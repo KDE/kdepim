@@ -18,7 +18,7 @@
 #include <QComboBox>
 
 #include <knuminput.h>
-#include <ksimpleconfig.h>
+#include <kconfig.h>
 
 #include "knrangefilter.h"
 
@@ -69,7 +69,7 @@ bool KNode::RangeFilter::matchesOp( int v1, Op o, int v2 )
 
 
 
-void KNode::RangeFilter::load( KSimpleConfig *conf )
+void KNode::RangeFilter::load( KConfig *conf )
 {
   enabled=conf->readEntry("enabled", false);
   val1=conf->readEntry("val1",0);
@@ -80,7 +80,7 @@ void KNode::RangeFilter::load( KSimpleConfig *conf )
 
 
 
-void KNode::RangeFilter::save( KSimpleConfig *conf )
+void KNode::RangeFilter::save( KConfig *conf )
 {
   conf->writeEntry("enabled", enabled);
   conf->writeEntry("val1", val1);

@@ -79,13 +79,13 @@ IdentityManager::IdentityManager( bool readonly, QObject * parent, const char * 
   dbus.connect( QString(), dbusPath, dbusInterface, "identitiesChanged", this, SLOT(slotIdentitiesChanged(QString)) );
 
   mReadOnly = readonly;
-  mConfig = new KConfig( "emailidentities", readonly );
+  mConfig = new KConfig( "emailidentities" );
   readConfig(mConfig);
   if ( mIdentities.isEmpty() ) {
     kDebug(5006) << "emailidentities is empty -> convert from kmailrc" << endl;
     // No emailidentities file, or an empty one due to broken conversion (kconf_update bug in kdelibs <= 3.2.2)
     // => convert it, i.e. read settings from kmailrc
-    KConfig kmailConf( "kmailrc", true );
+    KConfig kmailConf( "kmailrc" );
     readConfig( &kmailConf );
   }
   // we need at least a default identity:
@@ -202,7 +202,7 @@ void IdentityManager::writeConfig() const {
   for ( ConstIterator it = mIdentities.begin() ;
 	it != mIdentities.end() ; ++it, ++i ) {
     KConfigGroup cg( mConfig, QString::fromLatin1("Identity #%1").arg(i) );
-    (*it).writeConfig( &cg );
+    (*it).writeConfig( cg );
     if ( (*it).isDefault() ) {
       // remember which one is default:
       KConfigGroup general( mConfig, "General" );
@@ -234,7 +234,7 @@ void IdentityManager::readConfig(KConfigBase* config) {
 	group != identities.end() ; ++group ) {
     KConfigGroup configGroup( config, *group );
     mIdentities << Identity();
-    mIdentities.last().readConfig( &configGroup );
+    mIdentities.last().readConfig( configGroup );
     if ( !haveDefault && mIdentities.last().uoid() == defaultIdentity ) {
       haveDefault = true;
       mIdentities.last().setIsDefault( true );

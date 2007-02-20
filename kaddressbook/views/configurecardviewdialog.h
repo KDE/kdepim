@@ -54,8 +54,8 @@ class ConfigureCardViewWidget : public ViewConfigureWidget
     ConfigureCardViewWidget( KABC::AddressBook *ab, QWidget *parent );
     virtual ~ConfigureCardViewWidget();
 
-    virtual void restoreSettings( KConfig* );
-    virtual void saveSettings( KConfig* );
+    virtual void restoreSettings( const KConfigGroup &group);
+    virtual void saveSettings( KConfigGroup & );
 
   private:
     class CardViewLookNFeelPage *mAdvancedPage;
@@ -88,8 +88,8 @@ class CardViewLookNFeelPage : public KVBox {
     CardViewLookNFeelPage( QWidget *parent=0 );
     ~CardViewLookNFeelPage();
 
-    void restoreSettings( KConfig* );
-    void saveSettings( KConfig* );
+    void restoreSettings( const KConfigGroup& );
+    void saveSettings( KConfigGroup & );
 
   private slots:
     void setTextFont();

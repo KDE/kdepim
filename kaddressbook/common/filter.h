@@ -100,7 +100,7 @@ class Filter
     const QStringList &categories() const;
 
     /**
-      Saves the filter to the config file. 
+      Saves the filter to the config file.
      */
     void save( KConfigGroup &cfg );
 
@@ -128,7 +128,7 @@ class Filter
 
       @return The list of filters.
      */
-    static Filter::List restore( KConfig *config, const QString &baseGroup );
+    static Filter::List restore( KConfigBase *config, const QString &baseGroup );
 
     /**
       Sets the filter rule. If the rule is Filter::Matching (default),

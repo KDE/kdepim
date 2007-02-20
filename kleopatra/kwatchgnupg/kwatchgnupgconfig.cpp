@@ -182,36 +182,34 @@ void KWatchGnuPGConfig::slotSetHistorySizeUnlimited() {
 
 void KWatchGnuPGConfig::loadConfig()
 {
-  KSharedConfig::Ptr config = KGlobal::config();
-  config->setGroup("WatchGnuPG");
-  mExeED->setUrl( config->readEntry( "Executable", "watchgnupg" ) );
-  mSocketED->setUrl( config->readEntry( "Socket", QDir::home().canonicalPath()
+  KConfigGroup config(KGlobal::config(), "WatchGnuPG");
+  mExeED->setUrl( config.readEntry( "Executable", "watchgnupg" ) );
+  mSocketED->setUrl( config.readEntry( "Socket", QDir::home().canonicalPath()
 										+ "/.gnupg/log-socket") );
-  mLogLevelCB->setCurrentIndex( log_level_to_int( config->readEntry( "LogLevel", "basic" ) ) );
+  mLogLevelCB->setCurrentIndex( log_level_to_int( config.readEntry( "LogLevel", "basic" ) ) );
 
-  config->setGroup("LogWindow");
-  mLoglenSB->setValue( config->readEntry( "MaxLogLen", 10000 ) );
-  mWordWrapCB->setChecked( config->readEntry("WordWrap", false ) );
+  config.changeGroup("LogWindow");
+  mLoglenSB->setValue( config.readEntry( "MaxLogLen", 10000 ) );
+  mWordWrapCB->setChecked( config.readEntry("WordWrap", false ) );
 
-  config->setGroup( QString() );
+  config.changeGroup( QString() );
   enableButtonOk( false );
   enableButtonApply( false );
 }
 
 void KWatchGnuPGConfig::saveConfig()
 {
-  KSharedConfig::Ptr config = KGlobal::config();
-  config->setGroup("WatchGnuPG");
-  config->writeEntry( "Executable", mExeED->url().url() );
-  config->writeEntry( "Socket", mSocketED->url().url() );
-  config->writeEntry( "LogLevel", log_levels[mLogLevelCB->currentIndex()] );
+  KConfigGroup config(KGlobal::config(), "WatchGnuPG");
+  config.writeEntry( "Executable", mExeED->url().url() );
+  config.writeEntry( "Socket", mSocketED->url().url() );
+  config.writeEntry( "LogLevel", log_levels[mLogLevelCB->currentIndex()] );
 
-  config->setGroup("LogWindow");
-  config->writeEntry( "MaxLogLen", mLoglenSB->value() );
-  config->writeEntry( "WordWrap", mWordWrapCB->isChecked() );
+  config.changeGroup("LogWindow");
+  config.writeEntry( "MaxLogLen", mLoglenSB->value() );
+  config.writeEntry( "WordWrap", mWordWrapCB->isChecked() );
 
-  config->setGroup( QString() );
-  config->sync();
+  config.changeGroup( QString() );
+  config.sync();
   enableButtonOk( false );
   enableButtonApply( false );
 }

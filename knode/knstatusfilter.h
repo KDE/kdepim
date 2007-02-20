@@ -19,7 +19,7 @@
 #include <QBitArray>
 
 class QCheckBox;
-class KSimpleConfig;
+class KConfig;
 class KNRemoteArticle;
 
 namespace KNode {
@@ -36,8 +36,8 @@ class StatusFilter
     StatusFilter& operator=( const StatusFilter &sf )
       { for(int i=0; i<8; i++) data.setBit(i, sf.data.at(i)); return (*this); }
 
-    void load(KSimpleConfig *conf);
-    void save(KSimpleConfig *conf);
+    void load(KConfig *conf);
+    void save(KConfig *conf);
 
     bool doFilter(KNRemoteArticle *a);
 

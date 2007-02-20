@@ -500,8 +500,8 @@ VCardExportSelectionDialog::VCardExportSelectionDialog( QWidget *parent )
   mEncryptionKeys = new QCheckBox( i18n( "Encryption keys" ), page );
   layout->addWidget( mEncryptionKeys );
 
-  KConfig config( "kaddressbookrc" );
-  config.setGroup( "XXPortVCard" );
+  KConfig _config( "kaddressbookrc" );
+  KConfigGroup config(&_config, "XXPortVCard" );
 
   mPrivateBox->setChecked( config.readEntry( "ExportPrivateFields", true ) );
   mBusinessBox->setChecked( config.readEntry( "ExportBusinessFields", false ) );
@@ -511,8 +511,8 @@ VCardExportSelectionDialog::VCardExportSelectionDialog( QWidget *parent )
 
 VCardExportSelectionDialog::~VCardExportSelectionDialog()
 {
-  KConfig config( "kaddressbookrc" );
-  config.setGroup( "XXPortVCard" );
+  KConfig _config( "kaddressbookrc" );
+  KConfigGroup config(&_config, "XXPortVCard" );
 
   config.writeEntry( "ExportPrivateFields", mPrivateBox->isChecked() );
   config.writeEntry( "ExportBusinessFields", mBusinessBox->isChecked() );

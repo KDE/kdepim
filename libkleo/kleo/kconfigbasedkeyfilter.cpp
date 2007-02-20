@@ -67,7 +67,7 @@ static GpgME::UserID::Validity map2Validity( const QString & s ) {
 }
 
 
-Kleo::KConfigBasedKeyFilter::KConfigBasedKeyFilter( const KConfigBase & config )
+Kleo::KConfigBasedKeyFilter::KConfigBasedKeyFilter( const KConfigGroup & config )
   : KeyFilter(),
     mSpecificity( 0 ),
     mItalic( false ),

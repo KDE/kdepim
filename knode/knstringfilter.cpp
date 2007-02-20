@@ -19,7 +19,7 @@
 #include <kdialog.h>
 #include <klineedit.h>
 #include <klocale.h>
-#include <ksimpleconfig.h>
+#include <kconfig.h>
 
 #include "kngroup.h"
 #include "knnntpaccount.h"
@@ -77,7 +77,7 @@ void KNode::StringFilter::expand( KNGroup *g )
 
 
 
-void KNode::StringFilter::load( KSimpleConfig *conf )
+void KNode::StringFilter::load( KConfig *conf )
 {
   con=conf->readEntry("contains", true);
   data=conf->readEntry("Data");
@@ -86,7 +86,7 @@ void KNode::StringFilter::load( KSimpleConfig *conf )
 
 
 
-void KNode::StringFilter::save( KSimpleConfig *conf )
+void KNode::StringFilter::save( KConfig *conf )
 {
   conf->writeEntry("contains", con);
   conf->writeEntry("Data", data);

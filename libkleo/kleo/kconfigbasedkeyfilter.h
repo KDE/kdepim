@@ -41,13 +41,13 @@
 
 #include <gpgmepp/key.h>
 
-class KConfigBase;
+class KConfigGroup;
 
 namespace Kleo {
 
   class KConfigBasedKeyFilter : public KeyFilter {
   public:
-    explicit KConfigBasedKeyFilter( const KConfigBase & config );
+    explicit KConfigBasedKeyFilter( const KConfigGroup & config );
     ~KConfigBasedKeyFilter();
     bool matches( const GpgME::Key & key ) const;
 

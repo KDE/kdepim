@@ -58,14 +58,14 @@ ConfigureTableViewWidget::~ConfigureTableViewWidget()
 {
 }
 
-void ConfigureTableViewWidget::restoreSettings( KConfig *config )
+void ConfigureTableViewWidget::restoreSettings( const KConfigGroup &config )
 {
   ViewConfigureWidget::restoreSettings( config );
 
   mPage->restoreSettings( config );
 }
 
-void ConfigureTableViewWidget::saveSettings( KConfig *config )
+void ConfigureTableViewWidget::saveSettings( KConfigGroup &config )
 {
   ViewConfigureWidget::saveSettings( config );
 
@@ -83,28 +83,28 @@ LookAndFeelPage::LookAndFeelPage(QWidget *parent)
   enableBackgroundToggled(mBackgroundBox->isChecked());
 }
 
-void LookAndFeelPage::restoreSettings( KConfig *config )
+void LookAndFeelPage::restoreSettings( const KConfigGroup &config )
 {
-  mAlternateButton->setChecked(config->readEntry("ABackground", true));
-  mLineButton->setChecked(config->readEntry("SingleLine", false));
-  mToolTipBox->setChecked(config->readEntry("ToolTips", true));
+  mAlternateButton->setChecked(config.readEntry("ABackground", true));
+  mLineButton->setChecked(config.readEntry("SingleLine", false));
+  mToolTipBox->setChecked(config.readEntry("ToolTips", true));
 
   if (!mAlternateButton->isChecked() && !mLineButton->isChecked())
     mNoneButton->setChecked(true);
 
-  mBackgroundBox->setChecked(config->readEntry("Background", false));
-  mBackgroundName->lineEdit()->setText(config->readPathEntry("BackgroundName"));
-  mIMPresenceBox->setChecked( config->readEntry( "InstantMessagingPresence", false ) );
+  mBackgroundBox->setChecked(config.readEntry("Background", false));
+  mBackgroundName->lineEdit()->setText(config.readPathEntry("BackgroundName"));
+  mIMPresenceBox->setChecked( config.readEntry( "InstantMessagingPresence", false ) );
 }
 
-void LookAndFeelPage::saveSettings( KConfig *config )
+void LookAndFeelPage::saveSettings( KConfigGroup &config )
 {
-  config->writeEntry("ABackground", mAlternateButton->isChecked());
-  config->writeEntry("SingleLine", mLineButton->isChecked());
-  config->writeEntry("ToolTips", mToolTipBox->isChecked());
-  config->writeEntry("Background", mBackgroundBox->isChecked());
-  config->writePathEntry("BackgroundName", mBackgroundName->lineEdit()->text());
-  config->writeEntry( "InstantMessagingPresence", mIMPresenceBox->isChecked() );
+  config.writeEntry("ABackground", mAlternateButton->isChecked());
+  config.writeEntry("SingleLine", mLineButton->isChecked());
+  config.writeEntry("ToolTips", mToolTipBox->isChecked());
+  config.writeEntry("Background", mBackgroundBox->isChecked());
+  config.writePathEntry("BackgroundName", mBackgroundName->lineEdit()->text());
+  config.writeEntry( "InstantMessagingPresence", mIMPresenceBox->isChecked() );
 }
 
 void LookAndFeelPage::initGUI()

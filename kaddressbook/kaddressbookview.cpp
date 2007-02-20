@@ -58,7 +58,7 @@ KAddressBookView::~KAddressBookView()
 
 void KAddressBookView::readConfig( KConfigGroup &config )
 {
-  mFieldList = KABC::Field::restoreFields( &config, "KABCFields" );
+  mFieldList = KABC::Field::restoreFields( config, "KABCFields" );
 
   if ( mFieldList.isEmpty() )
     mFieldList = KABC::Field::defaultFields();

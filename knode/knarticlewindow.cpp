@@ -64,9 +64,9 @@ bool ArticleWindow::raiseWindowForArticle( KNArticle *art )
 {
   for ( ArticleWindow::List::Iterator it = mInstances.begin(); it != mInstances.end(); ++it )
     if ( (*it)->mArticleWidget->article() && (*it)->mArticleWidget->article() == art ) {
-#ifdef Q_OS_UNIX	    
+#ifdef Q_OS_UNIX
       KWin::activateWindow( (*it)->winId() );
-#endif      
+#endif
       return true;
     }
   return false;
@@ -78,9 +78,9 @@ bool ArticleWindow::raiseWindowForArticle( const QByteArray &mid )
   for ( ArticleWindow::List::Iterator it = mInstances.begin(); it != mInstances.end(); ++it )
     if ( (*it)->mArticleWidget->article() &&
            (*it)->mArticleWidget->article()->messageID()->as7BitString( false ) == mid ) {
-#ifdef Q_OS_UNIX	    
+#ifdef Q_OS_UNIX
       KWin::activateWindow( (*it)->winId() );
-#endif      
+#endif
       return true;
     }
 
@@ -117,19 +117,15 @@ ArticleWindow::ArticleWindow( KNArticle *art )
 
   setupGUI( ToolBar|Keys|Create, "knreaderui.rc");
 
-  KConfig *conf = knGlobals.config();
-  conf->setGroup("articleWindow_options");
   resize(500,400);    // default optimized for 800x600
-  applyMainWindowSettings(conf);
+  applyMainWindowSettings(KConfigGroup( knGlobals.config(), "articleWindow_options") );
 }
 
 
 ArticleWindow::~ArticleWindow()
 {
   mInstances.removeAll( this );
-  KConfig *conf = knGlobals.config();
-  conf->setGroup("articleWindow_options");
-  saveMainWindowSettings(conf);
+  saveMainWindowSettings(knGlobals.config()->group( "articleWindow_options") );
 }
 
 //--------------------------------

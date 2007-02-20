@@ -810,7 +810,7 @@ void CSVImportDialog::applyTemplate()
 
   for ( QStringList::iterator it = list.begin(); it != list.end(); ++it )
   {
-    KSimpleConfig config( *it, true );
+    KConfig config(  *it, KConfig::OnlyLocal);
 
     if ( !config.hasGroup( "csv column map" ) )
 	    continue;
@@ -830,8 +830,8 @@ void CSVImportDialog::applyTemplate()
   if ( !ok )
     return;
 
-  KSimpleConfig config( fileMap[ tmp ], true );
-  config.setGroup( "General" );
+  KConfig _config( fileMap[ tmp ], KConfig::OnlyLocal );
+  KConfigGroup config(&_config, "General" );
   mDatePatternEdit->setText( config.readEntry( "DatePattern", "Y-M-D" ) );
   uint numColumns = config.readEntry( "Columns", 0 );
   mDelimiterEdit->setText( config.readEntry( "DelimiterOther" ) );
@@ -842,7 +842,7 @@ void CSVImportDialog::applyTemplate()
   textquoteSelected( mComboQuote->currentText() );
 
   // create the column map
-  config.setGroup( "csv column map" );
+  config.changeGroup( "csv column map" );
   for ( uint i = 0; i < numColumns; ++i ) {
     int col = config.readEntry( QString::number( i ),0 );
     columnMap.insert( i, col );
@@ -875,18 +875,18 @@ void CSVImportDialog::saveTemplate()
   if ( name.isEmpty() )
     return;
 
-  KConfig config( fileName );
-  config.setGroup( "General" );
+  KConfig _config( fileName  );
+  KConfigGroup config(&_config, "General" );
   config.writeEntry( "DatePattern", mDatePatternEdit->text() );
   config.writeEntry( "Columns", mTable->numCols() );
   config.writeEntry( "DelimiterType", mDelimiterBox->id( mDelimiterBox->selected() ) );
   config.writeEntry( "DelimiterOther", mDelimiterEdit->text() );
   config.writeEntry( "QuoteType", mComboQuote->currentIndex() );
 
-  config.setGroup( "Misc" );
+  config.changeGroup( "Misc" );
   config.writeEntry( "Name", name );
 
-  config.setGroup( "csv column map" );
+  config.changeGroup( "csv column map" );
 
   for ( int column = 0; column < mTable->numCols(); ++column ) {
     Q3ComboTableItem *item = static_cast<Q3ComboTableItem*>( mTable->item( 0,

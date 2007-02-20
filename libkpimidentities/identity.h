@@ -24,7 +24,7 @@ namespace KPIM {
   class Identity;
   class Signature;
 }
-class KConfigBase;
+class KConfigGroup;
 class IdentityList;
 class QDataStream;
 class QMimeData;
@@ -76,8 +76,8 @@ public:
   Type type() const { return mType; }
 
 protected:
-  void writeConfig( KConfigBase * config ) const;
-  void readConfig( const KConfigBase * config );
+  void writeConfig( KConfigGroup& config ) const;
+  void readConfig( const KConfigGroup& config );
 
 private:
   QString textFromFile( bool * ok ) const;
@@ -141,11 +141,11 @@ public:
 protected:
   /** Read configuration from config. Group must be preset (or use
       KConfigGroup). Called from IdentityManager. */
-  void readConfig( const KConfigBase * );
+  void readConfig( const KConfigGroup & );
 
-  /** Write configuration to config. Group must be preset (or use 
+  /** Write configuration to config. Group must be preset (or use
       KConfigGroup). Called from IdentityManager. */
-  void writeConfig( KConfigBase * ) const;
+  void writeConfig( KConfigGroup & ) const;
 
 public:
   /** Tests if there are enough values set to allow mailing */
@@ -293,7 +293,7 @@ public:
 
   static const Identity& null();
   bool isNull() const;
-  
+
   static QString mimeDataType();
   static bool canDecode( const QMimeData* );
   void populateMimeData( QMimeData* );

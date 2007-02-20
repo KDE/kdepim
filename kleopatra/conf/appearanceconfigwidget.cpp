@@ -67,7 +67,7 @@ using namespace Kleo;
 class CategoryListViewItem : public Q3ListViewItem
 {
 public:
-  CategoryListViewItem( Q3ListView* lv, Q3ListViewItem* prev, const KConfigBase& config )
+  CategoryListViewItem( Q3ListView* lv, Q3ListViewItem* prev, const KConfigGroup& config )
     : Q3ListViewItem( lv, prev ) {
 
     setName( config.readEntry( "Name", i18n("<unnamed>") ) );
@@ -86,7 +86,7 @@ public:
     mDirty = false;
   }
 
-  void save( KConfigBase& config ) {
+  void save( KConfigGroup& config ) {
     config.writeEntry( "Name", text( 0 ) );
     config.writeEntry( "foreground-color", mForegroundColor );
     config.writeEntry( "background-color", mBackgroundColor );

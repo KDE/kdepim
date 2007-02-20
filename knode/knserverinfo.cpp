@@ -42,21 +42,20 @@ KNServerInfo::~KNServerInfo()
 }
 
 
-
-void KNServerInfo::readConf(KConfig *conf)
+void KNServerInfo::readConf(KConfigGroup& conf)
 {
-  s_erver=conf->readEntry("server", "localhost");
-  p_ort=conf->readEntry("port", 119);
-  i_d=conf->readEntry("id", -1);
+  s_erver=conf.readEntry("server", "localhost");
+  p_ort=conf.readEntry("port", 119);
+  i_d=conf.readEntry("id", -1);
 
-  n_eedsLogon=conf->readEntry("needsLogon",false);
-  u_ser=conf->readEntry("user");
-  p_ass = KNHelper::decryptStr(conf->readEntry("pass"));
+  n_eedsLogon=conf.readEntry("needsLogon",false);
+  u_ser=conf.readEntry("user");
+  p_ass = KNHelper::decryptStr(conf.readEntry("pass"));
 
   // migration to KWallet
   if ( Wallet::isEnabled() ) {
     if ( !p_ass.isEmpty() ) {
-      conf->deleteEntry( "pass" );
+      conf.deleteEntry( "pass" );
       p_assDirty = true;
     }
   } else
@@ -66,7 +65,7 @@ void KNServerInfo::readConf(KConfig *conf)
   if (Wallet::isOpen( Wallet::NetworkWallet() ))
     readPassword();
 
-  QString encStr = conf->readEntry( "encryption", "None" );
+  QString encStr = conf.readEntry( "encryption", "None" );
   if ( encStr.contains( "SSL", Qt::CaseInsensitive ) )
     mEncryption = SSL;
   else if ( encStr.contains( "TLS", Qt::CaseInsensitive ) )
@@ -76,15 +75,15 @@ void KNServerInfo::readConf(KConfig *conf)
 }
 
 
-void KNServerInfo::saveConf(KConfig *conf)
+void KNServerInfo::saveConf(KConfigGroup &conf)
 {
-  conf->writeEntry("server", s_erver);
+  conf.writeEntry("server", s_erver);
   if ( p_ort == 0 ) p_ort = 119;
-  conf->writeEntry("port", p_ort);
-  conf->writeEntry("id", i_d);
+  conf.writeEntry("port", p_ort);
+  conf.writeEntry("id", i_d);
 
-  conf->writeEntry("needsLogon", n_eedsLogon);
-  conf->writeEntry("user", u_ser);
+  conf.writeEntry("needsLogon", n_eedsLogon);
+  conf.writeEntry("user", u_ser);
   // open wallet for storing only if the user actually changed the password
   if (n_eedsLogon && p_assDirty) {
     Wallet *wallet = KNAccountManager::wallet();
@@ -102,7 +101,7 @@ void KNServerInfo::saveConf(KConfig *conf)
             KGuiItem( i18n("Store Password") ),
             KGuiItem( i18n("Do Not Store Password") ) )
             == KMessageBox::Yes ) {
-        conf->writeEntry( "pass", KNHelper::encryptStr( p_ass ) );
+        conf.writeEntry( "pass", KNHelper::encryptStr( p_ass ) );
       }
     }
     p_assDirty = false;
@@ -110,13 +109,13 @@ void KNServerInfo::saveConf(KConfig *conf)
 
   switch ( mEncryption ) {
     case SSL:
-      conf->writeEntry( "encryption", "SSL" );
+      conf.writeEntry( "encryption", "SSL" );
       break;
     case TLS:
-      conf->writeEntry( "encryption", "TLS" );
+      conf.writeEntry( "encryption", "TLS" );
       break;
     default:
-      conf->writeEntry( "encryption", "None" );
+      conf.writeEntry( "encryption", "None" );
   }
 }
 

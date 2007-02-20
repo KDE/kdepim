@@ -199,15 +199,15 @@ namespace {
 
     QVariant value() const { return mValue; }
 
-    void sync( KConfigBase * config ) {
+    void sync( KConfigGroup config ) {
       if ( !mDirty )
         return;
       mDirty = false;
-      config->writeEntry( kleo_chiasmus_config_entries[mIdx].name, mValue );
+      config.writeEntry( kleo_chiasmus_config_entries[mIdx].name, mValue );
     }
-    void read( const KConfigBase * config ) {
+    void read( const KConfigGroup & config ) {
       mDirty = false;
-      mValue = config->readEntry( kleo_chiasmus_config_entries[mIdx].name, defaultValue() );
+      mValue = config.readEntry( kleo_chiasmus_config_entries[mIdx].name, defaultValue() );
     }
   private:
     QVariant defaultValue() const;
@@ -277,7 +277,7 @@ namespace {
       for ( unsigned int i = 0 ; i < kleo_chiasmus_config_entries_dim ; ++i )
         if ( name == kleo_chiasmus_config_entries[i].name ) {
           ChiasmusConfigEntry * entry = new ChiasmusConfigEntry( i );
-          entry->read( &group );
+          entry->read( group );
           return mCache[name] = entry;
         }
       return 0;
@@ -286,7 +286,7 @@ namespace {
     void sync() {
       KConfigGroup group( configObject(), "Chiasmus" );
       for ( std::map<QString,ChiasmusConfigEntry*>::const_iterator it = mCache.begin(), end = mCache.end() ; it != end ; ++it )
-        it->second->sync( &group );
+        it->second->sync( group );
       group.sync();
       clear();
     }

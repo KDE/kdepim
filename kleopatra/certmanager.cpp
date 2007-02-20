@@ -219,8 +219,8 @@ CertManager::~CertManager() {
 }
 
 void CertManager::readConfig( bool noQueryGiven ) {
-  KConfig config( "kleopatrarc" );
-  config.setGroup( "Display Options" );
+  KConfig _config( "kleopatrarc" );
+  KConfigGroup config(&_config, "Display Options" );
   mHierarchicalView = config.readEntry( "hierarchicalView", false );
   if ( noQueryGiven ) {
     mNextFindRemote = config.readEntry( "startInRemoteMode", false );
@@ -228,8 +228,8 @@ void CertManager::readConfig( bool noQueryGiven ) {
 }
 
 void CertManager::writeConfig() {
-  KConfig config( "kleopatrarc" );
-  config.setGroup( "Display Options" );
+  KConfig _config( "kleopatrarc" );
+  KConfigGroup config(&_config, "Display Options" );
   config.writeEntry( "hierarchicalView", mKeyListView->hierarchical() );
   config.writeEntry( "startInRemoteMode", mNextFindRemote );
 }

@@ -149,12 +149,11 @@ void KWatchGnuPGMainWindow::startWatcher()
 						   .arg( QDateTime::currentDateTime().toString(Qt::ISODate)));
   }
   mWatcher->clearArguments();
-  KSharedConfig::Ptr config = KGlobal::config();
-  config->setGroup("WatchGnuPG");
-  *mWatcher << config->readEntry("Executable", WATCHGNUPGBINARY);
+  KConfigGroup config(KGlobal::config(), "WatchGnuPG");
+  *mWatcher << config.readEntry("Executable", WATCHGNUPGBINARY);
   *mWatcher << "--force";
-  *mWatcher << config->readEntry("Socket", WATCHGNUPGSOCKET);
-  config->setGroup(QString());
+  *mWatcher << config.readEntry("Socket", WATCHGNUPGSOCKET);
+  config.changeGroup(QString());
   if( !mWatcher->start() ) {
 	KMessageBox::sorry( this, i18n("The watchgnupg logging process could not be started.\nPlease install watchgnupg somewhere in your $PATH.\nThis log window is now completely useless." ) );
   } else {
@@ -173,8 +172,7 @@ void KWatchGnuPGMainWindow::setGnuPGConfig()
   if ( !cconfig )
     return;
   //Q_ASSERT( cconfig );
-  KSharedConfig::Ptr config = KGlobal::config();
-  config->setGroup("WatchGnuPG");
+  KConfigGroup config(KGlobal::config(), "WatchGnuPG");
   QStringList comps = cconfig->componentList();
   for( QStringList::const_iterator it = comps.begin(); it != comps.end(); ++it ) {
 	Kleo::CryptoConfigComponent* comp = cconfig->component( *it );
@@ -185,13 +183,13 @@ void KWatchGnuPGMainWindow::setGnuPGConfig()
 	  Kleo::CryptoConfigEntry* entry = group->entry("log-file");
 	  if( entry ) {
 		entry->setStringValue( QString("socket://")+
-							   config->readEntry("Socket",
+							   config.readEntry("Socket",
 												 WATCHGNUPGSOCKET ));
 		logclients << QString("%1 (%2)").arg(*it).arg(comp->description());
 	  }
 	  entry = group->entry("debug-level");
 	  if( entry ) {
-		entry->setStringValue( config->readEntry("LogLevel", "basic") );
+		entry->setStringValue( config.readEntry("LogLevel", "basic") );
 	  }
 	}
   }
@@ -282,9 +280,8 @@ void KWatchGnuPGMainWindow::slotConfigure()
 
 void KWatchGnuPGMainWindow::slotReadConfig()
 {
-  KSharedConfig::Ptr config = KGlobal::config();
-  config->setGroup("LogWindow");
-  mCentralWidget->setWordWrapMode( config->readEntry("WordWrap", false)
+  KConfigGroup config(KGlobal::config(), "LogWindow");
+  mCentralWidget->setWordWrapMode( config.readEntry("WordWrap", false)
 							   ?QTextOption::WordWrap
 							   :QTextOption::NoWrap );
 #ifdef __GNUC__

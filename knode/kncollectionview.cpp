@@ -95,15 +95,14 @@ KNCollectionView::~KNCollectionView()
 
 void KNCollectionView::readConfig()
 {
-  KConfig *conf = knGlobals.config();
-  conf->setGroup( "GroupView" );
+  KConfigGroup conf(knGlobals.config(), "GroupView" );
 
   // execute the listview layout stuff only once
   static bool initDone = false;
   if (!initDone) {
     initDone = true;
-    const int unreadColumn = conf->readEntry("UnreadColumn", 1);
-    const int totalColumn = conf->readEntry("TotalColumn", 2);
+    const int unreadColumn = conf.readEntry("UnreadColumn", 1);
+    const int totalColumn = conf.readEntry("TotalColumn", 2);
 
     // we need to _activate_ them in the correct order
     // this is ugly because we can't use header()->moveSection
@@ -136,11 +135,10 @@ void KNCollectionView::readConfig()
 
 void KNCollectionView::writeConfig()
 {
-  KConfig *conf = knGlobals.config();
-  conf->setGroup( "GroupView" );
+  KConfigGroup conf( knGlobals.config(), "GroupView" );
   saveLayout( knGlobals.config(), "GroupView" );
-  conf->writeEntry( "UnreadColumn", unreadIndex() );
-  conf->writeEntry( "TotalColumn", totalIndex() );
+  conf.writeEntry( "UnreadColumn", unreadIndex() );
+  conf.writeEntry( "TotalColumn", totalIndex() );
 }
 
 

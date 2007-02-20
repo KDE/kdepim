@@ -16,7 +16,7 @@
 #include <QFileInfo>
 #include <QTextStream>
 
-#include <ksimpleconfig.h>
+#include <kconfig.h>
 #include <kstandarddirs.h>
 #include <kdebug.h>
 #include <klocale.h>
@@ -111,7 +111,7 @@ bool KNFolder::readInfo(const QString &infoPath)
 
   i_nfoPath=infoPath;
 
-  KSimpleConfig info(i_nfoPath);
+  KConfig info(i_nfoPath, KConfig::OnlyLocal);
   if (!isRootFolder() && !isStandardFolder()) {
     n_ame=info.readEntry("name");
     i_d=info.readEntry("id", -1);
@@ -143,7 +143,7 @@ bool KNFolder::readInfo()
 void KNFolder::saveInfo()
 {
   if(!i_nfoPath.isEmpty()) {
-    KSimpleConfig info(i_nfoPath);
+    KConfig info(i_nfoPath, KConfig::OnlyLocal);
     if (!isRootFolder() && !isStandardFolder()) {
       info.writeEntry("name", n_ame);
       info.writeEntry("id", i_d);

@@ -21,7 +21,7 @@
 #include <QPixmap>
 #include <QTextStream>
 
-#include <ksimpleconfig.h>
+#include <kconfig.h>
 #include <kmessagebox.h>
 #include <klocale.h>
 #include <kglobalsettings.h>
@@ -45,8 +45,7 @@ KNode::Identity::Identity(bool g)
  :  u_seSigFile(false), u_seSigGenerator(false), g_lobal(g)
 {
   if(g_lobal) {
-    KConfig *c=knGlobals.config();
-    c->setGroup("IDENTITY");
+    KConfigGroup c(knGlobals.config(), "IDENTITY");
     loadConfig(c);
   }
 }
@@ -56,34 +55,34 @@ KNode::Identity::~Identity()
 {}
 
 
-void KNode::Identity::loadConfig(KConfigBase *c)
+void KNode::Identity::loadConfig(const KConfigGroup &c)
 {
-  n_ame=c->readEntry("Name");
-  e_mail=c->readEntry("Email");
-  r_eplyTo=c->readEntry("Reply-To");
-  m_ailCopiesTo=c->readEntry("Mail-Copies-To");
-  o_rga=c->readEntry("Org");
-  s_igningKey = c->readEntry("SigningKey").toLocal8Bit();
-  u_seSigFile=c->readEntry("UseSigFile",false);
-  u_seSigGenerator=c->readEntry("UseSigGenerator",false);
-  s_igPath=c->readPathEntry("sigFile");
-  s_igText=c->readEntry("sigText");
+  n_ame=c.readEntry("Name");
+  e_mail=c.readEntry("Email");
+  r_eplyTo=c.readEntry("Reply-To");
+  m_ailCopiesTo=c.readEntry("Mail-Copies-To");
+  o_rga=c.readEntry("Org");
+  s_igningKey = c.readEntry("SigningKey").toLocal8Bit();
+  u_seSigFile=c.readEntry("UseSigFile",false);
+  u_seSigGenerator=c.readEntry("UseSigGenerator",false);
+  s_igPath=c.readPathEntry("sigFile");
+  s_igText=c.readEntry("sigText");
 }
 
 
-void KNode::Identity::saveConfig(KConfigBase *c)
+void KNode::Identity::saveConfig(KConfigGroup &c)
 {
-  c->writeEntry("Name", n_ame);
-  c->writeEntry("Email", e_mail);
-  c->writeEntry("Reply-To", r_eplyTo);
-  c->writeEntry("Mail-Copies-To", m_ailCopiesTo);
-  c->writeEntry("Org", o_rga);
-  c->writeEntry("SigningKey", QString(s_igningKey));
-  c->writeEntry("UseSigFile", u_seSigFile);
-  c->writeEntry("UseSigGenerator",u_seSigGenerator);
-  c->writePathEntry("sigFile", s_igPath);
-  c->writeEntry("sigText", s_igText);
-  c->sync();
+  c.writeEntry("Name", n_ame);
+  c.writeEntry("Email", e_mail);
+  c.writeEntry("Reply-To", r_eplyTo);
+  c.writeEntry("Mail-Copies-To", m_ailCopiesTo);
+  c.writeEntry("Org", o_rga);
+  c.writeEntry("SigningKey", QString(s_igningKey));
+  c.writeEntry("UseSigFile", u_seSigFile);
+  c.writeEntry("UseSigGenerator",u_seSigGenerator);
+  c.writePathEntry("sigFile", s_igPath);
+  c.writeEntry("sigText", s_igText);
+  c.sync();
 }
 
 
@@ -91,8 +90,7 @@ void KNode::Identity::save()
 {
   kDebug(5003) << "KNConfig::Identity::save()" << endl;
   if(g_lobal) {
-    KConfig *c=knGlobals.config();
-    c->setGroup("IDENTITY");
+    KConfigGroup c(knGlobals.config(), "IDENTITY");
     saveConfig(c);
   }
 }
@@ -220,7 +218,7 @@ KNode::DisplayedHeaders::DisplayedHeaders()
   QString fname( KStandardDirs::locate("data","knode/headers.rc") );
 
   if (!fname.isNull()) {
-    KSimpleConfig headerConf(fname,true);
+    KConfig headerConf( fname, KConfig::OnlyLocal);
     QStringList headers = headerConf.groupList();
     headers.removeAll("<default>");
     headers.sort();
@@ -269,7 +267,7 @@ void KNode::DisplayedHeaders::save()
     KNHelper::displayInternalFileError();
     return;
   }
-  KSimpleConfig headerConf(dir+"headers.rc");
+  KConfig headerConf(dir+"headers.rc", KConfig::OnlyLocal);
   QStringList oldHeaders = headerConf.groupList();
 
   QStringList::Iterator oldIt=oldHeaders.begin();
@@ -369,58 +367,56 @@ KNode::Cleanup::Cleanup( bool global ) :
   mGlobal(global), mDefault(!global), mLastExpDate( QDate::currentDate() )
 {
   if (mGlobal) {
-    KConfig *conf = knGlobals.config();
-    conf->setGroup( "EXPIRE" );
-    loadConfig( conf );
+    loadConfig( knGlobals.config()->group( "EXPIRE" ) );
   }
 }
 
 
-void KNode::Cleanup::loadConfig(KConfigBase *conf)
+void KNode::Cleanup::loadConfig(const KConfigGroup &conf)
 {
   // group expire settings
-  d_oExpire = conf->readEntry( "doExpire", true );
-  r_emoveUnavailable = conf->readEntry( "removeUnavailable", true );
-  p_reserveThr = conf->readEntry( "saveThreads", true );
-  e_xpireInterval = conf->readEntry( "expInterval", 5 );
-  r_eadMaxAge = conf->readEntry( "readDays", 10 );
-  u_nreadMaxAge = conf->readEntry( "unreadDays", 15 );
-  mLastExpDate = conf->readEntry( "lastExpire", QDateTime() ).date();
+  d_oExpire = conf.readEntry( "doExpire", true );
+  r_emoveUnavailable = conf.readEntry( "removeUnavailable", true );
+  p_reserveThr = conf.readEntry( "saveThreads", true );
+  e_xpireInterval = conf.readEntry( "expInterval", 5 );
+  r_eadMaxAge = conf.readEntry( "readDays", 10 );
+  u_nreadMaxAge = conf.readEntry( "unreadDays", 15 );
+  mLastExpDate = conf.readEntry( "lastExpire", QDateTime() ).date();
 
   // folder compaction settings (only available globally)
   if (mGlobal) {
-    d_oCompact = conf->readEntry( "doCompact", true );
-    c_ompactInterval = conf->readEntry( "comInterval", 5 );
-    mLastCompDate = conf->readEntry( "lastCompact", QDateTime() ).date();
+    d_oCompact = conf.readEntry( "doCompact", true );
+    c_ompactInterval = conf.readEntry( "comInterval", 5 );
+    mLastCompDate = conf.readEntry( "lastCompact", QDateTime() ).date();
   }
 
   if (!mGlobal)
-    mDefault = conf->readEntry( "UseDefaultExpConf", true );
+    mDefault = conf.readEntry( "UseDefaultExpConf", true );
 }
 
 
-void KNode::Cleanup::saveConfig(KConfigBase *conf)
+void KNode::Cleanup::saveConfig(KConfigGroup &conf)
 {
   // group expire settings
-  conf->writeEntry( "doExpire", d_oExpire );
-  conf->writeEntry( "removeUnavailable", r_emoveUnavailable );
-  conf->writeEntry( "saveThreads", p_reserveThr );
-  conf->writeEntry( "expInterval", e_xpireInterval );
-  conf->writeEntry( "readDays", r_eadMaxAge );
-  conf->writeEntry( "unreadDays", u_nreadMaxAge );
-  conf->writeEntry( "lastExpire", mLastExpDate );
+  conf.writeEntry( "doExpire", d_oExpire );
+  conf.writeEntry( "removeUnavailable", r_emoveUnavailable );
+  conf.writeEntry( "saveThreads", p_reserveThr );
+  conf.writeEntry( "expInterval", e_xpireInterval );
+  conf.writeEntry( "readDays", r_eadMaxAge );
+  conf.writeEntry( "unreadDays", u_nreadMaxAge );
+  conf.writeEntry( "lastExpire", mLastExpDate );
 
   // folder compaction settings (only available globally)
   if (mGlobal) {
-    conf->writeEntry( "doCompact", d_oCompact );
-    conf->writeEntry( "comInterval", c_ompactInterval );
-    conf->writeEntry( "lastCompact", mLastCompDate );
+    conf.writeEntry( "doCompact", d_oCompact );
+    conf.writeEntry( "comInterval", c_ompactInterval );
+    conf.writeEntry( "lastCompact", mLastCompDate );
   }
 
   if (!mGlobal)
-    conf->writeEntry( "UseDefaultExpConf", mDefault );
+    conf.writeEntry( "UseDefaultExpConf", mDefault );
 
-  conf->sync();
+  conf.sync();
 }
 
 
@@ -428,8 +424,7 @@ void KNode::Cleanup::save()
 {
   kDebug(5003) << "KNConfig::Cleanup::save()" << endl;
   if (mGlobal) {
-    KConfig *conf = knGlobals.config();
-    conf->setGroup( "EXPIRE" );
+    KConfigGroup conf( knGlobals.config(), "EXPIRE" );
     saveConfig( conf );
   }
 }

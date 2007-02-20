@@ -106,19 +106,18 @@ RingBinderPrintStyle::RingBinderPrintStyle( PrintingWizard* parent, const char* 
   addPage( mPageAppearance, i18n( "Ring Binder Printing Style - Appearance" ) );
 
   // applying previous settings
-  KSharedConfig::Ptr config = KGlobal::config();
-  config->setGroup( RingBinderConfigSectionName );
-  mPageAppearance->cbPhoneNumbers->setChecked( config->readEntry( ShowPhoneNumbers, true ) );
-  mPageAppearance->cbEmails->setChecked( config->readEntry( ShowEmailAddresses, true ) );
-  mPageAppearance->cbStreetAddresses->setChecked( config->readEntry( ShowStreetAddresses, true ) );
-  mPageAppearance->cbOrganization->setChecked( config->readEntry( ShowOrganization, true ) );
-  mPageAppearance->cbBirthday->setChecked( config->readEntry( ShowBirthday, false ) );
-  mPageAppearance->cbFillEmpty->setChecked( config->readEntry( FillWithEmptyFields, true ) );
-  mPageAppearance->sbMinNumFill->setValue( config->readEntry( MinNumberOfEmptyFields, 0 ) );
+  KConfigGroup config(KGlobal::config(), RingBinderConfigSectionName );
+  mPageAppearance->cbPhoneNumbers->setChecked( config.readEntry( ShowPhoneNumbers, true ) );
+  mPageAppearance->cbEmails->setChecked( config.readEntry( ShowEmailAddresses, true ) );
+  mPageAppearance->cbStreetAddresses->setChecked( config.readEntry( ShowStreetAddresses, true ) );
+  mPageAppearance->cbOrganization->setChecked( config.readEntry( ShowOrganization, true ) );
+  mPageAppearance->cbBirthday->setChecked( config.readEntry( ShowBirthday, false ) );
+  mPageAppearance->cbFillEmpty->setChecked( config.readEntry( FillWithEmptyFields, true ) );
+  mPageAppearance->sbMinNumFill->setValue( config.readEntry( MinNumberOfEmptyFields, 0 ) );
 
-  QStringList tabNames = config->readEntry( LetterGroups, QStringList(),',' );
+  QStringList tabNames = config.readEntry( LetterGroups, QStringList(),',' );
   if ( tabNames.isEmpty() )
-    tabNames = QString( "AB,CD,EF,GH,IJK,LM,NO,PQR,S,TU,VW,XYZ" ).split( ',', 
+    tabNames = QString( "AB,CD,EF,GH,IJK,LM,NO,PQR,S,TU,VW,XYZ" ).split( ',',
 QString::SkipEmptyParts );
 
   mPageAppearance->letterListBox->insertStringList( tabNames );
@@ -135,22 +134,21 @@ void RingBinderPrintStyle::print( const KABC::Addressee::List &contacts, PrintPr
   progress->setProgress( 0 );
 
   // first write current config settings
-  KSharedConfig::Ptr config = KGlobal::config();
-  config->setGroup( RingBinderConfigSectionName );
-  config->writeEntry( ShowPhoneNumbers, mPageAppearance->cbPhoneNumbers->isChecked() );
-  config->writeEntry( ShowEmailAddresses, mPageAppearance->cbEmails->isChecked() );
-  config->writeEntry( ShowStreetAddresses, mPageAppearance->cbStreetAddresses->isChecked() );
-  config->writeEntry( ShowOrganization, mPageAppearance->cbOrganization->isChecked() );
-  config->writeEntry( ShowBirthday, mPageAppearance->cbBirthday->isChecked() );
-  config->writeEntry( FillWithEmptyFields, mPageAppearance->cbFillEmpty->isChecked() );
-  config->writeEntry( MinNumberOfEmptyFields, mPageAppearance->sbMinNumFill->value() );
+  KConfigGroup config(KGlobal::config(), RingBinderConfigSectionName );
+  config.writeEntry( ShowPhoneNumbers, mPageAppearance->cbPhoneNumbers->isChecked() );
+  config.writeEntry( ShowEmailAddresses, mPageAppearance->cbEmails->isChecked() );
+  config.writeEntry( ShowStreetAddresses, mPageAppearance->cbStreetAddresses->isChecked() );
+  config.writeEntry( ShowOrganization, mPageAppearance->cbOrganization->isChecked() );
+  config.writeEntry( ShowBirthday, mPageAppearance->cbBirthday->isChecked() );
+  config.writeEntry( FillWithEmptyFields, mPageAppearance->cbFillEmpty->isChecked() );
+  config.writeEntry( MinNumberOfEmptyFields, mPageAppearance->sbMinNumFill->value() );
   QStringList tmpstrl;
   for ( uint i = 0; i < mPageAppearance->letterListBox->count(); i++ ) {
     if ( !mPageAppearance->letterListBox->text( i ).isEmpty() ) {
       tmpstrl.append( mPageAppearance->letterListBox->text( i ) );
     }
   }
-  config->writeEntry( LetterGroups, tmpstrl );
+  config.writeEntry( LetterGroups, tmpstrl );
 
   KPrinter *printer = wizard() ->printer();
   QPainter painter;
@@ -178,7 +176,7 @@ void RingBinderPrintStyle::print( const KABC::Addressee::List &contacts, PrintPr
                 QRect( 0, 0, printer->width(), printer->height() ) );
   progress->addMessage( i18n( "Done" ) );
   painter.end();
-  config->sync();
+  config.sync();
 }
 
 bool RingBinderPrintStyle::printEntries( const KABC::Addressee::List &contacts,

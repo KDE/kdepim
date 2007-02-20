@@ -17,7 +17,7 @@
 
 #include <QString>
 
-class KConfig;
+class KConfigGroup;
 namespace KWallet {
   class Wallet;
 }
@@ -33,8 +33,8 @@ class KNServerInfo {
     KNServerInfo();
     ~KNServerInfo();
 
-    void readConf(KConfig *conf);
-    void saveConf(KConfig *conf);
+    void readConf(KConfigGroup &conf);
+    void saveConf(KConfigGroup &conf);
 
     //get
     int id()const                  { return i_d; }

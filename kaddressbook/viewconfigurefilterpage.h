@@ -39,8 +39,8 @@ class ViewConfigureFilterPage : public QWidget
     ViewConfigureFilterPage( QWidget *parent, const char *name = 0 );
     ~ViewConfigureFilterPage();
 
-    void restoreSettings( KConfig* );
-    void saveSettings( KConfig* );
+    void restoreSettings( const KConfigGroup & );
+    void saveSettings( KConfigGroup& );
 
   protected slots:
     void buttonClicked( int id );

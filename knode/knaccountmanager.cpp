@@ -17,7 +17,7 @@
 #include <QDir>
 
 #include <kdebug.h>
-#include <ksimpleconfig.h>
+#include <kconfig.h>
 #include <klocale.h>
 #include <kmessagebox.h>
 #include <kstandarddirs.h>

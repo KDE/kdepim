@@ -13,7 +13,7 @@
 */
 
 #include <kstandarddirs.h>
-#include <ksimpleconfig.h>
+#include <kconfig.h>
 #include <klocale.h>
 #include <kdebug.h>
 
@@ -78,7 +78,7 @@ bool KNArticleFilter::loadInfo()
 
     if (fname.isNull())
       return false;
-    KSimpleConfig conf(fname,true);
+    KConfig conf( fname, KConfig::OnlyLocal);
 
     conf.setGroup("GENERAL");
     n_ame=conf.readEntry("name");
@@ -98,7 +98,7 @@ void KNArticleFilter::load()
 
   if (fname.isNull())
     return;
-  KSimpleConfig conf(fname,true);
+  KConfig conf( fname, KConfig::OnlyLocal);
 
   conf.setGroup("STATUS");
   status.load(&conf);
@@ -141,7 +141,7 @@ void KNArticleFilter::save()
     KNHelper::displayInternalFileError();
     return;
   }
-  KSimpleConfig conf(dir+QString("%1.fltr").arg(i_d));
+  KConfig conf(dir+QString("%1.fltr").arg(i_d), KConfig::OnlyLocal);
 
   conf.setGroup("GENERAL");
   conf.writeEntry("name", QString(n_ame));

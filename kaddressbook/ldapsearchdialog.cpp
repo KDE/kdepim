@@ -232,8 +232,8 @@ void LDAPSearchDialog::restoreSettings()
   qDeleteAll(mLdapClientList);
   mLdapClientList.clear();
 
-  KConfig kabConfig( "kaddressbookrc" );
-  kabConfig.setGroup( "LDAPSearch" );
+  KConfig _kabConfig( "kaddressbookrc" );
+  KConfigGroup kabConfig(&_kabConfig, "LDAPSearch" );
   mSearchType->setCurrentIndex( kabConfig.readEntry( "SearchType", 0 ) );
 
   // then read the config file and register all selected
@@ -249,7 +249,7 @@ void LDAPSearchDialog::restoreSettings()
     for ( int j = 0; j < mNumHosts; ++j ) {
       KLDAP::LdapServer ldapServer;
       KPIM::LdapClient* ldapClient = new KPIM::LdapClient( 0, this, "ldapclient" );
-      KPIM::LdapSearch::readConfig( ldapServer, config, j, true );
+      KPIM::LdapSearch::readConfig( ldapServer, group, j, true );
       ldapClient->setServer( ldapServer );
       QStringList attrs;
 
@@ -298,8 +298,8 @@ void LDAPSearchDialog::restoreSettings()
 
 void LDAPSearchDialog::saveSettings()
 {
-  KConfig config( "kaddressbookrc" );
-  config.setGroup( "LDAPSearch" );
+  KConfig _config( "kaddressbookrc" );
+  KConfigGroup config(&_config, "LDAPSearch" );
   config.writeEntry( "SearchType", mSearchType->currentIndex() );
   config.sync();
 }

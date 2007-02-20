@@ -13,7 +13,7 @@
 */
 
 
-#include <ksimpleconfig.h>
+#include <kconfig.h>
 #include <klocale.h>
 #include <kdebug.h>
 
@@ -79,7 +79,7 @@ void KNGroup::updateListItem()
 
 bool KNGroup::readInfo(const QString &confPath)
 {
-  KSimpleConfig info(confPath);
+  KConfigGroup info( KSharedConfig::openConfig(confPath, KConfig::OnlyLocal), QString() );
 
   g_roupname = info.readEntry("groupname");
   d_escription = info.readEntry("description");
@@ -104,7 +104,7 @@ bool KNGroup::readInfo(const QString &confPath)
   c_rosspostIDBuffer = info.readEntry("crosspostIDBuffer", QStringList() );
 
   i_dentity=new KNode::Identity(false);
-  i_dentity->loadConfig(&info);
+  i_dentity->loadConfig(info);
   if(!i_dentity->isEmpty()) {
     kDebug(5003) << "KNGroup::readInfo(const QString &confPath) : using alternative user for " << g_roupname << endl;
   }
@@ -113,7 +113,7 @@ bool KNGroup::readInfo(const QString &confPath)
     i_dentity=0;
   }
 
-  mCleanupConf->loadConfig( &info );
+  mCleanupConf->loadConfig( info );
 
   return (!g_roupname.isEmpty());
 }
@@ -124,7 +124,8 @@ void KNGroup::saveInfo()
   QString dir(path());
 
   if (!dir.isNull()) {
-    KSimpleConfig info(dir+g_roupname+".grpinfo");
+    KConfig _info(dir+g_roupname+".grpinfo", KConfig::OnlyLocal);
+    KConfigGroup info( &_info, QString() );
 
     info.writeEntry("groupname", g_roupname);
     info.writeEntry("description", d_escription);
@@ -149,7 +150,7 @@ void KNGroup::saveInfo()
     info.writeEntry("crosspostIDBuffer", c_rosspostIDBuffer);
 
     if(i_dentity)
-      i_dentity->saveConfig(&info);
+      i_dentity->saveConfig(info);
     else if(info.hasKey("Email")) {
       info.deleteEntry("Name", false);
       info.deleteEntry("Email", false);
@@ -162,7 +163,7 @@ void KNGroup::saveInfo()
       info.deleteEntry("sigText", false);
     }
 
-    mCleanupConf->saveConfig( &info );
+    mCleanupConf->saveConfig( info );
   }
 }
 

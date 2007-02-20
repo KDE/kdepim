@@ -171,40 +171,40 @@ static const char sigTextKey[] = "Inline Signature";
 static const char sigFileKey[] = "Signature File";
 static const char sigCommandKey[] = "Signature Command";
 
-void Signature::readConfig( const KConfigBase * config )
+void Signature::readConfig( const KConfigGroup &config )
 {
-  QString sigType = config->readEntry( sigTypeKey );
+  QString sigType = config.readEntry( sigTypeKey );
   if ( sigType == sigTypeInlineValue ) {
     mType = Inlined;
-    mText = config->readEntry( sigTextKey );
+    mText = config.readEntry( sigTextKey );
   } else if ( sigType == sigTypeFileValue ) {
     mType = FromFile;
-    mUrl = config->readPathEntry( sigFileKey );
+    mUrl = config.readPathEntry( sigFileKey );
   } else if ( sigType == sigTypeCommandValue ) {
     mType = FromCommand;
-    mUrl = config->readPathEntry( sigCommandKey );
+    mUrl = config.readPathEntry( sigCommandKey );
   } else {
     mType = Disabled;
   }
 }
 
-void Signature::writeConfig( KConfigBase * config ) const
+void Signature::writeConfig( KConfigGroup & config ) const
 {
   switch ( mType ) {
   case Inlined:
-    config->writeEntry( sigTypeKey, sigTypeInlineValue );
-    config->writeEntry( sigTextKey, mText );
+    config.writeEntry( sigTypeKey, sigTypeInlineValue );
+    config.writeEntry( sigTextKey, mText );
     break;
   case FromFile:
-    config->writeEntry( sigTypeKey, sigTypeFileValue );
-    config->writePathEntry( sigFileKey, mUrl );
+    config.writeEntry( sigTypeKey, sigTypeFileValue );
+    config.writePathEntry( sigFileKey, mUrl );
     break;
   case FromCommand:
-    config->writeEntry( sigTypeKey, sigTypeCommandValue );
-    config->writePathEntry( sigCommandKey, mUrl );
+    config.writeEntry( sigTypeKey, sigTypeCommandValue );
+    config.writePathEntry( sigCommandKey, mUrl );
     break;
   case Disabled:
-    config->writeEntry( sigTypeKey, sigTypeDisabledValue );
+    config.writeEntry( sigTypeKey, sigTypeDisabledValue );
   default: ;
   }
 }
@@ -318,37 +318,37 @@ Identity::~Identity()
 }
 
 
-void Identity::readConfig( const KConfigBase * config )
+void Identity::readConfig( const KConfigGroup & config )
 {
-  mUoid = config->readEntry("uoid",QVariant(0)).toUInt();
+  mUoid = config.readEntry("uoid",QVariant(0)).toUInt();
 
-  mIdentity = config->readEntry("Identity");
-  mFullName = config->readEntry("Name");
-  mEmailAddr = config->readEntry("Email Address");
-  mVCardFile = config->readPathEntry("VCardFile");
-  mOrganization = config->readEntry("Organization");
-  mPGPSigningKey = config->readEntry("PGP Signing Key").toLatin1();
-  mPGPEncryptionKey = config->readEntry("PGP Encryption Key").toLatin1();
-  mSMIMESigningKey = config->readEntry("SMIME Signing Key").toLatin1();
-  mSMIMEEncryptionKey = config->readEntry("SMIME Encryption Key").toLatin1();
+  mIdentity = config.readEntry("Identity");
+  mFullName = config.readEntry("Name");
+  mEmailAddr = config.readEntry("Email Address");
+  mVCardFile = config.readPathEntry("VCardFile");
+  mOrganization = config.readEntry("Organization");
+  mPGPSigningKey = config.readEntry("PGP Signing Key").toLatin1();
+  mPGPEncryptionKey = config.readEntry("PGP Encryption Key").toLatin1();
+  mSMIMESigningKey = config.readEntry("SMIME Signing Key").toLatin1();
+  mSMIMEEncryptionKey = config.readEntry("SMIME Encryption Key").toLatin1();
 #ifdef HAVE_GPGME
-  mPreferredCryptoMessageFormat = Kleo::stringToCryptoMessageFormat( config->readEntry("Preferred Crypto Message Format", "none" ) );
+  mPreferredCryptoMessageFormat = Kleo::stringToCryptoMessageFormat( config.readEntry("Preferred Crypto Message Format", "none" ) );
 #endif
-  mReplyToAddr = config->readEntry("Reply-To Address");
-  mBcc = config->readEntry("Bcc");
-  mFcc = config->readEntry("Fcc", "sent-mail");
+  mReplyToAddr = config.readEntry("Reply-To Address");
+  mBcc = config.readEntry("Bcc");
+  mFcc = config.readEntry("Fcc", "sent-mail");
   if( mFcc.isEmpty() )
     mFcc = "sent-mail";
-  mDrafts = config->readEntry("Drafts", "drafts");
+  mDrafts = config.readEntry("Drafts", "drafts");
   if( mDrafts.isEmpty() )
     mDrafts = "drafts";
-  mTemplates = config->readEntry("Templates", "templates");
+  mTemplates = config.readEntry("Templates", "templates");
   if( mTemplates.isEmpty() )
     mTemplates = "templates";
-  mTransport = config->readEntry("Transport");
-  mDictionary = config->readEntry( "Dictionary" );
-  mXFace = config->readEntry( "X-Face" );
-  mXFaceEnabled = config->readEntry( "X-FaceEnabled", QVariant(false) ).toBool();
+  mTransport = config.readEntry("Transport");
+  mDictionary = config.readEntry( "Dictionary" );
+  mXFace = config.readEntry( "X-Face" );
+  mXFaceEnabled = config.readEntry( "X-FaceEnabled", QVariant(false) ).toBool();
 
   mSignature.readConfig( config );
   kDebug(5006) << "Identity::readConfig(): UOID = " << mUoid
@@ -356,33 +356,33 @@ void Identity::readConfig( const KConfigBase * config )
 }
 
 
-void Identity::writeConfig( KConfigBase * config ) const
+void Identity::writeConfig( KConfigGroup & config ) const
 {
-  config->writeEntry("uoid", mUoid);
+  config.writeEntry("uoid", mUoid);
 
-  config->writeEntry("Identity", mIdentity);
-  config->writeEntry("Name", mFullName);
-  config->writeEntry("Organization", mOrganization);
-  config->writeEntry("PGP Signing Key", mPGPSigningKey.data());
-  config->writeEntry("PGP Encryption Key", mPGPEncryptionKey.data());
-  config->writeEntry("SMIME Signing Key", mSMIMESigningKey.data());
-  config->writeEntry("SMIME Encryption Key", mSMIMEEncryptionKey.data());
+  config.writeEntry("Identity", mIdentity);
+  config.writeEntry("Name", mFullName);
+  config.writeEntry("Organization", mOrganization);
+  config.writeEntry("PGP Signing Key", mPGPSigningKey.data());
+  config.writeEntry("PGP Encryption Key", mPGPEncryptionKey.data());
+  config.writeEntry("SMIME Signing Key", mSMIMESigningKey.data());
+  config.writeEntry("SMIME Encryption Key", mSMIMEEncryptionKey.data());
 #ifdef HAVE_GPGME
-  config->writeEntry("Preferred Crypto Message Format", Kleo::cryptoMessageFormatToString( mPreferredCryptoMessageFormat ) );
+  config.writeEntry("Preferred Crypto Message Format", Kleo::cryptoMessageFormatToString( mPreferredCryptoMessageFormat ) );
 #else
-  config->writeEntry("Preferred Crypto Message Format", QString() );
+  config.writeEntry("Preferred Crypto Message Format", QString() );
 #endif
-  config->writeEntry("Email Address", mEmailAddr);
-  config->writeEntry("Reply-To Address", mReplyToAddr);
-  config->writeEntry("Bcc", mBcc);
-  config->writePathEntry("VCardFile", mVCardFile);
-  config->writeEntry("Transport", mTransport);
-  config->writeEntry("Fcc", mFcc);
-  config->writeEntry("Drafts", mDrafts);
-  config->writeEntry("Templates", mTemplates);
-  config->writeEntry( "Dictionary", mDictionary );
-  config->writeEntry( "X-Face", mXFace );
-  config->writeEntry( "X-FaceEnabled", mXFaceEnabled );
+  config.writeEntry("Email Address", mEmailAddr);
+  config.writeEntry("Reply-To Address", mReplyToAddr);
+  config.writeEntry("Bcc", mBcc);
+  config.writePathEntry("VCardFile", mVCardFile);
+  config.writeEntry("Transport", mTransport);
+  config.writeEntry("Fcc", mFcc);
+  config.writeEntry("Drafts", mDrafts);
+  config.writeEntry("Templates", mTemplates);
+  config.writeEntry( "Dictionary", mDictionary );
+  config.writeEntry( "X-Face", mXFace );
+  config.writeEntry( "X-FaceEnabled", mXFaceEnabled );
 
   mSignature.writeConfig( config );
 }

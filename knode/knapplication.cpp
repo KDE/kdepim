@@ -31,9 +31,8 @@ int KNApplication::newInstance()
 {
   kDebug(5003) << "KNApplication::newInstance()" << endl;
 
-  KConfig *conf=knGlobals.config();
-  conf->setGroup("GENERAL");
-  QString ver=conf->readEntry("Version");
+  KConfigGroup conf(knGlobals.config(), "GENERAL");
+  QString ver=conf.readEntry("Version");
 
   if(!ver.isEmpty() && ver!=KNODE_VERSION) { //new version installed
     if(KNConvert::needToConvert(ver)) { //we need to convert
@@ -41,15 +40,15 @@ int KNApplication::newInstance()
       KNConvert *convDlg=new KNConvert(ver);
       if(!convDlg->exec()) { //reject()
         if(convDlg->conversionDone()) //conversion has already happened but the user has canceled afterwards
-          conf->writeEntry("Version", KNODE_VERSION);
+          conf.writeEntry("Version", KNODE_VERSION);
         exit(0);
         return(0);
       } else //conversion done
-        conf->writeEntry("Version", KNODE_VERSION);
+        conf.writeEntry("Version", KNODE_VERSION);
       delete convDlg;
     }
     else //new version but no need to convert anything => just save the new version
-      conf->writeEntry("Version", KNODE_VERSION);
+      conf.writeEntry("Version", KNODE_VERSION);
   }
 
   if (!mainWidget()) {

@@ -175,29 +175,29 @@ AddresseeWidget::~AddresseeWidget()
 
 void AddresseeWidget::restoreSettings()
 {
-  KConfig config( "kabcrc" );
-  config.setGroup( "General" );
+  KConfig _config( "kabcrc" );
+  KConfigGroup config(&_config, "General" );
 
   mPrefix->setNameParts( config.readEntry( "Prefixes" , QStringList() ) );
   mInclusion->setNameParts( config.readEntry( "Inclusions" , QStringList() ) );
   mSuffix->setNameParts( config.readEntry( "Suffixes" , QStringList() ) );
 
-  KConfig cfg( "kaddressbookrc" );
-  cfg.setGroup( "General" );
+  KConfig _cfg( "kaddressbookrc" );
+  KConfigGroup cfg(&_cfg, "General" );
   mFormattedNameCombo->setCurrentIndex( cfg.readEntry( "FormattedNameType", 1 ) );
 }
 
 void AddresseeWidget::saveSettings()
 {
-  KConfig config( "kabcrc" );
-  config.setGroup( "General" );
+  KConfig _config( "kabcrc" );
+  KConfigGroup config(&_config, "General" );
 
   config.writeEntry( "Prefixes", mPrefix->nameParts() );
   config.writeEntry( "Inclusions", mInclusion->nameParts() );
   config.writeEntry( "Suffixes", mSuffix->nameParts() );
 
-  KConfig cfg( "kaddressbookrc" );
-  cfg.setGroup( "General" );
+  KConfig _cfg( "kaddressbookrc" );
+  KConfigGroup cfg(&_cfg, "General" );
   cfg.writeEntry( "FormattedNameType", mFormattedNameCombo->currentIndex() );
 
    QDBusMessage message =

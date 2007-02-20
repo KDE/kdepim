@@ -12,7 +12,7 @@
     Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, US
 */
 
-#include <ksimpleconfig.h>
+#include <kconfig.h>
 #include <kstandarddirs.h>
 #include <kdebug.h>
 
@@ -92,7 +92,7 @@ KNNntpAccount::~KNNntpAccount()
 // tries to read information, returns false if it fails to do so
 bool KNNntpAccount::readInfo(const QString &confPath)
 {
-  KSimpleConfig conf(confPath);
+  KConfigGroup conf( KSharedConfig::openConfig(confPath, KConfig::OnlyLocal), QString() );
 
   n_ame = conf.readEntry("name");
   //u_nsentCount = conf.readEntry("unsentCnt", 0);
@@ -102,12 +102,12 @@ bool KNNntpAccount::readInfo(const QString &confPath)
   u_seDiskCache = conf.readEntry("useDiskCache", false);
   i_ntervalChecking=conf.readEntry("intervalChecking", false);
   c_heckInterval=conf.readEntry("checkInterval", 10);
-  KNServerInfo::readConf(&conf);
+  KNServerInfo::readConf(conf);
 
   startTimer();
 
   i_dentity=new KNode::Identity(false);
-  i_dentity->loadConfig(&conf);
+  i_dentity->loadConfig(conf);
   if(!i_dentity->isEmpty()) {
     kDebug(5003) << "KNGroup::readInfo(const QString &confPath) : using alternative user for " << n_ame << endl;
   } else {
@@ -115,7 +115,7 @@ bool KNNntpAccount::readInfo(const QString &confPath)
     i_dentity=0;
   }
 
-  mCleanupConf->loadConfig( &conf );
+  mCleanupConf->loadConfig( conf );
 
   if (n_ame.isEmpty() || s_erver.isEmpty() || i_d == -1)
     return false;
@@ -130,7 +130,7 @@ void KNNntpAccount::saveInfo()
   if (dir.isNull())
     return;
 
-  KSimpleConfig conf(dir+"info");
+  KConfigGroup conf(KSharedConfig::openConfig( dir+"info", KConfig::OnlyLocal), QString() );
 
   conf.writeEntry("name", n_ame);
   //conf.writeEntry("unsentCnt", u_nsentCount);
@@ -142,10 +142,10 @@ void KNNntpAccount::saveInfo()
   conf.writeEntry("intervalChecking", i_ntervalChecking);
   conf.writeEntry("checkInterval", c_heckInterval);
 
-  KNServerInfo::saveConf(&conf);      // save not KNNntpAccount specific settings
+  KNServerInfo::saveConf(conf);      // save not KNNntpAccount specific settings
 
   if(i_dentity)
-    i_dentity->saveConfig(&conf);
+    i_dentity->saveConfig(conf);
   else if(conf.hasKey("Email")) {
     conf.deleteEntry("Name", false);
     conf.deleteEntry("Email", false);
@@ -158,7 +158,7 @@ void KNNntpAccount::saveInfo()
     conf.deleteEntry("sigText", false);
   }
 
-  mCleanupConf->saveConfig( &conf );
+  mCleanupConf->saveConfig( conf );
 }
 
 

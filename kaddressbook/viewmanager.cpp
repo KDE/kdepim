@@ -284,10 +284,10 @@ void ViewManager::editView()
     ViewConfigureDialog dlg( wdg, mActiveView->windowTitle(), this );
 
     KConfigGroup group( mCore->config(), mActiveView->windowTitle() );
-    dlg.restoreSettings( mCore->config() );
+    dlg.restoreSettings( group );
 
     if ( dlg.exec() ) {
-      dlg.saveSettings( mCore->config() );
+      dlg.saveSettings( group );
       mActiveView->readConfig( group );
       // Set the proper filter in the view. By setting the combo
       // box, the activated slot will be called, which will push

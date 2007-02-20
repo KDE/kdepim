@@ -336,10 +336,9 @@ void ArticleWidget::readConfig()
 
   mShowHtml = knGlobals.settings()->alwaysShowHTML();
 
-  KConfig *conf = knGlobals.config();
-  conf->setGroup( "READNEWS" );
-  mAttachmentStyle = conf->readEntry( "attachmentStyle", "inline" );
-  mHeaderStyle = conf->readEntry( "headerStyle", "fancy" );
+  KConfigGroup conf(knGlobals.config(), "READNEWS" );
+  mAttachmentStyle = conf.readEntry( "attachmentStyle", "inline" );
+  mHeaderStyle = conf.readEntry( "headerStyle", "fancy" );
   KToggleAction *ra = 0;
   ra = static_cast<KToggleAction*>( mActionCollection->action( QString("view_attachments_%1").arg(mAttachmentStyle) ) );
   ra->setChecked( true );
@@ -360,10 +359,9 @@ void ArticleWidget::writeConfig()
   if ( knGlobals.artWidget != this )
     return;
 
-  KConfig *conf = knGlobals.config();
-  conf->setGroup( "READNEWS" );
-  conf->writeEntry( "attachmentStyle", mAttachmentStyle );
-  conf->writeEntry( "headerStyle", mHeaderStyle );
+  KConfigGroup conf(knGlobals.config(), "READNEWS" );
+  conf.writeEntry( "attachmentStyle", mAttachmentStyle );
+  conf.writeEntry( "headerStyle", mHeaderStyle );
 
   knGlobals.settings()->setUseFixedFont( mFixedFontToggle->isChecked() );
   knGlobals.settings()->setInterpretFormatTags( mFancyToggle->isChecked() );

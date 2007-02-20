@@ -54,7 +54,7 @@ KMail_Protocol::~KMail_Protocol()
 
 const Protocol* KMail_Protocol::getProtocol( AccountSettings* settings ) const
 {
-	KConfig kmailconfig( "kmailrc", true, false );
+	KConfig kmailconfig( "kmailrc", KConfig::NoGlobals );
 	int id;
 	QString type;
 
@@ -82,7 +82,7 @@ KMailDrop* KMail_Protocol::createMaildrop( AccountSettings *settings ) const
 	int id;
 	QString type;
 	
-	KConfig kmailconfig( "kmailrc", true, false );
+	KConfig kmailconfig( "kmailrc", KConfig::NoGlobals );
 	if( settings->readEntries().contains( "kmailname" ) )
 		type = getTypeAndConfig( settings->readEntries()[ "kmailname" ], kmailconfig, id );
 	else
@@ -101,7 +101,7 @@ QMap< QString, QString > * KMail_Protocol::createConfig( AccountSettings* settin
 	int id;
 	QString type;
 	
-	KConfig kmailconfig( "kmailrc", true, false );
+	KConfig kmailconfig( "kmailrc", KConfig::NoGlobals );
 	//First: find the account in the configuration and get the type and id out of it.
 	if( settings->readEntries().contains( "kmailname" ) )
 		type = getTypeAndConfig( settings->readEntries()[ "kmailname" ], kmailconfig, id );
@@ -198,7 +198,7 @@ void KMail_Protocol::configFields( QVector< QWidget* >* vector, const QObject*, 
 	QString name;
 	int nummer = kmailFirstGroup - 1;
 	
-	KConfig kmailconfig( "kmailrc", true, false );
+	KConfig kmailconfig( "kmailrc", KConfig::NoGlobals );
 	while( kmailconfig.hasGroup( QString( kmailGroupName ).arg( ++nummer ) ) )
 	{
 		kmailconfig.setGroup( QString( kmailGroupName ).arg( nummer ) );

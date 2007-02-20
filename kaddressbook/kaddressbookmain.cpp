@@ -159,7 +159,7 @@ void KAddressBookMain::configureKeyBindings()
 
 void KAddressBookMain::configureToolbars()
 {
-  saveMainWindowSettings( KGlobal::config().data(), "MainWindow" );
+  saveMainWindowSettings( KGlobal::config()->group( "MainWindow" ) );
 
   KEditToolbar edit( factory() );
   connect( &edit, SIGNAL( newToolbarConfig() ),
@@ -171,7 +171,7 @@ void KAddressBookMain::configureToolbars()
 void KAddressBookMain::newToolbarConfig()
 {
   createGUI( "kaddressbookui.rc" );
-  applyMainWindowSettings( KGlobal::config().data(), "MainWindow" );
+  applyMainWindowSettings( KGlobal::config()->group( "MainWindow" ) );
 }
 
 #include "kaddressbookmain.moc"

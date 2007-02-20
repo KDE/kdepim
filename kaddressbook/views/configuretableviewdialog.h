@@ -48,8 +48,8 @@ class ConfigureTableViewWidget : public ViewConfigureWidget
     ConfigureTableViewWidget( KABC::AddressBook *ab, QWidget *parent );
     virtual ~ConfigureTableViewWidget();
 
-    virtual void restoreSettings( KConfig* );
-    virtual void saveSettings( KConfig* );
+    virtual void restoreSettings( const KConfigGroup & );
+    virtual void saveSettings( KConfigGroup& );
 
   private:
     void initGUI();
@@ -68,8 +68,8 @@ class LookAndFeelPage : public QWidget
     LookAndFeelPage( QWidget *parent );
     ~LookAndFeelPage() {}
 
-    void restoreSettings( KConfig* );
-    void saveSettings( KConfig* );
+    void restoreSettings( const KConfigGroup&);
+    void saveSettings( KConfigGroup& );
 
   protected slots:
     void enableBackgroundToggled( bool );

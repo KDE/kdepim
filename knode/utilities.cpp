@@ -205,18 +205,16 @@ int KNHelper::selectDialog(QWidget *parent, const QString &caption, const QStrin
 
 void KNHelper::saveWindowSize(const QString &name, const QSize &s)
 {
-  KConfig *c=knGlobals.config();
-  c->setGroup("WINDOW_SIZES");
-  c->writeEntry(name, s);
+  KConfigGroup c(knGlobals.config(), "WINDOW_SIZES");
+  c.writeEntry(name, s);
 }
 
 
 void KNHelper::restoreWindowSize(const QString &name, QWidget *d, const QSize &defaultSize)
 {
-  KConfig *c=knGlobals.config();
-  c->setGroup("WINDOW_SIZES");
+  KConfigGroup c(knGlobals.config(), "WINDOW_SIZES");
 
-  QSize s=c->readEntry(name,defaultSize);
+  QSize s=c.readEntry(name,defaultSize);
 
   if(s.isValid()) {
     QRect max = KGlobalSettings::desktopGeometry(QCursor::pos());

@@ -18,7 +18,7 @@
 #include <kmessagebox.h>
 #include <kmenu.h>
 #include <kstandarddirs.h>
-#include <ksimpleconfig.h>
+#include <kconfig.h>
 #include <kicon.h>
 
 #include "utilities.h"
@@ -69,9 +69,8 @@ KNFilterManager::KNFilterManager( QObject * parent )
 {
   loadFilters();
 
-  KConfig *conf=knGlobals.config();
-  conf->setGroup("READNEWS");
-  setFilter(conf->readEntry("lastFilterID", 1));
+  KConfigGroup conf(knGlobals.config(), "READNEWS");
+  setFilter(conf.readEntry("lastFilterID", 1));
 }
 
 
@@ -109,7 +108,7 @@ void KNFilterManager::loadFilters()
   QString fname(KStandardDirs::locate("data","knode/filters/filters.rc") );
 
   if (!fname.isNull()) {
-    KSimpleConfig conf(fname,true);
+    KConfig conf( fname, KConfig::OnlyLocal);
 
     QList<int> activeFilters = conf.readEntry("Active",QList<int>());
     menuOrder = conf.readEntry("Menu",QList<int>());
@@ -135,7 +134,7 @@ void KNFilterManager::saveFilterLists()
     KNHelper::displayInternalFileError();
     return;
   }
-  KSimpleConfig conf(dir+"filters.rc");
+  KConfig conf(dir+"filters.rc", KConfig::OnlyLocal);
   QList<int> activeFilters;
   for ( QList<KNArticleFilter*>::Iterator it = mFilterList.begin(); it != mFilterList.end(); ++it )
     activeFilters << (*it)->id();

@@ -70,13 +70,13 @@ ViewConfigureWidget::~ViewConfigureWidget()
 {
 }
 
-void ViewConfigureWidget::restoreSettings( KConfig *config )
+void ViewConfigureWidget::restoreSettings( const KConfigGroup &config )
 {
   mFieldsPage->restoreSettings( config );
   mFilterPage->restoreSettings( config );
 }
 
-void ViewConfigureWidget::saveSettings( KConfig *config )
+void ViewConfigureWidget::saveSettings( KConfigGroup &config )
 {
   mFieldsPage->saveSettings( config );
   mFilterPage->saveSettings( config );
@@ -110,12 +110,12 @@ ViewConfigureDialog::~ViewConfigureDialog()
 {
 }
 
-void ViewConfigureDialog::restoreSettings( KConfig *config )
+void ViewConfigureDialog::restoreSettings( const KConfigGroup &config )
 {
   mConfigWidget->restoreSettings( config );
 }
 
-void ViewConfigureDialog::saveSettings( KConfig *config )
+void ViewConfigureDialog::saveSettings( KConfigGroup &config )
 {
   mConfigWidget->saveSettings( config );
 }

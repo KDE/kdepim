@@ -59,17 +59,15 @@ class KDE_EXPORT ViewConfigureWidget : public KAB::ConfigureWidget
       in the GUI. If this method is overloaded, be sure to call the base
       class's method.
 
-      Do not change the group of the config object in this method.
      */
-    virtual void restoreSettings( KConfig *config );
+    virtual void restoreSettings( const KConfigGroup &config );
 
     /**
       Writes the configuration from the GUI to the config object. If this
       method is overloaded, be sure to call the base class's method.
 
-      Do not change the group of the config object in this method.
      */
-    virtual void saveSettings( KConfig *config );
+    virtual void saveSettings( KConfigGroup &config );
 
 
     /**
@@ -94,8 +92,8 @@ class ViewConfigureDialog : public KDialog
                          QWidget *parent, const char *name = 0 );
     virtual ~ViewConfigureDialog();
 
-    void restoreSettings( KConfig* );
-    void saveSettings( KConfig* );
+    void restoreSettings( const KConfigGroup& );
+    void saveSettings( KConfigGroup& );
 
   protected slots:
     void slotHelp();

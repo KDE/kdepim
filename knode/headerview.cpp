@@ -106,10 +106,9 @@ KNHeaderView::~KNHeaderView()
 void KNHeaderView::readConfig()
 {
   if ( !mInitDone ) {
-    KConfig *conf = knGlobals.config();
-    conf->setGroup( "HeaderView" );
-    mSortByThreadChangeDate = conf->readEntry( "sortByThreadChangeDate", false );
-    restoreLayout( conf, "HeaderView" );
+    KConfigGroup conf(knGlobals.config(), "HeaderView" );
+    mSortByThreadChangeDate = conf.readEntry( "sortByThreadChangeDate", false );
+    restoreLayout( knGlobals.config(), "HeaderView" );
     mInitDone = true;
   }
 
@@ -131,10 +130,9 @@ void KNHeaderView::readConfig()
 
 void KNHeaderView::writeConfig()
 {
-  KConfig *conf = knGlobals.config();
-  conf->setGroup( "HeaderView" );
-  conf->writeEntry( "sortByThreadChangeDate", mSortByThreadChangeDate );
-  saveLayout( conf, "HeaderView" );
+  KConfigGroup conf(knGlobals.config(), "HeaderView" );
+  conf.writeEntry( "sortByThreadChangeDate", mSortByThreadChangeDate );
+  saveLayout( knGlobals.config(), "HeaderView" );
 
   knGlobals.settings()->setShowLines( mPaintInfo.showSize );
   if ( !mShowingFolder ) // score column is always hidden when showing a folder

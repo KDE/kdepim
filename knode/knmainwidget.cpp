@@ -906,9 +906,8 @@ void KNMainWidget::initActions()
 
 bool KNMainWidget::firstStart()
 {
-  KConfig *conf=knGlobals.config();
-  conf->setGroup("GENERAL");
-  QString ver = conf->readEntry("Version");
+  KConfigGroup conf(knGlobals.config(), "GENERAL");
+  QString ver = conf.readEntry("Version");
   if(!ver.isEmpty())
     return false;
 
@@ -928,8 +927,7 @@ bool KNMainWidget::firstStart()
   if ( TransportManager::self()->isEmpty() )
     TransportManager::self()->createDefaultTransport();
 
-  conf->setGroup("GENERAL");
-  conf->writeEntry("Version", KNODE_VERSION);
+  conf.writeEntry("Version", KNODE_VERSION);
 
   return true;
 }
@@ -937,10 +935,9 @@ bool KNMainWidget::firstStart()
 
 void KNMainWidget::readOptions()
 {
-  KConfig *conf=knGlobals.config();
-  conf->setGroup("APPEARANCE");
+  KConfigGroup conf(knGlobals.config(), "APPEARANCE");
 
-  if (conf->readEntry("quicksearch", true))
+  if (conf.readEntry("quicksearch", true))
     a_ctToggleQuickSearch->setChecked(true);
   else
     q_uicksearch->hide();
@@ -955,10 +952,9 @@ void KNMainWidget::readOptions()
 
 void KNMainWidget::saveOptions()
 {
-  KConfig *conf=knGlobals.config();
-  conf->setGroup("APPEARANCE");
+  KConfigGroup conf(knGlobals.config(), "APPEARANCE");
 
-  conf->writeEntry("quicksearch", !q_uicksearch->isHidden());
+  conf.writeEntry("quicksearch", !q_uicksearch->isHidden());
   //saveMainWindowSettings(KGlobal::config(),"mainWindow_options");
 
   c_olView->writeConfig();

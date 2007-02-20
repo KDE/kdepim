@@ -66,8 +66,8 @@ AddresseeEditorDialog::AddresseeEditorDialog( KAB::Core * /*core*/,
 
   enableButton( KDialog::Apply, false );
 
-  KConfig config( "kaddressbookrc" );
-  config.setGroup( "AddresseeEditor" );
+  KConfig _config( "kaddressbookrc" );
+  KConfigGroup config(&_config, "AddresseeEditor" );
   QSize defaultSize( 750, 570 );
   resize( config.readEntry( "Size", defaultSize ) );
   connect(this,SIGNAL(okClicked()),SLOT(slotOk()));
@@ -79,8 +79,8 @@ AddresseeEditorDialog::~AddresseeEditorDialog()
 {
   kDebug(5720) << "~AddresseeEditorDialog()" << endl;
 
-  KConfig config( "kaddressbookrc" );
-  config.setGroup( "AddresseeEditor" );
+  KConfig _config( "kaddressbookrc" );
+  KConfigGroup config(&_config, "AddresseeEditor" );
   config.writeEntry( "Size", size() );
 
   emit editorDestroyed( mEditorWidget->addressee().uid() );

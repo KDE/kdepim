@@ -131,8 +131,8 @@ NameEditDialog::NameEditDialog( const KABC::Addressee &addr, int type,
   mFormattedNameEdit->setText( addr.formattedName() );
 
   // Prefix and suffix combos
-  KConfig config( "kabcrc" );
-  config.setGroup( "General" );
+  KConfig _config( "kabcrc" );
+  KConfigGroup config(&_config, "General" );
 
   QStringList sTitle;
   sTitle += "";

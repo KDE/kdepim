@@ -209,7 +209,7 @@ void LDAPOptionsWidget::restoreSettings()
   uint count = group.readEntry( "NumSelectedHosts", 0);
   for ( uint i = 0; i < count; ++i ) {
     KLDAP::LdapServer server;
-    KPIM::LdapSearch::readConfig( server, config, i, true );
+    KPIM::LdapSearch::readConfig( server, group, i, true );
     LDAPItem *item = new LDAPItem( mHostListView, server, true );
     item->setOn( true );
   }
@@ -217,7 +217,7 @@ void LDAPOptionsWidget::restoreSettings()
   count = group.readEntry( "NumHosts",0 );
   for ( uint i = 0; i < count; ++i ) {
     KLDAP::LdapServer server;
-    KPIM::LdapSearch::readConfig( server, config, i, false );
+    KPIM::LdapSearch::readConfig( server, group, i, false );
     new LDAPItem( mHostListView, server );
   }
 
@@ -240,10 +240,10 @@ void LDAPOptionsWidget::saveSettings()
 
     KLDAP::LdapServer server = item->server();
     if ( item->isOn() ) {
-      KPIM::LdapSearch::writeConfig( server, config, selected, true );
+      KPIM::LdapSearch::writeConfig( server, group, selected, true );
       selected++;
     } else {
-      KPIM::LdapSearch::writeConfig( server, config, unselected, false );
+      KPIM::LdapSearch::writeConfig( server, group, unselected, false );
       unselected++;
     }
   }
@@ -272,7 +272,7 @@ void LDAPOptionsWidget::initGUI()
   groupBox->setInsideSpacing( KDialog::spacingHint() );
   groupBox->setInsideMargin( KDialog::marginHint() );
 */
-  
+
   // Contents of the QVGroupBox: label and hbox
   /*QLabel *label =*/ new QLabel( i18n( "Check all servers that should be used:" ), groupBox );
 

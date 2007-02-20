@@ -193,8 +193,8 @@ void KABConfigWidget::restoreSettings()
       KABPrefs::instance()->locationMapURL().arg( KGlobal::locale()->country() ) );
   mLocationMapURL->lineEdit()->setCursorPosition( 0 );
 
-  KConfig config( "kabcrc", false, false );
-  config.setGroup( "General" );
+  KConfig _config("kabcrc", KConfig::NoGlobals);
+  KConfigGroup config(&_config, "General" );
   mTradeAsFamilyName->setChecked( config.readEntry( "TradeAsFamilyName", true ) );
   mLimitContactDisplay->setChecked( config.readEntry( "LimitContactDisplay", true ) );
 
@@ -216,8 +216,8 @@ void KABConfigWidget::saveSettings()
 
   KABPrefs::instance()->writeConfig();
 
-  KConfig config( "kabcrc", false, false );
-  config.setGroup( "General" );
+  KConfig _config("kabcrc", KConfig::NoGlobals);
+  KConfigGroup config(&_config, "General" );
   config.writeEntry( "TradeAsFamilyName", mTradeAsFamilyName->isChecked() );
   config.writeEntry( "LimitContactDisplay", mLimitContactDisplay->isChecked() );
 

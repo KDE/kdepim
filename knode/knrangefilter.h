@@ -22,7 +22,7 @@ class KIntSpinBox;
 class QComboBox;
 class QCheckBox;
 
-class KSimpleConfig;
+class KConfig;
 
 namespace KNode {
 
@@ -41,8 +41,8 @@ class RangeFilter
         enabled=nr.enabled;
         return (*this); }
 
-    void load(KSimpleConfig *conf);
-    void save(KSimpleConfig *conf);
+    void load(KConfig *conf);
+    void save(KConfig *conf);
 
     bool doFilter(int a);
 

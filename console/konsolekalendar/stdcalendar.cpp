@@ -61,8 +61,8 @@ StdCalendar::StdCalendar()
 
   mManager = resourceManager();
   if ( mManager->isEmpty() ) {
-    KConfig config( "korganizerrc" );
-    config.setGroup( "General" );
+    KConfig _config( "korganizerrc" );
+    KConfigGroup config(&_config, "General" );
     QString fileName = config.readPathEntry( "Active Calendar" );
 
     if ( !fileName.isEmpty() ) {

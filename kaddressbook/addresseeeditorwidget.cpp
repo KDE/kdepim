@@ -515,8 +515,8 @@ void AddresseeEditorWidget::load()
   mNameEdit->blockSignals( false );
 
   if ( mAddressee.formattedName().isEmpty() ) {
-    KConfig config( "kaddressbookrc" );
-    config.setGroup( "General" );
+    KConfig _config( "kaddressbookrc" );
+    KConfigGroup config(&_config, "General" );
     mFormattedNameType = config.readEntry( "FormattedNameType", 1 );
     mAddressee.setFormattedName( NameEditDialog::formattedName( mAddressee, mFormattedNameType ) );
   } else {

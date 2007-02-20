@@ -419,10 +419,8 @@ KNComposer::KNComposer(KNLocalArticle *a, const QString &text, const QString &si
   v_iew->e_dit->setModified(false);
 
   // restore window & toolbar configuration
-  KConfig *conf = knGlobals.config();
-  conf->setGroup("composerWindow_options");
   resize(535,450);    // default optimized for 800x600
-  applyMainWindowSettings(conf);
+  applyMainWindowSettings(knGlobals.config()->group("composerWindow_options"));
 
   // starting the external editor
   if ( knGlobals.settings()->useExternalEditor() )
@@ -443,9 +441,7 @@ KNComposer::~KNComposer()
   for ( QList<KNAttachment*>::Iterator it = mDeletedAttachments.begin(); it != mDeletedAttachments.end(); ++it )
     delete (*it);
 
-  KConfig *conf = knGlobals.config();
-  conf->setGroup("composerWindow_options");
-  saveMainWindowSettings(conf);
+  saveMainWindowSettings(knGlobals.config()->group("composerWindow_options"));
   qDeleteAll( m_listAction );
 }
 
@@ -1438,9 +1434,7 @@ void KNComposer::slotConfKeys()
 
 void KNComposer::slotConfToolbar()
 {
-  KConfig *conf = knGlobals.config();
-  conf->setGroup("composerWindow_options");
-  saveMainWindowSettings(conf);
+  saveMainWindowSettings(knGlobals.config()->group( "composerWindow_options") );
   KEditToolbar dlg(guiFactory(),this);
   connect(&dlg,SIGNAL( newToolbarConfig() ), this, SLOT( slotNewToolbarConfig() ));
   dlg.exec();
@@ -1453,9 +1447,7 @@ void KNComposer::slotNewToolbarConfig()
   a_ttPopup=static_cast<QMenu*> (factory()->container("attachment_popup", this));
   if(!a_ttPopup) a_ttPopup = new QMenu();
 
-  KConfig *conf = knGlobals.config();
-  conf->setGroup("composerWindow_options");
-  applyMainWindowSettings(conf);
+  applyMainWindowSettings(knGlobals.config()->group("composerWindow_options"));
 }
 
 //-------------------------------- </Actions> -----------------------------------
@@ -1862,16 +1854,15 @@ KNComposer::ComposerView::ComposerView( KNComposer *composer )
 KNComposer::ComposerView::~ComposerView()
 {
   if(v_iewOpen) {
-    KConfig *conf=knGlobals.config();
-    conf->setGroup("POSTNEWS");
+    KConfigGroup conf( knGlobals.config(), "POSTNEWS");
 
-    conf->writeEntry("Att_Splitter",sizes());   // save splitter pos
+    conf.writeEntry("Att_Splitter",sizes());   // save splitter pos
 
     QList<int> lst;                        // save header sizes
     Q3Header *h=a_ttView->header();
     for (int i=0; i<5; i++)
       lst << h->sectionSize(i);
-    conf->writeEntry("Att_Headers",lst);
+    conf.writeEntry("Att_Headers",lst);
   }
   delete mSpellChecker;
 }
@@ -1990,15 +1981,14 @@ void KNComposer::ComposerView::showAttachmentView()
     v_iewOpen=true;
     a_ttWidget->show();
 
-    KConfig *conf=knGlobals.config();
-    conf->setGroup("POSTNEWS");
+    KConfigGroup conf(knGlobals.config(), "POSTNEWS");
 
-    QList<int> lst = conf->readEntry("Att_Splitter",QList<int>());
+    QList<int> lst = conf.readEntry("Att_Splitter",QList<int>());
     if(lst.count()!=2)
       lst << 267 << 112;
     setSizes(lst);
 
-    lst=conf->readEntry("Att_Headers",QList<int>());
+    lst=conf.readEntry("Att_Headers",QList<int>());
     if(lst.count()==5) {
       QList<int>::Iterator it = lst.begin();
 

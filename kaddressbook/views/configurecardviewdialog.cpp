@@ -62,14 +62,14 @@ ConfigureCardViewWidget::~ConfigureCardViewWidget()
 {
 }
 
-void ConfigureCardViewWidget::restoreSettings( KConfig *config )
+void ConfigureCardViewWidget::restoreSettings( const KConfigGroup &config )
 {
   ViewConfigureWidget::restoreSettings( config );
 
   mAdvancedPage->restoreSettings( config );
 }
 
-void ConfigureCardViewWidget::saveSettings( KConfig *config )
+void ConfigureCardViewWidget::saveSettings( KConfigGroup &config )
 {
   ViewConfigureWidget::saveSettings( config );
 
@@ -88,82 +88,82 @@ CardViewLookNFeelPage::~CardViewLookNFeelPage()
 {
 }
 
-void CardViewLookNFeelPage::restoreSettings( KConfig *config )
+void CardViewLookNFeelPage::restoreSettings( const KConfigGroup &config )
 {
   // colors
-  cbEnableCustomColors->setChecked( config->readEntry( "EnableCustomColors", false ) );
+  cbEnableCustomColors->setChecked( config.readEntry( "EnableCustomColors", false ) );
   QColor c;
   c = KGlobalSettings::baseColor();
   lbColors->insertItem( new ColorListItem( i18n("Background Color"),
-        config->readEntry( "BackgroundColor", c ) ) );
+        config.readEntry( "BackgroundColor", c ) ) );
   c = palette().color( QPalette::Foreground );
   lbColors->insertItem( new ColorListItem( i18n("Text Color"),
-        config->readEntry( "TextColor", c ) ) );
+        config.readEntry( "TextColor", c ) ) );
   c = palette().color( QPalette::Button );
   lbColors->insertItem( new ColorListItem( i18n("Header, Border & Separator Color"),
-        config->readEntry( "HeaderColor", c ) ) );
+        config.readEntry( "HeaderColor", c ) ) );
   c = palette().color( QPalette::ButtonText );
   lbColors->insertItem( new ColorListItem( i18n("Header Text Color"),
-        config->readEntry( "HeaderTextColor", c ) ) );
+        config.readEntry( "HeaderTextColor", c ) ) );
   c = palette().color( QPalette::Highlight );
   lbColors->insertItem( new ColorListItem( i18n("Highlight Color"),
-        config->readEntry( "HighlightColor", c ) ) );
+        config.readEntry( "HighlightColor", c ) ) );
   c = palette().color( QPalette::HighlightedText );
   lbColors->insertItem( new ColorListItem( i18n("Highlighted Text Color"),
-        config->readEntry( "HighlightedTextColor", c ) ) );
+        config.readEntry( "HighlightedTextColor", c ) ) );
 
   enableColors();
 
   // fonts
   QFont fnt = font();
-  updateFontLabel( config->readEntry( "TextFont", fnt ), (QLabel*)lTextFont );
+  updateFontLabel( config.readEntry( "TextFont", fnt ), (QLabel*)lTextFont );
   fnt.setBold( true );
-  updateFontLabel( config->readEntry( "HeaderFont",  fnt ), (QLabel*)lHeaderFont );
-  cbEnableCustomFonts->setChecked( config->readEntry( "EnableCustomFonts", false ) );
+  updateFontLabel( config.readEntry( "HeaderFont",  fnt ), (QLabel*)lHeaderFont );
+  cbEnableCustomFonts->setChecked( config.readEntry( "EnableCustomFonts", false ) );
   enableFonts();
 
   // layout
-  sbMargin->setValue( config->readEntry( "ItemMargin", 0 ) );
-  sbSpacing->setValue( config->readEntry( "ItemSpacing", 10 ) );
-  sbSepWidth->setValue( config->readEntry( "SeparatorWidth", 2 ) );
-  cbDrawSeps->setChecked( config->readEntry( "DrawSeparators", true ) );
-  cbDrawBorders->setChecked( config->readEntry( "DrawBorder", true ) );
+  sbMargin->setValue( config.readEntry( "ItemMargin", 0 ) );
+  sbSpacing->setValue( config.readEntry( "ItemSpacing", 10 ) );
+  sbSepWidth->setValue( config.readEntry( "SeparatorWidth", 2 ) );
+  cbDrawSeps->setChecked( config.readEntry( "DrawSeparators", true ) );
+  cbDrawBorders->setChecked( config.readEntry( "DrawBorder", true ) );
 
   // behaviour
-  cbShowFieldLabels->setChecked( config->readEntry( "DrawFieldLabels", false ) );
-  cbShowEmptyFields->setChecked( config->readEntry( "ShowEmptyFields", false ) );
+  cbShowFieldLabels->setChecked( config.readEntry( "DrawFieldLabels", false ) );
+  cbShowEmptyFields->setChecked( config.readEntry( "ShowEmptyFields", false ) );
 }
 
-void CardViewLookNFeelPage::saveSettings( KConfig *config )
+void CardViewLookNFeelPage::saveSettings( KConfigGroup &config )
 {
   // colors
-  config->writeEntry( "EnableCustomColors", cbEnableCustomColors->isChecked() );
+  config.writeEntry( "EnableCustomColors", cbEnableCustomColors->isChecked() );
   if ( cbEnableCustomColors->isChecked() ) // ?? - Hmmm.
   {
-    config->writeEntry( "BackgroundColor", lbColors->color( 0 ) );
-    config->writeEntry( "TextColor", lbColors->color( 1 ) );
-    config->writeEntry( "HeaderColor", lbColors->color( 2 ) );
-    config->writeEntry( "HeaderTextColor", lbColors->color( 3 ) );
-    config->writeEntry( "HighlightColor", lbColors->color( 4 ) );
-    config->writeEntry( "HighlightedTextColor", lbColors->color( 5 ) );
+    config.writeEntry( "BackgroundColor", lbColors->color( 0 ) );
+    config.writeEntry( "TextColor", lbColors->color( 1 ) );
+    config.writeEntry( "HeaderColor", lbColors->color( 2 ) );
+    config.writeEntry( "HeaderTextColor", lbColors->color( 3 ) );
+    config.writeEntry( "HighlightColor", lbColors->color( 4 ) );
+    config.writeEntry( "HighlightedTextColor", lbColors->color( 5 ) );
   }
   // fonts
-  config->writeEntry( "EnableCustomFonts", cbEnableCustomFonts->isChecked() );
+  config.writeEntry( "EnableCustomFonts", cbEnableCustomFonts->isChecked() );
   if ( cbEnableCustomFonts->isChecked() )
   {
-    config->writeEntry( "TextFont", lTextFont->font() );
-    config->writeEntry( "HeaderFont", lHeaderFont->font() );
+    config.writeEntry( "TextFont", lTextFont->font() );
+    config.writeEntry( "HeaderFont", lHeaderFont->font() );
   }
   // layout
-  config->writeEntry( "ItemMargin", sbMargin->value() );
-  config->writeEntry( "ItemSpacing", sbSpacing->value() );
-  config->writeEntry( "SeparatorWidth", sbSepWidth->value() );
-  config->writeEntry("DrawBorder", cbDrawBorders->isChecked());
-  config->writeEntry("DrawSeparators", cbDrawSeps->isChecked());
+  config.writeEntry( "ItemMargin", sbMargin->value() );
+  config.writeEntry( "ItemSpacing", sbSpacing->value() );
+  config.writeEntry( "SeparatorWidth", sbSepWidth->value() );
+  config.writeEntry("DrawBorder", cbDrawBorders->isChecked());
+  config.writeEntry("DrawSeparators", cbDrawSeps->isChecked());
 
   // behaviour
-  config->writeEntry("DrawFieldLabels", cbShowFieldLabels->isChecked());
-  config->writeEntry("ShowEmptyFields", cbShowEmptyFields->isChecked());
+  config.writeEntry("DrawFieldLabels", cbShowFieldLabels->isChecked());
+  config.writeEntry("ShowEmptyFields", cbShowEmptyFields->isChecked());
 }
 
 void CardViewLookNFeelPage::setTextFont()

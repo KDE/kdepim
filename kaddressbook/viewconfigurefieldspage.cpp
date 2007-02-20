@@ -65,7 +65,7 @@ ViewConfigureFieldsPage::ViewConfigureFieldsPage( KABC::AddressBook *ab,
    initGUI();
 }
 
-void ViewConfigureFieldsPage::restoreSettings( KConfig *config )
+void ViewConfigureFieldsPage::restoreSettings( const KConfigGroup &config )
 {
   KABC::Field::List fields = KABC::Field::restoreFields( config, "KABCFields" );
 
@@ -79,7 +79,7 @@ void ViewConfigureFieldsPage::restoreSettings( KConfig *config )
   slotShowFields( mCategoryCombo->currentIndex() );
 }
 
-void ViewConfigureFieldsPage::saveSettings( KConfig *config )
+void ViewConfigureFieldsPage::saveSettings( KConfigGroup &config )
 {
   KABC::Field::List fields;
 

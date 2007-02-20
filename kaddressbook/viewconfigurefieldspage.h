@@ -43,8 +43,8 @@ class ViewConfigureFieldsPage : public QWidget
     ViewConfigureFieldsPage( KABC::AddressBook *ab, QWidget *parent = 0,
                              const char *name = 0 );
 
-    void restoreSettings( KConfig* );
-    void saveSettings( KConfig* );
+    void restoreSettings( const KConfigGroup& );
+    void saveSettings( KConfigGroup& );
 
   public slots:
     void slotSelect();

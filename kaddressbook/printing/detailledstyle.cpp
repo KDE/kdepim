@@ -88,40 +88,39 @@ DetailledPrintStyle::DetailledPrintStyle( PrintingWizard *parent, const char *na
 
   addPage( mPageAppearance, i18n( "Detailed Print Style - Appearance" ) );
 
-  KSharedConfig::Ptr config = KGlobal::config();
-  config->setGroup( ConfigSectionName );
+  KConfigGroup config(KGlobal::config(), ConfigSectionName );
 
-  kdeFonts = config->readEntry( UseKDEFonts, true );
+  kdeFonts = config.readEntry( UseKDEFonts, true );
   mPageAppearance->cbStandardFonts->setChecked( kdeFonts );
 
-  font = config->readEntry( HeaderFont, standard );
+  font = config.readEntry( HeaderFont, standard );
   mPageAppearance->kfcHeaderFont->setCurrentFont( font.family() );
   mPageAppearance->kisbHeaderFontSize->setValue( font.pointSize() );
 
-  font = config->readEntry( HeadlinesFont, standard );
+  font = config.readEntry( HeadlinesFont, standard );
   mPageAppearance->kfcHeadlineFont->setCurrentFont( font.family() );
   mPageAppearance->kisbHeadlineFontSize->setValue( font.pointSize() );
 
-  font = config->readEntry( BodyFont, standard );
+  font = config.readEntry( BodyFont, standard );
   mPageAppearance->kfcBodyFont->setCurrentFont( font.family() );
   mPageAppearance->kisbBodyFontSize->setValue( font.pointSize() );
 
-  font = config->readEntry( DetailsFont, standard );
+  font = config.readEntry( DetailsFont, standard );
   mPageAppearance->kfcDetailsFont->setCurrentFont( font.family() );
   mPageAppearance->kisbDetailsFontSize->setValue( font.pointSize() );
 
-  font = config->readEntry( FixedFont, fixed );
+  font = config.readEntry( FixedFont, fixed );
   mPageAppearance->kfcFixedFont->setCurrentFont( font.family() );
   mPageAppearance->kisbFixedFontSize->setValue( font.pointSize() );
 
   mPageAppearance->cbBackgroundColor->setChecked(
-      config->readEntry( ColoredContactHeaders, true ) );
+      config.readEntry( ColoredContactHeaders, true ) );
   QColor col(Qt::black);
   mPageAppearance->kcbHeaderBGColor->setColor(
-      config->readEntry( ContactHeaderBGColor, col ) );
+      config.readEntry( ContactHeaderBGColor, col ) );
   col = QColor(Qt::white);
   mPageAppearance->kcbHeaderTextColor->setColor(
-      config->readEntry( ContactHeaderForeColor, col ) );
+      config.readEntry( ContactHeaderForeColor, col ) );
 
   mPageAppearance->layout()->setMargin( KDialog::marginHint() );
   mPageAppearance->layout()->setSpacing( KDialog::spacingHint() );

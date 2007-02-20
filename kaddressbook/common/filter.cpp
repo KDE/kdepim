@@ -167,7 +167,7 @@ void Filter::save( KConfig *config, const QString &baseGroup, Filter::List &list
   s.writeEntry( "Count", index );
 }
 
-Filter::List Filter::restore( KConfig *config, const QString &baseGroup )
+Filter::List Filter::restore( KConfigBase *config, const QString &baseGroup )
 {
   Filter::List list;
   int count = 0;

@@ -77,8 +77,8 @@ Q_OBJECT
     Identity(bool g=true);
     ~Identity();
 
-    void loadConfig(KConfigBase *c);
-    void saveConfig(KConfigBase *c);
+    void loadConfig(const KConfigGroup &c);
+    void saveConfig(KConfigGroup &c);
     void save();
     bool isEmpty();
     bool isGlobal()const           { return g_lobal; }
@@ -227,8 +227,8 @@ class KDE_EXPORT Cleanup : public ConfigBase {
     Cleanup( bool global = true );
     ~Cleanup() {}
 
-    void loadConfig( KConfigBase *conf );
-    void saveConfig( KConfigBase *conf );
+    void loadConfig( const KConfigGroup &conf );
+    void saveConfig( KConfigGroup &conf );
     void save();
 
     //expire

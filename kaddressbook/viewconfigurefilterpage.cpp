@@ -87,28 +87,28 @@ ViewConfigureFilterPage::~ViewConfigureFilterPage()
   delete mFilterGroup;
 }
 
-void ViewConfigureFilterPage::restoreSettings( KConfig *config )
+void ViewConfigureFilterPage::restoreSettings( const KConfigGroup &config )
 {
   mFilterCombo->clear();
 
   // Load the filter combo
-  const Filter::List list = Filter::restore( config, "Filter" );
+  const Filter::List list = Filter::restore( config.config(), "Filter" );
   Filter::List::ConstIterator it;
   for ( it = list.begin(); it != list.end(); ++it )
     mFilterCombo->addItem( (*it).name() );
 
-  int id = config->readEntry( "DefaultFilterType", 1 );
+  int id = config.readEntry( "DefaultFilterType", 1 );
   mFilterGroup->setButton( id );
   buttonClicked( id );
 
   if ( id == 2 ) // has default filter
-    mFilterCombo->setItemText( mFilterCombo->currentIndex(), config->readEntry( "DefaultFilterName" ) );
+    mFilterCombo->setItemText( mFilterCombo->currentIndex(), config.readEntry( "DefaultFilterName" ) );
 }
 
-void ViewConfigureFilterPage::saveSettings( KConfig *config )
+void ViewConfigureFilterPage::saveSettings( KConfigGroup &config )
 {
-  config->writeEntry( "DefaultFilterName", mFilterCombo->currentText() );
-  config->writeEntry( "DefaultFilterType", mFilterGroup->id( mFilterGroup->selected() ) );
+  config.writeEntry( "DefaultFilterName", mFilterCombo->currentText() );
+  config.writeEntry( "DefaultFilterType", mFilterGroup->id( mFilterGroup->selected() ) );
 }
 
 void ViewConfigureFilterPage::buttonClicked( int id )

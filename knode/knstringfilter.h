@@ -21,7 +21,7 @@ class QCheckBox;
 class QComboBox;
 
 class KLineEdit;
-class KSimpleConfig;
+class KConfig;
 
 class KNGroup;
 
@@ -40,8 +40,8 @@ class StringFilter
     /** replace placeholders */
     void expand(KNGroup *g);
 
-    void load(KSimpleConfig *conf);
-    void save(KSimpleConfig *conf);
+    void load(KConfig *conf);
+    void save(KConfig *conf);
 
     bool doFilter(const QString &s);
 

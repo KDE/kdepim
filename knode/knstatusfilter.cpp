@@ -17,7 +17,7 @@
 
 #include <kdialog.h>
 #include <klocale.h>
-#include <ksimpleconfig.h>
+#include <kconfig.h>
 
 #include "knarticle.h"
 #include "knstatusfilter.h"
@@ -47,7 +47,7 @@ KNode::StatusFilter::~StatusFilter()
 
 
 
-void KNode::StatusFilter::load( KSimpleConfig *conf )
+void KNode::StatusFilter::load( KConfig *conf )
 {
   data.setBit(EN_R, conf->readEntry("EN_R", false));
   data.setBit(DAT_R, conf->readEntry("DAT_R", false));
@@ -65,7 +65,7 @@ void KNode::StatusFilter::load( KSimpleConfig *conf )
 
 
 
-void KNode::StatusFilter::save( KSimpleConfig *conf )
+void KNode::StatusFilter::save( KConfig *conf )
 {
   conf->writeEntry("EN_R", data.at(EN_R));
   conf->writeEntry("DAT_R", data.at(DAT_R));
