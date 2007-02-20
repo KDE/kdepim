@@ -27,7 +27,7 @@ kde4_add_library(kabc_xmlrpc SHARED ${kabc_xmlrpc_LIB_SRCS})
 
 target_link_libraries(kabc_xmlrpc  ${KDE4_KIO_LIBS} ${KDE4_KABC_LIBS} kdepim )
 
-set_target_properties(kabc_xmlrpc PROPERTIES VERSION 1.0.0 SOVERSION 1 )
+set_target_properties(kabc_xmlrpc PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
 install(TARGETS kabc_xmlrpc  DESTINATION ${LIB_INSTALL_DIR})
 
 
@@ -62,7 +62,7 @@ kde4_automoc(${knotes_xmlrpc_LIB_SRCS})
 kde4_add_kcfg_files(knotes_xmlrpc_LIB_SRCS knotes_egroupwareprefs.kcfgc )
 
 kde4_add_library(knotes_xmlrpc SHARED ${knotes_xmlrpc_LIB_SRCS})
-set_target_properties(knotes_xmlrpc PROPERTIES VERSION 1.0.0 SOVERSION 1 )
+set_target_properties(knotes_xmlrpc PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
 
 target_link_libraries(knotes_xmlrpc  ${KDE4_KDECORE_LIBS} ${KDE4_KCAL_LIBS} ${KDE4_KDEPRINT_LIBS} kdepim )
 

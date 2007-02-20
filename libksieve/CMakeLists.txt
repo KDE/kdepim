@@ -26,7 +26,7 @@ kde4_add_library(ksieve SHARED ${ksieve_LIB_SRCS})
 
 target_link_libraries(ksieve  ${KDE4_KDECORE_LIBS}  )
 
-set_target_properties(ksieve PROPERTIES VERSION 0.0.0 SOVERSION 0 )
+set_target_properties(ksieve PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
 install(TARGETS ksieve  DESTINATION ${LIB_INSTALL_DIR})
 
 

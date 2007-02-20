@@ -17,7 +17,7 @@ kde4_add_library(kabinterfaces SHARED ${kabinterfaces_LIB_SRCS})
 
 target_link_libraries(kabinterfaces  ${KDE4_KIO_LIBS} kabc)
 
-set_target_properties(kabinterfaces PROPERTIES VERSION 1.0.0 SOVERSION 1 )
+set_target_properties(kabinterfaces PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
 install(TARGETS kabinterfaces  DESTINATION ${LIB_INSTALL_DIR})
 
 
