@@ -128,11 +128,11 @@ bool KAddressBookMain::handleCommandLine()
   return mCore->handleCommandLine();
 }
 
-void KAddressBookMain::saveProperties( KConfig* )
+void KAddressBookMain::saveProperties( KConfigGroup& )
 {
 }
 
-void KAddressBookMain::readProperties( KConfig* )
+void KAddressBookMain::readProperties( KConfigGroup& )
 {
 }
 
