@@ -26,11 +26,9 @@
 #include <kstringvalidator.h>
 #include <kdebug.h>
 
-#include <qdict.h>
-#include <qvalidator.h>
-#include <qcstring.h>
-#include <qfile.h>
-#include <qdatetime.h>
+#include <QValidator>
+#include <QFile>
+#include <QDateTime>
 
 #if !defined(__osf__)
 #include <inttypes.h>
@@ -45,7 +43,7 @@ K_EXPORT_COMPONENT_FACTORY(kfile_rfc822, Rfc822Factory( "kfile_rfc822" ))
 KRfc822Plugin::KRfc822Plugin(QObject *parent, const char *name,
                        const QStringList &args)
 
-    : KFilePlugin(parent, name, args)
+    : KFilePlugin(parent, args)
 {
     KFileMimeTypeInfo* info = addMimeTypeInfo( "message/rfc822" );
 
@@ -68,9 +66,9 @@ bool KRfc822Plugin::readInfo( KFileMetaInfo& info, uint /*what*/ )
 
     QFile file(info.path());
 
-    if (!file.open(IO_ReadOnly))
+    if (!file.open(QIODevice::ReadOnly))
     {
-        kdDebug(7034) << "Couldn't open " << QFile::encodeName(info.path()) << endl;
+        kDebug(7034) << "Couldn't open " << QFile::encodeName(info.path()) << endl;
         return false;
     }
 

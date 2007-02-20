@@ -28,7 +28,7 @@ class ICSPlugin : public KFilePlugin
 {
   Q_OBJECT
 public:
-  ICSPlugin( QObject *parent, const char *name, const QStringList& args );
+  ICSPlugin( QObject *parent, const QStringList& args );
 
   virtual bool readInfo( KFileMetaInfo& info, uint what );
 };
