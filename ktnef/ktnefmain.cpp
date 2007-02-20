@@ -388,7 +388,7 @@ void KTNEFMain::viewDragRequested( const QList<KTNEFAttach*>& list )
 
 void KTNEFMain::slotEditToolbars()
 {
-	saveMainWindowSettings( KGlobal::config().data(), QString::fromLatin1("MainWindow") );
+	saveMainWindowSettings( KGlobal::config()->group( QString::fromLatin1("MainWindow") ) );
 	KEditToolbar	dlg(actionCollection());
 	connect(&dlg, SIGNAL( newToolbarConfig() ), this, SLOT( slotNewToolbarConfig() ));
 	dlg.exec();
@@ -397,7 +397,7 @@ void KTNEFMain::slotEditToolbars()
 void KTNEFMain::slotNewToolbarConfig()
 {
 	createGUI();
-	applyMainWindowSettings( KGlobal::config().data(), QString::fromLatin1("MainWindow") );
+	applyMainWindowSettings( KGlobal::config()->group( QString::fromLatin1("MainWindow") ) );
 }
 
 void KTNEFMain::slotShowMessageProperties()
