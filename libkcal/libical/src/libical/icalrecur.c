@@ -3,8 +3,6 @@
   FILE: icalrecur.c
   CREATOR: eric 16 May 2000
   
-  $Id$
-  $Locker:  $
     
 
  (C) COPYRIGHT 2000, Eric Busboom, http://www.softwarestudio.org

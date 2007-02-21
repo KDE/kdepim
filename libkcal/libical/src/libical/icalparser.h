@@ -3,7 +3,6 @@
   FILE: icalparser.h
   CREATOR: eric 20 April 1999
   
-  $Id$
 
 
  (C) COPYRIGHT 2000, Eric Busboom, http://www.softwarestudio.org

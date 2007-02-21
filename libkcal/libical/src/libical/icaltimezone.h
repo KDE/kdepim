@@ -4,8 +4,6 @@
  CREATOR: Damon Chaplin 15 March 2001
 
 
- $Id$
- $Locker:  $
 
  (C) COPYRIGHT 2001, Damon Chaplin
 

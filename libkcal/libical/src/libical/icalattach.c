@@ -3,8 +3,6 @@
   FILE: icalattach.c
   CREATOR: acampi 28 May 02
   
-  $Id$
-  $Locker:  $
     
 
  (C) COPYRIGHT 2000, Andrea Campi

@@ -3,7 +3,6 @@
   FILE: icalattachimpl.h
   CREATOR: acampi 28 May 02
   
-  $Id$
 
 
  (C) COPYRIGHT 2000, Andrea Campi

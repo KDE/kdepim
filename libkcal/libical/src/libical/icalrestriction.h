@@ -3,7 +3,6 @@
   FILE: icalrestriction.h
   CREATOR: eric 24 April 1999
   
-  $Id$
 
 
  (C) COPYRIGHT 2000, Eric Busboom, http://www.softwarestudio.org

@@ -3,8 +3,6 @@
   FILE: icalparser.c
   CREATOR: eric 04 August 1999
   
-  $Id$
-  $Locker:  $
     
  The contents of this file are subject to the Mozilla Public License
  Version 1.0 (the "License"); you may not use this file except in

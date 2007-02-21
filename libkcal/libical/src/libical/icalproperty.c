@@ -4,7 +4,6 @@
   FILE: icalproperty.c
   CREATOR: eric 28 April 1999
   
-  $Id$
 
 
  (C) COPYRIGHT 2000, Eric Busboom, http://www.softwarestudio.org
