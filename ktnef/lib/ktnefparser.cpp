@@ -811,6 +811,7 @@ bool KTNEFParser::readMAPIProperties( QMap<int,KTNEFProperty*>& props, KTNEFAtta
 				{
 					foundAttachment = true;
 					int len = mapi.value.toByteArray().size();
+					ALIGN( len, 4 )
 					attach->setSize( len );
 					attach->setOffset( d->device_->at() - len );
 					attach->addAttribute( attATTACHDATA, atpBYTE, QString( "< size=%1 >" ).arg( len ), false );
