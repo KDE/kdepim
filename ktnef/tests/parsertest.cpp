@@ -82,12 +82,12 @@ void ParserTest::testMAPIAttachments()
 
   att = atts.at( 1 );
   assert( att != 0 );
-  assert( att->size() == 213685 );
+  assert( att->size() == 213688 );
   assert( att->name() == QString( "VIA_Nytt_1402.pdf" ) );
 
   att = atts.at( 2 );
   assert( att != 0 );
-  assert( att->size() == 68919 );
+  assert( att->size() == 68920 );
   assert( att->name() == QString( "VIA_Nytt_14021.htm" ) );
 }
 
