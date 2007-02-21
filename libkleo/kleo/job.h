@@ -66,10 +66,10 @@ namespace Kleo {
 
     virtual void showErrorDialog( QWidget * parent=0, const QString & caption=QString() ) const;
 
-  public slots:
+  public Q_SLOTS:
     virtual void slotCancel() = 0;
 
-  signals:
+  Q_SIGNALS:
     void progress( const QString & what, int current, int total );
     void done();
   };
