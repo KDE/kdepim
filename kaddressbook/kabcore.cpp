@@ -1020,6 +1020,7 @@ void KABCore::initGUI()
   detailsPageLayout->setSpacing( 0 );
   detailsPageLayout->setMargin( 0 );
   mDetails = new KPIM::AddresseeView( mDetailsPage );
+  mDetails->setVerticalScrollBarPolicy ( Qt::ScrollBarAsNeeded );
   detailsPageLayout->addWidget( mDetails );
 
   connect( mDetails, SIGNAL( addressClicked( const QString&) ),
