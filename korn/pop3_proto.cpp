@@ -21,6 +21,8 @@
 
 #include "account_input.h"
 
+#include <kdebug.h>
+
 #include <qwidget.h>
 #include <qobject.h>
 #include <qstringlist.h>
