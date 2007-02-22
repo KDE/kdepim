@@ -1040,6 +1040,7 @@ void KABCore::initGUI()
 
   QHBoxLayout *detailsPageLayout = new QHBoxLayout( mDetailsPage, 0, 0 );
   mDetails = new KPIM::AddresseeView( mDetailsPage );
+  mDetails->setVScrollBarMode( QScrollView::Auto );
   detailsPageLayout->addWidget( mDetails );
 
   connect( mDetails, SIGNAL( addressClicked( const QString&) ),
