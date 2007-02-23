@@ -132,7 +132,7 @@ void KAddressBookMain::saveProperties( KConfigGroup& )
 {
 }
 
-void KAddressBookMain::readProperties( KConfigGroup& )
+void KAddressBookMain::readProperties( const KConfigGroup& )
 {
 }
 

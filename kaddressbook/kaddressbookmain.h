@@ -72,7 +72,7 @@ class KAddressBookMain : public KMainWindow
       object points to the session management config file that was saved
       with @ref saveProperties
      */
-    void readProperties( KConfigGroup& );
+    void readProperties( const KConfigGroup& );
 
     virtual bool queryClose();
 
