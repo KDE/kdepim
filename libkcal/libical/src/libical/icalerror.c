@@ -5,7 +5,8 @@
   
     
 
- (C) COPYRIGHT 2000, Eric Busboom, http://www.softwarestudio.org
+ (C) COPYRIGHT 2000, Eric Busboom <eric@softwarestudio.org>
+     http://www.softwarestudio.org
 
  This program is free software; you can redistribute it and/or modify
  it under the terms of either: 
@@ -157,7 +158,7 @@ static struct icalerror_string_map string_map[] =
 
 icalerrorenum icalerror_error_from_string(const char* str){
  
-    icalerrorenum e;
+    icalerrorenum e = ICAL_NO_ERROR;
     int i = 0;
 
     for( i = 0; string_map[i].error != ICAL_NO_ERROR; i++){

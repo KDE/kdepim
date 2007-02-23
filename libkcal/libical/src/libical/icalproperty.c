@@ -6,7 +6,8 @@
   
 
 
- (C) COPYRIGHT 2000, Eric Busboom, http://www.softwarestudio.org
+ (C) COPYRIGHT 2000, Eric Busboom <eric@softwarestudio.org>
+     http://www.softwarestudio.org
 
  This program is free software; you can redistribute it and/or modify
  it under the terms of either: 
@@ -693,7 +694,7 @@ icalproperty_remove_parameter_by_kind(icalproperty* prop, icalparameter_kind kin
  *  @param prop   A valid icalproperty.
  *  @param name   The name of the parameter to remove
  *
- *  This function removes paramters with the given name.  The name
+ *  This function removes parameters with the given name.  The name
  *  corresponds to either a built-in name (TZID, etc.) or the name of
  *  an extended parameter (X-FOO)
  *

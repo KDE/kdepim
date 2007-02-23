@@ -5,7 +5,8 @@
 
 
 
- (C) COPYRIGHT 2000, Eric Busboom, http://www.softwarestudio.org
+ (C) COPYRIGHT 2000, Eric Busboom <eric@softwarestudio.org>
+     http://www.softwarestudio.org
 
  This program is free software; you can redistribute it and/or modify
  it under the terms of either: 
@@ -59,7 +60,7 @@
  *
  *	- icaltime_get_timezone(struct icaltimetype t)
  *	- icaltime_get_tzid(struct icaltimetype t)
- *	- icaltime_set_timezone(struct icaltimetype t, const icaltimezone *zone)
+ *	- icaltime_set_timezone(struct icaltimetype t, icaltimezone *zone)
  *	- icaltime_day_of_year(struct icaltimetype t)
  *	- icaltime_day_of_week(struct icaltimetype t)
  *	- icaltime_start_doy_of_week(struct icaltimetype t)
@@ -92,7 +93,6 @@
 #define ICALTIME_H
 
 #include <time.h>
-
 /* An opaque struct representing a timezone. We declare this here to avoid
    a circular dependancy. */
 #ifndef ICALTIMEZONE_DEFINED
@@ -130,7 +130,7 @@ struct icaltimetype
    
 	int is_daylight; /**< 1 -> time is in daylight savings time. */
    
-	const icaltimezone *zone;	/**< timezone */
+	icaltimezone *zone;	/**< timezone */
 };	
 
 typedef struct icaltimetype icaltimetype;
@@ -143,7 +143,7 @@ struct icaltimetype icaltime_null_time(void);
 struct icaltimetype icaltime_null_date(void);
 
 /** Returns the current time in the given timezone, as an icaltimetype. */
-struct icaltimetype icaltime_current_time_with_zone(const icaltimezone *zone);
+struct icaltimetype icaltime_current_time_with_zone(icaltimezone *zone);
 
 /** Returns the current day as an icaltimetype, with is_date set. */
 struct icaltimetype icaltime_today(void);
@@ -153,14 +153,14 @@ struct icaltimetype icaltime_from_timet(const time_t v, const int is_date);
 
 /** Convert seconds past UNIX epoch to a timetype, using timezones. */
 struct icaltimetype icaltime_from_timet_with_zone(const time_t tm,
-	const int is_date, const icaltimezone *zone);
+	const int is_date, icaltimezone *zone);
 
 /** create a time from an ISO format string */
 struct icaltimetype icaltime_from_string(const char* str);
 
 /** create a time from an ISO format string */
 struct icaltimetype icaltime_from_string_with_zone(const char* str,
-	const icaltimezone *zone);
+	icaltimezone *zone);
 
 /** Create a new time, given a day of year and a year. */
 struct icaltimetype icaltime_from_day_of_year(const int doy,
@@ -176,21 +176,21 @@ time_t icaltime_as_timet(const struct icaltimetype);
 
 /** Return the time as seconds past the UNIX epoch, using timezones. */
 time_t icaltime_as_timet_with_zone(const struct icaltimetype tt,
-	const icaltimezone *zone);
+	icaltimezone *zone);
 
 /** Return a string represention of the time, in RFC2445 format. The
    string is owned by libical */
 const char* icaltime_as_ical_string(const struct icaltimetype tt);
 
 /** @brief Return the timezone */
-const icaltimezone *icaltime_get_timezone(const struct icaltimetype t);
+icaltimezone *icaltime_get_timezone(const struct icaltimetype t);
 
 /** @brief Return the tzid, or NULL for a floating time */
-char *icaltime_get_tzid(const struct icaltimetype t);
+const char *icaltime_get_tzid(const struct icaltimetype t);
 
 /** @brief Set the timezone */
 struct icaltimetype icaltime_set_timezone(struct icaltimetype *t,
-	const icaltimezone *zone);
+	icaltimezone *zone);
 
 /** Return the day of the year of the given time */
 int icaltime_day_of_year(const struct icaltimetype t);
