@@ -28,7 +28,7 @@ was-validated=true
 is-root-certificate=true
 is-validity=ultimate
 Name=Trusted Root Certificate
-Name[el]=Έμπιστο Βασικό Πιστοποιητικό
+Name[el]=Έμπιστο βασικό πιστοποιητικό
 Name[fr]=Certificat racine de confiance
 Name[x-test]=xxTrusted Root Certificatexx
 background-color=0,0,255
@@ -40,7 +40,7 @@ was-validated=true
 is-root-certificate=true
 is-not-validity=ultimate
 Name=Not Trusted Root Certificate
-Name[el]=Μη έμπιστο Βασικό Πιστοποιητικό
+Name[el]=Μη έμπιστο βασικό πιστοποιητικό
 Name[fr]=Certificat racine non fiable
 Name[x-test]=xxNot Trusted Root Certificatexx
 

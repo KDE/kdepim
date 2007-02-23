@@ -2,7 +2,7 @@
 Encoding=UTF-8
 Type=Service
 Name=Electronic Business Card Files
-Name[el]=Αρχεία Επαγγελματικών Ηλεκτρονικών Καρτών
+Name[el]=Αρχεία επαγγελματικών ηλεκτρονικών καρτών
 Name[fr]=Fichiers de cartes de commerce électroniques
 Name[x-test]=xxElectronic Business Card Filesxx
 ServiceTypes=ThumbCreator
