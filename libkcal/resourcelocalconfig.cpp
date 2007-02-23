@@ -52,9 +52,7 @@ ResourceLocalConfig::ResourceLocalConfig( QWidget* parent,  const char* name )
   mainLayout->addWidget( mURL, 1, 1 );
 
   formatGroup = new QButtonGroup( 1, Horizontal, i18n( "Calendar Format" ), this );
-//  formatGroup->setExclusive( true );
 
-//  formatGroup->setFrameStyle(QFrame::NoFrame);
   icalButton = new QRadioButton( i18n("iCalendar"), formatGroup );
   vcalButton = new QRadioButton( i18n("vCalendar"), formatGroup );
 
@@ -74,7 +72,7 @@ void ResourceLocalConfig::loadSettings( KRES::Resource *resource )
     else 
       kdDebug(5800) << "ERROR: ResourceLocalConfig::loadSettings(): Unknown format type" << endl;
   } else
-    kdDebug(5700) << "ERROR: ResourceLocalConfig::loadSettings(): no ResourceLocal, cast failed" << endl;
+    kdDebug(5800) << "ERROR: ResourceLocalConfig::loadSettings(): no ResourceLocal, cast failed" << endl;
 }
 
 void ResourceLocalConfig::saveSettings( KRES::Resource *resource )
@@ -106,7 +104,7 @@ void ResourceLocalConfig::saveSettings( KRES::Resource *resource )
       res->mFormat = new VCalFormat();
     }
   } else
-    kdDebug(5700) << "ERROR: ResourceLocalConfig::saveSettings(): no ResourceLocal, cast failed" << endl;
+    kdDebug(5800) << "ERROR: ResourceLocalConfig::saveSettings(): no ResourceLocal, cast failed" << endl;
 }
 
 #include "resourcelocalconfig.moc"
