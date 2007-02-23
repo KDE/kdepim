@@ -1326,7 +1326,7 @@ void ICalFormatImpl::readIncidence(icalcomponent *parent, icaltimezone *tz, Inci
           if ( icaltime_is_date( rd.time ) ) {
             incidence->recurrence()->addRDate( readICalDate( rd.time ) );
           } else {
-            incidence->recurrence()->addRDateTime( readICalDateTime(rd.time ) );
+            incidence->recurrence()->addRDateTime( readICalDateTime( rd.time, tz ) );
           }
         } else {
           // TODO: RDates as period are not yet implemented!
@@ -1407,6 +1407,7 @@ void ICalFormatImpl::readIncidence(icalcomponent *parent, icaltimezone *tz, Inci
   }
   // Fix incorrect alarm settings by other applications (like outloook 9)
   if ( mCompat ) mCompat->fixAlarms( incidence );
+  
 }
 
 void ICalFormatImpl::readIncidenceBase(icalcomponent *parent,IncidenceBase *incidenceBase)
@@ -1790,9 +1791,14 @@ icaltimetype ICalFormatImpl::writeICalDateTime(const QDateTime &datetime)
 QDateTime ICalFormatImpl::readICalDateTime( icaltimetype& t, icaltimezone* tz )
 {
 //   kdDebug(5800) << "ICalFormatImpl::readICalDateTime()" << endl;
-  if ( tz ) {
+  icaltimezone *zone = tz;
+  if ( tz && t.is_utc == 0 ) { // Only use the TZ if time is not UTC.
+    // FIXME: We'll need to make sure to apply the appropriate TZ, not just
+    //        the first one found.
     t.zone = tz;
     t.is_utc = (tz == icaltimezone_get_utc_timezone())?1:0;
+  } else {
+    zone = icaltimezone_get_utc_timezone();
   }
   //_dumpIcaltime( t );
 
@@ -1800,7 +1806,7 @@ QDateTime ICalFormatImpl::readICalDateTime( icaltimetype& t, icaltimezone* tz )
   if ( !mParent->timeZoneId().isEmpty() && t.zone ) {
 //    kdDebug(5800) << "--- Converting time from: " << icaltimezone_get_tzid( const_cast<icaltimezone*>( t.zone ) ) << " (" << ICalDate2QDate(t) << ")." << endl;
     icaltimezone* viewTimeZone = icaltimezone_get_builtin_timezone ( mParent->timeZoneId().latin1() );
-    icaltimezone_convert_time(  &t, const_cast<icaltimezone*>( t.zone ), viewTimeZone );
+    icaltimezone_convert_time(  &t, zone, viewTimeZone );
 //    kdDebug(5800) << "--- Converted to zone " << mParent->timeZoneId() << " (" << ICalDate2QDate(t) << ")." << endl;
   }
 
