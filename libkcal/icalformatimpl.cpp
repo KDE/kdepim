@@ -334,7 +334,7 @@ void ICalFormatImpl::writeIncidence(icalcomponent *parent,Incidence *incidence)
    icalcomponent_add_property(parent,icalproperty_new_lastmodified(
        writeICalDateTime(incidence->lastModified())));
   }
-  
+
   // description
   if (!incidence->description().isEmpty()) {
     icalcomponent_add_property(parent,icalproperty_new_description(
@@ -1092,6 +1092,9 @@ Attendee *ICalFormatImpl::readAttendee(icalproperty *attendee)
   icalparameter *p = 0;
 
   QString email = QString::fromUtf8(icalproperty_get_attendee(attendee));
+  if ( email.startsWith( "mailto:", false ) ) {
+    email = email.mid( 7 );
+  }
 
   QString name;
   QString uid = QString::null;
@@ -1175,7 +1178,7 @@ Attendee *ICalFormatImpl::readAttendee(icalproperty *attendee)
 Person ICalFormatImpl::readOrganizer( icalproperty *organizer )
 {
   QString email = QString::fromUtf8(icalproperty_get_organizer(organizer));
-  if ( email.startsWith("mailto:", false ) ) {
+  if ( email.startsWith( "mailto:", false ) ) {
     email = email.mid( 7 );
   }
   QString cn;
@@ -1407,7 +1410,7 @@ void ICalFormatImpl::readIncidence(icalcomponent *parent, icaltimezone *tz, Inci
   }
   // Fix incorrect alarm settings by other applications (like outloook 9)
   if ( mCompat ) mCompat->fixAlarms( incidence );
-  
+
 }
 
 void ICalFormatImpl::readIncidenceBase(icalcomponent *parent,IncidenceBase *incidenceBase)
@@ -1668,6 +1671,9 @@ void ICalFormatImpl::readAlarm(icalcomponent *alarm,Incidence *incidence)
       // Only in EMAIL alarm
       case ICAL_ATTENDEE_PROPERTY: {
         QString email = QString::fromUtf8(icalproperty_get_attendee(p));
+        if ( email.startsWith("mailto:", false ) ) {
+          email = email.mid( 7 );
+        }
         QString name;
         icalparameter *param = icalproperty_get_first_parameter(p,ICAL_CN_PARAMETER);
         if (param) {
