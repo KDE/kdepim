@@ -20,6 +20,7 @@
 #include "kio_proto.h"
 
 #include <kconfig.h>
+#include <kdebug.h>
 
 #include <QMap>
 
@@ -39,7 +40,7 @@ void KIO_Protocol::clearFields( QMap<QString, QString> *map, const KIO_Protocol:
 	if( fields & password )
 		map->insert( "password", "" );
 	if( fields & mailbox )
-		map->insert( "mailbox", "" );	
+		map->insert( "mailbox", "" );
 	if( fields & save_password  )
 		map->insert( "savepassword", "" );
 	if( fields & metadata )
@@ -58,7 +59,7 @@ void KIO_Protocol::readEntries( QMap< QString, QString >* map ) const
 		{
 			int split = (*it).indexOf( '=', 0, Qt::CaseSensitive );
 
-			map->insert( (*it).left( split ), (*it).right( (*it).length() - split - 1 ) );
+			metadata->insert( (*it).left( split ), (*it).right( (*it).length() - split - 1 ) );
 		}
 	}
 
