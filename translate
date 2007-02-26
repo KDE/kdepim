@@ -1,28 +1,58 @@
 #!/bin/sh
+
+# Update this path if necessary
+KDEL10N=$PWD/../kde-l10n
+
 export LC_ALL=C
 export CDPATH=
-KDEI18N=$KDESRC/enterprise/kde-i18n
-test -L po || ( rm -f po ; ln -s ../kde-i18n/templates/kdepim po )
-test -d po || exit 1
 
-xgettext=${XGETTEXT:-xgettext}
+test -L po || ( rm -f po ; ln -s ../kde-l10n/templates/messages/kdepim po )
+
+# I tried setting podir to get the output directly into kde-l10n but then
+# we run old code in cvs.sh; scripty doesn't use that anymore, but the scripts in l10n.
+# However those are harder to reduce to kdepim only, so let's keep the old way
+# of doing it: with a po subdir, like a 3rd-party app and not like a real kde module.
+#export podir="$KDEL10N/templates/messages/kdepim"
+if ! test -d "po"; then
+  echo "po doesn't exist"
+  exit 1
+fi
+
+if test -z "$XGETTEXT"; then
+  if test -f /usr/bin/kde-xgettext; then
+    xgettext=kde-xgettext
+    export XGETTEXT=kde-xgettext
+  else
+    xgettext=xgettext
+  fi
+else
+  xgettext="$XGETTEXT"
+fi
 gettext_version=`$xgettext --version | grep 0.10.35`
 if test -z "$gettext_version"; then
     echo "No xgettext installed or wrong xgettext version: "`$xgettext --version | head -n1`
     exit 1
 fi
 
+kdepim="$PWD"
 
+# I assume kdepim is uptodate, but kde-l10n is probably not
+cd "$KDEL10N" || exit 1
+svn update
+
+cd "$kdepim"
 make -f admin/Makefile.common package-messages || exit 1
+# ? make -f admin/Makefile.common package-merge || exit 1
 
-cd $KDEI18N || exit 1
-svn update
-export VERBOSE=1
-make merge || exit 1
-svn update
+cd "$KDEL10N" || exit 1
 
-function checkchanges()
-{
+scripts/merge_all.sh
+
+svn diff
+
+for i in `find -name kdepim`; do
+  cd $i || exit 1
+
   for t in `svn status 2>&1 | grep '^M' | gawk '{print $2}'`; do
     diff=`diff -u -I'^#' -I'^"POT-Creation-Date:' .svn/text-base/$t.svn-base $t`
     if test -n "$diff"; then
@@ -32,19 +62,14 @@ function checkchanges()
       svn revert $t
     fi
   done
-}
+  # New files are not added automatically; do those by hand.
 
-cd templates/kdepim || exit 1
-checkchanges
-cd ../..
+  # To see what changed in a .pot file:  svn di kmail.pot | grep '^[-+][^#]'
 
-cd de/messages/kdepim || exit 1
-checkchanges
-cd ../docs/kdepim || exit 1
-checkchanges
+  cd "$KDEL10N"
+done
 
-cd ../../..
-../check_po_files
+scripts/check_po_files
 
-echo "Now go to $KDEI18N and commit templates/ and de/"
+echo "Now go to $KDEL10N and commit templates/ and de/"
 
