@@ -27,6 +27,9 @@ if test -z "$XGETTEXT"; then
   if test -f /usr/bin/kde-xgettext; then
     xgettext=kde-xgettext
     export XGETTEXT=kde-xgettext
+  if test -f /opt/kde3/bin/kde-xgettext; then
+    xgettext=/opt/kde3/bin/kde-xgettext
+    export XGETTEXT=$xgettext
   else
     xgettext=xgettext
   fi
