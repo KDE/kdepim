@@ -6,6 +6,11 @@ KDEL10N=$PWD/../kde-l10n
 export LC_ALL=C
 export CDPATH=
 
+# Fix up the script
+if ! grep -q Language-Team admin/cvs.sh; then
+  patch admin/cvs.sh < cvs.sh.diff
+fi
+
 test -L po || ( rm -f po ; ln -s ../kde-l10n/templates/messages/kdepim po )
 
 # I tried setting podir to get the output directly into kde-l10n but then
