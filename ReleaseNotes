@@ -14,8 +14,6 @@ kmail
 
 - Kolab/issue 1222 - Reduce the memory consumption. Improve speed.
 
-- Kolab/issue 1385 - Forward port - add/insert signature
-
 - IMAP Quota feature - Forward ports of r503566, r504908, r504943, r544380, r550654, r573761, r573797, r573829, and r503568  from proko2
 
 

@@ -33,7 +33,7 @@ Index: common
      version=1.3.98
      ;;
 +  kdepim)
-+    version=3.5.6.enterprise.0.1
++    version=3.5.6.enterprise.20070227.637543
 +    ;;
    *)
      version=3.5.5
@@ -69,7 +69,7 @@ Index: versions
      ;;
 +  kdepim)
 +    HEADURL=branches/kdepim/enterprise/$1
-+    DESTURL=tags/kdepim/enterprise0_1/$1
++    DESTURL=tags/kdepim/enterprise.20070227.637543/$1
 +    subname=$1
 +    export UNSERMAKE=
 +    ;;
@@ -82,18 +82,20 @@ Index: versions
 
 
 # Update the version number in "common" and the tagname in "versions"
+# The version number is: YYYYMMDD.svnrevision
 
 
 #
 # Also update the version number in those files:
-# ./kmail/kmversion.h:#define KMAIL_VERSION "1.9.6 (enterprise 0.1)"
-# ./kontact/src/main.cpp:static const char version[] = "1.2.4 (enterprise 0.1)";
-# ./korganizer/version.h:static const char korgVersion[] = "3.5.6 (enterprise 0.1)";
+# ./kmail/kmversion.h:#define KMAIL_VERSION "1.9.6 (enterprise 20070227.637543)"
+# ./kontact/src/main.cpp:static const char version[] = "1.2.4 (enterprise 20070227.637543)";
+# ./korganizer/version.h:static const char korgVersion[] = "3.5.6 (enterprise 20070227.637543)";
 
 
 ./tag_all
 # tag_all checks out the enterprise branch of kdepim into a temporary tagging directory
 # and then allows to commit - to create the tag.
+# The script needs the variables SVNUSER and SVNPROTOCOL to be set.
 
 # Now check out kdepim in clean/, for instance by running checkout_enterprise.sh there.
 # [NOTE: this is specific to enterprise, usually tag_all does that]
@@ -114,6 +116,6 @@ rm -rf cache/kdepim
 
 # To make sure that snapshots display a useful version number,
 # change them after release to reflect development status in the branch.
-# ./kmail/kmversion.h:#define KMAIL_VERSION "1.9.6 (enterprise branch after 0.1)"
-# ./kontact/src/main.cpp:static const char version[] = "1.2.4 (enterprise branch after 0.1)";
-# ./korganizer/version.h:static const char korgVersion[] = "3.5.6 (enterprise branch after 0.1)";
+# ./kmail/kmversion.h:#define KMAIL_VERSION "1.9.6 (enterprise branch after 20070227.637543)"
+# ./kontact/src/main.cpp:static const char version[] = "1.2.4 (enterprise branch after 20070227.637543)";
+# ./korganizer/version.h:static const char korgVersion[] = "3.5.6 (enterprise branch after 20070227.637543)";
