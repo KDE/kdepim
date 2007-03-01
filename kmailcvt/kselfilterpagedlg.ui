@@ -110,7 +110,7 @@ This program will help you import your email from your previous email program in
             </widget>
           </item>
           <item>
-            <widget class="Q3TextEdit" name="mDesc" >
+            <widget class="QTextEdit" name="mDesc" >
               <property name="readOnly" >
                 <bool>true</bool>
               </property>
