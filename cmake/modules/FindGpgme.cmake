@@ -14,7 +14,7 @@ if (NOT GPGME_LIBRARIES OR NOT GPGME_INCLUDES)
   FIND_PROGRAM(GPGMECONFIG_EXECUTABLE NAMES gpgme-config)
 
   # if gpgme-config has been found
-  if (GPGMECONFIG_EXECUTABLE AND GPGME_VERSION)
+  if (GPGMECONFIG_EXECUTABLE)
 
     EXEC_PROGRAM(${GPGMECONFIG_EXECUTABLE} ARGS --version OUTPUT_VARIABLE GPGME_VERSION)
 
@@ -43,19 +43,37 @@ if (NOT GPGME_LIBRARIES OR NOT GPGME_INCLUDES)
       message(STATUS "The installed version of gpgme is too old: ${GPGME_VERSION}")
     endif (GPGME_INSTALLED_VERSION_OK)
 
-  endif (GPGMECONFIG_EXECUTABLE AND GPGME_VERSION)
+  endif (GPGMECONFIG_EXECUTABLE)
 
   if (GPGME_LIBRARIES)
       set(GPGME_FOUND TRUE)
-      #message(STATUS "Found gpgme: includes: ${GPGME_INCLUDES} libs: ${GPGME_LIBRARIES}")
-      message(STATUS "Found gpgme using ${GPGMECONFIG_EXECUTABLE}.")
   endif (GPGME_LIBRARIES)
 
-  #if (NOT GPGME_FOUND)
-  #    message(FATAL_ERROR "You are missing gpgme 0.4.5 or higher.
-  #  Download gpgme >= 0.4.5 from ftp://ftp.gnupg.org/gcrypt/alpha/gpgme")
-  #endif (NOT GPGME_FOUND)
 else (NOT GPGME_LIBRARIES OR NOT GPGME_INCLUDES)
   # It was found before, assume it's OK
   set(GPGME_FOUND TRUE)
 endif (NOT GPGME_LIBRARIES OR NOT GPGME_INCLUDES)
+
+macro_bool_to_01(GPGME_FOUND HAVE_GPGME)
+
+if (NOT Gpgme_FIND_QUIETLY)
+   if (GPGME_FOUND)
+      message(STATUS "Found gpgme.")
+   else (GPGME_FOUND)
+      message(STATUS "gpg not found.")
+   endif (GPGME_FOUND)
+   if (Gpgme_FIND_REQUIRED)
+      set (_req TRUE)
+   else (Gpgme_FIND_REQUIRED)
+      set (_req FALSE)
+   endif (Gpgme_FIND_REQUIRED)
+   macro_log_feature(GPGME_FOUND "gpgme" "GnuPG Made Easy Development Libraries" "http://www.gnupg.org/related_software/gpgme" ${_req} "0.4.5 or greater" "Needed to provide GNU Privacy Guard support in KDE PIM applications. Necessary to compile many PIM application, including KMail.")
+else (NOT Gpgme_FIND_QUIETLY)
+   if (NOT GPGME_FOUND)
+      if (Gpgme_FIND_REQUIRED)
+         message(FATAL_ERROR "")
+      endif (Gpgme_FIND_REQUIRED)
+   endif (NOT GPGME_FOUND)
+endif (NOT Gpgme_FIND_QUIETLY)
+
+
