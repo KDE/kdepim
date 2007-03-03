@@ -172,6 +172,7 @@ void MainWidget::sync()
 void MainWidget::sync( SyncProcess *syncProcess )
 {
   if ( syncProcess ) {
+    syncProcess->reinitEngine();
     QSync::Result result = syncProcess->engine()->synchronize();
     if ( result ) {
       qDebug( "%s", result.message().latin1() );
