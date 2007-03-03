@@ -25,6 +25,7 @@
 #include "configguiblank.h"
 #include "configguifile.h"
 #include "configguignokii.h"
+#include "configguigpe.h"
 #include "configguiirmc.h"
 #include "configguildap.h"
 #include "configguiopie.h"
@@ -87,6 +88,8 @@ ConfigGui *ConfigGui::Factory::create( const QSync::Member &member,
     return new ConfigGuiOpie( member, parent );
   } else if ( name == "gnokii-sync" ) {
     return new ConfigGuiGnokii( member, parent );
+  } else if ( name == "gpe-sync" ) {
+    return new ConfigGuiGpe( member, parent );
   } else if ( name == "google-calendar" ) {
     return new ConfigGuiGoogleCalendar( member, parent );
   } else if ( name == "ldap-sync" ) {

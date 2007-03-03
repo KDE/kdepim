@@ -28,7 +28,7 @@ libkitchensync_la_SOURCES = aboutpage.cpp mainwidget.cpp groupconfigdialog.cpp \
                             htmldiffalgodisplay.cpp genericdiffalgo.cpp multiconflictdialog.cpp \
                             configguiirmc.cpp ksplashwidget.cpp \
                             configguisyncmlobex.cpp configguisyncmlhttp.cpp configguiopie.cpp  \
-                            configguignokii.cpp configguigcalendar.cpp configguildap.cpp
+                            configguignokii.cpp configguigcalendar.cpp configguildap.cpp configguigpe.cpp
 libkitchensync_la_LDFLAGS = $(all_libraries) $(KDE_RPATH) -no-undefined
 libkitchensync_la_LIBADD = $(LIB_KIO) $(LIB_KHTML) $(top_builddir)/kitchensync/libqopensync/libqopensync.la \
                            $(LIB_KABC) $(top_builddir)/libkdepim/libkdepim.la -lkcal
