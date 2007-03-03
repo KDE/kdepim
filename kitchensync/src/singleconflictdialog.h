@@ -22,9 +22,11 @@
 #define SINGLECONFLICTDIALOG_H
 
 #include "conflictdialog.h"
+#include <libkdepim/diffalgo.h>
+
+using namespace KPIM;
 
 namespace KSync {
-class DiffAlgo;
 class HTMLDiffAlgoDisplay;
 }
 
@@ -45,7 +47,7 @@ class SingleConflictDialog : public ConflictDialog
   private:
     void initGUI();
 
-    KSync::DiffAlgo *mDiffAlgo;
+    DiffAlgo *mDiffAlgo;
     KSync::HTMLDiffAlgoDisplay *mDiffAlgoDisplay;
 };
 

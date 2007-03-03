@@ -22,7 +22,9 @@
 #ifndef KSYNC_GENERICDIFFALGO_H
 #define KSYNC_GENERICDIFFALGO_H
 
-#include "diffalgo.h"
+#include <libkdepim/diffalgo.h>
+
+using namespace KPIM;
 
 namespace KSync {
 

@@ -24,7 +24,9 @@
 
 #include <libkcal/event.h>
 #include <libkcal/todo.h>
-#include "diffalgo.h"
+#include <libkdepim/diffalgo.h>
+
+using namespace KPIM;
 
 namespace KSync {
 

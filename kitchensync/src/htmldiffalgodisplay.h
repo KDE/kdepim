@@ -23,8 +23,9 @@
 #define KSYNC_HTMLDIFFALGODISPLAY_H
 
 #include <ktextbrowser.h>
+#include <libkdepim/diffalgo.h>
 
-#include "diffalgo.h"
+using namespace KPIM;
 
 namespace KSync {
 

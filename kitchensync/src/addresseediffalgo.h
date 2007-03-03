@@ -23,7 +23,9 @@
 #define KSYNC_ADDRESSEEDIFFALGO_H
 
 #include <kabc/addressee.h>
-#include "diffalgo.h"
+#include <libkdepim/diffalgo.h>
+
+using namespace KPIM;
 
 namespace KSync {
 

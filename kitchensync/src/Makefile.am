@@ -2,6 +2,7 @@ SUBDIRS = about pics
 
 INCLUDES = -I$(top_srcdir)/kitchensync/src \
            -I$(top_srcdir)/kitchensync \
+           -I$(top_srcdir)/libkdepim \
            -I$(top_srcdir) \
             $(all_includes)
 
@@ -23,14 +24,14 @@ libkitchensync_la_SOURCES = aboutpage.cpp mainwidget.cpp groupconfigdialog.cpp \
                             pluginpicker.cpp configgui.cpp configguiblank.cpp configguifile.cpp \
                             memberinfo.cpp groupconfigcommon.cpp kwidgetlist.cpp \
                             configguipalm.cpp conflictdialog.cpp singleconflictdialog.cpp \
-                            addresseediffalgo.cpp calendardiffalgo.cpp diffalgo.cpp \
+                            addresseediffalgo.cpp calendardiffalgo.cpp \
                             htmldiffalgodisplay.cpp genericdiffalgo.cpp multiconflictdialog.cpp \
                             configguiirmc.cpp ksplashwidget.cpp \
                             configguisyncmlobex.cpp configguisyncmlhttp.cpp configguiopie.cpp  \
                             configguignokii.cpp configguigcalendar.cpp configguildap.cpp
 libkitchensync_la_LDFLAGS = $(all_libraries) $(KDE_RPATH) -no-undefined
 libkitchensync_la_LIBADD = $(LIB_KIO) $(LIB_KHTML) $(top_builddir)/kitchensync/libqopensync/libqopensync.la \
-                           $(LIB_KABC) -lkcal
+                           $(LIB_KABC) $(top_builddir)/libkdepim/libkdepim.la -lkcal
 
 # KPart
 kde_module_LTLIBRARIES = libkitchensyncpart.la
