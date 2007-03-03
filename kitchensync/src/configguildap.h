@@ -25,6 +25,7 @@
 #include "configgui.h"
 
 class QCheckBox;
+class QLabel;
 class QSpinBox;
 
 class KComboBox;
@@ -32,11 +33,16 @@ class KLineEdit;
 
 class ConfigGuiLdap : public ConfigGui
 {
+  Q_OBJECT
+
   public:
     ConfigGuiLdap( const QSync::Member &, QWidget *parent );
 
     void load( const QString &xml );
     QString save();
+
+  private slots:
+    void bindModeChanged( bool );
 
   private:
     void initGUI();
@@ -44,6 +50,8 @@ class ConfigGuiLdap : public ConfigGui
     KLineEdit *mServerName;
     QSpinBox *mPort;
 
+    QLabel *mBindLabel;
+    QLabel *mPasswordLabel;
     KLineEdit *mBindDn;
     KLineEdit *mPassword;
     QCheckBox *mAnonymousBind;

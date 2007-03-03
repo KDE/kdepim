@@ -1,7 +1,7 @@
 /*
     This file is part of KitchenSync.
 
-    Copyright (c) 2005 Tobias Koenig <tokoe@kde.org>
+    Copyright (c) 2007 Tobias Koenig <tokoe@kde.org>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -36,6 +36,14 @@ ConfigGuiLdap::ConfigGuiLdap( const QSync::Member &member, QWidget *parent )
   : ConfigGui( member, parent )
 {
   initGUI();
+
+  bindModeChanged( false );
+
+  mSearchScope->insertItem( i18n( "Base" ) );
+  mSearchScope->insertItem( i18n( "One" ) );
+  mSearchScope->insertItem( i18n( "Sub" ) );
+
+  mAuthMech->insertItem( i18n( "Simple" ) );
 }
 
 void ConfigGuiLdap::load( const QString &xml )
@@ -125,60 +133,77 @@ QString ConfigGuiLdap::save()
   return config;
 }
 
+void ConfigGuiLdap::bindModeChanged( bool checked )
+{
+  mBindLabel->setEnabled( !checked );
+  mBindDn->setEnabled( !checked );
+
+  mPasswordLabel->setEnabled( !checked );
+  mPassword->setEnabled( !checked );
+}
+
 void ConfigGuiLdap::initGUI()
 {
-  QGridLayout *layout = new QGridLayout( topLayout(), 12, 2, KDialog::spacingHint() );
+  QGridLayout *layout = new QGridLayout( topLayout(), 12, 4, KDialog::spacingHint() );
   layout->setMargin( KDialog::marginHint() );
 
   layout->addWidget( new QLabel( i18n( "Server:" ), this ), 0, 0 );
   mServerName = new KLineEdit( this );
   layout->addWidget( mServerName, 0, 1 );
 
-  layout->addWidget( new QLabel( i18n( "Port:" ), this ), 1, 0 );
-  mPort = new QSpinBox( this );
-  layout->addWidget( mPort, 1, 1 );
-
-  layout->addWidget( new QLabel( i18n( "Bind Dn:" ), this ), 2, 0 );
-  mBindDn = new KLineEdit( this );
-  layout->addWidget( mBindDn, 2, 1 );
-
-  layout->addWidget( new QLabel( i18n( "Password:" ), this ), 3, 0 );
-  mPassword = new KLineEdit( this );
-  layout->addWidget( mPassword, 3, 1 );
+  layout->addWidget( new QLabel( i18n( "Port:" ), this ), 0, 2, Qt::AlignRight );
+  mPort = new QSpinBox( 1, 65536, 1, this );
+  layout->addWidget( mPort, 0, 3 );
 
   mAnonymousBind = new QCheckBox( i18n( "Use anonymous bind" ), this );
-  layout->addMultiCellWidget( mAnonymousBind, 3, 3, 0, 1 );
+  layout->addMultiCellWidget( mAnonymousBind, 1, 1, 0, 1 );
+
+  connect( mAnonymousBind, SIGNAL( toggled( bool ) ),
+           this, SLOT( bindModeChanged( bool ) ) );
+
+  mBindLabel = new QLabel( i18n( "Bind Dn:" ), this );
+  layout->addWidget( mBindLabel, 2, 0 );
+  mBindDn = new KLineEdit( this );
+  layout->addMultiCellWidget( mBindDn, 2, 2, 1, 3 );
+
+  mPasswordLabel = new QLabel( i18n( "Password:" ), this );
+  layout->addWidget( mPasswordLabel, 3, 0 );
+  mPassword = new KLineEdit( this );
+  mPassword->setEchoMode( QLineEdit::Password );
+  layout->addMultiCellWidget( mPassword, 3, 3, 1, 3 );
 
   layout->addWidget( new QLabel( i18n( "Search Base:" ), this ), 4, 0 );
   mSearchBase = new KLineEdit( this );
-  layout->addWidget( mSearchBase, 4, 1 );
+  layout->addMultiCellWidget( mSearchBase, 4, 4, 1, 3 );
 
   layout->addWidget( new QLabel( i18n( "Search Filter:" ), this ), 5, 0 );
   mSearchFilter = new KLineEdit( this );
-  layout->addWidget( mSearchFilter, 5, 1 );
+  layout->addMultiCellWidget( mSearchFilter, 5, 5, 1, 3 );
 
   layout->addWidget( new QLabel( i18n( "Storage Base:" ), this ), 6, 0 );
   mStoreBase = new KLineEdit( this );
-  layout->addWidget( mStoreBase, 6, 1 );
+  layout->addMultiCellWidget( mStoreBase, 6, 6, 1, 3 );
 
   layout->addWidget( new QLabel( i18n( "Key Attribute:" ), this ), 7, 0 );
   mKeyAttribute = new KLineEdit( this );
-  layout->addWidget( mKeyAttribute, 7, 1 );
+  layout->addMultiCellWidget( mKeyAttribute, 7, 7, 1, 3 );
 
   layout->addWidget( new QLabel( i18n( "Search Scope:" ), this ), 8, 0 );
   mSearchScope = new KComboBox( this );
-  layout->addWidget( mSearchScope, 8, 1 );
+  layout->addMultiCellWidget( mSearchScope, 8, 8, 1, 3 );
 
   layout->addWidget( new QLabel( i18n( "Authentication Mechanism:" ), this ), 9, 0 );
   mAuthMech = new KComboBox( this );
-  layout->addWidget( mAuthMech, 9, 1 );
+  layout->addMultiCellWidget( mAuthMech, 9, 9, 1, 3 );
 
   mEncryption = new QCheckBox( i18n( "Use encryption" ), this );
-  layout->addMultiCellWidget( mEncryption, 10, 10, 0, 1 );
+  layout->addMultiCellWidget( mEncryption, 10, 10, 0, 3 );
 
   mReadLdap = new QCheckBox( i18n( "Load data from LDAP" ), this );
   layout->addMultiCellWidget( mReadLdap, 11, 11, 0, 1 );
 
   mWriteLdap = new QCheckBox( i18n( "Save data to LDAP" ), this );
-  layout->addMultiCellWidget( mWriteLdap, 12, 12, 0, 1 );
+  layout->addMultiCellWidget( mWriteLdap, 11, 11, 2, 3 );
 }
+
+#include "configguildap.moc"
