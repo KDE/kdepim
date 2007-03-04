@@ -4063,7 +4063,7 @@ who kindly agreed to allow the name &kalarm; to be used by this
 &install.intro.documentation;
 
 <para>&kalarm; is available for &kde; 2 and as a standalone package for
-&kde;3 from <ulink url="http://www.astrojar.org.uk/linux/kalarm.html">http://www.astrojar.org.uk/linux/kalarm.html</ulink>
+&kde;3 from <ulink url="http://www.astrojar.org.uk/kalarm">http://www.astrojar.org.uk/kalarm</ulink>
 </para>
 
 </sect1>
@@ -4100,7 +4100,7 @@ vary depending on your platform and configuration.</para>
 
 <para>You can find a list of changes in the
 <filename>ChangeLog</filename> file, or at <ulink
-url="http://www.astrojar.org.uk/linux/kalarm.html">http://www.astrojar.org.uk/linux/kalarm.html</ulink>.</para>
+url="http://www.astrojar.org.uk/kalarm">http://www.astrojar.org.uk/kalarm</ulink>.</para>
 </sect1>
 
 <sect1 id="compilation">
