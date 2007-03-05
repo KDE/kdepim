@@ -19,6 +19,8 @@
     Boston, MA 02110-1301, USA.
 */
 
+#include <q3textstream.h>
+
 /** hack includes **/
 #include <qdom.h>
 #include <qfile.h>
@@ -49,7 +51,7 @@ QStringList GroupConfig::activeObjectTypes() const
   const QString fileName = QString( "%1/filter.conf" ).arg( osync_group_get_configdir( mGroup ) );
 
   QFile file( fileName );
-  if ( !file.open( IO_ReadOnly ) )
+  if ( !file.open( QIODevice::ReadOnly ) )
     return QStringList();
 
   QDomDocument document;
@@ -95,11 +97,11 @@ void GroupConfig::setActiveObjectTypes( const QStringList &objectTypes )
   const QString fileName = QString( "%1/filter.conf" ).arg( osync_group_get_configdir( mGroup ) );
 
   QFile file( fileName );
-  if ( !file.open( IO_WriteOnly ) )
+  if ( !file.open( QIODevice::WriteOnly ) )
     return;
 
-  QTextStream s( &file );
-  s.setEncoding( QTextStream::UnicodeUTF8 );
+  Q3TextStream s( &file );
+  s.setEncoding( Q3TextStream::UnicodeUTF8 );
   s << document.toString();
   file.close();
 }
