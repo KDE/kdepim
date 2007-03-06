@@ -180,8 +180,8 @@ void CSVTemplateFactory::addTemplateNames(const QString& directory)
         KConfigBase* templateConfig = loadTemplateConfig(fileInfo.absoluteFilePath());
         if (templateConfig == 0) continue;
 
-        templateConfig->setGroup("Misc");
-        QString templateName = templateConfig->readEntry("Name");
+        KConfigGroup group( templateConfig, "Misc" );
+        QString templateName = group.readEntry("Name");
         if (!templateName.isEmpty()) m_templateNames[name] = templateName;
 
         delete templateConfig;

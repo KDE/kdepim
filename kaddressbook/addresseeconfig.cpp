@@ -51,47 +51,56 @@ Addressee AddresseeConfig::addressee()
 void AddresseeConfig::setAutomaticNameParsing( bool value )
 {
   KConfig config( "kaddressbook_addrconfig" );
-  config.setGroup( mAddressee.uid() );
-  config.writeEntry( "AutomaticNameParsing", value );
+
+  KConfigGroup group( &config, mAddressee.uid() );
+  group.writeEntry( "AutomaticNameParsing", value );
+
   config.sync();
 }
 
 bool AddresseeConfig::automaticNameParsing()
 {
   KConfig config( "kaddressbook_addrconfig" );
-  config.setGroup( mAddressee.uid() );
-  return config.readEntry( "AutomaticNameParsing",
+
+  KConfigGroup group( &config, mAddressee.uid() );
+  return group.readEntry( "AutomaticNameParsing",
                                KABPrefs::instance()->automaticNameParsing() );
 }
 
 void AddresseeConfig::setNoDefaultAddrTypes( const QList<int> &types )
 {
   KConfig config( "kaddressbook_addrconfig" );
-  config.setGroup( mAddressee.uid() );
-  config.writeEntry( "NoDefaultAddrTypes", types );
+
+  KConfigGroup group( &config, mAddressee.uid() );
+  group.writeEntry( "NoDefaultAddrTypes", types );
+
   config.sync();
 }
 
 QList<int> AddresseeConfig::noDefaultAddrTypes() const
 {
   KConfig config( "kaddressbook_addrconfig" );
-  config.setGroup( mAddressee.uid() );
-  return config.readEntry( "NoDefaultAddrTypes",QList<int>() );
+  KConfigGroup group( &config, mAddressee.uid() );
+
+  return group.readEntry( "NoDefaultAddrTypes",QList<int>() );
 }
 
 void AddresseeConfig::setCustomFields( const QStringList &fields )
 {
   KConfig config( "kaddressbook_addrconfig" );
-  config.setGroup( mAddressee.uid() );
-  config.writeEntry( "LocalCustomFields", fields );
+  KConfigGroup group( &config, mAddressee.uid() );
+
+  group.writeEntry( "LocalCustomFields", fields );
+
   config.sync();
 }
 
 QStringList AddresseeConfig::customFields() const
 {
   KConfig config( "kaddressbook_addrconfig" );
-  config.setGroup( mAddressee.uid() );
-  return config.readEntry( "LocalCustomFields" , QStringList() );
+  KConfigGroup group( &config, mAddressee.uid() );
+
+  return group.readEntry( "LocalCustomFields" , QStringList() );
 }
 
 void AddresseeConfig::remove()

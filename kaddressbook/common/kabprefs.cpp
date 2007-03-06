@@ -66,8 +66,8 @@ void KABPrefs::setCategoryDefaults()
 
 void KABPrefs::usrReadConfig()
 {
-  config()->setGroup( "General" );
-  mCustomCategories = config()->readEntry( "Custom Categories" , QStringList() );
+  KConfigGroup group( config(), "General" );
+  mCustomCategories = group.readEntry( "Custom Categories" , QStringList() );
   if ( mCustomCategories.isEmpty() )
     setCategoryDefaults();
 
@@ -77,8 +77,8 @@ void KABPrefs::usrReadConfig()
 
 void KABPrefs::usrWriteConfig()
 {
-  config()->setGroup( "General" );
-  config()->writeEntry( "Custom Categories", mCustomCategories );
+  KConfigGroup group( config(), "General" );
+  group.writeEntry( "Custom Categories", mCustomCategories );
 
   KPimPrefs::usrWriteConfig();
 }
