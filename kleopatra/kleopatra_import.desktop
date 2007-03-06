@@ -1,6 +1,10 @@
 [Desktop Entry]
 Encoding=UTF-8
 Name=Kleopatra
+Name[is]=Kleópatra
+Name[mk]=Клеопатра
+Name[ne]=क्लेओपत्र
+Name[ta]=க்ளியோபட்ரா
 Name[x-test]=xxKleopatraxx
 Type=Application
 Exec=kleopatra --import-certificate %u

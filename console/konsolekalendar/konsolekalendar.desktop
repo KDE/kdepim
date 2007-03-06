@@ -1,6 +1,23 @@
 [Desktop Entry]
 Encoding=UTF-8
 Name=KonsoleKalendar
+Name[af]=Konsole Kalender
+Name[cs]=Konzolový kalendář
+Name[de]=Konsolen-Kalender
+Name[hu]=Konsole-naptár
+Name[ja]=コンソールカレンダー
+Name[mk]=КонзоленКалендар
+Name[ms]=Kalendar Konsole
+Name[nb]=KonsoleKalender
+Name[nds]=Konsole-Kalenner
+Name[ne]=कन्सोल क्यालेन्डर
+Name[nl]=Konsole-agenda
+Name[nn]=KonsoleKalender
+Name[ro]=Calendar de consolă
+Name[sr]=Конзолни календар
+Name[sr@Latn]=Konzolni kalendar
+Name[ta]=கான்சோல் நாள்காட்டி
+Name[uk]=Календар для консолі
 Name[x-test]=xxKonsoleKalendarxx
 Exec=kdialog --sorry "konsolekalendar is a command-line only program.  Please read the handbook at help:/konsolekalendar for more info."
 Icon=konsolekalendar

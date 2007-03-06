@@ -7,6 +7,32 @@ QuoteType=0
 
 [Misc]
 Name=KAddressBook (KDE 3.1)
+Name[af]=K-adresboek (Kde 3.1)
+Name[ar]=دفتر العناوين KAddressBook (KDE 3.1(
+Name[ca]=Llibreta d'adreces (KDE 3.1)
+Name[cs]=Kniha adres (KDE 3.1)
+Name[cy]=KLlyfrCyfeiriadau (KDE 3.1)
+Name[de]=Adressbuch (KDE 3.1)
+Name[eo]=Adresaro (KDE 3.1)
+Name[et]=KDE aadressiraamat (KDE 3.1)
+Name[hr]=KAdressBook (KDE 3.1)
+Name[hu]=Címjegyzék (KDE 3.1)
+Name[it]=Rubrica indirizzi (KDE 3.1)
+Name[ka]=წიგნაკი (KDE 3.1)
+Name[mk]=КАдресар (KDE 3.1)
+Name[nb]=Adressebok (KDE 3.1)
+Name[nds]=KAdressbook (KDE 3.1)
+Name[ne]=केडीई ठेगाना पुस्तिका (केडीई ३.१)
+Name[nn]=KDE-adressebok (KDE 3.1)
+Name[pl]=Książka adresowa (KDE 3.1)
+Name[ro]=Cartea de adrese (KDE 3.1)
+Name[ru]=Адресная книга (KDE 3.1)
+Name[se]=KDE-čujuhusgirji (KDE 3.3)
+Name[sl]=Adresar (KDE 3.1)
+Name[sv]=Kadressbok (KDE 3.1)
+Name[ta]=கேமுகவரிப்புத்தகம் (KDE 3.1)
+Name[tg]=Китоби адрес (KDE 3.1)
+Name[tr]=KDE Adres Defteri (KDE 3.1)
 Name[x-test]=xxKAddressBook (KDE 3.1)xx
 
 [csv column map]
