@@ -1,22 +1,23 @@
-/* engine.h -  GPGME engine interface.
+/* engine.h - GPGME engine interface.
    Copyright (C) 2000 Werner Koch (dd9jn)
-   Copyright (C) 2001, 2002, 2003 g10 Code GmbH
+   Copyright (C) 2001, 2002, 2003, 2004 g10 Code GmbH
  
    This file is part of GPGME.
  
    GPGME is free software; you can redistribute it and/or modify it
-   under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
- 
+   under the terms of the GNU Lesser General Public License as
+   published by the Free Software Foundation; either version 2.1 of
+   the License, or (at your option) any later version.
+   
    GPGME is distributed in the hope that it will be useful, but
    WITHOUT ANY WARRANTY; without even the implied warranty of
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   General Public License for more details.
- 
-   You should have received a copy of the GNU General Public License
-   along with GPGME; if not, write to the Free Software Foundation,
-   Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  */
+   Lesser General Public License for more details.
+   
+   You should have received a copy of the GNU Lesser General Public
+   License along with this program; if not, write to the Free Software
+   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
+   02111-1307, USA.  */
 
 #ifndef ENGINE_H
 #define ENGINE_H
@@ -33,12 +34,29 @@ typedef gpgme_error_t (*engine_colon_line_handler_t) (void *priv, char *line);
 typedef gpgme_error_t (*engine_command_handler_t) (void *priv,
 						   gpgme_status_code_t code,
 						   const char *keyword,
-						   int fd);
+						   int fd, int *processed);
 
-gpgme_error_t _gpgme_engine_new (gpgme_protocol_t proto,
-				 engine_t *r_engine,
-				 const char *lc_ctype,
-				 const char *lc_messages);
+/* Get a deep copy of the engine info and return it in INFO.  */
+gpgme_error_t _gpgme_engine_info_copy (gpgme_engine_info_t *r_info);
+
+/* Release the engine info INFO.  */
+void _gpgme_engine_info_release (gpgme_engine_info_t info);
+
+/* Set the engine info for the info list INFO, protocol PROTO, to the
+   file name FILE_NAME and the home directory HOME_DIR.  */
+gpgme_error_t _gpgme_set_engine_info (gpgme_engine_info_t info,
+				      gpgme_protocol_t praoto,
+				      const char *file_name,
+				      const char *home_dir);
+
+
+gpgme_error_t _gpgme_engine_new (gpgme_engine_info_t info,
+				 engine_t *r_engine);
+gpgme_error_t _gpgme_engine_reset (engine_t engine);
+
+gpgme_error_t _gpgme_engine_set_locale (engine_t engine, int category,
+					const char *value);
+
 void _gpgme_engine_release (engine_t engine);
 void _gpgme_engine_set_status_handler (engine_t engine,
 				       engine_status_handler_t fnc,

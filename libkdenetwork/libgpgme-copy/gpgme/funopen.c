@@ -1,7 +1,7 @@
-/* putc_unlocked.c - Replacement for putc_unlocked.
+/* funopen.c - Replacement for funopen.
    Copyright (C) 2004 g10 Code GmbH
 
-   This file is part of GPGME.
+   This file is part of GPGME
 
    GPGME is free software; you can redistribute it and/or modify it
    under the terms of the GNU Lesser General Public License as
@@ -24,8 +24,20 @@
 
 #include <stdio.h>
 
-int
-putc_unlocked (int c, FILE *stream)
+#ifdef HAVE_FOPENCOOKIE
+FILE *
+funopen(const void *cookie, cookie_read_function_t *readfn,
+	cookie_write_function_t *writefn,
+	cookie_seek_function_t *seekfn,
+	cookie_close_function_t *closefn)
 {
-  return putc (c, stream);
+  cookie_io_functions_t io = { read: readfn, write: writefn, 
+			       seek: seekfn, close: closefn };
+
+  return fopencookie ((void *) cookie,
+		      readfn ? (writefn ? "rw" : "r")
+		      : (writefn ? "w" : ""), io);
 }
+#else
+#error No known way to implement funopen.
+#endif

@@ -1,22 +1,23 @@
 /* rungpg.c - Gpg Engine.
    Copyright (C) 2000 Werner Koch (dd9jn)
-   Copyright (C) 2001, 2002, 2003 g10 Code GmbH
+   Copyright (C) 2001, 2002, 2003, 2004, 2005, 2006 g10 Code GmbH
  
    This file is part of GPGME.
  
    GPGME is free software; you can redistribute it and/or modify it
-   under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
- 
+   under the terms of the GNU Lesser General Public License as
+   published by the Free Software Foundation; either version 2.1 of
+   the License, or (at your option) any later version.
+   
    GPGME is distributed in the hope that it will be useful, but
    WITHOUT ANY WARRANTY; without even the implied warranty of
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   General Public License for more details.
- 
-   You should have received a copy of the GNU General Public License
-   along with GPGME; if not, write to the Free Software Foundation,
-   Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  */
+   Lesser General Public License for more details.
+   
+   You should have received a copy of the GNU Lesser General Public
+   License along with this program; if not, write to the Free Software
+   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
+   02111-1307, USA.  */
 
 #if HAVE_CONFIG_H
 #include <config.h>
@@ -26,13 +27,15 @@
 #include <string.h>
 #include <assert.h>
 #include <errno.h>
+#include <unistd.h>
+#include <locale.h>
 
 #include "gpgme.h"
 #include "util.h"
 #include "ops.h"
 #include "wait.h"
 #include "context.h"  /*temp hack until we have GpmeData methods to do I/O */
-#include "io.h"
+#include "priv-io.h"
 #include "sema.h"
 #include "debug.h"
 
@@ -64,8 +67,15 @@ struct fd_data_map_s
 };
 
 
+typedef gpgme_error_t (*colon_preprocessor_t) (char *line, char **rline);
+
 struct engine_gpg
 {
+  char *file_name;
+
+  char *lc_messages;
+  char *lc_ctype;
+
   struct arg_and_data_s *arglist;
   struct arg_and_data_s **argtail;
 
@@ -92,6 +102,7 @@ struct engine_gpg
     engine_colon_line_handler_t fnc;  /* this indicate use of this structrue */
     void *fnc_value;
     void *tag;
+    colon_preprocessor_t preprocess_fnc;
   } colon;
 
   char **argv;  
@@ -174,8 +185,10 @@ close_notify_handler (int fd, void *opaque)
     }
 }
 
+/* If FRONT is true, push at the front of the list.  Use this for
+   options added late in the process.  */
 static gpgme_error_t
-add_arg (engine_gpg_t gpg, const char *arg)
+add_arg_ext (engine_gpg_t gpg, const char *arg, int front)
 {
   struct arg_and_data_s *a;
 
@@ -185,13 +198,35 @@ add_arg (engine_gpg_t gpg, const char *arg)
   a = malloc (sizeof *a + strlen (arg));
   if (!a)
     return gpg_error_from_errno (errno);
-  a->next = NULL;
+
   a->data = NULL;
   a->dup_to = -1;
   strcpy (a->arg, arg);
-  *gpg->argtail = a;
-  gpg->argtail = &a->next;
+  if (front)
+    {
+      a->next = gpg->arglist;
+      if (!gpg->arglist)
+	{
+	  /* If this is the first argument, we need to update the tail
+	     pointer.  */
+	  gpg->argtail = &a->next;
+	}
+      gpg->arglist = a;
+    }
+  else
+    {
+      a->next = NULL;
+      *gpg->argtail = a;
+      gpg->argtail = &a->next;
+    }
+
   return 0;
+}
+
+static gpgme_error_t
+add_arg (engine_gpg_t gpg, const char *arg)
+{
+  return add_arg_ext (gpg, arg, 0);
 }
 
 static gpgme_error_t
@@ -224,17 +259,11 @@ add_data (engine_gpg_t gpg, gpgme_data_t data, int dup_to, int inbound)
 }
 
 
-static const char *
-gpg_get_version (void)
+static char *
+gpg_get_version (const char *file_name)
 {
-  static const char *gpg_version;
-  DEFINE_STATIC_LOCK (gpg_version_lock);
-
-  LOCK (gpg_version_lock);
-  if (!gpg_version)
-    gpg_version = _gpgme_get_program_version (_gpgme_get_gpg_path ());
-  UNLOCK (gpg_version_lock);
-  return gpg_version;
+  return _gpgme_get_program_version (file_name ? file_name
+				     : _gpgme_get_gpg_path ());
 }
 
 
@@ -313,6 +342,14 @@ gpg_release (void *engine)
 
   gpg_cancel (engine);
 
+  if (gpg->file_name)
+    free (gpg->file_name);
+
+  if (gpg->lc_messages)
+    free (gpg->lc_messages);
+  if (gpg->lc_ctype)
+    free (gpg->lc_ctype);
+
   while (gpg->arglist)
     {
       struct arg_and_data_s *next = gpg->arglist->next;
@@ -336,14 +373,27 @@ gpg_release (void *engine)
 
 
 static gpgme_error_t
-gpg_new (void **engine, const char *lc_ctype, const char *lc_messages)
+gpg_new (void **engine, const char *file_name, const char *home_dir)
 {
   engine_gpg_t gpg;
   gpgme_error_t rc = 0;
+  char *dft_display = NULL;
+  char dft_ttyname[64];
+  char *dft_ttytype = NULL;
 
   gpg = calloc (1, sizeof *gpg);
   if (!gpg)
     return gpg_error_from_errno (errno);
+
+  if (file_name)
+    {
+      gpg->file_name = strdup (file_name);
+      if (!gpg->file_name)
+	{
+	  rc = gpg_error_from_errno (errno);
+	  goto leave;
+	}
+    }
 
   gpg->argtail = &gpg->arglist;
   gpg->status.fd[0] = -1;
@@ -380,13 +430,23 @@ gpg_new (void **engine, const char *lc_ctype, const char *lc_messages)
       goto leave;
     }
   gpg->status.eof = 0;
+
+  if (home_dir)
+    {
+      rc = add_arg (gpg, "--homedir");
+      if (!rc)
+	rc = add_arg (gpg, home_dir);
+      if (rc)
+	goto leave;
+    }
+
   rc = add_arg (gpg, "--status-fd");
   if (rc)
     goto leave;
 
   {
     char buf[25];
-    snprintf (buf, sizeof(buf), "%d", gpg->status.fd[1]);
+    _gpgme_io_fd2str (buf, sizeof (buf), gpg->status.fd[1]);
     rc = add_arg (gpg, buf);
     if (rc)
       goto leave;
@@ -399,6 +459,46 @@ gpg_new (void **engine, const char *lc_ctype, const char *lc_messages)
     rc = add_arg (gpg, "utf8");
   if (!rc)
     rc = add_arg (gpg, "--enable-progress-filter");
+  if (rc)
+    goto leave;
+
+  rc = _gpgme_getenv ("DISPLAY", &dft_display);
+  if (dft_display)
+    {
+      rc = add_arg (gpg, "--display");
+      if (!rc)
+	rc = add_arg (gpg, dft_display);
+
+      free (dft_display);
+    }
+  if (rc)
+    goto leave;
+
+  if (isatty (1))
+    {
+      if (ttyname_r (1, dft_ttyname, sizeof (dft_ttyname)))
+	rc = gpg_error_from_errno (errno);
+      else
+	{
+	  rc = add_arg (gpg, "--ttyname");
+	  if (!rc)
+	    rc = add_arg (gpg, dft_ttyname);
+	  if (!rc)
+	    {
+	      rc = _gpgme_getenv ("TERM", &dft_ttytype);
+	      if (!rc)
+		goto leave;
+
+	      rc = add_arg (gpg, "--ttytype");
+	      if (!rc)
+		rc = add_arg (gpg, dft_ttytype);
+
+	      free (dft_ttytype);
+	    }
+	}
+      if (rc)
+	goto leave;
+    }
 
  leave:
   if (rc)
@@ -406,6 +506,48 @@ gpg_new (void **engine, const char *lc_ctype, const char *lc_messages)
   else
     *engine = gpg;
   return rc;
+}
+
+
+static gpgme_error_t
+gpg_set_locale (void *engine, int category, const char *value)
+{
+  engine_gpg_t gpg = engine;
+
+  if (category == LC_CTYPE)
+    {
+      if (gpg->lc_ctype)
+        {
+          free (gpg->lc_ctype);
+          gpg->lc_ctype = NULL;
+        }
+      if (value)
+	{
+	  gpg->lc_ctype = strdup (value);
+	  if (!gpg->lc_ctype)
+	    return gpg_error_from_syserror ();
+	}
+    }
+#ifdef LC_MESSAGES
+  else if (category == LC_MESSAGES)
+    {
+      if (gpg->lc_messages)
+        {
+          free (gpg->lc_messages);
+          gpg->lc_messages = NULL;
+        }
+      if (value)
+	{
+	  gpg->lc_messages = strdup (value);
+	  if (!gpg->lc_messages)
+	    return gpg_error_from_syserror ();
+	}
+    }
+#endif /* LC_MESSAGES */
+  else
+    return gpg_error (GPG_ERR_INV_VALUE);
+
+  return 0;
 }
 
 
@@ -457,14 +599,20 @@ command_handler (void *opaque, int fd)
 {
   gpgme_error_t err;
   engine_gpg_t gpg = (engine_gpg_t) opaque;
+  int processed = 0;
 
   assert (gpg->cmd.used);
   assert (gpg->cmd.code);
   assert (gpg->cmd.fnc);
 
-  err = gpg->cmd.fnc (gpg->cmd.fnc_value, gpg->cmd.code, gpg->cmd.keyword, fd);
+  err = gpg->cmd.fnc (gpg->cmd.fnc_value, gpg->cmd.code, gpg->cmd.keyword, fd,
+		      &processed);
   if (err)
     return err;
+
+  /* We always need to send at least a newline character.  */
+  if (!processed)
+    _gpgme_io_write (fd, "\n", 1);
 
   gpg->cmd.code = 0;
   /* And sleep again until read_status will wake us up again.  */
@@ -566,7 +714,7 @@ build_argv (engine_gpg_t gpg)
     argc++;
   if (!gpg->cmd.used)
     argc++;	/* --batch */
-  argc += 1; /* --no-comment */
+  argc += 1;	/* --no-sk-comment */
 
   argv = calloc (argc + 1, sizeof *argv);
   if (!argv)
@@ -625,7 +773,7 @@ build_argv (engine_gpg_t gpg)
         }
       argc++;
     }
-  argv[argc] = strdup ("--no-comment");
+  argv[argc] = strdup ("--no-sk-comment");
   if (!argv[argc])
     {
       int saved_errno = errno;
@@ -693,8 +841,10 @@ build_argv (engine_gpg_t gpg)
 	  fd_data_map[datac].dup_to = a->dup_to;
 	  if (a->dup_to == -1)
 	    {
-	      const int ARGV_SIZE = 25;
-	      argv[argc] = malloc (ARGV_SIZE);
+	      char *ptr;
+	      int buflen = 25;
+
+	      argv[argc] = malloc (buflen);
 	      if (!argv[argc])
 		{
 		  int saved_errno = errno;
@@ -702,9 +852,16 @@ build_argv (engine_gpg_t gpg)
 		  free_argv (argv);
 		  return gpg_error_from_errno (saved_errno);
                 }
-	      snprintf (argv[argc], ARGV_SIZE,
-		       a->print_fd ? "%d" : "-&%d",
-		       fd_data_map[datac].peer_fd);
+
+	      ptr = argv[argc];
+	      if (!a->print_fd)
+		{
+		  *(ptr++) = '-';
+		  *(ptr++) = '&';
+		  buflen -= 2;
+		}
+	      
+	      _gpgme_io_fd2str (ptr, buflen, fd_data_map[datac].peer_fd);
 	      argc++;
             }
 	  datac++;
@@ -806,6 +963,8 @@ read_status (engine_gpg_t gpg)
 	  if (*p == '\n')
 	    {
 	      /* (we require that the last line is terminated by a LF) */
+	      if (p > buffer && p[-1] == '\r')
+		p[-1] = 0;
 	      *p = 0;
 	      if (!strncmp (buffer, "[GNUPG:] ", 9)
 		  && buffer[9] >= 'A' && buffer[9] <= 'Z')
@@ -842,29 +1001,6 @@ read_status (engine_gpg_t gpg)
 			  if (nread > 1)
 			    DEBUG0 ("ERROR, unexpected data in read_status");
 
-			  /* Before we can actually add the command
-			     fd, we might have to flush the linked
-			     output data pipe.  */
-			  if (gpg->cmd.linked_idx != -1
-			      && gpg->fd_data_map[gpg->cmd.linked_idx].fd != -1)
-			    {
-			      struct io_select_fd_s fds;
-			      fds.fd = gpg->fd_data_map[gpg->cmd.linked_idx].fd;
-			      fds.for_read = 1;
-			      fds.for_write = 0;
-			      fds.frozen = 0;
-			      fds.opaque = NULL;
-			      do
-				{
-				  fds.signaled = 0;
-				  _gpgme_io_select (&fds, 1, 1);
-				  if (fds.signaled)
-				    _gpgme_data_inbound_handler
-				      (gpg->cmd.linked_data, fds.fd);
-				}
-			      while (fds.signaled);
-			    }
-
 			  add_io_cb (gpg, gpg->cmd.fd, 0,
 				     command_handler, gpg,
 				     &gpg->fd_data_map[gpg->cmd.idx].tag);
@@ -884,6 +1020,31 @@ read_status (engine_gpg_t gpg)
 			{
 			  if (gpg->cmd.used)
 			    {
+			      /* Before we can actually add the
+				 command fd, we might have to flush
+				 the linked output data pipe.  */
+			      if (gpg->cmd.linked_idx != -1
+				  && gpg->fd_data_map[gpg->cmd.linked_idx].fd
+				  != -1)
+				{
+				  struct io_select_fd_s fds;
+				  fds.fd =
+				    gpg->fd_data_map[gpg->cmd.linked_idx].fd;
+				  fds.for_read = 1;
+				  fds.for_write = 0;
+				  fds.frozen = 0;
+				  fds.opaque = NULL;
+				  do
+				    {
+				      fds.signaled = 0;
+				      _gpgme_io_select (&fds, 1, 1);
+				      if (fds.signaled)
+					_gpgme_data_inbound_handler
+					  (gpg->cmd.linked_data, fds.fd);
+				    }
+				  while (fds.signaled);
+				}
+
 			      /* XXX We must check if there are any
 				 more fds active after removing this
 				 one.  */
@@ -975,14 +1136,27 @@ read_colon_line (engine_gpg_t gpg)
 	    {
 	      /* (we require that the last line is terminated by a LF)
 		 and we skip empty lines.  Note: we use UTF8 encoding
-		 and escaping of special characters We require at
+		 and escaping of special characters.  We require at
 		 least one colon to cope with some other printed
 		 information.  */
 	      *p = 0;
 	      if (*buffer && strchr (buffer, ':'))
 		{
+		  char *line = NULL;
+
+		  if (gpg->colon.preprocess_fnc)
+		    {
+		      gpgme_error_t err;
+
+		      err = gpg->colon.preprocess_fnc (buffer, &line);
+		      if (err)
+			return err;
+		    }
+
 		  assert (gpg->colon.fnc);
-		  gpg->colon.fnc (gpg->colon.fnc_value, buffer);
+		  gpg->colon.fnc (gpg->colon.fnc_value, line ? line : buffer);
+		  if (line)
+		    free (line);
 		}
             
 	      /* To reuse the buffer for the next line we have to
@@ -1042,8 +1216,26 @@ start (engine_gpg_t gpg)
   if (!gpg)
     return gpg_error (GPG_ERR_INV_VALUE);
 
-  if (! _gpgme_get_gpg_path ())
+  if (!gpg->file_name && !_gpgme_get_gpg_path ())
     return gpg_error (GPG_ERR_INV_ENGINE);
+
+  if (gpg->lc_ctype)
+    {
+      rc = add_arg_ext (gpg, gpg->lc_ctype, 1);
+      if (!rc)
+	rc = add_arg_ext (gpg, "--lc-ctype", 1);
+      if (rc)
+	return rc;
+    }
+
+  if (gpg->lc_messages)
+    {
+      rc = add_arg_ext (gpg, gpg->lc_messages, 1);
+      if (!rc)
+	rc = add_arg_ext (gpg, "--lc-messages", 1);
+      if (rc)
+	return rc;
+    }
 
   rc = build_argv (gpg);
   if (rc)
@@ -1100,7 +1292,8 @@ start (engine_gpg_t gpg)
   fd_parent_list[n].fd = -1;
   fd_parent_list[n].dup_to = -1;
 
-  status = _gpgme_io_spawn (_gpgme_get_gpg_path (),
+  status = _gpgme_io_spawn (gpg->file_name ? gpg->file_name :
+			    _gpgme_get_gpg_path (),
 			    gpg->argv, fd_child_list, fd_parent_list);
   saved_errno = errno;
   free (fd_child_list);
@@ -1227,6 +1420,91 @@ append_args_from_signers (engine_gpg_t gpg, gpgme_ctx_t ctx /* FIXME */)
 
 
 static gpgme_error_t
+append_args_from_sig_notations (engine_gpg_t gpg, gpgme_ctx_t ctx /* FIXME */)
+{
+  gpgme_error_t err = 0;
+  gpgme_sig_notation_t notation;
+
+  notation = gpgme_sig_notation_get (ctx);
+
+  while (!err && notation)
+    {
+      if (notation->name
+	  && !(notation->flags & GPGME_SIG_NOTATION_HUMAN_READABLE))
+	err = gpg_error (GPG_ERR_INV_VALUE);
+      else if (notation->name)
+	{
+	  char *arg;
+
+	  /* Maximum space needed is one byte for the "critical" flag,
+	     the name, one byte for '=', the value, and a terminating
+	     '\0'.  */
+
+	  arg = malloc (1 + notation->name_len + 1 + notation->value_len + 1);
+	  if (!arg)
+	    err = gpg_error_from_errno (errno);
+
+	  if (!err)
+	    {
+	      char *argp = arg;
+
+	      if (notation->critical)
+		*(argp++) = '!';
+
+	      memcpy (argp, notation->name, notation->name_len);
+	      argp += notation->name_len;
+
+	      *(argp++) = '=';
+
+	      /* We know that notation->name is '\0' terminated.  */
+	      strcpy (argp, notation->value);
+	    }
+
+	  if (!err)
+	    err = add_arg (gpg, "--sig-notation");
+	  if (!err)
+	    err = add_arg (gpg, arg);
+
+	  if (arg)
+	    free (arg);
+	}
+      else
+	{
+	  /* This is a policy URL.  */
+
+	  char *value;
+
+	  if (notation->critical)
+	    {
+	      value = malloc (1 + notation->value_len + 1);
+	      if (!value)
+		err = gpg_error_from_errno (errno);
+	      else
+		{
+		  value[0] = '!';
+		  /* We know that notation->value is '\0' terminated.  */
+		  strcpy (&value[1], notation->value);
+		}
+	    }
+	  else
+	    value = notation->value;
+
+	  if (!err)
+	    err = add_arg (gpg, "--sig-policy-url");
+	  if (!err)
+	    err = add_arg (gpg, value);
+
+	  if (value != notation->value)
+	    free (value);
+      	}
+
+      notation = notation->next;
+    }
+  return err;
+}
+
+
+static gpgme_error_t
 gpg_edit (void *engine, int type, gpgme_key_t key, gpgme_data_t out,
 	  gpgme_ctx_t ctx /* FIXME */)
 {
@@ -1242,7 +1520,7 @@ gpg_edit (void *engine, int type, gpgme_key_t key, gpgme_data_t out,
     err = add_data (gpg, out, 1, 1);
   if (!err)
     err = add_arg (gpg, "--");
-  if (!err)
+  if (!err && type == 0)
     {
       const char *s = key->subkeys ? key->subkeys->fpr : NULL;
       if (!s)
@@ -1310,6 +1588,13 @@ gpg_encrypt (void *engine, gpgme_key_t recp[], gpgme_encrypt_flags_t flags,
     err = add_arg (gpg, "-");
   if (!err)
     err = add_data (gpg, ciph, 1, 1);
+  if (gpgme_data_get_file_name (plain))
+    {
+      if (!err)
+	err = add_arg (gpg, "--set-filename");
+      if (!err)
+	err = add_arg (gpg, gpgme_data_get_file_name (plain));
+    }
   if (!err)
     err = add_arg (gpg, "--");
   if (!err)
@@ -1347,6 +1632,8 @@ gpg_encrypt_sign (void *engine, gpgme_key_t recp[],
 
   if (!err)
     err = append_args_from_signers (gpg, ctx);
+  if (!err)
+    err = append_args_from_sig_notations (gpg, ctx);
 
   /* Tell the gpg object about the data.  */
   if (!err)
@@ -1355,6 +1642,13 @@ gpg_encrypt_sign (void *engine, gpgme_key_t recp[],
     err = add_arg (gpg, "-");
   if (!err)
     err = add_data (gpg, ciph, 1, 1);
+  if (gpgme_data_get_file_name (plain))
+    {
+      if (!err)
+	err = add_arg (gpg, "--set-filename");
+      if (!err)
+	err = add_arg (gpg, gpgme_data_get_file_name (plain));
+    }
   if (!err)
     err = add_arg (gpg, "--");
   if (!err)
@@ -1473,6 +1767,93 @@ gpg_import (void *engine, gpgme_data_t keydata)
 }
 
 
+/* The output for external keylistings in GnuPG is different from all
+   the other key listings.  We catch this here with a special
+   preprocessor that reformats the colon handler lines.  */
+static gpgme_error_t
+gpg_keylist_preprocess (char *line, char **r_line)
+{
+  enum
+    {
+      RT_NONE, RT_INFO, RT_PUB, RT_UID
+    }
+  rectype = RT_NONE;
+#define NR_FIELDS 16
+  char *field[NR_FIELDS];
+  int fields = 0;
+
+  *r_line = NULL;
+
+  while (line && fields < NR_FIELDS)
+    {
+      field[fields++] = line;
+      line = strchr (line, ':');
+      if (line)
+	*(line++) = '\0';
+    }
+
+  if (!strcmp (field[0], "info"))
+    rectype = RT_INFO;
+  else if (!strcmp (field[0], "pub"))
+    rectype = RT_PUB;
+  else if (!strcmp (field[0], "uid"))
+    rectype = RT_UID;
+  else 
+    rectype = RT_NONE;
+
+  switch (rectype)
+    {
+    case RT_INFO:
+      /* FIXME: Eventually, check the version number at least.  */
+      return 0;
+
+    case RT_PUB:
+      if (fields < 7)
+	return 0;
+
+      /* The format is:
+
+	 pub:<keyid>:<algo>:<keylen>:<creationdate>:<expirationdate>:<flags>
+
+	 as defined in 5.2. Machine Readable Indexes of the OpenPGP
+	 HTTP Keyserver Protocol (draft). 
+
+	 We want:
+	 pub:o<flags>:<keylen>:<algo>:<keyid>:<creatdate>:<expdate>::::::::
+      */
+
+      if (asprintf (r_line, "pub:o%s:%s:%s:%s:%s:%s::::::::",
+		    field[6], field[3], field[2], field[1],
+		    field[4], field[5]) < 0)
+	return gpg_error_from_errno (errno);
+      return 0;
+
+    case RT_UID:
+      /* The format is:
+
+         uid:<escaped uid string>:<creationdate>:<expirationdate>:<flags>
+
+	 as defined in 5.2. Machine Readable Indexes of the OpenPGP
+	 HTTP Keyserver Protocol (draft). 
+
+	 We want:
+	 uid:o<flags>::::<creatdate>:<expdate>:::<uid>:
+      */
+
+      if (asprintf (r_line, "uid:o%s::::%s:%s:::%s:",
+		    field[4], field[2], field[3], field[1]) < 0)
+	return gpg_error_from_errno (errno);
+      return 0;
+
+    case RT_NONE:
+      /* Unknown record.  */
+      break;
+    }
+  return 0;
+
+}
+
+
 static gpgme_error_t
 gpg_keylist (void *engine, const char *pattern, int secret_only,
 	     gpgme_keylist_mode_t mode)
@@ -1480,6 +1861,13 @@ gpg_keylist (void *engine, const char *pattern, int secret_only,
   engine_gpg_t gpg = engine;
   gpgme_error_t err;
 
+  if (mode & GPGME_KEYLIST_MODE_EXTERN)
+    {
+      if ((mode & GPGME_KEYLIST_MODE_LOCAL)
+	  || secret_only)
+	return gpg_error (GPG_ERR_NOT_SUPPORTED);
+    }
+  
   err = add_arg (gpg, "--with-colons");
   if (!err)
     err = add_arg (gpg, "--fixed-list-mode");
@@ -1487,11 +1875,28 @@ gpg_keylist (void *engine, const char *pattern, int secret_only,
     err = add_arg (gpg, "--with-fingerprint");
   if (!err)
     err = add_arg (gpg, "--with-fingerprint");
+  if (!err && (mode & GPGME_KEYLIST_MODE_SIGS)
+      && (mode & GPGME_KEYLIST_MODE_SIG_NOTATIONS))
+    {
+      err = add_arg (gpg, "--list-options");
+      if (!err)
+	err = add_arg (gpg, "show-sig-subpackets=\"20,26\"");
+    }
   if (!err)
-    err = add_arg (gpg, secret_only ? "--list-secret-keys"
-		   : ((mode & GPGME_KEYLIST_MODE_SIGS)
-		      ? "--check-sigs" : "--list-keys"));
-  
+    {
+      if (mode & GPGME_KEYLIST_MODE_EXTERN)
+	{
+	  err = add_arg (gpg, "--search-keys");
+	  gpg->colon.preprocess_fnc = gpg_keylist_preprocess;
+	}
+      else
+	{
+	  err = add_arg (gpg, secret_only ? "--list-secret-keys"
+			 : ((mode & GPGME_KEYLIST_MODE_SIGS)
+			    ? "--check-sigs" : "--list-keys"));
+	}
+    }
+
   /* Tell the gpg object about the data.  */
   if (!err)
     err = add_arg (gpg, "--");
@@ -1522,6 +1927,13 @@ gpg_keylist_ext (void *engine, const char *pattern[], int secret_only,
     err = add_arg (gpg, "--with-fingerprint");
   if (!err)
     err = add_arg (gpg, "--with-fingerprint");
+  if (!err && (mode & GPGME_KEYLIST_MODE_SIGS)
+      && (mode & GPGME_KEYLIST_MODE_SIG_NOTATIONS))
+    {
+      err = add_arg (gpg, "--list-options");
+      if (!err)
+	err = add_arg (gpg, "show-sig-subpackets=\"20,26\"");
+    }
   if (!err)
     err = add_arg (gpg, secret_only ? "--list-secret-keys"
 		   : ((mode & GPGME_KEYLIST_MODE_SIGS)
@@ -1565,6 +1977,16 @@ gpg_sign (void *engine, gpgme_data_t in, gpgme_data_t out,
 
   if (!err)
     err = append_args_from_signers (gpg, ctx);
+  if (!err)
+    err = append_args_from_sig_notations (gpg, ctx);
+
+  if (gpgme_data_get_file_name (in))
+    {
+      if (!err)
+	err = add_arg (gpg, "--set-filename");
+      if (!err)
+	err = add_arg (gpg, gpgme_data_get_file_name (in));
+    }
 
   /* Tell the gpg object about the data.  */
   if (!err)
@@ -1664,9 +2086,11 @@ struct engine_ops _gpgme_engine_ops_gpg =
 
     /* Member functions.  */
     gpg_release,
+    NULL,				/* reset */
     gpg_set_status_handler,
     gpg_set_command_handler,
     gpg_set_colon_line_handler,
+    gpg_set_locale,
     gpg_decrypt,
     gpg_delete,
     gpg_edit,

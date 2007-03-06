@@ -15,33 +15,52 @@
  *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA 
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,
+ * USA. 
  */
 
 #include <config.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <errno.h>
+#include <unistd.h>
 #include <sys/types.h>
+#ifndef HAVE_W32_SYSTEM
 #include <sys/socket.h>
 #include <sys/un.h>
-#include <unistd.h>
+#else
+#include <windows.h>
+#endif
 
 #include "assuan-defs.h"
 
+static struct assuan_io io = { _assuan_simple_read,
+			       _assuan_simple_write };
+
+
 static int
-accept_connection_bottom (ASSUAN_CONTEXT ctx)
+accept_connection_bottom (assuan_context_t ctx)
 {
   int fd = ctx->connected_fd;
 
-  ctx->client_pid = (pid_t)-1;
+  ctx->peercred.valid = 0;
 #ifdef HAVE_SO_PEERCRED
   {
     struct ucred cr; 
-    int cl = sizeof cr;
+    socklen_t cl = sizeof cr;
 
-    if ( !getsockopt (fd, SOL_SOCKET, SO_PEERCRED, &cr, &cl) ) 
-      ctx->client_pid = cr.pid;
+    if ( !getsockopt (fd, SOL_SOCKET, SO_PEERCRED, &cr, &cl))
+      {
+         ctx->peercred.pid = cr.pid;
+         ctx->peercred.uid = cr.uid;
+         ctx->peercred.gid = cr.gid;
+         ctx->peercred.valid = 1;
+
+         /* This overrides any already set PID if the function returns
+            a valid one. */
+         if (cr.pid != (pid_t)-1 && cr.pid) 
+           ctx->pid = cr.pid;
+      }
   }
 #endif
 
@@ -62,18 +81,17 @@ accept_connection_bottom (ASSUAN_CONTEXT ctx)
 
 
 static int
-accept_connection (ASSUAN_CONTEXT ctx)
+accept_connection (assuan_context_t ctx)
 {
   int fd;
   struct sockaddr_un clnt_addr;
-  size_t len = sizeof clnt_addr;
+  socklen_t len = sizeof clnt_addr;
 
-  ctx->client_pid = (pid_t)-1;
   fd = accept (ctx->listen_fd, (struct sockaddr*)&clnt_addr, &len );
   if (fd == -1)
     {
       ctx->os_errno = errno;
-      return ASSUAN_Accept_Failed;
+      return _assuan_error (ASSUAN_Accept_Failed);
     }
 
   ctx->connected_fd = fd;
@@ -81,11 +99,11 @@ accept_connection (ASSUAN_CONTEXT ctx)
 }
 
 static int
-finish_connection (ASSUAN_CONTEXT ctx)
+finish_connection (assuan_context_t ctx)
 {
   if (ctx->inbound.fd != -1)
     {
-      close (ctx->inbound.fd);
+      _assuan_close (ctx->inbound.fd);
     }
   ctx->inbound.fd = -1;
   ctx->outbound.fd = -1;
@@ -94,75 +112,71 @@ finish_connection (ASSUAN_CONTEXT ctx)
 
 
 static void
-deinit_socket_server (ASSUAN_CONTEXT ctx)
+deinit_socket_server (assuan_context_t ctx)
 {
   finish_connection (ctx);
 }
 
-static struct assuan_io io = { _assuan_simple_read,
-			       _assuan_simple_write };
-
 /* Initialize a server for the socket LISTEN_FD which has already be
    put into listen mode */
 int
-assuan_init_socket_server (ASSUAN_CONTEXT *r_ctx, int listen_fd)
+assuan_init_socket_server (assuan_context_t *r_ctx, int listen_fd)
 {
-  ASSUAN_CONTEXT ctx;
-  int rc;
-
-  *r_ctx = NULL;
-  ctx = xtrycalloc (1, sizeof *ctx);
-  if (!ctx)
-    return ASSUAN_Out_Of_Core;
-  ctx->is_server = 1;
-  ctx->input_fd = -1;
-  ctx->output_fd = -1;
-
-  ctx->inbound.fd = -1;
-  ctx->outbound.fd = -1;
-
-  ctx->listen_fd = listen_fd;
-  ctx->connected_fd = -1;
-  ctx->deinit_handler = deinit_socket_server;
-  ctx->accept_handler = accept_connection;
-  ctx->finish_handler = finish_connection;
-
-  ctx->io = &io;
-
-  rc = _assuan_register_std_commands (ctx);
-  if (rc)
-    xfree (ctx);
-  else
-    *r_ctx = ctx;
-  return rc;
+  return assuan_init_socket_server_ext (r_ctx, listen_fd, 0);
 }
 
-/* Initialize a server using the already accepted socket FD. */
+/* Initialize a server using the already accepted socket FD.  This
+   fucntion is deprecated. */
 int
-assuan_init_connected_socket_server (ASSUAN_CONTEXT *r_ctx, int fd)
+assuan_init_connected_socket_server (assuan_context_t *r_ctx, int fd)
 {
-  ASSUAN_CONTEXT ctx;
+  return assuan_init_socket_server_ext (r_ctx, fd, 2);
+}
+
+
+/* 
+   Flag bits: 0 - use sendmsg/recvmsg to allow descriptor passing
+              1 - FD has already been accepted.
+*/
+int
+assuan_init_socket_server_ext (assuan_context_t *r_ctx, int fd,
+                               unsigned int flags)
+{
+  assuan_context_t ctx;
   int rc;
 
   *r_ctx = NULL;
   ctx = xtrycalloc (1, sizeof *ctx);
   if (!ctx)
-    return ASSUAN_Out_Of_Core;
+    return _assuan_error (ASSUAN_Out_Of_Core);
   ctx->is_server = 1;
-  ctx->pipe_mode = 1; /* we want a second accept to indicate EOF */
+  if ((flags & 2))
+    ctx->pipe_mode = 1; /* We want a second accept to indicate EOF. */
   ctx->input_fd = -1;
   ctx->output_fd = -1;
 
   ctx->inbound.fd = -1;
   ctx->outbound.fd = -1;
 
-  ctx->io = &io;
-
-  ctx->listen_fd = -1;
-  ctx->connected_fd = fd;
-  ctx->deinit_handler = deinit_socket_server;
-  ctx->accept_handler = accept_connection_bottom;
+  if ((flags & 2))
+    {
+      ctx->listen_fd = -1;
+      ctx->connected_fd = fd;
+    }
+  else
+    {
+      ctx->listen_fd = fd;
+      ctx->connected_fd = -1;
+    }
+  ctx->deinit_handler = (flags & 1)? _assuan_uds_deinit:deinit_socket_server;
+  ctx->accept_handler = ((flags & 2)
+                         ? accept_connection_bottom 
+                         : accept_connection);
   ctx->finish_handler = finish_connection;
+
+  ctx->io = &io;
+  if ((flags & 1))
+    _assuan_init_uds_io (ctx);
 
   rc = _assuan_register_std_commands (ctx);
   if (rc)
@@ -171,5 +185,3 @@ assuan_init_connected_socket_server (ASSUAN_CONTEXT *r_ctx, int fd)
     *r_ctx = ctx;
   return rc;
 }
-
-

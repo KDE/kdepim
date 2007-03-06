@@ -16,8 +16,8 @@
  
    You should have received a copy of the GNU Lesser General Public
    License along with libgpg-error; if not, write to the Free
-   Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
-   02110-1301, USA.  */
+   Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
+   02111-1307, USA.  */
 
 # Everything up to the first line that starts with a number in the
 # first column is copied into the output verbatim.  Then, empty lines
@@ -40,9 +40,11 @@
 8	GPG_ERR_SOURCE_KEYBOX		Keybox
 9	GPG_ERR_SOURCE_KSBA		KSBA
 10	GPG_ERR_SOURCE_DIRMNGR		Dirmngr
+11	GPG_ERR_SOURCE_GSTI		GSTI
 
-# 11 to 31 are free to be used.
+# 11 to 30 are free to be used.
 
+31	GPG_ERR_SOURCE_ANY		Any source
 32	GPG_ERR_SOURCE_USER_1		User defined source 1
 33	GPG_ERR_SOURCE_USER_2		User defined source 2
 34	GPG_ERR_SOURCE_USER_3		User defined source 3

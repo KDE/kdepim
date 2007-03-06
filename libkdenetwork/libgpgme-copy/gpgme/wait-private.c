@@ -1,22 +1,23 @@
 /* wait-private.c 
    Copyright (C) 2000 Werner Koch (dd9jn)
-   Copyright (C) 2001, 2002, 2003 g10 Code GmbH
+   Copyright (C) 2001, 2002, 2003, 2004, 2005 g10 Code GmbH
  
    This file is part of GPGME.
  
    GPGME is free software; you can redistribute it and/or modify it
-   under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
- 
+   under the terms of the GNU Lesser General Public License as
+   published by the Free Software Foundation; either version 2.1 of
+   the License, or (at your option) any later version.
+   
    GPGME is distributed in the hope that it will be useful, but
    WITHOUT ANY WARRANTY; without even the implied warranty of
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   General Public License for more details.
- 
-   You should have received a copy of the GNU General Public License
-   along with GPGME; if not, write to the Free Software Foundation,
-   Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  */
+   Lesser General Public License for more details.
+   
+   You should have received a copy of the GNU Lesser General Public
+   License along with this program; if not, write to the Free Software
+   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
+   02111-1307, USA.  */
 
 #if HAVE_CONFIG_H
 #include <config.h>
@@ -28,7 +29,7 @@
 #include "context.h"
 #include "wait.h"
 #include "ops.h"
-#include "io.h"
+#include "priv-io.h"
 #include "util.h"
 
 
@@ -83,7 +84,7 @@ _gpgme_wait_on_condition (gpgme_ctx_t ctx, volatile int *cond)
 
       if (nr < 0)
 	{
-	  /* An error occurred.  Close all fds in this context, and
+	  /* An error occured.  Close all fds in this context, and
 	     signal it.  */
 	  unsigned int idx;
 
@@ -100,18 +101,14 @@ _gpgme_wait_on_condition (gpgme_ctx_t ctx, volatile int *cond)
 	{
 	  if (ctx->fdt.fds[i].fd != -1 && ctx->fdt.fds[i].signaled)
 	    {
-	      struct wait_item_s *item;
-	      
 	      ctx->fdt.fds[i].signaled = 0;
 	      assert (nr);
 	      nr--;
-	      
-	      item = (struct wait_item_s *) ctx->fdt.fds[i].opaque;
 
-	      err = item->handler (item->handler_value, ctx->fdt.fds[i].fd);
+	      err = _gpgme_run_io_cb (&ctx->fdt.fds[i], 0);
 	      if (err)
 		{
-		  /* An error occurred.  Close all fds in this context,
+		  /* An error occured.  Close all fds in this context,
 		     and signal it.  */
 		  unsigned int idx;
 		  

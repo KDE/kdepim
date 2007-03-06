@@ -1,4 +1,4 @@
-/* ath-pthread.c - pthread module for self-adapting thread-safeness library
+/* ath.c - Thread-safeness library.
    Copyright (C) 2002, 2003, 2004 g10 Code GmbH
 
    This file is part of GPGME.
@@ -22,8 +22,7 @@
 #include <config.h>
 #endif
 
-#include <stdlib.h>
-#include <errno.h>
+#include <assert.h>
 #include <unistd.h>
 #ifdef HAVE_SYS_SELECT_H
 # include <sys/select.h>
@@ -31,91 +30,61 @@
 # include <sys/time.h>
 #endif
 #include <sys/types.h>
+#ifndef HAVE_W32_SYSTEM
 #include <sys/wait.h>
-
-#include <pthread.h>
+#endif
 
 #include "ath.h"
 
 
-/* The lock we take while checking for lazy lock initialization.  */
-static pthread_mutex_t check_init_lock = PTHREAD_MUTEX_INITIALIZER;
-
-/* Initialize the mutex *PRIV.  If JUST_CHECK is true, only do this if
-   it is not already initialized.  */
-static int
-mutex_pthread_init (ath_mutex_t *priv, int just_check)
-{
-  int err = 0;
-
-  if (just_check)
-    pthread_mutex_lock (&check_init_lock);
-  if (!*priv || !just_check)
-    {
-      pthread_mutex_t *lock = malloc (sizeof (pthread_mutex_t));
-      if (!lock)
-	err = ENOMEM;
-      if (!err)
-	{
-	  err = pthread_mutex_init (lock, NULL);
-	  if (err)
-	    free (lock);
-	  else
-	    *priv = (ath_mutex_t) lock;
-	}
-    }
-  if (just_check)
-    pthread_mutex_unlock (&check_init_lock);
-  return err;
-}
-
-
-void
-ath_init (void)
-{
-  /* Nothing to do.  */
-}
+#define MUTEX_UNLOCKED	((ath_mutex_t) 0)
+#define MUTEX_LOCKED	((ath_mutex_t) 1)
+#define MUTEX_DESTROYED	((ath_mutex_t) 2)
 
 
 int
 ath_mutex_init (ath_mutex_t *lock)
 {
-  return mutex_pthread_init (lock, 0);
+#ifndef NDEBUG
+  *lock = MUTEX_UNLOCKED;
+#endif
+  return 0;
 }
 
 
 int
 ath_mutex_destroy (ath_mutex_t *lock)
 {
-  int err = mutex_pthread_init (lock, 1);
-  if (!err)
-    {
-      err = pthread_mutex_destroy ((pthread_mutex_t *) *lock);
-      free (*lock);
-    }
-  return err;
+#ifndef NDEBUG
+  assert (*lock == MUTEX_UNLOCKED);
+
+  *lock = MUTEX_DESTROYED;
+#endif
+  return 0;
 }
 
 
 int
 ath_mutex_lock (ath_mutex_t *lock)
 {
-  int ret = mutex_pthread_init (lock, 1);
-  if (ret)
-    return ret;
+#ifndef NDEBUG
+  assert (*lock == MUTEX_UNLOCKED);
 
-  return pthread_mutex_lock ((pthread_mutex_t *) *lock);
+  *lock = MUTEX_LOCKED;
+#endif
+  return 0;
 }
 
 
 int
 ath_mutex_unlock (ath_mutex_t *lock)
 {
-  int ret = mutex_pthread_init (lock, 1);
-  if (ret)
-    return ret;
+#ifndef NDEBUG
+  assert (*lock == MUTEX_LOCKED);
 
-  return pthread_mutex_unlock ((pthread_mutex_t *) *lock);
+  *lock = MUTEX_UNLOCKED;
+#endif
+  return 0;
 }
 
 
@@ -137,39 +106,64 @@ ssize_t
 ath_select (int nfd, fd_set *rset, fd_set *wset, fd_set *eset,
 	    struct timeval *timeout)
 {
+#ifdef HAVE_W32_SYSTEM
+  return -1; /* Not supported. */
+#else
   return select (nfd, rset, wset, eset, timeout);
+#endif
 }
 
  
 ssize_t
 ath_waitpid (pid_t pid, int *status, int options)
 {
+#ifdef HAVE_W32_SYSTEM
+  return -1; /* Not supported. */
+#else
   return waitpid (pid, status, options);
+#endif
 }
 
 
 int
 ath_accept (int s, struct sockaddr *addr, socklen_t *length_ptr)
 {
+#ifdef HAVE_W32_SYSTEM
+  return -1; /* Not supported. */
+#else
   return accept (s, addr, length_ptr);
+#endif
 }
 
 
 int
 ath_connect (int s, const struct sockaddr *addr, socklen_t length)
 {
+#ifdef HAVE_W32_SYSTEM
+  return -1; /* Not supported. */
+#else
   return connect (s, addr, length);
+#endif
 }
+
 
 int
 ath_sendmsg (int s, const struct msghdr *msg, int flags)
 {
+#ifdef HAVE_W32_SYSTEM
+  return -1; /* Not supported. */
+#else
   return sendmsg (s, msg, flags);
+#endif
 }
 
 
 int
 ath_recvmsg (int s, struct msghdr *msg, int flags)
 {
+#ifdef HAVE_W32_SYSTEM
+  return -1; /* Not supported. */
+#else
   return recvmsg (s, msg, flags);
+#endif
 }

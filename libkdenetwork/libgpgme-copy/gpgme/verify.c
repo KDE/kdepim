@@ -1,22 +1,23 @@
 /* verify.c - Signature verification.
    Copyright (C) 2000 Werner Koch (dd9jn)
-   Copyright (C) 2001, 2002, 2003, 2004 g10 Code GmbH
+   Copyright (C) 2001, 2002, 2003, 2004, 2005 g10 Code GmbH
 
    This file is part of GPGME.
  
    GPGME is free software; you can redistribute it and/or modify it
-   under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
- 
+   under the terms of the GNU Lesser General Public License as
+   published by the Free Software Foundation; either version 2.1 of
+   the License, or (at your option) any later version.
+   
    GPGME is distributed in the hope that it will be useful, but
    WITHOUT ANY WARRANTY; without even the implied warranty of
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   General Public License for more details.
- 
-   You should have received a copy of the GNU General Public License
-   along with GPGME; if not, write to the Free Software Foundation,
-   Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  */
+   Lesser General Public License for more details.
+   
+   You should have received a copy of the GNU Lesser General Public
+   License along with this program; if not, write to the Free Software
+   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
+   02111-1307, USA.  */
 
 #if HAVE_CONFIG_H
 #include <config.h>
@@ -39,6 +40,7 @@ typedef struct
   gpgme_signature_t current_sig;
   int did_prepare_new_sig;
   int only_newsig_seen;
+  int plaintext_seen;
 } *op_data_t;
 
 
@@ -57,18 +59,20 @@ release_op_data (void *hook)
 	{
 	  gpgme_sig_notation_t next_nota = notation->next;
 
-	  if (notation->name)
-	    free (notation->name);
-	  if (notation->value)
-	    free (notation->value);
+	  _gpgme_sig_notation_free (notation);
 	  notation = next_nota;
 	}
 
       if (sig->fpr)
 	free (sig->fpr);
+      if (sig->pka_address)
+	free (sig->pka_address);
       free (sig);
       sig = next;
     }
+
+  if (opd->result.file_name)
+    free (opd->result.file_name);
 }
 
 
@@ -93,7 +97,8 @@ static void
 calc_sig_summary (gpgme_signature_t sig)
 {
   unsigned long sum = 0;
-
+  
+  /* Calculate the red/green flag.  */
   if (sig->validity == GPGME_VALIDITY_FULL
       || sig->validity == GPGME_VALIDITY_ULTIMATE)
     {
@@ -111,7 +116,8 @@ calc_sig_summary (gpgme_signature_t sig)
     }
   else if (gpg_err_code (sig->status) == GPG_ERR_BAD_SIGNATURE)
     sum |= GPGME_SIGSUM_RED;
-  
+
+
   /* FIXME: handle the case when key and message are expired. */
   switch (gpg_err_code (sig->status))
     {
@@ -136,6 +142,23 @@ calc_sig_summary (gpgme_signature_t sig)
       break;
     }
   
+  /* Now look at the certain reason codes.  */
+  switch (gpg_err_code (sig->validity_reason))
+    {
+    case GPG_ERR_CRL_TOO_OLD:
+      if (sig->validity == GPGME_VALIDITY_UNKNOWN)
+        sum |= GPGME_SIGSUM_CRL_TOO_OLD;
+      break;
+        
+    case GPG_ERR_CERT_REVOKED:
+      sum |= GPGME_SIGSUM_KEY_REVOKED;
+      break;
+
+    default:
+      break;
+    }
+
+  /* Check other flags. */
   if (sig->wrong_key_usage)
     sum |= GPGME_SIGSUM_BAD_POLICY;
   
@@ -183,6 +206,7 @@ parse_new_sig (op_data_t opd, gpgme_status_code_t code, char *args)
 {
   gpgme_signature_t sig;
   char *end = strchr (args, ' ');
+  char *tail;
 
   if (end)
     {
@@ -228,39 +252,70 @@ parse_new_sig (op_data_t opd, gpgme_status_code_t code, char *args)
       break;
 
     case GPGME_STATUS_ERRSIG:
-      if (end)
+      /* Parse the pubkey algo.  */
+      if (!end)
+	goto parse_err_sig_fail;
+      errno = 0;
+      sig->pubkey_algo = strtol (end, &tail, 0);
+      if (errno || end == tail || *tail != ' ')
+	goto parse_err_sig_fail;
+      end = tail;
+      while (*end == ' ')
+	end++;
+     
+      /* Parse the hash algo.  */
+      if (!*end)
+	goto parse_err_sig_fail;
+      errno = 0;
+      sig->hash_algo = strtol (end, &tail, 0);
+      if (errno || end == tail || *tail != ' ')
+	goto parse_err_sig_fail;
+      end = tail;
+      while (*end == ' ')
+	end++;
+
+      /* Skip the sig class.  */
+      end = strchr (end, ' ');
+      if (!end)
+	goto parse_err_sig_fail;
+      while (*end == ' ')
+	end++;
+
+      /* Parse the timestamp.  */
+      sig->timestamp = _gpgme_parse_timestamp (end, &tail);
+      if (sig->timestamp == -1 || end == tail || (*tail && *tail != ' '))
+	return gpg_error (GPG_ERR_INV_ENGINE);
+      end = tail;
+      while (*end == ' ')
+	end++;
+      
+      /* Parse the return code.  */
+      if (end[0] && (!end[1] || end[1] == ' '))
 	{
-	  int i = 0;
-	  /* The return code is the 6th argument, if it is 9, the
-	     problem is a missing key.  */
-	  while (end && i < 4)
+	  switch (end[0])
 	    {
-	      end = strchr (end, ' ');
-	      if (end)
-		end++;
-	      i++;
-	    }
-	  if (end && end[0] && (!end[1] || end[1] == ' '))
-	    {
-	      switch (end[0])
-		{
-		case '4':
-		  sig->status = gpg_error (GPG_ERR_UNSUPPORTED_ALGORITHM);
-		  break;
-		  
-		case '9':
-		  sig->status = gpg_error (GPG_ERR_NO_PUBKEY);
-		  break;
-		  
-		default:
-		  sig->status = gpg_error (GPG_ERR_GENERAL);
-		}
+	    case '4':
+	      sig->status = gpg_error (GPG_ERR_UNSUPPORTED_ALGORITHM);
+	      break;
+	      
+	    case '9':
+	      sig->status = gpg_error (GPG_ERR_NO_PUBKEY);
+	      break;
+	      
+	    default:
+	      sig->status = gpg_error (GPG_ERR_GENERAL);
 	    }
 	}
       else
-	sig->status = gpg_error (GPG_ERR_GENERAL);
-      break;
+	goto parse_err_sig_fail;
 
+      goto parse_err_sig_ok;
+      
+    parse_err_sig_fail:
+      sig->status = gpg_error (GPG_ERR_GENERAL);
+    parse_err_sig_ok:
+      break;
+      
     default:
       return gpg_error (GPG_ERR_GENERAL);
     }
@@ -279,7 +334,6 @@ static gpgme_error_t
 parse_valid_sig (gpgme_signature_t sig, char *args)
 {
   char *end = strchr (args, ' ');
-
   if (end)
     {
       *end = '\0';
@@ -296,6 +350,7 @@ parse_valid_sig (gpgme_signature_t sig, char *args)
   if (!sig->fpr)
     return gpg_error_from_errno (errno);
 
+  /* Skip the creation date.  */
   end = strchr (end, ' ');
   if (end)
     {
@@ -309,6 +364,43 @@ parse_valid_sig (gpgme_signature_t sig, char *args)
       sig->exp_timestamp = _gpgme_parse_timestamp (end, &tail);
       if (sig->exp_timestamp == -1 || end == tail || (*tail && *tail != ' '))
 	return gpg_error (GPG_ERR_INV_ENGINE);
+      end = tail;
+
+      while (*end == ' ')
+	end++;
+      /* Skip the signature version.  */
+      end = strchr (end, ' ');
+      if (end)
+	{
+	  while (*end == ' ')
+	    end++;
+
+	  /* Skip the reserved field.  */
+	  end = strchr (end, ' ');
+	  if (end)
+	    {
+	      /* Parse the pubkey algo.  */
+	      errno = 0;
+	      sig->pubkey_algo = strtol (end, &tail, 0);
+	      if (errno || end == tail || *tail != ' ')
+		return gpg_error (GPG_ERR_INV_ENGINE);
+	      end = tail;
+
+	      while (*end == ' ')
+		end++;
+
+	      if (*end)
+		{
+		  /* Parse the hash algo.  */
+
+		  errno = 0;
+		  sig->hash_algo = strtol (end, &tail, 0);
+		  if (errno || end == tail || *tail != ' ')
+		    return gpg_error (GPG_ERR_INV_ENGINE);
+		  end = tail;
+		}
+	    }
+	}
     }
   return 0;
 }
@@ -339,51 +431,39 @@ parse_notation (gpgme_signature_t sig, gpgme_status_code_t code, char *args)
 	   previous one.  The crypto backend misbehaves.  */
 	return gpg_error (GPG_ERR_INV_ENGINE);
 
-      notation = malloc (sizeof (*sig));
-      if (!notation)
-	return gpg_error_from_errno (errno);
-      notation->next = NULL;
+      err = _gpgme_sig_notation_create (&notation, NULL, 0, NULL, 0, 0);
+      if (err)
+	return err;
 
       if (code == GPGME_STATUS_NOTATION_NAME)
 	{
-	  int len = strlen (args) + 1;
-
-	  notation->name = malloc (len);
-	  if (!notation->name)
-	    {
-	      int saved_errno = errno;
-	      free (notation);
-	      return gpg_error_from_errno (saved_errno);
-	    }
-	  err = _gpgme_decode_percent_string (args, &notation->name, len);
+	  err = _gpgme_decode_percent_string (args, &notation->name, 0, 0);
 	  if (err)
 	    {
-	      free (notation->name);
-	      free (notation);
+	      _gpgme_sig_notation_free (notation);
 	      return err;
 	    }
 
-	  notation->value = NULL;
+	  notation->name_len = strlen (notation->name);
+
+	  /* FIXME: For now we fake the human-readable flag.  The
+	     critical flag can not be reported as it is not
+	     provided.  */
+	  notation->flags = GPGME_SIG_NOTATION_HUMAN_READABLE;
+	  notation->human_readable = 1;
 	}
       else
 	{
-	  int len = strlen (args) + 1;
+	  /* This is a policy URL.  */
 
-	  notation->name = NULL;
-	  notation->value = malloc (len);
-	  if (!notation->value)
-	    {
-	      int saved_errno = errno;
-	      free (notation);
-	      return gpg_error_from_errno (saved_errno);
-	    }
-	  err = _gpgme_decode_percent_string (args, &notation->value, len);
+	  err = _gpgme_decode_percent_string (args, &notation->value, 0, 0);
 	  if (err)
 	    {
-	      free (notation->value);
-	      free (notation);
+	      _gpgme_sig_notation_free (notation);
 	      return err;
 	    }
+
+	  notation->value_len = strlen (notation->value);
 	}
       *lastp = notation;
     }
@@ -420,9 +500,11 @@ parse_notation (gpgme_signature_t sig, gpgme_status_code_t code, char *args)
 	  dest += cur_len;
 	}
       
-      err = _gpgme_decode_percent_string (args, &dest, len);
+      err = _gpgme_decode_percent_string (args, &dest, len, 0);
       if (err)
 	return err;
+
+      notation->value_len += strlen (dest);
     }
   else
     return gpg_error (GPG_ERR_INV_ENGINE);
@@ -461,13 +543,18 @@ parse_trust (gpgme_signature_t sig, gpgme_status_code_t code, char *args)
 
   if (*args)
     sig->validity_reason = _gpgme_map_gnupg_error (args);
+  else
+    sig->validity_reason = 0;
 
   return 0;
 }
 
 
+/* Parse an error status line and if SET_STATUS is true update the
+   result status as appropriate.  With SET_STATUS being false, only
+   check for an error.  */
 static gpgme_error_t
-parse_error (gpgme_signature_t sig, char *args)
+parse_error (gpgme_signature_t sig, char *args, int set_status)
 {
   gpgme_error_t err;
   char *where = strchr (args, ' ');
@@ -489,7 +576,16 @@ parse_error (gpgme_signature_t sig, char *args)
 
   err = _gpgme_map_gnupg_error (which);
 
-  if (!strcmp (where, "verify.findkey"))
+  if (!strcmp (where, "proc_pkt.plaintext")
+      && gpg_err_code (err) == GPG_ERR_BAD_DATA)
+    {
+      /* This indicates a double plaintext.  The only solid way to
+         handle this is by failing the oepration.  */
+      return gpg_error (GPG_ERR_BAD_DATA);
+    }
+  else if (!set_status)
+    ;
+  else if (!strcmp (where, "verify.findkey"))
     sig->status = err;
   else if (!strcmp (where, "verify.keyusage")
 	   && gpg_err_code (err) == GPG_ERR_WRONG_KEY_USAGE)
@@ -507,6 +603,7 @@ _gpgme_verify_status_handler (void *priv, gpgme_status_code_t code, char *args)
   void *hook;
   op_data_t opd;
   gpgme_signature_t sig;
+  char *end;
 
   err = _gpgme_op_data_lookup (ctx, OPDATA_VERIFY, &hook, -1, NULL);
   opd = hook;
@@ -570,11 +667,25 @@ _gpgme_verify_status_handler (void *priv, gpgme_status_code_t code, char *args)
       return sig ? parse_trust (sig, code, args)
 	: gpg_error (GPG_ERR_INV_ENGINE);
 
+    case GPGME_STATUS_PKA_TRUST_BAD:
+    case GPGME_STATUS_PKA_TRUST_GOOD:
+      opd->only_newsig_seen = 0;
+      /* Check that we only get one of these status codes per
+         signature; if not the crypto backend misbehaves.  */
+      if (!sig || sig->pka_trust || sig->pka_address)
+        return gpg_error (GPG_ERR_INV_ENGINE);
+      sig->pka_trust = code == GPGME_STATUS_PKA_TRUST_GOOD? 2 : 1;
+      end = strchr (args, ' ');
+      if (end)
+        *end = 0;
+      sig->pka_address = strdup (args);
+      break;
+
     case GPGME_STATUS_ERROR:
       opd->only_newsig_seen = 0;
-      /* The error status is informational, so we don't return an
-         error code if we are not ready to process this status. */
-      return sig ? parse_error (sig, args) : 0;
+      /* Some  error stati are informational, so we don't return an
+         error code if we are not ready to process this status.  */
+      return parse_error (sig, args, !!sig );
 
     case GPGME_STATUS_EOF:
       if (sig && !opd->did_prepare_new_sig)
@@ -603,6 +714,13 @@ _gpgme_verify_status_handler (void *priv, gpgme_status_code_t code, char *args)
         }
       opd->only_newsig_seen = 0;
       break;
+
+    case GPGME_STATUS_PLAINTEXT:
+      if (++opd->plaintext_seen > 1)
+        return gpg_error (GPG_ERR_BAD_DATA);
+      err = _gpgme_parse_plaintext (args, &opd->result.file_name);
+      if (err)
+	return err;
 
     default:
       break;
@@ -713,8 +831,9 @@ gpgme_get_sig_key (gpgme_ctx_t ctx, int idx, gpgme_key_t *r_key)
    successful verify operation in R_STAT (if non-null).  The creation
    time stamp of the signature is returned in R_CREATED (if non-null).
    The function returns a string containing the fingerprint.  */
-const char *gpgme_get_sig_status (gpgme_ctx_t ctx, int idx,
-                                  _gpgme_sig_stat_t *r_stat, time_t *r_created)
+const char *
+gpgme_get_sig_status (gpgme_ctx_t ctx, int idx,
+                      _gpgme_sig_stat_t *r_stat, time_t *r_created)
 {
   gpgme_verify_result_t result;
   gpgme_signature_t sig;
@@ -773,8 +892,9 @@ const char *gpgme_get_sig_status (gpgme_ctx_t ctx, int idx,
    number of the signature after a successful verify operation.  WHAT
    is an attribute where GPGME_ATTR_EXPIRE is probably the most useful
    one.  WHATIDX is to be passed as 0 for most attributes . */
-unsigned long gpgme_get_sig_ulong_attr (gpgme_ctx_t ctx, int idx,
-                                        _gpgme_attr_t what, int whatidx)
+unsigned long 
+gpgme_get_sig_ulong_attr (gpgme_ctx_t ctx, int idx,
+                          _gpgme_attr_t what, int whatidx)
 {
   gpgme_verify_result_t result;
   gpgme_signature_t sig;
@@ -836,8 +956,9 @@ unsigned long gpgme_get_sig_ulong_attr (gpgme_ctx_t ctx, int idx,
 }
 
 
-const char *gpgme_get_sig_string_attr (gpgme_ctx_t ctx, int idx,
-                                      _gpgme_attr_t what, int whatidx)
+const char *
+gpgme_get_sig_string_attr (gpgme_ctx_t ctx, int idx,
+                           _gpgme_attr_t what, int whatidx)
 {
   gpgme_verify_result_t result;
   gpgme_signature_t sig;

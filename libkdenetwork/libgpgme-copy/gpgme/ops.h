@@ -1,22 +1,23 @@
 /* ops.h - Internal operation support.
    Copyright (C) 2000 Werner Koch (dd9jn)
-   Copyright (C) 2001, 2002, 2003 g10 Code GmbH
+   Copyright (C) 2001, 2002, 2003, 2004, 2005 g10 Code GmbH
  
    This file is part of GPGME.
  
    GPGME is free software; you can redistribute it and/or modify it
-   under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
- 
+   under the terms of the GNU Lesser General Public License as
+   published by the Free Software Foundation; either version 2.1 of
+   the License, or (at your option) any later version.
+   
    GPGME is distributed in the hope that it will be useful, but
    WITHOUT ANY WARRANTY; without even the implied warranty of
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   General Public License for more details.
- 
-   You should have received a copy of the GNU General Public License
-   along with GPGME; if not, write to the Free Software Foundation,
-   Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  */
+   Lesser General Public License for more details.
+   
+   You should have received a copy of the GNU Lesser General Public
+   License along with this program; if not, write to the Free Software
+   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
+   02111-1307, USA.  */
 
 #ifndef OPS_H
 #define OPS_H
@@ -52,6 +53,11 @@ gpgme_error_t _gpgme_op_reset (gpgme_ctx_t ctx, int synchronous);
 /* Parse the INV_RECP status line in ARGS and return the result in
    KEY.  */
 gpgme_error_t _gpgme_parse_inv_recp (char *args, gpgme_invalid_key_t *key);
+
+/* Parse the PLAINTEXT status line in ARGS and return the result in
+   FILENAMEP.  */
+gpgme_error_t _gpgme_parse_plaintext (char *args, char **filenamep);
+
 
 
 /* From verify.c.  */
@@ -98,9 +104,6 @@ gpgme_error_t _gpgme_passphrase_status_handler (void *priv,
 						char *args);
 gpgme_error_t _gpgme_passphrase_command_handler (void *opaque,
 						 gpgme_status_code_t code,
-						 const char *key, int fd);
-gpgme_error_t _gpgme_passphrase_command_handler_internal (void *opaque,
-						 gpgme_status_code_t code,
 						 const char *key, int fd,
 						 int *processed);
 
@@ -135,9 +138,32 @@ void _gpgme_op_trustlist_event_cb (void *data, gpgme_event_io_t type,
 				   void *type_data);
 
 
-/*-- version.c --*/
-const char *_gpgme_compare_versions (const char *my_version,
-				     const char *req_version);
+/* From version.c.  */
+
+/* Return true if MY_VERSION is at least REQ_VERSION, and false
+   otherwise.  */
+int _gpgme_compare_versions (const char *my_version,
+			     const char *req_version);
 char *_gpgme_get_program_version (const char *const path);
+
+
+/* From sig-notation.c.  */
+
+/* Create a new, empty signature notation data object.  */
+gpgme_error_t _gpgme_sig_notation_create (gpgme_sig_notation_t *notationp,
+					  const char *name, int name_len,
+					  const char *value, int value_len,
+					  gpgme_sig_notation_flags_t flags);
+
+/* Free the signature notation object and all associated resources.
+   The object must already be removed from any linked list as the next
+   pointer is ignored.  */
+void _gpgme_sig_notation_free (gpgme_sig_notation_t notation);
+
+/* Parse a notation or policy URL subpacket.  If the packet type is
+   not known, return no error but NULL in NOTATION.  */
+gpgme_error_t _gpgme_parse_notation (gpgme_sig_notation_t *notationp,
+				     int type, int pkflags, int len,
+				     char *data);
 
 #endif /* OPS_H */

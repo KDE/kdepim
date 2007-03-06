@@ -1,5 +1,5 @@
 /* assuan-inquire.c - handle inquire stuff
- *	Copyright (C) 2001, 2002, 2003  Free Software Foundation, Inc.
+ *	Copyright (C) 2001, 2002, 2003, 2005  Free Software Foundation, Inc.
  *
  * This file is part of Assuan.
  *
@@ -15,7 +15,8 @@
  *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA 
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,
+ * USA. 
  */
 
 #include <config.h>
@@ -134,11 +135,11 @@ free_membuf (struct membuf *mb)
  * 
  * Return value: 0 on success or an ASSUAN error code
  **/
-AssuanError
-assuan_inquire (ASSUAN_CONTEXT ctx, const char *keyword,
-                char **r_buffer, size_t *r_length, size_t maxlen)
+assuan_error_t
+assuan_inquire (assuan_context_t ctx, const char *keyword,
+                unsigned char **r_buffer, size_t *r_length, size_t maxlen)
 {
-  AssuanError rc;
+  assuan_error_t rc;
   struct membuf mb;
   char cmdbuf[LINELENGTH-10]; /* (10 = strlen ("INQUIRE ")+CR,LF) */
   unsigned char *line, *p;
@@ -146,14 +147,14 @@ assuan_inquire (ASSUAN_CONTEXT ctx, const char *keyword,
   int nodataexpected;
 
   if (!ctx || !keyword || (10 + strlen (keyword) >= sizeof (cmdbuf)))
-    return ASSUAN_Invalid_Value;
+    return _assuan_error (ASSUAN_Invalid_Value);
   nodataexpected = !r_buffer && !r_length && !maxlen;
   if (!nodataexpected && (!r_buffer || !r_length))
-    return ASSUAN_Invalid_Value;
+    return _assuan_error (ASSUAN_Invalid_Value);
   if (!ctx->is_server)
-    return ASSUAN_Not_A_Server;
+    return _assuan_error (ASSUAN_Not_A_Server);
   if (ctx->in_inquire)
-    return ASSUAN_Nested_Commands;
+    return _assuan_error (ASSUAN_Nested_Commands);
   
   ctx->in_inquire = 1;
   if (nodataexpected)
@@ -173,7 +174,7 @@ assuan_inquire (ASSUAN_CONTEXT ctx, const char *keyword,
           rc = _assuan_read_line (ctx);
           if (rc)
             goto leave;
-          line = ctx->inbound.line;
+          line = (unsigned char *) ctx->inbound.line;
           linelen = ctx->inbound.linelen;
         }    
       while (*line == '#' || !linelen);
@@ -182,12 +183,12 @@ assuan_inquire (ASSUAN_CONTEXT ctx, const char *keyword,
         break; /* END command received*/
       if (line[0] == 'C' && line[1] == 'A' && line[2] == 'N')
         {
-          rc = ASSUAN_Canceled;
+          rc = _assuan_error (ASSUAN_Canceled);
           goto leave;
         }
       if (line[0] != 'D' || line[1] != ' ' || nodataexpected)
         {
-          rc = ASSUAN_Unexpected_Command;
+          rc = _assuan_error (ASSUAN_Unexpected_Command);
           goto leave;
         }
       if (linelen < 3)
@@ -214,7 +215,7 @@ assuan_inquire (ASSUAN_CONTEXT ctx, const char *keyword,
         }
       if (mb.too_large)
         {
-          rc = ASSUAN_Too_Much_Data;
+          rc = _assuan_error (ASSUAN_Too_Much_Data);
           goto leave;
         }
     }
@@ -223,7 +224,7 @@ assuan_inquire (ASSUAN_CONTEXT ctx, const char *keyword,
     {
       *r_buffer = get_membuf (&mb, r_length);
       if (!*r_buffer)
-        rc = ASSUAN_Out_Of_Core;
+        rc = _assuan_error (ASSUAN_Out_Of_Core);
     }
 
  leave:

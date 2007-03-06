@@ -1,22 +1,23 @@
-/* wait.c 
+/* wait-user.c 
    Copyright (C) 2000 Werner Koch (dd9jn)
-   Copyright (C) 2001, 2002, 2003 g10 Code GmbH
+   Copyright (C) 2001, 2002, 2003, 2004, 2005 g10 Code GmbH
  
    This file is part of GPGME.
  
    GPGME is free software; you can redistribute it and/or modify it
-   under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
- 
+   under the terms of the GNU Lesser General Public License as
+   published by the Free Software Foundation; either version 2.1 of
+   the License, or (at your option) any later version.
+   
    GPGME is distributed in the hope that it will be useful, but
    WITHOUT ANY WARRANTY; without even the implied warranty of
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   General Public License for more details.
- 
-   You should have received a copy of the GNU General Public License
-   along with GPGME; if not, write to the Free Software Foundation,
-   Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  */
+   Lesser General Public License for more details.
+   
+   You should have received a copy of the GNU Lesser General Public
+   License along with this program; if not, write to the Free Software
+   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
+   02111-1307, USA.  */
 
 #if HAVE_CONFIG_H
 #include <config.h>
@@ -25,7 +26,7 @@
 
 #include "gpgme.h"
 #include "context.h"
-#include "io.h"
+#include "priv-io.h"
 #include "wait.h"
 
 
@@ -41,15 +42,12 @@ _gpgme_user_io_cb_handler (void *data, int fd)
   gpgme_error_t err;
   struct tag *tag = (struct tag *) data;
   gpgme_ctx_t ctx;
-  struct wait_item_s *item;
 
   assert (data);
   ctx = tag->ctx;
   assert (ctx);
-  item = (struct wait_item_s *) ctx->fdt.fds[tag->idx].opaque;
-  assert (item);
 
-  err = (*item->handler) (item->handler_value, fd);
+  err = _gpgme_run_io_cb (&ctx->fdt.fds[tag->idx], 0);
   if (err)
     {
       unsigned int idx;

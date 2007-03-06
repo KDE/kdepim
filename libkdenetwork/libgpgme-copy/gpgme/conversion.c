@@ -1,22 +1,23 @@
 /* conversion.c - String conversion helper functions.
    Copyright (C) 2000 Werner Koch (dd9jn)
-   Copyright (C) 2001, 2002, 2003 g10 Code GmbH
+   Copyright (C) 2001, 2002, 2003, 2004 g10 Code GmbH
  
    This file is part of GPGME.
 
    GPGME is free software; you can redistribute it and/or modify it
-   under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
- 
+   under the terms of the GNU Lesser General Public License as
+   published by the Free Software Foundation; either version 2.1 of
+   the License, or (at your option) any later version.
+   
    GPGME is distributed in the hope that it will be useful, but
    WITHOUT ANY WARRANTY; without even the implied warranty of
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   General Public License for more details.
- 
-   You should have received a copy of the GNU General Public License
-   along with GPGME; if not, write to the Free Software Foundation,
-   Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  */
+   Lesser General Public License for more details.
+   
+   You should have received a copy of the GNU Lesser General Public
+   License along with this program; if not, write to the Free Software
+   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
+   02111-1307, USA.  */
 
 #if HAVE_CONFIG_H
 #include <config.h>
@@ -173,9 +174,11 @@ _gpgme_decode_c_string (const char *src, char **destp, size_t len)
    large enough buffer is allocated with malloc and *DESTP is set to
    the result.  Currently, LEN is only used to specify if allocation
    is desired or not, the caller is expected to make sure that *DESTP
-   is large enough if LEN is not zero.  */
+   is large enough if LEN is not zero.  If BINARY is 1, then '\0'
+   characters are allowed in the output.  */
 gpgme_error_t
-_gpgme_decode_percent_string (const char *src, char **destp, size_t len)
+_gpgme_decode_percent_string (const char *src, char **destp, size_t len,
+			      int binary)
 {
   char *dest;
 
@@ -221,7 +224,7 @@ _gpgme_decode_percent_string (const char *src, char **destp, size_t len)
 	    }
 	  else
 	    {
-	      if (!val)
+	      if (!val && !binary)
 		{
 		  /* A binary zero is not representable in a C
 		     string.  */

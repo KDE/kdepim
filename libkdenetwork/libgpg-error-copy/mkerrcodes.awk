@@ -1,5 +1,5 @@
 # mkerrcodes.awk
-# Copyright (C) 2004 g10 Code GmbH
+# Copyright (C) 2004, 2005 g10 Code GmbH
 # 
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License as
@@ -13,7 +13,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
-# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA.
 #
 # As a special exception, g10 Code GmbH gives unlimited permission to
 # copy, distribute and modify the C source files that are the output
@@ -41,14 +41,20 @@
 # data portions.)  If your modification has such potential, you must delete
 # any notice of this special exception to the GPL from your modified version.
 
-# This script outputs an intermediate file that contains the following block
-# for each error value symbol in the input file (example for EINVAL):
+# This script outputs an intermediate file that contains the following output:
+# static struct
+#   {
+#     int err;
+#     const char *err_sym;
+#   } err_table[] =
+# {
+#   { 7, "GPG_ERR_E2BIG" },
+#   [...]
+# };
 #
-# #ifdef EINVAL
-# EINVAL GPG_ERR_EINVAL
-# #endif
+# The input file is a list of possible system errors, followed by a GPG_ERR_* name:
 #
-# The input file is a list of possible system errors.
+# 7 GPG_ERR_E2BIG
 #
 # Comments (starting with # and ending at the end of the line) are removed,
 # as is trailing whitespace.
@@ -63,7 +69,7 @@ BEGIN {
 /^#/ { next; }
 
 header {
-  if ($0 ~ /^[0-9]+/)
+  if (! /^[ \t]*$/)
     {
       header = 0;
 

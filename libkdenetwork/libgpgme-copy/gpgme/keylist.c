@@ -1,22 +1,23 @@
 /* keylist.c - Listing keys.
    Copyright (C) 2000 Werner Koch (dd9jn)
-   Copyright (C) 2001, 2002, 2003 g10 Code GmbH
+   Copyright (C) 2001, 2002, 2003, 2004, 2006 g10 Code GmbH
 
    This file is part of GPGME.
  
    GPGME is free software; you can redistribute it and/or modify it
-   under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
- 
+   under the terms of the GNU Lesser General Public License as
+   published by the Free Software Foundation; either version 2.1 of
+   the License, or (at your option) any later version.
+   
    GPGME is distributed in the hope that it will be useful, but
    WITHOUT ANY WARRANTY; without even the implied warranty of
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   General Public License for more details.
- 
-   You should have received a copy of the GNU General Public License
-   along with GPGME; if not, write to the Free Software Foundation,
-   Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  */
+   Lesser General Public License for more details.
+   
+   You should have received a copy of the GNU Lesser General Public
+   License along with this program; if not, write to the Free Software
+   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
+   02111-1307, USA.  */
 
 #if HAVE_CONFIG_H
 #include <config.h>
@@ -47,7 +48,13 @@ typedef struct
   struct _gpgme_op_keylist_result result;
 
   gpgme_key_t tmp_key;
+
+  /* This points to the last uid in tmp_key.  */
   gpgme_user_id_t tmp_uid;
+
+  /* This points to the last sig in tmp_uid.  */
+  gpgme_key_sig_t tmp_keysig;
+
   /* Something new is available.  */
   int key_cond;
   struct key_queue_item_s *key_queue;
@@ -62,8 +69,10 @@ release_op_data (void *hook)
 
   if (opd->tmp_key)
     gpgme_key_unref (opd->tmp_key);
-  if (opd->tmp_uid)
-    free (opd->tmp_uid);
+
+  /* opd->tmp_uid and opd->tmp_keysig are actually part of opd->tmp_key,
+     so we do not need to release them here.  */
+
   while (key)
     {
       struct key_queue_item_s *next = key->next;
@@ -167,7 +176,8 @@ set_mainkey_trust_info (gpgme_key_t key, const char *src)
 
 	case 'd':
           /* Note that gpg 1.3 won't print that anymore but only uses
-             the capabilities field. */
+             the capabilities field.  However, it is still used for
+             external key listings.  */
 	  key->disabled = 1;
 	  break;
 
@@ -243,6 +253,10 @@ set_subkey_capability (gpgme_subkey_t subkey, const char *src)
 	  subkey->can_authenticate = 1;
 	  break;
 
+	case 'q':
+	  subkey->is_qualified = 1;
+	  break;
+
 	case 'd':
 	  subkey->disabled = 1;
 	  break;
@@ -290,6 +304,11 @@ set_mainkey_capability (gpgme_key_t key, const char *src)
 	case 'a':
 	case 'A':
 	  key->can_authenticate = 1;
+	  break;
+
+	case 'q':
+	case 'Q':
+	  key->is_qualified = 1;
 	  break;
         }
       src++;
@@ -339,6 +358,7 @@ finish_key (gpgme_ctx_t ctx, op_data_t opd)
 
   opd->tmp_key = NULL;
   opd->tmp_uid = NULL;
+  opd->tmp_keysig = NULL;
 
   if (key)
     _gpgme_engine_io_event (ctx->engine, GPGME_EVENT_NEXT_KEY, key);
@@ -353,10 +373,10 @@ keylist_colon_handler (void *priv, char *line)
   enum
     {
       RT_NONE, RT_SIG, RT_UID, RT_SUB, RT_PUB, RT_FPR,
-      RT_SSB, RT_SEC, RT_CRT, RT_CRS, RT_REV
+      RT_SSB, RT_SEC, RT_CRT, RT_CRS, RT_REV, RT_SPK
     }
   rectype = RT_NONE;
-#define NR_FIELDS 13
+#define NR_FIELDS 16
   char *field[NR_FIELDS];
   int fields = 0;
   void *hook;
@@ -366,15 +386,15 @@ keylist_colon_handler (void *priv, char *line)
   gpgme_subkey_t subkey = NULL;
   gpgme_key_sig_t keysig = NULL;
 
-  DEBUG3 ("keylist_colon_handler ctx = %p, key = %p, line = %s\n",
-	  ctx, key, line ? line : "(null)");
-
   err = _gpgme_op_data_lookup (ctx, OPDATA_KEYLIST, &hook, -1, NULL);
   opd = hook;
   if (err)
     return err;
 
   key = opd->tmp_key;
+
+  DEBUG3 ("keylist_colon_handler ctx = %p, key = %p, line = %s\n",
+	  ctx, key, line ? line : "(null)");
 
   if (!line)
     {
@@ -411,6 +431,8 @@ keylist_colon_handler (void *priv, char *line)
     rectype = RT_SUB; 
   else if (!strcmp (field[0], "ssb") && key)
     rectype = RT_SSB;
+  else if (!strcmp (field[0], "spk") && key)
+    rectype = RT_SPK;
   else 
     rectype = RT_NONE;
 
@@ -419,6 +441,12 @@ keylist_colon_handler (void *priv, char *line)
      signature.  */
   if (rectype != RT_SIG && rectype != RT_REV)
     opd->tmp_uid = NULL;
+
+  /* Only look at subpackets immediately following a signature.  For
+     this, clear the signature pointer when encountering anything but
+     a subpacket.  */
+  if (rectype != RT_SPK)
+    opd->tmp_keysig = NULL;
 
   switch (rectype)
     {
@@ -439,7 +467,7 @@ keylist_colon_handler (void *priv, char *line)
 	}
 
       if (rectype == RT_SEC || rectype == RT_CRS)
-	key->secret = 1;
+	key->secret = subkey->secret = 1;
       if (rectype == RT_CRT || rectype == RT_CRS)
 	key->protocol = GPGME_PROTOCOL_CMS;
       finish_key (ctx, opd);
@@ -466,8 +494,9 @@ keylist_colon_handler (void *priv, char *line)
 	    subkey->pubkey_algo = i;
 	}
 
-      /* Field 5 has the long keyid.  */
-      if (fields >= 5 && strlen (field[4]) == DIM(subkey->_keyid) - 1)
+      /* Field 5 has the long keyid.  Allow short key IDs for the
+	 output of an external keyserver listing.  */
+      if (fields >= 5 && strlen (field[4]) <= DIM(subkey->_keyid) - 1)
 	strcpy (subkey->_keyid, field[4]);
 
       /* Field 6 has the timestamp (seconds).  */
@@ -501,6 +530,13 @@ keylist_colon_handler (void *priv, char *line)
       /* Field 12 has the capabilities.  */
       if (fields >= 12)
 	set_mainkey_capability (key, field[11]);
+
+      /* Field 15 carries special flags of a secret key.  We reset the
+         SECRET flag of a subkey here if the key is actually only a
+         stub. The SECRET flag of the key will be true even then. */
+      if (fields >= 15 && key->secret)
+        if (*field[14] == '#')
+          subkey->secret = 0;
       break;
 
     case RT_SUB:
@@ -555,6 +591,11 @@ keylist_colon_handler (void *priv, char *line)
       /* Field 12 has the capabilities.  */
       if (fields >= 12)
 	set_subkey_capability (subkey, field[11]);
+
+      /* Field 15 carries special flags of a secret key. */
+      if (fields >= 15 && key->secret)
+        if (*field[14] == '#')
+          subkey->secret = 0;
       break;
 
     case RT_UID:
@@ -574,11 +615,17 @@ keylist_colon_handler (void *priv, char *line)
 
     case RT_FPR:
       /* Field 10 has the fingerprint (take only the first one).  */
-      if (fields >= 10 && !key->subkeys->fpr && field[9] && *field[9])
+      if (fields >= 10 && field[9] && *field[9])
 	{
-	  key->subkeys->fpr = strdup (field[9]);
-	  if (!key->subkeys->fpr)
-	    return gpg_error_from_errno (errno);
+          /* Need to apply it to the last subkey because all subkeys
+             do have fingerprints. */
+          subkey = key->_last_subkey;
+          if (!subkey->fpr)
+            {
+              subkey->fpr = strdup (field[9]);
+              if (!subkey->fpr)
+                return gpg_error_from_errno (errno);
+            }
 	}
 
       /* Field 13 has the gpgsm chain ID (take only the first one).  */
@@ -661,8 +708,51 @@ keylist_colon_handler (void *priv, char *line)
 	    if (field[10][2] == 'x')
 	      keysig->exportable = 1;
 	  }
+
+      opd->tmp_keysig = keysig;
       break;
 
+    case RT_SPK:
+      if (!opd->tmp_keysig)
+	return 0;
+      assert (opd->tmp_keysig == key->_last_uid->_last_keysig);
+
+      if (fields >= 4)
+	{
+	  /* Field 2 has the subpacket type.  */
+	  int type = atoi (field[1]);
+
+	  /* Field 3 has the flags.  */
+	  int flags = atoi (field[2]);
+
+	  /* Field 4 has the length.  */
+	  int len = atoi (field[3]);
+
+	  /* Field 5 has the data.  */
+	  char *data = field[4];
+
+	  /* Type 20: Notation data.  */
+	  /* Type 26: Policy URL.  */
+	  if (type == 20 || type == 26)
+	    {
+	      gpgme_sig_notation_t notation;
+
+	      keysig = opd->tmp_keysig;
+
+	      /* At this time, any error is serious.  */
+	      err = _gpgme_parse_notation (&notation, type, flags, len, data);
+	      if (err)
+		return err;
+
+	      /* Add a new notation.  FIXME: Could be factored out.  */
+	      if (!keysig->notations)
+		keysig->notations = notation;
+	      if (keysig->_last_notation)
+		keysig->_last_notation->next = notation;
+	      keysig->_last_notation = notation;
+	    }
+	}
+    
     case RT_NONE:
       /* Unknown record.  */
       break;
@@ -793,6 +883,8 @@ gpgme_op_keylist_next (gpgme_ctx_t ctx, gpgme_key_t *r_key)
   opd = hook;
   if (err)
     return err;
+  if (opd == NULL)
+    return gpg_error (GPG_ERR_INV_VALUE);
 
   if (!opd->key_queue)
     {
@@ -841,7 +933,7 @@ gpgme_get_key (gpgme_ctx_t ctx, const char *fpr, gpgme_key_t *r_key,
   if (!ctx || !r_key || !fpr)
     return gpg_error (GPG_ERR_INV_VALUE);
   
-  if (strlen (fpr) < 16)	/* We have at least a key ID.  */
+  if (strlen (fpr) < 8)	/* We have at least a key ID.  */
     return gpg_error (GPG_ERR_INV_VALUE);
 
   /* FIXME: We use our own context because we have to avoid the user's
@@ -849,8 +941,22 @@ gpgme_get_key (gpgme_ctx_t ctx, const char *fpr, gpgme_key_t *r_key,
   err = gpgme_new (&listctx);
   if (err)
     return err;
-  gpgme_set_protocol (listctx, gpgme_get_protocol (ctx));
-  gpgme_set_keylist_mode (listctx, ctx->keylist_mode);
+  {
+    gpgme_protocol_t proto;
+    gpgme_engine_info_t info;
+
+    /* Clone the relevant state.  */
+    proto = gpgme_get_protocol (ctx);
+    gpgme_set_protocol (listctx, proto);
+    gpgme_set_keylist_mode (listctx, gpgme_get_keylist_mode (ctx));
+    info = gpgme_ctx_get_engine_info (ctx);
+    while (info && info->protocol != proto)
+      info = info->next;
+    if (info)
+      gpgme_ctx_set_engine_info (listctx, proto,
+				 info->file_name, info->home_dir);
+  }
+
   err = gpgme_op_keylist_start (listctx, fpr, secret);
   if (!err)
     err = gpgme_op_keylist_next (listctx, r_key);

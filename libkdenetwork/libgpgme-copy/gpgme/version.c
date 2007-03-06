@@ -1,22 +1,23 @@
 /* version.c - Version check routines.
    Copyright (C) 2000 Werner Koch (dd9jn)
-   Copyright (C) 2001, 2002, 2003 g10 Code GmbH
+   Copyright (C) 2001, 2002, 2003, 2004, 2005 g10 Code GmbH
  
    This file is part of GPGME.
  
    GPGME is free software; you can redistribute it and/or modify it
-   under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
- 
+   under the terms of the GNU Lesser General Public License as
+   published by the Free Software Foundation; either version 2.1 of
+   the License, or (at your option) any later version.
+   
    GPGME is distributed in the hope that it will be useful, but
    WITHOUT ANY WARRANTY; without even the implied warranty of
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   General Public License for more details.
- 
-   You should have received a copy of the GNU General Public License
-   along with GPGME; if not, write to the Free Software Foundation,
-   Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  */
+   Lesser General Public License for more details.
+   
+   You should have received a copy of the GNU Lesser General Public
+   License along with this program; if not, write to the Free Software
+   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
+   02111-1307, USA.  */
 
 #if HAVE_CONFIG_H
 #include <config.h>
@@ -26,10 +27,14 @@
 #include <ctype.h>
 
 #include "gpgme.h"
-#include "io.h"
+#include "priv-io.h"
 
 /* For _gpgme_sema_subsystem_init ().  */
 #include "sema.h"
+
+#ifdef HAVE_ASSUAN_H
+#include "assuan.h"
+#endif
 
 
 /* Bootstrap the subsystems needed for concurrent operation.  This
@@ -47,6 +52,9 @@ do_subsystem_inits (void)
 
   _gpgme_sema_subsystem_init ();
   _gpgme_io_subsystem_init ();
+#ifdef HAVE_ASSUAN_H
+  assuan_set_assuan_err_source (GPG_ERR_SOURCE_GPGME);
+#endif
 
   done = 1;
 }
@@ -103,7 +111,9 @@ parse_version_string (const char *str, int *major, int *minor, int *micro)
 }
 
 
-const char *
+/* Return true if MY_VERSION is at least REQ_VERSION, and false
+   otherwise.  */
+int
 _gpgme_compare_versions (const char *my_version,
 			 const char *rq_version)
 {
@@ -112,17 +122,17 @@ _gpgme_compare_versions (const char *my_version,
   const char *my_plvl, *rq_plvl;
 
   if (!rq_version)
-    return my_version;
+    return 1;
   if (!my_version)
-    return NULL;
+    return 0;
 
   my_plvl = parse_version_string (my_version, &my_major, &my_minor, &my_micro);
   if (!my_plvl)
-    return NULL;
+    return 0;
 
   rq_plvl = parse_version_string (rq_version, &rq_major, &rq_minor, &rq_micro);
   if (!rq_plvl)
-    return NULL;
+    return 0;
 
   if (my_major > rq_major
       || (my_major == rq_major && my_minor > rq_minor)
@@ -130,9 +140,9 @@ _gpgme_compare_versions (const char *my_version,
 	  && my_micro > rq_micro)
       || (my_major == rq_major && my_minor == rq_minor
 	  && my_micro == rq_micro && strcmp (my_plvl, rq_plvl) >= 0))
-    return my_version;
+    return 1;
 
-  return NULL;
+  return 0;
 }
 
 
@@ -149,7 +159,7 @@ const char *
 gpgme_check_version (const char *req_version)
 {
   do_subsystem_inits ();
-  return _gpgme_compare_versions (VERSION, req_version);
+  return _gpgme_compare_versions (VERSION, req_version) ? VERSION : NULL;
 }
 
 
@@ -197,6 +207,8 @@ _gpgme_get_program_version (const char *const file_name)
 	  mark = strchr (&line[linelen], '\n');
 	  if (mark)
 	    {
+	      if (mark > &line[0] && *mark == '\r')
+		mark--;
 	      *mark = '\0';
 	      break;
 	    }

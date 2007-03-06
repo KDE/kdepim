@@ -15,7 +15,8 @@
  *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA 
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,
+ * USA. 
  */
 
 #ifdef HAVE_CONFIG_H
@@ -29,13 +30,15 @@
 #include <unistd.h>
 #include <errno.h>
 #include <sys/types.h>
+#ifndef HAVE_W32_SYSTEM
 #include <sys/wait.h>
+#endif
 
 #include "assuan-defs.h"
 
 /* Disconnect and release the context CTX. */
 void
-assuan_disconnect (ASSUAN_CONTEXT ctx)
+assuan_disconnect (assuan_context_t ctx)
 {
   if (ctx)
     {
@@ -47,8 +50,30 @@ assuan_disconnect (ASSUAN_CONTEXT ctx)
     }
 }
 
+/* Return the PID of the peer or -1 if not known. This function works
+   in some situations where assuan_get_ucred fails. */
 pid_t
-assuan_get_pid (ASSUAN_CONTEXT ctx)
+assuan_get_pid (assuan_context_t ctx)
 {
-  return ctx ? ctx->pid : -1;
+  return (ctx && ctx->pid)? ctx->pid : -1;
+}
+
+
+/* Return user credentials. PID, UID and GID amy be gived as NULL if
+   you are not interested in this value.  For getting the pid of the
+   peer the assuan_get_pid is usually better suited. */
+assuan_error_t
+assuan_get_peercred (assuan_context_t ctx, pid_t *pid, uid_t *uid, gid_t *gid)
+{
+  if (!ctx)
+    return _assuan_error (ASSUAN_Invalid_Value);
+  if (!ctx->peercred.valid)
+    return _assuan_error (ASSUAN_General_Error);
+  if (pid)
+    *pid = ctx->peercred.pid;
+  if (uid)
+    *uid = ctx->peercred.uid;
+  if (gid)
+    *gid = ctx->peercred.gid;
+  return 0;
 }

@@ -4,18 +4,19 @@
    This file is part of GPGME.
  
    GPGME is free software; you can redistribute it and/or modify it
-   under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
- 
+   under the terms of the GNU Lesser General Public License as
+   published by the Free Software Foundation; either version 2.1 of
+   the License, or (at your option) any later version.
+   
    GPGME is distributed in the hope that it will be useful, but
    WITHOUT ANY WARRANTY; without even the implied warranty of
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   General Public License for more details.
- 
-   You should have received a copy of the GNU General Public License
-   along with GPGME; if not, write to the Free Software Foundation,
-   Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  */
+   Lesser General Public License for more details.
+   
+   You should have received a copy of the GNU Lesser General Public
+   License along with this program; if not, write to the Free Software
+   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
+   02111-1307, USA.  */
 
 #if HAVE_CONFIG_H
 #include <config.h>
@@ -50,12 +51,31 @@ stream_write (gpgme_data_t dh, const void *buffer, size_t size)
 static off_t
 stream_seek (gpgme_data_t dh, off_t offset, int whence)
 {
+  int err;
+
 #ifdef HAVE_FSEEKO
-  return fseeko (dh->data.stream, offset, whence);
+  err = fseeko (dh->data.stream, offset, whence);
 #else
   /* FIXME: Check for overflow, or at least bail at compilation.  */
-  return fseek (dh->data.stream, offset, whence);
+  err = fseek (dh->data.stream, offset, whence);
 #endif
+
+  if (err)
+    return -1;
+
+#ifdef HAVE_FSEEKO
+  return ftello (dh->data.stream);
+#else
+  return ftell (dh->data.stream);
+#endif
+}
+
+
+static int
+stream_get_fd (gpgme_data_t dh)
+{
+  fflush (dh->data.stream);
+  return fileno (dh->data.stream);
 }
 
 
@@ -64,7 +84,8 @@ static struct _gpgme_data_cbs stream_cbs =
     stream_read,
     stream_write,
     stream_seek,
-    NULL
+    NULL,
+    stream_get_fd
   };
 
 

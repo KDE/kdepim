@@ -1,22 +1,23 @@
 /* gpgme.c - GnuPG Made Easy.
    Copyright (C) 2000 Werner Koch (dd9jn)
-   Copyright (C) 2001, 2002, 2003 g10 Code GmbH
+   Copyright (C) 2001, 2002, 2003, 2004, 2005 g10 Code GmbH
 
    This file is part of GPGME.
  
    GPGME is free software; you can redistribute it and/or modify it
-   under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
- 
+   under the terms of the GNU Lesser General Public License as
+   published by the Free Software Foundation; either version 2.1 of
+   the License, or (at your option) any later version.
+   
    GPGME is distributed in the hope that it will be useful, but
    WITHOUT ANY WARRANTY; without even the implied warranty of
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   General Public License for more details.
- 
-   You should have received a copy of the GNU General Public License
-   along with GPGME; if not, write to the Free Software Foundation,
-   Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  */
+   Lesser General Public License for more details.
+   
+   You should have received a copy of the GNU Lesser General Public
+   License along with this program; if not, write to the Free Software
+   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
+   02111-1307, USA.  */
 
 #if HAVE_CONFIG_H
 #include <config.h>
@@ -50,8 +51,16 @@ gpgme_new (gpgme_ctx_t *r_ctx)
   ctx = calloc (1, sizeof *ctx);
   if (!ctx)
     return gpg_error_from_errno (errno);
+
+  _gpgme_engine_info_copy (&ctx->engine_info);
+  if (!ctx->engine_info)
+    {
+      free (ctx);
+      return gpg_error_from_errno (errno);
+    }
+
   ctx->keylist_mode = GPGME_KEYLIST_MODE_LOCAL;
-  ctx->include_certs = 1;
+  ctx->include_certs = GPGME_INCLUDE_CERTS_DEFAULT;
   ctx->protocol = GPGME_PROTOCOL_OpenPGP;
   _gpgme_fd_table_init (&ctx->fdt);
 
@@ -62,6 +71,7 @@ gpgme_new (gpgme_ctx_t *r_ctx)
       if (!ctx->lc_ctype)
 	{
 	  UNLOCK (def_lc_lock);
+	  _gpgme_engine_info_release (ctx->engine_info);
 	  free (ctx);
 	  return gpg_error_from_errno (errno);
 	}
@@ -77,6 +87,7 @@ gpgme_new (gpgme_ctx_t *r_ctx)
 	  UNLOCK (def_lc_lock);
 	  if (ctx->lc_ctype)
 	    free (ctx->lc_ctype);
+	  _gpgme_engine_info_release (ctx->engine_info);
 	  free (ctx);
 	  return gpg_error_from_errno (errno);
 	}
@@ -120,6 +131,7 @@ gpgme_release (gpgme_ctx_t ctx)
     free (ctx->lc_ctype);
   if (ctx->lc_messages)
     free (ctx->lc_messages);
+  _gpgme_engine_info_release (ctx->engine_info);
   free (ctx);
 }
 
@@ -147,7 +159,17 @@ gpgme_set_protocol (gpgme_ctx_t ctx, gpgme_protocol_t protocol)
   if (protocol != GPGME_PROTOCOL_OpenPGP && protocol != GPGME_PROTOCOL_CMS)
     return gpg_error (GPG_ERR_INV_VALUE);
 
-  ctx->protocol = protocol;
+  if (ctx->protocol != protocol)
+    {
+      /* Shut down the engine when switching protocols.  */
+      if (ctx->engine)
+	{
+	  _gpgme_engine_release (ctx->engine);
+	  ctx->engine = NULL;
+	}
+
+      ctx->protocol = protocol;
+    }
   return 0;
 }
 
@@ -210,12 +232,14 @@ gpgme_get_textmode (gpgme_ctx_t ctx)
 
 
 /* Set the number of certifications to include in an S/MIME message.
-   The default is 1 (only the cert of the sender).  -1 means all
-   certs, and -2 means all certs except the root cert.  */
+   The default is GPGME_INCLUDE_CERTS_DEFAULT.  -1 means all certs,
+   and -2 means all certs except the root cert.  */
 void
 gpgme_set_include_certs (gpgme_ctx_t ctx, int nr_of_certs)
 {
-  if (nr_of_certs < -2)
+  if (nr_of_certs == GPGME_INCLUDE_CERTS_DEFAULT)
+    ctx->include_certs = GPGME_INCLUDE_CERTS_DEFAULT;
+  else if (nr_of_certs < -2)
     ctx->include_certs = -2;
   else
     ctx->include_certs = nr_of_certs;
@@ -237,11 +261,6 @@ gpgme_get_include_certs (gpgme_ctx_t ctx)
 gpgme_error_t
 gpgme_set_keylist_mode (gpgme_ctx_t ctx, gpgme_keylist_mode_t mode)
 {
-  if (!((mode & GPGME_KEYLIST_MODE_LOCAL)
-	|| (mode & GPGME_KEYLIST_MODE_EXTERN)
-	|| (mode & GPGME_KEYLIST_MODE_SIGS)))
-    return gpg_error (GPG_ERR_INV_VALUE);
-
   ctx->keylist_mode = mode;
   return 0;
 }
@@ -333,8 +352,8 @@ gpgme_error_t
 gpgme_set_locale (gpgme_ctx_t ctx, int category, const char *value)
 {
   int failed = 0;
-  char *new_lc_ctype;
-  char *new_lc_messages;
+  char *new_lc_ctype = NULL;
+  char *new_lc_messages = NULL;
 
 #define PREPARE_ONE_LOCALE(lcat, ucat)				\
   if (!failed && value						\
@@ -343,12 +362,12 @@ gpgme_set_locale (gpgme_ctx_t ctx, int category, const char *value)
       new_lc_ ## lcat = strdup (value);				\
       if (!new_lc_ ## lcat)					\
         failed = 1;						\
-    }								\
-  else								\
-    new_lc_ ## lcat = NULL;
+    }
 
   PREPARE_ONE_LOCALE (ctype, CTYPE);
+#ifdef LC_MESSAGES
   PREPARE_ONE_LOCALE (messages, MESSAGES);
+#endif
 
   if (failed)
     {
@@ -382,13 +401,107 @@ gpgme_set_locale (gpgme_ctx_t ctx, int category, const char *value)
   if (!ctx)
     LOCK (def_lc_lock);
   SET_ONE_LOCALE (ctype, CTYPE);
+#ifdef LC_MESSAGES
   SET_ONE_LOCALE (messages, MESSAGES);
+#endif
   if (!ctx)
     UNLOCK (def_lc_lock);
 
   return 0;
 }
 
+
+/* Get the information about the configured engines.  A pointer to the
+   first engine in the statically allocated linked list is returned.
+   The returned data is valid until the next gpgme_ctx_set_engine_info.  */
+gpgme_engine_info_t
+gpgme_ctx_get_engine_info (gpgme_ctx_t ctx)
+{
+  return ctx->engine_info;
+}
+
+
+/* Set the engine info for the context CTX, protocol PROTO, to the
+   file name FILE_NAME and the home directory HOME_DIR.  */
+gpgme_error_t
+gpgme_ctx_set_engine_info (gpgme_ctx_t ctx, gpgme_protocol_t proto,
+			   const char *file_name, const char *home_dir)
+{
+  /* Shut down the engine when changing engine info.  */
+  if (ctx->engine)
+    {
+      _gpgme_engine_release (ctx->engine);
+      ctx->engine = NULL;
+    }
+  return _gpgme_set_engine_info (ctx->engine_info, proto,
+				 file_name, home_dir);
+}
+
+
+/* Clear all notation data from the context.  */
+void
+gpgme_sig_notation_clear (gpgme_ctx_t ctx)
+{
+  gpgme_sig_notation_t notation;
+
+  if (!ctx)
+    return;
+
+  notation = ctx->sig_notations;
+  while (notation)
+    {
+      gpgme_sig_notation_t next_notation = notation->next;
+      _gpgme_sig_notation_free (notation);
+      notation = next_notation;
+    }
+}
+
+
+/* Add the human-readable notation data with name NAME and value VALUE
+   to the context CTX, using the flags FLAGS.  If NAME is NULL, then
+   VALUE should be a policy URL.  The flag
+   GPGME_SIG_NOTATION_HUMAN_READABLE is forced to be true for notation
+   data, and false for policy URLs.  */
+gpgme_error_t
+gpgme_sig_notation_add (gpgme_ctx_t ctx, const char *name,
+			const char *value, gpgme_sig_notation_flags_t flags)
+{
+  gpgme_error_t err;
+  gpgme_sig_notation_t notation;
+  gpgme_sig_notation_t *lastp;
+
+  if (!ctx)
+     gpg_error (GPG_ERR_INV_VALUE);
+
+  if (name)
+    flags |= GPGME_SIG_NOTATION_HUMAN_READABLE;
+  else
+    flags &= ~GPGME_SIG_NOTATION_HUMAN_READABLE;
+
+  err = _gpgme_sig_notation_create (&notation, name, name ? strlen (name) : 0,
+				    value, value ? strlen (value) : 0, flags);
+  if (err)
+    return err;
+
+  lastp = &ctx->sig_notations;
+  while (*lastp)
+    lastp = &(*lastp)->next;
+
+  *lastp = notation;
+  return 0;
+}
+
+
+/* Get the sig notations for this context.  */
+gpgme_sig_notation_t
+gpgme_sig_notation_get (gpgme_ctx_t ctx)
+{
+  if (!ctx)
+    return NULL;
+
+  return ctx->sig_notations;
+}
+  
 
 const char *
 gpgme_pubkey_algo_name (gpgme_pubkey_algo_t algo)

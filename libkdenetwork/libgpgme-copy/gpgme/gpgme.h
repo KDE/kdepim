@@ -1,22 +1,23 @@
 /* gpgme.h - Public interface to GnuPG Made Easy.
    Copyright (C) 2000 Werner Koch (dd9jn)
-   Copyright (C) 2001, 2002, 2003, 2004 g10 Code GmbH
+   Copyright (C) 2001, 2002, 2003, 2004, 2005 g10 Code GmbH
 
    This file is part of GPGME.
  
    GPGME is free software; you can redistribute it and/or modify it
-   under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
- 
+   under the terms of the GNU Lesser General Public License as
+   published by the Free Software Foundation; either version 2.1 of
+   the License, or (at your option) any later version.
+   
    GPGME is distributed in the hope that it will be useful, but
    WITHOUT ANY WARRANTY; without even the implied warranty of
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   General Public License for more details.
- 
-   You should have received a copy of the GNU General Public License
-   along with GPGME; if not, write to the Free Software Foundation,
-   Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  */
+   Lesser General Public License for more details.
+   
+   You should have received a copy of the GNU Lesser General Public
+   License along with this program; if not, write to the Free Software
+   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
+   02111-1307, USA.  */
 
 #ifndef GPGME_H
 #define GPGME_H
@@ -37,9 +38,6 @@
   typedef long ssize_t;
 #else
 # include <sys/types.h>
-#ifdef _WIN32
-typedef long ssize_t;
-#endif
 #endif
 
 #ifdef __cplusplus
@@ -54,14 +52,9 @@ extern "C" {
 
 /* Check for compiler features.  */
 #if __GNUC__
-#ifdef __GNUC_PATCHLEVEL__
 #define _GPGME_GCC_VERSION (__GNUC__ * 10000 \
                             + __GNUC_MINOR__ * 100 \
                             + __GNUC_PATCHLEVEL__)
-#else
-#define _GPGME_GCC_VERSION (__GNUC__ * 10000 \
-                            + __GNUC_MINOR__ * 100)
-#endif
 
 #if _GPGME_GCC_VERSION > 30100
 #define _GPGME_DEPRECATED	__attribute__ ((__deprecated__))
@@ -79,7 +72,8 @@ extern "C" {
    AM_PATH_GPGME macro) check that this header matches the installed
    library.  Warning: Do not edit the next line.  configure will do
    that for you!  */
-#define GPGME_VERSION "0.9.0"
+#define GPGME_VERSION "1.1.4"
+
 
 
 /* Some opaque data types used by GPGME.  */
@@ -311,14 +305,53 @@ gpgme_protocol_t;
 
 
 /* The available keylist mode flags.  */
-typedef enum
-  {
-    GPGME_KEYLIST_MODE_LOCAL  = 1,
-    GPGME_KEYLIST_MODE_EXTERN = 2,
-    GPGME_KEYLIST_MODE_SIGS   = 4,
-    GPGME_KEYLIST_MODE_VALIDATE = 256
-  }
-gpgme_keylist_mode_t;
+#define GPGME_KEYLIST_MODE_LOCAL		1
+#define GPGME_KEYLIST_MODE_EXTERN		2
+#define GPGME_KEYLIST_MODE_SIGS			4
+#define GPGME_KEYLIST_MODE_SIG_NOTATIONS	8
+#define GPGME_KEYLIST_MODE_VALIDATE		256
+
+typedef unsigned int gpgme_keylist_mode_t;
+
+
+/* Signature notations.  */
+
+/* The available signature notation flags.  */
+#define GPGME_SIG_NOTATION_HUMAN_READABLE	1
+#define GPGME_SIG_NOTATION_CRITICAL		2
+
+typedef unsigned int gpgme_sig_notation_flags_t;
+
+struct _gpgme_sig_notation
+{
+  struct _gpgme_sig_notation *next;
+
+  /* If NAME is a null pointer, then VALUE contains a policy URL
+     rather than a notation.  */
+  char *name;
+
+  /* The value of the notation data.  */
+  char *value;
+
+  /* The length of the name of the notation data.  */
+  int name_len;
+
+  /* The length of the value of the notation data.  */
+  int value_len;
+
+  /* The accumulated flags.  */
+  gpgme_sig_notation_flags_t flags;
+
+  /* Notation data is human-readable.  */
+  unsigned int human_readable : 1;
+
+  /* Notation data is critical.  */
+  unsigned int critical : 1;
+
+  /* Internal to GPGME, do not use.  */
+  int _unused : 30;
+};
+typedef struct _gpgme_sig_notation *gpgme_sig_notation_t;
 
 
 /* The possible stati for the edit operation.  */
@@ -405,7 +438,17 @@ typedef enum
     GPGME_STATUS_TRUNCATED,
     GPGME_STATUS_ERROR,
     GPGME_STATUS_NEWSIG,
-    GPGME_STATUS_REVKEYSIG
+    GPGME_STATUS_REVKEYSIG,
+    GPGME_STATUS_SIG_SUBPACKET,
+    GPGME_STATUS_NEED_PASSPHRASE_PIN,
+    GPGME_STATUS_SC_OP_FAILURE,
+    GPGME_STATUS_SC_OP_SUCCESS,
+    GPGME_STATUS_CARDCTRL,
+    GPGME_STATUS_BACKUP_KEY_CREATED,
+    GPGME_STATUS_PKA_TRUST_BAD,
+    GPGME_STATUS_PKA_TRUST_GOOD,
+
+    GPGME_STATUS_PLAINTEXT
   }
 gpgme_status_code_t;
 
@@ -419,13 +462,16 @@ struct _gpgme_engine_info
   gpgme_protocol_t protocol;
 
   /* The file name of the engine binary.  */
-  const char *file_name;
-
+  char *file_name;
+  
   /* The version string of the installed engine.  */
-  const char *version;
+  char *version;
 
   /* The minimum version required for GPGME.  */
   const char *req_version;
+
+  /* The home directory used, or NULL if default.  */
+  char *home_dir;
 };
 typedef struct _gpgme_engine_info *gpgme_engine_info_t;
 
@@ -462,8 +508,11 @@ struct _gpgme_subkey
   /* True if subkey can be used for authentication.  */
   unsigned int can_authenticate : 1;
 
+  /* True if subkey is qualified for signatures according to German law.  */
+  unsigned int is_qualified : 1;
+
   /* Internal to GPGME, do not use.  */
-  unsigned int _unused : 23;
+  unsigned int _unused : 22;
   
   /* Public key algorithm supported by this subkey.  */
   gpgme_pubkey_algo_t pubkey_algo;
@@ -548,6 +597,12 @@ struct _gpgme_key_sig
 
   /* Crypto backend specific signature class.  */
   unsigned int sig_class;
+
+  /* Notation data and policy URLs.  */
+  gpgme_sig_notation_t notations;
+
+  /* Internal to GPGME, do not use.  */
+  gpgme_sig_notation_t _last_notation;
 };
 typedef struct _gpgme_key_sig *gpgme_key_sig_t;
 
@@ -623,8 +678,11 @@ struct _gpgme_key
   /* True if key can be used for authentication.  */
   unsigned int can_authenticate : 1;
 
+  /* True if subkey is qualified for signatures according to German law.  */
+  unsigned int is_qualified : 1;
+
   /* Internal to GPGME, do not use.  */
-  unsigned int _unused : 23;
+  unsigned int _unused : 22;
 
   /* This is the protocol supported by this key.  */
   gpgme_protocol_t protocol;
@@ -658,10 +716,7 @@ struct _gpgme_key
   gpgme_user_id_t _last_uid;
 
   /* The keylist mode that was active when listing the key.  */
-  /* Implementation note: We are using unsigned int here, and not
-     gpgme_keylist_mode_t, as the latter is currently an enum of
-     unknown size.  */
-  unsigned int keylist_mode;
+  gpgme_keylist_mode_t keylist_mode;
 };
 typedef struct _gpgme_key *gpgme_key_t;
 
@@ -714,6 +769,9 @@ void gpgme_set_textmode (gpgme_ctx_t ctx, int yes);
 /* Return non-zero if text mode is set in CTX.  */
 int gpgme_get_textmode (gpgme_ctx_t ctx);
 
+/* Use whatever the default of the backend crypto engine is.  */
+#define GPGME_INCLUDE_CERTS_DEFAULT	-256
+
 /* Include up to NR_OF_CERTS certificates in an S/MIME message.  */
 void gpgme_set_include_certs (gpgme_ctx_t ctx, int nr_of_certs);
 
@@ -751,6 +809,19 @@ void gpgme_get_progress_cb (gpgme_ctx_t ctx, gpgme_progress_cb_t *cb,
    locale if CTX is a null pointer.  */
 gpgme_error_t gpgme_set_locale (gpgme_ctx_t ctx, int category,
 				const char *value);
+
+/* Get the information about the configured engines.  A pointer to the
+   first engine in the statically allocated linked list is returned.
+   The returned data is valid until the next gpgme_ctx_set_engine_info.  */
+gpgme_engine_info_t gpgme_ctx_get_engine_info (gpgme_ctx_t ctx);
+
+/* Set the engine info for the context CTX, protocol PROTO, to the
+   file name FILE_NAME and the home directory HOME_DIR.  */
+gpgme_error_t gpgme_ctx_set_engine_info (gpgme_ctx_t ctx,
+					 gpgme_protocol_t proto,
+					 const char *file_name,
+					 const char *home_dir);
+
 
 /* Return a statically allocated string with the name of the public
    key algorithm ALGO, or NULL if that name is not known.  */
@@ -795,6 +866,22 @@ const char *gpgme_get_sig_string_attr (gpgme_ctx_t c, int idx,
    R_KEY.  */
 gpgme_error_t gpgme_get_sig_key (gpgme_ctx_t ctx, int idx, gpgme_key_t *r_key)
      _GPGME_DEPRECATED;
+
+
+/* Clear all notation data from the context.  */
+void gpgme_sig_notation_clear (gpgme_ctx_t ctx);
+
+/* Add the human-readable notation data with name NAME and value VALUE
+   to the context CTX, using the flags FLAGS.  If NAME is NULL, then
+   VALUE should be a policy URL.  The flag
+   GPGME_SIG_NOTATION_HUMAN_READABLE is forced to be true for notation
+   data, and false for policy URLs.  */
+gpgme_error_t gpgme_sig_notation_add (gpgme_ctx_t ctx, const char *name,
+				      const char *value,
+				      gpgme_sig_notation_flags_t flags);
+
+/* Get the sig notations for this context.  */
+gpgme_sig_notation_t gpgme_sig_notation_get (gpgme_ctx_t ctx);
 
 
 /* Run control.  */
@@ -911,9 +998,12 @@ gpgme_error_t gpgme_data_new_from_mem (gpgme_data_t *r_dh,
 				       int copy);
 
 /* Destroy the data buffer DH and return a pointer to its content.
-   The memory has be to released with free by the user.  It's size is
-   returned in R_LEN.  */
+   The memory has be to released with gpgme_free() by the user.  It's
+   size is returned in R_LEN.  */
 char *gpgme_data_release_and_get_mem (gpgme_data_t dh, size_t *r_len);
+
+/* Release the memory returned by gpgme_data_release_and_get_mem().  */
+void gpgme_free (void *buffer);
 
 gpgme_error_t gpgme_data_new_from_cbs (gpgme_data_t *dh,
 				       gpgme_data_cbs_t cbs,
@@ -930,6 +1020,14 @@ gpgme_data_encoding_t gpgme_data_get_encoding (gpgme_data_t dh);
 gpgme_error_t gpgme_data_set_encoding (gpgme_data_t dh,
 				       gpgme_data_encoding_t enc);
 
+/* Get the file name associated with the data object with handle DH, or
+   NULL if there is none.  */
+char *gpgme_data_get_file_name (gpgme_data_t dh);
+
+/* Set the file name associated with the data object with handle DH to
+   FILE_NAME.  */
+gpgme_error_t gpgme_data_set_file_name (gpgme_data_t dh,
+					const char *file_name);
 
 
 /* Create a new data buffer which retrieves the data from the callback
@@ -1066,6 +1164,25 @@ gpgme_error_t gpgme_op_encrypt_sign (gpgme_ctx_t ctx, gpgme_key_t recp[],
 
 
 /* Decryption.  */
+
+struct _gpgme_recipient
+{
+  struct _gpgme_recipient *next;
+
+  /* The key ID of key for which the text was encrypted.  */
+  char *keyid;
+
+  /* Internal to GPGME, do not use.  */
+  char _keyid[16 + 1];
+
+  /* The public key algorithm of the recipient key.  */
+  gpgme_pubkey_algo_t pubkey_algo;
+
+  /* The status of the recipient.  */
+  gpgme_error_t status;
+};
+typedef struct _gpgme_recipient *gpgme_recipient_t;
+
 struct _gpgme_op_decrypt_result
 {
   char *unsupported_algorithm;
@@ -1075,6 +1192,12 @@ struct _gpgme_op_decrypt_result
 
   /* Internal to GPGME, do not use.  */
   int _unused : 31;
+
+  gpgme_recipient_t recipients;
+
+  /* The original file name of the plaintext message, if
+     available.  */
+  char *file_name;
 };
 typedef struct _gpgme_op_decrypt_result *gpgme_decrypt_result_t;
 
@@ -1154,16 +1277,6 @@ gpgme_error_t gpgme_op_sign (gpgme_ctx_t ctx,
 
 
 /* Verify.  */
-struct _gpgme_sig_notation
-{
-  struct _gpgme_sig_notation *next;
-
-  /* If NAME is a null pointer, then VALUE contains a policy URL
-     rather than a notation.  */
-  char *name;
-  char *value;
-};
-typedef struct _gpgme_sig_notation *gpgme_sig_notation_t;
 
 /* Flags used for the SUMMARY field in a gpgme_signature_t.  */
 typedef enum
@@ -1178,7 +1291,7 @@ typedef enum
     GPGME_SIGSUM_CRL_MISSING = 0x0100,  /* CRL not available.  */
     GPGME_SIGSUM_CRL_TOO_OLD = 0x0200,  /* Available CRL is too old.  */
     GPGME_SIGSUM_BAD_POLICY  = 0x0400,  /* A policy was not met.  */
-    GPGME_SIGSUM_SYS_ERROR   = 0x0800   /* A system error occurred.  */
+    GPGME_SIGSUM_SYS_ERROR   = 0x0800   /* A system error occured.  */
   }
 gpgme_sigsum_t;
 
@@ -1207,17 +1320,33 @@ struct _gpgme_signature
   /* Key should not have been used for signing.  */
   unsigned int wrong_key_usage : 1;
 
+  /* PKA status: 0 = not available, 1 = bad, 2 = okay, 3 = RFU. */
+  unsigned int pka_trust : 2;
+
   /* Internal to GPGME, do not use.  */
-  int _unused : 31;
+  int _unused : 29;
 
   gpgme_validity_t validity;
   gpgme_error_t validity_reason;
+
+  /* The public key algorithm used to create the signature.  */
+  gpgme_pubkey_algo_t pubkey_algo;
+
+  /* The hash algorithm used to create the signature.  */
+  gpgme_hash_algo_t hash_algo;
+
+  /* The mailbox from the PKA information or NULL. */
+  char *pka_address;
 };
 typedef struct _gpgme_signature *gpgme_signature_t;
 
 struct _gpgme_op_verify_result
 {
   gpgme_signature_t signatures;
+
+  /* The original file name of the plaintext message, if
+     available.  */
+  char *file_name;
 };
 typedef struct _gpgme_op_verify_result *gpgme_verify_result_t;
 
@@ -1234,23 +1363,22 @@ gpgme_error_t gpgme_op_verify (gpgme_ctx_t ctx, gpgme_data_t sig,
 
 
 /* Import.  */
-enum
-  {
-    /* The key was new.  */
-    GPGME_IMPORT_NEW = 1,
 
-    /* The key contained new user IDs.  */
-    GPGME_IMPORT_UID = 2,
+/* The key was new.  */
+#define GPGME_IMPORT_NEW	1
 
-    /* The key contained new signatures.  */
-    GPGME_IMPORT_SIG = 4,
+/* The key contained new user IDs.  */
+#define GPGME_IMPORT_UID	2
 
-    /* The key contained new sub keys.  */
-    GPGME_IMPORT_SUBKEY	= 8,
+/* The key contained new signatures.  */
+#define GPGME_IMPORT_SIG	4
 
-    /* The key contained a secret key.  */
-    GPGME_IMPORT_SECRET = 16
-  };
+/* The key contained new sub keys.  */
+#define GPGME_IMPORT_SUBKEY	8
+
+/* The key contained a secret key.  */
+#define GPGME_IMPORT_SECRET	16
+
 
 struct _gpgme_import_status
 {
@@ -1259,7 +1387,7 @@ struct _gpgme_import_status
   /* Fingerprint.  */
   char *fpr;
 
-  /* If a problem occurred, the reason why the key could not be
+  /* If a problem occured, the reason why the key could not be
      imported.  Otherwise GPGME_No_Error.  */
   gpgme_error_t result;
 
@@ -1512,8 +1640,17 @@ int gpgme_trust_item_get_int_attr (gpgme_trust_item_t item, _gpgme_attr_t what,
 /* Check that the library fulfills the version requirement.  */
 const char *gpgme_check_version (const char *req_version);
 
-/* Retrieve information about the backend engines.  */
+/* Get the information about the configured and installed engines.  A
+   pointer to the first engine in the statically allocated linked list
+   is returned in *INFO.  If an error occurs, it is returned.  The
+   returned data is valid until the next gpgme_set_engine_info.  */
 gpgme_error_t gpgme_get_engine_info (gpgme_engine_info_t *engine_info);
+
+/* Set the default engine info for the protocol PROTO to the file name
+   FILE_NAME and the home directory HOME_DIR.  */
+gpgme_error_t gpgme_set_engine_info (gpgme_protocol_t proto,
+				     const char *file_name,
+				     const char *home_dir);
 
 
 /* Engine support functions.  */

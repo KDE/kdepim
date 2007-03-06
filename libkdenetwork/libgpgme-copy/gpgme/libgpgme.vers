@@ -1,5 +1,5 @@
 # libgpgme.vers - List of symbols to export.
-# Copyright (C) 2002, 2004 g10 Code GmbH
+# Copyright (C) 2002, 2004, 2005 g10 Code GmbH
 #
 # This file is part of GPGME.
 #
@@ -15,7 +15,28 @@
 #
 # You should have received a copy of the GNU Lesser General Public
 # License along with this program; if not, write to the Free Software
-# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA
+# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA
+
+#-------------------------------------------------------
+# Please remember to add new functions also to gpgme.def
+#-------------------------------------------------------
+
+GPGME_1.1 {
+  global:
+    gpgme_set_engine_info;
+
+    gpgme_ctx_get_engine_info;
+    gpgme_ctx_set_engine_info;
+
+    gpgme_data_set_file_name;
+    gpgme_data_get_file_name;
+
+    gpgme_sig_notation_clear;
+    gpgme_sig_notation_add;
+    gpgme_sig_notation_get;
+
+    gpgme_free;
+};
 
 
 GPGME_1.0 {
