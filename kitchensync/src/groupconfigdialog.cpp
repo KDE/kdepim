@@ -32,12 +32,13 @@ GroupConfigDialog::GroupConfigDialog( QWidget *parent, SyncProcess *process )
 {
   setModal( true );
   setWindowTitle( i18n("Configure Synchronization Group") );
-  setDefaultButton( Ok );
+  setButtons( Ok );
 
   QFrame *topFrame = new QFrame( this );
   setMainWidget( topFrame );
 
-  QBoxLayout *topLayout = new QVBoxLayout( topFrame );
+  QVBoxLayout *topLayout = new QVBoxLayout( topFrame );
+  topLayout->setMargin( 0 );
 
   mConfigWidget = new GroupConfig( topFrame );
   topLayout->addWidget( mConfigWidget );

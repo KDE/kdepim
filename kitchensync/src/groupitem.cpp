@@ -79,33 +79,39 @@ GroupItem::GroupItem( KWidgetList *parent, SyncProcess *process )
   mIcon->setFixedSize( mIcon->sizeHint() );
   hboxLayout->addWidget( mIcon );
 
-  QPalette pal;
-  pal.setColor( mIcon->backgroundRole(), palette().color( QPalette::Mid ) );
-  mIcon->setPalette( pal );
+  QPalette pal1;
+  pal1.setColor( mIcon->backgroundRole(), palette().color( QPalette::Mid ) );
+  mIcon->setPalette( pal1 );
 
   mGroupName = new QLabel( hbox );
   mGroupName->setAlignment( Qt::AlignLeft | Qt::AlignVCenter );
   mGroupName->setIndent( KDialog::spacingHint() );
   mGroupName->setFont( boldFont );
+  mGroupName->setAutoFillBackground( true );
   hboxLayout->addWidget( mGroupName );
 
-  pal.setColor( mGroupName->foregroundRole(), palette().color( QPalette::Light ) );
-  pal.setColor( mGroupName->backgroundRole(), palette().color( QPalette::Mid ) );
-  mGroupName->setPalette( pal );
+  QPalette pal2;
+  pal2.setColor( mGroupName->foregroundRole(), palette().color( QPalette::Light ) );
+  pal2.setColor( mGroupName->backgroundRole(), palette().color( QPalette::Mid ) );
+  mGroupName->setPalette( pal2 );
 
   mStatus = new QLabel( hbox );
   mStatus->setAlignment( Qt::AlignRight | Qt::AlignVCenter );
   mStatus->setIndent( KDialog::spacingHint() );
   mStatus->setFont( boldFont );
   mStatus->setText( i18n( "Ready" ) );
+  mStatus->setAutoFillBackground( true );
   hboxLayout->addWidget( mStatus );
 
-  pal.setColor( mStatus->foregroundRole(), palette().color( QPalette::Light ) );
-  pal.setColor( mStatus->backgroundRole(), palette().color( QPalette::Mid ) );
-  mStatus->setPalette( pal );
+  QPalette pal3;
+  pal3.setColor( mStatus->foregroundRole(), palette().color( QPalette::Light ) );
+  pal3.setColor( mStatus->backgroundRole(), palette().color( QPalette::Mid ) );
+  mStatus->setPalette( pal3 );
 
-  pal.setColor( hbox->backgroundRole(), palette().color( QPalette::Mid ) );
-  hbox->setPalette( pal );
+  QPalette pal4;
+  pal4.setColor( hbox->backgroundRole(), palette().color( QPalette::Mid ) );
+  hbox->setAutoFillBackground( true );
+  hbox->setPalette( pal4 );
 
   hbox->setMaximumHeight( hbox->minimumSizeHint().height() );
 
@@ -118,8 +124,10 @@ GroupItem::GroupItem( KWidgetList *parent, SyncProcess *process )
   layout->setColumnStretch( 0, 1 );
   layout->setRowStretch( 3, 1 );
 
-  pal.setColor( backgroundRole(), kapp->palette().color( QPalette::Active, QPalette::Base ) );
-  setPalette( pal );
+  QPalette pal5;
+  pal5.setColor( backgroundRole(), kapp->palette().color( QPalette::Active, QPalette::Base ) );
+  setPalette( pal5 );
+  setAutoFillBackground( true );
 
   connect( mCallbackHandler, SIGNAL( conflict( QSync::SyncMapping ) ),
            this, SLOT( conflict( QSync::SyncMapping ) ) );
@@ -131,9 +139,9 @@ GroupItem::GroupItem( KWidgetList *parent, SyncProcess *process )
            this, SLOT( engine( const QSync::SyncEngineUpdate& ) ) );
   connect( mCallbackHandler, SIGNAL( member( const QSync::SyncMemberUpdate& ) ),
            this, SLOT( member( const QSync::SyncMemberUpdate& ) ) );
-  connect( mSyncAction, SIGNAL( leftClickedURL() ),
+  connect( mSyncAction, SIGNAL( leftClickedUrl() ),
            this, SLOT( synchronize() ) );
-  connect( mConfigureAction, SIGNAL( leftClickedURL() ),
+  connect( mConfigureAction, SIGNAL( leftClickedUrl() ),
            this, SLOT( configure() ) );
   connect( mSyncProcess, SIGNAL( engineChanged( QSync::Engine* ) ),
            this, SLOT( engineChanged( QSync::Engine* ) ) );
@@ -156,11 +164,11 @@ void GroupItem::update()
 {
   clear();
 
-  mGroupName->setText( i18n( "Group: %1" ).arg( mSyncProcess->group().name() ) );
+  mGroupName->setText( i18n( "Group: %1", mSyncProcess->group().name() ) );
 
   QDateTime dateTime = mSyncProcess->group().lastSynchronization();
   if ( dateTime.isValid() )
-    mTime->setText( i18n( "Last synchronized on: %1" ).arg( KGlobal::locale()->formatDateTime( dateTime ) ) );
+    mTime->setText( i18n( "Last synchronized on: %1", KGlobal::locale()->formatDateTime( dateTime ) ) );
   else
     mTime->setText( i18n( "Not synchronized yet" ) );
 
@@ -206,14 +214,14 @@ void GroupItem::change( const QSync::SyncChangeUpdate &update )
   switch ( update.type() ) {
     case QSync::SyncChangeUpdate::Received:
       mProcessedItems++;
-      mStatus->setText( i18n( "%1 entries read" ).arg( mProcessedItems ) );
+      mStatus->setText( i18n( "%1 entries read", mProcessedItems ) );
       break;
     case QSync::SyncChangeUpdate::ReceivedInfo:
       mStatus->setText( i18n( "Receive information" ) );
       break;
     case QSync::SyncChangeUpdate::Sent:
       mProcessedItems--;
-      mStatus->setText( i18n( "%1 entries written" ).arg( mMaxProcessedItems - mProcessedItems ) );
+      mStatus->setText( i18n( "%1 entries written", mMaxProcessedItems - mProcessedItems ) );
 
       mProgressBar->show();
 
@@ -316,19 +324,19 @@ void GroupItem::member( const QSync::SyncMemberUpdate &update )
           item->setStatusMessage( i18n( "Disconnected" ) );
           break;
         case QSync::SyncMemberUpdate::ConnectError:
-          item->setStatusMessage( i18n( "Error: %1" ).arg( update.result().message() ) );
+          item->setStatusMessage( i18n( "Error: %1", update.result().message() ) );
           break;
         case QSync::SyncMemberUpdate::GetChangesError:
-          item->setStatusMessage( i18n( "Error: %1" ).arg( update.result().message() ) );
+          item->setStatusMessage( i18n( "Error: %1", update.result().message() ) );
           break;
         case QSync::SyncMemberUpdate::CommittedAllError:
-          item->setStatusMessage( i18n( "Error: %1" ).arg( update.result().message() ) );
+          item->setStatusMessage( i18n( "Error: %1", update.result().message() ) );
           break;
         case QSync::SyncMemberUpdate::SyncDoneError:
-          item->setStatusMessage( i18n( "Error: %1" ).arg( update.result().message() ) );
+          item->setStatusMessage( i18n( "Error: %1", update.result().message() ) );
           break;
         case QSync::SyncMemberUpdate::DisconnectedError:
-          item->setStatusMessage( i18n( "Error: %1" ).arg( update.result().message() ) );
+          item->setStatusMessage( i18n( "Error: %1", update.result().message() ) );
           break;
         default:
           break;

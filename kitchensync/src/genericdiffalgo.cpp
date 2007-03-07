@@ -51,11 +51,11 @@ void GenericDiffAlgo::run()
   for ( int i = 0; i < lines; ++i ) {
     if ( i < leftList.count() && i < rightList.count() ) {
       if ( !compareString( leftList[ i ], rightList[ i ] ) )
-        conflictField( i18n( "Line %1" ).arg( i ), leftList[ i ], rightList[ i ] );
+        conflictField( i18n( "Line %1", i ), leftList[ i ], rightList[ i ] );
     } else if ( i < leftList.count() && i >= rightList.count() ) {
-      additionalLeftField( i18n( "Line %1" ).arg( i ), leftList[ i ] );
+      additionalLeftField( i18n( "Line %1", i ), leftList[ i ] );
     } else if ( i >= leftList.count() && i < rightList.count() ) {
-      additionalRightField( i18n( "Line %1" ).arg( i ), rightList[ i ] );
+      additionalRightField( i18n( "Line %1", i ), rightList[ i ] );
     }
   }
 

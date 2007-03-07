@@ -87,6 +87,8 @@ KAboutData *MainWidget::aboutData()
 void MainWidget::initGUI()
 {
   QVBoxLayout *topLayout = new QVBoxLayout( this );
+  topLayout->setMargin( 0 );
+  topLayout->setSpacing( 0 );
 
   mGroupView = new GroupView( this );
   topLayout->addWidget( mGroupView );
@@ -148,7 +150,7 @@ void MainWidget::deleteGroup()
   SyncProcess *syncProcess = mGroupView->selectedSyncProcess();
   if ( syncProcess ) {
     int result = KMessageBox::warningContinueCancel( this,
-      i18n("Delete synchronization group '%1'?").arg( syncProcess->group().name() ) );
+      i18n("Delete synchronization group '%1'?", syncProcess->group().name() ) );
     if ( result == KMessageBox::Continue ) {
       SyncProcessManager::self()->remove( syncProcess );
       enableActions();

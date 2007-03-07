@@ -45,15 +45,16 @@ KWidgetList::KWidgetList( QWidget *parent )
   : QScrollArea( parent ),
     d( new Private )
 {
-  d->mBox = new QWidget( viewport() );
-//  addChild( d->mBox );
-
+  d->mBox = new QWidget();
   d->mBoxLayout = new QVBoxLayout( d->mBox );
+  d->mBoxLayout->setMargin( 0 );
+  d->mBoxLayout->setSpacing( 0 );
 
-//  setResizePolicy( AutoOneFit );
+  setWidget( d->mBox );
+  setWidgetResizable( true );
   setFocusPolicy( Qt::StrongFocus );
 
-  viewport()->setFocus();
+  setFocusProxy( d->mBox );
 }
 
 KWidgetList::~KWidgetList()
@@ -226,6 +227,7 @@ bool KWidgetList::eventFilter( QObject *object, QEvent *event )
       if ( d->mSelectedItem == 0 ) {
         if ( !d->mItems.isEmpty() ) {
           setSelected( d->mItems.first() );
+          ensureVisible( d->mItems.first()->x(), d->mItems.first()->y(), 50, 150 );
           return true;
         }
       }
@@ -234,6 +236,7 @@ bool KWidgetList::eventFilter( QObject *object, QEvent *event )
         if ( d->mItems[ i ] == d->mSelectedItem ) {
           if ( ( i - 1 ) >= 0 ) {
             setSelected( d->mItems[ i - 1 ] );
+            ensureVisible( d->mItems[ i - 1 ]->x(), d->mItems[ i - 1 ]->y(), 50, 150 );
             return true;
           }
         }
@@ -243,6 +246,7 @@ bool KWidgetList::eventFilter( QObject *object, QEvent *event )
       if ( d->mSelectedItem == 0 ) {
         if ( !d->mItems.isEmpty() ) {
           setSelected( d->mItems.last() );
+          ensureVisible( d->mItems.last()->x(), d->mItems.last()->y(), 50, 150 );
           return true;
         }
       }
@@ -251,6 +255,7 @@ bool KWidgetList::eventFilter( QObject *object, QEvent *event )
         if ( d->mItems[ i ] == d->mSelectedItem ) {
           if ( ( i + 1 ) < d->mItems.count() ) {
             setSelected( d->mItems[ i + 1 ] );
+            ensureVisible( d->mItems[ i + 1 ]->x(), d->mItems[ i + 1 ]->y(), 50, 150 );
             return true;
           }
         }
@@ -270,6 +275,8 @@ KWidgetListItem::KWidgetListItem( KWidgetList *parent )
   mSelectionBackgroundColor = KGlobalSettings::highlightColor();
 
   setFocusPolicy( Qt::StrongFocus );
+
+  setAutoFillBackground( true );
 }
 
 KWidgetListItem::~KWidgetListItem()

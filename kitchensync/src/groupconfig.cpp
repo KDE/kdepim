@@ -45,9 +45,11 @@ GroupConfig::GroupConfig( QWidget *parent )
   : QWidget( parent )
 {
   QBoxLayout *topLayout = new QVBoxLayout( this );
+  topLayout->setMargin( 0 );
   topLayout->setSpacing( KDialog::spacingHint() );
 
   QFrame *titleFrame = new QFrame( this );
+  titleFrame->setAutoFillBackground( true );
   topLayout->addWidget( titleFrame );
 
   QPalette pal;
@@ -56,7 +58,7 @@ GroupConfig::GroupConfig( QWidget *parent )
   titleFrame->setPalette( pal );
 
   QBoxLayout *nameLayout = new QHBoxLayout( titleFrame );
-  nameLayout->setMargin( 4 );
+  nameLayout->setMargin( 0 );
 
   QPixmap icon = KIconLoader::global()->loadIcon( "kontact_summary", K3Icon::Desktop );
 

@@ -72,7 +72,7 @@ PluginPicker::PluginPicker( QWidget *parent )
 
   updatePluginList();
 
-  mPluginList->setFocus();
+  setFocusProxy( mPluginList );
 }
 
 void PluginPicker::updatePluginList()
@@ -84,7 +84,8 @@ void PluginPicker::updatePluginList()
   QSync::Environment::PluginIterator it( env->pluginBegin() );
   for( ; it != env->pluginEnd(); ++it ) {
     QSync::Plugin plugin = *it;
-    mPluginList->appendItem( new PluginItem( mPluginList, plugin ) );
+    PluginItem *item = new PluginItem( 0, plugin );
+    mPluginList->appendItem( item );
   }
 }
 
@@ -114,6 +115,8 @@ PluginPickerDialog::PluginPickerDialog( QWidget *parent )
   connect( mPicker, SIGNAL( selected() ), SLOT( slotOk() ) );
 
   setInitialSize( QSize( 460, 380 ) );
+
+  mPicker->setFocus();
 }
 
 QSync::Plugin PluginPickerDialog::selectedPlugin() const
