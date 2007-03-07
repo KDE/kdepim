@@ -49,7 +49,7 @@ KDE4_AUTOMOC(${kitchensync_SRCS})
 
 KDE4_ADD_EXECUTABLE(kitchensync ${kitchensync_SRCS})
 
-TARGET_LINK_LIBRARIES(kitchensync ${QT_AND_KDECORE_LIBS} kio khtml qopensync kdepim kcal )
+TARGET_LINK_LIBRARIES(kitchensync ${QT_AND_KDECORE_LIBS} ${KDE4_KIO_LIBS} ${KDE4_KHTML_LIBS} qopensync kdepim kcal )
 
 INSTALL(TARGETS kitchensync DESTINATION ${BIN_INSTALL_DIR})
 
