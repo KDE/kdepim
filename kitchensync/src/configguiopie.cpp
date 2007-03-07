@@ -33,7 +33,8 @@
 ConfigGuiOpie::ConfigGuiOpie( const QSync::Member &member, QWidget *parent )
   : ConfigGui( member, parent )
 {
-  QGridLayout *layout = new QGridLayout( topLayout() );
+  QGridLayout *layout = new QGridLayout();
+  topLayout()->addLayout( layout );
 
   QLabel *label = new QLabel( i18n("Device IP:"), this );
   layout->addWidget( label, 0, 0 );
@@ -80,11 +81,11 @@ ConfigGuiOpie::ConfigGuiOpie( const QSync::Member &member, QWidget *parent )
   label->setBuddy( mPort );
   layout->addWidget( mPort, 5, 1 );
 
-  mDeviceType->insertItem( i18n("Opie/OpenZaurus") );
-  mDeviceType->insertItem( i18n("Qtopia2") );
+  mDeviceType->addItem( i18n("Opie/OpenZaurus") );
+  mDeviceType->addItem( i18n("Qtopia2") );
 
-  mConnectionType->insertItem( i18n("SCP") );
-  mConnectionType->insertItem( i18n("FTP") );
+  mConnectionType->addItem( i18n("SCP") );
+  mConnectionType->addItem( i18n("FTP") );
 
   topLayout()->addStretch( 1 );
 }
@@ -107,14 +108,14 @@ void ConfigGuiOpie::load( const QString &xml )
       mPort->setValue( e.text().toInt() );
     } else if ( e.tagName() == "device" ) {
       if ( e.text() == "opie" )
-        mDeviceType->setCurrentItem( 0 );
+        mDeviceType->setCurrentIndex( 0 );
       else
-        mDeviceType->setCurrentItem( 1 );
+        mDeviceType->setCurrentIndex( 1 );
     } else if ( e.tagName() == "conntype" ) {
       if ( e.text() == "scp" )
-        mConnectionType->setCurrentItem( 0 );
+        mConnectionType->setCurrentIndex( 0 );
       else
-        mConnectionType->setCurrentItem( 1 );
+        mConnectionType->setCurrentIndex( 1 );
     }
   }
 }
@@ -126,9 +127,9 @@ QString ConfigGuiOpie::save()
   xml += "<username>" + mUserName->text() + "</username>";
   xml += "<password>" + mPassword->text() + "</password>";
   xml += "<url>" + mDeviceIP->text() + "</url>";
-  xml += "<device>" + QString( mDeviceType->currentItem() == 0 ? "opie" : "qtopia2" ) + "</device>";
+  xml += "<device>" + QString( mDeviceType->currentIndex() == 0 ? "opie" : "qtopia2" ) + "</device>";
   xml += "<port>" + QString::number( mPort->value() ) + "</port>";
-  xml += "<conntype>" + QString( mConnectionType->currentItem() == 0 ? "scp" : "ftp" ) + "</conntype>";
+  xml += "<conntype>" + QString( mConnectionType->currentIndex() == 0 ? "scp" : "ftp" ) + "</conntype>";
   xml += "</config>";
 
   return xml;

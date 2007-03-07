@@ -20,12 +20,12 @@
 #ifndef GROUPCONFIG_H
 #define GROUPCONFIG_H
 
-#include <qwidget.h>
-#include <qvaluelist.h>
+#include <QtCore/QList>
+#include <QtGui/QWidget>
 
-class QFrame;
 class QLabel;
-class KJanusWidget;
+class KPageWidget;
+class KPageWidgetItem;
 
 class GroupConfigCommon;
 class MemberConfig;
@@ -50,13 +50,13 @@ class GroupConfig : public QWidget
   private:
     QLabel *mNameLabel;
 
-    KJanusWidget *mMemberView;
+    KPageWidget *mMemberView;
 
     SyncProcess *mProcess;
 
     GroupConfigCommon *mCommonConfig;
-    QValueList<MemberConfig *> mMemberConfigs;
-    QValueList<QFrame *> mConfigPages;
+    QList<MemberConfig*> mMemberConfigs;
+    QList<KPageWidgetItem*> mConfigPages;
 };
 
 #endif

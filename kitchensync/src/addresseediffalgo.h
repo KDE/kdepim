@@ -39,7 +39,7 @@ class AddresseeDiffAlgo : public DiffAlgo
 
   private:
     template <class L>
-    void diffList( const QString &id, const QValueList<L> &left, const QValueList<L> &right );
+    void diffList( const QString &id, const QList<L> &left, const QList<L> &right );
 
     QString toString( const KABC::PhoneNumber &number );
     QString toString( const KABC::Address &address );

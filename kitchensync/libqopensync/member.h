@@ -22,6 +22,7 @@
 #ifndef QSYNC_MEMBER_H
 #define QSYNC_MEMBER_H
 
+#include <libqopensync/qopensync_export.h>
 #include <libqopensync/plugin.h>
 #include <libqopensync/result.h>
 #include <libqopensync/plugin.h>
@@ -30,7 +31,7 @@ class OSyncMember;
 
 namespace QSync {
 
-class Member
+class QSYNC_EXPORT Member
 {
   friend class Group;
   friend class SyncChange;

@@ -26,6 +26,7 @@
 #include <klineedit.h>
 #include <klocale.h>
 #include <kurlrequester.h>
+#include <kvbox.h>
 
 #include <qcheckbox.h>
 #include <qdom.h>
@@ -33,7 +34,6 @@
 #include <qlayout.h>
 #include <qspinbox.h>
 #include <qtabwidget.h>
-#include <qvbox.h>
 
 ConfigGuiSyncmlHttp::ConfigGuiSyncmlHttp( const QSync::Member &member, QWidget *parent )
   : ConfigGui( member, parent ), mUrl( 0 ), mPort( 0 )
@@ -44,50 +44,55 @@ ConfigGuiSyncmlHttp::ConfigGuiSyncmlHttp( const QSync::Member &member, QWidget *
 
   // Connection
   QWidget *connectionWidget = new QWidget( tabWidget );
-  QVBoxLayout *connectionLayout = new QVBoxLayout( connectionWidget,
-                                                   KDialog::marginHint(), KDialog::spacingHint() );
+  QVBoxLayout *connectionLayout = new QVBoxLayout( connectionWidget );
+  connectionLayout->setMargin( KDialog::marginHint() );
+  connectionLayout->setSpacing( KDialog::spacingHint() );
 
   tabWidget->addTab( connectionWidget, i18n( "Connection" ) );
 
-  mGridLayout = new QGridLayout( connectionLayout );
+  mGridLayout = new QGridLayout();
+  connectionLayout->addLayout( mGridLayout );
 
   QLabel *label = new QLabel( i18n("Port:"), connectionWidget );
   mGridLayout->addWidget( label, 0, 0 );
 
   mPort = new QSpinBox( connectionWidget );
-  mPort->setMinValue( 1 );
-  mPort->setMaxValue( 65536 );
+  mPort->setRange( 1, 65536 );
   mGridLayout->addWidget( mPort, 0, 1 );
 
   // Database
   QWidget *databaseWidget = new QWidget( tabWidget );
-  QVBoxLayout *databaseLayout = new QVBoxLayout( databaseWidget,
-                                                 KDialog::marginHint(), KDialog::spacingHint() );
+  QVBoxLayout *databaseLayout = new QVBoxLayout( databaseWidget );
+  databaseLayout->setMargin( KDialog::marginHint() );
+  databaseLayout->setSpacing( KDialog::spacingHint() );
 
   tabWidget->addTab( databaseWidget, i18n( "Databases" ) );
 
-  mGridLayout = new QGridLayout( databaseLayout );
+  mGridLayout = new QGridLayout();
+  databaseLayout->addLayout( mGridLayout );
   addLineEdit( databaseWidget, i18n("Contact Database:"), &mContactDb, 0 );
   addLineEdit( databaseWidget, i18n("Calendar Database:"), &mCalendarDb, 1 );
   addLineEdit( databaseWidget, i18n("Note Database:"), &mNoteDb, 2 );
 
-  mContactDb->insertItem( "addressbook" );
-  mContactDb->insertItem( "contacts" );
+  mContactDb->addItem( "addressbook" );
+  mContactDb->addItem( "contacts" );
 
-  mCalendarDb->insertItem( "agenda" );
-  mCalendarDb->insertItem( "calendar" );
+  mCalendarDb->addItem( "agenda" );
+  mCalendarDb->addItem( "calendar" );
 
-  mNoteDb->insertItem( "notes" );
+  mNoteDb->addItem( "notes" );
 
 
   // Options
   QWidget *optionWidget = new QWidget( tabWidget );
-  QVBoxLayout *optionLayout = new QVBoxLayout( optionWidget,
-                                               KDialog::marginHint(), KDialog::spacingHint() );
+  QVBoxLayout *optionLayout = new QVBoxLayout( optionWidget );
+  optionLayout->setMargin( KDialog::marginHint() );
+  optionLayout->setSpacing( KDialog::spacingHint() );
 
   tabWidget->addTab( optionWidget, i18n( "Options" ) );
 
-  mGridLayout = new QGridLayout( optionLayout );
+  mGridLayout = new QGridLayout();
+  optionLayout->addLayout( mGridLayout );
 
   label = new QLabel( i18n("User name:"), optionWidget );
   mGridLayout->addWidget( label, 0, 0 );
@@ -104,13 +109,13 @@ ConfigGuiSyncmlHttp::ConfigGuiSyncmlHttp( const QSync::Member &member, QWidget *
 
 
   mUseStringTable = new QCheckBox( i18n("Use String Table"), optionWidget );
-  mGridLayout->addMultiCellWidget( mUseStringTable, 2, 2, 0, 1 );
+  mGridLayout->addWidget( mUseStringTable, 2, 2, 1, 1 );
 
   mOnlyReplace = new QCheckBox( i18n("Only Replace Entries"), optionWidget );
-  mGridLayout->addMultiCellWidget( mOnlyReplace, 3, 3, 0, 1 );
+  mGridLayout->addWidget( mOnlyReplace, 3, 3, 1, 1 );
 
   // Url
-  label = new QLabel( i18n("URL:"), optionWidget );
+  label = new QLabel( i18n("Url:"), optionWidget );
   mGridLayout->addWidget( label, 4, 0 );
 
   mUrl = new KLineEdit( optionWidget );
@@ -121,8 +126,7 @@ ConfigGuiSyncmlHttp::ConfigGuiSyncmlHttp( const QSync::Member &member, QWidget *
   mGridLayout->addWidget( label, 5, 0 );
 
   mRecvLimit = new QSpinBox( optionWidget );
-  mRecvLimit->setMinValue( 0 );
-  mRecvLimit->setMaxValue( 65536 );
+  mRecvLimit->setRange( 1, 65536 );
   mGridLayout->addWidget( mRecvLimit, 5, 1 );
 
   // maxObjSize 
@@ -130,8 +134,7 @@ ConfigGuiSyncmlHttp::ConfigGuiSyncmlHttp( const QSync::Member &member, QWidget *
   mGridLayout->addWidget( label, 6, 0 );
 
   mMaxObjSize = new QSpinBox( optionWidget );
-  mMaxObjSize->setMinValue( 0 );
-  mMaxObjSize->setMaxValue( 65536 );
+  mMaxObjSize->setRange( 1, 65536 );
   mGridLayout->addWidget( mMaxObjSize, 6, 1 );
 
   topLayout()->addStretch( 1 );
@@ -177,11 +180,11 @@ void ConfigGuiSyncmlHttp::load( const QString &xml )
     } else if ( element.tagName() == "onlyreplace" ) {
       mOnlyReplace->setChecked( element.text() == "1" );
     } else if ( element.tagName() == "contact_db" ) {
-      mContactDb->setCurrentText( element.text() );
+      mContactDb->setCurrentIndex( mContactDb->findText( element.text() ) );
     } else if ( element.tagName() == "calendar_db" ) {
-      mCalendarDb->setCurrentText( element.text() );
+      mCalendarDb->setCurrentIndex( mCalendarDb->findText( element.text() ) );
     } else if ( element.tagName() == "note_db" ) {
-      mNoteDb->setCurrentText( element.text() );
+      mNoteDb->setCurrentIndex( mNoteDb->findText( element.text() ) );
     }
   }
 }

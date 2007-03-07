@@ -23,7 +23,7 @@
 
 #include "configgui.h"
 
-class KURLRequester;
+class KUrlRequester;
 class QCheckBox;
 
 class ConfigGuiFile : public ConfigGui
@@ -35,7 +35,7 @@ class ConfigGuiFile : public ConfigGui
     QString save();
 
   private:
-    KURLRequester *mFilename;
+    KUrlRequester *mFilename;
     QCheckBox *mRecursive;
 };
 

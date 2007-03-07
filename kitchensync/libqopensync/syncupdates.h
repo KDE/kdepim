@@ -22,6 +22,7 @@
 #ifndef QSYNC_SYNCUPDATES_H
 #define QSYNC_SYNCUPDATES_H
 
+#include <libqopensync/qopensync_export.h>
 #include <libqopensync/member.h>
 #include <libqopensync/result.h>
 #include <libqopensync/syncchange.h>
@@ -35,7 +36,7 @@ class OSyncMemberUpdate;
 
 namespace QSync {
 
-class SyncMemberUpdate
+class QSYNC_EXPORT SyncMemberUpdate
 {
   friend class CallbackHandler;
 
@@ -66,7 +67,7 @@ class SyncMemberUpdate
     Member mMember;
 };
 
-class SyncChangeUpdate
+class QSYNC_EXPORT SyncChangeUpdate
 {
   friend class CallbackHandler;
 
@@ -97,7 +98,7 @@ class SyncChangeUpdate
     int mMappingId;
 };
 
-class SyncMappingUpdate
+class QSYNC_EXPORT SyncMappingUpdate
 {
   friend class CallbackHandler;
 
@@ -124,7 +125,7 @@ class SyncMappingUpdate
     SyncMapping mMapping;
 };
 
-class SyncEngineUpdate
+class QSYNC_EXPORT SyncEngineUpdate
 {
   friend class CallbackHandler;
 

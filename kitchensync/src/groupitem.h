@@ -32,10 +32,9 @@ class Engine;
 }
 
 class MemberItem;
-class KURLLabel;
+class KUrlLabel;
 class QLabel;
 class QProgressBar;
-class QVBox;
 
 class GroupItem : public KWidgetListItem
 {
@@ -71,15 +70,16 @@ class GroupItem : public KWidgetListItem
   private:
     SyncProcess *mSyncProcess;
     QSync::CallbackHandler *mCallbackHandler;
-    QValueList<MemberItem*> mMemberItems;
+    QList<MemberItem*> mMemberItems;
 
     QLabel *mIcon;
     QLabel *mGroupName;
     QLabel *mStatus;
     QLabel *mTime;
-    KURLLabel *mSyncAction;
-    KURLLabel *mConfigureAction;
-    QVBox *mBox;
+    KUrlLabel *mSyncAction;
+    KUrlLabel *mConfigureAction;
+    QWidget *mBox;
+    QVBoxLayout *mBoxLayout;
     QProgressBar *mProgressBar;
 
     int mProcessedItems;

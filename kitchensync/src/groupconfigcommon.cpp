@@ -55,10 +55,10 @@ ObjectTypeSelector::ObjectTypeSelector( QWidget *parent )
   QStringList objectTypes = conversion.objectTypes();
 
   // reorder the entries so that contact and event are the first one
-  qHeapSort( objectTypes );
+  qSort( objectTypes );
 
   QStringList reoderedObjectTypes, stack;
-  for ( uint i = 0; i < objectTypes.count(); ++i ) {
+  for ( int i = 0; i < objectTypes.count(); ++i ) {
     if ( objectTypes[ i ] == "contact" || objectTypes[ i ] == "event" )
       reoderedObjectTypes.append( objectTypes[ i ] );
     else
@@ -102,7 +102,7 @@ void ObjectTypeSelector::load( const QSync::Group &group )
 
   QMap<QString, QCheckBox*>::ConstIterator it;
   for( it = mObjectTypeChecks.begin(); it != mObjectTypeChecks.end(); ++it ) {
-    QCheckBox *check = it.data();
+    QCheckBox *check = it.value();
     check->setChecked( objectTypes.contains( it.key() ) || initialLoad );
   }
 }
@@ -113,7 +113,7 @@ void ObjectTypeSelector::save( QSync::Group group )
 
   QMap<QString,QCheckBox *>::ConstIterator it;
   for( it = mObjectTypeChecks.begin(); it != mObjectTypeChecks.end(); ++it ) {
-    QCheckBox *check = it.data();
+    QCheckBox *check = it.value();
     if ( check->isChecked() )
       objectTypes.append( it.key() );
   }
@@ -128,7 +128,9 @@ void ObjectTypeSelector::save( QSync::Group group )
 GroupConfigCommon::GroupConfigCommon( QWidget *parent )
   : QWidget( parent )
 {
-  QGridLayout *layout = new QGridLayout( this, 2, 2, KDialog::marginHint(), KDialog::spacingHint() );
+  QGridLayout *layout = new QGridLayout( this );
+  layout->setMargin( KDialog::marginHint() );
+  layout->setSpacing( KDialog::spacingHint() );
 
   layout->addWidget( new QLabel( i18n( "Name:" ), this ), 0, 0 );
 

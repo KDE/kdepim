@@ -25,17 +25,12 @@
 
 using namespace KSync;
 
-static QString textToHTML( const QString &text )
-{
-  return QStyleSheet::convertFromPlainText( text );
-}
-
 HTMLDiffAlgoDisplay::HTMLDiffAlgoDisplay( QWidget *parent )
   : KTextBrowser( parent )
 {
-  setWrapPolicy( QTextEdit::AtWordBoundary );
-  setVScrollBarMode( QScrollView::AlwaysOff );
-  setHScrollBarMode( QScrollView::AlwaysOff );
+//  setWrapPolicy( QTextEdit::AtWordBoundary );
+  setVerticalScrollBarPolicy( Qt::ScrollBarAlwaysOff );
+  setHorizontalScrollBarPolicy( Qt::ScrollBarAlwaysOff );
 }
 
 void HTMLDiffAlgoDisplay::begin()
@@ -77,14 +72,14 @@ void HTMLDiffAlgoDisplay::additionalLeftField( const QString &id, const QString 
 {
   mText.append( QString( "<tr><td align=\"right\"><b>%1:</b></td><td bgcolor=\"#9cff83\">%2</td><td></td><td></td></tr>" )
                .arg( id )
-               .arg( textToHTML( value ) ) );
+               .arg( Qt::escape( value ) ) );
 }
 
 void HTMLDiffAlgoDisplay::additionalRightField( const QString &id, const QString &value )
 {
   mText.append( QString( "<tr><td align=\"right\"><b>%1:</b></td><td></td><td></td><td bgcolor=\"#9cff83\">%2</td></tr>" )
                .arg( id )
-               .arg( textToHTML( value ) ) );
+               .arg( Qt::escape( value ) ) );
 }
 
 void HTMLDiffAlgoDisplay::conflictField( const QString &id, const QString &leftValue,
@@ -92,6 +87,6 @@ void HTMLDiffAlgoDisplay::conflictField( const QString &id, const QString &leftV
 {
   mText.append( QString( "<tr><td align=\"right\"><b>%1:</b></td><td bgcolor=\"#ff8686\">%2</td><td></td><td bgcolor=\"#ff8686\">%3</td></tr>" )
                .arg( id )
-               .arg( textToHTML( leftValue ) )
-               .arg( textToHTML( rightValue ) ) );
+               .arg( Qt::escape( leftValue ) )
+               .arg( Qt::escape( rightValue ) ) );
 }

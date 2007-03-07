@@ -22,13 +22,14 @@
 #ifndef QSYNC_ENGINE_H
 #define QSYNC_ENGINE_H
 
+#include <libqopensync/qopensync_export.h>
 #include <libqopensync/group.h>
 
 class OSyncEngine;
 
 namespace QSync {
 
-class Engine
+class QSYNC_EXPORT Engine
 {
   friend class CallbackHandler;
 

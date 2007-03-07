@@ -51,7 +51,8 @@ ConfigGui::ConfigGui( const QSync::Member &member, QWidget *parent )
   mTopLayout->setSpacing( KDialog::spacingHint() );
   mTopLayout->setMargin( KDialog::marginHint() );
 
-  QBoxLayout *nameLayout = new QHBoxLayout( mTopLayout );
+  QBoxLayout *nameLayout = new QHBoxLayout();
+  mTopLayout->addLayout( nameLayout );
 
   QLabel *label = new QLabel( i18n("Name:"), this );
   nameLayout->addWidget( label );
@@ -116,5 +117,5 @@ void ConfigGuiXml::load( const QString &xml )
 
 QString ConfigGuiXml::save()
 {
-  return mTextEdit->text();
+  return mTextEdit->toPlainText();
 }

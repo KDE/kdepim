@@ -22,10 +22,11 @@
 #ifndef QSYNC_CALLBACKHANDLER_H
 #define QSYNC_CALLBACKHANDLER_H
 
+#include <libqopensync/qopensync_export.h>
 #include <libqopensync/syncmapping.h>
 #include <libqopensync/syncupdates.h>
 
-#include <qobject.h>
+#include <QtCore/QObject>
 
 class OSyncEngine;
 class OSyncMapping;
@@ -34,13 +35,11 @@ class OSyncMappingUpdate;
 class OSyncEngineUpdate;
 class OSyncMemberUpdate;
 
-class QCustomEvent;
-
 namespace QSync {
 
 class Engine;
 
-class CallbackHandler : public QObject
+class QSYNC_EXPORT CallbackHandler : public QObject
 {
   Q_OBJECT
 
@@ -59,17 +58,9 @@ class CallbackHandler : public QObject
     void member( const QSync::SyncMemberUpdate &update );
 
   protected:
-    virtual void customEvent( QCustomEvent *event );
+    virtual void customEvent( QEvent *event );
 
   private:
-    enum EventType {
-      ConflictEventType = 4044,
-      ChangeEventType,
-      MappingEventType,
-      EngineEventType,
-      MemberEventType
-    };
-
     class ConflictEvent;
     class ChangeEvent;
     class MappingEvent;

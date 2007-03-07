@@ -46,7 +46,7 @@ bool SyncChange::isValid() const
 
 void SyncChange::setUid( const QString &uid )
 {
-  osync_change_set_uid( mSyncChange, uid.utf8() );
+  osync_change_set_uid( mSyncChange, uid.toUtf8() );
 }
 
 QString SyncChange::uid() const
@@ -56,7 +56,7 @@ QString SyncChange::uid() const
 
 void SyncChange::setHash( const QString &hash )
 {
-  osync_change_set_hash( mSyncChange, hash.utf8() );
+  osync_change_set_hash( mSyncChange, hash.toUtf8() );
 }
 
 QString SyncChange::hash() const
@@ -66,7 +66,7 @@ QString SyncChange::hash() const
 
 void SyncChange::setData( const QString &data )
 {
-  osync_change_set_data( mSyncChange, const_cast<char*>( data.utf8().data() ), data.utf8().size(), true );
+  osync_change_set_data( mSyncChange, const_cast<char*>( data.toUtf8().data() ), data.toUtf8().size(), true );
 }
 
 QString SyncChange::data() const

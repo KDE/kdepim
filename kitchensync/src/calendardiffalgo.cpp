@@ -21,7 +21,7 @@
 
 #include <klocale.h>
 
-#include <libkcal/kcalversion.h>
+#include <kcal/kcalversion.h>
 
 #include "calendardiffalgo.h"
 
@@ -62,7 +62,7 @@ static QString toString( const QDate &date )
   return date.toString();
 }
 
-static QString toString( const QDateTime &dateTime )
+static QString toString( const KDateTime &dateTime )
 {
   return dateTime.toString();
 }
@@ -121,8 +121,8 @@ void CalendarDiffAlgo::diffIncidenceBase( KCal::IncidenceBase *left, KCal::Incid
   if ( !compareString( left->uid(), right->uid() ) )
     conflictField( i18n( "UID" ), left->uid(), right->uid() );
 
-  if ( left->doesFloat() != right->doesFloat() )
-    conflictField( i18n( "Is floating" ), toString( left->doesFloat() ), toString( right->doesFloat() ) );
+  if ( left->floats() != right->floats() )
+    conflictField( i18n( "Is floating" ), toString( left->floats() ), toString( right->floats() ) );
 
   if ( left->hasDuration() != right->hasDuration() )
     conflictField( i18n( "Has duration" ), toString( left->hasDuration() ), toString( right->hasDuration() ) );
@@ -150,16 +150,15 @@ void CalendarDiffAlgo::diffIncidence( KCal::Incidence *left, KCal::Incidence *ri
 
   if ( !compareString( left->location(), right->location() ) )
     conflictField( i18n( "Location" ), left->location(), right->location() );
-  
+
   diffList( i18n( "Categories" ), left->categories(), right->categories() );
   diffList( i18n( "Alarms" ), left->alarms(), right->alarms() );
   diffList( i18n( "Resources" ), left->resources(), right->resources() );
   diffList( i18n( "Relations" ), left->relations(), right->relations() );
   diffList( i18n( "Attachments" ), left->attachments(), right->attachments() );
-#if LIBKCAL_IS_VERSION( 1, 3, 1 )
   diffList( i18n( "Exception Dates" ), left->recurrence()->exDates(), right->recurrence()->exDates() );
   diffList( i18n( "Exception Times" ), left->recurrence()->exDateTimes(), right->recurrence()->exDateTimes() );
-#endif
+
   // TODO: recurrence dates and date/times, exrules, rrules
 
   if ( left->created() != right->created() )
@@ -202,16 +201,15 @@ void CalendarDiffAlgo::diffTodo( KCal::Todo *left, KCal::Todo *right )
 }
 
 template <class L>
-void CalendarDiffAlgo::diffList( const QString &id,
-                                 const QValueList<L> &left, const QValueList<L> &right )
+void CalendarDiffAlgo::diffList( const QString &id, const QList<L> &left, const QList<L> &right )
 {
-  for ( uint i = 0; i < left.count(); ++i ) {
-    if ( right.find( left[ i ] ) == right.end() )
+  for ( int i = 0; i < left.count(); ++i ) {
+    if ( !right.contains( left[ i ] ) )
       additionalLeftField( id, toString( left[ i ] ) );
   }
 
-  for ( uint i = 0; i < right.count(); ++i ) {
-    if ( left.find( right[ i ] ) == left.end() )
+  for ( int i = 0; i < right.count(); ++i ) {
+    if ( !left.contains( right[ i ] ) )
       additionalRightField( id, toString( right[ i ] ) );
   }
 }

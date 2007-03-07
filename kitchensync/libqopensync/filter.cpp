@@ -43,7 +43,7 @@ void Filter::setConfiguration( const QString &configuration )
 {
   Q_ASSERT( mFilter );
 
-  osync_filter_set_config( mFilter, (const char*)configuration.utf8() );
+  osync_filter_set_config( mFilter, (const char*)configuration.toUtf8() );
 }
 
 QString Filter::configuration() const

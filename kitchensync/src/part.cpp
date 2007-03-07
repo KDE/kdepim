@@ -18,16 +18,9 @@
     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 */
 
-#include <qlayout.h>
-#include <qvbox.h>
-
-#include <kaction.h>
-#include <kapplication.h>
-#include <kdebug.h>
 #include <kiconloader.h>
-#include <kinstance.h>
-#include <klocale.h>
 #include <kparts/genericfactory.h>
+#include <kvbox.h>
 
 #include "mainwidget.h"
 
@@ -36,26 +29,24 @@
 typedef KParts::GenericFactory< KitchenSyncPart > KitchenSyncFactory;
 K_EXPORT_COMPONENT_FACTORY( libkitchensyncpart, KitchenSyncFactory )
 
-KitchenSyncPart::KitchenSyncPart( QWidget *parentWidget, const char *widgetName,
-                                  QObject *parent, const char *name,
-                                  const QStringList& )
-  : KParts::ReadOnlyPart( parent, name )
+KitchenSyncPart::KitchenSyncPart( QWidget *parentWidget, QObject *parent, const QStringList& )
+  : KParts::ReadOnlyPart( parent )
 {
-  setInstance( KitchenSyncFactory::instance() );
+  setComponentData( KitchenSyncFactory::componentData() );
 
-  QVBox *canvas = new QVBox( parentWidget, widgetName );
+  KVBox *canvas = new KVBox( parentWidget );
   setWidget( canvas );
 
   new MainWidget( this, canvas );
 
-  KGlobal::iconLoader()->addAppDir( "kitchensync" );
+  KIconLoader::global()->addAppDir( "kitchensync" );
 
   setXMLFile( "kitchensync_part.rc" );
 }
 
 KitchenSyncPart::~KitchenSyncPart()
 {
-  closeURL();
+  closeUrl();
 }
 
 KAboutData *KitchenSyncPart::createAboutData()
@@ -68,9 +59,9 @@ void KitchenSyncPart::exit()
   delete this;
 }
 
-bool KitchenSyncPart::openURL( const KURL &url )
+bool KitchenSyncPart::openUrl( const KUrl &url )
 {
-  emit setWindowCaption( url.prettyURL() );
+  emit setWindowCaption( url.prettyUrl() );
 
   return true;
 }

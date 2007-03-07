@@ -19,12 +19,10 @@
     Boston, MA 02110-1301, USA.
 */
 
-#include <q3textstream.h>
 
-/** hack includes **/
-#include <qdom.h>
-#include <qfile.h>
-/** hack includes **/
+#include <QtCore/QFile>
+#include <QtCore/QTextStream>
+#include <QtXml/QDomDocument>
 
 #include <opensync/opensync.h>
 
@@ -58,7 +56,7 @@ QStringList GroupConfig::activeObjectTypes() const
 
   QString message;
   if ( !document.setContent( &file, &message ) ) {
-    qDebug( "Error on loading %s: %s", fileName.latin1(), message.latin1() );
+    qDebug( "Error on loading %s: %s", qPrintable( fileName ), qPrintable( message ) );
     return QStringList();
   }
   file.close();
@@ -89,7 +87,7 @@ void GroupConfig::setActiveObjectTypes( const QStringList &objectTypes )
   QDomElement element = document.createElement( "filter" );
   document.appendChild( element );
 
-  for ( uint i = 0; i < objectTypes.count(); ++i ) {
+  for ( int i = 0; i < objectTypes.count(); ++i ) {
     QDomElement entry = document.createElement( objectTypes[ i ] );
     element.appendChild( entry );
   }
@@ -100,8 +98,8 @@ void GroupConfig::setActiveObjectTypes( const QStringList &objectTypes )
   if ( !file.open( QIODevice::WriteOnly ) )
     return;
 
-  Q3TextStream s( &file );
-  s.setEncoding( Q3TextStream::UnicodeUTF8 );
+  QTextStream s( &file );
+  s.setCodec( "UTF-8" );
   s << document.toString();
   file.close();
 }
@@ -141,7 +139,7 @@ void Group::setName( const QString &name )
 {
   Q_ASSERT( mGroup );
 
-  osync_group_set_name( mGroup, name.latin1() );
+  osync_group_set_name( mGroup, name.toLatin1() );
 }
 
 QString Group::name() const
@@ -275,12 +273,12 @@ void Group::setObjectTypeEnabled( const QString &objectType, bool enabled )
 {
   Q_ASSERT( mGroup );
 
-  osync_group_set_objtype_enabled( mGroup, objectType.utf8(), enabled );
+  osync_group_set_objtype_enabled( mGroup, objectType.toUtf8(), enabled );
 }
 
 bool Group::isObjectTypeEnabled( const QString &objectType ) const
 {
-  return osync_group_objtype_enabled( mGroup, objectType.utf8() );
+  return osync_group_objtype_enabled( mGroup, objectType.toUtf8() );
 }
 
 GroupConfig Group::config() const

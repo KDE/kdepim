@@ -32,7 +32,7 @@
 
 #include <kdialog.h>
 #include <kiconloader.h>
-#include <kjanuswidget.h>
+#include <kpagewidget.h>
 #include <klocale.h>
 #include <kmessagebox.h>
 
@@ -50,14 +50,15 @@ GroupConfig::GroupConfig( QWidget *parent )
   QFrame *titleFrame = new QFrame( this );
   topLayout->addWidget( titleFrame );
 
-  titleFrame->setPaletteForegroundColor( colorGroup().light() );
-  titleFrame->setPaletteBackgroundColor( colorGroup().mid() );
+  QPalette pal;
+  pal.setColor( titleFrame->foregroundRole(), palette().color( QPalette::Light ) );
+  pal.setColor( titleFrame->backgroundRole(), palette().color( QPalette::Mid ) );
+  titleFrame->setPalette( pal );
 
   QBoxLayout *nameLayout = new QHBoxLayout( titleFrame );
   nameLayout->setMargin( 4 );
 
-  QPixmap icon = KGlobal::iconLoader()->loadIcon( "kontact_summary",
-    KIcon::Desktop );
+  QPixmap icon = KIconLoader::global()->loadIcon( "kontact_summary", K3Icon::Desktop );
 
   QLabel *iconLabel = new QLabel( titleFrame );
   iconLabel->setPixmap( icon );
@@ -81,10 +82,12 @@ GroupConfig::GroupConfig( QWidget *parent )
 
   nameLayout->addStretch( 1 );
 
-  mMemberView = new KJanusWidget( this, 0, KJanusWidget::IconList );
+  mMemberView = new KPageWidget( this );
+  mMemberView->setFaceType( KPageWidget::List );
   topLayout->addWidget( mMemberView );
 
-  QBoxLayout *buttonLayout = new QHBoxLayout( topLayout );
+  QBoxLayout *buttonLayout = new QHBoxLayout();
+  topLayout->addLayout( buttonLayout );
 
   QPushButton *addButton = new QPushButton( i18n("Add Member..."), this );
   connect( addButton, SIGNAL( clicked() ), SLOT( addMember() ) );
@@ -92,9 +95,11 @@ GroupConfig::GroupConfig( QWidget *parent )
 
   buttonLayout->addStretch( 1 );
 
-  icon = KGlobal::iconLoader()->loadIcon( "bookmark", KIcon::Desktop );
-  QFrame *page = mMemberView->addPage( i18n("Group"),
-    i18n("General Group Settings"), icon );
+  QFrame *page = new QFrame();
+  KPageWidgetItem *item = mMemberView->addPage( page, i18n("Group") );
+  item->setHeader( i18n("General Group Settings") );
+  item->setIcon( KIcon( "bookmark" ) );
+
   QBoxLayout *pageLayout = new QVBoxLayout( page );
 
   mCommonConfig = new GroupConfigCommon( page );
@@ -113,15 +118,14 @@ void GroupConfig::setSyncProcess( SyncProcess *process )
 
 void GroupConfig::updateMembers()
 {
-  QValueList<MemberConfig *>::ConstIterator memberIt;
-  for ( memberIt = mMemberConfigs.begin(); memberIt != mMemberConfigs.end(); ++memberIt )
-    (*memberIt)->saveData();
+  for ( int i = 0; i < mMemberConfigs.count(); ++i )
+    mMemberConfigs[ i ]->saveData();
 
-  QValueList<QFrame *>::ConstIterator it2;
-  for ( it2 = mConfigPages.begin(); it2 != mConfigPages.end(); ++it2 ) {
-    mMemberView->removePage( *it2 );
-    delete *it2;
+  for ( int i = 0; i < mConfigPages.count(); ++i ) {
+    mMemberView->removePage( mConfigPages[ i ] );
+    delete mConfigPages[ i ];
   }
+
   mConfigPages.clear();
   mMemberConfigs.clear();
 
@@ -130,11 +134,14 @@ void GroupConfig::updateMembers()
   for ( ; it != group.end(); ++it ) {
     QSync::Member member = *it;
     MemberInfo mi( member );
-    QFrame *page = mMemberView->addPage( mi.name(), 
-      QString( "%1 (%2)" ).arg( mi.name() ).arg(member.pluginName()), mi.desktopIcon() );
+    QFrame *page = new QFrame();
+
+    KPageWidgetItem *item = mMemberView->addPage( page, mi.name() );
+    item->setHeader( QString( "%1 (%2)" ).arg( mi.name() ).arg( member.pluginName() ) );
+    item->setIcon( KIcon( mi.iconName() ) );
 
     QBoxLayout *pageLayout = new QVBoxLayout( page );
-    mConfigPages.append( page );
+    mConfigPages.append( item );
 
     MemberConfig *memberConfig = new MemberConfig( page, member );
     mMemberConfigs.append( memberConfig );
@@ -148,9 +155,8 @@ void GroupConfig::saveConfig()
 {
   mProcess->group().save();
 
-  QValueList<MemberConfig *>::ConstIterator it;
-  for ( it = mMemberConfigs.begin(); it != mMemberConfigs.end(); ++it )
-    (*it)->saveData();
+  for ( int i = 0; i < mMemberConfigs.count(); ++i )
+    mMemberConfigs[ i ]->saveData();
 
   mCommonConfig->save();
 
@@ -170,8 +176,7 @@ void GroupConfig::addMember()
       updateMembers();
 
       // select last (added) page
-      int index = mMemberView->pageIndex( mConfigPages.last() );
-      mMemberView->showPage( index );
+      mMemberView->setCurrentPage( mConfigPages.last() );
     }
   }
 }

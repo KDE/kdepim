@@ -24,13 +24,18 @@
 
 #include <klocale.h>
 
-#include <qlayout.h>
+#include <QtGui/QVBoxLayout>
+#include <QtGui/QFrame>
 
 GroupConfigDialog::GroupConfigDialog( QWidget *parent, SyncProcess *process )
-  : KDialogBase( parent, 0, true, i18n("Configure Synchronization Group"),
-     Ok )
+  : KDialog( parent )
 {
-  QFrame *topFrame = makeMainWidget();
+  setModal( true );
+  setWindowTitle( i18n("Configure Synchronization Group") );
+  setDefaultButton( Ok );
+
+  QFrame *topFrame = new QFrame( this );
+  setMainWidget( topFrame );
 
   QBoxLayout *topLayout = new QVBoxLayout( topFrame );
 
@@ -39,12 +44,12 @@ GroupConfigDialog::GroupConfigDialog( QWidget *parent, SyncProcess *process )
 
   mConfigWidget->setSyncProcess( process );
 
-  setInitialSize( configDialogSize( "size_groupconfigdialog" ) );
+  restoreDialogSize( KConfigGroup( KGlobal::config(), "size_groupconfigdialog" ) );
 }
 
 GroupConfigDialog::~GroupConfigDialog()
 {
-  saveDialogSize( "size_groupconfigdialog" );
+//  saveDialogSize( KConfigGroup( KGlobal::config(), "size_groupconfigdialog" ), KConfigFlags::Normal );
 }
 
 void GroupConfigDialog::slotOk()

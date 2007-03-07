@@ -37,8 +37,8 @@ static QString readFile( const QString &fileName )
 {
   QFile file( fileName );
   if ( !file.open( IO_ReadOnly ) ) {
-    kdDebug() << "Unable to open file '" << fileName << "'" << endl;
-    return QCString();
+    kDebug() << "Unable to open file '" << fileName << "'" << endl;
+    return QString();
   }
 
   QString content = QString::fromUtf8( file.readAll() );
@@ -49,22 +49,24 @@ static QString readFile( const QString &fileName )
 }
 
 AboutPage::AboutPage( QWidget *parent )
-  : QWidget( parent, "AboutPage" )
+  : QWidget( parent )
 {
+  setObjectName( "AboutPage" );
+
   QVBoxLayout *layout = new QVBoxLayout( this );
 
-  QString location = locate( "data", "kitchensync/about/main.html" );
+  QString location = KStandardDirs::locate( "data", "kitchensync/about/main.html" );
   QString content = readFile( location );
-  content = content.arg( locate( "data", "libkdepim/about/kde_infopage.css" ) );
-  if ( kapp->reverseLayout() )
-    content = content.arg( "@import \"%1\";" ).arg( locate( "data", "libkdepim/about/kde_infopage_rtl.css" ) );
+  content = content.arg( KStandardDirs::locate( "data", "libkdepim/about/kde_infopage.css" ) );
+  if ( QApplication::layoutDirection() == Qt::RightToLeft )
+    content = content.arg( "@import \"%1\";" ).arg( KStandardDirs::locate( "data", "libkdepim/about/kde_infopage_rtl.css" ) );
   else
     content = content.arg( "" );
 
   KHTMLPart *part = new KHTMLPart( this );
   layout->addWidget( part->view() );
 
-  part->begin( KURL( location ) );
+  part->begin( KUrl( location ) );
 
   QString appName( i18n( "KDE KitchenSync" ) );
   QString catchPhrase( i18n( "Get Synchronized!" ) );
@@ -75,15 +77,15 @@ AboutPage::AboutPage( QWidget *parent )
   part->end();
 
   connect( part->browserExtension(),
-           SIGNAL( openURLRequest( const KURL&, const KParts::URLArgs& ) ),
-           SLOT( handleUrl( const KURL& ) ) );
+           SIGNAL( openURLRequest( const KUrl&, const KParts::URLArgs& ) ),
+           SLOT( handleUrl( const KUrl& ) ) );
 
   connect( part->browserExtension(),
-           SIGNAL( createNewWindow( const KURL&, const KParts::URLArgs& ) ),
-           SLOT( handleUrl( const KURL& ) ) );
+           SIGNAL( createNewWindow( const KUrl&, const KParts::URLArgs& ) ),
+           SLOT( handleUrl( const KUrl& ) ) );
 }
 
-void AboutPage::handleUrl( const KURL &url )
+void AboutPage::handleUrl( const KUrl &url )
 {
   if ( url.protocol() == "exec" ) {
     if ( url.path() == "/addGroup" )
@@ -94,12 +96,12 @@ void AboutPage::handleUrl( const KURL &url )
 
 QString AboutPage::htmlText() const
 {
-  KIconLoader *iconloader = KGlobal::iconLoader();
-  int iconSize = iconloader->currentSize( KIcon::Desktop );
+  KIconLoader *iconloader = KIconLoader::global();
+  int iconSize = iconloader->currentSize( K3Icon::Desktop );
 
-  QString handbook_icon_path = iconloader->iconPath( "contents2",  KIcon::Desktop );
-  QString html_icon_path = iconloader->iconPath( "html",  KIcon::Desktop );
-  QString wizard_icon_path = iconloader->iconPath( "wizard",  KIcon::Desktop );
+  QString handbook_icon_path = iconloader->iconPath( "contents2",  K3Icon::Desktop );
+  QString html_icon_path = iconloader->iconPath( "html",  K3Icon::Desktop );
+  QString wizard_icon_path = iconloader->iconPath( "wizard",  K3Icon::Desktop );
 
   QString info = i18n( "<h2 style='text-align:center; margin-top: 0px;'>Welcome to KitchenSync %1</h2>"
       "<p>%1</p>"
@@ -111,7 +113,7 @@ QString AboutPage::htmlText() const
       "<tr><td><a href=\"%1\"><img width=\"%1\" height=\"%1\" src=\"%1\" /></a></td>"
       "<td><a href=\"%1\">%1</a><br><span id=\"subtext\"><nobr>%1</td></tr>"
       "</table>" )
-      .arg( kapp->aboutData()->version() )
+      .arg( KGlobal::mainComponent().aboutData()->version() )
       .arg( i18n( "KitchenSync synchronizes your e-mail, addressbook, calendar, to-do list and more." ) )
       .arg( "help:/kitchensync" )
       .arg( iconSize )

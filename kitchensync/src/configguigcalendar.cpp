@@ -32,7 +32,8 @@
 ConfigGuiGoogleCalendar::ConfigGuiGoogleCalendar( const QSync::Member &member, QWidget *parent )
   : ConfigGui( member, parent )
 {
-  QBoxLayout *userLayout = new QHBoxLayout( topLayout() );
+  QBoxLayout *userLayout = new QHBoxLayout();
+  topLayout()->addLayout( userLayout );
 
   QLabel *userLbl= new QLabel( i18n("Username:"), this );
   userLayout->addWidget(userLbl);
@@ -41,7 +42,8 @@ ConfigGuiGoogleCalendar::ConfigGuiGoogleCalendar( const QSync::Member &member, Q
   userLayout->addWidget(mUsername);
 
 
-  QBoxLayout *passLayout = new QHBoxLayout( topLayout() );
+  QBoxLayout *passLayout = new QHBoxLayout();
+  topLayout()->addLayout( passLayout );
 
   QLabel *passLbl = new QLabel( i18n("Password:"), this );
   passLayout->addWidget(passLbl);
@@ -52,7 +54,8 @@ ConfigGuiGoogleCalendar::ConfigGuiGoogleCalendar( const QSync::Member &member, Q
 
   topLayout()->addWidget(new QLabel( i18n("Please notice that currently the password is stored as plain text in the plugin configuration file"), this ));
 
-  QBoxLayout *urlLayout = new QHBoxLayout( topLayout() );
+  QBoxLayout *urlLayout = new QHBoxLayout();
+  topLayout()->addLayout( urlLayout );
   QLabel *urlLbl = new QLabel( i18n("Calendar URL:"), this );
   urlLayout->addWidget(urlLbl);
 

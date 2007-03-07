@@ -22,8 +22,8 @@
 #ifndef KSYNC_CALENDARDIFFALGO_H
 #define KSYNC_CALENDARDIFFALGO_H
 
-#include <libkcal/event.h>
-#include <libkcal/todo.h>
+#include <kcal/event.h>
+#include <kcal/todo.h>
 #include <libkdepim/diffalgo.h>
 
 using namespace KPIM;
@@ -39,7 +39,7 @@ class CalendarDiffAlgo : public DiffAlgo
 
   private:
     template <class L>
-    void diffList( const QString &id, const QValueList<L> &left, const QValueList<L> &right );
+    void diffList( const QString &id, const QList<L> &left, const QList<L> &right );
 
     void diffIncidenceBase( KCal::IncidenceBase*, KCal::IncidenceBase* );
     void diffIncidence( KCal::Incidence*, KCal::Incidence* );

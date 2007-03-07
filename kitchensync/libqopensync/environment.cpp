@@ -107,7 +107,7 @@ Group Environment::groupByName( const QString &name ) const
 {
   Group group;
 
-  OSyncGroup *ogroup = osync_env_find_group( mEnvironment, name.latin1() );
+  OSyncGroup *ogroup = osync_env_find_group( mEnvironment, name.toLatin1() );
   if ( ogroup )
     group.mGroup = ogroup;
 
@@ -156,7 +156,7 @@ Plugin Environment::pluginByName( const QString &name ) const
 {
   Plugin plugin;
 
-  OSyncPlugin *oplugin = osync_env_find_plugin( mEnvironment, name.latin1() );
+  OSyncPlugin *oplugin = osync_env_find_plugin( mEnvironment, name.toLatin1() );
   if ( oplugin )
     plugin.mPlugin = oplugin;
 

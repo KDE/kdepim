@@ -23,7 +23,7 @@
 
 #include <libqopensync/plugin.h>
 
-#include <kdialogbase.h>
+#include <kdialog.h>
 #include <kwidgetlist.h>
 
 #include <qwidget.h>
@@ -58,7 +58,7 @@ class PluginPicker : public QWidget
     KWidgetList *mPluginList;
 };
 
-class PluginPickerDialog : public KDialogBase
+class PluginPickerDialog : public KDialog
 {
   Q_OBJECT
 

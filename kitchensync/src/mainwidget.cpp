@@ -30,9 +30,9 @@
 
 #include <kaboutdata.h>
 #include <kaction.h>
+#include <kactioncollection.h>
 #include <kdebug.h>
 #include <kinputdialog.h>
-#include <klistview.h>
 #include <klocale.h>
 #include <kmessagebox.h>
 #include <kstdaction.h>
@@ -40,8 +40,8 @@
 
 #include <qlayout.h>
 
-MainWidget::MainWidget( KXMLGUIClient *guiClient, QWidget *widget, const char *name )
-  : QWidget( widget, name ), mGUIClient( guiClient )
+MainWidget::MainWidget( KXMLGUIClient *guiClient, QWidget *widget )
+  : QWidget( widget ), mGUIClient( guiClient )
 {
   initGUI();
   initActions();
@@ -102,14 +102,21 @@ void MainWidget::initGUI()
 
 void MainWidget::initActions()
 {
-  mActionSynchronize = new KAction( i18n("Synchronize"), "hotsync", 0, this, SLOT( sync() ),
-                                    mGUIClient->actionCollection(), "sync" );
-  mActionAddGroup = new KAction( i18n("Add Group..."), "filenew", 0, this, SLOT( addGroup() ),
-                                 mGUIClient->actionCollection(), "add_group" );
-  mActionDeleteGroup = new KAction( i18n("Delete Group..."), "editdelete", 0, this, SLOT( deleteGroup() ),
-                                    mGUIClient->actionCollection(), "delete_group" );
-  mActionEditGroup = new KAction( i18n("Edit Group..."), "edit", 0, this, SLOT( editGroup() ),
-                                  mGUIClient->actionCollection(), "edit_group" );
+  mActionSynchronize = new KAction( KIcon( "hotsync" ), i18n("Synchronize"), this );
+  mGUIClient->actionCollection()->addAction( "sync", mActionSynchronize );
+  connect( mActionSynchronize, SIGNAL( triggered() ), this, SLOT( sync() ) );
+
+  mActionAddGroup = new KAction( KIcon( "filenew" ), i18n("Add Group..."), this );
+  mGUIClient->actionCollection()->addAction( "add_group", mActionAddGroup );
+  connect( mActionAddGroup, SIGNAL( triggered() ), this, SLOT( addGroup() ) );
+
+  mActionDeleteGroup = new KAction( KIcon( "editdelete" ), i18n("Delete Group..."), this );
+  mGUIClient->actionCollection()->addAction( "delete_group", mActionDeleteGroup );
+  connect( mActionDeleteGroup, SIGNAL( triggered() ), this, SLOT( deleteGroup() ) );
+
+  mActionEditGroup = new KAction( KIcon( "edit" ), i18n("Edit Group..."), this );
+  mGUIClient->actionCollection()->addAction( "edit_group", mActionEditGroup );
+  connect( mActionEditGroup, SIGNAL( triggered() ), this, SLOT( editGroup() ) );
 }
 
 void MainWidget::enableActions()
@@ -175,7 +182,7 @@ void MainWidget::sync( SyncProcess *syncProcess )
     syncProcess->reinitEngine();
     QSync::Result result = syncProcess->engine()->synchronize();
     if ( result ) {
-      qDebug( "%s", result.message().latin1() );
+      qDebug( "%s", qPrintable( result.message() ) );
     } else {
       qDebug( "synchronization worked" );
     }

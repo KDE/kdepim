@@ -21,7 +21,6 @@
 
 #include "memberinfo.h"
 
-#include <kglobal.h>
 #include <kiconloader.h>
 #include <klocale.h>
 
@@ -32,12 +31,12 @@ MemberInfo::MemberInfo( const QSync::Member &member )
 
 QPixmap MemberInfo::smallIcon() const
 {
-  return KGlobal::iconLoader()->loadIcon( iconName(), KIcon::Small );
+  return KIconLoader::global()->loadIcon( iconName(), K3Icon::Small );
 }
 
 QPixmap MemberInfo::desktopIcon() const
 {
-  return KGlobal::iconLoader()->loadIcon( iconName(), KIcon::Desktop );
+  return KIconLoader::global()->loadIcon( iconName(), K3Icon::Desktop );
 }
 
 QString MemberInfo::iconName() const

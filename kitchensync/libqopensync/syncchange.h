@@ -22,13 +22,14 @@
 #ifndef QSYNC_SYNCCHANGE_H
 #define QSYNC_SYNCCHANGE_H
 
+#include <libqopensync/qopensync_export.h>
 #include <libqopensync/member.h>
 
 class OSyncChange;
 
 namespace QSync {
 
-class SyncChange
+class QSYNC_EXPORT SyncChange
 {
   friend class SyncMapping;
 

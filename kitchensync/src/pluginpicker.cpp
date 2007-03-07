@@ -38,10 +38,12 @@ PluginItem::PluginItem( KWidgetList *list, const QSync::Plugin &plugin )
   : KWidgetListItem( list ), mPlugin( plugin )
 {
   QString iconName = MemberInfo::pluginIconName( mPlugin.name() );
-  QGridLayout *layout = new QGridLayout( this, 2, 2, KDialog::marginHint(), KDialog::spacingHint() );
+  QGridLayout *layout = new QGridLayout( this );
+  layout->setMargin( KDialog::marginHint() );
+  layout->setSpacing( KDialog::spacingHint() );
 
   QLabel *icon = new QLabel( this );
-  icon->setPixmap( KGlobal::iconLoader()->loadIcon( iconName, KIcon::Desktop ) );
+  icon->setPixmap( KIconLoader::global()->loadIcon( iconName, K3Icon::Desktop ) );
   icon->setFixedSize( icon->sizeHint() );
 
   QLabel *name = new QLabel( plugin.longName(), this );
@@ -95,9 +97,14 @@ QSync::Plugin PluginPicker::selectedPlugin() const
 
 
 PluginPickerDialog::PluginPickerDialog( QWidget *parent )
-  : KDialogBase( parent, 0, true, i18n("Select Member Type"), Ok | Cancel )
+  : KDialog( parent )
 {
-  QFrame *topFrame = makeMainWidget();
+  setModal( true );
+  setWindowTitle( i18n("Select Member Type") );
+  setButtons( Ok | Cancel );
+
+  QFrame *topFrame = new QFrame( this );
+  setMainWidget( topFrame );
 
   QBoxLayout *topLayout = new QVBoxLayout( topFrame );
 

@@ -22,6 +22,7 @@
 #ifndef QSYNC_SYNCMAPPING_H
 #define QSYNC_SYNCMAPPING_H
 
+#include <libqopensync/qopensync_export.h>
 #include <libqopensync/syncchange.h>
 
 class OSyncEngine;
@@ -29,7 +30,7 @@ class OSyncMapping;
 
 namespace QSync {
 
-class SyncMapping
+class QSYNC_EXPORT SyncMapping
 {
   friend class SyncMappingUpdate;
 

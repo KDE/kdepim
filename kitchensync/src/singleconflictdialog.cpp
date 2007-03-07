@@ -96,12 +96,14 @@ void SingleConflictDialog::ignoreChange()
 
 void SingleConflictDialog::initGUI()
 {
-  QGridLayout *layout = new QGridLayout( this, 3, 4, KDialog::marginHint(), KDialog::spacingHint() );
+  QGridLayout *layout = new QGridLayout( this );
+  layout->setMargin( KDialog::marginHint() );
+  layout->setSpacing( KDialog::spacingHint() );
 
-  layout->addMultiCellWidget( new QLabel( i18n( "A conflict has appeared, please solve it manually." ), this ), 0, 0, 0, 3 );
+  layout->addWidget( new QLabel( i18n( "A conflict has appeared, please solve it manually." ), this ), 0, 0, 1, 4 );
   mDiffAlgoDisplay = new KSync::HTMLDiffAlgoDisplay( this );
 
-  layout->addMultiCellWidget( mDiffAlgoDisplay, 1, 1, 0, 3 );
+  layout->addWidget( mDiffAlgoDisplay, 1, 1, 1, 2 );
 
   QPushButton *button = new QPushButton( i18n( "Use Item" ), this );
   connect( button, SIGNAL( clicked() ), SLOT( useFirstChange() ) );

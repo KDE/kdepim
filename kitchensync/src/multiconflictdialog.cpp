@@ -37,7 +37,9 @@ class ChangeItem : public KWidgetListItem
       : KWidgetListItem( parent ),
         mChange( change )
     {
-      QGridLayout *layout = new QGridLayout( this, 2, 1, KDialog::marginHint(), KDialog::spacingHint() );
+      QGridLayout *layout = new QGridLayout( this );
+      layout->setMargin( KDialog::marginHint() );
+      layout->setSpacing( KDialog::spacingHint() );
 
       MemberInfo mi( change.member() );
       layout->addWidget( new QLabel( mi.name(), this ), 0, 0 );
@@ -118,12 +120,14 @@ void MultiConflictDialog::ignoreChange()
 
 void MultiConflictDialog::initGUI()
 {
-  QGridLayout *layout = new QGridLayout( this, 3, 3, KDialog::marginHint(), KDialog::spacingHint() );
+  QGridLayout *layout = new QGridLayout( this );
+  layout->setMargin( KDialog::marginHint() );
+  layout->setSpacing( KDialog::spacingHint() );
 
-  layout->addMultiCellWidget( new QLabel( i18n( "A conflict has appeared, please solve it manually." ), this ), 0, 0, 0, 2 );
+  layout->addWidget( new QLabel( i18n( "A conflict has appeared, please solve it manually." ), this ), 0, 0, 1, 3 );
 
   mWidgetList = new KWidgetList( this );
-  layout->addMultiCellWidget( mWidgetList, 1, 1, 0, 2 );
+  layout->addWidget( mWidgetList, 1, 1, 1, 2 );
 
   QPushButton *button = new QPushButton( i18n( "Use Selected Item" ), this );
   connect( button, SIGNAL( clicked() ), SLOT( useSelectedChange() ) );

@@ -55,9 +55,8 @@ SyncProcessManager::SyncProcessManager()
 
 SyncProcessManager::~SyncProcessManager()
 {
-  QValueList<SyncProcess*>::Iterator it;
-  for ( it = mProcesses.begin(); it != mProcesses.end(); ++it )
-    delete *it;
+  for ( int i = 0; i < mProcesses.count(); ++i )
+    delete mProcesses[ i ];
 
   mProcesses.clear();
 
@@ -80,20 +79,18 @@ SyncProcess* SyncProcessManager::at( int pos ) const
 
 SyncProcess* SyncProcessManager::byGroup( const QSync::Group &group )
 {
-  QValueList<SyncProcess*>::Iterator it;
-  for ( it = mProcesses.begin(); it != mProcesses.end(); ++it )
-    if ( (*it)->group() == group )
-      return *it;
+  for ( int i = 0; i < mProcesses.count(); ++i )
+    if ( mProcesses[ i ]->group() == group )
+      return mProcesses[ i ];
 
   return 0;
 }
 
 SyncProcess* SyncProcessManager::byGroupName( const QString &name )
 {
-  QValueList<SyncProcess*>::Iterator it;
-  for ( it = mProcesses.begin(); it != mProcesses.end(); ++it )
-    if ( (*it)->group().name() == name )
-      return *it;
+  for ( int i = 0; i < mProcesses.count(); ++i )
+    if ( mProcesses[ i ]->group().name() == name )
+      return mProcesses[ i ];
 
   return 0;
 }
@@ -116,7 +113,7 @@ void SyncProcessManager::addGroup( const QString &name )
 void SyncProcessManager::remove( SyncProcess *syncProcess )
 {
   if ( syncProcess ) {
-    mProcesses.remove( syncProcess );
+    mProcesses.removeAll( syncProcess );
     const QSync::Group group = syncProcess->group();
     delete syncProcess;
 

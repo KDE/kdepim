@@ -27,8 +27,6 @@
 
 using namespace KSync;
 
-#define MAX( a, b ) ( a > b ? a : b )
-
 static bool compareString( const QString &left, const QString &right )
 {
   if ( left.isEmpty() && right.isEmpty() )
@@ -46,11 +44,11 @@ void GenericDiffAlgo::run()
 {
   begin();
 
-  QStringList leftList = QStringList::split( '\n', mLeftData, true );
-  QStringList rightList = QStringList::split( '\n', mRightData, true );
+  const QStringList leftList = mLeftData.split( '\n', QString::KeepEmptyParts );
+  const QStringList rightList = mRightData.split( '\n', QString::KeepEmptyParts );
 
-  uint lines = MAX( leftList.count(), rightList.count() );
-  for ( uint i = 0; i < lines; ++i ) {
+  int lines = qMax( leftList.count(), rightList.count() );
+  for ( int i = 0; i < lines; ++i ) {
     if ( i < leftList.count() && i < rightList.count() ) {
       if ( !compareString( leftList[ i ], rightList[ i ] ) )
         conflictField( i18n( "Line %1" ).arg( i ), leftList[ i ], rightList[ i ] );

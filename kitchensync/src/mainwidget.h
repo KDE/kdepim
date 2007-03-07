@@ -40,7 +40,7 @@ class KDE_EXPORT MainWidget : public QWidget
 {
     Q_OBJECT
   public:
-    MainWidget( KXMLGUIClient *guiClient, QWidget *widget = 0, const char *name = 0 );
+    MainWidget( KXMLGUIClient *guiClient, QWidget *widget = 0 );
     ~MainWidget();
 
     virtual KXMLGUIClient *guiClient() const;

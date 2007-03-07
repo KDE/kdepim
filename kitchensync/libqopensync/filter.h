@@ -24,11 +24,13 @@
 
 #include <qstring.h>
 
+#include <libqopensync/qopensync_export.h>
+
 class OSyncFilter;
 
 namespace QSync {
 
-class Filter
+class QSYNC_EXPORT Filter
 {
   friend class Group;
 

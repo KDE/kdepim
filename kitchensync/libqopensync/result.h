@@ -24,11 +24,13 @@
 
 #include <qstring.h>
 
+#include <libqopensync/qopensync_export.h>
+
 struct OSyncError;
 
 namespace QSync {
 
-class Result
+class QSYNC_EXPORT Result
 {
   public:
     /**

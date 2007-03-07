@@ -39,11 +39,11 @@ ConfigGuiLdap::ConfigGuiLdap( const QSync::Member &member, QWidget *parent )
 
   bindModeChanged( false );
 
-  mSearchScope->insertItem( i18n( "Base" ) );
-  mSearchScope->insertItem( i18n( "One" ) );
-  mSearchScope->insertItem( i18n( "Sub" ) );
+  mSearchScope->addItem( i18n( "Base" ) );
+  mSearchScope->addItem( i18n( "One" ) );
+  mSearchScope->addItem( i18n( "Sub" ) );
 
-  mAuthMech->insertItem( i18n( "Simple" ) );
+  mAuthMech->addItem( i18n( "Simple" ) );
 }
 
 void ConfigGuiLdap::load( const QString &xml )
@@ -76,17 +76,17 @@ void ConfigGuiLdap::load( const QString &xml )
       QStringList list;
       list << "base" << "one" << "sub";
 
-      for ( uint i = 0; i < list.count(); ++i )
+      for ( int i = 0; i < list.count(); ++i )
         if ( list[ i ] == element.text() )
-          mSearchScope->setCurrentItem( i );
+          mSearchScope->setCurrentIndex( i );
 
     } else if ( element.tagName() == "authmech" ) {
       QStringList list;
       list << "SIMPLE";
 
-      for ( uint i = 0; i < list.count(); ++i )
+      for ( int i = 0; i < list.count(); ++i )
         if ( list[ i ] == element.text() )
-          mAuthMech->setCurrentItem( i );
+          mAuthMech->setCurrentIndex( i );
 
     } else if ( element.tagName() == "encryption" ) {
       mEncryption->setChecked( element.text().toInt() == 1 );
@@ -117,12 +117,12 @@ QString ConfigGuiLdap::save()
   QStringList scopes;
   scopes << "base" << "one" << "sub";
 
-  config += QString( "<scope>%1</scope>" ).arg( scopes[ mSearchScope->currentItem() ] );
+  config += QString( "<scope>%1</scope>" ).arg( scopes[ mSearchScope->currentIndex() ] );
 
   QStringList authMechs;
   authMechs << "SIMPLE";
 
-  config += QString( "<authmech>%1</authmech>" ).arg( authMechs[ mAuthMech->currentItem() ] );
+  config += QString( "<authmech>%1</authmech>" ).arg( authMechs[ mAuthMech->currentIndex() ] );
   config += QString( "<encryption>%1</encryption>" ).arg( mEncryption->isChecked() ? "1" : "0" );
 
   config += QString( "<ldap_read>%1</ldap_read>" ).arg( mReadLdap->isChecked() ? "1" : "0" );
@@ -144,19 +144,22 @@ void ConfigGuiLdap::bindModeChanged( bool checked )
 
 void ConfigGuiLdap::initGUI()
 {
-  QGridLayout *layout = new QGridLayout( topLayout(), 12, 4, KDialog::spacingHint() );
+  QGridLayout *layout = new QGridLayout();
+  topLayout()->addLayout( layout );
   layout->setMargin( KDialog::marginHint() );
+  layout->setSpacing( KDialog::spacingHint() );
 
   layout->addWidget( new QLabel( i18n( "Server:" ), this ), 0, 0 );
   mServerName = new KLineEdit( this );
   layout->addWidget( mServerName, 0, 1 );
 
   layout->addWidget( new QLabel( i18n( "Port:" ), this ), 0, 2, Qt::AlignRight );
-  mPort = new QSpinBox( 1, 65536, 1, this );
+  mPort = new QSpinBox( this );
+  mPort->setRange( 1, 65536 );
   layout->addWidget( mPort, 0, 3 );
 
   mAnonymousBind = new QCheckBox( i18n( "Use anonymous bind" ), this );
-  layout->addMultiCellWidget( mAnonymousBind, 1, 1, 0, 1 );
+  layout->addWidget( mAnonymousBind, 1, 0, 1, 2 );
 
   connect( mAnonymousBind, SIGNAL( toggled( bool ) ),
            this, SLOT( bindModeChanged( bool ) ) );
@@ -164,46 +167,46 @@ void ConfigGuiLdap::initGUI()
   mBindLabel = new QLabel( i18n( "Bind Dn:" ), this );
   layout->addWidget( mBindLabel, 2, 0 );
   mBindDn = new KLineEdit( this );
-  layout->addMultiCellWidget( mBindDn, 2, 2, 1, 3 );
+  layout->addWidget( mBindDn, 2, 1, 1, 2 );
 
   mPasswordLabel = new QLabel( i18n( "Password:" ), this );
   layout->addWidget( mPasswordLabel, 3, 0 );
   mPassword = new KLineEdit( this );
   mPassword->setEchoMode( QLineEdit::Password );
-  layout->addMultiCellWidget( mPassword, 3, 3, 1, 3 );
+  layout->addWidget( mPassword, 3, 1, 1, 2 );
 
   layout->addWidget( new QLabel( i18n( "Search Base:" ), this ), 4, 0 );
   mSearchBase = new KLineEdit( this );
-  layout->addMultiCellWidget( mSearchBase, 4, 4, 1, 3 );
+  layout->addWidget( mSearchBase, 4, 1, 1, 2 );
 
   layout->addWidget( new QLabel( i18n( "Search Filter:" ), this ), 5, 0 );
   mSearchFilter = new KLineEdit( this );
-  layout->addMultiCellWidget( mSearchFilter, 5, 5, 1, 3 );
+  layout->addWidget( mSearchFilter, 5, 1, 1, 2 );
 
   layout->addWidget( new QLabel( i18n( "Storage Base:" ), this ), 6, 0 );
   mStoreBase = new KLineEdit( this );
-  layout->addMultiCellWidget( mStoreBase, 6, 6, 1, 3 );
+  layout->addWidget( mStoreBase, 6, 1, 1, 2 );
 
   layout->addWidget( new QLabel( i18n( "Key Attribute:" ), this ), 7, 0 );
   mKeyAttribute = new KLineEdit( this );
-  layout->addMultiCellWidget( mKeyAttribute, 7, 7, 1, 3 );
+  layout->addWidget( mKeyAttribute, 7, 1, 1, 2 );
 
   layout->addWidget( new QLabel( i18n( "Search Scope:" ), this ), 8, 0 );
   mSearchScope = new KComboBox( this );
-  layout->addMultiCellWidget( mSearchScope, 8, 8, 1, 3 );
+  layout->addWidget( mSearchScope, 8, 1, 1, 2 );
 
   layout->addWidget( new QLabel( i18n( "Authentication Mechanism:" ), this ), 9, 0 );
   mAuthMech = new KComboBox( this );
-  layout->addMultiCellWidget( mAuthMech, 9, 9, 1, 3 );
+  layout->addWidget( mAuthMech, 9, 1, 1, 2 );
 
   mEncryption = new QCheckBox( i18n( "Use encryption" ), this );
-  layout->addMultiCellWidget( mEncryption, 10, 10, 0, 3 );
+  layout->addWidget( mEncryption, 10, 1, 1, 2 );
 
   mReadLdap = new QCheckBox( i18n( "Load data from LDAP" ), this );
-  layout->addMultiCellWidget( mReadLdap, 11, 11, 0, 1 );
+  layout->addWidget( mReadLdap, 11, 1, 1, 2 );
 
   mWriteLdap = new QCheckBox( i18n( "Save data to LDAP" ), this );
-  layout->addMultiCellWidget( mWriteLdap, 11, 11, 2, 3 );
+  layout->addWidget( mWriteLdap, 11, 2, 1, 2 );
 }
 
 #include "configguildap.moc"

@@ -23,17 +23,20 @@
 
 #include <libqopensync/engine.h>
 
-#include <qapplication.h>
+#include <QtCore/QCoreApplication>
+#include <QtCore/QEvent>
 
 #include "callbackhandler.h"
 
 using namespace QSync;
 
-class CallbackHandler::ConflictEvent : public QCustomEvent
+class CallbackHandler::ConflictEvent : public QEvent
 {
   public:
+    enum { Type = QEvent::User + 1 };
+
     ConflictEvent( const SyncMapping& mapping )
-      : QCustomEvent( ConflictEventType ), mMapping( mapping )
+      : QEvent( (QEvent::Type)(QEvent::User + 1) ), mMapping( mapping )
     {
     }
 
@@ -43,11 +46,13 @@ class CallbackHandler::ConflictEvent : public QCustomEvent
     SyncMapping mMapping;
 };
 
-class CallbackHandler::ChangeEvent : public QCustomEvent
+class CallbackHandler::ChangeEvent : public QEvent
 {
   public:
+    enum { Type = QEvent::User + 2 };
+
     ChangeEvent( const SyncChangeUpdate& change )
-      : QCustomEvent( ChangeEventType ), mChange( change )
+      : QEvent( (QEvent::Type)(QEvent::User + 2) ), mChange( change )
     {
     }
 
@@ -57,11 +62,13 @@ class CallbackHandler::ChangeEvent : public QCustomEvent
     SyncChangeUpdate mChange;
 };
 
-class CallbackHandler::MappingEvent : public QCustomEvent
+class CallbackHandler::MappingEvent : public QEvent
 {
   public:
+    enum { Type = QEvent::User + 3 };
+
     MappingEvent( const SyncMappingUpdate& mapping )
-      : QCustomEvent( MappingEventType ), mMapping( mapping )
+      : QEvent( (QEvent::Type)(QEvent::User + 3) ), mMapping( mapping )
     {
     }
 
@@ -71,11 +78,13 @@ class CallbackHandler::MappingEvent : public QCustomEvent
     SyncMappingUpdate mMapping;
 };
 
-class CallbackHandler::EngineEvent : public QCustomEvent
+class CallbackHandler::EngineEvent : public QEvent
 {
   public:
+    enum { Type = QEvent::User + 4 };
+
     EngineEvent( const SyncEngineUpdate& engine )
-      : QCustomEvent( EngineEventType ), mEngine( engine )
+      : QEvent( (QEvent::Type)(QEvent::User + 4) ), mEngine( engine )
     {
     }
 
@@ -85,11 +94,13 @@ class CallbackHandler::EngineEvent : public QCustomEvent
     SyncEngineUpdate mEngine;
 };
 
-class CallbackHandler::MemberEvent : public QCustomEvent
+class CallbackHandler::MemberEvent : public QEvent
 {
   public:
+    enum { Type = QEvent::User + 5 };
+
     MemberEvent( const SyncMemberUpdate& member )
-      : QCustomEvent( MemberEventType ), mMember( member )
+      : QEvent( (QEvent::Type)(QEvent::User + 5) ), mMember( member )
     {
     }
 
@@ -123,21 +134,21 @@ Engine* CallbackHandler::engine() const
   return mEngine;
 }
 
-void CallbackHandler::customEvent( QCustomEvent *event )
+void CallbackHandler::customEvent( QEvent *event )
 {
-  if ( event->type() == static_cast<QEvent::Type>( ConflictEventType ) ) {
+  if ( event->type() == ConflictEvent::Type ) {
     ConflictEvent *conflictEvent = static_cast<ConflictEvent*>( event );
     emit conflict( conflictEvent->mapping() );
-  } else if ( event->type() == static_cast<QEvent::Type>( ChangeEventType ) ) {
+  } else if ( event->type() == ChangeEvent::Type ) {
     ChangeEvent *changeEvent = static_cast<ChangeEvent*>( event );
     emit change( changeEvent->change() );
-  } else if ( event->type() == static_cast<QEvent::Type>( MappingEventType ) ) {
+  } else if ( event->type() == MappingEvent::Type ) {
     MappingEvent *mappingEvent = static_cast<MappingEvent*>( event );
     emit mapping( mappingEvent->mapping() );
-  } else if ( event->type() == static_cast<QEvent::Type>( EngineEventType ) ) {
+  } else if ( event->type() == EngineEvent::Type ) {
     EngineEvent *engineEvent = static_cast<EngineEvent*>( event );
     emit engine( engineEvent->engine() );
-  } else if ( event->type() == static_cast<QEvent::Type>( MemberEventType ) ) {
+  } else if ( event->type() == MemberEvent::Type ) {
     MemberEvent *memberEvent = static_cast<MemberEvent*>( event );
     emit member( memberEvent->member() );
   }
@@ -149,7 +160,7 @@ void CallbackHandler::conflict_callback( OSyncEngine *engine, OSyncMapping *omap
 
   CallbackHandler *handler = static_cast<CallbackHandler*>( data );
 
-  QApplication::postEvent( handler, new ConflictEvent( mapping ) );
+  QCoreApplication::postEvent( handler, new ConflictEvent( mapping ) );
 }
 
 void CallbackHandler::change_callback( OSyncEngine*, OSyncChangeUpdate *update, void *data )
@@ -158,7 +169,7 @@ void CallbackHandler::change_callback( OSyncEngine*, OSyncChangeUpdate *update, 
 
   CallbackHandler *handler = static_cast<CallbackHandler*>( data );
 
-  QApplication::postEvent( handler, new ChangeEvent( change ) );
+  QCoreApplication::postEvent( handler, new ChangeEvent( change ) );
 }
 
 void CallbackHandler::mapping_callback( OSyncMappingUpdate *update, void *data )
@@ -167,7 +178,7 @@ void CallbackHandler::mapping_callback( OSyncMappingUpdate *update, void *data )
 
   SyncMappingUpdate mapping( update, handler->engine()->mEngine );
 
-  QApplication::postEvent( handler, new MappingEvent( mapping ) );
+  QCoreApplication::postEvent( handler, new MappingEvent( mapping ) );
 }
 
 void CallbackHandler::engine_callback( OSyncEngine*, OSyncEngineUpdate *update, void *data )
@@ -176,7 +187,7 @@ void CallbackHandler::engine_callback( OSyncEngine*, OSyncEngineUpdate *update, 
 
   CallbackHandler *handler = static_cast<CallbackHandler*>( data );
 
-  QApplication::postEvent( handler, new EngineEvent( engine ) );
+  QCoreApplication::postEvent( handler, new EngineEvent( engine ) );
 }
 
 void CallbackHandler::member_callback( OSyncMemberUpdate *update, void *data )
@@ -185,7 +196,7 @@ void CallbackHandler::member_callback( OSyncMemberUpdate *update, void *data )
 
   CallbackHandler *handler = static_cast<CallbackHandler*>( data );
 
-  QApplication::postEvent( handler, new MemberEvent( member ) );
+  QCoreApplication::postEvent( handler, new MemberEvent( member ) );
 }
 
 #include "callbackhandler.moc"

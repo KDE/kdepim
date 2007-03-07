@@ -27,20 +27,15 @@
 #include <klineedit.h>
 #include <klocale.h>
 #include <kmessagebox.h>
+#include <kvbox.h>
 
 #include <kdebug.h>
 
-#include <qapplication.h>
-#include <qeventloop.h>
 #include <qlabel.h>
 #include <qlayout.h>
 #include <qpushbutton.h>
 #include <qspinbox.h>
 #include <qtabwidget.h>
-#include <qtooltip.h>
-#include <qvbox.h>
-
-#include "ksplashwidget.h"
 
 #include "configguiirmc.h"
 
@@ -49,9 +44,9 @@ ConfigGuiIRMC::ConfigGuiIRMC( const QSync::Member &member, QWidget *parent )
 {
   initGUI();
 
-  mConnectionType->insertItem( i18n( "Bluetooth" ) );
-  mConnectionType->insertItem( i18n( "InfraRed (IR)" ) );
-  mConnectionType->insertItem( i18n( "Cable" ) );
+  mConnectionType->addItem( i18n( "Bluetooth" ) );
+  mConnectionType->addItem( i18n( "InfraRed (IR)" ) );
+  mConnectionType->addItem( i18n( "Cable" ) );
 
   connect( mConnectionType, SIGNAL( activated( int ) ),
            this, SLOT( connectionTypeChanged( int ) ) );
@@ -69,13 +64,13 @@ void ConfigGuiIRMC::load( const QString &xml )
     QDomElement element = node.toElement();
     if ( element.tagName() == "connectmedium" ) {
       if ( element.text() == "bluetooth" ) {
-        mConnectionType->setCurrentItem( 0 );
+        mConnectionType->setCurrentIndex( 0 );
         connectionTypeChanged( 0 );
       } else if ( element.text() == "ir" ) {
-        mConnectionType->setCurrentItem( 1 );
+        mConnectionType->setCurrentIndex( 1 );
         connectionTypeChanged( 1 );
       } else if ( element.text() == "cable" ) {
-        mConnectionType->setCurrentItem( 2 );
+        mConnectionType->setCurrentIndex( 2 );
         connectionTypeChanged( 2 );
       }
     } else if (element.tagName() == "btunit" ) {
@@ -100,16 +95,16 @@ QString ConfigGuiIRMC::save()
   doc.appendChild( config );
 
   QDomElement element = doc.createElement( "connectmedium" );
-  if ( mConnectionType->currentItem() == 0 )
+  if ( mConnectionType->currentIndex() == 0 )
     element.appendChild( doc.createTextNode( "bluetooth" ) );
-  if ( mConnectionType->currentItem() == 1 )
+  if ( mConnectionType->currentIndex() == 1 )
     element.appendChild( doc.createTextNode( "ir" ) );
-  if ( mConnectionType->currentItem() == 2 )
+  if ( mConnectionType->currentIndex() == 2 )
     element.appendChild( doc.createTextNode( "cable" ) );
 
   config.appendChild( element );
 
-  if ( mConnectionType->currentItem() == 0 ) {
+  if ( mConnectionType->currentIndex() == 0 ) {
     QDomElement btunit = doc.createElement( "btunit" );
     if ( !mBluetoothWidget->address().isEmpty() )
       btunit.appendChild( doc.createTextNode( mBluetoothWidget->address() ) );
@@ -153,14 +148,14 @@ void ConfigGuiIRMC::initGUI()
   QTabWidget *tabWidget = new QTabWidget( this );
   topLayout()->addWidget( tabWidget );
 
-  QVBox *connectionWidget = new QVBox( tabWidget );
+  KVBox *connectionWidget = new KVBox( tabWidget );
   connectionWidget->setMargin( KDialog::marginHint() );
   connectionWidget->setSpacing( 5 );
 
   tabWidget->addTab( connectionWidget, i18n( "Connection" ) );
 
   mConnectionType = new KComboBox( connectionWidget );
-  QToolTip::add( mConnectionType, i18n( "Select your connection type." ) );
+  mConnectionType->setToolTip( i18n( "Select your connection type." ) );
 
   mBluetoothWidget = new BluetoothWidget( connectionWidget );
   mBluetoothWidget->hide();
@@ -175,20 +170,19 @@ void ConfigGuiIRMC::initGUI()
   connectionWidget->setStretchFactor( mIRWidget, 1 );
   connectionWidget->setStretchFactor( mCableWidget, 1 );
 
-  QVBox *optionsWidget = new QVBox( tabWidget );
+  KVBox *optionsWidget = new KVBox( tabWidget );
   optionsWidget->setMargin( KDialog::marginHint() );
   optionsWidget->setSpacing( 5 );
 
   tabWidget->addTab( optionsWidget, i18n( "Options" ) );
 
-  QHBox *optionBox = new QHBox( optionsWidget );
+  KHBox *optionBox = new KHBox( optionsWidget );
   optionBox->setSpacing( KDialog::spacingHint() );
 
   QLabel *label = new QLabel( i18n( "Don't send OBEX UUID (IRMC-SYNC)" ), optionBox );
   mDontTellSync = new QCheckBox( optionBox );
-  QToolTip::add( mDontTellSync, i18n( "Don't send OBEX UUID while connectiong. Needed for older IrMC based mobile phones." ) );
+  mDontTellSync->setToolTip( i18n( "Don't send OBEX UUID while connectiong. Needed for older IrMC based mobile phones." ) );
   label->setBuddy( mDontTellSync );
-
 }
 
 #include "configguiirmc.moc"

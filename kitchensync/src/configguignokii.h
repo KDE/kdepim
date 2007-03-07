@@ -24,7 +24,7 @@
 #include "configgui.h"
 #include "connectionwidgets.h"
 
-#include <qvaluelist.h>
+#include <qlist.h>
 #include <qpair.h>
 
 class QLabel;
@@ -50,7 +50,7 @@ class ConfigGuiGnokii : public ConfigGui
     BluetoothWidget *mBluetooth;
 
     typedef QPair<QString, QString> ConnectionType;
-    typedef QValueList<ConnectionType> ConnectionTypeList;
+    typedef QList<ConnectionType> ConnectionTypeList;
     ConnectionTypeList mConnectionTypes;
 
    protected slots:

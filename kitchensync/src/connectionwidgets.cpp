@@ -36,7 +36,6 @@
 #include <qspinbox.h>
 #include <qtabwidget.h>
 #include <qtooltip.h>
-#include <qvbox.h>
 
 #include "connectionwidgets.h"
 
@@ -103,7 +102,9 @@ QString BluetoothWidget::channel() const
 IRWidget::IRWidget( QWidget *parent )
   : QWidget( parent )
 {
-  QGridLayout *layout = new QGridLayout( this, 3, 3, 11, 3 );
+  QGridLayout *layout = new QGridLayout( this );
+  layout->setMargin( 11 );
+  layout->setSpacing( 3 );
 
   mDevice = new KLineEdit( this );
   mSerialNumber = new KLineEdit( this );
@@ -149,7 +150,9 @@ void IRWidget::save( QDomDocument &doc, QDomElement &parent )
 CableWidget::CableWidget( QWidget *parent )
   : QWidget( parent )
 {
-  QGridLayout *layout = new QGridLayout( this, 3, 2, 11, 3 );
+  QGridLayout *layout = new QGridLayout( this );
+  layout->setMargin( 11 );
+  layout->setSpacing( 3 );
 
   mManufacturer = new KComboBox( this );
   mDevice = new KComboBox( true, this );
@@ -167,13 +170,13 @@ CableWidget::CableWidget( QWidget *parent )
 
   layout->setRowStretch( 2, 1 );
 
-  mManufacturer->insertItem( i18n( "SonyEricsson/Ericsson" ) );
-  mManufacturer->insertItem( i18n( "Siemens" ) );
+  mManufacturer->addItem( i18n( "SonyEricsson/Ericsson" ) );
+  mManufacturer->addItem( i18n( "Siemens" ) );
 
-  mDevice->insertItem( "/dev/ttyS0" );
-  mDevice->insertItem( "/dev/ttyS1" );
-  mDevice->insertItem( "/dev/ttyUSB0" );
-  mDevice->insertItem( "/dev/ttyUSB1" );
+  mDevice->addItem( "/dev/ttyS0" );
+  mDevice->addItem( "/dev/ttyS1" );
+  mDevice->addItem( "/dev/ttyUSB0" );
+  mDevice->addItem( "/dev/ttyUSB1" );
 }
 
 void CableWidget::load( const QDomElement &parent )
@@ -182,16 +185,16 @@ void CableWidget::load( const QDomElement &parent )
   for ( node = parent.firstChild(); !node.isNull(); node = node.nextSibling() ) {
     QDomElement element = node.toElement();
     if ( element.tagName() == "cabletype" )
-      mManufacturer->setCurrentItem( element.text().toInt() );
+      mManufacturer->setCurrentIndex( element.text().toInt() );
     else if ( element.tagName() == "cabledev" )
-      mDevice->setCurrentText( element.text() );
+      mDevice->setCurrentIndex( mDevice->findText( element.text() ) );
   }
 }
 
 void CableWidget::save( QDomDocument &doc, QDomElement &parent )
 {
   QDomElement element = doc.createElement( "cabletype" );
-  element.appendChild( doc.createTextNode( QString::number( mManufacturer->currentItem() ) ) );
+  element.appendChild( doc.createTextNode( QString::number( mManufacturer->currentIndex() ) ) );
   parent.appendChild( element );
 
   element = doc.createElement( "cabledev" );
@@ -202,7 +205,9 @@ void CableWidget::save( QDomDocument &doc, QDomElement &parent )
 UsbWidget::UsbWidget( QWidget *parent )
   : QWidget( parent )
 {
-  QGridLayout *layout = new QGridLayout( this, 3, 2, 11, 3);
+  QGridLayout *layout = new QGridLayout( this );
+  layout->setMargin( 11 );
+  layout->setSpacing( 3 );
 
   mInterface = new QSpinBox( this );
   layout->addWidget( mInterface, 0, 1 );

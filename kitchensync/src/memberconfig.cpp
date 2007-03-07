@@ -67,7 +67,7 @@ void MemberConfig::saveData()
   if ( txt.isEmpty() ) {
     KMessageBox::sorry( this, i18n("Configuration of %1 is empty.").arg( mMember.pluginName() ) );
   } else {
-    QByteArray cfg = txt.utf8();
+    QByteArray cfg = txt.toUtf8();
     cfg.truncate(cfg.size() - 1); /* discard NUL terminator */
     mMember.setConfiguration( cfg );
     mMember.setName( mGui->instanceName() );

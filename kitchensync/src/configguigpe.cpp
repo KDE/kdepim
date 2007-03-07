@@ -37,8 +37,8 @@ ConfigGuiGpe::ConfigGuiGpe( const QSync::Member &member, QWidget *parent )
 {
   initGUI();
 
-  mConnectionMode->insertItem( i18n( "Local" ) );
-  mConnectionMode->insertItem( i18n( "Ssh" ) );
+  mConnectionMode->addItem( i18n( "Local" ) );
+  mConnectionMode->addItem( i18n( "Ssh" ) );
 }
 
 void ConfigGuiGpe::load( const QString &xml )
@@ -51,9 +51,9 @@ void ConfigGuiGpe::load( const QString &xml )
     QDomElement element = node.toElement();
     if ( element.tagName() == "use_local" ) {
       if ( element.text().toInt() == 1 )
-        mConnectionMode->setCurrentItem( 0 );
+        mConnectionMode->setCurrentIndex( 0 );
       else
-        mConnectionMode->setCurrentItem( 1 );
+        mConnectionMode->setCurrentIndex( 1 );
     } else if ( element.tagName() == "handheld_ip" ) {
       mIP->setText( element.text() );
     } else if ( element.tagName() == "handheld_port" ) {
@@ -68,8 +68,8 @@ QString ConfigGuiGpe::save()
 {
   QString config = "<config>";
 
-  config += QString( "<use_local>%1</use_local>" ).arg( mConnectionMode->currentItem() == 0 );
-  config += QString( "<use_ssh>%1</use_ssh>" ).arg( mConnectionMode->currentItem() == 1 );
+  config += QString( "<use_local>%1</use_local>" ).arg( mConnectionMode->currentIndex() == 0 );
+  config += QString( "<use_ssh>%1</use_ssh>" ).arg( mConnectionMode->currentIndex() == 1 );
   config += QString( "<handheld_ip>%1</handheld_ip>" ).arg( mIP->text() );
   config += QString( "<handheld_port>%1</handheld_port>" ).arg( mPort->value() );
   config += QString( "<handheld_user>%1</handheld_user>" ).arg( mUser->text() );
@@ -81,23 +81,26 @@ QString ConfigGuiGpe::save()
 
 void ConfigGuiGpe::initGUI()
 {
-  QGridLayout *layout = new QGridLayout( topLayout(), 12, 4, KDialog::spacingHint() );
+  QGridLayout *layout = new QGridLayout();
+  topLayout()->addLayout( layout );
   layout->setMargin( KDialog::marginHint() );
+  layout->setSpacing( KDialog::spacingHint() );
 
   layout->addWidget( new QLabel( i18n( "Connection Mode:" ), this ), 0, 0 );
   mConnectionMode = new KComboBox( this );
-  layout->addMultiCellWidget( mConnectionMode, 0, 0, 0, 1 );
+  layout->addWidget( mConnectionMode, 0, 0, 1, 1 );
 
   layout->addWidget( new QLabel( i18n( "IP Address:" ), this ), 1, 0 );
   mIP = new KLineEdit( this );
-  mIP->setInputMask( "000.000.000.000;_" );
+  mIP->setInputMask( "000.000.000.000" );
   layout->addWidget( mIP, 1, 1 );
 
   layout->addWidget( new QLabel( i18n( "Port:" ), this ), 1, 2, Qt::AlignRight );
-  mPort = new QSpinBox( 1, 65536, 1, this );
+  mPort = new QSpinBox( this );
+  mPort->setRange( 1, 65536 );
   layout->addWidget( mPort, 1, 3 );
 
   layout->addWidget( new QLabel( i18n( "User:" ), this ), 2, 0 );
   mUser = new KLineEdit( this );
-  layout->addMultiCellWidget( mUser, 2, 2, 1, 3 );
+  layout->addWidget( mUser, 2, 1, 1, 2 );
 }

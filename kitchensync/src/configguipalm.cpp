@@ -24,6 +24,7 @@
 #include <klineedit.h>
 #include <klocale.h>
 
+#include <QtGui/QGroupBox>
 #include <qbuttongroup.h>
 #include <qcheckbox.h>
 #include <qdom.h>
@@ -40,17 +41,17 @@ ConfigGuiPalm::ConfigGuiPalm( const QSync::Member &member, QWidget *parent )
 {
   initGUI();
 
-  mDevice->insertItem( "/dev/pilot" );
-  mDevice->insertItem( "/dev/ttyUSB0" );
-  mDevice->insertItem( "/dev/ttyUSB1" );
-  mDevice->insertItem( "/dev/ttyUSB2" );
-  mDevice->insertItem( "/dev/ttyUSB3" );
+  mDevice->addItem( "/dev/pilot" );
+  mDevice->addItem( "/dev/ttyUSB0" );
+  mDevice->addItem( "/dev/ttyUSB1" );
+  mDevice->addItem( "/dev/ttyUSB2" );
+  mDevice->addItem( "/dev/ttyUSB3" );
 
-  mSpeed->insertItem( "9600" );
-  mSpeed->insertItem( "19200" );
-  mSpeed->insertItem( "38400" );
-  mSpeed->insertItem( "57600" );
-  mSpeed->insertItem( "115200" );
+  mSpeed->addItem( "9600" );
+  mSpeed->addItem( "19200" );
+  mSpeed->addItem( "38400" );
+  mSpeed->addItem( "57600" );
+  mSpeed->addItem( "115200" );
 }
 
 void ConfigGuiPalm::load( const QString &xml )
@@ -62,9 +63,9 @@ void ConfigGuiPalm::load( const QString &xml )
   for( node = docElement.firstChild(); !node.isNull(); node = node.nextSibling() ) {
     QDomElement element = node.toElement();
     if ( element.tagName() == "sockaddr" ) {
-      mDevice->setCurrentText( element.text() );
+      mDevice->setCurrentIndex( mDevice->findText( element.text() ) );
     } else if ( element.tagName() == "speed" ) {
-      mSpeed->setCurrentText( element.text() );
+      mSpeed->setCurrentIndex( mSpeed->findText( element.text() ) );
     } else if ( element.tagName() == "timeout" ) {
       mTimeout->setValue( element.text().toInt() );
     } else if ( element.tagName() == "username" ) {
@@ -124,15 +125,18 @@ void ConfigGuiPalm::initGUI()
   QTabWidget *tabWidget = new QTabWidget( this );
 
   QWidget *connectionWidget = new QWidget( tabWidget );
-  QVBoxLayout *connectionLayout = new QVBoxLayout( connectionWidget,
-                                                   KDialog::marginHint(), KDialog::spacingHint() );
+  QVBoxLayout *connectionLayout = new QVBoxLayout( connectionWidget );
+  connectionLayout->setMargin( KDialog::marginHint() );
+  connectionLayout->setSpacing( KDialog::spacingHint() );
 
   QLabel *label = new QLabel( i18n( "Connection" ), connectionWidget );
   label->setFont( boldFont );
   connectionLayout->addWidget( label );
 
-  QGridLayout *gridLayout = new QGridLayout( connectionLayout, 3, 2, KDialog::spacingHint() );
+  QGridLayout *gridLayout = new QGridLayout();
+  connectionLayout->addLayout( gridLayout );
   gridLayout->setMargin( KDialog::marginHint() );
+  gridLayout->setSpacing( KDialog::spacingHint() );
 
   gridLayout->addWidget( new QLabel( i18n( "Port:" ), connectionWidget ), 0, 0 );
   gridLayout->addWidget( new QLabel( i18n( "Speed:" ), connectionWidget ), 1, 0 );
@@ -140,20 +144,23 @@ void ConfigGuiPalm::initGUI()
 
   mDevice = new KComboBox( true, connectionWidget );
   mSpeed = new KComboBox( connectionWidget );
-  mTimeout = new QSpinBox( 1, 60, 1, connectionWidget );
+  mTimeout = new QSpinBox( connectionWidget );
+  mTimeout->setRange( 1, 60 );
   mTimeout->setSuffix( i18n( " sec" ) );
 
   gridLayout->addWidget( mDevice, 0, 1 );
   gridLayout->addWidget( mSpeed, 1, 1 );
   gridLayout->addWidget( mTimeout, 2, 1 );
-  gridLayout->setColStretch( 1, 1 );
+  gridLayout->setColumnStretch( 1, 1 );
 
   label = new QLabel( i18n( "User" ), connectionWidget );
   label->setFont( boldFont );
   connectionLayout->addWidget( label );
 
-  gridLayout = new QGridLayout( connectionLayout, 1, 2, KDialog::spacingHint() );
+  gridLayout = new QGridLayout();
+  connectionLayout->addLayout( gridLayout );
   gridLayout->setMargin( KDialog::marginHint() );
+  gridLayout->setSpacing( KDialog::spacingHint() );
 
   gridLayout->addWidget( new QLabel( i18n( "Username:" ), connectionWidget ), 0, 0 );
 
@@ -164,34 +171,48 @@ void ConfigGuiPalm::initGUI()
   label->setFont( boldFont );
   connectionLayout->addWidget( label );
 
-  gridLayout = new QGridLayout( connectionLayout, 1, 2, KDialog::spacingHint() );
+  gridLayout = new QGridLayout();
+  connectionLayout->addLayout( gridLayout );
   gridLayout->setMargin( KDialog::marginHint() );
+  gridLayout->setSpacing( KDialog::spacingHint() );
 
-  QButtonGroup *buttonGroup = new QButtonGroup( 1, Qt::Horizontal, connectionWidget );
+  QButtonGroup *buttonGroup = new QButtonGroup( this );
   buttonGroup->setExclusive( true );
-  buttonGroup->setFrameStyle( QFrame::NoFrame );
-  mSyncAlways = new QRadioButton( i18n( "Sync Anyway" ), buttonGroup );
-  mSyncAsk = new QRadioButton( i18n( "Ask What To Do" ), buttonGroup );
-  mSyncAbort = new QRadioButton( i18n( "Abort Sync" ), buttonGroup );
 
-  gridLayout->addMultiCellWidget( buttonGroup, 0, 0, 0, 1 );
+  QGroupBox *buttonBox = new QGroupBox( connectionWidget );
+
+  QVBoxLayout *boxLayout = new QVBoxLayout( buttonBox );
+  mSyncAlways = new QRadioButton( i18n( "Sync Anyway" ), buttonBox );
+  buttonGroup->addButton( mSyncAlways );
+  boxLayout->addWidget( mSyncAlways );
+  mSyncAsk = new QRadioButton( i18n( "Ask What To Do" ), buttonBox );
+  buttonGroup->addButton( mSyncAsk );
+  boxLayout->addWidget( mSyncAsk );
+  mSyncAbort = new QRadioButton( i18n( "Abort Sync" ), buttonBox );
+  buttonGroup->addButton( mSyncAbort );
+  boxLayout->addWidget( mSyncAbort );
+
+  gridLayout->addWidget( buttonBox, 0, 0, 1, 2 );
 
   connectionLayout->addStretch( 1 );
   tabWidget->addTab( connectionWidget, i18n( "Connection" ) );
 
   QWidget *optionWidget = new QWidget( tabWidget );
-  QVBoxLayout *optionLayout = new QVBoxLayout( optionWidget,
-                                               KDialog::marginHint(), KDialog::spacingHint() );
+  QVBoxLayout *optionLayout = new QVBoxLayout( optionWidget );
+  optionLayout->setMargin( KDialog::marginHint() );
+  optionLayout->setSpacing( KDialog::spacingHint() );
 
   label = new QLabel( i18n( "Hotsync Notification" ), optionWidget );
   label->setFont( boldFont );
   optionLayout->addWidget( label );
 
-  gridLayout = new QGridLayout( optionLayout, 1, 2, KDialog::spacingHint() );
+  gridLayout = new QGridLayout();
+  optionLayout->addLayout( gridLayout );
   gridLayout->setMargin( KDialog::marginHint() );
+  gridLayout->setSpacing( KDialog::spacingHint() );
 
   mPopup = new QCheckBox( i18n( "Popup when interaction is required" ), optionWidget );
-  gridLayout->addMultiCellWidget( mPopup, 0, 0, 0, 1 );
+  gridLayout->addWidget( mPopup, 0, 0, 1, 2 );
 
   optionLayout->addStretch( 1 );
   tabWidget->addTab( optionWidget, i18n( "Options" ) );

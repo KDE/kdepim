@@ -33,16 +33,18 @@
 ConfigGuiFile::ConfigGuiFile( const QSync::Member &member, QWidget *parent )
   : ConfigGui( member, parent )
 {
-  QBoxLayout *filenameLayout = new QHBoxLayout( topLayout() );
+  QBoxLayout *filenameLayout = new QHBoxLayout();
+  topLayout()->addLayout( filenameLayout );
 
   QLabel *label = new QLabel( i18n("Directory name:"), this );
   filenameLayout->addWidget( label );
 
-  mFilename = new KURLRequester( this );
+  mFilename = new KUrlRequester( this );
   mFilename->setMode( KFile::Directory | KFile::LocalOnly );
   filenameLayout->addWidget( mFilename );
 
-  QBoxLayout *recursiveLayout = new QHBoxLayout( topLayout() );
+  QBoxLayout *recursiveLayout = new QHBoxLayout();
+  topLayout()->addLayout( recursiveLayout );
 
   mRecursive = new QCheckBox( i18n("Sync all subdirectories"), this );
   recursiveLayout->addWidget( mRecursive );
@@ -59,7 +61,7 @@ void ConfigGuiFile::load( const QString &xml )
   for( n = docElement.firstChild(); !n.isNull(); n = n.nextSibling() ) {
     QDomElement e = n.toElement();
     if ( e.tagName() == "path" ) {
-      mFilename->setURL( e.text() );
+      mFilename->setUrl( e.text() );
     } else if ( e.tagName() == "recursive" ) {
       mRecursive->setChecked( e.text() == "TRUE" );
     }
@@ -70,7 +72,7 @@ QString ConfigGuiFile::save()
 {
   QString xml;
   xml = "<config>";
-  xml += "<path>" + mFilename->url() + "</path>";
+  xml += "<path>" + mFilename->url().url() + "</path>";
   xml += "<recursive>";
   if ( mRecursive->isChecked() ) xml += "TRUE";
   else xml += "FALSE";

@@ -18,9 +18,9 @@
     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 */
 
-#include <kaction.h>
+#include <kactioncollection.h>
 #include <klocale.h>
-#include <kstdaction.h>
+#include <kstandardaction.h>
 #include <ktoolbar.h>
 
 #include "mainwidget.h"
@@ -30,20 +30,17 @@
 MainWindow::MainWindow()
   : KMainWindow( 0 )
 {
-  setWFlags( getWFlags() | WGroupLeader );
-
   setCaption( i18n( "PIM Synchronization" ) );
 
-  mWidget = new MainWidget( this, this, "MainWidget" );
+  mWidget = new MainWidget( this, this );
 
   setCentralWidget( mWidget );
 
   initActions();
 
-  createGUI( "kitchensyncui.rc", false );
-  createGUI( 0 );
+  createGUI( "kitchensyncui.rc" );
 
-  toolBar()->setIconText( KToolBar::IconTextBottom );
+  toolBar()->setToolButtonStyle( Qt::ToolButtonTextUnderIcon );
 
   resize( 760, 530 ); // initial size
   setAutoSaveSettings();
@@ -55,7 +52,7 @@ MainWindow::~MainWindow()
 
 void MainWindow::initActions()
 {
-  KStdAction::quit( this, SLOT( close() ), actionCollection() );
+  actionCollection()->addAction( KStandardAction::Quit, this, SLOT( close() ) );
 }
 
 #include "mainwindow.moc"

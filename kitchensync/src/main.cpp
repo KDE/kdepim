@@ -21,6 +21,7 @@
 #include <kdebug.h>
 #include <kaboutdata.h>
 #include <kcmdlineargs.h>
+#include <klocale.h>
 #include <kuniqueapplication.h>
 #include <stdlib.h>
 
@@ -43,13 +44,13 @@ int main( int argc, char **argv )
   KUniqueApplication::addCmdLineOptions();
 
   if( !KUniqueApplication::start() ) {
-    kdDebug() << "kitchensync already runs." << endl;
+    kDebug() << "kitchensync already runs." << endl;
     exit( 0 );
   };
 
   KUniqueApplication app;
-  
-  KGlobal::locale()->insertCatalogue( "libkcal" );
+
+  KGlobal::locale()->insertCatalog( "libkcal" );
 
   MainWindow *mainWindow = new MainWindow;
   mainWindow->show();

@@ -27,6 +27,7 @@
 #include <klineedit.h>
 #include <klocale.h>
 #include <kurlrequester.h>
+#include <kvbox.h>
 
 #include <qlayout.h>
 #include <qcheckbox.h>
@@ -35,7 +36,6 @@
 #include <qdom.h>
 #include <qspinbox.h>
 #include <qtabwidget.h>
-#include <qvbox.h>
 
 ConfigGuiSyncmlObex::ConfigGuiSyncmlObex( const QSync::Member &member, QWidget *parent )
   : ConfigGui( member, parent )
@@ -44,7 +44,7 @@ ConfigGuiSyncmlObex::ConfigGuiSyncmlObex( const QSync::Member &member, QWidget *
   topLayout()->addWidget( tabWidget );
 
   // Connection
-  QVBox *connectionWidget = new QVBox( this );
+  KVBox *connectionWidget = new KVBox( this );
   connectionWidget->setMargin( KDialog::marginHint() );
   connectionWidget->setSpacing( 5 );
 
@@ -60,7 +60,7 @@ ConfigGuiSyncmlObex::ConfigGuiSyncmlObex( const QSync::Member &member, QWidget *
 
   ConnectionTypeList::ConstIterator it;
   for ( it = mConnectionTypes.begin(); it != mConnectionTypes.end(); it++ )
-    mConnection->insertItem( (*it).second );
+    mConnection->addItem( (*it).second );
 
   mBluetooth = new BluetoothWidget( connectionWidget );
   mBluetooth->hide();
@@ -73,32 +73,36 @@ ConfigGuiSyncmlObex::ConfigGuiSyncmlObex( const QSync::Member &member, QWidget *
 
   // Databases
   QWidget *databaseWidget = new QWidget( tabWidget );
-  QVBoxLayout *databaseLayout = new QVBoxLayout( databaseWidget,
-                                                 KDialog::marginHint(), KDialog::spacingHint() );
+  QVBoxLayout *databaseLayout = new QVBoxLayout( databaseWidget );
+  databaseLayout->setMargin( KDialog::marginHint() );
+  databaseLayout->setSpacing( KDialog::spacingHint() );
 
   tabWidget->addTab( databaseWidget, i18n( "Databases" ) );
 
-  mGridLayout = new QGridLayout( databaseLayout );
+  mGridLayout = new QGridLayout();
+  databaseLayout->addLayout( mGridLayout );
   addLineEdit( databaseWidget, i18n("Contact Database:"), &mContactDb, 0 );
   addLineEdit( databaseWidget, i18n("Calendar Database:"), &mCalendarDb, 1 );
   addLineEdit( databaseWidget, i18n("Note Database:"), &mNoteDb, 2 );
 
-  mContactDb->insertItem( "addressbook" );
-  mContactDb->insertItem( "contacts" );
+  mContactDb->addItem( "addressbook" );
+  mContactDb->addItem( "contacts" );
 
-  mCalendarDb->insertItem( "agenda" );
-  mCalendarDb->insertItem( "calendar" );
+  mCalendarDb->addItem( "agenda" );
+  mCalendarDb->addItem( "calendar" );
 
-  mNoteDb->insertItem( "notes" );
+  mNoteDb->addItem( "notes" );
 
   // Options
   QWidget *optionsWidget = new QWidget( tabWidget );
-  QVBoxLayout *optionsLayout = new QVBoxLayout( optionsWidget,
-                                                KDialog::marginHint(), KDialog::spacingHint() );
+  QVBoxLayout *optionsLayout = new QVBoxLayout( optionsWidget );
+  optionsLayout->setMargin( KDialog::marginHint() );
+  optionsLayout->setSpacing( KDialog::spacingHint() );
 
   tabWidget->addTab( optionsWidget, i18n( "Options" ) );
 
-  mGridLayout = new QGridLayout( optionsLayout );
+  mGridLayout = new QGridLayout();
+  optionsLayout->addLayout( mGridLayout );
 
   QLabel *label = new QLabel( i18n("User name:"), optionsWidget );
   mGridLayout->addWidget( label, 0, 0 );
@@ -114,10 +118,10 @@ ConfigGuiSyncmlObex::ConfigGuiSyncmlObex( const QSync::Member &member, QWidget *
   mGridLayout->addWidget( mPassword, 1, 1 );
 
   mUseStringTable = new QCheckBox( i18n("Use String Table"), optionsWidget );
-  mGridLayout->addMultiCellWidget( mUseStringTable, 2, 2, 0, 1 );
+  mGridLayout->addWidget( mUseStringTable, 2, 2, 1, 1 );
 
   mOnlyReplace = new QCheckBox( i18n("Only Replace Entries"), optionsWidget );
-  mGridLayout->addMultiCellWidget( mOnlyReplace, 3, 3, 0, 1 );
+  mGridLayout->addWidget( mOnlyReplace, 3, 3, 1, 1 );
 
   // SynML Version
   label = new QLabel( i18n("SyncML Version:"), optionsWidget );
@@ -132,11 +136,11 @@ ConfigGuiSyncmlObex::ConfigGuiSyncmlObex( const QSync::Member &member, QWidget *
 
   SyncmlVersionList::ConstIterator itVersion;
   for ( itVersion = mSyncmlVersions.begin(); itVersion != mSyncmlVersions.end(); itVersion++ )
-    mSyncmlVersion->insertItem( (*itVersion).second );
+    mSyncmlVersion->addItem( (*itVersion).second );
 
   // WBXML
   mWbxml = new QCheckBox( i18n("WAP Binary XML"), optionsWidget );
-  mGridLayout->addMultiCellWidget( mWbxml, 12, 12, 0, 1 );
+  mGridLayout->addWidget( mWbxml, 12, 12, 1, 1 );
 
   // Identifier
   label = new QLabel( i18n("Software Identifier:"), optionsWidget );
@@ -145,16 +149,15 @@ ConfigGuiSyncmlObex::ConfigGuiSyncmlObex( const QSync::Member &member, QWidget *
   mIdentifier = new KComboBox( true, optionsWidget );
   mGridLayout->addWidget( mIdentifier, 13, 1 );
 
-  mIdentifier->insertItem( "" );
-  mIdentifier->insertItem( "PC Suite" );
+  mIdentifier->addItem( "" );
+  mIdentifier->addItem( "PC Suite" );
 
   // recvLimit
   label = new QLabel( i18n("Receive Limit:"), optionsWidget );
   mGridLayout->addWidget( label, 14, 0 );
 
   mRecvLimit = new QSpinBox( optionsWidget );
-  mRecvLimit->setMinValue( 0 );
-  mRecvLimit->setMaxValue( 65536 );
+  mRecvLimit->setRange( 1, 65536 );
   mGridLayout->addWidget( mRecvLimit, 14, 1 );
 
   // maxObjSize
@@ -162,8 +165,7 @@ ConfigGuiSyncmlObex::ConfigGuiSyncmlObex( const QSync::Member &member, QWidget *
   mGridLayout->addWidget( label, 15, 0 );
 
   mMaxObjSize = new QSpinBox( optionsWidget );
-  mMaxObjSize->setMinValue( 0 );
-  mMaxObjSize->setMaxValue( 65536 );
+  mMaxObjSize->setRange( 1, 65536 );
   mGridLayout->addWidget( mMaxObjSize, 15, 1 );
 
   topLayout()->addStretch( 1 );
@@ -195,17 +197,17 @@ void ConfigGuiSyncmlObex::load( const QString &xml )
     } else if ( element.tagName() == "password" ) {
       mPassword->setText( element.text() );
     } else if ( element.tagName() == "type" ) {
-      for ( uint i = 0; i < mConnectionTypes.count(); i++ ) {
+      for ( int i = 0; i < mConnectionTypes.count(); i++ ) {
         if ( mConnectionTypes[i].first == element.text().toInt() ) {
-          mConnection->setCurrentItem( i );
+          mConnection->setCurrentIndex( i );
           slotConnectionChanged( i );
           break;
         }
       }
     } else if ( element.tagName() == "version" ) {
-      for ( uint i = 0; i < mSyncmlVersions.count(); i++ ) {
+      for ( int i = 0; i < mSyncmlVersions.count(); i++ ) {
         if ( mSyncmlVersions[i].first == element.text().toInt() ) {
-          mSyncmlVersion->setCurrentItem( i );
+          mSyncmlVersion->setCurrentIndex( i );
           break;
         }
       }
@@ -214,7 +216,7 @@ void ConfigGuiSyncmlObex::load( const QString &xml )
     } else if ( element.tagName() == "bluetooth_channel" ) {
       if ( mBluetooth ) mBluetooth->setChannel( element.text() );
     } else if ( element.tagName() == "identifier" ) {
-      if ( mIdentifier ) mIdentifier->setCurrentText( element.text() );
+      if ( mIdentifier ) mIdentifier->setCurrentIndex( mIdentifier->findText( element.text() ) );
     } else if ( element.tagName() == "interface" ) {
       if ( mUsb ) mUsb->setInterface( element.text().toInt() );
     } else if ( element.tagName() == "wbxml" ) {
@@ -228,11 +230,11 @@ void ConfigGuiSyncmlObex::load( const QString &xml )
     } else if ( element.tagName() == "onlyreplace" ) {
       mOnlyReplace->setChecked( element.text() == "1" );
     } else if ( element.tagName() == "contact_db" ) {
-      mContactDb->setCurrentText( element.text() );
+      mContactDb->setCurrentIndex( mContactDb->findText( element.text() ) );
     } else if ( element.tagName() == "calendar_db" ) {
-      mCalendarDb->setCurrentText( element.text() );
+      mCalendarDb->setCurrentIndex( mCalendarDb->findText( element.text() ) );
     } else if ( element.tagName() == "note_db" ) {
-      mNoteDb->setCurrentText( element.text() );
+      mNoteDb->setCurrentIndex( mNoteDb->findText( element.text() ) );
     }
   }
 }

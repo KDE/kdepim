@@ -19,7 +19,9 @@
     Boston, MA 02110-1301, USA.
 */
 
-#include <qvbox.h>
+#include <QtCore/QEvent>
+#include <QtGui/QKeyEvent>
+#include <QtGui/QVBoxLayout>
 
 #include <kglobalsettings.h>
 
@@ -33,20 +35,23 @@ class KWidgetList::Private
     {
     }
 
-    QValueList<KWidgetListItem*> mItems;
+    QList<KWidgetListItem*> mItems;
     KWidgetListItem *mSelectedItem;
-    QVBox *mBox;
+    QWidget *mBox;
+    QVBoxLayout *mBoxLayout;
 };
 
-KWidgetList::KWidgetList( QWidget *parent, const char *name )
-  : QScrollView( parent, name ),
+KWidgetList::KWidgetList( QWidget *parent )
+  : QScrollArea( parent ),
     d( new Private )
 {
-  d->mBox = new QVBox( viewport() );
-  addChild( d->mBox );
+  d->mBox = new QWidget( viewport() );
+//  addChild( d->mBox );
 
-  setResizePolicy( AutoOneFit );
-  setFocusPolicy( QWidget::StrongFocus );
+  d->mBoxLayout = new QVBoxLayout( d->mBox );
+
+//  setResizePolicy( AutoOneFit );
+  setFocusPolicy( Qt::StrongFocus );
 
   viewport()->setFocus();
 }
@@ -71,9 +76,10 @@ void KWidgetList::appendItem( KWidgetListItem *item )
 
   if ( !d->mItems.contains( item ) ) {
     d->mItems.append( item );
-    item->reparent( d->mBox, 0, QPoint( 0, 0 ), true );
+    item->setParent( d->mBox );
     item->setSelected( false );
     item->installEventFilter( this );
+    d->mBoxLayout->addWidget( item );
 
     if ( d->mItems.count() == 1 ) {
       d->mSelectedItem = item;
@@ -92,7 +98,7 @@ void KWidgetList::removeItem( int index )
     return;
 
   KWidgetListItem *item = d->mItems[ index ];
-  d->mItems.remove( item );
+  d->mItems.removeAll( item );
 
   if ( d->mSelectedItem == item ) {
     // TODO: smarter selection
@@ -110,8 +116,8 @@ void KWidgetList::removeItem( int index )
 
 void KWidgetList::takeItem( KWidgetListItem *item )
 {
-  d->mItems.remove( item );
-  item->reparent( 0, 0, QPoint( 0, 0 ) );
+  d->mItems.removeAll( item );
+  item->setParent( 0 );
   item->removeEventFilter( this );
   item->hide();
 
@@ -169,14 +175,13 @@ KWidgetListItem *KWidgetList::item( int index ) const
 
 int KWidgetList::index( KWidgetListItem *item ) const
 {
-  return d->mItems.findIndex( item );
+  return d->mItems.indexOf( item );
 }
 
 void KWidgetList::clear()
 {
-  QValueList<KWidgetListItem*>::Iterator it;
-  for ( it = d->mItems.begin(); it != d->mItems.end(); ++it )
-    delete *it;
+  for ( int i = 0; i < d->mItems.count(); ++i )
+    delete d->mItems[ i ];
 
   d->mItems.clear();
 
@@ -192,25 +197,25 @@ bool KWidgetList::eventFilter( QObject *object, QEvent *event )
 {
   if ( event->type() == QEvent::MouseButtonPress ) {
     QMouseEvent *mouseEvent = static_cast<QMouseEvent*>( event );
-    if ( mouseEvent->button() & LeftButton ) {
-      QValueList<KWidgetListItem*>::Iterator it;
-      for ( it = d->mItems.begin(); it != d->mItems.end(); ++it ) {
-        if ( *it == object ) {
+    if ( mouseEvent->button() & Qt::LeftButton ) {
+      for ( int i = 0; i < d->mItems.count(); ++i ) {
+        KWidgetListItem *item = d->mItems[ i ];
+        if ( item == object ) {
           if ( d->mItems.count() != 1 ) {
-            setSelected( *it );
-            emit selectionChanged( *it );
+            setSelected( item );
+            emit selectionChanged( item );
           }
           return true;
         }
       }
     }
   } else if ( event->type() == QEvent::MouseButtonDblClick ) {
-    QValueList<KWidgetListItem*>::Iterator it;
-    for ( it = d->mItems.begin(); it != d->mItems.end(); ++it ) {
-      if ( *it == object ) {
+    for ( int i = 0; i < d->mItems.count(); ++i ) {
+      KWidgetListItem *item = d->mItems[ i ];
+      if ( item == object ) {
         if ( d->mItems.count() != 1 ) {
-          setSelected( *it );
-          emit doubleClicked( *it );
+          setSelected( item );
+          emit doubleClicked( item );
         }
         return true;
       }
@@ -225,7 +230,7 @@ bool KWidgetList::eventFilter( QObject *object, QEvent *event )
         }
       }
 
-      for ( int i = 0; i < (int)d->mItems.count(); ++i ) {
+      for ( int i = 0; i < d->mItems.count(); ++i ) {
         if ( d->mItems[ i ] == d->mSelectedItem ) {
           if ( ( i - 1 ) >= 0 ) {
             setSelected( d->mItems[ i - 1 ] );
@@ -242,9 +247,9 @@ bool KWidgetList::eventFilter( QObject *object, QEvent *event )
         }
       }
 
-      for ( int i = 0; i < (int)d->mItems.count(); ++i )
+      for ( int i = 0; i < d->mItems.count(); ++i )
         if ( d->mItems[ i ] == d->mSelectedItem ) {
-          if ( ( i + 1 ) < (int)d->mItems.count() ) {
+          if ( ( i + 1 ) < d->mItems.count() ) {
             setSelected( d->mItems[ i + 1 ] );
             return true;
           }
@@ -253,18 +258,18 @@ bool KWidgetList::eventFilter( QObject *object, QEvent *event )
     }
   }
 
-  return QScrollView::eventFilter( object, event );
+  return QScrollArea::eventFilter( object, event );
 }
 
-KWidgetListItem::KWidgetListItem( KWidgetList *parent, const char *name )
-  : QWidget( parent, name )
+KWidgetListItem::KWidgetListItem( KWidgetList *parent )
+  : QWidget( parent )
 {
   mForegroundColor = KGlobalSettings::textColor();
   mBackgroundColor = KGlobalSettings::baseColor();
   mSelectionForegroundColor = KGlobalSettings::highlightedTextColor();
   mSelectionBackgroundColor = KGlobalSettings::highlightColor();
 
-  setFocusPolicy( QWidget::StrongFocus );
+  setFocusPolicy( Qt::StrongFocus );
 }
 
 KWidgetListItem::~KWidgetListItem()
@@ -273,13 +278,16 @@ KWidgetListItem::~KWidgetListItem()
 
 void KWidgetListItem::setSelected( bool select )
 {
+  QPalette pal;
   if ( select ) {
-    setPaletteForegroundColor( mSelectionForegroundColor );
-    setPaletteBackgroundColor( mSelectionBackgroundColor );
+    pal.setColor( foregroundRole(), mSelectionForegroundColor );
+    pal.setColor( backgroundRole(), mSelectionBackgroundColor );
   } else {
-    setPaletteForegroundColor( mForegroundColor );
-    setPaletteBackgroundColor( mBackgroundColor );
+    pal.setColor( foregroundRole(), mForegroundColor );
+    pal.setColor( backgroundRole(), mBackgroundColor );
   }
+
+  setPalette( pal );
 }
 
 void KWidgetListItem::setForegroundColor( const QColor &color )

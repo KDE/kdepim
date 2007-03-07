@@ -44,8 +44,8 @@ AddresseeDiffAlgo::AddresseeDiffAlgo( const QString &leftAddressee,
 {
   KABC::VCardConverter converter;
 
-  mLeftAddressee = converter.parseVCard( leftAddressee );
-  mRightAddressee = converter.parseVCard( rightAddressee );
+  mLeftAddressee = converter.parseVCard( leftAddressee.toUtf8() );
+  mRightAddressee = converter.parseVCard( rightAddressee.toUtf8() );
 }
 
 void AddresseeDiffAlgo::run()
@@ -114,9 +114,9 @@ void AddresseeDiffAlgo::run()
     conflictField( KABC::Addressee::secrecyLabel(), mLeftAddressee.secrecy().asString(), mRightAddressee.secrecy().asString() );
   }
   if ( mLeftAddressee.url()!= mRightAddressee.url() )
-    conflictField( KABC::Addressee::urlLabel(), mLeftAddressee.url().prettyURL(),
-      mRightAddressee.url().prettyURL() );
-    
+    conflictField( KABC::Addressee::urlLabel(), mLeftAddressee.url().prettyUrl(),
+                   mRightAddressee.url().prettyUrl() );
+
   if ( mLeftAddressee.logo() != mRightAddressee.logo() ) {
   }
 
@@ -143,15 +143,15 @@ QString AddresseeDiffAlgo::toString( const KABC::Address &addr )
 
 template <class L>
 void AddresseeDiffAlgo::diffList( const QString &id,
-                                  const QValueList<L> &left, const QValueList<L> &right )
+                                  const QList<L> &left, const QList<L> &right )
 {
-  for ( uint i = 0; i < left.count(); ++i ) {
-    if ( right.find( left[ i ] ) == right.end() )
+  for ( int i = 0; i < left.count(); ++i ) {
+    if ( !right.contains( left[ i ] ) )
       additionalLeftField( id, toString( left[ i ] ) );
   }
 
-  for ( uint i = 0; i < right.count(); ++i ) {
-    if ( left.find( right[ i ] ) == left.end() )
+  for ( int i = 0; i < right.count(); ++i ) {
+    if ( !left.contains( right[ i ] ) )
       additionalRightField( id, toString( right[ i ] ) );
   }
 }

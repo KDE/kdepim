@@ -20,12 +20,12 @@
 #ifndef GROUPCONFIGDIALOG_H
 #define GROUPCONFIGDIALOG_H
 
-#include <kdialogbase.h>
+#include <kdialog.h>
 
 class GroupConfig;
 class SyncProcess;
 
-class GroupConfigDialog : public KDialogBase
+class GroupConfigDialog : public KDialog
 {
   Q_OBJECT
 

@@ -25,6 +25,7 @@
 #include <qdatetime.h>
 #include <qstringlist.h>
 
+#include <libqopensync/qopensync_export.h>
 #include <libqopensync/filter.h>
 #include <libqopensync/member.h>
 
@@ -32,10 +33,7 @@ class OSyncGroup;
 
 namespace QSync {
 
-/**
-  @internal
- */
-class GroupConfig
+class QSYNC_EXPORT GroupConfig
 {
   friend class Group;
 
@@ -50,7 +48,7 @@ class GroupConfig
 };
 
 
-class Group
+class QSYNC_EXPORT Group
 {
   friend class Engine;
   friend class Environment;

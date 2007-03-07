@@ -24,11 +24,13 @@
 
 #include <qstring.h>
 
+#include <libqopensync/qopensync_export.h>
+
 class OSyncPlugin;
 
 namespace QSync {
 
-class Plugin
+class QSYNC_EXPORT Plugin
 {
   friend class Environment;
   friend class Member;

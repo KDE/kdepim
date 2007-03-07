@@ -51,7 +51,7 @@ class ConfigGuiSyncmlObex : public ConfigGui
   private:
     // Connection
     typedef QPair<int, QString> ConnectionType;
-    typedef QValueList<ConnectionType> ConnectionTypeList;
+    typedef QList<ConnectionType> ConnectionTypeList;
     ConnectionTypeList mConnectionTypes;
 
     QComboBox *mConnection;
@@ -60,7 +60,7 @@ class ConfigGuiSyncmlObex : public ConfigGui
 
     // Options
     typedef QPair<int, QString> SyncmlVersion;
-    typedef QValueList<SyncmlVersion> SyncmlVersionList;
+    typedef QList<SyncmlVersion> SyncmlVersionList;
     SyncmlVersionList mSyncmlVersions;
 
     QStringList mIdentiferList;

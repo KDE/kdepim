@@ -22,13 +22,14 @@
 #ifndef QSYNC_CONVERSION_H
 #define QSYNC_CONVERSION_H
 
+#include <libqopensync/qopensync_export.h>
 #include <qstringlist.h>
 
 class OSyncEnv;
 
 namespace QSync {
 
-class Conversion
+class QSYNC_EXPORT Conversion
 {
   friend class Environment;
 

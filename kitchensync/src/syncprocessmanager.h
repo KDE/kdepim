@@ -91,7 +91,7 @@ class SyncProcessManager : public QObject
 
     void init( QSync::Environment *environment );
 
-    QValueList<SyncProcess*> mProcesses;
+    QList<SyncProcess*> mProcesses;
     QSync::Environment *mEnvironment;
 
     static SyncProcessManager *mSelf;

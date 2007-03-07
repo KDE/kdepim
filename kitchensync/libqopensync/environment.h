@@ -24,6 +24,7 @@
 
 #include <qstring.h>
 
+#include <libqopensync/qopensync_export.h>
 #include <libqopensync/group.h>
 #include <libqopensync/plugin.h>
 #include <libqopensync/result.h>
@@ -33,7 +34,7 @@ struct OSyncEnv;
 
 namespace QSync {
 
-class Environment
+class QSYNC_EXPORT Environment
 {
   public:
     Environment();

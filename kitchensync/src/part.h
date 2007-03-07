@@ -32,14 +32,13 @@ class KitchenSyncPart: public KParts::ReadOnlyPart
   Q_OBJECT
 
   public:
-    KitchenSyncPart( QWidget *parentWidget, const char *widgetName,
-                     QObject *parent, const char *name, const QStringList& );
+    KitchenSyncPart( QWidget *parentWidget, QObject *parent, const QStringList& );
     virtual ~KitchenSyncPart();
 
     static KAboutData *createAboutData();
 
     virtual void exit();
-    virtual bool openURL( const KURL &url );
+    virtual bool openUrl( const KUrl &url );
 
   protected:
     virtual bool openFile();

@@ -24,20 +24,19 @@
 #include <klocale.h>
 #include <kdialog.h>
 #include <kcombobox.h>
-
-#include <kdebug.h>
+#include <kvbox.h>
 
 #include <qlayout.h>
 #include <qlabel.h>
 #include <qlineedit.h>
 #include <qcombobox.h>
 #include <qdom.h>
-#include <qvbox.h>
 
 ConfigGuiGnokii::ConfigGuiGnokii( const QSync::Member &member, QWidget *parent )
   : ConfigGui( member, parent )
 {
-  QGridLayout *layout = new QGridLayout( topLayout() );
+  QGridLayout *layout = new QGridLayout();
+  topLayout()->addLayout( layout );
 
   // Model
   QLabel *label = new QLabel( i18n("Model:"), this );
@@ -45,22 +44,22 @@ ConfigGuiGnokii::ConfigGuiGnokii( const QSync::Member &member, QWidget *parent )
 
   mModel = new KComboBox( true, this );
   layout->addWidget( mModel, 0, 1 );
-  mModel->insertItem( "2110" ); 
-  mModel->insertItem( "3110" ); 
-  mModel->insertItem( "6110" ); 
-  mModel->insertItem( "6110" ); 
-  mModel->insertItem( "6160" ); 
-  mModel->insertItem( "6230" );
-  mModel->insertItem( "6230i" );
-  mModel->insertItem( "6510" ); 
-  mModel->insertItem( "7110" );
-  mModel->insertItem( "AT" );
+  mModel->addItem( "2110" ); 
+  mModel->addItem( "3110" ); 
+  mModel->addItem( "6110" ); 
+  mModel->addItem( "6110" ); 
+  mModel->addItem( "6160" ); 
+  mModel->addItem( "6230" );
+  mModel->addItem( "6230i" );
+  mModel->addItem( "6510" ); 
+  mModel->addItem( "7110" );
+  mModel->addItem( "AT" );
   // This one requires the gnapplet and rfcomm_channel
-  mModel->insertItem( "3650" );
-  mModel->insertItem( "6600" );
-  mModel->insertItem( "gnapplet" );
-  mModel->insertItem( "symbian" );
-  mModel->insertItem( "sx1" );
+  mModel->addItem( "3650" );
+  mModel->addItem( "6600" );
+  mModel->addItem( "gnapplet" );
+  mModel->addItem( "symbian" );
+  mModel->addItem( "sx1" );
 
   connect( mModel, SIGNAL (activated( int ) ),
     this, SLOT( slotModelChanged () ) );
@@ -90,17 +89,17 @@ ConfigGuiGnokii::ConfigGuiGnokii( const QSync::Member &member, QWidget *parent )
 
   ConnectionTypeList::ConstIterator it;
   for ( it = mConnectionTypes.begin(); it != mConnectionTypes.end(); it++ ) {
-    mConnection->insertItem( (*it).second );
+    mConnection->addItem( (*it).second );
   }
 
-  QVBox *connectionWidget = new QVBox( this );
+  KVBox *connectionWidget = new KVBox( this );
   connectionWidget->setMargin( KDialog::marginHint() );
   connectionWidget->setSpacing( 5 );
 
   mBluetooth = new BluetoothWidget( connectionWidget ); 
   mBluetooth->hide();
 
-  layout->addMultiCellWidget( connectionWidget, 2, 2, 0, 1 );
+  layout->addWidget( connectionWidget, 2, 0, 1, 2 );
 
   // Port
   mPortLabel = new QLabel( i18n("Port:"), this );
@@ -111,12 +110,12 @@ ConfigGuiGnokii::ConfigGuiGnokii( const QSync::Member &member, QWidget *parent )
   layout->addWidget( mPort, 2, 1 );
   mPort->hide();
 
-  mPort->insertItem( "/dev/ircomm0" );
-  mPort->insertItem( "/dev/ircomm1" );
-  mPort->insertItem( "/dev/ttyS0" );
-  mPort->insertItem( "/dev/ttyS1" );
-  mPort->insertItem( "/dev/ttyUSB0" );
-  mPort->insertItem( "/dev/ttyUSB1" );
+  mPort->addItem( "/dev/ircomm0" );
+  mPort->addItem( "/dev/ircomm1" );
+  mPort->addItem( "/dev/ttyS0" );
+  mPort->addItem( "/dev/ttyS1" );
+  mPort->addItem( "/dev/ttyUSB0" );
+  mPort->addItem( "/dev/ttyUSB1" );
 
   topLayout()->addStretch( 1 );
 }
@@ -168,17 +167,25 @@ void ConfigGuiGnokii::load( const QString &xml )
   for( n = docElement.firstChild(); !n.isNull(); n = n.nextSibling() ) {
     QDomElement e = n.toElement();
     if ( e.tagName() == "connection" ) {
-      for ( uint i = 0; i < mConnectionTypes.count(); i++ ) {
+      for ( int i = 0; i < mConnectionTypes.count(); i++ ) {
         if ( mConnectionTypes[i].first == e.text()) {
-          mConnection->setCurrentItem( i );
+          mConnection->setCurrentIndex( i );
           slotConnectionChanged( i );
           break;
         }
       }
     } else if ( e.tagName() == "port" ) {
-      mPort->setCurrentText( e.text() );
+      int pos = mPort->findText( e.text() );
+      if ( pos == -1 )
+        mPort->insertItem( 0, e.text() );
+      else
+        mPort->setCurrentIndex( pos );
     } else if ( e.tagName() == "model" ) {
-      mModel->setCurrentText( e.text() );
+      int pos = mModel->findText( e.text() );
+      if ( pos == -1 )
+        mModel->insertItem( 0, e.text() );
+      else
+        mModel->setCurrentIndex( pos );
     } else if ( e.tagName() == "rfcomm_channel" ) {
       mBluetooth->setChannel( e.text() );
       mBluetooth->showChannel();

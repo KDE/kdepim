@@ -22,17 +22,17 @@
 #ifndef KWIDGETLIST_H
 #define KWIDGETLIST_H
 
-#include <qscrollview.h>
+#include <QtGui/QScrollArea>
 
 class KWidgetListItem;
 
-class KWidgetList : public QScrollView
+class KWidgetList : public QScrollArea
 {
   Q_OBJECT
 
   public:
-    KWidgetList( QWidget *parent = 0, const char *name = 0 );
-    ~KWidgetList();
+    KWidgetList( QWidget *parent = 0 );
+    virtual ~KWidgetList();
 
     uint count() const;
 
@@ -69,7 +69,7 @@ class KWidgetList : public QScrollView
 class KWidgetListItem : public QWidget
 {
   public:
-    KWidgetListItem( KWidgetList *parent, const char *name = 0 );
+    KWidgetListItem( KWidgetList *parent );
     ~KWidgetListItem();
 
     void setSelected( bool selected );

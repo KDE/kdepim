@@ -30,14 +30,16 @@
 using namespace QSync;
 
 SyncProcess::SyncProcess( const QSync::Group &group )
-  : QObject( 0, "SyncProcess" )
+  : QObject( 0 )
 {
+  setObjectName( "SyncProcess" );
+
   mGroup = group;
   mEngine = new QSync::Engine( mGroup );
 
   Result result = mEngine->initialize();
   if ( result.isError() )
-    kdDebug() << "SyncProcess::SyncProcess: " << result.message() << endl;
+    kDebug() << "SyncProcess::SyncProcess: " << result.message() << endl;
 }
 
 SyncProcess::~SyncProcess()
@@ -76,7 +78,7 @@ void SyncProcess::reinitEngine()
   mEngine = new QSync::Engine( mGroup );
   Result result = mEngine->initialize();
   if ( result.isError() )
-    kdDebug() << "SyncProcess::reinitEngine: " << result.message() << endl;
+    kDebug() << "SyncProcess::reinitEngine: " << result.message() << endl;
 
   applyObjectTypeFilter();
 
@@ -89,9 +91,9 @@ void SyncProcess::applyObjectTypeFilter()
   const QStringList objectTypes = conversion.objectTypes();
   const QStringList activeObjectTypes = mGroup.config().activeObjectTypes();
 
-  for ( uint i = 0; i < objectTypes.count(); ++i ) {
+  for ( int i = 0; i < objectTypes.count(); ++i ) {
     if ( activeObjectTypes.contains( objectTypes[ i ] ) ) {
-      kdDebug() << "Enabled object type: " <<  objectTypes[ i ] << endl;
+      kDebug() << "Enabled object type: " <<  objectTypes[ i ] << endl;
       /*
        * This is not required. Also this lead to filtering problems when sync with "file-sync".
        * Uncomment this line again when OpenSync is fixed!
@@ -99,7 +101,7 @@ void SyncProcess::applyObjectTypeFilter()
        * mGroup.setObjectTypeEnabled( objectTypes[ i ], true );
        */
     } else {
-      kdDebug() << "Disabled object type: " <<  objectTypes[ i ] << endl;
+      kDebug() << "Disabled object type: " <<  objectTypes[ i ] << endl;
       mGroup.setObjectTypeEnabled( objectTypes[ i ], false );
     }
   }

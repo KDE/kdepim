@@ -1,5 +1,5 @@
 /*
-    This file is part of KitchenSync.
+    This file is part of libqopensync.
 
     Copyright (c) 2005 Tobias Koenig <tokoe@kde.org>
 
@@ -19,15 +19,19 @@
     Boston, MA 02110-1301, USA.
 */
 
-#ifndef KSPLASHWIDGET_H
-#define KSPLASHWIDGET_H
+#ifndef QOPENSYNC_EXPORT_H
+#define QOPENSYNC_EXPORT_H
 
-#include <qhbox.h>
+#include <kdemacros.h>
 
-class KSplashWidget : public QHBox
-{
-  public:
-    KSplashWidget( const QString &msg, const QString &icon = QString(), QWidget *parent = 0 );
-};
+#if defined(_WIN32) || defined(_WIN64)
+#ifdef MAKE_QOPENSYNC_LIB
+#define QSYNC_EXPORT KDE_EXPORT
+#else
+#define QSYNC_EXPORT KDE_IMPORT
+#endif
+#else
+#define QSYNC_EXPORT KDE_EXPORT
+#endif
 
 #endif

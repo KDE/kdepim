@@ -42,8 +42,8 @@ bool Member::isValid() const
   if ( !mMember )
     return false;
 
-  if ( !osync_member_instance_plugin( mMember, pluginName().utf8(), &error ) ) {
-    qDebug( "Plugin %s is not valid: %s", pluginName().latin1(), osync_error_print( &error ) );
+  if ( !osync_member_instance_plugin( mMember, pluginName().toUtf8(), &error ) ) {
+    qDebug( "Plugin %s is not valid: %s", qPrintable( pluginName() ), osync_error_print( &error ) );
     osync_error_free( &error );
     return false;
   }
@@ -89,7 +89,7 @@ void Member::setName( const QString &name )
 {
   Q_ASSERT( mMember );
 
-  osync_member_set_name( mMember, (const char*)name.utf8() );
+  osync_member_set_name( mMember, (const char*)name.toUtf8() );
 }
 
 QString Member::name() const
@@ -144,7 +144,7 @@ Result Member::save()
 Result Member::instance( const Plugin &plugin )
 {
   OSyncError *error = 0;
-  if ( !osync_member_instance_plugin( mMember, plugin.name().utf8(), &error ) )
+  if ( !osync_member_instance_plugin( mMember, plugin.name().toUtf8(), &error ) )
     return Result( &error );
   else
     return Result();
@@ -160,7 +160,7 @@ QString Member::scanDevices( const QString &query )
   Q_ASSERT( mMember );
 
   OSyncError *error = 0;
-  char *data = (char*)osync_member_call_plugin( mMember, "scan_devices", const_cast<char*>( query.utf8().data() ), &error );
+  char *data = (char*)osync_member_call_plugin( mMember, "scan_devices", const_cast<char*>( query.toUtf8().data() ), &error );
   if ( error != 0 ) {
     osync_error_free( &error );
     return QString();
@@ -176,7 +176,7 @@ bool Member::testConnection( const QString &configuration )
   Q_ASSERT( mMember );
 
   OSyncError *error = 0;
-  int *result = (int*)osync_member_call_plugin( mMember, "test_connection", const_cast<char*>( configuration.utf8().data() ), &error );
+  int *result = (int*)osync_member_call_plugin( mMember, "test_connection", const_cast<char*>( configuration.toUtf8().data() ), &error );
   if ( error != 0 ) {
     osync_error_free( &error );
     return false;

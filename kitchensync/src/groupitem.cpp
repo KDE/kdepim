@@ -31,7 +31,7 @@
 #include <qlayout.h>
 #include <qpixmap.h>
 #include <qprogressbar.h>
-#include <qvbox.h>
+#include <QtGui/QVBoxLayout>
 
 #include "memberinfo.h"
 #include "multiconflictdialog.h"
@@ -50,59 +50,76 @@ GroupItem::GroupItem( KWidgetList *parent, SyncProcess *process )
   boldFont.setBold( true );
   boldFont.setPointSize( boldFont.pointSize() + 2 );
 
-  QGridLayout *layout = new QGridLayout( this, 4, 4, KDialog::marginHint(), KDialog::spacingHint() );
+  QGridLayout *layout = new QGridLayout( this );
+  layout->setMargin( KDialog::marginHint() );
+  layout->setSpacing( KDialog::spacingHint() );
 
-  mBox = new QVBox( this );
-  mBox->setMargin( 5 );
+  mBox = new QWidget( this );
+  mBoxLayout = new QVBoxLayout( mBox );
+  mBoxLayout->setMargin( 5 );
+
   mProgressBar = new QProgressBar( this );
-  mProgressBar->setTotalSteps( 100 );
+  mProgressBar->setRange( 0, 100 );
 
   mTime = new QLabel( this );
-  mSyncAction = new KURLLabel( "exec:/sync", i18n( "Synchronize Now" ), this );
-  mConfigureAction = new KURLLabel( "exec:/config", i18n( "Configure" ), this );
+  mSyncAction = new KUrlLabel( "exec:/sync", i18n( "Synchronize Now" ), this );
+  mConfigureAction = new KUrlLabel( "exec:/config", i18n( "Configure" ), this );
 
   // header
-  QHBox* hbox = new QHBox( this );
-  hbox->setMargin( 2 );
+  QWidget* hbox = new QWidget( this );
+  QHBoxLayout *hboxLayout = new QHBoxLayout( hbox );
+  hboxLayout->setMargin( 2 );
 
   static QPixmap icon;
   if ( icon.isNull() )
-    icon = KGlobal::iconLoader()->loadIcon( "kontact_summary", KIcon::Desktop );
+    icon = KIconLoader::global()->loadIcon( "kontact_summary", K3Icon::Desktop );
 
   mIcon = new QLabel( hbox );
   mIcon->setPixmap( icon );
   mIcon->setFixedSize( mIcon->sizeHint() );
-  mIcon->setPaletteBackgroundColor( colorGroup().mid() );
+  hboxLayout->addWidget( mIcon );
+
+  QPalette pal;
+  pal.setColor( mIcon->backgroundRole(), palette().color( QPalette::Mid ) );
+  mIcon->setPalette( pal );
 
   mGroupName = new QLabel( hbox );
-  mGroupName->setAlignment( AlignLeft | AlignVCenter );
+  mGroupName->setAlignment( Qt::AlignLeft | Qt::AlignVCenter );
   mGroupName->setIndent( KDialog::spacingHint() );
   mGroupName->setFont( boldFont );
-  mGroupName->setPaletteForegroundColor( colorGroup().light() );
-  mGroupName->setPaletteBackgroundColor( colorGroup().mid() );
+  hboxLayout->addWidget( mGroupName );
+
+  pal.setColor( mGroupName->foregroundRole(), palette().color( QPalette::Light ) );
+  pal.setColor( mGroupName->backgroundRole(), palette().color( QPalette::Mid ) );
+  mGroupName->setPalette( pal );
 
   mStatus = new QLabel( hbox );
-  mStatus->setAlignment( Qt::AlignRight );
-  mStatus->setAlignment( AlignRight | AlignVCenter );
+  mStatus->setAlignment( Qt::AlignRight | Qt::AlignVCenter );
   mStatus->setIndent( KDialog::spacingHint() );
   mStatus->setFont( boldFont );
-  mStatus->setPaletteForegroundColor( colorGroup().light() );
-  mStatus->setPaletteBackgroundColor( colorGroup().mid() );
   mStatus->setText( i18n( "Ready" ) );
+  hboxLayout->addWidget( mStatus );
 
-  hbox->setPaletteBackgroundColor( colorGroup().mid() );
+  pal.setColor( mStatus->foregroundRole(), palette().color( QPalette::Light ) );
+  pal.setColor( mStatus->backgroundRole(), palette().color( QPalette::Mid ) );
+  mStatus->setPalette( pal );
+
+  pal.setColor( hbox->backgroundRole(), palette().color( QPalette::Mid ) );
+  hbox->setPalette( pal );
+
   hbox->setMaximumHeight( hbox->minimumSizeHint().height() );
 
-  layout->addMultiCellWidget( hbox, 0, 0, 0, 3 );
-  layout->addMultiCellWidget( mBox, 1, 1, 0, 3 );
+  layout->addWidget( hbox, 0, 0, 1, 4 );
+  layout->addWidget( mBox, 1, 1, 1, 4 );
   layout->addWidget( mTime, 2, 0 );
   layout->addWidget( mSyncAction, 2, 1 );
   layout->addWidget( mConfigureAction, 2, 2 );
   layout->addWidget( mProgressBar, 2, 3 );
-  layout->setColStretch( 0, 1 );
+  layout->setColumnStretch( 0, 1 );
   layout->setRowStretch( 3, 1 );
 
-  setPaletteBackgroundColor( kapp->palette().active().base() );
+  pal.setColor( backgroundRole(), kapp->palette().color( QPalette::Active, QPalette::Base ) );
+  setPalette( pal );
 
   connect( mCallbackHandler, SIGNAL( conflict( QSync::SyncMapping ) ),
            this, SLOT( conflict( QSync::SyncMapping ) ) );
@@ -156,6 +173,7 @@ void GroupItem::update()
 
   for ( ; memberIt != memberEndIt; ++memberIt ) {
     MemberItem *item = new MemberItem( mBox, mSyncProcess, *memberIt );
+    mBoxLayout->addWidget( item );
     item->show();
     item->setStatusMessage( i18n( "Ready" ) );
     mMemberItems.append( item );
@@ -166,9 +184,8 @@ void GroupItem::clear()
 {
   mGroupName->setText( QString() );
 
-  QValueList<MemberItem*>::Iterator it;
-  for ( it = mMemberItems.begin(); it != mMemberItems.end(); ++it )
-    delete *it;
+  for ( int i = 0; i < mMemberItems.count(); ++i )
+    delete mMemberItems[ i ];
 
   mMemberItems.clear();
 }
@@ -208,7 +225,7 @@ void GroupItem::change( const QSync::SyncChangeUpdate &update )
         if ( progress < 0 )
           progress = 0;
 
-        mProgressBar->setProgress( 100 - progress );
+        mProgressBar->setValue( 100 - progress );
       }
       break;
     case QSync::SyncChangeUpdate::WriteError:
@@ -234,7 +251,7 @@ void GroupItem::engine( const QSync::SyncEngineUpdate &update )
   switch ( update.type() ) {
     case QSync::SyncEngineUpdate::EndPhaseConnected:
       mStatus->setText( i18n( "Connected" ) );
-      mProgressBar->setProgress( 0 );
+      mProgressBar->setValue( 0 );
       mSynchronizing = true;
       mSyncAction->setText( "Abort Synchronization" );
       break;
@@ -243,7 +260,7 @@ void GroupItem::engine( const QSync::SyncEngineUpdate &update )
       break;
     case QSync::SyncEngineUpdate::EndPhaseWrite:
       mStatus->setText( i18n( "Data written" ) );
-      mProgressBar->setProgress( 100 );
+      mProgressBar->setValue( 100 );
       mProcessedItems = mMaxProcessedItems = 0;
       break;
     case QSync::SyncEngineUpdate::EndPhaseDisconnected:
@@ -281,36 +298,37 @@ void GroupItem::engine( const QSync::SyncEngineUpdate &update )
 
 void GroupItem::member( const QSync::SyncMemberUpdate &update )
 {
-  QValueList<MemberItem*>::Iterator it;
-  for ( it = mMemberItems.begin(); it != mMemberItems.end(); ++it ) {
-    if ( (*it)->member() == update.member() ) {
+  for ( int i = 0; i < mMemberItems.count(); ++i ) {
+    MemberItem *item = mMemberItems[ i ];
+
+    if ( item->member() == update.member() ) {
       switch ( update.type() ) {
         case QSync::SyncMemberUpdate::Connected:
-          (*it)->setStatusMessage( i18n( "Connected" ) );
+          item->setStatusMessage( i18n( "Connected" ) );
           break;
         case QSync::SyncMemberUpdate::SentChanges:
-          (*it)->setStatusMessage( i18n( "Changes read" ) );
+          item->setStatusMessage( i18n( "Changes read" ) );
           break;
         case QSync::SyncMemberUpdate::CommittedAll:
-          (*it)->setStatusMessage( i18n( "Changes written" ) );
+          item->setStatusMessage( i18n( "Changes written" ) );
           break;
         case QSync::SyncMemberUpdate::Disconnected:
-          (*it)->setStatusMessage( i18n( "Disconnected" ) );
+          item->setStatusMessage( i18n( "Disconnected" ) );
           break;
         case QSync::SyncMemberUpdate::ConnectError:
-          (*it)->setStatusMessage( i18n( "Error: %1" ).arg( update.result().message() ) );
+          item->setStatusMessage( i18n( "Error: %1" ).arg( update.result().message() ) );
           break;
         case QSync::SyncMemberUpdate::GetChangesError:
-          (*it)->setStatusMessage( i18n( "Error: %1" ).arg( update.result().message() ) );
+          item->setStatusMessage( i18n( "Error: %1" ).arg( update.result().message() ) );
           break;
         case QSync::SyncMemberUpdate::CommittedAllError:
-          (*it)->setStatusMessage( i18n( "Error: %1" ).arg( update.result().message() ) );
+          item->setStatusMessage( i18n( "Error: %1" ).arg( update.result().message() ) );
           break;
         case QSync::SyncMemberUpdate::SyncDoneError:
-          (*it)->setStatusMessage( i18n( "Error: %1" ).arg( update.result().message() ) );
+          item->setStatusMessage( i18n( "Error: %1" ).arg( update.result().message() ) );
           break;
         case QSync::SyncMemberUpdate::DisconnectedError:
-          (*it)->setStatusMessage( i18n( "Error: %1" ).arg( update.result().message() ) );
+          item->setStatusMessage( i18n( "Error: %1" ).arg( update.result().message() ) );
           break;
         default:
           break;
@@ -360,22 +378,31 @@ MemberItem::MemberItem( QWidget *parent, SyncProcess *process,
 
   QVBoxLayout *layout = new QVBoxLayout( this );
 
-  QHBox* box = new QHBox( this );
-  box->setMargin( 5 );
-  box->setSpacing( 6 );
+  QWidget* box = new QWidget( this );
+  QHBoxLayout *boxLayout = new QHBoxLayout( box );
+  boxLayout->setMargin( 5 );
+  boxLayout->setSpacing( 6 );
   layout->addWidget( box );
 
   mIcon = new QLabel( box );
   mIcon->setPixmap( icon );
   mIcon->setAlignment( Qt::AlignTop );
   mIcon->setFixedWidth( mIcon->sizeHint().width() );
+  boxLayout->addWidget( mIcon );
 
-  QVBox *nameBox = new QVBox( box );
+  QWidget *nameBox = new QWidget( box );
+  QVBoxLayout *nameBoxLayout = new QVBoxLayout( nameBox );
+  boxLayout->addWidget( nameBox );
+
   mMemberName = new QLabel( nameBox );
   mMemberName->setFont( boldFont );
+  nameBoxLayout->addWidget( mMemberName );
+
   mDescription = new QLabel( nameBox );
+  nameBoxLayout->addWidget( mDescription );
 
   mStatus = new QLabel( box );
+  boxLayout->addWidget( mStatus );
 
   mMemberName->setText( member.name() );
   mDescription->setText( plugin.longName() );
