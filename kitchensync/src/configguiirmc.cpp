@@ -40,8 +40,6 @@
 #include <qtooltip.h>
 #include <qvbox.h>
 
-#include "ksplashwidget.h"
-
 #include "configguiirmc.h"
 
 ConfigGuiIRMC::ConfigGuiIRMC( const QSync::Member &member, QWidget *parent )

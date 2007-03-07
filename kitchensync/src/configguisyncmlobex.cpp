@@ -153,7 +153,7 @@ ConfigGuiSyncmlObex::ConfigGuiSyncmlObex( const QSync::Member &member, QWidget *
   mGridLayout->addWidget( label, 14, 0 );
 
   mRecvLimit = new QSpinBox( optionsWidget );
-  mRecvLimit->setMinValue( 0 );
+  mRecvLimit->setMinValue( 1 );
   mRecvLimit->setMaxValue( 65536 );
   mGridLayout->addWidget( mRecvLimit, 14, 1 );
 
@@ -162,7 +162,7 @@ ConfigGuiSyncmlObex::ConfigGuiSyncmlObex( const QSync::Member &member, QWidget *
   mGridLayout->addWidget( label, 15, 0 );
 
   mMaxObjSize = new QSpinBox( optionsWidget );
-  mMaxObjSize->setMinValue( 0 );
+  mMaxObjSize->setMinValue( 1 );
   mMaxObjSize->setMaxValue( 65536 );
   mGridLayout->addWidget( mMaxObjSize, 15, 1 );
 

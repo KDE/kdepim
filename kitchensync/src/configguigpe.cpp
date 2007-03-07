@@ -86,11 +86,11 @@ void ConfigGuiGpe::initGUI()
 
   layout->addWidget( new QLabel( i18n( "Connection Mode:" ), this ), 0, 0 );
   mConnectionMode = new KComboBox( this );
-  layout->addMultiCellWidget( mConnectionMode, 0, 0, 0, 1 );
+  layout->addMultiCellWidget( mConnectionMode, 0, 0, 0, 3 );
 
   layout->addWidget( new QLabel( i18n( "IP Address:" ), this ), 1, 0 );
   mIP = new KLineEdit( this );
-  mIP->setInputMask( "000.000.000.000;_" );
+  mIP->setInputMask( "000.000.000.000" );
   layout->addWidget( mIP, 1, 1 );
 
   layout->addWidget( new QLabel( i18n( "Port:" ), this ), 1, 2, Qt::AlignRight );
