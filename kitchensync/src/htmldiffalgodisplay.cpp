@@ -28,7 +28,6 @@ using namespace KSync;
 HTMLDiffAlgoDisplay::HTMLDiffAlgoDisplay( QWidget *parent )
   : KTextBrowser( parent )
 {
-//  setWrapPolicy( QTextEdit::AtWordBoundary );
   setVerticalScrollBarPolicy( Qt::ScrollBarAlwaysOff );
   setHorizontalScrollBarPolicy( Qt::ScrollBarAlwaysOff );
 }

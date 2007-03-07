@@ -46,6 +46,8 @@ GroupConfigDialog::GroupConfigDialog( QWidget *parent, SyncProcess *process )
   mConfigWidget->setSyncProcess( process );
 
   restoreDialogSize( KConfigGroup( KGlobal::config(), "size_groupconfigdialog" ) );
+
+  connect( this, SIGNAL( okClicked() ), this, SLOT( slotOk() ) );
 }
 
 GroupConfigDialog::~GroupConfigDialog()
@@ -56,8 +58,6 @@ GroupConfigDialog::~GroupConfigDialog()
 void GroupConfigDialog::slotOk()
 {
   mConfigWidget->saveConfig();
-
-  accept();
 }
 
 #include "groupconfigdialog.moc"

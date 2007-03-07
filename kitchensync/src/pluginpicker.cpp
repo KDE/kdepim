@@ -117,6 +117,9 @@ PluginPickerDialog::PluginPickerDialog( QWidget *parent )
   setInitialSize( QSize( 460, 380 ) );
 
   mPicker->setFocus();
+
+  connect( this, SIGNAL( okClicked() ), this, SLOT( slotOk() ) );
+  connect( this, SIGNAL( okCancel() ), this, SLOT( slotCancel() ) );
 }
 
 QSync::Plugin PluginPickerDialog::selectedPlugin() const

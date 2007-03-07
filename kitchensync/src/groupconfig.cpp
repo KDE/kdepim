@@ -125,7 +125,6 @@ void GroupConfig::updateMembers()
 
   for ( int i = 0; i < mConfigPages.count(); ++i ) {
     mMemberView->removePage( mConfigPages[ i ] );
-    delete mConfigPages[ i ];
   }
 
   mConfigPages.clear();

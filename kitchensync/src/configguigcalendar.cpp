@@ -32,35 +32,29 @@
 ConfigGuiGoogleCalendar::ConfigGuiGoogleCalendar( const QSync::Member &member, QWidget *parent )
   : ConfigGui( member, parent )
 {
-  QBoxLayout *userLayout = new QHBoxLayout();
-  topLayout()->addLayout( userLayout );
+  QGridLayout *layout = new QGridLayout();
+  topLayout()->addLayout( layout );
 
   QLabel *userLbl= new QLabel( i18n("Username:"), this );
-  userLayout->addWidget(userLbl);
+  layout->addWidget(userLbl, 0, 0);
 
   mUsername = new QLineEdit(this);
-  userLayout->addWidget(mUsername);
-
-
-  QBoxLayout *passLayout = new QHBoxLayout();
-  topLayout()->addLayout( passLayout );
+  layout->addWidget(mUsername, 0, 1);
 
   QLabel *passLbl = new QLabel( i18n("Password:"), this );
-  passLayout->addWidget(passLbl);
+  layout->addWidget(passLbl, 1, 0);
 
   mPassword = new QLineEdit(this);
   mPassword->setEchoMode(QLineEdit::Password);
-  passLayout->addWidget(mPassword);
+  layout->addWidget(mPassword, 1, 1);
 
-  topLayout()->addWidget(new QLabel( i18n("Please notice that currently the password is stored as plain text in the plugin configuration file"), this ));
+  layout->addWidget(new QLabel( i18n("Please notice that currently the password is stored as plain text in the plugin configuration file"), this ), 2, 0, 1, 2);
 
-  QBoxLayout *urlLayout = new QHBoxLayout();
-  topLayout()->addLayout( urlLayout );
   QLabel *urlLbl = new QLabel( i18n("Calendar URL:"), this );
-  urlLayout->addWidget(urlLbl);
+  layout->addWidget(urlLbl, 3, 0);
 
   mUrl = new QLineEdit(this);
-  urlLayout->addWidget(mUrl);
+  layout->addWidget(mUrl, 3, 1);
 
   topLayout()->addStretch( 1 );
 }
@@ -101,6 +95,5 @@ QString ConfigGuiGoogleCalendar::save()
   root.appendChild(url);
   url.appendChild(doc.createTextNode(mUrl->text()));
 
-  //TODO: Implement me!
   return doc.toString();
 }

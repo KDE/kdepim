@@ -51,12 +51,12 @@ GroupItem::GroupItem( KWidgetList *parent, SyncProcess *process )
   boldFont.setPointSize( boldFont.pointSize() + 2 );
 
   QGridLayout *layout = new QGridLayout( this );
-  layout->setMargin( KDialog::marginHint() );
-  layout->setSpacing( KDialog::spacingHint() );
+  layout->setMargin( 1 );
+  layout->setSpacing( 3 );
 
   mBox = new QWidget( this );
   mBoxLayout = new QVBoxLayout( mBox );
-  mBoxLayout->setMargin( 5 );
+  mBoxLayout->setMargin( 1 );
 
   mProgressBar = new QProgressBar( this );
   mProgressBar->setRange( 0, 100 );
@@ -116,7 +116,7 @@ GroupItem::GroupItem( KWidgetList *parent, SyncProcess *process )
   hbox->setMaximumHeight( hbox->minimumSizeHint().height() );
 
   layout->addWidget( hbox, 0, 0, 1, 4 );
-  layout->addWidget( mBox, 1, 1, 1, 4 );
+  layout->addWidget( mBox, 1, 0, 1, 4 );
   layout->addWidget( mTime, 2, 0 );
   layout->addWidget( mSyncAction, 2, 1 );
   layout->addWidget( mConfigureAction, 2, 2 );
@@ -385,11 +385,12 @@ MemberItem::MemberItem( QWidget *parent, SyncProcess *process,
   QSync::Plugin plugin = member.plugin();
 
   QVBoxLayout *layout = new QVBoxLayout( this );
+  layout->setMargin( 1 );
 
   QWidget* box = new QWidget( this );
   QHBoxLayout *boxLayout = new QHBoxLayout( box );
-  boxLayout->setMargin( 5 );
-  boxLayout->setSpacing( 6 );
+  boxLayout->setMargin( 3 );
+  boxLayout->setSpacing( 3 );
   layout->addWidget( box );
 
   mIcon = new QLabel( box );

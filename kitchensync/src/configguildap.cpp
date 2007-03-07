@@ -159,7 +159,7 @@ void ConfigGuiLdap::initGUI()
   layout->addWidget( mPort, 0, 3 );
 
   mAnonymousBind = new QCheckBox( i18n( "Use anonymous bind" ), this );
-  layout->addWidget( mAnonymousBind, 1, 0, 1, 2 );
+  layout->addWidget( mAnonymousBind, 1, 0, 1, 4 );
 
   connect( mAnonymousBind, SIGNAL( toggled( bool ) ),
            this, SLOT( bindModeChanged( bool ) ) );
@@ -167,43 +167,43 @@ void ConfigGuiLdap::initGUI()
   mBindLabel = new QLabel( i18n( "Bind Dn:" ), this );
   layout->addWidget( mBindLabel, 2, 0 );
   mBindDn = new KLineEdit( this );
-  layout->addWidget( mBindDn, 2, 1, 1, 2 );
+  layout->addWidget( mBindDn, 2, 1, 1, 3 );
 
   mPasswordLabel = new QLabel( i18n( "Password:" ), this );
   layout->addWidget( mPasswordLabel, 3, 0 );
   mPassword = new KLineEdit( this );
   mPassword->setEchoMode( QLineEdit::Password );
-  layout->addWidget( mPassword, 3, 1, 1, 2 );
+  layout->addWidget( mPassword, 3, 1, 1, 3 );
 
   layout->addWidget( new QLabel( i18n( "Search Base:" ), this ), 4, 0 );
   mSearchBase = new KLineEdit( this );
-  layout->addWidget( mSearchBase, 4, 1, 1, 2 );
+  layout->addWidget( mSearchBase, 4, 1, 1, 3 );
 
   layout->addWidget( new QLabel( i18n( "Search Filter:" ), this ), 5, 0 );
   mSearchFilter = new KLineEdit( this );
-  layout->addWidget( mSearchFilter, 5, 1, 1, 2 );
+  layout->addWidget( mSearchFilter, 5, 1, 1, 3 );
 
   layout->addWidget( new QLabel( i18n( "Storage Base:" ), this ), 6, 0 );
   mStoreBase = new KLineEdit( this );
-  layout->addWidget( mStoreBase, 6, 1, 1, 2 );
+  layout->addWidget( mStoreBase, 6, 1, 1, 3 );
 
   layout->addWidget( new QLabel( i18n( "Key Attribute:" ), this ), 7, 0 );
   mKeyAttribute = new KLineEdit( this );
-  layout->addWidget( mKeyAttribute, 7, 1, 1, 2 );
+  layout->addWidget( mKeyAttribute, 7, 1, 1, 3 );
 
   layout->addWidget( new QLabel( i18n( "Search Scope:" ), this ), 8, 0 );
   mSearchScope = new KComboBox( this );
-  layout->addWidget( mSearchScope, 8, 1, 1, 2 );
+  layout->addWidget( mSearchScope, 8, 1, 1, 3 );
 
   layout->addWidget( new QLabel( i18n( "Authentication Mechanism:" ), this ), 9, 0 );
   mAuthMech = new KComboBox( this );
-  layout->addWidget( mAuthMech, 9, 1, 1, 2 );
+  layout->addWidget( mAuthMech, 9, 1, 1, 3 );
 
   mEncryption = new QCheckBox( i18n( "Use encryption" ), this );
-  layout->addWidget( mEncryption, 10, 1, 1, 2 );
+  layout->addWidget( mEncryption, 10, 0, 1, 4 );
 
   mReadLdap = new QCheckBox( i18n( "Load data from LDAP" ), this );
-  layout->addWidget( mReadLdap, 11, 1, 1, 2 );
+  layout->addWidget( mReadLdap, 11, 0, 1, 2 );
 
   mWriteLdap = new QCheckBox( i18n( "Save data to LDAP" ), this );
   layout->addWidget( mWriteLdap, 11, 2, 1, 2 );

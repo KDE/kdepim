@@ -88,7 +88,7 @@ void ConfigGuiGpe::initGUI()
 
   layout->addWidget( new QLabel( i18n( "Connection Mode:" ), this ), 0, 0 );
   mConnectionMode = new KComboBox( this );
-  layout->addWidget( mConnectionMode, 0, 0, 1, 1 );
+  layout->addWidget( mConnectionMode, 0, 1, 1, 3 );
 
   layout->addWidget( new QLabel( i18n( "IP Address:" ), this ), 1, 0 );
   mIP = new KLineEdit( this );
@@ -102,5 +102,5 @@ void ConfigGuiGpe::initGUI()
 
   layout->addWidget( new QLabel( i18n( "User:" ), this ), 2, 0 );
   mUser = new KLineEdit( this );
-  layout->addWidget( mUser, 2, 1, 1, 2 );
+  layout->addWidget( mUser, 2, 1, 1, 3 );
 }

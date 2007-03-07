@@ -117,6 +117,8 @@ ConfigGuiGnokii::ConfigGuiGnokii( const QSync::Member &member, QWidget *parent )
   mPort->addItem( "/dev/ttyUSB0" );
   mPort->addItem( "/dev/ttyUSB1" );
 
+  layout->setColumnStretch( 1, 1 );
+
   topLayout()->addStretch( 1 );
 }
 

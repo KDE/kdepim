@@ -59,6 +59,11 @@ ConfigGui::ConfigGui( const QSync::Member &member, QWidget *parent )
 
   mNameEdit = new KLineEdit( this );
   nameLayout->addWidget( mNameEdit );
+
+  QFrame *line = new QFrame( this );
+  line->setFrameStyle( QFrame::HLine );
+
+  mTopLayout->addWidget( line );
 }
 
 void ConfigGui::setInstanceName( const QString &t )
@@ -107,7 +112,7 @@ ConfigGuiXml::ConfigGuiXml( const QSync::Member &member, QWidget *parent )
   : ConfigGui( member, parent )
 {
   mTextEdit = new QTextEdit( this );
-  topLayout()->addWidget( mTextEdit );  
+  topLayout()->addWidget( mTextEdit );
 }
 
 void ConfigGuiXml::load( const QString &xml )
