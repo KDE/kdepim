@@ -72,7 +72,7 @@ QString ConfigGuiFile::save()
 {
   QString xml;
   xml = "<config>";
-  xml += "<path>" + mFilename->url().url() + "</path>";
+  xml += "<path>" + mFilename->url().path() + "</path>";
   xml += "<recursive>";
   if ( mRecursive->isChecked() ) {
     xml += "TRUE";

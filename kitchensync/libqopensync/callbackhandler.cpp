@@ -30,7 +30,7 @@
 
 using namespace QSync;
 
-class CallbackHandler::ConflictEvent : public QEvent
+class ConflictEvent : public QEvent
 {
   public:
     enum {
@@ -48,7 +48,7 @@ class CallbackHandler::ConflictEvent : public QEvent
     SyncMapping mMapping;
 };
 
-class CallbackHandler::ChangeEvent : public QEvent
+class ChangeEvent : public QEvent
 {
   public:
     enum {
@@ -66,7 +66,7 @@ class CallbackHandler::ChangeEvent : public QEvent
     SyncChangeUpdate mChange;
 };
 
-class CallbackHandler::MappingEvent : public QEvent
+class MappingEvent : public QEvent
 {
   public:
     enum {
@@ -84,7 +84,7 @@ class CallbackHandler::MappingEvent : public QEvent
     SyncMappingUpdate mMapping;
 };
 
-class CallbackHandler::EngineEvent : public QEvent
+class EngineEvent : public QEvent
 {
   public:
     enum {
@@ -102,7 +102,7 @@ class CallbackHandler::EngineEvent : public QEvent
     SyncEngineUpdate mEngine;
 };
 
-class CallbackHandler::MemberEvent : public QEvent
+class MemberEvent : public QEvent
 {
   public:
     enum {
@@ -146,19 +146,19 @@ Engine *CallbackHandler::engine() const
 
 void CallbackHandler::customEvent( QEvent *event )
 {
-  if ( event->type() == ConflictEvent::Type ) {
+  if ( event->type() == (QEvent::Type)ConflictEvent::Type ) {
     ConflictEvent *conflictEvent = static_cast<ConflictEvent*>( event );
     emit conflict( conflictEvent->mapping() );
-  } else if ( event->type() == ChangeEvent::Type ) {
+  } else if ( event->type() == (QEvent::Type)ChangeEvent::Type ) {
     ChangeEvent *changeEvent = static_cast<ChangeEvent*>( event );
     emit change( changeEvent->change() );
-  } else if ( event->type() == MappingEvent::Type ) {
+  } else if ( event->type() == (QEvent::Type)MappingEvent::Type ) {
     MappingEvent *mappingEvent = static_cast<MappingEvent*>( event );
     emit mapping( mappingEvent->mapping() );
-  } else if ( event->type() == EngineEvent::Type ) {
+  } else if ( event->type() == (QEvent::Type)EngineEvent::Type ) {
     EngineEvent *engineEvent = static_cast<EngineEvent*>( event );
     emit engine( engineEvent->engine() );
-  } else if ( event->type() == MemberEvent::Type ) {
+  } else if ( event->type() == (QEvent::Type)MemberEvent::Type ) {
     MemberEvent *memberEvent = static_cast<MemberEvent*>( event );
     emit member( memberEvent->member() );
   }

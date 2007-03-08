@@ -61,12 +61,6 @@ class QSYNC_EXPORT CallbackHandler : public QObject
     virtual void customEvent( QEvent *event );
 
   private:
-    class ConflictEvent;
-    class ChangeEvent;
-    class MappingEvent;
-    class EngineEvent;
-    class MemberEvent;
-
     static void conflict_callback( OSyncEngine*, OSyncMapping*, void* );
     static void change_callback( OSyncEngine*, OSyncChangeUpdate*, void* );
     static void mapping_callback( OSyncMappingUpdate*, void* );
