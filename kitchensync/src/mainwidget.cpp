@@ -134,7 +134,7 @@ void MainWidget::addGroup()
 {
   bool ok;
   QString name = KInputDialog::getText( i18n("Create Synchronization Group"),
-    i18n("Name for new synchronization group."), QString::null, &ok, this );
+    i18n("Name for new synchronization group."), QString(), &ok, this );
   if ( ok ) {
     SyncProcessManager::self()->addGroup( name );
     enableActions();

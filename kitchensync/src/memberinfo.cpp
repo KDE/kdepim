@@ -91,5 +91,5 @@ QString MemberInfo::pluginIconName( const QString &pluginName )
   if ( pluginName == "sunbird-sync" ) return "www";
 
 
-  return QString::null;
+  return QString();
 }

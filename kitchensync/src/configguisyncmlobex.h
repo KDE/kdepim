@@ -40,7 +40,7 @@ class ConfigGuiSyncmlObex : public ConfigGui
   Q_OBJECT
 
   public:
-    ConfigGuiSyncmlObex( const QSync::Member &, QWidget *parent = 0 );
+    explicit ConfigGuiSyncmlObex( const QSync::Member &, QWidget *parent = 0 );
 
     void load( const QString &xml );
     QString save();

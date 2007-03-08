@@ -129,7 +129,7 @@ ConfigGuiSyncmlHttp::ConfigGuiSyncmlHttp( const QSync::Member &member, QWidget *
   mRecvLimit->setRange( 1, 65536 );
   mGridLayout->addWidget( mRecvLimit, 5, 1 );
 
-  // maxObjSize 
+  // maxObjSize
   label = new QLabel( i18n("Maximum Object Size"), optionWidget );
   mGridLayout->addWidget( label, 6, 0 );
 
@@ -206,16 +206,16 @@ QString ConfigGuiSyncmlHttp::save()
 
   xml += "<usestringtable>";
   if ( mUseStringTable->isChecked() )
-    xml += "1";
+    xml += '1';
   else
-    xml += "0";
+    xml += '0';
   xml += "</usestringtable>\n";
 
   xml += "<onlyreplace>";
   if ( mOnlyReplace->isChecked() )
-    xml += "1";
+    xml += '1';
   else
-    xml += "0";
+    xml += '0';
   xml += "</onlyreplace>\n";
 
   xml += "<contact_db>" + mContactDb->currentText() + "</contact_db>\n";

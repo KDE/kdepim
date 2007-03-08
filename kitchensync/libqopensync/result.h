@@ -70,7 +70,7 @@ class QSYNC_EXPORT Result
       Construct Result from OpenSync error object. Deletes the OpenSync error
       object.
     */
-    Result( OSyncError **, bool deleteError = true );
+    explicit Result( OSyncError **, bool deleteError = true );
 
     /**
       Destroys the result.

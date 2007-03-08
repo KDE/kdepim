@@ -39,22 +39,22 @@ static bool compareString( const QString &left, const QString &right )
 
 static QString toString( KCal::Attendee *attendee )
 {
-  return attendee->name() + "<" + attendee->email() + ">";
+  return attendee->name() + '<' + attendee->email() + '>';
 }
 
 static QString toString( KCal::Alarm * )
 {
-  return QString::null;
+  return QString();
 }
 
 static QString toString( KCal::Incidence * )
 {
-  return QString::null;
+  return QString();
 }
 
 static QString toString( KCal::Attachment * )
 {
-  return QString::null;
+  return QString();
 }
 
 static QString toString( const QDate &date )

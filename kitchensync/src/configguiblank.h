@@ -26,7 +26,7 @@
 class ConfigGuiBlank : public ConfigGui
 {
   public:
-    ConfigGuiBlank( const QSync::Member &member, QWidget *parent = 0 );
+    explicit ConfigGuiBlank( const QSync::Member &member, QWidget *parent = 0 );
 
     void load( const QString &xml );
     QString save();

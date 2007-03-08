@@ -277,9 +277,9 @@ QString ConfigGuiSyncmlObex::save()
   // WBXML
   xml += "<wbxml>";
   if ( mWbxml->isChecked() )
-    xml += "1";
+    xml += '1';
   else
-    xml += "0";
+    xml += '0';
   xml += "</wbxml>\n";
 
   // Receive Limit
@@ -290,16 +290,16 @@ QString ConfigGuiSyncmlObex::save()
 
   xml += "<usestringtable>";
   if ( mUseStringTable->isChecked() )
-    xml += "1";
+    xml += '1';
   else
-    xml += "0";
+    xml += '0';
   xml += "</usestringtable>\n";
 
   xml += "<onlyreplace>";
   if ( mOnlyReplace->isChecked() )
-    xml += "1";
+    xml += '1';
   else
-    xml += "0";
+    xml += '0';
   xml += "</onlyreplace>\n";
 
   xml += "<contact_db>" + mContactDb->currentText() + "</contact_db>\n";

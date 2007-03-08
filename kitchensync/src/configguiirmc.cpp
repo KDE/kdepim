@@ -179,9 +179,9 @@ void ConfigGuiIRMC::initGUI()
   KHBox *optionBox = new KHBox( optionsWidget );
   optionBox->setSpacing( KDialog::spacingHint() );
 
-  QLabel *label = new QLabel( i18n( "Don't send OBEX UUID (IRMC-SYNC)" ), optionBox );
+  QLabel *label = new QLabel( i18n( "Do not send OBEX UUID (IRMC-SYNC)" ), optionBox );
   mDontTellSync = new QCheckBox( optionBox );
-  mDontTellSync->setToolTip( i18n( "Don't send OBEX UUID while connectiong. Needed for older IrMC based mobile phones." ) );
+  mDontTellSync->setToolTip( i18n( "Do not send OBEX UUID while connectiong. Needed for older IrMC based mobile phones." ) );
   label->setBuddy( mDontTellSync );
 }
 

@@ -85,7 +85,7 @@ class QSYNC_EXPORT Group
           mPos = it.mPos;
         }
 
-        Member operator*() 
+        Member operator*()
         {
           return mGroup->memberAt( mPos );
         }
@@ -125,12 +125,12 @@ class QSYNC_EXPORT Group
     QString name() const;
 
     /**
-      Sets the time of the last successfull synchronization.
+      Sets the time of the last successful synchronization.
      */
     void setLastSynchronization( const QDateTime &dateTime );
 
     /**
-      Returns the time of the last successfull synchronization.
+      Returns the time of the last successful synchronization.
      */
     QDateTime lastSynchronization() const;
 
@@ -181,14 +181,14 @@ class QSYNC_EXPORT Group
     Filter filterAt( int pos );
 
     /**
-      Set, if the object type with given name is enabled for synchronisation for
-      this group.
+      Set, if the object type with given name is enabled for synchronization
+      for this group.
      */
     void setObjectTypeEnabled( const QString &objectType, bool enabled );
 
     /**
-      Returns whether the object type with given name is enabled for synchronisation for
-      this group.
+      Returns whether the object type with given name is enabled for
+      synchronization for this group.
      */
     bool isObjectTypeEnabled( const QString &objectType ) const;
 

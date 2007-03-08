@@ -73,7 +73,7 @@ ObjectTypeSelector::ObjectTypeSelector( QWidget *parent )
   for( it = reoderedObjectTypes.begin(); it != reoderedObjectTypes.end(); ++it ) {
     QString objectType = *it;
 
-    // Don't display object type "data". Object type "data" is a kind of wildcard - so don't filter * 
+    // Don't display object type "data". Object type "data" is a kind of wildcard - so don't filter *
     if ( objectType == "data" )
       continue;
 
@@ -95,7 +95,7 @@ void ObjectTypeSelector::load( const QSync::Group &group )
 
   const QStringList objectTypes = config.activeObjectTypes();
 
-  // Enable everything on the inital load
+  // Enable everything on the initial load
   bool initialLoad = false;
   if ( objectTypes.isEmpty() )
     initialLoad = true;
