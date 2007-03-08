@@ -41,8 +41,8 @@ class AddresseeDiffAlgo : public DiffAlgo
     template <class L>
     void diffList( const QString &id, const QList<L> &left, const QList<L> &right );
 
-    QString toString( const KABC::PhoneNumber &number );
-    QString toString( const KABC::Address &address );
+    QString toString( const KABC::PhoneNumber &number ) const;
+    QString toString( const KABC::Address &address ) const;
 
     KABC::Addressee mLeftAddressee;
     KABC::Addressee mRightAddressee;

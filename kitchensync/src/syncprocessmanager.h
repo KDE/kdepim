@@ -80,7 +80,8 @@ class SyncProcessManager : public QObject
     /**
       Adds @param plugin instance as member to the group of @param process.
      */
-    QSync::Result addMember( SyncProcess *process, const QSync::Plugin &plugin );
+    QSync::Result addMember( SyncProcess *process,
+                             const QSync::Plugin &plugin );
 
   signals:
     void changed();

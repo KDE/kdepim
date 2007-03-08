@@ -131,12 +131,12 @@ void AddresseeDiffAlgo::run()
   end();
 }
 
-QString AddresseeDiffAlgo::toString( const KABC::PhoneNumber &number )
+QString AddresseeDiffAlgo::toString( const KABC::PhoneNumber &number ) const
 {
   return number.number();
 }
 
-QString AddresseeDiffAlgo::toString( const KABC::Address &addr )
+QString AddresseeDiffAlgo::toString( const KABC::Address &addr ) const
 {
   return addr.formattedAddress();
 }

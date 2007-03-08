@@ -55,8 +55,9 @@ QString SyncProcess::groupStatus() const
   return i18n( "Ready" );
 }
 
-QString SyncProcess::memberStatus( const QSync::Member& ) const
+QString SyncProcess::memberStatus( const QSync::Member &member ) const
 {
+  Q_UNUSED( member );
   return i18n( "Ready" );
 }
 
