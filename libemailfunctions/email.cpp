@@ -75,6 +75,7 @@ QStringList KPIM::splitEmailAddrList(const QString& aStr)
       index++; // ignore the quoted character
       break;
     case ',' :
+    case ';' :
       if (!insidequote && (commentlevel == 0)) {
         addr = aStr.mid(addrstart, index-addrstart);
         if (!addr.isEmpty())
@@ -152,7 +153,8 @@ KPIM::EmailParseResult splitAddressInternal( const QCString& address,
                  else
                    return KPIM::UnexpectedEnd;
                  break;
-      case ',' : if ( !inQuotedString ) {
+          case ',' :
+          case ';' : if ( !inQuotedString ) {
                    if ( allowMultipleAddresses )
                      stop = true;
                    else
@@ -344,7 +346,8 @@ KPIM::EmailParseResult KPIM::isValidEmailAddress( const QString& aStr )
             return UnexpectedEnd;
           }
           break;
-        case ',' :
+            case ',' :
+            case ';' :
           if ( !inQuotedString )
             return UnexpectedComma;
           break;
@@ -394,7 +397,8 @@ KPIM::EmailParseResult KPIM::isValidEmailAddress( const QString& aStr )
 
     case InAngleAddress : {
       switch ( aStr[index] ) {
-        case ',' :
+            case ',' :
+            case ';' :
           if ( !inQuotedString ) {
             return UnexpectedComma;
           }
