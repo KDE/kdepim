@@ -93,7 +93,7 @@ void KTNEFMain::setupActions()
 	KStandardAction::quit(kapp, SLOT(quit()), actionCollection());
 
 	// Action menu
-	KAction *action  = new KAction(KIcon(QString("viewmag")), i18n("View"), this);
+	KAction *action  = new KAction(KIcon(QString("zoom-original")), i18n("View"), this);
 	actionCollection()->addAction("view_file", action );
 	connect(action, SIGNAL(triggered(bool)), SLOT(viewFile()));
 	action  = new KAction(KIcon(QString("package_applications")), i18n("View With..."), this);
@@ -108,16 +108,16 @@ void KTNEFMain::setupActions()
 	action  = new KAction(KIcon(QString("ktnef_extract_all_to")), i18n("Extract All To..."), this);
 	actionCollection()->addAction("extract_all_files", action );
 	connect(action, SIGNAL(triggered(bool)), SLOT(extractAllFiles()));
-	action  = new KAction(KIcon("help"), i18n("Message Properties"), this);
+	action  = new KAction(KIcon("help-contents"), i18n("Message Properties"), this);
 	actionCollection()->addAction("msg_properties", action );
 	connect(action, SIGNAL(triggered(bool)), SLOT( slotShowMessageProperties() ));
-	action  = new KAction(KIcon(QString("contents")), i18n("Properties"), this);
+	action  = new KAction(KIcon(QString("help-contents")), i18n("Properties"), this);
 	actionCollection()->addAction("properties_file", action );
 	connect(action, SIGNAL(triggered(bool)), SLOT(propertiesFile()));
-	action  = new KAction(KIcon("mail_generic"), i18n("Show Message Text"), this);
+	action  = new KAction(KIcon("mail"), i18n("Show Message Text"), this);
 	actionCollection()->addAction("msg_text", action );
 	connect(action, SIGNAL(triggered(bool)), SLOT( slotShowMessageText() ));
-	action  = new KAction(KIcon("filesave"), i18n("Save Message Text As..."), this);
+	action  = new KAction(KIcon("document-save"), i18n("Save Message Text As..."), this);
 	actionCollection()->addAction("msg_save", action );
 	connect(action, SIGNAL(triggered(bool)), SLOT( slotSaveMessageText() ));
 	actionCollection()->action("view_file")->setEnabled(false);
@@ -128,7 +128,7 @@ void KTNEFMain::setupActions()
 	actionCollection()->action("properties_file")->setEnabled(false);
 
 	// Option menu
-	action  = new KAction(KIcon(QString("folder_open")), i18n("Default Folder..."), this);
+	action  = new KAction(KIcon(QString("folder-open")), i18n("Default Folder..."), this);
 	actionCollection()->addAction("options_default_dir", action );
 	connect(action, SIGNAL(triggered(bool)), SLOT(optionDefaultDir()));
 
@@ -348,7 +348,7 @@ void KTNEFMain::viewRightButtonPressed(Q3ListViewItem*, const QPoint& p, int)
 	{
 		if (list->count() == 1)
 		{
-			m.addAction(SmallIcon("viewmag"), i18n("View"), this, SLOT(viewFile()));
+			m.addAction(SmallIcon("zoom-original"), i18n("View"), this, SLOT(viewFile()));
 			m.addAction(SmallIcon("package_applications"), i18n("View With..."), this, SLOT(viewFileAs()));
 			m.addSeparator();
 		}
@@ -357,7 +357,7 @@ void KTNEFMain::viewRightButtonPressed(Q3ListViewItem*, const QPoint& p, int)
 		if (list->count() == 1u)
 		{
 			m.addSeparator();
-			m.addAction(SmallIcon("contents"), i18n("Properties"), this, SLOT(propertiesFile()));
+			m.addAction(SmallIcon("help-contents"), i18n("Properties"), this, SLOT(propertiesFile()));
 		}
 	}
 	else if ( list->count() == 0 )
