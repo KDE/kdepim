@@ -21,7 +21,7 @@
 #ifndef CONFIGGUISYNCML_H
 #define CONFIGGUISYNCML_H
 
-#include <qdom.h>
+#include <QtXml/QtXml>
 
 #include "configgui.h"
 

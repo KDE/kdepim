@@ -31,8 +31,8 @@
 #include <kiconloader.h>
 #include <klocale.h>
 
-#include <qlabel.h>
-#include <qlayout.h>
+#include <QtGui/QLabel>
+#include <QtGui/QLayout>
 
 PluginItem::PluginItem( KWidgetList *list, const QSync::Plugin &plugin )
   : KWidgetListItem( list ), mPlugin( plugin )

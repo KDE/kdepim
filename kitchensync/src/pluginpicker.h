@@ -26,7 +26,7 @@
 #include <kdialog.h>
 #include <kwidgetlist.h>
 
-#include <qwidget.h>
+#include <QtGui/QWidget>
 
 class PluginItem : public KWidgetListItem
 {

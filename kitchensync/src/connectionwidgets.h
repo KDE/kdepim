@@ -23,7 +23,7 @@
 #ifndef CONNECTIONWIDGETS_H
 #define CONNECTIONWIDGETS_H
 
-#include <qdom.h>
+#include <QtXml/QtXml>
 
 #include "configgui.h"
 

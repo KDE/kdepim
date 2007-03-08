@@ -23,8 +23,8 @@
 
 #include <libqopensync/member.h>
 
-#include <qstring.h>
-#include <qpixmap.h>
+#include <QtCore/QString>
+#include <QtGui/QPixmap>
 
 class MemberInfo
 {

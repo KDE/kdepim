@@ -22,7 +22,7 @@
 #ifndef CONFIGGUISYNCMLOBEX_H
 #define CONFIGGUISYNCMLOBEX_H
 
-#include <qdom.h>
+#include <QtXml/QtXml>
 
 #include "configgui.h"
 #include "connectionwidgets.h"

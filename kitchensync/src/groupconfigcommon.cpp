@@ -25,9 +25,9 @@
 #include <klocale.h>
 #include <kdebug.h>
 
-#include <qlabel.h>
-#include <qlayout.h>
-#include <qcheckbox.h>
+#include <QtGui/QLabel>
+#include <QtGui/QLayout>
+#include <QtGui/QCheckBox>
 
 #include <libqopensync/group.h>
 #include <libqopensync/conversion.h>

@@ -23,8 +23,8 @@
 
 #include <klocale.h>
 
-#include <qlabel.h>
-#include <qlayout.h>
+#include <QtGui/QLabel>
+#include <QtGui/QLayout>
 
 ConfigGuiBlank::ConfigGuiBlank( const QSync::Member &member, QWidget *parent )
   : ConfigGui( member, parent )

@@ -26,9 +26,9 @@
 #include <klocale.h>
 #include <kmessagebox.h>
 
-#include <qlabel.h>
-#include <qlayout.h>
-#include <qtabwidget.h>
+#include <QtGui/QLabel>
+#include <QtGui/QLayout>
+#include <QtGui/QTabWidget>
 
 MemberConfig::MemberConfig( QWidget *parent, const QSync::Member &member )
   : QWidget( parent ), mMember( member )

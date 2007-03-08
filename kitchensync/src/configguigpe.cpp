@@ -21,11 +21,11 @@
 
 #include "configguigpe.h"
 
-#include <qcheckbox.h>
-#include <qdom.h>
-#include <qlabel.h>
-#include <qlayout.h>
-#include <qspinbox.h>
+#include <QtGui/QCheckBox>
+#include <QtXml/QtXml>
+#include <QtGui/QLabel>
+#include <QtGui/QLayout>
+#include <QtGui/QSpinBox>
 
 #include <kcombobox.h>
 #include <kdialog.h>

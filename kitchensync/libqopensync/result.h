@@ -22,7 +22,7 @@
 #ifndef QSYNC_RESULT_H
 #define QSYNC_RESULT_H
 
-#include <qstring.h>
+#include <QtCore/QString>
 
 #include <libqopensync/qopensync_export.h>
 

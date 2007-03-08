@@ -22,7 +22,7 @@
 #ifndef QSYNC_FILTER_H
 #define QSYNC_FILTER_H
 
-#include <qstring.h>
+#include <QtCore/QString>
 
 #include <libqopensync/qopensync_export.h>
 

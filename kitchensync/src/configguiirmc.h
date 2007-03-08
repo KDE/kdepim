@@ -22,8 +22,8 @@
 #ifndef CONFIGGUIIRMC_H
 #define CONFIGGUIIRMC_H
 
-#include <qcheckbox.h>
-#include <qdom.h>
+#include <QtGui/QCheckBox>
+#include <QtXml/QtXml>
 
 #include "configgui.h"
 #include "connectionwidgets.h"

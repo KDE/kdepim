@@ -25,14 +25,14 @@
 #include <klocale.h>
 
 #include <QtGui/QGroupBox>
-#include <qbuttongroup.h>
-#include <qcheckbox.h>
-#include <qdom.h>
-#include <qlabel.h>
-#include <qlayout.h>
-#include <qradiobutton.h>
-#include <qspinbox.h>
-#include <qtabwidget.h>
+#include <QtGui/QButtonGroup>
+#include <QtGui/QCheckBox>
+#include <QtXml/QtXml>
+#include <QtGui/QLabel>
+#include <QtGui/QLayout>
+#include <QtGui/QRadioButton>
+#include <QtGui/QSpinBox>
+#include <QtGui/QTabWidget>
 
 #include "configguipalm.h"
 

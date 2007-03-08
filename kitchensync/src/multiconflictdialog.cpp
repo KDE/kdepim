@@ -22,9 +22,9 @@
 #include <klocale.h>
 #include <kwidgetlist.h>
 
-#include <qlabel.h>
-#include <qlayout.h>
-#include <qpushbutton.h>
+#include <QtGui/QLabel>
+#include <QtGui/QLayout>
+#include <QtGui/QPushButton>
 
 #include "memberinfo.h"
 

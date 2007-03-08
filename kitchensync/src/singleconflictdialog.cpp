@@ -21,9 +21,9 @@
 #include <kdialog.h>
 #include <klocale.h>
 
-#include <qlabel.h>
-#include <qlayout.h>
-#include <qpushbutton.h>
+#include <QtGui/QLabel>
+#include <QtGui/QLayout>
+#include <QtGui/QPushButton>
 
 #include "addresseediffalgo.h"
 #include "genericdiffalgo.h"

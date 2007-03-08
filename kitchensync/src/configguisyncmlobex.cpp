@@ -29,13 +29,13 @@
 #include <kurlrequester.h>
 #include <kvbox.h>
 
-#include <qlayout.h>
-#include <qcheckbox.h>
-#include <qcombobox.h>
-#include <qlabel.h>
-#include <qdom.h>
-#include <qspinbox.h>
-#include <qtabwidget.h>
+#include <QtGui/QLayout>
+#include <QtGui/QCheckBox>
+#include <QtGui/QComboBox>
+#include <QtGui/QLabel>
+#include <QtXml/QtXml>
+#include <QtGui/QSpinBox>
+#include <QtGui/QTabWidget>
 
 ConfigGuiSyncmlObex::ConfigGuiSyncmlObex( const QSync::Member &member, QWidget *parent )
   : ConfigGui( member, parent )

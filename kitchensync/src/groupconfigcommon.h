@@ -21,8 +21,8 @@
 #ifndef GROUPCONFIGCOMMON_H
 #define GROUPCONFIGCOMMON_H
 
-#include <qwidget.h>
-#include <qmap.h>
+#include <QtGui/QWidget>
+#include <QtCore/QMap>
 
 #include <libqopensync/group.h>
 

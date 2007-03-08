@@ -23,7 +23,7 @@
 #include <libqopensync/engine.h>
 #include <kdemacros.h>
 
-#include <qwidget.h>
+#include <QtGui/QWidget>
 
 class KAboutData;
 class KAction;

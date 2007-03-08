@@ -24,8 +24,8 @@
 #include "configgui.h"
 #include "connectionwidgets.h"
 
-#include <qlist.h>
-#include <qpair.h>
+#include <QtCore/QList>
+#include <QtCore/QPair>
 
 class QLabel;
 class QLineEdit;

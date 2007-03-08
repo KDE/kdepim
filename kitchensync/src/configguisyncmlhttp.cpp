@@ -28,12 +28,12 @@
 #include <kurlrequester.h>
 #include <kvbox.h>
 
-#include <qcheckbox.h>
-#include <qdom.h>
-#include <qlabel.h>
-#include <qlayout.h>
-#include <qspinbox.h>
-#include <qtabwidget.h>
+#include <QtGui/QCheckBox>
+#include <QtXml/QtXml>
+#include <QtGui/QLabel>
+#include <QtGui/QLayout>
+#include <QtGui/QSpinBox>
+#include <QtGui/QTabWidget>
 
 ConfigGuiSyncmlHttp::ConfigGuiSyncmlHttp( const QSync::Member &member, QWidget *parent )
   : ConfigGui( member, parent ), mUrl( 0 ), mPort( 0 )

@@ -23,12 +23,12 @@
 
 #include <klocale.h>
 
-#include <qcombobox.h>
-#include <qdom.h>
-#include <qlabel.h>
-#include <qlayout.h>
-#include <qlineedit.h>
-#include <qspinbox.h>
+#include <QtGui/QComboBox>
+#include <QtXml/QtXml>
+#include <QtGui/QLabel>
+#include <QtGui/QLayout>
+#include <QtGui/QLineEdit>
+#include <QtGui/QSpinBox>
 
 ConfigGuiOpie::ConfigGuiOpie( const QSync::Member &member, QWidget *parent )
   : ConfigGui( member, parent )

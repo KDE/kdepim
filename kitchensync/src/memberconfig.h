@@ -22,7 +22,7 @@
 
 #include <libqopensync/member.h>
 
-#include <qwidget.h>
+#include <QtGui/QWidget>
 
 class QTextEdit;
 class ConfigGui;

@@ -21,7 +21,7 @@
 #ifndef SYNCPROCESS_H
 #define SYNCPROCESS_H
 
-#include <qobject.h>
+#include <QtCore/QObject>
 
 #include <libqopensync/group.h>
 

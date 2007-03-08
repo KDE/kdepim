@@ -21,7 +21,7 @@
 #ifndef SYNCPROCESSMANAGER_H
 #define SYNCPROCESSMANAGER_H
 
-#include <qobject.h>
+#include <QtCore/QObject>
 
 #include <libqopensync/group.h>
 

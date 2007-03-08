@@ -26,11 +26,11 @@
 #include <kcombobox.h>
 #include <kvbox.h>
 
-#include <qlayout.h>
-#include <qlabel.h>
-#include <qlineedit.h>
-#include <qcombobox.h>
-#include <qdom.h>
+#include <QtGui/QLayout>
+#include <QtGui/QLabel>
+#include <QtGui/QLineEdit>
+#include <QtGui/QComboBox>
+#include <QtXml/QtXml>
 
 ConfigGuiGnokii::ConfigGuiGnokii( const QSync::Member &member, QWidget *parent )
   : ConfigGui( member, parent )

@@ -31,11 +31,11 @@
 
 #include <kdebug.h>
 
-#include <qlabel.h>
-#include <qlayout.h>
-#include <qpushbutton.h>
-#include <qspinbox.h>
-#include <qtabwidget.h>
+#include <QtGui/QLabel>
+#include <QtGui/QLayout>
+#include <QtGui/QPushButton>
+#include <QtGui/QSpinBox>
+#include <QtGui/QTabWidget>
 
 #include "configguiirmc.h"
 

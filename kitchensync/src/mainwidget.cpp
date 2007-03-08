@@ -38,7 +38,7 @@
 #include <kstdaction.h>
 #include <kxmlguiclient.h>
 
-#include <qlayout.h>
+#include <QtGui/QLayout>
 
 MainWidget::MainWidget( KXMLGUIClient *guiClient, QWidget *widget )
   : QWidget( widget ), mGUIClient( guiClient )

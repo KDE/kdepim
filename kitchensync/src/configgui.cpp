@@ -40,9 +40,9 @@
 #include <klocale.h>
 #include <klineedit.h>
 
-#include <qlayout.h>
-#include <qlabel.h>
-#include <qtextedit.h>
+#include <QtGui/QLayout>
+#include <QtGui/QLabel>
+#include <QtGui/QTextEdit>
 
 ConfigGui::ConfigGui( const QSync::Member &member, QWidget *parent )
   : QWidget( parent ), mMember( member )

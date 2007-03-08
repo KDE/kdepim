@@ -22,7 +22,7 @@
 #ifndef OSYNC_ENVIRONMENT_H
 #define OSYNC_ENVIRONMENT_H
 
-#include <qstring.h>
+#include <QtCore/QString>
 
 #include <libqopensync/qopensync_export.h>
 #include <libqopensync/group.h>

@@ -37,9 +37,9 @@
 #include <kmessagebox.h>
 
 
-#include <qlabel.h>
-#include <qlayout.h>
-#include <qpushbutton.h>
+#include <QtGui/QLabel>
+#include <QtGui/QLayout>
+#include <QtGui/QPushButton>
 
 GroupConfig::GroupConfig( QWidget *parent )
   : QWidget( parent )

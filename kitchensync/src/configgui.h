@@ -23,7 +23,7 @@
 
 #include <libqopensync/member.h>
 
-#include <qwidget.h>
+#include <QtGui/QWidget>
 
 class QBoxLayout;
 class KLineEdit;

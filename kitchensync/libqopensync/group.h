@@ -22,8 +22,8 @@
 #ifndef QSYNC_GROUP_H
 #define QSYNC_GROUP_H
 
-#include <qdatetime.h>
-#include <qstringlist.h>
+#include <QtCore/QDateTime>
+#include <QtCore/QStringList>
 
 #include <libqopensync/qopensync_export.h>
 #include <libqopensync/filter.h>

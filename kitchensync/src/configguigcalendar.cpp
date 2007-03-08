@@ -24,10 +24,10 @@
 
 #include <klocale.h>
 
-#include <qlayout.h>
-#include <qlabel.h>
-#include <qdom.h>
-#include <qlineedit.h>
+#include <QtGui/QLayout>
+#include <QtGui/QLabel>
+#include <QtXml/QtXml>
+#include <QtGui/QLineEdit>
 
 ConfigGuiGoogleCalendar::ConfigGuiGoogleCalendar( const QSync::Member &member, QWidget *parent )
   : ConfigGui( member, parent )

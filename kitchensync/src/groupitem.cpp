@@ -27,10 +27,10 @@
 #include <kpassivepopup.h>
 #include <kurllabel.h>
 
-#include <qlabel.h>
-#include <qlayout.h>
-#include <qpixmap.h>
-#include <qprogressbar.h>
+#include <QtGui/QLabel>
+#include <QtGui/QLayout>
+#include <QtGui/QPixmap>
+#include <QtGui/QProgressBar>
 #include <QtGui/QVBoxLayout>
 
 #include "memberinfo.h"

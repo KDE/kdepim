@@ -19,7 +19,8 @@
     Boston, MA 02110-1301, USA.
 */
 
-#include <qstring.h>
+#include <QtCore/QString>
+
 #include <osengine/engine.h>
 
 #include "syncmapping.h"

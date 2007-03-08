@@ -23,7 +23,7 @@
 #define QSYNC_CONVERSION_H
 
 #include <libqopensync/qopensync_export.h>
-#include <qstringlist.h>
+#include <QtCore/QStringList>
 
 class OSyncEnv;
 

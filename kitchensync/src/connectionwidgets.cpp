@@ -28,14 +28,11 @@
 #include <klocale.h>
 #include <kmessagebox.h>
 
-#include <qapplication.h>
-#include <qeventloop.h>
-#include <qlabel.h>
-#include <qlayout.h>
-#include <qpushbutton.h>
-#include <qspinbox.h>
-#include <qtabwidget.h>
-#include <qtooltip.h>
+#include <QtGui/QLabel>
+#include <QtGui/QLayout>
+#include <QtGui/QPushButton>
+#include <QtGui/QSpinBox>
+#include <QtGui/QTabWidget>
 
 #include "connectionwidgets.h"
 

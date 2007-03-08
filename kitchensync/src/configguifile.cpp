@@ -25,10 +25,10 @@
 #include <klocale.h>
 #include <kdialog.h>
 
-#include <qlayout.h>
-#include <qcheckbox.h>
-#include <qlabel.h>
-#include <qdom.h>
+#include <QtGui/QLayout>
+#include <QtGui/QCheckBox>
+#include <QtGui/QLabel>
+#include <QtXml/QtXml>
 
 ConfigGuiFile::ConfigGuiFile( const QSync::Member &member, QWidget *parent )
   : ConfigGui( member, parent )

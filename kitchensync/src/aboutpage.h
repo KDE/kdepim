@@ -23,7 +23,7 @@
 
 #include <kurl.h>
 
-#include <qwidget.h>
+#include <QtGui/QWidget>
 
 class AboutPage : public QWidget
 {

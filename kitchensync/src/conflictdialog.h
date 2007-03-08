@@ -21,7 +21,7 @@
 #ifndef CONFLICTDIALOG_H
 #define CONFLICTDIALOG_H
 
-#include <qdialog.h>
+#include <QtGui/QDialog>
 
 #include <libqopensync/syncmapping.h>
 
