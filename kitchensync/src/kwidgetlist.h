@@ -75,10 +75,10 @@ class KWidgetListItem : public QWidget
     void setSelected( bool selected );
 
   protected:
-    void setForegroundColor( const QColor& );
-    void setBackgroundColor( const QColor& );
-    void setSelectionForegroundColor( const QColor& );
-    void setSelectionBackgroundColor( const QColor& );
+    void setForegroundColor( const QColor &color );
+    void setBackgroundColor( const QColor &color );
+    void setSelectionForegroundColor( const QColor &color );
+    void setSelectionBackgroundColor( const QColor &color );
 
   private:
     QColor mForegroundColor;

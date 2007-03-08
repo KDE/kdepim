@@ -36,7 +36,6 @@
 #include <klocale.h>
 #include <kmessagebox.h>
 
-
 #include <QtGui/QLabel>
 #include <QtGui/QLayout>
 #include <QtGui/QPushButton>
@@ -120,8 +119,9 @@ void GroupConfig::setSyncProcess( SyncProcess *process )
 
 void GroupConfig::updateMembers()
 {
-  for ( int i = 0; i < mMemberConfigs.count(); ++i )
+  for ( int i = 0; i < mMemberConfigs.count(); ++i ) {
     mMemberConfigs[ i ]->saveData();
+  }
 
   for ( int i = 0; i < mConfigPages.count(); ++i ) {
     mMemberView->removePage( mConfigPages[ i ] );
@@ -156,8 +156,9 @@ void GroupConfig::saveConfig()
 {
   mProcess->group().save();
 
-  for ( int i = 0; i < mMemberConfigs.count(); ++i )
+  for ( int i = 0; i < mMemberConfigs.count(); ++i ) {
     mMemberConfigs[ i ]->saveData();
+  }
 
   mCommonConfig->save();
 

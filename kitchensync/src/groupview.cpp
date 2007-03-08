@@ -36,13 +36,14 @@ GroupView::GroupView( QWidget *parent )
   mLayout->addWidget( mWidgetList );
 }
 
-SyncProcess* GroupView::selectedSyncProcess() const
+SyncProcess *GroupView::selectedSyncProcess() const
 {
   GroupItem *item = static_cast<GroupItem*>( mWidgetList->selectedItem() );
-  if ( item )
+  if ( item ) {
     return item->syncProcess();
-  else
+  } else {
     return 0;
+  }
 }
 
 void GroupView::clear()
@@ -69,8 +70,9 @@ void GroupView::updateView()
     mAboutPage->show();
 */
   } else {
-    if ( mAboutPage )
+    if ( mAboutPage ) {
       mAboutPage->hide();
+    }
     mWidgetList->show();
   }
 
@@ -93,8 +95,9 @@ void GroupView::updateSyncProcess( SyncProcess *syncProcess )
 {
   for ( int i = 0; i < (int)mWidgetList->count(); ++i ) {
     GroupItem *item = static_cast<GroupItem*>( mWidgetList->item( i ) );
-    if ( item && item->syncProcess() == syncProcess )
+    if ( item && item->syncProcess() == syncProcess ) {
       item->update();
+    }
   }
 }
 

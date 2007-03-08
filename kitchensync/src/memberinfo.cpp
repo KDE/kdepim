@@ -66,30 +66,61 @@ QString MemberInfo::name() const
 
   }
 
-  if ( mMember.name().isEmpty() )
-    return nameMap[ mMember.pluginName() ] + " (" + QString::number( mMember.id() ) + ") ";
-  else
+  if ( mMember.name().isEmpty() ) {
+    return nameMap[ mMember.pluginName() ] +
+      " (" + QString::number( mMember.id() ) + ") ";
+  } else {
     return mMember.name();
+  }
 }
 
 QString MemberInfo::pluginIconName( const QString &pluginName )
 {
-  if ( pluginName == "file-sync" ) return "folder";
-  if ( pluginName == "palm-sync" ) return "pda_black";
-  if ( pluginName == "kdepim-sync" ) return "kontact";
-  if ( pluginName == "kio-sync" ) return "network";
-  if ( pluginName == "irmc-sync" ) return "mobile_phone";
-  if ( pluginName == "evo2-sync" ) return "evolution";
-  if ( pluginName == "opie-sync" ) return "pda_blue";
-  if ( pluginName == "ldap-sync" ) return "contents2";
-  if ( pluginName == "syncml-obex-client" ) return "mobile_phone";
-  if ( pluginName == "syncml-http-server" ) return "pda_blue";
-  if ( pluginName == "moto-sync" ) return "mobile_phone";
-  if ( pluginName == "gnokii-sync" ) return "mobile_phone";
-  if ( pluginName == "google-calendar" ) return "www";
-  if ( pluginName == "gpe-sync" ) return "pda_blue";
-  if ( pluginName == "sunbird-sync" ) return "www";
-
+  if ( pluginName == "file-sync" ) {
+    return "folder";
+  }
+  if ( pluginName == "palm-sync" ) {
+    return "pda_black";
+  }
+  if ( pluginName == "kdepim-sync" ) {
+    return "kontact";
+  }
+  if ( pluginName == "kio-sync" ) {
+    return "network";
+  }
+  if ( pluginName == "irmc-sync" ) {
+    return "mobile_phone";
+  }
+  if ( pluginName == "evo2-sync" ) {
+    return "evolution";
+  }
+  if ( pluginName == "opie-sync" ) {
+    return "pda_blue";
+  }
+  if ( pluginName == "ldap-sync" ) {
+    return "contents2";
+  }
+  if ( pluginName == "syncml-obex-client" ) {
+    return "mobile_phone";
+  }
+  if ( pluginName == "syncml-http-server" ) {
+    return "pda_blue";
+  }
+  if ( pluginName == "moto-sync" ) {
+    return "mobile_phone";
+  }
+  if ( pluginName == "gnokii-sync" ) {
+    return "mobile_phone";
+  }
+  if ( pluginName == "google-calendar" ) {
+    return "www";
+  }
+  if ( pluginName == "gpe-sync" ) {
+    return "pda_blue";
+  }
+  if ( pluginName == "sunbird-sync" ) {
+    return "www";
+  }
 
   return QString();
 }

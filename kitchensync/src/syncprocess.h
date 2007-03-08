@@ -37,8 +37,10 @@ class SyncProcess : public QObject
     SyncProcess( const QSync::Group &group );
     ~SyncProcess();
 
-    QSync::Group group() const { return mGroup; }
-    QSync::Engine* engine() const { return mEngine; }
+    QSync::Group group() const
+      { return mGroup; }
+    QSync::Engine *engine() const
+      { return mEngine; }
 
     QString groupStatus() const;
     QString memberStatus( const QSync::Member &member ) const;

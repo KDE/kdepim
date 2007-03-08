@@ -33,7 +33,7 @@ ConfigGuiBlank::ConfigGuiBlank( const QSync::Member &member, QWidget *parent )
   topLayout()->addWidget( label );
 }
 
-void ConfigGuiBlank::load( const QString& )
+void ConfigGuiBlank::load( const QString &name )
 {
 }
 

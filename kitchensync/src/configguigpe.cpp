@@ -47,13 +47,14 @@ void ConfigGuiGpe::load( const QString &xml )
   doc.setContent( xml );
   QDomElement docElement = doc.documentElement();
   QDomNode node;
-  for( node = docElement.firstChild(); !node.isNull(); node = node.nextSibling() ) {
+  for ( node = docElement.firstChild(); !node.isNull(); node = node.nextSibling() ) {
     QDomElement element = node.toElement();
     if ( element.tagName() == "use_local" ) {
-      if ( element.text().toInt() == 1 )
+      if ( element.text().toInt() == 1 ) {
         mConnectionMode->setCurrentIndex( 0 );
-      else
+      } else {
         mConnectionMode->setCurrentIndex( 1 );
+      }
     } else if ( element.tagName() == "handheld_ip" ) {
       mIP->setText( element.text() );
     } else if ( element.tagName() == "handheld_port" ) {

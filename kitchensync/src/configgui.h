@@ -37,18 +37,20 @@ class ConfigGui : public QWidget
     class Factory
     {
       public:
-        static ConfigGui *create( const QSync::Member &, QWidget *parent );
+        static ConfigGui *create( const QSync::Member &member, QWidget *parent );
     };
 
-    void setInstanceName( const QString & );
+    void setInstanceName( const QString &name );
     QString instanceName() const;
 
     virtual void load( const QString &xml ) = 0;
     virtual QString save() = 0;
 
-    QSync::Member member() const { return mMember; }
+    QSync::Member member() const
+      { return mMember; }
 
-    QBoxLayout *topLayout() const { return mTopLayout; }
+    QBoxLayout *topLayout() const
+      { return mTopLayout; }
 
   private:
     QSync::Member mMember;

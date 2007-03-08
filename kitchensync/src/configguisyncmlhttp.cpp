@@ -82,7 +82,6 @@ ConfigGuiSyncmlHttp::ConfigGuiSyncmlHttp( const QSync::Member &member, QWidget *
 
   mNoteDb->addItem( "notes" );
 
-
   // Options
   QWidget *optionWidget = new QWidget( tabWidget );
   QVBoxLayout *optionLayout = new QVBoxLayout( optionWidget );
@@ -106,7 +105,6 @@ ConfigGuiSyncmlHttp::ConfigGuiSyncmlHttp( const QSync::Member &member, QWidget *
   mPassword = new KLineEdit( optionWidget );
   mPassword->setEchoMode( QLineEdit::Password );
   mGridLayout->addWidget( mPassword, 1, 1 );
-
 
   mUseStringTable = new QCheckBox( i18n("Use String Table"), optionWidget );
   mGridLayout->addWidget( mUseStringTable, 2, 2, 1, 1 );
@@ -140,9 +138,10 @@ ConfigGuiSyncmlHttp::ConfigGuiSyncmlHttp( const QSync::Member &member, QWidget *
   topLayout()->addStretch( 1 );
 }
 
-void ConfigGuiSyncmlHttp::addLineEdit( QWidget *parent, const QString &text, KComboBox **edit, int row )
+void ConfigGuiSyncmlHttp::addLineEdit( QWidget *parent, const QString &text,
+                                       KComboBox **edit, int row )
 {
-  QLabel *label = new QLabel( text, parent);
+  QLabel *label = new QLabel( text, parent );
   mGridLayout->addWidget( label, row, 0 );
 
   *edit = new KComboBox( true, parent );
@@ -164,17 +163,21 @@ void ConfigGuiSyncmlHttp::load( const QString &xml )
     } else if ( element.tagName() == "password" ) {
       mPassword->setText( element.text() );
     } else if ( element.tagName() == "url" ) {
-      if ( mUrl )
+      if ( mUrl ) {
         mUrl->setText( element.text() );
+      }
     } else if ( element.tagName() == "port" ) {
-      if ( mPort )
+      if ( mPort ) {
         mPort->setValue( element.text().toInt() );
+      }
     } else if ( element.tagName() == "recvLimit" ) {
-      if ( mRecvLimit )
+      if ( mRecvLimit ) {
         mRecvLimit->setValue( element.text().toInt() );
+      }
     } else if ( element.tagName() == "maxObjSize" ) {
-      if ( mMaxObjSize )
+      if ( mMaxObjSize ) {
         mMaxObjSize->setValue( element.text().toInt() );
+      }
     } else if ( element.tagName() == "usestringtable" ) {
       mUseStringTable->setChecked( element.text() == "1" );
     } else if ( element.tagName() == "onlyreplace" ) {
@@ -205,17 +208,19 @@ QString ConfigGuiSyncmlHttp::save()
   xml += "<maxObjSize>" + QString::number( mMaxObjSize->value() ) + "</maxObjSize>\n";
 
   xml += "<usestringtable>";
-  if ( mUseStringTable->isChecked() )
+  if ( mUseStringTable->isChecked() ) {
     xml += '1';
-  else
+  } else {
     xml += '0';
+  }
   xml += "</usestringtable>\n";
 
   xml += "<onlyreplace>";
-  if ( mOnlyReplace->isChecked() )
+  if ( mOnlyReplace->isChecked() ) {
     xml += '1';
-  else
+  } else {
     xml += '0';
+  }
   xml += "</onlyreplace>\n";
 
   xml += "<contact_db>" + mContactDb->currentText() + "</contact_db>\n";

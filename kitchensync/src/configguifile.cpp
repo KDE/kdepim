@@ -58,7 +58,7 @@ void ConfigGuiFile::load( const QString &xml )
   doc.setContent( xml );
   QDomElement docElement = doc.documentElement();
   QDomNode n;
-  for( n = docElement.firstChild(); !n.isNull(); n = n.nextSibling() ) {
+  for ( n = docElement.firstChild(); !n.isNull(); n = n.nextSibling() ) {
     QDomElement e = n.toElement();
     if ( e.tagName() == "path" ) {
       mFilename->setUrl( e.text() );
@@ -74,8 +74,11 @@ QString ConfigGuiFile::save()
   xml = "<config>";
   xml += "<path>" + mFilename->url().url() + "</path>";
   xml += "<recursive>";
-  if ( mRecursive->isChecked() ) xml += "TRUE";
-  else xml += "FALSE";
+  if ( mRecursive->isChecked() ) {
+    xml += "TRUE";
+  } else {
+    xml += "FALSE";
+  }
   xml += "</recursive>";
   xml += "</config>";
 

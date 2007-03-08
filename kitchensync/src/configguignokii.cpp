@@ -44,14 +44,14 @@ ConfigGuiGnokii::ConfigGuiGnokii( const QSync::Member &member, QWidget *parent )
 
   mModel = new KComboBox( true, this );
   layout->addWidget( mModel, 0, 1 );
-  mModel->addItem( "2110" ); 
-  mModel->addItem( "3110" ); 
-  mModel->addItem( "6110" ); 
-  mModel->addItem( "6110" ); 
-  mModel->addItem( "6160" ); 
+  mModel->addItem( "2110" );
+  mModel->addItem( "3110" );
+  mModel->addItem( "6110" );
+  mModel->addItem( "6110" );
+  mModel->addItem( "6160" );
   mModel->addItem( "6230" );
   mModel->addItem( "6230i" );
-  mModel->addItem( "6510" ); 
+  mModel->addItem( "6510" );
   mModel->addItem( "7110" );
   mModel->addItem( "AT" );
   // This one requires the gnapplet and rfcomm_channel
@@ -61,7 +61,7 @@ ConfigGuiGnokii::ConfigGuiGnokii( const QSync::Member &member, QWidget *parent )
   mModel->addItem( "symbian" );
   mModel->addItem( "sx1" );
 
-  connect( mModel, SIGNAL (activated( int ) ),
+  connect( mModel, SIGNAL ( activated( int ) ),
     this, SLOT( slotModelChanged () ) );
 
   // Connection
@@ -71,11 +71,11 @@ ConfigGuiGnokii::ConfigGuiGnokii( const QSync::Member &member, QWidget *parent )
   mConnection = new QComboBox( this );
   layout->addWidget( mConnection, 1, 1 );
 
-  connect( mConnection, SIGNAL (activated( int ) ),
+  connect( mConnection, SIGNAL ( activated( int ) ),
       	    this, SLOT( slotConnectionChanged ( int ) ) );
 
   // this is a list of all connection types accepted by the gnokii-sync plugin
-  mConnectionTypes.append( ConnectionType( "bluetooth",  i18n( "Bluetooth" ) ) );
+  mConnectionTypes.append( ConnectionType( "bluetooth", i18n( "Bluetooth" ) ) );
   mConnectionTypes.append( ConnectionType( "irda", i18n( "IrDA" ) ) );
   mConnectionTypes.append( ConnectionType( "serial", i18n( "Serial" ) ) );
   mConnectionTypes.append( ConnectionType( "infrared", i18n( "Infrared" ) ) );
@@ -96,7 +96,7 @@ ConfigGuiGnokii::ConfigGuiGnokii( const QSync::Member &member, QWidget *parent )
   connectionWidget->setMargin( KDialog::marginHint() );
   connectionWidget->setSpacing( 5 );
 
-  mBluetooth = new BluetoothWidget( connectionWidget ); 
+  mBluetooth = new BluetoothWidget( connectionWidget );
   mBluetooth->hide();
 
   layout->addWidget( connectionWidget, 2, 0, 1, 2 );
@@ -133,8 +133,9 @@ void ConfigGuiGnokii::slotConnectionChanged( int nth )
     mBluetooth->show();
     slotModelChanged();
 
-    if ( !mPort->currentText().isEmpty() )
+    if ( !mPort->currentText().isEmpty() ) {
       mBluetooth->setAddress( mPort->currentText() );
+    }
 
   // dku2libusb
   } else if ( nth == 6 ) {
@@ -150,14 +151,15 @@ void ConfigGuiGnokii::slotModelChanged()
 {
   mBluetooth->hideChannel();
 
-  if ( mModel->currentText() == "gnapplet"
-    || mModel->currentText() == "symbian"
-    || mModel->currentText() == "3650"
-    || mModel->currentText() == "6600"
-    || mModel->currentText() == "sx1")
+  if ( mModel->currentText() == "gnapplet" ||
+       mModel->currentText() == "symbian" ||
+       mModel->currentText() == "3650" ||
+       mModel->currentText() == "6600" ||
+       mModel->currentText() == "sx1" ) {
     mBluetooth->showChannel();
-  else
+  } else {
     mBluetooth->setChannel("");
+  }
 }
 
 void ConfigGuiGnokii::load( const QString &xml )
@@ -166,7 +168,7 @@ void ConfigGuiGnokii::load( const QString &xml )
   doc.setContent( xml );
   QDomElement docElement = doc.documentElement();
   QDomNode n;
-  for( n = docElement.firstChild(); !n.isNull(); n = n.nextSibling() ) {
+  for ( n = docElement.firstChild(); !n.isNull(); n = n.nextSibling() ) {
     QDomElement e = n.toElement();
     if ( e.tagName() == "connection" ) {
       for ( int i = 0; i < mConnectionTypes.count(); i++ ) {
@@ -178,16 +180,18 @@ void ConfigGuiGnokii::load( const QString &xml )
       }
     } else if ( e.tagName() == "port" ) {
       int pos = mPort->findText( e.text() );
-      if ( pos == -1 )
+      if ( pos == -1 ) {
         mPort->insertItem( 0, e.text() );
-      else
+      } else {
         mPort->setCurrentIndex( pos );
+      }
     } else if ( e.tagName() == "model" ) {
       int pos = mModel->findText( e.text() );
-      if ( pos == -1 )
+      if ( pos == -1 ) {
         mModel->insertItem( 0, e.text() );
-      else
+      } else {
         mModel->setCurrentIndex( pos );
+      }
     } else if ( e.tagName() == "rfcomm_channel" ) {
       mBluetooth->setChannel( e.text() );
       mBluetooth->showChannel();
@@ -208,19 +212,21 @@ QString ConfigGuiGnokii::save()
     }
   }
 
-  if ( (*it).first == "bluetooth" )
+  if ( (*it).first == "bluetooth" ) {
     xml += "<port>" + mBluetooth->address() + "</port>";
-  else if ( (*it).first == "dku2libusb" )
+  } else if ( (*it).first == "dku2libusb" ) {
     xml += "<port>" + QString("FF:FF:FF:FF:FF:FF") + "</port>"; // Only place holder for libgnokii
-  else
+  } else {
     xml += "<port>" + mPort->currentText() + "</port>";
+  }
 
   // model
   xml += "<model>" + mModel->currentText() + "</model>";
 
   // rfcomm_channel
-  if ( !mBluetooth->channel().isNull() )
+  if ( !mBluetooth->channel().isNull() ) {
     xml += "<rfcomm_channel>" + mBluetooth->channel() + "</rfcomm_channel>";
+  }
 
   xml += "</config>";
 

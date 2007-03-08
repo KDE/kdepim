@@ -96,7 +96,7 @@ void ConfigGuiOpie::load( const QString &xml )
   doc.setContent( xml );
   QDomElement docElement = doc.documentElement();
   QDomNode n;
-  for( n = docElement.firstChild(); !n.isNull(); n = n.nextSibling() ) {
+  for ( n = docElement.firstChild(); !n.isNull(); n = n.nextSibling() ) {
     QDomElement e = n.toElement();
     if ( e.tagName() == "username" ) {
       mUserName->setText( e.text() );
@@ -107,15 +107,17 @@ void ConfigGuiOpie::load( const QString &xml )
     } else if ( e.tagName() == "port" ) {
       mPort->setValue( e.text().toInt() );
     } else if ( e.tagName() == "device" ) {
-      if ( e.text() == "opie" )
+      if ( e.text() == "opie" ) {
         mDeviceType->setCurrentIndex( 0 );
-      else
+      } else {
         mDeviceType->setCurrentIndex( 1 );
+      }
     } else if ( e.tagName() == "conntype" ) {
-      if ( e.text() == "scp" )
+      if ( e.text() == "scp" ) {
         mConnectionType->setCurrentIndex( 0 );
-      else
+      } else {
         mConnectionType->setCurrentIndex( 1 );
+      }
     }
   }
 }
@@ -127,9 +129,13 @@ QString ConfigGuiOpie::save()
   xml += "<username>" + mUserName->text() + "</username>";
   xml += "<password>" + mPassword->text() + "</password>";
   xml += "<url>" + mDeviceIP->text() + "</url>";
-  xml += "<device>" + QString( mDeviceType->currentIndex() == 0 ? "opie" : "qtopia2" ) + "</device>";
+  xml += "<device>" +
+         QString( mDeviceType->currentIndex() == 0 ? "opie" : "qtopia2" ) +
+         "</device>";
   xml += "<port>" + QString::number( mPort->value() ) + "</port>";
-  xml += "<conntype>" + QString( mConnectionType->currentIndex() == 0 ? "scp" : "ftp" ) + "</conntype>";
+  xml += "<conntype>" +
+         QString( mConnectionType->currentIndex() == 0 ? "scp" : "ftp" ) +
+         "</conntype>";
   xml += "</config>";
 
   return xml;

@@ -60,7 +60,7 @@ void ConfigGuiPalm::load( const QString &xml )
   doc.setContent( xml );
   QDomElement docElement = doc.documentElement();
   QDomNode node;
-  for( node = docElement.firstChild(); !node.isNull(); node = node.nextSibling() ) {
+  for ( node = docElement.firstChild(); !node.isNull(); node = node.nextSibling() ) {
     QDomElement element = node.toElement();
     if ( element.tagName() == "sockaddr" ) {
       mDevice->setCurrentIndex( mDevice->findText( element.text() ) );
@@ -103,12 +103,13 @@ QString ConfigGuiPalm::save()
   config += "<popup>" + QString( mPopup->isChecked() ? "1" : "0" ) + "</popup>";
 
   QString popup;
-  if ( mSyncAlways->isChecked() )
+  if ( mSyncAlways->isChecked() ) {
     popup = "0";
-  else if ( mSyncAsk->isChecked() )
+  } else if ( mSyncAsk->isChecked() ) {
     popup = "1";
-  else if ( mSyncAbort->isChecked() )
+  } else if ( mSyncAbort->isChecked() ) {
     popup = "2";
+  }
 
   config += "<mismatch>" + popup + "</mismatch>";
 

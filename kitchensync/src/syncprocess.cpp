@@ -38,8 +38,9 @@ SyncProcess::SyncProcess( const QSync::Group &group )
   mEngine = new QSync::Engine( mGroup );
 
   Result result = mEngine->initialize();
-  if ( result.isError() )
+  if ( result.isError() ) {
     kDebug() << "SyncProcess::SyncProcess: " << result.message() << endl;
+  }
 }
 
 SyncProcess::~SyncProcess()
@@ -66,8 +67,9 @@ QSync::Result SyncProcess::addMember( const QSync::Plugin &plugin )
   QSync::Member member = mGroup.addMember();
   QSync::Result result = member.instance( plugin );
 
-  if ( !result.isError() )
+  if ( !result.isError() ) {
     mGroup.save();
+  }
 
   return result;
 }
@@ -78,8 +80,9 @@ void SyncProcess::reinitEngine()
   delete mEngine;
   mEngine = new QSync::Engine( mGroup );
   Result result = mEngine->initialize();
-  if ( result.isError() )
+  if ( result.isError() ) {
     kDebug() << "SyncProcess::reinitEngine: " << result.message() << endl;
+  }
 
   applyObjectTypeFilter();
 

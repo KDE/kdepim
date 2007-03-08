@@ -36,25 +36,25 @@ ConfigGuiGoogleCalendar::ConfigGuiGoogleCalendar( const QSync::Member &member, Q
   topLayout()->addLayout( layout );
 
   QLabel *userLbl= new QLabel( i18n("Username:"), this );
-  layout->addWidget(userLbl, 0, 0);
+  layout->addWidget( userLbl, 0, 0 );
 
-  mUsername = new QLineEdit(this);
-  layout->addWidget(mUsername, 0, 1);
+  mUsername = new QLineEdit( this );
+  layout->addWidget( mUsername, 0, 1 );
 
   QLabel *passLbl = new QLabel( i18n("Password:"), this );
-  layout->addWidget(passLbl, 1, 0);
+  layout->addWidget( passLbl, 1, 0 );
 
-  mPassword = new QLineEdit(this);
-  mPassword->setEchoMode(QLineEdit::Password);
-  layout->addWidget(mPassword, 1, 1);
+  mPassword = new QLineEdit( this );
+  mPassword->setEchoMode( QLineEdit::Password );
+  layout->addWidget( mPassword, 1, 1 );
 
-  layout->addWidget(new QLabel( i18n("Please notice that currently the password is stored as plain text in the plugin configuration file"), this ), 2, 0, 1, 2);
+  layout->addWidget( new QLabel( i18n("Please notice that currently the password is stored as plain text in the plugin configuration file"), this ), 2, 0, 1, 2 );
 
   QLabel *urlLbl = new QLabel( i18n("Calendar URL:"), this );
-  layout->addWidget(urlLbl, 3, 0);
+  layout->addWidget( urlLbl, 3, 0 );
 
-  mUrl = new QLineEdit(this);
-  layout->addWidget(mUrl, 3, 1);
+  mUrl = new QLineEdit( this );
+  layout->addWidget( mUrl, 3, 1 );
 
   topLayout()->addStretch( 1 );
 }
@@ -65,14 +65,14 @@ void ConfigGuiGoogleCalendar::load( const QString &xml )
   doc.setContent( xml );
   QDomElement docElement = doc.documentElement();
   QDomNode n;
-  for( n = docElement.firstChild(); !n.isNull(); n = n.nextSibling() ) {
+  for ( n = docElement.firstChild(); !n.isNull(); n = n.nextSibling() ) {
     QDomElement e = n.toElement();
     if ( e.tagName() == "username" ) {
-      mUsername->setText(e.text());
+      mUsername->setText( e.text() );
     } else if ( e.tagName() == "password" ) {
-      mPassword->setText(e.text());
+      mPassword->setText( e.text() );
     } else if ( e.tagName() == "url" ) {
-      mUrl->setText(e.text());
+      mUrl->setText( e.text() );
     }
   }
 }
@@ -80,20 +80,20 @@ void ConfigGuiGoogleCalendar::load( const QString &xml )
 QString ConfigGuiGoogleCalendar::save()
 {
   QDomDocument doc;
-  QDomElement root = doc.createElement("config");
-  doc.appendChild(root);
+  QDomElement root = doc.createElement( "config" );
+  doc.appendChild( root );
 
-  QDomElement un = doc.createElement("username");
-  root.appendChild(un);
-  un.appendChild(doc.createTextNode(mUsername->text()));
+  QDomElement un = doc.createElement( "username" );
+  root.appendChild( un );
+  un.appendChild( doc.createTextNode( mUsername->text() ) );
 
-  QDomElement pass = doc.createElement("password");
-  root.appendChild(pass);
-  pass.appendChild(doc.createTextNode(mPassword->text()));
+  QDomElement pass = doc.createElement( "password" );
+  root.appendChild( pass );
+  pass.appendChild( doc.createTextNode( mPassword->text() ) );
 
-  QDomElement url = doc.createElement("url");
-  root.appendChild(url);
-  url.appendChild(doc.createTextNode(mUrl->text()));
+  QDomElement url = doc.createElement( "url" );
+  root.appendChild( url );
+  url.appendChild(doc.createTextNode( mUrl->text() ) );
 
   return doc.toString();
 }

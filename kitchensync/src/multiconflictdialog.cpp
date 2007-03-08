@@ -13,9 +13,9 @@
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
     GNU General Public License for more details.
 
-    You should have received a copy of the GNU General Public License
-    along with this program; if not, write to the Free Software
-    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+    You should have received a copy of the GNU General Public License along
+    with this program; if not, write to the Free Software Foundation, Inc.,
+    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 */
 
 #include <kdialog.h>
@@ -67,13 +67,15 @@ class ChangeItem : public KWidgetListItem
       layout->addWidget( new QLabel( type, this ), 1, 0 );
     }
 
-    QSync::SyncChange change() const { return mChange; }
+    QSync::SyncChange change() const
+      { return mChange; }
 
   private:
     QSync::SyncChange mChange;
 };
 
-MultiConflictDialog::MultiConflictDialog( QSync::SyncMapping &mapping, QWidget *parent )
+MultiConflictDialog::MultiConflictDialog( QSync::SyncMapping &mapping,
+                                          QWidget *parent )
   : ConflictDialog( mapping, parent )
 {
   initGUI();
@@ -96,8 +98,9 @@ MultiConflictDialog::~MultiConflictDialog()
 void MultiConflictDialog::useSelectedChange()
 {
   ChangeItem *item = static_cast<ChangeItem*>( mWidgetList->selectedItem() );
-  if ( !item )
+  if ( !item ) {
     return;
+  }
 
   mMapping.solve( item->change() );
 

@@ -32,8 +32,10 @@ namespace KSync {
 class AddresseeDiffAlgo : public DiffAlgo
 {
   public:
-    AddresseeDiffAlgo( const KABC::Addressee &leftAddressee, const KABC::Addressee &rightAddressee );
-    AddresseeDiffAlgo( const QString &leftAddressee, const QString &rightAddressee );
+    AddresseeDiffAlgo( const KABC::Addressee &leftAddressee,
+                       const KABC::Addressee &rightAddressee );
+    AddresseeDiffAlgo( const QString &leftAddressee,
+                       const QString &rightAddressee );
 
     void run();
 

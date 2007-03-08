@@ -52,15 +52,16 @@ ConfigGuiSyncmlObex::ConfigGuiSyncmlObex( const QSync::Member &member, QWidget *
 
   mConnection = new KComboBox( connectionWidget );
 
-  connect( mConnection, SIGNAL (activated( int ) ),
+  connect( mConnection, SIGNAL ( activated( int ) ),
            this, SLOT( slotConnectionChanged ( int ) ) );
 
   mConnectionTypes.append( ConnectionType( 2, i18n( "Bluetooth" ) ) );
   mConnectionTypes.append( ConnectionType( 5, i18n( "USB" ) ) );
 
   ConnectionTypeList::ConstIterator it;
-  for ( it = mConnectionTypes.begin(); it != mConnectionTypes.end(); it++ )
+  for ( it = mConnectionTypes.begin(); it != mConnectionTypes.end(); it++ ) {
     mConnection->addItem( (*it).second );
+  }
 
   mBluetooth = new BluetoothWidget( connectionWidget );
   mBluetooth->hide();
@@ -130,13 +131,14 @@ ConfigGuiSyncmlObex::ConfigGuiSyncmlObex( const QSync::Member &member, QWidget *
   mSyncmlVersion = new QComboBox( optionsWidget );
   mGridLayout->addWidget( mSyncmlVersion, 4, 1 );
 
-  mSyncmlVersions.append( SyncmlVersion( 0,  i18n( "1.0" ) ) );
-  mSyncmlVersions.append( SyncmlVersion( 1,  i18n( "1.1" ) ) );
-  mSyncmlVersions.append( SyncmlVersion( 2,  i18n( "1.2" ) ) );
+  mSyncmlVersions.append( SyncmlVersion( 0, i18n( "1.0" ) ) );
+  mSyncmlVersions.append( SyncmlVersion( 1, i18n( "1.1" ) ) );
+  mSyncmlVersions.append( SyncmlVersion( 2, i18n( "1.2" ) ) );
 
   SyncmlVersionList::ConstIterator itVersion;
-  for ( itVersion = mSyncmlVersions.begin(); itVersion != mSyncmlVersions.end(); itVersion++ )
+  for ( itVersion = mSyncmlVersions.begin(); itVersion != mSyncmlVersions.end(); itVersion++ ) {
     mSyncmlVersion->addItem( (*itVersion).second );
+  }
 
   // WBXML
   mWbxml = new QCheckBox( i18n("WAP Binary XML"), optionsWidget );
@@ -176,10 +178,11 @@ void ConfigGuiSyncmlObex::slotConnectionChanged( int pos )
   mUsb->hide();
   mBluetooth->hide();
 
-  if ( pos == 0 )
+  if ( pos == 0 ) {
     mBluetooth->show();
-  else if ( pos == 1 )
+  } else if ( pos == 1 ) {
     mUsb->show();
+  }
 }
 
 void ConfigGuiSyncmlObex::load( const QString &xml )
@@ -190,7 +193,7 @@ void ConfigGuiSyncmlObex::load( const QString &xml )
   QDomElement docElement = document.documentElement();
 
   QDomNode node;
-  for( node = docElement.firstChild(); !node.isNull(); node = node.nextSibling() ) {
+  for ( node = docElement.firstChild(); !node.isNull(); node = node.nextSibling() ) {
     QDomElement element = node.toElement();
     if ( element.tagName() == "username" ) {
       mUsername->setText( element.text() );
@@ -212,19 +215,33 @@ void ConfigGuiSyncmlObex::load( const QString &xml )
         }
       }
     } else if ( element.tagName() == "bluetooth_address" ) {
-      if ( mBluetooth ) mBluetooth->setAddress( element.text() );
+      if ( mBluetooth ) {
+        mBluetooth->setAddress( element.text() );
+      }
     } else if ( element.tagName() == "bluetooth_channel" ) {
-      if ( mBluetooth ) mBluetooth->setChannel( element.text() );
+      if ( mBluetooth ) {
+        mBluetooth->setChannel( element.text() );
+      }
     } else if ( element.tagName() == "identifier" ) {
-      if ( mIdentifier ) mIdentifier->setCurrentIndex( mIdentifier->findText( element.text() ) );
+      if ( mIdentifier ) {
+        mIdentifier->setCurrentIndex( mIdentifier->findText( element.text() ) );
+      }
     } else if ( element.tagName() == "interface" ) {
-      if ( mUsb ) mUsb->setInterface( element.text().toInt() );
+      if ( mUsb ) {
+        mUsb->setInterface( element.text().toInt() );
+      }
     } else if ( element.tagName() == "wbxml" ) {
-      if ( mWbxml) mWbxml->setChecked( element.text() == "1" );
+      if ( mWbxml ) {
+        mWbxml->setChecked( element.text() == "1" );
+      }
     } else if ( element.tagName() == "recvLimit" ) {
-      if ( mRecvLimit ) mRecvLimit->setValue( element.text().toInt() );
+      if ( mRecvLimit ) {
+        mRecvLimit->setValue( element.text().toInt() );
+      }
     } else if ( element.tagName() == "maxObjSize" ) {
-      if ( mMaxObjSize ) mMaxObjSize->setValue( element.text().toInt() );
+      if ( mMaxObjSize ) {
+        mMaxObjSize->setValue( element.text().toInt() );
+      }
     } else if ( element.tagName() == "usestringtable" ) {
       mUseStringTable->setChecked( element.text() == "1" );
     } else if ( element.tagName() == "onlyreplace" ) {
@@ -276,10 +293,11 @@ QString ConfigGuiSyncmlObex::save()
 
   // WBXML
   xml += "<wbxml>";
-  if ( mWbxml->isChecked() )
+  if ( mWbxml->isChecked() ) {
     xml += '1';
-  else
+  } else {
     xml += '0';
+  }
   xml += "</wbxml>\n";
 
   // Receive Limit
@@ -289,17 +307,19 @@ QString ConfigGuiSyncmlObex::save()
   xml += "<maxObjSize>" + QString::number( mMaxObjSize->value() ) + "</maxObjSize>\n";
 
   xml += "<usestringtable>";
-  if ( mUseStringTable->isChecked() )
+  if ( mUseStringTable->isChecked() ) {
     xml += '1';
-  else
+  } else {
     xml += '0';
+  }
   xml += "</usestringtable>\n";
 
   xml += "<onlyreplace>";
-  if ( mOnlyReplace->isChecked() )
+  if ( mOnlyReplace->isChecked() ) {
     xml += '1';
-  else
+  } else {
     xml += '0';
+  }
   xml += "</onlyreplace>\n";
 
   xml += "<contact_db>" + mContactDb->currentText() + "</contact_db>\n";
@@ -310,7 +330,8 @@ QString ConfigGuiSyncmlObex::save()
   return xml;
 }
 
-void ConfigGuiSyncmlObex::addLineEdit( QWidget *parent, const QString &text, KComboBox **edit, int row )
+void ConfigGuiSyncmlObex::addLineEdit( QWidget *parent, const QString &text,
+                                       KComboBox **edit, int row )
 {
   QLabel *label = new QLabel( text, parent );
   mGridLayout->addWidget( label, row, 0 );

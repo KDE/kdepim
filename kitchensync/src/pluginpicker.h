@@ -31,9 +31,10 @@
 class PluginItem : public KWidgetListItem
 {
   public:
-   PluginItem( KWidgetList *, const QSync::Plugin & );
+   PluginItem( KWidgetList *list, const QSync::Plugin &plugin );
 
-   QSync::Plugin plugin() const { return mPlugin; }
+   QSync::Plugin plugin() const
+      { return mPlugin; }
 
   private:
     QSync::Plugin mPlugin;

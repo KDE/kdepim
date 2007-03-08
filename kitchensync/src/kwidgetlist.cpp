@@ -72,8 +72,9 @@ uint KWidgetList::count() const
 
 void KWidgetList::appendItem( KWidgetListItem *item )
 {
-  if ( !item )
+  if ( !item ) {
     return;
+  }
 
   if ( !d->mItems.contains( item ) ) {
     d->mItems.append( item );
@@ -85,34 +86,38 @@ void KWidgetList::appendItem( KWidgetListItem *item )
     if ( d->mItems.count() == 1 ) {
       d->mSelectedItem = item;
     } else {
-      if ( !d->mSelectedItem )
+      if ( !d->mSelectedItem ) {
         setSelected( item );
-      else
+      } else {
         d->mSelectedItem->setSelected( true );
+      }
     }
   }
 }
 
 void KWidgetList::removeItem( int index )
 {
-  if ( index < 0 || index >= (int)d->mItems.count() )
+  if ( index < 0 || index >= (int)d->mItems.count() ) {
     return;
+  }
 
   KWidgetListItem *item = d->mItems[ index ];
   d->mItems.removeAll( item );
 
   if ( d->mSelectedItem == item ) {
     // TODO: smarter selection
-    if ( !d->mItems.isEmpty() )
+    if ( !d->mItems.isEmpty() ) {
       setSelected( d->mItems.first() );
-    else
+    } else {
       d->mSelectedItem = 0;
+    }
   }
 
   delete item;
 
-  if ( d->mItems.count() == 1 )
+  if ( d->mItems.count() == 1 ) {
     d->mItems.first()->setSelected( false );
+  }
 }
 
 void KWidgetList::takeItem( KWidgetListItem *item )
@@ -124,23 +129,27 @@ void KWidgetList::takeItem( KWidgetListItem *item )
 
   if ( d->mSelectedItem == item ) {
     // TODO: smarter selection
-    if ( !d->mItems.isEmpty() )
+    if ( !d->mItems.isEmpty() ) {
       setSelected( d->mItems.first() );
-    else
+    } else {
       d->mSelectedItem = 0;
+    }
   }
 }
 
 void KWidgetList::setSelected( KWidgetListItem *item )
 {
-  if ( !item )
+  if ( !item ) {
     return;
+  }
 
-  if ( d->mItems.contains( item ) == 0 )
+  if ( d->mItems.contains( item ) == 0 ) {
     return;
+  }
 
-  if ( d->mSelectedItem )
+  if ( d->mSelectedItem ) {
     d->mSelectedItem->setSelected( false );
+  }
 
   item->setSelected( true );
   d->mSelectedItem = item;
@@ -153,7 +162,7 @@ void KWidgetList::setSelected( int index )
 
 bool KWidgetList::isSelected( KWidgetListItem *item ) const
 {
-  return ( d->mSelectedItem == item );
+  return d->mSelectedItem == item;
 }
 
 bool KWidgetList::isSelected( int index ) const
@@ -168,10 +177,11 @@ KWidgetListItem *KWidgetList::selectedItem() const
 
 KWidgetListItem *KWidgetList::item( int index ) const
 {
-  if ( index < 0 || index >= (int)d->mItems.count() )
+  if ( index < 0 || index >= (int)d->mItems.count() ) {
     return 0;
-  else
+  } else {
     return d->mItems[ index ];
+  }
 }
 
 int KWidgetList::index( KWidgetListItem *item ) const
@@ -181,8 +191,9 @@ int KWidgetList::index( KWidgetListItem *item ) const
 
 void KWidgetList::clear()
 {
-  for ( int i = 0; i < d->mItems.count(); ++i )
+  for ( int i = 0; i < d->mItems.count(); ++i ) {
     delete d->mItems[ i ];
+  }
 
   d->mItems.clear();
 
@@ -227,7 +238,8 @@ bool KWidgetList::eventFilter( QObject *object, QEvent *event )
       if ( d->mSelectedItem == 0 ) {
         if ( !d->mItems.isEmpty() ) {
           setSelected( d->mItems.first() );
-          ensureVisible( d->mItems.first()->x(), d->mItems.first()->y(), 50, 150 );
+          ensureVisible( d->mItems.first()->x(),
+                         d->mItems.first()->y(), 50, 150 );
           return true;
         }
       }
@@ -236,7 +248,8 @@ bool KWidgetList::eventFilter( QObject *object, QEvent *event )
         if ( d->mItems[ i ] == d->mSelectedItem ) {
           if ( ( i - 1 ) >= 0 ) {
             setSelected( d->mItems[ i - 1 ] );
-            ensureVisible( d->mItems[ i - 1 ]->x(), d->mItems[ i - 1 ]->y(), 50, 150 );
+            ensureVisible( d->mItems[ i - 1 ]->x(),
+                           d->mItems[ i - 1 ]->y(), 50, 150 );
             return true;
           }
         }
@@ -246,19 +259,22 @@ bool KWidgetList::eventFilter( QObject *object, QEvent *event )
       if ( d->mSelectedItem == 0 ) {
         if ( !d->mItems.isEmpty() ) {
           setSelected( d->mItems.last() );
-          ensureVisible( d->mItems.last()->x(), d->mItems.last()->y(), 50, 150 );
+          ensureVisible( d->mItems.last()->x(),
+                         d->mItems.last()->y(), 50, 150 );
           return true;
         }
       }
 
-      for ( int i = 0; i < d->mItems.count(); ++i )
+      for ( int i = 0; i < d->mItems.count(); ++i ) {
         if ( d->mItems[ i ] == d->mSelectedItem ) {
           if ( ( i + 1 ) < d->mItems.count() ) {
             setSelected( d->mItems[ i + 1 ] );
-            ensureVisible( d->mItems[ i + 1 ]->x(), d->mItems[ i + 1 ]->y(), 50, 150 );
+            ensureVisible( d->mItems[ i + 1 ]->x(),
+                           d->mItems[ i + 1 ]->y(), 50, 150 );
             return true;
           }
         }
+      }
       return true;
     }
   }

@@ -57,12 +57,18 @@ AboutPage::AboutPage( QWidget *parent )
 
   QString location = KStandardDirs::locate( "data", "kitchensync/about/main.html" );
   QString content = readFile( location );
-  qDebug("path=%s", qPrintable(KStandardDirs::locate( "data", "libkdepim/about/kde_infopage.css" )));
-  content = content.arg( KStandardDirs::locate( "data", "libkdepim/about/kde_infopage.css" ) );
-  if ( QApplication::layoutDirection() == Qt::RightToLeft )
-    content = content.arg( "@import \"%1\";" ).arg( KStandardDirs::locate( "data", "libkdepim/about/kde_infopage_rtl.css" ) );
-  else
+  qDebug( "path=%s",
+          qPrintable( KStandardDirs::locate( "data",
+                                             "libkdepim/about/kde_infopage.css" ) ) );
+  content = content.arg( KStandardDirs::locate( "data",
+                                                "libkdepim/about/kde_infopage.css" ) );
+  if ( QApplication::layoutDirection() == Qt::RightToLeft ) {
+    content = content.arg( "@import \"%1\";" )
+              .arg( KStandardDirs::locate( "data",
+                                           "libkdepim/about/kde_infopage_rtl.css" ) );
+  } else {
     content = content.arg( "" );
+  }
 
   KHTMLPart *part = new KHTMLPart( this );
   layout->addWidget( part->view() );
@@ -89,10 +95,12 @@ AboutPage::AboutPage( QWidget *parent )
 void AboutPage::handleUrl( const KUrl &url )
 {
   if ( url.protocol() == "exec" ) {
-    if ( url.path() == "/addGroup" )
+    if ( url.path() == "/addGroup" ) {
       emit addGroup();
-  } else
+    }
+  } else {
     new KRun( url, this );
+  }
 }
 
 QString AboutPage::htmlText() const
@@ -100,15 +108,16 @@ QString AboutPage::htmlText() const
   KIconLoader *iconloader = KIconLoader::global();
   int iconSize = iconloader->currentSize( K3Icon::Desktop );
 
-  QString handbook_icon_path = iconloader->iconPath( "contents2",  K3Icon::Desktop );
-  QString html_icon_path = iconloader->iconPath( "html",  K3Icon::Desktop );
-  QString wizard_icon_path = iconloader->iconPath( "wizard",  K3Icon::Desktop );
+  QString handbook_icon_path = iconloader->iconPath( "contents2", K3Icon::Desktop );
+  QString html_icon_path = iconloader->iconPath( "html", K3Icon::Desktop );
+  QString wizard_icon_path = iconloader->iconPath( "wizard", K3Icon::Desktop );
 
   QString info = QString( "<h2 style='text-align:center; margin-top: 0px;'>%1 %2</h2>" )
-              .arg( i18n( "Welcome to KitchenSync" ), KGlobal::mainComponent().aboutData()->version() );
+                 .arg( i18n( "Welcome to KitchenSync" ),
+                       KGlobal::mainComponent().aboutData()->version() );
 
   info += QString( "<p>%1</p>" )
-              .arg( i18n( "KitchenSync synchronizes your e-mail, addressbook, calendar, to-do list and more." ) );
+          .arg( i18n( "KitchenSync synchronizes your e-mail, addressbook, calendar, to-do list and more." ) );
 
   info += QLatin1String( "<table align=\"center\">" );
 

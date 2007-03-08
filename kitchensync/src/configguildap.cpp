@@ -52,7 +52,7 @@ void ConfigGuiLdap::load( const QString &xml )
   doc.setContent( xml );
   QDomElement docElement = doc.documentElement();
   QDomNode node;
-  for( node = docElement.firstChild(); !node.isNull(); node = node.nextSibling() ) {
+  for ( node = docElement.firstChild(); !node.isNull(); node = node.nextSibling() ) {
     QDomElement element = node.toElement();
     if ( element.tagName() == "servername" ) {
       mServerName->setText( element.text() );
@@ -76,17 +76,21 @@ void ConfigGuiLdap::load( const QString &xml )
       QStringList list;
       list << "base" << "one" << "sub";
 
-      for ( int i = 0; i < list.count(); ++i )
-        if ( list[ i ] == element.text() )
+      for ( int i = 0; i < list.count(); ++i ) {
+        if ( list[ i ] == element.text() ) {
           mSearchScope->setCurrentIndex( i );
+        }
+      }
 
     } else if ( element.tagName() == "authmech" ) {
       QStringList list;
       list << "SIMPLE";
 
-      for ( int i = 0; i < list.count(); ++i )
-        if ( list[ i ] == element.text() )
+      for ( int i = 0; i < list.count(); ++i ) {
+        if ( list[ i ] == element.text() ) {
           mAuthMech->setCurrentIndex( i );
+        }
+      }
 
     } else if ( element.tagName() == "encryption" ) {
       mEncryption->setChecked( element.text().toInt() == 1 );

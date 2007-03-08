@@ -14,9 +14,9 @@
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
     GNU General Public License for more details.
 
-    You should have received a copy of the GNU General Public License
-    along with this program; if not, write to the Free Software
-    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+    You should have received a copy of the GNU General Public License along
+    with this program; if not, write to the Free Software Foundation, Inc.,
+    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 */
 
 #include <kcombobox.h>
@@ -78,8 +78,9 @@ void BluetoothWidget::setAddress( const QString address )
 
 void BluetoothWidget::setChannel( const QString channel )
 {
-  if ( mChannel )
+  if ( mChannel ) {
     mChannel->setText( channel );
+  }
 }
 
 QString BluetoothWidget::address() const
@@ -89,8 +90,9 @@ QString BluetoothWidget::address() const
 
 QString BluetoothWidget::channel() const
 {
-  if ( mChannel->text().isEmpty() )
+  if ( mChannel->text().isEmpty() ) {
     return QString();
+  }
 
   return mChannel->text();
 }
@@ -125,10 +127,11 @@ void IRWidget::load( const QDomElement &parent )
   QDomNode node;
   for ( node = parent.firstChild(); !node.isNull(); node = node.nextSibling() ) {
     QDomElement element = node.toElement();
-    if ( element.tagName() == "irname" )
+    if ( element.tagName() == "irname" ) {
       mDevice->setText( element.text() );
-    else if ( element.tagName() == "irserial" )
+    } else if ( element.tagName() == "irserial" ) {
       mSerialNumber->setText( element.text() );
+    }
   }
 }
 
@@ -181,17 +184,19 @@ void CableWidget::load( const QDomElement &parent )
   QDomNode node;
   for ( node = parent.firstChild(); !node.isNull(); node = node.nextSibling() ) {
     QDomElement element = node.toElement();
-    if ( element.tagName() == "cabletype" )
+    if ( element.tagName() == "cabletype" ) {
       mManufacturer->setCurrentIndex( element.text().toInt() );
-    else if ( element.tagName() == "cabledev" )
+    } else if ( element.tagName() == "cabledev" ) {
       mDevice->setCurrentIndex( mDevice->findText( element.text() ) );
+    }
   }
 }
 
 void CableWidget::save( QDomDocument &doc, QDomElement &parent )
 {
   QDomElement element = doc.createElement( "cabletype" );
-  element.appendChild( doc.createTextNode( QString::number( mManufacturer->currentIndex() ) ) );
+  element.appendChild( doc.createTextNode(
+                         QString::number( mManufacturer->currentIndex() ) ) );
   parent.appendChild( element );
 
   element = doc.createElement( "cabledev" );

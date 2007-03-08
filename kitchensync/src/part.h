@@ -32,7 +32,8 @@ class KitchenSyncPart: public KParts::ReadOnlyPart
   Q_OBJECT
 
   public:
-    KitchenSyncPart( QWidget *parentWidget, QObject *parent, const QStringList& );
+    KitchenSyncPart( QWidget *parentWidget, QObject *parent,
+                     const QStringList &list );
     virtual ~KitchenSyncPart();
 
     static KAboutData *createAboutData();
@@ -42,7 +43,7 @@ class KitchenSyncPart: public KParts::ReadOnlyPart
 
   protected:
     virtual bool openFile();
-    virtual void guiActivateEvent( KParts::GUIActivateEvent* );
+    virtual void guiActivateEvent( KParts::GUIActivateEvent *ev );
 };
 
 #endif

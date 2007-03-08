@@ -21,7 +21,6 @@
 
 #include "configgui.h"
 
-
 #include "configguiblank.h"
 #include "configguifile.h"
 #include "configguignokii.h"
@@ -101,12 +100,11 @@ ConfigGui *ConfigGui::Factory::create( const QSync::Member &member,
   } else if ( name == "ldap-sync" ) {
     return new ConfigGuiLdap( member, parent );
   } else if ( name == "kdepim-sync" ) {
-    return new ConfigGuiBlank( member, parent ); 
+    return new ConfigGuiBlank( member, parent );
   } else {
     return new ConfigGuiXml( member, parent );
   }
 }
-
 
 ConfigGuiXml::ConfigGuiXml( const QSync::Member &member, QWidget *parent )
   : ConfigGui( member, parent )

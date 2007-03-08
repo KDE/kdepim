@@ -36,7 +36,7 @@ class AboutPage : public QWidget
     void addGroup();
 
   private slots:
-    void handleUrl( const KUrl& );
+    void handleUrl( const KUrl &url );
 
   private:
     QString htmlText() const;

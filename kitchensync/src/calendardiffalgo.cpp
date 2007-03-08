@@ -30,10 +30,11 @@ using namespace KSync;
 #ifndef KDE_USE_FINAL
 static bool compareString( const QString &left, const QString &right )
 {
-  if ( left.isEmpty() && right.isEmpty() )
+  if ( left.isEmpty() && right.isEmpty() ) {
     return true;
-  else
+  } else {
     return left == right;
+  }
 }
 #endif
 
@@ -74,10 +75,11 @@ static QString toString( const QString str )
 
 static QString toString( bool value )
 {
-  if ( value )
+  if ( value ) {
     return i18n( "Yes" );
-  else
+  } else {
     return i18n( "No" );
+  }
 }
 
 CalendarDiffAlgo::CalendarDiffAlgo( KCal::Incidence *leftIncidence,
@@ -108,108 +110,163 @@ void CalendarDiffAlgo::run()
   end();
 }
 
-void CalendarDiffAlgo::diffIncidenceBase( KCal::IncidenceBase *left, KCal::IncidenceBase *right )
+void CalendarDiffAlgo::diffIncidenceBase( KCal::IncidenceBase *left,
+                                          KCal::IncidenceBase *right )
 {
   diffList( i18n( "Attendees" ), left->attendees(), right->attendees() );
 
-  if ( left->dtStart() != right->dtStart() )
-    conflictField( i18n( "Start time" ), left->dtStartStr(), right->dtStartStr() );
+  if ( left->dtStart() != right->dtStart() ) {
+    conflictField( i18n( "Start time" ),
+                   left->dtStartStr(), right->dtStartStr() );
+  }
 
-  if ( !compareString( left->organizer().fullName(), right->organizer().fullName() ) )
-    conflictField( i18n( "Organizer" ), left->organizer().fullName(), right->organizer().fullName() );
+  if ( !compareString( left->organizer().fullName(), right->organizer().fullName() ) ) {
+    conflictField( i18n( "Organizer" ),
+                   left->organizer().fullName(), right->organizer().fullName() );
+  }
 
-  if ( !compareString( left->uid(), right->uid() ) )
+  if ( !compareString( left->uid(), right->uid() ) ) {
     conflictField( i18n( "UID" ), left->uid(), right->uid() );
+  }
 
-  if ( left->floats() != right->floats() )
-    conflictField( i18n( "Is floating" ), toString( left->floats() ), toString( right->floats() ) );
+  if ( left->floats() != right->floats() ) {
+    conflictField( i18n( "Is floating" ),
+                   toString( left->floats() ), toString( right->floats() ) );
+  }
 
-  if ( left->hasDuration() != right->hasDuration() )
-    conflictField( i18n( "Has duration" ), toString( left->hasDuration() ), toString( right->hasDuration() ) );
+  if ( left->hasDuration() != right->hasDuration() ) {
+    conflictField( i18n( "Has duration" ),
+                   toString( left->hasDuration() ),
+                   toString( right->hasDuration() ) );
+  }
 
-  if ( left->duration() != right->duration() )
-    conflictField( i18n( "Duration" ), QString::number( left->duration() ), QString::number( right->duration() ) );
+  if ( left->duration() != right->duration() ) {
+    conflictField( i18n( "Duration" ),
+                   QString::number( left->duration() ),
+                   QString::number( right->duration() ) );
+  }
 }
 
-void CalendarDiffAlgo::diffIncidence( KCal::Incidence *left, KCal::Incidence *right )
+void CalendarDiffAlgo::diffIncidence( KCal::Incidence *left,
+                                      KCal::Incidence *right )
 {
-  if ( !compareString( left->description(), right->description() ) )
-    conflictField( i18n( "Description" ), left->description(), right->description() );
+  if ( !compareString( left->description(), right->description() ) ) {
+    conflictField( i18n( "Description" ),
+                   left->description(), right->description() );
+  }
 
-  if ( !compareString( left->summary(), right->summary() ) )
+  if ( !compareString( left->summary(), right->summary() ) ) {
     conflictField( i18n( "Summary" ), left->summary(), right->summary() );
+  }
 
-  if ( left->status() != right->status() )
+  if ( left->status() != right->status() ) {
     conflictField( i18n( "Status" ), left->statusStr(), right->statusStr() );
+  }
 
-  if ( left->secrecy() != right->secrecy() )
-    conflictField( i18n( "Secrecy" ), toString( left->secrecy() ), toString( right->secrecy() ) );
+  if ( left->secrecy() != right->secrecy() ) {
+    conflictField( i18n( "Secrecy" ),
+                   toString( left->secrecy() ), toString( right->secrecy() ) );
+  }
 
-  if ( left->priority() != right->priority() )
-    conflictField( i18n( "Priority" ), toString( left->priority() ), toString( right->priority() ) );
+  if ( left->priority() != right->priority() ) {
+    conflictField( i18n( "Priority" ),
+                   toString( left->priority() ), toString( right->priority() ) );
+  }
 
-  if ( !compareString( left->location(), right->location() ) )
+  if ( !compareString( left->location(), right->location() ) ) {
     conflictField( i18n( "Location" ), left->location(), right->location() );
+  }
 
   diffList( i18n( "Categories" ), left->categories(), right->categories() );
   diffList( i18n( "Alarms" ), left->alarms(), right->alarms() );
   diffList( i18n( "Resources" ), left->resources(), right->resources() );
   diffList( i18n( "Relations" ), left->relations(), right->relations() );
   diffList( i18n( "Attachments" ), left->attachments(), right->attachments() );
-  diffList( i18n( "Exception Dates" ), left->recurrence()->exDates(), right->recurrence()->exDates() );
-  diffList( i18n( "Exception Times" ), left->recurrence()->exDateTimes(), right->recurrence()->exDateTimes() );
+  diffList( i18n( "Exception Dates" ),
+            left->recurrence()->exDates(), right->recurrence()->exDates() );
+  diffList( i18n( "Exception Times" ),
+            left->recurrence()->exDateTimes(),
+            right->recurrence()->exDateTimes() );
 
   // TODO: recurrence dates and date/times, exrules, rrules
 
-  if ( left->created() != right->created() )
-    conflictField( i18n( "Created" ), left->created().toString(), right->created().toString() );
+  if ( left->created() != right->created() ) {
+    conflictField( i18n( "Created" ),
+                   left->created().toString(), right->created().toString() );
+  }
 
-  if ( !compareString( left->relatedToUid(), right->relatedToUid() ) )
-    conflictField( i18n( "Related Uid" ), left->relatedToUid(), right->relatedToUid() );
+  if ( !compareString( left->relatedToUid(), right->relatedToUid() ) ) {
+    conflictField( i18n( "Related Uid" ),
+                   left->relatedToUid(), right->relatedToUid() );
+  }
 }
 
 void CalendarDiffAlgo::diffEvent( KCal::Event *left, KCal::Event *right )
 {
-  if ( left->hasEndDate() != right->hasEndDate() )
-    conflictField( i18n( "Has End Date" ), toString( left->hasEndDate() ), toString( right->hasEndDate() ) );
+  if ( left->hasEndDate() != right->hasEndDate() ) {
+    conflictField( i18n( "Has End Date" ),
+                   toString( left->hasEndDate() ),
+                   toString( right->hasEndDate() ) );
+  }
 
-  if ( left->dtEnd() != right->dtEnd() )
+  if ( left->dtEnd() != right->dtEnd() ) {
     conflictField( i18n( "End Date" ), left->dtEndStr(), right->dtEndStr() );
+  }
 
   // TODO: check transparency
 }
 
 void CalendarDiffAlgo::diffTodo( KCal::Todo *left, KCal::Todo *right )
 {
-  if ( left->hasStartDate() != right->hasStartDate() )
-    conflictField( i18n( "Has Start Date" ), toString( left->hasStartDate() ), toString( right->hasStartDate() ) );
+  if ( left->hasStartDate() != right->hasStartDate() ) {
+    conflictField( i18n( "Has Start Date" ),
+                   toString( left->hasStartDate() ),
+                   toString( right->hasStartDate() ) );
+  }
 
-  if ( left->hasDueDate() != right->hasDueDate() )
-    conflictField( i18n( "Has Due Date" ), toString( left->hasDueDate() ), toString( right->hasDueDate() ) );
+  if ( left->hasDueDate() != right->hasDueDate() ) {
+    conflictField( i18n( "Has Due Date" ),
+                   toString( left->hasDueDate() ),
+                   toString( right->hasDueDate() ) );
+  }
 
-  if ( left->dtDue() != right->dtDue() )
-    conflictField( i18n( "Due Date" ), left->dtDue().toString(), right->dtDue().toString() );
+  if ( left->dtDue() != right->dtDue() ) {
+    conflictField( i18n( "Due Date" ),
+                   left->dtDue().toString(), right->dtDue().toString() );
+  }
 
-  if ( left->hasCompletedDate() != right->hasCompletedDate() )
-    conflictField( i18n( "Has Complete Date" ), toString( left->hasCompletedDate() ), toString( right->hasCompletedDate() ) );
+  if ( left->hasCompletedDate() != right->hasCompletedDate() ) {
+    conflictField( i18n( "Has Complete Date" ),
+                   toString( left->hasCompletedDate() ),
+                   toString( right->hasCompletedDate() ) );
+  }
 
-  if ( left->percentComplete() != right->percentComplete() )
-    conflictField( i18n( "Complete" ), QString::number( left->percentComplete() ), QString::number( right->percentComplete() ) );
+  if ( left->percentComplete() != right->percentComplete() ) {
+    conflictField( i18n( "Complete" ),
+                   QString::number( left->percentComplete() ),
+                   QString::number( right->percentComplete() ) );
+  }
 
-  if ( left->completed() != right->completed() )
-    conflictField( i18n( "Completed" ), toString( left->completed() ), toString( right->completed() ) );
+  if ( left->completed() != right->completed() ) {
+    conflictField( i18n( "Completed" ),
+                   toString( left->completed() ),
+                   toString( right->completed() ) );
+  }
 }
 
 template <class L>
-void CalendarDiffAlgo::diffList( const QString &id, const QList<L> &left, const QList<L> &right )
+void CalendarDiffAlgo::diffList( const QString &id,
+                                 const QList<L> &left, const QList<L> &right )
 {
   for ( int i = 0; i < left.count(); ++i ) {
-    if ( !right.contains( left[ i ] ) )
+    if ( !right.contains( left[ i ] ) ) {
       additionalLeftField( id, toString( left[ i ] ) );
+    }
   }
 
   for ( int i = 0; i < right.count(); ++i ) {
-    if ( !left.contains( right[ i ] ) )
+    if ( !left.contains( right[ i ] ) ) {
       additionalRightField( id, toString( right[ i ] ) );
+    }
   }
 }

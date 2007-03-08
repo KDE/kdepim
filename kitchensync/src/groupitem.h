@@ -44,7 +44,8 @@ class GroupItem : public KWidgetListItem
     GroupItem( KWidgetList*, SyncProcess *syncProcess );
     ~GroupItem();
 
-    SyncProcess *syncProcess() const { return mSyncProcess; }
+    SyncProcess *syncProcess() const
+      { return mSyncProcess; }
 
     void update();
 
@@ -57,10 +58,10 @@ class GroupItem : public KWidgetListItem
 
   protected slots:
     void conflict( QSync::SyncMapping );
-    void change( const QSync::SyncChangeUpdate& );
-    void mapping( const QSync::SyncMappingUpdate& );
-    void engine( const QSync::SyncEngineUpdate& );
-    void member( const QSync::SyncMemberUpdate& );
+    void change( const QSync::SyncChangeUpdate &update );
+    void mapping( const QSync::SyncMappingUpdate &update );
+    void engine( const QSync::SyncEngineUpdate &update );
+    void member( const QSync::SyncMemberUpdate &update );
 
     void synchronize();
     void configure();
@@ -93,8 +94,10 @@ class MemberItem : public QWidget
     MemberItem( QWidget *parent, SyncProcess *syncProcess,
                 const QSync::Member &member );
 
-    SyncProcess* syncProcess() const { return mSyncProcess; }
-    QSync::Member member() const { return mMember; }
+    SyncProcess *syncProcess() const
+      { return mSyncProcess; }
+    QSync::Member member() const
+      { return mMember; }
 
     void setStatusMessage( const QString &msg );
 

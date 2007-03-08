@@ -45,7 +45,8 @@ class SyncProcessManager : public QObject
     /**
       Return OpenSync Environment.
     */
-    QSync::Environment *environment() const { return mEnvironment; }
+    QSync::Environment *environment() const
+      { return mEnvironment; }
 
     /**
       Returns the number of SyncProcesses.
@@ -55,17 +56,17 @@ class SyncProcessManager : public QObject
     /**
       Returns the SyncProcess at position @param pos.
      */
-    SyncProcess* at( int pos ) const;
+    SyncProcess *at( int pos ) const;
 
     /**
       Returns the SyncProcess with the given @param group.
      */
-    SyncProcess* byGroup( const QSync::Group &group );
+    SyncProcess *byGroup( const QSync::Group &group );
 
     /**
       Returns the SyncProcess with the given group @param name.
      */
-    SyncProcess* byGroupName( const QString &name );
+    SyncProcess *byGroupName( const QString &name );
 
     /**
       Adds a group with given @param name.

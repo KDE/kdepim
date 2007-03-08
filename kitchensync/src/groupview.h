@@ -33,7 +33,7 @@ class GroupView : public QWidget
   public:
     GroupView( QWidget *parent );
 
-    SyncProcess* selectedSyncProcess() const;
+    SyncProcess *selectedSyncProcess() const;
 
     void clear();
 

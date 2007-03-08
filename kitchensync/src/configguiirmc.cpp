@@ -80,8 +80,6 @@ void ConfigGuiIRMC::load( const QString &xml )
     } else if (element.tagName() == "donttellsync" ) {
       mDontTellSync->setChecked( element.text() == "true" );
     }
-
-
   }
 
   mIRWidget->load( docElement );
@@ -95,23 +93,28 @@ QString ConfigGuiIRMC::save()
   doc.appendChild( config );
 
   QDomElement element = doc.createElement( "connectmedium" );
-  if ( mConnectionType->currentIndex() == 0 )
+  if ( mConnectionType->currentIndex() == 0 ) {
     element.appendChild( doc.createTextNode( "bluetooth" ) );
-  if ( mConnectionType->currentIndex() == 1 )
+  }
+  if ( mConnectionType->currentIndex() == 1 ) {
     element.appendChild( doc.createTextNode( "ir" ) );
-  if ( mConnectionType->currentIndex() == 2 )
+  }
+  if ( mConnectionType->currentIndex() == 2 ) {
     element.appendChild( doc.createTextNode( "cable" ) );
+  }
 
   config.appendChild( element );
 
   if ( mConnectionType->currentIndex() == 0 ) {
     QDomElement btunit = doc.createElement( "btunit" );
-    if ( !mBluetoothWidget->address().isEmpty() )
+    if ( !mBluetoothWidget->address().isEmpty() ) {
       btunit.appendChild( doc.createTextNode( mBluetoothWidget->address() ) );
+    }
 
     QDomElement btchannel = doc.createElement( "btchannel" );
-    if ( !mBluetoothWidget->channel().isEmpty() )
+    if ( !mBluetoothWidget->channel().isEmpty() ) {
       btchannel.appendChild( doc.createTextNode( mBluetoothWidget->channel() ) );
+    }
 
     config.appendChild( btunit );
     config.appendChild( btchannel );
@@ -135,12 +138,13 @@ void ConfigGuiIRMC::connectionTypeChanged( int type )
   mIRWidget->hide();
   mCableWidget->hide();
 
-  if ( type == 0 )
+  if ( type == 0 ) {
     mBluetoothWidget->show();
-  else if ( type == 1 )
+  } else if ( type == 1 ) {
     mIRWidget->show();
-  else
+  } else {
     mCableWidget->show();
+  }
 }
 
 void ConfigGuiIRMC::initGUI()

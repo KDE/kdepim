@@ -58,7 +58,6 @@ PluginItem::PluginItem( KWidgetList *list, const QSync::Plugin &plugin )
   layout->addWidget( description, 1, 1 );
 }
 
-
 PluginPicker::PluginPicker( QWidget *parent )
   : QWidget( parent )
 {
@@ -82,7 +81,7 @@ void PluginPicker::updatePluginList()
   QSync::Environment *env = SyncProcessManager::self()->environment();
 
   QSync::Environment::PluginIterator it( env->pluginBegin() );
-  for( ; it != env->pluginEnd(); ++it ) {
+  for ( ; it != env->pluginEnd(); ++it ) {
     QSync::Plugin plugin = *it;
     PluginItem *item = new PluginItem( 0, plugin );
     mPluginList->appendItem( item );
@@ -92,10 +91,12 @@ void PluginPicker::updatePluginList()
 QSync::Plugin PluginPicker::selectedPlugin() const
 {
   PluginItem *item = static_cast<PluginItem *>( mPluginList->selectedItem() );
-  if ( item ) return item->plugin();
-  else return QSync::Plugin();
+  if ( item ) {
+    return item->plugin();
+  } else {
+    return QSync::Plugin();
+  }
 }
-
 
 PluginPickerDialog::PluginPickerDialog( QWidget *parent )
   : KDialog( parent )
@@ -130,10 +131,11 @@ QSync::Plugin PluginPickerDialog::selectedPlugin() const
 QSync::Plugin PluginPickerDialog::getPlugin( QWidget *parent )
 {
   PluginPickerDialog dlg( parent );
-  if ( dlg.exec() )
+  if ( dlg.exec() ) {
     return dlg.selectedPlugin();
-  else
+  } else {
     return QSync::Plugin();
+  }
 }
 
 void PluginPickerDialog::slotOk()

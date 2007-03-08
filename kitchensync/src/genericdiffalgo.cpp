@@ -29,13 +29,15 @@ using namespace KSync;
 
 static bool compareString( const QString &left, const QString &right )
 {
-  if ( left.isEmpty() && right.isEmpty() )
+  if ( left.isEmpty() && right.isEmpty() ) {
     return true;
-  else
+  } else {
     return left == right;
+  }
 }
 
-GenericDiffAlgo::GenericDiffAlgo( const QString &leftData, const QString &rightData )
+GenericDiffAlgo::GenericDiffAlgo( const QString &leftData,
+                                  const QString &rightData )
   : mLeftData( leftData ), mRightData( rightData )
 {
 }
@@ -44,14 +46,17 @@ void GenericDiffAlgo::run()
 {
   begin();
 
-  const QStringList leftList = mLeftData.split( '\n', QString::KeepEmptyParts );
-  const QStringList rightList = mRightData.split( '\n', QString::KeepEmptyParts );
+  const QStringList leftList = mLeftData.split( '\n',
+                                                QString::KeepEmptyParts );
+  const QStringList rightList = mRightData.split( '\n',
+                                                  QString::KeepEmptyParts );
 
   int lines = qMax( leftList.count(), rightList.count() );
   for ( int i = 0; i < lines; ++i ) {
     if ( i < leftList.count() && i < rightList.count() ) {
-      if ( !compareString( leftList[ i ], rightList[ i ] ) )
+      if ( !compareString( leftList[ i ], rightList[ i ] ) ) {
         conflictField( i18n( "Line %1", i ), leftList[ i ], rightList[ i ] );
+      }
     } else if ( i < leftList.count() && i >= rightList.count() ) {
       additionalLeftField( i18n( "Line %1", i ), leftList[ i ] );
     } else if ( i >= leftList.count() && i < rightList.count() ) {

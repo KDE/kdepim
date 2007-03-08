@@ -19,7 +19,6 @@
     USA.
 */
 
-
 #include <kdialog.h>
 #include <klineedit.h>
 #include <klocale.h>
@@ -59,10 +58,11 @@ ObjectTypeSelector::ObjectTypeSelector( QWidget *parent )
 
   QStringList reoderedObjectTypes, stack;
   for ( int i = 0; i < objectTypes.count(); ++i ) {
-    if ( objectTypes[ i ] == "contact" || objectTypes[ i ] == "event" )
+    if ( objectTypes[ i ] == "contact" || objectTypes[ i ] == "event" ) {
       reoderedObjectTypes.append( objectTypes[ i ] );
-    else
+    } else {
       stack.append( objectTypes[ i ] );
+    }
   }
   reoderedObjectTypes += stack;
 
@@ -70,19 +70,21 @@ ObjectTypeSelector::ObjectTypeSelector( QWidget *parent )
 
   int row = 0;
   int col = 0;
-  for( it = reoderedObjectTypes.begin(); it != reoderedObjectTypes.end(); ++it ) {
+  for ( it = reoderedObjectTypes.begin(); it != reoderedObjectTypes.end(); ++it ) {
     QString objectType = *it;
 
-    // Don't display object type "data". Object type "data" is a kind of wildcard - so don't filter *
-    if ( objectType == "data" )
+    // Don't display object type "data".
+    // Object type "data" is a kind of wildcard - so don't filter *
+    if ( objectType == "data" ) {
       continue;
+    }
 
     QCheckBox *objectCheckBox = new QCheckBox( objectTypeMap[ objectType ], this );
     layout->addWidget( objectCheckBox, row, col );
     mObjectTypeChecks.insert( objectType, objectCheckBox );
 
     col++;
-    if ( (row == 0 && col == 2) || col == 3 ) {
+    if ( ( row == 0 && col == 2 ) || col == 3 ) {
       col = 0;
       row++;
     }
@@ -97,11 +99,12 @@ void ObjectTypeSelector::load( const QSync::Group &group )
 
   // Enable everything on the initial load
   bool initialLoad = false;
-  if ( objectTypes.isEmpty() )
+  if ( objectTypes.isEmpty() ) {
     initialLoad = true;
+  }
 
   QMap<QString, QCheckBox*>::ConstIterator it;
-  for( it = mObjectTypeChecks.begin(); it != mObjectTypeChecks.end(); ++it ) {
+  for ( it = mObjectTypeChecks.begin(); it != mObjectTypeChecks.end(); ++it ) {
     QCheckBox *check = it.value();
     check->setChecked( objectTypes.contains( it.key() ) || initialLoad );
   }
@@ -112,10 +115,11 @@ void ObjectTypeSelector::save( QSync::Group group )
   QStringList objectTypes;
 
   QMap<QString,QCheckBox *>::ConstIterator it;
-  for( it = mObjectTypeChecks.begin(); it != mObjectTypeChecks.end(); ++it ) {
+  for ( it = mObjectTypeChecks.begin(); it != mObjectTypeChecks.end(); ++it ) {
     QCheckBox *check = it.value();
-    if ( check->isChecked() )
+    if ( check->isChecked() ) {
       objectTypes.append( it.key() );
+    }
   }
 
   // Always add object type "data"
@@ -137,7 +141,8 @@ GroupConfigCommon::GroupConfigCommon( QWidget *parent )
   mGroupName = new KLineEdit( this );
   layout->addWidget( mGroupName, 0, 1 );
 
-  layout->addWidget( new QLabel( i18n( "Object Types to be Synchronized:"), this ), 1, 0, Qt::AlignTop );
+  layout->addWidget( new QLabel( i18n( "Object Types to be Synchronized:" ),
+                                 this ), 1, 0, Qt::AlignTop );
 
   mObjectTypeSelector = new ObjectTypeSelector( this );
   layout->addWidget( mObjectTypeSelector, 1, 1 );

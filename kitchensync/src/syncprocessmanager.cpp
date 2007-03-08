@@ -55,8 +55,9 @@ SyncProcessManager::SyncProcessManager()
 
 SyncProcessManager::~SyncProcessManager()
 {
-  for ( int i = 0; i < mProcesses.count(); ++i )
+  for ( int i = 0; i < mProcesses.count(); ++i ) {
     delete mProcesses[ i ];
+  }
 
   mProcesses.clear();
 
@@ -69,35 +70,39 @@ int SyncProcessManager::count() const
   return mProcesses.count();
 }
 
-SyncProcess* SyncProcessManager::at( int pos ) const
+SyncProcess *SyncProcessManager::at( int pos ) const
 {
-  if ( pos < 0 || pos >= (int)mProcesses.count() )
+  if ( pos < 0 || pos >= (int)mProcesses.count() ) {
     return 0;
+  }
 
   return mProcesses[ pos ];
 }
 
-SyncProcess* SyncProcessManager::byGroup( const QSync::Group &group )
+SyncProcess *SyncProcessManager::byGroup( const QSync::Group &group )
 {
-  for ( int i = 0; i < mProcesses.count(); ++i )
-    if ( mProcesses[ i ]->group() == group )
+  for ( int i = 0; i < mProcesses.count(); ++i ) {
+    if ( mProcesses[ i ]->group() == group ) {
       return mProcesses[ i ];
-
+    }
+  }
   return 0;
 }
 
-SyncProcess* SyncProcessManager::byGroupName( const QString &name )
+SyncProcess *SyncProcessManager::byGroupName( const QString &name )
 {
-  for ( int i = 0; i < mProcesses.count(); ++i )
-    if ( mProcesses[ i ]->group().name() == name )
+  for ( int i = 0; i < mProcesses.count(); ++i ) {
+    if ( mProcesses[ i ]->group().name() == name ) {
       return mProcesses[ i ];
+    }
+  }
 
   return 0;
 }
 
 void SyncProcessManager::addGroup( const QString &name )
 {
-  SyncProcess* process = byGroupName( name );
+  SyncProcess *process = byGroupName( name );
   if ( !process ) {
     QSync::Group group = mEnvironment->addGroup();
     group.setName( name );
@@ -106,8 +111,9 @@ void SyncProcessManager::addGroup( const QString &name )
     mProcesses.append( new SyncProcess( group ) );
 
     emit changed();
-  } else
+  } else {
     qDebug( "Try to add duplicate" );
+  }
 }
 
 void SyncProcessManager::remove( SyncProcess *syncProcess )
@@ -145,8 +151,9 @@ void SyncProcessManager::init( QSync::Environment *environment )
       }
     }
 
-    if ( isValid )
+    if ( isValid ) {
       mProcesses.append( new SyncProcess( *it ) );
+    }
   }
 
   emit changed();

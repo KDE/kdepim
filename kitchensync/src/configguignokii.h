@@ -56,7 +56,6 @@ class ConfigGuiGnokii : public ConfigGui
    protected slots:
      void slotConnectionChanged( int nth );
      void slotModelChanged();
-    
 };
 
 #endif

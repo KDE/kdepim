@@ -63,8 +63,8 @@ class IRWidget : public QWidget
   public:
     IRWidget( QWidget *parent );
 
-    void load( const QDomElement& );
-    void save( QDomDocument&, QDomElement& );
+    void load( const QDomElement &element );
+    void save( QDomDocument &element, QDomElement &element );
 
   private:
     KLineEdit *mDevice;
@@ -76,8 +76,8 @@ class CableWidget : public QWidget
   public:
     CableWidget( QWidget *parent );
 
-    void load( const QDomElement& );
-    void save( QDomDocument&, QDomElement& );
+    void load( const QDomElement &element );
+    void save( QDomDocument &element, QDomElement &element );
 
   private:
     KComboBox *mManufacturer;

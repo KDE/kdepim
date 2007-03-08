@@ -41,10 +41,11 @@ class CalendarDiffAlgo : public DiffAlgo
     template <class L>
     void diffList( const QString &id, const QList<L> &left, const QList<L> &right );
 
-    void diffIncidenceBase( KCal::IncidenceBase*, KCal::IncidenceBase* );
-    void diffIncidence( KCal::Incidence*, KCal::Incidence* );
-    void diffEvent( KCal::Event*, KCal::Event* );
-    void diffTodo( KCal::Todo*, KCal::Todo* );
+    void diffIncidenceBase( KCal::IncidenceBase *inc1,
+                            KCal::IncidenceBase *inc2 );
+    void diffIncidence( KCal::Incidence *inc1, KCal::Incidence *inc2 );
+    void diffEvent( KCal::Event *event1, KCal::Event *event2 );
+    void diffTodo( KCal::Todo *todo1, KCal::Todo *todo2 );
 
     KCal::Incidence *mLeftIncidence;
     KCal::Incidence *mRightIncidence;

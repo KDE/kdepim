@@ -14,9 +14,9 @@
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
     GNU General Public License for more details.
 
-    You should have received a copy of the GNU General Public License
-    along with this program; if not, write to the Free Software
-    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+    You should have received a copy of the GNU General Public License along
+    with this program; if not, write to the Free Software Foundation, Inc.,
+    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 */
 
 #include "mainwidget.h"
@@ -140,8 +140,9 @@ void MainWidget::addGroup()
     enableActions();
 
     SyncProcess *process = SyncProcessManager::self()->byGroupName( name );
-    if ( process )
+    if ( process ) {
       editGroup( process );
+    }
   }
 }
 
@@ -193,8 +194,9 @@ void MainWidget::sync( SyncProcess *syncProcess )
 
 void MainWidget::abortSync( SyncProcess *syncProcess )
 {
-  if ( syncProcess )
+  if ( syncProcess ) {
     syncProcess->engine()->abort();
+  }
 }
 
 #include "mainwidget.moc"

@@ -66,13 +66,15 @@ GroupItem::GroupItem( KWidgetList *parent, SyncProcess *process )
   mConfigureAction = new KUrlLabel( "exec:/config", i18n( "Configure" ), this );
 
   // header
-  QWidget* hbox = new QWidget( this );
+  QWidget *hbox = new QWidget( this );
   QHBoxLayout *hboxLayout = new QHBoxLayout( hbox );
   hboxLayout->setMargin( 2 );
 
   static QPixmap icon;
-  if ( icon.isNull() )
-    icon = KIconLoader::global()->loadIcon( "kontact_summary", K3Icon::Desktop );
+  if ( icon.isNull() ) {
+    icon = KIconLoader::global()->loadIcon( "kontact_summary",
+                                            K3Icon::Desktop );
+  }
 
   mIcon = new QLabel( hbox );
   mIcon->setPixmap( icon );
@@ -167,10 +169,12 @@ void GroupItem::update()
   mGroupName->setText( i18n( "Group: %1", mSyncProcess->group().name() ) );
 
   QDateTime dateTime = mSyncProcess->group().lastSynchronization();
-  if ( dateTime.isValid() )
-    mTime->setText( i18n( "Last synchronized on: %1", KGlobal::locale()->formatDateTime( dateTime ) ) );
-  else
+  if ( dateTime.isValid() ) {
+    mTime->setText( i18n( "Last synchronized on: %1",
+                          KGlobal::locale()->formatDateTime( dateTime ) ) );
+  } else {
     mTime->setText( i18n( "Not synchronized yet" ) );
+  }
 
   mProgressBar->reset();
   mProgressBar->hide();
@@ -192,8 +196,9 @@ void GroupItem::clear()
 {
   mGroupName->setText( QString() );
 
-  for ( int i = 0; i < mMemberItems.count(); ++i )
+  for ( int i = 0; i < mMemberItems.count(); ++i ) {
     delete mMemberItems[ i ];
+  }
 
   mMemberItems.clear();
 }
@@ -227,11 +232,13 @@ void GroupItem::change( const QSync::SyncChangeUpdate &update )
 
       {
         int progress = 100;
-        if ( mMaxProcessedItems != 0 )
+        if ( mMaxProcessedItems != 0 ) {
           progress = (mProcessedItems * 100) / mMaxProcessedItems;
+        }
 
-        if ( progress < 0 )
+        if ( progress < 0 ) {
           progress = 0;
+        }
 
         mProgressBar->setValue( 100 - progress );
       }
@@ -250,8 +257,9 @@ void GroupItem::change( const QSync::SyncChangeUpdate &update )
   }
 }
 
-void GroupItem::mapping( const QSync::SyncMappingUpdate& )
+void GroupItem::mapping( const QSync::SyncMappingUpdate &update )
 {
+  Q_UNUSED( update );
 }
 
 void GroupItem::engine( const QSync::SyncEngineUpdate &update )
@@ -349,10 +357,11 @@ void GroupItem::member( const QSync::SyncMemberUpdate &update )
 
 void GroupItem::synchronize()
 {
-  if ( !mSynchronizing )
+  if ( !mSynchronizing ) {
     emit synchronizeGroup( mSyncProcess );
-  else
+  } else {
     emit abortSynchronizeGroup( mSyncProcess );
+  }
 }
 
 void GroupItem::configure()
@@ -387,7 +396,7 @@ MemberItem::MemberItem( QWidget *parent, SyncProcess *process,
   QVBoxLayout *layout = new QVBoxLayout( this );
   layout->setMargin( 1 );
 
-  QWidget* box = new QWidget( this );
+  QWidget *box = new QWidget( this );
   QHBoxLayout *boxLayout = new QHBoxLayout( box );
   boxLayout->setMargin( 3 );
   boxLayout->setSpacing( 3 );
