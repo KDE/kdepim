@@ -106,7 +106,7 @@ void Member::setConfiguration( const QByteArray &configurationData )
   osync_member_set_config( mMember, configurationData.data(), configurationData.size() );
 }
 
-Result Member::configuration( QByteArray &configurationData, bool useDefault )
+Result Member::configuration( QByteArray &configurationData, bool useDefault ) const
 {
   Q_ASSERT( mMember );
 
@@ -130,7 +130,7 @@ Result Member::configuration( QByteArray &configurationData, bool useDefault )
   }
 }
 
-Result Member::save()
+Result Member::save() const
 {
   Q_ASSERT( mMember );
 
@@ -141,7 +141,7 @@ Result Member::save()
     return Result();
 }
 
-Result Member::instance( const Plugin &plugin )
+Result Member::instance( const Plugin &plugin ) const
 {
   OSyncError *error = 0;
   if ( !osync_member_instance_plugin( mMember, plugin.name().toUtf8(), &error ) )
@@ -155,7 +155,7 @@ bool Member::operator==( const Member &member ) const
   return mMember == member.mMember;
 }
 
-QString Member::scanDevices( const QString &query )
+QString Member::scanDevices( const QString &query ) const
 {
   Q_ASSERT( mMember );
 
@@ -171,7 +171,7 @@ QString Member::scanDevices( const QString &query )
   }
 }
 
-bool Member::testConnection( const QString &configuration )
+bool Member::testConnection( const QString &configuration ) const
 {
   Q_ASSERT( mMember );
 

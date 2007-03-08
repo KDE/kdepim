@@ -56,7 +56,7 @@ class QSYNC_EXPORT Environment
           mPos = it.mPos;
         }
 
-        Group operator*() 
+        Group operator*()
         {
           return mEnvironment->groupAt( mPos );
         }
@@ -89,7 +89,7 @@ class QSYNC_EXPORT Environment
           mPos = it.mPos;
         }
 
-        Plugin operator*() 
+        Plugin operator*()
         {
           return mEnvironment->pluginAt( mPos );
         }
@@ -168,7 +168,7 @@ class QSYNC_EXPORT Environment
     /**
       Removes a group from the environment.
      */
-    Result removeGroup( const Group &group );
+    Result removeGroup( const Group &group ) const;
 
     /**
       Returns the number of plugins.

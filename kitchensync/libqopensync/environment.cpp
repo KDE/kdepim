@@ -125,7 +125,7 @@ Group Environment::addGroup()
   return group;
 }
 
-Result Environment::removeGroup( const Group &group )
+Result Environment::removeGroup( const Group &group ) const
 {
   OSyncError *error = 0;
   if ( !osync_group_delete( group.mGroup, &error ) )

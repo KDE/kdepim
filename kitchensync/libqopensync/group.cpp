@@ -244,7 +244,7 @@ int Group::filterCount() const
   return osync_group_num_filters( mGroup );
 }
 
-Filter Group::filterAt( int pos )
+Filter Group::filterAt( int pos ) const
 {
   Q_ASSERT( mGroup );
 

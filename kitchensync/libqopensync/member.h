@@ -93,32 +93,32 @@ class QSYNC_EXPORT Member
       @returns The result of this operation.
      */
     Result configuration( QByteArray &configurationData,
-      bool useDefault = true );
+      bool useDefault = true ) const;
 
     /**
       Saves the changes to the configuration to hard disc.
      */
-    Result save();
+    Result save() const;
 
     /**
       Make this member an instance of the given plugin.
     */
-    Result instance( const Plugin & );
+    Result instance( const Plugin &plugin ) const;
 
-    bool operator==( const Member& ) const;
+    bool operator==( const Member &member ) const;
 
     /**
       This method can be used to query the plugin for scanning devices.
       The @param query is a plugin specific xml document as well as
       the return value.
      */
-    QString scanDevices( const QString &query );
+    QString scanDevices( const QString &query ) const;
 
     /**
       This method can be used to test whether the plugin can connect
       to the device with the given configuration.
      */
-    bool testConnection( const QString &configuration );
+    bool testConnection( const QString &configuration ) const;
 
   private:
     OSyncMember *mMember;
@@ -127,4 +127,3 @@ class QSYNC_EXPORT Member
 }
 
 #endif
-

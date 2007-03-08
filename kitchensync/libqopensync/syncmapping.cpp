@@ -87,7 +87,7 @@ int SyncMapping::changesCount() const
   return osengine_mapping_num_changes( mMapping );
 }
 
-SyncChange SyncMapping::changeAt( int pos )
+SyncChange SyncMapping::changeAt( int pos ) const
 {
   Q_ASSERT( mMapping );
 

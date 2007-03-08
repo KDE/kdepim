@@ -178,7 +178,7 @@ class QSYNC_EXPORT Group
     /**
       Returns the filter at position @param pos.
      */
-    Filter filterAt( int pos );
+    Filter filterAt( int pos ) const;
 
     /**
       Set, if the object type with given name is enabled for synchronization

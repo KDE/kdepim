@@ -48,7 +48,7 @@ class QSYNC_EXPORT SyncMapping
     void ignore();
 
     int changesCount() const;
-    SyncChange changeAt( int pos );
+    SyncChange changeAt( int pos ) const;
 
   private:
     OSyncEngine *mEngine;
