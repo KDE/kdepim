@@ -241,12 +241,12 @@ void ViewConfigureFieldsPage::initGUI()
   vb1->addStretch();
 
   mAddButton = new QToolButton( this );
-  mAddButton->setIcon( QApplication::isRightToLeft() ? KIcon( "1leftarrow" ) : KIcon( "1rightarrow" ) );
+  mAddButton->setIcon( QApplication::isRightToLeft() ? KIcon( "arrow-left" ) : KIcon( "arrow-right" ) );
   connect( mAddButton, SIGNAL( clicked() ), SLOT( slotSelect() ) );
   vb1->addWidget( mAddButton );
 
   mRemoveButton = new QToolButton( this );
-  mRemoveButton->setIcon( QApplication::isRightToLeft() ? KIcon( "1rightarrow" ) : KIcon( "1leftarrow" ) );
+  mRemoveButton->setIcon( QApplication::isRightToLeft() ? KIcon( "arrow-right" ) : KIcon( "arrow-left" ) );
   connect( mRemoveButton, SIGNAL( clicked() ), SLOT( slotUnSelect() ) );
   vb1->addWidget( mRemoveButton );
 
@@ -258,12 +258,12 @@ void ViewConfigureFieldsPage::initGUI()
   vb2->addStretch();
 
   mUpButton = new QToolButton( this );
-  mUpButton->setIcon( KIcon( "1uparrow" ) );
+  mUpButton->setIcon( KIcon( "arrow-up" ) );
   connect( mUpButton, SIGNAL( clicked() ), SLOT( slotMoveUp() ) );
   vb2->addWidget( mUpButton );
 
   mDownButton = new QToolButton( this );
-  mDownButton->setIcon( KIcon( "1downarrow" ) );
+  mDownButton->setIcon( KIcon( "arrow-down" ) );
   connect( mDownButton, SIGNAL( clicked() ), SLOT( slotMoveDown() ) );
   vb2->addWidget( mDownButton );
 

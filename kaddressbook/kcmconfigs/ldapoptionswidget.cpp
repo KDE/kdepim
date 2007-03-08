@@ -285,12 +285,12 @@ void LDAPOptionsWidget::initGUI()
   upDownBox->setSpacing( 6 );
   mUpButton = new QToolButton( upDownBox );
   mUpButton->setObjectName( "mUpButton" );
-  mUpButton->setIcon( BarIconSet( "up", K3Icon::SizeSmall ) );
+  mUpButton->setIcon( BarIconSet( "go-up", K3Icon::SizeSmall ) );
   mUpButton->setEnabled( false ); // b/c no item is selected yet
 
   mDownButton = new QToolButton( upDownBox );
   mDownButton->setObjectName( "mDownButton" );
-  mDownButton->setIcon( BarIconSet( "down", K3Icon::SizeSmall ) );
+  mDownButton->setIcon( BarIconSet( "go-down", K3Icon::SizeSmall ) );
   mDownButton->setEnabled( false ); // b/c no item is selected yet
 
   QWidget* spacer = new QWidget( upDownBox );

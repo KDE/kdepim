@@ -129,12 +129,12 @@ Kleo::DNAttributeOrderConfigWidget::DNAttributeOrderConfigWidget( DNAttributeMap
     const char * tooltip;
     const char * slot;
   } navButtons[] = {
-    { "2uparrow",    0, 1, I18N_NOOP( "Move to top" ),    SLOT(slotDoubleUpButtonClicked()) },
-    { "1uparrow",    1, 1, I18N_NOOP( "Move one up" ),    SLOT(slotUpButtonClicked()) },
-    { "1leftarrow",  2, 0, I18N_NOOP( "Remove from current attribute order" ), SLOT(slotLeftButtonClicked()) },
-    { "1rightarrow", 2, 2, I18N_NOOP( "Add to current attribute order" ), SLOT(slotRightButtonClicked()) },
-    { "1downarrow",  3, 1, I18N_NOOP( "Move one down" ),  SLOT(slotDownButtonClicked()) },
-    { "2downarrow",  4, 1, I18N_NOOP( "Move to bottom" ), SLOT(slotDoubleDownButtonClicked()) }
+    { "arrow-up-double",    0, 1, I18N_NOOP( "Move to top" ),    SLOT(slotDoubleUpButtonClicked()) },
+    { "arrow-up",    1, 1, I18N_NOOP( "Move one up" ),    SLOT(slotUpButtonClicked()) },
+    { "arrow-left",  2, 0, I18N_NOOP( "Remove from current attribute order" ), SLOT(slotLeftButtonClicked()) },
+    { "arrow-right", 2, 2, I18N_NOOP( "Add to current attribute order" ), SLOT(slotRightButtonClicked()) },
+    { "arrow-down",  3, 1, I18N_NOOP( "Move one down" ),  SLOT(slotDownButtonClicked()) },
+    { "arrow-down-double",  4, 1, I18N_NOOP( "Move to bottom" ), SLOT(slotDoubleDownButtonClicked()) }
   };
 
   for ( unsigned int i = 0 ; i < sizeof navButtons / sizeof *navButtons ; ++i ) {

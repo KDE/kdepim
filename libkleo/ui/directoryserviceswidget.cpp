@@ -102,10 +102,10 @@ Kleo::DirectoryServicesWidget::DirectoryServicesWidget(
     x500LV->setSorting( -1 );
 
     // taken from kmail's configuredialog.cpp
-    upButton->setIcon( BarIconSet( "up", K3Icon::SizeSmall ) );
+    upButton->setIcon( BarIconSet( "go-up", K3Icon::SizeSmall ) );
     upButton->setEnabled( false ); // b/c no item is selected yet
 
-    downButton->setIcon( BarIconSet( "down", K3Icon::SizeSmall ) );
+    downButton->setIcon( BarIconSet( "go-down", K3Icon::SizeSmall ) );
     downButton->setEnabled( false ); // b/c no item is selected yet
 #ifdef __GNUC__
 #warning "kde4: fix connect signal/slot" ;

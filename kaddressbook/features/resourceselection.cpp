@@ -62,7 +62,7 @@ class ResourceItem : public Q3CheckListItem
         mResourceIdentifier()
     {
       setOn( resource->isActive() );
-      setPixmap( 0, KIconLoader::global()->loadIcon( "contents", K3Icon::Small ) );
+      setPixmap( 0, KIconLoader::global()->loadIcon( "help-contents", K3Icon::Small ) );
       mChecked = isOn();
     }
 
@@ -75,7 +75,7 @@ class ResourceItem : public Q3CheckListItem
     {
       KPIM::ResourceABC* res = static_cast<KPIM::ResourceABC *>( mResource );
       setOn( res->subresourceActive( mResourceIdentifier ) );
-      setPixmap( 0, KIconLoader::global()->loadIcon( "contents", K3Icon::Small ) );
+      setPixmap( 0, KIconLoader::global()->loadIcon( "help-contents", K3Icon::Small ) );
       mChecked = isOn();
     }
 
@@ -235,7 +235,7 @@ void ResourceSelection::remove()
   int result = KMessageBox::warningContinueCancel( this,
         i18n( "<qt>Do you really want to remove the address book <b>%1</b>?</qt>" ,
           item->resource()->resourceName() ), "",
-        KGuiItem( i18n( "&Remove" ), "editdelete" ) );
+        KGuiItem( i18n( "&Remove" ), "edit-delete" ) );
   if ( result == KMessageBox::Cancel )
     return;
 

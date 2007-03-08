@@ -968,7 +968,7 @@ void KNode::DisplayedHeadersWidget::slotDelBtnClicked()
   if ( !mHeaderList->currentItem() )
     return;
 
-  if(KMessageBox::warningContinueCancel(this, i18n("Really delete this header?"),"",KGuiItem(i18n("&Delete"),"editdelete"))==KMessageBox::Continue) {
+  if(KMessageBox::warningContinueCancel(this, i18n("Really delete this header?"),"",KGuiItem(i18n("&Delete"),"edit-delete"))==KMessageBox::Continue) {
     KNDisplayedHeader *h = ( static_cast<HdrItem*>( mHeaderList->currentItem() ) )->header();
     d_ata->remove(h);
     delete mHeaderList->takeItem( mHeaderList->currentRow() );
@@ -1259,8 +1259,8 @@ KNode::FilterListWidget::FilterListWidget( const KComponentData &inst, QWidget *
   topL->setRowStretch(5,1);
   topL->setRowStretch(11,1);
 
-  a_ctive = SmallIcon("filter",16);
-  d_isabled = SmallIcon("filter",16,K3Icon::DisabledState);
+  a_ctive = SmallIcon("search-filter",16);
+  d_isabled = SmallIcon("search-filter",16,K3Icon::DisabledState);
 
   load();
 

@@ -542,39 +542,39 @@ void KNMainWidget::initActions()
 
   //navigation
   a_ctNavNextArt = actionCollection()->addAction("go_nextArticle" );
-  a_ctNavNextArt->setIcon(KIcon("next"));
+  a_ctNavNextArt->setIcon(KIcon("find-next"));
   a_ctNavNextArt->setText(i18n("&Next Article"));
   a_ctNavNextArt->setToolTip(i18n("Go to next article"));
   a_ctNavNextArt->setShortcuts(KShortcut("N;Right"));
   connect(a_ctNavNextArt, SIGNAL(triggered(bool)), h_drView, SLOT(nextArticle()));
 
   a_ctNavPrevArt = actionCollection()->addAction("go_prevArticle" );
-  a_ctNavPrevArt->setIcon(KIcon("previous"));
+  a_ctNavPrevArt->setIcon(KIcon("find-previous"));
   a_ctNavPrevArt->setText(i18n("&Previous Article"));
   a_ctNavPrevArt->setShortcuts(KShortcut("P;Left"));
   a_ctNavPrevArt->setToolTip(i18n("Go to previous article"));
   connect(a_ctNavPrevArt, SIGNAL(triggered(bool)), h_drView, SLOT(prevArticle()));
 
   a_ctNavNextUnreadArt = actionCollection()->addAction("go_nextUnreadArticle");
-  a_ctNavNextUnreadArt->setIcon(KIcon("1rightarrow"));
+  a_ctNavNextUnreadArt->setIcon(KIcon("arrow-right"));
   a_ctNavNextUnreadArt->setText(i18n("Next Unread &Article"));
   connect(a_ctNavNextUnreadArt, SIGNAL(triggered(bool)), SLOT(slotNavNextUnreadArt()));
   a_ctNavNextUnreadArt->setShortcut(QKeySequence(Qt::ALT+Qt::SHIFT+Qt::Key_Space));
 
   a_ctNavNextUnreadThread = actionCollection()->addAction("go_nextUnreadThread");
-  a_ctNavNextUnreadThread->setIcon(KIcon("2rightarrow"));
+  a_ctNavNextUnreadThread->setIcon(KIcon("arrow-right-double"));
   a_ctNavNextUnreadThread->setText(i18n("Next Unread &Thread"));
   connect(a_ctNavNextUnreadThread, SIGNAL(triggered(bool)), SLOT(slotNavNextUnreadThread()));
   a_ctNavNextUnreadThread->setShortcut(QKeySequence(Qt::SHIFT+Qt::Key_Space));
 
   a_ctNavNextGroup = actionCollection()->addAction("go_nextGroup");
-  a_ctNavNextGroup->setIcon(KIcon("down"));
+  a_ctNavNextGroup->setIcon(KIcon("go-down"));
   a_ctNavNextGroup->setText(i18n("Ne&xt Group"));
   connect(a_ctNavNextGroup, SIGNAL(triggered(bool)), c_olView, SLOT(nextGroup()));
   a_ctNavNextGroup->setShortcut(QKeySequence(Qt::Key_Plus));
 
   a_ctNavPrevGroup = actionCollection()->addAction("go_prevGroup");
-  a_ctNavPrevGroup->setIcon(KIcon("up"));
+  a_ctNavPrevGroup->setIcon(KIcon("go-up"));
   a_ctNavPrevGroup->setText(i18n("Pre&vious Group"));
   connect(a_ctNavPrevGroup, SIGNAL(triggered(bool)), c_olView, SLOT(prevGroup()));
   a_ctNavPrevGroup->setShortcut(QKeySequence(Qt::Key_Minus));
@@ -645,7 +645,7 @@ void KNMainWidget::initActions()
   connect(a_ctAccGetNewHdrsAll, SIGNAL(triggered(bool)), SLOT(slotAccGetNewHdrsAll()));
 
   a_ctAccDelete = actionCollection()->addAction("account_delete");
-  a_ctAccDelete->setIcon(KIcon("editdelete"));
+  a_ctAccDelete->setIcon(KIcon("edit-delete"));
   a_ctAccDelete->setText(i18n("&Delete Account"));
   connect(a_ctAccDelete, SIGNAL(triggered(bool)), SLOT(slotAccDelete()));
 
@@ -686,7 +686,7 @@ void KNMainWidget::initActions()
   connect(a_ctGrpUnsubscribe, SIGNAL(triggered(bool)), SLOT(slotGrpUnsubscribe()));
 
   a_ctGrpSetAllRead = actionCollection()->addAction("group_allRead");
-  a_ctGrpSetAllRead->setIcon(KIcon("goto"));
+  a_ctGrpSetAllRead->setIcon(KIcon("goto-page"));
   a_ctGrpSetAllRead->setText(i18n("Mark All as &Read"));
   connect(a_ctGrpSetAllRead, SIGNAL(triggered(bool)), SLOT(slotGrpSetAllRead()));
 
@@ -705,17 +705,17 @@ void KNMainWidget::initActions()
 
   //collection-view - folder
   a_ctFolNew = actionCollection()->addAction("folder_new");
-  a_ctFolNew->setIcon(KIcon("folder_new"));
+  a_ctFolNew->setIcon(KIcon("folder-new"));
   a_ctFolNew->setText(i18n("&New Folder"));
   connect(a_ctFolNew, SIGNAL(triggered(bool)), SLOT(slotFolNew()));
 
   a_ctFolNewChild = actionCollection()->addAction("folder_newChild");
-  a_ctFolNewChild->setIcon(KIcon("folder_new"));
+  a_ctFolNewChild->setIcon(KIcon("folder-new"));
   a_ctFolNewChild->setText(i18n("New &Subfolder"));
   connect(a_ctFolNewChild, SIGNAL(triggered(bool)), SLOT(slotFolNewChild()));
 
   a_ctFolDelete = actionCollection()->addAction("folder_delete");
-  a_ctFolDelete->setIcon(KIcon("editdelete"));
+  a_ctFolDelete->setIcon(KIcon("edit-delete"));
   a_ctFolDelete->setText(i18n("&Delete Folder"));
   connect(a_ctFolDelete, SIGNAL(triggered(bool)), SLOT(slotFolDelete()));
 
@@ -778,7 +778,7 @@ void KNMainWidget::initActions()
   a_ctArtSearch->setShortcut(QKeySequence(Qt::Key_F4));
 
   a_ctArtRefreshList = actionCollection()->addAction("view_Refresh");
-  a_ctArtRefreshList->setIcon(KIcon("reload"));
+  a_ctArtRefreshList->setIcon(KIcon("view-refresh"));
   a_ctArtRefreshList->setText(i18n("&Refresh List"));
   connect(a_ctArtRefreshList, SIGNAL(triggered(bool)), SLOT(slotArtRefreshList()));
   a_ctArtRefreshList->setShortcuts(KStandardShortcut::shortcut(KStandardShortcut::Reload));
@@ -825,7 +825,7 @@ void KNMainWidget::initActions()
   a_ctArtSetThreadUnread->setShortcut(QKeySequence(Qt::CTRL+Qt::Key_U));
 
   a_ctArtOpenNewWindow = actionCollection()->addAction("article_ownWindow");
-  a_ctArtOpenNewWindow->setIcon(KIcon("window_new"));
+  a_ctArtOpenNewWindow->setIcon(KIcon("window-new"));
   a_ctArtOpenNewWindow->setText(i18n("Open in Own &Window"));
   connect(a_ctArtOpenNewWindow, SIGNAL(triggered(bool)), SLOT(slotArtOpenNewWindow()));
   a_ctArtOpenNewWindow->setShortcut(QKeySequence(Qt::Key_O));
@@ -852,31 +852,31 @@ void KNMainWidget::initActions()
   a_ctScoreRaise->setShortcut(QKeySequence(Qt::CTRL+Qt::Key_I));
 
   a_ctArtToggleIgnored = actionCollection()->addAction("thread_ignore");
-  a_ctArtToggleIgnored->setIcon(KIcon("bottom"));
+  a_ctArtToggleIgnored->setIcon(KIcon("go-bottom"));
   a_ctArtToggleIgnored->setText(i18n("&Ignore Thread"));
   connect(a_ctArtToggleIgnored, SIGNAL(triggered(bool)), SLOT(slotArtToggleIgnored()));
   a_ctArtToggleIgnored->setShortcut(QKeySequence(Qt::Key_I));
 
   a_ctArtToggleWatched = actionCollection()->addAction("thread_watch");
-  a_ctArtToggleWatched->setIcon(KIcon("top"));
+  a_ctArtToggleWatched->setIcon(KIcon("go-top"));
   a_ctArtToggleWatched->setText(i18n("&Watch Thread"));
   connect(a_ctArtToggleWatched, SIGNAL(triggered(bool)), SLOT(slotArtToggleWatched()));
   a_ctArtToggleWatched->setShortcut(QKeySequence(Qt::Key_W));
 
   //header-view local articles
   a_ctArtSendOutbox = actionCollection()->addAction("net_sendPending");
-  a_ctArtSendOutbox->setIcon(KIcon("mail_send"));
+  a_ctArtSendOutbox->setIcon(KIcon("mail-send"));
   a_ctArtSendOutbox->setText(i18n("Sen&d Pending Messages"));
   connect(a_ctArtSendOutbox, SIGNAL(triggered(bool)), SLOT(slotArtSendOutbox()));
 
   a_ctArtDelete = actionCollection()->addAction("article_delete");
-  a_ctArtDelete->setIcon(KIcon("editdelete"));
+  a_ctArtDelete->setIcon(KIcon("edit-delete"));
   a_ctArtDelete->setText(i18n("&Delete Article"));
   connect(a_ctArtDelete, SIGNAL(triggered(bool)), SLOT(slotArtDelete()));
   a_ctArtDelete->setShortcut(QKeySequence(Qt::Key_Delete));
 
   a_ctArtSendNow = actionCollection()->addAction("article_sendNow");
-  a_ctArtSendNow->setIcon(KIcon("mail_send"));
+  a_ctArtSendNow->setIcon(KIcon("mail-send"));
   a_ctArtSendNow->setText(i18n("Send &Now"));
   connect(a_ctArtSendNow, SIGNAL(triggered(bool)), SLOT(slotArtSendNow()));
 
@@ -888,7 +888,7 @@ void KNMainWidget::initActions()
 
   //network
   a_ctNetCancel = actionCollection()->addAction("net_stop");
-  a_ctNetCancel->setIcon(KIcon("stop"));
+  a_ctNetCancel->setIcon(KIcon("process-stop"));
   a_ctNetCancel->setText(i18n("Stop &Network"));
   connect(a_ctNetCancel, SIGNAL(triggered(bool)), SLOT(slotNetCancel()));
   a_ctNetCancel->setEnabled(false);
@@ -1647,7 +1647,7 @@ void KNMainWidget::slotFolDelete()
     KMessageBox::sorry(knGlobals.topWidget, i18n("You cannot delete a standard folder."));
 
   else if( KMessageBox::Continue==KMessageBox::warningContinueCancel(knGlobals.topWidget,
-      i18n("Do you really want to delete this folder and all its children?"),"",KGuiItem(i18n("&Delete"),"editdelete")) ) {
+      i18n("Do you really want to delete this folder and all its children?"),"",KGuiItem(i18n("&Delete"),"edit-delete")) ) {
 
     if(!f_olManager->deleteFolder(f_olManager->currentFolder()))
       KMessageBox::sorry(knGlobals.topWidget,
@@ -1698,7 +1698,7 @@ void KNMainWidget::slotFolEmpty()
       return;
     }
     if( KMessageBox::Continue == KMessageBox::warningContinueCancel(
-        this, i18n("Do you really want to delete all articles in %1?", f_olManager->currentFolder()->name()),"",KGuiItem(i18n("&Delete"),"editdelete")) )
+        this, i18n("Do you really want to delete all articles in %1?", f_olManager->currentFolder()->name()),"",KGuiItem(i18n("&Delete"),"edit-delete")) )
       f_olManager->emptyFolder(f_olManager->currentFolder());
   }
 }

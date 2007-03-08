@@ -53,7 +53,7 @@ OverViewPage::OverViewPage( QWidget *parent, const char *name )
   layout->addWidget( label, 0, 0, 1, 3 );
 
   label = new QLabel( this );
-  label->setPixmap( KIconLoader::global()->loadIcon( "network", K3Icon::Desktop ) );
+  label->setPixmap( KIconLoader::global()->loadIcon( "network-wired", K3Icon::Desktop ) );
   layout->addWidget( label, 0, 3 );
 
   label = new QLabel( "", this );

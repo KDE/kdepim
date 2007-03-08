@@ -217,7 +217,7 @@ KNComposer::KNComposer(KNLocalArticle *a, const QString &text, const QString &si
 
   //file menu
   QAction *action = actionCollection()->addAction("send_now");
-  action->setIcon(KIcon("mail_send"));
+  action->setIcon(KIcon("mail-send"));
   action->setText(i18n("&Send Now"));
   connect(action, SIGNAL(triggered(bool)), SLOT(slotSendNow()));
   action->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_Return));
@@ -228,12 +228,12 @@ KNComposer::KNComposer(KNLocalArticle *a, const QString &text, const QString &si
   connect(action, SIGNAL(triggered(bool)), SLOT(slotSendLater()));
 
   action = actionCollection()->addAction("save_as_draft");
-  action->setIcon(KIcon("filesave"));
+  action->setIcon(KIcon("document-save"));
   action->setText(i18n("Save as &Draft"));
   connect(action, SIGNAL(triggered(bool)), SLOT(slotSaveAsDraft()));
 
   action = actionCollection()->addAction("art_delete");
-  action->setIcon(KIcon("editdelete"));
+  action->setIcon(KIcon("edit-delete"));
   action->setText(i18n("D&elete"));
   connect(action, SIGNAL(triggered(bool)), SLOT(slotArtDelete()));
 
@@ -294,12 +294,12 @@ KNComposer::KNComposer(KNLocalArticle *a, const QString &text, const QString &si
   //options menu
 
   a_ctDoPost = actionCollection()->add<KToggleAction>("send_news");
-  a_ctDoPost->setIcon(KIcon("filenew"));
+  a_ctDoPost->setIcon(KIcon("document-new"));
   a_ctDoPost->setText(i18n("Send &News Article"));
   connect(a_ctDoPost, SIGNAL(triggered(bool) ), SLOT(slotToggleDoPost()));
 
   a_ctDoMail = actionCollection()->add<KToggleAction>("send_mail");
-  a_ctDoMail->setIcon(KIcon("mail_generic"));
+  a_ctDoMail->setIcon(KIcon("mail"));
   a_ctDoMail->setText(i18n("Send E&mail"));
   connect(a_ctDoMail, SIGNAL(triggered(bool) ), SLOT(slotToggleDoMail()));
 
@@ -351,7 +351,7 @@ KNComposer::KNComposer(KNLocalArticle *a, const QString &text, const QString &si
   connect(v_iew->e_dit, SIGNAL(copyAvailable(bool)), rot13, SLOT(setEnabled(bool)));
 
   a_ctExternalEditor = actionCollection()->addAction("external_editor");
-  a_ctExternalEditor->setIcon(KIcon("run"));
+  a_ctExternalEditor->setIcon(KIcon("system-run"));
   a_ctExternalEditor->setText(i18n("Start &External Editor"));
   connect(a_ctExternalEditor, SIGNAL(triggered(bool)), SLOT(slotExternalEditor()));
 

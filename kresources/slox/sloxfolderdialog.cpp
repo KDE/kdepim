@@ -35,7 +35,7 @@ SloxFolderDialog::SloxFolderDialog( SloxFolderManager *manager, FolderType type,
   setCaption( i18n("Select Folder") );
   setButtons( Ok|Cancel|User1 );
   setDefaultButton( Ok );
-  setButtonGuiItem( User1, KGuiItem( i18n("Reload"), "reload" ) );
+  setButtonGuiItem( User1, KGuiItem( i18n("Reload"), "view-refresh" ) );
   mListView = new K3ListView( this );
   mListView->setRootIsDecorated( true );
   mListView->setShowSortIndicator( true );

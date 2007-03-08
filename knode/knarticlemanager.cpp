@@ -583,7 +583,7 @@ bool KNArticleManager::deleteArticles(KNLocalArticle::List &l, bool ask)
     }
     if( KMessageBox::Cancel == KMessageBox::warningContinueCancelList(
       knGlobals.topWidget, i18n("Do you really want to delete these articles?"), lst,
-        i18n("Delete Articles"), KGuiItem(i18n("&Delete"),"editdelete")) )
+        i18n("Delete Articles"), KGuiItem(i18n("&Delete"),"edit-delete")) )
       return false;
   }
 

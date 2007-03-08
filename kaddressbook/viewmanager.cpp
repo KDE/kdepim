@@ -315,7 +315,7 @@ void ViewManager::deleteView()
                        mActiveView->windowTitle() );
   QString caption = i18n( "Confirm Delete" );
 
-  if ( KMessageBox::warningContinueCancel( this, text, caption, KGuiItem( i18n( "&Delete" ), "editdelete" ) ) == KMessageBox::Continue ) {
+  if ( KMessageBox::warningContinueCancel( this, text, caption, KGuiItem( i18n( "&Delete" ), "edit-delete" ) ) == KMessageBox::Continue ) {
     mViewNameList.removeAll( mActiveView->windowTitle() );
 
     // remove the view from the config file
@@ -585,7 +585,7 @@ void ViewManager::initActions()
   action->setWhatsThis( i18n( "By pressing this button a dialog opens that allows you to modify the view of the addressbook. There you can add or remove fields that you want to be shown or hidden in the addressbook like the name for example." ) );
 
   action = coll->addAction( "view_add" );
-  action->setIcon( KIcon("window_new") );
+  action->setIcon( KIcon("window-new") );
   action->setText( i18n( "Add View..." ) );
   connect(action, SIGNAL(triggered(bool) ), SLOT( addView() ));
   action->setWhatsThis( i18n( "You can add a new view by choosing one from the dialog that appears after pressing the button. You have to give the view a name, so that you can distinguish between the different views." ) );
@@ -597,13 +597,13 @@ void ViewManager::initActions()
   mActionDeleteView->setWhatsThis( i18n( "By pressing this button you can delete the actual view, which you have added before." ) );
 
   action = coll->addAction( "view_refresh" );
-  action->setIcon( KIcon("reload") );
+  action->setIcon( KIcon("view-refresh") );
   action->setText( i18n( "Refresh View" ) );
   connect(action, SIGNAL(triggered(bool) ), SLOT( refreshView() ));
   action->setWhatsThis( i18n( "The view will be refreshed by pressing this button." ) );
 
   action = coll->addAction( "options_edit_filters" );
-  action->setIcon( KIcon("filter") );
+  action->setIcon( KIcon("search-filter") );
   action->setText( i18n( "Edit &Filters..." ) );
   connect(action, SIGNAL(triggered(bool) ), SLOT( configureFilters() ));
   action->setWhatsThis( i18n( "Edit the contact filters<p>You will be presented with a dialog, where you can add, remove and edit filters." ) );

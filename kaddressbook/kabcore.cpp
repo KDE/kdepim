@@ -1063,7 +1063,7 @@ void KABCore::initActions()
 
   // file menu
   mActionMail = coll->addAction( "file_mail" );
-  mActionMail->setIcon( KIcon("mail_send") );
+  mActionMail->setIcon( KIcon("mail-send") );
   mActionMail->setText( i18n( "&Send Email to Contact..." ) );
   connect(mActionMail, SIGNAL(triggered(bool)), SLOT( sendMail() ));
   action = KStandardAction::print( this, SLOT( print() ), actionCollection() );
@@ -1115,7 +1115,7 @@ void KABCore::initActions()
 //  mActionRedo->setWhatsThis( i18n( "Redoes the last <b>Cut</b>, <b>Copy</b> or <b>Paste</b>." ) );
 
   mActionDelete = coll->addAction( "edit_delete" );
-  mActionDelete->setIcon( KIcon("editdelete") );
+  mActionDelete->setIcon( KIcon("edit-delete") );
   mActionDelete->setText( i18n( "&Delete Contact" ) );
   connect(mActionDelete, SIGNAL(triggered(bool) ), SLOT( deleteContacts() ));
   mActionDelete->setShortcut(QKeySequence(Qt::Key_Delete));
@@ -1131,7 +1131,7 @@ void KABCore::initActions()
   // settings menu
   mActionJumpBar = coll->add<KToggleAction>( "options_show_jump_bar" );
   mActionJumpBar->setText( i18n( "Show Jump Bar" ) );
-  mActionJumpBar->setIcon( KIcon( "next" ) );
+  mActionJumpBar->setIcon( KIcon( "find-next" ) );
   mActionJumpBar->setWhatsThis( i18n( "Toggle whether the jump button bar shall be visible." ) );
   mActionJumpBar->setCheckedState( KGuiItem(i18n( "Hide Jump Bar" )) );
   connect( mActionJumpBar, SIGNAL( toggled( bool ) ), SLOT( setJumpButtonBarVisible( bool ) ) );
@@ -1156,7 +1156,7 @@ void KABCore::initActions()
 
   // misc
   action = coll->addAction( "ldap_lookup" );
-  action->setIcon( KIcon( "find" ) );
+  action->setIcon( KIcon( "edit-find" ) );
   action->setText( i18n( "&Lookup Addresses in LDAP Directory..." ) );
   connect(action, SIGNAL(triggered(bool)), SLOT( openLDAPDialog() ));
   action->setWhatsThis( i18n( "Search for contacts on a LDAP server<p>You will be presented with a dialog, where you can search for contacts and select the ones you want to add to your local address book." ) );

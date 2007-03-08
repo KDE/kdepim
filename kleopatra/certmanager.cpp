@@ -267,14 +267,14 @@ void CertManager::createActions() {
   connectEnableOperationSignal( this, action );
 
   action = coll->addAction( "view_stop_operations" );
-  action->setIcon( KIcon("stop") );
+  action->setIcon( KIcon("process-stop") );
   action->setText( i18n("Stop Operation") );
   connect(action, SIGNAL(triggered(bool) ), SIGNAL(stopOperations()));
   action->setShortcut(QKeySequence(Qt::Key_Escape));
   action->setEnabled( false );
 
   action = coll->addAction( "file_new_certificate" );
-  action->setIcon( KIcon("filenew") );
+  action->setIcon( KIcon("document-new") );
   action->setText( i18n("New Key Pair...") );
   connect(action, SIGNAL(triggered(bool) ), SLOT(newCertificate()));
 
@@ -309,14 +309,14 @@ void CertManager::createActions() {
 #endif
 
   mDeleteCertificateAction = coll->addAction( "edit_delete_certificate" );
-  mDeleteCertificateAction->setIcon( KIcon("editdelete") );
+  mDeleteCertificateAction->setIcon( KIcon("edit-delete") );
   mDeleteCertificateAction->setText( i18n("Delete") );
   connect(mDeleteCertificateAction, SIGNAL(triggered(bool) ), SLOT(slotDeleteCertificate()));
   mDeleteCertificateAction->setShortcut(QKeySequence(Qt::Key_Delete));
   connectEnableOperationSignal( this, mDeleteCertificateAction );
 
   mValidateCertificateAction = coll->addAction( "certificates_validate" );
-  mValidateCertificateAction->setIcon( KIcon("reload") );
+  mValidateCertificateAction->setIcon( KIcon("view-refresh") );
   mValidateCertificateAction->setText( i18n("Validate") );
   connect(mValidateCertificateAction, SIGNAL(triggered(bool) ), SLOT(slotValidate()));
   mValidateCertificateAction->setShortcut(QKeySequence(Qt::SHIFT + Qt::Key_F5));
@@ -383,7 +383,7 @@ void CertManager::createActions() {
                                   "location_combo_action", mNextFindRemote? 1 : 0 );
 
   mFindAction = coll->addAction( "find" );
-  mFindAction->setIcon( KIcon("find") );
+  mFindAction->setIcon( KIcon("edit-find") );
   mFindAction->setText( i18n("Find") );
   connect(mFindAction, SIGNAL(triggered(bool)), SLOT(slotSearch()));
 
@@ -1108,7 +1108,7 @@ void CertManager::slotDeleteCertificate() {
 
   if ( KMessageBox::warningContinueCancelList( this, msg, keyDisplayNames,
 					       i18n( "Delete Certificates" ),
-					       KGuiItem( i18n( "Delete" ), "editdelete" ),
+					       KGuiItem( i18n( "Delete" ), "edit-delete" ),
 					       "ConfirmDeleteCert", KMessageBox::Dangerous )
        != KMessageBox::Continue )
     return;

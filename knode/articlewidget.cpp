@@ -160,12 +160,12 @@ void ArticleWidget::initActions()
   connect(mReplyAction, SIGNAL(triggered(bool)), SLOT(slotReply()));
   mReplyAction->setShortcut(QKeySequence(Qt::Key_R));
   mRemailAction = mActionCollection->addAction("article_mailReply" );
-  mRemailAction->setIcon(KIcon("mail_reply"));
+  mRemailAction->setIcon(KIcon("mail-reply-sender"));
   mRemailAction->setText(i18n("Reply by E&mail..."));
   connect(mRemailAction, SIGNAL(triggered(bool)), SLOT(slotRemail()));
   mRemailAction->setShortcut(QKeySequence(Qt::Key_A));
   mForwardAction = mActionCollection->addAction("article_forward");
-  mForwardAction->setIcon(KIcon("mail_forward"));
+  mForwardAction->setIcon(KIcon("mail-forward"));
   mForwardAction->setText(i18n("Forw&ard by Email..."));
   connect(mForwardAction, SIGNAL(triggered(bool)), SLOT(slotForward()));
   mForwardAction->setShortcut(QKeySequence(Qt::Key_F));
@@ -242,15 +242,15 @@ void ArticleWidget::initActions()
   mCharsetSelectKeyb->setShortcut(QKeySequence(Qt::Key_C));
 
   QAction *action = mActionCollection->addAction("open_url");
-  action->setIcon(KIcon("fileopen"));
+  action->setIcon(KIcon("document-open"));
   action->setText(i18n("&Open URL"));
   connect(action, SIGNAL(triggered(bool)), SLOT(slotOpenURL()));
   action = mActionCollection->addAction("copy_url");
-  action->setIcon(KIcon("editcopy"));
+  action->setIcon(KIcon("edit-copy"));
   action->setText(i18n("&Copy Link Address"));
   connect(action, SIGNAL(triggered(bool)), SLOT( slotCopyURL()));
   action = mActionCollection->addAction("add_bookmark");
-  action->setIcon(KIcon("bookmark_add"));
+  action->setIcon(KIcon("bookmark-new"));
   action->setText(i18n("&Bookmark This Link"));
   connect(action, SIGNAL(triggered(bool)), SLOT(slotAddBookmark()));
   action = mActionCollection->addAction("add_addr_book");
@@ -260,11 +260,11 @@ void ArticleWidget::initActions()
   action->setText(i18n("&Open in Address Book"));
   connect(action, SIGNAL(triggered(bool) ), SLOT(slotOpenInAddressBook()));
   action = mActionCollection->addAction("open_attachment");
-  action->setIcon(KIcon("fileopen"));
+  action->setIcon(KIcon("document-open"));
   action->setText(i18n("&Open Attachment"));
   connect(action, SIGNAL(triggered(bool)), SLOT(slotOpenAttachment()));
   action = mActionCollection->addAction("save_attachment");
-  action->setIcon(KIcon("filesaveas"));
+  action->setIcon(KIcon("document-save-as"));
   action->setText(i18n("&Save Attachment As..."));
   connect(action, SIGNAL(triggered(bool)), SLOT(slotSaveAttachment()));
 }

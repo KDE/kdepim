@@ -108,11 +108,11 @@ void MainWidget::initActions()
   mGUIClient->actionCollection()->addAction( "sync", mActionSynchronize );
   connect( mActionSynchronize, SIGNAL( triggered() ), this, SLOT( sync() ) );
 
-  mActionAddGroup = new KAction( KIcon( "filenew" ), i18n("Add Group..."), this );
+  mActionAddGroup = new KAction( KIcon( "document-new" ), i18n("Add Group..."), this );
   mGUIClient->actionCollection()->addAction( "add_group", mActionAddGroup );
   connect( mActionAddGroup, SIGNAL( triggered() ), this, SLOT( addGroup() ) );
 
-  mActionDeleteGroup = new KAction( KIcon( "editdelete" ), i18n("Delete Group..."), this );
+  mActionDeleteGroup = new KAction( KIcon( "edit-delete" ), i18n("Delete Group..."), this );
   mGUIClient->actionCollection()->addAction( "delete_group", mActionDeleteGroup );
   connect( mActionDeleteGroup, SIGNAL( triggered() ), this, SLOT( deleteGroup() ) );
 

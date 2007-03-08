@@ -145,7 +145,7 @@ bool KNAccountManager::removeAccount(KNNntpAccount *a)
       i18n("This account cannot be deleted since there are some unsent messages for it.") );
   }
   else if ( KMessageBox::warningContinueCancel ( knGlobals.topWidget,
-            i18n("Do you really want to delete this account?"), "", KGuiItem( i18n("&Delete"), "editdelete") )
+            i18n("Do you really want to delete this account?"), "", KGuiItem( i18n("&Delete"), "edit-delete") )
             ==KMessageBox::Continue ) {
     lst = gManager->groupsOfAccount( a );
     for ( KNGroup::List::Iterator it = lst.begin(); it != lst.end(); ++it ) {
