@@ -34,8 +34,7 @@ class QSYNC_EXPORT SyncChange
   friend class SyncMapping;
 
   public:
-    enum Type
-    {
+    enum Type {
       UnknownChange,
       AddedChange,
       UnmodifiedChange,
@@ -44,7 +43,7 @@ class QSYNC_EXPORT SyncChange
     };
 
     SyncChange();
-    SyncChange( OSyncChange* );
+    SyncChange( OSyncChange *change );
     ~SyncChange();
 
     /**

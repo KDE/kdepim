@@ -36,7 +36,7 @@ Plugin::~Plugin()
 
 bool Plugin::isValid() const
 {
-  return ( mPlugin != 0 );
+  return mPlugin != 0;
 }
 
 QString Plugin::name() const

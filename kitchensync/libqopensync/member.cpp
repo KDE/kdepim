@@ -39,8 +39,9 @@ bool Member::isValid() const
 {
   OSyncError *error = 0;
 
-  if ( !mMember )
+  if ( !mMember ) {
     return false;
+  }
 
   if ( !osync_member_instance_plugin( mMember, pluginName().toUtf8(), &error ) ) {
     qDebug( "Plugin %s is not valid: %s", qPrintable( pluginName() ), osync_error_print( &error ) );
@@ -72,8 +73,9 @@ Plugin Member::plugin() const
   Plugin plugin;
 
   OSyncPlugin *oplugin = osync_member_get_plugin( mMember );
-  if ( oplugin )
+  if ( oplugin ) {
     plugin.mPlugin = oplugin;
+  }
 
   return plugin;
 }
@@ -115,10 +117,11 @@ Result Member::configuration( QByteArray &configurationData, bool useDefault ) c
 
   OSyncError *error = 0;
   osync_bool ok = false;
-  if ( useDefault )
+  if ( useDefault ) {
     ok = osync_member_get_config_or_default( mMember, &data, &size, &error );
-  else
+  } else {
     ok = osync_member_get_config( mMember, &data, &size, &error );
+  }
 
   if ( !ok ) {
     return Result( &error );
@@ -135,19 +138,21 @@ Result Member::save() const
   Q_ASSERT( mMember );
 
   OSyncError *error = 0;
-  if ( !osync_member_save( mMember, &error ) )
+  if ( !osync_member_save( mMember, &error ) ) {
     return Result( &error );
-  else
+  } else {
     return Result();
+  }
 }
 
 Result Member::instance( const Plugin &plugin ) const
 {
   OSyncError *error = 0;
-  if ( !osync_member_instance_plugin( mMember, plugin.name().toUtf8(), &error ) )
+  if ( !osync_member_instance_plugin( mMember, plugin.name().toUtf8(), &error ) ) {
     return Result( &error );
-  else
+  } else {
     return Result();
+  }
 }
 
 bool Member::operator==( const Member &member ) const
@@ -160,7 +165,10 @@ QString Member::scanDevices( const QString &query ) const
   Q_ASSERT( mMember );
 
   OSyncError *error = 0;
-  char *data = (char*)osync_member_call_plugin( mMember, "scan_devices", const_cast<char*>( query.toUtf8().data() ), &error );
+  char *data =
+    (char*)osync_member_call_plugin( mMember, "scan_devices",
+                                     const_cast<char*>( query.toUtf8().data() ),
+                                     &error );
   if ( error != 0 ) {
     osync_error_free( &error );
     return QString();
@@ -176,7 +184,10 @@ bool Member::testConnection( const QString &configuration ) const
   Q_ASSERT( mMember );
 
   OSyncError *error = 0;
-  int *result = (int*)osync_member_call_plugin( mMember, "test_connection", const_cast<char*>( configuration.toUtf8().data() ), &error );
+  int *result =
+    (int*)osync_member_call_plugin( mMember, "test_connection",
+                                    const_cast<char*>( configuration.toUtf8().data() ),
+                                    &error );
   if ( error != 0 ) {
     osync_error_free( &error );
     return false;

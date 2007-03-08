@@ -33,9 +33,11 @@ using namespace QSync;
 class CallbackHandler::ConflictEvent : public QEvent
 {
   public:
-    enum { Type = QEvent::User + 1 };
+    enum {
+      Type = QEvent::User + 1
+    };
 
-    ConflictEvent( const SyncMapping& mapping )
+    ConflictEvent( const SyncMapping &mapping )
       : QEvent( (QEvent::Type)(QEvent::User + 1) ), mMapping( mapping )
     {
     }
@@ -49,9 +51,11 @@ class CallbackHandler::ConflictEvent : public QEvent
 class CallbackHandler::ChangeEvent : public QEvent
 {
   public:
-    enum { Type = QEvent::User + 2 };
+    enum {
+      Type = QEvent::User + 2
+    };
 
-    ChangeEvent( const SyncChangeUpdate& change )
+    ChangeEvent( const SyncChangeUpdate &change )
       : QEvent( (QEvent::Type)(QEvent::User + 2) ), mChange( change )
     {
     }
@@ -65,9 +69,11 @@ class CallbackHandler::ChangeEvent : public QEvent
 class CallbackHandler::MappingEvent : public QEvent
 {
   public:
-    enum { Type = QEvent::User + 3 };
+    enum {
+      Type = QEvent::User + 3
+    };
 
-    MappingEvent( const SyncMappingUpdate& mapping )
+    MappingEvent( const SyncMappingUpdate &mapping )
       : QEvent( (QEvent::Type)(QEvent::User + 3) ), mMapping( mapping )
     {
     }
@@ -81,9 +87,11 @@ class CallbackHandler::MappingEvent : public QEvent
 class CallbackHandler::EngineEvent : public QEvent
 {
   public:
-    enum { Type = QEvent::User + 4 };
+    enum {
+      Type = QEvent::User + 4
+    };
 
-    EngineEvent( const SyncEngineUpdate& engine )
+    EngineEvent( const SyncEngineUpdate &engine )
       : QEvent( (QEvent::Type)(QEvent::User + 4) ), mEngine( engine )
     {
     }
@@ -97,9 +105,11 @@ class CallbackHandler::EngineEvent : public QEvent
 class CallbackHandler::MemberEvent : public QEvent
 {
   public:
-    enum { Type = QEvent::User + 5 };
+    enum {
+      Type = QEvent::User + 5
+    };
 
-    MemberEvent( const SyncMemberUpdate& member )
+    MemberEvent( const SyncMemberUpdate &member )
       : QEvent( (QEvent::Type)(QEvent::User + 5) ), mMember( member )
     {
     }
@@ -129,7 +139,7 @@ void CallbackHandler::setEngine( Engine *engine )
   osengine_set_memberstatus_callback( engine->mEngine, &member_callback, this );
 }
 
-Engine* CallbackHandler::engine() const
+Engine *CallbackHandler::engine() const
 {
   return mEngine;
 }

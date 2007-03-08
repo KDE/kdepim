@@ -36,7 +36,7 @@ class QSYNC_EXPORT SyncMapping
 
   public:
     SyncMapping();
-    SyncMapping( OSyncMapping*, OSyncEngine* );
+    SyncMapping( OSyncMapping *map, OSyncEngine *engine );
     ~SyncMapping();
 
     bool isValid() const;

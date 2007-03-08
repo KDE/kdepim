@@ -99,8 +99,9 @@ Result::Result( OSyncError **error, bool deleteError )
   mName = QString::fromUtf8( osync_error_get_name( error ) );
   mMessage = QString::fromUtf8( osync_error_print( error ) );
 
-  if ( deleteError )
+  if ( deleteError ) {
     osync_error_free( error );
+  }
 }
 
 Result::~Result()
@@ -144,6 +145,6 @@ bool Result::isError() const
 
 Result::operator bool () const
 {
-  return ( mType != NoError );
+  return mType != NoError;
 }
 

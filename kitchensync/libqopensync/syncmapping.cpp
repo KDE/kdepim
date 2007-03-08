@@ -91,8 +91,9 @@ SyncChange SyncMapping::changeAt( int pos ) const
 {
   Q_ASSERT( mMapping );
 
-  if ( pos < 0 || pos >= osengine_mapping_num_changes( mMapping ) )
+  if ( pos < 0 || pos >= osengine_mapping_num_changes( mMapping ) ) {
     return SyncChange();
+  }
 
   OSyncChange *ochange = osengine_mapping_nth_change( mMapping, pos );
 

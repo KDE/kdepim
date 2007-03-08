@@ -65,8 +65,10 @@ class QSYNC_EXPORT Environment
         GroupIterator &operator++( int ) { mPos++; return *this; }
         GroupIterator &operator--() { mPos--; return *this; }
         GroupIterator &operator--( int ) { mPos--; return *this; }
-        bool operator==( const GroupIterator &it ) { return mEnvironment == it.mEnvironment && mPos == it.mPos; }
-        bool operator!=( const GroupIterator &it ) { return mEnvironment == it.mEnvironment && mPos != it.mPos; }
+        bool operator==( const GroupIterator &it )
+          { return mEnvironment == it.mEnvironment && mPos == it.mPos; }
+        bool operator!=( const GroupIterator &it )
+          { return mEnvironment == it.mEnvironment && mPos != it.mPos; }
 
       private:
         Environment *mEnvironment;
@@ -98,8 +100,10 @@ class QSYNC_EXPORT Environment
         PluginIterator &operator++( int ) { mPos++; return *this; }
         PluginIterator &operator--() { mPos--; return *this; }
         PluginIterator &operator--( int ) { mPos--; return *this; }
-        bool operator==( const PluginIterator &it ) { return mEnvironment == it.mEnvironment && mPos == it.mPos; }
-        bool operator!=( const PluginIterator &it ) { return mEnvironment == it.mEnvironment && mPos != it.mPos; }
+        bool operator==( const PluginIterator &it )
+          { return mEnvironment == it.mEnvironment && mPos == it.mPos; }
+        bool operator!=( const PluginIterator &it )
+          { return mEnvironment == it.mEnvironment && mPos != it.mPos; }
 
       private:
         Environment *mEnvironment;

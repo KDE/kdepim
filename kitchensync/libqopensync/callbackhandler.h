@@ -48,7 +48,7 @@ class QSYNC_EXPORT CallbackHandler : public QObject
     ~CallbackHandler();
 
     void setEngine( Engine *engine );
-    Engine* engine() const;
+    Engine *engine() const;
 
   signals:
     void conflict( QSync::SyncMapping mapping );

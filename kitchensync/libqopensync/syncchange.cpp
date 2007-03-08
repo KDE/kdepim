@@ -41,7 +41,7 @@ SyncChange::~SyncChange()
 
 bool SyncChange::isValid() const
 {
-  return ( mSyncChange != 0 );
+  return mSyncChange != 0;
 }
 
 void SyncChange::setUid( const QString &uid )
@@ -66,7 +66,9 @@ QString SyncChange::hash() const
 
 void SyncChange::setData( const QString &data )
 {
-  osync_change_set_data( mSyncChange, const_cast<char*>( data.toUtf8().data() ), data.toUtf8().size(), true );
+  osync_change_set_data( mSyncChange,
+                         const_cast<char*>( data.toUtf8().data() ), data.toUtf8().size(),
+                         true );
 }
 
 QString SyncChange::data() const
@@ -75,11 +77,13 @@ QString SyncChange::data() const
 
   QString content;
   if ( objectFormatName() == "file" ) {
-    fileFormat *format = (fileFormat*)osync_change_get_data( mSyncChange );
-    if ( format )
+    fileFormat *format = (fileFormat *)osync_change_get_data( mSyncChange );
+    if ( format ) {
       content = QString::fromUtf8( format->data, format->size );
-  } else
+    }
+  } else {
     content = QString::fromUtf8( osync_change_get_data( mSyncChange ), size );
+  }
 
   return content;
 }

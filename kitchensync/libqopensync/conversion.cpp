@@ -46,7 +46,7 @@ QStringList Conversion::objectTypes() const
   OSyncFormatEnv *formatEnv = osync_conv_env_new( mEnvironment );
   Q_ASSERT( formatEnv );
 
-  QStringList types;	
+  QStringList types;
   for ( int i = 0; i < osync_conv_num_objtypes( formatEnv ); i++ ) {
     OSyncObjType *type = osync_conv_nth_objtype( formatEnv, i );
     types.append( QString::fromUtf8( osync_objtype_get_name( type ) ) );

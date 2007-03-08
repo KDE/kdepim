@@ -54,7 +54,7 @@ class QSYNC_EXPORT SyncMemberUpdate
     };
 
     SyncMemberUpdate();
-    SyncMemberUpdate( OSyncMemberUpdate* );
+    SyncMemberUpdate( OSyncMemberUpdate *update );
     ~SyncMemberUpdate();
 
     Type type() const;
@@ -81,7 +81,7 @@ class QSYNC_EXPORT SyncChangeUpdate
     };
 
     SyncChangeUpdate();
-    SyncChangeUpdate( OSyncChangeUpdate* );
+    SyncChangeUpdate( OSyncChangeUpdate *update );
     ~SyncChangeUpdate();
 
     Type type() const;
@@ -110,7 +110,7 @@ class QSYNC_EXPORT SyncMappingUpdate
     };
 
     SyncMappingUpdate();
-    SyncMappingUpdate( OSyncMappingUpdate*, OSyncEngine* );
+    SyncMappingUpdate( OSyncMappingUpdate *update, OSyncEngine *engine );
     ~SyncMappingUpdate();
 
     Type type() const;
@@ -142,7 +142,7 @@ class QSYNC_EXPORT SyncEngineUpdate
     };
 
     SyncEngineUpdate();
-    SyncEngineUpdate( OSyncEngineUpdate* );
+    SyncEngineUpdate( OSyncEngineUpdate *update );
     ~SyncEngineUpdate();
 
     Type type() const;

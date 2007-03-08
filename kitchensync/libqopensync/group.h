@@ -47,15 +47,13 @@ class QSYNC_EXPORT GroupConfig
     OSyncGroup *mGroup;
 };
 
-
 class QSYNC_EXPORT Group
 {
   friend class Engine;
   friend class Environment;
 
   public:
-    enum LockType
-    {
+    enum LockType {
       LockOk,
       Locked,
       LockStale

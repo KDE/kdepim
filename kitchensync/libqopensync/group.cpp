@@ -19,7 +19,6 @@
     Boston, MA 02110-1301, USA.
 */
 
-
 #include <QtCore/QFile>
 #include <QtCore/QTextStream>
 #include <QtXml/QDomDocument>
@@ -46,17 +45,20 @@ QStringList GroupConfig::activeObjectTypes() const
 {
   Q_ASSERT( mGroup );
 
-  const QString fileName = QString( "%1/filter.conf" ).arg( osync_group_get_configdir( mGroup ) );
+  const QString fileName =
+    QString( "%1/filter.conf" ).arg( osync_group_get_configdir( mGroup ) );
 
   QFile file( fileName );
-  if ( !file.open( QIODevice::ReadOnly ) )
+  if ( !file.open( QIODevice::ReadOnly ) ) {
     return QStringList();
+  }
 
   QDomDocument document;
 
   QString message;
   if ( !document.setContent( &file, &message ) ) {
-    qDebug( "Error on loading %s: %s", qPrintable( fileName ), qPrintable( message ) );
+    qDebug( "Error on loading %s: %s",
+            qPrintable( fileName ), qPrintable( message ) );
     return QStringList();
   }
   file.close();
@@ -67,8 +69,9 @@ QStringList GroupConfig::activeObjectTypes() const
   QDomNode node = element.firstChild();
   while ( !node.isNull() ) {
     QDomElement childElement = node.toElement();
-    if ( !childElement.isNull() )
+    if ( !childElement.isNull() ) {
       objectTypes.append( childElement.tagName() );
+    }
 
     node = node.nextSibling();
   }
@@ -92,18 +95,19 @@ void GroupConfig::setActiveObjectTypes( const QStringList &objectTypes )
     element.appendChild( entry );
   }
 
-  const QString fileName = QString( "%1/filter.conf" ).arg( osync_group_get_configdir( mGroup ) );
+  const QString fileName =
+    QString( "%1/filter.conf" ).arg( osync_group_get_configdir( mGroup ) );
 
   QFile file( fileName );
-  if ( !file.open( QIODevice::WriteOnly ) )
+  if ( !file.open( QIODevice::WriteOnly ) ) {
     return;
+  }
 
   QTextStream s( &file );
   s.setCodec( "UTF-8" );
   s << document.toString();
   file.close();
 }
-
 
 Group::Group()
   : mGroup( 0 )
@@ -116,7 +120,7 @@ Group::~Group()
 
 bool Group::isValid() const
 {
-  return ( mGroup != 0 );
+  return mGroup != 0;
 }
 
 Group::Iterator Group::begin()
@@ -153,8 +157,9 @@ void Group::setLastSynchronization( const QDateTime &dateTime )
 {
   Q_ASSERT( mGroup );
 
-  if ( dateTime.isValid() )
+  if ( dateTime.isValid() ) {
     osync_group_set_last_synchronization( mGroup, dateTime.toTime_t() );
+  }
 }
 
 QDateTime Group::lastSynchronization() const
@@ -163,8 +168,9 @@ QDateTime Group::lastSynchronization() const
 
   QDateTime dateTime;
   time_t time = osync_group_get_last_synchronization( mGroup );
-  if ( time != 0 )
+  if ( time != 0 ) {
     dateTime.setTime_t( time );
+  }
 
   return dateTime;
 }
@@ -229,8 +235,9 @@ Member Group::memberAt( int pos ) const
 
   Member member;
 
-  if ( pos < 0 || pos >= memberCount() )
+  if ( pos < 0 || pos >= memberCount() ) {
     return member;
+  }
 
   member.mMember = osync_group_nth_member( mGroup, pos );
 
@@ -250,8 +257,9 @@ Filter Group::filterAt( int pos ) const
 
   Filter filter;
 
-  if ( pos < 0 || pos >= filterCount() )
+  if ( pos < 0 || pos >= filterCount() ) {
     return filter;
+  }
 
   filter.mFilter = osync_group_nth_filter( mGroup, pos );
 
@@ -263,10 +271,11 @@ Result Group::save()
   Q_ASSERT( mGroup );
 
   OSyncError *error = 0;
-  if ( !osync_group_save( mGroup, &error ) )
+  if ( !osync_group_save( mGroup, &error ) ) {
     return Result( &error );
-  else
+  } else {
     return Result();
+  }
 }
 
 void Group::setObjectTypeEnabled( const QString &objectType, bool enabled )

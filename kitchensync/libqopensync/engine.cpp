@@ -41,10 +41,11 @@ Engine::~Engine()
 Result Engine::initialize()
 {
   OSyncError *error = 0;
-  if ( !osengine_init( mEngine, &error ) )
+  if ( !osengine_init( mEngine, &error ) ) {
     return Result( &error );
-  else
+  } else {
     return Result();
+  }
 }
 
 void Engine::finalize()
@@ -55,10 +56,11 @@ void Engine::finalize()
 Result Engine::synchronize()
 {
   OSyncError *error = 0;
-  if ( !osengine_synchronize( mEngine, &error ) )
+  if ( !osengine_synchronize( mEngine, &error ) ) {
     return Result( &error );
-  else
+  } else {
     return Result();
+  }
 }
 
 void Engine::abort()

@@ -36,7 +36,7 @@ Filter::~Filter()
 
 bool Filter::isValid() const
 {
-  return (mFilter != 0);
+  return mFilter != 0;
 }
 
 void Filter::setConfiguration( const QString &configuration )

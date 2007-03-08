@@ -61,8 +61,9 @@ SyncMemberUpdate::SyncMemberUpdate( OSyncMemberUpdate *update )
       break;
   }
 
-  if ( update->error )
+  if ( update->error ) {
     mResult = Result( &(update->error) );
+  }
 
   mMember.mMember = update->member;
 }
@@ -85,7 +86,6 @@ Member SyncMemberUpdate::member() const
 {
   return mMember;
 }
-
 
 SyncChangeUpdate::SyncChangeUpdate()
 {
@@ -111,8 +111,9 @@ SyncChangeUpdate::SyncChangeUpdate( OSyncChangeUpdate *update )
       break;
   }
 
-  if ( update->error )
+  if ( update->error ) {
     mResult = Result( &(update->error) );
+  }
 
   mChange = SyncChange( update->change );
   mMemberId = update->member_id;
@@ -152,7 +153,8 @@ SyncMappingUpdate::SyncMappingUpdate()
 {
 }
 
-SyncMappingUpdate::SyncMappingUpdate( OSyncMappingUpdate *update, OSyncEngine *engine )
+SyncMappingUpdate::SyncMappingUpdate( OSyncMappingUpdate *update,
+                                      OSyncEngine *engine )
 {
   switch ( update->type ) {
     case MAPPING_SOLVED:
@@ -166,8 +168,9 @@ SyncMappingUpdate::SyncMappingUpdate( OSyncMappingUpdate *update, OSyncEngine *e
       break;
   }
 
-  if ( update->error )
+  if ( update->error ) {
     mResult = Result( &(update->error) );
+  }
 
   mWinner = update->winner;
   mMapping.mEngine = engine;
@@ -231,8 +234,9 @@ SyncEngineUpdate::SyncEngineUpdate( OSyncEngineUpdate *update )
       break;
   }
 
-  if ( update->error )
+  if ( update->error ) {
     mResult = Result( &(update->error) );
+  }
 }
 
 SyncEngineUpdate::~SyncEngineUpdate()

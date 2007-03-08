@@ -70,19 +70,21 @@ Environment::PluginIterator Environment::pluginEnd()
 Result Environment::initialize()
 {
   OSyncError *error = 0;
-  if ( !osync_env_initialize( mEnvironment, &error ) )
+  if ( !osync_env_initialize( mEnvironment, &error ) ) {
     return Result( &error );
-  else
+  } else {
     return Result();
+  }
 }
 
 Result Environment::finalize()
 {
   OSyncError *error = 0;
-  if ( !osync_env_finalize( mEnvironment, &error ) )
-    return Result( &error);
-  else
+  if ( !osync_env_finalize( mEnvironment, &error ) ) {
+    return Result( &error );
+  } else {
     return Result();
+  }
 }
 
 int Environment::groupCount() const
@@ -94,8 +96,9 @@ Group Environment::groupAt( int pos ) const
 {
   Group group;
 
-  if ( pos < 0 || pos >= groupCount() )
+  if ( pos < 0 || pos >= groupCount() ) {
     return group;
+  }
 
   OSyncGroup *ogroup = osync_env_nth_group( mEnvironment, pos );
   group.mGroup = ogroup;
@@ -108,8 +111,9 @@ Group Environment::groupByName( const QString &name ) const
   Group group;
 
   OSyncGroup *ogroup = osync_env_find_group( mEnvironment, name.toLatin1() );
-  if ( ogroup )
+  if ( ogroup ) {
     group.mGroup = ogroup;
+  }
 
   return group;
 }
@@ -119,8 +123,9 @@ Group Environment::addGroup()
   Group group;
 
   OSyncGroup *ogroup = osync_group_new( mEnvironment );
-  if ( ogroup )
+  if ( ogroup ) {
     group.mGroup = ogroup;
+  }
 
   return group;
 }
@@ -128,10 +133,11 @@ Group Environment::addGroup()
 Result Environment::removeGroup( const Group &group ) const
 {
   OSyncError *error = 0;
-  if ( !osync_group_delete( group.mGroup, &error ) )
+  if ( !osync_group_delete( group.mGroup, &error ) ) {
     return Result( &error );
-  else
+  } else {
     return Result();
+  }
 }
 
 int Environment::pluginCount() const
@@ -143,8 +149,9 @@ Plugin Environment::pluginAt( int pos ) const
 {
   Plugin plugin;
 
-  if ( pos < 0 || pos >= pluginCount() )
+  if ( pos < 0 || pos >= pluginCount() ) {
     return plugin;
+  }
 
   OSyncPlugin *oplugin = osync_env_nth_plugin( mEnvironment, pos );
   plugin.mPlugin = oplugin;
@@ -157,8 +164,9 @@ Plugin Environment::pluginByName( const QString &name ) const
   Plugin plugin;
 
   OSyncPlugin *oplugin = osync_env_find_plugin( mEnvironment, name.toLatin1() );
-  if ( oplugin )
+  if ( oplugin ) {
     plugin.mPlugin = oplugin;
+  }
 
   return plugin;
 }
