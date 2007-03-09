@@ -34,6 +34,7 @@ Name[tr]=Uygulama Sekizli Akışı
 Name[x-test]=xxApplication Octetstreamxx
 Comment=A bodypart formatter plugin for text/calendar
 Comment[af]='n Data (boodskap lyf) formateer inprop module vir 'text/calendar'
+Comment[bg]=Редактор с поддръжка на форматиране за текст/календар
 Comment[ca]=Un endollable formatador del cos per a text/calendar
 Comment[cs]=Formátovač těla emailu pro typ text/calendar
 Comment[da]=Et bodypart formateringsplugin for text/calendar
