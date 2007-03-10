@@ -273,7 +273,7 @@ bool kio_sieveProtocol::parseCapabilities(bool requestCapabilities/* = false*/)
 			setMetaData("tlsSupported", "true");
 			
 		} else {
-			ksDebug() << "Unrecognised key." << endl;
+			ksDebug() << "Unrecognised key " << r.getKey() << endl;
 		}
 	}
 	
