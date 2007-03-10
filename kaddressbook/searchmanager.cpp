@@ -81,22 +81,56 @@ void SearchManager::search( const QString &pattern, const KABC::Field::List &fie
     if ( KPIM::DistributionList::isDistributionList( *it ) )
       continue;
 #endif
+
+    bool found = false;
+    // search over all fields
     KABC::Field::List::ConstIterator fieldIt( fieldList.begin() );
     const KABC::Field::List::ConstIterator fieldEndIt( fieldList.end() );
     for ( ; fieldIt != fieldEndIt; ++fieldIt ) {
 
       if ( type == StartsWith && (*fieldIt)->value( *it ).startsWith( pattern, Qt::CaseInsensitive ) ) {
         mContacts.append( *it );
+        found = true;
         break;
       } else if ( type == EndsWith && (*fieldIt)->value( *it ).endsWith( pattern, Qt::CaseInsensitive ) ) {
         mContacts.append( *it );
+        found = true;
         break;
       } else if ( type == Contains && (*fieldIt)->value( *it ).contains( pattern, Qt::CaseInsensitive ) ) {
         mContacts.append( *it );
+        found = true;
         break;
       } else if ( type == Equals && (*fieldIt)->value( *it ).localeAwareCompare( pattern ) == 0 ) {
         mContacts.append( *it );
+        found = true;
         break;
+      }
+    }
+
+    if ( !found ) {
+      // search over custom fields
+      const QStringList customs = (*it).customs();
+
+      QStringList::ConstIterator customIt( customs.begin() );
+      const QStringList::ConstIterator customEndIt( customs.end() );
+      for ( ; customIt != customEndIt; ++customIt ) {
+        int pos = (*customIt).find( ':' );
+        if ( pos != -1 ) {
+          const QString value = (*customIt).mid( pos + 1 );
+          if ( type == StartsWith && value.startsWith( pattern, Qt::CaseInsensitive ) ) {
+            mContacts.append( *it );
+            break;
+          } else if ( type == EndsWith && value.endsWith( pattern, Qt::CaseInsensitive ) ) {
+            mContacts.append( *it );
+            break;
+          } else if ( type == Contains && value.contains( pattern, Qt::CaseInsensitive ) != -1 ) {
+            mContacts.append( *it );
+            break;
+          } else if ( type == Equals && value.localeAwareCompare( pattern ) == 0 ) {
+            mContacts.append( *it );
+            break;
+          }
+        }
       }
     }
   }
