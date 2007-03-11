@@ -67,7 +67,7 @@ qt4_add_dbus_adaptor(korn_SRCS org.kde.korn.MailDrop.xml dbusdrop.h DBUSDrop )
 
 kde4_add_executable(korn ${korn_SRCS})
 
-target_link_libraries(korn  ${KDE4_KIO_LIBS} phononcore)
+target_link_libraries(korn  ${KDE4_KIO_LIBS} ${KDE4_PHONONCORE_LIBS})
 
 install(TARGETS korn  DESTINATION ${BIN_INSTALL_DIR} )
 

@@ -12,7 +12,7 @@ kde4_add_plugin(kmail_bodypartformatter_text_vcard WITH_PREFIX ${kmail_bodypartf
 
 
 
-target_link_libraries(kmail_bodypartformatter_text_vcard  ${KDE4_KDECORE_LIBS} kdepim kmime)
+target_link_libraries(kmail_bodypartformatter_text_vcard  ${KDE4_KDECORE_LIBS} ${KDE4_KMIME_LIBS} kdepim)
 
 install(TARGETS kmail_bodypartformatter_text_vcard  DESTINATION ${PLUGIN_INSTALL_DIR})
 

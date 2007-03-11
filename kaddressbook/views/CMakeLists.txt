@@ -22,7 +22,7 @@ kde4_add_plugin(kaddrbk_cardview WITH_PREFIX ${kaddrbk_cardview_PART_SRCS})
 
 
 
-target_link_libraries(kaddrbk_cardview  ${KDE4_KDECORE_LIBS} kaddressbook kabc)
+target_link_libraries(kaddrbk_cardview  ${KDE4_KDECORE_LIBS} ${KDE4_KABC_LIBS} kaddressbook)
 
 install(TARGETS kaddrbk_cardview  DESTINATION ${PLUGIN_INSTALL_DIR})
 
