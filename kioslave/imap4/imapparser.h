@@ -28,7 +28,6 @@
 #include <q3valuelist.h>
 #include <q3ptrlist.h>
 #include <q3asciidict.h>
-//Added by qt3to4:
 #include <Q3CString>
 
 #include <kio/authinfo.h>
@@ -212,7 +211,7 @@ public:
   /* @brief return the currently selected mailbox */
   const QString getCurrentBox ()
   {
-    return rfcDecoder::fromIMAP(currentBox);
+    return RfcCodecs::decodeImapFolderName(currentBox);
   };
 
   /**
@@ -246,7 +245,7 @@ public:
    * @param resultInfo The resultinfo from the command
    * @return success or failure
    */
-  bool clientAuthenticate (KIO::SlaveBase *slave, KIO::AuthInfo &ai, const QString & aFQDN, 
+  bool clientAuthenticate (KIO::SlaveBase *slave, KIO::AuthInfo &ai, const QString & aFQDN,
     const QString & aAuth, bool isSSL, QString & resultInfo);
 
   /**
@@ -379,7 +378,7 @@ public:
 
   /** extract the box,section,list type, uid, uidvalidity,info from an url */
   static void parseURL (const KUrl & _url, QString & _box, QString & _section,
-                        QString & _type, QString & _uid, QString & _validity, 
+                        QString & _type, QString & _uid, QString & _validity,
                         QString & _info);
 
 
@@ -473,13 +472,13 @@ protected:
   /** @brief the results from search/acl commands */
   QStringList lastResults;
 
-  /** 
+  /**
    * @brief namespace prefix - delimiter association
-   * The namespace is cleaned before so that it does not contain the delimiter 
+   * The namespace is cleaned before so that it does not contain the delimiter
    */
   QMap<QString, QString> namespaceToDelimiter;
 
-  /** 
+  /**
    * @brief list of namespaces in the form: section=namespace=delimiter
    * section is 0 (personal), 1 (other users) or 2 (shared)
    */

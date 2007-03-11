@@ -21,13 +21,14 @@
  *
  *********************************************************************/
 
-
 #include "mailaddress.h"
-#include "rfcdecoder.h"
 #include "mimehdrline.h"
+#include <kimap/rfccodecs.h>
 #include <kmime/kmime_util.h>
 #include <QByteArray>
 #include <Q3PtrList>
+
+using namespace KIMAP;
 
 mailAddress::mailAddress ()
 {
@@ -180,7 +181,7 @@ mailAddress::parseAddress (const char *aCStr)
 //      if(fullName[0] == '"')
 //        fullName = fullName.mid(1,fullName.length()-2);
 //      fullName = fullName.simplified().trimmed();
-//      fullName = rfcDecoder::decodeRFC2047String(fullName.ascii());
+//      fullName = RfcCodecs::decodeRFC2047String(fullName.ascii());
     }
 #endif
     if (!rawComment.isEmpty ())
@@ -188,7 +189,7 @@ mailAddress::parseAddress (const char *aCStr)
       if (rawComment[0] == '(')
         rawComment = rawComment.mid (1, rawComment.length () - 2);
       rawComment = rawComment.trimmed ();
-//      comment = rfcDecoder::decodeRFC2047String(comment.ascii());
+//      comment = RfcCodecs::decodeRFC2047String(comment.ascii());
     }
   }
   else
@@ -235,12 +236,12 @@ mailAddress::isEmpty () const
 void
 mailAddress::setFullName (const QString & _str)
 {
-  rawFullName = rfcDecoder::encodeRFC2047String (_str).toLatin1 ();
+  rawFullName = RfcCodecs::encodeRFC2047String (_str).toLatin1 ();
 }
 const QString
 mailAddress::getFullName () const
 {
-  return rfcDecoder::decodeRFC2047String (rawFullName);
+  return RfcCodecs::decodeRFC2047String (rawFullName);
 }
 
 void
@@ -252,12 +253,12 @@ mailAddress::setCommentRaw (const QByteArray & _str)
 void
 mailAddress::setComment (const QString & _str)
 {
-  rawComment = rfcDecoder::encodeRFC2047String (_str).toLatin1 ();
+  rawComment = RfcCodecs::encodeRFC2047String (_str).toLatin1 ();
 }
 const QString
 mailAddress::getComment () const
 {
-  return rfcDecoder::decodeRFC2047String (rawComment);
+  return RfcCodecs::decodeRFC2047String (rawComment);
 }
 
 const QByteArray &

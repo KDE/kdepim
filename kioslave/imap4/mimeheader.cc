@@ -18,10 +18,8 @@
 #include "mimeheader.h"
 #include "mimehdrline.h"
 #include "mailheader.h"
-#include "rfcdecoder.h"
 
 #include <QRegExp>
-//Added by qt3to4:
 #include <Q3CString>
 
 // #include <iostream.h>
@@ -31,6 +29,9 @@
 #include <kmimetype.h>
 #include <kcodecs.h>
 #include <kdebug.h>
+
+#include <kimap/rfccodecs.h>
+using namespace KIMAP;
 
 mimeHeader::mimeHeader ()
     : typeList (17, false), dispositionList (17, false),
@@ -291,7 +292,7 @@ mimeHeader::getParameter (const Q3CString& aStr, Q3Dict < QString > *aDict)
           {
             found = aDict->find (search + "*");
             if (found)
-              encoded += rfcDecoder::encodeRFC2231String (*found);
+              encoded += RfcCodecs::encodeRFC2231String (*found);
           }
           else
           {
@@ -302,19 +303,19 @@ mimeHeader::getParameter (const Q3CString& aStr, Q3Dict < QString > *aDict)
         while (found);
         if (encoded.contains ('\''))
         {
-          retVal = rfcDecoder::decodeRFC2231String (encoded.toLocal8Bit ());
+          retVal = RfcCodecs::decodeRFC2231String (encoded.toLocal8Bit ());
         }
         else
         {
           retVal =
-            rfcDecoder::decodeRFC2231String (Q3CString ("''") +
-                                             encoded.toLocal8Bit ());
+            RfcCodecs::decodeRFC2231String (Q3CString ("''") +
+                                            encoded.toLocal8Bit ());
         }
       }
       else
       {
         //simple encoded parameter
-        retVal = rfcDecoder::decodeRFC2231String (found->toLocal8Bit ());
+        retVal = RfcCodecs::decodeRFC2231String (found->toLocal8Bit ());
       }
     }
     else
@@ -339,7 +340,7 @@ mimeHeader::setParameter (const Q3CString& aLabel, const QString& aValue,
     //see if it needs to get encoded
     if (encoded && !aLabel.contains('*'))
     {
-      val = rfcDecoder::encodeRFC2231String (aValue);
+      val = RfcCodecs::encodeRFC2231String (aValue);
     }
     //see if it needs to be truncated
     vlen = val.length();

@@ -20,12 +20,13 @@
 
 #include <q3ptrlist.h>
 #include <q3dict.h>
-//Added by qt3to4:
 #include <Q3CString>
 
 #include "mimehdrline.h"
 #include "mimeio.h"
-#include "rfcdecoder.h"
+
+#include <kimap/rfccodecs.h>
+using namespace KIMAP;
 
 /**
   *@author Sven Carstens
@@ -283,11 +284,11 @@ public:
   }
   QString contentDescription ()
   {
-    return QString (rfcDecoder::decodeRFC2047String (_contentDescription));
+    return QString (RfcCodecs::decodeRFC2047String (_contentDescription));
   }
   void setContentDescription (const QString & _str)
   {
-    _contentDescription = rfcDecoder::encodeRFC2047String (_str).toLatin1 ();
+    _contentDescription = RfcCodecs::encodeRFC2047String (_str).toLatin1 ();
   }
   QString msgIdMD5 ()
   {

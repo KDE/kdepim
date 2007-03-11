@@ -21,10 +21,11 @@
 #include "mimeheader.h"
 #include "mailaddress.h"
 #include "mimeio.h"
-#include "rfcdecoder.h"
-//Added by qt3to4:
+#include <kimap/rfccodecs.h>
 #include <Q3CString>
 #include <Q3PtrList>
+
+using namespace KIMAP;
 
 /**
   *@author Sven Carstens
@@ -101,9 +102,9 @@ public:
    */
   void setSubject (const QString & _str)
   {
-    _subject = rfcDecoder::encodeRFC2047String(_str).toLatin1();
+    _subject = RfcCodecs::encodeRFC2047String(_str).toLatin1();
   }
-  /** 
+  /**
    * set a encoded subject
    */
   void setSubjectEncoded (const Q3CString & _str)
@@ -111,12 +112,12 @@ public:
     _subject = _str.simplified();
   }
 
-  /** 
+  /**
    * get the unicode subject
    */
   const QString getSubject ()
   {
-    return rfcDecoder::decodeRFC2047String(_subject);
+    return RfcCodecs::decodeRFC2047String(_subject);
   }
   /**
    * get the encoded subject

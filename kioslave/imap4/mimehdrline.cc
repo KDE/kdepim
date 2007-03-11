@@ -22,8 +22,6 @@
 #include <stdio.h>
 
 #include "mimehdrline.h"
-#include "rfcdecoder.h"
-//Added by qt3to4:
 #include <Q3CString>
 
 using namespace std;
@@ -97,7 +95,7 @@ mimeHdrLine::setStr (const char *inCStr)
 {
   int retVal = 0;
   char *aCStr = (char *) inCStr;
-//  char *begin = aCStr;  
+//  char *begin = aCStr;
   mimeLabel = Q3CString ((const char *) NULL);
   mimeValue = Q3CString ((const char *) NULL);
 

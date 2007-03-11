@@ -16,8 +16,6 @@
  ***************************************************************************/
 
 #include "mailheader.h"
-#include "rfcdecoder.h"
-//Added by qt3to4:
 #include <Q3CString>
 #include <Q3PtrList>
 
@@ -41,7 +39,7 @@ mailHeader::addHdrLine (mimeHdrLine * inLine)
 
   const Q3CString label(addLine->getLabel());
   const Q3CString value(addLine->getValue());
-  
+
   if (!qstricmp (label, "Return-Path")) {
 	returnpathAdr.parseAddress (value.data ());
 	goto out;
@@ -101,11 +99,11 @@ mailHeader::addHdrLine (mimeHdrLine * inLine)
   mimeHeader::addHdrLine (inLine);
   delete addLine;
   return;
-  
+
  out:
 //  cout << label.data() << ": '" << value.data() << "'" << endl;
 
-  //need only to add this line if not handled by mimeHeader       
+  //need only to add this line if not handled by mimeHeader
   originalHdrLines.append (addLine);
 }
 

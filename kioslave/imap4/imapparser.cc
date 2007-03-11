@@ -26,12 +26,8 @@
 #include <config.h>
 #endif
 
-#include "rfcdecoder.h"
-
 #include "imapparser.h"
-
 #include "imapinfo.h"
-
 #include "mailheader.h"
 #include "mimeheader.h"
 #include "mailaddress.h"
@@ -61,6 +57,9 @@ extern "C" {
 #include <kcodecs.h>
 #include <kglobal.h>
 #include <kurl.h>
+
+#include <kimap/rfccodecs.h>
+using namespace KIMAP;
 
 imapParser::imapParser ()
 {
@@ -141,8 +140,8 @@ imapParser::clientLogin (const QString & aUser, const QString & aPass,
 
   cmd =
     doCommand (new
-               imapCommand ("LOGIN", "\"" + rfcDecoder::quoteIMAP(aUser)
-               + "\" \"" + rfcDecoder::quoteIMAP(aPass) + "\""));
+               imapCommand ("LOGIN", "\"" + RfcCodecs::quoteIMAP(aUser)
+               + "\" \"" + RfcCodecs::quoteIMAP(aPass) + "\""));
 
   if (cmd->result () == "OK")
   {
@@ -672,7 +671,7 @@ void imapParser::parseList (parseString & result)
   skipWS (result);
 
   this_one.setHierarchyDelimiter(parseLiteralC(result));
-  this_one.setName (rfcDecoder::fromIMAP(parseLiteralC(result)));  // decode modified UTF7
+  this_one.setName (RfcCodecs::decodeImapFolderName( parseLiteralC(result)));  // decode modified UTF7
 
   listResponses.append (this_one);
 }
@@ -863,7 +862,7 @@ const mailAddress& imapParser::parseAddress (parseString & inWords, mailAddress&
   inWords.pos++;
   skipWS (inWords);
 
-  retVal.setFullName(rfcDecoder::quoteIMAP(parseLiteralC(inWords)));
+  retVal.setFullName(RfcCodecs::quoteIMAP(parseLiteralC(inWords)));
   retVal.setCommentRaw(parseLiteralC(inWords));
   retVal.setUser(parseLiteralC(inWords));
   retVal.setHost(parseLiteralC(inWords));

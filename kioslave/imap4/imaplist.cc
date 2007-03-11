@@ -39,12 +39,11 @@
     imap://server/folder/ - List messages in folder
  */
 
-#include "rfcdecoder.h"
+#include <kimap/rfccodecs.h>
 #include "imaplist.h"
 #include "imapparser.h"
 
 #include <kdebug.h>
-//Added by qt3to4:
 #include <Q3CString>
 
 imapList::imapList (): parser_(0), noInferiors_ (false),
@@ -106,7 +105,7 @@ hasNoChildren_ (false)
   hierarchyDelimiter_ = parser_->parseOneWord(s);
   if (hierarchyDelimiter_ == "NIL")
     hierarchyDelimiter_.clear();
-  name_ = rfcDecoder::fromIMAP (parser_->parseLiteral (s));  // decode modified UTF7
+  name_ = RfcCodecs::decodeImapFolderName (parser_->parseLiteral (s));  // decode modified UTF7
 }
 
 void imapList::parseAttributes( parseString & str )

@@ -26,7 +26,6 @@
 #include <q3ptrlist.h>
 #include <QString>
 #include <q3cstring.h>
-#include "rfcdecoder.h"
 
 class mailAddress
 {

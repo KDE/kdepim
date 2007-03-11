@@ -62,8 +62,6 @@ imap://server/folder/
 
 #include "imap4.h"
 
-#include "rfcdecoder.h"
-
 #include <sys/stat.h>
 
 #include <stdio.h>
