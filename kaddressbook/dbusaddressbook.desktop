@@ -3,4 +3,5 @@ Encoding=UTF-8
 Type=ServiceType
 X-KDE-ServiceType=DBUS/AddressBook
 Comment=Address Book with a D-Bus interface
+Comment[es]=Libreta de direcciones con interfaz D-Bus
 Comment[x-test]=xxAddress Book with a D-Bus interfacexx

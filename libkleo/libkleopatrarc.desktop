@@ -244,11 +244,13 @@ was-validated=true
 is-qualified=true
 font-bold=true
 Name=Keys for qualified signatures
+Name[es]=Claves para firmas cualificadas
 Name[x-test]=xxKeys for qualified signaturesxx
 
 [Key Filter #6]
 was-validated=true
 Name=Other keys
+Name[es]=Otras claves
 Name[x-test]=xxOther keysxx
 
 

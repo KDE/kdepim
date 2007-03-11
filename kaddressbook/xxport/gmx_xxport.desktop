@@ -2,8 +2,10 @@
 Encoding=UTF-8
 X-KDE-Library=libkaddrbk_gmx_xxport
 Name=KAB GMX XXPort Plugin
+Name[es]=Plugin KAB GMX XXPort
 Name[x-test]=xxKAB GMX XXPort Pluginxx
 Comment=Plugin to import and export contacts in GMX's addressbook format
+Comment[es]=Plugin para importar y exportar contactos en formato de libreta de direcciones GMX
 Comment[x-test]=xxPlugin to import and export contacts in GMX's addressbook formatxx
 Type=Service
 ServiceTypes=KAddressBook/XXPort

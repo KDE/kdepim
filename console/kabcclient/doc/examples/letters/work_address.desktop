@@ -3,6 +3,7 @@
 
 [Misc]
 Name=Letter business/work address
+Name[es]=Dirección postal de negocios/del trabajo
 Name[x-test]=xxLetter business/work addressxx
 
 [General]
