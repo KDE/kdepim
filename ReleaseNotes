@@ -1,4 +1,26 @@
-Current release is "Enterprise - Beta-01"
+Current release is "Enterprise - Beta-02"
+
+Features:
+=========
+
+kmail
+----------
+- Kolab/issue1385 - add/insert signature
+- kolab/issue1216 - porting semicolon as separator to enterprise.
+- kolab/issue1367 : Made ".mbox" as a default extension/filter while saving messages.
+
+Bugfixes:
+=========
+
+
+kmail
+----------
+- kolab/issue 1632 - kontact sometimes crashs by moving mails from the message find dialog to a folder
+- kolab/issue1384 - Don't allow base64 or qp encoding for message attachements, such
+as when forwarding.
+
+
+"Enterprise - Beta-01"
 
 Features:
 =========
