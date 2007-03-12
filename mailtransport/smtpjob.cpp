@@ -182,7 +182,7 @@ void SmtpJob::startSmtpJob()
   addSubjob( job );
   KIO::Scheduler::assignJobToSlave( mSlave, job );
 
-  setTotalSize( data().length() );
+  setTotalAmount( KJob::Bytes, data().length() );
 }
 
 bool SmtpJob::doKill()
@@ -223,7 +223,7 @@ void SmtpJob::dataRequest(KIO::Job * job, QByteArray & data)
     data.clear();
   else
     data = buffer()->read( 32*1024 );
-  setProcessedSize( buffer()->pos() );
+  setProcessedAmount( KJob::Bytes, buffer()->pos() );
 }
 
 void SmtpJob::slaveError(KIO::Slave * slave, int errorCode, const QString & errorMsg)
