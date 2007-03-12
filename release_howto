@@ -1,9 +1,9 @@
 ====== KDE PIM Enterprise release howto =====
 
-David Faure <faure@kde.org>, 02-Aug-2005.
+David Faure <faure@kde.org>, 02-Aug-2005, last update 12-Mar-2007.
 
 # First ensure that translations are uptodate, running "translate".
-# Packing kdepim doesn't pack the translations themselves, but still, 
+# Packing kdepim doesn't pack the translations themselves, but still,
 # at release time we have to ensure they are ok.
 
 #
@@ -19,16 +19,7 @@ Index: common
 ===================================================================
 --- common      (revision 615014)
 +++ common      (working copy)
-@@ -5,6 +5,8 @@
-
- test -n "$package" || { echo "requires modulename as parameter"; exit 1; }
-
-+export UNSERMAKE=no
-+
- if test -z "$version"; then
-
- case $package in
-@@ -23,6 +25,9 @@
+@@ -23,6 +23,9 @@ case $package in
    koffice-l10n)
      version=1.3.98
      ;;
@@ -38,12 +29,6 @@ Index: common
    *)
      version=3.5.5
      ;;
-@@ -42,6 +47,5 @@
- fi
-
- export CDPATH=""
--export UNSERMAKE=no  # very important for now :)
- export package version scriptpath isl10n
 
 Index: tag_all
 ===================================================================
@@ -97,8 +82,6 @@ Index: versions
 # and then allows to commit - to create the tag.
 # The script needs the variables SVNUSER and SVNPROTOCOL to be set.
 
-# Now check out kdepim in clean/, for instance by running checkout_enterprise.sh there.
-# [NOTE: this is specific to enterprise, usually tag_all does that]
 
 # If you used the "cache" feature with an older release, remove it first
 rm -rf cache/kdepim
