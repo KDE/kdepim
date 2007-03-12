@@ -35,7 +35,7 @@
 
 #include "job.h"
 
-#include <q3cstring.h>
+#include <QtCore/QByteArray>
 
 namespace GpgME {
   class Error;
@@ -74,7 +74,7 @@ namespace Kleo {
     */
     virtual GpgME::Error start( const QStringList & fingerprints ) = 0;
 
-  signals:
+  Q_SIGNALS:
     void result( const GpgME::Error & result, const QByteArray & keyData );
   };
 
