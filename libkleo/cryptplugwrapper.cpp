@@ -148,12 +148,11 @@ public:
     _unknownAttrsHandlingChar = "INFIX";
     if( config ){
       const QString oldGroup( config->group() );
-      config->setGroup( cfgGroup );                             // e.g. "General"
+      KConfigGroup groupCfgGroup( config, cfgGroup );
       _attrOrder =
-        config->readEntry( cfgAttributeOrderEntry , QStringList() );        // e.g. "DNAttributeOrder"
+        groupCfgGroup.readEntry( cfgAttributeOrderEntry , QStringList() );        // e.g. "DNAttributeOrder"
       _unknownAttrsHandlingChar =
-        config->readEntry( cfgUnknownAttrsEntry, QString() ).toUpper().toLatin1(); // e.g. "DNUnknownAttributes"
-      config->setGroup( oldGroup );
+        groupCfgGroup.readEntry( cfgUnknownAttrsEntry, QString() ).toUpper().toLatin1(); // e.g. "DNUnknownAttributes"
       if( _unknownAttrsHandlingChar == "HIDE" )
         _unknownAttrsHandling = unknownAttrsHide;
       else if( _unknownAttrsHandlingChar == "PREFIX" )
