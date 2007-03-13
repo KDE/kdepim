@@ -117,7 +117,7 @@ public:
 	 * Return the size of the full mail.
 	 * @return the size of the full mail.
 	 */
-	const int getSize() const {return _size;}
+	int getSize() const {return _size;}
 
 	/**
 	 * Set the mails date in seconds since 1970-01-01 00:00:00.
@@ -129,7 +129,7 @@ public:
 	 * Return the mails date in seconds since 1970-01-01 00:00:00.
 	 * @return the mails date.
 	 */
-	const int getDate() const {return _date;}
+	int getDate() const {return _date;}
 
 	/**
 	 * Return a string representation of this (for debugging purposes only)
