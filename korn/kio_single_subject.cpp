@@ -28,7 +28,7 @@
 #include <kio/scheduler.h>
 #include <kio/job.h>
 #include <kio/jobclasses.h>
-#include <krfcdate.h>
+#include <kdatetime.h>
 
 #include <QRegExp>
 #include <QString>
@@ -114,7 +114,9 @@ void KIO_Single_Subject::parseMail( QString * message, KornMailSubject *subject,
 			}
 			else if( rx_date.indexIn( line ) == 0 )
 			{
-	                 	subject->setDate( KRFCDate::parseDate( line.right( line.length() - 6 ) ) );
+				KDateTime dt = KDateTime::fromString(  line.right(  line.length() - 6 ),
+									KDateTime::RFCDate );
+	                 	subject->setDate( dt.toTime_t() );
 				++fieldnumber;
 			}
 		}
