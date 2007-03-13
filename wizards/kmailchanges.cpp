@@ -31,6 +31,14 @@
 #include <kdebug.h>
 #include <kstringhandler.h>
 
+static const char* s_folderContentsType[] = {
+  I18N_NOOP( "Calendar" ),
+  I18N_NOOP( "Contacts" ),
+  I18N_NOOP( "Notes" ),
+  I18N_NOOP( "Tasks" ),
+  I18N_NOOP( "Journal" ) };
+
+
 CreateImapAccount::CreateImapAccount( const QString &accountName, const QString &title )
   : KConfigPropagator::Change( title ),
     mAccountName( accountName ), mEnableSieve( false ), mEnableSavePassword( true ),
@@ -286,6 +294,14 @@ void CreateOnlineImapAccount::apply()
   }
 
   c.writeEntry( "sieve-support", mEnableSieve );
+
+  // locally unsubscribe the default folders
+  c.writeEntry( "locally-subscribed-folders", true );
+  QString groupwareFolders = QString("/INBOX/%1/,/INBOX/%2/,/INBOX/%3/,/INBOX/%4/,/INBOX/%5/")
+      .arg( i18n(s_folderContentsType[0]) ).arg( i18n(s_folderContentsType[1]) )
+      .arg( i18n(s_folderContentsType[2]) ).arg( i18n(s_folderContentsType[3]) )
+      .arg( i18n(s_folderContentsType[4]) );
+  c.writeEntry( "locallyUnsubscribedFolders", groupwareFolders );
 
   c.setGroup( QString("Folder-%1").arg( uid ) );
   c.writeEntry( "isOpen", true );
