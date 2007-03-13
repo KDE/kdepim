@@ -184,7 +184,7 @@ void ConfigGuiIRMC::initGUI()
 
   QLabel *label = new QLabel( i18n( "Don't send OBEX UUID (IRMC-SYNC)" ), optionBox );
   mDontTellSync = new QCheckBox( optionBox );
-  QToolTip::add( mDontTellSync, i18n( "Don't send OBEX UUID while connectiong. Needed for older IrMC based mobile phones." ) );
+  QToolTip::add( mDontTellSync, i18n( "Don't send OBEX UUID while connecting. Needed for older IrMC based mobile phones." ) );
   label->setBuddy( mDontTellSync );
 
 }
