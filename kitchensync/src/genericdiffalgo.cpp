@@ -29,6 +29,9 @@ using namespace KSync;
 
 #define MAX( a, b ) ( a > b ? a : b )
 
+#ifndef KDE_USE_FINAL
+// With --enable-final, we get the (identical) compareString from
+// addresseediffalgo.cpp
 static bool compareString( const QString &left, const QString &right )
 {
   if ( left.isEmpty() && right.isEmpty() )
@@ -36,6 +39,7 @@ static bool compareString( const QString &left, const QString &right )
   else
     return left == right;
 }
+#endif
 
 GenericDiffAlgo::GenericDiffAlgo( const QString &leftData, const QString &rightData )
   : mLeftData( leftData ), mRightData( rightData )

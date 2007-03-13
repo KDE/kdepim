@@ -6,6 +6,10 @@ INCLUDES = -I$(top_srcdir)/kitchensync/src \
            -I$(top_srcdir) \
             $(all_includes)
 
+if KDE_USE_FINAL
+KDE_CPPFLAGS = -DKDE_USE_FINAL
+endif
+
 # Application
 bin_PROGRAMS = kitchensync
 
