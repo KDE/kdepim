@@ -102,6 +102,11 @@ class CreateDisconnectedImapAccount : public CreateImapAccount
   public:
     CreateDisconnectedImapAccount( const QString &accountName );
     virtual void apply();
+
+    void enableLocalSubscription( bool b ) { mLocalSubscription = b; }
+
+  private:
+    bool mLocalSubscription;
 };
 
 class CreateOnlineImapAccount : public CreateImapAccount

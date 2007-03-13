@@ -160,6 +160,7 @@ void createKMailChanges( KConfigPropagator::Change::List& changes )
   account->setAuthenticationSend( CreateDisconnectedImapAccount::PLAIN );
   account->setSmtpPort( 465 );
   account->setDefaultDomain( defaultDomain );
+  account->enableLocalSubscription( KolabConfig::self()->useOnlineForNonGroupware() );
 
   account->setCustomWriter( new KolabCustomWriter );
 

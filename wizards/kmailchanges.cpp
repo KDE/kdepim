@@ -133,7 +133,8 @@ void CreateImapAccount::setCustomWriter(
 
 
 CreateDisconnectedImapAccount::CreateDisconnectedImapAccount(const QString & accountName) :
-    CreateImapAccount( accountName, i18n("Create Disconnected IMAP Account for KMail") )
+    CreateImapAccount( accountName, i18n("Create Disconnected IMAP Account for KMail") ),
+    mLocalSubscription( false )
 {
 }
 
@@ -175,6 +176,9 @@ void CreateDisconnectedImapAccount::apply()
   c.writeEntry( "Name", mAccountName );
   c.writeEntry( "host", mServer );
   c.writeEntry( "port", "993" );
+
+  // in case the user wants to get rid of some groupware folders
+  c.writeEntry( "locally-subscribed-folders", mLocalSubscription );
 
   c.writeEntry( "login", mUser );
 
