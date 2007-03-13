@@ -283,15 +283,23 @@ KolabWizard::KolabWizard() : KConfigWizard( new KolabPropagator )
   topLayout->addWidget( mPasswordEdit, 3, 1 );
 
   mSavePasswordCheck = new QCheckBox( i18n("Save password"), page );
-  topLayout->addWidget( mSavePasswordCheck, 4, 1 );
+  topLayout->addMultiCellWidget( mSavePasswordCheck, 4, 4, 0, 1 );
 
   topLayout->setRowStretch( 4, 1 );
+
+  mUseOnlineForNonGroupwareCheck = new QCheckBox( i18n("Use an online IMAP account for non-groupware folders"), page );
+  topLayout->addMultiCellWidget( mUseOnlineForNonGroupwareCheck, 5, 5, 0, 1 );
+  topLayout->setRowStretch( 5, 1 );
 
   QButtonGroup *bg = new QHButtonGroup(i18n("Server Version"), page );
   QWhatsThis::add( bg, i18n("Choose the version of the Kolab Server you are using.") );
   mKolab1 = new QRadioButton( i18n ( "Kolab 1" ), bg );
   mKolab2 = new QRadioButton( i18n ( "Kolab 2" ), bg );
-  topLayout->addMultiCellWidget( bg, 5, 5, 0, 1 );
+  topLayout->addMultiCellWidget( bg, 6, 6, 0, 1 );
+
+  //DF: I don't see the point in showing the user those pages.
+  //They are very 'internal' and of no use to anyone other than developers.
+  //(This is even more true for the rules page. The changes page is sort of OK)
 
   setupRulesPage();
   setupChangesPage();
@@ -322,6 +330,7 @@ void KolabWizard::usrReadConfig()
   mSavePasswordCheck->setChecked( KolabConfig::self()->savePassword() );
   mKolab1->setChecked( KolabConfig::self()->kolab1Legacy() );
   mKolab2->setChecked( !KolabConfig::self()->kolab1Legacy() );
+  mUseOnlineForNonGroupwareCheck->setChecked( KolabConfig::self()->useOnlineForNonGroupware() );
 }
 
 void KolabWizard::usrWriteConfig()
@@ -332,4 +341,5 @@ void KolabWizard::usrWriteConfig()
   KolabConfig::self()->setPassword( mPasswordEdit->text() );
   KolabConfig::self()->setSavePassword( mSavePasswordCheck->isChecked() );
   KolabConfig::self()->setKolab1Legacy( mKolab1->isChecked() );
+  KolabConfig::self()->setUseOnlineForNonGroupware( mUseOnlineForNonGroupwareCheck->isChecked() );
 }

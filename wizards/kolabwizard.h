@@ -46,6 +46,7 @@ class KDE_EXPORT KolabWizard : public KConfigWizard
     KLineEdit *mPasswordEdit;
     QCheckBox *mSavePasswordCheck;
     QRadioButton *mKolab1, *mKolab2;
+    QCheckBox *mUseOnlineForNonGroupwareCheck;
 };
 
 #endif

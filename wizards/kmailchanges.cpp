@@ -31,8 +31,8 @@
 #include <kdebug.h>
 #include <kstringhandler.h>
 
-CreateDisconnectedImapAccount::CreateDisconnectedImapAccount( const QString &accountName )
-  : KConfigPropagator::Change( i18n("Create Disconnected IMAP Account for KMail") ),
+CreateImapAccount::CreateImapAccount( const QString &accountName, const QString &title )
+  : KConfigPropagator::Change( title ),
     mAccountName( accountName ), mEnableSieve( false ), mEnableSavePassword( true ),
     mEncryption( None ), mAuthenticationSend( PLAIN ), mSmtpPort( 25 ),
     mExistingAccountId( -1 ), mExistingTransportId( -1 ),
@@ -40,82 +40,93 @@ CreateDisconnectedImapAccount::CreateDisconnectedImapAccount( const QString &acc
 {
 }
 
-CreateDisconnectedImapAccount::~CreateDisconnectedImapAccount()
+CreateImapAccount::~CreateImapAccount()
 {
   delete mCustomWriter;
 }
 
-void CreateDisconnectedImapAccount::setServer( const QString &s )
+void CreateImapAccount::setServer( const QString &s )
 {
   mServer = s;
 }
 
-void CreateDisconnectedImapAccount::setUser( const QString &s )
+void CreateImapAccount::setUser( const QString &s )
 {
   mUser = s;
 }
 
-void CreateDisconnectedImapAccount::setPassword( const QString &s )
+void CreateImapAccount::setPassword( const QString &s )
 {
   mPassword = s;
 }
 
-void CreateDisconnectedImapAccount::setRealName( const QString &s )
+void CreateImapAccount::setRealName( const QString &s )
 {
   mRealName = s;
 }
 
-void CreateDisconnectedImapAccount::setEmail( const QString &s )
+void CreateImapAccount::setEmail( const QString &s )
 {
   mEmail = s;
 }
 
-void CreateDisconnectedImapAccount::enableSieve( bool b )
+void CreateImapAccount::enableSieve( bool b )
 {
   mEnableSieve = b;
 }
 
-void CreateDisconnectedImapAccount::setSieveVacationFileName( const QString& f )
+void CreateImapAccount::setSieveVacationFileName( const QString& f )
 {
   mSieveVacationFileName = f;
 }
 
-void CreateDisconnectedImapAccount::enableSavePassword( bool b )
+void CreateImapAccount::enableSavePassword( bool b )
 {
   mEnableSavePassword = b;
 }
 
-void CreateDisconnectedImapAccount::setEncryption(
-  CreateDisconnectedImapAccount::Encryption e )
+void CreateImapAccount::setEncryption(
+  CreateImapAccount::Encryption e )
 {
   mEncryption = e;
 }
 
-void CreateDisconnectedImapAccount::setAuthenticationSend(
-  CreateDisconnectedImapAccount::Authentication a )
+void CreateImapAccount::setDefaultDomain(const QString &d)
+{
+  mDefaultDomain = d;
+}
+
+void CreateImapAccount::setAuthenticationSend(
+  CreateImapAccount::Authentication a )
 {
   mAuthenticationSend = a;
 }
 
-void CreateDisconnectedImapAccount::setSmtpPort( int port )
+void CreateImapAccount::setSmtpPort( int port )
 {
   mSmtpPort = port;
 }
 
-void CreateDisconnectedImapAccount::setExistingAccountId( int id )
+void CreateImapAccount::setExistingAccountId( int id )
 {
   mExistingAccountId = id;
 }
 
-void CreateDisconnectedImapAccount::setExistingTransportId( int id )
+void CreateImapAccount::setExistingTransportId( int id )
 {
   mExistingTransportId = id;
 }
 
-void CreateDisconnectedImapAccount::setCustomWriter(
-  CreateDisconnectedImapAccount::CustomWriter *writer )
+void CreateImapAccount::setCustomWriter(
+  CreateImapAccount::CustomWriter *writer )
 {
   mCustomWriter = writer;
+}
+
+
+CreateDisconnectedImapAccount::CreateDisconnectedImapAccount(const QString & accountName) :
+    CreateImapAccount( accountName, i18n("Create Disconnected IMAP Account for KMail") )
+{
 }
 
 void CreateDisconnectedImapAccount::apply()
@@ -124,6 +135,7 @@ void CreateDisconnectedImapAccount::apply()
 
   KConfig c( "kmailrc" );
   c.setGroup( "General" );
+  c.writeEntry( "Default domain", mDefaultDomain );
   int accountId;
   if ( mExistingAccountId < 0 ) {
     uint accCnt = c.readNumEntry( "accounts", 0 );
@@ -230,4 +242,51 @@ void CreateDisconnectedImapAccount::apply()
     mCustomWriter->writeFolder( c, uid );
     mCustomWriter->writeIds( accountId, transportId );
   }
+}
+
+CreateOnlineImapAccount::CreateOnlineImapAccount(const QString & accountName) :
+    CreateImapAccount( accountName, i18n("Create Online IMAP Account for KMail") )
+{
+}
+
+void CreateOnlineImapAccount::apply()
+{
+  KConfig c( "kmailrc" );
+  c.setGroup( "General" );
+  uint accCnt = c.readNumEntry( "accounts", 0 );
+  c.writeEntry( "accounts", accCnt+1 );
+
+  c.setGroup( QString("Account %1").arg(accCnt+1) );
+  int uid = kapp->random();
+  c.writeEntry( "Folder", uid );
+  c.writeEntry( "Id", uid );
+  c.writeEntry( "Type", "imap" );
+  c.writeEntry( "auth", true );
+  c.writeEntry( "Name", mAccountName );
+  c.writeEntry( "host", mServer );
+
+  c.writeEntry( "login", mUser );
+
+  if ( mEnableSavePassword ) {
+    c.writeEntry( "pass", KStringHandler::obscure( mPassword ) );
+    c.writeEntry( "store-passwd", true );
+  }
+  c.writeEntry( "port", "993" );
+
+  if ( mEncryption == SSL ) {
+    c.writeEntry( "encryption", "SSL" );
+  } else if ( mEncryption == TLS ) {
+    c.writeEntry( "encryption", "TLS" );
+  }
+
+  if ( mAuthenticationSend == PLAIN ) {
+    c.writeEntry( "authtype", "PLAIN" );
+  } else if ( mAuthenticationSend == LOGIN ) {
+    c.writeEntry( "authtype", "LOGIN" );
+  }
+
+  c.writeEntry( "sieve-support", mEnableSieve );
+
+  c.setGroup( QString("Folder-%1").arg( uid ) );
+  c.writeEntry( "isOpen", true );
 }
