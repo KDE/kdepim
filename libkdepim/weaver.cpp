@@ -151,7 +151,7 @@ namespace ThreadWeaver {
     {
     }
 
-    const int Event::type ()
+    int Event::type ()
     {
         return Type;
     }
@@ -197,7 +197,7 @@ namespace ThreadWeaver {
         return ++sm_Id;
     }
 
-    const unsigned int Thread::id() const
+    unsigned int Thread::id() const
     {
         return m_id;
     }

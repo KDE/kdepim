@@ -115,7 +115,7 @@ namespace ThreadWeaver {
         };
         Event ( Action = NoAction, Thread * = 0, Job *job = 0);
         /** Return the (custom defined) event type. */
-        static const int type ();
+        static int type ();
         /** The ID of the sender thread. */
         Thread* thread () const;
         /** The associated job. */
@@ -276,7 +276,7 @@ namespace ThreadWeaver {
             This id marks the respective Thread object, and must
             therefore not be confused with, e.g., the pthread thread
             ID. */
-        const unsigned int id() const;
+        unsigned int id() const;
 
         /** Post an event, will be received and processed by the Weaver. */
         void post (Event::Action, Job* = 0);
