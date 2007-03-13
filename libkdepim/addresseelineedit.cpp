@@ -123,7 +123,7 @@ void AddresseeLineEdit::init()
 
   if ( m_useCompletion ) {
     if ( !s_LDAPTimer ) {
-      ldapTimerDeleter.setObject( s_LDAPTimer, new QTimer );
+      ldapTimerDeleter.setObject( s_LDAPTimer, new QTimer( 0, "ldapTimerDeleter" ) );
       ldapSearchDeleter.setObject( s_LDAPSearch, new KPIM::LdapSearch );
       ldapTextDeleter.setObject( s_LDAPText, new QString );
 
