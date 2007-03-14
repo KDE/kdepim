@@ -1055,7 +1055,7 @@ bool kio_sieveProtocol::authenticate()
 
 		if (r.getType() != kio_sieveResponse::QUANTITY) {
       sasl_dispose( &conn );
-			error(ERR_UNSUPPORTED_PROTOCOL,
+			error(ERR_SLAVE_DEFINED,
 					i18n("A protocol error occurred during authentication.\n"
 							"Choose a different authentication method to %1.").arg(mechusing));
 			return false;
