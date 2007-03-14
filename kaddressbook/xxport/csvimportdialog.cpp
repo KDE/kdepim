@@ -815,9 +815,9 @@ void CSVImportDialog::applyTemplate()
     if ( !config.hasGroup( "csv column map" ) )
 	    continue;
 
-    config.setGroup( "Misc" );
-    templates.append( config.readEntry( "Name" ) );
-    fileMap.insert( config.readEntry( "Name" ), *it );
+    KConfigGroup group(&config,"Misc");
+    templates.append( group.readEntry( "Name" ) );
+    fileMap.insert( group.readEntry( "Name" ), *it );
   }
 
   // let the user chose, what to take

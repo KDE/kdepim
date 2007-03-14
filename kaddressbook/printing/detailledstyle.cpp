@@ -155,21 +155,20 @@ void DetailledPrintStyle::print( const KABC::Addressee::List &contacts, PrintPro
   QFont comment = QFont("Helvetica", 10, QFont::Normal);
 
   // store the configuration settings:
-  KSharedConfig::Ptr config = KGlobal::config();
-  config->setGroup( ConfigSectionName );
+  KConfigGroup config = KGlobal::config()->group(ConfigSectionName);
   useKDEFonts = mPageAppearance->cbStandardFonts->isChecked();
-  config->writeEntry( UseKDEFonts, useKDEFonts );
+  config.writeEntry( UseKDEFonts, useKDEFonts );
 
   // read the font and color selections from the wizard pages:
   useBGColor=mPageAppearance->cbBackgroundColor->isChecked();
-  config->writeEntry( ColoredContactHeaders, useBGColor );
+  config.writeEntry( ColoredContactHeaders, useBGColor );
 
   // use colored contact headers, otherwise use plain black and white):
   if ( useBGColor ) {
     headerColor = mPageAppearance->kcbHeaderTextColor->color();
     backColor = mPageAppearance->kcbHeaderBGColor->color();
-    config->writeEntry( ContactHeaderForeColor, headerColor );
-    config->writeEntry( ContactHeaderBGColor, backColor );
+    config.writeEntry( ContactHeaderForeColor, headerColor );
+    config.writeEntry( ContactHeaderBGColor, backColor );
   }
 
   if ( mPageAppearance->cbStandardFonts->isChecked() ) {
@@ -182,27 +181,27 @@ void DetailledPrintStyle::print( const KABC::Addressee::List &contacts, PrintPro
   } else {
     header.setFamily( mPageAppearance->kfcHeaderFont->currentText() );
     header.setPointSize( mPageAppearance->kisbHeaderFontSize->value() );
-    config->writeEntry( HeaderFont, header );
+    config.writeEntry( HeaderFont, header );
 
     // headlines:
     headlines.setFamily( mPageAppearance->kfcHeadlineFont->currentText() );
     headlines.setPointSize( mPageAppearance->kisbHeadlineFontSize->value() );
-    config->writeEntry( HeadlinesFont, headlines );
+    config.writeEntry( HeadlinesFont, headlines );
 
     // body:
     body.setFamily( mPageAppearance->kfcBodyFont->currentText() );
     body.setPointSize( mPageAppearance->kisbBodyFontSize->value() );
-    config->writeEntry( BodyFont, body );
+    config.writeEntry( BodyFont, body );
 
     // details:
     comment.setFamily( mPageAppearance->kfcDetailsFont->currentText() );
     comment.setPointSize( mPageAppearance->kisbDetailsFontSize->value() );
-    config->writeEntry( DetailsFont, comment );
+    config.writeEntry( DetailsFont, comment );
 
     // fixed:
     fixed.setFamily( mPageAppearance->kfcFixedFont->currentText() );
     fixed.setPointSize( mPageAppearance->kisbFixedFontSize->value() );
-    config->writeEntry( FixedFont, fixed );
+    config.writeEntry( FixedFont, fixed );
   }
 
   mPainter = new KABEntryPainter;
@@ -245,7 +244,7 @@ void DetailledPrintStyle::print( const KABC::Addressee::List &contacts, PrintPro
   progress->addMessage( i18n( "Done" ) );
   painter.end();
 
-  config->sync();
+  config.sync();
 }
 
 bool DetailledPrintStyle::printEntries( const KABC::Addressee::List &contacts,

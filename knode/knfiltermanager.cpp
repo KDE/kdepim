@@ -97,8 +97,8 @@ void KNFilterManager::prepareShutdown()
 {
   if (currFilter) {
     KConfig *conf=knGlobals.config();
-    conf->setGroup("READNEWS");
-    conf->writeEntry("lastFilterID", currFilter->id());
+    KConfigGroup group = conf->group("READNEWS");
+    group.writeEntry("lastFilterID", currFilter->id());
   }
 }
 
