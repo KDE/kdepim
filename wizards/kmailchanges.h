@@ -25,7 +25,7 @@
 #include <kconfigpropagator.h>
 #include <kconfig.h>
 
-class CreateDisconnectedImapAccount : public KConfigPropagator::Change
+class CreateImapAccount : public KConfigPropagator::Change
 {
   public:
     class CustomWriter
@@ -36,10 +36,8 @@ class CreateDisconnectedImapAccount : public KConfigPropagator::Change
         virtual void writeIds( int accountId, int transportId ) = 0;
     };
 
-    CreateDisconnectedImapAccount( const QString &accountName );
-    virtual ~CreateDisconnectedImapAccount();
-
-    void apply();
+    CreateImapAccount( const QString &accountName, const QString &title );
+    virtual ~CreateImapAccount();
 
     void setServer( const QString & );
     void setUser( const QString & );
@@ -49,6 +47,8 @@ class CreateDisconnectedImapAccount : public KConfigPropagator::Change
       Set email. Default is "user@server".
     */
     void setEmail( const QString & );
+
+    void setDefaultDomain( const QString & );
 
     void enableSieve( bool );
     void setSieveVacationFileName( const QString& );
@@ -68,12 +68,12 @@ class CreateDisconnectedImapAccount : public KConfigPropagator::Change
     void setExistingTransportId( int );
 
     /**
-      Set custom writer. CreateDisconnectedImapAccount takes ownerhsip of the
+      Set custom writer. CreateImapAccount takes ownerhsip of the
       object.
     */
     void setCustomWriter( CustomWriter * );
 
-  private:
+  protected:
     QString mAccountName;
 
     QString mServer;
@@ -81,6 +81,7 @@ class CreateDisconnectedImapAccount : public KConfigPropagator::Change
     QString mPassword;
     QString mRealName;
     QString mEmail;
+    QString mDefaultDomain;
 
     QString mSieveVacationFileName;
     bool mEnableSieve;
@@ -95,6 +96,25 @@ class CreateDisconnectedImapAccount : public KConfigPropagator::Change
     int mExistingTransportId;
 
     CustomWriter *mCustomWriter;
+};
+
+class CreateDisconnectedImapAccount : public CreateImapAccount
+{
+  public:
+    CreateDisconnectedImapAccount( const QString &accountName );
+    virtual void apply();
+
+    void enableLocalSubscription( bool b ) { mLocalSubscription = b; }
+
+  private:
+    bool mLocalSubscription;
+};
+
+class CreateOnlineImapAccount : public CreateImapAccount
+{
+  public:
+    CreateOnlineImapAccount( const QString &accountName );
+    virtual void apply();
 };
 
 #endif
