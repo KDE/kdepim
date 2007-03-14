@@ -130,7 +130,8 @@ if (Q_WS_X11)
 endif (Q_WS_X11)
 
 add_subdirectory(kdgantt)
-add_subdirectory(kfile-plugins)
+MESSAGE(STATUS "Remember to porting kfile-plugins")
+#add_subdirectory(kfile-plugins)
 add_subdirectory(kioslave)
 
 if(GPGME_FOUND)
