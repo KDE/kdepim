@@ -27,9 +27,6 @@ endif(UNIX)
 macro_optional_find_package(Sasl2)
 macro_log_feature(SASL2_FOUND "cyrus-sasl" "Cyrus SASL API" "http://asg.web.cmu.edu/sasl/sasl-library.html" FALSE "" "Needed to support authentication of logins")
 
-macro_optional_find_package(Boost)
-macro_log_feature(BOOST_FOUND "boost" "Boost C++ Development Libraries" "http://www.boost.org" FALSE "" "Needed to support the full text indexing feature in KMail")
-
 macro_optional_find_package(GNOKII)
 macro_log_feature(GNOKII_FOUND "gnokii" "Gnokii Development Libraries" "http://www.gnokii.org" FALSE "" "Needed to provide the ability to import and export KDE addressbook entries to/from mobile phones that are accessible via gnokii")
 
@@ -119,7 +116,6 @@ if(GPGME_FOUND)
    add_subdirectory(gpgmepp)
 endif(GPGME_FOUND)
 
-add_subdirectory(indexlib)
 if(OPENSYNC_FOUND AND OSENGINE_FOUND)
    macro_optional_add_subdirectory(kitchensync)
 endif(OPENSYNC_FOUND AND OSENGINE_FOUND)
