@@ -1,6 +1,7 @@
 [Desktop Entry]
 Encoding=UTF-8
 Name=KitchenSync
+Name[x-test]=xxKitchenSyncxx
 GenericName=Synchronization
 GenericName[af]=Sinkronisasie
 GenericName[bg]=Синхронизация
@@ -41,6 +42,7 @@ GenericName[sv]=Synkronisering
 GenericName[ta]=கூட்டிணைப்பு
 GenericName[tr]=Senkronizasyon
 GenericName[uk]=Синхронізація
+GenericName[x-test]=xxSynchronizationxx
 Exec=kitchensync
 Icon=kitchensync
 Type=Application
