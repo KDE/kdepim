@@ -1274,12 +1274,12 @@ void DwString::_replace(size_t aPos1, size_t aLen1, const char* aBuf, size_t aLe
         assert(newBuf != 0);
         if (newBuf != 0) {
             to = newBuf;
-            from = mRep->mBuffer + mStart;
-            for (i=0; i < pos1; ++i) *to++ = *from++;
-            from = aBuf;
-            for (i=0; i < len2; ++i) *to++ = *from++;
-            from = mRep->mBuffer + mStart + pos1 + len1;
-            for (i=0; i < mLength - pos1 - len1; ++i) *to++ = *from++;
+            memcpy(to, mRep->mBuffer + mStart, pos1);
+            to += pos1;
+            memcpy(to, aBuf, len2);
+            to += len2;
+            memcpy(to, mRep->mBuffer + mStart + pos1 + len1, mLength - pos1 - len1);
+            to += mLength - pos1 - len1;
             *to = 0;
             DwStringRep* rep = new DwStringRep(newBuf, size);
             assert(rep != 0);

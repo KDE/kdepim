@@ -2,12 +2,12 @@
    Copyright (C) 2004 Klar�vdalens Datakonsult AB
 
    This file is part of QGPGME.
- 
+
    QGPGME is free software; you can redistribute it and/or modify it
    under the terms of the GNU General Public License as published by
    the Free Software Foundation; either version 2 of the License, or
    (at your option) any later version.
- 
+
    QGPGME is distributed in the hope that it will be useful, but
    WITHOUT ANY WARRANTY; without even the implied warranty of
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
@@ -47,7 +47,7 @@ QGpgME::QByteArrayDataProvider::~QByteArrayDataProvider() {}
 
 ssize_t QGpgME::QByteArrayDataProvider::read( void * buffer, size_t bufSize ) {
 #ifndef NDEBUG
-  qDebug( "QGpgME::QByteArrayDataProvider::read( %p, %d )", buffer, bufSize );
+  //qDebug( "QGpgME::QByteArrayDataProvider::read( %p, %d )", buffer, bufSize );
 #endif
   if ( bufSize == 0 )
     return 0;
