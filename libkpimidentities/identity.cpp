@@ -176,7 +176,6 @@ void Signature::readConfig( const KConfigGroup &config )
   QString sigType = config.readEntry( sigTypeKey );
   if ( sigType == sigTypeInlineValue ) {
     mType = Inlined;
-    mText = config.readEntry( sigTextKey );
   } else if ( sigType == sigTypeFileValue ) {
     mType = FromFile;
     mUrl = config.readPathEntry( sigFileKey );
@@ -186,6 +185,7 @@ void Signature::readConfig( const KConfigGroup &config )
   } else {
     mType = Disabled;
   }
+  mText = config.readEntry( sigTextKey );
 }
 
 void Signature::writeConfig( KConfigGroup & config ) const
@@ -193,7 +193,6 @@ void Signature::writeConfig( KConfigGroup & config ) const
   switch ( mType ) {
   case Inlined:
     config.writeEntry( sigTypeKey, sigTypeInlineValue );
-    config.writeEntry( sigTextKey, mText );
     break;
   case FromFile:
     config.writeEntry( sigTypeKey, sigTypeFileValue );
@@ -207,6 +206,7 @@ void Signature::writeConfig( KConfigGroup & config ) const
     config.writeEntry( sigTypeKey, sigTypeDisabledValue );
   default: ;
   }
+  config.writeEntry( sigTextKey, mText );
 }
 
 QDataStream & KPIM::operator<<( QDataStream & stream, const KPIM::Signature & sig ) {

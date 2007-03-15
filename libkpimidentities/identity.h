@@ -64,7 +64,7 @@ public:
 
   /** Set the signature text and mark this signature as being of
       "inline text" type. */
-  void setText( const QString & text ) { mText = text; mType = Inlined; }
+  void setText( const QString & text ) { mText = text; }
   QString text() const { return mText; }
 
   /** Set the signature URL and mark this signature as being of
@@ -74,6 +74,7 @@ public:
 
   /// @return the type of signature (ie. way to obtain the signature text)
   Type type() const { return mType; }
+  void setType( Type type ) { mType = type; }
 
 protected:
   void writeConfig( KConfigGroup& config ) const;
