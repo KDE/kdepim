@@ -19,7 +19,7 @@
 
 #include <kdeversion.h>
 #include <kdebug.h>
-#include <kstringhandler.h>
+
 
 #include <libkdepim/kdepimprotocols.h>
 
@@ -167,7 +167,7 @@ void KNHdrViewItem::paintCell( QPainter *p, const QColorGroup &cg, int column, i
       f2.setBold( true );
       cntWidth = QFontMetrics( f2 ).width( t2, -1 );
     }
-    QString t = KStringHandler::rPixelSqueeze( text( column ), p->fontMetrics(), width - xText - cntWidth - 5 );
+    QString t = p->fontMetrics().elidedText( text( column ), Qt::ElideRight, width - xText - cntWidth - 5  );
 
     // show tooltip if we have to squeeze the text
     if ( t != text( column ) )

@@ -21,7 +21,7 @@
 #include <QDropEvent>
 
 #include <kiconloader.h>
-#include <kstringhandler.h>
+
 
 #include "kncollectionviewitem.h"
 #include "kncollectionview.h"
@@ -165,7 +165,7 @@ QString KNCollectionViewItem::squeezeFolderName( const QString &text,
       }
     }
     if ( (uint)fm.width( t ) > width )
-      t = KStringHandler::rPixelSqueeze( t, fm, width );
+      t = fm.elidedText( t, Qt::ElideRight, width  );
     return t;
   } else
     return KFolderTreeItem::squeezeFolderName( text, fm, width );
