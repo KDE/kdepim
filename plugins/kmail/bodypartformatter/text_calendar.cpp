@@ -246,8 +246,8 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
       // Now ensure that korganizer is running; otherwise start it, to prevent surprises
       // (https://intevation.de/roundup/kolab/issue758)
       QString error;
-      QString dcopService;
-      int result = KDBusServiceStarter::self()->findServiceFor( "DBUS/Organizer", QString::null, &error, &dcopService );
+      QString dbusService;
+      int result = KDBusServiceStarter::self()->findServiceFor( "DBUS/Organizer", QString::null, &error, &dbusService );
       if ( result == 0 ) {
         // OK, so korganizer (or kontact) is running. Now ensure the object we want is available
         // [that's not the case when kontact was already running, but korganizer not loaded into it...]
@@ -256,21 +256,21 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
 #endif
 /*        static const char* const dcopObjectId = "KOrganizerIface";
         DCOPCString dummy;
-        if ( !kapp->dcopClient()->findObject( dcopService, dcopObjectId, "", QByteArray(), dummy, dummy ) ) {
-          DCOPRef ref( dcopService, dcopService ); // talk to the KUniqueApplication or its kontact wrapper
+        if ( !kapp->dcopClient()->findObject( dbusService, dcopObjectId, "", QByteArray(), dummy, dummy ) ) {
+          DCOPRef ref( dcopService, dbusService ); // talk to the KUniqueApplication or its kontact wrapper
           DCOPReply reply = ref.call( "load()" );
           if ( reply.isValid() && (bool)reply ) {
-            kDebug() << "Loaded " << dcopService << " successfully" << endl;
-            Q_ASSERT( kapp->dcopClient()->findObject( dcopService, dcopObjectId, "", QByteArray(), dummy, dummy ) );
+            kDebug() << "Loaded " << dbusService << " successfully" << endl;
+            Q_ASSERT( kapp->dcopClient()->findObject( dbusService, dcopObjectId, "", QByteArray(), dummy, dummy ) );
           } else
-            kWarning() << "Error loading " << dcopService << endl;
+            kWarning() << "Error loading " << dbusService << endl;
         }*/
 
         // We don't do anything with it, we just need it to be running so that it handles
         // the incoming directory.
       }
       else
-        kWarning() << "Couldn't start DBUS/Organizer: " << dcopService << " " << error << endl;
+        kWarning() << "Couldn't start DBUS/Organizer: " << dbusService << " " << error << endl;
 
       return true;
     }
