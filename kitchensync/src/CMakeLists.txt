@@ -81,7 +81,7 @@ KDE4_AUTOMOC(${kitchensyncpart_PART_SRCS})
 
 KDE4_ADD_PLUGIN(kitchensyncpart WITH_PREFIX ${kitchensyncpart_PART_SRCS})
 
-TARGET_LINK_LIBRARIES(kitchensyncpart kitchensyncprivate ${QT_AND_KDECORE_LIBS} kparts )
+TARGET_LINK_LIBRARIES(kitchensyncpart kitchensyncprivate ${QT_AND_KDECORE_LIBS} ${KDE4_KPARTS_LIBS} )
 
 INSTALL(TARGETS kitchensyncpart DESTINATION ${PLUGIN_INSTALL_DIR} )
 
