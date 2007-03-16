@@ -46,8 +46,8 @@ SyncProcessManager::SyncProcessManager()
   mEnvironment = new QSync::Environment;
   QSync::Result result = mEnvironment->initialize();
   if ( result.isError() ) {
-    KMessageBox::error( 0, i18n("Error initializing OpenSync.\n%1")
-      .arg( result.message() ) );
+    KMessageBox::error( 0, i18n( "Error initializing OpenSync.\n%1",
+                                 result.message() ) );
   } else {
     init( mEnvironment );
   }

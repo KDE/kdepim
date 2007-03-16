@@ -50,8 +50,8 @@ void MemberConfig::loadData()
 
   if ( error ) {
     KMessageBox::error( this,
-      i18n("Unable to read config from plugin '%1':\n%2")
-      .arg( mMember.pluginName() ).arg( error.message() ) );
+      i18n( "Unable to read config from plugin '%1':\n%2",
+            mMember.pluginName(), error.message() ) );
   } else {
     QString txt = QString::fromUtf8( cfg.data(), cfg.size() );
     mGui->load( txt );

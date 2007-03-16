@@ -172,8 +172,8 @@ void GroupConfig::addMember()
   if ( plugin.isValid() ) {
     QSync::Result result = SyncProcessManager::self()->addMember( mProcess, plugin );
     if ( result.isError() ) {
-      KMessageBox::error( this, i18n("Error adding member %1\n%2\nType: %3")
-        .arg( plugin.name() ).arg( result.message() ).arg( result.type() ) );
+      KMessageBox::error( this, i18n("Error adding member %1\n%2\nType: %3",
+        plugin.name(), result.message(), result.type() ) );
     } else {
       updateMembers();
 
