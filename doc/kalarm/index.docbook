@@ -41,7 +41,7 @@
 
 <!-- Don't change format of date and version of the documentation -->
 
-<date>2007-02-11</date>
+<date>2007-03-16</date>
 <releaseinfo>1.09.05</releaseinfo>
 
 <abstract>
@@ -1074,7 +1074,9 @@ dialog.</para></note>
 <itemizedlist>
 <listitem>
 <para>Enter the sound file path or &URL;, or use the button beside the
-edit box to display a file selection dialog.</para>
+edit box to display a file selection dialog. You can listen to the
+selected file by clicking the play button to the left of the edit
+field.</para>
 </listitem>
 
 <listitem>
