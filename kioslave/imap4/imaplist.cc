@@ -105,7 +105,7 @@ hasNoChildren_ (false)
   hierarchyDelimiter_ = parser_->parseOneWord(s);
   if (hierarchyDelimiter_ == "NIL")
     hierarchyDelimiter_.clear();
-  name_ = RfcCodecs::decodeImapFolderName (parser_->parseLiteral (s));  // decode modified UTF7
+  name_ = KIMAP::decodeImapFolderName (parser_->parseLiteral (s));  // decode modified UTF7
 }
 
 void imapList::parseAttributes( parseString & str )

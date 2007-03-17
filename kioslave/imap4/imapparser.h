@@ -211,7 +211,7 @@ public:
   /* @brief return the currently selected mailbox */
   const QString getCurrentBox ()
   {
-    return RfcCodecs::decodeImapFolderName(currentBox);
+    return KIMAP::decodeImapFolderName(currentBox);
   };
 
   /**

@@ -140,8 +140,8 @@ imapParser::clientLogin (const QString & aUser, const QString & aPass,
 
   cmd =
     doCommand (new
-               imapCommand ("LOGIN", "\"" + RfcCodecs::quoteIMAP(aUser)
-               + "\" \"" + RfcCodecs::quoteIMAP(aPass) + "\""));
+               imapCommand ("LOGIN", "\"" + KIMAP::quoteIMAP(aUser)
+               + "\" \"" + KIMAP::quoteIMAP(aPass) + "\""));
 
   if (cmd->result () == "OK")
   {
@@ -671,7 +671,7 @@ void imapParser::parseList (parseString & result)
   skipWS (result);
 
   this_one.setHierarchyDelimiter(parseLiteralC(result));
-  this_one.setName (RfcCodecs::decodeImapFolderName( parseLiteralC(result)));  // decode modified UTF7
+  this_one.setName (KIMAP::decodeImapFolderName( parseLiteralC(result)));  // decode modified UTF7
 
   listResponses.append (this_one);
 }
@@ -862,7 +862,7 @@ const mailAddress& imapParser::parseAddress (parseString & inWords, mailAddress&
   inWords.pos++;
   skipWS (inWords);
 
-  retVal.setFullName(RfcCodecs::quoteIMAP(parseLiteralC(inWords)));
+  retVal.setFullName(KIMAP::quoteIMAP(parseLiteralC(inWords)));
   retVal.setCommentRaw(parseLiteralC(inWords));
   retVal.setUser(parseLiteralC(inWords));
   retVal.setHost(parseLiteralC(inWords));

@@ -198,8 +198,8 @@ imapCommand::clientList (const QString & reference, const QString & path,
                          bool lsub)
 {
   return new imapCommand (lsub ? "LSUB" : "LIST",
-                          QString ("\"") + RfcCodecs::encodeImapFolderName (reference) +
-                          "\" \"" + RfcCodecs::encodeImapFolderName (path) + "\"");
+                          QString ("\"") + KIMAP::encodeImapFolderName (reference) +
+                          "\" \"" + KIMAP::encodeImapFolderName (path) + "\"");
 }
 
 imapCommand *
@@ -210,7 +210,7 @@ imapCommand::clientSelect (const QString & path, bool examine)
      used with the "mbox driver" and the folder is opened with EXAMINE
      and Courier can't append to a mailbox that is in EXAMINE state */
   return new imapCommand ("SELECT",
-                          QString ("\"") + RfcCodecs::encodeImapFolderName (path) + "\"");
+                          QString ("\"") + KIMAP::encodeImapFolderName (path) + "\"");
 }
 
 imapCommand *
@@ -224,7 +224,7 @@ imapCommand::clientCopy (const QString & box, const QString & sequence,
                          bool nouid)
 {
   return new imapCommand (nouid ? "COPY" : "UID COPY",
-                          sequence + " \"" + RfcCodecs::encodeImapFolderName (box) + "\"");
+                          sequence + " \"" + KIMAP::encodeImapFolderName (box) + "\"");
 }
 
 imapCommand *
@@ -232,7 +232,7 @@ imapCommand::clientAppend (const QString & box, const QString & flags,
                            ulong size)
 {
   return new imapCommand ("APPEND",
-                          "\"" + RfcCodecs::encodeImapFolderName (box) + "\" " +
+                          "\"" + KIMAP::encodeImapFolderName (box) + "\" " +
                           ((flags.isEmpty()) ? "" : ("(" + flags + ") ")) +
                           "{" + QString::number(size) + "}");
 }
@@ -241,7 +241,7 @@ imapCommand *
 imapCommand::clientStatus (const QString & path, const QString & parameters)
 {
   return new imapCommand ("STATUS",
-                          QString ("\"") + RfcCodecs::encodeImapFolderName (path) +
+                          QString ("\"") + KIMAP::encodeImapFolderName (path) +
                           "\" (" + parameters + ")");
 }
 
@@ -249,28 +249,28 @@ imapCommand *
 imapCommand::clientCreate (const QString & path)
 {
   return new imapCommand ("CREATE",
-                          QString ("\"") + RfcCodecs::encodeImapFolderName (path) + "\"");
+                          QString ("\"") + KIMAP::encodeImapFolderName (path) + "\"");
 }
 
 imapCommand *
 imapCommand::clientDelete (const QString & path)
 {
   return new imapCommand ("DELETE",
-                          QString ("\"") + RfcCodecs::encodeImapFolderName (path) + "\"");
+                          QString ("\"") + KIMAP::encodeImapFolderName (path) + "\"");
 }
 
 imapCommand *
 imapCommand::clientSubscribe (const QString & path)
 {
   return new imapCommand ("SUBSCRIBE",
-                          QString ("\"") + RfcCodecs::encodeImapFolderName (path) + "\"");
+                          QString ("\"") + KIMAP::encodeImapFolderName (path) + "\"");
 }
 
 imapCommand *
 imapCommand::clientUnsubscribe (const QString & path)
 {
   return new imapCommand ("UNSUBSCRIBE",
-                          QString ("\"") + RfcCodecs::encodeImapFolderName (path) + "\"");
+                          QString ("\"") + KIMAP::encodeImapFolderName (path) + "\"");
 }
 
 imapCommand *
@@ -283,8 +283,8 @@ imapCommand *
 imapCommand::clientRename (const QString & src, const QString & dest)
 {
   return new imapCommand ("RENAME",
-                          QString ("\"") + RfcCodecs::encodeImapFolderName (src) +
-                          "\" \"" + RfcCodecs::encodeImapFolderName (dest) + "\"");
+                          QString ("\"") + KIMAP::encodeImapFolderName (src) +
+                          "\" \"" + KIMAP::encodeImapFolderName (dest) + "\"");
 }
 
 imapCommand *
@@ -316,52 +316,52 @@ imapCommand::clientStartTLS ()
 imapCommand *
 imapCommand::clientSetACL( const QString& box, const QString& user, const QString& acl )
 {
-  return new imapCommand ("SETACL", QString("\"") + RfcCodecs::encodeImapFolderName (box)
-                          + "\" \"" + RfcCodecs::encodeImapFolderName (user)
-                          + "\" \"" + RfcCodecs::encodeImapFolderName (acl) + "\"");
+  return new imapCommand ("SETACL", QString("\"") + KIMAP::encodeImapFolderName (box)
+                          + "\" \"" + KIMAP::encodeImapFolderName (user)
+                          + "\" \"" + KIMAP::encodeImapFolderName (acl) + "\"");
 }
 
 imapCommand *
 imapCommand::clientDeleteACL( const QString& box, const QString& user )
 {
-  return new imapCommand ("DELETEACL", QString("\"") + RfcCodecs::encodeImapFolderName (box)
-                          + "\" \"" + RfcCodecs::encodeImapFolderName (user)
+  return new imapCommand ("DELETEACL", QString("\"") + KIMAP::encodeImapFolderName (box)
+                          + "\" \"" + KIMAP::encodeImapFolderName (user)
                           + "\"");
 }
 
 imapCommand *
 imapCommand::clientGetACL( const QString& box )
 {
-  return new imapCommand ("GETACL", QString("\"") + RfcCodecs::encodeImapFolderName (box)
+  return new imapCommand ("GETACL", QString("\"") + KIMAP::encodeImapFolderName (box)
                           + "\"");
 }
 
 imapCommand *
 imapCommand::clientListRights( const QString& box, const QString& user )
 {
-  return new imapCommand ("LISTRIGHTS", QString("\"") + RfcCodecs::encodeImapFolderName (box)
-                          + "\" \"" + RfcCodecs::encodeImapFolderName (user)
+  return new imapCommand ("LISTRIGHTS", QString("\"") + KIMAP::encodeImapFolderName (box)
+                          + "\" \"" + KIMAP::encodeImapFolderName (user)
                           + "\"");
 }
 
 imapCommand *
 imapCommand::clientMyRights( const QString& box )
 {
-  return new imapCommand ("MYRIGHTS", QString("\"") + RfcCodecs::encodeImapFolderName (box)
+  return new imapCommand ("MYRIGHTS", QString("\"") + KIMAP::encodeImapFolderName (box)
                           + "\"");
 }
 
 imapCommand *
 imapCommand::clientSetAnnotation( const QString& box, const QString& entry, const QMap<QString, QString>& attributes )
 {
-  QString parameter = QString("\"") + RfcCodecs::encodeImapFolderName (box)
-                      + "\" \"" + RfcCodecs::encodeImapFolderName (entry)
+  QString parameter = QString("\"") + KIMAP::encodeImapFolderName (box)
+                      + "\" \"" + KIMAP::encodeImapFolderName (entry)
                       + "\" (";
   for( QMap<QString,QString>::ConstIterator it = attributes.begin(); it != attributes.end(); ++it ) {
     parameter += "\"";
-    parameter += RfcCodecs::encodeImapFolderName (it.key());
+    parameter += KIMAP::encodeImapFolderName (it.key());
     parameter += "\" \"";
-    parameter += RfcCodecs::encodeImapFolderName (it.value());
+    parameter += KIMAP::encodeImapFolderName (it.value());
     parameter += "\" ";
   }
   // Turn last space into a ')'
@@ -373,15 +373,15 @@ imapCommand::clientSetAnnotation( const QString& box, const QString& entry, cons
 imapCommand *
 imapCommand::clientGetAnnotation( const QString& box, const QString& entry, const QStringList& attributeNames )
 {
-  QString parameter = QString("\"") + RfcCodecs::encodeImapFolderName (box)
-                          + "\" \"" + RfcCodecs::encodeImapFolderName (entry)
+  QString parameter = QString("\"") + KIMAP::encodeImapFolderName (box)
+                          + "\" \"" + KIMAP::encodeImapFolderName (entry)
                           + "\" ";
   if ( attributeNames.count() == 1 )
-    parameter += "\"" + RfcCodecs::encodeImapFolderName (attributeNames.first()) + '"';
+    parameter += "\"" + KIMAP::encodeImapFolderName (attributeNames.first()) + '"';
   else {
     parameter += '(';
     for( QStringList::ConstIterator it = attributeNames.begin(); it != attributeNames.end(); ++it ) {
-      parameter += "\"" + RfcCodecs::encodeImapFolderName (*it) + "\" ";
+      parameter += "\"" + KIMAP::encodeImapFolderName (*it) + "\" ";
     }
     // Turn last space into a ')'
     parameter[parameter.length()-1] = ')';
@@ -398,7 +398,7 @@ imapCommand::clientNamespace()
 imapCommand *
 imapCommand::clientGetQuotaroot( const QString& box )
 {
-  QString parameter = RfcCodecs::encodeImapFolderName (box);
+  QString parameter = KIMAP::encodeImapFolderName (box);
   return new imapCommand ("GETQUOTAROOT", parameter);
 }
 

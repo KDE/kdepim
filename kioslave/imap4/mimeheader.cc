@@ -292,7 +292,7 @@ mimeHeader::getParameter (const Q3CString& aStr, Q3Dict < QString > *aDict)
           {
             found = aDict->find (search + "*");
             if (found)
-              encoded += RfcCodecs::encodeRFC2231String (*found);
+              encoded += KIMAP::encodeRFC2231String (*found);
           }
           else
           {
@@ -303,19 +303,19 @@ mimeHeader::getParameter (const Q3CString& aStr, Q3Dict < QString > *aDict)
         while (found);
         if (encoded.contains ('\''))
         {
-          retVal = RfcCodecs::decodeRFC2231String (encoded.toLocal8Bit ());
+          retVal = KIMAP::decodeRFC2231String (encoded.toLocal8Bit ());
         }
         else
         {
           retVal =
-            RfcCodecs::decodeRFC2231String (Q3CString ("''") +
-                                            encoded.toLocal8Bit ());
+            KIMAP::decodeRFC2231String (Q3CString ("''") +
+                                        encoded.toLocal8Bit ());
         }
       }
       else
       {
         //simple encoded parameter
-        retVal = RfcCodecs::decodeRFC2231String (found->toLocal8Bit ());
+        retVal = KIMAP::decodeRFC2231String (found->toLocal8Bit ());
       }
     }
     else
@@ -340,7 +340,7 @@ mimeHeader::setParameter (const Q3CString& aLabel, const QString& aValue,
     //see if it needs to get encoded
     if (encoded && !aLabel.contains('*'))
     {
-      val = RfcCodecs::encodeRFC2231String (aValue);
+      val = KIMAP::encodeRFC2231String (aValue);
     }
     //see if it needs to be truncated
     vlen = val.length();

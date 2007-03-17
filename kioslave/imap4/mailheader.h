@@ -102,7 +102,7 @@ public:
    */
   void setSubject (const QString & _str)
   {
-    _subject = RfcCodecs::encodeRFC2047String(_str).toLatin1();
+    _subject = KIMAP::encodeRFC2047String(_str).toLatin1();
   }
   /**
    * set a encoded subject
@@ -117,7 +117,7 @@ public:
    */
   const QString getSubject ()
   {
-    return RfcCodecs::decodeRFC2047String(_subject);
+    return KIMAP::decodeRFC2047String(_subject);
   }
   /**
    * get the encoded subject
