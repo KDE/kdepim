@@ -1,5 +1,5 @@
 /* This file is part of the KDE project
- * Copyright (C) 2002 Shane Wright <me@shanewright.co.uk>
+ * Copyright (C) 2007 Aaron Seigo <aseigo@kde.org>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public
@@ -17,21 +17,62 @@
  *
  */
 
-#ifndef KFILE_RFC822_H
-#define KFILE_RFC822_H
+#ifndef KFILE_Rfc822_H
+#define KFILE_Rfc822_H
 
-#include <kfilemetainfo.h>
+#define STRIGI_IMPORT_API
+#include <strigi/analyzerplugin.h>
+#include <strigi/streamendanalyzer.h>
+#include <kdepim_export.h>
 
-class QStringList;
+class Rfc822EndAnalyzerFactory;
 
-class KRfc822Plugin: public KFilePlugin
+class KDEPIM_EXPORT Rfc822EndAnalyzer : public Strigi::StreamEndAnalyzer
 {
-    Q_OBJECT
-    
 public:
-    KRfc822Plugin( QObject *parent, const char *name, const QStringList& args );
-    
-    virtual bool readInfo( KFileMetaInfo& info, uint what);
+  Rfc822EndAnalyzer( const Rfc822EndAnalyzerFactory* f );
+
+  enum Field { From = 0, To, Subject, Date, ContentType };
+
+  const char* getName() const { return "Rfc822EndAnalyzer"; }
+  bool checkHeader( const char* header, int32_t headersize ) const;
+  char analyze(  Strigi::AnalysisResult& idx, jstreams::InputStream* in );
+
+private:
+  const Rfc822EndAnalyzerFactory* m_factory;
 };
+
+class KDEPIM_EXPORT Rfc822EndAnalyzerFactory : public Strigi::StreamEndAnalyzerFactory
+{
+friend class Rfc822EndAnalyzer;
+public:
+  const Strigi::RegisteredField* field( Rfc822EndAnalyzer::Field ) const;
+
+private:
+  const Strigi::RegisteredField* fromField;
+  const Strigi::RegisteredField* toField;
+  const Strigi::RegisteredField* subjectField;
+  const Strigi::RegisteredField* dateField;
+  const Strigi::RegisteredField* contentTypeField;
+
+  const char* getName() const { return "Rfc822EndAnalyzer"; }
+  Strigi::StreamEndAnalyzer* newInstance() const { return new Rfc822EndAnalyzer( this ); }
+  void registerFields( Strigi::FieldRegister& );
+};
+
+//TODO: remove this include when vandenoever fixes analyzerplugin.h
+#include <strigi/jstreamsconfig.h>
+
+class KDEPIM_EXPORT Rfc822FactoryFactory : public Strigi::AnalyzerFactoryFactory
+{
+public:
+  std::list<Strigi::StreamEndAnalyzerFactory*> getStreamEndAnalyzerFactories() const {
+     std::list<Strigi::StreamEndAnalyzerFactory*> af;
+     af.push_back( new Rfc822EndAnalyzerFactory );
+     return af;
+  }
+};
+
+STRIGI_ANALYZER_FACTORY(Rfc822FactoryFactory)
 
 #endif

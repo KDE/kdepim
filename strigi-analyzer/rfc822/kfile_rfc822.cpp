@@ -1,4 +1,5 @@
 /* This file is part of the KDE project
+ * Copyright (C) 2007 Aaron Seigo <aseigo@kde.org>
  * Copyright (C) 2002 Shane Wright <me@shanewright.co.uk>
  *
  * This program is free software; you can redistribute it and/or
@@ -17,66 +18,26 @@
  *
  */
 
-#include <config.h>
 #include "kfile_rfc822.h"
 
-#include <kprocess.h>
-#include <klocale.h>
-#include <kgenericfactory.h>
-#include <kstringvalidator.h>
-#include <kdebug.h>
+#include <strigi/fieldtypes.h>
+#include <strigi/analysisresult.h>
+#include <strigi/streamendanalyzer.h>
 
-#include <QValidator>
-#include <QFile>
-#include <QDateTime>
-
-#if !defined(__osf__)
-#include <inttypes.h>
-#else
-typedef unsigned short uint32_t;
-#endif
-
-typedef KGenericFactory<KRfc822Plugin> Rfc822Factory;
-
-K_EXPORT_COMPONENT_FACTORY(kfile_rfc822, Rfc822Factory( "kfile_rfc822" ))
-
-KRfc822Plugin::KRfc822Plugin(QObject *parent, const char *name,
-                       const QStringList &args)
-
-    : KFilePlugin(parent, args)
+Rfc822EndAnalyzer::Rfc822EndAnalyzer( const Rfc822EndAnalyzerFactory* f )
+      : m_factory(  f )
 {
-    KFileMimeTypeInfo* info = addMimeTypeInfo( "message/rfc822" );
-
-    KFileMimeTypeInfo::GroupInfo* group = 0L;
-
-    group = addGroupInfo(info, "Technical", i18n("Technical Details"));
-
-    KFileMimeTypeInfo::ItemInfo* item;
-
-    item = addItemInfo(group, "From", i18n("From"), QVariant::String);
-    item = addItemInfo(group, "To", i18n("To"), QVariant::String);
-    item = addItemInfo(group, "Subject", i18n("Subject"), QVariant::String);
-    item = addItemInfo(group, "Date", i18n("Date"), QVariant::String);
-    item = addItemInfo(group, "Content-Type", i18n("Content-Type"), QVariant::String);
 }
 
-
-bool KRfc822Plugin::readInfo( KFileMetaInfo& info, uint /*what*/ )
+bool Rfc822EndAnalyzer::checkHeader(  const char* header, int32_t headersize ) const
 {
+    //TODO: how can we know if we have a RFC822 message here?
+    //      we just return false for now anyways since we need readLine to be useful =)
+    return false;
+}
 
-    QFile file(info.path());
-
-    if (!file.open(QIODevice::ReadOnly))
-    {
-        kDebug(7034) << "Couldn't open " << QFile::encodeName(info.path()) << endl;
-        return false;
-    }
-
-    /*
-         Note to self: probably should use QCString for all this, but
-         what we're doing is simple and self-contained so never mind..
-    */
-
+char Rfc822EndAnalyzer::analyze( Strigi::AnalysisResult& idx, jstreams::InputStream* in )
+{
     char id_from[] = "From: ";
     char id_to[] = "To: ";
     char id_subject[] = "Subject: ";
@@ -85,75 +46,79 @@ bool KRfc822Plugin::readInfo( KFileMetaInfo& info, uint /*what*/ )
 
     // we need a buffer for lines
     char linebuf[4096];
+    linebuf[0] = 0;
 
-    // we need a buffer for other stuff
-    char buf_from[1000] = "";
-    char buf_to[1000] = "";
-    char buf_subject[1000] = "";
-    char buf_date[1000] = "";
-    char buf_contenttype[1000] = "";
+    bool foundFrom = false;
+    bool foundTo = false;
+    bool foundDate = false;
+    bool foundSubject = false;
+    bool foundContentType = false;
 
-    memset(buf_from, 0, 999);
-    memset(buf_to, 0, 999);
-    memset(buf_subject, 0, 999);
-    memset(buf_date, 0, 999);
-    memset(buf_contenttype, 0, 999);
-    char * myptr;
+    while ( in->getStatus() == jstreams::Ok ) {
+        //TODO: reenable when readline is implemented in StreamBase
+        //in->readLine(linebuf, sizeof( linebuf ) );
 
-    bool done=false;
-    while (!done) {
-
-        // read a line
-        file.readLine(linebuf, sizeof( linebuf ));
-
-        // have we got something useful?
-        if (memcmp(linebuf, id_from, 6) == 0) {
-            // we have a name
-            myptr = linebuf + 6;
-            strncpy(buf_from, myptr, sizeof( buf_from ));
-            buf_from[998]='\0';
-        } else if (memcmp(linebuf, id_to, 4) == 0) {
-            // we have a name
-            myptr = linebuf + 4;
-            strncpy(buf_to, myptr, sizeof( buf_to ));
-            buf_to[998]='\0';
-        } else if (memcmp(linebuf, id_subject, 9) == 0) {
-            // we have a name
-            myptr = linebuf + 9;
-            strncpy(buf_subject, myptr, sizeof( buf_subject ));
-            buf_subject[998]='\0';
-        } else if (memcmp(linebuf, id_date, 6) == 0) {
-            // we have a name
-            myptr = linebuf + 6;
-            strncpy(buf_date, myptr, sizeof( buf_date ));
-            buf_date[998]='\0';
-        } else if (memcmp(linebuf, id_contenttype, 14) == 0) {
-            // we have a name
-            myptr = linebuf + 14;
-            strncpy(buf_contenttype, myptr, sizeof( buf_contenttype ));
-            buf_contenttype[998]='\0';
+        if (!foundFrom && memcmp(linebuf, id_from, 6) == 0) {
+            idx.setField( m_factory->field( From ), linebuf + 6 );
+            foundFrom = true;
+        } else if (!foundTo && memcmp(linebuf, id_to, 4) == 0) {
+            idx.setField( m_factory->field( To ), linebuf + 4 );
+            foundTo = true;
+        } else if (!foundSubject && memcmp(linebuf, id_subject, 9) == 0) {
+            idx.setField( m_factory->field( Subject ), linebuf + 9 );
+            foundSubject = true;
+        } else if (!foundDate && memcmp(linebuf, id_date, 6) == 0) {
+            idx.setField( m_factory->field( Date ), linebuf + 6 );
+            foundDate = true;
+        } else if (!foundContentType &&
+                   memcmp(linebuf, id_contenttype, 14) == 0) {
+            idx.setField( m_factory->field( ContentType ), linebuf + 14 );
+            foundContentType = true;
         }
 
-        // are we done yet?
-        if (
-          ((strlen(buf_from) > 0) && (strlen(buf_to) > 0) &&
-          (strlen(buf_subject) > 0) && (strlen(buf_date) > 0) &&
-          (strlen(buf_contenttype) > 0)) ||
-          (file.atEnd())
-          )
-            done = true;
-
+        if ( foundFrom && foundTo && foundDate &&
+             foundSubject && foundContentType ) {
+            return jstreams::Ok;
+        }
     };
 
-    KFileMetaInfoGroup group = appendGroup(info, "Technical");
-
-    if (strlen(buf_from) > 0)           appendItem(group, "From", buf_from);
-    if (strlen(buf_to) > 0)             appendItem(group, "To", buf_to);
-    if (strlen(buf_subject) > 0)        appendItem(group, "Subject", buf_subject);
-    if (strlen(buf_date) > 0)           appendItem(group, "Date", buf_date);
-    if (strlen(buf_contenttype) > 0)    appendItem(group, "Content-Type", buf_contenttype);
-
-    return true;
+    return jstreams::Error;
 }
 
-#include "kfile_rfc822.moc"
+const Strigi::RegisteredField* Rfc822EndAnalyzerFactory::field( Rfc822EndAnalyzer::Field f ) const
+{
+  switch ( f ) {
+    case Rfc822EndAnalyzer::From:
+      return fromField;
+      break;
+    case Rfc822EndAnalyzer::To:
+      return toField;
+      break;
+    case Rfc822EndAnalyzer::Subject:
+      return subjectField;
+      break;
+    case Rfc822EndAnalyzer::Date:
+      return dateField;
+      break;
+    case Rfc822EndAnalyzer::ContentType:
+    default:
+      return contentTypeField;
+      break;
+  }
+}
+
+void Rfc822EndAnalyzerFactory::registerFields( Strigi::FieldRegister& reg )
+{
+  // these cnstr's aren't pretty
+  static const cnstr from = "from";
+  static const cnstr to = "to";
+  static const cnstr subject = "subject";
+  static const cnstr date = "date";
+  static const cnstr contenttype = "content-type";
+  fromField = reg.registerField( from, Strigi::FieldRegister::stringType, 1, 0 );
+  toField = reg.registerField( to, Strigi::FieldRegister::stringType, 1, 0 );
+  subjectField = reg.registerField( subject, Strigi::FieldRegister::stringType, 1, 0 );
+  dateField = reg.registerField( date, Strigi::FieldRegister::stringType, 1, 0 );
+  contentTypeField = reg.registerField( contenttype, Strigi::FieldRegister::stringType, 1, 0 );
+}
+
