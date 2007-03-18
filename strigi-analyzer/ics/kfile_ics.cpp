@@ -19,8 +19,7 @@ t it will be useful,
  *
  */
 
-#include <QDateTime>
-#include <QFile>
+//#include <KDebug>
 
 #include <kcal/calendarlocal.h>
 #include <kcal/icalformat.h>
@@ -28,8 +27,6 @@ t it will be useful,
 #include <kcal/todo.h>
 
 #include "kfile_ics.h"
-
-#include <kgenericfactory.h>
 
 #include <strigi/fieldtypes.h>
 #include <strigi/analysisresult.h>
@@ -61,16 +58,16 @@ char IcsEndAnalyzer::analyze( Strigi::AnalysisResult& idx, jstreams::InputStream
   const char* data;
   //FIXME: large calendars will exhaust memory; incremental loading would be nice
   if ( in->read( data, 1, in->getSize() ) < 0 ) {
-    kDebug() << "Reading data from input stream failed" << endl;
-    return false;
+    //kDebug() << "Reading data from input stream failed" << endl;
+    return jstreams::Error;
   }
 
   ICalFormat ical;
   if ( !ical.fromRawString( &cal, data ) ) {
     VCalFormat vcal;
     if ( !vcal.fromRawString( &cal, data ) ) {
-      kDebug() << "Could not load calendar" << endl;
-      return false;
+      //kDebug() << "Could not load calendar" << endl;
+      return jstreams::Error;
     }
   }
 
@@ -96,7 +93,7 @@ char IcsEndAnalyzer::analyze( Strigi::AnalysisResult& idx, jstreams::InputStream
 
   cal.close();
 
-  return true;
+  return jstreams::Ok;
 }
 
 const Strigi::RegisteredField* IcsEndAnalyzerFactory::field( IcsEndAnalyzer::Field f ) const
