@@ -39,8 +39,6 @@ namespace KPIM {
 class ProgressItem;
 }
 
-class KConfig;
-
 namespace KABC {
 
 class SloxPrefs;
@@ -49,13 +47,14 @@ class KDE_EXPORT ResourceSlox : public ResourceCached, public SloxBase
 {
     Q_OBJECT
   public:
-    ResourceSlox( const KConfig * );
+    ResourceSlox();
+    ResourceSlox( const KConfigGroup &group );
     ResourceSlox( const KUrl &url,
                   const QString &user, const QString &password );
     ~ResourceSlox();
 
-    void readConfig( const KConfig * );
-    void writeConfig( KConfig * );
+    void readConfig( const KConfigGroup &group );
+    void writeConfig( KConfigGroup &group );
 
     SloxPrefs *prefs() const { return mPrefs; }
 

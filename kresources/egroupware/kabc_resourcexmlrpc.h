@@ -28,7 +28,6 @@
 
 #include <kabc/resourcecached.h>
 
-class KConfig;
 class Synchronizer;
 
 namespace KXMLRPC {
@@ -44,12 +43,13 @@ class KDE_EXPORT ResourceXMLRPC : public ResourceCached
   Q_OBJECT
 
   public:
-    ResourceXMLRPC( const KConfig* );
+    ResourceXMLRPC();
+    ResourceXMLRPC( const KConfigGroup &group );
     ResourceXMLRPC( const QString &url, const QString &domain,
                     const QString &user, const QString &password );
     ~ResourceXMLRPC();
 
-    virtual void writeConfig( KConfig* );
+    virtual void writeConfig( KConfigGroup &group );
 
     EGroupwarePrefs *prefs() const { return mPrefs; }
 

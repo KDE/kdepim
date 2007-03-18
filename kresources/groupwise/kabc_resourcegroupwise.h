@@ -29,8 +29,6 @@
 
 #include <kio/job.h>
 
-class KConfig;
-
 class GroupwiseServer;
 
 namespace KABC {
@@ -44,15 +42,16 @@ class KDE_EXPORT ResourceGroupwise : public ResourceCached
   Q_OBJECT
 
   public:
-    ResourceGroupwise( const KConfig * );
+    ResourceGroupwise();
+    ResourceGroupwise( const KConfigGroup &group );
     ResourceGroupwise( const KUrl &url,
                        const QString &user, const QString &password,
                        const QStringList &readAddressBooks,
                        const QString &writeAddressBook );
     ~ResourceGroupwise();
 
-    void readConfig( const KConfig * );
-    void writeConfig( KConfig * );
+    void readConfig( const KConfigGroup &group );
+    void writeConfig( KConfigGroup &group );
 
     void readAddressBooks();
     void writeAddressBooks();

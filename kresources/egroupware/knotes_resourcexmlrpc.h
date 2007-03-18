@@ -26,7 +26,6 @@
 #include <QString>
 #include <QList>
 
-#include <kconfig.h>
 #include <kurl.h>
 #include <kdemacros.h>
 
@@ -52,12 +51,12 @@ class KDE_EXPORT ResourceXMLRPC : public ResourceNotes
   Q_OBJECT
 
   public:
-    ResourceXMLRPC( const KConfig* );
     ResourceXMLRPC();
+    explicit ResourceXMLRPC( const KConfigGroup &group );
     virtual ~ResourceXMLRPC();
 
-    void readConfig( const KConfig* config );
-    void writeConfig( KConfig* config );
+    void readConfig( const KConfigGroup &group );
+    void writeConfig( KConfigGroup &group );
 
     EGroupwarePrefs *prefs() const { return mPrefs; }
 

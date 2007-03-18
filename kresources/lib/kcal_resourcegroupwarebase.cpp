@@ -39,16 +39,16 @@
 using namespace KCal;
 
 ResourceGroupwareBase::ResourceGroupwareBase()
-  : ResourceCached( 0 ), mPrefs(0), mFolderLister(0),
+  : ResourceCached(), mPrefs(0), mFolderLister(0),
     mLock( true ), mAdaptor(0), mDownloadJob(0), mUploadJob(0)
 {
 }
 
-ResourceGroupwareBase::ResourceGroupwareBase( const KConfig *config )
-  : ResourceCached( config ), mPrefs(0), mFolderLister(0),
+ResourceGroupwareBase::ResourceGroupwareBase( const KConfigGroup &group )
+  : ResourceCached( group ), mPrefs(0), mFolderLister(0),
     mLock( true ), mAdaptor(0), mDownloadJob(0), mUploadJob(0)
 {
-  if ( config ) readConfig( config );
+  readConfig( group );
 }
 
 ResourceGroupwareBase::~ResourceGroupwareBase()
@@ -160,10 +160,10 @@ KPIM::GroupwarePrefsBase *ResourceGroupwareBase::prefs()
   return mPrefs;
 }
 
-void ResourceGroupwareBase::readConfig( const KConfig *config )
+void ResourceGroupwareBase::readConfig( const KConfigGroup &group )
 {
   kDebug(5800) << "KCal::ResourceGroupwareBase::readConfig()" << endl;
-  ResourceCached::readConfig( config );
+  ResourceCached::readConfig( group );
   if ( mPrefs ) {
     mPrefs->readConfig();
     if ( mFolderLister )
@@ -171,12 +171,12 @@ void ResourceGroupwareBase::readConfig( const KConfig *config )
   }
 }
 
-void ResourceGroupwareBase::writeConfig( KConfig *config )
+void ResourceGroupwareBase::writeConfig( KConfigGroup &group )
 {
   kDebug(5800) << "KCal::ResourceGroupwareBase::writeConfig()" << endl;
 
-  ResourceCalendar::writeConfig( config );
-  ResourceCached::writeConfig( config );
+  ResourceCalendar::writeConfig( group );
+  ResourceCached::writeConfig( group );
 
   if ( mPrefs ) {
     if ( mFolderLister )

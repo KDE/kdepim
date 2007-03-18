@@ -54,12 +54,11 @@ class KDE_EXPORT ResourceTVAnytime : public ResourceCached
 
   public:
     ResourceTVAnytime();
-
-    ResourceTVAnytime( const KConfig * );
+    ResourceTVAnytime( const KConfigGroup &group );
     virtual ~ResourceTVAnytime();
 
-    void readConfig( const KConfig *config );
-    void writeConfig( KConfig *config );
+    void readConfig( const KConfigGroup &group );
+    void writeConfig( KConfigGroup &group );
 
     TVAnytimePrefsBase *prefs();
 

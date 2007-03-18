@@ -22,7 +22,6 @@
 #include <QApplication>
 
 #include <kabc/picture.h>
-#include <kconfig.h>
 #include <kdebug.h>
 #include <klocale.h>
 #include <kcodecs.h>
@@ -40,21 +39,27 @@
 
 using namespace KABC;
 
-ResourceSlox::ResourceSlox( const KConfig *config )
-  : ResourceCached( config ), SloxBase( this )
+ResourceSlox::ResourceSlox()
+  : ResourceCached(), SloxBase( this )
+{
+  init();
+
+  mPrefs->addGroupPrefix( identifier() );
+}
+
+ResourceSlox::ResourceSlox( const KConfigGroup &group )
+  : ResourceCached( group ), SloxBase( this )
 {
   init();
 
   mPrefs->addGroupPrefix( identifier() );
 
-  if ( config ) {
-    readConfig( config );
-  }
+  readConfig( group );
 }
 
 ResourceSlox::ResourceSlox( const KUrl &url,
                             const QString &user, const QString &password )
-  : ResourceCached( 0 ), SloxBase( this )
+  : ResourceCached(), SloxBase( this )
 {
   init();
 
@@ -113,17 +118,17 @@ ResourceSlox::~ResourceSlox()
   kDebug() << "KABC::~ResourceSlox() done" << endl;
 }
 
-void ResourceSlox::readConfig( const KConfig * )
+void ResourceSlox::readConfig( const KConfigGroup & )
 {
   mPrefs->readConfig();
 }
 
-void ResourceSlox::writeConfig( KConfig *config )
+void ResourceSlox::writeConfig( KConfigGroup &group )
 {
   kDebug() << "ResourceSlox::writeConfig() " << endl;
   kDebug() << mPrefs->url() << endl;
 
-  Resource::writeConfig( config );
+  Resource::writeConfig( group );
 
   mPrefs->writeConfig();
 }

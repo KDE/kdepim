@@ -34,11 +34,17 @@
 
 using namespace KABC;
 
-ResourceGroupwareBase::ResourceGroupwareBase( const KConfig *config )
-  : ResourceCached( config ),
+ResourceGroupwareBase::ResourceGroupwareBase()
+  : ResourceCached(),
     mPrefs(0), mFolderLister(0), mAdaptor(0), mDownloadJob(0), mUploadJob(0)
 {
-  if ( config ) readConfig( config );
+}
+
+ResourceGroupwareBase::ResourceGroupwareBase( const KConfigGroup &group )
+  : ResourceCached( group ),
+    mPrefs(0), mFolderLister(0), mAdaptor(0), mDownloadJob(0), mUploadJob(0)
+{
+  readConfig( group );
 }
 
 ResourceGroupwareBase::~ResourceGroupwareBase()
@@ -112,10 +118,10 @@ KPIM::GroupwarePrefsBase *ResourceGroupwareBase::createPrefs()
 
 
 
-void ResourceGroupwareBase::readConfig( const KConfig */*config*/ )
+void ResourceGroupwareBase::readConfig( const KConfigGroup & )
 {
   kDebug(5700) << "KABC::ResourceGroupwareBase::readConfig()" << endl;
-//   ResourceCached::readConfig( config );
+//   ResourceCached::readConfig( group );
   if ( mPrefs ) {
     mPrefs->readConfig();
     if ( mFolderLister )
@@ -123,9 +129,9 @@ void ResourceGroupwareBase::readConfig( const KConfig */*config*/ )
   }
 }
 
-void ResourceGroupwareBase::writeConfig( KConfig *config )
+void ResourceGroupwareBase::writeConfig( KConfigGroup &group )
 {
-  Resource::writeConfig( config );
+  Resource::writeConfig( group );
 
   if ( mPrefs ) {
     if ( mFolderLister )

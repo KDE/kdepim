@@ -38,10 +38,10 @@ class KDE_EXPORT ResourceBlogging : public ResourceGroupwareBase
     Q_OBJECT
   public:
     ResourceBlogging();
-    ResourceBlogging( const KConfig * );
+    ResourceBlogging( const KConfigGroup &group );
 
-    void readConfig( const KConfig *config );
-    void writeConfig( KConfig *config );
+    void readConfig( const KConfigGroup &group );
+    void writeConfig( KConfigGroup &group );
 
     bool addEvent( Event* ) { return false; }
     bool addTodo( Todo * ) { return false; }

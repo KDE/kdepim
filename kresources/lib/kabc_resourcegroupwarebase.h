@@ -26,8 +26,6 @@
 #include <kabc/resourcecached.h>
 #include <kdepim_export.h>
 
-class KConfig;
-
 namespace KPIM {
 class GroupwareJob;
 class GroupwareDownloadJob;
@@ -45,11 +43,12 @@ class KGROUPWAREBASE_EXPORT ResourceGroupwareBase : public ResourceCached
   Q_OBJECT
 
   public:
-    ResourceGroupwareBase( const KConfig * );
+    ResourceGroupwareBase();
+    ResourceGroupwareBase( const KConfigGroup &group );
     ~ResourceGroupwareBase();
 
-    void readConfig( const KConfig * );
-    void writeConfig( KConfig * );
+    void readConfig( const KConfigGroup &group );
+    void writeConfig( KConfigGroup &group );
 
     KPIM::GroupwarePrefsBase *prefs() const { return mPrefs; }
     void setPrefs( KPIM::GroupwarePrefsBase *prefs );

@@ -56,20 +56,26 @@
 
 using namespace KCal;
 
-KCalResourceSlox::KCalResourceSlox( const KConfig *config )
-  : ResourceCached( config ), SloxBase( this )
+KCalResourceSlox::KCalResourceSlox()
+  : ResourceCached(), SloxBase( this )
+{
+  init();
+
+  mPrefs->addGroupPrefix( identifier() );
+}
+
+KCalResourceSlox::KCalResourceSlox( const KConfigGroup &group )
+  : ResourceCached( group ), SloxBase( this )
 {
   init();
 
   mPrefs->addGroupPrefix( identifier() );
 
-  if ( config ) {
-    readConfig( config );
-  }
+  readConfig( group );
 }
 
 KCalResourceSlox::KCalResourceSlox( const KUrl &url )
-  : ResourceCached( 0 ), SloxBase( this )
+  : ResourceCached(), SloxBase( this )
 {
   init();
 
@@ -115,13 +121,13 @@ void KCalResourceSlox::init()
   enableChangeNotification();
 }
 
-void KCalResourceSlox::readConfig( const KConfig *config )
+void KCalResourceSlox::readConfig( const KConfigGroup &group )
 {
   mPrefs->readConfig();
 
   mWebdavHandler.setUserId( mPrefs->user() );
 
-  ResourceCached::readConfig( config );
+  ResourceCached::readConfig( group );
 
   KUrl url = mPrefs->url();
   url.setUser( mPrefs->user() );
@@ -131,15 +137,15 @@ void KCalResourceSlox::readConfig( const KConfig *config )
   mAccounts = new SloxAccounts( this, url );
 }
 
-void KCalResourceSlox::writeConfig( KConfig *config )
+void KCalResourceSlox::writeConfig( KConfigGroup &group )
 {
   kDebug() << "KCalResourceSlox::writeConfig()" << endl;
 
-  ResourceCalendar::writeConfig( config );
+  ResourceCalendar::writeConfig( group );
 
   mPrefs->writeConfig();
 
-  ResourceCached::writeConfig( config );
+  ResourceCached::writeConfig( group );
 }
 
 bool KCalResourceSlox::doLoad( bool )

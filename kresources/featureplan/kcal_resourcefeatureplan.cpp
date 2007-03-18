@@ -43,12 +43,19 @@
 
 using namespace KCal;
 
-ResourceFeaturePlan::ResourceFeaturePlan( const KConfig *config )
-  : ResourceCached( config ), mLock( true )
+
+ResourceFeaturePlan::ResourceFeaturePlan()
+  : ResourceCached(), mLock( true )
+{
+  mPrefs = new Prefs;
+}
+
+ResourceFeaturePlan::ResourceFeaturePlan( const KConfigGroup &group )
+  : ResourceCached( group ), mLock( true )
 {
   mPrefs = new Prefs;
 
-  if ( config ) readConfig( config );
+  readConfig( group );
 }
 
 ResourceFeaturePlan::~ResourceFeaturePlan()
@@ -60,14 +67,14 @@ Prefs *ResourceFeaturePlan::prefs()
   return mPrefs;
 }
 
-void ResourceFeaturePlan::readConfig( const KConfig * )
+void ResourceFeaturePlan::readConfig( const KConfigGroup & )
 {
   mPrefs->readConfig();
 }
 
-void ResourceFeaturePlan::writeConfig( KConfig *config )
+void ResourceFeaturePlan::writeConfig( KConfigGroup &group )
 {
-  ResourceCalendar::writeConfig( config );
+  ResourceCalendar::writeConfig( group );
 
   mPrefs->writeConfig();
 }

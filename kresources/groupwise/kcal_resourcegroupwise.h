@@ -47,12 +47,11 @@ class KDE_EXPORT ResourceGroupwise : public ResourceCached
 
   public:
     ResourceGroupwise();
-  
-    ResourceGroupwise( const KConfig * );
+    ResourceGroupwise( const KConfigGroup &group );
     virtual ~ResourceGroupwise();
 
-    void readConfig( const KConfig *config );
-    void writeConfig( KConfig *config );
+    void readConfig( const KConfigGroup &group );
+    void writeConfig( KConfigGroup &group );
 
     GroupwisePrefsBase *prefs();
 

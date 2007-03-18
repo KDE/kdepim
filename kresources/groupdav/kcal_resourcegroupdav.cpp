@@ -32,11 +32,11 @@ ResourceGroupDav::ResourceGroupDav()
   init();
 }
 
-ResourceGroupDav::ResourceGroupDav( const KConfig *config )
-  : ResourceGroupwareBase( config )
+ResourceGroupDav::ResourceGroupDav( const KConfigGroup &group )
+  : ResourceGroupwareBase( group )
 {
   init();
-  if ( config ) readConfig( config );
+  readConfig( group );
 }
 
 void ResourceGroupDav::init()

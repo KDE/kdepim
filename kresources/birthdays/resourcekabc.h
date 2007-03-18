@@ -50,12 +50,12 @@ class KDE_EXPORT ResourceKABC : public ResourceCalendar
     friend class ResourceKABCConfig;
 
   public:
-    ResourceKABC( const KConfig * );
-    ResourceKABC( );
+    ResourceKABC();
+    ResourceKABC( const KConfigGroup & );
     virtual ~ResourceKABC();
 
-    void readConfig( const KConfig *config );
-    void writeConfig( KConfig* config );
+    void readConfig( const KConfigGroup &group );
+    void writeConfig( KConfigGroup &group );
 
     void setAlarm( bool );
     bool alarm();

@@ -34,11 +34,11 @@ ResourceBlogging::ResourceBlogging()
   init();
 }
 
-ResourceBlogging::ResourceBlogging( const KConfig *config )
-  : ResourceGroupwareBase( config )
+ResourceBlogging::ResourceBlogging( const KConfigGroup &group )
+  : ResourceGroupwareBase( group )
 {
   init();
-  if ( config ) readConfig( config );
+  readConfig( group );
 }
 
 void ResourceBlogging::init()
@@ -53,40 +53,40 @@ void ResourceBlogging::init()
   ResourceGroupwareBase::init();
 }
 
-void ResourceBlogging::readConfig( const KConfig *config )
+void ResourceBlogging::readConfig( const KConfigGroup &group )
 {
   BloggingCalendarAdaptor *ad = dynamic_cast<BloggingCalendarAdaptor*>( adaptor() );
-  ResourceGroupwareBase::readConfig( config );
+  ResourceGroupwareBase::readConfig( group );
   if ( ad && prefs() ) {
     ad->setUser( prefs()->user() );
     ad->setPassword( prefs()->password() );
     ad->setBaseURL( prefs()->url() );
   }
-//   QString url = config->readEntry( "URL" );
+//   QString url = group.readEntry( "URL" );
 //   mUrl = KUrl( url );
   
-//   mServerAPI = config->readEntry( "ServerAPI" );
-//   mTemplate.setCategoryTagOpen( config->readEntry( "CategoryTagOpen", "<CATEGORY>" ) ); 
-//   mTemplate.setCategoryTagClose( config->readEntry( "CategoryTagClose", "</CATEGORY>" ) );
-//   mTemplate.setTitleTagOpen( config->readEntry( "TitleTagOpen", "<TITLE>" ) );
-//   mTemplate.setTitleTagClose( config->readEntry( "TitleTagClose", "</TITLE>" ) );
+//   mServerAPI = group.readEntry( "ServerAPI" );
+//   mTemplate.setCategoryTagOpen( group.readEntry( "CategoryTagOpen", "<CATEGORY>" ) ); 
+//   mTemplate.setCategoryTagClose( group.readEntry( "CategoryTagClose", "</CATEGORY>" ) );
+//   mTemplate.setTitleTagOpen( group.readEntry( "TitleTagOpen", "<TITLE>" ) );
+//   mTemplate.setTitleTagClose( group.readEntry( "TitleTagClose", "</TITLE>" ) );
 
 }
 
-void ResourceBlogging::writeConfig( KConfig *config )
+void ResourceBlogging::writeConfig( KConfigGroup &group )
 {
   kDebug(5800) << "ResourceBlogging::writeConfig()" << endl;
 
-  ResourceCalendar::writeConfig( config );
+  ResourceCalendar::writeConfig( group );
 
-//   config->writeEntry( "URL", mUrl.url() );
-//   config->writeEntry( "ServerAPI", mServerAPI );
-//   config->writeEntry( "CategoryTagOpen", mTemplate.categoryTagOpen() );
-//   config->writeEntry( "CategoryTagClose", mTemplate.categoryTagClose() );
-//   config->writeEntry( "TitleTagOpen", mTemplate.titleTagOpen() );
-//   config->writeEntry( "TitleTagClose", mTemplate.titleTagClose() );
+//   group.writeEntry( "URL", mUrl.url() );
+//   group.writeEntry( "ServerAPI", mServerAPI );
+//   group.writeEntry( "CategoryTagOpen", mTemplate.categoryTagOpen() );
+//   group.writeEntry( "CategoryTagClose", mTemplate.categoryTagClose() );
+//   group.writeEntry( "TitleTagOpen", mTemplate.titleTagOpen() );
+//   group.writeEntry( "TitleTagClose", mTemplate.titleTagClose() );
 
-  ResourceGroupwareBase::writeConfig( config );
+  ResourceGroupwareBase::writeConfig( group );
 }
 
 

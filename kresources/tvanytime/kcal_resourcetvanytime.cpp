@@ -53,21 +53,21 @@
 using namespace KCal;
 
 ResourceTVAnytime::ResourceTVAnytime()
-  : ResourceCached( 0 ), mLock( true )
+  : ResourceCached(), mLock( true )
 {
   init();
 
   mPrefs->addGroupPrefix( identifier() );
 }
 
-ResourceTVAnytime::ResourceTVAnytime( const KConfig *config )
-  : ResourceCached( config ), mLock( true )
+ResourceTVAnytime::ResourceTVAnytime( const KConfigGroup &group )
+  : ResourceCached( group ), mLock( true )
 {
   init();
 
   mPrefs->addGroupPrefix( identifier() );
 
-  if ( config ) readConfig( config );
+  readConfig( group );
 }
 
 ResourceTVAnytime::~ResourceTVAnytime()
@@ -103,35 +103,35 @@ TVAnytimePrefsBase *ResourceTVAnytime::prefs()
   return mPrefs;
 }
 
-void ResourceTVAnytime::readConfig( const KConfig *config )
+void ResourceTVAnytime::readConfig( const KConfigGroup &group )
 {
   kDebug() << "KCal::ResourceTVAnytime::readConfig()" << endl;
 
   mPrefs->readConfig();
 
-  ResourceCached::readConfig( config );
+  ResourceCached::readConfig( group );
 
   QStringList defaultActive;
   defaultActive << "BBCOne" << "BBCTwo" << "BBCThree" << "BBCROne" << "BBCRTwo" << "BBCRThree" << "BBCRFour";
-  mActiveServices = config->readEntry( "ActiveServices", defaultActive , QStringList() );
+  mActiveServices = group.readEntry( "ActiveServices", defaultActive , QStringList() );
   
 }
 
-void ResourceTVAnytime::writeConfig( KConfig *config )
+void ResourceTVAnytime::writeConfig( KConfigGroup &group )
 {
   kDebug() << "KCal::ResourceTVAnytime::writeConfig()" << endl;
 
-  ResourceCalendar::writeConfig( config );
+  ResourceCalendar::writeConfig( group );
 
   mPrefs->writeConfig();
 
-  ResourceCached::writeConfig( config );
+  ResourceCached::writeConfig( group );
   QStringList activeServices;
   ServiceMap::ConstIterator it;
   for ( it = mServiceMap.begin(); it != mServiceMap.end(); ++it )
     if ( it.value().active() )
       activeServices.append( it.key() );
-  config->writeEntry( "ActiveServices", activeServices );
+  group.writeEntry( "ActiveServices", activeServices );
 }
 
 bool ResourceTVAnytime::doOpen()

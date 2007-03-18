@@ -54,12 +54,11 @@ class KGROUPWAREBASE_EXPORT ResourceGroupwareBase : public ResourceCached
     Q_OBJECT
   public:
     ResourceGroupwareBase();
-  
-    ResourceGroupwareBase( const KConfig * );
+    ResourceGroupwareBase( const KConfigGroup &group );
     virtual ~ResourceGroupwareBase();
 
-    void readConfig( const KConfig *config );
-    void writeConfig( KConfig *config );
+    void readConfig( const KConfigGroup &group );
+    void writeConfig( KConfigGroup &group );
 
     KPIM::GroupwarePrefsBase *prefs();
     KPIM::FolderLister *folderLister() { return mFolderLister; }

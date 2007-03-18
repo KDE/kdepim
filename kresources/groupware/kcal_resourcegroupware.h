@@ -44,12 +44,11 @@ class ResourceGroupware : public ResourceCached
     Q_OBJECT
   public:
     ResourceGroupware();
-  
-    ResourceGroupware( const KConfig * );
+    ResourceGroupware( const KConfigGroup &group );
     virtual ~ResourceGroupware();
 
-    void readConfig( const KConfig *config );
-    void writeConfig( KConfig *config );
+    void readConfig( const KConfigGroup &group );
+    void writeConfig( KConfigGroup &group );
 
     GroupwarePrefsBase *prefs();
 

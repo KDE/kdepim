@@ -26,7 +26,6 @@
 #include <QDateTime>
 
 #include <kurl.h>
-#include <kconfig.h>
 #include <kdirwatch.h>
 #include <kdemacros.h>
 
@@ -56,10 +55,11 @@ class KDE_EXPORT ResourceRemote : public ResourceCached
     friend class ResourceRemoteConfig;
 
   public:
+    ResourceRemote();
     /**
       Create resource from configuration information stored in KConfig object.
     */
-    ResourceRemote( const KConfig * );
+    ResourceRemote( const KConfigGroup &group );
     /**
       Create remote resource.
       
@@ -69,8 +69,8 @@ class KDE_EXPORT ResourceRemote : public ResourceCached
     ResourceRemote( const KUrl &downloadUrl, const KUrl &uploadUrl = KUrl() );
     virtual ~ResourceRemote();
 
-    void readConfig( const KConfig *config );
-    void writeConfig( KConfig *config );
+    void readConfig( const KConfigGroup &group );
+    void writeConfig( KConfigGroup &group );
 
     void setDownloadUrl( const KUrl & );
     KUrl downloadUrl() const;

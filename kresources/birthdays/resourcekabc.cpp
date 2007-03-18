@@ -57,19 +57,16 @@ extern "C"
   }
 }
 
-ResourceKABC::ResourceKABC( const KConfig* config )
-  : ResourceCalendar( config ), mCalendar( QString::fromLatin1( "UTC" ) ),
+ResourceKABC::ResourceKABC( const KConfigGroup &group )
+  : ResourceCalendar( group ), mCalendar( QString::fromLatin1( "UTC" ) ),
     mAlarmDays( 0 ), mAlarm( true ), mUseCategories( false )
 {
-  if ( config ) {
-    readConfig( config );
-  }
-
+  readConfig( group );
   init();
 }
 
 ResourceKABC::ResourceKABC()
-  : ResourceCalendar( 0 ), mCalendar( QString::fromLatin1( "UTC" ) ),
+  : ResourceCalendar(), mCalendar( QString::fromLatin1( "UTC" ) ),
     mAlarmDays( 0 ), mAlarm( true ), mUseCategories( false )
 {
   init();
@@ -91,21 +88,21 @@ void ResourceKABC::init()
   mAddressbook = 0;
 }
 
-void ResourceKABC::readConfig( const KConfig *config )
+void ResourceKABC::readConfig( const KConfigGroup &group )
 {
-  mAlarmDays = config->readEntry( "AlarmDays", 0 );
-  mAlarm = config->readEntry( "Alarm", true );
-  mCategories = config->readEntry( "Categories" , QStringList() );
-  mUseCategories = config->readEntry( "UseCategories", false );
+  mAlarmDays = group.readEntry( "AlarmDays", 0 );
+  mAlarm = group.readEntry( "Alarm", true );
+  mCategories = group.readEntry( "Categories" , QStringList() );
+  mUseCategories = group.readEntry( "UseCategories", false );
 }
 
-void ResourceKABC::writeConfig( KConfig *config )
+void ResourceKABC::writeConfig( KConfigGroup &group )
 {
-  ResourceCalendar::writeConfig( config );
-  config->writeEntry( "AlarmDays", mAlarmDays );
-  config->writeEntry( "Alarm", mAlarm );
-  config->writeEntry( "Categories", mCategories );
-  config->writeEntry( "UseCategories", mUseCategories );
+  ResourceCalendar::writeConfig( group );
+  group.writeEntry( "AlarmDays", mAlarmDays );
+  group.writeEntry( "Alarm", mAlarm );
+  group.writeEntry( "Categories", mCategories );
+  group.writeEntry( "UseCategories", mUseCategories );
 }
 
 

@@ -47,7 +47,7 @@
 using namespace KCal;
 
 ResourceGroupware::ResourceGroupware()
-  : ResourceCached( 0 ), mLock( true ),
+  : ResourceCached(), mLock( true ),
     mProgress( 0 )
 {
   init();
@@ -55,14 +55,14 @@ ResourceGroupware::ResourceGroupware()
   mPrefs->addGroupPrefix( identifier() );
 }
 
-ResourceGroupware::ResourceGroupware( const KConfig *config )
-  : ResourceCached( config ), mLock( true )
+ResourceGroupware::ResourceGroupware( const KConfigGroup &group )
+  : ResourceCached( group ), mLock( true )
 {
   init();
 
   mPrefs->addGroupPrefix( identifier() );
 
-  if ( config ) readConfig( config );
+  readConfig( group );
 }
 
 ResourceGroupware::~ResourceGroupware()
@@ -92,24 +92,24 @@ GroupwarePrefsBase *ResourceGroupware::prefs()
   return mPrefs;
 }
 
-void ResourceGroupware::readConfig( const KConfig *config )
+void ResourceGroupware::readConfig( const KConfigGroup &group )
 {
   kDebug() << "KCal::ResourceGroupware::readConfig()" << endl;
 
   mPrefs->readConfig();
 
-  ResourceCached::readConfig( config );
+  ResourceCached::readConfig( group );
 }
 
-void ResourceGroupware::writeConfig( KConfig *config )
+void ResourceGroupware::writeConfig( KConfigGroup &group )
 {
   kDebug() << "KCal::ResourceGroupware::writeConfig()" << endl;
 
-  ResourceCalendar::writeConfig( config );
+  ResourceCalendar::writeConfig( group );
 
   mPrefs->writeConfig();
 
-  ResourceCached::writeConfig( config );
+  ResourceCached::writeConfig( group );
 }
 
 bool ResourceGroupware::doOpen()

@@ -48,21 +48,21 @@
 using namespace KCal;
 
 ResourceGroupwise::ResourceGroupwise()
-  : ResourceCached( 0 ), mLock( true )
+  : ResourceCached(), mLock( true )
 {
   init();
 
   mPrefs->addGroupPrefix( identifier() );
 }
 
-ResourceGroupwise::ResourceGroupwise( const KConfig *config )
-  : ResourceCached( config ), mLock( true )
+ResourceGroupwise::ResourceGroupwise( const KConfigGroup &group )
+  : ResourceCached( group ), mLock( true )
 {
   init();
 
   mPrefs->addGroupPrefix( identifier() );
 
-  if ( config ) readConfig( config );
+  readConfig( group );
 }
 
 ResourceGroupwise::~ResourceGroupwise()
@@ -92,24 +92,24 @@ GroupwisePrefsBase *ResourceGroupwise::prefs()
   return mPrefs;
 }
 
-void ResourceGroupwise::readConfig( const KConfig *config )
+void ResourceGroupwise::readConfig( const KConfigGroup &group )
 {
   kDebug() << "KCal::ResourceGroupwise::readConfig()" << endl;
 
   mPrefs->readConfig();
 
-  ResourceCached::readConfig( config );
+  ResourceCached::readConfig( group );
 }
 
-void ResourceGroupwise::writeConfig( KConfig *config )
+void ResourceGroupwise::writeConfig( KConfigGroup &group )
 {
   kDebug() << "KCal::ResourceGroupwise::writeConfig()" << endl;
 
-  ResourceCalendar::writeConfig( config );
+  ResourceCalendar::writeConfig( group );
 
   mPrefs->writeConfig();
 
-  ResourceCached::writeConfig( config );
+  ResourceCached::writeConfig( group );
 }
 
 bool ResourceGroupwise::doOpen()

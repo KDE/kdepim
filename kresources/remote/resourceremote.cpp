@@ -50,18 +50,22 @@
 
 using namespace KCal;
 
-ResourceRemote::ResourceRemote( const KConfig *config )
-  : ResourceCached( config ), mUseProgressManager( true ), mUseCacheFile( true )
+ResourceRemote::ResourceRemote()
+  : ResourceCached(), mUseProgressManager( true ), mUseCacheFile( true )
 {
-  if ( config ) {
-    readConfig( config );
-  }
+  init();
+}
+
+ResourceRemote::ResourceRemote( const KConfigGroup &group )
+  : ResourceCached( group ), mUseProgressManager( true ), mUseCacheFile( true )
+{
+  readConfig( group );
 
   init();
 }
 
 ResourceRemote::ResourceRemote( const KUrl &downloadUrl, const KUrl &uploadUrl )
-  : ResourceCached( 0 ), mUseProgressManager( false ), mUseCacheFile( false )
+  : ResourceCached(), mUseProgressManager( false ), mUseCacheFile( false )
 {
   mDownloadUrl = downloadUrl;
 
@@ -98,27 +102,27 @@ void ResourceRemote::init()
   enableChangeNotification();
 }
 
-void ResourceRemote::readConfig( const KConfig *config )
+void ResourceRemote::readConfig( const KConfigGroup &group )
 {
-  QString url = config->readEntry( "DownloadUrl" );
+  QString url = group.readEntry( "DownloadUrl" );
   mDownloadUrl = KUrl( url );
 
-  url = config->readEntry( "UploadUrl" );
+  url = group.readEntry( "UploadUrl" );
   mUploadUrl = KUrl( url );
 
-  ResourceCached::readConfig( config );
+  ResourceCached::readConfig( group );
 }
 
-void ResourceRemote::writeConfig( KConfig *config )
+void ResourceRemote::writeConfig( KConfigGroup &group )
 {
   kDebug(5800) << "ResourceRemote::writeConfig()" << endl;
 
-  ResourceCalendar::writeConfig( config );
+  ResourceCalendar::writeConfig( group );
 
-  config->writeEntry( "DownloadUrl", mDownloadUrl.url() );
-  config->writeEntry( "UploadUrl", mUploadUrl.url() );
+  group.writeEntry( "DownloadUrl", mDownloadUrl.url() );
+  group.writeEntry( "UploadUrl", mUploadUrl.url() );
 
-  ResourceCached::writeConfig( config );
+  ResourceCached::writeConfig( group );
 }
 
 void ResourceRemote::setDownloadUrl( const KUrl &url )

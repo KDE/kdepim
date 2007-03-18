@@ -100,25 +100,24 @@ static int rights( Incidence *incidence )
   return incidence->customProperty( "EGWRESOURCE", "RIGHTS" ).toInt();
 }
 
-ResourceXMLRPC::ResourceXMLRPC( const KConfig* config )
-  : ResourceCached( config ), mServer( 0 ), mLock( 0 )
+ResourceXMLRPC::ResourceXMLRPC()
+  : ResourceCached(), mServer( 0 ), mLock( 0 )
 {
   init();
 
   mPrefs->addGroupPrefix( identifier() );
-
-  if ( config )
-    readConfig( config );
 
   initEGroupware();
 }
 
-ResourceXMLRPC::ResourceXMLRPC( )
-  : ResourceCached( 0 ), mServer( 0 ), mLock( 0 )
+ResourceXMLRPC::ResourceXMLRPC( const KConfigGroup &group )
+  : ResourceCached( group ), mServer( 0 ), mLock( 0 )
 {
   init();
 
   mPrefs->addGroupPrefix( identifier() );
+
+  readConfig( group );
 
   initEGroupware();
 }
@@ -158,20 +157,20 @@ void ResourceXMLRPC::initEGroupware()
   KUrl url( mPrefs->url() );
 }
 
-void ResourceXMLRPC::readConfig( const KConfig* config )
+void ResourceXMLRPC::readConfig( const KConfigGroup &group )
 {
   mPrefs->readConfig();
 
-  ResourceCached::readConfig( config );
+  ResourceCached::readConfig( group );
 }
 
-void ResourceXMLRPC::writeConfig( KConfig* config )
+void ResourceXMLRPC::writeConfig( KConfigGroup &group )
 {
-  ResourceCalendar::writeConfig( config );
+  ResourceCalendar::writeConfig( group );
 
   mPrefs->writeConfig();
 
-  ResourceCached::writeConfig( config );
+  ResourceCached::writeConfig( group );
 }
 
 bool ResourceXMLRPC::doOpen()

@@ -27,11 +27,17 @@
 
 using namespace KABC;
 
-ResourceGroupDav::ResourceGroupDav( const KConfig *config )
-  : ResourceGroupwareBase( config )
+ResourceGroupDav::ResourceGroupDav()
+  : ResourceGroupwareBase()
 {
   init();
-  if ( config ) readConfig( config );
+}
+
+ResourceGroupDav::ResourceGroupDav( const KConfigGroup &group )
+  : ResourceGroupwareBase( group )
+{
+  init();
+  readConfig( group );
 }
 
 void ResourceGroupDav::init()

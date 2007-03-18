@@ -105,7 +105,7 @@ class CreateCalendarImapResource : public KConfigPropagator::Change
     {
       KCal::CalendarResourceManager m( "calendar" );
       m.readConfig();
-      KCal::ResourceKolab *r = new KCal::ResourceKolab( 0 );
+      KCal::ResourceKolab *r = new KCal::ResourceKolab();
       r->setResourceName( i18n("Kolab Server") );
       m.add( r );
       m.setStandardResource( r );
@@ -125,7 +125,7 @@ class CreateContactImapResource : public KConfigPropagator::Change
     {
       KRES::Manager<KABC::Resource> m( "contact" );
       m.readConfig();
-      KABC::ResourceKolab *r = new KABC::ResourceKolab( 0 );
+      KABC::ResourceKolab *r = new KABC::ResourceKolab();
       r->setResourceName( i18n("Kolab Server") );
       m.add( r );
       m.setStandardResource( r );
@@ -146,7 +146,7 @@ class CreateNotesImapResource : public KConfigPropagator::Change
     {
       KRES::Manager<ResourceNotes> m( "notes" );
       m.readConfig();
-      Kolab::ResourceKolab *r = new Kolab::ResourceKolab( 0 );
+      Kolab::ResourceKolab *r = new Kolab::ResourceKolab();
       r->setResourceName( i18n("Kolab Server") );
       m.add( r );
       m.setStandardResource( r );

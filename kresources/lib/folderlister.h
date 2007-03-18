@@ -37,8 +37,6 @@ namespace KIO {
 class Job;
 }
 
-class KConfig;
-
 namespace KPIM {
 
 class GroupwareDataAdaptor;

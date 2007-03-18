@@ -33,16 +33,23 @@
 
 using namespace KABC;
 
-ResourceGroupwise::ResourceGroupwise( const KConfig *config )
-  : ResourceCached( config )
+
+ResourceGroupwise::ResourceGroupwise()
 {
   init();
 
   mPrefs->addGroupPrefix( identifier() );
 
-  if ( config ) {
-    readConfig( config );
-  }
+  initGroupwise();
+}
+ResourceGroupwise::ResourceGroupwise( const KConfigGroup &group )
+  : ResourceCached( group )
+{
+  init();
+
+  mPrefs->addGroupPrefix( identifier() );
+
+  readConfig( group );
 
   initGroupwise();
 }
@@ -52,7 +59,7 @@ ResourceGroupwise::ResourceGroupwise( const KUrl &url,
                                       const QString &password,
                                       const QStringList &readAddressBooks,
                                       const QString &writeAddressBook )
-  : ResourceCached( 0 )
+  : ResourceCached()
 {
   init();
 
@@ -96,16 +103,16 @@ ResourceGroupwise::~ResourceGroupwise()
   mPrefs = 0;
 }
 
-void ResourceGroupwise::readConfig( const KConfig * )
+void ResourceGroupwise::readConfig( const KConfigGroup & );
 {
   mPrefs->readConfig();
 
   readAddressBooks();
 }
 
-void ResourceGroupwise::writeConfig( KConfig *config )
+void ResourceGroupwise::writeConfig( KConfigGroup &group )
 {
-  Resource::writeConfig( config );
+  Resource::writeConfig( group );
 
   writeAddressBooks();
 

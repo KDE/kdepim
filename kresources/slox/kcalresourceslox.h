@@ -29,7 +29,6 @@
 #include <qdom.h>
 
 #include <kurl.h>
-#include <kconfig.h>
 #include <kdirwatch.h>
 #include <kdemacros.h>
 
@@ -73,15 +72,16 @@ class KDE_EXPORT KCalResourceSlox : public KCal::ResourceCached, public SloxBase
     */
     enum { ReloadNever, ReloadOnStartup, ReloadOnceADay, ReloadAlways };
 
+    KCalResourceSlox();
     /**
       Create resource from configuration information stored in KConfig object.
     */
-    KCalResourceSlox( const KConfig * );
+    KCalResourceSlox( const KConfigGroup &group );
     KCalResourceSlox( const KUrl &url );
     ~KCalResourceSlox();
 
-    void readConfig( const KConfig *config );
-    void writeConfig( KConfig *config );
+    void readConfig( const KConfigGroup &group );
+    void writeConfig( KConfigGroup &group );
 
     KCal::SloxPrefs *prefs() const { return mPrefs; }
 

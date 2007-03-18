@@ -52,7 +52,7 @@ namespace KABC {
 class ResourceMemory : public ResourceCached
 {
   public:
-    ResourceMemory() : ResourceCached( 0 ) {}
+    ResourceMemory() : ResourceCached() {}
     
     Ticket *requestSaveTicket() { return 0; }
     bool load() { return true; }

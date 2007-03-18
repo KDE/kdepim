@@ -24,7 +24,6 @@
 
 #include <kabc/addressee.h>
 #include <kabprefs.h>
-#include <kconfig.h>
 #include <kdebug.h>
 #include <klocale.h>
 #include <kcodecs.h>
@@ -59,22 +58,30 @@ static int rights( const KABC::Addressee &addr )
   return addr.custom( "EGWRESOURCE", "RIGHTS" ).toInt();
 }
 
-ResourceXMLRPC::ResourceXMLRPC( const KConfig *config )
-  : ResourceCached( config ), mServer( 0 )
+ResourceXMLRPC::ResourceXMLRPC()
+  : ResourceCached(), mServer( 0 )
 {
   init();
 
   mPrefs->addGroupPrefix( identifier() );
 
-  if ( config )
-    mPrefs->readConfig();
+  initEGroupware();
+}
+
+ResourceXMLRPC::ResourceXMLRPC( const KConfigGroup &group )
+  : ResourceCached( group ), mServer( 0 )
+{
+  init();
+
+  mPrefs->addGroupPrefix( identifier() );
+  mPrefs->readConfig();
 
   initEGroupware();
 }
 
 ResourceXMLRPC::ResourceXMLRPC( const QString &url, const QString &domain,
                                 const QString &user, const QString &password )
-  : ResourceCached( 0 ), mServer( 0 )
+  : ResourceCached(), mServer( 0 )
 {
   init();
 
@@ -121,9 +128,9 @@ ResourceXMLRPC::~ResourceXMLRPC()
   mSynchronizer = 0;
 }
 
-void ResourceXMLRPC::writeConfig( KConfig *config )
+void ResourceXMLRPC::writeConfig( KConfigGroup &group )
 {
-  Resource::writeConfig( config );
+  Resource::writeConfig( group );
 
   mPrefs->writeConfig();
 }

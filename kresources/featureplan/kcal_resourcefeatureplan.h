@@ -41,11 +41,12 @@ class KDE_EXPORT ResourceFeaturePlan : public ResourceCached
 {
     Q_OBJECT
   public:
-    ResourceFeaturePlan( const KConfig * );
+    ResourceFeaturePlan();
+    ResourceFeaturePlan( const KConfigGroup &group );
     virtual ~ResourceFeaturePlan();
 
-    void readConfig( const KConfig *config );
-    void writeConfig( KConfig *config );
+    void readConfig( const KConfigGroup &group );
+    void writeConfig( KConfigGroup &group );
 
     Prefs *prefs();
 

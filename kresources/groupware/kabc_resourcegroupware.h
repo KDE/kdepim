@@ -26,8 +26,6 @@
 
 #include <kio/job.h>
 
-class KConfig;
-
 namespace KABC {
 
 class GroupwarePrefs;
@@ -37,13 +35,14 @@ class ResourceGroupware : public ResourceCached
   Q_OBJECT
 
   public:
-    ResourceGroupware( const KConfig * );
+    ResourceGroupware();
+    ResourceGroupware( const KConfigGroup &group );
     ResourceGroupware( const KUrl &url,
                        const QString &user, const QString &password );
     ~ResourceGroupware();
 
-    void readConfig( const KConfig * );
-    void writeConfig( KConfig * );
+    void readConfig( const KConfigGroup &group );
+    void writeConfig( KConfigGroup &group );
 
     void readAddressBooks();
     void writeAddressBooks();

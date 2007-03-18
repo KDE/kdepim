@@ -34,22 +34,27 @@
 
 using namespace KABC;
 
-ResourceGroupware::ResourceGroupware( const KConfig *config )
-  : ResourceCached( config )
+ResourceGroupware::ResourceGroupware()
+{
+  init();
+
+  mPrefs->addGroupPrefix( identifier() );
+}
+
+ResourceGroupware::ResourceGroupware( const KConfigGroup &group )
+  : ResourceCached( group )
 {
   init();
 
   mPrefs->addGroupPrefix( identifier() );
 
-  if ( config ) {
-    readConfig( config );
-  }
+  readConfig( group );
 }
 
 ResourceGroupware::ResourceGroupware( const KUrl &url,
                                       const QString &user,
                                       const QString &password )
-  : ResourceCached( 0 )
+  : ResourceCached()
 {
   init();
 
@@ -76,16 +81,16 @@ ResourceGroupware::~ResourceGroupware()
   mPrefs = 0;
 }
 
-void ResourceGroupware::readConfig( const KConfig * )
+void ResourceGroupware::readConfig( const KConfigGroup & );
 {
   mPrefs->readConfig();
 
   readAddressBooks();
 }
 
-void ResourceGroupware::writeConfig( KConfig *config )
+void ResourceGroupware::writeConfig( KConfigGroup &group )
 {
-  Resource::writeConfig( config );
+  Resource::writeConfig( group );
 
   writeAddressBooks();
 

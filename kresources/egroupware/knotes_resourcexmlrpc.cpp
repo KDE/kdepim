@@ -51,25 +51,25 @@ static const QString AddNoteCommand = "infolog.boinfolog.write";
 static const QString DeleteNoteCommand = "infolog.boinfolog.delete";
 static const QString LoadNoteCategoriesCommand = "infolog.boinfolog.categories";
 
-ResourceXMLRPC::ResourceXMLRPC( const KConfig* config )
-  : ResourceNotes( config ),  mCalendar( QString::fromLatin1("UTC") ),
+
+ResourceXMLRPC::ResourceXMLRPC()
+  : ResourceNotes(),  mCalendar( QString::fromLatin1("UTC") ),
     mServer( 0 )
 {
   init();
 
   mPrefs->addGroupPrefix( identifier() );
-
-  if ( config )
-    readConfig( config );
 }
 
-ResourceXMLRPC::ResourceXMLRPC( )
-  : ResourceNotes( 0 ), mCalendar( QString::fromLatin1("UTC") ),
+ResourceXMLRPC::ResourceXMLRPC( const KConfigGroup &group )
+  : ResourceNotes( group ),  mCalendar( QString::fromLatin1("UTC") ),
     mServer( 0 )
 {
   init();
 
   mPrefs->addGroupPrefix( identifier() );
+
+  readConfig( group );
 }
 
 ResourceXMLRPC::~ResourceXMLRPC()
@@ -93,14 +93,14 @@ void ResourceXMLRPC::init()
   mSynchronizer = new Synchronizer;
 }
 
-void ResourceXMLRPC::readConfig( const KConfig* )
+void ResourceXMLRPC::readConfig( const KConfigGroup & )
 {
   mPrefs->readConfig();
 }
 
-void ResourceXMLRPC::writeConfig( KConfig* config )
+void ResourceXMLRPC::writeConfig( KConfigGroup &group )
 {
-  ResourceNotes::writeConfig( config );
+  ResourceNotes::writeConfig( group );
 
   mPrefs->writeConfig();
 }

@@ -36,7 +36,7 @@ class KDE_EXPORT ResourceGroupDav : public ResourceGroupwareBase
     Q_OBJECT
   public:
     ResourceGroupDav();
-    ResourceGroupDav( const KConfig * );
+    explicit ResourceGroupDav( const KConfigGroup &group );
 
   protected:
     void init();
