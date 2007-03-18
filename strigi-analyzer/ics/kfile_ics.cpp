@@ -68,7 +68,7 @@ char IcsEndAnalyzer::analyze( Strigi::AnalysisResult& idx, jstreams::InputStream
   ICalFormat ical;
   if ( !ical.fromRawString( &cal, data ) ) {
     VCalFormat vcal;
-    if ( !vcal.fromString(  &cal, data ) ) {
+    if ( !vcal.fromRawString( &cal, data ) ) {
       kDebug() << "Could not load calendar" << endl;
       return false;
     }
