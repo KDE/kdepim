@@ -1,4 +1,5 @@
 /* This file is part of the KDE project
+ * Copyright (C) 2007 Aaron Seigo <aseigo@kde.org>
  * Copyright (C) 2004 Bram Schoenmakers <bramschoenmakers@kde.nl>
  *
  * This program is free software; you can redistribute it and/or
@@ -22,75 +23,121 @@ t it will be useful,
 #include <QFile>
 
 #include <kcal/calendarlocal.h>
+#include <kcal/icalformat.h>
+#include <kcal/vcalformat.h>
 #include <kcal/todo.h>
 
 #include "kfile_ics.h"
 
 #include <kgenericfactory.h>
 
+#include <strigi/fieldtypes.h>
+#include <strigi/analysisresult.h>
+#include <strigi/streamendanalyzer.h>
+
 using namespace KCal;
 
-typedef KGenericFactory<ICSPlugin> ICSFactory;
-K_EXPORT_COMPONENT_FACTORY(kfile_ics, ICSFactory( "kfile_ics" ))
-
-ICSPlugin::ICSPlugin( QObject *parent, const QStringList& args )
-  : KFilePlugin( parent, args )
+IcsEndAnalyzer::IcsEndAnalyzer( const IcsEndAnalyzerFactory* f )
+  : m_factory( f )
 {
-  KFileMimeTypeInfo* info = addMimeTypeInfo( "text/calendar" ); //TODO: vcs !!
+}
 
-  KFileMimeTypeInfo::GroupInfo* group = 0L;
-  group = addGroupInfo(info, "ICSInfo", i18n("Calendar Statistics"));
+bool IcsEndAnalyzer::checkHeader( const char* header, int32_t headersize ) const
+{
+  const char* magic = "BEGIN:VCALENDAR";
+  int32_t magicLength = strlen( magic );
 
-  addItemInfo( group, "ProductID",   i18n("Product ID"),     QVariant::String );
-  addItemInfo( group, "Events",        i18n("Events"),         QVariant::Int );
-  addItemInfo( group, "Todos",         i18n("To-dos"),         QVariant::Int );
-  addItemInfo( group, "TodoCompleted", i18n("Completed To-dos"), QVariant::Int );
-  addItemInfo( group, "TodoOverdue",   i18n("Overdue To-dos"), QVariant::Int );
-  addItemInfo( group, "Journals",      i18n("Journals"),       QVariant::Int );
-//   addItemInfo( group, "Reminders",     i18n("Reminders"),      QVariant::Int );
-
+  return headersize >= magicLength && !strncmp( magic, header, magicLength );
 }
 
 /*
 I chose to use libkcal instead of reading the calendar manually. It's easier to
 maintain this way.
 */
-bool ICSPlugin::readInfo( KFileMetaInfo& info, uint /*what*/ )
+char IcsEndAnalyzer::analyze( Strigi::AnalysisResult& idx, jstreams::InputStream* in )
 {
-  KFileMetaInfoGroup group = appendGroup( info, "ICSInfo");
+  CalendarLocal cal( QString::fromLatin1( "UTC" ) );
 
-  CalendarLocal cal ( QString::fromLatin1( "UTC" ) );
-  if( !cal.load( info.path() ) ) {
-    kDebug() << "Could not load calendar" << endl;
+  const char* data;
+  //FIXME: large calendars will exhaust memory; incremental loading would be nice
+  if ( in->read( data, 1, in->getSize() ) < 0 ) {
+    kDebug() << "Reading data from input stream failed" << endl;
     return false;
   }
 
-  appendItem( group, "ProductID", QVariant( cal.productId() ) );
-  appendItem( group, "Events", QVariant( int( cal.events().count() ) ) );
-  appendItem( group, "Journals", QVariant( int( cal.journals().count() ) ) );
+  ICalFormat ical;
+  if ( !ical.fromRawString( &cal, data ) ) {
+    VCalFormat vcal;
+    if ( !vcal.fromString(  &cal, data ) ) {
+      kDebug() << "Could not load calendar" << endl;
+      return false;
+    }
+  }
+
+  idx.setField( m_factory->field( ProductId ), cal.productId().toUtf8().data() );
+  idx.setField( m_factory->field( Events ), cal.events().count() );
+  idx.setField( m_factory->field( Journals ), cal.journals().count() );
   Todo::List todos = cal.todos();
 
   // count completed and overdue
-  Todo::List::ConstIterator it = todos.begin();
-  Todo::List::ConstIterator end = todos.end();
-
   int completed = 0;
   int overdue = 0;
-  for ( ; it != end ; ++it ) {
-    Todo *todo = *it;
-    if ( todo->isCompleted() )
+  foreach ( const Todo* todo, todos ) {
+    if ( todo->isCompleted() ) {
       ++completed;
-    else if ( todo->hasDueDate() && todo->dtDue().date() < QDate::currentDate() )
+    } else if ( todo->hasDueDate() && todo->dtDue().date() < QDate::currentDate() ) {
       ++overdue;
+    }
   }
 
-  appendItem( group, "Todos", QVariant( int(todos.count() ) ) );
-  appendItem( group, "TodoCompleted", QVariant( completed ) );
-  appendItem( group, "TodoOverdue", QVariant( overdue ) );
+  idx.setField( m_factory->field( Todos ), todos.count() );
+  idx.setField( m_factory->field( TodosCompleted ), completed );
+  idx.setField( m_factory->field( TodosOverdue ), overdue );
 
   cal.close();
 
   return true;
 }
 
-#include "kfile_ics.moc"
+const Strigi::RegisteredField* IcsEndAnalyzerFactory::field( IcsEndAnalyzer::Field f ) const
+{
+  switch ( f ) {
+    case IcsEndAnalyzer::ProductId:
+      return productIdField;
+      break;
+    case IcsEndAnalyzer::Events:
+      return eventsField;
+      break;
+    case IcsEndAnalyzer::Journals:
+      return journalsField;
+      break;
+    case IcsEndAnalyzer::Todos:
+      return todosField;
+      break;
+    case IcsEndAnalyzer::TodosCompleted:
+      return todosCompletedField;
+      break;
+    case IcsEndAnalyzer::TodosOverdue:
+    default:
+      return todosOverdueField;
+      break;
+  }
+}
+
+void IcsEndAnalyzerFactory::registerFields( Strigi::FieldRegister& reg )
+{
+  // these cnstr's aren't pretty
+  static const cnstr product = "Product Id";
+  static const cnstr events = "Events";
+  static const cnstr journals = "Journals";
+  static const cnstr todos = "Todos";
+  static const cnstr todoscompleted = "Todos Completed";
+  static const cnstr todosoverdue = "Todos Overdue";
+  productIdField = reg.registerField( product, Strigi::FieldRegister::stringType, 1, 0 );
+  eventsField = reg.registerField( events, Strigi::FieldRegister::integerType, 1, 0 );
+  journalsField = reg.registerField( journals, Strigi::FieldRegister::integerType, 1, 0 );
+  todosField = reg.registerField( todos, Strigi::FieldRegister::integerType, 1, 0 );
+  todosCompletedField = reg.registerField( todoscompleted, Strigi::FieldRegister::integerType, 1, 0 );
+  todosOverdueField = reg.registerField( todosoverdue, Strigi::FieldRegister::integerType, 1, 0 );
+}
+

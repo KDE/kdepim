@@ -1,54 +1,8 @@
+set(kfile_ics_SRCS kfile_ics.cpp )
 
+add_library(ics MODULE ${kfile_ics_SRCS})
 
+target_link_libraries(ics ${STREAMANALYZER_LIBRARY} ${KDE4_KDECORE_LIBS} ${KDE4_KCAL_LIBS} ${KDE4_KIO_LIBS} )
+set_target_properties(ics PROPERTIES PREFIX strigiea_)
+install(TARGETS ics LIBRARY DESTINATION ${LIB_INSTALL_DIR}/strigi)
 
-
-########### next target ###############
-
-set(kfile_ics_PART_SRCS kfile_ics.cpp )
-
-kde4_automoc(${kfile_ics_PART_SRCS})
-
-kde4_add_plugin(kfile_ics ${kfile_ics_PART_SRCS})
-
-
-
-target_link_libraries(kfile_ics  ${KDE4_KDECORE_LIBS} ${KDE4_KCAL_LIBS} ${KDE4_KIO_LIBS} )
-
-install(TARGETS kfile_ics  DESTINATION ${PLUGIN_INSTALL_DIR})
-
-
-########### install files ###############
-
-install( FILES kfile_ics.desktop  DESTINATION ${SERVICES_INSTALL_DIR})
-
-
-
-
-#original Makefile.am contents follow:
-
-## Makefile.am for ics file meta info plugin
-#
-## set the include path for X, kdepim, qt and KDE
-#INCLUDES = \
-#  -I$(top_srcdir) \
-#  $(all_includes)
-#
-#KDE_CXXFLAGS = -UQT3_SUPPORT
-#
-## these are the headers for your project
-#noinst_HEADERS   = kfile_ics.h
-#
-#kde_module_LTLIBRARIES = kfile_ics.la
-#
-#kfile_ics_la_SOURCES = kfile_ics.cpp
-#kfile_ics_la_LDFLAGS =  $(all_libraries) -module $(KDE_PLUGIN)
-#kfile_ics_la_LIBADD = $(top_builddir)/libkcal/libkcal.la $(LIB_KSYCOCA)
-#
-#
-#METASOURCES = AUTO
-#
-#messages: rc.cpp
-#	$(XGETTEXT) kfile_ics.cpp -o $(podir)/kfile_ics.pot
-#
-#services_DATA = kfile_ics.desktop
-#servicesdir = $(kde_servicesdir)

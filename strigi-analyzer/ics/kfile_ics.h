@@ -1,5 +1,5 @@
-  /* This file is part of the KDE project
- * Copyright (C) 2004 Bram Schoenmakers <bramschoenmakers@kde.nl>
+/* This file is part of the KDE project
+ * Copyright (C) 2007 Aaron Seigo <aseigo@kde.org>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public
@@ -17,20 +17,63 @@
  *
  */
 
-#ifndef KFILE_ICS_H
-#define KFILE_ICS_H
+#ifndef KFILE_Ics_H
+#define KFILE_Ics_H
 
-#include <kfilemetainfo.h>
+#define STRIGI_IMPORT_API
+#include <strigi/analyzerplugin.h>
+#include <strigi/streamendanalyzer.h>
+#include <kdepim_export.h>
 
-class QStringList;
+class IcsEndAnalyzerFactory;
 
-class ICSPlugin : public KFilePlugin
+class KDEPIM_EXPORT IcsEndAnalyzer : public Strigi::StreamEndAnalyzer
 {
-  Q_OBJECT
 public:
-  ICSPlugin( QObject *parent, const QStringList& args );
+  IcsEndAnalyzer( const IcsEndAnalyzerFactory* f );
 
-  virtual bool readInfo( KFileMetaInfo& info, uint what );
+  enum Field { ProductId = 0, Events, Journals, Todos, TodosCompleted, TodosOverdue };
+
+  const char* getName() const { return "IcsEndAnalyzer"; }
+  bool checkHeader( const char* header, int32_t headersize ) const;
+  char analyze(  Strigi::AnalysisResult& idx, jstreams::InputStream* in );
+
+private:
+  const IcsEndAnalyzerFactory* m_factory;
 };
+
+class KDEPIM_EXPORT IcsEndAnalyzerFactory : public Strigi::StreamEndAnalyzerFactory
+{
+friend class IcsEndAnalyzer;
+public:
+  const Strigi::RegisteredField* field( IcsEndAnalyzer::Field ) const;
+
+private:
+  const Strigi::RegisteredField* productIdField;
+  const Strigi::RegisteredField* eventsField;
+  const Strigi::RegisteredField* journalsField;
+  const Strigi::RegisteredField* todosField;
+  const Strigi::RegisteredField* todosCompletedField;
+  const Strigi::RegisteredField* todosOverdueField;
+
+  const char* getName() const { return "IcsEndAnalyzer"; }
+  Strigi::StreamEndAnalyzer* newInstance() const { return new IcsEndAnalyzer( this ); }
+  void registerFields( Strigi::FieldRegister& );
+};
+
+//TODO: remove this include when vandenoever fixes analyzerplugin.h
+#include <strigi/jstreamsconfig.h>
+
+class KDEPIM_EXPORT IcsFactoryFactory : public Strigi::AnalyzerFactoryFactory
+{
+public:
+  std::list<Strigi::StreamEndAnalyzerFactory*> getStreamEndAnalyzerFactories() const {
+     std::list<Strigi::StreamEndAnalyzerFactory*> af;
+     af.push_back( new IcsEndAnalyzerFactory );
+     return af;
+  }
+};
+
+STRIGI_ANALYZER_FACTORY(IcsFactoryFactory)
 
 #endif
