@@ -165,7 +165,7 @@ class KDE_EXPORT ResourceKABC : public ResourceCalendar
     bool doLoad();
     bool doSave();
 
-  private slots:
+  private Q_SLOTS:
     void reload();
 
   private:

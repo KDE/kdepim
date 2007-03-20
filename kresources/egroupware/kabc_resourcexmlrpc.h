@@ -67,7 +67,7 @@ class KDE_EXPORT ResourceXMLRPC : public ResourceCached
   protected:
     void init();
 
-  protected slots:
+  protected Q_SLOTS:
     void loginFinished( const QList<QVariant>&, const QVariant& );
     void logoutFinished( const QList<QVariant>&, const QVariant& );
 
