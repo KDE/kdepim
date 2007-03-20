@@ -76,5 +76,5 @@ Comment[x-test]=xxA bodypart formatter plugin for text/vcardxx
 Comment[zh_TW]=text/vCard 格式化外掛程式
 
 [Plugin]
-Type=text/x-vcard
+Type=text/directory
 X-KDE-Library=libkmail_bodypartformatter_text_vcard

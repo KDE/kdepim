@@ -97,5 +97,5 @@ Comment[uk]=Переглядач/розпаковувач файлів TNEF
 Comment[x-test]=xxA viewer/extractor for TNEF filesxx
 Comment[zh_TW]=TNEF 檔案檢視器
 Terminal=false
-MimeType=application/ms-tnef;
+MimeType=application/vnd.ms-tnef;
 Categories=Qt;KDE;Utility;X-KDE-Utilities-PIM;
