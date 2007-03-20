@@ -44,7 +44,7 @@ KVcfPlugin::KVcfPlugin(QObject *parent, const QStringList &args)
 
     : KFilePlugin(parent, args)
 {
-    KFileMimeTypeInfo* info = addMimeTypeInfo( "text/x-vcard" );
+    KFileMimeTypeInfo* info = addMimeTypeInfo( "text/directory" );
 
     KFileMimeTypeInfo::GroupInfo* group = 0L;
 

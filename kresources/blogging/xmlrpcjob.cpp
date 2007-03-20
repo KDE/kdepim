@@ -92,7 +92,7 @@ kDebug()<<"XmlrpcJob::XmlrpcJob, method not empty."<<endl;
 //     d->savedStaticData = staticData.copy();
   }
   addMetaData( "UserAgent", "KDE XML-RPC TransferJob" );
-  addMetaData( "content-type", "Content-Type: text/xml; charset=utf-8" );
+  addMetaData( "content-type", "Content-Type: application/xml; charset=utf-8" );
   addMetaData( "ConnectTimeout", "50" );
 }
 

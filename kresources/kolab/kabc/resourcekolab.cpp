@@ -74,7 +74,7 @@ K_EXPORT_COMPONENT_FACTORY(kabc_kolab,KolabFactory)
 static const char* s_kmailContentsType = "Contact";
 static const char* s_attachmentMimeTypeContact = "application/x-vnd.kolab.contact";
 static const char* s_attachmentMimeTypeDistList = "application/x-vnd.kolab.contact.distlist";
-static const char* s_inlineMimeType = "text/x-vcard";
+static const char* s_inlineMimeType = "text/x-vcard"; // the new mimetype name is text/directory, but keep this for compat
 
 KABC::ResourceKolab::ResourceKolab( const KConfig *config )
   : KPIM::ResourceABC( config ),

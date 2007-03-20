@@ -419,7 +419,7 @@ void KTNEFMain::slotShowMessageText()
 	str << rtf;
 	str.flush();
 
-	KRun::runUrl( KUrl( tmpFile.fileName() ), "text/rtf", this, true );
+	KRun::runUrl( KUrl( tmpFile.fileName() ), "application/rtf", this, true );
 }
 
 void KTNEFMain::slotSaveMessageText()

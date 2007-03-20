@@ -117,7 +117,7 @@ KIO::TransferJob *GroupDavGlobals::createListItemsJob( const KUrl &url )
   kDebug(5800) << "props = "<< doc.toString() << endl;
   KIO::TransferJob *job = KIO::davPropFind( url, doc, "1", false );
   if ( job ) {
-    job->addMetaData( "accept", "text/xml" );
+    job->addMetaData( "accept", "application/xml" );
     job->addMetaData( "customHTTPHeader", "accept-encoding: " );
   }
   return job;

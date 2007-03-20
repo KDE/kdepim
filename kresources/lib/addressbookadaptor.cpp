@@ -53,7 +53,7 @@ AddressBookAdaptor::AddressBookAdaptor()
 
 QString AddressBookAdaptor::mimeType() const
 {
-  return "text/x-vcard";
+  return "text/x-vcard"; // ### the new name is text/directory, is it ok to change this?
 }
 
 bool AddressBookAdaptor::localItemExists( const QString &localId )
