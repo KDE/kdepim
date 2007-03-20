@@ -1,6 +1,6 @@
 [Desktop Entry]
 Type=MimeType
-MimeType=application/ms-tnef
+MimeType=application/vnd.ms-tnef
 Icon=tar
 Patterns=*.tnf;
 Comment=TNEF File
