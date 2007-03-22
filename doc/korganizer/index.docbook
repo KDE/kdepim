@@ -4,8 +4,6 @@
   <!ENTITY kappname "&korganizer;">
   <!ENTITY package "kdepim">
   <!ENTITY plugins-chapter SYSTEM "plugins-chapter.docbook">
-  <!ENTITY exchange-plugin-workshop SYSTEM "exchange-plugin.docbook">
-  <!ENTITY group-scheduling-workshop SYSTEM "group-scheduling.docbook">
   <!ENTITY outlook-to-vcalendar-workshop SYSTEM "outlook-to-vcalendar.docbook">
   <!ENTITY % addindex "IGNORE">
   <!ENTITY % English "INCLUDE">
