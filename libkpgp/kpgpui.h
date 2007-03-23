@@ -25,7 +25,6 @@
 #include <QPixmap>
 #include <QLabel>
 #include <kdebug.h>       // used in inlined methods
-#include <Q3CString>     // used in return-by-value
 #include <QString>      // is a member in KeyRequester
 #include <QVector> // used in KeyApprovalDialog
 #include <Q3PtrVector>
