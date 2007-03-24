@@ -33,7 +33,7 @@
 </authorgroup>
 
 <copyright>
-<year>2001</year><year>2002</year><year>2003</year><year>2004</year><year>2005</year><year>2006</year>
+<year>2001</year><year>2002</year><year>2003</year><year>2004</year><year>2005</year><year>2006</year><year>2007</year>
 <holder>David Jarvie</holder>
 </copyright>
 
@@ -41,8 +41,8 @@
 
 <!-- Don't change format of date and version of the documentation -->
 
-<date>2006-12-06</date>
-<releaseinfo>1.04.07</releaseinfo>
+<date>2007-03-16</date>
+<releaseinfo>1.04.10</releaseinfo>
 
 <abstract>
 <para>&kalarm; is a personal alarm message, command and email scheduler for &kde;.</para>
@@ -771,8 +771,9 @@ dialog.</para></note>
 
 <itemizedlist>
 <listitem>
-<para>Enter the sound file path or URL, or use the button beside the
-edit box to display a file selection dialog.</para>
+<para>Enter the sound file path, or use the button beside the edit box
+to display a file selection dialog. You can listen to the selected
+file by clicking the play button to the left of the edit field.</para>
 </listitem>
 
 <listitem>
