@@ -1060,7 +1060,7 @@ synthesizer, &eg; <application>Festival</application>.</para>
 <para><guilabel>Sound file</guilabel> to play an audio file. Use the
 button on the right to display the Sound File dialog which lets you
 select a file to play and set volume and repetition options. If you
-hover the mouse over the button, a tooltip will display the audio file
+hover the mouse over the selector, a tooltip will display the audio file
 currently selected.</para>
 
 <note><para>&kalarm; uses the &arts; sound server for repetition and
