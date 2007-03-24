@@ -62,6 +62,7 @@
 #include <kprocess.h>
 #include <kpushbutton.h>
 #include <kconfiggroup.h>
+#include <kmenu.h>
 // Qt
 #include <QCheckBox>
 #include <QToolButton>
@@ -709,8 +710,8 @@ void Kleo::KeySelectionDialog::slotRMB( Kleo::KeyListViewItem * item, const QPoi
 
   mCurrentContextMenuItem = item;
 
-  Q3PopupMenu menu;
-  menu.insertItem( i18n( "Recheck Key" ), this, SLOT(slotRecheckKey()) );
+  KMenu menu;
+  menu.addAction( i18n( "Recheck Key" ), this, SLOT(slotRecheckKey()) );
   menu.exec( p );
 }
 
