@@ -251,35 +251,35 @@ void CertificateInfoWidgetImpl::startCertificateChainListing() {
 }
 
 void CertificateInfoWidgetImpl::startCertificateDump() {
-  KProcess* proc = new KProcess( this );
+  K3Process* proc = new KProcess( this );
   (*proc) << "gpgsm"; // must be in the PATH
   (*proc) << "--dump-keys";
   (*proc) << mChain.front().primaryFingerprint();
 
-  QObject::connect( proc, SIGNAL( receivedStdout(KProcess *, char *, int) ),
-                    this, SLOT( slotCollectStdout(KProcess *, char *, int) ) );
-  QObject::connect( proc, SIGNAL( receivedStderr(KProcess *, char *, int) ),
-                    this, SLOT( slotCollectStderr(KProcess *, char *, int) ) );
-  QObject::connect( proc, SIGNAL( processExited(KProcess*) ),
-                    this, SLOT( slotDumpProcessExited(KProcess*) ) );
+  QObject::connect( proc, SIGNAL( receivedStdout(K3Process *, char *, int) ),
+                    this, SLOT( slotCollectStdout(K3Process *, char *, int) ) );
+  QObject::connect( proc, SIGNAL( receivedStderr(K3Process *, char *, int) ),
+                    this, SLOT( slotCollectStderr(K3Process *, char *, int) ) );
+  QObject::connect( proc, SIGNAL( processExited(K3Process*) ),
+                    this, SLOT( slotDumpProcessExited(K3Process*) ) );
 
-  if ( !proc->start( KProcess::NotifyOnExit, (KProcess::Communication)(KProcess::Stdout | KProcess::Stderr) ) ) {
+  if ( !proc->start( K3Process::NotifyOnExit, (KProcess::Communication)(KProcess::Stdout | KProcess::Stderr) ) ) {
     QString wmsg = i18n("Failed to execute gpgsm:\n%1", i18n( "program not found" ) );
     dumpView->setText( wmsg );
   }
 }
 
-void CertificateInfoWidgetImpl::slotCollectStdout(KProcess *, char *buffer, int buflen)
+void CertificateInfoWidgetImpl::slotCollectStdout(K3Process *, char *buffer, int buflen)
 {
   mDumpOutput += QByteArray(buffer, buflen+1); // like KProcIO does
 }
 
-void CertificateInfoWidgetImpl::slotCollectStderr(KProcess *, char *buffer, int buflen)
+void CertificateInfoWidgetImpl::slotCollectStderr(K3Process *, char *buffer, int buflen)
 {
   mDumpError += QByteArray(buffer, buflen+1); // like KProcIO does
 }
 
-void CertificateInfoWidgetImpl::slotDumpProcessExited(KProcess* proc) {
+void CertificateInfoWidgetImpl::slotDumpProcessExited(K3Process* proc) {
   int rc = ( proc->normalExit() ) ? proc->exitStatus() : -1 ;
 
   if ( rc == 0 ) {

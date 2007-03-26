@@ -23,7 +23,7 @@
 #include "precommandjob.h"
 
 #include <klocale.h>
-#include <kprocess.h>
+#include <k3process.h>
 
 using namespace MailTransport;
 
@@ -32,10 +32,10 @@ PrecommandJob::PrecommandJob(const QString & precommand, QObject * parent) :
     mProcess( 0 ),
     mPrecommand( precommand )
 {
-  mProcess = new KProcess( this );
+  mProcess = new K3Process( this );
   mProcess->setUseShell( true );
   *mProcess << precommand;
-  connect( mProcess, SIGNAL(processExited(KProcess*)), SLOT(processExited(KProcess*)) );
+  connect( mProcess, SIGNAL(processExited(K3Process*)), SLOT(processExited(KProcess*)) );
 }
 
 PrecommandJob::~ PrecommandJob()
@@ -45,7 +45,7 @@ PrecommandJob::~ PrecommandJob()
 
 void PrecommandJob::start()
 {
-  if ( !mProcess->start( KProcess::NotifyOnExit ) ) {
+  if ( !mProcess->start( K3Process::NotifyOnExit ) ) {
     setError( UserDefinedError );
     setErrorText( i18n("Could not execute precommand '%1'.", mPrecommand ) );
     emitResult();
@@ -62,7 +62,7 @@ bool PrecommandJob::doKill()
   return true;
 }
 
-void PrecommandJob::processExited(KProcess *process)
+void PrecommandJob::processExited(K3Process *process)
 {
   Q_ASSERT( mProcess == process );
 

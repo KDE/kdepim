@@ -40,7 +40,7 @@
 
 #include <gpgmepp/context.h>
 
-class KProcess;
+class K3Process;
 
 namespace Kleo {
 
@@ -90,7 +90,7 @@ namespace Kleo {
     void slotCancel();
 
   private slots:
-    GpgME::Error slotProcessExited( KProcess * );
+    GpgME::Error slotProcessExited( K3Process * );
     void slotTimeout();
 
   private:

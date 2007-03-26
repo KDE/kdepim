@@ -91,7 +91,7 @@ QString Signature::textFromCommand( bool * ok ) const
 
   // run the process:
   int rc = 0;
-  if ( !proc.start( KProcess::Block, KProcess::Stdout ) )
+  if ( !proc.start( K3Process::Block, KProcess::Stdout ) )
     rc = -1;
   else
     rc = ( proc.normalExit() ) ? proc.exitStatus() : -1 ;

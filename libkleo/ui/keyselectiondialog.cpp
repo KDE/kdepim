@@ -59,7 +59,7 @@
 #include <kwin.h>
 #include <kconfig.h>
 #include <kmessagebox.h>
-#include <kprocess.h>
+#include <k3process.h>
 #include <kpushbutton.h>
 #include <kconfiggroup.h>
 #include <kmenu.h>
@@ -521,10 +521,10 @@ void Kleo::KeySelectionDialog::slotRereadKeys() {
 
 void Kleo::KeySelectionDialog::slotStartCertificateManager()
 {
-  KProcess certManagerProc;
+  K3Process certManagerProc;
   certManagerProc << "kleopatra";
 
-  if( !certManagerProc.start( KProcess::DontCare ) )
+  if( !certManagerProc.start( K3Process::DontCare ) )
     KMessageBox::error( this,
                         i18n( "Could not start certificate manager; "
                               "please check your installation." ),

@@ -110,14 +110,14 @@ GpgME::Error Kleo::QGpgMERefreshKeysJob::startAProcess() {
 
   mProcess->setUseStatusFD( true );
 
-  connect( mProcess, SIGNAL(processExited(KProcess*)),
-	   SLOT(slotProcessExited(KProcess*)) );
-  connect( mProcess, SIGNAL(receivedStderr(KProcess*,char*,int)),
-	   SLOT(slotStderr(KProcess*,char*,int)) );
+  connect( mProcess, SIGNAL(processExited(K3Process*)),
+	   SLOT(slotProcessExited(K3Process*)) );
+  connect( mProcess, SIGNAL(receivedStderr(K3Process*,char*,int)),
+	   SLOT(slotStderr(K3Process*,char*,int)) );
   connect( mProcess, SIGNAL(status(Kleo::GnuPGProcessBase*,const QString&,const QStringList&)),
 	   SLOT(slotStatus(Kleo::GnuPGProcessBase*,const QString&,const QStringList&)) );
 
-  if ( !mProcess->start( KProcess::NotifyOnExit, KProcess::Stderr ) ) {
+  if ( !mProcess->start( K3Process::NotifyOnExit, KProcess::Stderr ) ) {
     mError = gpg_err_make( GPG_ERR_SOURCE_GPGSM, GPG_ERR_ENOENT ); // what else?
     deleteLater();
     return mError;
@@ -185,11 +185,11 @@ void Kleo::QGpgMERefreshKeysJob::slotStatus( GnuPGProcessBase * proc, const QStr
   }
 }
 
-void Kleo::QGpgMERefreshKeysJob::slotStderr( KProcess *, char *, int ) {
+void Kleo::QGpgMERefreshKeysJob::slotStderr( K3Process *, char *, int ) {
   // implement? or not?
 }
 
-void Kleo::QGpgMERefreshKeysJob::slotProcessExited( KProcess * proc ) {
+void Kleo::QGpgMERefreshKeysJob::slotProcessExited( K3Process * proc ) {
   if ( proc != mProcess )
     return;
 

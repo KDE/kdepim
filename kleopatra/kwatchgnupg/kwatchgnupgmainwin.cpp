@@ -75,7 +75,7 @@ KWatchGnuPGMainWindow::KWatchGnuPGMainWindow( QWidget* parent, const char* name 
   setCentralWidget( mCentralWidget );
 
   mWatcher = new KProcIO( QTextCodec::codecForMib( 106 /*utf-8*/ ) );
-  connect( mWatcher, SIGNAL( processExited(KProcess*) ),
+  connect( mWatcher, SIGNAL( processExited(K3Process*) ),
 		   this, SLOT( slotWatcherExited() ) );
   connect( mWatcher, SIGNAL( readReady(KProcIO*) ),
 		   this, SLOT( slotReadStdout() ) );
@@ -135,7 +135,7 @@ void KWatchGnuPGMainWindow::slotConfigureToolbars()
 
 void KWatchGnuPGMainWindow::startWatcher()
 {
-  disconnect( mWatcher, SIGNAL( processExited(KProcess*) ),
+  disconnect( mWatcher, SIGNAL( processExited(K3Process*) ),
 			  this, SLOT( slotWatcherExited() ) );
   if( mWatcher->isRunning() ) {
 	mWatcher->kill();
@@ -160,7 +160,7 @@ void KWatchGnuPGMainWindow::startWatcher()
 	mCentralWidget->append( tr("[%1] Log started")
 							.arg( QDateTime::currentDateTime().toString(Qt::ISODate) ) );
   }
-  connect( mWatcher, SIGNAL( processExited(KProcess*) ),
+  connect( mWatcher, SIGNAL( processExited(K3Process*) ),
 		   this, SLOT( slotWatcherExited() ) );
 }
 
@@ -260,7 +260,7 @@ void KWatchGnuPGMainWindow::slotSaveAs()
 
 void KWatchGnuPGMainWindow::slotQuit()
 {
-  disconnect( mWatcher, SIGNAL( processExited(KProcess*) ),
+  disconnect( mWatcher, SIGNAL( processExited(K3Process*) ),
 			  this, SLOT( slotWatcherExited() ) );
   mWatcher->kill();
   kapp->quit();

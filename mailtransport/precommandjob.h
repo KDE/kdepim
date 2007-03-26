@@ -25,7 +25,7 @@
 
 #include <kjob.h>
 
-class KProcess;
+class K3Process;
 
 namespace MailTransport {
 
@@ -55,10 +55,10 @@ class PrecommandJob : public KJob
     virtual bool doKill();
 
   private slots:
-    void processExited(KProcess *process);
+    void processExited(K3Process *process);
 
   private:
-    KProcess *mProcess;
+    K3Process *mProcess;
     QString mPrecommand;
 };
 

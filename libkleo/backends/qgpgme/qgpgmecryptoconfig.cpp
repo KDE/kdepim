@@ -82,7 +82,7 @@ void QGpgMECryptoConfig::runGpgConf( bool showErrors )
 
   // run the process:
   int rc = 0;
-  if ( !proc.start( KProcess::Block ) )
+  if ( !proc.start( K3Process::Block ) )
     rc = -1;
   else
     rc = ( proc.normalExit() ) ? proc.exitStatus() : -2 ;
@@ -182,7 +182,7 @@ void QGpgMECryptoConfigComponent::runGpgConf()
 
   // run the process:
   int rc = 0;
-  if ( !proc.start( KProcess::Block ) )
+  if ( !proc.start( K3Process::Block ) )
     rc = -1;
   else
     rc = ( proc.normalExit() ) ? proc.exitStatus() : -1 ;
@@ -283,20 +283,20 @@ void QGpgMECryptoConfigComponent::sync( bool runtime )
   if ( runtime )
     commandLine += " --runtime";
   commandLine += " --change-options ";
-  commandLine += KProcess::quote( mName );
+  commandLine += K3Process::quote( mName );
   commandLine += " < ";
-  commandLine += KProcess::quote( tmpFile.fileName() );
+  commandLine += K3Process::quote( tmpFile.fileName() );
 
   //kDebug(5150) << commandLine << endl;
   //system( QCString( "cat " ) + tmpFile.name().toLatin1() ); // DEBUG
 
-  KProcess proc;
+  K3Process proc;
   proc.setUseShell( true );
   proc << commandLine;
 
   // run the process:
   int rc = 0;
-  if ( !proc.start( KProcess::Block ) )
+  if ( !proc.start( K3Process::Block ) )
     rc = -1;
   else
     rc = ( proc.normalExit() ) ? proc.exitStatus() : -1 ;
