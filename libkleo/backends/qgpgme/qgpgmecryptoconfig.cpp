@@ -35,7 +35,7 @@
 #include <QList>
 #include <QByteArray>
 #include <kdebug.h>
-#include <kprocio.h>
+#include <k3procio.h>
 #include <errno.h>
 #include <kmessagebox.h>
 #include <klocale.h>
@@ -73,12 +73,12 @@ void QGpgMECryptoConfig::runGpgConf( bool showErrors )
 {
   // Run gpgconf --list-components to make the list of components
 
-  KProcIO proc( QTextCodec::codecForName( "utf8" ) );
+  K3ProcIO proc( QTextCodec::codecForName( "utf8" ) );
   proc << "gpgconf"; // must be in the PATH
   proc << "--list-components";
 
-  QObject::connect( &proc, SIGNAL( readReady(KProcIO*) ),
-                    this, SLOT( slotCollectStdOut(KProcIO*) ) );
+  QObject::connect( &proc, SIGNAL( readReady(K3ProcIO*) ),
+                    this, SLOT( slotCollectStdOut(K3ProcIO*) ) );
 
   // run the process:
   int rc = 0;
@@ -103,7 +103,7 @@ void QGpgMECryptoConfig::runGpgConf( bool showErrors )
   mParsed = true;
 }
 
-void QGpgMECryptoConfig::slotCollectStdOut( KProcIO* proc )
+void QGpgMECryptoConfig::slotCollectStdOut( K3ProcIO* proc )
 {
   QString line;
   int result;
@@ -169,15 +169,15 @@ void QGpgMECryptoConfigComponent::runGpgConf()
 {
   // Run gpgconf --list-options <component>, and create all groups and entries for that component
 
-  KProcIO proc( QTextCodec::codecForName( "utf8" ) );
+  K3ProcIO proc( QTextCodec::codecForName( "utf8" ) );
   proc << "gpgconf"; // must be in the PATH
   proc << "--list-options";
   proc << mName;
 
   //kDebug(5150) << "Running gpgconf --list-options " << mName << endl;
 
-  QObject::connect( &proc, SIGNAL( readReady(KProcIO*) ),
-                    this, SLOT( slotCollectStdOut(KProcIO*) ) );
+  QObject::connect( &proc, SIGNAL( readReady(K3ProcIO*) ),
+                    this, SLOT( slotCollectStdOut(K3ProcIO*) ) );
   mCurrentGroup = 0;
 
   // run the process:
@@ -195,7 +195,7 @@ void QGpgMECryptoConfigComponent::runGpgConf()
   }
 }
 
-void QGpgMECryptoConfigComponent::slotCollectStdOut( KProcIO* proc )
+void QGpgMECryptoConfigComponent::slotCollectStdOut( K3ProcIO* proc )
 {
   QString line;
   int result;
@@ -268,7 +268,7 @@ void QGpgMECryptoConfigComponent::sync( bool runtime )
           line += ":16:";
         }
         line += '\n';
-        QByteArray line8bit = line.toUtf8(); // encode with utf8, and KProcIO uses utf8 when reading.
+        QByteArray line8bit = line.toUtf8(); // encode with utf8, and K3ProcIO uses utf8 when reading.
         tmpFile.write( line8bit.data(), line8bit.size()-1 /*no 0*/ );
         dirtyEntries.append( it.current() );
       }

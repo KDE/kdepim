@@ -47,7 +47,7 @@
 #include <kdialog.h>
 #include <kmessagebox.h>
 #include <kdebug.h>
-#include <kprocio.h>
+#include <k3procio.h>
 #include <kglobalsettings.h>
 
 // Qt
@@ -263,7 +263,7 @@ void CertificateInfoWidgetImpl::startCertificateDump() {
   QObject::connect( proc, SIGNAL( processExited(K3Process*) ),
                     this, SLOT( slotDumpProcessExited(K3Process*) ) );
 
-  if ( !proc->start( K3Process::NotifyOnExit, (K3Process::Communication)(KProcess::Stdout | KProcess::Stderr) ) ) {
+  if ( !proc->start( K3Process::NotifyOnExit, (K3Process::Communication)(K3Process::Stdout | K3Process::Stderr) ) ) {
     QString wmsg = i18n("Failed to execute gpgsm:\n%1", i18n( "program not found" ) );
     dumpView->setText( wmsg );
   }
@@ -271,12 +271,12 @@ void CertificateInfoWidgetImpl::startCertificateDump() {
 
 void CertificateInfoWidgetImpl::slotCollectStdout(K3Process *, char *buffer, int buflen)
 {
-  mDumpOutput += QByteArray(buffer, buflen+1); // like KProcIO does
+  mDumpOutput += QByteArray(buffer, buflen+1); // like K3ProcIO does
 }
 
 void CertificateInfoWidgetImpl::slotCollectStderr(K3Process *, char *buffer, int buflen)
 {
-  mDumpError += QByteArray(buffer, buflen+1); // like KProcIO does
+  mDumpError += QByteArray(buffer, buflen+1); // like K3ProcIO does
 }
 
 void CertificateInfoWidgetImpl::slotDumpProcessExited(K3Process* proc) {

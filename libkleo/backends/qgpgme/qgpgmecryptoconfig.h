@@ -39,7 +39,7 @@
 #include <QObject>
 #include <QVariant>
 #include <kdepim_export.h>
-class KProcIO;
+class K3ProcIO;
 
 class QGpgMECryptoConfigComponent;
 class QGpgMECryptoConfigEntry;
@@ -65,7 +65,7 @@ public:
   virtual void sync( bool runtime );
 
 private slots:
-  void slotCollectStdOut( KProcIO* proc );
+  void slotCollectStdOut( K3ProcIO* proc );
 private:
   /// @param showErrors if true, a messagebox will be shown if e.g. gpgconf wasn't found
   void runGpgConf( bool showErrors );
@@ -94,7 +94,7 @@ public:
   void sync( bool runtime );
 
 private slots:
-  void slotCollectStdOut( KProcIO* proc );
+  void slotCollectStdOut( K3ProcIO* proc );
 private:
   void runGpgConf();
 
