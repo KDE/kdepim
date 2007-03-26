@@ -110,8 +110,8 @@ GpgME::Error Kleo::ChiasmusJob::start() {
   if ( const GpgME::Error err = setup() )
     return mError = err;
 
-  connect( mSymCryptRun, SIGNAL(processExited(K3Process*)),
-           this, SLOT(slotProcessExited(K3Process*)) );
+  connect( mSymCryptRun, SIGNAL(processExited(KProcess*)),
+           this, SLOT(slotProcessExited(KProcess*)) );
 
   if ( !mSymCryptRun->launch( mInput ) )
     return mError = gpg_error( GPG_ERR_ENOENT ); // what else?
@@ -120,7 +120,7 @@ GpgME::Error Kleo::ChiasmusJob::start() {
   return mError = 0;
 }
 
-GpgME::Error Kleo::ChiasmusJob::slotProcessExited( K3Process * proc ) {
+GpgME::Error Kleo::ChiasmusJob::slotProcessExited( KProcess * proc ) {
   if ( proc != mSymCryptRun )
     mError = gpg_error( GPG_ERR_INTERNAL );
   else if ( mCanceled )
@@ -172,7 +172,7 @@ GpgME::Error Kleo::ChiasmusJob::exec() {
   if ( const GpgME::Error err = setup() )
     return mError = err;
 
-  if ( !mSymCryptRun->launch( mInput, K3Process::Block ) ) {
+  if ( !mSymCryptRun->launch( mInput, KProcess::Block ) ) {
     delete mSymCryptRun; mSymCryptRun = 0;
     return mError = gpg_error( GPG_ERR_ENOENT ); // what else?
   }

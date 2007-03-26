@@ -33,7 +33,7 @@
 #ifndef __KLEO_GNUPGPROCESSBASE_H__
 #define __KLEO_GNUPGPROCESSBASE_H__
 
-#include <k3process.h>
+#include <kprocess.h>
 #include <kdepim_export.h>
 
 namespace Kleo {
@@ -41,12 +41,12 @@ namespace Kleo {
   /**
    * @short a base class for GPG and GPGSM processes.
    *
-   * This K3Process subclass implements the status-fd handling common
+   * This KProcess subclass implements the status-fd handling common
    * to GPG and GPGSM.
    *
    * @author Marc Mutz <mutz@kde.org>
    */
-  class KLEO_EXPORT GnuPGProcessBase : public K3Process {
+  class KLEO_EXPORT GnuPGProcessBase : public KProcess {
     Q_OBJECT
   public:
     GnuPGProcessBase( QObject * parent=0 );

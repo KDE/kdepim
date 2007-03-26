@@ -62,12 +62,12 @@ void GnuPGViewer::setProcess( Kleo::GnuPGProcessBase * process ) {
   if ( !process )
     return;
   mProcess = process;
-  connect( mProcess, SIGNAL(processExited(K3Process*)),
-	   SLOT(slotProcessExited(K3Process*)) );
-  connect( mProcess, SIGNAL(receivedStdout(K3Process*,char*,int)),
-	   SLOT(slotStdout(K3Process*,char*,int)) );
-  connect( mProcess, SIGNAL(receivedStderr(K3Process*,char*,int)),
-	   SLOT(slotStderr(K3Process*,char*,int)) );
+  connect( mProcess, SIGNAL(processExited(KProcess*)),
+	   SLOT(slotProcessExited(KProcess*)) );
+  connect( mProcess, SIGNAL(receivedStdout(KProcess*,char*,int)),
+	   SLOT(slotStdout(KProcess*,char*,int)) );
+  connect( mProcess, SIGNAL(receivedStderr(KProcess*,char*,int)),
+	   SLOT(slotStderr(KProcess*,char*,int)) );
   connect( mProcess, SIGNAL(status(Kleo::GnuPGProcessBase*,const QString&,const QStringList&)),
 	   SLOT(slotStatus(Kleo::GnuPGProcessBase*,const QString&,const QStringList&)) );
 }
@@ -91,13 +91,13 @@ static QString escape( QString str ) {
   return str.replace( '&', "&amp" ).replace( '<', "&lt;" ).replace( '>', "&gt;" );
 }
 
-void GnuPGViewer::slotStdout( K3Process *, char * buffer, int buflen ) {
+void GnuPGViewer::slotStdout( KProcess *, char * buffer, int buflen ) {
   const QStringList l = split( buffer, buflen, mLastStdout );
   for ( QStringList::const_iterator it = l.begin() ; it != l.end() ; ++it )
     append( "stdout: " + escape( *it ) );
 }
 
-void GnuPGViewer::slotStderr( K3Process *, char * buffer, int buflen ) {
+void GnuPGViewer::slotStderr( KProcess *, char * buffer, int buflen ) {
   const QStringList l = split( buffer, buflen, mLastStderr );
   for ( QStringList::const_iterator it = l.begin() ; it != l.end() ; ++it )
     append( "<b>stderr: " + escape( *it ) + "</b>" );
@@ -105,7 +105,7 @@ void GnuPGViewer::slotStderr( K3Process *, char * buffer, int buflen ) {
 void GnuPGViewer::slotStatus( Kleo::GnuPGProcessBase *, const QString & type, const QStringList & args ) {
   append( "<b><font color=\"red\">status: " + escape( type + ' ' + args.join( " " ) ) + "</font></b>" );
 }
-void GnuPGViewer::slotProcessExited( K3Process * proc ) {
+void GnuPGViewer::slotProcessExited( KProcess * proc ) {
   if ( !proc )
     return;
   if ( proc->normalExit() )
@@ -135,7 +135,7 @@ int main( int argc, char** argv ) {
   app.setMainWidget( gv );
   gv->show();
 
-  gpg.start( K3Process::NotifyOnExit, K3Process::AllOutput );
+  gpg.start( KProcess::NotifyOnExit, KProcess::AllOutput );
 
   return app.exec();
 }

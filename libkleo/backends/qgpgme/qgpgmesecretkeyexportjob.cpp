@@ -86,16 +86,16 @@ GpgME::Error Kleo::QGpgMESecretKeyExportJob::start( const QStringList & patterns
 
   mProcess->setUseStatusFD( true );
 
-  connect( mProcess, SIGNAL(processExited(K3Process*)),
-	   SLOT(slotProcessExited(K3Process*)) );
-  connect( mProcess, SIGNAL(receivedStdout(K3Process*,char*,int)),
-	   SLOT(slotStdout(K3Process*,char*,int)) );
-  connect( mProcess, SIGNAL(receivedStderr(K3Process*,char*,int)),
-	   SLOT(slotStderr(K3Process*,char*,int)) );
+  connect( mProcess, SIGNAL(processExited(KProcess*)),
+	   SLOT(slotProcessExited(KProcess*)) );
+  connect( mProcess, SIGNAL(receivedStdout(KProcess*,char*,int)),
+	   SLOT(slotStdout(KProcess*,char*,int)) );
+  connect( mProcess, SIGNAL(receivedStderr(KProcess*,char*,int)),
+	   SLOT(slotStderr(KProcess*,char*,int)) );
   connect( mProcess, SIGNAL(status(Kleo::GnuPGProcessBase*,const QString&,const QStringList&)),
 	   SLOT(slotStatus(Kleo::GnuPGProcessBase*,const QString&,const QStringList&)) );
 
-  if ( !mProcess->start( K3Process::NotifyOnExit, K3Process::AllOutput ) ) {
+  if ( !mProcess->start( KProcess::NotifyOnExit, KProcess::AllOutput ) ) {
     mError = gpg_err_make( GPG_ERR_SOURCE_GPGSM, GPG_ERR_ENOENT ); // what else?
     deleteLater();
     return mError;
@@ -163,7 +163,7 @@ void Kleo::QGpgMESecretKeyExportJob::slotStatus( GnuPGProcessBase * proc, const 
   }
 }
 
-void Kleo::QGpgMESecretKeyExportJob::slotStdout( K3Process * proc, char * buf, int buflen ) {
+void Kleo::QGpgMESecretKeyExportJob::slotStdout( KProcess * proc, char * buf, int buflen ) {
   if ( proc != mProcess )
     return;
   if ( buflen <= 0 )
@@ -175,11 +175,11 @@ void Kleo::QGpgMESecretKeyExportJob::slotStdout( K3Process * proc, char * buf, i
   memcpy( mKeyData.data() + oldlen, buf, buflen );
 }
 
-void Kleo::QGpgMESecretKeyExportJob::slotStderr( K3Process *, char *, int ) {
+void Kleo::QGpgMESecretKeyExportJob::slotStderr( KProcess *, char *, int ) {
   // implement? or not?
 }
 
-void Kleo::QGpgMESecretKeyExportJob::slotProcessExited( K3Process * proc ) {
+void Kleo::QGpgMESecretKeyExportJob::slotProcessExited( KProcess * proc ) {
   if ( proc != mProcess )
     return;
 
