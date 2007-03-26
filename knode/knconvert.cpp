@@ -29,7 +29,7 @@
 #include <kmessagebox.h>
 #include <kstandarddirs.h>
 #include <klineedit.h>
-#include <k3process.h>
+#include <kprocess.h>
 #include <kcomponentdata.h>
 #include <kpushbutton.h>
 
@@ -187,11 +187,11 @@ void KNConvert::slotStart()
     }
 
     QString dataDir=KStandardDirs::locateLocal("data","knode/");
-    t_ar=new K3Process;
+    t_ar=new KProcess;
     *t_ar << "tar";
     *t_ar << "-cz" << dataDir
           << "-f" << b_ackupPath->text();
-    connect(t_ar, SIGNAL(processExited(K3Process*)), this, SLOT(slotTarExited(K3Process*)));
+    connect(t_ar, SIGNAL(processExited(KProcess*)), this, SLOT(slotTarExited(KProcess*)));
     if(!t_ar->start()) {
       delete t_ar;
       t_ar = 0;
@@ -220,7 +220,7 @@ void KNConvert::slotBrowse()
 }
 
 
-void KNConvert::slotTarExited(K3Process *proc)
+void KNConvert::slotTarExited(KProcess *proc)
 {
   bool success=true;
 

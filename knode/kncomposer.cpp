@@ -51,7 +51,7 @@ using KRecentAddress::RecentAddresses;
 #include <ktemporaryfile.h>
 #include <kpgp.h>
 #include <kpgpblock.h>
-#include <k3process.h>
+#include <kprocess.h>
 #include <k3syntaxhighlighter.h>
 #include <QCursor>
 #include <kcompletionbox.h>
@@ -1325,7 +1325,7 @@ void KNComposer::slotExternalEditor()
     return;
   }
 
-  e_xternalEditor=new K3Process();
+  e_xternalEditor=new KProcess();
 
   // construct command line...
   QStringList command = editorCommand.split(' ', QString::SkipEmptyParts);
@@ -1340,7 +1340,7 @@ void KNComposer::slotExternalEditor()
   if(!filenameAdded)    // no %f in the editor command
     (*e_xternalEditor) << e_ditorTempfile->fileName();
 
-  connect(e_xternalEditor, SIGNAL(processExited(K3Process *)),this, SLOT(slotEditorFinished(K3Process *)));
+  connect(e_xternalEditor, SIGNAL(processExited(KProcess *)),this, SLOT(slotEditorFinished(KProcess *)));
   if(!e_xternalEditor->start()) {
     KMessageBox::error(this, i18n("Unable to start external editor.\nPlease check your configuration in the settings dialog."));
     delete e_xternalEditor;
@@ -1549,7 +1549,7 @@ void KNComposer::slotGroupsBtnClicked()
 }
 
 
-void KNComposer::slotEditorFinished(K3Process *)
+void KNComposer::slotEditorFinished(KProcess *)
 {
   if(e_xternalEditor->normalExit()) {
     e_ditorTempfile->flush();

@@ -30,7 +30,7 @@ class QStackedWidget;
 class QCheckBox;
 
 class KLineEdit;
-class K3Process;
+class KProcess;
 
 
 /** Converter framework for older file formats. */
@@ -112,7 +112,7 @@ class KDE_EXPORT KNConvert : public KDialog {
     QStringList l_og;
     bool c_onversionDone;
     QString v_ersion;
-    K3Process     *t_ar;
+    KProcess     *t_ar;
 
     void convert();
 
@@ -120,7 +120,7 @@ class KDE_EXPORT KNConvert : public KDialog {
     void slotStart();
     void slotCreateBkupToggled(bool b);
     void slotBrowse();
-    void slotTarExited(K3Process *proc);
+    void slotTarExited(KProcess *proc);
 
 };
 

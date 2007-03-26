@@ -58,7 +58,7 @@
 
 #include <libkdepim/kfileio.h>
 #include <libkdepim/kxface.h>
-#include <libkdepim/linklocator.h>
+#include <emailfunctions/linklocator.h>
 
 #include "articlewidget.h"
 #include "csshelper.h"
