@@ -29,7 +29,7 @@
 #include <QByteArray>
 
 #include <klocale.h>
-#include <k3process.h>
+#include <kprocess.h>
 #include <kdebug.h>
 
 
@@ -363,7 +363,7 @@ Base5::publicKeys( const QStringList & patterns )
   for ( QStringList::ConstIterator it = patterns.begin();
         it != patterns.end(); ++it ) {
     cmd += " ";
-    cmd += K3Process::quote( *it ).toLocal8Bit();
+    cmd += KProcess::quote( *it ).toLocal8Bit();
   }
   status = 0;
   exitStatus = run( cmd, 0, true );
@@ -393,7 +393,7 @@ Base5::secretKeys( const QStringList & patterns )
   for ( QStringList::ConstIterator it = patterns.begin();
         it != patterns.end(); ++it ) {
     cmd += " ";
-    cmd += K3Process::quote( *it ).toLocal8Bit();
+    cmd += KProcess::quote( *it ).toLocal8Bit();
   }
   status = 0;
   exitStatus = run( cmd, 0, true );
