@@ -33,6 +33,7 @@ Name[tg]=Миқдори зиёди бинарии барномот
 Name[tr]=Uygulama Sekizli Akışı
 Name[x-test]=xxApplication Octetstreamxx
 Comment=A bodypart formatter plugin for text/x-patch
+Comment[es]=Una extensión de formato para el cuerpo de text/x-patch
 [Plugin]
 Type=text/x-patch
 X-KDE-Library=libkmail_bodypartformatter_text_xdiff
