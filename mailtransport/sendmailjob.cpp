@@ -23,7 +23,7 @@
 #include "transport.h"
 
 #include <klocale.h>
-#include <k3process.h>
+#include <kprocess.h>
 
 #include <qbuffer.h>
 
@@ -32,11 +32,11 @@ using namespace MailTransport;
 SendmailJob::SendmailJob(Transport * transport, QObject * parent) :
     TransportJob( transport, parent )
 {
-  mProcess = new K3Process( this );
-  connect( mProcess, SIGNAL(processExited(K3Process*)), SLOT(sendmailExited()) );
-  connect( mProcess, SIGNAL(wroteStdin(K3Process*)), SLOT(wroteStdin()) );
-  connect( mProcess, SIGNAL(receivedStderr(K3Process*,char*,int)),
-           SLOT(receivedStdErr(K3Process*,char*,int)) );
+  mProcess = new KProcess( this );
+  connect( mProcess, SIGNAL(processExited(KProcess*)), SLOT(sendmailExited()) );
+  connect( mProcess, SIGNAL(wroteStdin(KProcess*)), SLOT(wroteStdin()) );
+  connect( mProcess, SIGNAL(receivedStderr(KProcess*,char*,int)),
+           SLOT(receivedStdErr(KProcess*,char*,int)) );
 }
 
 SendmailJob::~ SendmailJob()
@@ -47,7 +47,7 @@ SendmailJob::~ SendmailJob()
 void SendmailJob::doStart()
 {
   *mProcess << transport()->host() << "-i" << "-f" << sender() << to() << cc() << bcc();
-  if ( !mProcess->start( K3Process::NotifyOnExit, K3Process::All ) ) {
+  if ( !mProcess->start( KProcess::NotifyOnExit, KProcess::All ) ) {
     setError( UserDefinedError );
     setErrorText( i18n("Failed to execute mailer program %1", transport()->host()) );
     emitResult();
@@ -76,7 +76,7 @@ void SendmailJob::wroteStdin()
   }
 }
 
-void SendmailJob::receivedStdErr(K3Process * proc, char * data, int len)
+void SendmailJob::receivedStdErr(KProcess * proc, char * data, int len)
 {
   Q_ASSERT( proc == mProcess );
   mLastError += QString::fromLocal8Bit( data, len );

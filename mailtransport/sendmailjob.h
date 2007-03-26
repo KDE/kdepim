@@ -24,7 +24,7 @@
 
 #include <mailtransport/transportjob.h>
 
-class K3Process;
+class KProcess;
 
 namespace MailTransport {
 
@@ -54,10 +54,10 @@ class MAILTRANSPORT_EXPORT SendmailJob : public TransportJob
   private slots:
     void sendmailExited();
     void wroteStdin();
-    void receivedStdErr( K3Process *proc, char* data, int len );
+    void receivedStdErr( KProcess *proc, char* data, int len );
 
   private:
-    K3Process* mProcess;
+    KProcess* mProcess;
     QString mLastError;
 };
 
