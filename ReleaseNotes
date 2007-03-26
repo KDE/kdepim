@@ -1,4 +1,23 @@
-Current release is "Enterprise - Beta-02"
+Current release is "Enterprise - Beta-03"
+
+Features:
+=========
+
+kmail
+----------
+- Kolab/Merge14/issue1095 -Add local subscription
+- Kolab/issue1206 - kolabziward quirks
+- Kolab/issue1207 - groupware folders only  as local subscription still shows mails in inbox
+
+Bugfixes:
+=========
+- Kolab/issue1583 - Fixing OL compatibility with attachments that have umlauts in the filename.
+- Kolab/issue 1658 - Adding a warning for empty To : field
+- Kowi-W W1-1 - kontact discards signature settings when signature is deactivated
+
+
+
+"Enterprise - Beta-02"
 
 Features:
 =========
