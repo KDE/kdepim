@@ -50,7 +50,7 @@ namespace QGpgME {
   class QByteArrayDataProvider;
 }
 
-class KProcess;
+class K3Process;
 
 namespace Kleo {
 
@@ -68,9 +68,9 @@ namespace Kleo {
     void slotCancel();
 
     void slotStatus( Kleo::GnuPGProcessBase *, const QString &, const QStringList & );
-    void slotStdout( KProcess *, char *, int );
-    void slotStderr( KProcess *, char *, int );
-    void slotProcessExited( KProcess * );
+    void slotStdout( K3Process *, char *, int );
+    void slotStderr( K3Process *, char *, int );
+    void slotProcessExited( K3Process * );
 
   private:
     GnuPGProcessBase * mProcess;

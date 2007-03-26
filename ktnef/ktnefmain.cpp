@@ -41,7 +41,7 @@ using namespace KTnef;
 #include <QMessageBox>
 #include <kfiledialog.h>
 #include <QDir>
-#include <kprocess.h>
+#include <k3process.h>
 #include <kglobal.h>
 #include <kstandarddirs.h>
 #include <kaction.h>

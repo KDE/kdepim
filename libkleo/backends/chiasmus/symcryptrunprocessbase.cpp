@@ -46,7 +46,7 @@ Kleo::SymCryptRunProcessBase::SymCryptRunProcessBase( const QString & class_, co
                                                       const QString & keyFile, const QString & options,
                                                       Operation mode,
                                                       QObject * parent )
-  : KProcess( parent ),
+  : K3Process( parent ),
     mOperation( mode ), mOptions( options )
 {
   *this << "symcryptrun"
@@ -59,10 +59,10 @@ Kleo::SymCryptRunProcessBase::SymCryptRunProcessBase( const QString & class_, co
 Kleo::SymCryptRunProcessBase::~SymCryptRunProcessBase() {}
 
 bool Kleo::SymCryptRunProcessBase::launch( const QByteArray & input, RunMode rm ) {
-  connect( this, SIGNAL(receivedStdout(KProcess*,char*,int)),
-           this, SLOT(slotReceivedStdout(KProcess*,char*,int)) );
-  connect( this, SIGNAL(receivedStderr(KProcess*,char*,int)),
-           this, SLOT(slotReceivedStderr(KProcess*,char*,int)) );
+  connect( this, SIGNAL(receivedStdout(K3Process*,char*,int)),
+           this, SLOT(slotReceivedStdout(K3Process*,char*,int)) );
+  connect( this, SIGNAL(receivedStderr(K3Process*,char*,int)),
+           this, SLOT(slotReceivedStderr(K3Process*,char*,int)) );
   if ( rm == Block ) {
     KTemporaryFile tempfile;
     if ( tempfile.open() )
@@ -72,15 +72,15 @@ bool Kleo::SymCryptRunProcessBase::launch( const QByteArray & input, RunMode rm 
     tempfile.flush();
     *this << "--input" << tempfile.fileName();
     addOptions();
-    return KProcess::start( Block, All );
+    return K3Process::start( Block, All );
   } else {
     addOptions();
-    const bool ok = KProcess::start( rm, All );
+    const bool ok = K3Process::start( rm, All );
     if ( !ok )
       return ok;
     mInput = input;
     writeStdin( mInput.begin(), mInput.size() );
-    connect( this, SIGNAL(wroteStdin(KProcess*)), this, SLOT(closeStdin()) );
+    connect( this, SIGNAL(wroteStdin(K3Process*)), this, SLOT(closeStdin()) );
     return true;
   }
 }
@@ -93,14 +93,14 @@ void Kleo::SymCryptRunProcessBase::addOptions() {
   }
 }
 
-void Kleo::SymCryptRunProcessBase::slotReceivedStdout( KProcess * proc, char * buf, int len ) {
+void Kleo::SymCryptRunProcessBase::slotReceivedStdout( K3Process * proc, char * buf, int len ) {
   Q_ASSERT( proc == this );
   const int oldsize = mOutput.size();
   mOutput.resize( oldsize + len );
   memcpy( mOutput.data() + oldsize, buf, len );
 }
 
-void Kleo::SymCryptRunProcessBase::slotReceivedStderr( KProcess * proc, char * buf, int len ) {
+void Kleo::SymCryptRunProcessBase::slotReceivedStderr( K3Process * proc, char * buf, int len ) {
   Q_ASSERT( proc == this );
   if ( len > 0 )
     mStderr += QString::fromLocal8Bit( buf, len );

@@ -21,7 +21,7 @@
 #include "kfile_vcf.h"
 #include <kdefakes.h>
 
-#include <kprocess.h>
+#include <k3process.h>
 #include <klocale.h>
 #include <kgenericfactory.h>
 #include <kstringvalidator.h>

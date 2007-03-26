@@ -43,7 +43,7 @@
 
 class Q3GroupBox;
 
-class KProcess;
+class K3Process;
 class K3Spell;
 class K3DictSpellingHighlighter;
 class KSelectAction;
@@ -123,7 +123,7 @@ class KNComposer : public KMainWindow {
 
     //edit
     bool e_xternalEdited;
-    KProcess *e_xternalEditor;
+    K3Process *e_xternalEditor;
     KTemporaryFile *e_ditorTempfile;
     K3Spell *s_pellChecker;
     SpellingFilter* mSpellingFilter;
@@ -179,7 +179,7 @@ class KNComposer : public KMainWindow {
     void slotGroupsBtnClicked();
 
     // external editor
-    void slotEditorFinished(KProcess *);
+    void slotEditorFinished(K3Process *);
     void slotCancelEditor();
 
     // attachment list

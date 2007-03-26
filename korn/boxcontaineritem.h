@@ -34,7 +34,7 @@ class Settings;
 class KActionCollection;
 class KConfig;
 class KMenu;
-class KProcess;
+class K3Process;
 
 class QColor;
 class QLabel;
@@ -254,10 +254,10 @@ signals:
 
 private slots:
 	/**
-	 * This slot is called when a KProcess-instance needs to be deleted:)
+	 * This slot is called when a K3Process-instance needs to be deleted:)
 	 * @param proc The instance of the instance which must be deleted.
 	 */
-	void processExited( KProcess* proc );
+	void processExited( K3Process* proc );
 };
 
 #endif //MK_BOXCONTAINERITEM_H

@@ -21,16 +21,16 @@
 #include <QString>
 #include <QWidget>
 #include <QEventLoop>
-#include <kprocess.h>
+#include <k3process.h>
 #include <kmessagebox.h>
 #include <klocale.h>
 
 static void ktexteditorkabcbridge_run_kaddressbook() {
 	QEventLoop eventLoop;
-	KProcess proc;
+	K3Process proc;
 	proc<<"kaddressbook";
 	proc<<"--nofork";
-	QObject::connect(&proc, SIGNAL(processExited(KProcess*)),
+	QObject::connect(&proc, SIGNAL(processExited(K3Process*)),
 		&eventLoop, SLOT(quit()));
 	proc.start();
 	eventLoop.exec(QEventLoop::ExcludeUserInputEvents);

@@ -32,7 +32,7 @@
 class QWidget;
 class KDropDialog;
 class KornMailSubject;
-class KProcess;
+class K3Process;
 class KIO_Count;
 class KIO_Protocol;
 class KIO_Subjects;
@@ -72,7 +72,7 @@ private:
 	int _readSubjectsTotalSteps;
 	int _deleteMailsTotalSteps;
 	//For process
-	KProcess *_process;
+	K3Process *_process;
 
 	//List of mailurls fetched by the last time emails were counted
 	struct FileInfo {

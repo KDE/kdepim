@@ -42,7 +42,7 @@
 #include <QByteArray>
 #include <QList>
 
-class KProcess;
+class K3Process;
 class Q3ListViewItem;
 
 namespace GpgME {
@@ -77,9 +77,9 @@ private slots:
   void slotNextKey( const GpgME::Key & key );
   void slotKeyExistanceCheckNextCandidate( const GpgME::Key & key );
   void slotKeyExistanceCheckFinished();
-  void slotCollectStdout(KProcess *, char *, int);
-  void slotCollectStderr(KProcess *, char *, int);
-  void slotDumpProcessExited(KProcess*);
+  void slotCollectStdout(K3Process *, char *, int);
+  void slotCollectStderr(K3Process *, char *, int);
+  void slotDumpProcessExited(K3Process*);
 
 private:
   void startCertificateChainListing();

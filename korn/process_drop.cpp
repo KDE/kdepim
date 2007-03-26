@@ -21,7 +21,7 @@
 #include <kconfigbase.h>
 #include <kdebug.h>
 #include <klocale.h>
-#include <kprocess.h>
+#include <k3process.h>
 
 #include <QByteArray>
 #include <QRegExp>
@@ -56,16 +56,16 @@ void ProcessDrop::recheck()
 	//Make the process if it doesn't exist yet.
 	if( !_process && !_program->isEmpty() )
 	{
-		_process = new KShellProcess;
+		_process = new K3ShellProcess;
 		*_process << *_program;
-		connect( _process, SIGNAL( processExited( KProcess* ) ), this, SLOT( slotExited( KProcess* ) ) );
-		connect( _process, SIGNAL( receivedStdout( KProcess*, char*, int ) ), this, SLOT( slotDataReceived( KProcess *, char*, int) ) );
+		connect( _process, SIGNAL( processExited( K3Process* ) ), this, SLOT( slotExited( K3Process* ) ) );
+		connect( _process, SIGNAL( receivedStdout( K3Process*, char*, int ) ), this, SLOT( slotDataReceived( K3Process *, char*, int) ) );
 	}
 
 	//Start process if it is not already running
 	if( _process && !_process->isRunning() )
 	{
-		_valid = _process->start( KProcess::NotifyOnExit, KProcess::Stdout );
+		_valid = _process->start( K3Process::NotifyOnExit, K3Process::Stdout );
 		if( !_valid )
 			kWarning() << i18n( "Could not start process %1", *_program ) << endl;
 	}
@@ -98,11 +98,11 @@ bool ProcessDrop::writeConfigGroup ( KConfigBase& ) const
 	return true;
 }
 
-void ProcessDrop::slotExited( KProcess* )
+void ProcessDrop::slotExited( K3Process* )
 {
 }
 
-void ProcessDrop::slotDataReceived( KProcess *proc, char* data, int length )
+void ProcessDrop::slotDataReceived( K3Process *proc, char* data, int length )
 {
 	QString line;
 	QRegExp lastNumber( "(.*\\D|)(\\d+)\\D*");

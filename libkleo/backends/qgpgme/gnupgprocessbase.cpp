@@ -61,7 +61,7 @@ struct Kleo::GnuPGProcessBase::Private {
 
 
 Kleo::GnuPGProcessBase::GnuPGProcessBase( QObject * parent )
-  : KProcess( parent )
+  : K3Process( parent )
 {
   d = new Private();
 }
@@ -80,7 +80,7 @@ bool Kleo::GnuPGProcessBase::start( RunMode runmode, Communication comm ) {
     // set up the status-fd. This should be in setupCommunication(),
     // but then it's too late: we need the fd of the pipe to pass it
     // as argument to the --status-fd option:
-    // PENDING(marc) find out why KProcess uses both pipe() and socketpair()...
+    // PENDING(marc) find out why K3Process uses both pipe() and socketpair()...
     if ( ::pipe( d->statusFD ) < 0 ) {
       kDebug( 5150 ) << "Kleo::GnuPGProcessBase::start: pipe(2) failed: " << perror << endl;
       return false;
@@ -98,11 +98,11 @@ bool Kleo::GnuPGProcessBase::start( RunMode runmode, Communication comm ) {
       //arguments.insert( it, "--enable-progress-filter" ); // gpgsm doesn't know this
     }
   }
-  return KProcess::start( runmode, comm );
+  return K3Process::start( runmode, comm );
 }
 
 int Kleo::GnuPGProcessBase::setupCommunication( Communication comm ) {
-  if ( int ok = KProcess::setupCommunication( comm ) )
+  if ( int ok = K3Process::setupCommunication( comm ) )
     return ok;
   if ( d->useStatusFD ) {
     // base class impl returned error, so close our fd's, too
@@ -119,13 +119,13 @@ int Kleo::GnuPGProcessBase::commSetupDoneP() {
     d->statnot = new QSocketNotifier( d->statusFD[0], QSocketNotifier::Read, this );
     connect( d->statnot, SIGNAL(activated(int)), SLOT(slotChildStatus(int)) );
   }
-  return KProcess::commSetupDoneP();
+  return K3Process::commSetupDoneP();
 }
 
 int Kleo::GnuPGProcessBase::commSetupDoneC() {
   if ( d->useStatusFD )
     ::fcntl( d->statusFD[1], F_SETFD, 0 );
-  return KProcess::commSetupDoneC();
+  return K3Process::commSetupDoneC();
 }
 
 void Kleo::GnuPGProcessBase::slotChildStatus( int fd ) {

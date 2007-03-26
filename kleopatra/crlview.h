@@ -38,7 +38,7 @@
 
 class QTextEdit;
 class QPushButton;
-class KProcess;
+class K3Process;
 class QTimer;
 class QCloseEvent;
 
@@ -51,7 +51,7 @@ public slots:
   void slotUpdateView();
 
 protected slots:
-  void slotReadStdout( KProcess*, char* buf, int len);
+  void slotReadStdout( K3Process*, char* buf, int len);
   void slotProcessExited();
   void slotAppendBuffer();
 
@@ -62,7 +62,7 @@ private:
   QTextEdit*   _textView;
   QPushButton* _updateButton;
   QPushButton* _closeButton;
-  KProcess*    _process;
+  K3Process*    _process;
   QTimer*      _timer;
   QString      _buffer;
 };

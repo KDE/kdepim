@@ -39,7 +39,7 @@
 namespace Kleo {
   class GnuPGProcessBase;
 }
-class KProcess;
+class K3Process;
 class QStringList;
 
 class GnuPGViewer : public Q3TextEdit {
@@ -51,10 +51,10 @@ public:
   void setProcess( Kleo::GnuPGProcessBase * process );
 
 private slots:
-  void slotStdout( KProcess *, char *, int );
-  void slotStderr( KProcess *, char *, int );
+  void slotStdout( K3Process *, char *, int );
+  void slotStderr( K3Process *, char *, int );
   void slotStatus( Kleo::GnuPGProcessBase *, const QString &, const QStringList & );
-  void slotProcessExited( KProcess * );
+  void slotProcessExited( K3Process * );
 
 private:
   Kleo::GnuPGProcessBase * mProcess;

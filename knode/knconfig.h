@@ -27,7 +27,7 @@
 #include <kmime/kmime_util.h>
 
 class KScoringRule;
-class KProcess;
+class K3Process;
 class KSpellConfig;
 namespace Kpgp {
   class Config;
@@ -117,8 +117,8 @@ Q_OBJECT
 
 
   protected slots:
-    void slotReceiveStdout(KProcess *proc, char *buffer, int buflen);
-    void slotReceiveStderr(KProcess *proc, char *buffer, int buflen);
+    void slotReceiveStdout(K3Process *proc, char *buffer, int buflen);
+    void slotReceiveStderr(K3Process *proc, char *buffer, int buflen);
 
   protected:
     QString   n_ame,

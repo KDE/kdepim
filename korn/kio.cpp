@@ -41,7 +41,7 @@
 #include<kconfigbase.h>
 #include<kdebug.h>
 #include<klocale.h>
-#include<kprocess.h>
+#include<k3process.h>
 
 #include<qlist.h>
 #include<qregexp.h>

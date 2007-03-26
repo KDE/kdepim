@@ -29,7 +29,7 @@
 #include <kdebug.h>
 #include <kiconloader.h>
 #include <kiconeffect.h>
-#include <kprocess.h>
+#include <k3process.h>
 
 #include <emailfunctions/email.h>
 
@@ -132,17 +132,17 @@ QString KNode::Identity::getSignature()
         else
           KMessageBox::error(knGlobals.topWidget, i18n("Cannot open the signature file."));
       } else {
-        KProcess process;
+        K3Process process;
 
         // construct command line...
         QStringList command = s_igPath.split(' ', QString::SkipEmptyParts);
         for ( QStringList::Iterator it = command.begin(); it != command.end(); ++it )
           process << (*it);
 
-        connect(&process, SIGNAL(receivedStdout(KProcess *, char *, int)), SLOT(slotReceiveStdout(KProcess *, char *, int)));
-        connect(&process, SIGNAL(receivedStderr(KProcess *, char *, int)), SLOT(slotReceiveStderr(KProcess *, char *, int)));
+        connect(&process, SIGNAL(receivedStdout(K3Process *, char *, int)), SLOT(slotReceiveStdout(K3Process *, char *, int)));
+        connect(&process, SIGNAL(receivedStderr(K3Process *, char *, int)), SLOT(slotReceiveStderr(K3Process *, char *, int)));
 
-        if (!process.start(KProcess::Block,KProcess::AllOutput))
+        if (!process.start(K3Process::Block,K3Process::AllOutput))
           KMessageBox::error(knGlobals.topWidget, i18n("Cannot run the signature generator."));
       }
     }
@@ -157,13 +157,13 @@ QString KNode::Identity::getSignature()
 }
 
 
-void KNode::Identity::slotReceiveStdout(KProcess *, char *buffer, int buflen)
+void KNode::Identity::slotReceiveStdout(K3Process *, char *buffer, int buflen)
 {
   s_igContents.append(QString::fromLocal8Bit(buffer,buflen));
 }
 
 
-void KNode::Identity::slotReceiveStderr(KProcess *, char *buffer, int buflen)
+void KNode::Identity::slotReceiveStderr(K3Process *, char *buffer, int buflen)
 {
   s_igStdErr.append(QString::fromLocal8Bit(buffer,buflen));
 }

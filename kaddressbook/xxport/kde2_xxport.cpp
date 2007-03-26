@@ -28,7 +28,7 @@
 #include <kio/netaccess.h>
 #include <klocale.h>
 #include <kmessagebox.h>
-#include <kprocess.h>
+#include <k3process.h>
 #include <kstandarddirs.h>
 #include <ktemporaryfile.h>
 #include <kurl.h>
@@ -59,7 +59,7 @@ KABC::Addressee::List KDE2XXPort::importContacts( const QString& ) const
 
   if ( !result ) return KABC::AddresseeList();
 
-  KProcess proc;
+  K3Process proc;
 
   if ( result == KMessageBox::Yes ) {
     proc << "kab2kabc";
@@ -69,7 +69,7 @@ KABC::Addressee::List KDE2XXPort::importContacts( const QString& ) const
   else
     kDebug(5720) << "KAddressBook::importKDE2(): Unknow return value." << endl;
 
-  proc.start( KProcess::Block );
+  proc.start( K3Process::Block );
 
   addressBook()->load();
 
