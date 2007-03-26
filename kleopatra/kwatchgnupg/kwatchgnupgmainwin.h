@@ -37,7 +37,7 @@
 
 class KWatchGnuPGTray;
 class KWatchGnuPGConfig;
-class K3ProcIO;
+class KProcIO;
 class QTextEdit;
 
 class KWatchGnuPGMainWindow : public KMainWindow {
@@ -67,7 +67,7 @@ private:
   void startWatcher();
   void setGnuPGConfig();
 
-  K3ProcIO* mWatcher;
+  KProcIO* mWatcher;
 
   QTextEdit* mCentralWidget;
   KWatchGnuPGTray* mSysTray;

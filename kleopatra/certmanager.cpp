@@ -68,7 +68,7 @@
 // KDE
 #include <kicon.h>
 #include <kfiledialog.h>
-#include <k3process.h>
+#include <kprocess.h>
 #include <kaction.h>
 #include <kapplication.h>
 #include <klocale.h>
@@ -956,10 +956,10 @@ bool CertManager::connectAndStartDirmngr( const char * slot, const char * proces
   assert( processname );
   assert( mDirmngrProc );
   mErrorbuffer.clear();
-  connect( mDirmngrProc, SIGNAL(processExited(K3Process*)), slot );
-  connect( mDirmngrProc, SIGNAL(receivedStderr(K3Process*,char*,int) ),
-           this, SLOT(slotStderr(K3Process*,char*,int)) );
-  if( !mDirmngrProc->start( K3Process::NotifyOnExit, K3Process::Stderr ) ) {
+  connect( mDirmngrProc, SIGNAL(processExited(KProcess*)), slot );
+  connect( mDirmngrProc, SIGNAL(receivedStderr(KProcess*,char*,int) ),
+           this, SLOT(slotStderr(KProcess*,char*,int)) );
+  if( !mDirmngrProc->start( KProcess::NotifyOnExit, KProcess::Stderr ) ) {
     delete mDirmngrProc; mDirmngrProc = 0;
     KMessageBox::error( this, i18n( "Unable to start %1 process. Please check your installation.", processname ), i18n( "Certificate Manager Error" ) );
     return false;
@@ -971,7 +971,7 @@ void CertManager::startImportCRL( const QString& filename, bool isTempFile )
 {
   assert( !mDirmngrProc );
   mImportCRLTempFile = isTempFile ? filename : QString();
-  mDirmngrProc = new K3Process();
+  mDirmngrProc = new KProcess();
   *mDirmngrProc << "gpgsm" << "--call-dirmngr" << "loadcrl" << filename;
   if ( !connectAndStartDirmngr( SLOT(slotDirmngrExited()), "gpgsm" ) ) {
     updateImportActions( true );
@@ -982,13 +982,13 @@ void CertManager::startImportCRL( const QString& filename, bool isTempFile )
 
 void CertManager::startClearCRLs() {
   assert( !mDirmngrProc );
-  mDirmngrProc = new K3Process();
+  mDirmngrProc = new KProcess();
   *mDirmngrProc << "dirmngr" << "--flush";
   //*mDirmngrProc << "gpgsm" << "--call-dimngr" << "flush"; // use this once it's implemented!
   connectAndStartDirmngr( SLOT(slotClearCRLsResult()), "dirmngr" );
 }
 
-void CertManager::slotStderr( K3Process*, char* buf, int len ) {
+void CertManager::slotStderr( KProcess*, char* buf, int len ) {
   mErrorbuffer += QString::fromLocal8Bit( buf, len );
 }
 
@@ -1408,10 +1408,10 @@ void CertManager::importNextURLOrRedisplay()
 
 void CertManager::slotStartWatchGnuPG()
 {
-  K3Process certManagerProc;
+  KProcess certManagerProc;
   certManagerProc << "kwatchgnupg";
 
-  if( !certManagerProc.start( K3Process::DontCare ) )
+  if( !certManagerProc.start( KProcess::DontCare ) )
     KMessageBox::error( this, i18n( "Could not start GnuPG LogViewer (kwatchgnupg). "
                                     "Please check your installation!" ),
                                     i18n( "Kleopatra Error" ) );

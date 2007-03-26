@@ -33,7 +33,7 @@
 #include "crlview.h"
 
 #include <klocale.h>
-#include <k3process.h>
+#include <kprocess.h>
 #include <kmessagebox.h>
 #include <kpushbutton.h>
 #include <KStandardGuiItem>
@@ -101,22 +101,22 @@ void CRLView::slotUpdateView()
   _textView->clear();
   _buffer.clear();
   if( _process == 0 ) {
-    _process = new K3Process();
+    _process = new KProcess();
     *_process << "gpgsm" << "--call-dirmngr" << "listcrls";
-    connect( _process, SIGNAL( receivedStdout( K3Process*, char*, int) ),
-	     this, SLOT( slotReadStdout( K3Process*, char*, int ) ) );
-    connect( _process, SIGNAL( processExited( K3Process* ) ),
+    connect( _process, SIGNAL( receivedStdout( KProcess*, char*, int) ),
+	     this, SLOT( slotReadStdout( KProcess*, char*, int ) ) );
+    connect( _process, SIGNAL( processExited( KProcess* ) ),
 	     this, SLOT( slotProcessExited() ) );
   }
   if( _process->isRunning() ) _process->kill();
-  if( !_process->start( K3Process::NotifyOnExit, K3Process::Stdout ) ) {
+  if( !_process->start( KProcess::NotifyOnExit, KProcess::Stdout ) ) {
     KMessageBox::error( this, i18n( "Unable to start gpgsm process. Please check your installation." ), i18n( "Certificate Manager Error" ) );
     slotProcessExited();
   }
   _timer->start( 1000 );
 }
 
-void CRLView::slotReadStdout( K3Process*, char* buf, int len)
+void CRLView::slotReadStdout( KProcess*, char* buf, int len)
 {
   _buffer.append( QString::fromUtf8( buf, len ) );
 }

@@ -57,7 +57,7 @@ class KJob;
 namespace KIO {
   class Job;
 }
-class K3Process;
+class KProcess;
 class KToolBar;
 class KAction;
 
@@ -120,7 +120,7 @@ private slots:
     void slotImportCRLJobFinished( KJob * );
 
     void slotDirmngrExited();
-    void slotStderr( K3Process*, char*, int );
+    void slotStderr( KProcess*, char*, int );
 
     void slotToggleRemote(int idx);
     void slotToggleHierarchicalView( bool );
@@ -184,7 +184,7 @@ private:
     Kleo::ProgressBar * mProgressBar;
     QLabel * mStatusLabel;
 
-    K3Process * mDirmngrProc;
+    KProcess * mDirmngrProc;
     QString mErrorbuffer;
     Q3PtrList<Kleo::KeyListViewItem> mItemsToDelete;
     KUrl::List mURLsToImport;
