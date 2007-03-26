@@ -30,20 +30,6 @@ Index: common
      version=3.5.5
      ;;
 
-Index: tag_all
-===================================================================
---- tag_all     (revision 615014)
-+++ tag_all     (working copy)
-@@ -90,6 +90,9 @@
- cd clean
- for i in `cat ../modules`; do
-   set_urls $i
-+  # proko2/enterprise hack (can't switch to the tag since it's only a partial one)
-+  if test $subname = "kdepim"; then exit; fi
-+
-   if test -d $subname; then
-        svn cleanup $subname
-        svn up --ignore-externals $subname
 Index: versions
 ===================================================================
 --- versions    (revision 615014)
@@ -67,14 +53,14 @@ Index: versions
 
 
 # Update the version number in "common" and the tagname in "versions"
-# The version number is: YYYYMMDD.svnrevision
+# The version number is: 0.YYYYMMDD.svnrevision
 
 
 #
 # Also update the version number in those files:
-# ./kmail/kmversion.h:#define KMAIL_VERSION "1.9.6 (enterprise 20070227.637543)"
-# ./kontact/src/main.cpp:static const char version[] = "1.2.4 (enterprise 20070227.637543)";
-# ./korganizer/version.h:static const char korgVersion[] = "3.5.6 (enterprise 20070227.637543)";
+# ./kmail/kmversion.h:#define KMAIL_VERSION "1.9.6 (enterprise 0.20070227.637543)"
+# ./kontact/src/main.cpp:static const char version[] = "1.2.4 (enterprise 0.20070227.637543)";
+# ./korganizer/version.h:static const char korgVersion[] = "3.5.6 (enterprise 0.20070227.637543)";
 
 
 ./tag_all
@@ -99,6 +85,6 @@ rm -rf cache/kdepim
 
 # To make sure that snapshots display a useful version number,
 # change them after release to reflect development status in the branch.
-# ./kmail/kmversion.h:#define KMAIL_VERSION "1.9.6 (enterprise branch after 20070227.637543)"
-# ./kontact/src/main.cpp:static const char version[] = "1.2.4 (enterprise branch after 20070227.637543)";
-# ./korganizer/version.h:static const char korgVersion[] = "3.5.6 (enterprise branch after 20070227.637543)";
+# ./kmail/kmversion.h:#define KMAIL_VERSION "1.9.6 (enterprise branch after 0.20070227.637543)"
+# ./kontact/src/main.cpp:static const char version[] = "1.2.4 (enterprise branch after 0.20070227.637543)";
+# ./korganizer/version.h:static const char korgVersion[] = "3.5.6 (enterprise branch after 0.20070227.637543)";
