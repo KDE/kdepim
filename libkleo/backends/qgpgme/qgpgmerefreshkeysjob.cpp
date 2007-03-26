@@ -117,7 +117,7 @@ GpgME::Error Kleo::QGpgMERefreshKeysJob::startAProcess() {
   connect( mProcess, SIGNAL(status(Kleo::GnuPGProcessBase*,const QString&,const QStringList&)),
 	   SLOT(slotStatus(Kleo::GnuPGProcessBase*,const QString&,const QStringList&)) );
 
-  if ( !mProcess->start( K3Process::NotifyOnExit, KProcess::Stderr ) ) {
+  if ( !mProcess->start( K3Process::NotifyOnExit, K3Process::Stderr ) ) {
     mError = gpg_err_make( GPG_ERR_SOURCE_GPGSM, GPG_ERR_ENOENT ); // what else?
     deleteLater();
     return mError;

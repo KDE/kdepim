@@ -251,7 +251,7 @@ void CertificateInfoWidgetImpl::startCertificateChainListing() {
 }
 
 void CertificateInfoWidgetImpl::startCertificateDump() {
-  K3Process* proc = new KProcess( this );
+  K3Process* proc = new K3Process( this );
   (*proc) << "gpgsm"; // must be in the PATH
   (*proc) << "--dump-keys";
   (*proc) << mChain.front().primaryFingerprint();
@@ -263,7 +263,7 @@ void CertificateInfoWidgetImpl::startCertificateDump() {
   QObject::connect( proc, SIGNAL( processExited(K3Process*) ),
                     this, SLOT( slotDumpProcessExited(K3Process*) ) );
 
-  if ( !proc->start( K3Process::NotifyOnExit, (KProcess::Communication)(KProcess::Stdout | KProcess::Stderr) ) ) {
+  if ( !proc->start( K3Process::NotifyOnExit, (K3Process::Communication)(KProcess::Stdout | KProcess::Stderr) ) ) {
     QString wmsg = i18n("Failed to execute gpgsm:\n%1", i18n( "program not found" ) );
     dumpView->setText( wmsg );
   }

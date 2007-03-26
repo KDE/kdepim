@@ -109,7 +109,7 @@ void CRLView::slotUpdateView()
 	     this, SLOT( slotProcessExited() ) );
   }
   if( _process->isRunning() ) _process->kill();
-  if( !_process->start( K3Process::NotifyOnExit, KProcess::Stdout ) ) {
+  if( !_process->start( K3Process::NotifyOnExit, K3Process::Stdout ) ) {
     KMessageBox::error( this, i18n( "Unable to start gpgsm process. Please check your installation." ), i18n( "Certificate Manager Error" ) );
     slotProcessExited();
   }

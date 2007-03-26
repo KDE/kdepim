@@ -35,7 +35,7 @@ PrecommandJob::PrecommandJob(const QString & precommand, QObject * parent) :
   mProcess = new K3Process( this );
   mProcess->setUseShell( true );
   *mProcess << precommand;
-  connect( mProcess, SIGNAL(processExited(K3Process*)), SLOT(processExited(KProcess*)) );
+  connect( mProcess, SIGNAL(processExited(K3Process*)), SLOT(processExited(K3Process*)) );
 }
 
 PrecommandJob::~ PrecommandJob()

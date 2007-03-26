@@ -135,7 +135,7 @@ int main( int argc, char** argv ) {
   app.setMainWidget( gv );
   gv->show();
 
-  gpg.start( K3Process::NotifyOnExit, KProcess::AllOutput );
+  gpg.start( K3Process::NotifyOnExit, K3Process::AllOutput );
 
   return app.exec();
 }

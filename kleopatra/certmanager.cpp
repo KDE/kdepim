@@ -959,7 +959,7 @@ bool CertManager::connectAndStartDirmngr( const char * slot, const char * proces
   connect( mDirmngrProc, SIGNAL(processExited(K3Process*)), slot );
   connect( mDirmngrProc, SIGNAL(receivedStderr(K3Process*,char*,int) ),
            this, SLOT(slotStderr(K3Process*,char*,int)) );
-  if( !mDirmngrProc->start( K3Process::NotifyOnExit, KProcess::Stderr ) ) {
+  if( !mDirmngrProc->start( K3Process::NotifyOnExit, K3Process::Stderr ) ) {
     delete mDirmngrProc; mDirmngrProc = 0;
     KMessageBox::error( this, i18n( "Unable to start %1 process. Please check your installation.", processname ), i18n( "Certificate Manager Error" ) );
     return false;

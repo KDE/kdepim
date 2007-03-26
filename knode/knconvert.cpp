@@ -191,7 +191,7 @@ void KNConvert::slotStart()
     *t_ar << "tar";
     *t_ar << "-cz" << dataDir
           << "-f" << b_ackupPath->text();
-    connect(t_ar, SIGNAL(processExited(K3Process*)), this, SLOT(slotTarExited(KProcess*)));
+    connect(t_ar, SIGNAL(processExited(K3Process*)), this, SLOT(slotTarExited(K3Process*)));
     if(!t_ar->start()) {
       delete t_ar;
       t_ar = 0;

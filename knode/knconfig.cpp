@@ -139,8 +139,8 @@ QString KNode::Identity::getSignature()
         for ( QStringList::Iterator it = command.begin(); it != command.end(); ++it )
           process << (*it);
 
-        connect(&process, SIGNAL(receivedStdout(K3Process *, char *, int)), SLOT(slotReceiveStdout(KProcess *, char *, int)));
-        connect(&process, SIGNAL(receivedStderr(K3Process *, char *, int)), SLOT(slotReceiveStderr(KProcess *, char *, int)));
+        connect(&process, SIGNAL(receivedStdout(K3Process *, char *, int)), SLOT(slotReceiveStdout(K3Process *, char *, int)));
+        connect(&process, SIGNAL(receivedStderr(K3Process *, char *, int)), SLOT(slotReceiveStderr(K3Process *, char *, int)));
 
         if (!process.start(K3Process::Block,K3Process::AllOutput))
           KMessageBox::error(knGlobals.topWidget, i18n("Cannot run the signature generator."));

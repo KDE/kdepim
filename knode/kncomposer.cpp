@@ -1340,7 +1340,7 @@ void KNComposer::slotExternalEditor()
   if(!filenameAdded)    // no %f in the editor command
     (*e_xternalEditor) << e_ditorTempfile->fileName();
 
-  connect(e_xternalEditor, SIGNAL(processExited(K3Process *)),this, SLOT(slotEditorFinished(KProcess *)));
+  connect(e_xternalEditor, SIGNAL(processExited(K3Process *)),this, SLOT(slotEditorFinished(K3Process *)));
   if(!e_xternalEditor->start()) {
     KMessageBox::error(this, i18n("Unable to start external editor.\nPlease check your configuration in the settings dialog."));
     delete e_xternalEditor;
