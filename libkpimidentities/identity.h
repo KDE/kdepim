@@ -19,7 +19,7 @@
 #include <QStringList>
 #include <QList>
 
-class K3Process;
+class KProcess;
 namespace KPIM {
   class Identity;
   class Signature;
