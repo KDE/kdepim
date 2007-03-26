@@ -47,7 +47,7 @@ SendmailJob::~ SendmailJob()
 void SendmailJob::doStart()
 {
   *mProcess << transport()->host() << "-i" << "-f" << sender() << to() << cc() << bcc();
-  if ( !mProcess->start( K3Process::NotifyOnExit, KProcess::All ) ) {
+  if ( !mProcess->start( K3Process::NotifyOnExit, K3Process::All ) ) {
     setError( UserDefinedError );
     setErrorText( i18n("Failed to execute mailer program %1", transport()->host()) );
     emitResult();
