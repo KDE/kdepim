@@ -37,7 +37,7 @@ static const char configKeyDefaultIdentity[] = "Default Identity";
 #include "identitymanager.h"
 
 #include "identity.h" // for IdentityList::{export,import}Data
-#include <emailfunctions/email.h> // for static helper functions
+#include <kpimutils/email.h> // for static helper functions
 
 #include <kemailsettings.h> // for IdentityEntry::fromControlCenter()
 #include <klocale.h>
@@ -304,7 +304,7 @@ const Identity & IdentityManager::identityForUoidOrDefault( uint uoid ) const
 
 const Identity & IdentityManager::identityForAddress( const QString & addresses ) const
 {
-  QStringList addressList = EmailAddressTools::splitAddressList( addresses );
+  QStringList addressList = KPIMUtils::splitAddressList( addresses );
   for ( ConstIterator it = begin() ; it != end() ; ++it ) {
     for( QStringList::ConstIterator addrIt = addressList.begin();
          addrIt != addressList.end(); ++addrIt ) {
@@ -312,7 +312,7 @@ const Identity & IdentityManager::identityForAddress( const QString & addresses 
       // a QCString and not a char*. It doesn't matter because emailAddr()
       // returns a 7-bit string.
       if( (*it).emailAddr().toLower() ==
-          EmailAddressTools::extractEmailAddress( *addrIt ).toLower() ) {
+          KPIMUtils::extractEmailAddress( *addrIt ).toLower() ) {
         return (*it);
       }
     }
