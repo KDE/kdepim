@@ -22,7 +22,6 @@
 #include <keditcl.h>
 #include <QLineEdit>
 #include <QRegExp>
-//Added by qt3to4:
 #include <QByteArray>
 #include <QCloseEvent>
 #include <Q3PtrList>
@@ -51,9 +50,11 @@ class KToggleAction;
 class KAction;
 class KNLocalArticle;
 class KNAttachment;
-class SpellingFilter;
 class KComboBox;
 class QComboBox;
+namespace KPIMUtils { class SpellingFilter; }
+using KPIMUtils::SpellingFilter;
+
 /** Message composer window. */
 class KNComposer : public KMainWindow {
 

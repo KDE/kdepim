@@ -54,12 +54,12 @@ using KRecentAddress::RecentAddresses;
 #include <k3process.h>
 #include <k3syntaxhighlighter.h>
 #include <QCursor>
+#include <kpimutils/spellingfilter.h>
 #include <kcompletionbox.h>
 #include <kxmlguifactory.h>
 #include <kstatusbar.h>
 #include <klocale.h>
 #include <kselectaction.h>
-#include <spellingfilter.h>
 #include <KStandardGuiItem>
 #include <ktoggleaction.h>
 #include <kconfiggroup.h>
