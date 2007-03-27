@@ -20,7 +20,7 @@ strict digraph "inter-dependency graph for kdepim" {
          */
 
         /* kdepimlibs */
-        "libemailfunctions"[style=filled, fillcolor=lightyellow, shape=box, URL="../kdepimlibs-apidocs/emailfunctions/html/index.html"];
+        "kpimutils"[style=filled, fillcolor=lightyellow, shape=box, URL="../kdepimlibs-apidocs/kpimutils/html/index.html"];
         /* TODO: dependencies incomplete */
         /*"libkabc"[style=filled, fillcolor=lightyellow, shape=box];*/
         /*"libkresources"[style=filled, fillcolor=lightyellow, shape=box];*/
@@ -88,13 +88,13 @@ strict digraph "inter-dependency graph for kdepim" {
         "korganizer" -> "wizards";
         "kresources" -> "karm";
         "kresources" -> "wizards";
-        "libemailfunctions" -> "kmail";
-        "libemailfunctions" -> "knode";
-        "libemailfunctions" -> "korganizer";
-        "libemailfunctions" -> "libkcal";
-        "libemailfunctions" -> "libkdepim";
-        "libemailfunctions" -> "libkpimidentities";
-        "libemailfunctions" -> "plugins";
+        "libkpimutils" -> "kmail";
+        "libkpimutils" -> "knode";
+        "libkpimutils" -> "korganizer";
+        "libkpimutils" -> "libkcal";
+        "libkpimutils" -> "libkdepim";
+        "libkpimutils" -> "libkpimidentities";
+        "libkpimutils" -> "plugins";
         "libkcal" -> "kalarm";
         "libkcal" -> "karm";
         "libkcal" -> "kfile-plugins";

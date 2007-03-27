@@ -46,7 +46,7 @@
 #include <kmail/kmmessage.h>
 #include <kmail/kmcommands.h>
 
-#include <emailfunctions/email.h>
+#include <kpimutils/email.h>
 
 #include <kglobal.h>
 #include <klocale.h>
