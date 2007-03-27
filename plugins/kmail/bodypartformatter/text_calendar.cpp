@@ -143,7 +143,7 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
       else {
         for ( it = attendees.begin(); it != attendees.end(); ++it ) {
           // match only the email part, not the name
-          if( EmailAddressTools::compareEmail( (*it)->email(), receiver, false ) ) {
+          if( KPIMUtils::compareEmail( (*it)->email(), receiver, false ) ) {
             // We are the current one, and even the receiver, note
             // this and quit searching.
             myself = (*it);
@@ -197,7 +197,7 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
       Attendee* newMyself = 0;
       QString name;
       QString email;
-      EmailAddressTools::extractEmailAddressAndName( receiver, email, name );
+      KPIMUtils::extractEmailAddressAndName( receiver, email, name );
       if ( name.isEmpty() && myself ) name = myself->name();
       if ( email.isEmpty()&& myself ) email = myself->email();
       Q_ASSERT( !email.isEmpty() ); // delivery must be possible
