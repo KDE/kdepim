@@ -17,7 +17,6 @@
 #include <stdlib.h>
 
 #include <QTextCodec>
-//Added by qt3to4:
 #include <QPixmap>
 #include <QTextStream>
 
@@ -31,7 +30,7 @@
 #include <kiconeffect.h>
 #include <k3process.h>
 
-#include <emailfunctions/email.h>
+#include <kpimutils/email.h>
 
 #include "kndisplayedheader.h"
 #include "knglobals.h"
@@ -107,7 +106,7 @@ bool KNode::Identity::isEmpty()
 
 bool KNode::Identity::emailIsValid()
 {
-  return EmailAddressTools::isValidSimpleAddress( e_mail );
+  return KPIMUtils::isValidSimpleAddress( e_mail );
 }
 
 

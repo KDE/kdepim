@@ -25,7 +25,6 @@
 #include <QStringList>
 #include <QTextCodec>
 #include <QTimer>
-//Added by qt3to4:
 #include <QHBoxLayout>
 
 #include <kaction.h>
@@ -51,7 +50,6 @@
 #include <kurl.h>
 #include <kxmlguifactory.h>
 #include <kicon.h>
-#include <emailfunctions/email.h>
 
 #include <libkpgp/kpgp.h>
 #include <libkpgp/kpgpblock.h>
@@ -59,6 +57,8 @@
 #include <libkdepim/kfileio.h>
 #include <libkdepim/kxface.h>
 #include <kpimutils/linklocator.h>
+#include <kpimutils/email.h>
+
 #include "articlewidget.h"
 #include "csshelper.h"
 #include "knarticle.h"
@@ -79,7 +79,6 @@
 #include "settings.h"
 
 using namespace KNode;
-using KPIMUtils::LinkLocator;
 
 QList<ArticleWidget*> ArticleWidget::mInstances;
 
@@ -629,7 +628,7 @@ void ArticleWidget::displayHeader()
 
     if ( hb->is("From") ) {
       headerHtml += QString( "<a href=\"mailto:%1\">%2</a>")
-          .arg( EmailAddressTools::extractEmailAddress( hb->asUnicodeString() ) )
+          .arg( KPIMUtils::extractEmailAddress( hb->asUnicodeString() ) )
           .arg( toHtmlString( hb->asUnicodeString(), None ) );
       KMime::Headers::Base *orgHdr = mArticle->getHeaderByType( "Organization" );
       if ( orgHdr && !orgHdr->isEmpty() ) {
@@ -791,7 +790,7 @@ QString ArticleWidget::displaySigHeader( const Kpgp::Block &block )
 
     // HTMLize the signer's user id and create mailto: link
     signer = toHtmlString( signer, None );
-    signer = "<a href=\"mailto:" + EmailAddressTools::extractEmailAddress( signer ) + "\">" + signer + "</a>";
+    signer = "<a href=\"mailto:" + KPIMUtils::extractEmailAddress( signer ) + "\">" + signer + "</a>";
 
     if( !signerKey.isEmpty() )
       message += i18n( "Message was signed by %1 (Key ID: 0x%2)." ,
@@ -919,17 +918,18 @@ void ArticleWidget::displayAttachment( KMime::Content *att, int partNum )
 
 QString ArticleWidget::toHtmlString( const QString &line, int flags )
 {
-  int llflags = LinkLocator::PreserveSpaces;
+  int llflags = KPIMUtils::LinkLocator::PreserveSpaces;
   if ( !(flags & ArticleWidget::ParseURL) )
-    llflags |= LinkLocator::IgnoreUrls;
+    llflags |= KPIMUtils::LinkLocator::IgnoreUrls;
   if ( mFancyToggle->isChecked() && (flags & ArticleWidget::FancyFormatting) )
-    llflags |= LinkLocator::ReplaceSmileys | LinkLocator::HighlightText;
+    llflags |= KPIMUtils::LinkLocator::ReplaceSmileys |
+               KPIMUtils::LinkLocator::HighlightText;
   QString text = line;
   if ( flags & ArticleWidget::AllowROT13 ) {
     if ( mRot13 )
       text = KNHelper::rot13( line );
   }
-  return LinkLocator::convertToHtml( text, llflags );
+  return KPIMUtils::LinkLocator::convertToHtml( text, llflags );
 }
 
 
