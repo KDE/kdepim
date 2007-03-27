@@ -84,6 +84,7 @@ extern "C" {
 #include <qdatetime.h>
 #include <QRegExp>
 #include <kprotocolmanager.h>
+#include <kcomponentdata.h>
 #include <kmessagebox.h>
 #include <kdebug.h>
 #include <kio/connection.h>
