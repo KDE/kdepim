@@ -58,8 +58,7 @@
 
 #include <libkdepim/kfileio.h>
 #include <libkdepim/kxface.h>
-#include <emailfunctions/linklocator.h>
-
+#include <kpimutils/linklocator.h>
 #include "articlewidget.h"
 #include "csshelper.h"
 #include "knarticle.h"
@@ -80,6 +79,7 @@
 #include "settings.h"
 
 using namespace KNode;
+using KPIMUtils::LinkLocator;
 
 QList<ArticleWidget*> ArticleWidget::mInstances;
 

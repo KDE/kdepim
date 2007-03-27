@@ -79,7 +79,8 @@ kde4_add_kcfg_files(knodecommon_LIB_SRCS settings_base.kcfgc )
 
 kde4_add_library(knodecommon SHARED ${knodecommon_LIB_SRCS})
 
-target_link_libraries(knodecommon  ${KDE4_KDEPRINT_LIBS} ${KDE4_KWALLETCLIENT_LIBS} ${KDE4_KMIME_LIBS} kpgp kdepim ${KDE4_KUTILS_LIBS} ${KDE4_KHTML_LIBS} mailtransport)
+target_link_libraries(knodecommon  ${KDE4_KDEPRINT_LIBS} ${KDE4_KWALLETCLIENT_LIBS} ${KDE4_KMIME_LIBS} kpgp kdepim ${KDE4_KUTILS_LIBS} 
+${KDE4_KHTML_LIBS} ${KDE4_KPIMUTILS_LIBS}  mailtransport)
 
 set_target_properties(knodecommon PROPERTIES VERSION 1.0.0 SOVERSION 1 )
 install(TARGETS knodecommon  DESTINATION ${LIB_INSTALL_DIR})
@@ -123,7 +124,7 @@ kde4_automoc(${knode_SRCS})
 
 kde4_add_executable(knode ${knode_SRCS})
 
-target_link_libraries(knode ${KDE4_EMAILFUNCTIONS_LIBS} ${KDE4_KDECORE_LIBS} knodecommon )
+target_link_libraries(knode ${KDE4_KDECORE_LIBS} knodecommon )
 
 install(TARGETS knode  DESTINATION ${BIN_INSTALL_DIR} )
 
