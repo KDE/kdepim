@@ -126,6 +126,7 @@ void KAddressBookView::initGUI()
 {
   // Create the layout
   QVBoxLayout *layout = new QVBoxLayout( this );
+  layout->setMargin( 0 );
 
   // Add the view widget
   mViewWidget = new QWidget( this );

@@ -1012,6 +1012,8 @@ void KABCore::initGUI()
 
   mDetailsWidget = new QWidget( mDetailsSplitter );
   mDetailsLayout = new QHBoxLayout( mDetailsWidget );
+  mDetailsLayout->setSpacing( 0 );
+  mDetailsLayout->setMargin( 0 );
 
   mDetailsPage = new QWidget( mDetailsWidget );
   mDetailsLayout->addWidget( mDetailsPage );

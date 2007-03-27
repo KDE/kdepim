@@ -94,6 +94,7 @@ KAddressBookTableView::KAddressBookTableView( KAB::Core *core,
 {
   mMainLayout = new QVBoxLayout( viewWidget() );
   mMainLayout->setSpacing( 2 );
+  mMainLayout->setMargin( 0 );
 
   // The list view will be created when the config is read.
   mListView = 0;

@@ -612,6 +612,8 @@ void ViewManager::initActions()
 void ViewManager::initGUI()
 {
   QHBoxLayout *layout = new QHBoxLayout( this );
+  layout->setSpacing( 0 );
+  layout->setMargin( 0 );
   mViewWidgetStack = new QStackedWidget( this );
   layout->addWidget( mViewWidgetStack );
 }
