@@ -52,7 +52,7 @@ check-local:
 	for i in $(srcdir)/*.h ; do \
 		( echo "#include <kdemacros.h>" ; echo "#include \"$$i\"" ; echo "int main(int argc,char **argv){return 0;}" ) > header-test.cc; \
 		echo "$$i" ; \
-		g++ $(all_includes) -c header-test.cc || echo "$$i" >> FAILED; \
+		g++ $(all_includes) -I$(top_builddir) -c header-test.cc || echo "$$i" >> FAILED; \
 	done
 	test ! -e FAILED
 

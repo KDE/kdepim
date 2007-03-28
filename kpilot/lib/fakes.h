@@ -22,6 +22,8 @@
    Boston, MA 02110-1301, USA.
 */
 
+#include <sys/types.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif
