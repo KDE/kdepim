@@ -20,7 +20,7 @@
 */
 
 #include "kde-features.h"
-#include "kde-features_parser.custom.h"
+#include "kde-features_parser.h"
 
 #include <kapplication.h>
 #include <kcmdlineargs.h>
