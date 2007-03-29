@@ -797,8 +797,7 @@ void KABCore::extensionModified( const KABC::Addressee::List &list )
       mCommandHistory->blockSignals( false );
     }
 
-    mModified = true;
-    mActionSave->setEnabled( true );
+    setModified(true);
   }
 }
 

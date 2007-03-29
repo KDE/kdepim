@@ -281,11 +281,10 @@ void DistributionListWidget::createList()
   KPIM::DistributionList dist;
   dist.setResource( resource );
   dist.setName( newName );
-  core()->addressBook()->insertAddressee( dist );
-
   // Creates undo-redo command, calls setModified, also triggers contactsUpdated,
   // which triggers updateNameCombo, so the new name appears
   changed( dist );
+  core()->addressBook()->insertAddressee( dist );
 
 #else
   new KABC::DistributionList( mManager, newName );
@@ -356,9 +355,8 @@ void DistributionListWidget::removeList()
   if ( dist.isEmpty() ) // not found [should be impossible]
     return;
 
-  core()->addressBook()->removeAddressee( dist );
-
   emit deleted( dist.uid() );
+  core()->addressBook()->removeAddressee( dist );
 #else
   mManager->remove( mManager->list( mNameCombo->currentText() ) );
   mNameCombo->removeItem( mNameCombo->currentItem() );
