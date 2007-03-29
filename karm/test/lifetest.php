@@ -110,6 +110,10 @@ if ($argv[1]!="--batch")
 }
 else
 {
+  if ( system( "which xte 2> /dev/null" ) == "" ) {
+    echo "xte not found\n";
+    exit(0);
+  }
   switch (funkeysim("Alt_L")) 
   {
     case 1: 

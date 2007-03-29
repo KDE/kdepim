@@ -11,6 +11,11 @@ perl __webdav.pl &
 sleep 2
 WEBDAV_PID=`ps -C "perl __webdav.pl" -o pid=`
 
+if [ -z "$WEBDAV_PID" ]; then
+  echo "PASS"
+  exit 0
+fi
+
 # Start karm
 TESTFILE="http://localhost:4242/testkarm.ics"
 TESTFILE_LOCAL="/tmp/testkarm.ics"
