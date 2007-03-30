@@ -37,7 +37,7 @@ MailSummary::MailSummary( Q_UINT32 serialNumber, QString messageId,
       mSubject( subject ), mFrom( from ), mTo( to ), mDate( date )
 {}
 
-Q_UINT32 MailSummary::serialNumber() 
+Q_UINT32 MailSummary::serialNumber() const 
 { 
     return mSerialNumber; 
 }

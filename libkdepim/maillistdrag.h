@@ -56,7 +56,7 @@ public:
     void set( Q_UINT32, QString, QString, QString, QString, time_t );
 
     /*** KMail unique identification number ***/
-    Q_UINT32 serialNumber();
+    Q_UINT32 serialNumber() const;
 
     /*** MD5 checksum of message identification string ***/
     QString messageId();
