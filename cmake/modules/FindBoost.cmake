@@ -7,7 +7,7 @@
 
 if (BOOST_INCLUDE_DIR)
   # Already in cache, be silent
-  set(BOOST_FIND_QUIETLY TRUE)
+  set(Boost_FIND_QUIETLY TRUE)
 endif (BOOST_INCLUDE_DIR)
 
 FIND_PATH(BOOST_INCLUDE_DIR boost/format.hpp
