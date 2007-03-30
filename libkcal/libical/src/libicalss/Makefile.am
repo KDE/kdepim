@@ -21,9 +21,6 @@ icalss.h: $(COMBINEDHEADERS)
 	echo '#ifdef __cplusplus'	  >  icalss.h
 	echo 'extern "C" {'		  >> icalss.h
 	echo '#endif'			  >> icalss.h
-	echo '/*'			  >> icalss.h
-	echo ' $$''Id''$$'		  >> icalss.h
-	echo '*/'			  >> icalss.h
 	cat $(COMBINEDHEADERS)				\
 	| egrep -v "#include.*\"ical"			\
 	| egrep -v "#include.*\"pvl\.h\""		\

@@ -3,11 +3,9 @@
   FILE: icalattach.c
   CREATOR: acampi 28 May 02
   
-  $Id$
-  $Locker:  $
     
 
- (C) COPYRIGHT 2000, Andrea Campi
+ (C) COPYRIGHT 2000, Andrea Campi <a.campi@inet.it>
 
  This program is free software; you can redistribute it and/or modify
  it under the terms of either: 

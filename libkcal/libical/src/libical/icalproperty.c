@@ -4,10 +4,10 @@
   FILE: icalproperty.c
   CREATOR: eric 28 April 1999
   
-  $Id$
 
 
- (C) COPYRIGHT 2000, Eric Busboom, http://www.softwarestudio.org
+ (C) COPYRIGHT 2000, Eric Busboom <eric@softwarestudio.org>
+     http://www.softwarestudio.org
 
  This program is free software; you can redistribute it and/or modify
  it under the terms of either: 
@@ -341,7 +341,7 @@ fold_property_line (char *text)
 	/* If this isn't the first line, we need to output a newline and space
 	   first. */
 	if (!first_line) {
-	    icalmemory_append_string (&buf, &buf_ptr, &buf_size, "\n ");
+	    icalmemory_append_string (&buf, &buf_ptr, &buf_size, "\r\n ");
 	}
 	first_line = 0;
 
@@ -433,7 +433,7 @@ icalproperty_as_ical_string (icalproperty* prop)
     char *out_buf;
     const char* kind_string = 0;
 
-    char newline[] = "\n";
+    char newline[] = "\r\n";
 
     
     icalerror_check_arg_rz( (prop!=0),"prop");
@@ -694,7 +694,7 @@ icalproperty_remove_parameter_by_kind(icalproperty* prop, icalparameter_kind kin
  *  @param prop   A valid icalproperty.
  *  @param name   The name of the parameter to remove
  *
- *  This function removes paramters with the given name.  The name
+ *  This function removes parameters with the given name.  The name
  *  corresponds to either a built-in name (TZID, etc.) or the name of
  *  an extended parameter (X-FOO)
  *

@@ -257,7 +257,7 @@ icalcomponent *ICalFormatImpl::writeFreeBusy(FreeBusy *freebusy,
   //Loops through all the periods in the freebusy object
   QValueList<Period> list = freebusy->busyPeriods();
   QValueList<Period>::Iterator it;
-  icalperiodtype period;
+  icalperiodtype period = icalperiodtype_null_period();
   for (it = list.begin(); it!= list.end(); ++it) {
     period.start = writeICalDateTime((*it).start());
     if ( (*it).hasDuration() ) {
@@ -318,16 +318,22 @@ void ICalFormatImpl::writeIncidence(icalcomponent *parent,Incidence *incidence)
   // unique id
   // If the scheduling ID is different from the real UID, the real
   // one is stored on X-REALID above
-  icalcomponent_add_property(parent,icalproperty_new_uid(
-      incidence->schedulingID().utf8()));
+  if ( !incidence->schedulingID().isEmpty() ) {
+    icalcomponent_add_property(parent,icalproperty_new_uid(
+        incidence->schedulingID().utf8()));
+  }
 
   // revision
-  icalcomponent_add_property(parent,icalproperty_new_sequence(
-      incidence->revision()));
+  if ( incidence->revision() > 0 ) { // 0 is default, so don't write that out
+    icalcomponent_add_property(parent,icalproperty_new_sequence(
+        incidence->revision()));
+  }
 
   // last modification date
-  icalcomponent_add_property(parent,icalproperty_new_lastmodified(
-      writeICalDateTime(incidence->lastModified())));
+  if ( incidence->lastModified().isValid() ) {
+   icalcomponent_add_property(parent,icalproperty_new_lastmodified(
+       writeICalDateTime(incidence->lastModified())));
+  }
 
   // description
   if (!incidence->description().isEmpty()) {
@@ -385,11 +391,15 @@ void ICalFormatImpl::writeIncidence(icalcomponent *parent,Incidence *incidence)
       secClass = ICAL_CLASS_PRIVATE;
       break;
   }
-  icalcomponent_add_property(parent,icalproperty_new_class(secClass));
+  if ( secClass != ICAL_CLASS_PUBLIC ) {
+    icalcomponent_add_property(parent,icalproperty_new_class(secClass));
+  }
 
   // priority
-  icalcomponent_add_property(parent,icalproperty_new_priority(
-      incidence->priority()));
+  if ( incidence->priority() > 0 ) { // 0 is undefined priority
+    icalcomponent_add_property(parent,icalproperty_new_priority(
+        incidence->priority()));
+  }
 
   // categories
   QStringList categories = incidence->categories();
@@ -451,8 +461,9 @@ void ICalFormatImpl::writeIncidence(icalcomponent *parent,Incidence *incidence)
   // attachments
   Attachment::List attachments = incidence->attachments();
   Attachment::List::ConstIterator atIt;
-  for ( atIt = attachments.begin(); atIt != attachments.end(); ++atIt )
+  for ( atIt = attachments.begin(); atIt != attachments.end(); ++atIt ) {
     icalcomponent_add_property( parent, writeAttachment( *atIt ) );
+  }
 
   // alarms
   Alarm::List::ConstIterator alarmIt;
@@ -479,7 +490,9 @@ void ICalFormatImpl::writeIncidenceBase( icalcomponent *parent,
       writeICalDateTime( QDateTime::currentDateTime() ) ) );
 
   // organizer stuff
-  icalcomponent_add_property( parent, writeOrganizer( incidenceBase->organizer() ) );
+  if ( !incidenceBase->organizer().isEmpty() ) {
+    icalcomponent_add_property( parent, writeOrganizer( incidenceBase->organizer() ) );
+  }
 
   // attendees
   if ( incidenceBase->attendeeCount() > 0 ) {
@@ -517,7 +530,7 @@ icalproperty *ICalFormatImpl::writeOrganizer( const Person &organizer )
   if (!organizer.name().isEmpty()) {
     icalproperty_add_parameter( p, icalparameter_new_cn(organizer.name().utf8()) );
   }
-  // TODO: Write dir, senty-by and language
+  // TODO: Write dir, sent-by and language
 
   return p;
 }
@@ -1079,6 +1092,9 @@ Attendee *ICalFormatImpl::readAttendee(icalproperty *attendee)
   icalparameter *p = 0;
 
   QString email = QString::fromUtf8(icalproperty_get_attendee(attendee));
+  if ( email.startsWith( "mailto:", false ) ) {
+    email = email.mid( 7 );
+  }
 
   QString name;
   QString uid = QString::null;
@@ -1162,7 +1178,7 @@ Attendee *ICalFormatImpl::readAttendee(icalproperty *attendee)
 Person ICalFormatImpl::readOrganizer( icalproperty *organizer )
 {
   QString email = QString::fromUtf8(icalproperty_get_organizer(organizer));
-  if ( email.startsWith("mailto:", false ) ) {
+  if ( email.startsWith( "mailto:", false ) ) {
     email = email.mid( 7 );
   }
   QString cn;
@@ -1191,11 +1207,11 @@ Attachment *ICalFormatImpl::readAttachment(icalproperty *attach)
     if (isurl == 0)
       attachment = new Attachment((const char*)icalattach_get_data(a));
     else {
-      attachment = new Attachment(QString(icalattach_get_url(a)));
+      attachment = new Attachment(QString::fromUtf8(icalattach_get_url(a)));
     }
   }
   else if ( value_kind == ICAL_URI_VALUE ) {
-    attachment = new Attachment(QString(icalvalue_get_uri(icalproperty_get_value(attach))));
+    attachment = new Attachment(QString::fromUtf8(icalvalue_get_uri(icalproperty_get_value(attach))));
   }
 
   icalparameter *p = icalproperty_get_first_parameter(attach, ICAL_FMTTYPE_PARAMETER);
@@ -1313,7 +1329,7 @@ void ICalFormatImpl::readIncidence(icalcomponent *parent, icaltimezone *tz, Inci
           if ( icaltime_is_date( rd.time ) ) {
             incidence->recurrence()->addRDate( readICalDate( rd.time ) );
           } else {
-            incidence->recurrence()->addRDateTime( readICalDateTime(rd.time ) );
+            incidence->recurrence()->addRDateTime( readICalDateTime( rd.time, tz ) );
           }
         } else {
           // TODO: RDates as period are not yet implemented!
@@ -1394,6 +1410,7 @@ void ICalFormatImpl::readIncidence(icalcomponent *parent, icaltimezone *tz, Inci
   }
   // Fix incorrect alarm settings by other applications (like outloook 9)
   if ( mCompat ) mCompat->fixAlarms( incidence );
+
 }
 
 void ICalFormatImpl::readIncidenceBase(icalcomponent *parent,IncidenceBase *incidenceBase)
@@ -1654,6 +1671,9 @@ void ICalFormatImpl::readAlarm(icalcomponent *alarm,Incidence *incidence)
       // Only in EMAIL alarm
       case ICAL_ATTENDEE_PROPERTY: {
         QString email = QString::fromUtf8(icalproperty_get_attendee(p));
+        if ( email.startsWith("mailto:", false ) ) {
+          email = email.mid( 7 );
+        }
         QString name;
         icalparameter *param = icalproperty_get_first_parameter(p,ICAL_CN_PARAMETER);
         if (param) {
@@ -1777,9 +1797,14 @@ icaltimetype ICalFormatImpl::writeICalDateTime(const QDateTime &datetime)
 QDateTime ICalFormatImpl::readICalDateTime( icaltimetype& t, icaltimezone* tz )
 {
 //   kdDebug(5800) << "ICalFormatImpl::readICalDateTime()" << endl;
-  if ( tz ) {
+  icaltimezone *zone = tz;
+  if ( tz && t.is_utc == 0 ) { // Only use the TZ if time is not UTC.
+    // FIXME: We'll need to make sure to apply the appropriate TZ, not just
+    //        the first one found.
     t.zone = tz;
     t.is_utc = (tz == icaltimezone_get_utc_timezone())?1:0;
+  } else {
+    zone = icaltimezone_get_utc_timezone();
   }
   //_dumpIcaltime( t );
 
@@ -1787,7 +1812,7 @@ QDateTime ICalFormatImpl::readICalDateTime( icaltimetype& t, icaltimezone* tz )
   if ( !mParent->timeZoneId().isEmpty() && t.zone ) {
 //    kdDebug(5800) << "--- Converting time from: " << icaltimezone_get_tzid( const_cast<icaltimezone*>( t.zone ) ) << " (" << ICalDate2QDate(t) << ")." << endl;
     icaltimezone* viewTimeZone = icaltimezone_get_builtin_timezone ( mParent->timeZoneId().latin1() );
-    icaltimezone_convert_time(  &t, const_cast<icaltimezone*>( t.zone ), viewTimeZone );
+    icaltimezone_convert_time(  &t, zone, viewTimeZone );
 //    kdDebug(5800) << "--- Converted to zone " << mParent->timeZoneId() << " (" << ICalDate2QDate(t) << ")." << endl;
   }
 

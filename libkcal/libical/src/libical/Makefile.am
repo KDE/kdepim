@@ -2,7 +2,6 @@
 #  FILE: Makefile.am
 #  CREATOR: eric 
 #  
-#  $Id$
 #
 #
 # (C) COPYRIGHT 2000, Eric Busboom, http://www.softwarestudio.org
@@ -130,9 +129,6 @@ ical.h: $(COMBINEDHEADERS)
 	echo '#ifdef __cplusplus'	  >  ical.h
 	echo 'extern "C" {'		  >> ical.h
 	echo '#endif'			  >> ical.h
-	echo '/*'			  >> ical.h
-	echo ' $$''Id''$$'		  >> ical.h
-	echo '*/'			  >> ical.h
 	cat $(COMBINEDHEADERS)				\
 	| egrep -v "#include.*\"ical"			\
 	| egrep -v "#include.*\"config"			\

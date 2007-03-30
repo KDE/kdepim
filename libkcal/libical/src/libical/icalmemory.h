@@ -4,8 +4,6 @@
  CREATOR: eric 30 June 1999
 
 
- $Id$
- $Locker:  $
 
  This program is free software; you can redistribute it and/or modify
  it under the terms of either: 
@@ -20,7 +18,8 @@
 
  The Initial Developer of the Original Code is Eric Busboom
 
- (C) COPYRIGHT 2000, Eric Busboom, http://www.softwarestudio.org
+ (C) COPYRIGHT 2000, Eric Busboom <eric@softwarestudio.org>
+     http://www.softwarestudio.org
 ======================================================================*/
 
 #ifndef ICALMEMORY_H

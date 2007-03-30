@@ -3,8 +3,6 @@
   FILE: icalderivedparameters.{c,h}
   CREATOR: eric 09 May 1999
   
-  $Id$
-  $Locker:  $
     
 
  (C) COPYRIGHT 2000, Eric Busboom, http://www.softwarestudio.org
@@ -51,7 +49,7 @@ struct icalparameter_impl* icalparameter_new_impl(icalparameter_kind kind);
    representation of the parameter's name */
 struct icalparameter_kind_map {
     icalparameter_kind kind;
-    char *name;
+    const char *name;
     
 };
 
@@ -171,7 +169,7 @@ icalparameter* icalparameter_new_from_value_string(icalparameter_kind kind,const
 
     param = icalparameter_new_impl(kind);
     if (!param)
-        return 0;
+	return 0;
 
     for (i=0; icalparameter_map[i].kind != ICAL_NO_PARAMETER; i++){
         if(kind == icalparameter_map[i].kind) {

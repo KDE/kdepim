@@ -3,11 +3,10 @@
   FILE: icalrecur.c
   CREATOR: eric 16 May 2000
   
-  $Id$
-  $Locker:  $
     
 
- (C) COPYRIGHT 2000, Eric Busboom, http://www.softwarestudio.org
+ (C) COPYRIGHT 2000, Eric Busboom <eric@softwarestudio.org>
+     http://www.softwarestudio.org
 
  This program is free software; you can redistribute it and/or modify
  it under the terms of either: 
@@ -260,6 +259,7 @@ void icalrecur_add_byrules(struct icalrecur_parser *parser, short *array,
     int i=0;
     int sign = 1;
     int v;
+    (void)parser;
 
     n = vals;
 
@@ -447,7 +447,7 @@ struct icalrecurrencetype icalrecurrencetype_from_string(const char* str)
 
 }
 
-static struct { char* str;size_t offset; int limit;  } recurmap[] = 
+static struct { const char* str;size_t offset; int limit;  } recurmap[] = 
 {
     {";BYSECOND=",offsetof(struct icalrecurrencetype,by_second),60},
     {";BYMINUTE=",offsetof(struct icalrecurrencetype,by_minute),60},
@@ -697,7 +697,7 @@ static int icalrecur_one_byrule(icalrecur_iterator* impl,enum byrule one)
     return passes;
 } 
 
-static int count_byrules(icalrecur_iterator* impl)
+/*static int count_byrules(icalrecur_iterator* impl)
 {
     int count = 0;
     enum byrule itr;
@@ -709,7 +709,7 @@ static int count_byrules(icalrecur_iterator* impl)
     }
 
     return count;
-}
+}*/
 
 
 static void setup_defaults(icalrecur_iterator* impl, 
@@ -1329,7 +1329,7 @@ static int next_day(icalrecur_iterator* impl)
 }
 
 
-static int next_yearday(icalrecur_iterator* impl)
+/*static int next_yearday(icalrecur_iterator* impl)
 {
 
   int has_by_yearday = (impl->by_ptrs[BY_YEAR_DAY][0]!=ICAL_RECURRENCE_ARRAY_MAX);
@@ -1360,7 +1360,7 @@ static int next_yearday(icalrecur_iterator* impl)
 
   return end_of_data;
 
-}
+}*/
 
 
 /* Returns the day of the month for the current month of t that is the

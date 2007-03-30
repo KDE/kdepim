@@ -3,10 +3,10 @@
   FILE: icalparser.h
   CREATOR: eric 20 April 1999
   
-  $Id$
 
 
- (C) COPYRIGHT 2000, Eric Busboom, http://www.softwarestudio.org
+ (C) COPYRIGHT 2000, Eric Busboom <eric@softwarestudio.org>
+     http://www.softwarestudio.org
 
  This program is free software; you can redistribute it and/or modify
  it under the terms of either: 

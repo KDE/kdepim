@@ -1113,22 +1113,27 @@ QDateTime RecurrenceRule::getNextDate( const QDateTime &preDate ) const
     return QDateTime();
 
   // Start date is only included if it really matches
-//   if ( preDate < startDt() ) return startDt();
+  QDateTime adjustedPreDate;
+  if ( preDate < startDt() )
+    adjustedPreDate = startDt().addSecs( -1 );
+  else
+    adjustedPreDate = preDate;
+
   if ( mDuration > 0 ) {
     if ( !mCached ) buildCache();
     DateTimeList::ConstIterator it = mCachedDates.begin();
-    while ( it != mCachedDates.end() && (*it) <= preDate ) ++it;
+    while ( it != mCachedDates.end() && (*it) <= adjustedPreDate ) ++it;
     if ( it != mCachedDates.end() ) {
-//  kdDebug(5800) << "    getNext date after " << preDate << ", cached date: " << *it << endl;
+//  kdDebug(5800) << "    getNext date after " << adjustedPreDate << ", cached date: " << *it << endl;
       return (*it);
     }
   }
 
-// kdDebug(5800) << "    getNext date after " << preDate << endl;
-  Constraint interval( getNextValidDateInterval( preDate, recurrenceType() ) );
+// kdDebug(5800) << "    getNext date after " << adjustedPreDate << endl;
+  Constraint interval( getNextValidDateInterval( adjustedPreDate, recurrenceType() ) );
   DateTimeList dts = datesForInterval( interval, recurrenceType() );
   DateTimeList::Iterator dtit = dts.begin();
-  while ( dtit != dts.end() && (*dtit) <= preDate ) ++dtit;
+  while ( dtit != dts.end() && (*dtit) <= adjustedPreDate ) ++dtit;
   if ( dtit != dts.end() ) {
     if ( mDuration >= 0 && (*dtit) > endDt() ) return QDateTime();
     else return (*dtit);
@@ -1216,7 +1221,7 @@ RecurrenceRule::Constraint RecurrenceRule::getPreviousValidDateInterval( const Q
 RecurrenceRule::Constraint RecurrenceRule::getNextValidDateInterval( const QDateTime &preDate, PeriodType type ) const
 {
   // TODO: Simplify this!
-// kdDebug(5800) << "       (o) getNextValidDateInterval after " << preDate << ", type=" << type << endl;
+  kdDebug(5800) << "       (o) getNextValidDateInterval after " << preDate << ", type=" << type << endl;
   long periods = 0;
   QDateTime start = startDt();
   QDateTime nextValid( start );
@@ -1236,6 +1241,7 @@ RecurrenceRule::Constraint RecurrenceRule::getNextValidDateInterval( const QDate
     case rMinutely: modifier *= 60;
     case rSecondly:
         periods = ownSecsTo( start, toDate ) / modifier;
+        periods = QMAX( 0, periods);
         if ( periods > 0 )
           periods += ( frequency() - 1 - ( (periods - 1) % frequency() ) );
         nextValid = start.addSecs( modifier * periods );
@@ -1248,6 +1254,7 @@ RecurrenceRule::Constraint RecurrenceRule::getNextValidDateInterval( const QDate
         modifier *= 7;
     case rDaily:
         periods = start.daysTo( toDate ) / modifier;
+        periods = QMAX( 0, periods);
         if ( periods > 0 )
           periods += (frequency() - 1 - ( (periods - 1) % frequency() ) );
         nextValid = start.addDays( modifier * periods );
@@ -1256,6 +1263,7 @@ RecurrenceRule::Constraint RecurrenceRule::getNextValidDateInterval( const QDate
     case rMonthly: {
         periods = 12*( toDate.date().year() - start.date().year() ) +
              ( toDate.date().month() - start.date().month() );
+        periods = QMAX( 0, periods);
         if ( periods > 0 )
           periods += (frequency() - 1 - ( (periods - 1) % frequency() ) );
         // set the day to the first day of the month, so we don't have problems
@@ -1265,6 +1273,7 @@ RecurrenceRule::Constraint RecurrenceRule::getNextValidDateInterval( const QDate
         break; }
     case rYearly:
         periods = ( toDate.date().year() - start.date().year() );
+        periods = QMAX( 0, periods);
         if ( periods > 0 )
           periods += ( frequency() - 1 - ( (periods - 1) % frequency() ) );
         nextValid.setDate( start.date().addYears( periods ) );
