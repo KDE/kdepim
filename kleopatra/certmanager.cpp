@@ -78,7 +78,7 @@
 #include <kstandarddirs.h>
 #include <kdebug.h>
 #include <kdialog.h>
-#include <kkeydialog.h>
+#include <kshortcutsdialog.h>
 #include <ktemporaryfile.h>
 #include <kio/job.h>
 #include <kio/jobuidelegate.h>
@@ -404,7 +404,7 @@ void CertManager::updateImportActions( bool enable ) {
 }
 
 void CertManager::slotEditKeybindings() {
-  KKeyDialog::configure( actionCollection(), KKeyChooser::LetterShortcutsAllowed );
+  KShortcutsDialog::configure( actionCollection(), KShortcutsEditor::LetterShortcutsAllowed );
 }
 
 void CertManager::slotShowConfigurationDialog() {

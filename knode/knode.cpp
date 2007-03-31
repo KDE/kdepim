@@ -16,7 +16,7 @@
 
 #include <QApplication>
 
-#include <kkeydialog.h>
+#include <kshortcutsdialog.h>
 #include <kedittoolbar.h>
 #include <kstandardaction.h>
 #include <kdebug.h>
@@ -88,7 +88,7 @@ void KNMainWindow::slotNewToolbarConfig()
 
 void KNMainWindow::slotConfKeys()
 {
-  KKeyDialog::configure(actionCollection(), KKeyChooser::LetterShortcutsAllowed);
+  KShortcutsDialog::configure(actionCollection(), KShortcutsEditor::LetterShortcutsAllowed);
 }
 
 bool KNMainWindow::queryClose()

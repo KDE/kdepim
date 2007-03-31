@@ -48,7 +48,7 @@
 #include <kconfig.h>
 #include <kfiledialog.h>
 #include <kedittoolbar.h>
-#include <kkeydialog.h>
+#include <kshortcutsdialog.h>
 
 #include <QTextEdit>
 #include <QDir>
@@ -123,7 +123,7 @@ void KWatchGnuPGMainWindow::createActions()
 
 void KWatchGnuPGMainWindow::configureShortcuts()
 {
-  KKeyDialog::configure( actionCollection(), KKeyChooser::LetterShortcutsAllowed, this );
+  KShortcutsDialog::configure( actionCollection(), KShortcutsEditor::LetterShortcutsAllowed, this );
 }
 
 void KWatchGnuPGMainWindow::slotConfigureToolbars()

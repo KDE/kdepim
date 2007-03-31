@@ -48,7 +48,7 @@ using namespace KTnef;
 #include <kstandardaction.h>
 #include <kdialog.h>
 #include <ktemporaryfile.h>
-#include <kkeydialog.h>
+#include <kshortcutsdialog.h>
 
 #ifdef KDE_NO_COMPAT
 #undef KDE_NO_COMPAT
@@ -142,7 +142,7 @@ void KTNEFMain::setupActions()
 
 void KTNEFMain::slotConfigureKeys()
 {
-  KKeyDialog::configure( actionCollection(), KKeyChooser::LetterShortcutsAllowed, this );
+  KShortcutsDialog::configure( actionCollection(), KShortcutsEditor::LetterShortcutsAllowed, this );
 }
 
 

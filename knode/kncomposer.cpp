@@ -40,7 +40,7 @@ using KRecentAddress::RecentAddresses;
 #include <kaction.h>
 #include <kactioncollection.h>
 #include <kstandardaction.h>
-#include <kkeydialog.h>
+#include <kshortcutsdialog.h>
 #include <kedittoolbar.h>
 #include <kmenu.h>
 #include <kfiledialog.h>
@@ -1428,7 +1428,7 @@ void KNComposer::slotUpdateCursorPos()
 
 void KNComposer::slotConfKeys()
 {
-  KKeyDialog::configure(actionCollection(), KKeyChooser::LetterShortcutsAllowed, this, true);
+  KShortcutsDialog::configure(actionCollection(), KShortcutsEditor::LetterShortcutsAllowed, this, true);
 }
 
 

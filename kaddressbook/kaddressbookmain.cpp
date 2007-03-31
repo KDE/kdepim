@@ -22,7 +22,7 @@
 */
 
 #include <kedittoolbar.h>
-#include <kkeydialog.h>
+#include <kshortcutsdialog.h>
 #include <kglobal.h>
 #include <klocale.h>
 #include <kmessagebox.h>
@@ -154,7 +154,7 @@ void KAddressBookMain::initActions()
 
 void KAddressBookMain::configureKeyBindings()
 {
-  KKeyDialog::configure( actionCollection(), KKeyChooser::LetterShortcutsAllowed, this );
+  KShortcutsDialog::configure( actionCollection(), KShortcutsEditor::LetterShortcutsAllowed, this );
 }
 
 void KAddressBookMain::configureToolbars()
