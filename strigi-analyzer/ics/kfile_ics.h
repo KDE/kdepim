@@ -34,9 +34,9 @@ public:
 
   enum Field { ProductId = 0, Events, Journals, Todos, TodosCompleted, TodosOverdue };
 
-  const char* getName() const { return "IcsEndAnalyzer"; }
+  const char* name() const { return "IcsEndAnalyzer"; }
   bool checkHeader( const char* header, int32_t headersize ) const;
-  char analyze(  Strigi::AnalysisResult& idx, jstreams::InputStream* in );
+  char analyze(  Strigi::AnalysisResult& idx, Strigi::InputStream* in );
 
 private:
   const IcsEndAnalyzerFactory* m_factory;
@@ -56,7 +56,7 @@ private:
   const Strigi::RegisteredField* todosCompletedField;
   const Strigi::RegisteredField* todosOverdueField;
 
-  const char* getName() const { return "IcsEndAnalyzer"; }
+  const char* name() const { return "IcsEndAnalyzer"; }
   Strigi::StreamEndAnalyzer* newInstance() const { return new IcsEndAnalyzer( this ); }
   void registerFields( Strigi::FieldRegister& );
 };

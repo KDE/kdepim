@@ -36,7 +36,7 @@ bool Rfc822EndAnalyzer::checkHeader(  const char* header, int32_t headersize ) c
     return false;
 }
 
-char Rfc822EndAnalyzer::analyze( Strigi::AnalysisResult& idx, jstreams::InputStream* in )
+char Rfc822EndAnalyzer::analyze( Strigi::AnalysisResult& idx, Strigi::InputStream* in )
 {
     char id_from[] = "From: ";
     char id_to[] = "To: ";
@@ -54,35 +54,35 @@ char Rfc822EndAnalyzer::analyze( Strigi::AnalysisResult& idx, jstreams::InputStr
     bool foundSubject = false;
     bool foundContentType = false;
 
-    while ( in->getStatus() == jstreams::Ok ) {
+    while ( in->status() == Strigi::Ok ) {
         //TODO: reenable when readline is implemented in StreamBase
         //in->readLine(linebuf, sizeof( linebuf ) );
 
         if (!foundFrom && memcmp(linebuf, id_from, 6) == 0) {
-            idx.setField( m_factory->field( From ), linebuf + 6 );
+            idx.addValue( m_factory->field( From ), linebuf + 6 );
             foundFrom = true;
         } else if (!foundTo && memcmp(linebuf, id_to, 4) == 0) {
-            idx.setField( m_factory->field( To ), linebuf + 4 );
+            idx.addValue( m_factory->field( To ), linebuf + 4 );
             foundTo = true;
         } else if (!foundSubject && memcmp(linebuf, id_subject, 9) == 0) {
-            idx.setField( m_factory->field( Subject ), linebuf + 9 );
+            idx.addValue( m_factory->field( Subject ), linebuf + 9 );
             foundSubject = true;
         } else if (!foundDate && memcmp(linebuf, id_date, 6) == 0) {
-            idx.setField( m_factory->field( Date ), linebuf + 6 );
+            idx.addValue( m_factory->field( Date ), linebuf + 6 );
             foundDate = true;
         } else if (!foundContentType &&
                    memcmp(linebuf, id_contenttype, 14) == 0) {
-            idx.setField( m_factory->field( ContentType ), linebuf + 14 );
+            idx.addValue( m_factory->field( ContentType ), linebuf + 14 );
             foundContentType = true;
         }
 
         if ( foundFrom && foundTo && foundDate &&
              foundSubject && foundContentType ) {
-            return jstreams::Ok;
+            return Strigi::Ok;
         }
     };
 
-    return jstreams::Error;
+    return Strigi::Error;
 }
 
 const Strigi::RegisteredField* Rfc822EndAnalyzerFactory::field( Rfc822EndAnalyzer::Field f ) const

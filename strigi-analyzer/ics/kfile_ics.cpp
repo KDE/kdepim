@@ -51,15 +51,15 @@ bool IcsEndAnalyzer::checkHeader( const char* header, int32_t headersize ) const
 I chose to use libkcal instead of reading the calendar manually. It's easier to
 maintain this way.
 */
-char IcsEndAnalyzer::analyze( Strigi::AnalysisResult& idx, jstreams::InputStream* in )
+char IcsEndAnalyzer::analyze( Strigi::AnalysisResult& idx, Strigi::InputStream* in )
 {
   CalendarLocal cal( QString::fromLatin1( "UTC" ) );
 
   const char* data;
   //FIXME: large calendars will exhaust memory; incremental loading would be nice
-  if ( in->read( data, 1, in->getSize() ) < 0 ) {
+  if ( in->read( data, 1, in->size() ) < 0 ) {
     //kDebug() << "Reading data from input stream failed" << endl;
-    return jstreams::Error;
+    return Strigi::Error;
   }
 
   ICalFormat ical;
@@ -67,13 +67,13 @@ char IcsEndAnalyzer::analyze( Strigi::AnalysisResult& idx, jstreams::InputStream
     VCalFormat vcal;
     if ( !vcal.fromRawString( &cal, data ) ) {
       //kDebug() << "Could not load calendar" << endl;
-      return jstreams::Error;
+      return Strigi::Error;
     }
   }
 
-  idx.setField( m_factory->field( ProductId ), cal.productId().toUtf8().data() );
-  idx.setField( m_factory->field( Events ), cal.events().count() );
-  idx.setField( m_factory->field( Journals ), cal.journals().count() );
+  idx.addValue( m_factory->field( ProductId ), cal.productId().toUtf8().data() );
+  idx.addValue( m_factory->field( Events ), cal.events().count() );
+  idx.addValue( m_factory->field( Journals ), cal.journals().count() );
   Todo::List todos = cal.todos();
 
   // count completed and overdue
@@ -87,13 +87,13 @@ char IcsEndAnalyzer::analyze( Strigi::AnalysisResult& idx, jstreams::InputStream
     }
   }
 
-  idx.setField( m_factory->field( Todos ), todos.count() );
-  idx.setField( m_factory->field( TodosCompleted ), completed );
-  idx.setField( m_factory->field( TodosOverdue ), overdue );
+  idx.addValue( m_factory->field( Todos ), todos.count() );
+  idx.addValue( m_factory->field( TodosCompleted ), completed );
+  idx.addValue( m_factory->field( TodosOverdue ), overdue );
 
   cal.close();
 
-  return jstreams::Ok;
+  return Strigi::Ok;
 }
 
 const Strigi::RegisteredField* IcsEndAnalyzerFactory::field( IcsEndAnalyzer::Field f ) const
