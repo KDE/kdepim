@@ -109,16 +109,10 @@ const Strigi::RegisteredField* Rfc822EndAnalyzerFactory::field( Rfc822EndAnalyze
 
 void Rfc822EndAnalyzerFactory::registerFields( Strigi::FieldRegister& reg )
 {
-  // these cnstr's aren't pretty
-  static const cnstr from = "from";
-  static const cnstr to = "to";
-  static const cnstr subject = "subject";
-  static const cnstr date = "date";
-  static const cnstr contenttype = "content-type";
-  fromField = reg.registerField( from, Strigi::FieldRegister::stringType, 1, 0 );
-  toField = reg.registerField( to, Strigi::FieldRegister::stringType, 1, 0 );
-  subjectField = reg.registerField( subject, Strigi::FieldRegister::stringType, 1, 0 );
-  dateField = reg.registerField( date, Strigi::FieldRegister::stringType, 1, 0 );
-  contentTypeField = reg.registerField( contenttype, Strigi::FieldRegister::stringType, 1, 0 );
+  fromField = reg.registerField("from", Strigi::FieldRegister::stringType, 1, 0 );
+  toField = reg.registerField("to", Strigi::FieldRegister::stringType, 1, 0 );
+  subjectField = reg.registerField("subject", Strigi::FieldRegister::stringType, 1, 0 );
+  dateField = reg.registerField("date", Strigi::FieldRegister::stringType, 1, 0 );
+  contentTypeField = reg.registerField("content-type", Strigi::FieldRegister::stringType, 1, 0 );
 }
 

@@ -121,20 +121,12 @@ const Strigi::RegisteredField* IcsEndAnalyzerFactory::field( IcsEndAnalyzer::Fie
   }
 }
 
-void IcsEndAnalyzerFactory::registerFields( Strigi::FieldRegister& reg )
-{
-  // these cnstr's aren't pretty
-  static const cnstr product = "Product Id";
-  static const cnstr events = "Events";
-  static const cnstr journals = "Journals";
-  static const cnstr todos = "Todos";
-  static const cnstr todoscompleted = "Todos Completed";
-  static const cnstr todosoverdue = "Todos Overdue";
-  productIdField = reg.registerField( product, Strigi::FieldRegister::stringType, 1, 0 );
-  eventsField = reg.registerField( events, Strigi::FieldRegister::integerType, 1, 0 );
-  journalsField = reg.registerField( journals, Strigi::FieldRegister::integerType, 1, 0 );
-  todosField = reg.registerField( todos, Strigi::FieldRegister::integerType, 1, 0 );
-  todosCompletedField = reg.registerField( todoscompleted, Strigi::FieldRegister::integerType, 1, 0 );
-  todosOverdueField = reg.registerField( todosoverdue, Strigi::FieldRegister::integerType, 1, 0 );
+void IcsEndAnalyzerFactory::registerFields( Strigi::FieldRegister& reg ) {
+  productIdField = reg.registerField("Product Id", Strigi::FieldRegister::stringType, 1, 0 );
+  eventsField = reg.registerField("Events", Strigi::FieldRegister::integerType, 1, 0 );
+  journalsField = reg.registerField("Journals", Strigi::FieldRegister::integerType, 1, 0 );
+  todosField = reg.registerField("Todos", Strigi::FieldRegister::integerType, 1, 0 );
+  todosCompletedField = reg.registerField("Todos Completed", Strigi::FieldRegister::integerType, 1, 0 );
+  todosOverdueField = reg.registerField("Todos Overdue", Strigi::FieldRegister::integerType, 1, 0 );
 }
 
