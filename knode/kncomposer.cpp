@@ -764,7 +764,7 @@ bool KNComposer::hasValidData()
                         "group properties.\n"
                         "The article will be sent unsigned." ),
                    QString(), KGuiItem(i18n( "Send Unsigned" )),
-                   "sendUnsignedDialog" )
+                   KStandardGuiItem::cancel(), "sendUnsignedDialog" )
                == KMessageBox::Cancel )
              return false;
     }

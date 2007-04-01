@@ -1109,6 +1109,7 @@ void CertManager::slotDeleteCertificate() {
   if ( KMessageBox::warningContinueCancelList( this, msg, keyDisplayNames,
 					       i18n( "Delete Certificates" ),
 					       KGuiItem( i18n( "Delete" ), "edit-delete" ),
+					       KStandardGuiItem::cancel(),
 					       "ConfirmDeleteCert", KMessageBox::Dangerous )
        != KMessageBox::Continue )
     return;
