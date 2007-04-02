@@ -9,7 +9,6 @@ kmail
 - Kolab/issue1206 - kolabziward quirks
 - Kolab/issue1207 - groupware folders only  as local subscription still shows mails in inbox
 - Kowi-W W1-5: selectable scope when reindexing a dimap cache
-- Kowi-W W1-23: configurable printing font in kmail
 
 
 Bugfixes:
