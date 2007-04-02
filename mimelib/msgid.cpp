@@ -52,7 +52,7 @@
 #include <mimelib/msgid.h>
 #include <mimelib/token.h>
 
-#include <kresolver.h>
+#include <k3resolver.h>
 
 static DwUint32 GetPid();
 
