@@ -35,7 +35,6 @@
 #define _CONFIGURE_DIALOG_H_
 
 #include <kcmultidialog.h>
-//Added by qt3to4:
 #include <QHideEvent>
 
 class ConfigureDialog : public KCMultiDialog

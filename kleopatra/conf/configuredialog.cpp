@@ -36,9 +36,9 @@
 #include <kwin.h>
 #include <kconfig.h>
 #include <kiconloader.h>
+#include <kcmultidialog.h>
 #include <klocale.h>
 #include <kconfiggroup.h>
-//Added by qt3to4:
 #include <QApplication>
 #include <QIcon>
 #include <QHideEvent>
