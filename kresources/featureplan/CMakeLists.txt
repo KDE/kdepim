@@ -49,7 +49,7 @@ kde4_automoc(${dumpfeaturelist_SRCS})
 
 kde4_add_executable(dumpfeaturelist ${dumpfeaturelist_SRCS})
 
-target_link_libraries(dumpfeaturelist  ${KDE4_KDECORE_LIBS} )
+target_link_libraries(dumpfeaturelist  ${KDE4_KDEUI_LIBS} )
 
 
 ########### next target ###############
@@ -60,7 +60,7 @@ kde4_automoc(${benchmarkfeaturelist_SRCS})
 
 kde4_add_executable(benchmarkfeaturelist ${benchmarkfeaturelist_SRCS})
 
-target_link_libraries(benchmarkfeaturelist  ${KDE4_KDECORE_LIBS})
+target_link_libraries(benchmarkfeaturelist  ${KDE4_KDEUI_LIBS})
 
 endif(KDE4_BUILD_TESTS)
 
