@@ -104,21 +104,49 @@ void createKMailChanges( KConfigPropagator::Change::List& changes )
   c->value = "0"; // TODO: Fix the language
   changes.append( c );
 
-  CreateDisconnectedImapAccount *account =
-    new CreateDisconnectedImapAccount( i18n("Kolab Server") );
-
   QString email;
+  QString defaultDomain = KolabConfig::self()->server();
   const QString server = KolabConfig::self()->server();
   QString user = KolabConfig::self()->user();
   int pos = user.find( "@" );
   // with kolab the userid _is_ the full email
-  if ( pos > 0 )
+  if ( pos > 0 ) {
     // The user typed in a full email address. Assume it's correct
     email = user;
+    const QString h = user.mid( pos+1 );
+    if ( !h.isEmpty() )
+      // The user did type in a domain on the email address. Use that
+      defaultDomain = h;
+  }
   else
     // Construct the email address. And use it for the username also
     user = email = user+"@"+KolabConfig::self()->server();
 
+  if ( KolabConfig::self()->useOnlineForNonGroupware() ) {
+    c = new KConfigPropagator::ChangeConfig;
+    c->file = "kmailrc";
+    c->group = "IMAP Resource";
+    c->name = "ShowOnlyGroupwareFoldersForGroupwareAccount";
+    c->value = "true";
+    changes.append( c );
+
+    CreateOnlineImapAccount *account = new CreateOnlineImapAccount( i18n("Kolab Server Mail") );
+
+    account->setServer( server );
+    account->setUser( user );
+    account->setPassword( KolabConfig::self()->password() );
+    account->setRealName( KolabConfig::self()->realName() );
+    account->setEmail( email );
+    account->enableSieve( true );
+    account->enableSavePassword( KolabConfig::self()->savePassword() );
+    account->setEncryption( CreateImapAccount::SSL );
+    account->setDefaultDomain( defaultDomain );
+
+    changes.append( account );
+  }
+
+  CreateDisconnectedImapAccount *account =
+    new CreateDisconnectedImapAccount( i18n("Kolab Server") );
 
   account->setServer( server );
   account->setUser( user );
@@ -128,9 +156,11 @@ void createKMailChanges( KConfigPropagator::Change::List& changes )
   account->enableSieve( true );
   account->setSieveVacationFileName( "kolab-vacation.siv" );
   account->enableSavePassword( KolabConfig::self()->savePassword() );
-  account->setEncryption( CreateDisconnectedImapAccount::SSL );
+  account->setEncryption( CreateImapAccount::SSL );
   account->setAuthenticationSend( CreateDisconnectedImapAccount::PLAIN );
   account->setSmtpPort( 465 );
+  account->setDefaultDomain( defaultDomain );
+  account->enableLocalSubscription( KolabConfig::self()->useOnlineForNonGroupware() );
 
   account->setCustomWriter( new KolabCustomWriter );
 
