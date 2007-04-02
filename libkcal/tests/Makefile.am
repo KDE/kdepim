@@ -64,19 +64,19 @@ testfields_CXXFLAGS= -DINPUT='"$(srcdir)/data/test_pilot.ics"'
 TESTFILES = test1.ics test2.ics test3.ics test4.ics test5.ics test_Mozilla.ics
 
 check-local: readandwrite testrecurrence testrecurprevious testrecurson testvcalexport
-	rm -f FAILED; \
+	rm -f FAILED;
 	for i in `find $(srcdir)/data/RecurrenceRule/ -name "*.ics"`; do \
 	  perl $(srcdir)/runtestcase.pl testrecurrence "next" $$i; \
-	done; \
+	done;
 	for i in `find $(srcdir)/data/RecurrenceRule/ -name "*.ics"`; do \
 	  perl $(srcdir)/runtestcase.pl testrecurprevious "prev" $$i; \
-	done; \
+	done;
 	for i in `find $(srcdir)/data/RecurrenceRule/ -name "*.ics"`; do \
 	  perl $(srcdir)/runtestcase.pl testrecurson "recurson" $$i; \
-	done; \
-	for i in `find $(srcdir)/data/Compat/ -name "*.ics"`; do \
+	done;
+	#for i in `find $(srcdir)/data/Compat/ -name "*.ics"`; do \
 	  perl $(srcdir)/runtestcase.pl readandwrite "ical" $$i; \
-	done; \
+	done;
 	for i in `find $(srcdir)/data/vCalendar/ -name "*.ics"`; do \
 		perl $(srcdir)/runtestcase.pl testvcalexport "vcal" $$i; \
 	done;
