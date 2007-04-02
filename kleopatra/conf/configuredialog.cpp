@@ -33,7 +33,7 @@
 
 #include "configuredialog.h"
 
-#include <kwin.h>
+#include <kwm.h>
 #include <kconfig.h>
 #include <kiconloader.h>
 #include <kcmultidialog.h>
@@ -50,7 +50,7 @@ ConfigureDialog::ConfigureDialog( QWidget *parent, bool modal )
   setCaption( i18n( "Configure" ) );
   setModal( modal );
 #ifdef Q_OS_UNIX
-  KWin::setIcons( winId(), qApp->windowIcon().pixmap( IconSize( K3Icon::Desktop ), IconSize( K3Icon::Desktop ) ),
+  KWM::setIcons( winId(), qApp->windowIcon().pixmap( IconSize( K3Icon::Desktop ), IconSize( K3Icon::Desktop ) ),
                   qApp->windowIcon().pixmap( IconSize( K3Icon::Small ), IconSize( K3Icon::Small ) ) );
 #endif
   showButton( User1, true );

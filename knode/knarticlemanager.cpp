@@ -19,7 +19,7 @@
 #include <kmimetypetrader.h>
 #include <klocale.h>
 #include <kdebug.h>
-#include <kwin.h>
+#include <kwm.h>
 #include <ktemporaryfile.h>
 
 #include "articlewidget.h"
@@ -389,7 +389,7 @@ void KNArticleManager::search()
   if(s_earchDlg) {
     s_earchDlg->show();
 #ifdef Q_OS_UNIX    
-    KWin::activateWindow(s_earchDlg->winId());
+    KWM::activateWindow(s_earchDlg->winId());
 #endif    
   } else {
     s_earchDlg = new SearchDialog( SearchDialog::STgroupSearch, 0 );

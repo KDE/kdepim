@@ -44,7 +44,7 @@
 #include <kconfig.h>
 #include <kprogressdialog.h>
 #include <kapplication.h>
-#include <kwin.h>
+#include <kwm.h>
 #include <kpushbutton.h>
 #include <kglobalsettings.h>
 #include <klineedit.h>
@@ -293,7 +293,7 @@ KeySelectionDialog::KeySelectionDialog( const KeyList& keyList,
   setButtons( Default|Ok|Cancel );
 #ifdef Q_OS_UNIX
   if ( qApp )
-    KWin::setIcons( winId(), qApp->windowIcon().pixmap( IconSize( K3Icon::Desktop ), IconSize( K3Icon::Desktop ) ),
+    KWM::setIcons( winId(), qApp->windowIcon().pixmap( IconSize( K3Icon::Desktop ), IconSize( K3Icon::Desktop ) ),
                     qApp->windowIcon().pixmap( IconSize( K3Icon::Small ), IconSize( K3Icon::Small ) ) );
 #endif  
   Kpgp::Module *pgp = Kpgp::Module::getKpgp();

@@ -16,7 +16,7 @@
 
 #include <kiconloader.h>
 #include <klocale.h>
-#include <kwin.h>
+#include <kwm.h>
 
 #include "utilities.h"
 #include "knglobals.h"
@@ -55,7 +55,7 @@ void KNConfigManager::configure()
   }
 #ifdef Q_OS_UNIX  
   else
-    KWin::activateWindow(d_ialog->winId());
+    KWM::activateWindow(d_ialog->winId());
 #endif  
 }
 
