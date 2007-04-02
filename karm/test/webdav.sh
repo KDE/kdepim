@@ -6,15 +6,17 @@ exec >>check.log 2>&1
 
 source __lib.sh
 
+# check for required perl stuff
+perl -e "use Net::DAV::Server;" > /dev/null 2>&1
+if ! [ $? = 0 ]; then
+	echo "PASS"
+	exit 0
+fi
+
 # Start webdav server
 perl __webdav.pl &
 sleep 2
 WEBDAV_PID=`ps -C "perl __webdav.pl" -o pid=`
-
-if [ -z "$WEBDAV_PID" ]; then
-  echo "PASS"
-  exit 0
-fi
 
 # Start karm
 TESTFILE="http://localhost:4242/testkarm.ics"
