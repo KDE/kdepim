@@ -60,13 +60,10 @@ private:
   void registerFields( Strigi::FieldRegister& );
 };
 
-//TODO: remove this include when vandenoever fixes analyzerplugin.h
-#include <strigi/jstreamsconfig.h>
-
 class KDEPIM_EXPORT Rfc822FactoryFactory : public Strigi::AnalyzerFactoryFactory
 {
 public:
-  std::list<Strigi::StreamEndAnalyzerFactory*> getStreamEndAnalyzerFactories() const {
+  std::list<Strigi::StreamEndAnalyzerFactory*> streamEndAnalyzerFactories() const {
      std::list<Strigi::StreamEndAnalyzerFactory*> af;
      af.push_back( new Rfc822EndAnalyzerFactory );
      return af;
