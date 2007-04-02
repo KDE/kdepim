@@ -128,8 +128,7 @@ void KWatchGnuPGMainWindow::configureShortcuts()
 
 void KWatchGnuPGMainWindow::slotConfigureToolbars()
 {
-    KEditToolbar dlg( factory() );
-
+    KEditToolBar dlg( factory() );
     dlg.exec();
 }
 

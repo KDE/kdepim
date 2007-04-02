@@ -1435,7 +1435,7 @@ void KNComposer::slotConfKeys()
 void KNComposer::slotConfToolbar()
 {
   saveMainWindowSettings(knGlobals.config()->group( "composerWindow_options") );
-  KEditToolbar dlg(guiFactory(),this);
+  KEditToolBar dlg(guiFactory(),this);
   connect(&dlg,SIGNAL( newToolbarConfig() ), this, SLOT( slotNewToolbarConfig() ));
   dlg.exec();
 }
