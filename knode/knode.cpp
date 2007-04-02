@@ -74,7 +74,8 @@ void KNMainWindow::openURL( const KUrl& url )
 void KNMainWindow::slotConfToolbar()
 {
   saveMainWindowSettings(knGlobals.config()->group( "mainWindow_options") );
-  KEditToolBar dlg(actionCollection(), "knodeui.rc");
+  KEditToolBar dlg( actionCollection() );
+  dlg.setResourceFile( "knodeui.rc" );
   connect(&dlg,SIGNAL( newToolbarConfig() ), this, SLOT( slotNewToolbarConfig() ));
   dlg.exec();
 }
