@@ -128,7 +128,7 @@ bool VCardXXPort::exportContacts( const KABC::AddresseeList &addrList, const QSt
 
     switch ( KMessageBox::questionYesNo( parentWidget(), msg, QString(), KGuiItem(i18n("Export to Several Files")), KGuiItem(i18n("Export to One File")) ) ) {
       case KMessageBox::Yes: {
-        KUrl baseUrl = KFileDialog::getExistingUrl();
+        KUrl baseUrl = KFileDialog::getExistingDirectoryUrl();
         if ( baseUrl.isEmpty() )
           return true;
 

@@ -32,7 +32,7 @@
 
 #include <kabc/addressbook.h>
 #include <kabc/addressee.h>
-#include <kcommand.h>
+#include <k3command.h>
 
 #include "kablock.h"
 
@@ -40,7 +40,7 @@ namespace KAB {
 class Core;
 }
 
-class Command : public KCommand
+class Command : public K3Command
 {
   public:
     Command( KABC::AddressBook *addressBook ) { mAddressBook = addressBook; }

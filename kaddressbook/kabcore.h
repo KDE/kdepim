@@ -137,7 +137,7 @@ class KDE_EXPORT KABCore : public KAB::Core
 
     KAB::SearchManager *searchManager() const { return mSearchManager; }
 
-    KCommandHistory *commandHistory() const { return mCommandHistory; }
+    K3CommandHistory *commandHistory() const { return mCommandHistory; }
 
 #ifdef KDEPIM_NEW_DISTRLISTS
     /**
@@ -423,7 +423,7 @@ class KDE_EXPORT KABCore : public KAB::Core
     KToggleAction *mActionJumpBar;
     KToggleAction *mActionDetails;
 
-    KCommandHistory *mCommandHistory;
+    K3CommandHistory *mCommandHistory;
 
     KAddressBookService *mAddressBookService;
 

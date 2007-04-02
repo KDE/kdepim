@@ -33,7 +33,7 @@
 #include <QObject>
 
 #include <kabc/field.h>
-#include <kcommand.h>
+#include <k3command.h>
 #include <kxmlguiclient.h>
 #include <kdemacros.h>
 
@@ -124,7 +124,7 @@ class KDE_EXPORT Core : public QObject
     //// This class isn't part of interfaces/, so this method here isn't really useful
     virtual SearchManager *searchManager() const = 0;
 
-    virtual KCommandHistory *commandHistory() const = 0;
+    virtual K3CommandHistory *commandHistory() const = 0;
 
     signals:
     /**
