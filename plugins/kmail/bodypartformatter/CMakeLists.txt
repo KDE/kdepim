@@ -44,7 +44,7 @@ kde4_add_plugin(kmail_bodypartformatter_text_xdiff WITH_PREFIX ${kmail_bodypartf
 
 
 
-target_link_libraries(kmail_bodypartformatter_text_xdiff  ${KDE4_KDECORE_LIBS} ${QT_QT3SUPPORT_LIBRARY} )
+target_link_libraries(kmail_bodypartformatter_text_xdiff  ${KDE4_KDECORE_LIBS} ${QT_QTGUI_LIBRARY} )
 
 install(TARGETS kmail_bodypartformatter_text_xdiff  DESTINATION ${PLUGIN_INSTALL_DIR})
 
