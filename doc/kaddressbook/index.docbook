@@ -120,7 +120,7 @@ will be displayed:</para>
 <para>&kaddressbook; can use multiple resources for loading and storing
 its contacts. After starting &kaddressbook; for the first time you will have
 a default resource installed that saves all contacts in a vCard file
-under $HOME/.kde/share/apps/kabc/std.vcf; you can add more resources
+under <filename>$<envar>HOME</envar>/.kde/share/apps/kabc/std.vcf</filename>; you can add more resources
 by using the <guilabel>Resource Configuration</guilabel> dialog, which is available in
 the &kcontrolcenter; under <guilabel>&kde; Components</guilabel>->
 <guilabel>&kde; Resources</guilabel>:</para>
