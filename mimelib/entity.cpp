@@ -224,8 +224,7 @@ void DwEntity::Assemble(DwHeaders& aHeaders, DwBody& aBody)
     // DwEntityParser skips the line separating the headers from the
     // body. So it's neither part of DwHeaders, nor of DwBody
     // -> we need to readd it here:
-    if ( mString != "" )
-      mString += DW_EOL;
+    mString += DW_EOL;
 
     mString += aBody.AsString();
     mIsModified = 0;
