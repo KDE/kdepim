@@ -339,7 +339,7 @@ void KornBoxCfgImpl::slotChangeNewAnim()
 
 void KornBoxCfgImpl::slotChangeNormalFont()
 {
-	KFontDialog fd( this, "font dialog" );
+	KFontDialog fd( this );
 	fd.setFont( *m_fonts[ 0 ], false );
 	fd.exec();
 	*m_fonts[ 0 ] = fd.font();
@@ -347,7 +347,7 @@ void KornBoxCfgImpl::slotChangeNormalFont()
 
 void KornBoxCfgImpl::slotChangeNewFont()
 {
-	KFontDialog fd( this, "font dialog" );
+	KFontDialog fd( this );
 	fd.setFont( *m_fonts[ 1 ], false );
 	fd.exec();
 	*m_fonts[ 1 ] = fd.font();
