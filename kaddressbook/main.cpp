@@ -34,7 +34,7 @@
 #include <klocale.h>
 #include <kstartupinfo.h>
 #include <kuniqueapplication.h>
-#include <kwin.h>
+#include <kwm.h>
 
 #include "kaddressbookmain.h"
 #include "kaddressbook_options.h"
