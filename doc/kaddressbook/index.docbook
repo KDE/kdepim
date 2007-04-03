@@ -1,4 +1,4 @@
-<?xml version="1.0" ?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE book PUBLIC "-//KDE//DTD DocBook XML V4.2-Based Variant V1.1//EN" 
 "dtd/kdex.dtd" [
  <!ENTITY kappname "&kaddressbook;">
@@ -42,12 +42,19 @@
 </address>
 </affiliation>
 </author>
+<author>
+<firstname>Michael</firstname>
+<surname>Skiba</surname>
+<affiliation>
+<address><email>michael@michael-skiba.de</email></address>
+</affiliation>
+</author>
 
 <!-- TRANS:ROLES_OF_TRANSLATORS -->
 </authorgroup>
 
-<date>2006-12-16</date>
-<releaseinfo>3.5.3 (&kde; 3.5.5)</releaseinfo>
+<date>2007-03-31</date>
+<releaseinfo>3.5.7 (&kde; 3.5.6)</releaseinfo>
 
 <legalnotice>
 &FDLNotice;
@@ -93,8 +100,9 @@ entry fields in its graphical user interface.
 <title>Getting Started</title>
 
 <para>
-After you have started &kaddressbook; (either using the panel menu or by typing
-<command>kaddressbook</command> at the command prompt) the &kaddressbook; main window
+After you have started &kaddressbook; (either using the &kmenu; or by typing
+<command>kaddressbook</command> at the command prompt or by using the 
+<guilabel>Contacts</guilabel> tab in &kontact;) the &kaddressbook; main window
 will be displayed:</para>
 
 <screenshot>
@@ -113,9 +121,9 @@ will be displayed:</para>
 its contacts. After starting &kaddressbook; for the first time you will have
 a default resource installed that saves all contacts in a vCard file
 under $HOME/.kde/share/apps/kabc/std.vcf; you can add more resources
-by using the Resource Configuration dialog, which is available in
-<application>kcontrol</application> under
-<guilabel>&kde; Components</guilabel>-><guilabel>&kde; Resources Configuration</guilabel>:</para>
+by using the <guilabel>Resource Configuration</guilabel> dialog, which is available in
+the &kcontrolcenter; under <guilabel>&kde; Components</guilabel>->
+<guilabel>&kde; Resources</guilabel>:</para>
 
 <screenshot>
 <screeninfo>The Resource Configuration Dialog</screeninfo>
@@ -125,48 +133,68 @@ by using the Resource Configuration dialog, which is available in
 <caption><para>The Resource Configuration Dialog.</para></caption>
 </mediaobject>
 </screenshot>
-<para>Load the configuration module you want to add your resource(s) to. By selecting it from the combo box at the top of the <guilabel>Resources</guilabel> section. The module for &kaddressbook; being <guilabel>contact</guilabel>.</para>
-<para>Launch the <guilabel>Resource Configuration</guilabel> dialog by pushing the <guibutton>Add...</guibutton> button. Choose the resource you want to add to your <guilabel>contact</guilabel> module and click <guilabel>OK</guilabel> to confirm your choice.</para>
+<para>Load the configuration module you want to add your resource(s) to. By selecting it from the combo box at the top of the <guilabel>Resources</guilabel> section. The module for configuring &kaddressbook;'s resources is <guilabel>Contacts</guilabel>.</para>
+<para>Launch the <guilabel>Resource Configuration</guilabel> dialog by pushing the <guibutton>Add...</guibutton> button. Choose the resource you want to add to your <guilabel>Contacts</guilabel> module and click <guilabel>OK</guilabel> to confirm your choice.</para>
 
 <variablelist>
 <varlistentry>
 <term><guilabel>Directory</guilabel></term>
-<listitem><para>each contact will be stored in its own file;</para></listitem>
+<listitem><para>Each contact will be stored in its own file;</para></listitem>
 </varlistentry>
 
 <varlistentry>
 <term><guilabel>File</guilabel></term>
-<listitem><para>all contacts will be stored in one file;</para></listitem>
+<listitem><para>All contacts will be stored in one file;</para></listitem>
 </varlistentry>
 
 <varlistentry>
-<term><guilabel>IMAP</guilabel></term>
+<term><guilabel>GroupDAV Server (e.g. Open Groupware)</guilabel></term>
 <listitem><para>To be written</para></listitem>
 </varlistentry>
 
 <varlistentry>
-<term><guilabel>Kolab</guilabel></term>
-<listitem><para>The contacts will be saved in the contact folder of your DIMAP account.</para><para><guilabel>Kolab server specificities:</guilabel> The Kolab resource should never be configured as Read Only. In case you have added several types of resources you need to set your <guilabel>Kolab Server</guilabel> resource as your <guilabel>Standard</guilabel> resource.</para></listitem>
+<term><guilabel>Novell GroupWise Server</guilabel></term>
+<listitem><para>To be written</para></listitem>
 </varlistentry>
 
 <varlistentry>
+<term><guilabel>Addressbook on IMAP Server via Kmail</guilabel></term>
+<listitem><para>This resource stores contacts as messages on an IMAP server.  &kmail; is used to access the IMAP server, therefore, if you use this type of resource, &kmail; will open whenever you access the address book, if it (or &kontact;) are not already running.</para></listitem>
+</varlistentry>
+<!--
+<varlistentry>
+<term><guilabel>Kolab</guilabel></term>
+<listitem><para>The contacts will be saved in the contact folder of your DIMAP account.</para><para><guilabel>Kolab server specificities:</guilabel> The Kolab resource should never be configured as Read Only. In case you have added several types of resources you need to set your <guilabel>Kolab Server</guilabel> resource as your <guilabel>Standard</guilabel> resource. &kmail; or &kontact; are also needed to access Kolab address books.</para></listitem>
+</varlistentry>
+-->
+<varlistentry>
 <term><guilabel>LDAP</guilabel></term>
-<listitem><para>all contacts will be stored on a LDAP server;</para></listitem>
+<listitem><para>All contacts will be stored on a LDAP server;</para></listitem>
 </varlistentry>
 
 <varlistentry>
 <term><guilabel>Network</guilabel></term>
-<listitem><para>all contacts will be stored in one file, which can be located
+<listitem><para>All contacts will be stored in one file, which can be located
 on a remote server (for example, through &HTTP;, WebDAV, &FTP; or Fish).</para></listitem>
 </varlistentry>
 
 <varlistentry>
-<term><guilabel>SLOX</guilabel></term>
+<term><guilabel>Addressbook on an Exchange Server (Experimental)</guilabel></term>
 <listitem><para>To be written</para></listitem>
 </varlistentry>
 
 <varlistentry>
-<term><guilabel>XML-RPC</guilabel></term>
+<term><guilabel>OpenXchange Server</guilabel></term>
+<listitem><para>This resource stores contacts on an OpenExchange server.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Suse Linux Openexchange Server</guilabel></term>
+<listitem><para>This resource stores contacts on an OpenExchange or SUSE &Linux; OpenExchange groupware server.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>eGroupware Server (via XML-RPC)</guilabel></term>
 <listitem><para>To be written</para></listitem>
 </varlistentry>
 
@@ -184,7 +212,7 @@ specified in RFC 2426;</para></listitem>
 </varlistentry>
 
 <varlistentry>
-<term><guilabel>binary</guilabel></term>
+<term><guilabel>Binary</guilabel></term>
 <listitem><para>the contacts will be stored in a binary format &mdash; this
 increases performance during loading and saving, but it is not portable like
 the vCard format.</para></listitem>
@@ -215,22 +243,35 @@ can input all the data that can be stored in a vCard.
 <caption><para>The Contact Dialog.</para></caption>
 </mediaobject>
 </screenshot>
+<!-- <part> is currently NOT ALLOWED in KDE.org documentations...
 
-<sect2 id="managing-contacts-automatic-nameparsing">
+ <part id="managing-contacts-general">
+<title>General Settings tab</title>
+<para>In the General Tab you can enter the basic information about a contact,
+for example, addresses, phone numbers, and email addresses.</para>
+
+-->
+
+<sect2 id="managing-contacts-general">
+<title>General Settings tab</title>
+<para>In the <guilabel>General</guilabel> tab you can enter the basic information about a contact,
+for example, addresses, phone numbers, and email addresses.</para>
+
+<sect3 id="managing-contacts-automatic-nameparsing">
 <title>Automatic Name Parsing</title>
 <para>
 &kaddressbook; tries to provide an easy name input by automatic name parsing;
 for this to work properly it is sometimes necessary to add custom name prefixes, suffixes
 or inclusions in the <link linkend="preferences-address-book-contact">configure dialog</link>.
-Nevertheless, no algorithm is perfect, so the name you enter may be parsed
+However, no algorithm is perfect, and rarely, a name may be parsed
 incorrectly; in this case, you can disable the automatic name parsing in
-the name edit dialog, which is available by clicking the <guibutton>Name...</guibutton> button
+the name edit dialog, which is available by clicking the <guibutton>Edit Name...</guibutton> button
 in the contact dialog. If you wish to disable the name parsing for all new contacts you can
 disable automatic name parsing globally in the <link linkend="preferences-address-book-general">configure dialog</link>.
 </para>
-</sect2>
+</sect3>
 
-<sect2 id="managing-contacts-formattedname">
+<sect3 id="managing-contacts-formattedname">
 <title>Formatted Name</title>
 <para>
 The formatted name of a contact is used by other programs to represent it.
@@ -239,19 +280,34 @@ The formatted name of a contact is used by other programs to represent it.
 
 <variablelist>
 <varlistentry>
-<term><guilabel>SimpleName</guilabel></term>
-<listitem><para>&lt;given name&gt; &lt;family name&gt;;</para></listitem>
+<term><guilabel>Custom</guilabel></term>
+<listitem><para>&lt;see below&gt;</para></listitem>
 </varlistentry>
 
 <varlistentry>
-<term><guilabel>FullName</guilabel></term>
+<term><guilabel>Simple Name</guilabel></term>
+<listitem><para>&lt;given name&gt; &lt;family name&gt;</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Full Name</guilabel></term>
 <listitem><para>&lt;prefix&gt; &lt;given name&gt; &lt;additional name&gt;
-&lt;family name&gt; &lt;suffix&gt;;</para></listitem>
+&lt;family name&gt; &lt;suffix&gt;</para></listitem>
 </varlistentry>
 
 <varlistentry>
-<term><guilabel>ReverseName</guilabel></term>
-<listitem><para>&lt;family name&gt;, &lt;given name&gt;.</para></listitem>
+<term><guilabel>Reverse Name with Comma</guilabel></term>
+<listitem><para>&lt;family name&gt;, &lt;given name&gt;</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Reverse Name</guilabel></term>
+<listitem><para>&lt;family name&gt; &lt;given name&gt;</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Organisation</guilabel></term>
+<listitem><para>&lt;Organisation Name&gt;</para></listitem>
 </varlistentry>
 </variablelist>
 
@@ -262,11 +318,37 @@ name &mdash; this configuration can be done in the name edit dialog.
 To specify a
 default formatted name type for new contacts, use the <link linkend="preferences-address-book-contact">configure dialog</link>.
 </para>
-</sect2>
-<sect2 id="managing-contacts-im-addresses">
+</sect3>
+
+<sect3 id="managing-contacts-phone-numbers">
+<title>Phone Numbers</title>
+<para>Here you can enter your contact's phone numbers. As well as land-lines and mobile/cell number, Fax, ISDN and many other types are possible.
+The number can contain almost any character, so it is possible to format the number in any way you need, including adding letters.</para>
+<para>
+	If three numbers aren't enough, simply press the <guilabel>Add</guilabel> button to get additional fields to enter a number.
+</para><para>
+If the type of the number is either a Phone, Mobile phone or Fax number you can select a script to be executed when clicking on it. (under Configuration → General)
+</para>
+</sect3>
+
+<sect3 id="managing-contacts-addresses">
+<title>Addresses</title>
+<para>Here you can enter your contact's addresses. You can do so by pressing the <guibutton>Edit Addresses...</guibutton> Button and simply enter the <guilabel>Street</guilabel>, <guilabel>Post Office Box</guilabel>, <guilabel>Locality</guilabel>, <guilabel>Postal Code</guilabel>, and <guilabel>Country</guilabel>. After you do so you can look up the address on the map by simply clicking on the address (you can change the map-service/string used by &kaddressbook; in its settings.</para>
+<para>You can also create a label, which will be shown instead of the real address (however, the map lookup, will use the real address).</para>
+<para>You can also have set different addresses (i.e. one for work and one for home). It's also possible to set two different <guilabel>Home</guilabel> addresses.</para>
+</sect3>
+
+<sect3 id="managing-contacts-emails">
+<title>Emails</title>
+<para>You can enter email addresses for your contact here. You can set one address as standard.</para>
+<para>If you set a photo for your contact on the <guilabel>Misc</guilabel> tab, &kmail; will show it when viewing these addresses. </para>
+<para>These addresses will be used in &kmail; if you type the name of the person in either the <guilabel>"to"</guilabel>, <guilabel>"cc"</guilabel> or <guilabel>"bcc"</guilabel> field of a new message.</para>
+</sect3>
+
+<sect3 id="managing-contacts-im-addresses">
 <title>Instant Messaging</title>
 <para>
-  The <guilabel>IM Address</guilabel> text box holds the preferred Instant Messaging Address for this contact.  To add, view and edit additional IM Addresses, click the <guilabel>Edit IM Addresses...</guilabel> button.  The Edit IM Addresses Dialog appears.
+  The <guilabel>IM Address</guilabel> text box holds the preferred Instant Messaging Address for this contact.  To add, view and edit additional IM Addresses, click the <guibutton>Edit IM Addresses...</guibutton> button.  The <guilabel>Edit Instant Messaging Address</guilabel> dialog appears.
 </para>
 <screenshot>
 <screeninfo>The Edit IM Addresses Dialog</screeninfo>
@@ -278,13 +360,32 @@ default formatted name type for new contacts, use the <link linkend="preferences
 </screenshot>
 
 <para>
-  A contact can have multiple instant messaging addresses associated with it.  Other applications, such as &kopete; and &konversation;, store their information here.  It is recommended that you add, edit and delete instant messaging addresses in &kopete; or &konversation; rather than here, since they can assist you better in adding the address, adding the user to a group, and so on.  If you are not interested in whether they are picked up in another application, and just want to store the instant messaging address with the contact, then it is fine to add and edit it here.
-</para>
+  A contact can have multiple instant messaging addresses associated with it. Other applications, which are using the <application>Kimproxy</application> system, such as &kopete; or &konversation; can interact using this information. So in example you can associate a contact in IRC with a contact in your address book. This cannot be done automatically, you have to make this association manually in the specific program.</para>
+<para>  If you are not interest in whether they are picked up in another application, and just want to store the instant messaging addresses with the contact, then it's fine to add and edit them here. Otherwise it's recommended that you let the applications do the changes and not yourself, to not interfere with them. </para>
+
 <para>
   For more information on adding new Instant Messaging Addresses, see
   <ulink url="help:/kopete/getting-started.html#creating-accounts">&kopete;'s handbook</ulink>
   and <ulink url="help:/konversation/linkaddressbook.html">&konversation;'s handbook</ulink>.
 </para>
+</sect3>
+
+<sect3 id="managing-contacts-categories">
+<title>Categories</title>
+<para>Categories help you to sort and group your contacts. You can simply add a contact to one or more groups by pressing the <guibutton>Select Categories...</guibutton> button.</para>
+<para>To add your own category or remove an unused category you can click on <guibutton>Edit Categories...</guibutton>. Here you can edit, add and remove categories. Please notice that it is automatically started in Edit mode.</para>
+</sect3>
+
+<sect3 id="managing-contacts-public-private-confidental">
+<title>Public, Private and Confidental</title>
+<para>The three modes Public, Private and Confidental are part of the vCard standart and implemented as such.  These allow you another way to group your contacts.</para>
+</sect3>
+
+</sect2>
+<sect2 id="managing-contacts-details">
+<title>Details tab</title>
+<para>This is the place where you can store additional details on your contacts.</para>
+<para>The fields are mostly self-explanatory. You will notice that the <guilabel>Anniversary</guilabel> and <guilabel>Birthday</guilabel> dates are listed in the <guilabel>Special Dates</guilabel> list in the &kontact; summary.</para>
 </sect2>
 
       <sect2 id="managing-contacts-crypto-preferences">
@@ -292,7 +393,7 @@ default formatted name type for new contacts, use the <link linkend="preferences
 	<para>
 	  In this tab, you can define preferences with regards to
 	  cryptography for a contact. At the time of this writing,
-	  only &kmail; will make use of these
+	  only &kmail; and &kontact; will make use of these
 	  preferences when composing messages. This mechanism replaces
 	  the barely editable per-recipient crypto preferences of
 	  earlier &kmail; releases.
@@ -410,7 +511,96 @@ default formatted name type for new contacts, use the <link linkend="preferences
 	    </listitem>
 	  </varlistentry>
 	</variablelist>
+	</sect2>
+<sect2 id="managing-contacts-misc">
+<title>Misc tab</title>
+<para>This describes the <guilabel>Misc</guilabel> settings tab</para>
+
+<sect3 id="managing-contacts-misc-geo-data">
+<title>Geo Data</title>
+<para>Here you can enter the contact's geographical location, with <guilabel>Latitude</guilabel> and <guilabel>Longitude</guilabel>. To "enable" them simply click on the check box <guilabel>use geo data</guilabel>. After that you can either enter the coordinates by hand or click on <guilabel>Edit Geo Data...</guilabel> to select them on a world map.</para>
+</sect3>
+<sect3 id="managing-contacts-misc-sound">
+<title>Sound</title>
+<para>You can store a spoken version of the name here. It is helpful for foreign names.</para>
+<para>However this is part of the vCard 2.1 standard and only supports the three formats: WAVE, PCM, AIFF.</para>
+<para>Select <guibutton>Store as URL</guibutton> if the sound lies on a remote machine.</para>
+</sect3>
+<sect3 id="managing-contacts-misc-picture-logo">
+<title>Photo and Logo</title>
+<para>By clicking on the buddy icon you can select and scale a picture of your contact.</para>
+<para>The Photo will be shown in the contact preview and in the Icon view mode. However the Logo picture will only be shown in Icon view and only if there's no photo available.</para>
+<para>To reset a photo or logo simply right click on it and select <guilabel>Reset</guilabel>.</para>
+</sect3>
+<sect3 id="managing-contacts-misc-free-busy-informations">
+<title>Location of Free/Busy informations</title>
+<para>Here you can select a path to a contact's Free/Busy information, which are used when you add him to an event in &korganizer; or &kontact;'s calendar view.</para>
+</sect3>
+</sect2>
+
+
+<sect2 id="managing-contacts-customfields">
+<title>Custom Fields Tab</title>
+<para>In the <guilabel>Custom Fields</guilabel> Tab you can add your own fields, either for just the current contact or for all. The following types of fields are possible:</para>
+	      <variablelist>
+		<varlistentry>
+		  <term>
+		    <guilabel>Text</guilabel>
+		  </term>
+		  <listitem>
+		    <para>Here you can enter every alphanumeric symbol
+		    </para>
+		  </listitem>
+		</varlistentry>
+<varlistentry>
+		  <term>
+		    <guilabel>Numeric Value</guilabel>
+		  </term>
+		  <listitem>
+		    <para>You can only enter numbers here.
+		    </para>
+		  </listitem>
+		</varlistentry>
+<varlistentry>
+		  <term>
+		    <guilabel>Boolean</guilabel>
+		  </term>
+		  <listitem>
+		    <para>Boolean is only yes or no(true or false, or however you want to call it). In KAddressbook it's a simply check box you can check or uncheck it.
+		    </para>
+		  </listitem>
+		</varlistentry>
+<varlistentry>
+		  <term>
+		    <guilabel>Date</guilabel>
+		  </term>
+		  <listitem>
+		    <para>Here you can enter a date.
+		    </para>
+		  </listitem>
+		</varlistentry>
+<varlistentry>
+		  <term>
+		    <guilabel>Time</guilabel>
+		  </term>
+		  <listitem>
+		    <para>Here you can enter a time value.
+		    </para>
+		  </listitem>
+		</varlistentry>
+<varlistentry>
+		  <term>
+		    <guilabel>Date &amp; Time</guilabel>
+		  </term>
+		  <listitem>
+		    <para>Here you can enter both, a date and a time.
+		    </para>
+		  </listitem>
+		</varlistentry>
+	      </variablelist>
+
       </sect2>
+	
 
 </sect1>
 
@@ -418,7 +608,7 @@ default formatted name type for new contacts, use the <link linkend="preferences
 <title>Using Views</title>
 <para>
 In this version, &kaddressbook; offers different views, which can
-represent the contacts in different ways:
+represent the contacts in three different ways:
 </para>
 
 <variablelist>
@@ -496,21 +686,25 @@ At the moment we already have three extensions:
 
 <variablelist>
 <varlistentry>
+<term><guilabel>None</guilabel></term>
+<listitem><para>This selection shows no extension. This is a good default selection, if you're not using any of the other extensions because it saves space.</para></listitem>
+</varlistentry>
+
+<varlistentry>
 <term><guilabel>Contact Editor</guilabel></term>
 <listitem><para>Similar to the the contact editing dialog, but
 designed to allow contacts to be edited quickly.</para></listitem>
 </varlistentry>
 
 <varlistentry>
-<term><guilabel>Location of Contact</guilabel></term>
-<listitem><para>This extension takes the postal address of a contact and
-loads a map service from the Internet (like www.map24.de) with these
-data; the result is shown in a &HTML; view.</para></listitem>
+<term><guilabel>Address Books</guilabel></term>
+<listitem><para>This extension shows you a list of available address book resources. You can check/uncheck them to show/hide the entries of a specific address book.</para>
+<para>It is also possible to <guilabel>Add</guilabel>, <guilabel>Edit</guilabel> or <guilabel>Remove</guilabel> an resource, for more information about this see <link linkend="configure-resources">how to configure resources</link>.</para></listitem>
 </varlistentry>
 
 <varlistentry>
 <term><guilabel>Distribution List Manager</guilabel></term>
-<listitem><para>This extension provides easy management of the distribution
+<listitem><para>This extension provides easy management of email distribution
 lists: just create a new list and select a contact in the view; then, after
 clicking <guibutton>Add contact</guibutton>, the selected contact is part
 of the distribution list.  A simpler way is to drag a contact from the
@@ -543,70 +737,96 @@ a dialog where you can select which contacts are to be exported.</para>
 </mediaobject>
 </screenshot>
 
-<para>The following import and export plugins are available at the
-moment:</para>
+<sect2>
+ <title>Import</title>
+ <para>&kaddressbook; is able to import the following formats:</para>
 
 <variablelist>
 <varlistentry>
 <term><guilabel>vCard</guilabel></term>
-<listitem><para>the vCard format is standardized format (RFC 2426)
-that is supported by most address book applications &mdash;
-&kaddressbook; can import and export versions 2.1 and 3.0;</para></listitem>
+<listitem><para>With this entry you can import your contacts from the vCard format (<acronym>RFC</acronym> 2426).</para></listitem>
 </varlistentry>
 
 <varlistentry>
-<term><guilabel>Mobile Phone</guilabel></term>
-<listitem><para>this plugin can import contacts from Nokia mobile
-phones via the gnokii library;</para></listitem>
+<term><guilabel>MS Exchange Personal Address Book (.PAB)</guilabel></term>
+<listitem><para>With this entry you can import your contacts from your Addressbook on a MS Exchange personal address book, which is used
+by MS Outlook and MS Outlook Express to store their contact data.</para></listitem>
 </varlistentry>
 
 <varlistentry>
 <term><guilabel>Eudora Addressbook</guilabel></term>
-<listitem><para>with this plugin you can import your contacts from
-the Eudora mail client;</para></listitem>
+<listitem><para>With this plugin you can import your contacts from
+the Eudora mail client.
+</para></listitem>
 </varlistentry>
 
 <varlistentry>
-<term><guilabel>CSV</guilabel></term>
+<term><guilabel>CSV List</guilabel></term>
 <listitem><para>CSV (comma separated value) is a format that is used
-by many (address book) applications &mdash; you can import and export your
-contacts with this format;</para></listitem>
+by many (address book) applications.</para></listitem>
 </varlistentry>
 
 <varlistentry>
-<term><guilabel>KDE2</guilabel></term>
-<listitem><para>to import your old address book data from &kde; 2.X you
-can use this item;</para></listitem>
+<term><guilabel>Opera Addressbook</guilabel></term>
+<listitem><para>With this entry you can import your contacts from the Opera web browser.</para></listitem>
 </varlistentry>
 
 <varlistentry>
-<term><guilabel>LDIF</guilabel></term>
-<listitem><para>LDIF is a plain-text representation of LDAP data, used by
-&Netscape; and Mozilla to store their address book
-data &mdash; &kaddressbook; supports import and export of this format;
-</para></listitem>
+<term><guilabel>KDE 2 Addressbook</guilabel></term>
+<listitem><para>With this entry you can import your old contacts from a &kde; 2.x installation.</para></listitem>
 </varlistentry>
 
 <varlistentry>
-<term><guilabel>PAB</guilabel></term>
-<listitem><para>PAB is the MS Exchange Personal Address Book format, used
-by MS Outlook and MS Outlook Express to store their contact
-data &mdash; &kaddressbook; supports the import of this format;
-</para></listitem>
+<term><guilabel>LDIF Addressbook</guilabel></term>
+<listitem><para>LDIF is a plain-text representation of LDAP data, used by &Netscape; and Mozilla to store their address book data.</para></listitem>
 </varlistentry>
 
 <varlistentry>
-<term><guilabel>Opera</guilabel></term>
-<listitem><para>use this plugin to import the contact database of the Opera web browser;
-</para></listitem>
-</varlistentry>
-
-<varlistentry>
-<term><guilabel>Bookmarks</guilabel></term>
-<listitem><para>this is a pseudo export plugin that makes the web URLs
-of your contacts available in the bookmark menu of konqueror.</para></listitem>
+<term><guilabel>GMX Address Book</guilabel></term>
+<listitem><para>To be written.</para></listitem>
 </varlistentry>
 </variablelist>
+</sect2>
+
+<sect2>
+<title>Export</title>
+<para>&kaddressbook; is able to export into the following formats:</para>
+
+<variablelist>
+<varlistentry>
+<term><guilabel>vCard 2.1 &#038; 3.0</guilabel></term>
+<listitem><para>With this entry you can import your contacts from the vCard format (<acronym>RFC</acronym> 2426). You can either export it into the 2.1 or in the 3.0 compatibel version of the vCard standard.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>CSV List</guilabel></term>
+<listitem><para>CSV (comma separated value) is a format that is used
+by many (address book) applications, it stores the contact informations in a plaintext field seperated by commas. This makes CSV very flexible and good for interaction with scripts.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>LDIF Addressbook</guilabel></term>
+<listitem><para>LDIF is a plain-text representation of LDAP data, used by &Netscape; and Mozilla to store their address book data.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>GMX Address Book</guilabel></term>
+<listitem><para>To be written.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Bookmarks Menu</guilabel></term>
+<listitem><para>This exports the stored URLs of your contacts into the &konqueror; bookmarks system.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Geo Data</guilabel></term>
+<listitem><para>To be written.</para></listitem>
+</varlistentry>
+
+</variablelist>
+
+</sect2>
 </sect1>
 
 <sect1 id="ldap-queries">
@@ -659,7 +879,7 @@ KAddressBook...</guimenuitem></menuchoice> or using the toolbar icon.</para>
 </screenshot>
 
 <sect2 id="preferences-address-book">
-<title>The <guilabel>Address Book</guilabel> Page</title>
+<title>The <guilabel>General</guilabel> Page</title>
 
 <sect3 id="preferences-address-book-general">
 <title>The <guilabel>General</guilabel> Tab</title>
@@ -678,16 +898,21 @@ feature is used for new addresses.</para></listitem>
 </varlistentry>
 
 <varlistentry>
-<term><guilabel>Script-Hooks</guilabel></term>
-<listitem><para>Here you can specify the commands which are to be executed 
-whenever you click at a phone number or fax number link in the details page.
-</para></listitem>
+<term><guilabel>Limit unfiltered display to 100 contacts</guilabel></term>
+<listitem><para>If checked, &kaddressbook; will only display 100 contacts in the contact list, when no filter is applied.</para></listitem>
 </varlistentry>
 
 <varlistentry>
-<term><guilabel>Extensions</guilabel></term>
-<listitem><para>In this list view you can enable and disable extensions individually
-and configure their settings.</para></listitem>
+<term><guilabel>Addressee editor type</guilabel></term>
+<listitem><para>You can either select the "<guilabel>Simple Editor</guilabel>" or the "<guilabel>Full Editor</guilabel>".</para>
+<para>The Simple editor mode only lets you enter the name (which will be automaticly parsed, if enabled) and an email address.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Script Hooks</guilabel></term>
+<listitem><para>Here you can specify commands which are to be executed 
+whenever you click at a (mobile) phone number or fax number or SMS link in the details page.
+</para></listitem>
 </varlistentry>
 </variablelist>
 </sect3>
@@ -735,17 +960,44 @@ for <link linkend="ldap-queries">ldap queries</link> in &kaddressbook;.</para>
 
 <para>Use <guibutton>Add Host...</guibutton> to add and setup a new server.</para>
 <screenshot>
-<screeninfo>Configuring LDAP Lookup for Kolab</screeninfo>
+<screeninfo>Configuring LDAP Lookup</screeninfo>
 <mediaobject>
 <imageobject><imagedata fileref="addhost.png" format="PNG"/></imageobject>
-<textobject><phrase>Example of LDAP Lookup configuration (Kolab).</phrase></textobject>
-<caption><para>The Add Host dialog - Example of LDAP Lookup configuration (Kolab).</para></caption>
+<textobject><phrase>Example of LDAP Lookup configuration.</phrase></textobject>
+<caption><para>The Add Host dialog - Example of LDAP Lookup configuration.</para></caption>
 </mediaobject>
 </screenshot>
+<para>Please notice that some of the fields might be disabled, depending on your selections.</para>
 <para>
 You can include and exclude servers from the search by selecting or deselecting their check boxes. In the server list. Press <guibutton>OK</guibutton> to close the dialog.
 </para>
-<para>You may configure the search order by moving up or down the servers in the list. This can be done using the corresponding arrows on the right side of the dialog.</para>
+<para>You may configure the search order by moving the servers up or down in the list. This can be done using the arrows on the right side of the dialog.</para>
+</sect2>
+<sect2 id="preferences-custom-pages">
+<title>The <guilabel>Custom Pages</guilabel> Page</title>
+<para>This section allows you to add your own &GUI; elements ('Widgets') to store your own values into &kaddressbook;. Proceed as described below:</para>
+<simplelist>
+<member>
+1. Click on <guibutton>Edit with QT Designer</guibutton>.(note: &Qt; Designer has to be installed, otherwise the button is disabled)
+</member>
+<member>
+2. In the dialog, select <guilabel>Widget</guilabel>, then click <guibutton>OK</guibutton>.</member>
+
+<member>
+3. Add your widgets to the form.
+</member>
+
+<member>
+4. Save the file in the folder proposed by <application>&Qt; Designer</application>
+</member>
+
+<member>
+5. Close <application>&Qt; Designer</application>
+</member>
+</simplelist>
+<para>In case you already have a designer file (*.ui) located somewhere on your hard disk, simply choose <guibutton>Import Page...</guibutton></para>
+<para>IMPORTANT: The name of each input widget you place within the form must start with 'X_'; so if you want the widget to correspond to your custom entry 'X-Foo', set the widget's name property to 'X_Foo'.</para>
+<para>IMPORTANT: The widget will edit custom fields with an application name of &kaddressbook;. To change the application name to be edited, set the widget name in <application>&Qt; Designer</application>.</para>
 </sect2>
 </sect1>
 </chapter>
@@ -771,9 +1023,9 @@ You can include and exclude servers from the search by selecting or deselecting 
 <varlistentry>
 <term><menuchoice>
 <guimenu>File</guimenu>
-<guimenuitem>Edit Contact</guimenuitem>
+<guimenuitem>Edit Contact...</guimenuitem>
 </menuchoice></term>
-<listitem><para><action>Opens the contact editor for editing the currently-selected
+<listitem><para><action>Opens the contact editor for editing the currently selected
 contact</action>.</para></listitem>
 </varlistentry>
 
@@ -810,9 +1062,9 @@ contact</action>.</para></listitem>
 <keycombo action="simul">&Ctrl;<keycap>P</keycap></keycombo>
 </shortcut>
 <guimenu>File</guimenu>
-<guimenuitem>Print</guimenuitem>
+<guimenuitem>Print...</guimenuitem>
 </menuchoice></term>
-<listitem><para><action>Prints the currently-selected contacts</action>.</para></listitem>
+<listitem><para><action>Prints the currently selected contacts</action>.</para></listitem>
 </varlistentry>
 
 <varlistentry>
@@ -820,7 +1072,7 @@ contact</action>.</para></listitem>
 <guimenu>File</guimenu>
 <guimenuitem>Send Email to Contact...</guimenuitem>
 </menuchoice></term>
-<listitem><para><action>Opens the preferred mail program with the currently-selected
+<listitem><para><action>Opens the preferred mail program with the currently selected
 contacts as recipients</action>.</para></listitem>
 </varlistentry>
 
@@ -829,7 +1081,7 @@ contacts as recipients</action>.</para></listitem>
 <guimenu>File</guimenu>
 <guimenuitem>Send Contact...</guimenuitem>
 </menuchoice></term>
-<listitem><para><action>Opens the preferred mail program with the currently-selected
+<listitem><para><action>Opens the preferred mail program with the currently selected
 contact details attached as vCard</action>.</para></listitem>
 </varlistentry>
 
@@ -838,7 +1090,7 @@ contact details attached as vCard</action>.</para></listitem>
 <guimenu>File</guimenu>
 <guimenuitem>Chat With...</guimenuitem>
 </menuchoice></term>
-<listitem><para><action>To be written</action>.</para></listitem>
+<listitem><para><action>If a Instant Messenger application (like &kopete;)is started and online, and has an association for this contact, this entry appears. It will open a new chat window to your contact.</action></para></listitem>
 </varlistentry>
 
 <varlistentry>
@@ -923,7 +1175,7 @@ it is in a valid format)</action>.</para></listitem>
 <guimenu>Edit</guimenu>
 <guimenuitem>Delete Contact</guimenuitem>
 </menuchoice></term>
-<listitem><para><action>Deletes the currently-selected contacts</action>.</para></listitem>
+<listitem><para><action>Deletes the currently selected contacts</action>.</para></listitem>
 </varlistentry>
 
 <varlistentry>
@@ -931,7 +1183,8 @@ it is in a valid format)</action>.</para></listitem>
 <guimenu>Edit</guimenu>
 <guimenuitem>Store Contact In...</guimenuitem>
 </menuchoice></term>
-<listitem><para><action>To be written</action>.</para></listitem>
+<listitem><para><action>If two or more resources are available you can move a contact into another resource.</action>.</para>
+<para>Please notice: This dialog will only work if two or more resources are available, if only one resource is present nothing will happen (this is a known bug).</para></listitem>
 </varlistentry>
 
 <varlistentry>
@@ -950,7 +1203,8 @@ it is in a valid format)</action>.</para></listitem>
 <guimenu>Edit</guimenu>
 <guimenuitem>Merge Contacts</guimenuitem>
 </menuchoice></term>
-<listitem><para><action>Merge the contact data</action>.</para></listitem>
+<listitem><para><action>To merge contacts, simply select two or more and press the <guimenuitem>Merge Contacts</guimenuitem> entry. The last contact selected will be the merged contact, which now contains all information from both.
+</action>.</para></listitem>
 </varlistentry>
 
 <varlistentry>
@@ -959,7 +1213,7 @@ it is in a valid format)</action>.</para></listitem>
 <guimenuitem>Select Categories...</guimenuitem>
 </menuchoice></term>
 <listitem><para><action>Opens a dialog where you can set the categories
-for the currently-selected contacts; when the selected categories differ
+for the currently selected contacts; when the selected categories differ
 from the categories of the contacts the dialog will ask you if you
 want to merge these differences or if the categories should be overwritten
 </action>.</para></listitem>
@@ -1164,7 +1418,7 @@ used to influence its starting behavior:</para>
 
 <para>&kaddressbook; - The &kde; Address Book</para>
 
-<para>Copyright (c) 1997-2003, The &kde;-PIM Team</para>
+<para>Copyright (c) 1997-2007, The &kde;-PIM Team</para>
 
 <para>&kaddressbook; was originally written in 1997 by &Don.Sanders; 
 &Don.Sanders.mail;. Currently it is
