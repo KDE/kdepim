@@ -186,7 +186,7 @@ private:
   void doListEntry (const QString & encodedUrl, int stretch, imapCache * cache = NULL,
     bool withFlags = false, bool withSubject = false);
 
-  QString myHost, myUser, myPass, myAuth, myTLS, myService;
+  QString myHost, myUser, myPass, myAuth, myTLS;
   int myPort;
   bool mySSL;
 

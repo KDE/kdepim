@@ -653,8 +653,6 @@ IMAP4Protocol::setHost (const QString & _host, int _port,
     myPort = _port;
     myUser = _user;
     myPass = _pass;
-    // FIXME pass it in?
-    myService = _port==143?QLatin1String( "imap" ):QLatin1String( "imaps" );
   }
 }
 
@@ -1904,7 +1902,8 @@ bool IMAP4Protocol::makeLogin ()
   kDebug(7116) << "IMAP4::makeLogin - checking login" << endl;
   bool alreadyConnected = getState() == ISTATE_CONNECT;
   kDebug(7116) << "IMAP4::makeLogin - alreadyConnected " << alreadyConnected << endl;
-  if (alreadyConnected || connectToHost (myHost, myService))
+  if (alreadyConnected || connectToHost (( m_bIsSSL ? IMAP_SSL_PROTOCOL : IMAP_PROTOCOL ), myHost,
+        myPort))
   {
 //      fcntl (m_iSock, F_SETFL, (fcntl (m_iSock, F_GETFL) | O_NDELAY));
 
