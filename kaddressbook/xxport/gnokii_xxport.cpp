@@ -559,9 +559,9 @@ static gn_error xxport_phone_write_entry( int phone_location, gn_memory_type mem
 	entry.memory_type = memtype;
 	QString cg = addr->custom(APP, "X_GSM_CALLERGROUP");
 	if (cg.isEmpty())
-		entry.caller_group = 5;		// default group
+		entry.caller_group = GN_PHONEBOOK_GROUP_None; // default group
 	else
-		entry.caller_group = cg.toInt();
+		entry.caller_group = (gn_phonebook_group_type)cg.toInt();
 	entry.location = phone_location;
 
 	// set date/revision
