@@ -1,6 +1,3 @@
-SUBDIRS = libksync libkonnector2 kitchensync multisynk
+SUBDIRS = libqopensync src
 
 include $(top_srcdir)/admin/Doxyfile.am
-
-splashpicsdir = $(kde_datadir)/kitchensync/pics
-splashpics_DATA = kitchensync.png
