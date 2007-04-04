@@ -53,7 +53,6 @@ There is also quite an amount of infrastructure in this package:
           plugin of KOrganizer
 * kdgantt: alternative lib for Gantt diagrams, used by the free/busy view of
            KOrganizer (yes, we should decide for one of the Gantt libs)
-* ksync: library for syncing collections of data entries
 * kioslaves/sieve: Sieve kioslave
 * ktnef: handling of tnef data
 
