@@ -1219,12 +1219,14 @@ bool KarmStorage::saveCalendar()
 {
   kdDebug(5970) << "KarmStorage::saveCalendar" << endl;
 
+#if 0
   Event::List evl=_calendar->rawEvents();
   kdDebug(5970) << "summary - dtStart - dtEnd" << endl;
   for (unsigned int i=0; i<evl.count(); i++) 
   {
     kdDebug() << evl[i]->summary() << evl[i]->dtStart() << evl[i]->dtEnd() << endl;
   }
+#endif
   KABC::Lock *lock = _calendar->lock();
   if ( !lock || !lock->lock() )
     return false;
