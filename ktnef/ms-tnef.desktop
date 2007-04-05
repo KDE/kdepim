@@ -5,7 +5,6 @@ Icon=tar
 Patterns=*.tnf;
 Comment=TNEF File
 Comment[af]=TNEF lêer
-Comment[be]=TNEF файл
 Comment[bg]=Файл TNEF
 Comment[br]=Restr TNEF
 Comment[ca]=Fitxer TNEF
