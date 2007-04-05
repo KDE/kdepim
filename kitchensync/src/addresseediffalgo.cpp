@@ -151,7 +151,7 @@ void AddresseeDiffAlgo::run()
 
   if ( mLeftAddressee.secrecy() != mRightAddressee.secrecy() ) {
     conflictField( KABC::Addressee::secrecyLabel(),
-                   mLeftAddressee.secrecy().asString(), mRightAddressee.secrecy().asString() );
+                   mLeftAddressee.secrecy().toString(), mRightAddressee.secrecy().toString() );
   }
 
   if ( mLeftAddressee.url() != mRightAddressee.url() ) {
