@@ -2457,7 +2457,7 @@ time at which the alarm is scheduled.</para>
 </itemizedlist>
 </listitem>
 
-<listitem><para><guilabel>Message windows have a title bar and take keyboard focus</guilabel>: This
+<listitem><para><guilabel>Message windows have a titlebar and take keyboard focus</guilabel>: This
 option controls whether alarm message windows are modal or not, &ie;
 whether they grab the keyboard focus when they appear. See the
 <link linkend="message-window">Alarm Message Window</link> section for
