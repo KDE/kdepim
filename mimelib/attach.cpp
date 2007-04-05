@@ -217,7 +217,7 @@ int MessageWithAttachments::PutFileInString(const char* aFilename,
 
     FILE* fp = fopen(aFilename, "rb");
     if (fp == 0) {
-        delete buf;
+        delete[] buf;
         str = "";
         return -1;
     }
