@@ -109,7 +109,6 @@ Comment[x-test]=xxConfiguration of LDAP directory servicesxx
 Comment[zh_TW]=設定 LDAP 目錄服務
 Keywords=ldap,directory,services
 Keywords[af]=ldap,directory,services,gids
-Keywords[be]=каталёг,сэрвісы,ldap,directory,services
 Keywords[bg]=директорийни, услуги, ldap, directory, services
 Keywords[br]=ldap,renkell,servijeroù
 Keywords[ca]=ldap,directori,serveis

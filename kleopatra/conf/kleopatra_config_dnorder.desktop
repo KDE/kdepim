@@ -106,7 +106,6 @@ Comment[x-test]=xxConfigure the order in which DN attributes are shownxx
 Comment[zh_TW]=設定 DN 屬性顯示順序
 Keywords=DN,order,RDN,attribute
 Keywords[af]=DN,order,RDN,attribute,volgorde,eienskap
-Keywords[be]=парадак,атрыбут,DN,order,RDN,attribute
 Keywords[bg]=индекс, ред, подредба, атрибут DN, order, RDN, attribute
 Keywords[ca]=DN,ordre,RDN,atribut
 Keywords[cs]=DN,pořadí,RDN,atribut
