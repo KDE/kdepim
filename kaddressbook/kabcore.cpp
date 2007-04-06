@@ -678,7 +678,7 @@ void KABCore::editContact( const QString &uid )
     AddresseeEditorDialog *dialog = mEditorDict.find( addr.uid() );
     if ( !dialog ) {
 
-      if ( !addr.resource()->readOnly() )
+      if ( addr.resource() && !addr.resource()->readOnly() )
         if ( !KABLock::self( mAddressBook )->lock( addr.resource() ) ) {
           return;
         }
@@ -980,7 +980,7 @@ void KABCore::slotEditorDestroyed( const QString &uid )
 
   KABC::Addressee addr = dialog->addressee();
 
-  if ( !addr.resource()->readOnly() ) {
+  if ( addr.resource() && !addr.resource()->readOnly() ) {
     QApplication::setOverrideCursor( Qt::WaitCursor );
     KABLock::self( mAddressBook )->unlock( addr.resource() );
     QApplication::restoreOverrideCursor();
