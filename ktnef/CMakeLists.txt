@@ -30,6 +30,4 @@ install(TARGETS ktnef_bin  DESTINATION ${BIN_INSTALL_DIR} )
 
 install( FILES ktnef.desktop  DESTINATION ${XDG_APPS_DIR})
 install( FILES ktnefui.rc  DESTINATION ${DATA_INSTALL_DIR}/ktnef)
-install( FILES ms-tnef.desktop  DESTINATION ${MIME_INSTALL_DIR}/application)
-
 
