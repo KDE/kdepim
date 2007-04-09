@@ -218,7 +218,7 @@ void KNArticleFactory::createReply(KNRemoteArticle *a, QString selectedText, boo
   attribution.replace(QRegExp("%NAME"),name);
   if ( !a->from()->isEmpty() )
     attribution.replace(QRegExp("%EMAIL"), QString::fromLatin1(a->from()->addresses().first()));
-  attribution.replace( QRegExp("%DATE"), KGlobal::locale()->formatDateTime(a->date()->dateTime().toLocalZone().dateTime(), false) );
+  attribution.replace( QRegExp("%DATE"), KGlobal::locale()->formatDateTime(a->date()->dateTime().toLocalZone().dateTime(), KLocale::LongDate) );
   QString msid = a->messageID()->identifier();
   attribution.replace( QRegExp("%MSIDX"), msid );
   attribution.replace( QRegExp("%MSID"), QLatin1Char('<') + msid + QLatin1Char('>') );

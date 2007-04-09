@@ -79,5 +79,5 @@ QString Holiday::dateStr() const
 
 QString Holiday::dateStr( bool shortfmt ) const
 {
-  return KGlobal::locale()->formatDate( mDate, shortfmt );
+  return KGlobal::locale()->formatDate( mDate, (shortfmt ? KLocale::ShortDate : KLocale::LongDate) );
 }

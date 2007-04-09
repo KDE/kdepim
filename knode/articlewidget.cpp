@@ -638,7 +638,7 @@ void ArticleWidget::displayHeader()
       }
     } else if ( hb->is("Date") ) {
       KMime::Headers::Date *date=static_cast<KMime::Headers::Date*>(hb);
-      headerHtml += toHtmlString( KGlobal::locale()->formatDateTime(date->dateTime().toLocalZone().dateTime(), false, true), None );
+      headerHtml += toHtmlString( KGlobal::locale()->formatDateTime(date->dateTime().toLocalZone().dateTime(), KLocale::LongDate, true), None );
     } else if ( hb->is("Newsgroups") ) {
       QString groups = hb->asUnicodeString();
       groups.replace( ',', ", " );

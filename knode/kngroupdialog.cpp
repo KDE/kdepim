@@ -299,7 +299,7 @@ void KNGroupDialog::slotUser2()
   QRadioButton *takeLast = new QRadioButton( i18n("Created since last check:"), btnGrp );
   topL->addWidget(takeLast, 0, 0, 1, 2 );
 
-  QLabel *l = new QLabel(KGlobal::locale()->formatDate(lastDate, false),btnGrp);
+  QLabel *l = new QLabel(KGlobal::locale()->formatDate(lastDate, KLocale::LongDate),btnGrp);
   topL->addWidget(l, 1, 1, Qt::AlignLeft);
 
   connect(takeLast, SIGNAL(toggled(bool)), l, SLOT(setEnabled(bool)));

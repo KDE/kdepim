@@ -340,7 +340,7 @@ bool RingBinderPrintStyle::printEntry( const KABC::Addressee& contact, const QRe
     }
     if ( mPageAppearance->cbBirthday->isChecked() && !contact.birthday().isNull() ) {
       namestr += QString( " *" ) + KGlobal::locale()->formatDate(
-          contact.birthday().date(), true );
+          contact.birthday().date(), KLocale::ShortDate );
     }
     painter->drawText( 5, top + ( linenum * fmnorm.lineSpacing() )
                               - fmnorm.leading(), namestr );

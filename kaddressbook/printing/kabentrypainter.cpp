@@ -207,7 +207,7 @@ bool KABEntryPainter::printAddressee( const KABC::Addressee &addr,
   // paint the birthday to the right:
   QDateTime dt = addr.birthday();
   if ( dt.isValid() ) {
-    line1 = KGlobal::locale()->formatDate( dt.date(), true );
+    line1 = KGlobal::locale()->formatDate( dt.date(), KLocale::ShortDate );
     if ( !fake ) {
       // create a little (1/8) space on top of the letters:
       float ypos = y + ( (float)rect.height() ) * 0.125;

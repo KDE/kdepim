@@ -247,7 +247,7 @@ void ContactListViewItem::refresh()
     if ( (*it)->label() == KABC::Addressee::birthdayLabel() ) {
       QDate date = mAddressee.birthday().date();
       if ( date.isValid() )
-        setText( i++, KGlobal::locale()->formatDate( date, true ) );
+        setText( i++, KGlobal::locale()->formatDate( date, KLocale::ShortDate ) );
       else
         setText( i++, "" );
     } else

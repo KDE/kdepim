@@ -29,7 +29,7 @@ KornSubjectsDlg::SubjectListViewItem::SubjectListViewItem( Q3ListView *parent, K
 	// convert the date according to the user settings and show it in column 2
 	QDateTime date;
 	date.setTime_t(_mailSubject->getDate());
-	setText(2, KGlobal::locale()->formatDateTime(date, true, true));
+	setText(2, KGlobal::locale()->formatDateTime(date, KLocale::ShortDate, true));
 }
 
 KornSubjectsDlg::SubjectListViewItem::~SubjectListViewItem()
