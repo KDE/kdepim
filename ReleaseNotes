@@ -18,6 +18,11 @@ Korganizer
 -----------
 - Kowi-W W1-9 icon alignment was improved.
 
+Additional Fixes
+================
+- Rebranched libkcal and kitchensync.
+
+
 "Enterprise - Beta-03"
 Features:
 =========
