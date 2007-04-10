@@ -1,5 +1,24 @@
-Current release is "Enterprise - Beta-03"
+Current release is "Enterprise - Beta-04"
 
+Features:
+=========
+
+kmail
+----------
+- Kowi-W W1-14 (automatic moving of not yet synced mails from folders with insufficient access rights to a lost+found folder)
+- Unit tests fixed.
+- Kolab/issue1530 - make preferred form of forwarding configurable
+
+Bugfixes
+=========
+- Fixes related to opening of *mbox files.
+- Aegypten/issue734 - Moving email in dimap breaks signature, because lines removed
+
+Korganizer
+-----------
+- Kowi-W W1-9 icon alignment was improved.
+
+"Enterprise - Beta-03"
 Features:
 =========
 
