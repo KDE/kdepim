@@ -28,7 +28,7 @@
 void ParserTest::testSingleAttachment()
 {
   KTNEFParser parser;
-  assert( parser.openFile( "one-file.tnef" ) == true );
+  assert( parser.openFile( KDESRCDIR "/one-file.tnef" ) == true );
 
   KTNEFMessage *msg = parser.message();
   assert( msg != 0 );
@@ -45,7 +45,7 @@ void ParserTest::testSingleAttachment()
 void ParserTest::testTwoAttachments()
 {
   KTNEFParser parser;
-  assert( parser.openFile( "two-files.tnef" ) == true );
+  assert( parser.openFile( KDESRCDIR "/two-files.tnef" ) == true );
 
   KTNEFMessage *msg = parser.message();
   assert( msg != 0 );
@@ -67,7 +67,7 @@ void ParserTest::testTwoAttachments()
 void ParserTest::testMAPIAttachments()
 {
   KTNEFParser parser;
-  assert( parser.openFile( "mapi_attach_data_obj.tnef" ) == true );
+  assert( parser.openFile( KDESRCDIR "/mapi_attach_data_obj.tnef" ) == true );
 
   KTNEFMessage *msg = parser.message();
   assert( msg != 0 );
