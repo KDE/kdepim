@@ -1,4 +1,4 @@
-AM_CPPFLAGS = -I$(top_srcdir)/ktnef $(all_includes)
+AM_CPPFLAGS = -I$(top_srcdir)/ktnef $(all_includes) -DKDESRCDIR=\"$(srcdir)\"
 LDADD = ../lib/libktnef.la $(LIB_KDECORE)
 
 check_PROGRAMS = parsertest
