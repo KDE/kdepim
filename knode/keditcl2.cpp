@@ -35,7 +35,7 @@
 #include <q3popupmenu.h>
 #include <Q3VButtonGroup>
 
-#include <kcombobox.h>
+#include <khistorycombobox.h>
 #include <knuminput.h>
 #include <kmessagebox.h>
 #include <knotification.h>
@@ -689,14 +689,14 @@ class KEdFind::KEdFindPrivate
 {
 public:
     KEdFindPrivate( QWidget *parent ) {
-	combo = new KHistoryCombo( parent );
+	combo = new KHistoryComboBox( parent );
 	combo->setMaxCount( 20 ); // just some default
     }
     ~KEdFindPrivate() {
 	delete combo;
     }
 
-    KHistoryCombo *combo;
+    KHistoryComboBox *combo;
 };
 
 
@@ -806,7 +806,7 @@ bool KEdFind::get_direction() const
   return direction->isChecked();
 }
 
-KHistoryCombo * KEdFind::searchCombo() const
+KHistoryComboBox * KEdFind::searchCombo() const
 {
     return d->combo;
 }
@@ -822,8 +822,8 @@ class KEdReplace::KEdReplacePrivate
 {
 public:
     KEdReplacePrivate( QWidget *parent ) {
-	searchCombo = new KHistoryCombo( parent );
-	replaceCombo = new KHistoryCombo( parent );
+	searchCombo = new KHistoryComboBox( parent );
+	replaceCombo = new KHistoryComboBox( parent );
 
 	searchCombo->setMaxCount( 20 ); // just some defaults
 	replaceCombo->setMaxCount( 20 );
@@ -833,7 +833,7 @@ public:
 	delete replaceCombo;
     }
 
-    KHistoryCombo *searchCombo, *replaceCombo;
+    KHistoryComboBox *searchCombo, *replaceCombo;
 };
 
 KEdReplace::KEdReplace( QWidget *parent, bool modal )
@@ -984,12 +984,12 @@ bool KEdReplace::get_direction()
   return direction->isChecked();
 }
 
-KHistoryCombo * KEdReplace::searchCombo() const
+KHistoryComboBox * KEdReplace::searchCombo() const
 {
     return d->searchCombo;
 }
 
-KHistoryCombo * KEdReplace::replaceCombo() const
+KHistoryComboBox * KEdReplace::replaceCombo() const
 {
     return d->replaceCombo;
 }
