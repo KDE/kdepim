@@ -73,7 +73,6 @@
 #include <QLineEdit>
 #include <QDateTime>
 
-#include <q3popupmenu.h>
 #include <QRegExp>
 #include <QPushButton>
 #include <QFrame>
