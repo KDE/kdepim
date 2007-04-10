@@ -120,7 +120,7 @@ void AddHostDialog::slotOk()
 {
   mServer->setHost( mCfg->host() );
   mServer->setPort( mCfg->port() );
-  mServer->setBaseDn( mCfg->dn().trimmed() );
+  mServer->setBaseDn( mCfg->dn() );
   mServer->setUser( mCfg->user() );
   mServer->setBindDn( mCfg->bindDn() );
   mServer->setPassword( mCfg->password() );
