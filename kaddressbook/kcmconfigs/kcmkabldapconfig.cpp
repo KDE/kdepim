@@ -22,7 +22,6 @@
 */
 
 #include <QCheckBox>
-#include <q3frame.h>
 #include <QLayout>
 //Added by qt3to4:
 #include <QVBoxLayout>

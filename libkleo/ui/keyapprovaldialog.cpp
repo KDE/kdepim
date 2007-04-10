@@ -50,7 +50,6 @@
 #include <kseparator.h>
 
 #include <QStringList>
-#include <q3frame.h>
 #include <QLayout>
 #include <QLabel>
 #include <QComboBox>

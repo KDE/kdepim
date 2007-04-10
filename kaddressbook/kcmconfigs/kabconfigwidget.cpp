@@ -22,7 +22,6 @@
 */
 
 #include <QCheckBox>
-#include <q3frame.h>
 #include <q3groupbox.h>
 #include <QLabel>
 #include <QLayout>
