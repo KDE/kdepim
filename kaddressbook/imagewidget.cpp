@@ -311,7 +311,7 @@ QPixmap ImageBaseWidget::loadPixmap( const KUrl &url )
     return pixmap;
   }
 
-  QPixmap selectedPixmap = QPixmap::fromImage( KPixmapRegionSelectorDialog::selectedImage( pixmap, 100, 140, this ) );
+  QPixmap selectedPixmap = QPixmap::fromImage( KPixmapRegionSelectorDialog::getSelectedImage( pixmap, 100, 140, this ) );
   if ( selectedPixmap.isNull() )
     return QPixmap();
   pixmap = selectedPixmap;
