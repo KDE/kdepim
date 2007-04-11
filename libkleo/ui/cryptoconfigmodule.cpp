@@ -49,8 +49,6 @@
 #include <q3grid.h>
 #include <QLabel>
 #include <QLayout>
-#include <q3vbox.h>
-#include <q3hbox.h>
 #include <QPushButton>
 #include <QRegExp>
 //Added by qt3to4:

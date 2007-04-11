@@ -36,7 +36,6 @@
 #include <q3groupbox.h>
 #include <QPushButton>
 #include <QComboBox>
-#include <q3hbox.h>
 #include <QLabel>
 //Added by qt3to4:
 #include <QVBoxLayout>

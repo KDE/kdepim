@@ -22,7 +22,6 @@
 */
 
 #include <q3buttongroup.h>
-#include <q3hbox.h>
 #include <QLabel>
 #include <QLayout>
 #include <QPushButton>
