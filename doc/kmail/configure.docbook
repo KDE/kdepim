@@ -1940,7 +1940,7 @@ think they are SPAM.
 <term><guilabel>Allow Semicolon As EMail Address Separator (AllowSemicolonAsAddressSeparator)</guilabel></term>
 <listitem>
 <para>
-In RFC2822, the comma (,) is the only allowed separator for email addresses in fields like To, CC and BCC. This option allows to also use the semi-colon (;) as separator. This only affects the user interface, the created messages still use commas only and thus do no violate the standard. 
+In RFC2822, the comma (,) is the only allowed separator for email addresses in fields like To, CC and BCC. This option allows to also use the semi-colon (;) as separator. This only affects the user interface, the created messages still use commas only and thus do no violate the standard.
 
 The option is enabled by default. To disable the feature, add a line reading (under [Composer] section):
 </para>
@@ -1950,10 +1950,24 @@ The option is enabled by default. To disable the feature, add a line reading (un
 </varlistentry>
 
 <varlistentry>
+<term><guilabel>ForwardingInlineByDefault</guilabel></term>
+<listitem>
+<para>
+Setting this value to true will set Forward->Inline as the top menu item in the context menu.
+Otherwise Forward->As Attachment will be at the top.
+
+The option is enabled by default. To disable the feature, add a line reading (under [Composer] section):
+</para>
+<programlisting>ForwardingInlineByDefault=true
+</programlisting>
+</listitem>
+</varlistentry>
+
+<varlistentry>
 <term><guilabel>Allow out-of-office settings to be adjusted by the user.</guilabel></term>
 <listitem>
 <para>
-In case you don't want users to be able to upload their own out-of-office scripts to 
+In case you don't want users to be able to upload their own out-of-office scripts to
 the server you can add:
 </para>
 <programlisting>AllowOutOfOfficeSettings=false
@@ -1968,7 +1982,7 @@ a line by itself just above the option.
 <term><guilabel>Allow out-of-office scripts to be uploaded by the user, but no settings changed.</guilabel></term>
 <listitem>
 <para>
-If you want to allow your users to upload their own out-of-office scripts but you do not want them to be 
+If you want to allow your users to upload their own out-of-office scripts but you do not want them to be
 able to change the domain to react to and the react-to-spam setting, you can add:
 </para>
 <programlisting>AllowOutOfOfficeUploadButNoSettings=true
@@ -1993,7 +2007,7 @@ value, add
 to the [OutOfOffice] section of the kmail configuration file. If there is no such section, simply add "[OutOfOffice]" on
 a line by itself just above the option.
 
-Applying defaults to the out-of-office configuration dialog via the corresponding 
+Applying defaults to the out-of-office configuration dialog via the corresponding
 button will restore this domain, in case the user has changed it.
 </para>
 </listitem>
@@ -2011,7 +2025,7 @@ behavior, add
 to the [OutOfOffice] section of the kmail configuration file. If there is no such section, simply add "[OutOfOffice]" on
 a line by itself just above the option.
 
-Applying defaults to the out-of-office configuration dialog via the corresponding 
+Applying defaults to the out-of-office configuration dialog via the corresponding
 button will restore this setting, in case the user has changed it.
 </para>
 </listitem>
