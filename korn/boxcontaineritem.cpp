@@ -52,7 +52,6 @@
 #include <q3ptrlist.h>
 #include <QString>
 #include <QToolTip>
-#include <q3vbox.h>
 #include <QMovie>
 
 BoxContainerItem::BoxContainerItem( QObject * parent )

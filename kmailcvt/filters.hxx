@@ -23,7 +23,6 @@
 #endif
 
 #include <QComboBox>
-#include <q3progressbar.h>
 #include <q3ptrlist.h>
 #include <q3listbox.h>
 #include <QLabel>
