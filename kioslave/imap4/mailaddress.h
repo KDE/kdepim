@@ -25,7 +25,6 @@
 
 #include <q3ptrlist.h>
 #include <QString>
-#include <q3cstring.h>
 
 class mailAddress
 {

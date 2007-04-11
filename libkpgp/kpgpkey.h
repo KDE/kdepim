@@ -21,7 +21,6 @@
 
 #include <time.h>
 
-#include <q3cstring.h>
 #include <QString>
 #include <QStringList>
 

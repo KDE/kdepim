@@ -34,7 +34,6 @@
 #define CERTIFICATEWIZARDIMPL_H
 #include "certificatewizard.h"
 
-#include <q3cstring.h>
 #include <q3valuevector.h>
 #include <QLineEdit>
 #include <kurl.h>

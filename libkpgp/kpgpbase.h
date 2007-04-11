@@ -20,7 +20,6 @@
 #define KPGPBASE_H
 
 #include <QString>
-#include <q3cstring.h>
 #include <QStringList>
 
 #include "kpgpkey.h"

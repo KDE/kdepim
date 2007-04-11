@@ -24,7 +24,6 @@
 
 #include <q3listview.h>
 #include <QStringList>
-#include <q3vbox.h>
 #include <QLayout>
 #include <QFont>
 #include <QPainter>

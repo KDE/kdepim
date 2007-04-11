@@ -14,7 +14,7 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <sys/stat.h>
-
+#include <Q3CString>
 #include <QBuffer>
 #include <QClipboard>
 #include <QDir>

@@ -40,8 +40,6 @@
 
 #include "addhostdialog.h"
 #include "ldapoptionswidget.h"
-#include <q3hbox.h>
-#include <q3vbox.h>
 #include <kiconloader.h>
 #include <kconfiggroup.h>
 

@@ -23,7 +23,6 @@
 #include "urlinfo.h"
 
 #include <QString>
-#include <q3cstring.h>
 
 #include <kdebug.h>
 #include <klocale.h>

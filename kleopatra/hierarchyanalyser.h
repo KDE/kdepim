@@ -36,7 +36,6 @@
 #include <gpgmepp/key.h>
 
 #include <QObject>
-#include <q3cstring.h>
 
 #include <map>
 #include <vector>

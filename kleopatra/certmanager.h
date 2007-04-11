@@ -38,7 +38,6 @@
 #include <kmainwindow.h>
 #include <kdemacros.h>
 #include <kurl.h>
-#include <q3cstring.h>
 #include <q3ptrlist.h>
 //Added by qt3to4:
 #include <QLabel>
