@@ -37,7 +37,6 @@
 #include <kfiledialog.h>
 #include <QBuffer>
 #include <QDataStream>
-#include <q3picture.h>
 #include <QDateTime>
 
 using namespace KTnef;
