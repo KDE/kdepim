@@ -599,6 +599,16 @@ icalproperty *ICalFormatImpl::writeAttendee(Attendee *attendee)
     icalproperty_add_parameter(p,icalparameter_uid);
   }
 
+  if ( !attendee->delegate().isEmpty() ) {
+    icalparameter* icalparameter_delegate = icalparameter_new_delegatedto( attendee->delegate().utf8() );
+    icalproperty_add_parameter( p, icalparameter_delegate );
+  }
+
+  if ( !attendee->delegator().isEmpty() ) {
+    icalparameter* icalparameter_delegator = icalparameter_new_delegatedfrom( attendee->delegator().utf8() );
+    icalproperty_add_parameter( p, icalparameter_delegator );
+  }
+
   return p;
 }
 
@@ -1172,7 +1182,17 @@ Attendee *ICalFormatImpl::readAttendee(icalproperty *attendee)
     p = icalproperty_get_next_parameter(attendee,ICAL_X_PARAMETER);
   } */
 
-  return new Attendee( name, email, rsvp, status, role, uid );
+  Attendee *a = new Attendee( name, email, rsvp, status, role, uid );
+
+  p = icalproperty_get_first_parameter( attendee, ICAL_DELEGATEDTO_PARAMETER );
+  if ( p )
+    a->setDelegate( icalparameter_get_delegatedto( p ) );
+
+  p = icalproperty_get_first_parameter( attendee, ICAL_DELEGATEDFROM_PARAMETER );
+  if ( p )
+    a->setDelegator( icalparameter_get_delegatedfrom( p ) );
+
+  return a;
 }
 
 Person ICalFormatImpl::readOrganizer( icalproperty *organizer )

@@ -1094,6 +1094,14 @@ QString IncidenceFormatter::formatICalInvitation( QString invitation, Calendar *
         html += "</td><td> &nbsp; </td><td>";
         // Decline
         html += helper->makeLink( "decline", i18n( "[Decline]" ) );
+        html += "</td><td> &nbsp; </td><td>";
+
+        // Delegate
+        html += helper->makeLink( "delegate", i18n( "[Delegate]" ) );
+        html += "</td><td> &nbsp; </td><td>";
+
+        // Forward
+        html += helper->makeLink( "forward", i18n( "[Forward]" ) );
 #if 0
         // TODO: implement this
         html += "</b></a></td><td> &nbsp; </td><td>";

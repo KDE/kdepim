@@ -48,7 +48,9 @@ bool KCal::operator==( const Attendee& a1, const Attendee& a2 )
              a1.RSVP() == a2.RSVP() &&
              a1.role() == a2.role() &&
              a1.status() == a2.status() &&
-             a1.uid() == a2.uid() );
+             a1.uid() == a2.uid() &&
+             a1.delegate() == a2.delegate() &&
+             a1.delegator() == a2.delegator() );
 }
 
 void Attendee::setStatus( Attendee::PartStat s )

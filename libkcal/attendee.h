@@ -40,10 +40,10 @@ class LIBKCAL_EXPORT Attendee : public Person
     enum Role { ReqParticipant, OptParticipant, NonParticipant, Chair };
 
     typedef ListBase<Attendee> List;
-  
+
     /**
       Create Attendee.
-      
+
       @param name Name
       @param email Email address
       @param rsvp Request for reply
@@ -64,12 +64,12 @@ class LIBKCAL_EXPORT Attendee : public Person
     */
     // FIXME: List of roles still has to be documented.
     void setRole( Role );
-    
+
     /**
       Return role of Attendee.
     */
     Role role() const;
-    
+
     /**
       Return role as clear text string.
     */
@@ -101,7 +101,7 @@ class LIBKCAL_EXPORT Attendee : public Person
       Return status.
     */
     PartStat status() const;
-    
+
     /**
       Return status as human-readable string.
     */
@@ -124,11 +124,31 @@ class LIBKCAL_EXPORT Attendee : public Person
     */
     bool RSVP() const { return mRSVP; }
 
+    /**
+      Sets the delegate.
+    */
+    void setDelegate( const QString &delegate ) { mDelegate = delegate; }
+    /**
+      Returns the delegate.
+    */
+    QString delegate() const { return mDelegate; }
+
+    /**
+      Sets the delegator.
+    */
+    void setDelegator( const QString &delegator ) { mDelegator = delegator; }
+    /**
+      Returns the delegator.
+    */
+    QString delegator() const { return mDelegator; }
+
   private:
     bool mRSVP;
     Role mRole;
     PartStat mStatus;
     QString mUid;
+    QString mDelegate;
+    QString mDelegator;
 
     class Private;
     Private *d;
