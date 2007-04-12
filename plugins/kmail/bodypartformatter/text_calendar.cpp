@@ -342,7 +342,8 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
       else if ( status == Attendee::Delegated ) dir = "delegated";
       else return true; // unknown status
 
-      saveFile( receiver, iCal, dir );
+      if ( status != Attendee::Delegated ) // we do that below for delegated incidences
+        saveFile( receiver, iCal, dir );
 
       QString delegateString;
       if ( status == Attendee::Delegated ) {
@@ -368,7 +369,9 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
       }
       delete incidence;
 
-      // create invitation for the delegate
+      // create invitation for the delegate (same as the original invitation
+      // with the delegate as additional attendee), we also use that for updating
+      // our calendar
       if ( status == Attendee::Delegated ) {
         incidence = icalToString( iCal );
         myself = findMyself( incidence, receiver );
@@ -379,6 +382,12 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
         Attendee *delegate = new Attendee( name, email, true );
         delegate->setDelegator( receiver );
         incidence->addAttendee( delegate );
+
+        ICalFormat format;
+        format.setTimeZone( KPimPrefs::timezone(), false );
+        QString iCal = format.createScheduleMessage( incidence, Scheduler::Request );
+        saveFile( receiver, iCal, dir );
+
         ok = mail( incidence, callback, Scheduler::Request, delegateString, Delegation );
       }
       return ok;
