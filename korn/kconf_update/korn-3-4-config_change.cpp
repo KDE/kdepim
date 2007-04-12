@@ -20,7 +20,6 @@
 #include <QRegExp>
 #include <QTextStream>
 #include <QMap>
-#include <q3valuelist.h>
 
 #include <stdio.h>
 

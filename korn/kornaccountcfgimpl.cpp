@@ -32,7 +32,6 @@
 
 #include <QCheckBox>
 #include <QComboBox>
-#include <q3ptrvector.h>
 #include <QLayout>
 #include <QMap>
 #include <QLabel>
