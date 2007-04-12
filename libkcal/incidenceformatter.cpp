@@ -802,8 +802,15 @@ static QString invitationHeaderEvent( Event *event, ScheduleMessage *msg )
               return i18n( "Sender tentatively accepts this meeting invitation" );
           case Attendee::Declined:
               return i18n( "Sender declines this meeting invitation" );
-          case Attendee::Delegated:
+          case Attendee::Delegated: {
+              QString delegate, dummy;
+              KPIM::getNameAndMail( attendee->delegate(), delegate, dummy );
+              if ( delegate.isEmpty() )
+                delegate = attendee->delegate();
+              if ( !delegate.isEmpty() )
+                return i18n( "Sender has delegated this meeting invitation to %1" ).arg( delegate );
               return i18n( "Sender has delegated this meeting invitation" );
+          }
           case Attendee::Completed:
               return i18n( "This meeting invitation is now completed" );
           case Attendee::InProcess:
