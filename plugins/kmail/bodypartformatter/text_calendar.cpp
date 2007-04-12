@@ -248,16 +248,34 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
       return newMyself;
     }
 
-    bool mail( Incidence* incidence, KMail::Callback& callback, Scheduler::Method method = Scheduler::Reply, const QString &to = QString::null ) const
+    enum MailType {
+      Answer,
+      Delegation,
+      Forward
+    };
+
+    bool mail( Incidence* incidence, KMail::Callback& callback, Scheduler::Method method = Scheduler::Reply,
+               const QString &to = QString::null, MailType type = Answer ) const
     {
       ICalFormat format;
       format.setTimeZone( KPimPrefs::timezone(), false );
       QString msg = format.createScheduleMessage( incidence, method );
+      QString summary = incidence->summary();
+      if ( summary.isEmpty() )
+        summary = i18n( "Incidence with no summary" );
       QString subject;
-      if ( !incidence->summary().isEmpty() )
-        subject = i18n( "Answer: %1" ).arg( incidence->summary() );
-      else
-        subject = i18n( "Answer: Incidence with no summary" );
+      switch ( type ) {
+        case Answer:
+          subject = i18n( "Answer: %1" ).arg( summary );
+          break;
+        case Delegation:
+          subject = i18n( "Delegated: %1" ).arg( summary );
+          break;
+        case Forward:
+          subject = i18n( "Forwarded: %1" ).arg( summary );
+          break;
+      }
+
       QString recv = to;
       if ( recv.isEmpty() )
         recv = incidence->organizer().fullName();
@@ -361,7 +379,7 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
         Attendee *delegate = new Attendee( name, email, true );
         delegate->setDelegator( receiver );
         incidence->addAttendee( delegate );
-        ok = mail( incidence, callback, Scheduler::Request, delegateString );
+        ok = mail( incidence, callback, Scheduler::Request, delegateString, Delegation );
       }
       return ok;
     }
