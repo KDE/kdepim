@@ -364,6 +364,20 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
         if ( newMyself && status == Attendee::Delegated )
           newMyself->setDelegate( delegateString );
         ok =  mail( incidence, callback );
+
+        // check if we need to inform our delegator about this as well
+        if ( newMyself && (status == Attendee::Accepted || status == Attendee::Declined) ) {
+          Attendee::List attendees = incidence->attendees();
+          for ( Attendee::List::ConstIterator it = attendees.constBegin(); it != attendees.constEnd(); ++it ) {
+            if ( (*it) == newMyself )
+              continue;
+            if ( KPIM::compareEmail( (*it)->delegate(), newMyself->fullName(), false ) && (*it)->RSVP() ) {
+              ok = mail( incidence, callback, Scheduler::Reply, (*it)->fullName() );
+              break;
+            }
+          }
+        }
+
       } else {
         ( new KMDeleteMsgCommand( callback.getMsg()->getMsgSerNum() ) )->start();
       }
