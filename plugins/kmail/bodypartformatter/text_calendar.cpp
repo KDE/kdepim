@@ -211,11 +211,40 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
                                 status,
                                 myself ? myself->role() : heuristicalRole( incidence ),
                                 myself ? myself->uid() : QString::null );
+      if ( myself ) {
+        newMyself->setDelegate( myself->delegate() );
+        newMyself->setDelegator( myself->delegator() );
+      }
+
+      // find our delegator, we need to keep him in
+      Attendee *delegator = 0;
+      if ( !newMyself->delegator().isEmpty() ) {
+        Attendee *oldDelegator = 0;
+        Attendee::List attendees = incidence->attendees();
+        for ( Attendee::List::ConstIterator it = attendees.constBegin(); it != attendees.constEnd(); ++it ) {
+          if( KPIM::compareEmail( (*it)->fullName(), newMyself->delegator(), false ) && (*it)->status() == Attendee::Delegated ) {
+            oldDelegator = *it;
+            break;
+          }
+        }
+        if ( oldDelegator ) {
+          delegator = new Attendee( oldDelegator->name(),
+                                    oldDelegator->email(),
+                                    true,
+                                    oldDelegator->status(),
+                                    oldDelegator->role(),
+                                    oldDelegator->uid() );
+          delegator->setDelegate( oldDelegator->delegate() );
+          delegator->setDelegator( oldDelegator->delegator() );
+        }
+      }
 
       // Make sure only ourselves is in the event
       incidence->clearAttendees();
       if( newMyself )
         incidence->addAttendee( newMyself );
+      if ( delegator )
+        incidence->addAttendee( delegator );
       return newMyself;
     }
 
