@@ -27,6 +27,8 @@
 
 #include "calendarlocal.h"
 
+#include <qfile.h>
+
 using namespace KCal;
 
 static const KCmdLineOptions options[] =
@@ -37,7 +39,7 @@ static const KCmdLineOptions options[] =
 
 int main(int argc,char **argv)
 {
-  KAboutData aboutData("testcalendar","Test Calendar","0.1");
+  KAboutData aboutData("testfields","Test calendar fields read/write","0.1");
   KCmdLineArgs::init(argc,argv,&aboutData);
   KCmdLineArgs::addCmdLineOptions( options );
 
@@ -63,11 +65,48 @@ int main(int argc,char **argv)
     return 1;
   }
 
-/*  if (e->hasStartDate()) {
-    QDateTime d = e->dtStart();
-    kdDebug() << "Event starts " << d << endl;
+  kdDebug() << "Event description " << e->summary() << endl;
+
+  if (e->hasEndDate()) {
+    QDateTime d = e->dtEnd();
+    kdDebug() << "Event ends " << d << endl;
   }
-*/
+
+  if (e->pilotId()) {
+    kdDebug() << "Pilot ID = " << e->pilotId() << endl;
+    kdDebug() << "Pilot Sync Status = " << e->syncStatus() << endl;
+  } else {
+    kdError() << "No Pilot ID" << endl;
+    return 1;
+  }
+
+  QString newSummary = QString::fromLatin1("Mooo summary");
+
+  e->setSummary(newSummary);
+  e->setSyncStatus(KCal::Incidence::SYNCNONE);
+
+  QString filew = file +".out";
+  if (!cal.save( filew ) ) {
+    kdError() << "Can't save " << filew << endl;
+    return 1;
+  }
+
+
+  CalendarLocal cal2( QString::fromLatin1("UTC") );
+  // now try to read the file back in and see if our changes made it to
+  // disk
+  if (!cal2.load( filew ) ) {
+    kdError() << "Can't load " << filew << endl;
+    return 1;
+  }
+
+  QFile::remove(filew);
+
+  e = cal2.event( uid );
+  if (!e) {
+    kdError() << "No event " << uid << endl;
+    return 1;
+  }
 
   kdDebug() << "Event description " << e->summary() << endl;
 
@@ -78,8 +117,19 @@ int main(int argc,char **argv)
 
   if (e->pilotId()) {
     kdDebug() << "Pilot ID = " << e->pilotId() << endl;
+    kdDebug() << "Pilot Sync Status = " << e->syncStatus() << endl;
   } else {
     kdError() << "No Pilot ID" << endl;
+    return 1;
+  }
+
+  if (e->summary() != newSummary) {
+    kdError() << "Wrong summary." << endl;
+    return 1;
+  }
+
+  if (e->syncStatus() != KCal::Incidence::SYNCNONE) {
+    kdError() << "Wrong Pilot sync status." << endl;
     return 1;
   }
 

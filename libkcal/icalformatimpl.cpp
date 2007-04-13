@@ -295,19 +295,22 @@ icalcomponent *ICalFormatImpl::writeJournal(Journal *journal)
 
 void ICalFormatImpl::writeIncidence(icalcomponent *parent,Incidence *incidence)
 {
+  // pilot sync stuff
+// TODO: move this application-specific code to kpilot
+  if (incidence->pilotId()) {
+    // this is a fragile thing...  whenever incidence->set* is called, it
+    // triggers an update to syncStatus.  therefore, we have to pull off
+    // the sync status before we do anything else.
+    incidence->setNonKDECustomProperty("X-PILOTSTAT", QString::number(incidence->syncStatus()));
+    incidence->setNonKDECustomProperty("X-PILOTID", QString::number(incidence->pilotId()));
+  }
+
   if ( incidence->schedulingID() != incidence->uid() )
     // We need to store the UID in here. The rawSchedulingID will
     // go into the iCal UID component
     incidence->setCustomProperty( "LIBKCAL", "ID", incidence->uid() );
   else
     incidence->removeCustomProperty( "LIBKCAL", "ID" );
-
-  // pilot sync stuff
-// TODO: move this application-specific code to kpilot
-  if (incidence->pilotId()) {
-    incidence->setNonKDECustomProperty("X-PILOTID", QString::number(incidence->pilotId()));
-    incidence->setNonKDECustomProperty("X-PILOTSTAT", QString::number(incidence->syncStatus()));
-  }
 
   writeIncidenceBase(parent,incidence);
 
