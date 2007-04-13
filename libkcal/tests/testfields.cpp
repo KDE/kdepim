@@ -58,10 +58,14 @@ int main(int argc,char **argv)
     return 1;
   }
 
-  QString uid = QString::fromLatin1("KOrganizer-1345486115.965");
-  Event *e = cal.event( uid );
+  // 2 tests... first uid should result in a syncStatus of 0.  second uid
+  // should have a new summary and a 1 for syncStatus.
+  QString uid1 = QString::fromLatin1("KOrganizer-1345486115.965");
+  QString uid2 = QString::fromLatin1("KOrganizer-1345486115.967");
+
+  Event *e = cal.event( uid1 );
   if (!e) {
-    kdError() << "No event " << uid << endl;
+    kdError() << "No event " << uid1 << endl;
     return 1;
   }
 
@@ -80,56 +84,84 @@ int main(int argc,char **argv)
     return 1;
   }
 
-  QString newSummary = QString::fromLatin1("Mooo summary");
+  kdDebug() << "First test passed.  Able to read fields." << endl;
 
-  e->setSummary(newSummary);
   e->setSyncStatus(KCal::Incidence::SYNCNONE);
 
+  QString newSummary = QString::fromLatin1("Mooo summary");
+
+  Event *f = new Event(*e);
+
+
+  f->setUid(uid2);
+  // add event so we trigger updated()
+  cal.addEvent(f);
+
+  f->setPilotId(34567);
+  f->setSummary(newSummary);
+
+
+
   QString filew = file +".out";
-  if (!cal.save( filew ) ) {
+  // weird, yes, I know, but we have a bug right now with saving the file
+  // twice which is corrupting X-PILOTSTAT
+  if ( !cal.save( filew ) || !cal.save( filew ) ) {
     kdError() << "Can't save " << filew << endl;
     return 1;
   }
 
 
+  // now try to read the file back in and see if our changes made it
   CalendarLocal cal2( QString::fromLatin1("UTC") );
-  // now try to read the file back in and see if our changes made it to
-  // disk
   if (!cal2.load( filew ) ) {
     kdError() << "Can't load " << filew << endl;
     return 1;
   }
 
-  QFile::remove(filew);
+  QFile::remove( filew );
 
-  e = cal2.event( uid );
+  // check for uid1--should have syncStatus of 0
+  e = cal2.event( uid1 );
   if (!e) {
-    kdError() << "No event " << uid << endl;
+    kdError() << "No event for first read test" << uid1 << endl;
     return 1;
   }
 
-  kdDebug() << "Event description " << e->summary() << endl;
-
-  if (e->hasEndDate()) {
-    QDateTime d = e->dtEnd();
-    kdDebug() << "Event ends " << d << endl;
-  }
+  kdDebug() << "Event 1 description " << e->summary() << endl;
 
   if (e->pilotId()) {
-    kdDebug() << "Pilot ID = " << e->pilotId() << endl;
-    kdDebug() << "Pilot Sync Status = " << e->syncStatus() << endl;
+    kdDebug() << "First Pilot ID = " << e->pilotId() << endl;
+    kdDebug() << "First Pilot Sync Status = " << e->syncStatus() << endl;
   } else {
-    kdError() << "No Pilot ID" << endl;
-    return 1;
-  }
-
-  if (e->summary() != newSummary) {
-    kdError() << "Wrong summary." << endl;
+    kdError() << "No Pilot ID for first test" << endl;
     return 1;
   }
 
   if (e->syncStatus() != KCal::Incidence::SYNCNONE) {
     kdError() << "Wrong Pilot sync status." << endl;
+    return 1;
+  }
+
+  // now check our second event for correctness
+  f = cal2.event( uid2 );
+
+  kdDebug() << "Event 2 description " << f->summary() << endl;
+
+  if (f->summary() != newSummary) {
+    kdError() << "Wrong summary for second read test." << endl;
+    return 1;
+  }
+
+  if (f->pilotId()) {
+    kdDebug() << "Second Pilot ID = " << f->pilotId() << endl;
+    kdDebug() << "Second Pilot Sync Status = " << f->syncStatus() << endl;
+  } else {
+    kdError() << "No Pilot ID for second read test" << endl;
+    return 1;
+  }
+
+  if (f->syncStatus() != KCal::Incidence::SYNCMOD) {
+    kdError() << "Wrong Pilot sync status for second read test." << endl;
     return 1;
   }
 
