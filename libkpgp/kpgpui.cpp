@@ -43,7 +43,7 @@
 #include <kconfigbase.h>
 #include <kconfig.h>
 #include <kprogressdialog.h>
-#include <kapplication.h>
+#include <QApplication>
 #include <kwm.h>
 #include <kpushbutton.h>
 #include <kglobalsettings.h>
@@ -1025,10 +1025,10 @@ bool KeySelectionDialog::checkKeys( const QList<Q3ListViewItem*>& keys ) const
     kDebug(5100) << "Checking key 0x" << getKeyId( *it ) << "...\n";
     pProgressDlg->setLabel( i18n("Checking key 0x%1...",
                               QString::fromAscii( getKeyId( *it ) ) ) );
-    kapp->processEvents();
+    qApp->processEvents();
     keysAllowed = keysAllowed && ( -1 != keyAdmissibility( *it, AllowExpensiveTrustCheck ) );
     pProgressDlg->progressBar()->setValue( pProgressDlg->progressBar()->value() + 1 );
-    kapp->processEvents();
+    qApp->processEvents();
   }
 
   delete pProgressDlg;

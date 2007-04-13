@@ -63,6 +63,7 @@
 #include <kpushbutton.h>
 #include <kconfiggroup.h>
 #include <kmenu.h>
+#include <klineedit.h>
 // Qt
 #include <QCheckBox>
 #include <QToolButton>
@@ -373,13 +374,10 @@ void Kleo::KeySelectionDialog::init( bool rememberChoice, bool extendedSelection
   QHBoxLayout * hlay = new QHBoxLayout();
   topLayout->addLayout( topLayout );
 
-  QLineEdit * le = new QLineEdit( page );
+  KLineEdit * le = new KLineEdit( page );
+  le->setClearButtonShown(true);
   le->setText( initialQuery );
-  QToolButton *clearButton = new QToolButton( page );
-  clearButton->setIcon( KIcon( QApplication::isRightToLeft() ? "clear_left":"locationbar_erase" ) );
-
-  hlay->addWidget( clearButton );
-
+  
   QLabel* lbSearchFor =  new QLabel( i18n("&Search for:"), page ) ;
   lbSearchFor->setBuddy(le);
 
@@ -387,7 +385,6 @@ void Kleo::KeySelectionDialog::init( bool rememberChoice, bool extendedSelection
   hlay->addWidget( le, 1 );
   le->setFocus();
 
-  connect( clearButton, SIGNAL( clicked() ), le, SLOT( clear() ) );
   connect( le, SIGNAL(textChanged(const QString&)),
 	   this, SLOT(slotSearch(const QString&)) );
   connect( mStartSearchTimer, SIGNAL(timeout()), SLOT(slotFilter()) );
