@@ -87,6 +87,8 @@ QStringList NetworkStatusModule::networks()
 
 int NetworkStatusModule::status( const QString & host )
 {
+	if ( host == "127.0.0.1" || host == "localhost" )
+		return NetworkStatus::Online;
 	Network * p = networkForHost( host );
 	if ( !p )
 	{
