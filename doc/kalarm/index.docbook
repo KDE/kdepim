@@ -33,7 +33,7 @@
 </authorgroup>
 
 <copyright>
-<year>2001</year><year>2002</year><year>2003</year><year>2004</year><year>2005</year><year>2006</year><year>2007</year>
+<year>2001</year><year>2002</year><year>2003</year><year>2004</year><year>2005</year><year>2006</year>
 <holder>David Jarvie</holder>
 </copyright>
 
@@ -41,8 +41,8 @@
 
 <!-- Don't change format of date and version of the documentation -->
 
-<date>2007-03-16</date>
-<releaseinfo>1.04.10</releaseinfo>
+<date>2007-04-16</date>
+<releaseinfo>1.04.11</releaseinfo>
 
 <abstract>
 <para>&kalarm; is a personal alarm message, command and email scheduler for &kde;.</para>
@@ -844,20 +844,45 @@ dialog:</para>
 shell command to execute before the alarm is displayed.  Note that
 &kalarm; will wait for the command to complete before displaying the
 alarm.</para>
+
+<para>A pre-alarm action is only executed once when the alarm message
+is initially displayed, including when a reminder message is replaced
+by the actual alarm message. It is <emphasis>not</emphasis> executed
+in any of the following circumstances:</para>
+
+<itemizedlist>
+<listitem><para>When a reminder message is displayed.</para></listitem>
+<listitem><para>When the message is redisplayed after deferring the
+alarm.</para></listitem>
+<listitem><para>When the message was displaying at the time you logged
+off and is then restored when you log back in.</para></listitem>
+<listitem><para>When a recurring alarm triggers but the alarm message
+(or a deferred alarm message) from a previous occurrence of the alarm
+is still visible; in other words, when the previous occurrence of the
+alarm has not yet been acknowledged.</para></listitem>
+</itemizedlist>
 </listitem>
 
 <listitem>
 <para>In the <guilabel>Post-alarm action</guilabel> field, enter a
-shell command to execute when the alarm window is closed.</para>
+shell command to execute when the alarm is acknowledged (whether by
+clicking <guibutton>Close</guibutton> or by using the close button
+in the window's titlebar). It is <emphasis>not</emphasis>
+executed in any of the following circumstances:</para>
+
+<itemizedlist>
+<listitem><para>When a reminder message is closed.</para></listitem>
+<listitem><para>When you defer the alarm, except when the deferred
+alarm is finally acknowledged.</para></listitem>
+<listitem><para>When the alarm message is closed due to logging
+out.</para></listitem>
+</itemizedlist>
 </listitem>
 </itemizedlist>
 
 <para>See the description of Command alarms below for details of how
 shell commands are executed.</para>
 
-<para>Note that special actions are not executed if the alarm was
-displaying at the time you logged off and is then restored when you
-log in.</para>
 </listitem>
 </itemizedlist>
 </listitem>
