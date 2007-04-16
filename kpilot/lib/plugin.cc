@@ -305,7 +305,7 @@ ConduitAction::ConduitAction(KPilotLink *p,
 	}
 
 	DEBUGKPILOT << fname << ": Direction=" << fSyncDirection.name() << endl;
-	fCtrHH = new CUDCounter(i18n("Palm"));
+	fCtrHH = new CUDCounter(i18n("Handheld"));
 	fCtrPC = new CUDCounter(i18n("PC")); 
 }
 
@@ -458,9 +458,56 @@ void ConduitAction::finished()
 	if (fCtrHH && fCtrPC) 
 	{
 		addSyncLogEntry(fCtrHH->moo() +"\n",false); 
-		DEBUGKPILOT << fname << ": " << fCtrHH->moo() << endl;;
+		DEBUGKPILOT << fname << ": " << fCtrHH->moo() << endl;
 		addSyncLogEntry(fCtrPC->moo() +"\n",false);
-		DEBUGKPILOT << fname << ": " << fCtrPC->moo() << endl;;
+		DEBUGKPILOT << fname << ": " << fCtrPC->moo() << endl;
+
+		// STEP2 of making sure we don't delete our little user's
+		// precious data...
+		// sanity checks for handheld...
+		int hhVolatility = fCtrHH->percentDeleted() + 
+				 fCtrHH->percentUpdated() +
+		    		 fCtrHH->percentCreated();
+
+		int pcVolatility = fCtrPC->percentDeleted() + 
+				 fCtrPC->percentUpdated() +
+		    		 fCtrPC->percentCreated();
+
+		// TODO: allow user to configure this...
+		// this is a percentage...
+		int allowedVolatility = 70;
+
+		QString caption = i18n("Large Changes Detected");
+		// args are already i18n'd
+		QString query = i18n("The %1 conduit has made a "
+			"large number of changes to your %2.  Do you want "
+			"to allow this change?\nDetails:\n\t%3");
+
+		if (hhVolatility > allowedVolatility)
+		{
+			query = query.arg(fConduitName)
+				.arg(fCtrHH->type()).arg(fCtrHH->moo());
+
+			DEBUGKPILOT << fname << ": Yikes, lots of volatility "
+				<< "caught.  Check with user: [" << query
+				<< "]." << endl;
+
+			/*
+			int rc = questionYesNo(query, caption,
+				QString::null, 0 );
+			if (rc == KMessageBox::Yes)
+			{
+				// TODO: add commit and rollback code.
+				// note: this will require some thinking,
+				// since we have to undo changes to the
+				// pilot databases, changes to the PC
+				// resources, changes to the mappings files
+				// (record id mapping, etc.)
+			}
+			*/
+		}
+
+
 	}
 
 }

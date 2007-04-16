@@ -219,15 +219,20 @@ public:
 	 * developers (hi, self!) to correctly set total number of records
 	 * conduits start with, so add a little protection...
 	 */
-	unsigned int percentCreated() { Q_ASSERT(fStart>0); return fC/fStart; }
-	unsigned int percentUpdated() { Q_ASSERT(fStart>0); return fU/fStart; }
-	unsigned int percentDeleted() { Q_ASSERT(fStart>0); return fD/fStart; }
+	unsigned int percentCreated() { return (fEnd   > 0 ? fC/fEnd   : 0); }
+	unsigned int percentUpdated() { return (fEnd   > 0 ? fU/fEnd   : 0); }
+	unsigned int percentDeleted() { return (fStart > 0 ? fD/fStart : 0); }
 
 	/** Measurement Of Objects -- report numbers of
 	* objects created, updated, deleted. This
 	* string is already i18n()ed.
 	*/
 	QString moo() const;
+
+	/** Type of counter(Handheld or PC).  This string is already
+	 * i18n()ed.
+	*/
+	QString type() const { return fType; }
 private:
 	/** keep track of Creates, Updates, Deletes, and Total
 	 * number of records so we can detect abnormal behavior and
