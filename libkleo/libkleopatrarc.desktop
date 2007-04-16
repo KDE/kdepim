@@ -250,6 +250,7 @@ is-qualified=true
 font-bold=true
 Name=Keys for qualified signatures
 Name[es]=Claves para firmas cualificadas
+Name[sv]=Nycklar för kvalificerade signaturer
 Name[x-test]=xxKeys for qualified signaturesxx
 
 [Key Filter #6]
@@ -257,6 +258,7 @@ was-validated=true
 Name=Other keys
 Name[es]=Otras claves
 Name[kk]=Басқа кілттер
+Name[sv]=Andra nycklar
 Name[x-test]=xxOther keysxx
 
 

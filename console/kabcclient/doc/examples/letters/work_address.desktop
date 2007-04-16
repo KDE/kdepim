@@ -4,6 +4,7 @@
 [Misc]
 Name=Letter business/work address
 Name[es]=Dirección postal de negocios/del trabajo
+Name[sv]=Brev företag/arbetsadress
 Name[x-test]=xxLetter business/work addressxx
 
 [General]

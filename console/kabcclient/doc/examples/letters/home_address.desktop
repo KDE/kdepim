@@ -4,6 +4,7 @@
 [Misc]
 Name=Letter home/private address
 Name[es]=Dirección postal personal/privada
+Name[sv]=Brev hem/privatadress
 Name[x-test]=xxLetter home/private addressxx
 
 [General]
