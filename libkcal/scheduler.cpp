@@ -22,6 +22,7 @@
 
 #include <klocale.h>
 #include <kdebug.h>
+#include <kmessagebox.h>
 #include <kstandarddirs.h>
 
 #include "event.h"
@@ -297,6 +298,7 @@ bool Scheduler::acceptReply(IncidenceBase *incidence,ScheduleMessage::Status /* 
     kdDebug(5800) << "Scheduler::acceptTransaction match found!" << endl;
     Attendee::List attendeesIn = incidence->attendees();
     Attendee::List attendeesEv;
+    Attendee::List attendeesNew;
     if (ev) attendeesEv = ev->attendees();
     if (to) attendeesEv = to->attendees();
     Attendee::List::ConstIterator inIt;
@@ -310,9 +312,35 @@ bool Scheduler::acceptReply(IncidenceBase *incidence,ScheduleMessage::Status /* 
           kdDebug(5800) << "Scheduler::acceptTransaction update attendee" << endl;
           attEv->setStatus(attIn->status());
           ret = true;
-        }
+        } else
+          attendeesNew.append( attIn );
       }
     }
+
+    for ( Attendee::List::ConstIterator it = attendeesNew.constBegin(); it != attendeesNew.constEnd(); ++it ) {
+      Attendee* attNew = *it;
+      QString msg = i18n("%1 wants to attend %2 but was not invited.").arg( attNew->fullName() )
+          .arg( ev ? ev->summary() : to->summary() );
+      if ( !attNew->delegator().isEmpty() )
+        msg = i18n("%1 wants to attend %2 on behalf of %3.").arg( attNew->fullName() )
+            .arg( ev ? ev->summary() : to->summary() )
+            .arg( attNew->delegator() );
+      if ( KMessageBox::questionYesNo( 0, msg, i18n("Uninvited attendee"),
+           KGuiItem(i18n("Accept Attendance")), KGuiItem(i18n("Reject Attendance")) )
+           != KMessageBox::Yes )
+        continue;
+
+      Attendee *a = new Attendee( attNew->name(), attNew->email(), attNew->RSVP(),
+                                  attNew->status(), attNew->role(), attNew->uid() );
+      a->setDelegate( attNew->delegate() );
+      a->setDelegator( attNew->delegator() );
+      if ( ev )
+        ev->addAttendee( a );
+      else if ( to )
+        to->addAttendee( a );
+      ret = true;
+    }
+
     if ( ret ) {
       // We set at least one of the attendees, so the incidence changed
       // Note: This should not result in a sequence number bump
@@ -322,7 +350,7 @@ bool Scheduler::acceptReply(IncidenceBase *incidence,ScheduleMessage::Status /* 
         to->updated();
     }
     if ( to ) {
-      // for VTODO a REPLY can be used to update the completion status of 
+      // for VTODO a REPLY can be used to update the completion status of
       // a task. see RFC2446 3.4.3
       Todo *update = dynamic_cast<Todo*> ( incidence );
       Q_ASSERT( update );
