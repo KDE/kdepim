@@ -18,7 +18,7 @@
 #ifndef KTNEFMAIN_H
 #define	KTNEFMAIN_H
 
-#include <kmainwindow.h>
+#include <kxmlguiwindow.h>
 #include <QString>
 #include <q3listview.h>
 
@@ -26,7 +26,7 @@ class KTNEFView;
 #include <ktnef/ktnefparser.h>
 #include <ktnef/ktnefattach.h>
 
-class KTNEFMain : public KMainWindow
+class KTNEFMain : public KXmlGuiWindow
 {
 	Q_OBJECT
 

@@ -63,8 +63,8 @@
 #define WATCHGNUPGBINARY "watchgnupg"
 #define WATCHGNUPGSOCKET ( QDir::home().canonicalPath() + "/.gnupg/log-socket")
 
-KWatchGnuPGMainWindow::KWatchGnuPGMainWindow( QWidget* parent, const char* name )
-  : KMainWindow( parent, name, Qt::WType_TopLevel ), mConfig(0)
+KWatchGnuPGMainWindow::KWatchGnuPGMainWindow( QWidget* parent )
+  : KXmlGuiWindow( parent, Qt::WType_TopLevel ), mConfig(0)
 {
   createActions();
   createGUI();

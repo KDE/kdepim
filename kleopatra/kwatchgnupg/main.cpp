@@ -67,7 +67,7 @@ KWatchGnuPGApplication::~KWatchGnuPGApplication()
 int KWatchGnuPGApplication::newInstance()
 {
   if( !mMainWin ) {
-	mMainWin = new KWatchGnuPGMainWindow( 0, "kwatchgnupg mainwin" );
+	mMainWin = new KWatchGnuPGMainWindow;
 	setMainWidget( mMainWin );
   }
   mMainWin->show();

@@ -15,7 +15,7 @@
 #ifndef KNODE_ARTICLEWINDOW_H
 #define KNODE_ARTICLEWINDOW_H
 
-#include <kmainwindow.h>
+#include <kxmlguiwindow.h>
 
 #include <QByteArray>
 #include <QList>
@@ -28,7 +28,7 @@ namespace KNode {
 class ArticleWidget;
 
 /** A stand-alone article viewer window. */
-class ArticleWindow : public KMainWindow  {
+class ArticleWindow : public KXmlGuiWindow  {
 
   Q_OBJECT
 

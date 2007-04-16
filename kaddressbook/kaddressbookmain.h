@@ -27,7 +27,7 @@
 
 #include <kaction.h>
 #include <kapplication.h>
-#include <kmainwindow.h>
+#include <kxmlguiwindow.h>
 
 class KABCore;
 
@@ -39,7 +39,7 @@ class KABCore;
   @author Don Sanders <dsanders@kde.org>
   @version 0.1
  */
-class KAddressBookMain : public KMainWindow
+class KAddressBookMain : public KXmlGuiWindow
 {
   Q_OBJECT
 

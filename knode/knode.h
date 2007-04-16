@@ -19,7 +19,7 @@
 #include <config.h>
 #endif
 
-#include <kmainwindow.h>
+#include <kxmlguiwindow.h>
 #include <kdialog.h>
 #include "resource.h"
 
@@ -40,7 +40,7 @@ class KNHeaderView;
 
 
 /** KNode main window. */
-class KNMainWindow : public KMainWindow
+class KNMainWindow : public KXmlGuiWindow
 {
   Q_OBJECT
 

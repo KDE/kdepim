@@ -17,7 +17,7 @@
 
 #include <k3listview.h>
 
-#include <kmainwindow.h>
+#include <kxmlguiwindow.h>
 #include <kdialog.h>
 #include <keditcl.h>
 #include <QLineEdit>
@@ -56,7 +56,7 @@ namespace KPIMUtils { class SpellingFilter; }
 using KPIMUtils::SpellingFilter;
 
 /** Message composer window. */
-class KNComposer : public KMainWindow {
+class KNComposer : public KXmlGuiWindow {
 
   Q_OBJECT
   Q_CLASSINFO( "D-Bus Interface", "org.kde.knode.composer")

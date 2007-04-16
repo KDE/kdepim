@@ -33,17 +33,17 @@
 #ifndef KWATCHGNUPGMAINWIN_H
 #define KWATCHGNUPGMAINWIN_H
 
-#include <kmainwindow.h>
+#include <kxmlguiwindow.h>
 
 class KWatchGnuPGTray;
 class KWatchGnuPGConfig;
 class K3ProcIO;
 class QTextEdit;
 
-class KWatchGnuPGMainWindow : public KMainWindow {
+class KWatchGnuPGMainWindow : public KXmlGuiWindow {
   Q_OBJECT
 public:
-  KWatchGnuPGMainWindow( QWidget* parent = 0, const char* name = 0 );
+  KWatchGnuPGMainWindow( QWidget* parent = 0 );
   virtual ~KWatchGnuPGMainWindow();
 public slots:
   void slotWatcherExited();

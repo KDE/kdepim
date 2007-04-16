@@ -41,7 +41,7 @@
 #include "kaddressbookmain.h"
 
 KAddressBookMain::KAddressBookMain( const QString &file )
-  : KMainWindow( 0 )
+  : KXmlGuiWindow( 0 )
 {
   // Set this to be the group leader for all subdialogs - this means
   // modal subdialogs will only affect this dialog, not the other windows

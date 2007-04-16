@@ -37,7 +37,7 @@
 #include "knhdrviewitem.h"
 
 KNMainWindow::KNMainWindow( QWidget* parent )
-  : KMainWindow( parent )
+  : KXmlGuiWindow( parent )
 {
   //setupStatusBar();
   createStandardStatusBarAction();

@@ -175,11 +175,12 @@ void KNLineEditSpell::spellCheckerCorrected( const QString &old, const QString &
 
 
 KNComposer::KNComposer(KNLocalArticle *a, const QString &text, const QString &sig, const QString &unwraped, bool firstEdit, bool dislikesCopies, bool createCopy)
-    : KMainWindow(0,"composerWindow"), r_esult(CRsave), a_rticle(a), s_ignature(sig), u_nwraped(unwraped),
+    : KXmlGuiWindow(0), r_esult(CRsave), a_rticle(a), s_ignature(sig), u_nwraped(unwraped),
       n_eeds8Bit(true), v_alidated(false), a_uthorDislikesMailCopies(dislikesCopies), e_xternalEdited(false), e_xternalEditor(0),
       e_ditorTempfile(0), s_pellChecker(0), a_ttChanged(false),
       mFirstEdit( firstEdit )
 {
+  setObjectName( "composerWindow" );
     mSpellingFilter = 0;
     spellLineEdit = false;
 

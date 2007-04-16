@@ -162,7 +162,7 @@ namespace {
 
 CertManager::CertManager( bool remote, const QString& query, const QString & import,
 			  QWidget* parent, Qt::WFlags f )
-  : KMainWindow( parent, f|Qt::WDestructiveClose ),
+  : KXmlGuiWindow( parent, f|Qt::WDestructiveClose ),
     mCrlView( 0 ),
     mDirmngrProc( 0 ),
     mHierarchyAnalyser( 0 ),
