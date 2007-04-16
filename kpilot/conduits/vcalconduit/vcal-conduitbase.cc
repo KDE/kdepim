@@ -211,7 +211,7 @@ void VCalConduitBase::slotProcess() {
 	// No state so sync is finished
 	else
 	{
-		DEBUGCONDUIT << fname << ": Sync finished." << endl;
+		DEBUGKPILOT << fname << ": Sync finished." << endl;
 		delayDone();
 	}
 }
@@ -224,20 +224,18 @@ void VCalConduitBase::slotProcess() {
 	setConflictResolution( res );
 }
 
-#ifdef DEBUG
 static void listResources( KCal::CalendarResources *p )
 {
 	FUNCTIONSETUP;
 	KCal::CalendarResourceManager *manager = p->resourceManager();
 
-	DEBUGCONDUIT << fname << ": Resources in calendar:" << endl;
+	DEBUGKPILOT << fname << ": Resources in calendar:" << endl;
 	KCal::CalendarResourceManager::Iterator it;
 	for( it = manager->begin(); it != manager->end(); ++it )
 	{
-		DEBUGCONDUIT << fname << ": " << (*it)->resourceName() << endl;
+		DEBUGKPILOT << fname << ": " << (*it)->resourceName() << endl;
 	}
 }
-#endif
 
 /* virtual */ bool VCalConduitBase::openCalendar()
 {
@@ -249,24 +247,24 @@ static void listResources( KCal::CalendarResources *p )
 	korgcfg.setGroup( "Time & Date" );
 	QString tz(korgcfg.readEntry( "TimeZoneId" ) );
 
-	DEBUGCONDUIT << fname << ": KOrganizer's time zone = " << tz << endl;
+	DEBUGKPILOT << fname << ": KOrganizer's time zone = " << tz << endl;
 
 	// Need a subclass ptr. for the ResourceCalendar methods
 	KCal::CalendarResources *rescal = 0L;
 
-	DEBUGCONDUIT << fname << ": Got calendar type " << config()->calendarType()
+	DEBUGKPILOT << fname << ": Got calendar type " << config()->calendarType()
 		<< endl;
 
 	switch(config()->calendarType())
 	{
 		case VCalConduitSettings::eCalendarLocal:
 		{
-			DEBUGCONDUIT << fname << "Using CalendarLocal, file = "
+			DEBUGKPILOT << fname << "Using CalendarLocal, file = "
 				<< config()->calendarFile() << endl;
 
 			if ( config()->calendarFile().isEmpty() )
 			{
-				DEBUGCONDUIT << fname << "Empty calendar file name." << endl;
+				DEBUGKPILOT << fname << "Empty calendar file name." << endl;
 
 				emit logError( i18n( "You selected to sync with an iCalendar"
 						" file, but did not give a filename. Please select a"
@@ -278,15 +276,15 @@ static void listResources( KCal::CalendarResources *p )
 			fCalendar = new KCal::CalendarLocal( tz );
 			if ( !fCalendar )
 			{
-				kdWarning() << k_funcinfo
+				WARNINGKPILOT
 					<< "Cannot initialize calendar object for file "
 					<< config()->calendarFile() << endl;
 				return false;
 			}
 
-			DEBUGCONDUIT << fname << "Calendar's timezone: "
+			DEBUGKPILOT << fname << "Calendar's timezone: "
 				<< fCalendar->timeZoneId() << endl;
-			DEBUGCONDUIT << fname << "Calendar is local time: "
+			DEBUGKPILOT << fname << "Calendar is local time: "
 				<< fCalendar->isLocalTime() << endl;
 
 			emit logMessage( fCalendar->isLocalTime() ?
@@ -309,7 +307,7 @@ static void listResources( KCal::CalendarResources *p )
 			// the calendar is initialized, so nothing more to do...
 			if (!dynamic_cast<KCal::CalendarLocal*>(fCalendar)->load(fCalendarFile) )
 			{
-				DEBUGCONDUIT << fname << "Calendar file " << fCalendarFile
+				DEBUGKPILOT << fname << "Calendar file " << fCalendarFile
 					<< " could not be opened. Will create a new one" << endl;
 
 				// Try to create empty file. if it fails,
@@ -317,7 +315,7 @@ static void listResources( KCal::CalendarResources *p )
 				QFile fl(fCalendarFile);
 				if (!fl.open(IO_WriteOnly | IO_Append))
 				{
-					DEBUGCONDUIT << fname << "Invalid calendar file name "
+					DEBUGKPILOT << fname << "Invalid calendar file name "
 						<< fCalendarFile << endl;
 
 					emit logError( i18n( "You chose to sync with the file \"%1\", which "
@@ -335,16 +333,14 @@ static void listResources( KCal::CalendarResources *p )
 		}
 
 		case VCalConduitSettings::eCalendarResource:
-			DEBUGCONDUIT << "Using CalendarResource!" << endl;
+			DEBUGKPILOT << "Using CalendarResource!" << endl;
 
 			rescal = new KCal::CalendarResources( tz );
-#ifdef DEBUG
 			listResources(rescal);
-#endif
 			fCalendar = rescal;
 			if ( !fCalendar)
 			{
-				kdWarning() << k_funcinfo << "Cannot initialize calendar " <<
+				WARNINGKPILOT << "Cannot initialize calendar " <<
 					"object for ResourceCalendar" << endl;
 				return false;
 			}
@@ -366,18 +362,20 @@ static void listResources( KCal::CalendarResources *p )
 
 	if ( !fCalendar )
 	{
-		kdWarning() <<k_funcinfo << "Unable to initialize calendar object."
+		WARNINGKPILOT << "Unable to initialize calendar object."
 			<< " Please check the conduit's setup." << endl;
 		emit logError( i18n( "Unable to initialize the calendar object. Please"
 			" check the conduit's setup") );
 		return false;
 	}
-	fP = newVCalPrivate( fCalendar );
+	fP = createPrivateCalendarData( fCalendar );
 	if ( !fP )
 	{
 		return false;
 	}
-	fP->updateIncidences();
+	int rc = fP->updateIncidences();
+	DEBUGKPILOT << fname << ": return from updateIncidences: [" << rc
+		<< "]" << endl;
 
 	if ( fP->count() < 1 )
 	{
@@ -392,12 +390,8 @@ KCal::Incidence* VCalConduitBase::addRecord( PilotRecord *r )
 	FUNCTIONSETUP;
 
 	recordid_t id = fLocalDatabase->writeRecord( r );
-#ifdef DEBUG
-	DEBUGCONDUIT<<fname<<": Pilot Record ID = " << r->id() << ", backup ID = "
+	DEBUGKPILOT<<fname<<": Pilot Record ID = " << r->id() << ", backup ID = "
 		<< id << endl;
-#else
-	Q_UNUSED(id);
-#endif
 
 	PilotRecordBase *de = newPilotEntry( r );
 	KCal::Incidence*e = 0L;
@@ -411,11 +405,13 @@ KCal::Incidence* VCalConduitBase::addRecord( PilotRecord *r )
 			e = newIncidence();
 			incidenceFromRecord( e, de );
 			fP->addIncidence( e );
+			fCtrPC->created();
 		}
 		else
 		{
 			// similar entry found, so just copy, no need to insert again
 			incidenceFromRecord( e, de );
+			fCtrPC->updated();
 		}
 	}
 	KPILOT_DELETE( de );
@@ -451,7 +447,7 @@ KCal::Incidence*VCalConduitBase::changeRecord(PilotRecord *r,PilotRecord *)
 	PilotRecordBase *de = newPilotEntry( r );
 	KCal::Incidence *e = fP->findIncidence( r->id() );
 
-	DEBUGCONDUIT << fname << ": Pilot Record ID: [" << r->id() << "]" << endl;
+	DEBUGKPILOT << fname << ": Pilot Record ID: [" << r->id() << "]" << endl;
 
 	if ( e && de )
 	{
@@ -469,13 +465,17 @@ KCal::Incidence*VCalConduitBase::changeRecord(PilotRecord *r,PilotRecord *)
 		}
 		// no conflict or conflict resolution says, Palm overwrites, so do it:
 		incidenceFromRecord( e, de );
-		e->setSyncStatus( KCal::Incidence::SYNCNONE );
+
+		// NOTE: This MUST be done last, since every other set* call
+		// calls updated(), which will trigger an
+		// setSyncStatus(SYNCMOD)!!!
+		e->setSyncStatus(KCal::Incidence::SYNCNONE);
 		fLocalDatabase->writeRecord( r );
 	}
 	else
 	{
-		kdWarning() << k_funcinfo
-			<< ": While changing record -- not found in iCalendar" << endl;
+		WARNINGKPILOT
+			<< "While changing record -- not found in iCalendar" << endl;
 		addRecord( r );
 	}
 
@@ -493,6 +493,7 @@ KCal::Incidence*VCalConduitBase::deleteRecord( PilotRecord *r, PilotRecord * )
 	{
 		// RemoveEvent also takes it out of the calendar.
 		fP->removeIncidence(e);
+		fCtrPC->deleted();
 	}
 	fLocalDatabase->writeRecord( r );
 	return NULL;
@@ -505,6 +506,7 @@ void VCalConduitBase::addPalmRecord( KCal::Incidence *e )
 
 	PilotRecordBase *de = newPilotEntry( 0L );
 	updateIncidenceOnPalm( e, de );
+	fCtrHH->created();
 	KPILOT_DELETE( de );
 }
 
@@ -513,6 +515,7 @@ void VCalConduitBase::changePalmRecord(KCal::Incidence*e, PilotRecord*s)
 {
 	PilotRecordBase *de = newPilotEntry( s );
 	updateIncidenceOnPalm( e, de );
+	fCtrHH->updated();
 	KPILOT_DELETE( de );
 }
 
@@ -522,15 +525,16 @@ void VCalConduitBase::deletePalmRecord( KCal::Incidence *e, PilotRecord *s )
 	FUNCTIONSETUP;
 	if ( s )
 	{
-		DEBUGCONDUIT << fname << ": deleting record " << s->id() << endl;
+		DEBUGKPILOT << fname << ": deleting record " << s->id() << endl;
 		s->setDeleted();
 		fDatabase->writeRecord( s );
 		fLocalDatabase->writeRecord( s );
+		fCtrHH->deleted();
 	}
 	else
 	{
-		DEBUGCONDUIT << fname << ": could not find record to delete (";
-		DEBUGCONDUIT << e->pilotId() << ")" << endl;
+		DEBUGKPILOT << fname << ": could not find record to delete (";
+		DEBUGKPILOT << e->pilotId() << ")" << endl;
 	}
 
 	Q_UNUSED(e);
@@ -544,13 +548,13 @@ void VCalConduitBase::updateIncidenceOnPalm( KCal::Incidence *e,
 {
 	FUNCTIONSETUP;
 	if ( !de || !e ) {
-		DEBUGCONDUIT << fname << ": NULL event given... Skipping it" << endl;
+		DEBUGKPILOT << fname << ": NULL event given... Skipping it" << endl;
 		return;
 	}
 
 	if ( e->syncStatus() == KCal::Incidence::SYNCDEL )
 	{
-		DEBUGCONDUIT << fname << ": don't write deleted incidence "
+		DEBUGKPILOT << fname << ": don't write deleted incidence "
 			<< e->summary() << " to the palm" << endl;
 		return;
 	}
@@ -566,7 +570,11 @@ void VCalConduitBase::updateIncidenceOnPalm( KCal::Incidence *e,
 		fLocalDatabase->writeRecord( r );
 //		fDatabase->writeRecord(r);
 		e->setPilotId( id );
-		e->setSyncStatus( KCal::Incidence::SYNCNONE );
+
+		// NOTE: This MUST be done last, since every other set* call
+		// calls updated(), which will trigger an
+		// setSyncStatus(SYNCMOD)!!!
+		e->setSyncStatus(KCal::Incidence::SYNCNONE);
 		KPILOT_DELETE( r );
 	}
 }
@@ -597,4 +605,18 @@ void VCalConduitBase::setState( ConduitState *s )
 {
 	KPILOT_DELETE( fState );
 	fState = s;
+};
+
+/* virtual */ void VCalConduitBase::postSync( )
+{
+	FUNCTIONSETUP;
+	if (fCtrPC && fP)
+		fCtrPC->setEndCount(fP->count());
+};
+
+/* virtual */ void VCalConduitBase::preSync( )
+{
+	FUNCTIONSETUP;
+	if (fCtrPC && fP)
+		fCtrPC->setStartCount(fP->count());
 };

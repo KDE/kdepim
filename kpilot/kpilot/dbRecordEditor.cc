@@ -42,12 +42,10 @@
 #include "dbRecordEditor.h"
 //#include "dbRecordEditor_base.h"
 
-#ifdef USE_KHEXEDIT
 #include <khexedit/byteseditinterface.h>
 #include <khexedit/valuecolumninterface.h>
 #include <khexedit/charcolumninterface.h>
 using namespace KHE;
-#endif
 
 
 
@@ -86,17 +84,13 @@ void DBRecordEditor::slotOk()
 		rec->setAttributes(att);
 #undef setFlag
 
-#ifdef USE_KHEXEDIT
 		if ( fRecordDataIf->isModified() )
 		{
-#ifdef DEBUG
 			DEBUGKPILOT << "record data changed, new Length of record: " <<
 				fRecordDataIf->dataSize() << endl;
-#endif
 			// take over data
 			rec->setData( fRecordDataIf->data(), fRecordDataIf->dataSize() );
 		}
-#endif
 
 		KDialogBase::slotOk();
 	}
@@ -169,7 +163,6 @@ void DBRecordEditor::initWidgets()
 
 	DBRecordEditorBaseLayout->addMultiCellWidget( fFlagsGroup, 1, 1, 0, 3 );
 
-#ifdef USE_KHEXEDIT
 	fRecordData = KHE::createBytesEditWidget( fWidget, "fRecordData" );
 	if( fRecordData )
 	{
@@ -207,7 +200,6 @@ void DBRecordEditor::initWidgets()
 	}
 
 	DBRecordEditorBaseLayout->addMultiCellWidget( fRecordData, 2, 2, 0, 3 );
-#endif
 
 	languageChange();
 	resize( QSize(600, 561).expandedTo(minimumSizeHint()) );
@@ -227,7 +219,6 @@ void DBRecordEditor::fillWidgets()
 	fSecret->setChecked(att & dlpRecAttrSecret);
 	fArchived->setChecked(att & dlpRecAttrArchived);
 
-#ifdef USE_KHEXEDIT
 	if( fRecordDataIf )
 	{
 		int len = rec->size();
@@ -238,7 +229,6 @@ void DBRecordEditor::fillWidgets()
 		// We are managing the buffer ourselves:
 		fRecordDataIf->setAutoDelete( false );
 	}
-#endif
 }
 
 

@@ -241,21 +241,30 @@ void SysInfoConduit::hardwareInfo()
 void SysInfoConduit::userInfo()
 {
 	FUNCTIONSETUP;
-	if (fUserInfo) {
+	if (fUserInfo)
+	{
 		/* Retrieve values for
 		 * - #username#
 		 * - #uid#
 		 */
 		KPilotUser user=fHandle->getPilotUser();
-		fValues[CSL1("username")] = user.getUserName();
-		if (user.getPasswordLength()>0)
+		fValues[CSL1("username")] = user.name();
+		if (user.passwordLength()>0)
+		{
 			fValues[CSL1("pw")] = i18n("Password set");
+		}
 		else
+		{
 			fValues[CSL1("pw")] = i18n("No password set");
-		fValues[CSL1("uid")] = QString::number(user.getUserID());
-		fValues[CSL1("viewerid")] = QString::number(user.getViewerID());
+		}
+		fValues[CSL1("uid")] = QString::number(user.data()->userID);
+		fValues[CSL1("viewerid")] = QString::number(user.data()->viewerID);
 		keepParts.append(CSL1("user"));
-	} else removeParts.append(CSL1("user"));
+	}
+	else
+	{
+		removeParts.append(CSL1("user"));
+	}
 	QTimer::singleShot(0, this, SLOT(memoryInfo()));
 }
 
@@ -484,7 +493,7 @@ void SysInfoConduit::writeFile()
 	bool loaded=false;
 	if (!templatefile.isEmpty()){
 #ifdef DEBUG
-		DEBUGCONDUIT<<"Loading template file "<<templatefile<<endl;
+		DEBUGKPILOT<<"Loading template file "<<templatefile<<endl;
 #endif
 		QFile infile(templatefile);
 		if (infile.open(IO_ReadOnly)) {
@@ -495,8 +504,10 @@ void SysInfoConduit::writeFile()
 		}
 	}
 
-	if (!loaded) {
-		kdWarning()<<"Loading template file "<<templatefile<<" failed. Using default template instead."<< endl;
+	if (!loaded)
+	{
+		WARNINGKPILOT << "Loading template file " << templatefile
+			<<" failed. Using default template instead." << endl;
 		output=defaultpage;
 	}
 
@@ -524,7 +535,7 @@ void SysInfoConduit::writeFile()
 	while (re.search(output)>=0){
 		QString dbstring;
 		QString subpatt=re.cap(1);
-		for (DBInfoList::ConstIterator i = dblist.begin(); i != dblist.end(); ++i ) {
+		for (KPilotLink::DBInfoList::ConstIterator i = dblist.begin(); i != dblist.end(); ++i ) {
 			DBInfo dbi = *i;
 			QString newpatt(subpatt);
 			char tmpchr[5];
@@ -567,16 +578,16 @@ void SysInfoConduit::writeFile()
 	// Write out the result
 	QFile outfile(fOutputFile);
 #ifdef DEBUG
-	DEBUGCONDUIT << fname << ": Writing file <" << fOutputFile << ">" << endl;
+	DEBUGKPILOT << fname << ": Writing file <" << fOutputFile << ">" << endl;
 #endif
 	if (fOutputFile.isEmpty() || (!outfile.open(IO_WriteOnly)) ) {
 		QFileInfo fi(QDir::home(), CSL1("KPilotSysInfo.")+QFileInfo(templatefile).extension() );
 		fOutputFile=fi.absFilePath();
-		kdWarning()<<i18n("Unable to open output file, using %1 instead.").arg(fOutputFile).latin1()<<endl;
+		WARNINGKPILOT << "Unable to open output file, using " << fOutputFile << " instead." << endl;
 		emit logMessage(i18n("Unable to open output file, using %1 instead.").arg(fOutputFile));
 		outfile.setName(fOutputFile);
 		if (!outfile.open(IO_WriteOnly)) {
-			kdWarning()<<i18n("Unable to open %1").arg(fOutputFile).latin1()<<endl;
+			WARNINGKPILOT<< "Unable to open " << fOutputFile << endl;
 			emit logError(i18n("Unable to open %1").arg(fOutputFile));
 			QTimer::singleShot(0, this, SLOT(cleanup()));
 			return;

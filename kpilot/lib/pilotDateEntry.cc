@@ -32,23 +32,45 @@
 #include <stdlib.h>
 
 #include <qdatetime.h>
+#include <qnamespace.h>
 #include <qregexp.h>
 
 #include <kglobal.h>
-#include <kdebug.h>
 
 #include "pilotDateEntry.h"
 
-PilotDateEntry::PilotDateEntry(struct AppointmentAppInfo &appInfo):PilotRecordBase(), fAppInfo(appInfo)
+static const char *default_category_names[] = {
+	"Unfiled",
+	"Business",
+	"Personal",
+	0L
+} ;
+
+void PilotDateInfo::resetToDefault()
+{
+	FUNCTIONSETUP;
+	// Reset to all 0s
+	memset(&fInfo,0,sizeof(fInfo));
+	// Fill up default categories
+	for (unsigned int i=0; (i<4) && default_category_names[i]; ++i)
+	{
+		strncpy(fInfo.category.name[i],default_category_names[i],sizeof(fInfo.category.name[0]));
+	}
+
+	fInfo.startOfWeek = 0;
+
+}
+
+
+PilotDateEntry::PilotDateEntry():PilotRecordBase()
 {
 	::memset(&fAppointmentInfo, 0, sizeof(struct Appointment));
 }
 
 /* initialize the entry from another one. If rec==NULL, this constructor does the same as PilotDateEntry()
 */
-PilotDateEntry::PilotDateEntry(struct AppointmentAppInfo &appInfo, PilotRecord * rec) :
-	PilotRecordBase(rec),
-	fAppInfo(appInfo)
+PilotDateEntry::PilotDateEntry(PilotRecord * rec) :
+	PilotRecordBase(rec)
 {
 	::memset(&fAppointmentInfo, 0, sizeof(fAppointmentInfo));
 	if (rec)
@@ -80,9 +102,7 @@ void PilotDateEntry::_copyExceptions(const PilotDateEntry & e)
 		}
 		else
 		{
-			kdError() << __FUNCTION__
-				<< ": malloc() failed, exceptions not copied"
-				<< endl;
+			WARNINGKPILOT << "malloc() failed, exceptions not copied" << endl;
 			fAppointmentInfo.exceptions = 0;
 		}
 	}
@@ -95,8 +115,7 @@ void PilotDateEntry::_copyExceptions(const PilotDateEntry & e)
 
 
 PilotDateEntry::PilotDateEntry(const PilotDateEntry & e) :
-	PilotRecordBase(e),
-	fAppInfo(e.fAppInfo)
+	PilotRecordBase(e)
 {
 	::memcpy(&fAppointmentInfo, &e.fAppointmentInfo,
 		sizeof(struct Appointment));
@@ -141,12 +160,12 @@ PilotDateEntry & PilotDateEntry::operator = (const PilotDateEntry & e)
 }				// end of assignment operator
 
 
-QString PilotDateEntry::getTextRepresentation(bool richText)
+QString PilotDateEntry::getTextRepresentation(Qt::TextFormat richText)
 {
 	QString text, tmp;
-	QString par = richText?CSL1("<p>"):QString::null;
-	QString ps = richText?CSL1("</p>"):CSL1("\n");
-	QString br = richText?CSL1("<br/>"):CSL1("\n");
+	QString par = (richText==Qt::RichText) ?CSL1("<p>"):QString::null;
+	QString ps = (richText==Qt::RichText) ?CSL1("</p>"):CSL1("\n");
+	QString br = (richText==Qt::RichText) ?CSL1("<br/>"):CSL1("\n");
 
 	// title + name
 	text += par;
@@ -350,9 +369,7 @@ void PilotDateEntry::setDescriptionP(const char *desc, int l)
 		}
 		else
 		{
-			kdError() << __FUNCTION__
-				<< ": malloc() failed, description not set"
-				<< endl;
+			WARNINGKPILOT << "malloc() failed, description not set" << endl;
 		}
 	}
 	else
@@ -376,8 +393,7 @@ void PilotDateEntry::setNoteP(const char *note, int l)
 		}
 		else
 		{
-			kdError() << __FUNCTION__
-				<< ": malloc() failed, note not set" << endl;
+			WARNINGKPILOT << "malloc() failed, note not set" << endl;
 		}
 	}
 	else
@@ -397,7 +413,8 @@ void PilotDateEntry::setLocation(const QString &s)
 	QString note = Pilot::fromPilot(getNoteP());
 	QRegExp rxp = QRegExp("^[Ll]ocation:[^\n]+\n");
 
-	if( s.isNull() )
+	// per QString docs, this covers null and 0 length
+	if( s.isEmpty() )
 	{
 		note.replace(rxp,"");
 	}

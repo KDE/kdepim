@@ -1,6 +1,6 @@
 #ifndef _KPILOT_KPILOTDEVICELINK_H
 #define _KPILOT_KPILOTDEVICELINK_H
-/* kpilotdevicelink.h			KPilot
+/*
 **
 ** Copyright (C) 1998-2001 by Dan Pilone
 ** Copyright (C) 2003-2004 Reinhold Kainhofer <reinhold@kainhofer.com>
@@ -31,58 +31,85 @@
 
 #include "kpilotlink.h"
 
-/** @file Definition of the device link class; implemented in kpilotlink.cc */
+class QThread;
 
-/** Implementation of the device link class for physical
-*   handheld devices, which communicate with the PC
-*   using DLP / SLP via the pilot-link library.
+class DeviceMap; ///< Globally tracks all devices that have a link assigned
+class Messages; ///< Tracks which messages have been printed
+class DeviceCommThread; ///< Thread for doing all palm device communications
+
+/**
+* The link behaves like a state machine most of the time:
+* it waits for the actual device to become available, and
+* then becomes ready to handle syncing.
+*/
+enum LinkStatus {
+	Init,
+	WaitingForDevice,
+	FoundDevice,
+	CreatedSocket,
+	DeviceOpen,
+	AcceptedDevice,
+	SyncDone,
+	PilotLinkError,
+	WorkaroundUSB
+} ;
+
+/**
+* Custom events we can be handling...
+*/
+enum DeviceCustomEvents { 
+	EventLogMessage = 1077,
+	EventLogError,
+	EventLogProgress,
+	EventDeviceReady
+};
+		 
+/**
+* Definition of the device link class for physical
+* handheld devices, which communicate with the PC
+* using DLP / SLP via the pilot-link library.
 */
 class KDE_EXPORT KPilotDeviceLink : public KPilotLink
 {
 friend class PilotSerialDatabase;
+friend class DeviceCommThread;
+
 Q_OBJECT
 
-/*
-** Constructors and destructors.
-*/
 public:
 	/**
-	* Creates a pilot link that can sync to the pilot.
-	*
+	* Constructor. Creates a link that can sync to a physical handheld.
 	* Call reset() on it to start looking for a device.
+	*
+	* @param parent Parent object.
+	* @param name   Name of this object.
+	* @param tempDevice Path to device node to use as an alternative
+	*                   to the "normal" one set by KPilot.
 	*/
-	KPilotDeviceLink( QObject *parent = 0, 
-		const char *name = 0, 
+	KPilotDeviceLink( QObject *parent = 0,
+		const char *name = 0,
 		const QString &tempDevice = QString::null );
-	/** Destructor. This rudely ends the communication with the handheld. */
-	virtual ~KPilotDeviceLink();
-
 
 	/**
-	* The link behaves like a state machine most of the time:
-	* it waits for the actual device to become available, and
-	* then becomes ready to handle syncing.
+	* Destructor. This rudely ends the communication with the handheld.
+	* It is best to call endOfSync() or finishSync() before destroying
+	* the device.
 	*/
-	typedef enum {
-		Init,
-		WaitingForDevice,
-		FoundDevice,
-		CreatedSocket,
-		DeviceOpen,
-		AcceptedDevice,
-		SyncDone,
-		PilotLinkError,
-		WorkaroundUSB
-		} LinkStatus;
+	virtual ~KPilotDeviceLink();
 
-	/** Get the status (state enum) of this link.
+	/**
+	* Get the status (state enum) of this link.
 	* @return The LinkStatus enum for the link's current state.
 	*/
-	LinkStatus status() const { return fLinkStatus; } ;
+	LinkStatus status() const
+	{
+		return fLinkStatus;
+	}
+
 	/** Get a human-readable string for the given status @p l. */
 	static QString statusString(LinkStatus l);
 
-	// The followin API is the actual implementation of
+	// The following API is the actual implementation of
 	// the KPilotLink API, for documentation see that file.
 	//
 	virtual QString statusString() const;
@@ -90,10 +117,10 @@ public:
 	virtual void reset( const QString & );
 	virtual void close();
 	virtual void reset();
+		void customEvent(QCustomEvent *e);
 	virtual bool tickle();
 	virtual const KPilotCard *getCardInfo(int card);
-	virtual void endOfSync();
-	virtual void finishSync();
+	virtual void endSync( EndOfSyncFlags f );
 	virtual int openConduit();
 	virtual int getNextDatabase(int index,struct DBInfo *);
 	virtual int findDatabase(const char *name, struct DBInfo*,
@@ -101,18 +128,19 @@ public:
 	virtual bool retrieveDatabase(const QString &path, struct DBInfo *db);
 	virtual DBInfoList getDBList(int cardno=0, int flags=dlpDBListRAM);
 	virtual PilotDatabase *database( const QString &name );
+	virtual PilotDatabase *database( const DBInfo *info );
 
 protected:
 	virtual bool installFile(const QString &, const bool deleteFile);
 	virtual void addSyncLogEntryImpl( const QString &s );
-	virtual int pilotSocket() const { return fCurrentPilotSocket; } ;
+	virtual int pilotSocket() const
+	{
+		return fPilotSocket;
+	}
 
 
 private:
 	LinkStatus fLinkStatus;
-
-
-
 
 
 public:
@@ -126,7 +154,7 @@ public:
 	void setWorkarounds(bool usb)
 	{
 		fWorkaroundUSB = usb;
-	} ;
+	}
 
 	/**
 	* Sets an additional device, which should be tried as fallback.
@@ -134,39 +162,22 @@ public:
 	* for accepting a connection.
 	*/
 	void setTempDevice( const QString &device );
-
-private:
-	/** Should we work around the Zire31/72 quirk? @see setWorkarounds() */
-	bool fWorkaroundUSB;
-	/** Timer used to check for a badly-connected Z31/72 */
-	QTimer *fWorkaroundUSBTimer;
-
-private slots:
-	/** This slot is called when we detect a bogus connection from
-	 *  a Z31 or Z72 and the workaround is enabled. It disconnects,
-	 *  then re-enables connections.
-	 */
-	void workaroundUSB();
-
-protected slots:
+	
 	/**
-	* Attempt to open the device. Called regularly to check
-	* if the device exists (to handle USB-style devices).
+	* Sets the device to use.  Used by probe dialog, since we know
+	* what device to use, but we don't want to start the detection
+	* immediately.
 	*/
-	void openDevice();
-
-	/**
-	* Called when the device is opened *and* activity occurs on the
-	* device. This indicates the beginning of a hotsync.
-	*/
-	void acceptDevice();
+	void setDevice( const QString &device ) 
+	{ 
+		fPilotPath = device;
+	}
+	
 
 protected:
-	/**
-	* Does the low-level opening of the device and handles the
-	* pilot-link library initialisation.
-	*/
-	bool open( const QString &device = QString::null );
+	/** Should we work around the Zire31/72 quirk? @see setWorkarounds() */
+	bool fWorkaroundUSB;
+
 
 	/**
 	* Check for device permissions and existence, emitting
@@ -175,26 +186,7 @@ protected:
 	*/
 	void checkDevice();
 
-	/**
-	* Some messages are only printed once and are suppressed
-	* after that. These are indicated by flag bits in
-	* messages.
-	*/
-	enum { OpenMessage=1, OpenFailMessage=2 } ;
-	int messages;
-	int messagesMask;
-	static const int messagesType;
-
-	/** Print a message @p s which has an id of @p msgid (one of
-	 *  the enum values mentioned above) -- but only if that
-	 *  message has not been suppressed through messagesMask.
-	 *  Printing a message adds it to the messagesMask.
-	 */
-	void shouldPrint(int msgid,const QString &s);
-
-
-
-private:
+protected:
 	/**
 	* Path with resolved symlinks, to prevent double binding
 	* to the same device.
@@ -202,22 +194,9 @@ private:
 	QString fRealPilotPath;
 
 	/**
-	* For transient devices: how often have we tried pi_bind()?
-	*/
-	int fRetries;
-
-	/**
-	* Timers and Notifiers for detecting activity on the device.
-	*/
-	QTimer *fOpenTimer;
-	QSocketNotifier *fSocketNotifier;
-	bool fSocketNotifierActive;
-
-	/**
 	* Pilot-link library handles for the device once it's opened.
 	*/
-	int fPilotMasterSocket;
-	int fCurrentPilotSocket;
+	int fPilotSocket;
 	QString fTempDevice;
 
 	/**
@@ -225,9 +204,16 @@ private:
 	* and data remains available on the pilot socket.
 	*/
 	int fAcceptedCount;
+	
+	/**
+	* Start/Stop our device communication thread.
+	*/
+	void startCommThread();
+	void stopCommThread();
 
-private:
-	class KPilotDeviceLinkPrivate;
+protected:
+	Messages *fMessages;
+	DeviceCommThread *fDeviceCommThread;
 } ;
 
 #endif

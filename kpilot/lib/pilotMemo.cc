@@ -28,6 +28,7 @@
 
 #include "options.h"
 
+#include <qnamespace.h>
 
 #include "pilotMemo.h"
 #include "pilotDatabase.h"
@@ -42,20 +43,48 @@ PilotMemo::PilotMemo(const PilotRecord * rec) : PilotRecordBase(rec)
 
 PilotRecord *PilotMemo::pack()
 {
-	pi_buffer_t *b = pi_buffer_new(fText.length()+8);
-	b->used = Pilot::toPilot(fText, b->data, b->allocated);
+	FUNCTIONSETUPL(4);
+	int i;
+	
+	int len = fText.length() + 8;
+	struct Memo buf;
+	buf.text = new char[len];
+
+	// put our text into buf
+	i = Pilot::toPilot(fText, buf.text, len);
+
+	pi_buffer_t *b = pi_buffer_new(len);
+	i = pack_Memo(&buf, b, memo_v1);
+
+	DEBUGKPILOT << fname << ": original text: [" << fText 
+		<< "], buf.text: [" << buf.text 
+		<< "], b->data: [" << b->data << "]" << endl;
+
+	if (i<0)
+	{
+		// Generic error from the pack_*() functions.
+		delete[] buf.text;
+		return 0;
+	}
+
+	// pack_Appointment sets b->used
 	PilotRecord *r = new PilotRecord(b, this);
+	delete[] buf.text;
 	return r;
 }
 
 
-QString PilotMemo::getTextRepresentation(bool richText)
+QString PilotMemo::getTextRepresentation(Qt::TextFormat richText)
 {
-	if (richText)
+	if (richText==Qt::RichText)
+	{
 		return i18n("<i>Title:</i> %1<br>\n<i>MemoText:</i><br>%2").
 			arg(rtExpand(getTitle(), richText)).arg(rtExpand(text(), richText));
+	}
 	else
+	{
 		return i18n("Title: %1\nMemoText:\n%2").arg(getTitle()).arg(text());
+	}
 }
 
 

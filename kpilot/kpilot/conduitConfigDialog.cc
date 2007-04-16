@@ -55,7 +55,6 @@
 #include <kconfigskeleton.h>
 #include <kdialogbase.h>
 
-#include "uiDialog.h"
 #include "plugin.h"
 #include "kpilotConfig.h"
 #include "kpilotConfigDialog.h"
@@ -298,7 +297,7 @@ ConduitConfigWidgetBase::ConduitConfigWidgetBase(QWidget *parent, const char *n)
 	btns->setStretchFactor(w,50);
 
 
-	fStack->addWidget(UIDialog::aboutPage(fStack,0L),GENERAL_ABOUT);
+	fStack->addWidget(ConduitConfigBase::aboutPage(fStack,0L),GENERAL_ABOUT);
 }
 
 ConduitConfigWidget::ConduitConfigWidget(QWidget *parent, const char *n,
@@ -438,8 +437,7 @@ void ConduitConfigWidget::fillLists()
 
 		if (!o->exec().isEmpty())
 		{
-			kdWarning() << k_funcinfo
-				<< ": Old-style conduit found "
+			WARNINGKPILOT << "Old-style conduit found "
 				<< o->name()
 				<< endl;
 		}

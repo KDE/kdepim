@@ -54,7 +54,7 @@ void InitState::startSync( ConduitAction *ca )
 		return;
 	}
 
-	DEBUGCONDUIT << fname << ": Starting InitState." << endl;
+	DEBUGKPILOT << fname << ": Starting InitState." << endl;
 
 	vccb->addLogMessage( i18n( "Initializing conduit ..." ) );
 	vccb->preSync();
@@ -104,6 +104,6 @@ void InitState::finishSync( ConduitAction *ca )
 		return;
 	}
 
-	DEBUGCONDUIT << fname << ": Finished InitState." << endl;
+	DEBUGKPILOT << fname << ": Finished InitState." << endl;
 	vccb->setState( fNextState );
 }

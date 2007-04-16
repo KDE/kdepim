@@ -45,7 +45,6 @@
 #include <kapplication.h>
 #include <kconfig.h>
 
-#include "uiDialog.h"
 
 #include "mal-setup_dialog.h"
 
@@ -61,7 +60,7 @@ MALWidgetSetup::MALWidgetSetup(QWidget *w, const char *n) :
 	FUNCTIONSETUP;
 
 	fConduitName=i18n("MAL");
-	UIDialog::addAboutPage(fConfigWidget->tabWidget,MALConduitFactory::about());
+	ConduitConfigBase::addAboutPage(fConfigWidget->tabWidget,MALConduitFactory::about());
 	fWidget = fConfigWidget;
 
 	fConfigWidget->tabWidget->adjustSize();
@@ -155,7 +154,7 @@ MALWidgetSetup::~MALWidgetSetup()
 	fConfigWidget->proxyPassword->insert(MALConduitSettings::proxyPassword());
 
 #ifdef DEBUG
-	DEBUGCONDUIT << fname << ": Got proxy password <"
+	DEBUGKPILOT << fname << ": Got proxy password <"
 		<< MALConduitSettings::proxyPassword()
 		<< "> set Text <"
 		<< fConfigWidget->proxyPassword->text()

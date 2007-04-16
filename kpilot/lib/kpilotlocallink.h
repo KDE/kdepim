@@ -1,6 +1,6 @@
 #ifndef _KPILOT_KPILOTLOCALLINK_H
 #define _KPILOT_KPILOTLOCALLINK_H
-/* kpilotlocallink.h			KPilot
+/*
 **
 ** Copyright (C) 1998-2001 by Dan Pilone
 ** Copyright (C) 2003-2004 Reinhold Kainhofer <reinhold@kainhofer.com>
@@ -31,11 +31,14 @@
 
 #include "kpilotlink.h"
 
-/** @file Definition of the local link class; implemented in kpilotlink.cc */
+/** @file
+* Definition of the local link class; implemented in kpilotlink.cc .
+*/
 
 
-/** Implementation of the device link for file-system backed (ie. local, fake)
-*   devices. Uses a directory specified in the reset() call to serve databases.
+/**
+* Implementation of the device link for file-system backed (ie. local, fake)
+* devices. Uses a directory specified in the reset() call to serve databases.
 */
 class KDE_EXPORT KPilotLocalLink : public KPilotLink
 {
@@ -51,8 +54,7 @@ public:
 	virtual void reset();
 	virtual bool tickle();
 	virtual const KPilotCard *getCardInfo(int card);
-	virtual void endOfSync();
-	virtual void finishSync();
+	virtual void endSync( EndOfSyncFlags f );
 	virtual int openConduit();
 	virtual int getNextDatabase(int index,struct DBInfo *);
 	virtual int findDatabase(const char *name, struct DBInfo*,
@@ -67,7 +69,10 @@ public slots:
 protected:
 	virtual bool installFile(const QString &, const bool deleteFile);
 	virtual void addSyncLogEntryImpl( const QString &s );
-	virtual int pilotSocket() const { return -1; } ;
+	virtual int pilotSocket() const
+	{
+		return -1;
+	}
 
 protected:
 	bool fReady;
@@ -76,6 +81,12 @@ protected:
 	class Private;
 	Private *d;
 
+	/**
+	* Pre-process the directory @p path to find out which databases
+	* live there.
+	*
+	* @return Number of database in @p path.
+	*/
 	unsigned int findAvailableDatabases( Private &, const QString &path );
 } ;
 

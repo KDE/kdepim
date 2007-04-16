@@ -59,10 +59,10 @@
 #include "pilotDatabase.h"
 #include "kpilotlink.h"
 #include "kpilotdevicelink.h"
+#include "actionQueue.h"
+#include "actions.h"
 
 #include "hotSync.h"
-#include "interactiveSync.h"
-#include "syncStack.h"
 #include "internalEditorAction.h"
 #include "logFile.h"
 
@@ -222,8 +222,7 @@ void PilotDaemonTray::changeIcon(IconShape i)
 	FUNCTIONSETUP;
 	if (icons[i].isNull())
 	{
-		kdWarning() << k_funcinfo
-			<< ": Icon #"<<i<<" is NULL!" << endl;
+		WARNINGKPILOT << "Icon #"<<i<<" is NULL!" << endl;
 	}
 	setPixmap(icons[i]);
 	fCurrentIcon = i;
@@ -264,7 +263,7 @@ void PilotDaemonTray::startHotSync()
 	{
 		connect(fBlinkTimer,SIGNAL(timeout()),
 			this,SLOT(slotBusyTimer()));
-		fBlinkTimer->start(350,false);
+		fBlinkTimer->start(750,false);
 	}
 }
 
@@ -300,8 +299,7 @@ PilotDaemon::PilotDaemon() :
 
 	if (fDaemonStatus == ERROR)
 	{
-		kdWarning() << k_funcinfo
-			<< ": Connecting to device failed." << endl;
+		WARNINGKPILOT << "Connecting to device failed." << endl;
 		return;
 	}
 
@@ -552,8 +550,6 @@ void PilotDaemon::showTray()
 
 /* DCOP */ QString PilotDaemon::shortStatusString()
 {
-	FUNCTIONSETUP;
-
 	QString s;
 
 	switch (status())
@@ -594,8 +590,7 @@ bool PilotDaemon::setupPilotLink()
 	fPilotLink = new KPilotDeviceLink( 0, 0, fTempDevice );
 	if (!fPilotLink)
 	{
-		kdWarning() << k_funcinfo
-			<< ": Can't get pilot link." << endl;
+		WARNINGKPILOT << "Can't get pilot link." << endl;
 		return false;
 	}
 
@@ -656,7 +651,7 @@ bool PilotDaemon::setupPilotLink()
 
 	if ( !fNextSyncType.setMode(mode) )
 	{
-		kdWarning() << k_funcinfo << ": Ignored fake sync type " << mode << endl;
+		WARNINGKPILOT << "Ignored fake sync type " << mode << endl;
 		return;
 	}
 
@@ -691,7 +686,7 @@ bool PilotDaemon::setupPilotLink()
 	else if (s.startsWith(CSL1("D"))) requestSync(0);
 	else
 	{
-		kdWarning() << ": Unknown sync type " << ( s.isEmpty() ? CSL1("<none>") : s )
+		WARNINGKPILOT << "Unknown sync type " << ( s.isEmpty() ? CSL1("<none>") : s )
 			<< endl;
 	}
 }
@@ -700,7 +695,7 @@ bool PilotDaemon::setupPilotLink()
 {
 	if ( !fNextSyncType.setOptions(test,local) )
 	{
-		kdWarning() << k_funcinfo << ": Nonsensical request for "
+		WARNINGKPILOT << "Nonsensical request for "
 			<< (test ? "test" : "notest")
 			<< ' '
 			<< (local ? "local" : "nolocal")
@@ -750,7 +745,7 @@ static void fillConduitNameMap()
 			KSharedPtr < KService > o = KService::serviceByDesktopName(*i);
 			if (!o)
 			{
-				kdWarning() << k_funcinfo << ": No service for " << *i << endl;
+				WARNINGKPILOT << "No service for " << *i << endl;
 			}
 			else
 			{
@@ -814,7 +809,7 @@ static KDesktopLockStatus isKDesktopLockRunning()
 	// Can't tell, very weird, err on the side of safety.
 	if (!dcopptr || !dcopptr->isAttached())
 	{
-		kdWarning() << k_funcinfo << ": Could not make DCOP connection. "
+		WARNINGKPILOT << "Could not make DCOP connection. "
 			<< "Assuming screensaver is active." << endl;
 		return DCOPError;
 	}
@@ -825,7 +820,7 @@ static KDesktopLockStatus isKDesktopLockRunning()
 	if (!dcopptr->call("kdesktop","KScreensaverIface","isBlanked()",
 		data,returnType,returnValue,true))
 	{
-		kdWarning() << k_funcinfo << ": Check for screensaver failed."
+		WARNINGKPILOT << "Check for screensaver failed."
 			<< "Assuming screensaver is active." << endl;
 		// Err on the side of safety again.
 		return DCOPError;
@@ -840,7 +835,7 @@ static KDesktopLockStatus isKDesktopLockRunning()
 	}
 	else
 	{
-		kdWarning() << k_funcinfo << ": Strange return value from screensaver. "
+		WARNINGKPILOT << "Strange return value from screensaver. "
 			<< "Assuming screensaver is active." << endl;
 		// Err on the side of safety.
 		return DCOPError;
@@ -890,8 +885,7 @@ static bool isSyncPossible(ActionQueue *fSyncStack,
 	if ((callstatus == DCOPStub::CallSucceeded) &&
 		(kpilotstatus != KPilotDCOP::WaitingForDaemon))
 	{
-		kdWarning() << k_funcinfo <<
-			": KPilot returned status " << kpilotstatus << endl;
+		WARNINGKPILOT << "KPilot returned status " << kpilotstatus << endl;
 
 		fSyncStack->queueInit();
 		fSyncStack->addAction(new SorryAction(pilotLink));
@@ -922,12 +916,13 @@ static bool isSyncPossible(ActionQueue *fSyncStack,
 }
 
 static void queueInstaller(ActionQueue *fSyncStack,
+	KPilotLink *pilotLink,
 	FileInstaller *fInstaller,
 	const QStringList &c)
 {
 	if (c.findIndex(CSL1("internal_fileinstall")) >= 0)
 	{
-		fSyncStack->queueInstaller(fInstaller->dir());
+		fSyncStack->addAction(new FileInstallAction(pilotLink,fInstaller->dir()));
 	}
 }
 
@@ -945,7 +940,7 @@ static void queueConduits(ActionQueue *fSyncStack,
 {
 	if (conduits.count() > 0)
 	{
-		fSyncStack->queueConduits( conduits,e);
+		fSyncStack->queueConduits(conduits,e);
 		// QString s = i18n("Conduit flags: ");
 		// s.append(ConduitProxy::flagsForMode(e).join(CSL1(" ")));
 		// logMessage(s);
@@ -1059,7 +1054,8 @@ bool PilotDaemon::shouldBackup()
 	}
 
 	// Normal case: regular sync.
-	fSyncStack->queueInit( ActionQueue::queueCheckUser );
+	fSyncStack->queueInit();
+	fSyncStack->addAction(new CheckUser(pilotLink));
 
 	conduits = KPilotSettings::installedConduits() ;
 
@@ -1080,17 +1076,17 @@ bool PilotDaemon::shouldBackup()
 			break;
 		case SyncAction::SyncMode::eRestore:
 			fSyncStack->addAction(new RestoreAction(pilotLink));
-			queueInstaller(fSyncStack,fInstaller,conduits);
+			queueInstaller(fSyncStack,pilotLink,fInstaller,conduits);
 			break;
 		case SyncAction::SyncMode::eFullSync:
 		case SyncAction::SyncMode::eHotSync:
 			// first install the files, and only then do the conduits
 			// (conduits might want to sync a database that will be installed
-			queueInstaller(fSyncStack,fInstaller,conduits);
+			queueInstaller(fSyncStack,pilotLink,fInstaller,conduits);
 			queueEditors(fSyncStack,pilotLink);
 			queueConduits(fSyncStack,conduits,fNextSyncType);
 			// After running the conduits, install new databases
-			queueInstaller(fSyncStack,fInstaller,conduits);
+			queueInstaller(fSyncStack,pilotLink,fInstaller,conduits);
 			// And sync the remaining databases if needed.
 			if (shouldBackup())
 			{
@@ -1220,8 +1216,7 @@ void PilotDaemon::slotRunKPilot()
 #endif
 		))
 	{
-		kdWarning() << k_funcinfo
-			<< ": Couldn't start KPilot! " << kpilotError << endl;
+		WARNINGKPILOT << "Couldn't start KPilot! " << kpilotError << endl;
 	}
 	else
 	{
@@ -1301,8 +1296,7 @@ static KCmdLineOptions daemonoptions[] = {
 	{"debug <level>", I18N_NOOP("Set debugging level"), "0"},
 #endif
 	{ "device <device>", I18N_NOOP("Device to try first"), ""},
-	{"fail-silently", /* TODO_I18N */ ("Exit instead of complaining "
-		"about bad configuration files"), 0},
+	{"fail-silently", I18N_NOOP("Exit instead of complaining about bad configuration files"), 0},
 	KCmdLineLastOption
 } ;
 
@@ -1369,8 +1363,7 @@ int main(int argc, char **argv)
 
 		if (KPilotSettings::configVersion() < KPilotConfig::ConfigurationVersion)
 		{
-			kdError() << k_funcinfo
-				<< ": Is still not configured for use."
+			WARNINGKPILOT << "Is still not configured for use."
 				<< endl;
 			if (!p->isSet("fail-silently"))
 			{
@@ -1397,10 +1390,8 @@ int main(int argc, char **argv)
 		delete gPilotDaemon;
 
 		gPilotDaemon = 0;
-		kdError() << k_funcinfo
-			<< ": **\n"
-			": Failed to start up daemon\n"
-			": due to errors constructing it.\n" ": **" << endl;
+		WARNINGKPILOT << "Failed to start up daemon "
+			"due to errors constructing it." << endl;
 		return 2;
 	}
 

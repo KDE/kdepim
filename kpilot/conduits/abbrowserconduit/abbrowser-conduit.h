@@ -31,13 +31,12 @@
 
 
 #include <kabc/addressbook.h>
+
 #include <pilotAddress.h>
 #include <plugin.h>
 
+#include "kabcRecord.h"
 
-#define SYNCNONE 0
-#define SYNCMOD 1
-#define SYNCDEL 3
 
 class ResolutionTable;
 namespace KABC
@@ -83,15 +82,12 @@ private:
 	/* Read the global KPilot config file for settings
 	 * particular to the AbbrowserConduit conduit. */
 	void readConfig();
-	/**
-	*  @return the Abbrowser Contact field to map the pilot "other" phone
-	*  field to (such as BusinessFax, etc)
-	*/
-	static bool isDeleted(const PilotAddress*addr);
-	static bool isArchived(const PilotAddress*addr);
-	static bool isArchived(const Addressee &addr);
-	static bool makeArchived(Addressee &addr);
 
+	void showPilotAddress(const PilotAddress *pilotAddress);
+	void showAddresses(
+		const Addressee &pcAddr,
+		const PilotAddress *backupAddr,
+		const PilotAddress *palmAddr);
 
 
 	/********************************************************/
@@ -115,37 +111,6 @@ private:
 	void _setAppInfo();
 
 
-
-	/********************************************************/
-	/* Handle special fields of the Addressees              */
-	/********************************************************/
-	static int getCustom(const int index);
-	static QString getCustomField(const Addressee &abEntry, const int index);
-	static void setCustomField(Addressee &abEntry, int index, QString cust);
-	static QString getOtherField(const Addressee&abEntry);
-	static void setOtherField(Addressee&abEntry, QString nr);
-	static PhoneNumber getFax(const Addressee &abEntry);
-	static void setFax(Addressee &abEntry, QString fax);
-	static KABC::Address getAddress(const Addressee &abEntry);
-	QString _getCatForHH(const QStringList cats, const QString curr) const;
-	void _setCategory(Addressee &abEntry, QString cat);
-
-
-
-/*********************************************************************
-                     D E B U G   O U T P U T
- *********************************************************************/
-	/**
-	* Output to console, for debugging only
-	*/
-	static void showAddressee(const Addressee &abAddress);
-	/**
-	* Output to console, for debugging only
-	*/
-	static void showPilotAddress(PilotAddress *pilotAddress);
-
-	void showAdresses(Addressee &pcAddr, PilotAddress *backupAddr,
-		PilotAddress *palmAddr);
 
 
 
@@ -194,10 +159,6 @@ private:
 	};
 	bool _equal(const PilotAddress *piAddress, const Addressee &abEntry,
 		enum eqFlagsType flags=eqFlagsAll) const;
-	void _copy(PilotAddress *toPilotAddr, Addressee &fromAbEntry);
-	void _setPilotAddress(PilotAddress *toPilotAddr, const KABC::Address & abAddress);
-	void _copyPhone(Addressee &toAbEntry, PhoneNumber phone, QString palmphone);
-	void _copy(Addressee &toAbEntry, PilotAddress *fromPiAddr);
 
 /*********************************************************************
  C O N F L I C T   R E S O L U T I O N   a n d   M E R G I N G
@@ -232,19 +193,26 @@ private:
 
 	PilotAddressInfo *fAddressAppInfo;
 
+	KABCSync::Settings fSyncSettings;
+
 	int pilotindex;
 	bool abChanged;
-	static const QString appString;
-	static const QString flagString;
-	static const QString idString;
 	/** addresseeMap maps record ids to IDs of Addressees. This is used to speed up searching the local addressbook */
 	QMap < recordid_t, QString> addresseeMap;
 	RecordIDList syncedIds, allIds;
 	static AddressBook* aBook;
 	QString fABookFile;
 	AddressBook::Iterator abiter;
-	// for a local file, we need to obtain a saveTicket when opening the abook
-	Ticket*ticket;
+	/** For a local file resource, we need to obtain a saveTicket 
+	*   when opening the abook, just in case we want to modify it
+	*   at all.
+	*/
+	Ticket *fTicket;
+
+	/** if we add a resource from the addressbook, track it to remove it
+	 *  later...
+	 */
+	KABC::Resource *fBookResource;
 
 } ;
 

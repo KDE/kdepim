@@ -34,34 +34,19 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
-// the hex edit widget is in cvs now, so we can enable it globally.
-// I still leave this flag here so one can always easily disable
-// the generic DB viewer, which uses the widget.
-#define USE_KHEXEDIT
-
-// Want to be as careful as possible about casting QStrings back and
-// forth, because of the potential for putting UTF-8 encoded data on the HH.
-// KHexEdit headers are not safe, though, so don't use this in general.
-#ifndef QT_NO_ASCII_CAST
-// #define QT_NO_ASCII_CAST		(1)
-#endif
-#ifndef QT_NO_CAST_ASCII
-// #define QT_NO_CAST_ASCII		(1)
-#endif
-
-
 #include "config.h"
 
-#include <unistd.h>     /* For size_t for pilot-link */
 #include <qglobal.h>
+#include <qnamespace.h>
+#include <qstring.h>
 
 #if (QT_VERSION < 0x030300)
 #error "This is KPilot for KDE3.5 and won't compile with Qt < 3.3.0"
 #endif
 
-#ifndef KDE_VERSION
+#include <kdebug.h>
 #include <kdeversion.h>
-#endif
+#include <klocale.h>
 
 #if !(KDE_IS_VERSION(3,4,0))
 #error "This is KPilot for (really) KDE 3.5 and won't compile with KDE < 3.4.0"
@@ -73,39 +58,30 @@
 
 #include "pilotLinkVersion.h"
 
-// For QString, and everything else needs it anyway.
-#include <qstring.h>
-// Dunno, really. Probably because everything needs it.
-#include <klocale.h>
-// For the debug stuff.
-#ifdef DEBUG
-#undef NDEBUG
-#undef NO_DEBUG
-#ifndef DEBUG_CERR
-#define DEBUG_CERR
+#include <iostream>
+
+using namespace std;
+inline std::ostream& operator <<(std::ostream &o, const QString &s)
+	{ if (s.isEmpty()) return o<<"<empty>"; else return o<<s.latin1(); }
+inline std::ostream& operator <<(std::ostream &o, const QCString &s)
+	{ if (s.isEmpty()) return o<<"<empty>"; else return o << *s; }
+
+
+#ifndef NDEBUG
+#define DEBUG	(1)
 #endif
-#endif
-#include <kdebug.h>
 
 extern KDE_EXPORT int debug_level;
 
 class KDE_EXPORT KPilotDepthCount
 {
 public:
-	KPilotDepthCount(int area, int level, const char *s);
+	KPilotDepthCount(int, int level, const char *s);
+	KPilotDepthCount(int level, const char *s);
 	~KPilotDepthCount();
-	QString indent() const;
-	const char *name() const { return fName; } ;
-	// if DEBUG_CERR is defined, we can't return std::cerr (by value),
-	// since the copy constructor is private!
-#ifndef DEBUG_CERR
-#ifdef NDEBUG
-	inline kndbgstream debug(int area=0)
-#else
-	inline kdbgstream debug(int area=0)
-#endif
-	{ return kdDebug(debug_level >= fLevel, area); }
-#endif
+	const char *indent() const;
+	inline const char *name() const { return fName; } ;
+	inline int level() const { return fLevel; } ;
 
 protected:
 	static int depth;
@@ -117,71 +93,45 @@ protected:
 
 #ifdef DEBUG
 #ifdef __GNUC__
-#define KPILOT_FNAMEDEF(l)	KPilotDepthCount fname(DEBUGAREA,l,__FUNCTION__)
+#define KPILOT_FNAMEDEF(l)	KPilotDepthCount fname(l,__FUNCTION__)
 #else
-#define	KPILOT_FNAMEDEF(l)	KPilotDepthCount fname(DEBUGAREA,l,__FILE__ ":" "__LINE__")
+#define	KPILOT_FNAMEDEF(l)	KPilotDepthCount fname(l,__FILE__ ":" "__LINE__")
 #endif
 
 #define FUNCTIONSETUP		KPILOT_FNAMEDEF(1)
 #define FUNCTIONSETUPL(l)	KPILOT_FNAMEDEF(l)
-#define DEBUGAREA 		0
-
-#define DEBUGAREA_KPILOT	5510
-#define DEBUGAREA_LIBRARY	5511
-#define DEBUGAREA_CONDUIT	5512
-#define DEBUGAREA_DB		5513
-
-#ifdef DEBUG_CERR
-#include <iostream>
-#endif
 
 // stderr / iostream-based debugging.
 //
 //
-#ifdef DEBUG_CERR
-#include <iostream>
-#define DEBUGKPILOT	std::cerr
-#define DEBUGLIBRARY	std::cerr
-#define DEBUGCONDUIT	std::cerr
-#define DEBUGDB		std::cerr
-using namespace std;
+#define DEBUGKPILOT   std::cerr
+#define WARNINGKPILOT std::cerr.clear(std::ios_base::goodbit),\
+	std::cerr << "! " << k_funcinfo << std::endl << "!   "
 
-inline std::ostream& operator <<(std::ostream &o, const QString &s)
-	{ if (s.isEmpty()) return o<<"<empty>"; else return o<<s.latin1(); }
-inline std::ostream& operator <<(std::ostream &o, const QCString &s)
-	{ if (s.isEmpty()) return o<<"<empty>"; else return o << *s; }
 
 
 
 inline std::ostream& operator <<(std::ostream &o, const KPilotDepthCount &d)
-	{ return o << d.indent() << ' ' << d.name(); }
+{
+	if (debug_level >= d.level())
+	{
+		o.clear(std::ios_base::goodbit);
+		return o << d.indent() << ' ' << d.name();
+	}
+	else
+	{
+		o.setstate(std::ios_base::badbit | std::ios_base::failbit);
+		return o;
+	}
+}
 
 #else
-
-#warning "kdDebug()-based debugging is deprecated"
-
-// kddebug based debugging
-//
-//
-#define DEBUGKPILOT	fname.debug(DEBUGAREA_KPILOT)
-#define DEBUGLIBRARY	fname.debug(DEBUGAREA_LIBRARY)
-#define DEBUGCONDUIT	fname.debug(DEBUGAREA_CONDUIT)
-#define DEBUGDB         fname.debug(DEBUGAREA_DB)
-
-inline kdbgstream& operator <<(kdbgstream o, const KPilotDepthCount &d)
-	{ return o << d.indent() ; }
-
-#endif
-
 
 // no debugging at all
 //
-#else
-#define DEBUGSTREAM	kndbgstream
-#define DEBUGKPILOT	kndDebug()
-#define DEBUGLIBRARY	kndDebug()
-#define DEBUGCONDUIT	kndDebug()
-#define DEBUGDB         kndDebug()
+#define DEBUGSTREAM   kndbgstream
+#define DEBUGKPILOT   kndDebug()
+#define WARNINGKPILOT kndDebug()
 
 // With debugging turned off, FUNCTIONSETUP doesn't do anything.
 //
@@ -190,11 +140,11 @@ inline kdbgstream& operator <<(kdbgstream o, const KPilotDepthCount &d)
 #define FUNCTIONSETUPL(a) const int fname = a; Q_UNUSED(fname);
 #endif
 
-#define KPILOT_VERSION	"4.9.0 (deepsix)"
+#define KPILOT_VERSION	"4.9.1 (rabid dolphin)"
 
 
 // Function to expand newlines in rich text to <br>\n
-QString rtExpand(const QString &s, bool richText=true);
+QString rtExpand(const QString &s, Qt::TextFormat richText);
 
 
 

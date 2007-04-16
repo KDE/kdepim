@@ -70,7 +70,7 @@ private:
 		eOutputTemplate
 	} fOutputType;
 
-	DBInfoList dblist;
+	KPilotLink::DBInfoList dblist;
 	QStringList removeParts;
 	QStringList keepParts;
 	static const QString defaultpage;

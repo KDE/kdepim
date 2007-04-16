@@ -78,21 +78,21 @@ ResolutionDialog::ResolutionDialog( QWidget* parent, const QString& caption, syn
 	QObject::connect(bgroup, SIGNAL(clicked(int)), this, SLOT(slotInfo(int)));
 
 	if (syncInfo) {
-		DEBUGCONDUIT<<"Adding resolution options for the databases "<<endl;
+		DEBUGKPILOT<<"Adding resolution options for the databases "<<endl;
 		syncInfoList::Iterator it;
 		int nr=0;
-		DEBUGCONDUIT<<"We're having "<<(*syncInfo).size()<<" entries in the database list"<<endl;
+		DEBUGKPILOT<<"We're having "<<(*syncInfo).size()<<" entries in the database list"<<endl;
 		for (it=syncInfo->begin(); it!=syncInfo->end(); ++it ) {
 			docSyncInfo si=(*it);
 			conflictEntry cE;
 			cE.index=nr;
 			cE.conflict=(si.direction==eSyncConflict);
-			DEBUGCONDUIT<<"Adding "<<si.handheldDB<<" to the conflict resolution dialog"<<endl;
+			DEBUGKPILOT<<"Adding "<<si.handheldDB<<" to the conflict resolution dialog"<<endl;
 
 			QString text=si.handheldDB;
 			if  (cE.conflict) {
 				text=CSL1("<qt><b><font color=red>")+text+CSL1("</font></b></qt>");
-				DEBUGCONDUIT<<"We have a conflict for database "<<si.handheldDB<<endl;
+				DEBUGKPILOT<<"We have a conflict for database "<<si.handheldDB<<endl;
 				hasConflicts=true;
 			}
 			cE.dbname=new QLabel(text, big_box);
@@ -118,8 +118,7 @@ ResolutionDialog::ResolutionDialog( QWidget* parent, const QString& caption, syn
 			++nr;
 		}
 	} else {
-		kdWarning()<<"The list of text files is not available to the resolution "
-			"dialog. Something must have gone wrong ..."<<endl;
+		WARNINGKPILOT << "The list of text files is not available to the resolution dialog." << endl;
 	}
 
 

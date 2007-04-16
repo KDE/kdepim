@@ -2,7 +2,7 @@
 #define _MEMOFILE_MEMOFILES_H
 /* memofiles.h			KPilot
 **
-** Copyright (C) 2004-2004 by Jason 'vanRijn' Kasper
+** Copyright (C) 2004-2007 by Jason 'vanRijn' Kasper
 */
 
 /*
@@ -39,7 +39,8 @@ class Memofiles {
 
 public:
 
-	Memofiles (MemoCategoryMap & categories, PilotMemoInfo &appInfo, QString & baseDirectory);
+	Memofiles (MemoCategoryMap & categories, PilotMemoInfo &appInfo, 
+		QString & baseDirectory, CUDCounter &fCtrHH);
 	~Memofiles();
 
 	void load(bool loadAll);
@@ -48,8 +49,6 @@ public:
 	void setPilotMemos (QPtrList<PilotMemo> & memos);
 	void addModifiedMemo (PilotMemo * memo);
 	void deleteMemo (PilotMemo * memo);
-
-	QString getResults();
 
 	bool isFirstSync();
 	bool isReady() { return _ready; };
@@ -65,11 +64,14 @@ public:
 	static QString FIELD_SEP;
 	static QString sanitizeName(QString name);
 
+	int count() { return _memofiles.count(); }
+
 private:
 
 	MemoCategoryMap _categories;
 	PilotMemoInfo &_memoAppInfo;
 	QString & _baseDirectory;
+	CUDCounter &_cudCounter;
 	QPtrList<Memofile> _memofiles;
 
 	bool  loadFromMetadata();
@@ -85,10 +87,6 @@ private:
 
 	QString _categoryMetadataFile;
 	QString _memoMetadataFile;
-
-	int _countDeletedToLocal;
-	int _countModifiedToLocal;
-	int _countNewToLocal;
 
 	bool _metadataLoaded;
 	bool _ready;

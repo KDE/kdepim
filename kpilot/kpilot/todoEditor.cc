@@ -89,7 +89,7 @@ void TodoEditor::fillFields()
 
 	if (fTodo == 0L)
 	{
-		fTodo = new PilotTodoEntry(*fAppInfo);
+		fTodo = new PilotTodoEntry();
 		fDeleteOnCancel = true;
 	}
 

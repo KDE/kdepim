@@ -10,7 +10,7 @@
 #      ./configure, saved to CMakeOptions.txt, and read in below...
 #
 
--include CMakeOptions.txt
+-include Makefile.cmake.in
 
 BUILD_DIR ?= build-$(shell uname -sr | tr -d [:space:] | tr -Cs a-zA-Z0-9 _ )
 # these come from CMakeOptions.txt (from ./configure)
@@ -26,7 +26,7 @@ check: lib tests
 	$(BUILD_DIR)/tests/testaddresses --data-dir=tests/data
 	$(BUILD_DIR)/tests/testdatebook --data-dir=tests/data
 
-install: all
+install: build-check
 	@cd "$(BUILD_DIR)" && $(MAKE) install
 
 uninstall: 
@@ -44,7 +44,7 @@ tests: build-check
 build-check:
 	test -d "$(BUILD_DIR)" || mkdir -p "$(BUILD_DIR)"
 	test -d "$(BUILD_DIR)"
-	SRC_DIR=`pwd` ; cd "$(BUILD_DIR)" && $(CMAKE) $$SRC_DIR $(CMAKE_FLAGS)
+	test -f "$(BUILD_DIR)/Makefile" || (cd "$(BUILD_DIR)" && $(CMAKE) .. )
 
 messages:
 	extractrc `find . -name *.rc` > rc.cc
@@ -53,6 +53,9 @@ messages:
 
 clean:
 	@rm -rf $(BUILD_DIR)
+
+svnclean:
+	@rm -rf `svn status --no-ignore | awk '/^[?I]/{print $2}'`
 
 help:
 	@echo "Usage: make ( all | install | uninstall | clean )"

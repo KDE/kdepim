@@ -31,9 +31,11 @@
 #include <klocale.h>
 
 #include "plugin.h"
-#include "pilotAppCategory.h"
+#include "pilot.h"
 #include "pilotDatabase.h"
+#include "kpilotdevicelink.h"
 
+class KPilotDeviceLink;
 
 /** @file
 *
@@ -131,8 +133,8 @@ private:
 
 	States fState;
 
-	RecordIDList fIDList;
-	RecordIDList::Iterator fIDListIterator;
+	Pilot::RecordIDList fIDList;
+	Pilot::RecordIDList::Iterator fIDListIterator;
 
 	QString fDBName;
 } ;

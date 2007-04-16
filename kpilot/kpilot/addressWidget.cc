@@ -101,11 +101,10 @@ int AddressWidget::getAllAddresses(PilotDatabase * addressDB)
 		if (!(pilotRec->isDeleted()) &&
 			(!(pilotRec->isSecret()) || KPilotSettings::showSecrets()))
 		{
-			address = new PilotAddress(fAddressAppInfo, pilotRec);
+			address = new PilotAddress(pilotRec);
 			if (address == 0L)
 			{
-				kdWarning() << k_funcinfo
-					<< ": Couldn't allocate record "
+				WARNINGKPILOT << "Couldn't allocate record "
 					<< currentRecord++
 					<< endl;
 				break;
@@ -151,8 +150,7 @@ void AddressWidget::showComponent()
 	else
 	{
 		populateCategories(fCatList, 0L);
-		kdWarning() << k_funcinfo
-			<< ": Could not open local AddressDB" << endl;
+		WARNINGKPILOT << "Could not open local AddressDB" << endl;
 	}
 
 	KPILOT_DELETE( addressDB );
@@ -276,11 +274,11 @@ void AddressWidget::setupWidget()
 		i18n("<qt>Delete the selected address from the address book.</qt>") :
 		i18n("<qt><i>Deleting is disabled by the 'internal editors' setting.</i></qt>") ;
 
-	button = new QPushButton(TODO_I18N("Export..."), this);
+	button = new QPushButton(i18n("Export addresses to file","Export..."), this);
 	grid->addWidget(button, 3,1);
 	connect(button, SIGNAL(clicked()), this, SLOT(slotExport()));
 	QWhatsThis::add(button,
-		TODO_I18N("<qt>Export all addresses in the selected category to CSV format.</qt>") );
+		i18n("<qt>Export all addresses in the selected category to CSV format.</qt>") );
 
 	QWhatsThis::add(fDeleteButton,wt);
 }
@@ -608,7 +606,7 @@ void AddressWidget::slotShowAddress(int which)
 #endif
 
 	QString text(CSL1("<qt>"));
-	text += addr->getTextRepresentation(true);
+	text += addr->getTextRepresentation(fAddressAppInfo,Qt::RichText);
 	text += CSL1("</qt>\n");
 	fAddrInfo->setText(text);
 

@@ -91,12 +91,12 @@ SyncAction::~SyncAction()
 {
 	FUNCTIONSETUP;
 
-	DEBUGLIBRARY << fname
-		<< ": Running conduit " << name() << endl;
+	DEBUGKPILOT << fname << ": Exec " << name() << endl;
 
 	bool r = this->exec();
 
-	DEBUGLIBRARY << fname << ": Exec returned " << r << endl;
+	DEBUGKPILOT << fname << ": Exec " << name()
+		<< (r ? " is running" : " failed to start") << endl;
 
 	if (!r)
 	{
@@ -152,8 +152,8 @@ SyncAction::SyncMode::SyncMode(const QStringList &args) :
 
 	if (!maps[i].name)
 	{
-		kdError() << k_funcinfo << "No mode set by arguments "
-			<< args << ", defaulting to HotSync." << endl;
+		WARNINGKPILOT << "No mode set by arguments ("
+			<< args.join(",") << ") defaulting to HotSync." << endl;
 	}
 }
 
@@ -164,7 +164,7 @@ SyncAction::SyncMode::SyncMode(Mode m, bool test, bool local) :
 {
 	if ( ((int)m<(int)eHotSync) || ((int)m>(int)eRestore) )
 	{
-		kdError() << k_funcinfo << "Mode value " << (int)m << " is illegal"
+		WARNINGKPILOT << "Mode value " << (int)m << " is illegal"
 			", defaulting to HotSync." << endl;
 		fMode = eHotSync;
 	}
@@ -188,7 +188,7 @@ QStringList SyncAction::SyncMode::list() const
 	}
 	if ( !maps[i].name )
 	{
-		kdError() << k_funcinfo << "Mode " << fMode << " does not have a name." << endl;
+		WARNINGKPILOT << "Mode " << fMode << " does not have a name." << endl;
 		l.append(QString::fromLatin1(maps[0].name));
 	}
 
@@ -217,11 +217,11 @@ QString SyncAction::SyncMode::name() const
 	if (isTest())
 	{
 
-		s.append(CSL1(" [%1]").arg(TODO_I18N("Test Sync")));
+		s.append(CSL1(" [%1]").arg(i18n("Test Sync")));
 	}
 	if (isLocal())
 	{
-		s.append(CSL1(" [%1]").arg(TODO_I18N("Local Sync")));
+		s.append(CSL1(" [%1]").arg(i18n("Local Sync")));
 	}
 	return s;
 }
@@ -238,7 +238,7 @@ bool SyncAction::SyncMode::setMode(int mode)
 	}
 	else
 	{
-		kdWarning() << k_funcinfo << ": Bad sync mode " << mode << " requested." << endl ;
+		WARNINGKPILOT << "Bad sync mode " << mode << " requested." << endl ;
 		fMode = eHotSync;
 		return false;
 	}
@@ -257,7 +257,7 @@ bool SyncAction::SyncMode::setMode(SyncAction::SyncMode::Mode m)
 		i++;
 	}
 
-	kdWarning() << k_funcinfo << ": Bad sync mode " << m << " requested." << endl ;
+	WARNINGKPILOT << "Bad sync mode " << m << " requested." << endl ;
 	fMode = eHotSync;
 	return false;
 }
@@ -268,7 +268,7 @@ void SyncAction::startTickle(unsigned timeout)
 
 	if (!deviceLink())
 	{
-		kdWarning() << k_funcinfo << ": Trying to tickle without a device." << endl;
+		WARNINGKPILOT << "Trying to tickle without a device." << endl;
 	}
 	else
 	{
@@ -282,7 +282,7 @@ void SyncAction::stopTickle()
 	FUNCTIONSETUP;
 	if (!deviceLink())
 	{
-		kdWarning() << k_funcinfo << ": Trying to tickle without a device." << endl;
+		WARNINGKPILOT << "Trying to tickle without a device." << endl;
 	}
 	else
 	{

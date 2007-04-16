@@ -39,7 +39,10 @@
 
 #include "vcal-conduit.moc"
 #include "vcalconduitSettings.h"
+
+#include "kcalRecord.h"
 #include "vcalRecord.h"
+
 
 extern "C"
 {
@@ -167,7 +170,9 @@ KCal::Incidence *VCalConduitPrivate::getNextModifiedIncidence()
 
 VCalConduit::VCalConduit(KPilotLink *d,
 	const char *n,
-	const QStringList &a) : VCalConduitBase(d,n,a)
+	const QStringList &a) :
+	VCalConduitBase(d,n,a),
+	fAppointmentAppInfo( 0L )
 {
 	FUNCTIONSETUP;
 	fConduitName=i18n("Calendar");
@@ -179,7 +184,7 @@ VCalConduit::~VCalConduit()
 //	FUNCTIONSETUP;
 }
 
-VCalConduitPrivateBase* VCalConduit::newVCalPrivate(KCal::Calendar *fCalendar) {
+VCalConduitPrivateBase *VCalConduit::createPrivateCalendarData(KCal::Calendar *fCalendar) {
 	return new VCalConduitPrivate(fCalendar);
 }
 
@@ -187,26 +192,8 @@ void VCalConduit::_getAppInfo()
 {
 	FUNCTIONSETUP;
 	// get the address application header information
-	unsigned char *buffer =
-		new unsigned char[Pilot::MAX_APPINFO_SIZE];
-	int appLen = fDatabase->readAppBlock(buffer,Pilot::MAX_APPINFO_SIZE);
-
-	unpack_AppointmentAppInfo(&fAppointmentAppInfo, buffer, appLen);
-	delete[]buffer;
-	buffer = NULL;
-
-#ifdef DEBUG
-	DEBUGCONDUIT << fname << " lastUniqueId"
-		<< fAppointmentAppInfo.category.lastUniqueID << endl;
-#endif
-	for (int i = 0; i < 16; i++)
-	{
-#ifdef DEBUG
-		DEBUGCONDUIT << fname << " cat " << i << " =" <<
-			fAppointmentAppInfo.category.name[i] << endl;
-#endif
-	}
-
+	KPILOT_DELETE(fAppointmentAppInfo);
+	fAppointmentAppInfo = new PilotDateInfo( fDatabase );
 }
 
 const QString VCalConduit::getTitle(PilotRecordBase *de)
@@ -223,7 +210,7 @@ PilotRecord *VCalConduit::recordFromIncidence(PilotRecordBase *de, const KCal::I
 	FUNCTIONSETUP;
 	if (!de || !e)
 	{
-		DEBUGCONDUIT << fname
+		DEBUGKPILOT << fname
 			<< ": got NULL entry or NULL incidence." << endl;
 		return 0L;
 	}
@@ -245,11 +232,11 @@ PilotRecord *VCalConduit::recordFromIncidence(PilotRecordBase *de, const KCal::I
 	const KCal::Event *event = dynamic_cast<const KCal::Event *>(e);
 	if (!event)
 	{
-		DEBUGCONDUIT << fname << ": Incidence is not an event." << endl;
+		DEBUGKPILOT << fname << ": Incidence is not an event." << endl;
 		return 0L;
 	}
 
-	if (VCalRecord::setDateEntry(dateEntry, event))
+	if (KCalSync::setDateEntry(dateEntry, event,*fAppointmentAppInfo->categoryInfo()))
 	{
 		return dateEntry->pack();
 	}
@@ -265,7 +252,7 @@ KCal::Incidence *VCalConduit::incidenceFromRecord(KCal::Incidence *e, const Pilo
 
 	if (!de || !e)
 	{
-		DEBUGCONDUIT << fname
+		DEBUGKPILOT << fname
 			<< ": Got NULL entry or NULL incidence." << endl;
 		return 0L;
 	}
@@ -273,18 +260,18 @@ KCal::Incidence *VCalConduit::incidenceFromRecord(KCal::Incidence *e, const Pilo
 	const PilotDateEntry *dateEntry = dynamic_cast<const PilotDateEntry *>(de);
 	if (!dateEntry)
 	{
-		DEBUGCONDUIT << fname << ": HH record not a date entry." << endl;
+		DEBUGKPILOT << fname << ": HH record not a date entry." << endl;
 		return 0L;
 	}
 
 	KCal::Event *event = dynamic_cast<KCal::Event *>(e);
 	if (!event)
 	{
-		DEBUGCONDUIT << fname << ": Incidence is not an event." << endl;
+		DEBUGKPILOT << fname << ": Incidence is not an event." << endl;
 		return 0L;
 	}
 
-	VCalRecord::setEvent(event, dateEntry);
+	KCalSync::setEvent(event, dateEntry,*fAppointmentAppInfo->categoryInfo());
 	return e;
 }
 
@@ -292,8 +279,7 @@ KCal::Incidence *VCalConduit::incidenceFromRecord(KCal::Incidence *e, const Pilo
 
 PilotRecordBase * VCalConduit::newPilotEntry(PilotRecord*r)
 {
-	if (r) return new PilotDateEntry(fAppointmentAppInfo,r);
-	else return new PilotDateEntry(fAppointmentAppInfo);
+	return new PilotDateEntry(r);
 }
 
 KCal::Incidence* VCalConduit::newIncidence()
@@ -303,7 +289,8 @@ KCal::Incidence* VCalConduit::newIncidence()
 
 static VCalConduitSettings *config_vcal = 0L;
 
-VCalConduitSettings *VCalConduit::theConfig() {
+VCalConduitSettings *VCalConduit::theConfig()
+{
 	if (!config_vcal)
 	{
 		config_vcal = new VCalConduitSettings(CSL1("Calendar"));

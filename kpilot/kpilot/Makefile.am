@@ -58,14 +58,13 @@ kpilot_COMPILE_FIRST = kpilotSettings.h
 kpilotDaemon_SOURCES = \
 	pilotDaemonDCOP.skel kpilotDCOP.stub loggerDCOP.stub loggerDCOP.skel \
 	pilotDaemon.cc logFile.cc \
-	hotSync.cc internalEditorAction.cc interactiveSync.cc syncStack.cc \
+	hotSync.cc internalEditorAction.cc \
 	fileInstaller.cc
 
 kpilotTest_SOURCES = \
 	logWidget.cc pilotComponent.cc \
-	hotSync.cc internalEditorAction.cc interactiveSync.cc \
+	hotSync.cc internalEditorAction.cc \
 	loggerDCOP.skel \
-	syncStack.cc \
 	main-test.cc
 
 

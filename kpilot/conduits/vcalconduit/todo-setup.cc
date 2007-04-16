@@ -36,7 +36,6 @@
 #include "todo-conduit.h"
 #include "todo-setup.h"
 
-#include "uiDialog.h"
 
 
 ToDoWidgetSetup::ToDoWidgetSetup(QWidget *w, const char *n) :
@@ -65,7 +64,7 @@ ToDoWidgetSetup::ToDoWidgetSetup(QWidget *w, const char *n) :
 		"reinhold@kainhofer.com",
 		"http://reinhold.kainhofer.com/Linux/");
 
-	UIDialog::addAboutPage(fConfigWidget->tabWidget,fAbout);
+	ConduitConfigBase::addAboutPage(fConfigWidget->tabWidget,fAbout);
 
 	fConfigWidget->fSyncDestination->setTitle(i18n("To-do Destination"));
 }

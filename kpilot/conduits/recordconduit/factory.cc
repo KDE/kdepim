@@ -36,7 +36,6 @@
 #include <kinstance.h>
 #include <kaboutdata.h>
 
-#include "uiDialog.h"
 #include "pluginfactory.h"
 #include "pilotDatabase.h"
 #include "recordConduit.h"
@@ -62,8 +61,8 @@ ConduitConfig::ConduitConfig(QWidget *p, const char *n) :
 	fConfigWidget(new RecordWidget(p))
 {
 	FUNCTIONSETUP;
-	fConduitName = TODO_I18N("Record Conduit");
-		fAbout = new KAboutData("recordConduit",
+	fConduitName = i18n("Record Conduit");
+	fAbout = new KAboutData("recordConduit",
 		I18N_NOOP("Record Conduit for KPilot"),
 		KPILOT_VERSION,
 		I18N_NOOP("Configures the Record Conduit for KPilot"),
@@ -74,7 +73,7 @@ ConduitConfig::ConduitConfig(QWidget *p, const char *n) :
 		"groot@kde.org",
 		"http://people.fruitsalad.org/adridg/");
 
-	UIDialog::addAboutPage(fConfigWidget->tabWidget,fAbout);
+	ConduitConfigBase::addAboutPage(fConfigWidget->tabWidget,fAbout);
 	fWidget=fConfigWidget;
 	QObject::connect(fConfigWidget->fLogMessage,SIGNAL(textChanged(const QString&)),
 		this,SLOT(modified()));
@@ -89,11 +88,11 @@ ConduitConfig::ConduitConfig(QWidget *p, const char *n) :
 	FUNCTIONSETUP;
 
 #ifdef DEBUG
-	DEBUGCONDUIT << fname
+	DEBUGKPILOT << fname
 		<< ": Message="
 		<< fConfigWidget->fLogMessage->text()
 		<< endl;
-	DEBUGCONDUIT << fname
+	DEBUGKPILOT << fname
 		<< ": Databases="
 		<< fConfigWidget->fDatabases->text()
 		<< endl;
@@ -116,11 +115,11 @@ ConduitConfig::ConduitConfig(QWidget *p, const char *n) :
 	fConfigWidget->fFailImmediately->setChecked( ConduitSettings::failImmediately() );
 
 #ifdef DEBUG
-	DEBUGCONDUIT << fname
+	DEBUGKPILOT << fname
 		<< ": Read Message="
 		<< fConfigWidget->fLogMessage->text()
 		<< endl;
-	DEBUGCONDUIT << fname
+	DEBUGKPILOT << fname
 		<< ": Read Database="
 		<< fConfigWidget->fDatabases->text()
 		<< endl;

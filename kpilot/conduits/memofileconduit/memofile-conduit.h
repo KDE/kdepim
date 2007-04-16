@@ -2,7 +2,7 @@
 #define _MEMOFILE_MEMOFILE_CONDUIT_H
 /* memofile-conduit.h			KPilot
 **
-** Copyright (C) 2004-2004 by Jason 'vanRijn' Kasper
+** Copyright (C) 2004-2007 by Jason 'vanRijn' Kasper
 */
 
 /*
@@ -43,9 +43,6 @@ public:
 		const QStringList &args = QStringList());
 	virtual ~MemofileConduit();
 
-	QString getResults();
-
-
 protected:
 	virtual bool exec();
 
@@ -59,10 +56,6 @@ private:
 	QString	_memo_directory;
 	bool	_sync_private;
 
-	int _countDeletedToPilot;
-	int _countModifiedToPilot;
-	int _countNewToPilot;
-
 	PilotMemoInfo	*fMemoAppInfo;
 	QPtrList<PilotMemo> fMemoList;
 
@@ -75,8 +68,6 @@ private:
 	bool	readConfig();
 	bool	getAppInfo();
 	bool	setAppInfo();
-	unsigned char *doPackAppInfo( int *appLen );
-	QString	getCategoryName(int category);
 
 	bool	initializeFromPilot();
 	bool	loadPilotCategories();

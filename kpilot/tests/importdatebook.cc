@@ -40,6 +40,7 @@
 #include "pilot.h"
 #include "pilotDateEntry.h"
 #include "pilotLocalDatabase.h"
+#include "../conduits/vcalconduit/kcalRecord.cc"
 #include "../conduits/vcalconduit/vcalRecord.cc"
 
 static const KCmdLineOptions options[] =
@@ -54,57 +55,69 @@ static const KCmdLineOptions options[] =
 
 int main(int argc, char **argv)
 {
+	KApplication::disableAutoDcopRegistration();
+
 	KAboutData aboutData("importdatebook","Import Date Book","0.1");
 	KCmdLineArgs::init(argc,argv,&aboutData);
 	KCmdLineArgs::addCmdLineOptions( options );
 
-	//  KApplication app( false, false );
-	KApplication app;
+	KApplication app( false, false );
 
 	KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
 
-#ifdef DEBUG
 	debug_level= (args->isSet("verbose")) ? 4 : 0;
-#endif
+
 	QString datadir = args->getOption("data-dir");
 	QString vcalfile = args->getOption("vcal-file");
 
 	if (datadir.isEmpty())
 	{
-		kdWarning() << "! Must provide a data-directory." << endl;
+		WARNINGKPILOT << "! Must provide a data-directory." << endl;
 	}
 	if (vcalfile.isEmpty())
 	{
-		kdWarning() << "! Must provide a vcal-file to read." << endl;
+		WARNINGKPILOT << "! Must provide a vcal-file to read." << endl;
 	}
 	if (datadir.isEmpty() || vcalfile.isEmpty())
 	{
 		return 1;
 	}
 
-	KCal::CalendarLocal *calendar = new KCal::CalendarLocal( QString() );
-	if (!calendar->load( vcalfile ))
+	DEBUGKPILOT << "Using vcal-file: [" << vcalfile 
+		<< "], creating DatebookDB in: [" << datadir
+		<< "]" << endl;
+
+	KCal::CalendarLocal *calendar = new KCal::CalendarLocal( QString::fromLatin1("UTC") );
+	if (!calendar || !calendar->load( vcalfile ))
 	{
 		return 1;
 	}
+
+	DEBUGKPILOT << "Opened calendar with: [" 
+		<< calendar->incidences().count() << "] incidences." << endl;
 
 	Pilot::setupPilotCodec( CSL1("Latin1") );
 
 	PilotLocalDatabase db( datadir, "DatebookDB" );
 	db.createDatabase( 0xdead, 0xbeef );
-	PilotDateInfo appInfo;
+	PilotDateInfo appInfo(0L);
+	appInfo.resetToDefault();
 	appInfo.writeTo(&db);
 
-	KCal::Event::List events = calendar->rawEvents();
+	KCal::Event::List events = calendar->events();
 
 	for (KCal::Event::List::ConstIterator i = events.begin();
 		i != events.end(); ++i)
 	{
-		PilotDateEntry d(*appInfo.info());
-		memset(&d,0,sizeof(d));
-		if (VCalRecord::setDateEntry(&d,*i))
+		PilotDateEntry * d = new PilotDateEntry();
+
+		const KCal::Event *e = *i;
+		DEBUGKPILOT << "event: [" << e->summary() << "]" << endl;
+
+		if (KCalSync::setDateEntry(d,e,*appInfo.categoryInfo()))
 		{
-			PilotRecord *r = d.pack();
+DEBUGKPILOT << "got here." << endl;
+			PilotRecord *r = d->pack();
 			if (r)
 			{
 				db.writeRecord(r);

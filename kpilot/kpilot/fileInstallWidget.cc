@@ -288,10 +288,10 @@ void FileInstallWidget::contextMenu(QMouseEvent *event)
     item = fIconView->findItem(event->pos());
     if(item) {
         // Popup for the right clicked item
-        popup.insertItem(TODO_I18N("Delete"), 10);
+        popup.insertItem(i18n("Delete a single file item","Delete"), 10);
     }
 
-    popup.insertItem(TODO_I18N("Delete selected files"), 11);
+    popup.insertItem(i18n("Delete selected files"), 11);
     if(files.empty())
         popup.setItemEnabled(11, false);
 

@@ -58,7 +58,7 @@ kde3_add_kcfg_files(kpalmdoc_SRCS kpalmdocSettings.kcfgc)
 kde3_add_ui_files(kpalmdoc_SRCS kpalmdoc_dlgbase.ui)
 kde3_automoc(${kpalmdoc_SRCS})
 add_executable(kpalmdoc ${kpalmdoc_SRCS})
-target_link_libraries(kpalmdoc ${QT_LIBRARIES} kpilot)
+target_link_libraries(kpalmdoc ${QT_LIBRARIES} kpilot kdeui kio)
 kpilot_rpath(kpalmdoc)
 
 install(
@@ -73,6 +73,10 @@ install(
 
 install(
 	FILES docconduit.kcfg kpalmdoc.kcfg DESTINATION ${KDE3_KCFG_DIR}
+)
+
+install(
+	FILES kpalmdoc.desktop DESTINATION ${KDE3_XDG_APPS_DIR}
 )
 
 install(

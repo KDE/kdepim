@@ -32,7 +32,10 @@
 
 #include "pilotAppInfo.h"
 
-PilotAppInfoBase::PilotAppInfoBase(PilotDatabase *d) : fC(new struct CategoryAppInfo), fLen(0), fOwn(true)
+PilotAppInfoBase::PilotAppInfoBase(PilotDatabase *d) :
+	fC( 0L ),
+	fLen(0),
+	fOwn(true)
 {
 	FUNCTIONSETUP;
 	int appLen = Pilot::MAX_APPINFO_SIZE;
@@ -40,18 +43,23 @@ PilotAppInfoBase::PilotAppInfoBase(PilotDatabase *d) : fC(new struct CategoryApp
 
 	if (!d || !d->isOpen())
 	{
-		kdError() << "Bad database pointer." << endl;
+		WARNINGKPILOT << "Bad database pointer." << endl;
 		fLen = 0;
 		KPILOT_DELETE( fC );
 		return;
 	}
+
+	fC = new struct CategoryAppInfo;
 	fLen = appLen = d->readAppBlock(buffer,appLen);
 	unpack_CategoryAppInfo(fC, buffer, appLen);
 }
 
 PilotAppInfoBase::~PilotAppInfoBase()
 {
-	if (fOwn) delete fC;
+	if (fOwn)
+	{
+		delete fC;
+	}
 }
 
 bool PilotAppInfoBase::setCategoryName(unsigned int i, const QString &s)

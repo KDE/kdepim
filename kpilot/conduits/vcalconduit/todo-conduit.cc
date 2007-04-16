@@ -46,6 +46,9 @@
 #include "vcalconduitSettings.h"
 #include "todo-factory.h"
 
+#include "kcalRecord.h"
+#include "todoRecord.h"
+
 // define conduit versions, one for the version when categories were synced for the first time, and the current version number
 #define CONDUIT_VERSION_CATEGORYSYNC 10
 #define CONDUIT_VERSION 10
@@ -157,7 +160,7 @@ KCal::Incidence *TodoConduitPrivate::getNextModifiedIncidence()
 
 #ifdef DEBUG
 	if(e)
-		DEBUGCONDUIT<< e->summary()<<" had SyncStatus="<<e->syncStatus()<<endl;
+		DEBUGKPILOT<< e->summary()<<" had SyncStatus="<<e->syncStatus()<<endl;
 #endif
 
 	}
@@ -196,12 +199,12 @@ void TodoConduit::_setAppInfo()
 
 	if( !fTodoAppInfo )
 	{
-		DEBUGCONDUIT << fname << ": fTodoAppInfo is NULL" << endl;
+		DEBUGKPILOT << fname << ": fTodoAppInfo is NULL" << endl;
 		return;
 	}
 	if( !fDatabase )
 	{
-		DEBUGCONDUIT << fname << ": fDatabase is NULL" << endl;
+		DEBUGKPILOT << fname << ": fDatabase is NULL" << endl;
 		return;
 	}
 
@@ -245,7 +248,7 @@ void TodoConduit::readConfig()
 	{
 		changeSync(SyncMode::eFullSync);
 	}
-	DEBUGCONDUIT<<"categoriesSynced=" << categoriesSynced << endl;
+	DEBUGKPILOT<<"categoriesSynced=" << categoriesSynced << endl;
 }
 
 void TodoConduit::preSync()
@@ -267,59 +270,72 @@ void TodoConduit::postSync()
 
 
 
-PilotRecord*TodoConduit::recordFromIncidence(PilotRecordBase *de, const KCal::Incidence*e)
-{
-	// don't need to check for null pointers here, the recordFromIncidence(PTE*, KCal::Todo*) will do that.
-	PilotTodoEntry *tde = dynamic_cast<PilotTodoEntry*>(de);
-	const KCal::Todo *te = dynamic_cast<const KCal::Todo*>(e);
-
-	return recordFromTodo(tde, te);
-}
-
-
-
-PilotRecord*TodoConduit::recordFromTodo(PilotTodoEntry*de, const KCal::Todo*todo)
+PilotRecord *TodoConduit::recordFromIncidence(PilotRecordBase *de, const KCal::Incidence *e)
 {
 	FUNCTIONSETUP;
-	if (!de || !todo) {
-		DEBUGCONDUIT << fname << ": NULL todo given... Skipping it" << endl;
-		return NULL;
-	}
 
-	// set secrecy, start/end times, alarms, recurrence, exceptions, summary and description:
-	if (todo->secrecy()!=KCal::Todo::SecrecyPublic)
+	if (!de || !e)
 	{
-		de->setSecret( true );
+		DEBUGKPILOT << fname
+			<< ": got NULL entry or NULL incidence." << endl;
+		return 0L;
 	}
 
-	// update it from the iCalendar Todo.
-
-	if (todo->hasDueDate()) {
-		struct tm t = writeTm(todo->dtDue());
-		de->setDueDate(t);
-		de->setIndefinite(0);
-	} else {
-		de->setIndefinite(1);
+	PilotTodoEntry *todoEntry = dynamic_cast<PilotTodoEntry*>(de);
+	if (!todoEntry)
+	{
+		// Secretly wasn't a todo entry after all
+		return 0L;
 	}
 
-	// TODO: take recurrence (code in VCAlConduit) from ActionNames
+	const KCal::Todo *todo = dynamic_cast<const KCal::Todo *>(e);
+	if (!todo)
+	{
+		DEBUGKPILOT << fname << ": Incidence is not a todo." << endl;
+		return 0L;
+	}
 
-	setCategory(de, todo);
-
-	// TODO: sync the alarm from ActionNames. Need to extend PilotTodoEntry
-	de->setPriority(todo->priority());
-
-	de->setComplete(todo->isCompleted());
-
-	// what we call summary pilot calls description.
-	de->setDescription(todo->summary());
-
-	// what we call description pilot puts as a separate note
-	de->setNote(todo->description());
-
-	DEBUGCONDUIT << "-------- " << todo->summary() << endl;
-	return de->pack();
+	// don't need to check for null pointers here, the recordFromIncidence(PTE*, KCal::Todo*) will do that.
+	if (KCalSync::setTodoEntry(todoEntry,todo,*fTodoAppInfo->categoryInfo()))
+	{
+		return todoEntry->pack();
+	}
+	else
+	{
+		return 0L;
+	}
 }
+
+KCal::Incidence *TodoConduit::incidenceFromRecord(KCal::Incidence *e, const PilotRecordBase *de)
+{
+	FUNCTIONSETUP;
+
+	if (!de || !e)
+	{
+		DEBUGKPILOT << fname
+			<< ": Got NULL entry or NULL incidence." << endl;
+		return 0L;
+	}
+
+	const PilotTodoEntry *todoEntry = dynamic_cast<const PilotTodoEntry *>(de);
+	if (!todoEntry)
+	{
+		DEBUGKPILOT << fname << ": HH record not a todo entry." << endl;
+		return 0L;
+	}
+
+	KCal::Todo *todo = dynamic_cast<KCal::Todo *>(e);
+	if (!todo)
+	{
+		DEBUGKPILOT << fname << ": Incidence is not a todo." << endl;
+		return 0L;
+	}
+
+	KCalSync::setTodo(todo, todoEntry,*fTodoAppInfo->categoryInfo());
+	return e;
+}
+
+
 
 
 
@@ -328,142 +344,18 @@ void TodoConduit::preRecord(PilotRecord*r)
 	FUNCTIONSETUP;
 	if (!categoriesSynced && r)
 	{
-		const PilotRecordBase *de=newPilotEntry(r);
+		const PilotRecordBase *de = newPilotEntry(r);
 		KCal::Incidence *e = fP->findIncidence(r->id());
-		setCategory(dynamic_cast<KCal::Todo*>(e), dynamic_cast<const PilotTodoEntry*>(de));
+		KCalSync::setCategory(dynamic_cast<KCal::Todo*>(e),
+			dynamic_cast<const PilotTodoEntry*>(de),
+			*fTodoAppInfo->categoryInfo());
 	}
 }
 
 
 
-void TodoConduit::setCategory(PilotTodoEntry*de, const KCal::Todo*todo)
-{
-	if (!de || !todo)
-	{
-		return;
-	}
-	de->setCategory(_getCat(todo->categories(), de->getCategoryLabel()));
-}
 
 
-
-/**
- * _getCat returns the id of the category from the given categories list. If none of the
- * categories exist on the palm, the "Unfiled" one is used.
- */
-QString TodoConduit::_getCat(const QStringList cats, const QString curr) const
-{
-	if (cats.size()<1) return QString::null;
-	if (cats.contains(curr)) return curr;
-	for ( QStringList::ConstIterator it = cats.begin(); it != cats.end(); ++it )
-	{
-		for (unsigned int j=1; j<Pilot::CATEGORY_COUNT; j++)
-		{
-			QString catName = fTodoAppInfo->categoryName(j);
-			if (!(*it).isEmpty() && !(*it).compare( catName ) )
-			{
-				return catName;
-			}
-		}
-	}
-	// If we have a free label, return the first possible cat
-	//
-	// FIXME: Clearly buggy, but I don't know how or why
-	QString lastName = fTodoAppInfo->categoryName(Pilot::CATEGORY_COUNT-1);
-	if (lastName.isEmpty()) return cats.first();
-	return QString::null;
-}
-
-
-
-KCal::Incidence *TodoConduit::incidenceFromRecord(KCal::Incidence *e, const PilotRecordBase *de)
-{
-	return dynamic_cast<KCal::Incidence*>(incidenceFromRecord(dynamic_cast<KCal::Todo*>(e), dynamic_cast<const PilotTodoEntry*>(de)));
-}
-
-
-
-KCal::Todo *TodoConduit::incidenceFromRecord(KCal::Todo *e, const PilotTodoEntry *de)
-{
-	FUNCTIONSETUP;
-
-	KCal::Todo*vtodo=e;
-	if (!vtodo)
-	{
-#ifdef DEBUG
-		DEBUGCONDUIT<<fname<<": null todo entry given. skipping..."<<endl;
-#endif
-		return NULL;
-	}
-
-   // We don't want this, do we?
-//	e->setOrganizer(fCalendar->getEmail());
-	e->setPilotId(de->id());
-#ifdef DEBUG
-		DEBUGCONDUIT<<fname<<": set KCal item to pilotId: [" << e->pilotId() << "] ..."<<endl;
-#endif
-	e->setSyncStatus(KCal::Incidence::SYNCNONE);
-	e->setSecrecy(de->isSecret() ? KCal::Todo::SecrecyPrivate : KCal::Todo::SecrecyPublic);
-
-	// we don't want to modify the vobject with pilot info, because it has
-	// already been  modified on the desktop.  The VObject's modified state
-	// overrides the PilotRec's modified state.
-	// TODO: Also include this in the vcal conduit!!!
-//	if (e->syncStatus() != KCal::Incidence::SYNCNONE) return e;
-
-	// otherwise, the vObject hasn't been touched.  Updated it with the
-	// info from the PilotRec.
-	if (de->getIndefinite()) {
-		e->setHasDueDate(false);
-	} else {
-		e->setDtDue(readTm(de->getDueDate()));
-		e->setHasDueDate(true);
-	}
-
-	// Categories
-	setCategory(e, de);
-
-	// PRIORITY //
-	e->setPriority(de->getPriority());
-
-	// COMPLETED? //
-	e->setCompleted(de->getComplete());
-	if ( de->getComplete() && !e->hasCompletedDate() ) {
-		e->setCompleted( QDateTime::currentDateTime() );
-	}
-
-	e->setSummary(de->getDescription());
-	e->setDescription(de->getNote());
-
-	e->setSyncStatus(KCal::Incidence::SYNCNONE);
-
-	return e;
-}
-
-
-
-void TodoConduit::setCategory(KCal::Todo *e, const PilotTodoEntry *de)
-{
-	if (!e || !de) return;
-	QStringList cats=e->categories();
-	int cat=de->category();
-	if ( (0<cat) && (cat<(int)Pilot::CATEGORY_COUNT) )
-	{
-		QString newcat=fTodoAppInfo->categoryName(cat);
-		if (!cats.contains(newcat))
-		{
-			// if this event only has one category associated with it, then we can
-			// safely assume that what we should be doing here is changing it to match
-			// the palm.  if there's already more than one category in the event, however, we
-			// won't cause data loss--we'll just append what the palm has to the
-			// event's categories
-			if (cats.count() <=1) cats.clear();
-
-			cats.append( newcat );
-			e->setCategories(cats);
-		}
-	}
-}
 
 static VCalConduitSettings *config_vcal = 0L;
 

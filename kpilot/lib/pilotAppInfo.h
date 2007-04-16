@@ -50,12 +50,6 @@
 class KDE_EXPORT PilotAppInfoBase
 {
 protected:
-	/** Constructor. This is for use by derived classes (using the template below
-	* only, and says that the category info in the base class aliases data in
-	* the derived class. Remember to call init()!
-	*/
-	PilotAppInfoBase() : fC(0L), fLen(0), fOwn(false) { } ;
-
 	/** Initialize class members after reading header, to alias data elsewhere.
 	* Only for use by the (derived) template classes below.
 	*/
@@ -66,6 +60,12 @@ protected:
 	} ;
 
 public:
+	/** Constructor. This is for use by derived classes (using the template below
+	* only, and says that the category info in the base class aliases data in
+	* the derived class. Remember to call init()!
+	*/
+	PilotAppInfoBase() : fC(0L), fLen(0), fOwn(false) { } ;
+
 	/** Constructor, intended for untyped access to the AppInfo only. This throws
 	* away everything but the category information. In this variety, the
 	* CategoryAppInfo structure is owned by the PilotAppInfoBase object.
@@ -97,7 +97,7 @@ public:
 	} ;
 
 	/** @see findCategory(const QString &name, bool unknownIsUnfiled, struct CategoryAppInfo *info). */
-	inline int findCategory(const QString &name, bool unknownIsUnfiled = false)
+	inline int findCategory(const QString &name, bool unknownIsUnfiled = false) const
 	{
 		return Pilot::findCategory(fC,name,unknownIsUnfiled);
 	} ;
@@ -137,6 +137,7 @@ protected:
 */
 template <typename appinfo,
 #if PILOT_LINK_IS(0,12,2)
+	/* There are additional consts introduced in 0.12.2 */
 	int(*unpack)(appinfo *, const unsigned char *, PI_SIZE_T),
 	int(*pack)(const appinfo *, unsigned char *, PI_SIZE_T)
 #else
@@ -168,12 +169,14 @@ public:
 			delete fC;
 			fC = 0L;
 			fLen = 0;
+			init(&fInfo.category,sizeof(fInfo));
 		}
 	} ;
 
 	PilotAppInfo()
 	{
 		memset(&fInfo,0,sizeof(fInfo));
+		init(&fInfo.category,sizeof(fInfo));
 	}
 
 

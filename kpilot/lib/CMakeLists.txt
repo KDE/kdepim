@@ -30,10 +30,16 @@ include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
 set(lib_SRCS
 	options.cc
-	uiDialog.cc
 	plugin.cc
 	syncAction.cc
+	actions.cc
+	actionQueue.cc
+	idmapping.cc
+	idmapperxml.cc
+	idmapper.cc
 	kpilotlink.cc
+	kpilotdevicelink.cc
+	kpilotlocallink.cc
 	pilot.cc
 	pilotAppInfo.cc
 	pilotRecord.cc
@@ -49,12 +55,14 @@ set(lib_SRCS
 kde3_automoc(${lib_SRCS})
 kde3_add_kcfg_files(lib_SRCS kpilotlibSettings.kcfgc)
 add_library(kpilot SHARED ${lib_SRCS})
-target_link_libraries(kpilot ${PILOTLINK_LIBRARY} ${QT_LIBRARIES} kabc kdeui)
+target_link_libraries(kpilot ${PILOTLINK_LIBRARY} ${QT_LIBRARIES} kdeui kio)
 kpilot_rpath(kpilot)
 
 #---------- INSTALL -----------------------*
 set(kpilotinclude_HEADERS
 	kpilotlink.h
+	kpilotdevicelink.h
+	kpilotlocallink.h
 	pilot.h
 	pilotDatabase.h
 	pilotLinkVersion.h
@@ -64,7 +72,6 @@ set(kpilotinclude_HEADERS
 	plugin.h
 	pluginfactory.h
 	syncAction.h
-	uiDialog.h
 )
 
 install(
@@ -76,3 +83,8 @@ install(
 	FILES ${kpilotinclude_HEADERS}
 	DESTINATION ${CMAKE_INSTALL_PREFIX}/include/kpilot
 )
+
+install(
+	FILES kpilotlib.kcfg DESTINATION ${KDE3_KCFG_DIR}
+)
+

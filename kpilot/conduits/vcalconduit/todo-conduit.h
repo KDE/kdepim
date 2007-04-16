@@ -75,7 +75,8 @@ protected:
 
 	virtual const QString dbname() { return CSL1("ToDoDB"); };
 	virtual void preSync();
-	virtual VCalConduitPrivateBase* newVCalPrivate(KCal::Calendar *fCalendar) {
+	virtual VCalConduitPrivateBase *createPrivateCalendarData(KCal::Calendar *fCalendar)
+	{
 		return new TodoConduitPrivate(fCalendar);
 	};
 
@@ -83,12 +84,10 @@ protected:
 	void _getAppInfo();
 	void _setAppInfo();
 	virtual void postSync();
-	QString _getCat(const QStringList cats, const QString curr) const;
 
-	virtual PilotTodoEntry *newPilotEntry(PilotRecord*r) {
-		FUNCTIONSETUP;
-		if (r) return new PilotTodoEntry(*(fTodoAppInfo->info()), r);
-		else return new PilotTodoEntry(*(fTodoAppInfo->info()));
+	virtual PilotRecordBase *newPilotEntry(PilotRecord*r)
+	{
+		return new PilotTodoEntry(r);
 	};
 	virtual KCal::Incidence*newIncidence() { return new KCal::Todo; };
 
@@ -99,13 +98,8 @@ public:
 
 protected:
 
-	PilotRecord *recordFromIncidence(PilotRecordBase *de, const KCal::Incidence*e);
-	PilotRecord *recordFromTodo(PilotTodoEntry*de, const KCal::Todo*e);
-	KCal::Incidence *incidenceFromRecord(KCal::Incidence *, const PilotRecordBase *);
-	KCal::Todo *incidenceFromRecord(KCal::Todo *, const PilotTodoEntry *);
-
-	void setCategory(PilotTodoEntry*de, const KCal::Todo*todo);
-	void setCategory(KCal::Todo*todo, const PilotTodoEntry*de);
+	virtual PilotRecord *recordFromIncidence(PilotRecordBase *de, const KCal::Incidence *e);
+	virtual KCal::Incidence *incidenceFromRecord(KCal::Incidence *e, const PilotRecordBase *de);
 
 	PilotToDoInfo *fTodoAppInfo;
 	bool categoriesSynced;

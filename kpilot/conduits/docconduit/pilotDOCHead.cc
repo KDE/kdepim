@@ -50,12 +50,12 @@ PilotDOCHead::PilotDOCHead(PilotRecord * rec):PilotRecordBase(rec)
 	const unsigned char *b = (const unsigned char *) rec->data();
 	unsigned int offset = 0;
 
-	version = dlp<short>::read(b,offset);
-	spare = dlp<short>::read(b,offset);
-	storyLen = dlp<long>::read(b,offset);
-	numRecords = dlp<short>::read(b,offset);
-	recordSize = dlp<short>::read(b,offset);
-	position = dlp<long>::read(b,offset);
+	version = Pilot::dlp<short>::read(b,offset);
+	spare = Pilot::dlp<short>::read(b,offset);
+	storyLen = Pilot::dlp<long>::read(b,offset);
+	numRecords = Pilot::dlp<short>::read(b,offset);
+	recordSize = Pilot::dlp<short>::read(b,offset);
+	position = Pilot::dlp<long>::read(b,offset);
 }
 
 
@@ -88,12 +88,12 @@ PilotRecord *PilotDOCHead::pack() const
 {
 	pi_buffer_t *b = pi_buffer_new(16);
 
-	dlp<short>::append(b,version);
-	dlp<short>::append(b,spare);
-	dlp<long>::append(b,storyLen);
-	dlp<short>::append(b,numRecords);
-	dlp<short>::append(b,recordSize);
-	dlp<long>::append(b,position);
+	Pilot::dlp<short>::append(b,version);
+	Pilot::dlp<short>::append(b,spare);
+	Pilot::dlp<long>::append(b,storyLen);
+	Pilot::dlp<short>::append(b,numRecords);
+	Pilot::dlp<short>::append(b,recordSize);
+	Pilot::dlp<long>::append(b,position);
 
 	PilotRecord *rec =  new PilotRecord(b, this);
 	return rec;

@@ -28,6 +28,7 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
+#include <qnamespace.h>
 #include <qstring.h>
 
 #include <pi-memo.h>
@@ -72,7 +73,7 @@ public:
 
 	~PilotMemo() { } ;
 
-	virtual QString getTextRepresentation(bool richText=false);
+	virtual QString getTextRepresentation(Qt::TextFormat richText);
 	QString text(void) const { return fText; } ;
 	void setText(const QString &text) { fText = text; } ;
 	QString getTitle(void) const ;
@@ -96,8 +97,9 @@ public:
 
 private:
 	QString fText;
+
 };
 
-typedef PilotAppInfo<MemoAppInfo,unpack_MemoAppInfo, pack_MemoAppInfo> PilotMemoInfo;
+typedef PilotAppInfo<struct MemoAppInfo,unpack_MemoAppInfo, pack_MemoAppInfo> PilotMemoInfo;
 
 #endif

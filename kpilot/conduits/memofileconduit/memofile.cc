@@ -1,6 +1,6 @@
 /* memofile.cc			KPilot
 **
-** Copyright (C) 2004-2004 by Jason 'vanRijn' Kasper
+** Copyright (C) 2004-2007 by Jason 'vanRijn' Kasper
 **
 */
 
@@ -64,21 +64,17 @@ bool Memofile::load()
 {
 	FUNCTIONSETUP;
 	if (filename().isEmpty()) {
-#ifdef DEBUG
-		DEBUGCONDUIT << fname
+		DEBUGKPILOT << fname
 		<< ": I was asked to load, but have no filename to load.  "
 		<< endl;
-#endif
 		return false;
 	}
 
 	QFile f( filenameAbs() );
 	if ( !f.open( IO_ReadOnly ) ) {
-#ifdef DEBUG
-		DEBUGCONDUIT << fname
+		DEBUGKPILOT << fname
 		<< ": Couldn't open file: [" << filenameAbs() << "] to read.  "
 		<< endl;
-#endif
 		return false;
 	}
 
@@ -93,11 +89,9 @@ bool Memofile::load()
 	if (body.startsWith(title)) {
 		text = body;
 	} else {
-#ifdef DEBUG
-		DEBUGCONDUIT << fname
+		DEBUGKPILOT << fname
 		<< ": text of your memofile: [" << filename()
  		<< "] didn't include the filename as the first line.  fixing it..." << endl;
-#endif
 		text = title + CSL1("\n") + body;
 	}
 
@@ -129,10 +123,8 @@ bool Memofile::save()
 bool Memofile::deleteFile()
 {
 	FUNCTIONSETUP;
-#ifdef DEBUG
-	DEBUGCONDUIT << fname
+	DEBUGKPILOT << fname
 	<< ": deleting file: [" << filenameAbs() << "]." << endl;
-#endif
 	return QFile::remove(filenameAbs());
 
 }
@@ -142,28 +134,22 @@ bool Memofile::saveFile()
 	FUNCTIONSETUP;
 
 	if (filename().isEmpty()) {
-#ifdef DEBUG
-		DEBUGCONDUIT << fname
+		DEBUGKPILOT << fname
 		<< ": I was asked to save, but have no filename to save to.  "
 		<< endl;
-#endif
 		return false;
 	}
 
-#ifdef DEBUG
-	DEBUGCONDUIT << fname
+	DEBUGKPILOT << fname
 	<< ": saving memo to file: ["
 	<< filenameAbs() << "]" << endl;
-#endif
 
 
 	QFile f( filenameAbs() );
 	if ( !f.open( IO_WriteOnly ) ) {
-#ifdef DEBUG
-		DEBUGCONDUIT << fname
+		DEBUGKPILOT << fname
 		<< ": Couldn't open file: [" << filenameAbs() << "] to write your memo to.  "
 		<< "This won't end well." << endl;
-#endif
 		return false;
 	}
 

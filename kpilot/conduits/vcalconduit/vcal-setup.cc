@@ -36,7 +36,6 @@
 #include "vcal-conduit.h"
 #include "vcal-setup.h"
 
-#include "uiDialog.h"
 
 VCalWidgetSetup::VCalWidgetSetup(QWidget *w, const char *n) :
 	VCalWidgetSetupBase(w,n)
@@ -66,7 +65,7 @@ VCalWidgetSetup::VCalWidgetSetup(QWidget *w, const char *n) :
 	fAbout->addCredit("Philipp Hullmann",
 		I18N_NOOP("Bugfixer"));
 
-	UIDialog::addAboutPage(fConfigWidget->tabWidget, fAbout);
+	ConduitConfigBase::addAboutPage(fConfigWidget->tabWidget, fAbout);
 	fConfigWidget->fSyncDestination->setTitle(i18n("Calendar Destination"));
 	fConduitName=i18n("Calendar");
 

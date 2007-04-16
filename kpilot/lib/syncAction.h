@@ -1,9 +1,10 @@
 #ifndef _KPILOT_SYNCACTION_H
 #define _KPILOT_SYNCACTION_H
-/* syncAction.h			KPilot
+/* KPilot
 **
 ** Copyright (C) 1998-2001 by Dan Pilone
 ** Copyright (C) 2003-2004 Reinhold Kainhofer <reinhold@kainhofer.com>
+** Copyright (C) 2006 Adriaan de Groot <groot@kde.org>
 **
 */
 
@@ -32,15 +33,17 @@
 
 #include <pi-dlp.h>
 
-
 #include <qobject.h>
 #include <qstring.h>
 #include <qstringlist.h>
 
 #include "kpilotlink.h"
 
+/** @file
+* SyncAction
+*/
+
 class QTimer;
-class QSocketNotifier;
 class KPilotUser;
 class SyncAction;
 

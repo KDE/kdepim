@@ -1,6 +1,6 @@
 /* memofile-factory.cc                      KPilot
 **
-** Copyright (C) 2004-2004 by Jason 'vanRijn' Kasper
+** Copyright (C) 2004-2007 by Jason 'vanRijn' Kasper
 **
 ** This file defines the factory for the memofile-conduit plugin.
 */
@@ -40,7 +40,6 @@
 #include "setup_base.h"
 #include "memofile-conduit.h"
 #include "memofileSettings.h"
-#include "uiDialog.h"
 
 #include "pluginfactory.h"
 
@@ -71,7 +70,7 @@ MemofileConduitConfig::MemofileConduitConfig(QWidget *p, const char *n) :
 		"vR@movingparts.net",
 		"http://www.cs.kun.nl/~adridg/kpilot");
 
-	UIDialog::addAboutPage(fConfigWidget->tabWidget,about);
+	ConduitConfigBase::addAboutPage(fConfigWidget->tabWidget,about);
 	fWidget=fConfigWidget;
 	QObject::connect(fConfigWidget->fDirectory,SIGNAL(textChanged(const QString&)),
 		this,SLOT(modified()));
@@ -84,12 +83,10 @@ MemofileConduitConfig::MemofileConduitConfig(QWidget *p, const char *n) :
 {
 	FUNCTIONSETUP;
 
-#ifdef DEBUG
-	DEBUGCONDUIT << fname
+	DEBUGKPILOT << fname
 		<< ": Directory="
 		<< fConfigWidget->fDirectory->url()
 		<< endl;
-#endif
 
 	MemofileConduitSettings::setDirectory( fConfigWidget->fDirectory->url() );
 	MemofileConduitSettings::setSyncPrivate( fConfigWidget->fSyncPrivate->isChecked() );
@@ -105,14 +102,12 @@ MemofileConduitConfig::MemofileConduitConfig(QWidget *p, const char *n) :
 	fConfigWidget->fDirectory->setURL( MemofileConduitSettings::directory() );
 	fConfigWidget->fSyncPrivate->setChecked( MemofileConduitSettings::syncPrivate() );
 
-#ifdef DEBUG
-	DEBUGCONDUIT << fname
+	DEBUGKPILOT << fname
 		<< ": Read Directory: ["
 		<< fConfigWidget->fDirectory->url()
 		<< "], sync private records: ["
 		<< fConfigWidget->fSyncPrivate
 		<< "]" << endl;
-#endif
 
 	unmodified();
 }

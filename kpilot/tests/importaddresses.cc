@@ -40,6 +40,8 @@
 #include "pilot.h"
 #include "pilotLocalDatabase.h"
 #include "pilotAddress.h"
+#include "../conduits/abbrowserconduit/kabcRecord.h"
+#include "../conduits/abbrowserconduit/kabcRecord.cc"
 
 static const KCmdLineOptions options[] =
 {
@@ -94,6 +96,11 @@ int main(int argc, char **argv)
 
 	PilotLocalDatabase db( datadir, "AddressDB" );
 	db.createDatabase( 0xdead, 0xbeef );
+	PilotAddressInfo info(0L);
+	info.resetToDefault();
+	info.writeTo(&db);
+
+	KABCSync::Settings settings;
 
 	kdDebug() << "# Printing address book." << endl;
 	unsigned int count = 1;
@@ -104,10 +111,18 @@ int main(int argc, char **argv)
 		kdDebug() << "# Entry #" << count << endl;
 		kdDebug() << "#  " << a.name() << endl;
 		kdDebug() << "#  " << a.formattedName() << endl;
+		PilotAddress *p = new PilotAddress();
+		KABCSync::copy(*p,a,info,settings);
+		PilotRecord *r = p->pack();
+		if (r)
+		{
+			db.writeRecord(r);
+			delete r;
+		}
+		delete p;
 		++it;
 		++count;
 	}
 
 	return 0;
 }
-

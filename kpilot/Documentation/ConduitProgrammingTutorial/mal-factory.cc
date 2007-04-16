@@ -78,7 +78,7 @@ MALConduitFactory::~MALConduitFactory()
     FUNCTIONSETUP;
 
 #ifdef DEBUG
-    DEBUGCONDUIT << fname
+    DEBUGKPILOT << fname
         << ": Creating object of class "
         << c
         << endl;

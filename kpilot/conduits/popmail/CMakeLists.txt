@@ -37,3 +37,7 @@ install(
 install(
 	FILES popmail-conduit.desktop DESTINATION ${KDE3_SERVICES_DIR}
 )
+
+install(
+	FILES popmail.kcfg DESTINATION ${KDE3_KCFG_DIR}
+)

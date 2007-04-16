@@ -5,7 +5,8 @@ include_directories(
 set(conduit_abbrowser_SRCS
 	resolutionDialog.cc
 	abbrowser-factory.cc
-	abbrowser-setup.cc 
+	abbrowser-setup.cc
+	kabcRecord.cc
 	abbrowser-conduit.cc
 )
 
@@ -22,7 +23,7 @@ kde3_add_kcfg_files(conduit_abbrowser_SRCS ${conduit_abbrowser_KCFGS})
 kde3_add_ui_files(conduit_abbrowser_SRCS ${conduit_abbrowser_UIS})
 kde3_automoc(${conduit_abbrowser_SRCS})
 add_library(conduit_address SHARED ${conduit_abbrowser_SRCS})
-target_link_libraries(conduit_address kabc_file)
+target_link_libraries(conduit_address kabc_file kabc)
 set_target_properties(conduit_address PROPERTIES LOCATION ${KDE3_PLUGIN_INSTALL_DIR}
 	INSTALL_RPATH ${CMAKE_INSTALL_PREFIX}/lib
 	PREFIX ""
@@ -38,3 +39,8 @@ install(
 install(
 	FILES abbrowser_conduit.desktop DESTINATION ${KDE3_SERVICES_DIR}
 )
+
+install(
+	FILES abbrowserconduit.kcfg DESTINATION ${KDE3_KCFG_DIR}
+)
+

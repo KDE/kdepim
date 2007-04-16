@@ -1,11 +1,11 @@
 #ifndef _KPILOT_PILOTLOCALDATABASE_H
 #define _KPILOT_PILOTLOCALDATABASE_H
-/* pilotLocalDatabase.h			KPilot
+/* KPilot
 **
 ** Copyright (C) 1998-2001 by Dan Pilone
 ** Copyright (C) 2003-2004 Reinhold Kainhofer <reinhold@kainhofer.com>
+** Copyright (C) 2006 Adriaan de Groot <groot@kde.org>
 **
-** See the .cc file for an explanation of what this file is for.
 */
 
 /*
@@ -31,6 +31,15 @@
 
 #include "pilotDatabase.h"
 
+/** @file
+* Defines the PilotLocalDatabase class, for databases stored
+* on disk (as opposed to in a handheld).
+*/
+
+/**
+* PilotLocalDatabase represents databases in the same binary format
+* as on the handheld but which are stored on local disk.
+*/
 class KDE_EXPORT PilotLocalDatabase : public PilotDatabase
 {
 public:
@@ -174,13 +183,16 @@ private:
 	class Private;
 	Private *d;
 
+public:
 	/**
 	* For databases opened by name only (constructor 2 -- which is the
 	* preferred one, too) try this path first before the default path.
 	* Set statically so it's shared for all local databases.
 	*/
-public:
 	static void setDBPath(const QString &);
+	/**
+	* Accessor for the extra search path.
+	*/
 	static const QString &getDBPath() { return *fPathBase; } ;
 private:
 	static QString *fPathBase;

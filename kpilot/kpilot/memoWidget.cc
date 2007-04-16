@@ -174,8 +174,7 @@ void MemoWidget::showComponent()
 		new PilotLocalDatabase(dbPath(), CSL1("MemoDB"));
 	if (memoDB == NULL || !memoDB->isOpen())
 	{
-		kdWarning() << k_funcinfo <<
-			": Can't open local database MemoDB\n";
+		WARNINGKPILOT << "Can't open local database MemoDB\n";
 
 		populateCategories(fCatList, 0L);
 		updateWidget();
@@ -363,7 +362,7 @@ void MemoWidget::slotDeleteMemo()
 		if (!memoDB || (!memoDB->isOpen()))
 		{
 			// Err.. peculiar.
-			kdWarning() << k_funcinfo << ": Can't open MemoDB" << endl;
+			WARNINGKPILOT << "Can't open MemoDB" << endl;
 			KMessageBox::sorry(this,
 				i18n("Cannot open MemoDB to delete record."),
 				i18n("Cannot Delete Memo"));

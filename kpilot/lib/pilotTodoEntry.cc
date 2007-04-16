@@ -32,6 +32,7 @@
 #include <stdlib.h>
 
 #include <qdatetime.h>
+#include <qnamespace.h>
 
 #include <kglobal.h>
 #include <kdebug.h>
@@ -40,8 +41,7 @@
 #include "pilotTodoEntry.h"
 
 
-PilotTodoEntry::PilotTodoEntry(struct ToDoAppInfo &appInfo) :
-	fAppInfo(appInfo),
+PilotTodoEntry::PilotTodoEntry() :
 	fDescriptionSize(0),
 	fNoteSize(0)
 {
@@ -49,11 +49,8 @@ PilotTodoEntry::PilotTodoEntry(struct ToDoAppInfo &appInfo) :
 	::memset(&fTodoInfo, 0, sizeof(struct ToDo));
 }
 
-/* initialize the entry from another one. If rec==NULL, this constructor does the same as PilotTodoEntry()
-*/
-PilotTodoEntry::PilotTodoEntry(struct ToDoAppInfo &appInfo, PilotRecord * rec) :
+PilotTodoEntry::PilotTodoEntry(PilotRecord * rec) :
 	PilotRecordBase(rec),
-	fAppInfo(appInfo),
 	fDescriptionSize(0),
 	fNoteSize(0)
 {
@@ -82,7 +79,6 @@ PilotTodoEntry::PilotTodoEntry(struct ToDoAppInfo &appInfo, PilotRecord * rec) :
 
 PilotTodoEntry::PilotTodoEntry(const PilotTodoEntry & e) :
 	PilotRecordBase( &e ),
-	fAppInfo(e.fAppInfo),
 	fDescriptionSize(0),
 	fNoteSize(0)
 {
@@ -119,16 +115,16 @@ PilotTodoEntry & PilotTodoEntry::operator = (const PilotTodoEntry & e)
 	return *this;
 }
 
-QString PilotTodoEntry::getTextRepresentation(bool richText)
+QString PilotTodoEntry::getTextRepresentation(Qt::TextFormat richText)
 {
 	QString text, tmp;
-	QString par = richText?CSL1("<p>"):CSL1("");
-	QString ps = richText?CSL1("</p>"):CSL1("\n");
-	QString br = richText?CSL1("<br/>"):CSL1("\n");
+	QString par = (richText==Qt::RichText) ?CSL1("<p>"): QString();
+	QString ps = (richText==Qt::RichText) ?CSL1("</p>"):CSL1("\n");
+	QString br = (richText==Qt::RichText) ?CSL1("<br/>"):CSL1("\n");
 
 	// title + name
 	text += par;
-	tmp=richText?CSL1("<b><big>%1</big></b>"):CSL1("%1");
+	tmp= (richText==Qt::RichText) ?CSL1("<b><big>%1</big></b>"):CSL1("%1");
 	text += tmp.arg(rtExpand(getDescription(), richText));
 	text += ps;
 
@@ -157,19 +153,14 @@ QString PilotTodoEntry::getTextRepresentation(bool richText)
 
 	if (!getNote().isEmpty())
 	{
-		text += richText?CSL1("<hr/>"):CSL1("-------------------------\n");
+		text += (richText==Qt::RichText) ?CSL1("<hr/>"):CSL1("-------------------------\n");
 		text+=par;
-		text+=richText?i18n("<b><em>Note:</em></b><br>"):i18n("Note:\n");
+		text+= (richText==Qt::RichText) ?i18n("<b><em>Note:</em></b><br>"):i18n("Note:\n");
 		text+=rtExpand(getNote(), richText);
 		text+=ps;
 	}
 
 	return text;
-}
-
-QString PilotTodoEntry::getCategoryLabel() const
-{
-	return Pilot::fromPilot(fAppInfo.category.name[category()]);
 }
 
 PilotRecord *PilotTodoEntry::pack() const
@@ -217,8 +208,7 @@ void PilotTodoEntry::setDescriptionP(const char *desc, int len)
 		}
 		else
 		{
-			kdError() << __FUNCTION__
-				<< ": malloc() failed, description not set"
+			WARNINGKPILOT << "malloc() failed, description not set"
 				<< endl;
 		}
 	}
@@ -264,8 +254,7 @@ void PilotTodoEntry::setNoteP(const char *note, int len)
 		}
 		else
 		{
-			kdError() << __FUNCTION__
-				<< ": malloc() failed, note not set" << endl;
+			WARNINGKPILOT << "malloc() failed, note not set" << endl;
 		}
 	}
 	else

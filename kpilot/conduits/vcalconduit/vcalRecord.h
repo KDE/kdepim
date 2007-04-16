@@ -29,33 +29,22 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
+class PilotDateEntry;
+
 namespace KCal
 {
 	class Event;
 }
 
-class PilotDateEntry;
-
-class VCalRecord
+namespace KCalSync
 {
-public:
-	static bool setEvent( KCal::Event *e, const PilotDateEntry *de);
-	static bool setDateEntry(PilotDateEntry *de, const KCal::Event *e);
-
-protected:
-	static void setStartEndTimes(KCal::Event *,const PilotDateEntry *);
-	static void setAlarms(KCal::Event *,const PilotDateEntry *);
-	static void setRecurrence(KCal::Event *,const PilotDateEntry *);
-	static void setExceptions(KCal::Event *,const PilotDateEntry *);
-	static void setCategory(KCal::Event *, const PilotDateEntry *);
-
-	static void setStartEndTimes(PilotDateEntry *, const KCal::Event * );
-	static void setAlarms(PilotDateEntry *, const KCal::Event * );
-	static void setRecurrence(PilotDateEntry *, const KCal::Event * );
-	static void setExceptions(PilotDateEntry *, const KCal::Event * );
-	static void setCategory(PilotDateEntry *, const KCal::Event *);
-
-} ;
+	bool setEvent( KCal::Event *e,
+		const PilotDateEntry *de,
+		const CategoryAppInfo &info);
+	bool setDateEntry(PilotDateEntry *de,
+		const KCal::Event *e,
+		const CategoryAppInfo &info);
+}
 
 #endif
 

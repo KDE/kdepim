@@ -51,6 +51,8 @@ void *init_conduit_mal()
 	return new MALConduitFactory;
 }
 
+unsigned long version_conduit_mal = Pilot::PLUGIN_API;
+
 }
 
 
@@ -96,7 +98,7 @@ MALConduitFactory::~MALConduitFactory()
 	FUNCTIONSETUP;
 
 #ifdef DEBUG
-	DEBUGCONDUIT << fname
+	DEBUGKPILOT << fname
 		<< ": Creating object of class "
 		<< c
 		<< endl;
@@ -112,8 +114,8 @@ MALConduitFactory::~MALConduitFactory()
 		}
 		else 
 		{
-			kdError() << k_funcinfo
-				<< ": Couldn't cast parent to widget."
+			WARNINGKPILOT
+				<< "Couldn't cast parent to widget."
 				<< endl;
 			return 0L;
 		}
@@ -129,8 +131,8 @@ MALConduitFactory::~MALConduitFactory()
 		}
 		else
 		{
-			kdError() << k_funcinfo
-				<< ": Couldn't cast parent to KPilotLink"
+			WARNINGKPILOT
+				<< "Couldn't cast parent to KPilotLink"
 				<< endl;
 			return 0L;
 		}

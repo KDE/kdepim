@@ -37,44 +37,14 @@
 #include "pilot.h"
 #include "pilotDateEntry.h"
 
+#include "kcalRecord.h"
 #include "vcalRecord.h"
 
-bool VCalRecord::setEvent(KCal::Event *e, const PilotDateEntry *de)
+
+static void setStartEndTimes(KCal::Event *e, const PilotDateEntry *de)
 {
 	FUNCTIONSETUP;
-	if (!e) {
-		DEBUGCONDUIT << fname
-			<< "! NULL event given... Skipping it" << endl;
-		return false;
-	}
-
-	e->setSyncStatus(KCal::Incidence::SYNCNONE);
-	e->setSecrecy(de->isSecret() ?
-		KCal::Event::SecrecyPrivate :
-		KCal::Event::SecrecyPublic);
-
-	e->setPilotId(de->id());
-	e->setSyncStatus(KCal::Incidence::SYNCNONE);
-
-	setStartEndTimes(e,de);
-	setAlarms(e,de);
-	setRecurrence(e,de);
-	setExceptions(e,de);
-
-	e->setSummary(de->getDescription());
-	e->setDescription(de->getNote());
-	e->setLocation(de->getLocation());
-
-	// used by e.g. Agendus and Datebk
-	setCategory(e, de);
-
-	return true;
-}
-
-void VCalRecord::setStartEndTimes(KCal::Event *e, const PilotDateEntry *de)
-{
-	FUNCTIONSETUP;
-	DEBUGCONDUIT << fname
+	DEBUGKPILOT << fname
 		<< "# Start time on Palm: "
 		<< readTm(de->getEventStart()).toString() << endl;
 
@@ -91,7 +61,7 @@ void VCalRecord::setStartEndTimes(KCal::Event *e, const PilotDateEntry *de)
 	}
 }
 
-void VCalRecord::setAlarms(KCal::Event *e, const PilotDateEntry *de)
+static void setAlarms(KCal::Event *e, const PilotDateEntry *de)
 {
 	FUNCTIONSETUP;
 
@@ -116,7 +86,7 @@ void VCalRecord::setAlarms(KCal::Event *e, const PilotDateEntry *de)
 		break;
 	default:
 #ifdef DEBUG
-		DEBUGCONDUIT << fname
+		DEBUGKPILOT << fname
 			<< ": Unknown advance units "
 			<< advanceUnits
 			<< endl;
@@ -132,14 +102,14 @@ void VCalRecord::setAlarms(KCal::Event *e, const PilotDateEntry *de)
 	alm->setEnabled(true);
 }
 
-void VCalRecord::setRecurrence(KCal::Event *event,const PilotDateEntry *dateEntry)
+static void setRecurrence(KCal::Event *event,const PilotDateEntry *dateEntry)
 {
 	FUNCTIONSETUP;
 
 	if ((dateEntry->getRepeatType() == repeatNone) || dateEntry->isMultiDay())
 	{
 #ifdef DEBUG
-		DEBUGCONDUIT<<fname<<": no recurrence to set"<<endl;
+		DEBUGKPILOT<<fname<<": no recurrence to set"<<endl;
 #endif
 		return;
 	}
@@ -153,11 +123,11 @@ void VCalRecord::setRecurrence(KCal::Event *event,const PilotDateEntry *dateEntr
 	{
 		endDate = readTm(dateEntry->getRepeatEnd()).date();
 #ifdef DEBUG
-		DEBUGCONDUIT << fname << "-- end " << endDate.toString() << endl;
+		DEBUGKPILOT << fname << "-- end " << endDate.toString() << endl;
 	}
 	else
 	{
-		DEBUGCONDUIT << fname << "-- noend" << endl;
+		DEBUGKPILOT << fname << "-- noend" << endl;
 #endif
 	}
 
@@ -173,7 +143,7 @@ void VCalRecord::setRecurrence(KCal::Event *event,const PilotDateEntry *dateEntr
 		const int *days = dateEntry->getRepeatDays();
 
 #ifdef DEBUG
-		DEBUGCONDUIT << fname
+		DEBUGKPILOT << fname
 			<< ": Got repeat-weekly entry, by-days="
 			<< days[0] << " "<< days[1] << " "<< days[2] << " "
 			<< days[3] << " "
@@ -221,7 +191,7 @@ void VCalRecord::setRecurrence(KCal::Event *event,const PilotDateEntry *dateEntr
 	case repeatNone:
 	default :
 #ifdef DEBUG
-		DEBUGCONDUIT << fname
+		DEBUGKPILOT << fname
 			<< ": Can't handle repeat type "
 			<< dateEntry->getRepeatType()
 			<< endl;
@@ -234,7 +204,7 @@ void VCalRecord::setRecurrence(KCal::Event *event,const PilotDateEntry *dateEntr
 	}
 }
 
-void VCalRecord::setExceptions(KCal::Event *vevent,const PilotDateEntry *dateEntry)
+static void setExceptions(KCal::Event *vevent,const PilotDateEntry *dateEntry)
 {
 	FUNCTIONSETUP;
 
@@ -254,7 +224,7 @@ void VCalRecord::setExceptions(KCal::Event *vevent,const PilotDateEntry *dateEnt
 	{
 #ifdef DEBUG
 	if (dateEntry->getExceptionCount()>0)
-	DEBUGCONDUIT << fname
+	DEBUGKPILOT << fname
 		<< ": WARNING Exceptions ignored for multi-day event "
 		<< dateEntry->getDescription()
 		<< endl ;
@@ -264,74 +234,7 @@ void VCalRecord::setExceptions(KCal::Event *vevent,const PilotDateEntry *dateEnt
 	vevent->recurrence()->setExDates(dl);
 }
 
-void VCalRecord::setCategory(KCal::Event *e, const PilotDateEntry *de)
-{
-	FUNCTIONSETUP;
-
-	if (!e || !de)
-	{
-#ifdef DEBUG
-		DEBUGCONDUIT << fname << ": error.  unable to set kcal category. e: [" <<
-			e << "], de: [" << de << "]" << endl;
-#endif
-		return;
-	}
-
-	QStringList cats=e->categories();
-	int cat = de->category();
-	QString newcat = de->getCategoryLabel();
-#ifdef DEBUG
-	DEBUGCONDUIT << fname << ": palm category id: [" << cat <<
-		"], label: [" << de->getCategoryLabel() << "]" << endl;
-#endif
-	if ( (0<cat) && (cat< (int)Pilot::CATEGORY_COUNT) )
-	{
-		if (!cats.contains(newcat))
-		{
-			// if this event only has one category associated with it, then we can
-			// safely assume that what we should be doing here is changing it to match
-			// the palm.  if there's already more than one category in the event, however, we
-			// won't cause data loss--we'll just append what the palm has to the
-			// event's categories
-			if (cats.count() <=1) cats.clear();
-
-			cats.append( newcat );
-			e->setCategories(cats);
-		}
-	}
-#ifdef DEBUG
-	DEBUGCONDUIT << fname << ": kcal categories now: [" << cats.join(",") << "]" << endl;
-#endif
-}
-
-
-bool VCalRecord::setDateEntry(PilotDateEntry*de, const KCal::Event*e)
-{
-	FUNCTIONSETUP;
-	if (!de || !e) {
-		DEBUGCONDUIT << fname
-			<< ": NULL event given... Skipping it" << endl;
-		return false;
-	}
-
-	// set secrecy, start/end times, alarms, recurrence, exceptions, summary and description:
-	if (e->secrecy()!=KCal::Event::SecrecyPublic)
-	{
-		de->setSecret( true );
-	}
-
-	setStartEndTimes(de, e);
-	setAlarms(de, e);
-	setRecurrence(de, e);
-	setExceptions(de, e);
-	de->setDescription(e->summary());
-	de->setNote(e->description());
-	de->setLocation(e->location());
-	setCategory(de, e);
-	return true;
-}
-
-void VCalRecord::setStartEndTimes(PilotDateEntry*de, const KCal::Event *e)
+static void setStartEndTimes(PilotDateEntry*de, const KCal::Event *e)
 {
 	FUNCTIONSETUP;
 	struct tm ttm=writeTm(e->dtStart());
@@ -352,14 +255,14 @@ void VCalRecord::setStartEndTimes(PilotDateEntry*de, const KCal::Event *e)
 
 
 
-void VCalRecord::setAlarms(PilotDateEntry*de, const KCal::Event *e)
+static void setAlarms(PilotDateEntry*de, const KCal::Event *e)
 {
 	FUNCTIONSETUP;
 
 	if (!de || !e )
 	{
 #ifdef DEBUG
-		DEBUGCONDUIT << fname << ": NULL entry given to setAlarms. "<<endl;
+		DEBUGKPILOT << fname << ": NULL entry given to setAlarms. "<<endl;
 #endif
 		return;
 	}
@@ -381,7 +284,7 @@ void VCalRecord::setAlarms(PilotDateEntry*de, const KCal::Event *e)
 	if (!alm )
 	{
 #ifdef DEBUG
-		DEBUGCONDUIT << fname << ": no enabled alarm found (should exist!!!)"<<endl;
+		DEBUGKPILOT << fname << ": no enabled alarm found (should exist!!!)"<<endl;
 #endif
 		de->setAlarmEnabled( false );
 		return;
@@ -415,7 +318,7 @@ void VCalRecord::setAlarms(PilotDateEntry*de, const KCal::Event *e)
 
 
 
-void VCalRecord::setRecurrence(PilotDateEntry*dateEntry, const KCal::Event *event)
+static void setRecurrence(PilotDateEntry*dateEntry, const KCal::Event *event)
 {
 	FUNCTIONSETUP;
 	bool isMultiDay=false;
@@ -431,7 +334,7 @@ void VCalRecord::setRecurrence(PilotDateEntry*dateEntry, const KCal::Event *even
 		dateEntry->setRepeatFrequency(1);
 		dateEntry->setRepeatEnd(dateEntry->getEventEnd());
 #ifdef DEBUG
-		DEBUGCONDUIT << fname <<": Setting single-day recurrence (" << startDt.toString() << " - " << endDt.toString() << ")" <<endl;
+		DEBUGKPILOT << fname <<": Setting single-day recurrence (" << startDt.toString() << " - " << endDt.toString() << ")" <<endl;
 #endif
 	}
 
@@ -459,8 +362,8 @@ void VCalRecord::setRecurrence(PilotDateEntry*dateEntry, const KCal::Event *even
 	}
 	dateEntry->setRepeatFrequency(freq);
 #ifdef DEBUG
-	DEBUGCONDUIT<<" Event: "<<event->summary()<<" ("<<event->description()<<")"<<endl;
-	DEBUGCONDUIT<< "duration: "<<r->duration() << ", endDate: "<<endDate.toString()<< ", ValidEndDate: "<<endDate.isValid()<<", NullEndDate: "<<endDate.isNull()<<endl;
+	DEBUGKPILOT<<" Event: "<<event->summary()<<" ("<<event->description()<<")"<<endl;
+	DEBUGKPILOT<< "duration: "<<r->duration() << ", endDate: "<<endDate.toString()<< ", ValidEndDate: "<<endDate.isValid()<<", NullEndDate: "<<endDate.isNull()<<endl;
 #endif
 
 	QBitArray dayArray(7), dayArrayPalm(7);
@@ -505,7 +408,7 @@ void VCalRecord::setRecurrence(PilotDateEntry*dateEntry, const KCal::Event *even
 		break;
 	case KCal::Recurrence::rYearlyDay:
 	case KCal::Recurrence::rYearlyPos:
-		DEBUGCONDUIT << fname
+		DEBUGKPILOT << fname
 			<< "! Unsupported yearly recurrence type." << endl;
 	case KCal::Recurrence::rYearlyMonth:
 		dateEntry->setRepeatType(repeatYearly);
@@ -515,7 +418,7 @@ void VCalRecord::setRecurrence(PilotDateEntry*dateEntry, const KCal::Event *even
 		break;
 	default:
 #ifdef DEBUG
-		DEBUGCONDUIT << fname << ": Unknown recurrence type "<< recType << " with frequency "
+		DEBUGKPILOT << fname << ": Unknown recurrence type "<< recType << " with frequency "
 			<< freq << " and duration " << r->duration() << endl;
 #endif
 		break;
@@ -523,14 +426,14 @@ void VCalRecord::setRecurrence(PilotDateEntry*dateEntry, const KCal::Event *even
 }
 
 
-void VCalRecord::setExceptions(PilotDateEntry *dateEntry, const KCal::Event *vevent )
+static void setExceptions(PilotDateEntry *dateEntry, const KCal::Event *vevent )
 {
 	FUNCTIONSETUP;
 	struct tm *ex_List;
 
 	if (!dateEntry || !vevent)
 	{
-		kdWarning() << k_funcinfo << ": NULL dateEntry or NULL vevent given for exceptions. Skipping exceptions" << endl;
+		WARNINGKPILOT << "NULL dateEntry or NULL vevent given for exceptions. Skipping exceptions" << endl;
 		return;
 	}
 	// first, we need to delete the old exceptions list, if it existed...
@@ -552,7 +455,7 @@ void VCalRecord::setExceptions(PilotDateEntry *dateEntry, const KCal::Event *vev
 	ex_List=new struct tm[excount];
 	if (!ex_List)
 	{
-		kdWarning() << k_funcinfo << ": Couldn't allocate memory for the exceptions" << endl;
+		WARNINGKPILOT << "Couldn't allocate memory for the exceptions" << endl;
 		dateEntry->setExceptionCount(0);
 		dateEntry->setExceptions(0);
 		return;
@@ -570,59 +473,76 @@ void VCalRecord::setExceptions(PilotDateEntry *dateEntry, const KCal::Event *vev
 }
 
 
-void VCalRecord::setCategory(PilotDateEntry *de, const KCal::Event *e)
+bool KCalSync::setEvent(KCal::Event *e,
+	const PilotDateEntry *de,
+	const CategoryAppInfo &info)
 {
 	FUNCTIONSETUP;
-
-	if (!de || !e)
+	if (!e)
 	{
-		return;
+		DEBUGKPILOT << fname
+			<< "! NULL event given... Skipping it" << endl;
+		return false;
+	}
+	if (!de)
+	{
+		DEBUGKPILOT << fname
+			<< "! NULL date entry given... Skipping it" << endl;
+		return false;
 	}
 
-	QString deCategory;
-	QStringList eventCategories = e->categories();
-	if (eventCategories.size() < 1)
-	{
-		// This event has no categories.
-		((PilotRecordBase *)de)->setCategory(Pilot::Unfiled);
-		return;
+
+	e->setSecrecy(de->isSecret() ?
+		KCal::Event::SecrecyPrivate :
+		KCal::Event::SecrecyPublic);
+
+	e->setPilotId(de->id());
+
+	setStartEndTimes(e,de);
+	setAlarms(e,de);
+	setRecurrence(e,de);
+	setExceptions(e,de);
+
+	e->setSummary(de->getDescription());
+	e->setDescription(de->getNote());
+	e->setLocation(de->getLocation());
+
+	// used by e.g. Agendus and Datebk
+	setCategory(e, de, info);
+
+	// NOTE: This MUST be done last, since every other set* call
+	// calls updated(), which will trigger an
+	// setSyncStatus(SYNCMOD)!!!
+	e->setSyncStatus(KCal::Incidence::SYNCNONE);
+
+	return true;
+}
+
+bool KCalSync::setDateEntry(PilotDateEntry *de,
+	const KCal::Event *e,
+	const CategoryAppInfo &info)
+{
+	FUNCTIONSETUP;
+	if (!de || !e) {
+		DEBUGKPILOT << fname
+			<< ": NULL event given... Skipping it" << endl;
+		return false;
 	}
 
-	// Quick check: does the record (not unfiled) have an entry
-	// in the categories list? If so, use that.
-	if (de->category() != Pilot::Unfiled)
+	// set secrecy, start/end times, alarms, recurrence, exceptions, summary and description:
+	if (e->secrecy()!=KCal::Event::SecrecyPublic)
 	{
-		deCategory = de->getCategoryLabel();
-		if (eventCategories.contains(deCategory))
-		{
-			// Found, so leave the category unchanged.
-			return;
-		}
+		de->setSecret( true );
 	}
 
-	QStringList availableHandheldCategories = Pilot::categoryNames(&(de->appInfo().category));
-
-	// Either the record is unfiled, and should be filed, or
-	// it has a category set which is not in the list of
-	// categories that the event has. So go looking for
-	// a category that is available both for the event
-	// and on the handheld.
-	for ( QStringList::ConstIterator it = eventCategories.begin();
-		it != eventCategories.end(); ++it )
-	{
-		// Odd, an empty category string.
-		if ( (*it).isEmpty() )
-		{
-			continue;
-		}
-
-		if (availableHandheldCategories.contains(*it))
-		{
-			de->setCategory(*it);
-			return;
-		}
-	}
-
-	((PilotRecordBase *)de)->setCategory(Pilot::Unfiled);
+	setStartEndTimes(de, e);
+	setAlarms(de, e);
+	setRecurrence(de, e);
+	setExceptions(de, e);
+	de->setDescription(e->summary());
+	de->setNote(e->description());
+	de->setLocation(e->location());
+	setCategory(de, e, info);
+	return true;
 }
 

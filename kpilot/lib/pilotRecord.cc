@@ -66,7 +66,7 @@
 /* static */ void PilotRecord::allocationInfo()
 {
 	FUNCTIONSETUP;
-	DEBUGLIBRARY << fname
+	DEBUGKPILOT << fname
 		<< ": Allocated " << fAllocated
 		<< "  Deleted " << fDeleted << endl;
 }

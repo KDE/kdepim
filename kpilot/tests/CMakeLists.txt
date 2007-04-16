@@ -28,15 +28,24 @@ kde3_add_executable(testdatebook ${testdatebook_SRCS})
 target_link_libraries(testdatebook kpilot ${QT_LIBRARIES})
 add_test(testdatebook ${EXECUTABLE_OUTPUT_PATH}/testdatebook)
 
-set(importdatebook_SRCS importdatebook.cc)
-kde3_add_executable(importdatebook ${importdatebook_SRCS})
-target_link_libraries(importdatebook kpilot ${QT_LIBRARIES} kcal)
-add_test(importdatebook ${EXECUTABLE_OUTPUT_PATH}/importdatebook)
+set(testidmapper_SRCS testidmapper.cc)
+kde3_add_executable(testidmapper ${testidmapper_SRCS})
+target_link_libraries(testidmapper kpilot ${QT_LIBRARIES})
+add_test(testidmapper ${EXECUTABLE_OUTPUT_PATH}/testidmapper)
+
+if (HAVE_CALENDARLOCAL_H)
+	set(importdatebook_SRCS importdatebook.cc)
+	set(exportdatebook_SRCS exportdatebook.cc)
+	kde3_add_executable(importdatebook ${importdatebook_SRCS})
+	kde3_add_executable(exportdatebook ${exportdatebook_SRCS})
+	target_link_libraries(importdatebook kpilot ${QT_LIBRARIES} kcal)
+	target_link_libraries(exportdatebook kpilot ${QT_LIBRARIES} kcal)
+	add_test(importdatebook ${EXECUTABLE_OUTPUT_PATH}/importdatebook)
+	add_test(exportdatebook ${EXECUTABLE_OUTPUT_PATH}/exportdatebook)
+endif (HAVE_CALENDARLOCAL_H)
 
 set(importaddresses_SRCS importaddresses.cc)
 kde3_add_executable(importaddresses ${importaddresses_SRCS})
 target_link_libraries(importaddresses kpilot ${QT_LIBRARIES} kabc kabc_file)
 add_test(importaddresses ${EXECUTABLE_OUTPUT_PATH}/importaddresses)
-
-
 

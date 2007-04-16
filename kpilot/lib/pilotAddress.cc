@@ -2,6 +2,7 @@
 **
 ** Copyright (C) 1998-2001 by Dan Pilone
 ** Copyright (C) 2003-2004 Reinhold Kainhofer <reinhold@kainhofer.com>
+** Copyright (C) 2007 by Adriaan de Groot <groot@kde.org>
 **
 ** This is a C++ wrapper for the pilot's address database structures.
 */
@@ -34,20 +35,153 @@
 #include <stdlib.h>
 #include <assert.h>
 
+#include <qnamespace.h>
 #include <qstringlist.h>
 
 #include "pilotAddress.h"
 
+static const char *default_category_names[] = {
+	"Unfiled",
+	"Business",
+	"Personal",
+	"Quicklist",
+	0L
+} ;
+
+static const char *default_field_labels[] = {
+	"Last name",
+	"First name",
+	"Company",
+	"Work",
+	"Home",
+	"Fax",
+	"Other",
+	"E-mail",
+	"Addr(W)",
+	"City",
+	"State",
+	"Zip Code",
+	"Country",
+	"Title",
+	"Custom 1",
+	"Custom 2",
+	"Custom 3",
+	"Custom 4",
+	"Note",
+	0L
+} ;
+
+void PilotAddressInfo::resetToDefault()
+{
+	FUNCTIONSETUP;
+	// Reset to all 0s
+	memset(&fInfo,0,sizeof(fInfo));
+	// Fill up default categories
+	for (unsigned int i=0; (i<4) && default_category_names[i]; ++i)
+	{
+		strncpy(fInfo.category.name[i],default_category_names[i],sizeof(fInfo.category.name[0]));
+	}
+	// Weird hack, looks like there's an extra copy of Unfiled
+	strncpy(fInfo.category.name[15],default_category_names[0],sizeof(fInfo.category.name[0]));
+
+	// And fill up the default labels.
+	for (unsigned int i=0; (i<19) && default_field_labels[i]; ++i)
+	{
+		strncpy(fInfo.labels[i],default_field_labels[i],sizeof(fInfo.labels[0]));
+	}
+}
+
+QString PilotAddressInfo::phoneLabel(EPhoneType i) const
+{
+	if (i<=eMobile)
+	{
+		return Pilot::fromPilot(info()->phoneLabels[i]);
+	}
+	else
+	{
+		return QString();
+	}
+}
+
+PhoneSlot::PhoneSlot( const int v )
+{
+	i = entryPhone1;
+	operator=(v);
+}
+
+const PhoneSlot &PhoneSlot::operator=( const int &v )
+{
+	if ( (entryPhone1 <= v) && (v <= entryPhone5) )
+	{
+		i = v;
+	}
+	else
+	{
+		i = invalid;
+	}
+	return *this;
+}
+
+const PhoneSlot &PhoneSlot::operator++()
+{
+	if ( (i!=invalid) && (i<entryPhone5) )
+	{
+		++i;
+	}
+	else
+	{
+		i = invalid;
+	}
+	return *this;
+}
+
+/* static */ const PhoneSlot PhoneSlot::begin()
+{
+	return PhoneSlot( entryPhone1 );
+}
+
+/* static */ const PhoneSlot PhoneSlot::end()
+{
+	return PhoneSlot( invalid );
+}
+
+unsigned int PhoneSlot::toOffset() const
+{
+	if ( isValid() )
+	{
+		return i-entryPhone1;
+	}
+	else
+	{
+		return 0;
+	}
+}
+
+unsigned int PhoneSlot::toField() const
+{
+	if ( isValid() )
+	{
+		return i;
+	}
+	else
+	{
+		return entryPhone1;
+	}
+}
+
+PhoneSlot::operator QString() const
+{
+	return QString("%1,%2").arg(toOffset()).arg(toField());
+}
 
 #define MAXFIELDS 19
 
-PilotAddress::PilotAddress(PilotAddressInfo *info, PilotRecord *rec) :
+PilotAddress::PilotAddress(PilotRecord *rec) :
 	PilotRecordBase(rec),
-	fAppInfo(*(info->info())),
 	fAddressInfo()
 {
 	FUNCTIONSETUPL(4);
-	reset();
+	memset(&fAddressInfo,0,sizeof(fAddressInfo));
 
 	if (rec)
 	{
@@ -58,25 +192,20 @@ PilotAddress::PilotAddress(PilotAddressInfo *info, PilotRecord *rec) :
 	}
 	else
 	{
-		fAddressInfo.phoneLabel[0] = (int) eWork;
-		fAddressInfo.phoneLabel[1] = (int) eHome;
-		fAddressInfo.phoneLabel[2] = (int) eOther;
-		fAddressInfo.phoneLabel[3] = (int) eMobile;
-		fAddressInfo.phoneLabel[4] = (int) eEmail;
+		fAddressInfo.phoneLabel[0] = (int) PilotAddressInfo::eWork;
+		fAddressInfo.phoneLabel[1] = (int) PilotAddressInfo::eHome;
+		fAddressInfo.phoneLabel[2] = (int) PilotAddressInfo::eOther;
+		fAddressInfo.phoneLabel[3] = (int) PilotAddressInfo::eMobile;
+		fAddressInfo.phoneLabel[4] = (int) PilotAddressInfo::eEmail;
 	}
-
-	_loadMaps();
 }
 
 PilotAddress::PilotAddress(const PilotAddress & copyFrom) :
 	PilotRecordBase(copyFrom),
-	fAppInfo(copyFrom.fAppInfo),
 	fAddressInfo()
 {
 	FUNCTIONSETUPL(4);
 	_copyAddressInfo(copyFrom.fAddressInfo);
-
-	_loadMaps();
 }
 
 PilotAddress & PilotAddress::operator = (const PilotAddress & copyFrom)
@@ -90,16 +219,24 @@ PilotAddress & PilotAddress::operator = (const PilotAddress & copyFrom)
 bool PilotAddress::operator==(const PilotAddress &compareTo)
 {
 	FUNCTIONSETUPL(4);
-	// TODO: call == of PilotAppCategory. I don't think this is necessary, but I'm not so sure...
-//	if (!(PilotAppCategory)(this)->operator==(compareTo) ) return false;
 
 	// now compare all the fields stored in the fAddressInfo.entry array of char*[19]
 	for (int i=0; i<MAXFIELDS; i++) {
 		// if one is NULL, and the other non-empty, they are not equal for sure
-		if ( !getFieldP(i) && compareTo.getFieldP(i)) return false;
-		if ( getFieldP(i) && !compareTo.getFieldP(i)) return false;
+		if ( !getFieldP(i) && compareTo.getFieldP(i))
+		{
+			return false;
+		}
+		if ( getFieldP(i) && !compareTo.getFieldP(i))
+		{
+			return false;
+		}
+
 		// test for getField(i)!=... to prevent strcmp or NULL strings!  None or both can be zero, but not a single one.
-		if ( (getFieldP(i) != compareTo.getFieldP(i)) && ( strcmp(getFieldP(i), compareTo.getFieldP(i)) ) )  return false;
+		if ( (getFieldP(i) != compareTo.getFieldP(i)) && ( strcmp(getFieldP(i), compareTo.getFieldP(i)) ) )
+		{
+			return false;
+		}
 	}
 	return true;
 }
@@ -116,13 +253,16 @@ void PilotAddress::_copyAddressInfo(const struct Address &copyFrom)
 			copyFrom.phoneLabel[labelLp];
 	}
 
-	for (int entryLp = 0; entryLp < MAXFIELDS; entryLp++)
+	for (unsigned int i = 0; i< MAXFIELDS; ++i)
 	{
-		if (copyFrom.entry[entryLp])
-			fAddressInfo.entry[entryLp] =
-				qstrdup(copyFrom.entry[entryLp]);
+		if (copyFrom.entry[i])
+		{
+			fAddressInfo.entry[i] = qstrdup(copyFrom.entry[i]);
+		}
 		else
-			fAddressInfo.entry[entryLp] = 0L;
+		{
+			fAddressInfo.entry[i] = 0L;
+		}
 	}
 }
 
@@ -133,13 +273,13 @@ PilotAddress::~PilotAddress()
 	free_Address(&fAddressInfo);
 }
 
-QString PilotAddress::getTextRepresentation(bool richText) const
+QString PilotAddress::getTextRepresentation(const PilotAddressInfo *info, Qt::TextFormat richText) const
 {
 	QString text, tmp;
 
-	QString par = richText?CSL1("<p>"):CSL1("");
-	QString ps = richText?CSL1("</p>"):CSL1("\n");
-	QString br = richText?CSL1("<br/>"):CSL1("\n");
+	QString par = (richText==Qt::RichText) ?CSL1("<p>"): QString();
+	QString ps = (richText==Qt::RichText) ?CSL1("</p>"):CSL1("\n");
+	QString br = (richText==Qt::RichText) ?CSL1("<br/>"):CSL1("\n");
 
 	// title + name
 	text += par;
@@ -149,11 +289,17 @@ QString PilotAddress::getTextRepresentation(bool richText) const
 		text += CSL1(" ");
 	}
 
-	tmp = richText?CSL1("<b><big>%1%2%3</big></b>"):CSL1("%1%2%3");
-	if (!getField(entryFirstname).isEmpty())
-		tmp=rtExpand(tmp.arg(getField(entryFirstname)), richText).arg(CSL1(" "));
+	tmp = richText ? CSL1("<b><big>%1 %2</big></b>") : CSL1("%1 %2");
+	QString firstName = getField(entryFirstname);
+	if (firstName.isEmpty())
+	{
+		// So replace placeholder for first name (%1) with empty
+		tmp = tmp.arg(QString());
+	}
 	else
-		tmp=tmp.arg(CSL1(" ")).arg(CSL1(" "));
+	{
+		tmp = tmp.arg(rtExpand(firstName,richText));
+	}
 	tmp=tmp.arg(rtExpand(getField(entryLastname), richText));
 	text += tmp;
 	text += ps;
@@ -168,24 +314,38 @@ QString PilotAddress::getTextRepresentation(bool richText) const
 
 	// phone numbers (+ labels)
 	text += par;
-	for (int i = entryPhone1; i <= entryPhone5; i++)
-		if (!getField(i).isEmpty())
+	for ( PhoneSlot i = PhoneSlot::begin(); i.isValid(); ++i )
+	{
+		if (!getField(i.toField()).isEmpty())
 		{
 			if (richText)
 			{
-				if (getShownPhone() == i - entryPhone1)
+				if (getShownPhone() == i)
+				{
 					tmp=CSL1("<small>%1: </small><b>%2</b>");
+				}
 				else
+				{
 					tmp=CSL1("<small>%1: </small>%2");
+				}
 			}
 			else
+			{
 				tmp=CSL1("%1: %2");
-			tmp=tmp.arg(Pilot::fromPilot(
-				fAppInfo.phoneLabels[getPhoneLabelIndex(i-entryPhone1)]));
-			tmp=tmp.arg(rtExpand(getField(i), richText));
+			}
+			if (info)
+			{
+				tmp=tmp.arg(info->phoneLabel( getPhoneType( i ) ));
+			}
+			else
+			{
+				tmp=tmp.arg(CSL1("Contact: "));
+			}
+			tmp=tmp.arg(rtExpand(getField(i.toField()), richText));
 			text += tmp;
 			text += br;
 		}
+	}
 	text += ps;
 
 	// address, city, state, country
@@ -220,19 +380,25 @@ QString PilotAddress::getTextRepresentation(bool richText) const
 	// custom fields
 	text += par;
 	for (int i = entryCustom1; i <= entryCustom4; i++)
+	{
 		if (!getField(i).isEmpty())
 		{
 			text += rtExpand(getField(i), richText);
 			text += br;
 		}
+	}
 	text += ps;
 
 	// category
-	if (!getCategoryLabel().isEmpty())
+	if (info)
 	{
-		text += par;
-		text += rtExpand(getCategoryLabel(), richText);
-		text += ps;
+		QString categoryName = info->categoryName( category() );
+		if (!categoryName.isEmpty())
+		{
+			text += par;
+			text += rtExpand(categoryName, richText);
+			text += ps;
+		}
 	}
 
 	// note
@@ -247,378 +413,190 @@ QString PilotAddress::getTextRepresentation(bool richText) const
 	return text;
 }
 
-QString PilotAddress::getCategoryLabel() const
-{
-	int cat(category());
-	if (cat>0) return Pilot::fromPilot(fAppInfo.category.name[cat]);
-	else return QString::null;
-}
-
 QStringList PilotAddress::getEmails() const
 {
-	FUNCTIONSETUP;
 	QStringList list;
-	QString test;
 
-	for (int i = entryPhone1; i <= entryPhone5; i++)
+	for ( PhoneSlot i = PhoneSlot::begin(); i.isValid(); ++i)
 	{
-		test = getField(i);
-		if (!test.isEmpty())
+		PilotAddressInfo::EPhoneType t = getPhoneType( i );
+		if ( t == PilotAddressInfo::eEmail )
 		{
-			int ind = getPhoneLabelIndex(i-entryPhone1);
-			if (ind == eEmail)
+			QString s = getField(i.toField());
+			if (!s.isEmpty())
 			{
-				list.append(test);
+				list.append(s);
 			}
 		}
 	}
 
-	DEBUGLIBRARY << fname << ": returning: ["
-		<< list.size() << "] e-mail addresses." << endl;
 	return list;
 }
 
-KABC::PhoneNumber::List PilotAddress::getPhoneNumbers() const
+void PilotAddress::setEmails(const QStringList &list)
 {
-	FUNCTIONSETUP;
-
-	KABC::PhoneNumber::List list;
-	QString test;
-
-	int shownPhone = getShownPhone() + entryPhone1;
-
-	DEBUGLIBRARY << fname << ": preferred pilot index is: ["
-		<< shownPhone << "], preferred phone number is: ["
-		<< getField(shownPhone) << "]" << endl;
-
-	for (int i = entryPhone1; i <= entryPhone5; i++)
-	{
-		test = getField(i);
-		// only look at this if the field is populated
-		if (!test.isEmpty())
-		{
-			int ind = getPhoneLabelIndex(i-entryPhone1);
-			// we only care about non-email types
-			if (ind != eEmail)
-			{
-				int phoneType = pilotToPhoneMap[ind];
-
-				// only populate a PhoneNumber if we have a corresponding type
-				if (phoneType >=0)
-				{
-					// if this is the preferred phone number, set it as such
-					if (shownPhone == i) {
-						phoneType |= KABC::PhoneNumber::Pref;
-						DEBUGLIBRARY << fname << ": found preferred pilot index: ["
-							<< i << "], text: [" << test << "]" << endl;
-					}
-					KABC::PhoneNumber ph(test, phoneType);
-					list.append(ph);
-				}
-				else
-				{
-					DEBUGLIBRARY << fname << ": whoopsie.  pilot phone number: ["
-						<< test << "], index: [" << i << "], type: ["
-						<< ind << "], has no corresponding PhoneNumber type." << endl;
-				}
-			}
-		}
-	}
-
-	DEBUGLIBRARY << fname << ": returning: ["
-		<< list.size() << "] phone numbers" << endl;
-	return list;
-}
-
-void PilotAddress::setPhoneNumbers(KABC::PhoneNumber::List list)
-{
-	FUNCTIONSETUP;
-	QString test;
-
-	// clear all phone numbers (not e-mails) first
-	for (int i = entryPhone1; i <= entryPhone5; i++)
-	{
-		test = getField(i);
-		if (!test.isEmpty())
-		{
-			int ind = getPhoneLabelIndex(i-entryPhone1);
-			if (ind != eEmail)
-			{
-				setField(i, "");
-			}
-		}
-	}
-
-	// now iterate through the list and for each PhoneNumber in the list,
-	// iterate through our phone types using our map and set the first one
-	// we find as the type of address for the Pilot
-	QMap<int, int>::ConstIterator it;
-
-	for(KABC::PhoneNumber::List::Iterator listIter = list.begin();
-		   listIter != list.end(); ++listIter)
-	{
-		KABC::PhoneNumber phone = *listIter;
-
-		int category = eHome;
-
-		for ( it = pilotToPhoneMap.begin(); it != pilotToPhoneMap.end(); ++it )
-		{
-			int pilotKey = it.key();
-			int phoneKey = it.data();
-			if ( phone.type() & phoneKey)
-			{
-				DEBUGLIBRARY << fname << ": found pilot type: ["
-					<< pilotKey << "] ("
-					<< fAppInfo.phoneLabels[pilotKey]
-					<< ") for PhoneNumber: ["
-					<< phone.number() << "]" << endl;
-
-				category = pilotKey;
-				break;
-			}
-		}
-		int fieldSlot = setPhoneField(static_cast<PilotAddress::EPhoneType>(category),
-					  phone.number(), true, false);
-
-		// if this is the preferred phone number, then set it as such
-		if (phone.type() & KABC::PhoneNumber::Pref) 
-		{
-			DEBUGLIBRARY << fname << ": found preferred PhoneNumber. "
-				<< "setting showPhone to index: ["
-				<< fieldSlot << "], PhoneNumber: ["
-				<< phone.number() << "]" << endl;
-			fAddressInfo.showPhone = fieldSlot - entryPhone1;
-		}
-	}
-
-	DEBUGLIBRARY << fname << ": Pilot's showPhone now: ["
-		<< fAddressInfo.showPhone << "]." << endl;
-
-	// after setting the numbers, make sure that something sensible is set as the
-	// shownPhone on the Pilot if nothing is yet...
-	QString pref = getField(fAddressInfo.showPhone + entryPhone1);
-	if (fAddressInfo.showPhone < 0 || fAddressInfo.showPhone > 4 || pref.isEmpty()) {
-		DEBUGLIBRARY << fname << ": Pilot's showPhone: ["
-			<< fAddressInfo.showPhone
-			<< "] not properly set to a default. trying to set a sensible one."
-			<< endl;
-
-		for (int i = entryPhone1; i <= entryPhone5; i++)
-		{
-			pref = getField(i);
-			if (!pref.isEmpty())
-			{
-				fAddressInfo.showPhone = i - entryPhone1;
-				break;
-			}
-		}
-	}
-	DEBUGLIBRARY << fname << ": Pilot's showPhone now: ["
-		<< fAddressInfo.showPhone << "], and that's final." << endl;
-}
-
-void PilotAddress::setEmails(QStringList list)
-{
+	FUNCTIONSETUPL(4);
 	QString test;
 
 	// clear all e-mails first
-	for (int i = entryPhone1; i <= entryPhone5; i++)
+	for ( PhoneSlot i = PhoneSlot::begin(); i.isValid(); ++i )
 	{
-		test = getField(i);
-		if (!test.isEmpty())
+		PilotAddressInfo::EPhoneType t = getPhoneType( i );
+		if (t == PilotAddressInfo::eEmail)
 		{
-			int ind = getPhoneLabelIndex(i-entryPhone1);
-			if (ind == eEmail)
-			{
-				setField(i, "");
-			}
+			setField(i.toField(), QString() );
 		}
 	}
 
-	for(QStringList::Iterator listIter = list.begin();
+	for(QStringList::ConstIterator listIter = list.begin();
 		   listIter != list.end(); ++listIter)
 	{
 		QString email = *listIter;
-		setPhoneField(eEmail, email, true, false);
+		if (!setPhoneField(PilotAddressInfo::eEmail, email, NoFlags).isValid())
+		{
+			WARNINGKPILOT << "Email accounts overflowed, silently dropped." << endl;
+		}
 	}
-}
-
-/**
- * Okay, this is so that we can map the Pilot address types to Phone Number types.
- * Email addresses are NOT included in this map, and are handled separately (not in
- * PhoneNumber at all).
- */
-
-void PilotAddress::_loadMaps()
-{
-	/**
-	 * from PhoneNumber
-	 * enum Types { Home = 1, Work = 2, Msg = 4, Pref = 8, Voice = 16, Fax = 32,
-					Cell = 64, Video = 128, Bbs = 256, Modem = 512, Car = 1024,
-					Isdn = 2048, Pcs = 4096, Pager = 8192 };
-	 * from PilotAddress
-	 * enum EPhoneType {
-		eWork=0, eHome, eFax, eOther, eEmail, eMain,
-		ePager, eMobile
-		};
-	 */
-	pilotToPhoneMap.clear();
-	// do this one first, since it's an oddball (PhoneNumber has Fax | Home and
-	// Fax | Work, so either way, we want to find Fax before we find Home.  =;)
-	pilotToPhoneMap.insert(eFax, KABC::PhoneNumber::Fax);
-
-	pilotToPhoneMap.insert(eWork, KABC::PhoneNumber::Work);
-	pilotToPhoneMap.insert(eHome, KABC::PhoneNumber::Home);
-	pilotToPhoneMap.insert(ePager, KABC::PhoneNumber::Pager);
-	pilotToPhoneMap.insert(eMobile, KABC::PhoneNumber::Cell);
-
-	// eMain doesn't cleanly map to anything in PhoneNumber, so we'll
-	// pretend that Palm really meant to say "Home"
-	pilotToPhoneMap.insert(eMain, KABC::PhoneNumber::Home);
-
-	// okay, more ugliness.  Addressee maps Other separately, so it will be set
-	// individually coming in and going out.  We're not counting this as a PhoneNumber.
-	// pilotToPhoneMap.insert(eOther, KABC::PhoneNumber::Home);
-
-
 }
 
 QString PilotAddress::getField(int field) const
 {
-	return Pilot::fromPilot(fAddressInfo.entry[field]);
-}
-
-int PilotAddress::_getNextEmptyPhoneSlot() const
-{
-	FUNCTIONSETUPL(4);
-	for (int phoneSlot = entryPhone1; phoneSlot <= entryPhone5;
-		phoneSlot++)
+	if ( (entryLastname <= field) && (field <= entryNote) )
 	{
-		QString phoneField = getField(phoneSlot);
-
-		if (phoneField.isEmpty())
-			return phoneSlot;
+		return Pilot::fromPilot(fAddressInfo.entry[field]);
 	}
-	return entryCustom4;
+	else
+	{
+		return QString();
+	}
 }
 
-int PilotAddress::setPhoneField(EPhoneType type, const QString &field,
-	bool overflowCustom, bool overwriteExisting)
+PhoneSlot PilotAddress::_getNextEmptyPhoneSlot() const
 {
 	FUNCTIONSETUPL(4);
-	// first look to see if the type is already assigned to a fieldSlot
-	//QString typeStr(_typeToStr(type));
-	//int appPhoneLabelNum = _getAppPhoneLabelNum(typeStr);
-	int appPhoneLabelNum = (int) type;
-	QString fieldStr(field);
-	int fieldSlot = (overwriteExisting) ? _findPhoneFieldSlot(appPhoneLabelNum) : -1;
+	for (PhoneSlot i = PhoneSlot::begin(); i.isValid(); ++i)
+	{
+		const char *phoneField = getFieldP(i.toField());
 
-	if (fieldSlot == -1)
+		if (!phoneField || !phoneField[0])
+		{
+			return i;
+		}
+	}
+	return PhoneSlot();
+}
+
+PhoneSlot PilotAddress::setPhoneField(PilotAddressInfo::EPhoneType type,
+	const QString &field,
+	PhoneHandlingFlags flags)
+{
+	FUNCTIONSETUPL(4);
+
+	const bool overwriteExisting = (flags == Replace);
+	PhoneSlot fieldSlot;
+	if (overwriteExisting)
+	{
+		fieldSlot = _findPhoneFieldSlot(type);
+	}
+
+	if ( !fieldSlot.isValid() )
+	{
 		fieldSlot = _getNextEmptyPhoneSlot();
+	}
 
 	// store the overflow phone
-	if (fieldSlot == entryCustom4)
+	if ( !fieldSlot.isValid() )
 	{
-		if (!fieldStr.isEmpty() && overflowCustom)
-		{
-			QString custom4Field = getField(entryCustom4);
-			QString typeStr(
-				Pilot::fromPilot(fAppInfo.phoneLabels[appPhoneLabelNum]));
-
-			custom4Field += typeStr + CSL1(" ") + fieldStr;
-			setField(entryCustom4, custom4Field);
-		}
+		DEBUGKPILOT << fname << ": Phone would overflow." << endl;
 	}
 	else			// phone field 1 - 5; straight forward storage
 	{
-		setField(fieldSlot, field);
-		int labelIndex = fieldSlot - entryPhone1;
-
-		fAddressInfo.phoneLabel[labelIndex] = appPhoneLabelNum;
+		setField(fieldSlot.toField(), field);
+		fAddressInfo.phoneLabel[fieldSlot.toOffset()] = (int) type;
 	}
 	return fieldSlot;
 }
 
-int PilotAddress::_findPhoneFieldSlot(int appTypeNum) const
+PhoneSlot PilotAddress::_findPhoneFieldSlot(PilotAddressInfo::EPhoneType t) const
 {
 	FUNCTIONSETUPL(4);
-	for (int index = 0; index < 5; index++)
+	for ( PhoneSlot i = PhoneSlot::begin(); i.isValid(); ++i )
 	{
-		if (fAddressInfo.phoneLabel[index] == appTypeNum)
-			return index + entryPhone1;
-	}
-
-	return -1;
-}
-
-QString PilotAddress::getPhoneField(EPhoneType type, bool checkCustom4) const
-{
-	FUNCTIONSETUPL(4);
-	// given the type, need to find which slot is associated with it
-	//QString typeToStr(_typeToStr(type));
-	//int appTypeNum = _getAppPhoneLabelNum(typeToStr);
-	int appTypeNum = (int) type;
-
-	int fieldSlot = _findPhoneFieldSlot(appTypeNum);
-
-	if (fieldSlot != -1)
-		return getField(fieldSlot);
-
-	// look through custom 4 for the field
-	if (!checkCustom4)
-		return QString::null;
-
-	// look for the phone type str
-	QString typeToStr(Pilot::fromPilot(fAppInfo.phoneLabels[appTypeNum]));
-	QString customField(getField(entryCustom4));
-	int foundField = customField.find(typeToStr);
-
-	if (foundField == -1)
-		return QString::null;
-
-	// parse out the next token
-	int startPos = foundField + typeToStr.length() + 1;
-	int endPos = customField.find(' ', startPos);
-
-	if (endPos == -1)
-		endPos = customField.length();
-	QString field = customField.mid(startPos, endPos);
-
-	field = field.simplifyWhiteSpace();
-
-	// return the token
-	return field;
-}
-
-
-int PilotAddress::_getAppPhoneLabelNum(const QString & phoneType) const
-{
-	FUNCTIONSETUPL(4);
-	for (int index = 0; index < 8; index++)
-	{
-		if (phoneType == Pilot::fromPilot(fAppInfo.phoneLabels[index]))
-			return index;
-	}
-
-	return -1;
-}
-
-void PilotAddress::setShownPhone(EPhoneType type)
-{
-	FUNCTIONSETUPL(4);
-	int appPhoneLabelNum = (int) type;
-	int fieldSlot = _findPhoneFieldSlot(appPhoneLabelNum);
-
-	if (fieldSlot == -1)
-	{
-		if (type != eHome)
+		if ( getPhoneType(i) == t )
 		{
-			setShownPhone(eHome);
-			return;
+			return i;
 		}
-		fieldSlot = entryPhone1;
 	}
-	fAddressInfo.showPhone = fieldSlot - entryPhone1;
+
+	return PhoneSlot();
+}
+
+QString PilotAddress::getPhoneField(PilotAddressInfo::EPhoneType type) const
+{
+	FUNCTIONSETUPL(4);
+	PhoneSlot fieldSlot = _findPhoneFieldSlot(type);
+
+	if (fieldSlot.isValid())
+	{
+		return getField(fieldSlot.toField());
+	}
+
+	return QString();
+}
+
+PhoneSlot PilotAddress::getShownPhone() const
+{
+	// The slot is stored as an offset
+	return PhoneSlot(entryPhone1 + fAddressInfo.showPhone);
+}
+
+const PhoneSlot &PilotAddress::setShownPhone( const PhoneSlot &v )
+{
+	FUNCTIONSETUPL(4);
+	if (v.isValid())
+	{
+		fAddressInfo.showPhone = v.toOffset();
+	}
+	return v;
+}
+
+PhoneSlot PilotAddress::setShownPhone(PilotAddressInfo::EPhoneType type)
+{
+	FUNCTIONSETUPL(4);
+	PhoneSlot fieldSlot = _findPhoneFieldSlot(type);
+
+	// Did we find a slot with the requested type?
+	if (!fieldSlot.isValid())
+	{
+		// No, so look for first non-empty phone slot
+		for ( fieldSlot = PhoneSlot::begin(); fieldSlot.isValid(); ++fieldSlot )
+		{
+			const char *p = getFieldP(fieldSlot.toField());
+			if (p && p[0])
+			{
+				break;
+			}
+		}
+		// If all of them are empty, then use first slot instead
+		if (!fieldSlot.isValid())
+		{
+			fieldSlot = PhoneSlot::begin();
+		}
+	}
+	setShownPhone(fieldSlot);
+	return fieldSlot;
+}
+
+PilotAddressInfo::EPhoneType PilotAddress::getPhoneType( const PhoneSlot &field ) const
+{
+	if ( field.isValid() )
+	{
+		return (PilotAddressInfo::EPhoneType) fAddressInfo.phoneLabel[field.toOffset()];
+	}
+	else
+	{
+		return PilotAddressInfo::eNone;
+	}
 }
 
 void PilotAddress::setField(int field, const QString &text)

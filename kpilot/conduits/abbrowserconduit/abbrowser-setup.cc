@@ -40,7 +40,6 @@
 #include "abbrowser-setup.h"
 #include "abbrowserSettings.h"
 
-#include "uiDialog.h"
 
 
 static KAboutData *createAbout()
@@ -71,7 +70,7 @@ AbbrowserWidgetSetup::AbbrowserWidgetSetup(QWidget *w, const char *n) :
 
 	fConduitName=i18n("Addressbook");
 	fAbout = createAbout();
-	UIDialog::addAboutPage(fConfigWidget->tabWidget,fAbout);
+	ConduitConfigBase::addAboutPage(fConfigWidget->tabWidget,fAbout);
 	fWidget=fConfigWidget;
 	fConfigWidget->fAbookFile->setMode(KFile::File);
 #define CM(a,b) connect(fConfigWidget->a,b,this,SLOT(modified()));
@@ -120,7 +119,7 @@ AbbrowserWidgetSetup::~AbbrowserWidgetSetup()
 	AbbrowserSettings::setCustom2(fConfigWidget->fCustom2->currentItem());
 	AbbrowserSettings::setCustom3(fConfigWidget->fCustom3->currentItem());
 #ifdef DEBUG
-	DEBUGCONDUIT <<fname<<
+	DEBUGKPILOT <<fname<<
 	  "Custom0: "<<fConfigWidget->fCustom0->currentItem()<<"   "<<
 	  "Custom1: "<<fConfigWidget->fCustom1->currentItem()<<"   "<<
 	  "Custom2: "<<fConfigWidget->fCustom2->currentItem()<<"   "<<
@@ -145,7 +144,7 @@ AbbrowserWidgetSetup::~AbbrowserWidgetSetup()
 	AbbrowserSettings::self()->readConfig();
 
 #ifdef DEBUG
-	DEBUGCONDUIT << fname
+	DEBUGKPILOT << fname
 		<< ": Settings "
 		<< " fPilotStreetHome=" << AbbrowserSettings::pilotStreet()
 		<< " fPilotFaxHome=" << AbbrowserSettings::pilotFax()

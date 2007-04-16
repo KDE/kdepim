@@ -73,11 +73,11 @@ NullConduit::~NullConduit()
 {
 	FUNCTIONSETUP;
 
-	DEBUGCONDUIT << fname << ": Mode " << syncMode().name() << endl;
+	DEBUGKPILOT << fname << ": Mode " << syncMode().name() << endl;
 
 	if ( fFailImmediately )
 	{
-		DEBUGCONDUIT << fname << ": Config says to fail now." << endl;
+		DEBUGKPILOT << fname << ": Config says to fail now." << endl;
 		emit logError(i18n("NULL conduit is programmed to fail."));
 		return false;
 	}
@@ -88,7 +88,7 @@ NullConduit::~NullConduit()
 		addSyncLogEntry(m);
 	}
 
-	DEBUGCONDUIT << fname
+	DEBUGKPILOT << fname
 		<< ": Message from null-conduit: "
 		<< m
 		<< endl;

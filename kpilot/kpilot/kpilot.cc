@@ -78,13 +78,8 @@
 
 #include "conduitConfigDialog.h"
 
-#ifndef _KPILOT_PILOTDAEMON_H
 #include "pilotDaemonDCOP.h"
-#endif
-
-#ifndef __PILOTDAEMONDCOP_STUB__
 #include "pilotDaemonDCOP_stub.h"
-#endif
 
 #include "kpilot.moc"
 
@@ -118,11 +113,8 @@ KPilotInstaller::KPilotInstaller() :
 	readConfig();
 	setupWidget();
 
-#ifdef DEBUG
 	PilotRecord::allocationInfo();
-#endif
 	fConfigureKPilotDialogInUse = false;
-
 }
 
 KPilotInstaller::~KPilotInstaller()
@@ -130,10 +122,8 @@ KPilotInstaller::~KPilotInstaller()
 	FUNCTIONSETUP;
 	killDaemonIfNeeded();
 	delete fDaemonStub;
-#ifdef DEBUG
 	PilotRecord::allocationInfo();
 	(void) PilotDatabase::instanceCount();
-#endif
 }
 
 void KPilotInstaller::killDaemonIfNeeded()
@@ -143,10 +133,7 @@ void KPilotInstaller::killDaemonIfNeeded()
 	{
 		if (!fDaemonWasRunning)
 		{
-#ifdef DEBUG
 			DEBUGKPILOT << fname << ": Killing daemon." << endl;
-#endif
-
 			getDaemon().quitNow();
 		}
 	}
@@ -164,18 +151,14 @@ void KPilotInstaller::startDaemonIfNeeded()
 
 	QString s = getDaemon().statusString();
 
-#ifdef DEBUG
 	DEBUGKPILOT << fname << ": Daemon status is "
 		<< ( s.isEmpty() ? CSL1("<none>") : s ) << endl;
-#endif
 
 	if ((s.isEmpty()) || (!getDaemon().ok()))
 	{
-#ifdef DEBUG
 		DEBUGKPILOT << fname
 			<< ": Daemon not responding, trying to start it."
 			<< endl;
-#endif
 		fLogWidget->addMessage(i18n("Starting the KPilot daemon ..."));
 		fDaemonWasRunning = false;
 	}
@@ -190,8 +173,7 @@ void KPilotInstaller::startDaemonIfNeeded()
 			, "0" /* no notify */
 		))
 	{
-		kdError() << k_funcinfo
-			<< ": Can't start daemon : " << daemonError << endl;
+		WARNINGKPILOT << ": Can't start daemon : " << daemonError << endl;
 		if (fLogWidget)
 		{
 			fLogWidget->addMessage(i18n("Could not start the "
@@ -202,10 +184,7 @@ void KPilotInstaller::startDaemonIfNeeded()
 	}
 	else
 	{
-#ifdef DEBUG
-		s = getDaemon().statusString();
 		DEBUGKPILOT << fname << ": Daemon status is " << s << endl;
-#endif
 		if (fLogWidget)
 		{
 			int wordoffset;
@@ -243,10 +222,6 @@ void KPilotInstaller::setupWidget()
 {
 	FUNCTIONSETUP;
 
-#ifdef DEBUG
-	DEBUGKPILOT << fname << ": Creating central widget." << endl;
-#endif
-
 	setCaption(CSL1("KPilot"));
 	setMinimumSize(500, 405);
 
@@ -266,11 +241,6 @@ void KPilotInstaller::setupWidget()
 	setMinimumSize(sizeHint() + QSize(10,60));
 
 	createGUI(CSL1("kpilotui.rc"), false);
-#ifdef DEBUG
-	DEBUGKPILOT << fname
-		<< ": Got XML from "
-		<< xmlFile() << " and " << localXMLFile() << endl;
-#endif
 	setAutoSaveSettings();
 }
 
@@ -279,10 +249,6 @@ void KPilotInstaller::initComponents()
 	FUNCTIONSETUP;
 
 	QString defaultDBPath = KPilotConfig::getDefaultDBPath();
-
-#ifdef DEBUG
-	DEBUGKPILOT << fname << ": Creating component pages." << endl;
-#endif
 
 	QPixmap pixmap;
 	QString pixfile;
@@ -338,12 +304,6 @@ void KPilotInstaller::slotAboutToShowComponent( QWidget *c )
 	FUNCTIONSETUP;
 	int ix = fManagingWidget->pageIndex( c );
 	PilotComponent*compToShow = fP->list().at(ix);
-#ifdef DEBUG
-	DEBUGKPILOT << fname
-		<< ": Index: " << ix
-		<< ", Widget=" << c
-		<< ", ComToShow=" << compToShow << endl;
-#endif
 	for ( PilotComponent *comp = fP->list().first(); comp; comp = fP->list().next() )
 	{
 		// Load/Unload the data needed
@@ -351,26 +311,26 @@ void KPilotInstaller::slotAboutToShowComponent( QWidget *c )
 	}
 }
 
-void KPilotInstaller::slotSelectComponent(PilotComponent * c)
+void KPilotInstaller::slotSelectComponent(PilotComponent *c)
 {
 	FUNCTIONSETUP;
 	if (!c)
 	{
-		kdWarning() << k_funcinfo << ": Not a widget." << endl;
+		WARNINGKPILOT << "Not a widget." << endl;
 		return;
 	}
 
 	QObject *o = c->parent();
 	if (!o)
 	{
-		kdWarning() << k_funcinfo << ": No parent." << endl;
+		WARNINGKPILOT << "Widget has no parent." << endl;
 		return;
 	}
 
 	QWidget *parent = dynamic_cast<QWidget *>(o);
 	if (!parent)
 	{
-		kdWarning() << k_funcinfo << ": No widget parent." << endl;
+		WARNINGKPILOT << "Widget's parent is not a widget." << endl;
 		return;
 	}
 
@@ -378,7 +338,7 @@ void KPilotInstaller::slotSelectComponent(PilotComponent * c)
 
 	if (index < 0)
 	{
-		kdWarning() << k_funcinfo << ": Index " << index << endl;
+		WARNINGKPILOT << "Bogus index " << index << endl;
 		return;
 	}
 
@@ -444,9 +404,7 @@ void KPilotInstaller::slotPCtoHHRequested()
 /* virtual DCOP */ ASYNC KPilotInstaller::daemonStatus(int i)
 {
 	FUNCTIONSETUP;
-#ifdef DEBUG
 	DEBUGKPILOT << fname << ": Received daemon message " << i << endl;
-#endif
 
 	switch(i)
 	{
@@ -474,7 +432,7 @@ void KPilotInstaller::slotPCtoHHRequested()
 		fAppStatus=WaitingForDaemon;
 		break;
 	case KPilotDCOP::None :
-		kdWarning() << k_funcinfo << ": Unhandled status message " << i << endl;
+		WARNINGKPILOT << "Unhandled status message " << i << endl;
 		break;
 	}
 }
@@ -494,11 +452,6 @@ bool KPilotInstaller::componentPreSync()
 	for (fP->list().first();
 		fP->list().current(); fP->list().next())
 	{
-#ifdef DEBUG
-		DEBUGKPILOT << fname
-			<< ": Pre-sync for builtin "
-			<< fP->list().current()->name() << endl;
-#endif
 		if (!fP->list().current()->preHotSync(reason))
 			break;
 	}
@@ -520,11 +473,6 @@ void KPilotInstaller::componentPostSync()
 	for (fP->list().first();
 		fP->list().current(); fP->list().next())
 	{
-#ifdef DEBUG
-		DEBUGKPILOT << fname
-			<< ": Post-sync for builtin "
-			<< fP->list().current()->name() << endl;
-#endif
 		fP->list().current()->postHotSync();
 	}
 }
@@ -684,8 +632,8 @@ void KPilotInstaller::quit()
 		QString reason;
 		if (!fP->list().current()->preHotSync(reason))
 		{
-			kdWarning() << k_funcinfo
-				<< ": Couldn't save "
+			WARNINGKPILOT
+				<< "Couldn't save "
 				<< fP->list().current()->name()
 				<< endl;
 		}
@@ -702,16 +650,9 @@ void KPilotInstaller::addComponentPage(PilotComponent * p,
 
 	if (!p)
 	{
-		kdWarning() << k_funcinfo
-			<< ": Adding NULL component?" << endl;
+		WARNINGKPILOT << "Adding NULL component?" << endl;
 		return;
 	}
-
-#ifdef DEBUG
-	DEBUGKPILOT << fname
-		<< ": Adding component @"
-		<< (unsigned long) p << " called " << p->name("(none)") << endl;
-#endif
 
 	fP->list().append(p);
 
@@ -741,12 +682,6 @@ void KPilotInstaller::addComponentPage(PilotComponent * p,
 		strlcpy(actionname, "view_", actionnameLength);
 		strlcat(actionname, componentname, actionnameLength);
 	}
-
-#ifdef DEBUG
-	DEBUGKPILOT << fname
-		<< ": Using component action name "
-		<< name << " for " << actionname << endl;
-#endif
 
 	KToggleAction *pt =
 		new KToggleAction(name, /* "kpilot" -- component icon, */ 0,
@@ -824,8 +759,7 @@ static bool runConfigure(PilotDaemonDCOP_stub &daemon,QWidget *parent)
 
 	if (!options)
 	{
-		kdError() << k_funcinfo
-			<< ": Can't allocate KPilotOptions object" << endl;
+		WARNINGKPILOT << "Can't allocate KPilotOptions object" << endl;
 		daemon.requestSync(rememberedSync);
 		return false;
 	}
@@ -834,9 +768,7 @@ static bool runConfigure(PilotDaemonDCOP_stub &daemon,QWidget *parent)
 
 	if ( r && options->result() )
 	{
-#ifdef DEBUG
-		DEBUGKPILOT << fname << ": Updating link." << endl;
-#endif
+		DEBUGKPILOT << fname << ": Updating settings." << endl;
 
 		// The settings are changed in the external module!!!
 		KPilotSettings::self()->config()->sync();
@@ -852,10 +784,6 @@ static bool runConfigure(PilotDaemonDCOP_stub &daemon,QWidget *parent)
 
 	KPILOT_DELETE(options);
 	daemon.requestSync(rememberedSync);
-
-#ifdef DEBUG
-	DEBUGKPILOT << fname << ": Done with options." << endl;
-#endif
 
 	KPilotConfig::sync();
 	return ret;
@@ -883,7 +811,7 @@ static WizardResult runWizard(PilotDaemonDCOP_stub &daemon,QWidget *parent)
 
 	if (!l)
 	{
-		kdWarning() << k_funcinfo << ": Couldn't load library!" << endl;
+		WARNINGKPILOT << "Couldn't load library!" << endl;
 		goto sorry;
 	}
 
@@ -894,14 +822,14 @@ static WizardResult runWizard(PilotDaemonDCOP_stub &daemon,QWidget *parent)
 
 	if (!f)
 	{
-		kdWarning() << k_funcinfo << ": No create_wizard() in library." << endl;
+		WARNINGKPILOT << "No create_wizard() in library." << endl;
 		goto sorry;
 	}
 
 	w = f(parent,ConfigWizard::Standalone);
 	if (!w)
 	{
-		kdWarning() << k_funcinfo << ": Can't create wizard." << endl;
+		WARNINGKPILOT << "Can't create wizard." << endl;
 		goto sorry;
 	}
 
@@ -1062,9 +990,7 @@ static KCmdLineOptions kpilotoptions[] = {
 	{"setup",
 		I18N_NOOP("Setup the Pilot device, conduits and other parameters"),
 		0L},
-#ifdef DEBUG
 	{"debug <level>", I18N_NOOP("Set debugging level"), "0"},
-#endif
 	KCmdLineLastOption
 };
 
@@ -1118,7 +1044,7 @@ int main(int argc, char **argv)
 		I18N_NOOP(".ui files"));
 	about.addCredit("Aaron J. Seigo",
 		I18N_NOOP("Bugfixer, coolness"));
-	about.addCredit("Bertjan Broeksema", 
+	about.addCredit("Bertjan Broeksema",
 		I18N_NOOP("VCalconduit state machine, CMake"));
 
 	KCmdLineArgs::init(argc, argv, &about);
@@ -1144,7 +1070,7 @@ int main(int argc, char **argv)
 	}
 	else if (KPilotSettings::configVersion() < KPilotConfig::ConfigurationVersion)
 	{
-		kdWarning() << ": KPilot configuration version "
+		WARNINGKPILOT << "KPilot configuration version "
 			<< KPilotConfig::ConfigurationVersion
 			<< " newer than stored version "
 			<< KPilotSettings::configVersion() << endl;
@@ -1160,11 +1086,9 @@ int main(int argc, char **argv)
 		(run_mode == KPilotConfig::ConfigureAndContinue) ||
 		(run_mode == KPilotConfig::WizardAndContinue) )
 	{
-#ifdef DEBUG
 		DEBUGKPILOT << fname
 			<< ": Running setup first."
 			<< " (mode " << run_mode << ")" << endl;
-#endif
 		PilotDaemonDCOP_stub *daemon = new PilotDaemonDCOP_stub("kpilotDaemon","KPilotDaemonIface");
 		bool r = false;
 		if (run_mode == KPilotConfig::WizardAndContinue)
@@ -1186,8 +1110,7 @@ int main(int argc, char **argv)
 
 	if (KPilotSettings::configVersion() < KPilotConfig::ConfigurationVersion)
 	{
-		kdWarning() << k_funcinfo <<
-			": Is still not configured for use." << endl;
+		WARNINGKPILOT << "Still not configured for use." << endl;
 		KPilotConfig::sorryVersionOutdated( KPilotSettings::configVersion());
 		return 1;
 	}
@@ -1207,7 +1130,6 @@ int main(int argc, char **argv)
 		CSL1("share/apps/kpilot/DBBackup"));
 	tp->show();
 	a.setMainWidget(tp);
-	DEBUGKPILOT << fname << ": MINIICON = " << a.miniIconName() << endl;
 	return a.exec();
 }
 

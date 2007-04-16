@@ -1,16 +1,11 @@
 #ifndef _KPILOT_PLUGIN_H
 #define _KPILOT_PLUGIN_H
-/* plugin.h                             KPilot
+/* KPilot
 **
 ** Copyright (C) 2001 by Dan Pilone
-** Copyright (C) 2002-2004 by Adriaan de Groot
+** Copyright (C) 2002-2004,2006 Adriaan de Groot <groot@kde.org>
 ** Copyright (C) 2003-2004 Reinhold Kainhofer <reinhold@kainhofer.com>
 **
-** This file defines the base class of all KPilot conduit plugins configuration
-** dialogs. This is necessary so that we have a fixed API to talk to from
-** inside KPilot.
-**
-** The factories used by KPilot plugins are also documented here.
 */
 
 /*
@@ -38,16 +33,34 @@
 
 #include "syncAction.h"
 
-class PilotDatabase;
+/** @file
+* This file defines the base class of all KPilot conduit plugins configuration
+* dialogs. This is necessary so that we have a fixed API to talk to from
+* inside KPilot.
+*
+* The factories used by KPilot plugins are also documented here.
+*/
+
+
+class QTabWidget;
+class KAboutData;
 class KLibrary;
+
+class PilotDatabase;
 
 namespace Pilot
 {
+	/**
+	* As the API for conduits may change in the course of time,
+	* identify them and refuse to load incompatible API versions.
+	* Bump this number every release to the current YYYYMMDD
+	* value.
+	*/
 	static const unsigned int PLUGIN_API = 20061118;
 }
 
 /**
-* The first classe here: ConduitConfigBase is for configuration purposes.
+* ConduitConfigBase is for configuration purposes.
 *
 * ConduitConfigBase: this is an object (with a widget!) that is embedded
 * in a dialog. This is the currently preferred form for configuration,
@@ -62,12 +75,17 @@ namespace Pilot
 * seems a little foolish.
 *
 */
-
 class KDE_EXPORT ConduitConfigBase : public QObject
 {
 Q_OBJECT
 public:
+	/**
+	* Constructor. Creates a conduit configuration support object
+	* with the given parent @p parent and name (optional) @p n.
+	*/
 	ConduitConfigBase(QWidget *parent=0L, const char *n=0L);
+
+	/** Destructor. */
 	virtual ~ConduitConfigBase();
 
 	/**
@@ -76,10 +94,17 @@ public:
 	* needs to be prompted. By default, this just returns
 	* fModified, but you can do more complicated things.
 	*/
-	virtual bool isModified() const { return fModified; } ;
-	QWidget *widget() const { return fWidget; } ;
+	virtual bool isModified() const
+	{
+		return fModified;
+	} ;
 
-public:
+	/** Accessor for the actual widget for the configuration. */
+	QWidget *widget() const
+	{
+		return fWidget;
+	} ;
+
 	/**
 	* Load or save the config widget's settings in the given
 	* KConfig object; leave the group unchanged. load() and
@@ -98,6 +123,39 @@ public:
 	* true otherwise, whether or not the changes were saved.
 	*/
 	virtual bool maybeSave();
+
+	QString conduitName() const { return fConduitName; } ;
+
+	/**
+	* This is the function that does the work of adding an about
+	* page to a tabwidget. It is made public and static so that
+	* it can be used elsewhere wherever tabwidgets appear.
+	*
+	* The about tab is created using aboutPage(). The new about
+	* widget is added to the tab widget @p w with the heading
+	* "About".
+	*
+	* @param w The tab widget to which the about page is added.
+	* @param data The KAboutData that is used.
+	*
+	*/
+	static  void addAboutPage(QTabWidget *w,
+		KAboutData *data=0L);
+
+	/**
+	* This creates the actual about widget. Again, public & static so
+	* you can slap in an about widget wherever.
+	*
+	* An about widget is created that shows the contributors to
+	* the application, along with copyright information and the
+	* application's icon. This widget can be used pretty much
+	* anywhere. Copied from KAboutDialog, mostly.
+	*
+	* @param parent The widget that holds the about widget.
+	* @param data The KAboutData that is used to populate the widget.
+	*/
+	static QWidget *aboutPage(QWidget *parent, KAboutData *data=0L);
+
 protected:
 	/**
 	* This function provides the string for the prompt used
@@ -105,23 +163,83 @@ protected:
 	*/
 	virtual QString maybeSaveText() const;
 
-public:
-	QString conduitName() const { return fConduitName; } ;
+	void unmodified() { fModified=false; } ;
+
+	bool fModified;
+	QWidget *fWidget;
+	QString fConduitName;
+
 
 protected slots:
 	void modified();
 signals:
 	void changed(bool);
 
-protected:
-	bool fModified;
-	QWidget *fWidget;
-	QString fConduitName;
-
-	void unmodified() { fModified=false; } ;
 } ;
 
 
+/**
+* Create-Update-Delete tracking of the plugin,
+* used for reporting purposes (in a consistent manner).  The intent
+* is that this class is used by the conduit as it is syncing data.
+* For this to be useful (and be used properly), the conduit needs
+* to tell us how many creates, updates, and deletes it has made to
+* a data store (PC or HH).  It also needs to tell us how many
+* records it started with and how many records it has at the
+* conclusion of its processing.  Using this information, we can
+* report on it consistently as well as analyze the activity taken
+* by the conduit and offer rollback functionality if we think the
+* conduit has behaved improperly.
+*/
+class KDE_EXPORT CUDCounter
+{
+public:
+	/** Create new counter initialized to 0, and be told what
+	 * kind of CUD we're counting (PC or Handheld, etc.) */
+	CUDCounter(QString s);
+
+	/** Track the creation of @p c items */
+	void created(unsigned int c=1);
+	/** Track updates to @p u items */
+	void updated(unsigned int u=1);
+	/** Track the destruction of @p d items */
+	void deleted(unsigned int d=1);
+	/** How many @p t items did we start with? */
+	void setStartCount(unsigned int t);
+	/** How many @p t items did we end with? */
+	void setEndCount(unsigned int t);
+
+	unsigned int countCreated() { return fC; }
+	unsigned int countUpdated() { return fU; }
+	unsigned int countDeleted() { return fD; }
+	unsigned int countStart() { return fStart; }
+	unsigned int countEnd() { return fEnd; }
+
+	/** percentage of changes.  unfortunately, we have to rely on our
+	 * developers (hi, self!) to correctly set total number of records
+	 * conduits start with, so add a little protection...
+	 */
+	unsigned int percentCreated() { Q_ASSERT(fStart>0); return fC/fStart; }
+	unsigned int percentUpdated() { Q_ASSERT(fStart>0); return fU/fStart; }
+	unsigned int percentDeleted() { Q_ASSERT(fStart>0); return fD/fStart; }
+
+	/** Measurement Of Objects -- report numbers of
+	* objects created, updated, deleted. This
+	* string is already i18n()ed.
+	*/
+	QString moo() const;
+private:
+	/** keep track of Creates, Updates, Deletes, and Total
+	 * number of records so we can detect abnormal behavior and
+	 * hopefully prevent data loss.
+	 */
+	unsigned int fC,fU,fD,fStart,fEnd;
+
+	/** What kind of CUD are we keeping track of so we can
+	 * moo() it out later?  (PC, Handheld, etc.)
+	 */
+	QString fType;
+} ;
 
 
 /**
@@ -137,17 +255,46 @@ protected:
 class KDE_EXPORT ConduitAction : public SyncAction
 {
 Q_OBJECT
+
 public:
 	ConduitAction(KPilotLink *,
 		const char *name=0L,
 		const QStringList &args = QStringList());
 	virtual ~ConduitAction();
 
+	/** ConduitAction is done doing work.  Allow it to sanity-check the
+	 * results
+	 */
+	void finished();
+
 	QString conduitName() const { return fConduitName; } ;
 
-protected:
 	/** Retrieve the sync mode set for this action. */
 	const SyncMode &syncMode() const { return fSyncDirection; };
+
+	/**
+	* A full sync happens for eFullSync, eCopyPCToHH and eCopyHHToPC. It
+	* completely ignores all modified flags and walks through all records
+	* in the database.
+	*/
+	bool isFullSync() const
+	{
+		return fFirstSync || fSyncDirection.isFullSync() ;
+	}
+
+	/**
+	* A first sync (i.e. database newly fetched from the handheld )
+	* does not check for deleted records, but understands them as
+	* added on the other side. The flag is set by the conduits
+	* when opening the local database, or the calendar/addressbook
+	* (if it is empty). This also implies a full sync.
+	*/
+	bool isFirstSync() const
+	{
+		return fFirstSync || fSyncDirection.isFirstSync() ;
+	}
+
+protected:
 	/** Retrieve the conflict resolution setting for this action. */
 	ConflictResolution getConflictResolution() const
 		{ return fConflictResolution; };
@@ -169,26 +316,6 @@ protected:
 			fConflictResolution=res;
 	}
 
-	/**
-	* A full sync happens for eFullSync, eCopyPCToHH and eCopyHHToPC. It
-	* completely ignores all modified flags and walks through all records
-	* in the database.
-	*/
-	bool isFullSync() const
-	{
-		return fFirstSync || fSyncDirection.isFullSync() ;
-	}
-
-	/**
-	* A first sync (i.e. database newly fetched from the handheld )
-	* does not check for deleted records, but understands them as
-	* added on the other side. The flag is set by the conduits
-	* when opening the local database, or the calendar/addressbook
-	* (if it is empty). This also implies a full sync.
-	*/
-	bool isFirstSync() const {
-		return fFirstSync || fSyncDirection.isFirstSync() ;
-	} ;
 	void setFirstSync(bool first) { fFirstSync=first; } ;
 
 	PilotDatabase *fDatabase;
@@ -208,15 +335,48 @@ protected:
 	*/
 	bool openDatabases(const QString &dbName, bool*retrieved=0L);
 
+	/**
+	* Name of the conduit; might be changed by subclasses. Should
+	* normally be set in the constructor.
+	*/
+	QString fConduitName;
+
+	/** Every plugin has 2 CUDCounters--one for keeping track of
+	 * changes made to PC data and one for keeping track of Palm data. */
+	CUDCounter *fCtrHH;
+	CUDCounter *fCtrPC;
+
 private:
 	SyncMode fSyncDirection;
 	ConflictResolution fConflictResolution;
 
-	// Make these only protected so the conduit can change the variable
-protected:
-	QString fConduitName;
-private:
 	bool fFirstSync;
+} ;
+
+/**
+* The ConduitProxy action delays loading the plugin for a conduit until the conduit
+* actually executes; the proxy then loads the file, creates a SyncAction for the conduit
+* and runs that. Once the conduit has finished, the proxy unloads everything
+* and emits syncDone().
+*/
+class ConduitProxy : public ConduitAction
+{
+Q_OBJECT
+
+public:
+	ConduitProxy(KPilotLink *,
+		const QString &desktopName,
+		const SyncAction::SyncMode &m);
+
+protected:
+	virtual bool exec();
+protected slots:
+	void execDone(SyncAction *);
+
+protected:
+	QString fDesktopName;
+	QString fLibraryName;
+	ConduitAction *fConduit;
 } ;
 
 /** A namespace containing only static helper methods. */

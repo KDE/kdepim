@@ -235,7 +235,7 @@ void ResolutionDlg::fillListView()
 	for ( ResolutionItem* it = fTable->last(); it; it = fTable->prev() )
 	{
 #ifdef DEBUG
-		DEBUGCONDUIT<<"Building table, items="<<it->fExistItems<<", PC="<<
+		DEBUGKPILOT<<"Building table, items="<<it->fExistItems<<", PC="<<
 			it->fEntries[0]<<", Palm="<<it->fEntries[1]<<", Backup="<<
 			it->fEntries[2]<<endl;
 #endif

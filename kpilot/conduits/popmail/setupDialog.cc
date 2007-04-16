@@ -50,7 +50,6 @@
 
 #include <kurlrequester.h>
 
-#include "uiDialog.h"
 
 #include "popmail-factory.h"
 #include "setup-dialog.h"
@@ -84,7 +83,7 @@ PopMailWidgetConfig::PopMailWidgetConfig(QWidget *p,const char *n) :
 		"magi@iki.fi",
 		"http://www.iki.fi/magi/");
 
-	UIDialog::addAboutPage(fConfigWidget->fTabWidget,fAbout);
+	ConduitConfigBase::addAboutPage(fConfigWidget->fTabWidget,fAbout);
 	fWidget=fConfigWidget;
 
 #define CM(a,b) connect(fConfigWidget->a,b,this,SLOT(modified()));
@@ -118,10 +117,6 @@ void PopMailWidgetConfig::load()
 	FUNCTIONSETUP;
 	MailConduitSettings::self()->config()->sync();
 	MailConduitSettings::self()->readConfig();
-/*kdWarning()<<"sendMode="<<MailConduitSettings::syncOutgoing()<<endl;
-kdWarning()<<"emailFrom="<<MailConduitSettings::emailAddress()<<endl;
-kdWarning()<<"signature="<<MailConduitSettings::signature()<<endl;*/
-
 
 #define RD(a,b,c) fConfigWidget->a->b(MailConduitSettings::c())
 	RD(fSendMode,setCurrentItem,syncOutgoing);
@@ -140,7 +135,7 @@ kdWarning()<<"signature="<<MailConduitSettings::signature()<<endl;*/
 {
 	FUNCTIONSETUP;
 #ifdef DEBUG
-	DEBUGCONDUIT << fname << ": Got mode " << i << endl;
+	DEBUGKPILOT << fname << ": Got mode " << i << endl;
 #endif
 
 #define E(a,b) fConfigWidget->a->setEnabled(b)
