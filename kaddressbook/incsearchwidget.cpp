@@ -50,7 +50,7 @@ IncSearchWidget::IncSearchWidget( QWidget *parent, const char *name )
 
   QToolButton *button = new QToolButton( this );
   button->setSizePolicy( QSizePolicy::Minimum, QSizePolicy::Minimum );
-  button->setIcon( SmallIcon( QApplication::isRightToLeft() ? "clear_left" : "locationbar_erase" ) );
+  button->setIcon( SmallIcon( QApplication::isRightToLeft() ? "clear-left" : "locationbar-erase" ) );
   button->setShortcut( QKeySequence( Qt::CTRL+Qt::ALT+Qt::Key_S ) );
   button->setAutoRaise( true );
   button->setToolTip( i18n( "Reset" ) );
