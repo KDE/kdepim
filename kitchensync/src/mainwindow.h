@@ -21,7 +21,7 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include <kmainwindow.h>
+#include <kxmlguiwindow.h>
 
 class MainWidget;
 
@@ -29,7 +29,7 @@ class MainWidget;
   This class serves as the main window for Kitchensync. It handles the
   menus, toolbars, and status bars.
  */
-class MainWindow : public KMainWindow
+class MainWindow : public KXmlGuiWindow
 {
   Q_OBJECT
 

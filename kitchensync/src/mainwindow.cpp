@@ -28,7 +28,7 @@
 #include "mainwindow.h"
 
 MainWindow::MainWindow()
-  : KMainWindow( 0 )
+  : KXmlGuiWindow( 0 )
 {
   setCaption( i18n( "PIM Synchronization" ) );
 
