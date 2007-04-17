@@ -101,7 +101,7 @@ ArticleWindow::ArticleWindow( KNArticle *art )
     setCaption( art->subject()->asUnicodeString() );
 
   // this will enable keyboard-only actions like that don't appear in any menu
-  actionCollection()->setDefaultShortcutContext( Qt::WindowShortcut );
+  //actionCollection()->setDefaultShortcutContext( Qt::WindowShortcut );
   actionCollection()->setAssociatedWidget( this );
 
   mArticleWidget = new ArticleWidget( this, this, actionCollection() );
