@@ -429,8 +429,13 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
         result = handleInvitation( iCal, Attendee::Declined, c );
       if ( path == "delegate" )
         result = handleInvitation( iCal, Attendee::Delegated, c );
-      if ( path == "forward" )
-        kdDebug() << k_funcinfo << "forwarding not yet implemented" << endl;
+      if ( path == "forward" ) {
+        Incidence* incidence = icalToString( iCal );
+        // TODO real attendee select dialog
+        // TODO mark incidence as forwarded
+        QString fwdTo = KInputDialog::getText( "Forward To", "Forward to:" );
+        result = mail( incidence, c, Scheduler::Request, fwdTo, Forward );
+      }
       if ( path == "reply" || path == "cancel" ) {
         // These should just be saved with their type as the dir
         if ( saveFile( "Receiver Not Searched", iCal, path ) ) {
