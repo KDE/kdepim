@@ -69,8 +69,8 @@ KTNEFMain::KTNEFMain( QWidget *parent )
 
 	setupTNEF();
 
-	KGlobal::config()->setGroup("Settings");
-	defaultdir_ = KGlobal::config()->readPathEntry("defaultdir", "/tmp/");
+	KConfigGroup group( KGlobal::config(), "Settings" );
+	defaultdir_ = group.readPathEntry("defaultdir", "/tmp/");
 	lastdir_ = defaultdir_;
 
 	// create personale temo extract dir
@@ -277,8 +277,8 @@ void KTNEFMain::optionDefaultDir()
 	if (!dirname.isEmpty())
 	{
 		defaultdir_ = dirname;
-		KGlobal::config()->setGroup("Settings");
-		KGlobal::config()->writePathEntry("defaultdir",defaultdir_);
+		KConfigGroup group( KGlobal::config(), "Settings" );
+		group.writePathEntry("defaultdir",defaultdir_);
 	}
 }
 
