@@ -293,6 +293,19 @@ bool Scheduler::acceptReply(IncidenceBase *incidence,ScheduleMessage::Status /* 
   bool ret = false;
   Event *ev = mCalendar->event(incidence->uid());
   Todo *to = mCalendar->todo(incidence->uid());
+
+  // try harder to find the correct incidence
+  if ( !ev && !to ) {
+    Incidence::List list = mCalendar->incidences();
+    for ( Incidence::List::ConstIterator it = list.constBegin(); it != list.constEnd(); ++it ) {
+      if ( (*it)->schedulingID() == incidence->uid() ) {
+        ev = dynamic_cast<Event*>( *it );
+        to = dynamic_cast<Todo*>( *it );
+        break;
+      }
+    }
+  }
+
   if (ev || to) {
     //get matching attendee in calendar
     kdDebug(5800) << "Scheduler::acceptTransaction match found!" << endl;
@@ -305,6 +318,7 @@ bool Scheduler::acceptReply(IncidenceBase *incidence,ScheduleMessage::Status /* 
     Attendee::List::ConstIterator evIt;
     for ( inIt = attendeesIn.begin(); inIt != attendeesIn.end(); ++inIt ) {
       Attendee *attIn = *inIt;
+      bool found = false;
       for ( evIt = attendeesEv.begin(); evIt != attendeesEv.end(); ++evIt ) {
         Attendee *attEv = *evIt;
         if (attIn->email().lower()==attEv->email().lower()) {
@@ -312,9 +326,11 @@ bool Scheduler::acceptReply(IncidenceBase *incidence,ScheduleMessage::Status /* 
           kdDebug(5800) << "Scheduler::acceptTransaction update attendee" << endl;
           attEv->setStatus(attIn->status());
           ret = true;
-        } else
-          attendeesNew.append( attIn );
+          found = true;
+        }
       }
+      if ( !found )
+        attendeesNew.append( attIn );
     }
 
     for ( Attendee::List::ConstIterator it = attendeesNew.constBegin(); it != attendeesNew.constEnd(); ++it ) {
