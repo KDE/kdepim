@@ -109,9 +109,9 @@ const Strigi::RegisteredField* Rfc822EndAnalyzerFactory::field( Rfc822EndAnalyze
 
 void Rfc822EndAnalyzerFactory::registerFields( Strigi::FieldRegister& reg )
 {
-  fromField = reg.registerField("from", Strigi::FieldRegister::stringType, 1, 0 );
-  toField = reg.registerField("to", Strigi::FieldRegister::stringType, 1, 0 );
-  subjectField = reg.registerField("subject", Strigi::FieldRegister::stringType, 1, 0 );
+  fromField = reg.registerField("email.from", Strigi::FieldRegister::stringType, 1, 0 );
+  toField = reg.registerField("email.to", Strigi::FieldRegister::stringType, 1, 0 );
+  subjectField = reg.registerField("email.subject", Strigi::FieldRegister::stringType, 1, 0 );
   dateField = reg.registerField("date", Strigi::FieldRegister::stringType, 1, 0 );
   contentTypeField = reg.registerField("content-type", Strigi::FieldRegister::stringType, 1, 0 );
 }
