@@ -216,35 +216,10 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
         newMyself->setDelegator( myself->delegator() );
       }
 
-      // find our delegator, we need to keep him in
-      Attendee *delegator = 0;
-      if ( !newMyself->delegator().isEmpty() ) {
-        Attendee *oldDelegator = 0;
-        Attendee::List attendees = incidence->attendees();
-        for ( Attendee::List::ConstIterator it = attendees.constBegin(); it != attendees.constEnd(); ++it ) {
-          if( KPIM::compareEmail( (*it)->fullName(), newMyself->delegator(), false ) && (*it)->status() == Attendee::Delegated ) {
-            oldDelegator = *it;
-            break;
-          }
-        }
-        if ( oldDelegator ) {
-          delegator = new Attendee( oldDelegator->name(),
-                                    oldDelegator->email(),
-                                    true,
-                                    oldDelegator->status(),
-                                    oldDelegator->role(),
-                                    oldDelegator->uid() );
-          delegator->setDelegate( oldDelegator->delegate() );
-          delegator->setDelegator( oldDelegator->delegator() );
-        }
-      }
-
       // Make sure only ourselves is in the event
       incidence->clearAttendees();
       if( newMyself )
         incidence->addAttendee( newMyself );
-      if ( delegator )
-        incidence->addAttendee( delegator );
       return newMyself;
     }
 
@@ -359,6 +334,21 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
 
       if( !incidence ) return false;
       Attendee *myself = findMyself( incidence, receiver );
+
+      // find our delegator, we need to inform him as well
+      QString delegator;
+      bool delegatorRSVP = false;
+      if ( myself && !myself->delegator().isEmpty() ) {
+        Attendee::List attendees = incidence->attendees();
+        for ( Attendee::List::ConstIterator it = attendees.constBegin(); it != attendees.constEnd(); ++it ) {
+          if( KPIM::compareEmail( (*it)->fullName(), myself->delegator(), false ) && (*it)->status() == Attendee::Delegated ) {
+            delegator = (*it)->fullName();
+            delegatorRSVP = (*it)->RSVP();
+            break;
+          }
+        }
+      }
+
       if ( ( myself && myself->RSVP() ) || heuristicalRSVP( incidence ) ) {
         Attendee* newMyself = setStatusOnMyself( incidence, myself, status, receiver );
         if ( newMyself && status == Attendee::Delegated )
@@ -366,16 +356,9 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
         ok =  mail( incidence, callback );
 
         // check if we need to inform our delegator about this as well
-        if ( newMyself && (status == Attendee::Accepted || status == Attendee::Declined) ) {
-          Attendee::List attendees = incidence->attendees();
-          for ( Attendee::List::ConstIterator it = attendees.constBegin(); it != attendees.constEnd(); ++it ) {
-            if ( (*it) == newMyself )
-              continue;
-            if ( KPIM::compareEmail( (*it)->delegate(), newMyself->fullName(), false ) && (*it)->RSVP() ) {
-              ok = mail( incidence, callback, Scheduler::Reply, (*it)->fullName() );
-              break;
-            }
-          }
+        if ( newMyself && (status == Attendee::Accepted || status == Attendee::Declined) && !delegator.isEmpty() ) {
+          if ( delegatorRSVP || status == Attendee::Declined )
+            ok = mail( incidence, callback, Scheduler::Reply, delegator );
         }
 
       } else {
