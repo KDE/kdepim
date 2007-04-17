@@ -26,8 +26,7 @@
 
 #include <kabc/addressee.h>
 #include <kconfig.h>
-//Added by qt3to4:
-#include <QList>
+#include <QtCore/QList>
 
 using namespace KABC;
 
@@ -43,8 +42,8 @@ class AddresseeConfig
     void setAutomaticNameParsing( bool value );
     bool automaticNameParsing();
 
-    void setNoDefaultAddrTypes( const QList<int> &types );
-    QList<int> noDefaultAddrTypes() const;
+    void setNoDefaultAddrTypes( const QList<KABC::Address::Type> &types );
+    QList<KABC::Address::Type> noDefaultAddrTypes() const;
 
     void setCustomFields( const QStringList &fields );
     QStringList customFields() const;

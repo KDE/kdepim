@@ -348,7 +348,7 @@ KABC::AddresseeList VCardXXPort::filterContacts( const KABC::AddresseeList &addr
   return list;
 }
 
-void VCardXXPort::addKey( KABC::Addressee &addr, KABC::Key::Types type )
+void VCardXXPort::addKey( KABC::Addressee &addr, KABC::Key::Type type )
 {
   QString fingerprint = addr.custom( "KADDRESSBOOK",
                                      (type == KABC::Key::PGP ? "OPENPGPFP" : "SMIMEFP") );

@@ -68,8 +68,16 @@ void SecrecyWidget::setSecrecy( const KABC::Secrecy &secrecy )
 
 KABC::Secrecy SecrecyWidget::secrecy() const
 {
+  static QMap<int, KABC::Secrecy::Type> typeMap;
+  if ( typeMap.isEmpty() ) {
+    typeMap.insert( 0, KABC::Secrecy::Public );
+    typeMap.insert( 1, KABC::Secrecy::Private );
+    typeMap.insert( 2, KABC::Secrecy::Confidential );
+    typeMap.insert( 3, KABC::Secrecy::Invalid );
+  }
+
   KABC::Secrecy secrecy;
-  secrecy.setType( mSecrecyCombo->currentIndex() );
+  secrecy.setType( typeMap.value( mSecrecyCombo->currentIndex() ) );
 
   return secrecy;
 }

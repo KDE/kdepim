@@ -587,7 +587,7 @@ void AddresseeEditorWidget::save()
   else
     mAddressee.removeCustom( "KADDRESSBOOK", "BlogFeed" );
 
-  mAddressee.setNote( mNoteEdit->text() );
+  mAddressee.setNote( mNoteEdit->toPlainText() );
   if ( mBirthdayPicker->date().isValid() )
     mAddressee.setBirthday( QDateTime( mBirthdayPicker->date() ) );
   else

@@ -111,12 +111,12 @@ void AddresseeDiffAlgo::run()
 
   if ( mLeftAddressee.timeZone() != mRightAddressee.timeZone() ) {
     conflictField( KABC::Addressee::timeZoneLabel(),
-                   mLeftAddressee.timeZone().asString(), mRightAddressee.timeZone().asString() );
+                   mLeftAddressee.timeZone().toString(), mRightAddressee.timeZone().toString() );
   }
 
   if ( mLeftAddressee.geo() != mRightAddressee.geo() ) {
     conflictField( KABC::Addressee::geoLabel(),
-                   mLeftAddressee.geo().asString(), mRightAddressee.geo().asString() );
+                   mLeftAddressee.geo().toString(), mRightAddressee.geo().toString() );
   }
 
   if ( !compareString( mLeftAddressee.title(), mRightAddressee.title() ) ) {

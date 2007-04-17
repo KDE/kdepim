@@ -344,7 +344,7 @@ void ResourceSlox::parseContactAttribute( const QDomElement &e, Addressee &a )
   QString text = decodeText( e.text() );
   if ( text.isEmpty() ) return;
   QString tag = e.tagName();
-  int pnType = 0;
+  KABC::PhoneNumber::Type pnType;
 
   if ( tag == fieldName( Birthday ) ) {
     QDateTime dt = WebdavHandler::sloxToQDateTime( text );
@@ -428,14 +428,14 @@ void ResourceSlox::parseContactAttribute( const QDomElement &e, Addressee &a )
   }
 }
 
-int ResourceSlox::phoneNumberType( const QString &fieldName ) const
+KABC::PhoneNumber::Type ResourceSlox::phoneNumberType( const QString &fieldName ) const
 {
-  QMap<int, QStringList> pnmap;
+  QMap<KABC::PhoneNumber::Type, QStringList> pnmap;
   if ( type() == "ox" )
     pnmap = mPhoneNumberOxMap;
   else
     pnmap = mPhoneNumberSloxMap;
-  QMap<int, QStringList>::ConstIterator it;
+  QMap<KABC::PhoneNumber::Type, QStringList>::ConstIterator it;
   for ( it = pnmap.begin(); it != pnmap.end(); ++it ) {
     QStringList l = it.value();
     QStringList::ConstIterator it2;
@@ -591,7 +591,7 @@ void ResourceSlox::createAddresseeFields( QDomDocument &doc, QDomElement &prop,
 
   // phone numbers
   PhoneNumber::List pnlist = a.phoneNumbers();
-  QMap<int, QStringList> pnSaveMap;
+  QMap<KABC::PhoneNumber::Type, QStringList> pnSaveMap;
   if ( type() == "ox" )
     pnSaveMap = mPhoneNumberOxMap;
   else
@@ -611,7 +611,7 @@ void ResourceSlox::createAddresseeFields( QDomDocument &doc, QDomElement &prop,
   }
   // send empty fields for the remaining ohone number fields
   // it's not possible to delete phone numbers otherwise
-  for ( QMap<int, QStringList>::ConstIterator it = pnSaveMap.begin(); it != pnSaveMap.end(); ++it ) {
+  for ( QMap<KABC::PhoneNumber::Type, QStringList>::ConstIterator it = pnSaveMap.begin(); it != pnSaveMap.end(); ++it ) {
     QStringList l = it.value();
     for ( QStringList::ConstIterator it2 = l.begin(); it2 != l.end(); ++it2 )
       WebdavHandler::addSloxElement( this, doc, prop, (*it2) );

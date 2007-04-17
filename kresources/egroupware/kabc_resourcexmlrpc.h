@@ -101,7 +101,7 @@ class KDE_EXPORT ResourceXMLRPC : public ResourceCached
     QString mKp3;
 
     QMap<QString, int> mCategoryMap;
-    QMap<QString, int> mAddrTypes;
+    QMap<QString, KABC::Address::TypeFlag> mAddrTypes;
     QMap<QString, QString> mCustomFieldsMap;
 
     KXMLRPC::Server *mServer;

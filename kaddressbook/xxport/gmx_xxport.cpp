@@ -155,7 +155,7 @@ QList<KABC::Addressee> GMXXXPort::importContacts( const QString& ) const
 		*it = (*it).simplified();
 	// strList[1] = Record_id (numbered item, ignore here)
 	int id = strList[14].toInt(); // Record_type_id (0=work,1=home,2=other)
-	int type = (id==0) ? KABC::Address::Work : KABC::Address::Home;
+  KABC::Address::Type type = (id==0) ? KABC::Address::Work : KABC::Address::Home;
 	if (!strList[19].isEmpty() && strList[19].toInt()!=0)
 		type |= KABC::Address::Pref; // Preferred address (seems to be bitfield for telephone Prefs)
         KABC::Address adr = addr->address(type);
@@ -165,7 +165,7 @@ QList<KABC::Addressee> GMXXXPort::importContacts( const QString& ) const
 	adr.setLocality(strList[5]);
 	addr->insertPhoneNumber( KABC::PhoneNumber(strList[6], KABC::PhoneNumber::Home) );
 	addr->insertPhoneNumber( KABC::PhoneNumber(strList[7], KABC::PhoneNumber::Fax) );
-	int celltype = KABC::PhoneNumber::Cell;
+  KABC::PhoneNumber::Type celltype = KABC::PhoneNumber::Cell;
 	// strList[9]=Mobile_type // always 0 or -1(default phone).
 	if (strList[9].toInt()) celltype |= KABC::PhoneNumber::Pref;
 	addr->insertPhoneNumber( KABC::PhoneNumber(strList[8], celltype) );

@@ -47,8 +47,8 @@ class PhoneTypeCombo : public KComboBox
     PhoneTypeCombo( QWidget *parent );
     ~PhoneTypeCombo();
 
-    void setType( int type );
-    int type() const;
+    void setType( KABC::PhoneNumber::Type type );
+    KABC::PhoneNumber::Type type() const;
 
   signals:
     void modified();
@@ -60,7 +60,7 @@ class PhoneTypeCombo : public KComboBox
   private:
     void update();
 
-    int mType;
+    KABC::PhoneNumber::Type mType;
     int mLastSelected;
     QList<int> mTypeList;
 };
@@ -133,12 +133,12 @@ class PhoneTypeDialog : public KDialog
 {
   Q_OBJECT
   public:
-    PhoneTypeDialog( int type, QWidget *parent );
+    PhoneTypeDialog( KABC::PhoneNumber::Type type, QWidget *parent );
 
-    int type() const;
+    KABC::PhoneNumber::Type type() const;
 
   private:
-    int mType;
+    KABC::PhoneNumber::Type mType;
     KABC::PhoneNumber::TypeList mTypeList;
 
     QButtonGroup *mGroup;

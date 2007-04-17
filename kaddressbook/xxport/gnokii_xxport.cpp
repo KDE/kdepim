@@ -403,7 +403,8 @@ static gn_error read_phone_entries( const char *memtypestr, gn_memory_type memty
 			a->setNote(a->note()+s);
 			break;
 		   case GN_PHONEBOOK_ENTRY_Number:
-			enum KABC::PhoneNumber::Types phonetype;
+           {
+			KABC::PhoneNumber::Type phonetype;
 			switch (entry.subentries[n].number_type) {
 			 case GN_PHONEBOOK_NUMBER_Mobile: phonetype = KABC::PhoneNumber::Cell; break;
 			 case GN_PHONEBOOK_NUMBER_Fax:    phonetype = KABC::PhoneNumber::Fax;  break;
@@ -416,6 +417,7 @@ static gn_error read_phone_entries( const char *memtypestr, gn_memory_type memty
 			//  type = (KABC::PhoneNumber::Types) (phonetype | KABC::PhoneNumber::Pref);
 			a->insertPhoneNumber(KABC::PhoneNumber(s, phonetype));
 			break;
+           }
 		   case GN_PHONEBOOK_ENTRY_URL:
 			a->setUrl(s);
 			break;

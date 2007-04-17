@@ -75,7 +75,7 @@ class KDE_EXPORT ResourceSlox : public ResourceCached, public SloxBase
   protected:
     void init();
 
-    int phoneNumberType( const QString &fieldName ) const;
+    KABC::PhoneNumber::Type phoneNumberType( const QString &fieldName ) const;
     void parseContactAttribute( const QDomElement &e, Addressee &a );
 
     void createAddresseeFields( QDomDocument &doc, QDomElement &prop, const Addressee &a );
@@ -104,7 +104,7 @@ class KDE_EXPORT ResourceSlox : public ResourceCached, public SloxBase
 
     KABC::Addressee mUploadAddressee;
 
-    QMap<int, QStringList> mPhoneNumberSloxMap, mPhoneNumberOxMap;
+    QMap<KABC::PhoneNumber::Type, QStringList> mPhoneNumberSloxMap, mPhoneNumberOxMap;
 };
 
 }

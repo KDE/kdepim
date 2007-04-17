@@ -54,10 +54,12 @@
 PhoneTypeCombo::PhoneTypeCombo( QWidget *parent )
   : KComboBox( parent ),
     mType( KABC::PhoneNumber::Home ),
-    mLastSelected( 0 ),
-    mTypeList( KABC::PhoneNumber::typeList() )
+    mLastSelected( 0 )
 {
   setObjectName( "TypeCombo" );
+
+  for ( int i = 0; i < KABC::PhoneNumber::typeList().count(); ++i )
+    mTypeList.append( KABC::PhoneNumber::typeList()[ i ] );
   mTypeList.append( -1 ); // Others...
 
   update();
@@ -72,7 +74,7 @@ PhoneTypeCombo::~PhoneTypeCombo()
 {
 }
 
-void PhoneTypeCombo::setType( int type )
+void PhoneTypeCombo::setType( KABC::PhoneNumber::Type type )
 {
   if ( !mTypeList.contains( type ) )
     mTypeList.insert( mTypeList.at( mTypeList.count() - 1 ), type );
@@ -81,7 +83,7 @@ void PhoneTypeCombo::setType( int type )
   update();
 }
 
-int PhoneTypeCombo::type() const
+KABC::PhoneNumber::Type PhoneTypeCombo::type() const
 {
   return mType;
 }
@@ -97,7 +99,7 @@ void PhoneTypeCombo::update()
     if ( *it == -1 ) { // "Other..." entry
       addItem( i18n( "Other..." ) );
     } else {
-      addItem( KABC::PhoneNumber::typeLabel( *it ) );
+      addItem( KABC::PhoneNumber::typeLabel( KABC::PhoneNumber::Type( *it ) ) );
     }
   }
 
@@ -111,7 +113,7 @@ void PhoneTypeCombo::selected( int pos )
   if ( mTypeList[ pos ] == -1 )
     otherSelected();
   else {
-    mType = mTypeList[ pos ];
+    mType = KABC::PhoneNumber::Type( mTypeList[ pos ] );
     mLastSelected = pos;
   }
 }
@@ -124,7 +126,7 @@ void PhoneTypeCombo::otherSelected()
     if ( !mTypeList.contains( mType ) )
       mTypeList.insert( mTypeList.at( mTypeList.count() - 1 ), mType );
   } else {
-    setType( mTypeList[ mLastSelected ] );
+    setType( KABC::PhoneNumber::Type( mTypeList[ mLastSelected ] ) );
   }
 
   update();
@@ -299,7 +301,7 @@ void PhoneEditWidget::changed( int pos )
 
 ///////////////////////////////////////////
 // PhoneTypeDialog
-PhoneTypeDialog::PhoneTypeDialog( int type, QWidget *parent )
+PhoneTypeDialog::PhoneTypeDialog( KABC::PhoneNumber::Type type, QWidget *parent )
   : KDialog( parent),
     mType( type )
 {
@@ -337,14 +339,14 @@ PhoneTypeDialog::PhoneTypeDialog( int type, QWidget *parent )
   mPreferredBox->setChecked( mType & KABC::PhoneNumber::Pref );
 }
 
-int PhoneTypeDialog::type() const
+KABC::PhoneNumber::Type PhoneTypeDialog::type() const
 {
-  int type = 0;
+  KABC::PhoneNumber::Type type = 0;
 
   for ( int i = 0; i < mGroup->buttons().count(); ++i ) {
     QCheckBox *box = dynamic_cast<QCheckBox*>( mGroup->buttons().at( i ) ) ;
     if ( box && box->isChecked() )
-      type += mTypeList[ i ];
+      type |= mTypeList[ i ];
   }
 
   if ( mPreferredBox->isChecked() )

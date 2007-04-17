@@ -45,7 +45,7 @@ class KComboBox;
 class KLineEdit;
 class K3ListView;
 
-typedef TypeCombo<KABC::Address> AddressTypeCombo;
+typedef TypeCombo<KABC::Address, KABC::Address::Type> AddressTypeCombo;
 
 /**
   Editor widget for addresses.
@@ -141,10 +141,10 @@ class AddressEditDialog : public KDialog
 class AddressTypeDialog : public KDialog
 {
   public:
-    AddressTypeDialog( int type, QWidget *parent );
+    AddressTypeDialog( KABC::Address::Type type, QWidget *parent );
     ~AddressTypeDialog();
 
-    int type() const;
+    KABC::Address::Type type() const;
 
   private:
     QButtonGroup *mGroup;

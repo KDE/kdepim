@@ -452,7 +452,7 @@ void ResourceXMLRPC::deleteContactFault( int, const QString &errorMsg,
 QString ResourceXMLRPC::addrTypesToTypeStr( int typeMask )
 {
   QStringList types;
-  QMap<QString, int>::ConstIterator it;
+  QMap<QString, KABC::Address::TypeFlag>::ConstIterator it;
   for ( it = mAddrTypes.begin(); it != mAddrTypes.end(); ++it )
     if ( it.value() & typeMask )
       types.append( it.key() );
@@ -661,9 +661,9 @@ void ResourceXMLRPC::readContact( const QMap<QString, QVariant> &args, Addressee
     } else if ( it.key() == "adr_one_type" ) {
       QStringList types = it.value().toString().split( ';', QString::SkipEmptyParts );
 
-      int type = Address::Work;
+      KABC::Address::Type type( Address::Work );
       for ( int i = 0; i < types.count(); ++i )
-        type += mAddrTypes[ types[ i ] ];
+        type |= mAddrTypes[ types[ i ] ];
 
       addrOne.setType( type );
     } else if ( it.key() == "label" ) {
@@ -681,9 +681,9 @@ void ResourceXMLRPC::readContact( const QMap<QString, QVariant> &args, Addressee
     } else if ( it.key() == "adr_two_type" ) {
       QStringList types = it.value().toString().split( ';', QString::SkipEmptyParts );
 
-      int type = Address::Home;
+      KABC::Address::Type type( Address::Home );
       for ( int i = 0; i < types.count(); ++i )
-        type += mAddrTypes[ types[ i ] ];
+        type |= mAddrTypes[ types[ i ] ];
 
       addrTwo.setType( type );
     } else if ( it.key() == "tel_work" ) {

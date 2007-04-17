@@ -67,22 +67,32 @@ bool AddresseeConfig::automaticNameParsing()
                                KABPrefs::instance()->automaticNameParsing() );
 }
 
-void AddresseeConfig::setNoDefaultAddrTypes( const QList<int> &types )
+void AddresseeConfig::setNoDefaultAddrTypes( const QList<KABC::Address::Type> &types )
 {
   KConfig config( "kaddressbook_addrconfig" );
 
+  QList<int> list;
+  for ( int i = 0; i < types.count(); ++i )
+    list.append( types[ i ] );
+
   KConfigGroup group( &config, mAddressee.uid() );
-  group.writeEntry( "NoDefaultAddrTypes", types );
+  group.writeEntry( "NoDefaultAddrTypes", list );
 
   config.sync();
 }
 
-QList<int> AddresseeConfig::noDefaultAddrTypes() const
+QList<KABC::Address::Type> AddresseeConfig::noDefaultAddrTypes() const
 {
   KConfig config( "kaddressbook_addrconfig" );
   KConfigGroup group( &config, mAddressee.uid() );
 
-  return group.readEntry( "NoDefaultAddrTypes",QList<int>() );
+  QList<int> list = group.readEntry( "NoDefaultAddrTypes", QList<int>() );
+
+  QList<KABC::Address::Type> types;
+  for ( int i = 0; i < list.count(); ++i )
+    types.append( KABC::Address::Type( list[ i ] ) );
+
+  return types;
 }
 
 void AddresseeConfig::setCustomFields( const QStringList &fields )

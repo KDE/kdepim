@@ -147,13 +147,13 @@ void AddressEditWidget::setAddresses( const KABC::Addressee &addr,
   // Insert types for existing numbers.
   mTypeCombo->insertTypeList( list );
 
-  QList<int> defaultTypes;
+  QList<KABC::Address::Type> defaultTypes;
   defaultTypes << KABC::Address::Home;
   defaultTypes << KABC::Address::Work;
 
   AddresseeConfig config( mAddressee );
-  const QList<int> configList = config.noDefaultAddrTypes();
-  QList<int>::ConstIterator it;
+  const QList<KABC::Address::Type> configList = config.noDefaultAddrTypes();
+  QList<KABC::Address::Type>::ConstIterator it;
   for ( it = configList.begin(); it != configList.end(); ++it )
     defaultTypes.removeAll( *it );
 
@@ -168,7 +168,7 @@ void AddressEditWidget::setAddresses( const KABC::Addressee &addr,
   mTypeCombo->updateTypes();
 
   // find preferred address which will be shown
-  int preferred = KABC::Address::Home;  // default if no preferred address set
+  KABC::Address::Type preferred( KABC::Address::Home );  // default if no preferred address set
   KABC::Address::List::ConstIterator addrIt;
   for ( addrIt = list.begin(); addrIt != list.end(); ++addrIt )
     if ( (*addrIt).type() & KABC::Address::Pref ) {
@@ -208,7 +208,7 @@ void AddressEditWidget::edit()
       }
 
       AddresseeConfig config( mAddressee );
-      QList<int> configList;
+      QList<KABC::Address::Type> configList;
       if ( !hasHome )
         configList << KABC::Address::Home;
       if ( !hasWork )
@@ -590,7 +590,7 @@ void AddressEditDialog::fillCountryCombo()
 }
 
 
-AddressTypeDialog::AddressTypeDialog( int type, QWidget *parent )
+AddressTypeDialog::AddressTypeDialog( KABC::Address::Type type, QWidget *parent )
   : KDialog( parent)
 {
   setCaption( i18nc( "street/postal", "Edit Address Type" ) );
@@ -625,13 +625,13 @@ AddressTypeDialog::~AddressTypeDialog()
 {
 }
 
-int AddressTypeDialog::type() const
+KABC::Address::Type AddressTypeDialog::type() const
 {
-  int type = 0;
+  KABC::Address::Type type;
   for ( int i = 0; i < mGroup->buttons().count(); ++i ) {
     QCheckBox *box = dynamic_cast<QCheckBox*>( mGroup->buttons().at( i ) );
     if ( box && box->isChecked() )
-      type += mTypeList[ i ];
+      type |= mTypeList[ i ];
   }
 
   return type;

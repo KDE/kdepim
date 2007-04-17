@@ -89,7 +89,7 @@ KABC::Key::List KeyWidget::keys() const
 
 void KeyWidget::addKey()
 {
-  QMap<QString, int> keyMap;
+  QMap<QString, KABC::Key::Type> keyMap;
   QStringList keyTypeNames;
   QStringList existingKeyTypes;
 
@@ -114,7 +114,7 @@ void KeyWidget::addKey()
   if ( !ok || name.isEmpty() )
     return;
 
-  int type = keyMap[ name ];
+  KABC::Key::Type type = keyMap[ name ];
   if ( !keyTypeNames.contains( name ) )
     type = KABC::Key::Custom;
 
