@@ -79,17 +79,20 @@ CryptoWidget::CryptoWidget( KABC::AddressBook *ab, QWidget *parent )
   topLayout->setRowStretch( 4, 1 );
 
   QGroupBox* protGB = new QGroupBox( i18n( "Allowed Protocols" ), this );
+  QLayout* protGBLayout = new QVBoxLayout;
   topLayout->addWidget( protGB, 0, 0, 1, 2 );
 
   uint msgFormat = 1;
   for ( uint i = 0 ; i < NumberOfProtocols ; ++i ) {
     Kleo::CryptoMessageFormat f = static_cast<Kleo::CryptoMessageFormat>( msgFormat );
     mProtocolCB[ i ] = new QCheckBox( Kleo::cryptoMessageFormatToLabel( f ), protGB );
+    protGBLayout->addWidget( mProtocolCB[i] );
     connect( mProtocolCB[i], SIGNAL( clicked() ), this, SLOT( setModified() ) );
 
     // Iterating over a bitfield means *2 every time
     msgFormat *= 2;
   }
+  protGB->setLayout( protGBLayout );
 
   QLabel* l = new QLabel( i18n( "Preferred OpenPGP encryption key:" ), this );
   topLayout->addWidget( l, 1, 0 );
@@ -104,6 +107,7 @@ CryptoWidget::CryptoWidget( KABC::AddressBook *ab, QWidget *parent )
   topLayout->addWidget( mSmimeCert, 2, 1 );
 
   QGroupBox* box = new QGroupBox( i18n( "Message Preference" ), this );
+  QLayout* boxLayout = new QVBoxLayout;
   topLayout->addWidget( box, 3, 0, 1, 2 );
 
 
@@ -117,6 +121,7 @@ CryptoWidget::CryptoWidget( KABC::AddressBook *ab, QWidget *parent )
   for ( unsigned int i = Kleo::UnknownSigningPreference; i < Kleo::MaxSigningPreference ; ++i )
     mSignPref->addItem( Kleo::signingPreferenceToLabel(
                            static_cast<Kleo::SigningPreference>( i ) ) );
+  boxLayout->addWidget( hbox );
 
   // Send preferences/encrypt (see libkleo/kleo/enum.h)
   hbox = new KHBox( box );
@@ -128,6 +133,8 @@ CryptoWidget::CryptoWidget( KABC::AddressBook *ab, QWidget *parent )
   for ( unsigned int i = Kleo::UnknownPreference; i < Kleo::MaxEncryptionPreference ; ++i )
     mCryptPref->addItem( Kleo::encryptionPreferenceToLabel(
                             static_cast<Kleo::EncryptionPreference>( i ) ) );
+  boxLayout->addWidget( hbox );
+  box->setLayout( boxLayout );
 
   // Emit "changed()" signal
   connect( mSignPref, SIGNAL( activated(int) ), this, SLOT( setModified() ) );
