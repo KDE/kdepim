@@ -1,0 +1,79 @@
+<!DOCTYPE UI><UI version="3.3" stdsetdef="1">
+<class>AttendeeSelectorWidget</class>
+<author>Volker Krause &lt;vkrause@kde.org&gt;</author>
+<widget class="QWidget">
+    <property name="name">
+        <cstring>AttendeeSelectorWidget</cstring>
+    </property>
+    <property name="geometry">
+        <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>354</width>
+            <height>238</height>
+        </rect>
+    </property>
+    <grid>
+        <property name="name">
+            <cstring>unnamed</cstring>
+        </property>
+        <widget class="KPushButton" row="0" column="1">
+            <property name="name">
+                <cstring>addButton</cstring>
+            </property>
+            <property name="enabled">
+                <bool>false</bool>
+            </property>
+            <property name="text">
+                <string>Add</string>
+            </property>
+        </widget>
+        <widget class="KPushButton" row="1" column="1">
+            <property name="name">
+                <cstring>removeButton</cstring>
+            </property>
+            <property name="enabled">
+                <bool>false</bool>
+            </property>
+            <property name="text">
+                <string>Remove</string>
+            </property>
+        </widget>
+        <widget class="KListBox" row="1" column="0" rowspan="2" colspan="1">
+            <property name="name">
+                <cstring>attendeeList</cstring>
+            </property>
+        </widget>
+        <widget class="KPIM::AddresseeLineEdit" row="0" column="0">
+            <property name="name">
+                <cstring>attendeeEdit</cstring>
+            </property>
+        </widget>
+        <spacer row="2" column="1">
+            <property name="name">
+                <cstring>spacer1</cstring>
+            </property>
+            <property name="orientation">
+                <enum>Vertical</enum>
+            </property>
+            <property name="sizeType">
+                <enum>Expanding</enum>
+            </property>
+            <property name="sizeHint">
+                <size>
+                    <width>20</width>
+                    <height>140</height>
+                </size>
+            </property>
+        </spacer>
+    </grid>
+</widget>
+<layoutdefaults spacing="6" margin="0"/>
+<layoutfunctions spacing="KDialog::spacingHint" margin="KDialog::marginHint"/>
+<includehints>
+    <includehint>kpushbutton.h</includehint>
+    <includehint>kpushbutton.h</includehint>
+    <includehint>klistbox.h</includehint>
+    <includehint>libkdepim/addresseelineedit.h</includehint>
+</includehints>
+</UI>

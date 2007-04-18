@@ -21,7 +21,7 @@ libkmail_bodypartformatter_text_vcard_la_LIBADD  = $(LIB_QT) $(LIB_KABC) \
                                                    ../../../libkmime/libkmime.la \
                                                    ../../../libemailfunctions/libemailfunctions.la
 
-libkmail_bodypartformatter_text_calendar_la_SOURCES = text_calendar.cpp delegateselector.cpp
+libkmail_bodypartformatter_text_calendar_la_SOURCES = text_calendar.cpp delegateselector.cpp attendeeselector.cpp ui_attendeeselector.ui
 libkmail_bodypartformatter_text_calendar_la_LDFLAGS = \
   $(all_libraries) -module $(KDE_PLUGIN) -no-undefined
 libkmail_bodypartformatter_text_calendar_la_LIBADD  = $(LIB_QT) $(LIB_KABC) \
