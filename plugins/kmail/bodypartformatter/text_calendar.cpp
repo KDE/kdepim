@@ -2,6 +2,7 @@
     This file is part of kdepim.
 
     Copyright (c) 2004 Cornelius Schumacher <schumacher@kde.org>
+    Copyright (c) 2007 Volker Krause <vkrause@kde.org>
 
     This program is free software; you can redistribute it and/or modify it
     under the terms of the GNU General Public License as published by
@@ -28,6 +29,8 @@
     you do not wish to do so, delete this exception statement from
     your version.
 */
+
+#include "delegateselector.h"
 
 #include <interfaces/bodypartformatter.h>
 #include <interfaces/bodypart.h>
@@ -321,11 +324,14 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
         saveFile( receiver, iCal, dir );
 
       QString delegateString;
+      bool delegatorRSVP = false;
       if ( status == Attendee::Delegated ) {
-        // TODO: add real attendee selector
-        bool ok = false;
-        delegateString = KInputDialog::getText( "Select Delegate", "Delegate:", QString::null, &ok );
-        if ( delegateString.isEmpty() || !ok )
+        DelegateSelector dlg;
+        if ( dlg.exec() == QDialog::Rejected )
+          return true;
+        delegateString = dlg.delegate();
+        delegatorRSVP = dlg.rsvp();
+        if ( delegateString.isEmpty() )
           return true;
       }
 
@@ -337,7 +343,6 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
 
       // find our delegator, we need to inform him as well
       QString delegator;
-      bool delegatorRSVP = false;
       if ( myself && !myself->delegator().isEmpty() ) {
         Attendee::List attendees = incidence->attendees();
         for ( Attendee::List::ConstIterator it = attendees.constBegin(); it != attendees.constEnd(); ++it ) {
@@ -351,8 +356,10 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
 
       if ( ( myself && myself->RSVP() ) || heuristicalRSVP( incidence ) ) {
         Attendee* newMyself = setStatusOnMyself( incidence, myself, status, receiver );
-        if ( newMyself && status == Attendee::Delegated )
+        if ( newMyself && status == Attendee::Delegated ) {
           newMyself->setDelegate( delegateString );
+          newMyself->setRSVP( delegatorRSVP );
+        }
         ok =  mail( incidence, callback );
 
         // check if we need to inform our delegator about this as well
