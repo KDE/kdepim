@@ -792,29 +792,49 @@ static QString invitationHeaderEvent( Event *event, ScheduleMessage *msg )
           kdDebug(5850) << "Warning: attendeecount in the reply should be 1 "
                         << "but is " << attendees.count() << endl;
         Attendee* attendee = *attendees.begin();
+        QString attendeeName = attendee->name();
+        if ( attendeeName.isEmpty() )
+          attendeeName = attendee->email();
+        if ( attendeeName.isEmpty() )
+          attendeeName = i18n( "Sender" );
+
+        QString delegatorName, dummy;
+        KPIM::getNameAndMail( attendee->delegator(), delegatorName, dummy );
+        if ( delegatorName.isEmpty() )
+          delegatorName = attendee->delegator();
 
         switch( attendee->status() ) {
           case Attendee::NeedsAction:
-              return i18n( "Sender indicates this invitation still needs some action" );
+              return i18n( "%1 indicates this invitation still needs some action" ).arg( attendeeName );
           case Attendee::Accepted:
-              return i18n( "Sender accepts this meeting invitation" );
+              if ( delegatorName.isEmpty() )
+                  return i18n( "%1 accepts this meeting invitation" ).arg( attendeeName );
+              return i18n( "%1 accepts this meeting invitation on behalf of %2" )
+                  .arg( attendeeName ).arg( delegatorName );
           case Attendee::Tentative:
-              return i18n( "Sender tentatively accepts this meeting invitation" );
+              if ( delegatorName.isEmpty() )
+                  return i18n( "%1 tentatively accepts this meeting invitation" ).arg( attendeeName );
+              return i18n( "%1 tentatively accepts this meeting invitation on behalf of %2" )
+                  .arg( attendeeName ).arg( delegatorName );
           case Attendee::Declined:
-              return i18n( "Sender declines this meeting invitation" );
+              if ( delegatorName.isEmpty() )
+                  return i18n( "%1 declines this meeting invitation" ).arg( attendeeName );
+              return i18n( "%1 declines this meeting invitation on behalf of %2" )
+                  .arg( attendeeName ).arg( delegatorName );
           case Attendee::Delegated: {
               QString delegate, dummy;
               KPIM::getNameAndMail( attendee->delegate(), delegate, dummy );
               if ( delegate.isEmpty() )
-                delegate = attendee->delegate();
+                  delegate = attendee->delegate();
               if ( !delegate.isEmpty() )
-                return i18n( "Sender has delegated this meeting invitation to %1" ).arg( delegate );
-              return i18n( "Sender has delegated this meeting invitation" );
+                return i18n( "%1 has delegated this meeting invitation to %2" )
+                    .arg( attendeeName ) .arg( delegate );
+              return i18n( "%1 has delegated this meeting invitation" ).arg( attendeeName );
           }
           case Attendee::Completed:
               return i18n( "This meeting invitation is now completed" );
           case Attendee::InProcess:
-              return i18n( "Sender is still processing the invitation" );
+              return i18n( "%1 is still processing the invitation" ).arg( attendeeName );
           default:
               return i18n( "Unknown response to this meeting invitation" );
         }
@@ -865,8 +885,15 @@ static QString invitationHeaderTodo( Todo *todo, ScheduleMessage *msg )
               return i18n( "Sender tentatively accepts this task" );
           case Attendee::Declined:
               return i18n( "Sender declines this task" );
-          case Attendee::Delegated:
+          case Attendee::Delegated: {
+              QString delegate, dummy;
+              KPIM::getNameAndMail( attendee->delegate(), delegate, dummy );
+              if ( delegate.isEmpty() )
+                delegate = attendee->delegate();
+              if ( !delegate.isEmpty() )
+                return i18n( "Sender has delegated this request for the task to %1" ).arg( delegate );
               return i18n( "Sender has delegated this request for the task " );
+          }
           case Attendee::Completed:
               return i18n( "The request for this task is now completed" );
           case Attendee::InProcess:
