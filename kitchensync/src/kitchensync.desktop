@@ -45,6 +45,7 @@ GenericName[ta]=கூட்டிணைப்பு
 GenericName[tr]=Senkronizasyon
 GenericName[uk]=Синхронізація
 GenericName[x-test]=xxSynchronizationxx
+GenericName[zh_TW]=同步
 Exec=kitchensync
 Icon=kitchensync
 Type=Application

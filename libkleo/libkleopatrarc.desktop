@@ -252,6 +252,7 @@ Name=Keys for qualified signatures
 Name[es]=Claves para firmas cualificadas
 Name[sv]=Nycklar för kvalificerade signaturer
 Name[x-test]=xxKeys for qualified signaturesxx
+Name[zh_TW]=合格簽章的金鑰
 
 [Key Filter #6]
 was-validated=true
@@ -260,5 +261,6 @@ Name[es]=Otras claves
 Name[kk]=Басқа кілттер
 Name[sv]=Andra nycklar
 Name[x-test]=xxOther keysxx
+Name[zh_TW]=其他金鑰
 
 

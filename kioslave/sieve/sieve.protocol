@@ -49,3 +49,4 @@ Description[sv]=En I/O-slav för brevfiltreringsprotokollet Sieve
 Description[ta]=Sieve அஞ்சல் வடிகட்டும் நெறிமுறைக்கான ஒரு ioslave
 Description[uk]=Підлеглий В/В для протоколу фільтрування пошти Sieve
 Description[x-test]=xxAn ioslave for the Sieve mail filtering protocolxx
+Description[zh_TW]=Sieve 郵件過濾協定的 ioslave

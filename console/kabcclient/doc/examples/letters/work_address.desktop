@@ -6,6 +6,7 @@ Name=Letter business/work address
 Name[es]=Dirección postal de negocios/del trabajo
 Name[sv]=Brev företag/arbetsadress
 Name[x-test]=xxLetter business/work addressxx
+Name[zh_TW]=信件工作地址
 
 [General]
 # user defined delimiter
