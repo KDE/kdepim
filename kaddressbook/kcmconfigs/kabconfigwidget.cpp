@@ -28,7 +28,7 @@
 #include <QLineEdit>
 #include <QPushButton>
 #include <QTabWidget>
-#include <QToolTip>
+
 #include <QComboBox>
 //Added by qt3to4:
 #include <QVBoxLayout>

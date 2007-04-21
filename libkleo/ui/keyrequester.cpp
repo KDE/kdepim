@@ -73,7 +73,7 @@
 // Qt
 #include <QApplication>
 #include <QLayout>
-#include <QToolTip>
+
 #include <QString>
 #include <QStringList>
 #include <QLabel>

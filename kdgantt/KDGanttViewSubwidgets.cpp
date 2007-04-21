@@ -44,7 +44,7 @@
 #include <QLabel>
 #include <QPainter>
 #include <QRect>
-#include <QToolTip>
+
 #include <QApplication>
 #include <qdrawutil.h>
 #include <QPalette>

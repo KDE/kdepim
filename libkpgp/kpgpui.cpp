@@ -19,7 +19,7 @@
 
 
 #include <QLabel>
-#include <QToolTip>
+
 #include <QApplication>
 #include <QTextCodec>
 #include <QDateTime>

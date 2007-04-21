@@ -29,7 +29,7 @@
 #include <QValidator>
 #include <QString>
 #include <QToolButton>
-#include <QToolTip>
+
 //Added by qt3to4:
 #include <QGridLayout>
 #include <Q3ListBox>

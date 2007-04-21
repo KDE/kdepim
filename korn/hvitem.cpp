@@ -31,7 +31,7 @@
 #include <QCursor>
 #include <QLabel>
 #include <QList>
-#include <QToolTip>
+
 #include <QIcon>
 //Added by qt3to4:
 #include <kiconloader.h>

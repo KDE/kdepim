@@ -52,7 +52,7 @@
 #include <qvbuttongroup.h>
 #include <qvgroupbox.h>
 #include <qscrollview.h>
-#include <QToolTip>
+
 #include <qdockwindow.h>
 #include <Q3PaintDeviceMetrics>
 

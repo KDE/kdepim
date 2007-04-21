@@ -30,7 +30,7 @@
 #include <QTabWidget>
 #include <QTextEdit>
 #include <QToolButton>
-#include <QToolTip>
+
 //Added by qt3to4:
 #include <QVBoxLayout>
 #include <QHBoxLayout>

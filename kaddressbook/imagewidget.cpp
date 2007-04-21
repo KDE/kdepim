@@ -43,7 +43,7 @@
 #include <QLabel>
 #include <QLayout>
 #include <QPixmap>
-#include <QToolTip>
+
 #include <QGridLayout>
 #include <QFrame>
 #include <QHBoxLayout>

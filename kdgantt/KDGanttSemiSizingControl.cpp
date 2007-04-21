@@ -36,7 +36,7 @@
 #include <QPushButton>
 #include <QPainter>
 #include <QBitmap>
-#include <QToolTip>
+
 #include <QWhatsThis>
 /*!
   \class KDGanttSemiSizingControl KDGanttSemiSizingControl.h

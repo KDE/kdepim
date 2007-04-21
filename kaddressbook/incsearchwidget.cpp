@@ -27,7 +27,7 @@
 #include <QLayout>
 #include <QTimer>
 #include <QToolButton>
-#include <QToolTip>
+
 
 //Added by qt3to4:
 #include <QHBoxLayout>

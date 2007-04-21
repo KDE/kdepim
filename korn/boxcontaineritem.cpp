@@ -51,7 +51,7 @@
 #include <QPixmap>
 #include <q3ptrlist.h>
 #include <QString>
-#include <QToolTip>
+
 #include <QMovie>
 
 BoxContainerItem::BoxContainerItem( QObject * parent )

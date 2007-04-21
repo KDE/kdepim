@@ -29,7 +29,7 @@
 #include <QRegExp>
 #include <QString>
 #include <QToolButton>
-#include <QToolTip>
+
 #include <QWidget>
 //Added by qt3to4:
 #include <QVBoxLayout>

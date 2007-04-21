@@ -15,7 +15,7 @@
 #ifndef KNHEADERVIEW_H
 #define KNHEADERVIEW_H
 
-#include <QToolTip>
+
 //Added by qt3to4:
 #include <QMouseEvent>
 #include <QFocusEvent>

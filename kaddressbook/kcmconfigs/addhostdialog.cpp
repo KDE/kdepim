@@ -25,7 +25,7 @@
 #include <QLayout>
 #include <QPushButton>
 #include <QSpinBox>
-#include <QToolTip>
+
 //Added by qt3to4:
 #include <QHBoxLayout>
 

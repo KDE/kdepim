@@ -49,7 +49,7 @@
 #include <q3header.h>
 #include <QLabel>
 #include <q3listview.h>
-#include <QToolTip>
+
 //Added by qt3to4:
 #include <QGridLayout>
 
