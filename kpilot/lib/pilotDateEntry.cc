@@ -39,7 +39,7 @@
 
 #include "pilotDateEntry.h"
 
-static const char *default_category_names[] = {
+static const char *default_date_category_names[] = {
 	"Unfiled",
 	"Business",
 	"Personal",
@@ -52,9 +52,9 @@ void PilotDateInfo::resetToDefault()
 	// Reset to all 0s
 	memset(&fInfo,0,sizeof(fInfo));
 	// Fill up default categories
-	for (unsigned int i=0; (i<4) && default_category_names[i]; ++i)
+	for (unsigned int i=0; (i<4) && default_date_category_names[i]; ++i)
 	{
-		strncpy(fInfo.category.name[i],default_category_names[i],sizeof(fInfo.category.name[0]));
+		strncpy(fInfo.category.name[i],default_date_category_names[i],sizeof(fInfo.category.name[0]));
 	}
 
 	fInfo.startOfWeek = 0;

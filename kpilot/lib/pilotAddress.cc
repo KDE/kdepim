@@ -40,7 +40,7 @@
 
 #include "pilotAddress.h"
 
-static const char *default_category_names[] = {
+static const char *default_address_category_names[] = {
 	"Unfiled",
 	"Business",
 	"Personal",
@@ -48,7 +48,7 @@ static const char *default_category_names[] = {
 	0L
 } ;
 
-static const char *default_field_labels[] = {
+static const char *default_address_field_labels[] = {
 	"Last name",
 	"First name",
 	"Company",
@@ -77,17 +77,17 @@ void PilotAddressInfo::resetToDefault()
 	// Reset to all 0s
 	memset(&fInfo,0,sizeof(fInfo));
 	// Fill up default categories
-	for (unsigned int i=0; (i<4) && default_category_names[i]; ++i)
+	for (unsigned int i=0; (i<4) && default_address_category_names[i]; ++i)
 	{
-		strncpy(fInfo.category.name[i],default_category_names[i],sizeof(fInfo.category.name[0]));
+		strncpy(fInfo.category.name[i],default_address_category_names[i],sizeof(fInfo.category.name[0]));
 	}
 	// Weird hack, looks like there's an extra copy of Unfiled
-	strncpy(fInfo.category.name[15],default_category_names[0],sizeof(fInfo.category.name[0]));
+	strncpy(fInfo.category.name[15],default_address_category_names[0],sizeof(fInfo.category.name[0]));
 
 	// And fill up the default labels.
-	for (unsigned int i=0; (i<19) && default_field_labels[i]; ++i)
+	for (unsigned int i=0; (i<19) && default_address_field_labels[i]; ++i)
 	{
-		strncpy(fInfo.labels[i],default_field_labels[i],sizeof(fInfo.labels[0]));
+		strncpy(fInfo.labels[i],default_address_field_labels[i],sizeof(fInfo.labels[0]));
 	}
 }
 
