@@ -509,6 +509,8 @@ bool DeviceCommThread::open(const QString &device)
 	QApplication::postEvent(link(),
 		new DeviceCommEvent(EventLogProgress, QString::null, 30));
 
+	DEBUGKPILOT << fname << ": doing dlp_ReadSysInfo..." << endl;
+
 	struct SysInfo sys_info;
 	if (dlp_ReadSysInfo(fPilotSocket, &sys_info) < 0)
 	{
@@ -521,6 +523,8 @@ bool DeviceCommThread::open(const QString &device)
 	}
 	else
 	{
+		DEBUGKPILOT << fname << ": dlp_ReadSysInfo successful..." << endl;
+
         	KPILOT_DELETE(link()->fPilotSysInfo);
 		link()->fPilotSysInfo = new KPilotSysInfo(&sys_info);
 		DEBUGKPILOT << fname
@@ -535,6 +539,8 @@ bool DeviceCommThread::open(const QString &device)
 
         KPILOT_DELETE(link()->fPilotUser);
 	link()->fPilotUser = new KPilotUser;
+
+	DEBUGKPILOT << fname << ": doing dlp_ReadUserInfo..." << endl;
 
 	/* Ask the pilot who it is.  And see if it's who we think it is. */
 	dlp_ReadUserInfo(fPilotSocket, link()->fPilotUser->data());
