@@ -509,9 +509,8 @@ bool DeviceCommThread::open(const QString &device)
 	QApplication::postEvent(link(),
 		new DeviceCommEvent(EventLogProgress, QString::null, 30));
 
-        KPILOT_DELETE(link()->fPilotSysInfo);
-	link()->fPilotSysInfo = new KPilotSysInfo();
-	if (dlp_ReadSysInfo(fPilotSocket, link()->fPilotSysInfo->sysInfo()) < 0)
+	struct SysInfo sys_info;
+	if (dlp_ReadSysInfo(fPilotSocket, &sys_info) < 0)
 	{
 		QApplication::postEvent(link(),
 			new DeviceCommEvent(EventLogError,
@@ -522,6 +521,8 @@ bool DeviceCommThread::open(const QString &device)
 	}
 	else
 	{
+        	KPILOT_DELETE(link()->fPilotSysInfo);
+		link()->fPilotSysInfo = new KPilotSysInfo(&sys_info);
 		DEBUGKPILOT << fname
 			<< ": RomVersion: [" << link()->fPilotSysInfo->getRomVersion()
 			<< "] Locale: [" << link()->fPilotSysInfo->getLocale()
