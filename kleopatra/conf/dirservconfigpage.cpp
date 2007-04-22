@@ -157,7 +157,7 @@ DirectoryServicesConfigurationPage::DirectoryServicesConfigurationPage( const KC
   KHBox* box = new KHBox( this );
   box->setSpacing( KDialog::spacingHint() );
   lay->addWidget( box );
-  QLabel* label = new QLabel( i18n( "LDAP &timeout (minutes:seconds)" ), box );
+  QLabel* label = new QLabel( i18n( "LDAP &timeout (minutes:seconds):" ), box );
   mTimeout = new QTimeEdit( box );
   mTimeout->setDisplayFormat( "mm:ss" );
   connect( mTimeout, SIGNAL( valueChanged( const QTime& ) ), this, SLOT( slotChanged() ) );
@@ -170,7 +170,7 @@ DirectoryServicesConfigurationPage::DirectoryServicesConfigurationPage( const KC
   box->setSpacing( KDialog::spacingHint() );
   lay->addWidget( box );
   mMaxItems = new KIntNumInput( box );
-  mMaxItems->setLabel( i18n( "&Maximum number of items returned by query" ), Qt::AlignLeft | Qt::AlignVCenter );
+  mMaxItems->setLabel( i18n( "&Maximum number of items returned by query:" ), Qt::AlignLeft | Qt::AlignVCenter );
   mMaxItems->setMinimum( 0 );
   connect( mMaxItems, SIGNAL( valueChanged(int) ), this, SLOT( slotChanged() ) );
   stretch = new QWidget( box );
