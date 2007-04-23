@@ -45,9 +45,9 @@
 
 static const KCmdLineOptions options[] =
 {
-	{"verbose", "Verbose output", 0},
-	{"korgfile <path>","KOrganizer master file", "."},
+	{"korgfile <path>","KOrganizer master file", 0},
 	{"newevents <path>","Calendar file to merge into korganizer", 0},
+	{"verbose", "Verbose debugging", 0},
 	KCmdLineLastOption
 };
 
@@ -89,11 +89,13 @@ int main(int argc, char **argv)
 	QString neweventssave = QString("%1.updated").arg(newevents);
 
 	kdDebug() << "Using korgfile: [" << korgfile 
-		<< "], newevents: [" << newevents
 		<< "]" << endl;
-	kdDebug() << "Saving korgfile to: [" << korgsave 
-		<< "], newevents: [" << neweventssave
+	kdDebug() << "Using newevents: [" << newevents
 		<< "]" << endl;
+	kdDebug() << "Will save korgfile to: [" << korgsave 
+		<< "]" << endl;
+	kdDebug() << "Will save newevents to: [" << neweventssave
+		<< "]" << endl << endl;
 
 	KCal::CalendarLocal *calkorg = new KCal::CalendarLocal( QString::fromLatin1("UTC") );
 	KCal::CalendarLocal *calxchg = new KCal::CalendarLocal( QString::fromLatin1("UTC") );
@@ -118,39 +120,48 @@ int main(int argc, char **argv)
 		<< numxchgstart << "] incidences." << endl;
 	
 
-	KCal::Event::List korgAllEvents;
-	KCal::Event::List::ConstIterator korgAllEventsIterator;
-	korgAllEvents = calkorg->events();
-	korgAllEvents.setAutoDelete(false);
+	KCal::Event::List korgEvents;
+	KCal::Event::List::ConstIterator korgIt;
+	korgEvents = calkorg->events();
+	korgEvents.setAutoDelete(false);
 
-	KCal::Event::List xchgAllEvents;
-	KCal::Event::List::ConstIterator xchgAllEventsIterator;
-	xchgAllEvents = calxchg->events();
-	xchgAllEvents.setAutoDelete(false);
+	KCal::Event::List xchgEvents;
+	KCal::Event::List::ConstIterator xchgIt;
+	xchgEvents = calxchg->events();
+	xchgEvents.setAutoDelete(false);
 
 	kdDebug() << "Looking for previous pilot ids for exchange events..." << endl;
 
 	// iterate through all events and try to find a korganizer event
 	// that matches up with this external event's UID
-	xchgAllEventsIterator = xchgAllEvents.end();
-	KCal::Event *ev = *xchgAllEventsIterator;
-	while (ev)
+	unsigned int numkorgpilotids = 0;
+	for (xchgIt = xchgEvents.begin(); xchgIt != xchgEvents.end(); ++xchgIt ) 
 	{
+		KCal::Event *ev = *xchgIt;
 		QString uid = ev->uid();
+		kdDebug() << "  - Looking at event: [" 
+			<< ev->summary() << "], uid: ["
+			<< uid << "]" << endl;
+
 		KCal::Event * evkorg = calkorg->event(uid);
-		if (evkorg)
+		if ( evkorg && (evkorg->pilotId() > 0) )
 		{
 			unsigned long pilotId = evkorg->pilotId();
+
 			kdDebug() << "Found korg event for uid: ["
 				<< uid << "], pilotId: [" 
 				<< pilotId << "]" << endl;
+			ev->setPilotId(pilotId);
+			ev->setSyncStatus(KCal::Incidence::SYNCMOD);
+
+			++numkorgpilotids;
 		}
-		// get the next one
-		ev = * --xchgAllEventsIterator;
 	}
+
+	kdDebug() << "Matched: [" << numkorgpilotids << "] events."<< endl;
 	/*
 	// use dynamic_cast which returns a null pointer if the class does not match...
-	fAllEvents.remove(dynamic_cast<KCal::Event*>(e));
+	fEvents.remove(dynamic_cast<KCal::Event*>(e));
 	if (!fCalendar) return;
 	fCalendar->deleteEvent(dynamic_cast<KCal::Event*>(e));
 	// now just in case we're in the middle of reading through our list
@@ -162,7 +173,7 @@ int main(int argc, char **argv)
 	/*
 	// search for event
 	KCal::Event::List::ConstIterator it;
-	for( it = fAllEvents.begin(); it != fAllEvents.end(); ++it ) {
+	for( it = fEvents.begin(); it != fEvents.end(); ++it ) {
 		KCal::Event *event = *it;
 		if ((recordid_t)event->pilotId() == id) return event;
 	}
