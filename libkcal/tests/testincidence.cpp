@@ -43,8 +43,7 @@ int main(int argc,char **argv)
   KCmdLineArgs::init(argc,argv,&aboutData);
   KCmdLineArgs::addCmdLineOptions( options );
 
-//  KApplication app( false, false );
-  KApplication app;
+ KApplication app( false, false );
 
   KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
 
@@ -79,7 +78,7 @@ int main(int argc,char **argv)
   QString todoString1 = f.toString( todo1 );
   if( verbose )
     kdDebug(5800) << "todo1 START:" << todoString1 << "todo1 END" << endl;
-    
+
   Incidence *todo2 = todo1->clone();
   QString todoString2 = f.toString( todo2 );
   if( verbose )
