@@ -25,6 +25,10 @@
 #include "vcalformat.h"
 #include "filestorage.h"
 
+extern "C" {
+#include "icaltimezone.h"
+}
+
 #include <kaboutdata.h>
 #include <kapplication.h>
 #include <kdebug.h>
@@ -50,13 +54,16 @@ int main( int argc, char **argv )
   KCmdLineArgs::init( argc, argv, &aboutData );
   KCmdLineArgs::addCmdLineOptions( options );
 
-  KApplication app/*( false, false )*/;
+  KApplication app( false, false );
 
   KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
 
   if ( args->count() != 2 ) {
     args->usage( "Wrong number of arguments." );
   }
+
+  // use zoneinfo data from source dir
+  set_zone_directory( KDETOPSRCDIR "/libkcal/libical/zoneinfo" );
 
   QString input = QFile::decodeName( args->arg( 0 ) );
   QString output = QFile::decodeName( args->arg( 1 ) );

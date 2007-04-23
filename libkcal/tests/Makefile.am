@@ -1,5 +1,10 @@
-INCLUDES = -I$(top_srcdir)/libkcal -I$(top_srcdir) $(all_includes)
+INCLUDES = -I$(top_srcdir)/libkcal \
+  -I$(srcdir)/../libical/src/libical \
+  -I$(srcdir)/../libical/src/libicalss -I../libical/src/libical \
+  -I../libical/src/libicalss -I$(srcdir)/../versit \
+  -I$(top_srcdir) $(all_includes)
 
+AM_CPPFLAGS = -DKDETOPSRCDIR=\"$(top_srcdir)\"
 
 check_PROGRAMS = testtostring \
                  testincidence \
