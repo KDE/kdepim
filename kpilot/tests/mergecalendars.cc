@@ -131,7 +131,9 @@ int main(int argc, char **argv)
 	kdDebug() << "Looking for previous pilot ids for exchange events..." << endl;
 
 	// iterate through all events and try to find a korganizer event
-	KCal::Event *ev = xchgAllEventsIterator.end();
+	// that matches up with this external event's UID
+	xchgAllEventsIterator = xchgAllEvents.end();
+	KCal::Event *ev = *xchgAllEventsIterator;
 	while (ev)
 	{
 		QString uid = ev->uid();
