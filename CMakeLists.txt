@@ -160,6 +160,6 @@ if(GPGME_FOUND)
 endif(GPGME_FOUND)
 
 add_subdirectory(cmake)
-add_subdirectory(mailtransport)
+#add_subdirectory(mailtransport)
 
 macro_display_feature_log()
