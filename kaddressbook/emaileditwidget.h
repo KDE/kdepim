@@ -30,7 +30,6 @@
 class Q3ButtonGroup;
 class QCheckBox;
 class Q3ListView;
-class Q3TextEdit;
 class QToolButton;
 
 class KComboBox;

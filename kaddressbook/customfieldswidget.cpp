@@ -22,7 +22,9 @@
 */
 
 #include <QCheckBox>
-#include <q3datetimeedit.h>
+#include <qdatetimeedit.h>
+#include <QDateEdit>
+#include <QTimeEdit>
 #include <QFrame>
 #include <QLabel>
 #include <QLayout>
@@ -175,19 +177,19 @@ void FieldWidget::addField( const QString &identifier, const QString &title,
     connect( wdg, SIGNAL( toggled( bool ) ),
              this, SIGNAL( changed() ) );
   } else if ( type == "date" ) {
-    Q3DateEdit *wdg = new Q3DateEdit( this );
+    QDateEdit *wdg = new QDateEdit( this );
     record.mWidget = wdg;
-    connect( wdg, SIGNAL( valueChanged( const QDate& ) ),
+    connect( wdg, SIGNAL( dateChanged( const QDate& ) ),
              this, SIGNAL( changed() ) );
   } else if ( type == "time" ) {
-    Q3TimeEdit *wdg = new Q3TimeEdit( this );
+    QTimeEdit *wdg = new QTimeEdit( this );
     record.mWidget = wdg;
-    connect( wdg, SIGNAL( valueChanged( const QTime& ) ),
+    connect( wdg, SIGNAL( timeChanged( const QTime& ) ),
              this, SIGNAL( changed() ) );
   } else if ( type == "datetime" ) {
-    Q3DateTimeEdit *wdg = new Q3DateTimeEdit( this );
+    QDateTimeEdit *wdg = new QDateTimeEdit( this );
     record.mWidget = wdg;
-    connect( wdg, SIGNAL( valueChanged( const QDateTime& ) ),
+    connect( wdg, SIGNAL( dateTimeChanged( const QDateTime& ) ),
              this, SIGNAL( changed() ) );
   } else  if ( type == "text" ) {
     QLineEdit *wdg = new QLineEdit( this );
@@ -254,14 +256,14 @@ void FieldWidget::clearFields()
     } else if ( qobject_cast<QCheckBox*>( (*fieldIt).mWidget ) ) {
       QCheckBox *wdg = static_cast<QCheckBox*>( (*fieldIt).mWidget );
       wdg->setChecked( true );
-    } else if ( qobject_cast<Q3DateTimeEdit*>( (*fieldIt).mWidget ) ) {
-      Q3DateEdit *wdg = static_cast<Q3DateEdit*>( (*fieldIt).mWidget );
+    } else if ( qobject_cast<QDateEdit*>( (*fieldIt).mWidget ) ) {
+      QDateEdit *wdg = static_cast<QDateEdit*>( (*fieldIt).mWidget );
       wdg->setDate( QDate::currentDate() );
-    } else if ( qobject_cast<Q3TimeEdit*>( (*fieldIt).mWidget ) ) {
-      Q3TimeEdit *wdg = static_cast<Q3TimeEdit*>( (*fieldIt).mWidget );
+    } else if ( qobject_cast<QTimeEdit*>( (*fieldIt).mWidget ) ) {
+      QTimeEdit *wdg = static_cast<QTimeEdit*>( (*fieldIt).mWidget );
       wdg->setTime( QTime::currentTime() );
-    } else if ( qobject_cast<Q3DateTimeEdit*>( (*fieldIt).mWidget ) ) {
-      Q3DateTimeEdit *wdg = static_cast<Q3DateTimeEdit*>( (*fieldIt).mWidget );
+    } else if ( qobject_cast<QDateTimeEdit*>( (*fieldIt).mWidget ) ) {
+      QDateTimeEdit *wdg = static_cast<QDateTimeEdit*>( (*fieldIt).mWidget );
       wdg->setDateTime( QDateTime::currentDateTime() );
     }
   }
@@ -292,14 +294,14 @@ void FieldWidget::loadContact( KABC::Addressee *addr )
         } else if ( qobject_cast<QCheckBox*>( (*fieldIt).mWidget ) ) {
           QCheckBox *wdg = static_cast<QCheckBox*>( (*fieldIt).mWidget );
           wdg->setChecked( value == "true" || value == "1" );
-        } else if ( qobject_cast<Q3DateTimeEdit*>( (*fieldIt).mWidget ) ) {
-          Q3DateEdit *wdg = static_cast<Q3DateEdit*>( (*fieldIt).mWidget );
+        } else if ( qobject_cast<QDateEdit*>( (*fieldIt).mWidget ) ) {
+          QDateEdit *wdg = static_cast<QDateEdit*>( (*fieldIt).mWidget );
           wdg->setDate( QDate::fromString( value, Qt::ISODate ) );
-        } else if ( qobject_cast<Q3TimeEdit*>( (*fieldIt).mWidget ) ) {
-          Q3TimeEdit *wdg = static_cast<Q3TimeEdit*>( (*fieldIt).mWidget );
+        } else if ( qobject_cast<QTimeEdit*>( (*fieldIt).mWidget ) ) {
+          QTimeEdit *wdg = static_cast<QTimeEdit*>( (*fieldIt).mWidget );
           wdg->setTime( QTime::fromString( value, Qt::ISODate ) );
-        } else if ( qobject_cast<Q3DateTimeEdit*>( (*fieldIt).mWidget ) ) {
-          Q3DateTimeEdit *wdg = static_cast<Q3DateTimeEdit*>( (*fieldIt).mWidget );
+        } else if ( qobject_cast<QDateTimeEdit*>( (*fieldIt).mWidget ) ) {
+          QDateTimeEdit *wdg = static_cast<QDateTimeEdit*>( (*fieldIt).mWidget );
           wdg->setDateTime( QDateTime::fromString( value, Qt::ISODate ) );
         }
       }
@@ -321,14 +323,14 @@ void FieldWidget::storeContact( KABC::Addressee *addr )
     } else if ( qobject_cast<QCheckBox*>( (*it).mWidget ) ) {
       QCheckBox *wdg = static_cast<QCheckBox*>( (*it).mWidget );
       value = ( wdg->isChecked() ? "true" : "false" );
-    } else if ( qobject_cast<Q3DateEdit*>( (*it).mWidget ) ) {
-      Q3DateEdit *wdg = static_cast<Q3DateEdit*>( (*it).mWidget );
+    } else if ( qobject_cast<QDateEdit*>( (*it).mWidget ) ) {
+      QDateEdit *wdg = static_cast<QDateEdit*>( (*it).mWidget );
       value = wdg->date().toString( Qt::ISODate );
-    } else if ( qobject_cast<Q3TimeEdit*>( (*it).mWidget )  ) {
-      Q3TimeEdit *wdg = static_cast<Q3TimeEdit*>( (*it).mWidget );
+    } else if ( qobject_cast<QTimeEdit*>( (*it).mWidget )  ) {
+      QTimeEdit *wdg = static_cast<QTimeEdit*>( (*it).mWidget );
       value = wdg->time().toString( Qt::ISODate );
-    } else if ( qobject_cast<Q3DateTimeEdit*>( (*it).mWidget ) ) {
-      Q3DateTimeEdit *wdg = static_cast<Q3DateTimeEdit*>( (*it).mWidget );
+    } else if ( qobject_cast<QDateTimeEdit*>( (*it).mWidget ) ) {
+      QDateTimeEdit *wdg = static_cast<QDateTimeEdit*>( (*it).mWidget );
       value = wdg->dateTime().toString( Qt::ISODate );
     }
 
@@ -518,11 +520,11 @@ QStringList CustomFieldsWidget::marshallFields( bool global ) const
         type = "integer";
       } else if ( qobject_cast<QCheckBox*>( (*it).mWidget ) ) {
         type = "boolean";
-      } else if ( qobject_cast<Q3DateEdit*>( (*it).mWidget ) ) {
+      } else if ( qobject_cast<QDateEdit*>( (*it).mWidget ) ) {
         type = "date";
-      } else if ( qobject_cast<Q3TimeEdit*>( (*it).mWidget ) ) {
+      } else if ( qobject_cast<QTimeEdit*>( (*it).mWidget ) ) {
         type = "time";
-      } else if ( qobject_cast<Q3DateTimeEdit*>( (*it).mWidget ) ) {
+      } else if ( qobject_cast<QDateTimeEdit*>( (*it).mWidget ) ) {
         type = "datetime";
       } else if ( qobject_cast<QLineEdit*>( (*it).mWidget ) ) {
         type = "text";

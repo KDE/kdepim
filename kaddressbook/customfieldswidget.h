@@ -31,7 +31,6 @@
 #include <QMap>
 #include <QPair>
 #include <QStringList>
-#include <q3valuevector.h>
 #include <QWidget>
 //Added by qt3to4:
 #include <QLabel>
