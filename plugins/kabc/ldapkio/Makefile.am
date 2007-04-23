@@ -13,7 +13,7 @@ INCLUDES = -I$(top_srcdir)/kabc -I$(top_builddir)/kabc $(all_includes) $(newldap
 
 libkabc_newldapkio_la_SOURCES = resourceldapkio.cpp resourceldapkioconfig.cpp
 libkabc_newldapkio_la_LDFLAGS = $(KDE_RPATH) $(all_libraries) -version-info 1:0:0 -no-undefined
-libkabc_newldapkio_la_LIBADD	= $(LIB_KABC) $(LIB_KIO) $(newldapkio_extra_libs)
+libkabc_newldapkio_la_LIBADD	= $(newldapkio_extra_libs) $(LIB_KABC) $(LIB_KIO)
 
 kde_module_LTLIBRARIES = kabc_newldapkio.la
 kabc_newldapkio_la_SOURCES = resourceldapkioplugin.cpp

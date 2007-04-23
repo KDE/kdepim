@@ -23,7 +23,7 @@ kcm_knode_la_LIBADD = libknodecommon.la $(LIB_KDECORE)
 
 
 libknodecommon_la_LDFLAGS = $(all_libraries) -no-undefined
-libknodecommon_la_LIBADD = -lkdeprint -lkwalletclient $(top_builddir)/libkdenetwork/libkdenetwork.la $(top_builddir)/libkdepim/libkdepim.la $(LIB_KSPELL) $(LIB_KABC) $(LIB_KFILE) $(LIB_KUTILS) $(LIBRESOLV)
+libknodecommon_la_LIBADD = $(top_builddir)/libkdenetwork/libkdenetwork.la $(top_builddir)/libkdepim/libkdepim.la $(LIB_KSPELL) $(LIB_KABC) $(LIB_KFILE) $(LIB_KUTILS) -lkdeprint -lkwalletclient $(LIBRESOLV)
 libknodecommon_la_SOURCES =   knconfigmanager.cpp \
                   knconfig.cpp \
                   knconfigwidgets.cpp \

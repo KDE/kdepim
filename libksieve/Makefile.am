@@ -7,8 +7,7 @@ lib_LTLIBRARIES = libksieve.la
 CLEANFILES = dummy.cpp
 
 libksieve_la_SOURCES = dummy.cpp
-libksieve_la_LIBADD = \
-	parser/libksieve_parser.la
+libksieve_la_LIBADD = parser/libksieve_parser.la
 libksieve_la_LDFLAGS = $(all_libraries) -version-info 0:0:0 -no-undefined
 
 dummy.cpp:

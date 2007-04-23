@@ -13,8 +13,8 @@ karm_SOURCES =  kaccelmenuwatch.cpp main.cpp desktoptracker.cpp \
                 karmstorage.cpp mainwindow.cpp preferences.cpp print.cpp \
                 task.cpp taskview.cpp tray.cpp \
 		csvexportdialog_base.ui csvexportdialog.cpp
-karm_LDADD = -lkdeprint $(top_builddir)/libkcal/libkcal.la \
-             $(top_builddir)/libkdepim/libkdepim.la $(LIBXSS)
+karm_LDADD = $(top_builddir)/libkcal/libkcal.la \
+             $(top_builddir)/libkdepim/libkdepim.la -lkdeprint $(LIBXSS)
 karm_LDFLAGS = $(all_libraries)
 noinst_HEADERS = desktoptracker.h edittaskdialog.h printdialog.h \
                  idletimedetector.h kaccelmenuwatch.h timekard.h \
