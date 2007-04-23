@@ -5,7 +5,7 @@ Features:
 
 kmail
 ----------
-- Kowi-W W1-14 (automatic moving of not yet synced mails from folders with insufficient access rights to a lost+found folder)
+- proko35 W1-14 (automatic moving of not yet synced mails from folders with insufficient access rights to a lost+found folder)
 - Unit tests fixed.
 - Kolab/issue1530 - make preferred form of forwarding configurable
 
@@ -16,7 +16,7 @@ Bugfixes
 
 Korganizer
 -----------
-- Kowi-W W1-9 icon alignment was improved.
+- proko35 W1-9 icon alignment was improved.
 
 Additional Fixes
 ================
@@ -32,14 +32,14 @@ kmail
 - Kolab/Merge14/issue1095 -Add local subscription
 - Kolab/issue1206 - kolabziward quirks
 - Kolab/issue1207 - groupware folders only  as local subscription still shows mails in inbox
-- Kowi-W W1-5: selectable scope when reindexing a dimap cache
+- proko35 W1-5: selectable scope when reindexing a dimap cache
 
 
 Bugfixes:
 =========
 - Kolab/issue1583 - Fixing OL compatibility with attachments that have umlauts in the filename.
 - Kolab/issue 1658 - Adding a warning for empty To : field
-- Kowi-W W1-1 - kontact discards signature settings when signature is deactivated
+- proko35 W1-1 - kontact discards signature settings when signature is deactivated
 
 
 
@@ -73,11 +73,11 @@ Features:
 kmail
 ----------
 
-- Kowi-w Task - W1-24, Kolab/issue 1180 - Copy/move folders ( related kolab/issues 1294 and 1317 )
+- proko35 Task - W1-24, Kolab/issue 1180 - Copy/move folders ( related kolab/issues 1294 and 1317 )
 
-- Kowi-w Task - W1-2 , Ktnef
+- proko35 Task - W1-2 , Ktnef
 
-- Kowi-w Task - W1-28, Search result DnD
+- proko35 Task - W1-28, Search result DnD
 
 - Kolab/issue 1222 - Reduce the memory consumption. Improve speed.
 
