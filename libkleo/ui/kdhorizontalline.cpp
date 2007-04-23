@@ -71,7 +71,7 @@ KDHorizontalLine::KDHorizontalLine( const QString & title, QWidget * parent, con
 KDHorizontalLine::~KDHorizontalLine() {}
 
 void KDHorizontalLine::setFrameStyle( int style ) {
-  Q3Frame::setFrameStyle( ( style & ~MShape ) | HLine ); // force HLine
+  Q3Frame::setFrameStyle( ( style & ~Shape_Mask ) | HLine ); // force HLine
 }
 
 void KDHorizontalLine::setTitle( const QString & title ) {
@@ -154,10 +154,8 @@ void KDHorizontalLine::paintEvent( QPaintEvent * e ) {
     if ( va & Qt::AlignTop )
       r.translate( 0, fm.descent() );
     const QColor pen( (QRgb) style()->styleHint( QStyle::SH_GroupBox_TextLabelColor, 0, this ) );
-#if QT_VERSION >= 0x030300
     if ( !style()->styleHint( QStyle::SH_UnderlineShortcut, 0, this ) )
       va |= Qt::TextHideMnemonic;
-#endif
     style()->drawItemText( &paint, r, Qt::TextShowMnemonic | Qt::AlignHCenter | va, palette(),
                            isEnabled(), mTitle );
     paint.setClipRegion( e->region().subtract( r ) ); // clip everything but title
