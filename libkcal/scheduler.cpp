@@ -344,7 +344,14 @@ bool Scheduler::acceptReply(IncidenceBase *incidence,ScheduleMessage::Status /* 
       if ( KMessageBox::questionYesNo( 0, msg, i18n("Uninvited attendee"),
            KGuiItem(i18n("Accept Attendance")), KGuiItem(i18n("Reject Attendance")) )
            != KMessageBox::Yes )
+      {
+        KCal::Incidence *cancel = dynamic_cast<Incidence*>( incidence );
+        if ( cancel )
+          cancel->addComment( i18n( "The organizer rejected your attendance at this meeting." ) );
+        performTransaction( cancel ? cancel : incidence, Scheduler::Cancel, attNew->fullName() );
+        delete cancel;
         continue;
+      }
 
       Attendee *a = new Attendee( attNew->name(), attNew->email(), attNew->RSVP(),
                                   attNew->status(), attNew->role(), attNew->uid() );
