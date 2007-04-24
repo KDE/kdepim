@@ -71,6 +71,8 @@ public:
     bool requestResponse;
     bool invitationSent;
     QString role;
+    QString delegate;
+    QString delegator;
   };
 
   explicit Incidence( const QString& tz, KCal::Incidence* incidence = 0 );
