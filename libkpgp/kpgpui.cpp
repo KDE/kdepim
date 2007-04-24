@@ -1012,8 +1012,8 @@ bool KeySelectionDialog::checkKeys( const QList<Q3ListViewItem*>& keys ) const
   kDebug(5100) << "Checking keys...\n";
 
   pProgressDlg = new KProgressDialog( 0, i18n("Checking Keys"),
-                                      i18n("Checking key 0xMMMMMMMM..."),
-                                      true );
+                                      i18n("Checking key 0xMMMMMMMM..."));
+  pProgressDlg->setModal(true );
   pProgressDlg->setAllowCancel( false );
   pProgressDlg->progressBar()->setMaximum( keys.count() );
   pProgressDlg->setMinimumDuration( 1000 );
