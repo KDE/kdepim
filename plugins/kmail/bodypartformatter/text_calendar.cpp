@@ -145,18 +145,13 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
       Attendee* myself = 0;
       // Find myself. There will always be all attendees listed, even if
       // only I need to answer it.
-      if ( attendees.count() == 1 )
-        // Only one attendee, that must be me
-        myself = *attendees.begin();
-      else {
-        for ( it = attendees.begin(); it != attendees.end(); ++it ) {
-          // match only the email part, not the name
-          if( KPIM::compareEmail( (*it)->email(), receiver, false ) ) {
-            // We are the current one, and even the receiver, note
-            // this and quit searching.
-            myself = (*it);
-            break;
-          }
+      for ( it = attendees.begin(); it != attendees.end(); ++it ) {
+        // match only the email part, not the name
+        if( KPIM::compareEmail( (*it)->email(), receiver, false ) ) {
+          // We are the current one, and even the receiver, note
+          // this and quit searching.
+          myself = (*it);
+          break;
         }
       }
       return myself;
@@ -369,6 +364,23 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
             ok = mail( incidence, callback, Scheduler::Reply, delegator );
         }
 
+      } else if ( !myself && (status != Attendee::Declined) ) {
+        // forwarded invitation
+        Attendee* newMyself = 0;
+        QString name;
+        QString email;
+        KPIM::getNameAndMail( receiver, name, email );
+        if ( !email.isEmpty() ) {
+          newMyself = new Attendee( name,
+                                    email,
+                                    true, // RSVP, otherwise we would not be here
+                                    status,
+                                    heuristicalRole( incidence ),
+                                    QString::null );
+          incidence->clearAttendees();
+          incidence->addAttendee( newMyself );
+          ok = mail( incidence, callback, Scheduler::Reply );
+        }
       } else {
         ( new KMDeleteMsgCommand( callback.getMsg()->getMsgSerNum() ) )->start();
       }
