@@ -1168,11 +1168,19 @@ QString IncidenceFormatter::formatICalInvitation( QString invitation, Calendar *
   Incidence* incidence = dynamic_cast<Incidence*>( incBase );
   if ( incidence ) {
     QString sDescr = incidence->description();
-    if( ( msg->method() == Scheduler::Request || msg->method() == Scheduler::Cancel ) &&
-        !sDescr.isEmpty() ) {
+    if( !sDescr.isEmpty() ) {
       html += "<br>&nbsp;<br>&nbsp;<br><u>" + i18n("Description:")
         + "</u><br><table border=\"0\"><tr><td>&nbsp;</td><td>";
       html += string2HTML(sDescr) + "</td></tr></table>";
+    }
+    QStringList comments = incidence->comments();
+    if ( ( msg->method() == Scheduler::Request || msg->method() == Scheduler::Cancel ) &&
+         !comments.isEmpty() ) {
+      html += "<br><u>" + i18n("Comments:")
+           + "</u><br><table border=\"0\"><tr><td>&nbsp;</td><td><ul>";
+      for ( uint i = 0; i < comments.count(); ++i )
+        html += "<li>" + string2HTML( comments[i] ) + "</li>";
+      html += "</ul></td></tr></table>";
     }
   }
 
