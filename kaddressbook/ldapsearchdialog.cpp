@@ -34,7 +34,7 @@
 
 #include <addresseelineedit.h>
 #include <kapplication.h>
-#include <kbuttonbox.h>
+#include <k3buttonbox.h>
 #include <kcombobox.h>
 #include <kconfig.h>
 #include <klineedit.h>
@@ -192,7 +192,7 @@ LDAPSearchDialog::LDAPSearchDialog( KABC::AddressBook *ab, KABCore *core,
   mResultListView->setShowSortIndicator( true );
   topLayout->addWidget( mResultListView );
 
-  KButtonBox *buttons = new KButtonBox( page, Qt::Horizontal );
+  K3ButtonBox *buttons = new K3ButtonBox( page, Qt::Horizontal );
   buttons->addButton( i18n( "Select All" ), this, SLOT( slotSelectAll() ) );
   buttons->addButton( i18n( "Unselect All" ), this, SLOT( slotUnselectAll() ) );
 
