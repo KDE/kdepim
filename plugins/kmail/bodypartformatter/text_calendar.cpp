@@ -253,7 +253,7 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
       QString recv = to;
       if ( recv.isEmpty() )
         recv = incidence->organizer().fullName();
-      return callback.mailICal( recv, msg, subject );
+      return callback.mailICal( recv, msg, subject, type != Forward );
     }
 
     bool saveFile( const QString& receiver, const QString& iCal,
@@ -440,7 +440,6 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
         QString fwdTo = dlg.attendees().join( ", " );
         if ( fwdTo.isEmpty() )
           return true;
-        // TODO mark incidence as forwarded
         result = mail( incidence, c, Scheduler::Request, fwdTo, Forward );
       }
       if ( path == "reply" || path == "cancel" ) {
