@@ -200,7 +200,7 @@ kio_sieveProtocol::~kio_sieveProtocol()
 }
 
 /* ---------------------------------------------------------------------------------- */
-void kio_sieveProtocol::setHost (const QString &host, int port, const QString &user, const QString &pass)
+void kio_sieveProtocol::setHost (const QString &host, quint16 port, const QString &user, const QString &pass)
 {
 	if ( isConnectionValid() &&
 			( m_sServer != host ||

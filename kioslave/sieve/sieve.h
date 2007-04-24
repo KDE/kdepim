@@ -76,7 +76,7 @@ public:
 	virtual void chmod(const KUrl& url, int permissions);
 	virtual void stat(const KUrl& url);
 
-	virtual void setHost(const QString &host, int port, const QString &user, const QString &pass);
+	virtual void setHost(const QString &host, quint16 port, const QString &user, const QString &pass);
 	virtual void openConnection();
 	virtual void closeConnection();
 	//virtual void slave_status();

@@ -64,7 +64,7 @@ public:
   virtual void openConnection();
   virtual void closeConnection();
 
-  virtual void setHost (const QString & _host, int _port, const QString & _user,
+  virtual void setHost (const QString & _host, quint16 _port, const QString & _user,
     const QString & _pass);
   /**
    * @brief get a message or part of a message

@@ -641,7 +641,7 @@ IMAP4Protocol::listDir (const KUrl & _url)
 }
 
 void
-IMAP4Protocol::setHost (const QString & _host, int _port,
+IMAP4Protocol::setHost (const QString & _host, quint16 _port,
                         const QString & _user, const QString & _pass)
 {
   if (myHost != _host || myPort != _port || myUser != _user || myPass != _pass)
