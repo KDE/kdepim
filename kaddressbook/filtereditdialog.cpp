@@ -37,7 +37,7 @@
 #include <QBoxLayout>
 
 #include <kapplication.h>
-#include <kbuttonbox.h>
+#include <k3buttonbox.h>
 #include <kdebug.h>
 #include <kiconloader.h>
 #include <klineedit.h>
@@ -289,7 +289,7 @@ void FilterDialog::initGUI()
   connect( mFilterListBox, SIGNAL( doubleClicked ( Q3ListBoxItem * ) ),
            SLOT( edit() ) );
 
-  KButtonBox *buttonBox = new KButtonBox( page, Qt::Vertical );
+  K3ButtonBox *buttonBox = new K3ButtonBox( page, Qt::Vertical );
   buttonBox->addButton( i18n( "&Add..." ), this, SLOT( add() ) );
   mEditButton = buttonBox->addButton( i18n( "&Edit..." ), this, SLOT( edit() ) );
   mEditButton->setEnabled( false );

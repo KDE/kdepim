@@ -35,7 +35,6 @@
 
 #include <kacceleratormanager.h>
 #include <kapplication.h>
-#include <kbuttonbox.h>
 #include <kconfig.h>
 #include <klineedit.h>
 #include <k3listview.h>

@@ -30,7 +30,6 @@
 #include <QHBoxLayout>
 
 #include <kacceleratormanager.h>
-#include <kbuttonbox.h>
 #include <klineedit.h>
 #include <klocale.h>
 #include "addhostdialog.h"

@@ -31,7 +31,7 @@
 #include <QHBoxLayout>
 #include <QGridLayout>
 
-#include <kbuttonbox.h>
+#include <k3buttonbox.h>
 #include <kcombobox.h>
 #include <kconfig.h>
 #include <kdialog.h>
@@ -59,7 +59,7 @@ NamePartWidget::NamePartWidget( const QString &title, const QString &label,
            SLOT( selectionChanged( Q3ListBoxItem* ) ) );
   groupLayout->addWidget( mBox, 0, 0 );
 
-  KButtonBox *bbox = new KButtonBox( group, Qt::Vertical );
+  K3ButtonBox *bbox = new K3ButtonBox( group, Qt::Vertical );
   mAddButton = bbox->addButton( i18n( "Add..." ), this,  SLOT( add() ) );
   mEditButton = bbox->addButton( i18n( "Edit..." ), this,  SLOT( edit() ) );
   mEditButton->setEnabled( false );

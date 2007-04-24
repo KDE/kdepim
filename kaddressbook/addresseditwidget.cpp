@@ -47,7 +47,6 @@
 #include <kacceleratormanager.h>
 #include <k3activelabel.h>
 #include <kapplication.h>
-#include <kbuttonbox.h>
 #include <kcombobox.h>
 #include <kconfig.h>
 #include <kdebug.h>
