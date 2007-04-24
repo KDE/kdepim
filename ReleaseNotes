@@ -1,4 +1,19 @@
-Current release is "Enterprise - Beta-04"
+Current release is "Enterprise - Beta-05"
+
+Features:
+=========
+
+kmail
+----------
+- proko35 W1-7 (cyclic section changes on tab and backtab keys in the addressee selection completion popup)
+- Better unit test and automated packaging infrastructure.
+
+Bugfixes
+=========
+
+
+
+"Enterprise - Beta-04"
 
 Features:
 =========
