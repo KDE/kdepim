@@ -335,6 +335,7 @@ bool Scheduler::acceptReply(IncidenceBase *incidence,ScheduleMessage::Status /* 
         attendeesNew.append( attIn );
     }
 
+    bool attendeeAdded = false;
     for ( Attendee::List::ConstIterator it = attendeesNew.constBegin(); it != attendeesNew.constEnd(); ++it ) {
       Attendee* attNew = *it;
       QString msg = i18n("%1 wants to attend %2 but was not invited.").arg( attNew->fullName() )
@@ -364,6 +365,15 @@ bool Scheduler::acceptReply(IncidenceBase *incidence,ScheduleMessage::Status /* 
       else if ( to )
         to->addAttendee( a );
       ret = true;
+      attendeeAdded = true;
+    }
+
+    // send update about new participants
+    if ( attendeeAdded ) {
+      if ( ev )
+        performTransaction( ev, Scheduler::Request );
+      if ( to )
+        performTransaction( to, Scheduler::Request );
     }
 
     if ( ret ) {
