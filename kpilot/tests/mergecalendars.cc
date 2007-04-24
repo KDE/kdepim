@@ -180,8 +180,7 @@ int main(int argc, char **argv)
 	{
 		if (++korgIt == korgEvents.end()) 
 		{
-			next = ev = 0;
-			break;
+			next = 0;
 		}
 		else
 		{
