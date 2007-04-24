@@ -10,6 +10,9 @@ kmail
 
 Bugfixes
 =========
+- Honor default forwarding settings for the toolbar button, the search window RMB and the keyboard shortcuts (issue 1530)
+-Fix documentation related to issue 1530
+-Also change the font of cut messages in case the inactive color is to similar to the normal color.(issue 1180)
 
 
 
