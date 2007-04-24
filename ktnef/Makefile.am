@@ -1,4 +1,4 @@
-SUBDIRS = ktnef lib gui tests
+SUBDIRS = ktnef lib gui
 
 messages: rc.cpp
 	$(EXTRACTRC) gui/*.rc gui/*.ui >> rc.cpp
