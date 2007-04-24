@@ -70,6 +70,9 @@
 </widget>
 <layoutdefaults spacing="6" margin="0"/>
 <layoutfunctions spacing="KDialog::spacingHint" margin="KDialog::marginHint"/>
+<includes>
+    <include location="global" impldecl="in declaration">libkdepim/addresseelineedit.h</include>
+</includes>
 <includehints>
     <includehint>kpushbutton.h</includehint>
     <includehint>kpushbutton.h</includehint>
