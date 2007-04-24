@@ -929,29 +929,7 @@ documentation</ulink>.
 </sect2>
 
 </sect1>
-<sect1 id="main-config-non-gui">
-<title>Options Without a User Interface Representation</title>
-<para>
-Apart from the options presented in the configuration dialog, some options
-can only be set directly in the configuration file ($KDEHOME/share/config/kontactrc)
-or through KIOSK.
-</para>
 
-<variablelist>
-
-<varlistentry>
-<term><guilabel>Show Disabled Plugins in the Side Bar</guilabel></term>
-<listitem>
-<para>By default, the side bar shows only enabled plugins. Enable this option if you want the side bar to display also disabled plugins. Disabled plugins will be listed below the enabled ones, and grayed out. To
-enable this feature, add a line reading:</para>
-<programlisting>ShowDisabledPluginsInSideBar=true
-</programlisting><para>
-to the [View] section of the kontact configuration file. If there is no such section, simply add "[View]" on
-a line by itself just above the option.</para>
-</listitem>
-</varlistentry>
-</variablelist>
-</sect1>
 </chapter>
 
 
