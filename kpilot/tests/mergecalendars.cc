@@ -25,8 +25,6 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
-#include "options.h"
-
 #include <kaboutdata.h>
 #include <kapplication.h>
 #include <kdebug.h>
@@ -36,12 +34,6 @@
 
 #include <libkcal/calendar.h>
 #include <libkcal/calendarlocal.h>
-
-#include "pilot.h"
-#include "pilotDateEntry.h"
-#include "pilotLocalDatabase.h"
-#include "../conduits/vcalconduit/kcalRecord.cc"
-#include "../conduits/vcalconduit/vcalRecord.cc"
 
 static const KCmdLineOptions options[] =
 {
@@ -55,7 +47,6 @@ static const KCmdLineOptions options[] =
 
 int main(int argc, char **argv)
 {
-	FUNCTIONSETUP;
 
 	KApplication::disableAutoDcopRegistration();
 
@@ -67,7 +58,7 @@ int main(int argc, char **argv)
 
 	KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
 
-	debug_level= (args->isSet("verbose")) ? 4 : 0;
+	int debug_level= (args->isSet("verbose")) ? 4 : 0;
 
 	QString korgfile = args->getOption("korgfile");
 	QString newfile = args->getOption("newfile");
