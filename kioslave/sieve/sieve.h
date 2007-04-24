@@ -121,6 +121,7 @@ protected:
 	QString				m_sPass;
 	QString				m_sAuth;
 	bool				m_shouldBeConnected;
+	QString				m_sPort;
 };
 
 #endif

@@ -1902,7 +1902,7 @@ bool IMAP4Protocol::makeLogin ()
   kDebug(7116) << "IMAP4::makeLogin - checking login" << endl;
   bool alreadyConnected = getState() == ISTATE_CONNECT;
   kDebug(7116) << "IMAP4::makeLogin - alreadyConnected " << alreadyConnected << endl;
-  if (alreadyConnected || connectToHost (( m_bIsSSL ? IMAP_SSL_PROTOCOL : IMAP_PROTOCOL ), myHost,
+  if (alreadyConnected || connectToHost (( mySSL ? IMAP_SSL_PROTOCOL : IMAP_PROTOCOL ), myHost,
         myPort))
   {
 //      fcntl (m_iSock, F_SETFL, (fcntl (m_iSock, F_GETFL) | O_NDELAY));

@@ -204,13 +204,13 @@ void kio_sieveProtocol::setHost (const QString &host, int port, const QString &u
 {
 	if ( isConnectionValid() &&
 			( m_sServer != host ||
-				m_port != QString::number( port ) ||
+				m_sPort != QString::number( port ) ||
 				m_sUser != user ||
 				m_sPass != pass ) ) {
 		disconnect();
 	}
 	m_sServer = host;
-	m_port = QString::number( port ? port : m_iDefaultPort );
+	m_sPort = QString::number( port ? port : defaultPort() );
 	m_sUser = user;
 	m_sPass = pass;
 	m_supportsTLS = false;
@@ -335,7 +335,7 @@ bool kio_sieveProtocol::connect(bool useTLSIfAvailable)
 	
 	setBlockConnection(true);
 
-	if (!connectToHost(m_sServer, m_port, true)) {
+	if (!connectToHost(m_sServer, m_sPort, true)) {
 		return false;
 	}
 
@@ -955,7 +955,7 @@ bool kio_sieveProtocol::authenticate()
 	AuthInfo ai;
 	ai.url.setProtocol("sieve");
 	ai.url.setHost(m_sServer);
-	ai.url.setPort( m_port.toInt() );
+	ai.url.setPort( m_sPort.toInt() );
 	ai.username = m_sUser;
 	ai.password = m_sPass;
 	ai.keepPassword = true;
