@@ -18,7 +18,7 @@
  *
  */
 
-#include "kfile_rfc822.h"
+#include "rfc822endanalyzer.h"
 
 #include <strigi/fieldtypes.h>
 #include <strigi/analysisresult.h>

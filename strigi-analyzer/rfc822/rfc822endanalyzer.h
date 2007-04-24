@@ -17,60 +17,59 @@
  *
  */
 
-#ifndef KFILE_Ics_H
-#define KFILE_Ics_H
+#ifndef RFC822ENDANALYZER_H
+#define RFC822ENDANALYZER_H
 
 #define STRIGI_IMPORT_API
 #include <strigi/analyzerplugin.h>
 #include <strigi/streamendanalyzer.h>
 #include <kdepim_export.h>
 
-class IcsEndAnalyzerFactory;
+class Rfc822EndAnalyzerFactory;
 
-class KDEPIM_EXPORT IcsEndAnalyzer : public Strigi::StreamEndAnalyzer
+class KDEPIM_EXPORT Rfc822EndAnalyzer : public Strigi::StreamEndAnalyzer
 {
 public:
-  IcsEndAnalyzer( const IcsEndAnalyzerFactory* f );
+  Rfc822EndAnalyzer( const Rfc822EndAnalyzerFactory* f );
 
-  enum Field { ProductId = 0, Events, Journals, Todos, TodosCompleted, TodosOverdue };
+  enum Field { From = 0, To, Subject, Date, ContentType };
 
-  const char* name() const { return "IcsEndAnalyzer"; }
+  const char* name() const { return "Rfc822EndAnalyzer"; }
   bool checkHeader( const char* header, int32_t headersize ) const;
   char analyze(  Strigi::AnalysisResult& idx, Strigi::InputStream* in );
 
 private:
-  const IcsEndAnalyzerFactory* m_factory;
+  const Rfc822EndAnalyzerFactory* m_factory;
 };
 
-class KDEPIM_EXPORT IcsEndAnalyzerFactory : public Strigi::StreamEndAnalyzerFactory
+class KDEPIM_EXPORT Rfc822EndAnalyzerFactory : public Strigi::StreamEndAnalyzerFactory
 {
-friend class IcsEndAnalyzer;
+friend class Rfc822EndAnalyzer;
 public:
-  const Strigi::RegisteredField* field( IcsEndAnalyzer::Field ) const;
+  const Strigi::RegisteredField* field( Rfc822EndAnalyzer::Field ) const;
 
 private:
-  const Strigi::RegisteredField* productIdField;
-  const Strigi::RegisteredField* eventsField;
-  const Strigi::RegisteredField* journalsField;
-  const Strigi::RegisteredField* todosField;
-  const Strigi::RegisteredField* todosCompletedField;
-  const Strigi::RegisteredField* todosOverdueField;
+  const Strigi::RegisteredField* fromField;
+  const Strigi::RegisteredField* toField;
+  const Strigi::RegisteredField* subjectField;
+  const Strigi::RegisteredField* dateField;
+  const Strigi::RegisteredField* contentTypeField;
 
-  const char* name() const { return "IcsEndAnalyzer"; }
-  Strigi::StreamEndAnalyzer* newInstance() const { return new IcsEndAnalyzer( this ); }
+  const char* name() const { return "Rfc822EndAnalyzer"; }
+  Strigi::StreamEndAnalyzer* newInstance() const { return new Rfc822EndAnalyzer( this ); }
   void registerFields( Strigi::FieldRegister& );
 };
 
-class KDEPIM_EXPORT IcsFactoryFactory : public Strigi::AnalyzerFactoryFactory
+class KDEPIM_EXPORT Rfc822FactoryFactory : public Strigi::AnalyzerFactoryFactory
 {
 public:
   std::list<Strigi::StreamEndAnalyzerFactory*> streamEndAnalyzerFactories() const {
      std::list<Strigi::StreamEndAnalyzerFactory*> af;
-     af.push_back( new IcsEndAnalyzerFactory );
+     af.push_back( new Rfc822EndAnalyzerFactory );
      return af;
   }
 };
 
-STRIGI_ANALYZER_FACTORY(IcsFactoryFactory)
+STRIGI_ANALYZER_FACTORY(Rfc822FactoryFactory)
 
 #endif

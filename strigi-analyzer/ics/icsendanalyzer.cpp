@@ -26,7 +26,7 @@ t it will be useful,
 #include <kcal/vcalformat.h>
 #include <kcal/todo.h>
 
-#include "kfile_ics.h"
+#include "icsendanalyzer.h"
 
 #include <strigi/fieldtypes.h>
 #include <strigi/analysisresult.h>
