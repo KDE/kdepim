@@ -37,7 +37,7 @@
 #include <QBoxLayout>
 
 #include <kapplication.h>
-#include <k3buttonbox.h>
+#include <KDialogButtonBox>
 #include <kdebug.h>
 #include <kiconloader.h>
 #include <klineedit.h>
@@ -289,11 +289,11 @@ void FilterDialog::initGUI()
   connect( mFilterListBox, SIGNAL( doubleClicked ( Q3ListBoxItem * ) ),
            SLOT( edit() ) );
 
-  K3ButtonBox *buttonBox = new K3ButtonBox( page, Qt::Vertical );
-  buttonBox->addButton( i18n( "&Add..." ), this, SLOT( add() ) );
-  mEditButton = buttonBox->addButton( i18n( "&Edit..." ), this, SLOT( edit() ) );
+  KDialogButtonBox *buttonBox = new KDialogButtonBox( page, Qt::Vertical );
+  buttonBox->addButton( i18n( "&Add..." ),QDialogButtonBox::ActionRole, this, SLOT( add() ) );
+  mEditButton = buttonBox->addButton( i18n( "&Edit..." ),QDialogButtonBox::ActionRole, this, SLOT( edit() ) );
   mEditButton->setEnabled( false );
-  mRemoveButton = buttonBox->addButton( i18n( "&Remove" ), this, SLOT( remove() ) );
+  mRemoveButton = buttonBox->addButton( i18n( "&Remove" ),QDialogButtonBox::ActionRole, this, SLOT( remove() ) );
   mRemoveButton->setEnabled( false );
 
   buttonBox->layout();

@@ -31,7 +31,7 @@
 #include <QVBoxLayout>
 
 #include <kapplication.h>
-#include <k3buttonbox.h>
+#include <KDialogButtonBox>
 #include <kconfig.h>
 #include <k3listview.h>
 #include <klocale.h>
@@ -296,11 +296,11 @@ void LDAPOptionsWidget::initGUI()
 
   layout->addWidget( groupBox );
 
-  K3ButtonBox *buttons = new K3ButtonBox( this );
-  buttons->addButton( i18n( "&Add Host..." ), this, SLOT( slotAddHost() ) );
-  mEditButton = buttons->addButton( i18n( "&Edit Host..." ), this, SLOT( slotEditHost() ) );
+  KDialogButtonBox *buttons = new KDialogButtonBox( this );
+  buttons->addButton( i18n( "&Add Host..." ), QDialogButtonBox::ActionRole, this, SLOT( slotAddHost() ) );
+  mEditButton = buttons->addButton( i18n( "&Edit Host..." ), QDialogButtonBox::ActionRole, this, SLOT( slotEditHost() ) );
   mEditButton->setEnabled( false );
-  mRemoveButton = buttons->addButton( i18n( "&Remove Host" ), this, SLOT( slotRemoveHost() ) );
+  mRemoveButton = buttons->addButton( i18n( "&Remove Host" ), QDialogButtonBox::ActionRole, this, SLOT( slotRemoveHost() ) );
   mRemoveButton->setEnabled( false );
   buttons->layout();
 

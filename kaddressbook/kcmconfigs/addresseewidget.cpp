@@ -21,7 +21,6 @@
     without including the source code for Qt in the source distribution.
 */
 
-#include <q3cstring.h>
 #include <q3groupbox.h>
 #include <QLabel>
 #include <QLayout>
@@ -31,7 +30,7 @@
 #include <QHBoxLayout>
 #include <QGridLayout>
 
-#include <k3buttonbox.h>
+#include <KDialogButtonBox>
 #include <kcombobox.h>
 #include <kconfig.h>
 #include <kdialog.h>
@@ -59,11 +58,11 @@ NamePartWidget::NamePartWidget( const QString &title, const QString &label,
            SLOT( selectionChanged( Q3ListBoxItem* ) ) );
   groupLayout->addWidget( mBox, 0, 0 );
 
-  K3ButtonBox *bbox = new K3ButtonBox( group, Qt::Vertical );
-  mAddButton = bbox->addButton( i18n( "Add..." ), this,  SLOT( add() ) );
-  mEditButton = bbox->addButton( i18n( "Edit..." ), this,  SLOT( edit() ) );
+  KDialogButtonBox *bbox = new KDialogButtonBox( group, Qt::Vertical );
+  mAddButton = bbox->addButton( i18n( "Add..." ), QDialogButtonBox::ActionRole, this,  SLOT( add() ) );
+  mEditButton = bbox->addButton( i18n( "Edit..." ), QDialogButtonBox::ActionRole, this,  SLOT( edit() ) );
   mEditButton->setEnabled( false );
-  mRemoveButton = bbox->addButton( i18n( "Remove" ), this,  SLOT( remove() ) );
+  mRemoveButton = bbox->addButton( i18n( "Remove" ), QDialogButtonBox::ActionRole, this,  SLOT( remove() ) );
   mRemoveButton->setEnabled( false );
   bbox->layout();
   groupLayout->addWidget( bbox, 0, 1 );
