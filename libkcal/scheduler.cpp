@@ -325,6 +325,8 @@ bool Scheduler::acceptReply(IncidenceBase *incidence,ScheduleMessage::Status /* 
           //update attendee-info
           kdDebug(5800) << "Scheduler::acceptTransaction update attendee" << endl;
           attEv->setStatus(attIn->status());
+          attEv->setDelegate(attIn->delegate());
+          attEv->setDelegator(attIn->delegator());
           ret = true;
           found = true;
         }
