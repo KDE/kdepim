@@ -102,10 +102,12 @@ Kleo::DirectoryServicesWidget::DirectoryServicesWidget(
     x500LV->setSorting( -1 );
 
     // taken from kmail's configuredialog.cpp
-    upButton->setIcon( BarIconSet( "go-up", K3Icon::SizeSmall ) );
+    upButton->setIcon( KIcon( "go-up" ) );
+    upButton->setIconSize( QSize( K3Icon::SizeSmall, K3Icon::SizeSmall ) );
     upButton->setEnabled( false ); // b/c no item is selected yet
 
-    downButton->setIcon( BarIconSet( "go-down", K3Icon::SizeSmall ) );
+    downButton->setIcon( KIcon( "go-down" ) );
+    downButton->setIconSize( QSize( K3Icon::SizeSmall, K3Icon::SizeSmall ) );
     downButton->setEnabled( false ); // b/c no item is selected yet
 #ifdef __GNUC__
 #warning "kde4: fix connect signal/slot" ;
@@ -217,7 +219,7 @@ void DirectoryServicesWidget::setInitialServices( const KUrl::List& urls )
 {
     x500LV->clear();
     for( KUrl::List::const_iterator it = urls.begin(); it != urls.end(); ++it ) {
-        QString dn = KUrl::decode_string( (*it).query().mid( 1 ) ); // decode query and skip leading '?'
+        QString dn = QUrl::fromPercentEncoding( (*it).query().mid( 1 ).toLatin1() ); // decode query and skip leading '?'
         (void)new QX500ListViewItem( x500LV, x500LV->lastItem(),
                                      (*it).host(),
                                      QString::number( (*it).port() ),

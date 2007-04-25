@@ -114,7 +114,7 @@ void SearchManager::search( const QString &pattern, const KABC::Field::List &fie
       QStringList::ConstIterator customIt( customs.begin() );
       const QStringList::ConstIterator customEndIt( customs.end() );
       for ( ; customIt != customEndIt; ++customIt ) {
-        int pos = (*customIt).find( ':' );
+        int pos = (*customIt).indexOf( ':' );
         if ( pos != -1 ) {
           const QString value = (*customIt).mid( pos + 1 );
           if ( type == StartsWith && value.startsWith( pattern, Qt::CaseInsensitive ) ) {
