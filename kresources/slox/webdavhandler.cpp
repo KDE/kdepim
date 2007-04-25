@@ -54,8 +54,8 @@ WebdavHandler::WebdavHandler()
 {
   KConfig cfg( "sloxrc" );
 
-  cfg.setGroup( "General" );
-  mLogFile = cfg.readEntry( "LogFile" );
+  const KConfigGroup cg( &cfg, "General" );
+  mLogFile = cg.readEntry( "LogFile" );
 
   kDebug() << "LOG FILE: " << mLogFile << endl;
 }

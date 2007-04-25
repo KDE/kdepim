@@ -913,15 +913,15 @@ bool KNMainWidget::firstStart()
 
   KConfig emailConf("emaildefaults");
 
-  emailConf.setGroup("Defaults");
-  QString group = emailConf.readEntry("Profile","Default");
+  KConfigGroup cgdefaults(&emailConf, "Defaults");
+  QString group = cgdefaults.readEntry("Profile","Default");
 
-  emailConf.setGroup(QString("PROFILE_%1").arg(group));
+  KConfigGroup cgprofile(&emailConf, QString("PROFILE_%1").arg(group));
   KNode::Identity *id=knGlobals.configManager()->identity();
-  id->setName(emailConf.readEntry("FullName"));
-  id->setEmail(emailConf.readEntry("EmailAddress").toLatin1());
-  id->setOrga(emailConf.readEntry("Organization"));
-  id->setReplyTo(emailConf.readEntry("ReplyAddr"));
+  id->setName(cgprofile.readEntry("FullName"));
+  id->setEmail(cgprofile.readEntry("EmailAddress").toLatin1());
+  id->setOrga(cgprofile.readEntry("Organization"));
+  id->setReplyTo(cgprofile.readEntry("ReplyAddr"));
   id->save();
 
   if ( TransportManager::self()->isEmpty() )

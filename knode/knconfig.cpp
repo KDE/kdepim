@@ -228,11 +228,11 @@ KNode::DisplayedHeaders::DisplayedHeaders()
     QStringList::Iterator it;
     for( it = headers.begin(); it != headers.end(); ++it ) {
       h=createNewHeader();
-      headerConf.setGroup((*it));
-      h->setName(headerConf.readEntry("Name"));
-      h->setTranslateName(headerConf.readEntry("Translate_Name",true));
-      h->setHeader(headerConf.readEntry("Header"));
-      flags=headerConf.readEntry("Flags",QList<int>());
+      KConfigGroup cg(&headerConf, (*it));
+      h->setName(cg.readEntry("Name"));
+      h->setTranslateName(cg.readEntry("Translate_Name",true));
+      h->setHeader(cg.readEntry("Header"));
+      flags=cg.readEntry("Flags",QList<int>());
       if(h->name().isNull() || h->header().isNull() || (flags.count()!=8)) {
         kDebug(5003) << "KNConfig::DisplayedHeaders::DisplayedHeaders() : ignoring invalid/incomplete Header" << endl;
         remove(h);
@@ -281,10 +281,10 @@ void KNode::DisplayedHeaders::save()
     group.setNum(idx++);
     while (group.length()<3)
       group.prepend("0");
-    headerConf.setGroup(group);
-    headerConf.writeEntry("Name",(*it)->name());
-    headerConf.writeEntry("Translate_Name",(*it)->translateName());
-    headerConf.writeEntry("Header",(*it)->header());
+    KConfigGroup cg(&headerConf, group);
+    cg.writeEntry("Name",(*it)->name());
+    cg.writeEntry("Translate_Name",(*it)->translateName());
+    cg.writeEntry("Header",(*it)->header());
     flags.clear();
     for (int i=0; i<8; i++) {
       if ((*it)->flag(i))
@@ -292,7 +292,7 @@ void KNode::DisplayedHeaders::save()
       else
         flags << 0;
     }
-    headerConf.writeEntry("Flags",flags);
+    cg.writeEntry("Flags",flags);
   }
   headerConf.sync();
   d_irty = false;
