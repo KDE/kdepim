@@ -26,15 +26,10 @@
 #include <QComboBox>
 #include <QLayout>
 #include <QPushButton>
-#include <q3listview.h>
-#include <q3buttongroup.h>
 #include <QRadioButton>
-#include <q3multilineedit.h>
 #include <QCheckBox>
-//Added by qt3to4:
 #include <QGridLayout>
 #include <QByteArray>
-#include <Q3PtrList>
 
 #include <kdialog.h>
 

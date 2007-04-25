@@ -33,6 +33,8 @@
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 #include <QProgressBar>
+#include <q3buttongroup.h>
+#include <q3multilineedit.h>
 
 #include <klocale.h>
 #include <kpassworddialog.h>

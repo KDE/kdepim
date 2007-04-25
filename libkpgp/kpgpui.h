@@ -42,6 +42,8 @@ class QComboBox;            // needed by Config
 class QPixmap;              // needed by KeySelectionDialog
 class QPushButton;          // needed by KeyRequester
 class QTimer;               // needed by KeySelectionDialog
+class QGroupBox;
+class Q3ListViewItem;
 
 class K3ListView;            // needed by KeySelectionDialog
 class KPasswordEdit;        // needed by PassphraseDialog
