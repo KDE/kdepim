@@ -3,6 +3,7 @@ add_subdirectory( pics )
 
 include_directories( ${CMAKE_SOURCE_DIR}/ktnef  )
 
+add_definitions (-DQT3_SUPPORT -DQT3_SUPPORT_WARNINGS)
 
 ########### next target ###############
 

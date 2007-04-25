@@ -1,5 +1,7 @@
 project(kleopatra)
 
+add_definitions (-DQT3_SUPPORT -DQT3_SUPPORT_WARNINGS)
+
 set(libconf_SRCS  ${CMAKE_SOURCE_DIR}/kleopatra/conf/configuredialog.cpp )
 add_subdirectory( conf ) 
 add_subdirectory( kwatchgnupg ) 

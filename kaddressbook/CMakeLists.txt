@@ -1,5 +1,7 @@
 project(kaddressbook)
 
+add_definitions (-DQT3_SUPPORT -DQT3_SUPPORT_WARNINGS)
+
 add_subdirectory( common )
 add_subdirectory( interfaces ) 
 add_subdirectory( printing ) 

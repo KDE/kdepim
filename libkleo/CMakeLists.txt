@@ -1,10 +1,11 @@
 include_directories(${CMAKE_SOURCE_DIR}/libkpgp/ ${CMAKE_BINARY_DIR}/libkleo/backends/chiasmus/  ${GPGME_INCLUDES} )
 
+add_definitions (-DQT3_SUPPORT -DQT3_SUPPORT_WARNINGS)
+
 add_subdirectory( pics )
 add_subdirectory( kleo )
 add_subdirectory( backends )
 add_subdirectory( tests )
-
 
 
 ########### next target ###############

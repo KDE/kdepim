@@ -5,6 +5,7 @@ add_subdirectory( filters )
 include_directories( ${KDE4_INCLUDE_DIR} ${CMAKE_BINARY_DIR}/libkdepim ${CMAKE_SOURCE_DIR}/libkdepim ${CMAKE_SOURCE_DIR}/libkpgp )
 
 add_definitions(-DI_KNOW_KSOCKS_ISNT_PUBLIC )
+add_definitions (-DQT3_SUPPORT -DQT3_SUPPORT_WARNINGS)
 
 ########### next target ###############
 

@@ -4,6 +4,8 @@ include_directories(${CMAKE_SOURCE_DIR}/libkpimidentities ${CMAKE_SOURCE_DIR}/kc
 
 message( STATUS "Kolab and GroupWise wizards disabled." )
 
+add_definitions (-DQT3_SUPPORT -DQT3_SUPPORT_WARNINGS)
+
 ########### next target ###############
 
 set(groupwarewizard_SRCS groupwarewizard.cpp main.cpp overviewpage.cpp 
