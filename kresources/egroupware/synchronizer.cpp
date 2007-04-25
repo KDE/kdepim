@@ -37,7 +37,7 @@ void Synchronizer::start()
   mBlocked = true;
 
   while ( mBlocked ) {
-    QApplication::processEvents( QEventLoop::ExcludeUserInput );
+    QApplication::processEvents( QEventLoop::ExcludeUserInputEvents );
 
     // use sleep here to reduce cpu usage
     usleep( 100 );
