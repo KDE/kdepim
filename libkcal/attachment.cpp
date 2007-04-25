@@ -77,7 +77,8 @@ bool Attachment::isBinary() const
 char *Attachment::data() const
 {
   if (mBinary)
-    return mData.utf8().data();
+    // this method actually return a const char*, but that can't be done because of the uneededly non-const libical API
+    return const_cast<char*>( mData.latin1() ); //mData.utf8().data();
   else
     return 0;
 }
