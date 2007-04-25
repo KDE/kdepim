@@ -28,6 +28,7 @@
 #include <QDragEnterEvent>
 #include <QCloseEvent>
 #include <QLabel>
+#include <q3groupbox.h>
 #include <k3spelldlg.h>
 #include <kdeversion.h>
 #include "addressesdialog.h"
