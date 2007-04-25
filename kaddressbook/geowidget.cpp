@@ -581,7 +581,8 @@ void GeoMapWidget::paintEvent( QPaintEvent* )
 
   QPixmap pm( w, h );
   QPainter p;
-  p.begin( &pm, this );
+  p.begin( &pm );
+  p.initFrom( this );
 
   p.setPen( QColor( 255, 0, 0 ) );
   p.setBrush( QColor( 255, 0, 0 ) );
