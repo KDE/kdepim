@@ -60,9 +60,8 @@
 
 using namespace Kleo;
 
-inline QPixmap loadIcon( QString s ) {
-  return KIconLoader::global()
-    ->loadIcon( s.replace( QRegExp( "[^a-zA-Z0-9_]" ), "_" ), K3Icon::NoGroup, K3Icon::SizeMedium );
+inline KIcon loadIcon( QString s ) {
+  return KIcon( s.replace( QRegExp( "[^a-zA-Z0-9_]" ), "-" ) );
 }
 
 static const KPageView::FaceType determineJanusFace( const Kleo::CryptoConfig * config ) {
@@ -93,12 +92,12 @@ Kleo::CryptoConfigModule::CryptoConfigModule( Kleo::CryptoConfig* config, QWidge
     if ( comp->groupList().empty() )
       continue;
     if ( type != Plain ) {
-      vbox = new QWidget(parent);
+      vbox = new QWidget(this);
       vlay = new QVBoxLayout( vbox );
       vlay->setSpacing( KDialog::spacingHint() );
       vlay->setMargin( 0 );
       KPageWidgetItem *pageItem = new KPageWidgetItem( vbox, comp->description() );
-      pageItem->setIcon( KIcon(loadIcon( comp->iconName() )) );
+      pageItem->setIcon( loadIcon( comp->iconName() ) );
       addPage(pageItem);
     }
 
@@ -248,7 +247,7 @@ Kleo::CryptoConfigGroupGUI::CryptoConfigGroupGUI(
     return;
 
   QLabel * l = new QLabel( widget );
-  l->setPixmap( loadIcon( iconName ) );
+  l->setPixmap( loadIcon( iconName ).pixmap( K3Icon::SizeMedium, K3Icon::SizeMedium ) );
   glay->addWidget( l, startRow, 0, endRow-startRow+1, 1, Qt::AlignTop );
 }
 
