@@ -802,7 +802,7 @@ icalvalue_attach_as_ical_string(const icalvalue* value)
 	strcpy (str, url);
 	return str;
     } else {
-// 	return icalvalue_binary_as_ical_string (value);
+/* 	return icalvalue_binary_as_ical_string (value);*/
       const char *data = 0;
       data = (const char*)icalattach_get_data(a);
       str = icalmemory_tmp_buffer (strlen (data) + 1);
