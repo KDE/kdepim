@@ -1,6 +1,6 @@
 /*
     This file is part of libkabc and/or kaddressbook.
-    Copyright (c) 2004 Klar‰lvdalens Datakonsult AB
+    Copyright (c) 2004 Klar√§lvdalens Datakonsult AB
         <info@klaralvdalens-datakonsult.se>
 
     This library is free software; you can redistribute it and/or
@@ -50,6 +50,9 @@ public:
 
   SubResource( bool active, bool writable, const QString& label,
                int completionWeight = 100 );
+
+  SubResource( bool active, bool writable, bool alarmRelevant,
+               const QString& label, int completionWeight = 100 );
   virtual ~SubResource();
 
   virtual void setActive( bool active );
@@ -57,6 +60,9 @@ public:
 
   virtual void setWritable( bool writable );
   virtual bool writable() const;
+
+  virtual void setAlarmRelevant( bool active );
+  virtual bool alarmRelevant() const;
 
   virtual void setLabel( const QString& label );
   virtual QString label() const;
@@ -67,6 +73,8 @@ public:
 private:
   bool mActive;   // Controlled by the applications
   bool mWritable; // Set if the KMail folder is writable
+  bool mAlarmRelevant; // Set if the alarms from this resource are of 
+                      // interest to the user, as per folder acls
   QString mLabel; // The GUI name of this resource
 
   // This is just for the abc plugin. But as long as only this is here,

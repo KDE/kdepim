@@ -1,6 +1,6 @@
 /*
     This file is part of libkabc and/or kaddressbook.
-    Copyright (c) 2004 Klar‰lvdalens Datakonsult AB
+    Copyright (c) 2004 Klar√§lvdalens Datakonsult AB
         <info@klaralvdalens-datakonsult.se>
 
     This library is free software; you can redistribute it and/or
@@ -559,7 +559,9 @@ void Kolab::Contact::loadDistrListMember( const QDomElement& element )
 {
   Member member;
   for ( QDomNode n = element.firstChild(); !n.isNull(); n = n.nextSibling() ) {
-   if ( n.isElement() ) {
+    if ( n.isComment() )
+      continue;
+    if ( n.isElement() ) {
       QDomElement e = n.toElement();
       QString tagName = e.tagName();
       if ( tagName == "display-name" )
@@ -1024,7 +1026,7 @@ void Contact::setFields( const KABC::Addressee* addressee )
   setNickName( addressee->nickName() );
   setSpouseName( addressee->custom( "KADDRESSBOOK", "X-SpousesName" ) );
   if ( !addressee->birthday().isNull() )
-  	setBirthday( addressee->birthday().date() );
+    setBirthday( addressee->birthday().date() );
   const QString& anniversary = addressee->custom( "KADDRESSBOOK", "X-Anniversary" );
   if ( !anniversary.isEmpty() )
     setAnniversary( stringToDate( anniversary  ) );
@@ -1146,7 +1148,11 @@ void Contact::saveTo( KABC::Addressee* addressee )
     distrList.setName( fullName() );
     QValueList<Member>::ConstIterator mit = mDistrListMembers.begin();
     for ( ; mit != mDistrListMembers.end(); ++mit ) {
-      distrList.insertEntry( (*mit).displayName, (*mit).email );
+      QString displayName = (*mit).displayName;
+      // fixup the display name DistributionList::assumes neither ',' nor ';' is present
+      displayName.replace( ',', ' ' );
+      displayName.replace( ';', ' ' );
+      distrList.insertEntry( displayName, (*mit).email );
     }
     addressee->insertCustom( "KADDRESSBOOK", "DistributionList", distrList.custom( "KADDRESSBOOK", "DistributionList" ) );
     Q_ASSERT( KPIM::DistributionList::isDistributionList( *addressee ) );

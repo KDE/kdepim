@@ -76,6 +76,9 @@ public:
   virtual void setForegroundColor( const QColor& fgColor );
   virtual QColor foregroundColor() const;
 
+  virtual void setRichText( bool richText );
+  virtual bool richText() const;
+
   // Load the attributes of this class
   virtual bool loadAttribute( QDomElement& );
 
@@ -100,6 +103,7 @@ protected:
   QString mSummary;
   QColor mBackgroundColor;
   QColor mForegroundColor;
+  bool mRichText;
 };
 
 }

@@ -1,6 +1,6 @@
 /*
     This file is part of libkabc and/or kaddressbook.
-    Copyright (c) 2004 Klar‰lvdalens Datakonsult AB
+    Copyright (c) 2004 Klar√§lvdalens Datakonsult AB
         <info@klaralvdalens-datakonsult.se>
 
     This library is free software; you can redistribute it and/or
@@ -34,10 +34,18 @@
 
 using namespace Kolab;
 
-SubResource::SubResource( bool active, bool writable, const QString& label,
+SubResource::SubResource( bool active, bool writable, 
+                          bool alarmRelevant, const QString& label,
                           int completionWeight )
-  : mActive( active ),  mWritable( writable ), mLabel( label ),
-    mCompletionWeight( completionWeight )
+  : mActive( active ),  mWritable( writable ), mAlarmRelevant( alarmRelevant ),
+    mLabel( label ), mCompletionWeight( completionWeight )
+{
+}
+
+SubResource::SubResource( bool active, bool writable, 
+                          const QString& label, int completionWeight )
+  : mActive( active ),  mWritable( writable ), mAlarmRelevant( false ),
+    mLabel( label ), mCompletionWeight( completionWeight )
 {
 }
 
@@ -53,6 +61,16 @@ void SubResource::setActive( bool active )
 bool SubResource::active() const
 {
   return mActive;
+}
+
+void SubResource::setAlarmRelevant( bool active )
+{
+  mAlarmRelevant = active;
+}
+
+bool SubResource::alarmRelevant() const
+{
+  return mAlarmRelevant;
 }
 
 void SubResource::setWritable( bool writable )

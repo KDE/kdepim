@@ -110,7 +110,8 @@ public:
 
   /// Listen to KMail changes in the amount of sub resources
   void fromKMailAddSubresource( const QString& type, const QString& subResource,
-                                const QString& label, bool writable );
+                                const QString& label, bool writable,
+                                bool alarmRelevant );
   void fromKMailDelSubresource( const QString& type, const QString& subResource );
 
   void fromKMailAsyncLoadResult( const QMap<Q_UINT32, QString>& map,
@@ -119,6 +120,8 @@ public:
 
   /** Return the list of subresources. */
   QStringList subresources() const;
+
+  bool canHaveSubresources() const { return true; }
 
   /** Is this subresource active? */
   bool subresourceActive( const QString& ) const;
@@ -130,12 +133,21 @@ public:
 
   virtual QString subresourceIdentifier( Incidence *incidence );
 
+  virtual bool addSubresource( const QString& resource, const QString& parent );
+  virtual bool removeSubresource( const QString& resource );
+
   KABC::Lock* lock();
 
 signals:
   void useGlobalMode();
 protected slots:
-   void slotEmitResourceChanged();
+  void slotEmitResourceChanged();
+protected:
+  /** 
+   * Return list of alarms which are relevant for the current user. These
+   * are the ones coming from folders which the user has "Administer" rights
+   * for, as per ACL */
+  KCal::Alarm::List relevantAlarms( const KCal::Alarm::List &alarms );
 
 private:
   void removeIncidences( const QCString& incidenceType );
@@ -162,13 +174,15 @@ private:
 
   /// Reimplemented from IncidenceBase::Observer to know when an incidence was changed
   void incidenceUpdated( KCal::IncidenceBase* );
+  void incidenceUpdatedSilent( KCal::IncidenceBase* incidencebase);
 
   bool openResource( KConfig& config, const char* contentType,
                      Kolab::ResourceMap& map );
   void loadSubResourceConfig( KConfig& config, const QString& name,
                               const QString& label, bool writable,
-                              Kolab::ResourceMap& subResource );
+                              bool alarmRelevant, Kolab::ResourceMap& subResource );
   bool loadSubResource( const QString& subResource, const char* mimetype );
+  bool unloadSubResource( const QString& subResource );
 
   QString configFile() const {
     return ResourceKolabBase::configFile( "kcal" );

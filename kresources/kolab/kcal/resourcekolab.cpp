@@ -46,6 +46,7 @@
 #include <kabc/locknull.h>
 #include <kmainwindow.h>
 #include <klocale.h>
+#include <kinputdialog.h>
 
 #include <qobject.h>
 #include <qtimer.h>
@@ -87,11 +88,13 @@ void ResourceKolab::loadSubResourceConfig( KConfig& config,
                                            const QString& name,
                                            const QString& label,
                                            bool writable,
+                                           bool alarmRelevant,
                                            ResourceMap& subResource )
 {
   KConfigGroup group( &config, name );
   bool active = group.readBoolEntry( "Active", true );
-  subResource.insert( name, Kolab::SubResource( active, writable, label ) );
+  subResource.insert( name, Kolab::SubResource( active, writable,
+                                                alarmRelevant, label ) );
 }
 
 bool ResourceKolab::openResource( KConfig& config, const char* contentType,
@@ -104,7 +107,8 @@ bool ResourceKolab::openResource( KConfig& config, const char* contentType,
   map.clear();
   QValueList<KMailICalIface::SubResource>::ConstIterator it;
   for ( it = subResources.begin(); it != subResources.end(); ++it )
-    loadSubResourceConfig( config, (*it).location, (*it).label, (*it).writable, map );
+    loadSubResourceConfig( config, (*it).location, (*it).label, (*it).writable,
+                           (*it).alarmRelevant, map );
   return true;
 }
 
@@ -208,6 +212,9 @@ bool ResourceKolab::loadSubResource( const QString& subResource,
 
 bool ResourceKolab::doLoad()
 {
+  if (!mUidMap.isEmpty() ) {
+    return true;
+  }
   mUidMap.clear();
 
   return loadAllEvents() & loadAllTodos() & loadAllJournals();
@@ -286,17 +293,10 @@ bool ResourceKolab::doSave()
       && kmailTriggerSync( kmailJournalContentsType );
   */
 }
-
-void ResourceKolab::incidenceUpdated( KCal::IncidenceBase* incidencebase )
+void ResourceKolab::incidenceUpdatedSilent( KCal::IncidenceBase* incidencebase)
 {
-  if ( incidencebase->isReadOnly() ) return; // Should not happen (TM)
-  incidencebase->setSyncStatus( KCal::Event::SYNCMOD );
-  incidencebase->setLastModified( QDateTime::currentDateTime() );
-  // we should probably update the revision number here,
-  // or internally in the Event itself when certain things change.
-  // need to verify with ical documentation.
-
-  const QString uid = incidencebase->uid();
+ const QString uid = incidencebase->uid();
+  //kdDebug() << k_funcinfo << uid << endl;
 
   if ( mUidsPendingUpdate.contains( uid ) || mUidsPendingAdding.contains( uid ) ) {
     /* We are currently processing this event ( removing and readding or
@@ -314,6 +314,18 @@ void ResourceKolab::incidenceUpdated( KCal::IncidenceBase* incidencebase )
     mUidsPendingUpdate.append( uid );
   }
   sendKMailUpdate( incidencebase, subResource, sernum );
+
+}
+void ResourceKolab::incidenceUpdated( KCal::IncidenceBase* incidencebase )
+{
+  if ( incidencebase->isReadOnly() ) return;
+  incidencebase->setSyncStatusSilent( KCal::Event::SYNCMOD );
+  incidencebase->setLastModified( QDateTime::currentDateTime() );
+  // we should probably update the revision number here,
+  // or internally in the Event itself when certain things change.
+  // need to verify with ical documentation.
+  incidenceUpdatedSilent( incidencebase );
+
 }
 
 void ResourceKolab::resolveConflict( KCal::Incidence* inc, const QString& subresource, Q_UINT32 sernum )
@@ -325,45 +337,54 @@ void ResourceKolab::resolveConflict( KCal::Incidence* inc, const QString& subres
         delete inc;
         return;
     }
-    Incidence* local = mCalendar.incidence( inc->uid() );
+    const QString origUid = inc->uid();
+    Incidence* local = mCalendar.incidence( origUid );
     Incidence* localIncidence = 0;
     Incidence* addedIncidence = 0;
+    Incidence*  result = 0;
     if ( local ) {
+      if (*local == *inc) {
+        // real duplicate, remove the second one
+        result = local;
+      } else {
         KIncidenceChooser* ch = new KIncidenceChooser();
         ch->setIncidence( local ,inc );
         if ( KIncidenceChooser::chooseMode == KIncidenceChooser::ask ) {
-            connect ( this, SIGNAL( useGlobalMode() ), ch, SLOT (  useGlobalMode() ) );
-            if ( ch->exec() )
-                if ( KIncidenceChooser::chooseMode != KIncidenceChooser::ask )
-                    emit useGlobalMode() ;
+          connect ( this, SIGNAL( useGlobalMode() ), ch, SLOT (  useGlobalMode() ) );
+          if ( ch->exec() )
+            if ( KIncidenceChooser::chooseMode != KIncidenceChooser::ask )
+              emit useGlobalMode() ;
         }
-        Incidence* result = ch->getIncidence();
-      delete ch;
-      if ( result == local ) {
-          localIncidence = local->clone();
-          delete inc;
-      } else  if ( result == inc ) {
-          addedIncidence = inc;
-      } else if ( result == 0 ) { // take both
-          localIncidence = local->clone();
-          localIncidence->recreate();
-          localIncidence->setSummary( i18n("Copy of: %1").arg(localIncidence->summary()) );
-          addedIncidence = inc;
+        result = ch->getIncidence();
+        delete ch;
       }
-      bool silent = mSilent;
-      mSilent = false;
-      deleteIncidence( local ); // remove local from kmail
-      kmailDeleteIncidence( subresource, sernum );// remove new from kmail
-      if ( localIncidence ) {
-        addIncidence( localIncidence, subresource, 0  );
-        mUidsPendingAdding.remove( localIncidence->uid() ); // we do want to inform KOrg also
-      }
-      if ( addedIncidence  ) {
-        addIncidence( addedIncidence, subresource, 0  );
-        mUidsPendingAdding.remove( addedIncidence->uid() ); // we do want to inform KOrg also
-      }
-      mSilent = silent;
-  }
+    } else {
+      // nothing there locally, just take the new one. Can't Happen (TM)
+      result = inc;
+    }
+    if ( result == local ) {
+        delete inc;
+        localIncidence = local;
+    } else  if ( result == inc ) {
+        addedIncidence = inc;
+    } else if ( result == 0 ) { // take both
+        addedIncidence = inc;
+        addedIncidence->setSummary( i18n("Copy of: %1").arg( addedIncidence->summary() ) );
+        addedIncidence->setUid( CalFormat::createUniqueId() );
+        localIncidence = local;
+    }
+    bool silent = mSilent;
+    mSilent = false;
+    if ( !localIncidence ) {
+        deleteIncidence( local ); // remove local from kmail
+    }
+    mUidsPendingDeletion.append( origUid );
+    if ( addedIncidence  ) {
+        sendKMailUpdate( addedIncidence, subresource, sernum );
+    } else {
+        kmailDeleteIncidence( subresource, sernum );// remove new from kmail
+    }
+    mSilent = silent;
 }
 void ResourceKolab::addIncidence( const char* mimetype, const QString& data,
                                   const QString& subResource, Q_UINT32 sernum )
@@ -448,7 +469,7 @@ bool ResourceKolab::addIncidence( KCal::Incidence* incidence, const QString& _su
 {
   Q_ASSERT( incidence );
   if ( !incidence ) return false;
-  const QString &uid = incidence->uid();
+  QString uid = incidence->uid();
   QString subResource = _subresource;
 
   Kolab::ResourceMap *map = &mEventSubResources; // don't use a ref here!
@@ -467,7 +488,37 @@ bool ResourceKolab::addIncidence( KCal::Incidence* incidence, const QString& _su
     // Find out if this event was previously stored in KMail
     bool newIncidence = _subresource.isEmpty();
     if ( newIncidence ) {
-      subResource = findWritableResource( *map );
+      // Add a description of the incidence
+      QString text = "<b><font size=\"+1\">";
+      if ( incidence->type() == "Event" )
+        text += i18n( "Choose the folder where you want to store this event" );
+      else if ( incidence->type() == "Todo" )
+        text += i18n( "Choose the folder where you want to store this task" );
+      else
+        text += i18n( "Choose the folder where you want to store this incidence" );
+      text += "<font></b><br>";
+      if ( !incidence->summary().isEmpty() )
+        text += i18n( "<b>Summary:</b> %1" ).arg( incidence->summary() ) + "<br>";
+      if ( !incidence->location().isEmpty() )
+        text += i18n( "<b>Location:</b> %1" ).arg( incidence->location() );
+      text += "<br>";
+      if ( !incidence->doesFloat() )
+        text += i18n( "<b>Start:</b> %1, %2" )
+                .arg( incidence->dtStartDateStr(), incidence->dtStartTimeStr() );
+      else
+        text += i18n( "<b>Start:</b> %1" ).arg( incidence->dtStartDateStr() );
+      text += "<br>";
+      if ( incidence->type() == "Event" ) {
+        Event* event = static_cast<Event*>( incidence );
+        if ( event->hasEndDate() )
+          if ( !event->doesFloat() )
+            text += i18n( "<b>End:</b> %1, %2" )
+                    .arg( event->dtEndDateStr(), event->dtEndTimeStr() );
+          else
+            text += i18n( "<b>End:</b> %1" ).arg( event->dtEndDateStr() );
+        text += "<br>";
+      }
+      subResource = findWritableResource( *map, text );
     }
 
     if ( subResource.isEmpty() )
@@ -503,19 +554,25 @@ bool ResourceKolab::addIncidence( KCal::Incidence* incidence, const QString& _su
       mUidMap[ uid ] = StorageReference( subResource, sernum );
     } else {
       /* This is a real add, from KMail, we didn't trigger this ourselves.
-       * If this uid already exists in this folder, do conflict resolution,
+       * If this uid already exists in this folder, do conflict resolution, 
        * unless the folder is read-only, in which case the user should not be
        * offered a means of putting mails in a folder she'll later be unable to
        * upload. Skip the incidence, in this case. */
-      if ( mUidMap.contains( uid )
-          && ( mUidMap[ uid ].resource() == subResource ) ) {
-        if ( (*map)[ subResource ].writable() ) {
-          resolveConflict( incidence, subResource, sernum );
+      if ( mUidMap.contains( uid ) ) {
+        if ( mUidMap[ uid ].resource() == subResource ) {
+          if ( (*map)[ subResource ].writable() ) {
+            resolveConflict( incidence, subResource, sernum );
+          } else {
+            kdWarning( 5650 ) << "Duplicate event in a read-only folder detected! "
+              "Please inform the owner of the folder. " << endl;
+          }
+          return true;
         } else {
-          kdWarning( 5650 ) << "Duplicate event in a read-only folder detected! "
-            "Please inform the owner of the folder. " << endl;
+          // duplicate uid in a different folder, do the internal-uid tango
+          incidence->setSchedulingID( uid );
+          incidence->setUid(CalFormat::createUniqueId( ) );
+          uid = incidence->uid();
         }
-        return true;
       }
       /* Add to the cache if the add didn't come from KOrganizer, in which case
        * we've already added it, and listen to updates from KOrganizer for it. */
@@ -697,15 +754,43 @@ KCal::Journal::List ResourceKolab::rawJournalsForDate( const QDate &date )
   return mCalendar.rawJournalsForDate( date );
 }
 
+KCal::Alarm::List ResourceKolab::relevantAlarms( const KCal::Alarm::List &alarms )
+{
+  KCal::Alarm::List relevantAlarms;
+  KCal::Alarm::List::ConstIterator it( alarms.begin() );
+  while ( it != alarms.end() ) {
+    KCal::Alarm *a = (*it);
+    ++it;
+    const QString &uid = a->parent()->uid();
+     if ( mUidMap.contains( uid ) ) {
+       const QString &sr = mUidMap[ uid ].resource();
+       Kolab::SubResource *subResource = 0;
+       if ( mEventSubResources.contains( sr ) )
+          subResource = &( mEventSubResources[ sr ] );
+       else if ( mTodoSubResources.contains( sr ) )
+          subResource = &( mTodoSubResources[ sr ] );
+       assert( subResource );
+       if ( subResource->alarmRelevant() )
+           relevantAlarms.append ( a );
+       else {
+         kdDebug(5650) << "Alarm skipped, not relevant." << endl;
+       }
+     }
+  }
+  return relevantAlarms;
+}
+
+
+
 KCal::Alarm::List ResourceKolab::alarms( const QDateTime& from,
                                          const QDateTime& to )
 {
-  return mCalendar.alarms( from, to );
+  return relevantAlarms( mCalendar.alarms( from, to ) );
 }
 
 KCal::Alarm::List ResourceKolab::alarmsTo( const QDateTime& to )
 {
-  return mCalendar.alarmsTo(to);
+  return relevantAlarms( mCalendar.alarmsTo(to) );
 }
 
 void ResourceKolab::setTimeZoneId( const QString& tzid )
@@ -759,8 +844,8 @@ void ResourceKolab::fromKMailDelIncidence( const QString& type,
   if ( !subresourceActive( subResource ) ) return;
 
   // Can't be in both, by contract
-  if ( mUidsPendingDeletion.contains( uid ) ) {
-    mUidsPendingDeletion.remove( uid );
+  if ( mUidsPendingDeletion.find( uid ) != mUidsPendingDeletion.end() ) {
+    mUidsPendingDeletion.remove( mUidsPendingDeletion.find( uid ) );
   } else if ( mUidsPendingUpdate.contains( uid ) ) {
     // It's good to know if was deleted, but we are waiting on a new one to
     // replace it, so let's just sit tight.
@@ -794,7 +879,7 @@ void ResourceKolab::fromKMailRefresh( const QString& type,
 void ResourceKolab::fromKMailAddSubresource( const QString& type,
                                              const QString& subResource,
                                              const QString& label,
-                                             bool writable )
+                                             bool writable, bool alarmRelevant )
 {
   ResourceMap* map = 0;
   const char* mimetype = 0;
@@ -819,7 +904,8 @@ void ResourceKolab::fromKMailAddSubresource( const QString& type,
   config.setGroup( subResource );
 
   bool active = config.readBoolEntry( subResource, true );
-  (*map)[ subResource ] = Kolab::SubResource( active, writable, label );
+  (*map)[ subResource ] = Kolab::SubResource( active, writable,
+                                              alarmRelevant, label );
   loadSubResource( subResource, mimetype );
   emit signalSubresourceAdded( this, type, subResource, label );
 }
@@ -841,25 +927,7 @@ void ResourceKolab::fromKMailDelSubresource( const QString& type,
   config.deleteGroup( subResource );
   config.sync();
 
-  // Make a list of all uids to remove
-  Kolab::UidMap::ConstIterator mapIt;
-  QStringList uids;
-  for ( mapIt = mUidMap.begin(); mapIt != mUidMap.end(); ++mapIt )
-    if ( mapIt.data().resource() == subResource )
-      // We have a match
-      uids << mapIt.key();
-
-  // Finally delete all the incidences
-  if ( !uids.isEmpty() ) {
-    TemporarySilencer t( this );
-    QStringList::ConstIterator it;
-    for ( it = uids.begin(); it != uids.end(); ++it ) {
-      KCal::Incidence* incidence = mCalendar.incidence( *it );
-      if( incidence )
-        mCalendar.deleteIncidence( incidence );
-      mUidMap.remove( *it );
-    }
-  }
+  unloadSubResource( subResource );
 
   emit signalSubresourceRemoved( this, type, subResource );
 }
@@ -884,18 +952,6 @@ ResourceKolab::labelForSubresource( const QString& subresource ) const
   if ( mJournalSubResources.contains( subresource ) )
     return mJournalSubResources[ subresource ].label();
   return subresource;
-}
-
-QString ResourceKolab::subresourceIdentifier( Incidence *incidence )
-{
-  QString uid = incidence->uid();
-  if ( mUidMap.contains( uid ) )
-    return mUidMap[ uid ].resource();
-  else
-    if ( mNewIncidencesMap.contains( uid ) )
-      return mNewIncidencesMap[ uid ];
-    else
-      return QString();
 }
 
 void ResourceKolab::fromKMailAsyncLoadResult( const QMap<Q_UINT32, QString>& map,
@@ -929,17 +985,27 @@ bool ResourceKolab::subresourceActive( const QString& subresource ) const
 void ResourceKolab::setSubresourceActive( const QString &subresource, bool v )
 {
   ResourceMap *map = 0;
-
-  if ( mEventSubResources.contains( subresource ) )
+  const char* mimeType = 0;
+  if ( mEventSubResources.contains( subresource ) ) {
      map = &mEventSubResources;
-  if ( mTodoSubResources.contains( subresource ) )
+     mimeType = eventAttachmentMimeType;
+  }
+  if ( mTodoSubResources.contains( subresource ) ) {
      map = &mTodoSubResources;
-  if ( mJournalSubResources.contains( subresource ) )
+     mimeType = todoAttachmentMimeType;
+  }
+  if ( mJournalSubResources.contains( subresource ) ) {
      map = &mJournalSubResources;
+     mimeType = journalAttachmentMimeType;
+  }
 
   if ( map && ( ( *map )[ subresource ].active() != v ) ) {
     ( *map )[ subresource ].setActive( v );
-    doLoad();                     // refresh the mCalendar cache
+    if ( v ) {
+        loadSubResource( subresource, mimeType );
+    } else {
+        unloadSubResource( subresource );
+    }
     mResourceChangedTimer.changeInterval( 100 );
   }
 }
@@ -968,6 +1034,78 @@ Kolab::ResourceMap* ResourceKolab::subResourceMap( const QString& contentsType )
   }
   // Not ours
   return 0;
+}
+
+
+/*virtual*/
+bool ResourceKolab::addSubresource( const QString& resource, const QString& parent )
+{
+   kdDebug(5650) << "KCal Kolab resource - adding subresource: " << resource << endl;
+   QString contentsType = kmailCalendarContentsType;
+   if ( !parent.isEmpty() ) {
+     if ( mEventSubResources.contains( parent ) )
+       contentsType = kmailCalendarContentsType;
+     else if ( mTodoSubResources.contains( parent ) )
+       contentsType = kmailTodoContentsType;
+     else if ( mJournalSubResources.contains( parent ) )
+       contentsType = kmailJournalContentsType;
+   } else {
+     QStringList contentTypeChoices;
+     contentTypeChoices << i18n("Calendar") << i18n("Tasks") << i18n("Journals");
+     const QString caption = i18n("Which kind of subresource should this be?");
+     const QString choice = KInputDialog::getItem( caption, QString::null, contentTypeChoices );
+     if ( choice == contentTypeChoices[0] )
+       contentsType = kmailCalendarContentsType;
+     else if ( choice == contentTypeChoices[1] )
+       contentsType = kmailTodoContentsType;
+     else if ( choice == contentTypeChoices[2] )
+       contentsType = kmailJournalContentsType;
+   }
+
+   return kmailAddSubresource( resource, parent, contentsType );
+}
+
+/*virtual*/
+bool ResourceKolab::removeSubresource( const QString& resource )
+{
+   kdDebug(5650) << "KCal Kolab resource - removing subresource: " << resource << endl;
+   return kmailRemoveSubresource( resource );
+}
+
+/*virtual*/
+QString ResourceKolab::subresourceIdentifier( Incidence *incidence )
+{
+  QString uid = incidence->uid();
+  if ( mUidMap.contains( uid ) )
+    return mUidMap[ uid ].resource();
+  else
+    if ( mNewIncidencesMap.contains( uid ) )
+      return mNewIncidencesMap[ uid ];
+    else
+      return QString();
+}
+
+
+bool ResourceKolab::unloadSubResource( const QString& subResource )
+{
+    const bool silent = mSilent;
+    mSilent = true;
+    Kolab::UidMap::Iterator mapIt = mUidMap.begin();
+    while ( mapIt != mUidMap.end() )
+    {
+        Kolab::UidMap::Iterator it = mapIt++;
+        const StorageReference ref = it.data();
+        if ( ref.resource() != subResource ) continue;
+        // FIXME incidence() is expensive
+        KCal::Incidence* incidence = mCalendar.incidence( it.key() );
+        if( incidence ) {
+            incidence->unRegisterObserver( this );
+            mCalendar.deleteIncidence( incidence );
+        }
+        mUidMap.remove( it );
+    }
+    mSilent = silent;
+    return true;
 }
 
 #include "resourcekolab.moc"

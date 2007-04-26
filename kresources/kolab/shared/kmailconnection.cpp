@@ -98,8 +98,8 @@ bool KMailConnection::connectToKMail()
     if ( !connectKMailSignal( "signalRefresh(QString,QString)",
                               "fromKMailRefresh(QString,QString)" ) )
       kdError(5650) << "DCOP connection to signalRefresh failed" << endl;
-    if ( !connectKMailSignal( "subresourceAdded( QString, QString, QString )",
-                              "fromKMailAddSubresource( QString, QString, QString )" ) )
+    if ( !connectKMailSignal( "subresourceAdded( QString, QString, QString, bool, bool )",
+                              "fromKMailAddSubresource( QString, QString, QString, bool, bool )" ) )
       kdError(5650) << "DCOP connection to subresourceAdded failed" << endl;
     if ( !connectKMailSignal( "subresourceDeleted(QString,QString)",
                               "fromKMailDelSubresource(QString,QString)" ) )
@@ -144,17 +144,14 @@ void KMailConnection::fromKMailRefresh( const QString& type, const QString& fold
 
 void KMailConnection::fromKMailAddSubresource( const QString& type,
                                                const QString& resource,
-                                               const QString& label )
+                                               const QString& label,
+                                               bool writable,
+                                               bool alarmRelevant )
 {
 //   kdDebug(5650) << "KMailConnection::fromKMailAddSubresource( " << type << ", "
 //                 << resource << " )\n";
-  bool writable = true;
-
-  // TODO: This should be told by KMail right away
-  if ( connectToKMail() )
-    writable = mKMailIcalIfaceStub->isWritableFolder( type, resource );
-
-  mResource->fromKMailAddSubresource( type, resource, label, writable );
+  mResource->fromKMailAddSubresource( type, resource, label,
+                                      writable, alarmRelevant );
 }
 
 void KMailConnection::fromKMailDelSubresource( const QString& type,
@@ -253,6 +250,23 @@ bool KMailConnection::kmailUpdate( const QString& resource,
   } else
     return false;
 }
+
+bool KMailConnection::kmailAddSubresource( const QString& resource,
+                                           const QString& parent,
+                                           const QString& contentsType )
+{
+  return connectToKMail() 
+      && mKMailIcalIfaceStub->addSubresource( resource, parent, contentsType )
+      && mKMailIcalIfaceStub->ok();
+}
+
+bool KMailConnection::kmailRemoveSubresource( const QString& resource )
+{
+  return connectToKMail() 
+      && mKMailIcalIfaceStub->removeSubresource( resource )
+      && mKMailIcalIfaceStub->ok();
+}
+
 
 bool KMailConnection::kmailStorageFormat( KMailICalIface::StorageFormat& type,
                                           const QString& folder )

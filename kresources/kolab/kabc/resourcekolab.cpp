@@ -1,6 +1,6 @@
 /*
     This file is part of libkabc and/or kaddressbook.
-    Copyright (c) 2002 - 2004 Klar‰lvdalens Datakonsult AB
+    Copyright (c) 2002 - 2004 Klar√§lvdalens Datakonsult AB
         <info@klaralvdalens-datakonsult.se>
 
     This library is free software; you can redistribute it and/or
@@ -213,7 +213,7 @@ bool KABC::ResourceKolab::loadSubResourceHelper( const QString& subResource,
     QMap<Q_UINT32, QString> lst;
 
     if ( !kmailIncidences( lst, mimetype, subResource, startIndex, nbMessages ) ) {
-      kdError() << "Communication problem in ResourceKolab::load()\n";
+      kdError() << "Communication problem in KABC::ResourceKolab::loadSubResourceHelper()\n";
       if ( progressId )
         uiserver.jobFinished( progressId );
       return false;
@@ -502,7 +502,8 @@ void KABC::ResourceKolab::fromKMailRefresh( const QString& type,
 void KABC::ResourceKolab::fromKMailAddSubresource( const QString& type,
                                                    const QString& subResource,
                                                    const QString& label,
-                                                   bool writable )
+                                                   bool writable,
+                                                   bool )
 {
   if( type != s_kmailContentsType ) return;
 
@@ -646,6 +647,19 @@ void KABC::ResourceKolab::setSubresourceActive( const QString &subresource, bool
   } else {
     kdDebug(5650) << "setSubresourceCompletionWeight: subresource " << subresource << " not found" << endl;
   }
+}
+
+
+/*virtual*/
+bool KABC::ResourceKolab::addSubresource( const QString& label, const QString& parent )
+{
+  return kmailAddSubresource( label, parent, s_kmailContentsType );
+}
+
+/*virtual*/
+bool KABC::ResourceKolab::removeSubresource( const QString& id )
+{
+  return kmailRemoveSubresource( id );
 }
 
 #include "resourcekolab.moc"
