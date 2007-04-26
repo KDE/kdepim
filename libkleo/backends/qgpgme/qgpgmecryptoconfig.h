@@ -135,6 +135,7 @@ public:
   QString name() const { return mName; }
   QString description() const { return mDescription; }
   bool isOptional() const;
+  bool isReadOnly() const;
   bool isList() const;
   bool isRuntime() const;
   Level level() const { return static_cast<Level>( mLevel ); }
@@ -175,7 +176,7 @@ private:
   QString mDescription;
   QVariant mDefaultValue;
   QVariant mValue;
-  uint mFlags : 7; // bitfield with 7 bits
+  uint mFlags : 8; // bitfield with 8 bits
   uint mLevel : 3; // max is 4 (2, in fact) -> 3 bits
   uint mRealArgType : 6; // max is 33 -> 6 bits
   uint mArgType : 3; // max is 6 (ArgType enum) -> 3 bits;

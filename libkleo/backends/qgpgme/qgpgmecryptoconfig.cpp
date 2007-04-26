@@ -50,13 +50,14 @@
 // have 2 threads talking to gpgconf anyway? :)
 static bool s_duringClear = false;
 
-#define GPGCONF_FLAG_GROUP 1
-#define GPGCONF_FLAG_OPTIONAL 2
-#define GPGCONF_FLAG_LIST 4
-#define GPGCONF_FLAG_RUNTIME 8
-#define GPGCONF_FLAG_DEFAULT 16 // fixed default value available
-#define GPGCONF_FLAG_DEFAULT_DESC 32 // runtime default value available
-#define GPGCONF_FLAG_NOARG_DESC 64 // option with optional arg; special meaning if no arg set
+static const int GPGCONF_FLAG_GROUP = 1;
+static const int GPGCONF_FLAG_OPTIONAL = 2;
+static const int GPGCONF_FLAG_LIST = 4;
+static const int GPGCONF_FLAG_RUNTIME = 8;
+static const int GPGCONF_FLAG_DEFAULT = 16; // fixed default value available
+static const int GPGCONF_FLAG_DEFAULT_DESC = 32; // runtime default value available
+static const int GPGCONF_FLAG_NOARG_DESC = 64; // option with optional arg; special meaning if no arg set
+static const int GPGCONF_FLAG_NO_CHANGE = 128; // readonly
 // Change size of mFlags bitfield if adding new values here
 
 QGpgMECryptoConfig::QGpgMECryptoConfig()
@@ -494,6 +495,11 @@ QGpgMECryptoConfigEntry::~QGpgMECryptoConfigEntry()
 bool QGpgMECryptoConfigEntry::isOptional() const
 {
   return mFlags & GPGCONF_FLAG_OPTIONAL;
+}
+
+bool QGpgMECryptoConfigEntry::isReadOnly() const
+{
+  return mFlags & GPGCONF_FLAG_NO_CHANGE;
 }
 
 bool QGpgMECryptoConfigEntry::isList() const

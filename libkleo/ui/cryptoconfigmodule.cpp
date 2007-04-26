@@ -347,7 +347,12 @@ Kleo::CryptoConfigEntryLineEdit::CryptoConfigEntryLineEdit(
   label->setBuddy( mLineEdit );
   glay->addWidget( label, row, 1 );
   glay->addWidget( mLineEdit, row, 2 );
-  connect( mLineEdit, SIGNAL( textChanged( const QString& ) ), SLOT( slotChanged() ) );
+  if ( entry->isReadOnly() ) {
+    label->setEnabled( false );
+    mLineEdit->setEnabled( false );
+  } else {
+    connect( mLineEdit, SIGNAL( textChanged( const QString& ) ), SLOT( slotChanged() ) );
+  }
 }
 
 void Kleo::CryptoConfigEntryLineEdit::doSave()
@@ -375,7 +380,12 @@ Kleo::CryptoConfigEntryPath::CryptoConfigEntryPath(
   label->setBuddy( mUrlRequester );
   glay->addWidget( label, row, 1 );
   glay->addWidget( mUrlRequester, row, 2 );
-  connect( mUrlRequester, SIGNAL( textChanged( const QString& ) ), SLOT( slotChanged() ) );
+  if ( entry->isReadOnly() ) {
+    label->setEnabled( false );
+    mUrlRequester->setEnabled( false );
+  } else {
+    connect( mUrlRequester, SIGNAL( textChanged( const QString& ) ), SLOT( slotChanged() ) );
+  }
 }
 
 void Kleo::CryptoConfigEntryPath::doSave()
@@ -403,7 +413,12 @@ Kleo::CryptoConfigEntryDirPath::CryptoConfigEntryDirPath(
   label->setBuddy( mUrlRequester );
   glay->addWidget( label, row, 1 );
   glay->addWidget( mUrlRequester, row, 2 );
-  connect( mUrlRequester, SIGNAL( textChanged( const QString& ) ), SLOT( slotChanged() ) );
+  if ( entry->isReadOnly() ) {
+    label->setEnabled( false );
+    mUrlRequester->setEnabled( false );
+  } else {
+    connect( mUrlRequester, SIGNAL( textChanged( const QString& ) ), SLOT( slotChanged() ) );
+  }
 }
 
 void Kleo::CryptoConfigEntryDirPath::doSave()
@@ -431,7 +446,12 @@ Kleo::CryptoConfigEntryURL::CryptoConfigEntryURL(
   label->setBuddy( mUrlRequester );
   glay->addWidget( label, row, 1 );
   glay->addWidget( mUrlRequester, row, 2 );
-  connect( mUrlRequester, SIGNAL( textChanged( const QString& ) ), SLOT( slotChanged() ) );
+  if ( entry->isReadOnly() ) {
+    label->setEnabled( false );
+    mUrlRequester->setEnabled( false );
+  } else {
+    connect( mUrlRequester, SIGNAL( textChanged( const QString& ) ), SLOT( slotChanged() ) );
+  }
 }
 
 void Kleo::CryptoConfigEntryURL::doSave()
@@ -469,9 +489,14 @@ Kleo::CryptoConfigEntrySpinBox::CryptoConfigEntrySpinBox(
   glay->addWidget( label, row, 1 );
   glay->addWidget( mNumInput, row, 2 );
 
-  if ( mKind == UInt || mKind == ListOfNone )
-    mNumInput->setMinimum( 0 );
-  connect( mNumInput, SIGNAL( valueChanged(int) ), SLOT( slotChanged() ) );
+  if ( entry->isReadOnly() ) {
+    label->setEnabled( false );
+    mNumInput->setEnabled( false );
+  } else {
+    if ( mKind == UInt || mKind == ListOfNone )
+      mNumInput->setMinimum( 0 );
+    connect( mNumInput, SIGNAL( valueChanged(int) ), SLOT( slotChanged() ) );
+  }
 }
 
 void Kleo::CryptoConfigEntrySpinBox::doSave()
@@ -519,7 +544,11 @@ Kleo::CryptoConfigEntryCheckBox::CryptoConfigEntryCheckBox(
   mCheckBox = new QCheckBox( widget );
   glay->addWidget( mCheckBox, row, 1, 1, 2 );
   mCheckBox->setText( description() );
-  connect( mCheckBox, SIGNAL( toggled(bool) ), SLOT( slotChanged() ) );
+  if ( entry->isReadOnly() ) {
+    mCheckBox->setEnabled( false );
+  } else {
+    connect( mCheckBox, SIGNAL( toggled(bool) ), SLOT( slotChanged() ) );
+  }
 }
 
 void Kleo::CryptoConfigEntryCheckBox::doSave()
@@ -552,7 +581,12 @@ Kleo::CryptoConfigEntryLDAPURL::CryptoConfigEntryLDAPURL(
   hlay->addWidget( mLabel, 1 );
   hlay->addWidget( mPushButton );
 
-  connect( mPushButton, SIGNAL( clicked() ), SLOT( slotOpenDialog() ) );
+  if ( entry->isReadOnly() ) {
+    mLabel->setEnabled( false );
+    mPushButton->hide();
+  } else {
+    connect( mPushButton, SIGNAL( clicked() ), SLOT( slotOpenDialog() ) );
+  }
 }
 
 void Kleo::CryptoConfigEntryLDAPURL::doLoad()
