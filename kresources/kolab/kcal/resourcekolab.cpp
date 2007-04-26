@@ -47,7 +47,10 @@
 #include <kmainwindow.h>
 #include <klocale.h>
 #include <kinputdialog.h>
+#include <ktempfile.h>
+#include <kmdcodec.h>
 
+#include <qfile.h>
 #include <qobject.h>
 #include <qtimer.h>
 #include <qapplication.h>
@@ -448,6 +451,22 @@ bool ResourceKolab::sendKMailUpdate( KCal::IncidenceBase* incidencebase, const Q
 //  kdDebug() << k_funcinfo << "Data string:\n" << data << endl;
 
   KCal::Incidence* incidence = static_cast<KCal::Incidence *>( incidencebase );
+
+  KCal::Attachment::List atts = incidence->attachments();
+  QStringList attURLs, attMimeTypes, attNames;
+  QValueList<KTempFile*> tmpFiles;
+  for ( KCal::Attachment::List::ConstIterator it = atts.constBegin(); it != atts.constEnd(); ++it ) {
+    KTempFile* tempFile = new KTempFile;
+    QCString decoded = KCodecs::base64Decode( QCString( (*it)->data() ) );
+    tempFile->file()->writeBlock( decoded.data(), decoded.length() );
+    tempFile->close();
+    KURL url;
+    url.setPath( tempFile->name() );
+    attURLs.append( url.url() );
+    attMimeTypes.append( (*it)->mimeType() );
+    attNames.append( (*it)->label() );
+  }
+
   CustomHeaderMap customHeaders;
   if ( incidence->schedulingID() != incidence->uid() )
     customHeaders.insert( "X-Kolab-SchedulingID", incidence->schedulingID() );
@@ -456,11 +475,17 @@ bool ResourceKolab::sendKMailUpdate( KCal::IncidenceBase* incidencebase, const Q
   if ( !isXMLStorageFormat ) subject.prepend( "iCal " ); // conform to the old style
 
   // behold, sernum is an in-parameter
-  const bool rc = kmailUpdate( subresource, sernum, data, mimetype, subject, customHeaders );
+  const bool rc = kmailUpdate( subresource, sernum, data, mimetype, subject, customHeaders, attURLs, attMimeTypes, attNames );
   // update the serial number
   if ( mUidMap.contains( incidencebase->uid() ) ) {
     mUidMap[ incidencebase->uid() ].setSerialNumber( sernum );
   }
+
+  for( QValueList<KTempFile *>::Iterator it = tmpFiles.begin(); it != tmpFiles.end(); ++it ) {
+    (*it)->setAutoDelete( true );
+    delete (*it);
+  }
+
   return rc;
 }
 

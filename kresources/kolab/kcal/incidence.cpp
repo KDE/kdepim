@@ -237,7 +237,7 @@ void Incidence::saveAttachments( QDomElement& element ) const
     if ( a->isUri() ) {
       writeString( element, "link-attachment", a->uri() );
     } else if ( a->isBinary() ) {
-      // TODO
+      writeString( element, "inline-attachment", a->label() );
     }
   }
 }
