@@ -314,6 +314,15 @@ icalvalue* icalvalue_new_from_string_with_error(icalvalue_kind kind,const char* 
 	}
 
     case ICAL_BINARY_VALUE:
+    {
+        icalattach *attach;
+        attach = icalattach_new_from_data (str, 0, 0);
+        if ( !attach )
+          break;
+        value = icalvalue_new_attach (attach);
+        icalattach_unref (attach);
+        break;
+    }
     case ICAL_BOOLEAN_VALUE:
         {
             /* HACK */

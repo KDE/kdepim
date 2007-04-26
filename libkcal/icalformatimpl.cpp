@@ -1220,7 +1220,7 @@ Attachment *ICalFormatImpl::readAttachment(icalproperty *attach)
 
   icalvalue_kind value_kind = icalvalue_isa(icalproperty_get_value(attach));
 
-  if ( value_kind == ICAL_ATTACH_VALUE ) {
+  if ( value_kind == ICAL_ATTACH_VALUE || value_kind == ICAL_BINARY_VALUE ) {
     icalattach *a = icalproperty_get_attach(attach);
 
     int isurl = icalattach_get_is_url (a);
