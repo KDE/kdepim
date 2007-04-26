@@ -46,17 +46,17 @@
 #include <kurlrequester.h>
 #include <kicon.h>
 
-#include <q3grid.h>
 #include <QLabel>
 #include <QLayout>
 #include <QPushButton>
 #include <QRegExp>
-//Added by qt3to4:
 #include <QPixmap>
 #include <QVBoxLayout>
 #include <QList>
 #include <QHBoxLayout>
 #include <QGridLayout>
+#include <QScrollArea>
+#include <QDesktopWidget>
 
 using namespace Kleo;
 
@@ -94,16 +94,38 @@ Kleo::CryptoConfigModule::CryptoConfigModule( Kleo::CryptoConfig* config, QWidge
       continue;
     if ( type != Plain ) {
       vbox = new QWidget(parent);
-	  KPageWidgetItem *pageItem = new KPageWidgetItem( vbox, comp->description() );
-	  pageItem->setIcon( KIcon(loadIcon( comp->iconName() )) );
-	  addPage(pageItem);
+      vlay = new QVBoxLayout( vbox );
+      vlay->setSpacing( KDialog::spacingHint() );
+      vlay->setMargin( 0 );
+      KPageWidgetItem *pageItem = new KPageWidgetItem( vbox, comp->description() );
+      pageItem->setIcon( KIcon(loadIcon( comp->iconName() )) );
+      addPage(pageItem);
     }
+
+    QScrollArea* scrollArea = new QScrollArea( this );
+    vlay->addWidget( scrollArea );
+    scrollArea->setHorizontalScrollBarPolicy( Qt::ScrollBarAlwaysOff );
+    scrollArea->setWidgetResizable( true );
+
     CryptoConfigComponentGUI* compGUI =
-      new CryptoConfigComponentGUI( this, comp, vbox, (*it).toLocal8Bit() );
-    if ( type == Plain )
-      vlay->addWidget( compGUI );
+      new CryptoConfigComponentGUI( this, comp, scrollArea, (*it).toLocal8Bit() );
+    scrollArea->setWidget( compGUI );
     // KJanusWidget doesn't seem to have iterators, so we store a copy...
     mComponentGUIs.append( compGUI );
+
+    // Set a nice startup size
+    const int deskHeight = QApplication::desktop()->height();
+    int dialogHeight;
+    if (deskHeight > 1000) // very big desktop ?
+      dialogHeight = 800;
+    else if (deskHeight > 650) // big desktop ?
+      dialogHeight = 500;
+    else // small (800x600, 640x480) desktop
+      dialogHeight = 400;
+    QSize sz = scrollArea->sizeHint();
+    scrollArea->setMinimumSize( sz.width()
+                                + scrollArea->style()->pixelMetric(QStyle::PM_ScrollBarExtent),
+                                qMin( compGUI->sizeHint().height(), dialogHeight ) );
   }
 }
 
@@ -151,7 +173,6 @@ Kleo::CryptoConfigComponentGUI::CryptoConfigComponentGUI(
   setObjectName( name );
   QGridLayout * glay = new QGridLayout( this );
   glay->setSpacing( KDialog::spacingHint() );
-  glay->setMargin( 0 );
   const QStringList groups = mComponent->groupList();
   if ( groups.size() > 1 ) {
     glay->setColumnMinimumWidth( 0, KDHorizontalLine::indentHint() );
