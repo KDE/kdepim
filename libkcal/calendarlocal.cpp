@@ -350,6 +350,20 @@ void CalendarLocal::appendRecurringAlarms( Alarm::List &alarms,
 }
 
 
+void CalendarLocal::incidenceUpdated( IncidenceBase *incidence )
+{
+  incidence->setSyncStatusSilent( Event::SYNCMOD );
+  incidence->setLastModified( QDateTime::currentDateTime() );
+  // we should probably update the revision number here,
+  // or internally in the Event itself when certain things change.
+  // need to verify with ical documentation.
+
+  // The static_cast is ok as the CalendarLocal only observes Incidence objects
+  notifyIncidenceChanged( static_cast<Incidence *>( incidence ) );
+
+  setModified( true );
+}
+
 void CalendarLocal::insertEvent( Event *event )
 {
   QString uid = event->uid();

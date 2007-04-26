@@ -340,6 +340,13 @@ bool IncidenceBase::hasDuration() const
 void IncidenceBase::setSyncStatus(int stat)
 {
   if (mReadOnly) return;
+  if ( mSyncStatus == stat ) return;
+  mSyncStatus = stat;
+  updatedSilent();
+}
+void IncidenceBase::setSyncStatusSilent(int stat)
+{
+  if (mReadOnly) return;
   mSyncStatus = stat;
 }
 
@@ -351,8 +358,9 @@ int IncidenceBase::syncStatus() const
 void IncidenceBase::setPilotId( unsigned long id )
 {
   if (mReadOnly) return;
+  if ( mPilotId == id) return;
   mPilotId = id;
-  updated();
+  updatedSilent();
 }
 
 unsigned long IncidenceBase::pilotId() const
@@ -384,3 +392,14 @@ void IncidenceBase::customPropertyUpdated()
 {
   updated();
 }
+
+void IncidenceBase::updatedSilent()
+{
+  QPtrListIterator<Observer> it(mObservers);
+  while( it.current() ) {
+    Observer *o = it.current();
+    ++it;
+    o->incidenceUpdatedSilent( this );
+  }
+}
+

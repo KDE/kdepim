@@ -374,6 +374,12 @@ class LIBKCAL_EXPORT Calendar : public QObject, public CustomProperties,
     Incidence *incidenceFromSchedulingID( const QString &sid );
 
     /**
+     * Searches all events and todos for (an incidence with this
+     * scheduling ID. Returns a list of matching results.
+     **/
+    Incidence::List incidencesFromSchedulingID( const QString &UID );
+
+    /**
        Create a merged list of Events, Todos, and Journals.
 
        @param events is an Event list to merge.
