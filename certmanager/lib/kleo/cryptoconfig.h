@@ -104,6 +104,11 @@ namespace Kleo {
     virtual bool isOptional() const = 0;
 
     /**
+     * @return true if the entry is readonly
+     */
+    virtual bool isReadOnly() const = 0;
+
+    /**
      * @return true if the argument can be given multiple times
      */
     virtual bool isList() const = 0;
