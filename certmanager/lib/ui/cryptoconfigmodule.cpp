@@ -51,10 +51,12 @@
 #include <qvbox.h>
 #include <qpushbutton.h>
 #include <qregexp.h>
+#include <qstyle.h>
+#include <qapplication.h>
 
 using namespace Kleo;
 
-inline QPixmap loadIcon( QString s ) {
+static inline QPixmap loadIcon( QString s ) {
   return KGlobal::instance()->iconLoader()
     ->loadIcon( s.replace( QRegExp( "[^a-zA-Z0-9_]" ), "_" ), KIcon::NoGroup, KIcon::SizeMedium );
 }
@@ -85,10 +87,32 @@ Kleo::CryptoConfigModule::CryptoConfigModule( Kleo::CryptoConfig* config, QWidge
     if ( face() != Plain ) {
       vbox = addVBoxPage( comp->description(), QString::null, loadIcon( comp->iconName() ) );
     }
+
+    QScrollView * scrollView = new QScrollView( vbox );
+    scrollView->setHScrollBarMode( QScrollView::AlwaysOff );
+    scrollView->setResizePolicy( QScrollView::AutoOneFit );
+    QVBox* boxInScrollView = new QVBox( scrollView->viewport() );
+    boxInScrollView->setMargin( KDialog::marginHint() );
+    scrollView->addChild( boxInScrollView );
+
     CryptoConfigComponentGUI* compGUI =
-      new CryptoConfigComponentGUI( this, comp, vbox, (*it).local8Bit() );
+      new CryptoConfigComponentGUI( this, comp, boxInScrollView, (*it).local8Bit() );
     // KJanusWidget doesn't seem to have iterators, so we store a copy...
     mComponentGUIs.append( compGUI );
+
+    // Set a nice startup size
+    const int deskHeight = QApplication::desktop()->height();
+    int dialogHeight;
+    if (deskHeight > 1000) // very big desktop ?
+      dialogHeight = 800;
+    else if (deskHeight > 650) // big desktop ?
+      dialogHeight = 500;
+    else // small (800x600, 640x480) desktop
+      dialogHeight = 400;
+    QSize sz = scrollView->sizeHint();
+    scrollView->setMinimumSize( sz.width()
+                                + scrollView->style().pixelMetric(QStyle::PM_ScrollBarExtent),
+                                QMIN( compGUI->sizeHint().height(), dialogHeight ) );
   }
 }
 
