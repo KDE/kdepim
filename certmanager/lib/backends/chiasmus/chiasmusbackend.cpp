@@ -158,6 +158,7 @@ namespace {
     QString name() const { return kleo_chiasmus_config_entries[mIdx].name; }
     QString description() const { return i18n( kleo_chiasmus_config_entries[mIdx].description ); }
     bool isOptional() const { return kleo_chiasmus_config_entries[mIdx].is_optional; }
+    bool isReadOnly() const { return false; }
     bool isList() const { return kleo_chiasmus_config_entries[mIdx].is_list; }
     bool isRuntime() const { return kleo_chiasmus_config_entries[mIdx].is_runtime; }
     Level level() const { return static_cast<Level>( kleo_chiasmus_config_entries[mIdx].level ); }
