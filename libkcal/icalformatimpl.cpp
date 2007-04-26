@@ -1238,6 +1238,13 @@ Attachment *ICalFormatImpl::readAttachment(icalproperty *attach)
   if (p && attachment)
     attachment->setMimeType(QString(icalparameter_get_fmttype(p)));
 
+  p = icalproperty_get_first_parameter(attach,ICAL_X_PARAMETER);
+  while (p) {
+   if ( strncmp (icalparameter_get_xname(p), "X-LABEL", 7) == 0 )
+     attachment->setLabel( icalparameter_get_xvalue(p) );
+    p = icalproperty_get_next_parameter(attach, ICAL_X_PARAMETER);
+  }
+
   return attachment;
 }
 
