@@ -55,37 +55,37 @@ include (gpgmepp/ConfigureChecks.cmake)
 configure_file (config.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config.h)
 
 
-set(libkabcommon_SRCS 
-	${CMAKE_SOURCE_DIR}/kaddressbook/common/kabprefs.cpp 
-	${CMAKE_SOURCE_DIR}/kaddressbook/common/locationmap.cpp 
-	${CMAKE_SOURCE_DIR}/kaddressbook/common/filter.cpp
-	)
-
-set(libknotesresources_SRCS 
-	${CMAKE_SOURCE_DIR}/knotes/resourcemanager.cpp 
-	${CMAKE_SOURCE_DIR}/knotes/resourcenotes.cpp 
-	${CMAKE_SOURCE_DIR}/knotes/resourcelocal.cpp 
-	${CMAKE_SOURCE_DIR}/knotes/resourcelocalconfig.cpp
+set(libkabcommon_SRCS
+  ${CMAKE_SOURCE_DIR}/kaddressbook/common/kabprefs.cpp
+  ${CMAKE_SOURCE_DIR}/kaddressbook/common/locationmap.cpp
+  ${CMAKE_SOURCE_DIR}/kaddressbook/common/filter.cpp
 )
 
-set(libknoteseditor_SRCS  
-	${CMAKE_SOURCE_DIR}/knotes/knoteedit.cpp 
+set(libknotesresources_SRCS
+  ${CMAKE_SOURCE_DIR}/knotes/resourcemanager.cpp
+  ${CMAKE_SOURCE_DIR}/knotes/resourcenotes.cpp
+  ${CMAKE_SOURCE_DIR}/knotes/resourcelocal.cpp
+  ${CMAKE_SOURCE_DIR}/knotes/resourcelocalconfig.cpp
 )
 
-set(libkdgantt_SRCS
-           ${CMAKE_SOURCE_DIR}/kdgantt/KDGanttView.cpp                   
-	   ${CMAKE_SOURCE_DIR}/kdgantt/KDGanttViewEventItem.cpp
-           ${CMAKE_SOURCE_DIR}/kdgantt/KDGanttViewItem.cpp     
-           ${CMAKE_SOURCE_DIR}/kdgantt/KDGanttViewItemDrag.cpp     
-           ${CMAKE_SOURCE_DIR}/kdgantt/KDGanttViewSubwidgets.cpp   
-           ${CMAKE_SOURCE_DIR}/kdgantt/KDGanttViewSummaryItem.cpp  
-           ${CMAKE_SOURCE_DIR}/kdgantt/KDGanttViewTaskItem.cpp     
-           ${CMAKE_SOURCE_DIR}/kdgantt/KDGanttViewTaskLink.cpp     
-           ${CMAKE_SOURCE_DIR}/kdgantt/KDGanttViewTaskLinkGroup.cpp    
-           ${CMAKE_SOURCE_DIR}/kdgantt/KDGanttMinimizeSplitter.cpp     
-           ${CMAKE_SOURCE_DIR}/kdgantt/KDGanttSemiSizingControl.cpp        
-           ${CMAKE_SOURCE_DIR}/kdgantt/KDGanttSizingControl.cpp        
-           ${CMAKE_SOURCE_DIR}/kdgantt/KDGanttXMLTools.cpp         
+set(libknoteseditor_SRCS
+  ${CMAKE_SOURCE_DIR}/knotes/knoteedit.cpp
+)
+
+set(libkdgantt1_SRCS
+  ${CMAKE_SOURCE_DIR}/kdgantt1/KDGanttView.cpp
+  ${CMAKE_SOURCE_DIR}/kdgantt1/KDGanttViewEventItem.cpp
+  ${CMAKE_SOURCE_DIR}/kdgantt1/KDGanttViewItem.cpp
+  ${CMAKE_SOURCE_DIR}/kdgantt1/KDGanttViewItemDrag.cpp
+  ${CMAKE_SOURCE_DIR}/kdgantt1/KDGanttViewSubwidgets.cpp
+  ${CMAKE_SOURCE_DIR}/kdgantt1/KDGanttViewSummaryItem.cpp
+  ${CMAKE_SOURCE_DIR}/kdgantt1/KDGanttViewTaskItem.cpp
+  ${CMAKE_SOURCE_DIR}/kdgantt1/KDGanttViewTaskLink.cpp
+  ${CMAKE_SOURCE_DIR}/kdgantt1/KDGanttViewTaskLinkGroup.cpp
+  ${CMAKE_SOURCE_DIR}/kdgantt1/KDGanttMinimizeSplitter.cpp
+  ${CMAKE_SOURCE_DIR}/kdgantt1/KDGanttSemiSizingControl.cpp
+  ${CMAKE_SOURCE_DIR}/kdgantt1/KDGanttSizingControl.cpp
+  ${CMAKE_SOURCE_DIR}/kdgantt1/KDGanttXMLTools.cpp
 )
 
 
@@ -128,7 +128,7 @@ if (Q_WS_X11)
    macro_optional_add_subdirectory(ktimetracker)
 endif (Q_WS_X11)
 
-add_subdirectory(kdgantt)
+add_subdirectory(kdgantt1)
 MESSAGE(STATUS "Remember to porting kfile-plugins")
 add_subdirectory(kfile-plugins)
 add_subdirectory(kioslave)
