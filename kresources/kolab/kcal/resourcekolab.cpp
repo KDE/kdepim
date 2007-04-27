@@ -579,7 +579,7 @@ bool ResourceKolab::addIncidence( KCal::Incidence* incidence, const QString& _su
       mUidMap[ uid ] = StorageReference( subResource, sernum );
     } else {
       /* This is a real add, from KMail, we didn't trigger this ourselves.
-       * If this uid already exists in this folder, do conflict resolution, 
+       * If this uid already exists in this folder, do conflict resolution,
        * unless the folder is read-only, in which case the user should not be
        * offered a means of putting mails in a folder she'll later be unable to
        * upload. Skip the incidence, in this case. */
@@ -642,7 +642,7 @@ bool ResourceKolab::addEvent( KCal::Event* event )
 void ResourceKolab::addEvent( const QString& xml, const QString& subresource,
                               Q_UINT32 sernum )
 {
-  KCal::Event* event = Kolab::Event::xmlToEvent( xml, mCalendar.timeZoneId() );
+  KCal::Event* event = Kolab::Event::xmlToEvent( xml, mCalendar.timeZoneId(), this, subresource, sernum );
   Q_ASSERT( event );
   if( event ) {
       addIncidence( event, subresource, sernum );
@@ -714,7 +714,7 @@ bool ResourceKolab::addTodo( KCal::Todo* todo )
 void ResourceKolab::addTodo( const QString& xml, const QString& subresource,
                              Q_UINT32 sernum )
 {
-  KCal::Todo* todo = Kolab::Task::xmlToTask( xml, mCalendar.timeZoneId() );
+  KCal::Todo* todo = Kolab::Task::xmlToTask( xml, mCalendar.timeZoneId(), this, subresource, sernum );
   Q_ASSERT( todo );
   if( todo )
       addIncidence( todo, subresource, sernum );

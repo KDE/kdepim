@@ -42,6 +42,7 @@ namespace KCal {
   class Incidence;
   class Recurrence;
   class Attachment;
+  class ResourceKolab;
 }
 
 namespace Kolab {
@@ -75,7 +76,8 @@ public:
     QString delegator;
   };
 
-  explicit Incidence( const QString& tz, KCal::Incidence* incidence = 0 );
+  explicit Incidence( KCal::ResourceKolab *res, const QString &subResource, Q_UINT32 sernum,
+                      const QString& tz, KCal::Incidence* incidence = 0 );
   virtual ~Incidence();
 
   void saveTo( KCal::Incidence* incidence );
@@ -159,6 +161,10 @@ protected:
     QString value;
   };
   QValueList<Custom> mCustomList;
+
+  KCal::ResourceKolab *mResource;
+  QString mSubResource;
+  Q_UINT32 mSernum;
 };
 
 }

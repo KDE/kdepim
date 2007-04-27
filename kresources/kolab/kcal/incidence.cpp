@@ -32,19 +32,27 @@
 */
 
 #include "incidence.h"
+#include "resourcekolab.h"
 
+#include <qfile.h>
 #include <qvaluelist.h>
 
 #include <libkcal/journal.h>
 #include <korganizer/version.h>
 #include <kdebug.h>
+#include <kmdcodec.h>
+#include <kurl.h>
 
 using namespace Kolab;
 
 
-Incidence::Incidence( const QString& tz, KCal::Incidence* incidence )
+Incidence::Incidence( KCal::ResourceKolab *res, const QString &subResource, Q_UINT32 sernum,
+                      const QString& tz, KCal::Incidence* incidence )
   : KolabBase( tz ), mFloatingStatus( Unset ), mHasAlarm( false ),
-    mRevision( 0 )
+    mRevision( 0 ),
+    mResource( res ),
+    mSubResource( subResource ),
+    mSernum( sernum )
 {
   if ( incidence )
     setFields( incidence );
@@ -329,7 +337,20 @@ bool Incidence::loadAttribute( QDomElement& element )
     } else
       return false;
   } else if ( tagName == "inline-attachment" ) {
-    // TODO
+    QString attachmentName = element.text();
+    QByteArray data;
+    KURL url;
+    if ( mResource->kmailGetAttachment( url, mSubResource, mSernum, attachmentName ) && !url.isEmpty() ) {
+      QFile f( url.path() );
+      if ( f.open( IO_ReadOnly ) ) {
+        data = f.readAll();
+        KCal::Attachment *a = new KCal::Attachment( KCodecs::base64Encode( data ).data() );
+        a->setLabel( attachmentName );
+        mAttachments.append( a );
+        f.close();
+      }
+      f.remove();
+    }
   } else if ( tagName == "link-attachment" ) {
     mAttachments.push_back( new KCal::Attachment( element.text() ) );
   } else if ( tagName == "alarm" )
@@ -654,8 +675,8 @@ void Incidence::setFields( const KCal::Incidence* incidence )
     // There is no scheduling ID
     setInternalUID( QString::null );
   } else {
-    // We've internally been using a different uid, so save that as the 
-    // temporary (internal) uid and restore the original uid, the one that 
+    // We've internally been using a different uid, so save that as the
+    // temporary (internal) uid and restore the original uid, the one that
     // is used in the folder and the outside world
     setUid( incidence->schedulingID() );
     setInternalUID( incidence->uid() );
@@ -663,7 +684,7 @@ void Incidence::setFields( const KCal::Incidence* incidence )
 
   if ( incidence->pilotId() != 0 )
     setPilotSyncId( incidence->pilotId() );
-    
+
   setPilotSyncStatus( incidence->syncStatus() );
 
   // Unhandled tags and other custom properties (see libkcal/customproperties.h)
