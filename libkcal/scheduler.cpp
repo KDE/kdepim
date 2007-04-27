@@ -331,7 +331,7 @@ bool Scheduler::acceptReply(IncidenceBase *incidence,ScheduleMessage::Status /* 
           found = true;
         }
       }
-      if ( !found )
+      if ( !found && attIn->status() != Attendee::Declined )
         attendeesNew.append( attIn );
     }
 
