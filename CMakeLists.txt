@@ -119,7 +119,6 @@ if(OPENSYNC_FOUND AND OSENGINE_FOUND)
    macro_optional_add_subdirectory(kitchensync)
 endif(OPENSYNC_FOUND AND OSENGINE_FOUND)
 macro_optional_add_subdirectory(knode)
-add_subdirectory(kabc)
 macro_optional_add_subdirectory(kaddressbook)
 
 macro_optional_add_subdirectory(kalarm)

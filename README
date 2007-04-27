@@ -42,7 +42,6 @@ There is also quite an amount of infrastructure in this package:
                  module (KMail, KNode). This will be merged with libkdepim.
 * mimelib: MIME messages library
 * libkpimexchange: connecting to Exchange2000 servers
-* kabc/frontend: A GUI frontend for libkabc, not intended for end users.
 * kdgantt: alternative lib for Gantt diagrams, used by the free/busy view of
            KOrganizer (yes, we should decide for one of the Gantt libs)
 * kioslaves/sieve: Sieve kioslave
