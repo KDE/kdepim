@@ -158,7 +158,7 @@ QString GraphicsItem::ganttToolTip() const
 {
     // TODO: Make delegate handle this
     const QAbstractItemModel* model = index().model();
-    if ( !model ) return QString::null;
+    if ( !model ) return QString();
     QString tip = model->data( index(), Qt::ToolTipRole ).toString();
     if ( !tip.isNull() ) return tip;
     else return GraphicsScene::tr( "%1 -> %2: %3" )

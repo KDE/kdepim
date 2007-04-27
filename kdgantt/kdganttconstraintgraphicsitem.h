@@ -43,7 +43,7 @@ namespace KDGantt {
         /*reimp*/ int type() const;
         /*reimp (non virtual)*/GraphicsScene* scene() const;
 
-        QString ganttToolTip() const { return QString::null; }
+        QString ganttToolTip() const { return QString(); }
 
         /*reimp*/ QRectF boundingRect() const;
         /*reimp*/ void paint( QPainter* painter, const QStyleOptionGraphicsItem* option,

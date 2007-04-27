@@ -35,7 +35,6 @@
 #include <QGraphicsRectItem>
 #include <QScrollBar>
 #include <QPaintEvent>
-#include <QHeaderView>
 
 #include <QDebug>
 
@@ -407,13 +406,13 @@ QModelIndex View::indexAt( const QPoint& pos ) const
 /*! Render the GanttView inside the rectangle \a target using the painter \a painter.
  * \see KDGantt::GraphicsView::print(QPainter* painter, const QRectF& target,bool drawRowLabels)
  */
-void View::print( QPainter* painter, const QRectF& target, bool drawRowLabels) 
+void View::print( QPainter* painter, const QRectF& target, bool drawRowLabels)
 {
 #if 0
     QRectF targetRect = target;
     if( targetRect.isNull() )
-        targetRect.setRect(0, 0, 
-			   painter->device()->width(), 
+        targetRect.setRect(0, 0,
+			   painter->device()->width(),
 			   painter->device()->height());
 
     QPixmap leftw = QPixmap::grabWidget(d->leftWidget->viewport());
@@ -435,10 +434,10 @@ void View::print( QPainter* painter, const QRectF& target, bool drawRowLabels)
     targetRight.translate( targetLeft.width(),0 );
 
     painter->drawPixmap( targetLeft, leftw, leftw.rect() );
-    d->gfxview.scene()->render( painter, 
+    d->gfxview.scene()->render( painter,
 				targetRight);
 #endif
-    d->gfxview.print( painter, 
+    d->gfxview.print( painter,
 		      target,
 		      drawRowLabels);
 }
@@ -465,7 +464,7 @@ namespace {
 
 KDAB_SCOPED_UNITTEST_SIMPLE( KDGantt, View, "test" ) {
     View view( 0 );
-#if 0 // GUI tests dont work well on the server
+#if 0 // GUI tests do not work well on the server
     QTimer::singleShot( 1000, qApp, SLOT( quit() ) );
     view.show();
 
