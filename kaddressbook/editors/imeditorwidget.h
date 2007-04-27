@@ -3,40 +3,42 @@
 
   Copyright (c) 2004 Will Stephenson   <lists@stevello.free-online.co.uk>
 
-    This program is free software; you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or
-    (at your option) any later version.
+  This program is free software; you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation; either version 2 of the License, or
+  (at your option) any later version.
 
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-    GNU General Public License for more details.
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+  GNU General Public License for more details.
 
-    You should have received a copy of the GNU General Public License
-    along with this program; if not, write to the Free Software
-    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+  You should have received a copy of the GNU General Public License along
+  with this program; if not, write to the Free Software Foundation, Inc.,
+  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 
-    As a special exception, permission is given to link this program
-    with any edition of Qt, and distribute the resulting executable,
-    without including the source code for Qt in the source distribution.
+  As a special exception, permission is given to link this program
+  with any edition of Qt, and distribute the resulting executable,
+  without including the source code for Qt in the source distribution.
 */
 
 #ifndef IMEDITORWIDGET_H
 #define IMEDITORWIDGET_H
-
 
 #include <k3listview.h>
 #include <kdialog.h>
 
 #include "contacteditorwidget.h"
 
-
 class AddressWidget;
 class KPluginInfo;
-class IMEditorBase;
+class Ui_IMEditorBase;
 
-enum IMContext { Any, Home, Work };
+enum IMContext {
+  Any,
+  Home,
+  Work
+};
 
 /* Note regarding Context:
  * It wasn not possible to get an idea of Context into Kopete in time for KDE 3.3,
@@ -52,7 +54,7 @@ class IMEditorWidget : public KDialog
 
   public:
     IMEditorWidget( QWidget *parent, const QString &preferredIM );
-    ~IMEditorWidget() {};
+    ~IMEditorWidget() {}
 
     void loadContact( KABC::Addressee *addr );
     void storeContact( KABC::Addressee *addr );
@@ -83,7 +85,7 @@ class IMEditorWidget : public KDialog
     bool mReadOnly;
     bool mModified;
     QString mPreferred;
-    IMEditorBase *mWidget;
+    Ui_IMEditorBase *mWidget;
     void setModified( bool modified );
 
     // Used to track changed protocols to reduce KABC writes
@@ -115,7 +117,8 @@ class IMAddressLVI : public K3ListViewItem
     bool preferred() const;
 
   protected:
-    virtual void paintCell( QPainter *p, const QColorGroup &cg, int column, int width, int alignment );
+    virtual void paintCell( QPainter *p, const QColorGroup &cg, int column,
+                            int width, int alignment );
 
   private:
     KPluginInfo * mProtocol;

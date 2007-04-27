@@ -3,23 +3,23 @@
 
   Copyright (c) 2004 Will Stephenson   <lists@stevello.free-online.co.uk>
 
-    This program is free software; you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or
-    (at your option) any later version.
+  This program is free software; you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation; either version 2 of the License, or
+  (at your option) any later version.
 
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-    GNU General Public License for more details.
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+  GNU General Public License for more details.
 
-    You should have received a copy of the GNU General Public License
-    along with this program; if not, write to the Free Software
-    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+  You should have received a copy of the GNU General Public License along
+  with this program; if not, write to the Free Software Foundation, Inc.,
+  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 
-    As a special exception, permission is given to link this program
-    with any edition of Qt, and distribute the resulting executable,
-    without including the source code for Qt in the source distribution.
+  As a special exception, permission is given to link this program
+  with any edition of Qt, and distribute the resulting executable,
+  without including the source code for Qt in the source distribution.
 */
 
 #include <q3listview.h>
@@ -27,7 +27,6 @@
 #include <QLayout>
 #include <QFont>
 #include <QPainter>
-//Added by qt3to4:
 #include <QList>
 
 #include <kdialog.h>
@@ -40,9 +39,8 @@
 #include <kservicetypetrader.h>
 
 #include "imaddresswidget.h"
-#include "imeditorbase.h"
+#include "ui_imeditorbase.h"
 #include "imeditorwidget.h"
-
 
 IMAddressLVI::IMAddressLVI( K3ListView *parent, KPluginInfo *protocol,
                             const QString &address, const IMContext &context )
@@ -81,12 +79,12 @@ void IMAddressLVI::setAddress( const QString &address )
   // irc uses 0xE120 to separate the nick and the server group.
   QString serverOrGroup = address.section( QChar( 0xE120 ), 1 );
 
-  if ( serverOrGroup.isEmpty() )
+  if ( serverOrGroup.isEmpty() ) {
     setText( 1, address );
-  else {
+  } else {
     QString nickname = address.section( QChar( 0xE120 ), 0, 0 );
     setText( 1, i18nc( "<nickname> on <server>","%1 on %2" ,
-             nickname, serverOrGroup ) );
+                       nickname, serverOrGroup ) );
   }
 
   mAddress = address;
@@ -97,17 +95,17 @@ void IMAddressLVI::setContext( const IMContext &context )
   mContext = context;
   // set context
 /*  switch ( context )
-  {
-  case Home:
+    {
+    case Home:
     setText( 2, i18n( "Home" ) );
     break;
-  case Work:
+    case Work:
     setText( 2, i18n( "Work" ) );
     break;
-  case Any:
+    case Any:
     setText( 2, i18n( "Any" ) );
     break;
-  }
+    }
 */
 }
 
@@ -142,14 +140,13 @@ void IMAddressLVI::activate()
 /*===========================================================================*/
 
 IMEditorWidget::IMEditorWidget( QWidget *parent, const QString &preferredIM )
-  : KDialog( parent),
-    mReadOnly( false )
+  : KDialog( parent ), mReadOnly( false )
 {
   setCaption( i18n( "Edit Instant Messaging Address" ) );
   setButtons( Help | Ok | Cancel );
   setDefaultButton( Ok );
-  mWidget = new IMEditorBase( this );
-  setMainWidget( mWidget );
+  mWidget = new Ui_IMEditorBase();
+  mWidget->setupUi( this );
 
   connect( mWidget->btnAdd, SIGNAL( clicked() ), SLOT( slotAdd() ) );
   connect( mWidget->btnEdit, SIGNAL( clicked() ), SLOT( slotEdit() ) );
@@ -170,21 +167,25 @@ IMEditorWidget::IMEditorWidget( QWidget *parent, const QString &preferredIM )
   //mWidget->btnDown->setEnabled( false );
   mPreferred = preferredIM;
   mPreferred = mPreferred.replace( " on ", QString( QChar( 0xE120 ) ), Qt::CaseSensitive );
-  mProtocols = KPluginInfo::fromServices( KServiceTypeTrader::self()->query( QString::fromLatin1( "KABC/IMProtocol" ) ) );
+  mProtocols = KPluginInfo::fromServices(
+    KServiceTypeTrader::self()->query( QString::fromLatin1( "KABC/IMProtocol" ) ) );
 
-  // order the protocols by putting them in a qmap, then sorting the set of keys and recreating the list
+  // order the protocols by putting them in a qmap, then sorting
+  // the set of keys and recreating the list
   QMap<QString, KPluginInfo *> protocolMap;
   QList<KPluginInfo *>::ConstIterator it;
   QList<KPluginInfo *> sorted;
-  for ( it = mProtocols.begin(); it != mProtocols.end(); ++it )
-      protocolMap.insert( (*it)->name(), (*it) );
+  for ( it = mProtocols.begin(); it != mProtocols.end(); ++it ) {
+    protocolMap.insert( (*it)->name(), (*it) );
+  }
 
   QStringList keys = protocolMap.keys();
   keys.sort();
   QStringList::ConstIterator keyIt = keys.begin();
   QStringList::ConstIterator end = keys.end();
-  for ( ; keyIt != end; ++keyIt )
-      sorted.append( protocolMap[*keyIt] );
+  for ( ; keyIt != end; ++keyIt ) {
+    sorted.append( protocolMap[*keyIt] );
+  }
   mProtocols = sorted;
 }
 
@@ -195,8 +196,9 @@ QList<KPluginInfo *> IMEditorWidget::availableProtocols() const
 
 void IMEditorWidget::loadContact( KABC::Addressee *addr )
 {
-  if ( mWidget->lvAddresses )
+  if ( mWidget->lvAddresses ) {
     mWidget->lvAddresses->clear();
+  }
 
   // see README for details of how Evolution stores IM addresses (differently)
   const QStringList customs = addr->customs();
@@ -214,20 +216,23 @@ void IMEditorWidget::loadContact( KABC::Addressee *addr )
           QStringList addresses = value.split( QChar( 0xE000 ), QString::SkipEmptyParts );
           QStringList::iterator end = addresses.end();
           for ( QStringList::ConstIterator it = addresses.begin(); it != end; ++it ) {
-            IMAddressLVI *imaddresslvi = new IMAddressLVI( mWidget->lvAddresses, protocol, *it, Any/*, false*/ );
+            IMAddressLVI *imaddresslvi =
+              new IMAddressLVI( mWidget->lvAddresses, protocol, *it, Any/*, false*/ );
             if ( !isSet && (*it).trimmed().toLower() == mPreferred.trimmed().toLower() ) {
               imaddresslvi->setPreferred( true );
               isSet = true;  //Only set one item to be preferred
             }
           }
-        } else
+        } else {
           kDebug( 5720 ) << k_funcinfo << " no protocol found for: " << app << endl;
+        }
       }
     }
   }
 
-  if ( mWidget->lvAddresses->firstChild() )
+  if ( mWidget->lvAddresses->firstChild() ) {
     mWidget->lvAddresses->firstChild()->setSelected( true );
+  }
 }
 
 void IMEditorWidget::storeContact( KABC::Addressee *addr )
@@ -235,21 +240,25 @@ void IMEditorWidget::storeContact( KABC::Addressee *addr )
   // for each changed protocol, write a new custom field containing the current set of
   // addresses
   QList<KPluginInfo *>::ConstIterator protocolIt;
-  for ( protocolIt = mChangedProtocols.begin(); protocolIt != mChangedProtocols.end(); ++protocolIt ) {
+  for ( protocolIt = mChangedProtocols.begin();
+        protocolIt != mChangedProtocols.end(); ++protocolIt ) {
     QStringList lst;
     Q3ListViewItemIterator addressIt( mWidget->lvAddresses );
     while ( addressIt.current() ) {
-      IMAddressLVI* currentAddress = static_cast<IMAddressLVI*>( *addressIt );
-      if ( currentAddress->protocol() == *protocolIt )
+      IMAddressLVI *currentAddress = static_cast<IMAddressLVI*>( *addressIt );
+      if ( currentAddress->protocol() == *protocolIt ) {
         lst.append( currentAddress->address() );
+      }
       ++addressIt;
     }
 
     QString addrBookField = (*protocolIt)->property( "X-KDE-InstantMessagingKABCField" ).toString();
-    if ( !lst.isEmpty() )
-      addr->insertCustom( addrBookField, QString::fromLatin1( "All" ), lst.join( QString( 0xE000 ) ) );
-    else
+    if ( !lst.isEmpty() ) {
+      addr->insertCustom( addrBookField, QString::fromLatin1( "All" ),
+                          lst.join( QString( 0xE000 ) ) );
+    } else {
       addr->removeCustom( addrBookField, QString::fromLatin1( "All" ) );
+    }
   }
 }
 
@@ -270,9 +279,9 @@ void IMEditorWidget::slotSetStandard()
       IMAddressLVI *item = static_cast<IMAddressLVI*>( it2.current() );
 
       if ( item->preferred() ) {
-        if ( current == item )
+        if ( current == item ) {
           return; //Selected is already preferred
-        else {
+        } else {
           item->setPreferred( false );
           mWidget->lvAddresses->repaintItem( item );
           break;
@@ -295,8 +304,9 @@ void IMEditorWidget::slotUpdateButtons()
   Q3ListViewItemIterator it( mWidget->lvAddresses, Q3ListViewItemIterator::Selected );
   while ( it.current() ) {
     ++num_selected;
-    if ( num_selected > 1 )
+    if ( num_selected > 1 ) {
       break; //no need to count above 2.
+    }
 
     ++it;
   }
@@ -334,9 +344,9 @@ bool IMEditorWidget::isModified() const
 
 void IMEditorWidget::slotAdd()
 {
-  KDialog addDialog( this);
+  KDialog addDialog( this );
   addDialog.setCaption( i18nc( "Instant messaging", "Add Address" ) );
-  addDialog.setButtons(  KDialog::Ok | KDialog::Cancel );
+  addDialog.setButtons( KDialog::Ok | KDialog::Cancel );
   addDialog.setDefaultButton( KDialog::Ok );
   addDialog.setObjectName( "addaddress" );
 
@@ -348,8 +358,9 @@ void IMEditorWidget::slotAdd()
 
   if ( addDialog.exec() == QDialog::Accepted ) {
     // add the new item
-    IMAddressLVI *imaddresslvi = new IMAddressLVI( mWidget->lvAddresses, addressWid->protocol(),
-                                                   addressWid->address() /*, addressWid->context() */ );
+    IMAddressLVI *imaddresslvi =
+      new IMAddressLVI( mWidget->lvAddresses, addressWid->protocol(),
+                        addressWid->address() /*, addressWid->context() */ );
 
     // If it's a new address, set is as preferred.
     if ( mPreferred.isEmpty() ) {
@@ -357,8 +368,9 @@ void IMEditorWidget::slotAdd()
       mPreferred = addressWid->address();
     }
 
-    if ( !mChangedProtocols.contains( addressWid->protocol() )  )
+    if ( !mChangedProtocols.contains( addressWid->protocol() )  ) {
       mChangedProtocols.append( addressWid->protocol() );
+    }
 
     mWidget->lvAddresses->sort();
 
@@ -372,7 +384,7 @@ void IMEditorWidget::slotEdit()
 
   // Just edit the first one selected.
   if ( IMAddressLVI *current = static_cast<IMAddressLVI*>( it.current() ) ) {
-    KDialog editDialog( this);
+    KDialog editDialog( this );
     editDialog.setCaption( i18nc( "Instant messaging", "Edit Address" ) );
     editDialog.setButtons( KDialog::Ok | KDialog::Cancel );
     editDialog.setDefaultButton( KDialog::Ok );
@@ -403,12 +415,14 @@ void IMEditorWidget::slotEdit()
         modified = true;
         // this proto is losing an entry
         current->setProtocol( addressWid->protocol() );
-        if ( !mChangedProtocols.contains( current->protocol() )  )
+        if ( !mChangedProtocols.contains( current->protocol() ) ) {
           mChangedProtocols.append( current->protocol() );
+        }
       }
 
-      if ( modified )
-        setModified(true);
+      if ( modified ) {
+        setModified( true );
+      }
     }
   }
 }
@@ -425,29 +439,36 @@ void IMEditorWidget::slotDelete()
     }
   }
 
-  if ( num_selected == 0 )
+  if ( num_selected == 0 ) {
     return;
+  }
 
-  if ( KMessageBox::warningContinueCancel( this, i18ncp( "Instant messaging",
-                                           "Do you really want to delete the selected address?",
-                                           "Do you really want to delete the %1 selected addresses?", num_selected ),
-                                           i18n( "Confirm Delete" ), KStandardGuiItem::del() ) != KMessageBox::Continue )
+  if ( KMessageBox::warningContinueCancel(
+         this,
+         i18ncp( "Instant messaging",
+                 "Do you really want to delete the selected address?",
+                 "Do you really want to delete the %1 selected addresses?", num_selected ),
+         i18n( "Confirm Delete" ), KStandardGuiItem::del() ) != KMessageBox::Continue ) {
     return;
+  }
 
   Q3ListViewItemIterator it( mWidget->lvAddresses );
   bool deletedPreferred = false;
-  while( it.current() ) {
+  while ( it.current() ) {
     if ( it.current()->isSelected() ) {
       IMAddressLVI * current = static_cast<IMAddressLVI*>( *it );
-      if ( !mChangedProtocols.contains( current->protocol() )  )
+      if ( !mChangedProtocols.contains( current->protocol() )  ) {
         mChangedProtocols.append( current->protocol() );
+      }
 
-      if ( current->preferred() )
+      if ( current->preferred() ) {
         deletedPreferred = true;
+      }
 
       delete current;
-    } else
+    } else {
       ++it;
+    }
   }
 
   if ( deletedPreferred ) {
@@ -455,8 +476,9 @@ void IMEditorWidget::slotDelete()
     if ( first ) {
       first->setPreferred( true );
       mPreferred = first->address();
-    } else
+    } else {
       mPreferred = "";
+    }
   }
 
   setModified( true );
@@ -467,7 +489,6 @@ QString IMEditorWidget::preferred() const
   QString retval( mPreferred );
   return retval.replace( QChar( 0xE120 ), " on " );
 }
-
 
 KPluginInfo * IMEditorWidget::protocolFromString( const QString &fieldValue ) const
 {

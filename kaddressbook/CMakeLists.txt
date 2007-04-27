@@ -67,9 +67,9 @@ set(libkabim_SRCS
 	${CMAKE_CURRENT_SOURCE_DIR}/editors/imaddresswidget.cpp
 )
 
-kde4_add_ui3_files(libkabim_SRCS
+kde4_add_ui_files(libkabim_SRCS
 	${CMAKE_CURRENT_SOURCE_DIR}/editors/imeditorbase.ui
-    ${CMAKE_CURRENT_SOURCE_DIR}/editors/imaddressbase.ui
+        ${CMAKE_CURRENT_SOURCE_DIR}/editors/imaddressbase.ui
 )
 
 
