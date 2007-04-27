@@ -56,9 +56,9 @@ void HeaderWidget::scrollTo( int v )
 {
     qreal old = m_offset;
     m_offset = v;
-	// QWidget::scroll() wont work properly for me on Mac§
+    // QWidget::scroll() wont work properly for me on Mac
     //scroll( static_cast<int>( old-v ), 0 );
-	update();
+    update();
 }
 
 void HeaderWidget::paintEvent( QPaintEvent* ev )
