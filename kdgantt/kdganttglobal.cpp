@@ -24,8 +24,6 @@
  **********************************************************************/
 #include "kdganttglobal.h"
 
-#include "unittest/test.h"
-
 using namespace KDGantt;
 
 /*!\enum KDGantt::ItemDataRole
@@ -136,6 +134,7 @@ QDebug operator<<( QDebug dbg, const KDGantt::DateTimeSpan& s )
 #endif /* QT_NO_DEBUG_STREAM */
 
 #ifndef KDAB_NO_UNIT_TESTS
+#include "unittest/test.h"
 
 namespace {
     std::ostream& operator<<( std::ostream& os, const Span& span )

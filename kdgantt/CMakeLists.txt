@@ -1,6 +1,4 @@
-project(kdgantt)
-
-# Those paths need to be absolute since this variable is used in other CMakeLists.txt files
+# Those paths need to be absolute since this file is included from other CMakeLists.txt files
 set(libkdgantt_SRCS
   ${CMAKE_SOURCE_DIR}/kdgantt/kdganttglobal.cpp
   ${CMAKE_SOURCE_DIR}/kdgantt/kdganttview.cpp
@@ -22,3 +20,29 @@ set(libkdgantt_SRCS
   ${CMAKE_SOURCE_DIR}/kdgantt/kdganttabstractgrid.cpp
   ${CMAKE_SOURCE_DIR}/kdgantt/kdganttdatetimegrid.cpp
 )
+
+add_definitions(-DKDAB_NO_UNIT_TESTS)
+
+# Generate moc_foo.cpp files since that's what the cpp files include (it works automatically with qmake, this way...)
+# List of source files generated with "grep -l moc_ *.cpp | sed -e 's/\.cpp$//'"
+# Plus kdganttgraphicsview_p
+set(libkdgantt_mocable_files
+  kdganttabstractgrid
+  kdganttconstraintmodel
+  kdganttconstraintproxy
+  kdganttdatetimegrid
+  kdganttforwardingproxymodel
+  kdganttgraphicsscene
+  kdganttgraphicsview
+  kdganttitemdelegate
+  kdganttproxymodel
+  kdganttsummaryhandlingproxymodel
+  kdganttview
+)
+foreach(it ${libkdgantt_mocable_files})
+  qt4_generate_moc(${CMAKE_SOURCE_DIR}/kdgantt/${it}.h ${CMAKE_BINARY_DIR}/kdgantt/moc_${it}.cpp)
+  macro_add_file_dependencies(${CMAKE_SOURCE_DIR}/kdgantt/${it}.cpp ${CMAKE_BINARY_DIR}/kdgantt/moc_${it}.cpp)
+endforeach(it)
+
+qt4_generate_moc(${CMAKE_SOURCE_DIR}/kdgantt/kdganttgraphicsview_p.h ${CMAKE_BINARY_DIR}/kdgantt/moc_kdganttgraphicsview_p.cpp)
+macro_add_file_dependencies(${CMAKE_SOURCE_DIR}/kdgantt/kdganttgraphicsview.cpp ${CMAKE_BINARY_DIR}/kdgantt/moc_kdganttgraphicsview_p.cpp)
