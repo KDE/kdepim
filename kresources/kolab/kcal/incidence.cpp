@@ -42,6 +42,7 @@
 #include <kdebug.h>
 #include <kmdcodec.h>
 #include <kurl.h>
+#include <kio/netaccess.h>
 
 using namespace Kolab;
 
@@ -344,7 +345,8 @@ bool Incidence::loadAttribute( QDomElement& element )
       QFile f( url.path() );
       if ( f.open( IO_ReadOnly ) ) {
         data = f.readAll();
-        KCal::Attachment *a = new KCal::Attachment( KCodecs::base64Encode( data ).data() );
+        QString mimeType = KIO::NetAccess::mimetype( url, 0 );
+        KCal::Attachment *a = new KCal::Attachment( KCodecs::base64Encode( data ).data(), mimeType );
         a->setLabel( attachmentName );
         mAttachments.append( a );
         f.close();
