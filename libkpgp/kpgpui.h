@@ -83,7 +83,7 @@ class KPGP_EXPORT Config : public QWidget
 
     virtual void setValues();
     virtual void applySettings();
-    QGroupBox* optionsGroupBox() { return mpOptionsGroupBox; };
+    QGroupBox* optionsGroupBox() { return mpOptionsGroupBox; }
   signals:
     void changed();
 
@@ -128,14 +128,14 @@ class KPGP_EXPORT KeySelectionDialog: public KeySelectionDialogSuper
 
     /** Returns a list of selected key IDs. */
     virtual KeyIDList keys() const
-      { return mKeyIds; };
+      { return mKeyIds; }
 
     virtual bool rememberSelection() const
       { if( mRememberCB )
           return mRememberCB->isChecked();
         else
           return false;
-      };
+      }
 
   protected slots:
     virtual void slotRereadKeys();
@@ -298,14 +298,14 @@ class KPGP_EXPORT KeyApprovalDialog: public KDialog
                        const QVector<KeyIDList>&,
                        const int allowedKeys,
                        QWidget *parent = 0 );
-    virtual ~KeyApprovalDialog() {};
+    virtual ~KeyApprovalDialog() {}
 
-    QVector<KeyIDList> keys() const { return mKeys; };
+    QVector<KeyIDList> keys() const { return mKeys; }
 
     bool preferencesChanged() const { return mPrefsChanged; }
 
   protected slots:
-    void slotPrefsChanged( int ) { mPrefsChanged = true; };
+    void slotPrefsChanged( int ) { mPrefsChanged = true; }
     void slotChangeEncryptionKey( int );
     virtual void slotOk();
     virtual void slotCancel();
@@ -330,7 +330,7 @@ class KPGP_EXPORT CipherTextDialog: public KDialog
   public:
     CipherTextDialog( const QByteArray & text, const QByteArray & charset=0,
                       QWidget *parent=0 );
-    virtual ~CipherTextDialog() {};
+    virtual ~CipherTextDialog() {}
 
   private:
     void setMinimumSize();

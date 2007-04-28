@@ -204,7 +204,7 @@ protected:
   virtual void createDefaultIdentity( QString& /*fullName*/, QString& /*emailAddress*/ ) {}
 
 protected slots:
-  void slotRollback() { rollback(); };
+  void slotRollback() { rollback(); }
 
 protected:
   /** The list that will be seen by everyone */

@@ -87,7 +87,7 @@ class UserID
              const Validity validity = KPGP_VALIDITY_UNKNOWN,
              const bool revoked = false,
              const bool invalid = false);
-  ~UserID() {};
+  ~UserID() {}
   
   /** Returns the text of the user id. */
   QString text() const;
@@ -189,7 +189,7 @@ class Subkey
  public:
   /** Constructs a new subkey with the given key ID. */
   Subkey(const KeyID& keyID, const bool secret = false);
-  ~Subkey() {};
+  ~Subkey() {}
 
   /** Returns true if the subkey is a secret subkey. */
   bool secret() const;
