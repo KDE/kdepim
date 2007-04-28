@@ -421,7 +421,7 @@ void TaskView::stopAllTimersAt(QDateTime qdt)
 // stops all timers for the time qdt. This makes sense, if the idletimedetector detected
 // the last work has been done 50 minutes ago.
 {
-  kdDebug(5970) << "Entering TaskView::stopAllTimersAt" << endl;
+  kdDebug(5970) << "Entering TaskView::stopAllTimersAt " << qdt << endl;
   for ( unsigned int i = 0; i < activeTasks.count(); i++ )
   {
     activeTasks.at(i)->setRunning(false, _storage, qdt, qdt);

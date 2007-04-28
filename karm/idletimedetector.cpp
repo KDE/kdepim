@@ -81,6 +81,7 @@ void IdleTimeDetector::informOverrun(int idleMinutes)
     // Revert And Stop
     kdDebug(5970) << "Now it is " << KGlobal::locale()->formatTime(QDateTime::currentDateTime().time()).ascii() << endl;
     kdDebug(5970) << "Reverting timer to " << KGlobal::locale()->formatTime(idleStart.time()).ascii() << endl;
+    emit(extractTime(idleMinutes+diff)); // we need to subtract the time that has been added during idleness.
     emit(stopAllTimersAt(idleStart));
   }
   else if (id == 1) {
