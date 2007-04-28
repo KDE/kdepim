@@ -59,8 +59,7 @@ void IdleTimeDetector::setMaxIdle(int maxIdle)
 void IdleTimeDetector::informOverrun(int idleMinutes)
 {
   if (!_overAllIdleDetect)
-    return; // In the preferences the user has indicated that he do not
-            // want idle detection.
+    return; // preferences say the user does not want idle detection.
 
   _timer->stop();
 
@@ -77,19 +76,22 @@ void IdleTimeDetector::informOverrun(int idleMinutes)
   QDateTime end = QDateTime::currentDateTime();
   int diff = start.secsTo(end)/secsPerMinute;
 
-  if (id == 0) {
+  if (id == 0) 
+  {
     // Revert And Stop
-    kdDebug(5970) << "Now it is " << KGlobal::locale()->formatTime(QDateTime::currentDateTime().time()).ascii() << endl;
+    kdDebug(5970) << "Now it is " << QDateTime::currentDateTime() << endl;
     kdDebug(5970) << "Reverting timer to " << KGlobal::locale()->formatTime(idleStart.time()).ascii() << endl;
     emit(extractTime(idleMinutes+diff)); // we need to subtract the time that has been added during idleness.
     emit(stopAllTimersAt(idleStart));
   }
-  else if (id == 1) {
+  else if (id == 1) 
+  {
     // Revert and Continue
     emit(extractTime(idleMinutes+diff));
     _timer->start(testInterval);
   }
-  else {
+  else 
+  {
     // Continue
     _timer->start(testInterval);
   }
