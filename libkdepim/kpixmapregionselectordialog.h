@@ -63,7 +63,7 @@ public:
     * parameters can be set by using it.
     */
    KPIM::KPixmapRegionSelectorWidget *pixmapRegionSelectorWidget() const
-      { return m_pixmapSelectorWidget; };
+      { return m_pixmapSelectorWidget; }
 
    /**
     * Creates a modal dialog, lets the user to select a region of the @p pixmap

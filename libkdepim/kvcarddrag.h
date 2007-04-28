@@ -50,7 +50,7 @@ class KDE_EXPORT KVCardDrag : public QStoredDrag
      * Constructs a vcard drag with the @p addressee.
      */
     KVCardDrag( const QString &content, QWidget *dragsource = 0, const char *name = 0 );
-    virtual ~KVCardDrag() {};
+    virtual ~KVCardDrag() {}
 
     /**
      * Sets the vcard of the drag to @p content.

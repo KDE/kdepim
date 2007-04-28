@@ -72,7 +72,7 @@ class LdapServer
     void setSizeLimit( int sizelimit ) { mSizeLimit = sizelimit; }
     void setVersion( int version ) { mVersion = version; }
     void setSecurity( int security ) { mSecurity = security; } //0-No, 1-TLS, 2-SSL - KDE4: add an enum to Lda
-    void setAuth( int auth ) { mAuth = auth; }; //0-Anonymous, 1-simple, 2-SASL - KDE4: add an enum to LdapCon
+    void setAuth( int auth ) { mAuth = auth; } //0-Anonymous, 1-simple, 2-SASL - KDE4: add an enum to LdapCon
     void setMech( const QString &mech ) { mMech = mech; }
 
   private:

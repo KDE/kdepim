@@ -80,7 +80,7 @@ class KDE_EXPORT KPimPrefs : public KConfigSkeleton
     QStringList mCustomCategories;
   
   protected:
-    virtual void setCategoryDefaults() {};
+    virtual void setCategoryDefaults() {}
 };
 
 #endif
