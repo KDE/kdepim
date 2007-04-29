@@ -162,4 +162,7 @@ add_subdirectory(cmake)
 #mailtransport move to kdepimlibs is not complete.
 add_subdirectory(mailtransport)
 
+# maildir access library
+add_subdirectory(maildir)
+
 macro_display_feature_log()
