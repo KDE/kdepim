@@ -68,7 +68,7 @@ QDateTime DateTimeGrid::Private::chartXtoDateTime( qreal x ) const
     int days = static_cast<int>( x/dayWidth );
     qreal secs = x*( 24.*60.*60. )/dayWidth;
     QDateTime dt = startDateTime;
-    QDateTime result = dt.addDays( days ).addSecs( static_cast<int>(secs-(days*24.*60.*60.) ) );
+    QDateTime result = dt.addDays( days ).addSecs( qRound(secs-(days*24.*60.*60.) ) );
     return result;
 }
 
@@ -239,8 +239,8 @@ void DateTimeGrid::paintGrid( QPainter* painter,
         pen.setBrush( QApplication::palette().dark() );
         pen.setStyle( Qt::DashLine );
         painter->setPen( pen );
-        QModelIndex idx = rowController->indexAt( exposedRect.top() );
-        int y = 0;
+        QModelIndex idx = rowController->indexAt( qRound( exposedRect.top() ) );
+        qreal y = 0;
         while ( y < exposedRect.bottom() && idx.isValid() ) {
             const Span s = rowController->rowGeometry( idx );
             y = s.start()+s.length();
