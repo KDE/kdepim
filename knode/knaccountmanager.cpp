@@ -252,7 +252,7 @@ KWallet::Wallet* KNAccountManager::wallet()
     mWallet = Wallet::openWallet( Wallet::NetworkWallet(),
                                   knGlobals.topWidget->topLevelWidget()->winId() );
   else
-    mWallet = Wallet::openWallet( Wallet::NetworkWallet() );
+    mWallet = Wallet::openWallet( Wallet::NetworkWallet(), 0 );
 
   if ( !mWallet ) {
     mWalletOpenFailed = true;
