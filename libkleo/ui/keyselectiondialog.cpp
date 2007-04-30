@@ -56,7 +56,7 @@
 #include <kglobal.h>
 #include <kiconloader.h>
 #include <kdebug.h>
-#include <kwm.h>
+#include <kwindowsystem.h>
 #include <kconfig.h>
 #include <kmessagebox.h>
 #include <k3process.h>
@@ -351,7 +351,7 @@ void Kleo::KeySelectionDialog::init( bool rememberChoice, bool extendedSelection
   if ( qApp ) {
     int iconSize = IconSize(K3Icon::Desktop);
     int miniSize = IconSize(K3Icon::Small);
-    KWM::setIcons( winId(), qApp->windowIcon().pixmap(iconSize, iconSize),
+    KWindowSystem::setIcons( winId(), qApp->windowIcon().pixmap(iconSize, iconSize),
                              qApp->windowIcon().pixmap(miniSize, miniSize) );
 
     KConfigGroup dialogConfig( KGlobal::config(), "Key Selection Dialog" );

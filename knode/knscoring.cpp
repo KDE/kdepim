@@ -14,7 +14,7 @@
 
 #include <QString>
 
-#include <kwm.h>
+#include <kwindowsystem.h>
 #include <kscoringeditor.h>
 
 #include "knscoring.h"
@@ -135,7 +135,7 @@ void KNScoringManager::configure()
   if (dlg) {
     dlg->show();
 #ifdef Q_OS_UNIX    
-    KWM::activateWindow(dlg->winId());
+    KWindowSystem::activateWindow(dlg->winId());
 #endif    
   }
 }

@@ -13,7 +13,7 @@
     Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, US
 */
 
-#include <kwm.h>
+#include <kwindowsystem.h>
 
 #include <kstandardaction.h>
 #include <kconfig.h>
@@ -65,7 +65,7 @@ bool ArticleWindow::raiseWindowForArticle( KNArticle *art )
   for ( ArticleWindow::List::Iterator it = mInstances.begin(); it != mInstances.end(); ++it )
     if ( (*it)->mArticleWidget->article() && (*it)->mArticleWidget->article() == art ) {
 #ifdef Q_OS_UNIX
-      KWM::activateWindow( (*it)->winId() );
+      KWindowSystem::activateWindow( (*it)->winId() );
 #endif
       return true;
     }
@@ -79,7 +79,7 @@ bool ArticleWindow::raiseWindowForArticle( const QByteArray &mid )
     if ( (*it)->mArticleWidget->article() &&
            (*it)->mArticleWidget->article()->messageID()->as7BitString( false ) == mid ) {
 #ifdef Q_OS_UNIX
-      KWM::activateWindow( (*it)->winId() );
+      KWindowSystem::activateWindow( (*it)->winId() );
 #endif
       return true;
     }

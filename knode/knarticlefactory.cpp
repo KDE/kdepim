@@ -21,7 +21,7 @@
 #include <kiconloader.h>
 #include <klocale.h>
 #include <kmessagebox.h>
-#include <kwm.h>
+#include <kwindowsystem.h>
 #include <ktoolinvocation.h>
 #include <kvbox.h>
 
@@ -571,7 +571,7 @@ void KNArticleFactory::edit(KNLocalArticle *a)
   KNComposer *com=findComposer(a);
   if(com) {
 #ifdef Q_OS_UNIX
-    KWM::activateWindow(com->winId());
+    KWindowSystem::activateWindow(com->winId());
 #endif
     return;
   }
@@ -1064,7 +1064,7 @@ void KNArticleFactory::slotComposerDone(KNComposer *com)
   }
 #ifdef Q_OS_UNIX
   else
-    KWM::activateWindow(com->winId());
+    KWindowSystem::activateWindow(com->winId());
 #endif
 }
 
