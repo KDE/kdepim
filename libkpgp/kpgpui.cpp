@@ -1025,7 +1025,7 @@ bool KeySelectionDialog::checkKeys( const QList<Q3ListViewItem*>& keys ) const
        it != keys.end();
        ++it ) {
     kDebug(5100) << "Checking key 0x" << getKeyId( *it ) << "...\n";
-    pProgressDlg->setLabel( i18n("Checking key 0x%1...",
+    pProgressDlg->setLabelText( i18n("Checking key 0x%1...",
                               QString::fromAscii( getKeyId( *it ) ) ) );
     qApp->processEvents();
     keysAllowed = keysAllowed && ( -1 != keyAdmissibility( *it, AllowExpensiveTrustCheck ) );
