@@ -285,7 +285,7 @@ static gn_error read_phone_entries( const char *memtypestr, gn_memory_type memty
   QString s, country;
 
   progress->setMaximum(memstat.used);
-  m_progressDlg->setLabel(i18n("<qt>Importing <b>%1</b> contacts from <b>%2</b> of the Mobile Phone.<br><br>%3</qt>",
+  m_progressDlg->setLabelText(i18n("<qt>Importing <b>%1</b> contacts from <b>%2</b> of the Mobile Phone.<br><br>%3</qt>",
 		 memstat.used,
 		 buildMemoryTypeString(memtype),
 		 buildPhoneInfoString(memstat)) );
@@ -792,7 +792,7 @@ bool GNOKIIXXPort::exportContacts( const KABC::AddresseeList &list, const QStrin
 	entries_written = 0;
 	progress->setValue(entries_written);
 	m_progressDlg->setButtonText(i18n("&Stop Export"));
-	m_progressDlg->setLabel(i18n("<qt>Exporting <b>%1</b> contacts to the <b>%2</b> "
+	m_progressDlg->setLabelText(i18n("<qt>Exporting <b>%1</b> contacts to the <b>%2</b> "
 			"of the Mobile Phone.<br><br>%3</qt>",
 		 list.count(),
 		 buildMemoryTypeString(memtype),
@@ -858,7 +858,7 @@ try_next_phone_entry:
 		if (m_progressDlg->wasCancelled())
 			break;
 		if (!deleteLabelInitialized) {
-			m_progressDlg->setLabel(
+			m_progressDlg->setLabelText(
 				i18n("<qt><center>"
 				     "All selected contacts have been successfully copied to "
 				     "the Mobile Phone.<br><br>"
@@ -884,7 +884,7 @@ try_next_phone_entry:
 	}
 
 finish:
-	m_progressDlg->setLabel(i18n("Export to phone finished."));
+	m_progressDlg->setLabelText(i18n("Export to phone finished."));
 	this_filter->processEvents();
 
 	GNOKII_DEBUG("GNOKII export filter finished.\n");

@@ -173,7 +173,7 @@ KABC::AddresseeList CSVImportDialog::contacts() const
   KProgressDialog progressDialog( mPage );
   progressDialog.setAutoClose( true );
   progressDialog.progressBar()->setMaximum( mTable->numRows() );
-  progressDialog.setLabel( i18n( "Importing contacts" ) );
+  progressDialog.setLabelText( i18n( "Importing contacts" ) );
   progressDialog.show();
 
   kapp->processEvents();
