@@ -164,7 +164,7 @@ ${CMAKE_SOURCE_DIR}/libkdepim/interfaces/org.kde.addressbook.service.xml kaddres
 
 kde4_add_library(kaddressbook SHARED ${kaddressbook_LIB_SRCS})
 
-target_link_libraries(kaddressbook  ${KDE4_SYNDICATION_LIBS} kdepim ${KDE4_KCAL_LIBS} kabc_file_core ${KDE4_KDEPRINT_LIBS} ${KDE4_KUTILS_LIBS} ${KDE4_PHONONCORE_LIBS} )
+target_link_libraries(kaddressbook  ${KDE4_SYNDICATION_LIBS} kdepim ${KDE4_KCAL_LIBS} kabc_file_core ${KDE4_KDEPRINT_LIBS} ${KDE4_KUTILS_LIBS} ${KDE4_PHONON_LIBS} )
 
 set_target_properties(kaddressbook PROPERTIES VERSION 1.0.0 SOVERSION 1 )
 install(TARGETS kaddressbook  DESTINATION ${LIB_INSTALL_DIR})
