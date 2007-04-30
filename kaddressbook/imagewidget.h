@@ -45,7 +45,6 @@ class QCheckBox;
 namespace Syndication {
 class Loader;
 class Feed;
-typedef SharedPtr<Feed> FeedPtr;
 }
 
 /**
