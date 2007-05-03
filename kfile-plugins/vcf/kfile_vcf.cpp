@@ -18,19 +18,17 @@
  */
 
 #include <kdebug.h>
-#include <config.h>
 #include "kfile_vcf.h"
+#include <kdefakes.h>
 
-#include <kprocess.h>
+#include <k3process.h>
 #include <klocale.h>
 #include <kgenericfactory.h>
 #include <kstringvalidator.h>
 
-#include <qdict.h>
-#include <qvalidator.h>
-#include <qcstring.h>
-#include <qfile.h>
-#include <qdatetime.h>
+#include <QValidator>
+#include <QFile>
+#include <QDateTime>
 
 #if !defined(__osf__)
 #include <inttypes.h>
@@ -42,12 +40,11 @@ typedef KGenericFactory<KVcfPlugin> VcfFactory;
 
 K_EXPORT_COMPONENT_FACTORY(kfile_vcf, VcfFactory( "kfile_vcf" ))
 
-KVcfPlugin::KVcfPlugin(QObject *parent, const char *name,
-                       const QStringList &args)
+KVcfPlugin::KVcfPlugin(QObject *parent, const QStringList &args)
 
-    : KFilePlugin(parent, name, args)
+    : KFilePlugin(parent, args)
 {
-    KFileMimeTypeInfo* info = addMimeTypeInfo( "text/x-vcard" );
+    KFileMimeTypeInfo* info = addMimeTypeInfo( "text/directory" );
 
     KFileMimeTypeInfo::GroupInfo* group = 0L;
 
@@ -66,9 +63,9 @@ bool KVcfPlugin::readInfo( KFileMetaInfo& info, uint /*what*/ )
 
     QFile file(info.path());
 
-    if (!file.open(IO_ReadOnly))
+    if (!file.open(QIODevice::ReadOnly))
     {
-        kdDebug(7034) << "Couldn't open " << QFile::encodeName(info.path()) << endl;
+        kDebug(7034) << "Couldn't open " << QFile::encodeName(info.path()) << endl;
         return false;
     }
 
