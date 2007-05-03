@@ -1953,10 +1953,10 @@ The option is enabled by default. To disable the feature, add a line reading (un
 <term><guilabel>ForwardingInlineByDefault</guilabel></term>
 <listitem>
 <para>
-Setting this value to true will set Forward->Inline as the top menu item in the context menu.
-Otherwise Forward->As Attachment will be at the top.
+This option allows you to make inline forwarding the default forwarding method instead
+of forwarding as attachement.
 
-The option is enabled by default. To disable the feature, add a line reading (under [Composer] section):
+To enable the feature, add a line reading (under [Composer] section):
 </para>
 <programlisting>ForwardingInlineByDefault=true
 </programlisting>
