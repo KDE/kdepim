@@ -97,7 +97,7 @@ void FilterMBox::import(FilterInfo *info)
                         x_status_flag = seperate;
                         x_status_flag.remove("X-Status: ");
                         x_status_flag = x_status_flag.trimmed();
-                        // qDebug("x_status_flag: %s", x_status_flag.latin1() );
+                        // qDebug("x_status_flag: %s", x_status_flag.toLatin1() );
                     }
 
                     // workaround to fix hang if a corrupted mbox contains some

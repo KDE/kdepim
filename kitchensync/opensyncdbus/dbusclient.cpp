@@ -49,10 +49,10 @@ bool OpenSyncService::handleMethodCall( const QDBusMessage &message )
 {
   qDebug( "OpenSyncService::handleMethodCall()" );
 
-  qDebug( "  Interface: %s", message.interface().latin1() );
-  qDebug( "  Path: %s", message.path().latin1() );
-  qDebug( "  Member: %s", message.member().latin1() );
-  qDebug( "  Sender: %s", message.sender().latin1() );
+  qDebug( "  Interface: %s", message.interface().toLatin1() );
+  qDebug( "  Path: %s", message.path().toLatin1() );
+  qDebug( "  Member: %s", message.member().toLatin1() );
+  qDebug( "  Sender: %s", message.sender().toLatin1() );
 
   if ( message.interface() != "org.opensync.SyncEngine" ) return false;
 

@@ -2960,7 +2960,7 @@ void KDGanttViewItem::moveTextCanvas(int x, int y)
         mx -= 2*myItemSize; // keep old behaviour
         
     mTextCanvas->move(mx+2*myItemSize,my-myItemSize/2);
-    //qDebug("%s: moveTextCanvas(%d,%d) offset: %d,%d moved to  %d,%d",listViewText(0).latin1(),x,y,myTextOffset.x(),myTextOffset.y(),mx+2*myItemSize,my-myItemSize/2);
+    //qDebug("%s: moveTextCanvas(%d,%d) offset: %d,%d moved to  %d,%d",listViewText(0).toLatin1(),x,y,myTextOffset.x(),myTextOffset.y(),mx+2*myItemSize,my-myItemSize/2);
 }
 
 void KDGanttViewItem::moveTextCanvas() 
@@ -2974,7 +2974,7 @@ void KDGanttViewItem::moveTextCanvas()
  */
 void KDGanttViewItem::setTextOffset(QPoint p) 
 {
-    //qDebug("%s: setTextOffset() offset: %d,%d",listViewText(0).latin1(),p.x(),p.y());
+    //qDebug("%s: setTextOffset() offset: %d,%d",listViewText(0).toLatin1(),p.x(),p.y());
     myTextOffset.setX(p.x());
     myTextOffset.setY(p.y());
 }

@@ -308,9 +308,6 @@ const Identity & IdentityManager::identityForAddress( const QString & addresses 
   for ( ConstIterator it = begin() ; it != end() ; ++it ) {
     for( QStringList::ConstIterator addrIt = addressList.begin();
          addrIt != addressList.end(); ++addrIt ) {
-      // I use QString::utf8() instead of QString::latin1() because I want
-      // a QCString and not a char*. It doesn't matter because emailAddr()
-      // returns a 7-bit string.
       if( (*it).emailAddr().toLower() ==
           KPIMUtils::extractEmailAddress( *addrIt ).toLower() ) {
         return (*it);
