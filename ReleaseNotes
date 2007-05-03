@@ -22,6 +22,8 @@ Misc
 -------
 * Fix crash in cachedimap mailcheck after modifying a cachedimap account
 * Fix order of libs so that kdepim proko2 (in its own prefix) can be used in parallel with another version of kdepim in /usr
+* prokde W1-16: when exporting a secret key to a .p12 file, allow the user to select the encoding (charset) of the passphrase in the p12 file. This is only available if gpgsm is >= 2.0.4 (newer than even kubuntu feisty).
+
 
 Changes since Proko2 2.1.5 up to Proko2 2.1.6 (released 2.2.2007)
 Features:
