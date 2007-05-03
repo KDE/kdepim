@@ -809,7 +809,7 @@ public:
 
     Kleo::ImportJob * importJob() const;
     Kleo::ExportJob * publicKeyExportJob( bool armor=false ) const;
-    Kleo::ExportJob * secretKeyExportJob( bool armor=false ) const;
+    Kleo::ExportJob * secretKeyExportJob( bool armor=false, const QString& charset = QString::null ) const;
     Kleo::DownloadJob * downloadJob( bool armor=false ) const;
     Kleo::DeleteJob * deleteJob() const;
 

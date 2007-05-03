@@ -53,11 +53,12 @@
 #include <string.h>
 #include <assert.h>
 
-Kleo::QGpgMESecretKeyExportJob::QGpgMESecretKeyExportJob( bool armour )
+Kleo::QGpgMESecretKeyExportJob::QGpgMESecretKeyExportJob( bool armour, const QString& charset )
   : ExportJob( QGpgME::EventLoopInteractor::instance(), "Kleo::QGpgMESecretKeyExportJob" ),
     mProcess( 0 ),
     mError( 0 ),
-    mArmour( armour )
+    mArmour( armour ),
+    mCharset( charset )
 {
 
 }
@@ -77,10 +78,12 @@ GpgME::Error Kleo::QGpgMESecretKeyExportJob::start( const QStringList & patterns
   // create and start gpgsm process:
   mProcess = new GnuPGProcessBase( this, "gpgsm --export-secret-key-p12" );
 
-  // FIXME: obbtain the path to gpgsm from gpgme, so we use the same instance.
+  // FIXME: obtain the path to gpgsm from gpgme, so we use the same instance.
   *mProcess << "gpgsm" << "--export-secret-key-p12";
   if ( mArmour )
     *mProcess << "--armor";
+  if ( !mCharset.isEmpty() )
+    *mProcess << "--p12-charset" << mCharset;
   *mProcess << patterns.front().utf8();
 
   mProcess->setUseStatusFD( true );
