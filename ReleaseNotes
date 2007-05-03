@@ -1,12 +1,36 @@
-Current Release is Proko2 2.1.6
+Current Release is Proko2 2.1.7
 
+Features
+=========
+
+kmail
+---------
+
+* kolab/issue 1533 - minor change in action text.
+* kolab/issue 1658 - Adding a warning for empty To : field.
+* kolab/issue 1530 - make preferred form of forwarding configurable.
+* Kolab/issue 1640 - kiosk-like setting for admins to prevent a too small imap mailcheck interval.
+* Kolab/issue 1583 Backport KMMsgBase::extractRFC2231HeaderField() required for the .
+
+Aegypten
+-------------
+* aegypten/issue 370 - Add scrollbar so that the dialog doesn't become too big when gpgconf gives us many options to configure.
+* aegypten/issue 734 - Revert the commit which introduced aegypten issue 734
+* aegypten/issue 735 - Support for the NO_CHANGE flag from gpgconf 2.0.3 (readonly widgets)
+
+Misc
+-------
+* Fix crash in cachedimap mailcheck after modifying a cachedimap account
+* Fix order of libs so that kdepim proko2 (in its own prefix) can be used in parallel with another version of kdepim in /usr
+
+Changes since Proko2 2.1.5 up to Proko2 2.1.6 (released 2.2.2007)
 Features:
 =========
 
 kmail
 ----------
 
-* Issue 1506 Add Kiosk option for mimetypes that are stripped from inlined 
+* Issue 1506 Add Kiosk option for mimetypes that are stripped from inlined
 forwarded mails. Useful for stripping out Toltec or Outlook tnef blobs, for example.
 
 korganizer
@@ -48,7 +72,7 @@ Currently, anything below 1900 is regarded as too insecure."
 mimelib
 ----------
 
-* Aegypten Issue 661 Don't add a spurious newline when calling Assemble() on a message that has 
+* Aegypten Issue 661 Don't add a spurious newline when calling Assemble() on a message that has
 no headers, as happens when it is a forwarded attachment, for example.
 
 
