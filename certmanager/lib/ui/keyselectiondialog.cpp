@@ -345,12 +345,12 @@ void Kleo::KeySelectionDialog::init( bool rememberChoice, bool extendedSelection
   mStartSearchTimer = new QTimer( this );
 
   QFrame *page = makeMainWidget();
-  QVBoxLayout *topLayout = new QVBoxLayout( page, 0, spacingHint() );
+  mTopLayout = new QVBoxLayout( page, 0, spacingHint() );
 
   if ( !text.isEmpty() )
-    topLayout->addWidget( new QLabel( text, page ) );
+    mTopLayout->addWidget( new QLabel( text, page ) );
 
-  QHBoxLayout * hlay = new QHBoxLayout( topLayout ); // inherits spacing
+  QHBoxLayout * hlay = new QHBoxLayout( mTopLayout ); // inherits spacing
   QLineEdit * le = new QLineEdit( page );
   le->setText( initialQuery );
   QToolButton *clearButton = new QToolButton( page );
@@ -374,11 +374,11 @@ void Kleo::KeySelectionDialog::init( bool rememberChoice, bool extendedSelection
   mKeyListView->setShowToolTips( true );
   if ( extendedSelection )
     mKeyListView->setSelectionMode( QListView::Extended );
-  topLayout->addWidget( mKeyListView, 10 );
+  mTopLayout->addWidget( mKeyListView, 10 );
 
   if ( rememberChoice ) {
     mRememberCB = new QCheckBox( i18n("&Remember choice"), page );
-    topLayout->addWidget( mRememberCB );
+    mTopLayout->addWidget( mRememberCB );
     QWhatsThis::add( mRememberCB,
 		     i18n("<qt><p>If you check this box your choice will "
 			  "be stored and you will not be asked again."

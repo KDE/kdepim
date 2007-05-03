@@ -97,6 +97,7 @@
 #include <algorithm>
 #include <assert.h>
 #include <kdepimmacros.h>
+#include <kinputdialog.h>
 namespace {
 
   class KDE_EXPORT DisplayStrategy : public Kleo::KeyListView::DisplayStrategy{
@@ -426,7 +427,7 @@ void CertManager::slotToggleHierarchicalView( bool hier ) {
     act->setEnabled( hier );
   if ( KAction * act = action("view_collapseall" ) )
     act->setEnabled( hier );
-  if ( KToggleAction * act = 
+  if ( KToggleAction * act =
       static_cast<KToggleAction*>( action("view_hierarchical") ) )
     act->setChecked( hier );
 
@@ -1306,7 +1307,50 @@ void CertManager::startSecretKeyExport( const QString & fingerprint ) {
     return;
 
   // PENDING(marc): let user choose between binary and PEM format?
-  Kleo::ExportJob * job = Kleo::CryptoBackendFactory::instance()->smime()->secretKeyExportJob( false );
+
+  // Check if gpgsm supports --p12-charset
+  Kleo::CryptoConfig* config = Kleo::CryptoBackendFactory::instance()->config();
+  QString charset;
+  if ( config && config->entry( "gpgsm", "Configuration", "p12-charset" ) ) {
+    // This comes from gnupg's sources, agent/minip12.c
+    // In fact, any charset supported by iconv would work, but we don't link to iconv directly...
+    static const char *charsets[] = {
+      "utf8",
+      "iso-8859-1",
+      "iso-8859-15",
+      "iso-8859-2",
+      "iso-8859-3",
+      "iso-8859-4",
+      "iso-8859-5",
+      "iso-8859-6",
+      "iso-8859-7",
+      "iso-8859-8",
+      "iso-8859-9",
+      "koi8-r",
+      "ibm437",
+      "ibm850",
+      "euc-jp",
+      "big5",
+      NULL
+    };
+    QStringList charsetList;
+    for ( const char** c = charsets; *c; ++c ) {
+      charsetList.append( QString::fromLatin1( *c ) );
+    }
+
+    // TODO this selection could be done in a derived KeySelectionDialog which would add a combobox,
+    // it would be better integrated.
+    bool ok;
+    charset = KInputDialog::getItem( i18n("Exporting secret key..."),
+                                     i18n("Choose a charset for encoding the pkcs#12 passphrase (utf8 is recommended)"),
+                                     charsetList,
+                                     0, false /*editable*/,
+                                     &ok, this );
+    if ( !ok )
+      return;
+  }
+
+  Kleo::ExportJob * job = Kleo::CryptoBackendFactory::instance()->smime()->secretKeyExportJob( false, charset );
   assert( job );
 
   connect( job, SIGNAL(result(const GpgME::Error&,const QByteArray&)),
