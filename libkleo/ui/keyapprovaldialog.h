@@ -70,8 +70,7 @@ namespace Kleo {
 
     KeyApprovalDialog( const std::vector<Item> & recipients,
 		       const std::vector<GpgME::Key> & sender,
-		       QWidget * parent=0, const char * name=0,
-                       bool modal=true );
+		       QWidget * parent=0 );
     ~KeyApprovalDialog();
 
     std::vector<Item> items() const;

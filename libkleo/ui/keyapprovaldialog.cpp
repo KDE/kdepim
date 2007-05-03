@@ -107,16 +107,14 @@ struct Kleo::KeyApprovalDialog::Private {
 };
 
 Kleo::KeyApprovalDialog::KeyApprovalDialog( const std::vector<Item> & recipients,
-                                      const std::vector<GpgME::Key> & sender,
-                                      QWidget * parent, const char * name,
-                                      bool modal )
-  : KDialog( parent),
+                                            const std::vector<GpgME::Key> & sender,
+                                            QWidget * parent )
+  : KDialog( parent ),
     d( 0 )
 {
   setCaption( i18n("Encryption Key Approval") );
   setButtons(  Ok|Cancel );
   setDefaultButton(  Ok );
-  setModal( modal );
   assert( !recipients.empty() );
 
   d = new Private();

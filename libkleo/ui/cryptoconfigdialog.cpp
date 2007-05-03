@@ -34,7 +34,7 @@
 #include <klocale.h>
 #include <kacceleratormanager.h>
 
-Kleo::CryptoConfigDialog::CryptoConfigDialog( Kleo::CryptoConfig* config, QWidget *parent, const char* name )
+Kleo::CryptoConfigDialog::CryptoConfigDialog( Kleo::CryptoConfig* config, QWidget *parent )
   : KDialog( parent)
 {
   setCaption( i18n( "Configure" ) );
@@ -52,7 +52,7 @@ Kleo::CryptoConfigDialog::CryptoConfigDialog( Kleo::CryptoConfig* config, QWidge
   // Automatically assign accelerators
   KAcceleratorManager::manage( this );
   connect(this,SIGNAL(user1Clicked()),this,SLOT(slotUser1()));
-  connect(this,SIGNAL(cancelClicked()),this,SLOT(slotCancel()));  
+  connect(this,SIGNAL(cancelClicked()),this,SLOT(slotCancel()));
   connect(this,SIGNAL(okClicked()),this,SLOT(slotOk()));
   connect(this,SIGNAL(defaultClicked()),this,SLOT(slotDefault()));
   connect(this,SIGNAL(applyClicked()),this,SLOT(slotApply()));

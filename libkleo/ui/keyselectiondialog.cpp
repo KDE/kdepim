@@ -364,20 +364,20 @@ void Kleo::KeySelectionDialog::init( bool rememberChoice, bool extendedSelection
 
   QFrame *page = new QFrame( this );
   setMainWidget( page );
-  QVBoxLayout *topLayout = new QVBoxLayout( page );
-  topLayout->setMargin( 0 );
-  topLayout->setSpacing( spacingHint() );
+  mTopLayout = new QVBoxLayout( page );
+  mTopLayout->setMargin( 0 );
+  mTopLayout->setSpacing( spacingHint() );
 
   if ( !text.isEmpty() )
-    topLayout->addWidget( new QLabel( text, page ) );
+    mTopLayout->addWidget( new QLabel( text, page ) );
 
   QHBoxLayout * hlay = new QHBoxLayout();
-  topLayout->addLayout( topLayout );
+  mTopLayout->addLayout( hlay );
 
   KLineEdit * le = new KLineEdit( page );
   le->setClearButtonShown(true);
   le->setText( initialQuery );
-  
+
   QLabel* lbSearchFor =  new QLabel( i18n("&Search for:"), page ) ;
   lbSearchFor->setBuddy(le);
 
@@ -398,11 +398,11 @@ void Kleo::KeySelectionDialog::init( bool rememberChoice, bool extendedSelection
   mKeyListView->setShowToolTips( true );
   if ( extendedSelection )
     mKeyListView->setSelectionMode( Q3ListView::Extended );
-  topLayout->addWidget( mKeyListView, 10 );
+  mTopLayout->addWidget( mKeyListView, 10 );
 
   if ( rememberChoice ) {
     mRememberCB = new QCheckBox( i18n("&Remember choice"), page );
-    topLayout->addWidget( mRememberCB );
+    mTopLayout->addWidget( mRememberCB );
     mRememberCB->setWhatsThis(
 		     i18n("<qt><p>If you check this box your choice will "
 			  "be stored and you will not be asked again."

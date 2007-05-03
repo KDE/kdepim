@@ -373,7 +373,7 @@ public:
   KeyGenerationJob * keyGenerationJob() const { return 0; }
   ImportJob * importJob() const { return 0; }
   ExportJob * publicKeyExportJob( bool ) const { return 0; }
-  ExportJob * secretKeyExportJob( bool ) const { return 0; }
+  ExportJob * secretKeyExportJob( bool, const QString& ) const { return 0; }
   DownloadJob * downloadJob( bool ) const { return 0; }
   DeleteJob * deleteJob() const { return 0; }
   SignEncryptJob * signEncryptJob( bool, bool ) const { return 0; }

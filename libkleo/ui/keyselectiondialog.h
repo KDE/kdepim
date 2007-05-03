@@ -46,6 +46,7 @@
 //Added by qt3to4:
 #include <QPixmap>
 
+class QVBoxLayout;
 class QCheckBox;
 class QPixmap;
 class QTimer;
@@ -120,6 +121,9 @@ namespace Kleo {
 
     bool rememberSelection() const;
 
+    // Could be used by derived classes to insert their own widget
+    QVBoxLayout* topLayout() const { return mTopLayout; }
+
   private slots:
     void slotRereadKeys();
     void slotStartCertificateManager();
@@ -152,6 +156,7 @@ namespace Kleo {
     void init( bool, bool, const QString &, const QString & );
 
   private:
+    QVBoxLayout* mTopLayout;
     Kleo::KeyListView * mKeyListView;
     const Kleo::CryptoBackend::Protocol * mOpenPGPBackend;
     const Kleo::CryptoBackend::Protocol * mSMIMEBackend;

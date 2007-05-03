@@ -784,12 +784,12 @@ Kleo::ExportJob * CryptPlugWrapper::publicKeyExportJob( bool armor ) const {
   return new Kleo::QGpgMEExportJob( context );
 }
 
-Kleo::ExportJob * CryptPlugWrapper::secretKeyExportJob( bool armor ) const {
+Kleo::ExportJob * CryptPlugWrapper::secretKeyExportJob( bool armor, const QString& charset ) const {
   if ( !_cp || _cp->mProtocol != GpgME::Context::CMS ) // fixme: add support for gpg, too
     return 0;
 
   // this operation is not supported by gpgme, so we have to call gpgsm ourselves:
-  return new Kleo::QGpgMESecretKeyExportJob( armor );
+  return new Kleo::QGpgMESecretKeyExportJob( armor, charset );
 }
 
 Kleo::RefreshKeysJob * CryptPlugWrapper::refreshKeysJob() const {
