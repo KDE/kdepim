@@ -146,6 +146,7 @@ if(GPGME_FOUND)
 endif(GPGME_FOUND)
 
 add_subdirectory(korn)
+add_subdirectory(kpilot)
 add_subdirectory(kresources)
 add_subdirectory(ktnef)
 MESSAGE(STATUS "disabled networkstatus")
