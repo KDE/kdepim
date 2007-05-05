@@ -223,12 +223,13 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
       format.setTimeZone( KPimPrefs::timezone(), false );
       QString msg = format.createScheduleMessage( incidence,
                                                   Scheduler::Reply );
+      kdDebug() << "scheduler::REPly=" << Scheduler::Reply << endl;
       QString subject;
       if ( !incidence->summary().isEmpty() )
         subject = i18n( "Answer: %1" ).arg( incidence->summary() );
       else
         subject = i18n( "Answer: Incidence with no summary" );
-      return callback.mailICal( incidence->organizer().fullName(), msg, subject );
+      return callback.mailICal( incidence->organizer().fullName(), msg, subject, Scheduler::Reply );
     }
 
     bool saveFile( const QString& receiver, const QString& iCal,
