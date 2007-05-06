@@ -150,7 +150,6 @@ protected:
   void loadSubResourceConfig( KConfig& config, const QString& name,
                               const QString& label, bool writable );
   bool loadSubResource( const QString& subResource );
-  bool loadSubResourceHelper( const QString& subResource, const char* mimetype, KMailICalIface::StorageFormat format );
   QString loadContact( const QString& contactData, const QString& subResource,
                        Q_UINT32 sernum, const KMailICalIface::StorageFormat format );
 
