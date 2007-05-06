@@ -75,13 +75,13 @@ namespace {
 
 class KMInvitationFormatterHelper : public KCal::InvitationFormatterHelper
 {
-  public: 
+  public:
     KMInvitationFormatterHelper( KMail::Interface::BodyPart *bodyPart ) : mBodyPart( bodyPart ) {}
     virtual QString generateLinkURL( const QString &id ) { return mBodyPart->makeLink( id ); }
   private:
     KMail::Interface::BodyPart *mBodyPart;
 };
-    
+
 class Formatter : public KMail::Interface::BodyPartFormatter
 {
   public:
@@ -217,7 +217,7 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
         incidence->addAttendee( newMyself );
     }
 
-    bool mail( Incidence* incidence, KMail::Callback& callback, QString status ) const
+    bool mail( Incidence* incidence, KMail::Callback& callback, const QString &status ) const
     {
       //status is accepted/tentative/declined
       ICalFormat format;
