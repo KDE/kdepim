@@ -185,7 +185,7 @@ bool KABC::ResourceKolab::loadSubResource( const QString& subResource )
 {
   int count = 0;
   if ( !kmailIncidencesCount( count, QString::null, subResource ) ) {
-    kdError() << "Communication problem in KABC::ResourceKolab::loadSubResourceHelper()\n";
+    kdError() << "Communication problem in KABC::ResourceKolab::loadSubResource()\n";
     return false;
   }
   if ( !count )
@@ -216,7 +216,7 @@ bool KABC::ResourceKolab::loadSubResource( const QString& subResource )
       KMailICalIface::StorageFormat format = s_formats[indexFormat].format;
       QMap<Q_UINT32, QString> lst;
       if ( !kmailIncidences( lst, mimetype, subResource, startIndex, nbMessages ) ) {
-        kdError() << "Communication problem in KABC::ResourceKolab::loadSubResourceHelper()\n";
+        kdError() << "Communication problem in KABC::ResourceKolab::loadSubResource()\n";
         if ( progressId )
           uiserver.jobFinished( progressId );
         return false;
