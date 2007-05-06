@@ -214,8 +214,9 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
         incidence->addAttendee( newMyself );
     }
 
-    bool mail( Incidence* incidence, KMail::Callback& callback ) const
+    bool mail( Incidence* incidence, KMail::Callback& callback, const QString &status ) const
     {
+      //status is accepted/tentative/declined
       ICalFormat format;
       format.setTimeSpec( KPimPrefs::timeSpec() );
       QString msg = format.createScheduleMessage( incidence,
@@ -225,7 +226,7 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
         subject = i18n( "Answer: %1", incidence->summary() );
       else
         subject = i18n( "Answer: Incidence with no summary" );
-      return callback.mailICal( incidence->organizer().fullName(), msg, subject );
+      return callback.mailICal( incidence->organizer().fullName(), msg, subject, status );
     }
 
     bool saveFile( const QString& receiver, const QString& iCal,
@@ -300,7 +301,7 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
       Attendee *myself = findMyself( incidence, receiver );
       if ( ( myself && myself->RSVP() ) || heuristicalRSVP( incidence ) ) {
         setStatusOnMyself( incidence, myself, status, receiver );
-        ok =  mail( incidence, callback );
+        ok = mail( incidence, callback, dir );
       } else {
         ( new KMDeleteMsgCommand( callback.getMsg()->getMsgSerNum() ) )->start();
       }
