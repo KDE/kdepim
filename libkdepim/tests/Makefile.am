@@ -8,9 +8,10 @@ check_PROGRAMS = testwizard testaddresseelineedit \
                  testutf7encoder \
                  test_kregexp \
                  testdateedit \
-                 testlinklocator \
-                 testdistrlist
+                 testlinklocator
 
+# disabled because of X dependency
+#                 testdistrlist
 
 testwizard_SOURCES = testwizard.cpp myconfig.kcfgc
 testaddresseelineedit_SOURCES = testaddresseelineedit.cpp
