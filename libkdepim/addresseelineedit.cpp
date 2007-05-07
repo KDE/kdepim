@@ -777,6 +777,9 @@ void AddresseeLineEdit::setCompletedItems( const QStringList& items, bool autoSu
     if ( !items.isEmpty() &&
          !(items.count() == 1 && m_searchString == items.first()) )
     {
+        QString oldCurrentText = completionBox->currentText();
+        QListBoxItem *itemUnderMouse = completionBox->itemAt( 
+            completionBox->viewport()->mapFromGlobal(QCursor::pos()) );
         completionBox->setItems( items );
 
         if ( !completionBox->isVisible() ) {
@@ -790,12 +793,25 @@ void AddresseeLineEdit::setCompletedItems( const QStringList& items, bool autoSu
             qApp->installEventFilter( this );
         }
 
-        QListBoxItem* item = completionBox->item( 1 );
+        // Try to re-select what was selected before, otherrwise use the first
+        // item, if there is one
+        QListBoxItem* item = 0;
+        if ( oldCurrentText.isEmpty()
+           || ( item = completionBox->findItem( oldCurrentText ) ) == 0 ) {
+            item = completionBox->item( 1 );
+        }
         if ( item )
         {
-          completionBox->blockSignals( true );
-          completionBox->setSelected( item, true );
-          completionBox->blockSignals( false );
+            completionBox->blockSignals( true );
+            // if the mouse was over an item, before
+            if ( itemUnderMouse ) {
+                QRect r = completionBox->itemRect( item );
+                QPoint target = r.topLeft();
+                target.setX( target.x() + r.width()/2 );
+                QCursor::setPos( completionBox->viewport()->mapToGlobal(target) );
+            }
+            completionBox->setSelected( item, true );
+            completionBox->blockSignals( false );
         }
 
         if ( autoSuggest )
