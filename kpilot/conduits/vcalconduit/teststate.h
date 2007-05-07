@@ -28,7 +28,7 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
-#include <libkcal/calendarlocal.h>
+#include <kcal/calendarlocal.h>
 
 #include "conduitstate.h"
 

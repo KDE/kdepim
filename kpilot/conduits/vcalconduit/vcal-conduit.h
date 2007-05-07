@@ -29,7 +29,7 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
-#include <libkcal/event.h>
+#include <kcal/event.h>
 
 #include "pilotDateEntry.h"
 
@@ -69,7 +69,6 @@ class VCalConduit : public VCalConduitBase
 Q_OBJECT
 public:
 	VCalConduit(KPilotLink *,
-		const char *name=0L,
 		const QStringList &args = QStringList());
 	virtual ~VCalConduit();
 

@@ -37,8 +37,8 @@
 #include "vcal-setup.h"
 
 
-VCalWidgetSetup::VCalWidgetSetup(QWidget *w, const char *n) :
-	VCalWidgetSetupBase(w,n)
+VCalWidgetSetup::VCalWidgetSetup(QWidget *w) :
+	VCalWidgetSetupBase(w)
 {
 	KAboutData *fAbout = new KAboutData("vcalConduit",
 		I18N_NOOP("VCal Conduit for KPilot"),
@@ -73,6 +73,8 @@ VCalWidgetSetup::VCalWidgetSetup(QWidget *w, const char *n) :
 
 /* static */ ConduitConfigBase *VCalWidgetSetup::create(QWidget *w,const char *n)
 {
-	return new VCalWidgetSetup(w,n);
+	ConduitConfigBase *t = new VCalWidgetSetup(w);
+	t->setObjectName(n);
+	return t;
 }
 VCalConduitSettings*VCalWidgetSetup::config() { return VCalConduit::theConfig(); }

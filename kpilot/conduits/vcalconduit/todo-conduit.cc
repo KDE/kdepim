@@ -37,8 +37,8 @@
 #include <qdatetime.h>
 #include <qtextcodec.h>
 
-#include <libkcal/calendar.h>
-#include <libkcal/todo.h>
+#include <kcal/calendar.h>
+#include <kcal/todo.h>
 
 #include <pilotLocalDatabase.h>
 
@@ -97,7 +97,9 @@ KCal::Incidence *TodoConduitPrivate::findIncidence(recordid_t id)
 	KCal::Todo::List::ConstIterator it;
         for( it = fAllTodos.begin(); it != fAllTodos.end(); ++it ) {
                 KCal::Todo *todo = *it;
+#if BADLY_PORTED
 		if ((recordid_t)(todo->pilotId()) == id) return todo;
+#endif
 	}
 
 	return 0L;
@@ -153,18 +155,13 @@ KCal::Incidence *TodoConduitPrivate::getNextModifiedIncidence()
 		++fAllTodosIterator;
 	}
 	if ( fAllTodosIterator != fAllTodos.end() ) e=*fAllTodosIterator;
+#if BADLY_PORTED
 	while (fAllTodosIterator != fAllTodos.end() &&
 		e && e->syncStatus()!=KCal::Incidence::SYNCMOD && e->pilotId())
 	{
 		e = (++fAllTodosIterator != fAllTodos.end()) ? *fAllTodosIterator : 0L;
-
-#ifdef DEBUG
-	if(e)
-		DEBUGKPILOT<< e->summary()<<" had SyncStatus="<<e->syncStatus()<<endl;
-#endif
-
 	}
-
+#endif
 	return (fAllTodosIterator == fAllTodos.end()) ? 0L : *fAllTodosIterator;
 }
 
@@ -175,8 +172,7 @@ KCal::Incidence *TodoConduitPrivate::getNextModifiedIncidence()
  ****************************************************************************/
 
 TodoConduit::TodoConduit(KPilotLink *d,
-	const char *n,
-	const QStringList &a) : VCalConduitBase(d,n,a),
+	const QStringList &a) : VCalConduitBase(d,a),
 	fTodoAppInfo( 0L )
 {
 	FUNCTIONSETUP;

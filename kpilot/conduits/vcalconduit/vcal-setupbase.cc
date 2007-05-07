@@ -39,8 +39,8 @@
 #include "vcalconduitSettings.h"
 #include "vcal-setupbase.h"
 
-VCalWidgetSetupBase::VCalWidgetSetupBase(QWidget *w, const char *n) :
-	ConduitConfigBase(w,n),
+VCalWidgetSetupBase::VCalWidgetSetupBase(QWidget *w) :
+	ConduitConfigBase(w),
 	fConfigWidget(new VCalWidget(w))
 {
 	FUNCTIONSETUP;

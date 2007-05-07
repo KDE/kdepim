@@ -29,10 +29,10 @@
 
 #include "options.h"
 
-#include <libkcal/calendar.h>
-#include <libkcal/calendarlocal.h>
-#include <libkcal/recurrence.h>
-#include <libkcal/vcalformat.h>
+#include <kcal/calendar.h>
+#include <kcal/calendarlocal.h>
+#include <kcal/recurrence.h>
+#include <kcal/vcalformat.h>
 
 #include "pilot.h"
 #include "pilotDateEntry.h"
@@ -239,17 +239,18 @@ static void setExceptions(KCal::Event *vevent,const PilotDateEntry *dateEntry)
 static void setStartEndTimes(PilotDateEntry*de, const KCal::Event *e)
 {
 	FUNCTIONSETUP;
-	struct tm ttm=writeTm(e->dtStart());
+	struct tm ttm=writeTm(e->dtStart().dateTime());
 	de->setEventStart(ttm);
+#if BADLY_PORTED
 	de->setFloats( e->doesFloat() );
-
+#endif
 	if (e->hasEndDate() && e->dtEnd().isValid())
 	{
-		ttm=writeTm(e->dtEnd());
+		ttm=writeTm(e->dtEnd().dateTime());
 	}
 	else
 	{
-		ttm=writeTm(e->dtStart());
+		ttm=writeTm(e->dtStart().dateTime());
 	}
 	de->setEventEnd(ttm);
 }
@@ -497,9 +498,9 @@ bool KCalSync::setEvent(KCal::Event *e,
 	e->setSecrecy(de->isSecret() ?
 		KCal::Event::SecrecyPrivate :
 		KCal::Event::SecrecyPublic);
-
+#if BADLY_PORTED
 	e->setPilotId(de->id());
-
+#endif
 	setStartEndTimes(e,de);
 	setAlarms(e,de);
 	setRecurrence(e,de);
@@ -515,8 +516,9 @@ bool KCalSync::setEvent(KCal::Event *e,
 	// NOTE: This MUST be done last, since every other set* call
 	// calls updated(), which will trigger an
 	// setSyncStatus(SYNCMOD)!!!
+#if BADLY_PORTED
 	e->setSyncStatus(KCal::Incidence::SYNCNONE);
-
+#endif
 	return true;
 }
 

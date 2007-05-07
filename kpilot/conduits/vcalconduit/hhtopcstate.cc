@@ -106,7 +106,7 @@ void HHToPCState::handleRecord( ConduitAction *ca )
 
 	bool archiveRecord = ( r->isArchived() );
 	s = vccb->localDatabase()->readRecordById( r->id() );
-	
+
 	if ( !s || vccb->isFirstSync() )
 	{
 #ifdef DEBUG
@@ -118,12 +118,14 @@ void HHToPCState::handleRecord( ConduitAction *ca )
 			DEBUGKPILOT << r->id() << endl;
 		}
 #endif
-		if ( !r->isDeleted() 
+		if ( !r->isDeleted()
 			|| ( vccb->config()->syncArchived() && archiveRecord ) )
 		{
 			KCal::Incidence *e = vccb->addRecord( r );
 			if ( vccb->config()->syncArchived() && archiveRecord )  {
+#if BADLY_PORTED
 				e->setSyncStatus( KCal::Incidence::SYNCDEL );
+#endif
 			}
 		}
 	}

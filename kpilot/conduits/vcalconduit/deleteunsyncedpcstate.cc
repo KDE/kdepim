@@ -56,10 +56,10 @@ void DeleteUnsyncedPCState::startSync( ConduitAction *ca )
 	}
 
 	DEBUGKPILOT << fname << ": Starting DeleteUnsyncedPCState." << endl;
-	
+
 	fPilotIndex = 0;
 	fNextState = new CleanUpState();
-	
+
 	vccb->setHasNextRecord( true );
 	fStarted = true;
 }
@@ -92,8 +92,10 @@ void DeleteUnsyncedPCState::handleRecord( ConduitAction *ca )
 
 	// try to find the corresponding index on the palm.  if we can't
 	// find it, then we have a pc record that needs to be deleted.
+#if BADLY_PORTED
 	recordid_t id = e->pilotId();
-	
+#endif
+	recordid_t id = 0;
 	PilotRecord *s = 0L;
 
 	if( id > 0 )
@@ -107,8 +109,8 @@ void DeleteUnsyncedPCState::handleRecord( ConduitAction *ca )
 	if ( id <=0 || !s )
 	{
 #ifdef DEBUG
-		DEBUGKPILOT << fname << ": found PC entry with pilotID: [" << id 
-			<< "], Description: [" << e->summary() 
+		DEBUGKPILOT << fname << ": found PC entry with pilotID: [" << id
+			<< "], Description: [" << e->summary()
 			<< "], Time: ["<< e->dtStart().toString() << "] until: ["
 			<< e->dtEnd().toString() << "]. Can't find it on Palm, "
 			<< "so I'm deleting it from the local calendar." << endl;

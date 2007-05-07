@@ -38,8 +38,8 @@
 
 
 
-ToDoWidgetSetup::ToDoWidgetSetup(QWidget *w, const char *n) :
-	VCalWidgetSetupBase(w,n)
+ToDoWidgetSetup::ToDoWidgetSetup(QWidget *w) :
+	VCalWidgetSetupBase(w)
 {
 	FUNCTIONSETUP;
 	fConduitName = i18n("To-do");
@@ -76,7 +76,8 @@ ToDoWidgetSetup::~ToDoWidgetSetup()
 
 /* static */ ConduitConfigBase *ToDoWidgetSetup::create(QWidget *w, const char *n)
 {
-	return new ToDoWidgetSetup(w,n);
+	ConduitConfigBase *t = new ToDoWidgetSetup(w);
+	t->setObjectName(n);
 }
 
 VCalConduitSettings*ToDoWidgetSetup::config()

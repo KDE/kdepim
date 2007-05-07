@@ -37,7 +37,7 @@ class VCalConduitSettings;
 class VCalWidgetSetupBase : public ConduitConfigBase
 {
 public:
-	VCalWidgetSetupBase(QWidget *, const char *);
+	VCalWidgetSetupBase(QWidget *);
 	virtual ~VCalWidgetSetupBase();
 
 	virtual void load();

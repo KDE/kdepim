@@ -460,7 +460,7 @@ KCal::Incidence*VCalConduitBase::changeRecord(PilotRecord *r,PilotRecord *)
 	if ( e && de )
 	{
 		// TODO: check for conflict, and if there is one, ask for resolution
-#if 0
+#if BADLY_PORTED
 		if ( ( e->syncStatus() != KCal::Incidence::SYNCNONE )
 			&& r->isModified() )
 		{
@@ -479,7 +479,7 @@ KCal::Incidence*VCalConduitBase::changeRecord(PilotRecord *r,PilotRecord *)
 		// NOTE: This MUST be done last, since every other set* call
 		// calls updated(), which will trigger an
 		// setSyncStatus(SYNCMOD)!!!
-#if 0
+#if BADLY_PORTED
 		e->setSyncStatus(KCal::Incidence::SYNCNONE);
 #endif
 		fLocalDatabase->writeRecord( r );
@@ -546,7 +546,7 @@ void VCalConduitBase::deletePalmRecord( KCal::Incidence *e, PilotRecord *s )
 	else
 	{
 		DEBUGKPILOT << fname << ": could not find record to delete (" << endl;
-#if 0
+#if BADLY_PORTED
 		DEBUGKPILOT << e->pilotId() << ")" << endl;
 #endif
 	}
@@ -565,14 +565,14 @@ void VCalConduitBase::updateIncidenceOnPalm( KCal::Incidence *e,
 		DEBUGKPILOT << fname << ": NULL event given... Skipping it" << endl;
 		return;
 	}
-
+#if BADLY_PORTED
 	if ( e->syncStatus() == KCal::Incidence::SYNCDEL )
 	{
 		DEBUGKPILOT << fname << ": don't write deleted incidence "
 			<< e->summary() << " to the palm" << endl;
 		return;
 	}
-
+#endif
 	PilotRecord *r = recordFromIncidence( de, e );
 
 	// TODO: Check for conflict!
@@ -583,12 +583,15 @@ void VCalConduitBase::updateIncidenceOnPalm( KCal::Incidence *e,
 //		r->setAttrib(r->getAttrib() & ~dlpRecAttrDeleted);
 		fLocalDatabase->writeRecord( r );
 //		fDatabase->writeRecord(r);
+#if BADLY_PORTED
 		e->setPilotId( id );
+
 
 		// NOTE: This MUST be done last, since every other set* call
 		// calls updated(), which will trigger an
 		// setSyncStatus(SYNCMOD)!!!
 		e->setSyncStatus(KCal::Incidence::SYNCNONE);
+#endif
 		KPILOT_DELETE( r );
 	}
 }

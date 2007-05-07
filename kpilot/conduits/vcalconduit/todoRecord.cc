@@ -29,10 +29,10 @@
 
 #include "options.h"
 
-#include <libkcal/calendar.h>
-#include <libkcal/calendarlocal.h>
-#include <libkcal/recurrence.h>
-#include <libkcal/vcalformat.h>
+#include <kcal/calendar.h>
+#include <kcal/calendarlocal.h>
+#include <kcal/recurrence.h>
+#include <kcal/vcalformat.h>
 
 #include "pilot.h"
 #include "pilotTodoEntry.h"
@@ -59,7 +59,7 @@ bool KCalSync::setTodoEntry(PilotTodoEntry *de,
 	// update it from the iCalendar Todo.
 
 	if (todo->hasDueDate()) {
-		struct tm t = writeTm(todo->dtDue());
+		struct tm t = writeTm(todo->dtDue().dateTime());
 		de->setDueDate(t);
 		de->setIndefinite(0);
 	} else {
@@ -105,9 +105,10 @@ bool KCalSync::setTodo(KCal::Todo *e,
 	}
 
 
+#if BADLY_PORTED
 	e->setPilotId(de->id());
 	DEBUGKPILOT<<fname<<": set KCal item to pilotId: [" << e->pilotId() << "] ..."<<endl;
-
+#endif
 	e->setSecrecy(de->isSecret() ? KCal::Todo::SecrecyPrivate : KCal::Todo::SecrecyPublic);
 
 	if (de->getIndefinite()) {
@@ -135,7 +136,8 @@ bool KCalSync::setTodo(KCal::Todo *e,
 	// NOTE: This MUST be done last, since every other set* call
 	// calls updated(), which will trigger an
 	// setSyncStatus(SYNCMOD)!!!
+#if BADLY_PORTED
 	e->setSyncStatus(KCal::Incidence::SYNCNONE);
-
+#endif
 	return true;
 }

@@ -34,7 +34,7 @@
 class ToDoWidgetSetup : public VCalWidgetSetupBase
 {
 public:
-	ToDoWidgetSetup(QWidget *,const char *);
+	ToDoWidgetSetup(QWidget *);
 	virtual ~ToDoWidgetSetup();
 
 	virtual VCalConduitSettings*config();

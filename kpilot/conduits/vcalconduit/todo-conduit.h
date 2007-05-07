@@ -33,7 +33,7 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
-#include <libkcal/todo.h>
+#include <kcal/todo.h>
 #include <pilotTodoEntry.h>
 #include "vcal-conduitbase.h"
 
@@ -66,7 +66,6 @@ class TodoConduit : public VCalConduitBase
 Q_OBJECT
 public:
 	TodoConduit(KPilotLink *,
-		const char *name=0L,
 		const QStringList &args = QStringList());
 	virtual ~TodoConduit();
 

@@ -53,7 +53,7 @@ void PCToHHState::startSync( ConduitAction *ca )
 	{
 		return;
 	}
-	
+
 	DEBUGKPILOT << fname << ": Starting PCToHHState." << endl;
 
 	// if we are asked to copy HH to PC, we shouldn't look for deleted records
@@ -100,19 +100,22 @@ void PCToHHState::handleRecord( ConduitAction *ca )
 		vccb->setHasNextRecord( false );
 		return;
 	}
-	
+
 	// let subclasses do something with the event
 	vccb->preIncidence( e );
 
-	// find the corresponding index on the palm and sync. If there is none, 
+	// find the corresponding index on the palm and sync. If there is none,
 	// create it.
-	recordid_t id = e->pilotId();
-	
+	recordid_t id = 0;
+#if BADLY_PORTED
+	e->pilotId();
+#endif
+
 	DEBUGKPILOT << fname << ": found PC entry with pilotID " << id <<endl;
 	DEBUGKPILOT << fname << ": Description: " << e->summary() << endl;
 
-	QDateTime start_time = e->dtStart();
-	QDateTime end_time = e->dtEnd();
+	KDateTime start_time = e->dtStart();
+	KDateTime end_time = e->dtEnd();
 	DEBUGKPILOT << fname << ": Time: "<< start_time.toString() << " until "
 		<< end_time.toString() << endl;
 
@@ -120,6 +123,7 @@ void PCToHHState::handleRecord( ConduitAction *ca )
 
 	if( id > 0 && ( s = vccb->database()->readRecordById( id ) ) )
 	{
+#if BADLY_PORTED
 		if( e->syncStatus() == KCal::Incidence::SYNCDEL )
 		{
 			vccb->deletePalmRecord( e, s );
@@ -128,9 +132,11 @@ void PCToHHState::handleRecord( ConduitAction *ca )
 		{
 			vccb->changePalmRecord( e, s );
 		}
-
+#endif
 		KPILOT_DELETE( s );
-	} else {
+	}
+	else
+	{
 #ifdef DEBUG
 		if (id > 0 )
 		{
@@ -147,7 +153,7 @@ void PCToHHState::handleRecord( ConduitAction *ca )
 void PCToHHState::finishSync( ConduitAction *ca )
 {
 	FUNCTIONSETUP;
-	
+
 	VCalConduitBase *vccb = dynamic_cast<VCalConduitBase*>(ca);
 	if( !vccb )
 	{

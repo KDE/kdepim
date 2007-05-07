@@ -29,10 +29,10 @@
 
 #include "options.h"
 
-#include <libkcal/calendar.h>
-#include <libkcal/calendarlocal.h>
-#include <libkcal/recurrence.h>
-#include <libkcal/vcalformat.h>
+#include <kcal/calendar.h>
+#include <kcal/calendarlocal.h>
+#include <kcal/recurrence.h>
+#include <kcal/vcalformat.h>
 
 #include "pilotDateEntry.h"
 #include "pilotDatabase.h"
@@ -94,7 +94,9 @@ KCal::Incidence *VCalConduitPrivate::findIncidence(recordid_t id)
 	KCal::Event::List::ConstIterator it;
 	for( it = fAllEvents.begin(); it != fAllEvents.end(); ++it ) {
 		KCal::Event *event = *it;
+#if BADLY_PORTED
 		if ((recordid_t)event->pilotId() == id) return event;
+#endif
 	}
 	return 0L;
 }
@@ -110,7 +112,7 @@ KCal::Incidence *VCalConduitPrivate::findIncidence(PilotRecordBase *tosearch)
 	KCal::Event::List::ConstIterator it;
 	for( it = fAllEvents.begin(); it != fAllEvents.end(); ++it ) {
 		KCal::Event *event = *it;
-		if ( (event->dtStart() == dt) && (event->summary() == title) ) return event;
+		if ( (event->dtStart().dateTime() == dt) && (event->summary() == title) ) return event;
 	}
 	return 0L;
 }
@@ -154,11 +156,13 @@ KCal::Incidence *VCalConduitPrivate::getNextModifiedIncidence()
 	// Fetch (new) current if possible.
 	if ( fAllEventsIterator != fAllEvents.end() ) e = *fAllEventsIterator;
 	// Then walk the list until we find an unsynced entry
+#if BADLY_PORTED
 	while ( fAllEventsIterator != fAllEvents.end() &&
 		e && e->syncStatus()!=KCal::Incidence::SYNCMOD && e->pilotId() > 0)
 	{
 		e = (++fAllEventsIterator != fAllEvents.end()) ? *fAllEventsIterator : 0L;
 	}
+#endif
 	return (fAllEventsIterator == fAllEvents.end()) ? 0L : 	*fAllEventsIterator;
 }
 
@@ -169,9 +173,8 @@ KCal::Incidence *VCalConduitPrivate::getNextModifiedIncidence()
  ****************************************************************************/
 
 VCalConduit::VCalConduit(KPilotLink *d,
-	const char *n,
 	const QStringList &a) :
-	VCalConduitBase(d,n,a),
+	VCalConduitBase(d,a),
 	fAppointmentAppInfo( 0L )
 {
 	FUNCTIONSETUP;
