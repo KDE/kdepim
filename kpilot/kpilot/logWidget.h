@@ -30,13 +30,12 @@
 */
 
 #include "pilotComponent.h"
-//Added by qt3to4:
-#include <QLabel>
 
 class QLabel;
-class Q3TextEdit;
-class KHBox;
 class QProgressBar;
+class QTextEdit;
+
+class KHBox;
 
 class LogWidget : public PilotComponent
 {
@@ -80,7 +79,7 @@ private:
 	bool saveFile(const QString &);
 
 private:
-	Q3TextEdit *fLog;
+	QTextEdit *fLog;
 	bool fShowTime;
 	QLabel *fSplash;
 	QLabel *fLabel;

@@ -119,7 +119,7 @@ void TickleThread::run()
 			{
 				if (!(--timeout))
 				{
-					QApplication::postEvent(fHandle, new QCustomEvent(static_cast<QEvent::Type>(KPilotLink::EventTickleTimeout)));
+					QApplication::postEvent(fHandle, new QEvent(static_cast<QEvent::Type>(KPilotLink::EventTickleTimeout)));
 					break;
 				}
 			}

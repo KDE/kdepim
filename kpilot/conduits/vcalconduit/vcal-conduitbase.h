@@ -32,7 +32,7 @@
 
 
 
-#include <libkcal/calendarlocal.h>
+#include <kcal/calendarlocal.h>
 
 #include <plugin.h>
 #include <pilotRecord.h>
@@ -110,7 +110,7 @@ public:
 	 * Method used by state classes to indicatie if there are more records to
 	 * deal with.
 	 */
-	void setHasNextRecord( bool b ) 
+	void setHasNextRecord( bool b )
 	{
 		hasNextRecord = b;
 	}

@@ -48,7 +48,6 @@
 #include <qtimer.h>
 //Added by qt3to4:
 #include <Q3ValueList>
-#include <Q3GridLayout>
 #include <QPixmap>
 
 #include <k3activelabel.h>
@@ -118,17 +117,19 @@ QWidget *ConduitConfigBase::aboutPage(QWidget *parent, KAboutData *ad)
 {
 	FUNCTIONSETUP;
 
-	QWidget *w = new QWidget(parent, "aboutpage");
+	QWidget *w = new QWidget(parent);
+	w->setObjectName("aboutpage");
 
 	QString s;
 	QLabel *text;
 	KIconLoader *l = KIconLoader::global();
 	const KAboutData *p = ad ? ad : KGlobal::mainComponent().aboutData();
 
-	Q3GridLayout *grid = new Q3GridLayout(w, 5, 4, SPACING);
+	QGridLayout *grid = new QGridLayout(w);
+	grid->setSpacing(SPACING);
 
-	grid->addColSpacing(0, SPACING);
-	grid->addColSpacing(4, SPACING);
+	grid->setColumnMinimumWidth(0, SPACING);
+	grid->setColumnMinimumWidth(4, SPACING);
 
 
 	QPixmap applicationIcon =
@@ -216,10 +217,13 @@ QWidget *ConduitConfigBase::aboutPage(QWidget *parent, KAboutData *ad)
 
 	QString comma = CSL1(", ");
 
-	unsigned int count=1;
+	int count=1;
 	for (i=pl.begin(); i!=pl.end(); ++i)
 	{
-		s.append(CSL1("%1 (<i>%2</i>)%3").arg((*i).name()).arg((*i).task()).arg(count<pl.count() ? comma : QString::null));
+		s.append(CSL1("%1 (<i>%2</i>)%3")
+			.arg((*i).name())
+			.arg((*i).task())
+			.arg( (count<pl.count()) ? comma : QString::null));
 		count++;
 	}
 	linktext->append(s);
@@ -479,17 +483,17 @@ void ConduitAction::finished()
 
 		QString caption = i18n("Large Changes Detected");
 		// args are already i18n'd
-		QString query = i18n("The %1 conduit has made a "
+		QString template_query = i18n("The %1 conduit has made a "
 			"large number of changes to your %2.  Do you want "
 			"to allow this change?\nDetails:\n\t%3");
 
 		if (hhVolatility > allowedVolatility)
 		{
-			query = query.arg(fConduitName)
+			QString query = template_query.arg(fConduitName)
 				.arg(fCtrHH->type()).arg(fCtrHH->moo());
 
-			DEBUGKPILOT << fname << ": Yikes, lots of volatility "
-				<< "caught.  Check with user: [" << query
+			DEBUGKPILOT << fname << ": high volatility."
+				<< "  Check with user: [" << query
 				<< "]." << endl;
 
 			/*
@@ -506,8 +510,15 @@ void ConduitAction::finished()
 			}
 			*/
 		}
+		if (pcVolatility > allowedVolatility)
+		{
+			QString query = template_query.arg(fConduitName)
+				.arg(fCtrPC->type()).arg(fCtrPC->moo());
 
-
+			DEBUGKPILOT << fname << ": high volatility."
+				<< "  Check with user: [" << query
+				<< "]." << endl;
+		}
 	}
 
 }

@@ -299,7 +299,7 @@ bool AbbrowserConduit::_loadAddressBook()
 				stopTickle();
 				return false;
 			}
-			// fBookResource = new ResourceFile(fABookFile, CSL1("vcard") );
+			fBookResource = new ResourceFile(fABookFile, CSL1("vcard") );
 			fBookResource = 0L;
 			WARNINGKPILOT << fname << ": File resource unavailable, will crash soon." << endl;
 
@@ -376,11 +376,11 @@ bool AbbrowserConduit::_saveAddressBook()
 		DEBUGKPILOT << fname
 			<< "Addressbook not changed, no need to save it" << endl;
 	}
-	// XXX: KDE4: release ticket in all cases (save no longer releases it)
 	if ( !saveSuccessful ) // didn't save, delete ticket manually
 	{
-		aBook->releaseSaveTicket(fTicket);
+		WARNINGKPILOT << fname << ": Failed to save." << endl;
 	}
+	aBook->releaseSaveTicket(fTicket);
 	fTicket=0L;
 
 	if ( AbbrowserSettings::addressbookType()!= AbbrowserSettings::eAbookResource )

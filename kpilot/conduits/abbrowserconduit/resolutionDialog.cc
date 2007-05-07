@@ -192,7 +192,11 @@ ResolutionDlg::ResolutionDlg( QWidget* parent, KPilotLink*fH,
 	adjustSize();
 	resize(size());
 
-	if (fHandle) tickleTimer=new QTimer(this, "TickleTimer");
+	if (fHandle)
+	{
+		tickleTimer=new QTimer(this);
+		tickleTimer->setObjectName("TickleTimer");
+	}
 
 	if (tickleTimer)
 	{

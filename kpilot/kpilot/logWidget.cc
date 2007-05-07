@@ -29,26 +29,24 @@
 
 #include "options.h"
 
-#include <qfile.h>
-#include <qlayout.h>
-#include <q3textedit.h>
 
 #include <qdatetime.h>
+#include <qfile.h>
 #include <qlabel.h>
-#include <qpixmap.h>
-#include <qtimer.h>
-#include <qpushbutton.h>
-#include <khbox.h>
-#include <q3textstream.h>
+#include <qlayout.h>
 #include <qpainter.h>
-//Added by qt3to4:
-#include <Q3GridLayout>
+#include <qpixmap.h>
+#include <qpushbutton.h>
+#include <qtextedit.h>
+#include <qtextstream.h>
+#include <qtimer.h>
 
-#include <kglobal.h>
-#include <kstandarddirs.h>
-#include <kprogressdialog.h>
 #include <kfiledialog.h>
+#include <kglobal.h>
+#include <khbox.h>
 #include <kmessagebox.h>
+#include <kprogressdialog.h>
+#include <kstandarddirs.h>
 
 #include <pi-version.h>
 
@@ -75,7 +73,8 @@ LogWidget::LogWidget(QWidget * parent) :
 	//QDBusConnection::sessionBus().registerObject("/Logger", this);
 
 	FUNCTIONSETUP;
-	Q3GridLayout *grid = new Q3GridLayout(this, 4, 4, SPACING);
+	QGridLayout *grid = new QGridLayout(this);
+	grid->setSpacing(SPACING);
 
 	grid->addRowSpacing(0, SPACING);
 	grid->addRowSpacing(1, 100);
@@ -86,10 +85,8 @@ LogWidget::LogWidget(QWidget * parent) :
 	grid->setRowStretch(1, 50);
 	grid->setColStretch(2, 50);
 
-	fLog = new Q3TextEdit(this);
+	fLog = new QTextEdit(this);
 	fLog->setReadOnly(true);
-	fLog->setWordWrap(Q3TextEdit::WidgetWidth);
-	fLog->setWrapPolicy(Q3TextEdit::AtWordOrDocumentBoundary);
 	fLog->setTextFormat(Qt::LogText);
 
 	fLog->setWhatsThis( i18n("<qt>This lists all the messages received "
@@ -125,7 +122,7 @@ LogWidget::LogWidget(QWidget * parent) :
 	initialText.append(CSL1(TE_EOL));
 
 	fLog->setText(initialText);
-	fLog->scrollToBottom();
+	fLog->moveCursor( QTextCursor::End );
 
 	KHBox *h = new KHBox(this);
 	h->setSpacing(SPACING);
@@ -220,7 +217,7 @@ void LogWidget::addMessage(const QString & s)
 	t.append(s);
 
 	fLog->append(t);
-	fLog->scrollToBottom();
+	fLog->moveCursor(QTextCursor::End);
 }
 
 void LogWidget::addError(const QString & s)
@@ -364,7 +361,7 @@ bool LogWidget::saveFile(const QString &saveFileName)
 	}
 	else
 	{
-		Q3TextStream t(&f);
+		QTextStream t(&f);
 		t << fLog->text();
 	}
 

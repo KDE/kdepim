@@ -89,10 +89,17 @@ QString PilotMemo::getTextRepresentation(Qt::TextFormat richText)
 
 QString PilotMemo::getTitle() const
 {
-	if (fText.isEmpty()) return QString::null;
+	if (fText.isEmpty())
+	{
+		return QString::null;
+	}
 
-	int memoTitleLen = fText.find('\n');
-	if (-1 == memoTitleLen) memoTitleLen=fText.length();
+	int memoTitleLen = fText.indexOf('\n');
+	// If not found, then use the whole memo text
+	if (memoTitleLen < 0)
+	{
+		return fText;
+	}
 	return fText.left(memoTitleLen);
 }
 
@@ -102,11 +109,15 @@ QString PilotMemo::shortTitle() const
 	QString t = QString(getTitle()).simplified();
 
 	if (t.length() < 32)
+	{
 		return t;
+	}
+
+	// Chop off at 40 characters, then search backwards to the last
+	// space and, if that makes sense, chop off there. This gives
+	// us a string between 32 and 40 characters long.
 	t.truncate(40);
-
-	int spaceIndex = t.findRev(' ');
-
+	int spaceIndex = t.lastIndexOf(' ');
 	if (spaceIndex > 32)
 	{
 		t.truncate(spaceIndex);

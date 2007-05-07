@@ -29,10 +29,10 @@
 
 #include "options.h"
 
-#include <libkcal/calendar.h>
-#include <libkcal/calendarlocal.h>
-#include <libkcal/recurrence.h>
-#include <libkcal/vcalformat.h>
+#include <kcal/calendar.h>
+#include <kcal/calendarlocal.h>
+#include <kcal/recurrence.h>
+#include <kcal/vcalformat.h>
 
 #include "pilot.h"
 #include "pilotRecord.h"

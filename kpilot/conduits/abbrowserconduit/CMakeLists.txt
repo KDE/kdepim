@@ -23,7 +23,7 @@ kde4_add_kcfg_files(conduit_abbrowser_SRCS ${conduit_abbrowser_KCFGS})
 kde4_add_ui3_files(conduit_abbrowser_SRCS ${conduit_abbrowser_UIS})
 kde4_automoc(${conduit_abbrowser_SRCS})
 kde4_add_plugin(conduit_address WITH_PREFIX ${conduit_abbrowser_SRCS})
-target_link_libraries(conduit_address  ${KDE4_KABC_LIBS} ${KDE4_KDEUI_LIBS} kpilot)
+target_link_libraries(conduit_address kabc_file_core ${KDE4_KABC_LIBS} ${KDE4_KDEUI_LIBS} kpilot)
 install(TARGETS conduit_address DESTINATION ${PLUGIN_INSTALL_DIR})
 
 install(FILES abbrowser_conduit.desktop DESTINATION ${SERVICES_INSTALL_DIR})

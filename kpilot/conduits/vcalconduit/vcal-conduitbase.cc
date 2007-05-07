@@ -238,6 +238,11 @@ static void listResources( KCal::CalendarResources *p )
 	}
 }
 
+static inline bool isLocalTime(KCal::Calendar *p)
+{
+	return p->timeSpec().isLocalZone();
+}
+
 /* virtual */ bool VCalConduitBase::openCalendar()
 {
 	FUNCTIONSETUP;
@@ -286,9 +291,9 @@ static void listResources( KCal::CalendarResources *p )
 			DEBUGKPILOT << fname << "Calendar's timezone: "
 				<< fCalendar->timeZoneId() << endl;
 			DEBUGKPILOT << fname << "Calendar is local time: "
-				<< fCalendar->isLocalTime() << endl;
+				<< isLocalTime(fCalendar) << endl;
 
-			emit logMessage( fCalendar->isLocalTime() ?
+			emit logMessage( isLocalTime(fCalendar) ?
 				i18n( "Using local time zone: %1" ).arg( tz ) :
 				i18n( "Using non-local time zone: %1" ).arg( tz ) );
 
@@ -355,7 +360,7 @@ static void listResources( KCal::CalendarResources *p )
 #endif
 #endif
 			addSyncLogEntry( i18n( "Syncing with standard calendar resource." ) );
-			emit logMessage( fCalendar->isLocalTime() ?
+			emit logMessage( isLocalTime(fCalendar) ?
 				i18n( "Using local time zone: %1" ).arg( tz ) :
 				i18n( "Using non-local time zone: %1" ).arg( tz ) );
 			break;
@@ -455,6 +460,7 @@ KCal::Incidence*VCalConduitBase::changeRecord(PilotRecord *r,PilotRecord *)
 	if ( e && de )
 	{
 		// TODO: check for conflict, and if there is one, ask for resolution
+#if 0
 		if ( ( e->syncStatus() != KCal::Incidence::SYNCNONE )
 			&& r->isModified() )
 		{
@@ -466,13 +472,16 @@ KCal::Incidence*VCalConduitBase::changeRecord(PilotRecord *r,PilotRecord *)
 				return e;
 			}
 		}
+#endif
 		// no conflict or conflict resolution says, Palm overwrites, so do it:
 		incidenceFromRecord( e, de );
 
 		// NOTE: This MUST be done last, since every other set* call
 		// calls updated(), which will trigger an
 		// setSyncStatus(SYNCMOD)!!!
+#if 0
 		e->setSyncStatus(KCal::Incidence::SYNCNONE);
+#endif
 		fLocalDatabase->writeRecord( r );
 	}
 	else
@@ -536,8 +545,10 @@ void VCalConduitBase::deletePalmRecord( KCal::Incidence *e, PilotRecord *s )
 	}
 	else
 	{
-		DEBUGKPILOT << fname << ": could not find record to delete (";
+		DEBUGKPILOT << fname << ": could not find record to delete (" << endl;
+#if 0
 		DEBUGKPILOT << e->pilotId() << ")" << endl;
+#endif
 	}
 
 	Q_UNUSED(e);

@@ -4,10 +4,11 @@
 
 # file to put output into for cmake to read in...
 SRC_DIR=$(dirname $0)
+SRC_DIR=`cd $SRC_DIR && pwd`
 if test "$SRC_DIR" = "." ; then
 	SRC_DIR=$(pwd)
 fi
-MAKEFILE="Makefile.cmake"
+MAKEFILE=$SRC_DIR/"Makefile.cmake"
 OUTFILE=Makefile.cmake.in
 CMAKEOUTFILE=$SRC_DIR/CMakeOptions.txt
 
