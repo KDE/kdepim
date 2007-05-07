@@ -299,7 +299,9 @@ bool AbbrowserConduit::_loadAddressBook()
 				stopTickle();
 				return false;
 			}
-			fBookResource = new ResourceFile(fABookFile, CSL1("vcard") );
+			// fBookResource = new ResourceFile(fABookFile, CSL1("vcard") );
+			fBookResource = 0L;
+			WARNINGKPILOT << fname << ": File resource unavailable, will crash soon." << endl;
 
 			bool r = aBook->addResource( fBookResource );
 			if ( !r )
