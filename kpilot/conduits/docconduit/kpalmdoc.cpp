@@ -28,8 +28,9 @@
 
 #include "options.h"
 
-#include <kcmdlineargs.h>
 #include <kaboutdata.h>
+#include <kapplication.h>
+#include <kcmdlineargs.h>
 
 #include "kpalmdoc_dlg.h"
 

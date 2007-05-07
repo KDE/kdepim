@@ -45,19 +45,11 @@
 #include <pilotLocalDatabase.h>
 #include <pilotSerialDatabase.h>
 
-#include "doc-factory.h"
 #include "doc-conflictdialog.h"
 #include "DOC-converter.h"
 #include "pilotDOCHead.h"
 #include "docconduitSettings.h"
 
-
-// Something to allow us to check what revision
-// the modules are that make up a binary distribution.
-extern "C"
-{
-unsigned long version_conduit_doc = Pilot::PLUGIN_API;
-}
 
 QString dirToString(eSyncDirectionEnum dir) {
 	switch(dir) {
@@ -95,11 +87,15 @@ DOCConduit::~DOCConduit()
 bool DOCConduit::isCorrectDBTypeCreator(DBInfo dbinfo) {
 	return dbinfo.type == dbtype() && dbinfo.creator == dbcreator();
 }
+
+static const char *dbDOCtype = "TEXt";
+static const char *dbDOCcreator = "REAd";
+
 const unsigned long DOCConduit::dbtype() {
-	return get_long(DOCConduitFactory::dbDOCtype);
+	return get_long(dbDOCtype);
 }
 const unsigned long DOCConduit::dbcreator() {
-	return get_long(DOCConduitFactory::dbDOCcreator);
+	return get_long(dbDOCcreator);
 }
 
 
@@ -151,7 +147,7 @@ bool DOCConduit::pcTextChanged(QString txtfn)
 	// How do I find out if a text file has changed shince we last synced it??
 	// Use KMD5 for now. If I realize it is too slow, then I have to go back to comparing modification times
 	// if there is no config setting yet, assume the file has been changed. the md5 sum will be written to the config file after the sync.
-	QString oldDigest=DOCConduitSettings::self()->config()->readEntry(txtfn);
+	QString oldDigest=DOCConduitSettings::self()->config()->readEntry(txtfn,QString());
 	if (oldDigest.length()<=0)
 	{
 		return true;
@@ -530,7 +526,7 @@ void DOCConduit::checkPDBFiles() {
 	// If the doc title doesn't appear in either list, install it to the Handheld, and add it to the list of dbs to be synced.
 	QString dbname=fl.baseName(TRUE).left(30);
 	if (!fDBNames.contains(dbname) && !fDBListSynced.contains(dbname)) {
-		if (fHandle->installFiles(pdbfilename, false)) {
+		if (fHandle->installFiles( QStringList(pdbfilename), false)) {
 			DBInfo dbinfo;
 			// Include all "extensions" except the last. This allows full stops inside the database name (e.g. abbreviations)
 			// first fill everything with 0, so we won't have a buffer overflow.
@@ -980,7 +976,7 @@ bool DOCConduit::postSyncAction(PilotDatabase * database,
 				QString dbpathname=localdb->dbPathName();
 				// This deletes localdb as well, which is just a cast from database
 				KPILOT_DELETE(database);
-				if (!fHandle->installFiles(dbpathname, false))
+				if (!fHandle->installFiles( QStringList(dbpathname), false))
 				{
 					rs = false;
 #ifdef DEBUG

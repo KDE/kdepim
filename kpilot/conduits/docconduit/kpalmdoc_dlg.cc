@@ -31,19 +31,20 @@
 #include <stdio.h>
 #include <iostream>
 
-#include <qtabwidget.h>
 #include <qcheckbox.h>
-#include <qradiobutton.h>
-#include <q3buttongroup.h>
-#include <qlabel.h>
 #include <qcombobox.h>
+#include <qlabel.h>
+#include <qradiobutton.h>
+#include <qtabwidget.h>
 
-#include <klocale.h>
-#include <kconfig.h>
-#include <k3aboutapplication.h>
-#include <kurlrequester.h>
-#include <kmessagebox.h>
+#include <kaboutapplicationdialog.h>
+#include <kaboutdata.h>
 #include <kcharsets.h>
+#include <kcomponentdata.h>
+#include <kconfig.h>
+#include <klocale.h>
+#include <kmessagebox.h>
+#include <kurlrequester.h>
 
 #include <pilotLocalDatabase.h>
 
@@ -82,7 +83,6 @@ ConverterDlg::ConverterDlg( QWidget *parent, const QString& caption)
 
 ConverterDlg::~ConverterDlg()
 {
-    // no need to delete child widgets, Qt does it all for us
 }
 void ConverterDlg::writeSettings()
 {
@@ -424,7 +424,7 @@ void ConverterDlg::slotToPDB()
 
 void ConverterDlg::slotUser1()
 {
-	K3AboutApplication ab(KGlobal::mainComponent().aboutData(), this);
+	KAboutApplicationDialog ab(KGlobal::mainComponent().aboutData(), this);
 	ab.show();
 	ab.exec();
 	return;

@@ -32,15 +32,17 @@
 #include "plugin.h"
 
 class DOCWidget;
+class KAboutData;
 
 class DOCWidgetConfig : public ConduitConfigBase
 {
 public:
-	DOCWidgetConfig(QWidget *, const char *);
+	DOCWidgetConfig(QWidget *);
 	virtual void commit();
 	virtual void load();
 protected:
 	DOCWidget *fConfigWidget;
+	KAboutData *fAbout;
 } ;
 
 

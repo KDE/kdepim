@@ -157,7 +157,7 @@ ResolutionDialog::~ResolutionDialog()
 	for (ceIt=conflictEntries.begin(); ceIt!=conflictEntries.end(); ++ceIt) {
 		(*syncInfo)[(*ceIt).index].direction=(eSyncDirectionEnum)((*ceIt).resolution->currentItem());
 	}
-	KDialog::slotOk();
+	accept();
 }
 
 QString eTextStatusToString(eTextStatus stat) {

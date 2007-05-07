@@ -33,18 +33,18 @@
 #include <q3buttongroup.h>
 #include <qcombobox.h>
 
+#include <kaboutdata.h>
+#include <kcharsets.h>
 #include <kconfig.h>
 #include <kurlrequester.h>
-#include <kcharsets.h>
 
 #include "doc-setupdialog.h"
-#include "doc-factory.h"
 #include "doc-setup.h"
 #include "docconduitSettings.h"
 
 
-DOCWidgetConfig::DOCWidgetConfig(QWidget * w, const char *n):
-	ConduitConfigBase(w, n),
+DOCWidgetConfig::DOCWidgetConfig(QWidget * w):
+	ConduitConfigBase(w),
 	fConfigWidget(new DOCWidget(w))
 {
 	FUNCTIONSETUP;
@@ -57,9 +57,18 @@ DOCWidgetConfig::DOCWidgetConfig(QWidget * w, const char *n):
 		fConfigWidget->fEncoding->insertItem(*it);
 	}
 
+	fAbout = new KAboutData("docconduit",
+		I18N_NOOP("Palm DOC Conduit for KPilot"), KPILOT_VERSION,
+		I18N_NOOP("Configures the DOC Conduit for KPilot"),
+		KAboutData::License_GPL, "(C) 2002, Reinhold Kainhofer");
+
+	fAbout->addAuthor("Reinhold Kainhofer",
+		I18N_NOOP("Maintainer"), "reinhold@kainhofer.com",
+		"http://reinhold.kainhofer.com");
+
 	fConfigWidget->fTXTDir->setMode(KFile::Directory);
 	fConfigWidget->fPDBDir->setMode(KFile::Directory);
-	ConduitConfigBase::addAboutPage(fConfigWidget->tabWidget,DOCConduitFactory::about());
+	ConduitConfigBase::addAboutPage(fConfigWidget->tabWidget, fAbout);
 
 	fConduitName=i18n("Palm DOC");
 
@@ -87,8 +96,8 @@ DOCWidgetConfig::DOCWidgetConfig(QWidget * w, const char *n):
 {
 	FUNCTIONSETUP;
 
-	DOCConduitSettings::setTXTDirectory( fConfigWidget->fTXTDir->url() );
-	DOCConduitSettings::setPDBDirectory( fConfigWidget->fPDBDir->url() );
+	DOCConduitSettings::setTXTDirectory( fConfigWidget->fTXTDir->url().url() );
+	DOCConduitSettings::setPDBDirectory( fConfigWidget->fPDBDir->url().url() );
 
 	DOCConduitSettings::setKeepPDBsLocally( fConfigWidget->fkeepPDBLocally->isChecked());
 	DOCConduitSettings::setConflictResolution( fConfigWidget->fConflictResolution->id(

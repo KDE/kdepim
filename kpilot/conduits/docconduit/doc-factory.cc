@@ -27,90 +27,20 @@
 */
 
 #include "options.h"
-#include "doc-factory.moc"
-#include "doc-factory.h"
 
-#include <kcomponentdata.h>
-#include <kaboutdata.h>
-#include <kpilotlink.h>
+#include "pluginfactory.h"
 
 #include "doc-conduit.h"
 #include "doc-setup.h"
 
 
 extern "C" {
-	void *init_conduit_doc() {
-		return new DOCConduitFactory;
-	}
+KPILOT_EXPORT unsigned long version_conduit_doc = Pilot::PLUGIN_API;
+
+KPILOT_EXPORT void *init_libconduit_doc() {
+	return new ConduitFactory<DOCWidgetConfig,DOCConduit>(0,"docconduit");
+}
 }
 
 
-
-// A number of static variables
-KAboutData * DOCConduitFactory::fAbout = 0L;
-
-const char *DOCConduitFactory::dbDOCtype = "TEXt";
-const char *DOCConduitFactory::dbDOCcreator = "REAd";
-
-
-
-DOCConduitFactory::DOCConduitFactory(QObject * p):
-KLibFactory(p)
-{
-	FUNCTIONSETUP;
-	//fInstance("docconduit");
-	fAbout =new KAboutData("docconduit",
-		I18N_NOOP("Palm DOC Conduit for KPilot"), KPILOT_VERSION,
-		I18N_NOOP("Configures the DOC Conduit for KPilot"),
-		KAboutData::License_GPL, "(C) 2002, Reinhold Kainhofer");
-
-	fAbout->addAuthor("Reinhold Kainhofer",
-		I18N_NOOP("Maintainer"), "reinhold@kainhofer.com",
-		"http://reinhold.kainhofer.com");
-}
-
-DOCConduitFactory::~DOCConduitFactory()
-{
-	FUNCTIONSETUP;
-	//KPILOT_DELETE(fInstance);
-	KPILOT_DELETE(fAbout);
-}
-
-
-/* virtual */ QObject * DOCConduitFactory::createObject(QObject * p,
-	const char *c, const QStringList & a)
-{
-	FUNCTIONSETUP;
-
-#ifdef DEBUG
-	DEBUGKPILOT << fname <<": Creating object of class " <<c <<endl;
-#endif
-	if (qstrcmp(c, "ConduitConfigBase") == 0)
-	{
-		QWidget *w = dynamic_cast<QWidget *>(p);
-		if (w)
-		{
-			return new DOCWidgetConfig(w);
-		}
-		else
-		{
-			WARNINGKPILOT << "Couldn't cast parent to widget." << endl;
-			return 0L;
-		}
-	}
-	if (qstrcmp(c, "SyncAction") == 0)
-	{
-		KPilotLink * d = dynamic_cast < KPilotLink * >(p);
-		if (d)
-		{
-			return new DOCConduit(d, a);
-		}
-		else
-		{
-			WARNINGKPILOT << "Couldn't cast parent to KPilotLink" <<endl;
-			return 0L;
-		}
-	}
-	return 0L;
-}
 
