@@ -46,6 +46,7 @@
 #include "typecombo.h"
 
 #include "phoneeditwidget.h"
+#include <qvaluevector.h>
 
 PhoneEditWidget::PhoneEditWidget( QWidget *parent, const char *name )
   : QWidget( parent, name ), mReadOnly(false)
@@ -146,10 +147,23 @@ void PhoneEditWidget::setPhoneNumbers( const KABC::PhoneNumber::List &list )
 
   updateCombos();
 
-  mPrefCombo->selectType( defaultTypes[ 0 ] );
-  mSecondCombo->selectType( defaultTypes[ 1 ] );
-  mThirdCombo->selectType( defaultTypes[ 2 ] );
-  mFourthCombo->selectType( defaultTypes[ 3 ] );
+  // Select combo items for which we have a phone number in the list
+  // and then switch to the defaultTypes (but not those we showed already)
+  const int nr = list.count();
+  QValueVector<int> selectedTypes( 4 );
+  for ( int i = 0; i < QMIN( nr, 4 ); ++i ) {
+    const int type = list[i].type();
+    defaultTypes.remove( type );
+    selectedTypes[i] = type;
+  }
+  int def = 0;
+  for ( int i = QMIN( nr, 4 ); i < 4; ++i )
+    selectedTypes[i] = defaultTypes[def++];
+
+  mPrefCombo->selectType( selectedTypes[ 0 ] );
+  mSecondCombo->selectType( selectedTypes[ 1 ] );
+  mThirdCombo->selectType( selectedTypes[ 2 ] );
+  mFourthCombo->selectType( selectedTypes[ 3 ] );
 
   updateLineEdits();
 }
