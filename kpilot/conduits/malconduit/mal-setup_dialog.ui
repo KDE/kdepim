@@ -277,7 +277,7 @@
                                     <string>&lt;qt&gt;If you selected HTTP or SOCKS proxy, type the address of the proxy server to use here, in the form &lt;i&gt;foo.bar.com&lt;/i&gt; (not &lt;i&gt;http://foo.bar.com&lt;/i&gt; or &lt;i&gt;http://foo.bar.com:8080&lt;/i&gt;).&lt;/qt&gt;</string>
                                 </property>
                             </widget>
-                            <widget class="KHistoryCombo" row="0" column="1" rowspan="1" colspan="2">
+                            <widget class="KHistoryComboBox" row="0" column="1" rowspan="1" colspan="2">
                                 <property name="name">
                                     <cstring>proxyServerName</cstring>
                                 </property>
@@ -285,27 +285,18 @@
                                     <string>&lt;qt&gt;If you selected HTTP or SOCKS proxy, type the address of the proxy server to use here, in the form &lt;i&gt;foo.bar.com&lt;/i&gt; (not &lt;i&gt;http://foo.bar.com&lt;/i&gt; or &lt;i&gt;http://foo.bar.com:8080&lt;/i&gt;).&lt;/qt&gt;</string>
                                 </property>
                             </widget>
-                            <widget class="KIntNumInput" row="1" column="1">
+                            <widget class="KLineEdit" row="1" column="1">
                                 <property name="name">
                                     <cstring>proxyCustomPort</cstring>
                                 </property>
                                 <property name="enabled">
                                     <bool>false</bool>
                                 </property>
-                                <property name="value">
-                                    <number>80</number>
-                                </property>
-                                <property name="minValue">
-                                    <number>0</number>
-                                </property>
-                                <property name="maxValue">
-                                    <number>65535</number>
-                                </property>
                                 <property name="whatsThis" stdset="0">
                                     <string>&lt;qt&gt;Enter the port you want KPilot to use when connecting to your proxy server here.&lt;/qt&gt;</string>
                                 </property>
                             </widget>
-                            <widget class="KPasswordEdit" row="5" column="1" rowspan="1" colspan="2">
+                            <widget class="KLineEdit" row="5" column="1" rowspan="1" colspan="2">
                                 <property name="name">
                                     <cstring>proxyPassword</cstring>
                                 </property>
@@ -462,21 +453,12 @@
                                     <string>Custom &amp;port:</string>
                                 </property>
                             </widget>
-                            <widget class="KIntNumInput" row="1" column="2">
+                            <widget class="KLineEdit" row="1" column="2">
                                 <property name="name">
                                     <cstring>malCustomPort</cstring>
                                 </property>
                                 <property name="enabled">
                                     <bool>false</bool>
-                                </property>
-                                <property name="value">
-                                    <number>80</number>
-                                </property>
-                                <property name="minValue">
-                                    <number>0</number>
-                                </property>
-                                <property name="maxValue">
-                                    <number>65535</number>
                                 </property>
                             </widget>
                             <spacer row="1" column="3">
@@ -496,7 +478,7 @@
                                     </size>
                                 </property>
                             </spacer>
-                            <widget class="KHistoryCombo" row="0" column="2" rowspan="1" colspan="2">
+                            <widget class="KHistoryComboBox" row="0" column="2" rowspan="1" colspan="2">
                                 <property name="name">
                                     <cstring>malServerName</cstring>
                                 </property>
@@ -542,7 +524,7 @@
                                     <enum>Horizontal</enum>
                                 </property>
                             </widget>
-                            <widget class="KPasswordEdit" row="4" column="1" rowspan="1" colspan="3">
+                            <widget class="KLineEdit" row="4" column="1" rowspan="1" colspan="3">
                                 <property name="name">
                                     <cstring>malPassword</cstring>
                                 </property>
@@ -629,6 +611,6 @@
 <layoutdefaults spacing="6" margin="11"/>
 <includes>
     <include location="global" impldecl="in implementation">klineedit.h</include>
-    <include location="global" impldecl="in implementation">knuminput.h</include>
+    <include location="global" impldecl="in implementation">khistorycombobox.h</include>
 </includes>
 </UI>

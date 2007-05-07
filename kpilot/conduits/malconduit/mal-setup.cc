@@ -38,6 +38,7 @@
 #include <qlineedit.h>
 #include <qcheckbox.h>
 
+#include <kaboutdata.h>
 #include <kcombobox.h>
 #include <knuminput.h>
 #include <kpassworddialog.h>
@@ -59,7 +60,22 @@ MALWidgetSetup::MALWidgetSetup(QWidget *w) :
 	FUNCTIONSETUP;
 
 	fConduitName=i18n("MAL");
-	ConduitConfigBase::addAboutPage(fConfigWidget->tabWidget,MALConduitFactory::about());
+	fAbout = new KAboutData("MALconduit",
+		I18N_NOOP("MAL Synchronization Conduit for KPilot"),
+		KPILOT_VERSION,
+		I18N_NOOP("Synchronizes the content from MAL Servers like AvantGo to the Handheld"),
+		KAboutData::License_GPL,
+		"(C) 2002, Reinhold Kainhofer");
+	fAbout->addAuthor("Reinhold Kainhofer",
+		I18N_NOOP("Primary Author"), "reinhold@kainhofer.com", "http://reinhold.kainhofer.com/");
+	fAbout->addCredit("Jason Day",
+		I18N_NOOP("Author of libmal and the JPilot AvantGo conduit"), "jasonday@worldnet.att.net");
+	fAbout->addCredit("Tom Whittaker",
+		I18N_NOOP("Author of syncmal"), "tom@tomw.org", "http://www.tomw.org/");
+	fAbout->addCredit("AvantGo, Inc.",
+		I18N_NOOP("Authors of the malsync library (c) 1997-1999"), "", "http://www.avantgo.com/");
+
+	ConduitConfigBase::addAboutPage(fConfigWidget->tabWidget,fAbout);
 	fWidget = fConfigWidget;
 
 	fConfigWidget->tabWidget->adjustSize();
@@ -101,21 +117,21 @@ MALWidgetSetup::~MALWidgetSetup()
 
 	if (fConfigWidget->proxyCustomPortCheck->isChecked() )
 	{
-		MALConduitSettings::setProxyPort( fConfigWidget->proxyCustomPort->value());
+		MALConduitSettings::setProxyPort( fConfigWidget->proxyCustomPort->text().toInt());
 	}
 	else
 	{
 		MALConduitSettings::setProxyPort(0);
 	}
 	MALConduitSettings::setProxyUser( fConfigWidget->proxyUserName->text() );
-	MALConduitSettings::setProxyPassword( fConfigWidget->proxyPassword->password() );
+	MALConduitSettings::setProxyPassword( fConfigWidget->proxyPassword->text() );
 
 	// MAL Server settings (not yet possible!!!)
 	MALConduitSettings::setMALServer( fConfigWidget->malServerName->currentText() );
 
 	if (fConfigWidget->malCustomPortCheck->isChecked() )
 	{
-		MALConduitSettings::setMALPort( fConfigWidget->malCustomPort->value());
+		MALConduitSettings::setMALPort( fConfigWidget->malCustomPort->text().toInt());
 	}
 	else
 	{
@@ -146,7 +162,7 @@ MALWidgetSetup::~MALWidgetSetup()
 	{
 		fConfigWidget->proxyCustomPortCheck->setChecked(true);
 		fConfigWidget->proxyCustomPort->setEnabled(true);
-		fConfigWidget->proxyCustomPort->setValue(proxyPortNr);
+		fConfigWidget->proxyCustomPort->setText( QString::number(proxyPortNr) );
 	}
 	fConfigWidget->proxyUserName->setText(MALConduitSettings::proxyUser());
 	fConfigWidget->proxyPassword->setText(QString::null);
@@ -158,7 +174,7 @@ MALWidgetSetup::~MALWidgetSetup()
 		<< "> set Text <"
 		<< fConfigWidget->proxyPassword->text()
 		<< "> and Pwd <"
-		<< fConfigWidget->proxyPassword->password()
+//		<< fConfigWidget->proxyPassword->password()
 		<< ">" << endl;
 #endif
 
@@ -170,7 +186,7 @@ MALWidgetSetup::~MALWidgetSetup()
 	{
 		fConfigWidget->malCustomPortCheck->setChecked(true);
 		fConfigWidget->malCustomPort->setEnabled(true);
-		fConfigWidget->malCustomPort->setValue(proxyPortNr);
+		fConfigWidget->malCustomPort->setText( QString::number(proxyPortNr) );
 	}
 	fConfigWidget->malUserName->setText(MALConduitSettings::mALUser());
 	fConfigWidget->malPassword->setText(MALConduitSettings::mALPassword());
@@ -179,6 +195,6 @@ MALWidgetSetup::~MALWidgetSetup()
 
 /* static */ ConduitConfigBase *MALWidgetSetup::create(QWidget *w, const char *n)
 {
-	return new MALWidgetSetup(w,n);
+	return new MALWidgetSetup(w);
 }
 
