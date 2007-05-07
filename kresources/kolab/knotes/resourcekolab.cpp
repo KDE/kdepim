@@ -50,7 +50,14 @@ static const char* kmailContentsType = "Note";
 static const char* attachmentMimeType = "application/x-vnd.kolab.note";
 static const char* inlineMimeType = "text/calendar";
 
-ResourceKolab::ResourceKolab( const KConfig *config )
+ResourceKolab::ResourceKolab()
+  : ResourceNotes(), ResourceKolabBase( "ResourceKolab-KNotes" ),
+    mCalendar( QLatin1String("UTC") )
+{
+  setType( "imap" );
+}
+
+ResourceKolab::ResourceKolab( const KConfigGroup& config )
   : ResourceNotes( config ), ResourceKolabBase( "ResourceKolab-KNotes" ),
     mCalendar( QLatin1String("UTC") )
 {

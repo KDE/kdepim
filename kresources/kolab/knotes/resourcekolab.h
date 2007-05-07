@@ -50,13 +50,14 @@ namespace Kolab {
  * clients).
  */
 class KDE_EXPORT ResourceKolab : public ResourceNotes,
-                      public KCal::IncidenceBase::Observer,
+                      public KCal::IncidenceBase::IncidenceObserver,
                       public ResourceKolabBase
 {
   Q_OBJECT
 
 public:
-  ResourceKolab( const KConfig* );
+  ResourceKolab();
+  ResourceKolab( const KConfigGroup& );
   virtual ~ResourceKolab();
 
   /// Load resource data.

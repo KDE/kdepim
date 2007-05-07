@@ -34,12 +34,13 @@
 #ifndef KMAILCONNECTION_H
 #define KMAILCONNECTION_H
 
-//#include <kmail/kmailicalIface.h>
+#include <QObject>
+#include <kmail/kmailicalIface.h>
+#include "kolabshared_export.h"
 
 class KUrl;
-class DCOPClient;
-class DCOPCString;
-class KMailICalIface_stub;
+class QString;
+class OrgKdeKmailGroupwareInterface;
 
 namespace Kolab {
 
@@ -48,12 +49,11 @@ class ResourceKolabBase;
 /**
   This class provides the kmail connectivity for IMAP resources.
 */
-class KMailConnection : public QObject, public DCOPObject {
+class KOLABSHARED_EXPORT KMailConnection : public QObject {
   Q_OBJECT
-  K_DCOP
 
   // These are the methods called by KMail when the resource changes
-k_dcop:
+private Q_SLOTS:
   bool fromKMailAddIncidence( const QString& type, const QString& resource,
                               quint32 sernum, int format, const QString& xml );
   void fromKMailDelIncidence( const QString& type, const QString& resource,
@@ -65,7 +65,7 @@ k_dcop:
                                  const QString& folder );
 
 public:
-  KMailConnection( ResourceKolabBase* resource, const DCOPCString& objId );
+  KMailConnection( ResourceKolabBase* resource );
   virtual ~KMailConnection();
 
   /**
@@ -73,7 +73,7 @@ public:
    */
   bool connectToKMail();
 
-  // Call the DCOP methods
+  // Call the DBus methods
   bool kmailSubresources( QList<KMailICalIface::SubResource>& lst,
                           const QString& contentsType );
   bool kmailIncidencesCount( int& count,
@@ -102,15 +102,14 @@ public:
   bool kmailTriggerSync( const QString& contentsType );
 
 private slots:
-  virtual void unregisteredFromDCOP( const DCOPCString& );
+  void dbusServiceOwnerChanged(const QString & service, const QString & oldOwner, const QString & newOwner);
 
 private:
   /** Connect a signal from KMail to a local slot. */
   bool connectKMailSignal( const QByteArray&, const QByteArray& );
 
   ResourceKolabBase* mResource;
-  DCOPClient* mDCOPClient;
-  KMailICalIface_stub* mKMailIcalIfaceStub;
+  OrgKdeKmailGroupwareInterface* mKmailGroupwareInterface;
 };
 
 }

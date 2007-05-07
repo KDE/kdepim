@@ -6,10 +6,6 @@ include_directories( ${CMAKE_SOURCE_DIR}/kresources/kolab/shared  )
 
 set(kabckolab_LIB_SRCS resourcekolab.cpp contact.cpp ${libresourcekolabshared_SRCS})
 
-#kde4_add_dcop_skels(kabckolab_LIB_SRCS
-#    ${CMAKE_SOURCE_DIR}/kresources/kolab/shared/kmailconnection.h
-#	)
-
 #kde4_add_dcop_stubs(kabckolab_LIB_SRCS ${CMAKE_SOURCE_DIR}/kmail/kmailicalIface.h )
 
 kde4_automoc(${kabckolab_LIB_SRCS})

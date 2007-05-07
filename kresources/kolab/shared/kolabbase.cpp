@@ -93,7 +93,7 @@ void KolabBase::setFields( const KABC::Addressee* addressee )
   // Set creation-time and last-modification-time
   const QString creationString = addressee->custom( "KOLAB", "CreationDate" );
   kDebug(5006) << "Creation time string: " << creationString << endl;
-  QDateTime creationDate;
+  KDateTime creationDate;
   if ( creationString.isEmpty() ) {
     creationDate = QDateTime::currentDateTime();
     kDebug(5006) << "Creation date set to current time\n";
@@ -438,11 +438,9 @@ void KolabBase::writeString( QDomElement& element, const QString& tag,
   }
 }
 
-QDateTime KolabBase::localToUTC( const QDateTime& time ) const
+QDateTime KolabBase::localToUTC( const KDateTime& time ) const
 {
-  QDateTime dt = time;
-  dt.setTimeSpec( Qt::LocalTime );
-  return KDateTime( dt, mTimeZone ).toUtc().dateTime();
+  return time.toUtc().dateTime();
 }
 
 KDateTime KolabBase::utcToLocal( const QDateTime& time ) const

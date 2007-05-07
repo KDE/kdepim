@@ -35,49 +35,41 @@
 #include "resourcekolabbase.h"
 
 #include <kdebug.h>
-#include <dcopclient.h>
-#include <kapplication.h>
-#include <kdcopservicestarter.h>
+#include <kdbusservicestarter.h>
+#include <kmail_groupwareinterface.h>
 #include <klocale.h>
-
-#include "kmailicalIface_stub.h"
 
 
 using namespace Kolab;
 
 
-KMailConnection::KMailConnection( ResourceKolabBase* resource,
-                                  const DCOPCString& objId )
-  : DCOPObject( objId ), mResource( resource ), mKMailIcalIfaceStub( 0 )
+KMailConnection::KMailConnection( ResourceKolabBase* resource )
+  : QObject(), mResource( resource ), mKmailGroupwareInterface( 0 )
 {
   // Make the connection to KMail ready
-  mDCOPClient = new DCOPClient();
-  mDCOPClient->attach();
-  mDCOPClient->registerAs( objId, true );
-
-  kapp->dcopClient()->setNotifications( true );
-  connect( kapp->dcopClient(), SIGNAL( applicationRemoved( const QByteArray& ) ),
-           this, SLOT( unregisteredFromDCOP( const QByteArray& ) ) );
+#if 0
+  // Do we need to kill the interface when kmail exits, to restart kmail next time?
+  connect( QDBusConnection::sessionBus().interface(), SIGNAL(serviceOwnerChanged(QString,QString,QString)),
+           SLOT(dbusServiceOwnerChanged(QString,QString,QString)) );
+#endif
+  // TODO connect to the dbus signals from kmail here
 }
 
 KMailConnection::~KMailConnection()
 {
-  kapp->dcopClient()->setNotifications( false );
-  delete mKMailIcalIfaceStub;
-  mKMailIcalIfaceStub = 0;
-  delete mDCOPClient;
-  mDCOPClient = 0;
+  delete mKmailGroupwareInterface;
+  mKmailGroupwareInterface = 0;
 }
 
-static const DCOPCString dcopObjectId = "KMailICalIface";
+static const char* dcopObjectId = "KMailICalIface";
 bool KMailConnection::connectToKMail()
 {
-  if ( !mKMailIcalIfaceStub ) {
+  if ( !mKmailGroupwareInterface ) {
     QString error;
-    DCOPCString dcopService;
-    int result = KDCOPServiceStarter::self()->
-      findServiceFor( "DCOP/ResourceBackend/IMAP", QString(),
-                      &error, &dcopService );
+    QString dbusService;
+    int result = KDBusServiceStarter::self()->
+      findServiceFor( "DBUS/ResourceBackend/IMAP", QString(),
+                      &error, &dbusService );
     if ( result != 0 ) {
       kError(5650) << "Couldn't connect to the IMAP resource backend\n";
       // TODO: You might want to show "error" (if not empty) here,
@@ -85,9 +77,9 @@ bool KMailConnection::connectToKMail()
       return false;
     }
 
-    mKMailIcalIfaceStub = new KMailICalIface_stub( kapp->dcopClient(),
-                                                   dcopService, dcopObjectId );
+    mKmailGroupwareInterface = new OrgKdeKmailGroupwareInterface( dbusService, "/Groupware", QDBusConnection::sessionBus());
 
+#if 0 // TODO
     // Attach to the KMail signals
     if ( !connectKMailSignal( "incidenceAdded(QString,QString,quint32,int,QString)",
                               "fromKMailAddIncidence(QString,QString,quint32,int,QString)" ) )
@@ -107,9 +99,10 @@ bool KMailConnection::connectToKMail()
     if ( !connectKMailSignal( "asyncLoadResult(QMap<quint32, QString>, QString, QString)",
                               "fromKMailAsyncLoadResult(QMap<quint32, QString>, QString, QString)" ) )
       kError(5650) << "DCOP connection to asyncLoadResult failed" << endl;
+#endif
   }
 
-  return ( mKMailIcalIfaceStub != 0 );
+  return ( mKmailGroupwareInterface != 0 );
 }
 
 bool KMailConnection::fromKMailAddIncidence( const QString& type,
@@ -152,7 +145,7 @@ void KMailConnection::fromKMailAddSubresource( const QString& type,
 
   // TODO: This should be told by KMail right away
   if ( connectToKMail() )
-    writable = mKMailIcalIfaceStub->isWritableFolder( type, resource );
+    writable = mKmailGroupwareInterface->isWritableFolder( type, resource );
 
   mResource->fromKMailAddSubresource( type, resource, label, writable );
 }
@@ -175,8 +168,12 @@ void KMailConnection::fromKMailAsyncLoadResult( const QMap<quint32, QString>& ma
 bool KMailConnection::connectKMailSignal( const QByteArray& signal,
                                           const QByteArray& method )
 {
+#if 0 // TODO
   return connectDCOPSignal( "kmail", dcopObjectId, signal, method, false )
     && connectDCOPSignal( "kontact", dcopObjectId, signal, method, false );
+#else
+  return false;
+#endif
 }
 
 bool KMailConnection::kmailSubresources( QList<KMailICalIface::SubResource>& lst,
@@ -185,8 +182,8 @@ bool KMailConnection::kmailSubresources( QList<KMailICalIface::SubResource>& lst
   if ( !connectToKMail() )
     return false;
 
-  lst = mKMailIcalIfaceStub->subresourcesKolab( contentsType );
-  return mKMailIcalIfaceStub->ok();
+  lst = mKmailGroupwareInterface->subresourcesKolab( contentsType );
+  return mKmailGroupwareInterface->ok();
 }
 
 bool KMailConnection::kmailIncidencesCount( int& count,
@@ -196,8 +193,8 @@ bool KMailConnection::kmailIncidencesCount( int& count,
   if ( !connectToKMail() )
     return false;
 
-  count = mKMailIcalIfaceStub->incidencesKolabCount( mimetype, resource );
-  return mKMailIcalIfaceStub->ok();
+  count = mKmailGroupwareInterface->incidencesKolabCount( mimetype, resource );
+  return mKmailGroupwareInterface->ok();
 }
 
 bool KMailConnection::kmailIncidences( QMap<quint32, QString>& lst,
@@ -209,8 +206,8 @@ bool KMailConnection::kmailIncidences( QMap<quint32, QString>& lst,
   if ( !connectToKMail() )
     return false;
 
-  lst = mKMailIcalIfaceStub->incidencesKolab( mimetype, resource, startIndex, nbMessages );
-  return mKMailIcalIfaceStub->ok();
+  lst = mKmailGroupwareInterface->incidencesKolab( mimetype, resource, startIndex, nbMessages );
+  return mKmailGroupwareInterface->ok();
 }
 
 
@@ -222,16 +219,16 @@ bool KMailConnection::kmailGetAttachment( KUrl& url,
   if ( !connectToKMail() )
     return false;
 
-  url = mKMailIcalIfaceStub->getAttachment( resource, sernum, filename );
-  return mKMailIcalIfaceStub->ok();
+  url = mKmailGroupwareInterface->getAttachment( resource, sernum, filename );
+  return mKmailGroupwareInterface->ok();
 }
 
 bool KMailConnection::kmailDeleteIncidence( const QString& resource,
                                             quint32 sernum )
 {
   return connectToKMail()
-    && mKMailIcalIfaceStub->deleteIncidenceKolab( resource, sernum )
-    && mKMailIcalIfaceStub->ok();
+    && mKmailGroupwareInterface->deleteIncidenceKolab( resource, sernum )
+    && mKmailGroupwareInterface->ok();
 }
 
 bool KMailConnection::kmailUpdate( const QString& resource,
@@ -246,10 +243,10 @@ bool KMailConnection::kmailUpdate( const QString& resource,
 {
   kDebug(5006) << kBacktrace() << endl;
   if ( connectToKMail() ) {
-    sernum = mKMailIcalIfaceStub->update( resource, sernum, subject, plainTextBody, customHeaders,
+    sernum = mKmailGroupwareInterface->update( resource, sernum, subject, plainTextBody, customHeaders,
                                           attachmentURLs, attachmentMimetypes, attachmentNames,
                                           deletedAttachments );
-    return sernum && mKMailIcalIfaceStub->ok();
+    return sernum && mKmailGroupwareInterface->ok();
   } else
     return false;
 }
@@ -258,25 +255,27 @@ bool KMailConnection::kmailStorageFormat( KMailICalIface::StorageFormat& type,
                                           const QString& folder )
 {
   bool ok = connectToKMail();
-  type = mKMailIcalIfaceStub->storageFormat( folder );
-  return ok && mKMailIcalIfaceStub->ok();
+  type = mKmailGroupwareInterface->storageFormat( folder );
+  return ok && mKmailGroupwareInterface->ok();
 }
 
 
 bool KMailConnection::kmailTriggerSync( const QString &contentsType )
 {
   bool ok = connectToKMail();
-  return ok && mKMailIcalIfaceStub->triggerSync( contentsType );
+  return ok && mKmailGroupwareInterface->triggerSync( contentsType );
 }
 
-void KMailConnection::unregisteredFromDCOP( const DCOPCString& appId )
+void KMailConnection::dbusServiceOwnerChanged(const QString & service, const QString & oldOwner, const QString & newOwner);
 {
-  if ( mKMailIcalIfaceStub && mKMailIcalIfaceStub->app() == appId ) {
+#if 0 // TODO
+  if ( mKmailGroupwareInterface && mKmailGroupwareInterface->app() == appId ) {
     // Delete the stub so that the next time we need to talk to kmail,
     // we'll know that we need to start a new one.
-    delete mKMailIcalIfaceStub;
-    mKMailIcalIfaceStub = 0;
+    delete mKmailGroupwareInterface;
+    mKmailGroupwareInterface = 0;
   }
+#endif
 }
 
 #include "kmailconnection.moc"

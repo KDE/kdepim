@@ -47,13 +47,16 @@ using namespace Kolab;
 
 static unsigned int uniquifier = 0;
 
-ResourceKolabBase::ResourceKolabBase( const DCOPCString& objId )
+ResourceKolabBase::ResourceKolabBase( const QByteArray& objId )
   : mSilent( false )
 {
   KGlobal::locale()->insertCatalog( "kres_kolab" );
   KGlobal::locale()->insertCatalog( "libkcal" );
-  DCOPCString uniqueObjId = objId + QString::number( uniquifier++ ).toLatin1();
+  QByteArray uniqueObjId = objId + QString::number( uniquifier++ ).toLatin1();
+  // TODO port to DBUS!
+#if 0
   mConnection = new KMailConnection( this, uniqueObjId );
+#endif
 }
 
 ResourceKolabBase::~ResourceKolabBase()

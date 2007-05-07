@@ -36,6 +36,7 @@
 
 #include <qdom.h>
 #include <QDateTime>
+#include <KDateTime>
 #include <QColor>
 
 class QFile;
@@ -156,7 +157,7 @@ protected:
   // Write a string tag
   static void writeString( QDomElement&, const QString&, const QString& );
 
-  QDateTime localToUTC( const QDateTime& time ) const;
+  QDateTime localToUTC( const KDateTime& time ) const;
   KDateTime utcToLocal( const QDateTime& time ) const;
 
   QString mUid;

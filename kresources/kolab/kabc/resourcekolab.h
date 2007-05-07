@@ -57,7 +57,8 @@ public:
   /**
    * Constructor
    */
-  ResourceKolab( const KConfig* );
+  ResourceKolab();
+  ResourceKolab( const KConfigGroup& );
 
   /**
    * Destructor.

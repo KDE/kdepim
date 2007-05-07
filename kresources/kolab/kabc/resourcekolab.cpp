@@ -38,12 +38,8 @@
 #include <klocale.h>
 #include <kmessagebox.h>
 #include <ktemporaryfile.h>
-#include <kio/observer.h>
-#include <kio/uiserver_stub.h>
 #include <kabc/vcardconverter.h>
 #include <kmainwindow.h>
-#include <kapplication.h>
-#include <dcopclient.h>
 
 #include <QObject>
 #include <QTimer>
@@ -58,7 +54,12 @@ using namespace Kolab;
 class KolabFactory : public KRES::PluginFactoryBase
 {
   public:
-    KRES::Resource *resource( const KConfig *config )
+    KRES::Resource *resource()
+    {
+      return new KABC::ResourceKolab();
+    }
+
+    KRES::Resource *resource( const KConfigGroup& config )
     {
       return new KABC::ResourceKolab( config );
     }
@@ -76,7 +77,15 @@ static const char* s_attachmentMimeTypeContact = "application/x-vnd.kolab.contac
 static const char* s_attachmentMimeTypeDistList = "application/x-vnd.kolab.contact.distlist";
 static const char* s_inlineMimeType = "text/x-vcard"; // the new mimetype name is text/directory, but keep this for compat
 
-KABC::ResourceKolab::ResourceKolab( const KConfig *config )
+KABC::ResourceKolab::ResourceKolab()
+  : KPIM::ResourceABC(),
+    Kolab::ResourceKolabBase( "ResourceKolab-KABC" ),
+    mCachedSubresource( QString() ), mLocked( false )
+{
+  setType( "imap" );
+}
+
+KABC::ResourceKolab::ResourceKolab( const KConfigGroup& config )
   : KPIM::ResourceABC( config ),
     Kolab::ResourceKolabBase( "ResourceKolab-KABC" ),
     mCachedSubresource( QString() ), mLocked( false )
@@ -196,6 +205,7 @@ bool KABC::ResourceKolab::loadSubResource( const QString& subResource )
   // If it's too big the progressbar is jumpy.
   const int nbMessages = 200;
 
+#if 0 // TODO port progress dialog
   (void)Observer::self(); // ensure kio_uiserver is running
   UIServer_stub uiserver( "kio_uiserver", "UIServer" );
   int progressId = 0;
@@ -205,6 +215,7 @@ bool KABC::ResourceKolab::loadSubResource( const QString& subResource )
     uiserver.infoMessage( progressId, i18n( "Loading contacts..." ) );
     uiserver.transferring( progressId, KUrl("Contacts") );
   }
+#endif
 
   for ( int startIndex = 0; startIndex < count; startIndex += nbMessages ) {
 
@@ -217,8 +228,10 @@ bool KABC::ResourceKolab::loadSubResource( const QString& subResource )
       QMap<quint32, QString> lst;
       if ( !kmailIncidences( lst, mimetype, subResource, startIndex, nbMessages ) ) {
         kError() << "Communication problem in KABC::ResourceKolab::loadSubResource()\n";
+#if 0 // TODO port progress dialog
         if ( progressId )
           uiserver.jobFinished( progressId );
+#endif
         return false;
       }
 
@@ -227,10 +240,12 @@ bool KABC::ResourceKolab::loadSubResource( const QString& subResource )
       }
 
     }
+#if 0 // TODO port progress dialog
     if ( progressId ) {
       uiserver.processedFiles( progressId, startIndex );
       uiserver.percent( progressId, 100 * startIndex / count );
     }
+#endif
 
 //    if ( progress.wasCanceled() ) {
 //      uiserver.jobFinished( progressId );
@@ -241,8 +256,10 @@ bool KABC::ResourceKolab::loadSubResource( const QString& subResource )
 
   kDebug(5650) << "Contacts kolab resource: got " << count << " contacts in " << subResource << endl;
 
+#if 0 // TODO port progress dialog
   if ( progressId )
     uiserver.jobFinished( progressId );
+#endif
   return true;
 }
 
