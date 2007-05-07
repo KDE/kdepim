@@ -1,0 +1,7 @@
+File=settings.kcfg
+ClassName= ConduitSettings
+Singleton=true
+ItemAccessors=true
+Mutators=true
+GlobalEnums=true
+SetUserTexts=true

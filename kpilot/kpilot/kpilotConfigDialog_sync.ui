@@ -1,0 +1,171 @@
+<!DOCTYPE UI><UI version="3.3" stdsetdef="1">
+<class>SyncConfigWidget</class>
+<comment>A widget for editing HotSync-specific settings.</comment>
+<author>David Bishop</author>
+<widget class="QWidget">
+    <property name="name">
+        <cstring>SyncConfigForm</cstring>
+    </property>
+    <property name="geometry">
+        <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>593</width>
+            <height>332</height>
+        </rect>
+    </property>
+    <property name="caption">
+        <string>KPilot Options</string>
+    </property>
+    <grid>
+        <property name="name">
+            <cstring>unnamed</cstring>
+        </property>
+        <property name="margin">
+            <number>0</number>
+        </property>
+        <widget class="QCheckBox" row="1" column="1">
+            <property name="name">
+                <cstring>fFullSyncCheck</cstring>
+            </property>
+            <property name="text">
+                <string>Do full sync when chan&amp;ging PCs</string>
+            </property>
+            <property name="checked">
+                <bool>true</bool>
+            </property>
+            <property name="whatsThis" stdset="0">
+                <string>&lt;qt&gt;Check this box to perform a full sync when your last sync was performed with another PC or system, to guarantee the completeness of your data.&lt;/qt&gt;</string>
+            </property>
+        </widget>
+        <widget class="QComboBox" row="0" column="1">
+            <item>
+                <property name="text">
+                    <string>HotSync (sync all changes)</string>
+                </property>
+            </item>
+            <item>
+                <property name="text">
+                    <string>FullSync (sync also unchanged records)</string>
+                </property>
+            </item>
+            <item>
+                <property name="text">
+                    <string>Copy PC to Handheld</string>
+                </property>
+            </item>
+            <item>
+                <property name="text">
+                    <string>Copy Handheld to PC</string>
+                </property>
+            </item>
+            <property name="name">
+                <cstring>fSpecialSync</cstring>
+            </property>
+            <property name="whatsThis" stdset="0">
+                <string>&lt;qt&gt;Select in this list the synchronization type that KPilot will use as default. Possible values are:&lt;br&gt;"HotSync", to run all selected conduits, and sync the databases with a modified flag set, updating the modified records only;&lt;br&gt;"FullSync" to run all selected conduits, and sync all databases, reading all records, and performing a full backup;&lt;br&gt;"Copy PC to handheld" to run all conduits and sync all databases, but instead of merging the information from both sources, copy the PC data to the handheld;&lt;br&gt;"Copy handheld to PC" to run all conduits and sync all databases, but instead of merging the information from both sources, copy the handheld data to the PC.&lt;/qt&gt;</string>
+            </property>
+        </widget>
+        <widget class="QLabel" row="0" column="0">
+            <property name="name">
+                <cstring>textLabel1_2</cstring>
+            </property>
+            <property name="text">
+                <string>&amp;Default sync:</string>
+            </property>
+            <property name="buddy" stdset="0">
+                <cstring>fSpecialSync</cstring>
+            </property>
+        </widget>
+        <spacer row="4" column="1">
+            <property name="name">
+                <cstring>spacer3</cstring>
+            </property>
+            <property name="orientation">
+                <enum>Vertical</enum>
+            </property>
+            <property name="sizeType">
+                <enum>Expanding</enum>
+            </property>
+            <property name="sizeHint">
+                <size>
+                    <width>20</width>
+                    <height>170</height>
+                </size>
+            </property>
+        </spacer>
+        <widget class="QComboBox" row="3" column="1">
+            <item>
+                <property name="text">
+                    <string>Ask User</string>
+                </property>
+            </item>
+            <item>
+                <property name="text">
+                    <string>Do Nothing</string>
+                </property>
+            </item>
+            <item>
+                <property name="text">
+                    <string>Handheld Overrides</string>
+                </property>
+            </item>
+            <item>
+                <property name="text">
+                    <string>PC Overrides</string>
+                </property>
+            </item>
+            <item>
+                <property name="text">
+                    <string>Values From Last Sync (if possible)</string>
+                </property>
+            </item>
+            <item>
+                <property name="text">
+                    <string>Use Both Entries</string>
+                </property>
+            </item>
+            <property name="name">
+                <cstring>fConflictResolution</cstring>
+            </property>
+            <property name="whatsThis" stdset="0">
+                <string>&lt;qt&gt;Select in this list how conflicting entries (entries which were edited both on your handheld and on the PC) are resolved. Possibly values are  "Ask User" to let you decide case by case, "Do Nothing" to allow the entries to be different, "PC overrides", "Handheld overrides", "Use values from last sync" and "Use both entries" to create a new entry on both the PC and handheld. Note that the conflict resolution option selected here can be overridden by conduits that have their own conflict resolution configuration.&lt;/qt&gt;</string>
+            </property>
+        </widget>
+        <widget class="QLabel" row="3" column="0">
+            <property name="name">
+                <cstring>textLabel1</cstring>
+            </property>
+            <property name="sizePolicy">
+                <sizepolicy>
+                    <hsizetype>4</hsizetype>
+                    <vsizetype>5</vsizetype>
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                </sizepolicy>
+            </property>
+            <property name="text">
+                <string>Conflict &amp;resolution:</string>
+            </property>
+            <property name="buddy" stdset="0">
+                <cstring>fConflictResolution</cstring>
+            </property>
+        </widget>
+        <widget class="QCheckBox" row="2" column="1">
+            <property name="name">
+                <cstring>fScreenlockSecure</cstring>
+            </property>
+            <property name="text">
+                <string>Do not sync when screensaver is active</string>
+            </property>
+            <property name="checked">
+                <bool>true</bool>
+            </property>
+            <property name="whatsThis" stdset="0">
+                <string>&lt;qt&gt;Check this box to prevent KPilot from syncing your handheld while the screensaver is active: this is a security measure to prevent others from syncing &lt;i&gt;their&lt;/i&gt; handhelds with your data.  This option must be disabled when you use a different desktop, since KPilot is not aware of screensavers other than KDE's.&lt;/qt&gt;</string>
+            </property>
+        </widget>
+    </grid>
+</widget>
+<layoutdefaults spacing="6" margin="11"/>
+</UI>

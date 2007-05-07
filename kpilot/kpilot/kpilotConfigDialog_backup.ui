@@ -1,0 +1,207 @@
+<!DOCTYPE UI><UI version="3.3" stdsetdef="1">
+<class>BackupConfigWidget</class>
+<comment>A widget for editing HotSync-specific settings.</comment>
+<author>David Bishop</author>
+<widget class="QWidget">
+    <property name="name">
+        <cstring>BackupConfigForm</cstring>
+    </property>
+    <property name="geometry">
+        <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>549</width>
+            <height>424</height>
+        </rect>
+    </property>
+    <property name="caption">
+        <string>KPilot Options</string>
+    </property>
+    <vbox>
+        <property name="name">
+            <cstring>unnamed</cstring>
+        </property>
+        <widget class="QGroupBox">
+            <property name="name">
+                <cstring>GroupBox23_2</cstring>
+            </property>
+            <property name="title">
+                <string>Backup Frequency</string>
+            </property>
+            <hbox>
+                <property name="name">
+                    <cstring>unnamed</cstring>
+                </property>
+                <widget class="QLabel">
+                    <property name="name">
+                        <cstring>TextLabel5_2</cstring>
+                    </property>
+                    <property name="sizePolicy">
+                        <sizepolicy>
+                            <hsizetype>5</hsizetype>
+                            <vsizetype>5</vsizetype>
+                            <horstretch>0</horstretch>
+                            <verstretch>0</verstretch>
+                        </sizepolicy>
+                    </property>
+                    <property name="minimumSize">
+                        <size>
+                            <width>100</width>
+                            <height>0</height>
+                        </size>
+                    </property>
+                    <property name="text">
+                        <string>Do &amp;backup:</string>
+                    </property>
+                    <property name="buddy" stdset="0">
+                        <cstring>fBackupFrequency</cstring>
+                    </property>
+                </widget>
+                <widget class="QComboBox">
+                    <item>
+                        <property name="text">
+                            <string>On every HotSync</string>
+                        </property>
+                    </item>
+                    <item>
+                        <property name="text">
+                            <string>On request only</string>
+                        </property>
+                    </item>
+                    <property name="name">
+                        <cstring>fBackupFrequency</cstring>
+                    </property>
+                    <property name="sizePolicy">
+                        <sizepolicy>
+                            <hsizetype>7</hsizetype>
+                            <vsizetype>0</vsizetype>
+                            <horstretch>0</horstretch>
+                            <verstretch>0</verstretch>
+                        </sizepolicy>
+                    </property>
+                </widget>
+            </hbox>
+        </widget>
+        <widget class="QGroupBox">
+            <property name="name">
+                <cstring>GroupBox23</cstring>
+            </property>
+            <property name="title">
+                <string>Databases</string>
+            </property>
+            <grid>
+                <property name="name">
+                    <cstring>unnamed</cstring>
+                </property>
+                <widget class="QLabel" row="0" column="0">
+                    <property name="name">
+                        <cstring>TextLabel5</cstring>
+                    </property>
+                    <property name="minimumSize">
+                        <size>
+                            <width>100</width>
+                            <height>0</height>
+                        </size>
+                    </property>
+                    <property name="text">
+                        <string>&amp;No backup:</string>
+                    </property>
+                    <property name="buddy" stdset="0">
+                        <cstring>fBackupOnly</cstring>
+                    </property>
+                    <property name="whatsThis" stdset="0">
+                        <string>&lt;qt&gt;&lt;p&gt;Enter the databases types you wish to exclude from the backup operation here. Use this setting if backing up some databases crashes the handheld, or if you do not want a backup of some databases (like AvantGo pages).&lt;/p&gt;&lt;p&gt;Entries with square brackets [] are &lt;i&gt;creator codes&lt;/i&gt; like &lt;tt&gt;[lnch]&lt;/tt&gt; and can exclude a whole range of databases. Entries without the brackets list database names, and may include shell-style wildcards, like &lt;tt&gt;*_a68k&lt;/tt&gt;.&lt;/p&gt;&lt;/qt&gt;</string>
+                    </property>
+                </widget>
+                <widget class="QLabel" row="1" column="0">
+                    <property name="name">
+                        <cstring>TextLabel6</cstring>
+                    </property>
+                    <property name="minimumSize">
+                        <size>
+                            <width>100</width>
+                            <height>0</height>
+                        </size>
+                    </property>
+                    <property name="text">
+                        <string>Not &amp;restored:</string>
+                    </property>
+                    <property name="buddy" stdset="0">
+                        <cstring>fSkipDB</cstring>
+                    </property>
+                    <property name="whatsThis" stdset="0">
+                        <string>&lt;qt&gt;&lt;p&gt;Enter the databases types you wish to exclude from the restore operation here (like AvantGo databases). They will be skipped even if they exist in the set of backup databases on the handheld. If you still want to install an ignored database to the handheld, you can always manually install it to the handheld.&lt;/p&gt;&lt;p&gt;Entries with square brackets [] are &lt;i&gt;creator codes&lt;/i&gt; like &lt;tt&gt;[lnch]&lt;/tt&gt; and can exclude a whole range of databases. Entries without the brackets list database names, and may include shell-style wildcards, like &lt;tt&gt;*_a68k&lt;/tt&gt;.&lt;/p&gt;&lt;/qt&gt;</string>
+                    </property>
+                </widget>
+                <widget class="QLineEdit" row="0" column="1">
+                    <property name="name">
+                        <cstring>fBackupOnly</cstring>
+                    </property>
+                    <property name="whatsThis" stdset="0">
+                        <string>&lt;qt&gt;&lt;p&gt;Enter the databases types you wish to exclude from the backup operation here. Use this setting if backing up some databases crashes the handheld, or if you do not want a backup of some databases (like AvantGo pages).&lt;/p&gt;&lt;p&gt;Entries with square brackets [] are &lt;i&gt;creator codes&lt;/i&gt; like &lt;tt&gt;[lnch]&lt;/tt&gt; and can exclude a whole range of databases. Entries without the brackets list database names, and may include shell-style wildcards, like &lt;tt&gt;*_a68k&lt;/tt&gt;.&lt;/p&gt;&lt;/qt&gt;</string>
+                    </property>
+                </widget>
+                <widget class="QLineEdit" row="1" column="1">
+                    <property name="name">
+                        <cstring>fSkipDB</cstring>
+                    </property>
+                    <property name="whatsThis" stdset="0">
+                        <string>&lt;qt&gt;&lt;p&gt;Enter the databases types you wish to exclude from the restore operation here (like AvantGo databases). They will be skipped even if they exist in the set of backup databases on the handheld. If you still want to install an ignored database to the handheld, you can always manually install it to the handheld.&lt;/p&gt;&lt;p&gt;Entries with square brackets [] are &lt;i&gt;creator codes&lt;/i&gt; like &lt;tt&gt;[lnch]&lt;/tt&gt; and can exclude a whole range of databases. Entries without the brackets list database names, and may include shell-style wildcards, like &lt;tt&gt;*_a68k&lt;/tt&gt;.&lt;/p&gt;&lt;/qt&gt;</string>
+                    </property>
+                </widget>
+                <widget class="QPushButton" row="0" column="2">
+                    <property name="name">
+                        <cstring>fBackupOnlyChooser</cstring>
+                    </property>
+                    <property name="text">
+                        <string>...</string>
+                    </property>
+                    <property name="whatsThis" stdset="0">
+                        <string>&lt;qt&gt;Click here to open the database selection dialog. This dialog allows you to check the databases you want to exclude from the backup from a list.&lt;/qt&gt;</string>
+                    </property>
+                </widget>
+                <widget class="QPushButton" row="1" column="2">
+                    <property name="name">
+                        <cstring>fSkipDBChooser</cstring>
+                    </property>
+                    <property name="text">
+                        <string>...</string>
+                    </property>
+                    <property name="whatsThis" stdset="0">
+                        <string>&lt;qt&gt;Click here to open the database selection dialog. This dialog allows you to select the databases you want to exclude from the restore operation from a list.&lt;/qt&gt;</string>
+                    </property>
+                </widget>
+            </grid>
+        </widget>
+        <widget class="QCheckBox">
+            <property name="name">
+                <cstring>fRunConduitsWithBackup</cstring>
+            </property>
+            <property name="text">
+                <string>Run conduits durin&amp;g a backup sync</string>
+            </property>
+            <property name="whatsThis" stdset="0">
+                <string>&lt;qt&gt;Check this box to run the selected conduits before every backup. This makes sure the backup is up to date with the last changes from your PC.&lt;/qt&gt;</string>
+            </property>
+        </widget>
+        <spacer>
+            <property name="name">
+                <cstring>spacer8</cstring>
+            </property>
+            <property name="orientation">
+                <enum>Vertical</enum>
+            </property>
+            <property name="sizeType">
+                <enum>Expanding</enum>
+            </property>
+            <property name="sizeHint">
+                <size>
+                    <width>20</width>
+                    <height>41</height>
+                </size>
+            </property>
+        </spacer>
+    </vbox>
+</widget>
+<layoutdefaults spacing="6" margin="11"/>
+</UI>

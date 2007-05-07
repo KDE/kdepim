@@ -1,0 +1,7 @@
+File=sysinfoconduit.kcfg
+ClassName=SysinfoSettings
+Singleton=true
+ItemAccessors=true
+Mutators=true
+GlobalEnums=true
+SetUserTexts=true

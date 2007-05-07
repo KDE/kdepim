@@ -1,0 +1,11 @@
+KPilot vCal KOrganizer conduit version 3.0
+(c) 1998 Dan Pilone, Preston Brown, Herwin Jan Steehouwer
+
+This conduit works with KPilot and KOrganizer.
+
+Things to remember:
+* When deleting from yout PalmPilot set 
+  'Save Archive Copy On PC' OFF !!!
+
+Preston Brown and Herwin Jan Steehouwer
+pbrown@kde.org, steehouwer@kde.org

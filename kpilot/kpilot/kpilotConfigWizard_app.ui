@@ -1,0 +1,112 @@
+<!DOCTYPE UI><UI version="3.3" stdsetdef="1">
+<class>ConfigWizard_base3</class>
+<widget class="QWidget">
+    <property name="name">
+        <cstring>ConfigWizard_base3</cstring>
+    </property>
+    <property name="geometry">
+        <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>462</width>
+            <height>404</height>
+        </rect>
+    </property>
+    <grid>
+        <property name="name">
+            <cstring>unnamed</cstring>
+        </property>
+        <widget class="QLabel" row="0" column="0">
+            <property name="name">
+                <cstring>textLabel6</cstring>
+            </property>
+            <property name="text">
+                <string>Finally, you can configure KPilot specifically for some PIM applications, like Kontact (KDE's integrated PIM application) or Evolution (GNOME's integrated PIM application).
+
+Press "Finish" to setup KPilot according to the settings in this configuration Wizard.</string>
+            </property>
+            <property name="alignment">
+                <set>WordBreak|AlignVCenter</set>
+            </property>
+        </widget>
+        <widget class="QButtonGroup" row="2" column="0">
+            <property name="name">
+                <cstring>fAppType</cstring>
+            </property>
+            <property name="title">
+                <string>Set Default Values for Syncing With</string>
+            </property>
+            <vbox>
+                <property name="name">
+                    <cstring>unnamed</cstring>
+                </property>
+                <widget class="QRadioButton">
+                    <property name="name">
+                        <cstring>radioButton6</cstring>
+                    </property>
+                    <property name="text">
+                        <string>&amp;KDE-PIM suite (Kontact)</string>
+                    </property>
+                    <property name="checked">
+                        <bool>true</bool>
+                    </property>
+                </widget>
+                <widget class="QRadioButton">
+                    <property name="name">
+                        <cstring>radioButton8</cstring>
+                    </property>
+                    <property name="text">
+                        <string>&amp;GNOME-PIM (Evolution)</string>
+                    </property>
+                </widget>
+                <widget class="QRadioButton">
+                    <property name="name">
+                        <cstring>radioButton4</cstring>
+                    </property>
+                    <property name="text">
+                        <string>No sync, just backup</string>
+                    </property>
+                </widget>
+            </vbox>
+        </widget>
+        <spacer row="3" column="0">
+            <property name="name">
+                <cstring>spacer5</cstring>
+            </property>
+            <property name="orientation">
+                <enum>Vertical</enum>
+            </property>
+            <property name="sizeType">
+                <enum>Expanding</enum>
+            </property>
+            <property name="sizeHint">
+                <size>
+                    <width>20</width>
+                    <height>120</height>
+                </size>
+            </property>
+        </spacer>
+        <spacer row="1" column="0">
+            <property name="name">
+                <cstring>spacer5_2</cstring>
+            </property>
+            <property name="orientation">
+                <enum>Vertical</enum>
+            </property>
+            <property name="sizeType">
+                <enum>Minimum</enum>
+            </property>
+            <property name="sizeHint">
+                <size>
+                    <width>20</width>
+                    <height>12</height>
+                </size>
+            </property>
+        </spacer>
+    </grid>
+</widget>
+<tabstops>
+    <tabstop>radioButton6</tabstop>
+</tabstops>
+<layoutdefaults spacing="6" margin="11"/>
+</UI>

@@ -1,0 +1,122 @@
+<!DOCTYPE UI><UI version="3.0" stdsetdef="1">
+<class>TimeWidget</class>
+<author>Reinhold Kainhofer</author>
+<widget class="QWidget">
+    <property name="name">
+        <cstring>Form2</cstring>
+    </property>
+    <property name="geometry">
+        <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>399</width>
+            <height>293</height>
+        </rect>
+    </property>
+    <grid>
+        <property name="name">
+            <cstring>unnamed</cstring>
+        </property>
+        <property name="margin">
+            <number>0</number>
+        </property>
+        <property name="spacing">
+            <number>6</number>
+        </property>
+        <widget class="QTabWidget" row="0" column="0">
+            <property name="name">
+                <cstring>tabWidget</cstring>
+            </property>
+            <widget class="QWidget">
+                <property name="name">
+                    <cstring>tab</cstring>
+                </property>
+                <attribute name="title">
+                    <string>General</string>
+                </attribute>
+                <grid>
+                    <property name="name">
+                        <cstring>unnamed</cstring>
+                    </property>
+                    <property name="margin">
+                        <number>11</number>
+                    </property>
+                    <property name="spacing">
+                        <number>6</number>
+                    </property>
+                    <spacer row="2" column="0">
+                        <property name="name">
+                            <cstring>Spacer3</cstring>
+                        </property>
+                        <property name="orientation">
+                            <enum>Vertical</enum>
+                        </property>
+                        <property name="sizeType">
+                            <enum>Expanding</enum>
+                        </property>
+                    </spacer>
+                    <widget class="QButtonGroup" row="0" column="0">
+                        <property name="name">
+                            <cstring>directionGroup</cstring>
+                        </property>
+                        <property name="title">
+                            <string>Direction</string>
+                        </property>
+                        <grid>
+                            <property name="name">
+                                <cstring>unnamed</cstring>
+                            </property>
+                            <property name="margin">
+                                <number>11</number>
+                            </property>
+                            <property name="spacing">
+                                <number>6</number>
+                            </property>
+                            <widget class="QRadioButton" row="0" column="0">
+                                <property name="name">
+                                    <cstring>RadioButton1</cstring>
+                                </property>
+                                <property name="text">
+                                    <string>Set the &amp;handheld time from the time on the PC</string>
+                                </property>
+                                <property name="checked">
+                                    <bool>true</bool>
+                                </property>
+                                <property name="whatsThis" stdset="0">
+                                    <string>&lt;qt&gt;Select this option to synchronize the handheld time with the PC time, by using the PC time on both.&lt;/qt&gt;</string>
+                                </property>
+                            </widget>
+                            <widget class="QRadioButton" row="1" column="0">
+                                <property name="name">
+                                    <cstring>RadioButton1_2</cstring>
+                                </property>
+                                <property name="enabled">
+                                    <bool>false</bool>
+                                </property>
+                                <property name="text">
+                                    <string>Set the &amp;PC time from the time on the handheld</string>
+                                </property>
+                                <property name="whatsThis" stdset="0">
+                                    <string>&lt;qt&gt;Select this option to synchronize the handheld time with the PC time, by using the handheld time on both.&lt;/qt&gt;</string>
+                                </property>
+                            </widget>
+                        </grid>
+                    </widget>
+                    <widget class="QLabel" row="1" column="0">
+                        <property name="name">
+                            <cstring>TextLabel1</cstring>
+                        </property>
+                        <property name="text">
+                            <string>&lt;qt&gt;PalmOS Version 3.25 and 3.3 do not support setting the system time, so this conduit will be skipped for handhelds that run either of these operating systems.&lt;/qt&gt;</string>
+                        </property>
+                    </widget>
+                </grid>
+            </widget>
+        </widget>
+    </grid>
+</widget>
+<tabstops>
+    <tabstop>tabWidget</tabstop>
+</tabstops>
+<layoutdefaults spacing="6" margin="11"/>
+</UI>

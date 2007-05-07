@@ -1,0 +1,7 @@
+File=abbrowserconduit.kcfg
+ClassName=AbbrowserSettings
+Singleton=true
+ItemAccessors=true
+Mutators=true
+GlobalEnums=true
+SetUserTexts=true
