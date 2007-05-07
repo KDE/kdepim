@@ -508,6 +508,8 @@ bool Contact::loadAddressAttribute( QDomElement& element )
 
       if ( tagName == "type" )
         address.type = e.text();
+      else if ( tagName == "x-kde-type" )
+        address.kdeAddressType = e.text().toInt();
       else if ( tagName == "street" )
         address.street = e.text();
       else if ( tagName == "pobox" )
@@ -539,6 +541,7 @@ void Contact::saveAddressAttributes( QDomElement& element ) const
     element.appendChild( e );
     const Address& a = *it;
     writeString( e, "type", a.type );
+    writeString( e, "x-kde-type", QString::number( a.kdeAddressType ) );
     if ( !a.street.isEmpty() )
       writeString( e, "street", a.street );
     if ( !a.pobox.isEmpty() )
@@ -1045,17 +1048,18 @@ void Contact::setFields( const KABC::Addressee* addressee )
   const KABC::Address::List addresses = addressee->addresses();
   for ( KABC::Address::List::ConstIterator it = addresses.begin() ; it != addresses.end(); ++it ) {
     Address address;
-    address.type = addressTypeToString( (*it).type() );
+    address.kdeAddressType = (*it).type();
+    address.type = addressTypeToString( address.kdeAddressType );
     address.street = (*it).street();
     address.pobox = (*it).postOfficeBox();
     address.locality = (*it).locality();
     address.region = (*it).region();
     address.postalCode = (*it).postalCode();
     address.country = (*it).country();
-    // ## TODO not in the XML format: post-office-box and extended address info.
+    // ## TODO not in the XML format: extended address info.
     // ## KDE-specific tags? Or hiding those fields? Or adding a warning?
     addAddress( address );
-    if ( (*it).type() & KABC::Address::Pref ) {
+    if ( address.kdeAddressType & KABC::Address::Pref ) {
       preferredAddress = address.type; // home, business or other
     }
   }
@@ -1207,9 +1211,12 @@ void Contact::saveTo( KABC::Addressee* addressee )
 
   for ( QValueList<Address>::ConstIterator it = mAddresses.begin(); it != mAddresses.end(); ++it ) {
     KABC::Address address;
-    int type = addressTypeFromString( (*it).type );
-    if ( (*it).type == mPreferredAddress )
-      type |= KABC::Address::Pref;
+    int type = (*it).kdeAddressType;
+    if ( type == -1 ) { // no kde-specific type available
+      type = addressTypeFromString( (*it).type );
+      if ( (*it).type == mPreferredAddress )
+        type |= KABC::Address::Pref;
+    }
     address.setType( type );
     address.setStreet( (*it).street );
     address.setPostOfficeBox( (*it).pobox );
