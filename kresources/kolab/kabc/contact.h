@@ -55,7 +55,11 @@ public:
 
   struct Address {
   public:
-    QString type;
+    Address() : kdeAddressType( -1 )
+    {
+    }
+    int kdeAddressType; // KABC::Address::Type
+    QString type;       // kolab-compliant address type: home, work or other
     QString street;
     QString pobox;
     QString locality;
