@@ -803,8 +803,11 @@ void AddresseeLineEdit::setCompletedItems( const QStringList& items, bool autoSu
         if ( item )
         {
             completionBox->blockSignals( true );
-            // if the mouse was over an item, before
-            if ( itemUnderMouse ) {
+            QListBoxItem *newItemUnderMouse = completionBox->itemAt( 
+                      completionBox->viewport()->mapFromGlobal(QCursor::pos()) );
+            // if the mouse was over an item, before, but now it's a different one
+            // move the cursor, so folks don't accidently click the wrong item
+            if ( itemUnderMouse && itemUnderMouse != newItemUnderMouse ) {
                 QRect r = completionBox->itemRect( item );
                 QPoint target = r.topLeft();
                 target.setX( target.x() + r.width()/2 );
