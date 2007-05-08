@@ -7,7 +7,7 @@ Features:
 korganizer
 -----------
  - proko35 W-15 forwarding and delegation of iCal invitations
- - proko35 w1-29 "attaching mails directly to events as either the full message or just the message body"
+ - proko35 W1-29 "attaching mails directly to events as either the full message or just the message body"
 
 Aegypten
 -------------
@@ -19,7 +19,7 @@ Miscellaneous
  - kolab/issue 1698 -Ignore denied invitations from not invited attendees.
  - kolab/issue1706 (addressbook: real adress type is broken) - introducing bugs in the GUI due to outlook compatibility,
  - prokde W1-16: when exporting a secret key to a .p12 file, allow the user to select the encoding (charset) of the passphrase in the p12 file.
-
+ - proko35 W1-8 Fix for usability issues with changes to the currently selected item when LDAP results come in delayed.
 
 "Enterprise - Beta-05"
 Features:
