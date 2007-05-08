@@ -163,7 +163,7 @@ void KPilotConfig::addFlagsChangedDatabase(QString db)
 	s += i18n("The configuration file is outdated.");
 	s += ' ';
 	s += i18n("The configuration file has version %1, while KPilot "
-		"needs version %2.").arg(fileversion).arg(ConfigurationVersion);
+		"needs version %2.",fileversion,ConfigurationVersion);
 	if (run)
 	{
 		s += ' ';
