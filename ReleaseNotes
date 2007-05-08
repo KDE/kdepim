@@ -1,5 +1,28 @@
-Current release is "Enterprise - Beta-05"
+Current release is "Enterprise - Beta-06"
 
+
+Features:
+=========
+
+korganizer
+-----------
+ - proko35 W-15 forwarding and delegation of iCal invitations
+ - proko35 w1-29 "attaching mails directly to events as either the full message or just the message body"
+
+Aegypten
+-------------
+* aegypten/issue 370 - Add scrollbar so that the dialog doesn't become too big when gpgconf gives us many options to configure.
+* aegypten/issue 735 - Support for the NO_CHANGE flag from gpgconf 2.0.3 (readonly widgets)
+
+Miscellaneous
+--------------
+ - kolab/issue 1698 -Ignore denied invitations from not invited attendees.
+ - kolab/issue1706 (addressbook: real adress type is broken) - introducing bugs in the GUI due to outlook compatibility,
+ - prokde W1-16: when exporting a secret key to a .p12 file, allow the user to select the encoding (charset) of the passphrase in the p12 file.
+ - proko35 W1-16 -support special characters in passwords for pkcs12 files
+
+
+"Enterprise - Beta-05"
 Features:
 =========
 
@@ -11,8 +34,8 @@ kmail
 Bugfixes
 =========
 - Honor default forwarding settings for the toolbar button, the search window RMB and the keyboard shortcuts (issue 1530)
--Fix documentation related to issue 1530
--Also change the font of cut messages in case the inactive color is to similar to the normal color.(issue 1180)
+- Fix documentation related to issue 1530
+- Also change the font of cut messages in case the inactive color is to similar to the normal color.(issue 1180)
 
 
 
