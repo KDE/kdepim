@@ -163,19 +163,11 @@ QWidget *ConduitConfigBase::aboutPage(QWidget *parent, KAboutData *ad)
 
 	QTextEdit *linktext = new QTextEdit(w);
 	linktext->setReadOnly(true);
-	grid->addRowSpacing(1,qMax(100,6*lineheight));
-	grid->addRowSpacing(2,qMax(100,6*lineheight));
-	grid->addColSpacing(2,SPACING+linewidth/2);
-	grid->addColSpacing(3,SPACING+linewidth/2);
-	grid->setRowStretch(1,50);
-	grid->setRowStretch(2,50);
-	grid->setColStretch(2,50);
-	grid->setColStretch(3,50);
 	linktext->setMinimumSize(linewidth,qMax(260,60+12*lineheight));
 	linktext->setFixedHeight(qMax(260,60+12*lineheight));
 	text = new QLabel(w);
-	grid->addMultiCellWidget(text,0,0,2,3);
-	grid->addMultiCellWidget(linktext,1,2,1,3);
+	grid->addWidget(text,0,2);
+	grid->addWidget(linktext,1,2,1,1);
 
 	// Now set the program and copyright information.
 	s = CSL1("<qt><h3>");
@@ -384,7 +376,7 @@ bool ConduitAction::openDatabases(const QString &name, bool *retrieved)
 
 		// make sure the dir for the backup db really exists!
 		QFileInfo fi(dbpath);
-		QString path(QFileInfo(dbpath).dir(true).absolutePath());
+		QString path(QFileInfo(dbpath).absolutePath());
 		if (!path.endsWith(CSL1("/")))
 		{
 			path.append(CSL1("/"));
