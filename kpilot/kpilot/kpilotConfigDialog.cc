@@ -32,13 +32,10 @@
 
 #include "options.h"
 
-#include <pi-version.h>
-
 #include <qcombobox.h>
 #include <qcheckbox.h>
 #include <qradiobutton.h>
 #include <qpushbutton.h>
-#include <q3buttongroup.h>
 #include <qlineedit.h>
 #include <qtabwidget.h>
 #include <qspinbox.h>
@@ -61,6 +58,7 @@
 #include "kpilotConfigDialog_viewers.h"
 #include "kpilotConfigDialog_backup.h"
 #include "kpilotConfigDialog.moc"
+#include "kpilotProbeDialog.h"
 #include "syncAction.h"
 #include "dbSelectionDialog.h"
 
@@ -83,6 +81,7 @@ DeviceConfigPage::DeviceConfigPage(QWidget * w, const char *n ) : ConfigPage( w,
 			fConfigWidget->fPilotEncoding->insertItem(*it);
 		}
 	}
+	connect( fConfigWidget->fDeviceAutodetect, SIGNAL(clicked()), this, SLOT(autoDetectDevice()));
 
 	fConfigWidget->resize(fConfigWidget->size());
 	fWidget = fConfigWidget;
@@ -224,6 +223,21 @@ void DeviceConfigPage::setEncoding()
 		KPilotSettings::setEncoding(enc);
 	}
 }
+
+
+void DeviceConfigPage::autoDetectDevice()
+{
+	FUNCTIONSETUP;
+	ProbeDialog *d = new ProbeDialog( fConfigWidget );
+	d->show();
+	d->exec();
+	if (d->detected())
+	{
+		fConfigWidget->fUserName->setText( d->userName() );
+		fConfigWidget->fPilotDevice->setText( d->device() );
+	}
+}
+
 
 SyncConfigPage::SyncConfigPage(QWidget * w, const char *n ) : ConfigPage( w, n )
 {

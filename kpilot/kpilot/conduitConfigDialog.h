@@ -92,14 +92,13 @@ signals:
 
 protected slots:
 	void configure();
-	void configureWizard();
+	void autoDetectDevice();
 
 	void unselect(); // Helper slot when cancelling a change in selection
 	void selected(QTreeWidgetItem *, QTreeWidgetItem *);
 	void reopenItem(QTreeWidgetItem *);
 
 private:
-	QPushButton *fConfigure;
 	QTreeWidgetItem *fCurrentConduit;
 	QTreeWidgetItem *fGeneralPage;
 	QTreeWidgetItem *fConduitsItem; // Parent of all the conduits items

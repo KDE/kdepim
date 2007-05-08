@@ -143,7 +143,6 @@ public slots:
 	* to configure KPilot.
 	*/
 	virtual void configure();
-	virtual void configureWizard();
 
 protected:
 	void readConfig();

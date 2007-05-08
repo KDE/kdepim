@@ -63,6 +63,7 @@ protected:
 
 protected slots:
 	void changePortType(int);
+	void autoDetectDevice();
 
 private:
 	DeviceConfigWidget *fConfigWidget;

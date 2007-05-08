@@ -1,10 +1,10 @@
 #ifndef _KPILOT_PROBEDIALOG_H
 #define _KPILOT_PROBEDIALOG_H
-/* kpilotConfigWizard.h                 KPilot
+/* KPilot
 **
 ** Copyright (C) 2004 Reinhold Kainhofer <reinhold@kainhofer.com>
 **
-** This file defines kpilot's configuration wizard
+** This file defines a dialog that automatically probes for Palm devices.
 */
 
 /*

@@ -63,7 +63,6 @@
 
 #include "kpilotConfigDialog.h"
 #include "kpilotConfig.h"
-#include "kpilotConfigWizard.h"
 
 #include "pilotComponent.h"
 #include "pilotDatabase.h"
@@ -589,23 +588,6 @@ void KPilotInstaller::initMenu()
                 actionCollection());
         (void) KStandardAction::preferences(this, SLOT(configure()),
                 actionCollection());
-
-        a = actionCollection()->addAction( "options_configure_wizard");
-        a->setText(i18n("Configuration &Wizard..."));
-        a->setIcon(KIcon(CSL1("wizard")));
-        a->setWhatsThis(i18n("Configure KPilot using the configuration wizard."));
-        connect(a, SIGNAL(triggered()), this, SLOT(configureWizard()));
-
-#if 0
-	a = new KAction(i18n("&List Only"),CSL1("listsync"),0,
-		this,SLOT(slotTestSyncRequested()),
-		actionCollection(), "file_list");
-	a->setToolTip(i18n("Next HotSync will list databases."));
-	a->setWhatsThis(i18n("Tell the daemon that the next HotSync "
-		"should just list the files on the Handheld and do nothing "
-		"else."));
-	syncPopup->insert(a);
-#endif
 }
 
 void KPilotInstaller::fileInstalled(int)
@@ -788,80 +770,6 @@ static bool runConfigure(OrgKdeKpilotDaemonInterface &daemon,QWidget *parent)
 	return ret;
 }
 
-/*
- * Run the config wizard -- this takes a little library magic, and
- * it might fail entirely; returns false if no wizard could be run,
- * or true if the wizard runs (says nothing about it being OK'ed or
- * canceled, though).
- */
-typedef enum { Failed, OK, Cancel } WizardResult;
-static WizardResult runWizard(OrgKdeKpilotDaemonInterface &daemon,QWidget *parent)
-{
-	FUNCTIONSETUP;
-	WizardResult ret = Failed ;
-	int rememberedSync = daemon.nextSyncType();
-	daemon.requestSync(0);
-	KPilotSettings::self()->readConfig();
-	// Declarations at top because of goto's in this function
-	ConfigWizard *(* f) (QWidget *, int) = 0L ;
-	ConfigWizard *w = 0L;
-	KLibrary *l = KLibLoader::self()->library("kcm_kpilot");
-	if (!l)
-	{
-		WARNINGKPILOT << "Couldn't load library!" << endl;
-		goto sorry;
-	}
-
-	if (l->resolveFunction("create_wizard"))
-	{
-		f = ( ConfigWizard * (*) (QWidget *, int) ) (l->resolveFunction("create_wizard")) ;
-	}
-
-	if (!f)
-	{
-		WARNINGKPILOT << "No create_wizard() in library." << endl;
-		goto sorry;
-	}
-
-	w = f(parent,ConfigWizard::Standalone);
-	if (!w)
-	{
-		WARNINGKPILOT << "Can't create wizard." << endl;
-		goto sorry;
-	}
-
-	if (w->exec())
-	{
-		KPilotSettings::self()->readConfig();
-		ret = OK;
-	}
-	else
-	{
-		ret = Cancel;
-	}
-	KPILOT_DELETE(w);
-
-sorry:
-	if (Failed == ret)
-	{
-		KMessageBox::sorry(parent,
-			i18n("The library containing the configuration wizard for KPilot "
-				"could not be loaded, and the wizard is not available. "
-				"Please try to use the regular configuration dialog."),
-				i18n("Wizard Not Available"));
-	}
-
-	if (OK == ret)
-	{
-		KPilotConfig::updateConfigVersion();
-		KPilotSettings::writeConfig();
-		KPilotConfig::sync();
-	}
-
-	daemon.requestSync(rememberedSync);
-	return ret;
-}
-
 void KPilotInstaller::componentUpdate()
 {
 	FUNCTIONSETUP;
@@ -914,30 +822,6 @@ void KPilotInstaller::componentUpdate()
 		}
 	}
 #endif	
-}
-
-void KPilotInstaller::configureWizard()
-{
-	FUNCTIONSETUP;
-
-	if ( fAppStatus!=Normal || fConfigureKPilotDialogInUse )
-	{
-		if (fLogWidget)
-		{
-			fLogWidget->addMessage(i18n("Cannot run KPilot's configuration wizard right now (KPilot's UI is already busy)."));
-		}
-		return;
-	}
-	fAppStatus=UIBusy;
-	fConfigureKPilotDialogInUse = true;
-
-	if (runWizard(getDaemon(),this) == OK)
-	{
-		componentUpdate();
-	}
-
-	fConfigureKPilotDialogInUse = false;
-	fAppStatus=Normal;
 }
 
 void KPilotInstaller::configure()
@@ -1084,25 +968,18 @@ int main(int argc, char **argv)
 
 
 	if ( (run_mode == KPilotConfig::ConfigureKPilot) ||
-		(run_mode == KPilotConfig::ConfigureAndContinue) ||
-		(run_mode == KPilotConfig::WizardAndContinue) )
+		(run_mode == KPilotConfig::ConfigureAndContinue) )
 	{
 		DEBUGKPILOT << fname
 			<< ": Running setup first."
 			<< " (mode " << run_mode << ")" << endl;
 		OrgKdeKpilotDaemonInterface * daemon = new OrgKdeKpilotDaemonInterface("org.kde.kpilot.daemon", "/Daemon", QDBusConnection::sessionBus()); 	
-		bool r = false;
-		if (run_mode == KPilotConfig::WizardAndContinue)
-		{
-			r = ( runWizard(*daemon,0L) == OK );
-		}
-		else
-		{
-			r = runConfigure(*daemon,0L);
-		}
+		bool r = runConfigure(*daemon,0L);
 		delete daemon;
 		if (!r) 
+		{
 			return 1;
+		}
 		// User expected configure only.
 		if (run_mode == KPilotConfig::ConfigureKPilot)
 		{

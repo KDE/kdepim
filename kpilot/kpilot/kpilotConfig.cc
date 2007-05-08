@@ -219,17 +219,7 @@ void KPilotConfig::addFlagsChangedDatabase(QString db)
 
 	if (0 == fileVersion) // No config file at all
 	{
-		res = KMessageBox::questionYesNoCancel(0L,
-			i18n("KPilot is not configured for use. You may use "
-				"the configuration wizard or the normal configure dialog "
-				"to configure KPilot."),
-			i18n("Not Configured"),
-			KGuiItem(i18n("Use &Wizard")),
-			KGuiItem(i18n("Use &Dialog")));
-		if (res == KMessageBox::Yes) return WizardAndContinue;
-		if (res == KMessageBox::No) return ConfigureAndContinue;
-
-		return Cancel;
+		return ConfigureAndContinue;
 	}
 
 	res = KMessageBox::warningContinueCancel(0L,
@@ -238,7 +228,10 @@ void KPilotConfig::addFlagsChangedDatabase(QString db)
 			"configuration automatically. Do you wish to "
 			"continue?"),
 		i18n("Configuration File Out-of Date"));
-	if (res!=KMessageBox::Continue) return Cancel;
+	if (res!=KMessageBox::Continue)
+	{
+		return Cancel;
+	}
 
 	DEBUGKPILOT << fname << ": Updating from "
 		<< fileVersion << " to " << ConfigurationVersion << endl;

@@ -46,7 +46,6 @@ public:
 		ConfigureKPilot,
 		ConfigureConduits,
 		ConfigureAndContinue,
-		WizardAndContinue
 	} RunMode;
 
 	/**

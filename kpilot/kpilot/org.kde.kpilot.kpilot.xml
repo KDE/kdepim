@@ -9,9 +9,6 @@
     <method name="configure">
         <annotation name="org.freedesktop.DBus.Method.NoReply" value="true"/>
     </method>
-    <method name="configureWizard">
-        <annotation name="org.freedesktop.DBus.Method.NoReply" value="true"/>
-    </method>
     <method name="kpilotStatus">
         <arg type="i" direction="out"/>
     </method>

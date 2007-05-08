@@ -65,7 +65,7 @@
                 <string>&lt;qt&gt;Enter your name here, as it appears in the Pilot's &amp;quot;Owner&amp;quot; setting.&lt;/qt&gt;</string>
             </property>
         </widget>
-        <spacer row="5" column="2">
+        <spacer row="6" column="2">
             <property name="name">
                 <cstring>spacer1</cstring>
             </property>
@@ -183,6 +183,17 @@
                 <string>&lt;qt&gt;Workarounds enable special handling for specific devices. Most devices do not need special handling. However, the Zire&tm; 31, Zire 72 and Tungsten T5 &lt;i&gt;do&lt;/i&gt; have special needs, so if you are connecting such a device, please select the workaround for them.&lt;/qt&gt;</string>
             </property>
         </widget>
+	<widget class="QPushButton" row="5" column="1">
+		<property name="name">
+			<cstring>fDeviceAutodetect</cstring>
+		</property>
+		<property name="text">
+			<string>Autodetect</string>
+		</property>
+		<property name="whatsThis" stdset="0">
+			<string>&lt;qt&gt;Click here to try to automatically detect your device, username and connection speed. KPilot will scan for attached devices.&lt;/qt&gt;</string>
+		</property>
+	</widget>
     </grid>
 </widget>
 <layoutdefaults spacing="6" margin="0"/>

@@ -22,18 +22,12 @@ kde4_add_kcfg_files(settings_SRC kpilotSettings.kcfgc)
 #
 set(kcmpilot_SRCS
 	${settings_SRC}
-	kpilotConfigWizard.cc
 	dbSelectionDialog.cc
 	kpilotConfigDialog.cc
 	conduitConfigDialog.cc
 	kpilotProbeDialog.cc
 )
 
-set(kcmpilot_KCFGS
-	kpilotConfigWizard_address.kcfgc
-	#kpilotConfigWizard_notes.kcfgc
-	kpilotConfigWizard_vcal.kcfgc
-)
 
 set(kcmpilot_UIS
 	kpilotConfigDialog_device.ui
@@ -41,13 +35,10 @@ set(kcmpilot_UIS
 	kpilotConfigDialog_startup.ui
 	kpilotConfigDialog_viewers.ui
 	kpilotConfigDialog_backup.ui
-	kpilotConfigWizard_user.ui
-	kpilotConfigWizard_app.ui
 	dbSelection_base.ui
 )
 
 kde4_add_ui3_files(kcmpilot_SRCS ${kcmpilot_UIS})
-kde4_add_kcfg_files(kcmpilot_SRCS ${kcmpilot_KCFGS} )
 
 qt4_add_dbus_interface(kcmpilot_SRCS org.kde.kpilot.daemon.xml kpilot_daemon_interface)
 

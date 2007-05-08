@@ -60,8 +60,6 @@
 #include "kpilotConfig.h"
 #include "kpilotConfigDialog.h"
 
-#include "kpilotConfigWizard.h"
-
 #include "conduitConfigDialog.moc"
 
 #define CONDUIT_NAME    (0)
@@ -78,12 +76,6 @@ extern "C"
 		FUNCTIONSETUP;
 		return new ConduitConfigWidget( parent, QStringList() );
 	}
-
-/*	KDE_EXPORT ConfigWizard *create_wizard(QWidget *parent, int m)
-	{
-		FUNCTIONSETUP;
-		return new ConfigWizard(parent,"Wizard", m);
-	}*/
 }
 
 typedef KGenericFactory<ConduitConfigWidget, QWidget> ConduitConfigFactory;
@@ -143,13 +135,10 @@ ConduitConfigWidgetBase::ConduitConfigWidgetBase(QWidget *parent, const QStringL
 	KCModule(ConduitConfigFactory::componentData(),parent),
 	fConduitList(0L),
 	fStack(0L),
-	fConfigureWizard(0L),
-	fConfigureKontact(0L),
 	fActionDescription(0L)
 {
 	FUNCTIONSETUP;
 
-	QWidget *w = 0L; // For spacing purposes only.
 	KHBox *btns = 0L;
 
 	QBoxLayout *mainLayout = new QHBoxLayout(this);
@@ -163,6 +152,8 @@ ConduitConfigWidgetBase::ConduitConfigWidgetBase(QWidget *parent, const QStringL
 	fConduitList->setSortingEnabled(false);
 	fConduitList->setSizePolicy(
 		QSizePolicy(QSizePolicy::Maximum, QSizePolicy::Preferred));
+	fConduitList->setWhatsThis(
+		i18n("This list box contains both general configuration items such as the device used for HotSync and the databases to be backed up as well as a list of conduits that KPilot may run during a HotSync. Click on an item to configure it. Conduits which are checked in this list will run during a HotSync."));
 	mainLayout->addWidget(fConduitList);
 
 	// Create the title
@@ -210,19 +201,12 @@ ConduitConfigWidgetBase::ConduitConfigWidgetBase(QWidget *parent, const QStringL
 		"Checked conduits will be run during a HotSync. "
 		"Select a conduit to configure it.</p>"
 		"</qt>"),&btns);
-	w = new QWidget(btns);
-	btns->setStretchFactor(w,50);
-	fConfigureWizard = new QPushButton(i18n("Configuration Wizard"),btns);
-	w = new QWidget(btns);
-	btns->setStretchFactor(w,50);
-
 
 	fStack->insertWidget(GENERAL_ABOUT,ConduitConfigBase::aboutPage(fStack,0L));
 }
 
 ConduitConfigWidget::ConduitConfigWidget(QWidget *parent, const QStringList &args) :
 	ConduitConfigWidgetBase(parent,args),
-	fConfigure(0L),
 	fCurrentConduit(0L),
 	fGeneralPage(0L),
 	fConduitsItem(0L),
@@ -242,9 +226,6 @@ ConduitConfigWidget::ConduitConfigWidget(QWidget *parent, const QStringList &arg
 	QObject::connect(fConduitList,
 		SIGNAL(currentItemChanged(QTreeWidgetItem *, QTreeWidgetItem *)),
 		this,SLOT(selected(QTreeWidgetItem *, QTreeWidgetItem *)));
-
-	QObject::connect(fConfigureWizard,SIGNAL(clicked()),
-		this,SLOT(configureWizard()));
 
 	fGeneralPage->setSelected(true);
 	fConduitList->setCurrentItem(fGeneralPage);
@@ -286,10 +267,6 @@ static QTreeWidgetItem *createCheckableItem( QTreeWidgetItem *parent,
 	q->setText(CONDUIT_DESKTOP,desktop.isEmpty() ? library : desktop);
 	q->setFlags(Qt::ItemIsUserCheckable | Qt::ItemIsSelectable   | Qt::ItemIsEnabled);
 	q->setCheckState(CONDUIT_NAME, Qt::Unchecked);
-#if 0
-	if (potentiallyInstalled.indexOf(p->text(CONDUIT_DESKTOP))>=0) \
-		p->setOriginalState(true);
-#endif
 	return q;
 }
 
@@ -338,13 +315,18 @@ void ConduitConfigWidget::fillLists()
 	createItem(general, i18n("Startup and Exit"),
 		i18n("Behavior at startup and exit."), CSL1("general_startexit") );
 
-	(void) createCheckableItem( conduits, i18n("Install Files"),
-		i18n("Install files that are dragged to KPilot onto the handheld."),
-		CSL1("internal_fileinstall") );
-
 	// List of installed (enabled) actions and conduits.
 	QStringList potentiallyInstalled = KPilotSettings::installedConduits();
-	// Get all installed conduits
+
+	// "Install Files" is treated as a conduit
+	q = createCheckableItem( conduits, i18n("Install Files"),
+		i18n("Install files that are dragged to KPilot onto the handheld."),
+		CSL1("internal_fileinstall") );
+	// "Install Files" is possibly enabled.
+	if (potentiallyInstalled.indexOf(q->text(CONDUIT_DESKTOP))>=0) \
+		q->setCheckState(CONDUIT_NAME, Qt::Checked);
+
+	// Get all conduits installed on the system
 	KService::List offers = KServiceTypeTrader::self()->query( CSL1("KPilotConduit") );
 	KService::List::ConstIterator e = offers.end();
 	for (KService::List::ConstIterator i = offers.begin(); i!=e; ++i)
@@ -362,9 +344,11 @@ void ConduitConfigWidget::fillLists()
 				<< endl;
 		}
 
-		(void) createCheckableItem( conduits, o->name(),
+		q = createCheckableItem( conduits, o->name(),
 			o->comment(),
 			o->library(), o->desktopEntryName() );
+		if (potentiallyInstalled.indexOf(q->text(CONDUIT_DESKTOP))>=0) \
+			q->setCheckState(CONDUIT_NAME, Qt::Checked);
 	}
 }
 
@@ -386,6 +370,7 @@ static void dumpConduitInfo(const KLibrary *lib)
 
 static ConduitConfigBase *handleGeneralPages(QWidget *w, QTreeWidgetItem *p)
 {
+	FUNCTIONSETUPL(2);
 	ConduitConfigBase *o = 0L;
 
 	QString s = p->text(CONDUIT_LIBRARY) ;
@@ -409,6 +394,11 @@ static ConduitConfigBase *handleGeneralPages(QWidget *w, QTreeWidgetItem *p)
 	else if (s.startsWith(CSL1("general_backup")))
 	{
 		o = new BackupConfigPage(w,"backupSetup");
+	}
+
+	if (!o)
+	{
+		WARNINGKPILOT << fname << "Got unknown page name " << s << endl;
 	}
 
 	return o;
@@ -701,14 +691,8 @@ void ConduitConfigWidget::reopenItem(QTreeWidgetItem *i)
 	i->setExpanded(true);
 }
 
-void ConduitConfigWidget::configureWizard()
+void ConduitConfigWidget::autoDetectDevice()
 {
 	FUNCTIONSETUP;
-	ConfigWizard wiz(this, "Wizard");
-	if (wiz.exec()) {
-		KPilotSettings::self()->readConfig();
-		load();
-	}
 }
-
 
