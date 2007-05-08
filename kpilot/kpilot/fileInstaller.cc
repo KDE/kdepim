@@ -101,29 +101,27 @@ void FileInstaller::deleteFiles(const QStringList &files)
     emit filesChanged();
 }
 
-/* virtual */ bool FileInstaller::runCopy(const QString & s, QWidget* w )
+/* virtual */ bool FileInstaller::runCopy(const QString &s, QWidget *w )
 {
 	FUNCTIONSETUP;
 
-	if(!(s.endsWith(CSL1(".pdb"), false) || s.endsWith(CSL1(".prc"), false))) {
+	if(!(s.endsWith(CSL1(".pdb"), Qt::CaseInsensitive)
+		|| s.endsWith(CSL1(".prc"), Qt::CaseInsensitive))) 
+	{
 		KMessageBox::detailedSorry(w, i18n("Cannot install %1").arg(s),
 			i18n("Only PalmOS database files (like *.pdb and *.prc) can be installed by the file installer."));
 		return false;
 	}
 
-#ifdef DEBUG
 	DEBUGKPILOT << fname << ": Copying " << s << endl;
-#endif
 
-	KUrl srcName;
-	srcName.setPath(s);
-	KUrl destDir(fDirName + CSL1("/") + srcName.fileName());
+	KUrl src;
+	KUrl dest;
+	src.setPath(s);
+	dest.setPath(fDirName + CSL1("/") + src.fileName());
 
-#if KDE_IS_VERSION(3,1,9)
-	return KIO::NetAccess::copy(srcName, destDir, w);
-#else
-	return KIO::NetAccess::copy(srcName,destDir);
-#endif
+	// Permissions -1, overwrite, no resume
+	return KIO::NetAccess::file_copy(src, dest, -1, true, false, w);
 }
 
 
