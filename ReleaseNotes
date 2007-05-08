@@ -11,15 +11,22 @@ korganizer
 
 Aegypten
 -------------
-* aegypten/issue 370 - Add scrollbar so that the dialog doesn't become too big when gpgconf gives us many options to configure.
-* aegypten/issue 735 - Support for the NO_CHANGE flag from gpgconf 2.0.3 (readonly widgets)
+ - aegypten/issue 370 - Add scrollbar so that the dialog doesn't become too big when gpgconf gives us many options to configure.
+ - aegypten/issue 735 - Support for the NO_CHANGE flag from gpgconf 2.0.3 (readonly widgets)
 
-Miscellaneous
---------------
+Bugfixes
+========
  - kolab/issue 1698 -Ignore denied invitations from not invited attendees.
  - kolab/issue1706 (addressbook: real adress type is broken) - introducing bugs in the GUI due to outlook compatibility,
+
+
+Miscellaneous
+==============
  - prokde W1-16: when exporting a secret key to a .p12 file, allow the user to select the encoding (charset) of the passphrase in the p12 file.
  - proko35 W1-8 Fix for usability issues with changes to the currently selected item when LDAP results come in delayed.
+ - kolab/35- W1-10 Add the possibility to have disabled plugins shown grayed out in the sidebar.
+Configurable by non-gui option.
+
 
 "Enterprise - Beta-05"
 Features:
