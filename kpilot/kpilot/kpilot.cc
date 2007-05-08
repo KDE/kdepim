@@ -61,11 +61,11 @@
 #include <ktoolinvocation.h>
 #include <KActionMenu>
 
-#include "kpilotConfigDialog.h"
 #include "kpilotConfig.h"
 
 #include "pilotComponent.h"
 #include "pilotDatabase.h"
+#include "syncAction.h"
 
 #include "addressWidget.h"
 #include "memoWidget.h"
@@ -75,7 +75,7 @@
 #include "datebookWidget.h"
 #include "todoWidget.h"
 
-#include "conduitConfigDialog.h"
+#include "config_dialog.h"
 
 #include "kpilotadaptor.h"
 #include "daemon_interface.h"

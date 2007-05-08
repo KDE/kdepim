@@ -58,7 +58,7 @@
 #include "config_page_viewers.h"
 #include "config_page_backup.h"
 #include "config_dialog_probe.h"
-#include "dbSelectionDialog.h"
+#include "config_dialog_dbselection.h"
 
 #include "config_pages.moc"
 
