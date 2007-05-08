@@ -69,7 +69,7 @@ void Memofiles::load (bool loadAll)
 
 	for ( it = _categories.begin(); it != _categories.end(); ++it ) {
 		int category = it.key();
-		QString categoryName = it.data();
+		QString categoryName = it.value();
 		QString categoryDirname = _baseDirectory + QDir::separator() + categoryName;
 
 		QDir dir = QDir(categoryDirname);
@@ -158,7 +158,7 @@ bool Memofiles::ensureDirectoryReady()
 
 	MemoCategoryMap::Iterator it;
 	for ( it = _categories.begin(); it != _categories.end(); ++it ) {
-		_category_name = it.data();
+		_category_name = it.value();
 		dir = _baseDirectory + QDir::separator() + _category_name;
 
 		DEBUGKPILOT << fname
@@ -214,7 +214,7 @@ void Memofiles::eraseLocalMemos ()
 
 	MemoCategoryMap::Iterator it;
 	for ( it = _categories.begin(); it != _categories.end(); ++it ) {
-		QString dir = _baseDirectory + QDir::separator() + it.data();
+		QString dir = _baseDirectory + QDir::separator() + it.value();
 
 		if (!folderRemove(QDir(dir))) {
 			DEBUGKPILOT << fname
@@ -270,7 +270,7 @@ bool Memofiles::loadFromMetadata ()
 		int errors = 0;
 		bool ok;
 
-		QStringList fields = QStringList::split( FIELD_SEP, data );
+		QStringList fields = data.split( FIELD_SEP, QString::SkipEmptyParts );
 		if ( fields.count() >= 4 ) {
 			int id = fields[0].toInt( &ok );
 			if ( !ok )
@@ -502,7 +502,7 @@ MemoCategoryMap Memofiles::readCategoryMetadata()
 		int errors = 0;
 		bool ok;
 
-		QStringList fields = QStringList::split( FIELD_SEP, data );
+		QStringList fields = data.split( FIELD_SEP, QString::SkipEmptyParts );
 		if ( fields.count() >= 2 ) {
 			int id = fields[0].toInt( &ok );
 			if ( !ok )
@@ -557,7 +557,7 @@ bool Memofiles::saveCategoryMetadata()
 	for ( it = _categories.begin(); it != _categories.end(); ++it ) {
 		stream  << it.key()
 		<< FIELD_SEP
-		<< it.data()
+		<< it.value()
 		<< endl;
 	}
 
@@ -655,7 +655,7 @@ QString Memofiles::filename(PilotMemo * memo)
 
 	if (filename.isEmpty()) {
 		QString text = memo->text();
-		int i = text.find(CSL1("\n"));
+		int i = text.indexOf('\n');
 		if (i > 1) {
 			filename = text.left(i);
 		}

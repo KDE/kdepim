@@ -375,16 +375,23 @@ void ConverterDlg::slotToPDB()
 
 
 		// Now that we have both directories, create the converter object
-		DEBUGKPILOT<<"Pdbinfo.dir="<<pdbinfo.dir().absPath()<<endl;
-		DEBUGKPILOT<<"txtinfo.dir="<<txtinfo.dir().absPath()<<endl;
-		QStringList txtfiles(txtinfo.dir().entryList(CSL1("*.txt")));
+		DEBUGKPILOT << fname 
+			<< "Pdbinfo.dir=" << pdbinfo.absolutePath() << endl;
+		DEBUGKPILOT << fname
+			<< "txtinfo.dir=" << txtinfo.absolutePath() << endl;
+		QStringList txtfiles(txtinfo.dir().entryList( QStringList(CSL1("*.txt"))));
 		QStringList converted_Files;
 
-		DEBUGKPILOT<<"Length of filename list: "<<txtfiles.size()<<endl;
+		DEBUGKPILOT << fname << "Length of filename list: "
+			<< txtfiles.size() << endl;
 		for ( QStringList::Iterator it = txtfiles.begin(); it != txtfiles.end(); ++it )
 		{
-			QString pdbfile=QFileInfo(*it).baseName(true)+CSL1(".pdb");
-			DEBUGKPILOT<<"pdbfile="<<pdbfile<<", pdbdir="<<pdburl<<", txtfile="<<*it<<", txtdir="<<txturl<<endl;
+			QString pdbfile=QFileInfo(*it).completeBaseName() + CSL1(".pdb");
+			DEBUGKPILOT << fname
+				<< "pdbfile=" << pdbfile 
+				<< ", pdbdir=" << pdburl
+				<< ", txtfile=" << *it
+				<< ", txtdir=" << txturl << endl;
 			if (convertTXTtoPDB(txturl, *it, pdburl, pdbfile, &conv))
 			{
 				converted_Files.append(*it);
@@ -398,11 +405,9 @@ void ConverterDlg::slotToPDB()
 		{
 			KMessageBox::sorry(this, i18n("No text files were converted correctly"));
 		}
-
-
-	} else { // no dir
-
-
+	} 
+	else 
+	{
 		// Check the from file
 		if (!txtinfo.isFile() || !txtinfo.exists())
 		{
@@ -411,14 +416,13 @@ void ConverterDlg::slotToPDB()
 			return;
 		}
 
-		if (convertTXTtoPDB(txtinfo.dirPath(true), txtinfo.fileName(),
-				pdbinfo.dirPath(true), pdbinfo.fileName(), &conv) )
+		if (convertTXTtoPDB(txtinfo.absolutePath(), txtinfo.fileName(),
+				pdbinfo.absolutePath(), pdbinfo.fileName(), &conv) )
 		{
 			KMessageBox::information(this, i18n("Conversion of file %1 successful.",txturl));
 		}
 
 	}
-
 }
 
 

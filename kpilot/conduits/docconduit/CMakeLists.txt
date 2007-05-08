@@ -12,8 +12,6 @@ set(doc_shared_SRCS
 
 set(conduit_doc_SRCS
 	${doc_shared_SRCS}
-	kpalmdoc_dlg.cc
-	kpalmdoc.cpp
 	doc-factory.cc
 	doc-setup.cc
 	doc-conduit.cc
@@ -21,13 +19,11 @@ set(conduit_doc_SRCS
 )
 
 set(conduit_doc_UIS
-	kpalmdoc_dlgbase.ui
 	doc-setupdialog.ui
 )
 
 set(conduit_doc_KCFGS
 	docconduitSettings.kcfgc
-	kpalmdocSettings.kcfgc
 )
 
 kde4_add_kcfg_files(conduit_doc_SRCS ${conduit_doc_KCFGS})
