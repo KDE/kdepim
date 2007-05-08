@@ -470,15 +470,11 @@ void ConduitConfigWidget::loadAndConfigure(QTreeWidgetItem *p)
 		KLibFactory *f = KLibLoader::self()->factory(library);
 		if (!f)
 		{
-#ifdef DEBUG
 			DEBUGKPILOT << fname
 				<< ": No conduit library "
-				<< library.data()
-				<< " [" << library.size() << "]"
-				<< " (" << libraryName << ")"
+				<< libraryName
 				<< " found."
 				<< endl;
-#endif
 			fStack->setCurrentIndex(BROKEN_CONDUIT);
 			warnNoLibrary(p);
 			return;
@@ -493,11 +489,9 @@ void ConduitConfigWidget::loadAndConfigure(QTreeWidgetItem *p)
 
 		if (!o)
 		{
-#ifdef DEBUG
 			DEBUGKPILOT << fname
 				<< ": Can't create ConduitConfigBase - must be old conduit."
 				<< endl;
-#endif
 
 			KLibLoader::self()->unloadLibrary(
 				library);
@@ -511,11 +505,9 @@ void ConduitConfigWidget::loadAndConfigure(QTreeWidgetItem *p)
 
 	if (!d)
 	{
-#ifdef DEBUG
 		DEBUGKPILOT << fname
 			<< ": Can't cast to config base object."
 			<< endl;
-#endif
 		fStack->setCurrentIndex(BROKEN_CONDUIT);
 		warnNoLibrary(p);
 		return;
@@ -530,11 +522,9 @@ void ConduitConfigWidget::loadAndConfigure(QTreeWidgetItem *p)
 	}
 	if (fStack->insertWidget(NEW_CONDUIT,d->widget())<0)
 	{
-#ifdef DEBUG
 		DEBUGKPILOT << fname
 			<< ": Can't add config widget to stack."
 			<< endl;
-#endif
 	}
 	else
 	{

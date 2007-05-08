@@ -86,11 +86,6 @@ DeviceConfigPage::DeviceConfigPage(QWidget * w, const char *n ) : ConfigPage( w,
 	fConfigWidget->resize(fConfigWidget->size());
 	fWidget = fConfigWidget;
 
-#if PILOT_LINK_NUMBER < PILOT_LINK_0_10_0
-	fConfigWidget->fPilotDevice->setMaxLength(13);
-#endif
-
-
 #define CM(a,b) connect(fConfigWidget->a,b,this,SLOT(modified()));
 	CM(fPilotDevice, SIGNAL(textChanged(const QString &)));
 	CM(fPilotSpeed, SIGNAL(activated(int)));
@@ -131,30 +126,6 @@ void DeviceConfigPage::load()
 	unmodified();
 }
 
-/* virtual */ bool DeviceConfigPage::validate()
-{
-	int r = KMessageBox::Yes;
-
-#if PILOT_LINK_NUMBER < PILOT_LINK_0_10_0
-	QString d = fConfigWidget->fPilotDevice->text();
-
-	if (d.length() > 13)
-	{
-	r = KMessageBox::questionYesNo(
-		fConfigWidget,
-		i18n("<qt>The device name you entered (<i>%1</i>) "
-			"is longer than 13 characters. This is "
-			"probably unsupported and can cause problems. "
-			"Are you sure you want to use this device name?</qt>")
-			.arg(d),
-		i18n("Device Name too Long"), i18n("Use"), i18n("Do Not Use")
-		) ;
-	}
-#endif
-
-	return KMessageBox::Yes == r;
-}
-
 /* virtual */ void DeviceConfigPage::commit()
 {
 	FUNCTIONSETUP;
@@ -167,14 +138,17 @@ void DeviceConfigPage::load()
 
 	switch(fConfigWidget->fWorkaround->currentItem())
 	{
-	case 0 : KPilotSettings::setWorkarounds(KPilotSettings::eWorkaroundNone); break;
-	case 1 : KPilotSettings::setWorkarounds(KPilotSettings::eWorkaroundUSB); break;
+	case 0 :
+		KPilotSettings::setWorkarounds(KPilotSettings::eWorkaroundNone);
+		break;
+	case 1 :
+		KPilotSettings::setWorkarounds(KPilotSettings::eWorkaroundUSB);
+		break;
 	default :
 		WARNINGKPILOT << "Unknown workaround number "
 			<< fConfigWidget->fWorkaround->currentItem()
 			<< endl;
 		KPilotSettings::setWorkarounds(KPilotSettings::eWorkaroundNone);
-
 	}
 	KPilotConfig::updateConfigVersion();
 	KPilotSettings::self()->writeConfig();
@@ -204,9 +178,13 @@ void DeviceConfigPage::getEncoding()
 	FUNCTIONSETUP;
 	QString e = KPilotSettings::encoding();
 	if (e.isEmpty())
+	{
 		fConfigWidget->fPilotEncoding->setCurrentText(CSL1("ISO8859-15"));
+	}
 	else
+	{
 		fConfigWidget->fPilotEncoding->setCurrentText(e);
+	}
 }
 
 void DeviceConfigPage::setEncoding()
@@ -385,7 +363,7 @@ void BackupConfigPage::slotSelectNoBackupDBs()
 
 	QStringList deviceDBs=KPilotSettings::deviceDBs();
 	QStringList addedDBs=KPilotSettings::addedDBs();
-	KPilotDBSelectionDialog*dlg=new KPilotDBSelectionDialog(selectedDBs, deviceDBs, addedDBs, 0, "NoBackupDBs");
+	KPilotDBSelectionDialog *dlg=new KPilotDBSelectionDialog(selectedDBs, deviceDBs, addedDBs, 0, "NoBackupDBs");
 	if (dlg && (dlg->exec()==QDialog::Accepted) )
 	{
 		fConfigWidget->fBackupOnly->setText(
@@ -403,7 +381,7 @@ void BackupConfigPage::slotSelectNoRestoreDBs()
 
 	QStringList deviceDBs=KPilotSettings::deviceDBs();
 	QStringList addedDBs=KPilotSettings::addedDBs();
-	KPilotDBSelectionDialog*dlg=new KPilotDBSelectionDialog(selectedDBs, deviceDBs, addedDBs, 0, "NoRestoreDBs");
+	KPilotDBSelectionDialog *dlg=new KPilotDBSelectionDialog(selectedDBs, deviceDBs, addedDBs, 0, "NoRestoreDBs");
 	if (dlg && (dlg->exec()==QDialog::Accepted) )
 	{
 		fConfigWidget->fSkipDB->setText(
@@ -526,7 +504,7 @@ void StartExitConfigPage::load()
 			src.setPath(location);
 			KUrl dst;
 			dst.setPath(autostart+desktopfile);
-			KIO::NetAccess::file_copy(src,dst,-1 /* 0666? */,true /* overwrite */);
+			KIO::NetAccess::file_copy(src,dst,-1,true /* overwrite */);
 		}
 	}
 	else

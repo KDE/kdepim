@@ -56,7 +56,6 @@ public:
 	DeviceConfigPage( QWidget *, const char * );
 
 protected:
-	virtual bool validate();
 	virtual void load();
 	virtual void commit();
 
