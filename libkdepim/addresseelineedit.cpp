@@ -780,6 +780,13 @@ void AddresseeLineEdit::setCompletedItems( const QStringList& items, bool autoSu
         QString oldCurrentText = completionBox->currentText();
         QListBoxItem *itemUnderMouse = completionBox->itemAt( 
             completionBox->viewport()->mapFromGlobal(QCursor::pos()) );
+        QString oldTextUnderMouse;
+        QPoint oldPosOfItemUnderMouse;
+        if ( itemUnderMouse ) {
+            oldTextUnderMouse = itemUnderMouse->text();
+            oldPosOfItemUnderMouse = completionBox->itemRect( itemUnderMouse ).topLeft();
+        }
+
         completionBox->setItems( items );
 
         if ( !completionBox->isVisible() ) {
@@ -802,19 +809,25 @@ void AddresseeLineEdit::setCompletedItems( const QStringList& items, bool autoSu
         }
         if ( item )
         {
-            completionBox->blockSignals( true );
-            QListBoxItem *newItemUnderMouse = completionBox->itemAt( 
-                      completionBox->viewport()->mapFromGlobal(QCursor::pos()) );
-            // if the mouse was over an item, before, but now it's a different one
-            // move the cursor, so folks don't accidently click the wrong item
-            if ( itemUnderMouse && itemUnderMouse != newItemUnderMouse ) {
-                QRect r = completionBox->itemRect( item );
-                QPoint target = r.topLeft();
-                target.setX( target.x() + r.width()/2 );
-                QCursor::setPos( completionBox->viewport()->mapToGlobal(target) );
-            }
-            completionBox->setSelected( item, true );
-            completionBox->blockSignals( false );
+          if ( itemUnderMouse ) {
+              QListBoxItem *newItemUnderMouse = completionBox->findItem( oldTextUnderMouse );
+              // if the mouse was over an item, before, but now that's elsewhere,
+              // move the cursor, so folks don't accidently click the wrong item
+              if ( newItemUnderMouse ) {
+                  QRect r = completionBox->itemRect( newItemUnderMouse );
+                  QPoint target = r.topLeft();
+                  if ( oldPosOfItemUnderMouse != target ) {
+                      target.setX( target.x() + r.width()/2 );
+                      QCursor::setPos( completionBox->viewport()->mapToGlobal(target) );
+                  }
+              }
+          }
+          completionBox->blockSignals( true );
+          completionBox->setSelected( item, true );
+          completionBox->setCurrentItem( item );
+          completionBox->ensureCurrentVisible();
+
+          completionBox->blockSignals( false );
         }
 
         if ( autoSuggest )
@@ -1046,6 +1059,8 @@ bool KPIM::AddresseeLineEdit::eventFilter(QObject *obj, QEvent *e)
         QListBoxItem *item = completionBox()->item( j + 1 );
         if ( item && !itemIsHeader(item) ) {
           completionBox()->setSelected( j+1, true );
+          completionBox()->setCurrentItem( item );
+          completionBox()->ensureCurrentVisible();
         }
       }
       return true;
