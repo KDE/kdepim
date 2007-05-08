@@ -57,9 +57,9 @@
 ConverterDlg::ConverterDlg( QWidget *parent, const QString& caption)
    : KDialog( parent)
 {
-	setCaption(i18n("&About"));
 	setModal(true);
 	setButtons(Close|Help|User1);
+	setButtonText(User1,i18n("&About"));
 	setDefaultButton(Close);
 	QWidget *page = new KHBox(this);
 	setMainWidget(page);
