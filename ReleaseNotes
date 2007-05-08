@@ -19,7 +19,6 @@ Miscellaneous
  - kolab/issue 1698 -Ignore denied invitations from not invited attendees.
  - kolab/issue1706 (addressbook: real adress type is broken) - introducing bugs in the GUI due to outlook compatibility,
  - prokde W1-16: when exporting a secret key to a .p12 file, allow the user to select the encoding (charset) of the passphrase in the p12 file.
- - proko35 W1-16 -support special characters in passwords for pkcs12 files
 
 
 "Enterprise - Beta-05"
