@@ -4,9 +4,7 @@
 ** Copyright (C) 2002-2004 by Adriaan de Groot
 ** Copyright (C) 2003-2004 Reinhold Kainhofer <reinhold@kainhofer.com>
 **
-** This file defines a specialization of KPilotDeviceLink
-** that can actually handle some HotSync tasks, like backup
-** and restore. It does NOT do conduit stuff.
+** This file defines the pages that make up part of the configuration dialog.
 */
 
 /*
@@ -49,18 +47,20 @@
 #include <kio/netaccess.h>
 #include <KGlobalSettings>
 
+#include "syncAction.h"
+
 #include "kpilotConfig.h"
 #include "kpilotSettings.h"
 
-#include "kpilotConfigDialog_device.h"
-#include "kpilotConfigDialog_sync.h"
-#include "kpilotConfigDialog_startup.h"
-#include "kpilotConfigDialog_viewers.h"
-#include "kpilotConfigDialog_backup.h"
-#include "kpilotConfigDialog.moc"
-#include "kpilotProbeDialog.h"
-#include "syncAction.h"
+#include "config_page_device.h"
+#include "config_page_sync.h"
+#include "config_page_startup.h"
+#include "config_page_viewers.h"
+#include "config_page_backup.h"
+#include "config_dialog_probe.h"
 #include "dbSelectionDialog.h"
+
+#include "config_pages.moc"
 
 /* virtual */ QString ConfigPage::maybeSaveText() const
 {

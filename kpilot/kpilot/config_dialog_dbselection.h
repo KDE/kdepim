@@ -1,6 +1,6 @@
 #ifndef _KPILOT_DBSELECTIONDIALOG_H
 #define _KPILOT_DBSELECTIONDIALOG_H
-/* dbSelectionDialog.h                 KPilot
+/* KPilot
 **
 ** Copyright (C) 2003 Reinhold Kainhofer <reinhold@kainhofer.com>
 **

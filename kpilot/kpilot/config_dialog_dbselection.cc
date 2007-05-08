@@ -37,8 +37,8 @@
 #include <kpushbutton.h>
 #include <klineedit.h>
 
-#include "dbSelection_base.h"
-#include "dbSelectionDialog.moc"
+#include "config_dialog_dbselection_base.h"
+#include "config_dialog_dbselection.moc"
 
 
 KPilotDBSelectionDialog::KPilotDBSelectionDialog(QStringList &selectedDBs, QStringList &deviceDBs,

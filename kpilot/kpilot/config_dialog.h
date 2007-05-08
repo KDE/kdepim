@@ -5,8 +5,8 @@
 ** Copyright (C) 2001 by Dan Pilone
 ** Copyright (C) 2003-2004 Reinhold Kainhofer <reinhold@kainhofer.com>
 **
-** This file defines a dialog that uses the .ui-defined widget for
-** configuring conduits.
+** This file defines a dialog for configuring all of KPilot, using
+** the pages from config_pages and the conduit (plugin) pages.
 */
 
 /*

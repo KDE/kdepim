@@ -22,20 +22,20 @@ kde4_add_kcfg_files(settings_SRC kpilotSettings.kcfgc)
 #
 set(kcmpilot_SRCS
 	${settings_SRC}
-	dbSelectionDialog.cc
-	kpilotConfigDialog.cc
-	conduitConfigDialog.cc
-	kpilotProbeDialog.cc
+	config_dialog.cc
+	config_dialog_probe.cc
+	config_dialog_dbselection.cc
+	config_pages.cc
 )
 
 
 set(kcmpilot_UIS
-	kpilotConfigDialog_device.ui
-	kpilotConfigDialog_sync.ui
-	kpilotConfigDialog_startup.ui
-	kpilotConfigDialog_viewers.ui
-	kpilotConfigDialog_backup.ui
-	dbSelection_base.ui
+	config_page_device.ui
+	config_page_sync.ui
+	config_page_startup.ui
+	config_page_viewers.ui
+	config_page_backup.ui
+	config_dialog_dbselection_base.ui
 )
 
 kde4_add_ui3_files(kcmpilot_SRCS ${kcmpilot_UIS})

@@ -1,13 +1,12 @@
 #ifndef _KPILOT_KPILOTCONFIGDIALOG_H
 #define _KPILOT_KPILOTCONFIGDIALOG_H
-/* kpilotConfigDialog.h                 KPilot
+/* KPilot
 **
 ** Copyright (C) 2001 by Dan Pilone
 ** Copyright (C) 2003-2004 Reinhold Kainhofer <reinhold@kainhofer.com>
 **
-** This file defines a specialization of KPilotDeviceLink
-** that can actually handle some HotSync tasks, like backup
-** and restore. It does NOT do conduit stuff.
+** This file defines logic for the pages that make up the configuration
+** dialog for KPilot.
 */
 
 /*

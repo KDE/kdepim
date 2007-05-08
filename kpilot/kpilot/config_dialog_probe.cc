@@ -1,8 +1,8 @@
-/* conduitConfigDialog.cc                KPilot
+/* KPilot
 **
 ** Copyright (C) 2004 Reinhold Kainhofer <reinhold@kainhofer.com>
 **
-** This file defines a .ui-based configuration dialog for conduits.
+** This file defines the logic for the device probing dialog.
 */
 
 /*
@@ -53,8 +53,9 @@
 #include "options.h"
 #include "kpilotdevicelink.h"
 
-#include "kpilotProbeDialog.moc"
 #include "kpilot_daemon_interface.h"
+
+#include "config_dialog_probe.moc"
 
 /*
 We can't connect to /dev/ttyUSB0 and /dev/ttyUSB1 at the same time, because that
