@@ -287,7 +287,7 @@ bool AbbrowserConduit::_loadAddressBook()
 				emit logError(i18n("You chose to sync with the file \"%1\", which "
 							"cannot be opened. Please make sure to supply a "
 							"valid file name in the conduit's configuration dialog. "
-							"Aborting the conduit.").arg(AbbrowserSettings::fileName()));
+							"Aborting the conduit.",AbbrowserSettings::fileName()));
 				KIO::NetAccess::removeTempFile(fABookFile);
 				stopTickle();
 				return false;
@@ -391,8 +391,7 @@ bool AbbrowserConduit::_saveAddressBook()
 			DEBUGKPILOT << fname << "Deleting local addressbook tempfile" << endl;
 			if(!KIO::NetAccess::upload(fABookFile, AbbrowserSettings::fileName(), 0L)) {
 				emit logError(i18n("An error occurred while uploading \"%1\". You can try to upload "
-					"the temporary local file \"%2\" manually")
-					.arg(AbbrowserSettings::fileName()).arg(fABookFile));
+					"the temporary local file \"%2\" manually",AbbrowserSettings::fileName(),fABookFile));
 			}
 			else {
 				KIO::NetAccess::removeTempFile(fABookFile);

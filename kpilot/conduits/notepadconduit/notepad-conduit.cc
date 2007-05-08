@@ -73,7 +73,7 @@ NotepadConduit::~NotepadConduit()
 
 	QDir dir(NotepadConduitSettings::outputDirectory());
 	if(!dir.exists() && !dir.mkdir(dir.path())) {
-		emit logError(i18n("Unable to open %1").arg(dir.path()));
+		emit logError(i18n("Unable to open %1",dir.path()));
 		delayDone();
 		return false;
 	}

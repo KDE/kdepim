@@ -258,7 +258,7 @@ bool MALConduit::skip()
 				syncMessage = i18n("No SOCKS proxy is set.");
 				break;
 			}
-			syncMessage = i18n("Using SOCKS proxy: %1").arg(proxyServer);
+			syncMessage = i18n("Using SOCKS proxy: %1",proxyServer);
 #ifdef DEBUG
 			DEBUGKPILOT<<" Using SOCKS proxy server \""<<proxyServer<<"\",  Port "<<proxyPort<<", User "<<MALConduitSettings::proxyUser()<<", Password "<<( (MALConduitSettings::proxyPassword().isEmpty())?QString("not "):QString() )<<"set"<<endl;
 #endif

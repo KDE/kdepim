@@ -287,13 +287,13 @@ RecordConduit::~RecordConduit()
 	// Database names probably in latin1.
 	if( !openDatabases( dbName(), &fFirstSync ) )
 	{
-		emit logError(i18n("Unable to open the %1 database on the handheld.").arg( dbName() ) );
+		emit logError(i18n("Unable to open the %1 database on the handheld.", dbName() ) );
 		return false;
 	}
 	_getAppInfo();
 	if( !mPCData->loadData() )
 	{
-		emit logError( i18n("Unable to open %1.").arg( mPCData->description() ) );
+		emit logError( i18n("Unable to open %1.", mPCData->description() ) );
 		return false;
 	}
 	// get the addresseMap which maps Pilot unique record(address) id's to

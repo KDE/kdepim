@@ -575,12 +575,12 @@ void SysInfoConduit::writeFile()
 		QFileInfo fi(QDir::home(), CSL1("KPilotSysInfo.")+QFileInfo(templatefile).suffix() );
 		fOutputFile=fi.absoluteFilePath();
 		WARNINGKPILOT << "Unable to open output file, using " << fOutputFile << " instead." << endl;
-		emit logMessage(i18n("Unable to open output file, using %1 instead.").arg(fOutputFile));
+		emit logMessage(i18n("Unable to open output file, using %1 instead.",fOutputFile));
 		outfile.setFileName(fOutputFile);
 		if (!outfile.open(QIODevice::WriteOnly))
 		{
 			WARNINGKPILOT<< "Unable to open " << fOutputFile << endl;
-			emit logError(i18n("Unable to open %1").arg(fOutputFile));
+			emit logError(i18n("Unable to open %1",fOutputFile));
 			QTimer::singleShot(0, this, SLOT(cleanup()));
 			return;
 		}
@@ -591,7 +591,7 @@ void SysInfoConduit::writeFile()
 	outstream<<output;
 	outfile.close();
 
-	emit logMessage(i18n("Handheld system information written to the file %1").arg(fOutputFile));
+	emit logMessage(i18n("Handheld system information written to the file %1",fOutputFile));
 	QTimer::singleShot(0, this, SLOT(cleanup()));
 }
 

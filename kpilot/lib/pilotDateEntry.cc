@@ -176,7 +176,7 @@ QString PilotDateEntry::getTextRepresentation(Qt::TextFormat richText)
 	QDateTime dt(readTm(getEventStart()));
 	QString startDate(dt.toString(Qt::LocalDate));
 	text+=par;
-	text+=i18n("Start date: %1").arg(startDate);
+	text+=i18n("Start date: %1",startDate);
 	text+=ps;
 
 	if (isEvent())
@@ -190,7 +190,7 @@ QString PilotDateEntry::getTextRepresentation(Qt::TextFormat richText)
 		dt=readTm(getEventEnd());
 		QString endDate(dt.toString(Qt::LocalDate));
 		text+=par;
-		text+=i18n("End date: %1").arg(endDate);
+		text+=i18n("End date: %1",endDate);
 		text+=ps;
 	}
 
@@ -212,19 +212,18 @@ QString PilotDateEntry::getTextRepresentation(Qt::TextFormat richText)
 	if (getRepeatType() != repeatNone)
 	{
 		text+=par;
-		tmp=i18n("Recurrence: every %1 %2");
 		int freq = getRepeatFrequency();
-		tmp=tmp.arg(freq);
-
+		QString tmpStr;
 		switch(getRepeatType())
 		{
-			case repeatDaily: tmp=tmp.arg(i18n("day(s)")); break;
-			case repeatWeekly: tmp=tmp.arg(i18n("week(s)")); break;
+			case repeatDaily: tmpStr = i18n("day(s)"); break;
+			case repeatWeekly: tmpStr = i18n("week(s)"); break;
 			case repeatMonthlyByDay:
-			case repeatMonthlyByDate: tmp=tmp.arg(i18n("month(s)")); break;
-			case repeatYearly: tmp=tmp.arg(i18n("year(s)")); break;
-			default: tmp=tmp.arg(QString::null); break;
+			case repeatMonthlyByDate: tmpStr = i18n("month(s)"); break;
+			case repeatYearly: tmpStr = i18n("year(s)"); break;
+			default: tmpStr.clear(); break;
 		}
+		tmp=i18n("Recurrence: every %1 %2",freq,tmpStr);
 		text+=tmp;
 		text+=br;
 

@@ -294,8 +294,8 @@ static inline bool isLocalTime(KCal::Calendar *p)
 				<< isLocalTime(fCalendar) << endl;
 
 			emit logMessage( isLocalTime(fCalendar) ?
-				i18n( "Using local time zone: %1" ).arg( tz ) :
-				i18n( "Using non-local time zone: %1" ).arg( tz ) );
+				i18n( "Using local time zone: %1" , tz ) :
+				i18n( "Using non-local time zone: %1" , tz ) );
 
 			KUrl kurl( config()->calendarFile() );
 			if( !KIO::NetAccess::download( config()->calendarFile(),
@@ -304,7 +304,7 @@ static inline bool isLocalTime(KCal::Calendar *p)
 				emit logError(i18n( "You chose to sync with the file \"%1\", which "
 					"cannot be opened. Please make sure to supply a "
 					"valid file name in the conduit's configuration dialog. "
-					"Aborting the conduit." ).arg( config()->calendarFile() ) );
+					"Aborting the conduit." , config()->calendarFile() ) );
 				KIO::NetAccess::removeTempFile( fCalendarFile );
 				return false;
 			}
@@ -327,14 +327,13 @@ static inline bool isLocalTime(KCal::Calendar *p)
 					emit logError( i18n( "You chose to sync with the file \"%1\", which "
 						"cannot be opened or created. Please make sure to supply a "
 						"valid file name in the conduit's configuration dialog. "
-						"Aborting the conduit." ).arg( config()->calendarFile() ) );
+						"Aborting the conduit." , config()->calendarFile() ) );
 					return false;
 				}
 				fl.close();
 				setFirstSync( true );
 			}
-			addSyncLogEntry( i18n( "Syncing with file \"%1\"" )
-				.arg( config()->calendarFile() ) );
+			addSyncLogEntry( i18n( "Syncing with file \"%1\"" , config()->calendarFile() ) );
 			break;
 		}
 
@@ -361,8 +360,8 @@ static inline bool isLocalTime(KCal::Calendar *p)
 #endif
 			addSyncLogEntry( i18n( "Syncing with standard calendar resource." ) );
 			emit logMessage( isLocalTime(fCalendar) ?
-				i18n( "Using local time zone: %1" ).arg( tz ) :
-				i18n( "Using non-local time zone: %1" ).arg( tz ) );
+				i18n( "Using local time zone: %1" , tz ) :
+				i18n( "Using non-local time zone: %1" , tz ) );
 			break;
 		default:
 			break;

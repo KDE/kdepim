@@ -179,8 +179,8 @@ void ConverterDlg::slotToText()
 			int res=KMessageBox::questionYesNo(this,
 				i18n("<qt>You selected to sync folders, "
 				"but gave a filename instead (<em>%1</em>)."
-				"<br>Use folder <em>%2</em> instead?</qt>").arg(pdburl)
-				.arg(pdbinfo.dirPath(true)), QString::null, KGuiItem(i18n("Use Folder")), KStandardGuiItem::cancel());
+				"<br>Use folder <em>%2</em> instead?</qt>",pdburl,
+				pdbinfo.dirPath(true)), QString::null, KGuiItem(i18n("Use Folder")), KStandardGuiItem::cancel());
 			if (res==KMessageBox::Yes)
 			{
 				pdburl=pdbinfo.dirPath(true);
@@ -195,7 +195,7 @@ void ConverterDlg::slotToText()
 			KMessageBox::sorry(this,
 				i18n("<qt>The folder <em>%1</em> for "
 				"the handheld database files is not a valid "
-				"folder.</qt>").arg(pdburl));
+				"folder.</qt>",pdburl));
 			return;
 		}
 
@@ -204,7 +204,7 @@ void ConverterDlg::slotToText()
 			KMessageBox::sorry(this,
 				i18n("<qt>The folder <em>%1</em> for "
 				"the handheld database files is not a "
-				"valid directory.</qt>").arg(pdburl));
+				"valid directory.</qt>",pdburl));
 			return;
 		}
 
@@ -215,8 +215,8 @@ void ConverterDlg::slotToText()
 			int res=KMessageBox::questionYesNo(this,
 				i18n("<qt>You selected to sync folders, "
 				"but gave a filename instead (<em>%1</em>)."
-				"<br>Use folder <em>%2</em> instead?</qt>").arg(txturl)
-				.arg(txtinfo.dirPath(true)), QString::null, KGuiItem(i18n("Use Folder")), KStandardGuiItem::cancel());
+				"<br>Use folder <em>%2</em> instead?</qt>",txturl,
+				txtinfo.dirPath(true)), QString::null, KGuiItem(i18n("Use Folder")), KStandardGuiItem::cancel());
 			if (res==KMessageBox::Yes) {
 				txturl=txtinfo.dirPath(true);
 				txtinfo.setFile(txturl);
@@ -328,8 +328,8 @@ void ConverterDlg::slotToPDB()
 			int res=KMessageBox::questionYesNo(this,
 				i18n("<qt>You selected to sync folders, "
 				"but gave a filename instead (<em>%1</em>)."
-				"<br>Use folder <em>%2</em> instead?</qt>",txturl)
-				.arg(txtinfo.dirPath(true)), QString::null, KGuiItem(i18n("Use Folder")), KStandardGuiItem::cancel());
+				"<br>Use folder <em>%2</em> instead?</qt>",txturl,
+				txtinfo.dirPath(true)), QString::null, KGuiItem(i18n("Use Folder")), KStandardGuiItem::cancel());
 			if (res==KMessageBox::Yes)
 			{
 				txturl=txtinfo.dirPath(true);
@@ -342,7 +342,7 @@ void ConverterDlg::slotToPDB()
 		{
 			KMessageBox::sorry(this,
 				i18n("<qt>The folder <em>%1</em> for "
-				"the text files is not a valid folder.</qt>").arg(txturl));
+				"the text files is not a valid folder.</qt>",txturl));
 			return;
 		}
 

@@ -178,9 +178,9 @@ void ResolutionDialog::slotInfo(int index) {
 	int ix=cE.index;
 	if (!syncInfo) return;
 	docSyncInfo si=(*syncInfo)[ix];
-	QString text=i18n("Status of the database %1:\n\n").arg(si.handheldDB);
-	text+=i18n("Handheld: %1\n").arg(eTextStatusToString(si.fPalmStatus));
-	text+=i18n("Desktop: %1\n").arg(eTextStatusToString(si.fPCStatus));
+	QString text=i18n("Status of the database %1:\n\n",si.handheldDB);
+	text+=i18n("Handheld: %1\n",eTextStatusToString(si.fPalmStatus));
+	text+=i18n("Desktop: %1\n",eTextStatusToString(si.fPCStatus));
 
 	KMessageBox::information(this, text, i18n("Database information"));
 }

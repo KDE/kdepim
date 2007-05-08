@@ -110,7 +110,7 @@ MemofileConduit::~MemofileConduit()
 	fCtrPC->setStartCount(_memofiles->count());
 
 	setFirstSync( _memofiles->isFirstSync() );
-	addSyncLogEntry(i18n(" Syncing with %1.").arg(_memo_directory));
+	addSyncLogEntry(i18n(" Syncing with %1.",_memo_directory));
 
 	if ( (syncMode() == SyncAction::SyncMode::eCopyHHToPC) || _memofiles->isFirstSync() ) {
 		addSyncLogEntry(i18n(" Copying Pilot to PC..."));

@@ -222,7 +222,7 @@ PilotRecord *VCalConduit::recordFromIncidence(PilotRecordBase *de, const KCal::I
 		(e->recurrenceType() ==  KCal::Recurrence::rYearlyPos) )
 	{
 		// Warn ahead of time
-		emit logMessage(i18n("Event \"%1\" has a yearly recurrence other than by month, will change this to recurrence by month on handheld.").arg(e->summary()));
+		emit logMessage(i18n("Event \"%1\" has a yearly recurrence other than by month, will change this to recurrence by month on handheld.",e->summary()));
 	}
 
 	PilotDateEntry *dateEntry = dynamic_cast<PilotDateEntry*>(de);

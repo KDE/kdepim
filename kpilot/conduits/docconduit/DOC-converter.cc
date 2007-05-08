@@ -197,7 +197,7 @@ QString DOCConverter::readText() {
 	QFile docfile(txtfilename);
 	if (!docfile.open(QIODevice::ReadOnly))
 	{
-		emit logError(i18n("Unable to open text file %1 for reading.").arg(txtfilename));
+		emit logError(i18n("Unable to open text file %1 for reading.",txtfilename));
 		return QString();
 	}
 
@@ -439,7 +439,7 @@ bool DOCConverter::convertTXTtoPDB() {
 #endif
 
 	if (!docdb->isOpen()) {
-		emit logError(i18n("Unable to open palm doc database %1").arg(docdb->dbPathName()) );
+		emit logError(i18n("Unable to open palm doc database %1",docdb->dbPathName()) );
 		return false;
 	}
 
@@ -522,7 +522,7 @@ bool DOCConverter::convertPDBtoTXT()
 	PilotRecord*headerRec = docdb->readRecordByIndex(0);
 	if (!headerRec)
 	{
-		emit logError(i18n("Unable to read database header for database %1.").arg(docdb->dbPathName()));
+		emit logError(i18n("Unable to read database header for database %1.",docdb->dbPathName()));
 		KPILOT_DELETE(docdb);
 		return false;
 	}
@@ -542,7 +542,7 @@ bool DOCConverter::convertPDBtoTXT()
 	QFile docfile(txtfilename);
 	if (!docfile.open(QIODevice::WriteOnly))
 	{
-		emit logError(i18n("Unable to open output file %1.").arg(txtfilename));
+		emit logError(i18n("Unable to open output file %1.",txtfilename));
 		KPILOT_DELETE(docdb);
 		return false;
 	}
@@ -557,7 +557,7 @@ bool DOCConverter::convertPDBtoTXT()
 			DEBUGKPILOT<<"Record "<<i<<endl;
 			KPILOT_DELETE(rec);
 		} else {
-			emit logMessage(i18n("Could not read text record #%1 from Database %2").arg(i).arg(docdb->dbPathName()));
+			emit logMessage(i18n("Could not read text record #%1 from Database %2",i,docdb->dbPathName()));
 		}
 	}
 
@@ -576,7 +576,7 @@ bool DOCConverter::convertPDBtoTXT()
 			bmks.append(bmk);
 			KPILOT_DELETE(rec);
 		} else {
-			emit logMessage(i18n("Could not read bookmark record #%1 from Database %2").arg(i).arg(docdb->dbPathName()));
+			emit logMessage(i18n("Could not read bookmark record #%1 from Database %2",i,docdb->dbPathName()));
 		}
 	}
 	// TODO: Sort the list of bookmarks according to their position
@@ -593,8 +593,7 @@ bool DOCConverter::convertPDBtoTXT()
 		QFile bmkfile(bmkfilename);
 		if (!bmkfile.open(QIODevice::WriteOnly))
 		{
-			emit logError(i18n("Unable to open file %1 for the bookmarks of %2.")
-				.arg(bmkfilename).arg(docdb ->dbPathName()));
+			emit logError(i18n("Unable to open file %1 for the bookmarks of %2.",bmkfilename,docdb->dbPathName()));
 		}
 		else
 		{

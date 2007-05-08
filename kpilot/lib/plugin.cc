@@ -483,6 +483,7 @@ void ConduitAction::finished()
 
 		QString caption = i18n("Large Changes Detected");
 		// args are already i18n'd
+		// TODO fix with new i18n API
 		QString template_query = i18n("The %1 conduit has made a "
 			"large number of changes to your %2.  Do you want "
 			"to allow this change?\nDetails:\n\t%3");
@@ -544,7 +545,7 @@ ConduitProxy::ConduitProxy(KPilotLink *p,
 		WARNINGKPILOT << "Can't find desktop file for conduit "
 			<< fDesktopName
 			<< endl;
-		addSyncLogEntry(i18n("Could not find conduit %1.").arg(fDesktopName));
+		addSyncLogEntry(i18n("Could not find conduit %1.",fDesktopName));
 		return false;
 	}
 
@@ -567,7 +568,7 @@ ConduitProxy::ConduitProxy(KPilotLink *p,
 			<< " - "
 			<< KLibLoader::self()->lastErrorMessage()
 			<< endl;
-		addSyncLogEntry(i18n("Could not load conduit %1.").arg(fDesktopName));
+		addSyncLogEntry(i18n("Could not load conduit %1.",fDesktopName));
 		return false;
 	}
 
@@ -579,7 +580,7 @@ ConduitProxy::ConduitProxy(KPilotLink *p,
 			<< " has version "
 			<< version
 			<< endl;
-		addSyncLogEntry(i18n("Conduit %1 has wrong version (%2).").arg(fDesktopName).arg(version));
+		addSyncLogEntry(i18n("Conduit %1 has wrong version (%2).",fDesktopName,version));
 		return false;
 	}
 
@@ -589,7 +590,7 @@ ConduitProxy::ConduitProxy(KPilotLink *p,
 		WARNINGKPILOT << "Can't find factory in library "
 			<< fLibraryName
 			<< endl;
-		addSyncLogEntry(i18n("Could not initialize conduit %1.").arg(fDesktopName));
+		addSyncLogEntry(i18n("Could not initialize conduit %1.",fDesktopName));
 		return false;
 	}
 
@@ -602,7 +603,7 @@ ConduitProxy::ConduitProxy(KPilotLink *p,
 	if (!object)
 	{
 		WARNINGKPILOT << "Can't create SyncAction." << endl;
-		addSyncLogEntry(i18n("Could not create conduit %1.").arg(fDesktopName));
+		addSyncLogEntry(i18n("Could not create conduit %1.",fDesktopName));
 		return false;
 	}
 
@@ -611,11 +612,11 @@ ConduitProxy::ConduitProxy(KPilotLink *p,
 	if (!fConduit)
 	{
 		WARNINGKPILOT << "Can't cast to ConduitAction." << endl;
-		addSyncLogEntry(i18n("Could not create conduit %1.").arg(fDesktopName));
+		addSyncLogEntry(i18n("Could not create conduit %1.",fDesktopName));
 		return false;
 	}
 
-	addSyncLogEntry(i18n("[Conduit %1]").arg(fDesktopName));
+	addSyncLogEntry(i18n("[Conduit %1]",fDesktopName));
 
 	// Handle the syncDone signal properly & unload the conduit.
 	QObject::connect(fConduit,SIGNAL(syncDone(SyncAction *)),
