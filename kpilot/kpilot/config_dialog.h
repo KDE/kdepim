@@ -67,7 +67,7 @@ protected:
 	void warnNoExec(const QTreeWidgetItem *);
 	void warnNoLibrary(const QTreeWidgetItem *);
 
-	void loadAndConfigure(QTreeWidgetItem *); // ,bool);
+	void loadAndConfigure(QTreeWidgetItem *);
 
 public:
 	/**
@@ -83,8 +83,6 @@ public:
 public slots:
 	virtual void save();
 	virtual void load();
-//	void slotOk();
-//	void slotApply();
 
 signals:
 	void selectionChanged(QTreeWidgetItem *);

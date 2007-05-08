@@ -731,13 +731,9 @@ static bool runConfigure(OrgKdeKpilotDaemonInterface &daemon,QWidget *parent)
 	KPilotSettings::self()->readConfig();
 	KCMultiDialog *options = new KCMultiDialog(parent);
 	options->setModal(true);
-	KPageWidgetItem* item = options->addModule( CSL1("kpilot_config.desktop"));
+	KPageWidgetItem *item = options->addModule( CSL1("kpilot_config.desktop"));
 	item->setName(i18n("Configuration"));
 
-#if 0
-	KCMultiDialog *options = new KCMultiDialog( KDialog::Plain, i18n("Configuration"), parent, "KPilotPreferences", true );
-	options->addModule( CSL1("kpilot_config.desktop") );
-#endif
 	if (!options)
 	{
 		WARNINGKPILOT << "Can't allocate KPilotOptions object" << endl;

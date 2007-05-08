@@ -153,6 +153,7 @@ ConduitConfigWidgetBase::ConduitConfigWidgetBase(QWidget *parent, const QStringL
 		QSizePolicy(QSizePolicy::Maximum, QSizePolicy::Preferred));
 	fConduitList->setWhatsThis(
 		i18n("This list box contains both general configuration items such as the device used for HotSync and the databases to be backed up as well as a list of conduits that KPilot may run during a HotSync. Click on an item to configure it. Conduits which are checked in this list will run during a HotSync."));
+	connect( fConduitList, SIGNAL(itemChanged( QTreeWidgetItem *, int )), this, SLOT(changed()) );
 	mainLayout->addWidget(fConduitList);
 
 	// Create the title
@@ -231,9 +232,7 @@ ConduitConfigWidget::ConduitConfigWidget(QWidget *parent, const QStringList &arg
 
 	selected(fGeneralPage,0L);
 
-	//(void) new ConduitTip(fConduitList);
 	setButtons(Apply);
-
 }
 
 ConduitConfigWidget::~ConduitConfigWidget()
@@ -316,6 +315,8 @@ void ConduitConfigWidget::fillLists()
 
 	// List of installed (enabled) actions and conduits.
 	QStringList potentiallyInstalled = KPilotSettings::installedConduits();
+
+	DEBUGKPILOT << fname << potentiallyInstalled.join( QString(',') ) << endl;
 
 	// "Install Files" is treated as a conduit
 	q = createCheckableItem( conduits, i18n("Install Files"),
