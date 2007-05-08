@@ -44,12 +44,12 @@
 #include <Q3GridLayout>
 
 #include <k3listbox.h>
+#include <k3listview.h>
 #include <ktextedit.h>
 #include <kpushbutton.h>
 #include <kcombobox.h>
 #include <kmessagebox.h>
 
-#include "listCat.h"
 #include "listItems.h"
 
 #include "dbviewerWidget.h"
