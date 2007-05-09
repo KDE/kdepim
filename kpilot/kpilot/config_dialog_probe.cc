@@ -28,31 +28,25 @@
 
 #include "options.h"
 
-#include <qlayout.h>
-#include <q3groupbox.h>
-#include <qlabel.h>
-#include <q3vbox.h>
-#include <qtimer.h>
-#include <q3ptrlist.h>
-#include <qmap.h>
-#include <q3valuelist.h>
-//Added by qt3to4:
-#include <Q3GridLayout>
+#include <QGroupBox>
+#include <QLabel>
+#include <QLayout>
+#include <QMap>
+#include <QTimer>
 
-#include <kmessagebox.h>
+#include <kapplication.h>
+#include <kconfigskeleton.h>
 #include <kglobal.h>
 #include <klocale.h>
-#include <kconfigskeleton.h>
+#include <kmessagebox.h>
 #include <kprogressdialog.h>
-#include <kapplication.h>
 #include <KVBox>
 
-#include "kpilotConfig.h"
-#include "pilotUser.h"
-#include "pilotSysInfo.h"
-#include "options.h"
 #include "kpilotdevicelink.h"
+#include "pilotSysInfo.h"
+#include "pilotUser.h"
 
+#include "kpilotConfig.h"
 #include "kpilot_daemon_interface.h"
 
 #include "config_dialog_probe.moc"
@@ -92,8 +86,17 @@ and the module can't be unloaded.
 
 ProbeDialog::ProbeDialog(QWidget *parent, const char *n) :
 	KDialog(parent),
-	mDetected(false), mUserName(), mDevice()
+	fResultsGroup(0L),
+	fStatusLabel(0L),
+	fUserNameLabel(0L),
+	fDeviceNameLabel(0L),
+	fProgress(0L),
+	fDetected(false), fUserName(), fDeviceName()
 {
+	if (n)
+	{
+		setObjectName(n);
+	}
 	setCaption(i18n("Autodetecting Your Handheld"));
 	setButtonText(Ok,i18n("Restart Detection"));
 	setButtons(Ok|Cancel|User1);
@@ -104,56 +107,55 @@ ProbeDialog::ProbeDialog(QWidget *parent, const char *n) :
 	KVBox *mainWidget = new KVBox();
 	setMainWidget(mainWidget);
 
-	fInfoText = new QLabel( i18n( "KPilot is now trying to automatically detect the device of your handheld. Please press the hotsync button if you have not done so already." ), mainWidget, "fInfoText" );
-	fInfoText->setAlignment( Qt::TextWordWrap );
+	QLabel *infoText = new QLabel( i18n( "KPilot is now trying to automatically detect the device of your handheld. Please press the hotsync button if you have not done so already." ), mainWidget );
+	infoText->setObjectName( "fInfoText" );
+	infoText->setWordWrap( true );
 
-	fStatusGroup = new Q3GroupBox( i18n("Status"), mainWidget, "fStatusGroup" );
-	fStatusGroup->setColumnLayout(0, Qt::Vertical );
-	fStatusGroupLayout = new Q3GridLayout( fStatusGroup->layout() );
+	QGroupBox *statusGroup = new QGroupBox( i18n("Status"), mainWidget );
+	QHBoxLayout *statusGroupLayout = new QHBoxLayout;
+	statusGroup->setLayout( statusGroupLayout );
 
-	fStatus = new QLabel( i18n("Autodetection not yet started..."), fStatusGroup, "fStatus" );
-	fStatus->setAlignment( Qt::TextWordWrap );
-	fStatusGroupLayout->addWidget( fStatus, 0, 0 );
+	fStatusLabel = new QLabel( i18n("Autodetection not yet started..."), statusGroup );
+	statusGroupLayout->addWidget( fStatusLabel );
 
-	fProgress = new QProgressBar( fStatusGroup );
+	fProgress = new QProgressBar( statusGroup );
 	fProgress->setMaximum(100);
-	fStatusGroupLayout->addWidget( fProgress, 1, 0 );
+	statusGroupLayout->addWidget( fProgress );
 
 
 
-	fResultsGroup = new Q3GroupBox( i18n( "Detected Values" ), mainWidget, "fResultsGroup" );
-	fResultsGroup->setEnabled( FALSE );
-	fResultsGroup->setColumnLayout(0, Qt::Vertical );
-	fResultsGroupLayout = new Q3GridLayout( fResultsGroup->layout() );
-	fResultsGroupLayout->setAlignment( Qt::AlignTop );
+	fResultsGroup = new QGroupBox( i18n( "Detected Values" ), mainWidget );
+	fResultsGroup->setEnabled( false );
+	QGridLayout *resultsGroupLayout = new QGridLayout;
+	fResultsGroup->setLayout( resultsGroupLayout );
 
-	fUserLabel = new QLabel( i18n( "Handheld user:" ), fResultsGroup, "fUserLabel" );
-	fUserLabel->setSizePolicy( QSizePolicy( (QSizePolicy::SizeType)4, (QSizePolicy::SizeType)5, 0, 0, fUserLabel->sizePolicy().hasHeightForWidth() ) );
-	fResultsGroupLayout->addWidget( fUserLabel, 0, 0 );
+	QLabel *userLabel = new QLabel( i18n( "Handheld user:" ), fResultsGroup );
+	resultsGroupLayout->addWidget( userLabel, 0, 0 );
 
-	fDeviceLabel = new QLabel( i18n( "Device:" ), fResultsGroup, "fDeviceLabel" );
-	fResultsGroupLayout->addWidget( fDeviceLabel, 1, 0 );
+	QLabel *deviceLabel = new QLabel( i18n( "Device:" ), fResultsGroup );
+	resultsGroupLayout->addWidget( deviceLabel, 1, 0 );
 
-	fUser = new QLabel( i18n("[Not yet known]"), fResultsGroup, "fUser" );
-	fResultsGroupLayout->addWidget( fUser, 0, 1 );
+	fUserNameLabel = new QLabel( i18n("[Not yet known]"), fResultsGroup );
+	fUserNameLabel->setObjectName( "fUser" );
+	resultsGroupLayout->addWidget( fUserNameLabel, 0, 1 );
 
-	fDevice = new QLabel( i18n("[Not yet known]"), fResultsGroup, "fDevice" );
-	fResultsGroupLayout->addWidget( fDevice, 1, 1 );
+	fDeviceNameLabel = new QLabel( i18n("[Not yet known]"), fResultsGroup );
+	fDeviceNameLabel->setObjectName( "fDevice" );
+	resultsGroupLayout->addWidget( fDeviceNameLabel, 1, 1 );
 
 
 	resize( QSize(459, 298).expandedTo(minimumSizeHint()) );
-	//clearWState( WState_Polished );
 	enableButtonOk(false);
 
-	mDevicesToProbe[0] << "/dev/pilot";
-	mDevicesToProbe[1] <<"/dev/ttyS0"<<"/dev/ttyS2"
+	fDevicesToProbe[0] << "/dev/pilot";
+	fDevicesToProbe[1] <<"/dev/ttyS0"<<"/dev/ttyS2"
 	                <<"/dev/tts/0"<<"/dev/tts/2"
 	                <<"/dev/ttyUSB0"<<"/dev/ttyUSB2"
 	                <<"/dev/usb/tts/0"<<"/dev/usb/tts/2"
 	                <<"/dev/cuaa0"<<"/dev/cuaa2"
 			<<"/dev/cuad0"<<"/dev/cuad2"
 	                <<"/dev/ucom0"<<"/dev/ucom2";
-	mDevicesToProbe[2] <<"/dev/ttyS1"<<"/dev/ttyS3"
+	fDevicesToProbe[2] <<"/dev/ttyS1"<<"/dev/ttyS3"
 	                <<"/dev/tts/1"<<"/dev/tts/3"
 	                <<"/dev/ttyUSB1"<<"/dev/ttyUSB3"
 	                <<"/dev/usb/tts/1"<<"/dev/usb/tts/3"
@@ -190,9 +192,9 @@ void ProbeDialog::progress()
 
 int ProbeDialog::exec()
 {
-	mDetected = false;
-	mUserName.clear();
-	mDevice.clear();
+	fDetected = false;
+	fUserName.clear();
+	fDeviceName.clear();
 	QTimer::singleShot( 0, this, SLOT( startDetection() ) );
 	return KDialog::exec();
 }
@@ -203,52 +205,41 @@ void ProbeDialog::startDetection()
 
 	disconnectDevices();
 	fProgress->setValue(0);
-	fStatus->setText( i18n("Starting detection...") );
-	QTimer::singleShot(0, this, SLOT(processEvents()) );
-	processEvents();
+	fStatusLabel->setText( i18n("Starting detection...") );
 	OrgKdeKpilotDaemonInterface *daemonInterface = new OrgKdeKpilotDaemonInterface("org.kde.kpilot.daemon", "/Daemon", QDBusConnection::sessionBus());
 	if (daemonInterface) {
 		daemonInterface->stopListening();
 	}
 	KPILOT_DELETE(daemonInterface);
-	processEvents();
-	if (!fTimeoutTimer->start( 30000, true ) )
-	{
-		WARNINGKPILOT << "Could not start fTimeoutTimer" << endl;
-	}
-	if (!fProcessEventsTimer->start( 100, false ) )
-	{
-		WARNINGKPILOT << "Could not start fProcessEventsTimer" << endl;
-	}
-	if (!fProgressTimer->start( 300, false) )
-	{
-		WARNINGKPILOT << "Could not start Progress timer" << endl;
-	}
+	fTimeoutTimer->setSingleShot( true );
+	fTimeoutTimer->start( 30000 );
+	fProcessEventsTimer->setSingleShot( false );
+	fProcessEventsTimer->start( 100 );
+	fProgressTimer->setSingleShot( false );
+	fProgressTimer->start( 300 );
 
 	KPilotDeviceLink*link;
 	for (int i=0; i<3; i++)
 	{
-		QStringList::iterator end(mDevicesToProbe[i].end());
-		for (QStringList::iterator it=mDevicesToProbe[i].begin(); it!=end; ++it)
+		QStringList::iterator end(fDevicesToProbe[i].end());
+		for (QStringList::iterator it=fDevicesToProbe[i].begin(); it!=end; ++it)
 		{
 			link = new KPilotDeviceLink();
 			link->setDevice((*it));
 #ifdef DEBUG
 			DEBUGKPILOT<<"new kpilotDeviceLink for "<<(*it)<<endl;
 #endif
-			mDeviceLinks[i].append( link );
+			fDeviceLinks[i].append( link );
 			connect( link, SIGNAL(deviceReady(KPilotDeviceLink*)), this, SLOT(connection(KPilotDeviceLink*)) );
 			processEvents();
 		}
 	}
-	fStatus->setText( i18n("Waiting for handheld to connect...") );
-	mProbeDevicesIndex=0;
+	fStatusLabel->setText( i18n("Waiting for handheld to connect...") );
+	fProbeDevicesIndex=0;
 
 	detect();
-	if (!fRotateLinksTimer->start( 3000, false) )
-	{
-		WARNINGKPILOT << "Could not start Device link rotation timer" << endl;
-	}
+	fRotateLinksTimer->setSingleShot( false );
+	fRotateLinksTimer->start( 3000 );
 }
 
 
@@ -256,25 +247,28 @@ void ProbeDialog::detect(int i)
 {
 	FUNCTIONSETUP;
 
-	mProbeDevicesIndex = i;
-	PilotLinkList::iterator end(mDeviceLinks[mProbeDevicesIndex].end());
+	fProbeDevicesIndex = i;
+	PilotLinkList::iterator end(fDeviceLinks[fProbeDevicesIndex].end());
 
-	for (PilotLinkList::iterator it=mDeviceLinks[mProbeDevicesIndex].begin(); it!=end; ++it)
+	for (PilotLinkList::iterator it=fDeviceLinks[fProbeDevicesIndex].begin(); it!=end; ++it)
 	{
-		if (*it) (*it)->reset();
+		if (*it)
+		{
+			(*it)->reset();
+		}
 	}
 }
 
 void ProbeDialog::detect()
 {
-	detect( (mProbeDevicesIndex+1)%3 );
+	detect( (fProbeDevicesIndex+1)%3 );
 }
 
 void ProbeDialog::timeout()
 {
 	disconnectDevices();
-	if (!mDetected) {
-		fStatus->setText( i18n("Timeout reached, could not detect a handheld.") );
+	if (!fDetected) {
+		fStatusLabel->setText( i18n("Timeout reached, could not detect a handheld.") );
 		KMessageBox::information ( this, i18n("<qt>A handheld could not be detected. Possible check the following things:</p>"
 			"<ul><li> Have you pressed the hotsync button on the handheld?\n"
 			"<li> Make sure the device sits in the cradle correctly.\n"
@@ -285,21 +279,24 @@ void ProbeDialog::timeout()
 	}
 }
 
-void ProbeDialog::connection( KPilotDeviceLink*lnk)
+void ProbeDialog::connection( KPilotDeviceLink *lnk)
 {
 	FUNCTIONSETUP;
 
-	mActiveLink = lnk;
-	if ( !mActiveLink ) return;
-	const KPilotUser &usr( mActiveLink->getPilotUser() );
+	fActiveLink = lnk;
+	if ( !fActiveLink )
+	{
+		return;
+	}
+	const KPilotUser &usr( fActiveLink->getPilotUser() );
 
-	mUserName = usr.name();
-	mDevice = mActiveLink->pilotPath();
+	fUserName = usr.name();
+	fDeviceName = fActiveLink->pilotPath();
 
-	fStatus->setText( i18n("Found a connected device on %1",mDevice) );
-	fUser->setText( mUserName );
-	fDevice->setText( mDevice );
-	mDetected = true;
+	fStatusLabel->setText( i18n("Found a connected device on %1",fDeviceName) );
+	fUserNameLabel->setText( fUserName );
+	fDeviceNameLabel->setText( fDeviceName );
+	fDetected = true;
 
 	fResultsGroup->setEnabled( true );
 	enableButtonOk(true);
@@ -309,36 +306,39 @@ void ProbeDialog::connection( KPilotDeviceLink*lnk)
 
 void ProbeDialog::retrieveDBList()
 {
-	KPilotLink::DBInfoList dbs = mActiveLink->getDBList();
-	mDBs.clear();
+	KPilotLink::DBInfoList dbs = fActiveLink->getDBList();
+	fDBs.clear();
 	char buff[7];
 	buff[0] = '[';
 
-	for ( KPilotLink::DBInfoList::ConstIterator i = dbs.begin();
-		i != dbs.end(); ++i )
+	for ( KPilotLink::DBInfoList::ConstIterator i = dbs.begin(); i != dbs.end(); ++i )
 	{
 		set_long( &buff[1], (*i).creator );
 		buff[5] = ']';
 		buff[6] = '\0';
 		QString cr( buff );
-		mDBs << cr;
-		mDBs << QString( (*i).name );
+		fDBs << cr;
+		fDBs << QString( (*i).name );
 	}
-	mDBs.sort();
+	fDBs.sort();
 
 	QString old( QString::null );
-	QStringList::Iterator itr = mDBs.begin();
-	while ( itr != mDBs.end() ) {
-		if ( old == *itr ) {
-			itr = mDBs.remove( itr );
-		} else {
+	QStringList::Iterator itr = fDBs.begin();
+	while ( itr != fDBs.end() )
+	{
+		if ( old == *itr )
+		{
+			itr = fDBs.erase( itr );
+		}
+		else
+		{
 			old = *itr;
 			++itr;
 		}
 	}
 
 	// End sync gracefully, but don't change settings on the handheld.
-	mActiveLink->endSync( KPilotLink::NoUpdate );
+	fActiveLink->endSync( KPilotLink::NoUpdate );
 
 	QTimer::singleShot(0, this, SLOT(disconnectDevices()));
 }
@@ -346,7 +346,10 @@ void ProbeDialog::disconnectDevices()
 {
 	FUNCTIONSETUP;
 
-	if (!mDetected) fStatus->setText( i18n("Disconnected from all devices") );
+	if (!fDetected)
+	{
+		fStatusLabel->setText( i18n("Disconnected from all devices") );
+	}
 	fProcessEventsTimer->stop( );
 	fTimeoutTimer->stop();
 	fProgressTimer->stop();
@@ -354,13 +357,13 @@ void ProbeDialog::disconnectDevices()
 	fProgress->setValue(fProgress->maximum());
 	for (int i=0; i<3; ++i)
 	{
-		PilotLinkList::iterator end(mDeviceLinks[i].end());
-		for (PilotLinkList::iterator it=mDeviceLinks[i].begin(); it!=end; ++it)
+		PilotLinkList::iterator end(fDeviceLinks[i].end());
+		for (PilotLinkList::iterator it=fDeviceLinks[i].begin(); it!=end; ++it)
 		{
 			(*it)->close();
 			KPILOT_DELETE(*it);
 		}
-		mDeviceLinks[i].clear();
+		fDeviceLinks[i].clear();
 	}
 
 

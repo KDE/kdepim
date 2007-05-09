@@ -38,8 +38,9 @@ class KPilotDBSelectionDialog : public KDialog
 {
 Q_OBJECT
 public:
-	KPilotDBSelectionDialog(QStringList &selectedDBs, QStringList &deviceDBs,
-		QStringList &addedDBs,  QWidget *, const char *);
+	KPilotDBSelectionDialog(const QStringList &selectedDBs,
+		const QStringList &deviceDBs,
+		const QStringList &addedDBs,  QWidget *, const char *);
 	virtual ~KPilotDBSelectionDialog();
 
 	QStringList getSelectedDBs();

@@ -28,36 +28,34 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
-#include "kdialog.h"
-//Added by qt3to4:
-#include <Q3GridLayout>
+
 #include <QLabel>
-#include <Q3ValueList>
+#include <QList>
+#include <QString>
+#include <QStringList>
+
+#include <kdialog.h>
+
+class QLabel;
+class QProgressBar;
+class QTimer;
 
 class KPilotDeviceLink;
-class QLabel;
-class Q3GroupBox;
-class QTimer;
-class Q3GridLayout;
-class QProgressBar;
-template <class T> class Q3ValueList;
-//template<class Qt::Key, class T> class QMap;
 
-typedef Q3ValueList<KPilotDeviceLink*> PilotLinkList;
-
-typedef QMap<QString, KPilotDeviceLink*> PilotLinkMap;
 
 class ProbeDialog : public KDialog
 {
 Q_OBJECT
 public:
+	typedef QList<KPilotDeviceLink*> PilotLinkList;
+
 	ProbeDialog(QWidget *p=0L,const char *n=0L);
 	~ProbeDialog();
 
-	bool detected() const { return mDetected; }
-	QString userName() const { return mUserName; }
-	QString device() const { return mDevice; }
-	QStringList dbs()  const { return mDBs; }
+	bool detected() const { return fDetected; }
+	QString userName() const { return fUserName; }
+	QString device() const { return fDeviceName; }
+	QStringList dbs()  const { return fDBs; }
 
 
 protected slots:
@@ -74,33 +72,26 @@ public slots:
 	int exec();
 	void slotUser1 () { startDetection(); }
 protected:
-	QLabel* fInfoText;
-	Q3GroupBox* fResultsGroup;
-	QLabel* fUserLabel;
-	QLabel* fDeviceLabel;
-	QLabel* fUser;
-	QLabel* fDevice;
-	Q3GroupBox* fStatusGroup;
-	QLabel* fStatus;
-	QProgressBar* fProgress;
+	QGroupBox *fResultsGroup;
+	QLabel *fStatusLabel;
+	QLabel *fUserNameLabel;
+	QLabel *fDeviceNameLabel;
+	QProgressBar *fProgress;
 
-	QTimer* fProcessEventsTimer;
-	QTimer* fTimeoutTimer;
-	QTimer* fProgressTimer;
-	QTimer* fRotateLinksTimer;
-protected:
-	Q3GridLayout* fResultsGroupLayout;
-	Q3GridLayout* fStatusGroupLayout;
+	QTimer *fProcessEventsTimer;
+	QTimer *fTimeoutTimer;
+	QTimer *fProgressTimer;
+	QTimer *fRotateLinksTimer;
 
-	QStringList mDevicesToProbe[3];
-	PilotLinkList mDeviceLinks[3];
-	int mProbeDevicesIndex;
-	KPilotDeviceLink *mActiveLink;
+	QStringList fDevicesToProbe[3];
+	PilotLinkList fDeviceLinks[3];
+	int fProbeDevicesIndex;
+	KPilotDeviceLink *fActiveLink;
 
-	bool mDetected;
-	QString mUserName;
-	QString mDevice;
-	QStringList mDBs;
+	bool fDetected;
+	QString fUserName;
+	QString fDeviceName;
+	QStringList fDBs;
 } ;
 
 #endif

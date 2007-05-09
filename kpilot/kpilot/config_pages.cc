@@ -78,7 +78,7 @@ DeviceConfigPage::DeviceConfigPage(QWidget * w, const char *n ) : ConfigPage( w,
 		QStringList l = KGlobal::charsets()->descriptiveEncodingNames();
 		for ( QStringList::Iterator it = l.begin(); it != l.end(); ++it )
 		{
-			fConfigWidget->fPilotEncoding->insertItem(*it);
+			fConfigWidget->fPilotEncoding->addItem(*it);
 		}
 	}
 	connect( fConfigWidget->fDeviceAutodetect, SIGNAL(clicked()), this, SLOT(autoDetectDevice()));
@@ -104,24 +104,24 @@ void DeviceConfigPage::load()
 
 	/* General tab in the setup dialog */
 	fConfigWidget->fPilotDevice->setText(KPilotSettings::pilotDevice());
-	fConfigWidget->fPilotSpeed->setCurrentItem(KPilotSettings::pilotSpeed());
+	fConfigWidget->fPilotSpeed->setCurrentIndex(KPilotSettings::pilotSpeed());
 	getEncoding();
 	fConfigWidget->fUserName->setText(KPilotSettings::userName());
 
 	switch(KPilotSettings::workarounds())
 	{
 	case KPilotSettings::eWorkaroundNone :
-		fConfigWidget->fWorkaround->setCurrentItem(0);
+		fConfigWidget->fWorkaround->setCurrentIndex(0);
 		break;
 	case KPilotSettings::eWorkaroundUSB :
-		fConfigWidget->fWorkaround->setCurrentItem(1);
+		fConfigWidget->fWorkaround->setCurrentIndex(1);
 		break;
 	default:
 		WARNINGKPILOT << "Unknown workaround number "
 			<< (int) KPilotSettings::workarounds()
 			<< endl;
 		KPilotSettings::setWorkarounds(KPilotSettings::eWorkaroundNone);
-		fConfigWidget->fWorkaround->setCurrentItem(0);
+		fConfigWidget->fWorkaround->setCurrentIndex(0);
 	}
 	unmodified();
 }
@@ -132,11 +132,11 @@ void DeviceConfigPage::load()
 
 	// General page
 	KPilotSettings::setPilotDevice(fConfigWidget->fPilotDevice->text());
-	KPilotSettings::setPilotSpeed(fConfigWidget->fPilotSpeed->currentItem());
+	KPilotSettings::setPilotSpeed(fConfigWidget->fPilotSpeed->currentIndex());
 	setEncoding();
 	KPilotSettings::setUserName(fConfigWidget->fUserName->text());
 
-	switch(fConfigWidget->fWorkaround->currentItem())
+	switch(fConfigWidget->fWorkaround->currentIndex())
 	{
 	case 0 :
 		KPilotSettings::setWorkarounds(KPilotSettings::eWorkaroundNone);
@@ -146,7 +146,7 @@ void DeviceConfigPage::load()
 		break;
 	default :
 		WARNINGKPILOT << "Unknown workaround number "
-			<< fConfigWidget->fWorkaround->currentItem()
+			<< fConfigWidget->fWorkaround->currentIndex()
 			<< endl;
 		KPilotSettings::setWorkarounds(KPilotSettings::eWorkaroundNone);
 	}
@@ -179,11 +179,11 @@ void DeviceConfigPage::getEncoding()
 	QString e = KPilotSettings::encoding();
 	if (e.isEmpty())
 	{
-		fConfigWidget->fPilotEncoding->setCurrentText(CSL1("ISO8859-15"));
+		fConfigWidget->fPilotEncoding->setEditText(CSL1("ISO8859-15"));
 	}
 	else
 	{
-		fConfigWidget->fPilotEncoding->setCurrentText(e);
+		fConfigWidget->fPilotEncoding->setEditText(e);
 	}
 }
 
@@ -255,18 +255,18 @@ void SyncConfigPage::load()
 	{
 		if (syncTypeMap[i] == synctype)
 		{
-			fConfigWidget->fSpecialSync->setCurrentItem(i);
+			fConfigWidget->fSpecialSync->setCurrentIndex(i);
 			synctype=-1;
 			break;
 		}
 	}
 	if (synctype != -1)
 	{
-		fConfigWidget->fSpecialSync->setCurrentItem(0); /* HotSync */
+		fConfigWidget->fSpecialSync->setCurrentIndex(0); /* HotSync */
 	}
 
 	fConfigWidget->fFullSyncCheck->setChecked(KPilotSettings::fullSyncOnPCChange());
-	fConfigWidget->fConflictResolution->setCurrentItem(KPilotSettings::conflictResolution());
+	fConfigWidget->fConflictResolution->setCurrentIndex(KPilotSettings::conflictResolution());
 	fConfigWidget->fScreenlockSecure->setChecked(KPilotSettings::screenlockSecure());
 
 	unmodified();
@@ -278,7 +278,7 @@ void SyncConfigPage::load()
 
 	/* Sync tab */
 	int synctype = -1;
-	unsigned int selectedsync = fConfigWidget->fSpecialSync->currentItem();
+	unsigned int selectedsync = fConfigWidget->fSpecialSync->currentIndex();
 	if (selectedsync < MENU_ITEM_COUNT)
 	{
 		synctype = syncTypeMap[selectedsync];
@@ -290,7 +290,7 @@ void SyncConfigPage::load()
 
 	KPilotSettings::setSyncType(synctype);
 	KPilotSettings::setFullSyncOnPCChange(fConfigWidget->fFullSyncCheck->isChecked());
-	KPilotSettings::setConflictResolution(fConfigWidget->fConflictResolution->currentItem());
+	KPilotSettings::setConflictResolution(fConfigWidget->fConflictResolution->currentIndex());
 	KPilotSettings::setScreenlockSecure(fConfigWidget->fScreenlockSecure->isChecked());
 
 	KPilotConfig::updateConfigVersion();
@@ -333,7 +333,7 @@ void BackupConfigPage::load()
 
 	int backupfreq=KPilotSettings::backupFrequency();
 
-	fConfigWidget->fBackupFrequency->setCurrentItem(backupfreq);
+	fConfigWidget->fBackupFrequency->setCurrentIndex(backupfreq);
 
 	unmodified();
 }
@@ -344,11 +344,11 @@ void BackupConfigPage::load()
 
 	/* Backup tab */
 	KPilotSettings::setSkipBackupDB(
-		QStringList::split(CSL1(","),fConfigWidget->fBackupOnly->text()));
+		fConfigWidget->fBackupOnly->text().split( ',' ) );
 	KPilotSettings::setSkipRestoreDB(
-		QStringList::split(CSL1(","),fConfigWidget->fSkipDB->text()));
+		fConfigWidget->fSkipDB->text().split( ',' ) );
 	KPilotSettings::setRunConduitsWithBackup(fConfigWidget->fRunConduitsWithBackup->isChecked());
-	KPilotSettings::setBackupFrequency(fConfigWidget->fBackupFrequency->currentItem());
+	KPilotSettings::setBackupFrequency(fConfigWidget->fBackupFrequency->currentIndex());
 
 	KPilotConfig::updateConfigVersion();
 	KPilotSettings::self()->writeConfig();
@@ -359,7 +359,7 @@ void BackupConfigPage::slotSelectNoBackupDBs()
 {
 	FUNCTIONSETUP;
 
-	QStringList selectedDBs(QStringList::split(',', fConfigWidget->fBackupOnly->text() ));
+	QStringList selectedDBs(fConfigWidget->fBackupOnly->text().split(','));
 
 	QStringList deviceDBs=KPilotSettings::deviceDBs();
 	QStringList addedDBs=KPilotSettings::addedDBs();
@@ -377,7 +377,7 @@ void BackupConfigPage::slotSelectNoRestoreDBs()
 {
 	FUNCTIONSETUP;
 
-	QStringList selectedDBs(QStringList::split(',', fConfigWidget->fSkipDB->text() ));
+	QStringList selectedDBs(fConfigWidget->fSkipDB->text().split(','));
 
 	QStringList deviceDBs=KPilotSettings::deviceDBs();
 	QStringList addedDBs=KPilotSettings::addedDBs();

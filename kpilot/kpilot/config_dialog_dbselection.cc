@@ -30,24 +30,37 @@
 
 #include "options.h"
 
-#include <q3listview.h>
 #include <qpushbutton.h>
-#include <k3listview.h>
+#include <klineedit.h>
+#include <klistwidget.h>
 #include <kmessagebox.h>
 #include <kpushbutton.h>
-#include <klineedit.h>
 
 #include "config_dialog_dbselection_base.h"
+
 #include "config_dialog_dbselection.moc"
 
+static inline void appendStringList(QStringList &items, const QStringList &add)
+{
+	QStringList::ConstIterator e = add.end();
+	for ( QStringList::ConstIterator it = add.begin(); it != e; ++it )
+	{
+		if (items.contains(*it)==0)
+		{
+			items << (*it);
+		}
+	}
+}
 
-KPilotDBSelectionDialog::KPilotDBSelectionDialog(QStringList &selectedDBs, QStringList &deviceDBs,
-		QStringList &addedDBs, QWidget *w, const char *n) :
+KPilotDBSelectionDialog::KPilotDBSelectionDialog(const QStringList &selectedDBs,
+	const QStringList &deviceDBs, const QStringList &addedDBs, QWidget *w, const char *n) :
 	KDialog(w),
 	fSelectedDBs(selectedDBs),
 	fAddedDBs(addedDBs),
 	fDeviceDBs(deviceDBs)
 {
+	FUNCTIONSETUP;
+
 	if (n)
 	{
 		setObjectName(n);
@@ -55,25 +68,21 @@ KPilotDBSelectionDialog::KPilotDBSelectionDialog(QStringList &selectedDBs, QStri
 	setButtons(Ok|Cancel);
 	setDefaultButton(Ok);
 	setModal(false);
-	FUNCTIONSETUP;
 
 	fSelectionWidget = new KPilotDBSelectionWidget(this);
 	setMainWidget(fSelectionWidget);
 
 	// Fill the encodings list
 	QStringList items(deviceDBs);
-	for ( QStringList::Iterator it = fAddedDBs.begin(); it != fAddedDBs.end(); ++it ) {
-		if (items.contains(*it)==0) items << (*it);
-	}
-	for ( QStringList::Iterator it = fSelectedDBs.begin(); it != fSelectedDBs.end(); ++it ) {
-		if (items.contains(*it)==0) items << (*it);
-	}
+	appendStringList(items, fAddedDBs);
+	appendStringList(items, fSelectedDBs);
 	items.sort();
 
-	for ( QStringList::Iterator it = items.begin(); it != items.end(); ++it ) {
-		Q3CheckListItem*checkitem=new Q3CheckListItem(fSelectionWidget->fDatabaseList,
-			*it, Q3CheckListItem::CheckBox);
-		if (fSelectedDBs.contains(*it)) checkitem->setOn(true);
+	for ( QStringList::Iterator it = items.begin(); it != items.end(); ++it )
+	{
+		QListWidgetItem *checkitem = new QListWidgetItem(*it, fSelectionWidget->fDatabaseList);
+		checkitem->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled | Qt::ItemIsUserCheckable);
+		checkitem->setCheckState(fSelectedDBs.contains(*it) ? Qt::Checked : Qt::Unchecked);
 	}
 
 	connect(fSelectionWidget->fNameEdit, SIGNAL(textChanged( const QString & )),
@@ -96,8 +105,9 @@ void KPilotDBSelectionDialog::addDB()
 	if (!dbname.isEmpty())
 	{
 		fSelectionWidget->fNameEdit->clear();
-		new Q3CheckListItem(fSelectionWidget->fDatabaseList, dbname,
-			Q3CheckListItem::CheckBox);
+		QListWidgetItem *checkitem = new QListWidgetItem(dbname, fSelectionWidget->fDatabaseList);
+		checkitem->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled | Qt::ItemIsUserCheckable);
+		checkitem->setCheckState(Qt::Unchecked);
 		fAddedDBs << dbname;
 	}
 }
@@ -105,10 +115,10 @@ void KPilotDBSelectionDialog::addDB()
 void KPilotDBSelectionDialog::removeDB()
 {
 	FUNCTIONSETUP;
-	Q3ListViewItem*item(fSelectionWidget->fDatabaseList->selectedItem());
+	QListWidgetItem *item(fSelectionWidget->fDatabaseList->currentItem());
 	if (item)
 	{
-		QString dbname=item->text(0);
+		QString dbname=item->text();
 		if (fDeviceDBs.contains(dbname))
 		{
 			KMessageBox::error(this, i18n("This is a database that exists on the device. It was not added manually, so it can not removed from the list."), i18n("Database on Device"));
@@ -131,13 +141,15 @@ QStringList KPilotDBSelectionDialog::getSelectedDBs()
 	fSelectedDBs.clear();
 
 	//  update the list of selected databases
-	Q3ListViewItemIterator it( fSelectionWidget->fDatabaseList );
-	while ( it.current() ) {
-		Q3CheckListItem *item = dynamic_cast<Q3CheckListItem*>(it.current());
-		++it;
+	int c = fSelectionWidget->fDatabaseList->count();
+	for (int i = 0; i<c; ++i)
+	{
+		QListWidgetItem *item = fSelectionWidget->fDatabaseList->item(i);
 
-		if ( item && item->isOn() )
+		if ( item && item->checkState() )
+		{
 			fSelectedDBs << item->text();
+		}
 	}
 
 	return fSelectedDBs;
