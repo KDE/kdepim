@@ -56,7 +56,7 @@ namespace Pilot
 	* Bump this number every release to the current YYYYMMDD
 	* value.
 	*/
-	static const unsigned int PLUGIN_API = 20070508;
+	static const unsigned int PLUGIN_API = 20071023;
 }
 
 /**
@@ -386,8 +386,11 @@ protected:
 /** A namespace containing only static helper methods. */
 namespace PluginUtility
 {
-	/** Searches the argument list for --foo=bar and returns bar, QString::null if not found.
-	* Don't include the -- in the argname. */
+	/** 
+	 * Searches the argument list for --foo=bar and returns bar, 
+	 * QString::null if not found.
+	 * Don't include the -- in the argname.
+	 */
 	KPILOT_EXPORT QString findArgument(const QStringList &a, const QString argname);
 
 	/**
@@ -396,69 +399,5 @@ namespace PluginUtility
 	*/
 	KPILOT_EXPORT unsigned long pluginVersion(const KLibrary *);
 }
-
-/**
-* All KPilot conduits should subclass KLibFactory like this.
-*
-* Boilerplate for inheritance:
-*
-* <pre>
-* class KPilotPlugin : public KLibFactory
-* {
-* Q_OBJECT
-*
-* public:
-* 	KPilotPlugin(QObject * = 0L,const char * = 0L) ;
-* 	virtual ~KPilotPlugin();
-* </pre>
-*
-* You don't @em have to provide about information for the plugin,
-* but it's useful, particularly for the about box in a conduit.
-*
-*
-* <pre>
-* 	static KAboutData *about() { return fAbout; } ;
-* </pre>
-*
-*
-* This is what it's all about: creating objects for the plugin.
-* One classname that @em must be supported is ConduitConfig,
-* which is defined above. The other is SyncAction.
-*
-*
-* <pre>
-* protected:
-* 	virtual QObject* createObject( QObject* parent = 0,
-* 		const char* name = 0,
-* 		const char* classname = "QObject",
-* 		const QStringList &args = QStringList() );
-* </pre>
-*
-* More boilerplate, and support for an instance and about data, used
-* by about() above.
-*
-* <pre>
-* 	KComponentData fInstance;
-* 	static KAboutData *fAbout;
-* } ;
-* </pre>
-*
-*
-*
-* The implementation of a conduit needs an init_conduit_name() function,
-* just like any KLibLoader library that uses factories.
-*
-* The createObject() function needs to support at least two creation
-* calls: "ConduitConfigBase" and "SyncAction".
-* "ConduitConfigBase" should return a subclass of ConduitConfigBase,
-* "SyncAction" a subclass of SyncAction.
-*
-* Finally, a conduit should have a symbol version_conduit_name,
-* that returns a long; much like the init_conduit_name() function. This
-* should return the version of the plugin API (KPILOT_PLUGIN_VERSION)
-* the conduit was compiled against. Additionally, a plugin may have a
-* id_conduit_name, which should be a const char *.
-*
-*/
 
 #endif

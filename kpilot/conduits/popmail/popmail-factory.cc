@@ -35,14 +35,8 @@
 #include "pluginfactory.h"
 
 
-extern "C"
-{
-KPILOT_EXPORT unsigned long version_conduit_popmail = Pilot::PLUGIN_API;
 
-KPILOT_EXPORT void *init_libconduit_popmail()
-{
-	return new ConduitFactory<PopMailWidgetConfig,PopMailConduit>;
-}
 
-}
+DECLARE_KPILOT_PLUGIN(conduit_popmail,PopMailWidgetConfig,PopMailConduit)
+
 

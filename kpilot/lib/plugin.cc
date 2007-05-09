@@ -685,10 +685,16 @@ QString findArgument(const QStringList &a, const QString &arg)
 
 /* static */ unsigned long pluginVersion(const KLibrary *lib)
 {
+	FUNCTIONSETUP;
 	QString symbol = CSL1("version_");
 	symbol.append(lib->name());
 
-	if (!lib->resolveSymbol(symbol.toLatin1())) return 0;
+	DEBUGKPILOT << fname << ": Symbol <" << symbol << '>' << endl;
+
+	if (!lib->resolveSymbol(symbol.toLatin1()))
+	{
+		return 0;
+	}
 
 	unsigned long *p = (unsigned long *)(lib->resolveSymbol(symbol.toLatin1()));
 	return *p;

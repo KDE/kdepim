@@ -94,5 +94,11 @@ protected:
 	//KComponentData fInstance;
 } ;
 
+#define DECLARE_KPILOT_PLUGIN(a,b,c) \
+	extern "C" { \
+	KPILOT_EXPORT unsigned long version_lib##a = Pilot::PLUGIN_API; \
+	KPILOT_EXPORT void *init_lib##a() \
+	{ return new ConduitFactory<b,c>(0, #a); } }
+
 #endif
 

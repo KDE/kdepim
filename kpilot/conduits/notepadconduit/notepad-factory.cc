@@ -112,14 +112,9 @@ NotepadConduitConfig::NotepadConduitConfig(QWidget *p, const char *n) :
 	fModified=false;
 }
 
-extern "C"
-{
-KPILOT_EXPORT unsigned long version_conduit_notepad = Pilot::PLUGIN_API;
 
-KPILOT_EXPORT void *init_libconduit_notepad()
-{
-	return new ConduitFactory<NotepadConduitConfig,NotepadConduit>(0);
-}
 
-}
+
+DECLARE_KPILOT_PLUGIN(conduit_notepad,NotepadConduitConfig,NotepadConduit)
+
 

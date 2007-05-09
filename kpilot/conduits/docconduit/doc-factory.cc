@@ -34,13 +34,8 @@
 #include "doc-setup.h"
 
 
-extern "C" {
-KPILOT_EXPORT unsigned long version_conduit_doc = Pilot::PLUGIN_API;
+DECLARE_KPILOT_PLUGIN(conduit_doc,DOCWidgetConfig,DOCConduit)
 
-KPILOT_EXPORT void *init_libconduit_doc() {
-	return new ConduitFactory<DOCWidgetConfig,DOCConduit>(0,"docconduit");
-}
-}
 
 
 

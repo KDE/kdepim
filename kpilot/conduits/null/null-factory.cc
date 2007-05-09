@@ -109,15 +109,5 @@ NullConduitConfig::NullConduitConfig(QWidget *p, const char *n) :
 }
 
 
-
-extern "C"
-{
-
-KPILOT_EXPORT unsigned long version_conduit_null = Pilot::PLUGIN_API;
-KPILOT_EXPORT void *init_libconduit_null()
-{
-	return new ConduitFactory<NullConduitConfig,NullConduit>(0,"nullconduit");
-}
-
-}
+DECLARE_KPILOT_PLUGIN(conduit_null,NullConduitConfig,NullConduit)
 

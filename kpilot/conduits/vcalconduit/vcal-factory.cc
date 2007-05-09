@@ -29,22 +29,13 @@
 
 #include "options.h"
 
-#include <kaboutdata.h>
-
 #include "pluginfactory.h"
 
 #include "vcal-setup.h"
 #include "vcal-conduit.h"
 
-extern "C"
-{
 
-void *init_conduit_vcal()
-{
-	return new ConduitFactory<VCalWidgetSetup,VCalConduit>;
-}
 
-}
-
+DECLARE_KPILOT_PLUGIN(conduit_vcal,VCalWidgetSetup,VCalConduit)
 
 

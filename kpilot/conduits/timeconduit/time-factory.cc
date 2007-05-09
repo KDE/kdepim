@@ -32,16 +32,7 @@
 #include "time-conduit.h"
 #include "time-setup.h"
 
+DECLARE_KPILOT_PLUGIN(conduit_time,TimeWidgetConfig,TimeConduit)
 
-extern "C"
-{
-KPILOT_EXPORT unsigned long version_conduit_time = Pilot::PLUGIN_API ;
-
-KPILOT_EXPORT void *init_libconduit_time()
-{
-	return new ConduitFactory<TimeWidgetConfig,TimeConduit>(0,"Timeconduit");
-}
-
-}
 
 

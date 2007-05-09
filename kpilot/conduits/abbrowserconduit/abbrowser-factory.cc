@@ -34,13 +34,4 @@
 #include "abbrowser-conduit.h"
 #include "abbrowser-setup.h"
 
-extern "C"
-{
-KPILOT_EXPORT unsigned long version_conduit_address = Pilot::PLUGIN_API;
-
-KPILOT_EXPORT void *init_libconduit_address()
-{
-	return new ConduitFactory<AbbrowserWidgetSetup,AbbrowserConduit>(0,"abbrowserconduit");
-}
-
-}
+DECLARE_KPILOT_PLUGIN(conduit_address,AbbrowserWidgetSetup,AbbrowserConduit)

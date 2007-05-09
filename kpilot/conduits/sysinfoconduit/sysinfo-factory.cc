@@ -1,4 +1,4 @@
-/* SysInfo-factory.cc                      KPilot
+/* KPilot
 **
 ** Copyright (C) 2003 by Reinhold Kainhofer
 **
@@ -32,13 +32,7 @@
 #include "sysinfo-conduit.h"
 #include "sysinfo-setup.h"
 
-extern "C"
-{
-KPILOT_EXPORT unsigned long version_conduit_sysinfo = Pilot::PLUGIN_API;
 
-KPILOT_EXPORT void *init_libconduit_sysinfo()
-{
-	return new ConduitFactory<SysInfoWidgetConfig,SysInfoConduit>;
-}
 
-}
+DECLARE_KPILOT_PLUGIN(conduit_sysinfo,SysInfoWidgetConfig,SysInfoConduit)
+

@@ -112,16 +112,6 @@ MemofileConduitConfig::MemofileConduitConfig(QWidget *p, const char *n) :
 	unmodified();
 }
 
+DECLARE_KPILOT_PLUGIN(conduit_memofile,MemofileConduitConfig,MemofileConduit)
 
-
-extern "C"
-{
-KPILOT_EXPORT unsigned long version_conduit_memofile = Pilot::PLUGIN_API;
-
-KPILOT_EXPORT void *init_libconduit_memofile()
-{
-	return new ConduitFactory<MemofileConduitConfig,MemofileConduit>(0,"memofileconduit");
-}
-
-}
 

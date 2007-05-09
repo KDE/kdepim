@@ -87,7 +87,7 @@ K_EXPORT_COMPONENT_FACTORY( kpilotconfig, ConduitConfigFactory("kcmkpilotconfig"
 #define CONDUIT_EXPLN    (2)
 #define GENERAL_EXPLN    (3)
 #define GENERAL_ABOUT    (4)
-#define NEW_CONDUIT    (5)
+#define NEW_CONDUIT      (5)
 
 /*
 ** Create a page in the widget stack @p parent on page @p pageno,
@@ -470,7 +470,7 @@ void ConduitConfigWidget::loadAndConfigure(QTreeWidgetItem *p)
 		KLibFactory *f = KLibLoader::self()->factory(library);
 		if (!f)
 		{
-			DEBUGKPILOT << fname
+			WARNINGKPILOT << fname
 				<< ": No conduit library "
 				<< libraryName
 				<< " found."
@@ -480,7 +480,16 @@ void ConduitConfigWidget::loadAndConfigure(QTreeWidgetItem *p)
 			return;
 		}
 
-		dumpConduitInfo(KLibLoader::self()->library(library));
+		KLibrary *lib = KLibLoader::self()->library(library);
+		dumpConduitInfo(lib);
+		if ( Pilot::PLUGIN_API > PluginUtility::pluginVersion(lib) )
+		{
+			WARNINGKPILOT << fname
+				<< ": Old conduit library found." << endl;
+			fStack->setCurrentIndex(BROKEN_CONDUIT);
+			warnNoLibrary(p);
+			return;
+		}
 
 		QStringList a;
 		a.append(CSL1("modal"));

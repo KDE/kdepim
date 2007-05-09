@@ -1,4 +1,4 @@
-/* Time-factory.cc                      KPilot
+/* KPilot
 **
 ** Copyright (C) 2002 by Reinhold Kainhofer
 **
@@ -31,24 +31,12 @@
 */
 
 #include "options.h"
-#include "plugin.h"
 #include "pluginfactory.h"
 
 #include "mal-conduit.h"
 #include "mal-setup.h"
 
+DECLARE_KPILOT_PLUGIN(conduit_mal,MALWidgetSetup,MALConduit)
 
-
-extern "C"
-{
-
-void *init_conduit_mal()
-{
-	return new ConduitFactory<MALWidgetSetup,MALConduit>(0);
-}
-
-unsigned long version_conduit_mal = Pilot::PLUGIN_API;
-
-}
 
 

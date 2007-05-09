@@ -34,13 +34,7 @@
 #include "todo-setup.h"
 #include "todo-conduit.h"
 
-extern "C"
-{
 
-void *init_conduit_todo()
-{
-	return new ConduitFactory<ToDoWidgetSetup,TodoConduit>;
-}
+DECLARE_KPILOT_PLUGIN(conduit_todo,ToDoWidgetSetup,TodoConduit)
 
-}
 
