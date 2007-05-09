@@ -441,6 +441,8 @@ void AddressEditDialog::updateAddressEdits()
   if ( mPreviousAddress )
     saveAddress( *mPreviousAddress );
 
+  if( mTypeCombo->isEmpty())
+      return;
   KABC::Address::List::Iterator it = mTypeCombo->selectedElement();
   KABC::Address a = *it;
   mPreviousAddress = &(*it);

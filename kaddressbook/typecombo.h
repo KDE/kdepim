@@ -56,6 +56,8 @@ class TypeCombo : public KComboBox
 
     bool hasType( U type );
 
+    bool isEmpty() const;
+
   private:
     List &mTypeList;
     QLineEdit *mLineEdit;
@@ -71,8 +73,16 @@ TypeCombo<T, U>::TypeCombo( TypeCombo::List &list, QWidget *parent,
 }
 
 template <class T, typename U>
+bool TypeCombo<T, U>::isEmpty() const
+{
+    return mTypeList.isEmpty();
+}
+
+template <class T, typename U>
 void TypeCombo<T, U>::updateTypes()
 {
+  if(mTypeList.isEmpty())
+	  return;
   // Remember current item
   QString currentId;
   int current = currentIndex();
