@@ -1,5 +1,4 @@
-
-
+include_directories(${STRIGI_INCLUDE_DIR})
 
 
 ########### next target ###############
