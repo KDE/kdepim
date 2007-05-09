@@ -1,8 +1,0 @@
-File=mailtransport.kcfg
-ClassName=TransportBase
-NameSpace=MailTransport
-Mutators=true
-ItemAccessors=true
-SetUserTexts=true
-Visibility=MAILTRANSPORT_EXPORT
-IncludeFiles=mailtransport/mailtransport_export.h
