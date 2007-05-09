@@ -47,12 +47,12 @@ target_link_libraries(conduit_todo ${QT_LIBRARIES} ${KDE4_KCAL_LIBS} kresources 
 set_target_properties(
 	conduit_vcal PROPERTIES LOCATION ${PLUGIN_INSTALL_DIR}
 	INSTALL_RPATH ${LIB_INSTALL_DIR}
-	PREFIX ""
+	PREFIX "lib"
 )
 set_target_properties(
 	conduit_todo PROPERTIES LOCATION ${PLUGIN_INSTALL_DIR}
 	INSTALL_RPATH ${LIB_INSTALL_DIR}
-	PREFIX ""
+	PREFIX "lib"
 )
 
 install(
