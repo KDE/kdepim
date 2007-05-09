@@ -52,8 +52,8 @@ private:
 protected slots:
 	void addDB();
 	void removeDB();
-	void slotTextChanged( const QString& dbname);
-
+	void textChanged( const QString& dbname);
+	void dbSelectionChanged( int );
 private:
 	KPilotDBSelectionWidget *fSelectionWidget;
 } ;

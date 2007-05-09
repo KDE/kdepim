@@ -85,12 +85,17 @@ KPilotDBSelectionDialog::KPilotDBSelectionDialog(const QStringList &selectedDBs,
 		checkitem->setCheckState(fSelectedDBs.contains(*it) ? Qt::Checked : Qt::Unchecked);
 	}
 
+	fSelectionWidget->fAddButton->setEnabled(false);
+	fSelectionWidget->fRemoveButton->setEnabled(false);
+
 	connect(fSelectionWidget->fNameEdit, SIGNAL(textChanged( const QString & )),
-		this, SLOT(slotTextChanged( const QString &)));
+		this, SLOT(textChanged( const QString &)));
 	connect(fSelectionWidget->fAddButton, SIGNAL(clicked()),
 		this, SLOT(addDB()));
 	connect(fSelectionWidget->fRemoveButton, SIGNAL(clicked()),
 		this, SLOT(removeDB()));
+	connect(fSelectionWidget->fDatabaseList, SIGNAL(currentRowChanged(int)),
+		this, SLOT(dbSelectionChanged(int)) );
 }
 
 KPilotDBSelectionDialog::~KPilotDBSelectionDialog()
@@ -155,8 +160,14 @@ QStringList KPilotDBSelectionDialog::getSelectedDBs()
 	return fSelectedDBs;
 }
 
-void KPilotDBSelectionDialog::slotTextChanged( const QString& dbname)
+void KPilotDBSelectionDialog::textChanged( const QString& dbname)
 {
 	FUNCTIONSETUP;
 	fSelectionWidget->fAddButton->setDisabled(dbname.isEmpty());
+}
+
+void KPilotDBSelectionDialog::dbSelectionChanged( int row )
+{
+	FUNCTIONSETUP;
+	fSelectionWidget->fRemoveButton->setEnabled( row >= 0 );
 }
