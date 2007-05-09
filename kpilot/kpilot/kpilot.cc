@@ -31,12 +31,13 @@
 
 #include "options.h"
 
-#include <qfile.h>
 #include <q3ptrlist.h>
 
-#include <qtimer.h>
-#include <QPixmap>
 #include <QCloseEvent>
+#include <QFile>
+#include <QPixmap>
+#include <QTimer>
+
 #include <KShortcutsDialog>
 
 #include <kurl.h>
@@ -85,13 +86,9 @@
 class KPilotInstaller::KPilotPrivate
 {
 public:
-	typedef Q3PtrList<PilotComponent> ComponentList;
+	typedef QList<PilotComponent *> ComponentList;
 
-private:
 	ComponentList  fPilotComponentList;
-
-public:
-	ComponentList &list() { return fPilotComponentList; } ;
 } ;
 
 KPilotInstaller::KPilotInstaller() :
@@ -158,7 +155,10 @@ void KPilotInstaller::startDaemonIfNeeded()
 		DEBUGKPILOT << fname
 			<< ": Daemon not responding, trying to start it."
 			<< endl;
-		fLogWidget->addMessage(i18n("Starting the KPilot daemon ..."));
+		if (fLogWidget)
+		{
+			fLogWidget->addMessage(i18n("Starting the KPilot daemon ..."));
+		}
 		fDaemonWasRunning = false;
 	}
 	else
@@ -183,8 +183,11 @@ void KPilotInstaller::startDaemonIfNeeded()
 		{
 			int wordoffset;
 			s.remove(0,12);
-			wordoffset=s.find(';');
-			if (wordoffset>0) s.truncate(wordoffset);
+			wordoffset=s.indexOf(';');
+			if (wordoffset>0)
+			{
+				s.truncate(wordoffset);
+			}
 
 			fLogWidget->addMessage(
 				i18n("Daemon status is `%1'",s.isEmpty() ? i18n("not running") : s ));
@@ -200,7 +203,6 @@ void KPilotInstaller::readConfig()
 	KPilotSettings::self()->readConfig();
 
 	(void) Pilot::setupPilotCodec(KPilotSettings::encoding());
-	(void) Pilot::setupPilotCodec(KPilotSettings::encoding());
 
 	if (fLogWidget)
 	{
@@ -213,7 +215,7 @@ void KPilotInstaller::readConfig()
 void KPilotInstaller::setupWidget()
 {
 	FUNCTIONSETUP;
-	
+
 #ifdef __GNUC__
 #warning "kde4 port it"
 #endif
@@ -300,7 +302,7 @@ void KPilotInstaller::slotAboutToShowComponent( const QModelIndex&, const QModel
 #ifdef __GNUC__
 #warning "kde4 port it"
 #endif
-#if 0	
+#if 0
 	int ix = fManagingWidget->pageIndex( c );
 	PilotComponent*compToShow = fP->list().at(ix);
 	for ( PilotComponent *comp = fP->list().first(); comp; comp = fP->list().next() )
@@ -308,16 +310,16 @@ void KPilotInstaller::slotAboutToShowComponent( const QModelIndex&, const QModel
 		// Load/Unload the data needed
 		comp->showKPilotComponent( comp == compToShow );
 	}
-#endif	
+#endif
 }
 
 void KPilotInstaller::slotSelectComponent(PilotComponent *c)
 {
 	FUNCTIONSETUP;
 #ifdef __GNUC__
-#warning "kde4 port it"	
+#warning "kde4 port it"
 #endif
-#if 0	
+#if 0
 	if (!c)
 	{
 		WARNINGKPILOT << "Not a widget." << endl;
@@ -453,14 +455,16 @@ bool KPilotInstaller::componentPreSync()
 
 	QString reason;
 
-	for (fP->list().first();
-		fP->list().current(); fP->list().next())
+	int e = fP->fPilotComponentList.size();
+	for (int i = 0; i<e; ++i)
 	{
-		if (!fP->list().current()->preHotSync(reason))
+		if (!fP->fPilotComponentList[i]->preHotSync(reason))
+		{
 			break;
+		}
 	}
 
-	if (!reason.isNull())
+	if (!reason.isEmpty())
 	{
 		KMessageBox::sorry(this,
 			i18n("Cannot start a Sync now. %1",reason),
@@ -474,10 +478,10 @@ void KPilotInstaller::componentPostSync()
 {
 	FUNCTIONSETUP;
 
-	for (fP->list().first();
-		fP->list().current(); fP->list().next())
+	int e = fP->fPilotComponentList.size();
+	for (int i = 0; i<e; ++i)
 	{
-		fP->list().current()->postHotSync();
+		fP->fPilotComponentList[i]->postHotSync();
 	}
 }
 
@@ -599,15 +603,15 @@ void KPilotInstaller::quit()
 {
 	FUNCTIONSETUP;
 
-	for (fP->list().first();
-		fP->list().current(); fP->list().next())
+	int e = fP->fPilotComponentList.size();
+	for (int i = 0; i<e; ++i)
 	{
 		QString reason;
-		if (!fP->list().current()->preHotSync(reason))
+		if (!fP->fPilotComponentList[i]->preHotSync(reason))
 		{
 			WARNINGKPILOT
 				<< "Couldn't save "
-				<< fP->list().current()->name()
+				<< fP->fPilotComponentList[i]->name()
 				<< endl;
 		}
 	}
@@ -770,7 +774,7 @@ void KPilotInstaller::componentUpdate()
 {
 	FUNCTIONSETUP;
 #ifdef __GNUC__
-#warning "kde4 port it"	
+#warning "kde4 port it"
 #endif
 #if 0
 	QString defaultDBPath = KPilotConfig::getDefaultDBPath();
@@ -817,7 +821,7 @@ void KPilotInstaller::componentUpdate()
 			component->showComponent(); // Reload
 		}
 	}
-#endif	
+#endif
 }
 
 void KPilotInstaller::configure()
@@ -926,7 +930,7 @@ int main(int argc, char **argv)
 		I18N_NOOP("Bugfixer, coolness"));
 	about.addCredit("Bertjan Broeksema",
 		I18N_NOOP("VCalconduit state machine, CMake"));
-	about.addCredit("Montel Laurent", 
+	about.addCredit("Montel Laurent",
 		I18N_NOOP("KDE4 port"));
 	KCmdLineArgs::init(argc, argv, &about);
 	KCmdLineArgs::addCmdLineOptions(kpilotoptions, "kpilot");
@@ -969,10 +973,10 @@ int main(int argc, char **argv)
 		DEBUGKPILOT << fname
 			<< ": Running setup first."
 			<< " (mode " << run_mode << ")" << endl;
-		OrgKdeKpilotDaemonInterface * daemon = new OrgKdeKpilotDaemonInterface("org.kde.kpilot.daemon", "/Daemon", QDBusConnection::sessionBus()); 	
+		OrgKdeKpilotDaemonInterface * daemon = new OrgKdeKpilotDaemonInterface("org.kde.kpilot.daemon", "/Daemon", QDBusConnection::sessionBus());
 		bool r = runConfigure(*daemon,0L);
 		delete daemon;
-		if (!r) 
+		if (!r)
 		{
 			return 1;
 		}
