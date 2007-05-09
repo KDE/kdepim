@@ -161,7 +161,7 @@ endif(GPGME_FOUND)
 add_subdirectory(cmake)
 
 #mailtransport move to kdepimlibs is not complete.
-add_subdirectory(mailtransport)
+#add_subdirectory(mailtransport)
 
 # maildir access library
 add_subdirectory(maildir)
