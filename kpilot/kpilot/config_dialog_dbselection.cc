@@ -171,3 +171,5 @@ void KPilotDBSelectionDialog::dbSelectionChanged( int row )
 	FUNCTIONSETUP;
 	fSelectionWidget->fRemoveButton->setEnabled( row >= 0 );
 }
+
+

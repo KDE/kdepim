@@ -32,6 +32,9 @@
             <property name="name">
                 <cstring>fDatabaseList</cstring>
             </property>
+	    <property name="whatsThis">
+		<string>This list shows the databases that have been detected on the handheld. Databases that are checked will be used for the operation that caused this dialog to appear.</string>
+	    </property>
         </widget>
         <widget class="KPushButton" row="1" column="2">
             <property name="name">
@@ -40,11 +43,17 @@
             <property name="text">
                 <string>&amp;Remove</string>
             </property>
+	    <property name="whatsThis">
+		<string>Click here to remove a database entirely from the list. Usually it is better to just uncheck the database.</string>
+	    </property>
         </widget>
         <widget class="KLineEdit" row="1" column="0">
             <property name="name">
                 <cstring>fNameEdit</cstring>
             </property>
+	    <property name="whatsThis">
+		<string>To add a database to the list (for instance, because the database was not detected automatically), enter its name here and then click on the Add button.</string>
+	    </property>
         </widget>
         <widget class="KPushButton" row="1" column="1">
             <property name="name">
@@ -53,6 +62,9 @@
             <property name="text">
                 <string>&amp;Add</string>
             </property>
+	    <property name="whatsThis">
+		<string>Click here to add a database to the list.</string>
+	    </property>
         </widget>
     </grid>
 </widget>
