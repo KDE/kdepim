@@ -572,7 +572,7 @@ bool DeviceCommThread::open(const QString &device)
 
 void DeviceCommThread::close()
 {
-	FUNCTIONSETUP;
+	FUNCTIONSETUPL(4);
 
 	pi_close(fTempSocket);
 
