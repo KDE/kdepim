@@ -199,7 +199,7 @@ GeoDialog::GeoDialog( QWidget *parent, const char *name )
 
   QGroupBox *sexagesimalGroup = new QGroupBox( i18n( "Sexagesimal" ), page );
   QGridLayout *sexagesimalLayout = new QGridLayout();
-  sexagesimalGroup->layout()->addItem( sexagesimalLayout );
+  sexagesimalGroup->setLayout( sexagesimalLayout );
   sexagesimalLayout->setSpacing( spacingHint() );
 
   QLabel *label = new QLabel( i18n( "Latitude:" ), sexagesimalGroup );
