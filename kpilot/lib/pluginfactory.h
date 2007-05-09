@@ -2,7 +2,7 @@
 #define _KPILOT_PLUGINFACTORY_H
 /* KPilot
 **
-** Copyright (C) 2005-2006 by Adriaan de Groot <groot@kde.org>
+** Copyright (C) 2005-2007 by Adriaan de Groot <groot@kde.org>
 **
 */
 
@@ -27,18 +27,23 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
-#include <qwidget.h>
+#include <QWidget>
 
-#include <kdebug.h>
-#include <klibloader.h>
 #include <KComponentData>
+#include <KDebug>
+#include <KLibLoader>
+
 /** @file Defines a template class for factories for KPilot's conduits. */
 
 class KPilotLink;
 
 
 
-/** Template class that defines a conduit's factory. */
+/**
+ * Template class that defines a conduit's factory. Instantiate it with a
+ * configuration widget class and a SyncAction derived conduit action,
+ * but preferably use DECLARE_KPILOT_PLUGIN below.
+ */
 
 template <class Widget, class Action> class ConduitFactory : public KLibFactory
 {
@@ -94,6 +99,21 @@ protected:
 	//KComponentData fInstance;
 } ;
 
+/**
+ * A conduit has a name -- which must match the name of the library
+ * that it lives in -- and two classes: a configure widget which derives
+ * from ConduitConfigBase and a conduit action that derives from
+ * ConduitAction. The boilerplate needed to handle the plugin
+ * factory name and special symbols as well as the factory
+ * is hidden in this macro.
+ *
+ * @param a The name of the conduit.
+ * @param b The class name for the config widget.
+ * @param c The class name for the conduit action.
+ *
+ * @note No quotes around the name.
+ * @example DECLARE_KPILOT_PLUGIN(null, NullConfigWidget, ConduitNull)
+ */
 #define DECLARE_KPILOT_PLUGIN(a,b,c) \
 	extern "C" { \
 	KPILOT_EXPORT unsigned long version_lib##a = Pilot::PLUGIN_API; \
