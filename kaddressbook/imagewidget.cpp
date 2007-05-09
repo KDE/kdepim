@@ -165,6 +165,8 @@ ImageBaseWidget::ImageBaseWidget( const QString &title, QWidget *parent )
            SLOT( urlDropped( const KUrl& ) ) );
   connect( mImageUrl, SIGNAL( textChanged( const QString& ) ),
            SIGNAL( changed() ) );
+  connect( mImageUrl, SIGNAL( textChanged( const QString& ) ),
+           SLOT( updateGUI() ) );
   connect( mImageUrl, SIGNAL( urlSelected( const KUrl& ) ),
            SLOT( loadImage() ) );
   connect( mImageUrl, SIGNAL( urlSelected( const KUrl& ) ),
