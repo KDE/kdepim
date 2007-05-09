@@ -31,8 +31,6 @@
 
 #include "options.h"
 
-#include <q3ptrlist.h>
-
 #include <QCloseEvent>
 #include <QFile>
 #include <QPixmap>
@@ -95,11 +93,8 @@ KPilotInstaller::KPilotInstaller() :
 	KXmlGuiWindow(0),
 	fP(new KPilotPrivate),
 	fQuitAfterCopyComplete(false),
-	fManagingWidget(0L),
 	fDaemonWasRunning(true),
-	fAppStatus(Startup),
-	fFileInstallWidget(0L),
-	fLogWidget(0L)
+	fAppStatus(Startup)
 {
 	new KpilotAdaptor(this);
 	QDBusConnection::sessionBus().registerObject("/KPilot", this);
@@ -139,6 +134,10 @@ void KPilotInstaller::killDaemonIfNeeded()
 void KPilotInstaller::startDaemonIfNeeded()
 {
 	FUNCTIONSETUP;
+	fAppStatus=Normal;
+	WARNINGKPILOT << fname << "Skipping daemon initialization." << endl;
+	return;
+
 
 	fAppStatus=WaitingForDaemon;
 
@@ -155,43 +154,34 @@ void KPilotInstaller::startDaemonIfNeeded()
 		DEBUGKPILOT << fname
 			<< ": Daemon not responding, trying to start it."
 			<< endl;
-		if (fLogWidget)
-		{
-			fLogWidget->addMessage(i18n("Starting the KPilot daemon ..."));
-		}
+		statusMessage(i18n("Starting the KPilot daemon ..."));
 		fDaemonWasRunning = false;
 	}
 	else
 	{
 		fDaemonWasRunning = true;
 	}
-	if (!fDaemonWasRunning &&  KToolInvocation::startServiceByDesktopName( CSL1("kpilotdaemon"), QStringList(), &daemonError, &daemonPID ) )
+	if (!fDaemonWasRunning && KToolInvocation::startServiceByDesktopName( CSL1("kpilotdaemon"), QStringList(), &daemonError, &daemonPID ) )
 	{
 		WARNINGKPILOT << ": Can't start daemon : " << daemonError << endl;
-		if (fLogWidget)
-		{
-			fLogWidget->addMessage(i18n("Could not start the "
-				"KPilot daemon. The system error message "
-				"was: &quot;%1&quot;",daemonError));
-		}
+		statusMessage(i18n("Could not start the "
+			"KPilot daemon. The system error message "
+			"was: &quot;%1&quot;",daemonError));
 		fAppStatus=Error;
 	}
 	else
 	{
 		DEBUGKPILOT << fname << ": Daemon status is " << s << endl;
-		if (fLogWidget)
+		int wordoffset;
+		s.remove(0,12);
+		wordoffset=s.indexOf(';');
+		if (wordoffset>0)
 		{
-			int wordoffset;
-			s.remove(0,12);
-			wordoffset=s.indexOf(';');
-			if (wordoffset>0)
-			{
-				s.truncate(wordoffset);
-			}
-
-			fLogWidget->addMessage(
-				i18n("Daemon status is `%1'",s.isEmpty() ? i18n("not running") : s ));
+			s.truncate(wordoffset);
 		}
+
+		statusMessage(
+			i18n("Daemon status is `%1'",s.isEmpty() ? i18n("not running") : s ));
 		fAppStatus=Normal;
 	}
 }
@@ -204,11 +194,8 @@ void KPilotInstaller::readConfig()
 
 	(void) Pilot::setupPilotCodec(KPilotSettings::encoding());
 
-	if (fLogWidget)
-	{
-		fLogWidget->addMessage(i18n("Using character set %1 on "
-			"the handheld.",Pilot::codecName()));
-	}
+	statusMessage(i18n("Using character set %1 on "
+		"the handheld.",Pilot::codecName()));
 }
 
 
@@ -216,24 +203,14 @@ void KPilotInstaller::setupWidget()
 {
 	FUNCTIONSETUP;
 
-#ifdef __GNUC__
-#warning "kde4 port it"
-#endif
 	setCaption(CSL1("KPilot"));
 	setMinimumSize(500, 405);
 
-#if 0
-	fManagingWidget = new KPageView(this);
-	fManagingWidget->setFaceType(KPageView::List);
-	fManagingWidget->setMinimumSize(fManagingWidget->sizeHint());
-	fManagingWidget->show();
-	setCentralWidget(fManagingWidget);
-	connect( fManagingWidget, SIGNAL( currentPageChanged( const QModelIndex &, const QModelIndex &)),
-			this, SLOT( slotAboutToShowComponent(const QModelIndex &, const QModelIndex & ) ) );
-#endif
+	setStatusBar(0L);
+
 	initIcons();
 	initMenu();
-	initComponents();
+	setCentralWidget( initComponents() );
 
 	setMinimumSize(sizeHint() + QSize(10,60));
 
@@ -241,49 +218,29 @@ void KPilotInstaller::setupWidget()
 	setAutoSaveSettings();
 }
 
-void KPilotInstaller::initComponents()
+QWidget *KPilotInstaller::initComponents()
 {
 	FUNCTIONSETUP;
-#if 0
+	QTabWidget *w = new QTabWidget( this );
+	w->setObjectName( "main_tab_widget" );
+
 	QString defaultDBPath = KPilotConfig::getDefaultDBPath();
 
-	QPixmap pixmap;
-	QString pixfile;
-	QWidget *w;
+	PilotComponent *p;
 
-#define ADDICONPAGE(a,b) \
-	pixmap = KIconLoader::global()->loadIcon(b, K3Icon::Desktop, 64); \
-	w = getManagingWidget()->addVBoxPage(a,QString::null, pixmap) ;
+#define ADDPAGE(cls,label) \
+	p = new cls(w,defaultDBPath); \
+	w->addTab(p, label); \
+	fP->fPilotComponentList.append(p);
 
-	ADDICONPAGE(i18n("HotSync"),CSL1("kpilotbhotsync"));
-	fLogWidget = new LogWidget(w);
-	addComponentPage(fLogWidget, i18n("HotSync"));
-	fLogWidget->setShowTime(true);
+	ADDPAGE(TodoWidget, i18n("To-do Viewer"))
+	ADDPAGE(AddressWidget, i18n("Address Viewer"))
+	ADDPAGE(MemoWidget, i18n("Memo Viewer"))
+	ADDPAGE(GenericDBWidget, i18n("Generic DB Viewer"))
 
-	ADDICONPAGE(i18n("To-do Viewer"),CSL1("kpilottodo"));
-	addComponentPage(new TodoWidget(w,defaultDBPath),
-		i18n("To-do Viewer"));
+#undef ADDPAGE
 
-	ADDICONPAGE(i18n("Address Viewer"),CSL1("kpilotaddress"));
-	addComponentPage(new AddressWidget(w,defaultDBPath),
-		i18n("Address Viewer"));
-
-	ADDICONPAGE(i18n("Memo Viewer"),CSL1("kpilotknotes"));
-	addComponentPage(new MemoWidget(w, defaultDBPath),
-		i18n("Memo Viewer"));
-
-	ADDICONPAGE(i18n("File Installer"),CSL1("kpilotfileinstaller"));
-	fFileInstallWidget = new FileInstallWidget(
-		w,defaultDBPath);
-	addComponentPage(fFileInstallWidget, i18n("File Installer"));
-
-	ADDICONPAGE(i18n("Generic DB Viewer"),CSL1("kpilotdb"));
-	addComponentPage(new GenericDBWidget(w,defaultDBPath),
-		i18n("Generic DB Viewer"));
-
-#undef ADDICONPAGE
-#endif
-	QTimer::singleShot(500,this,SLOT(initializeComponents()));
+	return w;
 }
 
 
@@ -430,12 +387,8 @@ void KPilotInstaller::daemonStatus(int i)
 		}
 		break;
 	case KPilotInstaller::DaemonQuit :
-		if (fLogWidget)
-		{
-			fLogWidget->logMessage(i18n("The daemon has exited."));
-			fLogWidget->logMessage(i18n("No further HotSyncs are possible."));
-			fLogWidget->logMessage(i18n("Restart the daemon to HotSync again."));
-		}
+		statusMessage(i18n("The daemon has exited. "
+			"No further HotSyncs are possible."));
 		fAppStatus=WaitingForDaemon;
 		break;
 	case KPilotInstaller::None :
@@ -495,11 +448,7 @@ void KPilotInstaller::setupSync(int kind, const QString & message)
 	}
 	if (!message.isEmpty())
 	{
-		QString m(message);
-		if (fLogWidget)
-		{
-			fLogWidget->logMessage(m);
-		}
+		statusMessage(message);
 	}
 	getDaemon().requestSync(kind);
 }
@@ -519,9 +468,10 @@ void KPilotInstaller::initMenu()
 
 	KActionMenu *syncPopup;
 
-	syncPopup = new KActionMenu(KIcon(CSL1("kpilot")),i18n("HotSync"),
+	syncPopup = new KActionMenu(KIcon(CSL1("kpilot_hotsync")),i18n("HotSync"),
 		actionCollection());
 	actionCollection()->addAction("popup_hotsync", syncPopup);
+
 
 	syncPopup->setToolTip(i18n("Select the kind of HotSync to perform next."));
 	syncPopup->setWhatsThis(i18n("Select the kind of HotSync to perform next. "
@@ -530,17 +480,17 @@ void KPilotInstaller::initMenu()
 	connect(syncPopup, SIGNAL(activated()),
 		this, SLOT(slotHotSyncRequested()));
 
-        a = actionCollection()->addAction( "file_hotsync");
+        a = actionCollection()->addAction( CSL1("file_hotsync"),
+		this, SLOT(slotHotSyncRequested()) );
     	a->setText(i18n("&HotSync"));
-	a->setIcon(KIcon(CSL1("hotsync")));
+	a->setIcon(KIcon(CSL1("kpilot_hotsync")));
         a->setToolTip(i18n("Next HotSync will be normal HotSync."));
         a->setWhatsThis(i18n("Tell the daemon that the next HotSync "
                 "should be a normal HotSync."));
-	connect(a, SIGNAL(triggered()), this, SLOT(slotHotSyncRequested()));
 
         a = actionCollection()->addAction( "file_fullsync");
         a->setText(i18n("Full&Sync"));
-        a->setIcon(KIcon(CSL1("fullsync")));
+        a->setIcon(KIcon(CSL1("kpilot_fullsync")));
         a->setToolTip(i18n("Next HotSync will be a FullSync."));
         a->setWhatsThis(i18n("Tell the daemon that the next HotSync "
                 "should be a FullSync (check data on both sides)."));
@@ -548,7 +498,7 @@ void KPilotInstaller::initMenu()
 
         a = actionCollection()->addAction( "file_backup");
         a->setText(i18n("&Backup"));
-        a->setIcon(KIcon(CSL1("backup")));
+        a->setIcon(KIcon(CSL1("kpilot_backup")));
         a->setToolTip(i18n("Next HotSync will be backup."));
 	a->setWhatsThis(i18n("Tell the daemon that the next HotSync "
                 "should back up the Handheld to the PC."));
@@ -556,7 +506,7 @@ void KPilotInstaller::initMenu()
 
         a = actionCollection()->addAction( "file_restore");
         a->setText(i18n("&Restore"));
-        a->setIcon(KIcon(CSL1("restore")));
+        a->setIcon(KIcon(CSL1("kpilot_restore")));
         a->setToolTip(i18n("Next HotSync will be restore."));
         a->setWhatsThis(i18n("Tell the daemon that the next HotSync "
                 "should restore the Handheld from data on the PC."));
@@ -564,6 +514,7 @@ void KPilotInstaller::initMenu()
 
         a = actionCollection()->addAction( "file_HHtoPC");
         a->setText(i18n("Copy Handheld to PC"));
+	a->setIcon(KIcon(CSL1("kpilot_hhtopc")));
         a->setToolTip(i18n("Next HotSync will be backup."));
         a->setWhatsThis(i18n("Tell the daemon that the next HotSync "
                 "should copy all data from the Handheld to the PC, "
@@ -572,7 +523,7 @@ void KPilotInstaller::initMenu()
 
         a = actionCollection()->addAction( "file_reload");
         a->setText(i18n("Rese&t Link"));
-	a->setIcon(KIcon(CSL1("reload")));
+	a->setIcon(KIcon(CSL1("kpilot_reset")));
         a->setToolTip(i18n("Reset the device connection."));
         a->setWhatsThis(i18n("Try to reset the daemon and its connection "
                 "to the Handheld."));
@@ -594,11 +545,6 @@ void KPilotInstaller::initMenu()
                 actionCollection());
 }
 
-void KPilotInstaller::fileInstalled(int)
-{
-	FUNCTIONSETUP;
-}
-
 void KPilotInstaller::quit()
 {
 	FUNCTIONSETUP;
@@ -611,7 +557,7 @@ void KPilotInstaller::quit()
 		{
 			WARNINGKPILOT
 				<< "Couldn't save "
-				<< fP->fPilotComponentList[i]->name()
+				<< fP->fPilotComponentList[i]->objectName()
 				<< endl;
 		}
 	}
@@ -619,73 +565,6 @@ void KPilotInstaller::quit()
 	killDaemonIfNeeded();
 	kapp->quit();
 }
-
-void KPilotInstaller::addComponentPage(PilotComponent * p,
-	const QString & name)
-{
-	FUNCTIONSETUP;
-#ifdef __GNUC__
-#warning "kde4 port it"
-#endif
-#if 0
-	if (!p)
-	{
-		WARNINGKPILOT << "Adding NULL component?" << endl;
-		return;
-	}
-
-	fP->list().append(p);
-
-	// The first component added gets id 1, while the title
-	// screen -- added elsewhere -- has id 0.
-	//
-	// fManagingWidget->addWidget(p, fP->list().count());
-
-
-	const char *componentname = p->name("(none)");
-	char *actionname = 0L;
-	int actionnameLength = 0;
-
-	if (strncmp(componentname, "component_", 10) == 0)
-	{
-		actionnameLength = strlen(componentname) - 10 + 8;
-		actionname = new char[actionnameLength];
-
-		strlcpy(actionname, "view_", actionnameLength);
-		strlcat(actionname, componentname + 10, actionnameLength);
-	}
-	else
-	{
-		actionnameLength = strlen(componentname) + 8;
-		actionname = new char[actionnameLength];
-
-		strlcpy(actionname, "view_", actionnameLength);
-		strlcat(actionname, componentname, actionnameLength);
-	}
-
-	KToggleAction *pt =
-		new KToggleAction(name, /* "kpilot" -- component icon, */ 0,
-		p, SLOT(slotShowComponent()),
-		actionCollection(), actionname);
-
-	pt->setExclusiveGroup(CSL1("view_menu"));
-
-	connect(p, SIGNAL(showComponent(PilotComponent *)),
-		this, SLOT(slotSelectComponent(PilotComponent *)));
-#endif
-}
-
-/* slot */ void KPilotInstaller::initializeComponents()
-{
-	FUNCTIONSETUP;
-
-/*	for (PilotComponent *p = fP->list().first();
-		p ; p = fP->list().next())
-	{
-		p->initialize();
-	}*/
-}
-
 
 void KPilotInstaller::optionsConfigureKeys()
 {
@@ -716,6 +595,7 @@ void KPilotInstaller::slotNewToolbarConfig()
 void KPilotInstaller::slotResetLink()
 {
 	FUNCTIONSETUP;
+	statusMessage( i18n("Resetting device connection ...") );
 	getDaemon().reloadSettings();
 }
 
@@ -830,10 +710,7 @@ void KPilotInstaller::configure()
 
 	if ( fAppStatus!=Normal || fConfigureKPilotDialogInUse )
 	{
-		if (fLogWidget)
-		{
-			fLogWidget->addMessage(i18n("Cannot configure KPilot right now (KPilot's UI is already busy)."));
-		}
+		statusMessage(i18n("Cannot configure KPilot right now (KPilot's UI is already busy)."));
 		return;
 	}
 	fAppStatus=UIBusy;
@@ -847,20 +724,12 @@ void KPilotInstaller::configure()
 	fAppStatus=Normal;
 }
 
-
-/* static */ const char *KPilotInstaller::version(int kind)
+void KPilotInstaller::statusMessage( const QString &s )
 {
-	FUNCTIONSETUP;
-	// I don't think the program title needs to be translated. (ADE)
-	//
-	//
-	if (kind)
+	QStatusBar *b = statusBar();
+	if (b)
 	{
-		return "kpilot.cc";
-	}
-	else
-	{
-		return "KPilot v" KPILOT_VERSION;
+		b->showMessage( s );
 	}
 }
 
@@ -1008,7 +877,7 @@ int main(int argc, char **argv)
 	KGlobal::dirs()->addResourceType("pilotdbs",
 		CSL1("share/apps/kpilot/DBBackup"));
 	tp->show();
-	a.setMainWidget(tp);
+	//a.setMainWidget(tp);
 	return a.exec();
 }
 

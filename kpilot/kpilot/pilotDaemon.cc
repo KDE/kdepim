@@ -157,8 +157,8 @@ void PilotDaemonTray::setupWidget()
 	else { DEBUGKPILOT << fname << ": Loaded icon " << name << endl; }
 
 	L(Normal,"kpilotDaemon")
-	L(Busy,"busysync")
-	L(NotListening,"nosync")
+	L(Busy,"kpilot_busysync")
+	L(NotListening,"kpilot_nosync")
 	slotShowNotListening();
 	QTimer::singleShot(2000,this,SLOT(slotShowNormal()));
 

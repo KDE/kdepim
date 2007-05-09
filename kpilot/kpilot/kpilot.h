@@ -29,21 +29,15 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
-#include <kmainwindow.h>
-#include <KXmlGuiWindow>
-//Added by qt3to4:
-#include <Q3StrList>
 #include <QCloseEvent>
-#include <KPageView>
 
-class QComboBox;
-class KAction;
-class KProgress;
-class KJanusWidget;
+#include <KXmlGuiWindow>
 
-class PilotComponent;
+class QModelIndex;
+
 class FileInstallWidget;
-class LogWidget;
+class PilotComponent;
+
 class OrgKdeKpilotDaemonInterface;
 
 
@@ -53,7 +47,6 @@ Q_OBJECT
 
 public:
 	KPilotInstaller();
-	KPilotInstaller(Q3StrList& fileList);
 	~KPilotInstaller();
 
         enum DaemonMessages {
@@ -69,25 +62,12 @@ public:
                 Error=101 } ;
 
 
-	/**
-	* Return a string with the version identifier (ie.
-	* "KPilot v3.1b11") if kind == 0; otherwise return
-	* a "long" string about KPilot -- currently the
-	* id of kpilot.o
-	*/
-	static const char *version(int kind);
-
-
-	// Adds 'name' to the pull down menu of components
-	void addComponentPage(PilotComponent *, const QString &name);
-
 
 	KPilotStatus status() const { return fAppStatus; } ;
 
 
 protected:
 	void closeEvent(QCloseEvent *e);
-	KPageView *getManagingWidget() { return fManagingWidget; }
 
 	/**
 	* Provide access to the daemon's D-Bus interface
@@ -163,7 +143,7 @@ protected:
 	void initIcons();
 	void initMenu();
 	void setupWidget();
-	void initComponents();
+	QWidget *initComponents();
 
 	/**
 	* This is the private-d-pointer, KPilot style. Not everything
@@ -173,14 +153,10 @@ protected:
 	KPilotPrivate *fP;
 
 private:
-	bool            fQuitAfterCopyComplete; // Used for GUI-less interface
-	KPageView    *fManagingWidget;
+	bool fQuitAfterCopyComplete; // Used for GUI-less interface
 	bool fDaemonWasRunning;
 
 	KPilotStatus fAppStatus;
-
-	FileInstallWidget *fFileInstallWidget;
-	LogWidget *fLogWidget;
 
 	// Used to track if dialog is visible - needed for new D-Bus calls
 	bool fConfigureKPilotDialogInUse;
@@ -188,7 +164,6 @@ private:
 
 protected slots:
 	void quit();
-	void fileInstalled(int which);
 	void slotNewToolbarConfig();
 
 	/**
@@ -209,11 +184,7 @@ protected slots:
 	void slotSelectComponent( PilotComponent *c );
 	void slotAboutToShowComponent( const QModelIndex &, const QModelIndex & );
 
-	/**
-	* Delayed initialization of the components.
-	* This improves perceived startup time.
-	*/
-	void initializeComponents();
+	void statusMessage( const QString & );
 
 signals:
 	void modeSelected(int selected);
