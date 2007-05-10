@@ -45,7 +45,7 @@ public:
 		Normal,
 		ConfigureKPilot,
 		ConfigureConduits,
-		ConfigureAndContinue,
+		ConfigureAndContinue
 	} RunMode;
 
 	/**
