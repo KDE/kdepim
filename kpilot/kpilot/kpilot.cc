@@ -90,8 +90,19 @@ public:
 
 	ComponentList  fPilotComponentList;
 
+	/** Was the daemon running before KPilot started? If not, then we
+	 *  started it and it is our responsibility to stop it on exit (if configured
+	 *  that way).
+	 */
 	bool fDaemonWasRunning;
+	/** Flag to indicate that the configure dialog is in use and no sync should
+	 *  be started just now.
+	 */
 	bool fConfigureKPilotDialogInUse;
+	/** When the application is created, data is delay-loaded into the widgets.
+	 *  This flag asserts that this is the first load and is set to false afterwards.
+	 */
+	bool fFirstLoad;
 
 	KPilotStatus fAppStatus;
 } ;
@@ -103,6 +114,7 @@ KPilotInstaller::KPilotInstaller() :
 	fP->fAppStatus = Startup;
 	fP->fDaemonWasRunning = true; // Assume it was
 	fP->fConfigureKPilotDialogInUse = false;
+	fP->fFirstLoad = true;
 
 	new KpilotAdaptor(this);
 	QDBusConnection::sessionBus().registerObject("/KPilot", this);
@@ -114,6 +126,8 @@ KPilotInstaller::KPilotInstaller() :
 	setupWidget();
 
 	PilotRecord::allocationInfo();
+
+	QTimer::singleShot(500, this, SLOT(componentUpdate()));
 }
 
 KPilotInstaller::~KPilotInstaller()
@@ -329,72 +343,6 @@ void KPilotInstaller::setupWidget()
 	createGUI(CSL1("kpilotui.rc"));
 	setAutoSaveSettings();
 }
-
-
-
-void KPilotInstaller::slotAboutToShowComponent( const QModelIndex&, const QModelIndex& )
-{
-	FUNCTIONSETUP;
-#ifdef __GNUC__
-#warning "kde4 port it"
-#endif
-#if 0
-	int ix = fManagingWidget->pageIndex( c );
-	PilotComponent*compToShow = fP->list().at(ix);
-	for ( PilotComponent *comp = fP->list().first(); comp; comp = fP->list().next() )
-	{
-		// Load/Unload the data needed
-		comp->showKPilotComponent( comp == compToShow );
-	}
-#endif
-}
-
-void KPilotInstaller::slotSelectComponent(PilotComponent *c)
-{
-	FUNCTIONSETUP;
-#ifdef __GNUC__
-#warning "kde4 port it"
-#endif
-#if 0
-	if (!c)
-	{
-		WARNINGKPILOT << "Not a widget." << endl;
-		return;
-	}
-
-	QObject *o = c->parent();
-	if (!o)
-	{
-		WARNINGKPILOT << "Widget has no parent." << endl;
-		return;
-	}
-
-	QWidget *parent = dynamic_cast<QWidget *>(o);
-	if (!parent)
-	{
-		WARNINGKPILOT << "Widget's parent is not a widget." << endl;
-		return;
-	}
-
-	int index = fManagingWidget->pageIndex(parent);
-
-	if (index < 0)
-	{
-		WARNINGKPILOT << "Bogus index " << index << endl;
-		return;
-	}
-
-	for ( PilotComponent *comp = fP->list().first(); comp; comp = fP->list().next() )
-	{
-		// Load/Unload the data needed
-		comp->showKPilotComponent( comp == c );
-	}
-	fManagingWidget->showPage(index);
-#endif
-}
-
-
-
 
 void KPilotInstaller::slotBackupRequested()
 {
@@ -614,20 +562,15 @@ static bool runConfigure(OrgKdeKpilotDaemonInterface &daemon,QWidget *parent)
 void KPilotInstaller::componentUpdate()
 {
 	FUNCTIONSETUP;
-#ifdef __GNUC__
-#warning "kde4 port it"
-#endif
-#if 0
-	QString defaultDBPath = KPilotConfig::getDefaultDBPath();
-	bool dbPathChanged = false;
 
-	for (fP->list().first();
-		fP->list().current();
-		fP->list().next())
+	QString defaultDBPath = KPilotConfig::getDefaultDBPath();
+	bool dbPathChanged = fP->fFirstLoad;
+	fP->fFirstLoad = false;
+
+	int e = fP->fPilotComponentList.size();
+	for (int i = 0; i<e; ++i)
 	{
-// TODO_RK: update the current component to use the new settings
-//			fP->list().current()->initialize();
-		PilotComponent *p = fP->list().current();
+		PilotComponent *p = fP->fPilotComponentList[i];
 		if (p && (p->dbPath() != defaultDBPath))
 		{
 			dbPathChanged = true;
@@ -642,27 +585,16 @@ void KPilotInstaller::componentUpdate()
 
 	// Otherwise, need to re-load the databases
 	//
-	if (fLogWidget)
+	statusMessage(i18n("Changed username to `%1'.",KPilotSettings::userName()));
+
+	for (int i = 0; i<e; ++i)
 	{
-		fLogWidget->logMessage(i18n("Changed username to `%1'.",PilotSettings::userName()));
-		fManagingWidget->showPage(0);
-		slotAboutToShowComponent(fLogWidget);
-	}
-	else
-	{
-		int ix = fManagingWidget->activePageIndex();
-		PilotComponent *component = 0L;
-		if (ix>=0)
+		PilotComponent *p = fP->fPilotComponentList[i];
+		if (p)
 		{
-			component = fP->list().at(ix);
-		}
-		if (component)
-		{
-			component->hideComponent(); // Throw away current data
-			component->showComponent(); // Reload
+			p->showComponent();
 		}
 	}
-#endif
 }
 
 void KPilotInstaller::configure()

@@ -104,19 +104,9 @@ protected slots:
 	 */
 	void slotResetLink();
 
-	/**
-	 * Indicate that a particular component has been selected (through
-	 * whatever mechanism). This will make that component visible and
-	 * adjust any other user-visible state to indicate that that component
-	 * is now active.
-	 *
-	 * This should be called (possibly by the component itself!)
-	 * or activated through the signal mechanism.
-	 * */
-	void slotSelectComponent( PilotComponent *c );
-	void slotAboutToShowComponent( const QModelIndex &, const QModelIndex & );
-
 	void statusMessage( const QString & );
+
+	void componentUpdate();
 
 protected:
 	void readConfig();
@@ -126,15 +116,10 @@ protected:
 	* Run all the internal conduits' presync functions.
 	*/
 	bool componentPreSync();
-	void setupSync(int kind,const QString& msg);
 	void componentPostSync();
-	/**
-	* Run after a configuration change to force
-	* the viewers to re-load data.
-	*/
-	void componentUpdate();
 
 	void setupWidget();
+	void setupSync(int kind,const QString& msg);
 
 
 	/**
