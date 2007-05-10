@@ -94,7 +94,7 @@ public:
 	virtual QString protocol( bool ) const { return "file"; }
 
 	/**
-	 * Some protocols use conncetions (such as pop3, imap); other don't (such as file).
+	 * Some protocols use connections (such as pop3, imap); other don't (such as file).
 	 * This function should return true if the protocol is connection based.
 	 *
 	 * By default, it returns false.
