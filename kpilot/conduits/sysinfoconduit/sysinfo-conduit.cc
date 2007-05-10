@@ -43,7 +43,7 @@
 #include <kstandarddirs.h>
 #include <pilotSerialDatabase.h>
 
-#include <Q3TextStream>
+#include <QTextStream>
 #include <sys/utsname.h>
 
 #include "sysinfo-conduit.moc"
@@ -485,7 +485,7 @@ void SysInfoConduit::writeFile()
 #endif
 		QFile infile(templatefile);
 		if (infile.open(QIODevice::ReadOnly)) {
-			Q3TextStream instream(&infile);
+			QTextStream instream(&infile);
 			output = instream.read();
 			infile.close();
 			loaded=true;
@@ -587,7 +587,7 @@ void SysInfoConduit::writeFile()
 	}
 
 	// Finally, write the actual text out to the file.
-	Q3TextStream outstream(&outfile);
+	QTextStream outstream(&outfile);
 	outstream<<output;
 	outfile.close();
 

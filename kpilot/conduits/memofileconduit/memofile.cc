@@ -78,7 +78,7 @@ bool Memofile::load()
 		return false;
 	}
 
-	Q3TextStream ts( &f );
+	QTextStream ts( &f );
 
 	QString text,title,body;
 	title = filename();
@@ -153,7 +153,7 @@ bool Memofile::saveFile()
 		return false;
 	}
 
-	Q3TextStream stream(&f);
+	QTextStream stream(&f);
 	stream  << text() << endl;
 	f.close();
 
