@@ -370,10 +370,14 @@ bool Scheduler::acceptReply(IncidenceBase *incidence,ScheduleMessage::Status /* 
 
     // send update about new participants
     if ( attendeeAdded ) {
-      if ( ev )
+      if ( ev ) {
+        ev->setRevision( ev->revision() + 1 );
         performTransaction( ev, Scheduler::Request );
-      if ( to )
+      }
+      if ( to ) {
+        to->setRevision( ev->revision() + 1 );
         performTransaction( to, Scheduler::Request );
+      }
     }
 
     if ( ret ) {
