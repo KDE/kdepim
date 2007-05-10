@@ -11,6 +11,7 @@ include(MacroOptionalAddSubdirectory)
 find_package(KdepimLibs REQUIRED)
 find_package(Kode REQUIRED)
 find_package(ZLIB REQUIRED)
+find_package(Strigi REQUIRED)
 
 if(Q_WS_X11)
    macro_log_feature(X11_Xss_LIB "libXss" "X Window Screen Saver Development Library" "http://xorg.freedesktop.org" FALSE "" "Required to build the KTimeTracker Program")
