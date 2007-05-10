@@ -58,7 +58,9 @@
 #include <kprogressdialog.h>
 #include <klibloader.h>
 #include <ktoolinvocation.h>
+
 #include <KActionMenu>
+#include <KXMLGUIFactory>
 
 #include "kpilotConfig.h"
 
@@ -87,15 +89,21 @@ public:
 	typedef QList<PilotComponent *> ComponentList;
 
 	ComponentList  fPilotComponentList;
+
+	bool fDaemonWasRunning;
+	bool fConfigureKPilotDialogInUse;
+
+	KPilotStatus fAppStatus;
 } ;
 
 KPilotInstaller::KPilotInstaller() :
 	KXmlGuiWindow(0),
-	fP(new KPilotPrivate),
-	fQuitAfterCopyComplete(false),
-	fDaemonWasRunning(true),
-	fAppStatus(Startup)
+	fP(new KPilotPrivate)
 {
+	fP->fAppStatus = Startup;
+	fP->fDaemonWasRunning = true; // Assume it was
+	fP->fConfigureKPilotDialogInUse = false;
+
 	new KpilotAdaptor(this);
 	QDBusConnection::sessionBus().registerObject("/KPilot", this);
 	//TODO verify it
@@ -106,7 +114,6 @@ KPilotInstaller::KPilotInstaller() :
 	setupWidget();
 
 	PilotRecord::allocationInfo();
-	fConfigureKPilotDialogInUse = false;
 }
 
 KPilotInstaller::~KPilotInstaller()
@@ -123,7 +130,7 @@ void KPilotInstaller::killDaemonIfNeeded()
 	FUNCTIONSETUP;
 	if (KPilotSettings::killDaemonAtExit())
 	{
-		if (!fDaemonWasRunning)
+		if (!fP->fDaemonWasRunning)
 		{
 			DEBUGKPILOT << fname << ": Killing daemon." << endl;
 			getDaemon().quitNow();
@@ -134,12 +141,12 @@ void KPilotInstaller::killDaemonIfNeeded()
 void KPilotInstaller::startDaemonIfNeeded()
 {
 	FUNCTIONSETUP;
-	fAppStatus=Normal;
+	fP->fAppStatus=Normal;
 	WARNINGKPILOT << fname << "Skipping daemon initialization." << endl;
 	return;
 
 
-	fAppStatus=WaitingForDaemon;
+	fP->fAppStatus=WaitingForDaemon;
 
 	QString daemonError;
 	QString daemonPID;
@@ -155,19 +162,19 @@ void KPilotInstaller::startDaemonIfNeeded()
 			<< ": Daemon not responding, trying to start it."
 			<< endl;
 		statusMessage(i18n("Starting the KPilot daemon ..."));
-		fDaemonWasRunning = false;
+		fP->fDaemonWasRunning = false;
 	}
 	else
 	{
-		fDaemonWasRunning = true;
+		fP->fDaemonWasRunning = true;
 	}
-	if (!fDaemonWasRunning && KToolInvocation::startServiceByDesktopName( CSL1("kpilotdaemon"), QStringList(), &daemonError, &daemonPID ) )
+	if (!fP->fDaemonWasRunning && KToolInvocation::startServiceByDesktopName( CSL1("kpilotdaemon"), QStringList(), &daemonError, &daemonPID ) )
 	{
 		WARNINGKPILOT << ": Can't start daemon : " << daemonError << endl;
 		statusMessage(i18n("Could not start the "
 			"KPilot daemon. The system error message "
 			"was: &quot;%1&quot;",daemonError));
-		fAppStatus=Error;
+		fP->fAppStatus=Error;
 	}
 	else
 	{
@@ -182,7 +189,7 @@ void KPilotInstaller::startDaemonIfNeeded()
 
 		statusMessage(
 			i18n("Daemon status is `%1'",s.isEmpty() ? i18n("not running") : s ));
-		fAppStatus=Normal;
+		fP->fAppStatus=Normal;
 	}
 }
 
@@ -198,30 +205,10 @@ void KPilotInstaller::readConfig()
 		"the handheld.",Pilot::codecName()));
 }
 
-
-void KPilotInstaller::setupWidget()
+static QWidget *initComponents( QWidget *parent, QList<PilotComponent *> &l )
 {
 	FUNCTIONSETUP;
-
-	setCaption(CSL1("KPilot"));
-	setMinimumSize(500, 405);
-
-	setStatusBar(0L);
-
-	initIcons();
-	initMenu();
-	setCentralWidget( initComponents() );
-
-	setMinimumSize(sizeHint() + QSize(10,60));
-
-	createGUI(CSL1("kpilotui.rc"));
-	setAutoSaveSettings();
-}
-
-QWidget *KPilotInstaller::initComponents()
-{
-	FUNCTIONSETUP;
-	QTabWidget *w = new QTabWidget( this );
+	QTabWidget *w = new QTabWidget( parent );
 	w->setObjectName( "main_tab_widget" );
 
 	QString defaultDBPath = KPilotConfig::getDefaultDBPath();
@@ -231,7 +218,7 @@ QWidget *KPilotInstaller::initComponents()
 #define ADDPAGE(cls,label) \
 	p = new cls(w,defaultDBPath); \
 	w->addTab(p, label); \
-	fP->fPilotComponentList.append(p);
+	l.append(p);
 
 	ADDPAGE(TodoWidget, i18n("To-do Viewer"))
 	ADDPAGE(AddressWidget, i18n("Address Viewer"))
@@ -243,12 +230,104 @@ QWidget *KPilotInstaller::initComponents()
 	return w;
 }
 
+void initMenu( KXmlGuiWindow *parent )
+{
+	FUNCTIONSETUP;
+	QAction *a;
+
+	KActionMenu *syncPopup;
+
+	syncPopup = new KActionMenu(KIcon(CSL1("kpilot_hotsync")),i18n("HotSync"),
+		parent->actionCollection());
+	parent->actionCollection()->addAction("popup_hotsync", syncPopup);
 
 
-void KPilotInstaller::initIcons()
+	syncPopup->setToolTip(i18n("Select the kind of HotSync to perform next."));
+	syncPopup->setWhatsThis(i18n("Select the kind of HotSync to perform next. "
+		"This applies only to the next HotSync; to change the default, use "
+		"the configuration dialog."));
+	QObject::connect(syncPopup, SIGNAL(activated()),
+		parent, SLOT(slotHotSyncRequested()));
+
+        a = parent->actionCollection()->addAction( CSL1("file_hotsync"),
+		parent, SLOT(slotHotSyncRequested()) );
+    	a->setText(i18n("&HotSync"));
+	a->setIcon(KIcon(CSL1("kpilot_hotsync")));
+        a->setToolTip(i18n("Next HotSync will be normal HotSync."));
+        a->setWhatsThis(i18n("Tell the daemon that the next HotSync "
+                "should be a normal HotSync."));
+
+        a = parent->actionCollection()->addAction( "file_fullsync");
+        a->setText(i18n("Full&Sync"));
+        a->setIcon(KIcon(CSL1("kpilot_fullsync")));
+        a->setToolTip(i18n("Next HotSync will be a FullSync."));
+        a->setWhatsThis(i18n("Tell the daemon that the next HotSync "
+                "should be a FullSync (check data on both sides)."));
+        QObject::connect(a, SIGNAL(triggered()), parent, SLOT(slotFullSyncRequested()));
+
+        a = parent->actionCollection()->addAction( "file_backup");
+        a->setText(i18n("&Backup"));
+        a->setIcon(KIcon(CSL1("kpilot_backup")));
+        a->setToolTip(i18n("Next HotSync will be backup."));
+	a->setWhatsThis(i18n("Tell the daemon that the next HotSync "
+                "should back up the Handheld to the PC."));
+        QObject::connect(a, SIGNAL(triggered()), parent, SLOT(slotBackupRequested()));
+
+        a = parent->actionCollection()->addAction( "file_restore");
+        a->setText(i18n("&Restore"));
+        a->setIcon(KIcon(CSL1("kpilot_restore")));
+        a->setToolTip(i18n("Next HotSync will be restore."));
+        a->setWhatsThis(i18n("Tell the daemon that the next HotSync "
+                "should restore the Handheld from data on the PC."));
+        QObject::connect(a, SIGNAL(triggered()), parent, SLOT(slotRestoreRequested()));
+
+        a = parent->actionCollection()->addAction( "file_HHtoPC");
+        a->setText(i18n("Copy Handheld to PC"));
+	a->setIcon(KIcon(CSL1("kpilot_hhtopc")));
+        a->setToolTip(i18n("Next HotSync will be backup."));
+        a->setWhatsThis(i18n("Tell the daemon that the next HotSync "
+                "should copy all data from the Handheld to the PC, "
+                "overwriting entries on the PC."));
+        QObject::connect(a, SIGNAL(triggered()), parent, SLOT(slotPCtoHHRequested()));
+
+        a = parent->actionCollection()->addAction( "file_reload");
+        a->setText(i18n("Rese&t Link"));
+	a->setIcon(KIcon(CSL1("kpilot_reset")));
+        a->setToolTip(i18n("Reset the device connection."));
+        a->setWhatsThis(i18n("Try to reset the daemon and its connection "
+                "to the Handheld."));
+        QObject::connect(a, SIGNAL(triggered()), parent, SLOT(slotResetLink()));
+
+        a = KStandardAction::quit(parent, SLOT(quit()), parent->actionCollection());
+        a->setWhatsThis(i18n("Quit KPilot, (and stop the daemon "
+                "if configured that way)."));
+
+	(void) KStandardAction::keyBindings(parent->guiFactory(), SLOT(configureShortcuts()), parent->actionCollection());
+	(void) KStandardAction::configureToolbars(parent, SLOT(configureToolbars()), parent->actionCollection());
+        (void) KStandardAction::preferences(parent, SLOT(configure()),
+                parent->actionCollection());
+}
+
+
+
+void KPilotInstaller::setupWidget()
 {
 	FUNCTIONSETUP;
 
+	setCaption(CSL1("KPilot"));
+	setMinimumSize(500, 405);
+
+	setStatusBar(0L);
+
+	createStandardStatusBarAction();
+	setStandardToolBarMenuEnabled(true);
+	initMenu( this );
+	setCentralWidget( initComponents( this, fP->fPilotComponentList ) );
+
+	setMinimumSize(sizeHint() + QSize(10,60));
+
+	createGUI(CSL1("kpilotui.rc"));
+	setAutoSaveSettings();
 }
 
 
@@ -373,23 +452,23 @@ void KPilotInstaller::daemonStatus(int i)
 	switch(i)
 	{
 	case KPilotInstaller::StartOfHotSync :
-		if (fAppStatus==Normal)
+		if (kpilotStatus()==Normal)
 		{
-			fAppStatus=WaitingForDaemon;
+			fP->fAppStatus=WaitingForDaemon;
 			componentPreSync();
 		}
 		break;
 	case KPilotInstaller::EndOfHotSync :
-		if (fAppStatus==WaitingForDaemon)
+		if (kpilotStatus()==WaitingForDaemon)
 		{
 			componentPostSync();
-			fAppStatus=Normal;
+			fP->fAppStatus=Normal;
 		}
 		break;
 	case KPilotInstaller::DaemonQuit :
 		statusMessage(i18n("The daemon has exited. "
 			"No further HotSyncs are possible."));
-		fAppStatus=WaitingForDaemon;
+		fP->fAppStatus=WaitingForDaemon;
 		break;
 	case KPilotInstaller::None :
 		WARNINGKPILOT << "Unhandled status message " << i << endl;
@@ -399,7 +478,7 @@ void KPilotInstaller::daemonStatus(int i)
 
 int KPilotInstaller::kpilotStatus()
 {
-	return status();
+	return fP->fAppStatus;
 }
 
 bool KPilotInstaller::componentPreSync()
@@ -453,98 +532,6 @@ void KPilotInstaller::setupSync(int kind, const QString & message)
 	getDaemon().requestSync(kind);
 }
 
-void KPilotInstaller::closeEvent(QCloseEvent * e)
-{
-	FUNCTIONSETUP;
-
-	quit();
-	e->accept();
-}
-
-void KPilotInstaller::initMenu()
-{
-	FUNCTIONSETUP;
-	QAction *a;
-
-	KActionMenu *syncPopup;
-
-	syncPopup = new KActionMenu(KIcon(CSL1("kpilot_hotsync")),i18n("HotSync"),
-		actionCollection());
-	actionCollection()->addAction("popup_hotsync", syncPopup);
-
-
-	syncPopup->setToolTip(i18n("Select the kind of HotSync to perform next."));
-	syncPopup->setWhatsThis(i18n("Select the kind of HotSync to perform next. "
-		"This applies only to the next HotSync; to change the default, use "
-		"the configuration dialog."));
-	connect(syncPopup, SIGNAL(activated()),
-		this, SLOT(slotHotSyncRequested()));
-
-        a = actionCollection()->addAction( CSL1("file_hotsync"),
-		this, SLOT(slotHotSyncRequested()) );
-    	a->setText(i18n("&HotSync"));
-	a->setIcon(KIcon(CSL1("kpilot_hotsync")));
-        a->setToolTip(i18n("Next HotSync will be normal HotSync."));
-        a->setWhatsThis(i18n("Tell the daemon that the next HotSync "
-                "should be a normal HotSync."));
-
-        a = actionCollection()->addAction( "file_fullsync");
-        a->setText(i18n("Full&Sync"));
-        a->setIcon(KIcon(CSL1("kpilot_fullsync")));
-        a->setToolTip(i18n("Next HotSync will be a FullSync."));
-        a->setWhatsThis(i18n("Tell the daemon that the next HotSync "
-                "should be a FullSync (check data on both sides)."));
-        connect(a, SIGNAL(triggered()), this, SLOT(slotFullSyncRequested()));
-
-        a = actionCollection()->addAction( "file_backup");
-        a->setText(i18n("&Backup"));
-        a->setIcon(KIcon(CSL1("kpilot_backup")));
-        a->setToolTip(i18n("Next HotSync will be backup."));
-	a->setWhatsThis(i18n("Tell the daemon that the next HotSync "
-                "should back up the Handheld to the PC."));
-        connect(a, SIGNAL(triggered()), this, SLOT(slotBackupRequested()));
-
-        a = actionCollection()->addAction( "file_restore");
-        a->setText(i18n("&Restore"));
-        a->setIcon(KIcon(CSL1("kpilot_restore")));
-        a->setToolTip(i18n("Next HotSync will be restore."));
-        a->setWhatsThis(i18n("Tell the daemon that the next HotSync "
-                "should restore the Handheld from data on the PC."));
-        connect(a, SIGNAL(triggered()), this, SLOT(slotRestoreRequested()));
-
-        a = actionCollection()->addAction( "file_HHtoPC");
-        a->setText(i18n("Copy Handheld to PC"));
-	a->setIcon(KIcon(CSL1("kpilot_hhtopc")));
-        a->setToolTip(i18n("Next HotSync will be backup."));
-        a->setWhatsThis(i18n("Tell the daemon that the next HotSync "
-                "should copy all data from the Handheld to the PC, "
-                "overwriting entries on the PC."));
-        connect(a, SIGNAL(triggered()), this, SLOT(slotPCtoHHRequested()));
-
-        a = actionCollection()->addAction( "file_reload");
-        a->setText(i18n("Rese&t Link"));
-	a->setIcon(KIcon(CSL1("kpilot_reset")));
-        a->setToolTip(i18n("Reset the device connection."));
-        a->setWhatsThis(i18n("Try to reset the daemon and its connection "
-                "to the Handheld."));
-        connect(a, SIGNAL(triggered()), this, SLOT(slotResetLink()));
-
-        a = KStandardAction::quit(this, SLOT(quit()), actionCollection());
-        a->setWhatsThis(i18n("Quit KPilot, (and stop the daemon "
-                "if configured that way)."));
-
-        // Options actions
-        createStandardStatusBarAction();
-        setStandardToolBarMenuEnabled(true);
-
-        (void) KStandardAction::keyBindings(this, SLOT(optionsConfigureKeys()),
-                actionCollection());
-        (void) KStandardAction::configureToolbars(this, SLOT(optionsConfigureToolbars()),
-                actionCollection());
-        (void) KStandardAction::preferences(this, SLOT(configure()),
-                actionCollection());
-}
-
 void KPilotInstaller::quit()
 {
 	FUNCTIONSETUP;
@@ -564,32 +551,6 @@ void KPilotInstaller::quit()
 
 	killDaemonIfNeeded();
 	kapp->quit();
-}
-
-void KPilotInstaller::optionsConfigureKeys()
-{
-	FUNCTIONSETUP;
-	KShortcutsDialog::configure( actionCollection() );
-}
-
-void KPilotInstaller::optionsConfigureToolbars()
-{
-	FUNCTIONSETUP;
-	// use the standard toolbar editor
-	// This was added in KDE 3.1
-	saveMainWindowSettings( KConfigGroup(KGlobal::config(), autoSaveGroup()) );
-	KEditToolBar dlg(actionCollection());
-	connect(&dlg, SIGNAL(newToolbarConfig()), this, SLOT(slotNewToolbarConfig()));
-	dlg.exec();
-}
-
-
-void KPilotInstaller::slotNewToolbarConfig()
-{
-	FUNCTIONSETUP;
-	// recreate our GUI
-	createGUI();
-	applyMainWindowSettings( KConfigGroup(KGlobal::config(), autoSaveGroup()) );
 }
 
 void KPilotInstaller::slotResetLink()
@@ -708,20 +669,20 @@ void KPilotInstaller::configure()
 {
 	FUNCTIONSETUP;
 
-	if ( fAppStatus!=Normal || fConfigureKPilotDialogInUse )
+	if ( kpilotStatus()!=Normal || fP->fConfigureKPilotDialogInUse )
 	{
 		statusMessage(i18n("Cannot configure KPilot right now (KPilot's UI is already busy)."));
 		return;
 	}
-	fAppStatus=UIBusy;
-	fConfigureKPilotDialogInUse = true;
+	fP->fAppStatus=UIBusy;
+	fP->fConfigureKPilotDialogInUse = true;
 	if (runConfigure(getDaemon(),this))
 	{
 		componentUpdate();
 	}
 
-	fConfigureKPilotDialogInUse = false;
-	fAppStatus=Normal;
+	fP->fConfigureKPilotDialogInUse = false;
+	fP->fAppStatus=Normal;
 }
 
 void KPilotInstaller::statusMessage( const QString &s )
@@ -866,7 +827,7 @@ int main(int argc, char **argv)
 
 	KPilotInstaller *tp = new KPilotInstaller();
 
-	if (tp->status() == KPilotInstaller::Error)
+	if (tp->kpilotStatus() == KPilotInstaller::Error)
 	{
 		KPILOT_DELETE(tp);
 		return 1;

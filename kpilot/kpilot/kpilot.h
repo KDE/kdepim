@@ -35,7 +35,6 @@
 
 class QModelIndex;
 
-class FileInstallWidget;
 class PilotComponent;
 
 class OrgKdeKpilotDaemonInterface;
@@ -49,42 +48,24 @@ public:
 	KPilotInstaller();
 	~KPilotInstaller();
 
-        enum DaemonMessages {
-                None=0,
-                StartOfHotSync=1,
-                EndOfHotSync=2,
-                DaemonQuit=4 } ;
-        enum KPilotStatus {
-                Startup=1,
-                WaitingForDaemon=2,
-                Normal=10,
-                UIBusy=100,
-                Error=101 } ;
-
-
-
-	KPilotStatus status() const { return fAppStatus; } ;
-
-
-protected:
-	void closeEvent(QCloseEvent *e);
+	enum DaemonMessages {
+		None=0,
+		StartOfHotSync=1,
+		EndOfHotSync=2,
+		DaemonQuit=4 } ;
+	enum KPilotStatus {
+		Startup=1,
+		WaitingForDaemon=2,
+		Normal=10,
+		UIBusy=100,
+		Error=101 } ;
 
 	/**
-	* Provide access to the daemon's D-Bus interface
-	* through an object of the stub class.
+	* This is the D-Bus interface from the daemon to KPilot.
 	*/
-protected:
-	OrgKdeKpilotDaemonInterface &getDaemon() { return *fDaemonInterface; } ;
-private:
-	OrgKdeKpilotDaemonInterface *fDaemonInterface;
+	virtual void daemonStatus(int);
+	virtual int kpilotStatus(); ///< Returns KPilotStatus values
 
-	/**
-	* Handle the functionality of kill-daemon-on-exit and
-	* kill-daemon-if-started-by-my by killing it in those
-	* cases.
-	*/
-protected:
-	void killDaemonIfNeeded();
 
 public slots:
 	/**
@@ -98,73 +79,24 @@ public slots:
 	void slotHHtoPCRequested();
 	void slotPCtoHHRequested();
 
-	void startDaemonIfNeeded();
-
-	/**
-	* These are slots for the standard Configure ...
-	* actions and not interesting. The show toolbar
-	* functionality is in kdelibs starting with KDE 3.1,
-	* but we need to remain backwards compatible.
-	*/
-	void optionsConfigureKeys();
-	void optionsConfigureToolbars();
 
 
-public:
-	/**
-	* This is the D-Bus interface from the daemon to KPilot.
-	*/
-	virtual void daemonStatus(int);
-	virtual int kpilotStatus();
-
-public slots:
 	/**
 	* This is the D-Bus interface from the daemon to KPilot
 	* to configure KPilot.
 	*/
 	virtual void configure();
 
-protected:
-	void readConfig();
-
-
-	/**
-	* Run all the internal conduits' presync functions.
-	*/
-	bool componentPreSync();
-	void setupSync(int kind,const QString& msg);
-	void componentPostSync();
-	/**
-	* Run after a configuration change to force
-	* the viewers to re-load data.
-	*/
-	void componentUpdate();
-
-	void initIcons();
-	void initMenu();
-	void setupWidget();
-	QWidget *initComponents();
-
-	/**
-	* This is the private-d-pointer, KPilot style. Not everything
-	* has moved there yet.
-	*/
-	class KPilotPrivate;
-	KPilotPrivate *fP;
-
-private:
-	bool fQuitAfterCopyComplete; // Used for GUI-less interface
-	bool fDaemonWasRunning;
-
-	KPilotStatus fAppStatus;
-
-	// Used to track if dialog is visible - needed for new D-Bus calls
-	bool fConfigureKPilotDialogInUse;
-
-
 protected slots:
+	/**
+	* Handle the functionality of kill-daemon-on-exit and
+	* kill-daemon-if-started-by-my by killing it in those
+	* cases.
+	*/
+	void killDaemonIfNeeded();
+	void startDaemonIfNeeded();
+
 	void quit();
-	void slotNewToolbarConfig();
 
 	/**
 	 * Get the daemon to reset the link. This uses reloadSettings()
@@ -186,8 +118,43 @@ protected slots:
 
 	void statusMessage( const QString & );
 
-signals:
-	void modeSelected(int selected);
+protected:
+	void readConfig();
+
+
+	/**
+	* Run all the internal conduits' presync functions.
+	*/
+	bool componentPreSync();
+	void setupSync(int kind,const QString& msg);
+	void componentPostSync();
+	/**
+	* Run after a configuration change to force
+	* the viewers to re-load data.
+	*/
+	void componentUpdate();
+
+	void setupWidget();
+
+
+	/**
+	* Provide access to the daemon's D-Bus interface
+	* through an object of the stub class.
+	*/
+	OrgKdeKpilotDaemonInterface &getDaemon()
+	{
+		return *fDaemonInterface;
+	}
+
+private:
+	OrgKdeKpilotDaemonInterface *fDaemonInterface;
+
+	/**
+	* This is the private-d-pointer, KPilot style. Not everything
+	* has moved there yet.
+	*/
+	class KPilotPrivate;
+	KPilotPrivate *fP;
 };
 
 
