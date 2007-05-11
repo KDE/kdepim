@@ -275,6 +275,7 @@ PilotAddress::~PilotAddress()
 
 QString PilotAddress::getTextRepresentation(const PilotAddressInfo *info, Qt::TextFormat richText) const
 {
+	FUNCTIONSETUP;
 	QString text, tmp;
 
 	QString par = (richText==Qt::RichText) ?CSL1("<p>"): QString();

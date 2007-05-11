@@ -71,7 +71,6 @@ public slots:
 	void syncDone();
 
 private slots:
-	void hideSplash();
 	void clearLog();
 	void saveLog();
 
@@ -81,7 +80,6 @@ private:
 private:
 	QTextEdit *fLog;
 	bool fShowTime;
-	QLabel *fSplash;
 	QLabel *fLabel;
 	QProgressBar *fProgress;
 	KHBox *fButtonBox;

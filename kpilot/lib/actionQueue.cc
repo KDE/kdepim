@@ -85,17 +85,13 @@ void ActionQueue::queueConduits(const QStringList &l,
 	{
 		if ((*it).startsWith(CSL1("internal_")))
 		{
-#ifdef DEBUG
 			DEBUGKPILOT << fname <<
 				": Ignoring conduit " << *it << endl;
-#endif
 			continue;
 		}
 
-#ifdef DEBUG
 		DEBUGKPILOT << fname
 			<< ": Creating proxy with mode=" << m.name() << endl;
-#endif
 		ConduitProxy *cp = new ConduitProxy(fHandle,*it,m);
 		addAction(cp);
 	}
@@ -118,12 +114,10 @@ void ActionQueue::actionCompleted(SyncAction *b)
 
 	if (b)
 	{
-#ifdef DEBUG
 		DEBUGKPILOT << fname
 			<< ": Completed action "
 			<< b->objectName()
 			<< endl;
-#endif
 		delete b;
 	}
 
@@ -150,12 +144,10 @@ void ActionQueue::actionCompleted(SyncAction *b)
 		return;
 	}
 
-#ifdef DEBUG
 	DEBUGKPILOT << fname
 		<< ": Will run action "
 		<< a->objectName()
 		<< endl;
-#endif
 
 	QObject::connect(a, SIGNAL(logMessage(const QString &)),
 		this, SIGNAL(logMessage(const QString &)));

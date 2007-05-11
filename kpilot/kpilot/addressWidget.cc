@@ -177,20 +177,14 @@ void AddressWidget::hideComponent()
 
 	if ( fPendingAddresses )
 	{
-#ifdef DEBUG
 		DEBUGKPILOT << fname
 			<< ": fPendingAddress="
 			<< fPendingAddresses
 			<< endl;
-#endif
 
-#if KDE_VERSION<220
-		s = i18n("There are still %1 address editing windows open.",QString::number(fPendingAddresses));
-#else
 		s = i18np("There is still an address editing window open.",
 			"There are still %n address editing windows open.",
 			fPendingAddresses);
-#endif
 		return false;
 	}
 

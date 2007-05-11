@@ -48,6 +48,20 @@ static QTextCodec *codec = 0L;
 
 QString fromPilot( const char *c, int len )
 {
+	// Obviously bogus length
+	if (len<1)
+	{
+		return QString();
+	}
+	// See if the C string is short
+	for (int i=0; i<len; ++i)
+	{
+		if (!c[i])
+		{
+			return codec->toUnicode(c,i);
+		}
+	}
+	// Use the whole length
 	return codec->toUnicode(c,len);
 }
 
