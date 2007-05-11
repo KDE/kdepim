@@ -318,7 +318,7 @@ PilotRecord *PilotLocalDatabase::readRecordById(recordid_t id)
 // Reads a record from database, returns the record
 PilotRecord *PilotLocalDatabase::readRecordByIndex(int index)
 {
-	FUNCTIONSETUP;
+	FUNCTIONSETUPL(4);
 
 	if (index < 0)
 	{
