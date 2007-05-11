@@ -107,6 +107,7 @@ protected slots:
 	void statusMessage( const QString & );
 
 	void componentUpdate();
+	void componentChanged(int);
 
 protected:
 	void readConfig();

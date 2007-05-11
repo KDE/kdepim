@@ -235,12 +235,16 @@ static QWidget *initComponents( QWidget *parent, QList<PilotComponent *> &l )
 	l.append(p);
 
 	ADDPAGE(TodoWidget, i18n("To-do Viewer"))
-	p->showKPilotComponent(true);
 	ADDPAGE(AddressWidget, i18n("Address Viewer"))
 	ADDPAGE(MemoWidget, i18n("Memo Viewer"))
 	ADDPAGE(GenericDBWidget, i18n("Generic DB Viewer"))
 
 #undef ADDPAGE
+
+	l[0]->showKPilotComponent(true);
+
+	QObject::connect(w, SIGNAL(currentChanged(int)),
+		parent,SLOT(componentChanged(int)));
 
 	return w;
 }
@@ -595,6 +599,19 @@ void KPilotInstaller::componentUpdate()
 		{
 			p->showComponent();
 		}
+	}
+}
+
+void KPilotInstaller::componentChanged(int which)
+{
+	FUNCTIONSETUP;
+	DEBUGKPILOT << fname << ": Selected component " << which << endl;
+	
+	int e = fP->fPilotComponentList.size();
+	for (int i = 0; i<e; ++i)
+	{
+		PilotComponent *p = fP->fPilotComponentList[i];
+		p->showKPilotComponent( which == i );
 	}
 }
 
