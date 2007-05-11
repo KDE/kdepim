@@ -201,7 +201,7 @@ void AddressWidget::postHotSync()
 {
 	FUNCTIONSETUP;
 
-	if ( shown )
+	if ( isVisible() )
 	{
 		fAddressList.clear();
 		showComponent();
@@ -419,7 +419,7 @@ void AddressWidget::slotSetCategory(int)
 void AddressWidget::slotEditRecord()
 {
 	FUNCTIONSETUP;
-	if ( !shown ) return;
+	if ( !isVisible() ) return;
 
 	int item = fListBox->currentItem();
 
@@ -453,7 +453,7 @@ void AddressWidget::slotEditRecord()
 void AddressWidget::slotCreateNewRecord()
 {
 	FUNCTIONSETUP;
-	if ( !shown ) return;
+	if ( !isVisible() ) return;
 
 	// Response to bug 18072: Don't even try to
 	// add records to an empty or unopened database,
@@ -503,7 +503,7 @@ void AddressWidget::slotCreateNewRecord()
 void AddressWidget::slotAddRecord(PilotAddress * address)
 {
 	FUNCTIONSETUP;
-	if ( !shown && fPendingAddresses==0 ) return;
+	if ( !isVisible() && fPendingAddresses==0 ) return;
 
 	int currentCatID = findSelectedCategory(fCatList,
 		fAddressAppInfo->categoryInfo(), true);
@@ -524,13 +524,13 @@ void AddressWidget::slotAddRecord(PilotAddress * address)
 	fListBox->setBottomItem(k);
 
 	fPendingAddresses--;
-	if ( !shown && fPendingAddresses==0 ) hideComponent();
+	if ( !isVisible() && fPendingAddresses==0 ) hideComponent();
 }
 
 void AddressWidget::slotUpdateRecord(PilotAddress * address)
 {
 	FUNCTIONSETUP;
-	if ( !shown && fPendingAddresses==0 ) return;
+	if ( !isVisible() && fPendingAddresses==0 ) return;
 
 	writeAddress(address);
 	int currentRecord = fListBox->currentItem();
@@ -542,7 +542,7 @@ void AddressWidget::slotUpdateRecord(PilotAddress * address)
 	emit(recordChanged(address));
 
 	fPendingAddresses--;
-	if ( !shown && fPendingAddresses==0 ) hideComponent();
+	if ( !isVisible() && fPendingAddresses==0 ) hideComponent();
 }
 
 void AddressWidget::slotEditCancelled()
@@ -550,13 +550,13 @@ void AddressWidget::slotEditCancelled()
 	FUNCTIONSETUP;
 
 	fPendingAddresses--;
-	if ( !shown && fPendingAddresses==0 ) hideComponent();
+	if ( !isVisible() && fPendingAddresses==0 ) hideComponent();
 }
 
 void AddressWidget::slotDeleteRecord()
 {
 	FUNCTIONSETUP;
-	if ( !shown ) return;
+	if ( !isVisible() ) return;
 
 	int item = fListBox->currentItem();
 
@@ -591,7 +591,7 @@ void AddressWidget::slotDeleteRecord()
 void AddressWidget::slotShowAddress(int which)
 {
 	FUNCTIONSETUP;
-	if (!shown) return;
+	if (!isVisible()) return;
 
 	PilotListItem *p = (PilotListItem *) fListBox->item(which);
 	PilotAddress *addr = (PilotAddress *) p->rec();

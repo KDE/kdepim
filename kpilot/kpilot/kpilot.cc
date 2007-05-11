@@ -235,6 +235,7 @@ static QWidget *initComponents( QWidget *parent, QList<PilotComponent *> &l )
 	l.append(p);
 
 	ADDPAGE(TodoWidget, i18n("To-do Viewer"))
+	p->showKPilotComponent(true);
 	ADDPAGE(AddressWidget, i18n("Address Viewer"))
 	ADDPAGE(MemoWidget, i18n("Memo Viewer"))
 	ADDPAGE(GenericDBWidget, i18n("Generic DB Viewer"))
@@ -424,7 +425,7 @@ void KPilotInstaller::daemonStatus(int i)
 	}
 }
 
-int KPilotInstaller::kpilotStatus()
+int KPilotInstaller::kpilotStatus() const
 {
 	return fP->fAppStatus;
 }

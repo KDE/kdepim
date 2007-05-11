@@ -176,7 +176,7 @@ bool FileInstallWidget::eventFilter(QObject *watched, QEvent *event)
 void FileInstallWidget::dropEvent(QDropEvent * drop)
 {
 	FUNCTIONSETUP;
-	if (!shown) return;
+	if (!isVisible()) return;
 
 	KUrl::List list;
 
@@ -218,7 +218,7 @@ void FileInstallWidget::showComponent()
 void FileInstallWidget::slotAddFile()
 {
 	FUNCTIONSETUP;
-	if (!shown) return;
+	if (!isVisible()) return;
 
 	QStringList fileNames = KFileDialog::getOpenFileNames(
 		KUrl(), i18n("*.pdb *.prc|PalmOS Databases (*.pdb *.prc)"));
@@ -249,7 +249,7 @@ void FileInstallWidget::postHotSync()
 	fIconView->setEnabled(true);
 	addButton->setEnabled(true);
 	clearButton->setEnabled(true);
-	if (shown) refreshFileInstallList();
+	if (isVisible()) refreshFileInstallList();
 }
 
 

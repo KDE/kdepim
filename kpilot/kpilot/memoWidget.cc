@@ -165,7 +165,7 @@ void MemoWidget::initializeMemos(PilotDatabase * memoDB)
 void MemoWidget::showComponent()
 {
 	FUNCTIONSETUP;
-	if (!shown) return;
+	if (!isVisible()) return;
 
 	// Get the local database - assume the call may fail and return
 	// NULL, or the database object may be returned but unopened.
@@ -332,7 +332,7 @@ void MemoWidget::slotSetCategory(int)
 void MemoWidget::slotDeleteMemo()
 {
 	FUNCTIONSETUP;
-	if (!shown) return;
+	if (!isVisible()) return;
 
 	int item = fListBox->currentItem();
 
@@ -407,7 +407,7 @@ void MemoWidget::slotDeleteMemo()
 void MemoWidget::updateWidget()
 {
 	FUNCTIONSETUP;
-	if (!shown || !d->fMemoAppInfo ) return;
+	if (!isVisible() || !d->fMemoAppInfo ) return;
 
 	if (fCatList->currentItem() == -1)
 	{
@@ -498,7 +498,7 @@ void MemoWidget::slotShowMemo(int which)
 {
 	FUNCTIONSETUP;
 	if ( which == -1 ) return;
-	if (!shown) return;
+	if (!isVisible()) return;
 
 	slotUpdateButtons();
 	if ( !fListBox->isSelected(which) )
@@ -525,7 +525,7 @@ void MemoWidget::slotShowMemo(int which)
 void MemoWidget::writeMemo(PilotMemo * which)
 {
 	FUNCTIONSETUP;
-	if (!shown) return;
+	if (!isVisible()) return;
 	PilotRecord *pilotRec = which->pack();
 	PilotDatabase *memoDB = new PilotLocalDatabase(dbPath(), CSL1("MemoDB"));
 	memoDB->writeRecord(pilotRec);
@@ -537,7 +537,7 @@ void MemoWidget::writeMemo(PilotMemo * which)
 void MemoWidget::saveChangedMemo()
 {
 	FUNCTIONSETUP;
-	if (!shown) return;
+	if (!isVisible()) return;
 
 	if (-1 == lastSelectedMemo) return;
 	if (!fTextWidget->isModified()) return;
@@ -601,7 +601,7 @@ void MemoWidget::slotAddMemo()
 void MemoWidget::slotImportMemo()
 {
 	FUNCTIONSETUP;
-	if (!shown || !d->fMemoAppInfo ) return;
+	if (!isVisible() || !d->fMemoAppInfo ) return;
 
 	int currentCatID = findSelectedCategory(fCatList,
 		d->fMemoAppInfo->categoryInfo(), true);
@@ -633,7 +633,7 @@ void MemoWidget::slotImportMemo()
 void MemoWidget::slotExportMemo()
 {
 	FUNCTIONSETUP;
-	if (!shown) return;
+	if (!isVisible()) return;
 
 	int index = fListBox->numRows();
 	if (index == 0)

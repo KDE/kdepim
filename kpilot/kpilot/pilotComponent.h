@@ -68,6 +68,10 @@ public:
 	*/
 	void showKPilotComponent( bool toShow );
 
+	bool isVisible() const
+	{
+		return fShown;
+	}
 
 	/**
 	* Get ready for a hotsync -- write any unflushed records
@@ -134,8 +138,7 @@ signals:
 
 private:
 	QString fDBPath;
-protected:
-	bool shown;
+	bool fShown;
 } ;
 
 #endif

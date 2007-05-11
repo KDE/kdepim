@@ -29,218 +29,105 @@
 
 #include "options.h"
 
-#include <q3ptrlist.h>
-//Added by qt3to4:
-#include <Q3GridLayout>
-#include <qpushbutton.h>
-#include <qlayout.h>
-#include <qlabel.h>
-#include <q3textview.h>
-#include <qcombobox.h>
+#include <QComboBox>
+#include <QGridLayout>
+#include <QLabel>
+#include <QList>
+#include <QListWidget>
+#include <QListWidgetItem>
+#include <QPushButton>
+#include <QTextEdit>
 
-#include <qtextcodec.h>
 
-#include <kmessagebox.h>
+#include <KMessageBox>
+
+#include "pilot.h"
+#include "pilotLocalDatabase.h"
+#include "pilotTodoEntry.h"
 
 #include "kpilotConfig.h"
 #include "todoEditor.h"
-#include "pilotLocalDatabase.h"
+
+
 #include "todoWidget.moc"
 
 
-
-
-TodoCheckListItem::TodoCheckListItem(Q3ListView*parent, const QString&text,
-	recordid_t pilotid, void*r):PilotCheckListItem(parent, text, pilotid, r)
+class TodoItem : public QListWidgetItem
 {
-
-}
-
-void TodoCheckListItem::stateChange(bool state)
-{
-	TodoListView*par=dynamic_cast<TodoListView*>(listView());
-	if (par) par->itemWasChecked(this, state);
-}
-
-
-
-TodoWidget::TodoWidget(QWidget * parent,
-	const QString & path) :
-	PilotComponent(parent, "component_todo", path),
-	fTodoInfo(0L),
-	fTodoAppInfo(0L),
-	fTodoDB(0L),
-	fPendingTodos(0)
-{
-	FUNCTIONSETUP;
-
-	setupWidget();
-	fTodoList.setAutoDelete(true);
-
-}
-
-TodoWidget::~TodoWidget()
-{
-	FUNCTIONSETUP;
-	KPILOT_DELETE( fTodoDB );
-}
-
-int TodoWidget::getAllTodos(PilotDatabase * todoDB)
-{
-	FUNCTIONSETUP;
-
-	int currentRecord = 0;
-	PilotRecord *pilotRec;
-	PilotTodoEntry *todo;
-
-#ifdef DEBUG
-	DEBUGKPILOT << fname << ": Reading ToDoDB..." << endl;
-#endif
-
-	while ((pilotRec = todoDB->readRecordByIndex(currentRecord)) != 0L)
+public:
+	TodoItem( QListWidget *parent, PilotTodoEntry *r ) :
+		QListWidgetItem( parent ),
+		fRecord(r)
 	{
-		if (!(pilotRec->isDeleted()) &&
-			(!(pilotRec->isSecret()) || KPilotSettings::showSecrets()))
+		setText( r->getDescription() );
+		QString n = r->getNote();
+		if (!n.isEmpty())
 		{
-			todo = new PilotTodoEntry(pilotRec);
-			if (todo == 0L)
-			{
-				WARNINGKPILOT << "Couldn't allocate record "
-					<< currentRecord++
-					<< endl;
-				break;
-			}
-			fTodoList.append(todo);
+			setToolTip(n);
 		}
-		KPILOT_DELETE( pilotRec );
-
-		currentRecord++;
+		setFlags( Qt::ItemIsSelectable | Qt::ItemIsUserCheckable | Qt::ItemIsEnabled );
+		setCheckState( r->getComplete() ? Qt::Checked : Qt::Unchecked );
 	}
 
-#ifdef DEBUG
-	DEBUGKPILOT << fname
-		<< ": Total " << currentRecord << " records" << endl;
-#endif
-
-	return currentRecord;
-}
-
-void TodoWidget::showComponent()
-{
-	FUNCTIONSETUP;
-	if ( fPendingTodos>0 ) return;
-
-#ifdef DEBUG
-	DEBUGKPILOT << fname
-		<< ": Reading from directory " << dbPath() << endl;
-#endif
-
-	fTodoDB = new PilotLocalDatabase(dbPath(), CSL1("ToDoDB"));
-
-	fTodoList.clear();
-
-	if (fTodoDB->isOpen())
+	const PilotTodoEntry *record() const
 	{
-		KPILOT_DELETE(fTodoAppInfo);
-		fTodoAppInfo = new PilotToDoInfo(fTodoDB);
-		populateCategories(fCatList, fTodoAppInfo->categoryInfo());
-		getAllTodos(fTodoDB);
-
+		return fRecord;
 	}
-	else
-	{
-		populateCategories(fCatList, 0L);
-		WARNINGKPILOT << "Could not open local TodoDB" << endl;
-	}
+protected:
+	PilotTodoEntry *fRecord;
+} ;
 
-	KPILOT_DELETE( fTodoDB );
-
-	updateWidget();
-}
-
-/* virtual */ bool TodoWidget::preHotSync(QString &s)
+class TodoWidget::Private
 {
-	FUNCTIONSETUP;
-
-	if (fPendingTodos)
+public:
+	Private() : fTodoDB(0L), fAppInfo(0L), fPendingTodos(0) {}
+	~Private()
 	{
-#ifdef DEBUG
-		DEBUGKPILOT << fname
-			<< ": fPendingTodo="
-			<< fPendingTodos
-			<< endl;
-#endif
-
-#if KDE_VERSION<220
-		s = i18n("There are still %1 to-do editing windows open.")
-			.arg(QString::number(fPendingTodos));
-#else
-		s = i18np("There is still a to-do editing window open.",
-			"There are still %n to-do editing windows open.",
-			fPendingTodos);
-#endif
-		return false;
+		KPILOT_DELETE(fAppInfo);
+		KPILOT_DELETE(fTodoDB);
 	}
+	PilotDatabase *fTodoDB;
+	PilotToDoInfo *fAppInfo;
 
-	return true;
-}
+	/**
+	* Keep track of how many open todo editing windows there
+	* are. You can't sync when there are open windows.
+	*/
+	int fPendingTodos;
 
-void TodoWidget::postHotSync()
-{
-	FUNCTIONSETUP;
+} ;
 
-	fTodoList.clear();
-	showComponent();
-}
-
-void TodoWidget::hideComponent()
-{
-	FUNCTIONSETUP;
-	if ( fPendingTodos==0 )
-	{
-		fTodoList.clear();
-		fListBox->clear();
-		KPILOT_DELETE( fTodoDB );
-	}
-}
-
-void TodoWidget::setupWidget()
+TodoWidget::TodoWidget(QWidget *parent, const QString & path) :
+	PilotComponent(parent, "component_todo", path),
+	fCategoryList(0L),
+	fTodoList(0L),
+	fTodoViewer(0L),
+	fEditButton(0L),
+	fDeleteButton(0L),
+	fP( new Private )
 {
 	FUNCTIONSETUP;
 
 	QLabel *label;
-	Q3GridLayout *grid = new Q3GridLayout(this, 6, 4, SPACING);
+	QGridLayout *grid = new QGridLayout(this);
+	grid->setSpacing( SPACING );
 
-	fCatList = new QComboBox(this);
-	grid->addWidget(fCatList, 0, 1);
-	connect(fCatList, SIGNAL(activated(int)),
+	fCategoryList = new QComboBox(this);
+	grid->addWidget(fCategoryList, 0, 1);
+	connect(fCategoryList, SIGNAL(activated(int)),
 		this, SLOT(slotSetCategory(int)));
-	fCatList->setWhatsThis(
+	fCategoryList->setWhatsThis(
 		i18n("<qt>Select the category of to-dos to display here.</qt>"));
 
 	label = new QLabel(i18n("Category:"), this);
-	label->setBuddy(fCatList);
+	label->setBuddy(fCategoryList);
 	grid->addWidget(label, 0, 0);
 
-	fListBox = new TodoListView(this);
-	fListBox->addColumn( i18n( "To-do Item" ) );
-	fListBox->setAllColumnsShowFocus( TRUE );
-	fListBox->setResizeMode( Q3ListView::LastColumn );
-	fListBox->setFullWidth( TRUE );
-	fListBox->setItemsMovable( FALSE );
-	fListBox->setItemsRenameable (TRUE);
-	grid->addMultiCellWidget(fListBox, 1, 1, 0, 1);
-	connect(fListBox, SIGNAL(selectionChanged(Q3ListViewItem*)),
-		this, SLOT(slotShowTodo(Q3ListViewItem*)));
-	connect(fListBox, SIGNAL(doubleClicked(Q3ListViewItem*)),
-		this, SLOT(slotEditRecord(Q3ListViewItem*)));
-	connect(fListBox, SIGNAL(returnPressed(Q3ListViewItem*)),
-		this, SLOT(slotEditRecord(Q3ListViewItem*)));
-	connect(fListBox, SIGNAL(itemChecked(Q3CheckListItem*, bool)),
-		this, SLOT(slotItemChecked(Q3CheckListItem*, bool)));
-	connect(fListBox, SIGNAL(itemRenamed(Q3ListViewItem*, const QString &, int)),
-		this, SLOT(slotItemRenamed(Q3ListViewItem*, const QString &, int)));
-	fListBox->setWhatsThis(
+	fTodoList = new QListWidget(this);
+	grid->addWidget(fTodoList, 1, 0, 1, 2);
+	connect(fTodoList, SIGNAL(currentItemChanged(QListWidgetItem *, QListWidgetItem *)),
+		this, SLOT(slotShowTodo(QListWidgetItem *)));
+	fTodoList->setWhatsThis(
 		i18n("<qt>This list displays all the to-dos "
 			"in the selected category. Click on "
 			"one to display it to the right.</qt>"));
@@ -249,8 +136,9 @@ void TodoWidget::setupWidget()
 	grid->addWidget(label, 0, 2);
 
 	// todo info text view
-	fTodoInfo = new Q3TextView(this);
-	grid->addMultiCellWidget(fTodoInfo, 1, 4, 2, 2);
+	fTodoViewer = new QTextEdit(this);
+	fTodoViewer->setReadOnly( true );
+	grid->addWidget(fTodoViewer, 1, 2, 4, 1);
 
 	QPushButton *button;
 	QString wt;
@@ -281,24 +169,137 @@ void TodoWidget::setupWidget()
 		i18n("<qt>Delete the selected to-do from the to-do list.</qt>") :
 		i18n("<qt><i>Deleting is disabled by the 'internal editors' setting.</i></qt>") ;
 	fDeleteButton->setWhatsThis(wt);
+
+	slotUpdateButtons();
+}
+
+
+TodoWidget::~TodoWidget()
+{
+	FUNCTIONSETUP;
+	KPILOT_DELETE( fP );
+}
+
+int TodoWidget::getAllTodos(PilotDatabase *todoDB)
+{
+	FUNCTIONSETUP;
+
+	int currentRecord = 0;
+	PilotRecord *pilotRec;
+	PilotTodoEntry *todo;
+
+	DEBUGKPILOT << fname << ": Reading ToDoDB..." << endl;
+
+	while ((pilotRec = todoDB->readRecordByIndex(currentRecord)) != 0L)
+	{
+		if (!(pilotRec->isDeleted()) &&
+			(!(pilotRec->isSecret()) || KPilotSettings::showSecrets()))
+		{
+			todo = new PilotTodoEntry(pilotRec);
+			if (todo == 0L)
+			{
+				WARNINGKPILOT << "Couldn't allocate record "
+					<< currentRecord++
+					<< endl;
+				break;
+			}
+			(void) new TodoItem( fTodoList, todo );
+		}
+		KPILOT_DELETE( pilotRec );
+
+		currentRecord++;
+	}
+
+	DEBUGKPILOT << fname
+		<< ": Total " << currentRecord << " records" << endl;
+
+	return currentRecord;
+}
+
+void TodoWidget::showComponent()
+{
+	FUNCTIONSETUP;
+	if ( fP->fPendingTodos>0 )
+	{
+		WARNINGKPILOT << fname
+			<< "Open todo editors prevent re-reading data." << endl;
+		return;
+	}
+
+	DEBUGKPILOT << fname
+		<< ": Reading from directory " << dbPath() << endl;
+
+	fTodoList->clear();
+
+	fP->fTodoDB = new PilotLocalDatabase(dbPath(), CSL1("ToDoDB"));
+	if (fP->fTodoDB->isOpen())
+	{
+		KPILOT_DELETE(fP->fAppInfo);
+		fP->fAppInfo = new PilotToDoInfo(fP->fTodoDB);
+		populateCategories(fCategoryList, fP->fAppInfo->categoryInfo());
+		getAllTodos(fP->fTodoDB);
+	}
+	else
+	{
+		populateCategories(fCategoryList, 0L);
+		WARNINGKPILOT << "Could not open local TodoDB" << endl;
+	}
+	KPILOT_DELETE( fP->fTodoDB );
+
+	updateWidget();
+}
+
+/* virtual */ bool TodoWidget::preHotSync(QString &s)
+{
+	FUNCTIONSETUP;
+
+	if (fP->fPendingTodos)
+	{
+		DEBUGKPILOT << fname
+			<< ": fPendingTodo="
+			<< fP->fPendingTodos
+			<< endl;
+
+		s = i18np("There is still a to-do editing window open.",
+			"There are still %n to-do editing windows open.",
+			fP->fPendingTodos);
+		return false;
+	}
+
+	return true;
+}
+
+void TodoWidget::postHotSync()
+{
+	FUNCTIONSETUP;
+
+	fTodoList->clear();
+	showComponent();
+}
+
+void TodoWidget::hideComponent()
+{
+	FUNCTIONSETUP;
+	if ( fP->fPendingTodos==0 )
+	{
+		fTodoList->clear();
+		KPILOT_DELETE( fP->fAppInfo );
+		KPILOT_DELETE( fP->fTodoDB );
+	}
 }
 
 void TodoWidget::updateWidget()
 {
 	FUNCTIONSETUP;
-	if (!shown || !fTodoAppInfo ) return;
+#if 0
+	if (!shown || !fP->fAppInfo ) return;
 
 	int listIndex = 0;
 
-	int currentCatID = findSelectedCategory(fCatList,
-		fTodoAppInfo->categoryInfo());
+	int currentCatID = findSelectedCategory(fCategoryList,
+		fAppInfo->categoryInfo());
 
-	fListBox->clear();
-	fTodoList.first();
-
-#ifdef DEBUG
 	DEBUGKPILOT << fname << ": Adding records..." << endl;
-#endif
 
 	PilotTodoEntry*todo;
 	while (fTodoList.current())
@@ -322,6 +323,7 @@ void TodoWidget::updateWidget()
 #endif
 
 	slotUpdateButtons();
+#endif
 }
 
 
@@ -330,7 +332,7 @@ void TodoWidget::updateWidget()
 {
 	FUNCTIONSETUP;
 
-	bool enabled = (fListBox->currentItem() != 0L);
+	bool enabled = fTodoList->currentItem();
 
 	enabled &= KPilotSettings::internalEditors() ;
 
@@ -341,21 +343,26 @@ void TodoWidget::updateWidget()
 void TodoWidget::slotSetCategory(int)
 {
 	FUNCTIONSETUP;
-
-	updateWidget();
 }
 
 void TodoWidget::slotEditRecord()
 {
-	slotEditRecord(fListBox->currentItem());
 }
-void TodoWidget::slotEditRecord(Q3ListViewItem*item)
+void TodoWidget::slotEditRecord(QListWidgetItem *item)
 {
 	FUNCTIONSETUP;
-	if (!shown) return;
+	if (!isVisible())
+	{
+		return;
+	}
 
-	TodoCheckListItem*p = static_cast<TodoCheckListItem*>(item);
-	if (!p) return;
+	TodoItem *p = static_cast<TodoItem*>(item);
+	if (!p)
+	{
+		return;
+	}
+
+#if 0
 	PilotTodoEntry *selectedRecord = (PilotTodoEntry *) p->rec();
 
 	if (selectedRecord->id() == 0)
@@ -377,13 +384,18 @@ void TodoWidget::slotEditRecord(Q3ListViewItem*item)
 	editor->show();
 
 	fPendingTodos++;
+#endif
 }
 
 void TodoWidget::slotCreateNewRecord()
 {
 	FUNCTIONSETUP;
-	if (!shown) return;
+	if (!isVisible())
+	{
+		return;
+	}
 
+#if 0
 	// Response to bug 18072: Don't even try to
 	// add records to an empty or unopened database,
 	// since we don't have the DBInfo stuff to deal with it.
@@ -427,10 +439,12 @@ void TodoWidget::slotCreateNewRecord()
 	editor->show();
 
 	fPendingTodos++;
+#endif
 }
 
 void TodoWidget::slotAddRecord(PilotTodoEntry * todo)
 {
+#if 0
 	FUNCTIONSETUP;
 	if ( !shown && fPendingTodos==0 ) return;
 
@@ -453,11 +467,13 @@ void TodoWidget::slotAddRecord(PilotTodoEntry * todo)
 
 	fPendingTodos--;
 	if ( !shown && fPendingTodos==0 ) hideComponent();
+#endif
 }
 
 void TodoWidget::slotUpdateRecord(PilotTodoEntry * todo)
 {
 	FUNCTIONSETUP;
+#if 0
 	if ( !shown && fPendingTodos==0 ) return;
 
 	writeTodo(todo);
@@ -471,19 +487,24 @@ void TodoWidget::slotUpdateRecord(PilotTodoEntry * todo)
 
 	fPendingTodos--;
 	if ( !shown && fPendingTodos==0 ) hideComponent();
+#endif
 }
 
 void TodoWidget::slotEditCancelled()
 {
 	FUNCTIONSETUP;
 
-	fPendingTodos--;
-	if ( !shown && fPendingTodos==0 ) hideComponent();
+	fP->fPendingTodos--;
+	if ( !isVisible() && fP->fPendingTodos==0 )
+	{
+		hideComponent();
+	}
 }
 
 void TodoWidget::slotDeleteRecord()
 {
 	FUNCTIONSETUP;
+#if 0
 	if (!shown) return;
 
 	TodoCheckListItem* p = static_cast<TodoCheckListItem*>(fListBox->currentItem());
@@ -509,27 +530,31 @@ void TodoWidget::slotDeleteRecord()
 	writeTodo(selectedRecord);
 	emit(recordChanged(selectedRecord));
 	showComponent();
+#endif
 }
 
 
 
-void TodoWidget::slotShowTodo(Q3ListViewItem*item)
+void TodoWidget::slotShowTodo(QListWidgetItem *item)
 {
 	FUNCTIONSETUP;
-	if (!shown) return;
+	if (!isVisible())
+	{
+		DEBUGKPILOT << fname << ": Widget is not shown. Ignoring." << endl;
+		return;
+	}
 
-	TodoCheckListItem *p = dynamic_cast<TodoCheckListItem*>(item);
-	if (!p) return;
-	PilotTodoEntry *todo = (PilotTodoEntry *) p->rec();
-
-#ifdef DEBUG
-	DEBUGKPILOT << fname << ": Showing "<< todo->getDescription()<<endl;
-#endif
+	TodoItem *p = dynamic_cast<TodoItem*>(item);
+	if (!p)
+	{
+		DEBUGKPILOT << fname << ": Item is not a TodoItem." << endl;
+		return;
+	}
 
 	QString text(CSL1("<qt>"));
-	text += todo->getTextRepresentation(Qt::RichText);
+	text += p->record()->getTextRepresentation(Qt::RichText);
 	text += CSL1("</qt>\n");
-	fTodoInfo->setText(text);
+	fTodoViewer->setText(text);
 
 	slotUpdateButtons();
 }
@@ -540,7 +565,7 @@ void TodoWidget::writeTodo(PilotTodoEntry * which,
 	PilotDatabase * todoDB)
 {
 	FUNCTIONSETUP;
-
+#if 0
 	// Open a database (myDB) only if needed,
 	// i.e. only if the passed-in todoDB
 	// isn't valid.
@@ -583,27 +608,15 @@ void TodoWidget::writeTodo(PilotTodoEntry * which,
 	{
 		KPILOT_DELETE(myDB);
 	}
+#endif
 }
 
-void TodoWidget::slotItemChecked(Q3CheckListItem*item, bool on)
+void TodoWidget::slotItemChecked(QListWidgetItem *item, bool on)
 {
-	TodoCheckListItem*p = static_cast<TodoCheckListItem*>(item);
-	if (!p) return;
-	PilotTodoEntry *selectedRecord = (PilotTodoEntry *) p->rec();
-	if (!selectedRecord) return;
-	selectedRecord->setComplete(on);
-	slotShowTodo(item);
+	FUNCTIONSETUP;
 }
 
-void TodoWidget::slotItemRenamed(Q3ListViewItem*item, const QString &txt, int nr)
+void TodoWidget::slotItemRenamed(QListWidgetItem *item, const QString &txt, int nr)
 {
-	TodoCheckListItem*p = static_cast<TodoCheckListItem*>(item);
-	if (!p) return;
-	PilotTodoEntry *selectedRecord = (PilotTodoEntry *) p->rec();
-	if (!selectedRecord) return;
-	if (nr==0)
-	{
-		selectedRecord->setDescription(txt);
-		slotShowTodo(item);
-	}
+	FUNCTIONSETUP;
 }

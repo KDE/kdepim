@@ -64,7 +64,7 @@ public:
 	* This is the D-Bus interface from the daemon to KPilot.
 	*/
 	virtual void daemonStatus(int);
-	virtual int kpilotStatus(); ///< Returns KPilotStatus values
+	virtual int kpilotStatus() const; ///< Returns KPilotStatus values
 
 
 public slots:
