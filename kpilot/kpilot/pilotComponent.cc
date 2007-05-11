@@ -121,16 +121,16 @@ void PilotComponent::populateCategories(QComboBox * c,
 {
 	FUNCTIONSETUP;
 
-#ifdef DEBUG
 	DEBUGKPILOT << fname
 		<< ": Combo box @"
-		<< (long) c << " and info @" << (long) info << endl;
-#endif
+		<< (void *) c << " and info @" << (void *) info << endl;
 
 	c->clear();
 
 	if (!info)
+	{
 		goto CategoryAll;
+	}
 
 	// Fill up the categories list box with
 	// the categories defined by the user.
@@ -142,19 +142,17 @@ void PilotComponent::populateCategories(QComboBox * c,
 	{
 		if (info->name[i][0])
 		{
-#ifdef DEBUG
 			DEBUGKPILOT << fname
 				<< ": Adding category: "
 				<< info->name[i]
 				<< " with ID: " << (int) info->ID[i] << endl;
-#endif
-
-			c->insertItem(Pilot::fromPilot(info->name[i]));
+			QVariant v( info->ID[i] );
+			c->addItem(Pilot::fromPilot(info->name[i]), v);
 		}
 	}
 
 CategoryAll:
-	c->insertItem(i18n("All"), 0);
+	c->insertItem(0, i18n("All"), QVariant(-1));
 }
 
 
