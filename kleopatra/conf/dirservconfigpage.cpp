@@ -160,7 +160,7 @@ DirectoryServicesConfigurationPage::DirectoryServicesConfigurationPage( const KC
   QLabel* label = new QLabel( i18n( "LDAP &timeout (minutes:seconds):" ), box );
   mTimeout = new QTimeEdit( box );
   mTimeout->setDisplayFormat( "mm:ss" );
-  connect( mTimeout, SIGNAL( valueChanged( const QTime& ) ), this, SLOT( slotChanged() ) );
+  connect( mTimeout, SIGNAL(timeChanged(const QTime&)), this, SLOT(slotChanged()) );
   label->setBuddy( mTimeout );
   QWidget* stretch = new QWidget( box );
   box->setStretchFactor( stretch, 2 );
