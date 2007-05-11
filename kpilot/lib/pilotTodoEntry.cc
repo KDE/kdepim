@@ -115,7 +115,7 @@ PilotTodoEntry & PilotTodoEntry::operator = (const PilotTodoEntry & e)
 	return *this;
 }
 
-QString PilotTodoEntry::getTextRepresentation(Qt::TextFormat richText)
+QString PilotTodoEntry::getTextRepresentation(Qt::TextFormat richText) const
 {
 	QString text, tmp;
 	QString par = (richText==Qt::RichText) ?CSL1("<p>"): QString();
@@ -130,9 +130,13 @@ QString PilotTodoEntry::getTextRepresentation(Qt::TextFormat richText)
 
 	text += par;
 	if (getComplete())
+	{
 		text += i18n("Completed");
+	}
 	else
+	{
 		text += i18n("Not completed");
+	}
 	text += ps;
 
 	if (!getIndefinite())

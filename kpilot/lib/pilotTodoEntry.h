@@ -69,10 +69,10 @@ public:
 		free_ToDo(&fTodoInfo);
 	}
 
-	/** Return a string for the ToDo item. If @param richText is true, then
+	/** Return a string for the ToDo item. If @param richText is Qt::RichText, then
 	* use qt style markup to make the string clearer when displayed.
 	*/
-	QString getTextRepresentation(Qt::TextFormat richText);
+	QString getTextRepresentation(Qt::TextFormat richText) const;
 
 	/** Assign an existing ToDo item to this one. */
 	PilotTodoEntry& operator=(const PilotTodoEntry &e);
