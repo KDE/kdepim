@@ -88,6 +88,7 @@ public:
 	}
 	PilotDatabase *fTodoDB;
 	PilotToDoInfo *fAppInfo;
+	QList<TodoItem *> fItems;
 
 	/**
 	* Keep track of how many open todo editing windows there
@@ -203,7 +204,7 @@ int TodoWidget::getAllTodos(PilotDatabase *todoDB)
 					<< endl;
 				break;
 			}
-			(void) new TodoItem( fTodoList, todo );
+			fP->fItems.append( new TodoItem( fTodoList, todo ) );
 		}
 		KPILOT_DELETE( pilotRec );
 
@@ -229,6 +230,7 @@ void TodoWidget::showComponent()
 	DEBUGKPILOT << fname
 		<< ": Reading from directory " << dbPath() << endl;
 
+	fP->fItems.clear();
 	fTodoList->clear();
 
 	fP->fTodoDB = new PilotLocalDatabase(dbPath(), CSL1("ToDoDB"));
@@ -247,6 +249,7 @@ void TodoWidget::showComponent()
 	KPILOT_DELETE( fP->fTodoDB );
 
 	updateWidget();
+	slotUpdateButtons();
 }
 
 /* virtual */ bool TodoWidget::preHotSync(QString &s)
@@ -273,6 +276,7 @@ void TodoWidget::postHotSync()
 {
 	FUNCTIONSETUP;
 
+	fP->fItems.clear();
 	fTodoList->clear();
 	showComponent();
 }
@@ -282,10 +286,12 @@ void TodoWidget::hideComponent()
 	FUNCTIONSETUP;
 	if ( fP->fPendingTodos==0 )
 	{
+		fP->fItems.clear();
 		fTodoList->clear();
 		KPILOT_DELETE( fP->fAppInfo );
 		KPILOT_DELETE( fP->fTodoDB );
 	}
+	fTodoViewer->clear();
 }
 
 void TodoWidget::updateWidget()
@@ -340,13 +346,28 @@ void TodoWidget::updateWidget()
 	fDeleteButton->setEnabled(enabled);
 }
 
-void TodoWidget::slotSetCategory(int)
+void TodoWidget::slotSetCategory(int category)
 {
 	FUNCTIONSETUP;
+	DEBUGKPILOT << fname << ": Selected category index " << category << endl;
+	int category_value = fCategoryList->itemData(category).toInt();
+	DEBUGKPILOT << fname << ": Selected category value " << category_value << endl;
+
+	int e = fP->fItems.size();
+	DEBUGKPILOT << fname << ": Scanning " << e << " items." << endl;
+	for (int i = 0; i<e; ++i)
+	{
+		TodoItem *item = fP->fItems[i];
+		int item_category = item->record()->category();
+		DEBUGKPILOT << fname << ": Item <" << item->text()
+			<< "> category " << item_category << endl;
+		item->setHidden(category && (item_category != category_value));
+	}
 }
 
 void TodoWidget::slotEditRecord()
 {
+	FUNCTIONSETUP;
 }
 void TodoWidget::slotEditRecord(QListWidgetItem *item)
 {
