@@ -47,7 +47,6 @@
 
 
 
-#define min(a,b) (a<b)?(a):(b)
 
 
 
@@ -72,23 +71,21 @@ bool operator== ( const docBookmark &s1, const docBookmark &s2)
 }
 
 
-int docMatchBookmark::findMatches(QString doctext, bmkList &fBookmarks) {
+int docMatchBookmark::findMatches(QString doctext, bmkList &fBookmarks)
+{
 	FUNCTIONSETUP;
-//	bmkList res;
 	int pos = 0, nr=0, found=0;
-#ifdef DEBUG
-	DEBUGKPILOT<<"Finding matches of "<<pattern<<endl;
-#endif
+	DEBUGKPILOT << fname << "Finding matches of " << pattern << endl;
 
-	while (pos >= 0 && found<to) {
-		pos = doctext.find(pattern, pos);
-#ifdef DEBUG
-		DEBUGKPILOT<<"Result of search: pos="<<pos<<endl;
-#endif
+	while (pos >= 0 && found<to)
+	{
+		pos = doctext.indexOf(pattern, pos);
+		DEBUGKPILOT << fname << "Result of search: pos=" << pos << endl;
 		if (pos >= 0)
 		{
 			++found;
-			if (found>=from && found<=to) {
+			if (found>=from && found<=to)
+			{
 				fBookmarks.append(new docBookmark(pattern, pos));
 				++nr;
 
@@ -108,20 +105,26 @@ int docRegExpBookmark::findMatches(QString doctext, bmkList &fBookmarks)
 	QRegExp rx(pattern);
 	int pos = 0, nr=0, found=0;
 
-	while (pos>=0 && found<=to) {
-#ifdef DEBUG
-		DEBUGKPILOT<<"Searching for bookmark "<<pattern<<endl;
-#endif
-		pos=rx.search(doctext, pos);
-		if (pos > -1) {
+	while (pos>=0 && found<=to)
+	{
+		DEBUGKPILOT << fname
+			<< "Searching for bookmark " << pattern << endl;
+		pos=rx.indexIn(doctext, pos);
+		if (pos > -1)
+		{
 			++found;
-			if (found>=from && found<to) {
-				if (capSubexpression>=0) {
-					fBookmarks.append(new docBookmark(/*bmkName.left(16)*/rx.cap(capSubexpression), pos));
-				} else {
+			if (found>=from && found<to)
+			{
+				if (capSubexpression>=0)
+				{
+					fBookmarks.append(new docBookmark(rx.cap(capSubexpression), pos));
+				}
+				else
+				{
 					// TODO: use the subexpressions from the regexp for the bmk name ($1..$9) (given as separate regexp)
 					QString bmkText(bmkName);
-					for (int i=0; i<=rx.numCaptures(); ++i) {
+					for (int i=0; i<=rx.numCaptures(); ++i)
+					{
 						bmkText.replace(CSL1("$%1").arg(i), rx.cap(i));
 						bmkText.replace(CSL1("\\%1").arg(i), rx.cap(i));
 					}
@@ -147,8 +150,14 @@ int docRegExpBookmark::findMatches(QString doctext, bmkList &fBookmarks)
  *********************************************************************/
 
 
-DOCConverter::DOCConverter(QObject *parent, const char *name):QObject(parent,name) {
+DOCConverter::DOCConverter(QObject *parent, const char *name) :
+	QObject(parent)
+{
 	FUNCTIONSETUP;
+	if (name)
+	{
+		setObjectName(name);
+	}
 	docdb=0L;
 	eSortBookmarks=eSortNone;
 	fBookmarks.setAutoDelete( TRUE );
@@ -191,9 +200,13 @@ void DOCConverter::setPDB(PilotDatabase * dbi) {
 
 
 
-QString DOCConverter::readText() {
+QString DOCConverter::readText()
+{
 	FUNCTIONSETUP;
-	if (txtfilename.isEmpty()) return QString();
+	if (txtfilename.isEmpty())
+	{
+		return QString();
+	}
 	QFile docfile(txtfilename);
 	if (!docfile.open(QIODevice::ReadOnly))
 	{
@@ -203,7 +216,7 @@ QString DOCConverter::readText() {
 
 	QTextStream docstream(&docfile);
 
-	QString doc = docstream.read();
+	QString doc = docstream.readAll();
 	docfile.close();
 	return doc;
 }
@@ -215,16 +228,28 @@ int DOCConverter::findBmkEndtags(QString &text, bmkList&fBmks) {
 	// Start from the end of the text
 	int pos = text.length() - 1, nr=0;
 	bool doSearch=true;
-	while (pos >= 0/* && doSearch*/) {
-		DEBUGKPILOT<<"Current character is \'"<<text[pos].latin1()<<"\'"<<endl;
+	while (pos >= 0)
+	{
+		DEBUGKPILOT << fname
+			<< "Current character is \'"
+			<< text[pos].toLatin1() << "\'" << endl;
 		// skip whitespace until we reach a >
-		while (text[pos].isSpace() && pos >= 0) {
-			DEBUGKPILOT<<"Skipping whitespaces at the end of the file"<<endl;
+		while (text[pos].isSpace() && pos >= 0)
+		{
+			DEBUGKPILOT << fname
+				<< "Skipping whitespaces at the end of the file" << endl;
 			pos--;
 		}
-		// every other character than a > is assumed to belong to the text, so there are no more bookmarks.
-		if (pos < 0 || text[pos] != '>') {
-			DEBUGKPILOT<<"Current character \'"<<text[pos].latin1()<<"\' at position "<<pos<<" is not and ending >. Finish searching for bookmarks."<<endl;
+		// every other character than a > is assumed to belong to the
+		// text, so there are no more bookmarks.
+		if (pos < 0 || text[pos] != '>')
+		{
+			DEBUGKPILOT << fname
+				<< "Current character \'"
+				<< text[pos].toLatin1()
+				<< "\' at position " << pos
+				<< " is not an ending >. "
+				<< "Finish searching for bookmarks." << endl;
 
 			pos=-1;
 			break;
@@ -258,17 +283,19 @@ int DOCConverter::findBmkEndtags(QString &text, bmkList&fBmks) {
 	return nr;
 }
 
-int DOCConverter::findBmkInline(QString &text, bmkList &fBmks) {
+int DOCConverter::findBmkInline(QString &text, bmkList &fBmks)
+{
 	FUNCTIONSETUP;
-//	bmkList res;
 	int nr=0;
 	QRegExp rx(CSL1("<\\*(.*)\\*>"));
 
 	rx.setMinimal(TRUE);
 	int pos = 0;
-	while (pos >= 0) {
-		pos = rx.search(text, pos);
-		if (pos >= 0) {
+	while (pos >= 0)
+	{
+		pos = rx.indexIn(text, pos);
+		if (pos >= 0)
+		{
 			fBmks.append(new docBookmark(rx.cap(1), pos+1));
 			++nr;
 			text = text.remove(pos, rx.matchedLength());
@@ -282,17 +309,24 @@ int DOCConverter::findBmkFile(QString &, bmkList &fBmks) {
 	int nr=0;
 
 	QString bmkfilename = txtfilename;
-	if (bmkfilename.endsWith(CSL1(".txt"))){
+	if (bmkfilename.endsWith(CSL1(".txt")))
+	{
 		bmkfilename.remove(bmkfilename.length()-4, 4);
 	}
 	QString oldbmkfilename=bmkfilename;
 	bmkfilename+=CSL1(BMK_SUFFIX);
 	QFile bmkfile(bmkfilename);
-	if (!bmkfile.open(QIODevice::ReadOnly)) 	{
+	if (!bmkfile.open(QIODevice::ReadOnly))
+	{
 		bmkfilename=oldbmkfilename+CSL1(PDBBMK_SUFFIX);
-		bmkfile.setName(bmkfilename);
-		if (!bmkfile.open(QIODevice::ReadOnly)) {
-			DEBUGKPILOT<<"Unable to open bookmarks file "<<bmkfilename<<" for reading the bookmarks of "<<docdb ->dbPathName()<<endl;
+		bmkfile.setFileName(bmkfilename);
+		if (!bmkfile.open(QIODevice::ReadOnly))
+		{
+			DEBUGKPILOT << fname
+				<< "Unable to open bookmarks file "
+				<< bmkfilename
+				<< " for reading the bookmarks of "
+				<< docdb->dbPathName() << endl;
 			return 0;
 		}
 	}
@@ -303,7 +337,7 @@ int DOCConverter::findBmkFile(QString &, bmkList &fBmks) {
 	QString line;
 	while ( !(line=bmkstream.readLine()).isEmpty() ) {
 		if (!line.isEmpty() && !line.startsWith(CSL1("#")) ) {
-			QStringList bmkinfo=QStringList::split(CSL1(","), line);
+			QStringList bmkinfo=line.split(CSL1(","));
 			int fieldnr=bmkinfo.count();
 			// We use the same syntax for the entries as MakeDocJ bookmark files:
 			//   <bookmark>,<string-to-search>,<bookmark-name-string>,<starting-bookmark>,<ending-bookmark>
@@ -466,7 +500,7 @@ bool DOCConverter::convertTXTtoPDB() {
 	int recnum=0;
 	while (start<len)
 	{
-		reclen=min(len-start, PilotDOCEntry::TEXT_SIZE);
+		reclen=qMin(len-start, PilotDOCEntry::TEXT_SIZE);
 		DEBUGKPILOT << "Record #"<<recnum<<", reclen="<<reclen<<", compress="<<compress<<endl;
 
 		PilotDOCEntry recText;
@@ -491,7 +525,7 @@ bool DOCConverter::convertTXTtoPDB() {
 
 		PilotDOCBookmark bmkEntry;
 		bmkEntry.pos=bmk->position;
-		strncpy(&bmkEntry.bookmarkName[0], bmk->bmkName.latin1(), 16);
+		strncpy(&bmkEntry.bookmarkName[0], bmk->bmkName.toLatin1(), 16);
 		PilotRecord*bmkRecord=bmkEntry.pack();
 		docdb->writeRecord(bmkRecord);
 		KPILOT_DELETE(bmkRecord);
@@ -585,8 +619,9 @@ bool DOCConverter::convertPDBtoTXT()
 
 	if ((fBmkTypes & eBmkFile) && (bmks.count()>0))
 	{
-		QString bmkfilename = docfile.name();
-		if (bmkfilename.endsWith(CSL1(".txt"))){
+		QString bmkfilename = docfile.fileName();
+		if (bmkfilename.endsWith(CSL1(".txt")))
+		{
 			bmkfilename.remove(bmkfilename.length()-4, 4);
 		}
 		bmkfilename+=CSL1(PDBBMK_SUFFIX);
