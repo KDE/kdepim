@@ -23,7 +23,7 @@ include_directories(
 	${CMAKE_CURRENT_SOURCE_DIR}/printing 
 	${CMAKE_CURRENT_SOURCE_DIR}/common 
 	${CMAKE_CURRENT_SOURCE_DIR}/editors 
-	${CMAKE_SOURCE_DIR}/akregator/src )
+        ${Boost_INCLUDE_DIR} )
 
 
 set(libkabcommon_SRCS
