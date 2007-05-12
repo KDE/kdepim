@@ -10,7 +10,7 @@ add_subdirectory(null)
 add_subdirectory(popmail)
 add_subdirectory(sysinfoconduit)
 add_subdirectory(timeconduit)
-
+#add_subdirectory(recordconduit)
 FIND_PATH( HAVE_CALENDARLOCAL_H "kcal/calendarlocal.h" ${KDE4_INCLUDE_DIR} )
 
 IF (HAVE_CALENDARLOCAL_H)
