@@ -31,7 +31,7 @@ set(conduit_vcal_SRCS
 
 kde4_automoc(${conduit_vcal_SRCS})
 kde4_add_library(conduit_vcal SHARED ${conduit_vcal_SRCS})
-target_link_libraries(conduit_vcal ${QT_LIBRARIES}  ${KDE4_KCAL_LIBS} kresources kpilot)
+target_link_libraries(conduit_vcal ${QT_LIBRARIES}  ${KDE4_KCAL_LIBS} ${KDE4_KRESOURCES_LIBS} kpilot)
 
 set(conduit_todo_SRCS
 	${conduit_SHARED}
@@ -42,7 +42,7 @@ set(conduit_todo_SRCS
 
 kde4_automoc(${conduit_todo_SRCS})
 kde4_add_library(conduit_todo SHARED ${conduit_todo_SRCS})
-target_link_libraries(conduit_todo ${QT_LIBRARIES} ${KDE4_KCAL_LIBS} kresources kpilot)
+target_link_libraries(conduit_todo ${QT_LIBRARIES} ${KDE4_KCAL_LIBS} ${KDE4_KRESOURCES_LIBS} kpilot)
 
 set_target_properties(
 	conduit_vcal PROPERTIES LOCATION ${PLUGIN_INSTALL_DIR}
