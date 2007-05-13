@@ -260,9 +260,10 @@ void LDAPOptionsWidget::defaults()
 
 void LDAPOptionsWidget::initGUI()
 {
-  QVBoxLayout *layout = new QVBoxLayout( this );
+  QVBoxLayout *layout = new QVBoxLayout;
   layout->setSpacing( KDialog::spacingHint() );
   layout->setMargin( 0 );
+  setLayout(layout);
 
   QGroupBox *groupBox = new QGroupBox( i18n( "LDAP Servers" ), this );
   /*
@@ -271,11 +272,15 @@ void LDAPOptionsWidget::initGUI()
   groupBox->setInsideMargin( KDialog::marginHint() );
 */
 
+  QVBoxLayout *mainLayout = new QVBoxLayout;
+  groupBox->setLayout(mainLayout);
   // Contents of the QVGroupBox: label and hbox
-  /*QLabel *label =*/ new QLabel( i18n( "Check all servers that should be used:" ), groupBox );
+  QLabel *label = new QLabel( i18n( "Check all servers that should be used:" ));
+  mainLayout->addWidget(label);
 
-  KHBox* hBox = new KHBox( groupBox );
+  KHBox* hBox = new KHBox;
   hBox->setSpacing( 6 );
+  mainLayout->addWidget(hBox);
   // Contents of the hbox: listview and up/down buttons on the right (vbox)
   mHostListView = new K3ListView( hBox );
 
