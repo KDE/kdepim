@@ -14,7 +14,6 @@ X-KDE-CfgDlgHierarchy=KNode
 
 Name=Cleanup
 Name[ar]=التنظيف
-Name[bg]=Изчистване
 Name[ca]=Neteja
 Name[cs]=Vyčištění
 Name[da]=Oprydning
@@ -61,7 +60,6 @@ Name[x-test]=xxCleanupxx
 Name[zh_TW]=清除
 Comment=Preserving Disk Space
 Comment[af]=Bespaar Skyf Spasie
-Comment[bg]=Освобождаване на свободно място на диска
 Comment[ca]=Preservar l'espai a disc
 Comment[cs]=Zachování místa na disku
 Comment[da]=Bevarer diskplads

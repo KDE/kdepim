@@ -4,7 +4,6 @@ Type=ServiceType
 X-KDE-ServiceType=KPilotConduit
 Comment=KPilot Conduit
 Comment[af]=Kpilot Pad
-Comment[bg]=Приставка на KPilot
 Comment[ca]=Conducte KPilot
 Comment[cs]=Propojení Palm Pilota
 Comment[cy]=Cwndid KPilot

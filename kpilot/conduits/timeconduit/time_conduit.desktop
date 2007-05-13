@@ -3,7 +3,6 @@ Encoding=UTF-8
 Type=Service
 Comment=This conduit sets the time on your handheld from the PC clock.
 Comment[af]=Hierdie pad stel die tyd op jou draagbare toestel vanaf die PC horlosie.
-Comment[bg]=Синхронизация на датата и часа на мобилно устройство с часовника на компютъра
 Comment[ca]=Aquest conducte estableix l'hora en la vostra agenda electrònica des del rellotge del PC.
 Comment[cs]=Toto propojení nastaví čas na vašem handheldu podle PC.
 Comment[cy]=Mae'r cwndid yma yn gosod yr amser ar eich llawiadur o gloc y CP.

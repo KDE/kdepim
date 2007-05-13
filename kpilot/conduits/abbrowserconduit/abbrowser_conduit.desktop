@@ -3,7 +3,6 @@ Encoding=UTF-8
 Type=Service
 Comment=This conduit syncs the handheld addressbook with KDE's addressbook.
 Comment[af]=Hierdie pad sinkroniseer die draagbare toestel adresboek met KDE se adresboek.
-Comment[bg]=Синхронизация на адресника на KDE с мобилни устройства
 Comment[ca]=Aquest conducte sincronitza la llibreta d'adreces de la vostra agenda electrònica amb la llibreta d'adreces de KDE.
 Comment[cs]=Toto propojení synchronizuje vašeho Pilota Knihou adres
 Comment[cy]=Mae'r cwndid yma yn cydamseru llyfr cyfeiriadau'r llawiadur efo llyfr cyfeiriadau KDE.

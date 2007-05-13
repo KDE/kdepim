@@ -46,7 +46,6 @@ Name[x-test]=xxKAB CSV XXPort Pluginxx
 Name[zh_TW]=KAB CSV XXPort 外掛程式
 Comment=Plugin to import and export contacts in CSV format
 Comment[af]=Inprop module wat kontakte in CSV formaat invoer en uitvoer
-Comment[bg]=Приставка за импортиране/експортиране на контактите във формат CSV
 Comment[ca]=Endollable per a importar i exportar contactes en format CSV
 Comment[cs]=Modul pro import a export kontaktů ve formátu CSV
 Comment[cy]=Ategyn i fewnforio ac allforio cysylltau mewn fformat CSV

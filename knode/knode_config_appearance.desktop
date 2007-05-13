@@ -14,7 +14,6 @@ X-KDE-CfgDlgHierarchy=KNode
 
 Name=Appearance
 Name[ar]=المظهر
-Name[bg]=Външен вид
 Name[br]=Neuziadur
 Name[ca]=Aparença
 Name[cs]=Vzhled
@@ -65,7 +64,6 @@ Name[x-test]=xxAppearancexx
 Name[zh_TW]=外觀
 Comment=Customize Visual Appearance
 Comment[af]=Pasmaak die visuele voorkoms
-Comment[bg]=Настройки на външния вид
 Comment[ca]=Personalitza l'aparença visual
 Comment[cs]=Nastavení vzhledu
 Comment[cy]=Addasu Golwg

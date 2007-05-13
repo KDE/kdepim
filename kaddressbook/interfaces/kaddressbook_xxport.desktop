@@ -4,7 +4,6 @@ Type=ServiceType
 X-KDE-ServiceType=KAddressBook/XXPort
 Comment=KAddressBook Import/Export Plugin
 Comment[af]=KAddressBook Invoer/Uitvoer inprop module
-Comment[bg]=Приставка за импортиране/експортиране на данни от адресника
 Comment[br]=Lugent enporzh/ezporzh evit KAddressBook
 Comment[ca]=Endollable d'importació/exportació per a la llibreta d'adreces
 Comment[cs]=Modul knihy adres pro import/export
