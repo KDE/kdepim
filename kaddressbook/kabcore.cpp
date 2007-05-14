@@ -38,7 +38,6 @@
 #include <kabc/resource.h>
 #include <kabc/stdaddressbook.h>
 #include <kabc/vcardconverter.h>
-#include <kabc/resourcefile.h>
 #include <kaboutdata.h>
 #include <kacceleratormanager.h>
 #include <kapplication.h>
@@ -110,11 +109,14 @@ KABCore::KABCore( KXMLGUIClient *client, bool readWrite, QWidget *parent,
     mAddressBook = KABC::StdAddressBook::self( true );
   } else {
     kDebug(5720) << "KABCore(): document '" << file << "'" << endl;
+    mAddressBook = KABC::StdAddressBook::self( true );
+    /*
     mAddressBook = new KABC::AddressBook;
     mAddressBook->addResource( new KABC::ResourceFile( file ) );
     if ( !mAddressBook->load() ) {
       KMessageBox::error( parent, i18n( "Unable to load '%1'.", file ) );
     }
+    */
   }
   mAddressBook->setErrorHandler( new KABC::GuiErrorHandler( mWidget ) );
 
