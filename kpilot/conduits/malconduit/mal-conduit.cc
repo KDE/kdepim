@@ -216,7 +216,7 @@ bool MALConduit::skip()
 				syncMessage = i18n("No proxy server is set.");
 				break;
 			}
-			syncMessage = i18n("Using proxy server: %1").arg(proxyServer);
+			syncMessage = i18n("Using proxy server: %1",proxyServer);
 
 #ifdef DEBUG
 			DEBUGKPILOT<<" Using HTTP proxy server \""<<proxyServer<<
