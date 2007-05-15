@@ -21,9 +21,9 @@ testutf7decoder_SOURCES = testutf7decoder.cpp
 test_kregexp_SOURCES = test_kregexp.cpp
 testdateedit_SOURCES = testdateedit.cpp
 testlinklocator_SOURCES = testlinklocator.cpp
-testdistrlist_SOURCES = testdistrlist.cpp
+#testdistrlist_SOURCES = testdistrlist.cpp
 
-TESTS = testdistrlist
+#TESTS = testdistrlist
 
 METASOURCES = AUTO
 
