@@ -59,7 +59,9 @@ private Q_SLOTS:
   void fromKMailDelIncidence( const QString& type, const QString& resource,
                               const QString& xml );
   void fromKMailRefresh( const QString& type, const QString& resource );
-  void fromKMailAddSubresource( const QString& type, const QString& resource, const QString& label );
+  void fromKMailAddSubresource( const QString& type, const QString& resource, 
+                                const QString& label, bool writable, 
+                                bool alarmRelevant );
   void fromKMailDelSubresource( const QString& type, const QString& resource );
   void fromKMailAsyncLoadResult( const QMap<quint32, QString>& map, const QString& type,
                                  const QString& folder );

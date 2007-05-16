@@ -526,7 +526,8 @@ void KABC::ResourceKolab::fromKMailRefresh( const QString& type,
 void KABC::ResourceKolab::fromKMailAddSubresource( const QString& type,
                                                    const QString& subResource,
                                                    const QString& label,
-                                                   bool writable )
+                                                   bool writable,
+                                                   bool )
 {
   if( type != s_kmailContentsType ) return;
 

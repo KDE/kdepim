@@ -87,11 +87,13 @@ void ResourceKolab::loadSubResourceConfig( KConfig& config,
                                            const QString& name,
                                            const QString& label,
                                            bool writable,
+                                           bool alarmRelevant,
                                            ResourceMap& subResource )
 {
   KConfigGroup group( &config, name );
   bool active = group.readEntry( "Active", true );
-  subResource.insert( name, Kolab::SubResource( active, writable, label ) );
+  subResource.insert( name, Kolab::SubResource( active, writable,
+                                                alarmRelevant, label ) );
 }
 
 bool ResourceKolab::openResource( KConfig& config, const char* contentType,
@@ -104,7 +106,8 @@ bool ResourceKolab::openResource( KConfig& config, const char* contentType,
   map.clear();
   QList<KMailICalIface::SubResource>::ConstIterator it;
   for ( it = subResources.begin(); it != subResources.end(); ++it )
-    loadSubResourceConfig( config, (*it).location, (*it).label, (*it).writable, map );
+    loadSubResourceConfig( config, (*it).location, (*it).label, (*it).writable, 
+                           (*it).alarmRelevant, map );
   return true;
 }
 
@@ -698,15 +701,41 @@ KCal::Journal::List ResourceKolab::rawJournalsForDate( const QDate &date )
   return mCalendar.rawJournalsForDate( date );
 }
 
+KCal::Alarm::List ResourceKolab::relevantAlarms( const KCal::Alarm::List &alarms )
+{
+  KCal::Alarm::List relevantAlarms;
+  KCal::Alarm::List::ConstIterator it( alarms.begin() );
+  while ( it != alarms.end() ) {
+    KCal::Alarm *a = (*it);
+    ++it;
+    const QString &uid = a->parent()->uid();
+     if ( mUidMap.contains( uid ) ) {
+       const QString &sr = mUidMap[ uid ].resource();
+       Kolab::SubResource *subResource = 0;
+       if ( mEventSubResources.contains( sr ) )
+          subResource = &( mEventSubResources[ sr ] );
+       else if ( mTodoSubResources.contains( sr ) )
+          subResource = &( mTodoSubResources[ sr ] );
+       assert( subResource );
+       if ( subResource->alarmRelevant() )
+           relevantAlarms.append ( a );
+       else {
+         kdDebug(5650) << "Alarm skipped, not relevant." << endl;
+       }
+     }
+  }
+  return relevantAlarms;
+}
+
 KCal::Alarm::List ResourceKolab::alarms( const KDateTime& from,
                                          const KDateTime& to )
 {
-  return mCalendar.alarms( from, to );
+  return relevantAlarms( mCalendar.alarms( from, to ) );
 }
 
 KCal::Alarm::List ResourceKolab::alarmsTo( const KDateTime& to )
 {
-  return mCalendar.alarmsTo(to);
+  return relevantAlarms( mCalendar.alarmsTo(to) );
 }
 
 void ResourceKolab::setTimeZoneId( const QString& tzid )
@@ -795,7 +824,7 @@ void ResourceKolab::fromKMailRefresh( const QString& type,
 void ResourceKolab::fromKMailAddSubresource( const QString& type,
                                              const QString& subResource,
                                              const QString& label,
-                                             bool writable )
+                                             bool writable, bool alarmRelevant )
 {
   ResourceMap* map = 0;
   const char* mimetype = 0;
@@ -820,7 +849,8 @@ void ResourceKolab::fromKMailAddSubresource( const QString& type,
   config.setGroup( subResource );
 
   bool active = config.readEntry( subResource, true );
-  (*map)[ subResource ] = Kolab::SubResource( active, writable, label );
+  (*map)[ subResource ] = Kolab::SubResource( active, writable, 
+                                              alarmRelevant, label );
   loadSubResource( subResource, mimetype );
   emit signalSubresourceAdded( this, type, subResource, label );
 }

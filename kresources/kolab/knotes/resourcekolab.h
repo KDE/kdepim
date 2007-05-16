@@ -89,7 +89,8 @@ public:
 
   /// Listen to KMail changes in the amount of sub resources
   void fromKMailAddSubresource( const QString& type, const QString& resource,
-                                const QString& label, bool writable );
+                                const QString& label, bool writable,
+                                bool alarmRelevant );
   void fromKMailDelSubresource( const QString& type, const QString& resource );
 
   void fromKMailAsyncLoadResult( const QMap<quint32, QString>& map,
