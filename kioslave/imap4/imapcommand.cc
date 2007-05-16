@@ -398,7 +398,7 @@ imapCommand::clientNamespace()
 imapCommand *
 imapCommand::clientGetQuotaroot( const QString& box )
 {
-  QString parameter = KIMAP::encodeImapFolderName (box);
+  QString parameter = QString("\"") + KIMAP::encodeImapFolderName (box) + '"';
   return new imapCommand ("GETQUOTAROOT", parameter);
 }
 
