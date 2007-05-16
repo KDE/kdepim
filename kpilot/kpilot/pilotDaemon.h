@@ -38,14 +38,12 @@
 #include <QDropEvent>
 #include <QPixmap>
 #include <QMouseEvent>
-#include <Q3PopupMenu>
 #include <QDragEnterEvent>
 #include <KSystemTrayIcon>
-
+class QMenu;
 class QPixmap;
 class QTimer;
 class K3AboutApplication;
-class Q3PopupMenu;
 
 class PilotDaemon;
 class ActionQueue;

@@ -37,12 +37,12 @@
 #include <qtooltip.h>
 #include <qpixmap.h>
 //Added by qt3to4:
-#include <Q3CString>
 #include <Q3Dict>
 #include <QDragEnterEvent>
 #include <QDropEvent>
 #include <QMouseEvent>
 #include <QCloseEvent>
+#include <QMenu>
 
 #include <kuniqueapplication.h>
 #include <k3aboutapplication.h>
