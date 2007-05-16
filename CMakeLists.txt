@@ -129,7 +129,6 @@ if (Q_WS_X11)
 endif (Q_WS_X11)
 
 add_subdirectory(kdgantt1)
-MESSAGE(STATUS "Remember to porting kfile-plugins")
 add_subdirectory(kfile-plugins)
 add_subdirectory(kioslave)
 
