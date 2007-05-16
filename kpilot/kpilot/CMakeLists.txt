@@ -31,7 +31,6 @@ set(kcmpilot_SRCS
 
 set(kcmpilot_UIS
 	config_page_device.ui
-	config_page_sync.ui
 	config_page_startup.ui
 	config_page_viewers.ui
 	config_page_backup.ui
@@ -39,6 +38,8 @@ set(kcmpilot_UIS
 )
 
 kde4_add_ui3_files(kcmpilot_SRCS ${kcmpilot_UIS})
+
+kde4_add_ui_files(kcmpilot_SRCS config_page_sync.ui)
 
 qt4_add_dbus_interface(kcmpilot_SRCS org.kde.kpilot.daemon.xml kpilot_daemon_interface)
 

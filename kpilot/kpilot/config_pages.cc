@@ -53,7 +53,6 @@
 #include "kpilotSettings.h"
 
 #include "config_page_device.h"
-#include "config_page_sync.h"
 #include "config_page_startup.h"
 #include "config_page_viewers.h"
 #include "config_page_backup.h"

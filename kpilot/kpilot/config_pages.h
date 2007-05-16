@@ -31,7 +31,7 @@
 */
 
 #include "plugin.h"
-
+#include "ui_config_page_sync.h"
 
 // class KPilotConfigWidget;
 class StartExitConfigWidget;
@@ -72,6 +72,13 @@ private:
 	void setEncoding();
 } ;
 
+class SyncConfigWidget : public QWidget, public Ui::SyncConfigWidget
+{
+public:
+  SyncConfigWidget( QWidget *parent ) : QWidget( parent ) {
+    setupUi( this );
+  }
+};
 
 class KDE_EXPORT SyncConfigPage : public ConfigPage
 {
