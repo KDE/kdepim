@@ -314,6 +314,11 @@ class LIBKCAL_EXPORT ResourceCalendar : public KRES::Resource
     virtual QStringList subresources() const { return QStringList(); }
 
     /**
+      Is this subresource capable of having subresources or not?
+    */
+    virtual bool canHaveSubresources() const { return false; }
+
+    /**
       Is this subresource active or not?
     */
     virtual bool subresourceActive( const QString& ) const { return true; }
@@ -335,6 +340,19 @@ class LIBKCAL_EXPORT ResourceCalendar : public KRES::Resource
     */
     virtual QString subresourceIdentifier( Incidence *incidence ) 
     { Q_UNUSED( incidence ); return QString(); }
+
+
+
+    /** 
+     * Remove a subresource with the id @param resource
+     */
+    virtual bool removeSubresource( const QString& resource );
+
+    /** 
+     * Add a subresource with the name @param resource and the parent 
+     * id @param parent.
+     */
+    virtual bool addSubresource( const QString& resource, const QString& parent );
 
   public slots:
     /**
