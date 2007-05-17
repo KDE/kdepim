@@ -2,7 +2,7 @@ include_directories(
 	${CMAKE_CURRENT_SOURCE_DIR}/../lib
 )
 
-add_subdirectory(abbrowserconduit)
+#add_subdirectory(abbrowserconduit)
 add_subdirectory(docconduit)
 add_subdirectory(memofileconduit)
 add_subdirectory(notepadconduit)
