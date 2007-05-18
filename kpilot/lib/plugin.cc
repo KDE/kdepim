@@ -691,12 +691,10 @@ QString findArgument(const QStringList &a, const QString &arg)
 
 	DEBUGKPILOT << fname << ": Symbol <" << symbol << '>' << endl;
 
-	if (!lib->resolveSymbol(symbol.toLatin1()))
-	{
-		return 0;
-	}
-
 	unsigned long *p = (unsigned long *)(lib->resolveSymbol(symbol.toLatin1()));
+        if ( !p )
+		return 0;
+
 	return *p;
 }
 
