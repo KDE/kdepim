@@ -145,9 +145,10 @@ IMEditorWidget::IMEditorWidget( QWidget *parent, const QString &preferredIM )
   setCaption( i18n( "Edit Instant Messaging Address" ) );
   setButtons( Help | Ok | Cancel );
   setDefaultButton( Ok );
+  QWidget *w = new QWidget(this);
   mWidget = new Ui_IMEditorBase();
-  mWidget->setupUi( this );
-
+  mWidget->setupUi( w );
+  setMainWidget(w);
   connect( mWidget->btnAdd, SIGNAL( clicked() ), SLOT( slotAdd() ) );
   connect( mWidget->btnEdit, SIGNAL( clicked() ), SLOT( slotEdit() ) );
   connect( mWidget->btnDelete, SIGNAL( clicked() ), SLOT( slotDelete() ) );
