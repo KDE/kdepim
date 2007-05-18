@@ -327,7 +327,7 @@ void ResourceKolab::fromKMailRefresh( const QString& type,
 
 void ResourceKolab::fromKMailAddSubresource( const QString& type,
                                              const QString& subResource,
-                                             const QString& mimetype,
+                                             const QString& /*label*/,
                                              bool writable,
                                              bool /*alarmRelevant*/ )
 {
@@ -344,7 +344,7 @@ void ResourceKolab::fromKMailAddSubresource( const QString& type,
 
   bool active = config.readBoolEntry( subResource, true );
   mSubResources[ subResource ] = Kolab::SubResource( active, writable, subResource );
-  loadSubResource( subResource, mimetype );
+  loadSubResource( subResource, attachmentMimeType );
   emit signalSubresourceAdded( this, type, subResource );
 }
 
