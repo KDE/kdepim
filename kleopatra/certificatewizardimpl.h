@@ -32,9 +32,10 @@
 
 #ifndef CERTIFICATEWIZARDIMPL_H
 #define CERTIFICATEWIZARDIMPL_H
-#include "certificatewizard.h"
+#include "ui_certificatewizard.h"
 
 #include <q3valuevector.h>
+#include <Q3Wizard>
 #include <QLineEdit>
 #include <kurl.h>
 
@@ -46,12 +47,22 @@ namespace KIO {
 }
 
 class KJob;
+
+class CertificateWizard : public Q3Wizard, public Ui::CertificateWizard
+{
+public:
+  CertificateWizard( QWidget *parent ) : Q3Wizard( parent ) {
+    setupUi( this );
+  }
+};
+
+
 class CertificateWizardImpl : public CertificateWizard
 {
     Q_OBJECT
 
 public:
-    CertificateWizardImpl( QWidget* parent = 0, bool modal = false, Qt::WFlags fl = 0 );
+    CertificateWizardImpl( QWidget* parent = 0);
     ~CertificateWizardImpl();
 
     bool sendToCA() const;

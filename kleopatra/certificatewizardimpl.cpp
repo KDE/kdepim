@@ -113,9 +113,10 @@ static bool availForMod( const QLineEdit * le ) {
  *  The wizard will by default be modeless, unless you set 'modal' to
  *  TRUE to construct a modal wizard.
  */
-CertificateWizardImpl::CertificateWizardImpl( QWidget* parent, bool modal, Qt::WFlags fl )
+CertificateWizardImpl::CertificateWizardImpl( QWidget* parent )
     : CertificateWizard( parent )
 {
+    setModal(false);
     // don't allow to go to last page until a key has been generated
     setNextEnabled( generatePage, false );
     // setNextEnabled( personalDataPage, false ); // ## disable again once we have a criteria when to enable again
