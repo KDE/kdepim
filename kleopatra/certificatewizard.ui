@@ -97,7 +97,7 @@ The key pair will be generated in a decentralized manner. Please contact your lo
           </spacer>
         </item>
         <item>
-          <widget class="Q3GroupBox" name="groupBox1" >
+          <widget class="QGroupBox" name="groupBox1" >
             <property name="title" >
               <string>Cryptographic Key Length</string>
             </property>
