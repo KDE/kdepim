@@ -52,8 +52,8 @@ WelcomeAction::WelcomeAction(KPilotLink *p) :
 {
 	FUNCTIONSETUP;
 
-	addSyncLogEntry(i18n("KPilot %1 HotSync starting...\n")
-		.arg(QString::fromLatin1(KPILOT_VERSION)));
+	addSyncLogEntry(i18n("KPilot %1 HotSync starting...\n",
+		QString::fromLatin1(KPILOT_VERSION)));
 	emit logMessage( i18n("Using encoding %1 on the handheld.",Pilot::codecName()) );
 	emit syncDone(this);
 	return true;

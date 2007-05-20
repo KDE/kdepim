@@ -64,7 +64,7 @@
 /* virtual */ QString ConfigPage::maybeSaveText() const
 {
 	return i18n("<qt>The settings for configuration page <i>%1</i> have been changed. Do you "
-		"want to save the changes before continuing?</qt>").arg(this->conduitName());
+		"want to save the changes before continuing?</qt>", this->conduitName());
 }
 
 DeviceConfigPage::DeviceConfigPage(QWidget * w, const char *n ) : ConfigPage( w, n )

@@ -183,7 +183,7 @@ void AddressWidget::hideComponent()
 			<< endl;
 
 		s = i18np("There is still an address editing window open.",
-			"There are still %n address editing windows open.",
+			"There are still %1 address editing windows open.",
 			fPendingAddresses);
 		return false;
 	}

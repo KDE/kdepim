@@ -854,8 +854,7 @@ void KPilotDeviceLink::checkDevice()
 		//
 		if (!(fi.isReadable() && fi.isWritable()))
 		{
-			emit logError(i18n("Pilot device %1 is not read-write.")
-				.arg(fPilotPath));
+			emit logError(i18n("Pilot device %1 is not read-write.", fPilotPath));
 		}
 	}
 	else
@@ -864,8 +863,8 @@ void KPilotDeviceLink::checkDevice()
 		// (relevant as long as we use only one device type)
 		//
 		emit logError(i18n("Pilot device %1 does not exist. "
-			"Probably it is a USB device and will appear during a HotSync.")
-				.arg(fPilotPath));
+			"Probably it is a USB device and will appear during a HotSync.",
+			fPilotPath));
 		// Suppress all normal and error messages about opening the device.
 		fMessages->block(Messages::OpenMessage | Messages::OpenFailMessage, true);
 	}
@@ -910,8 +909,7 @@ bool KPilotDeviceLink::installFile(const QString & f, const bool deleteFile)
 	{
 		WARNINGKPILOT << "Cannot open file " << f << endl;
 		emit logError(i18n
-			("<qt>Cannot install the file &quot;%1&quot;.</qt>").
-			arg(f));
+			("<qt>Cannot install the file &quot;%1&quot;.</qt>", f));
 		return false;
 	}
 
@@ -919,8 +917,7 @@ bool KPilotDeviceLink::installFile(const QString & f, const bool deleteFile)
 	{
 		WARNINGKPILOT << "Cannot pi_file_install " << f << endl;
 		emit logError(i18n
-			("<qt>Cannot install the file &quot;%1&quot;.</qt>").
-			arg(f));
+			("<qt>Cannot install the file &quot;%1&quot;.</qt>", f));
 		return false;
 	}
 

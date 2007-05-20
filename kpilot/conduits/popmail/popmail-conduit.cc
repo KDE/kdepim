@@ -106,7 +106,7 @@ void PopMailConduit::doSync()
 		if (sent_count>0)
 		{
 			addSyncLogEntry(i18np("Sent one message",
-				"Sent %n messages",sent_count));
+				"Sent %1 messages",sent_count));
 		}
 	}
 }

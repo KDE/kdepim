@@ -90,8 +90,8 @@ void CleanUpState::startSync( ConduitAction *ca )
 				{
 					vccb->addLogError( i18n( "An error occurred while uploading"
 						" \"%1\". You can try to upload "
-						"the temporary local file \"%2\" manually.")
-						.arg(vccb->config()->calendarFile()).arg(fCalendarFile));
+						"the temporary local file \"%2\" manually.",
+						vccb->config()->calendarFile(), fCalendarFile ) );
 				}
 				else {
 					KIO::NetAccess::removeTempFile( fCalendarFile );

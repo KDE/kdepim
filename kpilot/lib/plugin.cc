@@ -475,15 +475,14 @@ void ConduitAction::finished()
 
 		QString caption = i18n("Large Changes Detected");
 		// args are already i18n'd
-		// TODO fix with new i18n API
-		QString template_query = i18n("The %1 conduit has made a "
-			"large number of changes to your %2.  Do you want "
-			"to allow this change?\nDetails:\n\t%3");
+		KLocalizedString template_query = ki18n("The %1 conduit has made a "
+			         "large number of changes to your %2.  Do you want "
+			         "to allow this change?\nDetails:\n\t%3");
 
 		if (hhVolatility > allowedVolatility)
 		{
-			QString query = template_query.arg(fConduitName)
-				.arg(fCtrHH->type()).arg(fCtrHH->moo());
+			QString query = template_query.subs(fConduitName)
+				.subs(fCtrHH->type()).subs(fCtrHH->moo()).toString();
 
 			DEBUGKPILOT << fname << ": high volatility."
 				<< "  Check with user: [" << query
@@ -505,8 +504,8 @@ void ConduitAction::finished()
 		}
 		if (pcVolatility > allowedVolatility)
 		{
-			QString query = template_query.arg(fConduitName)
-				.arg(fCtrPC->type()).arg(fCtrPC->moo());
+			QString query = template_query.subs(fConduitName)
+				.subs(fCtrPC->type()).subs(fCtrPC->moo()).toString();
 
 			DEBUGKPILOT << fname << ": high volatility."
 				<< "  Check with user: [" << query

@@ -264,7 +264,7 @@ void TodoWidget::showComponent()
 			<< endl;
 
 		s = i18np("There is still a to-do editing window open.",
-			"There are still %n to-do editing windows open.",
+			"There are still %1 to-do editing windows open.",
 			fP->fPendingTodos);
 		return false;
 	}

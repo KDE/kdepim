@@ -289,7 +289,7 @@ bool LogWidget::saveFile(const QString &saveFileName)
 	{
 		int r = KMessageBox::questionYesNo(this,
 			i18n("<qt>Cannot open the file &quot;%1&quot; "
-				"for writing; try again?</qt>"),
+				"for writing; try again?</qt>", saveFileName),
 			i18n("Cannot Save"), KGuiItem(i18n("Try Again")), KGuiItem(i18n("Do Not Try")));
 
 		return !(r==KMessageBox::Yes);

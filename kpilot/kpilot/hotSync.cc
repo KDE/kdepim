@@ -625,7 +625,7 @@ FileInstallAction::~FileInstallAction()
 	fTimer->start(0);
 
 	emit logProgress(i18np("Installing one file",
-		"Installing %n Files",fList.count()), 0);
+		"Installing %1 files",fList.count()), 0);
 	return true;
 }
 

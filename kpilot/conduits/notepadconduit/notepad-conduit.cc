@@ -99,8 +99,8 @@ bool NotepadConduit::event(QEvent *e)
 //		stopTickle();
 		delayDone();
 		if(thread->getFailed())
-			logError(i18np("1 notepad could not be saved", "%n notepads could not be saved", thread->getFailed()));
-		logMessage(i18np("1 notepad saved", "%n notepads saved", thread->getSaved()));
+			logError(i18np("1 notepad could not be saved", "%1 notepads could not be saved", thread->getFailed()));
+		logMessage(i18np("1 notepad saved", "%1 notepads saved", thread->getSaved()));
 		delete thread;
 		return true;
 	}
