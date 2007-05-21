@@ -237,7 +237,7 @@ SloxWizard::SloxWizard() : KConfigWizard( new SloxPropagator )
   mUserEdit = new KLineEdit;
   topLayout->addWidget( mUserEdit, 1, 1 );
 
-  label = new QLabel( i18n("Password:") );
+  label = new QLabel( i18n("Password:"));
   topLayout->addWidget( label, 2, 0 );
   mPasswordEdit = new KLineEdit;
   mPasswordEdit->setEchoMode( KLineEdit::Password );
