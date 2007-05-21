@@ -223,30 +223,30 @@ SloxWizard::SloxWizard() : KConfigWizard( new SloxPropagator )
 {
   QWidget *page = createWizardPage( i18n("SUSE LINUX OpenExchange Server") );
 
-  QGridLayout *topLayout = new QGridLayout( page );
+  QGridLayout *topLayout = new QGridLayout;
   topLayout->setSpacing( spacingHint() );
+  page->setLayout(topLayout);
 
-  QLabel *label = new QLabel( i18n("Server name:"), page );
+  QLabel *label = new QLabel( i18n("Server name:"));
   topLayout->addWidget( label, 0, 0 );
-  mServerEdit = new KLineEdit( page );
+  mServerEdit = new KLineEdit;
   topLayout->addWidget( mServerEdit, 0, 1 );
 
-  label = new QLabel( i18n("User name:"), page );
+  label = new QLabel( i18n("User name:"));
   topLayout->addWidget( label, 1, 0 );
-  mUserEdit = new KLineEdit( page );
+  mUserEdit = new KLineEdit;
   topLayout->addWidget( mUserEdit, 1, 1 );
 
-  label = new QLabel( i18n("Password:"), page );
+  label = new QLabel( i18n("Password:") );
   topLayout->addWidget( label, 2, 0 );
-  mPasswordEdit = new KLineEdit( page );
+  mPasswordEdit = new KLineEdit;
   mPasswordEdit->setEchoMode( KLineEdit::Password );
   topLayout->addWidget( mPasswordEdit, 2, 1 );
 
-  mSavePasswordCheck = new QCheckBox( i18n("Save password"), page );
+  mSavePasswordCheck = new QCheckBox( i18n("Save password"));
   topLayout->addWidget( mSavePasswordCheck, 3, 0, 1, 2 );
 
-  mSecureCheck = new QCheckBox( i18n("Encrypt communication with server"),
-                                page );
+  mSecureCheck = new QCheckBox( i18n("Encrypt communication with server"));
   topLayout->addWidget( mSecureCheck, 4, 0, 1, 2 );
 
   topLayout->setRowStretch( 5, 1 );

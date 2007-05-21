@@ -270,40 +270,40 @@ GroupwiseWizard::GroupwiseWizard() : KConfigWizard( new GroupwisePropagator )
 {
   QFrame *page = createWizardPage( i18n("Novell GroupWise") );
 
-  QGridLayout *topLayout = new QGridLayout( page );
+  QGridLayout *topLayout = new QGridLayout;
   topLayout->setSpacing( spacingHint() );
+  page->setLayout(topLayout);
 
-  QLabel *label = new QLabel( i18n("Server name:"), page );
+  QLabel *label = new QLabel( i18n("Server name:"));
   topLayout->addWidget( label, 0, 0 );
-  mServerEdit = new KLineEdit( page );
+  mServerEdit = new KLineEdit;
   topLayout->addWidget( mServerEdit, 0, 1 );
 
-  label = new QLabel( i18n("Path to SOAP interface:"), page );
+  label = new QLabel( i18n("Path to SOAP interface:"));
   topLayout->addWidget( label, 1, 0 );
-  mPathEdit = new KLineEdit( page );
+  mPathEdit = new KLineEdit;
   topLayout->addWidget( mPathEdit, 1, 1 );
 
-  label = new QLabel( i18n("Port:"), page );
+  label = new QLabel( i18n("Port:"));
   topLayout->addWidget( label, 2, 0 );
-  mPortEdit = new QSpinBox( 1, 65536, 1, page );
+  mPortEdit = new QSpinBox( 1, 65536, 1);
   topLayout->addWidget( mPortEdit, 2, 1 );
 
-  label = new QLabel( i18n("User name:"), page );
+  label = new QLabel( i18n("User name:") );
   topLayout->addWidget( label, 3, 0 );
-  mUserEdit = new KLineEdit( page );
+  mUserEdit = new KLineEdit;
   topLayout->addWidget( mUserEdit, 3, 1 );
 
-  label = new QLabel( i18n("Password:"), page );
+  label = new QLabel( i18n("Password:"));
   topLayout->addWidget( label, 4, 0 );
-  mPasswordEdit = new KLineEdit( page );
+  mPasswordEdit = new KLineEdit;
   mPasswordEdit->setEchoMode( KLineEdit::Password );
   topLayout->addWidget( mPasswordEdit, 4, 1 );
 
-  mSavePasswordCheck = new QCheckBox( i18n("Save password"), page );
+  mSavePasswordCheck = new QCheckBox( i18n("Save password"));
   topLayout->addWidget( mSavePasswordCheck, 5, 0, 1, 2 );
 
-  mSecureCheck = new QCheckBox( i18n("Encrypt communication with server"),
-                                page );
+  mSecureCheck = new QCheckBox( i18n("Encrypt communication with server"));
   topLayout->addWidget( mSecureCheck, 5, 0, 1, 2 );
 
   topLayout->setRowStretch( 6, 1 );
@@ -311,10 +311,11 @@ GroupwiseWizard::GroupwiseWizard() : KConfigWizard( new GroupwisePropagator )
 
   mEmailPage = createWizardPage( i18n("Mail") );
 
-  topLayout = new QGridLayout( mEmailPage );
+  topLayout = new QGridLayout;
   topLayout->setSpacing( spacingHint() );
+  mEmailPage->setLayout(topLayout);
 
-  mEmailBox = new QGroupBox( i18n("Create Mail Account"), mEmailPage );
+  mEmailBox = new QGroupBox( i18n("Create Mail Account"));
   mEmailBox->setCheckable( true );
   topLayout->addWidget( mEmailBox, 0, 0 );
 
@@ -322,19 +323,20 @@ GroupwiseWizard::GroupwiseWizard() : KConfigWizard( new GroupwisePropagator )
   connect( mEmailBox, SIGNAL( toggled( bool ) ), mEmailWidget,
     SLOT( setEnabled( bool ) ) );
 
-  QGridLayout *accountLayout= new QGridLayout( mEmailWidget );
+  QGridLayout *accountLayout= new QGridLayout;
   accountLayout->setSpacing( spacingHint() );
+  mEmailWidget->setLayout(accountLayout);
 
-  label = new QLabel( i18n("Email address:"), mEmailWidget );
+  label = new QLabel( i18n("Email address:"));
   accountLayout->addWidget( label, 0, 0 );
 
-  mEmailEdit = new KLineEdit( mEmailWidget );
+  mEmailEdit = new KLineEdit;
   accountLayout->addWidget( mEmailEdit, 0, 1 );
 
-  label = new QLabel( i18n("Full name:"), mEmailWidget );
+  label = new QLabel( i18n("Full name:"));
   accountLayout->addWidget( label, 1, 0 );
 
-  mFullNameEdit = new KLineEdit( mEmailWidget );
+  mFullNameEdit = new KLineEdit;
   accountLayout->addWidget( mFullNameEdit, 1, 1 );
 
   accountLayout->setRowStretch( 2, 1 );
