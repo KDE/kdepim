@@ -96,7 +96,7 @@ KWatchGnuPGMainWindow::~KWatchGnuPGMainWindow()
 void KWatchGnuPGMainWindow::slotClear()
 {
   mCentralWidget->clear();
-  mCentralWidget->append( tr("[%1] Log cleared").arg( QDateTime::currentDateTime().toString(Qt::ISODate) ) );
+  mCentralWidget->append( i18n("[%1] Log cleared", QDateTime::currentDateTime().toString(Qt::ISODate) ) );
 }
 
 void KWatchGnuPGMainWindow::createActions()
@@ -144,8 +144,7 @@ void KWatchGnuPGMainWindow::startWatcher()
 #endif
 //	  kapp->eventLoop()->processEvents(QEventLoop::ExcludeUserInput);
 	}
-	mCentralWidget->append(tr("[%1] Log stopped")
-						   .arg( QDateTime::currentDateTime().toString(Qt::ISODate)));
+	mCentralWidget->append(i18n("[%1] Log stopped", QDateTime::currentDateTime().toString(Qt::ISODate)));
   }
   mWatcher->clearArguments();
   KConfigGroup config(KGlobal::config(), "WatchGnuPG");
@@ -156,8 +155,7 @@ void KWatchGnuPGMainWindow::startWatcher()
   if( !mWatcher->start() ) {
 	KMessageBox::sorry( this, i18n("The watchgnupg logging process could not be started.\nPlease install watchgnupg somewhere in your $PATH.\nThis log window is now completely useless." ) );
   } else {
-	mCentralWidget->append( tr("[%1] Log started")
-							.arg( QDateTime::currentDateTime().toString(Qt::ISODate) ) );
+	mCentralWidget->append( i18n("[%1] Log started",QDateTime::currentDateTime().toString(Qt::ISODate) ) );
   }
   connect( mWatcher, SIGNAL( processExited(K3Process*) ),
 		   this, SLOT( slotWatcherExited() ) );
