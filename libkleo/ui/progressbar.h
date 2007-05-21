@@ -33,7 +33,7 @@
 #ifndef __KLEO_PROGRESSBAR_H__
 #define __KLEO_PROGRESSBAR_H__
 
-#include <q3progressbar.h>
+#include <qprogressbar.h>
 #include <kdepim_export.h>
 class QTimer;
 
@@ -42,22 +42,22 @@ namespace Kleo {
   /**
      @short A QProgressBar with self-powered busy indicator
   */
-  class KLEO_EXPORT ProgressBar : public Q3ProgressBar {
+  class KLEO_EXPORT ProgressBar : public QProgressBar {
     Q_OBJECT
   public:
-    ProgressBar( QWidget * parent=0, const char * name=0, Qt::WFlags f=0 );
+    ProgressBar( QWidget * parent=0, Qt::WFlags f=0 );
 
   public slots:
     void slotProgress( const QString & message, int type, int current, int total );
     void slotProgress( const QString & message, int current, int total );
     /*! reimplementation to support self-powered busy indicator */
-    void setProgress( int progress );
+    void setValue( int progress );
     /*! reimplementation to support self-powered busy indicator */
-    void setTotalSteps( int total );
+    void setMaximum( int total );
     /*! reimplementation to support self-powered busy indicator */
     void reset();
     /*! reimplementation to preserve visibility */
-    void setProgress( int cur, int tot ) { Q3ProgressBar::setProgress( cur, tot ); }
+    void setRange( int cur, int tot ) { QProgressBar::setRange( cur, tot ); }
 
   private slots:
     void slotBusyTimerTick();

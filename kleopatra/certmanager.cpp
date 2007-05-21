@@ -609,7 +609,7 @@ void CertManager::startKeyListing( bool validating, bool refresh, const QStringL
     showKeyListError( this, err );
     return;
   }
-  mProgressBar->setProgress( 0, 0 ); // enable busy indicator
+  mProgressBar->setRange( 0, 0 ); // enable busy indicator
 }
 
 static void selectKeys( Kleo::KeyListView * lv, const std::set<std::string> & fprs ) {
@@ -764,7 +764,7 @@ void CertManager::slotStartCertificateDownload( const QString& fingerprint, cons
   if ( err )
     showCertificateDownloadError( this, err, displayName );
   else {
-    mProgressBar->setProgress( 0, 0 );
+    mProgressBar->setRange( 0, 0 );
     mJobsDisplayNameMap.insert( job, displayName );
   }
 }
@@ -818,7 +818,7 @@ void CertManager::startCertificateImport( const QByteArray & keyData, const QStr
   if ( err )
     showCertificateImportError( this, err, certDisplayName );
   else {
-    mProgressBar->setProgress( 0, 0 );
+    mProgressBar->setRange( 0, 0 );
     mJobsDisplayNameMap.insert( job, certDisplayName );
   }
 }
@@ -1146,7 +1146,7 @@ void CertManager::slotDeleteCertificate() {
   if ( err )
     showDeleteError( this, err );
   else
-    mProgressBar->setProgress( 0, 0 );
+    mProgressBar->setRange( 0, 0 );
 }
 
 void CertManager::slotDeleteResult( const GpgME::Error & err, const GpgME::Key & ) {
@@ -1260,7 +1260,7 @@ void CertManager::startCertificateExport( const QStringList & fingerprints ) {
   if ( err )
     showCertificateExportError( this, err );
   else
-    mProgressBar->setProgress( 0, 0 );
+    mProgressBar->setRange( 0, 0 );
 }
 
 // return true if we should proceed, false if we should abort
@@ -1395,7 +1395,7 @@ void CertManager::startSecretKeyExport( const QString & fingerprint ) {
   if ( err )
     showSecretKeyExportError( this, err );
   else
-    mProgressBar->setProgress( 0, 0 );
+    mProgressBar->setRange( 0, 0 );
 }
 
 void CertManager::slotSecretKeyExportResult( const GpgME::Error & err, const QByteArray & data ) {

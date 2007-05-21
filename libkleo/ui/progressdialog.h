@@ -33,7 +33,7 @@
 #ifndef __KLEO_PROGRESSDIALOG_H__
 #define __KLEO_PROGRESSDIALOG_H__
 
-#include <q3progressdialog.h>
+#include <qprogressdialog.h>
 #include <QString>
 #include <kdepim_export.h>
 namespace Kleo {
@@ -43,11 +43,11 @@ namespace Kleo {
   /**
      @short A progress dialog for Kleo::Jobs
   */
-  class KLEO_EXPORT ProgressDialog : public Q3ProgressDialog {
+  class KLEO_EXPORT ProgressDialog : public QProgressDialog {
     Q_OBJECT
   public:
     ProgressDialog( Job * job, const QString & baseText,
-		    QWidget * creator=0, const char * name=0, Qt::WFlags f=0  );
+		    QWidget * creator=0, Qt::WFlags f=0  );
     ~ProgressDialog();
 
   public slots:

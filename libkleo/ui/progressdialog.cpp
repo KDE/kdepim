@@ -44,17 +44,18 @@
 #include <assert.h>
 
 Kleo::ProgressDialog::ProgressDialog( Job * job, const QString & baseText,
-				      QWidget * creator, const char * name, Qt::WFlags f )
-  : Q3ProgressDialog( creator, name, false, f ), mBaseText( baseText )
+				      QWidget * creator, Qt::WFlags f )
+  : QProgressDialog( creator, f ), mBaseText( baseText )
 {
   assert( job );
-  setBar( new ProgressBar( this, "replacement progressbar in Kleo::ProgressDialog" ) );
+  setBar( new ProgressBar( this/*, "replacement progressbar in Kleo::ProgressDialog"*/ ) );
 
   setMinimumDuration( 2000 /*ms*/ );
   setAutoReset( false );
   setAutoClose( false );
   setLabelText( baseText );
-  setProgress( 0, 0 ); // activate busy indicator
+  setModal(false);
+  setRange( 0, 0 ); // activate busy indicator
 
   connect( job, SIGNAL(progress(const QString&,int,int)),
 	   SLOT(slotProgress(const QString&,int,int)) );
@@ -72,7 +73,7 @@ Kleo::ProgressDialog::~ProgressDialog() {
 void Kleo::ProgressDialog::setMinimumDuration( int ms ) {
   if ( 0 < ms && ms < minimumDuration() )
     QTimer::singleShot( ms, this, SLOT(forceShow()) );
-  Q3ProgressDialog::setMinimumDuration( ms );
+  QProgressDialog::setMinimumDuration( ms );
 }
 
 void Kleo::ProgressDialog::slotProgress( const QString & what, int current, int total ) {
@@ -84,7 +85,7 @@ void Kleo::ProgressDialog::slotProgress( const QString & what, int current, int 
     setLabelText( mBaseText );
   else
     setLabelText( i18n( "%1: %2", mBaseText, what ) );
-  setProgress( current, total );
+  setRange( current, total );
 }
 
 void Kleo::ProgressDialog::slotDone() {
