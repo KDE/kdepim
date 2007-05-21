@@ -67,7 +67,8 @@ static const char* incidenceInlineMimeType = "text/calendar";
 
 ResourceKolab::ResourceKolab( const KConfig *config )
   : ResourceCalendar( config ), ResourceKolabBase( "ResourceKolab-libkcal" ),
-    mCalendar( QString::fromLatin1("UTC") ), mOpen( false )
+    mCalendar( QString::fromLatin1("UTC") ), mOpen( false ),mResourceChangedTimer( 0,
+        "mResourceChangedTimer" )
 {
   setType( "imap" );
   connect( &mResourceChangedTimer, SIGNAL( timeout() ),
@@ -495,12 +496,12 @@ bool ResourceKolab::addIncidence( KCal::Incidence* incidence, const QString& _su
       }
     }
   } else { /* KMail told us */
-    bool ourOwnUpdate = false;
+    bool ourOwnUpdate = mUidsPendingUpdate.contains(  uid );
     /* Check if we updated this one, which means kmail deleted and added it.
      * We know the new state, so lets just not do much at all. The old incidence
      * in the calendar remains valid, but the serial number changed, so we need to
      * update that */
-    if ( ourOwnUpdate = mUidsPendingUpdate.contains( uid ) ) {
+    if ( ourOwnUpdate ) {
       mUidsPendingUpdate.remove( uid );
       mUidMap.remove( uid );
       mUidMap[ uid ] = StorageReference( subResource, sernum );
