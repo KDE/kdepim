@@ -64,7 +64,7 @@ int main( int argc, char **argv )
   KCmdLineArgs::addCmdLineOptions( options );
 
   // is a KComponentData needed?
-  QCoreApplication app( *KCmdLineArgs::qt_argc(), *KCmdLineArgs::qt_argv() );
+  QCoreApplication app( KCmdLineArgs::qtArgc(), KCmdLineArgs::qtArgv() );
 
   KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
 
