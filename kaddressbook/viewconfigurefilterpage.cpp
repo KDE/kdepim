@@ -21,7 +21,7 @@
     without including the source code for Qt in the source distribution.
 */
 
-#include <q3buttongroup.h>
+#include <qbuttongroup.h>
 #include <QLabel>
 #include <QLayout>
 #include <QRadioButton>
@@ -47,8 +47,8 @@ ViewConfigureFilterPage::ViewConfigureFilterPage( QWidget *parent,
   topLayout->setSpacing( KDialog::spacingHint() );
   topLayout->setMargin( 0 );
 
-  mFilterGroup = new Q3ButtonGroup();
-  connect( mFilterGroup, SIGNAL( clicked( int ) ), SLOT( buttonClicked( int ) ) );
+  mFilterGroup = new QButtonGroup();
+  connect( mFilterGroup, SIGNAL( buttonClicked( int ) ), SLOT( buttonClicked( int ) ) );
 
   QLabel *label = new QLabel( i18n( "The default filter will be activated whenever"
   " this view is displayed. This feature allows you to configure views that only"
@@ -63,17 +63,17 @@ ViewConfigureFilterPage::ViewConfigureFilterPage( QWidget *parent,
   topLayout->addWidget( spacer );
 
   QRadioButton *button = new QRadioButton( i18n( "No default filter" ), this );
-  mFilterGroup->insert( button );
+  mFilterGroup->addButton( button,0 );
   topLayout->addWidget( button );
 
   button = new QRadioButton( i18n( "Use last active filter" ), this );
-  mFilterGroup->insert( button );
+  mFilterGroup->addButton( button,1 );
   topLayout->addWidget( button );
 
   QBoxLayout *comboLayout = new QHBoxLayout();
   topLayout->addLayout( comboLayout );
   button = new QRadioButton( i18n( "Use filter:" ), this );
-  mFilterGroup->insert( button );
+  mFilterGroup->addButton( button,2 );
   comboLayout->addWidget( button );
 
   mFilterCombo = new KComboBox( this );
@@ -84,7 +84,6 @@ ViewConfigureFilterPage::ViewConfigureFilterPage( QWidget *parent,
 
 ViewConfigureFilterPage::~ViewConfigureFilterPage()
 {
-  delete mFilterGroup;
 }
 
 void ViewConfigureFilterPage::restoreSettings( const KConfigGroup &config )
@@ -98,7 +97,7 @@ void ViewConfigureFilterPage::restoreSettings( const KConfigGroup &config )
     mFilterCombo->addItem( (*it).name() );
 
   int id = config.readEntry( "DefaultFilterType", 1 );
-  mFilterGroup->setButton( id );
+  mFilterGroup->button ( id )->setChecked(true);
   buttonClicked( id );
 
   if ( id == 2 ) // has default filter
@@ -108,7 +107,7 @@ void ViewConfigureFilterPage::restoreSettings( const KConfigGroup &config )
 void ViewConfigureFilterPage::saveSettings( KConfigGroup &config )
 {
   config.writeEntry( "DefaultFilterName", mFilterCombo->currentText() );
-  config.writeEntry( "DefaultFilterType", mFilterGroup->id( mFilterGroup->selected() ) );
+  config.writeEntry( "DefaultFilterType", mFilterGroup->id( mFilterGroup->checkedButton() ) );
 }
 
 void ViewConfigureFilterPage::buttonClicked( int id )
