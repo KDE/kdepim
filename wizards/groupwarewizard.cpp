@@ -28,14 +28,13 @@
 
 #include "groupwarewizard.h"
 
-GroupwareWizard::GroupwareWizard( QWidget *parent, const char *name )
+GroupwareWizard::GroupwareWizard( QWidget *parent)
   : QWidget( parent )
 {
-  setObjectName(name);
-
   setWindowTitle( i18n( "KDE Groupware Wizard" ) );
 
-  QVBoxLayout *layout = new QVBoxLayout( this );
+  QVBoxLayout *layout = new QVBoxLayout;
+  setLayout(layout);
 
   mOverViewPage = new OverViewPage( this );
 

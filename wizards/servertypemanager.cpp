@@ -29,8 +29,9 @@ ServerTypeManager* ServerTypeManager::mSelf = 0;
 static KStaticDeleter<ServerTypeManager> serverManagerDeleter;
 
 ServerTypeManager::ServerTypeManager( QObject *parent, const char *name )
-  : QObject( parent, name )
+  : QObject( parent )
 {
+  setObjectName(name);
   loadPlugins();
 }
 

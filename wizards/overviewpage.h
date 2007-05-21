@@ -29,7 +29,7 @@ class OverViewPage : public QWidget
   Q_OBJECT
 
   public:
-    OverViewPage( QWidget *parent, const char *name = 0 );
+    OverViewPage( QWidget *parent);
     ~OverViewPage();
 
   private slots:

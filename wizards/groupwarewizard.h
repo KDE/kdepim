@@ -31,7 +31,7 @@ class GroupwareWizard : public QWidget
   Q_OBJECT
 
   public:
-    GroupwareWizard( QWidget *parent, const char *name = 0 );
+    GroupwareWizard( QWidget *parent);
     ~GroupwareWizard();
 
   private:

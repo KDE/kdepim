@@ -39,14 +39,14 @@
 
 #include "overviewpage.h"
 
-OverViewPage::OverViewPage( QWidget *parent, const char *name )
+OverViewPage::OverViewPage( QWidget *parent )
   : QWidget( parent )
 {
-  setObjectName(name);
 
-  QGridLayout *layout = new QGridLayout( this );
+  QGridLayout *layout = new QGridLayout;
   layout->setSpacing( KDialog::spacingHint() );
   layout->setMargin( KDialog::marginHint() );
+  setLayout(layout);
 
   const QString msg = i18n( "KDE Groupware Wizard" );
   QLabel *label = new QLabel( "<qt><b><u><h2>" + msg + "</h2></u></b></qt>" , this );
