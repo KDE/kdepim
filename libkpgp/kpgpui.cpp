@@ -33,8 +33,9 @@
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 #include <QProgressBar>
-#include <q3buttongroup.h>
+#include <qbuttongroup.h>
 #include <q3multilineedit.h>
+#include <QGroupBox>
 
 #include <klocale.h>
 #include <kpassworddialog.h>
@@ -183,8 +184,7 @@ Config::Config( QWidget *parent, bool encrypt )
   else
     encToSelf = 0;
   showCipherText = new QCheckBox( i18n("&Show signed/encrypted text after "
-                                       "composing"),
-                                  mpOptionsGroupBox );
+                                       "composing"));
   lay->addWidget( showCipherText );
   connect( showCipherText, SIGNAL( toggled( bool ) ),
            this, SIGNAL( changed( void ) ) );
@@ -196,8 +196,7 @@ Config::Config( QWidget *parent, bool encrypt )
   showCipherText->setWhatsThis( msg );
   if( encrypt ) {
     showKeyApprovalDlg = new QCheckBox( i18n("Always show the encryption "
-                                             "keys &for approval"),
-                                        mpOptionsGroupBox );
+                                             "keys &for approval"));
     lay->addWidget( showKeyApprovalDlg );
     connect( showKeyApprovalDlg, SIGNAL( toggled( bool ) ),
            this, SIGNAL( changed( void ) ) );
@@ -1365,8 +1364,7 @@ KeyApprovalDialog::KeyApprovalDialog( const QStringList& addresses,
   bigvbox->setSpacing( KDialog::spacingHint() );
   sv->addChild( bigvbox );
 
-  Q3ButtonGroup *mChangeButtonGroup = new Q3ButtonGroup( bigvbox );
-  mChangeButtonGroup->hide();
+  QButtonGroup *mChangeButtonGroup = new QButtonGroup;
   mAddressLabels.resize( addresses.count() );
   mKeyIdsLabels.resize( keyIDs.size() );
   //mKeyIdListBoxes.resize( keyIDs.size() );
@@ -1397,7 +1395,7 @@ KeyApprovalDialog::KeyApprovalDialog( const QStringList& addresses,
     keyidLB->setFrameStyle( QFrame::Panel | QFrame::Sunken );
     */
     QPushButton *button = new QPushButton( i18n("Change..."), hbox );
-    mChangeButtonGroup->insert( button );
+    mChangeButtonGroup->addButton( button );
     button->setAutoDefault( false );
     hbox->setStretchFactor( keyidsL, 10 );
     mKeyIdsLabels.insert( 0, keyidsL );
@@ -1454,7 +1452,7 @@ KeyApprovalDialog::KeyApprovalDialog( const QStringList& addresses,
     keyidLB->setFrameStyle( QFrame::Panel | QFrame::Sunken );
     */
     QPushButton *button = new QPushButton( i18n("Change..."), hbox );
-    mChangeButtonGroup->insert( button );
+    mChangeButtonGroup->addButton( button );
     button->setAutoDefault( false );
     hbox->setStretchFactor( keyidsL, 10 );
     mKeyIdsLabels.insert( i + 1, keyidsL );
@@ -1495,7 +1493,7 @@ KeyApprovalDialog::KeyApprovalDialog( const QStringList& addresses,
              this, SLOT(slotPrefsChanged(int)) );
     mEncrPrefCombos.insert( i, encrPrefCombo );
   }
-  connect( mChangeButtonGroup, SIGNAL(clicked(int)),
+  connect( mChangeButtonGroup, SIGNAL(buttonClicked(int)),
            this, SLOT(slotChangeEncryptionKey(int)) );
 
   QSize size = sizeHint();
