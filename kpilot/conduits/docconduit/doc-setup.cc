@@ -38,10 +38,8 @@
 #include <kconfig.h>
 #include <kurlrequester.h>
 
-#include "doc-setupdialog.h"
 #include "doc-setup.h"
 #include "docconduitSettings.h"
-
 
 DOCWidgetConfig::DOCWidgetConfig(QWidget * w):
 	ConduitConfigBase(w),

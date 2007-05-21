@@ -27,7 +27,7 @@ set(conduit_doc_KCFGS
 )
 
 kde4_add_kcfg_files(conduit_doc_SRCS ${conduit_doc_KCFGS})
-kde4_add_ui3_files(conduit_doc_SRCS ${conduit_doc_UIS})
+kde4_add_ui_files(conduit_doc_SRCS ${conduit_doc_UIS})
 kde4_automoc(${conduit_doc_SRCS})
 kde4_add_plugin(conduit_doc WITH_PREFIX ${conduit_doc_SRCS})
 target_link_libraries(conduit_doc ${QT_LIBRARIES} kpilot ${KDE4_KDEUI_LIBS} ${KDE4_KIO_LIBS})

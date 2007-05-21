@@ -38,12 +38,23 @@
 #include "pluginfactory.h"
 
 #include "notepad-conduit.h"     // Conduit action
-#include "notepad-setup.h"
+#include "ui_notepad-setup.h"
 #include "notepadconduit.h"     // Settings class
+
 
 //----------------------------------------------------------------------------
 // Conduit Configuration
 //----------------------------------------------------------------------------
+
+class NotepadWidget : public QWidget, public Ui::NotepadWidget
+{
+public:
+  NotepadWidget( QWidget *parent ) : QWidget( parent ) {
+    setupUi( this );
+  }
+};
+
+
 class NotepadConduitConfig : public ConduitConfigBase
 {
 public:

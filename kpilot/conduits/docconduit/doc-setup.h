@@ -30,9 +30,19 @@
 */
 
 #include "plugin.h"
+#include "ui_doc-setupdialog.h"
 
 class DOCWidget;
 class KAboutData;
+
+class DOCWidget  : public QWidget, public Ui::DOCWidget
+{
+public:
+  DOCWidget( QWidget *parent ) : QWidget( parent ) {
+    setupUi( this );
+  }
+};
+
 
 class DOCWidgetConfig : public ConduitConfigBase
 {
