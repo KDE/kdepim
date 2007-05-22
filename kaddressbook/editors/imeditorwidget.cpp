@@ -331,7 +331,7 @@ bool IMEditorWidget::isModified() const
 
 void IMEditorWidget::slotAdd()
 {
-  KDialogBase addDialog( this, "addaddress", true, i18n( "Add Address" ),
+  KDialogBase addDialog( this, "addaddress", true, i18n( "Instant messaging", "Add Address" ),
                          KDialogBase::Ok | KDialogBase::Cancel );
 
   IMAddressWidget *addressWid = new IMAddressWidget( &addDialog, mProtocols );
@@ -366,7 +366,7 @@ void IMEditorWidget::slotEdit()
 
   // Just edit the first one selected.
   if ( IMAddressLVI *current = static_cast<IMAddressLVI*>( it.current() ) ) {
-    KDialogBase editDialog( this, "editaddress", true, i18n( "Edit Address" ),
+    KDialogBase editDialog( this, "editaddress", true, i18n( "Instant messaging", "Edit Address" ),
                             KDialogBase::Ok | KDialogBase::Cancel );
     IMAddressWidget *addressWid = new IMAddressWidget( &editDialog, mProtocols, current->protocol(),
                                                        current->address(), current->context() ) ;
