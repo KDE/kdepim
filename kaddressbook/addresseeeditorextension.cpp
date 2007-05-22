@@ -61,8 +61,8 @@ void AddresseeEditorExtension::contactsSelectionChanged()
     addressees.append( mAddresseeEditor->addressee() );
     emit modified( addressees );
   }
-
-  mAddresseeEditor->setAddressee( selectedAddressees[ 0 ] );
+  if( !selectedAddressees.isEmpty())
+      mAddresseeEditor->setAddressee( selectedAddressees[ 0 ] );
 }
 
 QString AddresseeEditorExtension::title() const
