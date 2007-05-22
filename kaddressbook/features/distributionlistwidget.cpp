@@ -454,6 +454,8 @@ void DistributionListWidget::changeEmail()
 
   const QString email = EmailSelector::getEmail( contactItem->addressee().emails(),
                                                  contactItem->email(), this );
+  if(email.isEmpty())
+     return;
   dist.removeEntry( contactItem->addressee(), contactItem->email() );
   dist.insertEntry( contactItem->addressee(), email );
 
@@ -627,7 +629,7 @@ EmailSelector::EmailSelector( const QStringList &emails,
   : KDialog( parent )
 {
   setCaption( i18n("Select Email Address") );
-  setButtons( Ok );
+  setButtons( Ok|Cancel );
   setDefaultButton( Ok );
 
   QFrame *topFrame = new QFrame( this );
@@ -665,9 +667,10 @@ QString EmailSelector::getEmail( const QStringList &emails,
                                  const QString &current, QWidget *parent )
 {
   EmailSelector dlg( emails, current, parent );
-  dlg.exec();
+  if(dlg.exec())
+     return dlg.selected();
 
-  return dlg.selected();
+  return QString();
 }
 
 
