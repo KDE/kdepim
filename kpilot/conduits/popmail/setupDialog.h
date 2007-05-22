@@ -34,8 +34,16 @@
 
 
 #include "plugin.h"
+#include "ui_setup-dialog.h"
 
-class PopMailWidget; // From setup-dialog.ui
+class PopMailWidget : public QWidget, public Ui::PopMailWidget
+{
+public:
+  PopMailWidget( QWidget *parent ) : QWidget( parent ) {
+    setupUi( this );
+  }
+};
+
 
 class PopMailWidgetConfig : public ConduitConfigBase
 {

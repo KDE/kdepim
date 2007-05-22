@@ -34,8 +34,6 @@
 
 #include <kaboutdata.h>
 
-#include "time-setup_dialog.h"
-
 #include "time-setup.moc"
 #include "timeConduitSettings.h"
 

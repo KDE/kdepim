@@ -30,9 +30,18 @@
 */
 
 #include "plugin.h"
+#include "ui_time-setup_dialog.h"
 
-class TimeWidget;
 class KAboutData;
+
+class TimeWidget : public QWidget, public Ui::TimeWidget
+{
+public:
+  TimeWidget( QWidget *parent ) : QWidget( parent ) {
+    setupUi( this );
+  }
+};
+
 
 class TimeWidgetConfig : public ConduitConfigBase
 {

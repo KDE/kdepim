@@ -51,7 +51,6 @@
 #include <kurlrequester.h>
 
 
-#include "setup-dialog.h"
 #include "setupDialog.moc"
 #include "popmailSettings.h"
 
@@ -59,7 +58,7 @@
 
 PopMailWidgetConfig::PopMailWidgetConfig(QWidget *p) :
 	ConduitConfigBase(p),
-	fConfigWidget(new PopMailWidget(p,"PopMailWidget"))
+	fConfigWidget(new PopMailWidget(p))
 {
 	FUNCTIONSETUP;
 	fConduitName = i18n("KMail");
