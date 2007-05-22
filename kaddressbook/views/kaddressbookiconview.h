@@ -30,7 +30,7 @@
 #include <QDropEvent>
 #include <k3iconview.h>
 #include "kaddressbookview.h"
-
+#include <Q3ValueList>
 class Q3IconViewItem;
 class KConfigGroup;
 class AddresseeIconView;
@@ -90,6 +90,6 @@ class AddresseeIconView : public K3IconView
     virtual Q3DragObject *dragObject();
 
   protected slots:
-    void itemDropped( QDropEvent*, const QList<Q3IconDragItem>& );
+    void itemDropped( QDropEvent*, const Q3ValueList<Q3IconDragItem> & );
 };
 #endif

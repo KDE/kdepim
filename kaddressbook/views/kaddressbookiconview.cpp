@@ -77,15 +77,15 @@ AddresseeIconView::AddresseeIconView( QWidget *parent, const char *name )
   setSorting( true, true );
   setMode( K3IconView::Select );
 
-  connect( this, SIGNAL( dropped( QDropEvent*, const QList<Q3IconDragItem>& ) ),
-           this, SLOT( itemDropped( QDropEvent*, const QList<Q3IconDragItem>& ) ) );
+  connect( this, SIGNAL( dropped(QDropEvent *,const Q3ValueList<Q3IconDragItem> &) ),
+           this, SLOT( itemDropped(QDropEvent *,const Q3ValueList<Q3IconDragItem> &) ) );
 }
 
 AddresseeIconView::~AddresseeIconView()
 {
 }
 
-void AddresseeIconView::itemDropped( QDropEvent *event, const QList<Q3IconDragItem>& )
+void AddresseeIconView::itemDropped( QDropEvent *event,const Q3ValueList<Q3IconDragItem>&  )
 {
   emit addresseeDropped( event );
 }
