@@ -48,20 +48,13 @@ IncSearchWidget::IncSearchWidget( QWidget *parent, const char *name )
   layout->setSpacing( KDialog::spacingHint() );
   layout->setMargin( 2 );
 
-  QToolButton *button = new QToolButton( this );
-  button->setSizePolicy( QSizePolicy::Minimum, QSizePolicy::Minimum );
-  button->setIcon( SmallIcon( QApplication::isRightToLeft() ? "clear-left" : "locationbar-erase" ) );
-  button->setShortcut( QKeySequence( Qt::CTRL+Qt::ALT+Qt::Key_S ) );
-  button->setAutoRaise( true );
-  button->setToolTip( i18n( "Reset" ) );
-  layout->addWidget( button );
-
   QLabel *label = new QLabel( i18n( "Search:" ), this );
   label->setObjectName( "kde toolbar widget" );
   label->setAlignment( Qt::AlignVCenter | Qt::AlignRight );
   layout->addWidget( label );
 
   mSearchText = new KLineEdit( this );
+  mSearchText->setClearButtonShown(true);
   mSearchText->setSizePolicy( QSizePolicy::MinimumExpanding, QSizePolicy::Preferred );
   mSearchText->setWhatsThis( i18n( "The incremental search<p>Enter some text here will start the search for the contact, which matches the search pattern best. The part of the contact, which will be used for matching, depends on the field selection." ) );
   label->setBuddy( mSearchText );
@@ -91,9 +84,7 @@ IncSearchWidget::IncSearchWidget( QWidget *parent, const char *name )
            SLOT( announceDoSearch() ) );
   connect( mFieldCombo, SIGNAL( activated( const QString& ) ),
            SLOT( announceDoSearch() ) );
-  connect( button, SIGNAL( clicked() ),
-           mSearchText, SLOT( clear() ) );
-  connect( button, SIGNAL( clicked() ),
+  connect( mSearchText, SIGNAL( clearButtonClicked() ),
            SLOT( announceDoSearch() ) );
 
   initFields();
