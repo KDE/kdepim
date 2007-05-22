@@ -452,9 +452,10 @@ void DistributionListWidget::changeEmail()
   if ( !contactItem )
     return;
 
+  bool canceled = false;
   const QString email = EmailSelector::getEmail( contactItem->addressee().emails(),
-                                                 contactItem->email(), this );
-  if(email.isEmpty())
+                                                 contactItem->email(), this, canceled );
+  if(canceled)
      return;
   dist.removeEntry( contactItem->addressee(), contactItem->email() );
   dist.insertEntry( contactItem->addressee(), email );
@@ -664,12 +665,15 @@ QString EmailSelector::selected() const
 }
 
 QString EmailSelector::getEmail( const QStringList &emails,
-                                 const QString &current, QWidget *parent )
+                                 const QString &current, QWidget *parent, bool &canceled )
 {
   EmailSelector dlg( emails, current, parent );
   if(dlg.exec())
+  { 
+     canceled = false;
      return dlg.selected();
-
+  }
+  canceled = true;
   return QString();
 }
 

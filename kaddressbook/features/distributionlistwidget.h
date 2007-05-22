@@ -135,7 +135,7 @@ class EmailSelector : public KDialog
     QString selected() const;
 
     static QString getEmail( const QStringList &emails, const QString &current,
-                             QWidget *parent );
+                             QWidget *parent, bool & canceled );
 
   private:
     Q3ButtonGroup *mButtonGroup;
