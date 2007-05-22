@@ -71,7 +71,7 @@ int main( int argc, char **argv )
   KCmdLineArgs::init( argc, argv, &aboutData, KCmdLineArgs::CmdLineArgNone );
   KCmdLineArgs::addCmdLineOptions( options );
 
-  QCoreApplication app(  *KCmdLineArgs::qt_argc(), *KCmdLineArgs::qt_argv() );
+  QCoreApplication app( KCmdLineArgs::qtArgc(), KCmdLineArgs::qtArgv() );
 
   KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
 
