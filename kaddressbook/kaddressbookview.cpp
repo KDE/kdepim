@@ -187,7 +187,7 @@ void KAddressBookView::updateView()
   } else {
     const KABC::Addressee::List contacts = mCore->searchManager()->contacts();
     if ( !contacts.isEmpty() )
-      setSelected( contacts.first().uid(), true );
+      setFirstSelected( true );
     else
       emit selected( QString::null );
   }

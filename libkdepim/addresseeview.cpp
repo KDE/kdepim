@@ -268,11 +268,11 @@ QString AddresseeView::vCardAsHTML( const KABC::Addressee& addr, ::KIMProxy *pro
     if ( !addr.url().url().isEmpty() ) {
       QString url;
       if ( linkMask & URLLinks ) {
-        url = (addr.url().url().startsWith( "http://" ) || addr.url().url().startsWith( "https://" ) ? addr.url().url() :
-          "http://" + addr.url().url());
+        url = (addr.url().url().startsWith( "http://" ) || addr.url().url().startsWith( "https://" ) ? addr.url().prettyURL() :
+          "http://" + addr.url().prettyURL());
         url = KStringHandler::tagURLs( url );
       } else {
-        url = addr.url().url();
+        url = addr.url().prettyURL();
       }
       dynamicPart += rowFmtStr.arg( i18n("Homepage") ).arg( url );
     }
@@ -364,7 +364,6 @@ QString AddresseeView::vCardAsHTML( const KABC::Addressee& addr, ::KIMProxy *pro
       titleMap.insert( "ManagersName", i18n( "Manager's Name" ) );
       titleMap.insert( "SpousesName", i18n( "Partner's Name" ) );
       titleMap.insert( "Office", i18n( "Office" ) );
-      titleMap.insert( "IMAddress", i18n( "IM Address" ) );
       titleMap.insert( "Anniversary", i18n( "Anniversary" ) );
     }
 
@@ -382,8 +381,8 @@ QString AddresseeView::vCardAsHTML( const KABC::Addressee& addr, ::KIMProxy *pro
           QString key = customEntry.left( pos );
           const QString value = customEntry.mid( pos + 1 );
 
-          // blog is handled separated
-          if ( key == "BlogFeed" )
+          // blog and im address is handled separated
+          if ( key == "BlogFeed" || key == "IMAddress" )
             continue;
 
           const QMap<QString, QString>::ConstIterator keyIt = titleMap.find( key );
@@ -400,30 +399,38 @@ QString AddresseeView::vCardAsHTML( const KABC::Addressee& addr, ::KIMProxy *pro
   QString role( addr.role() );
   QString organization( addr.organization() );
 
-  if ( proxy && (fieldMask & IMFields) ) {
-    if ( proxy->isPresent( addr.uid() ) && proxy->presenceNumeric( addr.uid() ) > 0 ) {
-      // set image source to either a QMimeSourceFactory key or a data:/ URL
-      QString imgSrc;
-      if ( internalLoading ) {
-        imgSrc = QString::fromLatin1( "im_status_%1_image").arg( addr.uid() );
-        QMimeSourceFactory::defaultFactory()->setPixmap( imgSrc, proxy->presenceIcon( addr.uid() ) );
-      } else
-        imgSrc = pixmapAsDataUrl( proxy->presenceIcon( addr.uid() ) );
+  if ( fieldMask & IMFields ) {
 
-      // make the status a link, if required
-      QString imStatus;
-      if ( linkMask & IMLinks )
-        imStatus = QString::fromLatin1( "<a href=\"im:\"><img src=\"%1\"> (%2)</a>" );
-      else
-        imStatus = QString::fromLatin1( "<img src=\"%1\"> (%2)" );
+    const QString imAddress = addr.custom( "KADDRESSBOOK", "X-IMAddress" );
+    if ( !imAddress.isEmpty() ) {
+      customData += rowFmtStr.arg( i18n( "IM Address" ) ).arg( imAddress ) ;
+    }
 
-      // append our status to the rest of the dynamic part of the addressee
-      dynamicPart += rowFmtStr
-              .arg( i18n( "Presence" ) )
-              .arg( imStatus
-                        .arg( imgSrc )
-                        .arg( proxy->presenceString( addr.uid() ) )
-                  );
+    if ( proxy ) {
+      if ( proxy->isPresent( addr.uid() ) && proxy->presenceNumeric( addr.uid() ) > 0 ) {
+        // set image source to either a QMimeSourceFactory key or a data:/ URL
+        QString imgSrc;
+        if ( internalLoading ) {
+          imgSrc = QString::fromLatin1( "im_status_%1_image").arg( addr.uid() );
+          QMimeSourceFactory::defaultFactory()->setPixmap( imgSrc, proxy->presenceIcon( addr.uid() ) );
+        } else
+          imgSrc = pixmapAsDataUrl( proxy->presenceIcon( addr.uid() ) );
+
+        // make the status a link, if required
+        QString imStatus;
+        if ( linkMask & IMLinks )
+          imStatus = QString::fromLatin1( "<a href=\"im:\"><img src=\"%1\"> (%2)</a>" );
+        else
+          imStatus = QString::fromLatin1( "<img src=\"%1\"> (%2)" );
+
+        // append our status to the rest of the dynamic part of the addressee
+        dynamicPart += rowFmtStr
+                .arg( i18n( "Presence" ) )
+                .arg( imStatus
+                          .arg( imgSrc )
+                          .arg( proxy->presenceString( addr.uid() ) )
+                    );
+      }
     }
   }
 
