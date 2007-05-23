@@ -40,12 +40,13 @@ class ImageLoader : public QObject
   Q_OBJECT
 
   public:
-    ImageLoader();
+    ImageLoader( QWidget *parent );
 
     KABC::Picture loadPicture( const KURL &url, bool *ok );
 
   private:
     KABC::Picture mPicture;
+    QWidget *mParent;
 };
 
 /**
