@@ -230,7 +230,7 @@ void ProbeDialog::startDetection()
 			DEBUGKPILOT<<"new kpilotDeviceLink for "<<(*it)<<endl;
 #endif
 			fDeviceLinks[i].append( link );
-			connect( link, SIGNAL(deviceReady(KPilotDeviceLink*)), this, SLOT(connection(KPilotDeviceLink*)) );
+			connect( link, SIGNAL(deviceReady(KPilotLink*)), this, SLOT(connection(KPilotLink*)) );
 			processEvents();
 		}
 	}
@@ -279,11 +279,11 @@ void ProbeDialog::timeout()
 	}
 }
 
-void ProbeDialog::connection( KPilotDeviceLink *lnk)
+void ProbeDialog::connection( KPilotLink *lnk)
 {
 	FUNCTIONSETUP;
 
-	fActiveLink = lnk;
+	fActiveLink = static_cast<KPilotDeviceLink*>(lnk);
 	if ( !fActiveLink )
 	{
 		return;

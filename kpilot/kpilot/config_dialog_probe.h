@@ -61,7 +61,7 @@ public:
 protected slots:
 	void startDetection();
 	void timeout();
-	void connection(KPilotDeviceLink*lnk);
+	void connection(KPilotLink*lnk);
 	void retrieveDBList();
 	void disconnectDevices();
 	void processEvents();
