@@ -120,7 +120,7 @@ PluginPickerDialog::PluginPickerDialog( QWidget *parent )
   mPicker->setFocus();
 
   connect( this, SIGNAL( okClicked() ), this, SLOT( slotOk() ) );
-  connect( this, SIGNAL( okCancel() ), this, SLOT( slotCancel() ) );
+  connect( this, SIGNAL( cancelClicked() ), this, SLOT( slotCancel() ) );
 }
 
 QSync::Plugin PluginPickerDialog::selectedPlugin() const
