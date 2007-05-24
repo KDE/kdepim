@@ -50,6 +50,7 @@
 #include "KDGanttMinimizeSplitter.h"
 #include "KDGanttViewItemDrag.h"
 
+class KDIntervalColorRectangle;
 class KDGanttViewTaskLink;
 class QPrinter;
 class QIODevice;
@@ -259,6 +260,8 @@ public:
                                    const QColor& color,
 				   Scale mini =  KDGanttView::Minute ,
 				   Scale maxi =  KDGanttView::Month);
+#if 0
+   // This API has been replaced with KDIntervalColorRectangle and addIntervalBackgroundColor
     void setIntervalBackgroundColor( const QDateTime& start,
 				     const QDateTime& end,
 				     const QColor& color,
@@ -270,6 +273,8 @@ public:
 				   const QDateTime& newend );
     bool deleteBackgroundInterval( const QDateTime& start,
 				   const QDateTime& end );
+#endif
+    void addIntervalBackgroundColor( KDIntervalColorRectangle* newItem );
     void clearBackgroundColor();
     QColor columnBackgroundColor( const QDateTime& column ) const;
     void setWeekendBackgroundColor( const QColor& color );
@@ -338,7 +343,10 @@ public:
 
     void setLinkItemsEnabled(bool on);
     bool isLinkItemsEnabled() const;
-    
+
+    KDTimeTableWidget * timeTableWidget() { return myTimeTable; }
+    KDTimeHeaderWidget * timeHeaderWidget() { return myTimeHeader; }
+
 public slots:
     void editItem( KDGanttViewItem* );
     void zoomToSelection( const QDateTime& start,  const QDateTime&  end);
@@ -347,6 +355,7 @@ signals:
     void timeIntervallSelected( const QDateTime& start,  const QDateTime&  end);
     void timeIntervalSelected( const QDateTime& start,  const QDateTime&  end);
     void rescaling( Scale );
+    void intervalColorRectangleMoved( const QDateTime& start, const QDateTime& end );
 
     // the following signals are emitted if an item is clicked in the
     // listview (inclusive) or in the ganttview
@@ -357,7 +366,7 @@ signals:
 
     // The following signal is emitted when two items shall be linked
     void linkItems( KDGanttViewItem* from, KDGanttViewItem* to, int linkType );
-    
+
     // the following signals are emitted if an item is clicked in the
     // listview (exlusive) or in the ganttview
     // gv... means item in ganttview clicked

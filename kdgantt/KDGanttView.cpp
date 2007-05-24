@@ -324,7 +324,7 @@ QSize KDGanttView::sizeHint() const
   myTimeTable->setBlockUpdating( false );
   myTimeTable->updateMyContent();
   /* The below causes recursive calls to various size updating methods, which
-   * cause QCanvas to hide and show items like mad, which is very slow. If 
+   * cause QCanvas to hide and show items like mad, which is very slow. If
    * there is a legitimate gui updating issue here somewhere, it will need
    * to be solved differently.
    */
@@ -981,7 +981,7 @@ QSize KDGanttView::drawContents( QPainter* p,
       //HACK: Only draw list headers if we draw timeline, else
       // there is no room for it. This will most probably be changed
       // with qt4 anyway, so I think we can live with it atm.
-      myListView->drawToPainter( p, drawTimeLine ); 
+      myListView->drawToPainter( p, drawTimeLine );
       p->translate( lvX, -temp);
     }
     if ( drawTimeLine ) {
@@ -1822,7 +1822,7 @@ KDGanttView::HourFormat KDGanttView::hourFormat() const
   \param show true in order to show ticks, false in order to hide them.
          If show is true, setShowMinorTicks( false ) is performed automatically
          to hide the grid of the minor ticks.
-         In order to show now grid, call setShowMinorTicks( false ) and 
+         In order to show now grid, call setShowMinorTicks( false ) and
          setShowMajorTicks( false ).
   \sa showMajorTicks(), setShowMinorTicks(), showMinorTicks()
 */
@@ -1850,7 +1850,7 @@ bool KDGanttView::showMajorTicks() const
   \param show true in order to show ticks, false in order to hide them.
          If show is true, setShowMajorTicks( false ) is performed automatically
          to hide the grid of the major ticks.
-         In order to show now grid, call setShowMinorTicks( false ) and 
+         In order to show now grid, call setShowMinorTicks( false ) and
          setShowMajorTicks( false ).
 
   \sa showMinorTicks(), setShowMajorTicks(), showMajorTicks()
@@ -1898,7 +1898,7 @@ void KDGanttView::setColumnBackgroundColor( const QDateTime& column,
   myTimeHeader->setColumnBackgroundColor( column, color,mini,maxi );
 }
 
-
+#if 0
 /*!
   Sets the background color for a time interval given by \a start and
   \a end.  \a start may be later than \a end.  If there is already a
@@ -1975,7 +1975,17 @@ bool KDGanttView::deleteBackgroundInterval( const QDateTime& start,
 {
   return myTimeHeader->deleteBackgroundInterval( start, end );
 }
+#endif
 
+/*!
+  Adds a filled rectangle for a time interval given by \a start and
+  \a end, across all tasks.  \a start may be later than \a end.
+  \sa KDIntervalColorRectangle
+*/
+void KDGanttView::addIntervalBackgroundColor( KDIntervalColorRectangle* newItem )
+{
+  myTimeHeader->addIntervalBackgroundColor( newItem );
+}
 
 /*!
   Removes all background color settings set with setColumnBackgroundColor()
@@ -4633,7 +4643,7 @@ void  KDGanttView::notifyEditdialog( KDGanttViewItem * item)
 void KDGanttView::setLinkItemsEnabled(bool on)
 {
     myCanvasView->linkItemsEnabled = on;
-    myCanvasView->autoScrollEnabled = true;    
+    myCanvasView->autoScrollEnabled = true;
 }
 
 /*!
@@ -4641,7 +4651,7 @@ void KDGanttView::setLinkItemsEnabled(bool on)
 
   Returns if the linking functionallity is enabled or disabled.
 */
-bool KDGanttView::isLinkItemsEnabled() const 
+bool KDGanttView::isLinkItemsEnabled() const
 {
     return myCanvasView->linkItemsEnabled;
 }
