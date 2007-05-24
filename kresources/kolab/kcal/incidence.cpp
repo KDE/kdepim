@@ -43,12 +43,10 @@
 using namespace Kolab;
 
 
-Incidence::Incidence( const QString& tz, KCal::Incidence* incidence )
+Incidence::Incidence( const QString& tz )
   : KolabBase( tz ), mFloatingStatus( Unset ), mHasAlarm( false ),
     mRevision( 0 )
 {
-  if ( incidence )
-    setFields( incidence );
 }
 
 Incidence::~Incidence()
