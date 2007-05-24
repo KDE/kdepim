@@ -57,7 +57,7 @@ QString Event::eventToXML( KCal::Event* kcalEvent, const QString& tz  )
 
 Event::Event( KCal::ResourceKolab *res, const QString &subResource, Q_UINT32 sernum,
               const QString& tz, KCal::Event* event )
-  : Incidence( res, subResource, sernum, tz, event ),
+  : Incidence( res, subResource, sernum, tz ),
   mShowTimeAs( KCal::Event::Opaque ), mHasEndDate( false )
 {
   if ( event )

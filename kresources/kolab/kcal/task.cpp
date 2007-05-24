@@ -57,7 +57,7 @@ QString Task::taskToXML( KCal::Todo* todo, const QString& tz )
 
 Task::Task( KCal::ResourceKolab *res, const QString &subResource, Q_UINT32 sernum,
             const QString& tz, KCal::Todo* task )
-  : Incidence( res, subResource, sernum, tz, task ),
+  : Incidence( res, subResource, sernum, tz ),
     mPriority( 5 ), mPercentCompleted( 0 ),
     mStatus( KCal::Incidence::StatusNone ),
     mHasStartDate( false ), mHasDueDate( false ),

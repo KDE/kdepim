@@ -77,7 +77,7 @@ public:
   };
 
   explicit Incidence( KCal::ResourceKolab *res, const QString &subResource, Q_UINT32 sernum,
-                      const QString& tz, KCal::Incidence* incidence = 0 );
+                      const QString& tz );
   virtual ~Incidence();
 
   void saveTo( KCal::Incidence* incidence );

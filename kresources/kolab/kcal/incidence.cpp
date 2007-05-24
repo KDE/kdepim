@@ -48,15 +48,13 @@ using namespace Kolab;
 
 
 Incidence::Incidence( KCal::ResourceKolab *res, const QString &subResource, Q_UINT32 sernum,
-                      const QString& tz, KCal::Incidence* incidence )
+                      const QString& tz )
   : KolabBase( tz ), mFloatingStatus( Unset ), mHasAlarm( false ),
     mRevision( 0 ),
     mResource( res ),
     mSubResource( subResource ),
     mSernum( sernum )
 {
-  if ( incidence )
-    setFields( incidence );
 }
 
 Incidence::~Incidence()
