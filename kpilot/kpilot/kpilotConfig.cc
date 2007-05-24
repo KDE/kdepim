@@ -237,7 +237,7 @@ void KPilotConfig::addFlagsChangedDatabase(QString db)
 		<< fileVersion << " to " << ConfigurationVersion << endl;
 
 	KPilotConfig::updateConfigVersion();
-	KPilotSettings::writeConfig();
+	KPilotSettings::self()->writeConfig();
 	return ConfigureAndContinue;
 }
 

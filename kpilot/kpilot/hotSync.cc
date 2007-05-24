@@ -915,7 +915,7 @@ CheckUser::~CheckUser()
 		<< fHandle->getPilotUser().name() << ">" << endl;
 #endif
 
-	KPilotSettings::writeConfig();
+	KPilotSettings::self()->writeConfig();
 
 	// Now we've established which user will be used,
 	// fix the database location for local databases.
