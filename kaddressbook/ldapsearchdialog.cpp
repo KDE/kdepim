@@ -311,7 +311,7 @@ void LDAPSearchDialog::cancelQuery()
   }
 }
 
-void LDAPSearchDialog::slotAddResult( const KPIM::LdapClient&, const KLDAP::LdapObject& obj )
+void LDAPSearchDialog::slotAddResult( const LdapClient&, const KLDAP::LdapObject& obj )
 {
   new ContactListItem( mResultListView, obj.attributes() );
 }

@@ -35,6 +35,7 @@ class QCheckBox;
 class Q3ListView;
 class QPushButton;
 class KABCore;
+using namespace KPIM;
 
 class LDAPSearchDialog : public KDialog
 {
@@ -52,7 +53,7 @@ class LDAPSearchDialog : public KDialog
     void addresseesAdded();
 
   protected slots:
-    void slotAddResult( const KPIM::LdapClient &client, const KLDAP::LdapObject& obj );
+    void slotAddResult( const LdapClient &client, const KLDAP::LdapObject& obj );
     void slotSetScope( bool rec );
     void slotStartSearch();
     void slotStopSearch();
