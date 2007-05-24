@@ -73,7 +73,10 @@ public:
     QString role;
   };
 
-  explicit Incidence( const QString& tz, KCal::Incidence* incidence = 0 );
+protected:
+  explicit Incidence( const QString& tz );
+
+public:
   virtual ~Incidence();
 
   void saveTo( KCal::Incidence* incidence );
