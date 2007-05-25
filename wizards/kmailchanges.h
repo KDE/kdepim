@@ -25,6 +25,10 @@
 #include <kconfigpropagator.h>
 #include <kconfig.h>
 
+namespace KWallet {
+  class Wallet;
+}
+
 class CreateImapAccount : public KConfigPropagator::Change
 {
   public:
@@ -73,6 +77,9 @@ class CreateImapAccount : public KConfigPropagator::Change
     void setCustomWriter( CustomWriter * );
 
   protected:
+    bool writeToWallet( const QString &type, int id );
+
+  protected:
     QString mAccountName;
 
     QString mServer;
@@ -95,6 +102,9 @@ class CreateImapAccount : public KConfigPropagator::Change
     int mExistingTransportId;
 
     CustomWriter *mCustomWriter;
+
+  private:
+    static KWallet::Wallet *mWallet;
 };
 
 class CreateDisconnectedImapAccount : public CreateImapAccount
