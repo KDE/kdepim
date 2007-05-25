@@ -25,9 +25,12 @@
 
 #include "kolabkmailchanges.h"
 
+#warning Port me!
+#if 0
 #include "kresources/kolab/kcal/resourcekolab.h"
 #include "kresources/kolab/kabc/resourcekolab.h"
 #include "kresources/kolab/knotes/resourcekolab.h"
+#endif
 
 #include <kcal/resourcecalendar.h>
 #include <kabc/resource.h>
@@ -105,10 +108,13 @@ class CreateCalendarImapResource : public KConfigPropagator::Change
     {
       KCal::CalendarResourceManager m( "calendar" );
       m.readConfig();
+#warning Port me!
+#if 0
       KCal::ResourceKolab *r = new KCal::ResourceKolab();
       r->setResourceName( i18n("Kolab Server") );
       m.add( r );
       m.setStandardResource( r );
+#endif
       m.writeConfig();
     }
 };
@@ -125,10 +131,13 @@ class CreateContactImapResource : public KConfigPropagator::Change
     {
       KRES::Manager<KABC::Resource> m( "contact" );
       m.readConfig();
+#warning Port me!
+#if 0
       KABC::ResourceKolab *r = new KABC::ResourceKolab();
       r->setResourceName( i18n("Kolab Server") );
       m.add( r );
       m.setStandardResource( r );
+#endif
       m.writeConfig();
     }
 
@@ -144,6 +153,8 @@ class CreateNotesImapResource : public KConfigPropagator::Change
 
     void apply()
     {
+#warning Port me!
+#if 0
       KRES::Manager<ResourceNotes> m( "notes" );
       m.readConfig();
       Kolab::ResourceKolab *r = new Kolab::ResourceKolab();
@@ -151,6 +162,7 @@ class CreateNotesImapResource : public KConfigPropagator::Change
       m.add( r );
       m.setStandardResource( r );
       m.writeConfig();
+#endif
     }
 
 };
@@ -254,7 +266,7 @@ class KolabPropagator : public KConfigPropagator
 
 KolabWizard::KolabWizard() : KConfigWizard( new KolabPropagator )
 {
-  QFrame *page = createWizardPage( i18n("Kolab Server") );
+  QWidget *page = createWizardPage( i18n("Kolab Server") );
 
   QGridLayout *topLayout = new QGridLayout( page );
   topLayout->setSpacing( spacingHint() );

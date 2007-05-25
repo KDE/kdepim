@@ -31,6 +31,8 @@
 #include <kdebug.h>
 #include <kstringhandler.h>
 #include <krandom.h>
+#include <kwallet.h>
+using namespace KWallet;
 
 static const char* s_folderContentsType[] = {
   I18N_NOOP( "Calendar" ),
@@ -39,6 +41,7 @@ static const char* s_folderContentsType[] = {
   I18N_NOOP( "Tasks" ),
   I18N_NOOP( "Journal" ) };
 
+Wallet* CreateImapAccount::mWallet = 0;
 
 CreateImapAccount::CreateImapAccount( const QString &accountName, const QString &title )
   : KConfigPropagator::Change( title ),
@@ -193,6 +196,13 @@ void CreateDisconnectedImapAccount::apply()
     c.writeEntry( "use-tls", true );
   }
 
+  if ( mEnableSavePassword ) {
+    if ( !writeToWallet( "account", accountId ) ) {
+      c.writeEntry( "pass", KStringHandler::obscure( mPassword ) );
+      c.writeEntry( "store-passwd", true );
+    }
+  }
+
 
   c.setGroup( QString("Folder-%1").arg( uid ) );
   c.writeEntry( "isOpen", true );
@@ -220,8 +230,10 @@ void CreateDisconnectedImapAccount::apply()
   }
   c.writeEntry( "user", mUser );
   if ( mEnableSavePassword ) {
-    c.writeEntry( "pass", KStringHandler::obscure( mPassword ) );
-    c.writeEntry( "storepass", "true" );
+    if ( !writeToWallet( "transport", transportId ) ) {
+      c.writeEntry( "pass", KStringHandler::obscure( mPassword ) );
+      c.writeEntry( "storepass", true );
+    }
   }
 
   // Write email in "default kcontrol settings", used by IdentityManager
@@ -270,26 +282,28 @@ void CreateOnlineImapAccount::apply()
   c.writeEntry( "accounts", accCnt+1 );
 
   c.setGroup( QString("Account %1").arg(accCnt+1) );
-  int uid = kapp->random();
+  int uid = KRandom::random();
   c.writeEntry( "Folder", uid );
   c.writeEntry( "Id", uid );
   c.writeEntry( "Type", "imap" );
-  c.writeEntry( "auth", true );
+  c.writeEntry( "auth", "*" );
   c.writeEntry( "Name", mAccountName );
   c.writeEntry( "host", mServer );
 
   c.writeEntry( "login", mUser );
 
   if ( mEnableSavePassword ) {
-    c.writeEntry( "pass", KStringHandler::obscure( mPassword ) );
-    c.writeEntry( "store-passwd", true );
+    if ( !writeToWallet( "account", accCnt+1 ) ) {
+      c.writeEntry( "pass", KStringHandler::obscure( mPassword ) );
+      c.writeEntry( "store-passwd", true );
+    }
   }
   c.writeEntry( "port", "993" );
 
   if ( mEncryption == SSL ) {
-    c.writeEntry( "encryption", "SSL" );
+    c.writeEntry( "use-ssl", true );
   } else if ( mEncryption == TLS ) {
-    c.writeEntry( "encryption", "TLS" );
+    c.writeEntry( "use-tls", true );
   }
 
   if ( mAuthenticationSend == PLAIN ) {
@@ -310,4 +324,23 @@ void CreateOnlineImapAccount::apply()
 
   c.setGroup( QString("Folder-%1").arg( uid ) );
   c.writeEntry( "isOpen", true );
+}
+
+bool CreateImapAccount::writeToWallet(const QString & type, int id)
+{
+  if ( !Wallet::isEnabled() )
+    return false;
+  if ( !mWallet || !mWallet->isOpen() ) {
+    delete mWallet;
+    WId window = 0;
+    if ( qApp->activeWindow() )
+      window = qApp->activeWindow()->winId();
+    mWallet = Wallet::openWallet( Wallet::NetworkWallet(), window );
+    if ( !mWallet )
+      return false;
+    if ( !mWallet->hasFolder( "kmail" ) )
+      mWallet->createFolder( "kmail" );
+    mWallet->setFolder( "kmail" );
+  }
+  return mWallet->writePassword( type + "-" + QString::number( id ), mPassword );
 }
