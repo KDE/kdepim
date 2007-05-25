@@ -30,6 +30,8 @@
 #include <identity.h>
 #include <kdebug.h>
 #include <kstringhandler.h>
+#include <kwallet.h>
+using namespace KWallet;
 
 static const char* s_folderContentsType[] = {
   I18N_NOOP( "Calendar" ),
@@ -38,6 +40,7 @@ static const char* s_folderContentsType[] = {
   I18N_NOOP( "Tasks" ),
   I18N_NOOP( "Journal" ) };
 
+Wallet* CreateImapAccount::mWallet = 0;
 
 CreateImapAccount::CreateImapAccount( const QString &accountName, const QString &title )
   : KConfigPropagator::Change( title ),
@@ -193,8 +196,10 @@ void CreateDisconnectedImapAccount::apply()
   }
 
   if ( mEnableSavePassword ) {
-    c.writeEntry( "pass", KStringHandler::obscure( mPassword ) );
-    c.writeEntry( "store-passwd", true );
+    if ( !writeToWallet( "account", accountId ) ) {
+      c.writeEntry( "pass", KStringHandler::obscure( mPassword ) );
+      c.writeEntry( "store-passwd", true );
+    }
   }
 
 
@@ -224,8 +229,10 @@ void CreateDisconnectedImapAccount::apply()
   }
   c.writeEntry( "user", mUser );
   if ( mEnableSavePassword ) {
-    c.writeEntry( "pass", KStringHandler::obscure( mPassword ) );
-    c.writeEntry( "storepass", true );
+    if ( !writeToWallet( "transport", transportId ) ) {
+      c.writeEntry( "pass", KStringHandler::obscure( mPassword ) );
+      c.writeEntry( "storepass", true );
+    }
   }
 
   // Write email in "default kcontrol settings", used by IdentityManager
@@ -285,8 +292,10 @@ void CreateOnlineImapAccount::apply()
   c.writeEntry( "login", mUser );
 
   if ( mEnableSavePassword ) {
-    c.writeEntry( "pass", KStringHandler::obscure( mPassword ) );
-    c.writeEntry( "store-passwd", true );
+    if ( !writeToWallet( "account", accCnt+1 ) ) {
+      c.writeEntry( "pass", KStringHandler::obscure( mPassword ) );
+      c.writeEntry( "store-passwd", true );
+    }
   }
   c.writeEntry( "port", "993" );
 
@@ -314,4 +323,23 @@ void CreateOnlineImapAccount::apply()
 
   c.setGroup( QString("Folder-%1").arg( uid ) );
   c.writeEntry( "isOpen", true );
+}
+
+bool CreateImapAccount::writeToWallet(const QString & type, int id)
+{
+  if ( !Wallet::isEnabled() )
+    return false;
+  if ( !mWallet || !mWallet->isOpen() ) {
+    delete mWallet;
+    WId window = 0;
+    if ( qApp->activeWindow() )
+      window = qApp->activeWindow()->winId();
+    mWallet = Wallet::openWallet( Wallet::NetworkWallet(), window );
+    if ( !mWallet )
+      return false;
+    if ( !mWallet->hasFolder( "kmail" ) )
+      mWallet->createFolder( "kmail" );
+    mWallet->setFolder( "kmail" );
+  }
+  return mWallet->writePassword( type + "-" + QString::number( id ), mPassword );
 }
