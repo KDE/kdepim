@@ -285,7 +285,7 @@ void CreateOnlineImapAccount::apply()
   c.writeEntry( "Folder", uid );
   c.writeEntry( "Id", uid );
   c.writeEntry( "Type", "imap" );
-  c.writeEntry( "auth", true );
+  c.writeEntry( "auth", "*" );
   c.writeEntry( "Name", mAccountName );
   c.writeEntry( "host", mServer );
 
@@ -300,9 +300,9 @@ void CreateOnlineImapAccount::apply()
   c.writeEntry( "port", "993" );
 
   if ( mEncryption == SSL ) {
-    c.writeEntry( "encryption", "SSL" );
+    c.writeEntry( "use-ssl", true );
   } else if ( mEncryption == TLS ) {
-    c.writeEntry( "encryption", "TLS" );
+    c.writeEntry( "use-tls", true );
   }
 
   if ( mAuthenticationSend == PLAIN ) {
