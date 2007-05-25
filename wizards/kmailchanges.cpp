@@ -192,6 +192,11 @@ void CreateDisconnectedImapAccount::apply()
     c.writeEntry( "use-tls", true );
   }
 
+  if ( mEnableSavePassword ) {
+    c.writeEntry( "pass", KStringHandler::obscure( mPassword ) );
+    c.writeEntry( "store-passwd", true );
+  }
+
 
   c.setGroup( QString("Folder-%1").arg( uid ) );
   c.writeEntry( "isOpen", true );
@@ -220,7 +225,7 @@ void CreateDisconnectedImapAccount::apply()
   c.writeEntry( "user", mUser );
   if ( mEnableSavePassword ) {
     c.writeEntry( "pass", KStringHandler::obscure( mPassword ) );
-    c.writeEntry( "storepass", "true" );
+    c.writeEntry( "storepass", true );
   }
 
   // Write email in "default kcontrol settings", used by IdentityManager
