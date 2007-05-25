@@ -88,6 +88,7 @@
 #include "xxportmanager.h"
 
 #include "kabcore.h"
+#include "kaddressbookcore_interface.h"
 
 KABCore::KABCore( KXMLGUIClient *client, bool readWrite, QWidget *parent,
                   const QString &file, const char *name )
@@ -1321,6 +1322,7 @@ bool KABCore::handleCommandLine()
   QString addrStr = args->getOption( "addr" );
   QString uidStr = args->getOption( "uid" );
 
+  OrgKdeKAddressbookCoreInterface interface("org.kde.KAddressbook", "/KAddressbook", QDBusConnection::sessionBus());
   QString addr, uid, vcard;
   if ( !addrStr.isEmpty() )
     addr = addrStr ;
@@ -1331,27 +1333,23 @@ bool KABCore::handleCommandLine()
 
   // Can not see why anyone would pass both a uid and an email address, so I'll leave it that two contact editors will show if they do
   if ( !addr.isEmpty() ) {
-    QDBusInterface interface( "org.kde.KAddressbook", "/KAddressbook", "org.kde.KAddressbook.Core" );
-    interface.call( "addEmail", addr );
+    interface.addEmail( addr );
     doneSomething = true;
   }
 
   if ( !uid.isEmpty() ) {
-    QDBusInterface interface( "org.kde.KAddressbook", "/KAddressbook", "org.kde.KAddressbook.Core" );
-    interface.call( "showContactEditor", uid );
+    interface.showContactEditor(uid );
     doneSomething = true;
   }
 
   if ( args->isSet( "new-contact" ) ) {
-    QDBusInterface interface( "org.kde.KAddressbook", "/KAddressbook", "org.kde.KAddressbook.Core" );
-    interface.call( "newContact" );
+    interface.newContact();
     doneSomething = true;
   }
 
   if ( args->count() >= 1 ) {
     for ( int i = 0; i < args->count(); ++i ) {
-      QDBusInterface interface( "org.kde.KAddressbook", "/KAddressbook", "org.kde.KAddressbook.Core" );
-      interface.call( "importVCard", args->url( i ).url() );
+      interface.importVCard(args->url( i ).url() );
     }
     doneSomething = true;
   }

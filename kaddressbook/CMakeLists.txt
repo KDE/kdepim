@@ -162,6 +162,8 @@ kde4_automoc(${kaddressbook_LIB_SRCS})
 qt4_add_dbus_adaptor(kaddressbook_LIB_SRCS
 ${CMAKE_SOURCE_DIR}/libkdepim/interfaces/org.kde.addressbook.service.xml kaddressbookservice.h KAddressBookService )
 
+QT4_ADD_DBUS_INTERFACE(kaddressbook_LIB_SRCS org.kde.KAddressbook.Core.xml kaddressbookcore_interface )
+
 kde4_add_library(kaddressbook SHARED ${kaddressbook_LIB_SRCS})
 
 target_link_libraries(kaddressbook  ${KDE4_SYNDICATION_LIBS} kdepim ${KDE4_KCAL_LIBS} kabc_file_core ${KDE4_KDEPRINT_LIBS} ${KDE4_KUTILS_LIBS} ${KDE4_PHONON_LIBS} )
