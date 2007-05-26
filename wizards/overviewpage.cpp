@@ -108,11 +108,8 @@ void OverViewPage::showWizardEGroupware()
 
 void OverViewPage::showWizardKolab()
 {
-#ifdef __GNUC__
-#warning Kolab wizard disabled!
-#endif
-//  KolabWizard wizard;
-//  wizard.exec();
+  KolabWizard wizard;
+  wizard.exec();
 }
 
 void OverViewPage::showWizardSlox()
