@@ -295,19 +295,30 @@ icalcomponent *ICalFormatImpl::writeJournal(Journal *journal)
 
 void ICalFormatImpl::writeIncidence(icalcomponent *parent,Incidence *incidence)
 {
+  // pilot sync stuff
+// TODO: move this application-specific code to kpilot
+  if (incidence->pilotId()) {
+    // NOTE: we can't do setNonKDECustomProperty here because this changes
+    // data and triggers an updated() event...
+    // incidence->setNonKDECustomProperty("X-PILOTSTAT", QString::number(incidence->syncStatus()));
+    // incidence->setNonKDECustomProperty("X-PILOTID", QString::number(incidence->pilotId()));
+
+    icalproperty *p = 0;
+    p = icalproperty_new_x(QString::number(incidence->syncStatus()).utf8());
+    icalproperty_set_x_name(p,"X-PILOTSTAT");
+    icalcomponent_add_property(parent,p);
+
+    p = icalproperty_new_x(QString::number(incidence->pilotId()).utf8());
+    icalproperty_set_x_name(p,"X-PILOTID");
+    icalcomponent_add_property(parent,p);
+  }
+
   if ( incidence->schedulingID() != incidence->uid() )
     // We need to store the UID in here. The rawSchedulingID will
     // go into the iCal UID component
     incidence->setCustomProperty( "LIBKCAL", "ID", incidence->uid() );
   else
     incidence->removeCustomProperty( "LIBKCAL", "ID" );
-
-  // pilot sync stuff
-// TODO: move this application-specific code to kpilot
-  if (incidence->pilotId()) {
-    incidence->setNonKDECustomProperty("X-PILOTID", QString::number(incidence->pilotId()));
-    incidence->setNonKDECustomProperty("X-PILOTSTAT", QString::number(incidence->syncStatus()));
-  }
 
   writeIncidenceBase(parent,incidence);
 
@@ -1410,17 +1421,6 @@ void ICalFormatImpl::readIncidence(icalcomponent *parent, icaltimezone *tz, Inci
     incidence->setUid( uid );
   }
 
-  // kpilot stuff
-// TODO: move this application-specific code to kpilot
-  QString kp = incidence->nonKDECustomProperty("X-PILOTID");
-  if (!kp.isNull()) {
-    incidence->setPilotId(kp.toInt());
-  }
-  kp = incidence->nonKDECustomProperty("X-PILOTSTAT");
-  if (!kp.isNull()) {
-    incidence->setSyncStatus(kp.toInt());
-  }
-
   // Now that recurrence and exception stuff is completely set up,
   // do any backwards compatibility adjustments.
   if ( incidence->doesRecur() && mCompat )
@@ -1470,6 +1470,33 @@ void ICalFormatImpl::readIncidenceBase(icalcomponent *parent,IncidenceBase *inci
     }
 
     p = icalcomponent_get_next_property(parent,ICAL_ANY_PROPERTY);
+  }
+
+  // kpilot stuff
+  // TODO: move this application-specific code to kpilot
+  // need to get X-PILOT* attributes out, set correct properties, and get
+  // rid of them...
+  // Pointer fun, as per libical documentation
+  // (documented in UsingLibical.txt)
+  icalproperty *next =0;
+
+  for ( p = icalcomponent_get_first_property(parent,ICAL_X_PROPERTY);
+       p != 0; 
+       p = next )
+  {
+
+    next = icalcomponent_get_next_property(parent,ICAL_X_PROPERTY);
+
+    QString value = QString::fromUtf8(icalproperty_get_x(p));
+    QString name = icalproperty_get_x_name(p);
+
+    if (name == "X-PILOTID" && !value.isEmpty()) {
+      incidenceBase->setPilotId(value.toInt());
+      icalcomponent_remove_property(parent,p);
+    } else if (name == "X-PILOTSTAT" && !value.isEmpty()) {
+      incidenceBase->setSyncStatus(value.toInt());
+      icalcomponent_remove_property(parent,p);
+    }
   }
 
   // custom properties
