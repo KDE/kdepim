@@ -27,7 +27,7 @@ install(TARGETS conduit_sysinfo	DESTINATION ${PLUGIN_INSTALL_DIR})
 
 install(FILES sysinfo_conduit.desktop DESTINATION ${SERVICES_INSTALL_DIR})
 
-install(FILES sysinfoSettings.kcfgc sysinfoconduit.kcfg DESTINATION ${KCFG_INSTALL_DIR})
+install(FILES sysinfoconduit.kcfg DESTINATION ${KCFG_INSTALL_DIR})
 
 install(FILES Template.html Template.txt DESTINATION ${DATA_INSTALL_DIR}/kpilot/sysinfoconduit)
 
