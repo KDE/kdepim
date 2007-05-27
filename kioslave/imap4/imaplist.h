@@ -48,13 +48,13 @@ public:
     return attributes_.join(",");
   }
 
-  QByteArray hierarchyDelimiter () const
+  QString hierarchyDelimiter () const
   {
     return hierarchyDelimiter_;
   }
   void setHierarchyDelimiter (const QByteArray & _str)
   {
-    hierarchyDelimiter_ = _str;
+    hierarchyDelimiter_ = QString::fromLatin1(_str);
   }
 
   QString name () const
@@ -123,7 +123,7 @@ public:
 private:
 
   imapParser* parser_;
-  QByteArray hierarchyDelimiter_;
+  QString hierarchyDelimiter_;
   QString name_;
   bool noInferiors_;
   bool noSelect_;

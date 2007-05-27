@@ -2041,13 +2041,11 @@ bool IMAP4Protocol::makeLogin ()
       if ( it != listResponses.end() )
       {
         namespaceToDelimiter[QString()] = (*it).hierarchyDelimiter();
-        kDebug(7116) << "makeLogin - delimiter for empty ns='" <<
-          (*it).hierarchyDelimiter() << "'" << endl;
+        kDebug(7116) << "makeLogin - delimiter for empty ns='" << (*it).hierarchyDelimiter() << "'" << endl;
         if ( !hasCapability("NAMESPACE") )
         {
           // server does not support namespaces
-          QString nsentry = QString::number( 0 ) + "=="
-            + (*it).hierarchyDelimiter();
+          QString nsentry = QString::number( 0 ) + "==" + (*it).hierarchyDelimiter();
           imapNamespaces.append( nsentry );
         }
       }

@@ -44,7 +44,6 @@
 #include "imapparser.h"
 
 #include <kdebug.h>
-#include <Q3CString>
 
 imapList::imapList (): parser_(0), noInferiors_ (false),
 noSelect_ (false), marked_ (false), unmarked_ (false),
@@ -110,13 +109,12 @@ hasNoChildren_ (false)
 
 void imapList::parseAttributes( parseString & str )
 {
-  Q3CString attribute, orig;
 
   while ( !str.isEmpty () && str[0] != ')' )
   {
-    orig = parser_->parseOneWord(str);
+    QString orig = QString::fromLatin1( parser_->parseOneWord(str) );
     attributes_ << orig;
-    attribute = orig.toLower();
+    QString attribute = orig.toLower();
     if ( attribute.contains ("\\noinferiors"))
       noInferiors_ = true;
     else if ( attribute.contains ("\\noselect"))

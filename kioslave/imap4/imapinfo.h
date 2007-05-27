@@ -26,7 +26,6 @@
 #include <QStringList>
 #include <QString>
 #include <QString>
-#include <Q3CString>
 #include <QLatin1String>
 
 //class handling the info we get on EXAMINE and SELECT

@@ -509,7 +509,7 @@ imapParser::parseResult (QByteArray & result, parseString & rest,
   if (rest[0] == '[')
   {
     rest.pos++;
-    Q3CString option = parseOneWord(rest, true);
+    QByteArray option = parseOneWord(rest, true);
 
     switch (option[0])
     {
@@ -688,7 +688,7 @@ void imapParser::parseListRights (parseString & result)
   parseOneWord (result); // skip user id
   int outlen = 1;
   while ( outlen ) {
-    Q3CString word = parseOneWord (result, false, &outlen);
+    QByteArray word = parseOneWord (result, false, &outlen);
     lastResults.append (word);
   }
 }
@@ -728,7 +728,7 @@ void imapParser::parseQuota (parseString & result)
   // quota_response  ::= "QUOTA" SP astring SP quota_list
   // quota_list      ::= "(" #quota_resource ")"
   // quota_resource  ::= atom SP number SP number
-  Q3CString root = parseOneWord( result );
+  QByteArray root = parseOneWord( result );
   if ( root.isEmpty() ) {
     lastResults.append( "" );
   } else {
@@ -796,7 +796,7 @@ void imapParser::parseStatus (parseString & inWords)
   {
     ulong value;
 
-    Q3CString label = parseOneWord(inWords);
+    QByteArray label = parseOneWord(inWords);
     if (parseOneNumber (inWords, value))
     {
       if (label == "MESSAGES")
@@ -1632,18 +1632,16 @@ void imapParser::parseNamespace (parseString & result)
         ++ns;
       }
       // namespace prefix
-      Q3CString prefix = parseOneWord( result );
+      QString prefix = QString::fromLatin1( parseOneWord( result ) );
       // delimiter
-      Q3CString delim = parseOneWord( result );
-      kDebug(7116) << "imapParser::parseNamespace ns='" << prefix <<
-       "',delim='" << delim << "'" << endl;
+      QString delim = QString::fromLatin1( parseOneWord( result ) );
+      kDebug(7116) << "imapParser::parseNamespace ns='" << prefix << "',delim='" << delim << "'" << endl;
       if ( ns == 0 )
       {
         // at least one personal ns
         personalAvailable = true;
       }
-      QString nsentry = QString::number( ns ) + "=" + QString(prefix) +
-        "=" + QString(delim);
+      QString nsentry = QString::number( ns ) + "=" + prefix + "=" + delim;
       imapNamespaces.append( nsentry );
       if ( prefix.right( 1 ) == delim ) {
         // strip delimiter to get a correct entry for comparisons
