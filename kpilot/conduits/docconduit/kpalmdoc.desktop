@@ -50,5 +50,5 @@ Type=Application
 DocPath=kpalmdoc/index.html
 Terminal=false
 X-KDE-StartupNotify=true
-X-DCOP-ServiceType=Unique
+X-DBUS-ServiceType=Unique
 Categories=Qt;KDE;Utility;X-KDE-Utilities-File;
