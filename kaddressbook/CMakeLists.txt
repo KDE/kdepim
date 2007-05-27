@@ -23,7 +23,8 @@ include_directories(
 	${CMAKE_CURRENT_SOURCE_DIR}/printing 
 	${CMAKE_CURRENT_SOURCE_DIR}/common 
 	${CMAKE_CURRENT_SOURCE_DIR}/editors 
-        ${Boost_INCLUDE_DIR} )
+        ${CMAKE_BINARY_DIR}/libkdepim
+	${Boost_INCLUDE_DIR} )
 
 
 set(libkabcommon_SRCS
