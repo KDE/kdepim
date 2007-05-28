@@ -191,6 +191,7 @@ private:
     friend class KDTimeTableWidget;
     friend class KDGanttViewItem;
     friend class KDGanttView;
+    friend class KDGanttCanvasView; // calls computeIntervals
     virtual void mousePressEvent ( QMouseEvent * e );
     virtual void mouseReleaseEvent ( QMouseEvent * e );
     virtual void mouseDoubleClickEvent ( QMouseEvent * e );
@@ -463,6 +464,9 @@ public:
 
   void setColor( const QColor& color );
 
+  enum HitTest { Start, Middle, End };
+  HitTest hitTest( KDTimeHeaderWidget* timeHeader, const QPoint& pos ) const;
+
   void layout( KDTimeHeaderWidget* timeHeader, int height );
 
   static const int RTTI = 0x0c58;
@@ -511,8 +515,9 @@ protected:
 
     KDGanttView* mySignalSender;
     KDGanttViewItem* currentItem, *lastClickedItem, *cuttedItem;
-    QCanvasItem* movingItem;
+    QCanvasRectangle* movingItem;
     QPoint movingStart;
+    enum { Moving, ResizingLeft, ResizingRight } movingOperation;
     KDGanttViewTaskLink* currentLink;
     KDCanvasWhatsThis* myWhatsThis;
     QPopupMenu* onItem;
@@ -523,6 +528,7 @@ protected:
     QCanvasLine *linkLine;
     int fromArea;
     bool autoScrollEnabled;
+    bool mouseDown;
 
 signals:
   void heightResized( int );

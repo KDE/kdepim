@@ -3163,10 +3163,11 @@ KDGanttCanvasView::KDGanttCanvasView( KDGanttView* sender,QCanvas* canvas, QWidg
     fromItem = 0;
     fromArea = 0;
     linkItemsEnabled = false;
+    mouseDown = false;
     linkLine = new QCanvasLine(canvas);
     linkLine->hide();
     linkLine->setZ(1000);
-    //set_Mouse_Tracking(true);
+    set_Mouse_Tracking(true); // mouse cursor changes over KDIntervalColorRectangle borders
     new KDCanvasWhatsThis(viewport(),this);
     onItem = new QPopupMenu( this );
     QPopupMenu * newMenu = new QPopupMenu( this );
@@ -3497,6 +3498,7 @@ void KDGanttCanvasView::contentsMousePressEvent ( QMouseEvent * e )
     currentLink = 0;
     currentItem = 0;
     movingItem = 0;
+    mouseDown = true;
     if (e->button() == RightButton && mySignalSender->editable()) {
         lastClickedItem = (KDGanttViewItem*) mySignalSender->myListView->itemAt( QPoint(2,e->pos().y()));
         if ( lastClickedItem ) {
@@ -3539,9 +3541,15 @@ void KDGanttCanvasView::contentsMousePressEvent ( QMouseEvent * e )
                 break;
             case Type_is_KDGanttGridItem:
               if ( (*it)->rtti() == KDIntervalColorRectangle::RTTI ) {
-                // Cleaner would be a isMovable() in an interface implemented by all movable objects...
-                movingItem = *it;
+                // Cleaner would be isMovable()/isResizeable() in an interface
+                // implemented by all movable objects...
+                movingItem = static_cast<QCanvasRectangle *>(*it);
                 movingStart = e->pos();
+                KDIntervalColorRectangle* icr = static_cast<KDIntervalColorRectangle *>( movingItem );
+                KDIntervalColorRectangle::HitTest hitTest = icr->hitTest( mySignalSender->myTimeHeader, movingStart );
+                movingOperation = hitTest == KDIntervalColorRectangle::Start ? ResizingLeft :
+                                  hitTest == KDIntervalColorRectangle::End ? ResizingRight :
+                                  Moving;
               }
               break;
             default:
@@ -3592,6 +3600,7 @@ void KDGanttCanvasView::contentsMousePressEvent ( QMouseEvent * e )
 
 void KDGanttCanvasView::contentsMouseReleaseEvent ( QMouseEvent * e )
 {
+    mouseDown = false;
     static KDGanttViewItem* lastClicked = 0;
     mySignalSender->gvMouseButtonClicked( e->button(), currentItem ,  e->globalPos() );
     //qDebug("datetime %s ",mySignalSender->getDateTimeForCoordX(e->globalPos().x(), true ).toString().latin1() );
@@ -3724,20 +3733,60 @@ void KDGanttCanvasView::contentsMouseDoubleClickEvent ( QMouseEvent * e )
 
 void KDGanttCanvasView::contentsMouseMoveEvent ( QMouseEvent *e )
 {
+    if ( !mouseDown ) {
+      // Update cursor
+      bool found = false;
+      QCanvasItemList il = canvas() ->collisions ( e->pos() );
+      QCanvasItemList::Iterator it;
+      for ( it = il.begin(); it != il.end(); ++it ) {
+        if ( (*it)->rtti() == KDIntervalColorRectangle::RTTI ) {
+          found = true;
+          KDIntervalColorRectangle* icr = static_cast<KDIntervalColorRectangle *>( *it );
+          KDIntervalColorRectangle::HitTest hitTest = icr->hitTest( mySignalSender->myTimeHeader, e->pos() );
+          switch ( hitTest ) {
+          case KDIntervalColorRectangle::Start:
+          case KDIntervalColorRectangle::End:
+            setCursor( splitHCursor );
+            break;
+          default:
+            unsetCursor();
+          }
+        }
+      }
+      if ( !found )
+        unsetCursor();
+      return;
+    }
+
     const QPoint p = e->pos();
     if ( movingItem ) {
-      movingItem->moveBy(p.x() - movingStart.x(), 0 ); // only move it horizontally :)
+      int x = qRound( movingItem->x() );
+      int width = movingItem->width();
+      switch( movingOperation ) {
+      case Moving:
+        x += p.x() - movingStart.x();
+        break;
+      case ResizingLeft: {
+        width = qRound( movingItem->x() + movingItem->width() - p.x() );
+        x = p.x();
+        break;
+      }
+      case ResizingRight:
+        width = p.x() - x;
+        break;
+      }
       movingStart = p;
       if ( movingItem->rtti() == KDIntervalColorRectangle::RTTI ) {
-        KDIntervalColorRectangle* rect = static_cast<KDIntervalColorRectangle *>(movingItem);
-        const int durationInSeconds = rect->start().secsTo( rect->end() );
-        const QDateTime newStart = mySignalSender->myTimeHeader->getDateTimeForIndex(qRound(movingItem->x()));
-        emit mySignalSender->intervalColorRectangleMoved( newStart, newStart.addSecs( durationInSeconds ) );
+        KDIntervalColorRectangle* icr = static_cast<KDIntervalColorRectangle *>(movingItem);
+        const QDateTime newStart = mySignalSender->myTimeHeader->getDateTimeForIndex(x);
+        const QDateTime newEnd = mySignalSender->myTimeHeader->getDateTimeForIndex(x + width);
+        icr->setDateTimes( newStart, newEnd );
+        emit mySignalSender->intervalColorRectangleMoved( newStart, newEnd );
+        mySignalSender->myTimeHeader->computeIntervals( movingItem->height() );
       }
       canvas()->update();
     }
 
-    //qDebug("mousemove! ");
     static int moves = 0;
     if ( (currentLink || currentItem) && (moves < 3) ) {
         ++moves;
@@ -3905,4 +3954,20 @@ void KDIntervalColorRectangle::layout( KDTimeHeaderWidget* timeHeader, int heigh
   setSize( right - left, height );
   move( left, 0 );
   show();
+}
+
+/*!
+  \internal
+*/
+KDIntervalColorRectangle::HitTest KDIntervalColorRectangle::hitTest( KDTimeHeaderWidget* timeHeader, const QPoint& pos ) const
+{
+  const int left = timeHeader->getCoordX(mStart);
+  const int right = timeHeader->getCoordX(mEnd);
+  const int width = right - left + 1;
+  const int x = pos.x();
+  if ( x < left + width / 10 )
+    return Start;
+  if ( x > right - width / 10 )
+    return End;
+  return Middle;
 }
