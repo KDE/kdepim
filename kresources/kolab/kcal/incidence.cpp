@@ -744,10 +744,13 @@ void Incidence::saveTo( KCal::Incidence* incidence )
   for ( it = mAttendees.begin(); it != mAttendees.end(); ++it ) {
     KCal::Attendee::PartStat status = attendeeStringToStatus( (*it).status );
     KCal::Attendee::Role role = attendeeStringToRole( (*it).role );
-    incidence->addAttendee( new KCal::Attendee( (*it).displayName,
-                                                (*it).smtpAddress,
-                                                (*it).requestResponse,
-                                                status, role ) );
+    KCal::Attendee* attendee = new KCal::Attendee( (*it).displayName,
+                                                   (*it).smtpAddress,
+                                                   (*it).requestResponse,
+                                                    status, role );
+    attendee->setDelegate( (*it).delegate );
+    attendee->setDelegator( (*it).delegator );
+    incidence->addAttendee( attendee );
   }
 
   incidence->clearAttachments();
