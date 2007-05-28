@@ -133,7 +133,7 @@ class KDE_EXPORT ProgressItem : public QObject
     /**
      * Recalculate progress according to total/completed items and update.
      */
-    void updateProgress() { setProgress( mTotal? mCompleted*100/mTotal: 0 ); };
+    void updateProgress() { setProgress( mTotal? mCompleted*100/mTotal: 0 ); }
 
     void addChild( ProgressItem *kiddo );
     void removeChild( ProgressItem *kiddo );
@@ -259,7 +259,7 @@ class KDE_EXPORT ProgressManager : public QObject
      * number as the id string for your progressItem to ensure it is unique.
      * @return
      */
-    static QString getUniqueID() { return QString::number( ++uID ); };
+    static QString getUniqueID() { return QString::number( ++uID ); }
 
      /**
       * Creates a ProgressItem with a unique id and the given label.

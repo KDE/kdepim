@@ -54,7 +54,7 @@ namespace KParts
       /**
        * Retrieve a pointer to the widget. May be 0 if 0 was passed in the constructor
        **/
-      QWidget* widget() const { return m_exported; };
+      QWidget* widget() const { return m_exported; }
 
     private:
       QWidget* m_exported;

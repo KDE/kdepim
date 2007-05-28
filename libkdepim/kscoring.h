@@ -90,7 +90,7 @@ class KDE_EXPORT ActionBase {
   virtual ActionBase* clone() const =0;
   virtual int getType() const =0;
   virtual QString getValueString() const { return QString(); }
-  virtual void setValue(const QString&) {};
+  virtual void setValue(const QString&) {}
   static ActionBase* factory(int type, const QString &value);
   static QStringList userNames();
   static QString userName(int type);
