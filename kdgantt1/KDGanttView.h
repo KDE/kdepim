@@ -49,6 +49,7 @@
 #include "KDGanttMinimizeSplitter.h"
 #include "KDGanttViewItemDrag.h"
 
+class KDIntervalColorRectangle;
 class KDGanttViewTaskLink;
 class QPrinter;
 class QIODevice;
@@ -121,7 +122,7 @@ public:
     ~KDGanttView();
 
 
-    // virtual public methods 
+    // virtual public methods
     virtual void show();
     virtual bool close ( bool alsoDelete );
     // Pass-through methods from QListView
@@ -259,6 +260,8 @@ public:
                                    const QColor& color,
                                    Scale mini =  KDGanttView::Second ,
                                    Scale maxi =  KDGanttView::Month);
+#if 0
+   // This API has been replaced with KDIntervalColorRectangle and addIntervalBackgroundColor
     void setIntervalBackgroundColor( const QDateTime& start,
                                      const QDateTime& end,
                                      const QColor& color,
@@ -271,6 +274,8 @@ public:
 				   const QDateTime& newend );
     bool deleteBackgroundInterval( const QDateTime& start,
 				   const QDateTime& end );
+#endif
+    void addIntervalBackgroundColor( KDIntervalColorRectangle* newItem );
     void clearBackgroundColor();
     QColor columnBackgroundColor( const QDateTime& column ) const;
     void setWeekendBackgroundColor( const QColor& color );
@@ -301,7 +306,7 @@ public:
     void setShowLegendButton( bool show );
     bool showLegendButton() const;
 
-    
+
     KDGanttViewItem* selectedItem() const;
     void setSelected( KDGanttViewItem*, bool );
     KDGanttViewItem* firstChild() const;
@@ -348,9 +353,9 @@ public:
     void setTimeHeaderDatetimeFormatHour( const QString& fmt );
     QString timeHeaderDatetimeFormatHour() const;
     void setTimeHeaderDatetimeFormatMinute( const QString& fmt );
-    QString timeHeaderDatetimeFormatMinute() const; 
+    QString timeHeaderDatetimeFormatMinute() const;
     void setTimeHeaderDatetimeFormatSecond( const QString& fmt );
-    QString timeHeaderDatetimeFormatSecond() const; 
+    QString timeHeaderDatetimeFormatSecond() const;
     void setWeekStartsMonday( bool b );
     bool weekStartsMonday() const;
     void setWeekScaleShowNumber( bool b );
@@ -370,7 +375,7 @@ public:
     QDate lastMonth() const;
     QDate currentYear() const;
     QDate lastYear() const;
-    
+
     virtual KDGanttViewItem* createNewItem( QString KDGanttViewItemTypeAsString,
                                     KDGanttViewItem* parent = 0,
                                     KDGanttViewItem* after = 0,
@@ -386,7 +391,10 @@ public:
     bool isConnectorEnabled( int connector ) const;
     void setAllConnectorsEnabled( bool state );
     void setAutoScrollEnabled( bool state );
-    
+
+    KDTimeTableWidget * timeTableWidget() { return myTimeTable; }
+    KDTimeHeaderWidget * timeHeaderWidget() { return myTimeHeader; }
+
 public slots:
     void editItem( KDGanttViewItem* );
     void zoomToSelection( const QDateTime& start,  const QDateTime&  end);
@@ -425,12 +433,13 @@ public slots:
     void selectLastYear();
 
     void print();
-    
+
 signals:
     void itemDeleted( KDGanttViewItem* );
     void timeIntervallSelected( const QDateTime& start,  const QDateTime&  end);
     void timeIntervalSelected( const QDateTime& start,  const QDateTime&  end);
     void rescaling( Scale );
+    void intervalColorRectangleMoved( const QDateTime& start, const QDateTime& end );
 
     // the following signals are emitted if an item is clicked in the
     // listview (inclusive) or in the ganttview
@@ -455,7 +464,7 @@ signals:
     void gvItemDoubleClicked( KDGanttViewItem* );
     // the point is the global position!!
     void gvContextMenuRequested ( KDGanttViewItem * item, const QPoint & pos );
-    
+
     void gvCreateTaskLink( KDGanttViewItem*, int, KDGanttViewItem*, int );
 
     // lv... means item in listview clicked
@@ -479,13 +488,13 @@ signals:
     void taskLinkMidClicked( KDGanttViewTaskLink* );
     void taskLinkRightClicked( KDGanttViewTaskLink* );
     void taskLinkDoubleClicked( KDGanttViewTaskLink* );
-    
+
     void dropped ( QDropEvent * e, KDGanttViewItem* droppedItem, KDGanttViewItem* itemBelowMouse);
     void addOneTickRight();
     void addOneTickLeft();
 
 protected:
-    // virtual protected methods 
+    // virtual protected methods
     virtual QDragObject * dragObject ();
     virtual void startDrag ();
     virtual void userReadFromElement( QDomElement& element );
@@ -602,7 +611,7 @@ private:
     KDGanttViewItem* myCurrentItem;
     KDGanttMinimizeSplitter *mySplitter;
     int mAddTickcountForTimeline;
-    RepaintMode mRepaintMode; 
+    RepaintMode mRepaintMode;
 };
 
 

@@ -60,6 +60,7 @@
 #define Type_is_KDGanttViewItem 2
 #define Type_is_KDGanttTaskLink 3
 
+class KDIntervalColorRectangle;
 class KDCanvasWhatsThis;
 class KDToolTip;
 class KDCanvasRectangle;
@@ -87,7 +88,7 @@ public:
        int priority;
    };
    typedef QValueList<DateTimeColor> ColumnColorList;
-   typedef QValueList<DateTimeColor> IntervalColorList;
+   typedef QValueList<KDIntervalColorRectangle *> IntervalColorList;
    /*
      enum Scale { Minute, Hour, Day, Week, Month, Auto };
      enum YearFormat { FourDigit, TwoDigit, TwoDigitApostrophe };
@@ -133,6 +134,8 @@ public:
 				  const QColor& color,
 				  Scale mini =  KDGanttView::Second ,
 				  Scale maxi =  KDGanttView::Month);
+#if 0
+   // This API has been replaced with KDIntervalColorRectangle and addIntervalBackgroundColor
     void setIntervalBackgroundColor( const QDateTime& start,
                                      const QDateTime& end,
                                      const QColor& color,
@@ -145,6 +148,8 @@ public:
 				  const QDateTime& newend );
    bool deleteBackgroundInterval( const QDateTime& start,
 				  const QDateTime& end );
+#endif
+   void addIntervalBackgroundColor( KDIntervalColorRectangle* newItem );
    void clearBackgroundColor();
    QColor columnBackgroundColor( const QDateTime& column ) const;
    void setWeekendBackgroundColor( const QColor& color );
@@ -212,7 +217,7 @@ public slots:
     void addTickRight( int num = 1 );
     void addTickLeft( int num = 1 );
     void preparePopupMenu();
-    
+
     void center(const QDate &dt);
     void centerToday() { center(today()); }
     void centerYesterday() { center(yesterday()); }
@@ -254,6 +259,7 @@ private:
     friend class KDTimeTableWidget;
     friend class KDGanttViewItem;
     friend class KDGanttView;
+    friend class KDGanttCanvasView; // calls computeIntervals
     virtual void mousePressEvent ( QMouseEvent * e );
     virtual void mouseReleaseEvent ( QMouseEvent * e );
     virtual void mouseDoubleClickEvent ( QMouseEvent * e );
@@ -326,7 +332,7 @@ private:
     QString mTooltipDateFormat;
     bool mWeekStartsMonday;
     bool mWeekScaleShowNumber;
-    
+
     QMenu *myPopupMenu;
     KActionCollection *actionCollection;
     KSelectAction *mGridAction, *mScaleAction, *mTimeFormatAction, *mYearFormatAction;
@@ -381,7 +387,7 @@ void updateSlot();
 #endif
     void resetWidth( int );
     void checkHeight( int );
-private: 
+private:
     friend class KDGanttViewTaskLink;
     friend class KDTimeHeaderWidget;
     friend class KDGanttView;
@@ -546,6 +552,34 @@ public:
 };
 
 
+// Interval-color-rectangle, such as the one used in the freebusy view for the current event
+class KDIntervalColorRectangle: public KDCanvasRectangle
+{
+public:
+  KDIntervalColorRectangle( KDGanttView* view );
+
+  void setDateTimes( const QDateTime& start,
+                     const QDateTime& end );
+  QDateTime start() const { return mStart; }
+  QDateTime end() const { return mEnd; }
+
+  void setColor( const QColor& color );
+  QColor color() const { return mColor; }
+
+  enum HitTest { Start, Middle, End };
+  HitTest hitTest( KDTimeHeaderWidget* timeHeader, const QPoint& pos ) const;
+
+  void layout( KDTimeHeaderWidget* timeHeader, int height );
+
+  static const int RTTI = 0x0c58;
+  /*reimp*/ int rtti() const { return RTTI; }
+
+private:
+  QColor mColor;
+  QDateTime mStart;
+  QDateTime mEnd;
+};
+
 class KDCanvasToolTip;
 
 class KDGanttCanvasView : public QCanvasView
@@ -567,7 +601,7 @@ public:
     void insertItemAfter( KDGanttViewItem* , KDGanttViewItem* );
     void setMyVScrollBarMode ( ScrollBarMode );
     ScrollBarMode myVScrollBarMode () const;
-    
+
     void setConnectorEnabled(int connector, bool on);
     bool isConnectorEnabled(int connector) const;
     void setAllConnectorsEnabled(bool on);
@@ -582,22 +616,27 @@ protected:
     virtual void viewportPaintEvent ( QPaintEvent * pe );
     void resizeEvent ( QResizeEvent * ) ;
     void set_MouseTracking(bool on);
-    KDGanttView* mySignalSender;
-    KDGanttViewItem* currentItem, *lastClickedItem, *cuttedItem;
-    KDGanttViewTaskLink* currentLink;
-    KDGanttViewItem::Connector currentConnector;
     int getType(QCanvasItem*);
     KDGanttViewItem* getItem(QCanvasItem*);
     KDGanttViewTaskLink* getLink(QCanvasItem*);
+    KDGanttView* mySignalSender;
+    KDGanttViewItem* currentItem, *lastClickedItem, *cuttedItem;
+    QCanvasRectangle* movingItem;
+    QPoint movingStart;
+    enum { Moving, ResizingLeft, ResizingRight } movingOperation;
+    KDGanttViewTaskLink* currentLink;
+    KDGanttViewItem::Connector currentConnector;
     KDCanvasWhatsThis* myWhatsThis;
     QMenu* onItem;
     bool _showItemAddPopupMenu;
     int myMyContentsHeight;
     bool autoScrollEnabled;
+    bool mouseDown;
 
 signals:
   void heightResized( int );
   void widthResized( int );
+
 public slots:
   void set_Mouse_Tracking(bool on);
   void moveMyContent( int, int );
@@ -612,22 +651,22 @@ private slots:
   void pasteItemRoot() { pasteItem(0); }
   void pasteItemChild() { pasteItem(1); }
   void pasteItemAfter() { pasteItem(2); }
-  
+
   void newRootItem( int );
   void newRootEvent() { newRootItem( KDGanttViewItem::Event ); }
   void newRootTask() { newRootItem( KDGanttViewItem::Task ); }
   void newRootSummary() { newRootItem( KDGanttViewItem::Summary ); }
-    
+
   void newChildItem( int );
   void newChildEvent() { newChildItem( KDGanttViewItem::Event ); }
   void newChildTask() { newChildItem( KDGanttViewItem::Task ); }
   void newChildSummary() { newChildItem( KDGanttViewItem::Summary ); }
-  
+
   void newSiblingItem( int );
   void newSiblingEvent() { newSiblingItem( KDGanttViewItem::Event ); }
   void newSiblingTask() { newSiblingItem( KDGanttViewItem::Task ); }
   void newSiblingSummary() { newSiblingItem( KDGanttViewItem::Summary ); }
-  
+
   void slotScrollTimer();
   void myUpdateScrollBars();
 
@@ -666,7 +705,7 @@ public:
 };
 
 protected:
- 
+
 private:
   QWidget* _wid;
   KDTimeHeaderWidget * _header;

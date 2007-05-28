@@ -2351,7 +2351,7 @@ void KDGanttView::setColumnBackgroundColor( const QDateTime& column,
   myTimeHeader->setColumnBackgroundColor( column, color,mini,maxi );
 }
 
-
+#if 0
 /*!
   Sets the background color for a time interval given by \a start and
   \a end.  \a start may be later than \a end.  If there is already a
@@ -2431,7 +2431,17 @@ bool KDGanttView::deleteBackgroundInterval( const QDateTime& start,
 {
   return myTimeHeader->deleteBackgroundInterval( start, end );
 }
+#endif
 
+/*!
+  Adds a filled rectangle for a time interval given by \a start and
+  \a end, across all tasks.  \a start may be later than \a end.
+  \sa KDIntervalColorRectangle
+*/
+void KDGanttView::addIntervalBackgroundColor( KDIntervalColorRectangle* newItem )
+{
+  myTimeHeader->addIntervalBackgroundColor( newItem );
+}
 
 /*!
   Removes all background color settings set with setColumnBackgroundColor()
@@ -3784,7 +3794,15 @@ bool KDGanttView::loadXML( const QDomDocument& doc )
                                 }
                                 node = node.nextSibling();
                             }
-                            setIntervalBackgroundColor( dateTime, ente, color, prio, mini, maxi );
+                            //setIntervalBackgroundColor( dateTime, ente, color, prio, mini, maxi );
+                            KDIntervalColorRectangle* icr = new KDIntervalColorRectangle( this );
+                            icr->setDateTimes( dateTime, ente );
+                            icr->setColor( color );
+                            Q_UNUSED( prio );
+                            Q_UNUSED( mini );
+                            Q_UNUSED( maxi );
+                            addIntervalBackgroundColor(icr);
+
                         } else {
                             qDebug() << "Unrecognized tag name: " << tagName;
                             Q_ASSERT( false );
@@ -4237,21 +4255,21 @@ QDomDocument KDGanttView::saveXML( bool withPI ) const
     columnBackgroundColorsElement =
         doc.createElement( "IntervalBackgroundColors" );
     docRoot.appendChild( columnBackgroundColorsElement );
-    ccList = myTimeHeader->intervalBackgroundColorList();
-    for( KDTimeHeaderWidget::ColumnColorList::iterator it = ccList.begin();
-         it != ccList.end(); ++it ) {
+    KDTimeHeaderWidget::IntervalColorList icList = myTimeHeader->intervalBackgroundColorList();
+    for( KDTimeHeaderWidget::IntervalColorList::iterator it = icList.begin();
+         it != icList.end(); ++it ) {
         QDomElement columnBackgroundColorElement =
             doc.createElement( "IntervalBackgroundColor" );
         columnBackgroundColorsElement.appendChild( columnBackgroundColorElement );
         KDGanttXML::createDateTimeNode( doc, columnBackgroundColorElement,
-                                        "DateTimeStart", (*it).datetime );
+                                        "DateTimeStart", (*it)->start() );
         KDGanttXML::createDateTimeNode( doc, columnBackgroundColorElement,
-                                        "DateTimeEnd", (*it).end );
+                                        "DateTimeEnd", (*it)->end() );
         KDGanttXML::createColorNode( doc, columnBackgroundColorElement,
-                                     "Color", (*it).color );
-        KDGanttXML::createIntNode( doc, columnBackgroundColorElement, "Priority", (*it).priority );
-        KDGanttXML::createStringNode( doc, columnBackgroundColorElement, "MinScale", scaleToString( (*it).minScaleView ) );
-        KDGanttXML::createStringNode( doc, columnBackgroundColorElement, "MaxScale", scaleToString( (*it).maxScaleView ) );
+                                     "Color", (*it)->color() );
+        //KDGanttXML::createIntNode( doc, columnBackgroundColorElement, "Priority", (*it).priority );
+        //KDGanttXML::createStringNode( doc, columnBackgroundColorElement, "MinScale", scaleToString( (*it).minScaleView ) );
+        //KDGanttXML::createStringNode( doc, columnBackgroundColorElement, "MaxScale", scaleToString( (*it).maxScaleView ) );
     }
 
     // the LegendItems element
