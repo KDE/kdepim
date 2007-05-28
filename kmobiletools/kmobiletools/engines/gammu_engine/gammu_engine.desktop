@@ -1,0 +1,27 @@
+[Desktop Entry]
+Type=Service
+Name=Gammu Engine
+Name[br]=Keflusker Gammu
+Name[de]=Gammu-Treiber
+Name[es]=Motor Gammu
+Name[et]=Gammu mootor
+Name[it]=Motore Gammu
+Name[ja]=Gammu エンジン
+Name[nl]=Gammu-engine
+Name[pt]=Motor do Gammu
+Name[pt_BR]=Motor do Gammu
+Name[sv]=Gammu-gränssnitt
+Comment=KMobileTools Engine based on Gammu
+Comment[de]=KMobileTools-Treiber basierend auf Gammu
+Comment[es]=Motor de KMobileTools basado en Gammu
+Comment[et]=KMobileToolsi mootor Gammu põhjal
+Comment[it]=Motore KMobileTools basato su Gammu
+Comment[ja]=Gammu に基づく KMobileTools エンジン
+Comment[nl]=KMobileTools-engine gebaseeerd op Gammu
+Comment[pt]=Motor do KMobileTools baseado no Gammu
+Comment[pt_BR]=Motor do KMobileTools baseado no Gammu
+Comment[sv]=Gränssnitt för Kmobiletools baserat på Gammu
+Icon=kmobiletoolsGammu
+ServiceTypes=KMobileTools/Engine
+X-KMobileTools-LongDesc=Add a description here
+X-KDE-Library=libkmobiletools_gammu

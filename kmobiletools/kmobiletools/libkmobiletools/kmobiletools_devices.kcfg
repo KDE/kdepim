@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kcfg xmlns="http://www.kde.org/standards/kcfg/1.0"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0
+      http://www.kde.org/standards/kcfg/1.0/kcfg.xsd" >
+ <kcfgfile name="kmobiletoolsdevicesrc">
+     <parameter name="DeviceName" type="String" />
+ </kcfgfile>
+<group name="$(DeviceName)">
+    <entry name="devicename" type="String" />
+    <entry name="smscenter" type="String" />
+    <entry name="rawdevicename" type="String" />
+    <entry name="rawdevicevendor" type="String" />
+    <entry name="engine" type="String" />
+    <entry name="deviceurl" type="Path" />
+    <entry name="mobileimei" type="String" />
+    <entry name="autoload" type="Bool" />
+    <entry name="loaded" type="Bool">
+        <default>false</default>
+    </entry>
+    <entry name="verbose" type="Bool">
+        <default>false</default>
+    </entry>
+    <entry name="calendar" type="Bool">
+        <default>false</default>
+    </entry>
+    <!-- Generic device config options -->
+    <entry name="maildir_path" type="Path">
+        <default>$HOME/Mail/KMobileTools</default>
+    </entry>
+    <entry name="maildir" type="Bool">
+        <default>true</default>
+    </entry>
+
+    <entry name="status_pollTimeout" type="Double">
+        <default>5.0</default>
+    </entry>
+    <entry name="status_poll" type="Bool">
+        <default>true</default>
+    </entry>
+    <entry name="sync_clock" type="Bool">
+        <default>true</default>
+    </entry>
+    <entry name="smsPoll" type="Bool">
+        <default>true</default>
+    </entry>
+    <entry name="sms_pollTimeout" type="Double">
+        <default>60.0</default>
+    </entry>
+    <entry name="SMS_startup" type="Bool">
+        <default>true</default>
+    </entry>
+    <entry name="lastpath" type="String" />
+
+<!--     FileSystem Config entries -->
+    <entry name="fstype" type="UInt" />
+    <entry name="p2k_vendor" type="String" />
+    <entry name="p2k_prodid" type="String" />
+    <entry name="obex_transp" type="UInt" />
+    <entry name="obex_device" type="String" />
+    <entry name="obex_port" type="UInt" />
+</group>
+</kcfg>

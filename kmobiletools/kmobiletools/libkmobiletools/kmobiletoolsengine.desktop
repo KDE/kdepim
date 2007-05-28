@@ -1,0 +1,19 @@
+[Desktop Entry]
+Encoding=UTF-8
+Type=ServiceType
+X-KDE-ServiceType=KMobileTools/Engine
+X-KDE-Derived=KPluginInfo
+Comment=KMobileTools Engine
+Comment[de]=KMobileTools-Treiber
+Comment[es]=Motor de KMobileTools
+Comment[et]=KMobileToolsi mootor
+Comment[it]=Motore KMobileTools
+Comment[ja]=KMobileTools エンジン
+Comment[nl]=KMobileTools-engine
+Comment[pt]=Motor do KMobileTools
+Comment[pt_BR]=Motor do KMobileTools
+Comment[sv]=Gränssnitt för Kmobiletools
+
+[PropertyDef::X-KMobileTools-LongDesc]
+Type=QString
+

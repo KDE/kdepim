@@ -8,6 +8,7 @@ add_subdirectory(ktimetracker)
 endif (Q_WS_X11)
 add_subdirectory(kleopatra)
 add_subdirectory(kmail)
+add_subdirectory(kmobiletools)
 add_subdirectory(knode)
 add_subdirectory(knotes)
 add_subdirectory(konsolekalendar)
@@ -16,10 +17,3 @@ add_subdirectory(korganizer)
 add_subdirectory(korn)
 add_subdirectory(ktnef)
 add_subdirectory(kwatchgnupg)
-########### install files ###############
-#original Makefile.am contents follow:
-#
-
-
-
-#

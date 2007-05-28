@@ -1,0 +1,9 @@
+<!DOCTYPE kpartgui SYSTEM "kpartgui.dtd">
+<kpartgui name="kmobiletools_part" version="2">
+    <ToolBar noMerge="1" name="deviceToolBar"><text>Device Toolbar</text>
+        <Action name="sms_new"/>
+        <Action name="get_cal"/>
+        <Action name="exportsms"/>
+  <Separator/>
+</ToolBar>
+</kpartgui>

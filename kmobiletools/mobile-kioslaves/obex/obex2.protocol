@@ -1,0 +1,29 @@
+[Protocol]
+exec=kio_obex2
+protocol=obex2
+input=none
+output=filesystem
+listing=Name,Type,Size
+reading=true
+writing=true
+makedir=true
+deleting=true
+linking=false
+moving=false
+Icon=kmobiletools
+Class=:internet
+maxInstances=1
+defaultMimetype=application/octet-stream
+determineMimetypeFromExtension=true
+
+Description=A kioslave for obex
+Description[br]=Ur c'hioslave evit obex
+Description[de]=Ein-/Ausgabemodul für Obex
+Description[es]=Un kioslave para obex
+Description[et]=OBEX-i IO-moodul
+Description[it]=Un kioslave per obex
+Description[ja]=obex のための kioslave
+Description[nl]=Een kioslave voor obex
+Description[pt]=Um 'kioslave' para o 'obex'
+Description[pt_BR]=Um 'kioslave' para o 'obex'
+Description[sv]=I/O-slav för OBEX

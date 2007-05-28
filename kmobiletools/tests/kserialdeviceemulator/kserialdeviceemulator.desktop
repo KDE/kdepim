@@ -1,0 +1,18 @@
+[Desktop Entry]
+Encoding=UTF-8
+Name=KSerialDeviceEmulator
+Name[ja]=K シリアルデバイスエミュレータ
+Exec=kserialdeviceemulator
+Icon=kserialdeviceemulator
+Type=Application
+Comment=A simple KDE Application
+Comment[br]=Ur meziant eeun evit KDE
+Comment[de]=Eine einfache KDE-Anwendung
+Comment[es]=Un sencilla aplicación de KDE
+Comment[et]=Lihtne KDE rakendus
+Comment[it]=Una semplice applicazione KDE
+Comment[ja]=シンプルな KDE アプリケーション
+Comment[nl]=Een eenvoudige KDE-toepassing
+Comment[pt]=Uma aplicação simples do KDE
+Comment[pt_BR]=Uma aplicação simples do KDE
+Comment[sv]=Ett enkelt KDE-program

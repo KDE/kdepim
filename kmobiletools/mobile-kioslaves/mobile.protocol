@@ -1,0 +1,25 @@
+[Protocol]
+exec=kio_mobile
+protocol=mobile
+input=none
+output=filesystem
+listing=Name,Type,Size,Date,Access,Owner,Group,Link
+reading=true
+writing=false
+makedir=false
+deleting=false
+linking=false
+moving=false
+Icon=kmobiletools
+Class=:internet
+
+Description=A kioslave for mobile
+Description[de]=Ein-/Ausgabemodul für Mobiltelefone
+Description[es]=Un kioslave para móvil
+Description[et]=Mobiiltelefoni IO-moodul
+Description[it]=Un kioslave per i telefoni cellulari
+Description[ja]=携帯電話のための kioslave
+Description[nl]=Een kioslave voor mobile
+Description[pt]=Um 'kioslave' para o 'mobile'
+Description[pt_BR]=Um 'kioslave' para o 'mobile'
+Description[sv]=I/O-slav för protokollet för digital ljudåtkomst

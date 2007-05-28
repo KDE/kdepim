@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<!DOCTYPE gui SYSTEM "kpartgui.dtd">
+<gui name="kmobiletools" version="1">
+    <MenuBar>
+        <Menu name="file" noMerge="1">
+            <text>&amp;File</text>
+            <Merge name="kmobiletools_mainpart"/>
+        </Menu>
+        <Menu noMerge="1" name="settings"><text>&amp;Settings</text>
+            <Merge name="StandardToolBarMenuHandler"/>
+            <Action name="options_show_toolbar"/>
+            <Action name="options_show_statusbar"/>
+            <Merge name="show_merge"/>
+            <Separator/>
+            <Action name="options_configure_keybinding"/>
+            <Action name="options_configure_toolbars"/>
+            <Action name="options_configure"/>
+            <Action name="device_manager"/>
+            <Merge name="configure_merge"/>
+            <Separator/>
+            <Merge/>
+        </Menu>
+    </MenuBar>
+
+    <Merge/>
+</gui>

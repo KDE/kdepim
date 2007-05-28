@@ -22,6 +22,7 @@ What it is
 * kaddressbook: The KDE addressbook application.
 * kmail: the KDE mail client
 * kmailcvt: tool for importing mail related data from other programs
+* kmobiletools: an application specially designed to manage mobile phones
 * knode: news client
 * korganizer: a calendar-of-events and todo-list manager
 * kalarm: gui for setting up personal alarm messages, emails and commands

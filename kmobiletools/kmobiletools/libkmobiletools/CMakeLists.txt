@@ -1,0 +1,78 @@
+
+add_subdirectory( icons )
+
+IF (USE_CRASHHANDLER)
+	SET(crashhandler_SRCS crashhandler.cpp )
+ELSE (USE_CRASHHANDLER)
+	SET(crashhandler_SRCS "" )
+ENDIF (USE_CRASHHANDLER)
+
+########### next target ###############
+
+set(kmobiletools_LIB_SRCS 
+   aboutdata.cpp 
+   ${crashhandler_SRCS}
+   contactslist.cpp  
+   devicemenu.cpp 
+   encodingshelper.cpp 
+   engineslist.cpp 
+   homepage.cpp 
+   devicesconfig.cpp
+#   kmobiletools_devices_addons.cpp 
+   kmobiletoolshelper.cpp 
+   overlaywidget.cpp 
+   job.cpp 
+   weaver.cpp 
+   pickphonenumberdialog.cpp 
+   enginedata.cpp
+   picksmscenter.cpp 
+   popupaddressee.cpp 
+   popupnumber.cpp 
+   popupsms.cpp 
+   qserial.cpp 
+   serialdevice.cpp 
+   engine.cpp 
+   sms.cpp 
+   smslist.cpp )
+
+QT4_ADD_DBUS_INTERFACE(kmobiletools_LIB_SRCS org.kde.kmobiletools.device.xml kmobiletools_device_interface )
+QT4_ADD_DBUS_INTERFACE(kmobiletools_LIB_SRCS org.kde.kmobiletools.main.xml kmobiletools_main_interface )
+
+
+kde4_automoc(${kmobiletools_LIB_SRCS})
+
+kde4_add_ui_files(kmobiletools_LIB_SRCS ui_pickphonenumber.ui )
+
+kde4_add_kcfg_files(kmobiletools_LIB_SRCS kmobiletools_cfg.kcfgc kmobiletools_devices.kcfgc )
+
+kde4_add_library(kmobiletools SHARED ${kmobiletools_LIB_SRCS})
+
+target_link_libraries(kmobiletools  ${KDE4_KDECORE_LIBS} ${KDE4_KHTML_LIBS} ${KDE4_THREADWEAVER_LIBRARY} ${KDE4_KABC_LIBS} ${KDE4_KCAL_LIBS})
+
+set_target_properties(kmobiletools PROPERTIES VERSION 1.0.0 SOVERSION 1 )
+install(TARGETS kmobiletools DESTINATION ${LIB_INSTALL_DIR} )
+
+
+########### install files ###############
+
+install( FILES  kmobiletoolsengine.desktop DESTINATION ${SERVICETYPES_INSTALL_DIR} )
+install(FILES
+   kmobiletools_export.h
+   kmobiletoolshelper.h
+   engine.h
+   sms.h
+   smslist.h
+   encodingshelper.h
+   gsmcodec.h
+   qserial.h
+   job.h
+   contactslist.h
+   pickphonenumberdialog.h
+   serialdevice.h
+   picksmscenter.h
+   enginedata.h
+   weaver.h
+   ${CMAKE_CURRENT_BINARY_DIR}/kmobiletools_devices.h
+   devicesconfig.h
+   DESTINATION ${INCLUDE_INSTALL_DIR}/libkmobiletools)
+

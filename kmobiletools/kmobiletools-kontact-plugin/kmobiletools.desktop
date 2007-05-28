@@ -1,0 +1,37 @@
+[Desktop Entry]
+Encoding=UTF-8
+Type=Service
+Icon=kmobiletools
+ServiceTypes=Kontact/Plugin,KPluginInfo
+
+X-KDE-Library=libkontact_kmobiletools
+X-KDE-KontactPluginVersion=4
+X-KDE-KontactPartLibraryName=libkmobiletoolsmainpart
+
+X-KDE-PluginInfo-Name=kontact_kmobiletools
+X-KDE-PluginInfo-Version=0.1
+X-KDE-PluginInfo-License=GPL
+X-KDE-PluginInfo-EnabledByDefault=true
+
+Comment=KMmobileTools Plugin
+Comment[br]=Lugent KMmobileTools
+Comment[de]=KMmobileTools-Modul
+Comment[es]=Extensión de KMmobileTools
+Comment[et]=KMmobileToolsi plugin
+Comment[it]=Plugin KMmobileTools
+Comment[ja]=KMobileTools プラグイン
+Comment[nl]=KMobileTools-plugin
+Comment[pt]='Plugin' do KMmobileTools
+Comment[pt_BR]='Plugin' do KMmobileTools
+Comment[sv]=Insticksprogram för Kmobiletools
+Name=Mobile Phones
+Name[br]=Pellgomzioù lem-laka
+Name[de]=Mobiltelefone
+Name[es]=Teléfonos móviles
+Name[et]=Mobiiltelefonid
+Name[it]=Cellulari
+Name[ja]=携帯電話
+Name[nl]=Mobiele telefoons
+Name[pt]=Telemóveis
+Name[pt_BR]=Telemóveis
+Name[sv]=Mobiltelefoner

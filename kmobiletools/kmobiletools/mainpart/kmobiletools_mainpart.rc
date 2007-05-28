@@ -1,0 +1,29 @@
+<!DOCTYPE kpartgui SYSTEM "kpartgui.dtd">
+<kpartgui name="kmobiletools_mainpart" version="1">
+    <MenuBar>
+        <Menu name="file" nomerge="0"><text>&amp;File</text>
+            <Action name="home"/>
+            <Action name="prev"/>
+            <Action name="next"/>
+            <Merge />
+            <Separator />
+            <Action name="file_quit"/>
+        </Menu>
+        <Menu name="settings"><text>&amp;Settings</text>
+            <Separator/>
+            <Action name="device_manager" />
+            <Action name="options_configure" />
+            <Merge/>
+        </Menu>
+    </MenuBar>
+    <ToolBar noMerge="1" name="mainpart_toolbar"><text>Main Toolbar</text>
+        <Action name="device_manager"/>
+        <Action name="home"/>
+        <Action name="prev"/>
+        <Action name="next"/>
+        <Action name="help"/>
+    </ToolBar>
+    <ToolBar noMerge="1" name="deviceToolBar">
+        <ActionList name="kmobiletools_devicepart.rc" />
+    </ToolBar>
+</kpartgui>

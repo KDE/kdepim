@@ -1,0 +1,29 @@
+[Protocol]
+exec=kio_p2k
+protocol=p2k
+input=none
+output=filesystem
+listing=Name,Type,Size
+reading=true
+writing=true
+makedir=false
+deleting=true
+linking=false
+moving=false
+Icon=kmobiletools
+Class=:internet
+maxInstances=1
+defaultMimetype=application/octet-stream
+determineMimetypeFromExtension=true
+
+Description=A kioslave for p2k Motorola Phones
+Description[br]=Ur kioslave evit ar Pellgomzioù Motorola p2k
+Description[de]=Ein-/Ausgabemodul für p2k-Motorola-Telefone
+Description[es]=Un kioslave para los teléfonos motorola p2k
+Description[et]=p2k Motorola telefonide IO-moodul
+Description[it]=Un kioslave per telefoni p2k Motorola
+Description[ja]=p2k Motorola 電話のための kioslave
+Description[nl]=Een kioslave voor p2k Motorola-telefoons
+Description[pt]=Um 'kioslave' para os Telemóveis Motorola p2k
+Description[pt_BR]=Um 'kioslave' para os Telemóveis Motorola p2k
+Description[sv]=I/O-slav för Motorola telefoner p2k

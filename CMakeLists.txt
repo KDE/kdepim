@@ -145,6 +145,7 @@ if(GPGME_FOUND)
    add_subdirectory(korganizer)
 endif(GPGME_FOUND)
 
+add_subdirectory(kmobiletools)
 add_subdirectory(korn)
 add_subdirectory(kpilot)
 add_subdirectory(kresources)
