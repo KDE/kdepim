@@ -21,6 +21,7 @@
 #include <kabc/resource.h>
 #include <kabc/stdaddressbook.h>
 #include <kabc/vcardconverter.h>
+#include <kabc/errorhandler.h>
 #include <kresources/selectdialog.h>
 #include <dcopref.h>
 #include <dcopclient.h>
@@ -90,6 +91,8 @@ void KAddrBookExternal::addEmail( const QString& addr, QWidget *parent) {
 
   KABC::AddressBook *ab = KABC::StdAddressBook::self( true );
 
+  ab->setErrorHandler( new KABC::GuiErrorHandler( parent ) );
+
   // force a reload of the address book file so that changes that were made
   // by other programs are loaded
   ab->asyncLoad();
@@ -144,9 +147,7 @@ void KAddrBookExternal::addEmail( const QString& addr, QWidget *parent) {
       a.setFormattedName( name );
     }
 
-    if ( !KAddrBookExternal::addAddressee( a ) ) {
-      KMessageBox::error( parent, i18n("Cannot save to addressbook.") );
-    } else {
+    if ( KAddrBookExternal::addAddressee( a ) ) {
       QString text = i18n("<qt>The email address <b>%1</b> was added to your "
                           "addressbook; you can add more information to this "
                           "entry by opening the addressbook.</qt>").arg( addr );
@@ -158,6 +159,7 @@ void KAddrBookExternal::addEmail( const QString& addr, QWidget *parent) {
     KMessageBox::information( parent, text, QString::null,
                               "alreadyInAddressBook" );
   }
+  ab->setErrorHandler( 0 );
 }
 
 void KAddrBookExternal::openAddressBook(QWidget *) {
@@ -176,14 +178,13 @@ bool KAddrBookExternal::addVCard( const KABC::Addressee& addressee, QWidget *par
   KABC::AddressBook *ab = KABC::StdAddressBook::self( true );
   bool inserted = false;
 
+  ab->setErrorHandler( new KABC::GuiErrorHandler( parent ) );
+
   KABC::Addressee::List addressees =
       ab->findByEmail( addressee.preferredEmail() );
 
   if ( addressees.isEmpty() ) {
-    if ( !KAddrBookExternal::addAddressee( addressee ) ) {
-      KMessageBox::error( parent, i18n("Cannot save to addressbook.") );
-      inserted = false;
-    } else {
+    if ( KAddrBookExternal::addAddressee( addressee ) ) {
       QString text = i18n("The VCard was added to your addressbook; "
                           "you can add more information to this "
                           "entry by opening the addressbook.");
@@ -199,6 +200,7 @@ bool KAddrBookExternal::addVCard( const KABC::Addressee& addressee, QWidget *par
     inserted = true;
   }
 
+  ab->setErrorHandler( 0 );
   return inserted;
 }
 
