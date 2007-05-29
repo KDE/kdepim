@@ -1,26 +1,7 @@
 [Desktop Entry]
 Type=Service
 Name=AT Engine
-Name[br]=Keflusker AT
-Name[de]=AT-Treiber
-Name[es]=Motor AT
-Name[et]=AT mootor
-Name[it]=Motore AT
-Name[ja]=AT エンジン
-Name[nl]=AT-engine
-Name[pt]=Motor AT
-Name[pt_BR]=Motor AT
-Name[sv]=AT-gränssnitt
 Comment=KMobileTools Engine based on the standard GSM AT Command Set
-Comment[de]=KMobileTools-Treiber basierend auf dem Standard GSM-AT-Befehlssatz
-Comment[es]=Motor de KMobileTools basado en el conjunto de órdenes del estándar GSM AT
-Comment[et]=KMobileToolsi mootor standardse GSM AT käsustiku põhjal
-Comment[it]=Motore KMobileTools basato sull'insieme di comandi standard GSM AT
-Comment[ja]=標準的な GSM AT コマンドセットに基づく KMobileTools エンジン
-Comment[nl]=KMobileTools-engine gebaseerd op de standaard GSM AT-commandoset
-Comment[pt]=Motor do KMobileTools baseado no Conjunto de Comandos-Padrão AT do GSM
-Comment[pt_BR]=Motor do KMobileTools baseado no Conjunto de Comandos-Padrão AT do GSM
-Comment[sv]=Kmobiletools-gränssnitt baserat på standardiserade GSM AT-kommadon
 Icon=kmobiletoolsAT
 ServiceTypes=KMobileTools/Engine
 X-KMobileTools-LongDesc=KMobileTools default engine, developed interally by the KMobileTools team.\nGood choice with almost all mobile phones, but on some models it lacks advanced features.\nBest choice with Motorola Phones, works good also with Sony Ericsson and Siemens.

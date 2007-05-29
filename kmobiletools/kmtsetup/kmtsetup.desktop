@@ -1,18 +1,8 @@
 [Desktop Entry]
 Encoding=UTF-8
 Name=KMTSetup
-Name[sv]=Inställning av KMT
 Exec=kmtsetup
 Icon=kmtsetup
 Type=Application
 Hidden=true
 Comment=An application for configuration of devices used by kmobiletools
-Comment[de]=Eine Anwendung zum Einrichten von Geräten zur Nutzung in kmobiletools
-Comment[es]=Una aplicación para configurar los dispositivos utilizados por kmobiletools
-Comment[et]=KMobileToolsi kasutatavate seadmete seadistamine
-Comment[it]=Un'applicazione per configurare i dispositivi usati da kmobiletools
-Comment[ja]=kmobiletools で使用するデバイスを設定するためのアプリケーション
-Comment[nl]=Een toepassing voor het instellen van apparaten, gebruikt door KMobileTools
-Comment[pt]=Uma aplicação para a configuração dos dispositivos usados pelo kmobiletools
-Comment[pt_BR]=Uma aplicação para a configuração dos dispositivos usados pelo kmobiletools
-Comment[sv]=Ett program för att anpassa enheter använda av Kmobiletools

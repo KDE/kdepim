@@ -4,24 +4,6 @@
 
 [kmobiletools_ring]
 Name=Incoming Call
-Name[br]=Galv resevet
-Name[de]=Eingehender Anruf
-Name[es]=Llamada entrante
-Name[et]=Saabuv kõne
-Name[it]=Chiamata in arrivo
-Name[ja]=電話の着信
-Name[nl]=Inkomend gesprek
-Name[pt]=Chamada Recebida
-Name[pt_BR]=Chamada Recebida
-Name[sv]=Inkommande samtal
 Comment=There is an incoming call
-Comment[es]=Se produjo una llamada entrante
-Comment[et]=Saabus kõne
-Comment[it]=C'è una chiamata in arrivo
-Comment[ja]=電話が着信しました
-Comment[nl]=Er is een inkomend gesprek
-Comment[pt]=Está a receber uma chamada
-Comment[pt_BR]=Está a receber uma chamada
-Comment[sv]=Det finns ett inkommande samtal
 default_sound=KDE_Beep_Phone_1.ogg
 default_presentation=17
