@@ -32,7 +32,12 @@ class QWidget;
 
 class KLineEdit;
 class K3ListBox;
-class K3ListView;
+
+namespace KPIM {
+class CategorySelectWidget;
+}
+
+class KPIM::CategorySelectWidget;
 
 #include <kdialog.h>
 
@@ -88,7 +93,7 @@ class FilterEditDialog : public KDialog
     Filter mFilter;
 
     KLineEdit *mNameEdit;
-    K3ListView *mCategoriesView;
+    KPIM::CategorySelectWidget *mCategoriesView;
     Q3ButtonGroup *mMatchRuleGroup;
     QPushButton *mEditButton;
     QPushButton *mRemoveButton;

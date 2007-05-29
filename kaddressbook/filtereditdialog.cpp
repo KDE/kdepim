@@ -45,6 +45,7 @@
 #include <k3listview.h>
 #include <klocale.h>
 #include <ktoolinvocation.h>
+#include <libkdepim/categoryselectdialog.h>
 
 #include "kabprefs.h"
 #include "filtereditdialog.h"
@@ -59,12 +60,6 @@ FilterEditDialog::FilterEditDialog( QWidget *parent, const char *name )
   setModal( false );
   initGUI();
 
-  const QStringList cats = KABPrefs::instance()->customCategories();
-
-  QStringList::ConstIterator it;
-  for ( it = cats.begin(); it != cats.end(); ++it )
-    mCategoriesView->insertItem( new Q3CheckListItem( mCategoriesView, *it, Q3CheckListItem::CheckBox ) );
-
   filterNameTextChanged( mNameEdit->text() );
 }
 
@@ -76,16 +71,7 @@ void FilterEditDialog::setFilter( const Filter &filter )
 {
   mNameEdit->setText( filter.name() );
 
-  QStringList categories = filter.categories();
-  Q3ListViewItem *item = mCategoriesView->firstChild();
-  while ( item != 0 ) {
-    if ( categories.contains( item->text( 0 ) ) ) {
-      Q3CheckListItem *checkItem = static_cast<Q3CheckListItem*>( item );
-      checkItem->setOn( true );
-    }
-
-    item = item->nextSibling();
-  }
+  mCategoriesView->setSelected(filter.categories());
 
   if ( filter.matchRule() == Filter::Matching )
     mMatchRuleGroup->setButton( 0 );
@@ -99,16 +85,8 @@ Filter FilterEditDialog::filter()
 
   filter.setName( mNameEdit->text() );
 
-  QStringList categories;
-  Q3ListViewItem *item = mCategoriesView->firstChild();
-  while ( item != 0 ) {
-    Q3CheckListItem *checkItem = static_cast<Q3CheckListItem*>( item );
-    if ( checkItem->isOn() )
-      categories.append( item->text( 0 ) );
-
-    item = item->nextSibling();
-  }
-  filter.setCategories( categories );
+  QString lst;
+  filter.setCategories( mCategoriesView->selectedCategories(lst));
 
   if ( mMatchRuleGroup->find( 0 )->isChecked() )
     filter.setMatchRule( Filter::Matching );
@@ -137,10 +115,9 @@ void FilterEditDialog::initGUI()
   topLayout->addWidget( mNameEdit, 0, 1 );
   connect( mNameEdit, SIGNAL( textChanged( const QString& ) ),
            SLOT( filterNameTextChanged( const QString&) ) );
-
-  mCategoriesView = new K3ListView( page );
-  mCategoriesView->addColumn( i18n( "Category" ) );
-  mCategoriesView->setFullWidth( true );
+  mCategoriesView = new KPIM::CategorySelectWidget(page,KABPrefs::instance());
+  mCategoriesView->setCategories(KABPrefs::instance()->customCategories());
+  mCategoriesView->hideButton();
   topLayout->addWidget( mCategoriesView, 1, 0, 1, 2 );
 
   mMatchRuleGroup = new Q3ButtonGroup( page );
