@@ -19,8 +19,8 @@
 
     You should have received a copy of the GNU Library General Public License
     along with this library; see the file COPYING.LIB.  If not, write to
-    the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
-    Boston, MA 02111-1307, USA.
+    the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+    Boston, MA 02110-1301, USA.
 */
 
 #ifndef ADDRESSEELINEEDIT_H
@@ -35,7 +35,7 @@
 #include <kabc/addressee.h>
 
 #include "clicklineedit.h"
-#include "kcompletion.h"
+#include "kmailcompletion.h"
 #include <dcopobject.h>
 
 class KConfig;
@@ -60,9 +60,7 @@ class AddresseeLineEdit : public ClickLineEdit, public DCOPObject
     virtual ~AddresseeLineEdit();
 
     virtual void setFont( const QFont& );
-
     void allowSemiColonAsSeparator( bool );
-    //static KConfig *config();
 
   public slots:
     void cursorAtEnd();
@@ -122,9 +120,10 @@ class AddresseeLineEdit : public ClickLineEdit, public DCOPObject
     void stopLDAPLookup();
 
     void setCompletedItems( const QStringList& items, bool autoSuggest );
-    void addCompletionItem( const QString& string, int weight, int source );
+    void addCompletionItem( const QString& string, int weight, int source, const QStringList * keyWords=0 );
     QString completionSearchText( QString& );
     const QStringList getAdjustedCompletionItems( bool fullSearch );
+    void updateSearchString();
 
     QString m_previousAddresses;
     QString m_searchString;
@@ -132,22 +131,37 @@ class AddresseeLineEdit : public ClickLineEdit, public DCOPObject
     bool m_completionInitialized;
     bool m_smartPaste;
     bool m_addressBookConnected;
+    bool m_lastSearchMode;
+    bool m_searchExtended; //has \" been added?
     bool m_useSemiColonAsSeparator;
 
     //QMap<QString, KABC::Addressee> m_contactMap;
 
     static bool s_addressesDirty;
-    static KCompletion *s_completion;
+    static KMailCompletion *s_completion;
     static CompletionItemsMap* s_completionItemMap;
     static QTimer *s_LDAPTimer;
     static KPIM::LdapSearch *s_LDAPSearch;
     static QString *s_LDAPText;
     static AddresseeLineEdit *s_LDAPLineEdit;
-  //static KConfig *s_config;
     static QStringList *s_completionSources;
 
     class AddresseeLineEditPrivate;
     AddresseeLineEditPrivate *d;
+
+    //until MenuID moves into protected in KLineEdit, we keep a copy here
+    //Constants that represent the ID's of the popup menu.
+      enum MenuID
+      {
+        Default = 42,
+        NoCompletion,
+        AutoCompletion,
+        ShellCompletion,
+        PopupCompletion,
+        ShortAutoCompletion,
+        PopupAutoCompletion
+      };
+
 };
 
 }
