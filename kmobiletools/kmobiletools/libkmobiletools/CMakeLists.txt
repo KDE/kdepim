@@ -54,6 +54,8 @@ install(TARGETS kmobiletools DESTINATION ${LIB_INSTALL_DIR} )
 
 
 ########### install files ###############
+install( FILES kmobiletools_devices.kcfg kmobiletools_devices.kcfg DESTINATION  ${KCFG_INSTALL_DIR} )
+
 
 install( FILES  kmobiletoolsengine.desktop DESTINATION ${SERVICETYPES_INSTALL_DIR} )
 install(FILES

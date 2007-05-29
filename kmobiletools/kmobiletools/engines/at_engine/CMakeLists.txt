@@ -25,7 +25,7 @@ target_link_libraries(kmobiletools_at  ${KDE4_KDECORE_LIBS} kmobiletools kmobile
 
 set_target_properties(kmobiletools_at PROPERTIES VERSION 1.0.0 SOVERSION 1 )
 install(TARGETS kmobiletools_at DESTINATION ${LIB_INSTALL_DIR} )
-
+install( FILES atengineconfig.kcfg  DESTINATION  ${KCFG_INSTALL_DIR} )
 
 ########### install files ###############
 
