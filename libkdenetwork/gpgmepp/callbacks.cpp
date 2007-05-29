@@ -32,6 +32,7 @@
 #include <cerrno>
 #include <unistd.h>
 #include <stdlib.h>
+#include <string.h>
 
 static inline gpg_error_t makeErrorFromErrno() {
   return gpg_err_make_from_errno( (gpg_err_source_t)22, errno );

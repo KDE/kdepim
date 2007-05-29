@@ -44,9 +44,10 @@ using namespace KCal;
 
 ResourceCached::ResourceCached( const KConfig* config )
   : ResourceCalendar( config ), mCalendar( QString::fromLatin1( "UTC" ) ),
-    mReloadPolicy( ReloadNever ),  mReloadInterval( 10 ), mReloaded( false ),
+    mReloadPolicy( ReloadNever ),  mReloadInterval( 10 ), 
+    mReloadTimer( 0, "mReloadTimer" ), mReloaded( false ),
     mSavePolicy( SaveNever ), mSaveInterval( 10 ),
-    mIdMapper( "kcal/uidmaps/" )
+    mSaveTimer( 0, "mSaveTimer" ), mIdMapper( "kcal/uidmaps/" )
 {
   connect( &mReloadTimer, SIGNAL( timeout() ), SLOT( slotReload() ) );
   connect( &mSaveTimer, SIGNAL( timeout() ), SLOT( slotSave() ) );

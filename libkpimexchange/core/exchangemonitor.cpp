@@ -109,12 +109,12 @@ ExchangeMonitor::ExchangeMonitor( ExchangeAccount* account, int pollMode, const 
   }
 
   if ( mPollMode == Poll ) {
-    mPollTimer = new QTimer( this );
+    mPollTimer = new QTimer( this, "mPollTimer" );
     connect( mPollTimer, SIGNAL(timeout()), this, SLOT(slotPollTimer()) );
     mPollTimer->start( 60000 ); // 1 minute timer
   }
 
-  mRenewTimer = new QTimer( this );
+  mRenewTimer = new QTimer( this, "mRenewTimer" );
   connect( mRenewTimer, SIGNAL(timeout()), this, SLOT(slotRenewTimer()) );
   mRenewTimer->start( mSubscriptionLifetime * 900 ); // 10% early so as to be in time
 }

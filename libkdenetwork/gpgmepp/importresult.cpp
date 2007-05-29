@@ -28,6 +28,7 @@
 
 #include <gpgme.h>
 #include <cstdlib>
+#include <cstring>
 
 class GpgME::ImportResult::Private : public GpgME::Shared {
 public:
