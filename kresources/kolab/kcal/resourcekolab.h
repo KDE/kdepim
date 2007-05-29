@@ -136,6 +136,8 @@ public:
   virtual bool addSubresource( const QString& resource, const QString& parent );
   virtual bool removeSubresource( const QString& resource );
 
+  virtual QString subresourceType( const QString &resource );
+
   KABC::Lock* lock();
 
 signals:
@@ -143,7 +145,7 @@ signals:
 protected slots:
   void slotEmitResourceChanged();
 protected:
-  /** 
+  /**
    * Return list of alarms which are relevant for the current user. These
    * are the ones coming from folders which the user has "Administer" rights
    * for, as per ACL */

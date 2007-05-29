@@ -195,5 +195,11 @@ bool ResourceCalendar::setValue( const QString &key, const QString &value )
   return false;
 }
 
+QString ResourceCalendar::subresourceType( const QString &resource )
+{
+  Q_UNUSED( resource );
+  return QString();
+}
+
 
 #include "resourcecalendar.moc"

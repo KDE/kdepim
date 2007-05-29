@@ -1134,4 +1134,15 @@ bool ResourceKolab::unloadSubResource( const QString& subResource )
     return true;
 }
 
+QString ResourceKolab::subresourceType( const QString &resource )
+{
+  if ( mEventSubResources.contains( resource ) )
+    return "event";
+  if ( mTodoSubResources.contains( resource ) )
+    return "todo";
+  if ( mJournalSubResources.contains( resource ) )
+    return "journal";
+  return QString();
+}
+
 #include "resourcekolab.moc"
