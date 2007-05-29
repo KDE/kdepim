@@ -130,7 +130,7 @@ class EmailSelector : public KDialogBase
     QString selected() const;
 
     static QString getEmail( const QStringList &emails, const QString &current,
-                             QWidget *parent );
+                             QWidget *parent, bool &canceled );
 
   private:
     QButtonGroup *mButtonGroup;

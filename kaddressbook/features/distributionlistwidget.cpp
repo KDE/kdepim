@@ -446,8 +446,11 @@ void DistributionListWidget::changeEmail()
   if ( !contactItem )
     return;
 
+  bool canceled = false;
   const QString email = EmailSelector::getEmail( contactItem->addressee().emails(),
-                                                 contactItem->email(), this );
+                                                 contactItem->email(), this, canceled);
+  if( canceled)
+     return;
   dist.removeEntry( contactItem->addressee(), contactItem->email() );
   dist.insertEntry( contactItem->addressee(), email );
 
@@ -620,7 +623,7 @@ void DistributionListView::dropEvent( QDropEvent *e )
 
 EmailSelector::EmailSelector( const QStringList &emails,
                               const QString &current, QWidget *parent )
-  : KDialogBase( KDialogBase::Plain, i18n("Select Email Address"), Ok, Ok,
+  : KDialogBase( KDialogBase::Plain, i18n("Select Email Address"), Ok|Cancel, Ok,
                parent )
 {
   QFrame *topFrame = plainPage();
@@ -654,12 +657,16 @@ QString EmailSelector::selected() const
 }
 
 QString EmailSelector::getEmail( const QStringList &emails,
-                                 const QString &current, QWidget *parent )
+                                 const QString &current, QWidget *parent, bool &canceled )
 {
   EmailSelector dlg( emails, current, parent );
-  dlg.exec();
-
-  return dlg.selected();
+  if(dlg.exec())
+  {
+    canceled = false;
+    return dlg.selected();
+  }
+  canceled = true;
+  return QString();
 }
 
 
