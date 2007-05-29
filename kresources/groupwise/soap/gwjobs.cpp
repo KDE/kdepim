@@ -394,29 +394,32 @@ void ReadCalendarJob::run()
               totalItems += count;
             }
             kdDebug() << "Folder " <<  (*(*it)->id).c_str() << ", containing " << count << " items." << endl;
-            if ( *(fld->folderType) == Calendar ) {
-              kdDebug() << "Reading folder " <<  (*(*it)->id).c_str() << ", of type Calendar, physically containing " << count << " items." << endl;
-              readCalendarFolder( *(*it)->id, itemCounts );
-              haveReadFolder = true;
-              *mCalendarFolder = *((*it)->id);
+            if ( fld->folderType )
+            {
+              if ( *(fld->folderType) == Calendar ) {
+                kdDebug() << "Reading folder " <<  (*(*it)->id).c_str() << ", of type Calendar, physically containing " << count << " items." << endl;
+                readCalendarFolder( *(*it)->id, itemCounts );
+                haveReadFolder = true;
+                *mCalendarFolder = *((*it)->id);
+              }
+              else if ( *(fld->folderType) == Checklist ) {
+                kdDebug() << "Reading folder " <<  (*(*it)->id).c_str() << ", of type Checklist, physically containing " << count << " items." << endl;
+                readCalendarFolder( *(*it)->id, itemCounts );
+                haveReadFolder = true;
+                *mChecklistFolder = *((*it)->id);
+              }
+  /*            else if ( fld->folderType == SentItems ) {
+                kdDebug() << "Reading folder " <<  (*(*it)->id).c_str() << ", of type SentItems, physically containing " << count << " items." << endl;
+                readCalendarFolder( *(*it)->id, itemCounts );
+                haveReadFolder = true;
+                *mChecklistFolder = *((*it)->id);
+              }*/
+  /*            else if ( fld->folderType == Mailbox ) {
+                kdDebug() << "Reading folder " <<  (*(*it)->id).c_str() << ", of type Mailbox (not yet accepted items), containing " << count << " items." << endl;
+                readCalendarFolder( *(*it)->id, count, itemCounts );
+                haveReadFolder = true;
+              }*/
             }
-            else if ( *(fld->folderType) == Checklist ) {
-              kdDebug() << "Reading folder " <<  (*(*it)->id).c_str() << ", of type Checklist, physically containing " << count << " items." << endl;
-              readCalendarFolder( *(*it)->id, itemCounts );
-              haveReadFolder = true;
-              *mChecklistFolder = *((*it)->id);
-            }
-/*            else if ( fld->folderType == SentItems ) {
-              kdDebug() << "Reading folder " <<  (*(*it)->id).c_str() << ", of type SentItems, physically containing " << count << " items." << endl;
-              readCalendarFolder( *(*it)->id, itemCounts );
-              haveReadFolder = true;
-              *mChecklistFolder = *((*it)->id);
-            }*/
-/*            else if ( fld->folderType == Mailbox ) {
-              kdDebug() << "Reading folder " <<  (*(*it)->id).c_str() << ", of type Mailbox (not yet accepted items), containing " << count << " items." << endl;
-              readCalendarFolder( *(*it)->id, count, itemCounts );
-              haveReadFolder = true;
-            }*/
             if ( haveReadFolder )
             {
               kdDebug() << "Folder contained " << itemCounts.appointments << " appointments, " << itemCounts.notes << " notes, and " << itemCounts.tasks << " tasks." << endl;
