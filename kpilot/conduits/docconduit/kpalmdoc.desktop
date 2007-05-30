@@ -61,4 +61,4 @@ DocPath=kpalmdoc/index.html
 Terminal=false
 X-KDE-StartupNotify=true
 X-DCOP-ServiceType=Unique
-Categories=Qt;KDE;Utility;X-KDE-Utilities-File;
+Categories=Qt;KDE;Utility;X-KDE-Utilities-File;Office;PDA;

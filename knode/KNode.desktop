@@ -82,4 +82,4 @@ GenericName[zh_TW]=新聞閱讀器
 GenericName[zu]=Umfundi wezindaba
 X-KDE-StartupNotify=true
 X-DCOP-ServiceType=Unique
-Categories=Qt;KDE;Network;
+Categories=Qt;KDE;Network;News;
