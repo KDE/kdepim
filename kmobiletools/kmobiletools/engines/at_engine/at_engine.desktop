@@ -1,7 +1,9 @@
 [Desktop Entry]
 Type=Service
 Name=AT Engine
+Name[zh_TW]=AT 引擎
 Comment=KMobileTools Engine based on the standard GSM AT Command Set
+Comment[zh_TW]=基於標準 GSM AT 命令集的 KMobileTools 引擎
 Icon=kmobiletoolsAT
 ServiceTypes=KMobileTools/Engine
 X-KMobileTools-LongDesc=KMobileTools default engine, developed interally by the KMobileTools team.\nGood choice with almost all mobile phones, but on some models it lacks advanced features.\nBest choice with Motorola Phones, works good also with Sony Ericsson and Siemens.

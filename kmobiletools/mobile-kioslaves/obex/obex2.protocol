@@ -17,3 +17,4 @@ defaultMimetype=application/octet-stream
 determineMimetypeFromExtension=true
 
 Description=A kioslave for obex
+Description[zh_TW]=obex 的 kioslave

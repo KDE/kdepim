@@ -5,3 +5,4 @@ Exec=kserialdeviceemulator
 Icon=kserialdeviceemulator
 Type=Application
 Comment=A simple KDE Application
+Comment[zh_TW]=簡單的 KDE 應用程式

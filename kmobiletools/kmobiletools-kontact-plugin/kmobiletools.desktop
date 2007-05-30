@@ -14,4 +14,6 @@ X-KDE-PluginInfo-License=GPL
 X-KDE-PluginInfo-EnabledByDefault=true
 
 Comment=KMmobileTools Plugin
+Comment[zh_TW]=KMobileTools 外掛程式
 Name=Mobile Phones
+Name[zh_TW]=行動電話

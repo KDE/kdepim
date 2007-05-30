@@ -2,10 +2,12 @@
 Encoding=UTF-8
 Name=KMobileTools
 GenericName=Mobile Phones Management
+GenericName[zh_TW]=行動電話管理員
 Exec=kmobiletools %i %m -caption "%c"
 Icon=kmobiletools
 Type=Application
 DocPath=kmobiletools/index.html
 Comment=KDE Mobile Phones Suite
+Comment[zh_TW]=KDE 行動電話套件
 Terminal=false
 Categories=Qt;KDE;Utility;X-KDE-Utilities-Peripherals;

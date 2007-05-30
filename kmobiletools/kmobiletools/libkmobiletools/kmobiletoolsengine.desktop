@@ -4,6 +4,7 @@ Type=ServiceType
 X-KDE-ServiceType=KMobileTools/Engine
 X-KDE-Derived=KPluginInfo
 Comment=KMobileTools Engine
+Comment[zh_TW]=KMobileTools 引擎
 
 [PropertyDef::X-KMobileTools-LongDesc]
 Type=QString

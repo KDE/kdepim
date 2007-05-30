@@ -6,3 +6,4 @@ Icon=kmtsetup
 Type=Application
 Hidden=true
 Comment=An application for configuration of devices used by kmobiletools
+Comment[zh_TW]=設定 kmobiletools 使用的裝置的應用程式
