@@ -111,6 +111,7 @@ class kmobiletoolsMainPart : public KParts::ReadOnlyPart/*, virtual public MainI
     void newSMS();
     QStringList loadedEngines(bool friendly=false);
     void phonebookUpdated();
+    void slotConfigNotify();
 
     private:
         Q3WidgetStack *m_widget;

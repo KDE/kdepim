@@ -124,6 +124,7 @@ kmobiletoolsMainPart::kmobiletoolsMainPart( QWidget *parentWidget, QObject *pare
     actionCollection()->addAction(KStandardAction::Prior, "prev", this, SLOT(prevPart() ) );
 //     actionCollection()->addAction(KStandardAction::Preferences, "options_configure", this, SLOT(showPreference() ) );
     actionCollection()->addAction(KStandardAction::Quit, "file_quit", this, SLOT(slotQuit() ) );
+    actionCollection()->addAction(KStandardAction::ConfigureNotifications, "cfgnotify", this, SLOT(slotConfigNotify() ) );
 
 
 
@@ -628,4 +629,13 @@ void kmobiletoolsMainPart::phonebookUpdated()
         kDebug() << "Updating device part " << curPart->objectName() << endl;
         curPart->updateAllContacts();
     }
+}
+
+
+/*!
+    \fn kmobiletoolsMainPart::slotConfigNotify()
+ */
+void kmobiletoolsMainPart::slotConfigNotify()
+{
+///    KNotifyDialog::configure(m_widget, 0); @TODO port to KNotifyDialog
 }

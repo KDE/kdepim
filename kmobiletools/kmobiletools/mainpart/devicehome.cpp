@@ -64,6 +64,8 @@
 //#include <knotifyclient.h>
 #include <kcombobox.h>
 #include <kplugininfo.h>
+#include <knotification.h>
+#include <ksystemtrayicon.h>
 
 #ifdef HAVE_KCAL
 #include <libkcal/resourcelocal.h>
@@ -79,6 +81,7 @@
 #include <libkmobiletools/contactslist.h>
 #include <libkmobiletools/engineslist.h>
 #include <libkmobiletools/smslist.h>
+#include <libkmobiletools/weaver.h>
 
 #include "addressdetails.h"
 #include "editaddressee.h"
@@ -476,6 +479,14 @@ void DeviceHome::updateAllContacts()
 void DeviceHome::jobDone(KMobileTools::Job::JobType jobtype)
 {
     if(jobtype==KMobileTools::Job::fetchAddressBook) emit phonebookUpdated();
+    /** @TODO port to KNotification
+    int newsmscnt=engine->engineData()->smsList()->count(SMS::Unread, SMS::SIM | SMS::Phone );
+
+    if(newsmscnt && engine->ThreadWeaver()->isEmpty() && engine->ThreadWeaver()->isIdle() && newsmscnt!=smsnotifynum) {
+        smsnotifynum=newsmscnt;
+        QString eventString(i18n("<qt>%1 New Messages.<br>Mobile Phone: %2</qt>").arg(newsmscnt).arg(DEVCFG(name() )->devicename() ) );
+        KNotifyClient::event( KMobileTools::KMobiletoolsHelper::instance()->systray()->winId(), "kmobiletools_sms", eventString );
+    }*/
 }
 
 

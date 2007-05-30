@@ -12,6 +12,7 @@
         <Menu name="settings"><text>&amp;Settings</text>
             <Separator/>
             <Action name="device_manager" />
+            <Action name="cfgnotify"/>
             <Action name="options_configure" />
             <Merge/>
         </Menu>

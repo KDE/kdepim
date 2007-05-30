@@ -152,6 +152,7 @@ private:
     smsPart *p_smsPart;
     bool devIsConnected;
     int suspends_count;
+    int smsnotifynum;
 //     QFile f_pidfile;
     KParts::StatusBarExtension *statusBarExtension;
     QList<QAction*> l_actionList;
