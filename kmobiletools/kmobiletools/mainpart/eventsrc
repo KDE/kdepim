@@ -14,7 +14,5 @@ default_presentation=17
 [kmobiletools_sms]
 Name=New SMS Messages
 Comment=New incoming SMS were found
-Name[it]=Nuovi Messaggi SMS
-Comment[it]=Trovati nuovi SMS in arrivo
 default_sound=KDE_Beep_Double.ogg
 default_presentation=17
