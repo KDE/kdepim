@@ -196,7 +196,7 @@ bool SMS::writeToSlot(const QString &dir)
     if((d->i_type & Unsent) || (d->i_type & Sent) )
     {
         filename+=i18nc("Outgoing MailDir", "Outgoing");
-        text="To: ";
+        text="To: \"";
         for(QStringList::Iterator it=d->sl_numbers.begin(); it!=d->sl_numbers.end(); ++it)
             text+=KMobileTools::KMobiletoolsHelper::translateNumber(*it) + "\" <" + *it + ">\n";
         text+="X-Status: RS\n";
