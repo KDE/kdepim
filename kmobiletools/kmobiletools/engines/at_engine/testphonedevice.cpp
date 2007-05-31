@@ -19,8 +19,11 @@
  ***************************************************************************/
 #include "testphonedevice.h"
 #include <libkmobiletools/serialdevice.h>
+#include <libkmobiletools/enginedata.h>
+#include <QFile>
 
-TestPhoneDeviceJob::TestPhoneDeviceJob(const QString &devicename, AT_Engine* parent): kmobiletoolsATJob(NULL, parent)
+TestPhoneDeviceJob::TestPhoneDeviceJob(const QString &devicename, AT_Engine* parent): kmobiletoolsATJob(NULL, parent),
+    b_found(false), enginedata(0)
 {
     this->deviceName=devicename;
     p_device=new KMobileTools::SerialManager(parent, parent->objectName(), devicename);
@@ -30,10 +33,19 @@ TestPhoneDeviceJob::TestPhoneDeviceJob(const QString &devicename, AT_Engine* par
 TestPhoneDeviceJob::~TestPhoneDeviceJob()
 {
     delete p_device;
+    delete enginedata;
 }
 
 void TestPhoneDeviceJob::run() {
-    kDebug() << "TestPhoneDevice::run() on " << deviceName << endl;
+    if(! QFile::exists(deviceName)) return;
+    if(!p_device->open(this)) return;
+    enginedata=new KMobileTools::EngineData(0);
+    QString buffer;
+    const int probeTimeout=600;
+    buffer=p_device->sendATCommand(this, "AT+CGSN\r", probeTimeout);
+    kDebug() << "Sent CGSN probe, got " << buffer << endl;
+    p_device->close();
+    b_found=true;
 }
 
 #include "testphonedevice.moc"

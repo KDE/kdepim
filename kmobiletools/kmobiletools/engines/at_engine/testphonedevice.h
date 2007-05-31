@@ -24,8 +24,9 @@
 #include "at_engine.h"
 
 /**
-    @author 
+    @author Marco Gulino
 */
+class KMobileTools::EngineData;
 class TestPhoneDeviceJob : public kmobiletoolsATJob
 {
 Q_OBJECT
@@ -34,9 +35,14 @@ public:
 
     ~TestPhoneDeviceJob();
     JobType type() { return static_cast<JobType>(AT_Engine::TestPhoneDevice); }
+    KMobileTools::EngineData *data() { return enginedata; }
+    bool found() { return b_found; }
+    QString path() const { return deviceName; }
 protected:
     void run ();
     QString deviceName;
+    KMobileTools::EngineData* enginedata;
+    bool b_found;
 };
 
 #endif

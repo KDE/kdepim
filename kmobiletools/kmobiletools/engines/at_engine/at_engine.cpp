@@ -121,7 +121,7 @@ void AT_Engine::processSlot(KMobileTools::Job* job)
     KMobileTools::Engine::processSlot(job);
 //     kDebug() << "job Owner: " << p_job->jobOwner() << "; job class: " << p_job->className() << endl;
     if(job->property("owner") != objectName() ) return;
-    kDebug() << "KMobileTools::Engine::processSlot; jobType=" << job->type() << endl;
+//     kDebug() << "KMobileTools::Engine::processSlot; jobType=" << job->type() << endl;
     p_lastJob=0;
 //     kDebug() << "is KMobileToolsJob: " << p_job->inherits("KMobileTools::Job") << endl;
     KMobileTools::DevicesConfig *wconfig=KMobileTools::DevicesConfig::prefs(objectName() );
@@ -205,6 +205,10 @@ void AT_Engine::processSlot(KMobileTools::Job* job)
             emit calendarParsed();
             p_calendar->dump();
 #endif
+            break;
+        case TestPhoneDevice:
+            TestPhoneDeviceJob *djob=(TestPhoneDeviceJob*)job;
+            if(djob->found()) kDebug() << "Found device in " << djob->path() << endl;
             break;
     }
 }
