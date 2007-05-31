@@ -1,32 +1,52 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- 
-<notice>
-   Copyright © 2005-2005 Novell, Inc. All Rights Reserved.
+<?xml version="1.0" encoding="UTF-8"?><!-- 
+================================================================================
+File:	groupwise.wsdl
 
-   THIS WORK IS SUBJECT TO U.S. AND INTERNATIONAL COPYRIGHT LAWS AND TREATIES.
-   NO PART OF THIS WORK MAY BE USED, PRACTICED, PERFORMED COPIED, DISTRIBUTED,
-   REVISED, MODIFIED, TRANSLATED, ABRIDGED, CONDENSED, EXPANDED, COLLECTED,
-   COMPILED, LINKED, RECAST, TRANSFORMED OR ADAPTED WITHOUT THE PRIOR WRITTEN
-   CONSENT OF NOVELL, INC. ANY USE OR EXPLOITATION OF THIS WORK WITHOUT
-   AUTHORIZATION COULD SUBJECT THE PERPETRATOR TO CRIMINAL AND CIVIL LIABILITY.
-</notice>
--->
+Copyright (c) 2005-2006	Novell, Inc. All Rights Reserved.
 
-<definitions 
-    targetNamespace="http://schemas.novell.com/2005/01/GroupWise/groupwise.wsdl"
-    xmlns:tns="http://schemas.novell.com/2005/01/GroupWise/groupwise.wsdl"
-	 xmlns="http://schemas.xmlsoap.org/wsdl/"
-    xmlns:http="http://schemas.xmlsoap.org/wsdl/http/"
-    xmlns:types="http://schemas.novell.com/2005/01/GroupWise/types"
-    xmlns:methods="http://schemas.novell.com/2005/01/GroupWise/methods"
-    xmlns:events="http://schemas.novell.com/2005/01/GroupWise/events"
-    xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
+Use and redistribution of this work is subject to the developer license
+agreement through which this work is made available. Pursuant to that license
+agreement, Novell hereby grants You a royalty-free, non-exclusive license to
+include Novell's sample code in Your product(s) that interoperate with the
+applicable Novell product, and worldwide distribution rights to market,
+distribute, or sell Novell's sample code as a component of Your product.
+
+THE WORK IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, 
+INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A 
+PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL NOVELL OR THE AUTHORS 
+OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, 
+WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF 
+OR IN CONNECTION WITH THE WORK OR THE USE OR OTHER DEALINGS IN THE WORK.
+
+
+Alternatively, the contents of this file may be used under the terms of 
+GNU General Public License Version 2 (the "GPL") as explained below.  
+If you wish to allow use of your version of this file only under the terms 
+of the GPL, and not to allow others to use your version of this file under 
+the provisions appearing above, indicate your decision by deleting the 
+provisions above and replace them with the notice and other provisions required 
+by the GPL. If you do not delete the provisions above, a recipient may use 
+your version of this file under the above provisions of the GPL.
+
+
+This file is free software; you can redistribute it and/or modify it under the 
+terms of version 2 of the GNU General Public License as published by the 
+Free Software Foundation.  This program is distributed in the hope that it will 
+be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of 
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License 
+for more details.  You should have received a copy of the GNU General Public License 
+along with this program; if not, contact Novell, Inc.  
+
+To contact Novell about this file by physical or electronic mail, you may find 
+current contact information at www.novell.com.
+================================================================================
+--><definitions xmlns="http://schemas.xmlsoap.org/wsdl/" targetNamespace="http://schemas.novell.com/2005/01/GroupWise/groupwise.wsdl" xmlns:tns="http://schemas.novell.com/2005/01/GroupWise/groupwise.wsdl" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:types="http://schemas.novell.com/2005/01/GroupWise/types" xmlns:methods="http://schemas.novell.com/2005/01/GroupWise/methods" xmlns:events="http://schemas.novell.com/2005/01/GroupWise/events" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
    
 	<types>
 		<schema xmlns="http://www.w3.org/2001/XMLSchema">
-			<import namespace="http://schemas.novell.com/2005/01/GroupWise/types"   schemaLocation="types.xsd"/>
+			<import namespace="http://schemas.novell.com/2005/01/GroupWise/types" schemaLocation="types.xsd"/>
 			<import namespace="http://schemas.novell.com/2005/01/GroupWise/methods" schemaLocation="methods.xsd"/>
-			<import namespace="http://schemas.novell.com/2005/01/GroupWise/events"  schemaLocation="events.xsd"/>
+			<import namespace="http://schemas.novell.com/2005/01/GroupWise/events" schemaLocation="events.xsd"/>
 		</schema>		
 	</types>
 
@@ -107,6 +127,13 @@
       <part name="createItemRes" element="methods:createItemResponse"/>
    </message>
 
+   <message name="createItemsRequestMessage">
+      <part name="createItemsReq" element="methods:createItemsRequest"/>
+   </message>
+   <message name="createItemsResponseMessage">
+      <part name="createItemsRes" element="methods:createItemsResponse"/>
+   </message>
+
 	<message name="createJunkEntryRequestMessage">
       <part name="createJunkEntryReq" element="methods:createJunkEntryRequest"/>
    </message>
@@ -149,6 +176,13 @@
       <part name="destroyCursorRes" element="methods:destroyCursorResponse"/>
    </message>
 
+   <message name="executeRuleRequestMessage">
+      <part name="executeRuleReq" element="methods:executeRuleRequest"/>
+   </message>
+   <message name="executeRuleResponseMessage">
+      <part name="executeRuleRes" element="methods:executeRuleResponse"/>
+	</message>
+
    <message name="forwardRequestMessage">
       <part name="forwardReq" element="methods:forwardRequest"/>
    </message>
@@ -165,7 +199,7 @@
 
    <message name="getAttachmentRequestMessage">
       <part name="getAttachmentReq" element="methods:getAttachmentRequest"/>
-   </message>
+	</message>
    <message name="getAttachmentResponseMessage">
       <part name="getAttachmentRes" element="methods:getAttachmentResponse"/>
    </message>
@@ -196,6 +230,20 @@
    </message>
    <message name="getDeltaInfoResponseMessage">
       <part name="getDeltaInfoRes" element="methods:getDeltaInfoResponse"/>
+   </message>
+
+   <message name="getDocumentTypeListRequestMessage">
+      <part name="getDocumentTypeListReq" element="methods:getDocumentTypeListRequest"/>
+   </message>
+   <message name="getDocumentTypeListResponseMessage">
+      <part name="getDocumentTypeListRes" element="methods:getDocumentTypeListResponse"/>
+   </message>
+
+   <message name="getFolderRequestMessage">
+      <part name="getFolderReq" element="methods:getFolderRequest"/>
+   </message>
+   <message name="getFolderResponseMessage">
+		<part name="getFolderRes" element="methods:getFolderResponse"/>
    </message>
 
    <message name="getFolderListRequestMessage">
@@ -240,6 +288,20 @@
       <part name="getJunkMailSettingsRes" element="methods:getJunkMailSettingsResponse"/>
    </message>
 
+   <message name="getLibraryItemRequestMessage">
+      <part name="getLibraryItemReq" element="methods:getLibraryItemRequest"/>
+   </message>
+   <message name="getLibraryItemResponseMessage">
+      <part name="getLibraryItemRes" element="methods:getLibraryItemResponse"/>
+   </message>
+
+   <message name="getLibraryListRequestMessage">
+      <part name="getLibraryListReq" element="methods:getLibraryListRequest"/>
+   </message>
+   <message name="getLibraryListResponseMessage">
+      <part name="getLibraryListRes" element="methods:getLibraryListResponse"/>
+   </message>
+
    <message name="getQuickMessagesRequestMessage">
       <part name="getQuickMessagesReq" element="methods:getQuickMessagesRequest"/>
    </message>
@@ -261,6 +323,13 @@
       <part name="getProxyListRes" element="methods:getProxyListResponse"/>
    </message>
 
+   <message name="getRuleListRequestMessage">
+      <part name="getRuleListReq" element="methods:getRuleListRequest"/>
+   </message>
+   <message name="getRuleListResponseMessage">
+      <part name="getRuleListRes" element="methods:getRuleListResponse"/>
+	</message>
+
    <message name="getSettingsRequestMessage">
       <part name="getSettingsReq" element="methods:getSettingsRequest"/>
    </message>
@@ -275,6 +344,13 @@
       <part name="getSignaturesRes" element="methods:getSignaturesResponse"/>
    </message>
 
+   <message name="getTimestampRequestMessage">
+      <part name="getTimestampReq" element="methods:getTimestampRequest"/>
+   </message>
+   <message name="getTimestampResponseMessage">
+      <part name="getTimestampRes" element="methods:getTimestampResponse"/>
+   </message>
+
    <message name="getTimezoneListRequestMessage">
       <part name="getTimezoneListReq" element="methods:getTimezoneListRequest"/>
    </message>
@@ -282,8 +358,19 @@
       <part name="getTimezoneListRes" element="methods:getTimezoneListResponse"/>
    </message>
 
+   <message name="getUserListRequestMessage">
+      <part name="getUserListReq" element="methods:getUserListRequest"/>
+   </message>
+   <message name="getUserListResponseMessage">
+      <part name="getUserListRes" element="methods:getUserListResponse"/>
+   </message>
+
+   <message name="gwTraceMessage">
+      <part name="gwTrace" element="types:gwTrace"/>
+   </message>
+
    <message name="sessionMessage">
-      <part name="sessionId" element="types:session" />
+      <part name="sessionId" element="types:session"/>
    </message>
 
    <message name="loginRequestMessage">
@@ -454,6 +541,13 @@
       <part name="removeProxyAccessRes" element="methods:removeProxyAccessResponse"/>
    </message>
 
+   <message name="removeProxyUserRequestMessage">
+      <part name="removeProxyUserReq" element="methods:removeProxyUserRequest"/>
+   </message>
+   <message name="removeProxyUserResponseMessage">
+      <part name="removeProxyUserRes" element="methods:removeProxyUserResponse"/>
+   </message>
+
    <message name="removeSignatureRequestMessage">
       <part name="removeSignatureReq" element="methods:removeSignatureRequest"/>
    </message>
@@ -482,11 +576,25 @@
       <part name="sendItemRes" element="methods:sendItemResponse"/>
    </message>
 
+   <message name="setTimestampRequestMessage">
+      <part name="setTimestampReq" element="methods:setTimestampRequest"/>
+   </message>
+   <message name="setTimestampResponseMessage">
+      <part name="setTimestampRes" element="methods:setTimestampResponse"/>
+   </message>
+
    <message name="startFreeBusySessionRequestMessage">
       <part name="startFreeBusySessionReq" element="methods:startFreeBusySessionRequest"/>
    </message>
    <message name="startFreeBusySessionResponseMessage">
       <part name="startFreeBusySessionRes" element="methods:startFreeBusySessionResponse"/>
+   </message>
+
+   <message name="updateVersionStatusRequestMessage">
+      <part name="updateVersionStatusReq" element="methods:updateVersionStatusRequest"/>
+   </message>
+   <message name="updateVersionStatusResponseMessage">
+      <part name="updateVersionStatusRes" element="methods:updateVersionStatusResponse"/>
    </message>
 
    <message name="cleanEventConfigurationRequestMessage">
@@ -578,6 +686,11 @@
        <output message="tns:createItemResponseMessage"/>
      </operation>
 
+     <operation name="createItemsRequest">
+       <input message="tns:createItemsRequestMessage"/>
+       <output message="tns:createItemsResponseMessage"/>
+     </operation>
+
      <operation name="createJunkEntryRequest">
        <input message="tns:createJunkEntryRequestMessage"/>
        <output message="tns:createJunkEntryResponseMessage"/>
@@ -607,6 +720,11 @@
        <input message="tns:destroyCursorRequestMessage"/>
        <output message="tns:destroyCursorResponseMessage"/>
      </operation>
+
+     <operation name="executeRuleRequest">
+       <input message="tns:executeRuleRequestMessage"/>
+       <output message="tns:executeRuleResponseMessage"/>
+	  </operation>
 
      <operation name="forwardRequest">
        <input message="tns:forwardRequestMessage"/>
@@ -643,6 +761,16 @@
        <output message="tns:getDeltaInfoResponseMessage"/>
      </operation>
 
+     <operation name="getDocumentTypeListRequest">
+       <input message="tns:getDocumentTypeListRequestMessage"/>
+       <output message="tns:getDocumentTypeListResponseMessage"/>
+     </operation>
+
+     <operation name="getFolderRequest">
+       <input message="tns:getFolderRequestMessage"/>
+		 <output message="tns:getFolderResponseMessage"/>
+     </operation>
+
      <operation name="getFolderListRequest">
        <input message="tns:getFolderListRequestMessage"/>
        <output message="tns:getFolderListResponseMessage"/>
@@ -673,6 +801,16 @@
        <output message="tns:getJunkMailSettingsResponseMessage"/>
      </operation>
 
+     <operation name="getLibraryItemRequest">
+       <input message="tns:getLibraryItemRequestMessage"/>
+       <output message="tns:getLibraryItemResponseMessage"/>
+     </operation>
+
+     <operation name="getLibraryListRequest">
+       <input message="tns:getLibraryListRequestMessage"/>
+       <output message="tns:getLibraryListResponseMessage"/>
+     </operation>
+
      <operation name="getQuickMessagesRequest">
        <input message="tns:getQuickMessagesRequestMessage"/>
        <output message="tns:getQuickMessagesResponseMessage"/>
@@ -688,6 +826,11 @@
        <output message="tns:getProxyListResponseMessage"/>
      </operation>
 
+     <operation name="getRuleListRequest">
+       <input message="tns:getRuleListRequestMessage"/>
+       <output message="tns:getRuleListResponseMessage"/>
+	  </operation>
+
      <operation name="getSettingsRequest">
        <input message="tns:getSettingsRequestMessage"/>
        <output message="tns:getSettingsResponseMessage"/>
@@ -698,9 +841,19 @@
        <output message="tns:getSignaturesResponseMessage"/>
      </operation>
 
+     <operation name="getTimestampRequest">
+       <input message="tns:getTimestampRequestMessage"/>
+       <output message="tns:getTimestampResponseMessage"/>
+     </operation>
+
      <operation name="getTimezoneListRequest">
        <input message="tns:getTimezoneListRequestMessage"/>
        <output message="tns:getTimezoneListResponseMessage"/>
+     </operation>
+
+     <operation name="getUserListRequest">
+       <input message="tns:getUserListRequestMessage"/>
+       <output message="tns:getUserListResponseMessage"/>
      </operation>
 
      <operation name="loginRequest">
@@ -821,6 +974,11 @@
        <output message="tns:removeProxyAccessResponseMessage"/>
      </operation>
 
+     <operation name="removeProxyUserRequest">
+       <input message="tns:removeProxyUserRequestMessage"/>
+       <output message="tns:removeProxyUserResponseMessage"/>
+     </operation>
+
      <operation name="removeSignatureRequest">
        <input message="tns:removeSignatureRequestMessage"/>
        <output message="tns:removeSignatureResponseMessage"/>
@@ -841,6 +999,11 @@
        <output message="tns:sendItemResponseMessage"/>
      </operation>
 
+     <operation name="setTimestampRequest">
+       <input message="tns:setTimestampRequestMessage"/>
+       <output message="tns:setTimestampResponseMessage"/>
+     </operation>
+
      <operation name="startFreeBusySessionRequest">
        <input message="tns:startFreeBusySessionRequestMessage"/>
        <output message="tns:startFreeBusySessionResponseMessage"/>
@@ -854,6 +1017,11 @@
      <operation name="uncompleteRequest">
        <input message="tns:uncompleteRequestMessage"/>
        <output message="tns:uncompleteResponseMessage"/>
+     </operation>
+
+     <operation name="updateVersionStatusRequest">
+       <input message="tns:updateVersionStatusRequestMessage"/>
+       <output message="tns:updateVersionStatusResponseMessage"/>
      </operation>
 
    </portType>
@@ -893,9 +1061,10 @@
     <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
 
     <operation name="acceptRequest">
-      <soap:operation soapAction="acceptRequest" style="document" />
+      <soap:operation soapAction="acceptRequest" style="document"/>
       <input>
 		<soap:header message="tns:sessionMessage" part="sessionId" use="literal"/>
+		<soap:header message="tns:gwTraceMessage" part="gwTrace" use="literal"/>
         <soap:body use="literal"/>
       </input>
       <output>
@@ -904,9 +1073,10 @@
     </operation>
 
     <operation name="acceptShareRequest">
-      <soap:operation soapAction="acceptShareRequest" style="document" />
+      <soap:operation soapAction="acceptShareRequest" style="document"/>
       <input>
 		<soap:header message="tns:sessionMessage" part="sessionId" use="literal"/>
+		<soap:header message="tns:gwTraceMessage" part="gwTrace" use="literal"/>
         <soap:body use="literal"/>
       </input>
       <output>
@@ -915,9 +1085,10 @@
     </operation>
 
     <operation name="addItemRequest">
-      <soap:operation soapAction="addItemRequest" style="document" />
+      <soap:operation soapAction="addItemRequest" style="document"/>
       <input>
 		<soap:header message="tns:sessionMessage" part="sessionId" use="literal"/>
+		<soap:header message="tns:gwTraceMessage" part="gwTrace" use="literal"/>
         <soap:body use="literal"/>
       </input>
       <output>
@@ -926,9 +1097,10 @@
     </operation>
 
     <operation name="addItemsRequest">
-      <soap:operation soapAction="addItemsRequest" style="document" />
+      <soap:operation soapAction="addItemsRequest" style="document"/>
       <input>
 		<soap:header message="tns:sessionMessage" part="sessionId" use="literal"/>
+		<soap:header message="tns:gwTraceMessage" part="gwTrace" use="literal"/>
         <soap:body use="literal"/>
       </input>
       <output>
@@ -937,9 +1109,10 @@
     </operation>
 
     <operation name="addMembersRequest">
-      <soap:operation soapAction="addMembersRequest" style="document" />
+      <soap:operation soapAction="addMembersRequest" style="document"/>
       <input>
 		<soap:header message="tns:sessionMessage" part="sessionId" use="literal"/>
+		<soap:header message="tns:gwTraceMessage" part="gwTrace" use="literal"/>
         <soap:body use="literal"/>
       </input>
       <output>
@@ -948,9 +1121,10 @@
     </operation>
 
     <operation name="closeFreeBusySessionRequest">
-      <soap:operation soapAction="closeFreeBusySessionRequest" style="document" />
+      <soap:operation soapAction="closeFreeBusySessionRequest" style="document"/>
       <input>
 		<soap:header message="tns:sessionMessage" part="sessionId" use="literal"/>
+		<soap:header message="tns:gwTraceMessage" part="gwTrace" use="literal"/>
         <soap:body use="literal"/>
       </input>
       <output>
@@ -959,9 +1133,10 @@
     </operation>
 
     <operation name="completeRequest">
-      <soap:operation soapAction="completeRequest" style="document" />
+      <soap:operation soapAction="completeRequest" style="document"/>
       <input>
 		<soap:header message="tns:sessionMessage" part="sessionId" use="literal"/>
+		<soap:header message="tns:gwTraceMessage" part="gwTrace" use="literal"/>
         <soap:body use="literal"/>
       </input>
       <output>
@@ -970,9 +1145,10 @@
     </operation>
 
     <operation name="createCursorRequest">
-      <soap:operation soapAction="createCursorRequest" style="document" />
+      <soap:operation soapAction="createCursorRequest" style="document"/>
       <input>
 		<soap:header message="tns:sessionMessage" part="sessionId" use="literal"/>
+		<soap:header message="tns:gwTraceMessage" part="gwTrace" use="literal"/>
         <soap:body use="literal"/>
       </input>
       <output>
@@ -981,9 +1157,22 @@
     </operation>
 
     <operation name="createItemRequest">
-      <soap:operation soapAction="createItemRequest" style="document" />
+      <soap:operation soapAction="createItemRequest" style="document"/>
       <input>
 		<soap:header message="tns:sessionMessage" part="sessionId" use="literal"/>
+		<soap:header message="tns:gwTraceMessage" part="gwTrace" use="literal"/>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+
+    <operation name="createItemsRequest">
+      <soap:operation soapAction="createItemsRequest" style="document"/>
+      <input>
+		<soap:header message="tns:sessionMessage" part="sessionId" use="literal"/>
+		<soap:header message="tns:gwTraceMessage" part="gwTrace" use="literal"/>
         <soap:body use="literal"/>
       </input>
       <output>
@@ -992,9 +1181,10 @@
     </operation>
 
     <operation name="createJunkEntryRequest">
-      <soap:operation soapAction="createJunkEntryRequest" style="document" />
+      <soap:operation soapAction="createJunkEntryRequest" style="document"/>
       <input>
 		<soap:header message="tns:sessionMessage" part="sessionId" use="literal"/>
+		<soap:header message="tns:gwTraceMessage" part="gwTrace" use="literal"/>
         <soap:body use="literal"/>
       </input>
       <output>
@@ -1003,9 +1193,10 @@
     </operation>
 
     <operation name="createProxyAccessRequest">
-      <soap:operation soapAction="createProxyAccessRequest" style="document" />
+      <soap:operation soapAction="createProxyAccessRequest" style="document"/>
       <input>
 		<soap:header message="tns:sessionMessage" part="sessionId" use="literal"/>
+		<soap:header message="tns:gwTraceMessage" part="gwTrace" use="literal"/>
         <soap:body use="literal"/>
       </input>
       <output>
@@ -1014,9 +1205,10 @@
     </operation>
 
     <operation name="createSignatureRequest">
-      <soap:operation soapAction="createSignatureRequest" style="document" />
+      <soap:operation soapAction="createSignatureRequest" style="document"/>
       <input>
 		<soap:header message="tns:sessionMessage" part="sessionId" use="literal"/>
+		<soap:header message="tns:gwTraceMessage" part="gwTrace" use="literal"/>
         <soap:body use="literal"/>
       </input>
       <output>
@@ -1025,9 +1217,10 @@
     </operation>
 
     <operation name="declineRequest">
-      <soap:operation soapAction="declineRequest" style="document" />
+      <soap:operation soapAction="declineRequest" style="document"/>
       <input>
 		<soap:header message="tns:sessionMessage" part="sessionId" use="literal"/>
+		<soap:header message="tns:gwTraceMessage" part="gwTrace" use="literal"/>
         <soap:body use="literal"/>
       </input>
       <output>
@@ -1036,9 +1229,10 @@
     </operation>
 
     <operation name="delegateRequest">
-      <soap:operation soapAction="delegateRequest" style="document" />
+      <soap:operation soapAction="delegateRequest" style="document"/>
       <input>
 		<soap:header message="tns:sessionMessage" part="sessionId" use="literal"/>
+		<soap:header message="tns:gwTraceMessage" part="gwTrace" use="literal"/>
         <soap:body use="literal"/>
       </input>
       <output>
@@ -1047,9 +1241,10 @@
     </operation>
 
     <operation name="destroyCursorRequest">
-      <soap:operation soapAction="destroyCursorRequest" style="document" />
+      <soap:operation soapAction="destroyCursorRequest" style="document"/>
       <input>
 		<soap:header message="tns:sessionMessage" part="sessionId" use="literal"/>
+		<soap:header message="tns:gwTraceMessage" part="gwTrace" use="literal"/>
         <soap:body use="literal"/>
       </input>
       <output>
@@ -1057,10 +1252,23 @@
       </output>
     </operation>
 
-    <operation name="forwardRequest">
-      <soap:operation soapAction="forwardRequest" style="document" />
+    <operation name="executeRuleRequest">
+      <soap:operation soapAction="executeRuleRequest" style="document"/>
       <input>
 		<soap:header message="tns:sessionMessage" part="sessionId" use="literal"/>
+		<soap:header message="tns:gwTraceMessage" part="gwTrace" use="literal"/>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+	 </operation>
+
+    <operation name="forwardRequest">
+      <soap:operation soapAction="forwardRequest" style="document"/>
+      <input>
+		<soap:header message="tns:sessionMessage" part="sessionId" use="literal"/>
+		<soap:header message="tns:gwTraceMessage" part="gwTrace" use="literal"/>
         <soap:body use="literal"/>
       </input>
       <output>
@@ -1069,9 +1277,10 @@
     </operation>
 
     <operation name="getAddressBookListRequest">
-      <soap:operation soapAction="getAddressBookListRequest" style="document" />
+      <soap:operation soapAction="getAddressBookListRequest" style="document"/>
       <input>
 		<soap:header message="tns:sessionMessage" part="sessionId" use="literal"/>
+		<soap:header message="tns:gwTraceMessage" part="gwTrace" use="literal"/>
         <soap:body use="literal"/>
       </input>
       <output>
@@ -1080,9 +1289,10 @@
     </operation>
 
     <operation name="getAttachmentRequestMessage">
-      <soap:operation soapAction="getAttachmentRequestMessage" style="document" />
+      <soap:operation soapAction="getAttachmentRequestMessage" style="document"/>
       <input>
 		<soap:header message="tns:sessionMessage" part="sessionId" use="literal"/>
+		<soap:header message="tns:gwTraceMessage" part="gwTrace" use="literal"/>
         <soap:body use="literal"/>
       </input>
       <output>
@@ -1091,9 +1301,10 @@
     </operation>
 
     <operation name="getCategoryListRequest">
-      <soap:operation soapAction="getCategoryListRequest" style="document" />
+      <soap:operation soapAction="getCategoryListRequest" style="document"/>
       <input>
 		<soap:header message="tns:sessionMessage" part="sessionId" use="literal"/>
+		<soap:header message="tns:gwTraceMessage" part="gwTrace" use="literal"/>
         <soap:body use="literal"/>
       </input>
       <output>
@@ -1102,9 +1313,10 @@
     </operation>
 
     <operation name="getCustomListRequest">
-      <soap:operation soapAction="getCustomListRequest" style="document" />
+      <soap:operation soapAction="getCustomListRequest" style="document"/>
       <input>
 		<soap:header message="tns:sessionMessage" part="sessionId" use="literal"/>
+		<soap:header message="tns:gwTraceMessage" part="gwTrace" use="literal"/>
         <soap:body use="literal"/>
       </input>
       <output>
@@ -1113,9 +1325,10 @@
     </operation>
 
     <operation name="getDeltasRequest">
-      <soap:operation soapAction="getDeltasRequest" style="document" />
+      <soap:operation soapAction="getDeltasRequest" style="document"/>
       <input>
 		<soap:header message="tns:sessionMessage" part="sessionId" use="literal"/>
+		<soap:header message="tns:gwTraceMessage" part="gwTrace" use="literal"/>
         <soap:body use="literal"/>
       </input>
       <output>
@@ -1124,9 +1337,34 @@
     </operation>
 
     <operation name="getDeltaInfoRequest">
-      <soap:operation soapAction="getDeltaInfoRequest" style="document" />
+      <soap:operation soapAction="getDeltaInfoRequest" style="document"/>
       <input>
 		<soap:header message="tns:sessionMessage" part="sessionId" use="literal"/>
+		<soap:header message="tns:gwTraceMessage" part="gwTrace" use="literal"/>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+
+    <operation name="getDocumentTypeListRequest">
+      <soap:operation soapAction="getDocumentTypeListRequest" style="document"/>
+      <input>
+		<soap:header message="tns:sessionMessage" part="sessionId" use="literal"/>
+		<soap:header message="tns:gwTraceMessage" part="gwTrace" use="literal"/>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+
+    <operation name="getFolderRequest">
+      <soap:operation soapAction="getFolderRequest" style="document"/>
+      <input>
+		<soap:header message="tns:sessionMessage" part="sessionId" use="literal"/>
+		<soap:header message="tns:gwTraceMessage" part="gwTrace" use="literal"/>
         <soap:body use="literal"/>
       </input>
       <output>
@@ -1135,9 +1373,10 @@
     </operation>
 
     <operation name="getFolderListRequest">
-      <soap:operation soapAction="getFolderListRequest" style="document" />
+      <soap:operation soapAction="getFolderListRequest" style="document"/>
       <input>
 		<soap:header message="tns:sessionMessage" part="sessionId" use="literal"/>
+		<soap:header message="tns:gwTraceMessage" part="gwTrace" use="literal"/>
         <soap:body use="literal"/>
       </input>
       <output>
@@ -1146,9 +1385,10 @@
     </operation>
 
     <operation name="getFreeBusyRequest">
-      <soap:operation soapAction="getFreeBusyRequest" style="document" />
+      <soap:operation soapAction="getFreeBusyRequest" style="document"/>
       <input>
 		<soap:header message="tns:sessionMessage" part="sessionId" use="literal"/>
+		<soap:header message="tns:gwTraceMessage" part="gwTrace" use="literal"/>
         <soap:body use="literal"/>
       </input>
       <output>
@@ -1157,9 +1397,10 @@
     </operation>
 
     <operation name="getItemRequest">
-      <soap:operation soapAction="getItemRequest" style="document" />
+      <soap:operation soapAction="getItemRequest" style="document"/>
       <input>
 		<soap:header message="tns:sessionMessage" part="sessionId" use="literal"/>
+		<soap:header message="tns:gwTraceMessage" part="gwTrace" use="literal"/>
         <soap:body use="literal"/>
       </input>
       <output>
@@ -1168,9 +1409,10 @@
     </operation>
 
     <operation name="getItemsRequest">
-      <soap:operation soapAction="getItemsRequest" style="document" />
+      <soap:operation soapAction="getItemsRequest" style="document"/>
       <input>
 		<soap:header message="tns:sessionMessage" part="sessionId" use="literal"/>
+		<soap:header message="tns:gwTraceMessage" part="gwTrace" use="literal"/>
         <soap:body use="literal"/>
       </input>
       <output>
@@ -1179,9 +1421,10 @@
     </operation>
 
     <operation name="getJunkEntriesRequest">
-      <soap:operation soapAction="getJunkEntriesRequest" style="document" />
+      <soap:operation soapAction="getJunkEntriesRequest" style="document"/>
       <input>
 		<soap:header message="tns:sessionMessage" part="sessionId" use="literal"/>
+		<soap:header message="tns:gwTraceMessage" part="gwTrace" use="literal"/>
         <soap:body use="literal"/>
       </input>
       <output>
@@ -1190,9 +1433,34 @@
     </operation>
 
     <operation name="getJunkMailSettingsRequest">
-      <soap:operation soapAction="getJunkMailSettingsRequest" style="document" />
+      <soap:operation soapAction="getJunkMailSettingsRequest" style="document"/>
       <input>
 		<soap:header message="tns:sessionMessage" part="sessionId" use="literal"/>
+		<soap:header message="tns:gwTraceMessage" part="gwTrace" use="literal"/>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+
+    <operation name="getLibraryItemRequest">
+      <soap:operation soapAction="getLibraryItemRequest" style="document"/>
+      <input>
+		<soap:header message="tns:sessionMessage" part="sessionId" use="literal"/>
+		<soap:header message="tns:gwTraceMessage" part="gwTrace" use="literal"/>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+
+    <operation name="getLibraryListRequest">
+      <soap:operation soapAction="getLibraryListRequest" style="document"/>
+      <input>
+		<soap:header message="tns:sessionMessage" part="sessionId" use="literal"/>
+		<soap:header message="tns:gwTraceMessage" part="gwTrace" use="literal"/>
         <soap:body use="literal"/>
       </input>
       <output>
@@ -1201,9 +1469,10 @@
     </operation>
 
     <operation name="getQuickMessagesRequest">
-      <soap:operation soapAction="getQuickMessagesRequest" style="document" />
+      <soap:operation soapAction="getQuickMessagesRequest" style="document"/>
       <input>
 		<soap:header message="tns:sessionMessage" part="sessionId" use="literal"/>
+		<soap:header message="tns:gwTraceMessage" part="gwTrace" use="literal"/>
         <soap:body use="literal"/>
       </input>
       <output>
@@ -1212,9 +1481,10 @@
     </operation>
 
     <operation name="getProxyAccessListRequest">
-      <soap:operation soapAction="getProxyAccessListRequest" style="document" />
+      <soap:operation soapAction="getProxyAccessListRequest" style="document"/>
       <input>
 		<soap:header message="tns:sessionMessage" part="sessionId" use="literal"/>
+		<soap:header message="tns:gwTraceMessage" part="gwTrace" use="literal"/>
         <soap:body use="literal"/>
       </input>
       <output>
@@ -1223,9 +1493,10 @@
     </operation>
 
     <operation name="getProxyListRequest">
-      <soap:operation soapAction="getProxyListRequest" style="document" />
+      <soap:operation soapAction="getProxyListRequest" style="document"/>
       <input>
 		<soap:header message="tns:sessionMessage" part="sessionId" use="literal"/>
+		<soap:header message="tns:gwTraceMessage" part="gwTrace" use="literal"/>
         <soap:body use="literal"/>
       </input>
       <output>
@@ -1233,10 +1504,23 @@
       </output>
     </operation>
 
-    <operation name="getSettingsRequest">
-      <soap:operation soapAction="getSettingsRequest" style="document" />
+    <operation name="getRuleListRequest">
+      <soap:operation soapAction="getRuleListRequest" style="document"/>
       <input>
 		<soap:header message="tns:sessionMessage" part="sessionId" use="literal"/>
+		<soap:header message="tns:gwTraceMessage" part="gwTrace" use="literal"/>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+	 </operation>
+
+    <operation name="getSettingsRequest">
+      <soap:operation soapAction="getSettingsRequest" style="document"/>
+      <input>
+		<soap:header message="tns:sessionMessage" part="sessionId" use="literal"/>
+		<soap:header message="tns:gwTraceMessage" part="gwTrace" use="literal"/>
         <soap:body use="literal"/>
       </input>
       <output>
@@ -1245,9 +1529,22 @@
     </operation>
 
     <operation name="getSignaturesRequest">
-      <soap:operation soapAction="getSignaturesRequest" style="document" />
+      <soap:operation soapAction="getSignaturesRequest" style="document"/>
       <input>
 		<soap:header message="tns:sessionMessage" part="sessionId" use="literal"/>
+		<soap:header message="tns:gwTraceMessage" part="gwTrace" use="literal"/>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+
+    <operation name="getTimestampRequest">
+      <soap:operation soapAction="getTimestampRequest" style="document"/>
+      <input>
+		<soap:header message="tns:sessionMessage" part="sessionId" use="literal"/>
+		<soap:header message="tns:gwTraceMessage" part="gwTrace" use="literal"/>
         <soap:body use="literal"/>
       </input>
       <output>
@@ -1256,9 +1553,22 @@
     </operation>
 
     <operation name="getTimezoneListRequest">
-      <soap:operation soapAction="getTimezoneListRequest" style="document" />
+      <soap:operation soapAction="getTimezoneListRequest" style="document"/>
       <input>
 		<soap:header message="tns:sessionMessage" part="sessionId" use="literal"/>
+		<soap:header message="tns:gwTraceMessage" part="gwTrace" use="literal"/>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+
+    <operation name="getUserListRequest">
+      <soap:operation soapAction="getUserListRequest" style="document"/>
+      <input>
+		<soap:header message="tns:sessionMessage" part="sessionId" use="literal"/>
+		<soap:header message="tns:gwTraceMessage" part="gwTrace" use="literal"/>
         <soap:body use="literal"/>
       </input>
       <output>
@@ -1267,8 +1577,9 @@
     </operation>
 
     <operation name="loginRequest">
-      <soap:operation soapAction="loginRequest" style="document" />
+      <soap:operation soapAction="loginRequest" style="document"/>
       <input>
+		  <soap:header message="tns:gwTraceMessage" part="gwTrace" use="literal"/>
         <soap:body use="literal"/>
       </input>
       <output>
@@ -1276,9 +1587,10 @@
       </output>
     </operation>
     <operation name="logoutRequest">
-      <soap:operation soapAction="logoutRequest" style="document" />
+      <soap:operation soapAction="logoutRequest" style="document"/>
       <input>
 		<soap:header message="tns:sessionMessage" part="sessionId" use="literal"/>
+		<soap:header message="tns:gwTraceMessage" part="gwTrace" use="literal"/>
         <soap:body use="literal"/>
       </input>
       <output>
@@ -1287,9 +1599,10 @@
     </operation>
 
     <operation name="markPrivateRequest">
-      <soap:operation soapAction="markPrivateRequest" style="document" />
+      <soap:operation soapAction="markPrivateRequest" style="document"/>
       <input>
 		<soap:header message="tns:sessionMessage" part="sessionId" use="literal"/>
+		<soap:header message="tns:gwTraceMessage" part="gwTrace" use="literal"/>
         <soap:body use="literal"/>
       </input>
       <output>
@@ -1298,9 +1611,10 @@
     </operation>
 
     <operation name="markReadRequest">
-      <soap:operation soapAction="markReadRequest" style="document" />
+      <soap:operation soapAction="markReadRequest" style="document"/>
       <input>
 		<soap:header message="tns:sessionMessage" part="sessionId" use="literal"/>
+		<soap:header message="tns:gwTraceMessage" part="gwTrace" use="literal"/>
         <soap:body use="literal"/>
       </input>
       <output>
@@ -1309,9 +1623,10 @@
     </operation>
 
     <operation name="markUnPrivateRequest">
-      <soap:operation soapAction="markUnPrivateRequest" style="document" />
+      <soap:operation soapAction="markUnPrivateRequest" style="document"/>
       <input>
 		<soap:header message="tns:sessionMessage" part="sessionId" use="literal"/>
+		<soap:header message="tns:gwTraceMessage" part="gwTrace" use="literal"/>
         <soap:body use="literal"/>
       </input>
       <output>
@@ -1320,9 +1635,10 @@
     </operation>
 
     <operation name="markUnReadRequest">
-      <soap:operation soapAction="markUnReadRequest" style="document" />
+      <soap:operation soapAction="markUnReadRequest" style="document"/>
       <input>
 		<soap:header message="tns:sessionMessage" part="sessionId" use="literal"/>
+		<soap:header message="tns:gwTraceMessage" part="gwTrace" use="literal"/>
         <soap:body use="literal"/>
       </input>
       <output>
@@ -1331,9 +1647,10 @@
     </operation>
 
     <operation name="modifyItemRequest">
-      <soap:operation soapAction="modifyItemRequest" style="document" />
+      <soap:operation soapAction="modifyItemRequest" style="document"/>
       <input>
 		<soap:header message="tns:sessionMessage" part="sessionId" use="literal"/>
+		<soap:header message="tns:gwTraceMessage" part="gwTrace" use="literal"/>
         <soap:body use="literal"/>
       </input>
       <output>
@@ -1342,9 +1659,10 @@
     </operation>
 
 	 <operation name="modifyJunkEntryRequest">
-      <soap:operation soapAction="modifyJunkEntryRequest" style="document" />
+      <soap:operation soapAction="modifyJunkEntryRequest" style="document"/>
       <input>
 		<soap:header message="tns:sessionMessage" part="sessionId" use="literal"/>
+		<soap:header message="tns:gwTraceMessage" part="gwTrace" use="literal"/>
         <soap:body use="literal"/>
       </input>
       <output>
@@ -1353,9 +1671,10 @@
     </operation>
 
     <operation name="modifyJunkMailSettingsRequest">
-      <soap:operation soapAction="modifyJunkMailSettingsRequest" style="document" />
+      <soap:operation soapAction="modifyJunkMailSettingsRequest" style="document"/>
       <input>
 		<soap:header message="tns:sessionMessage" part="sessionId" use="literal"/>
+		<soap:header message="tns:gwTraceMessage" part="gwTrace" use="literal"/>
         <soap:body use="literal"/>
       </input>
       <output>
@@ -1364,9 +1683,10 @@
     </operation>
 
     <operation name="modifyPasswordRequest">
-      <soap:operation soapAction="modifyPasswordRequest" style="document" />
+      <soap:operation soapAction="modifyPasswordRequest" style="document"/>
       <input>
 		<soap:header message="tns:sessionMessage" part="sessionId" use="literal"/>
+		<soap:header message="tns:gwTraceMessage" part="gwTrace" use="literal"/>
         <soap:body use="literal"/>
       </input>
       <output>
@@ -1375,9 +1695,10 @@
     </operation>
 
     <operation name="modifyProxyAccessRequest">
-      <soap:operation soapAction="modifyProxyAccessRequest" style="document" />
+      <soap:operation soapAction="modifyProxyAccessRequest" style="document"/>
       <input>
 		<soap:header message="tns:sessionMessage" part="sessionId" use="literal"/>
+		<soap:header message="tns:gwTraceMessage" part="gwTrace" use="literal"/>
         <soap:body use="literal"/>
       </input>
       <output>
@@ -1386,9 +1707,10 @@
     </operation>
 
     <operation name="modifySettingsRequest">
-      <soap:operation soapAction="modifySettingsRequest" style="document" />
+      <soap:operation soapAction="modifySettingsRequest" style="document"/>
       <input>
 		<soap:header message="tns:sessionMessage" part="sessionId" use="literal"/>
+		<soap:header message="tns:gwTraceMessage" part="gwTrace" use="literal"/>
         <soap:body use="literal"/>
       </input>
       <output>
@@ -1397,9 +1719,10 @@
     </operation>
 
     <operation name="modifySignaturesRequest">
-      <soap:operation soapAction="modifySignaturesRequest" style="document" />
+      <soap:operation soapAction="modifySignaturesRequest" style="document"/>
       <input>
 		<soap:header message="tns:sessionMessage" part="sessionId" use="literal"/>
+		<soap:header message="tns:gwTraceMessage" part="gwTrace" use="literal"/>
         <soap:body use="literal"/>
       </input>
       <output>
@@ -1408,9 +1731,10 @@
     </operation>
 
     <operation name="moveItemRequest">
-      <soap:operation soapAction="moveItemRequest" style="document" />
+      <soap:operation soapAction="moveItemRequest" style="document"/>
       <input>
 		<soap:header message="tns:sessionMessage" part="sessionId" use="literal"/>
+		<soap:header message="tns:gwTraceMessage" part="gwTrace" use="literal"/>
         <soap:body use="literal"/>
       </input>
       <output>
@@ -1419,9 +1743,10 @@
     </operation>
 
     <operation name="positionCursorRequest">
-      <soap:operation soapAction="positionCursorRequest" style="document" />
+      <soap:operation soapAction="positionCursorRequest" style="document"/>
       <input>
 		<soap:header message="tns:sessionMessage" part="sessionId" use="literal"/>
+		<soap:header message="tns:gwTraceMessage" part="gwTrace" use="literal"/>
         <soap:body use="literal"/>
       </input>
       <output>
@@ -1430,9 +1755,10 @@
     </operation>
 
     <operation name="purgeDeletedItemsRequest">
-      <soap:operation soapAction="purgeDeletedItemsRequest" style="document" />
+      <soap:operation soapAction="purgeDeletedItemsRequest" style="document"/>
       <input>
 		<soap:header message="tns:sessionMessage" part="sessionId" use="literal"/>
+		<soap:header message="tns:gwTraceMessage" part="gwTrace" use="literal"/>
         <soap:body use="literal"/>
       </input>
       <output>
@@ -1441,9 +1767,10 @@
     </operation>
 
     <operation name="purgeRequest">
-      <soap:operation soapAction="purgeRequest" style="document" />
+      <soap:operation soapAction="purgeRequest" style="document"/>
       <input>
 		<soap:header message="tns:sessionMessage" part="sessionId" use="literal"/>
+		<soap:header message="tns:gwTraceMessage" part="gwTrace" use="literal"/>
         <soap:body use="literal"/>
       </input>
       <output>
@@ -1452,9 +1779,10 @@
     </operation>
 
     <operation name="readCursorRequest">
-      <soap:operation soapAction="readCursorRequest" style="document" />
+      <soap:operation soapAction="readCursorRequest" style="document"/>
       <input>
 		<soap:header message="tns:sessionMessage" part="sessionId" use="literal"/>
+		<soap:header message="tns:gwTraceMessage" part="gwTrace" use="literal"/>
         <soap:body use="literal"/>
       </input>
       <output>
@@ -1463,9 +1791,10 @@
     </operation>
 
     <operation name="removeCustomDefinitionRequest">
-      <soap:operation soapAction="removeCustomDefinitionRequest" style="document" />
+      <soap:operation soapAction="removeCustomDefinitionRequest" style="document"/>
       <input>
 		<soap:header message="tns:sessionMessage" part="sessionId" use="literal"/>
+		<soap:header message="tns:gwTraceMessage" part="gwTrace" use="literal"/>
         <soap:body use="literal"/>
       </input>
       <output>
@@ -1474,9 +1803,10 @@
     </operation>
 
     <operation name="removeItemRequest">
-      <soap:operation soapAction="removeItemRequest" style="document" />
+      <soap:operation soapAction="removeItemRequest" style="document"/>
       <input>
 		<soap:header message="tns:sessionMessage" part="sessionId" use="literal"/>
+		<soap:header message="tns:gwTraceMessage" part="gwTrace" use="literal"/>
         <soap:body use="literal"/>
       </input>
       <output>
@@ -1485,9 +1815,10 @@
     </operation>
 
     <operation name="removeItemsRequest">
-      <soap:operation soapAction="removeItemsRequest" style="document" />
+      <soap:operation soapAction="removeItemsRequest" style="document"/>
       <input>
 		<soap:header message="tns:sessionMessage" part="sessionId" use="literal"/>
+		<soap:header message="tns:gwTraceMessage" part="gwTrace" use="literal"/>
         <soap:body use="literal"/>
       </input>
       <output>
@@ -1496,9 +1827,10 @@
     </operation>
 
     <operation name="removeJunkEntryRequest">
-      <soap:operation soapAction="removeJunkEntryRequest" style="document" />
+      <soap:operation soapAction="removeJunkEntryRequest" style="document"/>
       <input>
 		<soap:header message="tns:sessionMessage" part="sessionId" use="literal"/>
+		<soap:header message="tns:gwTraceMessage" part="gwTrace" use="literal"/>
         <soap:body use="literal"/>
       </input>
       <output>
@@ -1507,9 +1839,10 @@
     </operation>
 
     <operation name="removeMembersRequest">
-      <soap:operation soapAction="removeMembersRequest" style="document" />
+      <soap:operation soapAction="removeMembersRequest" style="document"/>
       <input>
 		<soap:header message="tns:sessionMessage" part="sessionId" use="literal"/>
+		<soap:header message="tns:gwTraceMessage" part="gwTrace" use="literal"/>
         <soap:body use="literal"/>
       </input>
       <output>
@@ -1518,9 +1851,22 @@
     </operation>
 
     <operation name="removeProxyAccessRequest">
-      <soap:operation soapAction="removeProxyAccessRequest" style="document" />
+      <soap:operation soapAction="removeProxyAccessRequest" style="document"/>
       <input>
 		<soap:header message="tns:sessionMessage" part="sessionId" use="literal"/>
+		<soap:header message="tns:gwTraceMessage" part="gwTrace" use="literal"/>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+
+    <operation name="removeProxyUserRequest">
+      <soap:operation soapAction="removeProxyUserRequest" style="document"/>
+      <input>
+		<soap:header message="tns:sessionMessage" part="sessionId" use="literal"/>
+		<soap:header message="tns:gwTraceMessage" part="gwTrace" use="literal"/>
         <soap:body use="literal"/>
       </input>
       <output>
@@ -1529,9 +1875,10 @@
     </operation>
 
     <operation name="removeSignatureRequest">
-      <soap:operation soapAction="removeSignatureRequest" style="document" />
+      <soap:operation soapAction="removeSignatureRequest" style="document"/>
       <input>
 		<soap:header message="tns:sessionMessage" part="sessionId" use="literal"/>
+		<soap:header message="tns:gwTraceMessage" part="gwTrace" use="literal"/>
         <soap:body use="literal"/>
       </input>
       <output>
@@ -1540,9 +1887,10 @@
     </operation>
 
     <operation name="replyRequest">
-      <soap:operation soapAction="replyRequest" style="document" />
+      <soap:operation soapAction="replyRequest" style="document"/>
       <input>
 		<soap:header message="tns:sessionMessage" part="sessionId" use="literal"/>
+		<soap:header message="tns:gwTraceMessage" part="gwTrace" use="literal"/>
         <soap:body use="literal"/>
       </input>
       <output>
@@ -1551,9 +1899,10 @@
     </operation>
 
     <operation name="retractRequest">
-      <soap:operation soapAction="retractRequest" style="document" />
+      <soap:operation soapAction="retractRequest" style="document"/>
       <input>
 		<soap:header message="tns:sessionMessage" part="sessionId" use="literal"/>
+		<soap:header message="tns:gwTraceMessage" part="gwTrace" use="literal"/>
         <soap:body use="literal"/>
       </input>
       <output>
@@ -1562,9 +1911,22 @@
     </operation>
 
     <operation name="sendItemRequest">
-      <soap:operation soapAction="sendItemRequest" style="document" />
+      <soap:operation soapAction="sendItemRequest" style="document"/>
       <input>
 		<soap:header message="tns:sessionMessage" part="sessionId" use="literal"/>
+		<soap:header message="tns:gwTraceMessage" part="gwTrace" use="literal"/>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+
+    <operation name="setTimestampRequest">
+      <soap:operation soapAction="setTimestampRequest" style="document"/>
+      <input>
+		<soap:header message="tns:sessionMessage" part="sessionId" use="literal"/>
+		<soap:header message="tns:gwTraceMessage" part="gwTrace" use="literal"/>
         <soap:body use="literal"/>
       </input>
       <output>
@@ -1573,9 +1935,10 @@
     </operation>
 
     <operation name="startFreeBusySessionRequest">
-      <soap:operation soapAction="startFreeBusySessionRequest" style="document" />
+      <soap:operation soapAction="startFreeBusySessionRequest" style="document"/>
       <input>
 		<soap:header message="tns:sessionMessage" part="sessionId" use="literal"/>
+		<soap:header message="tns:gwTraceMessage" part="gwTrace" use="literal"/>
         <soap:body use="literal"/>
       </input>
       <output>
@@ -1584,9 +1947,10 @@
     </operation>
 
     <operation name="unacceptRequest">
-      <soap:operation soapAction="unacceptRequest" style="document" />
+      <soap:operation soapAction="unacceptRequest" style="document"/>
       <input>
 		<soap:header message="tns:sessionMessage" part="sessionId" use="literal"/>
+		<soap:header message="tns:gwTraceMessage" part="gwTrace" use="literal"/>
         <soap:body use="literal"/>
       </input>
       <output>
@@ -1595,9 +1959,22 @@
     </operation>
 
     <operation name="uncompleteRequest">
-      <soap:operation soapAction="uncompleteRequest" style="document" />
+      <soap:operation soapAction="uncompleteRequest" style="document"/>
       <input>
 		<soap:header message="tns:sessionMessage" part="sessionId" use="literal"/>
+		<soap:header message="tns:gwTraceMessage" part="gwTrace" use="literal"/>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+
+    <operation name="updateVersionStatusRequest">
+      <soap:operation soapAction="updateVersionStatusRequest" style="document"/>
+      <input>
+		<soap:header message="tns:sessionMessage" part="sessionId" use="literal"/>
+		<soap:header message="tns:gwTraceMessage" part="gwTrace" use="literal"/>
         <soap:body use="literal"/>
       </input>
       <output>
@@ -1612,9 +1989,10 @@
     <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
 
     <operation name="cleanEventConfigurationRequest">
-      <soap:operation soapAction="cleanEventConfigurationRequest" style="document" />
+      <soap:operation soapAction="cleanEventConfigurationRequest" style="document"/>
       <input>
 		<soap:header message="tns:sessionMessage" part="sessionId" use="literal"/>
+		<soap:header message="tns:gwTraceMessage" part="gwTrace" use="literal"/>
         <soap:body use="literal"/>
       </input>
       <output>
@@ -1623,9 +2001,10 @@
     </operation>
 
     <operation name="configureEventsRequest">
-      <soap:operation soapAction="configureEventsRequest" style="document" />
+      <soap:operation soapAction="configureEventsRequest" style="document"/>
       <input>
 		<soap:header message="tns:sessionMessage" part="sessionId" use="literal"/>
+		<soap:header message="tns:gwTraceMessage" part="gwTrace" use="literal"/>
         <soap:body use="literal"/>
       </input>
       <output>
@@ -1633,9 +2012,10 @@
       </output>
     </operation>
     <operation name="getEventConfigurationRequest">
-      <soap:operation soapAction="getEventConfigurationRequest" style="document" />
+      <soap:operation soapAction="getEventConfigurationRequest" style="document"/>
       <input>
 		<soap:header message="tns:sessionMessage" part="sessionId" use="literal"/>
+		<soap:header message="tns:gwTraceMessage" part="gwTrace" use="literal"/>
         <soap:body use="literal"/>
       </input>
       <output>
@@ -1643,9 +2023,10 @@
       </output>
     </operation>
     <operation name="getEventsRequest">
-      <soap:operation soapAction="getEventsRequest" style="document" />
+      <soap:operation soapAction="getEventsRequest" style="document"/>
       <input>
 		<soap:header message="tns:sessionMessage" part="sessionId" use="literal"/>
+		<soap:header message="tns:gwTraceMessage" part="gwTrace" use="literal"/>
         <soap:body use="literal"/>
       </input>
       <output>
@@ -1653,9 +2034,10 @@
       </output>
     </operation>
     <operation name="removeEventConfigurationRequest">
-      <soap:operation soapAction="removeEventConfigurationRequest" style="document" />
+      <soap:operation soapAction="removeEventConfigurationRequest" style="document"/>
       <input>
 		<soap:header message="tns:sessionMessage" part="sessionId" use="literal"/>
+		<soap:header message="tns:gwTraceMessage" part="gwTrace" use="literal"/>
         <soap:body use="literal"/>
       </input>
       <output>
@@ -1664,9 +2046,10 @@
     </operation>
    
     <operation name="removeEventsRequest">
-      <soap:operation soapAction="removeEventsRequest" style="document" />
+      <soap:operation soapAction="removeEventsRequest" style="document"/>
       <input>
 		<soap:header message="tns:sessionMessage" part="sessionId" use="literal"/>
+		<soap:header message="tns:gwTraceMessage" part="gwTrace" use="literal"/>
         <soap:body use="literal"/>
       </input>
       <output>
@@ -1696,4 +2079,3 @@
    </service>
 
 </definitions>
-
