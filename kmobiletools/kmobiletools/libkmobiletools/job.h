@@ -32,7 +32,7 @@ class KMOBILETOOLS_EXPORT Job : public ThreadWeaver::Job {
         explicit Job (Job *pjob, QObject* parent = 0);
         ~Job();
       enum JobType
-        { UnknownJob=255, initPhone=0, pollStatus=-1, fetchSMS=-2, fetchAddressBook=-3, fetchPhoneInfos=-4, testPhoneFeatures=-5,
+        { UserJob=255, initPhone=0, pollStatus=-1, fetchSMS=-2, fetchAddressBook=-3, fetchPhoneInfos=-4, testPhoneFeatures=-5,
         syncDateTimeJob=-6, selectSMSSlot=-7, selectCharacterSet=-8, sendSMS=-9, storeSMS=-10, sendStoredSMS=-11, addAddressee=-12, delAddressee=-13, editAddressee=-14,
         smsFolders=-15, delSMS=-16, fetchKCal=-17 };
 

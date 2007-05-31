@@ -6,6 +6,7 @@ set(kmobiletools_at_LIB_SRCS
    at_jobs.cpp 
    atabilities.cpp 
    phonebook_jobs.cpp 
+   testphonedevice.cpp 
    sms_jobs.cpp 
    #calendar_jobs.cpp 
    wizard/at_connectionspage.cpp

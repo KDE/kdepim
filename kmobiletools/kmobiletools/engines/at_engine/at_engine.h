@@ -45,6 +45,9 @@ class ATDevicesConfig;
 @author Marco Gulino
 */
 using namespace ThreadWeaver;
+
+typedef QHash<QString,KMobileTools::EngineData> ATDevices;
+
 class AT_Engine : public KMobileTools::Engine
 {
 Q_OBJECT
@@ -53,6 +56,7 @@ public:
     explicit AT_Engine(QObject *parent = 0, const QString &name = QString() );
 
     ~AT_Engine();
+    enum ATJobTypes { TestPhoneDevice=KMobileTools::Job::UserJob+1 };
 //     enum jobTypes
 //     { PollStatus=1, PollSMS=2 };
 
@@ -90,6 +94,7 @@ public:
             return retval;
         }
         KMobileTools::Job *p_lastJob;
+        void searchPhones(Connection connections, const QStringList &bluetoothDevices, const QStringList &customDevices);
 public slots:
     void slotPollStatus();
     void processSlot(KMobileTools::Job* );

@@ -38,6 +38,8 @@
 
 #include <config-kmobiletools.h>
 
+#include "testphonedevice.h"
+
 using namespace KMobileTools;
 
 AT_Engine::AT_Engine(QObject *parent, const QString &name)
@@ -86,6 +88,7 @@ AT_Engine *AT_EngineFactory::createObject(QObject *parent, const char */*classna
 void AT_Engine::slotSearchPhone()
 {
     kDebug() << "********** engine instance name: " << objectName() << endl;
+    searchPhones(static_cast<Connection>(config()->at_connections()), QStringList(), config()->at_userdevices() );
 //     devicesList()->probeDevices( config()->atdevices(), engineLibName(), QStringList(config()->at_initString())+=config()->at_initString2(), false, 0, config()->mobileimei() );
     /// @TODO reimplement
 }
@@ -118,6 +121,7 @@ void AT_Engine::processSlot(KMobileTools::Job* job)
     KMobileTools::Engine::processSlot(job);
 //     kDebug() << "job Owner: " << p_job->jobOwner() << "; job class: " << p_job->className() << endl;
     if(job->property("owner") != objectName() ) return;
+    kDebug() << "KMobileTools::Engine::processSlot; jobType=" << job->type() << endl;
     p_lastJob=0;
 //     kDebug() << "is KMobileToolsJob: " << p_job->inherits("KMobileTools::Job") << endl;
     KMobileTools::DevicesConfig *wconfig=KMobileTools::DevicesConfig::prefs(objectName() );
@@ -646,4 +650,29 @@ ATDevicesConfig *AT_Engine::config(bool forceNew, const QString &groupName) {
         return new ATDevicesConfig( gpname, gpname );
     return (ATDevicesConfig*) ATDevicesConfig::prefs(gpname );
 }
+
+void AT_Engine::searchPhones(Connection connections, const QStringList &bluetoothDevices, const QStringList &customDevices) {
+    QStringList devices;
+    if(connections & ConnectionUSB)
+        for(uchar i=0; i<10; i++) {
+            enqueueJob(new TestPhoneDeviceJob(QString("/dev/ttyACM%1").arg(i), this) );
+            enqueueJob(new TestPhoneDeviceJob(QString("/dev/ttyUSB%1").arg(i), this) );
+        }
+    if(connections & ConnectionIrDA)
+        for(uchar i=0; i<10; i++) {
+            enqueueJob(new TestPhoneDeviceJob(QString("/dev/ircomm%1").arg(i), this) );
+        }
+    if(connections & ConnectionSerial)
+        for(uchar i=0; i<10; i++) {
+            enqueueJob(new TestPhoneDeviceJob(QString("/dev/ttyS%1").arg(i), this) );
+        }
+    if(connections & ConnectionBluetooth)
+        for(QStringList::ConstIterator it=bluetoothDevices.begin(); it!=bluetoothDevices.end(); ++it)
+            enqueueJob(new TestPhoneDeviceJob(*it, this) );
+    if(connections & ConnectionUser)
+        for(QStringList::ConstIterator it=customDevices.begin(); it!=customDevices.end(); ++it)
+            enqueueJob(new TestPhoneDeviceJob(*it, this) );
+}
+
+
 
