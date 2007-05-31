@@ -51,4 +51,5 @@ install(TARGETS kmobiletoolsmainpart DESTINATION ${PLUGIN_INSTALL_DIR} )
 install( FILES  kmobiletools_mainpart.desktop DESTINATION ${SERVICES_INSTALL_DIR} )
 install( FILES  kmobiletools_mainpart.rc DESTINATION ${DATA_INSTALL_DIR}/kmobiletools )
 install( FILES  kmobiletools_devicepart.rc DESTINATION ${DATA_INSTALL_DIR}/kmobiletools )
-install( FILES  newdevicewizard/kmobilewizard.png operatorsdata progress.gif eventsrc bticon.png  		security.png kmobilebtwizard.png DESTINATION ${DATA_INSTALL_DIR}/kmobiletools )
+install( FILES  newdevicewizard/kmobilewizard.png operatorsdata progress.gif
+kmobiletools.notifyrc bticon.png  		security.png kmobilebtwizard.png DESTINATION ${DATA_INSTALL_DIR}/kmobiletools )

@@ -479,14 +479,14 @@ void DeviceHome::updateAllContacts()
 void DeviceHome::jobDone(KMobileTools::Job::JobType jobtype)
 {
     if(jobtype==KMobileTools::Job::fetchAddressBook) emit phonebookUpdated();
-    /** @TODO port to KNotification
     int newsmscnt=engine->engineData()->smsList()->count(SMS::Unread, SMS::SIM | SMS::Phone );
 
     if(newsmscnt && engine->ThreadWeaver()->isEmpty() && engine->ThreadWeaver()->isIdle() && newsmscnt!=smsnotifynum) {
         smsnotifynum=newsmscnt;
         QString eventString(i18n("<qt>%1 New Messages.<br>Mobile Phone: %2</qt>").arg(newsmscnt).arg(DEVCFG(name() )->devicename() ) );
-        KNotifyClient::event( KMobileTools::KMobiletoolsHelper::instance()->systray()->winId(), "kmobiletools_sms", eventString );
-    }*/
+        KNotification::event( QString("kmobiletools_sms"), eventString, QPixmap(),
+            KMobileTools::KMobiletoolsHelper::instance()->systray()->contextMenu() );
+    }
 }
 
 
@@ -1142,10 +1142,9 @@ void DeviceHome::slotSendStoredSMS( SMS *sms)
 void DeviceHome::slotRing( bool ringing)
 {
     if(!ringing) return;
-#if 0 // FIXME port to KNotification!
     kDebug() << "KNotify for ring event\n";
-        KNotifyClient::event( KMobileTools::KMobiletoolsHelper::instance()->systray()->winId(), "kmobiletools_ring", i18n("Incoming Call") );
-#endif
+    KNotification::event( QString("kmobiletools_ring"), i18n("Incoming Call"), QPixmap(),
+        KMobileTools::KMobiletoolsHelper::instance()->systray()->contextMenu() );
 }
 
 
