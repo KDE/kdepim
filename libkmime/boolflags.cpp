@@ -28,7 +28,7 @@ void BoolFlags::set(unsigned int i, bool b)
     n=0;
   }
   else { //second byte
-    p=(1 << i-8);
+    p=(1 << ( i-8 ));
     n=1;
   }
 

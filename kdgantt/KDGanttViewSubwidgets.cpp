@@ -58,7 +58,8 @@
 #include <kcalendarsystem.h>
 #include <kdebug.h>
 
-KDTimeTableWidget:: KDTimeTableWidget( QWidget* parent,KDGanttView* myGantt):QCanvas (parent)
+KDTimeTableWidget:: KDTimeTableWidget( QWidget* parent,KDGanttView* myGantt)
+    : QCanvas (parent)
 {
     myGanttView = myGantt;
     taskLinksVisible = true;
@@ -3151,7 +3152,8 @@ KDCanvasRectangle::KDCanvasRectangle( KDTimeTableWidget* canvas,
 
 
 
-KDGanttCanvasView::KDGanttCanvasView( KDGanttView* sender,QCanvas* canvas, QWidget* parent,  const char* name ) : QCanvasView ( canvas, parent, name )
+KDGanttCanvasView::KDGanttCanvasView( KDGanttView* sender,QCanvas* canvas, QWidget* parent,  const
+    char* name ) : QCanvasView ( canvas, parent, name ), scrollBarTimer( 0, "scrollBarTimer" )
 {
     setHScrollBarMode (QScrollView::AlwaysOn );
     setVScrollBarMode( QScrollView::AlwaysOn );
@@ -3217,7 +3219,7 @@ KDGanttCanvasView::KDGanttCanvasView( KDGanttView* sender,QCanvas* canvas, QWidg
     // If they needed a scrollbar timer in scrollview...
     connect( &scrollBarTimer, SIGNAL(timeout()), this, SLOT(myUpdateScrollBars() ) );
 
-    myScrollTimer = new QTimer( this );
+    myScrollTimer = new QTimer( this, "myScrollTimer" );
     connect( myScrollTimer, SIGNAL( timeout() ), SLOT( slotScrollTimer() ) );
     autoScrollEnabled = false;
 }

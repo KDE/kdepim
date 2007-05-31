@@ -304,8 +304,8 @@ KeySelectionDialog::KeySelectionDialog( const KeyList& keyList,
 
   resize( dialogSize );
 
-  mCheckSelectionTimer = new QTimer( this );
-  mStartSearchTimer = new QTimer( this );
+  mCheckSelectionTimer = new QTimer( this, "mCheckSelectionTimer" );
+  mStartSearchTimer = new QTimer( this, "mStartSearchTimer" );
 
   // load the key status icons
   mKeyGoodPix    = new QPixmap( UserIcon("key_ok") );
