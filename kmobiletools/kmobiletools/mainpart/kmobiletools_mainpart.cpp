@@ -46,6 +46,7 @@
 #include <kinputdialog.h>
 #include <kplugininfo.h>
 #include <q3sqlpropertymap.h>
+#include <knotifyconfigwidget.h>
 
 #include <libkmobiletools/kmobiletools_cfg.h>
 #include <libkmobiletools/devicesconfig.h>
@@ -124,7 +125,7 @@ kmobiletoolsMainPart::kmobiletoolsMainPart( QWidget *parentWidget, QObject *pare
     actionCollection()->addAction(KStandardAction::Prior, "prev", this, SLOT(prevPart() ) );
 //     actionCollection()->addAction(KStandardAction::Preferences, "options_configure", this, SLOT(showPreference() ) );
     actionCollection()->addAction(KStandardAction::Quit, "file_quit", this, SLOT(slotQuit() ) );
-    actionCollection()->addAction(KStandardAction::ConfigureNotifications, "cfgnotify", this, SLOT(slotConfigNotify() ) );
+    actionCollection()->addAction(KStandardAction::ConfigureNotifications, "options_configure_notifications", this, SLOT(slotConfigNotify() ) );
 
 
 
@@ -637,5 +638,5 @@ void kmobiletoolsMainPart::phonebookUpdated()
  */
 void kmobiletoolsMainPart::slotConfigNotify()
 {
-///    KNotifyDialog::configure(m_widget, 0); @TODO port to KNotifyDialog
+    KNotifyConfigWidget::configure(m_widget, 0);
 }
