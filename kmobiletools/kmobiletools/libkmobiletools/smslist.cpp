@@ -255,6 +255,7 @@ int SMSList::saveToCSV()
     QString fileName = saveFile.section( QDir::separator(),-1);
     if ( ! fileName.isEmpty() )
         savePath = saveFile.left(saveFile.length() - (fileName.length() + 1));
+        else return 0;
 
     QDir d = QDir::root();
     if (d.exists(saveFile)) {
