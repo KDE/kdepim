@@ -40,4 +40,4 @@ Icon=kpilot.xpm
 Type=Application
 Terminal=false
 X-DCOP-ServiceType=Unique
-Categories=Qt;KDE;Utility;
+Categories=Qt;KDE;Utility;Office;PDA;

@@ -45,4 +45,4 @@ Type=Application
 Icon=kontact
 Terminal=false
 X-KDE-StartupNotify=true
-Categories=Qt;KDE;Utility;X-KDE-Utilities-PIM;
+Categories=Qt;KDE;X-KDE-Utilities-PIM;Office;Network;Email;
