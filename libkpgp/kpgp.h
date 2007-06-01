@@ -33,8 +33,8 @@
 
 #include <kdialog.h>
 
+#include "libkpgp_export.h"
 #include "kpgpkey.h"
-#include <kdepim_export.h>
 
 class QLineEdit;
 class QCursor;

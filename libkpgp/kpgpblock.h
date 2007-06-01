@@ -22,8 +22,7 @@
 #include <QStringList>
 #include <QString>
 
-#include <kdepim_export.h>
-
+#include "libkpgp_export.h"
 #include "kpgp.h"
 
 namespace Kpgp {

@@ -29,9 +29,9 @@
 #include <QVector> // used in KeyApprovalDialog
 #include <Q3PtrVector>
 #include <kpassworddialog.h>
-#include "kpgp.h"
 
-#include <kdepim_export.h>
+#include "libkpgp_export.h"
+#include "kpgp.h"
 
 class QString;
 class QRegExp;
