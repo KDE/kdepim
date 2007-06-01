@@ -31,7 +31,7 @@ set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules" ${CMAKE_MODULE
 macro_optional_find_package(Pilotlink)
 macro_optional_find_package(Mal)
 macro_log_feature(PILOTLINK_FOUND "pilot-link" "Pilot-link Development Library" "http://www.pilot-link.org/" FALSE "0.12" "Needed for KPilot.")
-macro_log_feature(MAL_FOUND "libmal" "libmal Development Library" "<libmal>" FALSE "" "Needed for KPilot's Avantgo conduit.")
+macro_log_feature(MAL_FOUND "libmal" "libmal Development Library" "http://jasonday.home.att.net/code/libmal" FALSE "0.40" "Needed for KPilot's Avantgo conduit.")
 
 add_definitions(
 	${QT_DEFINITIONS}
