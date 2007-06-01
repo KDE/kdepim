@@ -23,10 +23,8 @@
 #ifndef KPIM_FOLDERLISTER_H
 #define KPIM_FOLDERLISTER_H
 
-// #include "kresources_groupwareprefs.h"
-/*#include "groupwareresourcejob.h"*/
+#include "kgroupware_export.h"
 #include <kurl.h>
-#include <kdepim_export.h>
 
 
 #include <QString>

@@ -23,10 +23,9 @@
 #ifndef KABC_ADDRESSBOOKADAPTOR_H
 #define KABC_ADDRESSBOOKADAPTOR_H
 
+#include "kgroupware_export.h"
 #include "groupwaredataadaptor.h"
-
 #include <kabc/addressee.h>
-#include <kdepim_export.h>
 #include <kurl.h>
 
 namespace KABC {

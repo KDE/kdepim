@@ -22,8 +22,8 @@
 #ifndef KCAL_RESOURCEGROUPWAREBASECONFIG_H
 #define KCAL_RESOURCEGROUPWAREBASECONFIG_H
 
-#include <kresources/configwidget.h>
-#include <kdepim_export.h>
+#include "kgroupware_export.h"
+#include "kresources/configwidget.h"
 
 class KPushButton;
 class KLineEdit;

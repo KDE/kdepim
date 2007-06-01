@@ -22,9 +22,9 @@
 #ifndef KABC_RESOURCEGROUPWARE_H
 #define KABC_RESOURCEGROUPWARE_H
 
-#include <kurl.h>
+#include "kgroupware_export.h"
 #include <kabc/resourcecached.h>
-#include <kdepim_export.h>
+#include <kurl.h>
 
 namespace KPIM {
 class GroupwareJob;

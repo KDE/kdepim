@@ -21,10 +21,10 @@
 #ifndef KABC_DAVADDRESSBOOKADAPTOR_H
 #define KCAL_DAVADDRESSBOOKADAPTOR_H
 
+#include "kgroupware_export.h"
 #include "addressbookadaptor.h"
 #include "folderlister.h"
 #include <qdom.h>
-#include <kdepim_export.h>
 
 namespace KABC {
 

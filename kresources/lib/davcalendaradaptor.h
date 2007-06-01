@@ -21,10 +21,10 @@
 #ifndef KCAL_DAVCALENDARADAPTOR_H
 #define KCAL_DAVCALENDARADAPTOR_H
 
+#include "kgroupware_export.h"
 #include "calendaradaptor.h"
 #include "folderlister.h"
 #include <qdom.h>
-#include <kdepim_export.h>
 
 namespace KCal {
 

@@ -23,10 +23,10 @@
 #ifndef KCAL_RESOURCEGROUPWAREBASE_H
 #define KCAL_RESOURCEGROUPWAREBASE_H
 
-#include <kurl.h>
+#include "kgroupware_export.h"
 #include <kcal/resourcecached.h>
-#include <kdepim_export.h>
 #include <kabc/locknull.h>
+#include <kurl.h>
 
 namespace KIO {
 class Job;

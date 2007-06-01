@@ -22,9 +22,8 @@
 #ifndef KCAL_CACHESETTINGSDLG_H
 #define KCAL_CACHESETTINGSDLG_H
 
+#include "kgroupware_export.h"
 #include <kdialog.h>
-#include <kdepim_export.h>
-
 
 namespace KRES {
 class Resource;

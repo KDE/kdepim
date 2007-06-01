@@ -23,11 +23,9 @@
 #ifndef KCAL_CALENDARADAPTOR_H
 #define KCAL_CALENDARADAPTOR_H
 
+#include "kgroupware_export.h"
 #include "groupwaredataadaptor.h"
-
-
 #include <kcal/incidence.h>
-#include <kdepim_export.h>
 #include <kurl.h>
 
 namespace KPIM {

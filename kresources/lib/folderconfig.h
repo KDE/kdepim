@@ -23,8 +23,8 @@
 #ifndef KPIM_FOLDERCONFIG_H
 #define KPIM_FOLDERCONFIG_H
 
+#include "kgroupware_export.h"
 #include <kurl.h>
-#include <kdepim_export.h>
 #include <QWidget>
 
 // class K3ListView;

@@ -22,12 +22,14 @@
 #ifndef WEBDAVHANDLER_H
 #define WEBDAVHANDLER_H
 
+#include "kgroupware_export.h"
+
+#include <kurl.h>
+
 #include <QString>
 #include <QStringList>
 #include <qdom.h>
 #include <QDateTime>
-#include <kurl.h>
-#include <kdepim_export.h>
 
 class KGROUPWAREDAV_EXPORT WebdavHandler
 {

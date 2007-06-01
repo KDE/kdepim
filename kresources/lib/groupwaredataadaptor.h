@@ -23,15 +23,17 @@
 #ifndef KPIM_GROUPWAREDATAADAPTOR_H
 #define KPIM_GROUPWAREDATAADAPTOR_H
 
-#include <groupwareresourcejob.h>
-#include <folderlister.h>
-#include <kurl.h>
-#include <QString>
-//Added by qt3to4:
-#include <QByteArray>
+#include "kgroupware_export.h"
+#include "groupwareresourcejob.h"
+#include "folderlister.h"
+
 #include <kcal/listbase.h>
+
+#include <kurl.h>
+
+#include <QString>
+#include <QByteArray>
 #include <QObject>
-#include <kdepim_export.h>
 
 
 namespace KIO {
