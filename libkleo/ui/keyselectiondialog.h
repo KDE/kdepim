@@ -37,14 +37,16 @@
 #ifndef __KLEO_UI_KEYSELECTIONDIALOG_H__
 #define __KLEO_UI_KEYSELECTIONDIALOG_H__
 
+#include "libkleo_export.h"
+#include "kleo/cryptobackend.h"
+
+#include <gpgmepp/key.h>
+
 #include <kdialog.h>
 
-#include <kleo/cryptobackend.h>
-#include <gpgmepp/key.h>
-#include <kdepim_export.h>
-#include <vector>
-//Added by qt3to4:
 #include <QPixmap>
+
+#include <vector>
 
 class QVBoxLayout;
 class QCheckBox;

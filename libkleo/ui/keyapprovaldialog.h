@@ -37,10 +37,10 @@
 #ifndef __KLEO_KEYAPPROVALDIALOG_H__
 #define __KLEO_KEYAPPROVALDIALOG_H__
 
-#include <kleo/enum.h>
+#include "libkleo_export.h"
+#include "kleo/enum.h"
 
 #include <kdialog.h>
-#include <kdepim_export.h>
 
 #include <kpgpkey.h> // for EncryptPref
 #include <gpgmepp/key.h>

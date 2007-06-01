@@ -22,11 +22,12 @@
 #ifndef CRYPTPLUG_H
 #define CRYPTPLUG_H
 
-#include <stdlib.h>
+#include "libkleo_export.h"
 
 #include <gpgmepp/context.h>
 #include <gpgme.h> // need it for gpgme_protocol_t :(
-#include <kdepim_export.h>
+
+#include <stdlib.h>
 
 namespace GpgME {
   class ImportResult;

@@ -33,12 +33,13 @@
 #ifndef KLEO_QGPGMECRYPTOCONFIG_H
 #define KLEO_QGPGMECRYPTOCONFIG_H
 
-#include <kleo/cryptoconfig.h>
+#include "libkleo_export.h"
+#include "kleo/cryptoconfig.h"
+
 #include <q3dict.h>
 #include <QStringList>
 #include <QObject>
 #include <QVariant>
-#include <kdepim_export.h>
 class K3ProcIO;
 
 class QGpgMECryptoConfigComponent;

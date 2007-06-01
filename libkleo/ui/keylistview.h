@@ -33,11 +33,12 @@
 #ifndef __KLEO_KEYLISTVIEW_H__
 #define __KLEO_KEYLISTVIEW_H__
 
-#include <k3listview.h>
+#include "libkleo_export.h"
 
 #include <gpgmepp/key.h>
-#include <kdepim_export.h>
-//Added by qt3to4:
+
+#include <k3listview.h>
+
 #include <QPixmap>
 #include <QByteArray>
 #include <Q3PtrList>

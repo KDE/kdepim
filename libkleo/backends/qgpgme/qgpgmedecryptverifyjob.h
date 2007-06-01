@@ -33,12 +33,12 @@
 #ifndef __KLEO_QGPGMEDECRYPTVERIFYJOB_H__
 #define __KLEO_QGPGMEDECRYPTVERIFYJOB_H__
 
-#include <kleo/decryptverifyjob.h>
+#include "libkleo_export.h"
+#include "kleo/decryptverifyjob.h"
 
 #include "qgpgmejob.h"
 
 #include <q3cstring.h>
-#include <kdepim_export.h>
 
 namespace GpgME {
   class Error;

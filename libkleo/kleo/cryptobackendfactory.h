@@ -33,10 +33,10 @@
 #ifndef __KLEO_CRYPTOBACKENDFACTORY_H__
 #define __KLEO_CRYPTOBACKENDFACTORY_H__
 
-#include <QObject>
-
+#include "libkleo_export.h"
 #include "cryptobackend.h"
-#include <kdepim_export.h>
+
+#include <QObject>
 
 #include <vector>
 #include <map>

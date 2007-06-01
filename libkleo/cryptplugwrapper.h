@@ -44,18 +44,15 @@
  *                                                                        *
   * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 
-                                                                          *
                                                                           */
+#include "libkleo_export.h"
 #include "kleo/cryptobackend.h"
 
 #include <QDateTime>
-
 #include <q3valuelist.h>
 #include <QPair>
 #include <QStringList>
 #include <QString>
-#include <kdepim_export.h>
-
 
 class KConfigBase;
 class QGpgMECryptoConfig;

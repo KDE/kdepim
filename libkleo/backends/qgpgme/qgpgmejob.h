@@ -33,15 +33,15 @@
 #ifndef __KLEO_QGPGMEJOB_H__
 #define __KLEO_QGPGMEJOB_H__
 
+#include "libkleo_export.h"
+
 #include <gpgmepp/interfaces/progressprovider.h>
 #include <gpgmepp/interfaces/passphraseprovider.h>
-
 #include <gpgmepp/key.h>
 
 #include <q3cstring.h>
 
 #include <vector>
-#include <kdepim_export.h>
 
 namespace GpgME {
   class Error;

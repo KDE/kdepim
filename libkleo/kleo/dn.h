@@ -33,9 +33,10 @@
 #ifndef __KLEO_DN_H__
 #define __KLEO_DN_H__
 
+#include "libkleo_export.h"
+
 #include <QString>
 #include <q3valuevector.h>
-#include <kdepim_export.h>
 
 class QStringList;
 class QWidget;

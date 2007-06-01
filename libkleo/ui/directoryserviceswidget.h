@@ -32,9 +32,10 @@
 
 #ifndef DIRECTORYSERVICESWIDGET_H
 #define DIRECTORYSERVICESWIDGET_H
+
 #include "ui_directoryserviceswidgetbase.h"
+#include "libkleo_export.h"
 #include <kurl.h>
-#include <kdepim_export.h>
 
 class CryptPlugWrapper;
 namespace Kleo {

@@ -1,6 +1,5 @@
-/*
-    This file is part of libkdepim.
-    Copyright (c) 2006 Allen Winter <winter@kde.org>
+/*  This file is part of the KDE project
+    Copyright (C) 2007 David Faure <faure@kde.org>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
@@ -18,32 +17,24 @@
     Boston, MA 02110-1301, USA.
 */
 
-#ifndef KDEPIM_EXPORT_H
-#define KDEPIM_EXPORT_H
+#ifndef LIBKLEO_EXPORT_H
+#define LIBKLEO_EXPORT_H
 
-/* needed for KDE_EXPORT macros */
+/* needed for KDE_EXPORT and KDE_IMPORT macros */
 #include <kdemacros.h>
 
-#if defined Q_OS_WIN
-# include <kdepim_export_win.h>
-#else /* UNIX */
-
-/* export statements for unix */
-#define AKONADI_EXPORT KDE_EXPORT
-#define AKONADI_RESOURCES_EXPORT KDE_EXPORT
-#define AKONADICOMPONENTS_EXPORT KDE_EXPORT
-#define AKONADISEARCHPROVIDER_EXPORT KDE_EXPORT
-#define AKREGATOR_EXPORT KDE_EXPORT
-#define KDEPIM_EXPORT KDE_EXPORT
-#define KHOLIDAYS_EXPORT KDE_EXPORT
-#define KODE_SCHEMA_EXPORT KDE_EXPORT
-#define KSCHEMA_EXPORT KDE_EXPORT
-#define KSIEVE_EXPORT KDE_EXPORT
-#define KXMLCOMMON_EXPORT KDE_EXPORT
-#define QGPGME_EXPORT KDE_EXPORT
-#define KGROUPWAREDAV_EXPORT KDE_EXPORT
-#define KGROUPWAREBASE_EXPORT KDE_EXPORT
-
+#ifndef KLEO_EXPORT
+# if defined(MAKE_LIBKLEO_LIB)
+   /* We are building this library */ 
+#  define KLEO_EXPORT KDE_EXPORT
+# else
+   /* We are using this library */ 
+#  define KLEO_EXPORT KDE_IMPORT
+# endif
 #endif
+
+# ifndef KLEO_EXPORT_DEPRECATED
+#  define KLEO_EXPORT_DEPRECATED KDE_DEPRECATED KLEO_EXPORT
+# endif
 
 #endif

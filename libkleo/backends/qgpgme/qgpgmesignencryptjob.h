@@ -33,8 +33,8 @@
 #ifndef __KLEO_QGPGMESIGNENCRYPTJOB_H__
 #define __KLEO_QGPGMESIGNENCRYPTJOB_H__
 
-#include <kleo/signencryptjob.h>
-
+#include "libkleo_export.h"
+#include "kleo/signencryptjob.h"
 #include "qgpgmejob.h"
 
 #include <gpgmepp/signingresult.h>
@@ -44,7 +44,6 @@
 
 #include <utility>
 
-#include <kdepim_export.h>
 namespace GpgME {
   class Error;
   class Context;

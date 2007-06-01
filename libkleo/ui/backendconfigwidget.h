@@ -34,8 +34,8 @@
 #ifndef __KLEO_UI_BACKENDCONFIGWIDGET_H__
 #define __KLEO_UI_BACKENDCONFIGWIDGET_H__
 
+#include "libkleo_export.h"
 #include <QWidget>
-#include <kdepim_export.h>
 
 namespace Kleo {
   class CryptoBackendFactory;

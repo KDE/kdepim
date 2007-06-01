@@ -33,10 +33,9 @@
 #ifndef __KLEO_QGPGMEKEYGENERATIONJOB_H__
 #define __KLEO_QGPGMEKEYGENERATIONJOB_H__
 
-#include <kleo/keygenerationjob.h>
-
+#include "libkleo_export.h"
+#include "kleo/keygenerationjob.h"
 #include "qgpgmejob.h"
-#include <kdepim_export.h>
 
 namespace GpgME {
   class Error;

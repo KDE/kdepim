@@ -49,13 +49,13 @@
 #ifndef __KLEO_UI_KEYREQUESTER_H__
 #define __KLEO_UI_KEYREQUESTER_H__
 
+#include "libkleo_export.h"
+#include "kleo/cryptobackend.h"
+
 #include <QWidget>
-//Added by qt3to4:
 #include <QLabel>
-#include <kleo/cryptobackend.h>
 
 #include <vector>
-#include <kdepim_export.h>
 
 namespace Kleo {
   class KeyListView;

@@ -32,8 +32,8 @@
 #ifndef CRYPTOCONFIGDIALOG_H
 #define CRYPTOCONFIGDIALOG_H
 
+#include "libkleo_export.h"
 #include <kdialog.h>
-#include <kdepim_export.h>
 
 namespace Kleo {
 
