@@ -2,11 +2,16 @@
 
 set(kmobiletoolsengineui_LIB_SRCS 
    connectionsPage.cpp
+   scanprogressPage.cpp
+   devicesfoundPage.cpp
    )
 
 kde4_automoc(${kmobiletoolsengineui_LIB_SRCS})
 
-kde4_add_ui_files(kmobiletoolsengineui_LIB_SRCS connectionsPage.ui )
+kde4_add_ui_files(kmobiletoolsengineui_LIB_SRCS connectionsPage.ui
+   devicesfoundPage.ui
+   scanprogressPage.ui
+   )
 
 #kde4_add_kcfg_files(kmobiletoolsengineui_LIB_SRCS kmobiletools_cfg.kcfgc kmobiletools_devices.kcfgc )
 
@@ -23,5 +28,7 @@ install(TARGETS kmobiletoolsengineui DESTINATION ${LIB_INSTALL_DIR} )
 #install( FILES  kmobiletoolsengine.desktop DESTINATION ${SERVICETYPES_INSTALL_DIR} )
 install(FILES
    connectionsPage.h
+   devicesfoundPage.h
+   scanprogressPage.h
    DESTINATION ${INCLUDE_INSTALL_DIR}/kmobiletools)
 

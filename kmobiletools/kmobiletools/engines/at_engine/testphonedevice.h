@@ -48,12 +48,13 @@ protected:
     bool b_closeafterimei; /// if false, we could subclass run() to extend the job taking other parameters than the imei.
 };
 
-class FindDeviceData : public TestPhoneDeviceJob {
+class FindDeviceDataJob : public TestPhoneDeviceJob {
 Q_OBJECT
 /// This one extends the previous class, being able to find more informations about the device.
 /// It can be used in the wizard, so the user can also get more data about found phones.
 public:
-    FindDeviceData(const QString &devicename, AT_Engine* parent);
+    FindDeviceDataJob(const QString &devicename, AT_Engine* parent);
+    JobType type() { return static_cast<JobType>(AT_Engine::FindDeviceData); }
 protected:
     void run();
 };

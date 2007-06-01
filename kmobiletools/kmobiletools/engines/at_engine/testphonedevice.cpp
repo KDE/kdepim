@@ -54,12 +54,12 @@ void TestPhoneDeviceJob::run() {
     b_found=true;
 }
 
-FindDeviceData::FindDeviceData(const QString &devicename, AT_Engine* parent): TestPhoneDeviceJob(devicename, parent)
+FindDeviceDataJob::FindDeviceDataJob(const QString &devicename, AT_Engine* parent): TestPhoneDeviceJob(devicename, parent)
 {
     b_closeafterimei=false;
 }
 
-void FindDeviceData::run() {
+void FindDeviceDataJob::run() {
     TestPhoneDeviceJob::run();
     p_device->close();
 }

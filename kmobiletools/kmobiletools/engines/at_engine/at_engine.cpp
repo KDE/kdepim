@@ -212,16 +212,19 @@ void AT_Engine::processSlot(KMobileTools::Job* job)
 #endif
             break;
         case TestPhoneDevice:
-            TestPhoneDeviceJob *djob=(TestPhoneDeviceJob*)job;
-            l_testphonejobs.removeAll(djob);
-            if(djob->found() && djob->data()->imei() == config()->mobileimei() ) {
-                kDebug() << "Probe finished: phone found in " << djob->path() << endl;
+            l_testphonejobs.removeAll((TestPhoneDeviceJob*)job);
+            if( ((TestPhoneDeviceJob*)job)->found() &&
+                ((TestPhoneDeviceJob*)job)->data()->imei() == config()->mobileimei() ) {
+                kDebug() << "Probe finished: phone found in " << ((TestPhoneDeviceJob*)job)->path() << endl;
                 while(!l_testphonejobs.isEmpty())
                     ThreadWeaver()->dequeue(l_testphonejobs.takeFirst());
-                engineData()->setProperty("devicePath", djob->path());
+                engineData()->setProperty("devicePath", ((TestPhoneDeviceJob*)job)->path());
                 slotInitPhone();
             }
             kDebug() << "jobs remaining: " << l_testphonejobs.count() << endl;
+            break;
+        case FindDeviceData:
+            emit foundDeviceData((FindDeviceDataJob*) job);
             break;
     }
 }

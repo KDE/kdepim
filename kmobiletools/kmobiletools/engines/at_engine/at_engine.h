@@ -39,6 +39,7 @@
 class QWizardPage;
 class ATDevicesConfig;
 class TestPhoneDeviceJob;
+class FindDeviceDataJob;
 /**
 @author Marco Gulino
 */
@@ -54,7 +55,7 @@ public:
     explicit AT_Engine(QObject *parent = 0, const QString &name = QString() );
 
     ~AT_Engine();
-    enum ATJobTypes { TestPhoneDevice=KMobileTools::Job::UserJob+1 };
+    enum ATJobTypes { TestPhoneDevice=KMobileTools::Job::UserJob+1, FindDeviceData=KMobileTools::Job::UserJob+2 };
 //     enum jobTypes
 //     { PollStatus=1, PollSMS=2 };
 
@@ -129,6 +130,8 @@ protected slots:
     void slotDevConnected();
     void slotFetchCalendar();
     void slotSwitchToFSMode();
+signals:
+    void foundDeviceData(FindDeviceDataJob*);
 };
 
 
