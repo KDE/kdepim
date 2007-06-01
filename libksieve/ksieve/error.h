@@ -33,9 +33,9 @@
 #ifndef __KSIEVE_ERROR_H__
 #define __KSIEVE_ERROR_H__
 
-#include <QString>
+#include "libksieve_export.h"
 
-#include <kdepim_export.h>
+#include <QString>
 
 #ifdef None // X headers
 #  undef None
