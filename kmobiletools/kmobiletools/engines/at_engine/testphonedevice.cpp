@@ -37,7 +37,7 @@ TestPhoneDeviceJob::~TestPhoneDeviceJob()
 }
 
 void TestPhoneDeviceJob::run() {
-    if(! QFile::exists(deviceName)) return;
+    if(! QFile::exists(deviceName)) { return; }
     if(!p_device->open(this)) return;
     enginedata=new KMobileTools::EngineData(0);
     QString buffer;
@@ -52,6 +52,16 @@ void TestPhoneDeviceJob::run() {
         }
     if(b_closeafterimei) p_device->close();
     b_found=true;
+}
+
+FindDeviceData::FindDeviceData(const QString &devicename, AT_Engine* parent): TestPhoneDeviceJob(devicename, parent)
+{
+    b_closeafterimei=false;
+}
+
+void FindDeviceData::run() {
+    TestPhoneDeviceJob::run();
+    p_device->close();
 }
 
 #include "testphonedevice.moc"

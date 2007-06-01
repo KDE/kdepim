@@ -29,6 +29,8 @@
 class KMobileTools::EngineData;
 class TestPhoneDeviceJob : public kmobiletoolsATJob
 {
+/// This job just check if a device exists, opens it, and try to get the IMEI code from it.
+/// It is used to scan a devices range, to find the phone to be initialized in the AT Engine.
 Q_OBJECT
 public:
     TestPhoneDeviceJob(const QString &devicename, AT_Engine* parent);
@@ -39,11 +41,21 @@ public:
     bool found() { return b_found; }
     QString path() const { return deviceName; }
 protected:
-    void run ();
+    virtual void run ();
     QString deviceName;
     KMobileTools::EngineData* enginedata;
     bool b_found;
-    bool b_closeafterimei;
+    bool b_closeafterimei; /// if false, we could subclass run() to extend the job taking other parameters than the imei.
+};
+
+class FindDeviceData : public TestPhoneDeviceJob {
+Q_OBJECT
+/// This one extends the previous class, being able to find more informations about the device.
+/// It can be used in the wizard, so the user can also get more data about found phones.
+public:
+    FindDeviceData(const QString &devicename, AT_Engine* parent);
+protected:
+    void run();
 };
 
 #endif
