@@ -20,42 +20,22 @@
    Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
    Boston, MA 02110-1301, USA.
  ***************************************************************************/
-#include "scanprogressPage.h"
-#include "ui_scanprogressPage.h"
-#include <QProgressBar>
+#ifndef AT_SCANPROGRESSPAGE_H
+#define AT_SCANPROGRESSPAGE_H
 
-class ScanProgressPagePrivate {
+#include <libkmobiletoolsengineui/scanprogressPage.h>
+
+/**
+	@author 
+*/
+class AT_ScanProgressPage : public ScanProgressPage
+{
+Q_OBJECT
 public:
-    ScanProgressPagePrivate() {}
-    Ui::scanProgressPage *wizPage;
+    AT_ScanProgressPage(QWidget *parent = 0);
+
+    ~AT_ScanProgressPage();
+
 };
 
-ScanProgressPage::ScanProgressPage( QWidget * parent )
-    : QWizardPage(parent), d(new ScanProgressPagePrivate)
-{
-    d->wizPage=new Ui::scanProgressPage;
-    d->wizPage->setupUi(this);
-    setProgress(0);
-}
-
-QString ScanProgressPage::statusString() const {
-    return d->wizPage->statuslabel->text();
-}
-
-void ScanProgressPage::setStatusString(const QString & text) {
-    d->wizPage->statuslabel->setText(text);
-}
-
-QProgressBar *ScanProgressPage::progressBar() {
-    return d->wizPage->progressBar;
-}
-
-void ScanProgressPage::setProgress(int progress) {
-    progressBar()->setValue(progress);
-}
-
-int ScanProgressPage::progress() {
-    return progressBar()->value();
-}
-
-#include "scanprogressPage.moc"
+#endif

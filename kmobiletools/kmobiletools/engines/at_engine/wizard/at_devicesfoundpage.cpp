@@ -20,42 +20,17 @@
    Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
    Boston, MA 02110-1301, USA.
  ***************************************************************************/
-#include "scanprogressPage.h"
-#include "ui_scanprogressPage.h"
-#include <QProgressBar>
+#include "at_devicesfoundpage.h"
 
-class ScanProgressPagePrivate {
-public:
-    ScanProgressPagePrivate() {}
-    Ui::scanProgressPage *wizPage;
-};
-
-ScanProgressPage::ScanProgressPage( QWidget * parent )
-    : QWizardPage(parent), d(new ScanProgressPagePrivate)
+AT_DevicesFoundPage::AT_DevicesFoundPage(QWidget *parent)
+ : DevicesFoundPage(parent)
 {
-    d->wizPage=new Ui::scanProgressPage;
-    d->wizPage->setupUi(this);
-    setProgress(0);
 }
 
-QString ScanProgressPage::statusString() const {
-    return d->wizPage->statuslabel->text();
+
+AT_DevicesFoundPage::~AT_DevicesFoundPage()
+{
 }
 
-void ScanProgressPage::setStatusString(const QString & text) {
-    d->wizPage->statuslabel->setText(text);
-}
+#include "at_devicesfoundpage.moc"
 
-QProgressBar *ScanProgressPage::progressBar() {
-    return d->wizPage->progressBar;
-}
-
-void ScanProgressPage::setProgress(int progress) {
-    progressBar()->setValue(progress);
-}
-
-int ScanProgressPage::progress() {
-    return progressBar()->value();
-}
-
-#include "scanprogressPage.moc"

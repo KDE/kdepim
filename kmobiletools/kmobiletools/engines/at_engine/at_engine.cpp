@@ -29,6 +29,8 @@
 #include <QLabel>
 #include <ksharedconfig.h>
 #include "wizard/at_connectionspage.h"
+#include "wizard/at_devicesfoundpage.h"
+#include "wizard/at_scanprogresspage.h"
 #include "cfgwidgets/engineconfig.h"
 
 #include <libkmobiletools/picksmscenter.h>
@@ -628,6 +630,8 @@ QList<QWizardPage*> AT_Engine::wizardPages(QWidget *parentWidget)
 {
     QList<QWizardPage*> retval;
     retval+=new AT_ConnectionsPage(parentWidget);
+    retval+=new AT_ScanProgressPage(parentWidget);
+    retval+=new AT_DevicesFoundPage(parentWidget);
     return retval;
 }
 

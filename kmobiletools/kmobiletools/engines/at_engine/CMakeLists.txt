@@ -14,6 +14,8 @@ set(kmobiletools_at_LIB_SRCS
    wizard/bluetooth.cpp
    wizard/serial.cpp
    wizard/userconnection.cpp
+   wizard/at_scanprogresspage.cpp
+   wizard/at_devicesfoundpage.cpp
 )
 
 kde4_automoc(${kmobiletools_at_LIB_SRCS})
