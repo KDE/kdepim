@@ -36,9 +36,14 @@
 #include <libkmobiletools/weaver.h>
 #include <libkmobiletools/enginedata.h>
 
+// Jobs includes
+#include "at_jobs.h"
+#include "sms_jobs.h"
+#include "phonebook_jobs.h"
+#include "testphonedevice.h"
+
 #include <config-kmobiletools.h>
 
-#include "testphonedevice.h"
 
 using namespace KMobileTools;
 
@@ -106,8 +111,8 @@ void AT_Engine::slotInitPhone()
         emit disconnected();
         return;
     } else kDebug() << "Device found on " << foundDevice()->foundPath() << endl;
-    device=new KMobileTools::SerialManager(this, this->objectName(), foundDevice()->foundPath(), initStrings() );
     */
+    device=new KMobileTools::SerialManager(this, this->objectName(), engineData()->property("devicePath").toString(), initStrings() );
     connect(device, SIGNAL(disconnected()), SIGNAL(disconnected() ) );
     connect(device, SIGNAL(error()), SIGNAL(error() ) );
     connect(device, SIGNAL(invalidLockFile( const QString& )), this, SIGNAL(invalidLockFile( const QString& )) );
@@ -208,7 +213,15 @@ void AT_Engine::processSlot(KMobileTools::Job* job)
             break;
         case TestPhoneDevice:
             TestPhoneDeviceJob *djob=(TestPhoneDeviceJob*)job;
-            if(djob->found()) kDebug() << "Found device in " << djob->path() << endl;
+            l_testphonejobs.removeAll(djob);
+            if(djob->found() && djob->data()->imei() == config()->mobileimei() ) {
+                kDebug() << "Probe finished: phone found in " << djob->path() << endl;
+                while(!l_testphonejobs.isEmpty())
+                    ThreadWeaver()->dequeue(l_testphonejobs.takeFirst());
+                engineData()->setProperty("devicePath", djob->path());
+                slotInitPhone();
+            }
+            kDebug() << "jobs remaining: " << l_testphonejobs.count() << endl;
             break;
     }
 }
@@ -655,27 +668,34 @@ ATDevicesConfig *AT_Engine::config(bool forceNew, const QString &groupName) {
     return (ATDevicesConfig*) ATDevicesConfig::prefs(gpname );
 }
 
+void AT_Engine::enqueueTPJob(TestPhoneDeviceJob* pjob) {
+    l_testphonejobs+=pjob;
+    enqueueJob(pjob);
+}
+
 void AT_Engine::searchPhones(Connection connections, const QStringList &bluetoothDevices, const QStringList &customDevices) {
+    if(!connections) return;
     QStringList devices;
+    TestPhoneDeviceJob *curjob;
     if(connections & ConnectionUSB)
         for(uchar i=0; i<10; i++) {
-            enqueueJob(new TestPhoneDeviceJob(QString("/dev/ttyACM%1").arg(i), this) );
-            enqueueJob(new TestPhoneDeviceJob(QString("/dev/ttyUSB%1").arg(i), this) );
+            enqueueTPJob( new TestPhoneDeviceJob(QString("/dev/ttyACM%1").arg(i), this) );
+            enqueueTPJob(new TestPhoneDeviceJob(QString("/dev/ttyUSB%1").arg(i), this) );
         }
     if(connections & ConnectionIrDA)
         for(uchar i=0; i<10; i++) {
-            enqueueJob(new TestPhoneDeviceJob(QString("/dev/ircomm%1").arg(i), this) );
+            enqueueTPJob(new TestPhoneDeviceJob(QString("/dev/ircomm%1").arg(i), this) );
         }
     if(connections & ConnectionSerial)
         for(uchar i=0; i<10; i++) {
-            enqueueJob(new TestPhoneDeviceJob(QString("/dev/ttyS%1").arg(i), this) );
+            enqueueTPJob(new TestPhoneDeviceJob(QString("/dev/ttyS%1").arg(i), this) );
         }
     if(connections & ConnectionBluetooth)
         for(QStringList::ConstIterator it=bluetoothDevices.begin(); it!=bluetoothDevices.end(); ++it)
-            enqueueJob(new TestPhoneDeviceJob(*it, this) );
+            enqueueTPJob(new TestPhoneDeviceJob(*it, this) );
     if(connections & ConnectionUser)
         for(QStringList::ConstIterator it=customDevices.begin(); it!=customDevices.end(); ++it)
-            enqueueJob(new TestPhoneDeviceJob(*it, this) );
+            enqueueTPJob(new TestPhoneDeviceJob(*it, this) );
 }
 
 

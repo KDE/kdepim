@@ -43,6 +43,7 @@ protected:
     QString deviceName;
     KMobileTools::EngineData* enginedata;
     bool b_found;
+    bool b_closeafterimei;
 };
 
 #endif

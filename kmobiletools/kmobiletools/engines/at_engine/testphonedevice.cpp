@@ -23,7 +23,7 @@
 #include <QFile>
 
 TestPhoneDeviceJob::TestPhoneDeviceJob(const QString &devicename, AT_Engine* parent): kmobiletoolsATJob(NULL, parent),
-    b_found(false), enginedata(0)
+    b_found(false), enginedata(0), b_closeafterimei(true)
 {
     this->deviceName=devicename;
     p_device=new KMobileTools::SerialManager(parent, parent->objectName(), devicename);
@@ -44,7 +44,13 @@ void TestPhoneDeviceJob::run() {
     const int probeTimeout=600;
     buffer=p_device->sendATCommand(this, "AT+CGSN\r", probeTimeout);
     kDebug() << "Sent CGSN probe, got " << buffer << endl;
-    p_device->close();
+    if( !KMobileTools::SerialManager::ATError(buffer) ) // Phone imei
+        enginedata->setIMEI( kmobiletoolsATJob::parseInfo( buffer ) );
+        else {
+            p_device->close();
+            return;
+        }
+    if(b_closeafterimei) p_device->close();
     b_found=true;
 }
 

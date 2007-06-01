@@ -28,19 +28,17 @@
 #include "calendar_jobs.h"
 #endif
 
-#include "at_jobs.h"
-#include "sms_jobs.h"
-#include "phonebook_jobs.h"
 #include "atengineconfig.h"
+#include "atabilities.h"
 
 #include <libkmobiletools/engine.h>
 #include <libkmobiletools/serialdevice.h>
 //Added by qt3to4:
 #include <Q3ValueList>
 /*class Device;*/
-class ATAbilities;
 class QWizardPage;
 class ATDevicesConfig;
+class TestPhoneDeviceJob;
 /**
 @author Marco Gulino
 */
@@ -95,6 +93,8 @@ public:
         }
         KMobileTools::Job *p_lastJob;
         void searchPhones(Connection connections, const QStringList &bluetoothDevices, const QStringList &customDevices);
+        QList<TestPhoneDeviceJob*> l_testphonejobs;
+        void enqueueTPJob(TestPhoneDeviceJob*);
 public slots:
     void slotPollStatus();
     void processSlot(KMobileTools::Job* );
