@@ -4,7 +4,7 @@
 */
 
 /****************************************************************************
- ** Copyright (C)  2002-2004 Klar‰lvdalens Datakonsult AB.  All rights reserved.
+ ** Copyright (C)  2002-2004 Klar√§lvdalens Datakonsult AB.  All rights reserved.
  **
  ** This file is part of the KDGantt library.
  **
@@ -185,6 +185,12 @@ public:
     static KDGanttViewItem* createFromDomElement( KDGanttViewItem* parent,
                                                   KDGanttViewItem* previous,
                                                   QDomElement& element );
+
+    void setMoveable( bool m );
+    bool isMoveable() const;
+    void setResizeable( bool r );
+    bool isResizeable() const;
+
 private:
     friend class KDGanttView;
     friend class KDTimeTableWidget;
@@ -239,6 +245,9 @@ private:
     bool shapeDefined;
     int _priority;
     static QDict<KDGanttViewItem> sItemDict;
+
+    bool _isMoveable;
+    bool _isResizeable;
 };
 
 

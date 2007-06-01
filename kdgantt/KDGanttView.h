@@ -4,7 +4,7 @@
 */
 
 /****************************************************************************
- ** Copyright (C)  2001-2004 Klar‰lvdalens Datakonsult AB.  All rights reserved.
+ ** Copyright (C)  2001-2004 Klar√§lvdalens Datakonsult AB.  All rights reserved.
  **
  ** This file is part of the KDGantt library.
  **
@@ -380,6 +380,7 @@ signals:
     void gvItemDoubleClicked( KDGanttViewItem* );
     // the point is the global position!!
     void gvContextMenuRequested ( KDGanttViewItem * item, const QPoint & pos );
+    void gvItemMoved( KDGanttViewItem* );
 
     // lv... means item in listview clicked
     void lvCurrentChanged( KDGanttViewItem* );

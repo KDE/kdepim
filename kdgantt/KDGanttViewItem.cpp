@@ -4,7 +4,7 @@
 */
 
 /****************************************************************************
- ** Copyright (C)  2002-2004 Klarälvdalens Datakonsult AB.  All rights reserved.
+ ** Copyright (C)  2002-2004 KlarÃ¤lvdalens Datakonsult AB.  All rights reserved.
  **
  ** This file is part of the KDGantt library.
  **
@@ -290,7 +290,7 @@ void KDGanttViewItem::generateAndInsertName( const QString& name )
     if( !_name.isEmpty() )
         // We had a name, remove it
         sItemDict.remove( _name );
-    
+
     QString newName;
     if ( name.isEmpty() || sItemDict.find( name ) ) {
         // create unique name
@@ -1421,6 +1421,8 @@ void KDGanttViewItem::setCallListViewOnSetOpen( bool call )
 
 void KDGanttViewItem::initColorAndShapes(Type t)
 {
+    _isMoveable = false;
+    _isResizeable = false;
     setTextOffset(QPoint(0,0));
   //_isCalendar = false;
     _callListViewOnSetOpen = true;
@@ -2483,7 +2485,7 @@ void KDGanttViewItem::moveTextCanvas(int x, int y)
     int my = y + myTextOffset.y();
     if (myTextOffset.x() != 0)
         mx -= 2*myItemSize; // keep old behaviour
-        
+
     textCanvas->move(mx+2*myItemSize,my-myItemSize/2);
     //qDebug("%s: moveTextCanvas(%d,%d) offset: %d,%d moved to  %d,%d",listViewText(0).latin1(),x,y,myTextOffset.x(),myTextOffset.y(),mx+2*myItemSize,my-myItemSize/2);
 }
@@ -2492,7 +2494,7 @@ void KDGanttViewItem::moveTextCanvas(int x, int y)
   Moves this items text relative to the middle right end of the item
   Used to move text away from link.
 */
-void KDGanttViewItem::moveTextCanvas() 
+void KDGanttViewItem::moveTextCanvas()
 {
     QPoint m = myTextOffset+middleRight();
     textCanvas->move(m.x(), m.y()-myItemSize/2);
@@ -2501,7 +2503,7 @@ void KDGanttViewItem::moveTextCanvas()
 /*!
   Sets with how much the item text is offset.
 */
-void KDGanttViewItem::setTextOffset(QPoint p) 
+void KDGanttViewItem::setTextOffset(QPoint p)
 {
     //qDebug("%s: setTextOffset() offset: %d,%d",listViewText(0).latin1(),p.x(),p.y());
     myTextOffset.setX(p.x());
@@ -2536,7 +2538,7 @@ void KDGanttViewItem::setFloatStartTime(const QDateTime &start)
 {
     myFloatStartTime = start;
 }
-    
+
 /*!
   Specifies the float end time of this item.
   If the time is invalid, the end float is not shown.
@@ -2546,4 +2548,24 @@ void KDGanttViewItem::setFloatStartTime(const QDateTime &start)
 void KDGanttViewItem::setFloatEndTime(const QDateTime &end)
 {
     myFloatEndTime = end;
+}
+
+void KDGanttViewItem::setMoveable(bool m)
+{
+  _isMoveable = m;
+}
+
+bool KDGanttViewItem::isMoveable() const
+{
+  return _isMoveable;
+}
+
+bool KDGanttViewItem::isResizeable() const
+{
+  return _isResizeable;
+}
+
+void KDGanttViewItem::setResizeable(bool r)
+{
+  _isResizeable = r;
 }
