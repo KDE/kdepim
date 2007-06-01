@@ -316,7 +316,6 @@ void DeviceHome::loadEngine()
         emit deleteThis( objectName() );
         return;
     }
-    engine->setObjectName( objectName() );
     connect(engine, SIGNAL(connected()), this, SLOT(devConnected()) );
     connect(engine, SIGNAL(disconnected()), this, SLOT(devDisconnected() ) );
     connect(engine, SIGNAL(connected() ), this, SLOT(enableWidgets() ) );

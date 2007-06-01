@@ -21,9 +21,14 @@
    Boston, MA 02110-1301, USA.
  ***************************************************************************/
 #include "at_scanprogresspage.h"
+#include "at_engine.h"
+#include "testphonedevice.h"
+#include <libkmobiletools/engineslist.h>
+#include <libkmobiletools/enginedata.h>
+#include "atengineconfig.h"
 
 AT_ScanProgressPage::AT_ScanProgressPage(QWidget *parent)
- : ScanProgressPage(parent)
+ : ScanProgressPage(parent), totaljobs(0), donejobs(0)
 {
 }
 
@@ -34,3 +39,88 @@ AT_ScanProgressPage::~AT_ScanProgressPage()
 
 #include "at_scanprogresspage.moc"
 
+
+
+/*!
+    \fn AT_ScanProgressPage::isComplete()
+ */
+bool AT_ScanProgressPage::isComplete() const {
+    bool complete=(donejobs!=0 && totaljobs==donejobs);
+    kDebug() << "isComplete==" << complete << " (progress=" << donejobs << "/" << totaljobs << ")\n";
+    return complete;
+}
+
+
+/*!
+    \fn AT_ScanProgressPage::cleanupPage()
+ */
+void AT_ScanProgressPage::cleanupPage()
+{
+    kDebug() << "AT_ScanProgressPage::cleanupPage()\n";
+    ScanProgressPage::cleanupPage();
+    disconnect(engine, SIGNAL(foundDeviceData(FindDeviceDataJob*)), this, SLOT(deviceProbed(FindDeviceDataJob*)) );
+    /// @todo implement me
+    totaljobs=0;
+    l_devices.clear();
+}
+
+
+/*!
+    \fn AT_ScanProgressPage::initializePage()
+ */
+void AT_ScanProgressPage::initializePage() {
+    kDebug() << "AT_ScanProgressPage::initializePage()\n";
+    engine=(AT_Engine*) KMobileTools::EnginesList::instance()->wizardEngine();
+    connect(engine, SIGNAL(foundDeviceData(FindDeviceDataJob*)), this, SLOT(deviceProbed(FindDeviceDataJob*)) );
+    cfg=(ATDevicesConfig*) DEVCFG(wizard()->objectName() );
+    startScan();
+}
+
+
+/*!
+    \fn AT_ScanProgressPage::deviceProbed(FindDeviceDataJob*)
+ */
+void AT_ScanProgressPage::deviceProbed(FindDeviceDataJob* job)
+{
+    kDebug() << "Job done: " << job->path() << "; found: " << job->found() << endl;
+    if(job->found()) l_devices+=job->data();
+    donejobs++;
+    setProgress( (donejobs*100)/totaljobs);
+    emit completeChanged();
+}
+
+
+/*!
+    \fn AT_ScanProgressPage::startScan()
+ */
+void AT_ScanProgressPage::startScan()
+{
+    donejobs=0;
+    if(!cfg->at_connections() ) return;
+    QStringList devices;
+    TestPhoneDeviceJob *curjob;
+    if(cfg->at_connections() & AT_Engine::ConnectionUSB)
+        for(uchar i=0; i<10; i++) {
+            engine->enqueueJob( new FindDeviceDataJob(QString("/dev/ttyACM%1").arg(i), engine) );
+            engine->enqueueJob(new FindDeviceDataJob(QString("/dev/ttyUSB%1").arg(i), engine) );
+            totaljobs+=2;
+        }
+    if(cfg->at_connections() & AT_Engine::ConnectionIrDA)
+        for(uchar i=0; i<10; i++) {
+            engine->enqueueJob(new FindDeviceDataJob(QString("/dev/ircomm%1").arg(i), engine) );
+            totaljobs++;
+        }
+    if(cfg->at_connections() & AT_Engine::ConnectionSerial)
+        for(uchar i=0; i<10; i++) {
+            engine->enqueueJob(new FindDeviceDataJob(QString("/dev/ttyS%1").arg(i), engine) );
+            totaljobs++;
+        }
+/*    if(cfg->at_connections() & ConnectionBluetooth)
+        for(QStringList::ConstIterator it=bluetoothDevices.begin(); it!=bluetoothDevices.end(); ++it)
+            engine->enqueueJob(new FindDeviceDataJob(*it, engine) );*/
+    if(cfg->at_connections() & AT_Engine::ConnectionUser)
+        for(QStringList::ConstIterator it=cfg->at_userdevices().begin(); it!=cfg->at_userdevices().end(); ++it) {
+            engine->enqueueJob(new FindDeviceDataJob(*it, engine) );
+            totaljobs++;
+        }
+}

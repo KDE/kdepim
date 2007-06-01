@@ -58,4 +58,9 @@ int ScanProgressPage::progress() {
     return progressBar()->value();
 }
 
+void ScanProgressPage::cleanupPage() {
+    kDebug() << "void ScanProgressPage::cleanupPage()\n";
+    setProgress(0);
+}
+
 #include "scanprogressPage.moc"

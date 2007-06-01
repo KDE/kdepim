@@ -36,7 +36,7 @@ public:
     TestPhoneDeviceJob(const QString &devicename, AT_Engine* parent);
 
     ~TestPhoneDeviceJob();
-    JobType type() { return static_cast<JobType>(AT_Engine::TestPhoneDevice); }
+    virtual JobType type() { return static_cast<JobType>(AT_Engine::TestPhoneDevice); }
     KMobileTools::EngineData *data() { return enginedata; }
     bool found() { return b_found; }
     QString path() const { return deviceName; }

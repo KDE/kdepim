@@ -38,6 +38,7 @@ public:
     QProgressBar *progressBar();
     void setProgress(int progress);
     int progress();
+    virtual void cleanupPage();
 private:
     ScanProgressPagePrivate *d;
 };

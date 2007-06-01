@@ -70,7 +70,7 @@ void FirstPage::engineSelected(int index)
 //     setField("engine",d->enginelibname);
     // now let's load the engine library
     kDebug() << "Engine Library field changed: " << field("engine").toString() << endl;
-    KMobileTools::Engine *engine=KMobileTools::Engine::load( engineLibrary() , this);
+    KMobileTools::Engine *engine=KMobileTools::Engine::load( engineLibrary() , wizard() );
     if(!engine)
     {
         KMessageBox::error(this, i18n("Could not load the engine %1.\nIf this error persists, please restart KMobileTools.",

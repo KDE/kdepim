@@ -24,10 +24,12 @@
 #define AT_SCANPROGRESSPAGE_H
 
 #include <libkmobiletoolsengineui/scanprogressPage.h>
+#include <QList>
 
-/**
-	@author 
-*/
+class FindDeviceDataJob;
+class AT_Engine;
+class ATDevicesConfig;
+namespace KMobileTools { class EngineData; }
 class AT_ScanProgressPage : public ScanProgressPage
 {
 Q_OBJECT
@@ -35,7 +37,20 @@ public:
     AT_ScanProgressPage(QWidget *parent = 0);
 
     ~AT_ScanProgressPage();
+    bool isComplete() const;
+    void cleanupPage();
+    void initializePage();
+    void startScan();
+    QList<KMobileTools::EngineData*> foundDevices();
 
+public slots:
+    void deviceProbed(FindDeviceDataJob*);
+private:
+    AT_Engine *engine;
+    ATDevicesConfig *cfg;
+    int totaljobs;
+    int donejobs;
+    QList<KMobileTools::EngineData*> l_devices;
 };
 
 #endif

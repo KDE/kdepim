@@ -261,7 +261,9 @@ Engine *Engine::load(const QString &libname, QObject *parent)
         kDebug() << "Error loading library: " << KLibLoader::self()->lastErrorMessage() << endl;
         return NULL;
     }
-    return static_cast<KMobileTools::Engine *>(factory->create(parent, "KMobileTools::Engine" ) );
+    Engine *ret=static_cast<KMobileTools::Engine *>(factory->create(parent, "KMobileTools::Engine" ) );
+    if(parent) ret->setObjectName(parent->objectName());
+    return ret;
 }
 
 void Engine::setConnected(bool b) { d->b_connected=b; }
