@@ -160,6 +160,12 @@ static QString eventViewerFormatAttendees( Incidence *event )
     for( it = attendees.begin(); it != attendees.end(); ++it ) {
       Attendee *a = *it;
       tmpStr += linkPerson( a->email(), a->name(), a->uid() );
+      if ( !a->delegator().isEmpty() ) {
+          tmpStr += i18n(" (delegated by %1)" ).arg( a->delegator() );
+      }
+      if ( !a->delegate().isEmpty() ) {
+          tmpStr += i18n(" (delegated to %1)" ).arg( a->delegate() );
+      }
     }
     tmpStr += "</ul>";
   }
