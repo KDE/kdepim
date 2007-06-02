@@ -4,7 +4,7 @@
 */
 
 /****************************************************************************
- ** Copyright (C)  2002-2004 Klarälvdalens Datakonsult AB.  All rights reserved.
+ ** Copyright (C)  2002-2004 KlarÃ¤lvdalens Datakonsult AB.  All rights reserved.
  **
  ** This file is part of the KDGantt library.
  **
@@ -83,7 +83,8 @@
 KDGanttView::KDGanttView( QWidget* parent, const char* name  )
     : KDGanttMinimizeSplitter( Qt::Vertical, parent, name ),
       myCanvasView(0),
-      myTimeHeaderScroll(0)
+      myTimeHeaderScroll(0),
+      mFixedHorizon( false )
 {
 #if defined KDAB_EVAL
     EvalDialog::checkEvalLicense( "KD Gantt" );
@@ -4051,7 +4052,7 @@ KDGanttViewItem* KDGanttView::getItemAt( const QPoint& pos, bool global ) const
 
 void KDGanttView::addTickRight()
 {
-  if ( _enableAdding && myCanvasView->horizontalScrollBar()->value() ==  myCanvasView->horizontalScrollBar()->maxValue()) {
+  if ( !mFixedHorizon && _enableAdding && myCanvasView->horizontalScrollBar()->value() ==  myCanvasView->horizontalScrollBar()->maxValue()) {
     //myCanvasView->horizontalScrollBar()->blockSignals( true );
     myTimeHeader->addTickRight();
     //myCanvasView->horizontalScrollBar()->blockSignals( false );
@@ -4063,7 +4064,7 @@ void KDGanttView::addTickRight()
 
 void KDGanttView::addTickLeft()
 {
-  if ( _enableAdding && myCanvasView->horizontalScrollBar()->value() == 0 ) {
+  if ( !mFixedHorizon && _enableAdding && myCanvasView->horizontalScrollBar()->value() == 0 ) {
     myCanvasView->horizontalScrollBar()->blockSignals( true );
     myTimeHeader->addTickLeft();
     myCanvasView->horizontalScrollBar()->blockSignals( false );

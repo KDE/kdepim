@@ -347,6 +347,8 @@ public:
     KDTimeTableWidget * timeTableWidget() { return myTimeTable; }
     KDTimeHeaderWidget * timeHeaderWidget() { return myTimeHeader; }
 
+    void setFixedHorizon( bool f ) { mFixedHorizon = f; }
+
 public slots:
     void editItem( KDGanttViewItem* );
     void zoomToSelection( const QDateTime& start,  const QDateTime&  end);
@@ -354,7 +356,7 @@ public slots:
 signals:
     void timeIntervallSelected( const QDateTime& start,  const QDateTime&  end);
     void timeIntervalSelected( const QDateTime& start,  const QDateTime&  end);
-    void rescaling( Scale );
+    void rescaling( KDGanttView::Scale );
     void intervalColorRectangleMoved( const QDateTime& start, const QDateTime& end );
 
     // the following signals are emitted if an item is clicked in the
@@ -486,6 +488,7 @@ private:
     void initDefaults();
     KDGanttViewItem* myCurrentItem;
     KDGanttMinimizeSplitter *mySplitter;
+    bool  mFixedHorizon;
 protected:
   virtual QDragObject * dragObject ();
   virtual void startDrag ();
