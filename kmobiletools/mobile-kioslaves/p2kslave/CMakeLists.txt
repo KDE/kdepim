@@ -13,7 +13,7 @@ deviceIFace.h )
 
 kde4_add_plugin(kio_p2k ${kio_p2k_PART_SRCS})
 
-target_link_libraries(kio_p2k  ${KDE4_KDECORE_LIBS} kio p2kmoto kmobiletools )
+target_link_libraries(kio_p2k  ${KDE4_KDECORE_LIBS} ${KDE4_KIO_LIBS} p2kmoto kmobiletools )
 
 install(TARGETS kio_p2k DESTINATION ${PLUGIN_INSTALL_DIR} )
 

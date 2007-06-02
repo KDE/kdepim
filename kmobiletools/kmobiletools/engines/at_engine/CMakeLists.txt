@@ -26,7 +26,7 @@ kde4_add_library(kmobiletools_at SHARED ${kmobiletools_at_LIB_SRCS})
 
 target_link_libraries(kmobiletools_at  ${KDE4_KDECORE_LIBS} kmobiletools kmobiletoolsengineui )
 
-set_target_properties(kmobiletools_at PROPERTIES VERSION 1.0.0 SOVERSION 1 )
+set_target_properties(kmobiletools_at PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
 install(TARGETS kmobiletools_at DESTINATION ${LIB_INSTALL_DIR} )
 install( FILES atengineconfig.kcfg  DESTINATION  ${KCFG_INSTALL_DIR} )
 

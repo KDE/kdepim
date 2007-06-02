@@ -19,7 +19,7 @@ kde4_add_library(kmobiletoolsengineui SHARED ${kmobiletoolsengineui_LIB_SRCS})
 
 target_link_libraries(kmobiletoolsengineui  ${QT_QTGUI_LIBRARY} ${KDE4_KDECORE_LIBS} )
 
-set_target_properties(kmobiletoolsengineui PROPERTIES VERSION 1.0.0 SOVERSION 1 )
+set_target_properties(kmobiletoolsengineui PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
 install(TARGETS kmobiletoolsengineui DESTINATION ${LIB_INSTALL_DIR} )
 
 

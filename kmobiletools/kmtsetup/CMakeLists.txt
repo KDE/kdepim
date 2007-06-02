@@ -9,7 +9,7 @@ kde4_add_ui_files(kmtsetup_SRCS kmtsetupwidgetbase.ui )
 
 kde4_add_executable(kmtsetup ${kmtsetup_SRCS})
 
-target_link_libraries(kmtsetup  ${KDE4_KDECORE_LIBS} kio ${KDE4_KDEUI_LIBS} )
+target_link_libraries(kmtsetup  ${KDE4_KDECORE_LIBS} ${KDE4_KIO_LIBS} ${KDE4_KDEUI_LIBS} )
 
 install(TARGETS kmtsetup DESTINATION ${BIN_INSTALL_DIR})
 

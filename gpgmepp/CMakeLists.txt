@@ -31,7 +31,7 @@ kde4_add_library(gpgme++ SHARED ${gpgme_LIB_SRCS})
 #Laurent test it !
 target_link_libraries(gpgme++ ${KDE4_KDECORE_LIBS} ${GPGME_LIBRARIES})
 
-set_target_properties(gpgme++ PROPERTIES VERSION 1.0.0 SOVERSION 1 )
+set_target_properties(gpgme++ PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
 install(TARGETS gpgme++  DESTINATION ${LIB_INSTALL_DIR})
 
 

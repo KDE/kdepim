@@ -74,7 +74,7 @@ kde4_add_kcfg_files(kolabwizard_SRCS kolabconfig.kcfgc)
 kde4_add_executable(kolabwizard ${kolabwizard_SRCS})
 
 # port me: add kcalkolab kabckolab knoteskolab again below
-target_link_libraries(kolabwizard  ${KDE4_KDECORE_LIBS} kcal kdepim kpimidentities)
+target_link_libraries(kolabwizard  ${KDE4_KDECORE_LIBS} ${KDE4_KCAL_LIBS} kdepim kpimidentities)
 
 install(TARGETS kolabwizard  DESTINATION ${BIN_INSTALL_DIR})
 

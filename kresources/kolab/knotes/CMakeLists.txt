@@ -19,7 +19,7 @@ kde4_add_library(knoteskolab SHARED ${knoteskolab_LIB_SRCS})
 
 target_link_libraries(knoteskolab  ${KDE4_KDEPRINT_LIBS} ${KDE4_KRESOURCES_LIBS} ${KDE4_KCAL_LIBS} kdepim)
 
-set_target_properties(knoteskolab PROPERTIES VERSION 1.0.0 SOVERSION 1 )
+set_target_properties(knoteskolab PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
 install(TARGETS knoteskolab  DESTINATION ${LIB_INSTALL_DIR})
 
 

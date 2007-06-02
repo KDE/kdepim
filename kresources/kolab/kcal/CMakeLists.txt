@@ -28,7 +28,7 @@ kde4_add_library(kcalkolab SHARED ${kcalkolab_LIB_SRCS})
 
 target_link_libraries(kcalkolab  ${KDE4_KDECORE_LIBS} ${KDE4_KRESOURCES_LIBS} ${KDE4_KCAL_LIBS} kdepim )
 
-set_target_properties(kcalkolab PROPERTIES VERSION 1.0.0 SOVERSION 1 )
+set_target_properties(kcalkolab PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
 install(TARGETS kcalkolab  DESTINATION ${LIB_INSTALL_DIR})
 
 

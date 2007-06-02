@@ -21,7 +21,7 @@ else(GPGME_FOUND)
    target_link_libraries(kpimidentities  ${KDE4_KDEUI_LIBS} kdepim )
 endif(GPGME_FOUND)
 
-set_target_properties(kpimidentities PROPERTIES VERSION 1.0.0 SOVERSION 1 )
+set_target_properties(kpimidentities PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
 install(TARGETS kpimidentities  DESTINATION ${LIB_INSTALL_DIR})
 
 install(FILES org.kde.pim.IdentityManager.xml DESTINATION ${DBUS_INTERFACES_DIR})
