@@ -21,10 +21,10 @@
 #ifndef __QGPGME_EVENTLOOPINTERACTOR_H__
 #define __QGPGME_EVENTLOOPINTERACTOR_H__
 
+#include "qgpgme_export.h"
 #include <gpgmepp/eventloopinteractor.h>
 
 #include <QObject>
-#include <kdepim_export.h>
 
 namespace GpgME {
   class Context;

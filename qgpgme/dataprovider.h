@@ -21,10 +21,10 @@
 #ifndef __QGPGME_DATAPROVIDER_H__
 #define __QGPGME_DATAPROVIDER_H__
 
+#include "qgpgme_export.h"
 #include <gpgmepp/interfaces/dataprovider.h>
 
 #include <QByteArray>
-#include <kdepim_export.h>
 
 namespace QGpgME {
 
