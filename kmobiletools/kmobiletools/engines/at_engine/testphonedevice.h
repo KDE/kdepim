@@ -50,7 +50,7 @@ protected:
 
 class FindDeviceDataJob : public TestPhoneDeviceJob {
 Q_OBJECT
-/// This one extends the previous class, being able to find more informations about the device.
+/// This one extends the previous class, being able to find more information about the device.
 /// It can be used in the wizard, so the user can also get more data about found phones.
 public:
     FindDeviceDataJob(const QString &devicename, AT_Engine* parent);

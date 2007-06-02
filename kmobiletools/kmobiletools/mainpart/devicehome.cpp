@@ -482,7 +482,7 @@ void DeviceHome::jobDone(KMobileTools::Job::JobType jobtype)
 
     if(newsmscnt && engine->ThreadWeaver()->isEmpty() && engine->ThreadWeaver()->isIdle() && newsmscnt!=smsnotifynum) {
         smsnotifynum=newsmscnt;
-        QString eventString(i18n("<qt>%1 New Messages.<br>Mobile Phone: %2</qt>").arg(newsmscnt).arg(DEVCFG(name() )->devicename() ) );
+        QString eventString(i18n("<qt>%1 New Messages.<br>Mobile Phone: %2</qt>", newsmscnt, DEVCFG(name() )->devicename() ) );
         KNotification::event( QString("kmobiletools_sms"), eventString, QPixmap(),
             KMobileTools::KMobiletoolsHelper::instance()->systray()->contextMenu() );
     }

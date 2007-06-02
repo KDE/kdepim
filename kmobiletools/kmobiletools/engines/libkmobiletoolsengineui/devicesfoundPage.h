@@ -35,7 +35,7 @@ public:
     DevicesFoundPage( QWidget * parent = 0 );
     QListWidget *phonesListWidget();
 private:
-    DevicesFoundPagePrivate *d;
+    DevicesFoundPagePrivate *const d;
 };
 #endif
 

@@ -40,7 +40,7 @@ public:
     int progress();
     virtual void cleanupPage();
 private:
-    ScanProgressPagePrivate *d;
+    ScanProgressPagePrivate *const d;
 };
 #endif
 
