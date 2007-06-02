@@ -148,6 +148,14 @@ void KAddressBookMain::configureKeyBindings()
   KKeyDialog::configure( actionCollection(), this );
 }
 
+void KAddressBookMain::loadProfile( const QString& )
+{
+}
+
+void KAddressBookMain::saveToProfile( const QString& ) const
+{
+}
+
 void KAddressBookMain::configureToolbars()
 {
   saveMainWindowSettings( KGlobal::config(), "MainWindow" );

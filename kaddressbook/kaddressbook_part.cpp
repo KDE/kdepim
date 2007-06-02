@@ -157,4 +157,12 @@ void KAddressbookPart::guiActivateEvent( KParts::GUIActivateEvent *e )
   }
 }
 
+void KAddressbookPart::loadProfile( const QString& )
+{
+}
+
+void KAddressbookPart::saveToProfile( const QString& ) const
+{
+}
+
 #include "kaddressbook_part.moc"

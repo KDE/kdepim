@@ -45,6 +45,8 @@ class KAddressbookPart: public KParts::ReadOnlyPart, virtual public KAddressBook
 
     static KAboutData *createAboutData();
 
+    virtual void saveToProfile( const QString& path ) const;
+    virtual void loadProfile( const QString& path );
   public slots:
     virtual void addEmail( QString addr );
     virtual void importVCard( const QString& vCardURL );

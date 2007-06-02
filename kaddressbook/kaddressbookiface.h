@@ -56,6 +56,9 @@ class KDE_EXPORT KAddressBookIface : virtual public DCOPObject
      * Return true if handled, false if command-line was empty.
      */
     virtual bool handleCommandLine() = 0;
+
+    virtual void loadProfile( const QString& path ) = 0;
+    virtual void saveToProfile( const QString& path ) const = 0;
 };
 
 #endif

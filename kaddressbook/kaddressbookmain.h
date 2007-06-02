@@ -78,6 +78,12 @@ class KAddressBookMain : public KMainWindow, virtual public KAddressBookIface
 
     virtual bool queryClose();
 
+    //override
+    void loadProfile( const QString& path );
+    
+    //override
+    void saveToProfile( const QString& path ) const;
+
   private slots:
     void configureKeyBindings();
     void configureToolbars();
