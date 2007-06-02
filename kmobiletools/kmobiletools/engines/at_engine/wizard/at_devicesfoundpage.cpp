@@ -21,6 +21,10 @@
    Boston, MA 02110-1301, USA.
  ***************************************************************************/
 #include "at_devicesfoundpage.h"
+#include "at_scanprogresspage.h"
+#include <QListWidget>
+#include <libkmobiletools/enginedata.h>
+#include <kdebug.h>
 
 AT_DevicesFoundPage::AT_DevicesFoundPage(QWidget *parent)
  : DevicesFoundPage(parent)
@@ -34,3 +38,29 @@ AT_DevicesFoundPage::~AT_DevicesFoundPage()
 
 #include "at_devicesfoundpage.moc"
 
+
+
+/*!
+    \fn AT_DevicesFoundPage::cleanupPage()
+ */
+void AT_DevicesFoundPage::cleanupPage()
+{
+    phonesListWidget()->clear();
+}
+
+
+/*!
+    \fn AT_DevicesFoundPage::initializePage()
+ */
+void AT_DevicesFoundPage::initializePage()
+{
+    kDebug() << "AT_DevicesFoundPage::initializePage()\n";
+    AT_ScanProgressPage *scanpage=(AT_ScanProgressPage *) wizard()->page(wizard()->property("scanprogress_id").toInt() );
+    kDebug() << "DevicesFound count: " << scanpage->foundDevices().count() << endl;
+    QListIterator<KMobileTools::EngineData*> it(scanpage->foundDevices());
+    KMobileTools::EngineData* curitem;
+    while(it.hasNext()) {
+        curitem=it.next();
+        new QListWidgetItem( curitem->property("devicePath").toString(), phonesListWidget() );
+    }
+}

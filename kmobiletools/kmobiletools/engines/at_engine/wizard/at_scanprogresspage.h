@@ -41,7 +41,7 @@ public:
     void cleanupPage();
     void initializePage();
     void startScan();
-    QList<KMobileTools::EngineData*> foundDevices();
+    QList<KMobileTools::EngineData*> foundDevices() { return l_devices ; }
 
 public slots:
     void deviceProbed(FindDeviceDataJob*);

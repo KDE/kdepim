@@ -35,6 +35,8 @@ public:
     AT_DevicesFoundPage(QWidget *parent = 0);
 
     ~AT_DevicesFoundPage();
+    void cleanupPage();
+    void initializePage();
 
 };
 

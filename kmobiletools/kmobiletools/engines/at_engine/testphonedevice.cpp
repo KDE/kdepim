@@ -40,6 +40,7 @@ void TestPhoneDeviceJob::run() {
     if(! QFile::exists(deviceName)) { return; }
     if(!p_device->open(this)) return;
     enginedata=new KMobileTools::EngineData(0);
+    enginedata->setProperty("devicePath", path() );
     QString buffer;
     const int probeTimeout=600;
     buffer=p_device->sendATCommand(this, "AT+CGSN\r", probeTimeout);

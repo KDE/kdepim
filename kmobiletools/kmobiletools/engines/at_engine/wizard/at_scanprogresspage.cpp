@@ -26,6 +26,7 @@
 #include <libkmobiletools/engineslist.h>
 #include <libkmobiletools/enginedata.h>
 #include "atengineconfig.h"
+#include <klocalizedstring.h>
 
 AT_ScanProgressPage::AT_ScanProgressPage(QWidget *parent)
  : ScanProgressPage(parent), totaljobs(0), donejobs(0)
@@ -70,6 +71,7 @@ void AT_ScanProgressPage::cleanupPage()
  */
 void AT_ScanProgressPage::initializePage() {
     kDebug() << "AT_ScanProgressPage::initializePage()\n";
+    wizard()->setProperty("scanprogress_id", wizard()->currentId());
     engine=(AT_Engine*) KMobileTools::EnginesList::instance()->wizardEngine();
     connect(engine, SIGNAL(foundDeviceData(FindDeviceDataJob*)), this, SLOT(deviceProbed(FindDeviceDataJob*)) );
     cfg=(ATDevicesConfig*) DEVCFG(wizard()->objectName() );
@@ -87,6 +89,11 @@ void AT_ScanProgressPage::deviceProbed(FindDeviceDataJob* job)
     donejobs++;
     setProgress( (donejobs*100)/totaljobs);
     emit completeChanged();
+    if(donejobs && (donejobs==totaljobs) ) {
+        setStatusString( i18nc("Wizard - probe finished", "All devices were analyzed.") );
+        wizard()->next();
+    }
+        else setStatusString( i18nc("Wizard - probed device..", "%1 done.", job->path() ) );
 }
 
 

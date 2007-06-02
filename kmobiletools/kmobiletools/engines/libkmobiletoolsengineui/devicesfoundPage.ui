@@ -16,7 +16,7 @@
    <item>
     <widget class="QLabel" name="label" >
      <property name="text" >
-      <string>TextLabel</string>
+      <string>KMobileTools successfully detected the following devices.&lt;br>Please select the one you want to configure.</string>
      </property>
      <property name="wordWrap" >
       <bool>true</bool>
@@ -33,7 +33,7 @@
    <item>
     <widget class="QGroupBox" name="groupBox" >
      <property name="title" >
-      <string>GroupBox</string>
+      <string>Details</string>
      </property>
     </widget>
    </item>
