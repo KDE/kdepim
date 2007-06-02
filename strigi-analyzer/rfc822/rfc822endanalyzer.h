@@ -23,11 +23,11 @@
 #define STRIGI_IMPORT_API
 #include <strigi/analyzerplugin.h>
 #include <strigi/streamendanalyzer.h>
-#include <kdepim_export.h>
+#include "kfile-plugins_export.h"
 
 class Rfc822EndAnalyzerFactory;
 
-class KDEPIM_EXPORT Rfc822EndAnalyzer : public Strigi::StreamEndAnalyzer
+class KFILE_PLUGINS_EXPORT Rfc822EndAnalyzer : public Strigi::StreamEndAnalyzer
 {
 public:
   Rfc822EndAnalyzer( const Rfc822EndAnalyzerFactory* f );
@@ -42,7 +42,7 @@ private:
   const Rfc822EndAnalyzerFactory* m_factory;
 };
 
-class KDEPIM_EXPORT Rfc822EndAnalyzerFactory : public Strigi::StreamEndAnalyzerFactory
+class KFILE_PLUGINS_EXPORT Rfc822EndAnalyzerFactory : public Strigi::StreamEndAnalyzerFactory
 {
 friend class Rfc822EndAnalyzer;
 public:
@@ -60,7 +60,7 @@ private:
   void registerFields( Strigi::FieldRegister& );
 };
 
-class KDEPIM_EXPORT Rfc822FactoryFactory : public Strigi::AnalyzerFactoryFactory
+class KFILE_PLUGINS_EXPORT Rfc822FactoryFactory : public Strigi::AnalyzerFactoryFactory
 {
 public:
   std::list<Strigi::StreamEndAnalyzerFactory*> streamEndAnalyzerFactories() const {

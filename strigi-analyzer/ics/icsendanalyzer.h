@@ -23,11 +23,11 @@
 #define STRIGI_IMPORT_API
 #include <strigi/analyzerplugin.h>
 #include <strigi/streamendanalyzer.h>
-#include <kdepim_export.h>
+#include "kfile-plugins_export.h"
 
 class IcsEndAnalyzerFactory;
 
-class KDEPIM_EXPORT IcsEndAnalyzer : public Strigi::StreamEndAnalyzer
+class KFILE_PLUGINS_EXPORT IcsEndAnalyzer : public Strigi::StreamEndAnalyzer
 {
 public:
   IcsEndAnalyzer( const IcsEndAnalyzerFactory* f );
@@ -42,7 +42,7 @@ private:
   const IcsEndAnalyzerFactory* m_factory;
 };
 
-class KDEPIM_EXPORT IcsEndAnalyzerFactory : public Strigi::StreamEndAnalyzerFactory
+class KFILE_PLUGINS_EXPORT IcsEndAnalyzerFactory : public Strigi::StreamEndAnalyzerFactory
 {
 friend class IcsEndAnalyzer;
 public:
@@ -61,7 +61,7 @@ private:
   void registerFields( Strigi::FieldRegister& );
 };
 
-class KDEPIM_EXPORT IcsFactoryFactory : public Strigi::AnalyzerFactoryFactory
+class KFILE_PLUGINS_EXPORT IcsFactoryFactory : public Strigi::AnalyzerFactoryFactory
 {
 public:
   std::list<Strigi::StreamEndAnalyzerFactory*> streamEndAnalyzerFactories() const {
