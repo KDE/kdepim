@@ -24,7 +24,7 @@
 #include <QString>
 #include <QDateTime>
 
-#include "kdepim_export.h"
+#include "kholidays_export.h"
 #include "holiday.h"
 
 namespace LibKHolidays {

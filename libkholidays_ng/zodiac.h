@@ -55,7 +55,7 @@
 
 #include <time.h>
 
-#include "kdepim_export.h"
+#include "kholidays_export.h"
 
 namespace LibKHolidays {
 

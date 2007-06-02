@@ -26,7 +26,7 @@
 #include <QStringList>
 #include <QDateTime>
 
-#include "kdepim_export.h"
+#include "kholidays_export.h"
 
 /**
   Represents and manages a Holiday

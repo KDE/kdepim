@@ -1,6 +1,5 @@
-/*
-    This file is part of libkholidays.
-    Copyright (c) 2004,2006 Allen Winter <winter@kde.org>
+/*  This file is part of the KDE project
+    Copyright (C) 2007 David Faure <faure@kde.org>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
@@ -18,21 +17,24 @@
     Boston, MA 02110-1301, USA.
 */
 
-#ifndef KHOLIDAYS_HOLIDAYS_H
-#define KHOLIDAYS_HOLIDAYS_H
+#ifndef KHOLIDAYS_EXPORT_H
+#define KHOLIDAYS_EXPORT_H
 
-#include "kholidays_export.h"
+/* needed for KDE_EXPORT and KDE_IMPORT macros */
+#include <kdemacros.h>
 
-namespace LibKHolidays {
+#ifndef KHOLIDAYS_EXPORT
+# if defined(MAKE_KHOLIDAYS_LIB)
+   /* We are building this library */ 
+#  define KHOLIDAYS_EXPORT KDE_EXPORT
+# else
+   /* We are using this library */ 
+#  define KHOLIDAYS_EXPORT KDE_IMPORT
+# endif
+#endif
 
-class KHOLIDAYS_EXPORT KHolidays {
-  public:
-    KHolidays();
-    ~KHolidays();
-
-  private:
-};
-
-}
+# ifndef KHOLIDAYS_EXPORT_DEPRECATED
+#  define KHOLIDAYS_EXPORT_DEPRECATED KDE_DEPRECATED KHOLIDAYS_EXPORT
+# endif
 
 #endif
