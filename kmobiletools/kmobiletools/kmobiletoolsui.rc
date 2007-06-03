@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE gui SYSTEM "kpartgui.dtd">
-<gui name="kmobiletools" version="1">
+<gui name="kmobiletools" version="390">
     <MenuBar>
         <Menu name="file" noMerge="1">
             <text>&amp;File</text>

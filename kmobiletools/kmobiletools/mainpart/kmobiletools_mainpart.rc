@@ -1,5 +1,5 @@
 <!DOCTYPE kpartgui SYSTEM "kpartgui.dtd">
-<kpartgui name="kmobiletools_mainpart" version="1">
+<kpartgui name="kmobiletools_mainpart" version="390">
     <MenuBar>
         <Menu name="file"><text>&amp;File</text>
             <Action name="home"/>

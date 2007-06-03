@@ -1,5 +1,5 @@
 <!DOCTYPE kpartgui SYSTEM "kpartgui.dtd">
-<kpartgui name="kmtsetup" version="1">
+<kpartgui name="kmtsetup" version="390">
 <MenuBar>
   <Menu name="custom"><text>C&amp;ustom</text>
     <Action name="custom_action" />
