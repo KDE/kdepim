@@ -94,7 +94,6 @@ add_subdirectory(kode)
 add_subdirectory(akonadi)
 add_subdirectory(libkdepim)
 add_subdirectory(libkholidays)
-add_subdirectory(libkholidays_ng)
 
 if(GPGME_FOUND)
    add_subdirectory(libkleo)
