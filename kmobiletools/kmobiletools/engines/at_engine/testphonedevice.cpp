@@ -62,6 +62,52 @@ FindDeviceDataJob::FindDeviceDataJob(const QString &devicename, AT_Engine* paren
 
 void FindDeviceDataJob::run() {
     TestPhoneDeviceJob::run();
+    if(!found()) {
+        p_device->close();
+        return;
+    }
+    QString buffer, temp;
+    const int probeTimeout=600;
+
+    buffer=p_device->sendATCommand(this, "AT+CGMR\r", probeTimeout);
+    if(!KMobileTools::SerialManager::ATError(buffer)) // Phone revision
+        enginedata->setRevision( kmobiletoolsATJob::parseInfo( buffer ) );
+
+    buffer=p_device->sendATCommand(this, "AT+CGMI\r", probeTimeout);
+    if( !KMobileTools::SerialManager::ATError(buffer) ) // Phone manufacturer
+        enginedata->setManufacturerString( kmobiletoolsATJob::parseInfo( buffer ) );
+
+    buffer=p_device->sendATCommand(this, "AT+CPMS=?\r", probeTimeout);
+    if( !KMobileTools::SerialManager::ATError(buffer) ) // SMS Slots
+        temp = kmobiletoolsATJob::parseInfo( buffer );
+    else temp.clear();
+//     enginedata->setSMSSlots( kmobiletoolsATJob::parseList( temp.replace("AT+CPMS=?", "") ) ); @TODO port
+
+    buffer=p_device->sendATCommand(this, "AT+CPBS=?\r", probeTimeout);
+    if( !KMobileTools::SerialManager::ATError(buffer) ) // PhoneBook Slots
+        temp = kmobiletoolsATJob::parseInfo( buffer );
+    else temp.clear();
+//     enginedata->setPbSlots( kmobiletoolsATJob::parseList( temp.replace("AT+CPBS=?", "") ) ); @TODO port
+
+    buffer=p_device->sendATCommand(this, "AT+CGMM\r", probeTimeout);
+    if(!KMobileTools::SerialManager::ATError(buffer)) // Phone model
+        enginedata->setModel( kmobiletoolsATJob::parseInfo( buffer ) );
+
+    buffer=p_device->sendATCommand(this, "AT+CSCS=?\r", probeTimeout);
+    if( !KMobileTools::SerialManager::ATError(buffer) ) // Charset
+        temp = kmobiletoolsATJob::parseInfo( buffer );
+    else temp.clear();
+//     enginedata->setCharsets( kmobiletoolsATJob::parseList( temp ) ); @TODO port
+
+    buffer=p_device->sendATCommand(this, "AT+CSCA?\r", probeTimeout); // SMS Center
+    if(!KMobileTools::SerialManager::ATError(buffer))
+    {
+        temp=kmobiletoolsATJob::parseInfo( buffer);
+        QRegExp tempRegexp;
+        tempRegexp.setPattern( ".*\"(.*)\".*");
+        if(tempRegexp.indexIn(temp)>=0) temp=tempRegexp.cap( 1 ); else temp.clear();
+        enginedata->setSMSCenter( temp );
+    }
     p_device->close();
 }
 

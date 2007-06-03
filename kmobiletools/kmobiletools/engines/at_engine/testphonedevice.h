@@ -43,8 +43,8 @@ public:
 protected:
     virtual void run ();
     QString deviceName;
-    KMobileTools::EngineData* enginedata;
     bool b_found;
+    KMobileTools::EngineData* enginedata;
     bool b_closeafterimei; /// if false, we could subclass run() to extend the job taking other parameters than the imei.
 };
 

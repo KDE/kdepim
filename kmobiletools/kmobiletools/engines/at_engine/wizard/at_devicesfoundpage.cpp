@@ -59,8 +59,11 @@ void AT_DevicesFoundPage::initializePage()
     kDebug() << "DevicesFound count: " << scanpage->foundDevices().count() << endl;
     QListIterator<KMobileTools::EngineData*> it(scanpage->foundDevices());
     KMobileTools::EngineData* curitem;
+    QListWidgetItem *newlwitem;
     while(it.hasNext()) {
         curitem=it.next();
-        new QListWidgetItem( curitem->property("devicePath").toString(), phonesListWidget() );
+        newlwitem=new QListWidgetItem( curitem->manufacturerString() + " " + curitem->model() , phonesListWidget() );
+        newlwitem->setData(Qt::UserRole+1, curitem->property("devicePath").toString() );
+        newlwitem->setData(Qt::UserRole+2, curitem->imei() );
     }
 }
