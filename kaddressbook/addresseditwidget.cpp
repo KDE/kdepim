@@ -461,7 +461,7 @@ void AddressEditDialog::updateAddressEdits()
 
   if ( a.isEmpty() )
     mCountryCombo->setItemText( mCountryCombo->currentIndex(),
-       KGlobal::locale()->twoAlphaToCountryName( KGlobal::locale()->country() ) );
+       KGlobal::locale()->countryCodeToName( KGlobal::locale()->country() ) );
 
   mStreetTextEdit->setFocus();
 
