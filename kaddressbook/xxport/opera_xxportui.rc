@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE gui>
-<gui name="opera_xxport" version="2">
+<gui name="opera_xxport" version="390">
 <MenuBar>
   <Menu name="file"><text>&amp;File</text>
     <Menu name="file_import"><text>&amp;Import</text>
