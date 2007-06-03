@@ -1,6 +1,6 @@
 <!DOCTYPE kpartgui SYSTEM "kpartgui.dtd">
 
-<kpartgui name="kpilot" version="5">
+<kpartgui name="kpilot" version="390">
 <MenuBar>
   <Menu name="file" noMerge="1"><text>&amp;File</text>
     <!-- Keep this list synchronized with pilotDaemon.cc and kpilot.cc -->

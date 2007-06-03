@@ -1,5 +1,5 @@
 <!DOCTYPE kpartgui>
-<kpartgui name="kitchensync" version="2">
+<kpartgui name="kitchensync" version="390">
   <MenuBar>
     <Menu name="file">
       <Action name="sync" />

@@ -77,7 +77,8 @@ class KDE_EXPORT ResourceKABC : public ResourceCalendar
     bool addEvent(Event *anEvent);
     /** deletes an event from this calendar. */
     bool deleteEvent(Event *);
-
+    /** removes all events from this calendar. */
+    void deleteAllEvents() {}
     /**
       Retrieves an event on the basis of the unique string ID.
     */
@@ -111,6 +112,11 @@ class KDE_EXPORT ResourceKABC : public ResourceCalendar
     */
     bool deleteTodo( Todo * );
     /**
+      Removes all todos from the todolist.
+    */
+    void deleteAllTodos() {}
+
+    /**
       Searches todolist for an event with this unique string identifier,
       returns a pointer or null.
     */
@@ -127,6 +133,8 @@ class KDE_EXPORT ResourceKABC : public ResourceCalendar
     virtual bool addJournal(Journal *);
     /** Remove journal from the calendar. */
     bool deleteJournal( Journal * );
+    /** Removes all journals from the calendar */
+    void deleteAllJournals() {}
     /** Return Journal with given UID */
     virtual Journal *journal(const QString &uid);
     /**
