@@ -24,21 +24,20 @@
 #include <klocale.h>
 #include <kparts/part.h>
 
-#include <kontact/plugin.h>
+#include <plugin.h>
+#include <uniqueapphandler.h>
 
-#include "mainIFace_stub.h"
 
 
 class KAboutData;
 
-class KMmobileToolsPlugin : public Kontact::Plugin
+class KMobileToolsPlugin : public Kontact::Plugin
 {
   Q_OBJECT
 
   public:
-    KMmobileToolsPlugin( Kontact::Core *core, const char *name,
-                       const QStringList & );
-    ~KMmobileToolsPlugin();
+    KMobileToolsPlugin( Kontact::Core *core, const QStringList & );
+    ~KMobileToolsPlugin();
 
     int weight() const { return 700; }
     bool isRunningStandalone();
@@ -46,7 +45,7 @@ class KMmobileToolsPlugin : public Kontact::Plugin
   protected:
     KParts::ReadOnlyPart *createPart();
     bool partLoaded;
-    MainIFace_stub *kmtIface;
+//     MainIFace_stub *kmtIface;
     public slots:
         void slotNewSMS();
 };

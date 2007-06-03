@@ -22,49 +22,51 @@
 #include <kgenericfactory.h>
 #include <kparts/componentfactory.h>
 #include <kaboutdata.h>
+#include <kactioncollection.h>
 
-#include <kontact/core.h>
-#include <kontact/plugin.h>
+#include <core.h>
 #include <kapplication.h>
-#include <dcopclient.h>
+// #include <dcopclient.h>
 #include <kaction.h>
 
 
-typedef KGenericFactory<KMmobileToolsPlugin, Kontact::Core> KMmobileToolsPluginFactory;
+typedef KGenericFactory<KMobileToolsPlugin, Kontact::Core> KMobileToolsPluginFactory;
 K_EXPORT_COMPONENT_FACTORY( libkontact_kmobiletools,
-                            KMmobileToolsPluginFactory( "kontact_kmobiletools" ) )
+                            KMobileToolsPluginFactory( "kontact_kmobiletools" ) )
 
-KMmobileToolsPlugin::KMmobileToolsPlugin( Kontact::Core *core, const char *, const QStringList& )
-    : Kontact::Plugin( core, core, "KMmobileTools" ), partLoaded(false)
+KMobileToolsPlugin::KMobileToolsPlugin( Kontact::Core *core, const QStringList& )
+    : Kontact::Plugin( core, core, "KMobileTools" ), partLoaded(false)
 {
-  kmtIface=0;
-  setInstance( KMmobileToolsPluginFactory::instance() );
-  insertNewAction( new KAction( i18n( "New SMS..." ), "newsms",
-                   CTRL+SHIFT+Key_S, this, SLOT( slotNewSMS() ), actionCollection(),
-                   "sms_new" ) );
+//   kmtIface=0;
+  setComponentData( KMobileToolsPluginFactory::componentData() );
+  KAction *newaction=new KAction(i18n( "New SMS..." ), this );
+  actionCollection()->addAction("newsms", newaction);
+  newaction->setShortcut(QKeySequence(Qt::CTRL+Qt::SHIFT+Qt::Key_S));
+  connect(newaction, SIGNAL(triggered(bool)),SLOT( slotNewSMS() ));
+  insertNewAction(newaction);
   setExecutableName("kmobiletools_bin");
-  kmtIface=new MainIFace_stub( "kmobiletools", "KMobileTools" );
+//   kmtIface=new MainIFace_stub( "kmobiletools", "KMobileTools" );
 }
 
-KMmobileToolsPlugin::~KMmobileToolsPlugin()
+KMobileToolsPlugin::~KMobileToolsPlugin()
 {
 }
 
-bool KMmobileToolsPlugin::isRunningStandalone()
+bool KMobileToolsPlugin::isRunningStandalone()
 {
-    return ( (!partLoaded) && kapp->dcopClient()->isApplicationRegistered("kmobiletools") );
+//     return ( (!partLoaded) && kapp->dcopClient()->isApplicationRegistered("kmobiletools") );
 }
 
-KParts::ReadOnlyPart* KMmobileToolsPlugin::createPart()
+KParts::ReadOnlyPart* KMobileToolsPlugin::createPart()
 {
   KParts::ReadOnlyPart* m_part=loadPart();
   partLoaded=(bool)m_part;
   return m_part;
 }
 
-void KMmobileToolsPlugin::slotNewSMS()
+void KMobileToolsPlugin::slotNewSMS()
 {
-    if(kmtIface) kmtIface->newSMS();
+//     if(kmtIface) kmtIface->newSMS();
 }
 
 #include "kmobiletools_plugin.moc"
