@@ -49,6 +49,7 @@ EngineData::EngineData(KMobileTools::Engine *parentEngine)
 {
     d->engine=parentEngine;
     if(d->engine) d->p_smsList=new SMSList(d->engine->objectName() );
+        else d->p_smsList=0;
     d->p_addresseeList = new ContactsList();
     d->p_calendar=new KCal::Event::List();
 }

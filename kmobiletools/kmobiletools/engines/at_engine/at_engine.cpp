@@ -660,9 +660,14 @@ QString AT_Engine::parseWizardSummary(const QString &strtemplate, const QString 
     if(conn & ConnectionIrDA)       tmpstrlist+=i18nc("IrDA Connection", "Infrared");
     if(conn & ConnectionUser)       tmpstrlist+=i18nc("User-defined Connection", "User defined");
     kDebug() << "conn=" << conn << "; stringlist: " << tmpstrlist << endl;
-    QString tempstr=i18ncp("Wizard summary - using <connection types>", "Using connection: %2", "Using connections: %2",
+    QString tempstr=i18ncp("AT Wizard summary - using <connection types>", "Using connection: %2", "Using connections: %2",
         tmpstrlist.count(), tmpstrlist.join(", ") );
     retstr=retstr.arg(tempstr);
+    tempstr=i18nc("AT Wizard summary - Basic parameters", "Manufacturer: %1<br>Model: %2", cfg->rawdevicevendor(), cfg->rawdevicename() );
+    retstr=retstr.arg(tempstr);
+    tempstr=i18nc("AT Wizard summary - Advanced parameters", "IMEI: %1", cfg->mobileimei() );
+    retstr=retstr.arg(tempstr);
+
     return retstr;
 }
 

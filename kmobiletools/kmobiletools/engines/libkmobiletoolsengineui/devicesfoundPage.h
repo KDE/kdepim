@@ -28,12 +28,17 @@
 
 class DevicesFoundPagePrivate;
 class QListWidget;
+class QStackedWidget;
+class QListWidgetItem;
 class ENGINEUI_EXPORT DevicesFoundPage : public QWizardPage
 {
 Q_OBJECT
 public:
     DevicesFoundPage( QWidget * parent = 0 );
     QListWidget *phonesListWidget();
+    QStackedWidget *details();
+public Q_SLOTS:
+    virtual void slotDetails(QListWidgetItem *)=0;
 private:
     DevicesFoundPagePrivate *const d;
 };

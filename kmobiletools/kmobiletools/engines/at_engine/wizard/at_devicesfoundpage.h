@@ -25,6 +25,8 @@
 
 #include <libkmobiletoolsengineui/devicesfoundPage.h>
 
+class QLabel;
+namespace KMobileTools { class EngineData; }
 /**
 	@author Marco Gulino <marco@kmobiletools.org>
 */
@@ -37,7 +39,14 @@ public:
     ~AT_DevicesFoundPage();
     void cleanupPage();
     void initializePage();
+    void showDetails(KMobileTools::EngineData* engineData);
+    bool validatePage();
+public slots:
+    void slotDetails(QListWidgetItem *);
 
+private:
+    QLabel *b_details;
+    KMobileTools::EngineData* enginedata;
 };
 
 #endif

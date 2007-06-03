@@ -35,6 +35,7 @@ DevicesFoundPage::DevicesFoundPage( QWidget * parent )
 {
     d->wizPage=new Ui::devicesfoundPage;
     d->wizPage->setupUi(this);
+    connect(phonesListWidget(), SIGNAL(itemClicked(QListWidgetItem *)), this, SLOT(slotDetails(QListWidgetItem *)) );
 }
 
 QListWidget *DevicesFoundPage::phonesListWidget()
@@ -42,5 +43,8 @@ QListWidget *DevicesFoundPage::phonesListWidget()
     return d->wizPage->listWidget;
 }
 
+QStackedWidget *DevicesFoundPage::details() {
+    return d->wizPage->detailsWS;
+}
 
 #include "devicesfoundPage.moc"

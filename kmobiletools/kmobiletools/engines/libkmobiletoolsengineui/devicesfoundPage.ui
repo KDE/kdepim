@@ -5,8 +5,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>493</width>
-    <height>202</height>
+    <width>364</width>
+    <height>242</height>
    </rect>
   </property>
   <property name="windowTitle" >
@@ -35,6 +35,14 @@
      <property name="title" >
       <string>Details</string>
      </property>
+     <layout class="QVBoxLayout" >
+      <item>
+       <widget class="QStackedWidget" name="detailsWS" >
+        <widget class="QWidget" name="page" />
+        <widget class="QWidget" name="page_2" />
+       </widget>
+      </item>
+     </layout>
     </widget>
    </item>
   </layout>
