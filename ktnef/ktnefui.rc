@@ -1,5 +1,5 @@
 <!DOCTYPE kpartgui>
-<kpartgui name="kups" version="1">
+<kpartgui name="kups" version="390">
 <MenuBar>
   <Menu name="action"><text>&amp;Action</text>
     <Action name="view_file" />
