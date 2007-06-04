@@ -1,8 +1,10 @@
 [Desktop Entry]
 Type=Service
 Name=Gammu Engine
+Name[el]=Μηχανή Gammu
 Name[zh_TW]=Gammu 引擎
 Comment=KMobileTools Engine based on Gammu
+Comment[el]=Μηχανή του KMobileTools βασισμένη στο Gammu
 Comment[zh_TW]=基於 Gammu 的 KMobileTools 引擎
 Icon=kmobiletoolsGammu
 ServiceTypes=KMobileTools/Engine

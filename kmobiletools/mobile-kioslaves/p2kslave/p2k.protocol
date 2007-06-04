@@ -17,4 +17,5 @@ defaultMimetype=application/octet-stream
 determineMimetypeFromExtension=true
 
 Description=A kioslave for p2k Motorola Phones
+Description[el]=Ένα kioslave για τηλέφωνα Motorola p2k
 Description[zh_TW]=p2k Motorola 行動電話的 kioslave

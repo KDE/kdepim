@@ -244,6 +244,7 @@ was-validated=true
 is-qualified=true
 font-bold=true
 Name=Keys for qualified signatures
+Name[el]=Κλειδιά για αναγνωριζόμενες υπογραφές
 Name[es]=Claves para firmas cualificadas
 Name[sv]=Nycklar för kvalificerade signaturer
 Name[x-test]=xxKeys for qualified signaturesxx

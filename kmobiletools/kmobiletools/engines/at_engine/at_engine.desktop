@@ -1,8 +1,10 @@
 [Desktop Entry]
 Type=Service
 Name=AT Engine
+Name[el]=Μηχανή AT
 Name[zh_TW]=AT 引擎
 Comment=KMobileTools Engine based on the standard GSM AT Command Set
+Comment[el]=Μηχανή του KMobileTools βασισμένη στο τυπικό σύνολο εντολών GSM AT
 Comment[zh_TW]=基於標準 GSM AT 命令集的 KMobileTools 引擎
 Icon=kmobiletoolsAT
 ServiceTypes=KMobileTools/Engine

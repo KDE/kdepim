@@ -4,6 +4,7 @@ Type=Link
 URL=mobile:/
 Icon=kmobiletools
 Name=Mobile Phones Filesystem
+Name[el]=Σύστημα αρχείων κινητών τηλεφώνων
 Name[zh_TW]=行動電話檔案系統
 Open=false
 X-KDE-TreeModule=Directory
