@@ -115,7 +115,8 @@ void AT_DevicesFoundPage::showDetails(KMobileTools::EngineData* engineData)
     ) );
 }
 
-bool AT_DevicesFoundPage::validatePage() {
+bool AT_DevicesFoundPage::validatePage() 
+{
     if(!enginedata) return false;
     ATDevicesConfig *cfg=(ATDevicesConfig*) DEVCFG(wizard()->objectName() );
     cfg->setMobileimei(enginedata->imei());
@@ -123,4 +124,5 @@ bool AT_DevicesFoundPage::validatePage() {
     cfg->setRawdevicename(enginedata->model());
     cfg->writeConfig();
     /// @TODO set slots
+    return true;
 }
