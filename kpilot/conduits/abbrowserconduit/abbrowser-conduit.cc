@@ -334,8 +334,8 @@ bool AbbrowserConduit::_loadAddressBook()
 	if (!fTicket)
 	{
 		WARNINGKPILOT << "Unable to lock addressbook for writing " << endl;
-		emit logError(i18n("Unable to lock addressbook for writing.  Can't sync!"));
-		addSyncLogEntry(i18n("Unable to lock addressbook for writing.  Can't sync!"));
+		emit logError(i18n("Unable to lock addressbook for writing.  Cannot sync!"));
+		addSyncLogEntry(i18n("Unable to lock addressbook for writing.  Cannot sync!"));
 		KPILOT_DELETE(aBook);
 		stopTickle();
 		return false;
@@ -1344,7 +1344,7 @@ bool AbbrowserConduit::_equal(const PilotAddress *piAddress, const Addressee &ab
 			}
 		}
 
-		// now look for differences in phone numbers.  Note:  we can't just compare one
+		// now look for differences in phone numbers.  Note:  we cannot just compare one
 		// of each kind of phone number, because there's no guarantee that if the user
 		// has more than one of a given type, we're comparing the correct two.
 
