@@ -33,9 +33,7 @@
 
 #include <KXmlGuiWindow>
 
-class QModelIndex;
 
-class PilotComponent;
 
 class OrgKdeKpilotDaemonInterface;
 

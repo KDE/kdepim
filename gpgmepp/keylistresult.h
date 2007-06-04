@@ -27,8 +27,7 @@
 
 namespace GpgME {
 
-  class Context;
-  class Error;
+    class Error;
 
   class KDE_EXPORT KeyListResult : public Result {
   public:

@@ -33,12 +33,9 @@
 #include "contacteditorwidgetmanager.h"
 #include "extensionwidget.h"
 
-class QCheckBox;
-class QSpinBox;
 class QTabWidget;
 class QTextEdit;
 
-class KComboBox;
 class KDateEdit;
 class KLineEdit;
 class KSqueezedTextLabel;
@@ -46,13 +43,9 @@ class KSqueezedTextLabel;
 class AddressEditWidget;
 class EmailEditWidget;
 class IMEditWidget;
-class KeyWidget;
 class PhoneEditWidget;
 class SecrecyWidget;
 
-namespace KAB {
-class Core;
-}
 
 namespace KPIM {
 class AddresseeLineEdit;

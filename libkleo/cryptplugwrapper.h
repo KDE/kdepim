@@ -54,13 +54,11 @@
 #include <QStringList>
 #include <QString>
 
-class KConfigBase;
 class QGpgMECryptoConfig;
 
 namespace GpgME {
   class ImportResult;
-  class KeyGenerationResult;
-}
+  }
 
 namespace Kleo {
   class KeyListJob;

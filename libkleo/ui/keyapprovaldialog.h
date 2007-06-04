@@ -51,7 +51,6 @@ namespace GpgME {
   class Key;
 }
 
-class QStringList;
 
 namespace Kleo {
 

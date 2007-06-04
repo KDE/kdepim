@@ -40,7 +40,6 @@ class Server;
 }
 
 class Synchronizer;
-class QTimer;
 
 namespace KCal {
 

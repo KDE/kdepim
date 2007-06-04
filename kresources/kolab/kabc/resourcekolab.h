@@ -41,8 +41,7 @@
 
 namespace KABC {
 
-  class FormatPlugin;
-
+  
 /**
  * This class implements a KAddressBook resource that keeps its
  * addresses in an Kolab folder in KMail (or other conforming email

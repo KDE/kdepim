@@ -20,7 +20,6 @@
 
 class KNArticle;
 class KNHeaderView;
-class QDrag;
 
 
 /** Header view item. */

@@ -32,7 +32,6 @@
 
 #include "conduitstate.h"
 
-class VCalConduitBase;
 
 /**
  * State to test the vcal-conduit. @see vcal-conduitstate.h

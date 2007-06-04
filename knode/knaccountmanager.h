@@ -24,7 +24,6 @@ namespace KWallet {
 
 class KNGroupManager;
 class KNNntpAccount;
-class KNServerInfo;
 
 
 /** Account manager.

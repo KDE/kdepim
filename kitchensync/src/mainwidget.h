@@ -30,10 +30,8 @@ class KAction;
 class KXMLGUIClient;
 class GroupView;
 class SyncProcess;
-class SyncProcessManager;
 
 namespace QSync {
-class Environment;
 }
 
 class KDE_EXPORT MainWidget : public QWidget

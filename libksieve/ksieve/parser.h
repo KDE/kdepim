@@ -35,7 +35,6 @@
 
 #include "libksieve_export.h"
 
-class QString;
 
 namespace KSieve {
 

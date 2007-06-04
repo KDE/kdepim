@@ -27,9 +27,7 @@
 
 #include "configgui.h"
 
-class QCheckBox;
 class QLabel;
-class QPushButton;
 class QSpinBox;
 
 class KComboBox;

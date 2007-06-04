@@ -59,7 +59,6 @@
 
 namespace Kleo {
   class KeyListView;
-  class KeyListViewItem;
 }
 
 namespace GpgME {

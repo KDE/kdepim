@@ -39,7 +39,6 @@
 #include <kcal/resourcecached.h>
 
 namespace KIO {
-class FileCopyJob;
 class Job;
 class DavJob;
 }

@@ -24,9 +24,7 @@
 class ReadMBox;
 class UrlInfo;
 
-class KUrl;
 
-class QString;
 
 /**
  * This class is used to get the stats of a mbox-email or mbox-file.

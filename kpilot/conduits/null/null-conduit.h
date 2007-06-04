@@ -32,7 +32,6 @@
 
 #include "plugin.h"
 
-class PilotRecord;
 class PilotDatabase;
 
 /**

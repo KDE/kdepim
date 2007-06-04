@@ -26,7 +26,6 @@
 
 class KComponentData;
 class KNConfigManager;
-class KNProgress;
 class KNAccountManager;
 class KNGroupManager;
 class KNArticleManager;

@@ -27,7 +27,6 @@
 #include <QWidget>
 
 class KComboBox;
-class KLineEdit;
 
 class Q3ListBox;
 class Q3ListBoxItem;

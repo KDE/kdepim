@@ -45,7 +45,6 @@ namespace KABC
 {
 class Addressee;
 class Address;
-class PhoneNumber;
 class Ticket;
 }
 

@@ -39,9 +39,7 @@
 
 class KConfigBase;
 class KConfig;
-class KMKernel;
 class QStringList;
-class KMIdentity;
 
 namespace KPIM {
 

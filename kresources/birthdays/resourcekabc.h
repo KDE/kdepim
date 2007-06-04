@@ -34,8 +34,6 @@
 #include "kdemacros.h"
 
 namespace KIO {
-class FileCopyJob;
-class Job;
 }
 
 namespace KCal {

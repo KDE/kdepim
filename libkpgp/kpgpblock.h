@@ -55,8 +55,6 @@ enum MessageStatus{
   CANCEL      =  0x8000
 };
   
-class Base;
-class Module;
 
   /*
    * BEGIN PGP MESSAGE

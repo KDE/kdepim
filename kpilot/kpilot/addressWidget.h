@@ -32,7 +32,6 @@
 #ifndef _KPILOT_ADDRESSWIDGET_H
 #define _KPILOT_ADDRESSWIDGET_H
 
-class Q3MultiLineEdit;
 class Q3ListBox;
 class QComboBox;
 class Q3TextView;

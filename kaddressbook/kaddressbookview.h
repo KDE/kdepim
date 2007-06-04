@@ -39,7 +39,6 @@
 #include "viewconfigurewidget.h"
 
 class KConfigGroup;
-class KXMLGUIClient;
 
 class QDropEvent;
 

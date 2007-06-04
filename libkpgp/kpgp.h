@@ -36,8 +36,6 @@
 #include "libkpgp_export.h"
 #include "kpgpkey.h"
 
-class QLineEdit;
-class QCursor;
 class QCheckBox;
 class QGridLayout;
 

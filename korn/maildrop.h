@@ -13,10 +13,7 @@
 class AccountSettings;
 class Protocol;
 
-class KConfigBase;
-class KConfigGroup;
 class KDropCfgDialog;
-class QColor;
 class KornMailSubject;
 
 template< class T > class QList;

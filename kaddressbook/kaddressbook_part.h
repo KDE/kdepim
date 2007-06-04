@@ -28,7 +28,6 @@
 #include <kparts/part.h>
 
 class KAboutData;
-class KComponentData;
 
 class KABCore;
 

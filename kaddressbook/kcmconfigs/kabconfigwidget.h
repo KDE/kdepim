@@ -28,11 +28,8 @@
 
 class QCheckBox;
 class QLineEdit;
-class Q3ListViewItem;
-class QPushButton;
 class QComboBox;
 
-class K3ListView;
 
 class AddresseeWidget;
 

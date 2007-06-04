@@ -34,7 +34,6 @@ class Q3ButtonGroup;
 class QComboBox;
 class QCheckBox;
 class QLineEdit;
-class QPushButton;
 class QRadioButton;
 class Q3Table;
 

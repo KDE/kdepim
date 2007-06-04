@@ -31,8 +31,6 @@
 
 class KComboBox;
 class Q3ListBox;
-class Q3ListBoxItem;
-class QPushButton;
 class QToolButton;
 
 class ViewConfigureFieldsPage : public QWidget

@@ -39,8 +39,7 @@
 
 namespace GpgME {
   class Error;
-  class Context;
-  class Key;
+    class Key;
 }
 
 namespace Kpgp {

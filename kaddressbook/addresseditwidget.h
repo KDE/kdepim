@@ -36,14 +36,11 @@
 
 class QButtonGroup;
 class QCheckBox;
-class Q3ListView;
 class QTextEdit;
-class QToolButton;
 
 class K3ActiveLabel;
 class KComboBox;
 class KLineEdit;
-class K3ListView;
 
 typedef TypeCombo<KABC::Address, KABC::Address::Type> AddressTypeCombo;
 

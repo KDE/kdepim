@@ -35,8 +35,6 @@
 class AccountSettings;
 class Settings;
 
-class KConfigGroup;
-class KUrlRequester;
 
 class QVBoxLayout;
 class QHBoxLayout;

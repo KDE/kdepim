@@ -38,8 +38,7 @@
 #include "gwjobs.h"
 
 namespace KABC {
-  class AddresseeList;
-  class Resource;
+    class Resource;
 }
 
 namespace KCal {

@@ -36,8 +36,6 @@
 #include "vcal-conduitbase.h"
 
 class PilotRecord;
-class PilotSerialDatabase;
-class PilotLocalDatabase;
 
 class VCalConduitPrivate : public VCalConduitPrivateBase
 {

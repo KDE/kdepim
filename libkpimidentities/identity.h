@@ -19,13 +19,11 @@
 #include <QStringList>
 #include <QList>
 
-class K3Process;
 namespace KPIM {
   class Identity;
   class Signature;
 }
 class KConfigGroup;
-class IdentityList;
 class QDataStream;
 class QMimeData;
 

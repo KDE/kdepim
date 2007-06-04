@@ -67,7 +67,6 @@
 #endif
 
 class DwMessage;
-class DwBodyPart;
 class DwField;
 class DwFieldBody;
 class DwDateTime;

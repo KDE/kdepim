@@ -29,7 +29,6 @@
 /**
 @author Marco Gulino
 */
-class QTimer;
 namespace KMobileTools{
     class Job;
     class SerialManagerPrivate;

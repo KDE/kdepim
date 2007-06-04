@@ -32,7 +32,6 @@
 //Added by qt3to4:
 #include <Q3PtrList>
 
-class KPilotInstaller;
 class Q3ListBox;
 class QComboBox;
 class QPushButton;

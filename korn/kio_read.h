@@ -30,10 +30,8 @@
 
 class KKioDrop;
 
-class KUrl;
 class KJob;
 namespace KIO { class MetaData; class Job; }
-class KIO_Protocol;
 
 class QString;
 class QVariant;

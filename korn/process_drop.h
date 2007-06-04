@@ -32,6 +32,7 @@ class K3ShellProcess;
 
 class QByteArray;
 class QString;
+class KConfigBase;
 
 /**
  * This class makes a maildrop for processes.

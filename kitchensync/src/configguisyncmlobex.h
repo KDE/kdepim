@@ -33,7 +33,6 @@ class QGridLayout;
 class QSpinBox;
 class KComboBox;
 class KLineEdit;
-class KURLRequester;
 
 class ConfigGuiSyncmlObex : public ConfigGui
 {

@@ -51,8 +51,7 @@ namespace Kleo {
   class DeleteJob;
   class SignEncryptJob;
   class DecryptVerifyJob;
-  class CryptoConfig;
-  class RefreshKeysJob;
+    class RefreshKeysJob;
 }
 
 namespace Kpgp {

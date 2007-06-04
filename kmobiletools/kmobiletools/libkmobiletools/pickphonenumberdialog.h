@@ -31,9 +31,6 @@
 /**
 	@author Marco Gulino <marco@kmobiletools.org>
 */
-namespace KMobileTools {
-class ContactsList;
-}
 
 class PickPhoneNumberDialogPrivate;
 

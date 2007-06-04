@@ -38,9 +38,6 @@ namespace KAB {
 class Core;
 }
 
-namespace KABC {
-class Field;
-}
 
 /**
   Used to draw the jump button bar on the right of the view.

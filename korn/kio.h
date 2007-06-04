@@ -29,8 +29,6 @@
 //TODO: remove include below
 #include "settings.h"
 
-class QWidget;
-class KDropDialog;
 class KornMailSubject;
 class K3Process;
 class KIO_Count;

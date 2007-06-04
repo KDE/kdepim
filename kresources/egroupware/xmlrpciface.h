@@ -29,8 +29,7 @@ class KJob;
 namespace KXMLRPC
 {
   class Query;
-  class QueryResult;
-  class Server;
+    class Server;
   class Result;
 
   class Query : public QObject

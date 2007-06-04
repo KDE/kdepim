@@ -32,7 +32,6 @@
 #include <QVBoxLayout>
 #include <QList>
 
-class Q3ButtonGroup;
 class QCheckBox;
 class QSignalMapper;
 

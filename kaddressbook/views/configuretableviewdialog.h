@@ -26,7 +26,6 @@
 
 #include "viewconfigurewidget.h"
 
-class QString;
 class QWidget;
 class QRadioButton;
 class QCheckBox;

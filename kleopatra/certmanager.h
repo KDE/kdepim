@@ -57,7 +57,6 @@ namespace KIO {
   class Job;
 }
 class K3Process;
-class KToolBar;
 class KAction;
 
 class CRLView;
@@ -67,7 +66,6 @@ class LineEditAction;
 class ComboAction;
 
 class KUrl;
-class QFile;
 class QStringList;
 class QLabel;
 

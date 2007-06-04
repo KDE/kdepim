@@ -36,7 +36,6 @@
 
 #include "appearanceconfigwidgetbase.h"
 #include <QStringList>
-class KConfig;
 
 namespace Kleo {
 

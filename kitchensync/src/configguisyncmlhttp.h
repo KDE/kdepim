@@ -26,7 +26,6 @@
 #include "configgui.h"
 
 class QCheckBox;
-class QComboBox;
 class QGridLayout;
 class QSpinBox;
 class KComboBox;

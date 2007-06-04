@@ -29,9 +29,6 @@
 #include <kldap/ldapconfigwidget.h>
 #include <libkdepim/ldapclient.h>
 
-class KLineEdit;
-class QPushButton;
-class QSpinBox;
 
 class AddHostDialog : public KDialog
 {

@@ -36,7 +36,6 @@ class K3ListView;
 class K3ListViewItem;
 class Q3ListViewItem;
 class DeviceManager;
-class KInstance;
 class KAboutData;
 class KSystemTrayIcon;
 

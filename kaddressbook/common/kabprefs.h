@@ -28,7 +28,6 @@
 #include <kdemacros.h>
 #include "kabprefs_base.h"
 
-class KConfig;
 
 class KDE_EXPORT KABPrefs : public KABPrefsBase
 {

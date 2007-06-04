@@ -40,7 +40,6 @@
 #include <QDropEvent>
 #include <QDragEnterEvent>
 
-class Q3MultiLineEdit;
 class QPushButton;
 class Q3IconDragItem;
 

@@ -37,7 +37,6 @@ class QTextEdit;
 class QListWidget;
 
 class KScoringEditorWidget;
-class KConfigBase;
 class KLineEdit;
 class KComboBox;
 class KIntSpinBox;
@@ -49,12 +48,10 @@ namespace Kpgp {
   class SecretKeyRequester;
 }
 
-class KNAccountManager;
 class KNArticleFilter;
 class KNDisplayedHeader;
 class KNFilterManager;
 class KNNntpAccount;
-class KNServerInfo;
 
 namespace KNode {
   class Appearance;

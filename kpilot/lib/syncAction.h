@@ -43,8 +43,6 @@
 * SyncAction
 */
 
-class QTimer;
-class KPilotUser;
 class SyncAction;
 
 class KPILOT_EXPORT SyncAction : public QObject

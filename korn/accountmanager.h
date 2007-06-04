@@ -28,9 +28,7 @@
 #include <QObject>
 
 class BoxSettings;
-class DBUSDrop;
 class KornSubjectsDlg;
-class KKioDrop;
 class KMailDrop;
 
 class KConfig;

@@ -43,8 +43,6 @@ class Calendar;
 class Incidence;
 }
 
-class PilotSerialDatabase;
-class PilotLocalDatabase;
 class VCalConduitSettings;
 
 class ConduitState;

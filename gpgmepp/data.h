@@ -30,8 +30,7 @@
 namespace GpgME {
 
   class DataProvider;
-  class Error;
-
+  
   class KDE_EXPORT Data {
   public:
     Data();

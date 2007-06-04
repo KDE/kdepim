@@ -24,7 +24,6 @@ class Settings;
 
 class KDialog;
 
-class KConfig;
 
 #include <QWidget>
 

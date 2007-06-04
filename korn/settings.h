@@ -24,7 +24,6 @@
 
 class BoxSettings;
 class QString;
-class QStringList;
 
 template< class T, class S > class QMap;
 

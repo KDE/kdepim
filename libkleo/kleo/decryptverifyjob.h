@@ -41,8 +41,7 @@
 
 namespace GpgME {
   class Error;
-  class Key;
-  class DecryptionResult;
+    class DecryptionResult;
   class VerificationResult;
 }
 

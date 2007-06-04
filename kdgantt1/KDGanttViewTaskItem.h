@@ -37,7 +37,6 @@
 #define KDGANTTVIEWTASKITEM_H
 
 #include "KDGanttViewItem.h"
-class KDCanvasRectangle;
 class QBrush;
 
 class KDGanttViewTaskItem : public KDGanttViewItem

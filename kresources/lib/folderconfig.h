@@ -27,8 +27,6 @@
 #include <kurl.h>
 #include <QWidget>
 
-// class K3ListView;
-class QComboBox;
 class FolderListView;
 
 namespace KPIM {

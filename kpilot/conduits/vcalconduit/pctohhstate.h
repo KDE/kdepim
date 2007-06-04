@@ -30,7 +30,6 @@
 
 #include "conduitstate.h"
 
-class VCalConduitBase;
 
 /**
  * State that handles copying of records from pc to handheld. 

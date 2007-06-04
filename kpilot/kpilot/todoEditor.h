@@ -35,9 +35,6 @@
 class PilotTodoEntry;
 struct ToDoAppInfo;
 
-class QComboBox;
-class QCheckBox;
-class KDateWidget;
 class TodoEditorBase;
 
 class TodoEditor : public KDialog

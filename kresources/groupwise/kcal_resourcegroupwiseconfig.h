@@ -26,7 +26,6 @@
 #include <kresources/resource.h>
 #include <kresources/configwidget.h>
 
-class QCheckBox;
 class KLineEdit;
 
 namespace KCal {

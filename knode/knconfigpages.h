@@ -17,8 +17,6 @@
 
 #include <kcmodule.h>
 
-class BaseWidget;
-class IdentityWidget;
 
 class QTabWidget;
 

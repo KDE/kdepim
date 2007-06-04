@@ -28,7 +28,6 @@
 
 class QWidget;
 class QString;
-class QStringList;
 
 class QLabel;
 class KLineEdit;

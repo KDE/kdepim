@@ -27,7 +27,6 @@
 #include <ldapclient.h>
 #include <kdialog.h>
 
-class KAddressBookTableView;
 class KComboBox;
 class KLineEdit;
 

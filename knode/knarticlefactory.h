@@ -28,15 +28,10 @@
 class QLabel;
 
 class KNGroup;
-class KNFolder;
 class KNCollection;
 class KNComposer;
 class KNSendErrorDialog;
 class KNNntpAccount;
-
-namespace KNode {
-  class Identity;
-}
 
 
 /** Article factory, responsible for creating and sending news articles. */

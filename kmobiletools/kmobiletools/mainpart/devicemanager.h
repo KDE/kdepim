@@ -27,9 +27,7 @@
 /**
 @author Marco Gulino
 */
-class K3IconView;
 class Q3ListViewItem;
-class QStringList;
 class deviceList;
 
 class DeviceManager : public KDialog

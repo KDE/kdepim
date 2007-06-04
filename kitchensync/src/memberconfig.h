@@ -24,7 +24,6 @@
 
 #include <QtGui/QWidget>
 
-class QTextEdit;
 class ConfigGui;
 
 class MemberConfig : public QWidget

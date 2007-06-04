@@ -43,8 +43,6 @@
 
 class QAbstractProxyModel;
 class QGraphicsView;
-class QGraphicsScene;
-class QGraphicsRectItem;
 
 namespace KDGantt {
     class GraphicsItem;

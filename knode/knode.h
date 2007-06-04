@@ -36,7 +36,6 @@ using KPIM::ProgressDialog;
 class KSqueezedTextLabel;
 
 class KNMainWidget;
-class KNHeaderView;
 
 
 /** KNode main window. */

@@ -17,9 +17,7 @@
 
 #include <kscoring.h>
 
-class KDialog;
 class KNRemoteArticle;
-class KNGroup;
 
 
 /** Article interface for the scoring system. */

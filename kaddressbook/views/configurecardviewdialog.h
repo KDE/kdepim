@@ -33,7 +33,6 @@
 #include <QLabel>
 #include <kvbox.h>
 
-class QString;
 class QWidget;
 class QCheckBox;
 class QLabel;
@@ -41,7 +40,6 @@ class KConfig;
 
 namespace KABC { class AddressBook; }
 
-class CardViewLookAndFeelPage;
 
 /**
   Configure dialog for the card view. This dialog inherits from the

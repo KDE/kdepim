@@ -37,8 +37,6 @@
 #include <pilotTodoEntry.h>
 #include "vcal-conduitbase.h"
 
-class PilotSerialDatabase;
-class PilotLocalDatabase;
 
 class TodoConduitPrivate : public VCalConduitPrivateBase
 {

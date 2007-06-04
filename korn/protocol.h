@@ -33,7 +33,6 @@
 
 class AccountInput;
 class AccountSettings;
-class KConfigGroup;
 class KIO_Protocol;
 class KMailDrop;
 

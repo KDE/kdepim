@@ -46,10 +46,6 @@ namespace GpgME {
   class Data;
 }
 
-namespace QGpgME {
-  class QByteArrayDataProvider;
-}
-
 class K3Process;
 
 namespace Kleo {

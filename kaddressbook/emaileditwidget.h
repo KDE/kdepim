@@ -27,14 +27,8 @@
 #include <kabc/addressee.h>
 #include <kdialog.h>
 
-class Q3ButtonGroup;
-class QCheckBox;
-class Q3ListView;
-class QToolButton;
 
-class KComboBox;
 class KLineEdit;
-class K3ListView;
 
 /**
   This widget displays a list box of the email addresses as well as buttons

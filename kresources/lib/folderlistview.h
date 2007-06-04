@@ -28,7 +28,6 @@
 #include "folderlister.h"
 
 class FolderListItem;
-class FolderListCaption;
 
 
 /*

@@ -32,7 +32,6 @@ class BoxSettings;
 class Settings;
 
 class KConfig;
-class KConfigGroup;
 class KDialog;
 
 class QFont;

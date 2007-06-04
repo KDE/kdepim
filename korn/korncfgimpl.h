@@ -34,9 +34,7 @@ class KConfig;
 
 class KDialog;
 
-class QObject;
 class QModelIndex;
-class QString;
 
 /**
  * This class implements the KOrn's configuration dialog.

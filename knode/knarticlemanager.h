@@ -26,7 +26,6 @@ class KTemporaryFile;
 
 class KNArticle;
 class KNHeaderView;
-class KNThread;
 class KNArticleCollection;
 class KNGroup;
 class KNFolder;

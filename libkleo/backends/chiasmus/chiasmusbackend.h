@@ -36,7 +36,6 @@
 
 #include "kleo/cryptobackend.h"
 
-class CryptPlugWrapper;
 
 namespace Kleo {
   class CryptoConfig;

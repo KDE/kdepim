@@ -81,8 +81,7 @@ namespace GpgME {
     friend class SigningResult;
     CreatedSignature( SigningResult::Private * parent, unsigned int index );
   public:
-    class Notation;
-
+    
     CreatedSignature();
     CreatedSignature( const CreatedSignature & other );
     ~CreatedSignature();

@@ -41,12 +41,10 @@
 #include "kaddressbookview.h"
 
 class Q3ListViewItem;
-class Q3ListBox;
 class QVBoxLayout;
 class KConfig;
 class KIMProxy;
 
-class ContactListViewItem;
 class ContactListView;
 
 namespace KABC { class AddressBook; }

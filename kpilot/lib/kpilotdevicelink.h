@@ -33,7 +33,6 @@
 //Added by qt3to4:
 #include <QCustomEvent>
 
-class QThread;
 
 class DeviceMap; ///< Globally tracks all devices that have a link assigned
 class Messages; ///< Tracks which messages have been printed

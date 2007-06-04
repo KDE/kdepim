@@ -52,7 +52,6 @@ class QVBoxLayout;
 class QCheckBox;
 class QPixmap;
 class QTimer;
-class Q3ListViewItem;
 class QRegExp;
 class QPoint;
 

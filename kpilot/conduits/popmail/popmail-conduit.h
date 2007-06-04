@@ -36,10 +36,8 @@
 
 #include "plugin.h"
 
-class KSocket;
 
 class PilotRecord;
-class PilotDatabase;
 
 class PopMailConduit : public ConduitAction
 {

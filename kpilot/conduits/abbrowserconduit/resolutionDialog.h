@@ -31,7 +31,6 @@
 #include <kdialog.h>
 class KPilotLink;
 class QTimer;
-class Q3ListView;
 class ResolutionDialogBase;
 
 

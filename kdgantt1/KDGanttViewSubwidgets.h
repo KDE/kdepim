@@ -62,7 +62,6 @@
 
 class KDIntervalColorRectangle;
 class KDCanvasWhatsThis;
-class KDToolTip;
 class KDCanvasRectangle;
 class KDTimeHeaderToolTip;
 class KActionCollection;

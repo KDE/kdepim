@@ -39,8 +39,7 @@
 
 namespace GpgME {
   class Error;
-  class Key;
-  class ImportResult;
+    class ImportResult;
 }
 
 

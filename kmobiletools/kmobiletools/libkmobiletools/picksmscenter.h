@@ -28,8 +28,6 @@
 	@author Marco Gulino <marco@kmobiletools.org>
 */
 class Q3ListViewItem;
-class KConfig;
-class K3ListView;
 class PickSMSCenterPrivate;
 class KMOBILETOOLS_EXPORT PickSMSCenter : public KDialog
 {

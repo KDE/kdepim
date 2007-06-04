@@ -30,7 +30,6 @@
 
 #include "contacteditorwidget.h"
 
-class AddressWidget;
 class KPluginInfo;
 class Ui_IMEditorBase;
 

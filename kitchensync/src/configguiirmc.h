@@ -29,10 +29,7 @@
 #include "connectionwidgets.h"
 
 class KComboBox;
-class KLineEdit;
 class QCheckBox;
-class QPushButton;
-class QSpinBox;
 
 class ConfigGuiIRMC : public ConfigGui
 {

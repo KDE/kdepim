@@ -26,20 +26,12 @@
 
 #include <kmime/kmime_util.h>
 
-class KScoringRule;
 class K3Process;
-class KSpellConfig;
 namespace Kpgp {
   class Config;
 }
 
-class KNNntpAccount;
-class KNAccountManager;
-class KNArticleFilter;
-class KNFilterManager;
 class KNDisplayedHeader;
-class KNServerInfo;
-class KNScoringManager;
 namespace KNode {
   class IdentityWidget;
 }

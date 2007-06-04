@@ -35,7 +35,6 @@
 
 class QLabel;
 class QPixmap;
-class QRadioButton;
 class KComboBox;
 
 class StylePage : public QWidget

@@ -39,7 +39,6 @@
 
 namespace GpgME {
   class Error;
-  class Key;
   class VerificationResult;
 }
 

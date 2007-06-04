@@ -31,7 +31,6 @@ class SystemTray;
 
 class KConfig;
 
-class QPixmap;
 template< class T > class QList;
 
 /**

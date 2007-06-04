@@ -8,7 +8,6 @@
 
 class KMailDrop;
 class KornMailSubject;
-class KornMailId;
 class K3ListView;
 class KornMailDlg;
 class QProgressDialog;

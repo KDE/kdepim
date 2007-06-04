@@ -26,7 +26,6 @@ class FilterListWidget;
 }
 
 class KNArticleFilter;
-class KNFilterDialog;
 
 
 /** Filter selection action. */

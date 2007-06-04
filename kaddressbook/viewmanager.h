@@ -33,7 +33,6 @@
 class QDropEvent;
 class QStackedWidget ;
 
-class KAction;
 class KSelectAction;
 
 class FilterSelectionWidget;

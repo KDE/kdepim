@@ -36,7 +36,6 @@
 #endif
 
 class DwAddressList;
-class DwMailboxList;
 
 //=============================================================================
 //+ Name DwAddress -- Abstract class representing an RFC-822 address

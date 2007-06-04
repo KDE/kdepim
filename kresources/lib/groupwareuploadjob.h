@@ -32,8 +32,7 @@
 namespace KIO {
   class Job;
   class TransferJob;
-  class DeleteJob;
-}
+  }
 
 namespace KPIM {
 

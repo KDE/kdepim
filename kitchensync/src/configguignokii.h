@@ -28,7 +28,6 @@
 #include <QtCore/QPair>
 
 class QLabel;
-class QLineEdit;
 class QComboBox;
 
 class ConfigGuiGnokii : public ConfigGui

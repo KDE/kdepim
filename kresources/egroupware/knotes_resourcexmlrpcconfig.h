@@ -24,7 +24,6 @@
 #include <kresources/configwidget.h>
 #include <kdemacros.h>
 
-class KIntSpinBox;
 class KLineEdit;
 class KUrlRequester;
 

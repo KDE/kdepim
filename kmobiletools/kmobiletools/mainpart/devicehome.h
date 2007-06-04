@@ -45,14 +45,12 @@ class QString;
 class K3ListView;
 class Q3ListViewItem;
 class StatusBar;
-class KStatusBar;
 class addressDetails;
 class smsPart;
 class QProgressBar;
 class QLabel;
 class kmobiletoolsMainPart;
 class StatusBarProgressBox;
-class KAction;
 namespace KParts
 {
     class StatusBarExtension;
@@ -245,7 +243,5 @@ signals:
         void deleteThis(const QString &);
 };
 
-class KInstance;
-class KAboutData;
 
 #endif // _KMOBILETOOLSPART_H_

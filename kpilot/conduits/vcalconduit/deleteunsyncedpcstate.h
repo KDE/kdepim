@@ -30,7 +30,6 @@
 
 #include "conduitstate.h"
 
-class VCalConduitBase;
 
 /**
  * State to handle delete unsynced pc records. @see vcal-conduitstate.h
