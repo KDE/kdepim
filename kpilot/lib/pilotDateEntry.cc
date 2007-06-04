@@ -418,7 +418,7 @@ void PilotDateEntry::setLocation(const QString &s)
 	}
 	else
 	{
-		QString location = "Location: " + s + "\n";
+		QString location = "Location: " + s + '\n';
 		int pos = note.find(rxp);
 
 		if(pos >= 0)

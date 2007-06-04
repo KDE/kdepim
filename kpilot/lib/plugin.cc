@@ -453,9 +453,9 @@ void ConduitAction::finished()
 
 	if (fCtrHH && fCtrPC)
 	{
-		addSyncLogEntry(fCtrHH->moo() +"\n",false);
+		addSyncLogEntry(fCtrHH->moo() +'\n',false);
 		DEBUGKPILOT << fname << ": " << fCtrHH->moo() << endl;
-		addSyncLogEntry(fCtrPC->moo() +"\n",false);
+		addSyncLogEntry(fCtrPC->moo() +'\n',false);
 		DEBUGKPILOT << fname << ": " << fCtrPC->moo() << endl;
 
 		// STEP2 of making sure we don't delete our little user's
