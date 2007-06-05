@@ -211,7 +211,8 @@ instead of icons.</para>
 
 <para>If you dislike the sidebar, you can simply hide it by dragging the
 splitter. An alternative navigation between part is provided by the 
-<guilabel>navigator</guilabel> toolbar, which can be freely positioned.</para>
+<guilabel>navigator</guilabel> toolbar, which will always be aligned on the opposite
+side of the mainwindow from the side pane.</para>
 
 </sect1>
 
