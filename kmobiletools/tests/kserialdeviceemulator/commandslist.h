@@ -53,8 +53,10 @@ public:
     static CommandsList *instance() { return p_instance; }
     void loadFile(const QString &filen);
     Command searchCmd(const QString &cmd);
+    bool hasSMSSlots() { return b_hassmsslots; }
     private:
         static CommandsList *p_instance;
+        bool b_hassmsslots;
 
 };
 

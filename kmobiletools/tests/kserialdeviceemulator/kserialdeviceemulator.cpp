@@ -176,32 +176,38 @@ QString CommandJob::getAnswer(const QString &cmd)
     if( regexpPB.search(cmd)!=-1 || regexpSMS.search(cmd)!=-1 || regexpSlot.search(cmd)!=-1 )
     {
         bool isSMS=(regexpSMS.search(cmd)!=-1 || (regexpSlot.search(cmd)!=-1 && regexpSlot.cap(1) == "AT+CPMS") );
+        if(isSMS && !CommandsList::instance()->hasSMSSlots()) {
+            command=CommandsList::instance()->searchCmd(cmd);
+            kDebug() << "NO SMS Slots to be found\n";
+        }
+        else {
 //         kDebug() << "Searching for sms:" << isSMS << endl;
-        regexpSlot.setPattern( "(AT\\+CP[MB]S)=\"*[\\w]+\"*");
-        bool rightSlot=false;
-        for(Q3ValueList<Command>::ConstIterator it=CommandsList::instance()->begin(); it!=CommandsList::instance()->end(); ++it)
-        {
-            if(regexpSlot.search( (*it).cmd() )!=-1)
+            regexpSlot.setPattern( "(AT\\+CP[MB]S)=\"*[\\w]+\"*");
+            bool rightSlot=false;
+            for(Q3ValueList<Command>::ConstIterator it=CommandsList::instance()->begin(); it!=CommandsList::instance()->end(); ++it)
             {
-                // If we're searching for a SMS slot and we've found a PB one, or vice versa, just continue the loop.
-                if( (regexpSlot.cap(1)=="AT+CPMS" && !isSMS ) || (regexpSlot.cap(1)=="AT+CPBS" && isSMS ) ) continue;
-                if( smsSlot==(*it).cmd() || pbSlot==(*it).cmd() )
+                if(regexpSlot.search( (*it).cmd() )!=-1)
                 {
-//                     kDebug() << "Searching for slot ok; was searching for " << (*it).origPos() << endl;
-                    rightSlot=true;
+                    // If we're searching for a SMS slot and we've found a PB one, or vice versa, just continue the loop.
+                    if( (regexpSlot.cap(1)=="AT+CPMS" && !isSMS ) || (regexpSlot.cap(1)=="AT+CPBS" && isSMS ) ) continue;
+                    if( smsSlot==(*it).cmd() || pbSlot==(*it).cmd() )
+                    {
+                        kDebug() << "Searching for slot ok; was searching for " << (*it).origPos() << endl;
+                        rightSlot=true;
+                    }
+                    else
+                    {
+                        kDebug() << "Was searching for a slot, but we've found another one: index: " << (*it).origPos() << endl;
+                        rightSlot=false;
+                    }
+                    continue;
                 }
-                else
+                if(rightSlot && (*it).cmd()==cmd)
                 {
-//                     kDebug() << "Was searching for a slot, but we've found another one: index: " << (*it).origPos() << endl;
-                    rightSlot=false;
+                    command=(*it);
+                    kDebug() << "Found correct slot command: " << command.origPos() << endl;
+                    break;
                 }
-                continue;
-            }
-            if(rightSlot && (*it).cmd()==cmd)
-            {
-                command=(*it);
-//                 kDebug() << "Found correct slot command: " << command.origPos() << endl;
-                break;
             }
         }
     } else command=CommandsList::instance()->searchCmd(cmd);

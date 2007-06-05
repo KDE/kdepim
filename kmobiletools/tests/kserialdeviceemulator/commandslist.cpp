@@ -53,11 +53,22 @@ void CommandsList::loadFile(const QString &filen)
     QFile file(filen);
     if (! file.exists()) return;
     clear();
+    b_hassmsslots=true;
     file.open(QIODevice::ReadOnly);
     uint i=0;
     Q3TextStream stream(&file);
     while ( !stream.atEnd() ) {
         line=stream.readLine();
+        if(line.left(1) == "#") {
+        // Command-comment
+            if (line.left(2) == "##") { // Command directive
+                if (line.contains("NOSMSSLOTS")) {
+                    b_hassmsslots=false;
+                    kDebug() << "Setting NO sms slots\n";
+                }
+            }
+            continue;
+        }
         if(line.left(3) == ">>>")
         {
             if(cmd.length() && answer.length())

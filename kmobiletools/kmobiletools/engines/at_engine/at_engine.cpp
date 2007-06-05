@@ -305,6 +305,13 @@ void AT_Engine::slotFetchSMS()
     diffSMSList()->clear();
     if(queue_sms) return;
     QStringList sl_slots=config()->at_smsslots();
+    if( ! sl_slots.count() ) {
+        kDebug() << "**** WARNING - this phone is NOT reporting having SMS slots. Perhaps it can't provide SMS. I'm trying anyway to fetch them.\n";
+        p_lastJob=new FetchSMS(p_lastJob, SMS::All, device, true, this );
+        enqueueJob(p_lastJob);
+        queue_sms=true;
+        return;
+    }
     for (QStringList::iterator it=sl_slots.begin(); it!=sl_slots.end(); ++it)
     {
         p_lastJob=new SelectSMSSlot( p_lastJob, (*it), device, this );

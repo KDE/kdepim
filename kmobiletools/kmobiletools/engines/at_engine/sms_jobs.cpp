@@ -409,7 +409,7 @@ FetchSMS::FetchSMS( KMobileTools::Job *pjob, SMS::SMSType type, KMobileTools::Se
 
 void FetchSMS::run()
 {
-    int sms_Slot;
+    int sms_Slot=0;
     QString buffer;
     buffer=p_device->sendATCommand(this,  "AT+CPMS?\r" );
     buffer=kmobiletoolsATJob::parseInfo( buffer);
@@ -425,6 +425,7 @@ void FetchSMS::run()
     if (in_memslot=="ME" || in_memslot== "MT" || in_memslot=="OM" || in_memslot=="IM") sms_Slot= SMS::Phone;
     if (in_memslot=="SM" || in_memslot== "MT" || in_memslot=="OM" || in_memslot=="IM") sms_Slot= SMS::SIM;
 //     kDebug() << "Current SMS Slot:" << in_memslot << ";" << memslot2 << ";" << memslot3 << ";\n";
+    if(! sms_Slot) sms_Slot=SMS::Phone; // if we've no slots just assign the SMS to the phone as default.
     
     // Get the slot number
     int numSlot;
