@@ -461,6 +461,20 @@ distinction is available in the
 
 </sect2>
 
+<sect2 id="side-pane-drag-and-drop-knotes-todo">
+<title>&knotes; -> &korganizer;'s Todo List</title>
+
+<para>
+Dragging a note from &knotes; to the icon for &korganizer;'s Todo List
+(<guiicon><inlinemediaobject><imageobject> <imagedata
+                                           fileref="todo-list-sidebar-icon.png" 
+                                           format="PNG"/>
+</imageobject></inlinemediaobject></guiicon>) will create a new Todo
+with the title set to the title of the note and the description set to the note itself.
+</para>
+
+</sect2>
+
 
 </sect1>
 
