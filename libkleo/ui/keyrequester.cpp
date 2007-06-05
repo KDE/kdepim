@@ -436,12 +436,12 @@ Kleo::EncryptionKeyRequester::EncryptionKeyRequester( bool multi, unsigned int p
                                                       QWidget * parent,
                                                       bool onlyTrusted, bool onlyValid )
   : KeyRequester( encryptionKeyUsage( proto & OpenPGP, proto & SMIME, onlyTrusted, onlyValid ), multi,
-                  parent )
+                  parent ),d(0)
 {
 }
 
 Kleo::EncryptionKeyRequester::EncryptionKeyRequester( QWidget * parent )
-  : KeyRequester( 0, false, parent )
+  : KeyRequester( 0, false, parent ),d(0)
 {
 }
 
@@ -457,12 +457,12 @@ Kleo::SigningKeyRequester::SigningKeyRequester( bool multi, unsigned int proto,
                                                 QWidget * parent,
                                                 bool onlyTrusted, bool onlyValid )
   : KeyRequester( signingKeyUsage( proto & OpenPGP, proto & SMIME, onlyTrusted, onlyValid ), multi,
-                  parent )
+                  parent ),d(0)
 {
 }
 
 Kleo::SigningKeyRequester::SigningKeyRequester( QWidget * parent )
-  : KeyRequester( 0, false, parent )
+  : KeyRequester( 0, false, parent ),d(0)
 {
 }
 

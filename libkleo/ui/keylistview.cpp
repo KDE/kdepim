@@ -146,11 +146,10 @@ Kleo::KeyListView::KeyListView( const ColumnStrategy * columnStrategy, const Dis
   : K3ListView( parent ),
     mColumnStrategy( columnStrategy ),
     mDisplayStrategy ( displayStrategy  ),
-    mHierarchical( false )
+    mHierarchical( false ),d(new Private())
 {
   setWindowFlags( f );
 
-  d = new Private();
 
   d->updateTimer = new QTimer( this );
   d->updateTimer->setSingleShot( true );
@@ -191,7 +190,7 @@ Kleo::KeyListView::~KeyListView() {
   assert( d->itemMap.size() == 0 );
   // need to delete the tooltip ourselves, as ~QToolTip isn't virtual :o
   delete d->itemToolTip; d->itemToolTip = 0;
-  delete d; d = 0;
+  delete d;
   delete mColumnStrategy; mColumnStrategy = 0;
   delete mDisplayStrategy; mDisplayStrategy = 0;
 }

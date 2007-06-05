@@ -321,7 +321,7 @@ namespace Kleo {
     bool mHierarchical;
 
     class Private;
-    Private * d;
+    Private *const d;
   };
 }
 

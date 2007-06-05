@@ -110,14 +110,13 @@ Kleo::KeyApprovalDialog::KeyApprovalDialog( const std::vector<Item> & recipients
                                             const std::vector<GpgME::Key> & sender,
                                             QWidget * parent )
   : KDialog( parent ),
-    d( 0 )
+    d( new Private() )
 {
   setCaption( i18n("Encryption Key Approval") );
   setButtons(  Ok|Cancel );
   setDefaultButton(  Ok );
   assert( !recipients.empty() );
 
-  d = new Private();
 
   QFrame *page = new QFrame( this );
   setMainWidget( page );
@@ -186,7 +185,7 @@ Kleo::KeyApprovalDialog::KeyApprovalDialog( const std::vector<Item> & recipients
 }
 
 Kleo::KeyApprovalDialog::~KeyApprovalDialog() {
-  delete d; d = 0;
+  delete d; 
 }
 
 std::vector<GpgME::Key> Kleo::KeyApprovalDialog::senderKeys() const {

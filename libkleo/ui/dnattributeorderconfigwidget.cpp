@@ -149,7 +149,7 @@ Kleo::DNAttributeOrderConfigWidget::DNAttributeOrderConfigWidget( DNAttributeMap
 }
 
 Kleo::DNAttributeOrderConfigWidget::~DNAttributeOrderConfigWidget() {
-  delete d; d = 0;
+  delete d;
 }
 
 void Kleo::DNAttributeOrderConfigWidget::load() {

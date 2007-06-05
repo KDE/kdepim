@@ -153,7 +153,7 @@ namespace Kleo {
 
   private:
     class Private;
-    Private * d;
+    Private *const d;
   protected:
     virtual void virtual_hook( int, void* );
   };
@@ -180,7 +180,7 @@ namespace Kleo {
 
   private:
     class Private;
-    Private * d;
+    Private *const d;
   protected:
     virtual void virtual_hook( int, void* );
   };
@@ -218,7 +218,7 @@ namespace Kleo {
 
   private:
     class Private;
-    Private * d;
+    Private *const d;
   protected:
     virtual void virtual_hook( int, void* );
   };
