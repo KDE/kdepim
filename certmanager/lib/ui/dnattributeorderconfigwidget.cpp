@@ -105,9 +105,9 @@ Kleo::DNAttributeOrderConfigWidget::DNAttributeOrderConfigWidget( DNAttributeMap
   d->currentLV->setSorting( -1 );
   glay->addWidget( d->currentLV, row, 2 );
 
-  connect( d->availableLV, SIGNAL(selectionChanged(QListViewItem*)),
+  connect( d->availableLV, SIGNAL(clicked( QListViewItem * )),
 	   SLOT(slotAvailableSelectionChanged(QListViewItem*)) );
-  connect( d->currentLV, SIGNAL(selectionChanged(QListViewItem*)),
+  connect( d->currentLV, SIGNAL(clicked(QListViewItem*)),
 	   SLOT(slotCurrentOrderSelectionChanged(QListViewItem*)) );
 
   d->placeHolderItem = new QListViewItem( d->availableLV, "_X_", i18n("All others") );
