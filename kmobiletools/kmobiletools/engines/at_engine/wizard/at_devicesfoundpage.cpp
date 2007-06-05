@@ -72,7 +72,7 @@ void AT_DevicesFoundPage::initializePage()
     QListWidgetItem *newlwitem;
     while(it.hasNext()) {
         curitem=it.next();
-        newlwitem=new QListWidgetItem( curitem->manufacturerString() + " " + curitem->model() , phonesListWidget() );
+        newlwitem=new QListWidgetItem( curitem->manufacturerString() + ' ' + curitem->model() , phonesListWidget() );
         newlwitem->setData(Qt::UserRole+1, curitem->property("devicePath").toString() ); /// @TODO replace with some model/view stuff
         newlwitem->setData(Qt::UserRole+2, curitem->imei() ); /// @TODO as above...
     }
