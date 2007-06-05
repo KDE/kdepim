@@ -76,11 +76,10 @@ static void prepare( Q3ListView * lv ) {
 }
 
 Kleo::DNAttributeOrderConfigWidget::DNAttributeOrderConfigWidget( DNAttributeMapper * mapper, QWidget * parent, const char * name, Qt::WFlags f )
-  : QWidget( parent, f ), d( 0 )
+  : QWidget( parent, f ), d( new Private() )
 {
   setObjectName(name);
   assert( mapper );
-  d = new Private();
   d->mapper = mapper;
 
   QGridLayout * glay = new QGridLayout( this );
@@ -109,9 +108,9 @@ Kleo::DNAttributeOrderConfigWidget::DNAttributeOrderConfigWidget( DNAttributeMap
   d->currentLV->setSorting( -1 );
   glay->addWidget( d->currentLV, row, 2 );
 
-  connect( d->availableLV, SIGNAL(selectionChanged(Q3ListViewItem*)),
+  connect( d->availableLV, SIGNAL(clicked(Q3ListViewItem*)),
 	   SLOT(slotAvailableSelectionChanged(Q3ListViewItem*)) );
-  connect( d->currentLV, SIGNAL(selectionChanged(Q3ListViewItem*)),
+  connect( d->currentLV, SIGNAL(clicked(Q3ListViewItem*)),
 	   SLOT(slotCurrentOrderSelectionChanged(Q3ListViewItem*)) );
 
   d->placeHolderItem = new Q3ListViewItem( d->availableLV, "_X_", i18n("All others") );
