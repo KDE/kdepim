@@ -1805,7 +1805,9 @@ attendee publishes his free/busy schedule, and if &korganizer; is correctly
 configured to retrieve it. For more information about configuring &korganizer;
 to publish and retrieve free/busy information, please check the
 <xref linkend="config" />. Double-clicking on an attendee entry in the list
-will allow you to enter the location of their free/busy information.
+will allow you to enter the location of their free/busy information. You can move
+the event to a different point in time by dragging it with the mouse, or resize it,
+by moving the edges of the highlighted area with the mouse.
 </para>
 
 <variablelist>
