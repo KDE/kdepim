@@ -1109,6 +1109,12 @@ view configuration</link>, it may also reflect its
 will be able to quickly identify the type of event by its color.
 </para>
 
+<para>
+The aganda view can display events from all your calendars merged into one view or
+show a view per calendar. Having both views available via tabs is also possible and
+can be <link linkend="config-main-views">customized in the preferences dialog</link>.
+</para>
+
 <sect3 id="day-view">
 <title>Day View</title>
 
@@ -1213,6 +1219,18 @@ you can identify the type of event (or resource) by its color.
 menu item or pressing the <guilabel><inlinemediaobject><imageobject><imagedata fileref="i_view_month.png"
  format="PNG"/></imageobject></inlinemediaobject>Month</guilabel> button
 in the toolbar.</para>
+
+</sect2>
+
+<sect2 id="timeline-view">
+<title>Timeline View</title>
+
+<para> The timeline view shows all events for the selected timespan in a gantt
+view. Every calendar is displayed in a separate line. </para>
+
+<para>Hover your mouse over any calendar item to display a tooltip with the
+item details. Double click an empty area to create an event, double
+click any calendar item to edit it.</para>
 
 </sect2>
 
@@ -1800,14 +1818,16 @@ sending the invitations.</para>
 <para>This tab shows the free/busy schedule chart on the right, where each line
 represents one of the attendees, listed on the left. The marked areas on the
 chart represent the time already taken by other events, unmarked areas represent
-time free from other events. The free/busy information is only available if the
+time free from other events. You can move the event to a different point in time
+by dragging it with the mouse, or resize it, by moving the edges of the highlighted
+area with the mouse.</para>
+
+<para>The free/busy information is only available if the
 attendee publishes his free/busy schedule, and if &korganizer; is correctly
 configured to retrieve it. For more information about configuring &korganizer;
 to publish and retrieve free/busy information, please check the
 <xref linkend="config" />. Double-clicking on an attendee entry in the list
-will allow you to enter the location of their free/busy information. You can move
-the event to a different point in time by dragging it with the mouse, or resize it,
-by moving the edges of the highlighted area with the mouse.
+will allow you to enter the location of their free/busy information. 
 </para>
 
 <variablelist>
@@ -1858,10 +1878,46 @@ among the <link linkend="reference-action-buttons">Action Buttons</link>,
 <sect2 id="entering-data-events-attachments">
 <title><guilabel>Attachments</guilabel> Tab</title>
 
-<para>Some to-dos require attachments. You can <guibutton>Add...</guibutton>, 
-<guibutton>Edit...</guibutton>, <guibutton>Remove</guibutton>, and
-<guibutton>Show</guibutton> attachments. You can refer to the attachment by
-entering the &URI; (path or Internet address) to the attachment.</para>
+<screenshot id="screenshot-event-attachments">
+<screeninfo>A screenshot of &korganizer;'s Edit Event dialog - Attachments tab</screeninfo>
+<mediaobject>
+<imageobject><imagedata fileref="event-attachments.png" format="PNG"/></imageobject>
+<textobject><phrase>A screenshot of &korganizer;'s Edit Event dialog - Attachments tab</phrase></textobject>
+<caption><para>A screenshot of &korganizer;'s Edit Event dialog - Attachments tab</para></caption>
+</mediaobject>
+</screenshot>
+
+<para>Events and to-dos can contain attachments. Attachments can either be stored as links
+or inline. The following actions are provided to work with attachments:</para>
+
+<variablelist>
+
+<varlistentry>
+<term><guibutton>Add URI...</guibutton></term>
+<listitem><para>Adds a link attachment.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guibutton>Add File...</guibutton></term>
+<listitem><para>Adds an inline attachment.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guibutton>Edit...</guibutton></term>
+<listitem><para>Allows to change an existing attachment.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guibutton>Remove</guibutton></term>
+<listitem><para>Deletes the selected attachment.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guibutton>Show</guibutton></term>
+<listitem><para>Display the selected attachment.</para></listitem>
+</varlistentry>
+
+</variablelist>
 
 <para>When you want to confirm, call off or revert the entered data, choose
 among the <link linkend="reference-action-buttons">Action Buttons</link>,
@@ -2568,6 +2624,15 @@ will allow you to keep control of which information is available only to you, an
 </listitem>
 </varlistentry>
 
+<varlistentry>
+<term><guilabel>Default email attachment method</guilabel></term>
+<listitem><para>This option allows you to select the way an email is attached to
+an event. You can attach an email the complete email including attachments, the email
+excluding attachments or only a link to the email.</para>
+<para>Note that attaching an email without attachments might invalidate its signature.
+</para></listitem>
+</varlistentry>
+
 </variablelist>
 
 </sect2>
@@ -2743,6 +2808,13 @@ as &korganizer; default configuration is to use the same color for
 all resources.</para></listitem>
 </varlistentry>
 
+<varlistentry>
+<term><guilabel>Agenda view calendar display</guilabel></term>
+<listitem><para>
+Select if all calendars should be merged into one agenda view, each calendar should
+be displayed in its own aganda view or if both view should be available via tabs.
+</para></listitem>
+</varlistentry>
 
 </variablelist>
 
