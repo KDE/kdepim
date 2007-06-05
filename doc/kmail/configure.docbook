@@ -647,7 +647,7 @@ so you can choose a monospaced font for the date field for better readability.</
 <guilabel>Recycle colors on deep quoting</guilabel> means that even text that is
 quoted more than three times will appear in color. Note that the
 <guilabel>Quoted text</guilabel> colors only work in the message reader, not in
-the composer. If you want folders which are close to their quota 
+the composer. If you want folders which are close to their quota
 (space alotment, usually used on IMAP servers) to be displayed in a different color,
 you can specify a percentage value as a threshold for this. The color to be used
 can be configured along with the other custom colors.<!-- TODO --></para>
@@ -1914,7 +1914,7 @@ option is selected.</para>
 <sect2 id="configure-non-gui-options">
 <title>Options without a user interface representation</title>
 <para>
-Apart from the options presented in the configuration dialog, some options 
+Apart from the options presented in the configuration dialog, some options
 can only be set directly in the configuration file ($KDEHOME/share/config/kmailrc)
 or through KIOSK.
 </para>
@@ -1925,13 +1925,13 @@ or through KIOSK.
 <term><guilabel>Send Message Distribution Notifications with an empty sender string (SendMDNsWithEmptySender)</guilabel></term>
 <listitem>
 <para>
-Send Message Disposition Notifications with an empty sender string. Some servers might be configured to reject 
+Send Message Disposition Notifications with an empty sender string. Some servers might be configured to reject
 such messages, so if you are experiencing problems sending MDNs, make sure this option is set to false. To
 enable this feature, add a line reading:
 
 SendMDNsWithEmptySender=true
 
-to the [MDN] section of the kmail configuration file. If there is no such section, simply add "[MDN]" on 
+to the [MDN] section of the kmail configuration file. If there is no such section, simply add "[MDN]" on
 a line by itself just above the option.
 
 Note that the default setting of "false" strictly speaking violates internet standards, but is
@@ -1965,6 +1965,19 @@ of forwarding as attachement.
 To enable the feature, add a line reading (under [Composer] section):
 </para>
 <programlisting>ForwardingInlineByDefault=true
+</programlisting>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>disregardUmask</guilabel></term>
+<listitem>
+<para>
+This option allows you to disregard the users umask setting and use "read-write for the user only".
+
+To enable the feature, add a line reading (under [General] section):
+</para>
+<programlisting>disregardUmask=false
 </programlisting>
 </listitem>
 </varlistentry>
