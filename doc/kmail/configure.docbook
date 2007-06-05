@@ -647,7 +647,10 @@ so you can choose a monospaced font for the date field for better readability.</
 <guilabel>Recycle colors on deep quoting</guilabel> means that even text that is
 quoted more than three times will appear in color. Note that the
 <guilabel>Quoted text</guilabel> colors only work in the message reader, not in
-the composer.<!-- TODO --></para>
+the composer. If you want folders which are close to their quota 
+(space alotment, usually used on IMAP servers) to be displayed in a different color,
+you can specify a percentage value as a threshold for this. The color to be used
+can be configured along with the other custom colors.<!-- TODO --></para>
 
 </sect2>
 
