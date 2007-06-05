@@ -427,6 +427,8 @@ if(!availData) availData=MAXBUFSIZE; // fix for rfcomm wrong size
     \fn SerialManager::speed(int value)
  */
  /// @TODO have to move this somewhere...
+ /// @TODO better baudrate management
+
 void SerialManager::setSpeed(int value)
 {
     switch( value ){
@@ -434,15 +436,18 @@ void SerialManager::setSpeed(int value)
             d->m_baudrate=QSerial::BAUD_9600;
             break;
         case 1:
-            d->m_baudrate= QSerial::BAUD_38400;
+            d->m_baudrate= QSerial::BAUD_19200;
             break;
         case 2:
-            d->m_baudrate= QSerial::BAUD_57600;
+            d->m_baudrate= QSerial::BAUD_38400;
             break;
         case 3:
-            d->m_baudrate= QSerial::BAUD_115200;
+            d->m_baudrate= QSerial::BAUD_57600;
             break;
         case 4:
+            d->m_baudrate= QSerial::BAUD_115200;
+            break;
+        case 5:
             d->m_baudrate= QSerial::BAUD_230400;
             break;
         default:
