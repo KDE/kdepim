@@ -591,7 +591,7 @@ void UpdateSMS::addToList( ATSMS *sms )
 
     if ( sms->isMultiPart() )
     {
-        ATSMS *smsit;
+        ATSMS *smsit = 0;
         for ( int i=0; i<smsList->size(); i++ )
         {
             smsit=(ATSMS*) smsList->at(i);
