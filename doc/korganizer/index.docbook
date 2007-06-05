@@ -2239,6 +2239,12 @@ list subscribers who use &korganizer; get the concert date automatically
 inserted in their calendar.
 </para>
 
+<para>Publishing an event as described above will only inform the receiver about
+the event, but not give her the option to ask for attendance. Use
+<menuchoice><guimenu>Schedule</guimenu><guimenuitem>Send as iCalendar...</guimenuitem></menuchoice>
+if you want to provide that option instead.
+</para>
+
 </sect1>
 
 
