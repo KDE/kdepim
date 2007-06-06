@@ -14,7 +14,7 @@ find_package(ZLIB REQUIRED)
 find_package(Strigi REQUIRED)
 
 if(Q_WS_X11)
-   macro_log_feature(X11_Xss_LIB "libXss" "X Window Screen Saver Development Library" "http://xorg.freedesktop.org" FALSE "" "Required to build the KTimeTracker Program")
+   macro_log_feature(X11_Xscreensaver_LIB "libXss" "X Window Screen Saver Development Library" "http://xorg.freedesktop.org" FALSE "" "Required to build the KTimeTracker Program")
 endif(Q_WS_X11)
 
 #we require the gpgme package for Unix.
