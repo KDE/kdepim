@@ -2288,9 +2288,12 @@ choosing the <menuchoice><guimenu>Schedule</guimenu><guimenuitem>Send Invitation
 to Attendees</guimenuitem></menuchoice> menu item.
 The attendees get an email containing all the relevant information
 for the event or to-do. They can respond to the meeting proposal by accepting or
-rejecting it or by making a counter proposal. All this information is sent to
-you by email again and, if you have configured &kmail; appropriately,
-the attendees responses are automatically inserted in your calendar.
+rejecting it or by making a counter proposal. They can also delegate or forward the 
+invitation.
+All this information is sent to you by email again and, if you have configured &kmail; 
+appropriately the attendees responses are automatically inserted in your calendar. If
+there are additional attendees willing to participate (e.g. by accepting a forwarded 
+invitation) you will be asked to accept the new attendees.
 </para>
 
 </sect2>
@@ -2337,7 +2340,12 @@ view</link>.</para>
 <guibutton>Accept</guibutton> or <guibutton>Accept Cond.</guibutton>. The
 last two actions will insert the item to your calendar. In any case, &kmail; will
 send your response to the organizer automatically.</para>
-
+<para>You can also <guibutton>Delegate</guibutton> or <guibutton>Forward</guibutton> 
+the invitation. When delegating, you can suggest another person as your representative.
+Using <guibutton>Forward</guibutton> you can forward the invitation to one or more 
+people not yet invited.
+When the receiver of the delegation or forward accepts the invitation, 
+the organizer will be asked to approve the new attendee.</para>
 <para>If for any reason you changed your mind, edit your status in the item's
 <link linkend="entering-data-events-attendees">attendee tab</link>. If you
 checked the <guilabel>Use Groupware Communication</guilabel> box
