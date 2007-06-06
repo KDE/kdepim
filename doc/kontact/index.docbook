@@ -332,7 +332,9 @@ object.</para>
 </caption>
 </mediaobject>
 </screenshot>
-
+<para>
+Another common action is the <guimenuitem>Synchronize</guimenuitem> action. It synchronizes mail and groupware folders depending on the active component. E.g., if the Calendar component is active, the button synchronizes all Calendar folders. In the Summary, the action synchronizes all folders independent of their content. 
+</para>
 </sect1>
 
 <sect1 id="side-pane-drag-and-drop">
