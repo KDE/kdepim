@@ -18,7 +18,7 @@ SET(kabcclient_SRCS
 
 kde4_automoc(${kabcclient_SRCS})
 
-kde4_add_executable(kabcclient ${kabcclient_SRCS})
+kde4_add_executable(kabcclient NOGUI ${kabcclient_SRCS})
 
 target_link_libraries(kabcclient ${KDE4_KDECORE_LIBS} ${KDE4_KABC_LIBS} ${KDE4_KDEUI_LIBS} )
 
