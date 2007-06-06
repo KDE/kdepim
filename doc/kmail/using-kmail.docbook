@@ -439,6 +439,12 @@ Trash</guimenuitem></menuchoice>. You can use
 <menuchoice><guimenu>Folder</guimenu><guimenuitem>Delete Folder</guimenuitem></menuchoice>
 to remove a folder and all its messages and subfolders.</para>
 
+<para>Folders can be copied or moved by using either drag and drop or the <menuchoice>
+<guimenuitem>Copy Folder</guimenuitem></menuchoice> and <menuchoice>
+<guimenuitem>Move Folder</guimenuitem></menuchoice> context menu entries. Note that you cannot
+move the above listed special folders.
+</para>
+
 <sect2 id="folders-properties-window">
 <title>Folder Properties</title>
 
@@ -479,6 +485,14 @@ example useful for the folder where you move all detected spam messages to.</par
 <para>Check <guilabel>Keep replies in this folder</guilabel> if you want
 replies to messages in this folder to be filed also into this folder rather 
 than into a special sent-mail folder.</para>
+
+<para>For calendar folders you can select who should get reminders for the contained
+events by using the <guilabel>Generate free/busy and activate alarms for</guilabel>
+choice box.</para>
+
+<para>In case you don't want to receive reminders for folders shared by someone else,
+you can block them locally by activating the <guilabel>Block free/busy and alarms locally</guilabel>
+checkbox.</para>
 
 </sect3>
 
