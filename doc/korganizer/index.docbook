@@ -2341,7 +2341,7 @@ view</link>.</para>
 last two actions will insert the item to your calendar. In any case, &kmail; will
 send your response to the organizer automatically.</para>
 <para>You can also <guibutton>Delegate</guibutton> or <guibutton>Forward</guibutton> 
-the invitation. When delegating, you can suggest another person as your representative.
+the invitation. When delegating, you can suggest another person as your proxy.
 Using <guibutton>Forward</guibutton> you can forward the invitation to one or more 
 people not yet invited.
 When the receiver of the delegation or forward accepts the invitation, 
