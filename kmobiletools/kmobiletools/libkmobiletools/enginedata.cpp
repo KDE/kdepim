@@ -49,7 +49,6 @@ EngineData::EngineData(KMobileTools::Engine *parentEngine)
 {
     d->engine=parentEngine;
     if(d->engine) d->p_smsList=new SMSList(d->engine->objectName() );
-        else d->p_smsList=0;
     d->p_addresseeList = new ContactsList();
     d->p_calendar=new KCal::Event::List();
 }
@@ -62,7 +61,7 @@ EngineData::~EngineData()
     delete d;
 }
 
-KMobileTools::Engine *EngineData::engine() { return d->engine; }
+//KMobileTools::Engine *EngineData::engine() { return d->engine; }
 
 #include "enginedata.moc"
 
@@ -70,7 +69,7 @@ QString EngineData::manufacturerString() const { return d->s_manufacturer;}
 void EngineData::setManufacturerString(const QString &s) { d->s_manufacturer=s;}
 
 void EngineData::setManufacturer(int i) { d->i_manufacturer=i; }
-int EngineData::manufacturer() { return d->i_manufacturer; }
+int EngineData::manufacturer() const { return d->i_manufacturer; }
 
 void EngineData::setModel(const QString &s) { d->s_model=s;}
 QString EngineData::model() const { return d->s_model; }
@@ -88,7 +87,7 @@ KCal::Event::List *EngineData::calendar() { return d->p_calendar; }
 
 SMSList *EngineData::smsList() const { return d->p_smsList; }
 
-ContactsList *EngineData::contactsList() { return d->p_addresseeList; }
+ContactsList *EngineData::contactsList() const { return d->p_addresseeList; }
 void EngineData::setContactsList(ContactsList* cl) { d->p_addresseeList=cl; }
 
 

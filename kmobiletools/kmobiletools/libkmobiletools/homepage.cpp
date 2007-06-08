@@ -217,10 +217,10 @@ void homepagePart::printInfoPage(int i, const QString &mobileName, KMobileTools:
         htmlData+="<ul><li><b>%1</b></li></ul>";
         htmlData=htmlData.arg(i18n("Phone details") );
         htmlData+="<p><b>%1</b> %2</p><p><b>%3</b> %4</p><p><b>%5</b> %6</p><p><b>%7</b> %8</p><div align='right'><a href=\"infopage:0\">%9</a></div>";
-        htmlData=htmlData.arg(i18n("Manufacturer: ") ).arg(engine->engineData()->manufacturerString() )
-            .arg(i18n("Model: ") ).arg(engine->engineData()->model() )
-            .arg(i18n("IMEI: ") ).arg(engine->engineData()->imei() )
-            .arg(i18n("Revision: ") ).arg(engine->engineData()->revision() )
+        htmlData=htmlData.arg(i18n("Manufacturer: ") ).arg(engine->constEngineData().manufacturerString() )
+            .arg(i18n("Model: ") ).arg(engine->constEngineData().model() )
+            .arg(i18n("IMEI: ") ).arg(engine->constEngineData().imei() )
+            .arg(i18n("Revision: ") ).arg(engine->constEngineData().revision() )
             .arg(i18n("Phone overview") );
         break;
     case 2:
@@ -233,7 +233,7 @@ void homepagePart::printInfoPage(int i, const QString &mobileName, KMobileTools:
     default:
         if( engine->isConnected() )
         {
-            SMSList *l=engine->engineData()->smsList();
+            SMSList *l=engine->constEngineData().smsList();
             htmlData+="<ul><li><b>%8</b></li></ul><p>%1 %2</p><p>%3 %4</p><div align='right'><a href=\"infopage:1\">%7</a></div>";
             htmlData=htmlData
                     .arg( QString("<a href=\"%1:sms\">").arg( devname ) +
@@ -243,7 +243,7 @@ void homepagePart::printInfoPage(int i, const QString &mobileName, KMobileTools:
                         ( l->count( SMS::Unread, SMS::Phone | SMS::SIM) ) ) + "</a>")
 //                     .arg( htmlIcon("phonecall",-K3Icon::SizeSmallMedium) ).arg("No new calls")
                     .arg(  QString("<a href=\"%1:phonebook\">").arg(devname ) + htmlIcon("personal",-K3Icon::SizeSmallMedium) )
-                    .arg(i18np("%1 contact stored in phonebook.", "%1 contacts stored in phonebook.", engine->engineData()->contactsList()->count())
+                    .arg(i18np("%1 contact stored in phonebook.", "%1 contacts stored in phonebook.", engine->constEngineData().contactsList()->count())
                     ) + "</a>";
         } else
         {

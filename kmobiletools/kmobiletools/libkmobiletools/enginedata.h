@@ -44,7 +44,7 @@ namespace KMobileTools {
              */
             EngineData(Engine *parentEngine);
             ~EngineData();
-            Engine *engine();
+            //Engine *engine();
         /**
          * Retrieves the phone manufacturer string, as returned by the mobile phone.
          * @return a QString containing the phone manufacturer.
@@ -66,7 +66,7 @@ namespace KMobileTools {
          * @return the manufacturer ID
          * @todo Change function name (manufacturerId)
          */
-        int manufacturer();
+        int manufacturer() const;
 
         /**
          * Retrieves the phone model.
@@ -109,7 +109,7 @@ namespace KMobileTools {
          * Retrieves the phone contact list.
          * @return phone contact list
          */
-        ContactsList* contactsList();
+        ContactsList* contactsList() const;
         void setContactsList(ContactsList*); // @TODO better usage
 
 

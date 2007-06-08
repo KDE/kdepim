@@ -121,7 +121,7 @@ QString KMobiletoolsHelper::translateNumber( const QString &s_number )
     for( ; it!=itEnd; ++it)
     {
         engine = *it;
-        retval=translateNumber(s_number, engine->engineData()->contactsList() );
+        retval=translateNumber(s_number, engine->constEngineData().contactsList() );
         if(  retval != s_number ) return retval;
     }
     retval=translateNumber(s_number, new ContactsList( KABC::StdAddressBook::self()->allAddressees () ) );

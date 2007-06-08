@@ -76,7 +76,7 @@ public:
         bool b_connected;
         bool b_ownweaver;
 
-        KMobileTools::EngineData *enginedata;
+        KMobileTools::EngineData enginedata;
 
 };
 
@@ -84,19 +84,19 @@ Engine::Engine( QObject *parent, const QString &name)
     : QObject(parent), d(new EnginePrivate)
 {
     setObjectName(name);
-    d->enginedata=new EngineData(this);
+
 //     b_ownweaver=ownWeaver;
     /*if(ownWeaver) */d->weaver=new KMobileTools::Weaver(this/*, name, 2, 2*/);
 //     else weaver=ThreadWeaver::Weaver::instance();
     d->p_diffSMSList=new SMSList();
     connect(d->weaver, SIGNAL(jobDone(KMobileTools::Job*) ), SLOT(processSlot(KMobileTools::Job*) ) );
     connect(d->weaver, SIGNAL(suspended() ), this, SLOT(slotWeaverSuspended() ) );
-    connect(engineData()->smsList(), SIGNAL(added( const QByteArray& )), SIGNAL(smsAdded( const QByteArray& ) )); // @TODO move
-    connect(engineData()->smsList(), SIGNAL(removed( const QByteArray& )), SIGNAL(smsDeleted( const QByteArray& ))); // @TODO move
-    connect(engineData()->smsList(), SIGNAL(modified( const QByteArray& )), SIGNAL(smsModified( const QByteArray& ))); // @TODO move
+    connect(engineData().smsList(), SIGNAL(added( const QByteArray& )), SIGNAL(smsAdded( const QByteArray& ) )); // @TODO move
+    connect(engineData().smsList(), SIGNAL(removed( const QByteArray& )), SIGNAL(smsDeleted( const QByteArray& ))); // @TODO move
+    connect(engineData().smsList(), SIGNAL(modified( const QByteArray& )), SIGNAL(smsModified( const QByteArray& ))); // @TODO move
     connect(this, SIGNAL(connected()), this, SLOT(slotDevConnected() ));
     connect(this, SIGNAL(disconnected()), this, SLOT(slotDevDisconnected()));
-    engineData()->setManufacturer(Unknown);
+    engineData().setManufacturer(Unknown);
     d->s_newSMS = 0;
     d->s_totalSMS = 0;
     d->i_suspendStatusJobs=0;
@@ -104,7 +104,14 @@ Engine::Engine( QObject *parent, const QString &name)
     d->b_connected=false;
 }
 
-KMobileTools::EngineData *Engine::engineData() { return d->enginedata; }
+
+KMobileTools::EngineData& Engine::engineData() {
+    return d->enginedata;
+}
+
+const KMobileTools::EngineData& Engine::constEngineData() const {
+    return static_cast<const EngineData&>( d->enginedata );
+}
 
 
 Engine::~Engine()
@@ -117,7 +124,7 @@ Engine::~Engine()
 
 //     delete p_addresseeList;
     delete d->p_diffSMSList;
-    delete d->enginedata;
+
     EnginesList::instance()->remove( this );
     delete d;
 }

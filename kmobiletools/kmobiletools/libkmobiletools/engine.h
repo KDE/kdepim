@@ -96,7 +96,12 @@ class KMOBILETOOLS_EXPORT Engine : public QObject
          */
         virtual ~Engine();
 
-        KMobileTools::EngineData *engineData();
+        /**
+         * Returns a const reference to the engine's data
+         *
+         * @return a const reference to EngineData
+         */
+        const KMobileTools::EngineData& constEngineData() const;
 
         KMobileTools::Weaver *ThreadWeaver();
         /**
@@ -252,6 +257,9 @@ class KMOBILETOOLS_EXPORT Engine : public QObject
 
     private:
         EnginePrivate *const d;
+
+    protected:
+        KMobileTools::EngineData& engineData();
 
     protected Q_SLOTS:
         virtual void slotDevConnected();

@@ -1,9 +1,7 @@
 
 add_subdirectory( libkmobiletoolsengineui )
 add_subdirectory( at_engine )
-
-message(STATUS "${CMAKE_CURRENT_SOURCE_DIR}: skipped subdir $(DIRGAMMU)")
-
+#add_subdirectory( gammu_engine )
 
 #original Makefile.am contents follow:
 
