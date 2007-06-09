@@ -102,7 +102,7 @@ class KMOBILETOOLS_EXPORT Engine : public QObject
          *
          * @return a const reference to EngineData
          */
-        const KMobileTools::EngineData& constEngineData() const;
+        const KMobileTools::EngineData* constEngineData() const;
 
         /**
          * Returns the engine's ThreadWeaver instance
@@ -279,11 +279,11 @@ class KMOBILETOOLS_EXPORT Engine : public QObject
 
     protected:
         /**
-         * Returns a reference to the engine's data.
+         * Returns a pointer to the engine's data.
          *
          * @return the engine's data
          */
-        KMobileTools::EngineData& engineData();
+        KMobileTools::EngineData* engineData();
 
     protected Q_SLOTS:
         /**

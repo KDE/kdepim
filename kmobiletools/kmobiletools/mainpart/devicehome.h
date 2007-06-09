@@ -123,15 +123,15 @@ public:
     bool isConnected() { return devIsConnected; }
     void stopDevice();
     void resumeDevice();
-    QString deviceVendor() { return engine->constEngineData().manufacturer(); } // @TODO remove me
-    QString deviceModel() { return engine->constEngineData().model(); } // @TODO remove me
+    QString deviceVendor() { return engine->constEngineData()->manufacturer(); } // @TODO remove me
+    QString deviceModel() { return engine->constEngineData()->model(); } // @TODO remove me
     QString friendlyName();
     static QStringList parseAddressee(const KABC::Addressee &addressee);
     void raiseDevice();
     bool openFile() { return false; }
     QWidget *widget() { return m_widget;}
     QList<QAction*> actionList() { return l_actionList;}
-    SMSList *smsList() { return engine->constEngineData().smsList(); }
+    SMSList *smsList() { return engine->constEngineData()->smsList(); }
     void setupWidgets();
     kmobiletoolsMainPart *parent() { return (kmobiletoolsMainPart *) QObject::parent(); }
     KCal::CalendarLocal * calendar() { return p_calendar; }

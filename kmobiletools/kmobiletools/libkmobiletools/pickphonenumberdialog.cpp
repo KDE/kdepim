@@ -92,7 +92,7 @@ void PickPhoneNumberDialog::slotSourceChanged(int index)
     else
     {
         KMobileTools::Engine *engine= KMobileTools::EnginesList::instance()->find( d->ui.pbSource->itemText(index), true );
-        if(engine) d->addresseeList=engine->constEngineData().contactsList(); else d->addresseeList=0;
+        if(engine) d->addresseeList=engine->constEngineData()->contactsList(); else d->addresseeList=0;
     }
     updateNumbersList();
 }
@@ -107,7 +107,7 @@ void PickPhoneNumberDialog::updatePhonebook()
         d->addresseeList=0;
         return;
     }
-    d->addresseeList=engine->constEngineData().contactsList();
+    d->addresseeList=engine->constEngineData()->contactsList();
     updateNumbersList();
 }
 /*!

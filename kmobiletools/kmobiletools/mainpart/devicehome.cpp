@@ -316,10 +316,10 @@ void DeviceHome::loadEngine()
         emit deleteThis( objectName() );
         return;
     }
-    connect(&(engine->constEngineData()), SIGNAL(connected()), this, SLOT(devConnected()) );
-    connect(&(engine->constEngineData()), SIGNAL(disconnected()), this, SLOT(devDisconnected() ) );
-    connect(&(engine->constEngineData()), SIGNAL(connected()), this, SLOT(enableWidgets() ) );
-    connect(&(engine->constEngineData()), SIGNAL(disconnected() ), this, SLOT(disableWidgets() ) );
+    connect(engine->constEngineData(), SIGNAL(connected()), this, SLOT(devConnected()) );
+    connect(engine->constEngineData(), SIGNAL(disconnected()), this, SLOT(devDisconnected() ) );
+    connect(engine->constEngineData(), SIGNAL(connected()), this, SLOT(enableWidgets() ) );
+    connect(engine->constEngineData(), SIGNAL(disconnected() ), this, SLOT(disableWidgets() ) );
     connect(engine, SIGNAL(phoneBookChanged() ), SLOT(updatePB()) );
     connect(engine, SIGNAL(phoneBookChanged(int, const ContactsList& ) ), SLOT(updatePB(int, const ContactsList& ) ) );
     connect(engine, SIGNAL(smsFoldersAdded() ), SLOT(addSMSFolders()) );
@@ -330,7 +330,7 @@ void DeviceHome::loadEngine()
     connect(engine, SIGNAL(fullPhonebook()), this, SLOT(fullPhonebook()) );
     connect(p_smsPart, SIGNAL(getSMSList() ), engine, SLOT( slotFetchSMS() ) );
     connect(p_smsPart, SIGNAL(remove( SMS* ) ), engine, SLOT(slotDelSMS( SMS* ) ) );
-    connect(engine->constEngineData().smsList(), SIGNAL(updated()), this, SLOT(updateSMSList() ) );
+    connect(engine->constEngineData()->smsList(), SIGNAL(updated()), this, SLOT(updateSMSList() ) );
     connect(engine, SIGNAL(jobFinished(KMobileTools::Job::JobType)), this, SLOT(jobDone(KMobileTools::Job::JobType)));
 #ifdef HAVE_KCAL
     connect(engine, SIGNAL(calendarParsed() ), this, SLOT(slotCalendarFetched() ) );
@@ -468,14 +468,14 @@ void DeviceHome::updateAllContacts()
         p_engine = *it;
         if( engine && QString(p_engine->objectName())==QString(engine->objectName())) continue;
         kDebug() << "DevicePart " << objectName() << ": adding contacts from engine " << p_engine->objectName() << endl;
-        updateAllContacts( p_engine->constEngineData().contactsList() );
+        updateAllContacts( p_engine->constEngineData()->contactsList() );
     }
 }
 
 void DeviceHome::jobDone(KMobileTools::Job::JobType jobtype)
 {
     if(jobtype==KMobileTools::Job::fetchAddressBook) emit phonebookUpdated();
-    int newsmscnt=engine->constEngineData().smsList()->count(SMS::Unread, SMS::SIM | SMS::Phone );
+    int newsmscnt=engine->constEngineData()->smsList()->count(SMS::Unread, SMS::SIM | SMS::Phone );
 
     if(newsmscnt && engine->ThreadWeaver()->isEmpty() && engine->ThreadWeaver()->isIdle() && newsmscnt!=smsnotifynum) {
         smsnotifynum=newsmscnt;
@@ -491,7 +491,7 @@ void DeviceHome::updatePB()
 //     updating without partial updates should ALWAYS clear the listview...
     ui.phonebookListView->clear();
 //     p_addressbook->clear();
-    ContactsList *phoneBook =engine->constEngineData().contactsList();
+    ContactsList *phoneBook =engine->constEngineData()->contactsList();
     /*    if (!(phoneBook->count() ) ) return;*/
 //     p_addressDetails->stopFetch();
 //     ui.phonebookListView->clear();
@@ -600,7 +600,7 @@ void DeviceHome::smsSelected(Q3ListViewItem *smsItem)
  */
 void DeviceHome::slotAddContact()
 {
-    editAddressee *new_contact=new editAddressee( engine->constEngineData().manufacturerID(), engine->availPbSlots() );
+    editAddressee *new_contact=new editAddressee( engine->constEngineData()->manufacturerID(), engine->availPbSlots() );
     if (new_contact->exec() == QDialog::Accepted )
     {
         KABC::Addressee::List abclist;
@@ -613,7 +613,7 @@ void DeviceHome::slotAddContact()
 
 void DeviceHome::slotEditContact(const KABC::Addressee &p_addressee)
 {
-    editAddressee *new_contact=new editAddressee(p_addressee, engine->constEngineData().manufacturerID(), engine->availPbSlots());
+    editAddressee *new_contact=new editAddressee(p_addressee, engine->constEngineData()->manufacturerID(), engine->availPbSlots());
     if (new_contact->exec() == QDialog::Accepted )
         engine->slotEditAddressee(p_addressee, new_contact->getAddressee());
     delete new_contact;
@@ -673,7 +673,7 @@ void DeviceHome::slotFetchPhonebook()
 
 void DeviceHome::slotSavePhonebook()
 {
-    exportPhonebookDlg *exportDlg=new exportPhonebookDlg(engine->constEngineData().contactsList() );
+    exportPhonebookDlg *exportDlg=new exportPhonebookDlg(engine->constEngineData()->contactsList() );
     exportDlg->exec();
 }
 
@@ -689,7 +689,7 @@ void DeviceHome::slotUploadAddressBook()
     if(abcDialog->deletePhoneBook() )
     {
         KABC::Addressee::List toDeleteList;
-        ContactsList *phoneBook =engine->constEngineData().contactsList();
+        ContactsList *phoneBook =engine->constEngineData()->contactsList();
         for (KABC::Addressee::List::ConstIterator it=phoneBook->begin(); it != phoneBook->end(); ++it)
             toDeleteList.append(*it);
         engine->slotDelAddressee( toDeleteList);
@@ -782,12 +782,12 @@ void DeviceHome::smsAdded(const QByteArray& smsUID)
     updateSMSCount();
     home->printInfoPage( home->currentInfoPage(), engine );
     kDebug( ) << "DeviceHome::smsAdded(" << smsUID << ")\n";
-    SMSList *smsList = engine->constEngineData().smsList();
+    SMSList *smsList = engine->constEngineData()->smsList();
     int newSMSIndex=smsList->find( smsUID );
     if(newSMSIndex<0) return;
     SMS *newSMS=smsList->at(newSMSIndex);
     if( !(newSMS->slot() & memslotSelected) || ! (newSMS->type() & smsTypeSelected)  ) return;
-    new SMSListViewItem( ui.SMSListView, newSMS, engine->constEngineData().contactsList() );
+    new SMSListViewItem( ui.SMSListView, newSMS, engine->constEngineData()->contactsList() );
 }
 
 void DeviceHome::raisePage(int page)
@@ -811,7 +811,7 @@ void DeviceHome::smsRemoved(const QByteArray& smsUID)
 //     return;
     updateSMSCount();
     home->printInfoPage( home->currentInfoPage(), engine );
-    SMSList *smsList = engine->constEngineData().smsList();
+    SMSList *smsList = engine->constEngineData()->smsList();
     int oldSMSIndex=smsList->find( smsUID );
     if(oldSMSIndex<0) return;
     SMS *oldSMS=smsList->at(oldSMSIndex);
@@ -845,7 +845,7 @@ void DeviceHome::smsFolderClicked( Q3ListViewItem * item )
 
 void DeviceHome::updateSMSList()
 {
-    SMSList *smsList = engine->constEngineData().smsList();
+    SMSList *smsList = engine->constEngineData()->smsList();
     ui.SMSListView->clear();
     SMS *newSMS;
 //     K3ListViewItem *newSMSItem;
@@ -854,7 +854,7 @@ void DeviceHome::updateSMSList()
     {
         newSMS=(*it);
         if( !(newSMS->slot() & memslotSelected) || ! (newSMS->type() & smsTypeSelected)  ) continue;
-        new SMSListViewItem( ui.SMSListView, newSMS, engine->constEngineData().contactsList() );
+        new SMSListViewItem( ui.SMSListView, newSMS, engine->constEngineData()->contactsList() );
     }
     updateSMSCount();
 
@@ -919,13 +919,13 @@ void DeviceHome::openURL(const KUrl &url)
 void DeviceHome::updateSMSCount()
 {
     if(!engine) return;
-    engine->constEngineData().smsList()->calcSMSNumber();
+    engine->constEngineData()->smsList()->calcSMSNumber();
     Q3ListViewItemIterator it( ui.SMSFolderView );
     SMSFolderListViewItem *tempItem;
     while ( it.current() ) {
         tempItem=(SMSFolderListViewItem*) it.current();
-        tempItem->setText(1, QString::number(engine->constEngineData().smsList()->count( ( tempItem->smsType() & (SMS::Unread | SMS::Unsent) ), tempItem->memSlot() ) ) );
-        tempItem->setText(2,QString::number(engine->constEngineData().smsList()->count( tempItem->smsType(), tempItem->memSlot() ) ) );
+        tempItem->setText(1, QString::number(engine->constEngineData()->smsList()->count( ( tempItem->smsType() & (SMS::Unread | SMS::Unsent) ), tempItem->memSlot() ) ) );
+        tempItem->setText(2,QString::number(engine->constEngineData()->smsList()->count( tempItem->smsType(), tempItem->memSlot() ) ) );
         ++it;
     }
 }
@@ -1024,7 +1024,7 @@ void DeviceHome::slotExportSMSList()
 {
 //     if ( KMobileTools::MainConfig::self()->maildir() )
     KMobileTools::KMobiletoolsHelper::createMailDir( objectName() );
-    engine->constEngineData().smsList()->saveToMailBox();
+    engine->constEngineData()->smsList()->saveToMailBox();
     kDebug() << "STARTING SMS EXPORT\n";
     KMessageBox::information( m_widget, i18n("<qt>SMS List for the mobile phone <b>%1</b> was exported to KMail default directory (%2).<br>To view exported messages, close and reopen KMail.</qt>", DEVCFG(objectName() )->devicename(), DEVCFG(objectName() )->maildir_path() ), i18n("SMS List Exported."), "smslistexported_infobox" );
 }
@@ -1037,7 +1037,7 @@ void DeviceHome::slotExportSMSListToCSV()
     int result;
     
     kDebug() << "STARTING SMS EXPORT TO CSV\n";
-    result = engine->constEngineData().smsList()->saveToCSV();
+    result = engine->constEngineData()->smsList()->saveToCSV();
     if (result >= 1) {
         KMessageBox::information( m_widget, i18n("<qt>SMS List for the mobile phone <b>%1</b> was exported to the selected Directory.</qt>", DEVCFG(objectName() )->devicename() ), i18n("SMS List Exported."), "smslistexportedtocsv_infobox" );
     }
@@ -1064,7 +1064,7 @@ void DeviceHome::slotStatusBar()
     signalLabel=new QLabel(i18n("Signal"), statusBarExtension->statusBar());
     if(!engine) return;
     connect(engine, SIGNAL(charge(int ) ), batteryProgress, SLOT(setValue(int ) ) );
-    connect(&(engine->constEngineData()), SIGNAL(signalStrengthChanged( int ) ), signalProgress, SLOT(setValue( int ) ) );
+    connect(engine->constEngineData(), SIGNAL(signalStrengthChanged( int ) ), signalProgress, SLOT(setValue( int ) ) );
     connect(engine, SIGNAL(networkNameChanged( const QString &) ), networkLabel, SLOT(setText(const QString& ) ) );
 //     connect(engine, SIGNAL( jobEnqueued(KMobileTools::Job *) ), statusBarBox, SLOT(slotJobEnqueued(KMobileTools::Job* ) ) );
 }
@@ -1076,7 +1076,7 @@ void DeviceHome::slotStatusBar()
 void DeviceHome::slotSaveAddressBook()
 {
     /** @TODO fix kabc saving
-    if( engine->constEngineData().contactsList()->isEmpty() ) return;
+    if( engine->constEngineData()->contactsList()->isEmpty() ) return;
     KABC::AddressBook *p_addressbook;
 //     KABCResFile *p_resourcefile;
     QString filename=KGlobal::dirs()->saveLocation( "data", "kmobiletools", true).append( "%1.vcf" ).arg(objectName() );
@@ -1101,8 +1101,8 @@ void DeviceHome::slotSaveAddressBook()
     p_addressbook->addResource( p_resourcefile);
     p_addressbook->load();
     p_addressbook->clear();
-    KABC::Addressee::List::ConstIterator pbit=engine->constEngineData().contactsList()->begin();
-    KABC::Addressee::List::ConstIterator pbend=engine->constEngineData().contactsList()->end();
+    KABC::Addressee::List::ConstIterator pbit=engine->constEngineData()->contactsList()->begin();
+    KABC::Addressee::List::ConstIterator pbend=engine->constEngineData()->contactsList()->end();
     for(; pbit != pbend; ++pbit)
     {
         p_addressbook->insertAddressee(*pbit);
@@ -1150,7 +1150,7 @@ void DeviceHome::slotRing( bool ringing)
 void DeviceHome::slotDial()
 {
     if( !ui.number_dial->currentText().length()) return;
-    if(! engine->constEngineData().phoneConnected())
+    if(! engine->constEngineData()->phoneConnected())
     {
         errNotConnected();
         return;

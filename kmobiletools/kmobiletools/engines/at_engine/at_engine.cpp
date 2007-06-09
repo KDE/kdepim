@@ -55,7 +55,7 @@ AT_Engine::AT_Engine(QObject *parent, const QString &name)
     device=NULL;
 //     p_smsList = new SMSList();
     queue_sms=false;
-    connect( this, SIGNAL(engineData().connected()), this, SLOT(slotFetchInfos()) );
+    connect( this, SIGNAL(engineData()->connected()), this, SLOT(slotFetchInfos()) );
 }
 
 
@@ -115,7 +115,7 @@ void AT_Engine::slotInitPhone()
         return;
     } else kDebug() << "Device found on " << foundDevice()->foundPath() << endl;
     */
-    device=new KMobileTools::SerialManager(this, this->objectName(), engineData().property("devicePath").toString(), initStrings() );
+    device=new KMobileTools::SerialManager(this, this->objectName(), engineData()->property("devicePath").toString(), initStrings() );
     connect(device, SIGNAL(disconnected()), this, SLOT(connectionStateChanged()));
     connect(device, SIGNAL(error()), SIGNAL(error() ) );
     p_lastJob=new initPhoneJob(device, this);
@@ -135,31 +135,31 @@ void AT_Engine::processSlot(KMobileTools::Job* job)
     switch( job->type() ){
         case KMobileTools::Job::initPhone:
             kDebug() << "Device is connected: " << device->isConnected() << endl;
-            engineData().setPhoneConnected( device->isConnected() );
+            engineData()->setPhoneConnected( device->isConnected() );
             break;
         case KMobileTools::Job::pollStatus:
-            engineData().setSignalStrength( ((PollStatus*) job)->phoneSignal() );
+            engineData()->setSignalStrength( ((PollStatus*) job)->phoneSignal() );
             emit chargeChanged( ((PollStatus*) job)->phoneCharge() );
             emit chargeTypeChanged( ((PollStatus*) job)->phoneChargeType() );
             emit ringing( ((PollStatus*) job)->ringing() );
             break;
         case KMobileTools::Job::fetchPhoneInfos:
-            engineData().setManufacturer( ( (FetchPhoneInfos*) job )->rawManufacturer() );
-            engineData().setModel( ( (FetchPhoneInfos*) job )->model() );
-            engineData().setRevision (( (FetchPhoneInfos*) job )->revision() );
-            engineData().setIMEI( ( (FetchPhoneInfos*) job )->imei() );
-            engineData().setSMSCenter(( (FetchPhoneInfos*) job )->smsCenter() );
-            if(! engineData().smsCenter().isNull() ) emit networkNameChanged( i18n("Network: %1",PickSMSCenter::smsCenterName (engineData().smsCenter() ) ) );
-            if ( engineData().manufacturer().contains( "Siemens", Qt::CaseInsensitive ) ) engineData().setManufacturerID( Siemens);
-            if ( engineData().manufacturer().contains( "Motorola", Qt::CaseInsensitive ) ) engineData().setManufacturerID ( Motorola);
-            if ( engineData().manufacturer().contains( "Ericsson", Qt::CaseInsensitive ) ) engineData().setManufacturerID ( SonyEricsson);
-            wconfig->setRawdevicename( engineData().model() );
-            wconfig->setRawdevicevendor( engineData().manufacturer() );
+            engineData()->setManufacturer( ( (FetchPhoneInfos*) job )->rawManufacturer() );
+            engineData()->setModel( ( (FetchPhoneInfos*) job )->model() );
+            engineData()->setRevision (( (FetchPhoneInfos*) job )->revision() );
+            engineData()->setIMEI( ( (FetchPhoneInfos*) job )->imei() );
+            engineData()->setSMSCenter(( (FetchPhoneInfos*) job )->smsCenter() );
+            if(! engineData()->smsCenter().isNull() ) emit networkNameChanged( i18n("Network: %1",PickSMSCenter::smsCenterName (engineData()->smsCenter() ) ) );
+            if ( engineData()->manufacturer().contains( "Siemens", Qt::CaseInsensitive ) ) engineData()->setManufacturerID( Siemens);
+            if ( engineData()->manufacturer().contains( "Motorola", Qt::CaseInsensitive ) ) engineData()->setManufacturerID ( Motorola);
+            if ( engineData()->manufacturer().contains( "Ericsson", Qt::CaseInsensitive ) ) engineData()->setManufacturerID ( SonyEricsson);
+            wconfig->setRawdevicename( engineData()->model() );
+            wconfig->setRawdevicevendor( engineData()->manufacturer() );
             wconfig->writeConfig();
             break;
         case KMobileTools::Job::fetchAddressBook:
             suspendStatusJobs(false);
-            engineData().setContactsList( (ContactsList*) &((FetchAddressee*) job )->fullAddresseeList() );
+            engineData()->setContactsList( (ContactsList*) &((FetchAddressee*) job )->fullAddresseeList() );
 //                 kDebug() << "trying to call KMobileTools::EnginesList::instance()->emitPhonebookUpdated();\n";
 //                 KMobileTools::EnginesList::instance()->emitPhonebookUpdated();
 //                 if( ! ((FetchAddressee*) job )->partialUpdates() )
@@ -168,7 +168,7 @@ void AT_Engine::processSlot(KMobileTools::Job* job)
         case KMobileTools::Job::fetchSMS:
             diffSMSList()->append(  ((FetchSMS*) job)->smsList );
             if( ((FetchSMS*) job)->last()) {
-                engineData().smsList()->sync(diffSMSList() );
+                engineData()->smsList()->sync(diffSMSList() );
                 queue_sms=false;
 //                  p_smsList->dump();
 //                  p_diffSMSList->dump();
@@ -220,7 +220,7 @@ void AT_Engine::processSlot(KMobileTools::Job* job)
                 kDebug() << "Probe finished: phone found in " << ((TestPhoneDeviceJob*)job)->path() << endl;
                 while(!l_testphonejobs.isEmpty())
                     ThreadWeaver()->dequeue(l_testphonejobs.takeFirst());
-                engineData().setProperty("devicePath", ((TestPhoneDeviceJob*)job)->path());
+                engineData()->setProperty("devicePath", ((TestPhoneDeviceJob*)job)->path());
                 slotInitPhone();
             }
             kDebug() << "jobs remaining: " << l_testphonejobs.count() << endl;
@@ -711,6 +711,6 @@ void AT_Engine::searchPhones(Connection connections, const QStringList &bluetoot
 }
 
 void AT_Engine::connectionStateChanged() {
-    engineData().setPhoneConnected( device->isConnected() );
+    engineData()->setPhoneConnected( device->isConnected() );
 }
 
