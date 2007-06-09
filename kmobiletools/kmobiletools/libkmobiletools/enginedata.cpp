@@ -97,7 +97,13 @@ QString EngineData::revision() const { return d->s_revision; }
 
 KCal::Event::List *EngineData::calendar() { return d->p_calendar; }
 
-SMSList *EngineData::smsList() const { return d->p_smsList; }
+const SMSList* EngineData::constSMSList() const {
+    return d->p_smsList;
+}
+
+SMSList* EngineData::smsList() const {
+    return d->p_smsList;
+}
 
 ContactsList *EngineData::contactsList() const { return d->p_addresseeList; }
 void EngineData::setContactsList(ContactsList* cl) { d->p_addresseeList=cl; }

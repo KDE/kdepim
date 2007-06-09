@@ -330,7 +330,7 @@ void DeviceHome::loadEngine()
     connect(engine, SIGNAL(fullPhonebook()), this, SLOT(fullPhonebook()) );
     connect(p_smsPart, SIGNAL(getSMSList() ), engine, SLOT( slotFetchSMS() ) );
     connect(p_smsPart, SIGNAL(remove( SMS* ) ), engine, SLOT(slotDelSMS( SMS* ) ) );
-    connect(engine->constEngineData()->smsList(), SIGNAL(updated()), this, SLOT(updateSMSList() ) );
+    connect(engine->constEngineData()->constSMSList(), SIGNAL(updated()), this, SLOT(updateSMSList() ) );
     connect(engine, SIGNAL(jobFinished(KMobileTools::Job::JobType)), this, SLOT(jobDone(KMobileTools::Job::JobType)));
 #ifdef HAVE_KCAL
     connect(engine, SIGNAL(calendarParsed() ), this, SLOT(slotCalendarFetched() ) );
@@ -475,7 +475,7 @@ void DeviceHome::updateAllContacts()
 void DeviceHome::jobDone(KMobileTools::Job::JobType jobtype)
 {
     if(jobtype==KMobileTools::Job::fetchAddressBook) emit phonebookUpdated();
-    int newsmscnt=engine->constEngineData()->smsList()->count(SMS::Unread, SMS::SIM | SMS::Phone );
+    int newsmscnt=engine->constEngineData()->constSMSList()->count(SMS::Unread, SMS::SIM | SMS::Phone );
 
     if(newsmscnt && engine->ThreadWeaver()->isEmpty() && engine->ThreadWeaver()->isIdle() && newsmscnt!=smsnotifynum) {
         smsnotifynum=newsmscnt;
@@ -782,7 +782,7 @@ void DeviceHome::smsAdded(const QByteArray& smsUID)
     updateSMSCount();
     home->printInfoPage( home->currentInfoPage(), engine );
     kDebug( ) << "DeviceHome::smsAdded(" << smsUID << ")\n";
-    SMSList *smsList = engine->constEngineData()->smsList();
+    const SMSList *smsList = engine->constEngineData()->constSMSList();
     int newSMSIndex=smsList->find( smsUID );
     if(newSMSIndex<0) return;
     SMS *newSMS=smsList->at(newSMSIndex);
@@ -811,7 +811,7 @@ void DeviceHome::smsRemoved(const QByteArray& smsUID)
 //     return;
     updateSMSCount();
     home->printInfoPage( home->currentInfoPage(), engine );
-    SMSList *smsList = engine->constEngineData()->smsList();
+    const SMSList *smsList = engine->constEngineData()->constSMSList();
     int oldSMSIndex=smsList->find( smsUID );
     if(oldSMSIndex<0) return;
     SMS *oldSMS=smsList->at(oldSMSIndex);
@@ -845,16 +845,14 @@ void DeviceHome::smsFolderClicked( Q3ListViewItem * item )
 
 void DeviceHome::updateSMSList()
 {
-    SMSList *smsList = engine->constEngineData()->smsList();
     ui.SMSListView->clear();
-    SMS *newSMS;
-//     K3ListViewItem *newSMSItem;
-//     smsList->dump();
-    for ( QList<SMS*>::Iterator it=smsList->begin(); it!=smsList->end(); ++it )
+
+    QListIterator<SMS*> it( *(engine->constEngineData()->constSMSList()) );
+
+    while( it.hasNext() )
     {
-        newSMS=(*it);
-        if( !(newSMS->slot() & memslotSelected) || ! (newSMS->type() & smsTypeSelected)  ) continue;
-        new SMSListViewItem( ui.SMSListView, newSMS, engine->constEngineData()->contactsList() );
+        if( !(it.next()->slot() & memslotSelected) || ! (it.next()->type() & smsTypeSelected)  ) continue;
+        new SMSListViewItem( ui.SMSListView, it.next(), engine->constEngineData()->contactsList() );
     }
     updateSMSCount();
 
@@ -919,13 +917,13 @@ void DeviceHome::openURL(const KUrl &url)
 void DeviceHome::updateSMSCount()
 {
     if(!engine) return;
-    engine->constEngineData()->smsList()->calcSMSNumber();
+    engine->constEngineData()->constSMSList()->calcSMSNumber();
     Q3ListViewItemIterator it( ui.SMSFolderView );
     SMSFolderListViewItem *tempItem;
     while ( it.current() ) {
         tempItem=(SMSFolderListViewItem*) it.current();
-        tempItem->setText(1, QString::number(engine->constEngineData()->smsList()->count( ( tempItem->smsType() & (SMS::Unread | SMS::Unsent) ), tempItem->memSlot() ) ) );
-        tempItem->setText(2,QString::number(engine->constEngineData()->smsList()->count( tempItem->smsType(), tempItem->memSlot() ) ) );
+        tempItem->setText(1, QString::number(engine->constEngineData()->constSMSList()->count( ( tempItem->smsType() & (SMS::Unread | SMS::Unsent) ), tempItem->memSlot() ) ) );
+        tempItem->setText(2,QString::number(engine->constEngineData()->constSMSList()->count( tempItem->smsType(), tempItem->memSlot() ) ) );
         ++it;
     }
 }
@@ -1024,7 +1022,7 @@ void DeviceHome::slotExportSMSList()
 {
 //     if ( KMobileTools::MainConfig::self()->maildir() )
     KMobileTools::KMobiletoolsHelper::createMailDir( objectName() );
-    engine->constEngineData()->smsList()->saveToMailBox();
+    engine->constEngineData()->constSMSList()->saveToMailBox();
     kDebug() << "STARTING SMS EXPORT\n";
     KMessageBox::information( m_widget, i18n("<qt>SMS List for the mobile phone <b>%1</b> was exported to KMail default directory (%2).<br>To view exported messages, close and reopen KMail.</qt>", DEVCFG(objectName() )->devicename(), DEVCFG(objectName() )->maildir_path() ), i18n("SMS List Exported."), "smslistexported_infobox" );
 }
@@ -1037,7 +1035,7 @@ void DeviceHome::slotExportSMSListToCSV()
     int result;
     
     kDebug() << "STARTING SMS EXPORT TO CSV\n";
-    result = engine->constEngineData()->smsList()->saveToCSV();
+    result = engine->constEngineData()->constSMSList()->saveToCSV();
     if (result >= 1) {
         KMessageBox::information( m_widget, i18n("<qt>SMS List for the mobile phone <b>%1</b> was exported to the selected Directory.</qt>", DEVCFG(objectName() )->devicename() ), i18n("SMS List Exported."), "smslistexportedtocsv_infobox" );
     }

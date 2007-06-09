@@ -27,6 +27,7 @@
 #include "kmobiletools_cfg.h"
 #include "devicesconfig.h"
 
+#include <QListIterator>
 
 class SMSListPrivate {
 public:
@@ -67,18 +68,17 @@ void SMSList::append( SMSList *sublist, bool sync)
 /*!
     \fn SMSList::find(int uid)
  */
-int SMSList::find(const QByteArray &uid)
+int SMSList::find(const QByteArray &uid) const
 {
-    int found=0;
-    SMS *tempSMS=0;
-    QList<SMS*>::iterator it;
-    for(it=begin(); it!=end(); ++it)
-    {
-        tempSMS=*it;
-        if(tempSMS->uid() == uid)
+    int found = 0;
+
+    QListIterator<SMS*> it( *this );
+    while( it.hasNext() ) {
+        if( it.next()->uid() == uid )
             return found;
         found++;
     }
+
     return -1;
 }
 
@@ -120,7 +120,7 @@ void SMSList::sync (SMSList *compList)
 //     return ( ((SMS*) item1)->uid()== ((SMS*) item2)->uid() );
 // }
 
-void SMSList::dump()
+void SMSList::dump() const
 {
     SMS *tempSMS;
     int i=0;
@@ -135,7 +135,7 @@ void SMSList::dump()
 //     kDebug() << "SMSList::dump(): Unread=" << i_unread << "; Read=" << i_read << "; Sent=" << i_sent << "; Unsent=" << i_unsent << endl;
 }
 
-void SMSList::calcSMSNumber()
+void SMSList::calcSMSNumber() const
 {
     resetCount();
     SMS *tempSMS;
@@ -169,7 +169,7 @@ void SMSList::calcSMSNumber()
     }
 }
 
-int SMSList::count(int smsType, int memSlot)
+int SMSList::count(int smsType, int memSlot) const
 {
     int result=0;
     if( (smsType & SMS::Unread) )
@@ -210,7 +210,7 @@ void SMSList::saveToMailBox(const QString &engineName)
 /*!
     \fn SMSList::saveToMailBox()
  */
-void SMSList::saveToMailBox()
+void SMSList::saveToMailBox() const
 {
     QDir savedir=(KMobileTools::DevicesConfig::prefs(engineName() ))->maildir_path();
     QString dir=savedir.dirName();
@@ -243,7 +243,7 @@ int SMSList::saveToCSV(const QString &engineName)
  */
 
 /// @TODO Check if we can remove dialog windows out of this class, emitting insteada signal.
-int SMSList::saveToCSV()
+int SMSList::saveToCSV() const
 {
     QString dir=QDir::homePath();
     QListIterator<SMS*> it(*this);
@@ -297,7 +297,7 @@ void SMSList::append( SMS *item )
     connect(item, SIGNAL(updated()), this, SIGNAL(updated()) );
 }
 
-void SMSList::resetCount() {
+void SMSList::resetCount() const {
     d->i_unread_phone=d->i_unread_sim=d->i_read_phone=d->i_read_sim=d->i_unsent_phone=d->i_unsent_sim=d->i_sent_phone=d->i_sent_sim=0;
 }
 

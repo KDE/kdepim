@@ -41,12 +41,12 @@ public:
     ~SMSList();
     void append(SMSList *sublist, bool sync=false);
     void append(SMS *sms);
-    int find(const QByteArray &uid);
+    int find(const QByteArray &uid) const;
     void sync (SMSList *compList);
-    void dump();
-    void calcSMSNumber();
-    int count(int smsType, int memSlot);
-    void resetCount();
+    void dump() const;
+    void calcSMSNumber() const;
+    int count(int smsType, int memSlot) const;
+    void resetCount() const;
     void setEngineName(const QString &enginename);
     QString engineName() const ;
 protected:
@@ -62,9 +62,9 @@ Q_SIGNALS:
 
 public Q_SLOTS:
     void saveToMailBox(const QString &engineName);
-    void saveToMailBox();
+    void saveToMailBox() const;
     int saveToCSV(const QString &engineName);
-    int saveToCSV();
+    int saveToCSV() const;
 };
 
 #endif

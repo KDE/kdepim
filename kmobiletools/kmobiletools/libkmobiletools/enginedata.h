@@ -236,13 +236,20 @@ namespace KMobileTools {
             void setContactsList( ContactsList* contactsList );
 
             /**
-             * The engine internal list of retrieved SMS
+             * Returns the fetched sms list for reading and writing
              *
              * @return a SMSList object containing all fetched SMS.
              *
-             * @TODO make this method return a const reference
              */
             SMSList* smsList() const;
+
+            /**
+             * Returns the fetched sms list for reading
+             *
+             * @return a SMSList object containing all fetched SMS.
+             *
+             */
+            const SMSList* constSMSList() const;
 
             /**
              * Retrieves the phone calendar.
@@ -258,7 +265,7 @@ namespace KMobileTools {
             * This signal is emitted when the phone is disconnected.
             */
             void disconnected();
-    
+
             /**
             * This signal is emitted when the phone is connected.
             */

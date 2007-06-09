@@ -233,7 +233,7 @@ void homepagePart::printInfoPage(int i, const QString &mobileName, KMobileTools:
     default:
         if( engine->constEngineData()->phoneConnected() )
         {
-            SMSList *l=engine->constEngineData()->smsList();
+            const SMSList *l=engine->constEngineData()->constSMSList();
             htmlData+="<ul><li><b>%8</b></li></ul><p>%1 %2</p><p>%3 %4</p><div align='right'><a href=\"infopage:1\">%7</a></div>";
             htmlData=htmlData
                     .arg( QString("<a href=\"%1:sms\">").arg( devname ) +
