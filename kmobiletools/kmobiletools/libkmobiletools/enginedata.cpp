@@ -33,6 +33,8 @@ class EngineDataPrivate {
     public:
         EngineDataPrivate() : engine(NULL), i_manufacturer(KMobileTools::Engine::Unknown) {}
         KMobileTools::Engine *engine;
+        bool b_connected;               // phone connected?
+        int i_signalStrength;           // signal strength in percent
         QString s_manufacturer;         // manufacturer raw string
         int i_manufacturer;             // enum value?
         QString s_model;                // phone model
@@ -90,4 +92,28 @@ SMSList *EngineData::smsList() const { return d->p_smsList; }
 ContactsList *EngineData::contactsList() const { return d->p_addresseeList; }
 void EngineData::setContactsList(ContactsList* cl) { d->p_addresseeList=cl; }
 
+void EngineData::setPhoneConnected( bool b ) {
+    // did the connection state change?
+    if( d->b_connected != b ) {
+        if( b )
+            emit connected();
+        else
+            emit disconnected();
+    }
 
+    d->b_connected=b;
+}
+bool EngineData::phoneConnected() const {
+    return d->b_connected;
+}
+
+int EngineData::signalStrength() const {
+    return d->i_signalStrength;
+}
+
+void EngineData::setSignalStrength( int signalStrength ) {
+    if( signalStrength != d->i_signalStrength )
+        emit signalStrengthChanged( signalStrength );
+
+    d->i_signalStrength = signalStrength;
+}

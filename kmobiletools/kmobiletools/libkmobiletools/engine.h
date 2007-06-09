@@ -156,12 +156,6 @@ class KMOBILETOOLS_EXPORT Engine : public QObject
         int smsSlot();
 
         /**
-         * Retrieves if phone is connected.
-         *
-         * @return true if phone is connected.
-         */
-        bool phoneConnected();
-        /**
          * Shows if mobile phone can encode text in PDU mode.
          *
          * @return true if mobile phone is PDU able.
@@ -292,8 +286,6 @@ class KMOBILETOOLS_EXPORT Engine : public QObject
         KMobileTools::EngineData& engineData();
 
     protected Q_SLOTS:
-        void setPhoneConnected(bool);
-
         /**
          * This slot is called whenever an enqueued job has been finished.
          * Reimplement this method to further process the data that the job
@@ -308,15 +300,6 @@ class KMOBILETOOLS_EXPORT Engine : public QObject
          * This signal is emitted when KMobileTools finish a task.
          */
         void jobFinished( KMobileTools::Job::JobType );
-        /**
-         * This signal is emitted when the phone is disconnected.
-         */
-        void disconnected();
-
-        /**
-         * This signal is emitted when the phone is connected.
-         */
-        void connected();
 
         /**
          * This signal is emitted when an error is occurred.
@@ -327,13 +310,6 @@ class KMOBILETOOLS_EXPORT Engine : public QObject
          * This signal is emitted when a SMS folder is added
          */
         void smsFoldersAdded();
-
-        /**
-         * This signal is emitted every phone poll.
-         *
-         * @param signalStrength the signal level in percentual.
-         */
-        void signalStrengthChanged( int signalStrength );
 
         /**
          * This signal is emitted every phone poll.

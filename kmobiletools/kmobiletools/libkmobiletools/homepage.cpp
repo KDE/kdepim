@@ -172,7 +172,7 @@ void homepagePart::printIndexPage()
             deviceIFace=new DeviceIFace_stub( kapp->dcopClient(), "kmobiletools", Q3CString((*it).latin1() ) );
             if ( deviceIFace->isConnected() )
 #endif
-            if ( KMobileTools::EnginesList::instance()->find(*it)->phoneConnected() ) // ### FIXME
+            if ( KMobileTools::EnginesList::instance()->find(*it)->constEngineData().phoneConnected() ) // ### FIXME
                 stringStatus=i18n("Device connected");
             else
             {
@@ -231,7 +231,7 @@ void homepagePart::printInfoPage(int i, const QString &mobileName, KMobileTools:
                 .arg(i18n("Please wait while KMobileTools tries to find the right device for your mobile phone.") );
         break;
     default:
-        if( engine->phoneConnected() )
+        if( engine->constEngineData().phoneConnected() )
         {
             SMSList *l=engine->constEngineData().smsList();
             htmlData+="<ul><li><b>%8</b></li></ul><p>%1 %2</p><p>%3 %4</p><div align='right'><a href=\"infopage:1\">%7</a></div>";

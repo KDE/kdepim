@@ -70,10 +70,6 @@ public:
 
         int i_suspendStatusJobs;
 
-        /**
-         * True if phone is connected.
-         */
-        bool b_connected;
         bool b_ownweaver;
 
         KMobileTools::EngineData enginedata;
@@ -99,7 +95,6 @@ Engine::Engine( QObject *parent, const QString &name)
     d->s_totalSMS = 0;
     d->i_suspendStatusJobs=0;
     EnginesList::instance()->append( this );
-    d->b_connected=false;
 }
 
 
@@ -264,7 +259,5 @@ Engine *Engine::load(const QString &libname, QObject *parent)
     return ret;
 }
 
-void Engine::setPhoneConnected(bool b) { d->b_connected=b; }
-bool Engine::phoneConnected() { return d->b_connected; }
 
 #include "engine.moc"

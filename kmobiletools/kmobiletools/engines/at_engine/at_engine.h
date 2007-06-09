@@ -96,6 +96,7 @@ public:
         void searchPhones(Connection connections, const QStringList &bluetoothDevices, const QStringList &customDevices);
         QList<TestPhoneDeviceJob*> l_testphonejobs;
         void enqueueTPJob(TestPhoneDeviceJob*);
+
 public slots:
     void slotPollStatus();
     void processSlot(KMobileTools::Job* );
@@ -129,6 +130,10 @@ public slots:
 protected slots:
     void slotFetchCalendar();
     void slotSwitchToFSMode();
+
+private slots:
+    void connectionStateChanged();
+
 signals:
     void foundDeviceData(FindDeviceDataJob*);
 };

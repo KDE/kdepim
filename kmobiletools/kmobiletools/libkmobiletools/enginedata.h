@@ -48,6 +48,34 @@ namespace KMobileTools {
             ~EngineData();
 
             /**
+            * Retrieves if phone is connected.
+            *
+            * @return true if phone is connected.
+            */
+            bool phoneConnected() const;
+
+            /**
+            * Sets if phone is connected.
+            *
+            * @return true if phone is connected.
+            */
+            void setPhoneConnected(bool);
+
+            /**
+             * Returns the phone's signal strength
+             * 
+             * @return the signal strength in percent
+             */
+            int signalStrength() const;
+
+            /**
+             * Sets the phone's signal strength
+             * 
+             * @p signalStrength the signal strength in percent
+             */
+            void setSignalStrength( int signalStrength );
+
+            /**
              * Sets phone manufacturer as returned by the mobile phone.
              *
              * @param manufacturer the manufacturer string.
@@ -167,6 +195,23 @@ namespace KMobileTools {
              */
             KCal::Event::List *calendar();
 
+        Q_SIGNALS:
+            /**
+            * This signal is emitted when the phone is disconnected.
+            */
+            void disconnected();
+    
+            /**
+            * This signal is emitted when the phone is connected.
+            */
+            void connected();
+
+            /**
+            * This signal is emitted whenever the signal strength has changed.
+            *
+            * @param signalStrength the signal level in percent
+            */
+            void signalStrengthChanged( int signalStrength );
 
         private:
             EngineDataPrivate *const d;

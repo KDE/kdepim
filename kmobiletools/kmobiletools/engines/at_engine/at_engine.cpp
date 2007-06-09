@@ -55,7 +55,7 @@ AT_Engine::AT_Engine(QObject *parent, const QString &name)
     device=NULL;
 //     p_smsList = new SMSList();
     queue_sms=false;
-    connect( this, SIGNAL(connected()), this, SLOT(slotFetchInfos()) );
+    connect( this, SIGNAL(engineData().connected()), this, SLOT(slotFetchInfos()) );
 }
 
 
@@ -116,7 +116,7 @@ void AT_Engine::slotInitPhone()
     } else kDebug() << "Device found on " << foundDevice()->foundPath() << endl;
     */
     device=new KMobileTools::SerialManager(this, this->objectName(), engineData().property("devicePath").toString(), initStrings() );
-    connect(device, SIGNAL(disconnected()), SIGNAL(disconnected() ) );
+    connect(device, SIGNAL(disconnected()), this, SLOT(connectionStateChanged()));
     connect(device, SIGNAL(error()), SIGNAL(error() ) );
     p_lastJob=new initPhoneJob(device, this);
     enqueueJob( p_lastJob );
@@ -135,10 +135,10 @@ void AT_Engine::processSlot(KMobileTools::Job* job)
     switch( job->type() ){
         case KMobileTools::Job::initPhone:
             kDebug() << "Device is connected: " << device->isConnected() << endl;
-            setPhoneConnected(device->isConnected() );
-            if( device->isConnected() ) emit connected(); break;
+            engineData().setPhoneConnected( device->isConnected() );
+            break;
         case KMobileTools::Job::pollStatus:
-            emit signalStrengthChanged( ((PollStatus*) job)->phoneSignal() );
+            engineData().setSignalStrength( ((PollStatus*) job)->phoneSignal() );
             emit chargeChanged( ((PollStatus*) job)->phoneCharge() );
             emit chargeTypeChanged( ((PollStatus*) job)->phoneChargeType() );
             emit ringing( ((PollStatus*) job)->ringing() );
@@ -710,5 +710,7 @@ void AT_Engine::searchPhones(Connection connections, const QStringList &bluetoot
             enqueueTPJob(new TestPhoneDeviceJob(*it, this) );
 }
 
-
+void AT_Engine::connectionStateChanged() {
+    engineData().setPhoneConnected( device->isConnected() );
+}
 

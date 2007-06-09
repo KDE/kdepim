@@ -316,10 +316,10 @@ void DeviceHome::loadEngine()
         emit deleteThis( objectName() );
         return;
     }
-    connect(engine, SIGNAL(connected()), this, SLOT(devConnected()) );
-    connect(engine, SIGNAL(disconnected()), this, SLOT(devDisconnected() ) );
-    connect(engine, SIGNAL(connected() ), this, SLOT(enableWidgets() ) );
-    connect(engine, SIGNAL(disconnected() ), this, SLOT(disableWidgets() ) );
+    connect(&(engine->constEngineData()), SIGNAL(connected()), this, SLOT(devConnected()) );
+    connect(&(engine->constEngineData()), SIGNAL(disconnected()), this, SLOT(devDisconnected() ) );
+    connect(&(engine->constEngineData()), SIGNAL(connected()), this, SLOT(enableWidgets() ) );
+    connect(&(engine->constEngineData()), SIGNAL(disconnected() ), this, SLOT(disableWidgets() ) );
     connect(engine, SIGNAL(phoneBookChanged() ), SLOT(updatePB()) );
     connect(engine, SIGNAL(phoneBookChanged(int, const ContactsList& ) ), SLOT(updatePB(int, const ContactsList& ) ) );
     connect(engine, SIGNAL(smsFoldersAdded() ), SLOT(addSMSFolders()) );
@@ -1064,7 +1064,7 @@ void DeviceHome::slotStatusBar()
     signalLabel=new QLabel(i18n("Signal"), statusBarExtension->statusBar());
     if(!engine) return;
     connect(engine, SIGNAL(charge(int ) ), batteryProgress, SLOT(setValue(int ) ) );
-    connect(engine, SIGNAL(signalStrengthChanged( int ) ), signalProgress, SLOT(setValue( int ) ) );
+    connect(&(engine->constEngineData()), SIGNAL(signalStrengthChanged( int ) ), signalProgress, SLOT(setValue( int ) ) );
     connect(engine, SIGNAL(networkNameChanged( const QString &) ), networkLabel, SLOT(setText(const QString& ) ) );
 //     connect(engine, SIGNAL( jobEnqueued(KMobileTools::Job *) ), statusBarBox, SLOT(slotJobEnqueued(KMobileTools::Job* ) ) );
 }
@@ -1150,7 +1150,7 @@ void DeviceHome::slotRing( bool ringing)
 void DeviceHome::slotDial()
 {
     if( !ui.number_dial->currentText().length()) return;
-    if(! engine->phoneConnected())
+    if(! engine->constEngineData().phoneConnected())
     {
         errNotConnected();
         return;
