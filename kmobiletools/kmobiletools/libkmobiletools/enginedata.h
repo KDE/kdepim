@@ -37,6 +37,8 @@ namespace KMobileTools {
     {
         Q_OBJECT
         public:
+            enum ChargeType { Unknown = -1, Battery = 0, ACAdaptor = 1 };
+
             /**
              * Creates a new EngineData object.
              * This class can store data from engines, emit signals when it changes,
@@ -74,6 +76,62 @@ namespace KMobileTools {
              * @p signalStrength the signal strength in percent
              */
             void setSignalStrength( int signalStrength );
+
+            /**
+             * Returns the phone's charge in percent
+             * 
+             * @return the phone's charge in percent
+             */
+            int charge() const;
+
+            /**
+             * Sets the phone's charge in percent
+             * 
+             * @p charge the phone's charge in percent
+             */
+            void setCharge( int charge );
+
+            /**
+             * Returns the phone's charge type
+             * 
+             * @return the phone's charge type
+             */
+            int chargeType() const;
+
+            /**
+             * Sets the phone's charge type
+             * 
+             * @p chargeType the phone's charge type
+             */
+            void setChargeType( ChargeType chargeType );
+
+            /**
+             * Returns whether the phone is ringing
+             * 
+             * @return true if the phone is ringing
+             */
+            bool phoneRinging() const;
+
+            /**
+             * Sets whether the phone is ringing
+             * 
+             * @p chargeType true if the phone is ringing
+             */
+            void setPhoneRinging( bool ringing );
+
+            /**
+             * Returns the network the phone is currently logged in
+             * 
+             * @return the network name
+             */
+            QString networkName() const;
+
+            /**
+             * Sets the network name the phone is currently logged in
+             * 
+             * @param networkName the network name
+             */
+            void setNetworkName( const QString& networkName );
 
             /**
              * Sets phone manufacturer as returned by the mobile phone.
@@ -212,6 +270,34 @@ namespace KMobileTools {
             * @param signalStrength the signal level in percent
             */
             void signalStrengthChanged( int signalStrength );
+
+            /**
+            * This signal is whenever the phone charge changes
+            *
+            * @param charge the charge level in percent
+            */
+            void chargeChanged( int charge );
+
+            /**
+            * This signal is emitted whenever the phone's charge type changed
+            *
+            * @param chargeType the charge type
+            */
+            void chargeTypeChanged( ChargeType chargeType );
+
+            /**
+            * This signal whenever the phone is ringing
+            *
+            * @param ringing true if phone is ringing
+            */
+            void ringing( bool ringing );
+
+            /**
+            * This signal is emitted whenever the current network changes
+            *
+            * @param name the name of the network.
+            */
+            void networkNameChanged( const QString& name );
 
         private:
             EngineDataPrivate *const d;

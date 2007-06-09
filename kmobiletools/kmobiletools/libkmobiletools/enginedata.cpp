@@ -33,17 +33,21 @@ class EngineDataPrivate {
     public:
         EngineDataPrivate() : engine(NULL), i_manufacturer(KMobileTools::Engine::Unknown) {}
         KMobileTools::Engine *engine;
-        bool b_connected;               // phone connected?
-        int i_signalStrength;           // signal strength in percent
-        QString s_manufacturer;         // manufacturer raw string
-        int i_manufacturer;             // enum value?
-        QString s_model;                // phone model
-        QString s_imei;                 // phone imei code
-        QString s_smscenter;            // SMS Center number
-        QString s_revision;             // Firmware revision
-        KCal::Event::List *p_calendar;  // Internal Calendar Events List
-        ContactsList* p_addresseeList;  // Phonebook Contacts List
-        SMSList *p_smsList;             // List of SMS fetched from the phone
+        bool b_connected;                           // phone connected?
+        int i_signalStrength;                       // signal strength in percent
+        int i_charge;                               // charge in percent
+        EngineData::ChargeType m_chargeType;        // charge type
+        bool b_ringing;                             // phone is ringing?
+        QString s_networkName;                      // network name
+        QString s_manufacturer;                     // manufacturer raw string
+        int i_manufacturer;                         // enum value?
+        QString s_model;                            // phone model
+        QString s_imei;                             // phone imei code
+        QString s_smscenter;                        // SMS Center number
+        QString s_revision;                         // Firmware revision
+        KCal::Event::List *p_calendar;              // Internal Calendar Events List
+        ContactsList* p_addresseeList;              // Phonebook Contacts List
+        SMSList *p_smsList;                         // List of SMS fetched from the phone
 };
 
 EngineData::EngineData(KMobileTools::Engine *parentEngine)
@@ -117,4 +121,48 @@ void EngineData::setSignalStrength( int signalStrength ) {
         emit signalStrengthChanged( signalStrength );
 
     d->i_signalStrength = signalStrength;
+}
+
+int EngineData::charge() const {
+    return d->i_charge;
+}
+
+void EngineData::setCharge( int charge ) {
+    if( charge != d->i_charge )
+        emit chargeChanged( charge );
+
+    d->i_charge = charge;
+}
+
+int EngineData::chargeType() const {
+    return d->m_chargeType;
+}
+
+void EngineData::setChargeType( ChargeType chargeType ) {
+    if( chargeType != d->m_chargeType )
+        emit chargeTypeChanged( chargeType );
+
+    d->m_chargeType = chargeType;
+}
+
+bool EngineData::phoneRinging() const {
+    return d->b_ringing;
+}
+
+void EngineData::setPhoneRinging( bool ringing ) {
+    if( ringing != d->b_ringing )
+        emit EngineData::ringing( ringing );
+
+    d->b_ringing = ringing;
+}
+
+QString EngineData::networkName() const {
+    return d->s_networkName;
+}
+
+void EngineData::setNetworkName( const QString& networkName ) {
+    if( networkName != d->s_networkName )
+        emit networkNameChanged( networkName );
+
+    d->s_networkName = networkName;
 }

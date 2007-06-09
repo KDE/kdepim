@@ -139,9 +139,9 @@ void AT_Engine::processSlot(KMobileTools::Job* job)
             break;
         case KMobileTools::Job::pollStatus:
             engineData()->setSignalStrength( ((PollStatus*) job)->phoneSignal() );
-            emit chargeChanged( ((PollStatus*) job)->phoneCharge() );
-            emit chargeTypeChanged( ((PollStatus*) job)->phoneChargeType() );
-            emit ringing( ((PollStatus*) job)->ringing() );
+            engineData()->setCharge( ((PollStatus*) job)->phoneCharge() );
+            engineData()->setChargeType( ((PollStatus*) job)->phoneChargeType() );
+            engineData()->setPhoneRinging( ((PollStatus*) job)->ringing() );
             break;
         case KMobileTools::Job::fetchPhoneInfos:
             engineData()->setManufacturer( ( (FetchPhoneInfos*) job )->rawManufacturer() );
@@ -149,7 +149,9 @@ void AT_Engine::processSlot(KMobileTools::Job* job)
             engineData()->setRevision (( (FetchPhoneInfos*) job )->revision() );
             engineData()->setIMEI( ( (FetchPhoneInfos*) job )->imei() );
             engineData()->setSMSCenter(( (FetchPhoneInfos*) job )->smsCenter() );
-            if(! engineData()->smsCenter().isNull() ) emit networkNameChanged( i18n("Network: %1",PickSMSCenter::smsCenterName (engineData()->smsCenter() ) ) );
+            if(! engineData()->smsCenter().isNull() )
+                engineData()->setNetworkName( i18n("Network: %1",
+                PickSMSCenter::smsCenterName (engineData()->smsCenter() ) ) );
             if ( engineData()->manufacturer().contains( "Siemens", Qt::CaseInsensitive ) ) engineData()->setManufacturerID( Siemens);
             if ( engineData()->manufacturer().contains( "Motorola", Qt::CaseInsensitive ) ) engineData()->setManufacturerID ( Motorola);
             if ( engineData()->manufacturer().contains( "Ericsson", Qt::CaseInsensitive ) ) engineData()->setManufacturerID ( SonyEricsson);

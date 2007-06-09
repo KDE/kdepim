@@ -308,31 +308,11 @@ class KMOBILETOOLS_EXPORT Engine : public QObject
 
         /**
          * This signal is emitted when a SMS folder is added
+         * 
+         * @TODO move this signal to engineData (and add a method to explicitly
+         * add and remove sms folders so the signal gets emitted automatically)
          */
         void smsFoldersAdded();
-
-        /**
-         * This signal is emitted every phone poll.
-         *
-         * @param charge the charge level in percentual.
-         */
-        void chargeChanged( int charge );
-
-        /**
-         * This signal is emitted every phone poll.
-         * Charge type is 1 when phone is connected to the adapter.
-         *
-         * @param chargeType the type of charge
-         */
-        void chargeTypeChanged( int chargeType );
-
-        /**
-         * This signal is emitted every phone poll.
-         *
-         * @param ringing true if phone is ringing
-         * @todo emit only if phone is ringing
-         */
-        void ringing( bool ringing );
 
         /**
          * This signal is emitted when the mobile's phone book has been changed.
@@ -345,13 +325,6 @@ class KMOBILETOOLS_EXPORT Engine : public QObject
          * This signal is emitted when the mobile's phone book has been changed.
          */
         void phoneBookChanged();
-
-        /**
-         * This signal is emitted every phone infos fetch.
-         *
-         * @param name the name of the network.
-         */
-        void networkNameChanged( const QString& name );
 
         /**
          * This signal is emitted when the engine is suspended.

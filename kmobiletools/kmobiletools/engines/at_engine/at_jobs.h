@@ -22,6 +22,7 @@
 #ifndef ATJOBSS_H
 #define ATJOBSS_H
 
+#include <libkmobiletools/enginedata.h>
 #include <libkmobiletools/engine.h>
 #include <libkmobiletools/sms.h>
 
@@ -93,14 +94,17 @@ class PollStatus : public kmobiletoolsATJob
     public:
       PollStatus (KMobileTools::Job *pjob, KMobileTools::SerialManager *device, AT_Engine* parent = 0 );
         int phoneCharge()     { return i_charge; }
-        int phoneChargeType() { return i_chargeType; }
+        KMobileTools::EngineData::ChargeType phoneChargeType() {
+            return m_chargeType;
+        }
         int phoneSignal()     { return i_signal; }
         bool ringing()        { return b_calling; }
         JobType type()            { return KMobileTools::Job::pollStatus; }
     protected:
         void run ();
     private:
-        int i_charge, i_signal, i_chargeType;
+        int i_charge, i_signal;
+        KMobileTools::EngineData::ChargeType m_chargeType;
         bool b_calling;
 };
 

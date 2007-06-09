@@ -192,7 +192,7 @@ void SelectCharacterSet::run ()
 
 
 PollStatus::PollStatus(KMobileTools::Job *pjob, KMobileTools::SerialManager *device, AT_Engine* parent) : kmobiletoolsATJob(pjob, device, parent)
-        , i_charge(0), i_signal(0), i_chargeType(0), b_calling(false)
+        , i_charge(0), i_signal(0), m_chargeType(KMobileTools::EngineData::Battery), b_calling(false)
 {}
 void PollStatus::run ()
 {
@@ -210,9 +210,9 @@ void PollStatus::run ()
         s_charge=s_charge.trimmed();
 
         i_charge=s_charge.section(",",1,1).toInt();
-        i_chargeType=s_charge.section(",",0,0).toInt();
+        m_chargeType=(KMobileTools::EngineData::ChargeType) s_charge.section(",",0,0).toInt();
     }
-    else { i_charge=-1; i_chargeType=-1; }
+    else { i_charge=-1; m_chargeType=KMobileTools::EngineData::Unknown; }
 
     if( str_status.contains("+CSQ",Qt::CaseSensitive) )
     {
@@ -229,12 +229,12 @@ void PollStatus::run ()
 //     sleep(10);
     if ( true /* ! Config->getMotoBattery() */ ) return;
 
-    if(i_chargeType==0)
+    if(m_chargeType==KMobileTools::EngineData::Battery)
     {
         if( log(i_charge/1.4)/log(1.038) > 30 )
             i_charge=(int) (log((double) i_charge/1.4)/log(1.038));
     }
-    if(i_chargeType==1)
+    if(m_chargeType==KMobileTools::EngineData::ACAdaptor)
     {
         i_charge= (int) ((int) pow( (double) (i_charge-6), (4.0/6.0) ) * 5.2) +2;
     }
