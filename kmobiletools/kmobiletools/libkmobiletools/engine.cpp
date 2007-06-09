@@ -27,8 +27,6 @@
 #include "weaver.h"
 #include "enginedata.h"
 
-#include "smslist.h"
-
 using namespace KMobileTools;
 
 class KMobileTools::EnginePrivate {
@@ -36,7 +34,6 @@ public:
     EnginePrivate() : p_pluginInfo(NULL), enginedata(NULL)
     {}
         KPluginInfo *p_pluginInfo;
-        SMSList *p_diffSMSList;
         KMobileTools::Weaver *weaver;
 
         QList<KMobileTools::Job*> jobs;
@@ -74,7 +71,6 @@ Engine::Engine( QObject *parent, const QString &name)
 //     b_ownweaver=ownWeaver;
     /*if(ownWeaver) */d->weaver=new KMobileTools::Weaver(this/*, name, 2, 2*/);
 //     else weaver=ThreadWeaver::Weaver::instance();
-    d->p_diffSMSList=new SMSList();
     connect(d->weaver, SIGNAL(jobDone(KMobileTools::Job*) ), SLOT(processSlot(KMobileTools::Job*) ) );
     connect(d->weaver, SIGNAL(suspended() ), this, SLOT(slotWeaverSuspended() ) );
 
@@ -102,7 +98,6 @@ Engine::~Engine()
 //     weaver=NULL;
 
 //     delete p_addresseeList;
-    delete d->p_diffSMSList;
 
     EnginesList::instance()->remove( this );
     delete d;
@@ -118,13 +113,6 @@ KMobileTools::Job *kjob=(Job*) job;
 KMobileTools::Weaver *Engine::ThreadWeaver()
 {
     return d->weaver;
-}
-
-
-
-SMSList *Engine::diffSMSList() const
-{
-    return d->p_diffSMSList;
 }
 
 QStringList Engine::smsFolders()

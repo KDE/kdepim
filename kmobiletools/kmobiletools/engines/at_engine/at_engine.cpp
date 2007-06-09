@@ -168,15 +168,12 @@ void AT_Engine::processSlot(KMobileTools::Job* job)
             emit phoneBookChanged();
             break;
         case KMobileTools::Job::fetchSMS:
-            diffSMSList()->append(  ((FetchSMS*) job)->smsList );
             if( ((FetchSMS*) job)->last()) {
-                engineData()->smsList()->sync(diffSMSList() );
+                engineData()->smsList()->sync( ((FetchSMS*)job)->smsList );
                 queue_sms=false;
-//                  p_smsList->dump();
-//                  p_diffSMSList->dump();
             }
-//         emit smsListUpdated();
-        break;
+//          emit smsListUpdated();
+            break;
         case KMobileTools::Job::testPhoneFeatures:
             wconfig->setFstype( ((TestPhoneFeatures *) job)->getAbilities().filesystem() );
         wconfig->writeConfig();
@@ -297,7 +294,6 @@ void AT_Engine::slotFetchSMS()
 {
     if(statusJobsSuspended() || ! device ) return;
 //     p_smsList->clear();
-    diffSMSList()->clear();
     if(queue_sms) return;
     QStringList sl_slots=config()->at_smsslots();
     if( ! sl_slots.count() ) {

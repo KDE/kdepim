@@ -111,8 +111,6 @@ class KMOBILETOOLS_EXPORT Engine : public QObject
          */
         KMobileTools::Weaver *ThreadWeaver();
 
-        SMSList* diffSMSList() const; /// @TODO remove?
-
         /**
          * Retrieves the phone SMS folders.
          *
