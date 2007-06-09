@@ -49,16 +49,6 @@ public:
         int i_currentPBMemSlot;
 
         /**
-         * New SMS number.
-         */
-        int s_newSMS;
-
-        /**
-         * Total SMS number.
-         */
-        int s_totalSMS;
-
-        /**
          * Phone SMS folders.
          */
         QStringList s_folders;
@@ -89,8 +79,6 @@ Engine::Engine( QObject *parent, const QString &name)
     connect(d->weaver, SIGNAL(suspended() ), this, SLOT(slotWeaverSuspended() ) );
 
     engineData()->setManufacturerID(Unknown);
-    d->s_newSMS = 0;
-    d->s_totalSMS = 0;
     d->i_suspendStatusJobs=0;
     EnginesList::instance()->append( this );
 }
@@ -130,16 +118,6 @@ KMobileTools::Job *kjob=(Job*) job;
 KMobileTools::Weaver *Engine::ThreadWeaver()
 {
     return d->weaver;
-}
-
-int Engine::newSMSCount()
-{
-    return d->s_newSMS;
-}
-
-int Engine::totalSMSCount()
-{
-    return d->s_totalSMS;
 }
 
 

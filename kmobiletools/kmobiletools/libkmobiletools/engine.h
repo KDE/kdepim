@@ -111,20 +111,6 @@ class KMOBILETOOLS_EXPORT Engine : public QObject
          */
         KMobileTools::Weaver *ThreadWeaver();
 
-        /**
-         * Retrieves the new SMS number.
-         *
-         * @return the new SMS number
-         */
-        int newSMSCount();
-
-        /**
-         * Retrieves the total SMS number.
-         *
-         * @return the total SMS number
-         */
-        int totalSMSCount();
-
         SMSList* diffSMSList() const; /// @TODO remove?
 
         /**
@@ -293,7 +279,7 @@ class KMOBILETOOLS_EXPORT Engine : public QObject
          *
          * @param job the job that has finished
          */
-        virtual void processSlot(KMobileTools::Job* job);
+        virtual void processSlot( KMobileTools::Job* job );
 
     Q_SIGNALS:
         /**

@@ -134,18 +134,18 @@ namespace KMobileTools {
             void setNetworkName( const QString& networkName );
 
             /**
-             * Sets phone manufacturer as returned by the mobile phone.
-             *
-             * @param manufacturer the manufacturer string.
-             */
-            void setManufacturer( const QString &manufacturer );
-
-            /**
              * Retrieves the phone manufacturer as returned by the mobile phone.
              *
              * @return a QString containing the phone manufacturer.
              */
             QString manufacturer() const;
+
+            /**
+             * Sets phone manufacturer as returned by the mobile phone.
+             *
+             * @param manufacturer the manufacturer string.
+             */
+            void setManufacturer( const QString &manufacturer );
 
             /**
              * Retrieves the manufacturer ID.
