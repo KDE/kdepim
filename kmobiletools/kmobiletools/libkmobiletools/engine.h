@@ -98,9 +98,9 @@ class KMOBILETOOLS_EXPORT Engine : public QObject
         virtual ~Engine();
 
         /**
-         * Returns a const reference to the engine's data
+         * Returns a const pointer to the engine's data
          *
-         * @return a const reference to EngineData
+         * @return a const pointer to EngineData
          */
         const KMobileTools::EngineData* constEngineData() const;
 
