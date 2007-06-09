@@ -201,7 +201,7 @@ void AT_Engine::processSlot(KMobileTools::Job* job)
             break;
         case KMobileTools::Job::delSMS:
             if( ! ((DeleteSMS*)job)->succeeded() ) break;
-            emit smsDeleted( ((DeleteSMS*)job)->sms()->uid() );
+            //emit smsDeleted( ((DeleteSMS*)job)->sms()->uid() );
             break;
         case KMobileTools::Job::storeSMS:
         case KMobileTools::Job::sendStoredSMS:

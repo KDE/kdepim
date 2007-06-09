@@ -87,9 +87,7 @@ Engine::Engine( QObject *parent, const QString &name)
     d->p_diffSMSList=new SMSList();
     connect(d->weaver, SIGNAL(jobDone(KMobileTools::Job*) ), SLOT(processSlot(KMobileTools::Job*) ) );
     connect(d->weaver, SIGNAL(suspended() ), this, SLOT(slotWeaverSuspended() ) );
-    connect(engineData()->smsList(), SIGNAL(added( const QByteArray& )), SIGNAL(smsAdded( const QByteArray& ) )); // @TODO move
-    connect(engineData()->smsList(), SIGNAL(removed( const QByteArray& )), SIGNAL(smsDeleted( const QByteArray& ))); // @TODO move
-    connect(engineData()->smsList(), SIGNAL(modified( const QByteArray& )), SIGNAL(smsModified( const QByteArray& ))); // @TODO move
+
     engineData()->setManufacturerID(Unknown);
     d->s_newSMS = 0;
     d->s_totalSMS = 0;

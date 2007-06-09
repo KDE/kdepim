@@ -297,12 +297,29 @@ class KMOBILETOOLS_EXPORT Engine : public QObject
 
     Q_SIGNALS:
         /**
+         * This signal is emitted when the engine is suspended.
+         */
+        void suspended();
+
+        /**
+         * This signal is emitted when the engine is resumed.
+         */
+        void resumed();
+
+        /**
+         * This signal is emitted when a job is enqueued.
+         *
+         * @param job the job that has been enqueued
+         */
+        void jobEnqueued( KMobileTools::Job * job );
+
+        /**
          * This signal is emitted when KMobileTools finish a task.
          */
         void jobFinished( KMobileTools::Job::JobType );
 
         /**
-         * This signal is emitted when an error is occurred.
+         * This signal is emitted when an error has occured
          */
         void errorOccured();
 
@@ -327,51 +344,6 @@ class KMOBILETOOLS_EXPORT Engine : public QObject
         void phoneBookChanged();
 
         /**
-         * This signal is emitted when the engine is suspended.
-         */
-        void suspended();
-
-        /**
-         * This signal is emitted when the engine is resumed.
-         */
-        void resumed();
-
-        /**
-         * This signal is emitted when a job is enqueued.
-         *
-         * @param job the job that has been enqueued
-         */
-        void jobEnqueued( KMobileTools::Job * job );
-
-        /**
-         * This signal is emitted when a new SMS is received.
-         *
-         * @param sms 
-         */
-        void smsArrived( const SMS* sms );
-
-        /**
-         * This signal is emitted when a SMS is added.
-         *
-         * @param sms the sms that is added
-         */
-        void smsAdded( const QByteArray& sms );
-
-        /**
-         * This signal is emitted when a SMS is deleted.
-         *
-         * @param sms the sms that is deleted
-         */
-        void smsDeleted( const QByteArray& sms );
-
-        /**
-         * This signal is emitted when a SMS is modified.
-         *
-         * @param sms the sms that is modified
-         */
-        void smsModified( const QByteArray& sms );
-
-        /**
          * This signal is emitted when phonebook is full.
          *
          * @TODO should be handled by errorOccured
@@ -380,6 +352,8 @@ class KMOBILETOOLS_EXPORT Engine : public QObject
 
         /**
          * This signal is emitted when calendar is parsed.
+         * 
+         * @TODO what to do with this one here? move to EngineData?
          */
         void calendarParsed();
 };

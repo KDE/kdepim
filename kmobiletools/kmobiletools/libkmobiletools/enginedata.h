@@ -299,6 +299,27 @@ namespace KMobileTools {
             */
             void networkNameChanged( const QString& name );
 
+            /**
+            * This signal is emitted when a SMS is added.
+            *
+            * @param sms the sms that is added
+            */
+            void smsAdded( const QByteArray& sms );
+
+            /**
+            * This signal is emitted when a SMS is deleted.
+            *
+            * @param sms the sms that is deleted
+            */
+            void smsDeleted( const QByteArray& sms );
+
+            /**
+            * This signal is emitted when a SMS is modified.
+            *
+            * @param sms the sms that is modified
+            */
+            void smsModified( const QByteArray& sms );
+
         private:
             EngineDataPrivate *const d;
     };
