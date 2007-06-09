@@ -72,7 +72,7 @@ void AT_DevicesFoundPage::initializePage()
     QListWidgetItem *newlwitem;
     while(it.hasNext()) {
         curitem=it.next();
-        newlwitem=new QListWidgetItem( curitem->manufacturerString() + ' ' + curitem->model() , phonesListWidget() );
+        newlwitem=new QListWidgetItem( curitem->manufacturer() + ' ' + curitem->model() , phonesListWidget() );
         newlwitem->setData(Qt::UserRole+1, curitem->property("devicePath").toString() ); /// @TODO replace with some model/view stuff
         newlwitem->setData(Qt::UserRole+2, curitem->imei() ); /// @TODO as above...
     }
@@ -111,7 +111,7 @@ void AT_DevicesFoundPage::showDetails(KMobileTools::EngineData* engineData)
     <li>Model: %2</li>\
     <li>IMEI: %3</li>\
     <li>Device: %4</li>",
-    engineData->manufacturerString(), engineData->model(), engineData->imei(), engineData->property("devicePath").toString()
+    engineData->manufacturer(), engineData->model(), engineData->imei(), engineData->property("devicePath").toString()
     ) );
 }
 
@@ -120,7 +120,7 @@ bool AT_DevicesFoundPage::validatePage()
     if(!enginedata) return false;
     ATDevicesConfig *cfg=(ATDevicesConfig*) DEVCFG(wizard()->objectName() );
     cfg->setMobileimei(enginedata->imei());
-    cfg->setRawdevicevendor(enginedata->manufacturerString());
+    cfg->setRawdevicevendor(enginedata->manufacturer());
     cfg->setRawdevicename(enginedata->model());
     cfg->writeConfig();
     /// @TODO set slots

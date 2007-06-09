@@ -94,9 +94,7 @@ Engine::Engine( QObject *parent, const QString &name)
     connect(engineData().smsList(), SIGNAL(added( const QByteArray& )), SIGNAL(smsAdded( const QByteArray& ) )); // @TODO move
     connect(engineData().smsList(), SIGNAL(removed( const QByteArray& )), SIGNAL(smsDeleted( const QByteArray& ))); // @TODO move
     connect(engineData().smsList(), SIGNAL(modified( const QByteArray& )), SIGNAL(smsModified( const QByteArray& ))); // @TODO move
-    connect(this, SIGNAL(connected()), this, SLOT(slotDevConnected() ));
-    connect(this, SIGNAL(disconnected()), this, SLOT(slotDevDisconnected()));
-    engineData().setManufacturer(Unknown);
+    engineData().setManufacturerID(Unknown);
     d->s_newSMS = 0;
     d->s_totalSMS = 0;
     d->i_suspendStatusJobs=0;
@@ -266,7 +264,7 @@ Engine *Engine::load(const QString &libname, QObject *parent)
     return ret;
 }
 
-void Engine::setConnected(bool b) { d->b_connected=b; }
-bool Engine::isConnected() { return d->b_connected; }
+void Engine::setPhoneConnected(bool b) { d->b_connected=b; }
+bool Engine::phoneConnected() { return d->b_connected; }
 
 #include "engine.moc"

@@ -65,11 +65,11 @@ EngineData::~EngineData()
 
 #include "enginedata.moc"
 
-QString EngineData::manufacturerString() const { return d->s_manufacturer;}
-void EngineData::setManufacturerString(const QString &s) { d->s_manufacturer=s;}
+QString EngineData::manufacturer() const { return d->s_manufacturer;}
+void EngineData::setManufacturer(const QString &s) { d->s_manufacturer=s;}
 
-void EngineData::setManufacturer(int i) { d->i_manufacturer=i; }
-int EngineData::manufacturer() const { return d->i_manufacturer; }
+void EngineData::setManufacturerID(int i) { d->i_manufacturer=i; }
+int EngineData::manufacturerID() const { return d->i_manufacturer; }
 
 void EngineData::setModel(const QString &s) { d->s_model=s;}
 QString EngineData::model() const { return d->s_model; }

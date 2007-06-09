@@ -600,7 +600,7 @@ void DeviceHome::smsSelected(Q3ListViewItem *smsItem)
  */
 void DeviceHome::slotAddContact()
 {
-    editAddressee *new_contact=new editAddressee( engine->constEngineData().manufacturer(), engine->availPbSlots() );
+    editAddressee *new_contact=new editAddressee( engine->constEngineData().manufacturerID(), engine->availPbSlots() );
     if (new_contact->exec() == QDialog::Accepted )
     {
         KABC::Addressee::List abclist;
@@ -613,7 +613,7 @@ void DeviceHome::slotAddContact()
 
 void DeviceHome::slotEditContact(const KABC::Addressee &p_addressee)
 {
-    editAddressee *new_contact=new editAddressee(p_addressee, engine->constEngineData().manufacturer(), engine->availPbSlots());
+    editAddressee *new_contact=new editAddressee(p_addressee, engine->constEngineData().manufacturerID(), engine->availPbSlots());
     if (new_contact->exec() == QDialog::Accepted )
         engine->slotEditAddressee(p_addressee, new_contact->getAddressee());
     delete new_contact;
@@ -1150,7 +1150,7 @@ void DeviceHome::slotRing( bool ringing)
 void DeviceHome::slotDial()
 {
     if( !ui.number_dial->currentText().length()) return;
-    if(! engine->isConnected())
+    if(! engine->phoneConnected())
     {
         errNotConnected();
         return;

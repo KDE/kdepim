@@ -106,19 +106,21 @@ class KMOBILETOOLS_EXPORT Engine : public QObject
 
         /**
          * Returns the engine's ThreadWeaver instance
-         * 
+         *
          * @return the thread weaver instance
          */
         KMobileTools::Weaver *ThreadWeaver();
 
         /**
          * Retrieves the new SMS number.
+         *
          * @return the new SMS number
          */
         int newSMSCount();
 
         /**
          * Retrieves the total SMS number.
+         *
          * @return the total SMS number
          */
         int totalSMSCount();
@@ -127,35 +129,41 @@ class KMOBILETOOLS_EXPORT Engine : public QObject
 
         /**
          * Retrieves the phone SMS folders.
+         *
          * @return the phone SMS folders
          */
         QStringList smsFolders();
 
         /**
          * Retrieves the numbers of phonebook memory slots.
+         *
          * @return the numbers of phonebook memory slots
          */ 
         virtual int availPbSlots() = 0;
 
         /**
          * Set the SMS slot (sim, phone, datacard) to be used.
+         *
          * @param slot the slot that be used
          */
         void setSMSSlot( int slot );
 
         /**
          * Retrieves the SMS slot used.
+         *
          * @return the sms slot used.
          */
         int smsSlot();
 
         /**
          * Retrieves if phone is connected.
+         *
          * @return true if phone is connected.
          */
-        bool isConnected();
+        bool phoneConnected();
         /**
          * Shows if mobile phone can encode text in PDU mode.
+         *
          * @return true if mobile phone is PDU able.
          */
         virtual bool pdu()=0; /// @TODO check removal
@@ -189,6 +197,7 @@ class KMOBILETOOLS_EXPORT Engine : public QObject
         int statusJobsSuspended() const;
         /**
          * Format a string to be displayed in the final page of the wizard, to show device parameters.
+         *
          * @param strtemplate The string to be used as template
          * @param deviceName the internal name of the device, for grabbing settings
          * @return A string with the device information, or a null string if an error occurred
@@ -197,6 +206,7 @@ class KMOBILETOOLS_EXPORT Engine : public QObject
         /**
          * Returns a list of QWizardPage objects to be used in the New Phone Wizard.
          * Each engine should reimplement this to provide different wizard pages depending on the engine settings.
+         *
          * @return a QList<QWizardPage*> with the engine wizard pages, or NULL if the engine does not provide wizard pages.
          */
         virtual QList<QWizardPage*> wizardPages(QWidget *parentWidget)=0;
@@ -207,6 +217,7 @@ class KMOBILETOOLS_EXPORT Engine : public QObject
          * - QString pixmapName
          * - QString header
          * as they will be used as parameters for KConfigDialog::addPage().
+         *
          * @param parentWidget the parent widget to be used when creating widgets.
          * @return a QList<QWidget*> object containing configuration pages.
          */
@@ -214,6 +225,7 @@ class KMOBILETOOLS_EXPORT Engine : public QObject
         /**
          * Convenience method returning a specific KMobileTools::DevicesConfig object with the engine specific configuration items.
          * Calling without parameters return settings for current engine.
+         *
          * @param forceNew if true, force creating a new KConfigSkeleton::DevicesConfig object instead of searching for an existing one.
          * @param groupName specify the group of settings to be loaded. If null, engine->objectName() will be used.
          * @return A KConfigSkeleton::DevicesConfig with this engine settings, or NULL in case of errors.
@@ -221,12 +233,13 @@ class KMOBILETOOLS_EXPORT Engine : public QObject
         virtual KMobileTools::DevicesConfig *config( bool forceNew=false, const QString &groupName=QString() )=0;
         /**
          * Convenience method to load an engine object through KLibFactory
+         *
          * @return a KMobileTools::Engine object, or a NULL pointer if something went wrong.
          */
         static Engine *load(const QString &libname, QObject *parent=0);
 
     public Q_SLOTS:
-        /** TODO implement this
+        /** @TODO implement this
             virtual bool changePhoneBookSlot (PhoneBookMemorySlot slot) = 0;
             virtual bool changeSMSMemSlot (SMS::MemorySlot slot ) = 0;
             virtual int parseSMSList() = 0;
@@ -236,7 +249,6 @@ class KMOBILETOOLS_EXPORT Engine : public QObject
         virtual void slotFetchSMS() = 0;
         virtual void slotFetchPhonebook() = 0;
         virtual void slotPollStatus() = 0;
-        virtual void processSlot(KMobileTools::Job* job);
         virtual void slotFetchInfos() = 0;
         virtual void slotDial(DialActions, const QString & =QString() ) = 0;
         /**
@@ -245,9 +257,11 @@ class KMOBILETOOLS_EXPORT Engine : public QObject
          * Reimplement to correctly initialize engines.
          */
         virtual void slotInitPhone() = 0;
+
         /**
          * Start searching for our mobile phone.
-         * It's the first method to be called when initializing the engine. The slot will look the phone configuraton, searching for the correct device to be initialized.
+         * It's the first method to be called when initializing the engine.
+         * The slot will look the phone configuraton, searching for the correct device to be initialized.
          * This has to be reimplemented in each engine.
          */
         virtual void slotSearchPhone() = 0;
@@ -278,7 +292,16 @@ class KMOBILETOOLS_EXPORT Engine : public QObject
         KMobileTools::EngineData& engineData();
 
     protected Q_SLOTS:
-        void setConnected(bool);
+        void setPhoneConnected(bool);
+
+        /**
+         * This slot is called whenever an enqueued job has been finished.
+         * Reimplement this method to further process the data that the job
+         * has dealt with.
+         *
+         * @param job the job that has finished
+         */
+        virtual void processSlot(KMobileTools::Job* job);
 
     Q_SIGNALS:
         /**
@@ -307,12 +330,14 @@ class KMOBILETOOLS_EXPORT Engine : public QObject
 
         /**
          * This signal is emitted every phone poll.
+         *
          * @param signalStrength the signal level in percentual.
          */
         void signalStrengthChanged( int signalStrength );
 
         /**
          * This signal is emitted every phone poll.
+         *
          * @param charge the charge level in percentual.
          */
         void chargeChanged( int charge );
@@ -320,12 +345,14 @@ class KMOBILETOOLS_EXPORT Engine : public QObject
         /**
          * This signal is emitted every phone poll.
          * Charge type is 1 when phone is connected to the adapter.
+         *
          * @param chargeType the type of charge
          */
         void chargeTypeChanged( int chargeType );
 
         /**
          * This signal is emitted every phone poll.
+         *
          * @param ringing true if phone is ringing
          * @todo emit only if phone is ringing
          */
@@ -333,6 +360,7 @@ class KMOBILETOOLS_EXPORT Engine : public QObject
 
         /**
          * This signal is emitted when the mobile's phone book has been changed.
+         *
          * @todo to be deleted
          */
         void phoneBookChanged( int, const ContactsList& );
@@ -344,6 +372,7 @@ class KMOBILETOOLS_EXPORT Engine : public QObject
 
         /**
          * This signal is emitted every phone infos fetch.
+         *
          * @param name the name of the network.
          */
         void networkNameChanged( const QString& name );
@@ -360,42 +389,42 @@ class KMOBILETOOLS_EXPORT Engine : public QObject
 
         /**
          * This signal is emitted when a job is enqueued.
-         * 
+         *
          * @param job the job that has been enqueued
          */
         void jobEnqueued( KMobileTools::Job * job );
 
         /**
          * This signal is emitted when a new SMS is received.
-         * 
+         *
          * @param sms 
          */
         void smsArrived( const SMS* sms );
 
         /**
          * This signal is emitted when a SMS is added.
-         * 
+         *
          * @param sms the sms that is added
          */
         void smsAdded( const QByteArray& sms );
 
         /**
          * This signal is emitted when a SMS is deleted.
-         * 
+         *
          * @param sms the sms that is deleted
          */
         void smsDeleted( const QByteArray& sms );
 
         /**
          * This signal is emitted when a SMS is modified.
-         * 
+         *
          * @param sms the sms that is modified
          */
         void smsModified( const QByteArray& sms );
 
         /**
          * This signal is emitted when phonebook is full.
-         * 
+         *
          * @TODO should be handled by errorOccured
          */
         void fullPhonebook();

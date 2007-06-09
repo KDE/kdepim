@@ -75,7 +75,7 @@ void FindDeviceDataJob::run() {
 
     buffer=p_device->sendATCommand(this, "AT+CGMI\r", probeTimeout);
     if( !KMobileTools::SerialManager::ATError(buffer) ) // Phone manufacturer
-        enginedata->setManufacturerString( kmobiletoolsATJob::parseInfo( buffer ) );
+        enginedata->setManufacturer( kmobiletoolsATJob::parseInfo( buffer ) );
 
     buffer=p_device->sendATCommand(this, "AT+CPMS=?\r", probeTimeout);
     if( !KMobileTools::SerialManager::ATError(buffer) ) // SMS Slots

@@ -123,7 +123,7 @@ public:
     bool isConnected() { return devIsConnected; }
     void stopDevice();
     void resumeDevice();
-    QString deviceVendor() { return engine->constEngineData().manufacturerString(); } // @TODO remove me
+    QString deviceVendor() { return engine->constEngineData().manufacturer(); } // @TODO remove me
     QString deviceModel() { return engine->constEngineData().model(); } // @TODO remove me
     QString friendlyName();
     static QStringList parseAddressee(const KABC::Addressee &addressee);

@@ -39,78 +39,133 @@ namespace KMobileTools {
         public:
             /**
              * Creates a new EngineData object.
-             * This class can store data from engines, emit signals when it changes, and act as an interface for the GUI.
+             * This class can store data from engines, emit signals when it changes,
+             * and act as an interface for the GUI.
+             *
              * @param parentEngine the engine providing data to store.
              */
-            EngineData(Engine *parentEngine);
+            EngineData( Engine *parentEngine );
             ~EngineData();
-            //Engine *engine();
-        /**
-         * Retrieves the phone manufacturer string, as returned by the mobile phone.
-         * @return a QString containing the phone manufacturer.
-         */
-        QString manufacturerString() const;
-        /**
-         * Sets phone manufacturer string,  as returned by the mobile phone.
-         * @param manufacturer The manufacturer string.
-        */
-        void setManufacturerString(const QString &manufacturer);
-        void setModel(const QString &);
-        void setIMEI(const QString &);
-        void setSMSCenter(const QString &);
-        void setRevision(const QString &);
-        void setManufacturer(int );
 
-        /**
-         * Retrieves the manufacturer ID.
-         * @return the manufacturer ID
-         * @todo Change function name (manufacturerId)
-         */
-        int manufacturer() const;
+            /**
+             * Sets phone manufacturer as returned by the mobile phone.
+             *
+             * @param manufacturer the manufacturer string.
+             */
+            void setManufacturer( const QString &manufacturer );
 
-        /**
-         * Retrieves the phone model.
-         * @return the phone model
-         */
-        QString model() const;
+            /**
+             * Retrieves the phone manufacturer as returned by the mobile phone.
+             *
+             * @return a QString containing the phone manufacturer.
+             */
+            QString manufacturer() const;
 
-        /**
-         * Retrieves the phone raw IMEI.
-         * The IMEI is a number unique to every GSM and UMTS mobile phone.
-         * @return the phone raw IMEI
-         */
-        QString imei() const;
+            /**
+             * Retrieves the manufacturer ID.
+             *
+             * @return the manufacturer ID
+             */
+            int manufacturerID() const;
 
-        /**
-         * Retrieves the phone firmware revision.
-         * @return the phone firmware revision
-         */
-        QString revision() const;
+            /**
+             * Sets the manufacturer ID.
+             *
+             * @param manufacturerID the manufacturer id
+             */
+            void setManufacturerID( int manufacturerID );
 
-        /**
-         * Retrieves the SMS center number.
-         * @return the SMS center number
-         */
-        QString smsCenter() const;
+            /**
+             * Retrieves the phone model.
+             *
+             * @return the phone model
+             */
+            QString model() const;
 
-        /**
-         * The engine internal list of retrieved SMS
-         * @return a SMSList object containing all fetched SMS.
-         */
-        SMSList* smsList() const;
+            /**
+             * Sets the phone model
+             *
+             * @param model the phone model
+             */
+            void setModel( const QString& model );
 
-        /**
-        * Retrieves the phone calendar.
-        * @return the phone calendar
-        */
-        KCal::Event::List *calendar();
+            /**
+             * Retrieves the phone raw IMEI.
+             * The IMEI is a number unique to every GSM and UMTS mobile phone.
+             *
+             * @return the phone raw IMEI
+             */
+            QString imei() const;
 
-        /**
-         * Retrieves the phone contact list.
-         * @return phone contact list
-         */
-        ContactsList* contactsList() const;
-        void setContactsList(ContactsList*); // @TODO better usage
+            /**
+             * Sets the phone raw IMEI.
+             * The IMEI is a number unique to every GSM and UMTS mobile phone.
+             *
+             * @param imei the phone's imei
+             */
+            void setIMEI( const QString& imei );
+
+            /**
+             * Retrieves the SMS center number.
+             *
+             * @return the SMS center number
+             */
+            QString smsCenter() const;
+
+            /**
+             * Sets the SMS center number.
+             *
+             * @param smsc the SMS center number
+             */
+            void setSMSCenter( const QString& smsc );
+
+            /**
+             * Retrieves the phone firmware revision.
+             *
+             * @return the phone firmware revision
+             */
+            QString revision() const;
+
+            /**
+             * Sets the phone firmware revision.
+             *
+             * @param revision the phone's firmware revision
+             */
+            void setRevision( const QString& revision );
+
+            /**
+             * Retrieves the phone contact list.
+             *
+             * @return phone contact list
+             */
+            ContactsList* contactsList() const;
+
+            /**
+             * Sets the phone contact list.
+             *
+             * @return phone contact list
+             *
+             * @TODO better usage
+             */
+            void setContactsList( ContactsList* contactsList );
+
+            /**
+             * The engine internal list of retrieved SMS
+             *
+             * @return a SMSList object containing all fetched SMS.
+             *
+             * @TODO make this method return a const reference
+             */
+            SMSList* smsList() const;
+
+            /**
+             * Retrieves the phone calendar.
+             *
+             * @return the phone calendar
+             *
+             * @TODO make this method return a const reference
+             */
+            KCal::Event::List *calendar();
 
 
         private:

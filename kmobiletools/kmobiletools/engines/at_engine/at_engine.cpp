@@ -135,7 +135,7 @@ void AT_Engine::processSlot(KMobileTools::Job* job)
     switch( job->type() ){
         case KMobileTools::Job::initPhone:
             kDebug() << "Device is connected: " << device->isConnected() << endl;
-            setConnected(device->isConnected() );
+            setPhoneConnected(device->isConnected() );
             if( device->isConnected() ) emit connected(); break;
         case KMobileTools::Job::pollStatus:
             emit signalStrengthChanged( ((PollStatus*) job)->phoneSignal() );
@@ -144,17 +144,17 @@ void AT_Engine::processSlot(KMobileTools::Job* job)
             emit ringing( ((PollStatus*) job)->ringing() );
             break;
         case KMobileTools::Job::fetchPhoneInfos:
-            engineData().setManufacturerString ( ( (FetchPhoneInfos*) job )->rawManufacturer() );
+            engineData().setManufacturer( ( (FetchPhoneInfos*) job )->rawManufacturer() );
             engineData().setModel( ( (FetchPhoneInfos*) job )->model() );
             engineData().setRevision (( (FetchPhoneInfos*) job )->revision() );
             engineData().setIMEI( ( (FetchPhoneInfos*) job )->imei() );
             engineData().setSMSCenter(( (FetchPhoneInfos*) job )->smsCenter() );
             if(! engineData().smsCenter().isNull() ) emit networkNameChanged( i18n("Network: %1",PickSMSCenter::smsCenterName (engineData().smsCenter() ) ) );
-            if ( engineData().manufacturerString().contains( "Siemens", Qt::CaseInsensitive ) ) engineData().setManufacturer( Siemens);
-            if ( engineData().manufacturerString().contains( "Motorola", Qt::CaseInsensitive ) ) engineData().setManufacturer ( Motorola);
-            if ( engineData().manufacturerString().contains( "Ericsson", Qt::CaseInsensitive ) ) engineData().setManufacturer ( SonyEricsson);
+            if ( engineData().manufacturer().contains( "Siemens", Qt::CaseInsensitive ) ) engineData().setManufacturerID( Siemens);
+            if ( engineData().manufacturer().contains( "Motorola", Qt::CaseInsensitive ) ) engineData().setManufacturerID ( Motorola);
+            if ( engineData().manufacturer().contains( "Ericsson", Qt::CaseInsensitive ) ) engineData().setManufacturerID ( SonyEricsson);
             wconfig->setRawdevicename( engineData().model() );
-            wconfig->setRawdevicevendor( engineData().manufacturerString() );
+            wconfig->setRawdevicevendor( engineData().manufacturer() );
             wconfig->writeConfig();
             break;
         case KMobileTools::Job::fetchAddressBook:
