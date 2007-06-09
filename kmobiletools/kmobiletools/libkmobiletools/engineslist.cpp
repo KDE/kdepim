@@ -19,6 +19,7 @@
  ***************************************************************************/
 #include "engineslist.h"
 #include "devicesconfig.h"
+#include "enginedata.h"
 
 #include "weaver.h"
 #include "engine.h"
@@ -82,14 +83,15 @@ void KMobileTools::EnginesList::queryClose()
 void KMobileTools::EnginesList::append( KMobileTools::Engine* item )
 {
     emit engineAdded( item );
-    connect(item, SIGNAL(constEngineData()->phoneBookChanged()), this, SIGNAL(phonebookUpdated() ));
+    connect(item->constEngineData(), SIGNAL(phoneBookChanged()), this, SIGNAL( phonebookUpdated() ));
+
     QList<KMobileTools::Engine*>::append(item);
 }
 
 void KMobileTools::EnginesList::remove( KMobileTools::Engine* item )
 {
     emit engineRemoved( item );
-    disconnect(item, SIGNAL(constEngineData()->phoneBookChanged()), this, SIGNAL(phonebookUpdated() ));
+    disconnect(item->constEngineData(), SIGNAL(phoneBookChanged()), this, SIGNAL(phonebookUpdated() ));
     QList<KMobileTools::Engine*>::removeAll(item);
 }
 /*

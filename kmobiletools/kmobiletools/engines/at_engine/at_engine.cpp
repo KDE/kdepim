@@ -55,7 +55,7 @@ AT_Engine::AT_Engine(QObject *parent, const QString &name)
     device=NULL;
 //     p_smsList = new SMSList();
     queue_sms=false;
-    connect( this, SIGNAL(engineData()->connected()), this, SLOT(slotFetchInfos()) );
+    connect( this->engineData(), SIGNAL(connected()), this, SLOT(slotFetchInfos()) );
 }
 
 

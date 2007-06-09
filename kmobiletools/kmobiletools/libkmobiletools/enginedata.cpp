@@ -77,25 +77,57 @@ EngineData::~EngineData()
 
 #include "enginedata.moc"
 
-QString EngineData::manufacturer() const { return d->s_manufacturer;}
-void EngineData::setManufacturer(const QString &s) { d->s_manufacturer=s;}
+QString EngineData::manufacturer() const {
+    return d->s_manufacturer;
+}
 
-void EngineData::setManufacturerID(int i) { d->i_manufacturer=i; }
-int EngineData::manufacturerID() const { return d->i_manufacturer; }
+void EngineData::setManufacturer( const QString &s ) {
+    d->s_manufacturer=s;
+}
 
-void EngineData::setModel(const QString &s) { d->s_model=s;}
-QString EngineData::model() const { return d->s_model; }
+void EngineData::setManufacturerID( int i ) {
+    d->i_manufacturer=i;
+}
 
-void EngineData::setIMEI(const QString &s) { d->s_imei=s;}
-QString EngineData::imei() const { return d->s_imei; }
+int EngineData::manufacturerID() const {
+    return d->i_manufacturer;
+}
 
-void EngineData::setSMSCenter(const QString &s) { d->s_smscenter=s;}
-QString EngineData::smsCenter() const { return d->s_smscenter;}
+void EngineData::setModel( const QString &s ) {
+    d->s_model=s;
+}
 
-void EngineData::setRevision(const QString &s) { d->s_revision=s;}
-QString EngineData::revision() const { return d->s_revision; }
+QString EngineData::model() const {
+    return d->s_model;
+}
 
-KCal::Event::List *EngineData::calendar() { return d->p_calendar; }
+void EngineData::setIMEI( const QString &s ) {
+    d->s_imei=s;
+}
+
+QString EngineData::imei() const {
+    return d->s_imei;
+}
+
+void EngineData::setSMSCenter( const QString &s ){
+    d->s_smscenter=s;
+}
+
+QString EngineData::smsCenter() const {
+    return d->s_smscenter;
+}
+
+void EngineData::setRevision( const QString &s ) {
+    d->s_revision=s;
+}
+
+QString EngineData::revision() const {
+    return d->s_revision;
+}
+
+KCal::Event::List *EngineData::calendar() {
+    return d->p_calendar;
+}
 
 const SMSList* EngineData::constSMSList() const {
     return d->p_smsList;
