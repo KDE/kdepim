@@ -108,8 +108,8 @@ SMSList* EngineData::smsList() const {
 ContactsList *EngineData::contactsList() const { return d->p_addresseeList; }
 
 void EngineData::setContactsList( ContactsList* cl ) {
-    emit phoneBookChanged();
     d->p_addresseeList=cl;
+    emit phoneBookChanged();
 }
 
 void EngineData::setPhoneConnected( bool b ) {

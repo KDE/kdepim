@@ -243,6 +243,7 @@ class KMOBILETOOLS_EXPORT Engine : public QObject
          * This has to be reimplemented in each engine.
          */
         virtual void slotSearchPhone() = 0;
+
         virtual void slotAddAddressee(const KABC::Addressee::List&) = 0;
         virtual void slotDelAddressee(const KABC::Addressee::List&) = 0;
         virtual void slotDelSMS(SMS*) = 0;

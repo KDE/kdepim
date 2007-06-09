@@ -33,6 +33,11 @@ class SMSList;
 namespace KMobileTools {
     class ContactsList;
     class Engine;
+
+    /**
+    * @author Matthias Lechner
+    * @author Marco Gulino
+    */
     class KMOBILETOOLS_EXPORT EngineData : public QObject
     {
         Q_OBJECT
