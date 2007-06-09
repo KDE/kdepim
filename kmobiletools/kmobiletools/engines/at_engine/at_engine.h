@@ -127,7 +127,6 @@ public slots:
 
 
 protected slots:
-    void slotDevConnected();
     void slotFetchCalendar();
     void slotSwitchToFSMode();
 signals:

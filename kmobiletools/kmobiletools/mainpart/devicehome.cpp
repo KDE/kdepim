@@ -320,16 +320,13 @@ void DeviceHome::loadEngine()
     connect(engine, SIGNAL(disconnected()), this, SLOT(devDisconnected() ) );
     connect(engine, SIGNAL(connected() ), this, SLOT(enableWidgets() ) );
     connect(engine, SIGNAL(disconnected() ), this, SLOT(disableWidgets() ) );
-    connect(engine, SIGNAL(updateInfoPage(int)), this, SLOT( printInfoPage(int) ));  
-    connect(engine, SIGNAL(addressBookToUpdate() ), this, SLOT(slotFetchPhonebook() ) );
-    connect(engine, SIGNAL(phoneBookUpdated() ), SLOT(updatePB()) );
-    connect(engine, SIGNAL(phoneBookUpdated(int, const ContactsList& ) ), SLOT(updatePB(int, const ContactsList& ) ) );
-    connect(engine, SIGNAL(smsListUpdated() ), SLOT(updateSMSList()) );
-    connect(engine, SIGNAL(addSMSFolders() ), SLOT(addSMSFolders()) );
+    connect(engine, SIGNAL(phoneBookChanged() ), SLOT(updatePB()) );
+    connect(engine, SIGNAL(phoneBookChanged(int, const ContactsList& ) ), SLOT(updatePB(int, const ContactsList& ) ) );
+    connect(engine, SIGNAL(smsFoldersAdded() ), SLOT(addSMSFolders()) );
     connect(engine, SIGNAL(smsAdded( const QByteArray& )), SLOT(smsAdded( const QByteArray&) ) );
     connect(engine, SIGNAL(smsDeleted( const QByteArray& )), SLOT(smsRemoved(const QByteArray&) ) );
     connect(engine, SIGNAL(smsModified( const QByteArray& )), SLOT(smsModified( const QByteArray& )) );
-    connect(engine, SIGNAL(isRinging( bool )), this, SLOT(slotRing( bool ) ) );
+    connect(engine, SIGNAL(ringing( bool )), this, SLOT(slotRing( bool ) ) );
     connect(engine, SIGNAL(fullPhonebook()), this, SLOT(fullPhonebook()) );
     connect(p_smsPart, SIGNAL(getSMSList() ), engine, SLOT( slotFetchSMS() ) );
     connect(p_smsPart, SIGNAL(remove( SMS* ) ), engine, SLOT(slotDelSMS( SMS* ) ) );
@@ -1067,8 +1064,8 @@ void DeviceHome::slotStatusBar()
     signalLabel=new QLabel(i18n("Signal"), statusBarExtension->statusBar());
     if(!engine) return;
     connect(engine, SIGNAL(charge(int ) ), batteryProgress, SLOT(setValue(int ) ) );
-    connect(engine, SIGNAL(signal(int ) ), signalProgress, SLOT(setValue(int ) ) );
-    connect(engine, SIGNAL(networkName( const QString &) ), networkLabel, SLOT(setText(const QString& ) ) );
+    connect(engine, SIGNAL(signalStrengthChanged( int ) ), signalProgress, SLOT(setValue( int ) ) );
+    connect(engine, SIGNAL(networkNameChanged( const QString &) ), networkLabel, SLOT(setText(const QString& ) ) );
 //     connect(engine, SIGNAL( jobEnqueued(KMobileTools::Job *) ), statusBarBox, SLOT(slotJobEnqueued(KMobileTools::Job* ) ) );
 }
 

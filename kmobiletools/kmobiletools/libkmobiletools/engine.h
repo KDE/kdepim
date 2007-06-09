@@ -50,6 +50,7 @@ class EngineData;
 
 /**
  * @author Marco Gulino
+ * @author Matthias Lechner
  */
 class KMOBILETOOLS_EXPORT Engine : public QObject
 {
@@ -89,7 +90,7 @@ class KMOBILETOOLS_EXPORT Engine : public QObject
          * @param parent the parent QObject
          * @param name the object name
          */
-        explicit Engine(QObject *parent = 0, const QString &name = QString());
+        explicit Engine( QObject *parent = 0, const QString &name = QString() );
 
         /**
          * Destroys a Engine object.
@@ -103,7 +104,13 @@ class KMOBILETOOLS_EXPORT Engine : public QObject
          */
         const KMobileTools::EngineData& constEngineData() const;
 
+        /**
+         * Returns the engine's ThreadWeaver instance
+         * 
+         * @return the thread weaver instance
+         */
         KMobileTools::Weaver *ThreadWeaver();
+
         /**
          * Retrieves the new SMS number.
          * @return the new SMS number
@@ -116,7 +123,7 @@ class KMOBILETOOLS_EXPORT Engine : public QObject
          */
         int totalSMSCount();
 
-        SMSList* diffSMSList() const; // @TODO remove?
+        SMSList* diffSMSList() const; /// @TODO remove?
 
         /**
          * Retrieves the phone SMS folders.
@@ -134,7 +141,7 @@ class KMOBILETOOLS_EXPORT Engine : public QObject
          * Set the SMS slot (sim, phone, datacard) to be used.
          * @param slot the slot that be used
          */
-        void setSMSSlot(int slot);
+        void setSMSSlot( int slot );
 
         /**
          * Retrieves the SMS slot used.
@@ -159,21 +166,25 @@ class KMOBILETOOLS_EXPORT Engine : public QObject
         virtual void queryClose();
         virtual QString shortDesc();
         virtual QString longDesc();
+
         /**
          * The engine name provided in the .desktop file
          */
-
-
         virtual QString currentDeviceName() const;
         virtual QString engineLibName() const=0;
         KPluginInfo *pluginInfo();
-        void enqueueJob(KMobileTools::Job*);
-
-        void setConnected(bool);
 
         virtual QStringList encodings() = 0;
         int currentPBMemSlot();
         void setCurrentPBMemSlot(int type);
+
+        /**
+         * Adds the specified @p job to the queue
+         *
+         * @param job the job to be added to the queue
+         */
+        void enqueueJob( KMobileTools::Job* job );
+
         void suspendStatusJobs(bool suspend);
         int statusJobsSuspended() const;
         /**
@@ -236,7 +247,7 @@ class KMOBILETOOLS_EXPORT Engine : public QObject
         virtual void slotInitPhone() = 0;
         /**
          * Start searching for our mobile phone.
-         * It's the first method to be called when initializing the engine. The slot will look the phone configuration, searching for the correct device to be initialized.
+         * It's the first method to be called when initializing the engine. The slot will look the phone configuraton, searching for the correct device to be initialized.
          * This has to be reimplemented in each engine.
          */
         virtual void slotSearchPhone() = 0;
@@ -259,17 +270,21 @@ class KMOBILETOOLS_EXPORT Engine : public QObject
         EnginePrivate *const d;
 
     protected:
+        /**
+         * Returns a reference to the engine's data.
+         *
+         * @return the engine's data
+         */
         KMobileTools::EngineData& engineData();
 
     protected Q_SLOTS:
-        virtual void slotDevConnected();
-        virtual void slotDevDisconnected();
+        void setConnected(bool);
 
     Q_SIGNALS:
         /**
          * This signal is emitted when KMobileTools finish a task.
          */
-        void jobFinished(KMobileTools::Job::JobType);
+        void jobFinished( KMobileTools::Job::JobType );
         /**
          * This signal is emitted when the phone is disconnected.
          */
@@ -283,76 +298,55 @@ class KMOBILETOOLS_EXPORT Engine : public QObject
         /**
          * This signal is emitted when an error is occurred.
          */
-        void error();
-
-        /**
-         * This signal is emitted when a new SMS is received.
-         */
-        void newSMS(SMS*);
-
-        /**
-         * This signal is emitted when something is changed in the engine and
-         * ask gui to update the page.
-         */
-        void updateInfoPage(int);
+        void errorOccured();
 
         /**
          * This signal is emitted when a SMS folder is added
          */
-        void addSMSFolders();
+        void smsFoldersAdded();
 
         /**
          * This signal is emitted every phone poll.
-         * @param signal the signal level in percentual.
+         * @param signalStrength the signal level in percentual.
          */
-        void signal(int);
+        void signalStrengthChanged( int signalStrength );
 
         /**
          * This signal is emitted every phone poll.
          * @param charge the charge level in percentual.
          */
-        void charge(int);
+        void chargeChanged( int charge );
 
         /**
          * This signal is emitted every phone poll.
          * Charge type is 1 when phone is connected to the adapter.
-         * @param chargetype the type of charge
+         * @param chargeType the type of charge
          */
-        void chargeType(int);
+        void chargeTypeChanged( int chargeType );
 
         /**
          * This signal is emitted every phone poll.
          * @param ringing true if phone is ringing
          * @todo emit only if phone is ringing
          */
-        void isRinging(bool);
+        void ringing( bool ringing );
 
         /**
-         * This signal is emitted when the phone book is updating.
+         * This signal is emitted when the mobile's phone book has been changed.
          * @todo to be deleted
          */
-        void phoneBookUpdated(int, const ContactsList&);
+        void phoneBookChanged( int, const ContactsList& );
 
         /**
-         * This signal is emitted when the phone book is updated.
+         * This signal is emitted when the mobile's phone book has been changed.
          */
-        void phoneBookUpdated();
-
-        /**
-         * This signal is emitted when SMS list is updated.
-         */
-        void smsListUpdated();
+        void phoneBookChanged();
 
         /**
          * This signal is emitted every phone infos fetch.
          * @param name the name of the network.
          */
-        void networkName( const QString &);
-
-        /**
-         * This signal is emitted when is needed a new fetch.
-         */
-        void addressBookToUpdate();
+        void networkNameChanged( const QString& name );
 
         /**
          * This signal is emitted when the engine is suspended.
@@ -366,31 +360,43 @@ class KMOBILETOOLS_EXPORT Engine : public QObject
 
         /**
          * This signal is emitted when a job is enqueued.
+         * 
+         * @param job the job that has been enqueued
          */
-        void jobEnqueued(KMobileTools::Job *);
+        void jobEnqueued( KMobileTools::Job * job );
+
+        /**
+         * This signal is emitted when a new SMS is received.
+         * 
+         * @param sms 
+         */
+        void smsArrived( const SMS* sms );
 
         /**
          * This signal is emitted when a SMS is added.
+         * 
+         * @param sms the sms that is added
          */
-        void smsAdded(const QByteArray&);
+        void smsAdded( const QByteArray& sms );
 
         /**
          * This signal is emitted when a SMS is deleted.
+         * 
+         * @param sms the sms that is deleted
          */
-        void smsDeleted(const QByteArray&);
+        void smsDeleted( const QByteArray& sms );
 
         /**
          * This signal is emitted when a SMS is modified.
+         * 
+         * @param sms the sms that is modified
          */
-        void smsModified(const QByteArray&);
-
-        /**
-         * This signal is emitted when lock file is invalid.
-         */
-        void invalidLockFile(const QString &);
+        void smsModified( const QByteArray& sms );
 
         /**
          * This signal is emitted when phonebook is full.
+         * 
+         * @TODO should be handled by errorOccured
          */
         void fullPhonebook();
 

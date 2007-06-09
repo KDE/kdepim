@@ -253,13 +253,6 @@ int Engine::statusJobsSuspended() const
     return d->i_suspendStatusJobs;
 }
 
-void Engine::slotDevConnected()
-{ setConnected(true);
-}
-void Engine::slotDevDisconnected()
-{ setConnected(false);
-}
-
 Engine *Engine::load(const QString &libname, QObject *parent)
 {
     kDebug() << "Engine::load(" << libname << ")" << endl;

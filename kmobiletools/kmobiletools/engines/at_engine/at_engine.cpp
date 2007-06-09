@@ -55,6 +55,7 @@ AT_Engine::AT_Engine(QObject *parent, const QString &name)
     device=NULL;
 //     p_smsList = new SMSList();
     queue_sms=false;
+    connect( this, SIGNAL(connected()), this, SLOT(slotFetchInfos()) );
 }
 
 
@@ -117,7 +118,6 @@ void AT_Engine::slotInitPhone()
     device=new KMobileTools::SerialManager(this, this->objectName(), engineData().property("devicePath").toString(), initStrings() );
     connect(device, SIGNAL(disconnected()), SIGNAL(disconnected() ) );
     connect(device, SIGNAL(error()), SIGNAL(error() ) );
-    connect(device, SIGNAL(invalidLockFile( const QString& )), this, SIGNAL(invalidLockFile( const QString& )) );
     p_lastJob=new initPhoneJob(device, this);
     enqueueJob( p_lastJob );
 }
@@ -138,10 +138,10 @@ void AT_Engine::processSlot(KMobileTools::Job* job)
             setConnected(device->isConnected() );
             if( device->isConnected() ) emit connected(); break;
         case KMobileTools::Job::pollStatus:
-            emit signal( ((PollStatus*) job)->phoneSignal() );
-            emit charge( ((PollStatus*) job)->phoneCharge() );
-            emit chargeType( ((PollStatus*) job)->phoneChargeType() );
-            emit isRinging( ((PollStatus*) job)->ringing() );
+            emit signalStrengthChanged( ((PollStatus*) job)->phoneSignal() );
+            emit chargeChanged( ((PollStatus*) job)->phoneCharge() );
+            emit chargeTypeChanged( ((PollStatus*) job)->phoneChargeType() );
+            emit ringing( ((PollStatus*) job)->ringing() );
             break;
         case KMobileTools::Job::fetchPhoneInfos:
             engineData().setManufacturerString ( ( (FetchPhoneInfos*) job )->rawManufacturer() );
@@ -149,7 +149,7 @@ void AT_Engine::processSlot(KMobileTools::Job* job)
             engineData().setRevision (( (FetchPhoneInfos*) job )->revision() );
             engineData().setIMEI( ( (FetchPhoneInfos*) job )->imei() );
             engineData().setSMSCenter(( (FetchPhoneInfos*) job )->smsCenter() );
-            if(! engineData().smsCenter().isNull() ) emit networkName( i18n("Network: %1",PickSMSCenter::smsCenterName (engineData().smsCenter() ) ) );
+            if(! engineData().smsCenter().isNull() ) emit networkNameChanged( i18n("Network: %1",PickSMSCenter::smsCenterName (engineData().smsCenter() ) ) );
             if ( engineData().manufacturerString().contains( "Siemens", Qt::CaseInsensitive ) ) engineData().setManufacturer( Siemens);
             if ( engineData().manufacturerString().contains( "Motorola", Qt::CaseInsensitive ) ) engineData().setManufacturer ( Motorola);
             if ( engineData().manufacturerString().contains( "Ericsson", Qt::CaseInsensitive ) ) engineData().setManufacturer ( SonyEricsson);
@@ -163,7 +163,7 @@ void AT_Engine::processSlot(KMobileTools::Job* job)
 //                 kDebug() << "trying to call KMobileTools::EnginesList::instance()->emitPhonebookUpdated();\n";
 //                 KMobileTools::EnginesList::instance()->emitPhonebookUpdated();
 //                 if( ! ((FetchAddressee*) job )->partialUpdates() )
-            emit phoneBookUpdated();
+            emit phoneBookChanged();
             break;
         case KMobileTools::Job::fetchSMS:
             diffSMSList()->append(  ((FetchSMS*) job)->smsList );
@@ -180,17 +180,17 @@ void AT_Engine::processSlot(KMobileTools::Job* job)
         wconfig->writeConfig();
         break;
         case KMobileTools::Job::addAddressee:
-            emit addressBookToUpdate();
+            slotFetchPhonebook();
             if( ((EditAddressees*)job)->pbIsFull() ) emit fullPhonebook();
             suspendStatusJobs(false);
             break;
         case KMobileTools::Job::editAddressee:
-            emit addressBookToUpdate();
+            slotFetchPhonebook();
             if( ((EditAddressees*)job)->pbIsFull() ) emit fullPhonebook();
             suspendStatusJobs(false);
             break;
         case KMobileTools::Job::delAddressee:
-            emit addressBookToUpdate();
+            slotFetchPhonebook();
             suspendStatusJobs(false);
             break;
         case KMobileTools::Job::selectSMSSlot:
@@ -229,13 +229,6 @@ void AT_Engine::processSlot(KMobileTools::Job* job)
             emit foundDeviceData((FindDeviceDataJob*) job);
             break;
     }
-}
-
-
-void AT_Engine::slotDevConnected()
-{
-    KMobileTools::Engine::slotDevConnected();
-    slotFetchInfos();
 }
 
 #include "at_engine.moc"
@@ -282,7 +275,7 @@ void AT_Engine::slotFetchPhonebook()
     if( atAbilities.canSiemensVCF() || atAbilities.canSDBR() )
         job=( new FetchAddresseeSiemens(p_lastJob, device, this ) );
     else job= ( new FetchAddressee(p_lastJob, availPbSlots(), device, this ) );
-    connect(job, SIGNAL(gotAddresseeList(int, const ContactsList&) ), this, SIGNAL(phoneBookUpdated(int, const ContactsList& ) ) );
+    connect(job, SIGNAL(gotAddresseeList(int, const ContactsList&) ), this, SIGNAL(phoneBookChanged(int, const ContactsList& ) ) );
     p_lastJob=job;
     enqueueJob(job);
 }
