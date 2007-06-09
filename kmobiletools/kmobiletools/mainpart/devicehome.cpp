@@ -321,7 +321,7 @@ void DeviceHome::loadEngine()
     connect(engine->constEngineData(), SIGNAL(connected()), this, SLOT(enableWidgets() ) );
     connect(engine->constEngineData(), SIGNAL(disconnected() ), this, SLOT(disableWidgets() ) );
     connect(engine, SIGNAL(phoneBookChanged() ), SLOT(updatePB()) );
-    connect(engine, SIGNAL(phoneBookChanged(int, const ContactsList& ) ), SLOT(updatePB(int, const ContactsList& ) ) );
+    //connect(engine, SIGNAL(phoneBookChanged(int, const ContactsList& ) ), SLOT(updatePB(int, const ContactsList& ) ) );
     connect(engine, SIGNAL(smsFoldersAdded() ), SLOT(addSMSFolders()) );
     connect(engine, SIGNAL(smsAdded( const QByteArray& )), SLOT(smsAdded( const QByteArray&) ) );
     connect(engine, SIGNAL(smsDeleted( const QByteArray& )), SLOT(smsRemoved(const QByteArray&) ) );
@@ -485,14 +485,13 @@ void DeviceHome::jobDone(KMobileTools::Job::JobType jobtype)
     }
 }
 
-
 void DeviceHome::updatePB()
 {
 //     updating without partial updates should ALWAYS clear the listview...
     ui.phonebookListView->clear();
 //     p_addressbook->clear();
     ContactsList *phoneBook =engine->constEngineData()->contactsList();
-    /*    if (!(phoneBook->count() ) ) return;*/
+    //    if (!(phoneBook->count() ) ) return;
 //     p_addressDetails->stopFetch();
 //     ui.phonebookListView->clear();
     for (KABC::Addressee::List::ConstIterator it=phoneBook->begin(); it != phoneBook->end(); ++it)
@@ -506,9 +505,10 @@ void DeviceHome::updatePB()
     emit phonebookUpdated();
 }
 
+/*
 void DeviceHome::updatePB(int , const KMobileTools::ContactsList &p_phoneBook)
 {
-    /*    if (!(phoneBook->count() ) ) return;*/
+    //    if (!(phoneBook->count() ) ) return;
 //     p_addressDetails->stopFetch();
 //     ui.phonebookListView->clear();
     for (KABC::Addressee::List::ConstIterator it=p_phoneBook.begin(); it != p_phoneBook.end(); ++it)
@@ -520,7 +520,7 @@ void DeviceHome::updatePB(int , const KMobileTools::ContactsList &p_phoneBook)
     enableWidgets(false);
 //     slotSaveAddressBook();
 //     emit phonebookUpdated();
-}
+}*/
 
 QStringList DeviceHome::parseAddressee(const KABC::Addressee &addressee)
 {

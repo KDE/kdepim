@@ -106,7 +106,13 @@ SMSList* EngineData::smsList() const {
 }
 
 ContactsList *EngineData::contactsList() const { return d->p_addresseeList; }
-void EngineData::setContactsList(ContactsList* cl) { d->p_addresseeList=cl; }
+
+void EngineData::setContactsList( ContactsList* cl ) {
+    if( cl != d->p_addresseeList )
+        emit phoneBookChanged();
+
+    d->p_addresseeList=cl;
+}
 
 void EngineData::setPhoneConnected( bool b ) {
     // did the connection state change?

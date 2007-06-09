@@ -327,6 +327,11 @@ namespace KMobileTools {
             */
             void smsModified( const QByteArray& sms );
 
+            /**
+            * This signal is emitted when the mobile's phone book has been changed.
+            */
+            void phoneBookChanged();
+
         private:
             EngineDataPrivate *const d;
     };

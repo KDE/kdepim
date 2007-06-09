@@ -176,7 +176,7 @@ public slots:
     void errNotConnected();
     void addSMSFolders();
     void updatePB();
-    void updatePB(int slot, const KMobileTools::ContactsList&);
+    //void updatePB(int slot, const KMobileTools::ContactsList&);
     void updateAllContacts();
     void updateAllContacts(KMobileTools::ContactsList *addressBook);
     void updateSMSList();

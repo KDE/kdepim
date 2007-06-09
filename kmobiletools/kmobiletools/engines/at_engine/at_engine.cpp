@@ -165,7 +165,7 @@ void AT_Engine::processSlot(KMobileTools::Job* job)
 //                 kDebug() << "trying to call KMobileTools::EnginesList::instance()->emitPhonebookUpdated();\n";
 //                 KMobileTools::EnginesList::instance()->emitPhonebookUpdated();
 //                 if( ! ((FetchAddressee*) job )->partialUpdates() )
-            emit phoneBookChanged();
+            //emit phoneBookChanged();
             break;
         case KMobileTools::Job::fetchSMS:
             if( ((FetchSMS*) job)->last()) {
@@ -274,7 +274,7 @@ void AT_Engine::slotFetchPhonebook()
     if( atAbilities.canSiemensVCF() || atAbilities.canSDBR() )
         job=( new FetchAddresseeSiemens(p_lastJob, device, this ) );
     else job= ( new FetchAddressee(p_lastJob, availPbSlots(), device, this ) );
-    connect(job, SIGNAL(gotAddresseeList(int, const ContactsList&) ), this, SIGNAL(phoneBookChanged(int, const ContactsList& ) ) );
+    //connect(job, SIGNAL(gotAddresseeList(int, const ContactsList&) ), this, SIGNAL(phoneBookChanged(int, const ContactsList& ) ) );
     p_lastJob=job;
     enqueueJob(job);
 }

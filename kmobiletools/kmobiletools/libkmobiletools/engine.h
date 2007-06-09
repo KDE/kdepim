@@ -316,18 +316,6 @@ class KMOBILETOOLS_EXPORT Engine : public QObject
         void smsFoldersAdded();
 
         /**
-         * This signal is emitted when the mobile's phone book has been changed.
-         *
-         * @todo to be deleted
-         */
-        void phoneBookChanged( int, const ContactsList& );
-
-        /**
-         * This signal is emitted when the mobile's phone book has been changed.
-         */
-        void phoneBookChanged();
-
-        /**
          * This signal is emitted when phonebook is full.
          *
          * @TODO should be handled by errorOccured
