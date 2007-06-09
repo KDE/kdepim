@@ -108,9 +108,7 @@ SMSList* EngineData::smsList() const {
 ContactsList *EngineData::contactsList() const { return d->p_addresseeList; }
 
 void EngineData::setContactsList( ContactsList* cl ) {
-    if( cl != d->p_addresseeList )
-        emit phoneBookChanged();
-
+    emit phoneBookChanged();
     d->p_addresseeList=cl;
 }
 
