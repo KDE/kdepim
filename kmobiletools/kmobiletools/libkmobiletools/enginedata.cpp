@@ -129,12 +129,12 @@ KCal::Event::List *EngineData::calendar() {
     return d->p_calendar;
 }
 
-const SMSList* EngineData::constSMSList() const {
+const SMSList* EngineData::smsList() const {
     return d->p_smsList;
 }
 
-SMSList* EngineData::smsList() const {
-    return d->p_smsList;
+void EngineData::setSMSList( SMSList *smsList ) {
+    d->p_smsList->sync( smsList );
 }
 
 ContactsList *EngineData::contactsList() const { return d->p_addresseeList; }

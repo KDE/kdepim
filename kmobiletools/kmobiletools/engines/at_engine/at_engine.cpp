@@ -169,7 +169,7 @@ void AT_Engine::processSlot(KMobileTools::Job* job)
             break;
         case KMobileTools::Job::fetchSMS:
             if( ((FetchSMS*) job)->last()) {
-                engineData()->smsList()->sync( ((FetchSMS*)job)->smsList );
+                engineData()->setSMSList( ((FetchSMS*)job)->smsList );
                 queue_sms=false;
             }
 //          emit smsListUpdated();

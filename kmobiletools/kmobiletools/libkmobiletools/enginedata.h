@@ -241,20 +241,18 @@ namespace KMobileTools {
             void setContactsList( ContactsList* contactsList );
 
             /**
-             * Returns the fetched sms list for reading and writing
+             * Sets the current list of sms
              *
-             * @return a SMSList object containing all fetched SMS.
-             *
+             * @param smsList the current list of sms
              */
-            SMSList* smsList() const;
+            void setSMSList( SMSList* smsList );
 
             /**
              * Returns the fetched sms list for reading
              *
              * @return a SMSList object containing all fetched SMS.
-             *
              */
-            const SMSList* constSMSList() const;
+            const SMSList* smsList() const;
 
             /**
              * Retrieves the phone calendar.

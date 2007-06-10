@@ -131,7 +131,7 @@ public:
     bool openFile() { return false; }
     QWidget *widget() { return m_widget;}
     QList<QAction*> actionList() { return l_actionList;}
-    const SMSList *smsList() { return engine->constEngineData()->constSMSList(); }
+    const SMSList *smsList() { return engine->constEngineData()->smsList(); }
     void setupWidgets();
     kmobiletoolsMainPart *parent() { return (kmobiletoolsMainPart *) QObject::parent(); }
     KCal::CalendarLocal * calendar() { return p_calendar; }
