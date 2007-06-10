@@ -55,7 +55,6 @@
 #include <QEventLoop>
 #include <QTimer>
 #include <QTextCodec>
-//Added by qt3to4:
 #include <QTextStream>
 #include <QDateTime>
 #include <kglobal.h>
@@ -281,10 +280,7 @@ void KWatchGnuPGMainWindow::slotReadConfig()
   mCentralWidget->setWordWrapMode( config.readEntry("WordWrap", false)
 							   ?QTextOption::WordWrap
 							   :QTextOption::NoWrap );
-#ifdef __GNUC__
-#warning "porting kde4: setMaxLogLines ";  
-#endif
-  //mCentralWidget->setMaxLogLines( config->readEntry( "MaxLogLen", 10000 ) );
+  mCentralWidget->document()->setMaximumBlockCount( config.readEntry( "MaxLogLen", 10000 ) );
   setGnuPGConfig();
   startWatcher();
 }

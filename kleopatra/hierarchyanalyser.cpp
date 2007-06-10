@@ -34,7 +34,6 @@
 
 #include <algorithm>
 #include <iterator>
-//Added by qt3to4:
 #include <QByteArray>
 
 HierarchyAnalyser::HierarchyAnalyser( QObject * parent, const char * name )
