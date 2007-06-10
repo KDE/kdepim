@@ -323,9 +323,9 @@ void DeviceHome::loadEngine()
     connect(engine, SIGNAL(phoneBookChanged() ), SLOT(updatePB()) );
     //connect(engine, SIGNAL(phoneBookChanged(int, const ContactsList& ) ), SLOT(updatePB(int, const ContactsList& ) ) );
     connect(engine, SIGNAL(smsFoldersAdded() ), SLOT(addSMSFolders()) );
-    connect(engine, SIGNAL(smsAdded( const QByteArray& )), SLOT(smsAdded( const QByteArray&) ) );
-    connect(engine, SIGNAL(smsDeleted( const QByteArray& )), SLOT(smsRemoved(const QByteArray&) ) );
-    connect(engine, SIGNAL(smsModified( const QByteArray& )), SLOT(smsModified( const QByteArray& )) );
+    connect(engine->constEngineData(), SIGNAL(smsAdded( const QByteArray& )), SLOT(smsAdded( const QByteArray&) ) );
+    connect(engine->constEngineData(), SIGNAL(smsDeleted( const QByteArray& )), SLOT(smsRemoved(const QByteArray&) ) );
+    connect(engine->constEngineData(), SIGNAL(smsModified( const QByteArray& )), SLOT(smsModified( const QByteArray& )) );
     connect(engine->constEngineData(), SIGNAL(ringing( bool )), this, SLOT(slotRing( bool ) ) );
     connect(engine, SIGNAL(fullPhonebook()), this, SLOT(fullPhonebook()) );
     connect(p_smsPart, SIGNAL(getSMSList() ), engine, SLOT( slotFetchSMS() ) );

@@ -35,6 +35,8 @@
 AT_DevicesFoundPage::AT_DevicesFoundPage(QWidget *parent)
  : DevicesFoundPage(parent)
 {
+    enginedata=0;
+
     b_details=new QLabel();
     details()->addWidget(b_details);
     details()->setCurrentWidget(b_details);
@@ -80,7 +82,6 @@ void AT_DevicesFoundPage::initializePage()
 
 void AT_DevicesFoundPage::slotDetails(QListWidgetItem *item) {
     kDebug() << k_funcinfo << endl;
-    enginedata=0;
     if(!item) return;
     AT_ScanProgressPage *scanpage=(AT_ScanProgressPage *) wizard()->page(wizard()->property("scanprogress_id").toInt() );
 

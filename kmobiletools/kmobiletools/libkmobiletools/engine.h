@@ -299,7 +299,7 @@ class KMOBILETOOLS_EXPORT Engine : public QObject
         void jobEnqueued( KMobileTools::Job * job );
 
         /**
-         * This signal is emitted when KMobileTools finish a task.
+         * This signal is emitted when KMobileTools finishs a task.
          */
         void jobFinished( KMobileTools::Job::JobType );
 
