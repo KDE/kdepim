@@ -170,7 +170,7 @@ kmobiletoolsMainPart::kmobiletoolsMainPart( QWidget *parentWidget, QObject *pare
     } else
     {
         int ret=KMessageBox::questionYesNo( m_widget, i18n("<qt>You have no write access to lockfiles directory <b>/var/lock/</b>. Please correct this using the permission fixer wizard, or by hand with \"chmod -R a+rwx /var/lock\"<br>Do you want to run the Permission Wizard now?</qt>") );
-        if(ret==KMessageBox::Yes) KRun::runCommand("kmtsetup");
+        if(ret==KMessageBox::Yes) KRun::runCommand("kmtsetup",0);
     }
 }
 
