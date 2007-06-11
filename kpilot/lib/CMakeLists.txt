@@ -34,6 +34,7 @@ target_link_libraries(kpilot ${PILOTLINK_LIBRARY} ${QT_LIBRARIES} ${KDE4_KIO_LIB
 #---------- INSTALL -----------------------*
 set(kpilotinclude_HEADERS
 	kpilotlink.h
+	kpilot_export.h
 	kpilotdevicelink.h
 	kpilotlocallink.h
 	pilot.h
