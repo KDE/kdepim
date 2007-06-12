@@ -64,7 +64,7 @@ class TypeCombo : public KComboBox
 };
 
 template <class T, typename U>
-TypeCombo<T, U>::TypeCombo( TypeCombo::List &list, QWidget *parent,
+TypeCombo<T, U>::TypeCombo( List &list, QWidget *parent,
                       const char *name )
   : KComboBox( parent ),
     mTypeList( list )
@@ -149,7 +149,7 @@ typename TypeCombo<T, U>::Iterator TypeCombo<T, U>::selectedElement()
 }
 
 template <class T, typename U>
-void TypeCombo<T, U>::insertType( const TypeCombo::List &list, U type,
+void TypeCombo<T, U>::insertType( const List &list, U type,
                                const T &defaultObject )
 {
   int i;
@@ -165,7 +165,7 @@ void TypeCombo<T, U>::insertType( const TypeCombo::List &list, U type,
 }
 
 template <class T, typename U>
-void TypeCombo<T, U>::insertTypeList( const TypeCombo::List &list )
+void TypeCombo<T, U>::insertTypeList( const List &list )
 {
   int i;
   for ( i = 0; i < list.count(); ++i ) {
