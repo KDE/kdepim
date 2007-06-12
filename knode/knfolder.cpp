@@ -451,7 +451,7 @@ bool KNFolder::saveArticles( KNLocalArticle::List &l )
     }
 
     if ( clear )
-      (*it)->KMime::Content::clear();
+      (*it)->Content::clear();
   }
 
   closeFiles();

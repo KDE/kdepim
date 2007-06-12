@@ -486,7 +486,7 @@ bool KNArticleManager::unloadArticle(KNArticle *a, bool force)
   ArticleWidget::articleRemoved( a );
   if ( a->type() != KNArticle::ATlocal )
     knGlobals.artFactory->deleteComposerForArticle(static_cast<KNLocalArticle*>(a));
-  a->KMime::Content::clear();
+  a->Content::clear();
   a->updateListItem();
   knGlobals.memoryManager()->removeCacheEntry(a);
 
@@ -528,12 +528,12 @@ void KNArticleManager::copyIntoFolder(KNArticle::List &l, KNFolder *f)
         if ( (*it)->isOrphant() )
           delete (*it); // ok, this is ugly; we simply delete orphant articles
         else
-          (*it)->KMime::Content::clear(); // no need to keep them in memory
+          (*it)->Content::clear(); // no need to keep them in memory
       }
       KNHelper::displayInternalFileError();
     } else {
       for ( KNLocalArticle::List::Iterator it = l2.begin(); it != l2.end(); ++it )
-        (*it)->KMime::Content::clear(); // no need to keep them in memory
+        (*it)->Content::clear(); // no need to keep them in memory
       knGlobals.memoryManager()->updateCacheEntry(f);
     }
 
