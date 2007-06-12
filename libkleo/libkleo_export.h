@@ -23,15 +23,20 @@
 /* needed for KDE_EXPORT and KDE_IMPORT macros */
 #include <kdemacros.h>
 
+#ifdef Q_WS_WIN
+
 #ifndef KLEO_EXPORT
-# if defined(MAKE_LIBKLEO_LIB)
-   /* We are building this library */ 
+# ifdef MAKE_KLEO_LIB
 #  define KLEO_EXPORT KDE_EXPORT
 # else
-   /* We are using this library */ 
 #  define KLEO_EXPORT KDE_IMPORT
 # endif
 #endif
+
+#else // not windows
+
+#define KLEO_EXPORT KDE_EXPORT
+#endif /* not windows */
 
 # ifndef KLEO_EXPORT_DEPRECATED
 #  define KLEO_EXPORT_DEPRECATED KDE_DEPRECATED KLEO_EXPORT
