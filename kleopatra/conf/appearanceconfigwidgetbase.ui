@@ -1,197 +1,131 @@
-<!DOCTYPE UI><UI version="3.2" stdsetdef="1">
-<class>AppearanceConfigWidgetBase</class>
-<widget class="QWidget">
-    <property name="name">
-        <cstring>AppearanceConfigWidgetBase</cstring>
+<ui version="4.0" stdsetdef="1" >
+  <author></author>
+  <comment></comment>
+  <exportmacro></exportmacro>
+  <class>AppearanceConfigWidgetBase</class>
+  <widget class="QWidget" name="AppearanceConfigWidgetBase" >
+    <property name="geometry" >
+      <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>616</width>
+        <height>352</height>
+      </rect>
     </property>
-    <property name="geometry">
-        <rect>
-            <x>0</x>
-            <y>0</y>
-            <width>616</width>
-            <height>352</height>
-        </rect>
+    <property name="windowTitle" >
+      <string>Color &amp; Font Configuration</string>
     </property>
-    <property name="windowTitle">
-        <string>Color &amp; Font Configuration</string>
-    </property>
-    <hbox>
-        <property name="name">
-            <cstring>unnamed</cstring>
-        </property>
-        <widget class="QListView">
-            <column>
-                <property name="text">
-                    <string>Key Categories</string>
-                </property>
-                <property name="clickable">
-                    <bool>true</bool>
-                </property>
-                <property name="resizable">
-                    <bool>true</bool>
-                </property>
-            </column>
-            <property name="name">
-                <cstring>categoriesLV</cstring>
+    <layout class="QHBoxLayout" >
+      <item>
+        <widget class="Q3ListView" name="categoriesLV" >
+          <column>
+            <property name="text" >
+              <string>Key Categories</string>
             </property>
-        </widget>
-        <widget class="QLayoutWidget">
-            <property name="name">
-                <cstring>layout2</cstring>
+            <property name="clickable" >
+              <bool>true</bool>
             </property>
-            <vbox>
-                <property name="name">
-                    <cstring>unnamed</cstring>
-                </property>
-                <widget class="QPushButton">
-                    <property name="name">
-                        <cstring>foregroundButton</cstring>
-                    </property>
-                    <property name="enabled">
-                        <bool>false</bool>
-                    </property>
-                    <property name="text">
-                        <string>Set &amp;Text Color...</string>
-                    </property>
-                </widget>
-                <widget class="QPushButton">
-                    <property name="name">
-                        <cstring>backgroundButton</cstring>
-                    </property>
-                    <property name="enabled">
-                        <bool>false</bool>
-                    </property>
-                    <property name="text">
-                        <string>Set &amp;Background Color...</string>
-                    </property>
-                </widget>
-                <widget class="QPushButton">
-                    <property name="name">
-                        <cstring>fontButton</cstring>
-                    </property>
-                    <property name="enabled">
-                        <bool>false</bool>
-                    </property>
-                    <property name="text">
-                        <string>Set F&amp;ont...</string>
-                    </property>
-                </widget>
-                <widget class="QCheckBox">
-                    <property name="name">
-                        <cstring>italicCB</cstring>
-                    </property>
-                    <property name="enabled">
-                        <bool>false</bool>
-                    </property>
-                    <property name="text">
-                        <string>Italic</string>
-                    </property>
-                </widget>
-                <widget class="QCheckBox">
-                    <property name="name">
-                        <cstring>boldCB</cstring>
-                    </property>
-                    <property name="enabled">
-                        <bool>false</bool>
-                    </property>
-                    <property name="text">
-                        <string>Bold</string>
-                    </property>
-                </widget>
-                <widget class="QCheckBox">
-                    <property name="name">
-                        <cstring>strikeoutCB</cstring>
-                    </property>
-                    <property name="enabled">
-                        <bool>false</bool>
-                    </property>
-                    <property name="text">
-                        <string>Strikeout</string>
-                    </property>
-                </widget>
-                <spacer>
-                    <property name="name">
-                        <cstring>spacer6</cstring>
-                    </property>
-                    <property name="orientation">
-                        <enum>Vertical</enum>
-                    </property>
-                    <property name="sizeType">
-                        <enum>Expanding</enum>
-                    </property>
-                    <property name="sizeHint">
-                        <size>
-                            <width>20</width>
-                            <height>100</height>
-                        </size>
-                    </property>
-                </spacer>
-                <widget class="QPushButton">
-                    <property name="name">
-                        <cstring>defaultLookPB</cstring>
-                    </property>
-                    <property name="enabled">
-                        <bool>false</bool>
-                    </property>
-                    <property name="text">
-                        <string>Default Appearance</string>
-                    </property>
-                </widget>
-            </vbox>
+            <property name="resizable" >
+              <bool>true</bool>
+            </property>
+          </column>
         </widget>
-    </hbox>
-</widget>
-<connections>
-    <connection>
-        <sender>foregroundButton</sender>
-        <signal>clicked()</signal>
-        <receiver>AppearanceConfigWidgetBase</receiver>
-        <slot>slotForegroundClicked()</slot>
-    </connection>
-    <connection>
-        <sender>backgroundButton</sender>
-        <signal>clicked()</signal>
-        <receiver>AppearanceConfigWidgetBase</receiver>
-        <slot>slotBackgroundClicked()</slot>
-    </connection>
-    <connection>
-        <sender>fontButton</sender>
-        <signal>clicked()</signal>
-        <receiver>AppearanceConfigWidgetBase</receiver>
-        <slot>slotFontClicked()</slot>
-    </connection>
-    <connection>
-        <sender>categoriesLV</sender>
-        <signal>selectionChanged(QListViewItem*)</signal>
-        <receiver>AppearanceConfigWidgetBase</receiver>
-        <slot>slotSelectionChanged(QListViewItem*)</slot>
-    </connection>
-    <connection>
-        <sender>defaultLookPB</sender>
-        <signal>clicked()</signal>
-        <receiver>AppearanceConfigWidgetBase</receiver>
-        <slot>slotDefaultClicked()</slot>
-    </connection>
-    <connection>
-        <sender>italicCB</sender>
-        <signal>clicked()</signal>
-        <receiver>AppearanceConfigWidgetBase</receiver>
-        <slot>slotItalicClicked()</slot>
-    </connection>
-    <connection>
-        <sender>boldCB</sender>
-        <signal>clicked()</signal>
-        <receiver>AppearanceConfigWidgetBase</receiver>
-        <slot>slotBoldClicked()</slot>
-    </connection>
-    <connection>
-        <sender>strikeoutCB</sender>
-        <signal>clicked()</signal>
-        <receiver>AppearanceConfigWidgetBase</receiver>
-        <slot>slotStrikeoutClicked()</slot>
-    </connection>
-</connections>
-<tabstops>
+      </item>
+      <item>
+        <layout class="QVBoxLayout" >
+          <item>
+            <widget class="QPushButton" name="foregroundButton" >
+              <property name="enabled" >
+                <bool>false</bool>
+              </property>
+              <property name="text" >
+                <string>Set &amp;Text Color...</string>
+              </property>
+            </widget>
+          </item>
+          <item>
+            <widget class="QPushButton" name="backgroundButton" >
+              <property name="enabled" >
+                <bool>false</bool>
+              </property>
+              <property name="text" >
+                <string>Set &amp;Background Color...</string>
+              </property>
+            </widget>
+          </item>
+          <item>
+            <widget class="QPushButton" name="fontButton" >
+              <property name="enabled" >
+                <bool>false</bool>
+              </property>
+              <property name="text" >
+                <string>Set F&amp;ont...</string>
+              </property>
+            </widget>
+          </item>
+          <item>
+            <widget class="QCheckBox" name="italicCB" >
+              <property name="enabled" >
+                <bool>false</bool>
+              </property>
+              <property name="text" >
+                <string>Italic</string>
+              </property>
+            </widget>
+          </item>
+          <item>
+            <widget class="QCheckBox" name="boldCB" >
+              <property name="enabled" >
+                <bool>false</bool>
+              </property>
+              <property name="text" >
+                <string>Bold</string>
+              </property>
+            </widget>
+          </item>
+          <item>
+            <widget class="QCheckBox" name="strikeoutCB" >
+              <property name="enabled" >
+                <bool>false</bool>
+              </property>
+              <property name="text" >
+                <string>Strikeout</string>
+              </property>
+            </widget>
+          </item>
+          <item>
+            <spacer name="spacer6" >
+              <property name="sizeHint" >
+                <size>
+                  <width>20</width>
+                  <height>100</height>
+                </size>
+              </property>
+              <property name="sizeType" >
+                <enum>QSizePolicy::Expanding</enum>
+              </property>
+              <property name="orientation" >
+                <enum>Qt::Vertical</enum>
+              </property>
+            </spacer>
+          </item>
+          <item>
+            <widget class="QPushButton" name="defaultLookPB" >
+              <property name="enabled" >
+                <bool>false</bool>
+              </property>
+              <property name="text" >
+                <string>Default Appearance</string>
+              </property>
+            </widget>
+          </item>
+        </layout>
+      </item>
+    </layout>
+  </widget>
+  <layoutdefault spacing="6" margin="11" />
+  <pixmapfunction>qPixmapFromMimeSource</pixmapfunction>
+  <tabstops>
     <tabstop>categoriesLV</tabstop>
     <tabstop>foregroundButton</tabstop>
     <tabstop>backgroundButton</tabstop>
@@ -200,16 +134,55 @@
     <tabstop>boldCB</tabstop>
     <tabstop>strikeoutCB</tabstop>
     <tabstop>defaultLookPB</tabstop>
-</tabstops>
-<slots>
-    <slot access="protected">slotForegroundClicked()</slot>
-    <slot access="protected">slotBackgroundClicked()</slot>
-    <slot access="protected">slotFontClicked()</slot>
-    <slot access="protected">slotSelectionChanged( QListViewItem * )</slot>
-    <slot access="protected">slotDefaultClicked()</slot>
-    <slot access="protected">slotItalicClicked()</slot>
-    <slot access="protected">slotBoldClicked()</slot>
-    <slot access="protected">slotStrikeoutClicked()</slot>
-</slots>
-<layoutdefaults spacing="6" margin="11"/>
-</UI>
+  </tabstops>
+  <connections>
+    <connection>
+      <sender>foregroundButton</sender>
+      <signal>clicked()</signal>
+      <receiver>AppearanceConfigWidgetBase</receiver>
+      <slot>slotForegroundClicked()</slot>
+    </connection>
+    <connection>
+      <sender>backgroundButton</sender>
+      <signal>clicked()</signal>
+      <receiver>AppearanceConfigWidgetBase</receiver>
+      <slot>slotBackgroundClicked()</slot>
+    </connection>
+    <connection>
+      <sender>fontButton</sender>
+      <signal>clicked()</signal>
+      <receiver>AppearanceConfigWidgetBase</receiver>
+      <slot>slotFontClicked()</slot>
+    </connection>
+    <connection>
+      <sender>categoriesLV</sender>
+      <signal>selectionChanged(Q3ListViewItem*)</signal>
+      <receiver>AppearanceConfigWidgetBase</receiver>
+      <slot>slotSelectionChanged(Q3ListViewItem*)</slot>
+    </connection>
+    <connection>
+      <sender>defaultLookPB</sender>
+      <signal>clicked()</signal>
+      <receiver>AppearanceConfigWidgetBase</receiver>
+      <slot>slotDefaultClicked()</slot>
+    </connection>
+    <connection>
+      <sender>italicCB</sender>
+      <signal>clicked()</signal>
+      <receiver>AppearanceConfigWidgetBase</receiver>
+      <slot>slotItalicClicked()</slot>
+    </connection>
+    <connection>
+      <sender>boldCB</sender>
+      <signal>clicked()</signal>
+      <receiver>AppearanceConfigWidgetBase</receiver>
+      <slot>slotBoldClicked()</slot>
+    </connection>
+    <connection>
+      <sender>strikeoutCB</sender>
+      <signal>clicked()</signal>
+      <receiver>AppearanceConfigWidgetBase</receiver>
+      <slot>slotStrikeoutClicked()</slot>
+    </connection>
+  </connections>
+</ui>

@@ -31,10 +31,6 @@
     your version.
  */
 
-#ifdef HAVE_CONFIG_H
-#include <config.h>
-#endif
-
 #include "appearanceconfigwidget.h"
 
 #include <kleo/cryptobackendfactory.h>
@@ -179,8 +175,8 @@ void CategoryListViewItem::paintCell( QPainter * p, const QColorGroup & cg, int 
 ////
 
 Kleo::AppearanceConfigWidget::AppearanceConfigWidget (
-  QWidget* parent,  const char* name, Qt::WFlags fl )
-  : AppearanceConfigWidgetBase( parent, name, fl )
+  QWidget* parent )
+  : AppearanceConfigWidgetBase( parent)
 {
     categoriesLV->setSorting( -1 );
     load();

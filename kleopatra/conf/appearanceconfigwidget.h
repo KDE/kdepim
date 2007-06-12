@@ -34,8 +34,18 @@
 #ifndef APPEARANCECONFIGWIDGET_H
 #define APPEARANCECONFIGWIDGET_H
 
-#include "appearanceconfigwidgetbase.h"
+#include "ui_appearanceconfigwidgetbase.h"
 #include <QStringList>
+
+
+class AppearanceConfigWidgetBase : public QWidget, public Ui::AppearanceConfigWidgetBase
+{
+public:
+  AppearanceConfigWidgetBase( QWidget *parent ) : QWidget( parent ) {
+    setupUi( this );
+  }
+};
+
 
 namespace Kleo {
 
@@ -44,7 +54,7 @@ namespace Kleo {
 
   public:
     AppearanceConfigWidget(
-      QWidget * parent=0, const char * name=0, Qt::WFlags f=0 );
+      QWidget * parent=0);
     ~AppearanceConfigWidget();
 
     void load();
