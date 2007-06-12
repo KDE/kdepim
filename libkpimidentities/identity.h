@@ -8,6 +8,7 @@
 #define kpim_identity_h
 
 #include <libkpimidentities/config-libkpimidentities.h> // HAVE_GPGME
+#include <libkpimidentities_export.h>
 
 #ifdef HAVE_GPGME
 #include <kleo/enum.h>
@@ -29,15 +30,21 @@ class QMimeData;
 
 namespace KPIM {
 
+KPIMIDENTITIES_EXPORT QDataStream & operator<<( QDataStream & stream, const KPIM::Signature & sig );
+KPIMIDENTITIES_EXPORT QDataStream & operator>>( QDataStream & stream, KPIM::Signature & sig );
+
+KPIMIDENTITIES_EXPORT QDataStream & operator<<( QDataStream & stream, const KPIM::Identity & ident );
+KPIMIDENTITIES_EXPORT QDataStream & operator>>( QDataStream & stream, KPIM::Identity & ident );
+
 /**
  * @short abstraction of a signature (aka "footer").
  * @author Marc Mutz <mutz@kde.org>
  */
-class KDE_EXPORT Signature {
+class KPIMIDENTITIES_EXPORT Signature {
   friend class Identity;
 
-  friend QDataStream & KPIM::operator<<( QDataStream & stream, const Signature & sig );
-  friend QDataStream & KPIM::operator>>( QDataStream & stream, Signature & sig );
+  friend QDataStream & operator<<( QDataStream & stream, const Signature & sig );
+  friend QDataStream & operator>>( QDataStream & stream, Signature & sig );
 
 public:
   /** Type of signature (ie. way to obtain the signature text) */
@@ -89,7 +96,7 @@ private:
 };
 
 /** User identity information */
-class KDE_EXPORT Identity
+class KPIMIDENTITIES_EXPORT Identity
 {
   // only the identity manager should be able to construct and
   // destruct us, but then we get into problems with using
@@ -319,12 +326,6 @@ protected:
   Kleo::CryptoMessageFormat mPreferredCryptoMessageFormat;
 #endif
 };
-
-KDE_EXPORT QDataStream & operator<<( QDataStream & stream, const KPIM::Signature & sig );
-KDE_EXPORT QDataStream & operator>>( QDataStream & stream, KPIM::Signature & sig );
-
-KDE_EXPORT QDataStream & operator<<( QDataStream & stream, const KPIM::Identity & ident );
-KDE_EXPORT QDataStream & operator>>( QDataStream & stream, KPIM::Identity & ident );
 
 } // namespace KPIM
 

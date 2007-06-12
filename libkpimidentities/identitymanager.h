@@ -32,10 +32,7 @@
 #define _KPIM_IDENTITYMANAGER_H_
 
 #include <libkdepim/configmanager.h>
-
-
-//Added by qt3to4:
-#include <kdemacros.h>
+#include <libkpimidentities_export.h>
 
 class KConfigBase;
 class KConfig;
@@ -48,7 +45,7 @@ class Identity;
  * @short Manages the list of identities.
  * @author Marc Mutz <mutz@kde.org>
  **/
-class KDE_EXPORT IdentityManager : public ConfigManager
+class KPIMIDENTITIES_EXPORT IdentityManager : public ConfigManager
 {
   Q_OBJECT
 public:

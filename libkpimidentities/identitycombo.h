@@ -33,8 +33,7 @@
 #define _KPIM_IDENTITYCOMBO_H_
 
 #include <QComboBox>
-
-#include <kdemacros.h>
+#include <libkpimidentities_export.h>
 
 class QString;
 
@@ -48,7 +47,7 @@ class Identity;
  * @author Marc Mutz <mutz@kde.org>
  **/
 
-class KDE_EXPORT IdentityCombo : public QComboBox {
+class KPIMIDENTITIES_EXPORT IdentityCombo : public QComboBox {
   Q_OBJECT
 public:
   IdentityCombo( IdentityManager* manager, QWidget * parent=0 );
