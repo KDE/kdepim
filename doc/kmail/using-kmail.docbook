@@ -205,8 +205,9 @@ select addresses from there.</para>
 <para>When you start typing an address in the
 <guilabel>To:</guilabel>/<guilabel>CC:</guilabel>/<guilabel>BCC:</guilabel>
 fields, a popup will appear that offers matching addresses that have been used recently
-and matching addresses from your address book; if you do not like the automatic
-popup you can disable it by clicking with the &RMB; on the field and choosing
+and matching addresses from your address book. If you use multiple addressbooks, you can
+use the TAB key to select the first entry of the next addressbook in the list.
+If you do not like the automatic popup you can disable it by clicking with the &RMB; on the field and choosing
 a different completion mode.</para>
 
 <para>Whenever you want to add more than one
