@@ -24,7 +24,7 @@
 #include <kdemacros.h>
 
 #ifndef KPGP_EXPORT
-# if defined(MAKE_LIBKPGP_LIB)
+# if defined(MAKE_KPGP_LIB)
    /* We are building this library */ 
 #  define KPGP_EXPORT KDE_EXPORT
 # else

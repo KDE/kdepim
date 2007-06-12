@@ -43,6 +43,9 @@
 #include <kstaticdeleter.h>
 #include <kconfiggroup.h>
 
+#ifdef ERROR
+#undef ERROR
+#endif
 #include "kpgpbase.h"
 #include "kpgpui.h"
 #include "kpgp.h"
