@@ -24,7 +24,7 @@
 #include <kdemacros.h>
 
 #ifndef KSIEVE_EXPORT
-# if defined(MAKE_LIBKSIEVE_LIB)
+# if defined(MAKE_KSIEVE_LIB)
    /* We are building this library */ 
 #  define KSIEVE_EXPORT KDE_EXPORT
 # else
