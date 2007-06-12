@@ -33,7 +33,7 @@
 #ifndef __KLEO_TESTS_GNUPGVIEWER_H__
 #define __KLEO_TESTS_GNUPGVIEWER_H__
 
-#include <q3textedit.h>
+#include <qtextedit.h>
 #include <QString>
 
 namespace Kleo {
@@ -42,10 +42,10 @@ namespace Kleo {
 class K3Process;
 class QStringList;
 
-class GnuPGViewer : public Q3TextEdit {
+class GnuPGViewer : public QTextEdit {
   Q_OBJECT
 public:
-  GnuPGViewer( QWidget * parent=0, const char * name=0 );
+  GnuPGViewer( QWidget * parent=0 );
   ~GnuPGViewer();
 
   void setProcess( Kleo::GnuPGProcessBase * process );

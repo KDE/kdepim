@@ -37,7 +37,6 @@
 #include <iostream>
 //Added by qt3to4:
 #include <Q3ValueList>
-#include <Q3CString>
 using namespace std;
 
 #include <stdlib.h>

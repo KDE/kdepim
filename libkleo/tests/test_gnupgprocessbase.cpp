@@ -46,11 +46,11 @@
 
 #include <QStringList>
 
-GnuPGViewer::GnuPGViewer( QWidget * parent, const char * name )
-  : Q3TextEdit( parent, name ), mProcess( 0 )
+GnuPGViewer::GnuPGViewer( QWidget * parent )
+  : QTextEdit( parent ), mProcess( 0 )
 {
-  setTextFormat( Qt::LogText );
-  setMaxLogLines( 10000 );
+  setAcceptRichText(false);
+  document()->setMaximumBlockCount( 10000 );
 }
 
 GnuPGViewer::~GnuPGViewer() {
