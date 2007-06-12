@@ -44,12 +44,7 @@ kde4_automoc(${mimelib_LIB_SRCS})
 
 kde4_add_library(mimelib SHARED ${mimelib_LIB_SRCS})
 
-if(NOT WIN32)
-  # fixme: doesn't kdecore depend on kdefakes so it's not needed here?
-  target_link_libraries(mimelib  ${KDE4_KDECORE_LIBS} kdefakes )
-else(NOT WIN32)
-  target_link_libraries(mimelib  ${KDE4_KDECORE_LIBS})
-endif(NOT WIN32)
+target_link_libraries(mimelib  ${KDE4_KDECORE_LIBS})
 
 set_target_properties(mimelib PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
 install(TARGETS mimelib  DESTINATION ${LIB_INSTALL_DIR})
