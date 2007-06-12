@@ -148,7 +148,7 @@ protected:
 
 inline DwBool DwAddress::IsValid() const
 {
-    return mIsValid;
+    return mIsValid != 0;
 }
 
 #endif

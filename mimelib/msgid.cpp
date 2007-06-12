@@ -322,7 +322,9 @@ void DwMsgId::CheckInvariants() const
 
 #if defined(DW_WIN32)
 
+#ifndef _PID_T_
 typedef unsigned pid_t;
+#endif
 
 static DwUint32 GetPid()
 {

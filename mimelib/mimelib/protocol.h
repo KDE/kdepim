@@ -115,7 +115,7 @@ public:
 //+ Noentry mIsDllOpen mIsOpen mSocket mPort mServerName mReceiveTimeout
 
 
-class DwProtocolClient {
+class DW_EXPORT DwProtocolClient {
 
 public:
 
