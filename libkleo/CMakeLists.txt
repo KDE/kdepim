@@ -3,7 +3,6 @@ include_directories(${CMAKE_SOURCE_DIR}/libkpgp/ ${CMAKE_BINARY_DIR}/libkleo/bac
 add_definitions (-DQT3_SUPPORT -DQT3_SUPPORT_WARNINGS)
 
 add_subdirectory( pics )
-add_subdirectory( kleo )
 add_subdirectory( backends )
 add_subdirectory( tests )
 
@@ -90,3 +89,31 @@ target_link_libraries(kleopatra  ${KDE4_KDE3SUPPORT_LIBS} qgpgme  )
 
 set_target_properties(kleopatra PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
 install(TARGETS kleopatra  DESTINATION ${LIB_INSTALL_DIR})
+
+install( FILES 
+	kleo/enum.h  
+	kleo/cryptobackend.h 
+	kleo/cryptobackendfactory.h 
+	kleo/cryptoconfig.h 
+	kleo/dn.h 
+	kleo/job.h 
+	kleo/keylistjob.h 
+	kleo/keygenerationjob.h 
+	kleo/importjob.h 
+	kleo/exportjob.h 
+	kleo/downloadjob.h 
+	kleo/deletejob.h 
+	kleo/encryptjob.h 
+	kleo/decryptjob.h 
+	kleo/signjob.h 
+	kleo/verifydetachedjob.h 
+	kleo/verifyopaquejob.h  
+	kleo/decryptverifyjob.h 
+	kleo/signencryptjob.h 
+	kleo/refreshkeysjob.h 
+	kleo/multideletejob.h  
+	kleo/hierarchicalkeylistjob.h  
+	kleo/keyfilter.h 
+	kleo/keyfiltermanager.h 
+	DESTINATION ${INCLUDE_INSTALL_DIR}/kleo)
+
