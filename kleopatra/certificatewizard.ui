@@ -439,7 +439,7 @@ If you want to change anything, press Back and make your changes; otherwise, pre
           </widget>
         </item>
         <item>
-          <widget class="Q3TextEdit" name="certificateTE" >
+          <widget class="QTextEdit" name="certificateTE" >
             <property name="readOnly" >
               <bool>true</bool>
             </property>
