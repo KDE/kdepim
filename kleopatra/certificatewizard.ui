@@ -462,12 +462,6 @@ If you want to change anything, press Back and make your changes; otherwise, pre
   </includes>
   <connections>
     <connection>
-      <sender>generatePB</sender>
-      <signal>clicked()</signal>
-      <receiver>CertificateWizard</receiver>
-      <slot>slotGenerateCertificate()</slot>
-    </connection>
-    <connection>
       <sender>sendToCARB</sender>
       <signal>toggled(bool)</signal>
       <receiver>caEmailED</receiver>
@@ -478,12 +472,6 @@ If you want to change anything, press Back and make your changes; otherwise, pre
       <signal>toggled(bool)</signal>
       <receiver>storeUR</receiver>
       <slot>setEnabled(bool)</slot>
-    </connection>
-    <connection>
-      <sender>caEmailED</sender>
-      <signal>textChanged(QString)</signal>
-      <receiver>CertificateWizard</receiver>
-      <slot>slotEmailAddressChanged(QString)</slot>
     </connection>
     <connection>
       <sender>sendToCARB</sender>

@@ -68,7 +68,6 @@
 #include <QLayout>
 #include <QLabel>
 #include <QComboBox>
-//Added by qt3to4:
 #include <QGridLayout>
 #include <QByteArray>
 
@@ -136,6 +135,8 @@ CertificateWizardImpl::CertificateWizardImpl( QWidget* parent )
 	     this, SLOT( slotHelpClicked() ) );
     connect( insertAddressButton, SIGNAL( clicked() ),
 	     this, SLOT( slotSetValuesFromWhoAmI() ) );
+    
+    connect(generatePB,SIGNAL(clicked()), this, SLOT(slotGenerateCertificate()));
 
     for ( unsigned int i = 0 ; i < numKeyLengths ; ++i )
       keyLengthCB->addItem( i18np("%1 bit", "%1 bits", keyLengths[i] ) );
