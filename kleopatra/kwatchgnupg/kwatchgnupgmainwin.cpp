@@ -71,6 +71,7 @@ KWatchGnuPGMainWindow::KWatchGnuPGMainWindow( QWidget* parent )
   mCentralWidget = new QTextEdit( this );
   mCentralWidget->setObjectName( "central log view" );
   mCentralWidget->setTextFormat( Qt::LogText );
+  mCentralWidget->setReadOnly(true);
   setCentralWidget( mCentralWidget );
 
   mWatcher = new K3ProcIO( QTextCodec::codecForMib( 106 /*utf-8*/ ) );
