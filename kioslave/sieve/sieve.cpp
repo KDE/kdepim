@@ -14,7 +14,7 @@
  *                                                                         *
  ***************************************************************************/
 
-/** 
+/**
  * Portions adapted from the SMTP ioslave.
  * Copyright (c) 2000, 2001 Alex Zepeda <jazepeda@pacbell.net>
  * Copyright (c) 2001 Michael Häckel <Michael@Haeckel.Net>
@@ -56,7 +56,7 @@ static inline
 #endif
 
 #define SIEVE_DEFAULT_PORT 2000
-  
+
 static sasl_callback_t callbacks[] = {
     { SASL_CB_ECHOPROMPT, NULL, NULL },
     { SASL_CB_NOECHOPROMPT, NULL, NULL },
@@ -69,6 +69,17 @@ static sasl_callback_t callbacks[] = {
     { SASL_CB_LIST_END, NULL, NULL }
 };
 
+static sasl_callback_t client_callbacks[] = {
+    { SASL_CB_ECHOPROMPT, NULL, NULL },
+    { SASL_CB_NOECHOPROMPT, NULL, NULL },
+    { SASL_CB_GETREALM, NULL, NULL },
+    { SASL_CB_USER, NULL, NULL },
+    { SASL_CB_AUTHNAME, NULL, NULL },
+    { SASL_CB_PASS, NULL, NULL },
+    { SASL_CB_CANON_USER, NULL, NULL },
+    { SASL_CB_LIST_END, NULL, NULL }
+};
+
 static const unsigned int SIEVE_DEFAULT_RECIEVE_BUFFER = 512;
 
 using namespace KIO;
@@ -77,7 +88,7 @@ extern "C"
 	KDE_EXPORT int kdemain(int argc, char **argv)
 	{
 		KComponentData instance("kio_sieve" );
-		
+
 		ksDebug() << "*** Starting kio_sieve " << endl;
 
 		if (argc != 4) {
@@ -226,17 +237,17 @@ void kio_sieveProtocol::openConnection()
 bool kio_sieveProtocol::parseCapabilities(bool requestCapabilities/* = false*/)
 {
 	ksDebug() << k_funcinfo << endl;
-	
+
 	// Setup...
 	bool ret = false;
-	
+
 	if (requestCapabilities) {
 		sendData("CAPABILITY");
 	}
 
 	while (receiveData()) {
 		ksDebug() << "Looping receive" << endl;
-		
+
 		if (r.getType() == kio_sieveResponse::ACTION) {
 			if ( r.getAction().toLower().contains("ok") ) {
 				ksDebug() << "Sieve server ready & awaiting authentication." << endl;
@@ -267,12 +278,12 @@ bool kio_sieveProtocol::parseCapabilities(bool requestCapabilities/* = false*/)
 			ksDebug() << "Server supports TLS" << endl;
 			m_supportsTLS = true;
 			setMetaData("tlsSupported", "true");
-			
+
 		} else {
 			ksDebug() << "Unrecognised key " << r.getKey() << endl;
 		}
 	}
-	
+
 	if (!m_supportsTLS) {
 		setMetaData("tlsSupported", "false");
 	}
@@ -299,7 +310,7 @@ void kio_sieveProtocol::changeCheck( const KUrl &url )
 		if ( query.startsWith("?") ) query.remove( 0, 1 );
 		QStringList q = query.split( "," );
 		QStringList::iterator it;
-  
+
 		for ( it = q.begin(); it != q.end(); ++it ) {
 			if ( ( (*it).section('=',0,0) ).toLower() == "x-mech" ) {
 				auth = ( (*it).section('=',1) ).toUpper();
@@ -323,7 +334,7 @@ void kio_sieveProtocol::changeCheck( const KUrl &url )
 bool kio_sieveProtocol::connect(bool useTLSIfAvailable)
 {
 	ksDebug() << k_funcinfo << endl;
-	
+
 	if (isConnectionValid()) return true;
 
 	infoMessage(i18n("Connecting to %1...", m_sServer));
@@ -332,7 +343,7 @@ bool kio_sieveProtocol::connect(bool useTLSIfAvailable)
 		error(ERR_CONNECTION_BROKEN, i18n("The connection to the server was lost."));
 		return false;
 	}
-	
+
 	setBlockConnection(true);
 
 	if (!connectToHost(m_sServer, m_sPort, true)) {
@@ -404,7 +415,7 @@ void kio_sieveProtocol::disconnect(bool forcibly)
 /*void kio_sieveProtocol::slave_status()
 {
 	slaveStatus(isConnectionValid() ? m_sServer : "", isConnectionValid());
-	
+
 	finished();
 }*/
 
@@ -598,7 +609,7 @@ void kio_sieveProtocol::put(const KUrl& url, int /*permissions*/, bool /*overwri
 
 	if (operationSuccessful())
 		ksDebug() << "Script upload complete." << endl;
-	
+
 	else {
 		/* The managesieve server parses received scripts and rejects
 		 * scripts which are not syntactically correct. Here we expect
@@ -764,7 +775,7 @@ void kio_sieveProtocol::del(const KUrl &url, bool isfile)
 	}
 
 	infoMessage(i18n("Done."));
-	
+
 	finished();
 }
 
@@ -781,7 +792,7 @@ void kio_sieveProtocol::chmod(const KUrl& url, int permissions)
     error(ERR_CANNOT_CHMOD, i18n("Cannot chmod to anything but 0700 (active) or 0600 (inactive script)."));
     return;
   }
-  
+
   finished();
 }
 
@@ -896,7 +907,7 @@ bool kio_sieveProtocol::saslInteract( void *in, AuthInfo &ai )
 	//some mechanisms do not require username && pass, so it doesn't need a popup
 	//window for getting this info
 	for ( ; interact->id != SASL_CB_LIST_END; interact++ ) {
-		if ( interact->id == SASL_CB_AUTHNAME || 
+		if ( interact->id == SASL_CB_AUTHNAME ||
 			interact->id == SASL_CB_PASS ) {
 
 			if (m_sUser.isEmpty() || m_sPass.isEmpty()) {
@@ -910,7 +921,7 @@ bool kio_sieveProtocol::saslInteract( void *in, AuthInfo &ai )
 			break;
 		}
 	}
-  
+
 	interact = ( sasl_interact_t * ) in;
 	while( interact->id != SASL_CB_LIST_END ) {
 		ksDebug() << "SASL_INTERACT id: " << interact->id << endl;
@@ -964,7 +975,7 @@ bool kio_sieveProtocol::authenticate()
 	  "(usually the same as your email password):");
 
 	result = sasl_client_new( "sieve",
-		m_sServer.toLatin1(), 0, 0, NULL, 0, &conn );
+		m_sServer.toLatin1(), 0, 0, client_callbacks, 0, &conn );
 
 	if ( result != SASL_OK ) {
 		ksDebug() << "sasl_client_new failed with: " << result << endl;
@@ -981,10 +992,10 @@ bool kio_sieveProtocol::authenticate()
 		strList = m_sasl_caps;
 
 	do {
-		result = sasl_client_start(conn, strList.join(" ").toLatin1(), 
+		result = sasl_client_start(conn, strList.join(" ").toLatin1(),
 			&client_interact, &out, &outlen, &mechusing);
 
-		if (result == SASL_INTERACT) 
+		if (result == SASL_INTERACT)
 			if ( !saslInteract( client_interact, ai ) ) {
 				sasl_dispose( &conn );
 				return false;
@@ -1011,13 +1022,13 @@ bool kio_sieveProtocol::authenticate()
 	ksDebug() << "firstCommand: " << firstCommand << endl;
 	if (!sendData( firstCommand.toLatin1() ))
 		return false;
-	
+
 	do {
 		receiveData();
-		
+
 		if (operationResult() != OTHER)
 			break;
-		
+
 		ksDebug() << "Challenge len  " << r.getQuantity() << endl;
 
 		if (r.getType() != kio_sieveResponse::QUANTITY) {
@@ -1044,7 +1055,7 @@ bool kio_sieveProtocol::authenticate()
 			result = sasl_client_step(conn, challenge.isEmpty() ? 0 : challenge.data(),
 				challenge.size(), &client_interact, &out, &outlen);
 
-			if (result == SASL_INTERACT) 
+			if (result == SASL_INTERACT)
 				if ( !saslInteract( client_interact, ai ) ) {
 					sasl_dispose( &conn );
 					return false;
@@ -1058,14 +1069,14 @@ bool kio_sieveProtocol::authenticate()
 			sasl_dispose( &conn );
 			return false;
 		}
-  
+
 		sendData('\"' + QByteArray::fromRawData( out, outlen ).toBase64() + '\"');
 //    ksDebug() << "C-1:  [" << out << "]." << endl;
 	} while ( true );
 
 	ksDebug() << "Challenges finished." << endl;
 	sasl_dispose( &conn );
-    
+
 	if (operationResult() == OK) {
 		// Authentication succeeded.
 		return true;
@@ -1220,6 +1231,6 @@ int kio_sieveProtocol::operationResult()
 			return BYE;
 		}
 	}
-	
+
 	return OTHER;
 }
