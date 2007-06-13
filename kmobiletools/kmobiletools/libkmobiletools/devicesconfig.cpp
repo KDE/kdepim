@@ -104,12 +104,12 @@ void DevicesConfig::deletePrefs(const QString &groupName)
 const QString DevicesConfig::deviceGroup( const QString &devicename)
 {
     QStringList validDevices = MainConfig::devicelist();
+    KConfig cfg/*=new KConfig*/("kmobiletoolsdevicesrc");
     QString cgroup;
-    for(int i=0; i<100; i++)
+    for(int i=0; i<cfg.groupList().size() ; i++)
     {
-        cgroup="device-%1";
-        cgroup=cgroup.arg(i);
-        if( DevicesConfig::prefs( cgroup )->devicename() == devicename) {
+        cgroup=cfg.groupList().at(i);
+        if( cfg.group(cgroup).readEntry("devicename") == devicename) {
       if ( ! validDevices.contains(cgroup) ) {
         DevicesConfig::deletePrefs(cgroup);
         kDebug() << "Removed stale group " << cgroup << endl;
