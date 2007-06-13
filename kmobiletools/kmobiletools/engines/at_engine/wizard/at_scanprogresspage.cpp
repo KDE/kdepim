@@ -106,18 +106,18 @@ void AT_ScanProgressPage::startScan()
     if(!cfg->at_connections() ) return;
     QStringList devices;
     TestPhoneDeviceJob *curjob;
-    if(cfg->at_connections() & AT_Engine::ConnectionUSB)
+    if(cfg->at_connections() & ATDevicesConfig::ConnectionUSB)
         for(uchar i=0; i<10; i++) {
             engine->enqueueJob( new FindDeviceDataJob(QString("/dev/ttyACM%1").arg(i), engine) );
             engine->enqueueJob(new FindDeviceDataJob(QString("/dev/ttyUSB%1").arg(i), engine) );
             totaljobs+=2;
         }
-    if(cfg->at_connections() & AT_Engine::ConnectionIrDA)
+    if(cfg->at_connections() & ATDevicesConfig::ConnectionIrDA)
         for(uchar i=0; i<10; i++) {
             engine->enqueueJob(new FindDeviceDataJob(QString("/dev/ircomm%1").arg(i), engine) );
             totaljobs++;
         }
-    if(cfg->at_connections() & AT_Engine::ConnectionSerial)
+    if(cfg->at_connections() & ATDevicesConfig::ConnectionSerial)
         for(uchar i=0; i<10; i++) {
             engine->enqueueJob(new FindDeviceDataJob(QString("/dev/ttyS%1").arg(i), engine) );
             totaljobs++;
@@ -125,7 +125,7 @@ void AT_ScanProgressPage::startScan()
 /*    if(cfg->at_connections() & ConnectionBluetooth)
         for(QStringList::ConstIterator it=bluetoothDevices.begin(); it!=bluetoothDevices.end(); ++it)
             engine->enqueueJob(new FindDeviceDataJob(*it, engine) );*/
-    if(cfg->at_connections() & AT_Engine::ConnectionUser)
+    if(cfg->at_connections() & ATDevicesConfig::ConnectionUser)
         for(QStringList::ConstIterator it=cfg->at_userdevices().begin(); it!=cfg->at_userdevices().end(); ++it) {
             engine->enqueueJob(new FindDeviceDataJob(*it, engine) );
             totaljobs++;

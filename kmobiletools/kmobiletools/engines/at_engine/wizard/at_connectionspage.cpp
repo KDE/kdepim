@@ -36,11 +36,11 @@ AT_ConnectionsPage::AT_ConnectionsPage(QWidget *parent)
     : ConnectionsPage(parent), blueWidget(NULL), usrConnWidget(NULL)
 {
     QListWidgetItem *tempitem;
-    tempitem=new QListWidgetItem(i18nc("Connections list", "USB Cable"), connections(), AT_Engine::ConnectionUSB + QListWidgetItem::UserType);
-    tempitem=new QListWidgetItem(i18nc("Connections list", "Serial Cable"), connections(), AT_Engine::ConnectionSerial + QListWidgetItem::UserType);
-    tempitem=new QListWidgetItem(i18nc("Connections list", "Bluetooth"), connections(), AT_Engine::ConnectionBluetooth + QListWidgetItem::UserType);
-    tempitem=new QListWidgetItem(i18nc("Connections list", "InfraRed"), connections(), AT_Engine::ConnectionIrDA + QListWidgetItem::UserType);
-    tempitem=new QListWidgetItem(i18nc("Connections list", "User Defined"), connections(), AT_Engine::ConnectionUser + QListWidgetItem::UserType);
+    tempitem=new QListWidgetItem(i18nc("Connections list", "USB Cable"), connections(), ATDevicesConfig::ConnectionUSB + QListWidgetItem::UserType);
+    tempitem=new QListWidgetItem(i18nc("Connections list", "Serial Cable"), connections(), ATDevicesConfig::ConnectionSerial + QListWidgetItem::UserType);
+    tempitem=new QListWidgetItem(i18nc("Connections list", "Bluetooth"), connections(), ATDevicesConfig::ConnectionBluetooth + QListWidgetItem::UserType);
+    tempitem=new QListWidgetItem(i18nc("Connections list", "InfraRed"), connections(), ATDevicesConfig::ConnectionIrDA + QListWidgetItem::UserType);
+    tempitem=new QListWidgetItem(i18nc("Connections list", "User Defined"), connections(), ATDevicesConfig::ConnectionUser + QListWidgetItem::UserType);
 }
 
 void AT_ConnectionsPage::initializePage() {
@@ -67,20 +67,20 @@ void AT_ConnectionsPage::setSelectedConnections(int) {
 void AT_ConnectionsPage::selChanged() {
     int sel=selectedConnections();
     // Bluetooth
-    if( (sel & AT_Engine::ConnectionBluetooth) && ! blueWidget ) {
+    if( (sel & ATDevicesConfig::ConnectionBluetooth) && ! blueWidget ) {
         blueWidget=new BluetoothWidget();
         connect(blueWidget, SIGNAL(completeChanged() ), this, SIGNAL(completeChanged() ) );
         details()->addTab(blueWidget, i18nc("Bluetooth Connection details tab title in the wizard", "Bluetooth") );
-    } else if (! (sel & AT_Engine::ConnectionBluetooth) ) {
+    } else if (! (sel & ATDevicesConfig::ConnectionBluetooth) ) {
         if (blueWidget) details()->removeTab(details()->indexOf(blueWidget));
         delete blueWidget;
         blueWidget=NULL;
     }
-    if( (sel & AT_Engine::ConnectionUser) && ! usrConnWidget ) {
+    if( (sel & ATDevicesConfig::ConnectionUser) && ! usrConnWidget ) {
         usrConnWidget=new UserConnectionWidget(this);
         connect(usrConnWidget, SIGNAL(completeChanged() ), this, SIGNAL(completeChanged() ) );
         details()->addTab(usrConnWidget, i18nc("User Defined Connection details tab title in the wizard", "User Defined") );
-    } else if (! (sel & AT_Engine::ConnectionUser) ) {
+    } else if (! (sel & ATDevicesConfig::ConnectionUser) ) {
         if (usrConnWidget) {
             details()->removeTab(details()->indexOf(usrConnWidget));
             disconnect(usrConnWidget);

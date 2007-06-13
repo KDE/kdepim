@@ -5,6 +5,7 @@ ClassName=ATDevicesConfig
 Singleton=false
 Mutators=true
 #Visibility=KMOBILETOOLS_EXPORT
+CustomAdditions=true
 MemberVariables=dpointer
 GlobalEnums=true
 ItemAccessors=false

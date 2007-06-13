@@ -30,6 +30,8 @@ class EngineConfigWidget : public QWidget, public Ui::EngineConfigBase {
 Q_OBJECT
 public:
     EngineConfigWidget(QWidget *parent);
+public slots:
+    void kbgChanged(int);
 };
 
 

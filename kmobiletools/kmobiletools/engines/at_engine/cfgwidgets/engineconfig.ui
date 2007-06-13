@@ -5,8 +5,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>437</width>
-    <height>495</height>
+    <width>459</width>
+    <height>489</height>
    </rect>
   </property>
   <layout class="QGridLayout" >
@@ -30,86 +30,104 @@
    </property>
    <item row="0" column="0" >
     <widget class="QTabWidget" name="tabWidget2" >
+     <property name="currentIndex" >
+      <number>0</number>
+     </property>
      <widget class="QWidget" name="tab" >
       <attribute name="title" >
        <string>De&amp;vice Options</string>
       </attribute>
       <layout class="QGridLayout" >
-       <property name="leftMargin" >
-        <number>11</number>
-       </property>
-       <property name="topMargin" >
-        <number>11</number>
-       </property>
-       <property name="rightMargin" >
-        <number>11</number>
-       </property>
-       <property name="bottomMargin" >
-        <number>11</number>
-       </property>
-       <property name="horizontalSpacing" >
-        <number>6</number>
-       </property>
-       <property name="verticalSpacing" >
-        <number>6</number>
-       </property>
        <item row="0" column="0" colspan="2" >
-        <widget class="Q3ButtonGroup" name="bg_devtype" >
+        <widget class="QGroupBox" name="at_connections" >
          <property name="title" >
           <string>Device Type</string>
          </property>
-         <property name="orientation" >
-          <enum>Qt::Vertical</enum>
-         </property>
          <layout class="QGridLayout" >
-          <property name="leftMargin" >
-           <number>11</number>
-          </property>
-          <property name="topMargin" >
-           <number>11</number>
-          </property>
-          <property name="rightMargin" >
-           <number>11</number>
-          </property>
-          <property name="bottomMargin" >
-           <number>11</number>
-          </property>
-          <property name="horizontalSpacing" >
-           <number>6</number>
-          </property>
-          <property name="verticalSpacing" >
-           <number>6</number>
-          </property>
           <item row="0" column="0" >
-           <widget class="QCheckBox" name="kcfg_at_usb" >
-            <property name="text" >
-             <string>&amp;USB Cable</string>
-            </property>
-           </widget>
+           <layout class="QHBoxLayout" >
+            <item>
+             <layout class="QVBoxLayout" >
+              <item>
+               <widget class="QCheckBox" name="kcfg_at_connUSB" >
+                <property name="text" >
+                 <string>&amp;USB Cable</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QCheckBox" name="kcfg_at_connIrdA" >
+                <property name="text" >
+                 <string>I&amp;nfrared</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <layout class="QVBoxLayout" >
+              <item>
+               <widget class="QCheckBox" name="kcfg_at_connBluetooth" >
+                <property name="text" >
+                 <string>Bluetoot&amp;h</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QCheckBox" name="kcfg_at_connSerial" >
+                <property name="text" >
+                 <string>&amp;Serial Cable</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+           </layout>
           </item>
           <item row="1" column="0" >
-           <widget class="QCheckBox" name="kcfg_at_irda" >
+           <widget class="QCheckBox" name="kcfg_at_connCustom" >
             <property name="text" >
-             <string>I&amp;nfrared</string>
-            </property>
-           </widget>
-          </item>
-          <item row="2" column="0" >
-           <widget class="QCheckBox" name="kcfg_at_bluetooth" >
-            <property name="text" >
-             <string>Bluetoot&amp;h</string>
-            </property>
-           </widget>
-          </item>
-          <item row="3" column="0" >
-           <widget class="QCheckBox" name="kcfg_at_serial" >
-            <property name="text" >
-             <string>&amp;Serial Cable</string>
+             <string>User Defined</string>
             </property>
            </widget>
           </item>
          </layout>
         </widget>
+       </item>
+       <item row="1" column="0" >
+        <widget class="KPushButton" name="b_advopts_details" />
+       </item>
+       <item row="1" column="1" >
+        <spacer>
+         <property name="orientation" >
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeType" >
+          <enum>QSizePolicy::Expanding</enum>
+         </property>
+         <property name="sizeHint" >
+          <size>
+           <width>121</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item row="2" column="0" >
+        <spacer>
+         <property name="orientation" >
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeType" >
+          <enum>QSizePolicy::MinimumExpanding</enum>
+         </property>
+         <property name="sizeHint" >
+          <size>
+           <width>21</width>
+           <height>0</height>
+          </size>
+         </property>
+        </spacer>
        </item>
        <item row="3" column="0" colspan="2" >
         <widget class="QTabWidget" name="advoptstab" >
@@ -146,7 +164,7 @@
             <number>0</number>
            </property>
            <item row="0" column="0" >
-            <widget class="KEditListBox" native="1" name="kcfg_atdevices" />
+            <widget class="KEditListBox" name="kcfg_at_userdevices" />
            </item>
           </layout>
          </widget>
@@ -250,24 +268,24 @@
               <number>11</number>
              </property>
              <item>
-              <widget class="KLineEdit" native="1" name="kcfg_at_initString" />
+              <widget class="KLineEdit" name="kcfg_at_initString" />
              </item>
              <item>
-              <widget class="KLineEdit" native="1" name="kcfg_at_initString2" />
+              <widget class="KLineEdit" name="kcfg_at_initString2" />
              </item>
              <item>
-              <widget class="KComboBox" native="1" name="kcfg_at_baudrate" />
+              <widget class="KComboBox" name="kcfg_at_baudrate" />
              </item>
              <item>
-              <widget class="KComboBox" native="1" name="kcfg_at_encoding" >
+              <widget class="KComboBox" name="kcfg_at_encoding" >
                <property name="enabled" >
                 <bool>true</bool>
                </property>
-               <property name="editable" stdset="0" >
+               <property name="editable" >
                 <bool>true</bool>
                </property>
-               <property name="autoCompletion" stdset="0" >
-                <bool>true</bool>
+               <property name="autoCompletion" >
+                <bool>false</bool>
                </property>
               </widget>
              </item>
@@ -302,41 +320,6 @@
           </layout>
          </widget>
         </widget>
-       </item>
-       <item row="1" column="0" >
-        <widget class="KPushButton" native="1" name="b_advopts_details" />
-       </item>
-       <item row="1" column="1" >
-        <spacer>
-         <property name="orientation" >
-          <enum>Qt::Horizontal</enum>
-         </property>
-         <property name="sizeType" >
-          <enum>QSizePolicy::Expanding</enum>
-         </property>
-         <property name="sizeHint" >
-          <size>
-           <width>121</width>
-           <height>20</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
-       <item row="2" column="0" >
-        <spacer>
-         <property name="orientation" >
-          <enum>Qt::Vertical</enum>
-         </property>
-         <property name="sizeType" >
-          <enum>QSizePolicy::MinimumExpanding</enum>
-         </property>
-         <property name="sizeHint" >
-          <size>
-           <width>21</width>
-           <height>0</height>
-          </size>
-         </property>
-        </spacer>
        </item>
       </layout>
      </widget>
@@ -415,16 +398,13 @@
         <number>6</number>
        </property>
        <item row="0" column="0" >
-        <widget class="Q3ButtonGroup" name="kcfg_at_dialsystem" >
+        <widget class="QGroupBox" name="kcfg_at_dialsystem" >
          <property name="whatsThis" >
           <string>KMobileTools needs to know how to dial numbers with your mobile phone.
 If you can't understand these options, just try all them until you see that dialing works correctly.</string>
          </property>
          <property name="title" >
           <string>Dialing Method</string>
-         </property>
-         <property name="orientation" >
-          <enum>Qt::Vertical</enum>
          </property>
          <layout class="QGridLayout" >
           <property name="leftMargin" >
@@ -488,31 +468,29 @@ If you can't understand these options, just try all them until you see that dial
  <pixmapfunction>qPixmapFromMimeSource</pixmapfunction>
  <customwidgets>
   <customwidget>
-   <class>Q3ButtonGroup</class>
-   <extends>Q3GroupBox</extends>
-   <header>Qt3Support/Q3ButtonGroup</header>
-   <container>1</container>
-  </customwidget>
-  <customwidget>
    <class>Q3ListView</class>
    <extends>Q3Frame</extends>
    <header>q3listview.h</header>
   </customwidget>
   <customwidget>
+   <class>KComboBox</class>
+   <extends>QComboBox</extends>
+   <header>kcombobox.h</header>
+  </customwidget>
+  <customwidget>
    <class>KEditListBox</class>
+   <extends>QGroupBox</extends>
+   <header>keditlistbox.h</header>
   </customwidget>
   <customwidget>
    <class>KLineEdit</class>
-   <extends>QWidget</extends>
+   <extends>QLineEdit</extends>
    <header>klineedit.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>
-   <class>KComboBox</class>
-  </customwidget>
-  <customwidget>
    <class>KPushButton</class>
-   <extends>QWidget</extends>
+   <extends>QPushButton</extends>
    <header>kpushbutton.h</header>
    <container>1</container>
   </customwidget>
@@ -520,9 +498,6 @@ If you can't understand these options, just try all them until you see that dial
  <includes>
   <include location="local" >keditlistbox.h</include>
   <include location="local" >klineedit.h</include>
-  <include location="local" >klineedit.h</include>
-  <include location="local" >klineedit.h</include>
-  <include location="local" >kcombobox.h</include>
   <include location="local" >kcombobox.h</include>
   <include location="local" >klineedit.h</include>
   <include location="local" >kpushbutton.h</include>

@@ -28,8 +28,8 @@
 #include "calendar_jobs.h"
 #endif
 
-#include "atengineconfig.h"
 #include "atabilities.h"
+#include "atengineconfig.h"
 
 #include <libkmobiletools/engine.h>
 #include <libkmobiletools/serialdevice.h>
@@ -51,7 +51,6 @@ class AT_Engine : public KMobileTools::Engine
 {
 Q_OBJECT
 public:
-    enum Connection { ConnectionUSB=0x1, ConnectionSerial=0x2, ConnectionBluetooth=0x4, ConnectionIrDA=0x8, ConnectionUser=0x10 };
     explicit AT_Engine(QObject *parent = 0, const QString &name = QString() );
 
     ~AT_Engine();
@@ -86,14 +85,9 @@ public:
         KMobileTools::SerialManager *device;
         bool queue_sms;
         /// @TODO remove this
-        QStringList initStrings()
-        {
-            QStringList retval( config()->at_initString() );
-            retval+=config()->at_initString2();
-            return retval;
-        }
+        QStringList initStrings();
         KMobileTools::Job *p_lastJob;
-        void searchPhones(Connection connections, const QStringList &bluetoothDevices, const QStringList &customDevices);
+        void searchPhones(ATDevicesConfig::Connection connections, const QStringList &bluetoothDevices, const QStringList &customDevices);
         QList<TestPhoneDeviceJob*> l_testphonejobs;
         void enqueueTPJob(TestPhoneDeviceJob*);
 

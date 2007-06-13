@@ -20,20 +20,24 @@
    Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
    Boston, MA 02110-1301, USA.
  ***************************************************************************/
-#include "engineconfig.h"
-#include "at_engine.h"
-#include <QRadioButton>
-#include <kdebug.h>
 
-EngineConfigWidget::EngineConfigWidget(QWidget *parent)
-    : QWidget(parent)
-{
-    setupUi(this);
-}
+public:
+    enum Connection { ConnectionUSB=0x1, ConnectionSerial=0x2, ConnectionBluetooth=0x4, ConnectionIrDA=0x8, ConnectionUser=0x10 };
 
-void EngineConfigWidget::kbgChanged(int i)
-{
-    kDebug() << k_funcinfo << "();" << i << endl;
-}
+    int at_connections() {
+        int r=0;
+        if( at_connUSB() ) r|=ATDevicesConfig::ConnectionUSB;
+        if( at_connIrdA() ) r|=ATDevicesConfig::ConnectionIrDA;
+        if( at_connSerial() ) r|=ATDevicesConfig::ConnectionSerial;
+        if( at_connBluetooth() ) r|=ATDevicesConfig::ConnectionBluetooth;
+        if( at_connCustom() ) r|=ATDevicesConfig::ConnectionUser;
+        return r;
+    }
+    void setAt_connections(int c) {
+        setAt_connUSB(c & ATDevicesConfig::ConnectionUSB);
+        setAt_connIrdA(c & ATDevicesConfig::ConnectionIrDA);
+        setAt_connSerial(c & ATDevicesConfig::ConnectionSerial);
+        setAt_connBluetooth(c & ATDevicesConfig::ConnectionBluetooth);
+        setAt_connCustom(c & ATDevicesConfig::ConnectionUser);
+    }
 
-#include "engineconfig.moc"

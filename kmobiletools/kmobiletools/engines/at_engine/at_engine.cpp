@@ -96,7 +96,7 @@ AT_Engine *AT_EngineFactory::createObject(QObject *parent, const char */*classna
 void AT_Engine::slotSearchPhone()
 {
     kDebug() << "********** engine instance name: " << objectName() << endl;
-    searchPhones(static_cast<Connection>(config()->at_connections()), QStringList(), config()->at_userdevices() );
+    searchPhones(static_cast<ATDevicesConfig::Connection>(config()->at_connections()), QStringList(), config()->at_userdevices() );
 //     devicesList()->probeDevices( config()->atdevices(), engineLibName(), QStringList(config()->at_initString())+=config()->at_initString2(), false, 0, config()->mobileimei() );
     /// @TODO reimplement
 }
@@ -121,6 +121,14 @@ void AT_Engine::slotInitPhone()
     p_lastJob=new initPhoneJob(device, this);
     enqueueJob( p_lastJob );
 }
+
+QStringList AT_Engine::initStrings() 
+{
+    QStringList retval( config()->at_initString() );
+    retval+=config()->at_initString2();
+    return retval;
+}
+
 
 
 void AT_Engine::processSlot(KMobileTools::Job* job)
@@ -652,11 +660,11 @@ QString AT_Engine::parseWizardSummary(const QString &strtemplate, const QString 
     ATDevicesConfig *cfg=(ATDevicesConfig*)DEVCFG(deviceName);
     int conn=cfg->at_connections();
     QStringList tmpstrlist;
-    if(conn & ConnectionUSB)        tmpstrlist+=i18nc("USB Connection", "USB");
-    if(conn & ConnectionSerial)     tmpstrlist+=i18nc("Serial Connection", "Serial Ports");
-    if(conn & ConnectionBluetooth)  tmpstrlist+=i18nc("Bluetooth Connection", "Bluetooth");
-    if(conn & ConnectionIrDA)       tmpstrlist+=i18nc("IrDA Connection", "Infrared");
-    if(conn & ConnectionUser)       tmpstrlist+=i18nc("User-defined Connection", "User defined");
+    if(conn & ATDevicesConfig::ConnectionUSB)        tmpstrlist+=i18nc("USB Connection", "USB");
+    if(conn & ATDevicesConfig::ConnectionSerial)     tmpstrlist+=i18nc("Serial Connection", "Serial Ports");
+    if(conn & ATDevicesConfig::ConnectionBluetooth)  tmpstrlist+=i18nc("Bluetooth Connection", "Bluetooth");
+    if(conn & ATDevicesConfig::ConnectionIrDA)       tmpstrlist+=i18nc("IrDA Connection", "Infrared");
+    if(conn & ATDevicesConfig::ConnectionUser)       tmpstrlist+=i18nc("User-defined Connection", "User defined");
     kDebug() << "conn=" << conn << "; stringlist: " << tmpstrlist << endl;
     QString tempstr=i18ncp("AT Wizard summary - using <connection types>", "Using connection: %2", "Using connections: %2",
         tmpstrlist.count(), tmpstrlist.join(", ") );
@@ -683,27 +691,27 @@ void AT_Engine::enqueueTPJob(TestPhoneDeviceJob* pjob) {
     enqueueJob(pjob);
 }
 
-void AT_Engine::searchPhones(Connection connections, const QStringList &bluetoothDevices, const QStringList &customDevices) {
+void AT_Engine::searchPhones(ATDevicesConfig::Connection connections, const QStringList &bluetoothDevices, const QStringList &customDevices) {
     if(!connections) return;
     QStringList devices;
     TestPhoneDeviceJob *curjob;
-    if(connections & ConnectionUSB)
+    if(connections & ATDevicesConfig::ConnectionUSB)
         for(uchar i=0; i<10; i++) {
             enqueueTPJob( new TestPhoneDeviceJob(QString("/dev/ttyACM%1").arg(i), this) );
             enqueueTPJob(new TestPhoneDeviceJob(QString("/dev/ttyUSB%1").arg(i), this) );
         }
-    if(connections & ConnectionIrDA)
+    if(connections & ATDevicesConfig::ConnectionIrDA)
         for(uchar i=0; i<10; i++) {
             enqueueTPJob(new TestPhoneDeviceJob(QString("/dev/ircomm%1").arg(i), this) );
         }
-    if(connections & ConnectionSerial)
+    if(connections & ATDevicesConfig::ConnectionSerial)
         for(uchar i=0; i<10; i++) {
             enqueueTPJob(new TestPhoneDeviceJob(QString("/dev/ttyS%1").arg(i), this) );
         }
-    if(connections & ConnectionBluetooth)
+    if(connections & ATDevicesConfig::ConnectionBluetooth)
         for(QStringList::ConstIterator it=bluetoothDevices.begin(); it!=bluetoothDevices.end(); ++it)
             enqueueTPJob(new TestPhoneDeviceJob(*it, this) );
-    if(connections & ConnectionUser)
+    if(connections & ATDevicesConfig::ConnectionUser)
         for(QStringList::ConstIterator it=customDevices.begin(); it!=customDevices.end(); ++it)
             enqueueTPJob(new TestPhoneDeviceJob(*it, this) );
 }
