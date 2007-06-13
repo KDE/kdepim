@@ -23,15 +23,21 @@
 /* needed for KDE_EXPORT and KDE_IMPORT macros */
 #include <kdemacros.h>
 
+#ifdef Q_WS_WIN
+
 #ifndef KFILE_PLUGINS_EXPORT
-# if defined(MAKE_KFILEPLUGINS_LIB)
-   /* We are building this library */
+# ifdef MAKE_KFILEPLUGINS_LIB
 #  define KFILE_PLUGINS_EXPORT KDE_EXPORT
 # else
-   /* We are using this library */
 #  define KFILE_PLUGINS_EXPORT KDE_IMPORT
 # endif
 #endif
+
+#else // not windows
+
+#define KFILE_PLUGINS_EXPORT KDE_EXPORT
+#endif /* not windows */
+
 
 # ifndef KFILE_PLUGINS_EXPORT_DEPRECATED
 #  define KFILE_PLUGINS_EXPORT_DEPRECATED KDE_DEPRECATED KFILE_PLUGINS_EXPORT

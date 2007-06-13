@@ -23,14 +23,20 @@
 /* needed for KDE_EXPORT and KDE_IMPORT macros */
 #include <kdemacros.h>
 
+#ifdef Q_WS_WIN
+
 #ifndef KPIMIDENTITIES_EXPORT
-# if defined(MAKE_KPIMIDENTITIES_LIB)
-   /* We are building this library */ 
+# ifdef MAKE_KPIMIDENTITIES_LIB
 #  define KPIMIDENTITIES_EXPORT KDE_EXPORT
 # else
-   /* We are using this library */ 
 #  define KPIMIDENTITIES_EXPORT KDE_IMPORT
 # endif
 #endif
+
+#else // not windows
+
+#define KPIMIDENTITIES_EXPORT KDE_EXPORT
+#endif /* not windows */
+
 
 #endif
