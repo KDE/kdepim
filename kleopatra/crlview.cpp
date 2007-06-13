@@ -33,7 +33,7 @@
 #include "crlview.h"
 
 #include <klocale.h>
-#include <k3process.h>
+#include <kprocess.h>
 #include <kmessagebox.h>
 #include <kpushbutton.h>
 #include <KStandardGuiItem>
@@ -60,6 +60,7 @@ CRLView::CRLView( QWidget* parent )
 
   _textView = new QTextEdit( this );
   _textView->setFont( KGlobalSettings::fixedFont() );
+  _textView->setReadOnly(true);
   topLayout->addWidget( _textView );
 
   QHBoxLayout* hbLayout = new QHBoxLayout();
@@ -100,25 +101,26 @@ void CRLView::slotUpdateView()
   _updateButton->setEnabled( false );
   _textView->clear();
   _buffer.clear();
-  if( _process == 0 ) {
-    _process = new K3Process();
+  if( !_process ) {
+    _process = new KProcess();
     *_process << "gpgsm" << "--call-dirmngr" << "listcrls";
-    connect( _process, SIGNAL( receivedStdout( K3Process*, char*, int) ),
-	     this, SLOT( slotReadStdout( K3Process*, char*, int ) ) );
-    connect( _process, SIGNAL( processExited( K3Process* ) ),
-	     this, SLOT( slotProcessExited() ) );
+    connect( _process, SIGNAL(readyReadStandardOutput ()), this, SLOT(slotReadStdout()));
+    connect( _process, SIGNAL( finished( int, QProcess::ExitStatus ) ),
+             this, SLOT( slotProcessExited(int, QProcess::ExitStatus)));
   }
-  if( _process->isRunning() ) _process->kill();
-  if( !_process->start( K3Process::NotifyOnExit, K3Process::Stdout ) ) {
+  if( _process->state() == QProcess::Running ) _process->kill();
+  _process->setOutputChannelMode(KProcess::OnlyStdoutChannel);
+  _process->start();
+  if( !_process->waitForStarted()){
     KMessageBox::error( this, i18n( "Unable to start gpgsm process. Please check your installation." ), i18n( "Certificate Manager Error" ) );
-    slotProcessExited();
-  }
+    processExited();
+   }
   _timer->start( 1000 );
 }
 
-void CRLView::slotReadStdout( K3Process*, char* buf, int len)
+void CRLView::slotReadStdout()
 {
-  _buffer.append( QString::fromUtf8( buf, len ) );
+  _buffer.append( _process->readAllStandardOutput() );
 }
 
 void CRLView::slotAppendBuffer() {
@@ -126,13 +128,18 @@ void CRLView::slotAppendBuffer() {
   _buffer.clear();
 }
 
-void CRLView::slotProcessExited()
+void CRLView::processExited()
 {
   _timer->stop();
   slotAppendBuffer();
   _updateButton->setEnabled( true );
+}
 
-  if( !_process->normalExit() ) {
+
+void CRLView::slotProcessExited(int, QProcess::ExitStatus _status)
+{
+  processExited();
+  if( _status != QProcess::NormalExit ) {
     KMessageBox::error( this, i18n( "The GpgSM process ended prematurely because of an unexpected error." ), i18n( "Certificate Manager Error" ) );
   }
 }

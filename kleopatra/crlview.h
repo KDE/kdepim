@@ -35,10 +35,11 @@
 
 #include <QDialog>
 #include <QString>
+#include <QProcess>
 
 class QTextEdit;
 class QPushButton;
-class K3Process;
+class KProcess;
 class QTimer;
 class QCloseEvent;
 
@@ -51,18 +52,18 @@ public slots:
   void slotUpdateView();
 
 protected slots:
-  void slotReadStdout( K3Process*, char* buf, int len);
-  void slotProcessExited();
+  void slotReadStdout();
+  void slotProcessExited(int, QProcess::ExitStatus);
   void slotAppendBuffer();
 
 protected:
   void closeEvent( QCloseEvent * );
-
+  void processExited();
 private:  
   QTextEdit*   _textView;
   QPushButton* _updateButton;
   QPushButton* _closeButton;
-  K3Process*    _process;
+  KProcess*    _process;
   QTimer*      _timer;
   QString      _buffer;
 };
