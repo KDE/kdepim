@@ -8,7 +8,6 @@ OPTION(USE_CRASHHANDLER "Use internal CrashHandler Manager" OFF)
 
 
 
-message(STATUS "${CMAKE_CURRENT_SOURCE_DIR}: skipped subdir $(KONTACT_PLUGIN_SUBDIR)")
 message(STATUS "${CMAKE_CURRENT_SOURCE_DIR}: skipped subdir $(KIOSLAVES_DIR)")
 message(STATUS "${CMAKE_CURRENT_SOURCE_DIR}: skipped subdir $(TEST_DIR)")
 
