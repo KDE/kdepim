@@ -45,6 +45,16 @@
 extern "C" {
 #include <sasl/sasl.h>
 }
+static sasl_callback_t callbacks[] = {
+  { SASL_CB_ECHOPROMPT, NULL, NULL },
+  { SASL_CB_NOECHOPROMPT, NULL, NULL },
+  { SASL_CB_GETREALM, NULL, NULL },
+  { SASL_CB_USER, NULL, NULL },
+  { SASL_CB_AUTHNAME, NULL, NULL },
+  { SASL_CB_PASS, NULL, NULL },
+  { SASL_CB_CANON_USER, NULL, NULL },
+  { SASL_CB_LIST_END, NULL, NULL }
+};
 #endif
 
 #include <qregexp.h>
@@ -222,7 +232,7 @@ imapParser::clientAuthenticate ( KIO::SlaveBase *slave, KIO::AuthInfo &ai,
   result = sasl_client_new( "imap", /* FIXME: with cyrus-imapd, even imaps' digest-uri
                                        must be 'imap'. I don't know if it's good or bad. */
                        aFQDN.latin1(),
-                       0, 0, 0, 0, &conn );
+                       0, 0, callbacks, 0, &conn );
 
   if ( result != SASL_OK ) {
     kdDebug(7116) << "sasl_client_new failed with: " << result << endl;
@@ -1800,7 +1810,7 @@ imapParser::parseURL (const KURL & _url, QString & _box, QString & _section,
     QString temp = (*it);
 
     int pt = temp.find ('/');
-    if (pt > 0) 
+    if (pt > 0)
     {
       if (temp.findRev ('"', pt) == -1 || temp.find('"', pt) == -1)
       {
@@ -1832,7 +1842,7 @@ imapParser::parseURL (const KURL & _url, QString & _box, QString & _section,
     if (!_box.isEmpty () && _box[_box.length () - 1] == '/')
       _box.truncate(_box.length() - 1);
   }
-  kdDebug(7116) << "URL: box= " << _box << ", section= " << _section << ", type= " 
+  kdDebug(7116) << "URL: box= " << _box << ", section= " << _section << ", type= "
     << _type << ", uid= " << _uid << ", validity= " << _validity << ", info= " << _info << endl;
 }
 
