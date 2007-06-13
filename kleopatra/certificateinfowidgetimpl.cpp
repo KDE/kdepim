@@ -266,6 +266,7 @@ void CertificateInfoWidgetImpl::startCertificateDump() {
   if ( !proc->start( K3Process::NotifyOnExit, (K3Process::Communication)(K3Process::Stdout | K3Process::Stderr) ) ) {
     QString wmsg = i18n("Failed to execute gpgsm:\n%1", i18n( "program not found" ) );
     dumpView->setText( wmsg );
+    delete proc;
   }
 }
 
