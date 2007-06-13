@@ -24,18 +24,14 @@
 #include <kdemacros.h>
 
 #ifndef KOLABSHARED_EXPORT
-# ifdef MAKE_KOLABSHARED_LIB
+# if defined(MAKE_KOLABSHARED_LIB)
+   /* We are building this library */ 
 #  define KOLABSHARED_EXPORT KDE_EXPORT
 # else
+   /* We are using this library */ 
 #  define KOLABSHARED_EXPORT KDE_IMPORT
 # endif
 #endif
-
-#else // not windows
-
-#define KOLABSHARED_EXPORT KDE_EXPORT
-#endif /* not windows */
-
 
 # ifndef KOLABSHARED_EXPORT_DEPRECATED
 #  define KOLABSHARED_EXPORT_DEPRECATED KDE_DEPRECATED KOLABSHARED_EXPORT

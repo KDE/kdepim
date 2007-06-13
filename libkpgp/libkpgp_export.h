@@ -23,21 +23,15 @@
 /* needed for KDE_EXPORT and KDE_IMPORT macros */
 #include <kdemacros.h>
 
-#ifdef Q_WS_WIN
-
 #ifndef KPGP_EXPORT
-# ifdef MAKE_KPGP_LIB
+# if defined(MAKE_KPGP_LIB)
+   /* We are building this library */ 
 #  define KPGP_EXPORT KDE_EXPORT
 # else
+   /* We are using this library */ 
 #  define KPGP_EXPORT KDE_IMPORT
 # endif
 #endif
-
-#else // not windows
-
-#define KPGP_EXPORT KDE_EXPORT
-#endif /* not windows */
-
 
 # ifndef KPGP_EXPORT_DEPRECATED
 #  define KPGP_EXPORT_DEPRECATED KDE_DEPRECATED KPGP_EXPORT

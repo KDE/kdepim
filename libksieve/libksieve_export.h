@@ -23,22 +23,15 @@
 /* needed for KDE_EXPORT and KDE_IMPORT macros */
 #include <kdemacros.h>
 
-
-#ifdef Q_WS_WIN
-
 #ifndef KSIEVE_EXPORT
-# ifdef MAKE_KSIEVE_LIB
+# if defined(MAKE_KSIEVE_LIB)
+   /* We are building this library */ 
 #  define KSIEVE_EXPORT KDE_EXPORT
 # else
+   /* We are using this library */ 
 #  define KSIEVE_EXPORT KDE_IMPORT
 # endif
 #endif
-
-#else // not windows
-
-#define KSIEVE_EXPORT KDE_EXPORT
-#endif /* not windows */
-
 
 # ifndef KSIEVE_EXPORT_DEPRECATED
 #  define KSIEVE_EXPORT_DEPRECATED KDE_DEPRECATED KSIEVE_EXPORT
