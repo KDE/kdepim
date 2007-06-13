@@ -63,8 +63,8 @@ KDE4_AUTOMOC(${kitchensyncprivate_LIB_SRCS})
 KDE4_ADD_LIBRARY(kitchensyncprivate SHARED ${kitchensyncprivate_LIB_SRCS})
 
 TARGET_LINK_LIBRARIES(kitchensyncprivate ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY}
-                                         ${KDE_KDECORE_LIBRARY} ${KDE_KDEUI_LIBRARY}
-                                         ${KDE_KDEKIO_LIBRARY} khtml
+                                         ${KDE4_KDECORE_LIBRARY} ${KDE4_KDEUI_LIBRARY}
+                                         ${KDE4_KDEKIO_LIBRARY} ${KDE4_KHTML_LIBRARY}
                                          kabc kcal kdepim qopensync )
 
 SET_TARGET_PROPERTIES(kitchensyncprivate PROPERTIES VERSION 4.2.0 SOVERSION 4 )
