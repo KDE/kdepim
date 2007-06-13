@@ -31,10 +31,6 @@
     your version.
  */
 
-#ifdef HAVE_CONFIG_H
-#include <config.h>
-#endif
-
 #include "backendconfigwidget.h"
 #include "cryptoconfigdialog.h"
 
@@ -51,10 +47,10 @@
 #include <QLayout>
 #include <q3header.h>
 #include <QTimer>
-//Added by qt3to4:
 #include <QVBoxLayout>
 #include <QHBoxLayout>
-
+#include <QDBusMessage>
+#include <QDBusConnection>
 #include <assert.h>
 
 namespace Kleo {
@@ -310,10 +306,10 @@ void Kleo::BackendConfigWidget::slotConfigureButtonClicked() {
     int result = dlg.exec();
     if ( result == QDialog::Accepted ) {
       // Tell other users of gpgconf (e.g. the s/mime page) that the gpgconf data might have changed
-#ifdef __GNUC__
-#warning "kde4: port it kapp->dcopClient()->emitDCOPSignal( KPIM::CryptoConfig, changed(), QByteArray() );"
-#endif
-	  //kapp->dcopClient()->emitDCOPSignal( "KPIM::CryptoConfig", "changed()", QByteArray() );
+      QDBusMessage message =
+          QDBusMessage::createSignal(QString(), "org.kde.kleo.CryptoConfig", "changed");
+      QDBusConnection::sessionBus().send(message);
+      
       // and schedule a rescan, in case the updates make a backend valid
       QTimer::singleShot( 0, this, SLOT(slotRescanButtonClicked()) );
     }
