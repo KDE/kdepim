@@ -1116,7 +1116,7 @@ QString IncidenceFormatter::formatICalInvitation( QString invitation, Calendar *
   html += bodyVisitor.result();
 
   html += "<br>&nbsp;<br>&nbsp;<br>";
-  html += "<table border=\"0\" cellspacing=\"0\"><tr><td>&nbsp;</td><td>";
+  html += "<table border=\"0\" cellspacing=\"0\"><tr><td>&nbsp;</td></tr><tr>";
 
 #if 0
   html += helper->makeLinkURL( "accept", i18n("[Enter this into my calendar]") );
@@ -1133,13 +1133,15 @@ QString IncidenceFormatter::formatICalInvitation( QString invitation, Calendar *
     {
         Incidence *inc = dynamic_cast<Incidence*>( incBase );
         if ( inc && inc->revision() > 0 ) {
+            html += "<td colspan=\"9\">";
             if ( incBase->type() == "Todo" ) {
                 html += helper->makeLink( "reply", i18n( "[Enter this into my task list]" ) );
             } else {
                 html += helper->makeLink( "reply", i18n( "[Enter this into my calendar]" ) );
             }
-            break;
+            html += "</td></tr><tr>";
         }
+        html += "<td>";
 
         // Accept
         html += helper->makeLink( "accept", i18n( "[Accept]" ) );
