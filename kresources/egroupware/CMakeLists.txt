@@ -8,8 +8,8 @@ include_directories( ${CMAKE_SOURCE_DIR}/libical/src/libical ${CMAKE_SOURCE_DIR}
 ########### next target ###############
 
 set(libegwcommon_SRCS 
-	xmlrpciface.cpp 
-	synchronizer.cpp 
+	xmlrpciface.cpp
+	synchronizer.cpp
 	debugdialog.cpp
 	)
 
@@ -122,7 +122,7 @@ install(TARGETS knotes_xmlrpc_plugin  DESTINATION ${PLUGIN_INSTALL_DIR})
 
 install( FILES knotes_xmlrpc.desktop  DESTINATION ${SERVICES_INSTALL_DIR}/kresources/knotes)
 install( FILES kabc_xmlrpc.desktop  DESTINATION ${SERVICES_INSTALL_DIR}/kresources/kabc)
-install( FILES kabc_resourcexmlrpc.h kcal_resourcexmlrpc.h  DESTINATION ${INCLUDE_INSTALL_DIR}/kabc)
+install( FILES kabc_resourcexmlrpc.h DESTINATION ${INCLUDE_INSTALL_DIR}/kabc)
 install( FILES kcal_xmlrpc.desktop  DESTINATION ${SERVICES_INSTALL_DIR}/kresources/kcal)
 
 

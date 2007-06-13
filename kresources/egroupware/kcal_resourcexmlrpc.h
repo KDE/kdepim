@@ -22,7 +22,6 @@
 #ifndef KCAL_RESOURCEXMLRPC_H
 #define KCAL_RESOURCEXMLRPC_H
 
-#include <q3ptrlist.h>
 #include <QString>
 #include <QList>
 
