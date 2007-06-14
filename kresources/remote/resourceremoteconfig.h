@@ -46,7 +46,7 @@ class KDE_EXPORT ResourceRemoteConfig : public KRES::ConfigWidget
   public:
     ResourceRemoteConfig( QWidget *parent = 0 );
 
-  public slots:
+  public Q_SLOTS:
     virtual void loadSettings( KRES::Resource *resource );
     virtual void saveSettings( KRES::Resource *resource );
 

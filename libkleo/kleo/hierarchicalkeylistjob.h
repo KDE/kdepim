@@ -34,12 +34,11 @@
 #define __KLEO_HIERARCHICALKEYLISTJOB_H__
 
 #include "libkleo_export.h"
-#include "kleo/keylistjob.h"
-#include "kleo/cryptobackend.h"
+#include "keylistjob.h"
+#include "cryptobackend.h"
 
 #include <gpgmepp/keylistresult.h>
 
-#include <q3cstring.h>
 #include <QPointer>
 
 #include <set>
@@ -89,7 +88,7 @@ namespace Kleo {
     GpgME::KeyListResult exec( const QStringList & patterns, bool secretOnly,
 			       std::vector<GpgME::Key> & keys );
 
-  private slots:
+  private Q_SLOTS:
     void slotResult( const GpgME::KeyListResult & );
     void slotNextKey( const GpgME::Key & key );
     /*! \reimp from Job */
