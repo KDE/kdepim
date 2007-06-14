@@ -39,6 +39,7 @@
 #include <errno.h>
 #include <kmessagebox.h>
 #include <klocale.h>
+#include <kshell.h>
 
 #include <assert.h>
 #include <ktemporaryfile.h>
@@ -284,9 +285,9 @@ void QGpgMECryptoConfigComponent::sync( bool runtime )
   if ( runtime )
     commandLine += " --runtime";
   commandLine += " --change-options ";
-  commandLine += K3Process::quote( mName );
+  commandLine += KShell::quoteArg( mName );
   commandLine += " < ";
-  commandLine += K3Process::quote( tmpFile.fileName() );
+  commandLine += KShell::quoteArg( tmpFile.fileName() );
 
   //kDebug(5150) << commandLine << endl;
   //system( QCString( "cat " ) + tmpFile.name().toLatin1() ); // DEBUG

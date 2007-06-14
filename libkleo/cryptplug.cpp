@@ -97,7 +97,6 @@
 #endif
 
 #include "cryptplug.h"
-#include <kdebug.h>
 
 SMIMECryptPlug::SMIMECryptPlug() : CryptPlug() {
   GPGMEPLUG_PROTOCOL = GPGME_PROTOCOL_CMS;
