@@ -38,7 +38,7 @@
 
 #include <QStringList>
 
-class QLineEdit;
+class KLineEdit;
 
 class LabelAction : public KAction {
   Q_OBJECT
@@ -62,7 +62,7 @@ public:
   QWidget* createWidget( QWidget* parent );
   void deleteWidget( QWidget* widget );
 private:
-  QLineEdit* _le;
+  KLineEdit* _le;
   QObject * _receiver;
   const char * _member;
 };

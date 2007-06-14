@@ -36,7 +36,7 @@
 #include <ktoolbar.h>
 #include <kauthorized.h>
 
-#include <QLineEdit>
+#include <KLineEdit>
 #include <QLabel>
 
 
@@ -84,7 +84,8 @@ LineEditAction::LineEditAction( const QString & text, KActionCollection * parent
 
 QWidget* LineEditAction::createWidget( QWidget * parent )
 {
-  _le = new QLineEdit( parent );
+  _le = new KLineEdit( parent );
+  _le->setClearButtonShown(true);
   connect( _le, SIGNAL( returnPressed() ), _receiver, _member );
   return _le;
 }
