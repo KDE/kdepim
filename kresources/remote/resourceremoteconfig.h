@@ -23,14 +23,12 @@
 #ifndef KCAL_RESOURCEREMOTECONFIG_H
 #define KCAL_RESOURCEREMOTECONFIG_H
 
-#include <qradiobutton.h>
-#include <q3buttongroup.h>
-#include <kurlrequester.h>
-
 #include <kresources/resource.h>
 #include <kresources/configwidget.h>
 
 #include <kdemacros.h>
+
+class KUrlRequester;
 
 namespace KCal {
 

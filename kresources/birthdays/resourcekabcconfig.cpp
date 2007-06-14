@@ -29,10 +29,13 @@
 #include <QHBoxLayout>
 #include <QGridLayout>
 #include <QBoxLayout>
+#include <QCheckBox>
 
 #include <kabprefs.h>
 #include <kdebug.h>
 #include <klocale.h>
+#include <krestrictedline.h>
+#include <k3listview.h>
 
 #include "resourcekabc.h"
 #include "resourcekabcconfig.h"

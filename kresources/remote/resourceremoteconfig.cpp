@@ -31,6 +31,7 @@
 #include <kmessagebox.h>
 #include <kstandarddirs.h>
 #include <kdialog.h>
+#include <kurlrequester.h>
 
 #include <kcal/resourcecachedconfig.h>
 

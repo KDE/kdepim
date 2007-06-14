@@ -21,9 +21,8 @@
 #ifndef KCAL_RESOURCEREMOTEDIR_H
 #define KCAL_RESOURCEREMOTEDIR_H
 
-#include <q3ptrlist.h>
-#include <QString>
-#include <QDateTime>
+#include <QtCore/QString>
+#include <QtCore/QDateTime>
 
 #include <kurl.h>
 #include <kdirwatch.h>
@@ -93,7 +92,7 @@ class KDE_EXPORT ResourceRemote : public ResourceCached
     bool setValue( const QString &key, const QString &value );
 
 
-  protected slots:
+  protected Q_SLOTS:
     void slotLoadJobResult( KJob * );
     void slotSaveJobResult( KJob * );
 

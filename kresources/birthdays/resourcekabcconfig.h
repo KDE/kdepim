@@ -23,13 +23,14 @@
 #ifndef KCAL_RESOURCEKABCCONFIG_H
 #define KCAL_RESOURCEKABCCONFIG_H
 
-#include <QCheckBox>
-#include <QLabel>
-
-#include <k3listview.h>
-#include <krestrictedline.h>
 #include <kresources/resource.h>
 #include <kresources/configwidget.h>
+
+class QCheckBox;
+class QLabel;
+
+class KRestrictedLine;
+class K3ListView;
 
 namespace KCal {
 
@@ -44,11 +45,11 @@ class ResourceKABCConfig : public KRES::ConfigWidget
   public:
     ResourceKABCConfig( QWidget* parent );
 
-  public slots:
+  public Q_SLOTS:
     virtual void loadSettings( KRES::Resource *resource);
     virtual void saveSettings( KRES::Resource *resource );
 
-  private slots:
+  private Q_SLOTS:
     void alarmClicked();
 
   private:

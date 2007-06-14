@@ -21,8 +21,7 @@
 #ifndef KCAL_RESOURCEKABC_H
 #define KCAL_RESOURCEKABC_H
 
-#include <q3ptrlist.h>
-#include <QString>
+#include <QtCore/QString>
 
 #include <kconfig.h>
 
@@ -31,10 +30,7 @@
 #include <kcal/resourcecalendar.h>
 #include <kabc/addressbook.h>
 
-#include "kdemacros.h"
-
-namespace KIO {
-}
+#include <kdemacros.h>
 
 namespace KCal {
 
