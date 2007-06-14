@@ -165,7 +165,6 @@ KWatchGnuPGConfig::KWatchGnuPGConfig( QWidget* parent )
 
   vlay->addStretch( 1 );
 
-  connect( this, SIGNAL(applyClicked()), SLOT(slotSave()) );
   connect( this, SIGNAL(okClicked()), SLOT(slotSave()) );
 }
 
