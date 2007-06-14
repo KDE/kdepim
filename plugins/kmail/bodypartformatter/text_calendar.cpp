@@ -319,6 +319,9 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
       if ( status != Attendee::Delegated ) // we do that below for delegated incidences
         saveFile( receiver, iCal, dir );
 
+      // Now produce the return message
+      Incidence* incidence = icalToString( iCal );
+
       QString delegateString;
       bool delegatorRSVP = false;
       if ( status == Attendee::Delegated ) {
@@ -329,10 +332,11 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
         delegatorRSVP = dlg.rsvp();
         if ( delegateString.isEmpty() )
           return true;
+        if ( KPIM::compareEmail( delegateString, incidence->organizer().email(), false ) ) {
+          KMessageBox::sorry( 0, i18n("Delegation to organizer is not possible.") );
+          return true;
+        }
       }
-
-      // Now produce the return message
-      Incidence* incidence = icalToString( iCal );
 
       if( !incidence ) return false;
       Attendee *myself = findMyself( incidence, receiver );
