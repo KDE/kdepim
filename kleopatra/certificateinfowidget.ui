@@ -121,9 +121,6 @@
               </property>
               <item>
                 <widget class="QTextEdit" name="dumpView" >
-                  <property name="textFormat" >
-                    <enum>Qt::LogText</enum>
-                  </property>
                   <property name="readOnly" >
                     <bool>true</bool>
                   </property>
