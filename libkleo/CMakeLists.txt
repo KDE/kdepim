@@ -114,6 +114,7 @@ install( FILES
 	kleo/multideletejob.h  
 	kleo/hierarchicalkeylistjob.h  
 	kleo/keyfilter.h 
-	kleo/keyfiltermanager.h 
+	kleo/keyfiltermanager.h
+	libkleo_export.h
 	DESTINATION ${INCLUDE_INSTALL_DIR}/kleo)
 

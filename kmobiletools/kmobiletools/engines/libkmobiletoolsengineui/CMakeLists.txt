@@ -30,5 +30,6 @@ install(FILES
    connectionsPage.h
    devicesfoundPage.h
    scanprogressPage.h
+   engineui_export.h
    DESTINATION ${INCLUDE_INSTALL_DIR}/kmobiletools)
 
