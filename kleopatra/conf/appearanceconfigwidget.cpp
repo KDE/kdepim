@@ -178,6 +178,14 @@ Kleo::AppearanceConfigWidget::AppearanceConfigWidget (
   QWidget* parent )
   : AppearanceConfigWidgetBase( parent)
 {
+   connect(foregroundButton,SIGNAL(clicked()),this,SLOT(slotForegroundClicked()));
+   connect(backgroundButton,SIGNAL(clicked()),this,SLOT(slotBackgroundClicked()));
+   connect(fontButton,SIGNAL(clicked()),this,SLOT(slotFontClicked()));
+   connect(categoriesLV,SIGNAL(selectionChanged(Q3ListViewItem*)),this,SLOT(slotSelectionChanged(Q3ListViewItem*)));
+   connect(defaultLookPB,SIGNAL(clicked()),this,SLOT(slotDefaultClicked()));
+   connect(italicCB,SIGNAL(clicked()),this,SLOT(slotItalicClicked()));
+   connect(boldCB,SIGNAL(clicked()),this,SLOT(slotBoldClicked()));
+   connect(strikeoutCB,SIGNAL(clicked()),this,SLOT(slotStrikeoutClicked()));
     categoriesLV->setSorting( -1 );
     load();
 }
