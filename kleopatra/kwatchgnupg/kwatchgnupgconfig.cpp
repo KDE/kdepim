@@ -194,7 +194,7 @@ void KWatchGnuPGConfig::saveConfig()
 {
   KConfigGroup config(KGlobal::config(), "WatchGnuPG");
   config.writeEntry( "Executable", mExeED->url().url() );
-  config.writeEntry( "Socket", mSocketED->url().url() );
+  config.writeEntry( "Socket", mSocketED->url().path() );
   config.writeEntry( "LogLevel", log_levels[mLogLevelCB->currentIndex()] );
 
   config.changeGroup("LogWindow");

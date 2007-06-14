@@ -95,6 +95,7 @@
 #include <Q3PtrList>
 #include <QLabel>
 #include <QMenu>
+#include <QProcess>
 // other
 #include <algorithm>
 #include <assert.h>
@@ -1453,10 +1454,7 @@ void CertManager::importNextURLOrRedisplay()
 
 void CertManager::slotStartWatchGnuPG()
 {
-  K3Process certManagerProc;
-  certManagerProc << "kwatchgnupg";
-
-  if( !certManagerProc.start( K3Process::DontCare ) )
+  if( !QProcess::startDetached("kwatchgnupg" ) )
     KMessageBox::error( this, i18n( "Could not start GnuPG LogViewer (kwatchgnupg). "
                                     "Please check your installation!" ),
                                     i18n( "Kleopatra Error" ) );
