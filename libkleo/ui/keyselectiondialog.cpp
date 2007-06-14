@@ -56,7 +56,6 @@
 #include <kwindowsystem.h>
 #include <kconfig.h>
 #include <kmessagebox.h>
-#include <k3process.h>
 #include <kpushbutton.h>
 #include <kconfiggroup.h>
 #include <kmenu.h>
@@ -70,6 +69,7 @@
 #include <QLayout>
 #include <QLineEdit>
 #include <QDateTime>
+#include <QProcess>
 
 #include <QRegExp>
 #include <QPushButton>
@@ -514,10 +514,7 @@ void Kleo::KeySelectionDialog::slotRereadKeys() {
 
 void Kleo::KeySelectionDialog::slotStartCertificateManager()
 {
-  K3Process certManagerProc;
-  certManagerProc << "kleopatra";
-
-  if( !certManagerProc.start( K3Process::DontCare ) )
+  if( !QProcess::startDetached("kleopatra" ) )
     KMessageBox::error( this,
                         i18n( "Could not start certificate manager; "
                               "please check your installation." ),
