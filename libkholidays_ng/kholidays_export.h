@@ -24,7 +24,7 @@
 #include <kdemacros.h>
 
 #ifndef KHOLIDAYS_EXPORT
-# if defined(MAKE_KHOLIDAYS_LIB)
+# if defined(MAKE_KHOLIDAYS_NG_LIB)
    /* We are building this library */ 
 #  define KHOLIDAYS_EXPORT KDE_EXPORT
 # else
