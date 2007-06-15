@@ -23,12 +23,12 @@
 
 #include <gpgmepp/gpgmefw.h>
 #include <gpgmepp/result.h>
-#include <kdemacros.h>
+#include <gpgmepp_export.h>
 namespace GpgME {
 
   class Error;
 
-  class KDE_EXPORT KeyGenerationResult : public Result {
+  class QPGMEPP_EXPORT KeyGenerationResult : public Result {
   public:
     KeyGenerationResult( gpgme_ctx_t ctx=0, int error=0 );
     explicit KeyGenerationResult( const Error & err );

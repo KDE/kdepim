@@ -25,13 +25,13 @@
 
 #include <sys/types.h> // for size_t, off_t
 #include <cstdio> // FILE
-#include <kdemacros.h>
+#include <gpgmepp_export.h>
 
 namespace GpgME {
 
   class DataProvider;
   
-  class KDE_EXPORT Data {
+  class QPGMEPP_EXPORT Data {
   public:
     Data();
     Data( gpgme_data_t data );

@@ -28,14 +28,14 @@
 
 #include <vector>
 
-#include <kdemacros.h>
+#include <gpgmepp_export.h>
 
 namespace GpgME {
 
   class Error;
   class Signature;
 
-  class KDE_EXPORT VerificationResult : public Result {
+  class QPGMEPP_EXPORT VerificationResult : public Result {
   public:
     VerificationResult( gpgme_ctx_t ctx=0, int error=0 );
     explicit VerificationResult( const Error & err );
@@ -54,7 +54,7 @@ namespace GpgME {
     Private * d;
   };
 
-  class KDE_EXPORT Signature {
+  class QPGMEPP_EXPORT Signature {
     friend class VerificationResult;
     Signature( VerificationResult::Private * parent, unsigned int index );
   public:
@@ -110,7 +110,7 @@ namespace GpgME {
     unsigned int idx;
   };
 
-  class KDE_EXPORT Signature::Notation {
+  class QPGMEPP_EXPORT Signature::Notation {
     friend class Signature;
     Notation( VerificationResult::Private * parent, unsigned int sindex, unsigned int nindex );
   public:
