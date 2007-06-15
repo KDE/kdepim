@@ -38,7 +38,7 @@ class GMXXXPort : public KAB::XXPort
 
   public slots:
     bool exportContacts( const KABC::AddresseeList &list, const QString &data );
-    QList<KABC::Addressee> importContacts( const QString &data ) const;
+    KABC::Addressee::List importContacts( const QString &data ) const;
 
   private:
     void doExport( QFile *fp, const KABC::AddresseeList &list );

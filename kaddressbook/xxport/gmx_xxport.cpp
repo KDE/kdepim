@@ -70,9 +70,9 @@ static bool checkDateTime( const QString &dateStr, QDateTime &dt )
 
 /* import */
 
-QList<KABC::Addressee> GMXXXPort::importContacts( const QString& ) const
+KABC::Addressee::List GMXXXPort::importContacts( const QString& ) const
 {
-  QList<KABC::Addressee> addrList;
+  KABC::Addressee::List addrList;
 
   QString fileName = KFileDialog::getOpenFileName( QDir::homePath(),
                       GMX_FILESELECTION_STRING, 0 );
