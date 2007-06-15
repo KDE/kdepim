@@ -1,4 +1,5 @@
-include_directories( ${GPGME_INCLUDES} )
+include_directories( ${GPGME_INCLUDES} ${CMAKE_SOURCE_DIR}/gpgmepp/
+	)
 
 add_subdirectory( tests ) 
 
