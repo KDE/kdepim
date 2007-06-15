@@ -58,10 +58,10 @@
 #include <kio/netaccess.h>
 #include <ktoolinvocation.h>
 #include <kconfiggroup.h>
+#include <KDBusServiceStarter>
 
 // Qt
 #include <QLineEdit>
-#include <q3textedit.h>
 #include <QPushButton>
 #include <QCheckBox>
 #include <QRadioButton>
@@ -70,6 +70,9 @@
 #include <QComboBox>
 #include <QGridLayout>
 #include <QByteArray>
+#include <QDBusConnection>
+#include <QDBusConnectionInterface>
+#include <QDBusReply>
 
 #include <assert.h>
 
@@ -428,10 +431,8 @@ void CertificateWizardImpl::sendCertificate( const QString& email, const QByteAr
 #ifdef __GNUC__
 #warning Port me to DBus!
 #endif
-/*  DCOPCString dcopService;
-  int result = KDCOPServiceStarter::self()->
-    findServiceFor( "DBUS/Mailer", QString(),
-                    &error, &dcopService );
+  QString dbusService;
+  int result = KDBusServiceStarter::self()->findServiceFor( "DBUS/Mailer", QString::null, &error, &dbusService );
   if ( result != 0 ) {
     kDebug() << "Couldn't connect to KMail\n";
     KMessageBox::error( this,
@@ -439,6 +440,27 @@ void CertificateWizardImpl::sendCertificate( const QString& email, const QByteAr
     return;
   }
 
+  //TODO look at if we can find kmail when embedded into kontact
+   bool kmailFound = false;
+   QDBusConnection dbus = QDBusConnection::sessionBus();
+   QDBusReply<QStringList> reply = dbus.interface()->registeredServiceNames();
+   if ( !reply.isValid() )
+      return;
+
+   const QStringList allServices = reply;
+   for ( QStringList::const_iterator it = allServices.begin(), end = allServices.end() ; it != end ; ++it ) {
+        const QString service = *it;
+        if ( service.startsWith( "org.kde.kmail" ) ) {
+                kmailFound = true;
+                break;
+        }
+   }
+ 
+   if(!kmailFound)
+   {
+	//TODO launch it into kontact
+   }
+  /*  DCOPCString dcopService;
   DCOPCString dummy;
   // OK, so kmail (or kontact) is running. Now ensure the object we want is available.
   // [that's not the case when kontact was already running, but kmail not loaded into it... in theory.]
