@@ -98,8 +98,9 @@ public slots:
     void slotInitPhone();
     void slotFetchPhonebook();
     void slotFetchSMS();
-    void slotAddAddressee(const QList<KABC::Addressee>&);
-    void slotDelAddressee(const QList<KABC::Addressee>&);
+    void slotAddAddressee(const KABC::Addressee::List&);
+    void slotDelAddressee(const KABC::Addressee::List&);
+
     void slotEditAddressee(const KABC::Addressee& p_oldAddressee, const KABC::Addressee& p_newAddressee);
     void slotWeaverSuspended();
     void slotResumeDevice();

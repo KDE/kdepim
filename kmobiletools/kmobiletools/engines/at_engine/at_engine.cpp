@@ -324,7 +324,7 @@ void AT_Engine::slotFetchSMS()
 /*!
     \fn AT_Engine::addAddressee(KABC::Addressee *addressee)
  */
-void AT_Engine::slotAddAddressee(const QList<KABC::Addressee>& abclist)
+void AT_Engine::slotAddAddressee(const KABC::Addressee::List& abclist)
 {
     EditAddressees *tempjob=new EditAddressees(p_lastJob, abclist, device, false, this );
     connect(tempjob, SIGNAL(fullPhonebook() ), this, SIGNAL(fullPhonebook() ) );
@@ -334,7 +334,7 @@ void AT_Engine::slotAddAddressee(const QList<KABC::Addressee>& abclist)
 /*!
     \fn AT_Engine::delAddressee(int index)
  */
-void AT_Engine::slotDelAddressee(const QList<KABC::Addressee>& abclist)
+void AT_Engine::slotDelAddressee(const KABC::Addressee::List& abclist)
 {
     if(device) {
         p_lastJob=new EditAddressees(p_lastJob, abclist, device, true, this );
