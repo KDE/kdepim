@@ -41,8 +41,9 @@
 //Added by qt3to4:
 #include <QByteArray>
 #include <QList>
+#include <KProcess>
 
-class K3Process;
+class KProcess;
 class Q3ListViewItem;
 
 namespace GpgME {
@@ -77,9 +78,9 @@ private slots:
   void slotNextKey( const GpgME::Key & key );
   void slotKeyExistanceCheckNextCandidate( const GpgME::Key & key );
   void slotKeyExistanceCheckFinished();
-  void slotCollectStdout(K3Process *, char *, int);
-  void slotCollectStderr(K3Process *, char *, int);
-  void slotDumpProcessExited(K3Process*);
+  void slotCollectStdout();
+  void slotCollectStderr();
+  void slotDumpProcessExited(int, QProcess::ExitStatus);
 
 private:
   void startCertificateChainListing();
@@ -94,6 +95,7 @@ private:
   bool mExternal;
   bool mFoundIssuer;
   bool mHaveKeyLocally;
+  KProcess* mProc;
 };
 
 #endif // CERTIFICATEINFOWIDGETIMPL_H

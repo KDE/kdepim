@@ -47,7 +47,6 @@
 #include <kdialog.h>
 #include <kmessagebox.h>
 #include <kdebug.h>
-#include <k3procio.h>
 #include <kglobalsettings.h>
 
 // Qt
@@ -71,7 +70,8 @@ CertificateInfoWidgetImpl::CertificateInfoWidgetImpl( const GpgME::Key & key, bo
   : CertificateInfoWidget( parent ),
     mExternal( external ),
     mFoundIssuer( true ),
-    mHaveKeyLocally( false )
+    mHaveKeyLocally( false ),
+    mProc(0L)
 {
   importButton->setEnabled( false );
 
@@ -251,37 +251,41 @@ void CertificateInfoWidgetImpl::startCertificateChainListing() {
 }
 
 void CertificateInfoWidgetImpl::startCertificateDump() {
-  K3Process* proc = new K3Process( this );
-  (*proc) << "gpgsm"; // must be in the PATH
-  (*proc) << "--dump-keys";
-  (*proc) << mChain.front().primaryFingerprint();
+  delete mProc;
+  mProc = new KProcess( this );
+  (*mProc) << "gpgsm"; // must be in the PATH
+  (*mProc) << "--dump-keys";
+  (*mProc) << mChain.front().primaryFingerprint();
 
-  QObject::connect( proc, SIGNAL( receivedStdout(K3Process *, char *, int) ),
-                    this, SLOT( slotCollectStdout(K3Process *, char *, int) ) );
-  QObject::connect( proc, SIGNAL( receivedStderr(K3Process *, char *, int) ),
-                    this, SLOT( slotCollectStderr(K3Process *, char *, int) ) );
-  QObject::connect( proc, SIGNAL( processExited(K3Process*) ),
-                    this, SLOT( slotDumpProcessExited(K3Process*) ) );
+  QObject::connect( mProc, SIGNAL(readyReadStandardOutput ()),
+		  this, SLOT( slotCollectStdout()));
+  QObject::connect( mProc, SIGNAL(readyReadStandardError()),
+		  this, SLOT(slotCollectStderr()));
+  QObject::connect( mProc, SIGNAL(finished (int, QProcess::ExitStatus)),
+		  this,SLOT(slotDumpProcessExited(int, QProcess::ExitStatus)));
 
-  if ( !proc->start( K3Process::NotifyOnExit, (K3Process::Communication)(K3Process::Stdout | K3Process::Stderr) ) ) {
+  mProc->setOutputChannelMode(KProcess::SeparateChannels);
+  mProc->start();
+  if ( !mProc->waitForStarted()) {
     QString wmsg = i18n("Failed to execute gpgsm:\n%1", i18n( "program not found" ) );
     dumpView->setText( wmsg );
-    delete proc;
+    delete mProc;
+    mProc = 0;
   }
 }
 
-void CertificateInfoWidgetImpl::slotCollectStdout(K3Process *, char *buffer, int buflen)
+void CertificateInfoWidgetImpl::slotCollectStdout()
 {
-  mDumpOutput += QByteArray(buffer, buflen+1); // like K3ProcIO does
+  mDumpOutput += mProc->readAllStandardOutput ();
 }
 
-void CertificateInfoWidgetImpl::slotCollectStderr(K3Process *, char *buffer, int buflen)
+void CertificateInfoWidgetImpl::slotCollectStderr()
 {
-  mDumpError += QByteArray(buffer, buflen+1); // like K3ProcIO does
+   mDumpOutput += mProc->readAllStandardError ();
 }
 
-void CertificateInfoWidgetImpl::slotDumpProcessExited(K3Process* proc) {
-  int rc = ( proc->normalExit() ) ? proc->exitStatus() : -1 ;
+void CertificateInfoWidgetImpl::slotDumpProcessExited(int, QProcess::ExitStatus) {
+  int rc = ( mProc->exitStatus() == QProcess::NormalExit  ) ? mProc->exitStatus() : -1 ;
 
   if ( rc == 0 ) {
     dumpView->setText( QString::fromUtf8( mDumpOutput ) );
@@ -298,8 +302,6 @@ void CertificateInfoWidgetImpl::slotDumpProcessExited(K3Process* proc) {
       dumpView->setText( i18n("Failed to execute gpgsm:\n%1", reason) );
     }
   }
-
-  proc->deleteLater();
 }
 
 void CertificateInfoWidgetImpl::slotNextKey( const GpgME::Key & key ) {
