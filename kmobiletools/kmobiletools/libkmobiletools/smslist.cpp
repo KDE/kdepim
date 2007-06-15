@@ -227,15 +227,18 @@ void SMSList::saveToMailBox() const
 /*!
     \fn SMSList::saveToCSV(const QString &engineName)
  */
-int SMSList::saveToCSV(const QString &engineName)
+int SMSList::saveToCSV(const QString &filename)
 {
-    int result;
-
-    setEngineName(engineName);
-    result = saveToCSV();
-    kDebug() << "SMSList::saveToCSV(): " << endl;
-
-    return result;
+    kDebug() << k_funcinfo << endl;
+    SMS *sms;
+    kdDebug() << "SMSList::saveToCSV(): saving CSV file to: " << filename << endl;
+    QListIterator<SMS*> it(*this);
+    bool ok=true;
+    while( (it.hasNext()) )
+    {
+        sms=it.next();
+        ok&=sms->writeToSlotCSV(filename);
+    }
 }
 
 /*!
@@ -243,22 +246,13 @@ int SMSList::saveToCSV(const QString &engineName)
  */
 
 /// @TODO Check if we can remove dialog windows out of this class, emitting insteada signal.
-int SMSList::saveToCSV() const
+int SMSList::saveToCSV()
 {
-    QString dir=QDir::homePath();
-    QListIterator<SMS*> it(*this);
     QString saveFile;
 
     saveFile = KFileDialog::getSaveFileName (QDir::homePath(), "*.csv",  0, i18n("Save file to disk"));
 
-    QString savePath = saveFile;
-    QString fileName = saveFile.section( QDir::separator(),-1);
-    if ( ! fileName.isEmpty() )
-        savePath = saveFile.left(saveFile.length() - (fileName.length() + 1));
-        else return 0;
-
-    QDir d = QDir::root();
-    if (d.exists(saveFile)) {
+    if ( QFile::exists(saveFile)) {
         kDebug() << "SMSList::saveToCSV(): FILE ALREADY EXISTS " << endl;
 
         int retval;
@@ -267,28 +261,14 @@ int SMSList::saveToCSV() const
                                                   "KMobileTools" );
 
         if(retval == KMessageBox::Continue) {
-            d.remove(saveFile);
+            QFile::remove(saveFile);
         }
         else {
             return -1;
         }
 
     }
-
-    dir =  savePath;
-
-    if (dir.isEmpty() ) {
-        dir = QDir::homePath();
-    }
-
-    kDebug() << "SMSList::saveToCSV(): saving CSV file to: " << dir << endl;
-
-    while( it.hasNext() )
-    {
-        it.next()->exportCSV(dir, fileName);
-    }
-
-    return 1;
+    return saveToCSV(saveFile);
 }
 
 void SMSList::append( SMS *item )

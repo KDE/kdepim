@@ -240,29 +240,25 @@ bool SMS::writeToSlot(const QString &dir)
 /*!
     \fn SMS::exportCSV(const QString &dir)
  */
-bool SMS::exportCSV(const QString &dir, const QString &filename)
+bool SMS::exportCSV(const QString &filename)
 {
-    kDebug() << "SMS::exportCSV(): " << endl;
+    kDebug() << k_funcinfo << endl;
     bool retval=false;
     if (d->i_slot & Phone )
-        retval = retval | writeToSlotCSV( dir, filename );
+        retval = retval | writeToSlotCSV( filename );
     return retval;
 }
 
-bool SMS::writeToSlotCSV(const QString &dir, const QString &filename)
+bool SMS::writeToSlotCSV(const QString &filename)
 {
-    kDebug() << "SMS::writeToSlotCSV(): " << endl;
+    kDebug() << k_funcinfo << endl;
     QString text;
-    QString filenameOut;
-
-    filenameOut = dir + QDir::separator() + filename;
 
     if((d->i_type & Unsent) || (d->i_type & Sent) )
     {
         text="\"OUTGOING\",";
         for(QStringList::Iterator it=d->sl_numbers.begin(); it!=d->sl_numbers.end(); ++it)
             text+="\"" + KMobileTools::KMobiletoolsHelper::translateNumber(*it) + "\",\"" + *it + "\",";
-        //filenameOut = dir + QDir::separator() + "outbox_" + filename;
     }
     else
     {
@@ -272,7 +268,6 @@ bool SMS::writeToSlotCSV(const QString &dir, const QString &filename)
 
         //text="\"INCOMING\",\"" + KMobileTools::KMobiletoolsHelper::translateNumber( getFrom() ) + "\",\"" + getFrom() + "\",";
         text="\"INCOMING\",\"" + transNumber  + "\",\"" + getFrom() + "\",";
-        //filenameOut = dir + QDir::separator() + "inbox_" + filename;
     }
 
     text+="\"" + d->dt_datetime.toString( "%1, d %2 yyyy hh:mm:ss" )
@@ -282,8 +277,8 @@ bool SMS::writeToSlotCSV(const QString &dir, const QString &filename)
     //text+="\"" + KCodecs::quotedPrintableEncode( getText().utf8() ) + "\"";
     //text+="\"" + getText().utf8() + "\"";
     text+="\"" + getText() + "\"";
-    kDebug() << "Writing sms to " << filenameOut << endl;
-    QFile file(filenameOut);
+    kDebug() << "Writing sms to " << filename << endl;
+    QFile file(filename);
     QString lastFile = file.readAll();
     if(! file.open( QIODevice::WriteOnly | QIODevice::Append ) ) return false;
     QTextStream stream( &file );

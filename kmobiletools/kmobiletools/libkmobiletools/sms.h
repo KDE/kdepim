@@ -104,8 +104,8 @@ private:
 public Q_SLOTS:
     bool exportMD(const QString &dir);
     bool writeToSlot( const QString &slotDir);
-    bool exportCSV(const QString &dir, const QString &filename);
-    bool writeToSlotCSV( const QString &slotDir, const QString &filename);
+    bool exportCSV(const QString &filename);
+    bool writeToSlotCSV( const QString &filename);
 Q_SIGNALS:
     void updated();
 };
