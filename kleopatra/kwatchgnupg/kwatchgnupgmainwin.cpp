@@ -32,6 +32,7 @@
 
 #include "kwatchgnupgmainwin.h"
 #include "kwatchgnupgconfig.h"
+#include "kwatchgnupg.h"
 #include "tray.h"
 
 #include <kleo/cryptobackendfactory.h>
@@ -59,8 +60,6 @@
 #include <QDateTime>
 #include <kglobal.h>
 #include <kicon.h>
-#define WATCHGNUPGBINARY "watchgnupg"
-#define WATCHGNUPGSOCKET ( QDir::home().canonicalPath() + "/.gnupg/log-socket")
 
 KWatchGnuPGMainWindow::KWatchGnuPGMainWindow( QWidget* parent )
   : KXmlGuiWindow( parent, Qt::WType_TopLevel ), mConfig(0)

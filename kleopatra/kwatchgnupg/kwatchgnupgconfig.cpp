@@ -31,6 +31,7 @@
 */
 
 #include "kwatchgnupgconfig.h"
+#include "kwatchgnupg.h"
 
 #include <klocale.h>
 #include <kurlrequester.h>
@@ -175,9 +176,8 @@ void KWatchGnuPGConfig::slotSetHistorySizeUnlimited() {
 void KWatchGnuPGConfig::loadConfig()
 {
   KConfigGroup config(KGlobal::config(), "WatchGnuPG");
-  mExeED->setUrl( config.readEntry( "Executable", "watchgnupg" ) );
-  mSocketED->setUrl( config.readEntry( "Socket", QDir::home().canonicalPath()
-										+ "/.gnupg/log-socket") );
+  mExeED->setUrl( config.readEntry( "Executable", WATCHGNUPGBINARY ) );
+  mSocketED->setUrl( config.readEntry( "Socket", WATCHGNUPGSOCKET));
   mLogLevelCB->setCurrentIndex( log_level_to_int( config.readEntry( "LogLevel", "basic" ) ) );
 
   config.changeGroup("LogWindow");
