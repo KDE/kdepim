@@ -30,7 +30,6 @@ kde4_add_library(gpgmepp SHARED ${gpgme_LIB_SRCS})
 
 #Laurent test it !
 target_link_libraries(gpgmepp ${KDE4_KDECORE_LIBS} ${GPGME_LIBRARIES})
-set_target_properties(gpgmepp PROPERTIES OUTPUT_NAME gpgme++)
 
 set_target_properties(gpgmepp PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
 install(TARGETS gpgmepp  DESTINATION ${LIB_INSTALL_DIR})
@@ -41,4 +40,4 @@ install(TARGETS gpgmepp  DESTINATION ${LIB_INSTALL_DIR})
 install( FILES context.h key.h trustitem.h 
    eventloopinteractor.h data.h gpgmefw.h result.h keylistresult.h keygenerationresult.h 
    importresult.h decryptionresult.h verificationresult.h signingresult.h encryptionresult.h engineinfo.h gpgmepp_export.h 
-   DESTINATION ${INCLUDE_INSTALL_DIR}/gpgme++ )
+   DESTINATION ${INCLUDE_INSTALL_DIR}/gpgmepp )

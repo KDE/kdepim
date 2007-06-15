@@ -15,7 +15,7 @@ kde4_automoc(${qgpgme_LIB_SRCS})
 kde4_add_library(qgpgme SHARED ${qgpgme_LIB_SRCS})
 
 #Laurent add test !
-target_link_libraries(qgpgme  ${KDE4_KDECORE_LIBS}  gpgme++ )
+target_link_libraries(qgpgme  ${KDE4_KDECORE_LIBS}  gpgmepp )
 
 set_target_properties(qgpgme PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
 install(TARGETS qgpgme  DESTINATION ${LIB_INSTALL_DIR})
