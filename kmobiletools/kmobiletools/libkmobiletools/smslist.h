@@ -63,8 +63,8 @@ Q_SIGNALS:
 public Q_SLOTS:
     void saveToMailBox(const QString &engineName);
     void saveToMailBox() const;
-    int saveToCSV(const QString &filename);
-    int saveToCSV();
+    int saveToCSV(const QString &filename) const;
+    int saveToCSV() const;
 };
 
 #endif

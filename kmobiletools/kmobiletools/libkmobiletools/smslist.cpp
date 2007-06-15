@@ -227,18 +227,23 @@ void SMSList::saveToMailBox() const
 /*!
     \fn SMSList::saveToCSV(const QString &engineName)
  */
-int SMSList::saveToCSV(const QString &filename)
+int SMSList::saveToCSV(const QString &filename) const
 {
     kDebug() << k_funcinfo << endl;
     SMS *sms;
     kdDebug() << "SMSList::saveToCSV(): saving CSV file to: " << filename << endl;
-    QListIterator<SMS*> it(*this);
     bool ok=true;
+/*    QListIterator<SMS*> it(*this);
     while( (it.hasNext()) )
     {
         sms=it.next();
         ok&=sms->writeToSlotCSV(filename);
+    }*/
+    for(int i=0; i<size(); i++) {
+        sms=at(i);
+        ok&=sms->writeToSlotCSV(filename);
     }
+    return ok;
 }
 
 /*!
@@ -246,7 +251,7 @@ int SMSList::saveToCSV(const QString &filename)
  */
 
 /// @TODO Check if we can remove dialog windows out of this class, emitting insteada signal.
-int SMSList::saveToCSV()
+int SMSList::saveToCSV() const
 {
     QString saveFile;
 
