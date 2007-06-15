@@ -31,14 +31,12 @@
 
 #include "appearanceconfigpage.h"
 #include <QLayout>
-//Added by qt3to4:
 #include <QVBoxLayout>
 #include "appearanceconfigwidget.h"
 #include <kmessagebox.h>
 #include <klocale.h>
 #include <kdebug.h>
 #include <kcomponentdata.h>
-#include <kdemacros.h>
 
 AppearanceConfigurationPage::AppearanceConfigurationPage( const KComponentData &instance, QWidget *parent, const QStringList &args )
     : KCModule( instance, parent, args )

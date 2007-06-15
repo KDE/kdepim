@@ -34,10 +34,8 @@
 #include <ui/dnattributeorderconfigwidget.h>
 #include <kleo/dn.h>
 #include <kcomponentdata.h>
-#include <kdemacros.h>
 
 #include <QLayout>
-//Added by qt3to4:
 #include <QVBoxLayout>
 
 DNOrderConfigPage::DNOrderConfigPage( const KComponentData &instance, QWidget *parent, const QStringList &args )
