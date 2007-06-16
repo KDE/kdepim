@@ -20,7 +20,7 @@
 #include "kpgp.h"
 
 #include <klocale.h>
-#include <k3process.h>
+#include <kshell.h>
 #include <kdebug.h>
 
 #include <QTextCodec>
@@ -412,7 +412,7 @@ BaseG::publicKeys( const QStringList & patterns )
   for ( QStringList::ConstIterator it = patterns.begin();
         it != patterns.end(); ++it ) {
     cmd += " ";
-    cmd += K3Process::quote( *it ).toLocal8Bit();
+    cmd += KShell::quoteArg( *it ).toLocal8Bit();
   }
   status = 0;
   exitStatus = runGpg( cmd, 0, true );
@@ -444,7 +444,7 @@ BaseG::secretKeys( const QStringList & patterns )
   for ( QStringList::ConstIterator it = patterns.begin();
         it != patterns.end(); ++it ) {
     cmd += " ";
-    cmd += K3Process::quote( *it ).toLocal8Bit();
+    cmd += KShell::quoteArg( *it ).toLocal8Bit();
   }
   status = 0;
   exitStatus = runGpg( cmd, 0, true );

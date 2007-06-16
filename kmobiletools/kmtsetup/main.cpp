@@ -28,6 +28,7 @@
 #include <k3process.h>
 #include <kdebug.h>
 #include <kstandarddirs.h>
+#include <kshell.h>
 
 static const char description[] =
     I18N_NOOP("KMobileTools Permission Wizard");
@@ -45,10 +46,10 @@ bool sudoRun(KCmdLineArgs *args)
     QString thisAppName=KStandardDirs::findExe(args->appName());
     kDebug() << "Trying to start " << thisAppName << endl;
     K3Process process;
-    process << "kdesu" << "-t" << K3Process::quote(thisAppName);
+    process << "kdesu" << "-t" << KShell::quoteArg(thisAppName);
     if(process.start( K3Process::Block ) && process.exitStatus()==0 ) return true;
     process.clearArguments();
-    process << "gksu" << "-d" << K3Process::quote(thisAppName);
+    process << "gksu" << "-d" << KShell::quoteArg(thisAppName);
     if(process.start( K3Process::Block ) && process.exitStatus()==0 ) return true;
     return false;
 }

@@ -27,7 +27,7 @@
 #include <QByteArray>
 
 #include <klocale.h>
-#include <k3process.h>
+#include <kshell.h>
 #include <kdebug.h>
 
 #define PGP2 "pgp"
@@ -531,7 +531,7 @@ Base2::doGetPublicKeys( const QByteArray & cmd, const QStringList & patterns )
 
     for ( QStringList::ConstIterator it = patterns.begin();
           it != patterns.end(); ++it ) {
-      exitStatus = run( cmd + " " + K3Process::quote( *it ).toLocal8Bit(),
+      exitStatus = run( cmd + " " + KShell::quoteArg( *it ).toLocal8Bit(),
                         0, true );
 
       if ( exitStatus != 0 ) {
