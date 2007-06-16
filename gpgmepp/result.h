@@ -26,7 +26,7 @@
 
 namespace GpgME {
 
-  class Result {
+  class QPGMEPP_EXPORT Result {
   public:
     Result( int error=0 ) : mError( error ) {}
     Result( const Result & other ) : mError( other.error() ) {}
