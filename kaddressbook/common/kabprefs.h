@@ -24,7 +24,7 @@
 #ifndef KABPREFS_H
 #define KABPREFS_H
 
-#include "kaddressbook_export.h"
+#include "kaddressbook/kaddressbook_export.h"
 #include "kabprefs_base.h"
 #include <QStringList>
 
