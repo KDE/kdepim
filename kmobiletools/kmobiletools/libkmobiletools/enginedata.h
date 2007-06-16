@@ -255,13 +255,18 @@ namespace KMobileTools {
             const SMSList* smsList() const;
 
             /**
-             * Retrieves the phone calendar.
+             * Sets the phone calendar
+             *
+             * @param calendar the phone calendar
+             */
+            void setCalendar( KCal::Event::List *calendar );
+
+            /**
+             * Returns the phone's calendar
              *
              * @return the phone calendar
-             *
-             * @TODO make this method return a const reference
              */
-            KCal::Event::List *calendar();
+            const KCal::Event::List *calendar();
 
         Q_SIGNALS:
             /**
@@ -334,6 +339,12 @@ namespace KMobileTools {
             * This signal is emitted when the mobile's phone book has been changed.
             */
             void phoneBookChanged();
+
+            /**
+            * This signal is emitted when calendar is modified.
+            *
+            */
+            void calendarChanged();
 
         private:
             EngineDataPrivate *const d;

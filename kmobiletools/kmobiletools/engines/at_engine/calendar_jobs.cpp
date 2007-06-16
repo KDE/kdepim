@@ -30,7 +30,7 @@
 FetchCalendar::FetchCalendar(KMobileTools::Job *pjob, KMobileTools::SerialManager *device, kmobiletoolsAT_engine* parent)
     : kmobiletoolsATJob(pjob, device, parent)
 {
-    p_calendar=engine->calendar();
+    p_calendar=engine->engineData()->calendar();
     p_calendar->clear();
 }
 

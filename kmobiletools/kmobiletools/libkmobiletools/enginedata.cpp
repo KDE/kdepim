@@ -125,7 +125,12 @@ QString EngineData::revision() const {
     return d->s_revision;
 }
 
-KCal::Event::List *EngineData::calendar() {
+void EngineData::setCalendar( KCal::Event::List* calendar ) {
+    d->p_calendar = calendar;
+    emit calendarChanged();
+}
+
+const KCal::Event::List *EngineData::calendar() {
     return d->p_calendar;
 }
 

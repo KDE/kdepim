@@ -322,13 +322,6 @@ class KMOBILETOOLS_EXPORT Engine : public QObject
          * @TODO should be handled by errorOccured
          */
         void fullPhonebook();
-
-        /**
-         * This signal is emitted when calendar is parsed.
-         * 
-         * @TODO what to do with this one here? move to EngineData?
-         */
-        void calendarParsed();
 };
 }
 #endif

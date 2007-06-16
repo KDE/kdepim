@@ -216,7 +216,7 @@ void AT_Engine::processSlot(KMobileTools::Job* job)
         case KMobileTools::Job::fetchKCal:
 #ifdef HAVE_KCAL
             suspendStatusJobs(false);
-            emit calendarParsed();
+            engineData()->setCalendar( p_calendar );
             p_calendar->dump();
 #endif
             break;

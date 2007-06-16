@@ -977,7 +977,7 @@ void DeviceHome::slotCalendarFetched()
 
     korgpart->closeUrl();
     kDebug() << "DeviceHome::slotCalendarFetched()\n";
-    Calendar *engineCal=engine->calendar();
+    Calendar *engineCal=constEngineData->calendar();
     p_calendar->deleteAllEvents ();
     for(Calendar::Iterator it=engineCal->begin(); it!=engineCal->end(); ++it)
         p_calendar->addEvent(*it);
