@@ -24,7 +24,6 @@
 #define DEVICESCONFIG_H
 
 // mainly derived from kdemultimedia/kaudiocreator
-//#include <kicontheme.h>
 
 #include <libkmobiletools/kmobiletools_export.h>
 #include <libkmobiletools/kmobiletools_devices.h>
@@ -39,9 +38,8 @@
 #define DEFAULT_VERBOSE false
 #endif
 #endif
-// #include "devicesconfig.h"
 
-#include <K3Icon> //@TODO port this
+#include <kicontheme.h>
 
 class DevicesConfigPrivate;
 
