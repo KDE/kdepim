@@ -23,11 +23,11 @@
 
 #include <gpgmepp/gpgmefw.h>
 #include <gpgmepp/context.h>
+#include <gpgmepp/gpgmepp_export.h>
 
 #include <sys/time.h>
 
 #include <vector>
-#include <gpgmepp_export.h>
 
 namespace GpgME {
 

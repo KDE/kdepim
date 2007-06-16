@@ -23,7 +23,8 @@
 
 #include <gpgmepp/gpgmefw.h>
 #include <gpgmepp/result.h>
-#include <gpgmepp_export.h>
+#include <gpgmepp/gpgmepp_export.h>
+
 namespace GpgME {
 
   class Error;

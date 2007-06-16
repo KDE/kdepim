@@ -22,10 +22,10 @@
 #define __GPGMEPP_CONTEXT_H__
 
 #include <gpgmepp/gpgmefw.h>
+#include <gpgmepp/gpgmepp_export.h>
 
 #include <vector>
 #include <utility>
-#include <gpgmepp_export.h>
 
 namespace GpgME {
 

@@ -23,8 +23,7 @@
 
 #include <gpgmepp/gpgmefw.h>
 #include <gpgmepp/context.h>
-
-#include <gpgmepp_export.h>
+#include <gpgmepp/gpgmepp_export.h>
 
 namespace GpgME {
 

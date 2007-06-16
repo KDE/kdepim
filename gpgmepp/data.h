@@ -22,10 +22,10 @@
 #define __GPGMEPP_DATA_H__
 
 #include <gpgmepp/gpgmefw.h>
+#include <gpgmepp/gpgmepp_export.h>
 
 #include <sys/types.h> // for size_t, off_t
 #include <cstdio> // FILE
-#include <gpgmepp_export.h>
 
 namespace GpgME {
 
