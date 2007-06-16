@@ -100,7 +100,7 @@
                 </layout>
               </item>
               <item row="1" column="0" >
-                <widget class="Q3Frame" name="sms_lv_src" >
+                <widget class="QFrame" name="sms_lv_src" >
                   <property name="frameShape" >
                     <enum>NoFrame</enum>
                   </property>
@@ -110,7 +110,7 @@
                 </widget>
               </item>
               <item row="3" column="0" >
-                <widget class="Q3Frame" name="smsFrame" >
+                <widget class="QFrame" name="smsFrame" >
                   <property name="sizePolicy" >
                     <sizepolicy>
                       <hsizetype>7</hsizetype>
@@ -489,7 +489,7 @@
                             <number>0</number>
                           </property>
                           <item>
-                            <widget class="Q3Frame" name="abc_sl_frame" >
+                            <widget class="QFrame" name="abc_sl_frame" >
                               <property name="sizePolicy" >
                                 <sizepolicy>
                                   <hsizetype>7</hsizetype>
@@ -516,7 +516,7 @@
                             </widget>
                           </item>
                           <item>
-                            <widget class="Q3Frame" name="detailsFrame" >
+                            <widget class="QFrame" name="detailsFrame" >
                               <property name="sizePolicy" >
                                 <sizepolicy>
                                   <hsizetype>3</hsizetype>
@@ -643,7 +643,7 @@
                 </layout>
               </item>
               <item row="1" column="0" >
-                <widget class="Q3Frame" name="korg_frame" >
+                <widget class="QFrame" name="korg_frame" >
                   <property name="frameShape" >
                     <enum>StyledPanel</enum>
                   </property>
