@@ -18,6 +18,11 @@
    Boston, MA 02110-1301, USA.
  ***************************************************************************/
 
+#ifndef KMOBILETOOLS_GSMCODEC_H
+#define KMOBILETOOLS_GSMCODEC_H
+
+#include <QtCore/QChar>
+
 const int gsmlen=138;
 const QChar alphabet7bit[]={
     0x0040 /* COMMERCIAL AT */ ,
@@ -175,3 +180,6 @@ const QChar extchars[]={
     0x40,
     0x65,
 };
+
+#endif
+
