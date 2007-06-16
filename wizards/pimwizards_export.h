@@ -1,8 +1,5 @@
-/*
-    This file is part of kdepim.
-
-    Copyright (c) 2004 Cornelius Schumacher <schumacher@kde.org>
-    Copyright (c) 2004 Bo Thorsen <bo@sonofthor.dk>
+/*  This file is part of the KDE project
+    Copyright (C) 2007 David Faure <faure@kde.org>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
@@ -19,34 +16,25 @@
     the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
     Boston, MA 02110-1301, USA.
 */
-#ifndef KOLABWIZARD_H
-#define KOLABWIZARD_H
 
-#include "pimwizards_export.h"
-#include <kconfigwizard.h>
+#ifndef PIMWIZARDS_EXPORT_H
+#define PIMWIZARDS_EXPORT_H
 
-class KLineEdit;
-class QCheckBox;
-class QRadioButton;
+/* needed for KDE_EXPORT and KDE_IMPORT macros */
+#include <kdemacros.h>
 
-class PIMWIZARDS_EXPORT KolabWizard : public KConfigWizard
-{
-  public:
-    KolabWizard();
-    ~KolabWizard();
+#ifndef PIMWIZARDS_EXPORT
+# if defined(MAKE_PIMWIZARDS_LIB)
+   /* We are building this library */
+#  define PIMWIZARDS_EXPORT KDE_EXPORT
+# else
+   /* We are using this library */
+#  define PIMWIZARDS_EXPORT KDE_IMPORT
+# endif
+#endif
 
-    QString validate();
-    void usrReadConfig();
-    void usrWriteConfig();
-
-  private:
-    KLineEdit *mServerEdit;
-    KLineEdit *mUserEdit;
-    KLineEdit *mRealNameEdit;
-    KLineEdit *mPasswordEdit;
-    QCheckBox *mSavePasswordCheck;
-    QRadioButton *mKolab1, *mKolab2;
-    QCheckBox *mUseOnlineForNonGroupwareCheck;
-};
+# ifndef PIMWIZARDS_EXPORT_DEPRECATED
+#  define PIMWIZARDS_EXPORT_DEPRECATED KDE_DEPRECATED PIMWIZARDS_EXPORT
+# endif
 
 #endif

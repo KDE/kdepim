@@ -13,22 +13,22 @@
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
     GNU General Public License for more details.
 
-    You should have received a copy of the GNU General Public License
-    along with this program; if not, write to the Free Software
-    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+    You should have received a copy of the GNU General Public License along
+    with this program; if not, write to the Free Software Foundation, Inc.,
+    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 */
 #ifndef GROUPWISEWIZARD_H
 #define GROUPWISEWIZARD_H
 
+#include "pimwizards_export.h"
 #include <kconfigwizard.h>
-#include <kdemacros.h>
 
 class KLineEdit;
 class QCheckBox;
 class QSpinBox;
 class QGroupBox;
 
-class KDE_EXPORT GroupwiseWizard : public KConfigWizard
+class PIMWIZARDS_EXPORT GroupwiseWizard : public KConfigWizard
 {
     Q_OBJECT
   public:
