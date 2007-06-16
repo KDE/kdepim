@@ -5,6 +5,7 @@ X-KDE-ServiceType=KMobileTools/Engine
 X-KDE-Derived=KPluginInfo
 Comment=KMobileTools Engine
 Comment[el]=Μηχανή KMobileTools
+Comment[es]=Motor KMobileTools
 Comment[zh_TW]=KMobileTools 引擎
 
 [PropertyDef::X-KMobileTools-LongDesc]

@@ -18,4 +18,5 @@ determineMimetypeFromExtension=true
 
 Description=A kioslave for obex
 Description[el]=Ένα kioslave για το obex
+Description[es]=Un kioslave para obex
 Description[zh_TW]=obex 的 kioslave
