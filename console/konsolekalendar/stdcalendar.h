@@ -36,7 +36,7 @@
  * @author Cornelius Schumacher
  * @author Allen Winter
  */
-class KDE_EXPORT StdCalendar : public KCal::CalendarResources
+class StdCalendar : public KCal::CalendarResources
 {
   public:
     /**
