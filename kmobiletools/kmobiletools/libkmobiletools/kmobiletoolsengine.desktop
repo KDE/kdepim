@@ -8,6 +8,6 @@ Comment[el]=Μηχανή KMobileTools
 Comment[es]=Motor KMobileTools
 Comment[zh_TW]=KMobileTools 引擎
 
-[PropertyDef::X-KMobileTools-LongDesc]
+[PropertyDef::Description]
 Type=QString
 

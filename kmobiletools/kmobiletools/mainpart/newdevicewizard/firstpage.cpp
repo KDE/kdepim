@@ -63,7 +63,7 @@ void FirstPage::engineSelected(int index)
         emit engineLibraryChanged( engineLibrary() );
         return;
     }
-    engineDescLabel->setText(engInfo->property("X-KMobileTools-LongDesc").toString().replace('\n',"<br>") );
+    engineDescLabel->setText(engInfo->property("Description").toString().replace('\n',"<br>") );
 //     setNextEnabled ( currentPage(), true );
     d->enginelibname=engInfo->service()->library();
     emit engineLibraryChanged( engineLibrary() );

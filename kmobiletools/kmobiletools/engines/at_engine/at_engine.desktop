@@ -11,5 +11,5 @@ Comment[es]=Motor KMobileTools basado en el estándar de comandos GSM de AT
 Comment[zh_TW]=基於標準 GSM AT 命令集的 KMobileTools 引擎
 Icon=kmobiletoolsAT
 ServiceTypes=KMobileTools/Engine
-X-KMobileTools-LongDesc=KMobileTools default engine, developed interally by the KMobileTools team.\nGood choice with almost all mobile phones, but on some models it lacks advanced features.\nBest choice with Motorola Phones, works good also with Sony Ericsson and Siemens.
+Description=KMobileTools default engine, developed interally by the KMobileTools team.\nGood choice with almost all mobile phones, but on some models it lacks advanced features.\nBest choice with Motorola Phones, works good also with Sony Ericsson and Siemens.
 X-KDE-Library=libkmobiletools_at

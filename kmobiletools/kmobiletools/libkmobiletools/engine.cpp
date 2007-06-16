@@ -170,7 +170,7 @@ QString Engine::shortDesc()
 
 QString Engine::longDesc()
 {
-    return pluginInfo()->property("X-KMobileTools-LongDesc").toString();
+    return pluginInfo()->property("Description").toString();
 }
 
 
