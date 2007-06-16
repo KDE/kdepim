@@ -44,6 +44,8 @@
 
 #include <kresources/configwidget.h>
 
+#include <libkdepim/progressmanager.h>
+
 #include "resourceremoteconfig.h"
 
 #include "resourceremote.h"

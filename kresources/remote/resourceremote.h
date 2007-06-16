@@ -21,14 +21,9 @@
 #ifndef KCAL_RESOURCEREMOTEDIR_H
 #define KCAL_RESOURCEREMOTEDIR_H
 
-#include <QtCore/QString>
-#include <QtCore/QDateTime>
-
 #include <kurl.h>
 #include <kdirwatch.h>
 #include <kdemacros.h>
-
-#include <libkdepim/progressmanager.h>
 
 #include <kcal/incidence.h>
 #include <kcal/calendarlocal.h>
@@ -39,6 +34,10 @@
 namespace KIO {
 class FileCopyJob;
 class Job;
+}
+
+namespace KPIM {
+class ProgressItem;
 }
 
 class KJob;
