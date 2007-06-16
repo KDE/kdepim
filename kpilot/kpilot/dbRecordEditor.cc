@@ -109,16 +109,16 @@ void DBRecordEditor::slotCancel()
 
 void DBRecordEditor::languageChange()
 {
-	fRecordIndexLabel->setText( tr2i18n( "Record index:" ) );
-	fRecordIDLabel->setText( tr2i18n( "Record ID:" ) );
-	fRecordIndex->setText( tr2i18n( "1" ) );
-	fRecordID->setText( tr2i18n( "1" ) );
-	fFlagsGroup->setTitle( tr2i18n( "Flags" ) );
-	fDirty->setText( tr2i18n( "&Dirty" ) );
-	fDeleted->setText( tr2i18n( "De&leted" ) );
-	fBusy->setText( tr2i18n( "&Busy" ) );
-	fSecret->setText( tr2i18n( "&Secret" ) );
-	fArchived->setText( tr2i18n( "&Archived" ) );
+	fRecordIndexLabel->setText( i18n( "Record index:" ) );
+	fRecordIDLabel->setText( i18n( "Record ID:" ) );
+	fRecordIndex->setText( i18n( "1" ) );
+	fRecordID->setText( i18n( "1" ) );
+	fFlagsGroup->setTitle( i18n( "Flags" ) );
+	fDirty->setText( i18n( "&Dirty" ) );
+	fDeleted->setText( i18n( "De&leted" ) );
+	fBusy->setText( i18n( "&Busy" ) );
+	fSecret->setText( i18n( "&Secret" ) );
+	fArchived->setText( i18n( "&Archived" ) );
 }
 
 void DBRecordEditor::initWidgets()
