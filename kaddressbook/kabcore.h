@@ -12,9 +12,9 @@
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
     GNU General Public License for more details.
 
-    You should have received a copy of the GNU General Public License
-    along with this program; if not, write to the Free Software
-    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+    You should have received a copy of the GNU General Public License along
+    with this program; if not, write to the Free Software Foundation, Inc.,
+    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 
     As a special exception, permission is given to link this program
     with any edition of Qt, and distribute the resulting executable,
@@ -24,15 +24,12 @@
 #ifndef KABCORE_H
 #define KABCORE_H
 
+#include "core.h"
 #include <kabc/field.h>
 
 #include <q3dict.h>
 #include <QWidget>
-//Added by qt3to4:
 #include <QHBoxLayout>
-
-#include "core.h"
-#include <kdemacros.h>
 
 namespace KABC {
 class AddressBook;
@@ -72,7 +69,7 @@ typedef struct {
   int counter;
 } ResourceMapEntry;
 
-class KDE_EXPORT KABCore : public KAB::Core
+class KADDRESSBOOK_EXPORT KABCore : public KAB::Core
 {
   Q_OBJECT
 

@@ -12,9 +12,9 @@
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
     GNU General Public License for more details.
 
-    You should have received a copy of the GNU General Public License
-    along with this program; if not, write to the Free Software
-    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+    You should have received a copy of the GNU General Public License along
+    with this program; if not, write to the Free Software Foundation, Inc.,
+    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 
     As a special exception, permission is given to link this program
     with any edition of Qt, and distribute the resulting executable,
@@ -24,12 +24,13 @@
 #ifndef VIEWCONFIGUREWIDGET_H
 #define VIEWCONFIGUREWIDGET_H
 
+#include "kaddressbook_export.h"
+#include "configurewidget.h"
+
 #include <kdialog.h>
-#include <kdemacros.h>
-#include <QPixmap>
 #include <kvbox.h>
 
-#include "configurewidget.h"
+#include <QPixmap>
 
 class KPageWidget;
 
@@ -46,7 +47,7 @@ class ViewConfigureFilterPage;
   is to show a page with the select fields widget. For simple views this may
   be sufficient.
 */
-class KDE_EXPORT ViewConfigureWidget : public KAB::ConfigureWidget
+class KADDRESSBOOK_EXPORT ViewConfigureWidget : public KAB::ConfigureWidget
 {
   Q_OBJECT
 

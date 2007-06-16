@@ -12,9 +12,9 @@
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
     GNU General Public License for more details.
 
-    You should have received a copy of the GNU General Public License
-    along with this program; if not, write to the Free Software
-    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+    You should have received a copy of the GNU General Public License along
+    with this program; if not, write to the Free Software Foundation, Inc.,
+    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 
     As a special exception, permission is given to link this program
     with any edition of Qt, and distribute the resulting executable,
@@ -26,17 +26,15 @@
 
 #define KAB_VIEW_PLUGIN_VERSION 1
 
-#include <QStringList>
-#include <QWidget>
-//Added by qt3to4:
-#include <QDropEvent>
-
-#include <kabc/field.h>
-#include <klibloader.h>
-#include <kdemacros.h>
-
+#include "kaddressbook_export.h"
 #include "filter.h"
 #include "viewconfigurewidget.h"
+#include <kabc/field.h>
+#include <klibloader.h>
+
+#include <QStringList>
+#include <QWidget>
+#include <QDropEvent>
 
 class KConfigGroup;
 
@@ -54,7 +52,7 @@ namespace KABC { class AddressBook; }
 
   @author Mike Pilone <mpilone@slac.com>
  */
-class KDE_EXPORT KAddressBookView : public QWidget
+class KADDRESSBOOK_EXPORT KAddressBookView : public QWidget
 {
   Q_OBJECT
 
@@ -273,7 +271,7 @@ class KDE_EXPORT KAddressBookView : public QWidget
     QWidget *mViewWidget;
 };
 
-class KDE_EXPORT ViewFactory : public KLibFactory
+class KADDRESSBOOK_EXPORT ViewFactory : public KLibFactory
 {
   public:
     virtual KAddressBookView *view( KAB::Core *core, QWidget *parent ) = 0;

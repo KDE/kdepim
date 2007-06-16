@@ -12,9 +12,9 @@
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
     GNU General Public License for more details.
 
-    You should have received a copy of the GNU General Public License
-    along with this program; if not, write to the Free Software
-    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+    You should have received a copy of the GNU General Public License along
+    with this program; if not, write to the Free Software Foundation, Inc.,
+    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 
     As a special exception, permission is given to link this program
     with any edition of Qt, and distribute the resulting executable,
@@ -24,11 +24,10 @@
 #ifndef KAB_EXTENSIONWIDGET_H
 #define KAB_EXTENSIONWIDGET_H
 
-#include <QWidget>
-
+#include "kaddressbook_export.h"
 #include <kabc/addressbook.h>
 #include <klibloader.h>
-#include <kdemacros.h>
+#include <QWidget>
 
 #define KAB_EXTENSIONWIDGET_PLUGIN_VERSION 1
 
@@ -36,7 +35,7 @@ namespace KAB {
 class Core;
 class ConfigureWidget;
 
-class KDE_EXPORT ExtensionWidget : public QWidget
+class KADDRESSBOOK_EXPORT ExtensionWidget : public QWidget
 {
   Q_OBJECT
 

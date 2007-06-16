@@ -12,9 +12,9 @@
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
     GNU General Public License for more details.
 
-    You should have received a copy of the GNU General Public License
-    along with this program; if not, write to the Free Software
-    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+    You should have received a copy of the GNU General Public License along
+    with this program; if not, write to the Free Software Foundation, Inc.,
+    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 
     As a special exception, permission is given to link this program
     with any edition of Qt, and distribute the resulting executable,
@@ -32,10 +32,10 @@
 
 #include <QObject>
 
+#include "kaddressbook_export.h"
 #include <kabc/field.h>
 #include <k3command.h>
 #include <kxmlguiclient.h>
-#include <kdemacros.h>
 
 namespace KABC {
 class AddressBook;
@@ -52,7 +52,7 @@ namespace KAB {
 
 class SearchManager;
 
-class KDE_EXPORT Core : public QObject
+class KADDRESSBOOK_EXPORT Core : public QObject
 {
   Q_OBJECT
 
