@@ -41,13 +41,12 @@ install(TARGETS kcal_resourcefeatureplan  DESTINATION ${PLUGIN_INSTALL_DIR})
 
 ########### next target ###############
 
-if(KDE4_BUILD_TESTS)
 set(dumpfeaturelist_SRCS dumpfeaturelist.cpp ${libfeatureplancommon_SRCS})
 
 kde4_automoc(${dumpfeaturelist_SRCS})
 
 
-kde4_add_executable(dumpfeaturelist ${dumpfeaturelist_SRCS})
+kde4_add_test_executable(dumpfeaturelist ${dumpfeaturelist_SRCS})
 
 target_link_libraries(dumpfeaturelist  ${KDE4_KDEUI_LIBS} )
 
@@ -58,11 +57,9 @@ set(benchmarkfeaturelist_SRCS benchmarkfeaturelist.cpp ${libfeatureplancommon_SR
 kde4_automoc(${benchmarkfeaturelist_SRCS})
 
 
-kde4_add_executable(benchmarkfeaturelist ${benchmarkfeaturelist_SRCS})
+kde4_add_test_executable(benchmarkfeaturelist ${benchmarkfeaturelist_SRCS})
 
 target_link_libraries(benchmarkfeaturelist  ${KDE4_KDEUI_LIBS})
-
-endif(KDE4_BUILD_TESTS)
 
 ########### install files ###############
 

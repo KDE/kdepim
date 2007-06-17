@@ -1,4 +1,3 @@
-if(KDE4_BUILD_TESTS)
 include_directories( ${CMAKE_SOURCE_DIR}/libkleo  )
 
 
@@ -9,7 +8,7 @@ set(test_keylister_SRCS test_keylister.cpp )
 kde4_automoc(${test_keylister_SRCS})
 
 
-kde4_add_executable(test_keylister ${test_keylister_SRCS})
+kde4_add_test_executable(test_keylister ${test_keylister_SRCS})
 
 target_link_libraries(test_keylister  kleopatra ${KDE4_KDECORE_LIBS} )
 
@@ -21,7 +20,7 @@ set(test_keygen_SRCS test_keygen.cpp )
 kde4_automoc(${test_keygen_SRCS})
 
 
-kde4_add_executable(test_keygen ${test_keygen_SRCS})
+kde4_add_test_executable(test_keygen ${test_keygen_SRCS})
 
 target_link_libraries(test_keygen  kleopatra ${KDE4_KDECORE_LIBS} )
 
@@ -32,7 +31,7 @@ set(test_keyselectiondialog_SRCS test_keyselectiondialog.cpp )
 
 kde4_automoc(${test_keyselectiondialog_SRCS})
 
-kde4_add_executable(test_keyselectiondialog ${test_keyselectiondialog_SRCS})
+kde4_add_test_executable(test_keyselectiondialog ${test_keyselectiondialog_SRCS})
 
 target_link_libraries(test_keyselectiondialog  kleopatra ${KDE4_KDECORE_LIBS} )
 
@@ -42,7 +41,7 @@ set(test_cryptoconfig_SRCS test_cryptoconfig.cpp )
 
 kde4_automoc(${test_cryptoconfig_SRCS})
 
-kde4_add_executable(test_cryptoconfig ${test_cryptoconfig_SRCS})
+kde4_add_test_executable(test_cryptoconfig ${test_cryptoconfig_SRCS})
 
 target_link_libraries(test_cryptoconfig  kleopatra ${KDE4_KDECORE_LIBS} )
 
@@ -52,7 +51,7 @@ set(test_gnupgprocessbase_SRCS test_gnupgprocessbase.cpp )
 
 kde4_automoc(${test_gnupgprocessbase_SRCS})
 
-kde4_add_executable(test_gnupgprocessbase ${test_gnupgprocessbase_SRCS})
+kde4_add_test_executable(test_gnupgprocessbase ${test_gnupgprocessbase_SRCS})
 
 target_link_libraries(test_gnupgprocessbase  kleopatra ${KDE4_KDECORE_LIBS} )
 
@@ -62,11 +61,9 @@ set(test_jobs_SRCS test_jobs.cpp )
 
 kde4_automoc(${test_jobs_SRCS})
 
-kde4_add_executable(test_jobs ${test_jobs_SRCS})
+kde4_add_test_executable(test_jobs ${test_jobs_SRCS})
 
 target_link_libraries(test_jobs  kleopatra ${KDE4_KDECORE_LIBS} )
-
-endif(KDE4_BUILD_TESTS)
 
 ########### install files ###############
 

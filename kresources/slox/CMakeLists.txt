@@ -95,13 +95,9 @@ install(TARGETS kabc_slox_plugin  DESTINATION ${PLUGIN_INSTALL_DIR})
 
 #kde4_automoc(${testsloxaccounts_SRCS})
 
-#if(KDE4_BUILD_TESTS)
-
-#kde4_add_executable(testsloxaccounts ${testsloxaccounts_SRCS})
+#kde4_add_test_executable(testsloxaccounts ${testsloxaccounts_SRCS})
 
 #target_link_libraries(testsloxaccounts  ${KDE4_KDECORE_LIBS} kslox )
-
-#endif(KDE4_BUILD_TESTS)
 
 ########### install files ###############
 
