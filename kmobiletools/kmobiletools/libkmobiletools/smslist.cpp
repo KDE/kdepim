@@ -256,9 +256,10 @@ int SMSList::saveToCSV() const
     QString saveFile;
 
     saveFile = KFileDialog::getSaveFileName (QDir::homePath(), "*.csv",  0, i18n("Save file to disk"));
+    if(saveFile.isEmpty() ) return -1;
 
     if ( QFile::exists(saveFile)) {
-        kDebug() << "SMSList::saveToCSV(): FILE ALREADY EXISTS " << endl;
+        kDebug() << "SMSList::saveToCSV(): File already exists " << endl;
 
         int retval;
         retval=KMessageBox::warningContinueCancel(NULL,
