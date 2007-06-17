@@ -23,7 +23,7 @@
 
 #include <sys/types.h>
 
-#include <gpgmepp_export.h>
+#include <gpgmepp/gpgmepp_export.h>
 
 namespace GpgME {
 
