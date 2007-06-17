@@ -63,7 +63,9 @@ SMS::SMS(QObject *parent)
 }
 
 SMS::SMS(const QStringList & numbers, const QString & text, const QDateTime & datetime, QObject *parent)
- : QObject(parent), d(new SMSPrivate(this) )
+ : QObject(parent),
+   Akonadi::Item("text/sms"), /// @TODO could this a proper mimetype? eventually add it in kde global mimetypes.
+ d(new SMSPrivate(this) )
 {
     setNumbers(numbers);
     setText(text);
@@ -76,7 +78,9 @@ QString SMS::uid() const {
 }
 
 SMS::SMS(const QStringList & numbers, const QString & text, QObject *parent)
- : QObject(parent), d(new SMSPrivate(this) )
+ : QObject(parent),
+  Akonadi::Item("text/sms"), /// @TODO could this a proper mimetype? eventually add it in kde global mimetypes.
+  d(new SMSPrivate(this) )
 {
     setNumbers(numbers);
     setText(text);
