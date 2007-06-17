@@ -33,12 +33,11 @@
 
 #include <pi-dlp.h>
 
-#include <qobject.h>
-
-#include <qstringlist.h>
+#include <QtCore/QObject>
+#include <QtCore/QStringList>
 
 #include "kpilotlink.h"
-#include <kpilot_export.h>
+#include "kpilot_export.h"
 /** @file
 * SyncAction
 */
@@ -84,20 +83,20 @@ protected:
 	*/
 	virtual bool exec() = 0;
 
-public slots:
+public Q_SLOTS:
 	/**
 	* This just calls exec() and deals with the
 	* return code.
 	*/
 	void execConduit();
 
-signals:
+Q_SIGNALS:
 	void syncDone(SyncAction *);
 	void logMessage(const QString &);
 	void logError(const QString &);
 	void logProgress(const QString &,int);
 
-protected slots:
+protected Q_SLOTS:
 	/** This slot emits syncDone(), and does nothing else. This
 	*   is safe, since the method returns immediately after the
 	*   emit -- even if syncDone() causes the SyncAction to be deleted.
@@ -367,7 +366,7 @@ protected:
 	*/
 	void startTickle(unsigned count=0);
 	void stopTickle();
-signals:
+Q_SIGNALS:
 	void timeout();
 
 

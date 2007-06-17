@@ -63,7 +63,7 @@ public:
 	virtual DBInfoList getDBList(int cardno=0, int flags=dlpDBListRAM);
 	virtual PilotDatabase *database( const QString &name );
 
-public slots:
+public Q_SLOTS:
 	void ready();
 
 protected:

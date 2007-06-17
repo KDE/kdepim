@@ -33,8 +33,7 @@
 
 #include "pilotDatabase.h"
 #include "pilotRecord.h"
-//Added by qt3to4:
-#include <Q3ValueList>
+#include <Qt3Support/Q3ValueList>
 
 /** @file
 * Database class for a database on the pilot connected

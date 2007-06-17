@@ -29,7 +29,7 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
-#include <qstringlist.h>
+#include <QtCore/QStringList>
 
 #include "syncAction.h"
 
@@ -170,9 +170,9 @@ protected:
 	QString fConduitName;
 
 
-protected slots:
+protected Q_SLOTS:
 	void modified();
-signals:
+Q_SIGNALS:
 	void changed(bool);
 
 } ;
@@ -374,7 +374,7 @@ public:
 
 protected:
 	virtual bool exec();
-protected slots:
+protected Q_SLOTS:
 	void execDone(SyncAction *);
 
 protected:

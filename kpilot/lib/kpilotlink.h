@@ -33,7 +33,7 @@
 
 #include <QtCore/QObject>
 #include <Qt3Support/Q3ValueList>
-#include <QCustomEvent>
+#include <QtCore/QCustomEvent>
 #include "kpilot_export.h"
 /** @file
 * Encapsulates all the communication with the handheld. Also
@@ -376,7 +376,7 @@ public:
 	*/
 	virtual void endSync( EndOfSyncFlags f ) = 0;
 
-signals:
+Q_SIGNALS:
 	/**
 	* A timeout associated with tickling has occurred. Each
 	* time startTickle() is called, you can state how long
@@ -407,7 +407,7 @@ signals:
 	void deviceReady( KPilotLink * );
 
 
-public slots:
+public Q_SLOTS:
 	/**
 	* Release all resources, including the master pilot socket,
 	* timers, etc.
