@@ -31,6 +31,7 @@
 
 #include <kabc/addressee.h>
 #include <libkmobiletools/job.h>
+// #define HAVE_KCAL 1
 
 /**
 @author Marco Gulino
