@@ -76,7 +76,7 @@ namespace Kleo {
     virtual GpgME::VerificationResult exec( const QByteArray & signature,
 					    const QByteArray & signedData ) = 0;
 
-  signals:
+  Q_SIGNALS:
     void result( const GpgME::VerificationResult & result );
   };
 

@@ -81,7 +81,7 @@ namespace Kleo {
     */
     virtual GpgME::Error start( const QStringList & patterns ) = 0;
 
-  signals:
+  Q_SIGNALS:
     void result( const GpgME::Error & error );
   };
 

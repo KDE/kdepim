@@ -86,7 +86,7 @@ namespace Kleo {
 
     virtual GpgME::KeyListResult exec( const QStringList & patterns, bool secretOnly, std::vector<GpgME::Key> & keys ) = 0;
 
-  signals:
+  Q_SIGNALS:
     void nextKey( const GpgME::Key & key );
     void result( const GpgME::KeyListResult & result );
   };

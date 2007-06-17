@@ -81,7 +81,7 @@ namespace Kleo {
 				       GpgME::Context::SignatureMode mode,
 				       QByteArray & signature ) = 0;
 
-  signals:
+  Q_SIGNALS:
     void result( const GpgME::SigningResult & result, const QByteArray & signature );
   };
 

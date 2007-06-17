@@ -83,7 +83,7 @@ namespace Kleo {
 					  const QByteArray & plainText,
 					  bool alwaysTrust, QByteArray & cipherText ) = 0;
 
-  signals:
+  Q_SIGNALS:
     void result( const GpgME::EncryptionResult & result, const QByteArray & cipherText );
   };
 

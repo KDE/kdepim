@@ -69,7 +69,7 @@ namespace Kleo {
     */
     virtual GpgME::Error start( const GpgME::Key & key, bool allowSecretKeyDeletion=false ) = 0;
 
-  signals:
+  Q_SIGNALS:
     void result( const GpgME::Error & result );
   };
 

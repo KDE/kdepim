@@ -73,7 +73,7 @@ namespace Kleo {
 
     virtual GpgME::ImportResult exec( const QByteArray & keyData ) = 0;
 
-  signals:
+  Q_SIGNALS:
     void result( const GpgME::ImportResult & result );
   };
 

@@ -78,7 +78,7 @@ namespace Kleo {
     virtual std::pair<GpgME::DecryptionResult,GpgME::VerificationResult>
       exec( const QByteArray & cipherText, QByteArray & plainText ) = 0;
 
-  signals:
+  Q_SIGNALS:
     void result( const GpgME::DecryptionResult & decryptionresult,
 		 const GpgME::VerificationResult & verificationresult,
 		 const QByteArray & plainText );

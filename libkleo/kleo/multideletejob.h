@@ -77,10 +77,10 @@ namespace Kleo {
     */
     GpgME::Error start( const std::vector<GpgME::Key> & keys, bool allowSecretKeyDeletion=false );
 
-  signals:
+  Q_SIGNALS:
     void result( const GpgME::Error & result, const GpgME::Key & errorKey );
 
-  private slots:
+  private Q_SLOTS:
     void slotResult( const GpgME::Error & );
     /*! \reimp from Job */
     void slotCancel();
