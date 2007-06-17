@@ -82,14 +82,14 @@ class KADDRESSBOOK_EXPORT ContactEditorWidget : public QWidget
      */
     bool modified() const;
 
-  signals:
+  Q_SIGNALS:
     /**
       Emitted whenever the page has changed, do not emit it directly,
       use setModified() instead.
      */
     void changed();
 
-  public slots:
+  public Q_SLOTS:
     /**
       Call this slot whenever the data were changed by the user. It
       will emit the changed() signal and set the modified property.
@@ -122,7 +122,7 @@ class ContactEditorWidgetFactory : public KLibFactory
     /**
       Returns the i18ned title of this tab page.
      */
-    virtual QString pageTitle() const { return ""; }
+    virtual QString pageTitle() const { return QString::fromLatin1(""); }
 
     /**
       Returns the identifier of the tab page where the widget

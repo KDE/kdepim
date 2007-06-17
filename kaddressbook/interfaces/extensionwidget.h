@@ -76,7 +76,7 @@ class KADDRESSBOOK_EXPORT ExtensionWidget : public QWidget
      */
     virtual QString identifier() const = 0;
 
-  signals:
+  Q_SIGNALS:
     void modified( const KABC::Addressee::List &list );
     void deleted( const QStringList& uidList );
 

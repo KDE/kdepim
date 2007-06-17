@@ -126,14 +126,14 @@ class KADDRESSBOOK_EXPORT Core : public QObject
 
     virtual K3CommandHistory *commandHistory() const = 0;
 
-    signals:
+    Q_SIGNALS:
     /**
       Forwarded from SearchManager
       After it is emitted, distributionListNames() might have a different result.
      */
     void contactsUpdated();
 
-  public slots:
+  public Q_SLOTS:
     /**
       Is called whenever a contact is selected in the view.
      */

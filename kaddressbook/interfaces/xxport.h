@@ -99,7 +99,7 @@ class KADDRESSBOOK_EXPORT XXPort : public QObject, virtual public KXMLGUIClient
      */
     void processEvents() const;
 
-  public slots:
+  public Q_SLOTS:
     /**
       Reimplement this method for exporting the contacts.
      */
@@ -110,7 +110,7 @@ class KADDRESSBOOK_EXPORT XXPort : public QObject, virtual public KXMLGUIClient
      */
     virtual KABC::Addressee::List importContacts( const QString& identifier ) const;
 
-  signals:
+  Q_SIGNALS:
     /**
       Emitted whenever the export action is activated.
       The parameter contains the @ref identifier() for
@@ -147,7 +147,7 @@ class KADDRESSBOOK_EXPORT XXPort : public QObject, virtual public KXMLGUIClient
      */
     QWidget *parentWidget() const;
 
-  private slots:
+  private Q_SLOTS:
     void slotImportActivated( const QString& );
     void slotExportActivated( const QString& );
 
