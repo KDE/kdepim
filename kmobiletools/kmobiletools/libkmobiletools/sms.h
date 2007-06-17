@@ -45,30 +45,10 @@ public:
     { SIM=0x1, Phone=0x2, Unknown=0x10 };
     enum SMSType
     { Unread=0x1, Read=0x2, Unsent=0x4, Sent=0x8, All=0xA };
-    static const QString SMSTypeString(SMSType smstype) {
-        switch (smstype) {
-                case SMS::Unread:
-                return "REC UNREAD";
-                case SMS::Read:
-                return "REC READ";
-                case SMS::Unsent:
-                return "STO UNSENT";
-                case SMS::Sent:
-                return  "STO SENT";
-                case SMS::All:
-                return "ALL";
-        }
-        return QString();
-}
+    static QString SMSTypeString(SMSType smstype);
 
-    static int SMSIntType (const QString& type) {
-        if (type==QLatin1String("REC UNREAD")) return SMS::Unread;
-        if (type==QLatin1String("REC READ")) return SMS::Read;
-        if (type==QLatin1String("STO UNSENT")) return SMS::Unsent;
-        if (type==QLatin1String("STO SENT")) return SMS::Sent;
-        if (type==QLatin1String("ALL")) return SMS::Sent;
-        return -1;
-}
+    static int SMSIntType (const QString& type);
+
     bool isIncoming() const;
     void setText(const QString & text);
     virtual QString getText() const;

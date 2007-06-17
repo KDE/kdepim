@@ -304,3 +304,28 @@ void SMS::setType( SMSType newType ) { d->i_type = newType; emit updated(); }
 int SMS::slot() const { return d->i_slot; }
 bool SMS::unread() const { return d->b_unread; }
 void SMS::setUnread(bool unread) { d->b_unread=unread;}
+
+QString SMS::SMSTypeString(SMSType smstype) {
+    switch (smstype) {
+        case SMS::Unread:
+        return "REC UNREAD";
+        case SMS::Read:
+        return "REC READ";
+        case SMS::Unsent:
+        return "STO UNSENT";
+        case SMS::Sent:
+        return  "STO SENT";
+        case SMS::All:
+        return "ALL";
+    }
+    return QString();
+}
+
+int SMS::SMSIntType(const QString& type) {
+    if (type==QLatin1String("REC UNREAD")) return SMS::Unread;
+    if (type==QLatin1String("REC READ")) return SMS::Read;
+    if (type==QLatin1String("STO UNSENT")) return SMS::Unsent;
+    if (type==QLatin1String("STO SENT")) return SMS::Sent;
+    if (type==QLatin1String("ALL")) return SMS::Sent;
+    return -1;
+}
