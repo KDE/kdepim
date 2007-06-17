@@ -135,17 +135,17 @@ public:
 	*/
 	void addLogMessage( const QString &msg )
 	{
-		emit logMessage( msg );
+		/*emit*/ logMessage( msg );
 	}
 	/** Log an error message in KPilot (the PC side of things). */
 	void addLogError( const QString &msg )
 	{
-		emit logError( msg );
+		/*emit*/ logError( msg );
 	}
 	/** Log progress in KPilot (the PC side of things). */
 	void addLogProgress( const QString &msg, int prog )
 	{
-		emit logProgress( msg, prog );
+		/*emit*/ logProgress( msg, prog );
 	}
 protected:
 	/** Connection to the device. @todo make private. */

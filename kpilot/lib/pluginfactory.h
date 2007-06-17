@@ -27,11 +27,11 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
-#include <QWidget>
+#include <QtGui/QWidget>
 
-#include <KComponentData>
-#include <KDebug>
-#include <KLibLoader>
+#include <kcomponentdata.h>
+#include <kdebug.h>
+#include <klibloader.h>
 
 /** @file Defines a template class for factories for KPilot's conduits. */
 

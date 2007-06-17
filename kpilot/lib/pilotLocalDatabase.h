@@ -30,8 +30,8 @@
 */
 
 #include "pilotDatabase.h"
-//Added by qt3to4:
-#include <Q3ValueList>
+
+#include <Qt3Support/Q3ValueList>
 
 /** @file
 * Defines the PilotLocalDatabase class, for databases stored
