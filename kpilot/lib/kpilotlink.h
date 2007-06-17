@@ -31,11 +31,10 @@
 
 #include <pi-dlp.h>
 
-#include <qobject.h>
-#include <q3valuelist.h>
-//Added by qt3to4:
+#include <QtCore/QObject>
+#include <Qt3Support/Q3ValueList>
 #include <QCustomEvent>
-#include <kpilot_export.h>
+#include "kpilot_export.h"
 /** @file
 * Encapsulates all the communication with the handheld. Also
 * does daemon-like polling of the handheld. Interesting status

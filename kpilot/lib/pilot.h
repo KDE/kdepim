@@ -32,10 +32,10 @@
 #include <pi-appinfo.h>
 #include <pi-buffer.h>
 #include <pi-dlp.h>
-#include <kpilot_export.h>
+#include "kpilot_export.h"
 
-#include <qstringlist.h>
-#include <q3valuelist.h>
+#include <QtCore/QStringList>
+#include <Qt3Support/Q3ValueList>
 
 #include "pilotLinkVersion.h"
 
