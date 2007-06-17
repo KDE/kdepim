@@ -31,9 +31,9 @@
 
 class SMSPrivate {
     public:
-        SMSPrivate()
+        SMSPrivate(SMS* p_parent)
     : i_folder(0), i_slot(0), i_type(SMS::All), b_unread(false)
-        {};
+        { parent=p_parent; }
     QStringList sl_numbers;
     QString s_text;
     QDateTime dt_datetime;
@@ -43,15 +43,27 @@ class SMSPrivate {
     QList<int> v_id;
     QString s_rawSlot;
     bool b_unread;
+    SMS *parent;
+    void refreshUid() const
+    {
+        KMD5 context;
+        QByteArray ba;
+        if ( sl_numbers.isEmpty()) ba = s_text.toUtf8();
+        else ba = ( s_text + sl_numbers.join(",")).toUtf8();
+        context.update(ba);
+        parent->reference().setRemoteId( context.hexDigest() );
+    }
 };
 
 SMS::SMS(QObject *parent)
- : QObject(parent), d(new SMSPrivate)
+ : QObject(parent), 
+  Akonadi::Item("text/sms"), /// @TODO could this a proper mimetype? eventually add it in kde global mimetypes.
+  d(new SMSPrivate(this) )
 {
 }
 
 SMS::SMS(const QStringList & numbers, const QString & text, const QDateTime & datetime, QObject *parent)
- : QObject(parent), d(new SMSPrivate)
+ : QObject(parent), d(new SMSPrivate(this) )
 {
     setNumbers(numbers);
     setText(text);
@@ -59,8 +71,12 @@ SMS::SMS(const QStringList & numbers, const QString & text, const QDateTime & da
     setFolder(d->i_folder);
 }
 
+QString SMS::uid() const {
+    return reference().remoteId();
+}
+
 SMS::SMS(const QStringList & numbers, const QString & text, QObject *parent)
- : QObject(parent), d(new SMSPrivate)
+ : QObject(parent), d(new SMSPrivate(this) )
 {
     setNumbers(numbers);
     setText(text);
@@ -95,15 +111,6 @@ QStringList SMS::getTo() const
     }
 }
 
-QByteArray SMS::uid() const
-{
-    KMD5 context;
-    QByteArray ba;
-    if (d->sl_numbers.isEmpty()) ba = d->s_text.toUtf8();
-    else ba = (d->s_text + d->sl_numbers.join(",")).toUtf8();
-    context.update(ba);
-    return context.hexDigest();
-}
 
 bool SMS::operator ==( SMS* compSMS)
 {
@@ -170,6 +177,7 @@ QStringList SMS::getMultiText(const QString &text)
 // Convenience non-static method for the above one
 QStringList SMS::getMultiText() const
 {
+    d->refreshUid(); /// @TODO move this to the single setters?
     return getMultiText(d->s_text);
 }
 

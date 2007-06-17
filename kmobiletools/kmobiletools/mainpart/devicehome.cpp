@@ -323,9 +323,9 @@ void DeviceHome::loadEngine()
     connect(engine, SIGNAL(phoneBookChanged() ), SLOT(updatePB()) );
     //connect(engine, SIGNAL(phoneBookChanged(int, const ContactsList& ) ), SLOT(updatePB(int, const ContactsList& ) ) );
     connect(engine, SIGNAL(smsFoldersAdded() ), SLOT(addSMSFolders()) );
-    connect(engine->constEngineData(), SIGNAL(smsAdded( const QByteArray& )), SLOT(smsAdded( const QByteArray&) ) );
-    connect(engine->constEngineData(), SIGNAL(smsDeleted( const QByteArray& )), SLOT(smsRemoved(const QByteArray&) ) );
-    connect(engine->constEngineData(), SIGNAL(smsModified( const QByteArray& )), SLOT(smsModified( const QByteArray& )) );
+    connect(engine->constEngineData(), SIGNAL(smsAdded( const QString & )), SLOT(smsAdded( const QString &) ) );
+    connect(engine->constEngineData(), SIGNAL(smsDeleted( const QString & )), SLOT(smsRemoved(const QString &) ) );
+    connect(engine->constEngineData(), SIGNAL(smsModified( const QString & )), SLOT(smsModified( const QString & )) );
     connect(engine->constEngineData(), SIGNAL(ringing( bool )), this, SLOT(slotRing( bool ) ) );
     connect(engine, SIGNAL(fullPhonebook()), this, SLOT(fullPhonebook()) );
     connect(p_smsPart, SIGNAL(getSMSList() ), engine, SLOT( slotFetchSMS() ) );
@@ -766,18 +766,18 @@ void DeviceHome::raiseDevice()
 
 
 /*!
-    \fn DeviceHome::smsModified(const QByteArray& smsUID)
+    \fn DeviceHome::smsModified(const QString & smsUID)
  */
-void DeviceHome::smsModified(const QByteArray& smsUID)
+void DeviceHome::smsModified(const QString & smsUID)
 {
     kDebug( ) << "DeviceHome::smsModified(" << smsUID << ")\n";
 }
 
 
 /*!
-    \fn DeviceHome::smsAdded(const QByteArray& smsUID)
+    \fn DeviceHome::smsAdded(const QString & smsUID)
  */
-void DeviceHome::smsAdded(const QByteArray& smsUID)
+void DeviceHome::smsAdded(const QString & smsUID)
 {
     updateSMSCount();
     home->printInfoPage( home->currentInfoPage(), engine );
@@ -802,9 +802,9 @@ QString DeviceHome::currentDeviceName() const
 }
 
 /*!
-    \fn DeviceHome::smsRemoved(const QByteArray& smsUID)
+    \fn DeviceHome::smsRemoved(const QString & smsUID)
  */
-void DeviceHome::smsRemoved(const QByteArray& smsUID)
+void DeviceHome::smsRemoved(const QString & smsUID)
 {
 //     kDebug( ) << "DeviceHome::smsRemoved(" << smsUID << ")\n";
 //     updateSMSList();

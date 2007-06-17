@@ -210,9 +210,9 @@ public slots:
     void slotUploadAddressBook();
     void addresseeListRightClick(Q3ListViewItem *item, const QPoint &point, int column);
     void smsListRightClick(Q3ListViewItem *item, const QPoint &point, int column);
-    void smsModified(const QByteArray& smsUID);
-    void smsAdded(const QByteArray& smsUID);
-    void smsRemoved(const QByteArray& smsUID);
+    void smsModified(const QString & smsUID);
+    void smsAdded(const QString & smsUID);
+    void smsRemoved(const QString & smsUID);
     void smsFolderClicked( Q3ListViewItem * item );
     void slotNewSMS() { slotNewSMS(QString() ); }
     void slotNewSMS(const QString &);

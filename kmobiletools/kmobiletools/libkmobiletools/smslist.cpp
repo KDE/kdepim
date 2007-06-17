@@ -68,7 +68,7 @@ void SMSList::append( SMSList *sublist, bool sync)
 /*!
     \fn SMSList::find(int uid)
  */
-int SMSList::find(const QByteArray &uid) const
+int SMSList::find(const QString &uid) const
 {
     int found = 0;
 

@@ -319,21 +319,21 @@ namespace KMobileTools {
             *
             * @param sms the sms that is added
             */
-            void smsAdded( const QByteArray& sms );
+            void smsAdded( const QString & sms );
 
             /**
             * This signal is emitted when a SMS is deleted.
             *
             * @param sms the sms that is deleted
             */
-            void smsDeleted( const QByteArray& sms );
+            void smsDeleted( const QString & sms );
 
             /**
             * This signal is emitted when a SMS is modified.
             *
             * @param sms the sms that is modified
             */
-            void smsModified( const QByteArray& sms );
+            void smsModified( const QString & sms );
 
             /**
             * This signal is emitted when the mobile's phone book has been changed.

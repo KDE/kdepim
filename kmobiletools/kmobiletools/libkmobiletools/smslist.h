@@ -41,7 +41,7 @@ public:
     ~SMSList();
     void append(SMSList *sublist, bool sync=false);
     void append(SMS *sms);
-    int find(const QByteArray &uid) const;
+    int find(const QString &uid) const;
     void sync (SMSList *compList);
     void dump() const;
     void calcSMSNumber() const;
@@ -55,9 +55,9 @@ private:
     SMSListPrivate *const d;
 
 Q_SIGNALS:
-    void removed(const QByteArray&);
-    void added(const QByteArray&);
-    void modified(const QByteArray&);
+    void removed(const QString&);
+    void added(const QString&);
+    void modified(const QString&);
     void updated();
 
 public Q_SLOTS:

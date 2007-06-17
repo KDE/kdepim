@@ -59,9 +59,9 @@ EngineData::EngineData(KMobileTools::Engine *parentEngine)
     d->p_addresseeList = new ContactsList();
     d->p_calendar=new KCal::Event::List();
 
-    connect( d->p_smsList, SIGNAL( added( const QByteArray& ) ), SIGNAL( smsAdded( const QByteArray& ) ) );
-    connect( d->p_smsList, SIGNAL( removed( const QByteArray& ) ), SIGNAL( smsDeleted( const QByteArray& ) ) ); 
-    connect( d->p_smsList, SIGNAL( modified( const QByteArray& ) ), SIGNAL( smsModified( const QByteArray& ) ) );
+    connect( d->p_smsList, SIGNAL( added( const QString & ) ), SIGNAL( smsAdded( const QString & ) ) );
+    connect( d->p_smsList, SIGNAL( removed( const QString & ) ), SIGNAL( smsDeleted( const QString & ) ) ); 
+    connect( d->p_smsList, SIGNAL( modified( const QString & ) ), SIGNAL( smsModified( const QString & ) ) );
 
 }
 

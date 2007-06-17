@@ -1,6 +1,7 @@
 project(kmobiletools)
 
-include_directories(${CMAKE_CURRENT_BINARY_DIR})
+include_directories(${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_SOURCE_DIR}/akonadi )
+
 
 add_definitions(-DQT3_SUPPORT)
 add_definitions(-DQT3_SUPPORT_WARNINGS)
