@@ -36,7 +36,7 @@
 #include "libkleo_export.h"
 #include "kleo/cryptoconfig.h"
 
-#include <q3dict.h>
+#include <QHash>
 #include <QStringList>
 #include <QObject>
 #include <QVariant>
@@ -72,7 +72,7 @@ private:
   void runGpgConf( bool showErrors );
 
 private:
-  Q3Dict<QGpgMECryptoConfigComponent> mComponents;
+  QHash<QString, QGpgMECryptoConfigComponent*> mComponents;
   bool mParsed;
 };
 
@@ -100,7 +100,7 @@ private:
   void runGpgConf();
 
 private:
-  Q3Dict<QGpgMECryptoConfigGroup> mGroups;
+  QHash<QString,QGpgMECryptoConfigGroup*> mGroups;
   QString mName;
   QString mDescription;
   QGpgMECryptoConfigGroup* mCurrentGroup; // during parsing
@@ -111,7 +111,7 @@ class QGpgMECryptoConfigGroup : public Kleo::CryptoConfigGroup {
 
 public:
   QGpgMECryptoConfigGroup( const QString & name, const QString& description, int level );
-  ~QGpgMECryptoConfigGroup() {}
+  ~QGpgMECryptoConfigGroup();
 
   QString name() const { return mName; }
   QString iconName() const { return QString(); }
@@ -122,7 +122,7 @@ public:
 
 private:
   friend class QGpgMECryptoConfigComponent; // it adds the entries
-  Q3Dict<QGpgMECryptoConfigEntry> mEntries;
+  QHash<QString,QGpgMECryptoConfigEntry*> mEntries;
   QString mName;
   QString mDescription;
   Kleo::CryptoConfigEntry::Level mLevel;

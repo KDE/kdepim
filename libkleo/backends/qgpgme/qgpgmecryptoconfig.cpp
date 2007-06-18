@@ -62,9 +62,8 @@ static const int GPGCONF_FLAG_NO_CHANGE = 128; // readonly
 // Change size of mFlags bitfield if adding new values here
 
 QGpgMECryptoConfig::QGpgMECryptoConfig()
- : mComponents( 7 ), mParsed( false )
+ :  mParsed( false )
 {
-    mComponents.setAutoDelete( true );
 }
 
 QGpgMECryptoConfig::~QGpgMECryptoConfig()
@@ -125,10 +124,11 @@ QStringList QGpgMECryptoConfig::componentList() const
 {
   if ( !mParsed )
     const_cast<QGpgMECryptoConfig*>( this )->runGpgConf( true );
-  Q3DictIterator<QGpgMECryptoConfigComponent> it( mComponents );
   QStringList names;
-  for( ; it.current(); ++it )
-    names.push_back( it.currentKey() );
+  QList<QString> keylist = mComponents.uniqueKeys();
+  foreach (QString key, keylist) {
+	names << key;
+  }
   return names;
 }
 
@@ -136,19 +136,20 @@ Kleo::CryptoConfigComponent* QGpgMECryptoConfig::component( const QString& name 
 {
   if ( !mParsed )
     const_cast<QGpgMECryptoConfig*>( this )->runGpgConf( false );
-  return mComponents.find( name );
+  return mComponents.value( name );
 }
 
 void QGpgMECryptoConfig::sync( bool runtime )
 {
-  Q3DictIterator<QGpgMECryptoConfigComponent> it( mComponents );
-  for( ; it.current(); ++it )
-    it.current()->sync( runtime );
+  foreach (QGpgMECryptoConfigComponent *it, mComponents){
+  	it->sync(runtime);
+  }
 }
 
 void QGpgMECryptoConfig::clear()
 {
   s_duringClear = true;
+  qDeleteAll(mComponents);
   mComponents.clear();
   s_duringClear = false;
   mParsed = false; // next call to componentList/component will need to run gpgconf again
@@ -157,14 +158,15 @@ void QGpgMECryptoConfig::clear()
 ////
 
 QGpgMECryptoConfigComponent::QGpgMECryptoConfigComponent( QGpgMECryptoConfig*, const QString& name, const QString& description )
-  : mGroups( 7 ), mName( name ), mDescription( description )
+  : mName( name ), mDescription( description )
 {
-  mGroups.setAutoDelete( true );
   runGpgConf();
 }
 
 QGpgMECryptoConfigComponent::~QGpgMECryptoConfigComponent()
 {
+  qDeleteAll(mGroups);
+  mGroups.clear();
 }
 
 void QGpgMECryptoConfigComponent::runGpgConf()
@@ -236,16 +238,17 @@ void QGpgMECryptoConfigComponent::slotCollectStdOut( K3ProcIO* proc )
 
 QStringList QGpgMECryptoConfigComponent::groupList() const
 {
-  Q3DictIterator<QGpgMECryptoConfigGroup> it( mGroups );
   QStringList names;
-  for( ; it.current(); ++it )
-    names.push_back( it.currentKey() );
+  QList<QString> keylist = mGroups.uniqueKeys();
+  foreach (QString key, keylist) {
+        names << key;
+  }
   return names;
 }
 
 Kleo::CryptoConfigGroup* QGpgMECryptoConfigComponent::group(const QString& name ) const
 {
-  return mGroups.find( name );
+  return mGroups.value( name );
 }
 
 void QGpgMECryptoConfigComponent::sync( bool runtime )
@@ -256,26 +259,30 @@ void QGpgMECryptoConfigComponent::sync( bool runtime )
   QList<QGpgMECryptoConfigEntry *> dirtyEntries;
 
   // Collect all dirty entries
-  Q3DictIterator<QGpgMECryptoConfigGroup> groupit( mGroups );
-  for( ; groupit.current(); ++groupit ) {
-    Q3DictIterator<QGpgMECryptoConfigEntry> it( groupit.current()->mEntries );
-    for( ; it.current(); ++it ) {
-      if ( it.current()->isDirty() ) {
-        // OK, we can set it.currentKey() to it.current()->outputString()
-        QString line = it.currentKey();
-        if ( it.current()->isSet() ) { // set option
+  QList<QString> keylist = mGroups.uniqueKeys();
+  foreach (QString key, keylist) {
+    QHash<QString,QGpgMECryptoConfigEntry*> entry = mGroups[key]->mEntries;
+    QList<QString> keylistentry = entry.uniqueKeys(); 
+    foreach (QString keyentry, keylistentry) {
+      if(entry[keyentry]->isDirty())
+      {
+       // OK, we can set it.currentKey() to it.current()->outputString()
+        QString line = keyentry;
+        if ( entry[keyentry]->isSet() ) { // set option
           line += ":0:";
-          line += it.current()->outputString();
+          line += entry[keyentry]->outputString();
         } else {                       // unset option
           line += ":16:";
         }
         line += '\n';
         QByteArray line8bit = line.toUtf8(); // encode with utf8, and K3ProcIO uses utf8 when reading.
         tmpFile.write( line8bit.data(), line8bit.size()-1 /*no 0*/ );
-        dirtyEntries.append( it.current() );
+        dirtyEntries.append( entry[keyentry] );
+
       }
-    }
+    } 
   }
+
   tmpFile.flush();
   if ( dirtyEntries.isEmpty() )
     return;
@@ -327,26 +334,32 @@ void QGpgMECryptoConfigComponent::sync( bool runtime )
 ////
 
 QGpgMECryptoConfigGroup::QGpgMECryptoConfigGroup( const QString & name, const QString& description, int level )
-  : mEntries( 29 ),
+  :
     mName( name ),
     mDescription( description ),
     mLevel( static_cast<Kleo::CryptoConfigEntry::Level>( level ) )
 {
-  mEntries.setAutoDelete( true );
+}
+
+QGpgMECryptoConfigGroup::~QGpgMECryptoConfigGroup()
+{
+  qDeleteAll(mEntries);
+  mEntries.clear();
 }
 
 QStringList QGpgMECryptoConfigGroup::entryList() const
 {
-  Q3DictIterator<QGpgMECryptoConfigEntry> it( mEntries );
   QStringList names;
-  for( ; it.current(); ++it )
-    names.push_back( it.currentKey() );
+  QList<QString> keylist = mEntries.uniqueKeys();
+  foreach (QString key, keylist) {
+        names << key;
+  }
   return names;
 }
 
 Kleo::CryptoConfigEntry* QGpgMECryptoConfigGroup::entry( const QString& name ) const
 {
-  return mEntries.find( name );
+  return mEntries.value( name );
 }
 
 ////
