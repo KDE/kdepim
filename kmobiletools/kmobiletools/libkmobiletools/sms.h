@@ -80,7 +80,7 @@ public:
     void setUnread(bool unread);
 private:
     QSharedDataPointer<SMSPrivate> d;
-
+/// @TODO remove signals and slots, move them to smslist?
 public Q_SLOTS:
     bool exportMD(const QString &dir);
     bool writeToSlot( const QString &slotDir);
