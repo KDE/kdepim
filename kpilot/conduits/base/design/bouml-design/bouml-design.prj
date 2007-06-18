@@ -1,7 +1,7 @@
 format 38
 "bouml-design"
-  revision 3
-  modified_by 10 "bertjan"
+  revision 5
+  modified_by 118 "bertjan"
 
 
   
@@ -36,6 +36,18 @@ format 38
 
   mark_for_import
   
+  ncouples 11
+  key "gxmi path" value "/home/bertjan/workspace/kpilot/conduits/base/design/bouml-design/test.xmi"
+  key "gxmi gen views" value "no"
+  key "gxmi encoding" value "ISO-8859-1"
+  key "gxmi taggedvalue" value "1"
+  key "gxmi uml2.0" value "no"
+  key "gxmi use profile" value "no"
+  key "gxmi pk prefix" value "no"
+  key "gxmi vis prefix" value "no"
+  key "gxmi primitive type" value "no"
+  key "gxmi gen extensions" value "no"
+  key "gxmi linefeed" value "no"
   classview 128010 "Record Conduit"
     //class diagram settings
     draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default show_members_stereotype default show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default show_infonote default shadow default
@@ -129,42 +141,6 @@ ${inlines}
 	
       end
 
-      operation 131850 "moveFilesToPermanentLocation"
-	public explicit_return_type ""
-	nparams 0
-	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
-"
-	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}{
-  ${body}}
-"
-	
-	
-      end
-
-      operation 128394 "readAppInfo"
-	public explicit_return_type ""
-	nparams 0
-	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
-"
-	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}{
-  ${body}}
-"
-	
-	
-      end
-
-      operation 131978 "removeTmpFiles"
-	public explicit_return_type ""
-	nparams 0
-	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
-"
-	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}{
-  ${body}}
-"
-	
-	
-      end
-
       operation 129802 "syncRecords"
 	public explicit_return_type ""
 	nparams 3
@@ -180,24 +156,6 @@ ${inlines}
 	
       end
 
-      classrelation 128138 // fLocalDatabase (<unidirectional association>)
-	relation 128138 --->
-	  a role_name "fLocalDatabase" multiplicity "1" protected
-	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} * ${name}${value};
-"
-	    classrelation_ref 128138 // fLocalDatabase (<unidirectional association>)
-	  b multiplicity "" parent class_ref 128650 // PilotDatabase
-      end
-
-      classrelation 128394 // fDataStore (<unidirectional association>)
-	relation 128394 --->
-	  a role_name "fDataStore" multiplicity "1" protected
-	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} * ${name}${value};
-"
-	    classrelation_ref 128394 // fDataStore (<unidirectional association>)
-	  b multiplicity "" parent class_ref 128778 // PCDataStore
-      end
-
       classrelation 128522 // fMapping (<unidirectional association>)
 	relation 128522 --->
 	  a role_name "fMapping" multiplicity "1" protected
@@ -207,24 +165,6 @@ ${inlines}
 	  b multiplicity "" parent class_ref 128394 // IDMapping
       end
 
-      classrelation 128650 // fHHCUDCount (<unidirectional association>)
-	relation 128650 --->
-	  a role_name "fHHCUDCount" multiplicity "1" protected
-	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} * ${name}${value};
-"
-	    classrelation_ref 128650 // fHHCUDCount (<unidirectional association>)
-	  b multiplicity "" parent class_ref 128522 // CUDCounter
-      end
-
-      classrelation 128778 // fPCCUDCounter (<unidirectional association>)
-	relation 128778 --->
-	  a role_name "fPCCUDCounter" multiplicity "1" protected
-	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} * ${name}${value};
-"
-	    classrelation_ref 128778 // fPCCUDCounter (<unidirectional association>)
-	  b multiplicity "" parent class_ref 128522 // CUDCounter
-      end
-
       classrelation 128906 // fDatabase (<unidirectional association>)
 	relation 128906 --->
 	  a role_name "fDatabase" multiplicity "1" protected
@@ -232,6 +172,33 @@ ${inlines}
 "
 	    classrelation_ref 128906 // fDatabase (<unidirectional association>)
 	  b multiplicity "" parent class_ref 128650 // PilotDatabase
+      end
+
+      classrelation 129418 // fLocalDatase (<unidirectional association>)
+	relation 129418 --->
+	  a role_name "fLocalDatase" multiplicity "1" protected
+	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} * ${name}${value};
+"
+	    classrelation_ref 129418 // fLocalDatase (<unidirectional association>)
+	  b multiplicity "" parent class_ref 128906 // ProxyDatabase
+      end
+
+      classrelation 129546 // fDatastore (<unidirectional association>)
+	relation 129546 --->
+	  a role_name "fDatastore" multiplicity "1" protected
+	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} * ${name}${value};
+"
+	    classrelation_ref 129546 // fDatastore (<unidirectional association>)
+	  b multiplicity "" parent class_ref 128906 // ProxyDatabase
+      end
+
+      classrelation 129674 // fBackupdb (<unidirectional association>)
+	relation 129674 --->
+	  a role_name "fBackupdb" multiplicity "1" protected
+	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} * ${name}${value};
+"
+	    classrelation_ref 129674 // fBackupdb (<unidirectional association>)
+	  b multiplicity "" parent class_ref 128906 // ProxyDatabase
       end
     end
 
@@ -568,6 +535,26 @@ ${inlines}
 	
 	
       end
+
+      operation 132234 "PilotDatabase"
+	public explicit_return_type ""
+	nparams 0
+	cpp_decl "    ${comment}${inline}${name}${(}${)}${volatile}${throw};
+"
+	cpp_def "${comment}${inline}${class}::${name}${(}${)}${volatile}${throw} {
+  ${body}}
+"
+	
+	
+      end
+
+      classrelation 129162 // <generalisation>
+	relation 129162 ---|>
+	  a public
+	    cpp default "${type}"
+	    classrelation_ref 129162 // <generalisation>
+	  b multiplicity "" parent class_ref 128906 // ProxyDatabase
+      end
     end
 
     class 128778 "PCDataStore"
@@ -603,6 +590,106 @@ ${inlines}
 "
 	
 	
+      end
+
+      classrelation 129034 // <generalisation>
+	relation 129034 ---|>
+	  a public
+	    cpp default "${type}"
+	    classrelation_ref 129034 // <generalisation>
+	  b multiplicity "" parent class_ref 128906 // ProxyDatabase
+      end
+    end
+
+    class 128906 "ProxyDatabase"
+      visibility package 
+      cpp_decl "${comment}${template}class ${name}${inherit} {
+${members}};
+${inlines}
+"
+      java_decl ""
+      idl_decl ""
+      explicit_switch_type ""
+      
+      operation 132106 "ProxyDatabase"
+	public explicit_return_type ""
+	nparams 0
+	cpp_decl "    ${comment}${inline}${name}${(}${)}${volatile}${throw};
+"
+	cpp_def "${comment}${inline}${class}::${name}${(}${)}${volatile}${throw} {
+  ${body}}
+"
+	
+	
+      end
+
+      operation 132362 "readNextModifiedRecord"
+	public explicit_return_type ""
+	nparams 0
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}{
+  ${body}}
+"
+	
+	
+      end
+
+      operation 132490 "readRecordById"
+	public explicit_return_type ""
+	nparams 0
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}{
+  ${body}}
+"
+	
+	
+      end
+
+      operation 132618 "cleanUp"
+	public explicit_return_type ""
+	nparams 0
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}{
+  ${body}}
+"
+	
+	
+      end
+
+      operation 132746 "getCUDCounter"
+	public explicit_return_type ""
+	nparams 0
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}{
+  ${body}}
+"
+	
+	
+      end
+
+      operation 132874 "commitChanges"
+	public explicit_return_type ""
+	nparams 0
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}{
+  ${body}}
+"
+	
+	
+      end
+
+      classrelation 129290 // fCounter (<unidirectional association>)
+	relation 129290 --->
+	  a role_name "fCounter" multiplicity "1" protected
+	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} * ${name}${value};
+"
+	    classrelation_ref 129290 // fCounter (<unidirectional association>)
+	  b multiplicity "" parent class_ref 128522 // CUDCounter
       end
     end
   end
