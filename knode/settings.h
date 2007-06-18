@@ -13,6 +13,7 @@
 #ifndef KNODE_SETTINGS_H
 #define KNODE_SETTINGS_H
 
+#include "knode_export.h"
 #include "settings_base.h"
 
 // TODO: remove as soon as XHeader is in it's own file
@@ -25,7 +26,7 @@ namespace KNode {
  * @todo Make the color and font accessors const (requires the KConfigXT
  * generated item accessors to be const too).
  */
-class KDE_EXPORT Settings : public SettingsBase
+class KNODE_EXPORT Settings : public SettingsBase
 {
   public:
     /// Create a new Settings object.

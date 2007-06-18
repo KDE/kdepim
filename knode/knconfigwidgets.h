@@ -15,6 +15,7 @@
 #ifndef KNCONFIGWIDGETS_H
 #define KNCONFIGWIDGETS_H
 
+#include "knode_export.h"
 #include <kpagedialog.h>
 #include <kcmodule.h>
 
@@ -24,7 +25,6 @@
 #include "ui_readnewsgeneralwidget_base.h"
 
 #include <QList>
-//Added by qt3to4:
 #include <QPixmap>
 #include <QLabel>
 #include <QListWidgetItem>
@@ -67,7 +67,7 @@ namespace KNode {
 
 /** Configuration widget for an dentity.
  */
-class KDE_EXPORT IdentityWidget : public KCModule {
+class KNODE_EXPORT IdentityWidget : public KCModule {
 
   Q_OBJECT
 
@@ -109,7 +109,7 @@ class KDE_EXPORT IdentityWidget : public KCModule {
 
 
 /** News server account list widget. */
-class KDE_EXPORT NntpAccountListWidget : public KCModule, private Ui::NntpAccountListWidgetBase
+class KNODE_EXPORT NntpAccountListWidget : public KCModule, private Ui::NntpAccountListWidgetBase
 {
   Q_OBJECT
 
@@ -164,7 +164,7 @@ class KDE_EXPORT NntpAccountListWidget : public KCModule, private Ui::NntpAccoun
 
 
 /** News server configuration dialog. */
-class KDE_EXPORT NntpAccountConfDialog : public KPageDialog, private Ui::NntpAccountDialogBase
+class KNODE_EXPORT NntpAccountConfDialog : public KPageDialog, private Ui::NntpAccountDialogBase
 {
   Q_OBJECT
 
@@ -186,7 +186,7 @@ class KDE_EXPORT NntpAccountConfDialog : public KPageDialog, private Ui::NntpAcc
 
 
 /** Appearance configuration widget. */
-class KDE_EXPORT AppearanceWidget : public KCModule
+class KNODE_EXPORT AppearanceWidget : public KCModule
 {
   Q_OBJECT
 
@@ -207,7 +207,7 @@ class KDE_EXPORT AppearanceWidget : public KCModule
     //===================================================================================
 
     /** Color list view item. */
-    class KDE_EXPORT ColorListItem : public QListWidgetItem {
+    class KNODE_EXPORT ColorListItem : public QListWidgetItem {
 
       public:
         /** Create a new color list view item.
@@ -229,7 +229,7 @@ class KDE_EXPORT AppearanceWidget : public KCModule
     //===================================================================================
 
     /** Font list view item. */
-    class KDE_EXPORT FontListItem : public QListWidgetItem {
+    class KNODE_EXPORT FontListItem : public QListWidgetItem {
 
       public:
         /** Create a new font list view item.
@@ -289,7 +289,7 @@ class KDE_EXPORT AppearanceWidget : public KCModule
 /** General read news configuration page.
  * @todo Use KConfigXT also for handling the date format button group.
  */
-class KDE_EXPORT ReadNewsGeneralWidget : public KCModule, KNode::Ui::ReadNewsGeneralWidgetBase
+class KNODE_EXPORT ReadNewsGeneralWidget : public KCModule, KNode::Ui::ReadNewsGeneralWidgetBase
 {
   public:
     /** Create a new general configuration page.
@@ -305,7 +305,7 @@ class KDE_EXPORT ReadNewsGeneralWidget : public KCModule, KNode::Ui::ReadNewsGen
 
 
 /** Read news navigation configuration page. */
-class KDE_EXPORT ReadNewsNavigationWidget : public KCModule
+class KNODE_EXPORT ReadNewsNavigationWidget : public KCModule
 {
   public:
     /** Create a new navigation configuration page.
@@ -316,7 +316,7 @@ class KDE_EXPORT ReadNewsNavigationWidget : public KCModule
 
 
 /** Article viewer configuration page. */
-class KDE_EXPORT ReadNewsViewerWidget : public KCModule
+class KNODE_EXPORT ReadNewsViewerWidget : public KCModule
 {
   public:
     /** Create a new article viewer configuration page.
@@ -327,7 +327,7 @@ class KDE_EXPORT ReadNewsViewerWidget : public KCModule
 
 
 /** Configuration widget for headers displayed in the article viewer. */
-class KDE_EXPORT DisplayedHeadersWidget : public KCModule {
+class KNODE_EXPORT DisplayedHeadersWidget : public KCModule {
 
   Q_OBJECT
 
@@ -380,7 +380,7 @@ class KDE_EXPORT DisplayedHeadersWidget : public KCModule {
 
 
 /** Configuration dialog for a single header displayed in the article viewer. */
-class KDE_EXPORT DisplayedHeaderConfDialog : public KDialog {
+class KNODE_EXPORT DisplayedHeaderConfDialog : public KDialog {
 
   Q_OBJECT
 
@@ -405,7 +405,7 @@ class KDE_EXPORT DisplayedHeaderConfDialog : public KDialog {
 
 
 /** Scoring configuration widget. */
-class KDE_EXPORT ScoringWidget : public KCModule
+class KNODE_EXPORT ScoringWidget : public KCModule
 {
   public:
     /** Create a new scoring configuration widget.
@@ -420,7 +420,7 @@ class KDE_EXPORT ScoringWidget : public KCModule
 
 
 /** Configuration widget for filters. */
-class KDE_EXPORT FilterListWidget : public KCModule {
+class KNODE_EXPORT FilterListWidget : public KCModule {
 
   Q_OBJECT
 
@@ -494,7 +494,7 @@ class KDE_EXPORT FilterListWidget : public KCModule {
 
 
 /** Configuration widget for technical posting settings. */
-class KDE_EXPORT PostNewsTechnicalWidget : public KCModule, KNode::Ui::PostNewsTechnicalWidgetBase
+class KNODE_EXPORT PostNewsTechnicalWidget : public KCModule, KNode::Ui::PostNewsTechnicalWidgetBase
 {
   Q_OBJECT
   public:
@@ -516,7 +516,7 @@ class KDE_EXPORT PostNewsTechnicalWidget : public KCModule, KNode::Ui::PostNewsT
 
 
 /** Dialog to edit additional headers. */
-class KDE_EXPORT XHeaderConfDialog : public KDialog
+class KNODE_EXPORT XHeaderConfDialog : public KDialog
 {
   public:
     /** Create a new dialog to edit an additional header.
@@ -536,7 +536,7 @@ class KDE_EXPORT XHeaderConfDialog : public KDialog
 
 
 /** Composer configuration widget. */
-class KDE_EXPORT PostNewsComposerWidget : public KCModule
+class KNODE_EXPORT PostNewsComposerWidget : public KCModule
 {
   public:
     /** Create a new composer configuration widget.
@@ -547,7 +547,7 @@ class KDE_EXPORT PostNewsComposerWidget : public KCModule
 
 
 /** Spell-checking configuration widget. */
-class KDE_EXPORT PostNewsSpellingWidget : public KCModule {
+class KNODE_EXPORT PostNewsSpellingWidget : public KCModule {
 
   public:
     PostNewsSpellingWidget( const KComponentData &inst, QWidget *parent = 0 );
@@ -562,7 +562,7 @@ class KDE_EXPORT PostNewsSpellingWidget : public KCModule {
 
 
 /** Privacy configuration widget. */
-class KDE_EXPORT PrivacyWidget : public KCModule {
+class KNODE_EXPORT PrivacyWidget : public KCModule {
 
   Q_OBJECT
 
@@ -581,7 +581,7 @@ class KDE_EXPORT PrivacyWidget : public KCModule {
 //BEGIN: Cleanup configuration -----------------------------------------------
 
 /** Configuration widget for group expireration */
-class KDE_EXPORT GroupCleanupWidget : public QWidget {
+class KNODE_EXPORT GroupCleanupWidget : public QWidget {
 
   Q_OBJECT
 
@@ -609,7 +609,7 @@ class KDE_EXPORT GroupCleanupWidget : public QWidget {
 
 
 /** Global cleanup configuration widget */
-class KDE_EXPORT CleanupWidget : public KCModule {
+class KNODE_EXPORT CleanupWidget : public KCModule {
 
   Q_OBJECT
 

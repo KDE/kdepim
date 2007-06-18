@@ -15,13 +15,12 @@
 #ifndef KNCONVERT_H
 #define KNCONVERT_H
 
+#include "knode_export.h"
 #include <time.h>
-
 
 #include <qglobal.h>
 #include <QList>
 
-#include <kdemacros.h>
 #include <KDialog>
 
 class QListWidget;
@@ -34,7 +33,7 @@ class K3Process;
 
 
 /** Converter framework for older file formats. */
-class KDE_EXPORT KNConvert : public KDialog {
+class KNODE_EXPORT KNConvert : public KDialog {
 
   Q_OBJECT
 

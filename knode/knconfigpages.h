@@ -14,7 +14,7 @@
 #ifndef KNCONFIGPAGES_H
 #define KNCONFIGPAGES_H
 
-
+#include "knode_export.h"
 #include <kcmodule.h>
 
 
@@ -27,7 +27,7 @@ namespace KNode {
  * It simply forwards load and save operations to all tabs.
  * Code mostly taken from kmail.
  */
-class KDE_EXPORT KCMTabContainer : public KCModule
+class KNODE_EXPORT KCMTabContainer : public KCModule
 {
   public:
     /** Create a new tab-based KCModule container.
@@ -65,7 +65,7 @@ class AccountsPage : public KCMTabContainer {
 
 
 /** Read news page. */
-class KDE_EXPORT ReadNewsPage : public KCMTabContainer {
+class KNODE_EXPORT ReadNewsPage : public KCMTabContainer {
   Q_OBJECT
 
   public:
@@ -73,7 +73,7 @@ class KDE_EXPORT ReadNewsPage : public KCMTabContainer {
 };
 
 /** Post news page. */
-class KDE_EXPORT PostNewsPage : public KCMTabContainer {
+class KNODE_EXPORT PostNewsPage : public KCMTabContainer {
   Q_OBJECT
 
   public:

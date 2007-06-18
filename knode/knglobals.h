@@ -15,10 +15,10 @@
 #ifndef KNGLOBALS_H
 #define KNGLOBALS_H
 
-#include <kconfig.h>
+#include "knode_export.h"
 #include "resource.h"
 
-#include <kdemacros.h>
+#include <kconfig.h>
 #include <kcomponentdata.h>
 
 // keep compatibility with the old way
@@ -51,7 +51,7 @@ namespace KNode {
     via KNodeApp. Now they can be accessed directly,
     this removes many header dependencies.
     (knode.h isn't include everywhere) */
-class KDE_EXPORT KNGlobals
+class KNODE_EXPORT KNGlobals
 {
   public:
     ~KNGlobals();

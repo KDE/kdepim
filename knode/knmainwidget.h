@@ -14,16 +14,15 @@
 #ifndef KNMAINWIDGET_H
 #define KNMAINWIDGET_H
 
+#include "knode_export.h"
+#include "resource.h"
 #include <kdialog.h>
 #include <kvbox.h>
-#include "resource.h"
 
 #include <qglobal.h>
 #include <QList>
-//Added by qt3to4:
 #include <QEvent>
 #include <QDropEvent>
-#include <kdemacros.h>
 
 class Q3ListViewItem;
 class QLineEdit;
@@ -66,7 +65,7 @@ class KNRemoteArticle;
 class KActionCollection;
 
 /** This is the central part of the KNode GUI. */
-class KDE_EXPORT KNMainWidget : public KVBox
+class KNODE_EXPORT KNMainWidget : public KVBox
 {
   Q_OBJECT
 public:

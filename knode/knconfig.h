@@ -15,6 +15,8 @@
 #ifndef KNCONFIG_H
 #define KNCONFIG_H
 
+#include "knode_export.h"
+
 #include <QColor>
 #include <QDateTime>
 #include <QFont>
@@ -59,7 +61,7 @@ class ConfigBase {
 
 
 /** A user identity. */
-class KDE_EXPORT Identity : public QObject, public ConfigBase {
+class KNODE_EXPORT Identity : public QObject, public ConfigBase {
 
 Q_OBJECT
 
@@ -133,7 +135,7 @@ Q_OBJECT
  * @deprecated Move the remaining parts either to their only users or to the
  *  KConfigXT generated Settings class.
  */
-class KDE_EXPORT Appearance : public ConfigBase {
+class KNODE_EXPORT Appearance : public ConfigBase {
 
 #define ICON_CNT 14
 
@@ -158,7 +160,7 @@ class KDE_EXPORT Appearance : public ConfigBase {
 
 
 /** Headers displayed in the article viewer. */
-class KDE_EXPORT DisplayedHeaders : public ConfigBase
+class KNODE_EXPORT DisplayedHeaders : public ConfigBase
 {
   public:
     DisplayedHeaders();
@@ -182,7 +184,7 @@ class KDE_EXPORT DisplayedHeaders : public ConfigBase
 
 
 /** Represents an additional header added by the composer. */
-class KDE_EXPORT XHeader
+class KNODE_EXPORT XHeader
 {
   public:
     /** Create a new XHeader object from the given string representation.
@@ -210,7 +212,7 @@ class KDE_EXPORT XHeader
 //BEGIN: Cleanup configuration -----------------------------------------------
 
 /** Expirery/cleaup settings (globally or per account/group/folder). */
-class KDE_EXPORT Cleanup : public ConfigBase {
+class KNODE_EXPORT Cleanup : public ConfigBase {
 
   friend class CleanupWidget;
   friend class GroupCleanupWidget;
