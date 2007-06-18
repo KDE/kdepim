@@ -52,6 +52,8 @@ using namespace KMobileTools;
 AT_Engine::AT_Engine(QObject *parent, const QString &name)
  : KMobileTools::Engine(parent, name), p_lastJob(NULL)
 {
+    KGlobal::locale()->insertCatalog( "kmobiletools_at_engine" );
+    KLocale::setMainCatalog("kmobiletools_at_engine");
     device=NULL;
 //     p_smsList = new SMSList();
     queue_sms=false;
