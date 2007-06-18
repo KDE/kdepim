@@ -21,6 +21,7 @@
 #ifndef ABOUTDATA_H
 #define ABOUTDATA_H
 
+#include "kmobiletools_export.h"
 #include <kaboutdata.h>
 #include <config-kmobiletools.h>
 #ifdef SVNREVISION
@@ -38,7 +39,7 @@
 /**
 @author Marco Gulino
 */
-class KDE_EXPORT AboutData : public KAboutData
+class KMOBILETOOLS_EXPORT AboutData : public KAboutData
 {
 public:
     AboutData();
