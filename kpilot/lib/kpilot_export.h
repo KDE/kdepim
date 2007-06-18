@@ -1,6 +1,5 @@
-/*
-    This file is part of kpilot.
-    Copyright (c) 2007 Laurent Montel <montel@kde.org>
+/*  This file is part of the KDE project
+    Copyright (C) 2007 David Faure <faure@kde.org>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
@@ -21,22 +20,21 @@
 #ifndef KPILOT_EXPORT_H
 #define KPILOT_EXPORT_H
 
-/* needed for KPILOT_EXPORT macros */
+/* needed for KDE_EXPORT and KDE_IMPORT macros */
 #include <kdemacros.h>
 
-#if defined Q_OS_WIN
-
 #ifndef KPILOT_EXPORT
-# ifdef MAKE_KPILOT_LIB
+# if defined(MAKE_KPILOT_LIB)
+   /* We are building this library */
 #  define KPILOT_EXPORT KDE_EXPORT
 # else
+   /* We are using this library */
 #  define KPILOT_EXPORT KDE_IMPORT
 # endif
 #endif
 
-#else /* UNIX*/
-/* export statements for unix */
-#define KPILOT_EXPORT KDE_EXPORT
-#endif
+# ifndef KPILOT_EXPORT_DEPRECATED
+#  define KPILOT_EXPORT_DEPRECATED KDE_DEPRECATED KPILOT_EXPORT
+# endif
 
 #endif
