@@ -91,7 +91,6 @@
 
 // Qt
 #include <QFontMetrics>
-//Added by qt3to4:
 #include <Q3PtrList>
 #include <QLabel>
 #include <QMenu>
@@ -101,10 +100,9 @@
 // other
 #include <algorithm>
 #include <assert.h>
-#include <kdemacros.h>
 namespace {
 
-  class KDE_EXPORT DisplayStrategy : public Kleo::KeyListView::DisplayStrategy{
+  class DisplayStrategy : public Kleo::KeyListView::DisplayStrategy{
   public:
     ~DisplayStrategy() {}
 
@@ -126,7 +124,7 @@ namespace {
     }
   };
 
-  class KDE_EXPORT ColumnStrategy : public Kleo::KeyListView::ColumnStrategy {
+  class ColumnStrategy : public Kleo::KeyListView::ColumnStrategy {
   public:
     ~ColumnStrategy() {}
 

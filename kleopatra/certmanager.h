@@ -36,10 +36,8 @@
 //#include <gpgme.h>
 
 #include <kxmlguiwindow.h>
-#include <kdemacros.h>
 #include <kurl.h>
 #include <q3ptrlist.h>
-//Added by qt3to4:
 #include <QLabel>
 
 #include <set>
@@ -76,7 +74,7 @@ namespace GpgME {
   class Key;
 }
 
-class KDE_EXPORT CertManager : public KXmlGuiWindow {
+class CertManager : public KXmlGuiWindow {
   Q_OBJECT
 public:
     CertManager( bool remote = false, const QString& query = QString(),
