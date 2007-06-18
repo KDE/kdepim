@@ -53,9 +53,8 @@
 #include <QLayout>
 #include <QLabel>
 #include <QComboBox>
-#include <q3scrollview.h>
+#include <QScrollArea>
 #include <QPushButton>
-//Added by qt3to4:
 #include <QVBoxLayout>
 #include <QGridLayout>
 
@@ -126,8 +125,10 @@ Kleo::KeyApprovalDialog::KeyApprovalDialog( const std::vector<Item> & recipients
 
   vlay->addWidget( new QLabel( i18n("The following keys will be used for encryption:"), page ) );
 
-  Q3ScrollView * sv = new Q3ScrollView( page );
-  sv->setResizePolicy( Q3ScrollView::AutoOneFit );
+  QScrollArea * sv = new QScrollArea( page );
+  //Laurent not sure
+  sv->setWidgetResizable(true);
+  //sv->setResizePolicy( Q3ScrollView::AutoOneFit );
   vlay->addWidget( sv );
 
   QWidget * view = new QWidget( sv->viewport() );
@@ -136,7 +137,7 @@ Kleo::KeyApprovalDialog::KeyApprovalDialog( const std::vector<Item> & recipients
   glay->setMargin( marginHint() );
   glay->setSpacing( spacingHint() );
   glay->setColumnStretch( 1, 1 );
-  sv->addChild( view );
+  sv->setWidget( view );
 
   int row = -1;
 
