@@ -505,7 +505,7 @@ void DistributionListWidget::updateContactView()
   KABC::DistributionList::Entry::List::ConstIterator it;
 #endif
   for ( it = entries.begin(); it != entries.end(); ++it, ++entryCount )
-    new ContactItem( mContactView, (*it).addressee, (*it).email );
+    new ContactItem( mContactView, (*it).addressee(), (*it).email() );
 
   bool state = mContactView->selectedItem() != 0;
   mChangeEmailButton->setEnabled( state );
