@@ -25,7 +25,7 @@
 #include <QtCore/QObject>
 #include <QtCore/QStringList>
 #include <QtCore/QDateTime>
-
+#include <QtCore/QSharedDataPointer>
 /**
 @author Marco Gulino
 */
@@ -79,7 +79,7 @@ public:
     bool unread() const;
     void setUnread(bool unread);
 private:
-    SMSPrivate * const d;
+    QSharedDataPointer<SMSPrivate> d;
 
 public Q_SLOTS:
     bool exportMD(const QString &dir);

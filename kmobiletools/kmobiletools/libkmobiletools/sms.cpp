@@ -27,13 +27,15 @@
 #include <qregexp.h>
 #include <kcodecs.h>
 #include <QTextStream>
+#include <QSharedData>
+
 #include "kmobiletoolshelper.h"
 #define MIMETYPE "application/x-kmobiletools-sms"
 
-class SMSPrivate {
+class SMSPrivate : public QSharedData {
     public:
-        SMSPrivate(SMS* p_parent)
-    : i_folder(0), i_slot(0), i_type(SMS::All), b_unread(false)
+        SMSPrivate(SMS* p_parent) : QSharedData(),
+        i_folder(0), i_slot(0), i_type(SMS::All), b_unread(false)
         { parent=p_parent; }
     QStringList sl_numbers;
     QString s_text;
@@ -53,7 +55,7 @@ class SMSPrivate {
         if ( sl_numbers.isEmpty()) ba = s_text.toUtf8();
         else ba = ( s_text + sl_numbers.join(",")).toUtf8();
         context.update(ba);
-        s_uid=QString(context.hexDigest() );
+//         s_uid=QString(context.hexDigest() );
     }
 };
 
@@ -180,7 +182,7 @@ QStringList SMS::getMultiText(const QString &text)
 // Convenience non-static method for the above one
 QStringList SMS::getMultiText() const
 {
-    d->refreshUid(); /// @TODO move this to the single setters?
+    ((SMSPrivate*)d.data() )->refreshUid(); /// @TODO move this to the single setters?
     return getMultiText(d->s_text);
 }
 
