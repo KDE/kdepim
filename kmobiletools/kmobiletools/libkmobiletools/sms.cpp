@@ -45,27 +45,26 @@ class SMSPrivate {
     QString s_rawSlot;
     bool b_unread;
     SMS *parent;
-    void refreshUid() const
+    QString s_uid;
+    void refreshUid()
     {
         KMD5 context;
         QByteArray ba;
         if ( sl_numbers.isEmpty()) ba = s_text.toUtf8();
         else ba = ( s_text + sl_numbers.join(",")).toUtf8();
         context.update(ba);
-        parent->reference().setRemoteId( context.hexDigest() );
+        s_uid=QString(context.hexDigest() );
     }
 };
 
 SMS::SMS(QObject *parent)
  : QObject(parent), 
-  Akonadi::Item(MIMETYPE), /// @TODO could this a proper mimetype? eventually add it in kde global mimetypes.
   d(new SMSPrivate(this) )
 {
 }
 
 SMS::SMS(const QStringList & numbers, const QString & text, const QDateTime & datetime, QObject *parent)
  : QObject(parent),
-   Akonadi::Item(MIMETYPE), /// @TODO could this a proper mimetype? eventually add it in kde global mimetypes.
  d(new SMSPrivate(this) )
 {
     setNumbers(numbers);
@@ -75,12 +74,11 @@ SMS::SMS(const QStringList & numbers, const QString & text, const QDateTime & da
 }
 
 QString SMS::uid() const {
-    return reference().remoteId();
+    return d->s_uid;
 }
 
 SMS::SMS(const QStringList & numbers, const QString & text, QObject *parent)
  : QObject(parent),
-  Akonadi::Item(MIMETYPE), /// @TODO could this a proper mimetype? eventually add it in kde global mimetypes.
   d(new SMSPrivate(this) )
 {
     setNumbers(numbers);

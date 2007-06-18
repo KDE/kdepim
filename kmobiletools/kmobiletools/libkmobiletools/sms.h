@@ -21,7 +21,6 @@
 #define SMS_H
 
 #include <libkmobiletools/kmobiletools_export.h>
-#include <libakonadi/item.h>
 
 #include <QtCore/QObject>
 #include <QtCore/QStringList>
@@ -32,7 +31,7 @@
 */
 
 class SMSPrivate;
-class KMOBILETOOLS_EXPORT SMS : public QObject, public Akonadi::Item
+class KMOBILETOOLS_EXPORT SMS : public QObject
 {
 Q_OBJECT
 public:
