@@ -20,18 +20,24 @@
 #include <klocale.h>
 #include <QPushButton>
 
+#include "kimportpage.h"
+#include "kselfilterpage.h"
 #include "filters.hxx"
 
-KMailCVT::KMailCVT(QWidget *parent, const char *name)
-	: K3Wizard(parent, name, true) {
-
+KMailCVT::KMailCVT(QWidget *parent)
+	: KAssistantDialog(parent) {
+        setModal(true);
 	setWindowTitle( i18n( "KMailCVT Import Tool" ) );
 
-	selfilterpage = new KSelFilterPage(this);
-	addPage( selfilterpage, i18n( "Step 1: Select Filter" ) );
 
-	importpage = new KImportPage(this);
-	addPage( importpage, i18n( "Step 2: Importing..." ) );
+	selfilterpage = new KSelFilterPage;
+	page1 = new KPageWidgetItem( selfilterpage, i18n( "Step 1: Select Filter" ) );
+
+	addPage( page1);
+
+	importpage = new KImportPage;
+	page2 = new KPageWidgetItem( importpage, i18n( "Step 2: Importing..." ) );
+	addPage( page2 );
 
 }
 
@@ -39,17 +45,16 @@ KMailCVT::~KMailCVT() {
 }
 
 void KMailCVT::next() {
-	if( currentPage() == selfilterpage ){
+	if( currentPage() == page1 ){
 		// Save selected filter
 		Filter *selectedFilter = selfilterpage->getSelectedFilter();
 		// without filter don't go next
 		if (!selectedFilter)
 			return;
 		// Goto next page
-		K3Wizard::next();
+		KAssistantDialog::next();
 		// Disable back & finish
-		setBackEnabled( currentPage(), false );
-		setFinishEnabled( currentPage(), false );
+		setValid( currentPage(), false );
 		// Start import
 		FilterInfo *info = new FilterInfo(importpage, this, selfilterpage->removeDupMsg_checked());
 		info->setStatusMsg(i18n("Import in progress"));
@@ -59,14 +64,13 @@ void KMailCVT::next() {
 		// Cleanup
 		delete info;
 		// Enable finish & back buttons
-		setFinishEnabled( currentPage(), true );
-		setBackEnabled( currentPage(), true );
-	} else K3Wizard::next();
+		setValid( currentPage(), true );
+	} else KAssistantDialog::next();
 }
 
 void KMailCVT::reject() {
-	if ( currentPage() == importpage && ! finishButton()->isEnabled() ) FilterInfo::terminateASAP(); // ie. import in progress
-	else K3Wizard::reject();
+	if ( currentPage() == page2 ) FilterInfo::terminateASAP(); // ie. import in progress
+	else KAssistantDialog::reject();
 }
 
 void KMailCVT::help()
@@ -76,3 +80,4 @@ void KMailCVT::help()
 }
 
 #include "kmailcvt.moc"
+

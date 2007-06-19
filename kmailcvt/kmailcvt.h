@@ -14,21 +14,19 @@
 #ifndef KMAILCVT_H
 #define KMAILCVT_H
 
-#ifdef HAVE_CONFIG_H
-#include <config.h>
-#endif
-
 #include <kapplication.h>
-#include <k3wizard.h>
+#include <KAssistantDialog>
 
-#include "kimportpage.h"
-#include "kselfilterpage.h"
+class KPageWidgetItem;
+class KSelFilterPage;
+class KImportPage;
+
   
 /** KMailCVT is the base class of the project */
-class KMailCVT : public K3Wizard {
+class KMailCVT : public KAssistantDialog {
 	Q_OBJECT
 public:
-	KMailCVT(QWidget* parent=0, const char *name=0);
+	KMailCVT(QWidget* parent=0);
 	~KMailCVT();
 
 	virtual void next();
@@ -36,8 +34,11 @@ public:
 public slots:
 	void help();
 private:
-	KSelFilterPage* selfilterpage;
-	KImportPage* importpage;
+	KPageWidgetItem* page1;
+	KPageWidgetItem* page2;
+	KSelFilterPage *selfilterpage;
+	KImportPage *importpage;
+
 };
 
 #endif
