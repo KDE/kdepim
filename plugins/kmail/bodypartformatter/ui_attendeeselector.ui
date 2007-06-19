@@ -1,0 +1,84 @@
+<ui version="4.0" >
+ <author>Volker Krause &lt;vkrause@kde.org></author>
+ <class>AttendeeSelectorWidget</class>
+ <widget class="QWidget" name="AttendeeSelectorWidget" >
+  <property name="geometry" >
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>354</width>
+    <height>238</height>
+   </rect>
+  </property>
+  <layout class="QGridLayout" >
+   <item row="0" column="1" >
+    <widget class="KPushButton" name="addButton" >
+     <property name="enabled" >
+      <bool>false</bool>
+     </property>
+     <property name="text" >
+      <string>Add</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="1" >
+    <widget class="KPushButton" name="removeButton" >
+     <property name="enabled" >
+      <bool>false</bool>
+     </property>
+     <property name="text" >
+      <string>Remove</string>
+     </property>
+    </widget>
+   </item>
+   <item rowspan="2" row="1" column="0" >
+    <widget class="K3ListBox" name="attendeeList" />
+   </item>
+   <item row="0" column="0" >
+    <widget class="KPIM::AddresseeLineEdit" name="attendeeEdit" />
+   </item>
+   <item row="2" column="1" >
+    <spacer>
+     <property name="orientation" >
+      <enum>Qt::Vertical</enum>
+     </property>
+     <property name="sizeType" >
+      <enum>QSizePolicy::Expanding</enum>
+     </property>
+     <property name="sizeHint" >
+      <size>
+       <width>20</width>
+       <height>140</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+  </layout>
+ </widget>
+ <layoutdefault spacing="6" margin="0" />
+ <layoutfunction spacing="KDialog::spacingHint" margin="KDialog::marginHint" />
+ <pixmapfunction>qPixmapFromMimeSource</pixmapfunction>
+ <customwidgets>
+  <customwidget>
+   <class>KPIM::AddresseeLineEdit</class>
+   <extends>KLineEdit</extends>
+   <header>libkdepim/addresseelineedit.h</header>
+  </customwidget>
+  <customwidget>
+   <class>KPushButton</class>
+   <extends>QPushButton</extends>
+   <header>kpushbutton.h</header>
+  </customwidget>
+  <customwidget>
+   <class>K3ListBox</class>
+  </customwidget>
+ </customwidgets>
+ <includes>
+  <include location="local" >kpushbutton.h</include>
+  <include location="local" >kpushbutton.h</include>
+  <include location="local" >k3listbox.h</include>
+  <include location="local" >libkdepim/addresseelineedit.h</include>
+ </includes>
+ <resources/>
+ <connections/>
+</ui>

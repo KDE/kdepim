@@ -2,6 +2,7 @@
     This file is part of kdepim.
 
     Copyright (c) 2004 Cornelius Schumacher <schumacher@kde.org>
+    Copyright (c) 2007 Volker Krause <vkrause@kde.org>
 
     This program is free software; you can redistribute it and/or modify it
     under the terms of the GNU General Public License as published by
@@ -29,6 +30,9 @@
     your version.
 */
 
+#include "attendeeselector.h"
+#include "delegateselector.h"
+
 #include <interfaces/bodypartformatter.h>
 #include <interfaces/bodypart.h>
 #include <interfaces/bodyparturlhandler.h>
@@ -49,6 +53,7 @@
 #include <kpimutils/email.h>
 
 #include <kglobal.h>
+#include <kinputdialog.h>
 #include <klocale.h>
 #include <kstringhandler.h>
 #include <kglobalsettings.h>
@@ -191,7 +196,7 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
 
     }
 
-    void setStatusOnMyself( Incidence* incidence, Attendee* myself,
+    Attendee* setStatusOnMyself( Incidence* incidence, Attendee* myself,
                             Attendee::PartStat status, const QString &receiver ) const
     {
       Attendee* newMyself = 0;
@@ -207,26 +212,52 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
                                 status,
                                 myself ? myself->role() : heuristicalRole( incidence ),
                                 myself ? myself->uid() : QString::null );
+      if ( myself ) {
+        newMyself->setDelegate( myself->delegate() );
+        newMyself->setDelegator( myself->delegator() );
+      }
 
       // Make sure only ourselves is in the event
       incidence->clearAttendees();
       if( newMyself )
         incidence->addAttendee( newMyself );
+      return newMyself;
     }
 
-    bool mail( Incidence* incidence, KMail::Callback& callback, const QString &status ) const
+    enum MailType {
+      Answer,
+      Delegation,
+      Forward
+    };
+
+    bool mail( Incidence* incidence, KMail::Callback& callback, const QString &status,
+               Scheduler::Method method = Scheduler::Reply, const QString &to = QString::null,
+               MailType type = Answer ) const
     {
       //status is accepted/tentative/declined
       ICalFormat format;
       format.setTimeSpec( KPimPrefs::timeSpec() );
-      QString msg = format.createScheduleMessage( incidence,
-                                                  Scheduler::Reply );
+      QString msg = format.createScheduleMessage( incidence, method );
+      QString summary = incidence->summary();
+      if ( summary.isEmpty() )
+        summary = i18n( "Incidence with no summary" );
       QString subject;
-      if ( !incidence->summary().isEmpty() )
-        subject = i18n( "Answer: %1", incidence->summary() );
-      else
-        subject = i18n( "Answer: Incidence with no summary" );
-      return callback.mailICal( incidence->organizer().fullName(), msg, subject, status );
+      switch ( type ) {
+        case Answer:
+          subject = i18n( "Answer: %1" ).arg( summary );
+          break;
+        case Delegation:
+          subject = i18n( "Delegated: %1" ).arg( summary );
+          break;
+        case Forward:
+          subject = i18n( "Forwarded: %1" ).arg( summary );
+          break;
+      }
+
+      QString recv = to;
+      if ( recv.isEmpty() )
+        recv = incidence->organizer().fullName();
+      return callback.mailICal( recv, msg, subject, status );
     }
 
     bool saveFile( const QString& receiver, const QString& iCal,
@@ -290,22 +321,83 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
       if ( status == Attendee::Accepted ) dir = "accepted";
       else if ( status == Attendee::Tentative  ) dir = "tentative";
       else if ( status == Attendee::Declined ) dir = "cancel";
+      else if ( status == Attendee::Delegated ) dir = "delegated";
       else return true; // unknown status
 
-      saveFile( receiver, iCal, dir );
+      if ( status != Attendee::Delegated ) // we do that below for delegated incidences
+        saveFile( receiver, iCal, dir );
+
+      QString delegateString;
+      bool delegatorRSVP = false;
+      if ( status == Attendee::Delegated ) {
+        DelegateSelector dlg;
+        if ( dlg.exec() == QDialog::Rejected )
+          return true;
+        delegateString = dlg.delegate();
+        delegatorRSVP = dlg.rsvp();
+        if ( delegateString.isEmpty() )
+          return true;
+      }
 
       // Now produce the return message
       Incidence* incidence = icalToString( iCal );
 
       if( !incidence ) return false;
       Attendee *myself = findMyself( incidence, receiver );
+
+      // find our delegator, we need to inform him as well
+      QString delegator;
+      if ( myself && !myself->delegator().isEmpty() ) {
+        Attendee::List attendees = incidence->attendees();
+        for ( Attendee::List::ConstIterator it = attendees.constBegin(); it != attendees.constEnd(); ++it ) {
+          if( KPIMUtils::compareEmail( (*it)->fullName(), myself->delegator(), false ) && (*it)->status() == Attendee::Delegated ) {
+            delegator = (*it)->fullName();
+            delegatorRSVP = (*it)->RSVP();
+            break;
+          }
+        }
+      }
+
       if ( ( myself && myself->RSVP() ) || heuristicalRSVP( incidence ) ) {
-        setStatusOnMyself( incidence, myself, status, receiver );
-        ok = mail( incidence, callback, dir );
+        Attendee* newMyself = setStatusOnMyself( incidence, myself, status, receiver );
+        if ( newMyself && status == Attendee::Delegated ) {
+          newMyself->setDelegate( delegateString );
+          newMyself->setRSVP( delegatorRSVP );
+        }
+        ok =  mail( incidence, callback, dir );
+
+        // check if we need to inform our delegator about this as well
+        if ( newMyself && (status == Attendee::Accepted || status == Attendee::Declined) && !delegator.isEmpty() ) {
+          if ( delegatorRSVP || status == Attendee::Declined )
+            ok = mail( incidence, callback, dir, Scheduler::Reply, delegator );
+        }
+
       } else {
         ( new KMDeleteMsgCommand( callback.getMsg()->getMsgSerNum() ) )->start();
       }
       delete incidence;
+
+      // create invitation for the delegate (same as the original invitation
+      // with the delegate as additional attendee), we also use that for updating
+      // our calendar
+      if ( status == Attendee::Delegated ) {
+        incidence = icalToString( iCal );
+        myself = findMyself( incidence, receiver );
+        myself->setStatus( status );
+        myself->setDelegate( delegateString );
+        QString name, email;
+        KPIMUtils::extractEmailAddressAndName( delegateString, email, name );
+        Attendee *delegate = new Attendee( name, email, true );
+        delegate->setDelegator( receiver );
+        incidence->addAttendee( delegate );
+
+        ICalFormat format;
+        format.setTimeSpec( KPimPrefs::timeSpec() );
+        QString iCal = format.createScheduleMessage( incidence, Scheduler::Request );
+        saveFile( receiver, iCal, dir );
+
+        ok = mail( incidence, callback, dir, Scheduler::Request, delegateString, Delegation );
+      }
       return ok;
     }
 
@@ -329,6 +421,19 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
         result = handleIgnore( iCal, c );
       if ( path == "decline" )
         result = handleInvitation( iCal, Attendee::Declined, c );
+      if ( path == "delegate" )
+        result = handleInvitation( iCal, Attendee::Delegated, c );
+      if ( path == "forward" ) {
+        Incidence* incidence = icalToString( iCal );
+        AttendeeSelector dlg;
+        if ( dlg.exec() == QDialog::Rejected )
+          return true;
+        QString fwdTo = dlg.attendees().join( ", " );
+        if ( fwdTo.isEmpty() )
+          return true;
+        // TODO mark incidence as forwarded
+        result = mail( incidence, c, "forward", Scheduler::Request, fwdTo, Forward );
+      }
       if ( path == "reply" || path == "cancel" ) {
         // These should just be saved with their type as the dir
         if ( saveFile( "Receiver Not Searched", iCal, path ) ) {
@@ -364,6 +469,10 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
           return i18n("Check my calendar..." );
         if ( path == "reply" )
           return i18n( "Enter incidence into my calendar" );
+        if ( path == "delegate" )
+          return i18n( "Delegate incidence" );
+        if ( path == "forward" )
+          return i18n( "Forward incidence" );
         if ( path == "cancel" )
           return i18n( "Remove incidence from my calendar" );
       }
