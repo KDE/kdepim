@@ -16,4 +16,5 @@ Class=:internet
 Description=A kioslave for mobile
 Description[el]=Ένα kioslave για κινητά τηλέφωνα
 Description[es]=Un kioslave para móviles
+Description[ja]=携帯電話のための kioslave
 Description[zh_TW]=行動電話的 kiosolave
