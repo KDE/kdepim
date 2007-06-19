@@ -1,7 +1,7 @@
 format 38
 "bouml-design"
-  revision 5
-  modified_by 118 "bertjan"
+  revision 9
+  modified_by 72 "bertjan"
 
 
   
@@ -65,13 +65,18 @@ format 38
     package_name_in_tab default show_context default show_opaque_action_definition default auto_label_position default write_flow_label_horizontally default draw_all_relations default shadow default
     show_infonote default drawing_language default
     
+    classdiagram 128138 "Class Diagram"
+      draw_all_relations no hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default show_members_stereotype default show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default show_infonote default shadow default
+      size A4
+    end
+
     sequencediagram 128010 "HotSync"
       show_full_operations_definition no write_horizontally default drawing_language c++ draw_all_relations default shadow yes
       size A4
     end
 
-    classdiagram 128138 "Class Diagram"
-      draw_all_relations no hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default show_members_stereotype default show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default show_infonote default shadow default
+    sequencediagram 128112 "First Sync"
+      show_full_operations_definition default write_horizontally default drawing_language default draw_all_relations default shadow default
       size A4
     end
 
@@ -171,7 +176,7 @@ ${inlines}
 	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} * ${name}${value};
 "
 	    classrelation_ref 128906 // fDatabase (<unidirectional association>)
-	  b multiplicity "" parent class_ref 128650 // PilotDatabase
+	  b multiplicity "" parent class_ref 128650 // HHProxyDatabase
       end
 
       classrelation 129418 // fLocalDatase (<unidirectional association>)
@@ -361,6 +366,30 @@ ${inlines}
 	
 	
       end
+
+      operation 128268 "setPCId"
+	public explicit_return_type ""
+	nparams 0
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}{
+  ${body}}
+"
+	
+	
+      end
+
+      operation 129608 "setHHId"
+	public explicit_return_type ""
+	nparams 0
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}{
+  ${body}}
+"
+	
+	
+      end
     end
 
     class 128522 "CUDCounter"
@@ -479,7 +508,7 @@ ${inlines}
       end
     end
 
-    class 128650 "PilotDatabase"
+    class 128650 "HHProxyDatabase"
       visibility package 
       cpp_decl "${comment}${template}class ${name}${inherit} {
 ${members}};
@@ -489,36 +518,21 @@ ${inlines}
       idl_decl ""
       explicit_switch_type ""
       
-      operation 129418 "readNextModifiedRec"
-	public explicit_return_type ""
-	nparams 1
-	  param inout name "ind" explicit_type "int"
-	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
-"
-	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}{
-  ${body}}
-"
-	
-	
+      classrelation 128100 // <generalisation>
+	relation 128100 ---|>
+	  a public
+	    cpp default "${type}"
+	    classrelation_ref 128100 // <generalisation>
+	  b multiplicity "" parent class_ref 128906 // ProxyDatabase
       end
 
-      operation 129674 "readRecordById"
+      operation 132234 "HHProxyDatabase"
 	public explicit_return_type ""
-	nparams 1
-	  param inout name "id" explicit_type "recordid_t"
-	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
-"
-	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}{
-  ${body}}
-"
-	
-	
-      end
-
-      operation 130186 "resetSyncFlags"
-	cpp_virtual public explicit_return_type ""
 	nparams 0
-	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+	cpp_decl "    ${comment}${inline}${name}${(}${)}${volatile}${throw};
+"
+	cpp_def "${comment}${inline}${class}::${name}${(}${)}${volatile}${throw} {
+  ${body}}
 "
 	
 	
@@ -536,7 +550,86 @@ ${inlines}
 	
       end
 
-      operation 132234 "PilotDatabase"
+      operation 128328 "lookForMatch"
+	cpp_virtual public explicit_return_type ""
+	nparams 0
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}{
+  ${body}}
+"
+	
+	
+      end
+
+      operation 128456 "readNextModifiedRecord"
+	cpp_virtual public explicit_return_type ""
+	nparams 0
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}{
+  ${body}}
+"
+	
+	
+      end
+
+      operation 128584 "readRecordById"
+	cpp_virtual public explicit_return_type ""
+	nparams 0
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}{
+  ${body}}
+"
+	
+	
+      end
+
+      operation 128712 "commitChanges"
+	cpp_virtual public explicit_return_type ""
+	nparams 0
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}{
+  ${body}}
+"
+	
+	
+      end
+
+      operation 129480 "resetSyncFlags"
+	public explicit_return_type ""
+	nparams 0
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}{
+  ${body}}
+"
+	
+	
+      end
+    end
+
+    class 128778 "PCProxyDatabase"
+      visibility package 
+      cpp_decl "${comment}${template}class ${name}${inherit} {
+${members}};
+${inlines}
+"
+      java_decl ""
+      idl_decl ""
+      explicit_switch_type ""
+      
+      classrelation 128228 // <generalisation>
+	relation 128228 ---|>
+	  a public
+	    cpp default "${type}"
+	    classrelation_ref 128228 // <generalisation>
+	  b multiplicity "" parent class_ref 128906 // ProxyDatabase
+      end
+
+      operation 128840 "PCProxyDatabase"
 	public explicit_return_type ""
 	nparams 0
 	cpp_decl "    ${comment}${inline}${name}${(}${)}${volatile}${throw};
@@ -548,40 +641,8 @@ ${inlines}
 	
       end
 
-      classrelation 129162 // <generalisation>
-	relation 129162 ---|>
-	  a public
-	    cpp default "${type}"
-	    classrelation_ref 129162 // <generalisation>
-	  b multiplicity "" parent class_ref 128906 // ProxyDatabase
-      end
-    end
-
-    class 128778 "PCDataStore"
-      visibility package 
-      cpp_decl "${comment}${template}class ${name}${inherit} {
-${members}};
-${inlines}
-"
-      java_decl ""
-      idl_decl ""
-      explicit_switch_type ""
-      
-      operation 129546 "readRecordById"
-	public explicit_return_type ""
-	nparams 1
-	  param inout name "id" explicit_type "QString"
-	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
-"
-	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}{
-  ${body}}
-"
-	
-	
-      end
-
-      operation 129930 "readNextModifiedRecord"
-	public explicit_return_type ""
+      operation 128968 "lookForMatch"
+	cpp_virtual public explicit_return_type ""
 	nparams 0
 	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
 "
@@ -592,17 +653,45 @@ ${inlines}
 	
       end
 
-      classrelation 129034 // <generalisation>
-	relation 129034 ---|>
-	  a public
-	    cpp default "${type}"
-	    classrelation_ref 129034 // <generalisation>
-	  b multiplicity "" parent class_ref 128906 // ProxyDatabase
+      operation 129096 "commitChanges"
+	cpp_virtual public explicit_return_type ""
+	nparams 0
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}{
+  ${body}}
+"
+	
+	
+      end
+
+      operation 129224 "readNextModifiedRecord"
+	cpp_virtual public explicit_return_type ""
+	nparams 0
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}{
+  ${body}}
+"
+	
+	
+      end
+
+      operation 129352 "readRecordById"
+	cpp_virtual public explicit_return_type ""
+	nparams 0
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}{
+  ${body}}
+"
+	
+	
       end
     end
 
     class 128906 "ProxyDatabase"
-      visibility package 
+      abstract visibility package 
       cpp_decl "${comment}${template}class ${name}${inherit} {
 ${members}};
 ${inlines}
@@ -623,7 +712,7 @@ ${inlines}
 	
       end
 
-      operation 132362 "readNextModifiedRecord"
+      operation 128140 "addRecord"
 	public explicit_return_type ""
 	nparams 0
 	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
@@ -635,7 +724,19 @@ ${inlines}
 	
       end
 
-      operation 132490 "readRecordById"
+      operation 128200 "deleteRecord"
+	public explicit_return_type ""
+	nparams 0
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}{
+  ${body}}
+"
+	
+	
+      end
+
+      operation 128072 "editRecord"
 	public explicit_return_type ""
 	nparams 0
 	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
@@ -672,12 +773,36 @@ ${inlines}
       end
 
       operation 132874 "commitChanges"
-	public explicit_return_type ""
+	abstract cpp_virtual public explicit_return_type ""
 	nparams 0
 	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
 "
-	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}{
-  ${body}}
+	
+	
+      end
+
+      operation 128012 "lookForMatch"
+	abstract cpp_virtual public explicit_return_type ""
+	nparams 0
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	
+	
+      end
+
+      operation 132362 "readNextModifiedRecord"
+	abstract cpp_virtual public explicit_return_type ""
+	nparams 0
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	
+	
+      end
+
+      operation 132490 "readRecordById"
+	abstract cpp_virtual public explicit_return_type ""
+	nparams 0
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
 "
 	
 	
