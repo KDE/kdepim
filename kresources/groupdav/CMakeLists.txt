@@ -41,32 +41,32 @@ install(TARGETS kabc_groupdav  DESTINATION ${LIB_INSTALL_DIR})
 
 ########### next target ###############
 
-set(kcal_groupdav_PART_SRCS kcal_resourcegroupdav_plugin.cpp)
+set(kcal_groupdav_plugin_PART_SRCS kcal_resourcegroupdav_plugin.cpp)
 
-kde4_automoc(${kcal_groupdav_PART_SRCS})
+kde4_automoc(${kcal_groupdav_plugin_PART_SRCS})
 
-kde4_add_plugin(kcal_groupdav ${kcal_groupdav_PART_SRCS})
+kde4_add_plugin(kcal_groupdav_plugin ${kcal_groupdav_plugin_PART_SRCS})
+set_target_properties(kcal_groupdav_plugin PROPERTIES OUTPUT_NAME kcal_groupdav)
 
 
+target_link_libraries(kcal_groupdav_plugin  ${KDE4_KDECORE_LIBS} kcal_groupdav)
 
-target_link_libraries(kcal_groupdav  ${KDE4_KDECORE_LIBS} )
-
-install(TARGETS kcal_groupdav  DESTINATION ${PLUGIN_INSTALL_DIR})
+install(TARGETS kcal_groupdav_plugin  DESTINATION ${PLUGIN_INSTALL_DIR})
 
 
 ########### next target ###############
 
-set(kabc_groupdav_PART_SRCS kabc_resourcegroupdav_plugin.cpp )
+set(kabc_groupdav_plugin_PART_SRCS kabc_resourcegroupdav_plugin.cpp )
 
-kde4_automoc(${kabc_groupdav_PART_SRCS})
+kde4_automoc(${kabc_groupdav_plugin_PART_SRCS})
 
-kde4_add_plugin(kabc_groupdav ${kabc_groupdav_PART_SRCS})
+kde4_add_plugin(kabc_groupdav_plugin ${kabc_groupdav_plugin_PART_SRCS})
+set_target_properties(kabc_groupdav_plugin PROPERTIES OUTPUT_NAME kabc_groupdav)
 
 
+target_link_libraries(kabc_groupdav_plugin  ${KDE4_KDECORE_LIBS} kabc_groupdav)
 
-target_link_libraries(kabc_groupdav  ${KDE4_KDECORE_LIBS} )
-
-install(TARGETS kabc_groupdav  DESTINATION ${PLUGIN_INSTALL_DIR})
+install(TARGETS kabc_groupdav_plugin  DESTINATION ${PLUGIN_INSTALL_DIR})
 
 
 ########### install files ###############
