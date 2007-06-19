@@ -25,11 +25,16 @@
 #include <klocale.h>
 #include <kpushbutton.h>
 
+#include <qlayout.h>
+
 AttendeeSelector::AttendeeSelector(QWidget * parent)
   : KDialogBase( parent, 0, true, i18n("Select Attendees"), Ok|Cancel, NoDefault, true )
 {
   ui = new AttendeeSelectorWidget( this );
   setMainWidget( ui );
+
+  QGridLayout *layout = static_cast<QGridLayout*>( ui->layout() );
+  layout->setMargin( 0 );
 
   ui->addButton->setGuiItem( KStdGuiItem::add() );
   connect( ui->addButton, SIGNAL(clicked()), SLOT(addClicked()) );
