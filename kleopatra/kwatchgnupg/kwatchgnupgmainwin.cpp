@@ -175,9 +175,7 @@ void KWatchGnuPGMainWindow::setGnuPGConfig()
 	if( group ) {
 	  Kleo::CryptoConfigEntry* entry = group->entry("log-file");
 	  if( entry ) {
-		entry->setStringValue( QString("socket://")+
-							   config.readEntry("Socket",
-												 WATCHGNUPGSOCKET ));
+		entry->setStringValue( QString("socket://")+ config.readEntry("Socket", WATCHGNUPGSOCKET ));
 		logclients << QString("%1 (%2)").arg(*it).arg(comp->description());
 	  }
 	  entry = group->entry("debug-level");
@@ -231,8 +229,7 @@ void KWatchGnuPGMainWindow::show()
 
 void KWatchGnuPGMainWindow::slotSaveAs()
 {
-  QString filename = KFileDialog::getSaveFileName( QString(), QString(),
-												   this, i18n("Save Log to File") );
+  QString filename = KFileDialog::getSaveFileName( QString(), QString(), this, i18n("Save Log to File") );
   if( filename.isEmpty() ) return;
   QFile file(filename);
   if( file.exists() ) {
