@@ -109,10 +109,14 @@ Kleo::DirectoryServicesWidget::DirectoryServicesWidget(
     downButton->setIcon( KIcon( "go-down" ) );
     downButton->setIconSize( QSize( K3Icon::SizeSmall, K3Icon::SizeSmall ) );
     downButton->setEnabled( false ); // b/c no item is selected yet
-#ifdef __GNUC__
-#warning "kde4: fix connect signal/slot" ;
-#endif
+
     connect( addServicePB,SIGNAL( clicked () ),SLOT(slotAddService() ) );
+    connect( removeServicePB, SIGNAL( clicked() ), SLOT( slotDeleteService() ) );
+    connect( x500LV, SIGNAL( returnPressed(Q3ListViewItem*) ), SLOT(slotServiceSelected(Q3ListViewItem*) ) );
+    connect( x500LV, SIGNAL(doubleClicked(Q3ListViewItem*) ),SLOT( slotServiceSelected(Q3ListViewItem*) ) );
+    connect( x500LV, SIGNAL( selectionChanged(Q3ListViewItem*) ), SLOT(slotServiceChanged(Q3ListViewItem*) ) );
+    connect( upButton, SIGNAL(clicked() ), SLOT(slotMoveUp() ) );
+    connect( downButton, SIGNAL( clicked() ), SLOT( slotMoveDown() ) );
 }
 
 
