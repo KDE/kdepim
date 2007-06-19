@@ -47,6 +47,7 @@ class QPainter;
 class QColorGroup;
 class QFont;
 class QColor;
+class QEvent;
 
 namespace Kleo {
 
@@ -233,7 +234,7 @@ namespace Kleo {
       virtual QString signatureText( const GpgME::UserID::Signature &, int ) const { return QString(); }
       virtual QString signatureToolTip( const GpgME::UserID::Signature & sig, int column ) const;
       virtual const QPixmap * signaturePixmap( const GpgME::UserID::Signature &, int ) const { return 0; }
-      virtual int signatureCompare( const GpgME::UserID::Signature & sig1, const GpgME::UserID::Signature & sig2, const int column ) const;
+      virtual int signatureCompare( const GpgME::UserID::Signature & sig1, const GpgME::UserID::Signature & sig2, const int column ) const;      
     };
 
     class KLEO_EXPORT DisplayStrategy {
@@ -308,7 +309,10 @@ namespace Kleo {
     /*! \reimp */
     void takeItem( Q3ListViewItem * );
 
+  protected:
+    virtual bool eventFilter(QObject *o, QEvent *e );
   private:
+    void showToolTip( const QPoint& p );
     void doHierarchicalInsert( const GpgME::Key & );
     void gatherScattered();
     void scatterGathered( Q3ListViewItem * );

@@ -51,7 +51,8 @@
 #include <q3cstring.h>
 //Added by qt3to4:
 #include <QPixmap>
-
+#include <QEvent>
+#include <QHelpEvent>
 #include <gpgmepp/key.h>
 
 #include <vector>
@@ -61,66 +62,12 @@
 
 static const int updateDelayMilliSecs = 500;
 
-namespace {
-
-#ifdef __GNUC__
-#warning Port me!
-#endif
-#if 0
-  class ItemToolTip : public QToolTip {
-  public:
-    ItemToolTip( Kleo::KeyListView * parent );
-  protected:
-    void maybeTip( const QPoint & p );
-  private:
-    Kleo::KeyListView * mKeyListView;
-  };
-
-  ItemToolTip::ItemToolTip( Kleo::KeyListView * parent )
-    : QToolTip( parent->viewport() ), mKeyListView( parent ) {}
-
-  void ItemToolTip::maybeTip( const QPoint & p ) {
-    if ( !mKeyListView )
-      return;
-
-    const Q3ListViewItem * item = mKeyListView->itemAt( p );
-    if ( !item )
-      return;
-
-    const QRect itemRect = mKeyListView->itemRect( item );
-    if ( !itemRect.isValid() )
-      return;
-
-    const int col = mKeyListView->header()->sectionAt( p.x() );
-    if ( col == -1 )
-      return;
-
-    const QRect headerRect = mKeyListView->header()->sectionRect( col );
-    if ( !headerRect.isValid() )
-      return;
-
-    const QRect cellRect( headerRect.left(), itemRect.top(),
-			  headerRect.width(), itemRect.height() );
-
-    QString tipStr;
-    if ( const Kleo::KeyListViewItem * klvi = Kleo::lvi_cast<Kleo::KeyListViewItem>( item ) )
-      tipStr = klvi->toolTip( col );
-    else
-      tipStr = item->text( col ) ;
-
-    if ( !tipStr.isEmpty() )
-      tip( cellRect, tipStr );
-  }
-#endif
-
-} // anon namespace
 
 struct Kleo::KeyListView::Private {
-  Private() : updateTimer( 0 ), itemToolTip( 0 ) {}
+  Private() : updateTimer( 0 ) {}
 
   std::vector<GpgME::Key> keyBuffer;
   QTimer * updateTimer;
-  QToolTip * itemToolTip;
   std::map<QByteArray,KeyListViewItem*> itemMap;
 };
 
@@ -150,11 +97,9 @@ Kleo::KeyListView::KeyListView( const ColumnStrategy * columnStrategy, const Dis
 {
   setWindowFlags( f );
 
-
   d->updateTimer = new QTimer( this );
   d->updateTimer->setSingleShot( true );
   connect( d->updateTimer, SIGNAL(timeout()), SLOT(slotUpdateTimeout()) );
-
   if ( !columnStrategy ) {
     kWarning(5150) << "Kleo::KeyListView: need a column strategy to work with!" << endl;
     return;
@@ -175,10 +120,6 @@ Kleo::KeyListView::KeyListView( const ColumnStrategy * columnStrategy, const Dis
 
   this->setToolTip("");
   viewport()->setToolTip(""); // make double sure :)
-#ifdef __GNUC__
-#warning Port me!
-#endif
-//  d->itemToolTip = new ItemToolTip( this );
 }
 
 Kleo::KeyListView::~KeyListView() {
@@ -189,11 +130,54 @@ Kleo::KeyListView::~KeyListView() {
   clear();
   assert( d->itemMap.size() == 0 );
   // need to delete the tooltip ourselves, as ~QToolTip isn't virtual :o
-  delete d->itemToolTip; d->itemToolTip = 0;
   delete d;
   delete mColumnStrategy; mColumnStrategy = 0;
   delete mDisplayStrategy; mDisplayStrategy = 0;
 }
+
+bool Kleo::KeyListView::eventFilter( QObject *o,QEvent *e )
+{
+  if ( !e )
+    return true;
+  if ( e->type()==QEvent::ToolTip )
+  {
+    QHelpEvent* helpEvent = static_cast<QHelpEvent*>( e );
+    showToolTip( helpEvent->pos() );
+  }
+  return false;
+}
+
+void Kleo::KeyListView::showToolTip( const QPoint& p )
+{
+  const Q3ListViewItem * item = itemAt( p );
+  if ( !item )
+    return;
+
+  QRect rect  = itemRect( item );
+  if ( !rect.isValid() )
+    return;
+
+  const int col = header()->sectionAt( p.x() );
+  if ( col == -1 )
+    return;
+
+  const QRect headerRect = header()->sectionRect( col );
+  if ( !headerRect.isValid() )
+    return;
+
+  const QRect cellRect( headerRect.left(), rect.top(),
+                        headerRect.width(), rect.height() );
+
+  QString tipStr;
+  if ( const Kleo::KeyListViewItem * klvi = Kleo::lvi_cast<Kleo::KeyListViewItem>( item ) )
+    tipStr = klvi->toolTip( col );
+    else
+      tipStr = item->text( col ) ;
+
+  if ( !tipStr.isEmpty() )
+    QToolTip::showText( mapToGlobal( cellRect.bottomRight() ), tipStr, this );
+}
+
 
 void Kleo::KeyListView::insertItem( Q3ListViewItem * qlvi ) {
   //kDebug() << "Kleo::KeyListView::insertItem( " << qlvi << " )" << endl;
