@@ -55,7 +55,6 @@ strict digraph "inter-dependency graph for kdepim" {
         "libakonadi"[style=filled, fillcolor=lightyellow, URL="akonadi/libakonadi/html/index.html"];
         "libkdepim"[style=filled, fillcolor=lightyellow, URL="libkdepim/html/index.html"];
         "libkholidays"[style=filled, fillcolor=lightyellow, URL="libkholidays/html/index.html"];
-        "libkholidays_ng"[style=filled, fillcolor=lightyellow, URL="libkholidays_ng/html/index.html"];
         "libkleo"[style=filled, fillcolor=lightyellow, URL="libkleo/html/index.html"];
         "libkpgp"[style=filled, fillcolor=lightyellow, URL="libkpgp/html/index.html"];
         "libkpimidentities"[style=filled, fillcolor=lightyellow, URL="libkpimidentities/html/index.html"];
@@ -83,7 +82,6 @@ strict digraph "inter-dependency graph for kdepim" {
         "knotes" -> "kontact";
         "knotes" -> "kresources";
         "kode" -> "kresources";
-        "kode" -> "libkholidays_ng";
         "korganizer" -> "kontact";
         "korganizer" -> "wizards";
         "kresources" -> "karm";
