@@ -44,7 +44,7 @@ ATSMS::ATSMS(const QStringList & numbers, const QString & text ) : SMS ( numbers
     multiPart=NULL;
 }
 
-ATSMS::ATSMS(const QStringList & numbers, const QString & text, const QDateTime & datetime ) : SMS ( numbers, text, datetime ) {
+ATSMS::ATSMS(const QStringList & numbers, const QString & text, const KDateTime & datetime ) : SMS ( numbers, text, datetime ) {
     concatenated=false;
     multiPart=NULL;
 }
@@ -538,7 +538,7 @@ void FetchSMS::run()
                             .arg( ttime.section( ':', 1, 1 ) ,2 )
                             .arg( ttime.section( ':', 2, 2  ),2 )
                             .replace(' ', '0');
-                    sms->setDateTime( QDateTime(
+                    sms->setDateTime( KDateTime(
                             QDate::fromString( date, Qt::ISODate ),
                     QTime::fromString( time )
                                                ) );

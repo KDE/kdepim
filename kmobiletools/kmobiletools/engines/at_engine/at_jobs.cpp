@@ -324,15 +324,15 @@ void SyncDateTime::run ()
 
     int year = CCLK.cap(1).toInt();
     if ( year<100 ) year = year + 2000;
-    QDateTime datetime( QDate( year, CCLK.cap(2).toInt(), CCLK.cap(3).toInt() ), QTime( CCLK.cap(4).toInt(), CCLK.cap(5).toInt(), CCLK.cap(6).toInt() ) );
+    KDateTime datetime( QDate( year, CCLK.cap(2).toInt(), CCLK.cap(3).toInt() ), QTime( CCLK.cap(4).toInt(), CCLK.cap(5).toInt(), CCLK.cap(6).toInt() ) );
 
-//     int timediff = abs( datetime.secsTo( QDateTime::currentDateTime() ) );
+//     int timediff = abs( datetime.secsTo( KDateTime::currentDateTime() ) );
     if ( true /** @TODO Since we already have a config entry for syncing time, it's not a bad idea to sync ANYWAY if this config entry is enabled.
                * However i'll need to have a better look on it.
                * timediff>2 */ )
     {
         p_device->lockMutex();
-        QDateTime now = QDateTime::currentDateTime();
+        KDateTime now = KDateTime::currentLocalDateTime();
         p_device->sendATCommand(this,  "AT+CCLK=\""+now.toString("yy/MM/dd,hh:mm:ss")+CCLK.cap(7)+"\"\r" );
         slotPercentDone( 99 );
         p_device->unlockMutex();

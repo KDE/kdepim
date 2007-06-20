@@ -1080,7 +1080,7 @@ SMSList* Device::smsList() {
                             sms.SMS[0].DateTime.Minute,
                             sms.SMS[0].DateTime.Second );
 
-                kmobileSMS->setDateTime( QDateTime( date, time ) );
+                kmobileSMS->setDateTime( KDateTime( date, time ) );
 
                 // join multi-part sms and set text
                 QString text;
@@ -1102,7 +1102,7 @@ SMSList* Device::smsList() {
 
                 kdDebug() << "=========================" << endl;
                 kdDebug() << "Number: " << number[0] << endl;
-                kdDebug() << "Date: " << QDateTime( date, time ) << endl;
+                kdDebug() << "Date: " << KDateTime( date, time ) << endl;
                 kdDebug() << "Slot: " << kmobileSMS->slot() << endl;
                 kdDebug() << "Folder: " << kmobileSMS->folder() << endl;
                 kdDebug() << "Location: " << kmobileSMS->location() << endl;

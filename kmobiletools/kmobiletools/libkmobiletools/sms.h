@@ -25,7 +25,7 @@
 
 #include <QtCore/QObject>
 #include <QtCore/QStringList>
-#include <QtCore/QDateTime>
+#include <kdatetime.h>
 #include <QtCore/QSharedDataPointer>
 /**
 @author Marco Gulino
@@ -37,7 +37,7 @@ class KMOBILETOOLS_EXPORT SMS : public KMime::Content
 public:
     SMS();
     SMS(const QStringList & numbers, const QString & text);
-    SMS(const QStringList & numbers, const QString & text, const QDateTime & datetime);
+    SMS(const QStringList & numbers, const QString & text, const KDateTime & datetime);
 
     virtual ~SMS();
 
@@ -59,11 +59,11 @@ public:
     virtual QString getFrom() const;
     virtual QStringList getTo() const;
     virtual QString getDate() const;
-    virtual QDateTime getDateTime() const;
+    virtual KDateTime getDateTime() const;
     virtual void setRawSlot(const QString &rawSlot);
     virtual QString rawSlot() const;
     void setNumbers(const QStringList & numbers);
-    void setDateTime(const QDateTime & datetime);
+    void setDateTime(const KDateTime & datetime);
 
     void setFolder( int newFolder );
     int folder() const;

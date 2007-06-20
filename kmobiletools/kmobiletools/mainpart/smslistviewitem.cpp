@@ -36,7 +36,7 @@ SMSListViewItem::SMSListViewItem(K3ListView *parent, SMS *sms, KMobileTools::Con
     p_phoneBook=phoneBook;
     if(! sms->getFrom().isNull()) setText(0, KMobileTools::KMobiletoolsHelper::translateNumber(sms->getFrom() ) );
     if(!sms->getTo().isEmpty()) setText(1, KMobileTools::KMobiletoolsHelper::translateNumber(sms->getTo  ().join(",") ) );
-    setText(2, sms->getDateTime().toString(Qt::LocalDate) );
+    setText(2, sms->getDateTime().toString(KDateTime::LocalDate) );
     setText(3, sms->getText().replace( '\n', ' ').replace( '\r', ' ').trimmed() );
 }
 

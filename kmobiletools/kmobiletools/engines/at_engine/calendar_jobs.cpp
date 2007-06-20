@@ -68,7 +68,7 @@ void FetchCalendar::fetchMotorolaCalendar()
     }
     QStringList::Iterator it;
     int index; QString text; bool timed; bool enabled;
-    QDateTime startDT, alDT; int duration, repeat;
+    KDateTime startDT, alDT; int duration, repeat;
     QDate tempDate; int tempyear, tempmonth, tempday;
     for(it=entries.begin(); it!=entries.end(); ++it)
     {

@@ -39,7 +39,7 @@ class SMSPrivate : public QSharedData {
         { parent=p_parent; }
     QStringList sl_numbers;
 //     QString s_text;
-    QDateTime dt_datetime;
+    KDateTime dt_datetime;
     int i_folder;
     int i_slot;
     SMS::SMSType i_type;
@@ -64,7 +64,7 @@ SMS::SMS() : KMime::Content(),
 {
 }
 
-SMS::SMS(const QStringList & numbers, const QString & text, const QDateTime & datetime)
+SMS::SMS(const QStringList & numbers, const QString & text, const KDateTime & datetime)
  : KMime::Content(), d(new SMSPrivate(this) )
 {
     setNumbers(numbers);
@@ -84,7 +84,7 @@ SMS::SMS(const QStringList & numbers, const QString & text)
     setText(text);
 }
 
-void SMS::setDateTime(const QDateTime & datetime)
+void SMS::setDateTime(const KDateTime & datetime)
 {
     d->dt_datetime=datetime;
 }
@@ -299,7 +299,7 @@ bool SMS::writeToSlotCSV(const QString &filename)
 void SMS::setText(const QString & text) { setBody(text.toUtf8()); }
 QString SMS::getText() const { return QString(body() ); }
 QString SMS::getDate() const { return d->dt_datetime.toString(); }
-QDateTime SMS::getDateTime() const { return d->dt_datetime; }
+KDateTime SMS::getDateTime() const { return d->dt_datetime; }
 void SMS::setRawSlot(const QString &rawSlot){ d->s_rawSlot=rawSlot;}
 QString SMS::rawSlot() const { return d->s_rawSlot;}
 void SMS::setNumbers(const QStringList & numbers) { d->sl_numbers=numbers; }

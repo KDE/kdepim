@@ -162,7 +162,7 @@ kmobiletoolsMainPart::kmobiletoolsMainPart( QWidget *parentWidget, QObject *pare
 
     if(qApp->isSessionRestored() )
         QTimer::singleShot( 100, this, SLOT(slotHide()) );
-    QFile testfile(QString("/var/lock/testLock.%1").arg(QDateTime::currentDateTime().toTime_t() ) );
+    QFile testfile(QString("/var/lock/testLock.%1").arg(KDateTime::currentLocalDateTime().toTime_t() ) );
     if(testfile.open( QIODevice::WriteOnly ) )
     {
         testfile.close();

@@ -33,7 +33,7 @@ class ATSMS : public SMS
 {
     public:
         ATSMS(const QStringList & numbers, const QString & text );
-        ATSMS(const QStringList & numbers, const QString & text, const QDateTime & datetime );
+        ATSMS(const QStringList & numbers, const QString & text, const KDateTime & datetime );
         virtual ~ATSMS();
         //! Return true if the this object is part of a multipart message.
         bool isMultiPart() { return concatenated; };
@@ -89,7 +89,7 @@ class SMSDecoder
     protected:
         inline bool hasMR() { return HAS_MR(SMTL); };
         inline bool hasTimeStamp() { return HAS_TIMESTAMP(SMTL); };
-        QDateTime datetime;
+        KDateTime datetime;
         QString message;
         int timezone;
         uint referenceNumber, sequenceNumber, maxMessages;
