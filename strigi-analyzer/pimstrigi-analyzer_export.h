@@ -17,24 +17,20 @@
     Boston, MA 02110-1301, USA.
 */
 
-#ifndef KFILEPLUGINS_EXPORT_H
-#define KFILEPLUGINS_EXPORT_H
+#ifndef PIMSTRIGIANALYZER_EXPORT_H
+#define PIMSTRIGIANALYZER_EXPORT_H
 
 /* needed for KDE_EXPORT and KDE_IMPORT macros */
 #include <kdemacros.h>
 
-#ifndef KFILE_PLUGINS_EXPORT
-# if defined(MAKE_KFILEPLUGINS_LIB)
+#ifndef PIMSTRIGI_ANALYZER_EXPORT
+# if defined(MAKE_PIMSTRIGIANALYZER_LIB)
    /* We are building this library */
-#  define KFILE_PLUGINS_EXPORT KDE_EXPORT
+#  define PIMSTRIGI_ANALYZER_EXPORT KDE_EXPORT
 # else
    /* We are using this library */
-#  define KFILE_PLUGINS_EXPORT KDE_IMPORT
+#  define PIMSTRIGI_ANALYZER_EXPORT KDE_IMPORT
 # endif
 #endif
-
-# ifndef KFILE_PLUGINS_EXPORT_DEPRECATED
-#  define KFILE_PLUGINS_EXPORT_DEPRECATED KDE_DEPRECATED KFILE_PLUGINS_EXPORT
-# endif
 
 #endif

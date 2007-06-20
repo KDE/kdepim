@@ -1,6 +1,6 @@
 set(icsendanalyzer_SRCS icsendanalyzer.cpp )
 
-include_directories(${CMAKE_SOURCE_DIR}/kfile-plugins ${STRIGI_INCLUDE_DIR})
+include_directories(${CMAKE_SOURCE_DIR}/strigi-analyzer ${STRIGI_INCLUDE_DIR})
 
 kde4_add_library(ics MODULE ${icsendanalyzer_SRCS})
 
