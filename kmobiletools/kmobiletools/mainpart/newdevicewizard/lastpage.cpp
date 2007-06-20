@@ -58,9 +58,9 @@ QString LastPage::getHTMLTemplate() const
             <p><b>%4</b><br>%9</p> \
             ";
     ret=ret.arg( KIconLoader::global()->iconPath("kmobiletools", -K3Icon::SizeHuge),
-                i18nc("Wizard summary - Technical Informations", "Technical Informations"),
-                i18nc("Wizard summary - Basic Phone Informations", "Basic Phone Informations"),
-                i18nc("Wizard summary - Advanced Phone Informations", "Advanced Phone Informations")
+                i18nc("Wizard summary - Technical Information", "Technical Information"),
+                i18nc("Wizard summary - Basic Phone Information", "Basic Phone Information"),
+                i18nc("Wizard summary - Advanced Phone Information", "Advanced Phone Information")
                );
     ret=ret.arg( field("phonename").toString(),
                 i18n("Engine: %1", KMobileTools::EnginesList::instance()->wizardEngine()->pluginInfo()->name() )

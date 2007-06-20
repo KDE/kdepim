@@ -82,7 +82,7 @@ const QString KMobileTools::Job::typeString()
         case KMobileTools::Job::fetchAddressBook:
             return i18n("Fetching PhoneBook");
         case KMobileTools::Job::fetchPhoneInfos:
-            return i18n("Fetching Phone Informations");
+            return i18n("Fetching Phone Information");
         case KMobileTools::Job::testPhoneFeatures:
             return i18n("Testing Phone Capabilities");
         case KMobileTools::Job::syncDateTimeJob:

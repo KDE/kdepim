@@ -42,7 +42,7 @@ It is required to have both your computer and your mobile phone properly configu
       </sizepolicy>
      </property>
      <property name="title" >
-      <string>Phone Informations</string>
+      <string>Phone Information</string>
      </property>
      <layout class="QVBoxLayout" >
       <item>

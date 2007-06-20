@@ -43,7 +43,7 @@ FirstPage::FirstPage(QWidget *parent)
 {
     d=new FirstPagePrivate;
     setupUi(this);
-    setTitle(i18nc("First new device wizard page title", "Mobile Phone Informations") );
+    setTitle(i18nc("First new device wizard page title", "Mobile Phone Information") );
     setCommitPage(true);
 }
 
