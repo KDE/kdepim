@@ -1,6 +1,6 @@
 format 38
 "bouml-design"
-  revision 17
+  revision 18
   modified_by 10 "bertjan"
 
 
@@ -95,6 +95,11 @@ format 38
       size A4
     end
 
+    sequencediagram 128906 "5.5 Test Mode"
+      show_full_operations_definition no write_horizontally default drawing_language c++ draw_all_relations default shadow yes
+      size A4
+    end
+
     class 128010 "RecordConduit"
       visibility package 
       cpp_decl "${comment}${template}class ${name}${inherit} {
@@ -111,6 +116,51 @@ ${inlines}
 	    cpp default "${type}"
 	    classrelation_ref 128010 // <generalisation>
 	  b multiplicity "" parent class_ref 128266 // ConduitAction
+      end
+
+      classrelation 128522 // fMapping (<unidirectional association>)
+	relation 128522 --->
+	  a role_name "fMapping" multiplicity "1" protected
+	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} * ${name}${value};
+"
+	    classrelation_ref 128522 // fMapping (<unidirectional association>)
+	  b multiplicity "" parent class_ref 128394 // IDMapping
+      end
+
+      classrelation 128906 // fDatabase (<unidirectional association>)
+	relation 128906 --->
+	  a role_name "fDatabase" multiplicity "1" protected
+	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} * ${name}${value};
+"
+	    classrelation_ref 128906 // fDatabase (<unidirectional association>)
+	  b multiplicity "" parent class_ref 128650 // HHProxyDatabase
+      end
+
+      classrelation 129418 // fLocalDatase (<unidirectional association>)
+	relation 129418 --->
+	  a role_name "fLocalDatase" multiplicity "1" protected
+	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} * ${name}${value};
+"
+	    classrelation_ref 129418 // fLocalDatase (<unidirectional association>)
+	  b multiplicity "" parent class_ref 128906 // DataProxy
+      end
+
+      classrelation 129546 // fDatastore (<unidirectional association>)
+	relation 129546 --->
+	  a role_name "fDatastore" multiplicity "1" protected
+	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} * ${name}${value};
+"
+	    classrelation_ref 129546 // fDatastore (<unidirectional association>)
+	  b multiplicity "" parent class_ref 128906 // DataProxy
+      end
+
+      classrelation 129674 // fBackupdb (<unidirectional association>)
+	relation 129674 --->
+	  a role_name "fBackupdb" multiplicity "1" protected
+	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} * ${name}${value};
+"
+	    classrelation_ref 129674 // fBackupdb (<unidirectional association>)
+	  b multiplicity "" parent class_ref 128906 // DataProxy
       end
 
       operation 131722 "askConfirmation"
@@ -176,51 +226,6 @@ ${inlines}
 	
       end
 
-      classrelation 128522 // fMapping (<unidirectional association>)
-	relation 128522 --->
-	  a role_name "fMapping" multiplicity "1" protected
-	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} * ${name}${value};
-"
-	    classrelation_ref 128522 // fMapping (<unidirectional association>)
-	  b multiplicity "" parent class_ref 128394 // IDMapping
-      end
-
-      classrelation 128906 // fDatabase (<unidirectional association>)
-	relation 128906 --->
-	  a role_name "fDatabase" multiplicity "1" protected
-	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} * ${name}${value};
-"
-	    classrelation_ref 128906 // fDatabase (<unidirectional association>)
-	  b multiplicity "" parent class_ref 128650 // HHProxyDatabase
-      end
-
-      classrelation 129418 // fLocalDatase (<unidirectional association>)
-	relation 129418 --->
-	  a role_name "fLocalDatase" multiplicity "1" protected
-	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} * ${name}${value};
-"
-	    classrelation_ref 129418 // fLocalDatase (<unidirectional association>)
-	  b multiplicity "" parent class_ref 128906 // DataProxy
-      end
-
-      classrelation 129546 // fDatastore (<unidirectional association>)
-	relation 129546 --->
-	  a role_name "fDatastore" multiplicity "1" protected
-	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} * ${name}${value};
-"
-	    classrelation_ref 129546 // fDatastore (<unidirectional association>)
-	  b multiplicity "" parent class_ref 128906 // DataProxy
-      end
-
-      classrelation 129674 // fBackupdb (<unidirectional association>)
-	relation 129674 --->
-	  a role_name "fBackupdb" multiplicity "1" protected
-	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} * ${name}${value};
-"
-	    classrelation_ref 129674 // fBackupdb (<unidirectional association>)
-	  b multiplicity "" parent class_ref 128906 // DataProxy
-      end
-
       operation 128075 "RecordConduit"
 	public explicit_return_type ""
 	nparams 0
@@ -231,6 +236,45 @@ ${inlines}
 "
 	
 	
+      end
+
+      operation 133642 "test"
+	public explicit_return_type ""
+	nparams 0
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}{
+  ${body}}
+"
+	
+	
+	comment "This method is called when the conduit is run in Test Mode. The implementing class can do whatever it wants to do for test purposes."
+      end
+
+      operation 133770 "postTest"
+	public explicit_return_type ""
+	nparams 0
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}{
+  ${body}}
+"
+	
+	
+	comment "This method is called after test and can be used by the implementing class to clean things up."
+      end
+
+      operation 133898 "preTest"
+	public explicit_return_type ""
+	nparams 0
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}{
+  ${body}}
+"
+	
+	
+	comment "This operation is called before test and can be used to set things up for testing purposes."
       end
     end
 
