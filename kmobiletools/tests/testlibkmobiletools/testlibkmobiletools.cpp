@@ -40,9 +40,9 @@ TestLibKMobileToolsApp::TestLibKMobileToolsApp()
     sms->setDateTime( KDateTime(QDate(2002,7,2), QTime(21,12,13) ) );
     out << "Set date time to " << sms->getDateTime().toString() << endl;
     sms->assemble();
-    out << "****************** SMS Serialization ******************\n\n"
+    out << "****************** SMS Serialization ******************\n"
         << sms->encodedContent()
-    << "\n\n**************** SMS Serialization End ****************\n\n";
+    << "\n**************** SMS Serialization End ****************\n\n";
     out << "Deleting SMS...";
     delete sms;
     out << " Done" << endl;

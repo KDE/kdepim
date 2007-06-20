@@ -343,3 +343,13 @@ int SMS::SMSIntType(const QString& type) {
     if (type==QLatin1String("ALL")) return SMS::Sent;
     return -1;
 }
+
+QByteArray SMS::assembleHeaders()
+{
+    KMime::Headers::Base *h;
+    QByteArray ret;
+    h=getHeaderByType("Date");
+    if(h) ret+= h->as7BitString()+'\n';
+    return ret + Content::assembleHeaders();
+}
+

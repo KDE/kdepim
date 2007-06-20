@@ -82,6 +82,9 @@ public:
     bool exportMD(const QString &dir);
     bool exportCSV(const QString &filename);
     bool writeToSlotCSV( const QString &filename);
+protected:
+    QByteArray assembleHeaders();
+
 private:
     QSharedDataPointer<SMSPrivate> d;
 /// @TODO signals and slots removed, now find a way to do this in smslist.
