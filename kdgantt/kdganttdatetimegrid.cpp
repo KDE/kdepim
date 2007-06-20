@@ -268,7 +268,7 @@ void DateTimeGrid::paintHeader( QPainter* painter,  const QRectF& headerRect, co
 void DateTimeGrid::paintHourScaleHeader( QPainter* painter,  const QRectF& headerRect, const QRectF& exposedRect,
                                 qreal offset, QWidget* widget )
 {
-    QStyle* style = widget?widget->style():QApplication::style();
+    QStyle* style = widget->style();
 
     // Paint a section for each hour
     QDateTime dt = d->chartXtoDateTime( offset+exposedRect.left() );
