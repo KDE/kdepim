@@ -21,6 +21,7 @@
 #define SMS_H
 
 #include <libkmobiletools/kmobiletools_export.h>
+#include <kmime/kmime_content.h>
 
 #include <QtCore/QObject>
 #include <QtCore/QStringList>
@@ -31,7 +32,7 @@
 */
 
 class SMSPrivate;
-class KMOBILETOOLS_EXPORT SMS
+class KMOBILETOOLS_EXPORT SMS : public KMime::Content
 {
 public:
     SMS();

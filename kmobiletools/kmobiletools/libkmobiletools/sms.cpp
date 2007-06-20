@@ -38,7 +38,7 @@ class SMSPrivate : public QSharedData {
         i_folder(0), i_slot(0), i_type(SMS::All), b_unread(false)
         { parent=p_parent; }
     QStringList sl_numbers;
-    QString s_text;
+//     QString s_text;
     QDateTime dt_datetime;
     int i_folder;
     int i_slot;
@@ -52,19 +52,20 @@ class SMSPrivate : public QSharedData {
     {
         KMD5 context;
         QByteArray ba;
-        if ( sl_numbers.isEmpty()) ba = s_text.toUtf8();
-        else ba = ( s_text + sl_numbers.join(",")).toUtf8();
+        if ( sl_numbers.isEmpty()) ba = parent->body();
+        else ba = ( parent->getText() + sl_numbers.join(",")).toUtf8();
         context.update(ba);
 //         s_uid=QString(context.hexDigest() );
     }
 };
 
-SMS::SMS() : d(new SMSPrivate(this) )
+SMS::SMS() : KMime::Content(),
+    d(new SMSPrivate(this) )
 {
 }
 
 SMS::SMS(const QStringList & numbers, const QString & text, const QDateTime & datetime)
- : d(new SMSPrivate(this) )
+ : KMime::Content(), d(new SMSPrivate(this) )
 {
     setNumbers(numbers);
     setText(text);
@@ -77,7 +78,7 @@ QString SMS::uid() const {
 }
 
 SMS::SMS(const QStringList & numbers, const QString & text)
- : d(new SMSPrivate(this) )
+ : KMime::Content(), d(new SMSPrivate(this) )
 {
     setNumbers(numbers);
     setText(text);
@@ -179,7 +180,7 @@ QStringList SMS::getMultiText(const QString &text)
 QStringList SMS::getMultiText() const
 {
     ((SMSPrivate*)d.data() )->refreshUid(); /// @TODO move this to the single setters?
-    return getMultiText(d->s_text);
+    return getMultiText(getText() );
 }
 
 
@@ -295,8 +296,8 @@ bool SMS::writeToSlotCSV(const QString &filename)
     return true;
 }
 
-void SMS::setText(const QString & text) { d->s_text=text; }
-QString SMS::getText() const { return d->s_text; }
+void SMS::setText(const QString & text) { setBody(text.toUtf8()); }
+QString SMS::getText() const { return QString(body() ); }
 QString SMS::getDate() const { return d->dt_datetime.toString(); }
 QDateTime SMS::getDateTime() const { return d->dt_datetime; }
 void SMS::setRawSlot(const QString &rawSlot){ d->s_rawSlot=rawSlot;}
