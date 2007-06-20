@@ -28,7 +28,7 @@ note 156426 "See detialed flow committing changes (TODO)."
   xyzwh 509 1047 2015 120 64
 note 156938 "See detailed flow for record syncing. (TODO)"
   xyzwh 581 404 2005 75 111
-note 164234 "At this moment the conduit knows that it's a hotsync so set iteratemode to MODIFIED."
+note 164234 "At this moment the conduit knows that it's a hotsync so set iteratemode to ALL."
   xyzwh 8 241 2005 114 110
 durationcanvas 128203 classinstance_ref 128075 // :PilotDaemon
   xyzwh 37 53 2010 11 52
@@ -429,7 +429,7 @@ reflexivemsg 163850 synchronous
   to durationcanvas_ref 128843 // 132234
   yz 80 2000 msg operation_ref 133130 // "loadAllRecords()"
   show_full_operations_definition default drawing_language default
-  label_xy 510 77
+  label_xy 513 78
 reflexivemsg 163978 synchronous
   to durationcanvas_ref 129611 // 132234
   yz 186 2000 msg operation_ref 133130 // "loadAllRecords()"

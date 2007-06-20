@@ -1,6 +1,6 @@
 format 38
 "bouml-design"
-  revision 13
+  revision 15
   modified_by 10 "bertjan"
 
 
@@ -32,7 +32,7 @@ format 38
   
   class_color yellow duration_color transparent continuation_color gray note_color blue fragment_color transparent subject_color transparent usecase_color yellow package_color transparent component_color green artifact_color green deploymentnode_color gray state_color yellow stateaction_color transparent activity_color transparent activityregion_color transparent activityaction_color transparent parameterpin_color white 
   font_size 9
-  diagram_format A4
+  diagram_format A3
 
   mark_for_import
   
@@ -76,6 +76,11 @@ format 38
     end
 
     sequencediagram 128266 "5.1 First Sync"
+      show_full_operations_definition no write_horizontally default drawing_language c++ draw_all_relations default shadow yes
+      size A4
+    end
+
+    sequencediagram 128522 "5.2 Full Sync"
       show_full_operations_definition no write_horizontally default drawing_language c++ draw_all_relations default shadow yes
       size A4
     end
@@ -185,7 +190,7 @@ ${inlines}
 	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} * ${name}${value};
 "
 	    classrelation_ref 129418 // fLocalDatase (<unidirectional association>)
-	  b multiplicity "" parent class_ref 128906 // ProxyDatabase
+	  b multiplicity "" parent class_ref 128906 // DataProxy
       end
 
       classrelation 129546 // fDatastore (<unidirectional association>)
@@ -194,7 +199,7 @@ ${inlines}
 	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} * ${name}${value};
 "
 	    classrelation_ref 129546 // fDatastore (<unidirectional association>)
-	  b multiplicity "" parent class_ref 128906 // ProxyDatabase
+	  b multiplicity "" parent class_ref 128906 // DataProxy
       end
 
       classrelation 129674 // fBackupdb (<unidirectional association>)
@@ -203,7 +208,7 @@ ${inlines}
 	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} * ${name}${value};
 "
 	    classrelation_ref 129674 // fBackupdb (<unidirectional association>)
-	  b multiplicity "" parent class_ref 128906 // ProxyDatabase
+	  b multiplicity "" parent class_ref 128906 // DataProxy
       end
 
       operation 128075 "RecordConduit"
@@ -535,7 +540,7 @@ ${inlines}
 	  a public
 	    cpp default "${type}"
 	    classrelation_ref 128100 // <generalisation>
-	  b multiplicity "" parent class_ref 128906 // ProxyDatabase
+	  b multiplicity "" parent class_ref 128906 // DataProxy
       end
 
       operation 132234 "HHProxyDatabase"
@@ -553,54 +558,6 @@ ${inlines}
 
       operation 130314 "writeAppBlock"
 	public explicit_return_type ""
-	nparams 0
-	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
-"
-	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}{
-  ${body}}
-"
-	
-	
-      end
-
-      operation 128328 "lookForMatch"
-	cpp_virtual public explicit_return_type ""
-	nparams 0
-	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
-"
-	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}{
-  ${body}}
-"
-	
-	
-      end
-
-      operation 128456 "readNextModifiedRecord"
-	cpp_virtual public explicit_return_type ""
-	nparams 0
-	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
-"
-	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}{
-  ${body}}
-"
-	
-	
-      end
-
-      operation 128584 "readRecordById"
-	cpp_virtual public explicit_return_type ""
-	nparams 0
-	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
-"
-	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}{
-  ${body}}
-"
-	
-	
-      end
-
-      operation 128712 "commitChanges"
-	cpp_virtual public explicit_return_type ""
 	nparams 0
 	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
 "
@@ -651,7 +608,7 @@ ${inlines}
 	  a public
 	    cpp default "${type}"
 	    classrelation_ref 128228 // <generalisation>
-	  b multiplicity "" parent class_ref 128906 // ProxyDatabase
+	  b multiplicity "" parent class_ref 128906 // DataProxy
       end
 
       operation 128840 "PCProxyDatabase"
@@ -666,56 +623,9 @@ ${inlines}
 	
       end
 
-      operation 128968 "lookForMatch"
-	cpp_virtual public explicit_return_type ""
-	nparams 0
-	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
-"
-	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}{
-  ${body}}
-"
-	
-	
-      end
-
-      operation 129096 "commitChanges"
-	cpp_virtual public explicit_return_type ""
-	nparams 0
-	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
-"
-	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}{
-  ${body}}
-"
-	
-	
-      end
-
-      operation 129224 "readNextModifiedRecord"
-	cpp_virtual public explicit_return_type ""
-	nparams 0
-	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
-"
-	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}{
-  ${body}}
-"
-	
-	
-      end
-
-      operation 129352 "readRecordById"
-	cpp_virtual public explicit_return_type ""
-	nparams 0
-	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
-"
-	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}{
-  ${body}}
-"
-	
-	
-      end
     end
 
-    class 128906 "ProxyDatabase"
+    class 128906 "DataProxy"
       abstract visibility package 
       cpp_decl "${comment}${template}class ${name}${inherit} {
 ${members}};
@@ -734,7 +644,7 @@ ${inlines}
 	  b multiplicity "" parent class_ref 128522 // CUDCounter
       end
 
-      operation 132106 "ProxyDatabase"
+      operation 132106 "DataProxy"
 	public explicit_return_type ""
 	nparams 0
 	cpp_decl "    ${comment}${inline}${name}${(}${)}${volatile}${throw};
@@ -806,6 +716,19 @@ ${inlines}
 	
       end
 
+      operation 133514 "setIterateMode"
+	public explicit_return_type ""
+	nparams 1
+	  param inout name "mode" explicit_type "Mode"
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}{
+  ${body}}
+"
+	
+	
+      end
+
       operation 132874 "commitChanges"
 	abstract cpp_virtual public explicit_return_type ""
 	nparams 0
@@ -825,15 +748,6 @@ ${inlines}
 	comment "Looks for a matching record. Should return 0 if there is no match."
       end
 
-      operation 133002 "loadModifiedRecords"
-	abstract cpp_virtual public explicit_return_type ""
-	nparams 0
-	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
-"
-	
-	
-      end
-
       operation 133130 "loadAllRecords"
 	abstract cpp_virtual public explicit_return_type ""
 	nparams 0
@@ -843,7 +757,7 @@ ${inlines}
 	
       end
 
-      operation 132362 "readNextModifiedRecord"
+      operation 132362 "nextRecord"
 	abstract cpp_virtual public explicit_return_type ""
 	nparams 0
 	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
