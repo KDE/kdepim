@@ -25,7 +25,7 @@ note 140554 "Overwrites last backup DB with synced copy of palm DB."
 note 142218 "Only if volalility of one of the CUDCounters exceeds a configured limit."
   xyzwh 19 931 2005 100 130
 note 156426 "See detialed flow committing changes (TODO)."
-  xyzwh 509 1047 2015 120 64
+  xyzwh 540 1013 2015 120 64
 note 156938 "See detailed flow for record syncing. (TODO)"
   xyzwh 581 404 2005 75 111
 note 164234 "At this moment the conduit knows that it's a hotsync so set iteratemode to ALL."
@@ -85,17 +85,17 @@ durationcanvas 157834 classinstance_ref 132234 // :HHProxyDatabase
 durationcanvas 158218 classinstance_ref 132234 // :HHProxyDatabase
   xyzwh 479 731 2010 11 27
 durationcanvas 158986 classinstance_ref 132234 // :HHProxyDatabase
-  xyzwh 479 799 2010 11 55
+  xyzwh 479 811 2010 11 25
 durationcanvas 159498 classinstance_ref 130698 // :CUDCounter
-  xyzwh 702 834 2010 11 25
+  xyzwh 702 812 2010 11 25
 durationcanvas 159754 classinstance_ref 132746 // :PCProxyDatabase
-  xyzwh 598 859 2010 11 30
+  xyzwh 598 835 2010 11 26
 durationcanvas 160010 classinstance_ref 130698 // :CUDCounter
-  xyzwh 702 872 2010 11 25
+  xyzwh 702 840 2010 11 25
 durationcanvas 160266 classinstance_ref 132234 // :HHProxyDatabase
   xyzwh 479 932 2010 11 27
 durationcanvas 160906 classinstance_ref 132234 // :HHProxyDatabase
-  xyzwh 479 1108 2010 11 25
+  xyzwh 479 1091 2010 11 42
 durationcanvas 161162 classinstance_ref 132746 // :PCProxyDatabase
   xyzwh 598 1127 2010 11 25
 durationcanvas 162058 classinstance_ref 132746 // :PCProxyDatabase
@@ -348,37 +348,27 @@ msg 158474 return
 msg 159114 synchronous
   from durationcanvas_ref 128266 // 128010
   to durationcanvas_ref 158986 // 132234
-  yz 812 2000 msg operation_ref 132618 // "cleanUp()"
+  yz 812 2000 msg operation_ref 132618 // "syncFinished()"
   show_full_operations_definition default drawing_language default
   label_xy 144 800
-reflexivemsg 159242 synchronous
-  to durationcanvas_ref 158986 // 132234
-  yz 802 2000 msg operation_ref 130314 // "writeAppBlock()"
-  show_full_operations_definition default drawing_language default
-  label_xy 513 802
-reflexivemsg 159370 synchronous
-  to durationcanvas_ref 158986 // 132234
-  yz 818 2000 msg operation_ref 129480 // "resetSyncFlags()"
-  show_full_operations_definition default drawing_language default
-  label_xy 513 817
 msg 159626 synchronous
   from durationcanvas_ref 158986 // 132234
   to durationcanvas_ref 159498 // 130698
-  yz 841 2000 msg operation_ref 131210 // "setEndCount(inout t : uint)"
+  yz 817 2000 msg operation_ref 131210 // "setEndCount(inout t : uint)"
   show_full_operations_definition default drawing_language default
-  label_xy 493 831
+  label_xy 493 807
 msg 159882 synchronous
   from durationcanvas_ref 128266 // 128010
   to durationcanvas_ref 159754 // 132746
-  yz 859 2000 msg operation_ref 132618 // "cleanUp()"
+  yz 839 2000 msg operation_ref 132618 // "syncFinished()"
   show_full_operations_definition default drawing_language default
-  label_xy 144 849
+  label_xy 144 829
 msg 160138 synchronous
   from durationcanvas_ref 159754 // 132746
   to durationcanvas_ref 160010 // 130698
-  yz 872 2000 msg operation_ref 131210 // "setEndCount(inout t : uint)"
+  yz 850 2000 msg operation_ref 131210 // "setEndCount(inout t : uint)"
   show_full_operations_definition default drawing_language default
-  label_xy 619 858
+  label_xy 610 838
 msg 160394 synchronous
   from durationcanvas_ref 128266 // 128010
   to durationcanvas_ref 160266 // 132234
@@ -440,6 +430,16 @@ reflexivemsg 164106 synchronous
   yz 255 2000 msg operation_ref 133130 // "loadAllRecords()"
   show_full_operations_definition default drawing_language default
   label_xy 631 252
+reflexivemsg 164746 synchronous
+  to durationcanvas_ref 160906 // 132234
+  yz 1098 2000 msg operation_ref 130314 // "writeAppBlock()"
+  show_full_operations_definition default drawing_language default
+  label_xy 513 1091
+reflexivemsg 165002 synchronous
+  to durationcanvas_ref 160906 // 132234
+  yz 1119 2000 msg operation_ref 129480 // "resetSyncFlags()"
+  show_full_operations_definition default drawing_language default
+  label_xy 511 1115
 line 131147 -_-_
   from ref 133642 z 1999 to ref 129611
 line 132043 -_-_
@@ -457,9 +457,11 @@ line 158602 -_-_
   line 158730 z 1999 to point 200 763
   line 158858 z 1999 to ref 136842
 line 161546 -_-_
-  from ref 156426 z 2009 to ref 160906
+  from ref 156426 z 2009 to point 502 1063
+  line 164874 z 2009 to ref 160906
 line 161674 -_-_
-  from ref 156426 z 2009 to ref 161162
+  from ref 156426 z 2009 to point 627 1101
+  line 165130 z 2009 to ref 161162
 line 164362 -_-_
   from ref 164234 z 1999 to ref 163466
 line 164490 -_-_

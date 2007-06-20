@@ -1,6 +1,6 @@
 format 38
 "bouml-design"
-  revision 15
+  revision 16
   modified_by 10 "bertjan"
 
 
@@ -81,6 +81,11 @@ format 38
     end
 
     sequencediagram 128522 "5.2 Full Sync"
+      show_full_operations_definition no write_horizontally default drawing_language c++ draw_all_relations default shadow yes
+      size A4
+    end
+
+    sequencediagram 128650 "5.3 Copy Handheld To PC"
       show_full_operations_definition no write_horizontally default drawing_language c++ draw_all_relations default shadow yes
       size A4
     end
@@ -386,7 +391,9 @@ ${inlines}
 
       operation 133258 "map"
 	public explicit_return_type ""
-	nparams 0
+	nparams 2
+	  param inout name "hhid" explicit_type "ulong"
+	  param inout name "pcid" explicit_type "QString"
 	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
 "
 	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}{
@@ -394,6 +401,7 @@ ${inlines}
 "
 	
 	
+	comment "Creates a mapping for given records with id's."
       end
 
       operation 133386 "contains"
@@ -622,7 +630,6 @@ ${inlines}
 	
 	
       end
-
     end
 
     class 128906 "DataProxy"
@@ -657,7 +664,7 @@ ${inlines}
       end
 
       operation 128140 "addRecord"
-	public explicit_return_type ""
+	public explicit_return_type "QVariant"
 	nparams 0
 	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
 "
@@ -666,6 +673,7 @@ ${inlines}
 "
 	
 	
+	comment "Adds the record to the database and returns the internal id for the added record."
       end
 
       operation 128200 "deleteRecord"
@@ -692,7 +700,7 @@ ${inlines}
 	
       end
 
-      operation 132618 "cleanUp"
+      operation 132618 "syncFinished"
 	public explicit_return_type ""
 	nparams 0
 	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
