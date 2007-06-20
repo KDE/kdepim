@@ -29,6 +29,12 @@ class TestLibKMobileToolsApp : public KApplication
 Q_OBJECT
 public:
     TestLibKMobileToolsApp ();
+    ~TestLibKMobileToolsApp ();
+    void mainloop();
+    void checkSMS();
+    void help();
+private:
+    QTextStream in, out, err;
 };
 
 #endif

@@ -24,13 +24,41 @@
 #include <libkmobiletools/sms.h>
 #include <QTextStream>
 #include <kcmdlineargs.h>
+#include <QTimer>
 
 // using namespace KMobileTools;
 
 TestLibKMobileToolsApp::TestLibKMobileToolsApp()
-    : KApplication(false)
+    : KApplication(false), in(stdin, QIODevice::ReadOnly), out(stdout, QIODevice::WriteOnly), err(stderr, QIODevice::WriteOnly)
 {
-    QTextStream out(stdout, QIODevice::WriteOnly);
+    mainloop();
+}
+
+TestLibKMobileToolsApp::~TestLibKMobileToolsApp()
+{
+}
+
+void TestLibKMobileToolsApp::help() {
+    out << "Available commands:\n"
+    << "help\t\tThis help screen\n"
+    << "sms\t\tTest sms object\n"
+    << "quit\t\tClose this application\n"
+    ;
+}
+
+void TestLibKMobileToolsApp::mainloop() {
+    bool ok=false;
+    out << "Enter a command to test libkmobiletools. \"help\" to see available commands\n> ";
+    out.flush();
+    QString cmd;
+    in >> cmd;
+    if(cmd=="help" || cmd=="?") help();
+    if(cmd=="sms") checkSMS();
+    if(cmd=="quit" || cmd=="q") { QTimer::singleShot(200, this, SLOT(quit()) ) ; return; }
+    mainloop();
+}
+
+void TestLibKMobileToolsApp::checkSMS() {
     out << "LibKMobileTools tester application\n";
     SMS *sms=new SMS();
     out << "sms created\n";
@@ -46,7 +74,6 @@ TestLibKMobileToolsApp::TestLibKMobileToolsApp()
     out << "Deleting SMS...";
     delete sms;
     out << " Done" << endl;
-    quit();
 }
 
 #include "testlibkmobiletools.moc"
