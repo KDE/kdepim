@@ -1,7 +1,7 @@
 format 38
 "bouml-design"
-  revision 9
-  modified_by 72 "bertjan"
+  revision 11
+  modified_by 10 "bertjan"
 
 
   
@@ -205,37 +205,13 @@ ${inlines}
 	    classrelation_ref 129674 // fBackupdb (<unidirectional association>)
 	  b multiplicity "" parent class_ref 128906 // ProxyDatabase
       end
-    end
 
-    class 128138 "TickerThread"
-      visibility package 
-      cpp_decl "${comment}${template}class ${name}${inherit} {
-${members}};
-${inlines}
-"
-      java_decl ""
-      idl_decl ""
-      explicit_switch_type ""
-      
-      operation 128010 "TickerThread"
+      operation 128075 "RecordConduit"
 	public explicit_return_type ""
-	nparams 1
-	  param inout name "link" explicit_type "KPilotDeviceLink*"
+	nparams 0
 	cpp_decl "    ${comment}${inline}${name}${(}${)}${volatile}${throw};
 "
 	cpp_def "${comment}${inline}${class}::${name}${(}${)}${volatile}${throw} {
-  ${body}}
-"
-	
-	
-      end
-
-      operation 128138 "exec"
-	public explicit_return_type ""
-	nparams 0
-	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
-"
-	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}{
   ${body}}
 "
 	
@@ -267,6 +243,18 @@ ${inlines}
 	
 	
 	comment "bool openDatabases(const QString &dbName, bool*retrieved=0L);"
+      end
+
+      operation 128203 "exec"
+	public explicit_return_type ""
+	nparams 0
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}{
+  ${body}}
+"
+	
+	
       end
     end
 
@@ -528,7 +516,8 @@ ${inlines}
 
       operation 132234 "HHProxyDatabase"
 	public explicit_return_type ""
-	nparams 0
+	nparams 1
+	  param inout name "*db" type class_ref 128203 // PilotDatabase
 	cpp_decl "    ${comment}${inline}${name}${(}${)}${volatile}${throw};
 "
 	cpp_def "${comment}${inline}${class}::${name}${(}${)}${volatile}${throw} {
@@ -599,6 +588,18 @@ ${inlines}
       end
 
       operation 129480 "resetSyncFlags"
+	public explicit_return_type ""
+	nparams 0
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}{
+  ${body}}
+"
+	
+	
+      end
+
+      operation 128331 "readAppBlock"
 	public explicit_return_type ""
 	nparams 0
 	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
@@ -790,6 +791,15 @@ ${inlines}
 	
       end
 
+      operation 133002 "loadModifiedRecords"
+	abstract cpp_virtual public explicit_return_type ""
+	nparams 0
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	
+	
+      end
+
       operation 132362 "readNextModifiedRecord"
 	abstract cpp_virtual public explicit_return_type ""
 	nparams 0
@@ -816,6 +826,30 @@ ${inlines}
 	    classrelation_ref 129290 // fCounter (<unidirectional association>)
 	  b multiplicity "" parent class_ref 128522 // CUDCounter
       end
+    end
+
+    class 128075 "PilotDaemon"
+      visibility package 
+      cpp_decl "${comment}${template}class ${name}${inherit} {
+${members}};
+${inlines}
+"
+      java_decl ""
+      idl_decl ""
+      explicit_switch_type ""
+      
+    end
+
+    class 128203 "PilotDatabase"
+      visibility package 
+      cpp_decl "${comment}${template}class ${name}${inherit} {
+${members}};
+${inlines}
+"
+      java_decl ""
+      idl_decl ""
+      explicit_switch_type ""
+      
     end
   end
 end
