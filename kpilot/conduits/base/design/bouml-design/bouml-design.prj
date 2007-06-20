@@ -1,6 +1,6 @@
 format 38
 "bouml-design"
-  revision 11
+  revision 13
   modified_by 10 "bertjan"
 
 
@@ -70,13 +70,13 @@ format 38
       size A4
     end
 
-    sequencediagram 128010 "HotSync"
+    sequencediagram 128010 "4.1 HotSync"
       show_full_operations_definition no write_horizontally default drawing_language c++ draw_all_relations default shadow yes
       size A4
     end
 
-    sequencediagram 128112 "First Sync"
-      show_full_operations_definition default write_horizontally default drawing_language default draw_all_relations default shadow default
+    sequencediagram 128266 "5.1 First Sync"
+      show_full_operations_definition no write_horizontally default drawing_language c++ draw_all_relations default shadow yes
       size A4
     end
 
@@ -368,6 +368,30 @@ ${inlines}
       end
 
       operation 129608 "setHHId"
+	public explicit_return_type ""
+	nparams 0
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}{
+  ${body}}
+"
+	
+	
+      end
+
+      operation 133258 "map"
+	public explicit_return_type ""
+	nparams 0
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}{
+  ${body}}
+"
+	
+	
+      end
+
+      operation 133386 "contains"
 	public explicit_return_type ""
 	nparams 0
 	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
@@ -701,6 +725,15 @@ ${inlines}
       idl_decl ""
       explicit_switch_type ""
       
+      classrelation 129290 // fCounter (<unidirectional association>)
+	relation 129290 --->
+	  a role_name "fCounter" multiplicity "1" protected
+	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} * ${name}${value};
+"
+	    classrelation_ref 129290 // fCounter (<unidirectional association>)
+	  b multiplicity "" parent class_ref 128522 // CUDCounter
+      end
+
       operation 132106 "ProxyDatabase"
 	public explicit_return_type ""
 	nparams 0
@@ -789,9 +822,19 @@ ${inlines}
 "
 	
 	
+	comment "Looks for a matching record. Should return 0 if there is no match."
       end
 
       operation 133002 "loadModifiedRecords"
+	abstract cpp_virtual public explicit_return_type ""
+	nparams 0
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	
+	
+      end
+
+      operation 133130 "loadAllRecords"
 	abstract cpp_virtual public explicit_return_type ""
 	nparams 0
 	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
@@ -816,15 +859,6 @@ ${inlines}
 "
 	
 	
-      end
-
-      classrelation 129290 // fCounter (<unidirectional association>)
-	relation 129290 --->
-	  a role_name "fCounter" multiplicity "1" protected
-	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} * ${name}${value};
-"
-	    classrelation_ref 129290 // fCounter (<unidirectional association>)
-	  b multiplicity "" parent class_ref 128522 // CUDCounter
       end
     end
 

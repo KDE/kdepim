@@ -13,7 +13,7 @@ classinstance 132234 class_ref 128650 // HHProxyDatabase
 classinstance 132746 class_ref 128778 // PCProxyDatabase
   name "" xyz 546 13 2000 life_line_z 2000
 note 133642 "Backup Database"
-  xyzwh 451 262 2000 89 46
+  xyzwh 489 262 2000 89 46
 fragment 135178 "for each     modified HH record"
   xyzwh 77 331 1988 610 213
 end
@@ -73,9 +73,9 @@ durationcanvas 139402 classinstance_ref 129290 // :IDMapping
 durationcanvas 139658 classinstance_ref 129290 // :IDMapping
   xyzwh 345 1106 2010 11 27
 durationcanvas 140938 classinstance_ref 130698 // :CUDCounter
-  xyzwh 702 980 2010 11 29
+  xyzwh 702 999 2010 11 29
 durationcanvas 141706 classinstance_ref 130698 // :CUDCounter
-  xyzwh 702 1016 2010 11 25
+  xyzwh 702 1037 2010 11 27
 durationcanvas 157450 classinstance_ref 132746 // :PCProxyDatabase
   xyzwh 598 582 2010 11 31
 durationcanvas 157834 classinstance_ref 132234 // :HHProxyDatabase
@@ -92,12 +92,12 @@ durationcanvas 160010 classinstance_ref 130698 // :CUDCounter
   xyzwh 702 857 2010 11 27
 durationcanvas 160266 classinstance_ref 132234 // :HHProxyDatabase
   xyzwh 479 934 2010 11 27
-durationcanvas 160522 classinstance_ref 132746 // :PCProxyDatabase
-  xyzwh 598 957 2010 11 25
 durationcanvas 160906 classinstance_ref 132234 // :HHProxyDatabase
   xyzwh 479 1131 2010 11 25
 durationcanvas 161162 classinstance_ref 132746 // :PCProxyDatabase
   xyzwh 598 1156 2010 11 25
+durationcanvas 162058 classinstance_ref 132746 // :PCProxyDatabase
+  xyzwh 598 967 2010 11 29
 msg 128459 synchronous
   from durationcanvas_ref 128203 // 128075
   to durationcanvas_ref 128331 // 128010
@@ -280,31 +280,31 @@ msg 139786 synchronous
   label_xy 144 1102
 reflexivemsg 140426 synchronous
   to durationcanvas_ref 128266 // 128010
-  yz 1069 2000 msg operation_ref 131338 // "createBackupDatabase()"
+  yz 1081 2000 msg operation_ref 131338 // "createBackupDatabase()"
   show_full_operations_definition default drawing_language default
-  label_xy 163 1066
+  label_xy 163 1078
 msg 141066 synchronous
   from durationcanvas_ref 128266 // 128010
   to durationcanvas_ref 140938 // 130698
-  yz 985 2000 msg operation_ref 131466 // "hasValidCount() : bool"
+  yz 1004 2000 msg operation_ref 131466 // "hasValidCount() : bool"
   show_full_operations_definition default drawing_language default
-  label_xy 153 975
+  label_xy 153 994
 msg 141194 return
   from durationcanvas_ref 140938 // 130698
   to durationcanvas_ref 128266 // 128010
-  yz 998 2000 unspecifiedmsg
+  yz 1017 2000 unspecifiedmsg
   show_full_operations_definition default drawing_language default
 msg 141834 synchronous
   from durationcanvas_ref 128266 // 128010
   to durationcanvas_ref 141706 // 130698
-  yz 1021 2000 msg operation_ref 131594 // "volatility() : int"
+  yz 1038 2000 msg operation_ref 131594 // "volatility() : int"
   show_full_operations_definition default drawing_language default
-  label_xy 155 1011
+  label_xy 155 1028
 reflexivemsg 142090 synchronous
   to durationcanvas_ref 128266 // 128010
-  yz 1041 2000 msg operation_ref 131722 // "askConfirmation()"
+  yz 1059 2000 msg operation_ref 131722 // "askConfirmation()"
   show_full_operations_definition default drawing_language default
-  label_xy 166 1038
+  label_xy 166 1056
 msg 157578 synchronous
   from durationcanvas_ref 128266 // 128010
   to durationcanvas_ref 157450 // 132746
@@ -378,11 +378,6 @@ msg 160394 synchronous
   yz 934 2000 msg operation_ref 132746 // "getCUDCounter()"
   show_full_operations_definition default drawing_language default
   label_xy 145 922
-msg 160650 synchronous
-  from durationcanvas_ref 128266 // 128010
-  to durationcanvas_ref 160522 // 132746
-  yz 962 2000 unspecifiedmsg
-  show_full_operations_definition default drawing_language default
 msg 160778 return
   from durationcanvas_ref 160266 // 132234
   to durationcanvas_ref 128266 // 128010
@@ -410,16 +405,25 @@ reflexivemsg 161930 synchronous
   yz 247 2000 msg operation_ref 133002 // "loadModifiedRecords()"
   show_full_operations_definition default drawing_language default
   label_xy 633 246
+msg 162186 synchronous
+  from durationcanvas_ref 128266 // 128010
+  to durationcanvas_ref 162058 // 132746
+  yz 967 2000 msg operation_ref 132746 // "getCUDCounter()"
+  show_full_operations_definition default drawing_language default
+  label_xy 141 958
+msg 162314 return
+  from durationcanvas_ref 162058 // 132746
+  to durationcanvas_ref 128266 // 128010
+  yz 985 2000 unspecifiedmsg
+  show_full_operations_definition default drawing_language default
 line 131147 -_-_
   from ref 133642 z 1999 to ref 129611
 line 132043 -_-_
   from ref 133642 z 1999 to ref 131659
-line 140682 -_-_ geometry HV
-  from ref 140554 z 1999 to point 149 1091
-  line 140810 z 1999 to ref 140426
-line 142346 -_-_ geometry HV
-  from ref 142218 z 1999 to point 149 966
-  line 142474 z 1999 to ref 142090
+line 140682 -_-_
+  from ref 140554 z 1999 to ref 140426
+line 142346 -_-_
+  from ref 142218 z 1999 to ref 142090
 line 157066 -_-_
   from ref 156938 z 1999 to point 580 533
   line 157194 z 1999 to point 250 533
