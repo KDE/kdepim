@@ -371,7 +371,7 @@ qint64 QSerial::writeData( const char *data, qint64 len )
         char c_retry=0;
 
         do {
-            if(d && d->i_modem!=-1) c_retval=::write(d->i_modem,temp, towrite); else return -1;
+            if(d->i_modem!=-1) c_retval=::write(d->i_modem,temp, towrite); else return -1;
             flush();
             if (c_retval==-1)
             {
