@@ -17,10 +17,10 @@
  *
  */
 
-#include <kdebug.h>
 #include "kfile_vcf.h"
-#include <kdefakes.h>
 
+#include <kdebug.h>
+#include <kdefakes.h>
 #include <k3process.h>
 #include <klocale.h>
 #include <kgenericfactory.h>

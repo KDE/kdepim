@@ -19,18 +19,18 @@ t it will be useful,
  *
  */
 
-//#include <KDebug>
+#include "icsendanalyzer.h"
 
 #include <kcal/calendarlocal.h>
 #include <kcal/icalformat.h>
 #include <kcal/vcalformat.h>
 #include <kcal/todo.h>
 
-#include "icsendanalyzer.h"
-
 #include <strigi/fieldtypes.h>
 #include <strigi/analysisresult.h>
 #include <strigi/streamendanalyzer.h>
+
+//#include <KDebug>
 
 using namespace KCal;
 
