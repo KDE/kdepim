@@ -59,15 +59,12 @@ class SMSPrivate : public QSharedData {
     }
 };
 
-SMS::SMS(QObject *parent)
- : QObject(parent), 
-  d(new SMSPrivate(this) )
+SMS::SMS() : d(new SMSPrivate(this) )
 {
 }
 
-SMS::SMS(const QStringList & numbers, const QString & text, const QDateTime & datetime, QObject *parent)
- : QObject(parent),
- d(new SMSPrivate(this) )
+SMS::SMS(const QStringList & numbers, const QString & text, const QDateTime & datetime)
+ : d(new SMSPrivate(this) )
 {
     setNumbers(numbers);
     setText(text);
@@ -79,9 +76,8 @@ QString SMS::uid() const {
     return d->s_uid;
 }
 
-SMS::SMS(const QStringList & numbers, const QString & text, QObject *parent)
- : QObject(parent),
-  d(new SMSPrivate(this) )
+SMS::SMS(const QStringList & numbers, const QString & text)
+ : d(new SMSPrivate(this) )
 {
     setNumbers(numbers);
     setText(text);
@@ -185,8 +181,6 @@ QStringList SMS::getMultiText() const
     ((SMSPrivate*)d.data() )->refreshUid(); /// @TODO move this to the single setters?
     return getMultiText(d->s_text);
 }
-
-#include "sms.moc"
 
 
 /*!
@@ -311,9 +305,9 @@ void SMS::setNumbers(const QStringList & numbers) { d->sl_numbers=numbers; }
 void SMS::setFolder( int newFolder ) { d->i_folder = newFolder; }
 int SMS::folder() const { return d->i_folder; }
 QList<int> *SMS::idList() { return &(d->v_id); }
-void SMS::setSlot( int newSlot ) { d->i_slot=newSlot; emit updated(); }
+void SMS::setSlot( int newSlot ) { d->i_slot=newSlot; /*emit updated();*/ }
 SMS::SMSType SMS::type() const { return d->i_type; }
-void SMS::setType( SMSType newType ) { d->i_type = newType; emit updated(); }
+void SMS::setType( SMSType newType ) { d->i_type = newType;/* emit updated();*/ }
 int SMS::slot() const { return d->i_slot; }
 bool SMS::unread() const { return d->b_unread; }
 void SMS::setUnread(bool unread) { d->b_unread=unread;}

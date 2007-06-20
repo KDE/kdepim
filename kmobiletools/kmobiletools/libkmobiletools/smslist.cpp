@@ -280,7 +280,7 @@ int SMSList::saveToCSV() const
 void SMSList::append( SMS *item )
 {
     QList<SMS*>::append(item);
-    connect(item, SIGNAL(updated()), this, SIGNAL(updated()) );
+//     connect(item, SIGNAL(updated()), this, SIGNAL(updated()) );
 }
 
 void SMSList::resetCount() const {

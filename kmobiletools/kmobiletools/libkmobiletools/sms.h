@@ -31,15 +31,14 @@
 */
 
 class SMSPrivate;
-class KMOBILETOOLS_EXPORT SMS : public QObject
+class KMOBILETOOLS_EXPORT SMS
 {
-Q_OBJECT
 public:
-    SMS(QObject *parent = 0);
-    SMS(const QStringList & numbers, const QString & text, QObject *parent = 0);
-    SMS(const QStringList & numbers, const QString & text, const QDateTime & datetime, QObject *parent = 0);
+    SMS();
+    SMS(const QStringList & numbers, const QString & text);
+    SMS(const QStringList & numbers, const QString & text, const QDateTime & datetime);
 
-    ~SMS();
+    virtual ~SMS();
 
     enum MemorySlot
     { SIM=0x1, Phone=0x2, Unknown=0x10 };
@@ -78,16 +77,17 @@ public:
     bool operator ==(SMS* compSMS);
     bool unread() const;
     void setUnread(bool unread);
-private:
-    QSharedDataPointer<SMSPrivate> d;
-/// @TODO remove signals and slots, move them to smslist?
-public Q_SLOTS:
-    bool exportMD(const QString &dir);
     bool writeToSlot( const QString &slotDir);
+    bool exportMD(const QString &dir);
     bool exportCSV(const QString &filename);
     bool writeToSlotCSV( const QString &filename);
+private:
+    QSharedDataPointer<SMSPrivate> d;
+/// @TODO signals and slots removed, now find a way to do this in smslist.
+/*public Q_SLOTS:
+
 Q_SIGNALS:
-    void updated();
+    void updated();*/
 };
 
 #endif

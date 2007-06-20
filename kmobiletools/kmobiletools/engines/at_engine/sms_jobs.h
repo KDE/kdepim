@@ -34,7 +34,7 @@ class ATSMS : public SMS
     public:
         ATSMS(const QStringList & numbers, const QString & text );
         ATSMS(const QStringList & numbers, const QString & text, const QDateTime & datetime );
-        ~ATSMS();
+        virtual ~ATSMS();
         //! Return true if the this object is part of a multipart message.
         bool isMultiPart() { return concatenated; };
         //! Returns the reference number of this message.
