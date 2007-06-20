@@ -396,18 +396,18 @@ void SerialManager::gotData()
     kDebug() << "gotData() : got "<< availData << "bytes to read" << endl;
 if(!availData) availData=MAXBUFSIZE; // fix for rfcomm wrong size
 //     kDebug() << "GotData: Size=" << availData << endl;
-    char *buffer=new char [availData+1];
-    memset(buffer, 0, availData+1);
+    QByteArray buffer( availData+1, 0 );
     int readdata;
 #ifdef KBLUETOOTH
     if(d->bluetooth)
-    readdata=d->rfcomm->read(buffer, availData);
+    readdata=d->rfcomm->read(buffer.data(), availData);
 #endif
-    readdata=d->serial->read(buffer, availData);
+    readdata=d->serial->read(buffer.data(), availData);
     if(readdata==-1)
     {
         kDebug() << "Read error: closing device link\n";
         close();
+        delete []
         return;
     }
     if(readdata>0)
@@ -417,7 +417,6 @@ if(!availData) availData=MAXBUFSIZE; // fix for rfcomm wrong size
         d->gotData=availData;
 //         std::cout << QString(buffer).replace("\r", "\n").replace("\n\n", "\n");
     }
-    delete [] buffer;
 }
 
 
