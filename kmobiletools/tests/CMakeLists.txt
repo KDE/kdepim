@@ -1,5 +1,6 @@
 
-add_subdirectory( kserialdeviceemulator )
+# add_subdirectory( kserialdeviceemulator )
+add_subdirectory ( testlibkmobiletools )
 
 include_directories( ${KDE4_INCLUDE_DIR} ${QT_INCLUDES}  )
 

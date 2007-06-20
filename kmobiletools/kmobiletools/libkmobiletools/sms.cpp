@@ -39,7 +39,6 @@ class SMSPrivate : public QSharedData {
         { parent=p_parent; }
     QStringList sl_numbers;
 //     QString s_text;
-    KDateTime dt_datetime;
     int i_folder;
     int i_slot;
     SMS::SMSType i_type;
@@ -82,11 +81,6 @@ SMS::SMS(const QStringList & numbers, const QString & text)
 {
     setNumbers(numbers);
     setText(text);
-}
-
-void SMS::setDateTime(const KDateTime & datetime)
-{
-    d->dt_datetime=datetime;
 }
 
 SMS::~SMS()
@@ -221,9 +215,9 @@ bool SMS::writeToSlot(const QString &dir)
     subject+="...";
     subject=subject.replace( QRegExp("([^\\s]*=[\\dA-F]{2,2}[^\\s]*)"), "=?utf-8?q?\\1?=");
     text+=QString("Subject: %1\n").arg(subject);
-    text+="Date: " + d->dt_datetime.toString( "%1, d %2 yyyy hh:mm:ss" )
-            .arg( KMobileTools::KMobiletoolsHelper::shortWeekDayNameEng( d->dt_datetime.date().dayOfWeek() ) )
-            .arg( KMobileTools::KMobiletoolsHelper::shortMonthNameEng( d->dt_datetime.date().month() ) )
+    text+="Date: " + getDateTime().toString( "%1, d %2 yyyy hh:mm:ss" )
+            .arg( KMobileTools::KMobiletoolsHelper::shortWeekDayNameEng( getDateTime().date().dayOfWeek() ) )
+            .arg( KMobileTools::KMobiletoolsHelper::shortMonthNameEng( getDateTime().date().month() ) )
             + '\n';
     text+="X-KMobileTools-IntType: " + QString::number(type() ) + '\n';
     text+="X-KMobileTools-TextType: " + SMSTypeString(type() ) + '\n';
@@ -235,7 +229,7 @@ bool SMS::writeToSlot(const QString &dir)
 //     text+="Content-Type: text/plain; charset=utf-8\n";
     text+="\n\n" + KCodecs::quotedPrintableEncode( getText().toUtf8() )+ '\n';
     filename=filename + QDir::separator() + "cur" + QDir::separator() +
-            QString::number(d->dt_datetime.toTime_t()) + '.' + QString(uid()) + '.' + "kmobiletools";
+            QString::number(getDateTime().toTime_t()) + '.' + QString(uid()) + '.' + "kmobiletools";
     kDebug() << "Writing sms to " << filename << endl;
     QFile file(filename);
     if(! file.open( QIODevice::WriteOnly | QIODevice::Truncate ) ) return false;
@@ -278,9 +272,9 @@ bool SMS::writeToSlotCSV(const QString &filename)
         text="\"INCOMING\",\"" + transNumber  + "\",\"" + getFrom() + "\",";
     }
 
-    text+="\"" + d->dt_datetime.toString( "%1, d %2 yyyy hh:mm:ss" )
-            .arg( KMobileTools::KMobiletoolsHelper::shortWeekDayNameEng( d->dt_datetime.date().dayOfWeek() ) )
-            .arg( KMobileTools::KMobiletoolsHelper::shortMonthNameEng( d->dt_datetime.date().month() ) )
+    text+="\"" + getDateTime().toString( "%1, d %2 yyyy hh:mm:ss" )
+            .arg( KMobileTools::KMobiletoolsHelper::shortWeekDayNameEng( getDateTime().date().dayOfWeek() ) )
+            .arg( KMobileTools::KMobiletoolsHelper::shortMonthNameEng( getDateTime().date().month() ) )
             + "\",";
     //text+="\"" + KCodecs::quotedPrintableEncode( getText().utf8() ) + "\"";
     //text+="\"" + getText().utf8() + "\"";
@@ -298,8 +292,20 @@ bool SMS::writeToSlotCSV(const QString &filename)
 
 void SMS::setText(const QString & text) { setBody(text.toUtf8()); }
 QString SMS::getText() const { return QString(body() ); }
-QString SMS::getDate() const { return d->dt_datetime.toString(); }
-KDateTime SMS::getDateTime() const { return d->dt_datetime; }
+QString SMS::getDate() const { return getDateTime().toString(); }
+
+KDateTime SMS::getDateTime() const {
+    if(! const_cast<SMS*>(this)->hasHeader("Date") ) return KDateTime();
+    return (dynamic_cast<KMime::Headers::Date*>(
+        const_cast<SMS*>(this)->getHeaderByType("Date"))
+            )->dateTime();
+}
+void SMS::setDateTime(const KDateTime & datetime) {
+    KMime::Headers::Date *h=new KMime::Headers::Date();
+    h->setDateTime(datetime);
+    setHeader(h);
+}
+
 void SMS::setRawSlot(const QString &rawSlot){ d->s_rawSlot=rawSlot;}
 QString SMS::rawSlot() const { return d->s_rawSlot;}
 void SMS::setNumbers(const QStringList & numbers) { d->sl_numbers=numbers; }
