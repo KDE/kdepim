@@ -305,9 +305,9 @@ class KMOBILETOOLS_EXPORT Engine : public QObject
         void jobFinished( KMobileTools::Job::JobType );
 
         /**
-         * This signal is emitted when an error has occured
+         * This signal is emitted when an error has occurred
          */
-        void errorOccured();
+        void errorOccurred();
 
         /**
          * This signal is emitted when a SMS folder is added
