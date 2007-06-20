@@ -31,6 +31,7 @@
 #include <ktar.h>
 // #include <kparts/statusbarextension.h>
 //#include <dcopclient.h>
+#include <KStandardGuiItem>
 #include <ksystemtrayicon.h>
 #include <kactioncollection.h>
 #include <kmessagebox.h>
@@ -169,7 +170,7 @@ kmobiletoolsMainPart::kmobiletoolsMainPart( QWidget *parentWidget, QObject *pare
         testfile.remove();
     } else
     {
-        int ret=KMessageBox::questionYesNo( m_widget, i18n("<qt>You have no write access to lockfiles directory <b>/var/lock/</b>. Please correct this using the permission fixer wizard, or by hand with \"chmod -R a+rwx /var/lock\"<br>Do you want to run the Permission Wizard now?</qt>") );
+        int ret=KMessageBox::questionYesNo( m_widget, i18n("<qt>You have no write access to lockfiles directory <b>/var/lock/</b>. Please correct this using the permission fixer wizard, or by hand with \"chmod -R a+rwx /var/lock\"<br>Do you want to run the Permission Wizard now?</qt>"), i18n("Locking Failed"), KGuiItem(i18n("Run Wizard")), KStandardGuiItem::cancel() );
         if(ret==KMessageBox::Yes) KRun::runCommand("kmtsetup", m_widget->topLevelWidget());
     }
 }
