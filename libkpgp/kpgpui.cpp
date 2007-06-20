@@ -65,7 +65,7 @@ const int Kpgp::KeySelectionDialog::sCheckSelectionDelay = 250;
 namespace Kpgp {
 
 PassphraseDialog::PassphraseDialog( QWidget *parent,
-                                    const QString &caption, 
+                                    const QString &caption,
                                     const QString &keyID )
   :KPasswordDialog( parent )
 {
@@ -292,11 +292,13 @@ KeySelectionDialog::KeySelectionDialog( const KeyList& keyList,
 {
   setCaption( title );
   setButtons( Default|Ok|Cancel );
-#ifdef Q_OS_UNIX
-  if ( qApp )
-    KWindowSystem::setIcons( winId(), qApp->windowIcon().pixmap( IconSize( K3Icon::Desktop ), IconSize( K3Icon::Desktop ) ),
-                    qApp->windowIcon().pixmap( IconSize( K3Icon::Small ), IconSize( K3Icon::Small ) ) );
-#endif  
+  if ( qApp ) {
+    KWindowSystem::setIcons( winId(),
+                             qApp->windowIcon().pixmap( IconSize( K3Icon::Desktop ),
+                                                        IconSize( K3Icon::Desktop ) ),
+                             qApp->windowIcon().pixmap( IconSize( K3Icon::Small ),
+                                                        IconSize( K3Icon::Small ) ) );
+  }
   Kpgp::Module *pgp = Kpgp::Module::getKpgp();
   KConfig *config = pgp->getConfig();
   KConfigGroup dialogConfig( config, "Key Selection Dialog" );
