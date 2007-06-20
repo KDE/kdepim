@@ -22,16 +22,17 @@
 #ifndef QOPENSYNC_EXPORT_H
 #define QOPENSYNC_EXPORT_H
 
+/* needed for KDE_EXPORT and KDE_IMPORT macros */
 #include <kdemacros.h>
 
-#if defined(_WIN32) || defined(_WIN64)
-#ifdef MAKE_QOPENSYNC_LIB
-#define QSYNC_EXPORT KDE_EXPORT
-#else
-#define QSYNC_EXPORT KDE_IMPORT
-#endif
-#else
-#define QSYNC_EXPORT KDE_EXPORT
+#ifndef QSYNC_EXPORT
+# if defined(MAKE_QOPENSYNC_LIB)
+   /* We are building this library */
+#  define QSYNC_EXPORT KDE_EXPORT
+# else
+   /* We are using this library */
+#  define QSYNC_EXPORT KDE_IMPORT
+# endif
 #endif
 
 #endif
