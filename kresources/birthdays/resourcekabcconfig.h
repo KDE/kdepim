@@ -30,7 +30,10 @@ class QCheckBox;
 class QLabel;
 
 class KRestrictedLine;
-class K3ListView;
+namespace KPIM {
+class CategorySelectWidget;
+}
+
 
 namespace KCal {
 
@@ -57,7 +60,7 @@ class ResourceKABCConfig : public KRES::ConfigWidget
     KRestrictedLine *mAlarmTimeEdit;
     QLabel *mALabel;
     QCheckBox *mUseCategories;
-    K3ListView *mCategoryView;
+    KPIM::CategorySelectWidget *mCategoryView;
 
     class Private;
     Private *d;

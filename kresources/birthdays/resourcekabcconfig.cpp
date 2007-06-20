@@ -35,7 +35,7 @@
 #include <kdebug.h>
 #include <klocale.h>
 #include <krestrictedline.h>
-#include <k3listview.h>
+#include <categoryselectdialog.h>
 
 #include "resourcekabc.h"
 #include "resourcekabcconfig.h"
@@ -67,9 +67,11 @@ ResourceKABCConfig::ResourceKABCConfig( QWidget* parent )
   mUseCategories = new QCheckBox( i18n( "Filter by categories" ), this );
   topLayout->addWidget( mUseCategories, 3, 0, 1, 2 );
 
-  mCategoryView = new K3ListView( this );
-  mCategoryView->addColumn( "" );
-  mCategoryView->header()->hide();
+  KABPrefs *prefs = KABPrefs::instance();
+  mCategoryView = new KPIM::CategorySelectWidget(this,prefs);
+  mCategoryView->setCategories(prefs->customCategories());
+  mCategoryView->hideHeader();
+  mCategoryView->hideButton();
   mCategoryView->setEnabled( false );
   topLayout->addWidget( mCategoryView, 4, 0, 1, 2 );
 
@@ -83,11 +85,6 @@ ResourceKABCConfig::ResourceKABCConfig( QWidget* parent )
 
   setReadOnly( true );
 
-  KABPrefs *prefs = KABPrefs::instance();
-  const QStringList categories = prefs->customCategories();
-  QStringList::ConstIterator it;
-  for ( it = categories.begin(); it != categories.end(); ++it )
-    new Q3CheckListItem( mCategoryView, *it, Q3CheckListItem::CheckBox );
 }
 
 void ResourceKABCConfig::loadSettings( KRES::Resource *resource )
@@ -102,15 +99,7 @@ void ResourceKABCConfig::loadSettings( KRES::Resource *resource )
     mALabel->setEnabled( res->alarm() );
 
     const QStringList categories = res->categories();
-    Q3ListViewItemIterator it( mCategoryView );
-    while ( it.current() ) {
-      if ( categories.contains( it.current()->text( 0 ) ) ) {
-        Q3CheckListItem *item = static_cast<Q3CheckListItem*>( it.current() );
-        item->setOn( true );
-      }
-      ++it;
-    }
-
+    mCategoryView->setSelected(categories);
     mUseCategories->setChecked( res->useCategories() );
   } else {
     kDebug(5700) << "ERROR: ResourceKABCConfig::loadSettings(): no ResourceKABC, cast failed" << endl;
@@ -126,11 +115,8 @@ void ResourceKABCConfig::saveSettings( KRES::Resource *resource )
     setReadOnly( true );
 
     QStringList categories;
-    Q3ListViewItemIterator it( mCategoryView, Q3ListViewItemIterator::Checked );
-    while ( it.current() ) {
-      categories.append( it.current()->text( 0 ) );
-      ++it;
-    }
+    QString categoriesStr;
+    categories = mCategoryView->selectedCategories(categoriesStr);
     res->setCategories( categories );
     res->setUseCategories( mUseCategories->isChecked() );
   } else {

@@ -1,6 +1,7 @@
 
-include_directories( ${CMAKE_SOURCE_DIR}/kaddressbook/common  )
+include_directories( ${CMAKE_SOURCE_DIR}/kaddressbook/common ${CMAKE_BINARY_DIR}/libkdepim ${CMAKE_SOURCE_DIR}/libkdepim )
 
+add_definitions (-DQT3_SUPPORT -DQT3_SUPPORT_WARNINGS)
 
 ########### next target ###############
 
