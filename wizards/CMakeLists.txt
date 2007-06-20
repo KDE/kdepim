@@ -8,7 +8,7 @@ add_definitions (-DQT3_SUPPORT -DQT3_SUPPORT_WARNINGS)
 
 ########### next target ###############
 
-set(groupwarewizard_SRCS groupwarewizard.cpp main.cpp overviewpage.cpp 
+set(groupwarewizard_SRCS groupwarewizard.cpp groupwaremain.cpp overviewpage.cpp 
     egroupwarewizard.cpp
     sloxwizard.cpp
     kolabwizard.cpp kmailchanges.cpp kolabkmailchanges.cpp 
