@@ -22,11 +22,11 @@ classcanvas 129674 class_ref 128394 // IDMapping
   end
 classcanvas 130058 class_ref 128522 // CUDCounter
   draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default show_members_stereotype default show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default show_infonote default shadow default
-  xyz 630 298 2000
+  xyz 627 294 2000
   end
 classcanvas 131210 class_ref 128906 // DataProxy
   draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default show_members_stereotype default show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default show_infonote default shadow default
-  xyz 409 266 2005
+  xyz 407 262 2005
   end
 relationcanvas 128100 relation_ref 128100 // <generalisation>
   from ref 128394 z 1999 to ref 131210
@@ -47,24 +47,24 @@ relationcanvas 129802 relation_ref 128522 // <unidirectional association>
   multiplicity_a_pos 67 208 3000 no_multiplicity_b
 relationcanvas 131722 relation_ref 129290 // <unidirectional association>
   from ref 131210 z 1999 to ref 130058
-  role_a_pos 572 360 3000 no_role_b
-  multiplicity_a_pos 612 385 3000 no_multiplicity_b
+  role_a_pos 569 356 3000 no_role_b
+  multiplicity_a_pos 609 381 3000 no_multiplicity_b
 relationcanvas 131850 relation_ref 129418 // <unidirectional association>
   from ref 128138 z 1999 to point 362 210
   line 132106 z 1999 to point 461 210
   line 131978 z 1999 to ref 131210
-  role_a_pos 472 247 3000 no_role_b
-  multiplicity_a_pos 445 247 3000 no_multiplicity_b
+  role_a_pos 471 243 3000 no_role_b
+  multiplicity_a_pos 444 243 3000 no_multiplicity_b
 relationcanvas 132234 relation_ref 129546 // <unidirectional association>
   from ref 128138 z 1999 to point 360 238
   line 132490 z 1999 to point 427 238
   line 132362 z 1999 to ref 131210
-  role_a_pos 444 247 3000 no_role_b
-  multiplicity_a_pos 417 247 3000 no_multiplicity_b
+  role_a_pos 442 243 3000 no_role_b
+  multiplicity_a_pos 415 243 3000 no_multiplicity_b
 relationcanvas 132618 relation_ref 129674 // <unidirectional association>
   from ref 128138 z 1999 to point 359 177
   line 132874 z 1999 to point 513 177
   line 132746 z 1999 to ref 131210
-  role_a_pos 502 247 3000 no_role_b
-  multiplicity_a_pos 475 247 3000 no_multiplicity_b
+  role_a_pos 502 243 3000 no_role_b
+  multiplicity_a_pos 475 243 3000 no_multiplicity_b
 end

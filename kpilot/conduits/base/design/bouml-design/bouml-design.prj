@@ -1,6 +1,6 @@
 format 38
 "bouml-design"
-  revision 16
+  revision 17
   modified_by 10 "bertjan"
 
 
@@ -86,6 +86,11 @@ format 38
     end
 
     sequencediagram 128650 "5.3 Copy Handheld To PC"
+      show_full_operations_definition no write_horizontally default drawing_language c++ draw_all_relations default shadow yes
+      size A4
+    end
+
+    sequencediagram 128778 "5.4 Copy PC To Handheld"
       show_full_operations_definition no write_horizontally default drawing_language c++ draw_all_relations default shadow yes
       size A4
     end
