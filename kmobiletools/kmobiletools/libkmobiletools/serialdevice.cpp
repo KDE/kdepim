@@ -407,7 +407,6 @@ if(!availData) availData=MAXBUFSIZE; // fix for rfcomm wrong size
     {
         kDebug() << "Read error: closing device link\n";
         close();
-        delete []
         return;
     }
     if(readdata>0)
