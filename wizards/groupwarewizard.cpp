@@ -19,14 +19,13 @@
     Boston, MA 02110-1301, USA.
 */
 
-#include <QApplication>
-#include <QLayout>
+#include "groupwarewizard.h"
+#include "overviewpage.h"
 
 #include <klocale.h>
 
-#include "overviewpage.h"
-
-#include "groupwarewizard.h"
+#include <QApplication>
+#include <QLayout>
 
 GroupwareWizard::GroupwareWizard( QWidget *parent)
   : QWidget( parent )

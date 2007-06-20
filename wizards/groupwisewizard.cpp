@@ -129,7 +129,7 @@ class CreateGroupwiseKabcResource : public KConfigPropagator::Change
       KABC::ResourceGroupwise *r = new KABC::ResourceGroupwise( url, user,
                                                                 password,
                                                                 QStringList(),
-                                                                QString::null );
+                                                                QString() );
       r->setResourceName( i18n("GroupWise") );
       m.add( r );
       m.writeConfig();

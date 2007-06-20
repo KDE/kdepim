@@ -19,10 +19,11 @@
     Boston, MA 02110-1301, USA.
 */
 
-#include <QButtonGroup>
-#include <QLabel>
-#include <QLayout>
-#include <QRadioButton>
+#include "overviewpage.h"
+#include "egroupwarewizard.h"
+#include "kolabwizard.h"
+#include "sloxwizard.h"
+#include "groupwisewizard.h"
 
 #include <kacceleratormanager.h>
 #include <kdialog.h>
@@ -32,12 +33,10 @@
 #include <kpushbutton.h>
 #include <KStandardGuiItem>
 
-#include "egroupwarewizard.h"
-#include "kolabwizard.h"
-#include "sloxwizard.h"
-#include "groupwisewizard.h"
-
-#include "overviewpage.h"
+#include <QButtonGroup>
+#include <QLabel>
+#include <QLayout>
+#include <QRadioButton>
 
 OverViewPage::OverViewPage( QWidget *parent )
   : QWidget( parent )

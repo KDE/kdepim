@@ -60,7 +60,7 @@ class ServerTypeManager : public QObject
 
     void loadPlugins();
 
-    ServerTypeManager( QObject *parent, const char *name = 0 );
+    explicit ServerTypeManager( QObject *parent, const char *name = 0 );
 
     static ServerTypeManager* mSelf;
 

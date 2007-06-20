@@ -29,6 +29,7 @@
 
 class ServerType : public QObject
 {
+  Q_OBJECT
   public:
     class ConnectionInfo
     {

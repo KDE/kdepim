@@ -25,7 +25,9 @@
 
 #include "kolabkmailchanges.h"
 
+#ifdef __GNUC__
 #warning Port me!
+#endif
 #if 0
 #include "kresources/kolab/kcal/resourcekolab.h"
 #include "kresources/kolab/kabc/resourcekolab.h"
@@ -108,7 +110,9 @@ class CreateCalendarImapResource : public KConfigPropagator::Change
     {
       KCal::CalendarResourceManager m( "calendar" );
       m.readConfig();
+#ifdef __GNUC__
 #warning Port me!
+#endif
 #if 0
       KCal::ResourceKolab *r = new KCal::ResourceKolab();
       r->setResourceName( i18n("Kolab Server") );
@@ -131,7 +135,9 @@ class CreateContactImapResource : public KConfigPropagator::Change
     {
       KRES::Manager<KABC::Resource> m( "contact" );
       m.readConfig();
+#ifdef __GNUC__
 #warning Port me!
+#endif
 #if 0
       KABC::ResourceKolab *r = new KABC::ResourceKolab();
       r->setResourceName( i18n("Kolab Server") );
@@ -153,7 +159,9 @@ class CreateNotesImapResource : public KConfigPropagator::Change
 
     void apply()
     {
+#ifdef __GNUC__
 #warning Port me!
+#endif
 #if 0
       KRES::Manager<ResourceNotes> m( "notes" );
       m.readConfig();

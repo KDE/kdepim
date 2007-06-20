@@ -342,5 +342,5 @@ bool CreateImapAccount::writeToWallet(const QString & type, int id)
       mWallet->createFolder( "kmail" );
     mWallet->setFolder( "kmail" );
   }
-  return mWallet->writePassword( type + "-" + QString::number( id ), mPassword );
+  return mWallet->writePassword( type + '-' + QString::number( id ), mPassword );
 }

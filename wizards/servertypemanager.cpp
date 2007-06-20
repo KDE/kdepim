@@ -19,11 +19,10 @@
     Boston, MA 02110-1301, USA.
 */
 
-#include <kstaticdeleter.h>
-
+#include "servertypemanager.h"
 #include "egroupwarehandler.h"
 
-#include "servertypemanager.h"
+#include <kstaticdeleter.h>
 
 ServerTypeManager* ServerTypeManager::mSelf = 0;
 static KStaticDeleter<ServerTypeManager> serverManagerDeleter;
