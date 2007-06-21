@@ -26,7 +26,6 @@
 #include <QtCore/QObject>
 #include <QtCore/QStringList>
 #include <kdatetime.h>
-#include <QtCore/QSharedDataPointer>
 /**
 @author Marco Gulino
 */
@@ -87,10 +86,10 @@ public:
     // Headers
     KMime::Headers::Date *date();
 protected:
-    QByteArray assembleHeaders();
+    virtual QByteArray assembleHeaders();
 
 private:
-    QSharedDataPointer<SMSPrivate> d;
+    SMSPrivate *const d;
 /// @TODO signals and slots removed, now find a way to do this in smslist.
 /*public Q_SLOTS:
 

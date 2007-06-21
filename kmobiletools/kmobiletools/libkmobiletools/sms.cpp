@@ -27,14 +27,13 @@
 #include <qregexp.h>
 #include <kcodecs.h>
 #include <QTextStream>
-#include <QSharedData>
 #define SMS_MIMETYPE "application/x-kmobiletools-sms"
 
 #include "kmobiletoolshelper.h"
 
-class SMSPrivate : public QSharedData {
+class SMSPrivate {
     public:
-        SMSPrivate(SMS* p_parent) : QSharedData(),
+        SMSPrivate(SMS* p_parent) :
         i_folder(0), i_slot(0), i_type(SMS::All), b_unread(false)
         { parent=p_parent; }
     QStringList sl_numbers;
@@ -173,7 +172,7 @@ QStringList SMS::getMultiText(const QString &text)
 // Convenience non-static method for the above one
 QStringList SMS::getMultiText() const
 {
-    ((SMSPrivate*)d.data() )->refreshUid(); /// @TODO move this to the single setters?
+    d->refreshUid(); /// @TODO move this to the single setters?
     return getMultiText(getText() );
 }
 
