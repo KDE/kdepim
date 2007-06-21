@@ -32,12 +32,13 @@
 
 class SMSPrivate;
 class KMime::Headers::Date;
+class KMime::Headers::From;
 class KMOBILETOOLS_EXPORT SMS : public KMime::Content
 {
 public:
     SMS();
-    SMS(const QStringList & numbers, const QString & text);
-    SMS(const QStringList & numbers, const QString & text, const KDateTime & datetime);
+    KDE_DEPRECATED SMS(const QStringList & numbers, const QString & text);
+    KDE_DEPRECATED SMS(const QStringList & numbers, const QString & text, const KDateTime & datetime);
 
     virtual ~SMS();
 
@@ -56,13 +57,16 @@ public:
     static QStringList getMultiText(const QString&);
     static int getMultiTextCount(const QString&);
     static int getMultiTextCount(int);
-    virtual QString getFrom() const;
+    void setFrom(const QString& number, const QString &displayname=QString() );
+    KMime::Headers::From *from() const;
+
+    virtual KDE_DEPRECATED QString getFrom() const;
     virtual QStringList getTo() const;
+    void KDE_DEPRECATED setNumbers(const QStringList & numbers);
     virtual QString getDate() const;
     virtual KDateTime getDateTime() const;
     virtual void setRawSlot(const QString &rawSlot);
     virtual QString rawSlot() const;
-    void setNumbers(const QStringList & numbers);
     void setDateTime(const KDateTime & datetime);
 
     void setFolder( int newFolder );
@@ -84,7 +88,7 @@ public:
     bool writeToSlotCSV( const QString &filename);
 
     // Headers
-    KMime::Headers::Date *date();
+    KMime::Headers::Date *date() const;
 protected:
     virtual QByteArray assembleHeaders();
 

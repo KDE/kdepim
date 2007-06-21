@@ -34,7 +34,7 @@
 class SMSPrivate {
     public:
         SMSPrivate(SMS* p_parent) :
-        i_folder(0), i_slot(0), i_type(SMS::All), b_unread(false)
+        i_folder(0), i_slot(0), i_type(SMS::All)
         { parent=p_parent; }
     QStringList sl_numbers;
 //     QString s_text;
@@ -43,7 +43,6 @@ class SMSPrivate {
     SMS::SMSType i_type;
     QList<int> v_id;
     QString s_rawSlot;
-    bool b_unread;
     SMS *parent;
     QString s_uid;
     void refreshUid()
@@ -84,16 +83,6 @@ SMS::SMS(const QStringList & numbers, const QString & text)
 
 SMS::~SMS()
 {
-}
-
-QString SMS::getFrom() const
-{
-    if (d->i_type==Unsent || d->i_type==Sent)
-    {
-        return QString();
-    } else {
-        return QString( d->sl_numbers.first() );
-    }
 }
 
 QStringList SMS::getTo() const
@@ -303,18 +292,17 @@ void SMS::setDateTime(const KDateTime & datetime) {
     setHeader(h);
 }
 
-void SMS::setRawSlot(const QString &rawSlot){ d->s_rawSlot=rawSlot;}
-QString SMS::rawSlot() const { return d->s_rawSlot;}
-void SMS::setNumbers(const QStringList & numbers) { d->sl_numbers=numbers; }
-void SMS::setFolder( int newFolder ) { d->i_folder = newFolder; }
-int SMS::folder() const { return d->i_folder; }
-QList<int> *SMS::idList() { return &(d->v_id); }
-void SMS::setSlot( int newSlot ) { d->i_slot=newSlot; /*emit updated();*/ }
-SMS::SMSType SMS::type() const { return d->i_type; }
-void SMS::setType( SMSType newType ) { d->i_type = newType;/* emit updated();*/ }
-int SMS::slot() const { return d->i_slot; }
-bool SMS::unread() const { return d->b_unread; }
-void SMS::setUnread(bool unread) { d->b_unread=unread;}
+bool SMS::unread() const {
+    return const_cast<SMS*>(this)->hasHeader("Read");
+}
+
+void SMS::setUnread(bool unread) {
+    if(unread && ! this->unread() ) {
+        removeHeader("Read");
+        return;
+    }
+    setHeader( new KMime::Headers::Generic("Read", 0, QString("read").toUtf8() ) );
+}
 
 QString SMS::SMSTypeString(SMSType smstype) {
     switch (smstype) {
@@ -351,7 +339,43 @@ QByteArray SMS::assembleHeaders()
 }
 
 // Headers implementation
-KMime::Headers::Date *SMS::date() {
-    return dynamic_cast<KMime::Headers::Date*>(getHeaderByType("Date") );
+KMime::Headers::Date *SMS::date() const{
+    return dynamic_cast<KMime::Headers::Date*>(const_cast<SMS*>(this)->getHeaderByType("Date") );
 }
+
+void SMS::setFrom(const QString& number, const QString &displayname) {
+    KMime::Headers::From *fromh=new KMime::Headers::From();
+    fromh->addAddress(number.toUtf8(), displayname);
+    setHeader(fromh);
+}
+
+KMime::Headers::From *SMS::from() const
+{
+
+    return dynamic_cast<KMime::Headers::From*>(const_cast<SMS*>(this)->getHeaderByType("From") );
+}
+
+QString SMS::getFrom() const
+{
+    if (d->i_type==Unsent || d->i_type==Sent)
+    {
+        return QString();
+    } else {
+        return QString( d->sl_numbers.first() );
+    }
+}
+
+
+/// @TODO port-or-delete the following ones
+void SMS::setRawSlot(const QString &rawSlot){ d->s_rawSlot=rawSlot;}
+QString SMS::rawSlot() const { return d->s_rawSlot;}
+void SMS::setNumbers(const QStringList & numbers) { d->sl_numbers=numbers; }
+void SMS::setFolder( int newFolder ) { d->i_folder = newFolder; }
+int SMS::folder() const { return d->i_folder; }
+QList<int> *SMS::idList() { return &(d->v_id); }
+void SMS::setSlot( int newSlot ) { d->i_slot=newSlot; /*emit updated();*/ }
+SMS::SMSType SMS::type() const { return d->i_type; }
+void SMS::setType( SMSType newType ) { d->i_type = newType;/* emit updated();*/ }
+int SMS::slot() const { return d->i_slot; }
+
 
