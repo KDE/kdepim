@@ -1,10 +1,11 @@
 include_directories(
    ${CMAKE_CURRENT_SOURCE_DIR}
+   ${CMAKE_CURRENT_SOURCE_DIR}/../../kmobiletools/libkmobiletools
    ${CMAKE_CURRENT_BINARY_DIR}
    ${CMAKE_SOURCE_DIR}/kmobiletools/kmobiletools/libkmobiletools
    )
 set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
-
+message( "************ ${CMAKE_CURRENT_SOURCE_DIR}/../../kmobiletools/libkmobiletools")
 set(testlibkmobiletools_SRCS testlibkmobiletools.cpp )
 
 kde4_automoc(${testlibkmobiletools_SRCS})
