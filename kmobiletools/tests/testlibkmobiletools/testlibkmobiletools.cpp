@@ -25,7 +25,7 @@
 #include <QTextStream>
 #include <kcmdlineargs.h>
 #include <QTimer>
-
+#include <KDateTime>
 // using namespace KMobileTools;
 
 TestLibKMobileToolsApp::TestLibKMobileToolsApp()
