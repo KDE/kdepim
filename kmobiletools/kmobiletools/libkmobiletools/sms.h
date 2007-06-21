@@ -32,6 +32,7 @@
 */
 
 class SMSPrivate;
+class KMime::Headers::Date;
 class KMOBILETOOLS_EXPORT SMS : public KMime::Content
 {
 public:
@@ -82,6 +83,9 @@ public:
     bool exportMD(const QString &dir);
     bool exportCSV(const QString &filename);
     bool writeToSlotCSV( const QString &filename);
+
+    // Headers
+    KMime::Headers::Date *date();
 protected:
     QByteArray assembleHeaders();
 

@@ -24,6 +24,7 @@
 #define TESTLIBKMOBILETOOLS_H
 
 #include <kapplication.h>
+class SMS;
 class TestLibKMobileToolsApp : public KApplication
 {
 Q_OBJECT
@@ -31,7 +32,8 @@ public:
     TestLibKMobileToolsApp ();
     ~TestLibKMobileToolsApp ();
     void mainloop();
-    void checkSMS();
+    SMS *checkSMS(bool deleteOnReturn=true);
+    void testAkonadi();
     void help();
 private:
     QTextStream in, out, err;

@@ -28,9 +28,9 @@
 #include <kcodecs.h>
 #include <QTextStream>
 #include <QSharedData>
+#define SMS_MIMETYPE "application/x-kmobiletools-sms"
 
 #include "kmobiletoolshelper.h"
-#define MIMETYPE "application/x-kmobiletools-sms"
 
 class SMSPrivate : public QSharedData {
     public:
@@ -296,9 +296,7 @@ QString SMS::getDate() const { return getDateTime().toString(); }
 
 KDateTime SMS::getDateTime() const {
     if(! const_cast<SMS*>(this)->hasHeader("Date") ) return KDateTime();
-    return (dynamic_cast<KMime::Headers::Date*>(
-        const_cast<SMS*>(this)->getHeaderByType("Date"))
-            )->dateTime();
+    return (const_cast<SMS*>(this)->date() )->dateTime();
 }
 void SMS::setDateTime(const KDateTime & datetime) {
     KMime::Headers::Date *h=new KMime::Headers::Date();
@@ -348,8 +346,13 @@ QByteArray SMS::assembleHeaders()
 {
     KMime::Headers::Base *h;
     QByteArray ret;
-    h=getHeaderByType("Date");
+    h=date();
     if(h) ret+= h->as7BitString()+'\n';
     return ret + Content::assembleHeaders();
+}
+
+// Headers implementation
+KMime::Headers::Date *SMS::date() {
+    return dynamic_cast<KMime::Headers::Date*>(getHeaderByType("Date") );
 }
 

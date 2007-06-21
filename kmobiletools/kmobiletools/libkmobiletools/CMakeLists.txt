@@ -1,5 +1,5 @@
 
-add_subdirectory( icons )
+add_subdirectory( akonadi icons )
 
 IF (USE_CRASHHANDLER)
 	SET(crashhandler_SRCS crashhandler.cpp )

@@ -231,7 +231,7 @@ int SMSList::saveToCSV(const QString &filename) const
 {
     kDebug() << k_funcinfo << endl;
     SMS *sms;
-    kdDebug() << "SMSList::saveToCSV(): saving CSV file to: " << filename << endl;
+    kDebug() << "SMSList::saveToCSV(): saving CSV file to: " << filename << endl;
     bool ok=true;
 /*    QListIterator<SMS*> it(*this);
     while( (it.hasNext()) )

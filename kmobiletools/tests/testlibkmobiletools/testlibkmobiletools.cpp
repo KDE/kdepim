@@ -25,7 +25,10 @@
 #include <QTextStream>
 #include <kcmdlineargs.h>
 #include <QTimer>
+#include <libakonadi/collection.h>
+#include "akonadi/akonadi_serializer_sms.cpp"
 #include <KDateTime>
+
 // using namespace KMobileTools;
 
 TestLibKMobileToolsApp::TestLibKMobileToolsApp()
@@ -42,23 +45,24 @@ void TestLibKMobileToolsApp::help() {
     out << "Available commands:\n"
     << "help\t\tThis help screen\n"
     << "sms\t\tTest sms object\n"
-    << "quit\t\tClose this application\n"
+    << "akonadi\t\tTest Akonadi resources object\n"
+    << "quit\t\tClose this application\n\n"
     ;
 }
 
 void TestLibKMobileToolsApp::mainloop() {
-    bool ok=false;
     out << "Enter a command to test libkmobiletools. \"help\" to see available commands\n> ";
     out.flush();
     QString cmd;
     in >> cmd;
     if(cmd=="help" || cmd=="?") help();
     if(cmd=="sms") checkSMS();
+    if(cmd=="akonadi") testAkonadi();
     if(cmd=="quit" || cmd=="q") { QTimer::singleShot(200, this, SLOT(quit()) ) ; return; }
     mainloop();
 }
 
-void TestLibKMobileToolsApp::checkSMS() {
+SMS *TestLibKMobileToolsApp::checkSMS(bool deleteOnReturn) {
     out << "LibKMobileTools tester application\n";
     SMS *sms=new SMS();
     out << "sms created\n";
@@ -71,9 +75,18 @@ void TestLibKMobileToolsApp::checkSMS() {
     out << "****************** SMS Serialization ******************\n"
         << sms->encodedContent()
     << "\n**************** SMS Serialization End ****************\n\n";
-    out << "Deleting SMS...";
-    delete sms;
-    out << " Done" << endl;
+    if(deleteOnReturn) { out << "Deleting SMS..."; delete sms; sms=NULL; out << " Done" << endl; }
+    return sms;
+}
+
+void TestLibKMobileToolsApp::testAkonadi() {
+    Akonadi::Item i;
+    i.setMimeType(SMS_MIMETYPE);
+    SMS *sms=checkSMS(false);
+    Akonadi::SerializerPluginSMS *serializer=new Akonadi::SerializerPluginSMS();
+    MessagePtr msg=MessagePtr(sms);
+    i.setPayload<MessagePtr>(msg);
+    delete serializer;
 }
 
 #include "testlibkmobiletools.moc"
