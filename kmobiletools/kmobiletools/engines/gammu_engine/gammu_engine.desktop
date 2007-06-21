@@ -15,4 +15,5 @@ Icon=kmobiletoolsGammu
 ServiceTypes=KMobileTools/Engine
 Description=A KMobileTools engine which uses Gammu as backend. Compatible with all AT-based phones. Special drivers for Alcatel, Nokia, Symbian and Sony Ericsson phones.
 Description[ja]=バックエンドに Gammu を使う KMobileTools エンジンです。AT ベースのすべての電話と互換性があります。Alcatel, Nokia, Symbian, Sony Ericsson 用の特別なドライバです。
+Description[zh_TW]=KMobileTool 引擎，使用 Gammu 做為後端介面。與所有 AT-based 電話相容。有 Alcatel、Nokia、Symbian 與 Sony Ericsson 電話的特殊驅動程式。
 X-KDE-Library=libkmobiletools_gammu
