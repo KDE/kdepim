@@ -56,7 +56,7 @@ class KDE_EXPORT ResourceKolab : public KCal::ResourceCalendar,
     friend struct TemporarySilencer;
 
 public:
-  ResourceKolab( const KConfig* );
+  ResourceKolab( const KConfigGroup& );
   virtual ~ResourceKolab();
 
   /// Load resource data.

@@ -119,11 +119,11 @@ bool KABC::ResourceKolab::doOpen()
   KConfig config( configFile() );
 
   // Read the calendar entries
-  QList<KMailICalIface::SubResource> subResources;
+  QList<KMail::SubResource> subResources;
   if ( !kmailSubresources( subResources, s_kmailContentsType ) )
     return false;
   mSubResources.clear();
-  QList<KMailICalIface::SubResource>::ConstIterator it;
+  QList<KMail::SubResource>::ConstIterator it;
   for ( it = subResources.begin(); it != subResources.end(); ++it ) {
     loadSubResourceConfig( config, (*it).location, (*it).label, (*it).writable );
   }
@@ -164,10 +164,10 @@ void KABC::ResourceKolab::releaseSaveTicket( Ticket* ticket )
 QString KABC::ResourceKolab::loadContact( const QString& contactData,
                                           const QString& subResource,
                                           quint32 sernum,
-                                          KMailICalIface::StorageFormat format )
+                                          KMail::StorageFormat format )
 {
   KABC::Addressee addr;
-  if ( format == KMailICalIface::StorageXML ) {
+  if ( format == KMail::StorageXML ) {
     Contact contact( contactData, this, subResource, sernum ); // load
     contact.saveTo( &addr );
   } else {
@@ -183,11 +183,11 @@ QString KABC::ResourceKolab::loadContact( const QString& contactData,
   return addr.uid();
 }
 
-static const struct { const char* mimetype; KMailICalIface::StorageFormat format; } s_formats[] =
+static const struct { const char* mimetype; KMail::StorageFormat format; } s_formats[] =
 {
-  { s_attachmentMimeTypeContact, KMailICalIface::StorageXML },
-  { s_attachmentMimeTypeDistList, KMailICalIface::StorageXML },
-  { s_inlineMimeType, KMailICalIface::StorageIcalVcard }
+  { s_attachmentMimeTypeContact, KMail::StorageXML },
+  { s_attachmentMimeTypeDistList, KMail::StorageXML },
+  { s_inlineMimeType, KMail::StorageIcalVcard }
 };
 
 bool KABC::ResourceKolab::loadSubResource( const QString& subResource )
@@ -224,7 +224,7 @@ bool KABC::ResourceKolab::loadSubResource( const QString& subResource )
     // QMap to also tell us the StorageFormat of each found contact...
     for ( int indexFormat = 0; indexFormat < 3; ++indexFormat ) {
       const char* mimetype = s_formats[indexFormat].mimetype;
-      KMailICalIface::StorageFormat format = s_formats[indexFormat].format;
+      KMail::StorageFormat format = s_formats[indexFormat].format;
       QMap<quint32, QString> lst;
       if ( !kmailIncidences( lst, mimetype, subResource, startIndex, nbMessages ) ) {
         kError() << "Communication problem in KABC::ResourceKolab::loadSubResource()\n";
@@ -377,7 +377,7 @@ bool KABC::ResourceKolab::kmailUpdateAddressee( const Addressee& addr )
   QString data;
   QString mimetype;
   AttachmentList att;
-  bool isXMLStorageFormat = kmailStorageFormat( subResource ) == KMailICalIface::StorageXML;
+  bool isXMLStorageFormat = kmailStorageFormat( subResource ) == KMail::StorageXML;
   QString subject = uid; // as per kolab2 spec
   if ( isXMLStorageFormat ) {
     Contact contact( &addr );
@@ -471,7 +471,7 @@ bool KABC::ResourceKolab::fromKMailAddIncidence( const QString& type,
 
   // Load contact to find the UID
   const QString uid = loadContact( contactXML, subResource, sernum,
-      ( KMailICalIface::StorageFormat )format );
+      ( KMail::StorageFormat )format );
 
   //kDebug(5650) << k_funcinfo << uid << endl;
 
@@ -588,7 +588,7 @@ void KABC::ResourceKolab::fromKMailAsyncLoadResult( const QMap<quint32, QString>
                                                     const QString& folder )
 {
   // FIXME
-  KMailICalIface::StorageFormat format = KMailICalIface::StorageXML;
+  KMail::StorageFormat format = KMail::StorageXML;
   for( QMap<quint32, QString>::ConstIterator it = map.begin(); it != map.end(); ++it ) {
     loadContact( it.value(), folder, it.key(), format );
   }

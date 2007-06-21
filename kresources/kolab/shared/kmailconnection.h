@@ -35,12 +35,13 @@
 #define KMAILCONNECTION_H
 
 #include <QObject>
-#include <kmail/kmailicalIface.h>
+#include <kmail/kmail_util.h>
 #include "kolabshared_export.h"
+#include <QDBusAbstractAdaptor>
 
 class KUrl;
 class QString;
-class OrgKdeKmailGroupwareInterface;
+class QDBusInterface;
 
 namespace Kolab {
 
@@ -49,21 +50,21 @@ class ResourceKolabBase;
 /**
   This class provides the kmail connectivity for IMAP resources.
 */
-class KOLABSHARED_EXPORT KMailConnection : public QObject {
+class KOLABSHARED_EXPORT KMailConnection : public QDBusAbstractAdaptor {
   Q_OBJECT
 
   // These are the methods called by KMail when the resource changes
-private Q_SLOTS:
-  bool fromKMailAddIncidence( const QString& type, const QString& resource,
+public Q_SLOTS:
+  Q_SCRIPTABLE bool fromKMailAddIncidence( const QString& type, const QString& resource,
                               quint32 sernum, int format, const QString& xml );
-  void fromKMailDelIncidence( const QString& type, const QString& resource,
+  Q_SCRIPTABLE void fromKMailDelIncidence( const QString& type, const QString& resource,
                               const QString& xml );
-  void fromKMailRefresh( const QString& type, const QString& resource );
-  void fromKMailAddSubresource( const QString& type, const QString& resource, 
+  Q_SCRIPTABLE void fromKMailRefresh( const QString& type, const QString& resource );
+  Q_SCRIPTABLE void fromKMailAddSubresource( const QString& type, const QString& resource, 
                                 const QString& label, bool writable, 
                                 bool alarmRelevant );
-  void fromKMailDelSubresource( const QString& type, const QString& resource );
-  void fromKMailAsyncLoadResult( const QMap<quint32, QString>& map, const QString& type,
+  Q_SCRIPTABLE void fromKMailDelSubresource( const QString& type, const QString& resource );
+  Q_SCRIPTABLE void fromKMailAsyncLoadResult( const QMap<quint32, QString>& map, const QString& type,
                                  const QString& folder );
 
 public:
@@ -76,7 +77,7 @@ public:
   bool connectToKMail();
 
   // Call the DBus methods
-  bool kmailSubresources( QList<KMailICalIface::SubResource>& lst,
+  bool kmailSubresources( QList<KMail::SubResource>& lst,
                           const QString& contentsType );
   bool kmailIncidencesCount( int& count,
                              const QString& mimetype,
@@ -99,7 +100,7 @@ public:
                     const QStringList& attachmentNames,
                     const QStringList& deletedAttachments );
 
-  bool kmailStorageFormat( KMailICalIface::StorageFormat& type, const QString& folder);
+  bool kmailStorageFormat( KMail::StorageFormat& type, const QString& folder);
 
   bool kmailTriggerSync( const QString& contentsType );
 
@@ -111,7 +112,7 @@ private:
   bool connectKMailSignal( const QByteArray&, const QByteArray& );
 
   ResourceKolabBase* mResource;
-  OrgKdeKmailGroupwareInterface* mKmailGroupwareInterface;
+  QDBusInterface* mKmailGroupwareInterface;
 };
 
 }

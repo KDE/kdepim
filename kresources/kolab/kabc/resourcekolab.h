@@ -36,7 +36,7 @@
 #include <libkdepim/resourceabc.h>
 #include "../shared/resourcekolabbase.h"
 #include "../shared/subresource.h"
-#include <kmail/kmailicalIface.h>
+#include <kmail/kmail_util.h>
 #include <kdemacros.h>
 
 namespace KABC {
@@ -151,7 +151,7 @@ protected:
                               const QString& label, bool writable );
   bool loadSubResource( const QString& subResource );
   QString loadContact( const QString& contactData, const QString& subResource,
-                       quint32 sernum, const KMailICalIface::StorageFormat format );
+                       quint32 sernum, const KMail::StorageFormat format );
 
   QString configFile() const {
     return Kolab::ResourceKolabBase::configFile( "kabc" );

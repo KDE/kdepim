@@ -65,7 +65,7 @@ static const char* journalAttachmentMimeType = "application/x-vnd.kolab.journal"
 static const char* incidenceInlineMimeType = "text/calendar";
 
 
-ResourceKolab::ResourceKolab( const KConfig *config )
+ResourceKolab::ResourceKolab( const KConfigGroup &config )
   : ResourceCalendar( config ), ResourceKolabBase( "ResourceKolab-libkcal" ),
     mCalendar( QString::fromLatin1("UTC") ), mOpen( false ),
     mResourceChangedTimer( 0, "mResourceChangedTimer" )
@@ -101,11 +101,11 @@ bool ResourceKolab::openResource( KConfig& config, const char* contentType,
                                   ResourceMap& map )
 {
   // Read the subresource entries from KMail
-  QList<KMailICalIface::SubResource> subResources;
+  QList<KMail::SubResource> subResources;
   if ( !kmailSubresources( subResources, contentType ) )
     return false;
   map.clear();
-  QList<KMailICalIface::SubResource>::ConstIterator it;
+  QList<KMail::SubResource>::ConstIterator it;
   for ( it = subResources.begin(); it != subResources.end(); ++it )
     loadSubResourceConfig( config, (*it).location, (*it).label, (*it).writable,
                            (*it).alarmRelevant, map );
@@ -394,7 +394,7 @@ bool ResourceKolab::sendKMailUpdate( KCal::IncidenceBase* incidencebase, const Q
   const QString& type = incidencebase->type();
   const char* mimetype = 0;
   QString data;
-  bool isXMLStorageFormat = kmailStorageFormat( subresource ) == KMailICalIface::StorageXML;
+  bool isXMLStorageFormat = kmailStorageFormat( subresource ) == KMail::StorageXML;
   if ( type == "Event" ) {
     if( isXMLStorageFormat ) {
       mimetype = eventAttachmentMimeType;
@@ -721,7 +721,7 @@ KCal::Alarm::List ResourceKolab::relevantAlarms( const KCal::Alarm::List &alarms
        if ( subResource->alarmRelevant() )
            relevantAlarms.append ( a );
        else {
-         kdDebug(5650) << "Alarm skipped, not relevant." << endl;
+         kDebug(5650) << "Alarm skipped, not relevant." << endl;
        }
      }
   }
@@ -759,7 +759,7 @@ bool ResourceKolab::fromKMailAddIncidence( const QString& type,
     return false;
   if ( !subresourceActive( subResource ) ) return true;
 
-  if ( format == KMailICalIface::StorageXML ) {
+  if ( format == KMail::StorageXML ) {
     // If this data file is one of ours, load it here
     if ( type == kmailCalendarContentsType )
       addEvent( data, subResource, sernum );

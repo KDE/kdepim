@@ -37,11 +37,15 @@ using namespace Kolab;
 class KolabFactory : public KRES::PluginFactoryBase
 {
   public:
-    KRES::Resource *resource( const KConfig *config )
+    KRES::Resource *resource( const KConfigGroup &config )
     {
       return new KABC::ResourceKolab( config );
     }
 
+  KRES::Resource *resource()
+    {
+      return new KABC::ResourceKolab();
+    }
     KRES::ConfigWidget *configWidget( QWidget* )
     {
       return 0;

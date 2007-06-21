@@ -45,7 +45,9 @@ using namespace Kolab;
 
 
 KMailConnection::KMailConnection( ResourceKolabBase* resource )
-  : QObject(), mResource( resource ), mKmailGroupwareInterface( 0 )
+  : QDBusAbstractAdaptor( this )
+  , mResource( resource )
+  , mKmailGroupwareInterface( 0 )
 {
   // Make the connection to KMail ready
 #if 0
@@ -77,8 +79,8 @@ bool KMailConnection::connectToKMail()
       // using e.g. KMessageBox
       return false;
     }
-
-    mKmailGroupwareInterface = new OrgKdeKmailGroupwareInterface( dbusService, "/Groupware", QDBusConnection::sessionBus());
+//TODO verify interface
+    mKmailGroupwareInterface = new QDBusInterface( dbusService, "org.kde.kmail", "/Groupware", QDBusConnection::sessionBus());
 
 #if 0 // TODO
     // Attach to the KMail signals
@@ -112,8 +114,8 @@ bool KMailConnection::fromKMailAddIncidence( const QString& type,
                                              int format,
                                              const QString& data )
 {
-  if ( format != KMailICalIface::StorageXML
-      && format != KMailICalIface::StorageIcalVcard )
+  if ( format != KMail::StorageXML
+      && format != KMail::StorageIcalVcard )
     return false;
 //   kDebug(5650) << "KMailConnection::fromKMailAddIncidence( " << type << ", "
 //                 << folder << " ). iCal:\n" << ical << endl;
@@ -174,14 +176,17 @@ bool KMailConnection::connectKMailSignal( const QByteArray& signal,
 #endif
 }
 
-bool KMailConnection::kmailSubresources( QList<KMailICalIface::SubResource>& lst,
+bool KMailConnection::kmailSubresources( QList<KMail::SubResource>& lst,
                                          const QString& contentsType )
 {
+  //TODO port it
+#if 0
   if ( !connectToKMail() )
     return false;
 
-  lst = mKmailGroupwareInterface->subresourcesKolab( contentsType );
+  lst = mKmailGroupwareInterface->call( "subresourcesKolab", contentsType );
   return (mKmailGroupwareInterface->lastError().type()==QDBusError::NoError);
+#endif
 }
 
 bool KMailConnection::kmailIncidencesCount( int& count,
@@ -191,7 +196,8 @@ bool KMailConnection::kmailIncidencesCount( int& count,
   if ( !connectToKMail() )
     return false;
 
-  count = mKmailGroupwareInterface->incidencesKolabCount( mimetype, resource );
+  QDBusReply<int> val= mKmailGroupwareInterface->call( "incidencesKolabCount", mimetype, resource );
+  count = val;
   return (mKmailGroupwareInterface->lastError().type()==QDBusError::NoError);
 }
 
@@ -201,11 +207,14 @@ bool KMailConnection::kmailIncidences( QMap<quint32, QString>& lst,
                                        int startIndex,
                                        int nbMessages )
 {
+  //TODO port it
+#if 0
   if ( !connectToKMail() )
     return false;
 
-  lst = mKmailGroupwareInterface->incidencesKolab( mimetype, resource, startIndex, nbMessages );
+  lst = mKmailGroupwareInterface->call( "incidencesKolab",  mimetype, resource, startIndex, nbMessages );
   return (mKmailGroupwareInterface->lastError().type()==QDBusError::NoError);
+#endif
 }
 
 
@@ -217,15 +226,19 @@ bool KMailConnection::kmailGetAttachment( KUrl& url,
   if ( !connectToKMail() )
     return false;
 
-  url = mKmailGroupwareInterface->getAttachment( resource, sernum, filename );
+  QDBusReply<QString> val = mKmailGroupwareInterface->call( "getAttachment", resource, sernum, filename );
+  QString tmp = val;
+  url = KUrl( val );
   return (mKmailGroupwareInterface->lastError().type()==QDBusError::NoError);
 }
 
 bool KMailConnection::kmailDeleteIncidence( const QString& resource,
                                             quint32 sernum )
 {
+  QDBusReply<bool> deleteIncidence = mKmailGroupwareInterface->call( "deleteIncidenceKolab", resource, sernum );
+  bool b = deleteIncidence;
   return connectToKMail()
-    && mKmailGroupwareInterface->deleteIncidenceKolab( resource, sernum )
+    && b
     && (mKmailGroupwareInterface->lastError().type()==QDBusError::NoError);
 }
 
@@ -239,6 +252,8 @@ bool KMailConnection::kmailUpdate( const QString& resource,
                                    const QStringList& attachmentNames,
                                    const QStringList& deletedAttachments )
 {
+  //PORT it
+#if 0
   kDebug(5006) << kBacktrace() << endl;
   if ( connectToKMail() ) {
     sernum = mKmailGroupwareInterface->update( resource, sernum, subject, plainTextBody, customHeaders,
@@ -247,21 +262,28 @@ bool KMailConnection::kmailUpdate( const QString& resource,
     return sernum && (mKmailGroupwareInterface->lastError().type()==QDBusError::NoError);
   } else
     return false;
+#endif
 }
 
-bool KMailConnection::kmailStorageFormat( KMailICalIface::StorageFormat& type,
+bool KMailConnection::kmailStorageFormat( KMail::StorageFormat& type,
                                           const QString& folder )
 {
+  //TODO port it
+#if 0
   bool ok = connectToKMail();
   type = mKmailGroupwareInterface->storageFormat( folder );
   return ok && (mKmailGroupwareInterface->lastError().type()==QDBusError::NoError);
+#endif
 }
 
 
 bool KMailConnection::kmailTriggerSync( const QString &contentsType )
 {
+//TODO port it
+#if 0
   bool ok = connectToKMail();
   return ok && mKmailGroupwareInterface->triggerSync( contentsType );
+#endif
 }
 
 void KMailConnection::dbusServiceOwnerChanged(const QString & service, const QString & oldOwner, const QString & newOwner)

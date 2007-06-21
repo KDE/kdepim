@@ -65,7 +65,7 @@ ResourceKolabBase::~ResourceKolabBase()
 }
 
 
-bool ResourceKolabBase::kmailSubresources( QList<KMailICalIface::SubResource>& lst,
+bool ResourceKolabBase::kmailSubresources( QList<KMail::SubResource>& lst,
                                            const QString& contentsType ) const
 {
   return mConnection->kmailSubresources( lst, contentsType );
@@ -219,9 +219,9 @@ QString ResourceKolabBase::findWritableResource( const ResourceMap& resources )
   return possible[chosenLabel];
 }
 
-KMailICalIface::StorageFormat ResourceKolabBase::kmailStorageFormat( const QString &folder ) const
+KMail::StorageFormat ResourceKolabBase::kmailStorageFormat( const QString &folder ) const
 {
-  KMailICalIface::StorageFormat format = (KMailICalIface::StorageFormat) 3;
+  KMail::StorageFormat format = (KMail::StorageFormat) 3;
   mConnection->kmailStorageFormat( format, folder );
   return format;
 }

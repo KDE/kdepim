@@ -40,7 +40,7 @@
 
 #include "kolabshared_export.h"
 #include "subresource.h"
-#include <kmail/kmailicalIface.h>
+#include <kmail/kmail_util.h>
 
 class QString;
 class KUrl;
@@ -108,7 +108,7 @@ protected:
 
   /// List all folders with a certain contentsType. Returns a QMap with
   /// resourcename/writable pairs
-  bool kmailSubresources( QList<KMailICalIface::SubResource>& lst,
+  bool kmailSubresources( QList<KMail::SubResource>& lst,
                           const QString& contentsType ) const;
 
   /// Get the number of messages in this folder.
@@ -137,7 +137,7 @@ protected:
   /// Delete an incidence.
   bool kmailDeleteIncidence( const QString& resource, quint32 sernum );
 
-  KMailICalIface::StorageFormat kmailStorageFormat( const QString& folder ) const;
+  KMail::StorageFormat kmailStorageFormat( const QString& folder ) const;
 
   typedef QMap<QByteArray, QString> CustomHeaderMap;
 

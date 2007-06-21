@@ -83,6 +83,8 @@ void KolabBase::saveTo( KCal::Incidence* incidence ) const
 
 void KolabBase::setFields( const KABC::Addressee* addressee )
 {
+//TODO port it
+#if 0
   // An addressee does not have a creation date, so somehow we should
   // make one, if this is a new entry
 
@@ -132,10 +134,13 @@ void KolabBase::setFields( const KABC::Addressee* addressee )
   }
 
   // TODO: Attachments
+#endif
 }
 
 void KolabBase::saveTo( KABC::Addressee* addressee ) const
 {
+//TODO port it
+#if 0
   addressee->setUid( uid() );
   addressee->setNote( body() );
   addressee->setCategories( categories().split( ',', QString::SkipEmptyParts ) );
@@ -154,7 +159,7 @@ void KolabBase::saveTo( KABC::Addressee* addressee ) const
     addressee->setSecrecy( KABC::Secrecy( KABC::Secrecy::Public ) );
     break;
   }
-
+#endif
   // TODO: Attachments
 }
 
@@ -313,6 +318,8 @@ bool KolabBase::loadAttribute( QDomElement& element )
 
 bool KolabBase::saveAttributes( QDomElement& element ) const
 {
+  //TODO port it
+#if 0
   writeString( element, "product-id", productID() );
   writeString( element, "uid", uid() );
   writeString( element, "body", body() );
@@ -325,6 +332,7 @@ bool KolabBase::saveAttributes( QDomElement& element ) const
     writeString( element, "pilot-sync-id", QString::number( pilotSyncId() ) );
   if ( hasPilotSyncStatus() )
     writeString( element, "pilot-sync-status", QString::number( pilotSyncStatus() ) );
+#endif
   return true;
 }
 
