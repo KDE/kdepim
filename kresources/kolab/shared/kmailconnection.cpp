@@ -64,7 +64,6 @@ KMailConnection::~KMailConnection()
   mKmailGroupwareInterface = 0;
 }
 
-static const char* dcopObjectId = "KMailICalIface";
 bool KMailConnection::connectToKMail()
 {
   if ( !mKmailGroupwareInterface ) {
@@ -81,6 +80,19 @@ bool KMailConnection::connectToKMail()
     }
 //TODO verify interface
     mKmailGroupwareInterface = new QDBusInterface( dbusService, "org.kde.kmail", "/Groupware", QDBusConnection::sessionBus());
+    //typedef QMap<quint32, QString> Quint32StringMap;
+   //Q_DECLARE_METATYPE(Quint32StringMap)
+    //qDBusRegisterMetaType<Quint32StringMap>();
+  //TODO verify if it connected.
+
+    QDBusConnection dbus = QDBusConnection::sessionBus();
+    dbus.connect( DBUS_KMAIL, "/GroupWare", "org.kde.kmail.groupware", "incidenceAdded", this, SLOT(fromKMailAddIncidence(QString,QString,quint32,int,QString) ) );
+    dbus.connect( DBUS_KMAIL, "/GroupWare", "org.kde.kmail.groupware", "incidenceDeleted", this, SLOT( fromKMailDelIncidence(QString,QString,QString) ) );
+    dbus.connect( DBUS_KMAIL, "/GroupWare", "org.kde.kmail.groupware", "signalRefresh", this, SLOT( fromKMailRefresh(QString,QString) ) );
+    dbus.connect( DBUS_KMAIL, "/GroupWare", "org.kde.kmail.groupware", "subresourceAdded", this, SLOT(fromKMailAddSubresource( QString, QString, QString, bool, bool ) ) );
+    dbus.connect( DBUS_KMAIL, "/GroupWare", "org.kde.kmail.groupware", "subresourceDeleted", this, SLOT(fromKMailDelSubresource(QString,QString) ) );
+    dbus.connect( DBUS_KMAIL, "/GroupWare", "org.kde.kmail.groupware", "asyncLoadResult", this, SLOT( fromKMailAsyncLoadResult(QMap<quint32, QString>, QString, QString) ) );
+
 
 #if 0 // TODO
     // Attach to the KMail signals
