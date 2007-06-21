@@ -21,7 +21,7 @@
 #include "akonadi_serializer_sms.h"
 
 #include <kdebug.h>
-#include <sms.h>
+#include <libkmobiletools/sms.h>
 #include <boost/shared_ptr.hpp>
 
 #include <libakonadi/item.h>

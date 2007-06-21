@@ -22,11 +22,11 @@
  ***************************************************************************/
 #include "testlibkmobiletools.h"
 #include <libkmobiletools/sms.h>
+#include <libkmobiletools/akonadi/akonadi_serializer_sms.cpp>
 #include <QTextStream>
 #include <kcmdlineargs.h>
 #include <QTimer>
 #include <libakonadi/collection.h>
-#include "akonadi/akonadi_serializer_sms.cpp"
 #include <KDateTime>
 
 // using namespace KMobileTools;
