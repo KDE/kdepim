@@ -35,7 +35,6 @@
 #define KOLABBASE_H
 
 #include <qdom.h>
-#include <QDateTime>
 #include <KDateTime>
 #include <QColor>
 
@@ -83,8 +82,8 @@ public:
   virtual void setCategories( const QString& categories );
   virtual QString categories() const;
 
-  virtual void setCreationDate( const QDateTime& date );
-  virtual QDateTime creationDate() const;
+  virtual void setCreationDate( const KDateTime& date );
+  virtual KDateTime creationDate() const;
 
   virtual void setLastModified( const KDateTime& date );
   virtual KDateTime lastModified() const;
@@ -101,9 +100,9 @@ public:
   virtual int pilotSyncStatus() const;
 
   // String - Date conversion methods
-  static QString dateTimeToString( const QDateTime& time );
+  static QString dateTimeToString( const KDateTime& time );
   static QString dateToString( const QDate& date );
-  static QDateTime stringToDateTime( const QString& time );
+  static KDateTime stringToDateTime( const QString& time );
   static QDate stringToDate( const QString& date );
 
   // String - Sensitivity conversion methods
@@ -157,13 +156,13 @@ protected:
   // Write a string tag
   static void writeString( QDomElement&, const QString&, const QString& );
 
-  QDateTime localToUTC( const KDateTime& time ) const;
-  KDateTime utcToLocal( const QDateTime& time ) const;
+  KDateTime localToUTC( const KDateTime& time ) const;
+  KDateTime utcToLocal( const KDateTime& time ) const;
 
   QString mUid;
   QString mBody;
   QString mCategories;
-  QDateTime mCreationDate;
+  KDateTime mCreationDate;
   KDateTime mLastModified;
   Sensitivity mSensitivity;
   const KTimeZone *mTimeZone;

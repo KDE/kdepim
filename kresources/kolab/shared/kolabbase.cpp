@@ -84,7 +84,7 @@ void KolabBase::saveTo( KCal::Incidence* incidence ) const
 void KolabBase::setFields( const KABC::Addressee* addressee )
 {
 //TODO port it
-#if 0
+#if 1
   // An addressee does not have a creation date, so somehow we should
   // make one, if this is a new entry
 
@@ -97,7 +97,7 @@ void KolabBase::setFields( const KABC::Addressee* addressee )
   kDebug(5006) << "Creation time string: " << creationString << endl;
   KDateTime creationDate;
   if ( creationString.isEmpty() ) {
-    creationDate = QDateTime::currentDateTime();
+    creationDate = KDateTime::currentDateTime(KDateTime::Spec( mTimeZone ) );
     kDebug(5006) << "Creation date set to current time\n";
   }
   else {
@@ -139,12 +139,10 @@ void KolabBase::setFields( const KABC::Addressee* addressee )
 
 void KolabBase::saveTo( KABC::Addressee* addressee ) const
 {
-//TODO port it
-#if 0
   addressee->setUid( uid() );
   addressee->setNote( body() );
   addressee->setCategories( categories().split( ',', QString::SkipEmptyParts ) );
-  addressee->setRevision( lastModified().toTimeZone( mTimeZone ).dateTime() );
+  addressee->setRevision( lastModified().toZone( mTimeZone ).dateTime() );
   addressee->insertCustom( "KOLAB", "CreationDate",
                            dateTimeToString( creationDate() ) );
 
@@ -159,7 +157,6 @@ void KolabBase::saveTo( KABC::Addressee* addressee ) const
     addressee->setSecrecy( KABC::Secrecy( KABC::Secrecy::Public ) );
     break;
   }
-#endif
   // TODO: Attachments
 }
 
@@ -193,12 +190,12 @@ QString KolabBase::categories() const
   return mCategories;
 }
 
-void KolabBase::setCreationDate( const QDateTime& date )
+void KolabBase::setCreationDate( const KDateTime& date )
 {
   mCreationDate = date;
 }
 
-QDateTime KolabBase::creationDate() const
+KDateTime KolabBase::creationDate() const
 {
   return mCreationDate;
 }
@@ -300,7 +297,7 @@ bool KolabBase::loadAttribute( QDomElement& element )
   else if ( tagName == "creation-date" )
     setCreationDate( stringToDateTime( element.text() ) );
   else if ( tagName == "last-modification-date" )
-    setLastModified( KDateTime( stringToDateTime( element.text() ), mTimeZone ) );
+    setLastModified( KDateTime( stringToDateTime( element.text() )) );
   else if ( tagName == "sensitivity" )
     setSensitivity( stringToSensitivity( element.text() ) );
   else if ( tagName == "product-id" )
@@ -381,9 +378,9 @@ QDomDocument KolabBase::domTree()
 }
 
 
-QString KolabBase::dateTimeToString( const QDateTime& time )
+QString KolabBase::dateTimeToString( const KDateTime& time )
 {
-  return time.toString( Qt::ISODate ) + 'Z';
+  return time.toString( KDateTime::ISODate ) + 'Z';
 }
 
 QString KolabBase::dateToString( const QDate& date )
@@ -391,12 +388,12 @@ QString KolabBase::dateToString( const QDate& date )
   return date.toString( Qt::ISODate );
 }
 
-QDateTime KolabBase::stringToDateTime( const QString& _date )
+KDateTime KolabBase::stringToDateTime( const QString& _date )
 {
   QString date( _date );
   if ( date.endsWith( "Z" ) )
     date.truncate( date.length() - 1 );
-  return QDateTime::fromString( date, Qt::ISODate );
+  return KDateTime::fromString( date, KDateTime::ISODate );
 }
 
 QDate KolabBase::stringToDate( const QString& date )
@@ -446,14 +443,14 @@ void KolabBase::writeString( QDomElement& element, const QString& tag,
   }
 }
 
-QDateTime KolabBase::localToUTC( const KDateTime& time ) const
+KDateTime KolabBase::localToUTC( const KDateTime& time ) const
 {
-  return time.toUtc().dateTime();
+  return time.toUtc();
 }
 
-KDateTime KolabBase::utcToLocal( const QDateTime& time ) const
+KDateTime KolabBase::utcToLocal( const KDateTime& time ) const
 {
-  QDateTime dt = time;
-  dt.setTimeSpec( Qt::UTC );
-  return KDateTime( dt, mTimeZone );
+  KDateTime dt = time;
+  dt.setTimeSpec( KDateTime::UTC );
+  return dt;
 }
