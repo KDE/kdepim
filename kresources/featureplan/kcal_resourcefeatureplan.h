@@ -25,11 +25,12 @@
 
 #include "kde-features.h"
 
+#include "featureplan_export.h"
+
 #include <kcal/resourcecached.h>
 
 #include <kabc/locknull.h>
 
-#include <kdemacros.h>
 #include <kconfig.h>
 
 namespace KCal {
@@ -37,7 +38,7 @@ namespace KCal {
 /**
   This class represents a featureplan (in KDE XML format)
 */
-class KDE_EXPORT ResourceFeaturePlan : public ResourceCached
+class KCAL_FEATUREPLAN_EXPORT ResourceFeaturePlan : public ResourceCached
 {
     Q_OBJECT
   public:

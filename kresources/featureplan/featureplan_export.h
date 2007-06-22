@@ -1,7 +1,5 @@
-/*
-    This file is part of kdepim.
-
-    Copyright (c) 2004 Cornelius Schumacher <schumacher@kde.org>
+/*  This file is part of the KDE project
+    Copyright (C) 2007 David Faure <faure@kde.org>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
@@ -19,35 +17,24 @@
     Boston, MA 02110-1301, USA.
 */
 
-#ifndef RESOURCEFEATUREPLANCONFIG_H
-#define RESOURCEFEATUREPLANCONFIG_H
+#ifndef FEATUREPLAN_EXPORT_H
+#define FEATUREPLAN_EXPORT_H
 
-#include <kresources/configwidget.h>
-#include "featureplan_export.h"
+/* needed for KDE_EXPORT and KDE_IMPORT macros */
+#include <kdemacros.h>
 
-class KLineEdit;
-class KUrlRequester;
-class QCheckBox;
+#ifndef KCAL_FEATUREPLAN_EXPORT
+# if defined(MAKE_KCAL_RESOURCEFEATUREPLAN_LIB)
+   /* We are building this library */ 
+#  define KCAL_FEATUREPLAN_EXPORT KDE_EXPORT
+# else
+   /* We are using this library */ 
+#  define KCAL_FEATUREPLAN_EXPORT KDE_IMPORT
+# endif
+#endif
 
-namespace KCal {
-
-class KCAL_FEATUREPLAN_EXPORT ResourceFeaturePlanConfig : public KRES::ConfigWidget
-{
-  Q_OBJECT
-
-  public:
-    ResourceFeaturePlanConfig( QWidget *parent = 0 );
-
-  public slots:
-    void loadSettings( KRES::Resource * );
-    void saveSettings( KRES::Resource * );
-
-  private:
-    KUrlRequester *mFilename;
-    KLineEdit *mFilterEmail;
-    QCheckBox *mCvsCheck;
-};
-
-}
+# ifndef KCAL_FEATUREPLAN_EXPORT_DEPRECATED
+#  define KCAL_FEATUREPLAN_EXPORT_DEPRECATED KDE_DEPRECATED KCAL_FEATUREPLAN_EXPORT
+# endif
 
 #endif
