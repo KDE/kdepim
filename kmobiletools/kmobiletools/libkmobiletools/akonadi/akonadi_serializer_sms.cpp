@@ -1,6 +1,6 @@
 /*
     Copyright (c) 2007 Till Adam <adam@kde.org>
-    Copyright (c) 2007 Till Adam <marco@kmobiletools.org> (adapted to kmobiletools)
+    Copyright (c) 2007 Marco Gulino <marco@kmobiletools.org> (adapted to kmobiletools)
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
