@@ -21,9 +21,9 @@
 #ifndef KCAL_RESOURCEREMOTEDIR_H
 #define KCAL_RESOURCEREMOTEDIR_H
 
+#include "remote_export.h"
 #include <kurl.h>
 #include <kdirwatch.h>
-#include <kdemacros.h>
 
 #include <kcal/incidence.h>
 #include <kcal/calendarlocal.h>
@@ -46,7 +46,7 @@ namespace KCal {
 /**
   This class provides a calendar stored as a remote file.
 */
-class KDE_EXPORT ResourceRemote : public ResourceCached
+class KCAL_RESOURCEREMOTE_EXPORT ResourceRemote : public ResourceCached
 {
     Q_OBJECT
 

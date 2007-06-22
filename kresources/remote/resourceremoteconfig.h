@@ -25,8 +25,7 @@
 
 #include <kresources/resource.h>
 #include <kresources/configwidget.h>
-
-#include <kdemacros.h>
+#include "remote_export.h"
 
 class KUrlRequester;
 
@@ -40,7 +39,7 @@ class ResourceCachedSaveConfig;
   
   @see ResourceRemote
 */
-class KDE_EXPORT ResourceRemoteConfig : public KRES::ConfigWidget
+class KCAL_RESOURCEREMOTE_EXPORT ResourceRemoteConfig : public KRES::ConfigWidget
 { 
     Q_OBJECT
   public:
