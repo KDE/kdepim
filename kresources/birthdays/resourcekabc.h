@@ -30,14 +30,13 @@
 #include <kcal/resourcecalendar.h>
 #include <kabc/addressbook.h>
 
-#include <kdemacros.h>
 
 namespace KCal {
 
 /**
   Resource providing birthdays and anniversaries as events.
 */
-class KDE_EXPORT ResourceKABC : public ResourceCalendar
+class ResourceKABC : public ResourceCalendar
 {
     Q_OBJECT
 
