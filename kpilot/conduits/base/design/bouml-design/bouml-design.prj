@@ -1,6 +1,6 @@
 format 38
 "bouml-design"
-  revision 18
+  revision 20
   modified_by 10 "bertjan"
 
 
@@ -36,7 +36,7 @@ format 38
 
   mark_for_import
   
-  ncouples 11
+  ncouples 12
   key "gxmi path" value "/home/bertjan/workspace/kpilot/conduits/base/design/bouml-design/test.xmi"
   key "gxmi gen views" value "no"
   key "gxmi encoding" value "ISO-8859-1"
@@ -48,6 +48,7 @@ format 38
   key "gxmi primitive type" value "no"
   key "gxmi gen extensions" value "no"
   key "gxmi linefeed" value "no"
+  key "check-out-cmd" value "specify the command with the file replaced by %file"
   classview 128010 "Record Conduit"
     //class diagram settings
     draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default show_members_stereotype default show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default show_infonote default shadow default
@@ -66,12 +67,12 @@ format 38
     show_infonote default drawing_language default
     
     classdiagram 128138 "Class Diagram"
-      draw_all_relations no hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default show_members_stereotype default show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default show_infonote default shadow default
+      draw_all_relations no hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default show_members_stereotype default show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language c++ show_context_mode default auto_label_position no show_infonote default shadow default
       size A4
     end
 
     sequencediagram 128010 "4.1 HotSync"
-      show_full_operations_definition no write_horizontally default drawing_language c++ draw_all_relations default shadow yes
+      show_full_operations_definition yes write_horizontally default drawing_language c++ draw_all_relations default shadow yes
       size A4
     end
 
@@ -101,7 +102,7 @@ format 38
     end
 
     class 128010 "RecordConduit"
-      visibility package 
+      abstract visibility package 
       cpp_decl "${comment}${template}class ${name}${inherit} {
 ${members}};
 ${inlines}
@@ -163,9 +164,22 @@ ${inlines}
 	  b multiplicity "" parent class_ref 128906 // DataProxy
       end
 
-      operation 131722 "askConfirmation"
-	public explicit_return_type ""
+      operation 128075 "RecordConduit"
+	public explicit_return_type "void"
 	nparams 0
+	cpp_decl "    ${comment}${inline}${name}${(}${)}${volatile}${throw};
+"
+	cpp_def "${comment}${inline}${class}::${name}${(}${)}${volatile}${throw} {
+  ${body}}
+"
+	
+	
+      end
+
+      operation 131722 "askConfirmation"
+	public explicit_return_type "bool"
+	nparams 1
+	  param in name "volatilityMessage" explicit_type "QString"
 	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
 "
 	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}{
@@ -188,7 +202,7 @@ ${inlines}
       end
 
       operation 131338 "createBackupDatabase"
-	public explicit_return_type ""
+	public explicit_return_type "void"
 	nparams 0
 	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
 "
@@ -200,64 +214,18 @@ ${inlines}
       end
 
       operation 128266 "loadSettings"
-	public explicit_return_type ""
+	abstract cpp_virtual public explicit_return_type "void"
 	nparams 0
 	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
 "
-	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}{
-  ${body}}
-"
 	
 	
-      end
-
-      operation 129802 "syncRecords"
-	public explicit_return_type ""
-	nparams 3
-	  param inout name "hh" explicit_type "PilotRecord"
-	  param inout name "backup" explicit_type "PilotRecord"
-	  param inout name "pc" explicit_type "Record"
-	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
-"
-	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}{
-  ${body}}
-"
-	
-	
-      end
-
-      operation 128075 "RecordConduit"
-	public explicit_return_type ""
-	nparams 0
-	cpp_decl "    ${comment}${inline}${name}${(}${)}${volatile}${throw};
-"
-	cpp_def "${comment}${inline}${class}::${name}${(}${)}${volatile}${throw} {
-  ${body}}
-"
-	
-	
-      end
-
-      operation 133642 "test"
-	public explicit_return_type ""
-	nparams 0
-	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
-"
-	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}{
-  ${body}}
-"
-	
-	
-	comment "This method is called when the conduit is run in Test Mode. The implementing class can do whatever it wants to do for test purposes."
       end
 
       operation 133770 "postTest"
-	public explicit_return_type ""
+	abstract cpp_virtual public explicit_return_type "void"
 	nparams 0
 	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
-"
-	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}{
-  ${body}}
 "
 	
 	
@@ -265,21 +233,40 @@ ${inlines}
       end
 
       operation 133898 "preTest"
-	public explicit_return_type ""
+	abstract cpp_virtual public explicit_return_type "void"
 	nparams 0
 	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
-"
-	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}{
-  ${body}}
 "
 	
 	
 	comment "This operation is called before test and can be used to set things up for testing purposes."
       end
+
+      operation 129802 "syncRecords"
+	abstract cpp_virtual public explicit_return_type "void"
+	nparams 3
+	  param inout name "hh" explicit_type "PilotRecord"
+	  param inout name "backup" explicit_type "PilotRecord"
+	  param inout name "pc" type class_ref 129034 // Record
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	
+	
+      end
+
+      operation 133642 "test"
+	abstract cpp_virtual public explicit_return_type "void"
+	nparams 0
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	
+	
+	comment "This method is called when the conduit is run in Test Mode. The implementing class can do whatever it wants to do for test purposes."
+      end
     end
 
     class 128266 "ConduitAction"
-      visibility package 
+      abstract visibility package 
       cpp_decl "${comment}${template}class ${name}${inherit} {
 ${members}};
 ${inlines}
@@ -330,7 +317,7 @@ ${inlines}
       operation 128650 "IDMapping"
 	public explicit_return_type ""
 	nparams 1
-	  param inout name "dbase" explicit_type "PilotDatabase*"
+	  param inout name "&conduit" explicit_type "QString"
 	cpp_decl "    ${comment}${inline}${name}${(}${)}${volatile}${throw};
 "
 	cpp_def "${comment}${inline}${class}::${name}${(}${)}${volatile}${throw} {
@@ -340,9 +327,10 @@ ${inlines}
 	
       end
 
-      operation 128778 "isValid"
+      operation 128778 "validate"
 	public explicit_return_type "bool"
-	nparams 0
+	nparams 1
+	  param inout name "*backupDb" type class_ref 128906 // DataProxy
 	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
 "
 	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}{
@@ -350,12 +338,15 @@ ${inlines}
 "
 	
 	
+	comment "Validates the mapping file with given dataproxy. The mapping is considered valid if:
+1. The number of mappings matches the number of records in the dataproxy.
+2. Every record that is in the backup database has a mapping."
       end
 
-      operation 129290 "getPCId"
-	public explicit_return_type ""
+      operation 129290 "pcRecordID"
+	public explicit_return_type "QString"
 	nparams 1
-	  param inout name "pid" explicit_type "uint"
+	  param inout name "hhRecordId" explicit_type "uint"
 	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
 "
 	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}{
@@ -363,12 +354,13 @@ ${inlines}
 "
 	
 	
+	comment "Returns the pc record ID for given handheld record. Returns QString::Null if no mapping is found."
       end
 
-      operation 130058 "getHHId"
-	public explicit_return_type ""
+      operation 130058 "hhRecordId"
+	public explicit_return_type "recordid_t"
 	nparams 1
-	  param inout name "pcid" explicit_type "QString"
+	  param in name "pcRecordID" explicit_type "QString"
 	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
 "
 	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}{
@@ -376,11 +368,13 @@ ${inlines}
 "
 	
 	
+	comment "Returns the id for the HH record which is mapped to the given pc record or 0 if there is no mapping."
       end
 
       operation 130442 "setLastSyncedDate"
 	public explicit_return_type ""
-	nparams 0
+	nparams 1
+	  param in name "dateTime" explicit_type "QDateTime"
 	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
 "
 	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}{
@@ -391,8 +385,9 @@ ${inlines}
       end
 
       operation 130570 "setLastSyncedPC"
-	public explicit_return_type ""
-	nparams 0
+	public explicit_return_type "void"
+	nparams 1
+	  param in name "lastSyncPC" explicit_type "uint"
 	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
 "
 	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}{
@@ -403,7 +398,7 @@ ${inlines}
       end
 
       operation 130698 "save"
-	public explicit_return_type ""
+	public explicit_return_type "void"
 	nparams 0
 	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
 "
@@ -490,7 +485,7 @@ ${inlines}
       end
 
       operation 129162 "setStartCount"
-	public explicit_return_type ""
+	public explicit_return_type "void"
 	nparams 1
 	  param inout name "t" explicit_type "uint"
 	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
@@ -583,7 +578,7 @@ ${inlines}
     end
 
     class 128650 "HHProxyDatabase"
-      visibility package 
+      abstract visibility package 
       cpp_decl "${comment}${template}class ${name}${inherit} {
 ${members}};
 ${inlines}
@@ -613,20 +608,8 @@ ${inlines}
 	
       end
 
-      operation 130314 "writeAppBlock"
-	public explicit_return_type ""
-	nparams 0
-	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
-"
-	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}{
-  ${body}}
-"
-	
-	
-      end
-
       operation 129480 "resetSyncFlags"
-	public explicit_return_type ""
+	public explicit_return_type "void"
 	nparams 0
 	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
 "
@@ -638,15 +621,30 @@ ${inlines}
       end
 
       operation 128331 "readAppBlock"
-	public explicit_return_type ""
+	abstract cpp_virtual public explicit_return_type "void"
 	nparams 0
 	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
 "
-	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}{
-  ${body}}
+	
+	
+      end
+
+      operation 130314 "writeAppBlock"
+	abstract cpp_virtual public explicit_return_type "void"
+	nparams 0
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
 "
 	
 	
+      end
+
+      classrelation 129930 // fDatabase (<unidirectional association>)
+	relation 129930 --->
+	  a role_name "fDatabase" multiplicity "1" protected
+	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} * ${name}${value};
+"
+	    classrelation_ref 129930 // fDatabase (<unidirectional association>)
+	  b multiplicity "" parent class_ref 128203 // PilotDatabase
       end
     end
 
@@ -750,19 +748,7 @@ ${inlines}
       end
 
       operation 132618 "syncFinished"
-	public explicit_return_type ""
-	nparams 0
-	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
-"
-	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}{
-  ${body}}
-"
-	
-	
-      end
-
-      operation 132746 "getCUDCounter"
-	public explicit_return_type ""
+	public explicit_return_type "void"
 	nparams 0
 	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
 "
@@ -774,7 +760,7 @@ ${inlines}
       end
 
       operation 133514 "setIterateMode"
-	public explicit_return_type ""
+	public explicit_return_type "void"
 	nparams 1
 	  param inout name "mode" explicit_type "Mode"
 	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
@@ -787,7 +773,7 @@ ${inlines}
       end
 
       operation 132874 "commitChanges"
-	abstract cpp_virtual public explicit_return_type ""
+	abstract cpp_virtual public explicit_return_type "void"
 	nparams 0
 	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
 "
@@ -796,8 +782,9 @@ ${inlines}
       end
 
       operation 128012 "lookForMatch"
-	abstract cpp_virtual public explicit_return_type ""
-	nparams 0
+	abstract cpp_virtual public return_type class_ref 129034 // Record
+	nparams 1
+	  param inout name "*rec" type class_ref 129034 // Record
 	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
 "
 	
@@ -806,7 +793,7 @@ ${inlines}
       end
 
       operation 133130 "loadAllRecords"
-	abstract cpp_virtual public explicit_return_type ""
+	abstract cpp_virtual public explicit_return_type "void"
 	nparams 0
 	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
 "
@@ -815,21 +802,43 @@ ${inlines}
       end
 
       operation 132362 "nextRecord"
-	abstract cpp_virtual public explicit_return_type ""
+	abstract cpp_virtual public return_type class_ref 129034 // Record
 	nparams 0
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	
+	
+	comment "Dependend on the iterateMode it should give the next record, the next modified record or 0 if there are no more records to iterate over."
+      end
+
+      operation 132490 "readRecordById"
+	abstract cpp_virtual public return_type class_ref 129034 // Record
+	nparams 1
+	  param inout name "id" explicit_type "QVariant"
 	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
 "
 	
 	
       end
 
-      operation 132490 "readRecordById"
-	abstract cpp_virtual public explicit_return_type ""
+      operation 134026 "volatilityMessage"
+	abstract cpp_virtual public explicit_return_type "QString"
 	nparams 0
 	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
 "
 	
 	
+	comment "Returns QString::Null if everything is ok, or a message explaining the cause (invalid count, or volatility exceeds configured threshold)."
+      end
+
+      classrelation 129802 // fRecords (<unidirectional association>)
+	relation 129802 --->
+	  stereotype "map"
+	  a role_name "fRecords" multiplicity "*" protected
+	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} * ${name}${value};
+"
+	    classrelation_ref 129802 // fRecords (<unidirectional association>)
+	  b multiplicity "" parent class_ref 129034 // Record
       end
     end
 
@@ -846,6 +855,18 @@ ${inlines}
     end
 
     class 128203 "PilotDatabase"
+      visibility package 
+      cpp_decl "${comment}${template}class ${name}${inherit} {
+${members}};
+${inlines}
+"
+      java_decl ""
+      idl_decl ""
+      explicit_switch_type ""
+      
+    end
+
+    class 129034 "Record"
       visibility package 
       cpp_decl "${comment}${template}class ${name}${inherit} {
 ${members}};
