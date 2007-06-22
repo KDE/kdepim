@@ -66,6 +66,7 @@ KMailConnection::~KMailConnection()
 
 bool KMailConnection::connectToKMail()
 {
+   kDebug()<<" bool KMailConnection::connectToKMail()\n";
   if ( !mKmailGroupwareInterface ) {
     QString error;
     QString dbusService;
@@ -79,6 +80,7 @@ bool KMailConnection::connectToKMail()
       return false;
     }
 //TODO verify interface
+    qDebug()<<" dbusService :"<<dbusService<<endl;
     mKmailGroupwareInterface = new QDBusInterface( dbusService, "org.kde.kmail", "/Groupware", QDBusConnection::sessionBus());
     //typedef QMap<quint32, QString> Quint32StringMap;
    //Q_DECLARE_METATYPE(Quint32StringMap)
@@ -275,6 +277,7 @@ bool KMailConnection::kmailUpdate( const QString& resource,
   } else
     return false;
 #endif
+  return false;
 }
 
 bool KMailConnection::kmailStorageFormat( KMail::StorageFormat& type,
