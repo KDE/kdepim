@@ -335,6 +335,8 @@ QByteArray SMS::assembleHeaders()
     QByteArray ret;
     h=date();
     if(h) ret+= h->as7BitString()+'\n';
+    h=from();
+    if(h) ret+= h->as7BitString()+'\n';
     return ret + Content::assembleHeaders();
 }
 
