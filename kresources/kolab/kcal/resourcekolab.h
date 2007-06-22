@@ -49,7 +49,7 @@ namespace KCal {
 struct TemporarySilencer;
 
 class KCALKOLAB_EXPORT ResourceKolab : public KCal::ResourceCalendar,
-                      public KCal::IncidenceBase::Observer,
+                      public KCal::IncidenceBase::IncidenceObserver,
                       public Kolab::ResourceKolabBase
 {
   Q_OBJECT
