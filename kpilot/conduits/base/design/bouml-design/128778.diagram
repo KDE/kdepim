@@ -175,7 +175,7 @@ msg 130251 synchronous
 msg 130442 synchronous
   from durationcanvas_ref 128266 // 128010
   to durationcanvas_ref 130314 // 129290
-  yz 289 2000 msg operation_ref 128778 // "validate(in *backupDb : DataProxy) : bool"
+  yz 289 2000 msg operation_ref 128778 // "isValid(in *backupDb : DataProxy) : bool"
   show_full_operations_definition default drawing_language default
   label_xy 144 277
 msg 130507 synchronous

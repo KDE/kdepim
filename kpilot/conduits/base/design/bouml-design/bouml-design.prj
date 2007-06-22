@@ -1,6 +1,6 @@
 format 38
 "bouml-design"
-  revision 21
+  revision 22
   modified_by 10 "bertjan"
 
 
@@ -82,7 +82,7 @@ format 38
     end
 
     sequencediagram 128522 "5.2 Full Sync"
-      show_full_operations_definition no write_horizontally default drawing_language c++ draw_all_relations default shadow yes
+      show_full_operations_definition yes write_horizontally default drawing_language c++ draw_all_relations default shadow yes
       size A4
     end
 
@@ -327,7 +327,7 @@ ${inlines}
 	
       end
 
-      operation 128778 "validate"
+      operation 128778 "isValid"
 	public explicit_return_type "bool"
 	nparams 1
 	  param in name "*backupDb" type class_ref 128906 // DataProxy
