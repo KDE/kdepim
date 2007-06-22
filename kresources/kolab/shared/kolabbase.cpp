@@ -83,8 +83,6 @@ void KolabBase::saveTo( KCal::Incidence* incidence ) const
 
 void KolabBase::setFields( const KABC::Addressee* addressee )
 {
-//TODO port it
-#if 1
   // An addressee does not have a creation date, so somehow we should
   // make one, if this is a new entry
 
@@ -134,7 +132,6 @@ void KolabBase::setFields( const KABC::Addressee* addressee )
   }
 
   // TODO: Attachments
-#endif
 }
 
 void KolabBase::saveTo( KABC::Addressee* addressee ) const
@@ -315,21 +312,18 @@ bool KolabBase::loadAttribute( QDomElement& element )
 
 bool KolabBase::saveAttributes( QDomElement& element ) const
 {
-  //TODO port it
-#if 0
   writeString( element, "product-id", productID() );
   writeString( element, "uid", uid() );
   writeString( element, "body", body() );
   writeString( element, "categories", categories() );
   writeString( element, "creation-date", dateTimeToString( creationDate() ) );
   writeString( element, "last-modification-date",
-               dateTimeToString( lastModified().toTimeZone( mTimeZone ).dateTime() ) );
+               dateTimeToString( lastModified().toZone( mTimeZone ) ) );
   writeString( element, "sensitivity", sensitivityToString( sensitivity() ) );
   if ( hasPilotSyncId() )
     writeString( element, "pilot-sync-id", QString::number( pilotSyncId() ) );
   if ( hasPilotSyncStatus() )
     writeString( element, "pilot-sync-status", QString::number( pilotSyncStatus() ) );
-#endif
   return true;
 }
 
