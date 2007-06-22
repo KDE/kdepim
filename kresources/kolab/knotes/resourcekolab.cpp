@@ -74,12 +74,12 @@ bool ResourceKolab::doOpen()
   config.setGroup( configGroupName );
 
   // Get the list of Notes folders from KMail
-  QList<KMailICalIface::SubResource> subResources;
+  QList<KMail::SubResource> subResources;
   if ( !kmailSubresources( subResources, QString::fromLatin1(kmailContentsType) ) )
     return false;
 
   // Make the resource map from the folder list
-  QList<KMailICalIface::SubResource>::ConstIterator it;
+  QList<KMail::SubResource>::ConstIterator it;
   mSubResources.clear();
   for ( it = subResources.begin(); it != subResources.end(); ++it ) {
     const QString subResource = (*it).location;
@@ -297,7 +297,7 @@ bool ResourceKolab::fromKMailAddIncidence( const QString& type,
   const bool silent = mSilent;
   mSilent = true;
   QString mimetype;
-  if ( format == KMailICalIface::StorageXML )
+  if ( format == KMail::StorageXML )
     mimetype = attachmentMimeType;
   else
     mimetype = inlineMimeType;
@@ -409,7 +409,7 @@ void ResourceKolab::fromKMailAsyncLoadResult( const QMap<quint32, QString>& map,
   const bool silent = mSilent;
   mSilent = true;
   QString mimetype;
-  if ( kmailStorageFormat( folder ) == KMailICalIface::StorageXML )
+  if ( kmailStorageFormat( folder ) == KMail::StorageXML )
     mimetype = attachmentMimeType;
   else
     mimetype = inlineMimeType;
