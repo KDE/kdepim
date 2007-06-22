@@ -37,8 +37,6 @@
 #include "task.h"
 #include "journal.h"
 
-//#include <kio/observer.h>
-//#include <kio/uiserver_stub.h>
 #include <kapplication.h>
 #include <kcal/icalformat.h>
 #include <libkdepim/kincidencechooser.h>
@@ -167,10 +165,12 @@ bool ResourceKolab::loadSubResource( const QString& subResource,
                            : !strcmp(mimetype, "application/x-vnd.kolab.journal") ? i18n( "Loading journals..." )
                            : i18n( "Loading events..." );
   const bool useProgress = qApp && qApp->type() != QApplication::Tty && count > mProgressDialogIncidenceLimit;
-  if ( useProgress )
-    (void)::Observer::self(); // ensure kio_uiserver is running
-  UIServer_stub uiserver( "kio_uiserver", "UIServer" );
+//TODO port me kde4
+#if 0
+  //  if ( useProgress )
+  //  (void)::Observer::self(); // ensure kio_uiserver is running
   int progressId = 0;
+  QDBusInterface uiserver( "org.kde.kio_uiserver", "/UIServer", QString(), QDBusConnection::sessionBus() );
   if ( useProgress ) {
     progressId = uiserver.newJob( kapp->dcopClient()->appId(), true );
     uiserver.totalFiles( progressId, count );
@@ -206,6 +206,7 @@ bool ResourceKolab::loadSubResource( const QString& subResource,
 
   if ( progressId )
     uiserver.jobFinished( progressId );
+#endif
   return true;
 }
 
@@ -293,7 +294,8 @@ bool ResourceKolab::doSave()
 void ResourceKolab::incidenceUpdated( KCal::IncidenceBase* incidencebase )
 {
   if ( incidencebase->isReadOnly() ) return; // Should not happen (TM)
-  incidencebase->setSyncStatus( KCal::Event::SYNCMOD );
+//TODO port me kde4
+  //incidencebase->setSyncStatus( KCal::Event::SYNCMOD );
   incidencebase->setLastModified( KDateTime::currentUtcDateTime() );
   // we should probably update the revision number here,
   // or internally in the Event itself when certain things change.
@@ -740,8 +742,11 @@ KCal::Alarm::List ResourceKolab::alarmsTo( const KDateTime& to )
 
 void ResourceKolab::setTimeZoneId( const QString& tzid )
 {
+  //TODO port me kde4
+#if 0
   mCalendar.setTimeZoneId( tzid );
   mFormat.setTimeZone( mCalendar.timeZoneId(), !mCalendar.isLocalTime() );
+#endif
 }
 
 bool ResourceKolab::fromKMailAddIncidence( const QString& type,

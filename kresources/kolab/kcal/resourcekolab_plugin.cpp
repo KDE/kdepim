@@ -35,9 +35,14 @@
 class KolabFactory : public KRES::PluginFactoryBase
 {
 public:
-  KRES::Resource *resource( const KConfig *config )
+  KRES::Resource *resource( const KConfigGroup &config )
   {
     return new KCal::ResourceKolab( config );
+  }
+  //FIXME ?
+  KRES::Resource *resource()
+  {
+    return 0;
   }
 
   KRES::ConfigWidget *configWidget( QWidget* )

@@ -132,6 +132,15 @@ public:
 
   virtual QString subresourceIdentifier( Incidence *incidence );
 
+  //TODO need to implement them
+  virtual void deleteAllEvents() {}
+  virtual void deleteAllTodos(){}
+  virtual void deleteAllJournals(){}
+  virtual void setTimeSpec(const KDateTime::Spec&){}
+  virtual KDateTime::Spec timeSpec() const{}
+  virtual QString timeZoneId() const {}
+  virtual void shiftTimes(const KDateTime::Spec&, const KDateTime::Spec&){}
+
   KABC::Lock* lock();
 
 signals:
