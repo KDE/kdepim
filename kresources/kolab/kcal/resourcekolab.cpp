@@ -63,7 +63,7 @@ static const char* incidenceInlineMimeType = "text/calendar";
 
 
 ResourceKolab::ResourceKolab( const KConfigGroup &config )
-  : ResourceCalendar( config ), ResourceKolabBase( "ResourceKolab-libkcal" ),
+  : ResourceCalendar( config ), ResourceKolabBase( "ResourceKolab_libkcal" ),
     mCalendar( QString::fromLatin1("UTC") ), mOpen( false ),
     mResourceChangedTimer( 0 )
 {

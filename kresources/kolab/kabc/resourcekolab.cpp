@@ -79,7 +79,7 @@ static const char* s_inlineMimeType = "text/x-vcard"; // the new mimetype name i
 
 KABC::ResourceKolab::ResourceKolab()
   : KPIM::ResourceABC(),
-    Kolab::ResourceKolabBase( "ResourceKolab-KABC" ),
+    Kolab::ResourceKolabBase( "ResourceKolab_KABC" ),
     mCachedSubresource( QString() ), mLocked( false )
 {
   setType( "imap" );
@@ -87,7 +87,7 @@ KABC::ResourceKolab::ResourceKolab()
 
 KABC::ResourceKolab::ResourceKolab( const KConfigGroup& config )
   : KPIM::ResourceABC( config ),
-    Kolab::ResourceKolabBase( "ResourceKolab-KABC" ),
+    Kolab::ResourceKolabBase( "ResourceKolab_KABC" ),
     mCachedSubresource( QString() ), mLocked( false )
 {
   setType( "imap" );

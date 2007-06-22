@@ -55,7 +55,6 @@ KMailConnection::KMailConnection( ResourceKolabBase* resource, const QString &un
            SLOT(dbusServiceOwnerChanged(QString,QString,QString)) );
 #endif
   // TODO connect to the dbus signals from kmail here
-  kDebug()<<" uniq :"<<uniq<<endl;
   QDBusConnection::sessionBus().registerObject( uniq,this,QDBusConnection::ExportScriptableSlots|QDBusConnection::ExportScriptableSignals );
 }
 
