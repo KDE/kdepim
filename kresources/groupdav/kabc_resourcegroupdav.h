@@ -23,11 +23,11 @@
 #define KABC_RESOURCEGROUPDAV_H
 
 #include "kabc_resourcegroupwarebase.h"
-#include <kdemacros.h>
+#include "groupdav_export.h"
 
 namespace KABC {
 
-class KDE_EXPORT ResourceGroupDav : public ResourceGroupwareBase
+class KABC_GROUPDAV_EXPORT ResourceGroupDav : public ResourceGroupwareBase
 {
   Q_OBJECT
 

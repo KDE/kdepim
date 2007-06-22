@@ -24,14 +24,14 @@
 #define KCAL_RESOURCEGROUPDAV_H
 
 #include "kcal_resourcegroupwarebase.h"
-
+#include "groupdav_export.h"
 namespace KCal {
 
 
 /**
   This class provides a resource for accessing an GroupDav.org server
 */
-class KDE_EXPORT ResourceGroupDav : public ResourceGroupwareBase
+class KCAL_GROUPDAV_EXPORT ResourceGroupDav : public ResourceGroupwareBase
 {
     Q_OBJECT
   public:
