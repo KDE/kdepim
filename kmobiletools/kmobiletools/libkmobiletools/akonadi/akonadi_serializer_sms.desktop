@@ -1,10 +1,7 @@
 [Misc]
 Encoding=UTF-8
 Name=SMS Serializer
-Name[es]=Serializador de correo
-Name[x-test]=xxSMS Serializerxx
 Comment=An Akonadi serializer plugin for sms objects
-Comment[x-test]=xxAn Akonadi serializer plugin for sms objectsxx
 
 [Plugin]
 Type=application/x-kmobiletools-sms

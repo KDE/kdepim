@@ -15,4 +15,5 @@ Icon=kmobiletoolsAT
 ServiceTypes=KMobileTools/Engine
 Description=KMobileTools default engine, developed interally by the KMobileTools team.\nGood choice with almost all mobile phones, but on some models it lacks advanced features.\nBest choice with Motorola Phones, works good also with Sony Ericsson and Siemens.
 Description[ja]=KMobileTools 開発チームによって内部的に開発されたデフォルトのエンジンです。\nほとんどの携帯電話に適していますが、一部の機種では拡張機能が使えません。\nMotorola には、これが最適のエンジンです。Sony Ericsson と Siemens でもうまく動きます。
+Description[zh_TW]=KMobileTools 預設引擎，由 KMobileTools 開發團隊研發。\n可適用於大部份的行動電話，但對某些電話而言只有最基本的功能。\n目前最適用於 Motorola 的電話，對 Sony Ericsson 與 Siemens 的支援也很好。
 X-KDE-Library=libkmobiletools_at
