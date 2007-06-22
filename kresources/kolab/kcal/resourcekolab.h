@@ -38,17 +38,17 @@
 #include <QTimer>
 #include <QHash>
 
-#include <kdemacros.h>
 #include <kcal/calendarlocal.h>
 #include <kcal/icalformat.h>
 #include <kcal/resourcecalendar.h>
+#include "kcalkolab_export.h"
 #include "../shared/resourcekolabbase.h"
 
 namespace KCal {
 
 struct TemporarySilencer;
 
-class KDE_EXPORT ResourceKolab : public KCal::ResourceCalendar,
+class KCALKOLAB_EXPORT ResourceKolab : public KCal::ResourceCalendar,
                       public KCal::IncidenceBase::Observer,
                       public Kolab::ResourceKolabBase
 {
