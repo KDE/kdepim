@@ -1,9 +1,9 @@
 
-message( STATUS "Kolab and GroupWise resources are disabled." )
+message( STATUS "GroupWise resources are disabled." )
 add_subdirectory( lib ) 
 add_subdirectory( remote ) 
 add_subdirectory( egroupware ) 
-#add_subdirectory( kolab ) 
+add_subdirectory( kolab ) 
 add_subdirectory( slox ) 
 add_subdirectory( featureplan ) 
 add_subdirectory( groupdav ) 

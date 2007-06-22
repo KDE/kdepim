@@ -30,9 +30,10 @@
 #endif
 #if 0
 #include "kresources/kolab/kcal/resourcekolab.h"
-#include "kresources/kolab/kabc/resourcekolab.h"
-#include "kresources/kolab/knotes/resourcekolab.h"
 #endif
+
+#include "kresources/kolab/knotes/resourcekolab.h"
+#include "kresources/kolab/kabc/resourcekolab.h"
 
 #include <kcal/resourcecalendar.h>
 #include <kabc/resource.h>
@@ -159,10 +160,6 @@ class CreateNotesImapResource : public KConfigPropagator::Change
 
     void apply()
     {
-#ifdef __GNUC__
-#warning Port me!
-#endif
-#if 0
       KRES::Manager<ResourceNotes> m( "notes" );
       m.readConfig();
       Kolab::ResourceKolab *r = new Kolab::ResourceKolab();
@@ -170,7 +167,6 @@ class CreateNotesImapResource : public KConfigPropagator::Change
       m.add( r );
       m.setStandardResource( r );
       m.writeConfig();
-#endif
     }
 
 };
