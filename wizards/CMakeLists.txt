@@ -23,7 +23,7 @@ target_link_libraries(groupwarewizard  ${KDE4_KDECORE_LIBS}
 kabc_xmlrpc kcal_xmlrpc knotes_xmlrpc
 kcal_slox kabc_slox
 kabckolab knoteskolab
-#kcalkolab
+kcalkolab
 kabc kcal kdepim kpimidentities
 )
 
@@ -74,8 +74,7 @@ kde4_add_kcfg_files(kolabwizard_SRCS kolabconfig.kcfgc)
 
 kde4_add_executable(kolabwizard ${kolabwizard_SRCS})
 
-# port me: add kcalkolab again below
-target_link_libraries(kolabwizard  ${KDE4_KDECORE_LIBS} ${KDE4_KCAL_LIBS} kdepim kpimidentities kabckolab knoteskolab)
+target_link_libraries(kolabwizard  ${KDE4_KDECORE_LIBS} ${KDE4_KCAL_LIBS} kdepim kpimidentities kabckolab knoteskolab kcalkolab)
 
 install(TARGETS kolabwizard  DESTINATION ${BIN_INSTALL_DIR})
 
