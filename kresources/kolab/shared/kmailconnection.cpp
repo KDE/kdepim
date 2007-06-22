@@ -93,8 +93,8 @@ bool KMailConnection::connectToKMail()
     dbus.connect( DBUS_KMAIL, "/GroupWare", "org.kde.kmail.groupware", "subresourceDeleted", this, SLOT(fromKMailDelSubresource(QString,QString) ) );
     dbus.connect( DBUS_KMAIL, "/GroupWare", "org.kde.kmail.groupware", "asyncLoadResult", this, SLOT( fromKMailAsyncLoadResult(QMap<quint32, QString>, QString, QString) ) );
 
+/*
 
-#if 0 // TODO
     // Attach to the KMail signals
     if ( !connectKMailSignal( "incidenceAdded(QString,QString,quint32,int,QString)",
                               "fromKMailAddIncidence(QString,QString,quint32,int,QString)" ) )
@@ -114,7 +114,7 @@ bool KMailConnection::connectToKMail()
     if ( !connectKMailSignal( "asyncLoadResult(QMap<quint32, QString>, QString, QString)",
                               "fromKMailAsyncLoadResult(QMap<quint32, QString>, QString, QString)" ) )
       kError(5650) << "DCOP connection to asyncLoadResult failed" << endl;
-#endif
+*/
   }
 
   return ( mKmailGroupwareInterface != 0 );
@@ -291,11 +291,10 @@ bool KMailConnection::kmailStorageFormat( KMail::StorageFormat& type,
 
 bool KMailConnection::kmailTriggerSync( const QString &contentsType )
 {
-//TODO port it
-#if 0
   bool ok = connectToKMail();
-  return ok && mKmailGroupwareInterface->triggerSync( contentsType );
-#endif
+  QDBusReply<bool> val =  mKmailGroupwareInterface->call( "triggerSync", contentsType );
+  bool ret = val;
+  return ok && ret;
 }
 
 void KMailConnection::dbusServiceOwnerChanged(const QString & service, const QString & oldOwner, const QString & newOwner)
