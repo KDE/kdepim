@@ -122,7 +122,7 @@ msg 128587 synchronous
   label_xy 49 83
 reflexivemsg 128715 synchronous
   to durationcanvas_ref 128266 // 128010
-  yz 130 2000 msg operation_ref 128522 // "openDatabases(inout dbName : QString&, inout retrieved : bool* = 0L)"
+  yz 130 2000 msg operation_ref 128522 // "openDatabases(in dbName : QString&, in retrieved : bool* = 0L)"
   show_full_operations_definition default drawing_language default
   label_xy 163 127
 reflexivemsg 128778 synchronous
@@ -133,49 +133,49 @@ reflexivemsg 128778 synchronous
 msg 128971 synchronous
   from durationcanvas_ref 128266 // 128010
   to durationcanvas_ref 128843 // 132234
-  yz 159 2000 msg operation_ref 132234 // "HHProxyDatabase(inout *db : PilotDatabase)"
+  yz 159 2000 msg operation_ref 132234 // "HHProxyDatabase(in *db : PilotDatabase)"
   show_full_operations_definition default drawing_language default
   label_xy 143 149
 msg 129227 synchronous
   from durationcanvas_ref 128843 // 132234
   to durationcanvas_ref 129099 // 130698
-  yz 131 2000 msg operation_ref 129034 // "CUDCounter(inout conduit : QString)"
+  yz 131 2000 msg operation_ref 129034 // "CUDCounter(in conduit : QString)"
   show_full_operations_definition default drawing_language default
   label_xy 491 120
 msg 129483 synchronous
   from durationcanvas_ref 128843 // 132234
   to durationcanvas_ref 129355 // 130698
-  yz 154 2000 msg operation_ref 129162 // "setStartCount(inout t : uint) : void"
+  yz 154 2000 msg operation_ref 129162 // "setStartCount(in count : uint) : void"
   show_full_operations_definition default drawing_language default
   label_xy 491 142
 msg 129546 synchronous
   from durationcanvas_ref 128266 // 128010
   to durationcanvas_ref 129418 // 129290
-  yz 264 2000 msg operation_ref 128650 // "IDMapping(inout &conduit : QString)"
+  yz 264 2000 msg operation_ref 128650 // "IDMapping(in &conduit : QString)"
   show_full_operations_definition default drawing_language default
   label_xy 144 253
 msg 129739 synchronous
   from durationcanvas_ref 128266 // 128010
   to durationcanvas_ref 129611 // 132234
-  yz 191 2000 msg operation_ref 132234 // "HHProxyDatabase(inout *db : PilotDatabase)"
+  yz 191 2000 msg operation_ref 132234 // "HHProxyDatabase(in *db : PilotDatabase)"
   show_full_operations_definition default drawing_language default
   label_xy 144 181
 msg 129995 synchronous
   from durationcanvas_ref 129611 // 132234
   to durationcanvas_ref 129867 // 130698
-  yz 213 2000 msg operation_ref 129034 // "CUDCounter(inout conduit : QString)"
+  yz 213 2000 msg operation_ref 129034 // "CUDCounter(in conduit : QString)"
   show_full_operations_definition default drawing_language default
   label_xy 493 202
 msg 130251 synchronous
   from durationcanvas_ref 129611 // 132234
   to durationcanvas_ref 130123 // 130698
-  yz 233 2000 msg operation_ref 129162 // "setStartCount(inout t : uint) : void"
+  yz 233 2000 msg operation_ref 129162 // "setStartCount(in count : uint) : void"
   show_full_operations_definition default drawing_language default
   label_xy 494 221
 msg 130442 synchronous
   from durationcanvas_ref 128266 // 128010
   to durationcanvas_ref 130314 // 129290
-  yz 289 2000 msg operation_ref 128778 // "validate(inout *backupDb : DataProxy) : bool"
+  yz 289 2000 msg operation_ref 128778 // "validate(in *backupDb : DataProxy) : bool"
   show_full_operations_definition default drawing_language default
   label_xy 144 277
 msg 130507 synchronous
@@ -192,13 +192,13 @@ msg 130570 return
 msg 130763 synchronous
   from durationcanvas_ref 130379 // 132746
   to durationcanvas_ref 130635 // 130698
-  yz 282 2000 msg operation_ref 129034 // "CUDCounter(inout conduit : QString)"
+  yz 282 2000 msg operation_ref 129034 // "CUDCounter(in conduit : QString)"
   show_full_operations_definition default drawing_language default
   label_xy 609 271
 msg 131019 synchronous
   from durationcanvas_ref 130379 // 132746
   to durationcanvas_ref 130891 // 130698
-  yz 309 2000 msg operation_ref 129162 // "setStartCount(inout t : uint) : void"
+  yz 309 2000 msg operation_ref 129162 // "setStartCount(in count : uint) : void"
   show_full_operations_definition default drawing_language default
   label_xy 611 298
 msg 131403 synchronous
@@ -220,7 +220,7 @@ reflexivemsg 132555 synchronous
 msg 139274 synchronous
   from durationcanvas_ref 128266 // 128010
   to durationcanvas_ref 139146 // 129290
-  yz 766 2000 msg operation_ref 130442 // "setLastSyncedDate(in dateTime : QDateTime)"
+  yz 766 2000 msg operation_ref 130442 // "setLastSyncedDate(in dateTime : QDateTime) : void"
   show_full_operations_definition default drawing_language default
   label_xy 146 757
 msg 139530 synchronous
@@ -271,7 +271,7 @@ msg 159114 synchronous
 msg 159626 synchronous
   from durationcanvas_ref 158986 // 132234
   to durationcanvas_ref 159498 // 130698
-  yz 719 2000 msg operation_ref 131210 // "setEndCount(inout t : uint)"
+  yz 719 2000 msg operation_ref 131210 // "setEndCount(in count : uint) : void"
   show_full_operations_definition default drawing_language default
   label_xy 493 709
 msg 159882 synchronous
@@ -283,7 +283,7 @@ msg 159882 synchronous
 msg 160138 synchronous
   from durationcanvas_ref 159754 // 132746
   to durationcanvas_ref 160010 // 130698
-  yz 749 2000 msg operation_ref 131210 // "setEndCount(inout t : uint)"
+  yz 749 2000 msg operation_ref 131210 // "setEndCount(in count : uint) : void"
   show_full_operations_definition default drawing_language default
   label_xy 619 735
 msg 160394 synchronous
@@ -323,13 +323,13 @@ msg 162314 return
 msg 163466 synchronous
   from durationcanvas_ref 128266 // 128010
   to durationcanvas_ref 163338 // 132234
-  yz 323 2000 msg operation_ref 133514 // "setIterateMode(inout mode : Mode) : void"
+  yz 323 2000 msg operation_ref 133514 // "setIterateMode(in mode : Mode) : void"
   show_full_operations_definition default drawing_language default
   label_xy 143 313
 msg 163722 synchronous
   from durationcanvas_ref 128266 // 128010
   to durationcanvas_ref 163594 // 132746
-  yz 345 2000 msg operation_ref 133514 // "setIterateMode(inout mode : Mode) : void"
+  yz 345 2000 msg operation_ref 133514 // "setIterateMode(in mode : Mode) : void"
   show_full_operations_definition default drawing_language default
   label_xy 142 335
 reflexivemsg 163850 synchronous
@@ -360,7 +360,7 @@ reflexivemsg 164874 synchronous
 msg 165386 synchronous
   from durationcanvas_ref 128266 // 128010
   to durationcanvas_ref 165258 // 129290
-  yz 449 2000 msg operation_ref 133386 // "contains()"
+  yz 449 2000 msg operation_ref 133386 // "contains(in pcRecordId : QString) : bool"
   show_full_operations_definition default drawing_language default
   label_xy 143 438
 msg 165514 return
@@ -382,13 +382,13 @@ msg 165898 return
 msg 166154 synchronous
   from durationcanvas_ref 165642 // 132746
   to durationcanvas_ref 166026 // 130698
-  yz 500 2000 msg operation_ref 130826 // "created(inout count : int = 1)"
+  yz 500 2000 msg operation_ref 130826 // "created(in count : int = 1) : void"
   show_full_operations_definition default drawing_language default
   label_xy 630 486
 msg 166666 synchronous
   from durationcanvas_ref 128266 // 128010
   to durationcanvas_ref 166538 // 129290
-  yz 527 2000 msg operation_ref 133258 // "map(inout hhid : ulong, inout pcid : QString)"
+  yz 527 2000 msg operation_ref 133258 // "map(in hhid : recordid_t, in pcid : QString) : void"
   show_full_operations_definition default drawing_language default
   label_xy 228 513
 msg 167178 synchronous
@@ -400,7 +400,7 @@ msg 167178 synchronous
 msg 167434 synchronous
   from durationcanvas_ref 128266 // 128010
   to durationcanvas_ref 167306 // 129290
-  yz 620 2000 msg operation_ref 133386 // "contains()"
+  yz 620 2000 msg operation_ref 133386 // "contains(in pcRecordId : QString) : bool"
   show_full_operations_definition default drawing_language default
   label_xy 216 606
 msg 167562 return

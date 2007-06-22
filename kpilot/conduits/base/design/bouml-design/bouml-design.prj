@@ -1,6 +1,6 @@
 format 38
 "bouml-design"
-  revision 20
+  revision 21
   modified_by 10 "bertjan"
 
 
@@ -77,7 +77,7 @@ format 38
     end
 
     sequencediagram 128266 "5.1 First Sync"
-      show_full_operations_definition no write_horizontally default drawing_language c++ draw_all_relations default shadow yes
+      show_full_operations_definition yes write_horizontally default drawing_language c++ draw_all_relations default shadow yes
       size A4
     end
 
@@ -99,6 +99,45 @@ format 38
     sequencediagram 128906 "5.5 Test Mode"
       show_full_operations_definition no write_horizontally default drawing_language c++ draw_all_relations default shadow yes
       size A4
+    end
+
+    class 128266 "ConduitAction"
+      abstract visibility package 
+      cpp_decl "${comment}${template}class ${name}${inherit} {
+${members}};
+${inlines}
+"
+      java_decl ""
+      idl_decl ""
+      explicit_switch_type ""
+      
+      operation 128522 "openDatabases"
+	public explicit_return_type ""
+	nparams 2
+	  param in name "dbName" explicit_type "QString&"
+	  param in name "retrieved" explicit_type "bool*"
+	    defaultvalue "0L"
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}{
+  ${body}}
+"
+	
+	
+	comment "bool openDatabases(const QString &dbName, bool*retrieved=0L);"
+      end
+
+      operation 128203 "exec"
+	public explicit_return_type ""
+	nparams 0
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}{
+  ${body}}
+"
+	
+	
+      end
     end
 
     class 128010 "RecordConduit"
@@ -245,9 +284,9 @@ ${inlines}
       operation 129802 "syncRecords"
 	abstract cpp_virtual public explicit_return_type "void"
 	nparams 3
-	  param inout name "hh" explicit_type "PilotRecord"
-	  param inout name "backup" explicit_type "PilotRecord"
-	  param inout name "pc" type class_ref 129034 // Record
+	  param in name "hh" type class_ref 129034 // Record
+	  param in name "backup" type class_ref 129034 // Record
+	  param in name "pc" type class_ref 129034 // Record
 	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
 "
 	
@@ -265,45 +304,6 @@ ${inlines}
       end
     end
 
-    class 128266 "ConduitAction"
-      abstract visibility package 
-      cpp_decl "${comment}${template}class ${name}${inherit} {
-${members}};
-${inlines}
-"
-      java_decl ""
-      idl_decl ""
-      explicit_switch_type ""
-      
-      operation 128522 "openDatabases"
-	public explicit_return_type ""
-	nparams 2
-	  param inout name "dbName" explicit_type "QString&"
-	  param inout name "retrieved" explicit_type "bool*"
-	    defaultvalue "0L"
-	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
-"
-	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}{
-  ${body}}
-"
-	
-	
-	comment "bool openDatabases(const QString &dbName, bool*retrieved=0L);"
-      end
-
-      operation 128203 "exec"
-	public explicit_return_type ""
-	nparams 0
-	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
-"
-	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}{
-  ${body}}
-"
-	
-	
-      end
-    end
-
     class 128394 "IDMapping"
       visibility package 
       cpp_decl "${comment}${template}class ${name}${inherit} {
@@ -317,7 +317,7 @@ ${inlines}
       operation 128650 "IDMapping"
 	public explicit_return_type ""
 	nparams 1
-	  param inout name "&conduit" explicit_type "QString"
+	  param in name "&conduit" explicit_type "QString"
 	cpp_decl "    ${comment}${inline}${name}${(}${)}${volatile}${throw};
 "
 	cpp_def "${comment}${inline}${class}::${name}${(}${)}${volatile}${throw} {
@@ -330,7 +330,7 @@ ${inlines}
       operation 128778 "validate"
 	public explicit_return_type "bool"
 	nparams 1
-	  param inout name "*backupDb" type class_ref 128906 // DataProxy
+	  param in name "*backupDb" type class_ref 128906 // DataProxy
 	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
 "
 	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}{
@@ -343,10 +343,10 @@ ${inlines}
 2. Every record that is in the backup database has a mapping."
       end
 
-      operation 129290 "pcRecordID"
+      operation 129290 "pcRecordId"
 	public explicit_return_type "QString"
 	nparams 1
-	  param inout name "hhRecordId" explicit_type "uint"
+	  param in name "hhRecordId" explicit_type "uint"
 	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
 "
 	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}{
@@ -372,7 +372,7 @@ ${inlines}
       end
 
       operation 130442 "setLastSyncedDate"
-	public explicit_return_type ""
+	public explicit_return_type "void"
 	nparams 1
 	  param in name "dateTime" explicit_type "QDateTime"
 	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
@@ -434,10 +434,10 @@ ${inlines}
       end
 
       operation 133258 "map"
-	public explicit_return_type ""
+	public explicit_return_type "void"
 	nparams 2
-	  param inout name "hhid" explicit_type "ulong"
-	  param inout name "pcid" explicit_type "QString"
+	  param in name "hhid" explicit_type "recordid_t"
+	  param in name "pcid" explicit_type "QString"
 	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
 "
 	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}{
@@ -449,229 +449,12 @@ ${inlines}
       end
 
       operation 133386 "contains"
-	public explicit_return_type ""
-	nparams 0
-	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
-"
-	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}{
-  ${body}}
-"
-	
-	
-      end
-    end
-
-    class 128522 "CUDCounter"
-      visibility package 
-      cpp_decl "${comment}${template}class ${name}${inherit} {
-${members}};
-${inlines}
-"
-      java_decl ""
-      idl_decl ""
-      explicit_switch_type ""
-      
-      operation 129034 "CUDCounter"
-	public explicit_return_type ""
-	nparams 1
-	  param inout name "conduit" explicit_type "QString"
-	cpp_decl "    ${comment}${inline}${name}${(}${)}${volatile}${throw};
-"
-	cpp_def "${comment}${inline}${class}::${name}${(}${)}${volatile}${throw} {
-  ${body}}
-"
-	
-	
-      end
-
-      operation 129162 "setStartCount"
-	public explicit_return_type "void"
-	nparams 1
-	  param inout name "t" explicit_type "uint"
-	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
-"
-	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}{
-  ${body}}
-"
-	
-	
-      end
-
-      operation 131210 "setEndCount"
-	public explicit_return_type ""
-	nparams 1
-	  param inout name "t" explicit_type "uint"
-	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
-"
-	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}{
-  ${body}}
-"
-	
-	
-      end
-
-      operation 130826 "created"
-	public explicit_return_type ""
-	nparams 1
-	  param inout name "count" explicit_type "int"
-	    defaultvalue "1"
-	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
-"
-	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}{
-  ${body}}
-"
-	
-	
-      end
-
-      operation 130954 "updated"
-	public explicit_return_type ""
-	nparams 1
-	  param inout name "count" explicit_type "int"
-	    defaultvalue "1"
-	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
-"
-	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}{
-  ${body}}
-"
-	
-	
-      end
-
-      operation 131082 "deleted"
-	public explicit_return_type ""
-	nparams 1
-	  param inout name "count" explicit_type "int"
-	    defaultvalue "1"
-	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
-"
-	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}{
-  ${body}}
-"
-	
-	
-      end
-
-      operation 131466 "hasValidCount"
 	public explicit_return_type "bool"
-	nparams 0
-	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
-"
-	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}{
-  ${body}}
-"
-	
-	
-      end
-
-      operation 131594 "volatility"
-	public explicit_return_type "int"
-	nparams 0
-	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
-"
-	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}{
-  ${body}}
-"
-	
-	
-      end
-    end
-
-    class 128650 "HHProxyDatabase"
-      abstract visibility package 
-      cpp_decl "${comment}${template}class ${name}${inherit} {
-${members}};
-${inlines}
-"
-      java_decl ""
-      idl_decl ""
-      explicit_switch_type ""
-      
-      classrelation 128100 // <generalisation>
-	relation 128100 ---|>
-	  a public
-	    cpp default "${type}"
-	    classrelation_ref 128100 // <generalisation>
-	  b multiplicity "" parent class_ref 128906 // DataProxy
-      end
-
-      operation 132234 "HHProxyDatabase"
-	public explicit_return_type ""
 	nparams 1
-	  param inout name "*db" type class_ref 128203 // PilotDatabase
-	cpp_decl "    ${comment}${inline}${name}${(}${)}${volatile}${throw};
-"
-	cpp_def "${comment}${inline}${class}::${name}${(}${)}${volatile}${throw} {
-  ${body}}
-"
-	
-	
-      end
-
-      operation 129480 "resetSyncFlags"
-	public explicit_return_type "void"
-	nparams 0
+	  param in name "pcRecordId" explicit_type "QString"
 	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
 "
 	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}{
-  ${body}}
-"
-	
-	
-      end
-
-      operation 128331 "readAppBlock"
-	abstract cpp_virtual public explicit_return_type "void"
-	nparams 0
-	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
-"
-	
-	
-      end
-
-      operation 130314 "writeAppBlock"
-	abstract cpp_virtual public explicit_return_type "void"
-	nparams 0
-	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
-"
-	
-	
-      end
-
-      classrelation 129930 // fDatabase (<unidirectional association>)
-	relation 129930 --->
-	  a role_name "fDatabase" multiplicity "1" protected
-	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} * ${name}${value};
-"
-	    classrelation_ref 129930 // fDatabase (<unidirectional association>)
-	  b multiplicity "" parent class_ref 128203 // PilotDatabase
-      end
-    end
-
-    class 128778 "PCProxyDatabase"
-      visibility package 
-      cpp_decl "${comment}${template}class ${name}${inherit} {
-${members}};
-${inlines}
-"
-      java_decl ""
-      idl_decl ""
-      explicit_switch_type ""
-      
-      classrelation 128228 // <generalisation>
-	relation 128228 ---|>
-	  a public
-	    cpp default "${type}"
-	    classrelation_ref 128228 // <generalisation>
-	  b multiplicity "" parent class_ref 128906 // DataProxy
-      end
-
-      operation 128840 "PCProxyDatabase"
-	public explicit_return_type ""
-	nparams 0
-	cpp_decl "    ${comment}${inline}${name}${(}${)}${volatile}${throw};
-"
-	cpp_def "${comment}${inline}${class}::${name}${(}${)}${volatile}${throw} {
   ${body}}
 "
 	
@@ -762,7 +545,7 @@ ${inlines}
       operation 133514 "setIterateMode"
 	public explicit_return_type "void"
 	nparams 1
-	  param inout name "mode" explicit_type "Mode"
+	  param in name "mode" explicit_type "Mode"
 	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
 "
 	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}{
@@ -784,7 +567,7 @@ ${inlines}
       operation 128012 "lookForMatch"
 	abstract cpp_virtual public return_type class_ref 129034 // Record
 	nparams 1
-	  param inout name "*rec" type class_ref 129034 // Record
+	  param in name "*rec" type class_ref 129034 // Record
 	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
 "
 	
@@ -814,7 +597,7 @@ ${inlines}
       operation 132490 "readRecordById"
 	abstract cpp_virtual public return_type class_ref 129034 // Record
 	nparams 1
-	  param inout name "id" explicit_type "QVariant"
+	  param in name "id" explicit_type "QVariant"
 	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
 "
 	
@@ -839,6 +622,224 @@ ${inlines}
 "
 	    classrelation_ref 129802 // fRecords (<unidirectional association>)
 	  b multiplicity "" parent class_ref 129034 // Record
+      end
+    end
+
+    class 128650 "HHProxyDatabase"
+      abstract visibility package 
+      cpp_decl "${comment}${template}class ${name}${inherit} {
+${members}};
+${inlines}
+"
+      java_decl ""
+      idl_decl ""
+      explicit_switch_type ""
+      
+      classrelation 128100 // <generalisation>
+	relation 128100 ---|>
+	  a public
+	    cpp default "${type}"
+	    classrelation_ref 128100 // <generalisation>
+	  b multiplicity "" parent class_ref 128906 // DataProxy
+      end
+
+      operation 132234 "HHProxyDatabase"
+	public explicit_return_type ""
+	nparams 1
+	  param in name "*db" type class_ref 128203 // PilotDatabase
+	cpp_decl "    ${comment}${inline}${name}${(}${)}${volatile}${throw};
+"
+	cpp_def "${comment}${inline}${class}::${name}${(}${)}${volatile}${throw} {
+  ${body}}
+"
+	
+	
+      end
+
+      operation 129480 "resetSyncFlags"
+	public explicit_return_type "void"
+	nparams 0
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}{
+  ${body}}
+"
+	
+	
+      end
+
+      operation 128331 "readAppBlock"
+	abstract cpp_virtual public explicit_return_type "void"
+	nparams 0
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	
+	
+      end
+
+      operation 130314 "writeAppBlock"
+	abstract cpp_virtual public explicit_return_type "void"
+	nparams 0
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	
+	
+      end
+
+      classrelation 129930 // fDatabase (<unidirectional association>)
+	relation 129930 --->
+	  a role_name "fDatabase" multiplicity "1" protected
+	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} * ${name}${value};
+"
+	    classrelation_ref 129930 // fDatabase (<unidirectional association>)
+	  b multiplicity "" parent class_ref 128203 // PilotDatabase
+      end
+    end
+
+    class 128778 "PCProxyDatabase"
+      visibility package 
+      cpp_decl "${comment}${template}class ${name}${inherit} {
+${members}};
+${inlines}
+"
+      java_decl ""
+      idl_decl ""
+      explicit_switch_type ""
+      
+      classrelation 128228 // <generalisation>
+	relation 128228 ---|>
+	  a public
+	    cpp default "${type}"
+	    classrelation_ref 128228 // <generalisation>
+	  b multiplicity "" parent class_ref 128906 // DataProxy
+      end
+
+      operation 128840 "PCProxyDatabase"
+	public explicit_return_type ""
+	nparams 0
+	cpp_decl "    ${comment}${inline}${name}${(}${)}${volatile}${throw};
+"
+	cpp_def "${comment}${inline}${class}::${name}${(}${)}${volatile}${throw} {
+  ${body}}
+"
+	
+	
+      end
+    end
+
+    class 128522 "CUDCounter"
+      visibility package 
+      cpp_decl "${comment}${template}class ${name}${inherit} {
+${members}};
+${inlines}
+"
+      java_decl ""
+      idl_decl ""
+      explicit_switch_type ""
+      
+      operation 129034 "CUDCounter"
+	public explicit_return_type ""
+	nparams 1
+	  param in name "conduit" explicit_type "QString"
+	cpp_decl "    ${comment}${inline}${name}${(}${)}${volatile}${throw};
+"
+	cpp_def "${comment}${inline}${class}::${name}${(}${)}${volatile}${throw} {
+  ${body}}
+"
+	
+	
+      end
+
+      operation 129162 "setStartCount"
+	public explicit_return_type "void"
+	nparams 1
+	  param in name "count" explicit_type "uint"
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}{
+  ${body}}
+"
+	
+	
+      end
+
+      operation 131210 "setEndCount"
+	public explicit_return_type "void"
+	nparams 1
+	  param in name "count" explicit_type "uint"
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}{
+  ${body}}
+"
+	
+	
+      end
+
+      operation 130826 "created"
+	public explicit_return_type "void"
+	nparams 1
+	  param in name "count" explicit_type "int"
+	    defaultvalue "1"
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}{
+  ${body}}
+"
+	
+	
+      end
+
+      operation 130954 "updated"
+	public explicit_return_type ""
+	nparams 1
+	  param inout name "count" explicit_type "int"
+	    defaultvalue "1"
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}{
+  ${body}}
+"
+	
+	
+      end
+
+      operation 131082 "deleted"
+	public explicit_return_type ""
+	nparams 1
+	  param inout name "count" explicit_type "int"
+	    defaultvalue "1"
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}{
+  ${body}}
+"
+	
+	
+      end
+
+      operation 131466 "hasValidCount"
+	public explicit_return_type "bool"
+	nparams 0
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}{
+  ${body}}
+"
+	
+	
+      end
+
+      operation 131594 "volatility"
+	public explicit_return_type "int"
+	nparams 0
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}{
+  ${body}}
+"
+	
+	
       end
     end
 
