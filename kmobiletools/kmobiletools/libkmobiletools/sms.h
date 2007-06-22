@@ -33,6 +33,7 @@
 
 class SMSPrivate;
 class SenderPrivate;
+class DestinationPrivate;
 namespace KMobileTools {
 typedef QHash<QString,QString> PhoneNumbers;
 
@@ -51,14 +52,14 @@ public:
 private:
     SenderPrivate *const d;
 };
-/*class KMOBILETOOLS_EXPORT Destination : public KMime::Headers::Generics::Structured
+class KMOBILETOOLS_EXPORT Destination : public Sender
 {
 public:
     Destination();
-    virtual ~Destination();
-    virtual const char *type();
+    virtual const char *type() const;
+private:
+    DestinationPrivate *const d;
 };
-*/
 
 class KMOBILETOOLS_EXPORT SMS : public KMime::Content
 {
@@ -115,10 +116,10 @@ public:
     // Headers
     KMime::Headers::Date *date() const;
    Sender *sender() const;
-//    Destination *to()   const;
+   Destination *destination()   const;
 
    void setSender(const QString& number, const QString &displayname=QString() );
-//    void addTo  (const QString& number, const QString &displayname=QString() );
+   void addDestination(const QString& number, const QString &displayname=QString() );
 
 protected:
     virtual QByteArray assembleHeaders();

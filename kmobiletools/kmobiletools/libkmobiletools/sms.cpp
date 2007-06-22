@@ -77,6 +77,10 @@ public:
         return rv;
     }
 };
+class DestinationPrivate {
+public:
+    DestinationPrivate() {}
+};
 
 Sender::Sender() : KMime::Headers::Generics::Structured(), d(new SenderPrivate) {
 }
@@ -121,13 +125,11 @@ PhoneNumbers Sender::phoneNumbers() const
     return d->numbers;
 }
 
-/*Destination::Destination() : KMime::Headers::Generics::Structured() {
+Destination::Destination() : Sender(), d(new DestinationPrivate) {
 }
+const char *Destination::type() const { return "Destination"; }
 
-Destination::~Destination() {}
 
-const char *Destination::type() { return "Destination"; }
-*/
 SMS::SMS() : KMime::Content(),
     d(new SMSPrivate(this) )
 {
@@ -409,8 +411,8 @@ QByteArray SMS::assembleHeaders()
     if(h) ret+= h->as7BitString()+'\n';
     h=sender();
     if(h) ret+= h->as7BitString()+'\n';
-//     h=to();
-//     if(h) ret+= h->as7BitString()+'\n';
+    h=destination();
+    if(h) ret+= h->as7BitString()+'\n';
     return ret + Content::assembleHeaders();
 }
 
@@ -422,28 +424,29 @@ KMime::Headers::Date *SMS::date() const{
 void SMS::setSender(const QString& number, const QString &displayname) {
     Sender *fromh=sender();
     if(!fromh) fromh=new Sender();
+    fromh->clear();
     fromh->addNumber(number, displayname);
     setHeader(fromh);
 }
-/*
-void SMS::addTo(const QString& number, const QString &displayname) {
-    Destination * h=to();
+
+void SMS::addDestination(const QString& number, const QString &displayname) {
+    Destination * h=destination();
     if(!h) {
         h=new Destination;
         setHeader(h);
     }
-    h->addAddress(number.toUtf8(), displayname);
+    h->addNumber(number.toUtf8(), displayname);
 }
-*/
+
 Sender *SMS::sender() const
 {
     return dynamic_cast<Sender*>(const_cast<SMS*>(this)->getHeaderByType("Sender") );
 }
-/*
-KMime::Headers::To *SMS::to() const
+
+Destination *SMS::destination() const
 {
     return dynamic_cast<Destination*>(const_cast<SMS*>(this)->getHeaderByType("Destination") );
-}*/
+}
 
 QString SMS::getFrom() const
 {

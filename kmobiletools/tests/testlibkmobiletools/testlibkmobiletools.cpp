@@ -71,12 +71,10 @@ KMobileTools::SMS *TestLibKMobileToolsApp::checkSMS(bool deleteOnReturn) {
     out << "Raw content: " << sms->body() << endl;
     sms->setDateTime( KDateTime(QDate(2002,7,2), QTime(21,12,13) ) );
     out << "Set date time to " << sms->getDateTime().toString() << endl;
-    sms->setSender( "test@kde.org", "Destination Name");
+    sms->setSender( "+39123456789", "Sender Name");
     out << "Added numbers: Sender=" << sms->sender()->as7BitString() << endl;
-//     for(int i=0; i<sms->to()->prettyAddresses().size(); i++)
-//         out << endl << sms->to()->prettyAddresses().at(i);
-//     out << "; to=";
-//     sms->to()->prettyAddresses();
+    sms->addDestination("+22123456789", "Destination Name #1");
+    sms->addDestination("+33345678923", "Destination Name #2 testing some special chars.. #@1\"<>, ");
     out << endl;
     sms->assemble();
     out << "****************** SMS Serialization ******************\n"
