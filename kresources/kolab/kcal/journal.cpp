@@ -76,22 +76,22 @@ QString Journal::summary() const
   return mSummary;
 }
 
-void Journal::setStartDate( const QDateTime& startDate )
+void Journal::setStartDate( const KDateTime& startDate )
 {
   mStartDate = startDate;
 }
 
-QDateTime Journal::startDate() const
+KDateTime Journal::startDate() const
 {
   return mStartDate;
 }
 
-void Journal::setEndDate( const QDateTime& endDate )
+void Journal::setEndDate( const KDateTime& endDate )
 {
   mEndDate = endDate;
 }
 
-QDateTime Journal::endDate() const
+KDateTime Journal::endDate() const
 {
   return mEndDate;
 }

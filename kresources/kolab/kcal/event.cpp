@@ -75,7 +75,7 @@ KCal::Event::Transparency Event::transparency() const
   return mShowTimeAs;
 }
 
-void Event::setEndDate( const QDateTime& date )
+void Event::setEndDate( const KDateTime& date )
 {
   mEndDate = date;
   mHasEndDate = true;
@@ -86,7 +86,7 @@ void Event::setEndDate( const QDateTime& date )
 
 void Event::setEndDate( const QDate& date )
 {
-  mEndDate = QDateTime( date );
+  mEndDate = KDateTime( date );
   mHasEndDate = true;
   if ( mFloatingStatus == HasTime )
     kDebug() << "ERROR: No time on end date but time on the event\n";
@@ -103,7 +103,7 @@ void Event::setEndDate( const QString& endDate )
     setEndDate( stringToDate( endDate ) );
 }
 
-QDateTime Event::endDate() const
+KDateTime Event::endDate() const
 {
   return mEndDate;
 }

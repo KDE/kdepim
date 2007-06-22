@@ -67,7 +67,7 @@ static const char* incidenceInlineMimeType = "text/calendar";
 ResourceKolab::ResourceKolab( const KConfigGroup &config )
   : ResourceCalendar( config ), ResourceKolabBase( "ResourceKolab-libkcal" ),
     mCalendar( QString::fromLatin1("UTC") ), mOpen( false ),
-    mResourceChangedTimer( 0, "mResourceChangedTimer" )
+    mResourceChangedTimer( 0 )
 {
   setType( "imap" );
   connect( &mResourceChangedTimer, SIGNAL( timeout() ),
@@ -131,8 +131,8 @@ static void closeResource( KConfig& config, ResourceMap& map )
 {
   ResourceMap::ConstIterator it;
   for ( it = map.begin(); it != map.end(); ++it ) {
-    config.setGroup( it.key() );
-    config.writeEntry( "Active", it.value().active() );
+    KConfigGroup group = config.group( it.key() );
+    group.writeEntry( "Active", it.value().active() );
   }
 }
 
@@ -846,9 +846,9 @@ void ResourceKolab::fromKMailAddSubresource( const QString& type,
     return;
 
   KConfig config( configFile() );
-  config.setGroup( subResource );
+  KConfigGroup group = config.group( subResource );
 
-  bool active = config.readEntry( subResource, true );
+  bool active = group.readEntry( subResource, true );
   (*map)[ subResource ] = Kolab::SubResource( active, writable,
                                               alarmRelevant, label );
   loadSubResource( subResource, mimetype );

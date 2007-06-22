@@ -108,13 +108,13 @@ QString Task::parent() const
   return mParent;
 }
 
-void Task::setDueDate( const QDateTime& date )
+void Task::setDueDate( const KDateTime& date )
 {
   mDueDate = date;
   mHasDueDate = true;
 }
 
-QDateTime Task::dueDate() const
+KDateTime Task::dueDate() const
 {
   return mDueDate;
 }
@@ -134,13 +134,13 @@ bool Task::hasDueDate() const
   return mHasDueDate;
 }
 
-void Task::setCompletedDate( const QDateTime& date )
+void Task::setCompletedDate( const KDateTime& date )
 {
   mCompletedDate = date;
   mHasCompletedDate = true;
 }
 
-QDateTime Task::completedDate() const
+KDateTime Task::completedDate() const
 {
   return mCompletedDate;
 }

@@ -82,7 +82,7 @@ KolabBase::Email Incidence::organizer() const
   return mOrganizer;
 }
 
-void Incidence::setStartDate( const QDateTime& startDate )
+void Incidence::setStartDate( const KDateTime& startDate )
 {
   mStartDate = startDate;
   if ( mFloatingStatus == AllDay )
@@ -92,7 +92,7 @@ void Incidence::setStartDate( const QDateTime& startDate )
 
 void Incidence::setStartDate( const QDate& startDate )
 {
-  mStartDate = QDateTime( startDate );
+  mStartDate = KDateTime( startDate );
   if ( mFloatingStatus == HasTime )
     kDebug() << "ERROR: No time on start date but time on the event\n";
   mFloatingStatus = AllDay;
@@ -108,7 +108,7 @@ void Incidence::setStartDate( const QString& startDate )
     setStartDate( stringToDate( startDate ) );
 }
 
-QDateTime Incidence::startDate() const
+KDateTime Incidence::startDate() const
 {
   return mStartDate;
 }

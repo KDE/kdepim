@@ -83,12 +83,12 @@ public:
   virtual void setHasStartDate( bool );
   virtual bool hasStartDate() const;
 
-  virtual void setDueDate( const QDateTime& date );
-  virtual QDateTime dueDate() const;
+  virtual void setDueDate( const KDateTime& date );
+  virtual KDateTime dueDate() const;
   virtual bool hasDueDate() const;
 
-  virtual void setCompletedDate( const QDateTime& date );
-  virtual QDateTime completedDate() const;
+  virtual void setCompletedDate( const KDateTime& date );
+  virtual KDateTime completedDate() const;
   virtual bool hasCompletedDate() const;
 
   // Load the attributes of this class
@@ -115,10 +115,10 @@ protected:
   bool mHasStartDate;
 
   bool mHasDueDate;
-  QDateTime mDueDate;
+  KDateTime mDueDate;
 
   bool mHasCompletedDate;
-  QDateTime mCompletedDate;
+  KDateTime mCompletedDate;
 };
 
 }

@@ -69,11 +69,11 @@ public:
   virtual void setSummary( const QString& summary );
   virtual QString summary() const;
 
-  virtual void setStartDate( const QDateTime& startDate );
-  virtual QDateTime startDate() const;
+  virtual void setStartDate( const KDateTime& startDate );
+  virtual KDateTime startDate() const;
 
-  virtual void setEndDate( const QDateTime& endDate );
-  virtual QDateTime endDate() const;
+  virtual void setEndDate( const KDateTime& endDate );
+  virtual KDateTime endDate() const;
 
   // Load the attributes of this class
   virtual bool loadAttribute( QDomElement& );
@@ -94,8 +94,8 @@ protected:
   QString productID() const;
 
   QString mSummary;
-  QDateTime mStartDate;
-  QDateTime mEndDate;
+  KDateTime mStartDate;
+  KDateTime mEndDate;
 };
 
 }
