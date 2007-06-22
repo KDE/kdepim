@@ -22,6 +22,7 @@
 
 #include "sloxbase.h"
 #include "webdavhandler.h"
+#include "slox_export.h"
 
 #include <q3ptrlist.h>
 #include <QString>
@@ -30,7 +31,6 @@
 
 #include <kurl.h>
 #include <kdirwatch.h>
-#include <kdemacros.h>
 
 #include <kcal/incidence.h>
 #include <kcal/todo.h>
@@ -57,7 +57,7 @@ class SloxAccounts;
 /**
   This class provides a calendar stored as a remote file.
 */
-class KDE_EXPORT KCalResourceSlox : public KCal::ResourceCached, public SloxBase
+class KCAL_SLOX_EXPORT KCalResourceSlox : public KCal::ResourceCached, public SloxBase
 {
     Q_OBJECT
 

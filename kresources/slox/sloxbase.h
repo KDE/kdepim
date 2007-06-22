@@ -21,13 +21,13 @@
 #define SLOXUTILS_H
 
 #include <QString>
-#include <kdemacros.h>
+#include "slox_export.h"
 
 namespace KRES {
 class Resource;
 }
 
-class KDE_EXPORT SloxBase {
+class KSLOX_EXPORT SloxBase {
   public:
     enum Field {
       ObjectId = 0, // system fields

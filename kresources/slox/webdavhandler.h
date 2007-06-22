@@ -27,8 +27,9 @@
 
 #include <kdatetime.h>
 
-#include <kdemacros.h>
 #include <kabc/addressee.h>
+
+#include "slox_export.h"
 
 namespace KCal {
 class Incidence;
@@ -36,7 +37,7 @@ class Incidence;
 
 class SloxBase;
 
-class KDE_EXPORT SloxItem
+class KSLOX_EXPORT SloxItem
 {
   public:
     enum Status { Invalid, Delete, Create, New };

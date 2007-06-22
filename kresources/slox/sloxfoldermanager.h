@@ -25,7 +25,7 @@
 
 #include <kurl.h>
 
-#include <kdemacros.h>
+#include "slox_export.h"
 
 namespace KIO {
 class Job;
@@ -35,7 +35,7 @@ class KJob;
 class SloxBase;
 class SloxFolder;
 
-class KDE_EXPORT SloxFolderManager : public QObject
+class KSLOX_EXPORT SloxFolderManager : public QObject
 {
     Q_OBJECT
   public:

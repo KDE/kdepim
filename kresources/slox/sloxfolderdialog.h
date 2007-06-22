@@ -23,12 +23,13 @@
 #include <kdialog.h>
 
 #include "sloxfolder.h"
+#include "slox_export.h"
 
 class K3ListView;
 class SloxFolder;
 class SloxFolderManager;
 
-class KDE_EXPORT SloxFolderDialog : public KDialog
+class KSLOX_EXPORT SloxFolderDialog : public KDialog
 {
   Q_OBJECT
   public:

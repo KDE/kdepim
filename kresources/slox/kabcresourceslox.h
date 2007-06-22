@@ -22,9 +22,9 @@
 
 #include "sloxbase.h"
 #include "webdavhandler.h"
+#include "slox_export.h"
 
 #include <kabc/resourcecached.h>
-#include <kdemacros.h>
 #include <kabc/addressee.h>
 
 #include <QMap>
@@ -43,7 +43,7 @@ namespace KABC {
 
 class SloxPrefs;
 
-class KDE_EXPORT ResourceSlox : public ResourceCached, public SloxBase
+class KABC_SLOX_EXPORT ResourceSlox : public ResourceCached, public SloxBase
 {
     Q_OBJECT
   public:

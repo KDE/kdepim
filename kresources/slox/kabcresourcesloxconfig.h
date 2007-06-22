@@ -21,7 +21,7 @@
 #define RESOURCESLOXCONFIG_H
 
 #include <kresources/configwidget.h>
-#include <kdemacros.h>
+#include "slox_export.h"
 
 class QCheckBox;
 class KLineEdit;
@@ -32,7 +32,7 @@ class SloxBase;
 
 namespace KABC {
 
-class KDE_EXPORT ResourceSloxConfig : public KRES::ConfigWidget
+class KABC_SLOX_EXPORT ResourceSloxConfig : public KRES::ConfigWidget
 {
   Q_OBJECT
 

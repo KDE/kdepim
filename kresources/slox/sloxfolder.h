@@ -21,7 +21,7 @@
 #define SLOXFOLDER_H
 
 #include <QString>
-#include <kdemacros.h>
+#include "slox_export.h"
 
 class K3ListViewItem;
 
@@ -32,7 +32,7 @@ enum FolderType {
   Contacts
 };
 
-class KDE_EXPORT SloxFolder
+class KSLOX_EXPORT SloxFolder
 {
   public:
     SloxFolder( const QString &id, const QString &parentId, const QString &type, const QString &name, bool def = false );

@@ -20,8 +20,8 @@
 #ifndef KCALRESOURCESLOXCONFIG_H
 #define KCALRESOURCESLOXCONFIG_H
 
+#include "slox_export.h"
 #include <kurlrequester.h>
-#include <kdemacros.h>
 
 #include <kresources/resource.h>
 #include <kresources/configwidget.h>
@@ -42,7 +42,7 @@ class SloxBase;
 
   @see KCalResourceSlox
 */
-class KDE_EXPORT KCalResourceSloxConfig : public KRES::ConfigWidget
+class KCAL_SLOX_EXPORT KCalResourceSloxConfig : public KRES::ConfigWidget
 {
     Q_OBJECT
   public:
