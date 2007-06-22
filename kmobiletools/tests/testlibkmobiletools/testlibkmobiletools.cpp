@@ -62,15 +62,22 @@ void TestLibKMobileToolsApp::mainloop() {
     mainloop();
 }
 
-SMS *TestLibKMobileToolsApp::checkSMS(bool deleteOnReturn) {
+KMobileTools::SMS *TestLibKMobileToolsApp::checkSMS(bool deleteOnReturn) {
     out << "LibKMobileTools tester application\n";
-    SMS *sms=new SMS();
+    KMobileTools::SMS *sms=new KMobileTools::SMS();
     out << "sms created\n";
     sms->setText("Testo di prova");
     out << "setting test to sms: " << sms->getText() << endl;
     out << "Raw content: " << sms->body() << endl;
     sms->setDateTime( KDateTime(QDate(2002,7,2), QTime(21,12,13) ) );
     out << "Set date time to " << sms->getDateTime().toString() << endl;
+    sms->setSender( "test@kde.org", "Destination Name");
+    out << "Added numbers: Sender=" << sms->sender()->as7BitString() << endl;
+//     for(int i=0; i<sms->to()->prettyAddresses().size(); i++)
+//         out << endl << sms->to()->prettyAddresses().at(i);
+//     out << "; to=";
+//     sms->to()->prettyAddresses();
+    out << endl;
     sms->assemble();
     out << "****************** SMS Serialization ******************\n"
         << sms->encodedContent()
@@ -82,7 +89,7 @@ SMS *TestLibKMobileToolsApp::checkSMS(bool deleteOnReturn) {
 void TestLibKMobileToolsApp::testAkonadi() {
     Akonadi::Item i;
     i.setMimeType(SMS_MIMETYPE);
-    SMS *sms=checkSMS(false);
+    KMobileTools::SMS *sms=checkSMS(false);
     Akonadi::SerializerPluginSMS *serializer=new Akonadi::SerializerPluginSMS();
     MessagePtr msg=MessagePtr(sms);
     i.setPayload<MessagePtr>(msg);

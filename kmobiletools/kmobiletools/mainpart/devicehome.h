@@ -225,7 +225,7 @@ public slots:
     void slotExportSMSListToCSV();
     void slotStatusBar();
     void slotSaveAddressBook();
-    void slotSendStoredSMS(SMS*);
+    void slotSendStoredSMS(KMobileTools::SMS*);
     void slotRing(bool);
     void slotDial();
     void slotDialNumber(const QString &);

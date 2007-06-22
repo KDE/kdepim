@@ -37,6 +37,7 @@
  * Description:
  * Some special attributes for the SMS class
  */
+using namespace KMobileTools;
 
 ATSMS::ATSMS(const QStringList & numbers, const QString & text ) : SMS ( numbers, text )
 {
@@ -111,15 +112,15 @@ ATSMS *SMSDecoder::decodeSMS( const QString &abuffer, uint index, uint stat )
     sms->idList()->append( index);
     switch( stat ){
         case 0:
-            sms->setType(SMS::Unread); break;
+            sms->setType(KMobileTools::SMS::Unread); break;
         case 1:
-            sms->setType(SMS::Read); break;
+            sms->setType(KMobileTools::SMS::Read); break;
         case 2:
-            sms->setType(SMS::Unsent); break;
+            sms->setType(KMobileTools::SMS::Unsent); break;
         case 3:
-            sms->setType(SMS::Sent); break;
+            sms->setType(KMobileTools::SMS::Sent); break;
         case 4:
-            sms->setType(SMS::All); break;
+            sms->setType(KMobileTools::SMS::All); break;
     }
 //     sms->setType( (SMS::SMSType)stat );
     return sms;
@@ -376,7 +377,7 @@ uint SMSDecoder::getDecimal()
     return ( 10*(i & 15) + ( i / 16 ) );
 }
 
-SendStoredSMS::SendStoredSMS ( KMobileTools::Job *pjob, SMS *sms, KMobileTools::SerialManager *device, AT_Engine* parent )
+SendStoredSMS::SendStoredSMS ( KMobileTools::Job *pjob, KMobileTools::SMS *sms, KMobileTools::SerialManager *device, AT_Engine* parent )
     : kmobiletoolsATJob( pjob, device, parent )
 {
     p_sms=sms;

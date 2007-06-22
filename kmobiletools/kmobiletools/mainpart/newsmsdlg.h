@@ -24,7 +24,7 @@
 #include <kdialog.h>
 
 class KStatusBar;
-class SMS;
+namespace KMobileTools { class SMS; }
 /**
 	@author Marco Gulino <marco@kmobiletools.org>
 */
@@ -38,7 +38,7 @@ public:
     ~newSMSDlg();
     const QStringList numbers() { return sl_numbers;}
     const QString text();
-    SMS *getSMSItem() { return p_sms; }
+    KMobileTools::SMS *getSMSItem() { return p_sms; }
     enum Actions { Send=0x1, Store=0x2 };
     int action() { return i_action; }
     private:
@@ -46,7 +46,7 @@ public:
         KStatusBar *statusBar;
         QStringList sl_numbers;
         void createSMSItem();
-        SMS *p_sms;
+        KMobileTools::SMS *p_sms;
         int i_action;
 
 public slots:

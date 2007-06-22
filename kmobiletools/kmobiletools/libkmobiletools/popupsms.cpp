@@ -21,8 +21,9 @@
 #include <kicon.h>
 #include <kdebug.h>
 #include <klocale.h>
+using namespace KMobileTools;
 
-popupSMS::popupSMS(SMS *sms, QWidget *parent)
+popupSMS::popupSMS(KMobileTools::SMS *sms, QWidget *parent)
     : KMenu(parent)
 {
     p_sms=sms;

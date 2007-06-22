@@ -29,7 +29,7 @@
 
 /** \brief Some special attributes for the SMS class.
  */
-class ATSMS : public SMS
+class ATSMS : public KMobileTools::SMS
 {
     public:
         ATSMS(const QStringList & numbers, const QString & text );
@@ -61,7 +61,7 @@ class ATSMS : public SMS
          * message. Warning: This is zero-indiced, i.e. the first part of message is part number 0.
         */
         uint getSequenceNumber() { return sequenceNumber-1; };
-        static ATSMS *fromSMS(SMS *);
+        static ATSMS *fromSMS(KMobileTools::SMS *);
     protected:
         void setMultiPart( uint refNumber, uint seqNumber, uint mesCount);
         bool concatenated;
@@ -137,13 +137,13 @@ class SMSEncoder
 class FetchSMS : public kmobiletoolsATJob
 {
     public:
-        FetchSMS( KMobileTools::Job *pjob, SMS::SMSType type, KMobileTools::SerialManager *device, bool lastSlot, AT_Engine* parent = 0  );
+        FetchSMS( KMobileTools::Job *pjob, KMobileTools::SMS::SMSType type, KMobileTools::SerialManager *device, bool lastSlot, AT_Engine* parent = 0  );
         SMSList *smsList;
         JobType type()            { return KMobileTools::Job::fetchSMS; }
         bool last() { return b_last;}
     protected:
         SMSDecoder decoder;
-        SMS::SMSType fetchType;
+        KMobileTools::SMS::SMSType fetchType;
         int index, stat;
         void run();
         bool b_last;
@@ -159,7 +159,7 @@ class FetchSMS : public kmobiletoolsATJob
 class UpdateSMS : public FetchSMS
 {
     public:
-      UpdateSMS( KMobileTools::Job *pjob, SMSList *smsList, SMS::SMSType type, KMobileTools::SerialManager *device, AT_Engine* parent = 0  );
+      UpdateSMS( KMobileTools::Job *pjob, SMSList *smsList, KMobileTools::SMS::SMSType type, KMobileTools::SerialManager *device, AT_Engine* parent = 0  );
         JobType type() { return KMobileTools::Job::fetchSMS; }
     protected:
         virtual void addToList( ATSMS *sms );
@@ -169,11 +169,11 @@ class UpdateSMS : public FetchSMS
 class SendStoredSMS : public kmobiletoolsATJob
 {
     public:
-      SendStoredSMS( KMobileTools::Job *pjob, SMS *sms, KMobileTools::SerialManager *device, AT_Engine* parent = 0  );
+      SendStoredSMS( KMobileTools::Job *pjob, KMobileTools::SMS *sms, KMobileTools::SerialManager *device, AT_Engine* parent = 0  );
         JobType type() { return KMobileTools::Job::sendStoredSMS; }
     protected:
         void run();
-        SMS *p_sms;
+        KMobileTools::SMS *p_sms;
 };
 
 
@@ -183,7 +183,7 @@ class SendStoredSMS : public kmobiletoolsATJob
 class SendSMS : public kmobiletoolsATJob
 {
     public:
-      SendSMS( KMobileTools::Job *pjob, SMS *sms, KMobileTools::SerialManager *device, AT_Engine* parent = 0  );
+      SendSMS( KMobileTools::Job *pjob, KMobileTools::SMS *sms, KMobileTools::SerialManager *device, AT_Engine* parent = 0  );
       SendSMS( KMobileTools::Job *pjob, const QString& number, const QString& text, KMobileTools::SerialManager *device, AT_Engine* parent = 0  );
         JobType type()            { return KMobileTools::Job::sendSMS; }
         bool succeeded() { return true; };
@@ -200,7 +200,7 @@ class SendSMS : public kmobiletoolsATJob
 class StoreSMS : public kmobiletoolsATJob
 {
     public:
-      StoreSMS( KMobileTools::Job *pjob, SMS *sms, KMobileTools::SerialManager *device, AT_Engine* parent = 0  );
+      StoreSMS( KMobileTools::Job *pjob, KMobileTools::SMS *sms, KMobileTools::SerialManager *device, AT_Engine* parent = 0  );
       StoreSMS( KMobileTools::Job *pjob, const QString &number, const QString &text, KMobileTools::SerialManager *device, AT_Engine* parent = 0  );
         JobType type()            { return KMobileTools::Job::storeSMS; }
         bool succeeded() { return true; };
@@ -220,12 +220,12 @@ class StoreSMS : public kmobiletoolsATJob
 class DeleteSMS : public kmobiletoolsATJob
 {
     public:
-      DeleteSMS( KMobileTools::Job *pjob, SMS *sms, KMobileTools::SerialManager *device, AT_Engine* parent = 0  );
+        DeleteSMS( KMobileTools::Job *pjob, KMobileTools::SMS *sms, KMobileTools::SerialManager *device, AT_Engine* parent = 0  );
         JobType type()            { return KMobileTools::Job::delSMS; }
         bool succeeded() { return true; };
-        SMS *sms() { return p_sms;}
+        KMobileTools::SMS *sms() { return p_sms;}
     protected:
-        SMS *p_sms;
+        KMobileTools::SMS *p_sms;
         void run();
         bool b_succeeded;
 };

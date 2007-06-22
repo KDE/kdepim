@@ -24,7 +24,7 @@
 
 #include <kmenu.h>
 
-class SMS;
+namespace KMobileTools { class SMS; }
 
 /**
 	@author Marco Gulino <marco@kmobiletools.org>
@@ -33,16 +33,16 @@ class KMOBILETOOLS_EXPORT popupSMS : public KMenu
 {
 Q_OBJECT
 public:
-    explicit popupSMS(SMS *sms, QWidget *parent=0);
+    explicit popupSMS(KMobileTools::SMS *sms, QWidget *parent=0);
 
     ~popupSMS();
 
     private slots:
         void slotRemove();
     private:
-        SMS *p_sms;
+        KMobileTools::SMS *p_sms;
     signals:
-        void remove(SMS *sms);
+        void remove(KMobileTools::SMS *sms);
 };
 
 #endif

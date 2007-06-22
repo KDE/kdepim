@@ -24,7 +24,7 @@
 #define TESTLIBKMOBILETOOLS_H
 
 #include <kapplication.h>
-class SMS;
+namespace KMobileTools { class SMS; }
 class TestLibKMobileToolsApp : public KApplication
 {
 Q_OBJECT
@@ -32,7 +32,7 @@ public:
     TestLibKMobileToolsApp ();
     ~TestLibKMobileToolsApp ();
     void mainloop();
-    SMS *checkSMS(bool deleteOnReturn=true);
+    KMobileTools::SMS *checkSMS(bool deleteOnReturn=true);
     void testAkonadi();
     void help();
 private:

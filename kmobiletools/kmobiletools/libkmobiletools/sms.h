@@ -22,6 +22,7 @@
 
 #include <libkmobiletools/kmobiletools_export.h>
 #include <kmime/kmime_content.h>
+#include <kmime/kmime_headers.h>
 
 #include <QtCore/QObject>
 #include <QtCore/QStringList>
@@ -31,8 +32,34 @@
 */
 
 class SMSPrivate;
-class KMime::Headers::Date;
-class KMime::Headers::From;
+class SenderPrivate;
+namespace KMobileTools {
+typedef QHash<QString,QString> PhoneNumbers;
+
+class KMOBILETOOLS_EXPORT Sender : public KMime::Headers::Generics::Structured
+{
+public:
+    Sender();
+    virtual ~Sender();
+    virtual const char *type() const;
+    virtual void addNumber(const QString &number, const QString &displayname=QString() );
+    virtual void clear();
+    virtual bool isEmpty() const;
+    virtual bool parse(const char *&scursor, const char *const send, bool isCRLF=false);
+    virtual QByteArray as7BitString(bool withHeaderType=true) const;
+    PhoneNumbers phoneNumbers() const;
+private:
+    SenderPrivate *const d;
+};
+/*class KMOBILETOOLS_EXPORT Destination : public KMime::Headers::Generics::Structured
+{
+public:
+    Destination();
+    virtual ~Destination();
+    virtual const char *type();
+};
+*/
+
 class KMOBILETOOLS_EXPORT SMS : public KMime::Content
 {
 public:
@@ -57,8 +84,6 @@ public:
     static QStringList getMultiText(const QString&);
     static int getMultiTextCount(const QString&);
     static int getMultiTextCount(int);
-    void setFrom(const QString& number, const QString &displayname=QString() );
-    KMime::Headers::From *from() const;
 
     virtual KDE_DEPRECATED QString getFrom() const;
     virtual QStringList getTo() const;
@@ -89,6 +114,12 @@ public:
 
     // Headers
     KMime::Headers::Date *date() const;
+   Sender *sender() const;
+//    Destination *to()   const;
+
+   void setSender(const QString& number, const QString &displayname=QString() );
+//    void addTo  (const QString& number, const QString &displayname=QString() );
+
 protected:
     virtual QByteArray assembleHeaders();
 
@@ -100,5 +131,6 @@ private:
 Q_SIGNALS:
     void updated();*/
 };
+}
 
 #endif

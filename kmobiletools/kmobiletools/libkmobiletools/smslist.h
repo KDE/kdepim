@@ -32,7 +32,7 @@
 
 class SMSListPrivate;
 
-class KMOBILETOOLS_EXPORT SMSList : public QObject, public QList<SMS*>
+class KMOBILETOOLS_EXPORT SMSList : public QObject, public QList<KMobileTools::SMS*>
 {
     Q_OBJECT
 public:
@@ -40,7 +40,7 @@ public:
 
     ~SMSList();
     void append(SMSList *sublist, bool sync=false);
-    void append(SMS *sms);
+    void append(KMobileTools::SMS *sms);
     int find(const QString &uid) const;
     void sync (SMSList *compList);
     void dump() const;

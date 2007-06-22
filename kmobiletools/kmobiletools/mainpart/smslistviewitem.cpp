@@ -29,7 +29,7 @@
 #include <kdebug.h>
 #define COLUMN_DATE 2
 
-SMSListViewItem::SMSListViewItem(K3ListView *parent, SMS *sms, KMobileTools::ContactsList *phoneBook, const char *name)
+SMSListViewItem::SMSListViewItem(K3ListView *parent, KMobileTools::SMS *sms, KMobileTools::ContactsList *phoneBook, const char *name)
     : QObject(parent), K3ListViewItem(parent, name)
 {
     p_sms=sms;
@@ -63,13 +63,13 @@ void SMSListViewItem::paintCell( QPainter * p, const QColorGroup & cg,
                                  int column, int width, int align )
 
 {
-    if (! ((p_sms->type() & SMS::Unread) || (p_sms->type() & SMS::Unsent)) )
+    if (! ((p_sms->type() & KMobileTools::SMS::Unread) || (p_sms->type() & KMobileTools::SMS::Unsent)) )
     {
         K3ListViewItem::paintCell(p,cg,column,width,align);
         return;
     }
     QColorGroup cg2(cg);
-    if(p_sms->type() & SMS::Unsent) cg2.setColor(QColorGroup::Text, Qt::red);
+    if(p_sms->type() & KMobileTools::SMS::Unsent) cg2.setColor(QColorGroup::Text, Qt::red);
     else cg2.setColor(QColorGroup::Text, Qt::blue);
     K3ListViewItem::paintCell( p, cg2, column, width, align );
 }
@@ -82,6 +82,6 @@ void SMSListViewItem::selected()
 void SMSListViewItem::markRead()
 {
     if(!isSelected()) return;
-    if(p_sms->type()==SMS::Unread ) p_sms->setType( SMS::Read );
+    if(p_sms->type()==KMobileTools::SMS::Unread ) p_sms->setType( KMobileTools::SMS::Read );
 }
 

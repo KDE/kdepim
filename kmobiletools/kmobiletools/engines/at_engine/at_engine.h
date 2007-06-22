@@ -111,13 +111,13 @@ public slots:
         dev->close();
     }
     void closeDevice() { AT_Engine::closeDevice(device); }
-    void slotDelSMS(SMS* sms);
-    void slotSendStoredSMS(SMS*);
+    void slotDelSMS(KMobileTools::SMS* sms);
+    void slotSendStoredSMS(KMobileTools::SMS*);
     void slotStoreSMS(const QString &number, const QString &text);
     void slotSendSMS(const QString &number, const QString &text);
     void slotSearchPhone();
-    void slotSendSMS(SMS*);
-    void slotStoreSMS(SMS*);
+    void slotSendSMS(KMobileTools::SMS*);
+    void slotStoreSMS(KMobileTools::SMS*);
 //     void invalidLockFile(const QString &);
     void slotDial(DialActions, const QString & =QString() );
 

@@ -39,10 +39,10 @@
 
 class KPluginInfo;
 class SMSList;
-class SMS;
 class QWizardPage;
 
 namespace KMobileTools {
+class SMS;
 class Weaver;
 class ContactsList;
 class EnginePrivate;

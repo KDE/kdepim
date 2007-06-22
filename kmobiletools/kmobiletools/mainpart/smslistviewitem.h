@@ -48,7 +48,7 @@ class SMSFolderListViewItem : public K3ListViewItem
         void setSMSType(int smstype) { i_smsType=smstype;}
         int memSlot() { return i_memslot;}
         int smsType() { return i_smsType; }
-        bool isIncoming() { return bool((i_smsType & SMS::Unread) || (i_smsType & SMS::Read) ); }
+        bool isIncoming() { return bool((i_smsType & KMobileTools::SMS::Unread) || (i_smsType & KMobileTools::SMS::Read) ); }
     private:
         int i_memslot;
         int i_smsType;
@@ -61,14 +61,14 @@ class SMSListViewItem : public QObject, public K3ListViewItem
 {
     Q_OBJECT
 public:
-    SMSListViewItem(K3ListView *parent, SMS *sms, KMobileTools::ContactsList *phoneBook, const char *name = 0);
+    SMSListViewItem(K3ListView *parent, KMobileTools::SMS *sms, KMobileTools::ContactsList *phoneBook, const char *name = 0);
 
     ~SMSListViewItem();
-    SMS *sms() { return p_sms;}
-    void setSMS(SMS *sms) {p_sms=sms;}
+    KMobileTools::SMS *sms() { return p_sms;}
+    void setSMS(KMobileTools::SMS *sms) {p_sms=sms;}
     virtual int compare( Q3ListViewItem *i, int col, bool ) const;
     private:
-        SMS *p_sms;
+        KMobileTools::SMS *p_sms;
         KMobileTools::ContactsList *p_phoneBook;
     protected:
         virtual void paintCell( QPainter * p, const QColorGroup & cg, int column, int width, int align );

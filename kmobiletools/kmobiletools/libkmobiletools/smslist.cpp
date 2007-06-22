@@ -29,6 +29,8 @@
 
 #include <QListIterator>
 
+using namespace KMobileTools;
+
 class SMSListPrivate {
 public:
     SMSListPrivate() : i_unread_phone(0), i_unread_sim(0), i_read_phone(0), i_read_sim(0),

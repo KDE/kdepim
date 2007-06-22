@@ -31,6 +31,8 @@
 
 #include "kmobiletoolshelper.h"
 
+using namespace KMobileTools;
+
 class SMSPrivate {
     public:
         SMSPrivate(SMS* p_parent) :
@@ -55,7 +57,77 @@ class SMSPrivate {
 //         s_uid=QString(context.hexDigest() );
     }
 };
+class SenderPrivate {
+public:
+    SenderPrivate() {}
+    PhoneNumbers numbers;
+    QByteArray numberAs7BitString( QHash<QString,QString>::ConstIterator n ) const
+    {
+        if( n.value().isEmpty() ) return n.key().toUtf8();
+        // adapted from kmime_header_parsing.cpp
+        QByteArray rv;
+        if ( KMime::isUsAscii( n.value() ) ) {
+            QByteArray tmp = n.value().toLatin1();
+            KMime::addQuotes( tmp, false );
+            rv += tmp;
+        } else {
+            rv += KMime::encodeRFC2047String( n.value(), QByteArray() /** @TODO verify this */, true );
+        }
+        rv += " <" + n.key().toUtf8() + '>';
+        return rv;
+    }
+};
 
+Sender::Sender() : KMime::Headers::Generics::Structured(), d(new SenderPrivate) {
+}
+
+Sender::~Sender() {}
+
+const char *Sender::type() const { return "Sender"; }
+
+void Sender::addNumber(const QString &number, const QString &displayname )
+{
+    d->numbers[number]=displayname;
+}
+
+void Sender::clear() { d->numbers.clear(); }
+bool Sender::isEmpty() const { return d->numbers.isEmpty(); }
+
+bool Sender::parse(const char *&scursor, const char *const send, bool isCRLF)
+{
+    kDebug() << k_funcinfo << "() " << scursor << ", " << send << ", " << isCRLF << endl;
+    return false;
+}
+
+QByteArray Sender::as7BitString(bool withHeaderType) const
+{
+    kDebug() << k_funcinfo << "() " << withHeaderType << endl;
+    QByteArray ret;
+    if( isEmpty() ) return ret;
+    if(withHeaderType) {
+        ret+=type();
+        ret+=": ";
+    }
+    for( QHash<QString,QString>::ConstIterator it=phoneNumbers().constBegin(); it!=phoneNumbers().constEnd(); ++it){
+        ret+=d->numberAs7BitString(it);
+        ret+=", ";
+    }
+    ret.resize(ret.length() -2);
+    return ret;
+}
+
+PhoneNumbers Sender::phoneNumbers() const
+{
+    return d->numbers;
+}
+
+/*Destination::Destination() : KMime::Headers::Generics::Structured() {
+}
+
+Destination::~Destination() {}
+
+const char *Destination::type() { return "Destination"; }
+*/
 SMS::SMS() : KMime::Content(),
     d(new SMSPrivate(this) )
 {
@@ -335,8 +407,10 @@ QByteArray SMS::assembleHeaders()
     QByteArray ret;
     h=date();
     if(h) ret+= h->as7BitString()+'\n';
-    h=from();
+    h=sender();
     if(h) ret+= h->as7BitString()+'\n';
+//     h=to();
+//     if(h) ret+= h->as7BitString()+'\n';
     return ret + Content::assembleHeaders();
 }
 
@@ -345,17 +419,31 @@ KMime::Headers::Date *SMS::date() const{
     return dynamic_cast<KMime::Headers::Date*>(const_cast<SMS*>(this)->getHeaderByType("Date") );
 }
 
-void SMS::setFrom(const QString& number, const QString &displayname) {
-    KMime::Headers::From *fromh=new KMime::Headers::From();
-    fromh->addAddress(number.toUtf8(), displayname);
+void SMS::setSender(const QString& number, const QString &displayname) {
+    Sender *fromh=sender();
+    if(!fromh) fromh=new Sender();
+    fromh->addNumber(number, displayname);
     setHeader(fromh);
 }
-
-KMime::Headers::From *SMS::from() const
-{
-
-    return dynamic_cast<KMime::Headers::From*>(const_cast<SMS*>(this)->getHeaderByType("From") );
+/*
+void SMS::addTo(const QString& number, const QString &displayname) {
+    Destination * h=to();
+    if(!h) {
+        h=new Destination;
+        setHeader(h);
+    }
+    h->addAddress(number.toUtf8(), displayname);
 }
+*/
+Sender *SMS::sender() const
+{
+    return dynamic_cast<Sender*>(const_cast<SMS*>(this)->getHeaderByType("Sender") );
+}
+/*
+KMime::Headers::To *SMS::to() const
+{
+    return dynamic_cast<Destination*>(const_cast<SMS*>(this)->getHeaderByType("Destination") );
+}*/
 
 QString SMS::getFrom() const
 {

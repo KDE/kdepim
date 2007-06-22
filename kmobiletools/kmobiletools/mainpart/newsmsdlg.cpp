@@ -78,7 +78,7 @@ void newSMSDlg::smsTextChanged()
 {
     int smslength=ui.smsText->toPlainText().length();
     QString statusTexT=i18n("SMS Text Length: %1 characters. Total SMS Count: %2. Encoding: %3", smslength,
-            SMS::getMultiTextCount(smslength),
+            KMobileTools::SMS::getMultiTextCount(smslength),
             KMobileTools::EncodingsHelper::encodingNameString( KMobileTools::EncodingsHelper::hasEncoding(ui.smsText->toPlainText(),
                 KMobileTools::EnginesList::instance()->find(objectName(), false)->pdu()
                 ) ) );
@@ -182,6 +182,6 @@ void newSMSDlg::slotUser2()
 void newSMSDlg::createSMSItem()
 {
 //     kDebug() << "newSMSDlg; numbers: " << sl_numbers << endl;
-    p_sms=new SMS(sl_numbers, ui.smsText->text() );
-    p_sms->setType( SMS::Unsent );
+    p_sms=new KMobileTools::SMS(sl_numbers, ui.smsText->text() );
+    p_sms->setType( KMobileTools::SMS::Unsent );
 }

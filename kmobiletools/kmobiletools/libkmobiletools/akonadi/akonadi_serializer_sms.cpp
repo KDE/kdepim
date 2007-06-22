@@ -32,7 +32,7 @@
 using namespace Akonadi;
 using namespace KMime;
 
-typedef boost::shared_ptr<SMS> MessagePtr;
+typedef boost::shared_ptr<KMobileTools::SMS> MessagePtr;
 
 template <typename T> static void parseAddrList( const QList<QByteArray> &addrList, T *hdr )
 {
@@ -65,7 +65,7 @@ void SerializerPluginSMS::deserialize( Item& item, const QString& label, const Q
 
     MessagePtr msg;
     if ( !item.hasPayload() ) {
-        SMS *m = new  SMS();
+        KMobileTools::SMS *m = new  KMobileTools::SMS();
         msg = MessagePtr( m );
         item.setPayload( msg );
     } else {
@@ -129,7 +129,7 @@ void SerializerPluginSMS::serialize( const Item& item, const QString& label, QBy
     if ( label != "SMS" )
       return;
 
-    boost::shared_ptr<SMS> m = item.payload< boost::shared_ptr<SMS> >();
+    boost::shared_ptr<KMobileTools::SMS> m = item.payload< boost::shared_ptr<KMobileTools::SMS> >();
     m->assemble();
     data = m->encodedContent();
 }
