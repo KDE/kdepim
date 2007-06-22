@@ -52,7 +52,7 @@ class KSLOX_EXPORT SloxItem
     QString responseDescription;
 };
 
-class KDE_EXPORT WebdavHandler
+class KSLOX_EXPORT WebdavHandler
 {
   public:
     WebdavHandler();

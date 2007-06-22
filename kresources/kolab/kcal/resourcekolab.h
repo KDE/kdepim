@@ -57,6 +57,7 @@ class KCALKOLAB_EXPORT ResourceKolab : public KCal::ResourceCalendar,
 
 public:
   ResourceKolab( const KConfigGroup& );
+
   virtual ~ResourceKolab();
 
   /// Load resource data.
