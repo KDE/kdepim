@@ -44,9 +44,8 @@
 using namespace Kolab;
 
 
-KMailConnection::KMailConnection( ResourceKolabBase* resource )
-  : QDBusAbstractAdaptor( this )
-  , mResource( resource )
+KMailConnection::KMailConnection( ResourceKolabBase* resource, const QString &uniq )
+  : mResource( resource )
   , mKmailGroupwareInterface( 0 )
 {
   // Make the connection to KMail ready
@@ -56,7 +55,10 @@ KMailConnection::KMailConnection( ResourceKolabBase* resource )
            SLOT(dbusServiceOwnerChanged(QString,QString,QString)) );
 #endif
   // TODO connect to the dbus signals from kmail here
+  kDebug()<<" uniq :"<<uniq<<endl;
+  QDBusConnection::sessionBus().registerObject( uniq,this,QDBusConnection::ExportScriptableSlots|QDBusConnection::ExportScriptableSignals );
 }
+
 
 KMailConnection::~KMailConnection()
 {

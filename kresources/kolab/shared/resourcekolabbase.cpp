@@ -55,8 +55,7 @@ ResourceKolabBase::ResourceKolabBase( const QByteArray& objId )
   KGlobal::locale()->insertCatalog( "kres_kolab" );
   KGlobal::locale()->insertCatalog( "libkcal" );
   QString uniqueObjId = "/Kolabresource_" +objId + QString::number( uniquifier++ ).toLatin1();
-  mConnection = new KMailConnection( this ); //Rename it to adaptor.
-  //QDBusConnection::sessionBus().registerObject( uniqueObjId, this,QDBusConnection::ExportScriptableSlots|QDBusConnection::ExportScriptableSignals );
+  mConnection = new KMailConnection( this, uniqueObjId ); //Rename it to adaptor.
 }
 
 ResourceKolabBase::~ResourceKolabBase()

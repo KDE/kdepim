@@ -50,9 +50,9 @@ class ResourceKolabBase;
 /**
   This class provides the kmail connectivity for IMAP resources.
 */
-class KOLABSHARED_EXPORT KMailConnection : public QDBusAbstractAdaptor {
+class KOLABSHARED_EXPORT KMailConnection : public QObject {
   Q_OBJECT
-
+  Q_CLASSINFO("D-Bus Interface", "org.kde.kmail.GroupWare")
   // These are the methods called by KMail when the resource changes
 public Q_SLOTS:
   Q_SCRIPTABLE bool fromKMailAddIncidence( const QString& type, const QString& resource,
@@ -68,7 +68,7 @@ public Q_SLOTS:
                                  const QString& folder );
 
 public:
-  KMailConnection( ResourceKolabBase* resource );
+  KMailConnection( ResourceKolabBase* resource, const QString&uniq );
   virtual ~KMailConnection();
 
   /**
