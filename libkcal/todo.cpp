@@ -161,7 +161,7 @@ void Todo::setHasStartDate(bool f)
 QDateTime Todo::dtStart( bool first ) const
 {
   if ( doesRecur() && !first )
-    return mDtRecurrence.addDays( dtDue( true ).daysTo( IncidenceBase::dtStart() ) );
+    return mDtRecurrence.addDays( dtDue( first ).daysTo( IncidenceBase::dtStart() ) );
   else
     return IncidenceBase::dtStart();
 }
