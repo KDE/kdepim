@@ -27,11 +27,11 @@
 #include <QList>
 
 #include <kurl.h>
-#include <kdemacros.h>
 
 #include <kcal/calendarlocal.h>
 #include <kcal/journal.h>
 #include "knotes/resourcenotes.h"
+#include "egroupware_export.h"
 
 namespace KXMLRPC {
 class Server;
@@ -46,7 +46,7 @@ class EGroupwarePrefs;
 /**
   This class provides access to eGroupware notes via XML-RPC.
 */
-class KDE_EXPORT ResourceXMLRPC : public ResourceNotes
+class KNOTES_XMLRPC_EXPORT ResourceXMLRPC : public ResourceNotes
 {
   Q_OBJECT
 

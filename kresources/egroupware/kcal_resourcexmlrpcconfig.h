@@ -22,14 +22,14 @@
 #define RESOURCEXMLRPCCONFIG_H
 
 #include <kresources/configwidget.h>
-#include <kdemacros.h>
+#include "egroupware_export.h"
 
 class KLineEdit;
 class KUrlRequester;
 
 namespace KCal {
 
-class KDE_EXPORT ResourceXMLRPCConfig : public KRES::ConfigWidget
+class KCAL_XMLRPC_EXPORT ResourceXMLRPCConfig : public KRES::ConfigWidget
 { 
   Q_OBJECT
 

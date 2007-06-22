@@ -24,7 +24,7 @@
 #include <QMap>
 //Added by qt3to4:
 #include <QList>
-#include <kdemacros.h>
+#include "egroupware_export.h"
 
 #include <kabc/resourcecached.h>
 
@@ -38,7 +38,7 @@ namespace KABC {
 
 class EGroupwarePrefs;
 
-class KDE_EXPORT ResourceXMLRPC : public ResourceCached
+class KABC_XMLRPC_EXPORT ResourceXMLRPC : public ResourceCached
 {
   Q_OBJECT
 

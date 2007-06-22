@@ -27,12 +27,12 @@
 
 #include <kurl.h>
 
-#include <kdemacros.h>
 
 #include <kcal/calendarlocal.h>
 #include <kcal/incidence.h>
 #include <kcal/resourcecached.h>
 #include "todostatemapper.h"
+#include "egroupware_export.h"
 
 namespace KXMLRPC {
 class Server;
@@ -47,7 +47,7 @@ class EGroupwarePrefs;
 /**
   This class provides access to php/eGroupware calendar via XML-RPC.
 */
-class KDE_EXPORT ResourceXMLRPC : public ResourceCached
+class KCAL_XMLRPC_EXPORT ResourceXMLRPC : public ResourceCached
 {
   Q_OBJECT
 
