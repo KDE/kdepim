@@ -32,6 +32,7 @@
 */
 
 #include "resourcekolabbase.h"
+
 #include "kmailconnection.h"
 
 #include <klocale.h>
@@ -41,6 +42,7 @@
 #include <ktemporaryfile.h>
 #include <kmessagebox.h>
 #include <QTextStream>
+#include <QDBusConnection>
 #include <kdebug.h>
 
 using namespace Kolab;
@@ -52,7 +54,9 @@ ResourceKolabBase::ResourceKolabBase( const QByteArray& objId )
 {
   KGlobal::locale()->insertCatalog( "kres_kolab" );
   KGlobal::locale()->insertCatalog( "libkcal" );
-  QByteArray uniqueObjId = objId + QString::number( uniquifier++ ).toLatin1();
+  QString uniqueObjId = "/Kolabresource_" +objId + QString::number( uniquifier++ ).toLatin1();
+  mConnection = new KMailConnection( this ); //Rename it to adaptor.
+  //QDBusConnection::sessionBus().registerObject( uniqueObjId, this,QDBusConnection::ExportScriptableSlots|QDBusConnection::ExportScriptableSignals );
   // TODO port to DBUS!
 #if 0
   mConnection = new KMailConnection( this, uniqueObjId );
@@ -225,3 +229,4 @@ KMail::StorageFormat ResourceKolabBase::kmailStorageFormat( const QString &folde
   mConnection->kmailStorageFormat( format, folder );
   return format;
 }
+

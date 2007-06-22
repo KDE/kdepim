@@ -37,10 +37,9 @@
 #include "task.h"
 #include "journal.h"
 
-#include <kio/observer.h>
-#include <kio/uiserver_stub.h>
+//#include <kio/observer.h>
+//#include <kio/uiserver_stub.h>
 #include <kapplication.h>
-#include <dcopclient.h>
 #include <kcal/icalformat.h>
 #include <libkdepim/kincidencechooser.h>
 #include <kabc/locknull.h>
@@ -120,8 +119,8 @@ bool ResourceKolab::doOpen()
   mOpen = true;
 
   KConfig config( configFile() );
-  config.setGroup( "General" );
-  mProgressDialogIncidenceLimit = config.readEntry("ProgressDialogIncidenceLimit", 200);
+  KConfigGroup group = config.group( "General" );
+  mProgressDialogIncidenceLimit = group.readEntry("ProgressDialogIncidenceLimit", 200);
 
   return openResource( config, kmailCalendarContentsType, mEventSubResources )
     && openResource( config, kmailTodoContentsType, mTodoSubResources )
