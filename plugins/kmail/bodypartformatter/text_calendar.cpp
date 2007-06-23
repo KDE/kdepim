@@ -244,13 +244,13 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
       QString subject;
       switch ( type ) {
         case Answer:
-          subject = i18n( "Answer: %1" ).arg( summary );
+          subject = i18n( "Answer: %1" , summary );
           break;
         case Delegation:
-          subject = i18n( "Delegated: %1" ).arg( summary );
+          subject = i18n( "Delegated: %1", summary );
           break;
         case Forward:
-          subject = i18n( "Forwarded: %1" ).arg( summary );
+          subject = i18n( "Forwarded: %1", summary );
           break;
       }
 
