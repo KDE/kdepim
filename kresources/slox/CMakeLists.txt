@@ -3,6 +3,8 @@ check_include_files(values.h HAVE_VALUES_H)
 
 configure_file (config-slox.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-slox.h)
 
+add_subdirectory( tests )
+
 
 ########### next target ###############
 
@@ -88,16 +90,6 @@ target_link_libraries(kabc_slox_plugin  ${KDE4_KDECORE_LIBS} kabc_slox )
 install(TARGETS kabc_slox_plugin  DESTINATION ${PLUGIN_INSTALL_DIR})
 
 
-
-########### next target ###############
-
-#set(testsloxaccounts_SRCS testsloxaccounts.cpp )
-
-#kde4_automoc(${testsloxaccounts_SRCS})
-
-#kde4_add_test_executable(testsloxaccounts ${testsloxaccounts_SRCS})
-
-#target_link_libraries(testsloxaccounts  ${KDE4_KDECORE_LIBS} kslox )
 
 ########### install files ###############
 

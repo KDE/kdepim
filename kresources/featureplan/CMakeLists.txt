@@ -1,5 +1,5 @@
 
-
+add_subdirectory( tests )
 
 
 set(libfeatureplancommon_SRCS)
@@ -37,29 +37,6 @@ kde4_add_plugin(kcal_resourcefeatureplan ${kcal_resourcefeatureplan_PART_SRCS})
 target_link_libraries(kcal_resourcefeatureplan  ${KDE4_KDECORE_LIBS} )
 
 install(TARGETS kcal_resourcefeatureplan  DESTINATION ${PLUGIN_INSTALL_DIR})
-
-
-########### next target ###############
-
-set(dumpfeaturelist_SRCS dumpfeaturelist.cpp ${libfeatureplancommon_SRCS})
-
-kde4_automoc(${dumpfeaturelist_SRCS})
-
-
-kde4_add_test_executable(dumpfeaturelist ${dumpfeaturelist_SRCS})
-
-target_link_libraries(dumpfeaturelist  ${KDE4_KDEUI_LIBS} )
-
-
-########### next target ###############
-set(benchmarkfeaturelist_SRCS benchmarkfeaturelist.cpp ${libfeatureplancommon_SRCS})
-
-kde4_automoc(${benchmarkfeaturelist_SRCS})
-
-
-kde4_add_test_executable(benchmarkfeaturelist ${benchmarkfeaturelist_SRCS})
-
-target_link_libraries(benchmarkfeaturelist  ${KDE4_KDEUI_LIBS})
 
 ########### install files ###############
 

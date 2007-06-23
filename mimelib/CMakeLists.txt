@@ -1,6 +1,7 @@
 project(mimelib)
 
 add_subdirectory( mimelib ) 
+add_subdirectory( tests ) 
 
 
 
@@ -49,17 +50,6 @@ target_link_libraries(mimelib  ${KDE4_KDECORE_LIBS})
 set_target_properties(mimelib PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
 install(TARGETS mimelib  DESTINATION ${LIB_INSTALL_DIR})
 
-
-########### next target ###############
-
-set(test_boyermor_SRCS test_boyermor.cpp )
-
-kde4_automoc(${test_boyermor_SRCS})
-
-
-kde4_add_test_executable(test_boyermor ${test_boyermor_SRCS})
-
-target_link_libraries(test_boyermor  ${KDE4_KDECORE_LIBS} mimelib )
 
 ########### install files ###############
 
