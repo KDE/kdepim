@@ -10,6 +10,6 @@ Type=Application
 Exec=kleopatra --import-certificate %u
 #Icon=kleopatra
 NoDisplay=true
-MimeType=application/pkcs7-mime;application/x-x509-ca-cert;application/x-pkcs12
+MimeType=application/pkcs7-mime;application/x-x509-ca-cert;application/x-pkcs12;
 
 X-KDE-StartupNotify=true
