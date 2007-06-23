@@ -29,7 +29,7 @@
 #include <QTextDocument>
 
 #include <libkmobiletools/kmobiletoolshelper.h>
-#include <libkmobiletools/popupnumber.h>
+#include <popupnumber.h>
 #include <libkmobiletools/sms.h>
 
 #define strBegin QString("<a href=\"smsctl:refresh\">%1</a> %2").arg(i18n("Click here") ).arg(i18n("to fetch all SMS from the phone") )

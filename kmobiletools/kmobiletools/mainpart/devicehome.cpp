@@ -76,8 +76,8 @@
 
 #include <libkmobiletools/aboutdata.h>
 #include <libkmobiletools/engine.h>
-#include <libkmobiletools/popupaddressee.h>
-#include <libkmobiletools/popupsms.h>
+#include <popupaddressee.h>
+#include <popupsms.h>
 #include <libkmobiletools/contactslist.h>
 #include <libkmobiletools/engineslist.h>
 #include <libkmobiletools/smslist.h>

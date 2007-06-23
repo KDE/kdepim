@@ -30,8 +30,8 @@
 #include <libkmobiletools/kmobiletoolshelper.h>
 #include <libkmobiletools/engine.h>
 #include <libkmobiletools/devicesconfig.h>
-#include <libkmobiletools/popupnumber.h>
-#include <libkmobiletools/popupaddressee.h>
+#include <popupnumber.h>
+#include <popupaddressee.h>
 
 using namespace KMobileTools;
 

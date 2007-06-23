@@ -8,6 +8,10 @@ set(kmobiletoolsmainpart_PART_SRCS
    calldialogimpl.cpp 
    calldialogimpl.h 
    deviceslist.cpp 
+   popupaddressee.cpp
+      popupnumber.cpp
+         popupsms.cpp
+
    editaddressee.cpp 
    exportphonebookdlg.cpp 
    importphonebookdlg.cpp 

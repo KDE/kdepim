@@ -26,9 +26,6 @@ set(kmobiletools_LIB_SRCS
    pickphonenumberdialog.cpp 
    enginedata.cpp
    picksmscenter.cpp 
-   popupaddressee.cpp 
-   popupnumber.cpp 
-   popupsms.cpp 
    qserial.cpp 
    serialdevice.cpp 
    engine.cpp 
