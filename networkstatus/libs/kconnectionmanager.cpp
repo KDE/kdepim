@@ -1,12 +1,9 @@
-/*
-    This file is part of kdepim.
-
-    Copyright (c) 2005 Will Stephenson <lists@stevello.free-online.co.uk>
+/*  This file is part of kdepim.
+    Copyright (C) 2005,2007 Will Stephenson <wstephenson@kde.org>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
-    License as published by the Free Software Foundation; either
-    version 2 of the License, or (at your option) any later version.
+    License version 2 as published by the Free Software Foundation.
 
     This library is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -14,148 +11,165 @@
     Library General Public License for more details.
 
     You should have received a copy of the GNU Library General Public License
-    along with this library; see the file COPYING.LIB.  If not, write to
-    the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+    along with this library.  If not, write to the Free Software
+    Foundation, Inc., 51 Franklin Street, Fifth Floor,
     Boston, MA 02110-1301, USA.
+
+    As a special exception, permission is given to link this library
+    with any edition of Qt, and distribute the resulting executable,
+    without including the source code for Qt in the source distribution.
 */
 
-#include <kapplication.h>
-#include <klocale.h>
-#include <kmessagebox.h>
-#include <kstaticdeleter.h>
+#include <KApplication>
+#include <KDebug>
+#include <KStaticDeleter>
 
 #include "clientinterface.h"
-#include "networkstatuscommon.h"
 
-#include "connectionmanager.h"
+#include "kconnectionmanager.h"
+#include "kconnectionmanager_p.h"
 
-// ConnectionManager's private parts
-class ConnectionManagerPrivate
-{
-	public:
-		// this holds the currently active state
-		ConnectionManager::State m_state;
-		ClientIface_stub * m_stub;
-		bool m_userInitiatedOnly;
-};
 
 // Connection manager itself
-ConnectionManager::ConnectionManager( QObject * parent ) : DCOPObject( "ConnectionManager" ), QObject( parent )
+KConnectionManager::KConnectionManager( QObject * parent ) : QObject( parent ), d( new KConnectionManagerPrivate( this ) )
 {
-	d = new ConnectionManagerPrivate;
-	
-	d->m_stub = new ClientIface_stub( kapp->dcopClient(), "kded", "networkstatus" );
-	
-	connectDCOPSignal( "kded", "networkstatus", "statusChange(QString,int)", "slotStatusChanged(QString,int)", false );
-	d->m_userInitiatedOnly = false;
-	initialise();
+    connect( d->service, SIGNAL(statusChanged(uint)), this, SLOT(serviceStatusChanged(uint)) );
+
+    initialise();
 }
 
-ConnectionManager *ConnectionManager::s_self = 0L;
-
-ConnectionManager *ConnectionManager::self()
+KConnectionManager::~KConnectionManager()
 {
-	static KStaticDeleter<ConnectionManager> deleter;
-	if(!s_self) {
-		deleter.setObject( s_self, new ConnectionManager( 0 ) );
-		s_self->setObjectName( "connection_manager" );
-	}
-	return s_self;	
+    delete d;
 }
 
-void ConnectionManager::initialise()
+KConnectionManager *KConnectionManager::s_self = 0L;
+
+KConnectionManager *KConnectionManager::self()
 {
-	// determine initial state and set the state object accordingly.
-	d->m_state = Offline;
-	updateStatus();
+    static KStaticDeleter<KConnectionManager> deleter;
+    if(!s_self)
+        deleter.setObject( s_self, new KConnectionManager( 0 ) );
+    return s_self;	
 }
 
-void ConnectionManager::updateStatus()
+void KConnectionManager::initialise()
 {
-	/*NetworkStatus::EnumStatus daemonStatus = (NetworkStatus::EnumStatus)d->m_stub->status( QString() );
-	switch ( daemonStatus )
-	{
-		case Offline:
-		case OfflineFailed:
-		case OfflineDisconnected:
-		case ShuttingDown:
-			if ( d->m_state == Online )
-				d->m_state = Pending;
-			else
-				d->m_state = Offline;
-			break;
-		case Establishing:
-		case Online:
-			d->m_state = Online;
-			break;
-		case NoNetworks:
-		case Unreachable:
-			d->m_state = Inactive;
-			break;
-	}*/
+    // determine initial state and set the state object accordingly.
+    uint status = d->service->status();
+
+    d->status = ( NetworkStatus::Status )status;
 }
 
-ConnectionManager::~ConnectionManager()
+NetworkStatus::Status KConnectionManager::status()
 {
-	delete d;
+    return d->status;
 }
 
-NetworkStatus::EnumStatus ConnectionManager::status( const QString & host )
+void KConnectionManager::serviceStatusChanged( uint status )
 {
-	if ( d->m_state == Inactive )
-		return NetworkStatus::NoNetworks;
-	else
-		return NetworkStatus::Offline;
-}
-NetworkStatus::EnumRequestResult ConnectionManager::requestConnection( QWidget * mainWidget, const QString & host, bool userInitiated )
-{
-	NetworkStatus::EnumRequestResult result;
-	// if offline and the user has previously indicated they didn't want any new connections, suppress it
-	if ( d->m_state == Offline && !userInitiated && d->m_userInitiatedOnly )
-		result = NetworkStatus::UserRefused;
-	// if offline, ask the user whether this connection should be allowed
-	if ( d->m_state == Offline )
-	{
-		if ( askToConnect( mainWidget ) )
-			result = (NetworkStatus::EnumRequestResult)d->m_stub->request( host, userInitiated );
-		else
-			result = NetworkStatus::UserRefused;
-	}
-	// otherwise, just ask for the connection
-	else
-		result = (NetworkStatus::EnumRequestResult)d->m_stub->request( host, userInitiated );
-	
-	return result;
-}
-
-void ConnectionManager::relinquishConnection( const QString & host )
-{
-	d->m_stub->relinquish( host );
-}
-
-void ConnectionManager::slotStatusChanged( QString host, int status )
-{
-	updateStatus();
-	// reset user initiated only flag if we are now online
-	if ( d->m_state == Online )
-		d->m_userInitiatedOnly = false;
-
-	emit statusChanged( host, (NetworkStatus::EnumStatus)status );
+    kDebug() << k_funcinfo << endl;
+    d->status = ( NetworkStatus::Status )status;
+    switch ( status ) {
+      case NetworkStatus::NoNetworks:
+        break;
+      case NetworkStatus::Unreachable:
+        break;
+      case NetworkStatus::OfflineDisconnected:
+      case NetworkStatus::OfflineFailed:
+      case NetworkStatus::ShuttingDown:
+      case NetworkStatus::Offline:
+      case NetworkStatus::Establishing:
+        if ( d->disconnectPolicy == Managed ) {
+          emit d->disconnected();
+        } else if ( d->disconnectPolicy == OnNextChange ) {
+          setDisconnectPolicy( Manual );
+          emit d->disconnected();
+        }
+        break;
+      case NetworkStatus::Online:
+        if ( d->disconnectPolicy == Managed ) {
+          emit d->connected();
+        } else if ( d->disconnectPolicy == OnNextChange ) {
+          setConnectPolicy( Manual );
+          emit d->connected();
+        }
+        break;
+      default:
+        kDebug() << k_funcinfo <<  "Unrecognised status code!" << endl;
+    }
+    emit statusChanged( d->status );
 }
 
-bool ConnectionManager::askToConnect( QWidget * mainWidget )
+KConnectionManager::ConnectionPolicy KConnectionManager::connectPolicy() const
 {
-#ifdef __GNUC__
-	#warning i18n: What the hell are these isolated i18n messages doing here?
-#endif
-	//i18n( "A network connection was disconnected.  The application is now in offline mode.  Do you want the application to resume network operations when the network is available again?" );
-	//i18n( "This application is currently in offline mode.  Do you want to connect?" );
-	//i18nc( "Message shown when a network connection failed.  The placeholder contains the concrete description of the operation eg 'while performing this operation", "A network connection failed %1.  Do you want to place the application in offline mode?" );
-	return ( KMessageBox::questionYesNo( mainWidget,
-			 i18n("This application is currently in offline mode.  Do you want to connect in order to carry out this operation?"),
-																		i18n("Leave Offline Mode?"),
-																		i18n("Connect"), i18n("Do Not Connect"),
-																		QString::fromLatin1("OfflineModeAlwaysGoOnline") ) == KMessageBox::Yes );
+    return d->connectPolicy;
 }
 
-#include "connectionmanager.moc"
+void KConnectionManager::setConnectPolicy( KConnectionManager::ConnectionPolicy policy )
+{
+    d->connectPolicy = policy;
+}
+
+KConnectionManager::ConnectionPolicy KConnectionManager::disconnectPolicy() const
+{
+    return d->disconnectPolicy;
+}
+
+void KConnectionManager::setDisconnectPolicy( KConnectionManager::ConnectionPolicy policy )
+{
+    d->disconnectPolicy = policy;
+}
+
+void KConnectionManager::setManualConnectionPolicies()
+{
+    d->connectPolicy = KConnectionManager::Manual;
+    d->disconnectPolicy = KConnectionManager::Manual;
+}
+
+void KConnectionManager::setManagedConnectionPolicies()
+{
+    d->connectPolicy = KConnectionManager::Managed;
+    d->disconnectPolicy = KConnectionManager::Managed;
+}
+
+void KConnectionManager::registerConnectSlot( QObject * receiver, const char * member )
+{
+    d->connectReceiver = receiver;
+    d->connectSlot = member;
+    connect( d, SIGNAL( connected() ), receiver, member );
+}
+
+void KConnectionManager::forgetConnectSlot()
+{
+    disconnect( d, SIGNAL( connected() ), d->connectReceiver, d->connectSlot );
+    d->connectReceiver = 0;
+    d->connectSlot = 0;
+}
+
+bool KConnectionManager::isConnectSlotRegistered() const
+{
+    return ( d->connectSlot != 0 );
+}
+
+void KConnectionManager::registerDisconnectSlot( QObject * receiver, const char * member )
+{
+    d->disconnectReceiver = receiver;
+    d->disconnectSlot = member;
+    connect( d, SIGNAL( disconnected() ), receiver, member );
+}
+
+void KConnectionManager::forgetDisconnectSlot()
+{
+    disconnect( d, SIGNAL( disconnected() ), d->disconnectReceiver, d->disconnectSlot );
+    d->disconnectReceiver = 0;
+    d->disconnectSlot = 0;
+}
+
+bool KConnectionManager::isDisconnectSlotRegistered() const
+{
+    return ( d->disconnectSlot != 0 );
+}
+
+#include "kconnectionmanager.moc"
+

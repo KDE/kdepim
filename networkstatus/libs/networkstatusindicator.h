@@ -1,5 +1,5 @@
-/*  This file is part of kdepim
-    Copyright (C) 2005,2007 Will Stephenson <wstephenson@kde.org>
+/*  This file is part of the KDE project
+    Copyright (C) 2007 Will Stephenson <wstephenson@kde.org>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
@@ -20,16 +20,24 @@
     without including the source code for Qt in the source distribution.
 */
 
-#ifndef NETWORKSTATUS_COMMON_H
-#define NETWORKSTATUS_COMMON_H
+#ifndef KDE_NETWORKSTATUS_INDICATOR_H
+#define KDE_NETWORKSTATUS_INDICATOR_H
 
-#include <qstringlist.h>
+//TODO own macros?
+#include <QWidget>
+#include <kdemacros.h>
+#include <networkstatuscommon.h>
 
-namespace NetworkStatus
+class KDE_EXPORT StatusBarNetworkStatusIndicator : public QWidget
 {
-    enum Status { NoNetworks = 1, Unreachable, OfflineDisconnected,  OfflineFailed, ShuttingDown, Offline, Establishing, Online };
-    enum RequestResult { RequestAccepted = 1, Connected, UserRefused, Unavailable };
-//    QString toString( Status st );
-}
+Q_OBJECT
+public:
+  StatusBarNetworkStatusIndicator( QWidget * parent );
+  ~StatusBarNetworkStatusIndicator();
+  void init();
+protected slots:
+  void networkStatusChanged( NetworkStatus::Status status );
+};
 
 #endif
+

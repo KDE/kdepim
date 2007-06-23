@@ -1,12 +1,9 @@
-/*
-    This file is part of kdepim.
-
-    Copyright (c) 2005 Will Stephenson <lists@stevello.free-online.co.uk>
+/*  This file is part of kdepim.
+    Copyright (C) 2005,2007 Will Stephenson <wstephenson@kde.org>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
-    License as published by the Free Software Foundation; either
-    version 2 of the License, or (at your option) any later version.
+    License version 2 as published by the Free Software Foundation.
 
     This library is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -14,80 +11,52 @@
     Library General Public License for more details.
 
     You should have received a copy of the GNU Library General Public License
-    along with this library; see the file COPYING.LIB.  If not, write to
-    the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+    along with this library.  If not, write to the Free Software
+    Foundation, Inc., 51 Franklin Street, Fifth Floor,
     Boston, MA 02110-1301, USA.
+
+    As a special exception, permission is given to link this library
+    with any edition of Qt, and distribute the resulting executable,
+    without including the source code for Qt in the source distribution.
 */
 
-#include <kdebug.h>
+#include <KDebug>
 
 #include "network.h"
 
-Network::Network( const QString name, NetworkStatus::Properties properties )
-	: m_name( name )
+Network::Network( const QString & name, int status, const QString & serviceName )
+	: m_name( name ), m_status( (NetworkStatus::Status)status ), m_service( serviceName )
 {
-	kDebug() << k_funcinfo << "constructing network '" << name << "', status: " << properties.status << endl;
-	m_status = properties.status;
-	m_netmasks = properties.netmasks;
-	m_internet = properties.internet;
-	m_service = properties.service;
-	m_onDemandPolicy = properties.onDemandPolicy;
 }
 
-NetworkStatus::EnumStatus Network::reachabilityFor( const QString & host )
-{
-	// initially assume all networks are internet
-	// TODO: compute reachability properly
-	Q_UNUSED( host );
-	if ( true /*nss.properties.internet && notPrivateNetwork( host )*/ )
-	{
-		NetworkStatus::EnumStatus status;
-		if ( m_status == NetworkStatus::Establishing || m_status == NetworkStatus::Online )
-			status = NetworkStatus::Online;
-		else if ( m_status == NetworkStatus::ShuttingDown || m_status == NetworkStatus::Offline )
-			status = NetworkStatus::Offline;
-		else
-			status = m_status;
-		
-		return status;
-	}
-}
-
-void Network::registerUsage( const QByteArray appId, const QString host )
-{
-	NetworkUsageStruct nus;
-	nus.appId = appId;
-	nus.host = host;
-	NetworkUsageList::iterator end = m_usage.end();
-	for ( NetworkUsageList::iterator it = m_usage.begin(); it != end; ++it )
-	{
-		if ( (*it).appId == appId && (*it).host == host )
-			return;
-	}
-	kDebug() << k_funcinfo << "registering " << appId << " as using network " << m_name << " for " << host << endl;
-	m_usage.append( nus );
-}
-
-void Network::unregisterUsage( const QByteArray appId, const QString host )
-{
-	NetworkUsageList::iterator end = m_usage.end();
-	for ( NetworkUsageList::iterator it = m_usage.begin(); it != end; ++it )
-	{
-		if ( (*it).appId == appId && (*it).host == host )
-		{
-			kDebug() << k_funcinfo << "unregistering " << appId << "'s usage of " << m_name << " for " << host << endl;
-			m_usage.erase( it );
-			break;
-		}
-	}
-}
-
-void Network::setStatus( NetworkStatus::EnumStatus status )
+void Network::setStatus( NetworkStatus::Status status )
 {
 	m_status = status;
 }
 
-void Network::removeAllUsage()
+NetworkStatus::Status Network::status()
 {
-	m_usage.clear();
+	return m_status;
 }
+
+void Network::setName( const QString& name )
+{
+	m_name = name;
+}
+
+QString Network::name()
+{
+	return m_name;
+}
+
+QString Network::service()
+{
+	return m_service;
+}
+
+void Network::setService( const QString& service )
+{
+	m_service = service;
+}
+
+// vim: sw=4 ts=4

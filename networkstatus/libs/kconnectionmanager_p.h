@@ -1,5 +1,5 @@
-/*  This file is part of kdepim.
-    Copyright (C) 2005,2007 Will Stephenson <wstephenson@kde.org>
+/*  This file is part of the KDE project
+    Copyright (C) 2007 Will Stephenson <wstephenson@kde.org>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
@@ -20,41 +20,36 @@
     without including the source code for Qt in the source distribution.
 */
 
-#ifndef NETWORKSTATUS_NETWORK_H
-#define NETWORKSTATUS_NETWORK_H
+#ifndef CONNECTIONMANAGERPRIVATE_H
+#define CONNECTIONMANAGERPRIVATE_H
 
+#include <QObject>
 #include <networkstatuscommon.h>
 
-class Network
-{
-public:
-//	Network( const QString name );
-	Network( const QString & name, int status, const QString & serviceName );
-	/**
-	 * Update the status of this network
-	 */
-	void setStatus( NetworkStatus::Status status );
-	/**
-	 * The connection status of this network
-	 */
-	NetworkStatus::Status status();
-	/**
-	 * The name of this network
-	 */
-	QString name();
-	void setName( const QString& name );
-	/**
-	 * Returns the service owning this network
-	 */
-	QString service();
-	void setService( const QString& service );
+#include "kconnectionmanager.h"
 
-private:
-	Network( const Network & );
-	QString m_name;
-	NetworkStatus::Status m_status;
-	QString m_service;
+class OrgKdeSolidNetworkingClientInterface;
+
+// KConnectionManager's private parts
+class KConnectionManagerPrivate : public QObject
+{
+Q_OBJECT
+    friend class KConnectionManager;
+public:
+    KConnectionManagerPrivate( QObject * parent = 0 );
+    ~KConnectionManagerPrivate();
+    // this holds the currently active state
+    NetworkStatus::Status status;
+    OrgKdeSolidNetworkingClientInterface * service;
+    KConnectionManager::ConnectionPolicy connectPolicy;
+    KConnectionManager::ConnectionPolicy disconnectPolicy;
+    QObject * connectReceiver;
+    const char * connectSlot;
+    QObject * disconnectReceiver;
+    const char * disconnectSlot;
+signals:
+    void connected();
+    void disconnected();
 };
 
 #endif
-// vim: sw=4 ts=4
