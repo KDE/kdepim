@@ -1,3 +1,3 @@
 
-install( FILES editinteractor.h passphraseprovider.h progressprovider.h  DESTINATION ${INCLUDE_INSTALL_DIR}/gpgme++/interfaces)
+install( FILES dataprovider.h editinteractor.h passphraseprovider.h progressprovider.h  DESTINATION ${INCLUDE_INSTALL_DIR}/gpgmepp/interfaces)
 

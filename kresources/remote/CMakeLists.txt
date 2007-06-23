@@ -34,5 +34,5 @@ install(TARGETS kcal_remote  DESTINATION ${PLUGIN_INSTALL_DIR})
 ########### install files ###############
 
 install( FILES remote.desktop  DESTINATION ${SERVICES_INSTALL_DIR}/kresources/kcal)
-install( FILES resourceremoteconfig.h resourceremote.h  DESTINATION ${INCLUDE_INSTALL_DIR}/kcal)
+install( FILES resourceremoteconfig.h resourceremote.h remote_export.h  DESTINATION ${INCLUDE_INSTALL_DIR}/kcal)
 
