@@ -117,4 +117,21 @@ install( FILES
 	kleo/keyfiltermanager.h
 	libkleo_export.h
 	DESTINATION ${INCLUDE_INSTALL_DIR}/kleo)
+	
+install ( FILES
+	ui/kdhorizontalline.h 
+	ui/progressbar.h 
+	ui/progressdialog.h 
+	ui/keylistview.h 
+	ui/keyselectiondialog.h 
+	ui/keyrequester.h 
+	ui/keyapprovaldialog.h 
+	ui/backendconfigwidget.h 
+	ui/dnattributeorderconfigwidget.h 
+	ui/cryptoconfigmodule.h 
+	ui/cryptoconfigdialog.h 
+	ui/directoryserviceswidget.h 
+	ui/adddirectoryservicedialogimpl.h
+	libkleo_export.h
+	DESTINATION ${INCLUDE_INSTALL_DIR}/libkleoui)
 
