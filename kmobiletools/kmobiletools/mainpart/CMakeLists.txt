@@ -11,7 +11,7 @@ set(kmobiletoolsmainpart_PART_SRCS
    popupaddressee.cpp
       popupnumber.cpp
          popupsms.cpp
-
+   pickphonenumberdialog.cpp
    editaddressee.cpp 
    exportphonebookdlg.cpp 
    importphonebookdlg.cpp 
@@ -34,6 +34,7 @@ kde4_add_ui_files(kmobiletoolsmainpart_PART_SRCS
    importphonebook.ui 
    mainWidget.ui 
    ui_newsms.ui
+   pickphonenumber.ui
    cfg_filesystem.ui 
    cfg_gammu-engine.ui 
    deviceList.ui 

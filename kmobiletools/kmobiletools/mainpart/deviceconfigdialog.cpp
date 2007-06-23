@@ -47,7 +47,7 @@
 
 #include "ui_genericDeviceOptions.h"
 // #include "deviceIFace_stub.h" @TODO update to dbus if necessary
-#include <libkmobiletools/picksmscenter.h>
+#include <picksmscenter.h>
 
 #include "ui_cfg_filesystem.h"
 #include "kcombobox.h"

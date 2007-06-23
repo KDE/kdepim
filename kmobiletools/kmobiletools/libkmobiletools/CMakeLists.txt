@@ -23,10 +23,9 @@ set(kmobiletools_LIB_SRCS
    overlaywidget.cpp 
    job.cpp 
    weaver.cpp 
-   pickphonenumberdialog.cpp 
    enginedata.cpp
-   picksmscenter.cpp 
    qserial.cpp 
+   picksmscenter.cpp
    serialdevice.cpp 
    engine.cpp 
    sms.cpp 
@@ -37,8 +36,6 @@ QT4_ADD_DBUS_INTERFACE(kmobiletools_LIB_SRCS org.kde.kmobiletools.main.xml kmobi
 
 
 kde4_automoc(${kmobiletools_LIB_SRCS})
-
-kde4_add_ui_files(kmobiletools_LIB_SRCS ui_pickphonenumber.ui )
 
 kde4_add_kcfg_files(kmobiletools_LIB_SRCS kmobiletools_cfg.kcfgc kmobiletools_devices.kcfgc )
 
@@ -57,6 +54,7 @@ install( FILES kmobiletools_devices.kcfg kmobiletools_devices.kcfg DESTINATION  
 install( FILES  kmobiletoolsengine.desktop DESTINATION ${SERVICETYPES_INSTALL_DIR} )
 install(FILES
    kmobiletools_export.h
+   picksmscenter.h
    kmobiletoolshelper.h
    engine.h
    sms.h
@@ -66,9 +64,7 @@ install(FILES
    qserial.h
    job.h
    contactslist.h
-   pickphonenumberdialog.h
    serialdevice.h
-   picksmscenter.h
    enginedata.h
    weaver.h
    ${CMAKE_CURRENT_BINARY_DIR}/kmobiletools_devices.h

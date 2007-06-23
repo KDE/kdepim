@@ -23,10 +23,8 @@
 #include <kdialog.h>
 #include <kabc/addressee.h>
 
-#include <libkmobiletools/kmobiletools_export.h>
-#include <libkmobiletools/ui_ui_pickphonenumber.h>
-
 #include <klistwidgetsearchline.h>
+#include "ui_pickphonenumber.h"
 
 /**
 	@author Marco Gulino <marco@kmobiletools.org>
@@ -34,7 +32,7 @@
 
 class PickPhoneNumberDialogPrivate;
 
-class KMOBILETOOLS_EXPORT PickPhoneNumberDialog : public KDialog
+class PickPhoneNumberDialog : public KDialog
 {
 Q_OBJECT
 public:

@@ -1,6 +1,6 @@
 <ui version="4.0" >
- <class>ui_PickPhoneNumber</class>
- <widget class="QWidget" name="ui_PickPhoneNumber" >
+ <class>PickPhoneNumber</class>
+ <widget class="QWidget" name="PickPhoneNumber" >
   <property name="geometry" >
    <rect>
     <x>0</x>

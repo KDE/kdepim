@@ -34,7 +34,6 @@
 #include "devicesconfig.h"
 #include "contactslist.h"
 
-
 using namespace KMobileTools;
 
 class PickPhoneNumberDialogPrivate {
@@ -42,7 +41,7 @@ class PickPhoneNumberDialogPrivate {
         PickPhoneNumberDialogPrivate()
     : addresseeList(NULL)
         {}
-        Ui::ui_PickPhoneNumber ui;
+        Ui::PickPhoneNumber ui;
         KMobileTools::ContactsList *addresseeList;
         QStringList s_selectedNumbers;
 };

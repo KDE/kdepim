@@ -29,7 +29,7 @@
 #include <kmessagebox.h>
 #include <kdebug.h>
 #include <libkmobiletools/kmobiletoolshelper.h>
-#include <libkmobiletools/pickphonenumberdialog.h>
+#include <pickphonenumberdialog.h>
 #include <libkmobiletools/encodingshelper.h>
 #include <libkmobiletools/engineslist.h>
 #include <libkmobiletools/sms.h>
