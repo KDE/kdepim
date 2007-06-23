@@ -65,6 +65,7 @@ public:
     {
         if( n.value().isEmpty() ) return n.key().toUtf8();
         // adapted from kmime_header_parsing.cpp
+        // Copyright (c) 2001-2002 Marc Mutz <mutz@kde.org>
         QByteArray rv;
         if ( KMime::isUsAscii( n.value() ) ) {
             QByteArray tmp = n.value().toLatin1();
@@ -75,6 +76,22 @@ public:
         }
         rv += " <" + n.key().toUtf8() + '>';
         return rv;
+    }
+    bool parsePhoneNumberString(const QString &s)
+    {
+        /// @TODO handle more charset
+        kDebug() << k_funcinfo << "() " << s << endl;
+        QString number, name;
+        QRegExp src;
+        src.setMinimal(true);
+        if(! s.contains('\"') )
+            src.setPattern("(.*)<(.*)>");
+        else src.setPattern("^\"(.*)\"[\\s]*<(.*)>");
+        kDebug() << "Regexp Pattern: " << src.pattern() << endl;
+        if( src.indexIn( s.trimmed() )==-1 ) { kDebug() << " search failed\n"; return false;}
+        numbers[src.cap(2)]=src.cap(1);
+        kDebug() << "adding contact: <<" << src.cap(1).trimmed() << ">> <<" << src.cap(2).trimmed() << ">>\n";
+        return true;
     }
 };
 class DestinationPrivate {
@@ -99,8 +116,33 @@ bool Sender::isEmpty() const { return d->numbers.isEmpty(); }
 
 bool Sender::parse(const char *&scursor, const char *const send, bool isCRLF)
 {
-    kDebug() << k_funcinfo << "() " << scursor << ", " << send << ", " << isCRLF << endl;
-    return false;
+/// @TODO handle more charset
+    kDebug() << k_funcinfo << "() " << scursor << ", " << int(send-scursor) << ", " << isCRLF << endl;
+//     return false;
+    QStringList singlenums;
+    // strip out type()
+    QString stype=QString("%1: ").arg(type() );
+    if (stype==QString(scursor).left(stype.size() ) )
+        scursor=&scursor[stype.size() ];
+    else return false;
+    bool hadQuotes=false;
+    char *start=(char*) scursor;
+    for( int i=0; i<(send-scursor); i++){
+//         kDebug() << "checking char '" << scursor[i] << "' (" << int(scursor[i]) << ")\n";
+        if(scursor[i]=='"' && scursor[i-1]!='\\')
+            hadQuotes=!hadQuotes;
+        if( !hadQuotes && scursor[i]==',' )
+        {
+            singlenums+=QString(start).left(i-(start-scursor));
+            start=(char*) &scursor[i+1];
+        }
+    }
+    singlenums+=QString(const_cast<char*>(start) );
+//     kDebug() << "Single nums found: >>>\n" << singlenums.join("|||\n|||") << "|||;" << endl;
+    bool ret=true;
+    for( int i=0; i<singlenums.size(); i++ )
+        ret&=d->parsePhoneNumberString( singlenums.at(i) );
+    return ret;
 }
 
 QByteArray Sender::as7BitString(bool withHeaderType) const
