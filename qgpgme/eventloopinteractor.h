@@ -44,14 +44,14 @@ namespace QGpgME {
 
     static EventLoopInteractor * instance();
 
-  signals:
+  Q_SIGNALS:
     void nextTrustItemEventSignal( GpgME::Context * context, const GpgME::TrustItem & item  );
     void nextKeyEventSignal( GpgME::Context * context, const GpgME::Key & key );
     void operationDoneEventSignal( GpgME::Context * context, const GpgME::Error & e );
 
     void aboutToDestroy();
 
-  protected slots:
+  protected Q_SLOTS:
     void slotWriteActivity( int socket );
     void slotReadActivity( int socket );
     
