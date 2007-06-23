@@ -1,7 +1,9 @@
 [Misc]
 Encoding=UTF-8
 Name=SMS Serializer
+Name[zh_TW]=簡訊序列器
 Comment=An Akonadi serializer plugin for sms objects
+Comment[zh_TW]=簡訊物件的 Akonadi 序列器外掛程式
 
 [Plugin]
 Type=application/x-kmobiletools-sms
