@@ -50,8 +50,8 @@ QString toString( NetworkStatus::Status st )
     case NetworkStatus::OfflineFailed:
       str = "OfflineFailed";
       break;
-    case NetworkStatus::ShuttingDown:
-      str = "ShuttingDown";
+    case NetworkStatus::TearingDown:
+      str = "TearingDown";
       break;
     case NetworkStatus::Offline:
       str = "Offline";
@@ -123,8 +123,8 @@ void TestService::changeComboActivated( int index )
     case 1 /*NetworkStatus::OfflineFailed*/:
       m_nextStatus = NetworkStatus::OfflineFailed;
       break;
-    case 2 /*NetworkStatus::ShuttingDown*/:
-      m_nextStatus = NetworkStatus::ShuttingDown;
+    case 2 /*NetworkStatus::TearingDown*/:
+      m_nextStatus = NetworkStatus::TearingDown;
       break;
     case 3 /*NetworkStatus::Offline*/:
       m_nextStatus = NetworkStatus::Offline;
@@ -153,7 +153,7 @@ void TestService::changeButtonClicked()
   ui.statusLabel->setPalette( palette );
   setCaption( toString( m_status ) );
 }
-
+#if 0
 int TestService::establish( const QString & network )
 {
 	Q_UNUSED( network );
@@ -167,7 +167,7 @@ int TestService::establish( const QString & network )
 int TestService::shutdown( const QString & network )
 {
 	Q_UNUSED( network );
-	m_status = NetworkStatus::ShuttingDown;
+	m_status = NetworkStatus::TearingDown;
 	m_service->setNetworkStatus( "test_net", (int)m_status );
 	m_nextStatus = NetworkStatus::Offline;
 	QTimer::singleShot( 5000, this, SLOT( slotStatusChange() ) );
@@ -185,7 +185,7 @@ void TestService::simulateDisconnect()
 	m_status = NetworkStatus::OfflineDisconnected;
 	m_service->setNetworkStatus( "test_net", (int)m_status );
 }
-
+#endif
 void TestService::slotStatusChange()
 {
 	m_status = m_nextStatus;
@@ -208,7 +208,7 @@ QColor TestService::toQColor( NetworkStatus::Status st )
       case NetworkStatus::OfflineFailed:
         col = Qt::darkRed;
         break;
-      case NetworkStatus::ShuttingDown:
+      case NetworkStatus::TearingDown:
         col = Qt::darkYellow;
         break;
       case NetworkStatus::Offline:

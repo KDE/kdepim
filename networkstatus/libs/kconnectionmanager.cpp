@@ -35,7 +35,7 @@ KConnectionManager::KConnectionManager( QObject * parent ) : QObject( parent ), 
 {
     connect( d->service, SIGNAL(statusChanged(uint)), this, SLOT(serviceStatusChanged(uint)) );
 
-    initialise();
+    initialize();
 }
 
 KConnectionManager::~KConnectionManager()
@@ -53,7 +53,7 @@ KConnectionManager *KConnectionManager::self()
     return s_self;	
 }
 
-void KConnectionManager::initialise()
+void KConnectionManager::initialize()
 {
     // determine initial state and set the state object accordingly.
     uint status = d->service->status();
@@ -77,7 +77,7 @@ void KConnectionManager::serviceStatusChanged( uint status )
         break;
       case NetworkStatus::OfflineDisconnected:
       case NetworkStatus::OfflineFailed:
-      case NetworkStatus::ShuttingDown:
+      case NetworkStatus::TearingDown:
       case NetworkStatus::Offline:
       case NetworkStatus::Establishing:
         if ( d->disconnectPolicy == Managed ) {

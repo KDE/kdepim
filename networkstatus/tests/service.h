@@ -37,10 +37,12 @@ public:
 	TestService();
 	virtual ~TestService();
 	int status( const QString & network );
+#if 0
 	int establish( const QString & network );
 	int shutdown( const QString & network );
 	void simulateFailure();
 	void simulateDisconnect();
+#endif
 protected slots:
 	void changeComboActivated( int index );
     void serviceOwnerChanged( const QString& service,const QString& oldOwner, const QString& newOwner );

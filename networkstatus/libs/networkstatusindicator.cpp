@@ -50,7 +50,7 @@ StatusBarNetworkStatusIndicator::~StatusBarNetworkStatusIndicator()
 {
 }
 
-void StatusBarNetworkStatusIndicator::init()
+void StatusBarNetworkStatusIndicator::initialize()
 {
   networkStatusChanged( KConnectionManager::self()->status());
 }

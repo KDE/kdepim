@@ -52,8 +52,8 @@ QString toString( NetworkStatus::Status st )
     case NetworkStatus::OfflineFailed:
       str = "OfflineFailed";
       break;
-    case NetworkStatus::ShuttingDown:
-      str = "ShuttingDown";
+    case NetworkStatus::TearingDown:
+      str = "TearingDown";
       break;
     case NetworkStatus::Offline:
       str = "Offline";

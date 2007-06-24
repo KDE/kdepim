@@ -25,10 +25,22 @@
 
 #include <qstringlist.h>
 
-namespace NetworkStatus
+namespace NetworkStatus //TODO: Move to Solid::Networking?
 {
-    enum Status { NoNetworks = 1, Unreachable, OfflineDisconnected,  OfflineFailed, ShuttingDown, Offline, Establishing, Online };
-    enum RequestResult { RequestAccepted = 1, Connected, UserRefused, Unavailable };
+    /**
+     * Describes the connection status of a single network or the aggregate status provided by the network status service
+     */
+    enum Status {
+        NoNetworks = 1, /**< No networks are known to the status service.  This does not imply that the system is really offline */
+        Unreachable, /**< Networks are known but not reachable. CANDIDATE FOR REMOVAL */
+        OfflineDisconnected, /**< The network is offline due to a normal disconnect CANDIDATE FOR REMOVAL */
+        OfflineFailed, /**< The network is offline due to a failure CANDIDATE FOR REMOVAL */
+        TearingDown, /**< In the process of tearing down a connection */
+        Offline, /**< Offline (no reason given ) */
+        Establishing, /**< In the process of making a connection */
+        Online /** Network is connected */
+    };
+
 //    QString toString( Status st );
 }
 
