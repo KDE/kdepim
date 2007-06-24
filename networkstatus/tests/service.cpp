@@ -79,8 +79,7 @@ TestService::TestService() : KMainWindow( 0 ),
     connect( ui.changeCombo, SIGNAL( activated( int ) ), SLOT( changeComboActivated( int ) ) );
     connect( ui.changeButton, SIGNAL( clicked() ), SLOT( changeButtonClicked() ) );
 
-    //connect( kapp->dcopClient(), SIGNAL( applicationRegistered( const QCString& ) ), this, SLOT( registeredToDCOP( const QCString& ) ) );
-    //kapp->dcopClient()->setNotifications( true );
+    connect( QDBusConnection::sessionBus().interface(), SIGNAL(serviceOwnerChanged(const QString&, const QString&, const QString & ) ), SLOT(serviceOwnerChanged(const QString&, const QString&, const QString & ) ) );
 
     ui.statusLabel->setText( toString( m_status ) );
     QPalette palette;
@@ -104,8 +103,10 @@ void TestService::registerService()
 void TestService::serviceOwnerChanged( const QString& service,const QString& oldOwner, const QString& newOwner )
 {
     Q_UNUSED( oldOwner );
-    if ( !newOwner.isEmpty() && service == "org.kde.kded" )
+    if ( !newOwner.isEmpty() && service == "org.kde.kded" ) {
+        kDebug() << "KDED restarted, trying to re-register service with it" << endl;
         registerService();
+    }
 }
 
 int TestService::status( const QString & network )

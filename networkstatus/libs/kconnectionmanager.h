@@ -126,6 +126,10 @@ public:
      * 1) the network connection is online,
      * 2) the policy mandates that the app connect
      *
+     * In some error recovery conditions, the slot may be called when the
+     * app is already connected. Application authors should consider this
+     * when designing the slot.
+     *
      * Only one slot may be registered at any one time. If a second slot is
      * registered, the first slot is forgotten.
      * @param receiver the QObject where the slot is located
@@ -148,6 +152,10 @@ public:
      * Record a slot to call on a given receiving QObject when
      * 1) the network connection goes offline (in any way ),
      * 2) the policy mandates that the app disconnect
+     *
+     * In some error recovery conditions, the slot may be called when the
+     * app is already disconnected. Application authors should consider this
+     * when designing the slot.
      *
      * Only one slot may be registered at any one time. If a econd slot is
      * registered, the first slot is forgotten
@@ -180,6 +188,11 @@ protected Q_SLOTS:
      * Called on DBus signal from the network status service
      */
     void serviceStatusChanged( uint status );
+    /**
+     * Detects when kded restarts, and sets status to NoNetworks so that apps
+     * may proceed
+     */
+    void serviceOwnerChanged( const QString &, const QString &, const QString & );
 private:
     // sets up internal state
     void initialize();

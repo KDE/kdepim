@@ -35,6 +35,7 @@
 KConnectionManager::KConnectionManager( QObject * parent ) : QObject( parent ), d( new KConnectionManagerPrivate( this ) )
 {
     connect( d->service, SIGNAL(statusChanged(uint)), this, SLOT(serviceStatusChanged(uint)) );
+    connect( QDBusConnection::sessionBus().interface(), SIGNAL(serviceOwnerChanged(const QString&, const QString&, const QString & ) ), SLOT(serviceOwnerChanged(const QString&, const QString&, const QString & ) ) );
 
     initialize();
 }
@@ -51,7 +52,7 @@ KConnectionManager *KConnectionManager::self()
     static KStaticDeleter<KConnectionManager> deleter;
     if(!s_self)
         deleter.setObject( s_self, new KConnectionManager( 0 ) );
-    return s_self;	
+    return s_self;
 }
 
 void KConnectionManager::initialize()
@@ -100,6 +101,23 @@ void KConnectionManager::serviceStatusChanged( uint status )
         kDebug( 921 ) << k_funcinfo <<  "Unrecognised status code!" << endl;
     }
     emit statusChanged( d->status );
+}
+
+void KConnectionManager::serviceOwnerChanged( const QString & name, const QString & oldOwner, const QString & newOwner )
+{
+  Q_UNUSED( oldOwner );
+  if ( name == "org.kde.kded" ) {
+    if ( newOwner.isEmpty() ) {
+      // kded quit on us
+      d->status = NetworkStatus::NoNetworks;
+      emit statusChanged( d->status );
+    } else {
+      // kded was replaced or started
+      initialize();
+      emit statusChanged( d->status );
+      serviceStatusChanged( d->status );
+    }
+  }
 }
 
 KConnectionManager::ConnectionPolicy KConnectionManager::connectPolicy() const
