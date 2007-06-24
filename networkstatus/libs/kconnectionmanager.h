@@ -69,7 +69,7 @@ public:
      */
     enum ConnectionPolicy {
         Manual, /**< Manual - the app should only disconnect when the user does so manually */
-        OnNextChange, /**< the app should connect or disconnect the next time the network changes state, thereafter Manual */
+        OnNextStatusChange, /**< the app should connect or disconnect the next time the network changes status, thereafter Manual */
         Managed /**< the app should connect or disconnect whenever the KConnectionManager reports a state change */
     };
     /**
@@ -85,7 +85,7 @@ public:
      * Access the current status of the network status service.
      * @return the current network status according to the network status service
      */
-    NetworkStatus::Status status();
+    NetworkStatus::Status status() const;
 
     /**
      * Set a policy to manage the application's connect behaviour
@@ -121,60 +121,6 @@ public:
      */
     void setManagedConnectionPolicies();
 
-    /**
-     * Record a slot to call on a given receiving QObject when
-     * 1) the network connection is online,
-     * 2) the policy mandates that the app connect
-     *
-     * In some error recovery conditions, the slot may be called when the
-     * app is already connected. Application authors should consider this
-     * when designing the slot.
-     *
-     * Only one slot may be registered at any one time. If a second slot is
-     * registered, the first slot is forgotten.
-     * @param receiver the QObject where the slot is located
-     * @param member the slot to call, format using the SLOT() macro.
-     */
-    void registerConnectSlot( QObject * receiver, const char * member );
-
-    /**
-     * Forget any connect slot previously registered
-     */
-    void forgetConnectSlot();
-
-    /**
-     * Has any slot been registered to be called on connect?
-     * @return whether a slot is registered to be called on connect
-     */
-    bool isConnectSlotRegistered() const;
-
-    /**
-     * Record a slot to call on a given receiving QObject when
-     * 1) the network connection goes offline (in any way ),
-     * 2) the policy mandates that the app disconnect
-     *
-     * In some error recovery conditions, the slot may be called when the
-     * app is already disconnected. Application authors should consider this
-     * when designing the slot.
-     *
-     * Only one slot may be registered at any one time. If a econd slot is
-     * registered, the first slot is forgotten
-     * @param receiver the QObject where the slot is located
-     * @param member the slot to call, format using the SLOT() macro.
-     */
-    void registerDisconnectSlot( QObject * receiver, const char * member );
-
-    /**
-     * Forget any disconnect slot previously registered
-     */
-    void forgetDisconnectSlot();
-
-    /**
-     * Has any slot been registered to be called on disconnect?
-     * @return whether a slot is registered to be called on disconnect
-     */
-    bool isDisconnectSlotRegistered() const;
-
     ~KConnectionManager();
 
 Q_SIGNALS:
@@ -183,6 +129,21 @@ Q_SIGNALS:
      * @param status the new status of the network status service
      */
     void statusChanged( NetworkStatus::Status status );
+    /**
+     * Signals that the system's network has become connected, so receivers
+     * should connect their sockets, ioslaves etc.
+     *
+     * This signal is emitted according to the active connectPolicy.
+     */
+    void shouldConnect();
+    /**
+     * Signals that the system's network has become disconnected,
+     * so receivers should adjust application state appropriately.
+     *
+     * This signal is emitted according to the active disconnectPolicy.
+     */
+    void shouldDisconnect();
+
 protected Q_SLOTS:
     /**
      * Called on DBus signal from the network status service

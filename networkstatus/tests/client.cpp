@@ -83,8 +83,8 @@ TestClient::TestClient()
     kDebug() << "About to connect" << endl;
     connect( KConnectionManager::self(), SIGNAL( statusChanged( NetworkStatus::Status ) ), SLOT( networkStatusChanged( NetworkStatus::Status ) ) );
     kDebug() << "Connected." << endl;
-    KConnectionManager::self()->registerConnectSlot( this, SLOT( doConnect() ) );
-    KConnectionManager::self()->registerDisconnectSlot( this, SLOT( doDisconnect() ) );
+    connect( KConnectionManager::self(), SIGNAL( shouldConnect() ), this, SLOT( doConnect() ) );
+    connect( KConnectionManager::self(), SIGNAL( shouldDisconnect() ), this, SLOT( doDisconnect() ) );
 
     connect( ui.connectButton, SIGNAL( clicked() ), SLOT( connectButtonClicked() ) );
 }

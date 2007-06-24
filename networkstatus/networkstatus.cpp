@@ -72,7 +72,7 @@ NetworkStatusModule::NetworkStatusModule() : KDEDModule(), d( new Private )
 
 NetworkStatusModule::~NetworkStatusModule()
 {
-    foreach ( Network * net, d->networks ) {
+    Q_FOREACH ( Network * net, d->networks ) {
         delete net;
     }
 
@@ -94,7 +94,7 @@ void NetworkStatusModule::updateStatus()
     NetworkStatus::Status bestStatus = NetworkStatus::NoNetworks;
     const NetworkStatus::Status oldStatus = d->status;
 
-    foreach ( Network * net, d->networks ) {
+    Q_FOREACH ( Network * net, d->networks ) {
         if ( net->status() > bestStatus )
             bestStatus = net->status();
     }

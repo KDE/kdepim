@@ -1,5 +1,8 @@
 project(networkstatus)
 
+macro_optional_find_package(NetworkManager)
+macro_log_feature(NETWORKMANAGER_FOUND "NetworkManager" "NetworkManager is a daemon for user controlled networking" "http://www.gnome.org/projects/NetworkManager")
+
 add_subdirectory(libs)
 add_subdirectory(tests)
 
@@ -8,6 +11,10 @@ add_subdirectory(tests)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/libs)
 
 set(kded_networkstatus_PART_SRCS networkstatus.cpp network.cpp)
+
+if(NETWORKMANAGER_FOUND)
+    MESSAGE(STATUS "Adding in-process NetworkManager service-wart to kded module")
+endif(NETWORKMANAGER_FOUND)
 
 qt4_add_dbus_adaptor(kded_networkstatus_PART_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/libs/org.kde.Solid.Networking.Service.xml
         networkstatus.h NetworkStatusModule)

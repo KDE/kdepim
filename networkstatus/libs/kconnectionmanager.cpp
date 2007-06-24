@@ -30,6 +30,15 @@
 
 #include "kconnectionmanager_p.h"
 
+// KConnectionManagerPrivate
+
+KConnectionManagerPrivate::KConnectionManagerPrivate(QObject * parent ) : service( new OrgKdeSolidNetworkingClientInterface( "org.kde.kded", "/modules/networkstatus", QDBusConnection::sessionBus(), parent ) ), connectPolicy( KConnectionManager::Managed ), disconnectPolicy( KConnectionManager::Managed )
+{
+}
+
+KConnectionManagerPrivate::~KConnectionManagerPrivate()
+{
+}
 
 // Connection manager itself
 KConnectionManager::KConnectionManager( QObject * parent ) : QObject( parent ), d( new KConnectionManagerPrivate( this ) )
@@ -63,7 +72,7 @@ void KConnectionManager::initialize()
     d->status = ( NetworkStatus::Status )status;
 }
 
-NetworkStatus::Status KConnectionManager::status()
+NetworkStatus::Status KConnectionManager::status() const
 {
     return d->status;
 }
@@ -83,18 +92,18 @@ void KConnectionManager::serviceStatusChanged( uint status )
       case NetworkStatus::Offline:
       case NetworkStatus::Establishing:
         if ( d->disconnectPolicy == Managed ) {
-          emit d->disconnected();
-        } else if ( d->disconnectPolicy == OnNextChange ) {
+          emit shouldDisconnect();
+        } else if ( d->disconnectPolicy == OnNextStatusChange ) {
           setDisconnectPolicy( Manual );
-          emit d->disconnected();
+          emit shouldDisconnect();
         }
         break;
       case NetworkStatus::Online:
         if ( d->disconnectPolicy == Managed ) {
-          emit d->connected();
-        } else if ( d->disconnectPolicy == OnNextChange ) {
+          emit shouldConnect();
+        } else if ( d->disconnectPolicy == OnNextStatusChange ) {
           setConnectPolicy( Manual );
-          emit d->connected();
+          emit shouldConnect();
         }
         break;
       default:
@@ -150,44 +159,6 @@ void KConnectionManager::setManagedConnectionPolicies()
 {
     d->connectPolicy = KConnectionManager::Managed;
     d->disconnectPolicy = KConnectionManager::Managed;
-}
-
-void KConnectionManager::registerConnectSlot( QObject * receiver, const char * member )
-{
-    d->connectReceiver = receiver;
-    d->connectSlot = member;
-    connect( d, SIGNAL(connected()), receiver, member );
-}
-
-void KConnectionManager::forgetConnectSlot()
-{
-    disconnect( d, SIGNAL(connected()), d->connectReceiver, d->connectSlot );
-    d->connectReceiver = 0;
-    d->connectSlot = 0;
-}
-
-bool KConnectionManager::isConnectSlotRegistered() const
-{
-    return ( d->connectSlot != 0 );
-}
-
-void KConnectionManager::registerDisconnectSlot( QObject * receiver, const char * member )
-{
-    d->disconnectReceiver = receiver;
-    d->disconnectSlot = member;
-    connect( d, SIGNAL(disconnected()), receiver, member );
-}
-
-void KConnectionManager::forgetDisconnectSlot()
-{
-    disconnect( d, SIGNAL(disconnected()), d->disconnectReceiver, d->disconnectSlot );
-    d->disconnectReceiver = 0;
-    d->disconnectSlot = 0;
-}
-
-bool KConnectionManager::isDisconnectSlotRegistered() const
-{
-    return ( d->disconnectSlot != 0 );
 }
 
 #include "kconnectionmanager.moc"

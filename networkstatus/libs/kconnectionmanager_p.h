@@ -23,7 +23,6 @@
 #ifndef CONNECTIONMANAGERPRIVATE_H
 #define CONNECTIONMANAGERPRIVATE_H
 
-#include <QObject>
 #include <networkstatuscommon.h>
 
 #include "kconnectionmanager.h"
@@ -31,10 +30,8 @@
 class OrgKdeSolidNetworkingClientInterface;
 
 // KConnectionManager's private parts
-class KConnectionManagerPrivate : public QObject
+class KConnectionManagerPrivate
 {
-Q_OBJECT
-    friend class KConnectionManager;
 public:
     KConnectionManagerPrivate( QObject * parent = 0 );
     ~KConnectionManagerPrivate();
@@ -43,13 +40,6 @@ public:
     OrgKdeSolidNetworkingClientInterface * service;
     KConnectionManager::ConnectionPolicy connectPolicy;
     KConnectionManager::ConnectionPolicy disconnectPolicy;
-    QObject * connectReceiver;
-    const char * connectSlot;
-    QObject * disconnectReceiver;
-    const char * disconnectSlot;
-signals:
-    void connected();
-    void disconnected();
 };
 
 #endif
