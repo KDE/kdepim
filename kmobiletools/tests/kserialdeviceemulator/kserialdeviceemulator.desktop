@@ -1,6 +1,7 @@
 [Desktop Entry]
 Encoding=UTF-8
 Name=KSerialDeviceEmulator
+Name[sv]=Kserialdeviceemulator
 Exec=kserialdeviceemulator
 Icon=kserialdeviceemulator
 Type=Application
@@ -9,4 +10,5 @@ Comment[be]=Простая праграма KDE
 Comment[el]=Μια απλή εφαρμογή του KDE
 Comment[es]=Una aplicación sencilla de KDE
 Comment[ja]=シンプルな KDE アプリケーション
+Comment[sv]=Ett enkelt KDE-program
 Comment[zh_TW]=簡單的 KDE 應用程式

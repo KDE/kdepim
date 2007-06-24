@@ -1,8 +1,10 @@
 [Misc]
 Encoding=UTF-8
 Name=SMS Serializer
+Name[sv]=SMS-serialisering
 Name[zh_TW]=簡訊序列器
 Comment=An Akonadi serializer plugin for sms objects
+Comment[sv]=Ett insticksprogram till Akonadi för serialisering av SMS-objekt
 Comment[zh_TW]=簡訊物件的 Akonadi 序列器外掛程式
 
 [Plugin]

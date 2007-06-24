@@ -7,6 +7,7 @@ Name=Mobile Phones Filesystem
 Name[el]=Σύστημα αρχείων κινητών τηλεφώνων
 Name[es]=Sistema de archivos de teléfonos móviles
 Name[ja]=携帯電話ファイルシステム
+Name[sv]=Filsystem på mobiltelefon
 Name[zh_TW]=行動電話檔案系統
 Open=false
 X-KDE-TreeModule=Directory

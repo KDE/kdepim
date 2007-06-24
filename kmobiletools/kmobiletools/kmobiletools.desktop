@@ -1,10 +1,12 @@
 [Desktop Entry]
 Encoding=UTF-8
 Name=KMobileTools
+Name[sv]=Kmobiletools
 GenericName=Mobile Phones Management
 GenericName[el]=Διαχείριση κινητών τηλεφώνων
 GenericName[es]=Gestión de teléfonos móviles
 GenericName[ja]=携帯電話管理ツール
+GenericName[sv]=Mobiltelefonhantering
 GenericName[zh_TW]=行動電話管理員
 Exec=kmobiletools %i %m -caption "%c"
 Icon=kmobiletools
@@ -14,6 +16,7 @@ Comment=KDE Mobile Phones Suite
 Comment[el]=Σουίτα διαχείρισης κινητών τηλεφώνων του KDE
 Comment[es]=Suite para teléfonos móviles de KDE
 Comment[ja]=KDE 携帯電話スイート
+Comment[sv]=KDE:s mobiltelefonsvit
 Comment[zh_TW]=KDE 行動電話套件
 Terminal=false
 Categories=Qt;KDE;Utility;X-KDE-Utilities-Peripherals;

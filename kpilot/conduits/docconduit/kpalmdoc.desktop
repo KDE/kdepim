@@ -2,6 +2,7 @@
 [Desktop Entry]
 Encoding=UTF-8
 Name=KPalmDOC
+Name[sv]=Kpalm DOC
 Name[ta]=கேகைdoc
 GenericName=PalmDOC Converter
 GenericName[af]=PalmDOC omskakelaar
@@ -39,6 +40,7 @@ GenericName[ru]=Конвертер PalmDOC
 GenericName[sl]=Pretvornik v PalmDOC
 GenericName[sr]=PalmDOC конвертор
 GenericName[sr@latin]=PalmDOC konvertor
+GenericName[sv]=PalmDOC-konvertering
 GenericName[ta]=பாம்DOC மாற்றி
 GenericName[tg]=Конвертёри PalmDOC
 GenericName[tr]=PalmDOC Çevirici

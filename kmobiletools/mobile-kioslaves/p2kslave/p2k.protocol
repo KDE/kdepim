@@ -20,4 +20,5 @@ Description=A kioslave for p2k Motorola Phones
 Description[el]=Ένα kioslave για τηλέφωνα Motorola p2k
 Description[es]=Un kioslave para teléfonos p2k de Motorola
 Description[ja]=p2k Motorola 電話のための kioslave
+Description[sv]=En I/O-slav för Motorola p2k mobiltelefoner
 Description[zh_TW]=p2k Motorola 行動電話的 kioslave
