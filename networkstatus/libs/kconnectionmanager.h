@@ -56,6 +56,13 @@ class KConnectionManagerPrivate;
 class KDE_EXPORT KConnectionManager : public QObject
 {
 Q_OBJECT
+// TODO Q_PROPERTY doesn't like namespaced enums, as far as I can see. Should go away when this is
+// all together in Solid::Networking
+//Q_ENUMS( Status )
+//Q_PROPERTY( Status status READ status SCRIPTABLE true )
+Q_PROPERTY( ConnectionPolicy connectPolicy READ connectPolicy WRITE setConnectPolicy SCRIPTABLE true )
+Q_PROPERTY( ConnectionPolicy disconnectPolicy READ disconnectPolicy WRITE setDisconnectPolicy SCRIPTABLE true )
+
 public:
     /**
      * This defines application policy in response to networking connect/disconnect events
