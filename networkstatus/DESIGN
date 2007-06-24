@@ -23,3 +23,12 @@ KConnectionManager
 As well as signalling status changes, KConnectionManager can easily call registered slots on
 connected and disconnected events.  These are controlled by ConnectionPolicy, which describes the
 circumstances when KConnectionManager should manage a connection.
+
+Layout
+networkstatus/
+  networkstatus KDED Module implementation.  Final destination: kdebase/runtime/solid
+networkstatus/libs
+  Client library libkconnectionmanager for client applications to use.  Final destination: kdelibs somewhere.
+networkstatus/tests
+  Test service and client GUI applications which make it easy to simulate network events and observe their effect on a client (which has a queued/autoconnect function with its simulated network usage).  Final destination: kdebase/runtime/solid
+
