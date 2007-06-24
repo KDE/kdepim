@@ -20,14 +20,14 @@
     without including the source code for Qt in the source distribution.
 */
 
+#include "networkstatusindicator.h"
+
 #include <QLabel>
 #include <QVBoxLayout>
 #include <KIconLoader>
 #include <KLocale>
 
 #include "kconnectionmanager.h"
-
-#include "networkstatusindicator.h"
 
 StatusBarNetworkStatusIndicator::StatusBarNetworkStatusIndicator(
     QWidget * parent) : QWidget( parent)
@@ -41,8 +41,8 @@ StatusBarNetworkStatusIndicator::StatusBarNetworkStatusIndicator(
   layout->addWidget( label );
   setLayout( layout );
 
-  connect( KConnectionManager::self(), SIGNAL( statusChanged( NetworkStatus::Status ) ),
-      SLOT( networkStatusChanged( NetworkStatus::Status) ) );
+  connect( KConnectionManager::self(), SIGNAL(statusChanged(NetworkStatus::Status)),
+      SLOT(networkStatusChanged(NetworkStatus::Status)) );
 
 }
 

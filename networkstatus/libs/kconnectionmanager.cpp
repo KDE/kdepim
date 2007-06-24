@@ -20,13 +20,14 @@
     without including the source code for Qt in the source distribution.
 */
 
+#include "kconnectionmanager.h"
+
 #include <KApplication>
 #include <KDebug>
 #include <KStaticDeleter>
 
 #include "clientinterface.h"
 
-#include "kconnectionmanager.h"
 #include "kconnectionmanager_p.h"
 
 
@@ -137,12 +138,12 @@ void KConnectionManager::registerConnectSlot( QObject * receiver, const char * m
 {
     d->connectReceiver = receiver;
     d->connectSlot = member;
-    connect( d, SIGNAL( connected() ), receiver, member );
+    connect( d, SIGNAL(connected()), receiver, member );
 }
 
 void KConnectionManager::forgetConnectSlot()
 {
-    disconnect( d, SIGNAL( connected() ), d->connectReceiver, d->connectSlot );
+    disconnect( d, SIGNAL(connected()), d->connectReceiver, d->connectSlot );
     d->connectReceiver = 0;
     d->connectSlot = 0;
 }
@@ -156,12 +157,12 @@ void KConnectionManager::registerDisconnectSlot( QObject * receiver, const char 
 {
     d->disconnectReceiver = receiver;
     d->disconnectSlot = member;
-    connect( d, SIGNAL( disconnected() ), receiver, member );
+    connect( d, SIGNAL(disconnected()), receiver, member );
 }
 
 void KConnectionManager::forgetDisconnectSlot()
 {
-    disconnect( d, SIGNAL( disconnected() ), d->disconnectReceiver, d->disconnectSlot );
+    disconnect( d, SIGNAL(disconnected()), d->disconnectReceiver, d->disconnectSlot );
     d->disconnectReceiver = 0;
     d->disconnectSlot = 0;
 }

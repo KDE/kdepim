@@ -49,7 +49,7 @@ public:
      * Default constructor.
      * @param parent the widget's parent
      */
-    StatusBarNetworkStatusIndicator( QWidget * parent );
+    explicit StatusBarNetworkStatusIndicator( QWidget * parent );
     ~StatusBarNetworkStatusIndicator();
     /**
      * Hides or shows the widget, depending on the current state of the network service.
