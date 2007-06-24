@@ -38,8 +38,8 @@ public:
     // this holds the currently active state
     NetworkStatus::Status status;
     OrgKdeSolidNetworkingClientInterface * service;
-    KConnectionManager::ConnectionPolicy connectPolicy;
-    KConnectionManager::ConnectionPolicy disconnectPolicy;
+    KConnectionManager::ManagementPolicy connectPolicy;
+    KConnectionManager::ManagementPolicy disconnectPolicy;
 };
 
 #endif

@@ -129,36 +129,24 @@ void KConnectionManager::serviceOwnerChanged( const QString & name, const QStrin
   }
 }
 
-KConnectionManager::ConnectionPolicy KConnectionManager::connectPolicy() const
+KConnectionManager::ManagementPolicy KConnectionManager::connectPolicy() const
 {
     return d->connectPolicy;
 }
 
-void KConnectionManager::setConnectPolicy( KConnectionManager::ConnectionPolicy policy )
+void KConnectionManager::setConnectPolicy( KConnectionManager::ManagementPolicy policy )
 {
     d->connectPolicy = policy;
 }
 
-KConnectionManager::ConnectionPolicy KConnectionManager::disconnectPolicy() const
+KConnectionManager::ManagementPolicy KConnectionManager::disconnectPolicy() const
 {
     return d->disconnectPolicy;
 }
 
-void KConnectionManager::setDisconnectPolicy( KConnectionManager::ConnectionPolicy policy )
+void KConnectionManager::setDisconnectPolicy( KConnectionManager::ManagementPolicy policy )
 {
     d->disconnectPolicy = policy;
-}
-
-void KConnectionManager::setManualConnectionPolicies()
-{
-    d->connectPolicy = KConnectionManager::Manual;
-    d->disconnectPolicy = KConnectionManager::Manual;
-}
-
-void KConnectionManager::setManagedConnectionPolicies()
-{
-    d->connectPolicy = KConnectionManager::Managed;
-    d->disconnectPolicy = KConnectionManager::Managed;
 }
 
 #include "kconnectionmanager.moc"

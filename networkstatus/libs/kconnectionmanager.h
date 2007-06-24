@@ -60,14 +60,14 @@ Q_OBJECT
 // all together in Solid::Networking
 //Q_ENUMS( Status )
 //Q_PROPERTY( Status status READ status SCRIPTABLE true )
-Q_PROPERTY( ConnectionPolicy connectPolicy READ connectPolicy WRITE setConnectPolicy SCRIPTABLE true )
-Q_PROPERTY( ConnectionPolicy disconnectPolicy READ disconnectPolicy WRITE setDisconnectPolicy SCRIPTABLE true )
+Q_PROPERTY( ManagementPolicy connectPolicy READ connectPolicy WRITE setConnectPolicy SCRIPTABLE true )
+Q_PROPERTY( ManagementPolicy disconnectPolicy READ disconnectPolicy WRITE setDisconnectPolicy SCRIPTABLE true )
 
 public:
     /**
      * This defines application policy in response to networking connect/disconnect events
      */
-    enum ConnectionPolicy {
+    enum ManagementPolicy {
         Manual, /**< Manual - the app should only disconnect when the user does so manually */
         OnNextStatusChange, /**< the app should connect or disconnect the next time the network changes status, thereafter Manual */
         Managed /**< the app should connect or disconnect whenever the KConnectionManager reports a state change */
@@ -91,35 +91,25 @@ public:
      * Set a policy to manage the application's connect behaviour
      * @param the new connection policy
      */
-    void setConnectPolicy( ConnectionPolicy );
+    void setConnectPolicy( ManagementPolicy );
 
     /**
      * Retrieve a policy managing the application's connect behaviour
      * @return the connection policy in use
      */
-    ConnectionPolicy connectPolicy() const;
+    ManagementPolicy connectPolicy() const;
 
     /**
      * Set a policy to manage the application's disconnect behaviour
      * @param the new disconnection policy
      */
-    void setDisconnectPolicy( ConnectionPolicy );
+    void setDisconnectPolicy( ManagementPolicy );
 
     /**
      * Retrieve a policy managing the application's disconnect behaviour
      * @return the disconnection policy in use
      */
-    ConnectionPolicy disconnectPolicy() const;
-
-    /**
-     * Convenience method to set @ref NetworkStatus::Manual on both policies
-     */
-    void setManualConnectionPolicies();
-
-    /**
-     * Convenience method to set @ref NetworkStatus::Managed on both policies
-     */
-    void setManagedConnectionPolicies();
+    ManagementPolicy disconnectPolicy() const;
 
     ~KConnectionManager();
 

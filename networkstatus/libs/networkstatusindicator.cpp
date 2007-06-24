@@ -39,7 +39,6 @@ StatusBarNetworkStatusIndicator::StatusBarNetworkStatusIndicator(
   label->setPixmap( SmallIcon("connect-no") );
   label->setToolTip( i18n( "The desktop is offline" ) );
   layout->addWidget( label );
-  setLayout( layout );
   initialize();
   connect( KConnectionManager::self(), SIGNAL(statusChanged(NetworkStatus::Status)),
       SLOT(networkStatusChanged(NetworkStatus::Status)) );
