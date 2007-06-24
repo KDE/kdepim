@@ -32,18 +32,17 @@
 StatusBarNetworkStatusIndicator::StatusBarNetworkStatusIndicator(
     QWidget * parent) : QWidget( parent)
 {
-  //setMargin( 2 );
   QVBoxLayout * layout = new QVBoxLayout( this );
+  layout->setMargin( 3 );
   layout->setSpacing( 1 );
   QLabel * label = new QLabel( this );
   label->setPixmap( SmallIcon("connect-no") );
   label->setToolTip( i18n( "The desktop is offline" ) );
   layout->addWidget( label );
   setLayout( layout );
-
+  initialize();
   connect( KConnectionManager::self(), SIGNAL(statusChanged(NetworkStatus::Status)),
       SLOT(networkStatusChanged(NetworkStatus::Status)) );
-
 }
 
 StatusBarNetworkStatusIndicator::~StatusBarNetworkStatusIndicator()
