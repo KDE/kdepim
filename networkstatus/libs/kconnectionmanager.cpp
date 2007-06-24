@@ -69,7 +69,7 @@ NetworkStatus::Status KConnectionManager::status()
 
 void KConnectionManager::serviceStatusChanged( uint status )
 {
-    kDebug() << k_funcinfo << endl;
+//    kDebug( 921 ) << k_funcinfo << endl;
     d->status = ( NetworkStatus::Status )status;
     switch ( status ) {
       case NetworkStatus::NoNetworks:
@@ -97,7 +97,7 @@ void KConnectionManager::serviceStatusChanged( uint status )
         }
         break;
       default:
-        kDebug() << k_funcinfo <<  "Unrecognised status code!" << endl;
+        kDebug( 921 ) << k_funcinfo <<  "Unrecognised status code!" << endl;
     }
     emit statusChanged( d->status );
 }

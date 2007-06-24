@@ -84,7 +84,7 @@ NetworkStatusModule::~NetworkStatusModule()
 
 int NetworkStatusModule::status()
 {
-    kDebug() << k_funcinfo << " status: " << (int)d->status << endl;
+    kDebug( 1222 ) << k_funcinfo << " status: " << (int)d->status << endl;
     return (int)d->status;
 }
 
@@ -102,7 +102,6 @@ void NetworkStatusModule::updateStatus()
     d->status = bestStatus;
 
     if ( oldStatus != d->status ) {
-        kDebug() << "signalling" << endl;
         emit statusChanged( (uint)d->status );
     }
 }
@@ -116,7 +115,7 @@ void NetworkStatusModule::serviceOwnerChanged( const QString & name ,const QStri
       it.next();
       if ( it.value()->service() == name )
       {
-        kDebug() << "Departing service " << name << " owned network " << it.value()->name() << ", removing it" << endl;
+        kDebug( 1222 ) << "Departing service " << name << " owned network " << it.value()->name() << ", removing it" << endl;
         Network * removedNet = it.value();
         it.remove();
         updateStatus();
@@ -130,20 +129,24 @@ void NetworkStatusModule::serviceOwnerChanged( const QString & name ,const QStri
 
 QStringList NetworkStatusModule::networks()
 {
-    kDebug() << k_funcinfo << " contains " << d->networks.count() << " networks" << endl;
+    if ( d->networks.count() ) {
+      kDebug() << "Network status module is aware of " << d->networks.count() << " networks" << endl;
+    } else {
+      kDebug( 1222 ) << "Network status module is not aware of any networks" << endl;
+    }
     return d->networks.keys();
 }
 
 void NetworkStatusModule::setNetworkStatus( const QString & networkName, int st )
 {
-    kDebug() << k_funcinfo << networkName << ", " << st << endl;
+    kDebug( 1222 ) << k_funcinfo << networkName << ", " << st << endl;
     NetworkStatus::Status changedStatus = (NetworkStatus::Status)st;
     if ( d->networks.contains( networkName ) ) {
       Network * net = d->networks[ networkName ];
         net->setStatus( changedStatus );
         updateStatus();
     } else {
-      kDebug() << "  No network named '" << networkName << "' found." << endl;
+      kDebug( 1222 ) << "  No network named '" << networkName << "' known." << endl;
     }
 }
 
@@ -153,7 +156,7 @@ void NetworkStatusModule::registerNetwork( const QString & networkName, int stat
     QDBusConnectionInterface * sessionBus = dbus.interface();
     QString uniqueOwner = sessionBus->serviceOwner( serviceName ).value();
 
-    kDebug() << k_funcinfo << networkName << ", with status " << status << " is owned by " << uniqueOwner<< endl;
+    kDebug( 1222 ) << k_funcinfo << networkName << ", with status " << status << " is owned by " << uniqueOwner<< endl;
 
     d->networks.insert( networkName, new Network( networkName, status, uniqueOwner ) );
     updateStatus();
@@ -161,7 +164,7 @@ void NetworkStatusModule::registerNetwork( const QString & networkName, int stat
 
 void NetworkStatusModule::unregisterNetwork( const QString & networkName )
 {
-    kDebug() << k_funcinfo << networkName << " unregistered." << endl;
+    kDebug( 1222 ) << k_funcinfo << networkName << " unregistered." << endl;
 
     d->networks.remove( networkName );
     updateStatus();
