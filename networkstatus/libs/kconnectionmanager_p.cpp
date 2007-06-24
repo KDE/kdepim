@@ -2,7 +2,7 @@
 
 #include "kconnectionmanager_p.h"
 
-KConnectionManagerPrivate::KConnectionManagerPrivate(QObject * parent ) : QObject( parent ), service( new OrgKdeSolidNetworkingClientInterface( "org.kde.kded", "/Networking", QDBusConnection::sessionBus(), this ) ),
+KConnectionManagerPrivate::KConnectionManagerPrivate(QObject * parent ) : QObject( parent ), service( new OrgKdeSolidNetworkingClientInterface( "org.kde.kded", "/modules/networkstatus", QDBusConnection::sessionBus(), this ) ),
   connectPolicy( KConnectionManager::Managed ),
   disconnectPolicy( KConnectionManager::Managed ),
   connectReceiver( 0 ), connectSlot( 0 ),

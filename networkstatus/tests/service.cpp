@@ -67,7 +67,7 @@ QString toString( NetworkStatus::Status st )
 }
 
 TestService::TestService() : KMainWindow( 0 ),
-    m_service( new OrgKdeSolidNetworkingServiceInterface( "org.kde.kded", "/Networking", QDBusConnection::sessionBus(), this ) ),
+    m_service( new OrgKdeSolidNetworkingServiceInterface( "org.kde.kded", "/modules/networkstatus", QDBusConnection::sessionBus(), this ) ),
     m_status ( NetworkStatus::Offline ),
     m_nextStatus( NetworkStatus::OfflineDisconnected ),
     m_view( new QWidget( this ) )

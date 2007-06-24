@@ -65,7 +65,7 @@ NetworkStatusModule::NetworkStatusModule() : KDEDModule(), d( new Private )
     new ServiceAdaptor( this );
 
     QDBusConnection dbus = QDBusConnection::sessionBus();
-    dbus.registerObject( "/Networking", this );
+    //dbus.registerObject( "/modules/networking", this );
     QDBusConnectionInterface * sessionBus = dbus.interface();
 
     connect( sessionBus, SIGNAL(serviceOwnerChanged(const QString&,const QString&,const QString&)), this, SLOT(serviceOwnerChanged(const QString&,const QString&,const QString&)) );
