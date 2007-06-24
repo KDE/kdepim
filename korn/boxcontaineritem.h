@@ -182,7 +182,7 @@ private:
 	 */
 	void setAnimIcon( QLabel* label, const QString& anim );
 
-private:
+protected:
 	BoxSettings *_settings;
 	
 private slots:

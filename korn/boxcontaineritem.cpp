@@ -163,10 +163,7 @@ void BoxContainerItem::showPassivePopup( QWidget* parent, QList< KornMailSubject
 	KPassivePopup *popup = new KPassivePopup( parent );
 	popup->setObjectName( "Passive popup" );
 		
-#ifdef __GNUC__
-#warning Port objId() call to DBus!
-#endif
-	KVBox *mainvlayout = popup->standardView( QString( "KOrn - %1/%2 (total: %3)" ).arg( /*objId().data()*/"" ).arg( accountName )
+	KVBox *mainvlayout = popup->standardView( QString( "KOrn - %1/%2 (total: %3)" ).arg( _settings->boxName() ).arg( accountName )
 			.arg( total ), "", QPixmap(), 0 );
 	QWidget *mainglayout_wid = new QWidget( mainvlayout );
 	QGridLayout *mainglayout = new QGridLayout( mainglayout_wid );
