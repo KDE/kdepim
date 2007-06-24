@@ -36,7 +36,7 @@ StatusBarNetworkStatusIndicator::StatusBarNetworkStatusIndicator(
   QVBoxLayout * layout = new QVBoxLayout( this );
   layout->setSpacing( 1 );
   QLabel * label = new QLabel( this );
-  label->setPixmap( SmallIcon("connect_no") );
+  label->setPixmap( SmallIcon("connect-no") );
   label->setToolTip( i18n( "The desktop is offline" ) );
   layout->addWidget( label );
   setLayout( layout );
