@@ -35,7 +35,6 @@
  * @code
  * StatusBarNetworkStatusIndicator * indicator = new StatusBarNetworkStatusIndicator( this );
  * statusBar()->addWidget( indicator, 0, false );
- * indicator->initialize();
  * @endcode
  *
  * @author Will Stephenson <wstephenson@kde.org>
@@ -51,12 +50,13 @@ public:
      */
     explicit StatusBarNetworkStatusIndicator( QWidget * parent );
     ~StatusBarNetworkStatusIndicator();
+protected slots:
     /**
      * Hides or shows the widget, depending on the current state of the network service.
      */
+    void networkStatusChanged( NetworkStatus::Status status );
     void initialize();
-protected slots:
-  void networkStatusChanged( NetworkStatus::Status status );
+private:
 };
 
 #endif
