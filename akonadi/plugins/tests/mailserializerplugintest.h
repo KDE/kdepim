@@ -1,6 +1,5 @@
 /*
-    Copyright (c) 2007 Till Adam <adam@kde.org>
-    Copyright (c) 2007 Marco Gulino <marco@kmobiletools.org> (adapted to kmobiletools)
+    Copyright (c) 2007 Volker Krause <vkrause@kde.org>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -18,22 +17,17 @@
     02110-1301, USA.
 */
 
+#ifndef MAILSERIALIZERTEST_H
+#define MAILSERIALIZERTEST_H
 
-#ifndef __AKONADI_SERIALIZER_MAIL_H__
-#define __AKONADI_SERIALIZER_MAIL_H__
+#include <QtCore/QObject>
 
-#include <libakonadi/itemserializer.h>
-
-namespace Akonadi {
-
-class SerializerPluginSMS : public ItemSerializerPlugin
+class MailSerializerPluginTest : public QObject
 {
-public:
-    void deserialize( Item& item, const QString& label, QIODevice& data );
-    void serialize( const Item& item, const QString& label, QIODevice& data );
+  Q_OBJECT
+  private slots:
+    void testMailPlugin();
 };
 
-
-}
 
 #endif

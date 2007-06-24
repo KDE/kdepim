@@ -51,11 +51,11 @@ template <typename T> static void parseAddrList( const QList<QByteArray> &addrLi
 }
 
 
-void SerializerPluginSMS::deserialize( Item& item, const QString& label, const QByteArray& data ) const
+void SerializerPluginSMS::deserialize( Item& item, const QString& label, QIODevice& data )
 {
     kDebug() << k_funcinfo << "() " << label << endl;
     if ( label != "SMS" ) {
-      item.addPart( label, data );
+      item.addPart( label, data.readAll() );
       return;
     }
     if ( item.mimeType() != QString::fromLatin1(SMS_MIMETYPE) ) {
@@ -73,7 +73,7 @@ void SerializerPluginSMS::deserialize( Item& item, const QString& label, const Q
     }
 
     if ( label == "SMS" ) {
-        msg->setContent( data );
+        msg->setContent( data.readAll() );
         msg->parse();
     }/*
     else if ( label == "ENVELOPE" ) {
@@ -115,15 +115,7 @@ void SerializerPluginSMS::deserialize( Item& item, const QString& label, const Q
 }
 
 
-void SerializerPluginSMS::deserialize( Item& item, const QString& label, const QIODevice& data ) const
-{
-  Q_UNUSED( item );
-  Q_UNUSED( label );
-  Q_UNUSED( data );
-}
-
-
-void SerializerPluginSMS::serialize( const Item& item, const QString& label, QByteArray& data ) const
+void SerializerPluginSMS::serialize( const Item& item, const QString& label, QIODevice& data )
 {
     kDebug() << k_funcinfo << "() " << label << endl;
     if ( label != "SMS" )
@@ -131,16 +123,9 @@ void SerializerPluginSMS::serialize( const Item& item, const QString& label, QBy
 
     boost::shared_ptr<KMobileTools::SMS> m = item.payload< boost::shared_ptr<KMobileTools::SMS> >();
     m->assemble();
-    data = m->encodedContent();
+    data.write( m->encodedContent() );
 }
 
-
-void SerializerPluginSMS::serialize( const Item& item, const QString& label, QIODevice& data ) const
-{
-  Q_UNUSED( item );
-  Q_UNUSED( label );
-  Q_UNUSED( data );
-}
 
 extern "C"
 KDE_EXPORT Akonadi::ItemSerializerPlugin *
