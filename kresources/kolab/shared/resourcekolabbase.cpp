@@ -33,7 +33,7 @@
 
 #include "resourcekolabbase.h"
 
-#include "kmailconnection.h"
+#include "kmailconnectionadaptor.h"
 
 #include <klocale.h>
 #include <kstandarddirs.h>
@@ -55,7 +55,7 @@ ResourceKolabBase::ResourceKolabBase( const QByteArray& objId )
   KGlobal::locale()->insertCatalog( "kres_kolab" );
   KGlobal::locale()->insertCatalog( "libkcal" );
   QString uniqueObjId = "/Kolabresource_" +objId + QString::number( uniquifier++ ).toLatin1();
-  mConnection = new KMailConnection( this, uniqueObjId ); //Rename it to adaptor.
+  mConnection = new KMailConnectionAdaptor( this, uniqueObjId ); //Rename it to adaptor.
 }
 
 ResourceKolabBase::~ResourceKolabBase()

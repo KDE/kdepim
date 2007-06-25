@@ -31,8 +31,8 @@
     your version.
 */
 
-#ifndef KMAILCONNECTION_H
-#define KMAILCONNECTION_H
+#ifndef KMAILCONNECTIONADAPTOR_H
+#define KMAILCONNECTIONADAPTOR_H
 
 #include <QObject>
 #include <kmail/kmail_util.h>
@@ -50,7 +50,7 @@ class ResourceKolabBase;
 /**
   This class provides the kmail connectivity for IMAP resources.
 */
-class KOLABSHARED_EXPORT KMailConnection : public QObject {
+class KOLABSHARED_EXPORT KMailConnectionAdaptor : public QObject {
   Q_OBJECT
   Q_CLASSINFO("D-Bus Interface", "org.kde.kmail.GroupWare")
   // These are the methods called by KMail when the resource changes
@@ -68,8 +68,8 @@ public Q_SLOTS:
                                  const QString& folder );
 
 public:
-  KMailConnection( ResourceKolabBase* resource, const QString&uniq );
-  virtual ~KMailConnection();
+  KMailConnectionAdaptor( ResourceKolabBase* resource, const QString&uniq );
+  virtual ~KMailConnectionAdaptor();
 
   /**
    * Do the connection to KMail.

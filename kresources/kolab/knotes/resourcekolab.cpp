@@ -71,7 +71,7 @@ ResourceKolab::~ResourceKolab()
 bool ResourceKolab::doOpen()
 {
   KConfig config( configFile() );
-  config.setGroup( configGroupName );
+  KConfigGroup group = config.group( configGroupName );
 
   // Get the list of Notes folders from KMail
   QList<KMail::SubResource> subResources;
@@ -83,7 +83,7 @@ bool ResourceKolab::doOpen()
   mSubResources.clear();
   for ( it = subResources.begin(); it != subResources.end(); ++it ) {
     const QString subResource = (*it).location;
-    const bool active = config.readEntry( subResource, true );
+    const bool active = group.readEntry( subResource, true );
     mSubResources[ subResource ] = Kolab::SubResource( active, (*it).writable, (*it).label );
   }
 
@@ -93,10 +93,10 @@ bool ResourceKolab::doOpen()
 void ResourceKolab::doClose()
 {
   KConfig config( configFile() );
-  config.setGroup( configGroupName );
+  KConfigGroup group = config.group( configGroupName );
   Kolab::ResourceMap::ConstIterator it;
   for ( it = mSubResources.begin(); it != mSubResources.end(); ++it )
-    config.writeEntry( it.key(), it.value().active() );
+    group.writeEntry( it.key(), it.value().active() );
 }
 
 bool ResourceKolab::loadSubResource( const QString& subResource,
@@ -348,9 +348,9 @@ void ResourceKolab::fromKMailAddSubresource( const QString& type,
     return;
 
   KConfig config( configFile() );
-  config.setGroup( configGroupName );
+  KConfigGroup group = config.group( configGroupName );
 
-  bool active = config.readEntry( subResource, true );
+  bool active = group.readEntry( subResource, true );
   mSubResources[ subResource ] = Kolab::SubResource( active, writable, subResource );
   loadSubResource( subResource, mimetype );
   emit signalSubresourceAdded( this, type, subResource );
@@ -371,9 +371,9 @@ void ResourceKolab::fromKMailDelSubresource( const QString& type,
   mSubResources.remove( subResource );
 
   KConfig config( configFile() );
-  config.setGroup( configGroupName );
-  config.deleteEntry( subResource );
-  config.sync();
+  KConfigGroup group = config.group( configGroupName );
+  group.deleteEntry( subResource );
+  group.sync();
 
   // Make a list of all uids to remove
   Kolab::UidMap::ConstIterator mapIt;

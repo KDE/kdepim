@@ -31,7 +31,7 @@
     your version.
 */
 
-#include "kmailconnection.h"
+#include "kmailconnectionadaptor.h"
 #include "resourcekolabbase.h"
 
 #include <kdebug.h>
@@ -44,7 +44,7 @@
 using namespace Kolab;
 
 
-KMailConnection::KMailConnection( ResourceKolabBase* resource, const QString &uniq )
+KMailConnectionAdaptor::KMailConnectionAdaptor( ResourceKolabBase* resource, const QString &uniq )
   : mResource( resource )
   , mKmailGroupwareInterface( 0 )
 {
@@ -59,15 +59,15 @@ KMailConnection::KMailConnection( ResourceKolabBase* resource, const QString &un
 }
 
 
-KMailConnection::~KMailConnection()
+KMailConnectionAdaptor::~KMailConnectionAdaptor()
 {
   delete mKmailGroupwareInterface;
   mKmailGroupwareInterface = 0;
 }
 
-bool KMailConnection::connectToKMail()
+bool KMailConnectionAdaptor::connectToKMail()
 {
-   kDebug()<<" bool KMailConnection::connectToKMail()\n";
+   kDebug()<<" bool KMailConnectionAdaptor::connectToKMail()\n";
   if ( !mKmailGroupwareInterface ) {
     QString error;
     QString dbusService;
@@ -123,7 +123,7 @@ bool KMailConnection::connectToKMail()
   return ( mKmailGroupwareInterface != 0 );
 }
 
-bool KMailConnection::fromKMailAddIncidence( const QString& type,
+bool KMailConnectionAdaptor::fromKMailAddIncidence( const QString& type,
                                              const QString& folder,
                                              quint32 sernum,
                                              int format,
@@ -132,55 +132,55 @@ bool KMailConnection::fromKMailAddIncidence( const QString& type,
   if ( format != KMail::StorageXML
       && format != KMail::StorageIcalVcard )
     return false;
-//   kDebug(5650) << "KMailConnection::fromKMailAddIncidence( " << type << ", "
+//   kDebug(5650) << "KMailConnectionAdaptor::fromKMailAddIncidence( " << type << ", "
 //                 << folder << " ). iCal:\n" << ical << endl;
   return mResource->fromKMailAddIncidence( type, folder, sernum, format, data );
 }
 
-void KMailConnection::fromKMailDelIncidence( const QString& type,
+void KMailConnectionAdaptor::fromKMailDelIncidence( const QString& type,
                                              const QString& folder,
                                              const QString& xml )
 {
-//   kDebug(5650) << "KMailConnection::fromKMailDelIncidence( " << type << ", "
+//   kDebug(5650) << "KMailConnectionAdaptor::fromKMailDelIncidence( " << type << ", "
 //                 << folder << ", " << uid << " )\n";
   mResource->fromKMailDelIncidence( type, folder, xml );
 }
 
-void KMailConnection::fromKMailRefresh( const QString& type, const QString& folder )
+void KMailConnectionAdaptor::fromKMailRefresh( const QString& type, const QString& folder )
 {
-//   kDebug(5650) << "KMailConnection::fromKMailRefresh( " << type << ", "
+//   kDebug(5650) << "KMailConnectionAdaptor::fromKMailRefresh( " << type << ", "
 //                 << folder << " )\n";
   mResource->fromKMailRefresh( type, folder );
 }
 
-void KMailConnection::fromKMailAddSubresource( const QString& type,
+void KMailConnectionAdaptor::fromKMailAddSubresource( const QString& type,
                                                const QString& resource,
                                                const QString& label,
                                                bool writable,
                                                bool alarmRelevant )
 {
-//   kDebug(5650) << "KMailConnection::fromKMailAddSubresource( " << type << ", "
+//   kDebug(5650) << "KMailConnectionAdaptor::fromKMailAddSubresource( " << type << ", "
 //                 << resource << " )\n";
   mResource->fromKMailAddSubresource( type, resource, label,
                                       writable, alarmRelevant );
 }
 
-void KMailConnection::fromKMailDelSubresource( const QString& type,
+void KMailConnectionAdaptor::fromKMailDelSubresource( const QString& type,
                                                const QString& resource )
 {
-//   kDebug(5650) << "KMailConnection::fromKMailDelSubresource( " << type << ", "
+//   kDebug(5650) << "KMailConnectionAdaptor::fromKMailDelSubresource( " << type << ", "
 //                 << resource << " )\n";
   mResource->fromKMailDelSubresource( type, resource );
 }
 
-void KMailConnection::fromKMailAsyncLoadResult( const QMap<quint32, QString>& map,
+void KMailConnectionAdaptor::fromKMailAsyncLoadResult( const QMap<quint32, QString>& map,
                                                 const QString& type,
                                                 const QString& folder )
 {
   mResource->fromKMailAsyncLoadResult( map, type, folder );
 }
 
-bool KMailConnection::connectKMailSignal( const QByteArray& signal,
+bool KMailConnectionAdaptor::connectKMailSignal( const QByteArray& signal,
                                           const QByteArray& method )
 {
 #if 0 // TODO
@@ -191,7 +191,7 @@ bool KMailConnection::connectKMailSignal( const QByteArray& signal,
 #endif
 }
 
-bool KMailConnection::kmailSubresources( QList<KMail::SubResource>& lst,
+bool KMailConnectionAdaptor::kmailSubresources( QList<KMail::SubResource>& lst,
                                          const QString& contentsType )
 {
   //TODO port it
@@ -204,7 +204,7 @@ bool KMailConnection::kmailSubresources( QList<KMail::SubResource>& lst,
 #endif
 }
 
-bool KMailConnection::kmailIncidencesCount( int& count,
+bool KMailConnectionAdaptor::kmailIncidencesCount( int& count,
                                             const QString& mimetype,
                                             const QString& resource )
 {
@@ -216,7 +216,7 @@ bool KMailConnection::kmailIncidencesCount( int& count,
   return (mKmailGroupwareInterface->lastError().type()==QDBusError::NoError);
 }
 
-bool KMailConnection::kmailIncidences( QMap<quint32, QString>& lst,
+bool KMailConnectionAdaptor::kmailIncidences( QMap<quint32, QString>& lst,
                                        const QString& mimetype,
                                        const QString& resource,
                                        int startIndex,
@@ -233,7 +233,7 @@ bool KMailConnection::kmailIncidences( QMap<quint32, QString>& lst,
 }
 
 
-bool KMailConnection::kmailGetAttachment( KUrl& url,
+bool KMailConnectionAdaptor::kmailGetAttachment( KUrl& url,
                                           const QString& resource,
                                           quint32 sernum,
                                           const QString& filename )
@@ -247,7 +247,7 @@ bool KMailConnection::kmailGetAttachment( KUrl& url,
   return (mKmailGroupwareInterface->lastError().type()==QDBusError::NoError);
 }
 
-bool KMailConnection::kmailDeleteIncidence( const QString& resource,
+bool KMailConnectionAdaptor::kmailDeleteIncidence( const QString& resource,
                                             quint32 sernum )
 {
   QDBusReply<bool> deleteIncidence = mKmailGroupwareInterface->call( "deleteIncidenceKolab", resource, sernum );
@@ -257,7 +257,7 @@ bool KMailConnection::kmailDeleteIncidence( const QString& resource,
     && (mKmailGroupwareInterface->lastError().type()==QDBusError::NoError);
 }
 
-bool KMailConnection::kmailUpdate( const QString& resource,
+bool KMailConnectionAdaptor::kmailUpdate( const QString& resource,
                                    quint32& sernum,
                                    const QString& subject,
                                    const QString& plainTextBody,
@@ -281,7 +281,7 @@ bool KMailConnection::kmailUpdate( const QString& resource,
   return false;
 }
 
-bool KMailConnection::kmailStorageFormat( KMail::StorageFormat& type,
+bool KMailConnectionAdaptor::kmailStorageFormat( KMail::StorageFormat& type,
                                           const QString& folder )
 {
   //TODO port it
@@ -293,7 +293,7 @@ bool KMailConnection::kmailStorageFormat( KMail::StorageFormat& type,
 }
 
 
-bool KMailConnection::kmailTriggerSync( const QString &contentsType )
+bool KMailConnectionAdaptor::kmailTriggerSync( const QString &contentsType )
 {
   bool ok = connectToKMail();
   QDBusReply<bool> val =  mKmailGroupwareInterface->call( "triggerSync", contentsType );
@@ -301,7 +301,7 @@ bool KMailConnection::kmailTriggerSync( const QString &contentsType )
   return ok && ret;
 }
 
-void KMailConnection::dbusServiceOwnerChanged(const QString & service, const QString & oldOwner, const QString & newOwner)
+void KMailConnectionAdaptor::dbusServiceOwnerChanged(const QString & service, const QString & oldOwner, const QString & newOwner)
 {
 #if 0 // TODO
   if ( mKmailGroupwareInterface && mKmailGroupwareInterface->app() == appId ) {
@@ -313,4 +313,4 @@ void KMailConnection::dbusServiceOwnerChanged(const QString & service, const QSt
 #endif
 }
 
-#include "kmailconnection.moc"
+#include "kmailconnectionadaptor.moc"
