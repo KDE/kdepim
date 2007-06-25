@@ -151,7 +151,7 @@ class CardViewItem
      */
     Field *fieldAt( const QPoint &itempos ) const;
 
-    CardView *cardView() const { return mView; };
+    CardView *cardView() const { return mView; }
 
     /**
       @return The height of this item as rendered, in pixels.

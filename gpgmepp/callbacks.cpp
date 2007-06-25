@@ -27,6 +27,7 @@
 
 #include <cassert>
 #include <cerrno>
+#include <cstring>
 #include <unistd.h>
 #include <stdlib.h>
 

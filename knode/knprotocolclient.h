@@ -48,10 +48,10 @@ class KNProtocolClient : public QThread  {
 
     void updatePercentage(int percent);
 
-    int getProgressValue() const { return progressValue; };
+    int getProgressValue() const { return progressValue; }
     /** bytes in&out for the current connection */
-    int getByteCount() const { return byteCount; };
-    bool isInByteCountMode() const { return byteCountMode; };
+    int getByteCount() const { return byteCount; }
+    bool isInByteCountMode() const { return byteCountMode; }
 
     void terminateClient() { mTerminate = true; }
   protected:
@@ -63,7 +63,7 @@ class KNProtocolClient : public QThread  {
 
     /** connect, handshake and authorization */
     virtual bool openConnection();
-    bool isConnected()   { return (tcpSocket!=-1); };
+    bool isConnected()   { return (tcpSocket!=-1); }
     /** sends QUIT-command and closes the socket */
     virtual void closeConnection();
 
@@ -77,7 +77,7 @@ class KNProtocolClient : public QThread  {
     /** reads next complete line of input */
     bool getNextLine();
     /** returns pointer to current line of input */
-    char* getCurrentLine()  { return thisLine; };
+    char* getCurrentLine()  { return thisLine; }
     /** receives a message (multiple lines) */
     bool getMsg(Q3StrList &msg);
     /** reads next line and returns the response code */

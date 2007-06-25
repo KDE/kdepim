@@ -22,7 +22,7 @@ class KNApplication : public KUniqueApplication
 {
     Q_OBJECT
   public:
-    KNApplication(): KUniqueApplication() { };
+    KNApplication(): KUniqueApplication() { }
 
 
     /** Create new instance of KNode. Make the existing

@@ -46,7 +46,7 @@ class ResourceSelection : public KAB::ExtensionWidget
     QString title() const;
     QString identifier() const;
 
-    void contactsSelectionChanged() {};
+    void contactsSelectionChanged() {}
 
   private slots:
     void add();

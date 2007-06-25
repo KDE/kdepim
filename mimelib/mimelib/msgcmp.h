@@ -256,8 +256,8 @@ public:
     //. Returns a object id that is unique among all DwMessageComponent
     //. objects.
 
-    const char* partId() const { return mId.c_str(); };
-    void SetPartId( DwString id ) { mId = id; };
+    const char* partId() const { return mId.c_str(); }
+    void SetPartId( DwString id ) { mId = id; }
     // set or get a unique string for that part
 
 protected:

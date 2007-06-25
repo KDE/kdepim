@@ -61,7 +61,7 @@ class CardViewTip : public QLabel
       setIndent( 1 );
     }
 
-    ~CardViewTip() {};
+    ~CardViewTip() {}
 
   protected:
     void leaveEvent( QEvent* )
@@ -147,7 +147,7 @@ class CardViewPrivate
        mLastClickPos( QPoint(0, 0) ),
        mRubberBandAnchor( 0 ),
        mCompText( QString() )
-    {};
+    {}
 
     CardViewItemList mItemList;
     Q3PtrList<CardViewSeparator> mSeparatorList;

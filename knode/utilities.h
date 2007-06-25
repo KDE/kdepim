@@ -97,8 +97,8 @@ public:
       a file open for reading */
   QFile* setURL(KUrl url);
   /** returns the file after getFile(QString) of setURL(url) was called */
-  QFile* getFile()const { return f_ile; };
-  KUrl getURL() const    { return u_rl; };
+  QFile* getFile()const { return f_ile; }
+  KUrl getURL() const    { return u_rl; }
 
 private:
 

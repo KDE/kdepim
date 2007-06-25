@@ -24,6 +24,8 @@
 #include <strigi/analysisresult.h>
 #include <strigi/streamendanalyzer.h>
 
+#include <string.h>
+
 Rfc822EndAnalyzer::Rfc822EndAnalyzer( const Rfc822EndAnalyzerFactory* f )
       : m_factory(  f )
 {

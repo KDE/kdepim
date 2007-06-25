@@ -1373,8 +1373,8 @@ IMAP4Protocol::special (const QByteArray & aData)
     if (cmd->result () != "OK")
     {
       completeQueue.removeRef (cmd);
-      error(ERR_COULD_NOT_WRITE, i18n("Changing the flags of message %1 "
-                                      "failed.", _url.prettyUrl()));
+      error(ERR_SLAVE_DEFINED, i18n("Changing the flags of message %1 "
+                                      "failed with %2.", _url.prettyUrl(), cmd->result()));
       return;
     }
     completeQueue.removeRef (cmd);
@@ -1385,8 +1385,8 @@ IMAP4Protocol::special (const QByteArray & aData)
       if (cmd->result () != "OK")
       {
         completeQueue.removeRef (cmd);
-        error(ERR_COULD_NOT_WRITE, i18n("Changing the flags of message %1 "
-                                        "failed.", _url.prettyUrl()));
+        error(ERR_SLAVE_DEFINED, i18n("Silent Changing the flags of message %1 "
+                                        "failed with %2.", _url.prettyUrl(), cmd->result()));
         return;
       }
       completeQueue.removeRef (cmd);

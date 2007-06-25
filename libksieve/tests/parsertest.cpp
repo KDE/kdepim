@@ -40,6 +40,8 @@ using KSieve::Parser;
 #include <QString>
 
 #include <iostream>
+#include <cstdlib>
+
 using std::cout;
 using std::cerr;
 using std::endl;

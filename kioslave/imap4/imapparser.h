@@ -212,7 +212,7 @@ public:
   const QString getCurrentBox ()
   {
     return KIMAP::decodeImapFolderName(currentBox);
-  };
+  }
 
   /**
    * @brief do setup and send the command to parseWriteLine
@@ -388,29 +388,29 @@ public:
   imapCache *getLastHandled ()
   {
     return lastHandled;
-  };
+  }
 
 /** @brief return the last results */
   const QStringList & getResults ()
   {
     return lastResults;
-  };
+  }
 
   /** @brief return the last status code */
   const imapInfo & getStatus ()
   {
     return lastStatus;
-  };
+  }
   /** return the select info */
   const imapInfo & getSelected ()
   {
     return selectInfo;
-  };
+  }
 
   const QByteArray & getContinuation ()
   {
     return continuation;
-  };
+  }
 
   /** @brief see if server has a capability */
   bool hasCapability (const QString &);
