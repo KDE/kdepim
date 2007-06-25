@@ -48,10 +48,10 @@ typedef QMap<quint32, QString> Quint32StringMap;
 typedef QMap<QByteArray, QString> ByteArrayStringMap;
 Q_DECLARE_METATYPE(ByteArrayStringMap)
 
-Q_DECLARE_METATYPE(KMail::SubResource )
-Q_DECLARE_METATYPE(QListKmailSubResource )
+Q_DECLARE_METATYPE(KMail::SubResource)
+Q_DECLARE_METATYPE(QListKmailSubResource)
 Q_DECLARE_METATYPE(Quint32StringMap)
-Q_DECLARE_METATYPE(KMail::StorageFormat )
+Q_DECLARE_METATYPE(KMail::StorageFormat)
 
 const QDBusArgument &operator<<(QDBusArgument &arg, const KMail::SubResource &subResource)
 {
@@ -276,7 +276,7 @@ bool KMailConnectionAdaptor::kmailIncidences( QMap<quint32, QString>& lst,
   registerTypes();
   QDBusReply<Quint32StringMap> r = mKmailGroupwareInterface->call( "incidencesKolab",  mimetype, resource, startIndex, nbMessages );
   if (r.isValid()) {
-    lst = r;
+    lst = r.value();
   }
   return (mKmailGroupwareInterface->lastError().type()==QDBusError::NoError);
 }
@@ -358,12 +358,12 @@ bool KMailConnectionAdaptor::kmailTriggerSync( const QString &contentsType )
 
 void KMailConnectionAdaptor::dbusServiceOwnerChanged(const QString & service, const QString & oldOwner, const QString & newOwner)
 {
-  if (mKmailGroupwareInterface && mKmailGroupwareInterface->service()==service) 
+  if (mKmailGroupwareInterface && mKmailGroupwareInterface->service()==service)
   {
     // Delete the stub so that the next time we need to talk to kmail,
     // we'll know that we need to start a new one.
     delete mKmailGroupwareInterface;
-    mKmailGroupwareInterface = 0;    
+    mKmailGroupwareInterface = 0;
   }
 }
 
