@@ -138,7 +138,7 @@ bool KMailConnectionAdaptor::connectToKMail()
     }
 //TODO verify interface
     qDebug()<<" dbusService :"<<dbusService<<endl;
-    mKmailGroupwareInterface = new QDBusInterface( dbusService, "org.kde.kmail", "/Groupware", QDBusConnection::sessionBus());
+    mKmailGroupwareInterface = new QDBusInterface( dbusService, "/Groupware" , "org.kde.kmail.groupware", QDBusConnection::sessionBus());
     registerTypes();
 
     QDBusConnection dbus = QDBusConnection::sessionBus();
