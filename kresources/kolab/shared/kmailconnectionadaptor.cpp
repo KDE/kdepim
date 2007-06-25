@@ -43,9 +43,15 @@
 #include <QDBusError>
 
 using namespace Kolab;
+typedef QList<KMail::SubResource> QListKmailSubResource;
+typedef QMap<quint32, QString> Quint32StringMap;
+typedef QMap<QByteArray, QString> ByteArrayStringMap;
+Q_DECLARE_METATYPE(ByteArrayStringMap)
 
 Q_DECLARE_METATYPE(KMail::SubResource )
-Q_DECLARE_METATYPE(QList<KMail::SubResource> )
+Q_DECLARE_METATYPE(QListKmailSubResource )
+Q_DECLARE_METATYPE(Quint32StringMap)
+Q_DECLARE_METATYPE(KMail::StorageFormat )
 
 const QDBusArgument &operator<<(QDBusArgument &arg, const KMail::SubResource &subResource)
 {
@@ -63,12 +69,33 @@ const QDBusArgument &operator>>(const QDBusArgument &arg, KMail::SubResource &su
     return arg;
 }
 
+const QDBusArgument &operator<<(QDBusArgument &arg, const KMail::StorageFormat &format)
+{
+    arg.beginStructure();
+    quint32 foo = format;
+    arg << foo;
+    arg.endStructure();
+    return arg;
+}
+
+const QDBusArgument &operator>>(const QDBusArgument &arg, KMail::StorageFormat &format)
+{
+    arg.beginStructure();
+    quint32 foo = format;
+    arg >> foo;
+    arg.endStructure();
+    return arg;
+}
+
 static void registerTypes()
 {
     static bool registered = false;
     if (!registered) {
       qDBusRegisterMetaType<KMail::SubResource>();
-      qDBusRegisterMetaType< QList<KMail::SubResource> >();
+      qDBusRegisterMetaType< QListKmailSubResource >();
+      qDBusRegisterMetaType<Quint32StringMap>();
+      qDBusRegisterMetaType<KMail::StorageFormat>();
+      qDBusRegisterMetaType<ByteArrayStringMap>();
       registered = true;
     }
 }
@@ -112,10 +139,7 @@ bool KMailConnectionAdaptor::connectToKMail()
 //TODO verify interface
     qDebug()<<" dbusService :"<<dbusService<<endl;
     mKmailGroupwareInterface = new QDBusInterface( dbusService, "org.kde.kmail", "/Groupware", QDBusConnection::sessionBus());
-    //typedef QMap<quint32, QString> Quint32StringMap;
-   //Q_DECLARE_METATYPE(Quint32StringMap)
-    //qDBusRegisterMetaType<Quint32StringMap>();
-  //TODO verify if it connected.
+    registerTypes();
 
     QDBusConnection dbus = QDBusConnection::sessionBus();
     dbus.connect( DBUS_KMAIL, "/GroupWare", "org.kde.kmail.groupware", "incidenceAdded", this, SLOT(fromKMailAddIncidence(QString,QString,quint32,int,QString) ) );
@@ -227,16 +251,10 @@ bool KMailConnectionAdaptor::kmailSubresources( QList<KMail::SubResource>& lst,
     return false;
   registerTypes();
 
-  QDBusReply<QVariantList> r = mKmailGroupwareInterface->call( "subresourcesKolab", contentsType );
+  QDBusReply<QListKmailSubResource> r = mKmailGroupwareInterface->call( "subresourcesKolab", contentsType );
   if ( r.isValid() )
   {
-    //  QVariantList args = r;
-    //QVariantList::ConstIterator it = r.constBegin();
-    //QVariantList::ConstIterator end = r.constEnd();
-    //for ( ; it != end; ++it)
-    {
-      //lst<< *it,
-    }
+    lst = r;
   }
   return (mKmailGroupwareInterface->lastError().type()==QDBusError::NoError);
 }
@@ -261,22 +279,10 @@ bool KMailConnectionAdaptor::kmailIncidences( QMap<quint32, QString>& lst,
 {
   if ( !connectToKMail() )
     return false;
-  //TODO port it
-#if 0
-  if ( !connectToKMail() )
-    return false;
-
-  lst = mKmailGroupwareInterface->call( "incidencesKolab",  mimetype, resource, startIndex, nbMessages );
-  return (mKmailGroupwareInterface->lastError().type()==QDBusError::NoError);
-#endif
-  //Registered dbus type.
-  QDBusReply<QVariantMap> r = mKmailGroupwareInterface->call( "incidencesKolab",  mimetype, resource, startIndex, nbMessages );
+  registerTypes();
+  QDBusReply<Quint32StringMap> r = mKmailGroupwareInterface->call( "incidencesKolab",  mimetype, resource, startIndex, nbMessages );
   if (r.isValid()) {
-    // convert <QVariant,QString> to <quint32, QString>
-    const QVariantMap val = r.value();
-    for( QVariantMap::const_iterator it = val.begin(); it != val.end(); ++it ) {
-      //lst.insert(it.key().toUint(), it.value().toString());
-    }
+    lst = r;
   }
   return (mKmailGroupwareInterface->lastError().type()==QDBusError::NoError);
 }
@@ -316,29 +322,35 @@ bool KMailConnectionAdaptor::kmailUpdate( const QString& resource,
                                    const QStringList& attachmentNames,
                                    const QStringList& deletedAttachments )
 {
-  //PORT it
-#if 0
-  kDebug(5006) << kBacktrace() << endl;
-  if ( connectToKMail() ) {
-    sernum = mKmailGroupwareInterface->update( resource, sernum, subject, plainTextBody, customHeaders,
-                                          attachmentURLs, attachmentMimetypes, attachmentNames,
-                                          deletedAttachments );
-    return sernum && (mKmailGroupwareInterface->lastError().type()==QDBusError::NoError);
-  } else
+  if ( !connectToKMail() )
     return false;
-#endif
-  return false;
+  registerTypes();
+  bool ret = false;
+  //TODO fix me
+  /*QList<QVariant> arg;
+  arg <<resource;
+  arg<<sernum;
+  arg<<subject;
+  arg<<plainTextBody;
+  arg<<customHeaders;
+  arg<<attachmentURLs;
+  arg<<attachmentMimetypes;
+  arg<<attachmentNames;
+  arg<<deletedAttachments;
+  QDBusReply<bool> reply = mKmailGroupwareInterface->callWithArgumentList( QDBus::NoBlock, "update", arg );
+  if ( reply.isValid() )
+  ret = reply;*/
+  return ret;
 }
 
 bool KMailConnectionAdaptor::kmailStorageFormat( KMail::StorageFormat& type,
                                           const QString& folder )
 {
-  //TODO port it
-#if 0
   bool ok = connectToKMail();
-  type = mKmailGroupwareInterface->storageFormat( folder );
+  QDBusReply<KMail::StorageFormat> reply = mKmailGroupwareInterface->call( "storageFormat", folder );
+  if ( reply.isValid() )
+    type = reply;
   return ok && (mKmailGroupwareInterface->lastError().type()==QDBusError::NoError);
-#endif
 }
 
 
