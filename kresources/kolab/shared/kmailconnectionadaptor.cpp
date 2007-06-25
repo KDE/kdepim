@@ -110,6 +110,10 @@ KMailConnectionAdaptor::KMailConnectionAdaptor( ResourceKolabBase* resource, con
   connect( QDBusConnection::sessionBus().interface(), SIGNAL(serviceOwnerChanged(QString,QString,QString)),
            SLOT(dbusServiceOwnerChanged(QString,QString,QString)) );
 #endif
+  QObject::connect(QDBusConnection::sessionBus().interface(),
+                   SIGNAL(serviceOwnerChanged(QString,QString,QString)),
+                   this, SLOT(dbusServiceOwnerChanged(QString,QString,QString)));
+
   // TODO connect to the dbus signals from kmail here
   QDBusConnection::sessionBus().registerObject( uniq,this,QDBusConnection::ExportScriptableSlots|QDBusConnection::ExportScriptableSignals );
 }
@@ -136,8 +140,6 @@ bool KMailConnectionAdaptor::connectToKMail()
       // using e.g. KMessageBox
       return false;
     }
-//TODO verify interface
-    qDebug()<<" dbusService :"<<dbusService<<endl;
     mKmailGroupwareInterface = new QDBusInterface( dbusService, "/Groupware" , "org.kde.kmail.groupware", QDBusConnection::sessionBus());
     registerTypes();
 
@@ -172,7 +174,6 @@ bool KMailConnectionAdaptor::connectToKMail()
       kError(5650) << "DCOP connection to asyncLoadResult failed" << endl;
 */
   }
-  kDebug()<<" mKmailGroupwareInterface != 0 :"<<(  mKmailGroupwareInterface != 0 )<<endl;
   return ( mKmailGroupwareInterface != 0 );
 }
 
@@ -364,14 +365,13 @@ bool KMailConnectionAdaptor::kmailTriggerSync( const QString &contentsType )
 
 void KMailConnectionAdaptor::dbusServiceOwnerChanged(const QString & service, const QString & oldOwner, const QString & newOwner)
 {
-#if 0 // TODO
-  if ( mKmailGroupwareInterface && mKmailGroupwareInterface->app() == appId ) {
+  if (mKmailGroupwareInterface && mKmailGroupwareInterface->service()==service) 
+  {
     // Delete the stub so that the next time we need to talk to kmail,
     // we'll know that we need to start a new one.
     delete mKmailGroupwareInterface;
-    mKmailGroupwareInterface = 0;
+    mKmailGroupwareInterface = 0;    
   }
-#endif
 }
 
 #include "kmailconnectionadaptor.moc"
