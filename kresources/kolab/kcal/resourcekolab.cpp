@@ -72,6 +72,16 @@ ResourceKolab::ResourceKolab( const KConfigGroup &config )
            this, SLOT( slotEmitResourceChanged() ) );
 }
 
+ResourceKolab::ResourceKolab()
+  : ResourceCalendar(), ResourceKolabBase( "ResourceKolab_libkcal" ),
+    mCalendar( QString::fromLatin1("UTC") ), mOpen( false ),
+    mResourceChangedTimer( 0 )
+{
+  setType( "imap" );
+  connect( &mResourceChangedTimer, SIGNAL( timeout() ),
+           this, SLOT( slotEmitResourceChanged() ) );
+}
+
 ResourceKolab::~ResourceKolab()
 {
   // The resource is deleted on exit (StdAddressBook's KStaticDeleter),

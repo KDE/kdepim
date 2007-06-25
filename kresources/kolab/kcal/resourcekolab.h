@@ -57,6 +57,7 @@ class KCALKOLAB_EXPORT ResourceKolab : public KCal::ResourceCalendar,
 
 public:
   ResourceKolab( const KConfigGroup& );
+  ResourceKolab();
 
   virtual ~ResourceKolab();
 
@@ -138,8 +139,8 @@ public:
   virtual void deleteAllTodos(){}
   virtual void deleteAllJournals(){}
   virtual void setTimeSpec(const KDateTime::Spec&){}
-  virtual KDateTime::Spec timeSpec() const{}
-  virtual QString timeZoneId() const {}
+  virtual KDateTime::Spec timeSpec() const{ return KDateTime::UTC; }
+  virtual QString timeZoneId() const { return QString(); }
   virtual void shiftTimes(const KDateTime::Spec&, const KDateTime::Spec&){}
 
   KABC::Lock* lock();

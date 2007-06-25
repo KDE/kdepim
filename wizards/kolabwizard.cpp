@@ -68,8 +68,8 @@ class SetupLDAPSearchAccount : public KConfigPropagator::Change
       }
       { // while we're here, write default domain
         KConfig c( "kmailrc" );
-        c.setGroup( "General" );
-        c.writeEntry( "Default domain", basedn );
+        KConfigGroup group = c.group( "General" );
+        group.writeEntry( "Default domain", basedn );
       }
 
       basedn.replace(".",",dc=");
@@ -77,17 +77,17 @@ class SetupLDAPSearchAccount : public KConfigPropagator::Change
 
       // Set the changes
       KConfig c( "kabldaprc" );
-      c.setGroup( "LDAP" );
+      KConfigGroup group = c.group( "LDAP" );
       bool hasMyServer = false;
-      uint selHosts = c.readEntry("NumSelectedHosts", 0);
+      uint selHosts = group.readEntry("NumSelectedHosts", 0);
       for ( uint i = 0 ; i < selHosts && !hasMyServer; ++i )
-        if ( c.readEntry( QString("SelectedHost%1").arg(i), QString() ) == host )
+        if ( group.readEntry( QString("SelectedHost%1").arg(i), QString() ) == host )
           hasMyServer = true;
       if ( !hasMyServer ) {
-        c.writeEntry( "NumSelectedHosts", selHosts + 1 );
-        c.writeEntry( QString("SelectedHost%1").arg(selHosts), host);
-        c.writeEntry( QString("SelectedBase%1").arg(selHosts), basedn);
-        c.writeEntry( QString("SelectedPort%1").arg(selHosts), "389");
+        group.writeEntry( "NumSelectedHosts", selHosts + 1 );
+        group.writeEntry( QString("SelectedHost%1").arg(selHosts), host);
+        group.writeEntry( QString("SelectedBase%1").arg(selHosts), basedn);
+        group.writeEntry( QString("SelectedPort%1").arg(selHosts), "389");
       }
     }
 
@@ -105,15 +105,10 @@ class CreateCalendarImapResource : public KConfigPropagator::Change
     {
       KCal::CalendarResourceManager m( "calendar" );
       m.readConfig();
-#ifdef __GNUC__
-#warning Port me!
-#endif
-#if 0      
       KCal::ResourceKolab *r = new KCal::ResourceKolab();
       r->setResourceName( i18n("Kolab Server") );
       m.add( r );
       m.setStandardResource( r );
-#endif
       m.writeConfig();
     }
 };
