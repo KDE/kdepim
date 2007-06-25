@@ -124,7 +124,7 @@ namespace Kleo {
     void setInitialQuery( const QString & s ) { mInitialQuery = s; }
     const QString & initialQuery() const { return mInitialQuery; }
 
-  signals:
+  Q_SIGNALS:
     void changed();
 
   private:
@@ -132,7 +132,7 @@ namespace Kleo {
     void startKeyListJob( const QStringList & fingerprints );
     void updateKeys();
 
-  private slots:
+  private Q_SLOTS:
     void slotNextKey( const GpgME::Key & key );
     void slotKeyListResult( const GpgME::KeyListResult & result );
     void slotDialogButtonClicked();
