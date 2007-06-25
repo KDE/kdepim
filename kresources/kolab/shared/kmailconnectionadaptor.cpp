@@ -37,12 +37,41 @@
 #include <kdebug.h>
 #include <kdbusservicestarter.h>
 #include <kmail_groupwareinterface.h>
+#include <kmail_util.h>
 #include <klocale.h>
 #include <QDBusAbstractInterface>
 #include <QDBusError>
 
 using namespace Kolab;
 
+Q_DECLARE_METATYPE(KMail::SubResource )
+Q_DECLARE_METATYPE(QList<KMail::SubResource> )
+
+const QDBusArgument &operator<<(QDBusArgument &arg, const KMail::SubResource &subResource)
+{
+    arg.beginStructure();
+    arg << subResource.location << subResource.label << subResource.writable << subResource.alarmRelevant;
+    arg.endStructure();
+    return arg;
+}
+
+const QDBusArgument &operator>>(const QDBusArgument &arg, KMail::SubResource &subResource)
+{
+    arg.beginStructure();
+    arg >> subResource.location >> subResource.label >> subResource.writable >> subResource.alarmRelevant;
+    arg.endStructure();
+    return arg;
+}
+
+static void registerTypes()
+{
+    static bool registered = false;
+    if (!registered) {
+      qDBusRegisterMetaType<KMail::SubResource>();
+      qDBusRegisterMetaType< QList<KMail::SubResource> >();
+      registered = true;
+    }
+}
 
 KMailConnectionAdaptor::KMailConnectionAdaptor( ResourceKolabBase* resource, const QString &uniq )
   : mResource( resource )
@@ -119,7 +148,7 @@ bool KMailConnectionAdaptor::connectToKMail()
       kError(5650) << "DCOP connection to asyncLoadResult failed" << endl;
 */
   }
-
+  kDebug()<<" mKmailGroupwareInterface != 0 :"<<(  mKmailGroupwareInterface != 0 )<<endl;
   return ( mKmailGroupwareInterface != 0 );
 }
 
@@ -194,14 +223,22 @@ bool KMailConnectionAdaptor::connectKMailSignal( const QByteArray& signal,
 bool KMailConnectionAdaptor::kmailSubresources( QList<KMail::SubResource>& lst,
                                          const QString& contentsType )
 {
-  //TODO port it
-#if 0
   if ( !connectToKMail() )
     return false;
+  registerTypes();
 
-  lst = mKmailGroupwareInterface->call( "subresourcesKolab", contentsType );
+  QDBusReply<QVariantList> r = mKmailGroupwareInterface->call( "subresourcesKolab", contentsType );
+  if ( r.isValid() )
+  {
+    //  QVariantList args = r;
+    //QVariantList::ConstIterator it = r.constBegin();
+    //QVariantList::ConstIterator end = r.constEnd();
+    //for ( ; it != end; ++it)
+    {
+      //lst<< *it,
+    }
+  }
   return (mKmailGroupwareInterface->lastError().type()==QDBusError::NoError);
-#endif
 }
 
 bool KMailConnectionAdaptor::kmailIncidencesCount( int& count,
@@ -222,6 +259,8 @@ bool KMailConnectionAdaptor::kmailIncidences( QMap<quint32, QString>& lst,
                                        int startIndex,
                                        int nbMessages )
 {
+  if ( !connectToKMail() )
+    return false;
   //TODO port it
 #if 0
   if ( !connectToKMail() )
@@ -230,6 +269,16 @@ bool KMailConnectionAdaptor::kmailIncidences( QMap<quint32, QString>& lst,
   lst = mKmailGroupwareInterface->call( "incidencesKolab",  mimetype, resource, startIndex, nbMessages );
   return (mKmailGroupwareInterface->lastError().type()==QDBusError::NoError);
 #endif
+  //Registered dbus type.
+  QDBusReply<QVariantMap> r = mKmailGroupwareInterface->call( "incidencesKolab",  mimetype, resource, startIndex, nbMessages );
+  if (r.isValid()) {
+    // convert <QVariant,QString> to <quint32, QString>
+    const QVariantMap val = r.value();
+    for( QVariantMap::const_iterator it = val.begin(); it != val.end(); ++it ) {
+      //lst.insert(it.key().toUint(), it.value().toString());
+    }
+  }
+  return (mKmailGroupwareInterface->lastError().type()==QDBusError::NoError);
 }
 
 
