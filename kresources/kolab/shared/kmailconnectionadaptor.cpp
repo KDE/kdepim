@@ -100,22 +100,15 @@ static void registerTypes()
     }
 }
 
-KMailConnectionAdaptor::KMailConnectionAdaptor( ResourceKolabBase* resource, const QString &uniq )
+KMailConnectionAdaptor::KMailConnectionAdaptor( ResourceKolabBase* resource )
   : mResource( resource )
   , mKmailGroupwareInterface( 0 )
 {
   // Make the connection to KMail ready
-#if 0
-  // Do we need to kill the interface when kmail exits, to restart kmail next time?
-  connect( QDBusConnection::sessionBus().interface(), SIGNAL(serviceOwnerChanged(QString,QString,QString)),
-           SLOT(dbusServiceOwnerChanged(QString,QString,QString)) );
-#endif
   QObject::connect(QDBusConnection::sessionBus().interface(),
                    SIGNAL(serviceOwnerChanged(QString,QString,QString)),
                    this, SLOT(dbusServiceOwnerChanged(QString,QString,QString)));
 
-  // TODO connect to the dbus signals from kmail here
-  QDBusConnection::sessionBus().registerObject( uniq,this,QDBusConnection::ExportScriptableSlots|QDBusConnection::ExportScriptableSignals );
 }
 
 

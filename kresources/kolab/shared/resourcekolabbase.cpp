@@ -47,15 +47,12 @@
 
 using namespace Kolab;
 
-static unsigned int uniquifier = 0;
-
 ResourceKolabBase::ResourceKolabBase( const QByteArray& objId )
   : mSilent( false )
 {
   KGlobal::locale()->insertCatalog( "kres_kolab" );
   KGlobal::locale()->insertCatalog( "libkcal" );
-  QString uniqueObjId = "/Kolabresource_" +objId + QString::number( uniquifier++ ).toLatin1();
-  mConnection = new KMailConnectionAdaptor( this, uniqueObjId ); //Rename it to adaptor.
+  mConnection = new KMailConnectionAdaptor( this ); //Rename it to adaptor.
 }
 
 ResourceKolabBase::~ResourceKolabBase()

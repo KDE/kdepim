@@ -52,23 +52,22 @@ class ResourceKolabBase;
 */
 class KOLABSHARED_EXPORT KMailConnectionAdaptor : public QObject {
   Q_OBJECT
-  Q_CLASSINFO("D-Bus Interface", "org.kde.kmail.GroupWare")
   // These are the methods called by KMail when the resource changes
 public Q_SLOTS:
-  Q_SCRIPTABLE bool fromKMailAddIncidence( const QString& type, const QString& resource,
-                              quint32 sernum, int format, const QString& xml );
-  Q_SCRIPTABLE void fromKMailDelIncidence( const QString& type, const QString& resource,
+  bool fromKMailAddIncidence( const QString& type, const QString& resource,
+                             quint32 sernum, int format, const QString& xml );
+  void fromKMailDelIncidence( const QString& type, const QString& resource,
                               const QString& xml );
-  Q_SCRIPTABLE void fromKMailRefresh( const QString& type, const QString& resource );
-  Q_SCRIPTABLE void fromKMailAddSubresource( const QString& type, const QString& resource, 
+  void fromKMailRefresh( const QString& type, const QString& resource );
+  void fromKMailAddSubresource( const QString& type, const QString& resource, 
                                 const QString& label, bool writable, 
                                 bool alarmRelevant );
-  Q_SCRIPTABLE void fromKMailDelSubresource( const QString& type, const QString& resource );
-  Q_SCRIPTABLE void fromKMailAsyncLoadResult( const QMap<quint32, QString>& map, const QString& type,
+  void fromKMailDelSubresource( const QString& type, const QString& resource );
+  void fromKMailAsyncLoadResult( const QMap<quint32, QString>& map, const QString& type,
                                  const QString& folder );
 
 public:
-  KMailConnectionAdaptor( ResourceKolabBase* resource, const QString&uniq );
+  KMailConnectionAdaptor( ResourceKolabBase* resource );
   virtual ~KMailConnectionAdaptor();
 
   /**
