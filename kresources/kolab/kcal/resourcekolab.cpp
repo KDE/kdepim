@@ -182,40 +182,55 @@ bool ResourceKolab::loadSubResource( const QString& subResource,
   int progressId = 0;
   QDBusInterface uiserver( "org.kde.kio_uiserver", "/UIServer", QString(), QDBusConnection::sessionBus() );
   if ( useProgress ) {
+    QDBusReply<int> ret = uiserver.call( "newJob", );
+    progressId = ret;
+    <method name="newJob">
+      <arg name="appServiceName" type="s" direction="in"/>
+      <arg name="capabilities" type="i" direction="in"/>
+      <arg name="showProgress" type="b" direction="in"/>
+      <arg name="internalAppName" type="s" direction="in"/>
+      <arg name="jobIcon" type="s" direction="in"/>
+      <arg name="appName" type="s" direction="in"/>
+      <arg name="jobId" type="i" direction="out"/>
+    </method>
     progressId = uiserver.newJob( kapp->dcopClient()->appId(), true );
-    uiserver.totalFiles( progressId, count );
-    uiserver.infoMessage( progressId, labelTxt );
-    uiserver.transferring( progressId, labelTxt );
-  }
+    uiserver.call( "totalFiles", progressId, count );
+    uiserver.call( "infoMessage", progressId, labelTxt );
 
-  for ( int startIndex = 0; startIndex < count; startIndex += nbMessages ) {
+    //uiserver.transferring( progressId, labelTxt ); //TODO was removed
+  }
+#endif
+  for ( uint startIndex = 0; startIndex < count; startIndex += nbMessages ) {
     QMap<quint32, QString> lst;
     if ( !kmailIncidences( lst, mimetype, subResource, startIndex, nbMessages ) ) {
       kError(5650) << "Communication problem in ResourceKolab::load()\n";
+#if  0
       if ( progressId )
-        uiserver.jobFinished( progressId );
+        uiserver.call( "jobFinished",  progressId, errorCode ); //TODO
+#endif
       return false;
     }
-
     { // for RAII scoping below
       TemporarySilencer t( this );
       for( QMap<quint32, QString>::ConstIterator it = lst.begin(); it != lst.end(); ++it ) {
         addIncidence( mimetype, it.value(), subResource, it.key() );
       }
     }
+#if 0
     if ( progressId ) {
-      uiserver.processedFiles( progressId, startIndex );
-      uiserver.percent( progressId, 100 * startIndex / count );
+      uiserver.call( "processedFiles", progressId, startIndex );
+      uiserver.call( "percent", progressId, ( uint )( 100 * startIndex / count ) );
     }
+#endif
 
 //    if ( progress.wasCanceled() ) {
 //      uiserver.jobFinished( progressId );
 //      return false;
 //    }
   }
-
+#if 0
   if ( progressId )
-    uiserver.jobFinished( progressId );
+    uiserver.call( "jobFinished",  progressId, errorCode ); //TODO
 #endif
   return true;
 }
