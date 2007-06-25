@@ -39,10 +39,9 @@ public:
   {
     return new KCal::ResourceKolab( config );
   }
-  //FIXME ?
   KRES::Resource *resource()
   {
-    return 0;
+    return new KCal::ResourceKolab();
   }
 
   KRES::ConfigWidget *configWidget( QWidget* )
