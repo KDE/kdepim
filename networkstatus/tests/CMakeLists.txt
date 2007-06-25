@@ -14,14 +14,14 @@ target_link_libraries(service ${KDE4_KIO_LIBS})
 
 ########### next target ###############
 
-set(client_SRCS client.cpp)
+#set(client_SRCS client.cpp)
 
-kde4_add_ui_files(client_SRCS testclientview.ui)
+#kde4_add_ui_files(client_SRCS testclientview.ui)
 
-qt4_add_dbus_interface(client_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/../libs/org.kde.Solid.Networking.Client.xml clientinterface)
+#qt4_add_dbus_interface(client_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/../libs/org.kde.Solid.Networking.Client.xml clientinterface)
 
-kde4_automoc(${client_SRCS})
+#kde4_automoc(${client_SRCS})
 
-kde4_add_executable(client ${client_SRCS})
+#kde4_add_executable(client ${client_SRCS})
 
-target_link_libraries(client kconnectionmanager ${KDE4_KIO_LIBS})
+#target_link_libraries(client kconnectionmanager ${KDE4_KIO_LIBS})
