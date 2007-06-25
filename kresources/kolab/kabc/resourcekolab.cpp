@@ -136,10 +136,10 @@ void KABC::ResourceKolab::doClose()
   KConfig config( configFile() );
 
   Kolab::ResourceMap::ConstIterator it;
-  for ( it = mSubResources.begin(); it != mSubResources.end(); ++it ) {
-    config.setGroup( it.key() );
-    config.writeEntry( "Active", it.value().active() );
-    config.writeEntry( "CompletionWeight", it.value().completionWeight() );
+  for ( it = mSubResources.begin(); it != mSubResources.end(); ++it ) { 
+    KConfigGroup group = config.group( it.key() );
+    group.writeEntry( "Active", it.value().active() );
+    group.writeEntry( "CompletionWeight", it.value().completionWeight() );
   }
 }
 
