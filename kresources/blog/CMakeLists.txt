@@ -1,0 +1,38 @@
+
+
+
+
+########### next target ###############
+
+set(kcal_resourceblog_LIB_SRCS resourceblog.cpp resourceblogconfig.cpp )
+
+kde4_automoc(${kcal_resourceblog_LIB_SRCS})
+
+kde4_add_library(kcal_resourceblog SHARED ${kcal_resourceblog_LIB_SRCS})
+
+target_link_libraries(kcal_resourceblog  ${KDE4_KDECORE_LIBS} ${KDE4_KCAL_LIBS} kdepim )
+
+set_target_properties(kcal_resourceblog PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
+install(TARGETS kcal_resourceblog  DESTINATION ${LIB_INSTALL_DIR})
+
+
+########### next target ###############
+
+set(kcal_blog_PART_SRCS resourceblog_plugin.cpp )
+
+kde4_automoc(${kcal_blog_PART_SRCS})
+
+kde4_add_plugin(kcal_blog ${kcal_blog_PART_SRCS})
+
+
+
+target_link_libraries(kcal_blog ${KDE4_KDECORE_LIBS} kcal_resourceblog kdepim )
+
+install(TARGETS kcal_blog  DESTINATION ${PLUGIN_INSTALL_DIR})
+
+
+########### install files ###############
+
+install( FILES blog.desktop  DESTINATION ${SERVICES_INSTALL_DIR}/kresources/kcal)
+install( FILES blog_export.h resourceblogconfig.h resourceblog.h  DESTINATION ${INCLUDE_INSTALL_DIR}/kcal)
+
