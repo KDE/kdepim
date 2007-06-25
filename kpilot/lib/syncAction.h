@@ -31,8 +31,6 @@
 
 #include <time.h>
 
-#include <pi-dlp.h>
-
 #include <QtCore/QObject>
 #include <QtCore/QStringList>
 
