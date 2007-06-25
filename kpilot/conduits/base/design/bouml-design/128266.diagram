@@ -8,10 +8,10 @@ classinstance 129290 class_ref 128394 // IDMapping
   name "" xyz 312 10 2000 life_line_z 2000
 classinstance 130698 class_ref 128522 // CUDCounter
   name "" xyz 666 14 2000 life_line_z 2000
-classinstance 132234 class_ref 128650 // HHProxyDatabase
-  name "" xyz 426 13 2000 life_line_z 2000
-classinstance 132746 class_ref 128778 // PCProxyDatabase
-  name "" xyz 546 13 2000 life_line_z 2000
+classinstance 132234 class_ref 128650 // HHDataProxy
+  name "" xyz 439 13 2000 life_line_z 2000
+classinstance 132746 class_ref 128778 // PCDataProxy
+  name "" xyz 559 13 2000 life_line_z 2000
 fragment 135178 "for each     HH record"
   xyzwh 79 417 1988 642 177
 end
@@ -30,88 +30,88 @@ note 164746 "Only if there is no match."
   xyzwh 383 686 2005 83 67
 note 167050 "Backup DB"
   xyzwh 336 211 2005 88 35
-note 167306 "At this moment the conduit knows that it will do a first syn so set iterate mode to ALL"
-  xyzwh 4 281 2005 114 107
+note 167306 "At this moment the conduit knows that it will do a first sync so set iterate mode to ALL"
+  xyzwh 4 280 2005 112 122
 durationcanvas 128203 classinstance_ref 128075 // :PilotDaemon
   xyzwh 37 53 2010 11 52
 durationcanvas 128266 classinstance_ref 128010 // :RecordConduit
-  xyzwh 131 88 2010 11 1054
+  xyzwh 130 88 2010 11 1054
 durationcanvas 128331 classinstance_ref 128010 // :RecordConduit
-  xyzwh 131 53 2010 11 25
-durationcanvas 128843 classinstance_ref 132234 // :HHProxyDatabase
-  xyzwh 479 62 2010 11 114
+  xyzwh 130 53 2010 11 25
+durationcanvas 128843 classinstance_ref 132234 // :HHDataProxy
+  xyzwh 477 62 2010 11 114
 durationcanvas 129099 classinstance_ref 130698 // :CUDCounter
-  xyzwh 702 115 2010 11 27
+  xyzwh 701 115 2010 11 27
 durationcanvas 129355 classinstance_ref 130698 // :CUDCounter
-  xyzwh 702 154 2010 11 25
+  xyzwh 701 154 2010 11 25
 durationcanvas 129418 classinstance_ref 129290 // :IDMapping
-  xyzwh 344 387 2010 11 25
-durationcanvas 130379 classinstance_ref 132746 // :PCProxyDatabase
-  xyzwh 598 278 2010 11 67
+  xyzwh 343 387 2010 11 25
+durationcanvas 130379 classinstance_ref 132746 // :PCDataProxy
+  xyzwh 597 278 2010 11 67
 durationcanvas 130635 classinstance_ref 130698 // :CUDCounter
-  xyzwh 702 300 2010 11 25
+  xyzwh 701 300 2010 11 25
 durationcanvas 130891 classinstance_ref 130698 // :CUDCounter
-  xyzwh 702 334 2010 11 25
-durationcanvas 131275 classinstance_ref 132234 // :HHProxyDatabase
-  xyzwh 479 453 2010 11 28
+  xyzwh 701 334 2010 11 25
+durationcanvas 131275 classinstance_ref 132234 // :HHDataProxy
+  xyzwh 477 453 2010 11 28
 durationcanvas 139146 classinstance_ref 129290 // :IDMapping
-  xyzwh 344 826 2010 11 24
+  xyzwh 343 826 2010 11 24
 durationcanvas 139402 classinstance_ref 129290 // :IDMapping
-  xyzwh 344 859 2010 11 25
+  xyzwh 343 859 2010 11 25
 durationcanvas 139658 classinstance_ref 129290 // :IDMapping
-  xyzwh 344 1034 2010 11 27
-durationcanvas 158986 classinstance_ref 132234 // :HHProxyDatabase
-  xyzwh 479 782 2010 11 25
+  xyzwh 343 1034 2010 11 27
+durationcanvas 158986 classinstance_ref 132234 // :HHDataProxy
+  xyzwh 477 782 2010 11 25
 durationcanvas 159498 classinstance_ref 130698 // :CUDCounter
-  xyzwh 702 777 2010 11 25
-durationcanvas 159754 classinstance_ref 132746 // :PCProxyDatabase
-  xyzwh 598 810 2010 11 25
+  xyzwh 701 777 2010 11 25
+durationcanvas 159754 classinstance_ref 132746 // :PCDataProxy
+  xyzwh 597 810 2010 11 25
 durationcanvas 160010 classinstance_ref 130698 // :CUDCounter
-  xyzwh 702 813 2010 11 25
-durationcanvas 160266 classinstance_ref 132234 // :HHProxyDatabase
-  xyzwh 479 851 2010 11 70
-durationcanvas 160906 classinstance_ref 132234 // :HHProxyDatabase
-  xyzwh 479 1043 2010 11 52
-durationcanvas 161162 classinstance_ref 132746 // :PCProxyDatabase
-  xyzwh 598 1112 2010 11 28
-durationcanvas 162058 classinstance_ref 132746 // :PCProxyDatabase
-  xyzwh 598 497 2010 11 29
-durationcanvas 162442 classinstance_ref 132746 // :PCProxyDatabase
-  xyzwh 598 543 2010 11 25
+  xyzwh 701 813 2010 11 25
+durationcanvas 160266 classinstance_ref 132234 // :HHDataProxy
+  xyzwh 477 851 2010 11 70
+durationcanvas 160906 classinstance_ref 132234 // :HHDataProxy
+  xyzwh 477 1043 2010 11 52
+durationcanvas 161162 classinstance_ref 132746 // :PCDataProxy
+  xyzwh 597 1112 2010 11 28
+durationcanvas 162058 classinstance_ref 132746 // :PCDataProxy
+  xyzwh 597 497 2010 11 29
+durationcanvas 162442 classinstance_ref 132746 // :PCDataProxy
+  xyzwh 597 543 2010 11 25
 durationcanvas 162698 classinstance_ref 130698 // :CUDCounter
-  xyzwh 702 541 2010 11 25
+  xyzwh 701 541 2010 11 25
 durationcanvas 163210 classinstance_ref 129290 // :IDMapping
-  xyzwh 344 564 2010 11 25
-durationcanvas 163466 classinstance_ref 132746 // :PCProxyDatabase
-  xyzwh 598 634 2010 11 25
+  xyzwh 343 564 2010 11 25
+durationcanvas 163466 classinstance_ref 132746 // :PCDataProxy
+  xyzwh 597 634 2010 11 25
 durationcanvas 163722 classinstance_ref 129290 // :IDMapping
-  xyzwh 344 661 2010 11 25
-durationcanvas 163978 classinstance_ref 132234 // :HHProxyDatabase
-  xyzwh 479 685 2010 11 25
+  xyzwh 343 661 2010 11 25
+durationcanvas 163978 classinstance_ref 132234 // :HHDataProxy
+  xyzwh 477 685 2010 11 25
 durationcanvas 164234 classinstance_ref 130698 // :CUDCounter
-  xyzwh 702 691 2010 11 25
+  xyzwh 701 691 2010 11 25
 durationcanvas 164490 classinstance_ref 129290 // :IDMapping
-  xyzwh 344 718 2010 11 25
-durationcanvas 165130 classinstance_ref 132746 // :PCProxyDatabase
-  xyzwh 598 929 2010 11 76
-durationcanvas 165514 classinstance_ref 132234 // :HHProxyDatabase
-  xyzwh 479 181 2010 11 93
+  xyzwh 343 718 2010 11 25
+durationcanvas 165130 classinstance_ref 132746 // :PCDataProxy
+  xyzwh 597 929 2010 11 76
+durationcanvas 165514 classinstance_ref 132234 // :HHDataProxy
+  xyzwh 477 181 2010 11 93
 durationcanvas 166026 classinstance_ref 130698 // :CUDCounter
-  xyzwh 702 217 2010 11 25
+  xyzwh 701 217 2010 11 25
 durationcanvas 166282 classinstance_ref 130698 // :CUDCounter
-  xyzwh 702 252 2010 11 25
-durationcanvas 166538 classinstance_ref 132746 // :PCProxyDatabase
-  xyzwh 598 351 2010 11 25
-durationcanvas 166794 classinstance_ref 132234 // :HHProxyDatabase
-  xyzwh 479 373 2010 11 29
+  xyzwh 701 252 2010 11 25
+durationcanvas 166538 classinstance_ref 132746 // :PCDataProxy
+  xyzwh 597 351 2010 11 25
+durationcanvas 166794 classinstance_ref 132234 // :HHDataProxy
+  xyzwh 477 373 2010 11 29
 durationcanvas 168458 classinstance_ref 130698 // :CUDCounter
-  xyzwh 702 859 2010 11 27
+  xyzwh 701 859 2010 11 27
 durationcanvas 168842 classinstance_ref 130698 // :CUDCounter
-  xyzwh 702 892 2010 11 29
+  xyzwh 701 892 2010 11 29
 durationcanvas 169226 classinstance_ref 130698 // :CUDCounter
-  xyzwh 702 938 2010 11 25
+  xyzwh 701 938 2010 11 25
 durationcanvas 169610 classinstance_ref 130698 // :CUDCounter
-  xyzwh 702 975 2010 11 30
+  xyzwh 701 975 2010 11 30
 msg 128459 synchronous
   from durationcanvas_ref 128203 // 128075
   to durationcanvas_ref 128331 // 128010
@@ -137,7 +137,7 @@ reflexivemsg 128778 synchronous
 msg 128971 synchronous
   from durationcanvas_ref 128266 // 128010
   to durationcanvas_ref 128843 // 132234
-  yz 165 2000 msg operation_ref 132234 // "HHProxyDatabase(in *db : PilotDatabase)"
+  yz 165 2000 msg operation_ref 132234 // "HHDataProxy(in *db : PilotDatabase)"
   show_full_operations_definition default drawing_language default
   label_xy 145 155
 msg 129227 synchronous
@@ -161,7 +161,7 @@ msg 129546 synchronous
 msg 130507 synchronous
   from durationcanvas_ref 128266 // 128010
   to durationcanvas_ref 130379 // 132746
-  yz 282 2000 msg operation_ref 128840 // "PCProxyDatabase()"
+  yz 282 2000 msg operation_ref 128840 // "PCDataProxy()"
   show_full_operations_definition default drawing_language default
   label_xy 144 271
 msg 130763 synchronous
@@ -350,7 +350,7 @@ msg 165386 return
 msg 165642 synchronous
   from durationcanvas_ref 128266 // 128010
   to durationcanvas_ref 165514 // 132234
-  yz 189 2000 msg operation_ref 132234 // "HHProxyDatabase(in *db : PilotDatabase)"
+  yz 189 2000 msg operation_ref 132234 // "HHDataProxy(in *db : PilotDatabase)"
   show_full_operations_definition default drawing_language default
   label_xy 144 178
 reflexivemsg 165770 synchronous
@@ -461,7 +461,8 @@ line 167178 -_-_
   from ref 167050 z 2004 to ref 165514
 line 167434 -_-_
   from ref 167306 z 1999 to point 311 306
-  line 168202 z 1999 to ref 166666
+  line 168202 z 1999 to point 378 353
+  line 128036 z 1999 to ref 166666
 line 167562 -_-_
   from ref 167306 z 1999 to point 291 329
   line 168330 z 1999 to ref 166922

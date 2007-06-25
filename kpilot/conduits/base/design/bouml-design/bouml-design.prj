@@ -1,7 +1,7 @@
 format 38
 "bouml-design"
-  revision 22
-  modified_by 10 "bertjan"
+  revision 23
+  modified_by 36 "gideon"
 
 
   
@@ -173,7 +173,7 @@ ${inlines}
 	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} * ${name}${value};
 "
 	    classrelation_ref 128906 // fDatabase (<unidirectional association>)
-	  b multiplicity "" parent class_ref 128650 // HHProxyDatabase
+	  b multiplicity "" parent class_ref 128650 // HHDataProxy
       end
 
       classrelation 129418 // fLocalDatase (<unidirectional association>)
@@ -625,7 +625,7 @@ ${inlines}
       end
     end
 
-    class 128650 "HHProxyDatabase"
+    class 128650 "HHDataProxy"
       abstract visibility package 
       cpp_decl "${comment}${template}class ${name}${inherit} {
 ${members}};
@@ -643,7 +643,7 @@ ${inlines}
 	  b multiplicity "" parent class_ref 128906 // DataProxy
       end
 
-      operation 132234 "HHProxyDatabase"
+      operation 132234 "HHDataProxy"
 	public explicit_return_type ""
 	nparams 1
 	  param in name "*db" type class_ref 128203 // PilotDatabase
@@ -696,7 +696,7 @@ ${inlines}
       end
     end
 
-    class 128778 "PCProxyDatabase"
+    class 128778 "PCDataProxy"
       visibility package 
       cpp_decl "${comment}${template}class ${name}${inherit} {
 ${members}};
@@ -714,7 +714,7 @@ ${inlines}
 	  b multiplicity "" parent class_ref 128906 // DataProxy
       end
 
-      operation 128840 "PCProxyDatabase"
+      operation 128840 "PCDataProxy"
 	public explicit_return_type ""
 	nparams 0
 	cpp_decl "    ${comment}${inline}${name}${(}${)}${volatile}${throw};
