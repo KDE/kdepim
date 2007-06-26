@@ -1,6 +1,7 @@
 [Desktop Entry]
 Encoding=UTF-8
 Name=KMTSetup
+Name[pa]=KMT-ਸੈਟਅੱਪ
 Name[sv]=KMT-inställning
 Exec=kmtsetup
 Icon=kmtsetup
