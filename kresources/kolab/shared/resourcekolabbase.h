@@ -47,7 +47,7 @@ class KUrl;
 
 namespace Kolab {
 
-  class KMailConnectionAdaptor;
+  class KMailConnection;
 
 /**
   This class provides the kmail connectivity for IMAP resources.
@@ -175,7 +175,7 @@ protected:
   QStringList mUidsPendingUpdate;
 
 private:
-  mutable KMailConnectionAdaptor* mConnection;
+  mutable KMailConnection* mConnection;
 };
 
 }
