@@ -54,7 +54,7 @@ namespace Kleo {
     void load();
     void save() const;
 
-    void emitChanged( bool b ) { emit changed( b ); }
+    void emitChanged( bool b ) { changed( b ); }
 
   Q_SIGNALS:
     void changed( bool );
