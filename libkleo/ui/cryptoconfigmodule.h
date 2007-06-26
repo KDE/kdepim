@@ -55,7 +55,7 @@ namespace Kleo {
     void defaults();
     void cancel();
 
-  signals:
+  Q_SIGNALS:
     void changed();
 
   private:

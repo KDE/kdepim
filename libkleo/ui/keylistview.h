@@ -275,20 +275,20 @@ namespace Kleo {
 
     KeyListViewItem * itemByFingerprint( const QByteArray & ) const;
 
-  signals:
+  Q_SIGNALS:
     void doubleClicked( Kleo::KeyListViewItem*, const QPoint&, int );
     void returnPressed( Kleo::KeyListViewItem* );
     void selectionChanged( Kleo::KeyListViewItem* );
     void contextMenu( Kleo::KeyListViewItem*, const QPoint& );
 
-  public slots:
+  public Q_SLOTS:
     virtual void slotAddKey( const GpgME::Key & key );
     virtual void slotRefreshKey( const GpgME::Key & key );
 
     //
     // Only boring stuff below:
     //
-  private slots:
+  private Q_SLOTS:
     void slotEmitDoubleClicked( Q3ListViewItem*, const QPoint&, int );
     void slotEmitReturnPressed( Q3ListViewItem* );
     void slotEmitSelectionChanged( Q3ListViewItem* );

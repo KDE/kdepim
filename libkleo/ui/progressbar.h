@@ -47,7 +47,7 @@ namespace Kleo {
   public:
     ProgressBar( QWidget * parent=0, Qt::WFlags f=0 );
 
-  public slots:
+  public Q_SLOTS:
     void slotProgress( const QString & message, int type, int current, int total );
     void slotProgress( const QString & message, int current, int total );
     /*! reimplementation to support self-powered busy indicator */
@@ -59,7 +59,7 @@ namespace Kleo {
     /*! reimplementation to preserve visibility */
     void setRange( int cur, int tot ) { QProgressBar::setRange( cur, tot ); }
 
-  private slots:
+  private Q_SLOTS:
     void slotBusyTimerTick();
 
   private:

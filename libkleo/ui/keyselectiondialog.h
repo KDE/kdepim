@@ -125,7 +125,7 @@ namespace Kleo {
     // Could be used by derived classes to insert their own widget
     QVBoxLayout* topLayout() const { return mTopLayout; }
 
-  private slots:
+  private Q_SLOTS:
     void slotRereadKeys();
     void slotStartCertificateManager();
     void slotKeyListResult( const GpgME::KeyListResult & );

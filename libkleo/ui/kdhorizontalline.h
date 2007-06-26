@@ -65,7 +65,7 @@ public:
 
   static int indentHint();
 
-public slots:
+public Q_SLOTS:
   virtual void setTitle( const QString & title );
 
 protected:

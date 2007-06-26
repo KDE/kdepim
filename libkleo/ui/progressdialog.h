@@ -50,11 +50,11 @@ namespace Kleo {
 		    QWidget * creator=0, Qt::WFlags f=0  );
     ~ProgressDialog();
 
-  public slots:
+  public Q_SLOTS:
     /*! reimplementation */
     void setMinimumDuration( int ms );
 
-  private slots:
+  private Q_SLOTS:
     void slotProgress( const QString & what, int current, int total );
     void slotDone();
   private:

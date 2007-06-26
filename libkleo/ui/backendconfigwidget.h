@@ -56,10 +56,10 @@ namespace Kleo {
 
     void emitChanged( bool b ) { emit changed( b ); }
 
-  signals:
+  Q_SIGNALS:
     void changed( bool );
 
-  private slots:
+  private Q_SLOTS:
     void slotSelectionChanged( Q3ListViewItem * );
     void slotRescanButtonClicked();
     void slotConfigureButtonClicked();

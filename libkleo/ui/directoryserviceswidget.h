@@ -60,13 +60,13 @@ public:
   KUrl::List urlList() const;
   void clear();
 
-public slots:
+public Q_SLOTS:
   void defaults();
 
-signals:
+Q_SIGNALS:
   void changed();
 
-protected slots:
+protected Q_SLOTS:
   void slotServiceChanged( Q3ListViewItem* );
   void slotServiceSelected( Q3ListViewItem* );
   void slotAddService();

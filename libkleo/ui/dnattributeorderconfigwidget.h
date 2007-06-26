@@ -54,14 +54,14 @@ namespace Kleo {
     void save() const;
     void defaults();
 
-  signals:
+  Q_SIGNALS:
     void changed();
 
     //
     // only boring stuff below...
     //
 
-  private slots:
+  private Q_SLOTS:
     void slotAvailableSelectionChanged( Q3ListViewItem * );
     void slotCurrentOrderSelectionChanged( Q3ListViewItem * );
     void slotDoubleUpButtonClicked();
