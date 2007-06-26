@@ -142,18 +142,13 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
       Attendee* myself = 0;
       // Find myself. There will always be all attendees listed, even if
       // only I need to answer it.
-      if ( attendees.count() == 1 )
-        // Only one attendee, that must be me
-        myself = *attendees.begin();
-      else {
-        for ( it = attendees.begin(); it != attendees.end(); ++it ) {
-          // match only the email part, not the name
-          if( KPIMUtils::compareEmail( (*it)->email(), receiver, false ) ) {
-            // We are the current one, and even the receiver, note
-            // this and quit searching.
-            myself = (*it);
-            break;
-          }
+      for ( it = attendees.begin(); it != attendees.end(); ++it ) {
+        // match only the email part, not the name
+        if( KPIMUtils::compareEmail( (*it)->email(), receiver, false ) ) {
+          // We are the current one, and even the receiver, note
+          // this and quit searching.
+          myself = (*it);
+          break;
         }
       }
       return myself;
@@ -257,7 +252,7 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
       QString recv = to;
       if ( recv.isEmpty() )
         recv = incidence->organizer().fullName();
-      return callback.mailICal( recv, msg, subject, status );
+      return callback.mailICal( recv, msg, subject, status, type != Forward );
     }
 
     bool saveFile( const QString& receiver, const QString& iCal,
@@ -327,6 +322,9 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
       if ( status != Attendee::Delegated ) // we do that below for delegated incidences
         saveFile( receiver, iCal, dir );
 
+      // Now produce the return message
+      Incidence* incidence = icalToString( iCal );
+
       QString delegateString;
       bool delegatorRSVP = false;
       if ( status == Attendee::Delegated ) {
@@ -337,10 +335,11 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
         delegatorRSVP = dlg.rsvp();
         if ( delegateString.isEmpty() )
           return true;
+        if ( KPIMUtils::compareEmail( delegateString, incidence->organizer().email(), false ) ) {
+          KMessageBox::sorry( 0, i18n("Delegation to organizer is not possible.") );
+          return true;
+        }
       }
-
-      // Now produce the return message
-      Incidence* incidence = icalToString( iCal );
 
       if( !incidence ) return false;
       Attendee *myself = findMyself( incidence, receiver );
@@ -372,6 +371,23 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
             ok = mail( incidence, callback, dir, Scheduler::Reply, delegator );
         }
 
+      } else if ( !myself && (status != Attendee::Declined) ) {
+        // forwarded invitation
+        Attendee* newMyself = 0;
+        QString name;
+        QString email;
+        KPIMUtils::extractEmailAddressAndName( receiver, email, name );
+        if ( !email.isEmpty() ) {
+          newMyself = new Attendee( name,
+                                    email,
+                                    true, // RSVP, otherwise we would not be here
+                                    status,
+                                    heuristicalRole( incidence ),
+                                    QString::null );
+          incidence->clearAttendees();
+          incidence->addAttendee( newMyself );
+          ok = mail( incidence, callback, dir, Scheduler::Reply );
+        }
       } else {
         ( new KMDeleteMsgCommand( callback.getMsg()->getMsgSerNum() ) )->start();
       }
@@ -431,7 +447,6 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
         QString fwdTo = dlg.attendees().join( ", " );
         if ( fwdTo.isEmpty() )
           return true;
-        // TODO mark incidence as forwarded
         result = mail( incidence, c, "forward", Scheduler::Request, fwdTo, Forward );
       }
       if ( path == "reply" || path == "cancel" ) {
