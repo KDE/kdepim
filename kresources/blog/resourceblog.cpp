@@ -269,7 +269,7 @@ bool ResourceBlog::doSave(bool)
 	/* TODO: Replace with KBlog interaction */
 	KBlog::BlogPosting *post;
 	//post = new KBlog::BlogPosting("title", "content", "category", true);
-	mAPI->createPosting(post);
+	//mAPI->createPosting(post);
 	/*
 	mUploadJob = KIO::file_copy( KUrl( cacheFile() ), mUrl, -1, true );
 	connect( mUploadJob, SIGNAL( result( KJob * ) ),
