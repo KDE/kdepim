@@ -189,6 +189,10 @@ bool Incidence::loadAttendeeAttribute( QDomElement& element,
         attendee.invitationSent = ( e.text().toLower() != "true" );
       else if ( tagName == "role" )
         attendee.role = e.text();
+      else if ( tagName == "delegated-to" )
+        attendee.delegate = e.text();
+      else if ( tagName == "delegated-from" )
+        attendee.delegator = e.text();
       else
         // TODO: Unhandled tag - save for later storage
         kDebug() << "Warning: Unhandled tag " << e.tagName() << endl;
@@ -212,6 +216,8 @@ void Incidence::saveAttendeeAttribute( QDomElement& element,
   writeString( e, "invitation-sent",
                ( attendee.invitationSent ? "true" : "false" ) );
   writeString( e, "role", attendee.role );
+  writeString( e, "delegated-to", attendee.delegate );
+  writeString( e, "delegated-from", attendee.delegator );
 }
 
 void Incidence::saveAttendees( QDomElement& element ) const
@@ -413,6 +419,8 @@ static KCal::Attendee::PartStat attendeeStringToStatus( const QString& s )
     return KCal::Attendee::Tentative;
   if ( s == "declined" )
     return KCal::Attendee::Declined;
+  if ( s == "delegated" )
+    return KCal::Attendee::Delegated;
 
   // Default:
   return KCal::Attendee::Accepted;
@@ -430,6 +438,7 @@ static QString attendeeStatusToString( KCal::Attendee::PartStat status )
   case KCal::Attendee::Tentative:
     return "tentative";
   case KCal::Attendee::Delegated:
+    return "delegated";
   case KCal::Attendee::Completed:
   case KCal::Attendee::InProcess:
     // These don't have any meaning in the Kolab format, so just use:
@@ -617,6 +626,8 @@ void Incidence::setFields( const KCal::Incidence* incidence )
     // attendee.invitationSent = kcalAttendee->mFlag;
     // DF: Hmm? mFlag is set to true and never used at all.... Did you mean another field?
     attendee.role = attendeeRoleToString( kcalAttendee->role() );
+    attendee.delegate = kcalAttendee->delegate();
+    attendee.delegator = kcalAttendee->delegator();
 
     addAttendee( attendee );
   }
@@ -700,10 +711,13 @@ void Incidence::saveTo( KCal::Incidence* incidence )
   for ( it = mAttendees.begin(); it != mAttendees.end(); ++it ) {
     KCal::Attendee::PartStat status = attendeeStringToStatus( (*it).status );
     KCal::Attendee::Role role = attendeeStringToRole( (*it).role );
-    incidence->addAttendee( new KCal::Attendee( (*it).displayName,
-                                                (*it).smtpAddress,
-                                                (*it).requestResponse,
-                                                status, role ) );
+    KCal::Attendee *a = new KCal::Attendee( (*it).displayName,
+                                            (*it).smtpAddress,
+                                             (*it).requestResponse,
+                                             status, role );
+    a->setDelegate( (*it).delegate );
+    a->setDelegator( (*it).delegator );
+    incidence->addAttendee( a );
   }
 
   incidence->clearAttachments();
