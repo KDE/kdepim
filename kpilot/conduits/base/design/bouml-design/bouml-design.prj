@@ -1,6 +1,6 @@
 format 38
 "bouml-design"
-  revision 26
+  revision 27
   modified_by 10 "bertjan"
 
 
@@ -966,5 +966,107 @@ ${inlines}
       end
     end
 
+    class 129290 "ImplementingHHDataProxy"
+      visibility package 
+      cpp_decl "${comment}${template}class ${name}${inherit} {
+${members}};
+${inlines}
+"
+      java_decl ""
+      idl_decl ""
+      explicit_switch_type ""
+      
+      classrelation 130186 // <generalisation>
+	relation 130186 ---|>
+	  a public
+	    cpp default "${type}"
+	    classrelation_ref 130186 // <generalisation>
+	  b multiplicity "" parent class_ref 128650 // HHDataProxy
+      end
+    end
+
+    class 129418 "ImplementingPCDataProxy"
+      visibility package 
+      cpp_decl "${comment}${template}class ${name}${inherit} {
+${members}};
+${inlines}
+"
+      java_decl ""
+      idl_decl ""
+      explicit_switch_type ""
+      
+      classrelation 130314 // <generalisation>
+	relation 130314 ---|>
+	  a public
+	    cpp default "${type}"
+	    classrelation_ref 130314 // <generalisation>
+	  b multiplicity "" parent class_ref 128778 // PCDataProxy
+      end
+    end
+
+    class 129546 "ImplementingHHRecord"
+      visibility package 
+      cpp_decl "${comment}${template}class ${name}${inherit} {
+${members}};
+${inlines}
+"
+      java_decl ""
+      idl_decl ""
+      explicit_switch_type ""
+      
+      classrelation 130442 // <generalisation>
+	relation 130442 ---|>
+	  a public
+	    cpp default "${type}"
+	    classrelation_ref 130442 // <generalisation>
+	  b multiplicity "" parent class_ref 129162 // HHRecord
+      end
+    end
+
+    class 129674 "ImplementingPCRecord"
+      visibility package 
+      cpp_decl "${comment}${template}class ${name}${inherit} {
+${members}};
+${inlines}
+"
+      java_decl ""
+      idl_decl ""
+      explicit_switch_type ""
+      
+      classrelation 130570 // <generalisation>
+	relation 130570 ---|>
+	  a public
+	    cpp default "${type}"
+	    classrelation_ref 130570 // <generalisation>
+	  b multiplicity "" parent class_ref 129162 // HHRecord
+      end
+
+      classrelation 130698 // <generalisation>
+	relation 130698 ---|>
+	  a public
+	    cpp default "${type}"
+	    classrelation_ref 130698 // <generalisation>
+	  b multiplicity "" parent class_ref 129034 // Record
+      end
+    end
+
+    class 129802 "ImplementingRecordConduit"
+      visibility package 
+      cpp_decl "${comment}${template}class ${name}${inherit} {
+${members}};
+${inlines}
+"
+      java_decl ""
+      idl_decl ""
+      explicit_switch_type ""
+      
+      classrelation 130826 // <generalisation>
+	relation 130826 ---|>
+	  a public
+	    cpp default "${type}"
+	    classrelation_ref 130826 // <generalisation>
+	  b multiplicity "" parent class_ref 128010 // RecordConduit
+      end
+    end
   end
 end
