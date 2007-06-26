@@ -106,9 +106,6 @@ private slots:
   void dbusServiceOwnerChanged(const QString & service, const QString & oldOwner, const QString & newOwner);
 
 private:
-  /** Connect a signal from KMail to a local slot. */
-  bool connectKMailSignal( const QByteArray&, const QByteArray& );
-
   ResourceKolabBase* mResource;
   QDBusInterface* mKmailGroupwareInterface;
 };

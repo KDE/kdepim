@@ -227,17 +227,6 @@ void KMailConnection::fromKMailAsyncLoadResult( const QMap<quint32, QString>& ma
   mResource->fromKMailAsyncLoadResult( map, type, folder );
 }
 
-bool KMailConnection::connectKMailSignal( const QByteArray& signal,
-                                          const QByteArray& method )
-{
-#if 0 // TODO
-  return connectDCOPSignal( "kmail", dcopObjectId, signal, method, false )
-    && connectDCOPSignal( "kontact", dcopObjectId, signal, method, false );
-#else
-  return false;
-#endif
-}
-
 bool KMailConnection::kmailSubresources( QList<KMail::SubResource>& lst,
                                          const QString& contentsType )
 {
