@@ -1,6 +1,6 @@
 format 38
 "bouml-design"
-  revision 25
+  revision 26
   modified_by 10 "bertjan"
 
 
@@ -68,6 +68,16 @@ format 38
     
     classdiagram 128138 "Class Diagram"
       draw_all_relations no hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default show_members_stereotype default show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language c++ show_context_mode default auto_label_position no show_infonote default shadow default
+      size A4
+    end
+
+    sequencediagram 129546 "COM - Init"
+      show_full_operations_definition yes write_horizontally default drawing_language c++ draw_all_relations default shadow yes
+      size A4
+    end
+
+    sequencediagram 129674 "COM - Finish"
+      show_full_operations_definition yes write_horizontally default drawing_language c++ draw_all_relations default shadow yes
       size A4
     end
 
@@ -633,7 +643,6 @@ ${inlines}
 	    classrelation_ref 129802 // fRecords (<unidirectional association>)
 	  b multiplicity "" parent class_ref 129034 // Record
       end
-
     end
 
     class 128650 "HHDataProxy"
@@ -956,5 +965,6 @@ ${inlines}
 	
       end
     end
+
   end
 end
