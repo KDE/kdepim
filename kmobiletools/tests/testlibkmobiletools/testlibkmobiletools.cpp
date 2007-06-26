@@ -70,12 +70,15 @@ KMobileTools::SMS *TestLibKMobileToolsApp::checkSMS(bool deleteOnReturn) {
     out << "setting test to sms: " << sms->getText() << endl;
     out << "Raw content: " << sms->body() << endl;
     sms->setDateTime( KDateTime(QDate(2002,7,2), QTime(21,12,13) ) );
+    sms->setUnread(false);
     out << "Set date time to " << sms->getDateTime().toString() << endl;
     sms->setSender( "+39123456789", "Sender Name");
     out << "Added numbers: Sender=" << sms->sender()->as7BitString() << endl;
     sms->addDestination("+22123456789", "Destination Name #1");
     sms->addDestination("+33345678923", "Destination Name #2 testing some special chars.. #@1\"<>, ");
     sms->sender()->from7BitString("Sender: Sender Name #1 <+33345678923>, \"Sender 2\" <1234543>, \"Sender 3 with ,commas,\" <224123>, \"Sender 4 with \\\"quotes\\\"\" <1234567>");
+    sms->setType( KMobileTools::SMS::Unread );
+
     out << endl;
     sms->assemble();
     out << "****************** SMS Serialization ******************\n"

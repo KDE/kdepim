@@ -76,7 +76,7 @@ public:
     { Unread=0x1, Read=0x2, Unsent=0x4, Sent=0x8, All=0xA };
     static QString SMSTypeString(SMSType smstype);
 
-    static int SMSIntType (const QString& type);
+    static SMSType SMSIntType (const QString& type);
 
     bool isIncoming() const;
     void setText(const QString & text);
@@ -95,12 +95,12 @@ public:
     virtual QString rawSlot() const;
     void setDateTime(const KDateTime & datetime);
 
-    void setFolder( int newFolder );
-    int folder() const;
+    void KDE_DEPRECATED setFolder( int newFolder );
+    int KDE_DEPRECATED  folder() const;
     QList<int> *idList();
 //     void setId( int newId ) { i_id = newId; }; // krazy:exclude=inline
 
-    void setSlot( int newSlot );
+    void KDE_DEPRECATED setSlot( int newSlot );
     SMSType type() const;
     void setType( SMSType newType );
     int slot() const;

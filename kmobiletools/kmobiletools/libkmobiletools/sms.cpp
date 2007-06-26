@@ -36,13 +36,12 @@ using namespace KMobileTools;
 class SMSPrivate {
     public:
         SMSPrivate(SMS* p_parent) :
-        i_folder(0), i_slot(0), i_type(SMS::All)
+        i_folder(0), i_slot(0)
         { parent=p_parent; }
     QStringList sl_numbers;
 //     QString s_text;
     int i_folder;
     int i_slot;
-    SMS::SMSType i_type;
     QList<int> v_id;
     QString s_rawSlot;
     SMS *parent;
@@ -203,7 +202,7 @@ SMS::~SMS()
 
 QStringList SMS::getTo() const
 {
-    if (d->i_type==Unsent || d->i_type==Sent)
+    if (type()==Unsent || type()==Sent)
     {
         return d->sl_numbers;
     } else {
@@ -299,7 +298,7 @@ bool SMS::writeToSlot(const QString &dir)
 {
     QString filename=dir+QDir::separator();
     QString text;
-    if((d->i_type & Unsent) || (d->i_type & Sent) )
+    if((type() & Unsent) || (type() & Sent) )
     {
         filename+=i18nc("Outgoing MailDir", "Outgoing");
         text="To: \"";
@@ -360,7 +359,7 @@ bool SMS::writeToSlotCSV(const QString &filename)
     kDebug() << k_funcinfo << endl;
     QString text;
 
-    if((d->i_type & Unsent) || (d->i_type & Sent) )
+    if((type() & Unsent) || (type() & Sent) )
     {
         text="\"OUTGOING\",";
         for(QStringList::Iterator it=d->sl_numbers.begin(); it!=d->sl_numbers.end(); ++it)
@@ -409,15 +408,15 @@ void SMS::setDateTime(const KDateTime & datetime) {
 }
 
 bool SMS::unread() const {
-    return const_cast<SMS*>(this)->hasHeader("Read");
+    return const_cast<SMS*>(this)->hasHeader("X-KMobileTools-Read");
 }
 
 void SMS::setUnread(bool unread) {
     if(unread && ! this->unread() ) {
-        removeHeader("Read");
+        removeHeader("X-KMobileTools-Read");
         return;
     }
-    setHeader( new KMime::Headers::Generic("Read", 0, QString("read").toUtf8() ) );
+    setHeader( new KMime::Headers::Generic("X-KMobileTools-Read", 0, QString("read").toUtf8() ) );
 }
 
 QString SMS::SMSTypeString(SMSType smstype) {
@@ -436,13 +435,13 @@ QString SMS::SMSTypeString(SMSType smstype) {
     return QString();
 }
 
-int SMS::SMSIntType(const QString& type) {
+SMS::SMSType SMS::SMSIntType(const QString& type) {
     if (type==QLatin1String("REC UNREAD")) return SMS::Unread;
     if (type==QLatin1String("REC READ")) return SMS::Read;
     if (type==QLatin1String("STO UNSENT")) return SMS::Unsent;
     if (type==QLatin1String("STO SENT")) return SMS::Sent;
     if (type==QLatin1String("ALL")) return SMS::Sent;
-    return -1;
+    return SMS::All; // Good enough or switch back to -1?
 }
 
 QByteArray SMS::assembleHeaders()
@@ -454,6 +453,10 @@ QByteArray SMS::assembleHeaders()
     h=sender();
     if(h) ret+= h->as7BitString()+'\n';
     h=destination();
+    if(h) ret+= h->as7BitString()+'\n';
+    h=getHeaderByType("X-KMobileTools-Type");
+    if(h) ret+= h->as7BitString()+'\n';
+    h=getHeaderByType("X-KMobileTools-Read");
     if(h) ret+= h->as7BitString()+'\n';
     return ret + Content::assembleHeaders();
 }
@@ -492,12 +495,25 @@ Destination *SMS::destination() const
 
 QString SMS::getFrom() const
 {
-    if (d->i_type==Unsent || d->i_type==Sent)
+    if (type()==Unsent || type()==Sent)
     {
         return QString();
     } else {
         return QString( d->sl_numbers.first() );
     }
+}
+
+SMS::SMSType SMS::type() const {
+    KMime::Headers::Generic* htype=dynamic_cast<KMime::Headers::Generic*>(const_cast<SMS*>(this)->getHeaderByType("X-KMobileTools-Type") );
+    if(!htype) return All; /// @TODO error handling here
+    kDebug() << htype->as7BitString (false);
+    return SMSIntType( QString ( htype->as7BitString() ) );
+}
+void SMS::setType( SMSType newType ) {
+    KMime::Headers::Generic *htype=dynamic_cast<KMime::Headers::Generic*>(getHeaderByType("X-KMobileTools-Type") );
+    if(!htype) htype=new KMime::Headers::Generic("X-KMobileTools-Type");
+    htype->from7BitString( SMS::SMSTypeString(newType).toUtf8() );
+    setHeader( htype );
 }
 
 
@@ -509,8 +525,7 @@ void SMS::setFolder( int newFolder ) { d->i_folder = newFolder; }
 int SMS::folder() const { return d->i_folder; }
 QList<int> *SMS::idList() { return &(d->v_id); }
 void SMS::setSlot( int newSlot ) { d->i_slot=newSlot; /*emit updated();*/ }
-SMS::SMSType SMS::type() const { return d->i_type; }
-void SMS::setType( SMSType newType ) { d->i_type = newType;/* emit updated();*/ }
+
 int SMS::slot() const { return d->i_slot; }
 
 
