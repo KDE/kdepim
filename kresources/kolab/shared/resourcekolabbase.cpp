@@ -52,7 +52,7 @@ ResourceKolabBase::ResourceKolabBase( const QByteArray& objId )
 {
   KGlobal::locale()->insertCatalog( "kres_kolab" );
   KGlobal::locale()->insertCatalog( "libkcal" );
-  mConnection = new KMailConnection( this ); //Rename it to adaptor.
+  mConnection = new KMailConnection( this );
 }
 
 ResourceKolabBase::~ResourceKolabBase()
