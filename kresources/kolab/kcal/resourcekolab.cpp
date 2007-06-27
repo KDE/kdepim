@@ -467,7 +467,12 @@ bool ResourceKolab::sendKMailUpdate( KCal::IncidenceBase* incidencebase, const Q
     attMimeTypes.append( (*it)->mimeType() );
     attNames.append( (*it)->label() );
   }
-
+  QStringList deletedAtts;
+  if ( kmailListAttachments( deletedAtts, subresource, sernum ) ) {
+    for ( QStringList::ConstIterator it = attNames.constBegin(); it != attNames.constEnd(); ++it ) {
+      deletedAtts.remove( *it );
+    }
+  }
   CustomHeaderMap customHeaders;
   if ( incidence->schedulingID() != incidence->uid() )
     customHeaders.insert( "X-Kolab-SchedulingID", incidence->schedulingID() );
@@ -476,7 +481,7 @@ bool ResourceKolab::sendKMailUpdate( KCal::IncidenceBase* incidencebase, const Q
   if ( !isXMLStorageFormat ) subject.prepend( "iCal " ); // conform to the old style
 
   // behold, sernum is an in-parameter
-  const bool rc = kmailUpdate( subresource, sernum, data, mimetype, subject, customHeaders, attURLs, attMimeTypes, attNames );
+  const bool rc = kmailUpdate( subresource, sernum, data, mimetype, subject, customHeaders, attURLs, attMimeTypes, attNames, deletedAtts );
   // update the serial number
   if ( mUidMap.contains( incidencebase->uid() ) ) {
     mUidMap[ incidencebase->uid() ].setSerialNumber( sernum );

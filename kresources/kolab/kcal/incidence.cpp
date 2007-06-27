@@ -335,22 +335,6 @@ bool Incidence::loadAttribute( QDomElement& element )
       return true;
     } else
       return false;
-  } else if ( tagName == "inline-attachment" ) {
-    QString attachmentName = element.text();
-    QByteArray data;
-    KURL url;
-    if ( mResource->kmailGetAttachment( url, mSubResource, mSernum, attachmentName ) && !url.isEmpty() ) {
-      QFile f( url.path() );
-      if ( f.open( IO_ReadOnly ) ) {
-        data = f.readAll();
-        QString mimeType = KIO::NetAccess::mimetype( url, 0 );
-        KCal::Attachment *a = new KCal::Attachment( KCodecs::base64Encode( data ).data(), mimeType );
-        a->setLabel( attachmentName );
-        mAttachments.append( a );
-        f.close();
-      }
-      f.remove();
-    }
   } else if ( tagName == "link-attachment" ) {
     mAttachments.push_back( new KCal::Attachment( element.text() ) );
   } else if ( tagName == "alarm" )
@@ -825,6 +809,29 @@ void Incidence::saveTo( KCal::Incidence* incidence )
 
 }
 
+void Incidence::loadAttachments()
+{
+  QStringList attachments;
+  if ( mResource->kmailListAttachments( attachments, mSubResource, mSernum ) ) {
+    for ( QStringList::ConstIterator it = attachments.constBegin(); it != attachments.constEnd(); ++it ) {
+      QByteArray data;
+      KURL url;
+      if ( mResource->kmailGetAttachment( url, mSubResource, mSernum, *it ) && !url.isEmpty() ) {
+        QFile f( url.path() );
+        if ( f.open( IO_ReadOnly ) ) {
+          data = f.readAll();
+          QString mimeType = KIO::NetAccess::mimetype( url, 0 );
+          KCal::Attachment *a = new KCal::Attachment( KCodecs::base64Encode( data ).data(), mimeType );
+          a->setLabel( *it );
+          mAttachments.append( a );
+          f.close();
+        }
+        f.remove();
+      }
+    }
+  }
+}
+
 QString Incidence::productID() const
 {
   return QString( "KOrganizer " ) + korgVersion + ", Kolab resource";
@@ -833,3 +840,4 @@ QString Incidence::productID() const
 // Unhandled KCal::Incidence fields:
 // revision, status (unused), priority (done in tasks), attendee.uid,
 // mComments, mReadOnly
+

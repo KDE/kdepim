@@ -268,7 +268,7 @@ bool Task::loadXML( const QDomDocument& document )
       kdDebug() << "Node is not a comment or an element???" << endl;
   }
 
-
+  loadAttachments();
   return true;
 }
 

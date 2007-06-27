@@ -223,6 +223,16 @@ bool KMailConnection::kmailGetAttachment( KURL& url,
   return mKMailIcalIfaceStub->ok();
 }
 
+bool KMailConnection::kmailListAttachments(QStringList &list,
+                                            const QString & resource, Q_UINT32 sernum)
+{
+  if ( !connectToKMail() )
+    return false;
+
+  list = mKMailIcalIfaceStub->listAttachments( resource, sernum );
+  return mKMailIcalIfaceStub->ok();
+}
+
 bool KMailConnection::kmailDeleteIncidence( const QString& resource,
                                             Q_UINT32 sernum )
 {
@@ -255,14 +265,14 @@ bool KMailConnection::kmailAddSubresource( const QString& resource,
                                            const QString& parent,
                                            const QString& contentsType )
 {
-  return connectToKMail() 
+  return connectToKMail()
       && mKMailIcalIfaceStub->addSubresource( resource, parent, contentsType )
       && mKMailIcalIfaceStub->ok();
 }
 
 bool KMailConnection::kmailRemoveSubresource( const QString& resource )
 {
-  return connectToKMail() 
+  return connectToKMail()
       && mKMailIcalIfaceStub->removeSubresource( resource )
       && mKMailIcalIfaceStub->ok();
 }
