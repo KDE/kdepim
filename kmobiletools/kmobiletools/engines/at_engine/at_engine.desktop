@@ -17,6 +17,7 @@ Comment[zh_TW]=基於標準 GSM AT 命令集的 KMobileTools 引擎
 Icon=kmobiletoolsAT
 ServiceTypes=KMobileTools/Engine
 Description=KMobileTools default engine, developed interally by the KMobileTools team.\nGood choice with almost all mobile phones, but on some models it lacks advanced features.\nBest choice with Motorola Phones, works good also with Sony Ericsson and Siemens.
+Description[es]=El motor predefinido KMobileTools, desarrollado por el equipo de KMobileTools.\nBuena elección para casi todos los teléfonos móviles, pero en algunos modelos carece de características avanzadas.\nLa mejor opción para teléfonos Motorola, que también funciona con Sony Ericsson y Siemens.
 Description[ja]=KMobileTools 開発チームによって内部的に開発されたデフォルトのエンジンです。\nほとんどの携帯電話に適していますが、一部の機種では拡張機能が使えません。\nMotorola には、これが最適のエンジンです。Sony Ericsson と Siemens でもうまく動きます。
 Description[sv]=Kmobiletools standardgränssnitt, utvecklat internt av Kmobiletools-gruppen.\nEtt bra val för nästan alla mobiltelefoner, men för vissa modeller saknar det avancerade funktioner.\nBästa valet för Motorola-telefoner, fungerar bra med Sony Ericsson och Siemens.
 Description[zh_TW]=KMobileTools 預設引擎，由 KMobileTools 開發團隊研發。\n可適用於大部份的行動電話，但對某些電話而言只有最基本的功能。\n目前最適用於 Motorola 的電話，對 Sony Ericsson 與 Siemens 的支援也很好。

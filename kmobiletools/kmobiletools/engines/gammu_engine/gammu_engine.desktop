@@ -16,6 +16,7 @@ Comment[zh_TW]=基於 Gammu 的 KMobileTools 引擎
 Icon=kmobiletoolsGammu
 ServiceTypes=KMobileTools/Engine
 Description=A KMobileTools engine which uses Gammu as backend. Compatible with all AT-based phones. Special drivers for Alcatel, Nokia, Symbian and Sony Ericsson phones.
+Description[es]=Un motor de KMobileTools que utiliza Gammu como dorsal. Compatible con todos los teléfonos AT. Conductos especiales para Alcatel, Nokia, Symbian y Sony Ericsson.
 Description[ja]=バックエンドに Gammu を使う KMobileTools エンジンです。AT ベースのすべての電話と互換性があります。Alcatel, Nokia, Symbian, Sony Ericsson 用の特別なドライバです。
 Description[sv]=Ett Kmobiletools-gränssnitt som använder Gammu som gränssnitt. Fungerar med alla AT-baserade telefoner. Särskilda drivrutiner för  telefoner från Alcatel, Nokia, Symbian och Sony Ericsson.
 Description[zh_TW]=KMobileTool 引擎，使用 Gammu 做為後端介面。與所有 AT-based 電話相容。有 Alcatel、Nokia、Symbian 與 Sony Ericsson 電話的特殊驅動程式。

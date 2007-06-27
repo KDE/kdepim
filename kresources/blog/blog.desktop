@@ -1,6 +1,9 @@
 [Desktop Entry]
 Encoding=UTF-8
 Name=Journal in a blog
+Name[es]=Diario en un blog
+Name[sv]=Webbjournal
+Name[zh_TW]=部落格日誌
 X-KDE-Library=kcal_blog
 Type=Service
 ServiceTypes=KResources/Plugin
