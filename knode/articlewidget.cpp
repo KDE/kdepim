@@ -54,8 +54,8 @@
 #include <libkpgp/kpgp.h>
 #include <libkpgp/kpgpblock.h>
 
-#include <libkdepim/kfileio.h>
 #include <libkdepim/kxface.h>
+#include <kpimutils/kfileio.h>
 #include <kpimutils/linklocator.h>
 #include <kpimutils/email.h>
 
@@ -1025,7 +1025,7 @@ QString ArticleWidget::writeAttachmentToTempFile( KMime::Content *att, int partN
 
   QByteArray data = att->decodedContent();
   // ### KMail does crlf2lf conversion here before writing the file
-  if( !KPIM::kByteArrayToFile( data, fname, false, false, false ) )
+  if( !KPIMUtils::kByteArrayToFile( data, fname, false, false, false ) )
     return QString();
 
   mTempFiles.append( fname );

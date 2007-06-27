@@ -4,7 +4,7 @@
 
 #include "identity.h"
 
-#include <libkdepim/kfileio.h>
+#include <kpimutils/kfileio.h>
 #include <libkdepim/collectingprocess.h>
 
 #include <kdebug.h>
@@ -128,7 +128,7 @@ QString Signature::textFromFile( bool * ok ) const
   }
   if ( ok ) *ok = true;
   // ### hmm, should we allow other encodings, too?
-  const QByteArray ba = kFileToByteArray( mUrl, false );
+  const QByteArray ba = KPIMUtils::kFileToByteArray( mUrl, false );
   return QString::fromLocal8Bit( ba.data(), ba.size() );
 }
 
