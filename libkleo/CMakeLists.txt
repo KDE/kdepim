@@ -131,7 +131,6 @@ install ( FILES
 	ui/cryptoconfigmodule.h 
 	ui/cryptoconfigdialog.h 
 	ui/directoryserviceswidget.h 
-	ui/adddirectoryservicedialogimpl.h
 	libkleo_export.h
 	DESTINATION ${INCLUDE_INSTALL_DIR}/libkleoui)
 
