@@ -3,6 +3,7 @@ include_directories(
 )
 
 #add_subdirectory(abbrowserconduit)
+add_subdirectory(base)
 add_subdirectory(docconduit)
 add_subdirectory(memofileconduit)
 add_subdirectory(notepadconduit)

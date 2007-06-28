@@ -1,7 +1,8 @@
 format 38
 "bouml-design"
-  revision 27
+  revision 31
   modified_by 10 "bertjan"
+  cpp_root_dir "/home/bertjan/workspace/kpilot/conduits/base/"
 
 
   
@@ -66,6 +67,7 @@ format 38
     package_name_in_tab default show_context default show_opaque_action_definition default auto_label_position default write_flow_label_horizontally default draw_all_relations default shadow default
     show_infonote default drawing_language default
     
+    associated_deployment_view deploymentview_ref 128138 // Deployment view
     classdiagram 128138 "Class Diagram"
       draw_all_relations no hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default show_members_stereotype default show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language c++ show_context_mode default auto_label_position no show_infonote default shadow default
       size A4
@@ -239,9 +241,9 @@ ${inlines}
 	public explicit_return_type "bool"
 	nparams 1
 	  param in name "volatilityMessage" explicit_type "QString"
-	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
 "
-	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}{
+	cpp_def "${comment}${inline}${type} ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}{
   ${body}}
 "
 	
@@ -307,7 +309,7 @@ ${inlines}
 	  param in name "hh" type class_ref 129034 // Record
 	  param in name "backup" type class_ref 129034 // Record
 	  param in name "pc" type class_ref 129034 // Record
-	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}const ${t0} & ${p0}, const ${t1} & ${p1}, const ${t2} & ${p2}${)}${const}${volatile}${throw}${abstract};
 "
 	
 	
@@ -338,9 +340,9 @@ ${inlines}
 	public explicit_return_type ""
 	nparams 1
 	  param in name "&conduit" explicit_type "QString"
-	cpp_decl "    ${comment}${inline}${name}${(}${)}${volatile}${throw};
+	cpp_decl "    ${comment}${inline}${name}${(}const ${t0} & ${p0}${)}${volatile}${throw};
 "
-	cpp_def "${comment}${inline}${class}::${name}${(}${)}${volatile}${throw} {
+	cpp_def "${comment}${inline}${class}::${name}${(}const ${t0} & ${p0}${)}${volatile}${throw} {
   ${body}}
 "
 	
@@ -900,7 +902,7 @@ ${inlines}
     end
 
     class 129034 "Record"
-      visibility package 
+      abstract visibility package 
       cpp_decl "${comment}${template}class ${name}${inherit} {
 ${members}};
 ${inlines}
@@ -910,24 +912,18 @@ ${inlines}
       explicit_switch_type ""
       
       operation 134410 "id"
-	public explicit_return_type "QVariant"
+	abstract cpp_virtual public explicit_return_type "QVariant"
 	nparams 0
 	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
-"
-	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}{
-  ${body}}
 "
 	
 	
       end
 
       operation 134538 "isModified"
-	public explicit_return_type "bool"
+	abstract cpp_virtual public explicit_return_type "bool"
 	nparams 0
 	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
-"
-	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}{
-  ${body}}
 "
 	
 	
@@ -1066,6 +1062,201 @@ ${inlines}
 	    cpp default "${type}"
 	    classrelation_ref 130826 // <generalisation>
 	  b multiplicity "" parent class_ref 128010 // RecordConduit
+      end
+    end
+  end
+
+  deploymentview 128138 "Deployment view"
+    //deployment diagram settings
+    package_name_in_tab default show_context default write_horizontally default auto_label_position default draw_all_relations default shadow default
+    draw_component_as_icon default show_component_req_prov default show_component_rea default
+    artifact 128266 "RecordConduit"
+      stereotype "source"
+      cpp_h "#ifndef ${NAME}_H
+#define ${NAME}_H
+
+/* ${name}.h			KPilot
+**
+** Copyright (C) 2007 by Bertjan Broeksema
+*/
+
+/*
+** This program is free software; you can redistribute it and/or modify
+** it under the terms of the GNU Lesser General Public License as published by
+** the Free Software Foundation; either version 2.1 of the License, or
+** (at your option) any later version.
+**
+** This program is distributed in the hope that it will be useful,
+** but WITHOUT ANY WARRANTY; without even the implied warranty of
+** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+** GNU Lesser General Public License for more details.
+**
+** You should have received a copy of the GNU Lesser General Public License
+** along with this program in a file called COPYING; if not, write to
+** the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+** MA 02110-1301, USA.
+*/
+
+/*
+** Bug reports and questions can be sent to kde-pim@kde.org
+*/
+
+${comment}
+${includes}
+${declarations}
+${namespace_start}
+${definition}
+${namespace_end}
+#endif
+"
+      cpp_src "${comment}
+${includes}
+${namespace_start}
+${members}
+${namespace_end}"
+      associated_classes
+	class_ref 128010 // RecordConduit
+      end
+    end
+
+    artifact 128394 "IDMapping"
+      stereotype "source"
+      cpp_h "#ifndef ${NAME}_H
+#define ${NAME}_H
+
+/* ${name}.h			KPilot
+**
+** Copyright (C) 2004-2007 by Bertjan Broeksema
+*/
+
+/*
+** This program is free software; you can redistribute it and/or modify
+** it under the terms of the GNU Lesser General Public License as published by
+** the Free Software Foundation; either version 2.1 of the License, or
+** (at your option) any later version.
+**
+** This program is distributed in the hope that it will be useful,
+** but WITHOUT ANY WARRANTY; without even the implied warranty of
+** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+** GNU Lesser General Public License for more details.
+**
+** You should have received a copy of the GNU Lesser General Public License
+** along with this program in a file called COPYING; if not, write to
+** the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+** MA 02110-1301, USA.
+*/
+
+/*
+** Bug reports and questions can be sent to kde-pim@kde.org
+*/
+
+${comment}
+${includes}
+${declarations}
+${namespace_start}
+${definition}
+${namespace_end}
+#endif
+"
+      cpp_src "${comment}
+${includes}
+${namespace_start}
+${members}
+${namespace_end}"
+      associated_classes
+	class_ref 128394 // IDMapping
+      end
+    end
+
+    artifact 128522 "DataProxy"
+      stereotype "source"
+      cpp_h "#ifndef ${NAMESPACE}_${NAME}_H
+#define ${NAMESPACE}_${NAME}_H
+
+${comment}
+${includes}
+${declarations}
+${namespace_start}
+${definition}
+${namespace_end}
+#endif
+"
+      cpp_src "${comment}
+${includes}
+${namespace_start}
+${members}
+${namespace_end}"
+      associated_classes
+	class_ref 128906 // DataProxy
+      end
+    end
+
+    artifact 128650 "HHDataProxy"
+      stereotype "source"
+      cpp_h "#ifndef ${NAMESPACE}_${NAME}_H
+#define ${NAMESPACE}_${NAME}_H
+
+${comment}
+${includes}
+${declarations}
+${namespace_start}
+${definition}
+${namespace_end}
+#endif
+"
+      cpp_src "${comment}
+${includes}
+${namespace_start}
+${members}
+${namespace_end}"
+      associated_classes
+	class_ref 128650 // HHDataProxy
+      end
+    end
+
+    artifact 128778 "CUDCounter"
+      stereotype "source"
+      cpp_h "#ifndef ${NAMESPACE}_${NAME}_H
+#define ${NAMESPACE}_${NAME}_H
+
+${comment}
+${includes}
+${declarations}
+${namespace_start}
+${definition}
+${namespace_end}
+#endif
+"
+      cpp_src "${comment}
+${includes}
+${namespace_start}
+${members}
+${namespace_end}"
+      associated_classes
+	class_ref 128522 // CUDCounter
+      end
+    end
+
+    artifact 128906 "Record"
+      stereotype "source"
+      cpp_h "#ifndef ${NAMESPACE}_${NAME}_H
+#define ${NAMESPACE}_${NAME}_H
+
+${comment}
+${includes}
+${declarations}
+${namespace_start}
+${definition}
+${namespace_end}
+#endif
+"
+      cpp_src "${comment}
+${includes}
+${namespace_start}
+${members}
+${namespace_end}"
+      associated_classes
+	class_ref 129034 // Record
       end
     end
   end

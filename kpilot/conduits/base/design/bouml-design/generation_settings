@@ -1,6 +1,7 @@
 
   cpp_default_defs 
   cpp_h_extension "h" cpp_src_extension "cpp" java_extension "java" idl_extension "idl"
+  cpp_javadoc_comment
 
   type_forms 15 // uml cpp java idl cpp_in cpp_out cpp_inout cpp_return
     "void" "void" "void" "void" "${type}" "${type} &" "${type}" "${type}"
@@ -43,8 +44,34 @@
   cpp_enum_default_type_forms "${type}" "${type} &" "${type} &" "${type}" // in out inout return
   other_cpp_types_default_type_forms "const ${type} &" "${type} &" "${type} &" "${type}" // in out inout return
 
-  cpp_default_h_content "#ifndef ${NAMESPACE}_${NAME}_H
-#define ${NAMESPACE}_${NAME}_H
+  cpp_default_h_content "#ifndef ${NAME}_H
+#define ${NAME}_H
+
+/* ${name}.h			KPilot
+**
+** Copyright (C) 2007 by Bertjan Broeksema
+*/
+
+/*
+** This program is free software; you can redistribute it and/or modify
+** it under the terms of the GNU Lesser General Public License as published by
+** the Free Software Foundation; either version 2.1 of the License, or
+** (at your option) any later version.
+**
+** This program is distributed in the hope that it will be useful,
+** but WITHOUT ANY WARRANTY; without even the implied warranty of
+** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+** GNU Lesser General Public License for more details.
+**
+** You should have received a copy of the GNU Lesser General Public License
+** along with this program in a file called COPYING; if not, write to
+** the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+** MA 02110-1301, USA.
+*/
+
+/*
+** Bug reports and questions can be sent to kde-pim@kde.org
+*/
 
 ${comment}
 ${includes}
@@ -80,22 +107,22 @@ ${items}
 "
   cpp_default_typedef_decl "${comment}typedef ${type} ${name};
 "
-  cpp_default_attribute_declaration "    ${comment}${static}${mutable}${volatile}${const}${type} ${name}${value};
+  cpp_default_attribute_declaration "	${comment}${static}${mutable}${volatile}${const}${type} ${name}${value};
 "
   cpp_default_enum_item_declaration "  ${name}${value},${comment}"
   cpp_association_aggregation_declaration
-    "    ${comment}${static}${mutable}${volatile}${const}${type} * ${name}${value};
+    "	${comment}${static}${mutable}${volatile}${const}${type} *${name}${value};
 " // multiplicity 1
-    "    ${comment}${static}${mutable}${volatile}${const}${stereotype}<${type} *> ${name}${value};
+    "	${comment}${static}${mutable}${volatile}${const}${stereotype}<${type} *> ${name}${value};
 " // multiplicity * a..b
-    "    ${comment}${static}${mutable}${volatile}${const}${type} * ${name}${multiplicity}${value};
+    "	${comment}${static}${mutable}${volatile}${const}${type} * ${name}${multiplicity}${value};
 " // multiplicity [..]
   cpp_aggregation_by_value_declaration
-    "    ${comment}${static}${mutable}${volatile}${const}${type} ${name}${value};
+    "	${comment}${static}${mutable}${volatile}${const}${type} ${name}${value};
 " // multiplicity 1
-    "    ${comment}${static}${mutable}${volatile}${const}${stereotype}<${type}> ${name}${value};
+    "	${comment}${static}${mutable}${volatile}${const}${stereotype}<${type}> ${name}${value};
 " // multiplicity * a..b
-    "    ${comment}${static}${mutable}${volatile}${const}${type} ${name}${multiplicity}${value};
+    "	${comment}${static}${mutable}${volatile}${const}${type} ${name}${multiplicity}${value};
 " // multiplicity [..]
   cpp_get "get_${name}" inline const value_const public
   cpp_set "set_${name}" public
