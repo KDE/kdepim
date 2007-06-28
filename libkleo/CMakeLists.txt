@@ -130,7 +130,6 @@ install ( FILES
 	ui/dnattributeorderconfigwidget.h 
 	ui/cryptoconfigmodule.h 
 	ui/cryptoconfigdialog.h 
-	ui/directoryserviceswidget.h 
 	libkleo_export.h
 	DESTINATION ${INCLUDE_INSTALL_DIR}/libkleoui)
 
