@@ -27,6 +27,7 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
+#include "plugin.h"
 
 class IDMapping;
 class HHDataProxy;
@@ -34,6 +35,7 @@ class DataProxy;
 class Record;
 
 class RecordConduit : public ConduitAction {
+// Members
 protected:
 	IDMapping * fMapping;
 	HHDataProxy * fDatabase;
@@ -41,33 +43,40 @@ protected:
 	DataProxy * fDatastore;
 	DataProxy * fBackupdb;
 
+// Methods
+protected:
+	virtual bool exec();
 
 public:
-	RecordConduit() = 0;
-
 	bool askConfirmation(const QString & volatilityMessage);
 
-	copyDatabases();
+	void copyDatabases();
 
 	void createBackupDatabase();
 
 	virtual void loadSettings() = 0;
 
 	/**
-	* This method is called after test and can be used by the implementing class to clean things up.
-	*/
+	 * This method is called after test and can be used by the implementing class 
+	 *to clean things up.
+	 */
 	virtual void postTest() = 0;
 
 	/**
-	* This operation is called before test and can be used to set things up for testing purposes.
-	*/
+	 * This operation is called before test and can be used to set things up for 
+	 * testing purposes.
+	 */
 	virtual void preTest() = 0;
 
-	virtual void syncRecords(const Record & hh, const Record & backup, const Record & pc) = 0;
+	virtual void syncRecords(
+		const Record & hh,
+		const Record & backup,
+		const Record & pc) = 0;
 
 	/**
-	* This method is called when the conduit is run in Test Mode. The implementing class can do whatever it wants to do for test purposes.
-	*/
+	 * This method is called when the conduit is run in Test Mode. The implementing
+	 * class can do whatever it wants to do for test purposes.
+	 */
 	virtual void test() = 0;
 };
 #endif
