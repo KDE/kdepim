@@ -2,6 +2,7 @@
 Encoding=UTF-8
 Name=Journal in a blog
 Name[es]=Diario en un blog
+Name[ja]=ブログのジャーナル
 Name[sv]=Webbjournal
 Name[zh_TW]=部落格日誌
 X-KDE-Library=kcal_blog
