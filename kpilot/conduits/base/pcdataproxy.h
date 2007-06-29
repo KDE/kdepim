@@ -1,4 +1,7 @@
-/* dataproxy.cc			KPilot
+#ifndef PCDATAPROXY_H
+#define PCDATAPROXY_H
+
+/* pcdatpProxy.h			KPilot
 **
 ** Copyright (C) 2007 by Bertjan Broeksema
 */
@@ -23,39 +26,18 @@
 /*
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
+
+
 #include "dataproxy.h"
-#include "cudcounter.h"
 
-DataProxy::DataProxy()
-{
-}
+class PCDataProxy : public DataProxy {
+public:
+	PCDataProxy();
 
-DataProxy::~DataProxy()
-{
-}
-
-/**
- * Adds the record to the database and returns the internal id for the added record.
- */
-QVariant DataProxy::addRecord()
-{
-	return QVariant();
-}
-
-void DataProxy::deleteRecord()
-{
-}
-
-void DataProxy::editRecord()
-{
-}
-
-void DataProxy::syncFinished()
-{
-}
-
-void DataProxy::setIterateMode( const Mode m )
-{
-	fMode = m;
-}
-
+	/**
+	 * Returns true when the proxy was able to open the PC data store (e.g. the
+	 * xml file or vcal file).
+	 */
+	virtual bool isOpen() = 0;
+};
+#endif

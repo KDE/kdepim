@@ -12,44 +12,28 @@ classinstance 132234 class_ref 128650 // HHDataProxy
   name "" xyz 424 13 2000 life_line_z 2000
 classinstance 132746 class_ref 128778 // PCDataProxy
   name "" xyz 561 11 2000 life_line_z 2000
-note 133642 "Backup Database"
-  xyzwh 497 263 2000 89 58
 note 164234 "At this moment the conduit knows that it's a hotsync so set iteratemode to MODIFIED."
   xyzwh 6 251 2005 113 119
 note 168330 "See 4.1, 5.1, 5.2, 5.3, 5.4 and 5.5 for different flows en COM - finish for common actions after flow."
   xyzwh 202 423 2000 145 120
+note 168970 "See \"DET - Init data proxies\""
+  xyzwh 277 138 2000 189 35
 durationcanvas 128203 classinstance_ref 128075 // :PilotDaemon
   xyzwh 38 50 2010 11 55
 durationcanvas 128266 classinstance_ref 128010 // :RecordConduit
   xyzwh 131 88 2010 11 448
 durationcanvas 128331 classinstance_ref 128010 // :RecordConduit
   xyzwh 131 50 2010 11 27
-durationcanvas 128843 classinstance_ref 132234 // :HHDataProxy
-  xyzwh 463 70 2010 11 108
-durationcanvas 129099 classinstance_ref 130698 // :CUDCounter
-  xyzwh 816 128 2010 11 26
-durationcanvas 129355 classinstance_ref 130698 // :CUDCounter
-  xyzwh 816 161 2010 11 25
 durationcanvas 129418 classinstance_ref 129290 // :IDMapping
-  xyzwh 352 262 2010 11 25
-durationcanvas 129611 classinstance_ref 132234 // :HHDataProxy
-  xyzwh 463 183 2010 11 68
-durationcanvas 129867 classinstance_ref 130698 // :CUDCounter
-  xyzwh 816 201 2010 11 25
-durationcanvas 130123 classinstance_ref 130698 // :CUDCounter
-  xyzwh 816 231 2010 11 25
+  xyzwh 352 181 2010 11 26
 durationcanvas 130314 classinstance_ref 129290 // :IDMapping
-  xyzwh 351 301 2010 13 28
-durationcanvas 130379 classinstance_ref 132746 // :PCDataProxy
-  xyzwh 600 245 2010 11 75
-durationcanvas 130635 classinstance_ref 130698 // :CUDCounter
-  xyzwh 816 272 2010 11 25
-durationcanvas 130891 classinstance_ref 130698 // :CUDCounter
-  xyzwh 816 306 2010 11 25
+  xyzwh 351 280 2010 13 28
 durationcanvas 163338 classinstance_ref 132234 // :HHDataProxy
-  xyzwh 463 339 2010 11 28
+  xyzwh 463 326 2010 11 28
 durationcanvas 163594 classinstance_ref 132746 // :PCDataProxy
-  xyzwh 600 368 2010 11 25
+  xyzwh 600 352 2010 11 25
+durationcanvas 169354 classinstance_ref 132746 // :PCDataProxy
+  xyzwh 600 232 2010 11 25
 msg 128459 synchronous
   from durationcanvas_ref 128203 // 128075
   to durationcanvas_ref 128331 // 128010
@@ -72,114 +56,49 @@ reflexivemsg 128778 synchronous
   yz 98 2000 msg operation_ref 128266 // "loadSettings() : void"
   show_full_operations_definition default drawing_language default
   label_xy 165 95
-msg 128971 synchronous
-  from durationcanvas_ref 128266 // 128010
-  to durationcanvas_ref 128843 // 132234
-  yz 159 2000 msg operation_ref 132234 // "HHDataProxy(in *db : PilotDatabase)"
-  show_full_operations_definition default drawing_language default
-  label_xy 143 149
-msg 129227 synchronous
-  from durationcanvas_ref 128843 // 132234
-  to durationcanvas_ref 129099 // 130698
-  yz 141 2000 msg operation_ref 129034 // "CUDCounter(in conduit : QString)"
-  show_full_operations_definition default drawing_language default
-  label_xy 476 131
-msg 129483 synchronous
-  from durationcanvas_ref 128843 // 132234
-  to durationcanvas_ref 129355 // 130698
-  yz 166 2000 msg operation_ref 129162 // "setStartCount(in count : uint) : void"
-  show_full_operations_definition default drawing_language default
-  label_xy 477 156
 msg 129546 synchronous
   from durationcanvas_ref 128266 // 128010
   to durationcanvas_ref 129418 // 129290
-  yz 273 2000 msg operation_ref 128650 // "IDMapping(in &conduit : QString)"
+  yz 193 2000 msg operation_ref 128650 // "IDMapping(in &conduit : QString)"
   show_full_operations_definition default drawing_language default
-  label_xy 144 262
-msg 129739 synchronous
-  from durationcanvas_ref 128266 // 128010
-  to durationcanvas_ref 129611 // 132234
-  yz 191 2000 msg operation_ref 132234 // "HHDataProxy(in *db : PilotDatabase)"
-  show_full_operations_definition default drawing_language default
-  label_xy 144 181
-msg 129995 synchronous
-  from durationcanvas_ref 129611 // 132234
-  to durationcanvas_ref 129867 // 130698
-  yz 213 2000 msg operation_ref 129034 // "CUDCounter(in conduit : QString)"
-  show_full_operations_definition default drawing_language default
-  label_xy 478 202
-msg 130251 synchronous
-  from durationcanvas_ref 129611 // 132234
-  to durationcanvas_ref 130123 // 130698
-  yz 237 2000 msg operation_ref 129162 // "setStartCount(in count : uint) : void"
-  show_full_operations_definition default drawing_language default
-  label_xy 476 225
+  label_xy 144 182
 msg 130442 synchronous
   from durationcanvas_ref 128266 // 128010
   to durationcanvas_ref 130314 // 129290
-  yz 302 2000 msg operation_ref 128778 // "isValid(in *backupDb : DataProxy) : bool"
+  yz 281 2000 msg operation_ref 128778 // "isValid(in *backupDb : DataProxy) : bool"
   show_full_operations_definition default drawing_language default
-  label_xy 144 290
-msg 130507 synchronous
-  from durationcanvas_ref 128266 // 128010
-  to durationcanvas_ref 130379 // 132746
-  yz 250 2000 msg operation_ref 128840 // "PCDataProxy()"
-  show_full_operations_definition default drawing_language default
-  label_xy 143 239
+  label_xy 144 263
 msg 130570 return
   from durationcanvas_ref 130314 // 129290
   to durationcanvas_ref 128266 // 128010
-  yz 317 2000 unspecifiedmsg
+  yz 296 2000 unspecifiedmsg
   show_full_operations_definition default drawing_language default
-msg 130763 synchronous
-  from durationcanvas_ref 130379 // 132746
-  to durationcanvas_ref 130635 // 130698
-  yz 282 2000 msg operation_ref 129034 // "CUDCounter(in conduit : QString)"
-  show_full_operations_definition default drawing_language default
-  label_xy 611 271
-msg 131019 synchronous
-  from durationcanvas_ref 130379 // 132746
-  to durationcanvas_ref 130891 // 130698
-  yz 309 2000 msg operation_ref 129162 // "setStartCount(in count : uint) : void"
-  show_full_operations_definition default drawing_language default
-  label_xy 615 296
-reflexivemsg 132555 synchronous
-  to durationcanvas_ref 128843 // 132234
-  yz 99 2000 msg operation_ref 128331 // "readAppBlock() : void"
-  show_full_operations_definition default drawing_language default
-  label_xy 499 96
 msg 163466 synchronous
   from durationcanvas_ref 128266 // 128010
   to durationcanvas_ref 163338 // 132234
-  yz 343 2000 msg operation_ref 133514 // "setIterateMode(in mode : Mode) : void"
+  yz 330 2000 msg operation_ref 133514 // "setIterateMode(in mode : Mode) : void"
   show_full_operations_definition default drawing_language default
-  label_xy 143 334
+  label_xy 143 318
 msg 163722 synchronous
   from durationcanvas_ref 128266 // 128010
   to durationcanvas_ref 163594 // 132746
-  yz 378 2000 msg operation_ref 133514 // "setIterateMode(in mode : Mode) : void"
+  yz 362 2000 msg operation_ref 133514 // "setIterateMode(in mode : Mode) : void"
   show_full_operations_definition default drawing_language default
-  label_xy 144 367
-reflexivemsg 163850 synchronous
-  to durationcanvas_ref 128843 // 132234
-  yz 80 2000 msg operation_ref 133130 // "loadAllRecords() : void"
+  label_xy 144 351
+reflexivemsg 168842 synchronous
+  to durationcanvas_ref 128266 // 128010
+  yz 155 2000 msg operation_ref 134666 // "initDataProxies()"
   show_full_operations_definition default drawing_language default
-  label_xy 495 77
-reflexivemsg 163978 synchronous
-  to durationcanvas_ref 129611 // 132234
-  yz 186 2000 msg operation_ref 133130 // "loadAllRecords() : void"
+  label_xy 164 152
+msg 169482 synchronous
+  from durationcanvas_ref 128266 // 128010
+  to durationcanvas_ref 169354 // 132746
+  yz 232 2000 msg operation_ref 134794 // "isOpen() : bool"
   show_full_operations_definition default drawing_language default
-  label_xy 496 183
-reflexivemsg 164106 synchronous
-  to durationcanvas_ref 130379 // 132746
-  yz 254 2000 msg operation_ref 133130 // "loadAllRecords() : void"
-  show_full_operations_definition default drawing_language default
-  label_xy 633 251
-line 131147 -_-_
-  from ref 133642 z 1999 to point 480 271
-  line 168074 z 1999 to ref 129611
+  label_xy 144 220
 line 164362 -_-_
-  from ref 164234 z 1999 to ref 163466
+  from ref 164234 z 1999 to point 240 309
+  line 169610 z 1999 to ref 163466
 line 164490 -_-_
   from ref 164234 z 1999 to point 78 388
   line 168714 z 1999 to point 158 388
@@ -187,4 +106,7 @@ line 164490 -_-_
 line 168458 -_-_
   from ref 168330 z 1999 to point 136 446
   line 168586 z 1999 to ref 128266
+line 169098 -_-_
+  from ref 168970 z 1999 to point 155 142
+  line 169226 z 1999 to ref 168842
 end

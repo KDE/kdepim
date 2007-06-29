@@ -1,4 +1,6 @@
-/* dataproxy.cc			KPilot
+#ifndef HHDATAPROXY_H
+#define HHDATAPROXY_H
+/* hhdataproxy.h			KPilot
 **
 ** Copyright (C) 2007 by Bertjan Broeksema
 */
@@ -23,39 +25,23 @@
 /*
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
+
 #include "dataproxy.h"
-#include "cudcounter.h"
 
-DataProxy::DataProxy()
-{
-}
+class PilotDatabase;
 
-DataProxy::~DataProxy()
-{
-}
+class HHDataProxy : public DataProxy {
+public:
+	HHDataProxy();
 
-/**
- * Adds the record to the database and returns the internal id for the added record.
- */
-QVariant DataProxy::addRecord()
-{
-	return QVariant();
-}
+	void resetSyncFlags();
 
-void DataProxy::deleteRecord()
-{
-}
+	virtual void readAppBlock() = 0;
 
-void DataProxy::editRecord()
-{
-}
+	virtual void writeAppBlock() = 0;
 
-void DataProxy::syncFinished()
-{
-}
 
-void DataProxy::setIterateMode( const Mode m )
-{
-	fMode = m;
-}
-
+protected:
+	PilotDatabase *fDatabase;
+};
+#endif

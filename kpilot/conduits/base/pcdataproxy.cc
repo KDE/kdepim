@@ -1,4 +1,4 @@
-/* dataproxy.cc			KPilot
+/* pcdataproxy.cc			KPilot
 **
 ** Copyright (C) 2007 by Bertjan Broeksema
 */
@@ -23,39 +23,9 @@
 /*
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
-#include "dataproxy.h"
-#include "cudcounter.h"
+#include "pcdataproxy.h"
 
-DataProxy::DataProxy()
+PCDataProxy::PCDataProxy()
 {
-}
-
-DataProxy::~DataProxy()
-{
-}
-
-/**
- * Adds the record to the database and returns the internal id for the added record.
- */
-QVariant DataProxy::addRecord()
-{
-	return QVariant();
-}
-
-void DataProxy::deleteRecord()
-{
-}
-
-void DataProxy::editRecord()
-{
-}
-
-void DataProxy::syncFinished()
-{
-}
-
-void DataProxy::setIterateMode( const Mode m )
-{
-	fMode = m;
 }
 

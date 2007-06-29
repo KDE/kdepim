@@ -1,8 +1,8 @@
 format 38
 "bouml-design"
-  revision 31
-  modified_by 10 "bertjan"
-  cpp_root_dir "/home/bertjan/workspace/kpilot/conduits/base/"
+  revision 33
+  modified_by 10 "kde4"
+  cpp_root_dir "/home/kde4/src/kpilot/conduits/base/design/bouml-design/"
 
 
   
@@ -111,6 +111,11 @@ format 38
     sequencediagram 128906 "5.5 Test Mode"
       show_full_operations_definition no write_horizontally default drawing_language c++ draw_all_relations default shadow yes
       size A4
+    end
+
+    sequencediagram 129802 "DET - Init data proxies"
+      show_full_operations_definition yes write_horizontally default drawing_language default draw_all_relations default shadow default
+      size A3
     end
 
     sequencediagram 129034 "DET - Load all HH records"
@@ -269,6 +274,15 @@ ${inlines}
 "
 	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}{
   ${body}}
+"
+	
+	
+      end
+
+      operation 134666 "initDataProxies"
+	abstract cpp_virtual protected explicit_return_type ""
+	nparams 0
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
 "
 	
 	
@@ -719,7 +733,7 @@ ${inlines}
     end
 
     class 128778 "PCDataProxy"
-      visibility package 
+      abstract visibility package 
       cpp_decl "${comment}${template}class ${name}${inherit} {
 ${members}};
 ${inlines}
@@ -746,6 +760,16 @@ ${inlines}
 "
 	
 	
+      end
+
+      operation 134794 "isOpen"
+	abstract cpp_virtual public explicit_return_type "bool"
+	nparams 0
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	
+	
+	comment "Returns true when the proxy was able to open the PC data store (e.g. the xml file or vcal file)."
       end
     end
 
@@ -1257,6 +1281,55 @@ ${members}
 ${namespace_end}"
       associated_classes
 	class_ref 129034 // Record
+      end
+    end
+
+    artifact 129034 "PCDataProxy"
+      stereotype "source"
+      cpp_h "#ifndef ${NAME}_H
+#define ${NAME}_H
+
+/* ${name}.h			KPilot
+**
+** Copyright (C) 2007 by Bertjan Broeksema
+*/
+
+/*
+** This program is free software; you can redistribute it and/or modify
+** it under the terms of the GNU Lesser General Public License as published by
+** the Free Software Foundation; either version 2.1 of the License, or
+** (at your option) any later version.
+**
+** This program is distributed in the hope that it will be useful,
+** but WITHOUT ANY WARRANTY; without even the implied warranty of
+** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+** GNU Lesser General Public License for more details.
+**
+** You should have received a copy of the GNU Lesser General Public License
+** along with this program in a file called COPYING; if not, write to
+** the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+** MA 02110-1301, USA.
+*/
+
+/*
+** Bug reports and questions can be sent to kde-pim@kde.org
+*/
+
+${comment}
+${includes}
+${declarations}
+${namespace_start}
+${definition}
+${namespace_end}
+#endif
+"
+      cpp_src "${comment}
+${includes}
+${namespace_start}
+${members}
+${namespace_end}"
+      associated_classes
+	class_ref 128778 // PCDataProxy
       end
     end
   end

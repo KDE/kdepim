@@ -1,7 +1,6 @@
 #ifndef IDMAPPING_H
 #define IDMAPPING_H
-
-/* IDMapping.h			KPilot
+/* idmapping.h			KPilot
 **
 ** Copyright (C) 2004-2007 by Bertjan Broeksema
 */
@@ -27,44 +26,54 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
+#include <QString>
+
+#include "pi-macros.h"
+
+class DataProxy;
 
 class IDMapping {
-  public:
-    IDMapping();
+private:
+	QString fConduitName;
+public:
+	IDMapping( const QString &conduitName = QString() );
 
-    /**
-     * Validates the mapping file with given dataproxy. The mapping is considered valid if:
-     * 1. The number of mappings matches the number of records in the dataproxy.
-     * 2. Every record that is in the backup database has a mapping.
-     */
-    bool isValid();
+	/**
+	 * Validates the mapping file with given dataproxy. The mapping is considered 
+	 * valid if:
+	 * 1. The number of mappings matches the number of records in the dataproxy.
+	 * 2. Every record that is in the backup database has a mapping.
+	 */
+	bool isValid( const DataProxy *proxy );
 
-    /**
-     * Returns the pc record ID for given handheld record. Returns QString::Null if no mapping is found.
-     */
-    QString pcRecordId();
+	/**
+	 * Returns the pc record ID for given handheld record. Returns QString::Null 
+	 * if no mapping is found.
+	 */
+	QString pcRecordId();
 
-    /**
-     * Returns the id for the HH record which is mapped to the given pc record or 0 if there is no mapping.
-     */
-    recordid_t hhRecordId();
+	/**
+	 * Returns the id for the HH record which is mapped to the given pc record or
+	 * 0 if there is no mapping.
+	 */
+	recordid_t hhRecordId();
 
-    void setLastSyncedDate();
+	void setLastSyncedDate();
 
-    void setLastSyncedPC();
+	void setLastSyncedPC();
 
-    void save();
+	void save();
 
-     setPCId();
+	void setPCId();
 
-     setHHId();
+	void setHHId();
 
-    /**
-     * Creates a mapping for given records with id's.
-     */
-    void map();
+	/**
+	 * Creates a mapping for given records with id's.
+	 */
+	void map();
 
-    bool contains();
+	bool contains();
 
 };
 #endif

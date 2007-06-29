@@ -31,30 +31,46 @@
 
 class IDMapping;
 class HHDataProxy;
+class PCDataProxy;
 class DataProxy;
 class Record;
 
 class RecordConduit : public ConduitAction {
 // Members
 protected:
-	IDMapping * fMapping;
-	HHDataProxy * fDatabase;
-	DataProxy * fLocalDatase;
-	DataProxy * fDatastore;
-	DataProxy * fBackupdb;
+	QString fDatabaseName;
+	IDMapping *fMapping;
+	HHDataProxy *fHHDataProxy;
+	HHDataProxy *fBackupDataProxy;
+	PCDataProxy *fPCDataProxy;
 
 // Methods
+public:
+	RecordConduit( KPilotLink *o, const QStringList &a = QStringList()
+		, const QString &databaseName = QString()
+		, const QString &conduitName = QString() );
+	
+	virtual ~RecordConduit();
+
 protected:
 	virtual bool exec();
-
-public:
+	
+	virtual void loadSettings() = 0;
+	
+	/**
+	 * Initialize the data proxies data are needed during sync. The following 
+	 * members should be initialized after the call:
+	 * - fLocalDatase
+	 * - fDatastore
+	 * - fBackupdb
+	 */
+	virtual void initDataProxies() = 0;
+	
 	bool askConfirmation(const QString & volatilityMessage);
 
 	void copyDatabases();
 
 	void createBackupDatabase();
-
-	virtual void loadSettings() = 0;
 
 	/**
 	 * This method is called after test and can be used by the implementing class 

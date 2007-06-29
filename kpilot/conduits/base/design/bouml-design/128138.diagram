@@ -14,7 +14,7 @@ classcanvas 128394 class_ref 128650 // HHDataProxy
   end
 classcanvas 129290 class_ref 128778 // PCDataProxy
   draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default show_members_stereotype default show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default show_infonote default shadow default
-  xyz 368 565 2000
+  xyz 402 574 2000
   end
 classcanvas 129674 class_ref 128394 // IDMapping
   draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default show_members_stereotype default show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default show_infonote default shadow default
