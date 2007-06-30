@@ -13,7 +13,6 @@ X-KDE-ParentComponents=knode,kontact_knodeplugin
 X-KDE-CfgDlgHierarchy=KNode
 
 Name=Appearance
-Name[ar]=المظهر
 Name[be]=Вонкавы выгляд
 Name[br]=Neuziadur
 Name[ca]=Aparença

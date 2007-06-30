@@ -14,7 +14,6 @@ X-KDE-ParentComponents=kleopatra
 X-KDE-CfgDlgHierarchy=Kleopatra
 
 Name=Directory Services
-Name[ar]=خدمات الدليل
 Name[ca]=Serveis de directori
 Name[cs]=Adresářové služby
 Name[da]=Opslagstjeneste

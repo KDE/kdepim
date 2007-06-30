@@ -13,7 +13,6 @@ X-KDE-ParentComponents=kpilot,kpilotDaemon,kontact_kpilotplugin
 
 Name=KPilot Configuration
 Name[af]=KPilot opstelling
-Name[ar]=إعداد KPilot
 Name[br]=Kefluniadur KPilot
 Name[ca]=Configuració de KPilot
 Name[cs]=Nastavení KPilotu
