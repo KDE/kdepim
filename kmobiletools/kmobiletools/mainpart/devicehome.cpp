@@ -83,9 +83,6 @@
 #include <libkmobiletools/smslist.h>
 #include <libkmobiletools/weaver.h>
 
-#include <libkmobiletools/errorhandler.h>
-#include <libkmobiletools/error.h>
-
 #include "addressdetails.h"
 #include "editaddressee.h"
 #include "smspart.h"
@@ -168,9 +165,6 @@ DeviceHome::DeviceHome( QWidget *parentWidget, const QString &devicename, kmobil
     l_actionList.append(act);
     QTimer::singleShot( 1000, this, SLOT(slotStatusBar() ) );
     updateAllContacts();
-
-    ErrorHandler::instance()->addError( new Error( __FILE__, __LINE__ ) );
-
 }
 
 #include "devicehome.moc"
