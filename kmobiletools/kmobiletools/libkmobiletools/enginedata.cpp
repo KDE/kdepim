@@ -1,7 +1,7 @@
 /***************************************************************************
    Copyright (C) 2007
    by Marco Gulino <marco@kmobiletools.org>
-
+   by Matthias Lechner <matthias@lmme.de>
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by

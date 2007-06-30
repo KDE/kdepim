@@ -18,6 +18,8 @@ set(kmobiletools_LIB_SRCS
    engineslist.cpp 
    homepage.cpp 
    devicesconfig.cpp
+   error.cpp
+   errorhandler.cpp
 #   kmobiletools_devices_addons.cpp 
    kmobiletoolshelper.cpp 
    overlaywidget.cpp 
@@ -56,6 +58,8 @@ install(FILES
    kmobiletools_export.h
    picksmscenter.h
    kmobiletoolshelper.h
+   error.h
+   errorhandler.h
    engine.h
    sms.h
    smslist.h
