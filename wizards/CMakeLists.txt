@@ -1,6 +1,6 @@
 project(wizards)
 
-include_directories(${CMAKE_SOURCE_DIR}/libkpimidentities ${CMAKE_SOURCE_DIR}/kcal ${CMAKE_SOURCE_DIR}/kresources/kolab/shared ${CMAKE_SOURCE_DIR}/knotes ${CMAKE_SOURCE_DIR}/libkleo ${CMAKE_SOURCE_DIR}/kresources/lib)
+include_directories(${CMAKE_SOURCE_DIR}/kcal ${CMAKE_SOURCE_DIR}/kresources/kolab/shared ${CMAKE_SOURCE_DIR}/knotes ${CMAKE_SOURCE_DIR}/libkleo ${CMAKE_SOURCE_DIR}/kresources/lib)
 
 message( STATUS "GroupWise wizard disabled." )
 

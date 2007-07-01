@@ -35,7 +35,8 @@
 #include <k3spell.h>
 #include <k3sconfig.h>
 #include <kcombobox.h>
-#include <kpgpui.h>
+#include <kpgp/kpgp.h>
+#include <kpgp/kpgpui.h>
 #include <kurlcompletion.h>
 #include <kiconloader.h>
 #include <kpushbutton.h>
@@ -59,7 +60,6 @@
 #include "ui_readnewsnavigationwidget_base.h"
 #include "ui_readnewsviewerwidget_base.h"
 #include "settings.h"
-#include <kpgp.h>
 
 KNode::IdentityWidget::IdentityWidget( Identity *d, const KComponentData &inst, QWidget *parent ) :
   KCModule( inst ,parent ),

@@ -42,7 +42,7 @@
 
 #include <kdialog.h>
 
-#include <kpgpkey.h> // for EncryptPref
+#include <kpgp/kpgpkey.h> // for EncryptPref
 #include <gpgmepp/key.h>
 
 #include <vector>

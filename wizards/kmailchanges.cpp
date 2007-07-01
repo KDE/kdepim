@@ -26,8 +26,8 @@
 #include <klocale.h>
 #include <kstandarddirs.h>
 #include <kemailsettings.h>
-#include <identitymanager.h>
-#include <identity.h>
+#include <kpimidentities/identitymanager.h>
+#include <kpimidentities/identity.h>
 #include <kdebug.h>
 #include <kstringhandler.h>
 #include <krandom.h>
@@ -242,7 +242,7 @@ void CreateDisconnectedImapAccount::apply()
   es.setSetting( KEMailSettings::RealName, mRealName );
   es.setSetting( KEMailSettings::EmailAddress, mEmail );
 
-  KPIM::IdentityManager identityManager;
+  KPIMIdentities::IdentityManager identityManager;
   if ( !identityManager.allEmails().contains( mEmail ) ) {
     // Not sure how to name the identity. First one is "Default", next one mAccountName, but then...
     // let's use the server name after that.
@@ -257,7 +257,7 @@ void CreateDisconnectedImapAccount::apply()
       }
     }
 
-    KPIM::Identity& identity = identityManager.newFromScratch( accountName );
+    KPIMIdentities::Identity& identity = identityManager.newFromScratch( accountName );
     identity.setFullName( mRealName );
     identity.setEmailAddr( mEmail );
     identityManager.commit();

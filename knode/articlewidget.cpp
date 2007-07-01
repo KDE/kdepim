@@ -51,8 +51,8 @@
 #include <kxmlguifactory.h>
 #include <kicon.h>
 
-#include <libkpgp/kpgp.h>
-#include <libkpgp/kpgpblock.h>
+#include <kpgp/kpgp.h>
+#include <kpgp/kpgpblock.h>
 
 #include <libkdepim/kxface.h>
 #include <kpimutils/kfileio.h>

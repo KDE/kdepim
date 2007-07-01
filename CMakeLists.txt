@@ -106,7 +106,6 @@ endif(NOT WIN32)
 if(GPGME_FOUND)
    add_subdirectory(kleopatra)
 endif(GPGME_FOUND)
-add_subdirectory(libkpimidentities)
 
 add_subdirectory(libksieve)
 add_subdirectory(mimelib)
