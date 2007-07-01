@@ -99,10 +99,6 @@ if(GPGME_FOUND)
    add_subdirectory(libkleo)
 endif(GPGME_FOUND)
 
-if(NOT WIN32)
-  add_subdirectory(libkpgp)
-endif(NOT WIN32)
-
 if(GPGME_FOUND)
    add_subdirectory(kleopatra)
 endif(GPGME_FOUND)
