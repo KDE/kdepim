@@ -38,8 +38,6 @@ libkdepim         Marc Mutz <mutz@kde.org>
                   Don Sanders <sanders@kde.org> (maillistdrag)
 libkholidays      Allen Winter <winter@kde.org>
 libkleo           Marc Mutz <mutz@kde.org>
-libkpgp           Ingo Klöcker <kloecker@kde.org>
-libkpimidentities Marc Mutz <mutz@kde.org>
 libksieve         Marc Mutz <mutz@kde.org>
 mimelib           ?
 networkstatus     Will Stephenson <lists@stevello.free-online.co.uk>

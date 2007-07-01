@@ -65,12 +65,6 @@
         * - <a href="libkleo/html/index.html"><b>libkleo</b></a>
         *   (<a href="libkleo/html/classes.html">classes</a>)\n
         *   <i>A library for encryption handling.</i>
-        * - <a href="libkpgp/html/index.html"><b>libkpgp</b></a>
-        *   (<a href="libkpgp/html/classes.html">classes</a>)\n
-        *   <i>A PGP abstraction layer.</i>
-        * - <a href="libkpimidentities/html/index.html"><b>libkpimidentities</b></a>
-        *   (<a href="libkpimidentities/html/classes.html">classes</a>)\n
-        *   <i>A library for managing identities.</i>
         * - <a href="kdgantt/html/index.html"><b>kdgantt</b></a>
         *   (<a href="kdgantt/html/classes.html">classes</a>)\n
         *   <i>Klarälvdalens Datakonsult AB's gantt charting engine.</i>
