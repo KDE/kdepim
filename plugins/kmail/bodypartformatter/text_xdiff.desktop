@@ -35,6 +35,7 @@ Name[x-test]=xxApplication Octetstreamxx
 Comment=A bodypart formatter plugin for text/x-patch
 Comment[el]=Ένα πρόσθετο μορφοποιητή για text/x-patch
 Comment[es]=Una extensión de formato para el cuerpo de text/x-patch
+Comment[fa]=یک وصلۀ قالب‌دهندۀ جزء بدنه برای text/x-patch
 Comment[ja]=text/x-patch 用の bodypart フォーマッタプラグイン
 Comment[kk]=Text/x-diff бөлімін пішімдеу модулі
 Comment[sv]=Ett insticksprogram för brevtextformatering av text/x-patch
