@@ -52,7 +52,6 @@ include_directories (${CMAKE_SOURCE_DIR} ${CMAKE_BINARY_DIR} ${KDE4_INCLUDES} ${
 
 
 include (ConfigureChecks.cmake)
-include (gpgmepp/ConfigureChecks.cmake)
 configure_file (config.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config.h)
 
 
@@ -108,10 +107,6 @@ add_subdirectory(mimelib)
 macro_optional_add_subdirectory(akregator)
 macro_optional_add_subdirectory(doc)
 
-if(GPGME_FOUND)
-   add_subdirectory(gpgmepp)
-endif(GPGME_FOUND)
-
 if(OPENSYNC_FOUND AND OSENGINE_FOUND)
    macro_optional_add_subdirectory(kitchensync)
 endif(OPENSYNC_FOUND AND OSENGINE_FOUND)
@@ -151,7 +146,6 @@ MESSAGE(STATUS "disabled networkstatus")
 
 if(GPGME_FOUND)
    add_subdirectory(plugins)
-   add_subdirectory(qgpgme)
    add_subdirectory(wizards)
 endif(GPGME_FOUND)
 

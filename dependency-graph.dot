@@ -32,7 +32,6 @@ strict digraph "inter-dependency graph for kdepim" {
         /* kdepim */
         "akonadiserver"[style=filled, fillcolor=lightcyan, URL="akonadi/akonadiserver/html/index.html"];
         "akregator"[style=filled, fillcolor=lightcyan, URL="akregator/html/index.html"];
-        "gpgmepp"[style=filled, fillcolor=lightyellow, URL="gpgmepp/html/index.html"];
         /* kabc ?? */
         "kaddressbook"[style=filled, fillcolor=lightcyan, URL="kaddressbook/html/index.html"];
         "kalarm"[style=filled, fillcolor=lightcyan, URL="kalarm/html/index.html"];
@@ -62,7 +61,6 @@ strict digraph "inter-dependency graph for kdepim" {
         "mimelib"[style=filled, fillcolor=lightyellow];
         "networkstatus"[style=filled, fillcolor=palegreen];
         "plugins"[style=filled, fillcolor=palegreen];
-        "qgpgme"[style=filled, fillcolor=lightyellow, URL="qgpgme/html/index.html"];
         "wizards"[style=filled, fillcolor=lightcyan];
 
         /*
@@ -103,11 +101,6 @@ strict digraph "inter-dependency graph for kdepim" {
         "libkcal" -> "libkdepim";
         "libkcal" -> "plugins";
         "libkcal" -> "libktnef"
-        "qgpgme" -> "libkleo";
-        "gpgmepp" -> "kmail";
-        "gpgmepp" -> "kleopatra";
-        "gpgmepp" -> "libkleo";
-        "gpgmepp" -> "qgpgme";
         "libkdepim" -> "akregator";
         "libkdepim" -> "kaddressbook";
         "libkdepim" -> "kalarm";

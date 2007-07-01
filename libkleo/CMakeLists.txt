@@ -1,4 +1,4 @@
-include_directories(${CMAKE_SOURCE_DIR}/libkpgp/ ${CMAKE_BINARY_DIR}/libkleo/backends/chiasmus/  ${GPGME_INCLUDES} ${CMAKE_SOURCE_DIR}/gpgmepp/ )
+include_directories( ${CMAKE_BINARY_DIR}/libkleo/backends/chiasmus/ )
 
 add_definitions (-DQT3_SUPPORT -DQT3_SUPPORT_WARNINGS)
 
@@ -85,7 +85,7 @@ kde4_automoc(${kleopatra_LIB_SRCS})
 
 kde4_add_library(kleopatra SHARED ${kleopatra_LIB_SRCS})
 
-target_link_libraries(kleopatra  ${KDE4_KDE3SUPPORT_LIBS} qgpgme  )
+target_link_libraries(kleopatra  ${KDE4_KDE3SUPPORT_LIBS} gpgmepp qgpgme ${GPGME_LIBRARIES} )
 
 set_target_properties(kleopatra PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
 install(TARGETS kleopatra  DESTINATION ${LIB_INSTALL_DIR})

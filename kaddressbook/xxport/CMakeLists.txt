@@ -1,5 +1,5 @@
 
-include_directories( ${CMAKE_SOURCE_DIR}/kaddressbook/interfaces ${CMAKE_SOURCE_DIR}/kaddressbook ${CMAKE_SOURCE_DIR}/gpgmepp/ )
+include_directories( ${CMAKE_SOURCE_DIR}/kaddressbook/interfaces ${CMAKE_SOURCE_DIR}/kaddressbook )
 
 configure_file (config-xxport.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-xxport.h )
 
@@ -28,7 +28,7 @@ kde4_add_plugin(kaddrbk_vcard_xxport WITH_PREFIX ${kaddrbk_vcard_xxport_PART_SRC
 
 
 
-target_link_libraries(kaddrbk_vcard_xxport  ${KDE4_KDECORE_LIBS} kaddressbook qgpgme )
+target_link_libraries(kaddrbk_vcard_xxport  ${KDE4_KDECORE_LIBS} kaddressbook gpgmepp qgpgme )
 
 install(TARGETS kaddrbk_vcard_xxport  DESTINATION ${PLUGIN_INSTALL_DIR})
 endif(GPGME_FOUND)

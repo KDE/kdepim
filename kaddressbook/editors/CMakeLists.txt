@@ -2,8 +2,7 @@
 add_subdirectory( protocols ) 
 add_subdirectory( icons ) 
 
-include_directories( ${CMAKE_SOURCE_DIR}/kaddressbook/interfaces ${CMAKE_SOURCE_DIR}/kaddressbook ${CMAKE_SOURCE_DIR}/libkleo ${KDE4_INCLUDE_DIR} ${GPGME_INCLUDES} ${CMAKE_SOURCE_DIR}/gpgmepp/ 
-${QT_INCLUDES} )
+include_directories( ${CMAKE_SOURCE_DIR}/kaddressbook/interfaces ${CMAKE_SOURCE_DIR}/kaddressbook ${CMAKE_SOURCE_DIR}/libkleo ${KDE4_INCLUDE_DIR} ${GPGME_INCLUDES} ${QT_INCLUDES} )
 
 
 ########### next target ###############
