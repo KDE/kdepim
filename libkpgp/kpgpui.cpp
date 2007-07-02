@@ -551,13 +551,13 @@ QString KeySelectionDialog::keyInfo( const Kpgp::Key *key ) const
   QDateTime dt;
   dt.setTime_t( key->creationDate() );
   if( remark.isEmpty() ) {
-    return " " + i18nc("creation date and status of an OpenPGP key",
+    return ' ' + i18nc("creation date and status of an OpenPGP key",
                       "Creation date: %1, Status: %2",
                        KGlobal::locale()->formatDate( dt.date(), KLocale::ShortDate ) ,
                        status );
   }
   else {
-    return " " + i18nc("creation date, status and remark of an OpenPGP key",
+    return ' ' + i18nc("creation date, status and remark of an OpenPGP key",
                       "Creation date: %1, Status: %2 (%3)",
                        KGlobal::locale()->formatDate( dt.date(), KLocale::ShortDate ) ,
                        status ,

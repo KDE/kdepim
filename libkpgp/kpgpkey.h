@@ -81,10 +81,10 @@ class UserID
    *
    *  @todo How exactly do invalid and validity affect each other?
    */
-  UserID(const QString& str,
-             const Validity validity = KPGP_VALIDITY_UNKNOWN,
-             const bool revoked = false,
-             const bool invalid = false);
+  explicit UserID(const QString& str,
+                  const Validity validity = KPGP_VALIDITY_UNKNOWN,
+                  const bool revoked = false,
+                  const bool invalid = false);
   ~UserID() {}
 
   /** Returns the text of the user id. */
@@ -186,7 +186,7 @@ class Subkey
 {
  public:
   /** Constructs a new subkey with the given key ID. */
-  Subkey(const KeyID& keyID, const bool secret = false);
+  explicit Subkey(const KeyID& keyID, const bool secret = false);
   ~Subkey() {}
 
   /** Returns true if the subkey is a secret subkey. */
@@ -515,9 +515,9 @@ class Key
       @param uid   UID for this key (user ID)
       @param secret Is this key secret?
   */
-  Key( const KeyID& keyid = KeyID(),
-       const QString& uid = QString(),
-       const bool secret = false);
+  explicit Key( const KeyID& keyid = KeyID(),
+                const QString& uid = QString(),
+                const bool secret = false);
   ~Key();
 
   /** Clears/resets all key data. */

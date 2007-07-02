@@ -53,7 +53,7 @@
 
 namespace Kpgp {
 
-Module *Module::kpgpObject = 0L;
+Module *Module::kpgpObject = 0;
 static KStaticDeleter<Module> kpgpod;
 
 Module::Module()
@@ -1492,14 +1492,14 @@ Module::canonicalAddress( const QString& _adress )
     //char hostname[1024];
     //gethostname(hostname,1024);
     //return "<" + address + "@" + hostname + ">";
-    return "<" + address + "@localdomain>";
+    return '<' + address + "@localdomain>";
   }
   else
   {
     int index1 = address.lastIndexOf(" ",index);
     int index2 = address.indexOf(" ",index);
     if(index2 == -1) index2 = address.length();
-    return "<" + address.mid(index1+1 ,index2-index1-1) + ">";
+    return '<' + address.mid(index1+1 ,index2-index1-1) + '>';
   }
 }
 

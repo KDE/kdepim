@@ -38,7 +38,7 @@ class QString;
 class QRegExp;
 class QByteArray;
 class QCheckBox;            // needed by Config, KeySelectionDialog
-class Q3MultiLineEdit;       // needed by CipherTextDialog
+class Q3MultiLineEdit;      // needed by CipherTextDialog
 class QComboBox;            // needed by Config
 class QPixmap;              // needed by KeySelectionDialog
 class QPushButton;          // needed by KeyRequester
@@ -46,7 +46,7 @@ class QTimer;               // needed by KeySelectionDialog
 class QGroupBox;
 class Q3ListViewItem;
 
-class K3ListView;            // needed by KeySelectionDialog
+class K3ListView;           // needed by KeySelectionDialog
 class KPasswordEdit;        // needed by PassphraseDialog
 
 namespace Kpgp {
@@ -62,8 +62,9 @@ class KPGP_EXPORT PassphraseDialog : public KPasswordDialog
   Q_OBJECT
 
   public:
-    PassphraseDialog( QWidget *parent=0, const QString &caption=QString(),
-                      const QString &keyID=QString());
+    explicit PassphraseDialog( QWidget *parent=0,
+                               const QString &caption=QString(),
+                               const QString &keyID=QString());
     virtual ~PassphraseDialog();
 
     QString passphrase();
@@ -79,7 +80,7 @@ class KPGP_EXPORT Config : public QWidget
   Q_OBJECT
 
   public:
-    Config( QWidget *parent = 0, bool encrypt = true );
+    explicit Config( QWidget *parent = 0, bool encrypt = true );
     virtual ~Config();
 
     virtual void setValues();
@@ -138,7 +139,7 @@ class KPGP_EXPORT KeySelectionDialog: public KeySelectionDialogSuper
           return false;
       }
 
-  protected slots:
+  protected Q_SLOTS:
     virtual void slotRereadKeys();
     virtual void slotSelectionChanged( Q3ListViewItem* );
     virtual void slotSelectionChanged();
@@ -204,8 +205,8 @@ class KPGP_EXPORT KeyRequester: public QWidget
   Q_OBJECT
 
 public:
-  KeyRequester( QWidget * parent=0, bool multipleKeys=false,
-		unsigned int allowedKeys=AllKeys, const char * name=0 );
+  explicit KeyRequester( QWidget * parent=0, bool multipleKeys=false,
+                         unsigned int allowedKeys=AllKeys, const char * name=0 );
   virtual ~KeyRequester();
 
   KeyIDList keyIDs() const;
@@ -236,7 +237,7 @@ protected:
   int mAllowedKeys;
   KeyIDList mKeys;
 
-protected slots:
+protected Q_SLOTS:
   void slotDialogButtonClicked();
   void slotEraseButtonClicked();
 
@@ -254,8 +255,9 @@ protected:
 class KPGP_EXPORT PublicKeyRequester : public KeyRequester {
   Q_OBJECT
 public:
-  PublicKeyRequester( QWidget * parent=0, bool multipleKeys=false,
-		      unsigned int allowedKeys=PublicKeys, const char * name=0 );
+  explicit PublicKeyRequester( QWidget * parent=0, bool multipleKeys=false,
+                               unsigned int allowedKeys=PublicKeys,
+                               const char * name=0 );
   virtual ~PublicKeyRequester();
 
 protected:
@@ -273,8 +275,9 @@ protected:
 class KPGP_EXPORT SecretKeyRequester : public KeyRequester {
   Q_OBJECT
 public:
-  SecretKeyRequester( QWidget * parent=0, bool multipleKeys=false,
-		      unsigned int allowedKeys=SecretKeys, const char * name=0 );
+  explicit SecretKeyRequester( QWidget * parent=0, bool multipleKeys=false,
+                               unsigned int allowedKeys=SecretKeys,
+                               const char * name=0 );
   virtual ~SecretKeyRequester();
 
 protected:
@@ -305,7 +308,7 @@ class KPGP_EXPORT KeyApprovalDialog: public KDialog
 
     bool preferencesChanged() const { return mPrefsChanged; }
 
-  protected slots:
+  protected Q_SLOTS:
     void slotPrefsChanged( int ) { mPrefsChanged = true; }
     void slotChangeEncryptionKey( int );
     virtual void slotOk();
@@ -329,8 +332,9 @@ class KPGP_EXPORT CipherTextDialog: public KDialog
   Q_OBJECT
 
   public:
-    CipherTextDialog( const QByteArray & text, const QByteArray & charset=0,
-                      QWidget *parent=0 );
+    explicit CipherTextDialog( const QByteArray &text,
+                               const QByteArray &charset=0,
+                               QWidget *parent=0 );
     virtual ~CipherTextDialog() {}
 
   private:
