@@ -1376,7 +1376,7 @@ KeyApprovalDialog::KeyApprovalDialog( const QStringList& addresses,
     new QLabel( i18n("Your keys:"), hbox );
     QLabel* keyidsL = new QLabel( hbox );
     if( keyIDs[0].isEmpty() ) {
-      keyidsL->setText( i18nc("<none> means 'no key'", "<none>") );
+      keyidsL->setText( i18nc( "@info", "<placeholder>none</placeholder> means 'no key'" ) );
     }
     else {
       keyidsL->setText( "0x" + keyIDs[0].toStringList().join( "\n0x" ) );
@@ -1433,7 +1433,7 @@ KeyApprovalDialog::KeyApprovalDialog( const QStringList& addresses,
     new QLabel( i18n("Encryption keys:"), hbox );
     QLabel* keyidsL = new QLabel( hbox );
     if( (*kit).isEmpty() ) {
-      keyidsL->setText( i18nc("<none> means 'no key'", "<none>") );
+      keyidsL->setText( i18nc( "@info", "<placeholder>none</placeholder> means 'no key'" ) );
     }
     else {
       keyidsL->setText( "0x" + (*kit).toStringList().join( "\n0x" ) );
@@ -1461,12 +1461,12 @@ KeyApprovalDialog::KeyApprovalDialog( const QStringList& addresses,
     hbox = new KHBox( bigvbox );
     new QLabel( i18n("Encryption preference:"), hbox );
     QComboBox *encrPrefCombo = new QComboBox( hbox );
-    encrPrefCombo->addItem( i18n("<none>") );
-    encrPrefCombo->addItem( i18n("Never Encrypt with This Key") );
-    encrPrefCombo->addItem( i18n("Always Encrypt with This Key") );
-    encrPrefCombo->addItem( i18n("Encrypt Whenever Encryption is Possible") );
-    encrPrefCombo->addItem( i18n("Always Ask") );
-    encrPrefCombo->addItem( i18n("Ask Whenever Encryption is Possible") );
+    encrPrefCombo->addItem( i18nc( "@item:inlistbox", "<placeholder>none</placeholder>") );
+    encrPrefCombo->addItem( i18nc( "@item:inlistbox", "Never Encrypt with This Key") );
+    encrPrefCombo->addItem( i18nc( "@item:inlistbox", "Always Encrypt with This Key") );
+    encrPrefCombo->addItem( i18nc( "@item:inlistbox", "Encrypt Whenever Encryption is Possible") );
+    encrPrefCombo->addItem( i18nc( "@item:inlistbox", "Always Ask") );
+    encrPrefCombo->addItem( i18nc( "@item:inlistbox", "Ask Whenever Encryption is Possible") );
 
     EncryptPref encrPref = pgp->encryptionPreference( *ait );
     switch( encrPref ) {
