@@ -21,24 +21,21 @@
 
 #include "kmailcvt.h"
 
-static const KCmdLineOptions options[] =
-{
-  KCmdLineLastOption
-};
-
 int main(int argc, char *argv[])
 {
   KLocale::setMainCatalog("kmailcvt");
 
-  KAboutData aboutData( "kmailcvt", I18N_NOOP("KMailCVT"),
-    "3", I18N_NOOP("KMail Import Filters"), KAboutData::License_GPL_V2,
-    I18N_NOOP("(c) 2000-2005, The KMailCVT developers"));
-  aboutData.addAuthor("Hans Dijkema",I18N_NOOP("Original author"), "kmailcvt@hum.org");
-  aboutData.addAuthor("Danny Kukawka", I18N_NOOP("Maintainer & New filters"), "danny.kukawka@web.de");
-  aboutData.addAuthor("Laurence Anderson", I18N_NOOP("New GUI & cleanups"), "l.d.anderson@warwick.ac.uk");
-  aboutData.addCredit("Daniel Molkentin", I18N_NOOP("New GUI & cleanups"), "molkentin@kde.org");
+  KAboutData aboutData( "kmailcvt", 0, ki18n("KMailCVT"),
+    "3", ki18n("KMail Import Filters"), KAboutData::License_GPL_V2,
+    ki18n("(c) 2000-2005, The KMailCVT developers"));
+  aboutData.addAuthor(ki18n("Hans Dijkema"),ki18n("Original author"), "kmailcvt@hum.org");
+  aboutData.addAuthor(ki18n("Danny Kukawka"), ki18n("Maintainer & New filters"), "danny.kukawka@web.de");
+  aboutData.addAuthor(ki18n("Laurence Anderson"), ki18n("New GUI & cleanups"), "l.d.anderson@warwick.ac.uk");
+  aboutData.addCredit(ki18n("Daniel Molkentin"), ki18n("New GUI & cleanups"), "molkentin@kde.org");
 
   KCmdLineArgs::init( argc, argv, &aboutData );
+
+  KCmdLineOptions options;
   KCmdLineArgs::addCmdLineOptions( options ); // Add our own options.
 
   KApplication a;

@@ -649,15 +649,6 @@ void KPilotInstaller::statusMessage( const QString &s )
 //
 //
 //
-static KCmdLineOptions kpilotoptions[] = {
-	{"s", 0, 0},
-	{"setup",
-		I18N_NOOP("Setup the Pilot device, conduits and other parameters"),
-		0L},
-	{"debug <level>", I18N_NOOP("Set debugging level"), "0"},
-	KCmdLineLastOption
-};
-
 
 
 
@@ -676,43 +667,48 @@ int main(int argc, char **argv)
 {
 	FUNCTIONSETUP;
 
-	KAboutData about("kpilot", I18N_NOOP("KPilot"),
+	KAboutData about("kpilot", 0, ki18n("KPilot"),
 		KPILOT_VERSION,
-		"KPilot - HotSync software for KDE\n\n",
+		ki18n("KPilot - HotSync software for KDE\n\n"),
 		KAboutData::License_GPL,
-		"(c) 1998-2000,2001, Dan Pilone (c) 2000-2006, Adriaan de Groot",
-		0L,
+		ki18n("(c) 1998-2000,2001, Dan Pilone (c) 2000-2006, Adriaan de Groot"),
+		ki18n(0L),
 		"http://www.kpilot.org/"
 		);
-	about.addAuthor("Dan Pilone",
-		I18N_NOOP("Project Leader"),
+	about.addAuthor(ki18n("Dan Pilone"),
+		ki18n("Project Leader"),
 		"pilone@slac.com" );
-	about.addAuthor("Adriaan de Groot",
-		I18N_NOOP("Maintainer"),
+	about.addAuthor(ki18n("Adriaan de Groot"),
+		ki18n("Maintainer"),
 		"groot@kde.org", "http://www.kpilot.org/");
-	about.addAuthor("Reinhold Kainhofer",
-		I18N_NOOP("Core and conduits developer"), "reinhold@kainhofer.com", "http://reinhold.kainhofer.com/Linux/");
-	about.addAuthor("Jason 'vanRijn' Kasper",
-		I18N_NOOP("Core and conduits developer"),
+	about.addAuthor(ki18n("Reinhold Kainhofer"),
+		ki18n("Core and conduits developer"), "reinhold@kainhofer.com", "http://reinhold.kainhofer.com/Linux/");
+	about.addAuthor(ki18n("Jason 'vanRijn' Kasper"),
+		ki18n("Core and conduits developer"),
 		"vR@movingparts.net", "http://movingparts.net/");
-	about.addCredit("Preston Brown", I18N_NOOP("VCal conduit"));
-	about.addCredit("Greg Stern", I18N_NOOP("Abbrowser conduit"));
-	about.addCredit("Chris Molnar", I18N_NOOP("Expenses conduit"));
-	about.addCredit("Jörn Ahrens", I18N_NOOP("Notepad conduit, Bugfixer"));
-	about.addCredit("Heiko Purnhagen", I18N_NOOP("Bugfixer"));
-	about.addCredit("Jörg Habenicht", I18N_NOOP("Bugfixer"));
-	about.addCredit("Martin Junius",
-		I18N_NOOP("XML GUI"),
+	about.addCredit(ki18n("Preston Brown"), ki18n("VCal conduit"));
+	about.addCredit(ki18n("Greg Stern"), ki18n("Abbrowser conduit"));
+	about.addCredit(ki18n("Chris Molnar"), ki18n("Expenses conduit"));
+	about.addCredit(ki18n("Jörn Ahrens"), ki18n("Notepad conduit, Bugfixer"));
+	about.addCredit(ki18n("Heiko Purnhagen"), ki18n("Bugfixer"));
+	about.addCredit(ki18n("Jörg Habenicht"), ki18n("Bugfixer"));
+	about.addCredit(ki18n("Martin Junius"),
+		ki18n("XML GUI"),
 		"mj@m-j-s.net", "http://www.m-j-s.net/kde/");
-	about.addCredit("David Bishop",
-		I18N_NOOP(".ui files"));
-	about.addCredit("Aaron J. Seigo",
-		I18N_NOOP("Bugfixer, coolness"));
-	about.addCredit("Bertjan Broeksema",
-		I18N_NOOP("VCalconduit state machine, CMake"));
-	about.addCredit("Montel Laurent",
-		I18N_NOOP("KDE4 port"));
+	about.addCredit(ki18n("David Bishop"),
+		ki18n(".ui files"));
+	about.addCredit(ki18n("Aaron J. Seigo"),
+		ki18n("Bugfixer, coolness"));
+	about.addCredit(ki18n("Bertjan Broeksema"),
+		ki18n("VCalconduit state machine, CMake"));
+	about.addCredit(ki18n("Montel Laurent"),
+		ki18n("KDE4 port"));
 	KCmdLineArgs::init(argc, argv, &about);
+
+	KCmdLineOptions kpilotoptions;
+	kpilotoptions.add("s");
+	kpilotoptions.add("setup", ki18n("Setup the Pilot device, conduits and other parameters"), 0L);
+	kpilotoptions.add("debug <level>", ki18n("Set debugging level"), "0");
 	KCmdLineArgs::addCmdLineOptions(kpilotoptions, "kpilot");
 	KUniqueApplication::addCmdLineOptions();
 	KCmdLineArgs *p = KCmdLineArgs::parsedArgs();

@@ -102,7 +102,7 @@ void TestLibKMobileToolsApp::testAkonadi() {
 
 int main(int argc, char** argv)
 {
-    KCmdLineArgs::init(argc, argv, "testlibkmobiletools", "testlibkmobiletools", "a little test tool", "0.1");
+    KCmdLineArgs::init(argc, argv, "testlibkmobiletools", 0, ki18n("testlibkmobiletools"), "0.1", ki18n("a little test tool"));
     TestLibKMobileToolsApp *app=new TestLibKMobileToolsApp();
     return app->exec();
 }

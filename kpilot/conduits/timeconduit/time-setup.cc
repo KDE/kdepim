@@ -41,14 +41,14 @@
 
 static KAboutData *createAbout()
 {
-	KAboutData *fAbout = new KAboutData("Timeconduit",
-		I18N_NOOP("Time Synchronization Conduit for KPilot"),
+	KAboutData *fAbout = new KAboutData("Timeconduit", 0,
+		ki18n("Time Synchronization Conduit for KPilot"),
 		KPILOT_VERSION,
-		I18N_NOOP("Synchronizes the Time on the Handheld and the PC"),
+		ki18n("Synchronizes the Time on the Handheld and the PC"),
 		KAboutData::License_GPL,
-		"(C) 2002, Reinhold Kainhofer");
-	fAbout->addAuthor("Reinhold Kainhofer",
-		I18N_NOOP("Primary Author"), "reinhold@kainhofer.com", "http://reinhold.kainhofer.com/");
+		ki18n("(C) 2002, Reinhold Kainhofer"));
+	fAbout->addAuthor(ki18n("Reinhold Kainhofer"),
+		ki18n("Primary Author"), "reinhold@kainhofer.com", "http://reinhold.kainhofer.com/");
 	return fAbout;
 }
 

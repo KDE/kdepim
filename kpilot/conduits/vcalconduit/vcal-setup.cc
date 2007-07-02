@@ -40,30 +40,30 @@
 VCalWidgetSetup::VCalWidgetSetup(QWidget *w) :
 	VCalWidgetSetupBase(w)
 {
-	KAboutData *fAbout = new KAboutData("vcalConduit",
-		I18N_NOOP("VCal Conduit for KPilot"),
+	KAboutData *fAbout = new KAboutData("vcalConduit", 0,
+		ki18n("VCal Conduit for KPilot"),
 		KPILOT_VERSION,
-		I18N_NOOP("Configures the VCal Conduit for KPilot"),
+		ki18n("Configures the VCal Conduit for KPilot"),
 		KAboutData::License_GPL,
-		"(C) 2001, Adriaan de Groot\n(C) 2002-2003, Reinhold Kainhofer");
-	fAbout->addAuthor("Adriaan de Groot",
-		I18N_NOOP("Maintainer"),
+		ki18n("(C) 2001, Adriaan de Groot\n(C) 2002-2003, Reinhold Kainhofer"));
+	fAbout->addAuthor(ki18n("Adriaan de Groot"),
+		ki18n("Maintainer"),
 		"groot@kde.org",
 		"http://www.kpilot.org/");
-	fAbout->addAuthor("Reinhold Kainhofer",
-		I18N_NOOP("Maintainer"),
+	fAbout->addAuthor(ki18n("Reinhold Kainhofer"),
+		ki18n("Maintainer"),
 		"reinhold@kainhofer.com",
 		"http://reinhold.kainhofer.com/Linux/");
-	fAbout->addAuthor("Dan Pilone",
-		I18N_NOOP("Original Author"));
-	fAbout->addAuthor("Preston Brown",
-		I18N_NOOP("Original Author"));
-	fAbout->addAuthor("Herwin-Jan Steehouwer",
-		I18N_NOOP("Original Author"));
-	fAbout->addCredit("Cornelius Schumacher",
-		I18N_NOOP("iCalendar port"));
-	fAbout->addCredit("Philipp Hullmann",
-		I18N_NOOP("Bugfixer"));
+	fAbout->addAuthor(ki18n("Dan Pilone"),
+		ki18n("Original Author"));
+	fAbout->addAuthor(ki18n("Preston Brown"),
+		ki18n("Original Author"));
+	fAbout->addAuthor(ki18n("Herwin-Jan Steehouwer"),
+		ki18n("Original Author"));
+	fAbout->addCredit(ki18n("Cornelius Schumacher"),
+		ki18n("iCalendar port"));
+	fAbout->addCredit(ki18n("Philipp Hullmann"),
+		ki18n("Bugfixer"));
 
 	ConduitConfigBase::addAboutPage(fConfigWidget->tabWidget, fAbout);
 	fConfigWidget->fSyncDestination->setTitle(i18n("Calendar Destination"));

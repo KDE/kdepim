@@ -65,18 +65,14 @@ static const char description[] =
 
 static const char version[] = "0.1";
 
-static KCmdLineOptions options[] =
-{
-//    { "+[URL]", I18N_NOOP( "Document to open" ), 0 },
-  KCmdLineLastOption
-};
-
 int main(int argc, char **argv)
 {
-  KAboutData about("conversationview", I18N_NOOP("conversationview"), version, description,
-		     KAboutData::License_LGPL, "(C) 2006 Aron Boström", 0, 0, "Aron.Bostrom@gmail.com");
-  about.addAuthor( "Aron Boström", 0, "Aron.Bostrom@gmail.com" );
+  KAboutData about("conversationview", 0, ki18n("conversationview"), version, ki18n(description),
+		     KAboutData::License_LGPL, ki18n("(C) 2006 Aron Boström"), KLocalizedString(), 0, "Aron.Bostrom@gmail.com");
+  about.addAuthor( ki18n("Aron Boström"), KLocalizedString(), "Aron.Bostrom@gmail.com" );
   KCmdLineArgs::init(argc, argv, &about);
+
+  KCmdLineOptions options;
   KCmdLineArgs::addCmdLineOptions( options );
   KApplication app;
 

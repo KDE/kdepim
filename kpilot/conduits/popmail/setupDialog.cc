@@ -62,22 +62,22 @@ PopMailWidgetConfig::PopMailWidgetConfig(QWidget *p) :
 {
 	FUNCTIONSETUP;
 	fConduitName = i18n("KMail");
-	KAboutData *fAbout = new KAboutData("popmailConduit",
-		I18N_NOOP("Mail Conduit for KPilot"),
+	KAboutData *fAbout = new KAboutData("popmailConduit", 0,
+		ki18n("Mail Conduit for KPilot"),
 		KPILOT_VERSION,
-		I18N_NOOP("Configures the Mail Conduit for KPilot"),
+		ki18n("Configures the Mail Conduit for KPilot"),
 		KAboutData::License_GPL,
-		"(C) 2001, Dan Pilone, Michael Kropfberger, Adriaan de Groot");
-	fAbout->addAuthor("Adriaan de Groot",
-		I18N_NOOP("Maintainer"),
+		ki18n("(C) 2001, Dan Pilone, Michael Kropfberger, Adriaan de Groot"));
+	fAbout->addAuthor(ki18n("Adriaan de Groot"),
+		ki18n("Maintainer"),
 		"groot@kde.org",
 		"http://www.kpilot.org/");
-	fAbout->addAuthor("Dan Pilone",
-		I18N_NOOP("Original Author"));
-	fAbout->addCredit("Michael Kropfberger",
-		I18N_NOOP("POP3 code"));
-	fAbout->addCredit("Marko Gr&ouml;nroos",
-		I18N_NOOP("SMTP support and redesign"),
+	fAbout->addAuthor(ki18n("Dan Pilone"),
+		ki18n("Original Author"));
+	fAbout->addCredit(ki18n("Michael Kropfberger"),
+		ki18n("POP3 code"));
+	fAbout->addCredit(ki18n("Marko Gr&ouml;nroos"),
+		ki18n("SMTP support and redesign"),
 		"magi@iki.fi",
 		"http://www.iki.fi/magi/");
 

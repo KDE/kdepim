@@ -59,14 +59,14 @@ MemofileConduitConfig::MemofileConduitConfig(QWidget *p, const char *n) :
 {
 	FUNCTIONSETUP;
 	fConduitName = i18n("Memofile");
-	KAboutData *about = new KAboutData("MemofileConduit",
-		I18N_NOOP("Memofile Conduit for KPilot"),
+	KAboutData *about = new KAboutData("MemofileConduit", 0,
+		ki18n("Memofile Conduit for KPilot"),
 		KPILOT_VERSION,
-		I18N_NOOP("Configures the Memofile Conduit for KPilot"),
+		ki18n("Configures the Memofile Conduit for KPilot"),
 		KAboutData::License_GPL,
-		"(C) 2004, Jason 'vanRijn' Kasper");
-	about->addAuthor("Jason 'vanRijn' Kasper",
-		I18N_NOOP("Primary Author"),
+		ki18n("(C) 2004, Jason 'vanRijn' Kasper"));
+	about->addAuthor(ki18n("Jason 'vanRijn' Kasper"),
+		ki18n("Primary Author"),
 		"vR@movingparts.net",
 		"http://www.cs.kun.nl/~adridg/kpilot");
 

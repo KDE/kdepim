@@ -38,20 +38,17 @@
 #include "pilotDateEntry.h"
 #include "pilotLocalDatabase.h"
 
-static const KCmdLineOptions options[] =
-{
-	{"verbose", "Verbose output", 0},
-	{"data-dir <path>","Set data directory", "."},
-	KCmdLineLastOption
-};
-
 
 
 int main(int argc, char **argv)
 {
 
-	KAboutData aboutData("testdatebook","Test Date Book","0.1");
+	KAboutData aboutData("testdatebook", 0,ki18n("Test Date Book"),"0.1");
 	KCmdLineArgs::init(argc,argv,&aboutData);
+
+	KCmdLineOptions options;
+	options.add("verbose", ki18n("Verbose output"));
+	options.add("data-dir <path>", ki18n("Set data directory"), ".");
 	KCmdLineArgs::addCmdLineOptions( options );
 
 	KApplication app( false);

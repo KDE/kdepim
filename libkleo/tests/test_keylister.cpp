@@ -130,7 +130,7 @@ void CertListView::slotStart() {
 
 int main( int argc, char** argv ) {
 
-  KAboutData aboutData( "test_keylister", "KeyLister Test", "0.1" );
+  KAboutData aboutData( "test_keylister", 0, ki18n("KeyLister Test"), "0.1" );
   KCmdLineArgs::init( argc, argv, &aboutData );
   KApplication app;
 

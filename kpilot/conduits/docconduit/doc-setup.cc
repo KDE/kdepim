@@ -55,13 +55,13 @@ DOCWidgetConfig::DOCWidgetConfig(QWidget * w):
 		fConfigWidget->fEncoding->insertItem(*it);
 	}
 
-	fAbout = new KAboutData("docconduit",
-		I18N_NOOP("Palm DOC Conduit for KPilot"), KPILOT_VERSION,
-		I18N_NOOP("Configures the DOC Conduit for KPilot"),
-		KAboutData::License_GPL, "(C) 2002, Reinhold Kainhofer");
+	fAbout = new KAboutData("docconduit", 0,
+		ki18n("Palm DOC Conduit for KPilot"), KPILOT_VERSION,
+		ki18n("Configures the DOC Conduit for KPilot"),
+		KAboutData::License_GPL, ki18n("(C) 2002, Reinhold Kainhofer"));
 
-	fAbout->addAuthor("Reinhold Kainhofer",
-		I18N_NOOP("Maintainer"), "reinhold@kainhofer.com",
+	fAbout->addAuthor(ki18n("Reinhold Kainhofer"),
+		ki18n("Maintainer"), "reinhold@kainhofer.com",
 		"http://reinhold.kainhofer.com");
 
 	fConfigWidget->fTXTDir->setMode(KFile::Directory);

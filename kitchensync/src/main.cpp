@@ -28,16 +28,13 @@
 #include "mainwidget.h"
 #include "mainwindow.h"
 
-static KCmdLineOptions options[] =
-{
-  KCmdLineLastOption
-};
-
 int main( int argc, char **argv )
 {
   KAboutData *about = MainWidget::aboutData();
 
   KCmdLineArgs::init( argc, argv, about );
+
+  KCmdLineOptions options;
   KCmdLineArgs::addCmdLineOptions( options );
   KUniqueApplication::addCmdLineOptions();
 

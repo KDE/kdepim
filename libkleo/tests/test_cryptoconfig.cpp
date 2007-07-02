@@ -44,7 +44,7 @@ using namespace std;
 
 int main( int argc, char** argv ) {
 
-  KAboutData aboutData( "test_cryptoconfig", "CryptoConfig Test", "0.1" );
+  KAboutData aboutData( "test_cryptoconfig", 0, ki18n("CryptoConfig Test"), "0.1" );
   KCmdLineArgs::init( argc, argv, &aboutData );
   KApplication app( false );
 

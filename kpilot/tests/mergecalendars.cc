@@ -34,22 +34,19 @@
 #include <libkcal/calendar.h>
 #include <libkcal/calendarlocal.h>
 
-static const KCmdLineOptions options[] =
-{
-	{"korgfile <path>","KOrganizer master file", 0},
-	{"newfile <path>","Calendar file to merge into korganizer", 0},
-	{"verbose", "Verbose debugging", 0},
-	KCmdLineLastOption
-};
-
 
 
 int main(int argc, char **argv)
 {
 
 
-	KAboutData aboutData("mergecalendars","Merge libkcal Calendars","0.1");
+	KAboutData aboutData("mergecalendars", 0,ki18n("Merge libkcal Calendars"),"0.1");
 	KCmdLineArgs::init(argc,argv,&aboutData);
+
+	KCmdLineOptions options;
+	options.add("korgfile <path>", ki18n("KOrganizer master file"));
+	options.add("newfile <path>", ki18n("Calendar file to merge into korganizer"));
+	options.add("verbose", ki18n("Verbose debugging"));
 	KCmdLineArgs::addCmdLineOptions( options );
 
 	KApplication app( false, false );

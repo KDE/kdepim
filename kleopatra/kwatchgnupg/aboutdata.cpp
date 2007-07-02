@@ -45,7 +45,7 @@ struct about_data {
 };
 
 static const about_data authors[] = {
-  { "Steffen Hansen", I18N_NOOP("Original Author"), "hansen@kde.org", 0 },
+  { I18N_NOOP("Steffen Hansen"), I18N_NOOP("Original Author"), "hansen@kde.org", 0 },
 };
 
 #if 0
@@ -56,18 +56,18 @@ static const about_data credits[] = {
 #endif
 
 AboutData::AboutData()
-  : KAboutData( "kwatchgnupg", I18N_NOOP("KWatchGnuPG"),
-		kwatchgnupg_version, description, License_GPL,
-		"(c) 2004 Klar\xC3\xA4lvdalens Datakonsult AB\n" )
+  : KAboutData( "kwatchgnupg", 0, ki18n("KWatchGnuPG"),
+		kwatchgnupg_version, ki18n(description), License_GPL,
+		ki18n("(c) 2004 Klar\xC3\xA4lvdalens Datakonsult AB\n") )
 {
   using ::authors;
   //using ::credits;
   for ( unsigned int i = 0 ; i < sizeof authors / sizeof *authors ; ++i )
-    addAuthor( authors[i].name, authors[i].desc,
+    addAuthor( ki18n(authors[i].name), ki18n(authors[i].desc),
 	       authors[i].email, authors[i].web );
 #if 0
   for ( unsigned int i = 0 ; i < sizeof credits / sizeof *credits ; ++i )
-    addCredit( credits[i].name, credits[i].desc,
+    addCredit( ki18n(credits[i].name), ki18n(credits[i].desc),
 	       credits[i].email, credits[i].web );
 #endif
 }

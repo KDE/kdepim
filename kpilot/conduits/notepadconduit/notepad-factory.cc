@@ -74,19 +74,19 @@ static KAboutData *createAbout()
 {
 	FUNCTIONSETUP;
 
-	KAboutData *fAbout = new KAboutData("NotepadConduit",
-		I18N_NOOP("Saves notepads to png files"),
+	KAboutData *fAbout = new KAboutData("NotepadConduit", 0,
+		ki18n("Saves notepads to png files"),
 		KPILOT_VERSION,
-		I18N_NOOP("Configures the Notepad Conduit for KPilot"),
+		ki18n("Configures the Notepad Conduit for KPilot"),
 		KAboutData::License_LGPL,
-		"(C) 2004, Joern Ahrens");
-	fAbout->addAuthor("Joern Ahrens",
-		I18N_NOOP("Primary Author"),
+		ki18n("(C) 2004, Joern Ahrens"));
+	fAbout->addAuthor(ki18n("Joern Ahrens"),
+		ki18n("Primary Author"),
 		"kde@jokele.de",
 		"http://www.jokele.de/");
-	fAbout->addCredit("Adriaan de Groot");
-	fAbout->addCredit("Angus Ainslies",
-		I18N_NOOP("Notepad conduit is based on Angus' read-notepad, part of pilot-link" ));
+	fAbout->addCredit(ki18n("Adriaan de Groot"));
+	fAbout->addCredit(ki18n("Angus Ainslies"),
+		ki18n("Notepad conduit is based on Angus' read-notepad, part of pilot-link" ));
 	return fAbout;
 }
 

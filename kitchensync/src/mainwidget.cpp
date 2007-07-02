@@ -74,12 +74,12 @@ KXMLGUIClient *MainWidget::guiClient() const
 
 KAboutData *MainWidget::aboutData()
 {
-  KAboutData *about = new KAboutData( "kitchensync", I18N_NOOP( "KitchenSync" ),
-                                      "0.1", I18N_NOOP( "The KDE Syncing Application" ),
+  KAboutData *about = new KAboutData( "kitchensync", 0, ki18n( "KitchenSync" ),
+                                      "0.1", ki18n( "The KDE Syncing Application" ),
                                       KAboutData::License_GPL_V2,
-                                      I18N_NOOP( "(c) 2005, The KDE PIM Team" ) );
-  about->addAuthor( "Tobias Koenig", I18N_NOOP( "Current maintainer" ), "tokoe@kde.org" );
-  about->addAuthor( "Cornelius Schumacher", 0, "schumacher@kde.org" );
+                                      ki18n( "(c) 2005, The KDE PIM Team" ) );
+  about->addAuthor( ki18n("Tobias Koenig"), ki18n( "Current maintainer" ), "tokoe@kde.org" );
+  about->addAuthor( ki18n("Cornelius Schumacher"), KLocalizedString(), "schumacher@kde.org" );
 
   return about;
 }

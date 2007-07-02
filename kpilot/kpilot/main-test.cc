@@ -59,55 +59,6 @@
 #include "hotSync.h"
 
 
-static KCmdLineOptions generalOptions[] = {
-	{"p",0,0},
-	{"port <device>",
-		I18N_NOOP("Path to Pilot device node"),
-		"/dev/pilot"},
-	{"l",0,0},
-	{"list", I18N_NOOP("List DBs"), 0},
-	{"b",0,0},
-	{"backup <dest dir>", I18N_NOOP("Backup Pilot to <dest dir>"), 0},
-	{"r",0,0},
-	{"restore <src dir>", I18N_NOOP("Restore Pilot from backup"), 0},
-	{"e",0,0},
-	{ "exec <filename>",
-		I18N_NOOP("Run conduit from desktop file <filename>"),
-		0 },
-	{"c",0,0},
-	{ "check <what>",
-		I18N_NOOP("Run a specific check (with the device)"), "help"},
-	{"s",0,0},
-	{ "show <what>",
-		I18N_NOOP("Show KPilot configuration information"), "help"},
-#ifdef DEBUG
-	{ "debug <level>",
-		I18N_NOOP("Set the debug level"), "1" },
-#endif
-	KCmdLineLastOption
-} ;
-
-static KCmdLineOptions conduitOptions[] = {
-	{ "T",0,0},
-	{ "notest",
-		I18N_NOOP("*Really* run the conduit, not in test mode."),
-		0 } ,
-	{ "F",0,0},
-	{ "local",
-		I18N_NOOP("Run the conduit in file-test mode."),
-		0 } ,
-	{ "HHtoPC",
-		I18N_NOOP("Copy Pilot to Desktop."),
-		0 } ,
-	{ "PCtoHH",
-		I18N_NOOP("Copy Desktop to Pilot."),
-		0 } ,
-	{ "loop",
-		I18N_NOOP("Repeated perform action - only useful for --list"),
-		0 } ,
-	KCmdLineLastOption
-} ;
-
 /**
 *** Conduits - sync actions - for testing specific scenarios.
 **/
@@ -341,18 +292,45 @@ int main(int argc, char **argv)
 	debug_level = 1;
 #endif
 	FUNCTIONSETUP;
-	KAboutData about("kpilotTest",
-		I18N_NOOP("KPilotTest"),
+	KAboutData about("kpilotTest", 0,
+		ki18n("KPilotTest"),
 		KPILOT_VERSION,
-		"KPilot Tester",
-		KAboutData::License_GPL, "(C) 2001-2004, Adriaan de Groot");
-	about.addAuthor("Adriaan de Groot",
-		I18N_NOOP("KPilot Maintainer"),
+		ki18n("KPilot Tester"),
+		KAboutData::License_GPL, ki18n("(C) 2001-2004, Adriaan de Groot"));
+	about.addAuthor(ki18n("Adriaan de Groot"),
+		ki18n("KPilot Maintainer"),
 		"groot@kde.org", "http://www.kpilot.org/");
 
 	KCmdLineArgs::init(argc, argv, &about);
+
+	KCmdLineOptions generalOptions;
+	generalOptions.add("p");
+	generalOptions.add("port <device>", ki18n("Path to Pilot device node"), "/dev/pilot");
+	generalOptions.add("l");
+	generalOptions.add("list", ki18n("List DBs"));
+	generalOptions.add("b");
+	generalOptions.add("backup <dest dir>", ki18n("Backup Pilot to <dest dir>"));
+	generalOptions.add("r");
+	generalOptions.add("restore <src dir>", ki18n("Restore Pilot from backup"));
+	generalOptions.add("e");
+	generalOptions.add("exec <filename>", ki18n("Run conduit from desktop file <filename>"));
+	generalOptions.add("c");
+	generalOptions.add("check <what>", ki18n("Run a specific check (with the device)"), "help");
+	generalOptions.add("s");
+	generalOptions.add("show <what>", ki18n("Show KPilot configuration information"), "help");
+	#ifdef DEBUG
+	generalOptions.add("debug <level>", ki18n("Set the debug level"), "1");
 	KCmdLineArgs::addCmdLineOptions(generalOptions,
 		I18N_NOOP("General"));
+
+	KCmdLineOptions conduitOptions;
+	conduitOptions.add("T");
+	conduitOptions.add("notest", ki18n("*Really* run the conduit, not in test mode."));
+	conduitOptions.add("F");
+	conduitOptions.add("local", ki18n("Run the conduit in file-test mode."));
+	conduitOptions.add("HHtoPC", ki18n("Copy Pilot to Desktop."));
+	conduitOptions.add("PCtoHH", ki18n("Copy Desktop to Pilot."));
+	conduitOptions.add("loop", ki18n("Repeated perform action - only useful for --list"));
 	KCmdLineArgs::addCmdLineOptions(conduitOptions,
 		I18N_NOOP("Conduit Actions"),"conduit");
 

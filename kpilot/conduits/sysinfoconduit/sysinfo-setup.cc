@@ -89,14 +89,14 @@ SysInfoWidgetConfig::SysInfoWidgetConfig(QWidget *w) :
 {
 	FUNCTIONSETUP;
 
-	KAboutData *fAbout = new KAboutData("SysInfoConduit",
-		I18N_NOOP("KPilot System Information conduit"),
+	KAboutData *fAbout = new KAboutData("SysInfoConduit", 0,
+		ki18n("KPilot System Information conduit"),
 		KPILOT_VERSION,
-		I18N_NOOP("Retrieves System, Hardware, and User Info from the Handheld and stores them to a file."),
+		ki18n("Retrieves System, Hardware, and User Info from the Handheld and stores them to a file."),
 		KAboutData::License_GPL,
-		"(C) 2003, Reinhold Kainhofer");
-	fAbout->addAuthor("Reinhold Kainhofer",
-		I18N_NOOP("Primary Author"), "reinhold@kainhofer.com", "http://reinhold.kainhofer.com/");
+		ki18n("(C) 2003, Reinhold Kainhofer"));
+	fAbout->addAuthor(ki18n("Reinhold Kainhofer"),
+		ki18n("Primary Author"), "reinhold@kainhofer.com", "http://reinhold.kainhofer.com/");
 
 	ConduitConfigBase::addAboutPage(fConfigWidget->tabWidget,fAbout);
 	fWidget=fConfigWidget;

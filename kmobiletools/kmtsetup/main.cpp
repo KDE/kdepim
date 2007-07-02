@@ -35,12 +35,6 @@ static const char description[] =
 
 static const char version[] = "0.1";
 
-static KCmdLineOptions options[] =
-{
-//    { "+[URL]", I18N_NOOP( "Document to open" ), 0 },
-    KCmdLineLastOption
-};
-
 bool sudoRun(KCmdLineArgs *args)
 {
     QString thisAppName=KStandardDirs::findExe(args->appName());
@@ -56,11 +50,13 @@ bool sudoRun(KCmdLineArgs *args)
 
 int main(int argc, char **argv)
 {
-    KAboutData about("kmtsetup", I18N_NOOP("KMTSetup"), version, description,
-                     KAboutData::License_GPL, "(C) 2006 Davide Bettio 'WindowsUninstall'", 0, 0, "davbet@aliceposta.it");
-    about.addAuthor( "Davide Bettio 'WindowsUninstall'", 0, "davbet@aliceposta.it" );
-    about.addAuthor( "Marco Gulino", 0, "marco@kmobiletools.org" );
+    KAboutData about("kmtsetup", 0, ki18n("KMTSetup"), version, ki18n(description),
+                     KAboutData::License_GPL, ki18n("(C) 2006 Davide Bettio 'WindowsUninstall'"), KLocalizedString(), 0, "davbet@aliceposta.it");
+    about.addAuthor( ki18n("Davide Bettio 'WindowsUninstall'"), KLocalizedString(), "davbet@aliceposta.it" );
+    about.addAuthor( ki18n("Marco Gulino"), KLocalizedString(), "marco@kmobiletools.org" );
     KCmdLineArgs::init(argc, argv, &about);
+
+    KCmdLineOptions options;
     KCmdLineArgs::addCmdLineOptions( options );
     KApplication app;
     KMTSetupWidget *mainWin = 0;

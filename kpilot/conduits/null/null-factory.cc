@@ -61,14 +61,14 @@ NullConduitConfig::NullConduitConfig(QWidget *p, const char *n) :
 {
 	FUNCTIONSETUP;
 	fConduitName = i18n("Null");
-	fAbout = new KAboutData("nullConduit",
-		I18N_NOOP("Null Conduit for KPilot"),
+	fAbout = new KAboutData("nullConduit", 0,
+		ki18n("Null Conduit for KPilot"),
 		KPILOT_VERSION,
-		I18N_NOOP("Configures the Null Conduit for KPilot"),
+		ki18n("Configures the Null Conduit for KPilot"),
 		KAboutData::License_GPL,
-		"(C) 2001, 2007, Adriaan de Groot");
-	fAbout->addAuthor("Adriaan de Groot",
-		I18N_NOOP("Primary Author"),
+		ki18n("(C) 2001, 2007, Adriaan de Groot"));
+	fAbout->addAuthor(ki18n("Adriaan de Groot"),
+		ki18n("Primary Author"),
 		"groot@kde.org",
 		"http://www.kpilot.org");
 

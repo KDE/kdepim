@@ -43,7 +43,7 @@
 #include <vector>
 
 int main( int argc, char ** argv ) {
-  KAboutData aboutData( "test_keyselectiondialog", "KeySelectionDialog Test", "0.1" );
+  KAboutData aboutData( "test_keyselectiondialog", 0, ki18n("KeySelectionDialog Test"), "0.1" );
   KCmdLineArgs::init( argc, argv, &aboutData );
 
   KIconLoader::global()->addAppDir( "libkleopatra" );

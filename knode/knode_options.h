@@ -19,11 +19,12 @@
 #include <klocale.h>
 
 /** KNode's command line options. */
-static KCmdLineOptions knode_options[] =
+static KCmdLineOptions knode_options ()
 {
-  { "+[url]", I18N_NOOP("A 'news://server/group' URL"), 0 },
-  KCmdLineLastOption
-};
+  KCmdLineOptions options;
+  options.add("+[url]", ki18n("A 'news://server/group' URL"));
+  return options;
+}
 
 #endif /* KNODE_OPTIONS_H */
 

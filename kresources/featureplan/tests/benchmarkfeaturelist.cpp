@@ -32,12 +32,6 @@
 
 #include <iostream>
 
-static const KCmdLineOptions options[] =
-{
-  { "+featurelist", "Name of featurelist XML file", 0 },
-  KCmdLineLastOption
-};
-
 void displayFeature( const Feature &f )
 {
   std::cout << "FEATURE: " << f.summary().toLocal8Bit().data() << std::endl;
@@ -69,10 +63,13 @@ void displayCategory( const Category::List &categories )
 
 int main( int argc, char **argv )
 {
-  KAboutData aboutData( "benchmarkfeaturelist",
-                        "Benchmark for feature list XML parser",
+  KAboutData aboutData( "benchmarkfeaturelist", 0,
+                        ki18n("Benchmark for feature list XML parser"),
                         "0.1" );
   KCmdLineArgs::init( argc, argv, &aboutData, KCmdLineArgs::CmdLineArgNone );
+
+  KCmdLineOptions options;
+  options.add("+featurelist", ki18n("Name of featurelist XML file"));
   KCmdLineArgs::addCmdLineOptions( options );
 
   QCoreApplication app( KCmdLineArgs::qtArgc(), KCmdLineArgs::qtArgv() );
@@ -83,7 +80,7 @@ int main( int argc, char **argv )
     args->usage( "Wrong number of arguments." );
   }
 
-  QString filename = QFile::decodeName( args->arg( 0 ) );
+  QString filename = args->arg( 0 );
 
   for( int i = 0; i < 1; ++i ) {
     bool ok = false;

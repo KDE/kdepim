@@ -154,7 +154,7 @@ int main( int argc, char** argv ) {
     protocol = argv[1];
     argc = 1; // hide from KDE
   }
-  KAboutData aboutData( "test_keygen", "KeyGenerationJob Test", "0.1" );
+  KAboutData aboutData( "test_keygen", 0, ki18n("KeyGenerationJob Test"), "0.1" );
   KCmdLineArgs::init( argc, argv, &aboutData );
   KApplication app;
 

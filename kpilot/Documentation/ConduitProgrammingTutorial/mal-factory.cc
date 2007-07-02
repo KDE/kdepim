@@ -45,20 +45,20 @@ MALConduitFactory::MALConduitFactory(QObject *p, const char *n) :
     FUNCTIONSETUP;
 
     fInstance("MALconduit");
-    fAbout = new KAboutData("MALconduit",
-        I18N_NOOP("MAL Synchronization Conduit for KPilot"),
+    fAbout = new KAboutData("MALconduit", 0,
+        ki18n("MAL Synchronization Conduit for KPilot"),
         KPILOT_VERSION,
-        I18N_NOOP("Synchronizes the content from MAL Servers like AvantGo to the Handheld"),
+        ki18n("Synchronizes the content from MAL Servers like AvantGo to the Handheld"),
         KAboutData::License_GPL,
-        "(C) 2002, Reinhold Kainhofer");
-    fAbout->addAuthor("Reinhold Kainhofer",
-        I18N_NOOP("Primary Author"), "reinhold@kainhofer.com", "http://reinhold.kainhofer.com/");
-    fAbout->addAuthor("Jason Day",
-        I18N_NOOP("Author of libmal and the JPilot AvantGo conduit"), "jasonday@worldnet.att.net");
-    fAbout->addAuthor("Tom Whittaker",
-        I18N_NOOP("Author of syncmal"), "tom@tomw.org", "http://www.tomw.org/");
-    fAbout->addAuthor("AvantGo, Inc.",
-        I18N_NOOP("Authors of the malsync library (c) 1997-1999"), "www.avantgo.com", "http://www.avantgo.com/");
+        ki18n("(C) 2002, Reinhold Kainhofer"));
+    fAbout->addAuthor(ki18n("Reinhold Kainhofer"),
+        ki18n("Primary Author"), "reinhold@kainhofer.com", "http://reinhold.kainhofer.com/");
+    fAbout->addAuthor(ki18n("Jason Day"),
+        ki18n("Author of libmal and the JPilot AvantGo conduit"), "jasonday@worldnet.att.net");
+    fAbout->addAuthor(ki18n("Tom Whittaker"),
+        ki18n("Author of syncmal"), "tom@tomw.org", "http://www.tomw.org/");
+    fAbout->addAuthor(ki18n("AvantGo, Inc."),
+        ki18n("Authors of the malsync library (c) 1997-1999"), "www.avantgo.com", "http://www.avantgo.com/");
 }
 
 MALConduitFactory::~MALConduitFactory()

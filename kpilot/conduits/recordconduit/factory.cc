@@ -62,14 +62,14 @@ ConduitConfig::ConduitConfig(QWidget *p, const char *n) :
 {
 	FUNCTIONSETUP;
 	fConduitName = i18n("Record Conduit");
-	fAbout = new KAboutData("recordConduit",
-		I18N_NOOP("Record Conduit for KPilot"),
+	fAbout = new KAboutData("recordConduit", 0,
+		ki18n("Record Conduit for KPilot"),
 		KPILOT_VERSION,
-		I18N_NOOP("Configures the Record Conduit for KPilot"),
+		ki18n("Configures the Record Conduit for KPilot"),
 		KAboutData::License_GPL,
-		"(C) 2005, Adriaan de Groot");
-	fAbout->addAuthor("Adriaan de Groot",
-		I18N_NOOP("Primary Author"),
+		ki18n("(C) 2005, Adriaan de Groot"));
+	fAbout->addAuthor(ki18n("Adriaan de Groot"),
+		ki18n("Primary Author"),
 		"groot@kde.org",
 		"http://people.fruitsalad.org/adridg/");
 

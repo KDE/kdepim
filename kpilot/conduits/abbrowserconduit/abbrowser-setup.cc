@@ -44,21 +44,21 @@
 
 static KAboutData *createAbout()
 {
-	KAboutData *fAbout = new KAboutData("abbrowserconduit",
-		I18N_NOOP("Abbrowser Conduit for KPilot"),
+	KAboutData *fAbout = new KAboutData("abbrowserconduit", 0,
+		ki18n("Abbrowser Conduit for KPilot"),
 		KPILOT_VERSION,
-		I18N_NOOP("Configures the Abbrowser Conduit for KPilot"),
+		ki18n("Configures the Abbrowser Conduit for KPilot"),
 		KAboutData::License_GPL,
-		"(C) 2001, Dan Pilone\n(C) 2002-2003, Reinhold Kainhofer");
-	fAbout->addAuthor("Greg Stern",
-		I18N_NOOP("Primary Author"));
-	fAbout->addAuthor("Adriaan de Groot",
-		I18N_NOOP("Maintainer"),
+		ki18n("(C) 2001, Dan Pilone\n(C) 2002-2003, Reinhold Kainhofer"));
+	fAbout->addAuthor(ki18n("Greg Stern"),
+		ki18n("Primary Author"));
+	fAbout->addAuthor(ki18n("Adriaan de Groot"),
+		ki18n("Maintainer"),
 		"groot@kde.org",
 		"http://www.kpilot.org");
-	fAbout->addAuthor("Reinhold Kainhofer", I18N_NOOP("Maintainer"),
+	fAbout->addAuthor(ki18n("Reinhold Kainhofer"), ki18n("Maintainer"),
 		"reinhold@kainhofer.com", "http://reinhold.kainhofer.com");
-	fAbout->addCredit("David Bishop", I18N_NOOP("UI"));
+	fAbout->addCredit(ki18n("David Bishop"), ki18n("UI"));
 	return fAbout;
 }
 

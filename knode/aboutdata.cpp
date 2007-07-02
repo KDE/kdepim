@@ -41,21 +41,21 @@ namespace KNode
   };
 
   AboutData::AboutData()
-    : KAboutData( "knode",
-                  I18N_NOOP("KNode"),
+    : KAboutData( "knode", 0,
+                  ki18n("KNode"),
                   KNODE_VERSION,
-                  I18N_NOOP("A newsreader for KDE"),
+                  ki18n("A newsreader for KDE"),
                   KAboutData::License_GPL,
-                  I18N_NOOP("Copyright (c) 1999-2005 the KNode authors"),
-                  0,
+                  ki18n("Copyright (c) 1999-2005 the KNode authors"),
+                  KLocalizedString(),
                   "http://knode.sourceforge.net/" )
   {
     setOrganizationDomain( "kde.org" );
     using KNode::authors;
     for ( unsigned int i = 0 ; i < sizeof authors / sizeof *authors ; ++i )
-      addAuthor( authors[i].name, authors[i].desc, authors[i].email );
+      addAuthor( ki18n(authors[i].name), ki18n(authors[i].desc), authors[i].email );
 
-    addCredit( "Jakob Schroeter", 0, "js@camaya.net" );
+    addCredit( ki18n("Jakob Schroeter"), KLocalizedString(), "js@camaya.net" );
   }
 
   AboutData::~AboutData()

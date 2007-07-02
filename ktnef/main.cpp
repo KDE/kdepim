@@ -28,21 +28,17 @@ static const char description[] =
 	I18N_NOOP("Viewer for mail attachments using TNEF format");
 
 
-static KCmdLineOptions options[] =
-{
-  { "+[file]", I18N_NOOP("An optional argument 'file'"), 0 },
-  KCmdLineLastOption
-  // INSERT YOUR COMMANDLINE OPTIONS HERE
-};
-
 int main(int argc, char *argv[])
 {
 
-  KAboutData aboutData( "ktnef", I18N_NOOP("KTnef"),
-    "1.0", description, KAboutData::License_GPL,
-    "(c) 2000, Michael Goffioul");
-  aboutData.addAuthor("Michael Goffioul",0, "kdeprint@swing.be");
+  KAboutData aboutData( "ktnef", 0, ki18n("KTnef"),
+    "1.0", ki18n(description), KAboutData::License_GPL,
+    ki18n("(c) 2000, Michael Goffioul"));
+  aboutData.addAuthor(ki18n("Michael Goffioul"),KLocalizedString(), "kdeprint@swing.be");
   KCmdLineArgs::init( argc, argv, &aboutData );
+
+  KCmdLineOptions options;
+  options.add("+[file]", ki18n("An optional argument 'file'"));
   KCmdLineArgs::addCmdLineOptions( options ); // Add our own options.
   KCmdLineArgs::addStdCmdLineOptions();
 

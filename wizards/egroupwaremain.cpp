@@ -27,20 +27,17 @@
 #include <kglobal.h>
 #include <klocale.h>
 
-static const KCmdLineOptions options[] =
-{
-  {"verbose", "Verbose output", 0},
-  KCmdLineLastOption
-};
-
 int main(int argc,char **argv)
 {
   KLocale::setMainCatalog( "kdepimwizards" );
 
-  KAboutData aboutData( "egroupwarewizard",
-                        "eGroupware Server Configuration Wizard",
+  KAboutData aboutData( "egroupwarewizard", 0,
+                        ki18n("eGroupware Server Configuration Wizard"),
                         "0.1" );
   KCmdLineArgs::init( argc, argv, &aboutData );
+
+  KCmdLineOptions options;
+  options.add("verbose", ki18n("Verbose output"));
   KCmdLineArgs::addCmdLineOptions( options );
 
   KApplication app;

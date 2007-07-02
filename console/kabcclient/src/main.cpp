@@ -38,38 +38,6 @@
 
 static const char version[] = "0.8.1";
 
-static KCmdLineOptions cmdLineOptions[] =
-{
-    {"A", 0, 0},
-    {"add", I18N_NOOP("Add input data as new addressbook entries"), 0},
-    {"R", 0, 0},
-    {"remove", I18N_NOOP("Remove entries matching the input data"), 0},
-    {"M", 0, 0},
-    {"merge", I18N_NOOP("Merge input data into the addressbook"), 0},
-    {"S", 0, 0},
-    {"search", I18N_NOOP("Search for entries matching the input data"), 0},
-    {"L", 0, 0},
-    {"list", I18N_NOOP("List all entries in address book"), 0},
-    {"nosave",
-     I18N_NOOP("Do not save changes to the addressbook on add/remove operations"), 0},
-    {"if", 0, 0},
-    {"input-format <format>", I18N_NOOP("How to interpret the input data."), "search"},
-    {"if-opts", 0, 0},
-    {"input-format-options <options>", I18N_NOOP("Input options for the selected format"), 0},
-    {"of", 0, 0},
-    {"output-format <format>", I18N_NOOP("How to present the output data."), "vcard"},
-    {"of-opts", 0, 0},
-    {"output-format-options <options>", I18N_NOOP("Output options for the selected format"), 0},
-    {"ic", 0, 0},
-    {"input-codec <textcodec>", I18N_NOOP("How to convert the input text."), "local"},
-    {"oc", 0, 0},
-    {"output-codec <textcodec>", I18N_NOOP("How to convert the output text."), "local"},
-    {"match-case",
-     I18N_NOOP("Match key fields case sensitive. UID is always matched case sensitive"), 0},
-    {"+[input data]", I18N_NOOP("Input to use instead of reading stdin"), 0},
-    KCmdLineLastOption
-};
-
 bool checkForFormatHelp(KCmdLineArgs* args, FormatFactory* factory);
 bool checkForCodecHelp(KCmdLineArgs* args);
 
@@ -86,17 +54,70 @@ using std::endl;
 
 int main(int argc, char** argv)
 {
-    KAboutData aboutData("kabcclient", I18N_NOOP("KABC client"), version,
-                         I18N_NOOP("KDE addressbook commandline client"),
+    KAboutData aboutData("kabcclient", 0, ki18n("KABC client"), version,
+                         ki18n("KDE addressbook commandline client"),
                          KAboutData::License_GPL_V2);
 
-    aboutData.addAuthor("Kevin Krammer", I18N_NOOP("Primary Author"), "kevin.krammer@gmx.at");
+    aboutData.addAuthor(ki18n("Kevin Krammer"), ki18n("Primary Author"), "kevin.krammer@gmx.at");
 
     QString commandName = QFileInfo(QFile::decodeName(argv[0])).fileName();
     if (commandName == "kabc2mutt")
     {
         return handleKABC2Mutt(argc, argv);
     }
+
+
+    KCmdLineOptions cmdLineOptions;
+
+    cmdLineOptions.add("A");
+
+    cmdLineOptions.add("add", ki18n("Add input data as new addressbook entries"));
+
+    cmdLineOptions.add("R");
+
+    cmdLineOptions.add("remove", ki18n("Remove entries matching the input data"));
+
+    cmdLineOptions.add("M");
+
+    cmdLineOptions.add("merge", ki18n("Merge input data into the addressbook"));
+
+    cmdLineOptions.add("S");
+
+    cmdLineOptions.add("search", ki18n("Search for entries matching the input data"));
+
+    cmdLineOptions.add("L");
+
+    cmdLineOptions.add("list", ki18n("List all entries in address book"));
+
+    cmdLineOptions.add("nosave", ki18n("Do not save changes to the addressbook on add/remove operations"));
+
+    cmdLineOptions.add("if");
+
+    cmdLineOptions.add("input-format <format>", ki18n("How to interpret the input data."), "search");
+
+    cmdLineOptions.add("if-opts");
+
+    cmdLineOptions.add("input-format-options <options>", ki18n("Input options for the selected format"));
+
+    cmdLineOptions.add("of");
+
+    cmdLineOptions.add("output-format <format>", ki18n("How to present the output data."), "vcard");
+
+    cmdLineOptions.add("of-opts");
+
+    cmdLineOptions.add("output-format-options <options>", ki18n("Output options for the selected format"));
+
+    cmdLineOptions.add("ic");
+
+    cmdLineOptions.add("input-codec <textcodec>", ki18n("How to convert the input text."), "local");
+
+    cmdLineOptions.add("oc");
+
+    cmdLineOptions.add("output-codec <textcodec>", ki18n("How to convert the output text."), "local");
+
+    cmdLineOptions.add("match-case", ki18n("Match key fields case sensitive. UID is always matched case sensitive"));
+
+    cmdLineOptions.add("+[input data]", ki18n("Input to use instead of reading stdin"));
 
     KCmdLineArgs::addCmdLineOptions(cmdLineOptions);
     KCmdLineArgs::init(argc, argv, &aboutData);
@@ -143,65 +164,63 @@ int main(int argc, char** argv)
 
     KABCClient client(operation, &formatFactory);
 
-    if (!client.setInputFormat(args->getOption("input-format")))
+    if (!client.setInputFormat(args->getOption("input-format").toLocal8Bit()))
     {
         const QString error = i18n("Invalid input format \"%1\". See --input-format help",
                                    optionAsString(args, "input-format"));
-        KCmdLineArgs::usage(error);
+        KCmdLineArgs::usageError(error);
         return 1;
     }
 
     if (args->isSet("input-format-options"))
     {
-        if (!client.setInputOptions(args->getOption("input-format-options")))
+        if (!client.setInputOptions(args->getOption("input-format-options").toLocal8Bit()))
         {
             const QString error = i18n("Invalid options for input format \"%1\". "
                                       "See --input-format-options help",
                                       optionAsString(args, "input-format"));
-            KCmdLineArgs::usage(error);
+            KCmdLineArgs::usageError(error);
         }
     }
 
-    if (!client.setOutputFormat(args->getOption("output-format")))
+    if (!client.setOutputFormat(args->getOption("output-format").toLocal8Bit()))
     {
         const QString error = i18n("Invalid output format \"%1\". See --output-format help",
                                    optionAsString(args, "output-format"));
-        KCmdLineArgs::usage(error);
+        KCmdLineArgs::usageError(error);
         return 1;
     }
 
     if (args->isSet("output-format-options"))
     {
-        if (!client.setOutputOptions(args->getOption("output-format-options")))
+        if (!client.setOutputOptions(args->getOption("output-format-options").toLocal8Bit()))
         {
             const QString error = i18n("Invalid options for output format \"%1\". "
                                        "See --output-format-options help",
                                        optionAsString(args, "output-format"));
-            KCmdLineArgs::usage(error);
+            KCmdLineArgs::usageError(error);
         }
     }
 
-    QByteArray codecName = args->getOption("input-codec");
-    if (!args->isSet("input-codec") && args->getOption("input-format") == QByteArray("vcard"))
+    QString codecName = args->getOption("input-codec");
+    if (!args->isSet("input-codec") && args->getOption("input-format") == QString("vcard"))
         codecName = "UTF8";
 
-    if (!client.setInputCodec(codecName))
+    if (!client.setInputCodec(codecName.toLocal8Bit()))
     {
-        const QString error = i18n("Invalid input codec \"%1\"",
-                                   QString::fromLocal8Bit(codecName));
-        KCmdLineArgs::usage(error);
+        const QString error = i18n("Invalid input codec \"%1\"", codecName);
+        KCmdLineArgs::usageError(error);
         return 1;
     }
 
     codecName = args->getOption("output-codec");
-    if (!args->isSet("output-codec") && args->getOption("output-format") == QByteArray("vcard"))
+    if (!args->isSet("output-codec") && args->getOption("output-format") == QString("vcard"))
         codecName = "UTF8";
 
-    if (!client.setOutputCodec(codecName))
+    if (!client.setOutputCodec(codecName.toLocal8Bit()))
     {
-        const QString error = i18n("Invalid output codec \"%1\"",
-                                   QString::fromLocal8Bit(codecName));
-        KCmdLineArgs::usage(error);
+        const QString error = i18n("Invalid output codec \"%1\"", codecName);
+        KCmdLineArgs::usageError(error);
         return 1;
     }
 
@@ -220,7 +239,7 @@ int main(int argc, char** argv)
     {
         for (int i = 0; i < args->count(); ++i)
         {
-            sstream << args->arg(i) << endl;
+            sstream << args->arg(i).toLocal8Bit().data() << endl;
         }
 
         client.setInputStream(&sstream);
@@ -275,12 +294,12 @@ bool checkForFormatHelp(KCmdLineArgs* args, FormatFactory* factory)
     {
         formatHelpRequested = true;
 
-        InputFormat* format = factory->inputFormat(args->getOption("input-format"));
+        InputFormat* format = factory->inputFormat(args->getOption("input-format").toLocal8Bit());
         if (format == 0)
         {
             const QString error = i18n("Invalid input format \"%1\". See --input-format help",
                                        optionAsString(args, "input-format"));
-            KCmdLineArgs::usage(error);
+            KCmdLineArgs::usageError(error);
             exit(1);
         }
 
@@ -329,12 +348,12 @@ bool checkForFormatHelp(KCmdLineArgs* args, FormatFactory* factory)
     {
         formatHelpRequested = true;
 
-        OutputFormat* format = factory->outputFormat(args->getOption("output-format"));
+        OutputFormat* format = factory->outputFormat(args->getOption("output-format").toLocal8Bit());
         if (format == 0)
         {
             const QString error = i18n("Invalid output format \"%1\". See --output-format help",
                                        optionAsString(args, "output-format"));
-            KCmdLineArgs::usage(error);
+            KCmdLineArgs::usageError(error);
             exit(1);
         }
 
@@ -399,29 +418,29 @@ bool checkForCodecHelp(KCmdLineArgs* args)
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
 
-static KCmdLineOptions kabc2muttCmdLineOptions[] =
-{
-    {"query <substring>",
-     I18N_NOOP("Only show contacts where name or address matches <substring>"), 0},
-    {"format <format>",
-     I18N_NOOP("Default format is 'alias'. 'query' returns email<tab>name<tab>, "
-               "as needed by mutt's query_command"), "alias"},
-    {"alternate-key-format",
-     I18N_NOOP("Default key format is 'JohDoe', this option turns it into 'jdoe'"), 0},
-    {"ignore-case", I18N_NOOP("Make queries case insensitive"), 0},
-    {"all-addresses", I18N_NOOP("Return all mail addresses, not just the preferred one"), 0},
-    KCmdLineLastOption
-};
-
 int handleKABC2Mutt(int argc, char** argv)
 {
-    KAboutData aboutData("kabc2mutt", I18N_NOOP("kabc2mutt"), version,
-                         I18N_NOOP("kabc - mutt converter"),
+    KAboutData aboutData("kabc2mutt", 0, ki18n("kabc2mutt"), version,
+                         ki18n("kabc - mutt converter"),
                          KAboutData::License_GPL_V2);
 
-    aboutData.addAuthor("Tobias König",  I18N_NOOP("Primary Author"),
+    aboutData.addAuthor(ki18n("Tobias König"),  ki18n("Primary Author"),
                         "tokoe@kde.org");
-    aboutData.addAuthor("Kevin Krammer", I18N_NOOP("Contributor"), "kevin.krammer@gmx.at");
+    aboutData.addAuthor(ki18n("Kevin Krammer"), ki18n("Contributor"), "kevin.krammer@gmx.at");
+
+
+    KCmdLineOptions kabc2muttCmdLineOptions;
+
+    kabc2muttCmdLineOptions.add("query <substring>", ki18n("Only show contacts where name or address matches <substring>"));
+
+    kabc2muttCmdLineOptions.add("format <format>", ki18n("Default format is 'alias'. 'query' returns email<tab>name<tab>, "
+               "as needed by mutt's query_command"), "alias");
+
+    kabc2muttCmdLineOptions.add("alternate-key-format", ki18n("Default key format is 'JohDoe', this option turns it into 'jdoe'"));
+
+    kabc2muttCmdLineOptions.add("ignore-case", ki18n("Make queries case insensitive"));
+
+    kabc2muttCmdLineOptions.add("all-addresses", ki18n("Return all mail addresses, not just the preferred one"));
 
     KCmdLineArgs::addCmdLineOptions(kabc2muttCmdLineOptions);
     KCmdLineArgs::init(argc, argv, &aboutData);
@@ -440,7 +459,7 @@ int handleKABC2Mutt(int argc, char** argv)
     client.setInputFormat("email");
     client.setOutputFormat("mutt");
 
-    QString options = QString::fromLocal8Bit(args->getOption("format"));
+    QString options = args->getOption("format");
 
     if (args->isSet("alternate-key-format"))
     {
@@ -461,7 +480,7 @@ int handleKABC2Mutt(int argc, char** argv)
     std::stringstream sstream;
     if (operation == KABCClient::Search)
     {
-        sstream << args->getOption("query").data() << endl;
+        sstream << args->getOption("query").toLocal8Bit().data() << endl;
         client.setInputStream(&sstream);
     }
 
@@ -502,7 +521,7 @@ QString optionAsString(KCmdLineArgs* args, const char* option)
 {
     if (args == 0 || option == 0) return QString();
 
-    return QString::fromLocal8Bit(args->getOption(option));
+    return args->getOption(option);
 }
 
 // End of file

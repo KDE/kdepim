@@ -17,16 +17,16 @@ static const char version[] = "0.3";
 
 int main(int argc, char *argv[])
 {
-	KAboutData aboutData(argv[0], I18N_NOOP("Korn"),
-		version, description, KAboutData::License_GPL,
-		I18N_NOOP("(c) 1999-2004, The Korn Developers"));
-	aboutData.addAuthor("Sirtaj Singh Kang",0, "taj@kde.org");
-	aboutData.addAuthor("Cristian Tibirna",0, "tibirna@kde.org");
-	aboutData.addAuthor("Kurt Granroth",0, "granroth@kde.org");
-	aboutData.addAuthor("Rik Hemsley",0, "rik@kde.org");
-	aboutData.addAuthor("Fixes by Jörg Habenicht",0, "j.habenicht@europemail.com");
-	aboutData.addAuthor("Preview by Heiner Eichmann",0, "h.eichmann@gmx.de");
-	aboutData.addAuthor("Mart Kelder",0,"mart.kde@hccnet.nl");
+	KAboutData aboutData(argv[0], 0, ki18n("Korn"),
+		version, ki18n(description), KAboutData::License_GPL,
+		ki18n("(c) 1999-2004, The Korn Developers"));
+	aboutData.addAuthor(ki18n("Sirtaj Singh Kang"),KLocalizedString(), "taj@kde.org");
+	aboutData.addAuthor(ki18n("Cristian Tibirna"),KLocalizedString(), "tibirna@kde.org");
+	aboutData.addAuthor(ki18n("Kurt Granroth"),KLocalizedString(), "granroth@kde.org");
+	aboutData.addAuthor(ki18n("Rik Hemsley"),KLocalizedString(), "rik@kde.org");
+	aboutData.addAuthor(ki18n("Fixes by Jörg Habenicht"),KLocalizedString(), "j.habenicht@europemail.com");
+	aboutData.addAuthor(ki18n("Preview by Heiner Eichmann"),KLocalizedString(), "h.eichmann@gmx.de");
+	aboutData.addAuthor(ki18n("Mart Kelder"),KLocalizedString(),"mart.kde@hccnet.nl");
 	
 	KCmdLineArgs::init( argc, argv, &aboutData );
 	KUniqueApplication::addCmdLineOptions();

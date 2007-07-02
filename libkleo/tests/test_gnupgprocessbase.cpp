@@ -119,7 +119,7 @@ int main( int argc, char** argv ) {
     kDebug() << "Need at least two arguments" << endl;
     return 1;
   }
-  KAboutData aboutData( "test_gnupgprocessbase", "GnuPGProcessBase Test", "0.1" );
+  KAboutData aboutData( "test_gnupgprocessbase", 0, ki18n("GnuPGProcessBase Test"), "0.1" );
   KCmdLineArgs::init( &aboutData );
   KApplication app;
 

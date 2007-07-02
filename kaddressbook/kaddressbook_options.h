@@ -27,17 +27,18 @@
 #include <kcmdlineargs.h>
 #include <klocale.h>
 
-static KCmdLineOptions kaddressbook_options[] =
+static KCmdLineOptions kaddressbook_options ()
 {
-  { "a", 0 , 0 },
-  { "addr <email>", I18N_NOOP( "Shows contact editor with given email address" ), 0 },
-  { "uid <uid>", I18N_NOOP( "Shows contact editor with given uid" ), 0 },
-  { "editor-only", I18N_NOOP( "Launches in editor only mode" ), 0 },
-  { "new-contact", I18N_NOOP( "Launches editor for the new contact" ), 0 },
-  { "document <file>", I18N_NOOP( "Work on given file" ), 0 },
-  { "+[URL]", I18N_NOOP( "Import the given vCard" ), 0 },
-  KCmdLineLastOption
-};
+  KCmdLineOptions options;
+  options.add( "a" );
+  options.add( "addr <email>", ki18n( "Shows contact editor with given email address" ) );
+  options.add( "uid <uid>", ki18n( "Shows contact editor with given uid" ) );
+  options.add( "editor-only", ki18n( "Launches in editor only mode" ) );
+  options.add( "new-contact", ki18n( "Launches editor for the new contact" ) );
+  options.add( "document <file>", ki18n( "Work on given file" ) );
+  options.add( "+[URL]", ki18n( "Import the given vCard" ) );
+  return options;
+}
 
 #endif /* KADDRESSBOOK_OPTIONS_H */
 

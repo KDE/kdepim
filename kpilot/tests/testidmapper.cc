@@ -286,7 +286,7 @@ bool test7()
 
 int main(int argc, char **argv)
 {
-	KAboutData aboutData("testidmapper","Test IDMapper","0.1");
+	KAboutData aboutData("testidmapper", 0,ki18n("Test IDMapper"),"0.1");
 	KCmdLineArgs::init(argc,argv,&aboutData);
 
 	KApplication app( false);

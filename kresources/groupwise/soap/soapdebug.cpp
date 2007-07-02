@@ -30,26 +30,23 @@ class ResourceMemory : public ResourceCached
 
 }
 
-static const KCmdLineOptions options[] =
-{
-  { "s", 0, 0 },
-  { "server <hostname>", I18N_NOOP("Server"), 0 },
-  { "u", 0, 0 },
-  { "user <string>", I18N_NOOP("User"), 0 },
-  { "p", 0, 0 },
-  { "password <string>", I18N_NOOP("Password"), 0 },
-  { "f", 0, 0 },
-  { "freebusy-user <string>", I18N_NOOP("Free/Busy user name"), 0 },
-  { "addressbook-id <string>", I18N_NOOP("Addressbook identifier"), 0 },
-  KCmdLineLastOption
-};
-
 int main( int argc, char **argv )
 {
-  KAboutData aboutData( "soapdebug", I18N_NOOP("Groupwise Soap Debug"), "0.1" );
-  aboutData.addAuthor( "Cornelius Schumacher", 0, "schumacher@kde.org" );
+  KAboutData aboutData( "soapdebug", 0, ki18n("Groupwise Soap Debug"), "0.1" );
+  aboutData.addAuthor( ki18n("Cornelius Schumacher"), KLocalizedString(), "schumacher@kde.org" );
 
   KCmdLineArgs::init( argc, argv, &aboutData );
+
+  KCmdLineOptions options;
+  options.add("s");
+  options.add("server <hostname>", ki18n("Server"));
+  options.add("u");
+  options.add("user <string>", ki18n("User"));
+  options.add("p");
+  options.add("password <string>", ki18n("Password"));
+  options.add("f");
+  options.add("freebusy-user <string>", ki18n("Free/Busy user name"));
+  options.add("addressbook-id <string>", ki18n("Addressbook identifier"));
   KCmdLineArgs::addCmdLineOptions( options );
 
   KApplication app;

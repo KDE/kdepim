@@ -1325,15 +1325,6 @@ void PilotDaemon::updateTrayStatus(const QString &s)
 #endif
 }
 
-static KCmdLineOptions daemonoptions[] = {
-#ifdef DEBUG
-	{"debug <level>", I18N_NOOP("Set debugging level"), "0"},
-#endif
-	{ "device <device>", I18N_NOOP("Device to try first"), ""},
-	{"fail-silently", I18N_NOOP("Exit instead of complaining about bad configuration files"), 0},
-	KCmdLineLastOption
-} ;
-
 
 int main(int argc, char **argv)
 {
@@ -1341,28 +1332,35 @@ int main(int argc, char **argv)
 
 	KLocale::setMainCatalog("kpilot");
 
-	KAboutData about("kpilotDaemon",
-		I18N_NOOP("KPilot Daemon"),
+	KAboutData about("kpilotDaemon", 0,
+		ki18n("KPilot Daemon"),
 		KPILOT_VERSION,
-		"KPilot - HotSync software for KDE\n\n",
+		ki18n("KPilot - HotSync software for KDE\n\n"),
 		KAboutData::License_GPL,
-		"(c) 1998-2000,2001, Dan Pilone (c) 2000-2004, Adriaan de Groot",
-		0L,
+		ki18n("(c) 1998-2000,2001, Dan Pilone (c) 2000-2004, Adriaan de Groot"),
+		ki18n(0L),
 		"http://www.kpilot.org/"
 		);
-	about.addAuthor("Dan Pilone",
-		I18N_NOOP("Project Leader"),
+	about.addAuthor(ki18n("Dan Pilone"),
+		ki18n("Project Leader"),
 		"pilone@slac.com");
-	about.addAuthor("Adriaan de Groot",
-		I18N_NOOP("Maintainer"),
+	about.addAuthor(ki18n("Adriaan de Groot"),
+		ki18n("Maintainer"),
 		"groot@kde.org", "http://www.kpilot.org/");
-	about.addAuthor("Reinhold Kainhofer",
-		I18N_NOOP("Developer"),
+	about.addAuthor(ki18n("Reinhold Kainhofer"),
+		ki18n("Developer"),
 		"reinhold@kainhofer.com", "http://reinhold.kainhofer.com/Linux/");
 	aboutData = &about;
 
 
 	KCmdLineArgs::init(argc, argv, &about);
+
+	KCmdLineOptions daemonoptions;
+	#ifdef DEBUG
+	daemonoptions.add("debug <level>", ki18n("Set debugging level"), "0");
+	#endif
+	daemonoptions.add("device <device>", ki18n("Device to try first"));
+	daemonoptions.add("fail-silently", ki18n("Exit instead of complaining about bad configuration files"));
 	KCmdLineArgs::addCmdLineOptions(daemonoptions,"kpilotconfig");
 	KUniqueApplication::addCmdLineOptions();
 	KCmdLineArgs *p = KCmdLineArgs::parsedArgs();

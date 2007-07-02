@@ -42,21 +42,18 @@
 #include "../conduits/vcalconduit/kcalRecord.cc"
 #include "../conduits/vcalconduit/vcalRecord.cc"
 
-static const KCmdLineOptions options[] =
-{
-	{"verbose", "Verbose output", 0},
-	{"data-dir <path>","Set data directory", "."},
-	{"vcal-file <path>","Set vcal file", 0},
-	KCmdLineLastOption
-};
-
 
 
 int main(int argc, char **argv)
 {
 
-	KAboutData aboutData("importdatebook","Import Date Book","0.1");
+	KAboutData aboutData("importdatebook", 0,ki18n("Import Date Book"),"0.1");
 	KCmdLineArgs::init(argc,argv,&aboutData);
+
+	KCmdLineOptions options;
+	options.add("verbose", ki18n("Verbose output"));
+	options.add("data-dir <path>", ki18n("Set data directory"), ".");
+	options.add("vcal-file <path>", ki18n("Set vcal file"));
 	KCmdLineArgs::addCmdLineOptions( options );
 
 	KApplication app( false, false );

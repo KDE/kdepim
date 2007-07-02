@@ -27,19 +27,16 @@
 
 #include "groupwarewizard.h"
 
-static const KCmdLineOptions options[] =
-{
-  { "serverType <type>", "The server type", 0 },
-  KCmdLineLastOption
-};
-
 int main( int argc, char **argv )
 {
   KLocale::setMainCatalog( "kdepimwizards" );
 
-  KAboutData aboutData( "groupwarewizard",
-                        I18N_NOOP( "KDE-PIM Groupware Configuration Wizard" ), "0.1" );
+  KAboutData aboutData( "groupwarewizard", 0,
+                        ki18n( "KDE-PIM Groupware Configuration Wizard" ), "0.1" );
   KCmdLineArgs::init( argc, argv, &aboutData );
+
+  KCmdLineOptions options;
+  options.add("serverType <type>", ki18n("The server type"));
   KCmdLineArgs::addCmdLineOptions( options );
 
   KApplication app;

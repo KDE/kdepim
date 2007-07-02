@@ -114,7 +114,7 @@ int main( int argc, char *argv[] )
   KLocale::setMainCatalog( "kaddressbook" );
 
   KCmdLineArgs::init( argc, argv, KABCore::createAboutData() );
-  KCmdLineArgs::addCmdLineOptions( kaddressbook_options );
+  KCmdLineArgs::addCmdLineOptions( kaddressbook_options() );
   KUniqueApplication::addCmdLineOptions();
 
   if ( !KAddressBookApp::start() )

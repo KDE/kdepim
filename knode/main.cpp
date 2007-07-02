@@ -29,7 +29,7 @@ int main(int argc, char* argv[])
   AboutData aboutData;
 
   KCmdLineArgs::init( argc, argv, &aboutData );
-  KCmdLineArgs::addCmdLineOptions( knode_options );
+  KCmdLineArgs::addCmdLineOptions( knode_options() );
   KUniqueApplication::addCmdLineOptions();
 
   if (!KNApplication::start())

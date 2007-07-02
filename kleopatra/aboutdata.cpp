@@ -53,37 +53,37 @@ static const about_data authors[] = {
 
 
 static const about_data credits[] = {
-  { "David Faure",
+  { I18N_NOOP("David Faure"),
     I18N_NOOP("Backend configuration framework, KIO integration"),
     "faure@kde.org", 0 },
-  { "Michel Boyer de la Giroday",
+  { I18N_NOOP("Michel Boyer de la Giroday"),
     I18N_NOOP("Key-state dependant colors and fonts in the key list"),
     "michel@klaralvdalens-datakonsult.se", 0 },
-  { "Daniel Molkentin",
+  { I18N_NOOP("Daniel Molkentin"),
     I18N_NOOP("Certificate Wizard KIOSK integration, infrastructure"),
     "molkentin@kde.org", 0 },
-  { "Ralf Nolden",
+  { I18N_NOOP("Ralf Nolden"),
     I18N_NOOP("Support for obsolete EMAIL RDN in Certificate Wizard"),
     "nolden@kde.org", 0 },
-  { "Karl-Heinz Zimmer",
+  { I18N_NOOP("Karl-Heinz Zimmer"),
     I18N_NOOP("DN display ordering support, infrastructure"),
     "khz@kde.org", 0 },
 };
 
 
 AboutData::AboutData()
-  : KAboutData( "kleopatra", I18N_NOOP("Kleopatra"),
-		kleopatra_version, description, License_GPL,
-		"(c) 2002 Steffen Hansen, Jesper Pedersen,\n"
-		"Kalle Dalheimer, Klar\xC3\xA4lvdalens Datakonsult AB\n\n"
-		"(c) 2004 Marc Mutz, Klar\xC3\xA4lvdalens Datakonsult AB" )
+  : KAboutData( "kleopatra", 0, ki18n("Kleopatra"),
+		kleopatra_version, ki18n(description), License_GPL,
+		ki18n("(c) 2002 Steffen Hansen, Jesper Pedersen,\n"
+		      "Kalle Dalheimer, Klar\xC3\xA4lvdalens Datakonsult AB\n\n"
+		      "(c) 2004 Marc Mutz, Klar\xC3\xA4lvdalens Datakonsult AB") )
 {
   using ::authors;
   using ::credits;
   for ( unsigned int i = 0 ; i < sizeof authors / sizeof *authors ; ++i )
-    addAuthor( authors[i].name, authors[i].desc,
+    addAuthor( ki18n(authors[i].name), ki18n(authors[i].desc),
 	       authors[i].email, authors[i].web );
   for ( unsigned int i = 0 ; i < sizeof credits / sizeof *credits ; ++i )
-    addCredit( credits[i].name, credits[i].desc,
+    addCredit( ki18n(credits[i].name), ki18n(credits[i].desc),
 	       credits[i].email, credits[i].web );
 }

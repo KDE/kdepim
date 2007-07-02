@@ -25,17 +25,17 @@
 
 
 AboutData::AboutData()
-    : KAboutData("kmobiletools", I18N_NOOP("KMobileTools"), KMOBILETOOLS_VERSION, I18N_NOOP("A KDE Mobile Phone Management Tool"),
-                 License_GPL, I18N_NOOP("(C) 2007 KMobileTools developers"), 0,
+    : KAboutData("kmobiletools", 0, ki18n("KMobileTools"), KMOBILETOOLS_VERSION, ki18n("A KDE Mobile Phone Management Tool"),
+                 License_GPL, ki18n("(C) 2007 KMobileTools developers"), KLocalizedString(),
                      "http://www.kmobiletools.org/")
 {
     setVersion(KMOBILETOOLS_VERSION);
-    addAuthor( "Marco Gulino", I18N_NOOP("Maintainer, core developer, AT engine and coordinator"), "marco@kmobiletools.org" );
-    addAuthor( "Stefan Bogner", I18N_NOOP("Gammu engine"), "bochi@kmobiletools.org" );
+    addAuthor( ki18n("Marco Gulino"), ki18n("Maintainer, core developer, AT engine and coordinator"), "marco@kmobiletools.org" );
+    addAuthor( ki18n("Stefan Bogner"), ki18n("Gammu engine"), "bochi@kmobiletools.org" );
 
-    addCredit( "Pino Toscano", I18N_NOOP("Help porting to KDE4"), "toscano.pino@tiscali.it" );
-    addCredit( "Alexander Rensmann", I18N_NOOP("AT engine, Siemens support"), "zerraxys@gmx.net" );
-    addCredit( "Lee Olson", I18N_NOOP("KMobileTools main icon, images, artwork"), "clearbeast@gmail.com" );
+    addCredit( ki18n("Pino Toscano"), ki18n("Help porting to KDE4"), "toscano.pino@tiscali.it" );
+    addCredit( ki18n("Alexander Rensmann"), ki18n("AT engine, Siemens support"), "zerraxys@gmx.net" );
+    addCredit( ki18n("Lee Olson"), ki18n("KMobileTools main icon, images, artwork"), "clearbeast@gmail.com" );
 }
 
 AboutData::~AboutData()

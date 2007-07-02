@@ -30,18 +30,14 @@ static const char description[] =
 
 static const char version[] = "0.1";
 
-static KCmdLineOptions options[] =
-{
-//    { "+[URL]", I18N_NOOP( "Document to open" ), 0 },
-    KCmdLineLastOption
-};
-
 int main(int argc, char **argv)
 {
-    KAboutData about("kserialdeviceemulator", I18N_NOOP("KSerialDeviceEmulator"), version, description,
-                     KAboutData::License_GPL, "(C) 2006 Marco Gulino", 0, 0, "marco@kmobiletools.org");
-    about.addAuthor( "Marco Gulino", 0, "marco@kmobiletools.org" );
+    KAboutData about("kserialdeviceemulator", 0, ki18n("KSerialDeviceEmulator"), version, ki18n(description),
+                     KAboutData::License_GPL, ki18n("(C) 2006 Marco Gulino"), KLocalizedString(), 0, "marco@kmobiletools.org");
+    about.addAuthor( ki18n("Marco Gulino"), KLocalizedString(), "marco@kmobiletools.org" );
     KCmdLineArgs::init(argc, argv, &about);
+
+    KCmdLineOptions options;
     KCmdLineArgs::addCmdLineOptions( options );
     KApplication app;
     KSerialDeviceEmulator *mainWin = 0;

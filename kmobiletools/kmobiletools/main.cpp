@@ -33,16 +33,13 @@
 
 // static const char version[] = "0.5.0";
 
-static KCmdLineOptions options[] =
-{
-    { "+[URL]", I18N_NOOP( "Document to open" ), 0 },
-    KCmdLineLastOption
-};
-
 int main(int argc, char **argv)
 {
     AboutData *aboutdata=new AboutData();
     KCmdLineArgs::init(argc, argv, aboutdata );
+
+    KCmdLineOptions options;
+    options.add("+[URL]", ki18n( "Document to open" ));
     KCmdLineArgs::addCmdLineOptions( options );
     KApplication app;
 

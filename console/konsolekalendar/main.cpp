@@ -67,119 +67,77 @@ static const char progVersion[] = "1.3.5";
 static const char progDesc[] = "A command line interface to KDE calendars";
 static const char progURL[] = "pim.kde.org/components/konsolekalendar.php";
 
-static KCmdLineOptions options[] =
-{
-  { "verbose",
-    I18N_NOOP( "Print helpful runtime messages" ), 0 },
-  { "dry-run",
-    I18N_NOOP( "Print what would have been done, but do not execute" ), 0 },
-  { "file <calendar-file>",
-    I18N_NOOP( "Specify which calendar you want to use" ), 0 },
-
-  { ":",
-    I18N_NOOP( "Incidence types (these options can be combined):" ), 0 },
-  { "event",
-    I18N_NOOP( "  Operate for Events only (Default)" ), 0 },
-  { "todo",
-    I18N_NOOP( "  Operate for To-dos only [NOT WORKING YET]" ), 0 },
-  { "journal",
-    I18N_NOOP( "  Operate for Journals only [NOT WORKING YET]" ), 0 },
-
-  { ":",
-    I18N_NOOP( "Major operation modes:" ), 0 },
-  { "view",
-    I18N_NOOP( "  Print incidences in specified export format" ), 0 },
-  { "add",
-    I18N_NOOP( "  Insert an incidence into the calendar" ), 0 },
-  { "change",
-    I18N_NOOP( "  Modify an existing incidence" ), 0 },
-  { "delete",
-    I18N_NOOP( "  Remove an existing incidence" ), 0 },
-  { "create",
-    I18N_NOOP( "  Create new calendar file if one does not exist" ), 0 },
-  { "import <import-file>",
-    I18N_NOOP( "  Import this calendar to main calendar" ), 0 },
-  { ":",
-    I18N_NOOP( "Operation modifiers:" ), 0 },
-  { "all",
-    I18N_NOOP( "  View all calendar entries, ignoring date/time options" ), 0 },
-  { "next",
-    I18N_NOOP( "  View next activity in calendar" ), 0 },
-  { "show-next <days>",
-    I18N_NOOP( "  From start date show next # days' activities" ), 0 },
-  { "uid <uid>",
-    I18N_NOOP( "  Incidence Unique-string identifier" ), 0 },
-  { "date <start-date>",
-    I18N_NOOP( "  Start from this day [YYYY-MM-DD]" ), 0 },
-  { "time <start-time>",
-    I18N_NOOP( "  Start from this time [HH:MM:SS]" ), 0 },
-  { "end-date <end-date>",
-    I18N_NOOP( "  End at this day [YYYY-MM-DD]" ), 0 },
-  { "end-time <end-time>",
-    I18N_NOOP( "  End at this time [HH:MM:SS]" ), 0 },
-  { "epoch-start <epoch-time>",
-    I18N_NOOP( " Start from this time [secs since epoch]" ), 0 },
-  { "epoch-end <epoch-time>",
-    I18N_NOOP( "  End at this time [secs since epoch]" ), 0 },
-  { "summary <summary>",
-    I18N_NOOP( "  Add summary to incidence (for add/change modes)" ), 0 },
-  { "description <description>",
-    I18N_NOOP( "Add description to incidence (for add/change modes)" ), 0 },
-  { "location <location>",
-    I18N_NOOP( "  Add location to incidence (for add/change modes)" ), 0 },
-
-  { ":", I18N_NOOP( "Export options:" ), 0 },
-  { "export-type <export-type>",
-    I18N_NOOP( "Export file type (Default: text)" ), 0 },
-  { "export-file <export-file>",
-    I18N_NOOP( "Export to file (Default: stdout)" ), 0 },
-  { "export-list",
-    I18N_NOOP( "  Print list of export types supported and exit" ), 0 },
-
-  { "",
-    I18N_NOOP( "Examples:\n"
-               "  konsolekalendar --view\n"
-               "  konsolekalendar --add --date 2003-06-04 "
-               "--time 10:00 --end-time 12:00 \\\n"
-               "                  --summary \"Doctor Visit\" "
-               "--description \"Get My Head Examined\"\n"
-               "  konsolekalendar --delete --uid KOrganizer-1740326.803" ), 0 },
-
-  { "",
-    I18N_NOOP( "For more information visit the program home page at:\n"
-               "  http://pim.kde.org/components/konsolekalendar.php" ), 0 },
-
-  KCmdLineLastOption
-};
-
 int main( int argc, char *argv[] )
 {
   KAboutData aboutData(
-    progName,                        // internal program name
-    I18N_NOOP( progDisplay ),        // displayable program name.
+    progName, 0,                        // internal program name
+    ki18n( progDisplay ),        // displayable program name.
     progVersion,                     // version string
-    I18N_NOOP( progDesc ),           // short porgram description
-    KAboutData::License_GPL,         // license type
-    "(c) 2002-2005, Tuukka Pasanen and Allen Winter", // copyright statement
-    0,                               // any free form text
+    ki18n( progDesc ),           // short porgram description
+    KAboutData::License_GPL,         ki18n(// license type
+    "(c) 2002-2005, Tuukka Pasanen and Allen Winter"), ki18n(// copyright statement
+    0),                               // any free form text
     progURL,                         // program home page address
     "bugs.kde.org"                   // bug report email address
     );
 
   aboutData.addAuthor(
-    "Tuukka Pasanen",                // developer's name
-    I18N_NOOP( "Primary Author" ),   // task or role
+    ki18n("Tuukka Pasanen"),                // developer's name
+    ki18n( "Primary Author" ),   // task or role
     "illuusio@mailcity.com",         // email address
     0                                // home page or relevant link
     );
   aboutData.addAuthor(
-    "Allen Winter",                  // developer's name
-    I18N_NOOP( "Author" ),           // task or role
+    ki18n("Allen Winter"),                  // developer's name
+    ki18n( "Author" ),           // task or role
     "winter@kde.org",                // email address
     0                                // home page or relevant link
     );
 
   KCmdLineArgs::init( argc, argv, &aboutData, KCmdLineArgs::CmdLineArgNone );
+
+  KCmdLineOptions options;
+  options.add("verbose", ki18n( "Print helpful runtime messages" ));
+  options.add("dry-run", ki18n( "Print what would have been done, but do not execute" ));
+  options.add("file <calendar-file>", ki18n( "Specify which calendar you want to use" ));
+  options.add(":", ki18n( "Incidence types (these options can be combined):" ));
+  options.add("event", ki18n( "  Operate for Events only (Default)" ));
+  options.add("todo", ki18n( "  Operate for To-dos only [NOT WORKING YET]" ));
+  options.add("journal", ki18n( "  Operate for Journals only [NOT WORKING YET]" ));
+  options.add(":", ki18n( "Major operation modes:" ));
+  options.add("view", ki18n( "  Print incidences in specified export format" ));
+  options.add("add", ki18n( "  Insert an incidence into the calendar" ));
+  options.add("change", ki18n( "  Modify an existing incidence" ));
+  options.add("delete", ki18n( "  Remove an existing incidence" ));
+  options.add("create", ki18n( "  Create new calendar file if one does not exist" ));
+  options.add("import <import-file>", ki18n( "  Import this calendar to main calendar" ));
+  options.add(":", ki18n( "Operation modifiers:" ));
+  options.add("all", ki18n( "  View all calendar entries, ignoring date/time options" ));
+  options.add("next", ki18n( "  View next activity in calendar" ));
+  options.add("show-next <days>", ki18n( "  From start date show next # days' activities" ));
+  options.add("uid <uid>", ki18n( "  Incidence Unique-string identifier" ));
+  options.add("date <start-date>", ki18n( "  Start from this day [YYYY-MM-DD]" ));
+  options.add("time <start-time>", ki18n( "  Start from this time [HH:MM:SS]" ));
+  options.add("end-date <end-date>", ki18n( "  End at this day [YYYY-MM-DD]" ));
+  options.add("end-time <end-time>", ki18n( "  End at this time [HH:MM:SS]" ));
+  options.add("epoch-start <epoch-time>", ki18n( " Start from this time [secs since epoch]" ));
+  options.add("epoch-end <epoch-time>", ki18n( "  End at this time [secs since epoch]" ));
+  options.add("summary <summary>", ki18n( "  Add summary to incidence (for add/change modes)" ));
+  options.add("description <description>", ki18n( "Add description to incidence (for add/change modes)" ));
+  options.add("location <location>", ki18n( "  Add location to incidence (for add/change modes)" ));
+  options.add(":", ki18n( "Export options:" ));
+  options.add("export-type <export-type>", ki18n( "Export file type (Default: text)" ));
+  options.add("export-file <export-file>", ki18n( "Export to file (Default: stdout)" ));
+  options.add("export-list", ki18n( "  Print list of export types supported and exit" ));
+  options.add("", ki18n( "Examples:\n"
+               "  konsolekalendar --view\n"
+               "  konsolekalendar --add --date 2003-06-04 "
+               "--time 10:00 --end-time 12:00 \\\n"
+               "                  --summary \"Doctor Visit\" "
+               "--description \"Get My Head Examined\"\n"
+               "  konsolekalendar --delete --uid KOrganizer-1740326.803" ));
+  options.add("", ki18n( "For more information visit the program home page at:\n"
+               "  http://pim.kde.org/components/konsolekalendar.php" ));
   KCmdLineArgs::addCmdLineOptions( options ); // Add our own options.
 
   KApplication app(

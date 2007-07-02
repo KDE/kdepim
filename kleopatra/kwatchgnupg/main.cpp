@@ -79,9 +79,8 @@ int main( int argc, char** argv )
   AboutData aboutData;
 
   KCmdLineArgs::init(argc, argv, &aboutData);
-  static const KCmdLineOptions options[] = {
-	KCmdLineLastOption// End of options.
-  };
+
+  KCmdLineOptions options;
   KCmdLineArgs::addCmdLineOptions( options );
   KWatchGnuPGApplication::addCmdLineOptions();
 

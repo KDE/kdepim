@@ -47,12 +47,11 @@ int main( int argc, char** argv )
   AboutData aboutData;
 
   KCmdLineArgs::init(argc, argv, &aboutData);
-  static const KCmdLineOptions options[] = {
-            { "external" , I18N_NOOP("Search for external certificates initially"), 0 },
-            { "query " , I18N_NOOP("Initial query string"), 0 },
-	    { "import-certificate ", I18N_NOOP("Name of certificate file to import"), 0 },
-	    KCmdLineLastOption// End of options.
-  };
+
+  KCmdLineOptions options;
+  options.add("external", ki18n("Search for external certificates initially"));
+  options.add("query ", ki18n("Initial query string"));
+  options.add("import-certificate ", ki18n("Name of certificate file to import"));
   KCmdLineArgs::addCmdLineOptions( options );
 
   KApplication app;
@@ -70,8 +69,8 @@ int main( int argc, char** argv )
   }
 
   CertManager* manager = new CertManager( args->isSet("external"),
-					  QString::fromLocal8Bit(args->getOption("query")),
-					  QString::fromLocal8Bit(args->getOption("import-certificate")) );
+					  args->getOption("query"),
+					  args->getOption("import-certificate") );
 
   args->clear();
   manager->show();
