@@ -43,7 +43,7 @@ kde4_add_kcfg_files(kmobiletools_LIB_SRCS kmobiletools_cfg.kcfgc kmobiletools_de
 
 kde4_add_library(kmobiletools SHARED ${kmobiletools_LIB_SRCS})
 
-target_link_libraries(kmobiletools kmime akonadi ${KDE4_KDECORE_LIBS} ${KDE4_KHTML_LIBS} ${KDE4_THREADWEAVER_LIBRARY} ${KDE4_KABC_LIBS} ${KDE4_KCAL_LIBS})
+target_link_libraries(kmobiletools ${KDE4_KDECORE_LIBS} ${KDE4_KHTML_LIBS} ${KDE4_THREADWEAVER_LIBRARY} ${KDE4_KABC_LIBS} ${KDE4_KCAL_LIBS} ${KDE4_KMIME_LIBS} akonadi)
 
 set_target_properties(kmobiletools PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
 install(TARGETS kmobiletools DESTINATION ${LIB_INSTALL_DIR} )
