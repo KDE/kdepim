@@ -709,7 +709,7 @@ int main(int argc, char **argv)
 	kpilotoptions.add("s");
 	kpilotoptions.add("setup", ki18n("Setup the Pilot device, conduits and other parameters"), 0L);
 	kpilotoptions.add("debug <level>", ki18n("Set debugging level"), "0");
-	KCmdLineArgs::addCmdLineOptions(kpilotoptions, "kpilot");
+	KCmdLineArgs::addCmdLineOptions(kpilotoptions, ki18n("kpilot"));
 	KUniqueApplication::addCmdLineOptions();
 	KCmdLineArgs *p = KCmdLineArgs::parsedArgs();
 

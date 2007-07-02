@@ -1361,7 +1361,7 @@ int main(int argc, char **argv)
 	#endif
 	daemonoptions.add("device <device>", ki18n("Device to try first"));
 	daemonoptions.add("fail-silently", ki18n("Exit instead of complaining about bad configuration files"));
-	KCmdLineArgs::addCmdLineOptions(daemonoptions,"kpilotconfig");
+	KCmdLineArgs::addCmdLineOptions(daemonoptions, ki18n("kpilotconfig"));
 	KUniqueApplication::addCmdLineOptions();
 	KCmdLineArgs *p = KCmdLineArgs::parsedArgs();
 

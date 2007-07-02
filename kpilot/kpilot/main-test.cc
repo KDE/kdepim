@@ -320,8 +320,8 @@ int main(int argc, char **argv)
 	generalOptions.add("show <what>", ki18n("Show KPilot configuration information"), "help");
 	#ifdef DEBUG
 	generalOptions.add("debug <level>", ki18n("Set the debug level"), "1");
-	KCmdLineArgs::addCmdLineOptions(generalOptions,
-		I18N_NOOP("General"));
+	#endif
+	KCmdLineArgs::addCmdLineOptions(generalOptions, ki18n("General"));
 
 	KCmdLineOptions conduitOptions;
 	conduitOptions.add("T");
@@ -332,7 +332,7 @@ int main(int argc, char **argv)
 	conduitOptions.add("PCtoHH", ki18n("Copy Desktop to Pilot."));
 	conduitOptions.add("loop", ki18n("Repeated perform action - only useful for --list"));
 	KCmdLineArgs::addCmdLineOptions(conduitOptions,
-		I18N_NOOP("Conduit Actions"),"conduit");
+		ki18n("Conduit Actions"),"conduit");
 
 	KCmdLineArgs::addStdCmdLineOptions();
 
