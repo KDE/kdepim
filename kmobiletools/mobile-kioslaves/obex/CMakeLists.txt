@@ -10,7 +10,7 @@ kde4_automoc(${kio_obex2_PART_SRCS})
 
 kde4_add_plugin(kio_obex2 ${kio_obex2_PART_SRCS})
 
-target_link_libraries(kio_obex2  ${KDE4_KDECORE_LIBS} ${KDE4_KIO_LIBS} bfb multicobex bluetooth openobex obexftp )
+target_link_libraries(kio_obex2  ${KDE4_KIO_LIBS} bfb multicobex bluetooth openobex obexftp )
 
 install(TARGETS kio_obex2 DESTINATION ${PLUGIN_INSTALL_DIR} )
 

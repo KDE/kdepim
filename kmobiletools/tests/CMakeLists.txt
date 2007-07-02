@@ -1,4 +1,5 @@
 
+include_directories(${CMAKE_SOURCE_DIR}/kmobiletools/libkmobiletools  )
 # add_subdirectory( kserialdeviceemulator )
 add_subdirectory ( testlibkmobiletools )
 

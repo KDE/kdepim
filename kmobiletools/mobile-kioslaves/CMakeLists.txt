@@ -12,7 +12,7 @@ kde4_automoc(${kio_mobile_PART_SRCS})
 
 kde4_add_plugin(kio_mobile ${kio_mobile_PART_SRCS})
 
-target_link_libraries(kio_mobile  ${KDE4_KDECORE_LIBS} ${KDE4_KIO_LIBS} kmobiletools )
+target_link_libraries(kio_mobile ${KDE4_KIO_LIBS} kmobiletools )
 
 install(TARGETS kio_mobile DESTINATION ${PLUGIN_INSTALL_DIR} )
 
