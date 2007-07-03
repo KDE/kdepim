@@ -1,6 +1,6 @@
 format 38
 "bouml-design"
-  revision 33
+  revision 35
   modified_by 10 "kde4"
   cpp_root_dir "/home/kde4/src/kpilot/conduits/base/design/bouml-design/"
 
@@ -203,12 +203,12 @@ ${inlines}
 	  b multiplicity "" parent class_ref 128650 // HHDataProxy
       end
 
-      classrelation 129418 // fLocalDatase (<unidirectional association>)
+      classrelation 129418 // fLocalDatabase (<unidirectional association>)
 	relation 129418 --->
-	  a role_name "fLocalDatase" multiplicity "1" protected
+	  a role_name "fLocalDatabase" multiplicity "1" protected
 	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} * ${name}${value};
 "
-	    classrelation_ref 129418 // fLocalDatase (<unidirectional association>)
+	    classrelation_ref 129418 // fLocalDatabase (<unidirectional association>)
 	  b multiplicity "" parent class_ref 128906 // DataProxy
       end
 
@@ -363,10 +363,10 @@ ${inlines}
 	
       end
 
-      operation 128778 "isValid"
+      operation 128778 "validate"
 	public explicit_return_type "bool"
 	nparams 1
-	  param in name "*backupDb" type class_ref 128906 // DataProxy
+	  param in name "keys" explicit_type "QList<QVariant>"
 	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
 "
 	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}{
@@ -529,9 +529,10 @@ ${inlines}
 	
       end
 
-      operation 128140 "addRecord"
+      operation 128140 "createRecord"
 	public explicit_return_type "QVariant"
-	nparams 0
+	nparams 1
+	  param inout name "record" type class_ref 129034 // Record
 	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
 "
 	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}{
@@ -544,7 +545,8 @@ ${inlines}
 
       operation 128200 "deleteRecord"
 	public explicit_return_type ""
-	nparams 0
+	nparams 1
+	  param inout name "record" type class_ref 129034 // Record
 	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
 "
 	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}{
@@ -554,7 +556,7 @@ ${inlines}
 	
       end
 
-      operation 128072 "editRecord"
+      operation 128072 "updateRecord"
 	public explicit_return_type ""
 	nparams 0
 	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
@@ -620,7 +622,19 @@ ${inlines}
 	
       end
 
-      operation 132362 "nextRecord"
+      operation 135050 "hasNext"
+	public explicit_return_type "bool"
+	nparams 0
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}{
+  ${body}}
+"
+	
+	
+      end
+
+      operation 132362 "next"
 	abstract cpp_virtual public return_type class_ref 129034 // Record
 	nparams 0
 	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
@@ -658,6 +672,18 @@ ${inlines}
 "
 	    classrelation_ref 129802 // fRecords (<unidirectional association>)
 	  b multiplicity "" parent class_ref 129034 // Record
+      end
+
+      operation 135178 "keys"
+	public explicit_return_type "QList<QVariant>"
+	nparams 0
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}{
+  ${body}}
+"
+	
+	
       end
     end
 
@@ -876,7 +902,7 @@ ${inlines}
 	
       end
 
-      operation 131594 "volatility"
+      operation 131594 "volatilityPercent"
 	public explicit_return_type "int"
 	nparams 0
 	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
@@ -886,6 +912,24 @@ ${inlines}
 "
 	
 	
+	comment "If the startcount is greater then 0 it returns (volatilityCount() / startCount).
+Otherewhise 100."
+      end
+
+      operation 134922 "volatilityCount"
+	public explicit_return_type "int"
+	nparams 0
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}{
+  ${body}}
+"
+	
+	
+	comment "Returns the sum of:
+- Created records
+- Modified recrods
+- Deleted records"
       end
     end
 

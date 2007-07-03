@@ -65,7 +65,7 @@ msg 129546 synchronous
 msg 130442 synchronous
   from durationcanvas_ref 128266 // 128010
   to durationcanvas_ref 130314 // 129290
-  yz 281 2000 msg operation_ref 128778 // "isValid(in *backupDb : DataProxy) : bool"
+  yz 281 2000 msg operation_ref 128778 // "validate(in keys : QList<QVariant>) : bool"
   show_full_operations_definition default drawing_language default
   label_xy 144 263
 msg 130570 return

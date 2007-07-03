@@ -14,10 +14,10 @@ classinstance 132746 class_ref 128778 // PCDataProxy
   name "" xyz 561 11 2000 life_line_z 2000
 note 133642 "Backup Database"
   xyzwh 502 214 2000 89 58
-fragment 135178 "for each     loaded HH record"
+fragment 135178 "for each     modified HH record"
   xyzwh 78 162 1988 610 213
 end
-fragment 137610 "for each      loaded PC record"
+fragment 137610 "for each      modified PC record"
   xyzwh 79 379 1994 610 221
 end
 note 156938 "See detailed flow for record syncing. (TODO)"
@@ -55,7 +55,7 @@ msg 128587 synchronous
 msg 131403 synchronous
   from durationcanvas_ref 128266 // 128010
   to durationcanvas_ref 131275 // 132234
-  yz 201 2000 msg operation_ref 132362 // "nextRecord() : Record"
+  yz 201 2000 msg operation_ref 132362 // "next() : Record"
   show_full_operations_definition default drawing_language default
   label_xy 147 190
 msg 131531 return
@@ -120,7 +120,7 @@ reflexivemsg 136842 synchronous
 msg 157578 synchronous
   from durationcanvas_ref 128266 // 128010
   to durationcanvas_ref 157450 // 132746
-  yz 413 2000 msg operation_ref 132362 // "nextRecord() : Record"
+  yz 413 2000 msg operation_ref 132362 // "next() : Record"
   show_full_operations_definition default drawing_language default
   label_xy 147 402
 msg 157706 return
