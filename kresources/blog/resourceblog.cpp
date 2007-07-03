@@ -45,6 +45,7 @@
 #include <libkdepim/progressmanager.h>
 
 #include <kblog/blogger.h>
+#include <kblog/metaweblog.h>
 
 #include "resourceblog.h"
 
@@ -59,17 +60,15 @@ KCAL_RESOURCEBLOG_EXPORT ResourceBlog::ResourceBlog()
 KCAL_RESOURCEBLOG_EXPORT ResourceBlog::ResourceBlog(const KConfigGroup &group)
 	: ResourceCached(group), mUseProgressManager(true), mUseCacheFile(true)
 {
-	readConfig(group);
-
 	init();
+	readConfig(group);
 }
 
 KCAL_RESOURCEBLOG_EXPORT ResourceBlog::ResourceBlog(const KUrl &url)
 	: ResourceCached(), mUseProgressManager(false), mUseCacheFile(false)
 {
-	mUrl = url;
-
 	init();
+	mUrl = url;
 }
 
 
@@ -92,6 +91,8 @@ void ResourceBlog::init()
 
 	mProgress = 0;
 
+	mAPI = 0;
+
 	setType("blog");
 
 	mLock = new KABC::Lock(cacheFile());
@@ -101,8 +102,14 @@ void ResourceBlog::init()
 
 void ResourceBlog::readConfig(const KConfigGroup &group)
 {
+	kDebug(5800) << "ResourceBlog::readConfig()" << endl;
+
 	QString url = group.readEntry("Url");
 	mUrl = KUrl(url);
+	mUser = group.readEntry("User");
+	mPassword = group.readEntry("Password");
+	QString api = group.readEntry("API");
+	setAPI(api);
 
 	ResourceCached::readConfig(group);
 }
@@ -111,10 +118,12 @@ void ResourceBlog::writeConfig(KConfigGroup &group)
 {
 	kDebug(5800) << "ResourceBlog::writeConfig()" << endl;
 
-	ResourceCalendar::writeConfig(group);
-
 	group.writeEntry("Url", mUrl.url());
+	group.writeEntry("User", mUser);
+	group.writeEntry("Password", mPassword);
+	group.writeEntry("API", API());
 
+	ResourceCalendar::writeConfig(group);
 	ResourceCached::writeConfig(group);
 }
 
@@ -128,14 +137,49 @@ KUrl ResourceBlog::url() const
 	return mUrl;
 }
 
-void ResourceBlog::setAPI(KBlog::APIBlog &API)
+void ResourceBlog::setUser(const QString &user)
 {
-	mAPI = &API;
+	mUser = user;
 }
 
-KBlog::APIBlog* ResourceBlog::API()
+QString ResourceBlog::user() const
 {
-	return mAPI;
+	return mUser;
+}
+
+void ResourceBlog::setPassword(const QString &password)
+{
+	mPassword = password;
+}
+
+QString ResourceBlog::password() const
+{
+	return mPassword;
+}
+
+void ResourceBlog::setAPI(const QString &API)
+{
+	if (API == "Blogger")
+		mAPI = new KBlog::APIBlogger(mUrl, this);
+	else if (API == "MetaWeblog")
+		mAPI = new KBlog::APIMetaWeblog(mUrl, this);
+	else {
+		kError() << "ResourceBlog::setAPI(): Unrecognised API: " << API << endl;
+		return;
+	}
+	mAPI->setUsername(mUser);
+	mAPI->setPassword(mPassword);
+}
+
+QString ResourceBlog::API() const
+{
+	if (mAPI) {
+		if (qobject_cast<KBlog::APIBlogger*>(mAPI))
+			return "Blogger";
+		if (qobject_cast<KBlog::APIMetaWeblog*>(mAPI))
+			return "MetaWeblog";
+	}
+	return NULL;
 }
 
 void ResourceBlog::setUseProgressManager(bool useProgressManager)
@@ -185,7 +229,7 @@ bool ResourceBlog::doLoad(bool)
 
 	emit resourceChanged(this);
 
-	/* TODO: Replace with KBlog interaction */
+	/* TODO: Replace with KBlog caching interaction */
 	/*
 	if ( mLock->lock() ) {
 	kDebug() << "Download from: " << mUrl << endl;
@@ -267,7 +311,6 @@ bool ResourceBlog::doSave(bool)
   	saveToCache();
 
 	/* TODO: Replace with KBlog interaction */
-	KBlog::BlogPosting *post;
 	//post = new KBlog::BlogPosting("title", "content", "category", true);
 	//mAPI->createPosting(post);
 	/*
@@ -312,6 +355,8 @@ void ResourceBlog::dump() const
 {
 	ResourceCalendar::dump();
 	kDebug(5800) << "  Url: " << mUrl.url() << endl;
+	kDebug(5800) << "  User: " << mUser << endl;
+	kDebug(5800) << "  API: " << API() << endl;
 	kDebug(5800) << "  ReloadPolicy: " << reloadPolicy() << endl;
 }
 
@@ -319,6 +364,7 @@ void ResourceBlog::addInfoText(QString &txt) const
 {
 	txt += "<br>";
 	txt += i18n("URL: %1", mUrl.prettyUrl() );
+	txt += i18n("API: %1", API() );
 }
 
 bool ResourceBlog::setValue(const QString &key, const QString &value)
@@ -327,8 +373,53 @@ bool ResourceBlog::setValue(const QString &key, const QString &value)
 		setUrl(KUrl(value));
 		return true;
 	}
+	else if (key == "User") {
+		setUser(value);
+		return true;
+	}
+	else if (key == "Password") {
+		setPassword(value);
+		return true;
+	}
+	else if (key == "API") {
+		setAPI(value);
+		return true;
+	}
 	else
 		return ResourceCached::setValue(key, value);
+}
+
+bool ResourceBlog::addJournal(Journal* journal)
+{
+	QString title = journal->summary();
+	QString content = journal->description();
+	KDateTime date = journal->dtStart();
+	//QStringList categories = journal->categories();
+	KBlog::BlogPosting* post;
+	post = new KBlog::BlogPosting(title, content);
+	if (mAPI) {
+		mAPI->setBlogId("1");
+		post->setCreationDateTime(date);
+		mAPI->createPosting(post);
+		return true;
+	}
+	kError() << "ResourceBlog::addJournal(): Journal not initialised." << endl;
+	return false;
+}
+
+bool ResourceBlog::deleteJournal(Journal* journal)
+{
+	return true;
+}
+
+Journal::List ResourceBlog::journals(const QDate&)
+{
+	return Journal::List();
+}
+
+Journal* ResourceBlog::journal(const QString& uid)
+{
+	return NULL;
 }
 
 bool ResourceBlog::addEvent(Event*)

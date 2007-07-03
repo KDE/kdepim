@@ -33,6 +33,7 @@
 #include <kdialog.h>
 #include <kurlrequester.h>
 #include <klineedit.h>
+#include <kcombobox.h>
 
 #include <kcal/resourcecachedconfig.h>
 
@@ -50,7 +51,6 @@ KCAL_RESOURCEBLOG_EXPORT ResourceBlogConfig::ResourceBlogConfig(QWidget* parent)
 	mainLayout->setSpacing(KDialog::spacingHint());
 
 	QLabel *label = new QLabel(i18n("XML-RPC URL:"), this);
-
 	mUrl = new KUrlRequester(this);
 	mUrl->setMode(KFile::File);
 	mainLayout->addWidget(label, 1, 0);
@@ -69,36 +69,54 @@ KCAL_RESOURCEBLOG_EXPORT ResourceBlogConfig::ResourceBlogConfig(QWidget* parent)
 	mainLayout->addWidget(label, 3, 0);
 	mainLayout->addWidget(mPassword, 3, 1);
 
-	/* TODO: Add API list selector */
+	label = new QLabel(i18n("API:"), this);
+	mAPI = new KComboBox(false, this);
+	mAPI->addItem("Blogger");
+	mAPI->addItem("MetaWeblog");
+
+	mainLayout->addWidget(label, 4, 0);
+	mainLayout->addWidget(mAPI, 4, 1);
 
 	mReloadConfig = new ResourceCachedReloadConfig(this);
-	mainLayout->addWidget(mReloadConfig, 4, 0, 1, 2);
+	mainLayout->addWidget(mReloadConfig, 5, 0, 1, 2);
 
 	mSaveConfig = new ResourceCachedSaveConfig(this);
-	mainLayout->addWidget(mSaveConfig, 5, 0, 1, 2);
+	mainLayout->addWidget(mSaveConfig, 6, 0, 1, 2);
 }
 
-void ResourceBlogConfig::loadSettings(KRES::Resource *resource)
+void ResourceBlogConfig::loadSettings(KRES::Resource *res)
 {
-	ResourceBlog *res = static_cast<ResourceBlog *>(resource);
-	if (res) {
-		mUrl->setUrl(res->url().url());
-		mReloadConfig->loadSettings(res);
-		kDebug(5700) << "reloaded" << endl;
-		mSaveConfig->loadSettings(res);
-		kDebug(5700) << "saved" << endl;
+	ResourceBlog *resource = static_cast<ResourceBlog *>(res);
+	if (resource) {
+		mUrl->setUrl(resource->url().url());
+		mUser->setText(resource->user());
+		mPassword->setText(resource->password());
+		if (resource->API() == "Blogger")
+			mAPI->setCurrentIndex(0);
+		else if (resource->API() == "MetaWeblog")
+			mAPI->setCurrentIndex(1);
+		else
+			kError() << "ResourceBlogConfig::loadSettings(): Unrecognised API: " << resource->API() << endl;
+		mReloadConfig->loadSettings(resource);
+		kDebug(5700) << "ResourceBlogConfig::loadSettings(): reloaded" << endl;
+		mSaveConfig->loadSettings(resource);
+		kDebug(5700) << "ResourceBlogConfig::loadSettings(): saved" << endl;
 	}
 	else
 		kError(5700) << "ResourceBlogConfig::loadSettings(): no ResourceBlog, cast failed" << endl;
 }
 
-void ResourceBlogConfig::saveSettings(KRES::Resource *resource)
+void ResourceBlogConfig::saveSettings(KRES::Resource *res)
 {
-	ResourceBlog *res = static_cast<ResourceBlog*>(resource);
-	if (res) {
-		mUrl->setUrl(res->url().url());
-		mReloadConfig->saveSettings(res);
-		mSaveConfig->saveSettings(res);
+	ResourceBlog *resource = static_cast<ResourceBlog*>(res);
+	if (resource) {
+		resource->setUrl(mUrl->url().url());
+		resource->setUser(mUser->text());
+		resource->setPassword(mPassword->text());
+		resource->setAPI(mAPI->currentText());
+		mReloadConfig->saveSettings(resource);
+		mSaveConfig->saveSettings(resource);
+		kDebug(5700) << "ResourceBlogConfig::saveSettings(): saved" << endl;
 	}
 	else
 		kError(5700) << "ResourceBlogConfig::saveSettings(): no ResourceBlog, cast failed" << endl;

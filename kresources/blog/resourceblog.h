@@ -78,9 +78,14 @@ class ResourceBlog : public ResourceCached
 	void setUrl(const KUrl &);
 	KUrl url() const;
 
-	void setAPI(KBlog::APIBlog &API);
+	void setUser(const QString &);
+	QString user() const;
 
-	KBlog::APIBlog* API();
+	void setPassword(const QString &);
+	QString password() const;
+
+	void setAPI(const QString &);
+	QString API() const;
 
 	void setUseProgressManager(bool useProgressManager);
 	bool useProgressManager() const;
@@ -95,6 +100,14 @@ class ResourceBlog : public ResourceCached
 	void dump() const;
 
 	bool setValue( const QString &key, const QString &value );
+
+	bool addJournal( Journal* journal );
+
+	bool deleteJournal( Journal* journal );
+
+	Journal::List journals( const QDate& );
+
+	Journal* journal( const QString& uid );
 
 	bool addEvent(Event *anEvent);
 
@@ -124,8 +137,9 @@ class ResourceBlog : public ResourceCached
 	void init();
 
 	KUrl mUrl;
-
-	KBlog::APIBlog *mAPI;
+	QString mUser;
+	QString mPassword;
+	KBlog::APIBlog* mAPI;
 
 	bool mUseProgressManager;
 	bool mUseCacheFile;

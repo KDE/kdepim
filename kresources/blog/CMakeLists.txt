@@ -10,7 +10,7 @@ kde4_automoc(${kcal_resourceblog_LIB_SRCS})
 
 kde4_add_library(kcal_resourceblog SHARED ${kcal_resourceblog_LIB_SRCS})
 
-target_link_libraries(kcal_resourceblog  ${KDE4_KDECORE_LIBS} ${KDE4_KCAL_LIBS} kdepim )
+target_link_libraries(kcal_resourceblog  ${KDE4_KDECORE_LIBS} ${KDE4_KCAL_LIBS} kblog kdepim )
 
 set_target_properties(kcal_resourceblog PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
 install(TARGETS kcal_resourceblog  DESTINATION ${LIB_INSTALL_DIR})

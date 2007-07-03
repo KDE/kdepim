@@ -30,6 +30,7 @@
 
 class KUrlRequester;
 class KLineEdit;
+class KComboBox;
 
 namespace KCal {
 
@@ -45,22 +46,23 @@ class ResourceBlogConfig : public KRES::ConfigWidget
 {
 	Q_OBJECT
 	public:
-	ResourceBlogConfig(QWidget *parent = 0);
+	ResourceBlogConfig(QWidget* parent = 0);
 
 	public Q_SLOTS:
-	virtual void loadSettings(KRES::Resource *resource);
-	virtual void saveSettings(KRES::Resource *resource);
+	virtual void loadSettings(KRES::Resource* resource);
+	virtual void saveSettings(KRES::Resource* resource);
 
 	private:
-	KUrlRequester *mUrl;
-	KLineEdit *mUser;
-	KLineEdit *mPassword;
+	KUrlRequester* mUrl;
+	KLineEdit* mUser;
+	KLineEdit* mPassword;
+	KComboBox* mAPI;
 
-	ResourceCachedReloadConfig *mReloadConfig;
-	ResourceCachedSaveConfig *mSaveConfig;
+	ResourceCachedReloadConfig* mReloadConfig;
+	ResourceCachedSaveConfig* mSaveConfig;
 
 	class Private;
-	Private *d;
+	Private* d;
 };
 
 }
