@@ -67,7 +67,7 @@ qt4_add_dbus_adaptor(kpilotTest_SRCS org.kde.kpilot.logger.xml logFile.h LogFile
 kde4_automoc(${kpilotTest_SRCS})
 
 kde4_add_executable(kpilotTest ${kpilotTest_SRCS})
-target_link_libraries(kpilotTest ${QT_LIBRARIES} kpilot ${KDE4_KDEUI_LIBS} ${KDE4_KIO_LIBS})
+target_link_libraries(kpilotTest ${QT_LIBRARIES} kpilot  ${KDE4_KIO_LIBS})
 
 ###
 #
@@ -90,7 +90,7 @@ qt4_add_dbus_interface(kpilotDaemon_SRCS org.kde.kpilot.daemon.xml kpilot_daemon
 
 kde4_automoc(${kpilotDaemon_SRCS})
 kde4_add_executable(kpilotDaemon ${kpilotDaemon_SRCS})
-target_link_libraries(kpilotDaemon ${QT_LIBRARIES} kpilot ${KDE4_KDEUI_LIBS} ${KDE4_KIO_LIBS} ${KDE4_KDE3SUPPORT_LIBS})
+target_link_libraries(kpilotDaemon ${QT_LIBRARIES} kpilot  ${KDE4_KIO_LIBS} ${KDE4_KDE3SUPPORT_LIBS})
 
 ###
 #
@@ -130,7 +130,7 @@ qt4_add_dbus_adaptor( kpilot_bin_SRCS org.kde.kpilot.kpilot.xml kpilot.h KPilotI
 qt4_add_dbus_interface(kpilot_bin_SRCS org.kde.kpilot.daemon.xml daemon_interface)
 
 kde4_add_executable(kpilot_bin ${kpilot_bin_SRCS})
-target_link_libraries(kpilot_bin ${QT_LIBRARIES} kpilot ${KDE4_KDE3SUPPORT_LIBS} ${KDE4_KUTILS_LIBS} ${KDE4_KDEUI_LIBS} ${KDE4_KIO_LIBS})
+target_link_libraries(kpilot_bin ${QT_LIBRARIES} kpilot ${KDE4_KDE3SUPPORT_LIBS} ${KDE4_KUTILS_LIBS}  ${KDE4_KIO_LIBS})
 set_target_properties(kpilot_bin PROPERTIES OUTPUT_NAME kpilot)
 
 ######################### INSTALL STUFF #######################################

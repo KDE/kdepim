@@ -30,7 +30,7 @@ kde4_add_kcfg_files(conduit_doc_SRCS ${conduit_doc_KCFGS})
 kde4_add_ui_files(conduit_doc_SRCS ${conduit_doc_UIS})
 kde4_automoc(${conduit_doc_SRCS})
 kde4_add_plugin(conduit_doc WITH_PREFIX ${conduit_doc_SRCS})
-target_link_libraries(conduit_doc ${QT_LIBRARIES} kpilot ${KDE4_KDEUI_LIBS} ${KDE4_KIO_LIBS})
+target_link_libraries(conduit_doc ${QT_LIBRARIES} kpilot  ${KDE4_KIO_LIBS})
 install(TARGETS conduit_doc DESTINATION ${PLUGIN_INSTALL_DIR})
 
 set(kpalmdoc_SRCS
@@ -42,7 +42,7 @@ kde4_add_kcfg_files(kpalmdoc_SRCS kpalmdocSettings.kcfgc)
 kde4_add_ui3_files(kpalmdoc_SRCS kpalmdoc_dlgbase.ui)
 kde4_automoc(${kpalmdoc_SRCS})
 kde4_add_executable(kpalmdoc ${kpalmdoc_SRCS})
-target_link_libraries(kpalmdoc ${QT_LIBRARIES} kpilot ${KDE4_KDEUI_LIBS} ${KDE4_KIO_LIBS})
+target_link_libraries(kpalmdoc ${QT_LIBRARIES} kpilot  ${KDE4_KIO_LIBS})
 
 install(
 	TARGETS kpalmdoc DESTINATION ${BIN_INSTALL_DIR}) 
