@@ -40,8 +40,14 @@ public:
 
 	void deleted();
 
-	bool hasValidCount();
+	/**
+	 * Returns the sum of created records, updated records and deleted records.
+	 */
+	int volatilityCount();
 
-	int volatility();
+	/**
+	 * Returns 100 if startcount is 0 otherwhise volatilityCount() / startCount.
+	 */
+	int volatilityPercent();
 };
 #endif

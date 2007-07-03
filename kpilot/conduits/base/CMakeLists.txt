@@ -5,10 +5,11 @@ include_directories(
 set(conduit_base_SRCS
 	idmapping.cc
 	cudcounter.cc
+	#record.cc
 	dataproxy.cc
 	pcdataproxy.cc
 	hhdataproxy.cc
-	RecordConduit.cpp
+	recordconduit.cc
 )
 
 #set(conduit_mal_UIS

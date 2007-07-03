@@ -28,35 +28,42 @@
 
 CUDCounter::CUDCounter()
 {
+	#warning Not implemented!
 }
 
 void CUDCounter::setStartCount()
 {
+	#warning Not implemented!
 }
 
 void CUDCounter::setEndCount()
 {
+	#warning Not implemented!
 }
 
 void CUDCounter::created()
 {
+	#warning Not implemented!
 }
 
 void CUDCounter::updated()
 {
+	#warning Not implemented!
 }
 
 void CUDCounter::deleted()
 {
+	#warning Not implemented!
 }
 
-bool CUDCounter::hasValidCount()
+int CUDCounter::volatilityCount()
 {
-	return false;
+	#warning Not implemented!
+	return -1;
 }
 
-int CUDCounter::volatility()
+int CUDCounter::volatilityPercent()
 {
+	#warning Not implemented!
 	return 100;
 }
-

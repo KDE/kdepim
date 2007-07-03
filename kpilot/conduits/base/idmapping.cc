@@ -30,48 +30,61 @@ IDMapping::IDMapping( const QString &conduitName )
 	Q_UNUSED( conduitName );
 }
 
-bool IDMapping::isValid( const DataProxy *proxy )
+bool IDMapping::isValid( const QList<QVariant> &hhIds )
 {
-	Q_UNUSED( proxy );
+	#warning Not implemented!
+	Q_UNUSED( hhIds );
 	return false;
 }
 
-QString IDMapping::pcRecordId() 
+QString IDMapping::pcRecordId( const recordid_t hhId )
 {
-	return QString( "Implement" );
+	#warning Not implemented!
+	Q_UNUSED( hhId );
+	return QString();
 }
 
-recordid_t IDMapping::hhRecordId()
+recordid_t IDMapping::hhRecordId( const QString &pcRecordId )
 {
+	#warning Not implemented!
+	Q_UNUSED( pcRecordId );
 	return 0;
 }
 
-void IDMapping::setLastSyncedDate()
+void IDMapping::setLastSyncedDate( const QDateTime &dateTime )
 {
+	Q_UNUSED( dateTime );
+	#warning Not implemented!
 }
 
-void IDMapping::setLastSyncedPC()
+void IDMapping::setLastSyncedPC( const QString &pc )
 {
+	Q_UNUSED( pc );
+	#warning Not implemented!
 }
 
 void IDMapping::save()
 {
+	#warning Not implemented!
 }
 
-void IDMapping::setPCId()
+void IDMapping::map( const recordid_t hhRecordId, const QString &pcId )
 {
+	Q_UNUSED( hhRecordId );
+	Q_UNUSED( pcId );
+	#warning Not implemented!
 }
 
-void IDMapping::setHHId()
+bool IDMapping::contains( const recordid_t hhRecordId )
 {
-}
-
-void IDMapping::map()
-{
-}
-
-bool IDMapping::contains()
-{
+	Q_UNUSED( hhRecordId );
+	#warning Not implemented!
 	return false;
 }
 
+bool IDMapping::contains( const QString &pcId )
+{
+	Q_UNUSED( pcId );
+	#warning Not implemented!
+	return false;
+}

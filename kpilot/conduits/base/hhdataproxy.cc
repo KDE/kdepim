@@ -32,5 +32,6 @@ HHDataProxy::HHDataProxy()
 
 void HHDataProxy::resetSyncFlags()
 {
+	#warning Not implemented!
 }
 

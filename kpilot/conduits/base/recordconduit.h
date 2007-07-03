@@ -35,6 +35,12 @@ class PCDataProxy;
 class DataProxy;
 class Record;
 
+/**
+ * This is the base class for all record based conduits. Each of them should 
+ * implement this class. All references in the form of (see x.x) refer to a 
+ * section in the document "Use Case - Conduit Syncing.odt" which can be found
+ * in the design directory.
+ */
 class RecordConduit : public ConduitAction {
 // Members
 protected:
@@ -65,34 +71,44 @@ protected:
 	 * - fBackupdb
 	 */
 	virtual void initDataProxies() = 0;
-	
-	bool askConfirmation(const QString & volatilityMessage);
-
-	void copyDatabases();
-
-	void createBackupDatabase();
 
 	/**
 	 * This method is called after test and can be used by the implementing class 
 	 *to clean things up.
 	 */
 	virtual void postTest() = 0;
-
+	
 	/**
 	 * This operation is called before test and can be used to set things up for 
 	 * testing purposes.
 	 */
 	virtual void preTest() = 0;
 
-	virtual void syncRecords(
-		const Record & hh,
-		const Record & backup,
-		const Record & pc) = 0;
-
 	/**
-	 * This method is called when the conduit is run in Test Mode. The implementing
-	 * class can do whatever it wants to do for test purposes.
+	 * This method is called when the conduit is run in Test Mode. The 
+	 * implementing class can do whatever it wants to do for test purposes.
 	 */
 	virtual void test() = 0;
+
+private:
+	/**
+	 * Executes the HotSync flow (see 4.1)
+	 */
+	void hotSync();
+	
+	/**
+	 * Synchronizes the three records. If one of the parameters is 0L we asume 
+	 * that either the record does not exist (and needs to be created), or it is
+	 * deleted and should be deleted on the other side.
+	 */
+	bool syncRecords( Record *pcRecord, Record *backupRecord, Record *hhRecord );
+	
+	void solveConflict( Record *pcRecord, Record *hhRecord );
+	
+	bool askConfirmation(const QString & volatilityMessage);
+
+	void copyDatabases();
+
+	void createBackupDatabase();
 };
 #endif

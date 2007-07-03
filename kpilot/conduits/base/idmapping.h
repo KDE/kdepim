@@ -27,6 +27,8 @@
 */
 
 #include <QString>
+#include <QList>
+#include <QVariant>
 
 #include "pi-macros.h"
 
@@ -41,39 +43,37 @@ public:
 	/**
 	 * Validates the mapping file with given dataproxy. The mapping is considered 
 	 * valid if:
-	 * 1. The number of mappings matches the number of records in the dataproxy.
+	 * 1. The number of mappings matches the number of records in the list.
 	 * 2. Every record that is in the backup database has a mapping.
 	 */
-	bool isValid( const DataProxy *proxy );
+	bool isValid( const QList<QVariant> &hhIds );
 
 	/**
 	 * Returns the pc record ID for given handheld record. Returns QString::Null 
 	 * if no mapping is found.
 	 */
-	QString pcRecordId();
+	QString pcRecordId( const recordid_t hhRecordId );
 
 	/**
 	 * Returns the id for the HH record which is mapped to the given pc record or
 	 * 0 if there is no mapping.
 	 */
-	recordid_t hhRecordId();
+	recordid_t hhRecordId( const QString &pcRecordId );
 
-	void setLastSyncedDate();
+	void setLastSyncedDate( const QDateTime &dateTime );
 
-	void setLastSyncedPC();
+	void setLastSyncedPC( const QString &pc );
 
 	void save();
 
-	void setPCId();
-
-	void setHHId();
-
 	/**
-	 * Creates a mapping for given records with id's.
+	 * Deletes any mapping that exists for @p hhRecordId and @p pcRecordId and 
+	 * then creates a new mapping between @p hhRecordId and @p pcRecordId.
 	 */
-	void map();
+	void map( const recordid_t hhRecordId, const QString &pcId  );
 
-	bool contains();
-
+	bool contains( const recordid_t hhRecordId );
+	
+	bool contains( const QString &pcId );
 };
 #endif

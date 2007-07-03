@@ -40,19 +40,30 @@ public:
 	virtual ~DataProxy();
 
 	enum Mode {
-		ALL=1,
-		MODIFIED=2
+		All=1,
+		Modified=2
 	};
 
 	/**
 		* Adds the record to the database and returns the internal id for the added
 		* record.
 		*/
-	QVariant addRecord();
+	QVariant create( Record *record );
 
-	void deleteRecord();
+	/**
+	 * Deletes record with @p id from the database.
+	 */
+	void remove( const QVariant &id );
 
-	void editRecord();
+	/**
+	 * Updates the fields of record with @p id with the fields from @p record.
+	 */
+	void update( const QVariant &id, const Record *record );
+
+	/**
+	 * Returns the list with ids from the records in the proxy.
+	 */
+	virtual QList<QVariant> ids() = 0;
 
 	void syncFinished();
 
@@ -60,7 +71,7 @@ public:
 	 * Sets the mode which is used to iterate over the loaded records. It defaults
 	 * to iterate over all records.
 	 */
-	void setIterateMode( const Mode m = ALL );
+	void setIterateMode( const Mode m = All );
 
 	virtual void commitChanges() = 0;
 
@@ -71,13 +82,15 @@ public:
 
 	virtual void loadAllRecords() = 0;
 
+	virtual bool hasNext() = 0;
+
 	/**
 		* Dependend on the iterateMode it should give the next record, the next
 		* modified record or 0 if there are no more records to iterate over.
 		*/
-	virtual Record* nextRecord() = 0;
+	virtual Record* next() = 0;
 
-	virtual Record* readRecordById() = 0;
+	virtual Record* readRecordById( const QVariant &id ) = 0;
 
 	/**
 		* Returns QString::Null if everything is ok, or a message explaining the

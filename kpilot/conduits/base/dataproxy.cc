@@ -34,28 +34,32 @@ DataProxy::~DataProxy()
 {
 }
 
-/**
- * Adds the record to the database and returns the internal id for the added record.
- */
-QVariant DataProxy::addRecord()
+QVariant DataProxy::create( Record *record )
 {
+	Q_UNUSED(record)
+	#warning Not implemented!
 	return QVariant();
 }
 
-void DataProxy::deleteRecord()
+void DataProxy::remove( const QVariant &id )
 {
+	Q_UNUSED(id)
+	#warning Not implemented!
 }
 
-void DataProxy::editRecord()
+void DataProxy::update( const QVariant &id, const Record *record )
 {
+	Q_UNUSED(record)
+	Q_UNUSED(id)
+	#warning Not implemented!
 }
 
 void DataProxy::syncFinished()
 {
+	#warning Not implemented!
 }
 
 void DataProxy::setIterateMode( const Mode m )
 {
 	fMode = m;
 }
-
