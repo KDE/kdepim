@@ -26,17 +26,15 @@ install(TARGETS kcal_resourcefeatureplan  DESTINATION ${LIB_INSTALL_DIR})
 
 ########### next target ###############
 
-set(kcal_resourcefeatureplan_PART_SRCS kcal_resourcefeatureplanplugin.cpp ${kcal_resourcefeatureplan_LIB_SRCS} ${libfeatureplancommon_SRCS})
+set(kcal_resourcefeatureplan_plugin_PART_SRCS kcal_resourcefeatureplanplugin.cpp)
 
-kde4_automoc(${kcal_resourcefeatureplan_PART_SRCS})
+kde4_automoc(${kcal_resourcefeatureplan_plugin_PART_SRCS})
 
-kde4_add_plugin(kcal_resourcefeatureplan ${kcal_resourcefeatureplan_PART_SRCS})
+kde4_add_plugin(kcal_resourcefeatureplan_plugin ${kcal_resourcefeatureplan_plugin_PART_SRCS})
 
+target_link_libraries(kcal_resourcefeatureplan_plugin ${KDE4_KDECORE_LIBS} kcal_resourcefeatureplan)
 
-
-target_link_libraries(kcal_resourcefeatureplan  ${KDE4_KDECORE_LIBS} )
-
-install(TARGETS kcal_resourcefeatureplan  DESTINATION ${PLUGIN_INSTALL_DIR})
+install(TARGETS kcal_resourcefeatureplan_plugin  DESTINATION ${PLUGIN_INSTALL_DIR})
 
 ########### install files ###############
 
