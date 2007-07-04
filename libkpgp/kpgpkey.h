@@ -21,7 +21,7 @@
 
 #include <QtCore/QString>
 #include <QtCore/QStringList>
-#include <Q3PtrList>
+#include <Qt3Support/Q3PtrList>
 
 #include <time.h>
 

@@ -28,7 +28,7 @@
 #include <QtGui/QCheckBox>    // used in inlined methods
 #include <QtGui/QPixmap>
 #include <QtGui/QLabel>
-#include <Q3PtrVector>
+#include <Qt3Support/Q3PtrVector>
 
 #include <kdebug.h>       // used in inlined methods
 #include <kdialog.h>      // base class of all dialogs here
