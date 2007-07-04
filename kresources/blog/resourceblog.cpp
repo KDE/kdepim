@@ -1,23 +1,23 @@
 /*
- This file is part of libkcal.
+  This file is part of the blog resource.
 
- Copyright (c) 2003,2004 Cornelius Schumacher <schumacher@kde.org>
- Copyright (c) 2007 Mike Arthur <mike@mikearthur.co.uk>
+  Copyright (c) 2003,2004 Cornelius Schumacher <schumacher@kde.org>
+  Copyright (c) 2007 Mike Arthur <mike@mikearthur.co.uk>
 
- This library is free software; you can redistribute it and/or
- modify it under the terms of the GNU Library General Public
- License as published by the Free Software Foundation; either
- version 2 of the License, or (at your option) any later version.
+  This library is free software; you can redistribute it and/or
+  modify it under the terms of the GNU Library General Public
+  License as published by the Free Software Foundation; either
+  version 2 of the License, or (at your option) any later version.
 
- This library is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- Library General Public License for more details.
+  This library is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+  Library General Public License for more details.
 
- You should have received a copy of the GNU Library General Public License
- along with this library; see the file COPYING.LIB.  If not, write to
- the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
- Boston, MA 02110-1301, USA.
+  You should have received a copy of the GNU Library General Public License
+  along with this library; see the file COPYING.LIB.  If not, write to
+  the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+  Boston, MA 02110-1301, USA.
 */
 
 #include <typeinfo>
@@ -72,15 +72,16 @@ KCAL_RESOURCEBLOG_EXPORT ResourceBlog::ResourceBlog( const KUrl &url )
   mUrl = url;
 }
 
-
 ResourceBlog::~ResourceBlog()
 {
   close();
 
-  if ( mDownloadJob )
+  if ( mDownloadJob ) {
     mDownloadJob->kill();
-  if ( mUploadJob )
+  }
+  if ( mUploadJob ) {
     mUploadJob->kill();
+  }
 
   delete mLock;
 }
@@ -160,11 +161,11 @@ QString ResourceBlog::password() const
 
 void ResourceBlog::setAPI( const QString &API )
 {
-  if ( API == "Blogger" )
+  if ( API == "Blogger" ) {
     mAPI = new KBlog::APIBlogger( mUrl, this );
-  else if ( API == "MetaWeblog" )
+  } else if ( API == "MetaWeblog" ) {
     mAPI = new KBlog::APIMetaWeblog( mUrl, this );
-  else {
+  } else {
     kError() << "ResourceBlog::setAPI(): Unrecognised API: " << API << endl;
     return;
   }
@@ -175,10 +176,12 @@ void ResourceBlog::setAPI( const QString &API )
 QString ResourceBlog::API() const
 {
   if ( mAPI ) {
-    if ( qobject_cast<KBlog::APIBlogger*>( mAPI ) )
+    if ( qobject_cast<KBlog::APIBlogger*>( mAPI ) ) {
       return "Blogger";
-    if ( qobject_cast<KBlog::APIMetaWeblog*>( mAPI ) )
+    }
+    if ( qobject_cast<KBlog::APIMetaWeblog*>( mAPI ) ) {
       return "MetaWeblog";
+    }
   }
   return 0;
 }
@@ -382,8 +385,9 @@ bool ResourceBlog::setValue( const QString &key, const QString &value )
   } else if ( key == "API" ) {
     setAPI( value );
     return true;
-  } else
+  } else {
     return ResourceCached::setValue( key, value );
+  }
 }
 
 bool ResourceBlog::addJournal( Journal *journal )

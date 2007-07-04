@@ -1,23 +1,23 @@
 /*
- This file is part of libkcal.
+  This file is part of the blog resource.
 
- Copyright (c) 2003,4 Cornelius Schumacher <schumacher@kde.org>
- Copyright (c) 2007 Mike Arthur <mike@mikearthur.co.uk>
+  Copyright (c) 2003,4 Cornelius Schumacher <schumacher@kde.org>
+  Copyright (c) 2007 Mike Arthur <mike@mikearthur.co.uk>
 
- This library is free software; you can redistribute it and/or
- modify it under the terms of the GNU Library General Public
- License as published by the Free Software Foundation; either
- version 2 of the License, or (at your option) any later version.
+  This library is free software; you can redistribute it and/or
+  modify it under the terms of the GNU Library General Public
+  License as published by the Free Software Foundation; either
+  version 2 of the License, or (at your option) any later version.
 
- This library is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- Library General Public License for more details.
+  This library is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+  Library General Public License for more details.
 
- You should have received a copy of the GNU Library General Public License
- along with this library; see the file COPYING.LIB.  If not, write to
- the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
- Boston, MA 02110-1301, USA.
+  You should have received a copy of the GNU Library General Public License
+  along with this library; see the file COPYING.LIB.  If not, write to
+  the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+  Boston, MA 02110-1301, USA.
 */
 
 #include <typeinfo>
@@ -91,20 +91,22 @@ void ResourceBlogConfig::loadSettings( KRES::Resource *res )
     mUrl->setUrl( resource->url().url() );
     mUser->setText( resource->user() );
     mPassword->setText( resource->password() );
-    if ( resource->API() == "Blogger" )
+    if ( resource->API() == "Blogger" ) {
       mAPI->setCurrentIndex( 0 );
-    else if ( resource->API() == "MetaWeblog" )
+    } else if ( resource->API() == "MetaWeblog" ) {
       mAPI->setCurrentIndex( 1 );
-    else
+    } else {
       kError() << "ResourceBlogConfig::loadSettings(): Unrecognised API: "
-      << resource->API() << endl;
+               << resource->API() << endl;
+    }
     mReloadConfig->loadSettings( resource );
     kDebug( 5700 ) << "ResourceBlogConfig::loadSettings(): reloaded" << endl;
     mSaveConfig->loadSettings( resource );
     kDebug( 5700 ) << "ResourceBlogConfig::loadSettings(): saved" << endl;
-  } else
+  } else {
     kError( 5700 ) << "ResourceBlogConfig::loadSettings():"
-    << " no ResourceBlog, cast failed" << endl;
+                   << " no ResourceBlog, cast failed" << endl;
+  }
 }
 
 void ResourceBlogConfig::saveSettings( KRES::Resource *res )
@@ -118,9 +120,10 @@ void ResourceBlogConfig::saveSettings( KRES::Resource *res )
     mReloadConfig->saveSettings( resource );
     mSaveConfig->saveSettings( resource );
     kDebug( 5700 ) << "ResourceBlogConfig::saveSettings(): saved" << endl;
-  } else
+  } else {
     kError( 5700 ) << "ResourceBlogConfig::saveSettings():"
-    " no ResourceBlog, cast failed" << endl;
+      " no ResourceBlog, cast failed" << endl;
+  }
 }
 
 #include "resourceblogconfig.moc"

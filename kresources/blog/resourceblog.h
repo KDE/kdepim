@@ -1,5 +1,5 @@
 /*
-  This file is part of libkcal.
+  This file is part of the blog resource.
 
   Copyright (c) 2003 Cornelius Schumacher <schumacher@kde.org>
   Copyright (c) 2007 Mike Arthur <mike@mikearthur.co.uk>
