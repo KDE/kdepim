@@ -410,7 +410,7 @@ bool ResourceBlog::addJournal( Journal *journal )
 
 bool ResourceBlog::deleteJournal( Journal *journal )
 {
-  return true;
+  return false;
 }
 
 Journal::List ResourceBlog::journals( const QDate& )
@@ -422,4 +422,5 @@ Journal *ResourceBlog::journal( const QString& uid )
 {
   return 0;
 }
+
 #include "resourceblog.moc"

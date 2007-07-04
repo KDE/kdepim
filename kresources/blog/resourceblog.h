@@ -113,19 +113,29 @@ class ResourceBlog : public ResourceCached
     Journal *journal( const QString& uid );
 
     bool addEvent( Event *anEvent )
-    {}
+    {
+      Q_UNUSED( anEvent )
+      return false;
+    }
 
     bool deleteEvent( Event * )
-    {}
+    {
+      return false;
+    }
 
     void deleteAllEvents()
     {}
 
     bool addTodo( Todo *todo )
-    {}
+    {
+      Q_UNUSED( todo )
+      return false;
+    }
 
     bool deleteTodo( Todo * )
-    {}
+    {
+      return false;
+    }
 
     void deleteAllTodos()
     {}
