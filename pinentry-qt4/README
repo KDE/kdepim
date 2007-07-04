@@ -1,0 +1,2 @@
+This is a simple port of the pinentry application to Qt 4.
+It is based on revision 161 of pinentry (www.gnupg.org).
