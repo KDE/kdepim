@@ -1,6 +1,7 @@
 /* RecordConduit.cc			KPilot
 **
 ** Copyright (C) 2007 by Bertjan Broeksema
+** Copyright (C) 2007 by Jason "vanRijn" Kasper
 */
 
 /*
@@ -121,16 +122,20 @@ RecordConduit::~RecordConduit()
 
 void RecordConduit::hotSync()
 {
+	FUNCTIONSETUP;
 	// Walk through all modified hand held records. The proxy is responsible for
 	// serving the right records.
 	while( fHHDataProxy->hasNext() )
 	{
 		Record *hhRecord = fHHDataProxy->next();
 		Record *backupRecord = fBackupDataProxy->readRecordById( hhRecord->id() );
+		Record *pcRecord = 0L;
 		
-		recordid_t hhRecordId = hhRecord->id().toInt();
-		QVariant pcRecordId = QVariant( fMapping->pcRecordId( hhRecordId ) );
-		Record *pcRecord = fPCDataProxy->readRecordById( pcRecordId );
+		QVariant pcRecordId = fMapping->recordId( hhRecord->id() );
+		if( pcRecordId.isValid() ) {
+			// There is a mapping.
+			pcRecord = fPCDataProxy->readRecordById( pcRecordId );
+		}
 		
 		syncRecords( hhRecord, backupRecord, pcRecord );
 	}
@@ -140,19 +145,21 @@ void RecordConduit::hotSync()
 	while( fPCDataProxy->hasNext() )
 	{
 		Record *pcRecord = fPCDataProxy->next();
-	
-		// FIXME: Do i loose data here by this conversion?
-		QVariant pcRecordId = QVariant( 
-			(uint) fMapping->hhRecordId( pcRecord->id().toString() ) );
+		Record *backupRecord = 0L;
+		Record *hhRecord = 0L;
 		
-		Record *backupRecord = fBackupDataProxy->readRecordById( pcRecordId );
-		Record *hhRecord = fHHDataProxy->readRecordById( pcRecordId );
+		QVariant hhRecordId = fMapping->recordId( pcRecord->id() );
+		if( hhRecordId.isValid() ) {
+			// There is a mapping.
+			backupRecord = fBackupDataProxy->readRecordById( pcRecord->id() );
+			hhRecord = fHHDataProxy->readRecordById( pcRecord->id() );
+		}
 		
 		syncRecords( hhRecord, backupRecord, pcRecord );
 	}
 }
 
-bool RecordConduit::syncRecords( Record *pcRecord, Record *backupRecord,
+void RecordConduit::syncRecords( Record *pcRecord, Record *backupRecord,
 			Record *hhRecord )
 {
 	FUNCTIONSETUP;
@@ -167,23 +174,26 @@ bool RecordConduit::syncRecords( Record *pcRecord, Record *backupRecord,
 			// Case: 6.5.9
 			if( pcRecord->isModified() )
 			{
-				//return solveConflict( hhRecord, pcRecord );
+				solveConflict( hhRecord, pcRecord );
 			}
 			else
 			{
-				//return syncFields( hhRecord, pcRecord );
+				//            from      to
+				syncFields( hhRecord, pcRecord );
 			}
 		}
 		// Case: 6.5.6
 		else if( pcRecord->isModified() )
 		{
-			//return syncFields( pcRecord, hhRecord );
+			//            from      to
+			syncFields( pcRecord, hhRecord );
 		}
+		/*
 		else
 		{
 			// Case: 6.5.1 (hotSync)
-			return true;
 		}
+		*/
 	}
 	
 	if( hhRecord )
@@ -193,21 +203,25 @@ bool RecordConduit::syncRecords( Record *pcRecord, Record *backupRecord,
 			// Case: 6.5.11
 			if( hhRecord->isModified() )
 			{
-				//return solveConflict( hhRecord, 0L );
+				// Pc record deleted, hh record modified.
+				solveConflict( 0L, hhRecord );
 			}
 			// Case: 6.5.7
 			else
 			{
-				//return fHHDataProxy->deleteRecord( hhRecord );
+				fHHDataProxy->remove( hhRecord->id() );
+				fMapping->remove( hhRecord->id() );
 			}
 		}
 		// Case: 6.5.2 (and 6.5.8 if the conduit iterates over the HH data proxy
 		// first )
 		else
 		{
-			//fPCDataProxy->addRecord( hhRecord );
-			// Save tmp id for pc record
-			// return true;
+			// Warning id is a temporary id. Only after commit we know what id is
+			// assigned to the record. So on commit the proxy should get the mapping
+			// so that it can change the mapping.
+			QVariant id = fPCDataProxy->create( hhRecord );
+			fMapping->map( hhRecord->id(), id );
 		}
 	}
 	
@@ -218,47 +232,62 @@ bool RecordConduit::syncRecords( Record *pcRecord, Record *backupRecord,
 			// Case: 6.5.10
 			if( pcRecord->isModified() )
 			{
-				//return solveConflict( 0L, pcRecord );
+				solveConflict( pcRecord, 0L );
 			}
 			// Case: 6.5.4
 			else
 			{
-				//return fPCDataProxy->deleteRecord( pcRecord );
+				fPCDataProxy->remove( pcRecord->id() );
+				fMapping->remove( pcRecord->id() );
 			}
 		}
 		// Case: 6.5.5 (and 6.5.8 if the conduit iterates over the PC data proxy 
 		// first )
 		else
 		{
-			//fHHDataProxy->addRecord( pcRecord );
-			// Save tmp id for hh record
-			// return true;
+			QVariant id = fHHDataProxy->create( pcRecord );
+			fMapping->map( id, pcRecord->id() );
 		}
 	}
 	
 	// For completeness: Case 6.5.12
+	/*
 	if( backupRecord )
 	{
 		return true;
 	}
 	
 	return false;
+	*/
+}
+
+void RecordConduit::syncFields( Record *to, Record *from )
+{
+	FUNCTIONSETUP;
+	Q_UNUSED(to);
+	Q_UNUSED(from);
+	#warning Not implemented!
+}
+
+void RecordConduit::solveConflict( Record *pcRecord, Record *hhRecord )
+{
+	FUNCTIONSETUP;
+	Q_UNUSED(pcRecord);
+	Q_UNUSED(hhRecord);
+	#warning Not implemented!
 }
 
 bool RecordConduit::askConfirmation(const QString & volatilityMessage)
 {
+	FUNCTIONSETUP;
 	#warning Not implemented!
 	Q_UNUSED(volatilityMessage);
 	return false;
 }
 
-void RecordConduit::copyDatabases()
-{
-	#warning Not implemented!
-}
-
 void RecordConduit::createBackupDatabase() 
 {
+	FUNCTIONSETUP;
 	#warning Not implemented!
 }
 

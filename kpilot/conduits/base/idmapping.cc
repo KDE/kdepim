@@ -1,6 +1,7 @@
 /* idmapping.h			KPilot
 **
 ** Copyright (C) 2004-2007 by Bertjan Broeksema
+** Copyright (C) 2007 by Jason "vanRijn" Kasper
 */
 
 /*
@@ -37,18 +38,11 @@ bool IDMapping::isValid( const QList<QVariant> &hhIds )
 	return false;
 }
 
-QString IDMapping::pcRecordId( const recordid_t hhId )
+QVariant IDMapping::recordId( const QVariant &id )
 {
 	#warning Not implemented!
-	Q_UNUSED( hhId );
-	return QString();
-}
-
-recordid_t IDMapping::hhRecordId( const QString &pcRecordId )
-{
-	#warning Not implemented!
-	Q_UNUSED( pcRecordId );
-	return 0;
+	Q_UNUSED( id );
+	return QVariant();
 }
 
 void IDMapping::setLastSyncedDate( const QDateTime &dateTime )
@@ -68,23 +62,22 @@ void IDMapping::save()
 	#warning Not implemented!
 }
 
-void IDMapping::map( const recordid_t hhRecordId, const QString &pcId )
+void IDMapping::map( const QVariant &hhRecordId, const QVariant &pcId )
 {
 	Q_UNUSED( hhRecordId );
 	Q_UNUSED( pcId );
 	#warning Not implemented!
 }
 
-bool IDMapping::contains( const recordid_t hhRecordId )
+void IDMapping::remove( const QVariant &recordId )
 {
-	Q_UNUSED( hhRecordId );
+	Q_UNUSED( recordId );
 	#warning Not implemented!
-	return false;
 }
 
-bool IDMapping::contains( const QString &pcId )
+bool IDMapping::contains( const QVariant &hhRecordId )
 {
-	Q_UNUSED( pcId );
+	Q_UNUSED( hhRecordId );
 	#warning Not implemented!
 	return false;
 }

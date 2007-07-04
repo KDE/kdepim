@@ -1,6 +1,7 @@
 /* dataproxy.cc			KPilot
 **
 ** Copyright (C) 2007 by Bertjan Broeksema
+** Copyright (C) 2007 by Jason "vanRijn" Kasper
 */
 
 /*
@@ -52,6 +53,11 @@ void DataProxy::update( const QVariant &id, const Record *record )
 	Q_UNUSED(record)
 	Q_UNUSED(id)
 	#warning Not implemented!
+}
+
+const CUDCounter* DataProxy::counter() const
+{
+	return fCounter;
 }
 
 void DataProxy::syncFinished()

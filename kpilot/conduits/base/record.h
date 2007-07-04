@@ -1,9 +1,9 @@
 #ifndef RECORD_H
 #define RECORD_H
-
 /* record.h			KPilot
 **
 ** Copyright (C) 2007 by Bertjan Broeksema
+** Copyright (C) 2007 by Jason "vanRijn" Kasper
 */
 
 /*

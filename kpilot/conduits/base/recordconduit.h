@@ -1,9 +1,9 @@
 #ifndef RECORDCONDUIT_H
 #define RECORDCONDUIT_H
-
 /* RecordConduit.h			KPilot
 **
 ** Copyright (C) 2007 by Bertjan Broeksema
+** Copyright (C) 2007 by Jason "vanRijn" Kasper
 */
 
 /*
@@ -101,13 +101,17 @@ private:
 	 * that either the record does not exist (and needs to be created), or it is
 	 * deleted and should be deleted on the other side.
 	 */
-	bool syncRecords( Record *pcRecord, Record *backupRecord, Record *hhRecord );
+	void syncRecords( Record *pcRecord, Record *backupRecord, Record *hhRecord );
+	
+	/**
+	 * Changes the fields in @p to so that they are in sync with the fields from
+	 * @p from.
+	 */
+	void syncFields( Record *from, Record *to );
 	
 	void solveConflict( Record *pcRecord, Record *hhRecord );
 	
 	bool askConfirmation(const QString & volatilityMessage);
-
-	void copyDatabases();
 
 	void createBackupDatabase();
 };

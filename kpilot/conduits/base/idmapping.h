@@ -3,6 +3,7 @@
 /* idmapping.h			KPilot
 **
 ** Copyright (C) 2004-2007 by Bertjan Broeksema
+** Copyright (C) 2007 by Jason "vanRijn" Kasper
 */
 
 /*
@@ -49,16 +50,10 @@ public:
 	bool isValid( const QList<QVariant> &hhIds );
 
 	/**
-	 * Returns the pc record ID for given handheld record. Returns QString::Null 
-	 * if no mapping is found.
+	 * Searches for a mapping which contains @p id and returns the id to which it
+	 * is mapped.
 	 */
-	QString pcRecordId( const recordid_t hhRecordId );
-
-	/**
-	 * Returns the id for the HH record which is mapped to the given pc record or
-	 * 0 if there is no mapping.
-	 */
-	recordid_t hhRecordId( const QString &pcRecordId );
+	QVariant recordId( const QVariant &id );
 
 	void setLastSyncedDate( const QDateTime &dateTime );
 
@@ -70,10 +65,14 @@ public:
 	 * Deletes any mapping that exists for @p hhRecordId and @p pcRecordId and 
 	 * then creates a new mapping between @p hhRecordId and @p pcRecordId.
 	 */
-	void map( const recordid_t hhRecordId, const QString &pcId  );
-
-	bool contains( const recordid_t hhRecordId );
+	void map( const QVariant &hhRecordId, const QVariant &pcRecordId );
 	
-	bool contains( const QString &pcId );
+	/**
+	 * Search for a mapping which contains @p recordId and if one is found it will
+	 * be removed.
+	 */
+	void remove( const QVariant &recordId );
+
+	bool contains( const QVariant &id );
 };
 #endif

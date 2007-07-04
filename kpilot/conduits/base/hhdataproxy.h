@@ -3,6 +3,7 @@
 /* hhdataproxy.h			KPilot
 **
 ** Copyright (C) 2007 by Bertjan Broeksema
+** Copyright (C) 2007 by Jason "vanRijn" Kasper
 */
 
 /*

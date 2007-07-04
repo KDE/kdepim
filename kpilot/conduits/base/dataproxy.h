@@ -3,6 +3,7 @@
 /* dataproxy.h			KPilot
 **
 ** Copyright (C) 2007 by Bertjan Broeksema
+** Copyright (C) 2007 by Jason "vanRijn" Kasper
 */
 
 /*
@@ -65,6 +66,8 @@ public:
 	 */
 	virtual QList<QVariant> ids() = 0;
 
+	const CUDCounter* counter() const;
+
 	void syncFinished();
 
 	/**
@@ -78,7 +81,7 @@ public:
 	/**
 		* Looks for a matching record. Should return 0 if there is no match.
 		*/
-	virtual Record* lookForMatch() = 0;
+	virtual Record* find( const QVariant &id ) const = 0;
 
 	virtual void loadAllRecords() = 0;
 
@@ -92,15 +95,8 @@ public:
 
 	virtual Record* readRecordById( const QVariant &id ) = 0;
 
-	/**
-		* Returns QString::Null if everything is ok, or a message explaining the
-		* cause (invalid count, or volatility exceeds configured threshold).
-		*/
-	virtual QString volatilityMessage() = 0;
-
-
 protected:
 	Mode fMode;
-	Record *fRecords;
+	QList<Record> *fRecords;
 };
 #endif
