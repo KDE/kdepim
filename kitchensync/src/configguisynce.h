@@ -12,7 +12,7 @@ class ConfigGuiSynce : public ConfigGui
 
     void load( const QString &xml );
 
-    QString save();
+    QString save() const;
 
   private:
     void initGUI();

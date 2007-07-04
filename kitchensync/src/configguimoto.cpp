@@ -28,7 +28,7 @@ void ConfigGuiMoto::load( const QString &xml )
   }
 }
 
-QString ConfigGuiMoto::save()
+QString ConfigGuiMoto::save() const
 {
   QString config = "<config>\n";
 

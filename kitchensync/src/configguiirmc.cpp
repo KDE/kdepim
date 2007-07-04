@@ -91,7 +91,7 @@ void ConfigGuiIRMC::load( const QString &xml )
   mCableWidget->load( docElement );
 }
 
-QString ConfigGuiIRMC::save()
+QString ConfigGuiIRMC::save() const
 {
   QDomDocument doc;
   QDomElement config = doc.createElement( "config" );

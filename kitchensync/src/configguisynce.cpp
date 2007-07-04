@@ -34,7 +34,7 @@ void ConfigGuiSynce::load( const QString &xml )
   }
 }
 
-QString ConfigGuiSynce::save()
+QString ConfigGuiSynce::save() const
 {
   QString config = "<config>\n";
 

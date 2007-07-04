@@ -29,7 +29,7 @@ class ConfigGuiBlank : public ConfigGui
     ConfigGuiBlank( const QSync::Member &member, QWidget *parent = 0 );
 
     void load( const QString &xml );
-    QString save();
+    QString save() const;
 };
 
 #endif

@@ -35,7 +35,7 @@ class ConfigGuiGpe : public ConfigGui
     ConfigGuiGpe( const QSync::Member &, QWidget *parent );
 
     void load( const QString &xml );
-    QString save();
+    QString save() const;
 
   private:
     void initGUI();

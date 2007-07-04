@@ -237,7 +237,7 @@ void ConfigGuiSyncmlObex::load( const QString &xml )
   }
 }
 
-QString ConfigGuiSyncmlObex::save()
+QString ConfigGuiSyncmlObex::save() const
 {
   QString xml;
   xml = "<config>\n";

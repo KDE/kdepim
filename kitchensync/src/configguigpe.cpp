@@ -64,7 +64,7 @@ void ConfigGuiGpe::load( const QString &xml )
   }
 }
 
-QString ConfigGuiGpe::save()
+QString ConfigGuiGpe::save() const
 {
   QString config = "<config>";
 
