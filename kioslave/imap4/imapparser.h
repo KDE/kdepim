@@ -28,7 +28,7 @@
 #include <q3valuelist.h>
 #include <q3ptrlist.h>
 #include <q3asciidict.h>
-#include <Q3CString>
+#include <QByteArray>
 
 #include <kio/authinfo.h>
 #include <kio/slavebase.h>
@@ -59,32 +59,20 @@ public:
   QByteArray cstr() const
   {
     if (pos >= data.size()) return QByteArray();
-    return QByteArray(data.data() + pos, data.size() - pos + 1);
+    return QByteArray(data.data() + pos, data.size() - pos);
   }
-  int find(char c, int index = 0)
+  int find(char c, int index = 0) const
   {
     int res = data.indexOf(c, index + pos);
     return (res == -1) ? res : (res - pos);
   }
   // Warning: does not check for going past end of "data"
-  void takeLeft(Q3CString& dest, uint len) const
-  {
-    dest.resize(len + 1);
-    memmove(dest.data(), data.data() + pos, len);
-  }
-  // Warning: does not check for going past end of "data"
-  void takeLeftNoResize(Q3CString& dest, uint len) const
+  void takeLeftNoResize(QByteArray& dest, uint len) const
   {
     memmove(dest.data(), data.data() + pos, len);
   }
   // Warning: does not check for going past end of "data"
-  void takeMid(Q3CString& dest, uint start, uint len) const
-  {
-    dest.resize(len + 1);
-    memmove(dest.data(), data.data() + pos + start, len);
-  }
-  // Warning: does not check for going past end of "data"
-  void takeMidNoResize(Q3CString& dest, uint start, uint len) const
+  void takeMidNoResize(QByteArray& dest, uint start, uint len) const
   {
     memmove(dest.data(), data.data() + pos + start, len);
   }
@@ -158,11 +146,11 @@ public:
     myFlags = inFlags;
   }
 
-  Q3CString getDate ()
+  QByteArray getDate ()
   {
     return myDate;
   }
-  void setDate (const Q3CString & _str)
+  void setDate (const QByteArray & _str)
   {
     myDate = _str;
   }
@@ -172,7 +160,7 @@ public:
     myHeader = NULL;
     mySize = 0;
     myFlags = 0;
-    myDate = Q3CString();
+    myDate = QByteArray();
     myUid = 0;
   }
 
@@ -181,7 +169,7 @@ protected:
   ulong mySize;
   ulong myFlags;
   ulong myUid;
-  Q3CString myDate;
+  QByteArray myDate;
 };
 
 
@@ -353,25 +341,14 @@ public:
   void parseSentence (parseString & inWords);
 
   /** parse a literal or word, may require more data */
-  Q3CString parseLiteralC(parseString & inWords, bool relay = false,
-                           bool stopAtBracket = false, int *outlen = 0);
-  inline QByteArray parseLiteral (parseString & inWords, bool relay = false,
-                           bool stopAtBracket = false) {
-    int len = 0; // string size
-    // Choice: we can create an extra QCString, or we can get the buffer in
-    // the wrong size to start.  Let's try option b.
-    Q3CString tmp = parseLiteralC(inWords, relay, stopAtBracket, &len);
-    return tmp;
-  }
+  QByteArray parseLiteral(parseString & inWords, bool relay = false,
+                          bool stopAtBracket = false);
 
   // static parser routines, can be used elsewhere
 
-  static Q3CString b2c(const QByteArray &ba)
-  { return Q3CString(ba.data(), ba.size() + 1); }
-
   /** parse one word (maybe quoted) upto next space " ) ] } */
   static QByteArray parseOneWord (parseString & inWords,
-    bool stopAtBracket = false, int *len = 0);
+    bool stopAtBracket = false);
 
   /** parse one number using parseOneWord */
   static bool parseOneNumber (parseString & inWords, ulong & num);

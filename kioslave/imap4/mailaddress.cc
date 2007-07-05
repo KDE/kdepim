@@ -96,15 +96,15 @@ mailAddress::parseAddress (const char *aCStr)
       {
       case '"':
         advance = mimeHdrLine::parseQuoted ('"', '"', aCStr);
-        rawFullName += QByteArray (aCStr, advance + 1);
+        rawFullName += QByteArray (aCStr, advance);
         break;
       case '(':
         advance = mimeHdrLine::parseQuoted ('(', ')', aCStr);
-        rawComment += QByteArray (aCStr, advance + 1);
+        rawComment += QByteArray (aCStr, advance);
         break;
       case '<':
         advance = mimeHdrLine::parseQuoted ('<', '>', aCStr);
-        user = QByteArray (aCStr, advance + 1); // copy it
+        user = QByteArray (aCStr, advance); // copy it
         len = advance;
         user = user.mid (1, len - 2);  // strip <>
         len -= 2;
@@ -113,7 +113,7 @@ mailAddress::parseAddress (const char *aCStr)
         user.truncate(pt); // and user
         break;
       default:
-        advance = mimeHdrLine::parseWord ((const char *) aCStr);
+        advance = mimeHdrLine::parseWord (aCStr);
         //if we've seen a FQ mailname the rest must be quoted or is just junk
         if (user.isEmpty ())
         {

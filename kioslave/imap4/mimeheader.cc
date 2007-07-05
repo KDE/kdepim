@@ -105,7 +105,7 @@ mimeHeader::addHdrLine (mimeHdrLine * aHdrLine)
           if (aCStr[skip - 1] == ';')
             cut++;
         }
-        QByteArray mimeValue(aCStr, skip - cut + 1);  // cutting of one because of 0x00
+        QByteArray mimeValue(aCStr, skip - cut);
 
 
         if (!qstricmp (addLine->getLabel (), "Content-Disposition"))
