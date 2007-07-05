@@ -35,9 +35,9 @@
 QString Memofiles::FIELD_SEP = CSL1("\t");
 
 Memofiles::Memofiles (MemoCategoryMap & categories, PilotMemoInfo &appInfo, 
-	QString & baseDirectory, CUDCounter &fCtrPC) :
+	QString & baseDirectory) :
 	_categories(categories), _memoAppInfo(appInfo), 
-	_baseDirectory(baseDirectory), _cudCounter(fCtrPC)
+	_baseDirectory(baseDirectory)
 {
 	FUNCTIONSETUP;
 	_memofiles.clear();
@@ -359,7 +359,7 @@ void Memofiles::deleteMemo(PilotMemo * memo)
 	if (memofile) {
 		memofile->deleteFile();
 		_memofiles.remove(memofile);
-		_cudCounter.deleted();
+		//_cudCounter.deleted();
 	}
 }
 
@@ -380,7 +380,7 @@ void Memofiles::addModifiedMemo (PilotMemo * memo)
 	Memofile * memofile = find(memo->id());
 
 	if (NULL == memofile) {
-		_cudCounter.created();
+		//_cudCounter.created();
 		debug += CSL1(" new from pilot.");
 	} else {
 		// we have found a local memofile that was modified on the palm.  for the time
@@ -388,7 +388,7 @@ void Memofiles::addModifiedMemo (PilotMemo * memo)
 		// the local filesystem with changes to the palm (palm overrides local).  at
 		// some point in the future, we should probably honor a user preference for
 		// this...
-		_cudCounter.updated();
+		//_cudCounter.updated();
 		_memofiles.remove(memofile);
 		debug += CSL1(" modified from pilot.");
 	}

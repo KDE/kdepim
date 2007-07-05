@@ -94,6 +94,8 @@ public:
 	virtual Record* next() = 0;
 
 	virtual Record* readRecordById( const QVariant &id ) = 0;
+	
+	virtual unsigned int recordCount() const = 0;
 
 protected:
 	Mode fMode;

@@ -33,9 +33,29 @@ class Record {
 public:
 	virtual ~Record() = 0;
 	
-	virtual QVariant id() = 0;
+	virtual const QVariant id() const = 0;
 
-	virtual bool isModified() = 0;
+	/**
+	 * Returns true if the record knows that it's modified since last sync.
+	 */
+	virtual bool isModified() const = 0;
+	
+	/**
+	 * Returns the list of fields that this record has.
+	 */
+	virtual const QStringList fields() const = 0;
+	
+	/**
+	 * Sets the value of @p field to @p value and returns true. Returns false if 
+	 * the field does not exists or if the value is not of an appropriate type for
+	 * the field.
+	 */
+	virtual bool setValue( const QString &field, const QVariant &value ) = 0;
 
+	/**
+	 * Returns the value for @p field or an invalid QVariant if the field does not
+	 * exists.
+	 */
+	virtual const QVariant value( const QString &field ) const = 0;
 };
 #endif

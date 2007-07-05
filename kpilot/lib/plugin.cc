@@ -274,8 +274,6 @@ ConduitAction::ConduitAction(KPilotLink *p,
 	SyncAction(p),
 	fDatabase(0L),
 	fLocalDatabase(0L),
-	fCtrHH(0L),
-	fCtrPC(0L),
 	fSyncDirection(args),
 	fConflictResolution(SyncAction::eAskUser),
 	fFirstSync(false)
@@ -297,8 +295,6 @@ ConduitAction::ConduitAction(KPilotLink *p,
 	}
 
 	DEBUGKPILOT << fname << ": Direction=" << fSyncDirection.name() << endl;
-	fCtrHH = new CUDCounter(i18n("Handheld"));
-	fCtrPC = new CUDCounter(i18n("PC"));
 }
 
 /* virtual */ ConduitAction::~ConduitAction()
@@ -307,9 +303,6 @@ ConduitAction::ConduitAction(KPilotLink *p,
 
 	KPILOT_DELETE(fDatabase);
 	KPILOT_DELETE(fLocalDatabase);
-
-	KPILOT_DELETE(fCtrHH);
-	KPILOT_DELETE(fCtrPC);
 }
 
 bool ConduitAction::openDatabases(const QString &name, bool *retrieved)
@@ -422,10 +415,6 @@ bool ConduitAction::openDatabases(const QString &name, bool *retrieved)
 			<< "\" on the pilot."
 			<< endl;
 	}
-	else
-	{
-		fCtrHH->setStartCount(fDatabase->recordCount());
-	}
 
 	return (fDatabase && fDatabase->isOpen() &&
 	        fLocalDatabase && fLocalDatabase->isOpen() );
@@ -443,78 +432,6 @@ bool ConduitAction::changeSync(SyncMode::Mode m)
 	}
 	return false;
 }
-
-void ConduitAction::finished()
-{
-	FUNCTIONSETUP;
-
-	if (fDatabase && fCtrHH)
-		fCtrHH->setEndCount(fDatabase->recordCount());
-
-	if (fCtrHH && fCtrPC)
-	{
-		addSyncLogEntry(fCtrHH->moo() +'\n',false);
-		DEBUGKPILOT << fname << ": " << fCtrHH->moo() << endl;
-		addSyncLogEntry(fCtrPC->moo() +'\n',false);
-		DEBUGKPILOT << fname << ": " << fCtrPC->moo() << endl;
-
-		// STEP2 of making sure we don't delete our little user's
-		// precious data...
-		// sanity checks for handheld...
-		int hhVolatility = fCtrHH->percentDeleted() +
-				 fCtrHH->percentUpdated() +
-		    		 fCtrHH->percentCreated();
-
-		int pcVolatility = fCtrPC->percentDeleted() +
-				 fCtrPC->percentUpdated() +
-		    		 fCtrPC->percentCreated();
-
-		// TODO: allow user to configure this...
-		// this is a percentage...
-		int allowedVolatility = 70;
-
-		QString caption = i18n("Large Changes Detected");
-		// args are already i18n'd
-		KLocalizedString template_query = ki18n("The %1 conduit has made a "
-			         "large number of changes to your %2.  Do you want "
-			         "to allow this change?\nDetails:\n\t%3");
-
-		if (hhVolatility > allowedVolatility)
-		{
-			QString query = template_query.subs(fConduitName)
-				.subs(fCtrHH->type()).subs(fCtrHH->moo()).toString();
-
-			DEBUGKPILOT << fname << ": high volatility."
-				<< "  Check with user: [" << query
-				<< "]." << endl;
-
-			/*
-			int rc = questionYesNo(query, caption,
-				QString::null, 0 );
-			if (rc == KMessageBox::Yes)
-			{
-				// TODO: add commit and rollback code.
-				// note: this will require some thinking,
-				// since we have to undo changes to the
-				// pilot databases, changes to the PC
-				// resources, changes to the mappings files
-				// (record id mapping, etc.)
-			}
-			*/
-		}
-		if (pcVolatility > allowedVolatility)
-		{
-			QString query = template_query.subs(fConduitName)
-				.subs(fCtrPC->type()).subs(fCtrPC->moo()).toString();
-
-			DEBUGKPILOT << fname << ": high volatility."
-				<< "  Check with user: [" << query
-				<< "]." << endl;
-		}
-	}
-
-}
-
 
 ConduitProxy::ConduitProxy(KPilotLink *p,
 	const QString &name,
@@ -638,9 +555,6 @@ void ConduitProxy::execDone(SyncAction *p)
 		return;
 	}
 
-	// give our worker a chance to sanity check the results...
-	fConduit->finished();
-
 	addSyncLogEntry(CSL1("\n"),false); // Put bits of the conduit logs on separate lines
 
 	KPILOT_DELETE(p);
@@ -697,53 +611,4 @@ QString findArgument(const QStringList &a, const QString &arg)
 	return *p;
 }
 
-
-
 }
-
-
-CUDCounter::CUDCounter(QString s) :
-	fC(0),fU(0),fD(0),fStart(0),fEnd(0),fType(s)
-{
-}
-
-void CUDCounter::created(unsigned int c)
-{
-	fC += c;
-}
-
-void CUDCounter::updated(unsigned int c)
-{
-	fU += c;
-}
-
-void CUDCounter::deleted(unsigned int c)
-{
-	fD += c;
-}
-
-void CUDCounter::setStartCount(unsigned int t)
-{
-	fStart = t;
-}
-
-void CUDCounter::setEndCount(unsigned int t)
-{
-	fEnd = t;
-}
-
-QString CUDCounter::moo() const
-{
-	QString result = fType + ": " +
-		i18n("Start: %1. End: %2. ",fStart,fEnd);
-
-	if (fC > 0) result += i18n("%1 new. ",fC);
-	if (fU > 0) result += i18n("%1 changed. ",fU);
-	if (fD > 0) result += i18n("%1 deleted. ",fD);
-
-	if ( (fC+fU+fD) <= 0) result += i18n("No changes made. ");
-
-	return result;
-}
-
-

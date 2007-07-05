@@ -32,29 +32,29 @@ CUDCounter::CUDCounter()
 	#warning Not implemented!
 }
 
-void CUDCounter::setStartCount()
+void CUDCounter::setStartCount( unsigned int t )
 {
-	#warning Not implemented!
+	fStart = t;
 }
 
-void CUDCounter::setEndCount()
+void CUDCounter::setEndCount( unsigned int t )
 {
-	#warning Not implemented!
+	fEnd = t;
 }
 
-void CUDCounter::created()
+void CUDCounter::created( unsigned int c )
 {
-	#warning Not implemented!
+	fC += c;
 }
 
-void CUDCounter::updated()
+void CUDCounter::updated( unsigned int u )
 {
-	#warning Not implemented!
+	fU += u;
 }
 
-void CUDCounter::deleted()
+void CUDCounter::deleted( unsigned int d )
 {
-	#warning Not implemented!
+	fD += d;
 }
 
 int CUDCounter::volatilityCount()
@@ -68,3 +68,19 @@ int CUDCounter::volatilityPercent()
 	#warning Not implemented!
 	return 100;
 }
+
+/*
+QString CUDCounter::moo() const
+{
+	QString result = fType + ": " +
+		i18n("Start: %1. End: %2. ",fStart,fEnd);
+
+	if (fC > 0) result += i18n("%1 new. ",fC);
+	if (fU > 0) result += i18n("%1 changed. ",fU);
+	if (fD > 0) result += i18n("%1 deleted. ",fD);
+
+	if ( (fC+fU+fD) <= 0) result += i18n("No changes made. ");
+
+	return result;
+}
+*/

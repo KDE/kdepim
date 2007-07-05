@@ -177,76 +177,6 @@ Q_SIGNALS:
 
 } ;
 
-
-/**
-* Create-Update-Delete tracking of the plugin,
-* used for reporting purposes (in a consistent manner).  The intent
-* is that this class is used by the conduit as it is syncing data.
-* For this to be useful (and be used properly), the conduit needs
-* to tell us how many creates, updates, and deletes it has made to
-* a data store (PC or HH).  It also needs to tell us how many
-* records it started with and how many records it has at the
-* conclusion of its processing.  Using this information, we can
-* report on it consistently as well as analyze the activity taken
-* by the conduit and offer rollback functionality if we think the
-* conduit has behaved improperly.
-*/
-class KPILOT_EXPORT CUDCounter
-{
-public:
-	/** Create new counter initialized to 0, and be told what
-	 * kind of CUD we're counting (PC or Handheld, etc.) */
-	CUDCounter(QString s);
-
-	/** Track the creation of @p c items */
-	void created(unsigned int c=1);
-	/** Track updates to @p u items */
-	void updated(unsigned int u=1);
-	/** Track the destruction of @p d items */
-	void deleted(unsigned int d=1);
-	/** How many @p t items did we start with? */
-	void setStartCount(unsigned int t);
-	/** How many @p t items did we end with? */
-	void setEndCount(unsigned int t);
-
-	unsigned int countCreated() { return fC; }
-	unsigned int countUpdated() { return fU; }
-	unsigned int countDeleted() { return fD; }
-	unsigned int countStart() { return fStart; }
-	unsigned int countEnd() { return fEnd; }
-
-	/** percentage of changes.  unfortunately, we have to rely on our
-	 * developers (hi, self!) to correctly set total number of records
-	 * conduits start with, so add a little protection...
-	 */
-	unsigned int percentCreated() { return (fEnd   > 0 ? fC/fEnd   : 0); }
-	unsigned int percentUpdated() { return (fEnd   > 0 ? fU/fEnd   : 0); }
-	unsigned int percentDeleted() { return (fStart > 0 ? fD/fStart : 0); }
-
-	/** Measurement Of Objects -- report numbers of
-	* objects created, updated, deleted. This
-	* string is already i18n()ed.
-	*/
-	QString moo() const;
-
-	/** Type of counter(Handheld or PC).  This string is already
-	 * i18n()ed.
-	*/
-	QString type() const { return fType; }
-private:
-	/** keep track of Creates, Updates, Deletes, and Total
-	 * number of records so we can detect abnormal behavior and
-	 * hopefully prevent data loss.
-	 */
-	unsigned int fC,fU,fD,fStart,fEnd;
-
-	/** What kind of CUD are we keeping track of so we can
-	 * moo() it out later?  (PC, Handheld, etc.)
-	 */
-	QString fType;
-} ;
-
-
 /**
 * The SyncActions created by the factory should obey at least
 * the argument test, indicating a dry run. The device link is
@@ -265,11 +195,6 @@ public:
 	ConduitAction(KPilotLink *,
 		const QStringList &args = QStringList());
 	virtual ~ConduitAction();
-
-	/** ConduitAction is done doing work.  Allow it to sanity-check the
-	 * results
-	 */
-	void finished();
 
 	QString conduitName() const { return fConduitName; } ;
 
@@ -344,11 +269,6 @@ protected:
 	* normally be set in the constructor.
 	*/
 	QString fConduitName;
-
-	/** Every plugin has 2 CUDCounters--one for keeping track of
-	 * changes made to PC data and one for keeping track of Palm data. */
-	CUDCounter *fCtrHH;
-	CUDCounter *fCtrPC;
 
 private:
 	SyncMode fSyncDirection;

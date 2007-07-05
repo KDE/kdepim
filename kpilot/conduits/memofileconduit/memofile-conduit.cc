@@ -101,13 +101,13 @@ MemofileConduit::~MemofileConduit()
 	}
 
 	_memofiles = new Memofiles(fCategories, *fMemoAppInfo,
-		_memo_directory, *fCtrHH);
+		_memo_directory);
 	if (! _memofiles || ! _memofiles->isReady()) {
 		emit logError(i18n("Cannot initialize the memo files from disk."));
 		return false;
 	}
 
-	fCtrPC->setStartCount(_memofiles->count());
+	//fCtrPC->setStartCount(_memofiles->count());
 
 	setFirstSync( _memofiles->isFirstSync() );
 	addSyncLogEntry(i18n(" Syncing with %1.",_memo_directory));
@@ -407,7 +407,7 @@ bool MemofileConduit::copyPCToHH()
 	// re-create our memofiles helper...
 	KPILOT_DELETE(_memofiles);
 	_memofiles = new Memofiles(fCategories, *fMemoAppInfo,
-		_memo_directory, *fCtrHH);
+		_memo_directory);
 
 	_memofiles->load(true);
 
@@ -476,10 +476,10 @@ int MemofileConduit::writeToPilot(Memofile * memofile)
 
 	QString status;
 	if (oldid <=0) {
-		fCtrHH->created();
+		//fCtrHH->created();
 		status = "new to pilot";
 	} else {
-		fCtrHH->updated();
+		//fCtrHH->updated();
 		status = "updated";
 	}
 
@@ -503,7 +503,7 @@ void MemofileConduit::deleteFromPilot(PilotMemo * memo)
 	}
 	KPILOT_DELETE(r);
 
-	fCtrHH->deleted();
+	//fCtrHH->deleted();
 
 	DEBUGKPILOT << fname
 		<< ": memo: [" << memo->getTitle()
@@ -549,7 +549,7 @@ void MemofileConduit::cleanup()
 	fLocalDatabase->resetSyncFlags();
 	fLocalDatabase->cleanup();
 
-	fCtrPC->setEndCount(_memofiles->count());
+	//fCtrPC->setEndCount(_memofiles->count());
 }
 
 

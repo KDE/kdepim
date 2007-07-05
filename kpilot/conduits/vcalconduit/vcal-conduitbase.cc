@@ -412,13 +412,13 @@ KCal::Incidence* VCalConduitBase::addRecord( PilotRecord *r )
 			e = newIncidence();
 			incidenceFromRecord( e, de );
 			fP->addIncidence( e );
-			fCtrPC->created();
+			//fCtrPC->created();
 		}
 		else
 		{
 			// similar entry found, so just copy, no need to insert again
 			incidenceFromRecord( e, de );
-			fCtrPC->updated();
+			//fCtrPC->updated();
 		}
 	}
 	KPILOT_DELETE( de );
@@ -504,7 +504,7 @@ KCal::Incidence*VCalConduitBase::deleteRecord( PilotRecord *r, PilotRecord * )
 	{
 		// RemoveEvent also takes it out of the calendar.
 		fP->removeIncidence(e);
-		fCtrPC->deleted();
+		//fCtrPC->deleted();
 	}
 	fLocalDatabase->writeRecord( r );
 	return NULL;
@@ -517,7 +517,7 @@ void VCalConduitBase::addPalmRecord( KCal::Incidence *e )
 
 	PilotRecordBase *de = newPilotEntry( 0L );
 	updateIncidenceOnPalm( e, de );
-	fCtrHH->created();
+	//fCtrHH->created();
 	KPILOT_DELETE( de );
 }
 
@@ -526,7 +526,7 @@ void VCalConduitBase::changePalmRecord(KCal::Incidence*e, PilotRecord*s)
 {
 	PilotRecordBase *de = newPilotEntry( s );
 	updateIncidenceOnPalm( e, de );
-	fCtrHH->updated();
+	//fCtrHH->updated();
 	KPILOT_DELETE( de );
 }
 
@@ -540,7 +540,7 @@ void VCalConduitBase::deletePalmRecord( KCal::Incidence *e, PilotRecord *s )
 		s->setDeleted();
 		fDatabase->writeRecord( s );
 		fLocalDatabase->writeRecord( s );
-		fCtrHH->deleted();
+		//fCtrHH->deleted();
 	}
 	else
 	{
@@ -626,13 +626,17 @@ void VCalConduitBase::setState( ConduitState *s )
 /* virtual */ void VCalConduitBase::postSync( )
 {
 	FUNCTIONSETUP;
+	/*
 	if (fCtrPC && fP)
 		fCtrPC->setEndCount(fP->count());
+	*/
 }
 
 /* virtual */ void VCalConduitBase::preSync( )
 {
 	FUNCTIONSETUP;
+	/*
 	if (fCtrPC && fP)
 		fCtrPC->setStartCount(fP->count());
+	*/
 }

@@ -27,19 +27,43 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
+/**
+* Create-Update-Delete tracking of the plugin,
+* used for reporting purposes (in a consistent manner).  The intent
+* is that this class is used by the conduit as it is syncing data.
+* For this to be useful (and be used properly), the conduit needs
+* to tell us how many creates, updates, and deletes it has made to
+* a data store (PC or HH).  It also needs to tell us how many
+* records it started with and how many records it has at the
+* conclusion of its processing.  Using this information, we can
+* report on it consistently as well as analyze the activity taken
+* by the conduit and offer rollback functionality if we think the
+* conduit has behaved improperly.
+*/
 class CUDCounter {
 public:
 	CUDCounter();
 
-	void setStartCount();
+	/** How many @p t items did we start with? */
+	void setStartCount( unsigned int t );
 
-	void setEndCount();
+	/** How many @p t items did we end with? */
+	void setEndCount( unsigned int t );
 
-	void created();
+	/** Track the creation of @p c items */
+	void created( unsigned int c=1 );
 
-	void updated();
+	/** Track updates to @p u items */
+	void updated( unsigned int u=1 );
 
-	void deleted();
+	/** Track the destruction of @p d items */
+	void deleted( unsigned int d=1 );
+
+	unsigned int countCreated() const { return fC; }
+	unsigned int countUpdated() const { return fU; }
+	unsigned int countDeleted() const { return fD; }
+	unsigned int countStart() const { return fStart; }
+	unsigned int countEnd() const { return fEnd; }
 
 	/**
 	 * Returns the sum of created records, updated records and deleted records.
@@ -50,5 +74,35 @@ public:
 	 * Returns 100 if startcount is 0 otherwhise volatilityCount() / startCount.
 	 */
 	int volatilityPercent();
+
+	// Some stuff of copied from the CUDCounter in plugin.h
+
+	/** percentage of changes.  unfortunately, we have to rely on our
+	 * developers (hi, self!) to correctly set total number of records
+	 * conduits start with, so add a little protection...
+	 */
+	/*
+	unsigned int percentCreated() { return (fEnd   > 0 ? fC/fEnd   : 0); }
+	unsigned int percentUpdated() { return (fEnd   > 0 ? fU/fEnd   : 0); }
+	unsigned int percentDeleted() { return (fStart > 0 ? fD/fStart : 0); }
+	*/
+	
+	/** Measurement Of Objects -- report numbers of
+	* objects created, updated, deleted. This
+	* string is already i18n()ed.
+	*/
+	//QString moo() const;
+
+	/** Type of counter(Handheld or PC).  This string is already
+	 * i18n()ed.
+	*/
+	//QString type() const { return fType; }
+	
+private:
+	unsigned int fC;
+	unsigned int fU;
+	unsigned int fD;
+	unsigned int fStart;
+	unsigned int fEnd;
 };
 #endif

@@ -17,7 +17,7 @@ note 164234 "At this moment the conduit knows that it's a hotsync so set iterate
 note 168330 "See 4.1, 5.1, 5.2, 5.3, 5.4 and 5.5 for different flows en COM - finish for common actions after flow."
   xyzwh 202 423 2000 145 120
 note 168970 "See \"DET - Init data proxies\""
-  xyzwh 277 138 2000 189 35
+  xyzwh 277 138 3005 189 35
 durationcanvas 128203 classinstance_ref 128075 // :PilotDaemon
   xyzwh 38 50 2010 11 55
 durationcanvas 128266 classinstance_ref 128010 // :RecordConduit

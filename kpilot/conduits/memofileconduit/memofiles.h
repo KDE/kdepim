@@ -42,7 +42,7 @@ class Memofiles {
 public:
 
 	Memofiles (MemoCategoryMap & categories, PilotMemoInfo &appInfo, 
-		QString & baseDirectory, CUDCounter &fCtrHH);
+		QString & baseDirectory);
 	~Memofiles();
 
 	void load(bool loadAll);
@@ -73,7 +73,6 @@ private:
 	MemoCategoryMap _categories;
 	PilotMemoInfo &_memoAppInfo;
 	QString & _baseDirectory;
-	CUDCounter &_cudCounter;
 	Q3PtrList<Memofile> _memofiles;
 
 	bool  loadFromMetadata();

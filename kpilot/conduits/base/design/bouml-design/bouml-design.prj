@@ -1,6 +1,6 @@
 format 38
 "bouml-design"
-  revision 35
+  revision 36
   modified_by 10 "kde4"
   cpp_root_dir "/home/kde4/src/kpilot/conduits/base/design/bouml-design/"
 

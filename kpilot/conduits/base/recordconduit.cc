@@ -117,7 +117,89 @@ RecordConduit::~RecordConduit()
 		return false; // 6.3.7 and 6.3.8
 	}
 	
+	// Sync finished, clean up things.
+	fHHDataProxy->syncFinished();
+	fPCDataProxy->syncFinished();
+	
+	fMapping->setLastSyncedDate( QDateTime::currentDateTime() );
+	if( !fMapping->isValid( fHHDataProxy->ids() ) )
+	{
+		// TODO: Warn the user.
+		return false;
+	}
+	
+	const CUDCounter *hhCounter = fHHDataProxy->counter();
+	const CUDCounter *pcCounter = fPCDataProxy->counter();
+	
+	bool volitile = isVolatile();
+	
 	return true;
+}
+
+bool RecordConduit::isVolatile()
+{
+	/*
+	if (fCtrHH && fCtrPC)
+	{
+		addSyncLogEntry(fCtrHH->moo() +'\n',false);
+		DEBUGKPILOT << fname << ": " << fCtrHH->moo() << endl;
+		addSyncLogEntry(fCtrPC->moo() +'\n',false);
+		DEBUGKPILOT << fname << ": " << fCtrPC->moo() << endl;
+
+		// STEP2 of making sure we don't delete our little user's
+		// precious data...
+		// sanity checks for handheld...
+		int hhVolatility = fCtrHH->percentDeleted() +
+				 fCtrHH->percentUpdated() + fCtrHH->percentCreated();
+
+		int pcVolatility = fCtrPC->percentDeleted() +
+				 fCtrPC->percentUpdated() + fCtrPC->percentCreated();
+
+		// TODO: allow user to configure this...
+		// this is a percentage...
+		int allowedVolatility = 70;
+
+		QString caption = i18n( "Large Changes Detected" );
+		// args are already i18n'd
+		KLocalizedString template_query = ki18n("The %1 conduit has made a "
+			         "large number of changes to your %2.  Do you want "
+			         "to allow this change?\nDetails:\n\t%3");
+
+		if (hhVolatility > allowedVolatility)
+		{
+			QString query = template_query.subs(fConduitName)
+				.subs(fCtrHH->type()).subs(fCtrHH->moo()).toString();
+
+			DEBUGKPILOT << fname << ": high volatility."
+				<< "  Check with user: [" << query
+				<< "]." << endl;
+				
+			/*
+			int rc = questionYesNo(query, caption,
+				QString::null, 0 );
+			if (rc == KMessageBox::Yes)
+			{
+				// TODO: add commit and rollback code.
+				// note: this will require some thinking,
+				// since we have to undo changes to the
+				// pilot databases, changes to the PC
+				// resources, changes to the mappings files
+				// (record id mapping, etc.)
+			}
+			*/
+		//}
+		/*
+		if (pcVolatility > allowedVolatility)
+		{
+			QString query = template_query.subs(fConduitName)
+				.subs(fCtrPC->type()).subs(fCtrPC->moo()).toString();
+
+			DEBUGKPILOT << fname << ": high volatility."
+				<< "  Check with user: [" << query
+				<< "]." << endl;
+		}
+	}
+	*/
 }
 
 void RecordConduit::hotSync()
@@ -261,12 +343,32 @@ void RecordConduit::syncRecords( Record *pcRecord, Record *backupRecord,
 	*/
 }
 
-void RecordConduit::syncFields( Record *to, Record *from )
+bool RecordConduit::syncFields( Record *to, Record *from )
 {
 	FUNCTIONSETUP;
-	Q_UNUSED(to);
-	Q_UNUSED(from);
-	#warning Not implemented!
+	
+	// This shouldn't happen.
+	if( !to || !from )
+	{
+		DEBUGKPILOT << fname << ": error, one of the two records is zero!" << endl;
+		return false;
+	}
+	
+	QStringList fields = from->fields();
+	QStringListIterator it( fields );
+	while( it.hasNext() )
+	{
+		QString field = it.next();
+		bool result = to->setValue( field, from->value( field ) );
+		if( !result )
+		{
+			DEBUGKPILOT << fname << ": error, field " << field << " does not exists ";
+			DEBUGKPILOT	<< "or the value given is not valid!" << endl;
+			return false;
+		}
+	}
+	
+	return true;
 }
 
 void RecordConduit::solveConflict( Record *pcRecord, Record *hhRecord )

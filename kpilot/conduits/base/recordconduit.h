@@ -96,6 +96,8 @@ private:
 	 */
 	void hotSync();
 	
+	bool isVolatile();
+	
 	/**
 	 * Synchronizes the three records. If one of the parameters is 0L we asume 
 	 * that either the record does not exist (and needs to be created), or it is
@@ -105,9 +107,10 @@ private:
 	
 	/**
 	 * Changes the fields in @p to so that they are in sync with the fields from
-	 * @p from.
+	 * @p from. Returns false if one of the fields of @p from is not in @p to or
+	 * if one of the values is not accepted by @p to.
 	 */
-	void syncFields( Record *from, Record *to );
+	bool syncFields( Record *from, Record *to );
 	
 	void solveConflict( Record *pcRecord, Record *hhRecord );
 	
