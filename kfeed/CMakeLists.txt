@@ -2,7 +2,6 @@ add_subdirectory( tests )
 
 ########### next target ###############
 
-include_directories( )
 set(kfeed_LIB_SRCS
    item.cpp
    enclosure.cpp
