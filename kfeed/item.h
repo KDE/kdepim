@@ -39,7 +39,7 @@ class Enclosure;
 class Person;
 
 
-enum KFEED_EXPORT StatusFlags {
+enum StatusFlags {
     New,
     Unread,
     Read,
