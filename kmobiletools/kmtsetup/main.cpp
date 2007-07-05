@@ -25,7 +25,7 @@
 #include <klocale.h>
 #include <krun.h>
 #include <kuser.h>
-#include <k3process.h>
+#include <kprocess.h>
 #include <kdebug.h>
 #include <kstandarddirs.h>
 #include <kshell.h>
@@ -39,12 +39,12 @@ bool sudoRun(KCmdLineArgs *args)
 {
     QString thisAppName=KStandardDirs::findExe(args->appName());
     kDebug() << "Trying to start " << thisAppName << endl;
-    K3Process process;
+    KProcess process;
     process << "kdesu" << "-t" << KShell::quoteArg(thisAppName);
-    if(process.start( K3Process::Block ) && process.exitStatus()==0 ) return true;
-    process.clearArguments();
+    if(process.execute()==0 ) return true;
+    process.clearProgram();
     process << "gksu" << "-d" << KShell::quoteArg(thisAppName);
-    if(process.start( K3Process::Block ) && process.exitStatus()==0 ) return true;
+    if(process.execute()==0 ) return true;
     return false;
 }
 

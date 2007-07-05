@@ -36,6 +36,7 @@
 #include <QByteArray>
 #include <kdebug.h>
 #include <k3procio.h>
+#include <kprocess.h>
 #include <errno.h>
 #include <kmessagebox.h>
 #include <klocale.h>
@@ -299,16 +300,11 @@ void QGpgMECryptoConfigComponent::sync( bool runtime )
   //kDebug(5150) << commandLine << endl;
   //system( QCString( "cat " ) + tmpFile.name().toLatin1() ); // DEBUG
 
-  K3Process proc;
-  proc.setUseShell( true );
-  proc << commandLine;
+  KProcess proc;
+  proc.setShellCommand( commandLine );
 
   // run the process:
-  int rc = 0;
-  if ( !proc.start( K3Process::Block ) )
-    rc = -1;
-  else
-    rc = ( proc.normalExit() ) ? proc.exitStatus() : -1 ;
+  int rc = proc.execute();
 
   if ( rc == -1 )
   {

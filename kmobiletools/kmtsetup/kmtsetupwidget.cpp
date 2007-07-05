@@ -27,7 +27,7 @@
 #include <Q3ValueList>
 #include <k3listview.h>
 #include <qstringlist.h>
-#include <k3process.h>
+#include <kprocess.h>
 #include <kglobal.h>
 #include <kuser.h>
 #include <klocale.h>
@@ -119,11 +119,10 @@ void KMTSetupWidget::loadUsersLists(){
 void KMTSetupWidget::addUserToGroup(const QString &user, const QString &group){
     //gpasswd -a user group
 
-    K3Process *gpasswdproc = new K3Process();
-    *gpasswdproc << "gpasswd";
-    *gpasswdproc << "-a" << user.trimmed() << group.trimmed();
-    kDebug() << "Process arguments: " << gpasswdproc->args() << endl;
-    gpasswdproc->start(K3Process::Block);
+    KProcess gpasswdproc;
+    gpasswdproc << "gpasswd";
+    gpasswdproc << "-a" << user.trimmed() << group.trimmed();
+    gpasswdproc.execute();
 }
 
 void KMTSetupWidget::slotDefault(){
