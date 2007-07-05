@@ -370,6 +370,8 @@ void readCustomProperty( KFeed::Item& item, QXmlStreamReader& reader )
 
 } // namespace
 
+KFeed::Serializer::~Serializer() {}
+
 void KFeed::XmlSerializerImpl::serialize( const KFeed::Item& item, QByteArray& array ) const 
 {
     QXmlStreamWriter writer( &array );

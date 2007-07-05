@@ -35,7 +35,7 @@ class Item;
 class KFEED_EXPORT Serializer
 {
 public:
-    virtual ~Serializer() {}
+    virtual ~Serializer();
     virtual void serialize( const KFeed::Item& item, QByteArray& array ) const = 0;
     virtual bool deserialize( KFeed::Item& item, const QByteArray& array ) const = 0;
 };
@@ -43,7 +43,6 @@ public:
 class KFEED_EXPORT XmlSerializerImpl : public Serializer
 {
 public:
-    virtual ~XmlSerializerImpl() {}
     void serialize( const KFeed::Item& item, QByteArray& array ) const;
     bool deserialize( KFeed::Item& item, const QByteArray& array ) const;
 };
