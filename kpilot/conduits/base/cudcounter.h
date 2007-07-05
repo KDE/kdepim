@@ -27,6 +27,8 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
+#include <QString>
+
 /**
 * Create-Update-Delete tracking of the plugin,
 * used for reporting purposes (in a consistent manner).  The intent
@@ -75,23 +77,21 @@ public:
 	 */
 	int volatilityPercent();
 
-	// Some stuff of copied from the CUDCounter in plugin.h
-
-	/** percentage of changes.  unfortunately, we have to rely on our
+	/**
+	 * percentage of changes.  unfortunately, we have to rely on our
 	 * developers (hi, self!) to correctly set total number of records
 	 * conduits start with, so add a little protection...
 	 */
-	/*
-	unsigned int percentCreated() { return (fEnd   > 0 ? fC/fEnd   : 0); }
-	unsigned int percentUpdated() { return (fEnd   > 0 ? fU/fEnd   : 0); }
-	unsigned int percentDeleted() { return (fStart > 0 ? fD/fStart : 0); }
-	*/
+	unsigned int percentCreated() const { return (fEnd   > 0 ? fC/fEnd   : 0); }
+	unsigned int percentUpdated() const { return (fEnd   > 0 ? fU/fEnd   : 0); }
+	unsigned int percentDeleted() const { return (fStart > 0 ? fD/fStart : 0); }
 	
-	/** Measurement Of Objects -- report numbers of
-	* objects created, updated, deleted. This
-	* string is already i18n()ed.
-	*/
-	//QString moo() const;
+	/** 
+	 * Measurement Of Objects -- report numbers of
+	 * objects created, updated, deleted. This
+	 * string is already i18n()ed.
+	 */
+	QString moo() const;
 
 	/** Type of counter(Handheld or PC).  This string is already
 	 * i18n()ed.

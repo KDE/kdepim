@@ -39,7 +39,10 @@ class IDMapping {
 private:
 	QString fConduitName;
 public:
-	IDMapping( const QString &conduitName = QString() );
+	/**
+	 * $HOME/.kde/share/apps/kpilot/conduits/<Username>/mapping/<Conduit>-mapping.xml.
+	 */
+	IDMapping( const QString &userName, const QString &conduitname );
 
 	/**
 	 * Validates the mapping file with given dataproxy. The mapping is considered 
@@ -59,7 +62,12 @@ public:
 
 	void setLastSyncedPC( const QString &pc );
 
-	void save();
+	/**
+	 *
+	 */
+	bool commit();
+	
+	bool rollback();
 
 	/**
 	 * Deletes any mapping that exists for @p hhRecordId and @p pcRecordId and 

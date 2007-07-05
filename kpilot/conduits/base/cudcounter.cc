@@ -27,6 +27,8 @@
 
 #include "cudcounter.h"
 
+#include <klocalizedstring.h>
+
 CUDCounter::CUDCounter()
 {
 	#warning Not implemented!
@@ -69,11 +71,9 @@ int CUDCounter::volatilityPercent()
 	return 100;
 }
 
-/*
 QString CUDCounter::moo() const
 {
-	QString result = fType + ": " +
-		i18n("Start: %1. End: %2. ",fStart,fEnd);
+	QString result = i18n("Start: %1. End: %2. ",fStart,fEnd);
 
 	if (fC > 0) result += i18n("%1 new. ",fC);
 	if (fU > 0) result += i18n("%1 changed. ",fU);
@@ -83,4 +83,3 @@ QString CUDCounter::moo() const
 
 	return result;
 }
-*/

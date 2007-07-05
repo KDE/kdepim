@@ -26,9 +26,11 @@
 */
 #include "idmapping.h"
 
-IDMapping::IDMapping( const QString &conduitName )
+IDMapping::IDMapping( const QString &userName, const QString &conduitName )
 {
+	#warning Not implemented!
 	Q_UNUSED( conduitName );
+	Q_UNUSED( userName );
 }
 
 bool IDMapping::isValid( const QList<QVariant> &hhIds )
@@ -57,9 +59,16 @@ void IDMapping::setLastSyncedPC( const QString &pc )
 	#warning Not implemented!
 }
 
-void IDMapping::save()
+bool IDMapping::commit()
 {
 	#warning Not implemented!
+	return false;
+}
+
+bool IDMapping::rollback()
+{
+	#warning Not implemented!
+	return false;
 }
 
 void IDMapping::map( const QVariant &hhRecordId, const QVariant &pcId )

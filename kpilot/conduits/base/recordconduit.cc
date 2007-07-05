@@ -73,7 +73,8 @@ RecordConduit::~RecordConduit()
 	bool pcDatabaseOpen = fPCDataProxy->isOpen();
 	
 	// See 6.2
-	fMapping = new IDMapping( fConduitName );
+	// FIXME: Retrieve the username.
+	fMapping = new IDMapping( QString(""), fConduitName );
 	if( !fMapping->isValid( fBackupDataProxy->ids() ) )
 	{
 		setFirstSync( true );
@@ -128,17 +129,70 @@ RecordConduit::~RecordConduit()
 		return false;
 	}
 	
-	const CUDCounter *hhCounter = fHHDataProxy->counter();
-	const CUDCounter *pcCounter = fPCDataProxy->counter();
+	if( !checkVolatility() )
+	{
+		// volatility bounds are exceeded or the user did not want to proceed.
+		return false;
+	}
 	
-	bool volitile = isVolatile();
+	/*
+	 * If from this point something goes wrong (which shouldn't because we did our
+	 * very best to deliver sane data) some of the data (mapping, hh database or
+	 * pc database) will be corrupted.
+	 */
+	if( !fMapping->commit() )
+	{
+		// Solution: restore mapping file backup -> TODO: make a backup of the file.
+		fMapping->rollback();
+		return false;
+	}
+	
+	// If commit fails every commit should be undone and the user should be 
+	// notified about the failure.
+	if( createBackupDatabase() )
+	{
+		if( fHHDataProxy->commit() )
+		{
+			if( !fPCDataProxy->commit() )
+			{
+				fPCDataProxy->rollback();
+				fHHDataProxy->rollback();
+				fMapping->rollback();
+				// TODO: notify user.
+				return false;
+			}
+			else
+			{
+				return true;
+			}
+		}
+		else
+		{
+			fHHDataProxy->rollback();
+			fMapping->rollback();
+			// TODO: notify user.
+			return false;
+		}
+	} 
+	else
+	{
+		fMapping->rollback();
+		// TODO: notify user.
+		return false;
+	}
 	
 	return true;
 }
 
-bool RecordConduit::isVolatile()
+bool RecordConduit::checkVolatility()
 {
+	FUNCTIONSETUP;
+	#warning Not implemented!
+	return false;
+	
 	/*
+	const CUDCounter *fCtrHH = fHHDataProxy->counter();
+	const CUDCounter *fCtrPC = fPCDataProxy->counter();
 	if (fCtrHH && fCtrPC)
 	{
 		addSyncLogEntry(fCtrHH->moo() +'\n',false);
@@ -173,7 +227,7 @@ bool RecordConduit::isVolatile()
 			DEBUGKPILOT << fname << ": high volatility."
 				<< "  Check with user: [" << query
 				<< "]." << endl;
-				
+		*/
 			/*
 			int rc = questionYesNo(query, caption,
 				QString::null, 0 );
@@ -386,10 +440,3 @@ bool RecordConduit::askConfirmation(const QString & volatilityMessage)
 	Q_UNUSED(volatilityMessage);
 	return false;
 }
-
-void RecordConduit::createBackupDatabase() 
-{
-	FUNCTIONSETUP;
-	#warning Not implemented!
-}
-

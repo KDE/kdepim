@@ -96,7 +96,7 @@ private:
 	 */
 	void hotSync();
 	
-	bool isVolatile();
+	bool checkVolatility();
 	
 	/**
 	 * Synchronizes the three records. If one of the parameters is 0L we asume 
@@ -114,8 +114,8 @@ private:
 	
 	void solveConflict( Record *pcRecord, Record *hhRecord );
 	
-	bool askConfirmation(const QString & volatilityMessage);
+	bool askConfirmation( const QString & volatilityMessage );
 
-	void createBackupDatabase();
+	virtual bool createBackupDatabase() = 0;
 };
 #endif

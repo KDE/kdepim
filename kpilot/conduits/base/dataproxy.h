@@ -76,7 +76,9 @@ public:
 	 */
 	void setIterateMode( const Mode m = All );
 
-	virtual void commitChanges() = 0;
+	virtual bool commit() = 0;
+	
+	virtual bool rollback() = 0;
 
 	/**
 		* Looks for a matching record. Should return 0 if there is no match.
