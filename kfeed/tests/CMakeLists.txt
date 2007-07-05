@@ -1,4 +1,4 @@
-include_directories( ${CMAKE_SOURCE_DIR}/akregator/kfeed )
+include_directories( ${CMAKE_SOURCE_DIR}/kfeed )
 
 ########### next target ###############
 

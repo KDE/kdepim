@@ -104,6 +104,7 @@ endif(GPGME_FOUND)
 
 add_subdirectory(libksieve)
 add_subdirectory(mimelib)
+macro_optional_add_subdirectory(kfeed)
 macro_optional_add_subdirectory(akregator)
 macro_optional_add_subdirectory(doc)
 
