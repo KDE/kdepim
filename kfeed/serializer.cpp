@@ -20,11 +20,11 @@
  *
  */
 
+#include "serializer.h"
 #include "category.h"
 #include "enclosure.h"
 #include "item.h"
 #include "person.h"
-#include "serializer.h"
 
 #include <syndication/atom/constants.h>
 #include <syndication/constants.h>
