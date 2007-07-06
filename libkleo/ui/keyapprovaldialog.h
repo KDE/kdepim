@@ -77,7 +77,7 @@ namespace Kleo {
 
     bool preferencesChanged() const;
 
-  private slots:
+  private Q_SLOTS:
     void slotPrefsChanged();
 
   private:

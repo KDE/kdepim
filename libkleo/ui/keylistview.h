@@ -39,9 +39,9 @@
 
 #include <k3listview.h>
 
-#include <QPixmap>
-#include <QByteArray>
-#include <Q3PtrList>
+#include <QtGui/QPixmap>
+#include <QtCore/QByteArray>
+#include <Qt3Support/Q3PtrList>
 
 class QPainter;
 class QColorGroup;
