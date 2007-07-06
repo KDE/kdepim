@@ -71,8 +71,7 @@ mailAddress::mailAddress (char *aCStr)
   parseAddress (aCStr);
 }
 
-int
-mailAddress::parseAddress (const char *aCStr)
+int mailAddress::parseAddress (const char *aCStr)
 {
   int retVal = 0;
   int skip;
@@ -119,8 +118,8 @@ mailAddress::parseAddress (const char *aCStr)
         {
           if (*aCStr != ',')
           {
-            rawFullName += QByteArray (aCStr, advance + 1);
-            if (mimeHdrLine::skipWS ((const char *) &aCStr[advance]) > 0)
+            rawFullName += aCStr;
+            if (mimeHdrLine::skipWS (aCStr+advance) > 0)
             {
               rawFullName += ' ';
             }
@@ -135,7 +134,7 @@ mailAddress::parseAddress (const char *aCStr)
       }
       else
         break;
-      advance = mimeHdrLine::skipWS ((const char *) aCStr);
+      advance = mimeHdrLine::skipWS (aCStr);
       if (advance > 0)
       {
         retVal += advance;
@@ -199,8 +198,7 @@ mailAddress::parseAddress (const char *aCStr)
   return retVal;
 }
 
-const QByteArray
-mailAddress::getStr ()
+const QByteArray mailAddress::getStr ()
 {
   QByteArray retVal(128, '\0' ); // Should be generally big enough
 
@@ -227,48 +225,42 @@ mailAddress::getStr ()
   return retVal;
 }
 
-bool
-mailAddress::isEmpty () const
+bool mailAddress::isEmpty () const
 {
   return user.isEmpty ();
 }
 
-void
-mailAddress::setFullName (const QString & _str)
+void mailAddress::setFullName (const QString & _str)
 {
   rawFullName = KIMAP::encodeRFC2047String (_str).toLatin1 ();
 }
-const QString
-mailAddress::getFullName () const
+
+const QString mailAddress::getFullName () const
 {
   return KIMAP::decodeRFC2047String (rawFullName);
 }
 
-void
-mailAddress::setCommentRaw (const QByteArray & _str)
+void mailAddress::setCommentRaw (const QByteArray & _str)
 {
   rawComment = _str;
 }
 
-void
-mailAddress::setComment (const QString & _str)
+void mailAddress::setComment (const QString & _str)
 {
   rawComment = KIMAP::encodeRFC2047String (_str).toLatin1 ();
 }
-const QString
-mailAddress::getComment () const
+
+const QString mailAddress::getComment () const
 {
   return KIMAP::decodeRFC2047String (rawComment);
 }
 
-const QByteArray &
-mailAddress::getCommentRaw () const
+const QByteArray & mailAddress::getCommentRaw () const
 {
   return rawComment;
 }
 
-QString
-mailAddress::emailAddrAsAnchor (const mailAddress & adr, bool shortAdr)
+QString mailAddress::emailAddrAsAnchor (const mailAddress & adr, bool shortAdr)
 {
   QString retVal;
   if (!adr.getFullName ().isEmpty ())
@@ -301,8 +293,7 @@ mailAddress::emailAddrAsAnchor (const mailAddress & adr, bool shortAdr)
   return retVal;
 }
 
-QString
-mailAddress::emailAddrAsAnchor (const Q3PtrList < mailAddress > &list, bool value)
+QString mailAddress::emailAddrAsAnchor (const Q3PtrList < mailAddress > &list, bool value)
 {
   QString retVal;
   Q3PtrListIterator < mailAddress > it (list);

@@ -20,7 +20,6 @@
 #include "mailheader.h"
 
 #include <QRegExp>
-#include <Q3CString>
 
 // #include <iostream.h>
 #include <kglobal.h>
@@ -150,9 +149,9 @@ mimeHeader::addHdrLine (mimeHdrLine * aHdrLine)
         {
           if (skip > 0)
           {
-            addParameter (Q3CString (aCStr, skip).simplified(), aList);
+            addParameter (QByteArray (aCStr, skip).simplified(), aList);
 //            cout << "-- '" << aParm.data() << "'" << endl;
-            mimeValue = Q3CString (addLine->getValue ().data (), skip);
+            mimeValue = QByteArray (addLine->getValue ().data (), skip);
             aCStr += skip;
           }
           else
@@ -164,13 +163,13 @@ mimeHeader::addHdrLine (mimeHdrLine * aHdrLine)
 }
 
 void
-mimeHeader::addParameter (const Q3CString& aParameter, Q3Dict < QString > *aList)
+mimeHeader::addParameter (const QByteArray& aParameter, Q3Dict < QString > *aList)
 {
   if ( !aList )
     return;
 
   QString *aValue;
-  Q3CString aLabel;
+  QByteArray aLabel;
   int pos = aParameter.indexOf ('=');
 //  cout << aParameter.left(pos).data();
   aValue = new QString ();
@@ -184,26 +183,26 @@ mimeHeader::addParameter (const Q3CString& aParameter, Q3Dict < QString > *aList
 }
 
 QString
-mimeHeader::getDispositionParm (const Q3CString& aStr)
+mimeHeader::getDispositionParm (const QByteArray& aStr)
 {
   return getParameter (aStr, &dispositionList);
 }
 
 QString
-mimeHeader::getTypeParm (const Q3CString& aStr)
+mimeHeader::getTypeParm (const QByteArray& aStr)
 {
   return getParameter (aStr, &typeList);
 }
 
 void
-mimeHeader::setDispositionParm (const Q3CString& aLabel, const QString& aValue)
+mimeHeader::setDispositionParm (const QByteArray& aLabel, const QString& aValue)
 {
   setParameter (aLabel, aValue, &dispositionList);
   return;
 }
 
 void
-mimeHeader::setTypeParm (const Q3CString& aLabel, const QString& aValue)
+mimeHeader::setTypeParm (const QByteArray& aLabel, const QString& aValue)
 {
   setParameter (aLabel, aValue, &typeList);
 }
@@ -233,25 +232,25 @@ mimeHeader::outputHeader (mimeIO & useIO)
 {
   if (!getDisposition ().isEmpty ())
   {
-    useIO.outputMimeLine (Q3CString ("Content-Disposition: ")
+    useIO.outputMimeLine (QByteArray ("Content-Disposition: ")
                           + getDisposition ()
                           + outputParameter (&dispositionList));
   }
 
   if (!getType ().isEmpty ())
   {
-    useIO.outputMimeLine (Q3CString ("Content-Type: ")
+    useIO.outputMimeLine (QByteArray ("Content-Type: ")
                           + getType () + outputParameter (&typeList));
   }
   if (!getDescription ().isEmpty ())
-    useIO.outputMimeLine (Q3CString ("Content-Description: ") +
+    useIO.outputMimeLine (QByteArray ("Content-Description: ") +
                           getDescription ());
   if (!getID ().isEmpty ())
-    useIO.outputMimeLine (Q3CString ("Content-ID: ") + getID ());
+    useIO.outputMimeLine (QByteArray ("Content-ID: ") + getID ());
   if (!getMD5 ().isEmpty ())
-    useIO.outputMimeLine (Q3CString ("Content-MD5: ") + getMD5 ());
+    useIO.outputMimeLine (QByteArray ("Content-MD5: ") + getMD5 ());
   if (!getEncoding ().isEmpty ())
-    useIO.outputMimeLine (Q3CString ("Content-Transfer-Encoding: ") +
+    useIO.outputMimeLine (QByteArray ("Content-Transfer-Encoding: ") +
                           getEncoding ());
 
   Q3PtrListIterator < mimeHdrLine > ait = getAdditionalIterator ();
@@ -261,11 +260,11 @@ mimeHeader::outputHeader (mimeIO & useIO)
                           ait.current ()->getValue ());
     ++ait;
   }
-  useIO.outputMimeLine (Q3CString (""));
+  useIO.outputMimeLine (QByteArray (""));
 }
 
 QString
-mimeHeader::getParameter (const Q3CString& aStr, Q3Dict < QString > *aDict)
+mimeHeader::getParameter (const QByteArray& aStr, Q3Dict < QString > *aDict)
 {
   QString retVal, *found;
   if (aDict)
@@ -284,7 +283,7 @@ mimeHeader::getParameter (const Q3CString& aStr, Q3Dict < QString > *aDict)
 
         do
         {
-          Q3CString search;
+          QByteArray search;
           search.setNum (part);
           search = aStr + "*" + search;
           found = aDict->find (search);
@@ -308,7 +307,7 @@ mimeHeader::getParameter (const Q3CString& aStr, Q3Dict < QString > *aDict)
         else
         {
           retVal =
-            KIMAP::decodeRFC2231String (Q3CString ("''") +
+            KIMAP::decodeRFC2231String (QByteArray ("''") +
                                         encoded.toLocal8Bit ());
         }
       }
@@ -327,7 +326,7 @@ mimeHeader::getParameter (const Q3CString& aStr, Q3Dict < QString > *aDict)
 }
 
 void
-mimeHeader::setParameter (const Q3CString& aLabel, const QString& aValue,
+mimeHeader::setParameter (const QByteArray& aLabel, const QString& aValue,
                           Q3Dict < QString > *aDict)
 {
   bool encoded = true;
@@ -354,7 +353,7 @@ mimeHeader::setParameter (const Q3CString& aLabel, const QString& aValue,
       // split in half
       int i = 0;
       QString shortValue;
-      Q3CString shortLabel;
+      QByteArray shortLabel;
 
       while (!val.isEmpty ())
       {
@@ -405,10 +404,9 @@ mimeHeader::setParameter (const Q3CString& aLabel, const QString& aValue,
   }
 }
 
-Q3CString
-mimeHeader::outputParameter (Q3Dict < QString > *aDict)
+QByteArray mimeHeader::outputParameter (Q3Dict < QString > *aDict)
 {
-  Q3CString retVal;
+  QByteArray retVal;
   if (aDict)
   {
     Q3DictIterator < QString > it (*aDict);
@@ -435,7 +433,7 @@ void
 mimeHeader::outputPart (mimeIO & useIO)
 {
   Q3PtrListIterator < mimeHeader > nestedParts = getNestedIterator ();
-  Q3CString boundary;
+  QByteArray boundary;
   if (!getTypeParm ("boundary").isEmpty ())
     boundary = getTypeParm ("boundary").toLatin1 ();
 
@@ -457,12 +455,13 @@ mimeHeader::outputPart (mimeIO & useIO)
     useIO.outputMimeLine (getPostBody ());
 }
 
+#if 0
 int
 mimeHeader::parsePart (mimeIO & useIO, const QString& boundary)
 {
   int retVal = 0;
   bool mbox = false;
-  Q3CString preNested, postNested;
+  QByteArray preNested, postNested;
   mbox = parseHeader (useIO);
 
   kDebug(7116) << "mimeHeader::parsePart - parsing part '" << getType () << "'" << endl;
@@ -499,11 +498,11 @@ mimeHeader::parsePart (mimeIO & useIO, const QString& boundary)
 }
 
 int
-mimeHeader::parseBody (mimeIO & useIO, Q3CString & messageBody,
+mimeHeader::parseBody (mimeIO & useIO, QByteArray & messageBody,
                        const QString& boundary, bool mbox)
 {
-  Q3CString inputStr;
-  Q3CString buffer;
+  QByteArray inputStr;
+  QByteArray buffer;
   QString partBoundary;
   QString partEnd;
   int retVal = 0;               //default is last part
@@ -546,14 +545,14 @@ mimeHeader::parseBody (mimeIO & useIO, Q3CString & messageBody,
   messageBody += buffer;
   return retVal;
 }
+#endif
 
-bool
-mimeHeader::parseHeader (mimeIO & useIO)
+bool mimeHeader::parseHeader (mimeIO & useIO)
 {
   bool mbox = false;
   bool first = true;
   mimeHdrLine my_line;
-  Q3CString inputStr;
+  QByteArray inputStr;
 
   kDebug(7116) << "mimeHeader::parseHeader - starting parsing" << endl;
   while (useIO.inputLine (inputStr))
@@ -576,7 +575,7 @@ mimeHeader::parseHeader (mimeIO & useIO)
       mbox = true;
       first = false;
     }
-    inputStr = (const char *) NULL;
+    inputStr = QByteArray();
   }
 
   kDebug(7116) << "mimeHeader::parseHeader - finished parsing" << endl;
@@ -656,9 +655,7 @@ QString
 mimeHeader::bodyDecoded ()
 {
   kDebug(7116) << "mimeHeader::bodyDecoded" << endl;
-  QByteArray temp;
-
-  temp = bodyDecodedBinary ();
+  QByteArray temp = bodyDecodedBinary ();
   return QString::fromLatin1 (temp.data (), temp.count ());
 }
 

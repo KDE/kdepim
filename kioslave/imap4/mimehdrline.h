@@ -19,8 +19,7 @@
 #define MIMEHDRLINE_H
 
 
-#include <q3cstring.h>
-#include <q3asciidict.h>
+#include <QByteArray>
 
 /**
   *@author Sven Carstens
@@ -31,17 +30,17 @@ class mimeHdrLine
 public:
   mimeHdrLine ();
   mimeHdrLine (mimeHdrLine *);
-  mimeHdrLine (const Q3CString &, const Q3CString &);
+  mimeHdrLine (const QByteArray &, const QByteArray &);
    ~mimeHdrLine ();
   /** parse a Line into the class
 and report characters slurped */
   int setStr (const char *);
   int appendStr (const char *);
   /** return the value */
-  const Q3CString& getValue ();
+  const QByteArray& getValue ();
   /** return the label */
-  const Q3CString& getLabel ();
-  static Q3CString truncateLine (Q3CString, unsigned int truncate = 80);
+  const QByteArray& getLabel ();
+  static QByteArray truncateLine (QByteArray, unsigned int truncate = 80);
   static int parseSeparator (char, const char *);
   static int parseQuoted (char, char, const char *);
   /** skip all white space characters */
@@ -52,12 +51,12 @@ and report characters slurped */
   static int parseAlphaNum (const char *);
 
 protected:                     // Protected attributes
-  /** contains the Value 
+  /** contains the Value
  */
-    Q3CString mimeValue;
+    QByteArray mimeValue;
   /** contains the Label of the line
  */
-  Q3CString mimeLabel;
+  QByteArray mimeLabel;
 protected:                     // Protected methods
   /** parses a continuated line */
   int parseFullLine (const char *);

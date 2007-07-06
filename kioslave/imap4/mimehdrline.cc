@@ -22,25 +22,15 @@
 #include <stdio.h>
 
 #include "mimehdrline.h"
-#include <Q3CString>
 
 using namespace std;
 
-const char *wdays[] = {
-  "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"
-};
-
-const char *months[] = {
-  "Jan", "Feb", "Mar", "Apr", "May", "Jun",
-  "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
-};
-
 mimeHdrLine::mimeHdrLine ():
-mimeValue ((const char *) NULL), mimeLabel ((const char *) NULL)
+mimeValue (), mimeLabel ()
 {
 }
 
-mimeHdrLine::mimeHdrLine (const Q3CString & aLabel, const Q3CString & aValue):
+mimeHdrLine::mimeHdrLine (const QByteArray & aLabel, const QByteArray & aValue):
 mimeValue (aValue),
 mimeLabel (aLabel)
 {
@@ -55,12 +45,10 @@ mimeHdrLine::~mimeHdrLine ()
 {
 }
 
-int
-mimeHdrLine::appendStr (const char *inCStr)
+int mimeHdrLine::appendStr (const char *aCStr)
 {
   int retVal = 0;
   int skip;
-  char *aCStr = (char *) inCStr;
 
   if (aCStr)
   {
@@ -69,11 +57,11 @@ mimeHdrLine::appendStr (const char *inCStr)
     {
       if (skip > 0)
       {
-        mimeValue += Q3CString (aCStr, skip + 1);
+        mimeValue += QByteArray (aCStr, skip);
         aCStr += skip;
         retVal += skip;
         skip = parseFullLine (aCStr);
-        mimeValue += Q3CString (aCStr, skip + 1);
+        mimeValue += QByteArray (aCStr, skip);
         retVal += skip;
         aCStr += skip;
       }
@@ -91,13 +79,12 @@ mimeHdrLine::appendStr (const char *inCStr)
 move input ptr accordingly
 and report characters slurped */
 int
-mimeHdrLine::setStr (const char *inCStr)
+mimeHdrLine::setStr (const char *aCStr)
 {
   int retVal = 0;
-  char *aCStr = (char *) inCStr;
 //  char *begin = aCStr;
-  mimeLabel = Q3CString ((const char *) NULL);
-  mimeValue = Q3CString ((const char *) NULL);
+  mimeLabel = QByteArray ();
+  mimeValue = QByteArray ();
 
   if (aCStr)
   {
@@ -113,7 +100,7 @@ mimeHdrLine::setStr (const char *inCStr)
         retVal = 0;
       else
       {
-        mimeLabel = Q3CString (aCStr, label);  //length including zero
+        mimeLabel = QByteArray (aCStr, label);  //length including zero
         retVal += label;
         aCStr += label;
       }
@@ -127,7 +114,7 @@ mimeHdrLine::setStr (const char *inCStr)
       aCStr += skip;
       retVal += skip;
       skip = parseFullLine (aCStr);
-      mimeValue = Q3CString (aCStr, skip + 1);
+      mimeValue = QByteArray (aCStr, skip);
       retVal += skip;
       aCStr += skip;
     }
@@ -159,11 +146,9 @@ mimeHdrLine::setStr (const char *inCStr)
 }
 
 /** slurp one word*/
-int
-mimeHdrLine::parseWord (const char *inCStr)
+int mimeHdrLine::parseWord (const char *aCStr)
 {
   int retVal = 0;
-  char *aCStr = (char *) inCStr;
 
   if (aCStr && *aCStr)
   {
@@ -180,10 +165,8 @@ mimeHdrLine::parseWord (const char *inCStr)
 }
 
 /** slurp one word*/
-int
-mimeHdrLine::parseQuoted (char startQuote, char endQuote, const char *inCStr)
+int mimeHdrLine::parseQuoted (char startQuote, char endQuote, const char *aCStr)
 {
-  char *aCStr = (char *) inCStr;
   int retVal = 0;
 
   if (aCStr && *aCStr)
@@ -221,11 +204,9 @@ mimeHdrLine::parseQuoted (char startQuote, char endQuote, const char *inCStr)
 }
 
 /** slurp one alphanumerical word without continuation*/
-int
-mimeHdrLine::parseAlphaNum (const char *inCStr)
+int mimeHdrLine::parseAlphaNum (const char *aCStr)
 {
   int retVal = 0;
-  char *aCStr = (char *) inCStr;
 
   if (aCStr)
   {
@@ -249,11 +230,9 @@ mimeHdrLine::parseAlphaNum (const char *inCStr)
   return retVal;
 }
 
-int
-mimeHdrLine::parseHalfWord (const char *inCStr)
+int mimeHdrLine::parseHalfWord (const char *aCStr)
 {
   int retVal = 0;
-  char *aCStr = (char *) inCStr;
 
   if (aCStr && *aCStr)
   {
@@ -280,11 +259,9 @@ mimeHdrLine::parseHalfWord (const char *inCStr)
 }
 
 /** slurp one line without continuation*/
-int
-mimeHdrLine::parseHalfLine (const char *inCStr)
+int mimeHdrLine::parseHalfLine (const char *aCStr)
 {
   int retVal = 0;
-  char *aCStr = (char *) inCStr;
 
   if (aCStr)
   {
@@ -314,11 +291,9 @@ mimeHdrLine::parseHalfLine (const char *inCStr)
 }
 
 /** skip all white space characters including continuation*/
-int
-mimeHdrLine::skipWS (const char *inCStr)
+int mimeHdrLine::skipWS (const char *aCStr)
 {
   int retVal = 0;
-  char *aCStr = (char *) inCStr;
 
   if (aCStr && *aCStr)
   {
@@ -354,11 +329,9 @@ mimeHdrLine::skipWS (const char *inCStr)
 }
 
 /** parses continuated lines */
-int
-mimeHdrLine::parseFullLine (const char *inCStr)
+int mimeHdrLine::parseFullLine (const char *aCStr)
 {
   int retVal = 0;
-  char *aCStr = (char *) inCStr;
   int skip;
 
   if (aCStr)
@@ -404,10 +377,8 @@ mimeHdrLine::parseFullLine (const char *inCStr)
 }
 
 /** parses continuated lines */
-int
-mimeHdrLine::parseSeparator (char separator, const char *inCStr)
+int mimeHdrLine::parseSeparator (char separator, const char *aCStr)
 {
-  char *aCStr = (char *) inCStr;
   int retVal = 0;
   int skip;
 
@@ -465,26 +436,23 @@ mimeHdrLine::parseSeparator (char separator, const char *inCStr)
 
 /** return the label */
 
-const Q3CString&
-mimeHdrLine::getLabel ()
+const QByteArray& mimeHdrLine::getLabel ()
 {
   return mimeLabel;
 }
 
 /** return the value */
-const Q3CString&
-mimeHdrLine::getValue ()
+const QByteArray& mimeHdrLine::getValue ()
 {
   return mimeValue;
 }
 
 
 // FIXME: very inefficient still
-Q3CString
-mimeHdrLine::truncateLine(Q3CString aLine, unsigned int truncate)
+QByteArray mimeHdrLine::truncateLine(QByteArray aLine, unsigned int truncate)
 {
   int cutHere;
-  Q3CString retVal;
+  QByteArray retVal;
   uint len = aLine.length();
 
   // see if we have a line of the form "key: value" (like "Subject: bla")

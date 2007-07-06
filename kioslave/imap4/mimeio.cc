@@ -16,8 +16,6 @@
  ***************************************************************************/
 
 #include <iostream>
-//Added by qt3to4:
-#include <Q3CString>
 using namespace std;
 
 #include "mimeio.h"
@@ -32,12 +30,11 @@ mimeIO::~mimeIO ()
 {
 }
 
-int
-mimeIO::inputLine (Q3CString & aLine)
+int mimeIO::inputLine (QByteArray & aLine)
 {
   char input;
 
-  aLine = (const char *) NULL;
+  aLine = QByteArray();
   while (inputChar (input))
   {
     aLine += input;
@@ -48,8 +45,7 @@ mimeIO::inputLine (Q3CString & aLine)
   return aLine.length ();
 }
 
-int
-mimeIO::outputLine (const Q3CString & aLine, int len)
+int mimeIO::outputLine (const QByteArray & aLine, int len)
 {
   int i;
 
@@ -63,11 +59,10 @@ mimeIO::outputLine (const Q3CString & aLine, int len)
   return i;
 }
 
-int
-mimeIO::outputMimeLine (const Q3CString & inLine)
+int mimeIO::outputMimeLine (const QByteArray & inLine)
 {
   int retVal = 0;
-  Q3CString aLine = inLine;
+  QByteArray aLine = inLine;
   int len = inLine.length();
 
   int theLF = aLine.lastIndexOf ('\n');
@@ -103,8 +98,7 @@ mimeIO::outputMimeLine (const Q3CString & inLine)
   return retVal;
 }
 
-int
-mimeIO::inputChar (char &aChar)
+int mimeIO::inputChar (char &aChar)
 {
   if (cin.eof ())
   {
@@ -115,19 +109,17 @@ mimeIO::inputChar (char &aChar)
   return 1;
 }
 
-int
-mimeIO::outputChar (char aChar)
+int mimeIO::outputChar (char aChar)
 {
   cout << aChar;
   return 1;
 }
 
-void
-mimeIO::setCRLF (const char *aCRLF)
-{
-  theCRLF = aCRLF;
-  crlfLen = strlen(aCRLF);
-}
+// void mimeIO::setCRLF (const char *aCRLF)
+// {
+//   theCRLF = aCRLF;
+//   crlfLen = strlen(aCRLF);
+// }
 
 mimeIOQFile::mimeIOQFile (const QString & aName):
 mimeIO (),
@@ -141,14 +133,12 @@ mimeIOQFile::~mimeIOQFile ()
   myFile.close ();
 }
 
-int
-mimeIOQFile::outputLine (const Q3CString &, int)
+int mimeIOQFile::outputLine (const QByteArray &, int)
 {
   return 0;
 }
 
-int
-mimeIOQFile::inputLine (Q3CString & data)
+int mimeIOQFile::inputLine (QByteArray & data)
 {
   data.resize( 1024 );
   myFile.readLine (data.data(), 1024);
@@ -164,8 +154,7 @@ mimeIOQString::~mimeIOQString ()
 {
 }
 
-int
-mimeIOQString::outputLine (const Q3CString & _str, int len)
+int mimeIOQString::outputLine (const QByteArray & _str, int len)
 {
   if (len == -1) {
     len = _str.length();
@@ -174,8 +163,7 @@ mimeIOQString::outputLine (const Q3CString & _str, int len)
   return len;
 }
 
-int
-mimeIOQString::inputLine (Q3CString & _str)
+int mimeIOQString::inputLine (QByteArray & _str)
 {
   if (theString.isEmpty ())
     return 0;

@@ -16,7 +16,6 @@
  ***************************************************************************/
 
 #include "mailheader.h"
-#include <Q3CString>
 #include <Q3PtrList>
 
 mailHeader::mailHeader ()
@@ -37,8 +36,8 @@ mailHeader::addHdrLine (mimeHdrLine * inLine)
 {
   mimeHdrLine *addLine = new mimeHdrLine (inLine);
 
-  const Q3CString label(addLine->getLabel());
-  const Q3CString value(addLine->getValue());
+  const QByteArray label(addLine->getLabel());
+  const QByteArray value(addLine->getValue());
 
   if (!qstricmp (label, "Return-Path")) {
 	returnpathAdr.parseAddress (value.data ());
@@ -110,18 +109,18 @@ mailHeader::addHdrLine (mimeHdrLine * inLine)
 void
 mailHeader::outputHeader (mimeIO & useIO)
 {
-  static const Q3CString __returnPath("Return-Path: ", 14);
-  static const Q3CString __from      ("From: ", 7);
-  static const Q3CString __sender    ("Sender: ", 9);
-  static const Q3CString __replyTo   ("Reply-To: ", 11);
-  static const Q3CString __to        ("To: ", 5);
-  static const Q3CString __cc        ("CC: ", 5);
-  static const Q3CString __bcc       ("BCC: ", 6);
-  static const Q3CString __subject   ("Subject: ", 10);
-  static const Q3CString __messageId ("Message-ID: ", 13);
-  static const Q3CString __inReplyTo ("In-Reply-To: ", 14);
-  static const Q3CString __references("References: ", 13);
-  static const Q3CString __date      ("Date: ", 7);
+  static const QByteArray __returnPath("Return-Path: ");
+  static const QByteArray __from      ("From: ");
+  static const QByteArray __sender    ("Sender: ");
+  static const QByteArray __replyTo   ("Reply-To: ");
+  static const QByteArray __to        ("To: ");
+  static const QByteArray __cc        ("CC: ");
+  static const QByteArray __bcc       ("BCC: ");
+  static const QByteArray __subject   ("Subject: ");
+  static const QByteArray __messageId ("Message-ID: ");
+  static const QByteArray __inReplyTo ("In-Reply-To: ");
+  static const QByteArray __references("References: ");
+  static const QByteArray __date      ("Date: ");
 
   if (!returnpathAdr.isEmpty())
     useIO.outputMimeLine(__returnPath + returnpathAdr.getStr());
@@ -187,10 +186,10 @@ mailHeader::parseAddressList (const char *inCStr,
   return advance;
 }
 
-Q3CString
+QByteArray
 mailHeader::getAddressStr (Q3PtrList < mailAddress > *aList)
 {
-  Q3CString retVal;
+  QByteArray retVal;
 
   Q3PtrListIterator < mailAddress > it = Q3PtrListIterator < mailAddress > (*aList);
   while (it.current ())

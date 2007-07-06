@@ -22,7 +22,6 @@
 #include "mailaddress.h"
 #include "mimeio.h"
 #include <kimap/rfccodecs.h>
-#include <Q3CString>
 #include <Q3PtrList>
 
 using namespace KIMAP;
@@ -70,29 +69,29 @@ public:
     replytoAdr = _adr;
   }
 
-  const Q3CString& getMessageId ()
+  const QByteArray& getMessageId ()
   {
     return messageID;
   }
-  void setMessageId (const Q3CString & _str)
+  void setMessageId (const QByteArray & _str)
   {
     messageID = _str;
   }
 
-  const Q3CString& getInReplyTo ()
+  const QByteArray& getInReplyTo ()
   {
     return inReplyTo;
   }
-  void setInReplyTo (const Q3CString & _str)
+  void setInReplyTo (const QByteArray & _str)
   {
     inReplyTo = _str;
   }
 
-  const Q3CString& getReferences ()
+  const QByteArray& getReferences ()
   {
     return references;
   }
-  void setReferences (const Q3CString & _str)
+  void setReferences (const QByteArray & _str)
   {
     references = _str;
   }
@@ -107,7 +106,7 @@ public:
   /**
    * set a encoded subject
    */
-  void setSubjectEncoded (const Q3CString & _str)
+  void setSubjectEncoded (const QByteArray & _str)
   {
     _subject = _str.simplified();
   }
@@ -122,7 +121,7 @@ public:
   /**
    * get the encoded subject
    */
-  const Q3CString& getSubjectEncoded ()
+  const QByteArray& getSubjectEncoded ()
   {
     return _subject;
   }
@@ -130,7 +129,7 @@ public:
   /**
    * set the date
    */
-  void setDate (const Q3CString & _str)
+  void setDate (const QByteArray & _str)
   {
     mDate = _str;
   }
@@ -138,13 +137,13 @@ public:
   /**
    * get the date
    */
-  const Q3CString& date ()
+  const QByteArray& date ()
   {
     return mDate;
   }
 
   static int parseAddressList (const char *, Q3PtrList < mailAddress > *);
-  static Q3CString getAddressStr (Q3PtrList < mailAddress > *);
+  static QByteArray getAddressStr (Q3PtrList < mailAddress > *);
   Q3PtrList < mailAddress > &to ()
   {
     return toAdr;
@@ -183,12 +182,12 @@ private:
   mailAddress senderAdr;
   mailAddress returnpathAdr;
   mailAddress replytoAdr;
-  Q3CString _subject;
-  Q3CString mDate;
+  QByteArray _subject;
+  QByteArray mDate;
   int gmt_offset;
-  Q3CString messageID;
-  Q3CString inReplyTo;
-  Q3CString references;
+  QByteArray messageID;
+  QByteArray inReplyTo;
+  QByteArray references;
 };
 
 #endif

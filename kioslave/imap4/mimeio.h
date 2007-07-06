@@ -18,7 +18,7 @@
 #ifndef MIMEIO_H
 #define MIMEIO_H
 
-#include <q3cstring.h>
+#include <QByteArray>
 #include <QFile>
 
 /**
@@ -31,16 +31,16 @@ public:
   mimeIO ();
   virtual ~ mimeIO ();
 
-  virtual int outputLine (const Q3CString &, int len = -1);
-  virtual int outputMimeLine (const Q3CString &);
-  virtual int inputLine (Q3CString &);
+  virtual int outputLine (const QByteArray &, int len = -1);
+  virtual int outputMimeLine (const QByteArray &);
+  virtual int inputLine (QByteArray &);
   virtual int outputChar (char);
   virtual int inputChar (char &);
 
-  void setCRLF (const char *);
+  //void setCRLF (const char *);
 
 protected:
-    Q3CString theCRLF;
+    QByteArray theCRLF;
     int crlfLen;
 };
 
@@ -49,8 +49,8 @@ class mimeIOQFile:public mimeIO
 public:
   mimeIOQFile (const QString &);
     virtual ~ mimeIOQFile ();
-  virtual int outputLine (const Q3CString &, int len = -1);
-  virtual int inputLine (Q3CString &);
+  virtual int outputLine (const QByteArray &, int len = -1);
+  virtual int inputLine (QByteArray &);
 
 protected:
     QFile myFile;
@@ -61,8 +61,8 @@ class mimeIOQString:public mimeIO
 public:
   mimeIOQString ();
   virtual ~ mimeIOQString ();
-  virtual int outputLine (const Q3CString &, int len = -1);
-  virtual int inputLine (Q3CString &);
+  virtual int outputLine (const QByteArray &, int len = -1);
+  virtual int inputLine (QByteArray &);
   const QString& getString () const
   {
     return theString;

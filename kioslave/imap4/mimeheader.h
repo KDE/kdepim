@@ -20,7 +20,7 @@
 
 #include <q3ptrlist.h>
 #include <q3dict.h>
-#include <Q3CString>
+#include <QByteArray>
 
 #include "mimehdrline.h"
 #include "mimeio.h"
@@ -43,20 +43,20 @@ public:
   virtual void outputPart (mimeIO &);
 
 
-  Q3CString outputParameter (Q3Dict < QString > *);
+  QByteArray outputParameter (Q3Dict < QString > *);
 
-  int parsePart (mimeIO &, const QString&);
-  int parseBody (mimeIO &, Q3CString &, const QString&, bool mbox = false);
+//  int parsePart (mimeIO &, const QString&);
+//  int parseBody (mimeIO &, QByteArray &, const QString&, bool mbox = false);
 
   // parse a header. returns true if it had a leading 'From ' line
   bool parseHeader (mimeIO &);
 
-  QString getDispositionParm (const Q3CString&);
-  void setDispositionParm (const Q3CString&, const QString&);
+  QString getDispositionParm (const QByteArray&);
+  void setDispositionParm (const QByteArray&, const QString&);
   Q3DictIterator < QString > getDispositionIterator ();
 
-  QString getTypeParm (const Q3CString&);
-  void setTypeParm (const Q3CString&, const QString&);
+  QString getTypeParm (const QByteArray&);
+  void setTypeParm (const QByteArray&, const QString&);
   Q3DictIterator < QString > getTypeIterator ();
 
   // recursively serialize all important contents to the QDataStream
@@ -136,33 +136,33 @@ public:
 
   Q3PtrListIterator < mimeHdrLine > getOriginalIterator ();
   Q3PtrListIterator < mimeHdrLine > getAdditionalIterator ();
-  void setContent (const Q3CString &aContent)
+  void setContent (const QByteArray &aContent)
   {
     mimeContent = aContent;
   }
-  Q3CString getContent ()
+  QByteArray getContent ()
   {
     return mimeContent;
   }
 
-  Q3CString getBody ()
+  QByteArray getBody ()
   {
     return preMultipartBody + postMultipartBody;
   }
-  Q3CString getPreBody ()
+  QByteArray getPreBody ()
   {
     return preMultipartBody;
   }
-  void setPreBody (Q3CString & inBody)
+  void setPreBody (QByteArray & inBody)
   {
     preMultipartBody = inBody;
   }
 
-  Q3CString getPostBody ()
+  QByteArray getPostBody ()
   {
     return postMultipartBody;
   }
-  void setPostBody (Q3CString & inBody)
+  void setPostBody (QByteArray & inBody)
   {
     postMultipartBody = inBody;
     contentLength = inBody.length ();
@@ -234,7 +234,7 @@ public:
   }
   void setTypeStr (const QString & _str)
   {
-    contentType = Q3CString (_str.toLatin1 ()) + "/" + subtypeStr ().toLatin1 ();
+    contentType = QByteArray (_str.toLatin1 ()) + "/" + subtypeStr ().toLatin1 ();
   }
   QString subtypeStr ()
   {
@@ -244,7 +244,7 @@ public:
   }
   void setSubtypeStr (const QString & _str)
   {
-    contentType = Q3CString (typeStr ().toLatin1 ()) + "/" + _str.toLatin1 ();
+    contentType = QByteArray (typeStr ().toLatin1 ()) + "/" + _str.toLatin1 ();
   }
   QString cteStr ()
   {
@@ -311,9 +311,9 @@ public:
 #endif
 
 protected:
-  static void addParameter (const Q3CString&, Q3Dict < QString > *);
-  static QString getParameter (const Q3CString&, Q3Dict < QString > *);
-  static void setParameter (const Q3CString&, const QString&, Q3Dict < QString > *);
+  static void addParameter (const QByteArray&, Q3Dict < QString > *);
+  static QString getParameter (const QByteArray&, Q3Dict < QString > *);
+  static void setParameter (const QByteArray&, const QString&, Q3Dict < QString > *);
 
   Q3PtrList < mimeHdrLine > originalHdrLines;
 
@@ -328,9 +328,9 @@ private:
   QByteArray _contentID;
   QByteArray _contentMD5;
   unsigned int contentLength;
-  Q3CString mimeContent;
-  Q3CString preMultipartBody;
-  Q3CString postMultipartBody;
+  QByteArray mimeContent;
+  QByteArray preMultipartBody;
+  QByteArray postMultipartBody;
   mimeHeader *nestedMessage;
   Q3PtrList < mimeHeader > nestedParts;
   QString partSpecifier;
