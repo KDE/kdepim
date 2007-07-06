@@ -157,8 +157,8 @@ bool Task::loadAttribute( QDomElement& element )
   if ( tagName == "priority" ) {
     bool ok;
     int priority = element.text().toInt( &ok );
-    if ( !ok || priority < 0 || priority > 9 )
-      priority = 5;
+    if ( !ok || priority < 0 || priority > 5 )
+      priority = 3;
     setPriority( priority );
   } else if ( tagName == "completed" ) {
     bool ok;
@@ -303,7 +303,7 @@ void Task::setFields( const KCal::Todo* task )
   if ( task->relatedTo() )
     setParent( task->relatedTo()->uid() );
   else if ( !task->relatedToUid().isEmpty() )
-    setParent( task->relatedToUid() );
+    setParent( task->relatedToUid( ) );
   else
     setParent( QString() );
 

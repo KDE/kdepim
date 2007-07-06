@@ -155,10 +155,10 @@ bool KMailConnection::connectToKMail()
       kError(5650) << "DCOP connection to incidenceDeleted failed" << endl;
     if ( !connectKMailSignal( "signalRefresh(QString,QString)",
                               "fromKMailRefresh(QString,QString)" ) )
-      kError(5650) << "DCOP connection to signalRefresh failed" << endl;
+      kdError(5650) << "DCOP connection to signalRefresh failed" << endl;
     if ( !connectKMailSignal( "subresourceAdded( QString, QString, QString, bool, bool )",
                               "fromKMailAddSubresource( QString, QString, QString, bool, bool )" ) )
-      kError(5650) << "DCOP connection to subresourceAdded failed" << endl;
+      kdError(5650) << "DCOP connection to subresourceAdded failed" << endl;
     if ( !connectKMailSignal( "subresourceDeleted(QString,QString)",
                               "fromKMailDelSubresource(QString,QString)" ) )
       kError(5650) << "DCOP connection to subresourceDeleted failed" << endl;
@@ -325,6 +325,27 @@ bool KMailConnection::kmailUpdate( const QString& resource,
   ret = reply;*/
   return ret;
 }
+
+bool KMailConnection::kmailAddSubresource( const QString& resource,
+                                           const QString& parent,
+                                           const QString& contentsType )
+{
+  bool ok = connectToKMail();
+  QDBusReply<bool> reply = mKmailGroupwareInterface->call( "addSubresource", resource, parent, contentsType );
+  if ( reply.isValid() )
+    ok = reply;
+  return ok && (mKmailGroupwareInterface->lastError().type()==QDBusError::NoError);
+}
+
+bool KMailConnection::kmailRemoveSubresource( const QString& resource )
+{
+  bool ok = connectToKMail();
+  QDBusReply<bool> reply = mKmailGroupwareInterface->call( "removeSubresource", resource );
+  if ( reply.isValid() )
+    ok = reply;
+  return ok && (mKmailGroupwareInterface->lastError().type()==QDBusError::NoError);
+}
+
 
 bool KMailConnection::kmailStorageFormat( KMail::StorageFormat& type,
                                           const QString& folder )

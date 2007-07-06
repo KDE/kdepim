@@ -58,8 +58,8 @@ public Q_SLOTS:
   void fromKMailDelIncidence( const QString& type, const QString& resource,
                               const QString& xml );
   void fromKMailRefresh( const QString& type, const QString& resource );
-  void fromKMailAddSubresource( const QString& type, const QString& resource, 
-                                const QString& label, bool writable, 
+  void fromKMailAddSubresource( const QString& type, const QString& resource,
+                                const QString& label, bool writable,
                                 bool alarmRelevant );
   void fromKMailDelSubresource( const QString& type, const QString& resource );
   void fromKMailAsyncLoadResult( const QMap<quint32, QString>& map, const QString& type,
@@ -101,6 +101,10 @@ public:
   bool kmailStorageFormat( KMail::StorageFormat& type, const QString& folder);
 
   bool kmailTriggerSync( const QString& contentsType );
+  bool kmailAddSubresource( const QString& resource,
+                            const QString& parent,
+                            const QString& contentsType );
+  bool kmailRemoveSubresource( const QString& resource );
 
 private slots:
   void dbusServiceOwnerChanged(const QString & service, const QString & oldOwner, const QString & newOwner);

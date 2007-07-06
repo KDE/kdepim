@@ -153,11 +153,16 @@ protected:
                     const QStringList& attachmentNames = QStringList(),
                     const QStringList& deletedAttachments = QStringList() );
 
+  bool kmailAddSubresource( const QString& resource, const QString& parent,
+                            const QString& contentsType );
+  bool kmailRemoveSubresource( const QString& resource );
+
   /// Get the full path of the config file.
   QString configFile( const QString& type ) const;
 
   /// If only one of these is writable, return that. Otherwise return null.
-  QString findWritableResource( const ResourceMap& resources );
+  QString findWritableResource( const ResourceMap& resources,
+                                const QString& text = QString::null );
 
   bool mSilent;
 

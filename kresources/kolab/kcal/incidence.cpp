@@ -144,14 +144,14 @@ const QList<Incidence::Attendee>& Incidence::attendees() const
   return mAttendees;
 }
 
-void Incidence::setSchedulingID( const QString& sid )
+void Incidence::setInternalUID( const QString& iuid )
 {
-  mSchedulingID = sid;
+  mInternalUID = iuid;
 }
 
-QString Incidence::schedulingID() const
+QString Incidence::internalUID() const
 {
-  return mSchedulingID;
+  return mInternalUID;
 }
 
 void Incidence::setRevision( int revision )
@@ -333,8 +333,8 @@ bool Incidence::loadAttribute( QDomElement& element )
   } else if ( tagName == "alarm" )
     // Alarms should be minutes before. Libkcal uses event time + alarm time
     setAlarm( - element.text().toInt() );
-  else if ( tagName == "scheduling-id" )
-    setSchedulingID( element.text() );
+  else if ( tagName == "x-kde-internaluid" )
+    setInternalUID( element.text() );
   else if ( tagName == "revision" ) {
     bool ok;
     int revision = element.text().toInt( &ok );
@@ -378,7 +378,7 @@ bool Incidence::saveAttributes( QDomElement& element ) const
     int alarmTime = qRound( -alarm() );
     writeString( element, "alarm", QString::number( alarmTime ) );
   }
-  writeString( element, "scheduling-id", schedulingID() );
+  writeString( element, "x-kde-internaluid", internalUID() );
   writeString( element, "revision", QString::number( revision() ) );
   saveCustomAttributes( element );
   return true;
@@ -648,11 +648,16 @@ void Incidence::setFields( const KCal::Incidence* incidence )
   }
 
   // Handle the scheduling ID
-  if ( incidence->schedulingID() == incidence->uid() )
+  if ( incidence->schedulingID() == incidence->uid() ) {
     // There is no scheduling ID
-    setSchedulingID( QString() );
-  else
-    setSchedulingID( incidence->schedulingID() );
+    setInternalUID( QString::null );
+  } else {
+    // We've internally been using a different uid, so save that as the 
+    // temporary (internal) uid and restore the original uid, the one that 
+    // is used in the folder and the outside world
+    setUid( incidence->schedulingID() );
+    setInternalUID( incidence->uid() );
+  }
 
   // Unhandled tags and other custom properties (see libkcal/customproperties.h)
   const QMap<QByteArray, QString> map = incidence->customProperties();
@@ -771,9 +776,16 @@ void Incidence::saveTo( KCal::Incidence* incidence )
     } // "none" is default since tje set*ly methods set infinite recurrence
 
     incidence->recurrence()->setExDates( mRecurrence.exclusions );
-  }
 
-  incidence->setSchedulingID( schedulingID() );
+  }
+  /* If we've stored a uid to be used internally instead of the real one
+   * (to deal with duplicates of events in different folders) before, then
+   * restore it, so it does not change. Keep the original uid around for
+   * scheduling purposes. */
+  if ( !internalUID().isEmpty() ) {
+    incidence->setUid( internalUID() );
+    incidence->setSchedulingID( uid() );
+  }
 
   for( QList<Custom>::ConstIterator it = mCustomList.begin(); it != mCustomList.end(); ++it ) {
     incidence->setNonKDECustomProperty( (*it).key, (*it).value );

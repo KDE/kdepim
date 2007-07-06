@@ -124,6 +124,8 @@ public:
   /** Return the list of subresources. */
   QStringList subresources() const;
 
+  bool canHaveSubresources() const { return true; }
+
   /** Is this subresource active? */
   bool subresourceActive( const QString& ) const;
   /** (De)activate the subresource */
@@ -143,12 +145,15 @@ public:
   virtual QString timeZoneId() const { return QString(); }
   virtual void shiftTimes(const KDateTime::Spec&, const KDateTime::Spec&){}
 
+  virtual bool addSubresource( const QString& resource, const QString& parent );
+  virtual bool removeSubresource( const QString& resource );
+
   KABC::Lock* lock();
 
 signals:
   void useGlobalMode();
 protected slots:
-   void slotEmitResourceChanged();
+  void slotEmitResourceChanged();
 protected:
   /** 
    * Return list of alarms which are relevant for the current user. These
@@ -181,6 +186,7 @@ private:
 
   /// Reimplemented from IncidenceBase::Observer to know when an incidence was changed
   void incidenceUpdated( KCal::IncidenceBase* );
+  void incidenceUpdatedSilent( KCal::IncidenceBase* incidencebase);
 
   bool openResource( KConfig& config, const char* contentType,
                      Kolab::ResourceMap& map );
@@ -188,6 +194,7 @@ private:
                               const QString& label, bool writable,
                               bool alarmRelevant, Kolab::ResourceMap& subResource );
   bool loadSubResource( const QString& subResource, const char* mimetype );
+  bool unloadSubResource( const QString& subResource );
 
   QString configFile() const {
     return ResourceKolabBase::configFile( "kcal" );
