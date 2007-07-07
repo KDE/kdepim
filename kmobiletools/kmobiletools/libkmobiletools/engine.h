@@ -100,7 +100,7 @@ class KMOBILETOOLS_EXPORT Engine : public QObject
         virtual ~Engine();
 
         /**
-         * Returns a const pointer to the engine's data
+         * Returns a const pointer to the engine's data for read-only access
          *
          * @return a const pointer to EngineData
          */
@@ -266,7 +266,7 @@ class KMOBILETOOLS_EXPORT Engine : public QObject
 
     protected:
         /**
-         * Returns a pointer to the engine's data.
+         * Returns a pointer to the engine's data for read/write access
          *
          * @return the engine's data
          */

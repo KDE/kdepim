@@ -17,55 +17,66 @@
    Boston, MA 02110-1301, USA.
  ***************************************************************************/
 
-#include "error.h"
+#include "baseerror.h"
 #include <klocale.h>
 
 
 namespace KMobileTools {
 
-Error::Error( const QString& fileName, int lineNumber ) {
+BaseError::BaseError( const QString& fileName, int lineNumber, const QDateTime& dateTime,
+                      const QString& methodName ) {
     m_fileName = fileName;
     m_lineNumber = lineNumber;
+    m_dateTime = dateTime;
+    m_methodName = methodName;
 
     m_priority = High;
     m_description = i18n("No error description available.");
 }
 
 
-Error::~Error() {
+BaseError::~BaseError() {
 }
 
-bool Error::operator==( Error& error ) const {
+bool BaseError::operator==( BaseError& error ) const {
     /// @TODO implement me
     return false;
 }
 
-bool Error::operator!=( Error& error ) const {
+bool BaseError::operator!=( BaseError& error ) const {
     /// @TODO implement me
     return true;
 }
 
-Error::Priority Error::priority() const {
+BaseError::Priority BaseError::priority() const {
     return m_priority;
 }
 
-QString Error::fileName() const {
+QString BaseError::fileName() const {
     return m_fileName;
 }
 
-int Error::lineNumber() const {
+int BaseError::lineNumber() const {
     return m_lineNumber;
 }
 
-QString Error::description() const {
+QDateTime BaseError::dateTime() const {
+    return m_dateTime;
+}
+
+QString BaseError::methodName() const {
+    return m_methodName;
+}
+
+QString BaseError::description() const {
     return m_description;
 }
 
-void Error::setPriority( Priority priority ) {
+void BaseError::setPriority( Priority priority ) {
     m_priority = priority;
 }
 
-void Error::setDescription( const QString& errorDescription ) {
+void BaseError::setDescription( const QString& errorDescription ) {
     m_description = errorDescription;
 }
 

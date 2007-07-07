@@ -23,7 +23,7 @@
 #include <QMutex>
 #include <QStack>
 
-#include "error.h"
+#include "errortypes/baseerror.h"
 #include "kmobiletools_export.h"
 
 namespace KMobileTools {
@@ -31,12 +31,12 @@ namespace KMobileTools {
 /**
     @author Matthias Lechner <matthias@lmme.de>
 
-    This an KMobileTools' error handler.
+    This is KMobileTools' error handler.
 
     In a typical use-case you would retrieve an instance and add
     an error via addError().
 
-    ErrorHandler::instance()->addError( Error( ... ) );
+    ErrorHandler::instance()->addError( new BaseError( ... ) );
 */
 class KMOBILETOOLS_EXPORT ErrorHandler {
 public:
@@ -52,7 +52,7 @@ public:
      *
      * @param error the error which should be handled
      */
-    void addError( Error* error );
+    void addError( BaseError* error );
 
     /**
      * Returns how many errors have been occured within the current session
@@ -70,7 +70,7 @@ private:
 
     static ErrorHandler* m_uniqueInstance;
     static QMutex m_mutex;
-    static QStack<Error*> m_errorStack;
+    static QStack<BaseError*> m_errorStack;
 
     /**
      * SafeGuard is used to delete the ErrorHandler instance
@@ -88,7 +88,7 @@ private:
 
 ErrorHandler* ErrorHandler::m_uniqueInstance = 0;
 QMutex ErrorHandler::m_mutex;
-QStack<Error*> ErrorHandler::m_errorStack;
+QStack<BaseError*> ErrorHandler::m_errorStack;
 
 }
 

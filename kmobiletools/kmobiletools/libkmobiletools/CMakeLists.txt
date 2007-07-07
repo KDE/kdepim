@@ -1,5 +1,6 @@
-
-add_subdirectory( akonadi icons )
+add_subdirectory( errortypes )
+add_subdirectory( akonadi )
+add_subdirectory( icons )
 
 IF (USE_CRASHHANDLER)
 	SET(crashhandler_SRCS crashhandler.cpp )
@@ -18,8 +19,8 @@ set(kmobiletools_LIB_SRCS
    engineslist.cpp 
    homepage.cpp 
    devicesconfig.cpp
-   error.cpp
    errorhandler.cpp
+   errortypes/baseerror.cpp
 #   kmobiletools_devices_addons.cpp 
    kmobiletoolshelper.cpp 
    overlaywidget.cpp 
@@ -58,8 +59,8 @@ install(FILES
    kmobiletools_export.h
    picksmscenter.h
    kmobiletoolshelper.h
-   error.h
    errorhandler.h
+   errortypes/baseerror.h
    engine.h
    sms.h
    smslist.h

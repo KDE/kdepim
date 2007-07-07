@@ -23,13 +23,16 @@
 #include "kmobiletools_export.h"
 
 #include <QString>
+#include <QDateTime>
+
+#define ERROR_META_INFO __FILE__, __LINE__, QDateTime::currentDateTime(), __FUNCTION__
 
 namespace KMobileTools {
 
 /**
     @author Matthias Lechner <matthias@lmme.de>
 */
-class KMOBILETOOLS_EXPORT Error {
+class KMOBILETOOLS_EXPORT BaseError {
 public:
     enum Priority {
         Low = 0,
@@ -37,25 +40,42 @@ public:
         High = 10
     };
 
-    Error( const QString& fileName, int lineNumber );
-    ~Error();
+    BaseError( const QString& fileName,
+               int lineNumber,
+               const QDateTime& dateTime,
+               const QString& methodName );
+    ~BaseError();
 
-    bool operator==( Error& error ) const;
-    bool operator!=( Error& error ) const;
+    bool operator==( BaseError& error ) const;
+    bool operator!=( BaseError& error ) const;
 
     /**
-     * Returns the file name where the error has occurred
+     * Returns the file name where the error occurred
      * 
-     * @return the file name where the error has occurred
+     * @return the file name where the error occurred
      */
     QString fileName() const;
 
     /**
-     * Returns the line where the error has occurred
+     * Returns the line where the error occurred
      *
-     * @return the line where the error has occurred
+     * @return the line where the error occurred
      */
     int lineNumber() const;
+
+    /**
+     * Returns the date and time when the error occurred
+     *
+     * @return the date and time
+     */
+    QDateTime dateTime() const;
+
+    /**
+     * Returns the name of the method in which the error occurred
+     *
+     * @return the method name
+     */
+    QString methodName() const;
 
     /**
      * Returns the error's priority
@@ -91,6 +111,8 @@ protected:
 private:
     QString m_fileName;
     int m_lineNumber;
+    QDateTime m_dateTime;
+    QString m_methodName;
 
     Priority m_priority;
     QString m_description;

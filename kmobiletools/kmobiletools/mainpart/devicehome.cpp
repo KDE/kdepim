@@ -95,6 +95,8 @@
 //#include "mainIFace_stub.h"
 
 
+#include <libkmobiletools/errorhandler.h>
+
 #define INDEX_WIDGET_ID 0
 #define PHONEBOOK_WIDGET_ID 2
 #define SMS_WIDGET_ID 1
@@ -356,6 +358,8 @@ void DeviceHome::loadEngine()
             QTimer::singleShot(15*1000, engine, SLOT(slotFetchSMS()));
     }
     updateSMSCount();
+
+    ErrorHandler::instance()->addError( new BaseError(ERROR_META_INFO) );
 }
 
 

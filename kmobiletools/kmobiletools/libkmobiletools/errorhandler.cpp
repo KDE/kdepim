@@ -44,7 +44,7 @@ ErrorHandler* ErrorHandler::instance() {
     return m_uniqueInstance;
 }
 
-void ErrorHandler::addError( Error* error ) {
+void ErrorHandler::addError( BaseError* error ) {
     /// @TODO implement me
     m_mutex.lock();
 
@@ -57,21 +57,23 @@ void ErrorHandler::addError( Error* error ) {
 
     QString priority;
     switch( error->priority() ) {
-        case Error::Low:
+        case BaseError::Low:
             priority = "Low";
             break;
 
-        case Error::Medium:
+        case BaseError::Medium:
             priority = "Medium";
             break;
 
-        case Error::High:
+        case BaseError::High:
             priority = "High";
             break;
     }
 
-    QString errorMessage = QString( "%1 priority error occured.\nFile: %2\nLine: %3" ).arg( priority )
-                        .arg( error->fileName() ).arg( error->lineNumber() );
+    QString errorMessage = QString( "%1 priority error occured.\nFile: %2\nLine: %3\n"
+                                    "Description: %4" ).arg( priority )
+                                    .arg( error->fileName() ).arg( error->lineNumber() )
+                                    .arg( error->description() );
     KMessageBox::error( 0, errorMessage );
 
     m_mutex.unlock();
