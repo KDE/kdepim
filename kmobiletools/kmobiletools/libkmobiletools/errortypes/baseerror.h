@@ -24,6 +24,7 @@
 
 #include <QString>
 #include <QDateTime>
+#include <QObject>
 
 #define ERROR_META_INFO __FILE__, __LINE__, QDateTime::currentDateTime(), __FUNCTION__
 

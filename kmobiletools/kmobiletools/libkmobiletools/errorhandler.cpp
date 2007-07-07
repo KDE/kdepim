@@ -18,14 +18,19 @@
  ***************************************************************************/
 
 #include "errorhandler.h"
+#include "errorlog.h"
 
 #include <kmessagebox.h>
+#include <QStack>
 
 namespace KMobileTools {
 
+ErrorHandler* ErrorHandler::m_uniqueInstance = 0;
+QMutex ErrorHandler::m_mutex;
+QStack<BaseError*> ErrorHandler::m_errorStack;
+
 ErrorHandler::ErrorHandler()
 {
-
 }
 
 
@@ -37,11 +42,11 @@ ErrorHandler::~ErrorHandler()
 ErrorHandler* ErrorHandler::instance() {
     /// @TODO locking can be optimized here
     m_mutex.lock();
-    if( m_uniqueInstance != 0 )
-        m_uniqueInstance = new ErrorHandler();
+    if( ErrorHandler::m_uniqueInstance != 0 )
+        ErrorHandler::m_uniqueInstance = new ErrorHandler();
     m_mutex.unlock();
 
-    return m_uniqueInstance;
+    return ErrorHandler::m_uniqueInstance;
 }
 
 void ErrorHandler::addError( BaseError* error ) {
@@ -54,6 +59,12 @@ void ErrorHandler::addError( BaseError* error ) {
             m_errorStack.push( error );
     } else
         m_errorStack.push( error );
+
+    QString errorMessage = QString( "An error has just occurred:\nFile: %1\nLine: %2\n"
+                                    "Description: %3\nDate/Time: %4\n Method: %5\nPriority: " )
+                                    .arg( error->fileName() ).arg( error->lineNumber() )
+                                    .arg( error->description() ).arg( error->dateTime().toString() )
+                                    .arg( error->methodName() );
 
     QString priority;
     switch( error->priority() ) {
@@ -70,11 +81,16 @@ void ErrorHandler::addError( BaseError* error ) {
             break;
     }
 
-    QString errorMessage = QString( "%1 priority error occured.\nFile: %2\nLine: %3\n"
-                                    "Description: %4" ).arg( priority )
-                                    .arg( error->fileName() ).arg( error->lineNumber() )
-                                    .arg( error->description() );
-    KMessageBox::error( 0, errorMessage );
+    ErrorLog::instance()->write( QString( "===============================" ) );
+    ErrorLog::instance()->write( QString( "Occurred on %1")
+                                 .arg( error->dateTime().toString( Qt::ISODate ) ) );
+    ErrorLog::instance()->write( QString( "Location:    %1:%2" ).arg( error->fileName() )
+                                 .arg( QString::number( error->lineNumber() ) ) );
+    ErrorLog::instance()->write( QString( "Method:      %1()" ).arg( error->methodName() ) );
+    ErrorLog::instance()->write( QString( "Priority:    %1" ).arg( error->priority() ) );
+    ErrorLog::instance()->write( QString( "Description: %1" ).arg( error->description() ) );
+
+    KMessageBox::error( 0, errorMessage + priority );
 
     m_mutex.unlock();
 }

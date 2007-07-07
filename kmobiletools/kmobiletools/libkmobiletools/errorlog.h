@@ -17,69 +17,47 @@
    Boston, MA 02110-1301, USA.
  ***************************************************************************/
 
-#ifndef KMOBILETOOLSERRORHANDLER_H
-#define KMOBILETOOLSERRORHANDLER_H
+#ifndef KMOBILETOOLSERRORLOG_H
+#define KMOBILETOOLSERRORLOG_H
 
+#include <KTemporaryFile>
 #include <QMutex>
-#include <QStack>
 
-#include "errortypes/baseerror.h"
 #include "kmobiletools_export.h"
 
 namespace KMobileTools {
 
 /**
     @author Matthias Lechner <matthias@lmme.de>
-
-    This is KMobileTools' error handler.
-
-    In a typical use-case you would retrieve an instance and add
-    an error via addError().
-
-    ErrorHandler::instance()->addError( new BaseError( ... ) );
 */
-class KMOBILETOOLS_EXPORT ErrorHandler {
+class KMOBILETOOLS_EXPORT ErrorLog {
 public:
     /**
-     * Returns an ErrorHandler instance
+     * Returns an ErrorLog instance
      *
-     * @return an error handler instance
+     * @return a ErrorLog instance
      */
-    static ErrorHandler* instance();
-
-    /**
-     * Adds an error to the error handler
-     *
-     * @param error the error which should be handled
-     */
-    void addError( BaseError* error );
-
-    /**
-     * Returns how many errors have occured during the current session
-     * 
-     * @return the error count
-     */
-    int errorCount() const;
-
-    ~ErrorHandler();
+    static ErrorLog* instance();
+    static void write( const QString& text );
+    ~ErrorLog();
 
 private:
-    ErrorHandler();
+    ErrorLog();
     // making copy constructor private since this is a singleton
-    ErrorHandler( const ErrorHandler& );
+    ErrorLog( const ErrorLog& );
 
-    static ErrorHandler* m_uniqueInstance;
+    static ErrorLog* m_uniqueInstance;
     static QMutex m_mutex;
-    static QStack<BaseError*> m_errorStack;
+    static KTemporaryFile* m_logFile;
 
     /**
-     * SafeGuard is used to delete the ErrorHandler instance
+     * SafeGuard is used to delete the ErrorLog instance
      * on destruction.
      */
     class SafeGuard {
          public: ~SafeGuard() {
-           if( ErrorHandler::m_uniqueInstance )
-             delete ErrorHandler::m_uniqueInstance;
+           if( ErrorLog::m_uniqueInstance )
+             delete ErrorLog::m_uniqueInstance;
          }
      };
      friend class SafeGuard;

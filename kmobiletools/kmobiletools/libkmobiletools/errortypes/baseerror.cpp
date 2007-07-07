@@ -39,12 +39,20 @@ BaseError::~BaseError() {
 }
 
 bool BaseError::operator==( BaseError& error ) const {
-    /// @TODO implement me
+    if( error.fileName() == m_fileName &&
+        error.lineNumber() == m_lineNumber &&
+        error.dateTime() == m_dateTime )
+        return true;
+
     return false;
 }
 
 bool BaseError::operator!=( BaseError& error ) const {
-    /// @TODO implement me
+    if( error.fileName() == m_fileName &&
+        error.lineNumber() == m_lineNumber &&
+        error.dateTime() == m_dateTime )
+        return false;
+
     return true;
 }
 

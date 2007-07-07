@@ -19,6 +19,7 @@ set(kmobiletools_LIB_SRCS
    engineslist.cpp 
    homepage.cpp 
    devicesconfig.cpp
+   errorlog.cpp
    errorhandler.cpp
    errortypes/baseerror.cpp
 #   kmobiletools_devices_addons.cpp 
@@ -59,6 +60,7 @@ install(FILES
    kmobiletools_export.h
    picksmscenter.h
    kmobiletoolshelper.h
+   errorlog.h
    errorhandler.h
    errortypes/baseerror.h
    engine.h
