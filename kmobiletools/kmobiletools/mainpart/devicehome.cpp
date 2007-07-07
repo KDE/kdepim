@@ -358,8 +358,6 @@ void DeviceHome::loadEngine()
             QTimer::singleShot(15*1000, engine, SLOT(slotFetchSMS()));
     }
     updateSMSCount();
-
-    ErrorHandler::instance()->addError( new BaseError(ERROR_META_INFO) );
 }
 
 
