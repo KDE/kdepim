@@ -50,8 +50,8 @@ using KRecentAddress::RecentAddresses;
 #include <kcombobox.h>
 #include <k3spell.h>
 #include <ktemporaryfile.h>
-#include <kpgp/kpgp.h>
-#include <kpgp/kpgpblock.h>
+#include <libkpgp/kpgp.h>
+#include <libkpgp/kpgpblock.h>
 #include <k3process.h>
 #include <k3syntaxhighlighter.h>
 #include <QCursor>

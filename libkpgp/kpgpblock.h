@@ -128,7 +128,7 @@ class KPGP_EXPORT Block
 
   /** shows the secret key which is needed
     to decrypt the message */
-  QString requiredKey() const;
+  QByteArray requiredKey() const;
   void setRequiredKey( const QByteArray& keyId );
 
   QString requiredUserId() const;
@@ -277,7 +277,7 @@ Block::setSignatureDate( const QByteArray& date )
   mSignatureDate = date;
 }
 
-inline QString
+inline QByteArray
 Block::requiredKey() const
 {
   return mRequiredKey;

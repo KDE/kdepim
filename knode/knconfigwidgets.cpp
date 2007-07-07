@@ -35,8 +35,8 @@
 #include <k3spell.h>
 #include <k3sconfig.h>
 #include <kcombobox.h>
-#include <kpgp/kpgp.h>
-#include <kpgp/kpgpui.h>
+#include <libkpgp/kpgp.h>
+#include <libkpgp/kpgpui.h>
 #include <kurlcompletion.h>
 #include <kiconloader.h>
 #include <kpushbutton.h>

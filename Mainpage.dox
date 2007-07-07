@@ -62,6 +62,9 @@
         * - <a href="libkholidays/html/index.html"><b>libkholidays</b></a>
         *   (<a href="libkholidays/html/classes.html">classes</a>)\n
         *   <i>A library for handling holidays.</i>
+        * - <a href="kpgp/html/index.html"><b>kpgp</b></a>
+        *   (<a href="libkpgp/html/classes.html">classes</a>)\n
+        *   <i>Library for kpgp.</i>
         * - <a href="libkleo/html/index.html"><b>libkleo</b></a>
         *   (<a href="libkleo/html/classes.html">classes</a>)\n
         *   <i>A library for encryption handling.</i>

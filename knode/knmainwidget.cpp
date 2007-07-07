@@ -76,7 +76,7 @@ using MailTransport::TransportManager;
 #include "kncleanup.h"
 #include "utilities.h"
 #include "knscoring.h"
-#include <kpgp/kpgp.h>
+#include <libkpgp/kpgp.h>
 #include "knmemorymanager.h"
 #include "scheduler.h"
 #include "settings.h"

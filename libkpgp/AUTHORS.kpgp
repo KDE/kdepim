@@ -1,0 +1,13 @@
+Program: kpgp
+
+Lars Knoll <knoll@mpi-hd.mpg.de>
+ - Original version, PGP2 and PGP5 support
+
+"J. Nick Koston" <bdraco@the.system.is.halted.net>
+ - GnuPG support
+
+Andreas Gungl <a.gungl@gmx.de>
+ - PGP6 and other enhancements
+
+Ingo Klöcker <ingo.kloecker@epost.de>
+ - KpgpKey and other enhancements

@@ -19,12 +19,12 @@ set(kpgp_LIB_SRCS
 
 kde4_automoc(${kpgp_LIB_SRCS})
 
-kde4_add_library(kpgp-gpl SHARED ${kpgp_LIB_SRCS})
+kde4_add_library(kpgp SHARED ${kpgp_LIB_SRCS})
 
-target_link_libraries(kpgp-gpl  ${KDE4_KDE3SUPPORT_LIBS} )
+target_link_libraries(kpgp  ${KDE4_KDE3SUPPORT_LIBS} )
 
-set_target_properties(kpgp-gpl PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
-install(TARGETS kpgp-gpl  DESTINATION ${LIB_INSTALL_DIR})
+set_target_properties(kpgp PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
+install(TARGETS kpgp  DESTINATION ${LIB_INSTALL_DIR})
 
 
 ########### install files ###############
