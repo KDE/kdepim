@@ -158,6 +158,4 @@ add_subdirectory(cmake)
 # maildir access library
 add_subdirectory(maildir)
 
-add_subdirectory(pinentry-qt4)
-
 macro_display_feature_log()
