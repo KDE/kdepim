@@ -105,7 +105,7 @@ public:
      *
      * @return custom debug information
      */
-    DebugHash customDebugInformation();
+    DebugHash customDebugInformation() const;
 
 protected:
     /**

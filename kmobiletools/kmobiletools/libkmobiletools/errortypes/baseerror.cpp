@@ -96,6 +96,10 @@ QString BaseError::description() const {
     return d->m_description;
 }
 
+DebugHash BaseError::customDebugInformation() const {
+    return d->m_customDebugInformation;
+}
+
 void BaseError::setPriority( Priority priority ) {
     d->m_priority = priority;
 }
