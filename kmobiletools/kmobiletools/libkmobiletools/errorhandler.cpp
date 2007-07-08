@@ -25,9 +25,17 @@
 
 namespace KMobileTools {
 
-ErrorHandler* ErrorHandler::m_uniqueInstance = 0;
-QMutex ErrorHandler::m_mutex;
-QStack<const BaseError*> ErrorHandler::m_errorStack;
+class ErrorHandlerPrivate {
+public:
+    ErrorHandler* m_uniqueInstance;
+    static QMutex m_mutex;
+    static QStack<const BaseError*> m_errorStack;
+};
+
+QMutex ErrorHandlerPrivate::m_mutex;
+QStack<const BaseError*> ErrorHandlerPrivate::m_errorStack;
+
+K_GLOBAL_STATIC(ErrorHandlerPrivate, d)
 
 ErrorHandler::ErrorHandler()
 {
@@ -36,29 +44,24 @@ ErrorHandler::ErrorHandler()
 
 ErrorHandler::~ErrorHandler()
 {
-    qDeleteAll( m_errorStack.begin(), m_errorStack.end() );
+    qDeleteAll( d->m_errorStack.begin(), d->m_errorStack.end() );
 }
 
 ErrorHandler* ErrorHandler::instance() {
-    /// @TODO locking can be optimized here
-    m_mutex.lock();
-    if( ErrorHandler::m_uniqueInstance == 0 )
-        ErrorHandler::m_uniqueInstance = new ErrorHandler();
-    m_mutex.unlock();
-
-    return ErrorHandler::m_uniqueInstance;
+    // instance is automatically created
+    return d->m_uniqueInstance;
 }
 
 void ErrorHandler::addError( const BaseError* error ) {
     /// @TODO implement me
-    m_mutex.lock();
+    d->m_mutex.lock();
 
     // don't add the same error twice in a row
-    if( !m_errorStack.isEmpty() ) {
-        if( *(m_errorStack.top()) != *error )
-            m_errorStack.push( error );
+    if( !d->m_errorStack.isEmpty() ) {
+        if( *(d->m_errorStack.top()) != *error )
+            d->m_errorStack.push( error );
     } else
-        m_errorStack.push( error );
+        d->m_errorStack.push( error );
 
     QString errorMessage = QString( "An error has just occurred:\nFile: %1\nLine: %2\n"
                                     "Description: %3\nDate/Time: %4\n Method: %5\nPriority: " )
@@ -85,11 +88,11 @@ void ErrorHandler::addError( const BaseError* error ) {
 
     KMessageBox::error( 0, errorMessage + priority );
 
-    m_mutex.unlock();
+    d->m_mutex.unlock();
 }
 
 int ErrorHandler::errorCount() const {
-    return m_errorStack.count();
+    return d->m_errorStack.count();
 }
 
 void ErrorHandler::writeToLog( const BaseError* error ) {

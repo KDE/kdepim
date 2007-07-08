@@ -28,6 +28,8 @@
 
 namespace KMobileTools {
 
+class ErrorHandlerPrivate;
+
 /**
     @author Matthias Lechner <matthias@lmme.de>
 
@@ -74,22 +76,6 @@ private:
      * @param error the error to add to the log
      */
     void writeToLog( const BaseError* error );
-
-    static ErrorHandler* m_uniqueInstance;
-    static QMutex m_mutex;
-    static QStack<const BaseError*> m_errorStack;
-
-    /**
-     * SafeGuard is used to delete the ErrorHandler instance
-     * on destruction.
-     */
-    class SafeGuard {
-         public: ~SafeGuard() {
-           if( ErrorHandler::m_uniqueInstance )
-             delete ErrorHandler::m_uniqueInstance;
-         }
-     };
-     friend class SafeGuard;
 };
 
 }
