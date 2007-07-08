@@ -33,6 +33,8 @@ namespace KMobileTools {
 // gcc 4.1.3 doesn't compile without using this typedef
 typedef QHash<QString,QString> DebugHash;
 
+class BaseErrorPrivate;
+
 /**
     @author Matthias Lechner <matthias@lmme.de>
 */
@@ -123,15 +125,7 @@ protected:
     void setDescription( const QString& errorDescription );
 
 private:
-    QString m_fileName;
-    int m_lineNumber;
-    QDateTime m_dateTime;
-    QString m_methodName;
-    DebugHash m_customDebugInformation;
-
-    Priority m_priority;
-    QString m_description;
-
+    BaseErrorPrivate* d;
 };
 
 }

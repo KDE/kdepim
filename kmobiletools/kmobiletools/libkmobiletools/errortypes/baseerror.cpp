@@ -18,75 +18,90 @@
  ***************************************************************************/
 
 #include "baseerror.h"
-#include <klocale.h>
+#include <KLocale>
 
 
 namespace KMobileTools {
 
+class BaseErrorPrivate {
+public:
+    QString m_fileName;
+    int m_lineNumber;
+    QDateTime m_dateTime;
+    QString m_methodName;
+    DebugHash m_customDebugInformation;
+
+    BaseError::Priority m_priority;
+    QString m_description;
+};
+
 BaseError::BaseError( const QString& fileName, int lineNumber, const QDateTime& dateTime,
                       const QString& methodName, const DebugHash& customDebugInformation ) {
-    m_fileName = fileName;
-    m_lineNumber = lineNumber;
-    m_dateTime = dateTime;
-    m_methodName = methodName;
-    m_customDebugInformation = customDebugInformation;
+    d = new BaseErrorPrivate;
 
-    m_priority = High;
-    m_description = i18n("No error description available.");
+    d->m_fileName = fileName;
+    d->m_lineNumber = lineNumber;
+    d->m_dateTime = dateTime;
+    d->m_methodName = methodName;
+    d->m_customDebugInformation = customDebugInformation;
+
+    d->m_priority = High;
+    d->m_description = i18n("No error description available.");
 }
 
 
 BaseError::~BaseError() {
+    delete d;
 }
 
 bool BaseError::operator==( const BaseError& error ) const {
-    if( error.fileName() == m_fileName &&
-        error.lineNumber() == m_lineNumber &&
-        error.dateTime() == m_dateTime )
+    if( error.fileName() == d->m_fileName &&
+        error.lineNumber() == d->m_lineNumber &&
+        error.dateTime() == d->m_dateTime )
         return true;
 
     return false;
 }
 
 bool BaseError::operator!=( const BaseError& error ) const {
-    if( error.fileName() == m_fileName &&
-        error.lineNumber() == m_lineNumber &&
-        error.dateTime() == m_dateTime )
+    if( error.fileName() == d->m_fileName &&
+        error.lineNumber() == d->m_lineNumber &&
+        error.dateTime() == d->m_dateTime )
         return false;
 
     return true;
 }
 
 BaseError::Priority BaseError::priority() const {
-    return m_priority;
+    return d->m_priority;
 }
 
 QString BaseError::fileName() const {
-    return m_fileName;
+    return d->m_fileName;
 }
 
 int BaseError::lineNumber() const {
-    return m_lineNumber;
+    return d->m_lineNumber;
 }
 
 QDateTime BaseError::dateTime() const {
-    return m_dateTime;
+    return d->m_dateTime;
 }
 
 QString BaseError::methodName() const {
-    return m_methodName;
+    return d->m_methodName;
 }
 
 QString BaseError::description() const {
-    return m_description;
+    return d->m_description;
 }
 
 void BaseError::setPriority( Priority priority ) {
-    m_priority = priority;
+    d->m_priority = priority;
 }
 
 void BaseError::setDescription( const QString& errorDescription ) {
-    m_description = errorDescription;
+    d->m_description = errorDescription;
 }
 
 }

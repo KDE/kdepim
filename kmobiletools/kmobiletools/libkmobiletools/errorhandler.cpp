@@ -20,7 +20,7 @@
 #include "errorhandler.h"
 #include "errorlog.h"
 
-#include <kmessagebox.h>
+#include <KMessageBox>
 #include <QStack>
 
 namespace KMobileTools {
