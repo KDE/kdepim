@@ -51,12 +51,12 @@ public:
                const DebugHash& customDebugInformation = DebugHash() );
     ~BaseError();
 
-    bool operator==( BaseError& error ) const;
-    bool operator!=( BaseError& error ) const;
+    bool operator==( const BaseError& error ) const;
+    bool operator!=( const BaseError& error ) const;
 
     /**
      * Returns the file name where the error occurred
-     * 
+     *
      * @return the file name where the error occurred
      */
     QString fileName() const;

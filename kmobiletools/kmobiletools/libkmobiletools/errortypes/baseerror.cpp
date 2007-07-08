@@ -39,7 +39,7 @@ BaseError::BaseError( const QString& fileName, int lineNumber, const QDateTime& 
 BaseError::~BaseError() {
 }
 
-bool BaseError::operator==( BaseError& error ) const {
+bool BaseError::operator==( const BaseError& error ) const {
     if( error.fileName() == m_fileName &&
         error.lineNumber() == m_lineNumber &&
         error.dateTime() == m_dateTime )
@@ -48,7 +48,7 @@ bool BaseError::operator==( BaseError& error ) const {
     return false;
 }
 
-bool BaseError::operator!=( BaseError& error ) const {
+bool BaseError::operator!=( const BaseError& error ) const {
     if( error.fileName() == m_fileName &&
         error.lineNumber() == m_lineNumber &&
         error.dateTime() == m_dateTime )

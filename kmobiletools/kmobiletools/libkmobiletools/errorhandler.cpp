@@ -27,7 +27,7 @@ namespace KMobileTools {
 
 ErrorHandler* ErrorHandler::m_uniqueInstance = 0;
 QMutex ErrorHandler::m_mutex;
-QStack<BaseError*> ErrorHandler::m_errorStack;
+QStack<const BaseError*> ErrorHandler::m_errorStack;
 
 ErrorHandler::ErrorHandler()
 {
@@ -49,7 +49,7 @@ ErrorHandler* ErrorHandler::instance() {
     return ErrorHandler::m_uniqueInstance;
 }
 
-void ErrorHandler::addError( BaseError* error ) {
+void ErrorHandler::addError( const BaseError* error ) {
     /// @TODO implement me
     m_mutex.lock();
 
@@ -81,14 +81,7 @@ void ErrorHandler::addError( BaseError* error ) {
             break;
     }
 
-    ErrorLog::instance()->write( QString( "===============================" ) );
-    ErrorLog::instance()->write( QString( "Occurred on %1")
-                                 .arg( error->dateTime().toString( Qt::ISODate ) ) );
-    ErrorLog::instance()->write( QString( "Location:    %1:%2" ).arg( error->fileName() )
-                                 .arg( QString::number( error->lineNumber() ) ) );
-    ErrorLog::instance()->write( QString( "Method:      %1()" ).arg( error->methodName() ) );
-    ErrorLog::instance()->write( QString( "Priority:    %1" ).arg( error->priority() ) );
-    ErrorLog::instance()->write( QString( "Description: %1" ).arg( error->description() ) );
+    writeToLog( error );
 
     KMessageBox::error( 0, errorMessage + priority );
 
@@ -97,6 +90,18 @@ void ErrorHandler::addError( BaseError* error ) {
 
 int ErrorHandler::errorCount() const {
     return m_errorStack.count();
+}
+
+void ErrorHandler::writeToLog( const BaseError* error ) {
+    ErrorLog* errorLog = ErrorLog::instance();
+
+    errorLog->write( QString( "===============================" ) );
+    errorLog->write( QString( "Occurred on %1").arg( error->dateTime().toString( Qt::ISODate ) ) );
+    errorLog->write( QString( "Location:    %1:%2" ).arg( error->fileName() )
+                                                    .arg( QString::number( error->lineNumber() ) ) );
+    errorLog->write( QString( "Method:      %1()" ).arg( error->methodName() ) );
+    errorLog->write( QString( "Priority:    %1" ).arg( error->priority() ) );
+    errorLog->write( QString( "Description: %1" ).arg( error->description() ) );
 }
 
 }

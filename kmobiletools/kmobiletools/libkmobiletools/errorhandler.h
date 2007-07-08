@@ -52,7 +52,7 @@ public:
      *
      * @param error the error which should be handled
      */
-    void addError( BaseError* error );
+    void addError( const BaseError* error );
 
     /**
      * Returns how many errors have occured during the current session
@@ -68,9 +68,16 @@ private:
     // making copy constructor private since this is a singleton
     ErrorHandler( const ErrorHandler& );
 
+    /**
+     * Adds information about the @p error to the log file
+     *
+     * @param error the error to add to the log
+     */
+    void writeToLog( const BaseError* error );
+
     static ErrorHandler* m_uniqueInstance;
     static QMutex m_mutex;
-    static QStack<BaseError*> m_errorStack;
+    static QStack<const BaseError*> m_errorStack;
 
     /**
      * SafeGuard is used to delete the ErrorHandler instance
