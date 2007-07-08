@@ -19,28 +19,31 @@
 
 #include "errorlog.h"
 #include <QTextStream>
+#include <KStandardDirs>
+#include <KGlobal>
+
+#include <KDebug>
 
 namespace KMobileTools {
 
 ErrorLog* ErrorLog::m_uniqueInstance = 0;
 QMutex ErrorLog::m_mutex;
-KTemporaryFile* ErrorLog::m_logFile;
 
 ErrorLog::ErrorLog()
 {
-    m_logFile = new KTemporaryFile();
+    m_logFile.open();
 }
 
 
 ErrorLog::~ErrorLog()
 {
-    delete m_logFile;
+    m_logFile.close();
 }
 
 ErrorLog* ErrorLog::instance() {
     /// @TODO locking can be optimized here
     m_mutex.lock();
-    if( ErrorLog::m_uniqueInstance != 0 )
+    if( ErrorLog::m_uniqueInstance == 0 )
         ErrorLog::m_uniqueInstance = new ErrorLog();
     m_mutex.unlock();
 
@@ -50,10 +53,14 @@ ErrorLog* ErrorLog::instance() {
 void ErrorLog::write( const QString& text ) {
     m_mutex.lock();
 
-    QTextStream log( m_logFile );
+    QTextStream log( &m_logFile );
     log << text << "\n";
 
     m_mutex.unlock();
+}
+
+QString ErrorLog::fileName() const {
+    return m_logFile.fileName();
 }
 
 }

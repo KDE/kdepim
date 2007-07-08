@@ -38,7 +38,21 @@ public:
      * @return a ErrorLog instance
      */
     static ErrorLog* instance();
-    static void write( const QString& text );
+
+    /**
+     * Adds an entry to the error log
+     *
+     * @param text the text to add
+     */
+    void write( const QString& text );
+
+    /**
+     * Returns the file name of the error log
+     *
+     * @return the error log file name
+     */
+    QString fileName() const;
+
     ~ErrorLog();
 
 private:
@@ -48,7 +62,7 @@ private:
 
     static ErrorLog* m_uniqueInstance;
     static QMutex m_mutex;
-    static KTemporaryFile* m_logFile;
+    KTemporaryFile m_logFile;
 
     /**
      * SafeGuard is used to delete the ErrorLog instance

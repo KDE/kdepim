@@ -42,7 +42,7 @@ ErrorHandler::~ErrorHandler()
 ErrorHandler* ErrorHandler::instance() {
     /// @TODO locking can be optimized here
     m_mutex.lock();
-    if( ErrorHandler::m_uniqueInstance != 0 )
+    if( ErrorHandler::m_uniqueInstance == 0 )
         ErrorHandler::m_uniqueInstance = new ErrorHandler();
     m_mutex.unlock();
 
