@@ -4,12 +4,16 @@ Name=SMS Serializer
 Name[el]=Διαχειριστής SMS
 Name[es]=Serializador de SMS
 Name[ja]=SMS シリアライザ
+Name[pt]=Serializador de SMS
+Name[pt_BR]=Serializador de SMS
 Name[sv]=SMS-serialisering
 Name[zh_TW]=簡訊序列器
 Comment=An Akonadi serializer plugin for sms objects
 Comment[el]=Ένα πρόσθετο διαχείρισης SMS αντικειμένων για το Akonadi
 Comment[es]=Un plugin serializador de Akonadi para objetos sms
 Comment[ja]=SMS オブジェクトのための Akonadi シリアライザプラグイン
+Comment[pt]=Um 'plugin' de serialização do Akonadi para os objectos de SMS
+Comment[pt_BR]=Um 'plugin' de serialização do Akonadi para os objectos de SMS
 Comment[sv]=Ett insticksprogram till Akonadi för serialisering av SMS-objekt
 Comment[zh_TW]=簡訊物件的 Akonadi 序列器外掛程式
 

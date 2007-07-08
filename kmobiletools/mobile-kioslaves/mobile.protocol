@@ -17,5 +17,7 @@ Description=A kioslave for mobile
 Description[el]=Ένα kioslave για κινητά τηλέφωνα
 Description[es]=Un kioslave para móviles
 Description[ja]=携帯電話のための kioslave
+Description[pt]=Um kioslave para o 'mobile'
+Description[pt_BR]=Um kioslave para o 'mobile'
 Description[sv]=En I/O-slav för mobiltelefoner
 Description[zh_TW]=行動電話的 kiosolave
