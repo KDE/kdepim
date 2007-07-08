@@ -59,22 +59,6 @@ private:
     ErrorLog();
     // making copy constructor private since this is a singleton
     ErrorLog( const ErrorLog& );
-
-    static ErrorLog* m_uniqueInstance;
-    static QMutex m_mutex;
-    KTemporaryFile m_logFile;
-
-    /**
-     * SafeGuard is used to delete the ErrorLog instance
-     * on destruction.
-     */
-    class SafeGuard {
-         public: ~SafeGuard() {
-           if( ErrorLog::m_uniqueInstance )
-             delete ErrorLog::m_uniqueInstance;
-         }
-     };
-     friend class SafeGuard;
 };
 
 }

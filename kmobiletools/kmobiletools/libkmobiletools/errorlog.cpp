@@ -26,41 +26,43 @@
 
 namespace KMobileTools {
 
-ErrorLog* ErrorLog::m_uniqueInstance = 0;
-QMutex ErrorLog::m_mutex;
+class ErrorLogPrivate {
+public:
+    ErrorLog* m_uniqueInstance;
+    static QMutex m_mutex;
+    KTemporaryFile m_logFile;
+};
+
+QMutex ErrorLogPrivate::m_mutex;
+
+K_GLOBAL_STATIC(ErrorLogPrivate, d)
 
 ErrorLog::ErrorLog()
 {
-    m_logFile.open();
+    d->m_logFile.open();
 }
 
 
 ErrorLog::~ErrorLog()
 {
-    m_logFile.close();
+    d->m_logFile.close();
 }
 
 ErrorLog* ErrorLog::instance() {
-    /// @TODO locking can be optimized here
-    m_mutex.lock();
-    if( ErrorLog::m_uniqueInstance == 0 )
-        ErrorLog::m_uniqueInstance = new ErrorLog();
-    m_mutex.unlock();
-
-    return ErrorLog::m_uniqueInstance;
+    return d->m_uniqueInstance;
 }
 
 void ErrorLog::write( const QString& text ) {
-    m_mutex.lock();
+    d->m_mutex.lock();
 
-    QTextStream log( &m_logFile );
+    QTextStream log( &d->m_logFile );
     log << text << "\n";
 
-    m_mutex.unlock();
+    d->m_mutex.unlock();
 }
 
 QString ErrorLog::fileName() const {
-    return m_logFile.fileName();
+    return d->m_logFile.fileName();
 }
 
 }
