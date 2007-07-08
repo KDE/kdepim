@@ -24,11 +24,12 @@
 namespace KMobileTools {
 
 BaseError::BaseError( const QString& fileName, int lineNumber, const QDateTime& dateTime,
-                      const QString& methodName ) {
+                      const QString& methodName, const DebugHash& customDebugInformation ) {
     m_fileName = fileName;
     m_lineNumber = lineNumber;
     m_dateTime = dateTime;
     m_methodName = methodName;
+    m_customDebugInformation = customDebugInformation;
 
     m_priority = High;
     m_description = i18n("No error description available.");

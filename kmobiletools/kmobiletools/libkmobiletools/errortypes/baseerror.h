@@ -24,11 +24,14 @@
 
 #include <QString>
 #include <QDateTime>
-#include <QObject>
+#include <QHash>
 
 #define ERROR_META_INFO __FILE__, __LINE__, QDateTime::currentDateTime(), __FUNCTION__
 
 namespace KMobileTools {
+
+// gcc 4.1.3 doesn't compile without using this typedef
+typedef QHash<QString,QString> DebugHash;
 
 /**
     @author Matthias Lechner <matthias@lmme.de>
@@ -44,7 +47,8 @@ public:
     BaseError( const QString& fileName,
                int lineNumber,
                const QDateTime& dateTime,
-               const QString& methodName );
+               const QString& methodName,
+               const DebugHash& customDebugInformation = DebugHash() );
     ~BaseError();
 
     bool operator==( BaseError& error ) const;
@@ -92,6 +96,15 @@ public:
      */
     QString description() const;
 
+    /**
+     * Returns custom debug information as QString-QString hash.
+     * This can be used by derived classes to retrieve context related information
+     * which was before added in the constructor.
+     *
+     * @return custom debug information
+     */
+    DebugHash customDebugInformation();
+
 protected:
     /**
      * Sets the error's priority
@@ -114,6 +127,7 @@ private:
     int m_lineNumber;
     QDateTime m_dateTime;
     QString m_methodName;
+    DebugHash m_customDebugInformation;
 
     Priority m_priority;
     QString m_description;
