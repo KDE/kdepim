@@ -24,7 +24,7 @@ kabc_xmlrpc kcal_xmlrpc knotes_xmlrpc
 kcal_slox kabc_slox
 kabckolab knoteskolab
 kcalkolab
-kabc kcal kdepim kpimidentities
+kabc kcal kdepim ${KDE4_KPIMIDENTITIES_LIBS}
 )
 
 install(TARGETS groupwarewizard  DESTINATION ${BIN_INSTALL_DIR})
