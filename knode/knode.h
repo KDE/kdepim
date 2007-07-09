@@ -15,10 +15,6 @@
 #ifndef KNODE_H
 #define KNODE_H
 
-#ifdef HAVE_CONFIG_H
-#include <config.h>
-#endif
-
 #include <kxmlguiwindow.h>
 #include <kdialog.h>
 #include "resource.h"

@@ -15,10 +15,6 @@
 #ifndef RESSOURCE_H
 #define RESSOURCE_H
 
-#ifdef HAVE_CONFIG_H
-#include <config.h>
-#endif
-
 
 //========= KNode Version Information ============
 
