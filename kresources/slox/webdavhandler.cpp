@@ -31,7 +31,6 @@
 #endif
 #endif
 
-#include <config.h>
 #include <climits>
 #include <stdlib.h>
 
