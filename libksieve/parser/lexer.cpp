@@ -30,7 +30,6 @@
     your version.
 */
 
-#include <config.h>
 
 #include <ksieve/lexer.h>
 #include <impl/lexer.h>

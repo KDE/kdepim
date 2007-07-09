@@ -30,8 +30,6 @@
     your version.
 */
 
-#include <config.h>
-
 #include <ksieve/parser.h>
 #include <impl/parser.h>
 

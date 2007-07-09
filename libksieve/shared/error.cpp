@@ -30,8 +30,6 @@
     your version.
 */
 
-#include <config.h>
-
 #include <ksieve/error.h>
 
 #include <klocale.h> // i18n
