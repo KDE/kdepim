@@ -17,7 +17,6 @@
 
 #include "filter_thunderbird.hxx"
 
-#include <config.h>
 #include <klocale.h>
 #include <kfiledialog.h>
 #include <ktemporaryfile.h>

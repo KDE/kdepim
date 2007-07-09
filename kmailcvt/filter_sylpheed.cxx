@@ -17,7 +17,6 @@
 
 #include "filter_sylpheed.hxx"
 
-#include <config.h>
 #include <klocale.h>
 #include <kfiledialog.h>
 #include <kdebug.h>

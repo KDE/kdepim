@@ -17,7 +17,6 @@
 
 #include "filter_thebat.hxx"
 
-#include <config.h>
 
 #include <QRegExp>
 

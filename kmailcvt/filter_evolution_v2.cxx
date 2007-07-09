@@ -18,7 +18,6 @@
 
 #include "filter_evolution_v2.hxx"
 
-#include <config.h>
 #include <klocale.h>
 #include <kfiledialog.h>
 #include <ktemporaryfile.h>
