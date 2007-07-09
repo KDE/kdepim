@@ -30,8 +30,6 @@
     your version.
 */
 
-#include <config.h>
-
 #include "directoryserviceswidget.h"
 #include "adddirectoryservicedialogimpl.h"
 #include "cryptplugwrapper.h"
