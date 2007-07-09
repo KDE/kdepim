@@ -46,7 +46,7 @@ kde4_add_ui_files(kmobiletoolsmainpart_PART_SRCS
 
 kde4_add_plugin(kmobiletoolsmainpart WITH_PREFIX ${kmobiletoolsmainpart_PART_SRCS})
 
-target_link_libraries(kmobiletoolsmainpart  kmobiletools kabc_file_core ${KDE4_KHTML_LIBS} ${KDE4_KDEUI_LIBS} ${KDE4_KPARTS_LIBS} ${KDE4_KRESOURCES_LIBS} ${KDE4_KABC_LIBS} ${KDE4_KNOTIFYCONFIG_LIBS} )
+target_link_libraries(kmobiletoolsmainpart  kmobiletools kabc_file_core ${KDE4_KHTML_LIBRARY} ${KDE4_KDEUI_LIBS} ${KDE4_KPARTS_LIBRARY} ${KDE4_KRESOURCES_LIBS} ${KDE4_KABC_LIBRARY} ${KDE4_KNOTIFYCONFIG_LIBS} )
 
 install(TARGETS kmobiletoolsmainpart DESTINATION ${PLUGIN_INSTALL_DIR} )
 
