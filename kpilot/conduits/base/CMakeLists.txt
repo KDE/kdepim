@@ -3,6 +3,7 @@ include_directories(
 )
 
 set(conduit_base_SRCS
+	idmappingxmlsource.cc
 	idmapping.cc
 	cudcounter.cc
 	#record.cc

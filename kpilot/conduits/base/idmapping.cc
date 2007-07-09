@@ -26,67 +26,120 @@
 */
 #include "idmapping.h"
 
-IDMapping::IDMapping( const QString &userName, const QString &conduitName )
+#include "options.h"
+
+IDMapping::IDMapping( const QString &userName, const QString &conduit )
+	: fSource( userName, conduit )
 {
-	#warning Not implemented!
-	Q_UNUSED( conduitName );
-	Q_UNUSED( userName );
+	FUNCTIONSETUP;
+	
+	fSource.loadMapping();
 }
 
+/**
+	 * Validates the mapping file with given dataproxy. The mapping is considered 
+	 * valid if:
+	 * 1. The number of mappings matches the number of records in the list.
+	 * 2. Every record that is in the backup database has a mapping.
+	 */
 bool IDMapping::isValid( const QList<QString> &hhIds )
 {
-	#warning Not implemented!
-	Q_UNUSED( hhIds );
+	FUNCTIONSETUP;
+	
+	const QMap<QString, QString>* mappings = fSource.mappings();
+	
+	
+	bool equalSize = (mappings->size() == hhIds.size());
+	
+	if(equalSize)
+	{
+		bool idsInMapping = true;
+		
+		QList<QString>::const_iterator i;
+		for( i = hhIds.constBegin(); i != hhIds.constEnd(); ++i )
+		{
+			QString id = *i;
+			idsInMapping = idsInMapping && (mappings->keys().contains( id ) 
+				|| mappings->values().contains( id ) );
+		}
+		
+		return idsInMapping;
+	}
+	
 	return false;
 }
 
 QString IDMapping::recordId( const QString &id )
 {
-	#warning Not implemented!
-	Q_UNUSED( id );
-	return QString();
+	FUNCTIONSETUP;
+	
+	if( fSource.mappings()->contains( id ) )
+	{
+		return fSource.mappings()->value( id );
+	}
+
+	return fSource.mappings()->key( id );
 }
 
 void IDMapping::setLastSyncedDate( const QDateTime &dateTime )
 {
-	Q_UNUSED( dateTime );
-	#warning Not implemented!
+	FUNCTIONSETUP;
+	
+	fSource.setLastSyncedDate( dateTime );
 }
 
 void IDMapping::setLastSyncedPC( const QString &pc )
 {
-	Q_UNUSED( pc );
-	#warning Not implemented!
+	FUNCTIONSETUP;
+	
+	fSource.setLastSyncedPC( pc );
 }
 
 bool IDMapping::commit()
 {
-	#warning Not implemented!
-	return false;
+	FUNCTIONSETUP;
+	
+	return fSource.saveMapping();
 }
 
 bool IDMapping::rollback()
 {
-	#warning Not implemented!
-	return false;
+	FUNCTIONSETUP;
+	
+	return fSource.rollback();
 }
 
 void IDMapping::map( const QString &hhRecordId, const QString &pcId )
 {
-	Q_UNUSED( hhRecordId );
-	Q_UNUSED( pcId );
-	#warning Not implemented!
+	FUNCTIONSETUP;
+	
+	fSource.mappings()->insert( hhRecordId, pcId );
 }
 
 void IDMapping::remove( const QString &recordId )
 {
-	Q_UNUSED( recordId );
-	#warning Not implemented!
+	FUNCTIONSETUP;
+	
+	if( fSource.mappings()->contains( recordId ) )
+	{
+		// The recordId is one of a handheld record.
+		fSource.mappings()->remove( recordId );
+	}
+	else
+	{
+		// The recordId is one of a pc record.
+		QString hhId = fSource.mappings()->key( recordId );
+		if( !hhId.isEmpty() )
+		{
+			fSource.mappings()->remove( hhId );
+		}
+	}
 }
 
-bool IDMapping::contains( const QString &hhRecordId )
+bool IDMapping::contains( const QString &recordId )
 {
-	Q_UNUSED( hhRecordId );
-	#warning Not implemented!
-	return false;
+	FUNCTIONSETUP;
+	
+	return fSource.mappings()->contains( recordId ) ||
+		fSource.mappings()->values().contains( recordId );
 }

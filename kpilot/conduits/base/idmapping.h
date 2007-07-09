@@ -27,22 +27,28 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
+#include "pi-macros.h"
+
+#include "idmappingxmlsource.h"
+
 #include <QDateTime>
 #include <QString>
-#include <QList>
-
-#include "pi-macros.h"
+#include <QMap>
+#include <QFile>
 
 class DataProxy;
 
 class IDMapping {
 private:
 	QString fConduitName;
+	IDMappingXmlSource fSource;
+
 public:
 	/**
+	 * Opens the file in:
 	 * $HOME/.kde/share/apps/kpilot/conduits/<Username>/mapping/<Conduit>-mapping.xml.
 	 */
-	IDMapping( const QString &userName, const QString &conduitname );
+	IDMapping( const QString &userName, const QString &conduit );
 
 	/**
 	 * Validates the mapping file with given dataproxy. The mapping is considered 
@@ -81,6 +87,6 @@ public:
 	 */
 	void remove( const QString &recordId );
 
-	bool contains( const QString &id );
+	bool contains( const QString &recordId );
 };
 #endif

@@ -1,0 +1,215 @@
+/*
+** Copyright (C) 2006 Bertjan Broeksema <bbroeksema@bluebottle.com>
+*/
+
+/*
+** This program is free software; you can redistribute it and/or modify
+** it under the terms of the GNU Lesser General Public License as published by
+** the Free Software Foundation; either version 2.1 of the License, or
+** (at your option) any later version.
+**
+** This program is distributed in the hope that it will be useful,
+** but WITHOUT ANY WARRANTY; without even the implied warranty of
+** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+** GNU Lesser General Public License for more details.
+**
+** You should have received a copy of the GNU Lesser General Public License
+** along with this program in a file called COPYING; if not, write to
+** the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+** MA 02110-1301, USA.
+*/
+
+/*
+** Bug reports and questions can be sent to kde-pim@kde.org
+*/
+
+#include "idmappingxmlsource.h"
+
+#include "options.h"
+
+#include <KGlobal>
+#include <KStandardDirs>
+
+#include <QDir>
+#include <QDomDocument>
+#include <QDomElement>
+#include <QDomNode>
+
+IDMappingXmlSource::IDMappingXmlSource( const QString &userName
+	, const QString &conduit )
+{
+	FUNCTIONSETUP;
+	
+	// $HOME/.kde/share/apps/kpilot/conduits/<Username>/mapping/<Conduit>-mapping.xml.
+	// saveLocation will create dirs if necessary.
+	QString pathName = KGlobal::dirs()->saveLocation( "data",
+		CSL1("kpilot/conduits/"));
+	
+	fPath = pathName + CSL1( "/" ) + userName + CSL1( "/mapping/" ) + conduit 
+		+ CSL1( "-mapping.xml" );
+	
+	// Create directories if necessary.
+	QDir dir( pathName );
+	if( !dir.exists( userName ) )
+	{
+		dir.mkpath( userName + CSL1( "/mapping/" ) );
+	}
+	else
+	{
+		dir.cd( userName );
+		if( dir.exists( CSL1( "mapping" ) ) )
+		{
+			dir.cd( CSL1( "mapping" ) );
+			if( dir.exists( conduit + CSL1( "-mapping.xml" ) ) )
+			{
+				// Make a backup of the existing file.
+				QFile file( dir.absolutePath() + conduit + CSL1( "-mapping.xml" ) );
+				file.copy( file.fileName() + CSL1( "~" ) );
+			}
+		}
+		else
+		{
+			dir.mkdir( CSL1( "mapping" ) );
+		}
+	}
+}
+
+IDMappingXmlSource::~IDMappingXmlSource()
+{
+	FUNCTIONSETUP;
+}
+
+void IDMappingXmlSource::setLastSyncedDate( const QDateTime &dateTime )
+{
+	fLastSyncedDateTime = dateTime;
+}
+
+void IDMappingXmlSource::setLastSyncedPC( const QString &pc )
+{
+	fLastSyncedPC = pc;
+}
+
+void IDMappingXmlSource::loadMapping()
+{
+	FUNCTIONSETUP;
+	
+	// Reset local data.
+	fMappings = QMap<QString, QString>();
+	fLastSyncedDateTime = QDateTime();
+	fLastSyncedPC = QString();
+	
+	QFile file( fPath );
+	
+	if( !file.exists() )
+	{
+		DEBUGKPILOT << fname << ": File does not exist, empty map." << endl;
+	}
+	else
+	{
+		DEBUGKPILOT << fname << ": Parsing file " << file.fileName() << endl;
+		QXmlSimpleReader reader;
+		reader.setContentHandler( this );
+		
+		// Make sure that the file is closed after parsing.
+		const QXmlInputSource *source = new QXmlInputSource( &file );
+		reader.parse( source );
+		file.close();
+		
+		delete source;
+	}
+}
+
+bool IDMappingXmlSource::saveMapping()
+{
+	FUNCTIONSETUP;
+	
+	DEBUGKPILOT << fname << ": Saving " << fMappings.count();
+	DEBUGKPILOT << " mappings..." << endl;
+	DEBUGKPILOT << fname << ": ";
+	
+	QDomDocument doc;
+	QDomElement root = doc.createElement( CSL1("mappings") );
+	QDomNode node = doc.createProcessingInstruction(CSL1("xml")
+		,CSL1("version=\"1.0\" encoding=\"UTF-8\""));
+	
+	doc.appendChild( node );
+	doc.appendChild( root );
+	
+	QDomElement dateElement = doc.createElement( CSL1( "lastsync" ) );
+	dateElement.setAttribute( CSL1( "value" )
+		, fLastSyncedDateTime.toString( Qt::ISODate ) );
+	
+	QDomElement pcElement = doc.createElement( CSL1( "pc" ) );
+	pcElement.setAttribute( CSL1( "value" ), fLastSyncedPC );
+	
+	root.appendChild( dateElement );
+	root.appendChild( pcElement );
+	
+	QMap<QString, QString>::const_iterator it;
+	for( it = fMappings.begin(); it != fMappings.end(); ++it )
+	{
+		DEBUGKPILOT << ".";
+		
+		QDomElement mappingElement = doc.createElement( CSL1("mapping") );
+		mappingElement.setAttribute( CSL1("hh"), it.key() );
+		mappingElement.setAttribute( CSL1("pc"), it.value() );
+		
+		root.appendChild( mappingElement );
+	}
+	
+	QFile file( fPath );
+	if( file.open( QIODevice::ReadWrite ) )
+	{
+		QTextStream out( &file );
+		doc.save( out, 4 );
+		file.close();
+		
+		DEBUGKPILOT << endl << fname << ": finished saving." << endl;
+		
+		return true;
+	}
+	
+	return false;
+}
+
+bool IDMappingXmlSource::rollback()
+{
+	QFile backup( fPath + "~" );
+	
+	if( !backup.exists() )
+	{
+		// No backup so nothing to restore.
+		return false;
+	}
+	
+	// Try to copy the backup back to the original location.
+	return backup.copy( fPath );
+}
+
+bool IDMappingXmlSource::startElement( const QString &namespaceURI
+	, const QString &localName, const QString &qName
+	, const QXmlAttributes &attribs )
+{
+	FUNCTIONSETUP;
+	Q_UNUSED(namespaceURI);
+	Q_UNUSED(localName);
+	
+	if( qName == CSL1( "mapping" ) )
+	{
+		QString hh( attribs.value( CSL1( "hh" ) ) );
+		QString pc( attribs.value( CSL1( "pc" ) ) );
+		
+		fMappings.insert( hh, pc );
+	}
+	else if( qName == CSL1( "lastsync" ) )
+	{
+		fLastSyncedDateTime = QDateTime::fromString( attribs.value( CSL1("value") )
+			, Qt::ISODate );
+	}
+	else if( qName == CSL1("pc") )
+	{
+		fLastSyncedPC = attribs.value( CSL1("value") );
+	}
+
+	return true;
+}
