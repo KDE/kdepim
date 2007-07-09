@@ -535,7 +535,7 @@ void KABC::ResourceKolab::fromKMailAddSubresource( const QString& type,
     return;
 
   KConfig config( configFile() );
-  config.setGroup( "Contact" );
+  config.group( "Contact" );
   loadSubResourceConfig( config, subResource, label, writable );
   loadSubResource( subResource );
   addressBook()->emitAddressBookChanged();
