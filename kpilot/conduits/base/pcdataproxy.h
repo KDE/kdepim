@@ -33,11 +33,5 @@
 class PCDataProxy : public DataProxy {
 public:
 	PCDataProxy();
-
-	/**
-	 * Returns true when the proxy was able to open the PC data store (e.g. the
-	 * xml file or vcal file).
-	 */
-	virtual bool isOpen() = 0;
 };
 #endif

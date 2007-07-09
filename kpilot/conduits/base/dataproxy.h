@@ -27,47 +27,54 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
-#include "record.h"
+#include "cudcounter.h"
 
-class CUDCounter;
+#include <QMap>
+
+class Record;
 
 class DataProxy {
-protected:
-	CUDCounter *fCounter;
-
 public:
-	DataProxy();
-	
-	virtual ~DataProxy();
-
 	enum Mode {
 		All=1,
 		Modified=2
 	};
+	
+	DataProxy();
+	
+	virtual ~DataProxy();
 
 	/**
 		* Adds the record to the database and returns the internal id for the added
 		* record.
 		*/
-	QVariant create( Record *record );
+	QString create( Record *record );
 
 	/**
 	 * Deletes record with @p id from the database.
 	 */
-	void remove( const QVariant &id );
+	void remove( const QString &id );
 
 	/**
 	 * Updates the fields of record with @p id with the fields from @p record.
 	 */
-	void update( const QVariant &id, const Record *record );
+	void update( const QString &id, Record *record );
 
 	/**
 	 * Returns the list with ids from the records in the proxy.
 	 */
-	virtual QList<QVariant> ids() = 0;
+	QList<QString> ids() const;
 
+	/**
+	 * Returns the CUDCounter. Because the dataproxy is the only one who is 
+	 * authorized to change it the pointer is const.
+	 */
 	const CUDCounter* counter() const;
 
+	/**
+	 * Notifies the proxy that the synchronisation is finished and that
+	 * no modifications will be done after this.
+	 */
 	void syncFinished();
 
 	/**
@@ -75,32 +82,75 @@ public:
 	 * to iterate over all records.
 	 */
 	void setIterateMode( const Mode m = All );
+	
+	/**
+	 * Returns the record count. Keep in mind that if there are uncommitted
+	 * changes this may differ from the record count of the actual datastore.
+	 */
+	unsigned int recordCount() const;
+	
+	/**
+	 * Looks for a matching record. Should return 0 if there is no match.
+	 */
+	Record* find( const QString &id ) const;
+	
+	/**
+	 * Depending on the iterateMode it should give if there is a next record or if
+	 * there is a next modified record.
+	 */
+	bool hasNext() const;
 
+	/**
+	 * Depending on the iterateMode it should give the next record, the next
+	 * modified record or 0 if there are no more records to iterate over.
+	 */
+	Record* next();
+	
+	/**
+	 * Returns true when the proxy was able to open the underlying data store 
+	 * in read/write mode.
+	 */
+	virtual bool isOpen() const = 0;
+
+	/**
+	 * Commits all changes to the data store.
+	 */
 	virtual bool commit() = 0;
 	
+	/**
+	 * Reverts all changes that are committed to the data store.
+	 */
 	virtual bool rollback() = 0;
 
 	/**
-		* Looks for a matching record. Should return 0 if there is no match.
-		*/
-	virtual Record* find( const QVariant &id ) const = 0;
-
+	 * Loads all records from underlying data source, sets the startcount of the
+	 * counter and resets the iterator.
+	 */
 	virtual void loadAllRecords() = 0;
-
-	virtual bool hasNext() = 0;
-
-	/**
-		* Dependend on the iterateMode it should give the next record, the next
-		* modified record or 0 if there are no more records to iterate over.
-		*/
-	virtual Record* next() = 0;
-
-	virtual Record* readRecordById( const QVariant &id ) = 0;
 	
-	virtual unsigned int recordCount() const = 0;
-
 protected:
 	Mode fMode;
-	QList<Record> *fRecords;
+	CUDCounter fCounter;
+	QMap<QString, Record*> fRecords;
+	QMapIterator<QString, Record*> fIterator;
+	
+	// These are kept for rollback.
+	/**
+	 * Id's from created records.
+	 */
+	QList<QString> fCreated;
+	
+	/**
+	 * Old values of updated records.
+	 */
+	QList<Record*> fUpdated;
+	
+	/**
+	 * Deleted records;
+	 */
+	QList<Record*> fDeleted;
+
+private:
+	int fLastId;
 };
 #endif

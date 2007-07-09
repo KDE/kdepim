@@ -33,18 +33,18 @@ IDMapping::IDMapping( const QString &userName, const QString &conduitName )
 	Q_UNUSED( userName );
 }
 
-bool IDMapping::isValid( const QList<QVariant> &hhIds )
+bool IDMapping::isValid( const QList<QString> &hhIds )
 {
 	#warning Not implemented!
 	Q_UNUSED( hhIds );
 	return false;
 }
 
-QVariant IDMapping::recordId( const QVariant &id )
+QString IDMapping::recordId( const QString &id )
 {
 	#warning Not implemented!
 	Q_UNUSED( id );
-	return QVariant();
+	return QString();
 }
 
 void IDMapping::setLastSyncedDate( const QDateTime &dateTime )
@@ -71,20 +71,20 @@ bool IDMapping::rollback()
 	return false;
 }
 
-void IDMapping::map( const QVariant &hhRecordId, const QVariant &pcId )
+void IDMapping::map( const QString &hhRecordId, const QString &pcId )
 {
 	Q_UNUSED( hhRecordId );
 	Q_UNUSED( pcId );
 	#warning Not implemented!
 }
 
-void IDMapping::remove( const QVariant &recordId )
+void IDMapping::remove( const QString &recordId )
 {
 	Q_UNUSED( recordId );
 	#warning Not implemented!
 }
 
-bool IDMapping::contains( const QVariant &hhRecordId )
+bool IDMapping::contains( const QString &hhRecordId )
 {
 	Q_UNUSED( hhRecordId );
 	#warning Not implemented!

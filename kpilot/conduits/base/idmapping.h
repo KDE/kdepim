@@ -27,9 +27,9 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
+#include <QDateTime>
 #include <QString>
 #include <QList>
-#include <QVariant>
 
 #include "pi-macros.h"
 
@@ -50,13 +50,13 @@ public:
 	 * 1. The number of mappings matches the number of records in the list.
 	 * 2. Every record that is in the backup database has a mapping.
 	 */
-	bool isValid( const QList<QVariant> &hhIds );
+	bool isValid( const QList<QString> &hhIds );
 
 	/**
 	 * Searches for a mapping which contains @p id and returns the id to which it
 	 * is mapped.
 	 */
-	QVariant recordId( const QVariant &id );
+	QString recordId( const QString &id );
 
 	void setLastSyncedDate( const QDateTime &dateTime );
 
@@ -73,14 +73,14 @@ public:
 	 * Deletes any mapping that exists for @p hhRecordId and @p pcRecordId and 
 	 * then creates a new mapping between @p hhRecordId and @p pcRecordId.
 	 */
-	void map( const QVariant &hhRecordId, const QVariant &pcRecordId );
+	void map( const QString &hhRecordId, const QString &pcRecordId );
 	
 	/**
 	 * Search for a mapping which contains @p recordId and if one is found it will
 	 * be removed.
 	 */
-	void remove( const QVariant &recordId );
+	void remove( const QString &recordId );
 
-	bool contains( const QVariant &id );
+	bool contains( const QString &id );
 };
 #endif

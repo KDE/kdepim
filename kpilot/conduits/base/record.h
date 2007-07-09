@@ -33,7 +33,9 @@ class Record {
 public:
 	virtual ~Record() = 0;
 	
-	virtual const QVariant id() const = 0;
+	virtual const QString id() const = 0;
+	
+	virtual const QString setId( const QString &id ) const = 0;
 
 	/**
 	 * Returns true if the record knows that it's modified since last sync.

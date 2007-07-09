@@ -24,12 +24,14 @@
 /*
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
+#include <KMessageBox>
+
 #include "options.h"
 
 #include "recordconduit.h"
 #include "idmapping.h"
-#include "pcdataproxy.h"
-#include "hhdataproxy.h"
+#include "cudcounter.h"
+#include "dataproxy.h"
 #include "record.h"
 
 RecordConduit::RecordConduit( KPilotLink *o, const QStringList &a
@@ -149,33 +151,25 @@ RecordConduit::~RecordConduit()
 	
 	// If commit fails every commit should be undone and the user should be 
 	// notified about the failure.
-	if( createBackupDatabase() )
+	if( !createBackupDatabase() )
 	{
-		if( fHHDataProxy->commit() )
-		{
-			if( !fPCDataProxy->commit() )
-			{
-				fPCDataProxy->rollback();
-				fHHDataProxy->rollback();
-				fMapping->rollback();
-				// TODO: notify user.
-				return false;
-			}
-			else
-			{
-				return true;
-			}
-		}
-		else
-		{
-			fHHDataProxy->rollback();
-			fMapping->rollback();
-			// TODO: notify user.
-			return false;
-		}
-	} 
-	else
+		fMapping->rollback();
+		// TODO: notify user.
+		return false;
+	}
+	
+	if( !fHHDataProxy->commit() )
 	{
+		fHHDataProxy->rollback();
+		fMapping->rollback();
+		// TODO: notify user.
+		return false;
+	}
+	
+	if( !fPCDataProxy->commit() )
+	{
+		fPCDataProxy->rollback();
+		fHHDataProxy->rollback();
 		fMapping->rollback();
 		// TODO: notify user.
 		return false;
@@ -190,70 +184,72 @@ bool RecordConduit::checkVolatility()
 	#warning Not implemented!
 	return false;
 	
-	/*
 	const CUDCounter *fCtrHH = fHHDataProxy->counter();
 	const CUDCounter *fCtrPC = fPCDataProxy->counter();
-	if (fCtrHH && fCtrPC)
+
+	addSyncLogEntry(fCtrHH->moo() +'\n',false);
+	DEBUGKPILOT << fname << ": " << fCtrHH->moo() << endl;
+	addSyncLogEntry(fCtrPC->moo() +'\n',false);
+	DEBUGKPILOT << fname << ": " << fCtrPC->moo() << endl;
+
+	// STEP2 of making sure we don't delete our little user's
+	// precious data...
+	// sanity checks for handheld...
+	int hhVolatility = fCtrHH->percentDeleted() +
+		fCtrHH->percentUpdated() + fCtrHH->percentCreated();
+	
+	int pcVolatility = fCtrPC->percentDeleted() +
+		fCtrPC->percentUpdated() + fCtrPC->percentCreated();
+
+	// TODO: allow user to configure this...
+	// this is a percentage...
+	int allowedVolatility = 70;
+		
+	QString caption = i18n( "Large Changes Detected" );
+	// args are already i18n'd
+	KLocalizedString template_query = ki18n( "The %1 conduit has made a "
+		"large number of changes to your %2.  Do you want "
+		"to allow this change?\nDetails:\n\t%3");
+
+	// Default to allow changes
+	int rc = KMessageBox::Yes;
+
+	if (hhVolatility > allowedVolatility)
 	{
-		addSyncLogEntry(fCtrHH->moo() +'\n',false);
-		DEBUGKPILOT << fname << ": " << fCtrHH->moo() << endl;
-		addSyncLogEntry(fCtrPC->moo() +'\n',false);
-		DEBUGKPILOT << fname << ": " << fCtrPC->moo() << endl;
-
-		// STEP2 of making sure we don't delete our little user's
-		// precious data...
-		// sanity checks for handheld...
-		int hhVolatility = fCtrHH->percentDeleted() +
-				 fCtrHH->percentUpdated() + fCtrHH->percentCreated();
-
-		int pcVolatility = fCtrPC->percentDeleted() +
-				 fCtrPC->percentUpdated() + fCtrPC->percentCreated();
-
-		// TODO: allow user to configure this...
-		// this is a percentage...
-		int allowedVolatility = 70;
-
-		QString caption = i18n( "Large Changes Detected" );
-		// args are already i18n'd
-		KLocalizedString template_query = ki18n("The %1 conduit has made a "
-			         "large number of changes to your %2.  Do you want "
-			         "to allow this change?\nDetails:\n\t%3");
-
-		if (hhVolatility > allowedVolatility)
-		{
-			QString query = template_query.subs(fConduitName)
-				.subs(fCtrHH->type()).subs(fCtrHH->moo()).toString();
-
-			DEBUGKPILOT << fname << ": high volatility."
-				<< "  Check with user: [" << query
-				<< "]." << endl;
-		*/
-			/*
-			int rc = questionYesNo(query, caption,
-				QString::null, 0 );
-			if (rc == KMessageBox::Yes)
-			{
-				// TODO: add commit and rollback code.
-				// note: this will require some thinking,
-				// since we have to undo changes to the
-				// pilot databases, changes to the PC
-				// resources, changes to the mappings files
-				// (record id mapping, etc.)
-			}
-			*/
-		//}
-		/*
-		if (pcVolatility > allowedVolatility)
-		{
-			QString query = template_query.subs(fConduitName)
-				.subs(fCtrPC->type()).subs(fCtrPC->moo()).toString();
-
-			DEBUGKPILOT << fname << ": high volatility."
-				<< "  Check with user: [" << query
-				<< "]." << endl;
-		}
+		QString query = template_query
+			.subs( fConduitName )
+			.subs( i18n("handheld") )
+			.subs( fCtrHH->moo() )
+			.toString();
+		
+		DEBUGKPILOT << fname << ": high volatility."
+			<< " Check with user: [" << query << "]." << endl;
+		
+		rc = questionYesNo( query, caption, QString::null, 0 );
 	}
-	*/
+	
+	if (pcVolatility > allowedVolatility)
+	{
+		QString query = template_query
+			.subs( fConduitName )
+			.subs( i18n( "pc" ) )
+			.subs( fCtrPC->moo() )
+			.toString();
+		
+		DEBUGKPILOT << fname << ": high volatility."
+			<< "  Check with user: [" << query << "]." << endl;
+		
+		rc = questionYesNo( query, caption, QString::null, 0 );
+	}
+	
+	// Allow the changes
+	if( rc == KMessageBox::Yes )
+	{
+		return true;
+	}
+
+	// Disallow the changes
+	return false;
 }
 
 void RecordConduit::hotSync()
@@ -264,13 +260,13 @@ void RecordConduit::hotSync()
 	while( fHHDataProxy->hasNext() )
 	{
 		Record *hhRecord = fHHDataProxy->next();
-		Record *backupRecord = fBackupDataProxy->readRecordById( hhRecord->id() );
+		Record *backupRecord = fBackupDataProxy->find( hhRecord->id() );
 		Record *pcRecord = 0L;
 		
-		QVariant pcRecordId = fMapping->recordId( hhRecord->id() );
-		if( pcRecordId.isValid() ) {
+		QString pcRecordId = fMapping->recordId( hhRecord->id() );
+		if( !pcRecordId.isNull() ) {
 			// There is a mapping.
-			pcRecord = fPCDataProxy->readRecordById( pcRecordId );
+			pcRecord = fPCDataProxy->find( pcRecordId );
 		}
 		
 		syncRecords( hhRecord, backupRecord, pcRecord );
@@ -284,11 +280,11 @@ void RecordConduit::hotSync()
 		Record *backupRecord = 0L;
 		Record *hhRecord = 0L;
 		
-		QVariant hhRecordId = fMapping->recordId( pcRecord->id() );
-		if( hhRecordId.isValid() ) {
+		QString hhRecordId = fMapping->recordId( pcRecord->id() );
+		if( !hhRecordId.isNull() ) {
 			// There is a mapping.
-			backupRecord = fBackupDataProxy->readRecordById( pcRecord->id() );
-			hhRecord = fHHDataProxy->readRecordById( pcRecord->id() );
+			backupRecord = fBackupDataProxy->find( pcRecord->id() );
+			hhRecord = fHHDataProxy->find( pcRecord->id() );
 		}
 		
 		syncRecords( hhRecord, backupRecord, pcRecord );
@@ -356,7 +352,7 @@ void RecordConduit::syncRecords( Record *pcRecord, Record *backupRecord,
 			// Warning id is a temporary id. Only after commit we know what id is
 			// assigned to the record. So on commit the proxy should get the mapping
 			// so that it can change the mapping.
-			QVariant id = fPCDataProxy->create( hhRecord );
+			QString id = fPCDataProxy->create( hhRecord );
 			fMapping->map( hhRecord->id(), id );
 		}
 	}
@@ -381,7 +377,7 @@ void RecordConduit::syncRecords( Record *pcRecord, Record *backupRecord,
 		// first )
 		else
 		{
-			QVariant id = fHHDataProxy->create( pcRecord );
+			QString id = fHHDataProxy->create( pcRecord );
 			fMapping->map( id, pcRecord->id() );
 		}
 	}

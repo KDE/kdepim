@@ -24,48 +24,162 @@
 /*
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
-#include "dataproxy.h"
-#include "cudcounter.h"
 
-DataProxy::DataProxy()
+#include "options.h"
+
+#include "dataproxy.h"
+
+#include "record.h"
+
+DataProxy::DataProxy() : fIterator( fRecords )
 {
+	fLastId = 0;
 }
 
 DataProxy::~DataProxy()
 {
 }
 
-QVariant DataProxy::create( Record *record )
+QString DataProxy::create( Record *record )
 {
-	Q_UNUSED(record)
-	#warning Not implemented!
-	return QVariant();
+	FUNCTIONSETUP;
+	
+	// Temporary id.
+	fLastId = fLastId--;
+	QString recordId = QString::number( fLastId );
+	
+	// Make sure that the new record has the right id and add the record.
+	record->setId( recordId );
+	fRecords.insert( recordId, record );
+	
+	// Update rollback/volatility information.
+	fCreated.append( recordId );
+	fCounter.created();
+	
+	return recordId;
 }
 
-void DataProxy::remove( const QVariant &id )
+void DataProxy::remove( const QString &id )
 {
-	Q_UNUSED(id)
-	#warning Not implemented!
+	FUNCTIONSETUP;
+	
+	Record *rec = fRecords.value( id );
+	if( rec == 0L )
+	{
+		// No record
+		return;
+	}
+	
+	// Remove record.
+	fRecords.remove( id );
+	
+	// Update rollback/volatility information.
+	fDeleted.append( rec );
+	fCounter.deleted();
 }
 
-void DataProxy::update( const QVariant &id, const Record *record )
+void DataProxy::update( const QString &id, Record *newRecord )
 {
-	Q_UNUSED(record)
-	Q_UNUSED(id)
-	#warning Not implemented!
+	FUNCTIONSETUP;
+	
+	Record *oldRecord = fRecords.value( id );
+	if( oldRecord == 0L )
+	{
+		// No record, should not happen.
+		DEBUGKPILOT << fname << ": There is no record with id " << id
+			<< ". Record not updated and not added" << endl;
+		return;
+	}
+	
+	// Make sure that the new record has the right id and update the old record.
+	newRecord->setId( id );
+	fRecords.insert( id, newRecord );
+	
+	// Update rollback/volatility information.
+	fUpdated.append( oldRecord );
+	fCounter.updated();
+}
+
+QList<QString> DataProxy::ids() const
+{
+	return fRecords.keys();
 }
 
 const CUDCounter* DataProxy::counter() const
 {
-	return fCounter;
+	FUNCTIONSETUP;
+	
+	return &fCounter;
 }
 
 void DataProxy::syncFinished()
 {
-	#warning Not implemented!
+	FUNCTIONSETUP;
+	
+	fCounter.setEndCount( fRecords.size() );
 }
 
 void DataProxy::setIterateMode( const Mode m )
 {
+	FUNCTIONSETUP;
+	
 	fMode = m;
+}
+
+unsigned int DataProxy::recordCount() const
+{
+	return fRecords.size();
+}
+
+Record* DataProxy::find( const QString &id ) const
+{
+	FUNCTIONSETUP;
+	return fRecords.value( id );
+}
+
+bool DataProxy::hasNext() const
+{
+	FUNCTIONSETUP;
+	
+	if( fMode == All )
+	{
+		return fIterator.hasNext();
+	}
+	else
+	{
+		QMapIterator<QString, Record*> tmpIt = fIterator;
+		while( tmpIt.hasNext() )
+		{
+			Record *rec = tmpIt.next().value();
+			if( rec->isModified() )
+			{
+				return true;
+			}
+		}
+	}
+	
+	return false;
+}
+
+Record* DataProxy::next()
+{
+	FUNCTIONSETUP;
+	
+	if( fMode == All )
+	{
+			return fIterator.next().value();
+	}
+	else
+	{
+		while( fIterator.hasNext() )
+		{
+			Record *rec = fIterator.next().value();
+			if( rec->isModified() )
+			{
+				return rec;
+			}
+		}
+	}
+	
+	return 0L;
 }

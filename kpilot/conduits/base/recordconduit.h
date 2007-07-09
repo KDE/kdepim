@@ -46,9 +46,9 @@ class RecordConduit : public ConduitAction {
 protected:
 	QString fDatabaseName;
 	IDMapping *fMapping;
-	HHDataProxy *fHHDataProxy;
-	HHDataProxy *fBackupDataProxy;
-	PCDataProxy *fPCDataProxy;
+	DataProxy *fHHDataProxy;
+	DataProxy *fBackupDataProxy;
+	DataProxy *fPCDataProxy;
 
 // Methods
 public:
@@ -71,18 +71,6 @@ protected:
 	 * - fBackupdb
 	 */
 	virtual void initDataProxies() = 0;
-
-	/**
-	 * This method is called after test and can be used by the implementing class 
-	 *to clean things up.
-	 */
-	virtual void postTest() = 0;
-	
-	/**
-	 * This operation is called before test and can be used to set things up for 
-	 * testing purposes.
-	 */
-	virtual void preTest() = 0;
 
 	/**
 	 * This method is called when the conduit is run in Test Mode. The 
