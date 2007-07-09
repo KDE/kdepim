@@ -85,19 +85,19 @@ void QGpgMECryptoConfig::runGpgConf( bool showErrors )
   // run the process:
   int rc = 0;
   if ( !proc.start( K3Process::Block ) )
-    rc = -1;
+    rc = -2;
   else
-    rc = ( proc.normalExit() ) ? proc.exitStatus() : -2 ;
+    rc = ( proc.normalExit() ) ? proc.exitStatus() : -1 ;
 
   // handle errors, if any (and if requested)
   if ( showErrors && rc != 0 ) {
     QString reason;
     if ( rc == -1 )
-        reason = i18n( "program not found" );
+        reason = i18n( "program terminated unexpectedly" );
     else if ( rc == -2 )
-        reason = i18n( "program cannot be executed" );
+        reason = i18n( "program not found or cannot be started" );
     else
-        reason = strerror(rc);
+        reason = strerror(rc); // XXX errno as an exit code?
     QString wmsg = i18n("<qt>Failed to execute gpgconf:<br>%1</qt>", reason);
     kWarning(5150) << wmsg << endl; // to see it from test_cryptoconfig.cpp
     KMessageBox::error(0, wmsg);
@@ -188,7 +188,7 @@ void QGpgMECryptoConfigComponent::runGpgConf()
   // run the process:
   int rc = 0;
   if ( !proc.start( K3Process::Block ) )
-    rc = -1;
+    rc = -2;
   else
     rc = ( proc.normalExit() ) ? proc.exitStatus() : -1 ;
 
@@ -306,7 +306,7 @@ void QGpgMECryptoConfigComponent::sync( bool runtime )
   // run the process:
   int rc = proc.execute();
 
-  if ( rc == -1 )
+  if ( rc == -2 )
   {
     QString wmsg = i18n( "Could not start gpgconf\nCheck that gpgconf is in the PATH and that it can be started" );
     kWarning(5150) << wmsg << endl;
