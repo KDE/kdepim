@@ -22,13 +22,13 @@
 #include <typeinfo>
 #include <stdlib.h>
 
-#include <QDateTime>
-#include <QString>
-#include <q3ptrlist.h>
+#include <QtCore/QDateTime>
+#include <QtCore/QString>
 
 #include <kdebug.h>
 #include <kurl.h>
 #include <kio/job.h>
+#include <kio/jobuidelegate.h>
 #include <klocale.h>
 #include <kstandarddirs.h>
 
@@ -225,7 +225,7 @@ void ResourceRemote::slotPercent( KJob *, unsigned long percent )
 void ResourceRemote::slotLoadJobResult( KJob *job )
 {
   if ( job->error() ) {
-    static_cast<KIO::Job*>(job)->showErrorDialog( 0 );
+    static_cast<KIO::Job*>(job)->ui()->showErrorMessage();
   } else {
     kDebug(5800) << "ResourceRemote::slotLoadJobResult() success" << endl;
 
@@ -286,7 +286,7 @@ bool ResourceRemote::isSaving()
 void ResourceRemote::slotSaveJobResult( KJob *job )
 {
   if ( job->error() ) {
-    static_cast<KIO::Job*>(job)->showErrorDialog( 0 );
+    static_cast<KIO::Job*>(job)->ui()->showErrorMessage();
   } else {
     kDebug(5800) << "ResourceRemote::slotSaveJobResult() success" << endl;
 

@@ -41,13 +41,14 @@
 #include <klocale.h>
 #include <QDBusAbstractInterface>
 #include <QDBusError>
+#include <QMap>
 
 using namespace Kolab;
 typedef QList<KMail::SubResource> QListKmailSubResource;
 typedef QMap<quint32, QString> Quint32StringMap;
 typedef QMap<QByteArray, QString> ByteArrayStringMap;
-Q_DECLARE_METATYPE(ByteArrayStringMap)
 
+Q_DECLARE_METATYPE(ByteArrayStringMap)
 Q_DECLARE_METATYPE(KMail::SubResource)
 Q_DECLARE_METATYPE(QListKmailSubResource)
 Q_DECLARE_METATYPE(Quint32StringMap)
@@ -92,7 +93,7 @@ static void registerTypes()
     static bool registered = false;
     if (!registered) {
       qDBusRegisterMetaType<KMail::SubResource>();
-      qDBusRegisterMetaType< QListKmailSubResource >();
+      qDBusRegisterMetaType<QListKmailSubResource>();
       qDBusRegisterMetaType<Quint32StringMap>();
       qDBusRegisterMetaType<KMail::StorageFormat>();
       qDBusRegisterMetaType<ByteArrayStringMap>();
@@ -109,6 +110,7 @@ KMailConnection::KMailConnection( ResourceKolabBase* resource )
                    SIGNAL(serviceOwnerChanged(QString,QString,QString)),
                    this, SLOT(dbusServiceOwnerChanged(QString,QString,QString)));
 
+  registerTypes();
 }
 
 
@@ -305,25 +307,25 @@ bool KMailConnection::kmailUpdate( const QString& resource,
                                    const QStringList& attachmentNames,
                                    const QStringList& deletedAttachments )
 {
-  if ( !connectToKMail() )
-    return false;
-  registerTypes();
-  bool ret = false;
-  //TODO fix me
-  /*QList<QVariant> arg;
-  arg <<resource;
-  arg<<sernum;
-  arg<<subject;
-  arg<<plainTextBody;
-  arg<<customHeaders;
-  arg<<attachmentURLs;
-  arg<<attachmentMimetypes;
-  arg<<attachmentNames;
-  arg<<deletedAttachments;
-  QDBusReply<bool> reply = mKmailGroupwareInterface->callWithArgumentList( QDBus::NoBlock, "update", arg );
+  bool ok = connectToKMail();
+
+  QList<QVariant> arguments;
+  arguments << resource;
+  arguments << sernum;
+  arguments << subject;
+  arguments << plainTextBody;
+  arguments << QVariant::fromValue( customHeaders );
+  arguments << attachmentURLs;
+  arguments << attachmentMimetypes;
+  arguments << attachmentNames;
+  arguments << deletedAttachments;
+
+  QDBusReply<quint32> reply = mKmailGroupwareInterface->callWithArgumentList( QDBus::Block, "update", arguments );
+
   if ( reply.isValid() )
-  ret = reply;*/
-  return ret;
+    sernum = reply;
+
+  return ok && (mKmailGroupwareInterface->lastError().type() == QDBusError::NoError);
 }
 
 bool KMailConnection::kmailAddSubresource( const QString& resource,
@@ -366,9 +368,9 @@ bool KMailConnection::kmailTriggerSync( const QString &contentsType )
   return ok && ret;
 }
 
-void KMailConnection::dbusServiceOwnerChanged(const QString & service, const QString & oldOwner, const QString & newOwner)
+void KMailConnection::dbusServiceOwnerChanged(const QString & service, const QString&, const QString&)
 {
-  if (mKmailGroupwareInterface && mKmailGroupwareInterface->service()==service)
+  if (mKmailGroupwareInterface && mKmailGroupwareInterface->service() == service)
   {
     // Delete the stub so that the next time we need to talk to kmail,
     // we'll know that we need to start a new one.

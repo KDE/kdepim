@@ -201,7 +201,7 @@ bool ResourceKolab::loadSubResource( const QString& subResource,
     //uiserver.transferring( progressId, labelTxt ); //TODO was removed
   }
 #endif
-  for ( uint startIndex = 0; startIndex < count; startIndex += nbMessages ) {
+  for ( int startIndex = 0; startIndex < count; startIndex += nbMessages ) {
     QMap<quint32, QString> lst;
     if ( !kmailIncidences( lst, mimetype, subResource, startIndex, nbMessages ) ) {
       kError(5650) << "Communication problem in ResourceKolab::load()\n";

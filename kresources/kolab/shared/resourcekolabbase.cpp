@@ -47,7 +47,7 @@
 
 using namespace Kolab;
 
-ResourceKolabBase::ResourceKolabBase( const QByteArray& objId )
+ResourceKolabBase::ResourceKolabBase( const QByteArray& )
   : mSilent( false )
 {
   KGlobal::locale()->insertCatalog( "kres_kolab" );

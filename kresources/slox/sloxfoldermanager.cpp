@@ -20,11 +20,11 @@
 #include <QFile>
 #include <qdom.h>
 #include <QString>
-//Added by qt3to4:
 #include <QTextStream>
 
 #include <kdebug.h>
 #include <kio/job.h>
+#include <kio/jobuidelegate.h>
 #include <kio/davjob.h>
 #include <klocale.h>
 #include <kstandarddirs.h>
@@ -90,7 +90,7 @@ void SloxFolderManager::slotResult( KJob *job )
   kDebug() << k_funcinfo << endl;
 
   if ( job->error() ) {
-    static_cast<KIO::Job*>(job)->showErrorDialog( 0 );
+    static_cast<KIO::Job*>(job)->ui()->showErrorMessage();
   } else {
     kDebug() << k_funcinfo << " success, writing to " << cacheFile() << endl;
     QFile f( cacheFile() );

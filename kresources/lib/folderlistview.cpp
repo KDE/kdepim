@@ -96,36 +96,49 @@ void FolderListView::showPopupMenu( FolderListItem *i, const QPoint &globalPos )
   KPIM::FolderLister::Entry folder( i->folder() );
 
   KMenu m( this );
-  int id;
 
   m.setTitle( folder.name);
-  id = m.insertItem( i18n("&Enabled"), this, SLOT(slotPopupHandler(int)), 0, FolderName );
-  m.setItemChecked( id, i->isOn() );
+  QAction *action = m.addAction( i18n("&Enabled"), this, SLOT(slotPopupHandler(QAction*)) );
+  action->setData( FolderName );
+  action->setCheckable( true );
+  action->setChecked( i->isOn() );
   m.addSeparator();
 
   if ( ( folder.type & KPIM::FolderLister::Event ) && (mTypes.contains( Event ) ) ) {
-    id = m.insertItem( i18n("Default for New &Events"), this, SLOT(slotPopupHandler(int)), 0, Event );
-    m.setItemChecked( id, i->isDefault( Event ) );
+    action = m.addAction( i18n("Default for New &Events"), this, SLOT(slotPopupHandler(QAction*)) );
+    action->setData( Event );
+    action->setCheckable( true );
+    action->setChecked( i->isDefault( Event ) );
   }
   if ( ( folder.type & KPIM::FolderLister::Todo ) && (mTypes.contains( Todo ) ) ) {
-    id = m.insertItem( i18n("Default for New &Todos"), this, SLOT(slotPopupHandler(int)), 0, Todo );
-    m.setItemChecked( id, i->isDefault( Todo ) );
+    action = m.addAction( i18n("Default for New &Todos"), this, SLOT(slotPopupHandler(QAction*)) );
+    action->setData( Todo );
+    action->setCheckable( true );
+    action->setChecked( i->isDefault( Todo ) );
   }
   if ( ( folder.type & KPIM::FolderLister::Journal ) && (mTypes.contains( Journal ) ) ) {
-    id = m.insertItem( i18n("Default for New &Journals"), this, SLOT(slotPopupHandler(int)), 0, Journal );
-    m.setItemChecked( id, i->isDefault( Journal ) );
+    action = m.addAction( i18n("Default for New &Journals"), this, SLOT(slotPopupHandler(QAction*)) );
+    action->setData( Journal );
+    action->setCheckable( true );
+    action->setChecked( i->isDefault( Journal ) );
   }
   if ( ( folder.type & KPIM::FolderLister::Contact ) && (mTypes.contains( Contact ) ) ) {
-    id = m.insertItem( i18n("Default for New &Contacts"), this, SLOT(slotPopupHandler(int)), 0, Contact );
-    m.setItemChecked( id, i->isDefault( Contact ) );
+    action = m.addAction( i18n("Default for New &Contacts"), this, SLOT(slotPopupHandler(QAction*)) );
+    action->setData( Contact );
+    action->setCheckable( true );
+    action->setChecked( i->isDefault( Contact ) );
   }
   if ( ( folder.type == KPIM::FolderLister::All ) && (mTypes.contains( All ) ) ) {
-    id = m.insertItem( i18n("Default for All New &Items"), this, SLOT(slotPopupHandler(int)), 0, All );
-    m.setItemChecked( id, i->isDefault( All ) );
+    action = m.addAction( i18n("Default for All New &Items"), this, SLOT(slotPopupHandler(QAction*)) );
+    action->setData( All );
+    action->setCheckable( true );
+    action->setChecked( i->isDefault( All ) );
   }
   if ( ( folder.type == KPIM::FolderLister::Unknown ) && (mTypes.contains( Unknown ) ) ) {
-    id = m.insertItem( i18n("Default for &Unknown New Items"), this, SLOT(slotPopupHandler(int)), 0, Unknown );
-    m.setItemChecked( id, i->isDefault( Unknown ) );
+    action = m.addAction( i18n("Default for &Unknown New Items"), this, SLOT(slotPopupHandler(QAction*)) );
+    action->setData( Unknown );
+    action->setCheckable( true );
+    action->setChecked( i->isDefault( Unknown ) );
   }
 
   m.exec( globalPos );
@@ -137,9 +150,9 @@ void FolderListView::showPopupMenu( Q3ListViewItem *i )
     showPopupMenu( (FolderListItem*)i, viewport()->mapToGlobal(itemRect(i).topLeft()) );
 }
 
-void FolderListView::slotPopupHandler( int z )
+void FolderListView::slotPopupHandler( QAction *action )
 {
-  ((FolderListItem*)currentItem())->changeProperty( (Property)z );
+  ((FolderListItem*)currentItem())->changeProperty( (Property)action->data().toInt() );
 }
 
 // Because QListViewItem::activatePos() is going to become deprecated,

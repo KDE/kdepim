@@ -62,7 +62,7 @@ class FolderListView : public K3ListView
     /* call item to change a property, or display a menu */
     void slotMousePressed( int, Q3ListViewItem*, const QPoint&, int );
     /* asks item to change the property in q */
-    void slotPopupHandler( int z );
+    void slotPopupHandler( QAction* );
 
   signals:
     void changed();

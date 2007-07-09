@@ -29,15 +29,16 @@
 #include <kdebug.h>
 #include <kstandarddirs.h>
 #include <kio/job.h>
+#include <kio/jobuidelegate.h>
 #include <kio/davjob.h>
 #include <kstringhandler.h>
 #include <kconfig.h>
 
-#include <QFile>
-#include <qdom.h>
-#include <QString>
-//Added by qt3to4:
-#include <QTextStream>
+#include <QtCore/QFile>
+#include <QtCore/QString>
+#include <QtCore/QTextStream>
+#include <QtXml/QDomDocument>
+#include <QtXml/QDomElement>
 
 SloxAccounts::SloxAccounts( SloxBase *res, const KUrl &baseUrl )
   : mBaseUrl( baseUrl ), mRes( res )
@@ -150,7 +151,7 @@ void SloxAccounts::slotResult( KJob *job )
   kDebug() << "SloxAccounts::slotResult()" << endl;
 
   if ( job->error() ) {
-    static_cast<KIO::Job*>(job)->showErrorDialog( 0 );
+    static_cast<KIO::Job*>(job)->ui()->showErrorMessage();
   } else {
     if ( mRes->resType() == "ox" ) {
       QFile f( cacheFile() );

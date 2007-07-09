@@ -202,22 +202,18 @@ QString Query::marshal( const QVariant &arg ) const
   switch ( arg.type() )
   {
       case QVariant::String:
-        {
-#ifdef __GNUC__
-#warning Port me!
-#endif
-      //case QVariant::CString: 
+      {
         QString result = arg.toString();
         result = result.replace( "&", "&amp;" );
         result = result.replace( "\"", "&quot;" );
         result = result.replace( "<", "&lt;" );
         result = result.replace( ">", "&gt;" );
         return "<value><string>" + result + "</string></value>\r\n";
-        }
+      }
       case QVariant::Int:
-      return "<value><int>" + QString::number( arg.toInt() ) + "</int></value>\r\n";
+        return "<value><int>" + QString::number( arg.toInt() ) + "</int></value>\r\n";
       case QVariant::Double:
-      return "<value><double>" + QString::number( arg.toDouble() ) + "</double></value>\r\n";
+        return "<value><double>" + QString::number( arg.toDouble() ) + "</double></value>\r\n";
       case QVariant::Bool:
       {
         QString markup = "<value><boolean>";
@@ -226,9 +222,9 @@ QString Query::marshal( const QVariant &arg ) const
         return markup;
       }
       case QVariant::ByteArray:
-      return "<value><base64>" + KCodecs::base64Encode( arg.toByteArray() ) + "</base64></value>\r\n";
+        return "<value><base64>" + KCodecs::base64Encode( arg.toByteArray() ) + "</base64></value>\r\n";
       case QVariant::DateTime:
-      return "<value><datetime.iso8601>" + arg.toDateTime().toString( Qt::ISODate ) + "</datetime.iso8601></value>\r\n";
+        return "<value><datetime.iso8601>" + arg.toDateTime().toString( Qt::ISODate ) + "</datetime.iso8601></value>\r\n";
       case QVariant::List:
       {
         QString markup = "<value><array><data>\r\n";

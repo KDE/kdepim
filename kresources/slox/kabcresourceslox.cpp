@@ -29,6 +29,7 @@
 #include <kstringhandler.h>
 #include <libkdepim/kpimprefs.h>
 #include <libkdepim/progressmanager.h>
+#include <kio/jobuidelegate.h>
 #include <kio/davjob.h>
 
 #include "webdavhandler.h"
@@ -231,7 +232,7 @@ void ResourceSlox::slotResult( KJob *job )
   kDebug() << "ResourceSlox::slotResult()" << endl;
 
   if ( job->error() ) {
-    static_cast<KIO::Job*>(job)->showErrorDialog( 0 );
+    static_cast<KIO::Job*>(job)->ui()->showErrorMessage();
   } else {
     kDebug() << "ResourceSlox::slotResult() success" << endl;
 
@@ -296,7 +297,7 @@ void ResourceSlox::slotUploadResult( KJob *job )
   kDebug() << "ResourceSlox::slotUploadResult()" << endl;
 
   if ( job->error() ) {
-    static_cast<KIO::Job*>(job)->showErrorDialog( 0 );
+    static_cast<KIO::Job*>(job)->ui()->showErrorMessage();
   } else {
     kDebug() << "ResourceSlox::slotUploadResult() success" << endl;
 
@@ -543,7 +544,7 @@ void ResourceSlox::createAddresseeFields( QDomDocument &doc, QDomElement &prop,
   WebdavHandler::addSloxElement( this, doc, prop, fieldName( Title ), a.title() );
   if ( !a.birthday().isNull() )
     WebdavHandler::addSloxElement( this, doc, prop, fieldName( Birthday ),
-                                   WebdavHandler::qDateTimeToSlox( a.birthday() ) );
+                                   WebdavHandler::kDateTimeToSlox( KDateTime( a.birthday() ) ) );
   else
     WebdavHandler::addSloxElement( this, doc, prop, fieldName( Birthday ) );
   WebdavHandler::addSloxElement( this, doc, prop, fieldName( Role ), a.role() );
@@ -570,7 +571,7 @@ void ResourceSlox::createAddresseeFields( QDomDocument &doc, QDomElement &prop,
     QString anniversary = a.custom( "KADDRESSBOOK", "X-Anniversary" );
     if ( !anniversary.isEmpty() )
       WebdavHandler::addSloxElement( this, doc, prop, fieldName( Anniversary ),
-        WebdavHandler::qDateTimeToSlox( QDateTime::fromString( anniversary, Qt::ISODate ) ) );
+        WebdavHandler::kDateTimeToSlox( KDateTime::fromString( anniversary ) ) );
     else
       WebdavHandler::addSloxElement( this, doc, prop, fieldName( Anniversary ) );
   }
