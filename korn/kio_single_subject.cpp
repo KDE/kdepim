@@ -142,6 +142,7 @@ void KIO_Single_Subject::slotResult( KIO::Job *job )
 	} else {
 		KornMailSubject * mailSubject = new KornMailSubject( new KornStringId( *_name ), 0 );
 		parseMail( _message, mailSubject, _protocol->fullMessage() );
+		mailSubject->decodeHeaders();
 		mailSubject->setSize( _size );
 		emit readSubject( mailSubject );
 	}
