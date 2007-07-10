@@ -41,8 +41,7 @@ extern "C" { KDE_EXPORT int kdemain(int argc, char* argv[]); }
 
 int kdemain( int argc, char * argv[] )
 {
-	KLocale::setMainCatalog("kdelibs");
-	KComponentData instance("kio_mbox");
+	KComponentData instance("kio_mbox", "kdelibs4");
 	(void) KGlobal::locale();
 
 	if (argc != 4) {
