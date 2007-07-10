@@ -3,6 +3,7 @@
 
 class KMailDrop;
 
+class QTextCodec;
 class QVariant;
 
 #include <QString>
@@ -158,6 +159,38 @@ public:
 	 * @return true if elem1 is send before elem2; false otherwise
 	 */
 	friend bool operator<( const KornMailSubject& elem1, const KornMailSubject& elem2 );
+
+	/**
+	 * decodes headers using decodeRFC2047String
+	 */
+	void decodeHeaders();
+
+private:
+	/**
+	 * Decode a string based on RFC2047
+	 */
+	QString decodeRFC2047String(const QByteArray& aStr);
+
+	/**
+	 * Unfolding a string (basically changing tabs to spaces
+	 */
+	QByteArray unfold( const QByteArray & header );
+
+	/**
+	 * Returns true if the parameter is a blank (or tab)
+	 *
+	 * Note from KMail's code, where this function is taken from:
+	 * don't rely on isblank(), which is a GNU extension in
+	 * <cctype>. But if someone wants to write a configure test for
+	 * isblank(), we can then rename this function to isblank and #ifdef
+	 * it's definition...
+	 */
+	 inline bool isBlank( char ch ) { return ch == ' ' || ch == '\t' ; }
+
+	 /**
+	  * ??
+	  */
+	 const QTextCodec* codecForName(const QByteArray& _str);
 };
 
 #endif

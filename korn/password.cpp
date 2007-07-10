@@ -46,10 +46,10 @@ QString KOrnPassword::readKMailPassword( int accountnr, const KConfigBase& fallb
 	open();
 
 	if( !m_wallet || !m_wallet->isOpen() || m_openFailed )
-		return fallbackConfig.readEntry( "pass" );
+		return KMailDecrypt( fallbackConfig.readEntry( "pass" ) );
 
 	if( !m_wallet->hasFolder( "kmail" ) )
-		return fallbackConfig.readEntry( "pass" );
+		return KMailDecrypt( fallbackConfig.readEntry( "pass" ));
 	m_wallet->setFolder( "kmail" );
 
 	if( m_wallet->readPassword( QString( "account-%1" ).arg( accountnr ), password ) != 0 )
