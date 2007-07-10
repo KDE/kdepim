@@ -27,12 +27,14 @@
 
 #include "hhdataproxy.h"
 
+#include "pilotDatabase.h"
+
 HHDataProxy::HHDataProxy()
 {
 }
 
 void HHDataProxy::resetSyncFlags()
 {
-	#warning Not implemented!
+	fDatabase->resetSyncFlags();
 }
 

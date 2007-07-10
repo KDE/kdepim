@@ -101,8 +101,6 @@ private:
 	bool syncFields( Record *from, Record *to );
 	
 	void solveConflict( Record *pcRecord, Record *hhRecord );
-	
-	bool askConfirmation( const QString & volatilityMessage );
 
 	virtual bool createBackupDatabase() = 0;
 };

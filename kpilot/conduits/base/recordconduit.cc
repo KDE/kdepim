@@ -181,8 +181,6 @@ RecordConduit::~RecordConduit()
 bool RecordConduit::checkVolatility()
 {
 	FUNCTIONSETUP;
-	#warning Not implemented!
-	return false;
 	
 	const CUDCounter *fCtrHH = fHHDataProxy->counter();
 	const CUDCounter *fCtrPC = fPCDataProxy->counter();
@@ -424,15 +422,32 @@ bool RecordConduit::syncFields( Record *to, Record *from )
 void RecordConduit::solveConflict( Record *pcRecord, Record *hhRecord )
 {
 	FUNCTIONSETUP;
-	Q_UNUSED(pcRecord);
-	Q_UNUSED(hhRecord);
-	#warning Not implemented!
-}
+	
+	if ( getConflictResolution() == SyncAction::eAskUser )
+	{
+		// TODO: Make this nicer, like the abbrowser conduit had.
+		QString query = i18n( "The following item was modified "
+			"both on the Handheld and on your PC:\nPC entry:\n\t" );
+		query += pcRecord->toString();
+		query += i18n( "\nHandheld entry:\n\t" );
+		query += hhRecord->toString();
+		query += i18n( "\n\nWhich entry do you want to keep? It will "
+			"overwrite the other entry." );
 
-bool RecordConduit::askConfirmation(const QString & volatilityMessage)
-{
-	FUNCTIONSETUP;
-	#warning Not implemented!
-	Q_UNUSED(volatilityMessage);
-	return false;
+		if( KMessageBox::No == questionYesNo(
+			query,
+			i18n( "Conflicting Entries" ),
+			QString::null,
+			0 /* Never timeout */,
+			i18n( "Handheld" ), i18n( "PC" )) )
+		{
+			// Keep PC record
+			syncFields( hhRecord, pcRecord );
+		}
+		else
+		{
+			// Keep Handheld record
+			syncFields( pcRecord, hhRecord );
+		}
+	}
 }

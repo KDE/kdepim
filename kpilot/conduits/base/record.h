@@ -59,5 +59,7 @@ public:
 	 * exists.
 	 */
 	virtual const QVariant value( const QString &field ) const = 0;
+	
+	virtual QString toString() const = 0;
 };
 #endif

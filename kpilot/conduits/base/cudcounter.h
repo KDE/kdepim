@@ -70,12 +70,12 @@ public:
 	/**
 	 * Returns the sum of created records, updated records and deleted records.
 	 */
-	int volatilityCount();
+	int volatilityCount() const;
 
 	/**
 	 * Returns 100 if startcount is 0 otherwhise volatilityCount() / startCount.
 	 */
-	int volatilityPercent();
+	int volatilityPercent() const;
 
 	/**
 	 * percentage of changes.  unfortunately, we have to rely on our
@@ -93,11 +93,6 @@ public:
 	 */
 	QString moo() const;
 
-	/** Type of counter(Handheld or PC).  This string is already
-	 * i18n()ed.
-	*/
-	//QString type() const { return fType; }
-	
 private:
 	unsigned int fC;
 	unsigned int fU;

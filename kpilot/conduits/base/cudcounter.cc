@@ -31,7 +31,6 @@
 
 CUDCounter::CUDCounter()
 {
-	#warning Not implemented!
 }
 
 void CUDCounter::setStartCount( unsigned int t )
@@ -59,16 +58,14 @@ void CUDCounter::deleted( unsigned int d )
 	fD += d;
 }
 
-int CUDCounter::volatilityCount()
+int CUDCounter::volatilityCount() const
 {
-	#warning Not implemented!
-	return -1;
+	return fC + fU + fD;
 }
 
-int CUDCounter::volatilityPercent()
+int CUDCounter::volatilityPercent() const
 {
-	#warning Not implemented!
-	return 100;
+	return (fStart > 0 ? volatilityCount() / fStart : 100 );
 }
 
 QString CUDCounter::moo() const
