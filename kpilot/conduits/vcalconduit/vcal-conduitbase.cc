@@ -605,18 +605,18 @@ void VCalConduitBase::setState( ConduitState *s )
 {
 	KPILOT_DELETE( fState );
 	fState = s;
-};
+}
 
 /* virtual */ void VCalConduitBase::postSync( )
 {
 	FUNCTIONSETUP;
 	if (fCtrPC && fP)
 		fCtrPC->setEndCount(fP->count());
-};
+}
 
 /* virtual */ void VCalConduitBase::preSync( )
 {
 	FUNCTIONSETUP;
 	if (fCtrPC && fP)
 		fCtrPC->setStartCount(fP->count());
-};
+}

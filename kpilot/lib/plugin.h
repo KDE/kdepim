@@ -407,7 +407,7 @@ namespace PluginUtility
 	*/
 	unsigned long pluginVersion(const KLibrary *);
 	QString pluginVersionString(const KLibrary *);
-} ;
+}
 
 /**
 * All KPilot conduits should subclass KLibFactory like this.
