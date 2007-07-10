@@ -84,7 +84,7 @@ set(kleopatra_LIB_SRCS ${libkleopatra_core_SRCS} ${libkleopatra_ui_SRCS} ${libkl
 
 kde4_add_library(kleopatra SHARED ${kleopatra_LIB_SRCS})
 
-target_link_libraries(kleopatra  ${KDE4_KDE3SUPPORT_LIBS} gpgmepp qgpgme ${GPGME_LIBRARIES} )
+target_link_libraries(kleopatra  ${KDE4_KDE3SUPPORT_LIBS} ${KDE4_GPGMEPP_LIBS} ${KDE4_QGPGME_LIBS} ${GPGME_LIBRARIES} )
 
 set_target_properties(kleopatra PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
 install(TARGETS kleopatra  DESTINATION ${LIB_INSTALL_DIR})
