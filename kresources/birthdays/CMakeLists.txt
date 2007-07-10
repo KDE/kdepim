@@ -9,7 +9,6 @@ set(kcal_kabc_PART_SRCS ${libkabcommon_SRCS} resourcekabc.cpp resourcekabcconfig
 
 kde4_add_kcfg_files(kcal_kabc_PART_SRCS ${CMAKE_SOURCE_DIR}/kaddressbook/common/kabprefs_base.kcfgc )
 
-kde4_automoc(${kcal_kabc_PART_SRCS})
 
 kde4_add_plugin(kcal_kabc ${kcal_kabc_PART_SRCS})
 

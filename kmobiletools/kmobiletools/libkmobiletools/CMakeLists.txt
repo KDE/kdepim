@@ -39,7 +39,6 @@ QT4_ADD_DBUS_INTERFACE(kmobiletools_LIB_SRCS org.kde.kmobiletools.device.xml kmo
 QT4_ADD_DBUS_INTERFACE(kmobiletools_LIB_SRCS org.kde.kmobiletools.main.xml kmobiletools_main_interface )
 
 
-kde4_automoc(${kmobiletools_LIB_SRCS})
 
 kde4_add_kcfg_files(kmobiletools_LIB_SRCS kmobiletools_cfg.kcfgc kmobiletools_devices.kcfgc )
 

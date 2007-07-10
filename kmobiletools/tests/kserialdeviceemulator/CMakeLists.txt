@@ -7,7 +7,6 @@ set(kserialdeviceemulator_SRCS
    kserialdeviceemulatorwidget.cpp 
    commandslist.cpp )
 
-kde4_automoc(${kserialdeviceemulator_SRCS})
 
 kde4_add_ui_files(kserialdeviceemulator_SRCS kserialdeviceemulatorwidgetbase.ui )
 

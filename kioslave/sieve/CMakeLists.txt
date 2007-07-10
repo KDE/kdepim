@@ -7,7 +7,6 @@ configure_file (config-sieve.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-sieve.h 
 
 set(kio_sieve_PART_SRCS sieve.cpp )
 
-kde4_automoc(${kio_sieve_PART_SRCS})
 
 kde4_add_plugin(kio_sieve ${kio_sieve_PART_SRCS})
 

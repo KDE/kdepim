@@ -6,7 +6,6 @@ set(kmobiletoolsengineui_LIB_SRCS
    devicesfoundPage.cpp
    )
 
-kde4_automoc(${kmobiletoolsengineui_LIB_SRCS})
 
 kde4_add_ui_files(kmobiletoolsengineui_LIB_SRCS connectionsPage.ui
    devicesfoundPage.ui

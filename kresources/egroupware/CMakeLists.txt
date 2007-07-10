@@ -19,7 +19,6 @@ set(kabc_xmlrpc_LIB_SRCS kabc_resourcexmlrpc.cpp kabc_resourcexmlrpcconfig.cpp $
 kde4_add_kcfg_files(kabc_xmlrpc_LIB_SRCS ${CMAKE_SOURCE_DIR}/kaddressbook/common/kabprefs_base.kcfgc )
 
 
-kde4_automoc(${kabc_xmlrpc_LIB_SRCS})
 
 kde4_add_kcfg_files(kabc_xmlrpc_LIB_SRCS kabc_egroupwareprefs.kcfgc )
 
@@ -40,7 +39,6 @@ set(kcal_xmlrpc_LIB_SRCS ${libegwcommon_SRCS}
 
 kde4_add_kcfg_files(kcal_xmlrpc_LIB_SRCS ${CMAKE_SOURCE_DIR}/kaddressbook/common/kabprefs_base.kcfgc )
 
-kde4_automoc(${kcal_xmlrpc_LIB_SRCS})
 
 kde4_add_kcfg_files(kcal_xmlrpc_LIB_SRCS kcal_egroupwareprefs.kcfgc )
 
@@ -57,7 +55,6 @@ install(TARGETS kcal_xmlrpc  DESTINATION ${LIB_INSTALL_DIR})
 set(knotes_xmlrpc_LIB_SRCS knotes_resourcexmlrpc.cpp knotes_resourcexmlrpcconfig.cpp  ${libegwcommon_SRCS} 
 ${libknotesresources_SRCS})
 
-kde4_automoc(${knotes_xmlrpc_LIB_SRCS})
 
 kde4_add_kcfg_files(knotes_xmlrpc_LIB_SRCS knotes_egroupwareprefs.kcfgc )
 
@@ -74,7 +71,6 @@ install(TARGETS knotes_xmlrpc  DESTINATION ${LIB_INSTALL_DIR})
 
 set(kabc_xmlrpc_plugin_PART_SRCS kabc_resourcexmlrpcplugin.cpp )
 
-kde4_automoc(${kabc_xmlrpc_plugin_PART_SRCS})
 
 kde4_add_plugin(kabc_xmlrpc_plugin ${kabc_xmlrpc_plugin_PART_SRCS})
 set_target_properties(kabc_xmlrpc_plugin PROPERTIES OUTPUT_NAME kabc_xmlrpc)
@@ -90,7 +86,6 @@ install(TARGETS kabc_xmlrpc_plugin  DESTINATION ${PLUGIN_INSTALL_DIR})
 
 set(kcal_xmlrpc_plugin_PART_SRCS kcal_resourcexmlrpcplugin.cpp )
 
-kde4_automoc(${kcal_xmlrpc_plugin_PART_SRCS})
 
 kde4_add_plugin(kcal_xmlrpc_plugin ${kcal_xmlrpc_plugin_PART_SRCS})
 set_target_properties(kcal_xmlrpc_plugin PROPERTIES OUTPUT_NAME kcal_xmlrpc)
@@ -106,7 +101,6 @@ install(TARGETS kcal_xmlrpc_plugin  DESTINATION ${PLUGIN_INSTALL_DIR})
 
 set(knotes_xmlrpc_plugin_PART_SRCS knotes_resourcexmlrpcplugin.cpp )
 
-kde4_automoc(${knotes_xmlrpc_plugin_PART_SRCS})
 
 kde4_add_plugin(knotes_xmlrpc_plugin ${knotes_xmlrpc_plugin_PART_SRCS})
 set_target_properties(knotes_xmlrpc_plugin PROPERTIES OUTPUT_NAME knotes_xmlrpc)

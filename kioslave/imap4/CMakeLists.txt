@@ -17,7 +17,6 @@ set(kio_imap4_PART_SRCS
    mimehdrline.cc 
    mimeio.cc )
 
-kde4_automoc(${kio_imap4_PART_SRCS})
 
 kde4_add_plugin(kio_imap4 ${kio_imap4_PART_SRCS})
 

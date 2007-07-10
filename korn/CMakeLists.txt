@@ -52,7 +52,6 @@ set(korn_SRCS
 # run moc on label.h and add the resulting stuff to the korn_SRCS list
 qt4_wrap_cpp(korn_SRCS label.h)
 
-kde4_automoc(${korn_SRCS})
 
 kde4_add_ui_files(korn_SRCS 
    kornaccountcfg.ui 

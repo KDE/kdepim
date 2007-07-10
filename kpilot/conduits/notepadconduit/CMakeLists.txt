@@ -17,7 +17,6 @@ set(conduit_notepad_KCFGS
 
 kde4_add_kcfg_files(conduit_notepad_SRCS ${conduit_notepad_KCFGS})
 kde4_add_ui_files(conduit_notepad_SRCS ${conduit_notepad_UIS})
-kde4_automoc(${conduit_notepad_SRCS})
 kde4_add_plugin(conduit_notepad WITH_PREFIX ${conduit_notepad_SRCS})
 target_link_libraries(conduit_notepad  ${KDE4_KIO_LIBS} kpilot)
 

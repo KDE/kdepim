@@ -12,7 +12,6 @@ set(libkgroupdav_SRCS groupdavglobals.cpp)
 
 set(kcal_groupdav_LIB_SRCS groupdavcalendaradaptor.cpp kcal_resourcegroupdav.cpp ${libkgroupdav_SRCS})
 
-kde4_automoc(${kcal_groupdav_LIB_SRCS})
 
 kde4_add_library(kcal_groupdav SHARED ${kcal_groupdav_LIB_SRCS})
 
@@ -26,7 +25,6 @@ install(TARGETS kcal_groupdav  DESTINATION ${LIB_INSTALL_DIR})
 
 set(kabc_groupdav_LIB_SRCS kabc_resourcegroupdav.cpp groupdavaddressbookadaptor.cpp ${libkgroupdav_SRCS})
 
-kde4_automoc(${kabc_groupdav_LIB_SRCS})
 
 kde4_add_library(kabc_groupdav SHARED ${kabc_groupdav_LIB_SRCS})
 
@@ -43,7 +41,6 @@ install(TARGETS kabc_groupdav  DESTINATION ${LIB_INSTALL_DIR})
 
 set(kcal_groupdav_plugin_PART_SRCS kcal_resourcegroupdav_plugin.cpp)
 
-kde4_automoc(${kcal_groupdav_plugin_PART_SRCS})
 
 kde4_add_plugin(kcal_groupdav_plugin ${kcal_groupdav_plugin_PART_SRCS})
 set_target_properties(kcal_groupdav_plugin PROPERTIES OUTPUT_NAME kcal_groupdav)
@@ -58,7 +55,6 @@ install(TARGETS kcal_groupdav_plugin  DESTINATION ${PLUGIN_INSTALL_DIR})
 
 set(kabc_groupdav_plugin_PART_SRCS kabc_resourcegroupdav_plugin.cpp )
 
-kde4_automoc(${kabc_groupdav_plugin_PART_SRCS})
 
 kde4_add_plugin(kabc_groupdav_plugin ${kabc_groupdav_plugin_PART_SRCS})
 set_target_properties(kabc_groupdav_plugin PROPERTIES OUTPUT_NAME kabc_groupdav)

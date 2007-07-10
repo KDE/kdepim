@@ -10,7 +10,6 @@ set(kfeed_LIB_SRCS
    serializer.cpp
 )
 
-kde4_automoc(${kfeed_LIB_SRCS})
 
 kde4_add_library(kfeed SHARED ${kfeed_LIB_SRCS})
 

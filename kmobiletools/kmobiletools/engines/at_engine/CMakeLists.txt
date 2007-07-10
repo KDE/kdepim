@@ -18,7 +18,6 @@ set(kmobiletools_at_LIB_SRCS
    wizard/at_devicesfoundpage.cpp
 )
 
-kde4_automoc(${kmobiletools_at_LIB_SRCS})
 kde4_add_kcfg_files(kmobiletools_at_LIB_SRCS atengineconfig.kcfgc )
 kde4_add_ui_files(kmobiletools_at_LIB_SRCS cfgwidgets/engineconfig.ui
 wizard/bluetooth.ui wizard/serial.ui wizard/userconnection.ui )

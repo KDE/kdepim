@@ -6,7 +6,6 @@ include_directories( ${KDE4_INCLUDE_DIR} )
 
 set(ktexteditorkabcbridge_PART_SRCS ktexteditorkabcbridge.cpp )
 
-kde4_automoc(${ktexteditorkabcbridge_PART_SRCS})
 
 kde4_add_plugin(ktexteditorkabcbridge  ${ktexteditorkabcbridge_PART_SRCS})
 

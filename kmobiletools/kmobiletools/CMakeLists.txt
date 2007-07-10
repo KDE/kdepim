@@ -19,7 +19,6 @@ add_subdirectory( engines )
 
 set(kmobiletools_SRCS main.cpp kmobiletools.cpp )
 
-kde4_automoc(${kmobiletools_SRCS})
 
 kde4_add_executable(kmobiletools_bin ${kmobiletools_SRCS})
 set_target_properties(kmobiletools_bin PROPERTIES OUTPUT_NAME kmobiletools)

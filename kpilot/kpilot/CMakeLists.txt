@@ -44,7 +44,6 @@ kde4_add_ui_files(kcmpilot_SRCS config_page_sync.ui)
 qt4_add_dbus_interface(kcmpilot_SRCS org.kde.kpilot.daemon.xml kpilot_daemon_interface)
 
 
-kde4_automoc(${kcmpilot_SRCS})
 kde4_add_plugin(kcm_kpilot ${kcmpilot_SRCS})
 target_link_libraries(kcm_kpilot  kpilot ${KDE4_KDEUI_LIBS} ${KDE4_KDE3SUPPORT_LIBS})
 
@@ -64,7 +63,6 @@ set(kpilotTest_SRCS
 # Acts as a receiver for DCOP log messages
 qt4_add_dbus_adaptor(kpilotTest_SRCS org.kde.kpilot.logger.xml logFile.h LogFile  )
 
-kde4_automoc(${kpilotTest_SRCS})
 
 kde4_add_executable(kpilotTest ${kpilotTest_SRCS})
 target_link_libraries(kpilotTest ${QT_LIBRARIES} kpilot  ${KDE4_KIO_LIBS})
@@ -88,7 +86,6 @@ qt4_add_dbus_interface(kpilotDaemon_SRCS org.kde.kpilot.logger.xml logfile_inter
 qt4_add_dbus_interface(kpilotDaemon_SRCS org.kde.kpilot.kpilot.xml kpilot_interface)
 qt4_add_dbus_interface(kpilotDaemon_SRCS org.kde.kpilot.daemon.xml kpilot_daemon_interface)
 
-kde4_automoc(${kpilotDaemon_SRCS})
 kde4_add_executable(kpilotDaemon ${kpilotDaemon_SRCS})
 target_link_libraries(kpilotDaemon ${QT_LIBRARIES} kpilot  ${KDE4_KIO_LIBS} ${KDE4_KDE3SUPPORT_LIBS})
 
@@ -122,7 +119,6 @@ set(kpilot_UIS
 )
 
 kde4_add_ui3_files(kpilot_bin_SRCS ${kpilot_UIS})
-kde4_automoc(${kpilot_bin_SRCS})
 
 # Talks to the daemon. Listens as itself.
 qt4_add_dbus_adaptor( kpilot_bin_SRCS org.kde.kpilot.logger.xml logFile.h LogFile  )

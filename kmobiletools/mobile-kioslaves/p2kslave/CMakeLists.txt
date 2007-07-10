@@ -6,7 +6,6 @@ include_directories( ${KDE4_INCLUDE_DIR} ${QT_INCLUDES}  )
 
 set(kio_p2k_PART_SRCS kio_p2kprotocol.cpp p2kimpl.cpp p2kwrapper.cpp )
 
-kde4_automoc(${kio_p2k_PART_SRCS})
 
 #kde4_add_dcop_stubs(kio_p2k_PART_SRCS MESSAGE(STATUS "DCOP stuff was remove into kde4, convert it to dbus please. kde4_add_dcop_stubs doen't exist. We keep it to remember to port to dbus")
 deviceIFace.h )

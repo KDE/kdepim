@@ -6,7 +6,6 @@ include_directories(
 set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
 set(testlibkmobiletools_SRCS testlibkmobiletools.cpp )
 
-kde4_automoc(${testlibkmobiletools_SRCS})
 
 kde4_add_executable(testlibkmobiletools ${testlibkmobiletools_SRCS})
 set_target_properties(testlibkmobiletools PROPERTIES OUTPUT_NAME testlibkmobiletools)

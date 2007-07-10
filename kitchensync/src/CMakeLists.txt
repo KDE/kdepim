@@ -11,7 +11,6 @@ main.cpp
 mainwindow.cpp
 )
 
-KDE4_AUTOMOC(${kitchensync_SRCS})
 
 KDE4_ADD_EXECUTABLE(kitchensync ${kitchensync_SRCS})
 
@@ -58,7 +57,6 @@ configguildap.cpp
 configguigpe.cpp
 )
 
-KDE4_AUTOMOC(${kitchensyncprivate_LIB_SRCS})
 
 KDE4_ADD_LIBRARY(kitchensyncprivate SHARED ${kitchensyncprivate_LIB_SRCS})
 
@@ -77,7 +75,6 @@ SET(kitchensyncpart_PART_SRCS
 part.cpp
 )
 
-KDE4_AUTOMOC(${kitchensyncpart_PART_SRCS})
 
 KDE4_ADD_PLUGIN(kitchensyncpart WITH_PREFIX ${kitchensyncpart_PART_SRCS})
 

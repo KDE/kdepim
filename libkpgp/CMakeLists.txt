@@ -17,7 +17,6 @@ set(kpgp_LIB_SRCS
    kpgpbase5.cpp 
    kpgpbase6.cpp )
 
-kde4_automoc(${kpgp_LIB_SRCS})
 
 kde4_add_library(kpgp SHARED ${kpgp_LIB_SRCS})
 

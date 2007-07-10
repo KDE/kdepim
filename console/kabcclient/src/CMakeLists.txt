@@ -16,7 +16,6 @@ SET(kabcclient_SRCS
     inputformatimpls.cpp
     outputformatimpls.cpp)
 
-kde4_automoc(${kabcclient_SRCS})
 
 kde4_add_executable(kabcclient NOGUI ${kabcclient_SRCS})
 

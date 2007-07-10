@@ -6,7 +6,6 @@
 
 set(kcal_resourceblog_LIB_SRCS resourceblog.cpp resourceblogconfig.cpp )
 
-kde4_automoc(${kcal_resourceblog_LIB_SRCS})
 
 kde4_add_library(kcal_resourceblog SHARED ${kcal_resourceblog_LIB_SRCS})
 
@@ -20,7 +19,6 @@ install(TARGETS kcal_resourceblog  DESTINATION ${LIB_INSTALL_DIR})
 
 set(kcal_blog_PART_SRCS resourceblog_plugin.cpp )
 
-kde4_automoc(${kcal_blog_PART_SRCS})
 
 kde4_add_plugin(kcal_blog ${kcal_blog_PART_SRCS})
 

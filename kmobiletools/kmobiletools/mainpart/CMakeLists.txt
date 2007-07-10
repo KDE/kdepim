@@ -25,7 +25,6 @@ set(kmobiletoolsmainpart_PART_SRCS
    kmobiletools_mainpart.cpp 
    newdevicewizard/newdevicewizard.cpp )
 
-kde4_automoc(${kmobiletoolsmainpart_PART_SRCS})
 
 kde4_add_ui_files(kmobiletoolsmainpart_PART_SRCS 
    calldialog.ui 

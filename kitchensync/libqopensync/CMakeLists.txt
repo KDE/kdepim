@@ -18,7 +18,6 @@ syncupdates.cpp
 syncchange.cpp
 )
 
-KDE4_AUTOMOC(${qopensync_LIB_SRCS})
 
 KDE4_ADD_LIBRARY(qopensync SHARED ${qopensync_LIB_SRCS})
 

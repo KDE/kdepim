@@ -21,7 +21,6 @@ set(kleopatra_bin_SRCS ${libconf_SRCS}
    crlview.cpp 
    certlistview.cpp )
 
-kde4_automoc(${kleopatra_bin_SRCS})
 
 kde4_add_ui_files(kleopatra_bin_SRCS certificateinfowidget.ui certificatewizard.ui)
 

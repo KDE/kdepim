@@ -11,7 +11,6 @@ set(kio_mbox_PART_SRCS
    stat.cc 
    urlinfo.cc )
 
-kde4_automoc(${kio_mbox_PART_SRCS})
 
 kde4_add_plugin(kio_mbox ${kio_mbox_PART_SRCS})
 

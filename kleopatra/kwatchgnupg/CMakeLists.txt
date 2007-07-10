@@ -11,7 +11,6 @@ set(kwatchgnupg_SRCS
    tray.cpp 
    main.cpp )
 
-kde4_automoc(${kwatchgnupg_SRCS})
 
 kde4_add_executable(kwatchgnupg ${kwatchgnupg_SRCS})
 

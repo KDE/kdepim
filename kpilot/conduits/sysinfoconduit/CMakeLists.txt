@@ -18,7 +18,6 @@ set(conduit_sysinfo_KCFGS
 
 kde4_add_kcfg_files(conduit_sysinfo_SRCS ${conduit_sysinfo_KCFGS})
 kde4_add_ui3_files(conduit_sysinfo_SRCS ${conduit_sysinfo_UIS})
-kde4_automoc(${conduit_sysinfo_SRCS})
 
 kde4_add_plugin(conduit_sysinfo WITH_PREFIX ${conduit_sysinfo_SRCS})
 target_link_libraries(conduit_sysinfo  ${KDE4_KIO_LIBS} kpilot)

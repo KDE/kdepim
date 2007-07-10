@@ -16,7 +16,6 @@ set(kslox_LIB_SRCS
    sloxfolderdialog.cpp 
    sloxbase.cpp )
 
-kde4_automoc(${kslox_LIB_SRCS})
 
 kde4_add_library(kslox SHARED ${kslox_LIB_SRCS})
 
@@ -30,7 +29,6 @@ install(TARGETS kslox  DESTINATION ${LIB_INSTALL_DIR})
 
 set(kabc_slox_LIB_SRCS kabcresourceslox.cpp kabcresourcesloxconfig.cpp )
 
-kde4_automoc(${kabc_slox_LIB_SRCS})
 
 kde4_add_kcfg_files(kabc_slox_LIB_SRCS kabcsloxprefs.kcfgc )
 
@@ -46,7 +44,6 @@ install(TARGETS kabc_slox  DESTINATION ${LIB_INSTALL_DIR})
 
 set(kcal_slox_LIB_SRCS kcalresourceslox.cpp kcalresourcesloxconfig.cpp )
 
-kde4_automoc(${kcal_slox_LIB_SRCS})
 
 kde4_add_kcfg_files(kcal_slox_LIB_SRCS kcalsloxprefs.kcfgc )
 
@@ -62,7 +59,6 @@ install(TARGETS kcal_slox  DESTINATION ${LIB_INSTALL_DIR})
 
 set(kcal_slox_plugin_PART_SRCS kcalresourceslox_plugin.cpp )
 
-kde4_automoc(${kcal_slox_plugin_PART_SRCS})
 
 kde4_add_plugin(kcal_slox_plugin ${kcal_slox_plugin_PART_SRCS})
 set_target_properties(kcal_slox_plugin PROPERTIES OUTPUT_NAME kcal_slox)
@@ -78,7 +74,6 @@ install(TARGETS kcal_slox_plugin DESTINATION ${PLUGIN_INSTALL_DIR})
 
 set(kabc_slox_plugin_PART_SRCS kabcresourceslox_plugin.cpp)
 
-kde4_automoc(${kabc_slox_plugin_PART_SRCS})
 
 kde4_add_plugin(kabc_slox_plugin ${kabc_slox_plugin_PART_SRCS})
 set_target_properties(kabc_slox_plugin PROPERTIES OUTPUT_NAME kabc_slox)

@@ -6,7 +6,6 @@ include_directories( ${CMAKE_SOURCE_DIR}/kresources/groupwise/soap  )
 
 set(kio_groupwise_PART_SRCS groupwise.cpp )
 
-kde4_automoc(${kio_groupwise_PART_SRCS})
 
 kde4_add_plugin(kio_groupwise ${kio_groupwise_PART_SRCS})
 

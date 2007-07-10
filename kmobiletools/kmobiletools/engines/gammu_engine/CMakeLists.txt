@@ -10,7 +10,6 @@ set(kmobiletools_gammu_LIB_SRCS
    qphoneerror.cpp 
    device.cpp )
 
-kde4_automoc(${kmobiletools_gammu_LIB_SRCS})
 
 kde4_add_library(kmobiletools_gammu SHARED ${kmobiletools_gammu_LIB_SRCS})
 

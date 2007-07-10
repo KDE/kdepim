@@ -7,7 +7,6 @@ configure_file (config-xxport.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-xxport.
 
 set(kaddrbk_csv_xxport_PART_SRCS csv_xxport.cpp csvimportdialog.cpp dateparser.cpp )
 
-kde4_automoc(${kaddrbk_csv_xxport_PART_SRCS})
 
 kde4_add_plugin(kaddrbk_csv_xxport WITH_PREFIX ${kaddrbk_csv_xxport_PART_SRCS})
 
@@ -22,7 +21,6 @@ install(TARGETS kaddrbk_csv_xxport  DESTINATION ${PLUGIN_INSTALL_DIR})
 if(GPGME_FOUND)
 set(kaddrbk_vcard_xxport_PART_SRCS vcard_xxport.cpp )
 
-kde4_automoc(${kaddrbk_vcard_xxport_PART_SRCS})
 
 kde4_add_plugin(kaddrbk_vcard_xxport WITH_PREFIX ${kaddrbk_vcard_xxport_PART_SRCS})
 
@@ -37,7 +35,6 @@ endif(GPGME_FOUND)
 
 set(kaddrbk_kde2_xxport_PART_SRCS kde2_xxport.cpp )
 
-kde4_automoc(${kaddrbk_kde2_xxport_PART_SRCS})
 
 kde4_add_plugin(kaddrbk_kde2_xxport WITH_PREFIX ${kaddrbk_kde2_xxport_PART_SRCS})
 
@@ -52,7 +49,6 @@ install(TARGETS kaddrbk_kde2_xxport  DESTINATION ${PLUGIN_INSTALL_DIR})
 
 set(kaddrbk_bookmark_xxport_PART_SRCS bookmark_xxport.cpp )
 
-kde4_automoc(${kaddrbk_bookmark_xxport_PART_SRCS})
 
 kde4_add_plugin(kaddrbk_bookmark_xxport WITH_PREFIX ${kaddrbk_bookmark_xxport_PART_SRCS})
 
@@ -67,7 +63,6 @@ install(TARGETS kaddrbk_bookmark_xxport  DESTINATION ${PLUGIN_INSTALL_DIR})
 
 set(kaddrbk_eudora_xxport_PART_SRCS eudora_xxport.cpp )
 
-kde4_automoc(${kaddrbk_eudora_xxport_PART_SRCS})
 
 kde4_add_plugin(kaddrbk_eudora_xxport WITH_PREFIX ${kaddrbk_eudora_xxport_PART_SRCS})
 
@@ -82,7 +77,6 @@ install(TARGETS kaddrbk_eudora_xxport  DESTINATION ${PLUGIN_INSTALL_DIR})
 
 set(kaddrbk_ldif_xxport_PART_SRCS ldif_xxport.cpp )
 
-kde4_automoc(${kaddrbk_ldif_xxport_PART_SRCS})
 
 kde4_add_plugin(kaddrbk_ldif_xxport WITH_PREFIX ${kaddrbk_ldif_xxport_PART_SRCS})
 
@@ -97,7 +91,6 @@ install(TARGETS kaddrbk_ldif_xxport  DESTINATION ${PLUGIN_INSTALL_DIR})
 
 set(kaddrbk_opera_xxport_PART_SRCS opera_xxport.cpp )
 
-kde4_automoc(${kaddrbk_opera_xxport_PART_SRCS})
 
 kde4_add_plugin(kaddrbk_opera_xxport WITH_PREFIX ${kaddrbk_opera_xxport_PART_SRCS})
 
@@ -112,7 +105,6 @@ install(TARGETS kaddrbk_opera_xxport  DESTINATION ${PLUGIN_INSTALL_DIR})
 
 set(kaddrbk_pab_xxport_PART_SRCS pab_xxport.cpp pab_mapihd.cpp pab_pablib.cpp )
 
-kde4_automoc(${kaddrbk_pab_xxport_PART_SRCS})
 
 kde4_add_plugin(kaddrbk_pab_xxport WITH_PREFIX ${kaddrbk_pab_xxport_PART_SRCS})
 
@@ -127,7 +119,6 @@ install(TARGETS kaddrbk_pab_xxport  DESTINATION ${PLUGIN_INSTALL_DIR})
 
 set(kaddrbk_gmx_xxport_PART_SRCS gmx_xxport.cpp )
 
-kde4_automoc(${kaddrbk_gmx_xxport_PART_SRCS})
 
 kde4_add_plugin(kaddrbk_gmx_xxport WITH_PREFIX ${kaddrbk_gmx_xxport_PART_SRCS})
 
@@ -143,7 +134,6 @@ install(TARGETS kaddrbk_gmx_xxport  DESTINATION ${PLUGIN_INSTALL_DIR})
 if(GNOKII_FOUND)
    set(kaddrbk_gnokii_xxport_PART_SRCS gnokii_xxport.cpp )
 
-   kde4_automoc(${kaddrbk_gnokii_xxport_PART_SRCS})
 
    kde4_add_plugin(kaddrbk_gnokii_xxport WITH_PREFIX ${kaddrbk_gnokii_xxport_PART_SRCS})
 

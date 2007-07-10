@@ -65,7 +65,6 @@ set(knodecommon_LIB_SRCS
 qt4_add_dbus_adaptor( knodecommon_LIB_SRCS org.kde.knode.xml knmainwidget.h KNMainWidget)
 
 
-kde4_automoc(${knodecommon_LIB_SRCS})
 
 kde4_add_ui_files(knodecommon_LIB_SRCS
    nntpaccountdialog_base.ui
@@ -90,7 +89,6 @@ install(TARGETS knodecommon  DESTINATION ${LIB_INSTALL_DIR})
 
 set(kcm_knode_PART_SRCS knconfigpages.cpp )
 
-kde4_automoc(${kcm_knode_PART_SRCS})
 
 kde4_add_plugin(kcm_knode ${kcm_knode_PART_SRCS})
 
@@ -105,7 +103,6 @@ install(TARGETS kcm_knode  DESTINATION ${PLUGIN_INSTALL_DIR})
 
 set(knodepart_PART_SRCS knode_part.cpp )
 
-kde4_automoc(${knodepart_PART_SRCS})
 
 kde4_add_plugin(knodepart WITH_PREFIX ${knodepart_PART_SRCS})
 
@@ -120,7 +117,6 @@ install(TARGETS knodepart  DESTINATION ${PLUGIN_INSTALL_DIR})
 
 set(knode_SRCS knode.cpp knapplication.cpp main.cpp )
 
-kde4_automoc(${knode_SRCS})
 
 kde4_add_executable(knode ${knode_SRCS})
 

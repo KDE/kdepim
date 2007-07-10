@@ -6,7 +6,6 @@ include_directories( ${CMAKE_SOURCE_DIR}/kresources/opengroupware/soap  )
 
 set(kio_opengroupware_PART_SRCS opengroupware.cpp webdavhandler.cpp )
 
-kde4_automoc(${kio_opengroupware_PART_SRCS})
 
 kde4_add_plugin(kio_opengroupware ${kio_opengroupware_PART_SRCS})
 

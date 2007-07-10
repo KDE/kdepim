@@ -10,7 +10,6 @@ set(kabinterfaces_LIB_SRCS
    extensionwidget.cpp 
    xxport.cpp )
 
-kde4_automoc(${kabinterfaces_LIB_SRCS})
 
 kde4_add_library(kabinterfaces SHARED ${kabinterfaces_LIB_SRCS})
 

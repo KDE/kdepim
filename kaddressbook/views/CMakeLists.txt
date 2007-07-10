@@ -16,7 +16,6 @@ set(kaddrbk_cardview_PART_SRCS ${libkabcommon_SRCS}
    configurecardviewdialog.cpp 
    kaddressbookcardview.cpp )
 
-kde4_automoc(${kaddrbk_cardview_PART_SRCS})
 
 kde4_add_plugin(kaddrbk_cardview WITH_PREFIX ${kaddrbk_cardview_PART_SRCS})
 
@@ -31,7 +30,6 @@ install(TARGETS kaddrbk_cardview  DESTINATION ${PLUGIN_INSTALL_DIR})
 
 set(kaddrbk_iconview_PART_SRCS kaddressbookiconview.cpp )
 
-kde4_automoc(${kaddrbk_iconview_PART_SRCS})
 
 kde4_add_plugin(kaddrbk_iconview WITH_PREFIX ${kaddrbk_iconview_PART_SRCS})
 
@@ -46,7 +44,6 @@ install(TARGETS kaddrbk_iconview  DESTINATION ${PLUGIN_INSTALL_DIR})
 
 set(kaddrbk_tableview_PART_SRCS configuretableviewdialog.cpp contactlistview.cpp kaddressbooktableview.cpp )
 
-kde4_automoc(${kaddrbk_tableview_PART_SRCS})
 
 kde4_add_plugin(kaddrbk_tableview WITH_PREFIX ${kaddrbk_tableview_PART_SRCS})
 

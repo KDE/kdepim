@@ -6,7 +6,6 @@ include_directories( ${CMAKE_SOURCE_DIR}/kmobiletools/kmobiletools/libkmobiletoo
 
 set(kio_obex2_PART_SRCS kio_obexprotocol.cpp obeximpl.cpp obexwrapper.cpp )
 
-kde4_automoc(${kio_obex2_PART_SRCS})
 
 kde4_add_plugin(kio_obex2 ${kio_obex2_PART_SRCS})
 

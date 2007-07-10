@@ -14,7 +14,6 @@ set(groupwarewizard_SRCS groupwarewizard.cpp groupwaremain.cpp overviewpage.cpp
     kolabwizard.cpp kmailchanges.cpp kolabkmailchanges.cpp 
 )
 
-kde4_automoc(${groupwarewizard_SRCS})
 kde4_add_kcfg_files(groupwarewizard_SRCS egroupwareconfig.kcfgc kolabconfig.kcfgc sloxconfig.kcfgc)
 
 kde4_add_executable(groupwarewizard ${groupwarewizard_SRCS})
@@ -34,7 +33,6 @@ install(TARGETS groupwarewizard  DESTINATION ${BIN_INSTALL_DIR})
 
 set(egroupwarewizard_SRCS egroupwarewizard.cpp egroupwaremain.cpp)
 
-kde4_automoc(${egroupwarewizard_SRCS})
 
 kde4_add_kcfg_files(egroupwarewizard_SRCS egroupwareconfig.kcfgc)
 
@@ -49,7 +47,6 @@ install(TARGETS egroupwarewizard  DESTINATION ${BIN_INSTALL_DIR})
 
 set(sloxwizard_SRCS sloxwizard.cpp sloxmain.cpp)
 
-kde4_automoc(${sloxwizard_SRCS})
 
 kde4_add_kcfg_files(sloxwizard_SRCS sloxconfig.kcfgc)
 
@@ -68,7 +65,6 @@ set(kolabwizard_SRCS
    kolabkmailchanges.cpp 
    kolabmain.cpp)
 
-kde4_automoc(${kolabwizard_SRCS})
 
 kde4_add_kcfg_files(kolabwizard_SRCS kolabconfig.kcfgc)
 

@@ -8,7 +8,6 @@ include_directories( ${KDE4_INCLUDE_DIR} ${QT_INCLUDES}  )
 
 set(kio_mobile_PART_SRCS mobile.cpp mobileimpl.cpp )
 
-kde4_automoc(${kio_mobile_PART_SRCS})
 
 kde4_add_plugin(kio_mobile ${kio_mobile_PART_SRCS})
 

@@ -24,7 +24,6 @@ set(lib_SRCS
 	pilotTodoEntry.cc
 )
 
-kde4_automoc(${lib_SRCS})
 kde4_add_kcfg_files(lib_SRCS kpilotlibSettings.kcfgc)
 kde4_add_library(kpilot SHARED ${lib_SRCS})
 set_target_properties(kpilot PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )

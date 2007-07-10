@@ -3,7 +3,6 @@
 
 set(kmtsetup_SRCS main.cpp kmtsetupwidget.cpp )
 
-kde4_automoc(${kmtsetup_SRCS})
 
 kde4_add_ui_files(kmtsetup_SRCS kmtsetupwidgetbase.ui )
 

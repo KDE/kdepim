@@ -9,7 +9,6 @@ set(kabckolab_LIB_SRCS resourcekolab.cpp contact.cpp ${libresourcekolabshared_SR
 qt4_generate_dbus_interface( ${CMAKE_SOURCE_DIR}/kmail/groupwareadaptor.h  org.kde.kmail.groupware.xml )
 QT4_ADD_DBUS_INTERFACE( kabckolab_LIB_SRCS ${CMAKE_CURRENT_BINARY_DIR}/org.kde.kmail.groupware.xml kmail_groupwareinterface )
 
-kde4_automoc(${kabckolab_LIB_SRCS})
 
 kde4_add_library(kabckolab SHARED ${kabckolab_LIB_SRCS})
 
@@ -23,7 +22,6 @@ install(TARGETS kabckolab  DESTINATION ${LIB_INSTALL_DIR})
 
 set(kabc_kolab_PART_SRCS resourcekolab_plugin.cpp )
 
-kde4_automoc(${kabc_kolab_PART_SRCS})
 
 kde4_add_plugin(kabc_kolab ${kabc_kolab_PART_SRCS})
 

@@ -5,7 +5,6 @@ set(libkconnectionmanager_SRCS kconnectionmanager.cpp networkstatusindicator.cpp
 qt4_add_dbus_interface(libkconnectionmanager_SRCS org.kde.Solid.Networking.Client.xml
     clientinterface)
 
-kde4_automoc(${libkconnectionmanager_SRCS})
 
 kde4_add_library(kconnectionmanager SHARED ${libkconnectionmanager_SRCS})
 

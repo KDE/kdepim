@@ -11,7 +11,6 @@ kde4_add_kcfg_files(libfeatureplancommon_SRCS prefs.kcfgc )
 
 set(kcal_resourcefeatureplan_LIB_SRCS ${libfeatureplancommon_SRCS} kcal_resourcefeatureplan.cpp kcal_resourcefeatureplanconfig.cpp )
 
-kde4_automoc(${kcal_resourcefeatureplan_LIB_SRCS})
 
 kde4_add_library(kcal_resourcefeatureplan SHARED ${kcal_resourcefeatureplan_LIB_SRCS})
 
@@ -28,7 +27,6 @@ install(TARGETS kcal_resourcefeatureplan  DESTINATION ${LIB_INSTALL_DIR})
 
 set(kcal_resourcefeatureplan_plugin_PART_SRCS kcal_resourcefeatureplanplugin.cpp)
 
-kde4_automoc(${kcal_resourcefeatureplan_plugin_PART_SRCS})
 
 kde4_add_plugin(kcal_resourcefeatureplan_plugin ${kcal_resourcefeatureplan_plugin_PART_SRCS})
 

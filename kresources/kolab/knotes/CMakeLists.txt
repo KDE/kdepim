@@ -11,7 +11,6 @@ qt4_generate_dbus_interface( ${CMAKE_SOURCE_DIR}/kmail/groupwareadaptor.h  org.k
 QT4_ADD_DBUS_INTERFACE( knoteskolab_LIB_SRCS ${CMAKE_CURRENT_BINARY_DIR}/org.kde.kmail.groupware.xml kmail_groupwareinterface )
 
 
-kde4_automoc(${knoteskolab_LIB_SRCS})
 
 kde4_add_library(knoteskolab SHARED ${knoteskolab_LIB_SRCS})
 
@@ -25,7 +24,6 @@ install(TARGETS knoteskolab  DESTINATION ${LIB_INSTALL_DIR})
 
 set(knotes_kolab_PART_SRCS resourcekolab_plugin.cpp )
 
-kde4_automoc(${knotes_kolab_PART_SRCS})
 
 kde4_add_plugin(knotes_kolab ${knotes_kolab_PART_SRCS})
 

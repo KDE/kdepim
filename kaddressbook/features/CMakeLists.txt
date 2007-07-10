@@ -6,7 +6,6 @@ include_directories( ${CMAKE_SOURCE_DIR}/kaddressbook/interfaces ${CMAKE_SOURCE_
 
 set(kaddrbk_distributionlist_PART_SRCS distributionlistwidget.cpp )
 
-kde4_automoc(${kaddrbk_distributionlist_PART_SRCS})
 
 kde4_add_plugin(kaddrbk_distributionlist WITH_PREFIX ${kaddrbk_distributionlist_PART_SRCS})
 
@@ -21,7 +20,6 @@ install(TARGETS kaddrbk_distributionlist  DESTINATION ${PLUGIN_INSTALL_DIR})
 
 set(kaddrbk_resourceselection_PART_SRCS resourceselection.cpp )
 
-kde4_automoc(${kaddrbk_resourceselection_PART_SRCS})
 
 kde4_add_plugin(kaddrbk_resourceselection WITH_PREFIX ${kaddrbk_resourceselection_PART_SRCS})
 

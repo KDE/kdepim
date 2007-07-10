@@ -30,7 +30,6 @@ set(kmailcvt_SRCS
 
 qt4_add_dbus_interfaces(kmailcvt_SRCS ${CMAKE_SOURCE_DIR}/kmail/org.kde.kmail.kmail.xml )
 
-kde4_automoc(${kmailcvt_SRCS})
 
 
 kde4_add_ui_files(kmailcvt_SRCS kselfilterpagedlg.ui kimportpagedlg.ui)

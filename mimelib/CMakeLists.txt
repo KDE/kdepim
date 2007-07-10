@@ -41,7 +41,6 @@ set(mimelib_LIB_SRCS
    uuencode.cpp 
    binhex.cpp )
 
-kde4_automoc(${mimelib_LIB_SRCS})
 
 kde4_add_library(mimelib SHARED ${mimelib_LIB_SRCS})
 
