@@ -25,5 +25,27 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
-#include "Record.h"
+#include "record.h"
 
+#include "options.h"
+
+const QString Record::id() const
+{
+	FUNCTIONSETUP;
+	
+	return fId;
+}
+	
+void Record::setId( const QString &id )
+{
+	FUNCTIONSETUP;
+	
+	fId = id;
+}
+
+const QVariant Record::value( const QString &field ) const
+{
+	FUNCTIONSETUP;
+
+	return fFieldValues.value( field );
+}

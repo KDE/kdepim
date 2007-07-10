@@ -6,24 +6,18 @@ set(conduit_base_SRCS
 	idmappingxmlsource.cc
 	idmapping.cc
 	cudcounter.cc
-	#record.cc
+	record.cc
 	dataproxy.cc
 	pcdataproxy.cc
 	hhdataproxy.cc
 	recordconduit.cc
 )
 
-#set(conduit_mal_UIS
-#	mal-setup_dialog.ui
-#)
+set(conduit_base_KCFGS
+	recordconduitSettings.kcfgc
+)
 
-#set(conduit_mal_KCFGS
-#	malconduitSettings.kcfgc
-#)
-
-#kde4_add_kcfg_files(conduit_mal_SRCS ${conduit_mal_KCFGS})
-#kde4_add_ui3_files(conduit_mal_SRCS ${conduit_mal_UIS})
-#kde4_add_plugin(conduit_mal WITH_PREFIX ${conduit_mal_SRCS})
+kde4_add_kcfg_files(conduit_base_SRCS ${conduit_base_KCFGS})
 kde4_add_library(conduit_base SHARED ${conduit_base_SRCS})
 target_link_libraries(conduit_base ${QT_LIBRARIES} kpilot)
 

@@ -33,9 +33,27 @@ class Record {
 public:
 	virtual ~Record() = 0;
 	
-	virtual const QString id() const = 0;
+	const QString id() const;
 	
-	virtual const QString setId( const QString &id ) const = 0;
+	void setId( const QString &id );
+
+	/**
+	 * Returns the value for @p field or an invalid QVariant if the field does not
+	 * exists.
+	 */
+	const QVariant value( const QString &field ) const;
+
+	/**
+	 * Returns an exact copy of this record.
+	 */
+	virtual Record* duplicate() = 0;
+
+	/**
+	 * Sets the value of @p field to @p value and returns true. Returns false if 
+	 * the field does not exists or if the value is not of an appropriate type for
+	 * the field.
+	 */
+	virtual bool setValue( const QString &field, const QVariant &value ) = 0;
 
 	/**
 	 * Returns true if the record knows that it's modified since last sync.
@@ -48,18 +66,12 @@ public:
 	virtual const QStringList fields() const = 0;
 	
 	/**
-	 * Sets the value of @p field to @p value and returns true. Returns false if 
-	 * the field does not exists or if the value is not of an appropriate type for
-	 * the field.
+	 * Returns a string representation of the record.
 	 */
-	virtual bool setValue( const QString &field, const QVariant &value ) = 0;
-
-	/**
-	 * Returns the value for @p field or an invalid QVariant if the field does not
-	 * exists.
-	 */
-	virtual const QVariant value( const QString &field ) const = 0;
-	
 	virtual QString toString() const = 0;
+
+private:
+	QString fId;
+	QMap<QString, QVariant> fFieldValues;
 };
 #endif

@@ -34,6 +34,8 @@
 #include "dataproxy.h"
 #include "record.h"
 
+#include "recordconduitSettings.h"
+
 RecordConduit::RecordConduit( KPilotLink *o, const QStringList &a
 	, const QString &databaseName, const QString &conduitName ) :
 	ConduitAction(o, a),
@@ -423,7 +425,8 @@ void RecordConduit::solveConflict( Record *pcRecord, Record *hhRecord )
 {
 	FUNCTIONSETUP;
 	
-	if ( getConflictResolution() == SyncAction::eAskUser )
+	int res = getConflictResolution();
+	if ( res == SyncAction::eAskUser )
 	{
 		// TODO: Make this nicer, like the abbrowser conduit had.
 		QString query = i18n( "The following item was modified "
@@ -449,5 +452,35 @@ void RecordConduit::solveConflict( Record *pcRecord, Record *hhRecord )
 			// Keep Handheld record
 			syncFields( pcRecord, hhRecord );
 		}
+	}
+	else if( res == eHHOverrides )
+	{
+		// Keep Handheld record
+		syncFields( pcRecord, hhRecord );
+	}
+	else if( res == ePCOverrides )
+	{
+		// Keep PC record
+		syncFields( hhRecord, pcRecord );
+	}
+	else if( res == eDuplicate )
+	{
+		/*
+		 * break the previous relationship and create a new one on both sides, 
+		 * duplicating bothrecords
+		 */
+		fMapping->remove( pcRecord->id() );
+		
+		Record *rec = pcRecord->duplicate();
+		QString id = fHHDataProxy->create( rec );
+		fMapping->map( id, pcRecord->id() );
+		
+		rec = hhRecord->duplicate();
+		id = fPCDataProxy->create( rec );
+		fMapping->map( id, pcRecord->id() );
+	}
+	else if( res == ePreviousSyncOverrides )
+	{
+		// FIXME: Implement.
 	}
 }
