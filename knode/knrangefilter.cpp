@@ -69,24 +69,24 @@ bool KNode::RangeFilter::matchesOp( int v1, Op o, int v2 )
 
 
 
-void KNode::RangeFilter::load( KConfig *conf )
+void KNode::RangeFilter::load( const KConfigGroup &group )
 {
-  enabled=conf->readEntry("enabled", false);
-  val1=conf->readEntry("val1",0);
-  op1=(Op) conf->readEntry("op1",0);
-  val2=conf->readEntry("val2",0);
-  op2=(Op) conf->readEntry("op2",0);
+  enabled=group.readEntry("enabled", false);
+  val1=group.readEntry("val1",0);
+  op1=(Op) group.readEntry("op1",0);
+  val2=group.readEntry("val2",0);
+  op2=(Op) group.readEntry("op2",0);
 }
 
 
 
-void KNode::RangeFilter::save( KConfig *conf )
+void KNode::RangeFilter::save( KConfigGroup &group )
 {
-  conf->writeEntry("enabled", enabled);
-  conf->writeEntry("val1", val1);
-  conf->writeEntry("op1", (int)op1);
-  conf->writeEntry("op2", (int)op2);
-  conf->writeEntry("val2", val2);
+  group.writeEntry("enabled", enabled);
+  group.writeEntry("val1", val1);
+  group.writeEntry("op1", (int)op1);
+  group.writeEntry("op2", (int)op2);
+  group.writeEntry("val2", val2);
 }
 
 

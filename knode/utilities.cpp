@@ -128,7 +128,7 @@ QFile* KNLoadHelper::getFile( const QString &dialogTitle )
 }
 
 
-QFile* KNLoadHelper::setURL(KUrl url)
+QFile* KNLoadHelper::setURL(const KUrl& url)
 {
   if (f_ile)
     return f_ile;

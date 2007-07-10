@@ -41,8 +41,8 @@ class RangeFilter
         enabled=nr.enabled;
         return (*this); }
 
-    void load(KConfig *conf);
-    void save(KConfig *conf);
+    void load(const KConfigGroup &conf);
+    void save(KConfigGroup &conf);
 
     bool doFilter(int a);
 

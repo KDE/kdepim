@@ -36,8 +36,8 @@ class StatusFilter
     StatusFilter& operator=( const StatusFilter &sf )
       { for(int i=0; i<8; i++) data.setBit(i, sf.data.at(i)); return (*this); }
 
-    void load(KConfig *conf);
-    void save(KConfig *conf);
+    void load(const KConfigGroup &conf);
+    void save(KConfigGroup &conf);
 
     bool doFilter(KNRemoteArticle *a);
 

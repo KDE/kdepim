@@ -77,20 +77,20 @@ void KNode::StringFilter::expand( KNGroup *g )
 
 
 
-void KNode::StringFilter::load( KConfig *conf )
+void KNode::StringFilter::load( const KConfigGroup &group )
 {
-  con=conf->readEntry("contains", true);
-  data=conf->readEntry("Data");
-  regExp=conf->readEntry("regX", false);
+  con=group.readEntry("contains", true);
+  data=group.readEntry("Data");
+  regExp=group.readEntry("regX", false);
 }
 
 
 
-void KNode::StringFilter::save( KConfig *conf )
+void KNode::StringFilter::save( KConfigGroup &group )
 {
-  conf->writeEntry("contains", con);
-  conf->writeEntry("Data", data);
-  conf->writeEntry("regX", regExp);
+  group.writeEntry("contains", con);
+  group.writeEntry("Data", data);
+  group.writeEntry("regX", regExp);
 }
 
 

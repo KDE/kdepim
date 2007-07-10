@@ -47,37 +47,37 @@ KNode::StatusFilter::~StatusFilter()
 
 
 
-void KNode::StatusFilter::load( KConfig *conf )
+void KNode::StatusFilter::load( const KConfigGroup &group )
 {
-  data.setBit(EN_R, conf->readEntry("EN_R", false));
-  data.setBit(DAT_R, conf->readEntry("DAT_R", false));
+  data.setBit(EN_R, group.readEntry("EN_R", false));
+  data.setBit(DAT_R, group.readEntry("DAT_R", false));
 
-  data.setBit(EN_N, conf->readEntry("EN_N", false));
-  data.setBit(DAT_N, conf->readEntry("DAT_N", false));
+  data.setBit(EN_N, group.readEntry("EN_N", false));
+  data.setBit(DAT_N, group.readEntry("DAT_N", false));
 
-  data.setBit(EN_US, conf->readEntry("EN_US", false));
-  data.setBit(DAT_US, conf->readEntry("DAT_US", false));
+  data.setBit(EN_US, group.readEntry("EN_US", false));
+  data.setBit(DAT_US, group.readEntry("DAT_US", false));
 
-  data.setBit(EN_NS, conf->readEntry("EN_NS", false));
-  data.setBit(DAT_NS, conf->readEntry("DAT_NS", false));
+  data.setBit(EN_NS, group.readEntry("EN_NS", false));
+  data.setBit(DAT_NS, group.readEntry("DAT_NS", false));
 
 }
 
 
 
-void KNode::StatusFilter::save( KConfig *conf )
+void KNode::StatusFilter::save( KConfigGroup &group )
 {
-  conf->writeEntry("EN_R", data.at(EN_R));
-  conf->writeEntry("DAT_R", data.at(DAT_R));
+  group.writeEntry("EN_R", data.at(EN_R));
+  group.writeEntry("DAT_R", data.at(DAT_R));
 
-  conf->writeEntry("EN_N", data.at(EN_N));
-  conf->writeEntry("DAT_N", data.at(DAT_N));
+  group.writeEntry("EN_N", data.at(EN_N));
+  group.writeEntry("DAT_N", data.at(DAT_N));
 
-  conf->writeEntry("EN_US", data.at(EN_US));
-  conf->writeEntry("DAT_US", data.at(DAT_US));
+  group.writeEntry("EN_US", data.at(EN_US));
+  group.writeEntry("DAT_US", data.at(DAT_US));
 
-  conf->writeEntry("EN_NS", data.at(EN_NS));
-  conf->writeEntry("DAT_NS", data.at(DAT_NS));
+  group.writeEntry("EN_NS", data.at(EN_NS));
+  group.writeEntry("DAT_NS", data.at(DAT_NS));
 }
 
 

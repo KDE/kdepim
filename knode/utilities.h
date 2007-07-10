@@ -95,7 +95,7 @@ public:
   QFile* getFile( const QString &dialogTitle );
   /** tries to access the file specified by the url and returns
       a file open for reading */
-  QFile* setURL(KUrl url);
+  QFile* setURL(const KUrl& url);
   /** returns the file after getFile(QString) of setURL(url) was called */
   QFile* getFile()const { return f_ile; }
   KUrl getURL() const    { return u_rl; }

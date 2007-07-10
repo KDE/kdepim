@@ -40,8 +40,8 @@ class StringFilter
     /** replace placeholders */
     void expand(KNGroup *g);
 
-    void load(KConfig *conf);
-    void save(KConfig *conf);
+    void load(const KConfigGroup &group);
+    void save(KConfigGroup &conf);
 
     bool doFilter(const QString &s);
 

@@ -80,10 +80,10 @@ bool KNArticleFilter::loadInfo()
       return false;
     KConfig conf( fname, KConfig::OnlyLocal);
 
-    conf.setGroup("GENERAL");
-    n_ame=conf.readEntry("name");
-    translateName = conf.readEntry("Translate_Name",true);
-    e_nabled=conf.readEntry("enabled", true);
+    KConfigGroup group = conf.group("GENERAL");
+    n_ame=group.readEntry("name");
+    translateName = group.readEntry("Translate_Name",true);
+    e_nabled=group.readEntry("enabled", true);
     apon=(ApOn) conf.readEntry("applyOn", 0);
     return true;
   }
@@ -100,29 +100,29 @@ void KNArticleFilter::load()
     return;
   KConfig conf( fname, KConfig::OnlyLocal);
 
-  conf.setGroup("STATUS");
-  status.load(&conf);
+  KConfigGroup group = conf.group("STATUS");
+  status.load(group);
 
-  conf.setGroup("SCORE");
-  score.load(&conf);
+  group = conf.group("SCORE");
+  score.load(group);
 
-  conf.setGroup("AGE");
-  age.load(&conf);
+  group = conf.group("AGE");
+  age.load(group);
 
-  conf.setGroup("LINES");
-  lines.load(&conf);
+  group = conf.group("LINES");
+  lines.load(group);
 
-  conf.setGroup("SUBJECT");
-  subject.load(&conf);
+  group = conf.group("SUBJECT");
+  subject.load(group);
 
-  conf.setGroup("FROM");
-  from.load(&conf);
+  group = conf.group("FROM");
+  from.load(group);
 
-  conf.setGroup("MESSAGEID");
-  messageId.load(&conf);
+  group = conf.group("MESSAGEID");
+  messageId.load(group);
 
-  conf.setGroup("REFERENCES");
-  references.load(&conf);
+  group = conf.group("REFERENCES");
+  references.load(group);
 
   l_oaded=true;
 
@@ -143,35 +143,35 @@ void KNArticleFilter::save()
   }
   KConfig conf(dir+QString("%1.fltr").arg(i_d), KConfig::OnlyLocal);
 
-  conf.setGroup("GENERAL");
-  conf.writeEntry("name", QString(n_ame));
-  conf.writeEntry("Translate_Name",translateName);
-  conf.writeEntry("enabled", e_nabled);
-  conf.writeEntry("applyOn", (int) apon);
+  KConfigGroup group = conf.group("GENERAL");
+  group.writeEntry("name", QString(n_ame));
+  group.writeEntry("Translate_Name",translateName);
+  group.writeEntry("enabled", e_nabled);
+  group.writeEntry("applyOn", (int) apon);
 
-  conf.setGroup("STATUS");
-  status.save(&conf);
+  group = conf.group("STATUS");
+  status.save(group);
 
-  conf.setGroup("SCORE");
-  score.save(&conf);
+  group = conf.group("SCORE");
+  score.save(group);
 
-  conf.setGroup("AGE");
-  age.save(&conf);
+  group = conf.group("AGE");
+  age.save(group);
 
-  conf.setGroup("LINES");
-  lines.save(&conf);
+  group = conf.group("LINES");
+  lines.save(group);
 
-  conf.setGroup("SUBJECT");
-  subject.save(&conf);
+  group = conf.group("SUBJECT");
+  subject.save(group);
 
-  conf.setGroup("FROM");
-  from.save(&conf);
+  group = conf.group("FROM");
+  from.save(group);
 
-  conf.setGroup("MESSAGEID");
-  messageId.save(&conf);
+  group = conf.group("MESSAGEID");
+  messageId.save(group);
 
-  conf.setGroup("REFERENCES");
-  references.save(&conf);
+  group = conf.group("REFERENCES");
+  references.save(group);
 
   kDebug(5003) << "KNMessageFilter: filter saved \"" << n_ame << "\" " << endl;
 }
