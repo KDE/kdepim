@@ -19,7 +19,7 @@ SET(kabcclient_SRCS
 
 kde4_add_executable(kabcclient NOGUI ${kabcclient_SRCS})
 
-target_link_libraries(kabcclient ${KDE4_KDECORE_LIBS} ${KDE4_KABC_LIBS} ${KDE4_KDEUI_LIBS} )
+target_link_libraries(kabcclient ${KDE4_KABC_LIBS} ${KDE4_KDEUI_LIBS} )
 
 install(TARGETS kabcclient DESTINATION ${BIN_INSTALL_DIR})
 #note: kabcclient acts as kabc2mutt invoked with that name
