@@ -52,7 +52,7 @@ namespace KAB {
 
 class SearchManager;
 
-class KADDRESSBOOK_EXPORT Core : public QObject
+class KABINTERFACES_EXPORT Core : public QObject
 {
   Q_OBJECT
 

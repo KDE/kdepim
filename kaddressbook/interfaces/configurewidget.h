@@ -34,7 +34,7 @@ class AddressBook;
 
 namespace KAB {
 
-class KADDRESSBOOK_EXPORT ConfigureWidget : public QWidget
+class KABINTERFACES_EXPORT ConfigureWidget : public QWidget
 {
   public:
     ConfigureWidget( KABC::AddressBook *ab, QWidget *parent );

@@ -35,7 +35,7 @@ namespace KAB {
 class Core;
 class ConfigureWidget;
 
-class KADDRESSBOOK_EXPORT ExtensionWidget : public QWidget
+class KABINTERFACES_EXPORT ExtensionWidget : public QWidget
 {
   Q_OBJECT
 

@@ -33,8 +33,23 @@
 # endif
 #endif
 
+#ifndef KABINTERFACES_EXPORT
+# if defined(MAKE_KABINTERFACES_LIB)
+   /* We are building this library */
+#  define KABINTERFACES_EXPORT KDE_EXPORT
+# else
+   /* We are using this library */
+#  define KABINTERFACES_EXPORT KDE_IMPORT
+# endif
+#endif
+
 # ifndef KADDRESSBOOK_EXPORT_DEPRECATED
 #  define KADDRESSBOOK_EXPORT_DEPRECATED KDE_DEPRECATED KADDRESSBOOK_EXPORT
 # endif
+
+# ifndef KABINTERFACES_EXPORT_DEPRECATED
+#  define KABINTERFACES_EXPORT_DEPRECATED KDE_DEPRECATED KABINTERFACES_EXPORT
+# endif
+
 
 #endif
