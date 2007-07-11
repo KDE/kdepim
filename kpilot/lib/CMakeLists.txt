@@ -45,7 +45,7 @@ set(kpilotinclude_HEADERS
 	plugin.h
 	pluginfactory.h
 	syncAction.h
-	kpilot_export.h
+	options.h
 )
 
 install(TARGETS kpilot LIBRARY DESTINATION ${LIB_INSTALL_DIR})

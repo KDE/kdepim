@@ -39,6 +39,8 @@
 
 #include "pilotDateEntry.h"
 
+#include <config-kpilot.h>
+
 static const char *default_date_category_names[] = {
 	"Unfiled",
 	"Business",

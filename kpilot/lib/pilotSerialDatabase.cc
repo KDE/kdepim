@@ -46,6 +46,8 @@
 #include "pilotSerialDatabase.h"
 #include "kpilotdevicelink.h"
 
+#include <config-kpilot.h>
+
 PilotSerialDatabase::PilotSerialDatabase(KPilotDeviceLink *l,
 	const QString &dbName) :
 	PilotDatabase(dbName),

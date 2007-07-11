@@ -70,6 +70,7 @@
 #include "kpilotlink.h"
 #include "kpilotdevicelink.moc"
 
+#include <config-kpilot.h>
 
 // singleton helper class
 class DeviceMap

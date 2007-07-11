@@ -34,8 +34,6 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
-#include "config-kpilot.h"
-
 #include <qglobal.h>
 #include <qnamespace.h>
 

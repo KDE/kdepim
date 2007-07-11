@@ -39,6 +39,8 @@
 #include <kdebug.h>
 #include <kcmdlineargs.h>
 
+#include <config-kpilot.h>
+
 #ifdef DEBUG
 int debug_level = 1;
 #else
