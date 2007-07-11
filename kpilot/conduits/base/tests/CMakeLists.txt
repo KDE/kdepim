@@ -2,10 +2,6 @@ include_directories(
 	${CMAKE_SOURCE_DIR}/conduits/base
 )
 
-link_directories(
-	${CMAKE_BINARY_DIR}/lib
-)
-
 MACRO( RECORD_CONDUIT_UNIT_TESTS )
 	FOREACH( _testname ${ARGN} )
 		kde4_add_unit_test( ${_testname} ${_testname}.cc )
@@ -21,9 +17,9 @@ MACRO( RECORD_CONDUIT_EXECUTABLE_TESTS )
 ENDMACRO( RECORD_CONDUIT_EXECUTABLE_TESTS )
 
 RECORD_CONDUIT_EXECUTABLE_TESTS(
-	#idmappingxmlsourcetest
+	idmappingxmlsourcetest
 )
 
 RECORD_CONDUIT_UNIT_TESTS (
-	#idmappingxmlsourcetest
+	idmappingxmlsourcetest
 )

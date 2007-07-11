@@ -25,12 +25,14 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
+#include "kpilot_export.h"
+
 #include <QXmlDefaultHandler>
 #include <QDateTime>
 #include <QMap>
 
 
-class IDMappingXmlSource : public QXmlDefaultHandler
+class KPILOT_EXPORT IDMappingXmlSource : public QXmlDefaultHandler
 {
 public:
 	IDMappingXmlSource( const QString &userName, const QString &conduit );

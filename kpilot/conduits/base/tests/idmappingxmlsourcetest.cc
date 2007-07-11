@@ -1,34 +1,131 @@
 #include <QtTest>
 #include <QtCore>
 
-#include "idmappingxmlsource.h"
+#include <idmappingxmlsource.h>
+#include <options.h>
+
+#include <KGlobal>
+#include <KStandardDirs>
+
+#include "qtest_kde.h"
 
 class TestIDMappingXmlSource: public QObject
 {
 	Q_OBJECT
+	
+public:
+	TestIDMappingXmlSource();
+	
 private slots:
 	void testConstructor();
-	void testMonth();
+	void testLastSyncedDate();
+	void testLastSyncedPC();
+	void testMappings();
+	void testSaveLoad();
+	void cleanupTestCase();
+
+private:
+	QString fUser;
+	QString fConduit;
 };
- 
+
+TestIDMappingXmlSource::TestIDMappingXmlSource() : fUser( "test-user" )
+	, fConduit("test-conduit")
+{
+}
+
 void TestIDMappingXmlSource::testConstructor()
 {
-	IDMappingXmlSource source( "testUser", "testConduit" );
+	QString pathName = KGlobal::dirs()->saveLocation( "data",
+		CSL1("kpilot/conduits/"));
+
+	IDMappingXmlSource source( fUser, fConduit );
 	
-	QDate date( 1967, 3, 11 );
-	QVERIFY( date.isValid() );
+	QDir dir( pathName );
+	QVERIFY( dir.exists( fUser ) );
+	
+	dir.cd( fUser );
+	QVERIFY( dir.exists( CSL1( "mapping" ) ) );
 }
- 
-void TestIDMappingXmlSource::testMonth()
+
+void TestIDMappingXmlSource::testLastSyncedDate()
 {
-	// 11 March 1967
-	QDate date;
-	date.setYMD( 1967, 3, 11 );
-	QCOMPARE( date.month(), 3 );
-	QCOMPARE( QDate::longMonthName( date.month() ),
-		QString("March") );
+	QDateTime dt = QDateTime::currentDateTime();
+	
+	IDMappingXmlSource source( fUser, fConduit );
+	source.setLastSyncedDate( dt );
+	
+	QDateTime dtSource = source.lastSyncedDate();
+	QVERIFY( dt == dtSource );
 }
+
+void TestIDMappingXmlSource::testLastSyncedPC()
+{
+	QString pc( CSL1( "test-pc" ) );
+	
+	IDMappingXmlSource source( fUser, fConduit );
+	source.setLastSyncedPC( pc );
+	
+	QString pcSource = source.lastSyncedPC();
+	QVERIFY( pc == pcSource );
+}
+
+void TestIDMappingXmlSource::testMappings()
+{
+	IDMappingXmlSource source( fUser, fConduit );
+	
+	QMap<QString, QString> *mappings = source.mappings();
+	mappings->insert( CSL1( "test-pc" ) , CSL1( "test-hh" ) );
+	
+	QMap<QString, QString> *mappings2 = source.mappings();
+	
+	QVERIFY( mappings2->size() == mappings->size() );
+	
+	QVERIFY( mappings2->value( CSL1( "test-pc" ) ) == CSL1( "test-hh" ) );
+}
+
+void TestIDMappingXmlSource::testSaveLoad()
+{
+	QDateTime dt = QDateTime::currentDateTime();
+	// Correct msecs, these wont be saved and the test 
+	// dt == source2.lastSyncedDate() will fail.
+	dt = dt.addMSecs( -dt.time().msec() );
+	QString pc( CSL1( "test-pc" ) );
+
+	IDMappingXmlSource source( fUser, fConduit );
+	source.setLastSyncedDate( dt );
+	source.setLastSyncedPC( pc );
+	source.mappings()->insert( CSL1( "test-pc" ) , CSL1( "test-hh" ) );
+	
+	source.saveMapping();
+	
+	QString path = KGlobal::dirs()->saveLocation( "data", 
+		CSL1("kpilot/conduits/") );
+
+	QDir dir( path );
+	dir.cd( fUser + CSL1( "/mapping" ) );
+	
+	QVERIFY( dir.exists( fConduit + CSL1( "-mapping.xml" ) ) );
+	
+	IDMappingXmlSource source2( fUser, fConduit );
+	source2.loadMapping();
+	
+	QVERIFY( pc == source2.lastSyncedPC() );
+	QVERIFY( dt == source2.lastSyncedDate() );
+	QVERIFY( source2.mappings()->size() == 1 );
+	QVERIFY( source2.mappings()->value( CSL1( "test-pc" ) ) 
+		== CSL1( "test-hh" ) );
+}
+
+void TestIDMappingXmlSource::cleanupTestCase()
+{
+	QString pathName = KGlobal::dirs()->saveLocation( "data",
+		CSL1("kpilot/conduits/"));
+	QDir dir( pathName );
+	//dir.rmpath( fUser + CSL1( "/mapping" ) );
+}
+
  
-QTEST_MAIN(TestIDMappingXmlSource)
+QTEST_KDEMAIN(TestIDMappingXmlSource, NoGUI)
 
 #include "idmappubgxmlsourcetest.moc"

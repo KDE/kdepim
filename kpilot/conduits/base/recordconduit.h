@@ -41,7 +41,7 @@ class Record;
  * section in the document "Use Case - Conduit Syncing.odt" which can be found
  * in the design directory.
  */
-class RecordConduit : public ConduitAction {
+class KPILOT_EXPORT RecordConduit : public ConduitAction {
 // Members
 protected:
 	QString fDatabaseName;
