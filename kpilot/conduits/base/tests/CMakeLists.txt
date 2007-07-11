@@ -1,5 +1,5 @@
 include_directories(
-	${CMAKE_SOURCE_DIR}/conduits/base
+	${CMAKE_CURRENT_SOURCE_DIR}/..
 )
 
 MACRO( RECORD_CONDUIT_UNIT_TESTS )

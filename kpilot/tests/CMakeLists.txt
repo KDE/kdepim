@@ -1,5 +1,5 @@
 link_directories(${CMAKE_BINARY_DIR}/lib ${CMAKE_CURRENT_BINARY_DIR})
-include_directories(${CMAKE_SOURCE_DIR}/lib ${CMAKE_BINARY_DIR}/lib)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../lib ${CMAKE_CURRENT_BINARY_DIR}/../lib)
 
 # This can be used for finding data files in the source dir
 add_definitions( -DKDESRCDIR=\\"${CMAKE_CURRENT_SOURCE_DIR}\\" )
