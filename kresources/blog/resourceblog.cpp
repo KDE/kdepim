@@ -76,21 +76,11 @@ ResourceBlog::~ResourceBlog()
 {
   close();
 
-  if ( mDownloadJob ) {
-    mDownloadJob->kill();
-  }
-  if ( mUploadJob ) {
-    mUploadJob->kill();
-  }
-
   delete mLock;
 }
 
 void ResourceBlog::init()
 {
-  mDownloadJob = 0;
-  mUploadJob = 0;
-
   mProgress = 0;
 
   mAPI = 0;
@@ -210,17 +200,6 @@ bool ResourceBlog::doLoad( bool )
 {
   kDebug( 5800 ) << "ResourceBlog::load()" << endl;
 
-  if ( mDownloadJob ) {
-    kWarning() << "ResourceBlog::load(): download still in progress."
-    << endl;
-    return true;
-  }
-  if ( mUploadJob ) {
-    kWarning() << "ResourceBlog::load(): upload still in progress."
-    << endl;
-    return false;
-  }
-
   mCalendar.close();
 
   if ( mUseCacheFile ) {
@@ -233,54 +212,63 @@ bool ResourceBlog::doLoad( bool )
 
   emit resourceChanged( this );
 
-  /* TODO: Replace with KBlog caching interaction */
-  /*
-  if ( mLock->lock() ) {
-  kDebug() << "Download from: " << mUrl << endl;
+  if ( mAPI ) {
+    if ( mLock->lock() ) { // FIXME: Replace listPostings?
+      kDebug( 5800 ) << "Downloading blog posts from: " << mUrl << endl;
+      //ResourceCached::deleteAllJournals();
+      mAPI->setBlogId( "1" ); //FIXME
+      mAPI->setDownloadCount( 0 ); // Download ALL the posts
+      connect ( mAPI, SIGNAL( listedPosting( KBlog::BlogPosting & ) ),
+                this, SLOT( slotListedPosting( KBlog::BlogPosting & ) ));
+      connect ( mAPI, SIGNAL( listPostingsFinished() ),
+                this, SLOT( slotListPostingsFinished() ));
 
-  mDownloadJob = KIO::file_copy( mUrl, KUrl( cacheFile() ), -1, true,
-      false, !mUseProgressManager );
-  connect( mDownloadJob, SIGNAL( result( KJob * ) ),
-   SLOT( slotLoadJobResult( KJob * ) ) );
-  if ( mUseProgressManager ) {
-  connect( mDownloadJob, SIGNAL( percent( KJob *, unsigned long ) ),
-   SLOT( slotPercent( KJob *, unsigned long ) ) );
-  mProgress = KPIM::ProgressManager::createProgressItem(
-   KPIM::ProgressManager::getUniqueID(), i18n("Downloading Calendar") );
+      if ( mUseProgressManager ) {
+        //KPIM::ProgressManager::createProgressItem( KPIM::ProgressManager::getUniqueID(), i18n("Downloading blog posts") );
+        //mProgress->setProgress( 0 );
+      }
 
-  mProgress->setProgress( 0 );
+      mAPI->listPostings();
+      return true;
+    } else {
+      kDebug( 5800 ) << "ResourceBlog::load(): cache file is locked"
+          << " - something else must be loading the file" << endl;
+    }
   }
-  } else {
-  kDebug() << "ResourceBlog::load(): cache file is locked"
-    << " - something else must be loading the file" << endl;
-  }
-  */
-  return true;
+  return false;
 }
 
 void ResourceBlog::slotPercent( KJob *, unsigned long percent )
 {
-  kDebug() << "ResourceBlog::slotPercent(): " << percent << endl;
+  kDebug( 5800 ) << "ResourceBlog::slotPercent(): " << percent << endl;
 
   mProgress->setProgress( percent );
 }
 
-void ResourceBlog::slotLoadJobResult( KJob *job )
+void ResourceBlog::slotListedPosting( KBlog::BlogPosting &blogPosting )
 {
-  if ( job->error() ) {
-    static_cast<KIO::Job*>( job )->ui()->setWindow( 0 );
-  } else {
-    kDebug( 5800 ) << "ResourceBlog::slotLoadJobResult() success" << endl;
+  kDebug( 5800 ) << "ResourceBlog::slotListedPosting()" << endl;
+  // TODO: Make sure I don't leak memory
+  Journal *journalBlog = new Journal();
+  //journalBlog->setUid(blogPosting.postingId());
+  journalBlog->setDtStart(blogPosting.creationDateTime());
+  journalBlog->setSummary(blogPosting.title());
+  journalBlog->setDescription(blogPosting.content());
+  //TODO: Use list of journals
+  ResourceCached::addJournal( journalBlog );
+}
 
-    mCalendar.close();
-    disableChangeNotification();
-    loadFromCache();
-    enableChangeNotification();
+void ResourceBlog::slotListPostingsFinished()
+{
+  kDebug( 5800 ) << "ResourceBlog::slotListPostingsFinished()" << endl;
 
-    emit resourceChanged( this );
-  }
+  mCalendar.close();
+  disableChangeNotification();
+  loadFromCache();
+  enableChangeNotification();
 
-  mDownloadJob = 0;
+  emit resourceChanged( this );
+
   if ( mProgress ) {
     mProgress->setComplete();
     mProgress = 0;
@@ -288,10 +276,13 @@ void ResourceBlog::slotLoadJobResult( KJob *job )
 
   mLock->unlock();
   emit resourceLoaded( this );
+  //kDebug( 5800 ) << "ResourceBlog::slotListPostingsFinished()" << rawJournals() << endl;
 }
+
 
 bool ResourceBlog::doSave( bool )
 {
+  /*
   kDebug( 5800 ) << "ResourceBlog::save()" << endl;
 
   if ( readOnly() || !hasChanges() ) {
@@ -299,55 +290,12 @@ bool ResourceBlog::doSave( bool )
     return true;
   }
 
-  if ( mDownloadJob ) {
-    kWarning() << "ResourceBlog::save(): download still in progress."
-    << endl;
-    return false;
-  }
-  if ( mUploadJob ) {
-    kWarning() << "ResourceBlog::save(): upload still in progress."
-    << endl;
-    return false;
-  }
-
   mChangedIncidences = allChanges();
 
   saveToCache();
-
-  /* TODO: Replace with KBlog interaction */
-  //post = new KBlog::BlogPosting("title", "content", "category", true);
-  //mAPI->createPosting(post);
-  /*
-  mUploadJob = KIO::file_copy( KUrl( cacheFile() ), mUrl, -1, true );
-  connect( mUploadJob, SIGNAL( result( KJob * ) ),
-   SLOT( slotSaveJobResult( KJob * ) ) );
+  // TODO: Autosave on adding journal
   */
   return true;
-}
-
-bool ResourceBlog::isSaving()
-{
-  return mUploadJob;
-}
-
-void ResourceBlog::slotSaveJobResult( KJob *job )
-{
-  if ( job->error() ) {
-    static_cast<KIO::Job*>( job )->ui()->setWindow( 0 );
-  } else {
-    kDebug( 5800 ) << "ResourceBlog::slotSaveJobResult() success" << endl;
-
-    Incidence::List::ConstIterator it;
-    for ( it = mChangedIncidences.begin(); it != mChangedIncidences.end();
-          ++it ) {
-      clearChange( *it );
-    }
-    mChangedIncidences.clear();
-  }
-
-  mUploadJob = 0;
-
-  emit resourceSaved( this );
 }
 
 KABC::Lock *ResourceBlog::lock ()
@@ -390,15 +338,18 @@ bool ResourceBlog::setValue( const QString &key, const QString &value )
   }
 }
 
+
 bool ResourceBlog::addJournal( Journal *journal )
 {
+  kDebug( 5800 ) << "ResourceBlog::addJournal()" << endl;
   QString title = journal->summary();
   QString content = journal->description();
   KDateTime date = journal->dtStart();
-  //QStringList categories = journal->categories();
+  QStringList categories = journal->categories();
   KBlog::BlogPosting *post;
   post = new KBlog::BlogPosting( title, content );
   if ( mAPI ) {
+    //TODO: Categories
     mAPI->setBlogId( "1" );
     post->setCreationDateTime( date );
     mAPI->createPosting( post );
@@ -406,21 +357,6 @@ bool ResourceBlog::addJournal( Journal *journal )
   }
   kError() << "ResourceBlog::addJournal(): Journal not initialised." << endl;
   return false;
-}
-
-bool ResourceBlog::deleteJournal( Journal *journal )
-{
-  return false;
-}
-
-Journal::List ResourceBlog::journals( const QDate& )
-{
-  return Journal::List();
-}
-
-Journal *ResourceBlog::journal( const QString& uid )
-{
-  return 0;
 }
 
 #include "resourceblog.moc"

@@ -60,7 +60,6 @@ class ResourceBlogConfig : public KRES::ConfigWidget
     KComboBox *mAPI;
 
     ResourceCachedReloadConfig *mReloadConfig;
-    ResourceCachedSaveConfig *mSaveConfig;
 
     class Private;
     Private *d;

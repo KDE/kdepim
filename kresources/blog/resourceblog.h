@@ -98,19 +98,17 @@ class ResourceBlog : public ResourceCached
 
     KABC::Lock *lock ();
 
-    bool isSaving();
-
     void dump() const;
 
     bool setValue( const QString &key, const QString &value );
 
     bool addJournal( Journal *journal );
 
-    bool deleteJournal( Journal *journal );
-
-    Journal::List journals( const QDate& );
-
-    Journal *journal( const QString& uid );
+    bool deleteJournal( Journal *journal )
+    {
+      Q_UNUSED( journal )
+      return false;
+    }
 
     bool addEvent( Event *anEvent )
     {
@@ -141,10 +139,10 @@ class ResourceBlog : public ResourceCached
     {}
 
   protected Q_SLOTS:
-    void slotLoadJobResult( KJob * );
-    void slotSaveJobResult( KJob * );
-
     void slotPercent( KJob *, unsigned long percent );
+
+    void slotListedPosting( KBlog::BlogPosting &blogPosting );
+    void slotListPostingsFinished();
 
   protected:
     bool doLoad( bool syncCache );
@@ -160,11 +158,10 @@ class ResourceBlog : public ResourceCached
     QString mPassword;
     KBlog::APIBlog *mAPI;
 
+    Journal::List *mJournals;
+
     bool mUseProgressManager;
     bool mUseCacheFile;
-
-    KIO::FileCopyJob *mDownloadJob;
-    KIO::FileCopyJob *mUploadJob;
 
     KPIM::ProgressItem *mProgress;
 

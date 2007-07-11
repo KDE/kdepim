@@ -79,9 +79,6 @@ KCAL_RESOURCEBLOG_EXPORT ResourceBlogConfig::ResourceBlogConfig
 
   mReloadConfig = new ResourceCachedReloadConfig( this );
   mainLayout->addWidget( mReloadConfig, 5, 0, 1, 2 );
-
-  mSaveConfig = new ResourceCachedSaveConfig( this );
-  mainLayout->addWidget( mSaveConfig, 6, 0, 1, 2 );
 }
 
 void ResourceBlogConfig::loadSettings( KRES::Resource *res )
@@ -101,8 +98,6 @@ void ResourceBlogConfig::loadSettings( KRES::Resource *res )
     }
     mReloadConfig->loadSettings( resource );
     kDebug( 5700 ) << "ResourceBlogConfig::loadSettings(): reloaded" << endl;
-    mSaveConfig->loadSettings( resource );
-    kDebug( 5700 ) << "ResourceBlogConfig::loadSettings(): saved" << endl;
   } else {
     kError( 5700 ) << "ResourceBlogConfig::loadSettings():"
                    << " no ResourceBlog, cast failed" << endl;
@@ -118,7 +113,6 @@ void ResourceBlogConfig::saveSettings( KRES::Resource *res )
     resource->setPassword( mPassword->text() );
     resource->setAPI( mAPI->currentText() );
     mReloadConfig->saveSettings( resource );
-    mSaveConfig->saveSettings( resource );
     kDebug( 5700 ) << "ResourceBlogConfig::saveSettings(): saved" << endl;
   } else {
     kError( 5700 ) << "ResourceBlogConfig::saveSettings():"
