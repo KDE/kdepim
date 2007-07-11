@@ -18,9 +18,11 @@
  ***************************************************************************/
 
 #include "errorlog.h"
+#include <QMutex>
 #include <QTextStream>
 #include <KStandardDirs>
 #include <KGlobal>
+#include <KTemporaryFile>
 
 #include <KDebug>
 

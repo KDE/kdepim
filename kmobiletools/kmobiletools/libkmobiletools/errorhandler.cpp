@@ -19,9 +19,12 @@
 
 #include "errorhandler.h"
 #include "errorlog.h"
+#include "errortypes/baseerror.h"
 
 #include <KMessageBox>
+#include <KGlobal>
 #include <QStack>
+#include <QMutex>
 
 namespace KMobileTools {
 

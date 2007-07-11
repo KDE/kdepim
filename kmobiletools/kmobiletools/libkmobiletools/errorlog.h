@@ -20,10 +20,9 @@
 #ifndef KMOBILETOOLSERRORLOG_H
 #define KMOBILETOOLSERRORLOG_H
 
-#include <KTemporaryFile>
-#include <QMutex>
-
 #include "kmobiletools_export.h"
+
+class QString;
 
 namespace KMobileTools {
 

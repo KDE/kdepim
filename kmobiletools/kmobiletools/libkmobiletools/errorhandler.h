@@ -20,15 +20,11 @@
 #ifndef KMOBILETOOLSERRORHANDLER_H
 #define KMOBILETOOLSERRORHANDLER_H
 
-#include <QMutex>
-#include <QStack>
-
-#include "errortypes/baseerror.h"
 #include "kmobiletools_export.h"
 
 namespace KMobileTools {
 
-class ErrorHandlerPrivate;
+class BaseError;
 
 /**
     @author Matthias Lechner <matthias@lmme.de>
