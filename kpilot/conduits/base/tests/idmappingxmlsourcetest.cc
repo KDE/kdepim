@@ -1,17 +1,20 @@
 #include <QtTest>
 #include <QtCore>
- 
+
+#include "idmappingxmlsource.h"
+
 class TestIDMappingXmlSource: public QObject
 {
 	Q_OBJECT
 private slots:
-	void testValidity();
+	void testConstructor();
 	void testMonth();
 };
  
-void TestIDMappingXmlSource::testValidity()
+void TestIDMappingXmlSource::testConstructor()
 {
-	// 11 March 1967
+	IDMappingXmlSource source( "testUser", "testConduit" );
+	
 	QDate date( 1967, 3, 11 );
 	QVERIFY( date.isValid() );
 }
@@ -28,4 +31,4 @@ void TestIDMappingXmlSource::testMonth()
  
 QTEST_MAIN(TestIDMappingXmlSource)
 
-#include "tutorial1.moc"
+#include "idmappubgxmlsourcetest.moc"
