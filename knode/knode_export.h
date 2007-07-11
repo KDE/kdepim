@@ -24,7 +24,7 @@
 #include <kdemacros.h>
 
 #ifndef KNODE_EXPORT
-# if defined(MAKE_KNODE_LIB)
+# if defined(MAKE_KNODECOMMON_LIB)
    /* We are building this library */
 #  define KNODE_EXPORT KDE_EXPORT
 # else

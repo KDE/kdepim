@@ -4,5 +4,5 @@ ClassName=SettingsBase
 Mutators=true
 ItemAccessors=true
 SetUserTexts=true
-Visibility=KDE_EXPORT
-IncludeFiles=qapplication.h
+Visibility=KNODE_EXPORT
+IncludeFiles=qapplication.h,knode_export.h
