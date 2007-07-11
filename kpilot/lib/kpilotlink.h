@@ -33,7 +33,6 @@
 
 #include <QtCore/QObject>
 #include <Qt3Support/Q3ValueList>
-#include <QtCore/QCustomEvent>
 #include "kpilot_export.h"
 /** @file
 * Encapsulates all the communication with the handheld. Also
@@ -41,6 +40,7 @@
 * changes are signalled.
 */
 
+class QCustomEvent;
 class QThread;
 class KPilotUser;
 class KPilotSysInfo;
