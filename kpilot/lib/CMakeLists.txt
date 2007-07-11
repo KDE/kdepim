@@ -6,9 +6,6 @@ set(lib_SRCS
 	syncAction.cc
 	actions.cc
 	actionQueue.cc
-	idmapping.cc
-	idmapperxml.cc
-	idmapper.cc
 	kpilotlink.cc
 	kpilotdevicelink.cc
 	kpilotlocallink.cc

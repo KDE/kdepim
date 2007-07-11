@@ -69,8 +69,7 @@ add_subdirectory(lib)
 add_subdirectory(kpilot)
 add_subdirectory(conduits)
 
-
-STRING(COMPARE EQUAL "${ENABLE_TESTS}" "YES" buildtests)
+STRING(COMPARE EQUAL ${KDE4_BUILD_TESTS} "ON" buildtests)
 if (buildtests)
 	MESSAGE(STATUS "KPILOT: Test suite enabled.")
 	enable_testing()

@@ -25,6 +25,8 @@ private slots:
 	void cleanupTestCase();
 
 private:
+	void cleanDir();
+	
 	QString fUser;
 	QString fConduit;
 };
@@ -110,6 +112,9 @@ void TestIDMappingXmlSource::testSaveLoad()
 	IDMappingXmlSource source2( fUser, fConduit );
 	source2.loadMapping();
 	
+	// There should be a backup now.
+	QVERIFY( dir.exists( fConduit + CSL1( "-mapping.xml~" ) ) );
+	
 	QVERIFY( pc == source2.lastSyncedPC() );
 	QVERIFY( dt == source2.lastSyncedDate() );
 	QVERIFY( source2.mappings()->size() == 1 );
@@ -117,15 +122,29 @@ void TestIDMappingXmlSource::testSaveLoad()
 		== CSL1( "test-hh" ) );
 }
 
-void TestIDMappingXmlSource::cleanupTestCase()
+void TestIDMappingXmlSource::cleanDir()
 {
 	QString pathName = KGlobal::dirs()->saveLocation( "data",
 		CSL1("kpilot/conduits/"));
+
 	QDir dir( pathName );
-	//dir.rmpath( fUser + CSL1( "/mapping" ) );
+	dir.cd( fUser );
+	dir.cd( CSL1( "mapping" ) );
+	dir.remove( fConduit + CSL1( "-mapping.xml" ) );
+	dir.remove(  fConduit + CSL1( "-mapping.xml~" ) );
+	dir.remove(  fConduit + CSL1( "-mapping.xml.fail" ) );
+	dir.cd( CSL1( ".." ) );
+	dir.rmdir( CSL1( "mapping" ) );
+	dir.cd( CSL1( ".." ) );
+	dir.rmdir( fUser );
+}
+
+void TestIDMappingXmlSource::cleanupTestCase()
+{
+	cleanDir();
 }
 
  
 QTEST_KDEMAIN(TestIDMappingXmlSource, NoGUI)
 
-#include "idmappubgxmlsourcetest.moc"
+#include "idmappinggxmlsourcetest.moc"

@@ -18,8 +18,10 @@ ENDMACRO( RECORD_CONDUIT_EXECUTABLE_TESTS )
 
 RECORD_CONDUIT_EXECUTABLE_TESTS(
 	idmappingxmlsourcetest
+	idmappingtest
 )
 
 RECORD_CONDUIT_UNIT_TESTS (
 	idmappingxmlsourcetest
+	idmappingtest
 )

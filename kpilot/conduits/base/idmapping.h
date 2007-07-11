@@ -36,44 +36,16 @@
 #include <QMap>
 #include <QFile>
 
-class DataProxy;
-
-class IDMapping {
+class KPILOT_EXPORT IDMapping {
 private:
 	QString fConduitName;
 	IDMappingXmlSource fSource;
 
 public:
 	/**
-	 * Opens the file in:
-	 * $HOME/.kde/share/apps/kpilot/conduits/<Username>/mapping/<Conduit>-mapping.xml.
+	 * Creates a new mapping object for given user and conduit.
 	 */
 	IDMapping( const QString &userName, const QString &conduit );
-
-	/**
-	 * Validates the mapping file with given dataproxy. The mapping is considered 
-	 * valid if:
-	 * 1. The number of mappings matches the number of records in the list.
-	 * 2. Every record that is in the backup database has a mapping.
-	 */
-	bool isValid( const QList<QString> &hhIds );
-
-	/**
-	 * Searches for a mapping which contains @p id and returns the id to which it
-	 * is mapped.
-	 */
-	QString recordId( const QString &id );
-
-	void setLastSyncedDate( const QDateTime &dateTime );
-
-	void setLastSyncedPC( const QString &pc );
-
-	/**
-	 *
-	 */
-	bool commit();
-	
-	bool rollback();
 
 	/**
 	 * Deletes any mapping that exists for @p hhRecordId and @p pcRecordId and 
@@ -87,6 +59,46 @@ public:
 	 */
 	void remove( const QString &recordId );
 
+	/**
+	 *	Method to find out wether or not there is a mapping for @p recordId.
+	 */
 	bool contains( const QString &recordId );
+
+	/**
+	 * Validates the mapping file with given dataproxy. The mapping is considered 
+	 * valid if:
+	 * 1. The number of mappings matches the number of records in @p ids.
+	 * 2. Every id that is in @p ids has a mapping.
+	 *
+	 * NOTE: The list of id's should be a list of handheld ids or a list of pc 
+	 * ids. Not a mix of them.
+	 */
+	bool isValid( const QList<QString> &ids );
+
+	/**
+	 * Searches for a mapping which contains @p id and returns the id to which it
+	 * is mapped.
+	 */
+	QString recordId( const QString &id );
+
+	/**
+	 * Sets the date/time on which the last sync is executed to @p dateTime.
+	 */
+	void setLastSyncedDate( const QDateTime &dateTime );
+
+	/**
+	 * Sets the pc on which the last sync is executed to @p pc.
+	 */
+	void setLastSyncedPC( const QString &pc );
+
+	/**
+	 * Saves the changes to persistent storage.
+	 */
+	bool commit();
+	
+	/**
+	 * Tries to undo the changes in persistent storage.
+	 */
+	bool rollback();
 };
 #endif

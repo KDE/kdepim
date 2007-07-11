@@ -63,7 +63,8 @@ IDMappingXmlSource::IDMappingXmlSource( const QString &userName
 			if( dir.exists( conduit + CSL1( "-mapping.xml" ) ) )
 			{
 				// Make a backup of the existing file.
-				QFile file( dir.absolutePath() + conduit + CSL1( "-mapping.xml" ) );
+				QFile file( dir.absolutePath() + CSL1( "/" ) + conduit 
+					+ CSL1( "-mapping.xml" ) );
 				file.copy( file.fileName() + CSL1( "~" ) );
 			}
 		}
@@ -81,11 +82,15 @@ IDMappingXmlSource::~IDMappingXmlSource()
 
 void IDMappingXmlSource::setLastSyncedDate( const QDateTime &dateTime )
 {
+	FUNCTIONSETUP;
+	
 	fLastSyncedDateTime = dateTime;
 }
 
 void IDMappingXmlSource::setLastSyncedPC( const QString &pc )
 {
+	FUNCTIONSETUP;
+	
 	fLastSyncedPC = pc;
 }
 
@@ -174,16 +179,42 @@ bool IDMappingXmlSource::saveMapping()
 
 bool IDMappingXmlSource::rollback()
 {
+	FUNCTIONSETUP;
+	
 	QFile backup( fPath + "~" );
 	
 	if( !backup.exists() )
 	{
-		// No backup so nothing to restore.
+		// No backup, reset values.
+		fMappings = QMap<QString, QString>();
+		fLastSyncedDateTime = QDateTime();
+		fLastSyncedPC = QString();
+		return true;
+	}
+	
+	// Rename the incorrect mapping.
+	QFile fail( fPath );
+	bool renamed = fail.rename( fPath + ".fail" );
+	
+	if( !renamed )
+	{
+		// Could not rename the file, rollback failed.
+		DEBUGKPILOT << "Rename failed" << endl;
 		return false;
 	}
 	
 	// Try to copy the backup back to the original location.
-	return backup.copy( fPath );
+	bool copied = backup.copy( fPath );
+	if( copied )
+	{
+		// Read the backup file.
+		loadMapping();
+		return true;
+	}
+	
+	DEBUGKPILOT << "Copy failed" << endl;
+	// There went something wrong during copy. Rollback failed.
+	return false;
 }
 
 bool IDMappingXmlSource::startElement( const QString &namespaceURI
@@ -191,6 +222,7 @@ bool IDMappingXmlSource::startElement( const QString &namespaceURI
 	, const QXmlAttributes &attribs )
 {
 	FUNCTIONSETUP;
+	
 	Q_UNUSED(namespaceURI);
 	Q_UNUSED(localName);
 	

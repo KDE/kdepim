@@ -55,6 +55,7 @@ public:
 	
 	bool rollback();
 	 
+protected:
 	/**
 	 * Overloaded function to parse the xml file.
 	 */

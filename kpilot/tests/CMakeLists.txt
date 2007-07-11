@@ -21,10 +21,6 @@ set(testdatebook_SRCS testdatebook.cc)
 kde4_add_unit_test(testdatebook ${testdatebook_SRCS})
 target_link_libraries(testdatebook kpilot ${QT_LIBRARIES})
 
-set(testidmapper_SRCS testidmapper.cc)
-kde4_add_unit_test(testidmapper ${testidmapper_SRCS})
-target_link_libraries(testidmapper kpilot ${QT_LIBRARIES})
-
 #if (HAVE_CALENDARLOCAL_H)
 #	set(importdatebook_SRCS importdatebook.cc)
 #	set(exportdatebook_SRCS exportdatebook.cc)

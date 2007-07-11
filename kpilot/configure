@@ -66,7 +66,7 @@ CMAKE_FLAGS=""
 
 getvalue CMAKE_INSTALL_PREFIX n
 getvalue CMAKE_BUILD_TYPE n
-getvalue ENABLE_TESTS n
+getvalue KDE4_BUILD_TESTS n
 #getvalue BUILD_DIR y
 getvalue PILOTLINK_BASE n
 getvalue MAL_BASE n
@@ -112,9 +112,9 @@ do
 		--enable-test*)
 			T=$(echo "$1" | cut -d = -f2 | tr '[A-Z]' '[a-z]')
 			if test "$T" = "$1" || test "yes" = "$T" ; then
-				ENABLE_TESTS=YES
+				KDE4_BUILD_TESTS=ON
 			else
-				ENABLE_TESTS=NO
+				KDE4_BUILD_TESTS=OFF
 			fi
 			;;
 		--with-simple-builddir*)

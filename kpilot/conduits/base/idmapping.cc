@@ -36,31 +36,39 @@ IDMapping::IDMapping( const QString &userName, const QString &conduit )
 	fSource.loadMapping();
 }
 
-/**
-	 * Validates the mapping file with given dataproxy. The mapping is considered 
-	 * valid if:
-	 * 1. The number of mappings matches the number of records in the list.
-	 * 2. Every record that is in the backup database has a mapping.
-	 */
-bool IDMapping::isValid( const QList<QString> &hhIds )
+bool IDMapping::isValid( const QList<QString> &ids )
 {
 	FUNCTIONSETUP;
 	
 	const QMap<QString, QString>* mappings = fSource.mappings();
 	
-	
-	bool equalSize = (mappings->size() == hhIds.size());
+	bool equalSize = (mappings->size() == ids.size());
 	
 	if(equalSize)
 	{
 		bool idsInMapping = true;
 		
 		QList<QString>::const_iterator i;
-		for( i = hhIds.constBegin(); i != hhIds.constEnd(); ++i )
+		QList<QString> mIds;
+		if( fSource.mappings()->contains( *ids.constBegin() ) )
 		{
-			QString id = *i;
-			idsInMapping = idsInMapping && (mappings->keys().contains( id ) 
-				|| mappings->values().contains( id ) );
+			// The ids are hanhdeld ids.
+			mIds = fSource.mappings()->keys();
+			for( i = mIds.constBegin(); i != mIds.constEnd(); ++i )
+			{
+				QString id = *i;
+				idsInMapping = idsInMapping && ids.contains( id );
+			}
+		}
+		else
+		{
+			// The ids are pc ids.
+			mIds = fSource.mappings()->values();
+			for( i = mIds.constBegin(); i != mIds.constEnd(); ++i )
+			{
+				QString id = *i;
+				idsInMapping = idsInMapping && ids.contains( id );
+			}
 		}
 		
 		return idsInMapping;
