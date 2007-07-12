@@ -147,92 +147,92 @@ void CreateDisconnectedImapAccount::apply()
   if ( mEmail.isEmpty() ) mEmail = mUser + '@' + mServer;
 
   KConfig c( "kmailrc" );
-  c.setGroup( "General" );
-  c.writeEntry( "Default domain", mDefaultDomain );
+  KConfigGroup group = c.group( "General" );
+  group.writeEntry( "Default domain", mDefaultDomain );
   int accountId;
   if ( mExistingAccountId < 0 ) {
-    uint accCnt = c.readEntry( "accounts", 0 );
+    uint accCnt = group.readEntry( "accounts", 0 );
     accountId = accCnt + 1;
-    c.writeEntry( "accounts", accountId );
+    group.writeEntry( "accounts", accountId );
   } else {
     accountId = mExistingAccountId;
   }
   int transportId;
   if ( mExistingTransportId < 0 ) {
-    uint transCnt = c.readEntry( "transports", 0 );
+    uint transCnt = group.readEntry( "transports", 0 );
     transportId = transCnt + 1;
-    c.writeEntry( "transports", transportId );
+    group.writeEntry( "transports", transportId );
   } else {
     transportId = mExistingTransportId;
   }
 
-  c.setGroup( QString("Account %1").arg( accountId ) );
+  group = c.group( QString("Account %1").arg( accountId ) );
   int uid;
   if ( mExistingAccountId < 0 ) {
     uid = KRandom::random();
-    c.writeEntry( "Folder", uid );
+    group.writeEntry( "Folder", uid );
   } else {
-    uid = c.readEntry( "Folder",0 );
+    uid = group.readEntry( "Folder",0 );
   }
-  c.writeEntry( "Id", uid );
-  c.writeEntry( "Type", "cachedimap");
-  c.writeEntry( "auth", "*");
-  c.writeEntry( "Name", mAccountName );
-  c.writeEntry( "host", mServer );
-  c.writeEntry( "port", "993" );
+  group.writeEntry( "Id", uid );
+  group.writeEntry( "Type", "cachedimap");
+  group.writeEntry( "auth", "*");
+  group.writeEntry( "Name", mAccountName );
+  group.writeEntry( "host", mServer );
+  group.writeEntry( "port", "993" );
 
   // in case the user wants to get rid of some groupware folders
-  c.writeEntry( "locally-subscribed-folders", mLocalSubscription );
+  group.writeEntry( "locally-subscribed-folders", mLocalSubscription );
 
-  c.writeEntry( "login", mUser );
+  group.writeEntry( "login", mUser );
 
-  c.writeEntry( "sieve-support", mEnableSieve ? "true" : "false" );
+  group.writeEntry( "sieve-support", mEnableSieve ? "true" : "false" );
   if ( !mSieveVacationFileName.isEmpty() )
-    c.writeEntry( "sieve-vacation-filename", mSieveVacationFileName );
+    group.writeEntry( "sieve-vacation-filename", mSieveVacationFileName );
 
   if ( mEncryption == SSL ) {
-    c.writeEntry( "use-ssl", true );
+    group.writeEntry( "use-ssl", true );
   } else if ( mEncryption == TLS ) {
-    c.writeEntry( "use-tls", true );
+    group.writeEntry( "use-tls", true );
   }
 
   if ( mEnableSavePassword ) {
     if ( !writeToWallet( "account", accountId ) ) {
-      c.writeEntry( "pass", KStringHandler::obscure( mPassword ) );
-      c.writeEntry( "store-passwd", true );
+      group.writeEntry( "pass", KStringHandler::obscure( mPassword ) );
+      group.writeEntry( "store-passwd", true );
     }
   }
 
 
-  c.setGroup( QString("Folder-%1").arg( uid ) );
-  c.writeEntry( "isOpen", true );
+  group = c.group( QString("Folder-%1").arg( uid ) );
+  group.writeEntry( "isOpen", true );
 
   if ( mEnableSavePassword ) {
-    c.writeEntry( "pass", KStringHandler::obscure( mPassword ) );
-    c.writeEntry( "store-passwd", true );
+    group.writeEntry( "pass", KStringHandler::obscure( mPassword ) );
+    group.writeEntry( "store-passwd", true );
   }
 
-  c.setGroup( QString("Transport %1").arg( transportId ) );
-  c.writeEntry( "name", mAccountName );
-  c.writeEntry( "host", mServer );
-  c.writeEntry( "type", "smtp" );
-  c.writeEntry( "port", mSmtpPort );
+  group = c.group( QString("Transport %1").arg( transportId ) );
+  group.writeEntry( "name", mAccountName );
+  group.writeEntry( "host", mServer );
+  group.writeEntry( "type", "smtp" );
+  group.writeEntry( "port", mSmtpPort );
   if ( mEncryption == SSL ) {
-    c.writeEntry( "encryption", "SSL" );
+    group.writeEntry( "encryption", "SSL" );
   } else if ( mEncryption == TLS ) {
-    c.writeEntry( "encryption", "TLS" );
+    group.writeEntry( "encryption", "TLS" );
   }
-  c.writeEntry( "auth", true );
+  group.writeEntry( "auth", true );
   if ( mAuthenticationSend == PLAIN ) {
-    c.writeEntry( "authtype", "PLAIN" );
+    group.writeEntry( "authtype", "PLAIN" );
   } else if ( mAuthenticationSend == LOGIN ) {
-    c.writeEntry( "authtype", "LOGIN" );
+    group.writeEntry( "authtype", "LOGIN" );
   }
-  c.writeEntry( "user", mUser );
+  group.writeEntry( "user", mUser );
   if ( mEnableSavePassword ) {
     if ( !writeToWallet( "transport", transportId ) ) {
-      c.writeEntry( "pass", KStringHandler::obscure( mPassword ) );
-      c.writeEntry( "storepass", true );
+      group.writeEntry( "pass", KStringHandler::obscure( mPassword ) );
+      group.writeEntry( "storepass", true );
     }
   }
 
@@ -277,53 +277,53 @@ CreateOnlineImapAccount::CreateOnlineImapAccount(const QString & accountName) :
 void CreateOnlineImapAccount::apply()
 {
   KConfig c( "kmailrc" );
-  c.setGroup( "General" );
-  uint accCnt = c.readNumEntry( "accounts", 0 );
-  c.writeEntry( "accounts", accCnt+1 );
+  KConfigGroup group = c.group( "General" );
+  uint accCnt = group.readEntry( "accounts", 0 );
+  group.writeEntry( "accounts", accCnt+1 );
 
-  c.setGroup( QString("Account %1").arg(accCnt+1) );
+  group = c.group( QString("Account %1").arg(accCnt+1) );
   int uid = KRandom::random();
-  c.writeEntry( "Folder", uid );
-  c.writeEntry( "Id", uid );
-  c.writeEntry( "Type", "imap" );
-  c.writeEntry( "auth", "*" );
-  c.writeEntry( "Name", mAccountName );
-  c.writeEntry( "host", mServer );
+  group.writeEntry( "Folder", uid );
+  group.writeEntry( "Id", uid );
+  group.writeEntry( "Type", "imap" );
+  group.writeEntry( "auth", "*" );
+  group.writeEntry( "Name", mAccountName );
+  group.writeEntry( "host", mServer );
 
-  c.writeEntry( "login", mUser );
+  group.writeEntry( "login", mUser );
 
   if ( mEnableSavePassword ) {
     if ( !writeToWallet( "account", accCnt+1 ) ) {
-      c.writeEntry( "pass", KStringHandler::obscure( mPassword ) );
-      c.writeEntry( "store-passwd", true );
+      group.writeEntry( "pass", KStringHandler::obscure( mPassword ) );
+      group.writeEntry( "store-passwd", true );
     }
   }
-  c.writeEntry( "port", "993" );
+  group.writeEntry( "port", "993" );
 
   if ( mEncryption == SSL ) {
-    c.writeEntry( "use-ssl", true );
+    group.writeEntry( "use-ssl", true );
   } else if ( mEncryption == TLS ) {
-    c.writeEntry( "use-tls", true );
+    group.writeEntry( "use-tls", true );
   }
 
   if ( mAuthenticationSend == PLAIN ) {
-    c.writeEntry( "authtype", "PLAIN" );
+    group.writeEntry( "authtype", "PLAIN" );
   } else if ( mAuthenticationSend == LOGIN ) {
-    c.writeEntry( "authtype", "LOGIN" );
+    group.writeEntry( "authtype", "LOGIN" );
   }
 
-  c.writeEntry( "sieve-support", mEnableSieve );
+  group.writeEntry( "sieve-support", mEnableSieve );
 
   // locally unsubscribe the default folders
-  c.writeEntry( "locally-subscribed-folders", true );
+  group.writeEntry( "locally-subscribed-folders", true );
   QString groupwareFolders = QString("/INBOX/%1/,/INBOX/%2/,/INBOX/%3/,/INBOX/%4/,/INBOX/%5/")
       .arg( i18n(s_folderContentsType[0]) ).arg( i18n(s_folderContentsType[1]) )
       .arg( i18n(s_folderContentsType[2]) ).arg( i18n(s_folderContentsType[3]) )
       .arg( i18n(s_folderContentsType[4]) );
-  c.writeEntry( "locallyUnsubscribedFolders", groupwareFolders );
+  group.writeEntry( "locallyUnsubscribedFolders", groupwareFolders );
 
-  c.setGroup( QString("Folder-%1").arg( uid ) );
-  c.writeEntry( "isOpen", true );
+  group = c.group( QString("Folder-%1").arg( uid ) );
+  group.writeEntry( "isOpen", true );
 }
 
 bool CreateImapAccount::writeToWallet(const QString & type, int id)
