@@ -31,9 +31,11 @@
 
 #include <QMap>
 
+#include "kpilot_export.h"
+
 class Record;
 
-class DataProxy {
+class KPILOT_EXPORT DataProxy {
 public:
 	enum Mode {
 		All=1,
@@ -46,17 +48,19 @@ public:
 
 	/**
 		* Adds the record to the database and returns the internal id for the added
-		* record.
+		* record. This method resets the iterator.
 		*/
 	QString create( Record *record );
 
 	/**
-	 * Deletes record with @p id from the database.
+	 * Deletes record with @p id from the database. This method resets the 
+	 * iterator.
 	 */
 	void remove( const QString &id );
 
 	/**
 	 * Updates the fields of record with @p id with the fields from @p record.
+	 * This method resets the iterator.
 	 */
 	void update( const QString &id, Record *record );
 
