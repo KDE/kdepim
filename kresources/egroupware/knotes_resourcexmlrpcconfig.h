@@ -29,7 +29,7 @@ class KUrlRequester;
 
 namespace KNotes {
 
-class KABC_XMLRPC_EXPORT ResourceXMLRPCConfig : public KRES::ConfigWidget
+class KNOTES_XMLRPC_EXPORT ResourceXMLRPCConfig : public KRES::ConfigWidget
 { 
   Q_OBJECT
 

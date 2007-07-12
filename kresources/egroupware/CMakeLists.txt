@@ -107,7 +107,7 @@ set_target_properties(knotes_xmlrpc_plugin PROPERTIES OUTPUT_NAME knotes_xmlrpc)
 
 
 
-target_link_libraries(knotes_xmlrpc_plugin ${KDE4_KDECORE_LIBS} knotes_xmlrpc )
+target_link_libraries(knotes_xmlrpc_plugin knotes_xmlrpc ${KDE4_KDECORE_LIBS} knotes_xmlrpc )
 
 install(TARGETS knotes_xmlrpc_plugin  DESTINATION ${PLUGIN_INSTALL_DIR})
 
