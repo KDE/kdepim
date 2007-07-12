@@ -71,8 +71,8 @@ KCAL_RESOURCEBLOG_EXPORT ResourceBlogConfig::ResourceBlogConfig
 
   label = new QLabel( i18n( "API:" ), this );
   mAPI = new KComboBox( false, this );
-  mAPI->addItem( "Blogger" );
   mAPI->addItem( "MetaWeblog" );
+  mAPI->addItem( "Blogger" );
 
   mainLayout->addWidget( label, 4, 0 );
   mainLayout->addWidget( mAPI, 4, 1 );
@@ -88,13 +88,10 @@ void ResourceBlogConfig::loadSettings( KRES::Resource *res )
     mUrl->setUrl( resource->url().url() );
     mUser->setText( resource->user() );
     mPassword->setText( resource->password() );
-    if ( resource->API() == "Blogger" ) {
+    if ( resource->API() == "MetaWeblog" ) {
       mAPI->setCurrentIndex( 0 );
-    } else if ( resource->API() == "MetaWeblog" ) {
+    } else if ( resource->API() == "Blogger" ) {
       mAPI->setCurrentIndex( 1 );
-    } else {
-      kError() << "ResourceBlogConfig::loadSettings(): Unrecognised API: "
-               << resource->API() << endl;
     }
     mReloadConfig->loadSettings( resource );
     kDebug( 5700 ) << "ResourceBlogConfig::loadSettings(): reloaded" << endl;
