@@ -38,7 +38,6 @@
 #include <QMap>
 #include <QStringList>
 
-#include "kolabshared_export.h"
 #include "subresource.h"
 #include <kmail/kmail_util.h>
 
@@ -72,7 +71,7 @@ namespace Kolab {
        By calling kmailAddIncidence() the resource causes
        KMail to store the new address in the (IMAP) folder.
 */
-class KOLABSHARED_EXPORT ResourceKolabBase {
+class ResourceKolabBase {
 public:
   ResourceKolabBase( const QByteArray& objId );
   virtual ~ResourceKolabBase();

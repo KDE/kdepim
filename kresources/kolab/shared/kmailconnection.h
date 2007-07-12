@@ -36,7 +36,6 @@
 
 #include <QObject>
 #include <kmail/kmail_util.h>
-#include "kolabshared_export.h"
 #include <QMap>
 class KUrl;
 class QString;
@@ -49,7 +48,7 @@ class ResourceKolabBase;
 /**
   This class provides the kmail connectivity for IMAP resources.
 */
-class KOLABSHARED_EXPORT KMailConnection : public QObject {
+class KMailConnection : public QObject {
   Q_OBJECT
   // These are the methods called by KMail when the resource changes
 public Q_SLOTS:
