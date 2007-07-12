@@ -1,5 +1,7 @@
 // binhex.cpp
 
+#define DW_IMPLEMENTATION
+
 #include <string.h>
 #include <mimelib/binhex.h>
 

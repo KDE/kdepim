@@ -47,6 +47,17 @@
 #include <strings.h>
 #endif
 
+
+#ifdef DW_WIN32
+#warning Win32 socket defines: This compiles, but does it work?
+#define ETIMEDOUT WSAETIMEDOUT
+#define ENOBUFS WSAENOBUFS
+#define EPROTONOSUPPORT WSAEPROTONOSUPPORT
+#define ENOTSOCK WSAENOTSOCK
+#define EMSGSIZE WSAEMSGSIZE
+#define EADDRNOTAVAIL WSAEADDRNOTAVAIL
+#endif
+
 #ifndef INADDR_NONE
 #define INADDR_NONE (-1)
 #endif
