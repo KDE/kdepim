@@ -1,6 +1,6 @@
-#ifndef TESTRECORD_H
-#define TESTRECORD_H
-/* record.h			KPilot
+#ifndef TESTRECORDCONDUIT_H
+#define TESTRECORDCONDUIT_H
+/* keyringconduit.h			KPilot
 **
 ** Copyright (C) 2007 by Bertjan Broeksema
 ** Copyright (C) 2007 by Jason "vanRijn" Kasper
@@ -27,36 +27,21 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
-#include <QVariant>
-#include <QStringList>
+#include "recordconduit.h"
 
-#include "record.h"
-
-class KPILOT_EXPORT TestRecord : public Record {
+class KPILOT_EXPORT TestRecordConduit : public RecordConduit {
 public:
-	TestRecord();
-
-	TestRecord( const QString &id );
+	TestRecordConduit( const QStringList &args );
 	
-	TestRecord( const QStringList &fields );
+	virtual void loadSettings();
 	
-	virtual ~TestRecord();
+	virtual void initDataProxies();
 	
-	virtual Record* duplicate();
-
-	virtual bool setValue( const QString &field, const QVariant &value );
-
-	virtual bool isModified() const;
+	virtual void test();
 	
-	virtual const QStringList fields() const;
+	virtual bool createBackupDatabase() { return true; }
 	
-	virtual QString toString() const;
-
-	// For test purposes.
-	void setUnmodified();
-	
-private:
-	bool fModified;
-	QStringList fFields;
+	bool syncFieldsTest( Record *from, Record *to );
 };
+
 #endif

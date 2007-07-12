@@ -52,7 +52,7 @@ protected:
 
 // Methods
 public:
-	RecordConduit( KPilotLink *o, const QStringList &a = QStringList()
+	explicit RecordConduit( KPilotLink *o, const QStringList &a = QStringList()
 		, const QString &databaseName = QString()
 		, const QString &conduitName = QString() );
 	
@@ -78,7 +78,9 @@ protected:
 	 */
 	virtual void test() = 0;
 
-private:
+	virtual bool createBackupDatabase() = 0;
+
+protected:
 	/**
 	 * Executes the HotSync flow (see 4.1)
 	 */
@@ -101,7 +103,5 @@ private:
 	bool syncFields( Record *from, Record *to );
 	
 	void solveConflict( Record *pcRecord, Record *hhRecord );
-
-	virtual bool createBackupDatabase() = 0;
 };
 #endif

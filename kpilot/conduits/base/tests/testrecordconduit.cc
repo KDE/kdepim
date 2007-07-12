@@ -1,6 +1,4 @@
-#ifndef TESTRECORD_H
-#define TESTRECORD_H
-/* record.h			KPilot
+/* testrecordconduit.cc			KPilot
 **
 ** Copyright (C) 2007 by Bertjan Broeksema
 ** Copyright (C) 2007 by Jason "vanRijn" Kasper
@@ -27,36 +25,32 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
-#include <QVariant>
-#include <QStringList>
+#include <options.h>
 
-#include "record.h"
+#include "testrecordconduit.h"
+#include "testdataproxy.h"
 
-class KPILOT_EXPORT TestRecord : public Record {
-public:
-	TestRecord();
+TestRecordConduit::TestRecordConduit( const QStringList &args )
+	: RecordConduit( 0L, args, CSL1( "test-db" ), CSL1( "test-conduit" ) )
+{
+}
 
-	TestRecord( const QString &id );
+void TestRecordConduit::loadSettings()
+{
+}
 	
-	TestRecord( const QStringList &fields );
-	
-	virtual ~TestRecord();
-	
-	virtual Record* duplicate();
+void TestRecordConduit::initDataProxies()
+{
+	fHHDataProxy = new TestDataProxy();
+	fBackupDataProxy = new TestDataProxy();
+	fPCDataProxy = new TestDataProxy();
+}
 
-	virtual bool setValue( const QString &field, const QVariant &value );
+void TestRecordConduit::test()
+{
+}
 
-	virtual bool isModified() const;
-	
-	virtual const QStringList fields() const;
-	
-	virtual QString toString() const;
-
-	// For test purposes.
-	void setUnmodified();
-	
-private:
-	bool fModified;
-	QStringList fFields;
-};
-#endif
+bool TestRecordConduit::syncFieldsTest( Record *from, Record *to )
+{
+	return syncFields( from, to );
+}

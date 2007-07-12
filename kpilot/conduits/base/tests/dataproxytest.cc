@@ -1,4 +1,4 @@
-/* hhdataproxy.cc			KPilot
+/* dataproxytest.cc			KPilot
 **
 ** Copyright (C) 2007 by Bertjan Broeksema
 ** Copyright (C) 2007 by Jason "vanRijn" Kasper
@@ -31,9 +31,6 @@
 #include <options.h>
 #include <idmapping.h>
 #include <cudcounter.h>
-
-#include <KGlobal>
-#include <KStandardDirs>
 
 #include "qtest_kde.h"
 

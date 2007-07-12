@@ -36,7 +36,12 @@ TestRecord::TestRecord()
 
 TestRecord::TestRecord( const QString & id ) : Record( id ), fModified(false)
 {
-	fFields = QStringList() << CSL1( "f1" ) << CSL1( "f2" );
+	fFields << CSL1( "f1" ) << CSL1( "f2" );
+}
+
+TestRecord::TestRecord( const QStringList &fields )
+{
+	fFields = fields;
 }
 
 TestRecord::~TestRecord()

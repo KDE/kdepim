@@ -27,6 +27,7 @@ ENDMACRO( RECORD_CONDUIT_EXECUTABLE_TESTS )
 set(testlib_SRCS
 	testrecord.cc
 	testdataproxy.cc
+	testrecordconduit.cc
 )
 
 kde4_add_library(testlib SHARED ${testlib_SRCS})
@@ -36,10 +37,12 @@ RECORD_CONDUIT_EXECUTABLE_TESTS(
 	idmappingxmlsourcetest
 	idmappingtest
 	dataproxytest
+	recordconduittest
 )
 
 RECORD_CONDUIT_UNIT_TESTS (
 	idmappingxmlsourcetest
 	idmappingtest
 	dataproxytest
+	recordconduittest
 )
