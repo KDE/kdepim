@@ -31,6 +31,11 @@
 
 CUDCounter::CUDCounter()
 {
+	fC = 0;
+	fU = 0;
+	fD = 0;
+	fStart = 0;
+	fEnd = 0;
 }
 
 void CUDCounter::setStartCount( unsigned int t )
