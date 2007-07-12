@@ -96,9 +96,17 @@ protected:
 	void syncRecords( Record *pcRecord, Record *backupRecord, Record *hhRecord );
 	
 	/**
+	 * Synchronizes the two conflicted records and lets one of the two overide.
+	 */
+	void syncConflictedRecords( Record *pcRecord, Record *hhRecord
+		, bool pcOverides );
+	
+	/**
 	 * Changes the fields in @p to so that they are in sync with the fields from
-	 * @p from. Returns false if one of the fields of @p from is not in @p to or
-	 * if one of the values is not accepted by @p to.
+	 * @p from. Returns false if:
+	 * - one of the fields of @p from is not in @p to
+	 * - If the field count of both records is not the same.
+	 * - If one of the values is not accepted by @p to.
 	 */
 	bool syncFields( Record *from, Record *to );
 	

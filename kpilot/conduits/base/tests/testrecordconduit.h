@@ -33,6 +33,8 @@ class KPILOT_EXPORT TestRecordConduit : public RecordConduit {
 public:
 	TestRecordConduit( const QStringList &args );
 	
+	~TestRecordConduit();
+	
 	virtual void loadSettings();
 	
 	virtual void initDataProxies();
@@ -41,7 +43,17 @@ public:
 	
 	virtual bool createBackupDatabase() { return true; }
 	
+	/** Methods below are added for testpurposes **/
+	
 	bool syncFieldsTest( Record *from, Record *to );
+	
+	void solveConflictTest( Record *pcRecord, Record *hhRecord );
+	
+	DataProxy *pcDataProxy() { return fPCDataProxy; }
+	
+	DataProxy *hhDataProxy() { return fHHDataProxy; }
+	
+	IDMapping *mapping() { return fMapping; }
 };
 
 #endif

@@ -29,10 +29,18 @@
 
 #include "testrecordconduit.h"
 #include "testdataproxy.h"
+#include "idmapping.h"
 
 TestRecordConduit::TestRecordConduit( const QStringList &args )
 	: RecordConduit( 0L, args, CSL1( "test-db" ), CSL1( "test-conduit" ) )
 {
+	// Create a mapping, we don't test the exec() function.
+	fMapping = new IDMapping( QString(""), fConduitName );
+}
+
+TestRecordConduit::~TestRecordConduit()
+{
+	delete fMapping;
 }
 
 void TestRecordConduit::loadSettings()
@@ -53,4 +61,9 @@ void TestRecordConduit::test()
 bool TestRecordConduit::syncFieldsTest( Record *from, Record *to )
 {
 	return syncFields( from, to );
+}
+
+void TestRecordConduit::solveConflictTest( Record *pcRecord, Record *hhRecord )
+{
+	solveConflict( pcRecord, hhRecord );
 }

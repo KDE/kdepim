@@ -29,7 +29,7 @@
 
 #include "options.h"
 
-TestRecord::TestRecord()
+TestRecord::TestRecord() : fModified(false)
 {
 	fFields << CSL1( "f1" ) << CSL1( "f2" );
 }
@@ -39,7 +39,7 @@ TestRecord::TestRecord( const QString & id ) : Record( id ), fModified(false)
 	fFields << CSL1( "f1" ) << CSL1( "f2" );
 }
 
-TestRecord::TestRecord( const QStringList &fields )
+TestRecord::TestRecord( const QStringList &fields ) : fModified(false)
 {
 	fFields = fields;
 }
@@ -51,7 +51,10 @@ TestRecord::~TestRecord()
 // Not accurate but that doesn't matter, we won't test this anyway.
 Record* TestRecord::duplicate()
 {
-	return new TestRecord( fId );
+	TestRecord *rec = new TestRecord( fId );
+	rec->fFields = fFields;
+	rec->fFieldValues = fFieldValues;
+	return rec;
 }
 
 bool TestRecord::setValue( const QString &field, const QVariant &value )

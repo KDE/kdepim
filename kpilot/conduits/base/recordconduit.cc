@@ -70,6 +70,8 @@ RecordConduit::~RecordConduit()
 	bool backupDatabaseOpen = !retrieved;
 	setFirstSync( retrieved );
 	
+	// NOTE: Do not forget that the HHData proxy and the backup proxy must use
+	// the opened databases, maybe we should pass them for clearity to this method.
 	initDataProxies();
 	
 	// For the pc data proxy we can only after initilisation know if it could be
@@ -146,7 +148,7 @@ RecordConduit::~RecordConduit()
 	 */
 	if( !fMapping->commit() )
 	{
-		// Solution: restore mapping file backup -> TODO: make a backup of the file.
+		// Solution: restore mapping file backup.
 		fMapping->rollback();
 		return false;
 	}
@@ -352,7 +354,8 @@ void RecordConduit::syncRecords( Record *pcRecord, Record *backupRecord,
 			// Warning id is a temporary id. Only after commit we know what id is
 			// assigned to the record. So on commit the proxy should get the mapping
 			// so that it can change the mapping.
-			QString id = fPCDataProxy->create( hhRecord );
+			pcRecord = hhRecord->duplicate();
+			QString id = fPCDataProxy->create( pcRecord );
 			fMapping->map( hhRecord->id(), id );
 		}
 	}
@@ -377,7 +380,8 @@ void RecordConduit::syncRecords( Record *pcRecord, Record *backupRecord,
 		// first )
 		else
 		{
-			QString id = fHHDataProxy->create( pcRecord );
+			hhRecord = pcRecord->duplicate();
+			QString id = fHHDataProxy->create( hhRecord );
 			fMapping->map( id, pcRecord->id() );
 		}
 	}
@@ -393,15 +397,38 @@ void RecordConduit::syncRecords( Record *pcRecord, Record *backupRecord,
 	*/
 }
 
-bool RecordConduit::syncFields( Record *to, Record *from )
+bool RecordConduit::syncFields( Record *from, Record *to )
 {
 	FUNCTIONSETUP;
 	
 	// This shouldn't happen.
 	if( !to || !from )
 	{
-		DEBUGKPILOT << fname << ": error, one of the two records is zero!" << endl;
+		DEBUGKPILOT << fname << ": one of the two records is zero! Not syncing"
+			<< endl;
 		return false;
+	}
+	
+	if( to->fields().size() != from->fields().size() )
+	{
+		DEBUGKPILOT << fname << ": fieldcount of both records differ. Not syncing"
+			<< endl;
+		return false;
+	}
+	else
+	{
+		QStringList fields = from->fields();
+		QStringListIterator it( fields );
+		while( it.hasNext() )
+		{
+			QString field = it.next();
+			if( !to->fields().contains( field ) )
+			{
+				DEBUGKPILOT << fname << ": One of the fields is not present in the "
+					<< "to-record. Not syncing." << endl;
+				return false;
+			}
+		}
 	}
 	
 	QStringList fields = from->fields();
@@ -421,9 +448,61 @@ bool RecordConduit::syncFields( Record *to, Record *from )
 	return true;
 }
 
+void RecordConduit::syncConflictedRecords( Record *pcRecord, Record *hhRecord
+	, bool pcOverides )
+{
+	FUNCTIONSETUP;
+	
+	if( pcRecord && hhRecord )
+	{
+		if( pcOverides )
+		{
+			// Keep pcRecord
+			syncFields( pcRecord, hhRecord );
+		}
+		else
+		{
+			// Keep hhRecord
+			syncFields( hhRecord, pcRecord );
+		}
+	}
+	else if( pcRecord && !hhRecord )
+	{
+		if( pcOverides )
+		{
+			hhRecord = pcRecord->duplicate();
+			QString id = fHHDataProxy->create( hhRecord );
+			fMapping->map( id, pcRecord->id() );
+		}
+		else
+		{
+			fPCDataProxy->remove( pcRecord->id() );
+			fMapping->remove( pcRecord->id() );
+		}
+	}
+	else if( !pcRecord && hhRecord )
+	{
+		if( pcOverides )
+		{
+			fHHDataProxy->remove( hhRecord->id() );
+			fMapping->remove( hhRecord->id() );
+		}
+		else
+		{
+			pcRecord = hhRecord->duplicate();
+			QString id = fPCDataProxy->create( pcRecord );
+			fMapping->map( hhRecord->id(), id );
+		}
+	}
+	// else both records are 0L do nothing. NOTE: After sync we should remove
+	// mappings which don't have records on either side.
+}
+
 void RecordConduit::solveConflict( Record *pcRecord, Record *hhRecord )
 {
 	FUNCTIONSETUP;
+	
+	// NOTE: One of the two records might be 0L, which means that it's deleted.
 	
 	int res = getConflictResolution();
 	if ( res == SyncAction::eAskUser )
@@ -431,9 +510,23 @@ void RecordConduit::solveConflict( Record *pcRecord, Record *hhRecord )
 		// TODO: Make this nicer, like the abbrowser conduit had.
 		QString query = i18n( "The following item was modified "
 			"both on the Handheld and on your PC:\nPC entry:\n\t" );
-		query += pcRecord->toString();
+		if( pcRecord )
+		{
+			query += pcRecord->toString();
+		}
+		else
+		{
+			query += i18n( "deleted" );
+		}
 		query += i18n( "\nHandheld entry:\n\t" );
-		query += hhRecord->toString();
+		if( hhRecord )
+		{
+			query += hhRecord->toString();
+		}
+		else
+		{
+			query += i18n( "deleted" );
+		}
 		query += i18n( "\n\nWhich entry do you want to keep? It will "
 			"overwrite the other entry." );
 
@@ -445,23 +538,23 @@ void RecordConduit::solveConflict( Record *pcRecord, Record *hhRecord )
 			i18n( "Handheld" ), i18n( "PC" )) )
 		{
 			// Keep PC record
-			syncFields( hhRecord, pcRecord );
+			syncConflictedRecords( pcRecord, hhRecord, true );
 		}
 		else
 		{
 			// Keep Handheld record
-			syncFields( pcRecord, hhRecord );
+			syncConflictedRecords( pcRecord, hhRecord, false );
 		}
 	}
 	else if( res == eHHOverrides )
 	{
 		// Keep Handheld record
-		syncFields( pcRecord, hhRecord );
+		syncConflictedRecords( pcRecord, hhRecord, false );
 	}
 	else if( res == ePCOverrides )
 	{
 		// Keep PC record
-		syncFields( hhRecord, pcRecord );
+		syncConflictedRecords( pcRecord, hhRecord, true );
 	}
 	else if( res == eDuplicate )
 	{
@@ -483,4 +576,6 @@ void RecordConduit::solveConflict( Record *pcRecord, Record *hhRecord )
 	{
 		// FIXME: Implement.
 	}
+	
+	// else: eDoNothing
 }
