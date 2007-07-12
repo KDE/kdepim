@@ -2,7 +2,7 @@
 #define IDMAPPING_H
 /* idmapping.h			KPilot
 **
-** Copyright (C) 2004-2007 by Bertjan Broeksema
+** Copyright (C) 2007 by Bertjan Broeksema
 ** Copyright (C) 2007 by Jason "vanRijn" Kasper
 */
 
