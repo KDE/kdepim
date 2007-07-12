@@ -98,7 +98,7 @@ if(GPGME_FOUND)
 endif(GPGME_FOUND)
 
 if(GPGME_FOUND)
-   add_subdirectory(kleopatra)
+   macro_optional_add_subdirectory(kleopatra)
 endif(GPGME_FOUND)
 if(NOT WIN32)
   add_subdirectory(libkpgp)
@@ -120,7 +120,7 @@ if (Q_WS_X11)
 endif (Q_WS_X11)
 
 add_subdirectory(kdgantt1)
-add_subdirectory(strigi-analyzer)
+macro_optional_add_subdirectory(strigi-analyzer)
 add_subdirectory(kioslave)
 
 if(GPGME_FOUND)
@@ -129,8 +129,8 @@ endif(GPGME_FOUND)
 
 macro_optional_add_subdirectory(kmailcvt)
 macro_optional_add_subdirectory(knotes)
-add_subdirectory(console)
-add_subdirectory(kontact)
+macro_optional_add_subdirectory(console)
+macro_optional_add_subdirectory(kontact)
 
 if(GPGME_FOUND)
    macro_optional_add_subdirectory(korganizer)
@@ -146,7 +146,7 @@ endif( NOT WIN32)
 
 macro_optional_add_subdirectory(korn)
 add_subdirectory(kresources)
-add_subdirectory(ktnef)
+macro_optional_add_subdirectory(ktnef)
 MESSAGE(STATUS "disabled networkstatus")
 #add_subdirectory(networkstatus)
 
