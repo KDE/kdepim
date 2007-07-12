@@ -10,7 +10,7 @@ include_directories(
 
 ########### next target ###############
 
-set(kaddrbk_cardview_PART_SRCS ${libkabcommon_SRCS} 
+set(kaddrbk_cardview_PART_SRC 
    cardview.cpp 
    colorlistbox.cpp 
    configurecardviewdialog.cpp 
@@ -21,7 +21,7 @@ kde4_add_plugin(kaddrbk_cardview WITH_PREFIX ${kaddrbk_cardview_PART_SRCS})
 
 
 
-target_link_libraries(kaddrbk_cardview  ${KDE4_KDECORE_LIBS} ${KDE4_KABC_LIBS} kaddressbook)
+target_link_libraries(kaddrbk_cardview  ${KDE4_KDECORE_LIBS} ${KDE4_KABC_LIBS} kaddressbook kabcommon)
 
 install(TARGETS kaddrbk_cardview  DESTINATION ${PLUGIN_INSTALL_DIR})
 

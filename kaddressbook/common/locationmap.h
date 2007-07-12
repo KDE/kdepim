@@ -24,11 +24,13 @@
 #ifndef LOCATIONMAP_H
 #define LOCATIONMAP_H
 
+#include "kabcommon_export.h"
+
 #include <kabc/address.h>
 #include <QObject>
 #include <QString>
 
-class LocationMap : public QObject
+class KABCOMMON_EXPORT LocationMap : public QObject
 {
   Q_OBJECT
 

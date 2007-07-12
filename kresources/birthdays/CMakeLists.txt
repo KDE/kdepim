@@ -5,7 +5,7 @@ add_definitions (-DQT3_SUPPORT -DQT3_SUPPORT_WARNINGS)
 
 ########### next target ###############
 
-set(kcal_kabc_PART_SRCS ${libkabcommon_SRCS} resourcekabc.cpp resourcekabcconfig.cpp )
+set(kcal_kabc_PART_SRCS resourcekabc.cpp resourcekabcconfig.cpp )
 
 kde4_add_kcfg_files(kcal_kabc_PART_SRCS ${CMAKE_SOURCE_DIR}/kaddressbook/common/kabprefs_base.kcfgc )
 
@@ -14,7 +14,7 @@ kde4_add_plugin(kcal_kabc ${kcal_kabc_PART_SRCS})
 
 
 
-target_link_libraries(kcal_kabc  ${KDE4_KDECORE_LIBS} ${KDE4_KCAL_LIBS} kdepim )
+target_link_libraries(kcal_kabc  ${KDE4_KDECORE_LIBS} ${KDE4_KCAL_LIBS} kdepim kabcommon)
 
 install(TARGETS kcal_kabc  DESTINATION ${PLUGIN_INSTALL_DIR})
 

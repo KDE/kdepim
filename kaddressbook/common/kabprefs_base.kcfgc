@@ -4,9 +4,9 @@ ClassName=KABPrefsBase
 Singleton=false
 Mutators=true
 Inherits=KPimPrefs
-IncludeFiles=libkdepim/kpimprefs.h,kaddressbook_export.h
+IncludeFiles=libkdepim/kpimprefs.h,kabcommon_export.h
 MemberVariables=public
 GlobalEnums=true
 ItemAccessors=true
 SetUserTexts=true
-
+Visibility=KABCOMMON_EXPORT

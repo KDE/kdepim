@@ -24,11 +24,11 @@
 #ifndef KABPREFS_H
 #define KABPREFS_H
 
-#include "kaddressbook/kaddressbook_export.h"
+#include "kabcommon_export.h"
 #include "kabprefs_base.h"
 #include <QStringList>
 
-class KABPrefs : public KABPrefsBase
+class KABCOMMON_EXPORT KABPrefs : public KABPrefsBase
 {
   public:
     virtual ~KABPrefs();

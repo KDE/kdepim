@@ -54,12 +54,6 @@ include_directories (${CMAKE_SOURCE_DIR} ${CMAKE_BINARY_DIR} ${KDE4_INCLUDES} ${
 include (ConfigureChecks.cmake)
 configure_file (config.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config.h)
 
-set(libkabcommon_SRCS
-  ${CMAKE_SOURCE_DIR}/kaddressbook/common/kabprefs.cpp
-  ${CMAKE_SOURCE_DIR}/kaddressbook/common/locationmap.cpp
-  ${CMAKE_SOURCE_DIR}/kaddressbook/common/filter.cpp
-)
-
 set(libknotesresources_SRCS
   ${CMAKE_SOURCE_DIR}/knotes/resourcemanager.cpp
   ${CMAKE_SOURCE_DIR}/knotes/resourcenotes.cpp

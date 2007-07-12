@@ -27,14 +27,6 @@ include_directories(
 	${Boost_INCLUDE_DIR} )
 
 
-set(libkabcommon_SRCS
-	${CMAKE_CURRENT_SOURCE_DIR}/common/kabprefs.cpp 
-	${CMAKE_CURRENT_SOURCE_DIR}/common/locationmap.cpp 
-	${CMAKE_CURRENT_SOURCE_DIR}/common/filter.cpp
-	)
-
-kde4_add_kcfg_files(libkabcommon_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/common/kabprefs_base.kcfgc )
-
 set(libprinter_SRCS
 	${CMAKE_CURRENT_SOURCE_DIR}/printing/detailledstyle.cpp 
 	${CMAKE_CURRENT_SOURCE_DIR}/printing/kabentrypainter.cpp 
@@ -72,9 +64,6 @@ set(kaddressbook_bin_SRCS
 	kaddressbookmain.cpp 
 	)
 
-#kde4_add_kcfg_files(kaddressbook_bin_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/common/kabprefs_base.kcfgc )
-
-
 qt4_add_dbus_adaptor(kaddressbook_bin_SRCS org.kde.KAddressbook.Core.xml kaddressbookmain.h KAddressBookMain kaddressbookadaptor )
 
 kde4_add_executable(kaddressbook_bin ${kaddressbook_bin_SRCS})
@@ -103,7 +92,7 @@ install(TARGETS kaddressbookpart  DESTINATION ${PLUGIN_INSTALL_DIR})
 
 ########### next target ###############
 
-set(kaddressbook_LIB_SRCS ${libkabim_SRCS} ${libprinter_SRCS} ${libkabcommon_SRCS} 
+set(kaddressbook_LIB_SRCS ${libkabim_SRCS} ${libprinter_SRCS} 
    addresseeconfig.cpp
    addresseeeditordialog.cpp
    addresseeeditorwidget.cpp
@@ -154,7 +143,7 @@ QT4_ADD_DBUS_INTERFACE(kaddressbook_LIB_SRCS org.kde.KAddressbook.Core.xml kaddr
 
 kde4_add_library(kaddressbook SHARED ${kaddressbook_LIB_SRCS})
 
-target_link_libraries(kaddressbook  ${KDE4_SYNDICATION_LIBS} kdepim ${KDE4_KCAL_LIBS} kabc_file_core ${KDE4_KDEPRINT_LIBS} ${KDE4_KUTILS_LIBS} ${KDE4_PHONON_LIBS} kabinterfaces  )
+target_link_libraries(kaddressbook  ${KDE4_SYNDICATION_LIBS} kdepim ${KDE4_KCAL_LIBS} kabc_file_core ${KDE4_KDEPRINT_LIBS} ${KDE4_KUTILS_LIBS} ${KDE4_PHONON_LIBS} kabinterfaces kabcommon )
 
 set_target_properties(kaddressbook PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
 install(TARGETS kaddressbook  DESTINATION ${LIB_INSTALL_DIR})

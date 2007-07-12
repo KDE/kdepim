@@ -27,7 +27,7 @@
 #include <QString>
 #include <QStringList>
 
-
+#include "kabcommon_export.h"
 #include <kabc/addressee.h>
 #include <kconfig.h>
 
@@ -36,7 +36,7 @@
 
   @todo This class should be switched to use shared data.
  */
-class Filter
+class KABCOMMON_EXPORT Filter
 {
   public:
     typedef QList<Filter> List;
