@@ -29,9 +29,15 @@
 
 #include <QVariant>
 
-class Record {
+#include "kpilot_export.h"
+
+class KPILOT_EXPORT Record {
 public:
-	virtual ~Record() = 0;
+	Record();
+	
+	Record( const QString &id );
+	
+	virtual ~Record() {};
 	
 	const QString id() const;
 	
@@ -70,7 +76,7 @@ public:
 	 */
 	virtual QString toString() const = 0;
 
-private:
+protected:
 	QString fId;
 	QMap<QString, QVariant> fFieldValues;
 };

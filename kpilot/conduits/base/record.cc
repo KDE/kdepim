@@ -29,6 +29,14 @@
 
 #include "options.h"
 
+Record::Record()
+{
+}
+
+Record::Record( const QString &id ) : fId( id )
+{
+}
+
 const QString Record::id() const
 {
 	FUNCTIONSETUP;
