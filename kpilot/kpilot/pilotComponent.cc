@@ -96,7 +96,7 @@ int PilotComponent::findSelectedCategory(QComboBox * fCatList,
 	// selected we can indicate that we are using the "All" category.
 	//
 	//
-	if (fCatList->currentItem() == 0)
+	if (fCatList->currentIndex() == 0)
 	{
 		currentCatID = (-1);
 #ifdef DEBUG
@@ -106,7 +106,7 @@ int PilotComponent::findSelectedCategory(QComboBox * fCatList,
 	else
 	{
 		QString selectedCategory =
-			fCatList->text(fCatList->currentItem());
+			fCatList->itemText(fCatList->currentIndex());
 		currentCatID = Pilot::findCategory(info, selectedCategory, AllIsUnfiled);
 	}
 

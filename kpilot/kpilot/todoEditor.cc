@@ -108,7 +108,7 @@ void TodoEditor::fillFields()
 		fWidget->fHasEndDate->setChecked(true);
 		fWidget->fEndDate->setDate(readTm(fTodo->getDueDate()).date());
 	}
-	fWidget->fPriority->setCurrentItem(fTodo->getPriority());
+	fWidget->fPriority->setCurrentIndex(fTodo->getPriority());
 //	fCategory->setCurrentItem(fTodo->getCategory()));
 	fWidget->fNote->setText(fTodo->getNote());
 }
@@ -145,7 +145,7 @@ void TodoEditor::fillFields()
 	{
 		fTodo->setIndefinite(true);
 	}
-	fTodo->setPriority(fWidget->fPriority->currentItem());
+	fTodo->setPriority(fWidget->fPriority->currentIndex());
 //	fTodo->setCategory(fWidget->fCategory->currentItem());
 	fTodo->setNote(fWidget->fNote->text());
 

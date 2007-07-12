@@ -57,13 +57,16 @@ DatebookWidget::DatebookWidget(QWidget *parent, const QString &dbpath) :
 	QSpacerItem* spacer = new QSpacerItem( 20, 180, QSizePolicy::Minimum, QSizePolicy::Expanding );
 	g->addItem( spacer, 1, 1 );
 
-	fAddButton = new QPushButton( i18n( "&Add..." ), this, "pushButton1" );
+	fAddButton = new QPushButton( i18n( "&Add..." ), this );
+	fAddButton->setObjectName( QLatin1String( "pushButton1" ) );
 	g->addWidget( fAddButton, 2, 0 );
 
-	fEditButton = new QPushButton( i18n( "&Edit..." ), this, "pushButton2" );
+	fEditButton = new QPushButton( i18n( "&Edit..." ), this );
+	fEditButton->setObjectName( QLatin1String( "pushButton2" ) );
 	g->addWidget( fEditButton, 2, 1 );
 
-	fDeleteButton = new QPushButton( i18n( "&Delete..." ), this, "pushButton3" );
+	fDeleteButton = new QPushButton( i18n( "&Delete..." ), this );
+	fDeleteButton->setObjectName( QLatin1String( "pushButton3" ) );
 	g->addWidget( fDeleteButton, 2, 2 );
 
 	fEventList = new K3ListView( this);

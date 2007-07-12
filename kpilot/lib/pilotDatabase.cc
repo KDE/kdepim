@@ -63,7 +63,7 @@ PilotDatabase::PilotDatabase(const QString &s) :
 	creationCount--;
 	if (createdNames)
 	{
-		createdNames->remove(fName.isEmpty() ? CSL1("<empty>") : fName);
+		createdNames->removeAll(fName.isEmpty() ? CSL1("<empty>") : fName);
 	}
 }
 

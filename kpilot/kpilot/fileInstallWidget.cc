@@ -53,7 +53,6 @@
 #include <QDragEnterEvent>
 
 #include <kfiledialog.h>
-#include <k3urldrag.h>
 #include <kiconloader.h>
 #include <k3iconview.h>
 #include <kglobal.h>
@@ -123,29 +122,29 @@ FileInstallWidget::~FileInstallWidget()
 
 static inline bool pdbOrPrc(const QString &s)
 {
-	return s.endsWith(CSL1(".pdb"),false) || s.endsWith(CSL1(".prc"),false) ;
+	return s.endsWith(CSL1(".pdb"),Qt::CaseInsensitive) || s.endsWith(CSL1(".prc"),Qt::CaseInsensitive);
 }
 
 void FileInstallWidget::dragEnterEvent(QDragEnterEvent *event)
 {
 	FUNCTIONSETUP;
 
-	KUrl::List urls;
-	if(!K3URLDrag::decode(event, urls)) {
-		event->accept(false);
+	if(!KUrl::List::canDecode(event->mimeData())) {
+		event->setAccepted(false);
 		return;
 	}
 
+	KUrl::List urls = KUrl::List::fromMimeData(event->mimeData());
 	KUrl::List::const_iterator it;
 	QString filename;
     for ( it = urls.begin(); it != urls.end(); ++it ) {
 		filename = (*it).fileName();
 		if(!pdbOrPrc(filename)) {
-			event->accept(false);
+			event->setAccepted(false);
 			return;
 		}
 	}
-	event->accept(true);
+	event->setAccepted(true);
 }
 
 bool FileInstallWidget::eventFilter(QObject *watched, QEvent *event)
@@ -178,9 +177,9 @@ void FileInstallWidget::dropEvent(QDropEvent * drop)
 	FUNCTIONSETUP;
 	if (!isVisible()) return;
 
-	KUrl::List list;
+	KUrl::List list = KUrl::List::fromMimeData(drop->mimeData());
 
-	if (!K3URLDrag::decode(drop, list) || list.isEmpty())
+	if (list.isEmpty())
 		return;
 
 #ifdef DEBUG

@@ -421,7 +421,7 @@ void PilotDateEntry::setLocation(const QString &s)
 	else
 	{
 		QString location = "Location: " + s + '\n';
-		int pos = note.find(rxp);
+		int pos = note.indexOf(rxp);
 
 		if(pos >= 0)
 		{
@@ -441,7 +441,7 @@ QString PilotDateEntry::getLocation() const
 	// one from PilotDateEntry::getNote();
 	QString note = Pilot::fromPilot(getNoteP());
 	QRegExp rxp = QRegExp("^[Ll]ocation:[^\n]+\n");
-	int pos = note.find(rxp, 0);
+	int pos = note.indexOf(rxp, 0);
 
 	if(pos >= 0)
 	{

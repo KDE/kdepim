@@ -52,7 +52,6 @@
 #include <kiconloader.h>
 #include <kdebug.h>
 #include <QProcess>
-#include <k3urldrag.h>
 #include <kservice.h>
 #include <khelpmenu.h>
 #include <ktoolinvocation.h>
@@ -104,16 +103,14 @@ PilotDaemonTray::PilotDaemonTray(PilotDaemon * p) :
 /* virtual */ void PilotDaemonTray::dragEnterEvent(QDragEnterEvent * e)
 {
 	FUNCTIONSETUP;
-	e->accept(K3URLDrag::canDecode(e));
+	e->setAccepted(KUrl::List::canDecode(e->mimeData()));
 }
 
 /* virtual */ void PilotDaemonTray::dropEvent(QDropEvent * e)
 {
 	FUNCTIONSETUP;
 
-	KUrl::List list;
-
-	K3URLDrag::decode(e, list);
+	KUrl::List list = KUrl::List::fromMimeData(e->mimeData());
 
 	QStringList files;
 	for(KUrl::List::ConstIterator it = list.begin(); it != list.end(); ++it)
@@ -168,7 +165,7 @@ void PilotDaemonTray::setupWidget()
 		SLOT(slotRunKPilot()));
 	menuConfigureConduitsItem = menu->insertItem(i18n("&Configure KPilot..."),
 		daemon, SLOT(slotRunConfig()));
-	menu->insertSeparator();
+	menu->addSeparator();
 
 	fSyncTypeMenu = new QMenu(menu);
 	fSyncTypeMenu->setObjectName("sync_type_menu");
@@ -178,7 +175,7 @@ void PilotDaemonTray::setupWidget()
 		(int)(SyncAction::SyncMode::a));
 	fSyncTypeMenu->insertItem(i18n("Default (%1)",SyncAction::SyncMode::name((SyncAction::SyncMode::Mode)KPilotSettings::syncType())),
 		0);
-	fSyncTypeMenu->insertSeparator();
+	fSyncTypeMenu->addSeparator();
 
         // Keep this synchronized with kpilotui.rc and kpilot.cc if at all possible.
 	MI(eHotSync);
@@ -195,7 +192,7 @@ void PilotDaemonTray::setupWidget()
 	menu->insertItem(i18n("Next &Sync"),fSyncTypeMenu);
 
 	KHelpMenu *help = new KHelpMenu(menu,aboutData);
-	menu->insertItem(KIconLoader::global()->loadIconSet(CSL1("help"),K3Icon::Small,0,true),i18n("&Help"),help->menu());
+	menu->insertItem(KIcon(CSL1("help")),i18n("&Help"),help->menu());
 
 
 #ifdef DEBUG
@@ -264,13 +261,15 @@ void PilotDaemonTray::startHotSync()
 	changeIcon(Busy);
 	if (!fBlinkTimer)
 	{
-		fBlinkTimer = new QTimer(this,"blink timer");
+		fBlinkTimer = new QTimer(this);
+		fBlinkTimer->setObjectName(QLatin1String("blink timer"));
 	}
 	if (fBlinkTimer)
 	{
 		connect(fBlinkTimer,SIGNAL(timeout()),
 			this,SLOT(slotBusyTimer()));
-		fBlinkTimer->start(750,false);
+		fBlinkTimer->setSingleShot(false);
+		fBlinkTimer->start(750);
 	}
 }
 

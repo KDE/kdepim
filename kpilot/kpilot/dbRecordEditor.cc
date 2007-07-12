@@ -127,18 +127,22 @@ void DBRecordEditor::initWidgets()
 
 	DBRecordEditorBaseLayout = new Q3GridLayout( fWidget, 1, 1, 11, 6, "DBRecordEditorBaseLayout");
 
-	fRecordIndexLabel = new QLabel( fWidget, "fRecordIndexLabel" );
+	fRecordIndexLabel = new QLabel( fWidget );
+	fRecordIndexLabel->setObjectName( QLatin1String( "fRecordIndexLabel" ) );
 	DBRecordEditorBaseLayout->addWidget( fRecordIndexLabel, 0, 0 );
 
-	fRecordIDLabel = new QLabel( fWidget, "fRecordIDLabel" );
+	fRecordIDLabel = new QLabel( fWidget );
+	fRecordIDLabel->setObjectName( QLatin1String( "fRecordIDLabel" ) );
 	DBRecordEditorBaseLayout->addWidget( fRecordIDLabel, 0, 2 );
 
-	fRecordIndex = new QLineEdit( fWidget, "fRecordIndex" );
+	fRecordIndex = new QLineEdit( fWidget );
+	fRecordIndex->setObjectName( QLatin1String( "fRecordIndex" ) );
 	fRecordIndex->setReadOnly( TRUE );
 
 	DBRecordEditorBaseLayout->addWidget( fRecordIndex, 0, 1 );
 
-	fRecordID = new QLineEdit( fWidget, "fRecordID" );
+	fRecordID = new QLineEdit( fWidget );
+	fRecordID->setObjectName( QLatin1String( "fRecordID" ) );
 	fRecordID->setReadOnly( TRUE );
 
 	DBRecordEditorBaseLayout->addWidget( fRecordID, 0, 3 );
@@ -152,19 +156,24 @@ void DBRecordEditor::initWidgets()
 	fFlagsGroupLayout = new Q3GridLayout( fFlagsGroup->layout() );
 	fFlagsGroupLayout->setAlignment( Qt::AlignTop );
 
-	fDirty = new QCheckBox( fFlagsGroup, "fDirty" );
+	fDirty = new QCheckBox( fFlagsGroup );
+	fDirty->setObjectName( QLatin1String( "fDirty" ) );
 	fFlagsGroupLayout->addWidget( fDirty, 0, 0 );
 
-	fDeleted = new QCheckBox( fFlagsGroup, "fDeleted" );
+	fDeleted = new QCheckBox( fFlagsGroup );
+	fDeleted->setObjectName( QLatin1String( "fDeleted" ) );
 	fFlagsGroupLayout->addWidget( fDeleted, 1, 0 );
 
-	fBusy = new QCheckBox( fFlagsGroup, "fBusy" );
+	fBusy = new QCheckBox( fFlagsGroup );
+	fBusy->setObjectName( QLatin1String( "fBusy" ) );
 	fFlagsGroupLayout->addWidget( fBusy, 0, 1 );
 
-	fSecret = new QCheckBox( fFlagsGroup, "fSecret" );
+	fSecret = new QCheckBox( fFlagsGroup );
+	fSecret->setObjectName( QLatin1String( "fSecret" ) );
 	fFlagsGroupLayout->addMultiCellWidget( fSecret, 1, 1, 1, 2 );
 
-	fArchived = new QCheckBox( fFlagsGroup, "fArchived" );
+	fArchived = new QCheckBox( fFlagsGroup );
+	fArchived->setObjectName( QLatin1String( "fArchived" ) );
 	fFlagsGroupLayout->addWidget( fArchived, 0, 2 );
 
 	DBRecordEditorBaseLayout->addMultiCellWidget( fFlagsGroup, 1, 1, 0, 3 );

@@ -96,7 +96,7 @@ public:
 
 	void unbindDevice( const QString &device )
 	{
-		mBoundDevices.remove( device );
+		mBoundDevices.removeAll( device );
 		showList();
 	}
 
@@ -748,7 +748,7 @@ void KPilotDeviceLink::stopCommThread()
 
 		// try to wait for our thread to finish, but don't
 		// block the main thread forever
-		if (fDeviceCommThread->running()) 
+		if (fDeviceCommThread->isRunning()) 
 		{
 			DEBUGKPILOT << fname
 				<< ": comm thread still running. "

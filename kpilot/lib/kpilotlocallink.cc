@@ -101,7 +101,7 @@ unsigned int KPilotLocalLink::findAvailableDatabases( KPilotLocalLink::Private &
 		QString dbname = (*i);
 		dbname.remove(dbname.length()-4,4);
 
-		QString dbnamecheck = (*i).left((*i).findRev(CSL1(".pdb")));
+		QString dbnamecheck = (*i).left((*i).lastIndexOf(CSL1(".pdb")));
 		Q_ASSERT(dbname == dbnamecheck);
 
 		if (PilotLocalDatabase::infoFromFile( path + CSL1("/") + (*i), &dbi))
@@ -282,8 +282,8 @@ KPilotLocalLink::~KPilotLocalLink()
 		return true;
 	}
 
-	KUrl src = KUrl::fromPathOrUrl( canonicalSrcPath );
-	KUrl dst = KUrl::fromPathOrUrl( canonicalDstPath );
+	KUrl src( canonicalSrcPath );
+	KUrl dst( canonicalDstPath );
 
 	KIO::NetAccess::file_copy(src,dst,-1,true);
 
