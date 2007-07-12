@@ -65,7 +65,7 @@ class KApplication;
 
 namespace KAB {
 
-class KADDRESSBOOK_EXPORT XXPort : public QObject, virtual public KXMLGUIClient
+class KABINTERFACES_EXPORT XXPort : public QObject, virtual public KXMLGUIClient
 {
   Q_OBJECT
 
