@@ -275,12 +275,22 @@ ConduitAction::ConduitAction(KPilotLink *p,
 	fFirstSync(false)
 {
 	FUNCTIONSETUP;
-
-	QString cResolution(args.filter(QRegExp(CSL1("--conflictResolution \\d*"))).first());
-	if (cResolution.isEmpty())
+	
+	QStringList cResolutions = args.filter(QRegExp(CSL1("--conflictResolution \\d*")));
+	if(!cResolutions.isEmpty())
 	{
-		fConflictResolution=(SyncAction::ConflictResolution)
-			cResolution.replace(QRegExp(CSL1("--conflictResolution (\\d*)")), CSL1("\\1")).toInt();
+		QString cResolution = cResolutions.first();
+		{
+			fConflictResolution=(SyncAction::ConflictResolution)
+				cResolution.replace(QRegExp(CSL1("--conflictResolution (\\d*)"))
+					, CSL1("\\1")).toInt();
+		}
+	}
+	else
+	{
+		DEBUGKPILOT << fname << ": No conflict resolution given, defaulting to: "
+			<< " SyncAction::eAskUser" << endl;
+		fConflictResolution = SyncAction::eAskUser;
 	}
 
 	for (QStringList::ConstIterator it = args.begin();
