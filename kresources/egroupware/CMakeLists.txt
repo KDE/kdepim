@@ -16,10 +16,6 @@ set(libegwcommon_SRCS
 
 set(kabc_xmlrpc_LIB_SRCS kabc_resourcexmlrpc.cpp kabc_resourcexmlrpcconfig.cpp ${libegwcommon_SRCS})
 
-kde4_add_kcfg_files(kabc_xmlrpc_LIB_SRCS ${CMAKE_SOURCE_DIR}/kaddressbook/common/kabprefs_base.kcfgc )
-
-
-
 kde4_add_kcfg_files(kabc_xmlrpc_LIB_SRCS kabc_egroupwareprefs.kcfgc )
 
 kde4_add_library(kabc_xmlrpc SHARED ${kabc_xmlrpc_LIB_SRCS})
@@ -36,9 +32,6 @@ set(kcal_xmlrpc_LIB_SRCS ${libegwcommon_SRCS}
    kcal_resourcexmlrpc.cpp 
    kcal_resourcexmlrpcconfig.cpp 
    todostatemapper.cpp )
-
-kde4_add_kcfg_files(kcal_xmlrpc_LIB_SRCS ${CMAKE_SOURCE_DIR}/kaddressbook/common/kabprefs_base.kcfgc )
-
 
 kde4_add_kcfg_files(kcal_xmlrpc_LIB_SRCS kcal_egroupwareprefs.kcfgc )
 
