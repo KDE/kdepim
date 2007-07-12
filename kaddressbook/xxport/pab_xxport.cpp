@@ -29,7 +29,6 @@
 #include <kio/netaccess.h>
 #include <klocale.h>
 #include <kmessagebox.h>
-#include <k3process.h>
 #include <kstandarddirs.h>
 #include <ktemporaryfile.h>
 #include <kurl.h>
