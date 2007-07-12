@@ -28,7 +28,7 @@
 #include "kabprefs_base.h"
 #include <QStringList>
 
-class KADDRESSBOOK_EXPORT KABPrefs : public KABPrefsBase
+class KABPrefs : public KABPrefsBase
 {
   public:
     virtual ~KABPrefs();
