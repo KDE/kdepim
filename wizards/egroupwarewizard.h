@@ -21,13 +21,12 @@
 #ifndef EGROUPWAREWIZARD_H
 #define EGROUPWAREWIZARD_H
 
-#include "pimwizards_export.h"
 #include <kconfigwizard.h>
 
 class KLineEdit;
 class QCheckBox;
 
-class PIMWIZARDS_EXPORT EGroupwareWizard : public KConfigWizard
+class EGroupwareWizard : public KConfigWizard
 {
   public:
     EGroupwareWizard();

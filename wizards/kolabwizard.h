@@ -22,14 +22,13 @@
 #ifndef KOLABWIZARD_H
 #define KOLABWIZARD_H
 
-#include "pimwizards_export.h"
 #include <kconfigwizard.h>
 
 class KLineEdit;
 class QCheckBox;
 class QRadioButton;
 
-class PIMWIZARDS_EXPORT KolabWizard : public KConfigWizard
+class KolabWizard : public KConfigWizard
 {
   public:
     KolabWizard();

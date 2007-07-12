@@ -20,13 +20,12 @@
 #ifndef SLOXWIZARD_H
 #define SLOXWIZARD_H
 
-#include "pimwizards_export.h"
 #include <kconfigwizard.h>
 
 class KLineEdit;
 class QCheckBox;
 
-class PIMWIZARDS_EXPORT SloxWizard : public KConfigWizard
+class SloxWizard : public KConfigWizard
 {
   public:
     SloxWizard();

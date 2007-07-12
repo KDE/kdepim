@@ -20,7 +20,6 @@
 #ifndef GROUPWISEWIZARD_H
 #define GROUPWISEWIZARD_H
 
-#include "pimwizards_export.h"
 #include <kconfigwizard.h>
 
 class KLineEdit;
@@ -28,7 +27,7 @@ class QCheckBox;
 class QSpinBox;
 class QGroupBox;
 
-class PIMWIZARDS_EXPORT GroupwiseWizard : public KConfigWizard
+class GroupwiseWizard : public KConfigWizard
 {
     Q_OBJECT
   public:
