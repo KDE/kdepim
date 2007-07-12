@@ -35,7 +35,6 @@
 #include <pi-dlp.h>
 
 #include <qtimer.h>
-#include <q3vbox.h>
 #include <qlayout.h>
 #include <qcheckbox.h>
 #include <qlabel.h>
@@ -43,9 +42,7 @@
 #include <qdir.h>
 #include <qfile.h>
 #include <qfileinfo.h>
-#include <q3tl.h>
 #include <qstyle.h>
-//Added by qt3to4:
 
 #include <kdialog.h>
 #include <kglobal.h>

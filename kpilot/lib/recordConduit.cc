@@ -39,7 +39,6 @@
 
 #include <qtimer.h>
 #include <qfile.h>
-#include <q3tl.h>
 
 #include "pilotAppCategory.h"
 #include "pilotSerialDatabase.h"

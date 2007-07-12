@@ -37,20 +37,16 @@
 
 #include <qdir.h>
 #include <qfileinfo.h>
-#include <q3hbox.h>
 #include <qlabel.h>
 #include <qlayout.h>
 #include <qpushbutton.h>
 #include <qregexp.h>
 #include <qstringlist.h>
 #include <qtabwidget.h>
-#include <q3textview.h>
 #include <qtimer.h>
-//Added by qt3to4:
-#include <Q3ValueList>
 #include <QPixmap>
+#include <qtextedit.h>
 
-#include <k3activelabel.h>
 #include <kglobal.h>
 #include <kiconloader.h>
 #include <kcomponentdata.h>
@@ -202,8 +198,8 @@ QWidget *ConduitConfigBase::aboutPage(QWidget *parent, KAboutData *ad)
 
 
 
-	Q3ValueList<KAboutPerson> pl = p->authors();
-	Q3ValueList<KAboutPerson>::ConstIterator i;
+	QList<KAboutPerson> pl = p->authors();
+	QList<KAboutPerson>::ConstIterator i;
 
 	s = i18n("<b>Authors:</b> ");
 
