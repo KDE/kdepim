@@ -53,7 +53,6 @@
 #include <qthread.h>
 //Added by qt3to4:
 #include <QEvent>
-#include <QCustomEvent>
 #include <QApplication>
 
 #include <kconfig.h>
@@ -178,7 +177,7 @@ KPilotLink::~KPilotLink()
 	KPILOT_DELETE(fPilotSysInfo);
 }
 
-void KPilotLink::customEvent(QCustomEvent *e)
+void KPilotLink::customEvent(QEvent *e)
 {
 	if ((int)e->type() == EventTickleTimeout)
 	{

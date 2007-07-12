@@ -30,8 +30,6 @@
 */
 
 #include "kpilotlink.h"
-//Added by qt3to4:
-#include <QCustomEvent>
 
 
 class DeviceMap; ///< Globally tracks all devices that have a link assigned
@@ -118,7 +116,7 @@ public:
 	virtual void reset( const QString & );
 	virtual void close();
 	virtual void reset();
-		void customEvent(QCustomEvent *e);
+		void customEvent(QEvent *e);
 	virtual bool tickle();
 	virtual const KPilotCard *getCardInfo(int card);
 	virtual void endSync( EndOfSyncFlags f );

@@ -51,8 +51,6 @@
 #include <qtimer.h>
 #include <qdatetime.h>
 #include <qthread.h>
-//Added by qt3to4:
-#include <QCustomEvent>
 #include <QApplication>
 
 #include <kconfig.h>
@@ -676,7 +674,7 @@ KPilotDeviceLink::~KPilotDeviceLink()
 	 return fLinkStatus == AcceptedDevice;
 }
 
-void KPilotDeviceLink::customEvent(QCustomEvent *e)
+void KPilotDeviceLink::customEvent(QEvent *e)
 {
 	FUNCTIONSETUP;
 
