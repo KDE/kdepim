@@ -14,7 +14,11 @@
 
 # check if we are currently building kdepim
 if ( EXISTS ${CMAKE_SOURCE_DIR}/libkdepim/kdepim_export.h )
-	set( KODE_XML_COMPILER_EXECUTABLE ${CMAKE_BINARY_DIR}/kode/kxml_compiler/kxml_compiler.shell )
+	if (WIN32)
+		set( KODE_XML_COMPILER_EXECUTABLE ${CMAKE_BINARY_DIR}/bin/kxml_compiler.exe.bat )
+	else(WIN32)
+		set( KODE_XML_COMPILER_EXECUTABLE ${CMAKE_BINARY_DIR}/kode/kxml_compiler/kxml_compiler.shell )
+	endif(WIN32)
 	set( _KODE_XML_COMPILER_DEP kxml_compiler )
 else ( EXISTS ${CMAKE_SOURCE_DIR}/libkdepim/kdepim_export.h )
 	find_program( KODE_XML_COMPILER_EXECUTABLE NAME kxml_compiler PATHS
