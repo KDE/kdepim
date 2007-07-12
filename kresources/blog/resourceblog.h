@@ -158,7 +158,7 @@ class ResourceBlog : public ResourceCached
     QString mPassword;
     KBlog::APIBlog *mAPI;
 
-    Journal::List *mJournals;
+    Journal::List *mJournalList;
 
     bool mUseProgressManager;
     bool mUseCacheFile;

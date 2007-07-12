@@ -77,6 +77,10 @@ ResourceBlog::~ResourceBlog()
   close();
 
   delete mLock;
+
+  qDeleteAll( *mJournalList );
+  mJournalList->clear();
+  delete mJournalList;
 }
 
 void ResourceBlog::init()
@@ -84,6 +88,8 @@ void ResourceBlog::init()
   mProgress = 0;
 
   mAPI = 0;
+
+  mJournalList = new Journal::List();
 
   setType( "blog" );
 
@@ -200,8 +206,10 @@ bool ResourceBlog::doLoad( bool )
 {
   kDebug( 5800 ) << "ResourceBlog::load()" << endl;
 
+
   mCalendar.close();
 
+  /*
   if ( mUseCacheFile ) {
     disableChangeNotification();
     loadFromCache();
@@ -209,14 +217,15 @@ bool ResourceBlog::doLoad( bool )
   }
 
   clearChanges();
+  */
 
   emit resourceChanged( this );
 
+
   if ( mAPI ) {
-    if ( mLock->lock() ) { // FIXME: Replace listPostings?
+    if ( mLock->lock() ) {
       kDebug( 5800 ) << "Downloading blog posts from: " << mUrl << endl;
-      //ResourceCached::deleteAllJournals();
-      mAPI->setBlogId( "1" ); //FIXME
+      mAPI->setBlogId( "1" ); //FIXME Set the correct blogid
       mAPI->setDownloadCount( 0 ); // Download ALL the posts
       connect ( mAPI, SIGNAL( listedPosting( KBlog::BlogPosting & ) ),
                 this, SLOT( slotListedPosting( KBlog::BlogPosting & ) ));
@@ -224,8 +233,10 @@ bool ResourceBlog::doLoad( bool )
                 this, SLOT( slotListPostingsFinished() ));
 
       if ( mUseProgressManager ) {
-        //KPIM::ProgressManager::createProgressItem( KPIM::ProgressManager::getUniqueID(), i18n("Downloading blog posts") );
-        //mProgress->setProgress( 0 );
+        mProgress = KPIM::ProgressManager::createProgressItem(
+            KPIM::ProgressManager::getUniqueID(),
+            i18n("Downloading blog posts") );
+        mProgress->setProgress( 0 );
       }
 
       mAPI->listPostings();
@@ -248,24 +259,22 @@ void ResourceBlog::slotPercent( KJob *, unsigned long percent )
 void ResourceBlog::slotListedPosting( KBlog::BlogPosting &blogPosting )
 {
   kDebug( 5800 ) << "ResourceBlog::slotListedPosting()" << endl;
-  // TODO: Make sure I don't leak memory
   Journal *journalBlog = new Journal();
-  //journalBlog->setUid(blogPosting.postingId());
-  journalBlog->setDtStart(blogPosting.creationDateTime());
+  journalBlog->setUid("kblog-" + mUrl.url() + "-" + mUser + "-" +
+      blogPosting.postingId() );
   journalBlog->setSummary(blogPosting.title());
   journalBlog->setDescription(blogPosting.content());
-  //TODO: Use list of journals
-  ResourceCached::addJournal( journalBlog );
+  journalBlog->setDtStart(blogPosting.creationDateTime());
+  if (ResourceCached::addJournal( journalBlog )) {
+    kDebug( 5800 ) << "ResourceBlog::slotListedPosting(): Journal added"
+        << endl;
+    *mJournalList << journalBlog;
+  }
 }
 
 void ResourceBlog::slotListPostingsFinished()
 {
   kDebug( 5800 ) << "ResourceBlog::slotListPostingsFinished()" << endl;
-
-  mCalendar.close();
-  disableChangeNotification();
-  loadFromCache();
-  enableChangeNotification();
 
   emit resourceChanged( this );
 
@@ -276,13 +285,11 @@ void ResourceBlog::slotListPostingsFinished()
 
   mLock->unlock();
   emit resourceLoaded( this );
-  //kDebug( 5800 ) << "ResourceBlog::slotListPostingsFinished()" << rawJournals() << endl;
 }
 
 
 bool ResourceBlog::doSave( bool )
 {
-  /*
   kDebug( 5800 ) << "ResourceBlog::save()" << endl;
 
   if ( readOnly() || !hasChanges() ) {
@@ -290,11 +297,11 @@ bool ResourceBlog::doSave( bool )
     return true;
   }
 
-  mChangedIncidences = allChanges();
+  //mChangedIncidences = allChanges();
 
   saveToCache();
-  // TODO: Autosave on adding journal
-  */
+  emit resourceSaved( this );
+
   return true;
 }
 
@@ -337,7 +344,6 @@ bool ResourceBlog::setValue( const QString &key, const QString &value )
     return ResourceCached::setValue( key, value );
   }
 }
-
 
 bool ResourceBlog::addJournal( Journal *journal )
 {
