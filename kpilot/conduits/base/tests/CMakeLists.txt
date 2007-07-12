@@ -4,24 +4,42 @@ include_directories(
 
 MACRO( RECORD_CONDUIT_UNIT_TESTS )
 	FOREACH( _testname ${ARGN} )
-		kde4_add_unit_test( ${_testname} ${_testname}.cc )
-		target_link_libraries( ${_testname} conduit_base ${QT_QTTEST_LIBRARY} )
+		kde4_add_unit_test( ${_testname} ${_testname}.cc ${${_testname}_SRCS} )
+		target_link_libraries( ${_testname} 
+			conduit_base
+			testlib
+			${QT_QTTEST_LIBRARY} 
+		)
 	ENDFOREACH( _testname )
 ENDMACRO( RECORD_CONDUIT_UNIT_TESTS )
 
 MACRO( RECORD_CONDUIT_EXECUTABLE_TESTS )
 	FOREACH( _testname ${ARGN} )
 		kde4_add_test_executable( ${_testname} ${_testname}.cc )
-		target_link_libraries( ${_testname} conduit_base ${QT_QTTEST_LIBRARY} )
+		target_link_libraries( ${_testname} 
+			conduit_base
+			testlib
+			${QT_QTTEST_LIBRARY} 
+		)
 	ENDFOREACH( _testname )
 ENDMACRO( RECORD_CONDUIT_EXECUTABLE_TESTS )
+
+set(testlib_SRCS
+	testrecord.cc
+	testdataproxy.cc
+)
+
+kde4_add_library(testlib SHARED ${testlib_SRCS})
+target_link_libraries(testlib conduit_base)
 
 RECORD_CONDUIT_EXECUTABLE_TESTS(
 	idmappingxmlsourcetest
 	idmappingtest
+	dataproxytest
 )
 
 RECORD_CONDUIT_UNIT_TESTS (
 	idmappingxmlsourcetest
 	idmappingtest
+	dataproxytest
 )
