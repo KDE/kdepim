@@ -266,7 +266,8 @@ bool InternalEditorAction::queryUseKPilotChanges(QString dbName, recordid_t id, 
 		{
 			QLabel*tmpW = new QLabel( i18n("To view and edit the record data, please install a hex editor (e.g. khexedit from kdeutils)."), page );
 			tmpW->setBackgroundMode( Qt::PaletteMid );
-			tmpW->setAlignment( Qt::AlignHCenter | Qt::AlignVCenter | Qt::TextWordWrap);
+			tmpW->setAlignment( Qt::AlignHCenter | Qt::AlignVCenter );
+			tmpW->setWordWrap( true );
 			tmpW->setFrameShape( Q3Frame::Panel );
 			tmpW->setFrameShadow( Q3Frame::Sunken );
 			hexEdit = tmpW;
@@ -294,7 +295,8 @@ bool InternalEditorAction::queryUseKPilotChanges(QString dbName, recordid_t id, 
 		{
 			QLabel*tmpW = new QLabel( i18n("To view and edit the record data, please install a hex editor (e.g. khexedit from kdeutils)."), page );
 			tmpW->setBackgroundMode( Qt::PaletteMid );
-			tmpW->setAlignment( Qt::AlignHCenter | Qt::AlignVCenter | Qt::TextWordWrap);
+			tmpW->setAlignment( Qt::AlignHCenter | Qt::AlignVCenter );
+			tmpW->setWordWrap( true );
 			tmpW->setFrameShape( Q3Frame::Panel );
 			tmpW->setFrameShadow( Q3Frame::Sunken );
 			hexEdit = tmpW;

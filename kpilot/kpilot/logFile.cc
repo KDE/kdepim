@@ -96,7 +96,7 @@ void LogFile::logEndSync()
 	if (fSyncing) 
 	{
 		logMessage(i18n("HotSync finished."));
-		fLogStream.unsetDevice();
+		fLogStream.setDevice(0);
 		if (fOutfile) fOutfile->close();
 		KPILOT_DELETE(fOutfile)
 		fSyncing=false;

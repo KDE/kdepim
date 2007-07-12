@@ -209,7 +209,8 @@ void DBRecordEditor::initWidgets()
 	{
 		QLabel*tmpW = new QLabel( i18n("To view and edit the record data, please install a hex editor (e.g. kbytesedit from kdeutils)."), fWidget );
 		tmpW->setBackgroundMode( Qt::PaletteMid );
-		tmpW->setAlignment( Qt::AlignHCenter | Qt::AlignVCenter | Qt::TextWordWrap);
+		tmpW->setAlignment( Qt::AlignHCenter | Qt::AlignVCenter );
+		tmpW->setWordWrap( true );
 		tmpW->setFrameShape( Q3Frame::Panel );
 		tmpW->setFrameShadow( Q3Frame::Sunken );
 		fRecordData = tmpW;

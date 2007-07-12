@@ -408,7 +408,7 @@ void MemoWidget::updateWidget()
 	FUNCTIONSETUP;
 	if (!isVisible() || !d->fMemoAppInfo ) return;
 
-	if (fCatList->currentItem() == -1)
+	if (fCatList->currentIndex() == -1)
 	{
 #ifdef DEBUG
 		DEBUGKPILOT << fname << ": No category selected.\n";
@@ -539,7 +539,7 @@ void MemoWidget::saveChangedMemo()
 	if (!isVisible()) return;
 
 	if (-1 == lastSelectedMemo) return;
-	if (!fTextWidget->isModified()) return;
+	if (!fTextWidget->document()->isModified()) return;
 
 #ifdef DEBUG
 	DEBUGKPILOT << fname
@@ -624,7 +624,7 @@ void MemoWidget::slotImportMemo()
 		}
 
 		QTextStream stream(&importFile);
-		QString memoText = stream.read();
+		QString memoText = stream.readAll();
 		addMemo(memoText, currentCatID);
 	}
 }

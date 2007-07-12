@@ -70,7 +70,8 @@ DBAppInfoEditor::DBAppInfoEditor(char*appInfoData, int l, QWidget *parent) :
 	{
 		QLabel*tmpW = new QLabel( i18n("To view the Application info block data, please install a hex editor (e.g. khexedit from kdeutils)."), this );
 		tmpW->setBackgroundMode( Qt::PaletteMid );
-		tmpW->setAlignment( Qt::AlignHCenter | Qt::AlignVCenter | Qt::TextWordWrap);
+		tmpW->setAlignment( Qt::AlignHCenter | Qt::AlignVCenter );
+		tmpW->setWordWrap( true );
 		tmpW->setFrameShape( Q3Frame::Panel );
 		tmpW->setFrameShadow( Q3Frame::Sunken );
 		fAppInfoEdit = tmpW;

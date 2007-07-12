@@ -287,12 +287,12 @@ void GenericDBWidget::slotDBType(int mode)
 	switch (mode)
 	{
 		case 1:
-			dir.setNameFilter(CSL1("*.prc")); break;
+			dir.setNameFilters(QStringList() << CSL1("*.prc")); break;
 		case 2:
-			dir.setNameFilter(CSL1("*.pdb")); break;
+			dir.setNameFilters(QStringList() << CSL1("*.pdb")); break;
 		case 0:
 		default:
-			dir.setNameFilter(CSL1("*.pdb;*.prc")); break;
+			dir.setNameFilters(QStringList() << CSL1("*.pdb;*.prc")); break;
 	}
 	QStringList l = dir.entryList();
 	fDBList->insertStringList(l);
