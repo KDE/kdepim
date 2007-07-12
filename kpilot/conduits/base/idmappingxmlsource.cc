@@ -1,5 +1,7 @@
-/*
-** Copyright (C) 2006 Bertjan Broeksema <bbroeksema@bluebottle.com>
+/* idmappingxmlsource.cc			KPilot
+**
+** Copyright (C) 2007 by Bertjan Broeksema
+** Copyright (C) 2007 by Jason "vanRijn" Kasper
 */
 
 /*

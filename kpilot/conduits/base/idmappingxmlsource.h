@@ -1,7 +1,9 @@
-#ifndef _KPILOT_IDMAPPERXML_H
-#define _KPILOT_IDMAPPERXML_H
-/*
-** Copyright (C) 2006 Bertjan Broeksema <bbroeksema@bluebottle.com>
+#ifndef IDMAPPERXMLSOURCE_H
+#define IDMAPPERXMLSOURCE_H
+/* idmappingxmlsource.h			KPilot
+**
+** Copyright (C) 2007 by Bertjan Broeksema
+** Copyright (C) 2007 by Jason "vanRijn" Kasper
 */
 
 /*
