@@ -30,8 +30,7 @@
 #include <qtimer.h>
 #include <qlayout.h>
 #include <qlabel.h>
-//Added by qt3to4:
-#include <Q3GridLayout>
+#include <QGridLayout>
 #include <Q3Frame>
 #include <kmessagebox.h>
 #include <kdialog.h>
@@ -218,7 +217,8 @@ bool InternalEditorAction::queryUseKPilotChanges(QString dbName, recordid_t id, 
 
 	QWidget*page=new QWidget(resdlg);
 	resdlg->setMainWidget(page);
-	Q3GridLayout*layout = new Q3GridLayout( page, 1, 1);
+	QGridLayout*layout = new QGridLayout( page, 1, 1);
+	layout->setSpacing(0);
 
 	QLabel *label=new QLabel(dialogText, page);
 	label->setWordWrap(true);

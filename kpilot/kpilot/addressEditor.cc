@@ -40,8 +40,6 @@
 #endif
 #ifndef QLABEL_H
 #include <qlabel.h>
-//Added by qt3to4:
-#include <Q3GridLayout>
 #include <QFrame>
 #endif
 #ifndef _KDEBUG_H
@@ -180,7 +178,9 @@ void AddressEditor::initLayout()
 
 	QFrame *p = new QFrame();
 	setMainWidget(p);
-	Q3GridLayout *grid = new Q3GridLayout(p, 10, 5, 0, SPACING);
+	QGridLayout *grid = new QGridLayout(p, 10, 5);
+	grid->setMargin(0);
+	grid->setSpacing(SPACING);
 
 	QLabel *t;
 

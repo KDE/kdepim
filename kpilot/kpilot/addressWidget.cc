@@ -51,8 +51,6 @@
 #include <q3textview.h>
 #include <qtextcodec.h>
 #include <qregexp.h>
-//Added by qt3to4:
-#include <Q3GridLayout>
 
 #include <kmessagebox.h>
 #include <kdebug.h>
@@ -208,7 +206,8 @@ void AddressWidget::setupWidget()
 	FUNCTIONSETUP;
 
 	QLabel *label;
-	Q3GridLayout *grid = new Q3GridLayout(this, 6, 4, SPACING);
+	QGridLayout *grid = new QGridLayout(this, 6, 4);
+	grid->setMargin(SPACING);
 
 	fCatList = new QComboBox(this);
 	grid->addWidget(fCatList, 0, 1);

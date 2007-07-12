@@ -47,8 +47,6 @@
 #include <qlabel.h>
 #include <qdatetime.h>
 #include <q3ptrlist.h>
-//Added by qt3to4:
-#include <Q3GridLayout>
 #include <QComboBox>
 #include <kmessagebox.h>
 #include <kfiledialog.h>
@@ -224,7 +222,8 @@ void MemoWidget::setupWidget()
 
 	QLabel *label = NULL;
 	QPushButton *button = NULL;
-	Q3GridLayout *grid = new Q3GridLayout(this, 5, 4, SPACING);
+	QGridLayout *grid = new QGridLayout(this, 5, 4);
+	grid->setMargin(SPACING);
 	QString wt;
 
 	fCatList = new QComboBox(this);

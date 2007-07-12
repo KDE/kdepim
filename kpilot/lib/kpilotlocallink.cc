@@ -92,7 +92,7 @@ unsigned int KPilotLocalLink::findAvailableDatabases( KPilotLocalLink::Private &
 	// Use this to fake indexes in the list of DBInfo structs
 	unsigned int counter = 0;
 
-	QStringList dbs = d.entryList( CSL1("*.pdb"), QDir::Files | QDir::NoSymLinks | QDir::Readable );
+	QStringList dbs = d.entryList( QStringList() << CSL1("*.pdb"), QDir::Files | QDir::NoSymLinks | QDir::Readable );
 	for ( QStringList::ConstIterator i = dbs.begin(); i != dbs.end() ; ++i)
 	{
 		struct DBInfo dbi;
@@ -325,13 +325,13 @@ KPilotLocalLink::~KPilotLocalLink()
 		return false;
 	}
 
-	const Q_ULONG BUF_SIZ = 8192 ;
+	const qint64 BUF_SIZ = 8192 ;
 	char buf[BUF_SIZ];
-	Q_LONG r;
+	qint64 r;
 
-	while ( (r=in.readBlock(buf,BUF_SIZ))>0 )
+	while ( (r=in.read(buf,BUF_SIZ))>0 )
 	{
-		out.writeBlock(buf,r);
+		out.write(buf,r);
 	}
 	out.flush();
 	in.close();

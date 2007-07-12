@@ -41,7 +41,7 @@
 #include <qdir.h>
 #include <qregexp.h>
 #include <q3listview.h>
-#include <Q3GridLayout>
+#include <QGridLayout>
 
 #include <k3listbox.h>
 #include <k3listview.h>
@@ -76,7 +76,8 @@ GenericDBWidget::GenericDBWidget(QWidget *parent, const QString &dbpath) :
 
 void GenericDBWidget::setupWidget()
 {
-	Q3GridLayout *g = new Q3GridLayout( this, 1, 1, SPACING);
+	QGridLayout *g = new QGridLayout( this, 1, 1 );
+	g->setMargin(SPACING);
 
 	fDBList = new K3ListBox( this );
 	g->addWidget( fDBList, 0, 0 );
@@ -86,7 +87,7 @@ void GenericDBWidget::setupWidget()
 	fDBType->insertItem( i18n( "Only Applications (*.prc)" ) );
 	fDBType->insertItem( i18n( "Only Databases (*.pdb)" ) );
 
-	Q3GridLayout *g1 = new Q3GridLayout( 0, 1, 1);
+	QGridLayout *g1 = new QGridLayout( 0, 1, 1);
 	fDBInfo = new KTextEdit( this );
 	fDBInfo->setSizePolicy( QSizePolicy( (QSizePolicy::SizeType)3, (QSizePolicy::SizeType)0, 0, 0, fDBInfo->sizePolicy().hasHeightForWidth() ) );
 	fDBInfo->setReadOnly( TRUE );
@@ -96,7 +97,7 @@ void GenericDBWidget::setupWidget()
 	fAppInfoButton = new KPushButton( i18n( "&Application Info Block (Categories etc.)" ), this );
 	g1->addWidget( fAppInfoButton, 2, 0 );
 
-	Q3GridLayout *g2 = new Q3GridLayout( 0, 1, 1);
+	QGridLayout *g2 = new QGridLayout( 0, 1, 1);
 	fRecordList = new K3ListView( this );
 	g2->addMultiCellWidget( fRecordList, 0, 0, 0, 2 );
 	fRecordList->addColumn(i18n("Rec. Nr."));

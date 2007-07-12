@@ -44,9 +44,7 @@
 #include <q3multilineedit.h>
 #include <qpixmap.h>
 #include <q3popupmenu.h>
-//Added by qt3to4:
 #include <QDropEvent>
-#include <Q3GridLayout>
 #include <Q3ValueList>
 #include <QMouseEvent>
 #include <QEvent>
@@ -72,7 +70,8 @@ FileInstallWidget::FileInstallWidget(QWidget * parent,
 {
 	FUNCTIONSETUP;
 
-	Q3GridLayout *grid = new Q3GridLayout(this, 5, 5, SPACING);
+	QGridLayout *grid = new QGridLayout(this, 5, 5);
+	grid->setMargin(SPACING);
 
 	QLabel *label = new QLabel(i18n("Files to install:"), this);
 

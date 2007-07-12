@@ -34,8 +34,6 @@
 #include <qlayout.h>
 #include <qdir.h>
 #include <qpushbutton.h>
-//Added by qt3to4:
-#include <Q3GridLayout>
 
 #include <k3listview.h>
 #include <kdatepicker.h>
@@ -48,7 +46,8 @@ DatebookWidget::DatebookWidget(QWidget *parent, const QString &dbpath) :
 {
 	FUNCTIONSETUP;
 
-	Q3GridLayout *g = new Q3GridLayout(this,1,1,SPACING);
+	QGridLayout *g = new QGridLayout(this,1,1);
+	g->setSpacing(SPACING);
 
 	fDatePicker = new KDatePicker( this);
 	fDatePicker->setSizePolicy( QSizePolicy( (QSizePolicy::SizeType)4, (QSizePolicy::SizeType)5, 0, 0, fDatePicker->sizePolicy().hasHeightForWidth() ) );

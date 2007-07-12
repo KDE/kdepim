@@ -36,7 +36,7 @@
 #include <qpushbutton.h>
 #include <qlayout.h>
 //Added by qt3to4:
-#include <Q3GridLayout>
+#include <QGridLayout>
 #include <Q3Frame>
 
 #include <kmessagebox.h>
@@ -125,7 +125,10 @@ void DBRecordEditor::initWidgets()
 {
 	// FUNCTIONSETUP
 
-	DBRecordEditorBaseLayout = new Q3GridLayout( fWidget, 1, 1, 11, 6, "DBRecordEditorBaseLayout");
+	DBRecordEditorBaseLayout = new QGridLayout( fWidget, 1, 1 );
+	DBRecordEditorBaseLayout->setMargin( 11 );
+	DBRecordEditorBaseLayout->setSpacing( 6 );
+	DBRecordEditorBaseLayout->setObjectName( QLatin1String( "DBRecordEditorBaseLayout" ) );
 
 	fRecordIndexLabel = new QLabel( fWidget );
 	fRecordIndexLabel->setObjectName( QLatin1String( "fRecordIndexLabel" ) );
@@ -153,7 +156,7 @@ void DBRecordEditor::initWidgets()
 	fFlagsGroup->setColumnLayout(0, Qt::Vertical );
 	fFlagsGroup->layout()->setSpacing( 6 );
 	fFlagsGroup->layout()->setMargin( 11 );
-	fFlagsGroupLayout = new Q3GridLayout( fFlagsGroup->layout() );
+	fFlagsGroupLayout = new QGridLayout( fFlagsGroup->layout() );
 	fFlagsGroupLayout->setAlignment( Qt::AlignTop );
 
 	fDirty = new QCheckBox( fFlagsGroup );
