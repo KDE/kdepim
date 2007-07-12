@@ -60,8 +60,6 @@ include_directories(
 	${QT_INCLUDE_DIR} 
 	${QT_QTDBUS_INCLUDE_DIR})
 
-add_definitions (-DQT3_SUPPORT -DQT3_SUPPORT_WARNINGS)
-
 # Only build stuff if p-l is found
 if (PILOTLINK_FOUND)
 # tell cmake to process CMakeLists.txt in that subdirectory

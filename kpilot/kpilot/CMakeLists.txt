@@ -6,6 +6,8 @@ include_directories(
 )
 add_subdirectory(icons)
 
+add_definitions (-DQT3_SUPPORT -DQT3_SUPPORT_WARNINGS)
+
 ###
 #
 # Settings (KConfigXT) shared between various parts of KPilot
