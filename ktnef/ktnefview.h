@@ -22,10 +22,9 @@
 #include <q3ptrlist.h>
 #include <QResizeEvent>
 
-#include "ktnefview_export.h"
 #include <ktnef/ktnefattach.h>
 
-class KTNEFVIEW_EXPORT KTNEFView : public K3ListView
+class KTNEFView : public K3ListView
 {
 	Q_OBJECT
 
