@@ -1,7 +1,5 @@
 include_directories(${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_CURRENT_SOURCE_DIR})
 
-add_definitions (-DQT3_SUPPORT -DQT3_SUPPORT_WARNINGS)
-
 set(lib_SRCS
 	options.cc
 	plugin.cc
