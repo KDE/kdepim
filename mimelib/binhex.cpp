@@ -420,13 +420,13 @@ DwBinhex::DwBinhex()
 {
     Initialize();
 }
-
+#endif // 0
 
 DwBinhex::~DwBinhex()
 {
 }
 
-
+#if 0
 void DwBinhex::Initialize()
 {
     memset(mFileName, 0, sizeof(mFileName));

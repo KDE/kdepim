@@ -49,7 +49,6 @@
 
 
 #ifdef DW_WIN32
-#warning Win32 socket defines: This compiles, but does it work?
 #define ETIMEDOUT WSAETIMEDOUT
 #define ENOBUFS WSAENOBUFS
 #define EPROTONOSUPPORT WSAEPROTONOSUPPORT
