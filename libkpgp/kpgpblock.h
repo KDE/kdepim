@@ -27,6 +27,10 @@
 
 namespace Kpgp {
 
+#ifdef ERROR
+# undef ERROR
+#endif
+
 enum BlockType {
   UnknownBlock = -1,        // BEGIN PGP ???
   NoPgpBlock = 0,
