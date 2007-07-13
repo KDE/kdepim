@@ -423,10 +423,12 @@ int EditAddressees::addAddressee( const KABC::Addressee& addressee, int start)
                 }
             }
             QString num_type;
-            if((*it).number().contains("+") ) num_type="145"; else num_type="129";
-            buffer=p_device->sendATCommand(this, command.arg(i_index).arg( encodeString((*it).number())).arg(encodeString(addressee.formattedName())).arg(num_type));
+	    QString s_number=(*it).number();
+            if(s_number.contains("+") ) num_type="145"; else num_type="129";
+	    s_number=s_number.remove(' ').remove('(').remove(')');
+            buffer=p_device->sendATCommand(this, command.arg(i_index).arg( encodeString( s_number) ).arg(encodeString(addressee.formattedName())).arg(num_type));
             if( KMobileTools::SerialManager::ATError(buffer) && engine->config()->at_encoding().contains("UCS2", Qt::CaseSensitive ) )
-                buffer=p_device->sendATCommand(this, command.arg(i_index).arg( (*it).number()).arg(encodeString(addressee.formattedName())).arg(num_type));
+                buffer=p_device->sendATCommand(this, command.arg(i_index).arg( s_number ).arg(encodeString(addressee.formattedName())).arg(num_type));
             if(KMobileTools::SerialManager::ATError(buffer)) i_retry++; else i_retry=4;
         }
         curProgress++;
