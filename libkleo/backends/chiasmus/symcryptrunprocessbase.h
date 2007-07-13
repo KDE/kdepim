@@ -33,15 +33,13 @@
 #ifndef __KLEO_BACKEND_CHIASMUS__SYMCRYPTRUNPROCESSBASE_H__
 #define __KLEO_BACKEND_CHIASMUS__SYMCRYPTRUNPROCESSBASE_H__
 
-#include <k3process.h>
-
-#include <q3cstring.h>
+#include <kprocess.h>
 
 class QString;
 
 namespace Kleo {
 
-class SymCryptRunProcessBase : public K3Process {
+class SymCryptRunProcessBase : public KProcess {
   Q_OBJECT
 public:
   enum Operation {
@@ -53,18 +51,15 @@ public:
                           QObject * parent=0 );
   ~SymCryptRunProcessBase();
 
-  bool launch( const QByteArray & input, RunMode rm=NotifyOnExit );
+  bool startBlock(const QByteArray & input);
+  bool startNotify(const QByteArray & input);
 
   const QByteArray & output() const { return mOutput; }
   const QString & stdErr() const { return mStderr; }
 
-public slots:
-  /*! upgraded to slot */
-  void closeStdin() { K3Process::closeStdin(); }
-
 private slots:
-  void slotReceivedStdout( K3Process *, char *, int );
-  void slotReceivedStderr( K3Process *, char *, int );
+  void slotReceivedStdout();
+  void slotReceivedStderr();
 
 private:
   void addOptions();

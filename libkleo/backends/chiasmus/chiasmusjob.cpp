@@ -110,27 +110,25 @@ GpgME::Error Kleo::ChiasmusJob::start() {
   if ( const GpgME::Error err = setup() )
     return mError = err;
 
-  connect( mSymCryptRun, SIGNAL(processExited(K3Process*)),
-           this, SLOT(slotProcessExited(K3Process*)) );
+  connect( mSymCryptRun, SIGNAL(finished(int,QProcess::ExitStatus)),
+           this, SLOT(slotProcessExited(int, QProcess::ExitStatus)) );
 
-  if ( !mSymCryptRun->launch( mInput ) )
+  if ( !mSymCryptRun->startNotify( mInput ) )
     return mError = gpg_error( GPG_ERR_ENOENT ); // what else?
 
   d.disable();
   return mError = 0;
 }
 
-GpgME::Error Kleo::ChiasmusJob::slotProcessExited( K3Process * proc ) {
-  if ( proc != mSymCryptRun )
-    mError = gpg_error( GPG_ERR_INTERNAL );
-  else if ( mCanceled )
+GpgME::Error Kleo::ChiasmusJob::slotProcessExited(int exitCode, QProcess::ExitStatus exitStatus) {
+  if ( mCanceled )
     mError = gpg_error( GPG_ERR_CANCELED );
   else if ( mTimeout )
     mError = gpg_error( GPG_ERR_TIMEOUT );
-  else if ( !proc->normalExit() )
+  else if ( exitStatus==QProcess::CrashExit )
     mError = gpg_error( GPG_ERR_GENERAL );
   else
-    switch ( proc->exitStatus() ) {
+    switch ( exitCode ) {
     case 0: // success
       mOutput = mSymCryptRun->output();
       mError = 0;
@@ -172,12 +170,12 @@ GpgME::Error Kleo::ChiasmusJob::exec() {
   if ( const GpgME::Error err = setup() )
     return mError = err;
 
-  if ( !mSymCryptRun->launch( mInput, K3Process::Block ) ) {
+  if ( !mSymCryptRun->startBlock( mInput) ) {
     delete mSymCryptRun; mSymCryptRun = 0;
     return mError = gpg_error( GPG_ERR_ENOENT ); // what else?
   }
 
-  const GpgME::Error err = slotProcessExited( mSymCryptRun );
+  const GpgME::Error err = slotProcessExited( mSymCryptRun->exitCode(),mSymCryptRun->exitStatus() );
   delete mSymCryptRun; mSymCryptRun = 0;
   return err;
 }
