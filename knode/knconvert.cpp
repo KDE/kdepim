@@ -29,7 +29,6 @@
 #include <kmessagebox.h>
 #include <kstandarddirs.h>
 #include <klineedit.h>
-#include <k3process.h>
 #include <kcomponentdata.h>
 #include <kpushbutton.h>
 
@@ -187,15 +186,14 @@ void KNConvert::slotStart()
     }
 
     QString dataDir=KStandardDirs::locateLocal("data","knode/");
-    t_ar=new K3Process;
+    t_ar=new KProcess;
     *t_ar << "tar";
     *t_ar << "-cz" << dataDir
           << "-f" << b_ackupPath->text();
-    connect(t_ar, SIGNAL(processExited(K3Process*)), this, SLOT(slotTarExited(K3Process*)));
-    if(!t_ar->start()) {
-      delete t_ar;
-      t_ar = 0;
-      slotTarExited(0);
+    connect(t_ar, SIGNAL(finished (int, QProcess::ExitStatus )), this, SLOT(slotTarExited(int, QProcess::ExitStatus )));
+    t_ar->start();
+    if(!t_ar->waitForStarted()) {
+      slotTarExited(t_ar->exitCode(), t_ar->exitStatus() );
     }
   }
   else
@@ -220,11 +218,11 @@ void KNConvert::slotBrowse()
 }
 
 
-void KNConvert::slotTarExited(K3Process *proc)
+void KNConvert::slotTarExited(int exitCode, QProcess::ExitStatus exitStatus )
 {
   bool success=true;
 
-  if(!proc || !proc->normalExit() || proc->exitStatus()!=0) {
+  if( (exitStatus == QProcess::CrashExit) || exitCode) {
     success=false;
     if(KMessageBox::Cancel==KMessageBox::warningContinueCancel(this, i18n("<b>The backup failed</b>; do you want to continue anyway?"))) {
 
