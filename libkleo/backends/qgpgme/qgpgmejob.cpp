@@ -34,6 +34,7 @@
 #include <config.h>
 #endif
 
+#define NOMINMAX    // to avoid creating of min/max macros when using msvc
 #include "qgpgmejob.h"
 #include "qgpgmeprogresstokenmapper.h"
 

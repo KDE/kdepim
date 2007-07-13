@@ -48,7 +48,8 @@
 #include <assert.h>
 #include <stdio.h>
 
-struct Kleo::GnuPGProcessBase::Private {
+class Kleo::GnuPGProcessBase::Private {
+public:
   Private() : useStatusFD( false ), statnot( 0 ) {
     statusFD[0] = statusFD[1] = -1;
   }

@@ -85,8 +85,8 @@ namespace Kleo {
     MaxSigningPreference = AskSigningWheneverPossible
   };
 
-  KLEO_EXPORT QString signingPreferenceToLabel( SigningPreference pref ) KLEO_EXPORT;
-  KLEO_EXPORT const char* signingPreferenceToString( SigningPreference pref ) KLEO_EXPORT;
+  KLEO_EXPORT QString signingPreferenceToLabel( SigningPreference pref );
+  KLEO_EXPORT const char* signingPreferenceToString( SigningPreference pref );
   KLEO_EXPORT SigningPreference stringToSigningPreference( const QString& str );
 }
 
