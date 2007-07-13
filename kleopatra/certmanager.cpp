@@ -68,7 +68,7 @@
 // KDE
 #include <kicon.h>
 #include <kfiledialog.h>
-#include <k3process.h>
+#include <kprocess.h>
 #include <kaction.h>
 #include <kapplication.h>
 #include <klocale.h>
@@ -897,10 +897,10 @@ void CertManager::slotCertificateImportResult( const GpgME::ImportResult & res )
    This slot is called when the dirmngr process that imports a
    certificate file exists.
 */
-void CertManager::slotDirmngrExited() {
-    if ( !mDirmngrProc->normalExit() )
+void CertManager::slotDirmngrExited(int exitCode, QProcess::ExitStatus exitStatus) {
+  if ( exitStatus == QProcess::CrashExit )
         KMessageBox::error( this, i18n( "The GpgSM process that tried to import the CRL file ended prematurely because of an unexpected error." ), i18n( "Certificate Manager Error" ) );
-    else if ( mDirmngrProc->exitStatus() )
+    else if ( exitCode )
       KMessageBox::error( this, i18n( "An error occurred when trying to import the CRL file. The output from GpgSM was:\n%1", mErrorbuffer ), i18n( "Certificate Manager Error" ) );
     else
       KMessageBox::information( this, i18n( "CRL file imported successfully." ), i18n( "Certificate Manager Information" ) );
@@ -957,10 +957,17 @@ bool CertManager::connectAndStartDirmngr( const char * slot, const char * proces
   assert( processname );
   assert( mDirmngrProc );
   mErrorbuffer.clear();
-  connect( mDirmngrProc, SIGNAL(processExited(K3Process*)), slot );
-  connect( mDirmngrProc, SIGNAL(receivedStderr(K3Process*,char*,int) ),
-           this, SLOT(slotStderr(K3Process*,char*,int)) );
-  if( !mDirmngrProc->start( K3Process::NotifyOnExit, K3Process::Stderr ) ) {
+
+  connect( mDirmngrProc, SIGNAL(finished( int, QProcess::ExitStatus)), slot );
+
+  connect( mDirmngrProc, SIGNAL(readyReadStandardError () ),
+           this, SLOT(slotStderr() ) );
+  mDirmngrProc->setOutputChannelMode(KProcess::OnlyStderrChannel);
+
+  mDirmngrProc->start();
+
+  const bool ok = mDirmngrProc->waitForStarted();
+  if( !ok ) {
     delete mDirmngrProc; mDirmngrProc = 0;
     KMessageBox::error( this, i18n( "Unable to start %1 process. Please check your installation.", processname ), i18n( "Certificate Manager Error" ) );
     return false;
@@ -972,7 +979,7 @@ void CertManager::startImportCRL( const QString& filename, bool isTempFile )
 {
   assert( !mDirmngrProc );
   mImportCRLTempFile = isTempFile ? filename : QString();
-  mDirmngrProc = new K3Process();
+  mDirmngrProc = new KProcess();
   *mDirmngrProc << "gpgsm" << "--call-dirmngr" << "loadcrl" << filename;
   if ( !connectAndStartDirmngr( SLOT(slotDirmngrExited()), "gpgsm" ) ) {
     updateImportActions( true );
@@ -983,14 +990,14 @@ void CertManager::startImportCRL( const QString& filename, bool isTempFile )
 
 void CertManager::startClearCRLs() {
   assert( !mDirmngrProc );
-  mDirmngrProc = new K3Process();
+  mDirmngrProc = new KProcess();
   *mDirmngrProc << "dirmngr" << "--flush";
   //*mDirmngrProc << "gpgsm" << "--call-dimngr" << "flush"; // use this once it's implemented!
   connectAndStartDirmngr( SLOT(slotClearCRLsResult()), "dirmngr" );
 }
 
-void CertManager::slotStderr( K3Process*, char* buf, int len ) {
-  mErrorbuffer += QString::fromLocal8Bit( buf, len );
+void CertManager::slotStderr() {
+  mErrorbuffer += QString::fromLocal8Bit( mDirmngrProc->readAllStandardError () );
 }
 
 /**
@@ -1016,9 +1023,9 @@ void CertManager::slotClearCRLs() {
 
 void CertManager::slotClearCRLsResult() {
   assert( mDirmngrProc );
-  if ( !mDirmngrProc->normalExit() )
+  if ( mDirmngrProc->exitStatus() == QProcess::CrashExit )
     KMessageBox::error( this, i18n( "The DirMngr process that tried to clear the CRL cache ended prematurely because of an unexpected error." ), i18n( "Certificate Manager Error" ) );
-  else if ( mDirmngrProc->exitStatus() )
+  else if ( mDirmngrProc->exitCode() )
     KMessageBox::error( this, i18n( "An error occurred when trying to clear the CRL cache. The output from DirMngr was:\n%1", mErrorbuffer ), i18n( "Certificate Manager Error" ) );
   else
     KMessageBox::information( this, i18n( "CRL cache cleared successfully." ), i18n( "Certificate Manager Information" ) );

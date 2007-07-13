@@ -39,7 +39,7 @@
 #include <kurl.h>
 #include <q3ptrlist.h>
 #include <QLabel>
-
+#include <QProcess>
 #include <set>
 #include <string>
 
@@ -54,7 +54,7 @@ class KJob;
 namespace KIO {
   class Job;
 }
-class K3Process;
+class KProcess;
 class KAction;
 
 class CRLView;
@@ -114,8 +114,8 @@ private slots:
     void importCRLFromLDAP();
     void slotImportCRLJobFinished( KJob * );
 
-    void slotDirmngrExited();
-    void slotStderr( K3Process*, char*, int );
+    void slotDirmngrExited(int exitCode, QProcess::ExitStatus exitStatus);
+    void slotStderr();
 
     void slotToggleRemote(int idx);
     void slotToggleHierarchicalView( bool );
@@ -179,7 +179,7 @@ private:
     Kleo::ProgressBar * mProgressBar;
     QLabel * mStatusLabel;
 
-    K3Process * mDirmngrProc;
+    KProcess * mDirmngrProc;
     QString mErrorbuffer;
     Q3PtrList<Kleo::KeyListViewItem> mItemsToDelete;
     KUrl::List mURLsToImport;
