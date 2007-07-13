@@ -169,8 +169,8 @@ pabfields_t::pabfields_t(pabrec & R, QWidget * /*parent*/)
     _order=R.read(mb);mb+=sizeof(_order);
 
     {mapitag_t mt(_tag,_order);
-     tags[tags.size()]=mt;
-     context_tags[context_tags.size()]=mt;
+     tags[(int)tags.size()]=mt;
+     context_tags[(int)context_tags.size()]=mt;
     }
   }
   tags.sort();
