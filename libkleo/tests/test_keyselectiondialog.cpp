@@ -29,7 +29,9 @@
     your version.
 */
 
+#ifdef HAVE_CONFIG_H
 #include <config.h>
+#endif
 
 #include <ui/keyselectiondialog.h>
 #include <gpgmepp/key.h>

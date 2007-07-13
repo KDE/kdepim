@@ -56,8 +56,7 @@
 #include <kglobal.h>
 #include <kconfiggroup.h>
 
-class Kleo::DN::Private {
-public:
+struct Kleo::DN::Private {
   Private() : mRefCount( 0 ) {}
   Private( const Private & other )
     : attributes( other.attributes ),

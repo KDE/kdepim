@@ -1,4 +1,4 @@
-include_directories( ${CMAKE_BINARY_DIR}/libkleo/backends/chiasmus/ ${GPGME_INCLUDES} )
+include_directories( ${CMAKE_BINARY_DIR}/kleo/backends/chiasmus/ ${GPGME_INCLUDES} )
 
 add_definitions (-DQT3_SUPPORT -DQT3_SUPPORT_WARNINGS)
 
@@ -9,70 +9,70 @@ add_subdirectory( tests )
 
 ########### next target ###############
 set(libkleopatra_backend_qgpgme_SRCS
-	${CMAKE_SOURCE_DIR}/libkleo/backends/qgpgme/gnupgprocessbase.cpp 
-	${CMAKE_SOURCE_DIR}/libkleo/backends/qgpgme/qgpgmeprogresstokenmapper.cpp 
-	${CMAKE_SOURCE_DIR}/libkleo/backends/qgpgme/qgpgmebackend.cpp 
-	${CMAKE_SOURCE_DIR}/libkleo/backends/qgpgme/qgpgmejob.cpp 
-	${CMAKE_SOURCE_DIR}/libkleo/backends/qgpgme/qgpgmekeylistjob.cpp 
-	${CMAKE_SOURCE_DIR}/libkleo/backends/qgpgme/qgpgmekeygenerationjob.cpp 
-	${CMAKE_SOURCE_DIR}/libkleo/backends/qgpgme/qgpgmeimportjob.cpp 
-	${CMAKE_SOURCE_DIR}/libkleo/backends/qgpgme/qgpgmeexportjob.cpp 
-	${CMAKE_SOURCE_DIR}/libkleo/backends/qgpgme/qgpgmesecretkeyexportjob.cpp 
-	${CMAKE_SOURCE_DIR}/libkleo/backends/qgpgme/qgpgmedownloadjob.cpp 
-	${CMAKE_SOURCE_DIR}/libkleo/backends/qgpgme/qgpgmedeletejob.cpp 
-	${CMAKE_SOURCE_DIR}/libkleo/backends/qgpgme/qgpgmeencryptjob.cpp 
-	${CMAKE_SOURCE_DIR}/libkleo/backends/qgpgme/qgpgmedecryptjob.cpp 
-	${CMAKE_SOURCE_DIR}/libkleo/backends/qgpgme/qgpgmesignjob.cpp 
-	${CMAKE_SOURCE_DIR}/libkleo/backends/qgpgme/qgpgmeverifydetachedjob.cpp 
-	${CMAKE_SOURCE_DIR}/libkleo/backends/qgpgme/qgpgmeverifyopaquejob.cpp 
-	${CMAKE_SOURCE_DIR}/libkleo/backends/qgpgme/qgpgmesignencryptjob.cpp 
-	${CMAKE_SOURCE_DIR}/libkleo/backends/qgpgme/qgpgmedecryptverifyjob.cpp 
-	${CMAKE_SOURCE_DIR}/libkleo/backends/qgpgme/qgpgmecryptoconfig.cpp 
-	${CMAKE_SOURCE_DIR}/libkleo/backends/qgpgme/qgpgmerefreshkeysjob.cpp
+	${CMAKE_SOURCE_DIR}/kleo/backends/qgpgme/gnupgprocessbase.cpp 
+	${CMAKE_SOURCE_DIR}/kleo/backends/qgpgme/qgpgmeprogresstokenmapper.cpp 
+	${CMAKE_SOURCE_DIR}/kleo/backends/qgpgme/qgpgmebackend.cpp 
+	${CMAKE_SOURCE_DIR}/kleo/backends/qgpgme/qgpgmejob.cpp 
+	${CMAKE_SOURCE_DIR}/kleo/backends/qgpgme/qgpgmekeylistjob.cpp 
+	${CMAKE_SOURCE_DIR}/kleo/backends/qgpgme/qgpgmekeygenerationjob.cpp 
+	${CMAKE_SOURCE_DIR}/kleo/backends/qgpgme/qgpgmeimportjob.cpp 
+	${CMAKE_SOURCE_DIR}/kleo/backends/qgpgme/qgpgmeexportjob.cpp 
+	${CMAKE_SOURCE_DIR}/kleo/backends/qgpgme/qgpgmesecretkeyexportjob.cpp 
+	${CMAKE_SOURCE_DIR}/kleo/backends/qgpgme/qgpgmedownloadjob.cpp 
+	${CMAKE_SOURCE_DIR}/kleo/backends/qgpgme/qgpgmedeletejob.cpp 
+	${CMAKE_SOURCE_DIR}/kleo/backends/qgpgme/qgpgmeencryptjob.cpp 
+	${CMAKE_SOURCE_DIR}/kleo/backends/qgpgme/qgpgmedecryptjob.cpp 
+	${CMAKE_SOURCE_DIR}/kleo/backends/qgpgme/qgpgmesignjob.cpp 
+	${CMAKE_SOURCE_DIR}/kleo/backends/qgpgme/qgpgmeverifydetachedjob.cpp 
+	${CMAKE_SOURCE_DIR}/kleo/backends/qgpgme/qgpgmeverifyopaquejob.cpp 
+	${CMAKE_SOURCE_DIR}/kleo/backends/qgpgme/qgpgmesignencryptjob.cpp 
+	${CMAKE_SOURCE_DIR}/kleo/backends/qgpgme/qgpgmedecryptverifyjob.cpp 
+	${CMAKE_SOURCE_DIR}/kleo/backends/qgpgme/qgpgmecryptoconfig.cpp 
+	${CMAKE_SOURCE_DIR}/kleo/backends/qgpgme/qgpgmerefreshkeysjob.cpp
 	)
 
 
 set(libkleopatra_backend_chiasmus_SRCS 
-	${CMAKE_SOURCE_DIR}/libkleo/backends/chiasmus/config_data.c 
-	${CMAKE_SOURCE_DIR}/libkleo/backends/chiasmus/obtainkeysjob.cpp 
-	${CMAKE_SOURCE_DIR}/libkleo/backends/chiasmus/symcryptrunprocessbase.cpp 
-	${CMAKE_SOURCE_DIR}/libkleo/backends/chiasmus/chiasmusjob.cpp 
-	${CMAKE_SOURCE_DIR}/libkleo/backends/chiasmus/chiasmuslibrary.cpp 
-	${CMAKE_SOURCE_DIR}/libkleo/backends/chiasmus/chiasmusbackend.cpp
+	${CMAKE_SOURCE_DIR}/kleo/backends/chiasmus/config_data.c 
+	${CMAKE_SOURCE_DIR}/kleo/backends/chiasmus/obtainkeysjob.cpp 
+	${CMAKE_SOURCE_DIR}/kleo/backends/chiasmus/symcryptrunprocessbase.cpp 
+	${CMAKE_SOURCE_DIR}/kleo/backends/chiasmus/chiasmusjob.cpp 
+	${CMAKE_SOURCE_DIR}/kleo/backends/chiasmus/chiasmuslibrary.cpp 
+	${CMAKE_SOURCE_DIR}/kleo/backends/chiasmus/chiasmusbackend.cpp
 	)
 
 
 set(libkleopatra_core_SRCS
-   ${CMAKE_SOURCE_DIR}/libkleo/kleo/cryptobackend.cpp 
-   ${CMAKE_SOURCE_DIR}/libkleo/kleo/cryptobackendfactory.cpp 
-   ${CMAKE_SOURCE_DIR}/libkleo/kleo/enum.cpp 
-   ${CMAKE_SOURCE_DIR}/libkleo/kleo/dn.cpp 
-   ${CMAKE_SOURCE_DIR}/libkleo/kleo/job.cpp 
-   ${CMAKE_SOURCE_DIR}/libkleo/kleo/multideletejob.cpp 
-   ${CMAKE_SOURCE_DIR}/libkleo/kleo/hierarchicalkeylistjob.cpp 
-   ${CMAKE_SOURCE_DIR}/libkleo/kleo/kconfigbasedkeyfilter.cpp 
-   ${CMAKE_SOURCE_DIR}/libkleo/kleo/keyfiltermanager.cpp
+   ${CMAKE_SOURCE_DIR}/kleo/kleo/cryptobackend.cpp 
+   ${CMAKE_SOURCE_DIR}/kleo/kleo/cryptobackendfactory.cpp 
+   ${CMAKE_SOURCE_DIR}/kleo/kleo/enum.cpp 
+   ${CMAKE_SOURCE_DIR}/kleo/kleo/dn.cpp 
+   ${CMAKE_SOURCE_DIR}/kleo/kleo/job.cpp 
+   ${CMAKE_SOURCE_DIR}/kleo/kleo/multideletejob.cpp 
+   ${CMAKE_SOURCE_DIR}/kleo/kleo/hierarchicalkeylistjob.cpp 
+   ${CMAKE_SOURCE_DIR}/kleo/kleo/kconfigbasedkeyfilter.cpp 
+   ${CMAKE_SOURCE_DIR}/kleo/kleo/keyfiltermanager.cpp
    )
 
 set(libkleopatra_ui_SRCS
-   ${CMAKE_SOURCE_DIR}/libkleo/ui/kdhorizontalline.cpp 
-   ${CMAKE_SOURCE_DIR}/libkleo/ui/progressbar.cpp 
-   ${CMAKE_SOURCE_DIR}/libkleo/ui/progressdialog.cpp 
-   ${CMAKE_SOURCE_DIR}/libkleo/ui/keylistview.cpp 
-   ${CMAKE_SOURCE_DIR}/libkleo/ui/keyselectiondialog.cpp 
-   ${CMAKE_SOURCE_DIR}/libkleo/ui/keyrequester.cpp 
-   ${CMAKE_SOURCE_DIR}/libkleo/ui/keyapprovaldialog.cpp 
-   ${CMAKE_SOURCE_DIR}/libkleo/ui/backendconfigwidget.cpp 
-   ${CMAKE_SOURCE_DIR}/libkleo/ui/dnattributeorderconfigwidget.cpp 
-   ${CMAKE_SOURCE_DIR}/libkleo/ui/cryptoconfigmodule.cpp 
-   ${CMAKE_SOURCE_DIR}/libkleo/ui/cryptoconfigdialog.cpp 
-   ${CMAKE_SOURCE_DIR}/libkleo/ui/directoryserviceswidget.cpp 
-   ${CMAKE_SOURCE_DIR}/libkleo/ui/adddirectoryservicedialogimpl.cpp
+   ${CMAKE_SOURCE_DIR}/kleo/ui/kdhorizontalline.cpp 
+   ${CMAKE_SOURCE_DIR}/kleo/ui/progressbar.cpp 
+   ${CMAKE_SOURCE_DIR}/kleo/ui/progressdialog.cpp 
+   ${CMAKE_SOURCE_DIR}/kleo/ui/keylistview.cpp 
+   ${CMAKE_SOURCE_DIR}/kleo/ui/keyselectiondialog.cpp 
+   ${CMAKE_SOURCE_DIR}/kleo/ui/keyrequester.cpp 
+   ${CMAKE_SOURCE_DIR}/kleo/ui/keyapprovaldialog.cpp 
+   ${CMAKE_SOURCE_DIR}/kleo/ui/backendconfigwidget.cpp 
+   ${CMAKE_SOURCE_DIR}/kleo/ui/dnattributeorderconfigwidget.cpp 
+   ${CMAKE_SOURCE_DIR}/kleo/ui/cryptoconfigmodule.cpp 
+   ${CMAKE_SOURCE_DIR}/kleo/ui/cryptoconfigdialog.cpp 
+   ${CMAKE_SOURCE_DIR}/kleo/ui/directoryserviceswidget.cpp 
+   ${CMAKE_SOURCE_DIR}/kleo/ui/adddirectoryservicedialogimpl.cpp
 )
 
 kde4_add_ui_files(libkleopatra_ui_SRCS
-	${CMAKE_SOURCE_DIR}/libkleo/ui/adddirectoryservicedialog.ui
-	${CMAKE_SOURCE_DIR}/libkleo/ui/directoryserviceswidgetbase.ui
+	${CMAKE_SOURCE_DIR}/kleo/ui/adddirectoryservicedialog.ui
+	${CMAKE_SOURCE_DIR}/kleo/ui/directoryserviceswidgetbase.ui
 )
 
 set(kleopatra_LIB_SRCS ${libkleopatra_core_SRCS} ${libkleopatra_ui_SRCS} ${libkleopatra_backend_chiasmus_SRCS} ${libkleopatra_backend_qgpgme_SRCS}
@@ -84,13 +84,22 @@ set(kleopatra_LIB_SRCS ${libkleopatra_core_SRCS} ${libkleopatra_ui_SRCS} ${libkl
 
 kde4_add_library(kleopatra SHARED ${kleopatra_LIB_SRCS})
 
-target_link_libraries(kleopatra  ${KDE4_KDE3SUPPORT_LIBS} ${KDE4_GPGMEPP_LIBS} ${KDE4_QGPGME_LIBS} ${GPGME_LIBRARIES} )
+target_link_libraries(kleopatra  ${KDE4_KDE3SUPPORT_LIBS} gpgme qgpgme ${GPGME_LIBRARIES} )
 
 set_target_properties(kleopatra PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
 install(TARGETS kleopatra  DESTINATION ${LIB_INSTALL_DIR})
 
+install( FILES
+	cryptplug.h
+	cryptplugfactory.h
+	cryptplugwrapper.h
+	cryptplugwrapperlist.h
+	libkleo_export.h
+  	DESTINATION ${INCLUDE_INSTALL_DIR}/libkleo)
+
 install( FILES 
 	kleo/enum.h  
+	kleo/oidmap.h
 	kleo/cryptobackend.h 
 	kleo/cryptobackendfactory.h 
 	kleo/cryptoconfig.h 
@@ -105,6 +114,7 @@ install( FILES
 	kleo/encryptjob.h 
 	kleo/decryptjob.h 
 	kleo/signjob.h 
+	kleo/specialjob.h 
 	kleo/verifydetachedjob.h 
 	kleo/verifyopaquejob.h  
 	kleo/decryptverifyjob.h 
@@ -129,6 +139,7 @@ install ( FILES
 	ui/dnattributeorderconfigwidget.h 
 	ui/cryptoconfigmodule.h 
 	ui/cryptoconfigdialog.h 
+	ui/directoryserviceswidget.h
 	libkleo_export.h
 	DESTINATION ${INCLUDE_INSTALL_DIR}/libkleoui)
 

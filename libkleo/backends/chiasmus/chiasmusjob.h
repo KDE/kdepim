@@ -39,7 +39,8 @@
 #include <QStringList>
 
 #include <gpgmepp/context.h>
-#include <KProcess>
+
+class K3Process;
 
 namespace Kleo {
 
@@ -89,7 +90,7 @@ namespace Kleo {
     void slotCancel();
 
   private slots:
-    GpgME::Error slotProcessExited(int exitCode, QProcess::ExitStatus exitStatus);
+    GpgME::Error slotProcessExited( K3Process * );
     void slotTimeout();
 
   private:

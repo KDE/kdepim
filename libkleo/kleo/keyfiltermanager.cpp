@@ -52,8 +52,7 @@ namespace {
   };
 }
 
-class Kleo::KeyFilterManager::Private {
-public:
+struct Kleo::KeyFilterManager::Private {
   void clear() {
     std::for_each( filters.begin(), filters.end(), Delete<KeyFilter>() );
     filters.clear();
