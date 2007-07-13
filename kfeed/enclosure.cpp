@@ -24,7 +24,7 @@
 
 #include <QString>
 
-struct KFeed::EnclosurePrivate
+class KFeed::EnclosurePrivate
 {
 public:
     EnclosurePrivate() : length( 0 ), duration( 0 )
