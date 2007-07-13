@@ -45,7 +45,7 @@
 #include <kaction.h>
 #include <kactioncollection.h>
 #include <kstandardaction.h>
-#include <k3procio.h>
+#include <kprocess.h>
 #include <kconfig.h>
 #include <kfiledialog.h>
 #include <kedittoolbar.h>
@@ -73,11 +73,12 @@ KWatchGnuPGMainWindow::KWatchGnuPGMainWindow( QWidget* parent )
   mCentralWidget->setReadOnly(true);
   setCentralWidget( mCentralWidget );
 
-  mWatcher = new K3ProcIO( QTextCodec::codecForMib( 106 /*utf-8*/ ) );
-  connect( mWatcher, SIGNAL( processExited(K3Process*) ),
-		   this, SLOT( slotWatcherExited() ) );
-  connect( mWatcher, SIGNAL( readReady(K3ProcIO*) ),
-		   this, SLOT( slotReadStdout() ) );
+  mWatcher = new KProcess;
+  connect( mWatcher, SIGNAL(finished(int, QProcess::ExitStatus)),
+           this, SLOT( slotWatcherExited(int, QProcess::ExitStatus) ) );
+
+  connect( mWatcher, SIGNAL(readyReadStandardOutput() ),
+           this, SLOT( slotReadStdout() ) );
 
   slotReadConfig();
   mSysTray = new KWatchGnuPGTray( this );
@@ -133,28 +134,30 @@ void KWatchGnuPGMainWindow::slotConfigureToolbars()
 
 void KWatchGnuPGMainWindow::startWatcher()
 {
-  disconnect( mWatcher, SIGNAL( processExited(K3Process*) ),
-			  this, SLOT( slotWatcherExited() ) );
-  if( mWatcher->isRunning() ) {
+  disconnect( mWatcher, SIGNAL( finished(int, QProcess::ExitStatus)),
+              this, SLOT( slotWatcherExited(int, QProcess::ExitStatus) ) );
+  if( mWatcher->state()== QProcess::Running ) {
 	mWatcher->kill();
-	while( mWatcher->isRunning() ) {
+	while( mWatcher->state()== QProcess::Running ) {
 	  qApp->processEvents(QEventLoop::ExcludeUserInput);
 	}
 	mCentralWidget->append(i18n("[%1] Log stopped", QDateTime::currentDateTime().toString(Qt::ISODate)));
   }
-  mWatcher->clearArguments();
+  mWatcher->clearProgram();
   KConfigGroup config(KGlobal::config(), "WatchGnuPG");
   *mWatcher << config.readEntry("Executable", WATCHGNUPGBINARY);
   *mWatcher << "--force";
   *mWatcher << config.readEntry("Socket", WATCHGNUPGSOCKET);
   config.changeGroup(QString());
-  if( !mWatcher->start() ) {
+  mWatcher->start();
+  const bool ok = mWatcher->waitForStarted();
+  if( !ok) {
 	KMessageBox::sorry( this, i18n("The watchgnupg logging process could not be started.\nPlease install watchgnupg somewhere in your $PATH.\nThis log window is now completely useless." ) );
   } else {
 	mCentralWidget->append( i18n("[%1] Log started",QDateTime::currentDateTime().toString(Qt::ISODate) ) );
   }
-  connect( mWatcher, SIGNAL( processExited(K3Process*) ),
-		   this, SLOT( slotWatcherExited() ) );
+  connect( mWatcher, SIGNAL( finished(int, QProcess::ExitStatus) ),
+           this, SLOT( slotWatcherExited(int, QProcess::ExitStatus) ) );
 }
 
 void KWatchGnuPGMainWindow::setGnuPGConfig()
@@ -190,7 +193,7 @@ void KWatchGnuPGMainWindow::setGnuPGConfig()
   }
 }
 
-void KWatchGnuPGMainWindow::slotWatcherExited()
+void KWatchGnuPGMainWindow::slotWatcherExited(int, QProcess::ExitStatus)
 {
   if( KMessageBox::questionYesNo( this, i18n("The watchgnupg logging process died.\nDo you want to try to restart it?"), QString(), KGuiItem(i18n("Try Restart")), KGuiItem(i18n("Do Not Try")) ) == KMessageBox::Yes ) {
 	mCentralWidget->append( i18n("====== Restarting logging process =====") );
@@ -204,7 +207,8 @@ void KWatchGnuPGMainWindow::slotReadStdout()
 {
   if ( !mWatcher )
     return;
-  QString str;
+  QString str = QString::fromLocal8Bit( mWatcher->readAllStandardOutput() );
+/*
   while( mWatcher->readln(str,false) > 0 ) {
 	mCentralWidget->append( str );
 	if( !isVisible() ) {
@@ -212,13 +216,8 @@ void KWatchGnuPGMainWindow::slotReadStdout()
 	  // PENDING(steffen)
 	  mSysTray->setAttention(true);
 	}
-  }
-  QTimer::singleShot( 0, this, SLOT(slotAckRead()) );
-}
-
-void KWatchGnuPGMainWindow::slotAckRead() {
-  if ( mWatcher )
-    mWatcher->ackRead();
+	}
+*/
 }
 
 void KWatchGnuPGMainWindow::show()
@@ -250,8 +249,8 @@ void KWatchGnuPGMainWindow::slotSaveAs()
 
 void KWatchGnuPGMainWindow::slotQuit()
 {
-  disconnect( mWatcher, SIGNAL( processExited(K3Process*) ),
-			  this, SLOT( slotWatcherExited() ) );
+  disconnect( mWatcher, SIGNAL( finished(int, QProcess::ExitStatus) ),
+              this, SLOT( slotWatcherExited(int, QProcess::ExitStatus) ) );
   mWatcher->kill();
   kapp->quit();
 }

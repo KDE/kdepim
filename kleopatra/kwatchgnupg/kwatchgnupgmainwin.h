@@ -34,10 +34,10 @@
 #define KWATCHGNUPGMAINWIN_H
 
 #include <kxmlguiwindow.h>
-
+#include <QProcess>
 class KWatchGnuPGTray;
 class KWatchGnuPGConfig;
-class K3ProcIO;
+class KProcess;
 class QTextEdit;
 
 class KWatchGnuPGMainWindow : public KXmlGuiWindow {
@@ -46,9 +46,8 @@ public:
   KWatchGnuPGMainWindow( QWidget* parent = 0 );
   virtual ~KWatchGnuPGMainWindow();
 public slots:
-  void slotWatcherExited();
+  void slotWatcherExited(int, QProcess::ExitStatus);
   void slotReadStdout();
-  void slotAckRead();
 
   void slotSaveAs();
   void slotQuit();
@@ -67,7 +66,7 @@ private:
   void startWatcher();
   void setGnuPGConfig();
 
-  K3ProcIO* mWatcher;
+  KProcess* mWatcher;
 
   QTextEdit* mCentralWidget;
   KWatchGnuPGTray* mSysTray;
