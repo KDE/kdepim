@@ -23,7 +23,7 @@
 #define KEDITCL_H
 
 #include <Q3MultiLineEdit>
-
+#include <knode_export.h>
 #include <kdialog.h>
 
 class QCheckBox;
@@ -33,7 +33,7 @@ class KIntNumInput;
 class Q3VButtonGroup;
 class QMenu;
 
-class KDEUI_EXPORT KEdGotoLine : public KDialog
+class KNODE_EXPORT KEdGotoLine : public KDialog
 {
     Q_OBJECT
 
@@ -53,7 +53,7 @@ private:
 };
 
 ///
-class KDEUI_EXPORT KEdFind : public KDialog
+class KNODE_EXPORT KEdFind : public KDialog
 {
     Q_OBJECT
     Q_PROPERTY( QString text READ getText WRITE setText )
@@ -98,7 +98,7 @@ private:
 };
 
 ///
-class KDEUI_EXPORT KEdReplace : public KDialog
+class KNODE_EXPORT KEdReplace : public KDialog
 {
     Q_OBJECT
 
@@ -155,7 +155,7 @@ private:
  * @author Bernd Johannes Wuebben <wuebben@math.cornell.edu>, Waldo Bastian <bastian@kde.org>
  **/
 
-class KDEUI_EXPORT_DEPRECATED KEdit : public Q3MultiLineEdit
+class KNODE_EXPORT_DEPRECATED KEdit : public Q3MultiLineEdit
 {
     Q_OBJECT
 
