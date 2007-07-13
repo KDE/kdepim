@@ -37,9 +37,6 @@ macro_log_feature(MYSQL_EMBEDDED_FOUND "mysql-embedded" "MySQL/Embedded Library"
 macro_optional_find_package(LibXslt)
 macro_log_feature(XSLTPROC_EXECUTABLE "xsltproc" "xsltproc" "http://xmlsoft.org/XSLT/" FALSE "" "Needed to generate Akonadi database code")
 
-macro_optional_find_package(Opensync)
-#macro_log_feature for Opensync is performed in the FindOpensync.cmake
-
 # is this really required here ?
 if (APPLE)
    find_package(Carbon REQUIRED)
@@ -131,6 +128,7 @@ if(GPGME_FOUND)
 endif(GPGME_FOUND)
 
 if( NOT WIN32)
+ macro_optional_find_package(Opensync)
  macro_optional_add_subdirectory(kmobiletools)
  macro_optional_add_subdirectory(kpilot)
  if(OPENSYNC_FOUND AND OSENGINE_FOUND)
