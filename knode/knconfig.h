@@ -25,6 +25,7 @@
 #include <QPixmap>
 
 #include <kconfig.h>
+#include <kprocess.h>
 
 #include <kmime/kmime_util.h>
 
@@ -107,12 +108,12 @@ Q_OBJECT
     QString sigPath()const         { return s_igPath; }
     QString sigText()const         { return s_igText; }
     QString getSignature();
-    QString getSigGeneratorStdErr() { return s_igStdErr; }
+    QString getSigGeneratorStdErr() const { return s_igStdErr; }
 
 
   protected slots:
-    void slotReceiveStdout(K3Process *proc, char *buffer, int buflen);
-    void slotReceiveStderr(K3Process *proc, char *buffer, int buflen);
+    void slotReceiveStdout();
+    void slotReceiveStderr();
 
   protected:
     QString   n_ame,
@@ -128,6 +129,7 @@ Q_OBJECT
     bool      u_seSigFile,
               u_seSigGenerator,
               g_lobal;
+    KProcess *m_process;
 };
 
 

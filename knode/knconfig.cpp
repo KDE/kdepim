@@ -28,7 +28,6 @@
 #include <kdebug.h>
 #include <kiconloader.h>
 #include <kiconeffect.h>
-#include <k3process.h>
 
 #include <kpimutils/email.h>
 
@@ -131,18 +130,25 @@ QString KNode::Identity::getSignature()
         else
           KMessageBox::error(knGlobals.topWidget, i18n("Cannot open the signature file."));
       } else {
-        K3Process process;
+        m_process = new KProcess;
 
         // construct command line...
         QStringList command = s_igPath.split(' ', QString::SkipEmptyParts);
         for ( QStringList::Iterator it = command.begin(); it != command.end(); ++it )
-          process << (*it);
+          *m_process << (*it);
 
-        connect(&process, SIGNAL(receivedStdout(K3Process *, char *, int)), SLOT(slotReceiveStdout(K3Process *, char *, int)));
-        connect(&process, SIGNAL(receivedStderr(K3Process *, char *, int)), SLOT(slotReceiveStderr(K3Process *, char *, int)));
+        connect(m_process, SIGNAL(readyReadStandardOutput()), SLOT(slotReceiveStdout()));
+        connect(m_process, SIGNAL(readyReadStandardError()), SLOT(slotReceiveStderr()));
 
-        if (!process.start(K3Process::Block,K3Process::AllOutput))
+	m_process->setOutputChannelMode(KProcess::SeparateChannels);
+	m_process->start();
+	const bool ok = m_process->waitForFinished();
+	if( !ok)
+	{
           KMessageBox::error(knGlobals.topWidget, i18n("Cannot run the signature generator."));
+      	}
+	delete m_process;
+	m_process = 0L;
       }
     }
   }
@@ -156,15 +162,15 @@ QString KNode::Identity::getSignature()
 }
 
 
-void KNode::Identity::slotReceiveStdout(K3Process *, char *buffer, int buflen)
+void KNode::Identity::slotReceiveStdout()
 {
-  s_igContents.append(QString::fromLocal8Bit(buffer,buflen));
+  s_igContents.append(QString::fromLocal8Bit(m_process->readAllStandardOutput()));
 }
 
 
-void KNode::Identity::slotReceiveStderr(K3Process *, char *buffer, int buflen)
+void KNode::Identity::slotReceiveStderr()
 {
-  s_igStdErr.append(QString::fromLocal8Bit(buffer,buflen));
+  s_igStdErr.append(QString::fromLocal8Bit(m_process->readAllStandardError ()));
 }
 
 
