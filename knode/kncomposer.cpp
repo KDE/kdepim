@@ -52,7 +52,6 @@ using KRecentAddress::RecentAddresses;
 #include <ktemporaryfile.h>
 #include <libkpgp/kpgp.h>
 #include <libkpgp/kpgpblock.h>
-#include <k3process.h>
 #include <k3syntaxhighlighter.h>
 #include <QCursor>
 #include <kpimutils/spellingfilter.h>

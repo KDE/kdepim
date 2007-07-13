@@ -29,7 +29,6 @@
 
 #include <kmime/kmime_util.h>
 
-class K3Process;
 namespace Kpgp {
   class Config;
 }
