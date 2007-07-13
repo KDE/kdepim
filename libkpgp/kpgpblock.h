@@ -40,7 +40,6 @@ enum BlockType {
 
 enum MessageStatus{
   OK          =  0x0000,
-  CLEARTEXT   =  0x0000,
   RUN_ERR     =  0x0001,
   ERROR       =  0x0001,
   ENCRYPTED   =  0x0002,

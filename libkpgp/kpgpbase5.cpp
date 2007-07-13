@@ -204,7 +204,7 @@ Base5::decrypt( Block& block, const char *passphrase )
 
   if(exitStatus == -1) {
     errMsg = i18n("Error running PGP");
-    status = RUN_ERR;
+    status = ERROR;
     block.setStatus( status );
     return status;
   }
