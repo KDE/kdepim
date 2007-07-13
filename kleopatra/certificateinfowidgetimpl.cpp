@@ -37,7 +37,7 @@
 #include <kleo/dn.h>
 #include <kleo/cryptobackendfactory.h>
 
-#include <ui/progressdialog.h>
+#include <libkleoui/progressdialog.h>
 
 // gpgme++
 #include <gpgmepp/keylistresult.h>

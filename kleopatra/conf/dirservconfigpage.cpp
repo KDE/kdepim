@@ -30,7 +30,7 @@
 */
 
 #include "dirservconfigpage.h"
-#include "directoryserviceswidget.h"
+#include <libkleoui/directoryserviceswidget.h>
 
 #include <kleo/cryptobackendfactory.h>
 

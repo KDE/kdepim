@@ -1,7 +1,7 @@
 #ifndef CERTLISTVIEW_H
 #define CERTLISTVIEW_H
 
-#include <ui/keylistview.h>
+#include <libkleoui/keylistview.h>
 #include <kurl.h>
 //Added by qt3to4:
 #include <QDragEnterEvent>

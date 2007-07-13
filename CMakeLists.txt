@@ -85,10 +85,6 @@ add_subdirectory(libkdepim)
 add_subdirectory(libkholidays)
 
 if(GPGME_FOUND)
-   add_subdirectory(libkleo)
-endif(GPGME_FOUND)
-
-if(GPGME_FOUND)
    macro_optional_add_subdirectory(kleopatra)
 endif(GPGME_FOUND)
 if(NOT WIN32)
