@@ -1,6 +1,8 @@
 set(vcfendanalyzer_SRCS vcfendanalyzer.cpp )
 
 include_directories(${CMAKE_SOURCE_DIR}/strigi-analyzer ${STRIGI_INCLUDE_DIR})
+# kde4_add_library just defines MAKE_VCF_LIB which is not really unique
+add_definitions(-DMAKE_PIMSTRIGIANALYZER_LIB)
 
 kde4_add_library(vcf MODULE ${vcfendanalyzer_SRCS})
 
