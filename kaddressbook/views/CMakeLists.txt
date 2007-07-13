@@ -10,7 +10,7 @@ include_directories(
 
 ########### next target ###############
 
-set(kaddrbk_cardview_PART_SRC 
+set(kaddrbk_cardview_PART_SRCS 
    cardview.cpp 
    colorlistbox.cpp 
    configurecardviewdialog.cpp 
