@@ -24,7 +24,10 @@ include_directories(
 	${CMAKE_CURRENT_SOURCE_DIR}/common 
 	${CMAKE_CURRENT_SOURCE_DIR}/editors 
         ${CMAKE_BINARY_DIR}/libkdepim
+	${CMAKE_BINARY_DIR}/kaddressbook/common/
 	${Boost_INCLUDE_DIR} )
+
+
 
 
 set(libprinter_SRCS
