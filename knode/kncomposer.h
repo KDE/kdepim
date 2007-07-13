@@ -37,12 +37,11 @@
 
 #include <kdeversion.h>
 #include <keditcl.h>
-
+#include <kprocess.h>
 #include <kabc/addresslineedit.h>
 
 class Q3GroupBox;
 
-class K3Process;
 class K3Spell;
 class K3DictSpellingHighlighter;
 class KSelectAction;
@@ -123,7 +122,7 @@ class KNComposer : public KXmlGuiWindow {
 
     //edit
     bool e_xternalEdited;
-    K3Process *e_xternalEditor;
+    KProcess *e_xternalEditor;
     KTemporaryFile *e_ditorTempfile;
     K3Spell *s_pellChecker;
     SpellingFilter* mSpellingFilter;
@@ -179,7 +178,7 @@ class KNComposer : public KXmlGuiWindow {
     void slotGroupsBtnClicked();
 
     // external editor
-    void slotEditorFinished(K3Process *);
+    void slotEditorFinished(int, QProcess::ExitStatus);
     void slotCancelEditor();
 
     // attachment list

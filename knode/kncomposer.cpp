@@ -1327,7 +1327,7 @@ void KNComposer::slotExternalEditor()
     return;
   }
 
-  e_xternalEditor=new K3Process();
+  e_xternalEditor=new KProcess();
 
   // construct command line...
   QStringList command = editorCommand.split(' ', QString::SkipEmptyParts);
@@ -1342,8 +1342,9 @@ void KNComposer::slotExternalEditor()
   if(!filenameAdded)    // no %f in the editor command
     (*e_xternalEditor) << e_ditorTempfile->fileName();
 
-  connect(e_xternalEditor, SIGNAL(processExited(K3Process *)),this, SLOT(slotEditorFinished(K3Process *)));
-  if(!e_xternalEditor->start()) {
+  connect(e_xternalEditor, SIGNAL( finished ( int, QProcess::ExitStatus)),this, SLOT(slotEditorFinished( finished ( int, QProcess::ExitStatus))));
+  e_xternalEditor->start();
+  if(!e_xternalEditor->waitForStarted()) {
     KMessageBox::error(this, i18n("Unable to start external editor.\nPlease check your configuration in the settings dialog."));
     delete e_xternalEditor;
     e_xternalEditor=0;
@@ -1551,9 +1552,9 @@ void KNComposer::slotGroupsBtnClicked()
 }
 
 
-void KNComposer::slotEditorFinished(K3Process *)
+void KNComposer::slotEditorFinished(int, QProcess::ExitStatus exitStatus)
 {
-  if(e_xternalEditor->normalExit()) {
+  if(exitStatus == QProcess::NormalExit) {
     e_ditorTempfile->flush();
     e_ditorTempfile->seek(0);
     insertFile(e_ditorTempfile, true);
