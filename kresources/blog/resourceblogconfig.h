@@ -1,9 +1,6 @@
 /*
   This file is part of the blog resource.
 
-  Copyright (c) 2002 Tobias Koenig <tokoe@kde.org>
-  Copyright (c) 2002 Jan-Pascal van Best <janpascal@vanbest.org>
-  Copyright (c) 2004 Cornelius Schumacher <schumacher@kde.org>
   Copyright (c) 2007 Mike Arthur <mike@mikearthur.co.uk>
 
   This library is free software; you can redistribute it and/or
@@ -36,33 +33,59 @@ namespace KCal
 {
 
 class ResourceCachedReloadConfig;
-class ResourceCachedSaveConfig;
 
 /**
-  Configuration widget for blog resource.
+  The class provides a configuration widget for blog resource.
 
   @see ResourceBlog
 */
 class ResourceBlogConfig : public KRES::ConfigWidget
 {
-    Q_OBJECT
+  Q_OBJECT
   public:
+    /**
+      Creates a configuration widget for blog resource.
+
+      @param parent The parent widget to attach to.
+    */
     ResourceBlogConfig( QWidget *parent = 0 );
 
   public Q_SLOTS:
+    /**
+      Loads the settings for the blog resource for the widget's defaults.
+    */
     virtual void loadSettings( KRES::Resource *resource );
+
+    /**
+      Saves the entered settings from the widget to the blog resource.
+    */
     virtual void saveSettings( KRES::Resource *resource );
 
   private:
+    /**
+      Used to the URL used for XML-RPC access to the blog.
+    */
     KUrlRequester *mUrl;
+
+    /**
+      Used to enter the username for the blog's XML-RPC authentication.
+    */
     KLineEdit *mUser;
+
+    /**
+      Used to enter the password for the blog's XML-RPC authentication.
+    */
     KLineEdit *mPassword;
+
+    /**
+      The combobox used to select the XML-RPC API used to access the blog.
+    */
     KComboBox *mAPI;
 
+    /**
+      A widget to configure the cache reload options.
+    */
     ResourceCachedReloadConfig *mReloadConfig;
-
-    class Private;
-    Private *d;
 };
 
 }

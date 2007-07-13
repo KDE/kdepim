@@ -1,7 +1,6 @@
 /*
   This file is part of the blog resource.
 
-  Copyright (c) 2003,4 Cornelius Schumacher <schumacher@kde.org>
   Copyright (c) 2007 Mike Arthur <mike@mikearthur.co.uk>
 
   This library is free software; you can redistribute it and/or
@@ -20,16 +19,11 @@
   Boston, MA 02110-1301, USA.
 */
 
-#include <typeinfo>
-
 #include <QLabel>
-#include <QLayout>
 #include <QGridLayout>
 
 #include <klocale.h>
 #include <kdebug.h>
-#include <kmessagebox.h>
-#include <kstandarddirs.h>
 #include <kdialog.h>
 #include <kurlrequester.h>
 #include <klineedit.h>
@@ -38,7 +32,6 @@
 #include <kcal/resourcecachedconfig.h>
 
 #include "resourceblog.h"
-
 #include "resourceblogconfig.h"
 
 using namespace KCal;
@@ -46,6 +39,7 @@ using namespace KCal;
 KCAL_RESOURCEBLOG_EXPORT ResourceBlogConfig::ResourceBlogConfig
 ( QWidget *parent ) : KRES::ConfigWidget( parent )
 {
+  //FIXME: Resize to abritary size to fix KOrganizer bug.
   resize( 245, 115 );
   QGridLayout *mainLayout = new QGridLayout( this );
   mainLayout->setSpacing( KDialog::spacingHint() );
@@ -77,6 +71,7 @@ KCAL_RESOURCEBLOG_EXPORT ResourceBlogConfig::ResourceBlogConfig
   mainLayout->addWidget( label, 4, 0 );
   mainLayout->addWidget( mAPI, 4, 1 );
 
+  // Add the subwidget for the cache reload settings.
   mReloadConfig = new ResourceCachedReloadConfig( this );
   mainLayout->addWidget( mReloadConfig, 5, 0, 1, 2 );
 }

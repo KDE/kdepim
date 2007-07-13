@@ -1,7 +1,6 @@
 /*
   This file is part of the blog resource.
 
-  Copyright (c) 2003 Cornelius Schumacher <schumacher@kde.org>
   Copyright (c) 2007 Mike Arthur <mike@mikearthur.co.uk>
 
   This library is free software; you can redistribute it and/or
@@ -23,33 +22,16 @@
 #define KCAL_RESOURCEBLOGDIR_H
 
 #include "blog_export.h"
-#include <kurl.h>
-#include <kdirwatch.h>
-
-#include <kcal/incidence.h>
-#include <kcal/calendarlocal.h>
-#include <kcal/icalformat.h>
 
 #include <kcal/resourcecached.h>
 
 #include <kblog/blog.h>
-
-#include <kio/jobclasses.h>
-#include <kio/jobuidelegate.h>
-
-namespace KIO
-{
-class FileCopyJob;
-class Job;
-class JobUiDelegate;
-}
 
 namespace KPIM
 {
 class ProgressItem;
 }
 
-class KJob;
 namespace KCal
 {
 
@@ -62,115 +44,273 @@ class ResourceBlog : public ResourceCached
     friend class ResourceBlogConfig;
 
   public:
-    ResourceBlog();
     /**
-     Create resource from configuration information stored in KConfig object.
+      Create the blog resource..
+    */
+    ResourceBlog();
+
+    /**
+      Create the blog resource from configuration information.
+
+      @param group The configuration information.
     */
     ResourceBlog( const KConfigGroup &group );
-    /**
-     Create blog resource.
 
-     @param url URL used for XML-RPC access.
+    /**
+      Create the blog resource from a XML-RPC access URL.
+
+      @param url The URL used for XML-RPC access.
     */
     ResourceBlog( const KUrl &url );
-    virtual ~ResourceBlog();
 
+    /**
+      Destroy the blog resource.
+    */
+    ~ResourceBlog();
+
+    /**
+      Read resource parameters from configuration information.
+
+      @param group The configuration information.
+    */
     void readConfig( const KConfigGroup &group );
+
+    /**
+      Write resource parameters to configuration information.
+
+      @param group The configuration information.
+    */
     void writeConfig( KConfigGroup &group );
 
+    /**
+      Set the URL used for XML-RPC access to the blog.
+    */
     void setUrl( const KUrl & );
+
+    /**
+      Get the URL used for XML-RPC access to the blog.
+
+      @return The URL used for XML-RPC access.
+    */
     KUrl url() const;
 
+    /**
+      Set the username for the blog's XML-RPC authentication.
+    */
     void setUser( const QString & );
+
+    /**
+      Get the username for the blog's XML-RPC authentication.
+
+      @return The username for the blog.
+    */
     QString user() const;
 
+    /**
+      Set the password for the blog's XML-RPC authentication.
+    */
     void setPassword( const QString & );
+
+    /**
+      Get the password for the blog's XML-RPC authentication.
+
+      @return The password for the blog.
+    */
     QString password() const;
 
+    /**
+      Set the XML-RPC API used to access the blog.
+    */
     void setAPI( const QString & );
+
+    /**
+      Get name of the XML-RPC API used to access the blog.
+
+      @return The name of the chosen API.
+    */
     QString API() const;
 
+    /**
+      Set whether to display the progress of operations.
+
+      @param useProgressManager Whether to display the progress of operations.
+    */
     void setUseProgressManager( bool useProgressManager );
+
+    /**
+      Get whether the progress of operations are displayed.
+
+      @return Whether the progress of operations are displayed.
+    */
     bool useProgressManager() const;
 
+    /**
+      Set whether to use a cachefile to store old journals.
+
+      @param useCacheFile Whether to use a cachefile.
+    */
     void setUseCacheFile( bool useCacheFile );
+
+    /**
+      Get whether a cachefile is used to store old journals.
+
+      @return Whether a cachefile is used.
+    */
     bool useCacheFile() const;
 
+    /**
+      Get the status of the cachefile lock.
+
+      @return Whether the cachefile is locked.
+    */
     KABC::Lock *lock ();
 
+    /**
+      Print the resource parameters to the console.
+    */
     void dump() const;
 
+    /**
+      Set thr resource's parameters.
+
+      @param key The parameter to set.
+      @param value The value to set the parameter to.
+      @return The success of the parameter assignment.
+    */
     bool setValue( const QString &key, const QString &value );
 
+    /**
+      Posts a journal to the blog.
+
+      @param key The journal to post.
+      @return The success of the journal addition.
+    */
     bool addJournal( Journal *journal );
 
+    // Posts cannot be deleted from the server.
     bool deleteJournal( Journal *journal )
     {
       Q_UNUSED( journal )
       return false;
     }
 
+    // The blog resource only handles journals.
     bool addEvent( Event *anEvent )
     {
       Q_UNUSED( anEvent )
       return false;
     }
 
+    // The blog resource only handles journals.
     bool deleteEvent( Event * )
     {
       return false;
     }
 
+    // The blog resource only handles journals.
     void deleteAllEvents()
     {}
 
+    // The blog resource only handles journals.
     bool addTodo( Todo *todo )
     {
       Q_UNUSED( todo )
       return false;
     }
 
+    // The blog resource only handles journals.
     bool deleteTodo( Todo * )
     {
       return false;
     }
 
+    // The blog resource only handles journals.
     void deleteAllTodos()
     {}
 
   protected Q_SLOTS:
-    void slotPercent( KJob *, unsigned long percent );
+    /**
+      Converts a listed posting to a journal and adds to the cached resource.
 
+      @param blogPosting A posting from the blog.
+    */
     void slotListedPosting( KBlog::BlogPosting &blogPosting );
+
+    /**
+      Cleans up after the posting's listing completed.
+    */
     void slotListPostingsFinished();
 
   protected:
-    bool doLoad( bool syncCache );
-    bool doSave( bool syncCache );
+    /**
+      Load the resource cache from the blog.
 
+      @return The success of the blog retrieval operation.
+    */
+    bool doLoad( bool );
+
+    /**
+      Save the resource cache.
+
+      @return The success of the cache save operation.
+    */
+    bool doSave( bool );
+
+    /**
+      Add the URL and API of the blog to the string.
+    */
     void addInfoText( QString & ) const;
 
   private:
+    /**
+      Initialise the blog resource.
+    */
     void init();
 
+    /**
+      The URL used for XML-RPC access.
+    */
     KUrl mUrl;
+
+    /**
+      The username for the blog's XML-RPC authentication.
+    */
     QString mUser;
+
+    /**
+      The password for the blog's XML-RPC authentication.
+    */
     QString mPassword;
+
+    /**
+      The XML-RPC object used to access the blog.
+    */
     KBlog::APIBlog *mAPI;
 
+    /**
+      The list of created journal objects.
+    */
     Journal::List *mJournalList;
 
+    /**
+      Whether the progress of operations are displayed.
+    */
     bool mUseProgressManager;
+
+    /**
+      Whether a cachefile is used to store old journals.
+    */
     bool mUseCacheFile;
 
+    /**
+      The object used to manage the progress of operations display.
+    */
     KPIM::ProgressItem *mProgress;
 
-    Incidence::List mChangedIncidences;
-
+    /**
+      The cachefile lock.
+    */
     KABC::Lock *mLock;
-
-    class Private;
-    Private *d;
 };
 
 }

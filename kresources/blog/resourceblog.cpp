@@ -1,7 +1,6 @@
 /*
   This file is part of the blog resource.
 
-  Copyright (c) 2003,2004 Cornelius Schumacher <schumacher@kde.org>
   Copyright (c) 2007 Mike Arthur <mike@mikearthur.co.uk>
 
   This library is free software; you can redistribute it and/or
@@ -20,25 +19,14 @@
   Boston, MA 02110-1301, USA.
 */
 
-#include <typeinfo>
-#include <stdlib.h>
-
 #include <QDateTime>
 #include <QString>
-#include <q3ptrlist.h>
 
 #include <kdebug.h>
 #include <kurl.h>
-#include <kio/job.h>
 #include <klocale.h>
-#include <kstandarddirs.h>
 
-#include <kcal/incidence.h>
-#include <kcal/event.h>
-#include <kcal/todo.h>
 #include <kcal/journal.h>
-
-#include <kabc/locknull.h>
 
 #include <kresources/configwidget.h>
 
@@ -78,7 +66,8 @@ ResourceBlog::~ResourceBlog()
 
   delete mLock;
 
-  qDeleteAll( *mJournalList );
+  //FIXME: Delete contents of mJournalList
+  //qDeleteAll( *mJournalList );
   mJournalList->clear();
   delete mJournalList;
 }
@@ -157,10 +146,10 @@ QString ResourceBlog::password() const
 
 void ResourceBlog::setAPI( const QString &API )
 {
-  if ( API == "Blogger" ) {
-    mAPI = new KBlog::APIBlogger( mUrl, this );
-  } else if ( API == "MetaWeblog" ) {
+  if ( API == "MetaWeblog" ) {
     mAPI = new KBlog::APIMetaWeblog( mUrl, this );
+  } else if ( API == "Blogger" ) {
+    mAPI = new KBlog::APIBlogger( mUrl, this );
   } else {
     kError() << "ResourceBlog::setAPI(): Unrecognised API: " << API << endl;
     return;
@@ -249,22 +238,17 @@ bool ResourceBlog::doLoad( bool )
   return false;
 }
 
-void ResourceBlog::slotPercent( KJob *, unsigned long percent )
-{
-  kDebug( 5800 ) << "ResourceBlog::slotPercent(): " << percent << endl;
-
-  mProgress->setProgress( percent );
-}
-
 void ResourceBlog::slotListedPosting( KBlog::BlogPosting &blogPosting )
 {
   kDebug( 5800 ) << "ResourceBlog::slotListedPosting()" << endl;
   Journal *journalBlog = new Journal();
+  //FIXME: Is this the best UID scheme?
   journalBlog->setUid("kblog-" + mUrl.url() + "-" + mUser + "-" +
       blogPosting.postingId() );
   journalBlog->setSummary(blogPosting.title());
   journalBlog->setDescription(blogPosting.content());
   journalBlog->setDtStart(blogPosting.creationDateTime());
+  //FIXME: Causes UID collision on reload of resource.
   if (ResourceCached::addJournal( journalBlog )) {
     kDebug( 5800 ) << "ResourceBlog::slotListedPosting(): Journal added"
         << endl;
@@ -296,8 +280,6 @@ bool ResourceBlog::doSave( bool )
     emit resourceSaved( this );
     return true;
   }
-
-  //mChangedIncidences = allChanges();
 
   saveToCache();
   emit resourceSaved( this );
