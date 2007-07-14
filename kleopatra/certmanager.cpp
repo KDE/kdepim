@@ -55,10 +55,10 @@
 #include <kleo/refreshkeysjob.h>
 #include <kleo/cryptoconfig.h>
 
-#include <libkleoui/progressdialog.h>
-#include <libkleoui/progressbar.h>
-#include <libkleoui/keyselectiondialog.h>
-#include <libkleoui/cryptoconfigdialog.h>
+#include <kleo/ui/progressdialog.h>
+#include <kleo/ui/progressbar.h>
+#include <kleo/ui/keyselectiondialog.h>
+#include <kleo/ui/cryptoconfigdialog.h>
 
 // GPGME++
 #include <gpgmepp/importresult.h>

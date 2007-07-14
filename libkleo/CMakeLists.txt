@@ -1,4 +1,4 @@
-include_directories( ${CMAKE_SOURCE_DIR}/kleo/kleo ${CMAKE_SOURCE_DIR}/kleo ${CMAKE_BINARY_DIR}/kleo/backends/chiasmus/ ${GPGME_INCLUDES} )
+include_directories( ${CMAKE_BINARY_DIR}/kleo/backends/chiasmus/ ${GPGME_INCLUDES} )
 
 add_definitions (-DQT3_SUPPORT -DQT3_SUPPORT_WARNINGS)
 
@@ -89,15 +89,12 @@ target_link_libraries(kleopatra  ${KDE4_KDE3SUPPORT_LIBS} gpgme qgpgme ${GPGME_L
 set_target_properties(kleopatra PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
 install(TARGETS kleopatra  DESTINATION ${LIB_INSTALL_DIR})
 
-install( FILES
+install( FILES 
 	cryptplug.h
 	cryptplugfactory.h
 	cryptplugwrapper.h
 	cryptplugwrapperlist.h
 	libkleo_export.h
-  	DESTINATION ${INCLUDE_INSTALL_DIR}/libkleo)
-
-install( FILES 
 	kleo/enum.h  
 	kleo/oidmap.h
 	kleo/cryptobackend.h 
@@ -141,5 +138,5 @@ install ( FILES
 	ui/cryptoconfigdialog.h 
 	ui/directoryserviceswidget.h
 	libkleo_export.h
-	DESTINATION ${INCLUDE_INSTALL_DIR}/libkleoui)
+	DESTINATION ${INCLUDE_INSTALL_DIR}/kleo/ui)
 

@@ -22,9 +22,9 @@
 */
 
 #include <config.h>
-#include <libkleoui/keyrequester.h>
-#include <libkleo/cryptplugfactory.h>
-#include <libkleo/cryptplugwrapper.h>
+#include <kleo/ui/keyrequester.h>
+#include <kleo/cryptplugfactory.h>
+#include <kleo/cryptplugwrapper.h>
 #include <kleo/enum.h>
 
 #include "gpgmepp/data.h"
