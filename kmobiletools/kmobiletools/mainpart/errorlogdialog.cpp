@@ -206,6 +206,6 @@ ErrorLogItem::ErrorLogItem( const KMobileTools::BaseError* errorObject, QListWid
 
 const BaseError* ErrorLogItem::errorObject() const {
     return m_errorObject;
-};
+}
 
 #include "errorlogdialog.moc"
