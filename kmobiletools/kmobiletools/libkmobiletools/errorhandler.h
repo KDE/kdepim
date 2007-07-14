@@ -20,7 +20,7 @@
 #ifndef KMOBILETOOLSERRORHANDLER_H
 #define KMOBILETOOLSERRORHANDLER_H
 
-#include <QStack>
+#include <QtCore/QStack>
 #include "kmobiletools_export.h"
 
 namespace KMobileTools {
