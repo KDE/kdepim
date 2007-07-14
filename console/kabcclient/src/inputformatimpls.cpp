@@ -18,6 +18,7 @@
 
 // standard includes
 #include <iostream>
+#include <string>
 
 // Qt includes
 #include <QTextCodec>
