@@ -8,6 +8,9 @@
             <Separator />
             <Action name="file_quit"/>
         </Menu>
+	<Menu name="tools"><text>&amp;Tools</text>
+	    <Action name="error_log"/>
+	</Menu>
         <Menu name="settings"><text>&amp;Settings</text>
             <Separator/>
             <Action name="options_configure_notifications" />

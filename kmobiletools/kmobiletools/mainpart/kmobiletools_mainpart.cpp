@@ -117,9 +117,14 @@ kmobiletoolsMainPart::kmobiletoolsMainPart( QWidget *parentWidget, QObject *pare
     curAction=new KAction( KIcon("package-utilities"), i18n("Device Manager"), this);
     connect(curAction, SIGNAL(triggered(bool)), this,SLOT(deviceManager()));
     actionCollection()->addAction("device_manager", curAction);
+
     curAction=new KAction( KIcon("go-home") ,i18n("Homepage"), this );
     connect(curAction, SIGNAL(triggered(bool)),this,SLOT(goHome()) );
     actionCollection()->addAction("home", curAction);
+
+    curAction = new KAction( KIcon("text-enriched"), i18n("Show error log"), this );
+    connect(curAction, SIGNAL(triggered(bool)), this, SLOT( showErrorLog() ) );
+    actionCollection()->addAction( "error_log", curAction );
 
     curAction=KStandardAction::next(this, SLOT(nextPart() ), this);
     actionCollection()->addAction(KStandardAction::Next, "next", this, SLOT(nextPart() ) );
@@ -128,7 +133,7 @@ kmobiletoolsMainPart::kmobiletoolsMainPart( QWidget *parentWidget, QObject *pare
     actionCollection()->addAction(KStandardAction::Quit, "file_quit", this, SLOT(slotQuit() ) );
     actionCollection()->addAction(KStandardAction::ConfigureNotifications, "options_configure_notifications", this, SLOT(slotConfigNotify() ) );
 
-
+    m_errorLogDialog = 0;
 
 //     partManager=new KParts::PartManager(m_widget, this);
     p_homepage=new KMobileTools::homepagePart(m_widget);
@@ -183,6 +188,7 @@ void kmobiletoolsMainPart::slotHide()
 
 kmobiletoolsMainPart::~kmobiletoolsMainPart()
 {
+    delete m_errorLogDialog;
     kDebug() << "kmobiletoolsMainPart::~kmobiletoolsMainPart()\n";
 }
 
@@ -640,4 +646,15 @@ void kmobiletoolsMainPart::phonebookUpdated()
 void kmobiletoolsMainPart::slotConfigNotify()
 {
     KNotifyConfigWidget::configure(m_widget, 0);
+}
+
+void kmobiletoolsMainPart::showErrorLog() {
+    /// @TODO this file is a mess ;) ErrorLogDialog should actually be passed the parent widget here
+    /// but this is not available outside the constructor
+    ///
+    /// don't forget to remove the "delete" in the destructor when the real parent is passed!
+    if( m_errorLogDialog == 0 )
+        m_errorLogDialog = new ErrorLogDialog( 0 );
+
+    m_errorLogDialog->show();
 }

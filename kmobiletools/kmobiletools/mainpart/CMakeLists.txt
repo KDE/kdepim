@@ -23,7 +23,8 @@ set(kmobiletoolsmainpart_PART_SRCS
    newdevicewizard/lastpage.cpp
    statusbar.cpp
    kmobiletools_mainpart.cpp 
-   newdevicewizard/newdevicewizard.cpp )
+   newdevicewizard/newdevicewizard.cpp
+   errorlogdialog.cpp )
 
 
 kde4_add_ui_files(kmobiletoolsmainpart_PART_SRCS 

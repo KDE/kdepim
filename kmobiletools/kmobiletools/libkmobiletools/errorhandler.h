@@ -20,6 +20,7 @@
 #ifndef KMOBILETOOLSERRORHANDLER_H
 #define KMOBILETOOLSERRORHANDLER_H
 
+#include <QStack>
 #include "kmobiletools_export.h"
 
 namespace KMobileTools {
@@ -58,6 +59,13 @@ public:
      * @return the error count
      */
     int errorCount() const;
+
+    /**
+     * Returns the stack of errors
+     *
+     * @return the error stack
+     */
+    QStack<const BaseError*> errorStack();
 
     ~ErrorHandler();
 

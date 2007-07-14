@@ -23,7 +23,6 @@
 
 #include <KMessageBox>
 #include <KGlobal>
-#include <QStack>
 #include <QMutex>
 
 namespace KMobileTools {
@@ -108,6 +107,10 @@ void ErrorHandler::writeToLog( const BaseError* error ) {
     errorLog->write( QString( "Method:      %1()" ).arg( error->methodName() ) );
     errorLog->write( QString( "Priority:    %1" ).arg( error->priority() ) );
     errorLog->write( QString( "Description: %1" ).arg( error->description() ) );
+}
+
+QStack<const BaseError*> ErrorHandler::errorStack() {
+    return d->m_errorStack;
 }
 
 }

@@ -27,6 +27,8 @@
 #include <qstringlist.h>
 #include <kdebug.h>
 
+#include "errorlogdialog.h"
+
 //#include "mainIFace.h"
 #include "deviceslist.h"
 
@@ -93,6 +95,7 @@ class kmobiletoolsMainPart : public KParts::ReadOnlyPart/*, virtual public MainI
     void prevPart();
     DeviceManager *deviceManager();
     void configSlot(const QString &command);
+    void showErrorLog();
     void showPreference();
     void addDevice(const QString &newDevice);
     void delDevice(const QString &newDevice);
@@ -122,6 +125,8 @@ class kmobiletoolsMainPart : public KParts::ReadOnlyPart/*, virtual public MainI
         QStringList sl_toloadList;
         KParts::StatusBarExtension *p_statusBarExtension;
         static kmobiletoolsMainPart *m_mainpart;
+
+        ErrorLogDialog* m_errorLogDialog;
     signals:
         void devicesUpdated();
         void deviceChanged(const QString &);

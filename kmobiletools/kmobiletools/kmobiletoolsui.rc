@@ -6,6 +6,10 @@
             <text>&amp;File</text>
             <Merge name="files_merge"/>
         </Menu>
+	<Menu name="tools" noMerge="1">
+	    <text>&amp;Tools</text>
+	    <Merge name="tools_merge"/>
+	</Menu>
         <Menu name="settings" noMerge="1">
             <text>&amp;Settings</text>
             <Merge name="StandardToolBarMenuHandler"/>
