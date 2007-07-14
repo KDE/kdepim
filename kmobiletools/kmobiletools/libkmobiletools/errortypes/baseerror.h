@@ -23,6 +23,7 @@
 #include "kmobiletools_export.h"
 
 #include <QString>
+#include <QVariant>
 #include <QDateTime>
 #include <QHash>
 
@@ -31,7 +32,7 @@
 namespace KMobileTools {
 
 // gcc 4.1.3 doesn't compile without using this typedef
-typedef QHash<QString,QString> DebugHash;
+typedef QHash<QString,QVariant> DebugHash;
 
 class BaseErrorPrivate;
 
