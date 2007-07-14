@@ -48,11 +48,9 @@
 #include <kleo/libkleo_export.h>
 #include <kleo/cryptobackend.h>
 
-#include <QDateTime>
-#include <q3valuelist.h>
-#include <QPair>
-#include <QStringList>
-#include <QString>
+#include <QtCore/QMap>
+#include <QtCore/QString>
+#include <QtCore/QVariant>
 
 class QGpgMECryptoConfig;
 
