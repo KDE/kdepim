@@ -34,8 +34,8 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
-#include <qglobal.h>
-#include <qnamespace.h>
+#include <QtCore/qglobal.h>
+#include <QtCore/qnamespace.h>
 
 #include <kdebug.h>
 #include <kdeversion.h>

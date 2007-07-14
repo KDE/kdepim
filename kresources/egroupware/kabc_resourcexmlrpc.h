@@ -21,9 +21,8 @@
 #ifndef KABC_RESOURCEXMLRPC_H
 #define KABC_RESOURCEXMLRPC_H
 
-#include <QMap>
-//Added by qt3to4:
-#include <QList>
+#include <QtCore/QMap>
+#include <QtCore/QList>
 #include "egroupware_export.h"
 
 #include <kabc/resourcecached.h>

@@ -26,7 +26,7 @@
 
 #include "kaddressbook_export.h"
 #include <kconfig.h>
-#include <QWidget>
+#include <QtGui/QWidget>
 
 namespace KABC {
 class AddressBook;

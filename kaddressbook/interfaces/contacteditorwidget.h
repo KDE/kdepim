@@ -28,8 +28,8 @@
 #include <kabc/addressbook.h>
 #include <klibloader.h>
 
-#include <QWidget>
-#include <QList>
+#include <QtGui/QWidget>
+#include <QtCore/QList>
 
 #define KAB_CEW_PLUGIN_VERSION 1
 

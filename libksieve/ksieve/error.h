@@ -35,7 +35,7 @@
 
 #include "libksieve_export.h"
 
-#include <QString>
+#include <QtCore/QString>
 
 #ifdef None // X headers
 #  undef None

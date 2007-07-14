@@ -22,10 +22,10 @@
 
 #include "kmobiletools_export.h"
 
-#include <QString>
-#include <QVariant>
-#include <QDateTime>
-#include <QHash>
+#include <QtCore/QString>
+#include <QtCore/QVariant>
+#include <QtCore/QDateTime>
+#include <QtCore/QHash>
 
 #define ERROR_META_INFO __FILE__, __LINE__, QDateTime::currentDateTime(), __FUNCTION__
 

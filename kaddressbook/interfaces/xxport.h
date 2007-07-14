@@ -24,7 +24,7 @@
 #ifndef KAB_XXPORT_H
 #define KAB_XXPORT_H
 
-#include <QObject>
+#include <QtCore/QObject>
 
 #include "kaddressbook_export.h"
 #include <kabc/addressbook.h>
