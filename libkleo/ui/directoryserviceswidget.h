@@ -35,8 +35,9 @@
 
 #include "libkleo_export.h"
 #include <kurl.h>
-#include <Q3ListViewItem>
+#include <QtGui/QWidget>
 
+class Q3ListViewItem;
 class CryptPlugWrapper;
 namespace Kleo {
 
