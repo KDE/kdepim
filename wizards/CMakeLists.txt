@@ -8,7 +8,7 @@ add_definitions (-DQT3_SUPPORT -DQT3_SUPPORT_WARNINGS)
 
 ########### next target ###############
 
-set(groupwarewizard_SRCS groupwarewizard.cpp groupwaremain.cpp overviewpage.cpp 
+set(groupwarewizard_SRCS ${libknotesresources_SRCS} groupwarewizard.cpp groupwaremain.cpp overviewpage.cpp 
     egroupwarewizard.cpp
     sloxwizard.cpp
     kolabwizard.cpp kmailchanges.cpp kolabkmailchanges.cpp 
@@ -22,7 +22,7 @@ target_link_libraries(groupwarewizard  ${KDE4_KDECORE_LIBS}
 kabc_xmlrpc kcal_xmlrpc knotes_xmlrpc
 kcal_slox kabc_slox
 kabckolab knoteskolab
-kcalkolab
+kcalkolab kresources
 kabc kcal kdepim ${KDE4_KPIMIDENTITIES_LIBS}
 )
 
@@ -31,7 +31,7 @@ install(TARGETS groupwarewizard  DESTINATION ${BIN_INSTALL_DIR})
 
 ########### next target ###############
 
-set(egroupwarewizard_SRCS egroupwarewizard.cpp egroupwaremain.cpp)
+set(egroupwarewizard_SRCS ${libknotesresources_SRCS} egroupwarewizard.cpp egroupwaremain.cpp)
 
 
 kde4_add_kcfg_files(egroupwarewizard_SRCS egroupwareconfig.kcfgc)
@@ -45,7 +45,7 @@ install(TARGETS egroupwarewizard  DESTINATION ${BIN_INSTALL_DIR})
 
 ########### next target ###############
 
-set(sloxwizard_SRCS sloxwizard.cpp sloxmain.cpp)
+set(sloxwizard_SRCS ${libknotesresources_SRCS} sloxwizard.cpp sloxmain.cpp)
 
 
 kde4_add_kcfg_files(sloxwizard_SRCS sloxconfig.kcfgc)
@@ -59,7 +59,7 @@ install(TARGETS sloxwizard  DESTINATION ${BIN_INSTALL_DIR})
 
 ########### next target ###############
 
-set(kolabwizard_SRCS 
+set(kolabwizard_SRCS ${libknotesresources_SRCS} 
    kolabwizard.cpp 
    kmailchanges.cpp 
    kolabkmailchanges.cpp 
