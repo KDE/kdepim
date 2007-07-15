@@ -29,7 +29,9 @@ namespace KMobileTools {
 /**
     @author Matthias Lechner <matthias@lmme.de>
 */
+class ErrorLogPrivate;
 class KMOBILETOOLS_EXPORT ErrorLog {
+    friend class ErrorLogInstance;
 public:
     /**
      * Returns an ErrorLog instance
@@ -58,6 +60,8 @@ private:
     ErrorLog();
     // making copy constructor private since this is a singleton
     ErrorLog( const ErrorLog& );
+
+    ErrorLogPrivate* const d;
 };
 
 }

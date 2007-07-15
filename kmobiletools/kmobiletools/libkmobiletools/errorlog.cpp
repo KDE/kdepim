@@ -28,18 +28,23 @@
 
 namespace KMobileTools {
 
+class ErrorLogInstance {
+public:
+    ErrorLog m_uniqueInstance;
+};
+
 class ErrorLogPrivate {
 public:
-    ErrorLog* m_uniqueInstance;
     static QMutex m_mutex;
     KTemporaryFile m_logFile;
 };
 
 QMutex ErrorLogPrivate::m_mutex;
 
-K_GLOBAL_STATIC(ErrorLogPrivate, d)
+K_GLOBAL_STATIC(ErrorLogInstance, errorLogInstance)
 
 ErrorLog::ErrorLog()
+: d( new ErrorLogPrivate )
 {
     d->m_logFile.open();
 }
@@ -51,7 +56,7 @@ ErrorLog::~ErrorLog()
 }
 
 ErrorLog* ErrorLog::instance() {
-    return d->m_uniqueInstance;
+    return &errorLogInstance->m_uniqueInstance;
 }
 
 void ErrorLog::write( const QString& text ) {

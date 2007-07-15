@@ -28,9 +28,13 @@
 
 namespace KMobileTools {
 
-class ErrorHandlerPrivate {
+class ErrorHandlerInstance {
 public:
     ErrorHandler m_uniqueInstance;
+};
+
+class ErrorHandlerPrivate {
+public:
     QMutex m_mutex;
     QStack<const BaseError*> m_errorStack;
 
@@ -39,10 +43,10 @@ public:
     }
 };
 
-K_GLOBAL_STATIC(ErrorHandlerPrivate, d)
+K_GLOBAL_STATIC(ErrorHandlerInstance, errorHandlerInstance)
 
 ErrorHandler::ErrorHandler()
-: QObject( 0 )
+: QObject( 0 ), d( new ErrorHandlerPrivate )
 {
 }
 
@@ -53,7 +57,7 @@ ErrorHandler::~ErrorHandler()
 
 ErrorHandler* ErrorHandler::instance() {
     // instance is automatically created
-    return &d->m_uniqueInstance;
+    return &errorHandlerInstance->m_uniqueInstance;
 }
 
 void ErrorHandler::addError( const BaseError* error ) {
@@ -77,6 +81,17 @@ int ErrorHandler::errorCount() const {
     return d->m_errorStack.count();
 }
 
+QStack<const BaseError*> ErrorHandler::errorStack() {
+    return d->m_errorStack;
+}
+
+void ErrorHandler::displayError( const BaseError* error ) {
+    if( receivers( SIGNAL( errorOccurred( const BaseError* ) ) ) > 0 )
+        emit errorOccurred( error->description(), error->priority() );
+    else
+        KMessageBox::error( 0, error->description() );
+}
+
 void ErrorHandler::writeToLog( const BaseError* error ) {
     ErrorLog* errorLog = ErrorLog::instance();
 
@@ -87,17 +102,6 @@ void ErrorHandler::writeToLog( const BaseError* error ) {
     errorLog->write( QString( "Method:      %1()" ).arg( error->methodName() ) );
     errorLog->write( QString( "Priority:    %1" ).arg( error->priority() ) );
     errorLog->write( QString( "Description: %1" ).arg( error->description() ) );
-}
-
-QStack<const BaseError*> ErrorHandler::errorStack() {
-    return d->m_errorStack;
-}
-
-void ErrorHandler::displayError( const BaseError* error ) {
-    if( receivers( SIGNAL( errorOccurred( const BaseError* ) ) ) > 0 )
-        emit errorOccurred( error->description(), error->priority() );
-    else
-        KMessageBox::error( 0, error->description() );
 }
 
 }

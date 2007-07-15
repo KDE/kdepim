@@ -39,10 +39,11 @@ namespace KMobileTools {
 
     ErrorHandler::instance()->addError( new BaseError( ... ) );
 */
+class ErrorHandlerPrivate;
 class KMOBILETOOLS_EXPORT ErrorHandler : public QObject {
     Q_OBJECT
 
-friend class ErrorHandlerPrivate;
+friend class ErrorHandlerInstance;
 public:
     /**
      * Returns an ErrorHandler instance
@@ -79,6 +80,7 @@ Q_SIGNALS:
 
 private:
     ErrorHandler();
+    ErrorHandlerPrivate* const d;
 
     /**
      * Adds information about the @p error to the log file

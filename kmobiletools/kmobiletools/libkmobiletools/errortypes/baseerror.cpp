@@ -36,8 +36,9 @@ public:
 };
 
 BaseError::BaseError( const QString& fileName, int lineNumber, const QDateTime& dateTime,
-                      const QString& methodName, const DebugHash& customDebugInformation ) {
-    d = new BaseErrorPrivate;
+                      const QString& methodName, const DebugHash& customDebugInformation )
+: d ( new BaseErrorPrivate )
+{
 
     d->m_fileName = fileName;
     d->m_lineNumber = lineNumber;

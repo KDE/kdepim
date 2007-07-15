@@ -17,8 +17,8 @@
    Boston, MA 02110-1301, USA.
  ***************************************************************************/
 
-#ifndef KMOBILETOOLSERROR_H
-#define KMOBILETOOLSERROR_H
+#ifndef KMOBILETOOLSBASEERROR_H
+#define KMOBILETOOLSBASEERROR_H
 
 #include "kmobiletools_export.h"
 
@@ -126,7 +126,7 @@ protected:
     void setDescription( const QString& errorDescription );
 
 private:
-    BaseErrorPrivate* d;
+    BaseErrorPrivate* const d;
 };
 
 }
