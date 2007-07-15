@@ -8,7 +8,7 @@ add_subdirectory( tests )
 
 
 ########### next target ###############
-set(libkleopatra_backend_qgpgme_SRCS
+set(libkleo_backend_qgpgme_SRCS
 	${CMAKE_SOURCE_DIR}/kleo/backends/qgpgme/gnupgprocessbase.cpp 
 	${CMAKE_SOURCE_DIR}/kleo/backends/qgpgme/qgpgmeprogresstokenmapper.cpp 
 	${CMAKE_SOURCE_DIR}/kleo/backends/qgpgme/qgpgmebackend.cpp 
@@ -32,7 +32,7 @@ set(libkleopatra_backend_qgpgme_SRCS
 	)
 
 
-set(libkleopatra_backend_chiasmus_SRCS 
+set(libkleo_backend_chiasmus_SRCS 
 	${CMAKE_SOURCE_DIR}/kleo/backends/chiasmus/config_data.c 
 	${CMAKE_SOURCE_DIR}/kleo/backends/chiasmus/obtainkeysjob.cpp 
 	${CMAKE_SOURCE_DIR}/kleo/backends/chiasmus/symcryptrunprocessbase.cpp 
@@ -42,7 +42,7 @@ set(libkleopatra_backend_chiasmus_SRCS
 	)
 
 
-set(libkleopatra_core_SRCS
+set(libkleo_core_SRCS
    ${CMAKE_SOURCE_DIR}/kleo/kleo/cryptobackend.cpp 
    ${CMAKE_SOURCE_DIR}/kleo/kleo/cryptobackendfactory.cpp 
    ${CMAKE_SOURCE_DIR}/kleo/kleo/enum.cpp 
@@ -54,7 +54,7 @@ set(libkleopatra_core_SRCS
    ${CMAKE_SOURCE_DIR}/kleo/kleo/keyfiltermanager.cpp
    )
 
-set(libkleopatra_ui_SRCS
+set(libkleo_ui_SRCS
    ${CMAKE_SOURCE_DIR}/kleo/ui/kdhorizontalline.cpp 
    ${CMAKE_SOURCE_DIR}/kleo/ui/progressbar.cpp 
    ${CMAKE_SOURCE_DIR}/kleo/ui/progressdialog.cpp 
@@ -70,24 +70,24 @@ set(libkleopatra_ui_SRCS
    ${CMAKE_SOURCE_DIR}/kleo/ui/adddirectoryservicedialogimpl.cpp
 )
 
-kde4_add_ui_files(libkleopatra_ui_SRCS
+kde4_add_ui_files(libkleo_ui_SRCS
 	${CMAKE_SOURCE_DIR}/kleo/ui/adddirectoryservicedialog.ui
 	${CMAKE_SOURCE_DIR}/kleo/ui/directoryserviceswidgetbase.ui
 )
 
-set(kleopatra_LIB_SRCS ${libkleopatra_core_SRCS} ${libkleopatra_ui_SRCS} ${libkleopatra_backend_chiasmus_SRCS} ${libkleopatra_backend_qgpgme_SRCS}
+set(kleo_LIB_SRCS ${libkleo_core_SRCS} ${libkleo_ui_SRCS} ${libkleo_backend_chiasmus_SRCS} ${libkleo_backend_qgpgme_SRCS}
    cryptplug.cpp 
    cryptplugwrapper.cpp 
    cryptplugwrapperlist.cpp 
    cryptplugfactory.cpp )
 
 
-kde4_add_library(kleopatra SHARED ${kleopatra_LIB_SRCS})
+kde4_add_library(kleo-gpl SHARED ${kleo_LIB_SRCS})
 
-target_link_libraries(kleopatra  ${KDE4_KDE3SUPPORT_LIBS} gpgme qgpgme ${GPGME_LIBRARIES} )
+target_link_libraries(kleo-gpl  ${KDE4_KDE3SUPPORT_LIBS} gpgme qgpgme ${GPGME_LIBRARIES} )
 
-set_target_properties(kleopatra PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
-install(TARGETS kleopatra  DESTINATION ${LIB_INSTALL_DIR})
+set_target_properties(kleo-gpl PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
+install(TARGETS kleo-gpl  DESTINATION ${LIB_INSTALL_DIR})
 
 install( FILES 
 	cryptplug.h
