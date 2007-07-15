@@ -49,8 +49,8 @@
 #ifndef __KLEO_UI_KEYREQUESTER_H__
 #define __KLEO_UI_KEYREQUESTER_H__
 
-#include "libkleo_export.h"
-#include "kleo/cryptobackend.h"
+#include <kleo/kleo_export.h>
+#include <kleo/cryptobackend.h>
 
 #include <QtGui/QWidget>
 #include <QtGui/QLabel>

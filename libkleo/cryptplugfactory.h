@@ -1,5 +1,5 @@
 /*
-    keyfiltermanager.h
+    cryptplugfactory.h
 
     This file is part of libkleopatra, the KDE keymanagement library
     Copyright (c) 2004 Klarälvdalens Datakonsult AB
@@ -30,41 +30,53 @@
     your version.
 */
 
-#ifndef __KLEO_KEYFILTERMANAGER_H__
-#define __KLEO_KEYFILTERMANAGER_H__
+#ifndef __KLEO_CRYPTPLUGFACTORY_H__
+#define __KLEO_CRYPTPLUGFACTORY_H__
 
 #include "kleo_export.h"
-#include <QtCore/QObject>
+#include "kleo/cryptobackendfactory.h"
 
-namespace GpgME {
-  class Key;
+#ifndef LIBKLEOPATRA_NO_COMPAT
+namespace Kleo {
+  //typedef CryptoBackendFactory CryptPlugFactory KDE_DEPRECATED;
 }
 
-namespace Kleo {
-  class KeyFilter;
-}
+class CryptPlugWrapper;
+class CryptPlugWrapperList;
 
-namespace Kleo {
+namespace KMail {
 
-  class KLEO_EXPORT KeyFilterManager : public QObject {
+  class KLEO_EXPORT CryptPlugFactory : public Kleo::CryptoBackendFactory {
     Q_OBJECT
   protected:
-    KeyFilterManager( QObject * parent=0, const char * name=0 );
-    ~KeyFilterManager();
+    CryptPlugFactory();
+    ~CryptPlugFactory();
 
   public:
-    static KeyFilterManager * instance();
+    static CryptPlugFactory * instance();
 
-    const KeyFilter * filterMatching( const GpgME::Key & key ) const;
+    CryptPlugWrapper * active() const;
+    CryptPlugWrapper * smime() const;
+    CryptPlugWrapper * openpgp() const;
 
-    void reload();
+    CryptPlugWrapperList & list() const { return *mCryptPlugWrapperList; }
+
+    CryptPlugWrapper * createForProtocol( const QString & proto ) const;
+
+    void scanForBackends( QStringList * reason );
 
   private:
-    class Private;
-    Private * d;
-    static KeyFilterManager * mSelf;
+    void updateCryptPlugWrapperList();
+
+  private:
+    CryptPlugFactory( const CryptPlugFactory & );
+    void operator=( const CryptPlugFactory & );
+    CryptPlugWrapperList * mCryptPlugWrapperList;
+
+    static CryptPlugFactory * mSelf;
   };
 
 }
+#endif
 
-#endif // __KLEO_KEYFILTERMANAGER_H__
+#endif // __KLEO_CRYPTPLUGFACTORY_H__

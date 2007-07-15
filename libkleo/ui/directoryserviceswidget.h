@@ -33,7 +33,7 @@
 #ifndef DIRECTORYSERVICESWIDGET_H
 #define DIRECTORYSERVICESWIDGET_H
 
-#include "libkleo_export.h"
+#include <kleo/kleo_export.h>
 #include <kurl.h>
 #include <QtGui/QWidget>
 

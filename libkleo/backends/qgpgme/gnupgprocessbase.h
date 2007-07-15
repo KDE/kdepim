@@ -1,8 +1,8 @@
 /*
-    keyfiltermanager.h
+    gnupgprocessbase.h
 
     This file is part of libkleopatra, the KDE keymanagement library
-    Copyright (c) 2004 Klarälvdalens Datakonsult AB
+    Copyright (c) 2004 Klar�vdalens Datakonsult AB
 
     Libkleopatra is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License as
@@ -30,41 +30,60 @@
     your version.
 */
 
-#ifndef __KLEO_KEYFILTERMANAGER_H__
-#define __KLEO_KEYFILTERMANAGER_H__
+#ifndef __KLEO_GNUPGPROCESSBASE_H__
+#define __KLEO_GNUPGPROCESSBASE_H__
 
 #include "kleo_export.h"
-#include <QtCore/QObject>
-
-namespace GpgME {
-  class Key;
-}
-
-namespace Kleo {
-  class KeyFilter;
-}
+#include <k3process.h>
 
 namespace Kleo {
 
-  class KLEO_EXPORT KeyFilterManager : public QObject {
+  /**
+   * @short a base class for GPG and GPGSM processes.
+   *
+   * This K3Process subclass implements the status-fd handling common
+   * to GPG and GPGSM.
+   *
+   * @author Marc Mutz <mutz@kde.org>
+   */
+  class KLEO_EXPORT GnuPGProcessBase : public K3Process {
     Q_OBJECT
-  protected:
-    KeyFilterManager( QObject * parent=0, const char * name=0 );
-    ~KeyFilterManager();
-
   public:
-    static KeyFilterManager * instance();
+    GnuPGProcessBase( QObject * parent=0 );
+    ~GnuPGProcessBase();
 
-    const KeyFilter * filterMatching( const GpgME::Key & key ) const;
+    void setUseStatusFD( bool use );
 
-    void reload();
+    /*! reimplementation */
+    bool start( RunMode runmode, Communication comm );
+
+    bool closeStatus();
+
+  signals:
+    void status( Kleo::GnuPGProcessBase * proc, const QString & type, const QStringList & args );
+
+  protected:
+    /*! reimplementation */
+    int setupCommunication( Communication comm );
+    /*! reimplementation */
+    int commSetupDoneP();
+    /*! reimplementation */
+    int commSetupDoneC();
+
+    int childStatus( int fd );
+
+
+  private slots:
+    void slotChildStatus( int fd );
+
+  private:
+    void parseStatusOutput();
 
   private:
     class Private;
     Private * d;
-    static KeyFilterManager * mSelf;
   };
 
 }
 
-#endif // __KLEO_KEYFILTERMANAGER_H__
+#endif // __KLEO_GNUPGPROCESSBASE_H__

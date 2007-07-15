@@ -34,7 +34,7 @@
 #ifndef __KLEO_UI_BACKENDCONFIGWIDGET_H__
 #define __KLEO_UI_BACKENDCONFIGWIDGET_H__
 
-#include "libkleo_export.h"
+#include <kleo/kleo_export.h>
 #include <QtGui/QWidget>
 
 namespace Kleo {

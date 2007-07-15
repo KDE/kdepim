@@ -45,7 +45,7 @@
   * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 
                                                                           */
-#include <kleo/libkleo_export.h>
+#include <kleo/kleo_export.h>
 #include <kleo/cryptobackend.h>
 
 #include <QtCore/QMap>

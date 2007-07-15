@@ -1,5 +1,5 @@
 /*
-    keyfiltermanager.h
+    qgpgmekeygenerationjob.h
 
     This file is part of libkleopatra, the KDE keymanagement library
     Copyright (c) 2004 Klarälvdalens Datakonsult AB
@@ -30,41 +30,48 @@
     your version.
 */
 
-#ifndef __KLEO_KEYFILTERMANAGER_H__
-#define __KLEO_KEYFILTERMANAGER_H__
+#ifndef __KLEO_QGPGMEKEYGENERATIONJOB_H__
+#define __KLEO_QGPGMEKEYGENERATIONJOB_H__
 
 #include "kleo_export.h"
-#include <QtCore/QObject>
+#include "kleo/keygenerationjob.h"
+#include "qgpgmejob.h"
 
 namespace GpgME {
+  class Error;
+  class Context;
   class Key;
+  class Data;
+}
+
+namespace QGpgME {
+  class QByteArrayDataProvider;
 }
 
 namespace Kleo {
-  class KeyFilter;
-}
 
-namespace Kleo {
-
-  class KLEO_EXPORT KeyFilterManager : public QObject {
-    Q_OBJECT
-  protected:
-    KeyFilterManager( QObject * parent=0, const char * name=0 );
-    ~KeyFilterManager();
-
+  class KLEO_EXPORT QGpgMEKeyGenerationJob : public KeyGenerationJob, private QGpgMEJob {
+    Q_OBJECT QGPGME_JOB
   public:
-    static KeyFilterManager * instance();
-
-    const KeyFilter * filterMatching( const GpgME::Key & key ) const;
-
-    void reload();
+    QGpgMEKeyGenerationJob( GpgME::Context * context );
+    ~QGpgMEKeyGenerationJob();
+    
+    /*! \reimp from KeygenerationJob */
+    GpgME::Error start( const QString & parameters );
+    
+  private slots:
+    void slotOperationDoneEvent( GpgME::Context * context, const GpgME::Error & error ) {
+      QGpgMEJob::doSlotOperationDoneEvent( context, error );
+    }
 
   private:
-    class Private;
-    Private * d;
-    static KeyFilterManager * mSelf;
+    void doOperationDoneEvent( const GpgME::Error & e );
+
+  private:
+    QGpgME::QByteArrayDataProvider * mPubKeyDataProvider;
+    GpgME::Data * mPubKey;
   };
 
 }
 
-#endif // __KLEO_KEYFILTERMANAGER_H__
+#endif // __KLEO_QGPGMEKEYGENERATIONJOB_H__

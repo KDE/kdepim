@@ -1,13 +1,12 @@
 /*
-    keyfiltermanager.h
+    cryptoconfigdialog.h
 
-    This file is part of libkleopatra, the KDE keymanagement library
+    This file is part of kgpgcertmanager
     Copyright (c) 2004 Klarälvdalens Datakonsult AB
 
     Libkleopatra is free software; you can redistribute it and/or
-    modify it under the terms of the GNU General Public License as
-    published by the Free Software Foundation; either version 2 of the
-    License, or (at your option) any later version.
+    modify it under the terms of the GNU General Public License,
+    version 2, as published by the Free Software Foundation.
 
     Libkleopatra is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -30,41 +29,41 @@
     your version.
 */
 
-#ifndef __KLEO_KEYFILTERMANAGER_H__
-#define __KLEO_KEYFILTERMANAGER_H__
+#ifndef CRYPTOCONFIGDIALOG_H
+#define CRYPTOCONFIGDIALOG_H
 
-#include "kleo_export.h"
-#include <QtCore/QObject>
-
-namespace GpgME {
-  class Key;
-}
-
-namespace Kleo {
-  class KeyFilter;
-}
+#include <kleo/kleo_export.h>
+#include <kdialog.h>
 
 namespace Kleo {
 
-  class KLEO_EXPORT KeyFilterManager : public QObject {
+  class CryptoConfig;
+  class CryptoConfigModule;
+
+  /**
+   * Simple KDialog wrapper around CryptoConfigModule
+   */
+  class KLEO_EXPORT CryptoConfigDialog : public KDialog
+  {
     Q_OBJECT
-  protected:
-    KeyFilterManager( QObject * parent=0, const char * name=0 );
-    ~KeyFilterManager();
-
   public:
-    static KeyFilterManager * instance();
+    CryptoConfigDialog( Kleo::CryptoConfig* config, QWidget *parent = 0 );
 
-    const KeyFilter * filterMatching( const GpgME::Key & key ) const;
+  protected Q_SLOTS:
+    void slotOk();
+    void slotCancel();
+    void slotDefault();
+    void slotApply();
+    void slotUser1(); // reset
 
-    void reload();
+  public Q_SLOTS:
+    void slotChanged();
 
   private:
-    class Private;
-    Private * d;
-    static KeyFilterManager * mSelf;
+    CryptoConfigModule* mMainWidget;
   };
 
 }
 
-#endif // __KLEO_KEYFILTERMANAGER_H__
+#endif /* CRYPTOCONFIGDIALOG_H */
+

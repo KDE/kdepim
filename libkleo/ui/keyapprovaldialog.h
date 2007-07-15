@@ -1,8 +1,12 @@
-/*
-    keyfiltermanager.h
+/*  -*- c++ -*-
+    keyselectiondialog.h
 
     This file is part of libkleopatra, the KDE keymanagement library
     Copyright (c) 2004 Klarälvdalens Datakonsult AB
+
+    Based on kpgpui.h
+    Copyright (C) 2001,2002 the KPGP authors
+    See file libkdenetwork/AUTHORS.kpgp for details
 
     Libkleopatra is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License as
@@ -30,41 +34,56 @@
     your version.
 */
 
-#ifndef __KLEO_KEYFILTERMANAGER_H__
-#define __KLEO_KEYFILTERMANAGER_H__
+#ifndef __KLEO_KEYAPPROVALDIALOG_H__
+#define __KLEO_KEYAPPROVALDIALOG_H__
 
-#include "kleo_export.h"
-#include <QtCore/QObject>
+#include <kleo/kleo_export.h>
+#include <kleo/enum.h>
+
+#include <kdialog.h>
+
+#include <gpgmepp/key.h>
+
+#include <vector>
 
 namespace GpgME {
   class Key;
 }
 
-namespace Kleo {
-  class KeyFilter;
-}
 
 namespace Kleo {
 
-  class KLEO_EXPORT KeyFilterManager : public QObject {
+  class KLEO_EXPORT KeyApprovalDialog : public KDialog {
     Q_OBJECT
-  protected:
-    KeyFilterManager( QObject * parent=0, const char * name=0 );
-    ~KeyFilterManager();
-
   public:
-    static KeyFilterManager * instance();
+    struct Item {
+      Item() : pref( UnknownPreference ) {}
+      Item( const QString & a, const std::vector<GpgME::Key> & k,
+	    EncryptionPreference p=UnknownPreference )
+	: address( a ), keys( k ), pref( p ) {}
+      QString address;
+      std::vector<GpgME::Key> keys;
+      EncryptionPreference pref;
+    };
 
-    const KeyFilter * filterMatching( const GpgME::Key & key ) const;
+    KeyApprovalDialog( const std::vector<Item> & recipients,
+		       const std::vector<GpgME::Key> & sender,
+		       QWidget * parent=0 );
+    ~KeyApprovalDialog();
 
-    void reload();
+    std::vector<Item> items() const;
+    std::vector<GpgME::Key> senderKeys() const;
+
+    bool preferencesChanged() const;
+
+  private Q_SLOTS:
+    void slotPrefsChanged();
 
   private:
     class Private;
-    Private * d;
-    static KeyFilterManager * mSelf;
+    Private *const d;
   };
 
-}
+} // namespace Kleo
 
-#endif // __KLEO_KEYFILTERMANAGER_H__
+#endif // __KLEO_KEYAPPROVALDIALOG_H__

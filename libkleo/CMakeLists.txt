@@ -94,7 +94,7 @@ install( FILES
 	cryptplugfactory.h
 	cryptplugwrapper.h
 	cryptplugwrapperlist.h
-	libkleo_export.h
+	kleo_export.h
 	kleo/enum.h  
 	kleo/oidmap.h
 	kleo/cryptobackend.h 
@@ -121,7 +121,6 @@ install( FILES
 	kleo/hierarchicalkeylistjob.h  
 	kleo/keyfilter.h 
 	kleo/keyfiltermanager.h
-	libkleo_export.h
 	DESTINATION ${INCLUDE_INSTALL_DIR}/kleo)
 	
 install ( FILES
@@ -137,6 +136,5 @@ install ( FILES
 	ui/cryptoconfigmodule.h 
 	ui/cryptoconfigdialog.h 
 	ui/directoryserviceswidget.h
-	libkleo_export.h
 	DESTINATION ${INCLUDE_INSTALL_DIR}/kleo/ui)
 

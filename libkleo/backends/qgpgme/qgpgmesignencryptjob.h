@@ -1,5 +1,5 @@
 /*
-    keyfiltermanager.h
+    qgpgmesignencryptjob.h
 
     This file is part of libkleopatra, the KDE keymanagement library
     Copyright (c) 2004 Klarälvdalens Datakonsult AB
@@ -30,41 +30,61 @@
     your version.
 */
 
-#ifndef __KLEO_KEYFILTERMANAGER_H__
-#define __KLEO_KEYFILTERMANAGER_H__
+#ifndef __KLEO_QGPGMESIGNENCRYPTJOB_H__
+#define __KLEO_QGPGMESIGNENCRYPTJOB_H__
 
 #include "kleo_export.h"
-#include <QtCore/QObject>
+#include "kleo/signencryptjob.h"
+#include "qgpgmejob.h"
+
+#include <gpgmepp/signingresult.h>
+#include <gpgmepp/encryptionresult.h>
+
+#include <q3cstring.h>
+
+#include <utility>
 
 namespace GpgME {
+  class Error;
+  class Context;
   class Key;
 }
 
 namespace Kleo {
-  class KeyFilter;
-}
 
-namespace Kleo {
-
-  class KLEO_EXPORT KeyFilterManager : public QObject {
-    Q_OBJECT
-  protected:
-    KeyFilterManager( QObject * parent=0, const char * name=0 );
-    ~KeyFilterManager();
-
+  class KLEO_EXPORT QGpgMESignEncryptJob : public SignEncryptJob, private QGpgMEJob {
+    Q_OBJECT QGPGME_JOB
   public:
-    static KeyFilterManager * instance();
+    QGpgMESignEncryptJob( GpgME::Context * context );
+    ~QGpgMESignEncryptJob();
 
-    const KeyFilter * filterMatching( const GpgME::Key & key ) const;
+    /*! \reimp from SignEncryptJob */
+    GpgME::Error start( const std::vector<GpgME::Key> & signers,
+			const std::vector<GpgME::Key> & recipients,
+			const QByteArray & plainText, bool alwaysTrust );
 
-    void reload();
+    std::pair<GpgME::SigningResult,GpgME::EncryptionResult>
+      exec( const std::vector<GpgME::Key> & signers,
+	    const std::vector<GpgME::Key> & recipients,
+	    const QByteArray & plainText, bool alwaysTrust,
+	    QByteArray & cipherText );
+
+    /*! \reimp from Job */
+    void showErrorDialog( QWidget * parent, const QString & caption ) const;
+
+  private slots:
+    void slotOperationDoneEvent( GpgME::Context * context, const GpgME::Error & e ) {
+      QGpgMEJob::doSlotOperationDoneEvent( context, e );
+    }
 
   private:
-    class Private;
-    Private * d;
-    static KeyFilterManager * mSelf;
+    void doOperationDoneEvent( const GpgME::Error & e );
+    GpgME::Error setup( const std::vector<GpgME::Key> &,
+			const QByteArray & );
+  private:
+    std::pair<GpgME::SigningResult,GpgME::EncryptionResult> mResult;
   };
 
 }
 
-#endif // __KLEO_KEYFILTERMANAGER_H__
+#endif // __KLEO_QGPGMESIGNENCRYPTJOB_H__

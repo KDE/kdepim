@@ -1,5 +1,5 @@
 /*
-    keyfiltermanager.h
+    qgpgmedecryptverifyjob.h
 
     This file is part of libkleopatra, the KDE keymanagement library
     Copyright (c) 2004 Klarälvdalens Datakonsult AB
@@ -30,41 +30,46 @@
     your version.
 */
 
-#ifndef __KLEO_KEYFILTERMANAGER_H__
-#define __KLEO_KEYFILTERMANAGER_H__
+#ifndef __KLEO_QGPGMEDECRYPTVERIFYJOB_H__
+#define __KLEO_QGPGMEDECRYPTVERIFYJOB_H__
 
 #include "kleo_export.h"
-#include <QtCore/QObject>
+#include "kleo/decryptverifyjob.h"
+
+#include "qgpgmejob.h"
+
+#include <q3cstring.h>
 
 namespace GpgME {
-  class Key;
+  class Error;
+  class Context;
 }
 
 namespace Kleo {
-  class KeyFilter;
-}
 
-namespace Kleo {
-
-  class KLEO_EXPORT KeyFilterManager : public QObject {
-    Q_OBJECT
-  protected:
-    KeyFilterManager( QObject * parent=0, const char * name=0 );
-    ~KeyFilterManager();
-
+  class KLEO_EXPORT QGpgMEDecryptVerifyJob : public DecryptVerifyJob, private QGpgMEJob {
+    Q_OBJECT QGPGME_JOB
   public:
-    static KeyFilterManager * instance();
+    QGpgMEDecryptVerifyJob( GpgME::Context * context );
+    ~QGpgMEDecryptVerifyJob();
 
-    const KeyFilter * filterMatching( const GpgME::Key & key ) const;
+    /*! \reimp from DecryptVerifyJob */
+    GpgME::Error start( const QByteArray & cipherText );
 
-    void reload();
+    /*! \reimp from DecryptVerifyJob */
+    std::pair<GpgME::DecryptionResult,GpgME::VerificationResult>
+      exec( const QByteArray & cipherText, QByteArray & plainText );
+
+  private slots:
+    void slotOperationDoneEvent( GpgME::Context * context, const GpgME::Error & e ) {
+      QGpgMEJob::doSlotOperationDoneEvent( context, e );
+    }
 
   private:
-    class Private;
-    Private * d;
-    static KeyFilterManager * mSelf;
+    void doOperationDoneEvent( const GpgME::Error & e );
+    void setup( const QByteArray & );
   };
 
 }
 
-#endif // __KLEO_KEYFILTERMANAGER_H__
+#endif // __KLEO_QGPGMEDECRYPTVERIFYJOB_H__
