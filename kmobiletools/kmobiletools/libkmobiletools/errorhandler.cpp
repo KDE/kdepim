@@ -19,7 +19,6 @@
 
 #include "errorhandler.h"
 #include "errorlog.h"
-#include "errortypes/baseerror.h"
 
 #include <KMessageBox>
 #include <KPassivePopup>
