@@ -173,7 +173,7 @@ namespace Kleo {
     /**
      * Constructor for Qt designer
      */
-    EncryptionKeyRequester( QWidget * parent=0 );
+    EncryptionKeyRequester( QWidget * parent );
     ~EncryptionKeyRequester();
 
     void setAllowedKeys( unsigned int proto, bool onlyTrusted=true, bool onlyValid=true );
@@ -205,7 +205,7 @@ namespace Kleo {
     /**
      * Constructor for Qt designer
      */
-    SigningKeyRequester( QWidget * parent=0 );
+    SigningKeyRequester( QWidget * parent );
     ~SigningKeyRequester();
 
     /*
