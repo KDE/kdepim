@@ -65,8 +65,8 @@ KCAL_RESOURCEBLOG_EXPORT ResourceBlogConfig::ResourceBlogConfig
 
   label = new QLabel( i18n( "API:" ), this );
   mAPI = new KComboBox( false, this );
-  mAPI->addItem( "MetaWeblog" );
-  mAPI->addItem( "Blogger" );
+  mAPI->addItem( "MetaWeblog", ResourceBlog::MetaWeblog );
+  mAPI->addItem( "Blogger", ResourceBlog::Blogger );
 
   mainLayout->addWidget( label, 4, 0 );
   mainLayout->addWidget( mAPI, 4, 1 );
@@ -83,11 +83,7 @@ void ResourceBlogConfig::loadSettings( KRES::Resource *res )
     mUrl->setUrl( resource->url().url() );
     mUser->setText( resource->user() );
     mPassword->setText( resource->password() );
-    if ( resource->API() == "MetaWeblog" ) {
-      mAPI->setCurrentIndex( 0 );
-    } else if ( resource->API() == "Blogger" ) {
-      mAPI->setCurrentIndex( 1 );
-    }
+    mAPI->setCurrentIndex( resource->API() );
     mReloadConfig->loadSettings( resource );
     kDebug( 5700 ) << "ResourceBlogConfig::loadSettings(): reloaded" << endl;
   } else {
@@ -103,7 +99,7 @@ void ResourceBlogConfig::saveSettings( KRES::Resource *res )
     resource->setUrl( mUrl->url().url() );
     resource->setUser( mUser->text() );
     resource->setPassword( mPassword->text() );
-    resource->setAPI( mAPI->currentText() );
+    resource->setAPI( resource->QStringToAPIType( mAPI->currentText() ) );
     mReloadConfig->saveSettings( resource );
     kDebug( 5700 ) << "ResourceBlogConfig::saveSettings(): saved" << endl;
   } else {

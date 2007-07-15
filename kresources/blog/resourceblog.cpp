@@ -87,6 +87,26 @@ void ResourceBlog::init()
   enableChangeNotification();
 }
 
+  QString ResourceBlog::APITypeToQString( const ResourceBlog::APIType &type ) {
+    if ( type == ResourceBlog::MetaWeblog ) {
+      return "MetaWeblog";
+    }
+    else if ( type == ResourceBlog::Blogger ) {
+      return "Blogger";
+    }
+    return 0;
+  }
+
+  ResourceBlog::APIType ResourceBlog::QStringToAPIType( const QString &type ) {
+    if ( type == "MetaWeblog" ) {
+      return MetaWeblog;
+    }
+    else if ( type == "Blogger" ) {
+      return Blogger;
+    }
+    return Unknown;
+  }
+
 void ResourceBlog::readConfig( const KConfigGroup &group )
 {
   kDebug( 5800 ) << "ResourceBlog::readConfig()" << endl;
@@ -95,8 +115,7 @@ void ResourceBlog::readConfig( const KConfigGroup &group )
   mUrl = KUrl( url );
   mUser = group.readEntry( "User" );
   mPassword = group.readEntry( "Password" );
-  QString api = group.readEntry( "API" );
-  setAPI( api );
+  setAPI( QStringToAPIType ( group.readEntry( "API" ) ) );
 
   ResourceCached::readConfig( group );
 }
@@ -108,7 +127,7 @@ void ResourceBlog::writeConfig( KConfigGroup &group )
   group.writeEntry( "Url", mUrl.url() );
   group.writeEntry( "User", mUser );
   group.writeEntry( "Password", mPassword );
-  group.writeEntry( "API", API() );
+  group.writeEntry( "API", APITypeToQString ( API() ) );
 
   ResourceCalendar::writeConfig( group );
   ResourceCached::writeConfig( group );
@@ -144,11 +163,11 @@ QString ResourceBlog::password() const
   return mPassword;
 }
 
-void ResourceBlog::setAPI( const QString &API )
+void ResourceBlog::setAPI( const APIType &API )
 {
-  if ( API == "MetaWeblog" ) {
+  if ( API == MetaWeblog ) {
     mAPI = new KBlog::APIMetaWeblog( mUrl, this );
-  } else if ( API == "Blogger" ) {
+  } else if ( API == Blogger ) {
     mAPI = new KBlog::APIBlogger( mUrl, this );
   } else {
     kError() << "ResourceBlog::setAPI(): Unrecognised API: " << API << endl;
@@ -156,19 +175,20 @@ void ResourceBlog::setAPI( const QString &API )
   }
   mAPI->setUsername( mUser );
   mAPI->setPassword( mPassword );
+  Q_ASSERT(false);
 }
 
-QString ResourceBlog::API() const
+ResourceBlog::APIType ResourceBlog::API() const
 {
   if ( mAPI ) {
-    if ( qobject_cast<KBlog::APIBlogger*>( mAPI ) ) {
-      return "Blogger";
-    }
     if ( qobject_cast<KBlog::APIMetaWeblog*>( mAPI ) ) {
-      return "MetaWeblog";
+      return MetaWeblog;
+    }
+    else if ( qobject_cast<KBlog::APIBlogger*>( mAPI ) ) {
+      return Blogger;
     }
   }
-  return 0;
+  return Unknown;
 }
 
 void ResourceBlog::setUseProgressManager( bool useProgressManager )
@@ -195,7 +215,6 @@ bool ResourceBlog::doLoad( bool )
 {
   kDebug( 5800 ) << "ResourceBlog::load()" << endl;
 
-
   mCalendar.close();
 
   /*
@@ -210,16 +229,17 @@ bool ResourceBlog::doLoad( bool )
 
   emit resourceChanged( this );
 
-
   if ( mAPI ) {
     if ( mLock->lock() ) {
       kDebug( 5800 ) << "Downloading blog posts from: " << mUrl << endl;
       mAPI->setBlogId( "1" ); //FIXME Set the correct blogid
       mAPI->setDownloadCount( 0 ); // Download ALL the posts
       connect ( mAPI, SIGNAL( listedPosting( KBlog::BlogPosting & ) ),
-                this, SLOT( slotListedPosting( KBlog::BlogPosting & ) ));
+                this, SLOT( slotListedPosting( KBlog::BlogPosting & ) ) );
       connect ( mAPI, SIGNAL( listPostingsFinished() ),
                 this, SLOT( slotListPostingsFinished() ));
+      connect ( mAPI, SIGNAL( error( KBlog::errorType &, QString & ) ),
+                this, SLOT( slotError( KBlog::errorType &, QString & ) ) );
 
       if ( mUseProgressManager ) {
         mProgress = KPIM::ProgressManager::createProgressItem(
@@ -235,6 +255,7 @@ bool ResourceBlog::doLoad( bool )
           << " - something else must be loading the file" << endl;
     }
   }
+  Q_ASSERT(false);
   return false;
 }
 
@@ -271,6 +292,12 @@ void ResourceBlog::slotListPostingsFinished()
   emit resourceLoaded( this );
 }
 
+void ResourceBlog::slotError( const KBlog::APIBlog::errorType &type,
+                              const QString &errorMessage )
+{
+  kError( 5800 ) << "ResourceBlog: " << type << ": " << errorMessage << endl;
+  Q_ASSERT(false);
+}
 
 bool ResourceBlog::doSave( bool )
 {
@@ -320,7 +347,7 @@ bool ResourceBlog::setValue( const QString &key, const QString &value )
     setPassword( value );
     return true;
   } else if ( key == "API" ) {
-    setAPI( value );
+    setAPI( QStringToAPIType( value ) );
     return true;
   } else {
     return ResourceCached::setValue( key, value );
@@ -340,11 +367,15 @@ bool ResourceBlog::addJournal( Journal *journal )
     //TODO: Categories
     mAPI->setBlogId( "1" );
     post->setCreationDateTime( date );
+    connect ( mAPI, SIGNAL( error( KBlog::errorType &, QString & ) ),
+              this, SLOT( slotError( KBlog::errorType &, QString & ) ) );
     mAPI->createPosting( post );
     return true;
   }
   kError() << "ResourceBlog::addJournal(): Journal not initialised." << endl;
   return false;
 }
+
+
 
 #include "resourceblog.moc"

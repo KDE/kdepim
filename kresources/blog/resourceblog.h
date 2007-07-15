@@ -40,7 +40,7 @@ namespace KCal
 */
 class ResourceBlog : public ResourceCached
 {
-    Q_OBJECT
+  Q_OBJECT
     friend class ResourceBlogConfig;
 
   public:
@@ -67,6 +67,23 @@ class ResourceBlog : public ResourceCached
       Destroy the blog resource.
     */
     ~ResourceBlog();
+
+    /**
+      The available APIs for accessing blogs.
+    */
+    enum APIType {
+      MetaWeblog, Blogger, Unknown
+    };
+
+    /**
+      Convert the API type enumerator to a QString.
+    */
+    QString APITypeToQString( const APIType &type ) ;
+
+    /**
+      Convert the API type enumerator to a QString.
+    */
+    APIType QStringToAPIType( const QString &type ) ;
 
     /**
       Read resource parameters from configuration information.
@@ -121,14 +138,14 @@ class ResourceBlog : public ResourceCached
     /**
       Set the XML-RPC API used to access the blog.
     */
-    void setAPI( const QString & );
+    void setAPI( const APIType & );
 
     /**
       Get name of the XML-RPC API used to access the blog.
 
-      @return The name of the chosen API.
+      @return The enumeration of the chosen API.
     */
-    QString API() const;
+    APIType API() const;
 
     /**
       Set whether to display the progress of operations.
@@ -240,6 +257,15 @@ class ResourceBlog : public ResourceCached
       Cleans up after the posting's listing completed.
     */
     void slotListPostingsFinished();
+
+    /**
+      Prints an error on a XML-RPC failure
+
+      @param type The type of the error.
+      @param errorMessage The specific cause of the error.
+    */
+    void slotError( const KBlog::APIBlog::errorType &type,
+                    const QString &errorMessage );
 
   protected:
     /**
