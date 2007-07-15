@@ -87,11 +87,10 @@ void ErrorLogDialog::updateErrorView() {
 
     m_errorLogListWidget->clear();
 
-    ErrorLogItem* currentItem;
-    for( int i=0; i<m_errorStack.size(); i++ )
-        currentItem = new ErrorLogItem( m_errorStack.at(i), m_errorLogListWidget );
+    for( int i = ( m_errorStack.size() - 1 ); i>=0; i-- )
+        new ErrorLogItem( m_errorStack.at(i), m_errorLogListWidget );
 
-    m_errorLogListWidget->setCurrentItem( currentItem );
+    m_errorLogListWidget->setCurrentItem( m_errorLogListWidget->item( 0 ) );
 }
 
 void ErrorLogDialog::showErrorDetails( QListWidgetItem* widgetItem ) {
@@ -161,10 +160,9 @@ void ErrorLogDialog::showErrorDetails( QListWidgetItem* widgetItem ) {
     QHashIterator<QString, QVariant> i( errorObject->customDebugInformation() );
     while( i.hasNext() ) {
         i.next();
-        htmlDescription += QString( "%1: %2" ).arg( i.key() )
-                                              .arg( i.value().toString() );
+        htmlDescription += QString( "%1: %2<br>" ).arg( i.key() )
+                                                  .arg( i.value().toString() );
     }
-    htmlDescription += "<br><br>";
 
     m_errorDetailsTextEdit->setHtml( htmlDescription );
 }
