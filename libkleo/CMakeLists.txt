@@ -84,7 +84,7 @@ set(kleo_LIB_SRCS ${libkleo_core_SRCS} ${libkleo_ui_SRCS} ${libkleo_backend_chia
 
 kde4_add_library(kleo-gpl SHARED ${kleo_LIB_SRCS})
 
-target_link_libraries(kleo-gpl  ${KDE4_KDE3SUPPORT_LIBS} gpgme qgpgme ${GPGME_LIBRARIES} )
+target_link_libraries(kleo-gpl ${KDE4_KDE3SUPPORT_LIBS} gpgme qgpgme ${GPGME_LIBRARIES} ${QT_QT3SUPPORT_LIBRARY})
 
 set_target_properties(kleo-gpl PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
 install(TARGETS kleo-gpl  DESTINATION ${LIB_INSTALL_DIR})
