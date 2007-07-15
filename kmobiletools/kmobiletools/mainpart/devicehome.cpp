@@ -319,27 +319,39 @@ void DeviceHome::loadEngine()
         emit deleteThis( objectName() );
         return;
     }
+
+    // engine <-> part communication
     connect(engine->constEngineData(), SIGNAL(connected()), this, SLOT(devConnected()) );
     connect(engine->constEngineData(), SIGNAL(disconnected()), this, SLOT(devDisconnected() ) );
     connect(engine->constEngineData(), SIGNAL(connected()), this, SLOT(enableWidgets() ) );
     connect(engine->constEngineData(), SIGNAL(disconnected() ), this, SLOT(disableWidgets() ) );
-    connect(engine, SIGNAL(phoneBookChanged() ), SLOT(updatePB()) );
-    //connect(engine, SIGNAL(phoneBookChanged(int, const ContactsList& ) ), SLOT(updatePB(int, const ContactsList& ) ) );
+
+    connect(engine->constEngineData(), SIGNAL(phoneBookChanged() ), SLOT(updatePB()) );
     connect(engine, SIGNAL(smsFoldersAdded() ), SLOT(addSMSFolders()) );
     connect(engine->constEngineData(), SIGNAL(smsAdded( const QString & )), SLOT(smsAdded( const QString &) ) );
     connect(engine->constEngineData(), SIGNAL(smsDeleted( const QString & )), SLOT(smsRemoved(const QString &) ) );
     connect(engine->constEngineData(), SIGNAL(smsModified( const QString & )), SLOT(smsModified( const QString & )) );
+    connect(engine->constEngineData()->smsList(), SIGNAL(updated()), this, SLOT(updateSMSList() ) );
+
     connect(engine->constEngineData(), SIGNAL(ringing( bool )), this, SLOT(slotRing( bool ) ) );
     connect(engine, SIGNAL(fullPhonebook()), this, SLOT(fullPhonebook()) );
-    connect(p_smsPart, SIGNAL(getSMSList() ), engine, SLOT( slotFetchSMS() ) );
-    connect(p_smsPart, SIGNAL(remove( SMS* ) ), engine, SLOT(slotDelSMS( SMS* ) ) );
-    connect(engine->constEngineData()->smsList(), SIGNAL(updated()), this, SLOT(updateSMSList() ) );
+
     connect(engine, SIGNAL(jobFinished(KMobileTools::Job::JobType)), this, SLOT(jobDone(KMobileTools::Job::JobType)));
+
 #ifdef HAVE_KCAL
     connect(engine, SIGNAL(calendarParsed() ), this, SLOT(slotCalendarFetched() ) );
 #endif
+
+
+    // part <-> part communication
+    connect(p_smsPart, SIGNAL(getSMSList() ), engine, SLOT( slotFetchSMS() ) );
+    connect(p_smsPart, SIGNAL(remove( SMS* ) ), engine, SLOT(slotDelSMS( SMS* ) ) );
+
+
     home->printInfoPage( 2, engine );
     engine->slotSearchPhone();
+
+    // setup status poll trigger
     if( DEVCFG(objectName() )->status_poll() && DEVCFG(objectName() )->status_pollTimeout() > 0 )
     {
         statusPollTimer=new QTimer(this);
@@ -347,6 +359,8 @@ void DeviceHome::loadEngine()
         connect(statusPollTimer, SIGNAL(timeout() ), engine, SLOT(slotPollStatus()) );
         statusPollTimer->start( (int) DEVCFG(objectName() )->status_pollTimeout() * 1000 );
     }
+
+    // setup sms poll trigger
     if( DEVCFG(objectName() )->smsPoll() && DEVCFG(objectName() )->sms_pollTimeout() > 0 )
     {
         smsPollTimer=new QTimer(this);
@@ -361,6 +375,11 @@ void DeviceHome::loadEngine()
     updateSMSCount();
 
     ErrorHandler::instance()->addError( new BaseError(ERROR_META_INFO) );
+
+    QHash<QString,QVariant> debugInfo;
+    debugInfo["Test"] = "Testinfo";
+    debugInfo["Bla"] = 3;
+    ErrorHandler::instance()->addError( new BaseError( QString("Test"), 10, QDateTime(), "Test", debugInfo ) );
 }
 
 
