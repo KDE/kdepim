@@ -2,6 +2,7 @@
 was-validated=false
 Name=Not Validated Key
 Name[fr]=Clé non validée
+Name[sv]=Ej validerad nyckel
 
 [Key Filter #1]
 was-validated=true
@@ -10,12 +11,14 @@ is-revoked=false
 foreground-color=255,0,0
 Name=Expired Key
 Name[fr]=Clé expirée
+Name[sv]=Ugången nyckel
 
 [Key Filter #2]
 was-validated=true
 is-revoked=true
 Name=Revoked Key
 Name[fr]=Clé révoquée
+Name[sv]=Återkallad nyckel
 
 [Key Filter #3]
 was-validated=true
@@ -23,6 +26,7 @@ is-root-certificate=true
 is-validity=ultimate
 Name=Trusted Root Certificate
 Name[fr]=Certificat racine de confiance
+Name[sv]=Pålitligt rotcertifikat
 background-color=0,0,255
 font-bold=true
 
@@ -33,15 +37,18 @@ is-root-certificate=true
 is-not-validity=ultimate
 Name=Not Trusted Root Certificate
 Name[fr]=Certificat racine non fiable
+Name[sv]=Ej pålitligt rotcertifikat
 
 [Key Filter #5]
 was-validated=true
 is-qualified=true
 font-bold=true
 Name=Keys for qualified signatures
+Name[sv]=Nycklar för kvalificerade signaturer
 
 [Key Filter #6]
 was-validated=true
 Name=Other keys
+Name[sv]=Övriga nycklar
 
 
