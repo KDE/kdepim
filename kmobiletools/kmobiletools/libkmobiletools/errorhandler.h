@@ -20,9 +20,9 @@
 #ifndef KMOBILETOOLSERRORHANDLER_H
 #define KMOBILETOOLSERRORHANDLER_H
 
-#include <QStack>
-#include <QString>
-#include <QObject>
+#include <QtCore/QStack>
+#include <QtCore/QString>
+#include <QtCore/QObject>
 
 #include "errortypes/baseerror.h"
 #include "kmobiletools_export.h"
