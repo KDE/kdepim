@@ -49,8 +49,8 @@ class KDHorizontalLine : public Q3Frame {
   Q_OBJECT
   Q_PROPERTY( QString title READ title WRITE setTitle )
 public:
-  KDHorizontalLine( QWidget * parent=0, const char * name=0,  Qt::WFlags f=0 );
-  KDHorizontalLine( const QString & title, QWidget * parent=0, const char * name=0,  Qt::WFlags f=0 );
+  explicit KDHorizontalLine( QWidget * parent=0, const char * name=0,  Qt::WFlags f=0 );
+  explicit KDHorizontalLine( const QString & title, QWidget * parent=0, const char * name=0,  Qt::WFlags f=0 );
   ~KDHorizontalLine();
 
   QString title() const { return mTitle; }

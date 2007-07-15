@@ -77,8 +77,8 @@ namespace Kleo {
   class KLEO_EXPORT KeyRequester : public QWidget {
     Q_OBJECT
   public:
-    KeyRequester( unsigned int allowedKeys, bool multipleKeys=false,
-		  QWidget * parent=0 );
+    explicit KeyRequester( unsigned int allowedKeys, bool multipleKeys=false,
+                           QWidget * parent=0 );
     // Constructor for Qt Designer
     KeyRequester( QWidget * parent=0 );
     ~KeyRequester();
@@ -167,9 +167,11 @@ namespace Kleo {
     /**
      * Preferred constructor
      */
-    EncryptionKeyRequester( bool multipleKeys=false, unsigned int proto=AllProtocols,
-			    QWidget * parent=0,
-			    bool onlyTrusted=true, bool onlyValid=true );
+    explicit EncryptionKeyRequester( bool multipleKeys=false,
+                                     unsigned int proto=AllProtocols,
+                                     QWidget * parent=0,
+                                     bool onlyTrusted=true,
+                                     bool onlyValid=true );
     /**
      * Constructor for Qt designer
      */
@@ -199,9 +201,10 @@ namespace Kleo {
      * @param onlyTrusted only show trusted keys
      * @param onlyValid only show valid keys
      */
-    SigningKeyRequester( bool multipleKeys=false, unsigned int proto=AllProtocols,
-			 QWidget * parent=0,
-			 bool onlyTrusted=true, bool onlyValid=true );
+    explicit SigningKeyRequester( bool multipleKeys=false,
+                                  unsigned int proto=AllProtocols,
+                                  QWidget * parent=0,
+                                  bool onlyTrusted=true, bool onlyValid=true );
     /**
      * Constructor for Qt designer
      */

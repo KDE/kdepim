@@ -61,8 +61,9 @@
 
 using namespace Kleo;
 
-inline KIcon loadIcon( QString s ) {
-  return KIcon( s.replace( QRegExp( "[^a-zA-Z0-9_]" ), "-" ) );
+inline KIcon loadIcon( const QString &s ) {
+  QString ss = s;
+  return KIcon( ss.replace( QRegExp( "[^a-zA-Z0-9_]" ), "-" ) );
 }
 
 static const KPageView::FaceType determineJanusFace( const Kleo::CryptoConfig * config ) {

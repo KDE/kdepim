@@ -45,7 +45,7 @@ namespace Kleo {
   class KLEO_EXPORT ProgressBar : public QProgressBar {
     Q_OBJECT
   public:
-    ProgressBar( QWidget * parent=0, Qt::WFlags f=0 );
+    explicit ProgressBar( QWidget * parent=0, Qt::WFlags f=0 );
 
   public Q_SLOTS:
     void slotProgress( const QString & message, int type, int current, int total );

@@ -538,10 +538,10 @@ public:
         \sa ~CryptPlugWrapper, setActive, active, initialize, deinitialize
         \sa initStatus
     */
-    CryptPlugWrapper( const QString& name=QString(),
-                      const QString& libName=QString(),
-                      const QString& update=QString(),
-                      bool           active = false );
+    explicit CryptPlugWrapper( const QString& name=QString(),
+                               const QString& libName=QString(),
+                               const QString& update=QString(),
+                               bool           active = false );
 
     /*! \ingroup groupAdmin
         \brief Destructor of CRYPTPLUG wrapper class.
@@ -798,7 +798,7 @@ public:
 
     Kleo::ImportJob * importJob() const;
     Kleo::ExportJob * publicKeyExportJob( bool armor=false ) const;
-    Kleo::ExportJob * secretKeyExportJob( bool armor=false, const QString& charset = QString::null ) const;
+    Kleo::ExportJob * secretKeyExportJob( bool armor=false, const QString& charset = QString() ) const;
     Kleo::DownloadJob * downloadJob( bool armor=false ) const;
     Kleo::DeleteJob * deleteJob() const;
 

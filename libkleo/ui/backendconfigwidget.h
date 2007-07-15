@@ -48,7 +48,7 @@ namespace Kleo {
   class KLEO_EXPORT BackendConfigWidget : public QWidget {
     Q_OBJECT
   public:
-    BackendConfigWidget( CryptoBackendFactory * factory, QWidget * parent=0, const char * name=0, Qt::WFlags f=0 );
+    explicit BackendConfigWidget( CryptoBackendFactory * factory, QWidget * parent=0, const char * name=0, Qt::WFlags f=0 );
     ~BackendConfigWidget();
 
     void load();

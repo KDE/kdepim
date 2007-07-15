@@ -47,7 +47,7 @@ namespace Kleo {
     Q_OBJECT
   public:
     /*! Use Kleo::DNAttributeMapper::instance()->configWidget( parent, name ) instead. */
-    DNAttributeOrderConfigWidget( DNAttributeMapper * mapper, QWidget * parent=0, const char * name=0, Qt::WFlags f=0 );
+    explicit DNAttributeOrderConfigWidget( DNAttributeMapper * mapper, QWidget * parent=0, const char * name=0, Qt::WFlags f=0 );
     ~DNAttributeOrderConfigWidget();
 
     void load();

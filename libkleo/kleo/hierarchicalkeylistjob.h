@@ -70,8 +70,9 @@ namespace Kleo {
   class KLEO_EXPORT HierarchicalKeyListJob : public KeyListJob {
     Q_OBJECT
   public:
-    HierarchicalKeyListJob( const CryptoBackend::Protocol * protocol,
-			    bool remote=false, bool includeSigs=false, bool validating=false );
+    explicit HierarchicalKeyListJob( const CryptoBackend::Protocol * protocol,
+                                     bool remote=false, bool includeSigs=false,
+                                     bool validating=false );
     ~HierarchicalKeyListJob();
 
     /**

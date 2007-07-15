@@ -1,14 +1,15 @@
 /*
-    cryptoconfigdialog.h
+    adddirectoryservicedialogimpl.h
 
-    This file is part of kgpgcertmanager
-    Copyright (c) 2004 Klarälvdalens Datakonsult AB
+    This file is part of Kleopatra, the KDE keymanager
+    Copyright (c) 2001,2002,2004 Klarälvdalens Datakonsult AB
 
-    Libkleopatra is free software; you can redistribute it and/or
-    modify it under the terms of the GNU General Public License,
-    version 2, as published by the Free Software Foundation.
+    Kleopatra is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
 
-    Libkleopatra is distributed in the hope that it will be useful,
+    Kleopatra is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
     General Public License for more details.
@@ -29,41 +30,20 @@
     your version.
 */
 
-#ifndef CRYPTOCONFIGDIALOG_H
-#define CRYPTOCONFIGDIALOG_H
+#ifndef ADDDIRECTORYSERVICEDIALOGIMPL_H
+#define ADDDIRECTORYSERVICEDIALOGIMPL_H
+#include "ui_adddirectoryservicedialog.h"
 
-#include <kleo/kleo_export.h>
-#include <kdialog.h>
-
-namespace Kleo {
-
-  class CryptoConfig;
-  class CryptoConfigModule;
-
-  /**
-   * Simple KDialog wrapper around CryptoConfigModule
-   */
-  class KLEO_EXPORT CryptoConfigDialog : public KDialog
-  {
+class AddDirectoryServiceDialogImpl : public QDialog, public Ui::AddDirectoryServiceDialog
+{
     Q_OBJECT
-  public:
-    explicit CryptoConfigDialog( Kleo::CryptoConfig* config, QWidget *parent = 0 );
 
-  protected Q_SLOTS:
-    void slotOk();
+public:
+    explicit AddDirectoryServiceDialogImpl( QWidget* parent = 0, const char* name = 0, bool modal = false, Qt::WFlags fl = 0 );
+    ~AddDirectoryServiceDialogImpl();
+private Q_SLOTS:
+    void slotAccept();
     void slotCancel();
-    void slotDefault();
-    void slotApply();
-    void slotUser1(); // reset
+};
 
-  public Q_SLOTS:
-    void slotChanged();
-
-  private:
-    CryptoConfigModule* mMainWidget;
-  };
-
-}
-
-#endif /* CRYPTOCONFIGDIALOG_H */
-
+#endif // ADDDIRECTORYSERVICEDIALOGIMPL_H

@@ -47,7 +47,7 @@ namespace Kleo {
   class CryptoConfigModule : public KPageWidget {
     Q_OBJECT
   public:
-    CryptoConfigModule( Kleo::CryptoConfig* config, QWidget * parent=0 );
+    explicit CryptoConfigModule( Kleo::CryptoConfig* config, QWidget * parent=0 );
 
     void save();
     void reset(); // i.e. reload current settings, discarding user input

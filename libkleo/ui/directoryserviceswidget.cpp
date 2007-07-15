@@ -30,8 +30,8 @@
     your version.
 */
 
-#include "ui_directoryserviceswidgetbase.h"
 #include "directoryserviceswidget.h"
+#include "ui_directoryserviceswidgetbase.h"
 #include "adddirectoryservicedialogimpl.h"
 #include "cryptplugwrapper.h"
 
@@ -230,7 +230,7 @@ void DirectoryServicesWidget::setInitialServices( const KUrl::List& urls )
 {
     d->ui.x500LV->clear();
     for( KUrl::List::const_iterator it = urls.begin(); it != urls.end(); ++it ) {
-        QString dn = QUrl::fromPercentEncoding( (*it).query().mid( 1 ).toLatin1() ); // decode query and skip leading '?'
+        QString dn = KUrl::fromPercentEncoding( (*it).query().mid( 1 ).toLatin1() ); // decode query and skip leading '?'
         (void)new QX500ListViewItem( d->ui.x500LV, d->ui.x500LV->lastItem(),
                                      (*it).host(),
                                      QString::number( (*it).port() ),

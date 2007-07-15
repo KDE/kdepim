@@ -18,9 +18,9 @@
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
     General Public License for more details.
 
-    You should have received a copy of the GNU General Public License
-    along with this program; if not, write to the Free Software
-    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+    You should have received a copy of the GNU General Public License along
+    with this program; if not, write to the Free Software Foundation, Inc.,
+    51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
     In addition, as a special exception, the copyright holders give
     permission to link the code of this program with any edition of
@@ -141,8 +141,8 @@ parse_dn_part (DnPair *array, const unsigned char *string)
   if (!n)
     return NULL; /* empty key */
   p = (char*)malloc (n+1);
-  
-  
+
+
   memcpy (p, string, n);
   p[n] = 0;
   trim_trailing_spaces ((char*)p);
@@ -166,8 +166,8 @@ parse_dn_part (DnPair *array, const unsigned char *string)
         return NULL; /* empty or odd number of digits */
       n /= 2;
       array->value = p = (char*)malloc (n+1);
-      
-      
+
+
       for (s1=string; n; s1 += 2, n--)
         *p++ = xtoi_2 (s1);
       *p = 0;
@@ -180,7 +180,7 @@ parse_dn_part (DnPair *array, const unsigned char *string)
             { /* pair */
               s++;
               if (*s == ',' || *s == '=' || *s == '+'
-                  || *s == '<' || *s == '>' || *s == '#' || *s == ';' 
+                  || *s == '<' || *s == '>' || *s == '#' || *s == ';'
                   || *s == '\\' || *s == '\"' || *s == ' ')
                 n++;
               else if (hexdigitp (s) && hexdigitp (s+1))
@@ -195,18 +195,18 @@ parse_dn_part (DnPair *array, const unsigned char *string)
             return NULL; /* invalid encoding */
           else if (*s == ',' || *s == '=' || *s == '+'
                    || *s == '<' || *s == '>' || *s == '#' || *s == ';' )
-            break; 
+            break;
           else
             n++;
         }
 
       array->value = p = (char*)malloc (n+1);
-      
-      
+
+
       for (s=string; n; s++, n--)
         {
           if (*s == '\\')
-            { 
+            {
               s++;
               if (hexdigitp (s))
                 {
@@ -304,7 +304,7 @@ reorder_dn( const Kleo::DN::Attribute::List & dn ) {
 	if ( (*dnit).name() == *oit )
 	  result.push_back( *dnit );
     }
-  
+
   return result;
 }
 
