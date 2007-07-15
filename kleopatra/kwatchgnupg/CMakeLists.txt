@@ -1,6 +1,4 @@
 
-include_directories( ${CMAKE_SOURCE_DIR}/libkleo  )
-
 
 ########### next target ###############
 
@@ -14,7 +12,7 @@ set(kwatchgnupg_SRCS
 
 kde4_add_executable(kwatchgnupg ${kwatchgnupg_SRCS})
 
-target_link_libraries(kwatchgnupg  kleopatra ${KDE4_KUTILS_LIBS} )
+target_link_libraries(kwatchgnupg ${KDE4_KUTILS_LIBS} ${KDE4_KLEO_LIBS})
 
 install(TARGETS kwatchgnupg  DESTINATION ${BIN_INSTALL_DIR} )
 

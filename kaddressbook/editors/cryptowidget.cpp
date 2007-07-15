@@ -111,7 +111,7 @@ CryptoWidget::CryptoWidget( KABC::AddressBook *ab, QWidget *parent )
   topLayout->addWidget( box, 3, 0, 1, 2 );
 
 
-  // Send preferences/sign (see libkleo/kleo/enum.h)
+  // Send preferences/sign (see kleo/kleo/enum.h)
   KHBox* hbox = new KHBox( box );
 
   l = new QLabel( i18n( "Sign:" ), hbox );
@@ -123,7 +123,7 @@ CryptoWidget::CryptoWidget( KABC::AddressBook *ab, QWidget *parent )
                            static_cast<Kleo::SigningPreference>( i ) ) );
   boxLayout->addWidget( hbox );
 
-  // Send preferences/encrypt (see libkleo/kleo/enum.h)
+  // Send preferences/encrypt (see kleo/kleo/enum.h)
   hbox = new KHBox( box );
 
   l = new QLabel( i18n("Encrypt:"), hbox );

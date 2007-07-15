@@ -1,6 +1,4 @@
 
-include_directories( ${CMAKE_SOURCE_DIR}/libkleo ${CMAKE_SOURCE_DIR}/libkleo/ui ${CMAKE_BINARY_DIR}/libkleo  )
-
 
 ########### next target ###############
 
@@ -20,7 +18,7 @@ kde4_add_plugin(kcm_kleopatra ${kcm_kleopatra_PART_SRCS})
 
 
 
-target_link_libraries(kcm_kleopatra  ${KDE4_KDEUI_LIBS} kleopatra )
+target_link_libraries(kcm_kleopatra ${KDE4_KDEUI_LIBS} ${KDE4_KLEO_LIBS} ${QT_QT3SUPPORT_LIBRARY})
 
 install(TARGETS kcm_kleopatra  DESTINATION ${PLUGIN_INSTALL_DIR})
 
