@@ -341,7 +341,7 @@ bool ResourceTVAnytime::readService( const QString & serviceId )
 
   kDebug() << "reading schedule for " << serviceId << " on " << dates << endl;
 
-  const KTimeZone *london = KSystemTimeZones::zone( "Europe/London" );
+  KTimeZone london = KSystemTimeZones::zone( "Europe/London" );
 
   for( QStringList::Iterator it = dates.begin(); it != dates.end(); ++it )
   {

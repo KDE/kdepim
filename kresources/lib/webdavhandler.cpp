@@ -161,14 +161,14 @@ QDateTime WebdavHandler::utcAsZone( const QDateTime& utc, const QString& timeZon
     kError() << "WebdavHandler::utcAsZone(): non-UTC time supplied" << endl;
     return utc;
   }
-  const KTimeZone *tz = KSystemTimeZones::zone( timeZoneId );
-  if ( !tz ) {
+  KTimeZone tz = KSystemTimeZones::zone( timeZoneId );
+  if ( !tz.isValid() ) {
     // Default to no conversion when time zone not recognized
     QDateTime local = utc;
     local.setTimeSpec( Qt::LocalTime );
     return local;
   }
-  return tz->toZoneTime( utc );
+  return tz.toZoneTime( utc );
 }
 
 QDateTime WebdavHandler::zoneAsUtc( const QDateTime& zone, const QString& timeZoneId )
@@ -177,12 +177,12 @@ QDateTime WebdavHandler::zoneAsUtc( const QDateTime& zone, const QString& timeZo
     kError() << "WebdavHandler::zoneAsUtc(): UTC time supplied" << endl;
     return zone;
   }
-  const KTimeZone *tz = KSystemTimeZones::zone( timeZoneId );
-  if ( !tz ) {
+  KTimeZone tz = KSystemTimeZones::zone( timeZoneId );
+  if ( !tz.isValid() ) {
     // Default to no conversion when time zone not recognized
     QDateTime utc = zone;
     utc.setTimeSpec( Qt::UTC );
     return utc;
   }
-  return tz->toUtc( zone );
+  return tz.toUtc( zone );
 }
