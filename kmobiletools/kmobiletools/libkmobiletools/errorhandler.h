@@ -20,12 +20,14 @@
 #ifndef KMOBILETOOLSERRORHANDLER_H
 #define KMOBILETOOLSERRORHANDLER_H
 
-#include <QtCore/QStack>
+#include <QStack>
+#include <QString>
+#include <QObject>
+
+#include "errortypes/baseerror.h"
 #include "kmobiletools_export.h"
 
 namespace KMobileTools {
-
-class BaseError;
 
 /**
     @author Matthias Lechner <matthias@lmme.de>
@@ -37,7 +39,10 @@ class BaseError;
 
     ErrorHandler::instance()->addError( new BaseError( ... ) );
 */
-class KMOBILETOOLS_EXPORT ErrorHandler {
+class KMOBILETOOLS_EXPORT ErrorHandler : public QObject {
+    Q_OBJECT
+
+friend class ErrorHandlerPrivate;
 public:
     /**
      * Returns an ErrorHandler instance
@@ -69,10 +74,11 @@ public:
 
     ~ErrorHandler();
 
+Q_SIGNALS:
+    void errorOccurred( const QString& message, BaseError::Priority );
+
 private:
     ErrorHandler();
-    // making copy constructor private since this is a singleton
-    ErrorHandler( const ErrorHandler& );
 
     /**
      * Adds information about the @p error to the log file
@@ -80,6 +86,7 @@ private:
      * @param error the error to add to the log
      */
     void writeToLog( const BaseError* error );
+    void displayError( const BaseError* error );
 };
 
 }

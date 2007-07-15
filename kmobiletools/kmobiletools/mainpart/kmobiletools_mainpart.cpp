@@ -188,7 +188,6 @@ void kmobiletoolsMainPart::slotHide()
 
 kmobiletoolsMainPart::~kmobiletoolsMainPart()
 {
-    delete m_errorLogDialog;
     kDebug() << "kmobiletoolsMainPart::~kmobiletoolsMainPart()\n";
 }
 

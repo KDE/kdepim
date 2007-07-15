@@ -22,6 +22,7 @@
 #include "errortypes/baseerror.h"
 
 #include <KMessageBox>
+#include <KPassivePopup>
 #include <KGlobal>
 #include <QMutex>
 
@@ -29,29 +30,30 @@ namespace KMobileTools {
 
 class ErrorHandlerPrivate {
 public:
-    ErrorHandler* m_uniqueInstance;
-    static QMutex m_mutex;
-    static QStack<const BaseError*> m_errorStack;
-};
+    ErrorHandler m_uniqueInstance;
+    QMutex m_mutex;
+    QStack<const BaseError*> m_errorStack;
 
-QMutex ErrorHandlerPrivate::m_mutex;
-QStack<const BaseError*> ErrorHandlerPrivate::m_errorStack;
+    ~ErrorHandlerPrivate() {
+        qDeleteAll( m_errorStack.begin(), m_errorStack.end() );
+    }
+};
 
 K_GLOBAL_STATIC(ErrorHandlerPrivate, d)
 
 ErrorHandler::ErrorHandler()
+: QObject( 0 )
 {
 }
 
 
 ErrorHandler::~ErrorHandler()
 {
-    qDeleteAll( d->m_errorStack.begin(), d->m_errorStack.end() );
 }
 
 ErrorHandler* ErrorHandler::instance() {
     // instance is automatically created
-    return d->m_uniqueInstance;
+    return &d->m_uniqueInstance;
 }
 
 void ErrorHandler::addError( const BaseError* error ) {
@@ -65,30 +67,8 @@ void ErrorHandler::addError( const BaseError* error ) {
     } else
         d->m_errorStack.push( error );
 
-    QString errorMessage = QString( "An error has just occurred:\nFile: %1\nLine: %2\n"
-                                    "Description: %3\nDate/Time: %4\n Method: %5\nPriority: " )
-                                    .arg( error->fileName() ).arg( error->lineNumber() )
-                                    .arg( error->description() ).arg( error->dateTime().toString() )
-                                    .arg( error->methodName() );
-
-    QString priority;
-    switch( error->priority() ) {
-        case BaseError::Low:
-            priority = "Low";
-            break;
-
-        case BaseError::Medium:
-            priority = "Medium";
-            break;
-
-        case BaseError::High:
-            priority = "High";
-            break;
-    }
-
+    displayError( error );
     writeToLog( error );
-
-    KMessageBox::error( 0, errorMessage + priority );
 
     d->m_mutex.unlock();
 }
@@ -113,4 +93,13 @@ QStack<const BaseError*> ErrorHandler::errorStack() {
     return d->m_errorStack;
 }
 
+void ErrorHandler::displayError( const BaseError* error ) {
+    if( receivers( SIGNAL( errorOccurred( const BaseError* ) ) ) > 0 )
+        emit errorOccurred( error->description(), error->priority() );
+    else
+        KMessageBox::error( 0, error->description() );
 }
+
+}
+
+#include "errorhandler.moc"
