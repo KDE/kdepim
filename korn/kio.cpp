@@ -41,7 +41,6 @@
 #include<kconfigbase.h>
 #include<kdebug.h>
 #include<klocale.h>
-#include<k3process.h>
 
 #include<qlist.h>
 #include<qregexp.h>
@@ -84,7 +83,6 @@ KKioDrop::KKioDrop()
 	_read( 0 ),
 	_readSubjectsTotalSteps( 0 ),
 	_deleteMailsTotalSteps( 0 ),
-	_process( 0 ),
 	_mailurls( 0 )
 {
 	_kurl = new KUrl;
@@ -122,7 +120,6 @@ KKioDrop::KKioDrop( AccountSettings* )
 	_read( 0 ),
 	_readSubjectsTotalSteps( 0 ),
 	_deleteMailsTotalSteps( 0 ),
-	_process( 0 ),
 	_mailurls( 0 )
 {
 	_kurl = new KUrl;

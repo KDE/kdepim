@@ -33,7 +33,7 @@
 #include <klocale.h>
 #include <kpassivepopup.h>
 #include <kmenu.h>
-#include <k3process.h>
+#include <kprocess.h>
 #include <kshortcut.h>
 #include <kstandardaction.h>
 #include <ktoolinvocation.h>
@@ -89,14 +89,12 @@ void BoxContainerItem::readConfig( BoxSettings* settings, BoxSettings *config_bo
 
 void BoxContainerItem::runCommand( const QString& cmd )
 {
-	K3Process *process = new K3Process;
-	process->setUseShell( true );
-	if( hasNewMessages() )
-		process->setEnvironment( "HASNEWMESSAGES", "yes" );
-	process->setEnvironment( "NUMBEROFMESSAGES", QString::number( totalMessages() ) );
-	*process << cmd;
-	connect( process, SIGNAL( processExited (K3Process *) ), this, SLOT( processExited( K3Process * ) ) );
-	process->start();
+	KProcess m_process;
+	m_process.setEnv("NUMBEROFMESSAGES", QString::number( totalMessages() ) );
+	if(hasNewMessages() )
+	   m_process.setEnv("HASNEWMESSAGES", "yes" );
+        m_process.setShellCommand(cmd);
+	m_process.execute ();
 }
 
 void BoxContainerItem::mouseButtonPressed( Qt::MouseButton state )
@@ -429,11 +427,6 @@ void BoxContainerItem::startTimer()
 void BoxContainerItem::stopTimer()
 {
 	doStopTimer();
-}
-
-void BoxContainerItem::processExited( K3Process* proc )
-{
-	delete proc;
 }
 
 #include "boxcontaineritem.moc"
