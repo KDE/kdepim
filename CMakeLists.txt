@@ -97,8 +97,11 @@ macro_optional_add_subdirectory(kfeed)
 macro_optional_add_subdirectory(akregator)
 macro_optional_add_subdirectory(doc)
 if(NOT WIN32)
-  # Laurent knode depend against libkpgp which doesn't compile on windows system for the moment
+  # Laurent knode/kmail depend against libkpgp which doesn't compile on windows system for the moment
   macro_optional_add_subdirectory(knode)
+  if(GPGME_FOUND)
+    macro_optional_add_subdirectory(kmail)
+  endif(GPGME_FOUND)
 endif(NOT WIN32)
 macro_optional_add_subdirectory(kaddressbook)
 
@@ -111,10 +114,6 @@ endif (Q_WS_X11)
 add_subdirectory(kdgantt1)
 macro_optional_add_subdirectory(strigi-analyzer)
 add_subdirectory(kioslave)
-
-if(GPGME_FOUND)
-   macro_optional_add_subdirectory(kmail)
-endif(GPGME_FOUND)
 
 macro_optional_add_subdirectory(kmailcvt)
 macro_optional_add_subdirectory(knotes)
