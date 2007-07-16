@@ -962,8 +962,7 @@ bool kio_sieveProtocol::authenticate()
 	ai.comment = i18n("Please enter your authentication details for your sieve account "
 	  "(usually the same as your email password):");
 
-	result = sasl_client_new( "sieve", m_sServer.latin1(), 0, 0, callbacks, 0, &conn );
-
+	result = sasl_client_new( "sieve", m_sServer.toLatin1(), 0, 0, callbacks, 0, &conn );
 	if ( result != SASL_OK ) {
 		ksDebug() << "sasl_client_new failed with: " << result << endl;
 		SASLERROR
