@@ -142,8 +142,8 @@ void CalendarDiffAlgo::diffIncidenceBase( KCal::IncidenceBase *left,
 
   if ( left->duration() != right->duration() ) {
     conflictField( i18n( "Duration" ),
-                   QString::number( left->duration() ),
-                   QString::number( right->duration() ) );
+                   QString::number( left->duration().asSeconds() ),
+                   QString::number( right->duration().asSeconds() ) );
   }
 }
 
