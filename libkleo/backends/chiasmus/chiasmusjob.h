@@ -40,7 +40,6 @@
 
 #include <gpgmepp/context.h>
 
-class K3Process;
 
 namespace Kleo {
 
