@@ -21,7 +21,7 @@
 #include <kconfigbase.h>
 #include <kdebug.h>
 #include <klocale.h>
-#include <k3process.h>
+#include <kprocess.h>
 
 #include <QByteArray>
 #include <QRegExp>
@@ -56,16 +56,20 @@ void ProcessDrop::recheck()
 	//Make the process if it doesn't exist yet.
 	if( !_process && !_program->isEmpty() )
 	{
-		_process = new K3ShellProcess;
-		*_process << *_program;
+		_process = new KProcess;
+		_process->setShellCommand(*_program);
+		connect(_process, SIGNAL(finished(int, QProcess::ExitStatus)),
+				SLOT(slotFinished(int, QProcess::ExitStatus)));
+
 		connect( _process, SIGNAL( processExited( K3Process* ) ), this, SLOT( slotExited( K3Process* ) ) );
-		connect( _process, SIGNAL( receivedStdout( K3Process*, char*, int ) ), this, SLOT( slotDataReceived( K3Process *, char*, int) ) );
+		connect( _process, SIGNAL(readyReadStandardOutput ()), this, SLOT( slotDataReceived() ) );
 	}
 
 	//Start process if it is not already running
-	if( _process && !_process->isRunning() )
+	if( _process && (_process->state ()!=QProcess::Running) )
 	{
-		_valid = _process->start( K3Process::NotifyOnExit, K3Process::Stdout );
+		_process->start();
+		_valid = _process->waitForStarted();
 		if( !_valid )
 			kWarning() << i18n( "Could not start process %1", *_program ) << endl;
 	}
@@ -98,26 +102,19 @@ bool ProcessDrop::writeConfigGroup ( KConfigBase& ) const
 	return true;
 }
 
-void ProcessDrop::slotExited( K3Process* )
+void ProcessDrop::slotExited(int, QProcess::ExitStatus)
 {
 }
 
-void ProcessDrop::slotDataReceived( K3Process *proc, char* data, int length )
+void ProcessDrop::slotDataReceived()
 {
 	QString line;
 	QRegExp lastNumber( "(.*\\D|)(\\d+)\\D*");
 	int index;
 	int result = -1;
 
-	//Test if the message comes from the right process
-	if( proc != _process )
-	{
-		kDebug() << "Got wrong process in slotDataReceived()" << endl;
-		return;
-	}
-
 	//Append the data to the buffer
-	_receivedBuffer->append( QByteArray( data, length ) );
+	_receivedBuffer->append( _process->readAllStandardOutput () );
 	_receivedBuffer->replace( '\n', '\0' );
 
 	//Search for numbers in every completed line

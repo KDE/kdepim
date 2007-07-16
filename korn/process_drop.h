@@ -26,9 +26,7 @@
  */
 
 #include "polldrop.h"
-
-class K3Process;
-class K3ShellProcess;
+#include <kprocess.h>
 
 class QByteArray;
 class QString;
@@ -123,21 +121,18 @@ private slots:
 	 *
 	 * @param proc the process which is terminated
 	 */
-	void slotExited( K3Process *proc );
+	void slotExited(int, QProcess::ExitStatus);
 	
 	/**
 	 * This function is called when data from the process is received.
 	 * The data is append to _receivedBuffer, and checked for numbers after that.
 	 *
-	 * @param proc the process which send the data
-	 * @param data the data iself
-	 * @param length the length of the data
 	 */
-	void slotDataReceived( K3Process *proc, char* data, int length );
+	void slotDataReceived();
 private:
 	bool _valid;
 	bool _waitForRechecked;
-	K3ShellProcess *_process;
+	KProcess *_process;
 	QString *_program;
 	QByteArray *_receivedBuffer;
 };
