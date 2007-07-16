@@ -58,7 +58,7 @@ extern "C" {
 using namespace KIMAP;
 
 #ifdef HAVE_LIBSASL2
-static sasl_callback_t client_callbacks[] = {
+static sasl_callback_t callbacks[] = {
     { SASL_CB_ECHOPROMPT, NULL, NULL },
     { SASL_CB_NOECHOPROMPT, NULL, NULL },
     { SASL_CB_GETREALM, NULL, NULL },
@@ -233,7 +233,7 @@ imapParser::clientAuthenticate ( KIO::SlaveBase *slave, KIO::AuthInfo &ai,
   result = sasl_client_new( "imap", /* FIXME: with cyrus-imapd, even imaps' digest-uri
                                        must be 'imap'. I don't know if it's good or bad. */
                        aFQDN.toLatin1(),
-                       0, 0, client_callbacks, 0, &conn );
+                       0, 0, callbacks, 0, &conn );
 
   if ( result != SASL_OK ) {
     kDebug(7116) << "sasl_client_new failed with: " << result << endl;

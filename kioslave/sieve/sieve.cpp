@@ -64,18 +64,6 @@ static sasl_callback_t callbacks[] = {
     { SASL_CB_USER, NULL, NULL },
     { SASL_CB_AUTHNAME, NULL, NULL },
     { SASL_CB_PASS, NULL, NULL },
-    { SASL_CB_GETOPT, NULL, NULL },
-    { SASL_CB_CANON_USER, NULL, NULL },
-    { SASL_CB_LIST_END, NULL, NULL }
-};
-
-static sasl_callback_t client_callbacks[] = {
-    { SASL_CB_ECHOPROMPT, NULL, NULL },
-    { SASL_CB_NOECHOPROMPT, NULL, NULL },
-    { SASL_CB_GETREALM, NULL, NULL },
-    { SASL_CB_USER, NULL, NULL },
-    { SASL_CB_AUTHNAME, NULL, NULL },
-    { SASL_CB_PASS, NULL, NULL },
     { SASL_CB_CANON_USER, NULL, NULL },
     { SASL_CB_LIST_END, NULL, NULL }
 };
@@ -96,9 +84,9 @@ extern "C"
 			return -1;
 		}
 
-		if ( sasl_client_init( callbacks ) != SASL_OK ) {
+		if ( sasl_client_init( NULL ) != SASL_OK ) {
 			fprintf(stderr, "SASL library initialization failed!\n");
-			return -1;
+			::exit (-1);
 		}
 
 		kio_sieveProtocol slave(argv[2], argv[3]);
@@ -974,8 +962,7 @@ bool kio_sieveProtocol::authenticate()
 	ai.comment = i18n("Please enter your authentication details for your sieve account "
 	  "(usually the same as your email password):");
 
-	result = sasl_client_new( "sieve",
-		m_sServer.toLatin1(), 0, 0, client_callbacks, 0, &conn );
+	result = sasl_client_new( "sieve", m_sServer.latin1(), 0, 0, callbacks, 0, &conn );
 
 	if ( result != SASL_OK ) {
 		ksDebug() << "sasl_client_new failed with: " << result << endl;
