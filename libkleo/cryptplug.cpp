@@ -30,20 +30,6 @@
 #include <gpgmepp/data.h>
 #include <gpgmepp/importresult.h>
 
-// not defined on win32 :(
-
-#ifdef _WIN32
-
-# ifndef LC_MESSAGES
-
-#  define LC_MESSAGES 42
-
-# endif
-
-#endif
-
-
-
 /*! \file gpgmeplug.c
     \brief GPGME implementation of CRYPTPLUG following the
     specification located in common API header cryptplug.h.
