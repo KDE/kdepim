@@ -75,12 +75,15 @@ kde4_add_ui_files(libkleo_ui_SRCS
 	${CMAKE_SOURCE_DIR}/kleo/ui/directoryserviceswidgetbase.ui
 )
 
-set(kleo_LIB_SRCS ${libkleo_core_SRCS} ${libkleo_ui_SRCS} ${libkleo_backend_chiasmus_SRCS} ${libkleo_backend_qgpgme_SRCS}
+set(kleo_LIB_SRCS ${libkleo_core_SRCS} ${libkleo_ui_SRCS} ${libkleo_backend_chiasmus_SRCS}
    cryptplug.cpp 
    cryptplugwrapper.cpp 
    cryptplugwrapperlist.cpp 
    cryptplugfactory.cpp )
 
+if(NOT WIN32)
+   set(kleo_LIB_SRCS ${kleo_LIB_SRCS} ${libkleo_backend_qgpgme_SRCS})
+endif(NOT WIN32)
 
 kde4_add_library(kleo-gpl SHARED ${kleo_LIB_SRCS})
 
