@@ -92,7 +92,8 @@ static QStringList preferencesStrings() {
 }
 
 
-struct Kleo::KeyApprovalDialog::Private {
+class Kleo::KeyApprovalDialog::Private {
+public:
   Private() : selfRequester( 0 ), prefsChanged( false ) {}
 
   Kleo::KeyRequester * selfRequester;

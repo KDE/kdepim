@@ -87,7 +87,7 @@ endif(NOT WIN32)
 
 kde4_add_library(kleo-gpl SHARED ${kleo_LIB_SRCS})
 
-target_link_libraries(kleo-gpl ${KDE4_KDE3SUPPORT_LIBS} gpgme qgpgme ${GPGME_LIBRARIES} ${QT_QT3SUPPORT_LIBRARY})
+target_link_libraries(kleo-gpl ${KDE4_KDE3SUPPORT_LIBS} qgpgme ${GPGME_LIBRARIES} ${QT_QT3SUPPORT_LIBRARY})
 
 set_target_properties(kleo-gpl PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
 install(TARGETS kleo-gpl  DESTINATION ${LIB_INSTALL_DIR})

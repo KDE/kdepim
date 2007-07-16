@@ -72,11 +72,7 @@ bool Kleo::SymCryptRunProcessBase::launch( const QByteArray & input, bool block 
     tempfile.flush();
     *this << "--input" << tempfile.fileName();
     addOptions();
-    KProcess::start();
-    if(!waitForStarted())
-      return false;
-    while(waitForFinished(10))
-      ;
+    KProcess::execute();
   } else {
     addOptions();
     KProcess::start();

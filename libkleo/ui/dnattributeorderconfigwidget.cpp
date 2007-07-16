@@ -51,7 +51,8 @@
 
 #include <assert.h>
 
-struct Kleo::DNAttributeOrderConfigWidget::Private {
+class Kleo::DNAttributeOrderConfigWidget::Private {
+public:
   enum { UUp=0, Up=1, Left=2, Right=3, Down=4, DDown=5 };
 
   Q3ListView * availableLV;
