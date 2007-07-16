@@ -1,8 +1,11 @@
 [Key Filter #0]
 was-validated=false
 Name=Not Validated Key
+Name[el]=Μη επικυρωμένο κλειδί
 Name[fr]=Clé non validée
+Name[pt]=Chave Não Validada
 Name[sv]=Ej validerad nyckel
+Name[zh_TW]=未確認金鑰
 
 [Key Filter #1]
 was-validated=true
@@ -10,23 +13,32 @@ is-expired=true
 is-revoked=false
 foreground-color=255,0,0
 Name=Expired Key
+Name[el]=Ληγμένο κλειδί
 Name[fr]=Clé expirée
+Name[pt]=Chave Expirada
 Name[sv]=Ugången nyckel
+Name[zh_TW]=過期金鑰
 
 [Key Filter #2]
 was-validated=true
 is-revoked=true
 Name=Revoked Key
+Name[el]=Ακυρωμένο κλειδί
 Name[fr]=Clé révoquée
+Name[pt]=Chave Revogada
 Name[sv]=Återkallad nyckel
+Name[zh_TW]=已撤銷金鑰
 
 [Key Filter #3]
 was-validated=true
 is-root-certificate=true
 is-validity=ultimate
 Name=Trusted Root Certificate
+Name[el]=Έμπιστο βασικό πιστοποιητικό
 Name[fr]=Certificat racine de confiance
+Name[pt]=Certificado de Raiz de Confiança
 Name[sv]=Pålitligt rotcertifikat
+Name[zh_TW]=已信任的根憑證
 background-color=0,0,255
 font-bold=true
 
@@ -36,19 +48,28 @@ was-validated=true
 is-root-certificate=true
 is-not-validity=ultimate
 Name=Not Trusted Root Certificate
+Name[el]=Μη έμπιστο βασικό πιστοποιητικό
 Name[fr]=Certificat racine non fiable
+Name[pt]=Certificado de Raiz Não-Fiável
 Name[sv]=Ej pålitligt rotcertifikat
+Name[zh_TW]=未信任的根憑證
 
 [Key Filter #5]
 was-validated=true
 is-qualified=true
 font-bold=true
 Name=Keys for qualified signatures
+Name[el]=Κλειδιά για αναγνωριζόμενες υπογραφές
+Name[pt]=Chaves para as assinaturas qualificadas
 Name[sv]=Nycklar för kvalificerade signaturer
+Name[zh_TW]=確認簽章的金鑰
 
 [Key Filter #6]
 was-validated=true
 Name=Other keys
+Name[el]=Άλλα κλειδιά
+Name[pt]=Outras chaves
 Name[sv]=Övriga nycklar
+Name[zh_TW]=其他金鑰
 
 
