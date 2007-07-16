@@ -696,7 +696,7 @@ Kleo::EncryptJob * CryptPlugWrapper::encryptJob( bool armor, bool textmode ) con
   context->setArmor( armor );
   context->setTextMode( textmode );
 #ifndef _WIN32                                              
-  return new Kleo::QGpgMEKeycryptJob( context );             
+  return new Kleo::QGpgMEEncryptJob( context );             
 #else                                                       
   return 0;                                                 
 #endif                                                      
