@@ -203,9 +203,10 @@ void KMail_Protocol::configFields( QVector< QWidget* >* vector, const QObject*, 
 	KConfig kmailconfig( "kmailrc", KConfig::NoGlobals );
 	while( kmailconfig.hasGroup( QString( kmailGroupName ).arg( ++nummer ) ) )
 	{
-		kmailconfig.setGroup( QString( kmailGroupName ).arg( nummer ) );
-		type = kmailconfig.readEntry( kmailKeyType, QString() );
-		name = kmailconfig.readEntry( kmailKeyName, QString() );
+		
+		KConfigGroup group = kmailconfig.group( QString( kmailGroupName ).arg( nummer ) );
+		type = group.readEntry( kmailKeyType, QString() );
+		name = group.readEntry( kmailKeyName, QString() );
 		if( type == "imap" || type == "cachedimap" || type == "pop" || type == "local" )
 		{
 			accountList.insert( name, name );
