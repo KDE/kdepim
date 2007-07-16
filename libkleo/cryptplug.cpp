@@ -47,6 +47,13 @@
     \see cryptplug.h
 */
 
+// not defined on win32 :(
+#ifdef _WIN32
+# ifndef LC_MESSAGES
+#  define LC_MESSAGES 42
+# endif
+#endif
+
 #include <QString>
 //Added by qt3to4:
 #include <QByteArray>
