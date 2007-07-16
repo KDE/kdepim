@@ -678,7 +678,11 @@ Kleo::KeyListJob * CryptPlugWrapper::keyListJob( bool remote, bool includeSigs, 
   if ( includeSigs ) mode |= GpgME::Context::Signatures;
   if ( validate ) mode |= GpgME::Context::Validate;
   context->setKeyListMode( mode );
+#ifndef _WIN32
   return new Kleo::QGpgMEKeyListJob( context );
+#else
+  return 0;
+#endif
 }
 
 Kleo::EncryptJob * CryptPlugWrapper::encryptJob( bool armor, bool textmode ) const {
@@ -691,7 +695,11 @@ Kleo::EncryptJob * CryptPlugWrapper::encryptJob( bool armor, bool textmode ) con
 
   context->setArmor( armor );
   context->setTextMode( textmode );
-  return new Kleo::QGpgMEEncryptJob( context );
+#ifndef _WIN32                                              
+  return new Kleo::QGpgMEKeycryptJob( context );             
+#else                                                       
+  return 0;                                                 
+#endif                                                      
 }
 
 Kleo::DecryptJob * CryptPlugWrapper::decryptJob() const {
@@ -701,8 +709,11 @@ Kleo::DecryptJob * CryptPlugWrapper::decryptJob() const {
   GpgME::Context * context = GpgME::Context::createForProtocol( _cp->mProtocol );
   if ( !context )
     return 0;
-
-  return new Kleo::QGpgMEDecryptJob( context );
+#ifndef _WIN32                                              
+  return new Kleo::QGpgMEDecryptJob( context );             
+#else                                                       
+  return 0;                                                 
+#endif                                                      
 }
 
 Kleo::SignJob * CryptPlugWrapper::signJob( bool armor, bool textMode ) const {
@@ -715,8 +726,11 @@ Kleo::SignJob * CryptPlugWrapper::signJob( bool armor, bool textMode ) const {
 
   context->setArmor( armor );
   context->setTextMode( textMode );
-
-  return new Kleo::QGpgMESignJob( context );
+#ifndef _WIN32                                                     
+  return new Kleo::QGpgMESignJob( context );                    
+#else                                                              
+  return 0;                                                        
+#endif                                                             
 }
 
 Kleo::VerifyDetachedJob * CryptPlugWrapper::verifyDetachedJob( bool textMode ) const {
@@ -728,8 +742,11 @@ Kleo::VerifyDetachedJob * CryptPlugWrapper::verifyDetachedJob( bool textMode ) c
     return 0;
 
   context->setTextMode( textMode );
-
-  return new Kleo::QGpgMEVerifyDetachedJob( context );
+#ifndef _WIN32                                              
+  return new Kleo::QGpgMEVerifyDetachedJob( context );             
+#else                                                       
+  return 0;                                                 
+#endif                                                      
 }
 
 Kleo::VerifyOpaqueJob * CryptPlugWrapper::verifyOpaqueJob( bool textMode ) const {
@@ -741,8 +758,11 @@ Kleo::VerifyOpaqueJob * CryptPlugWrapper::verifyOpaqueJob( bool textMode ) const
     return 0;
 
   context->setTextMode( textMode );
-
-  return new Kleo::QGpgMEVerifyOpaqueJob( context );
+#ifndef _WIN32                                           
+  return new Kleo::QGpgMEVerifyOpaqueJob( context );   
+#else                                                    
+  return 0;                                              
+#endif                                                   
 }
 
 Kleo::KeyGenerationJob * CryptPlugWrapper::keyGenerationJob() const {
@@ -752,8 +772,11 @@ Kleo::KeyGenerationJob * CryptPlugWrapper::keyGenerationJob() const {
   GpgME::Context * context = GpgME::Context::createForProtocol( _cp->mProtocol );
   if ( !context )
     return 0;
-
-  return new Kleo::QGpgMEKeyGenerationJob( context );
+#ifndef _WIN32                                              
+  return new Kleo::QGpgMEKeyGenerationJob( context );             
+#else                                                       
+  return 0;                                                 
+#endif                                                      
 }
 
 Kleo::ImportJob * CryptPlugWrapper::importJob() const {
@@ -763,8 +786,11 @@ Kleo::ImportJob * CryptPlugWrapper::importJob() const {
   GpgME::Context * context = GpgME::Context::createForProtocol( _cp->mProtocol );
   if ( !context )
     return 0;
-
-  return new Kleo::QGpgMEImportJob( context );
+#ifndef _WIN32                                              
+  return new Kleo::QGpgMEImportJob( context );             
+#else                                                       
+  return 0;                                                 
+#endif                                                      
 }
 
 Kleo::ExportJob * CryptPlugWrapper::publicKeyExportJob( bool armor ) const {
@@ -776,7 +802,11 @@ Kleo::ExportJob * CryptPlugWrapper::publicKeyExportJob( bool armor ) const {
     return 0;
 
   context->setArmor( armor );
-  return new Kleo::QGpgMEExportJob( context );
+#ifndef _WIN32                                              
+  return new Kleo::QGpgMEExportJob( context );             
+#else                                                       
+  return 0;                                                 
+#endif                                                      
 }
 
 Kleo::ExportJob * CryptPlugWrapper::secretKeyExportJob( bool armor, const QString& charset ) const {
@@ -784,7 +814,11 @@ Kleo::ExportJob * CryptPlugWrapper::secretKeyExportJob( bool armor, const QStrin
     return 0;
 
   // this operation is not supported by gpgme, so we have to call gpgsm ourselves:
-  return new Kleo::QGpgMESecretKeyExportJob( armor, charset );
+#ifndef _WIN32                                              
+  return new Kleo::QGpgMESecretKeyExportJob( armor, charset );            
+#else                                                       
+  return 0;                                                 
+#endif                                                      
 }
 
 Kleo::RefreshKeysJob * CryptPlugWrapper::refreshKeysJob() const {
@@ -792,7 +826,11 @@ Kleo::RefreshKeysJob * CryptPlugWrapper::refreshKeysJob() const {
     return 0;
 
   // this operation is not supported by gpgme, so we have to call gpgsm ourselves:
-  return new Kleo::QGpgMERefreshKeysJob();
+#ifndef _WIN32                                              
+  return new Kleo::QGpgMERefreshKeysJob();             
+#else                                                       
+  return 0;                                                 
+#endif                                                      
 }
 
 Kleo::DownloadJob * CryptPlugWrapper::downloadJob( bool armor ) const {
@@ -806,8 +844,11 @@ Kleo::DownloadJob * CryptPlugWrapper::downloadJob( bool armor ) const {
   context->setArmor( armor );
   // this is the hackish interface for downloading from keyserers currently:
   context->setKeyListMode( GpgME::Context::Extern );
-
-  return new Kleo::QGpgMEDownloadJob( context );
+#ifndef _WIN32                                              
+  return new Kleo::QGpgMEDownloadJob( context );             
+#else                                                       
+  return 0;                                                 
+#endif                                                      
 }
 
 Kleo::DeleteJob * CryptPlugWrapper::deleteJob() const {
@@ -817,8 +858,11 @@ Kleo::DeleteJob * CryptPlugWrapper::deleteJob() const {
   GpgME::Context * context = GpgME::Context::createForProtocol( _cp->mProtocol );
   if ( !context )
     return 0;
-
-  return new Kleo::QGpgMEDeleteJob( context );
+#ifndef _WIN32                                              
+  return new Kleo::QGpgMEDeleteJob( context );             
+#else                                                       
+  return 0;                                                 
+#endif                                                      
 }
 
 Kleo::SignEncryptJob * CryptPlugWrapper::signEncryptJob( bool armor, bool textMode ) const {
@@ -831,8 +875,11 @@ Kleo::SignEncryptJob * CryptPlugWrapper::signEncryptJob( bool armor, bool textMo
 
   context->setArmor( armor );
   context->setTextMode( textMode );
-
-  return new Kleo::QGpgMESignEncryptJob( context );
+#ifndef _WIN32                                              
+  return new Kleo::QGpgMESignEncryptJob( context );             
+#else                                                       
+  return 0;                                                 
+#endif                                                      
 }
 
 Kleo::DecryptVerifyJob * CryptPlugWrapper::decryptVerifyJob( bool textMode ) const {
@@ -844,6 +891,9 @@ Kleo::DecryptVerifyJob * CryptPlugWrapper::decryptVerifyJob( bool textMode ) con
     return 0;
 
   context->setTextMode( textMode );
-
-  return new Kleo::QGpgMEDecryptVerifyJob( context );
+#ifndef _WIN32                                              
+  return new Kleo::QGpgMEDecryptVerifyJob( context );             
+#else                                                       
+  return 0;                                                 
+#endif                                                      
 }
