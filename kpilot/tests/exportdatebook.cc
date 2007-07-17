@@ -50,7 +50,7 @@ int main(int argc, char **argv)
 	FUNCTIONSETUP;
 
 
-	KAboutData aboutData("exportdatebook", 0,ki18n("Emport Date Book"),"0.1");
+	KAboutData aboutData("exportdatebook", 0,ki18n("Export Date Book"),"0.1");
 	KCmdLineArgs::init(argc,argv,&aboutData);
 
 	KCmdLineOptions options;
