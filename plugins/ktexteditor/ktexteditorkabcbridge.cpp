@@ -24,6 +24,7 @@
 #include <kprocess.h>
 #include <kmessagebox.h>
 #include <klocale.h>
+#include <kglobal.h>
 
 static void ktexteditorkabcbridge_run_kaddressbook() {
 	QEventLoop eventLoop;
@@ -38,6 +39,7 @@ static void ktexteditorkabcbridge_run_kaddressbook() {
 
 extern "C" {
 KDE_EXPORT QString ktexteditorkabcbridge(const QString& placeholder, QWidget *widget,bool *ok) {
+	KGlobal::locale()->insertCatalog( "ktexteditorkabcbridge_plugin" );
 	KABC::StdAddressBook *addrBook=KABC::StdAddressBook::self();
 	KABC::Addressee userAddress=addrBook->whoAmI();
 	if (userAddress.isEmpty()) {
