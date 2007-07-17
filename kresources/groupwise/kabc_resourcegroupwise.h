@@ -22,7 +22,7 @@
 
 #include "soap/groupwiseserver.h"
 
-#include <kabcresourcecached.h>
+#include <kabc/resourcecached.h>
 #include <kdemacros.h>
 
 #include <libkdepim/progressmanager.h>
@@ -37,9 +37,9 @@ class GroupwisePrefs;
 
 class KDE_EXPORT ResourceGroupwise : public ResourceCached
 {
+  Q_OBJECT
   friend class ResourceGroupwiseConfig;
 
-  Q_OBJECT
 
   public:
     ResourceGroupwise();
