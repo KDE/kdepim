@@ -33,11 +33,13 @@
 
 DataProxy::DataProxy() : fIterator( fRecords )
 {
+	FUNCTIONSETUP;
 	fLastId = 0;
 }
 
 DataProxy::~DataProxy()
 {
+	FUNCTIONSETUP;
 }
 
 QString DataProxy::create( Record *record )
@@ -55,9 +57,6 @@ QString DataProxy::create( Record *record )
 	// Update rollback/volatility information.
 	fCreated.append( recordId );
 	fCounter.created();
-	
-	// Reset the iterator
-	fIterator = QMapIterator<QString, Record*>( fRecords );
 	
 	return recordId;
 }
@@ -79,9 +78,6 @@ void DataProxy::remove( const QString &id )
 	// Update rollback/volatility information.
 	fDeleted.append( rec );
 	fCounter.deleted();
-	
-	// Reset the iterator
-	fIterator = QMapIterator<QString, Record*>( fRecords );
 }
 
 void DataProxy::update( const QString &id, Record *newRecord )
@@ -104,9 +100,6 @@ void DataProxy::update( const QString &id, Record *newRecord )
 	// Update rollback/volatility information.
 	fUpdated.append( oldRecord );
 	fCounter.updated();
-	
-	// Reset the iterator
-	fIterator = QMapIterator<QString, Record*>( fRecords );
 }
 
 QList<QString> DataProxy::ids() const
@@ -144,6 +137,11 @@ Record* DataProxy::find( const QString &id ) const
 {
 	FUNCTIONSETUP;
 	return fRecords.value( id );
+}
+
+void DataProxy::resetIterator()
+{
+	fIterator = QMapIterator<QString, Record*>( fRecords );
 }
 
 bool DataProxy::hasNext() const

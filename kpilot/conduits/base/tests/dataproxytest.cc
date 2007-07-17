@@ -35,11 +35,17 @@
 #include "qtest_kde.h"
 
 #include "testdataproxy.h"
-#include "testrecord.h"
+#include "record.h"
 
 class DataProxyTest : public QObject
 {
 	Q_OBJECT
+
+public:
+	DataProxyTest();
+
+private:
+	QStringList fFields;
 	
 private slots:
 	void testCreate();
@@ -49,15 +55,21 @@ private slots:
 	void testRecordCount();
 	void testIds();
 	void testSyncFinished();
-	void testIteration();
+	void testIterationModeAll();
+	void testIterationModeModified();
 };
+
+DataProxyTest::DataProxyTest()
+{
+	fFields << CSL1( "f1" ) << CSL1( "f2" );
+}
 
 void DataProxyTest::testCreate()
 {
 	TestDataProxy fProxy;
 	
-	Record *rec1 = new TestRecord();
-	Record *rec2 = new TestRecord();
+	Record *rec1 = new Record( fFields );
+	Record *rec2 = new Record( fFields );
 	
 	QString id1 = fProxy.create( rec1 );
 	QString id2 = fProxy.create( rec2 );
@@ -72,7 +84,7 @@ void DataProxyTest::testFind()
 {
 	TestDataProxy fProxy;
 	
-	Record *rec1 = new TestRecord();
+	Record *rec1 = new Record( fFields );
 	
 	QString id1 = fProxy.create( rec1 );
 	
@@ -84,7 +96,7 @@ void DataProxyTest::testUpdate()
 {
 	TestDataProxy fProxy;
 	
-	Record *rec1 = new TestRecord();
+	Record *rec1 = new Record( fFields );
 	rec1->setValue( CSL1( "f1" ), CSL1( "A TEST VALUE" ) );
 	rec1->setValue( CSL1( "f2" ), CSL1( "ANOTHER TEST VALUE" ) );
 	
@@ -92,7 +104,7 @@ void DataProxyTest::testUpdate()
 	// works.
 	QVERIFY( rec1->value( CSL1( "f1" ) ) == CSL1( "A TEST VALUE" ) );
 	
-	Record *rec2 = new TestRecord();
+	Record *rec2 = new Record( fFields );
 	rec2->setValue( CSL1( "f1" ), CSL1( "And Yet another test value" ) );
 	rec2->setValue( CSL1( "f2" ), CSL1( "And the last one" ) );
 	
@@ -108,7 +120,7 @@ void DataProxyTest::testRemove()
 {
 	TestDataProxy fProxy;
 	
-	Record *rec1 = new TestRecord();
+	Record *rec1 = new Record( fFields );
 	rec1->setValue( CSL1( "f1" ), CSL1( "A TEST VALUE" ) );
 	rec1->setValue( CSL1( "f2" ), CSL1( "ANOTHER TEST VALUE" ) );
 	
@@ -126,8 +138,8 @@ void DataProxyTest::testRecordCount()
 {
 	TestDataProxy fProxy;
 	
-	Record *rec1 = new TestRecord();
-	Record *rec2 = new TestRecord();
+	Record *rec1 = new Record( fFields );
+	Record *rec2 = new Record( fFields );
 	
 	QVERIFY( fProxy.recordCount() == 0 );
 	
@@ -145,8 +157,8 @@ void DataProxyTest::testIds()
 {
 	TestDataProxy fProxy;
 	
-	Record *rec1 = new TestRecord();
-	Record *rec2 = new TestRecord();
+	Record *rec1 = new Record( fFields );
+	Record *rec2 = new Record( fFields );
 	
 	QString id1 = fProxy.create( rec1 );
 	QString id2 = fProxy.create( rec2 );
@@ -160,8 +172,8 @@ void DataProxyTest::testSyncFinished()
 {
 	TestDataProxy fProxy;
 	
-	Record *rec1 = new TestRecord();
-	Record *rec2 = new TestRecord();
+	Record *rec1 = new Record( fFields );
+	Record *rec2 = new Record( fFields );
 	
 	fProxy.create( rec1 );
 	fProxy.create( rec2 );
@@ -171,27 +183,29 @@ void DataProxyTest::testSyncFinished()
 	QVERIFY( fProxy.counter()->countEnd() == 2 );
 }
 
-void DataProxyTest::testIteration()
+void DataProxyTest::testIterationModeAll()
 {
 	// First test the mode: All
 	TestDataProxy fProxy;
-	fProxy.setIterateMode( DataProxy::All );
 	
-	TestRecord *rec1 = new TestRecord();
+	Record *rec1 = new Record( fFields );
 	rec1->setValue( CSL1( "f1" ), CSL1( "A test value" ) );
 	rec1->setValue( CSL1( "f2" ), CSL1( "Another test value" ) );
 	
-	TestRecord *rec2 = new TestRecord();
+	Record *rec2 = new Record( fFields );
 	rec2->setValue( CSL1( "f1" ), CSL1( "And more test value" ) );
 	rec2->setValue( CSL1( "f2" ), CSL1( "Yet another one" ) );
 	
-	TestRecord *rec3 = new TestRecord();
+	Record *rec3 = new Record( fFields );
 	rec3->setValue( CSL1( "f1" ), CSL1( "One for the third" ) );
 	rec3->setValue( CSL1( "f2" ), CSL1( "Two for the third" ) );
 	
 	fProxy.create( rec1 );
 	fProxy.create( rec2 );
 	fProxy.create( rec3 );
+	
+	fProxy.setIterateMode( DataProxy::All );
+	fProxy.resetIterator();
 	
 	QVERIFY( fProxy.hasNext() );
 	QVERIFY( fProxy.next() == rec1 );
@@ -200,21 +214,48 @@ void DataProxyTest::testIteration()
 	QVERIFY( fProxy.hasNext() );
 	QVERIFY( fProxy.next() == rec3 );
 	QVERIFY( !fProxy.hasNext() );
+}
+
+void DataProxyTest::testIterationModeModified()
+{
+	TestDataProxy fProxy;
 	
-	// Test iteration over modified records.
-	fProxy = TestDataProxy();
+	qDebug() << CSL1( "test-1" );
 	
-	rec2->setUnmodified();
+	Record *rec1 = new Record( fFields );
+	rec1->setValue( CSL1( "f1" ), CSL1( "A test value" ) );
+	rec1->setValue( CSL1( "f2" ), CSL1( "Another test value" ) );
 	
-	QVERIFY( rec1->isModified() );
-	QVERIFY( !rec2->isModified() );
-	QVERIFY( rec3->isModified() );
+	qDebug() << CSL1( "test-2" );
+	
+	Record *rec2 = new Record( fFields );
+	rec2->setValue( CSL1( "f1" ), CSL1( "And more test value" ) );
+	rec2->setValue( CSL1( "f2" ), CSL1( "Yet another one" ) );
+	qDebug() << CSL1( "test-3: " ) << rec2;
+	rec2->synced();
+	
+	qDebug() << CSL1( "test-3" );
+	
+	Record *rec3 = new Record( fFields );
+	rec3->setValue( CSL1( "f1" ), CSL1( "One for the third" ) );
+	rec3->setValue( CSL1( "f2" ), CSL1( "Two for the third" ) );
+	
+	qDebug() << CSL1( "test-4" );
 	
 	fProxy.create( rec1 );
 	fProxy.create( rec2 );
 	fProxy.create( rec3 );
 	
+	qDebug() << CSL1( "test-5" );
+	
+	QVERIFY( rec1->isModified() );
+	QVERIFY( !rec2->isModified() );
+	QVERIFY( rec3->isModified() );
+	
+	qDebug() << CSL1( "test-6" );
+	
 	fProxy.setIterateMode( DataProxy::Modified );
+	fProxy.resetIterator();
 	
 	QVERIFY( fProxy.hasNext() );
 	QVERIFY( fProxy.next() == rec1 );

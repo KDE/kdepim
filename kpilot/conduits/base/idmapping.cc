@@ -77,16 +77,58 @@ bool IDMapping::isValid( const QList<QString> &ids )
 	return false;
 }
 
-QString IDMapping::recordId( const QString &id )
+void IDMapping::map( const QString &hhRecordId, const QString &pcId )
 {
 	FUNCTIONSETUP;
 	
-	if( fSource.mappings()->contains( id ) )
-	{
-		return fSource.mappings()->value( id );
-	}
+	fSource.mappings()->insert( hhRecordId, pcId );
+}
+
+QString IDMapping::pcRecordId( const QString &id )
+{
+	FUNCTIONSETUP;
+	
+	return fSource.mappings()->value( id );
+}
+
+QString IDMapping::hhRecordId( const QString &id )
+{
+	FUNCTIONSETUP;
 
 	return fSource.mappings()->key( id );
+}
+
+void IDMapping::removeHHId( const QString &recordId )
+{
+	FUNCTIONSETUP;
+	
+	fSource.mappings()->remove( recordId );
+}
+
+void IDMapping::removePCId( const QString &recordId )
+{
+	FUNCTIONSETUP;
+	
+	// The recordId is one of a pc record.
+	QString hhId = fSource.mappings()->key( recordId );
+	if( !hhId.isEmpty() )
+	{
+		fSource.mappings()->remove( hhId );
+	}
+}
+
+bool IDMapping::containsHHId( const QString &recordId )
+{
+	FUNCTIONSETUP;
+	
+	return fSource.mappings()->contains( recordId );
+}
+
+bool IDMapping::containsPCId( const QString &recordId )
+{
+	FUNCTIONSETUP;
+	
+	return fSource.mappings()->values().contains( recordId );
 }
 
 void IDMapping::setLastSyncedDate( const QDateTime &dateTime )
@@ -115,39 +157,4 @@ bool IDMapping::rollback()
 	FUNCTIONSETUP;
 	
 	return fSource.rollback();
-}
-
-void IDMapping::map( const QString &hhRecordId, const QString &pcId )
-{
-	FUNCTIONSETUP;
-	
-	fSource.mappings()->insert( hhRecordId, pcId );
-}
-
-void IDMapping::remove( const QString &recordId )
-{
-	FUNCTIONSETUP;
-	
-	if( fSource.mappings()->contains( recordId ) )
-	{
-		// The recordId is one of a handheld record.
-		fSource.mappings()->remove( recordId );
-	}
-	else
-	{
-		// The recordId is one of a pc record.
-		QString hhId = fSource.mappings()->key( recordId );
-		if( !hhId.isEmpty() )
-		{
-			fSource.mappings()->remove( hhId );
-		}
-	}
-}
-
-bool IDMapping::contains( const QString &recordId )
-{
-	FUNCTIONSETUP;
-	
-	return fSource.mappings()->contains( recordId ) ||
-		fSource.mappings()->values().contains( recordId );
 }

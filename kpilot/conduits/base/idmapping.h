@@ -54,32 +54,51 @@ public:
 	void map( const QString &hhRecordId, const QString &pcRecordId );
 	
 	/**
-	 * Search for a mapping which contains @p recordId and if one is found it will
-	 * be removed.
+	 * Searches for a mapping which contains @p hhRecordId and returns the id to
+	 * which it is mapped. Returns QString() if no mapping is found.
 	 */
-	void remove( const QString &recordId );
+	QString pcRecordId( const QString &hhRecordId );
+	
+	/**
+	 * Searches for a mapping which contains @p pcRecordId and returns the id to
+	 * which it is mapped. Returns QString() if no mapping is found.
+	 */
+	QString hhRecordId( const QString &pcRecordId );
+	
+	/**
+	 * Search for a mapping for which the hh id == @p hhRecordId and if one is
+	 * found it will be removed.
+	 */
+	void removeHHId( const QString &hhRecordId );
+	
+	/**
+	 * Search for a mapping for which the pc id == @p pcRecordId and if one is
+	 * found it will be removed.
+	 */
+	void removePCId( const QString &pcRecordId );
 
 	/**
-	 *	Method to find out wether or not there is a mapping for @p recordId.
+	 * Method to find out wether or not there is a mapping for hh record with 
+	 * @p hhRecordId.
 	 */
-	bool contains( const QString &recordId );
+	bool containsHHId( const QString &hhRecordId );
 
+	/**
+	 * Method to find out wether or not there is a mapping for pc record with 
+	 * @p pcRecordId.
+	 */
+	bool containsPCId( const QString &pcRecordId );
+	
 	/**
 	 * Validates the mapping file with given dataproxy. The mapping is considered 
 	 * valid if:
 	 * 1. The number of mappings matches the number of records in @p ids.
-	 * 2. Every id that is in @p ids has a mapping.
+	 * 2. Every id that is in @p recordIds has a mapping.
 	 *
 	 * NOTE: The list of id's should be a list of handheld ids or a list of pc 
 	 * ids. Not a mix of them.
 	 */
-	bool isValid( const QList<QString> &ids );
-
-	/**
-	 * Searches for a mapping which contains @p id and returns the id to which it
-	 * is mapped.
-	 */
-	QString recordId( const QString &id );
+	bool isValid( const QList<QString> &recordIds );
 
 	/**
 	 * Sets the date/time on which the last sync is executed to @p dateTime.

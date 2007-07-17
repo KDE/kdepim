@@ -49,6 +49,7 @@ private slots:
 	void testIsValid();
 	void testRecordId();
 	void testCommitRollBack();
+	void testWeirdCase();
 	void cleanupTestCase();
 	
 
@@ -69,24 +70,24 @@ void IDMappingTest::testMap()
 	IDMapping mapping( fUser, fConduit );
 	mapping.map( CSL1( "hh-1" ), CSL1( "pc-100" ) );
 	
-	QVERIFY( mapping.contains( CSL1( "hh-1" ) ) );
-	QVERIFY( mapping.contains( CSL1( "pc-100" ) ) );
+	QVERIFY( mapping.containsHHId( CSL1( "hh-1" ) ) );
+	QVERIFY( mapping.containsPCId( CSL1( "pc-100" ) ) );
 }
 
 void IDMappingTest::testRemove()
 {
 	IDMapping mapping( fUser, fConduit );
 	mapping.map( CSL1( "hh-1" ), CSL1( "pc-100" ) );
-	mapping.remove( CSL1( "hh-1" ) );
+	mapping.removeHHId( CSL1( "hh-1" ) );
 	
-	QVERIFY( !mapping.contains( CSL1( "hh-1" ) ) );
-	QVERIFY( !mapping.contains( CSL1( "pc-100" ) ) );
+	QVERIFY( !mapping.containsHHId( CSL1( "hh-1" ) ) );
+	QVERIFY( !mapping.containsPCId( CSL1( "pc-100" ) ) );
 	
 	mapping.map( CSL1( "hh-1" ), CSL1( "pc-100" ) );
-	mapping.remove( CSL1( "pc-100" ) );
+	mapping.removePCId( CSL1( "pc-100" ) );
 	
-	QVERIFY( !mapping.contains( CSL1( "hh-1" ) ) );
-	QVERIFY( !mapping.contains( CSL1( "pc-100" ) ) );
+	QVERIFY( !mapping.containsHHId( CSL1( "hh-1" ) ) );
+	QVERIFY( !mapping.containsPCId( CSL1( "pc-100" ) ) );
 }
 
 void IDMappingTest::testIsValid()
@@ -128,10 +129,10 @@ void IDMappingTest::testRecordId()
 	mapping.map( CSL1( "hh-1" ), CSL1( "pc-100" ) );
 	mapping.map( CSL1( "hh-2" ), CSL1( "pc-40" ) );
 	
-	QVERIFY( mapping.recordId( CSL1( "hh-1" ) ) == CSL1( "pc-100" ) );
-	QVERIFY( mapping.recordId( CSL1( "pc-100" ) ) == CSL1( "hh-1" ) );
-	QVERIFY( mapping.recordId( CSL1( "hh-2" ) ) == CSL1( "pc-40" ) );
-	QVERIFY( mapping.recordId( CSL1( "pc-40" ) ) == CSL1( "hh-2" ) );
+	QVERIFY( mapping.pcRecordId( CSL1( "hh-1" ) ) == CSL1( "pc-100" ) );
+	QVERIFY( mapping.hhRecordId( CSL1( "pc-100" ) ) == CSL1( "hh-1" ) );
+	QVERIFY( mapping.pcRecordId( CSL1( "hh-2" ) ) == CSL1( "pc-40" ) );
+	QVERIFY( mapping.hhRecordId( CSL1( "pc-40" ) ) == CSL1( "hh-2" ) );
 }
 
 void IDMappingTest::testCommitRollBack()
@@ -166,6 +167,36 @@ void IDMappingTest::testCommitRollBack()
 	IDMapping mapping3( fUser, fConduit );
 	
 	QVERIFY( mapping3.isValid( hhIds ) );
+}
+
+void IDMappingTest::testWeirdCase()
+{
+	IDMapping mapping( fUser, fConduit );
+	mapping.map( CSL1( "weird-1" ), CSL1( "weird-2" ) );
+	mapping.map( CSL1( "weird-2" ), CSL1( "weird-1" ) );
+	
+	QVERIFY( mapping.pcRecordId( CSL1( "weird-1" ) ) == CSL1( "weird-2" ) );
+	QVERIFY( mapping.hhRecordId( CSL1( "weird-1" ) ) == CSL1( "weird-2" ) );
+	
+	mapping.removeHHId( CSL1( "weird-1" ) );
+	
+	// It shouldn't have removed the mapping where pcId = weird-1
+	QVERIFY( mapping.hhRecordId( CSL1( "weird-1" ) ) == CSL1( "weird-2" ) );
+	
+	// The other two should be gone.
+	QVERIFY( !mapping.containsHHId( CSL1( "weird-1" ) ) );
+	QVERIFY( !mapping.containsPCId( CSL1( "weird-2" ) ) );
+	
+	// Try the other way around.
+	mapping.map( CSL1( "weird-1" ), CSL1( "weird-2" ) );
+	mapping.removePCId( CSL1( "weird-2" ) );
+	
+	// It shouldn't have removed the mapping where pcId = weird-1
+	QVERIFY( mapping.hhRecordId( CSL1( "weird-1" ) ) == CSL1( "weird-2" ) );
+	
+	// The other two should be gone.
+	QVERIFY( !mapping.containsHHId( CSL1( "weird-1" ) ) );
+	QVERIFY( !mapping.containsPCId( CSL1( "weird-2" ) ) );
 }
 
 void IDMappingTest::cleanDir()

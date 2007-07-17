@@ -31,7 +31,7 @@
 
 class KPILOT_EXPORT TestRecordConduit : public RecordConduit {
 public:
-	TestRecordConduit( const QStringList &args );
+	TestRecordConduit( const QStringList &args, bool createRecords = false );
 	
 	~TestRecordConduit();
 	
@@ -49,11 +49,18 @@ public:
 	
 	void solveConflictTest( Record *pcRecord, Record *hhRecord );
 	
+	void hotSyncTest();
+	
 	DataProxy *pcDataProxy() { return fPCDataProxy; }
 	
 	DataProxy *hhDataProxy() { return fHHDataProxy; }
 	
+	DataProxy *backupDataProxy() { return fBackupDataProxy; }
+	
 	IDMapping *mapping() { return fMapping; }
+
+private:
+	bool fCreateRecords;
 };
 
 #endif

@@ -99,6 +99,11 @@ public:
 	Record* find( const QString &id ) const;
 	
 	/**
+	 * Resets the iterator.
+	 */
+	void resetIterator();
+	
+	/**
 	 * Depending on the iterateMode it should give if there is a next record or if
 	 * there is a next modified record.
 	 */

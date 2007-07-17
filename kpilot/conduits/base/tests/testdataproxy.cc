@@ -26,8 +26,51 @@
 */
 
 #include "testdataproxy.h"
+#include "record.h"
+
+#include "options.h"
 
 TestDataProxy::TestDataProxy() {}
+
+TestDataProxy::TestDataProxy( int count, bool containsModified )
+{
+	bool modified = true;
+	
+	QStringList fields;
+	fields << CSL1( "f1" ) << CSL1( "f2" );
+	
+	for( int i = 1; i <= count; i++ )
+	{
+		Record *rec = new Record( fields, CSL1( "id-" ) + QString::number( i ) );
+		rec->setValue( CSL1( "f1" )
+			, CSL1( "Value 1: " ) + QString::number( qrand() ) );
+		rec->setValue( CSL1( "f2" )
+			, CSL1( "Value 2: " ) + QString::number( qrand() ) );
+		
+		if( containsModified && !modified )
+		{
+			rec->synced();
+		}
+		else if( !containsModified )
+		{
+			rec->synced();
+		}
+		
+		fRecords.insert( rec->id(), rec );
+		modified = !modified;
+	}
+	
+	fIterator = QMapIterator<QString, Record*>( fRecords );
+}
+
+void TestDataProxy::printRecords()
+{
+	QMapIterator<QString, Record*> i(fRecords);
+	while (i.hasNext()) {
+		i.next();
+		qDebug() << i.value()->toString();
+	}
+}
 
 /*
 	* Implement virtual methods to be able to instantiate this. The testclass 

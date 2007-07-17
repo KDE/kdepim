@@ -259,42 +259,51 @@ void RecordConduit::hotSync()
 	FUNCTIONSETUP;
 	// Walk through all modified hand held records. The proxy is responsible for
 	// serving the right records.
+	
+	DEBUGKPILOT << fname << ": Walking over modified hh records." << endl;
+	
+	fHHDataProxy->resetIterator();
 	while( fHHDataProxy->hasNext() )
 	{
 		Record *hhRecord = fHHDataProxy->next();
 		Record *backupRecord = fBackupDataProxy->find( hhRecord->id() );
 		Record *pcRecord = 0L;
 		
-		QString pcRecordId = fMapping->recordId( hhRecord->id() );
+		QString pcRecordId = fMapping->pcRecordId( hhRecord->id() );
 		if( !pcRecordId.isNull() ) {
 			// There is a mapping.
 			pcRecord = fPCDataProxy->find( pcRecordId );
 		}
 		
-		syncRecords( hhRecord, backupRecord, pcRecord );
+		syncRecords( pcRecord, backupRecord, hhRecord );
 	}
 	
 	// Walk through all modified pc records. The proxy is responsible for
 	// serving the right records.
+	
+	DEBUGKPILOT << fname << ": Walking over modified pc records." << endl;
+	
+	fPCDataProxy->resetIterator();
 	while( fPCDataProxy->hasNext() )
 	{
 		Record *pcRecord = fPCDataProxy->next();
 		Record *backupRecord = 0L;
 		Record *hhRecord = 0L;
 		
-		QString hhRecordId = fMapping->recordId( pcRecord->id() );
+		QString hhRecordId = fMapping->hhRecordId( pcRecord->id() );
+		
 		if( !hhRecordId.isNull() ) {
 			// There is a mapping.
-			backupRecord = fBackupDataProxy->find( pcRecord->id() );
-			hhRecord = fHHDataProxy->find( pcRecord->id() );
+			backupRecord = fBackupDataProxy->find( hhRecordId );
+			hhRecord = fHHDataProxy->find( hhRecordId );
 		}
 		
-		syncRecords( hhRecord, backupRecord, pcRecord );
+		syncRecords( pcRecord, backupRecord, hhRecord );
 	}
 }
 
 void RecordConduit::syncRecords( Record *pcRecord, Record *backupRecord,
-			Record *hhRecord )
+	Record *hhRecord )
 {
 	FUNCTIONSETUP;
 	#warning implemented, but needs work
@@ -308,29 +317,31 @@ void RecordConduit::syncRecords( Record *pcRecord, Record *backupRecord,
 			// Case: 6.5.9
 			if( pcRecord->isModified() )
 			{
-				solveConflict( hhRecord, pcRecord );
+				DEBUGKPILOT << fname << ": Case 6.5.9" << endl;
+				solveConflict( pcRecord, hhRecord  );
 			}
 			else
 			{
-				//            from      to
+				// Case 6.5.3
+				//          from      to
+				DEBUGKPILOT << fname << ": Case 6.5.3" << endl;
 				syncFields( hhRecord, pcRecord );
 			}
 		}
 		// Case: 6.5.6
 		else if( pcRecord->isModified() )
 		{
-			//            from      to
+			DEBUGKPILOT << fname << ": Case 6.5.6" << endl;
+			//          from      to
 			syncFields( pcRecord, hhRecord );
 		}
-		/*
 		else
 		{
 			// Case: 6.5.1 (hotSync)
+			DEBUGKPILOT << fname << ": Case 6.5.1" << endl;
 		}
-		*/
 	}
-	
-	if( hhRecord )
+	else if( hhRecord )
 	{
 		if( backupRecord )
 		{
@@ -338,13 +349,15 @@ void RecordConduit::syncRecords( Record *pcRecord, Record *backupRecord,
 			if( hhRecord->isModified() )
 			{
 				// Pc record deleted, hh record modified.
+				DEBUGKPILOT << fname << ": Case 6.5.11" << endl;
 				solveConflict( 0L, hhRecord );
 			}
 			// Case: 6.5.7
 			else
 			{
+				DEBUGKPILOT << fname << ": Case 6.5.7" << endl;
 				fHHDataProxy->remove( hhRecord->id() );
-				fMapping->remove( hhRecord->id() );
+				fMapping->removeHHId( hhRecord->id() );
 			}
 		}
 		// Case: 6.5.2 (and 6.5.8 if the conduit iterates over the HH data proxy
@@ -354,47 +367,49 @@ void RecordConduit::syncRecords( Record *pcRecord, Record *backupRecord,
 			// Warning id is a temporary id. Only after commit we know what id is
 			// assigned to the record. So on commit the proxy should get the mapping
 			// so that it can change the mapping.
-			pcRecord = hhRecord->duplicate();
+			DEBUGKPILOT << fname << ": Case 6.5.2 and 6.5.8" << endl;
+			pcRecord = new Record( *hhRecord );
 			QString id = fPCDataProxy->create( pcRecord );
 			fMapping->map( hhRecord->id(), id );
 		}
 	}
-	
-	if( pcRecord )
+	else if( pcRecord )
 	{
 		if( backupRecord )
 		{
 			// Case: 6.5.10
 			if( pcRecord->isModified() )
 			{
+				DEBUGKPILOT << fname << ": Case 6.5.10" << endl;
 				solveConflict( pcRecord, 0L );
 			}
 			// Case: 6.5.4
 			else
 			{
+				DEBUGKPILOT << fname << ": Case 6.5.4" << endl;
 				fPCDataProxy->remove( pcRecord->id() );
-				fMapping->remove( pcRecord->id() );
+				fMapping->removePCId( pcRecord->id() );
 			}
 		}
 		// Case: 6.5.5 (and 6.5.8 if the conduit iterates over the PC data proxy 
 		// first )
 		else
 		{
-			hhRecord = pcRecord->duplicate();
+			DEBUGKPILOT << fname << ": Case 6.5.5" << endl;
+			hhRecord = new Record( *pcRecord );
 			QString id = fHHDataProxy->create( hhRecord );
 			fMapping->map( id, pcRecord->id() );
 		}
 	}
-	
 	// For completeness: Case 6.5.12
-	/*
-	if( backupRecord )
+	else if( backupRecord )
 	{
-		return true;
+		DEBUGKPILOT << fname << ": Case 6.5.12" << endl;
 	}
-	
-	return false;
-	*/
+	else
+	{
+		DEBUGKPILOT << fname << ": This should not happen." << endl;
+	}
 }
 
 bool RecordConduit::syncFields( Record *from, Record *to )
@@ -445,6 +460,12 @@ bool RecordConduit::syncFields( Record *from, Record *to )
 		}
 	}
 	
+	// Both records are in sync so they are no longer modified.
+	from->synced();
+	to->synced();
+	
+	// TODO: Save the new hash of the to record somewhere
+	
 	return true;
 }
 
@@ -455,6 +476,9 @@ void RecordConduit::syncConflictedRecords( Record *pcRecord, Record *hhRecord
 	
 	if( pcRecord && hhRecord )
 	{
+		DEBUGKPILOT << fname << ": pc: " << pcRecord->id() << ", hh: " << 
+			hhRecord->id() << endl;
+		
 		if( pcOverides )
 		{
 			// Keep pcRecord
@@ -468,34 +492,39 @@ void RecordConduit::syncConflictedRecords( Record *pcRecord, Record *hhRecord
 	}
 	else if( pcRecord && !hhRecord )
 	{
+		DEBUGKPILOT << fname << ": pc: " << pcRecord->id() << ", hh: 0L" << endl;
+			
 		if( pcOverides )
 		{
-			hhRecord = pcRecord->duplicate();
+			hhRecord = new Record( *pcRecord );
 			QString id = fHHDataProxy->create( hhRecord );
 			fMapping->map( id, pcRecord->id() );
 		}
 		else
 		{
 			fPCDataProxy->remove( pcRecord->id() );
-			fMapping->remove( pcRecord->id() );
+			fMapping->removePCId( pcRecord->id() );
 		}
 	}
 	else if( !pcRecord && hhRecord )
 	{
+		DEBUGKPILOT << fname << ": pc: 0L, hh: " << hhRecord->id() << endl;
+			
 		if( pcOverides )
 		{
 			fHHDataProxy->remove( hhRecord->id() );
-			fMapping->remove( hhRecord->id() );
+			fMapping->removeHHId( hhRecord->id() );
 		}
 		else
 		{
-			pcRecord = hhRecord->duplicate();
+			pcRecord = new Record( *hhRecord );
 			QString id = fPCDataProxy->create( pcRecord );
 			fMapping->map( hhRecord->id(), id );
 		}
 	}
 	// else both records are 0L do nothing. NOTE: After sync we should remove
 	// mappings which don't have records on either side.
+	//return true;
 }
 
 void RecordConduit::solveConflict( Record *pcRecord, Record *hhRecord )
@@ -549,6 +578,7 @@ void RecordConduit::solveConflict( Record *pcRecord, Record *hhRecord )
 	else if( res == eHHOverrides )
 	{
 		// Keep Handheld record
+		DEBUGKPILOT << fname << ": conflict resolution: HH Overides" << endl;
 		syncConflictedRecords( pcRecord, hhRecord, false );
 	}
 	else if( res == ePCOverrides )
@@ -562,20 +592,22 @@ void RecordConduit::solveConflict( Record *pcRecord, Record *hhRecord )
 		 * break the previous relationship and create a new one on both sides, 
 		 * duplicating bothrecords
 		 */
-		fMapping->remove( pcRecord->id() );
+		fMapping->removePCId( pcRecord->id() );
 		
-		Record *rec = pcRecord->duplicate();
+		Record *rec = new Record( *pcRecord );
 		QString id = fHHDataProxy->create( rec );
 		fMapping->map( id, pcRecord->id() );
 		
-		rec = hhRecord->duplicate();
+		rec = new Record( *hhRecord );
 		id = fPCDataProxy->create( rec );
 		fMapping->map( id, pcRecord->id() );
 	}
 	else if( res == ePreviousSyncOverrides )
 	{
 		// FIXME: Implement.
+		
 	}
 	
 	// else: eDoNothing
+	//return true;
 }

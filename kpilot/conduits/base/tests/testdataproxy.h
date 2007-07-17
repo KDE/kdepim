@@ -32,6 +32,16 @@
 class KPILOT_EXPORT TestDataProxy : public DataProxy {
 public:
 	TestDataProxy();
+	
+	/**
+	 * Creates a dataproxy with @p count records in it. If containsModified is 
+	 * true the proxy will create first a modified, then an unmodified record and
+	 * so until @p count records are created. Otherwhise all records are 
+	 * unmodified.
+	 */
+	TestDataProxy( int count, bool containsModified = true );
+
+	void printRecords();
 
 	/*
 	 * Implement virtual methods to be able to instantiate this. The testclass 

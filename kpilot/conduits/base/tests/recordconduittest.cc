@@ -35,32 +35,42 @@
 #include "idmapping.h"
 
 #include "testrecordconduit.h"
-#include "testrecord.h"
+#include "record.h"
 
 
 class RecordConduitTest : public QObject
 {
 	Q_OBJECT
 
-	/* possibilities (O = deleted, M = modified, - = unchanged):
+	/* possibilities (O = deleted, M = modified, - = unchanged, Does not exist):
 	 *
-	 * Tests the solving algorithm for conflicting records when HH Overides:
+	 * The sync algorithm should be tested for all of the following cases:
 	 *
-	 * CASE | PC | HH | Resolotion
-	 *  1-1 |  - |  - | Not a conflict
-	 *  1-2 |  - |  M | Sync hh fields to pc record
-	 *  1-3 |  - |  0 | Delete pc record from pc datastore
-	 *  1-4 |  M |  - | Sync hh fields to pc record
-	 *  1-5 |  M |  M | Sync hh fields to pc record
-	 *  1-6 |  M |  0 | Delete pc record from pc datastore
-	 *  1-7 |  0 |  - | Add duplicate of hh rec to pc datastore.
-	 *  1-8 |  0 |  M | Add duplicate of hh rec to pc datastore.
-	 *  1-9 |  0 |  0 | Not a conflict
+	 * CASE | PC | BU | HH | Conflict
+	 *   1  |  - |  - |  - | N
+	 *   2  |  - |  - |  M | N
+	 *   3  |  - |  - |  0 | N
+	 *   4  |  M |  - |  - | N
+	 *   5  |  M |  - |  M | Y
+	 *   6  |  M |  - |  0 | Y
+	 *   7  |  0 |  - |  - | N   The resolution for all this cases is depending on
+	 *   8  |  0 |  - |  M | Y   the way of syncing, and the conflict resolution
+	 *   9  |  0 |  - |  0 | N   that is used.
+	 *  10  |  X |  X |  - | N
+	 *  11  |  X |  X |  M | N
+	 *  12  |  - |  X |  X | N
+	 *  13  |  M |  X |  X | N
 	 *
 	 */
 
+public:
+	RecordConduitTest();
+
 private slots:
-	void testSyncFields();
+	void testSyncfFields();
+	
+	/** HotSync and HH overides tests (See table below) **/
+	void testCase_1_1();
 	void testCase_1_2();
 	void testCase_1_3();
 	void testCase_1_4();
@@ -68,9 +78,25 @@ private slots:
 	void testCase_1_6();
 	void testCase_1_7();
 	void testCase_1_8();
+	void testCase_1_9();
+	void testCase_1_10();
+	void testCase_1_11();
+	void testCase_1_12();
+	void testCase_1_13();
+
+private:
+	QStringList fFields;
+	TestRecordConduit *fConduit;
+	
+	void initTestCase_1();
 };
 
-void RecordConduitTest::testSyncFields()
+RecordConduitTest::RecordConduitTest()
+{
+	fFields << CSL1( "f1" ) << CSL1( "f2" );
+}
+
+void RecordConduitTest::testSyncfFields()
 {
 	QStringList args = QStringList() << CSL1( "--hotsync" );
 		//<< CSL1( "--conflictResolution 1" );
@@ -78,13 +104,11 @@ void RecordConduitTest::testSyncFields()
 	TestRecordConduit conduit( args );
 	conduit.initDataProxies();
 	
-	QStringList fields = QStringList() << CSL1( "f1" ) << CSL1( "f2" );
-	
-	TestRecord *rec1 = new TestRecord( fields );
+	Record *rec1 = new Record( fFields );
 	rec1->setValue( CSL1( "f1" ), CSL1( "A test value" ) );
 	rec1->setValue( CSL1( "f2" ), CSL1( "Another test value" ) );
 	
-	TestRecord *rec2 = new TestRecord( fields );
+	Record *rec2 = new Record( fFields );
 	rec2->setValue( CSL1( "f1" ), CSL1( "And more test value" ) );
 	rec2->setValue( CSL1( "f2" ), CSL1( "Yet another one" ) );
 	
@@ -93,282 +117,400 @@ void RecordConduitTest::testSyncFields()
 	QVERIFY( rec2->value( CSL1( "f1" ) ) == CSL1( "A test value" ) );
 	QVERIFY( rec2->value( CSL1( "f2" ) ) == CSL1( "Another test value" ) );
 	
-	// Make a record with other fields
-	QStringList fields2 = QStringList() << CSL1( "afield" ) << CSL1( "f2" );
+	// Make a record with other fFields
+	QStringList fFields2 = QStringList() << CSL1( "afield" ) << CSL1( "f2" );
 	
-	TestRecord *rec3 = new TestRecord( fields2 );
+	Record *rec3 = new Record( fFields2 );
 	rec3->setValue( CSL1( "afield" ), CSL1( "Test 3-1" ) );
 	rec3->setValue( CSL1( "f2" ), CSL1( "Test 3-2" ) );
 	
-	// Then try to sync, because not all fields are the same the to record should
+	// Then try to sync, because not all fFields are the same the to record should
 	// remain unmodified.
-	//                             ( from, to )
+	//                              ( from, to )
 	QVERIFY( !conduit.syncFieldsTest( rec1, rec3 ) );
 	QVERIFY( rec3->value( CSL1( "afield" ) ) == CSL1( "Test 3-1" ) );
 	QVERIFY( rec3->value( CSL1( "f2" ) ) == CSL1( "Test 3-2" ) );
 }
 
-void RecordConduitTest::testCase_1_2()
+/*
+ * The following table gives the status of the TestRecordConduit befor sync.
+ *
+ *CASE|      PC   || HH & BACKUP    |
+ *    |   Id |STAT|| BU | HH | Id   | Resolution for hotSync and hhOverides
+ *  1 | id-2 |  - ||  - |  M | id-1 | sync hh to pc
+ *  2 | id-4 |  - ||  - |  - | id-2 | Do nothing
+ *  3 | id-1 |  M ||  - |  M | id-3 | sync hh to pc
+ *  4 | id-3 |  M ||  - |  - | id-4 | Sync pc to hh
+ *  5 | D-1  |  0 ||  - |  M | id-5 | sync hh to pc
+ *  6 | D-2  |  0 ||  - |  - | id-6 | Delete hh record and mapping.
+ *  7 | D-3  |  0 ||  - |  0 | D-1  | Mapping D1-D3 should be removed after sync.
+ *  8 | id-6 |  - ||  - |  0 | D-2  | Delete pc record and mapping.
+ *  9 | id-5 |  M ||  - |  0 | D-3  | Delete pc record and mapping.
+ * 10 | id-7 |  M ||  X |  X |      | Sync pc to hh
+ * 11 | id-8 |  - ||  X |  X |      | Do nothing, only full sync does this.
+ * 12 |      |  X ||  X |  M | id-7 | sync hh to pc
+ * 13 |      |  X ||  X |  - | id-8 | Do nothing, only full sync does this.
+ */
+
+void RecordConduitTest::initTestCase_1()
 {
-	// CASE | PC | HH | Resolotion
-	//  1-2 |  - |  M | Sync hh fields to pc record
 	
 	// NOTE: 2 == eHHOverrides, this is important for the solveConflict() method
 	QStringList args = QStringList() << CSL1( "--hotsync" )
 		<< CSL1( "--conflictResolution 2" );
 	
-	TestRecordConduit conduit( args );
-	conduit.initDataProxies();
+	fConduit = new TestRecordConduit( args, true );
+	fConduit->initDataProxies();
 	
-	// An unmodified pc rec
-	TestRecord *pcRec = new TestRecord();
-	pcRec->setValue( CSL1( "f1" ), CSL1( "A" ) );
-	pcRec->setValue( CSL1( "f2" ), CSL1( "B" ) );
-	pcRec->setUnmodified();
+	// Set the right iteration mode for a hotsync.
+	fConduit->pcDataProxy()->setIterateMode( DataProxy::Modified );
+	fConduit->hhDataProxy()->setIterateMode( DataProxy::Modified );
 	
-	QString pcId = conduit.pcDataProxy()->create( pcRec );
+	// Prints out all records from all datastores..
+	//fConduit->test();
+}
+
+void RecordConduitTest::testCase_1_1()
+{
+	//  1 | id-2 |  - ||  - |  M | id-1 | sync hh to pc
+	initTestCase_1();
 	
-	// A modified hh rec
-	TestRecord *hhRec = new TestRecord();
-	hhRec->setValue( CSL1( "f1" ), CSL1( "A" ) );
-	hhRec->setValue( CSL1( "f2" ), CSL1( "D" ) );
+	// Duplicate the records before the sync.
+	Record *pcRec = new Record( *(fConduit->pcDataProxy()->find( CSL1( "id-2" )) ) );
+	Record *hhRec = new Record( *(fConduit->hhDataProxy()->find( CSL1( "id-1" )) ) );
+	Record *backupRec = new Record( 
+		*(fConduit->backupDataProxy()->find( CSL1( "id-1" )) ) );
 	
-	QString hhId = conduit.hhDataProxy()->create( hhRec );
-	// There must be a mapping! Conflicts only occure for known records.
-	conduit.mapping()->map( hhId, pcId );
+	// Verify the startsituation
+	QVERIFY( !pcRec->isModified() );
+	QVERIFY( hhRec->isModified() );
+	QVERIFY( !backupRec->isModified() );
+	QVERIFY( *pcRec != *hhRec );
 	
-	/** END OF PREPARATIONS **/
+	// There should be a mapping
+	QVERIFY( fConduit->mapping()->hhRecordId( CSL1( "id-2" ) ) == CSL1( "id-1" ) );
+	QVERIFY( fConduit->mapping()->pcRecordId( CSL1( "id-1" ) ) == CSL1( "id-2" ) );
 	
-	// NOTE: we do not care about the CUDCounter, that is tested in DataProxyTest.
-	conduit.solveConflictTest( pcRec, hhRec );
-	QVERIFY( pcRec->value( CSL1( "f1" ) ) == CSL1( "A" ) );
-	QVERIFY( pcRec->value( CSL1( "f2" ) ) == CSL1( "D" ) );
-	QVERIFY( conduit.mapping()->contains( hhId ) );
-	QVERIFY( conduit.mapping()->contains( pcId ) );
+	// Everything is ok, do a hotsync now.
+	fConduit->hotSyncTest();
+	
+	// So... did hotsync do what whe expected it to do?
+	Record *syncedPCRec = fConduit->pcDataProxy()->find( CSL1( "id-2" ) );
+	Record *syncedHHRec = fConduit->hhDataProxy()->find( CSL1( "id-1" ) );
+	
+	// Records should be there.
+	QVERIFY( syncedPCRec );
+	QVERIFY( syncedHHRec );
+	
+	// Pc and hh record should have the values from the handheld record before 
+	// sync.
+	QVERIFY( *syncedPCRec == *hhRec );
+	QVERIFY( *syncedHHRec == *hhRec );
+	
+	// Records are in sync so shouldn't be modified anymore after a hotsync.
+	QVERIFY( syncedPCRec->id() == pcRec->id() );
+	QVERIFY( !syncedPCRec->isModified() );
+	QVERIFY( !syncedHHRec->isModified() );
+	
+	// There still should be a correct mapping.
+	qDebug() << fConduit->mapping()->hhRecordId( CSL1( "id-2" ) );
+	QVERIFY( fConduit->mapping()->hhRecordId( CSL1( "id-2" ) ) == CSL1( "id-1" ) );
+	QVERIFY( fConduit->mapping()->pcRecordId( CSL1( "id-1" ) ) == CSL1( "id-2" ) );
+	
+	delete fConduit;
+}
+
+void RecordConduitTest::testCase_1_2()
+{
+	// 2 | id-4 |  - ||  - |  - | id-2 | Do nothing
+	initTestCase_1();
+	
+	// Duplicate the records before the sync.
+	Record *pcRec = new Record( *(fConduit->pcDataProxy()->find( CSL1( "id-4" )) ) );
+	Record *hhRec = new Record( *(fConduit->hhDataProxy()->find( CSL1( "id-2" )) ) );
+	Record *backupRec = new Record( 
+		*(fConduit->backupDataProxy()->find( CSL1( "id-2" )) ) );
+	
+	// Verify the startsituation
+	QVERIFY( !pcRec->isModified() );
+	QVERIFY( !hhRec->isModified() );
+	QVERIFY( !backupRec->isModified() );
+	QVERIFY( *pcRec != *hhRec );
+	
+	// There should be a valid mapping
+	QVERIFY( fConduit->mapping()->hhRecordId( CSL1( "id-2" ) ) == CSL1( "id-1" ) );
+	QVERIFY( fConduit->mapping()->pcRecordId( CSL1( "id-1" ) ) == CSL1( "id-2" ) );
+	
+	// Everything is ok, do a hotsync now.
+	fConduit->hotSyncTest();
+	
+	Record *syncedPCRec = fConduit->pcDataProxy()->find( CSL1( "id-4" ) );
+	Record *syncedHHRec = fConduit->hhDataProxy()->find( CSL1( "id-2" ) );
+	Record *syncedBackupRec = fConduit->backupDataProxy()->find( CSL1( "id-2" ) );
+	
+	// Records should be there.
+	QVERIFY( syncedPCRec );
+	QVERIFY( syncedHHRec );
+	QVERIFY( syncedBackupRec );
+	
+	// Pc and hh record should have the values from the handheld record before 
+	// sync.
+	QVERIFY( *syncedPCRec == *pcRec );
+	QVERIFY( *syncedHHRec == *hhRec );
+	QVERIFY( *syncedPCRec != *syncedHHRec );
+	
+	// There should be a valid mapping
+	QVERIFY( fConduit->mapping()->hhRecordId( CSL1( "id-2" ) ) == CSL1( "id-1" ) );
+	QVERIFY( fConduit->mapping()->pcRecordId( CSL1( "id-1" ) ) == CSL1( "id-2" ) );
+	
+	delete fConduit;
 }
 
 void RecordConduitTest::testCase_1_3()
 {
-	// CASE | PC | HH | Resolotion
-	//  1-3 |  - |  0 | Delete pc record from pc datastore
+	// 3 | id-1 |  M ||  - |  M | id-3 | sync hh to pc
+	initTestCase_1();
 	
-	// NOTE: 2 == eHHOverrides, this is important for the solveConflict() method
-	QStringList args = QStringList() << CSL1( "--hotsync" )
-		<< CSL1( "--conflictResolution 2" );
+	// Duplicate the records before the sync.
+	Record *pcRec = new Record( *(fConduit->pcDataProxy()->find( CSL1( "id-1" )) ) );
+	Record *hhRec = new Record( *(fConduit->hhDataProxy()->find( CSL1( "id-3" )) ) );
+	Record *backupRec = new Record( 
+		*(fConduit->backupDataProxy()->find( CSL1( "id-3" )) ) );
 	
-	TestRecordConduit conduit( args );
-	conduit.initDataProxies();
+	// Verify the startsituation
+	QVERIFY( pcRec->isModified() );
+	QVERIFY( hhRec->isModified() );
+	QVERIFY( !backupRec->isModified() );
+	QVERIFY( *pcRec != *hhRec );
 	
-	// An unmodified pc rec
-	TestRecord *pcRec = new TestRecord();
-	pcRec->setValue( CSL1( "f1" ), CSL1( "A" ) );
-	pcRec->setValue( CSL1( "f2" ), CSL1( "B" ) );
-	pcRec->setUnmodified();
+	// There should be a mapping
+	QVERIFY( fConduit->mapping()->hhRecordId( CSL1( "id-1" ) ) == CSL1( "id-3" ) );
+	QVERIFY( fConduit->mapping()->pcRecordId( CSL1( "id-3" ) ) == CSL1( "id-1" ) );
 	
-	QString pcId = conduit.pcDataProxy()->create( pcRec );
-	// There must be a mapping! Conflicts only occure for known records.
-	conduit.mapping()->map( CSL1( "hh-1" ), pcId );
+	// Everything is ok, do a hotsync now.
+	fConduit->hotSyncTest();
 	
-	// A deleted hh rec
-	TestRecord *hhRec = 0L;
+	Record *syncedPCRec = fConduit->pcDataProxy()->find( CSL1( "id-1" ) );
+	Record *syncedHHRec = fConduit->hhDataProxy()->find( CSL1( "id-3" ) );
 	
-	/** END OF PREPARATIONS **/
+	// Records should be there.
+	QVERIFY( syncedPCRec );
+	QVERIFY( syncedHHRec );
 	
-	// NOTE: we do not care about the CUDCounter, that is tested in DataProxyTest.
-	conduit.solveConflictTest( pcRec, hhRec );
+	// Pc and hh record should have the values from the handheld record before 
+	// sync.
+	QVERIFY( *syncedHHRec == *hhRec );
+	QVERIFY( *syncedPCRec == *hhRec );
 	
-	QVERIFY( conduit.pcDataProxy()->find( pcRec->id() ) == 0L );
-	QVERIFY( !conduit.mapping()->contains( pcRec->id() ) );
+	// Records are in sync so shouldn't be modified anymore after a hotsync.
+	QVERIFY( !syncedPCRec->isModified() );
+	QVERIFY( !syncedHHRec->isModified() );
+	
+	// There should be a mapping
+	QVERIFY( fConduit->mapping()->hhRecordId( CSL1( "id-1" ) ) == CSL1( "id-3" ) );
+	QVERIFY( fConduit->mapping()->pcRecordId( CSL1( "id-3" ) ) == CSL1( "id-1" ) );
+	
+	delete fConduit;
 }
 
 void RecordConduitTest::testCase_1_4()
 {
-	// CASE | PC | HH | Resolotion
-	//  1-4 |  M |  - | Sync hh fields to pc record
+	// 4 | id-3 |  M ||  - |  - | id-4 | Sync pc to hh
+	initTestCase_1();
 	
-	// NOTE: 2 == eHHOverrides, this is important for the solveConflict() method
-	QStringList args = QStringList() << CSL1( "--hotsync" )
-		<< CSL1( "--conflictResolution 2" );
+	// Duplicate the records before the sync.
+	Record *pcRec = new Record( *(fConduit->pcDataProxy()->find( CSL1( "id-3" )) ) );
+	Record *hhRec = new Record( *(fConduit->hhDataProxy()->find( CSL1( "id-4" )) ) );
+	Record *backupRec = new Record( 
+		*(fConduit->backupDataProxy()->find( CSL1( "id-4" )) ) );
 	
-	TestRecordConduit conduit( args );
-	conduit.initDataProxies();
+	// Verify the startsituation
+	QVERIFY( pcRec->isModified() );
+	QVERIFY( !hhRec->isModified() );
+	QVERIFY( !backupRec->isModified() );
+	QVERIFY( *pcRec != *hhRec );
 	
-	// A modified pc rec
-	TestRecord *pcRec = new TestRecord();
-	pcRec->setValue( CSL1( "f1" ), CSL1( "A" ) );
-	pcRec->setValue( CSL1( "f2" ), CSL1( "B" ) );
+	// There should be a mapping
+	QVERIFY( fConduit->mapping()->hhRecordId( CSL1( "id-3" ) ) == CSL1( "id-4" ) );
+	QVERIFY( fConduit->mapping()->pcRecordId( CSL1( "id-4" ) ) == CSL1( "id-3" ) );
 	
-	QString pcId = conduit.pcDataProxy()->create( pcRec );
+	// Everything is ok, do a hotsync now.
+	fConduit->hotSyncTest();
 	
-	// An unmodified hh rec
-	TestRecord *hhRec = new TestRecord();
-	hhRec->setValue( CSL1( "f1" ), CSL1( "A" ) );
-	hhRec->setValue( CSL1( "f2" ), CSL1( "D" ) );
-	hhRec->setUnmodified();
+	Record *syncedPCRec = fConduit->pcDataProxy()->find( CSL1( "id-3" ) );
+	Record *syncedHHRec = fConduit->hhDataProxy()->find( CSL1( "id-4" ) );
 	
-	QString hhId = conduit.hhDataProxy()->create( hhRec );
-	// There must be a mapping! Conflicts only occure for known records.
-	conduit.mapping()->map( hhId, pcId );
+	// Records should be there.
+	QVERIFY( syncedPCRec );
+	QVERIFY( syncedHHRec );
 	
-	/** END OF PREPARATIONS **/
+	// Pc and hh record should have the values from the pc record before sync.
+	QVERIFY( *syncedHHRec == *pcRec );
+	QVERIFY( *syncedPCRec == *pcRec );
 	
-	// NOTE: we do not care about the CUDCounter, that is tested in DataProxyTest.
-	conduit.solveConflictTest( pcRec, hhRec );
-	QVERIFY( pcRec->value( CSL1( "f1" ) ) == CSL1( "A" ) );
-	QVERIFY( pcRec->value( CSL1( "f2" ) ) == CSL1( "D" ) );
-	QVERIFY( conduit.mapping()->contains( hhId ) );
-	QVERIFY( conduit.mapping()->contains( pcId ) );
+	// Records are in sync so shouldn't be modified anymore after a hotsync.
+	QVERIFY( !syncedPCRec->isModified() );
+	QVERIFY( !syncedHHRec->isModified() );
+	
+	// There should be a mapping
+	QVERIFY( fConduit->mapping()->hhRecordId( CSL1( "id-3" ) ) == CSL1( "id-4" ) );
+	QVERIFY( fConduit->mapping()->pcRecordId( CSL1( "id-4" ) ) == CSL1( "id-3" ) );
+	
+	delete fConduit;
 }
 
 void RecordConduitTest::testCase_1_5()
 {
-	// CASE | PC | HH | Resolotion
-	//  1-5 |  M |  M | Sync hh fields to pc record
+	// 5 | D-1  |  0 ||  - |  M | id-5 | sync hh to pc
+	initTestCase_1();
 	
-	// NOTE: 2 == eHHOverrides, this is important for the solveConflict() method
-	QStringList args = QStringList() << CSL1( "--hotsync" )
-		<< CSL1( "--conflictResolution 2" );
+	// Duplicate the records before the sync.
+	Record *hhRec = new Record( *(fConduit->hhDataProxy()->find( CSL1( "id-5" ) ) ) );
+	Record *backupRec = new Record( 
+		*(fConduit->backupDataProxy()->find( CSL1( "id-5" )) ) );
 	
-	TestRecordConduit conduit( args );
-	conduit.initDataProxies();
+	// Verify the startsituation
+	QVERIFY( !fConduit->pcDataProxy()->find( CSL1( "D-1" ) ) );
+	QVERIFY( hhRec->isModified() );
+	QVERIFY( !backupRec->isModified() );
 	
-	// A modified pc rec
-	TestRecord *pcRec = new TestRecord();
-	pcRec->setValue( CSL1( "f1" ), CSL1( "A" ) );
-	pcRec->setValue( CSL1( "f2" ), CSL1( "B" ) );
+	// There should be a mapping
+	QVERIFY( fConduit->mapping()->hhRecordId( CSL1( "D-1" ) ) == CSL1( "id-5" ) );
+	QVERIFY( fConduit->mapping()->pcRecordId( CSL1( "id-5" ) ) == CSL1( "D-1" ) );
 	
-	QString pcId = conduit.pcDataProxy()->create( pcRec );
+	// Everything is ok, do a hotsync now.
+	fConduit->hotSyncTest();
 	
-	// A modified hh rec
-	TestRecord *hhRec = new TestRecord();
-	hhRec->setValue( CSL1( "f1" ), CSL1( "A" ) );
-	hhRec->setValue( CSL1( "f2" ), CSL1( "D" ) );
+	// First determine the new id for the pc record.
+	QString pcRecordId = fConduit->mapping()->pcRecordId( CSL1( "id-5" ) );
 	
-	QString hhId = conduit.hhDataProxy()->create( hhRec );
-	// There must be a mapping! Conflicts only occure for known records.
-	conduit.mapping()->map( hhId, pcId );
+	QVERIFY( !pcRecordId.isNull() );
 	
-	/** END OF PREPARATIONS **/
+	Record *syncedPCRec = fConduit->pcDataProxy()->find( pcRecordId );
+	Record *syncedHHRec = fConduit->hhDataProxy()->find( CSL1( "id-5" ) );
 	
-	// NOTE: we do not care about the CUDCounter, that is tested in DataProxyTest.
-	conduit.solveConflictTest( pcRec, hhRec );
-	QVERIFY( pcRec->value( CSL1( "f1" ) ) == CSL1( "A" ) );
-	QVERIFY( pcRec->value( CSL1( "f2" ) ) == CSL1( "D" ) );
-	QVERIFY( conduit.mapping()->contains( hhId ) );
-	QVERIFY( conduit.mapping()->contains( pcId ) );
+	QVERIFY( syncedHHRec );
+	QVERIFY( syncedPCRec );
+	QVERIFY( *hhRec == *syncedHHRec );
+	QVERIFY( *hhRec == *syncedPCRec );
+	
+	delete fConduit;
 }
 
 void RecordConduitTest::testCase_1_6()
 {
-	// CASE | PC | HH | Resolotion
-	//  1-6 |  M |  0 | Delete pc record from pc datastore
+	// D-2  |  0 ||  - |  - | id-6 | Delete hh record and mapping.
+	/*
+	initTestCase_1();
 	
-	// NOTE: 2 == eHHOverrides, this is important for the solveConflict() method
-	QStringList args = QStringList() << CSL1( "--hotsync" )
-		<< CSL1( "--conflictResolution 2" );
+	// Duplicate the records before the sync.
+	Record *hhRec = new Record( *(fConduit->hhDataProxy()->find( CSL1( "id-6" ) ) ) );
+	Record *backupRec = new Record( 
+		*(fConduit->backupDataProxy()->find( CSL1( "id-6" )) ) );
 	
-	TestRecordConduit conduit( args );
-	conduit.initDataProxies();
+	// Verify the startsituation
+	QVERIFY( !fConduit->pcDataProxy()->find( CSL1( "D-2" ) ) );
+	QVERIFY( !hhRec->isModified() );
+	QVERIFY( !backupRec->isModified() );
 	
-	// A modified pc rec
-	TestRecord *pcRec = new TestRecord();
-	pcRec->setValue( CSL1( "f1" ), CSL1( "A" ) );
-	pcRec->setValue( CSL1( "f2" ), CSL1( "B" ) );
+	// There should be a mapping
+	QVERIFY( fConduit->mapping()->hhRecordId( CSL1( "D-2" ) ) == CSL1( "id-6" ) );
+	QVERIFY( fConduit->mapping()->pcRecordId( CSL1( "id-6" ) ) == CSL1( "D-2" ) );
 	
-	QString pcId = conduit.pcDataProxy()->create( pcRec );
+	// Everything is ok, do a hotsync now.
+	fConduit->hotSyncTest();
 	
-	// A deleted hh rec
-	TestRecord *hhRec = 0L;
+	// First determine the new id for the pc record.
+	QString pcRecordId = fConduit->mapping()->pcRecordId( CSL1( "id-6" ) );
 	
-	// There must be a mapping! Conflicts only occure for known records.
-	conduit.mapping()->map( CSL1( "hh-1" ), pcId );
+	QVERIFY( !pcRecordId.isNull() );
 	
-	/** END OF PREPARATIONS **/
+	QVERIFY( !fConduit->pcDataProxy()->find( CSL1( "D-2" ) ) );
+	QVERIFY( !fConduit->hhDataProxy()->find( CSL1( "id-6" ) ) );
 	
-	// NOTE: we do not care about the CUDCounter, that is tested in DataProxyTest.
-	conduit.solveConflictTest( pcRec, hhRec );
-	QVERIFY( conduit.pcDataProxy()->find( pcRec->id() ) == 0L );
-	QVERIFY( !conduit.mapping()->contains( pcRec->id() ) );
+	// There should be a mapping
+	QVERIFY( fConduit->mapping()->hhRecordId( CSL1( "D-2" ) ) == QString() );
+	QVERIFY( fConduit->mapping()->pcRecordId( CSL1( "id-6" ) ) == QString() );
+	
+	delete fConduit;
+	*/
 }
 
 void RecordConduitTest::testCase_1_7()
 {
-	// CASE | PC | HH | Resolotion
-	//  1-7 |  0 |  - | Add duplicate of hh rec to pc datastore.
-	
-	// NOTE: 2 == eHHOverrides, this is important for the solveConflict() method
-	QStringList args = QStringList() << CSL1( "--hotsync" )
-		<< CSL1( "--conflictResolution 2" );
-	
-	TestRecordConduit conduit( args );
-	conduit.initDataProxies();
-	
-	// A deleted pc rec
-	TestRecord *pcRec = 0L;
-	
-	// An unmodified hh rec
-	TestRecord *hhRec = new TestRecord();
-	hhRec->setValue( CSL1( "f1" ), CSL1( "A" ) );
-	hhRec->setValue( CSL1( "f2" ), CSL1( "D" ) );
-	hhRec->setUnmodified();
-	
-	QString hhId = conduit.pcDataProxy()->create( hhRec );
-	
-	// There must be a mapping! Conflicts only occure for known records.
-	conduit.mapping()->map( hhId, CSL1( "pc-unknown" ) );
-	
-	/** END OF PREPARATIONS **/
-	
-	// NOTE: we do not care about the CUDCounter, that is tested in DataProxyTest.
-	// NOTE: This test assumes that the duplicate method of Record does work!
-	conduit.solveConflictTest( pcRec, hhRec );
-	QVERIFY( conduit.mapping()->contains( hhId ) );
-	
-	Record *rec = conduit.pcDataProxy()->find( conduit.mapping()->recordId( hhId ) );
-		
-	QVERIFY( rec );
-	QVERIFY( rec->value( CSL1( "f1" ) ) == CSL1( "A" ) );
-	QVERIFY( rec->value( CSL1( "f2" ) ) == CSL1( "D" ) );
+	// 7 | D-3  |  0 ||  - |  0 | D-1  | Mapping D1-D3 should be removed after sync.
 }
 
 void RecordConduitTest::testCase_1_8()
 {
-	// CASE | PC | HH | Resolotion
-	//  1-8 |  0 |  M | Add duplicate of hh rec to pc datastore.
-	
-	// NOTE: 2 == eHHOverrides, this is important for the solveConflict() method
-	QStringList args = QStringList() << CSL1( "--hotsync" )
-		<< CSL1( "--conflictResolution 2" );
-	
-	TestRecordConduit conduit( args );
-	conduit.initDataProxies();
-	
-	// A deleted pc rec
-	TestRecord *pcRec = 0L;
-	
-	// A modified hh rec
-	TestRecord *hhRec = new TestRecord();
-	hhRec->setValue( CSL1( "f1" ), CSL1( "A" ) );
-	hhRec->setValue( CSL1( "f2" ), CSL1( "D" ) );
-	
-	QString hhId = conduit.pcDataProxy()->create( hhRec );
-	
-	// There must be a mapping! Conflicts only occure for known records.
-	conduit.mapping()->map( hhId, CSL1( "pc-unknown" ) );
-	
-	/** END OF PREPARATIONS **/
-	
-	// NOTE: we do not care about the CUDCounter, that is tested in DataProxyTest.
-	// NOTE: This test assumes that the duplicate method of Record does work!
-	conduit.solveConflictTest( pcRec, hhRec );
-	QVERIFY( conduit.mapping()->contains( hhId ) );
-	
-	Record *rec = conduit.pcDataProxy()->find( conduit.mapping()->recordId( hhId ) );
-		
-	QVERIFY( rec );
-	QVERIFY( rec->value( CSL1( "f1" ) ) == CSL1( "A" ) );
-	QVERIFY( rec->value( CSL1( "f2" ) ) == CSL1( "D" ) );
+	// 8 | id-6 |  - ||  - |  0 | D-2  | Delete pc record and mapping.
 }
+
+void RecordConduitTest::testCase_1_9()
+{
+	//9 | id-5 |  M ||  - |  0 | D-3  | Delete pc record and mapping.
+}
+
+void RecordConduitTest::testCase_1_10()
+{
+	// 10 | id-7 |  M ||  X |  X |      | Sync pc to hh
+	/*
+	initTestCase_1();
+	
+	// Duplicate the records before the sync.
+	Record *pcRec = new Record( *(fConduit->pcDataProxy()->find( CSL1( "id-7" )) ) );
+	
+	// Verify the startsituation
+	QVERIFY( pcRec->isModified() );
+	
+	// There shouldn't be a mapping
+	QVERIFY( fConduit->mapping()->hhRecordId( CSL1( "id-7" ) ) == QString() );
+	
+	// Everything is ok, do a hotsync now.
+	fConduit->hotSyncTest();
+	
+	Record *syncedPCRec = fConduit->pcDataProxy()->find( CSL1( "id-7" ) );
+	
+	QString hhRecId = fConduit->mapping()->hhRecordId( CSL1( "id-7" ) );
+	
+	QVERIFY( hhRecId != QString() );
+	
+	Record *syncedHHRec = fConduit->hhDataProxy()->find( hhRecId );
+	
+	// Records should be there.
+	QVERIFY( syncedPCRec );
+	QVERIFY( syncedHHRec );
+	
+	// Pc and hh record should have the values from the pc record before sync.
+	QVERIFY( *syncedHHRec == *pcRec );
+	QVERIFY( *syncedPCRec == *pcRec );
+	
+	qDebug() << syncedPCRec->toString();
+	
+	// Records are in sync so shouldn't be modified anymore after a hotsync.
+	QVERIFY( !syncedPCRec->isModified() );
+	QVERIFY( !syncedHHRec->isModified() );
+	
+	delete fConduit;
+	*/
+}
+
+void RecordConduitTest::testCase_1_11()
+{
+	// 11 | id-8 |  - ||  X |  X |      | Do nothing, only full sync does this.
+}
+
+void RecordConduitTest::testCase_1_12()
+{
+	// 12 |      |  X ||  X |  M | id-7 | sync hh to pc
+}
+
+void RecordConduitTest::testCase_1_13()
+{
+	// 13 |      |  X ||  X |  - | id-8 | Do nothing, only full sync does this.
+}
+
+
 QTEST_KDEMAIN(RecordConduitTest, NoGUI)
 
 #include "recordconduittest.moc"
