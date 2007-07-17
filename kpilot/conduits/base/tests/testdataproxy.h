@@ -34,12 +34,10 @@ public:
 	TestDataProxy();
 	
 	/**
-	 * Creates a dataproxy with @p count records in it. If containsModified is 
-	 * true the proxy will create first a modified, then an unmodified record and
-	 * so until @p count records are created. Otherwhise all records are 
-	 * unmodified.
+	 * Creates a dataproxy with @p count records in it. The ids are prefixed with
+	 * @p idPref.
 	 */
-	TestDataProxy( int count, bool containsModified = true );
+	TestDataProxy( int count, const QString &idPref );
 
 	void printRecords();
 

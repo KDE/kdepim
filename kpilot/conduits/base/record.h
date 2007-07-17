@@ -60,6 +60,11 @@ protected:
 	 */
 	bool fModified;
 	
+	/**
+	 * Indicates wheter or not this record is deleted.
+	 */
+	bool fDeleted;
+	
 public:
 	Record( const QStringList& fields );
 	
@@ -90,9 +95,18 @@ public:
 	bool setValue( const QString &field, const QVariant &value );
 
 	/**
-	 * Returns true if the record is modified.
+	 * Returns true if the record is modified and if it's marked as deleted.
 	 */
 	bool isModified() const;
+	
+	void setModified();
+	
+	void setDeleted();
+	
+	/**
+	 * Returns true when this record is marked for deletion.
+	 */
+	bool isDeleted() const;
 	
 	/**
 	 * Notify the record that syncing is finished so that it can reset flags.

@@ -94,7 +94,7 @@ public:
 	unsigned int recordCount() const;
 	
 	/**
-	 * Looks for a matching record. Should return 0 if there is no match.
+	 * Looks for a matching record. Should return 0L if there is no match.
 	 */
 	Record* find( const QString &id ) const;
 	
@@ -105,13 +105,13 @@ public:
 	
 	/**
 	 * Depending on the iterateMode it should give if there is a next record or if
-	 * there is a next modified record.
+	 * there is a next modified/deleted record.
 	 */
 	bool hasNext() const;
 
 	/**
 	 * Depending on the iterateMode it should give the next record, the next
-	 * modified record or 0 if there are no more records to iterate over.
+	 * modified/deleted record or 0L if there are no more records to iterate over.
 	 */
 	Record* next();
 	

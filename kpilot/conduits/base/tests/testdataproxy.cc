@@ -32,32 +32,23 @@
 
 TestDataProxy::TestDataProxy() {}
 
-TestDataProxy::TestDataProxy( int count, bool containsModified )
+TestDataProxy::TestDataProxy( int count, const QString &idPref )
 {
-	bool modified = true;
-	
 	QStringList fields;
 	fields << CSL1( "f1" ) << CSL1( "f2" );
 	
 	for( int i = 1; i <= count; i++ )
 	{
-		Record *rec = new Record( fields, CSL1( "id-" ) + QString::number( i ) );
+		QString id = idPref + QString::number( i );
+		
+		Record *rec = new Record( fields, id );
 		rec->setValue( CSL1( "f1" )
 			, CSL1( "Value 1: " ) + QString::number( qrand() ) );
 		rec->setValue( CSL1( "f2" )
 			, CSL1( "Value 2: " ) + QString::number( qrand() ) );
-		
-		if( containsModified && !modified )
-		{
-			rec->synced();
-		}
-		else if( !containsModified )
-		{
-			rec->synced();
-		}
+		rec->synced();
 		
 		fRecords.insert( rec->id(), rec );
-		modified = !modified;
 	}
 	
 	fIterator = QMapIterator<QString, Record*>( fRecords );

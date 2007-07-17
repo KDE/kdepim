@@ -30,6 +30,7 @@
 #include "testrecordconduit.h"
 #include "testdataproxy.h"
 #include "idmapping.h"
+#include "record.h"
 
 TestRecordConduit::TestRecordConduit( const QStringList &args, bool createRecs )
 	: RecordConduit( 0L, args, CSL1( "test-db" ), CSL1( "test-conduit" ) )
@@ -53,58 +54,60 @@ void TestRecordConduit::initDataProxies()
 {
 	if( fCreateRecords )
 	{
-		// Create all three proxies. The backup proxy only contains
+		// Create all three proxies and mappings. The backup proxy only contains
 		// unmodified records:
 		/*
-		 *    Id | PC || BU | HH |
-		 *  id-1 |  M ||  - | M  |
-		 *  id-2 |  - ||  - | -  |
-		 *  id-3 |  M ||  - | M  |
-		 *  id-4 |  - ||  - | -  |
-		 *  id-5 |  M ||  - | M  |
-		 *  id-6 |  - ||  - | -  |
-		 *  id-7 |  M ||  X | M  |
-		 *  id-8 |  - ||  X | -  |
-		 */
-		fHHDataProxy = new TestDataProxy( 6 );
-		fBackupDataProxy = new TestDataProxy( 6, false );
-		fPCDataProxy = new TestDataProxy( 7 );
-		 
-		/*
-		 * We want to map them as follows:
+		 * The following table gives the status of the TestRecordConduit befor sync.
 		 *
-		 *    Id | PC || BU | HH | Id
-		 *  id-2 |  - ||  - | M  | id-1 -> sync hh to pc
-		 *  id-4 |  - ||  - | -  | id-2 -> Do nothing
-		 *  id-1 |  M ||  - | M  | id-3 -> Conflict
-		 *  id-3 |  M ||  - | -  | id-4 -> Sync pc to hh
+		 * CASE  |      PC   || HH & BACKUP    |
+		 *       |   Id |STAT|| BU | HH | Id   |
+		 * 5.5.1 | pc-1 |  - ||  - |  - | hh-1 |
+		 * 5.5.2 |      |  X ||  X |  N | hh-2 |
+		 * 5.5.3 | pc-2 |  - ||  - |  M | hh-3 |
+		 * 5.5.4 | pc-3 |  - ||  - |  D | hh-4 |
+		 * 5.5.5 | pc-4 |  N ||  X |  X |      |
+		 * 5.5.6 | pc-5 |  M ||  - |  - | hh-5 |
+		 * 5.5.7 | pc-6 |  D ||  - |  - | hh-6 |
+		 * 5.5.8 | pc-7 |  N ||  X |  N | hh-7 |
+		 * 5.5.9 | pc-8 |  M ||  - |  M | hh-8 |
+		 * 5.5.10| pc-9 |  M ||  - |  D | hh-9 |
+		 * 5.5.11| pc-10|  D ||  - |  M | hh-10|
+		 * 5.5.12| pc-11|  D ||  - |  D | hh-11|
+		 * 5.5.13|      |  X ||  X |  - | hh-12|
+		 * 5.5.14| pc-12|  - ||  X |  X |      |
 		 */
-		//                     HH    ,         PC
-		fMapping->map( CSL1( "id-1" ), CSL1( "id-2" ) );
-		fMapping->map( CSL1( "id-2" ), CSL1( "id-4" ) );
-		fMapping->map( CSL1( "id-3" ), CSL1( "id-1" ) );
-		fMapping->map( CSL1( "id-4" ), CSL1( "id-3" ) );
+		fHHDataProxy = new TestDataProxy( 12, CSL1( "hh-" ) );
+		fHHDataProxy->find( CSL1( "hh-2" ) )->setModified();
+		fHHDataProxy->find( CSL1( "hh-3" ) )->setModified();
+		fHHDataProxy->find( CSL1( "hh-4" ) )->setDeleted();
+		fHHDataProxy->find( CSL1( "hh-8" ) )->setModified();
+		fHHDataProxy->find( CSL1( "hh-9" ) )->setDeleted();
+		fHHDataProxy->find( CSL1( "hh-10" ) )->setModified();
+		fHHDataProxy->find( CSL1( "hh-11" ) )->setDeleted();
 		
-		/* We also want some conflict situations with deleted records:
-		 *   Id  | PC || BU | HH | Id
-		 *  D-1  |  0 ||  - |  - | id-6 -> Delete hh-record and mapping.
-	   *  D-2  |  0 ||  - |  M | id-5 -> Add duplicate of hh rec to pc datastore.
-	   *  D-3  |  0 ||  - |  0 | D-1  -> Not a conflict (Mapping D1-D3 should be 
-	   *                                 removed after sync
-	   *  id-6 |  - ||  - |  0 | D-2  -> Add duplicate of hh rec to pc datastore.
-	   *  id-5 |  M ||  - |  0 | D-3  -> Add duplicate of hh rec to pc datastore.
-	   */
-		fMapping->map( CSL1( "id-5" ), CSL1( "D-1" ) );
-		fMapping->map( CSL1( "id-6" ), CSL1( "D-2" ) );
+		fBackupDataProxy = new TestDataProxy( 11, CSL1( "hh-" ) );
+		fBackupDataProxy->remove( CSL1( "hh-2" ) );
+		fBackupDataProxy->remove( CSL1( "hh-7" ) );
 		
-		/*
-		fMapping->map( CSL1( "D-1" ), CSL1( "D-3" ) );
-		fMapping->map( CSL1( "D-2" ), CSL1( "id-6" ) );
-		fMapping->map( CSL1( "D-3" ), CSL1( "id-5" ) );
-		*/
-		// For records with ids 7 and 8 we don't have to create mappings.
-		
-		// Now we have records and mappings for every possible situation.
+		fPCDataProxy = new TestDataProxy( 12, CSL1( "pc-" ) );
+		fPCDataProxy->find( CSL1( "pc-4" ) )->setModified();
+		fPCDataProxy->find( CSL1( "pc-5" ) )->setModified();
+		fPCDataProxy->find( CSL1( "pc-6" ) )->setDeleted();
+		fPCDataProxy->find( CSL1( "pc-8" ) )->setModified();
+		fPCDataProxy->find( CSL1( "pc-9" ) )->setModified();
+		fPCDataProxy->find( CSL1( "pc-10" ) )->setDeleted();
+		fPCDataProxy->find( CSL1( "pc-11" ) )->setDeleted();
+		 
+		fMapping->map( CSL1( "hh-1" ), CSL1( "pc-1" ) );
+		fMapping->map( CSL1( "hh-3" ), CSL1( "pc-2" ) );
+		fMapping->map( CSL1( "hh-4" ), CSL1( "pc-3" ) );
+		fMapping->map( CSL1( "hh-5" ), CSL1( "pc-5" ) );
+		fMapping->map( CSL1( "hh-6" ), CSL1( "pc-6" ) );
+		fMapping->map( CSL1( "hh-7" ), CSL1( "pc-7" ) );
+		fMapping->map( CSL1( "hh-8" ), CSL1( "pc-8" ) );
+		fMapping->map( CSL1( "hh-9" ), CSL1( "pc-9" ) );
+		fMapping->map( CSL1( "hh-10" ), CSL1( "pc-10" ) );
+		fMapping->map( CSL1( "hh-11" ), CSL1( "pc-11" ) );
 	}
 	else
 	{

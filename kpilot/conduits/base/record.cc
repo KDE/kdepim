@@ -30,12 +30,12 @@
 #include "options.h"
 
 Record::Record( const QStringList& fields ) : fId( QString() )
-	, fFields( fields ), fModified( false )
+	, fFields( fields ), fModified( false ), fDeleted( false )
 {
 }
 
 Record::Record( const QStringList& fields, const QString &id ) : fId( id )
-	, fFields( fields ), fModified( false )
+	, fFields( fields ), fModified( false ), fDeleted( false )
 {
 }
 
@@ -45,6 +45,7 @@ Record::Record( const Record &other )
 	fFields = other.fFields;
 	fFieldValues = other.fFieldValues;
 	fModified = other.fModified;
+	fDeleted = other.fDeleted;
 }
 
 const QString Record::id() const
@@ -86,12 +87,29 @@ bool Record::setValue( const QString &field, const QVariant &value )
 
 bool Record::isModified() const
 {
-	return fModified;
+	return fModified || fDeleted;
+}
+
+void Record::setModified()
+{
+	fModified = true;
+}
+
+void Record::setDeleted()
+{
+	fDeleted = true;
+}
+
+
+bool Record::isDeleted() const
+{
+	return fDeleted;
 }
 
 void Record::synced()
 {
 	fModified = false;
+	fDeleted = false;
 }
 
 QString Record::toString() const

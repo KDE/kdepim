@@ -110,6 +110,11 @@ protected:
 	 */
 	bool syncFields( Record *from, Record *to );
 	
+	/**
+	 * Deletes the mapping for those records and removes them from the proxies.
+	 */
+	void deleteRecords( Record *pcRecord, Record *hhRecord );
+	
 	void solveConflict( Record *pcRecord, Record *hhRecord );
 };
 #endif
