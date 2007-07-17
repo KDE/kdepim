@@ -149,8 +149,8 @@ void OpenGroupware::getFreeBusy( const KUrl &url )
       QDate start = QDate::currentDate().addDays( -3 );
       QDate end = QDate::currentDate().addDays( 60 );
 
-      fb->setDtStart( start );
-      fb->setDtEnd( end );
+      fb->setDtStart( KDateTime( start, KDateTime::Spec::LocalZone() ) );
+      fb->setDtEnd( KDateTime( end, KDateTime::Spec::LocalZone() ) );
 
       kDebug() << "Login" << endl;
 
