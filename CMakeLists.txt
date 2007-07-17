@@ -103,10 +103,9 @@ if(NOT WIN32)
     macro_optional_add_subdirectory(kmail)
     add_subdirectory(plugins)
   endif(GPGME_FOUND)
+  macro_optional_add_subdirectory(kalarm)
 endif(NOT WIN32)
 macro_optional_add_subdirectory(kaddressbook)
-
-macro_optional_add_subdirectory(kalarm)
 
 if (Q_WS_X11)
    macro_optional_add_subdirectory(ktimetracker)
