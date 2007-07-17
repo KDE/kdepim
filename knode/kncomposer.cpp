@@ -308,7 +308,7 @@ KNComposer::KNComposer(KNLocalArticle *a, const QString &text, const QString &si
   a_ctSetCharset->setText(i18n("Set &Charset"));
   a_ctSetCharset->setItems( KGlobal::charsets()->availableEncodingNames() );
   a_ctSetCharset->setShortcutConfigurable(false);
-  connect(a_ctSetCharset, SIGNAL(activated(const QString&)),
+  connect(a_ctSetCharset, SIGNAL(triggered(const QString&)),
   this, SLOT(slotSetCharset(const QString&)));
 
   a_ctSetCharsetKeyb = actionCollection()->addAction("set_charset_keyboard");
