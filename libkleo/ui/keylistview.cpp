@@ -132,35 +132,36 @@ Kleo::KeyListView::~KeyListView() {
   delete mDisplayStrategy; mDisplayStrategy = 0;
 }
 
-bool Kleo::KeyListView::eventFilter( QObject *o,QEvent *e )
+bool Kleo::KeyListView::event( QEvent *e )
 {
   if ( !e )
     return true;
-  if ( e->type()==QEvent::ToolTip )
+  if ( e && e->type()==QEvent::ToolTip )
   {
     QHelpEvent* helpEvent = static_cast<QHelpEvent*>( e );
-    showToolTip( helpEvent->pos() );
+    if(showToolTip( helpEvent->pos() ))
+	    helpEvent->accept();
   }
-  return false;
+  return K3ListView::event(e);
 }
 
-void Kleo::KeyListView::showToolTip( const QPoint& p )
+bool Kleo::KeyListView::showToolTip( const QPoint& p )
 {
   const Q3ListViewItem * item = itemAt( p );
   if ( !item )
-    return;
+    return false;
 
   QRect rect  = itemRect( item );
   if ( !rect.isValid() )
-    return;
+    return false;
 
   const int col = header()->sectionAt( p.x() );
   if ( col == -1 )
-    return;
+    return false;
 
   const QRect headerRect = header()->sectionRect( col );
   if ( !headerRect.isValid() )
-    return;
+    return false;
 
   const QRect cellRect( headerRect.left(), rect.top(),
                         headerRect.width(), rect.height() );
@@ -173,6 +174,7 @@ void Kleo::KeyListView::showToolTip( const QPoint& p )
 
   if ( !tipStr.isEmpty() )
     QToolTip::showText( mapToGlobal( cellRect.bottomRight() ), tipStr, this );
+  return true;
 }
 
 

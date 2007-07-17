@@ -310,9 +310,9 @@ namespace Kleo {
     void takeItem( Q3ListViewItem * );
 
   protected:
-    virtual bool eventFilter(QObject *o, QEvent *e );
+    virtual bool event(QEvent *e );
   private:
-    void showToolTip( const QPoint& p );
+    bool showToolTip( const QPoint& p );
     void doHierarchicalInsert( const GpgME::Key & );
     void gatherScattered();
     void scatterGathered( Q3ListViewItem * );
