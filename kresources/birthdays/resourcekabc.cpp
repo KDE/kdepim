@@ -92,7 +92,7 @@ void ResourceKABC::readConfig( const KConfigGroup &group )
 {
   mAlarmDays = group.readEntry( "AlarmDays", 0 );
   mAlarm = group.readEntry( "Alarm", true );
-  mCategories = group.readEntry( "Categories" , QStringList() );
+  mCategories = group.readEntry( "Categories", QStringList() );
   mUseCategories = group.readEntry( "UseCategories", false );
 }
 
@@ -104,7 +104,6 @@ void ResourceKABC::writeConfig( KConfigGroup &group )
   group.writeEntry( "Categories", mCategories );
   group.writeEntry( "UseCategories", mUseCategories );
 }
-
 
 bool ResourceKABC::doOpen()
 {
@@ -136,14 +135,16 @@ bool ResourceKABC::doLoad()
     if ( mUseCategories ) {
       bool hasCategory = false;
       QStringList categories = (*it).categories();
-      for ( strIt = mCategories.begin(); strIt != endStrIt; ++strIt )
+      for ( strIt = mCategories.begin(); strIt != endStrIt; ++strIt ) {
         if ( categories.contains( *strIt ) ) {
           hasCategory = true;
           break;
         }
+      }
 
-      if ( !hasCategory )
+      if ( !hasCategory ) {
         continue;
+      }
     }
 
     QDate birthdate = (*it).birthday().date();
@@ -154,32 +155,34 @@ bool ResourceKABC::doLoad()
       name_1 = (*it).nickName();
       email_1 = (*it).fullEmail();
       uid_1 = (*it).uid();
-      if (name_1.isEmpty()) name_1 = (*it).realName();
-      summary = i18n("%1's birthday", name_1 );
-
+      if ( name_1.isEmpty() ) {
+        name_1 = (*it).realName();
+      }
+      summary = i18n( "%1's birthday", name_1 );
 
       Event *ev = new Event();
-      ev->setUid( uid_1+"_KABC_Birthday");
+      ev->setUid( uid_1 + "_KABC_Birthday" );
 
-      ev->setDtStart(KDateTime(birthdate, KDateTime::ClockTime));
-      ev->setDtEnd(KDateTime(birthdate, KDateTime::ClockTime));
-      ev->setHasEndDate(true);
-      ev->setFloats(true);
+      ev->setDtStart( KDateTime( birthdate, KDateTime::ClockTime ) );
+      ev->setDtEnd( KDateTime( birthdate, KDateTime::ClockTime ) );
+      ev->setHasEndDate( true );
+      ev->setFloats( true );
       ev->setTransparency( Event::Transparent );
 
-      ev->setCustomProperty("KABC", "BIRTHDAY", "YES");
-      ev->setCustomProperty("KABC", "UID-1", uid_1 );
-      ev->setCustomProperty("KABC", "NAME-1", name_1 );
-      ev->setCustomProperty("KABC", "EMAIL-1", email_1 );
-      kDebug(5800) << "ResourceKABC::doLoad: uid:" << uid_1 << " name: " << name_1
-        << " email: " << email_1 << endl;
-      ev->setSummary(summary);
+      ev->setCustomProperty( "KABC", "BIRTHDAY", "YES" );
+      ev->setCustomProperty( "KABC", "UID-1", uid_1 );
+      ev->setCustomProperty( "KABC", "NAME-1", name_1 );
+      ev->setCustomProperty( "KABC", "EMAIL-1", email_1 );
+      kDebug(5800) << "ResourceKABC::doLoad: uid:" << uid_1
+                   << " name: " << name_1
+                   << " email: " << email_1 << endl;
+      ev->setSummary( summary );
 
       // Set the recurrence
       Recurrence *vRecurrence = ev->recurrence();
-      vRecurrence->setStartDateTime( KDateTime(birthdate, KDateTime::ClockTime) );
+      vRecurrence->setStartDateTime( KDateTime( birthdate, KDateTime::ClockTime ) );
       vRecurrence->setYearly( 1 );
-      if ( birthdate.month()==2 && birthdate.day()==29 ) {
+      if ( birthdate.month() == 2 && birthdate.day() == 29 ) {
         vRecurrence->addYearlyDay( 60 );
       }
 
@@ -187,37 +190,41 @@ bool ResourceKABC::doLoad()
 
       if ( mAlarm ) {
         // Set the alarm
-        Alarm* vAlarm = ev->newAlarm();
-        vAlarm->setText(summary);
-        vAlarm->setTime(KDateTime(birthdate, KDateTime::ClockTime));
-        // 24 hours before
-        vAlarm->setStartOffset( -1440 * mAlarmDays );
-        vAlarm->setEnabled(true);
+        Alarm *vAlarm = ev->newAlarm();
+        vAlarm->setText( summary );
+        vAlarm->setTime( KDateTime( birthdate, KDateTime::ClockTime ) );
+        // N days before
+        vAlarm->setStartOffset( Duration( -mAlarmDays, Duration::Days ) );
+        vAlarm->setEnabled( true );
       }
 
       // insert category
-      ev->setCategories(i18n("Birthday"));
+      ev->setCategories( i18n( "Birthday" ) );
 
       ev->setReadOnly( true );
-      mCalendar.addEvent(ev);
+      mCalendar.addEvent( ev );
       kDebug(5800) << "imported " << birthdate.toString() << endl;
     }
 
     QString anniversary_string = (*it).custom( "KADDRESSBOOK", "X-Anniversary" );
-    if (anniversary_string.isEmpty() )
+    if ( anniversary_string.isEmpty() ) {
       continue;
+    }
     QDate anniversary = QDate::fromString( anniversary_string, Qt::ISODate );
-    if ( !anniversary.isValid() )
+    if ( !anniversary.isValid() ) {
       continue;
+    }
 
     QString name = (*it).custom( "KADDRESSBOOK", "X-SpousesName" );
-    if ( name.isEmpty() )
+    if ( name.isEmpty() ) {
       anniversaries.append( *it );
-    else {
+    } else {
       bool found = false;
       for ( addrIt = anniversaries.begin(); addrIt != anniversaries.end(); ++addrIt ) {
         if ( name == (*addrIt).realName() ) {
-          QDate spouseAnniversary = QDate::fromString( (*addrIt).custom( "KADDRESSBOOK", "X-Anniversary" ), Qt::ISODate );
+          QDate spouseAnniversary =
+            QDate::fromString( (*addrIt).custom( "KADDRESSBOOK", "X-Anniversary" ),
+                               Qt::ISODate );
           if ( anniversary == spouseAnniversary ) {
             found = true;
             break;
@@ -226,48 +233,55 @@ bool ResourceKABC::doLoad()
         }
       }
 
-      if ( !found )
+      if ( !found ) {
         anniversaries.append( *it );
+      }
     }
   }
 
   for ( addrIt = anniversaries.begin(); addrIt != anniversaries.end(); ++addrIt ) {
-    KDateTime anniversary( QDate::fromString( (*addrIt).custom( "KADDRESSBOOK", "X-Anniversary" ), Qt::ISODate ), KDateTime::ClockTime );
+    KDateTime anniversary(
+      QDate::fromString( (*addrIt).custom( "KADDRESSBOOK", "X-Anniversary" ),
+                         Qt::ISODate ), KDateTime::ClockTime );
     kDebug(5800) << "found an anniversary " << anniversary.date().toString() << endl;
     QString name;
     QString name_1 = (*addrIt).nickName();
     QString uid_1 = (*addrIt).uid();
     QString email_1 = (*addrIt).fullEmail();
-    if ( name_1.isEmpty() )
+    if ( name_1.isEmpty() ) {
       name_1 = (*addrIt).realName();
-
+    }
 
     QString spouseName = (*addrIt).custom( "KADDRESSBOOK", "X-SpousesName" );
-    QString name_2,email_2,uid_2;
+    QString name_2, email_2, uid_2;
     if ( !spouseName.isEmpty() ) {
       //TODO: find a KABC:Addressee of the spouse
-      //      Probably easiest would be to use a QMap (as the spouse's entry was already searched above!
+      //Probably easiest would be to use a QMap (as the spouse's entry was
+      //already searched above!)
       KABC::Addressee spouse;
       spouse.setNameFromString( spouseName );
       uid_2 = spouse.uid();
       email_2 = spouse.fullEmail();
       name_2 = spouse.nickName();
-      if ( name_2.isEmpty() )
+      if ( name_2.isEmpty() ) {
         name_2 = spouse.givenName();
-      summary = i18nc("insert names of both spouses", "%1's & %2's anniversary", name_1, name_2 );
+      }
+      summary = i18nc( "insert names of both spouses",
+                       "%1's & %2's anniversary", name_1, name_2 );
     } else {
-      summary = i18nc("only one spouse in addressbook, insert the name", "%1's anniversary", name_1 );
+      summary = i18nc( "only one spouse in addressbook, insert the name",
+                       "%1's anniversary", name_1 );
     }
 
     Event *ev = new Event();
-      ev->setUid( uid_1+"_KABC_Anniversary");
+    ev->setUid( uid_1 + "_KABC_Anniversary" );
 
-    ev->setDtStart(anniversary);
-    ev->setDtEnd(anniversary);
-    ev->setHasEndDate(true);
-    ev->setFloats(true);
+    ev->setDtStart( anniversary );
+    ev->setDtEnd( anniversary );
+    ev->setHasEndDate( true );
+    ev->setFloats( true );
 
-    ev->setSummary(summary);
+    ev->setSummary( summary );
 
     ev->setCustomProperty( "KABC", "BIRTHDAY", "YES" );
 
@@ -276,15 +290,15 @@ bool ResourceKABC::doLoad()
     ev->setCustomProperty( "KABC", "EMAIL-1", email_1 );
     ev->setCustomProperty( "KABC", "ANNIVERSARY", "YES" );
     if ( !spouseName.isEmpty() ) {
-      ev->setCustomProperty("KABC", "UID-2", uid_2 );
-      ev->setCustomProperty("KABC", "NAME-2", spouseName );
-      ev->setCustomProperty("KABC", "EMAIL-2", email_2 );
+      ev->setCustomProperty( "KABC", "UID-2", uid_2 );
+      ev->setCustomProperty( "KABC", "NAME-2", spouseName );
+      ev->setCustomProperty( "KABC", "EMAIL-2", email_2 );
     }
     // Set the recurrence
     Recurrence *vRecurrence = ev->recurrence();
-    vRecurrence->setStartDateTime( KDateTime( anniversary.date(), KDateTime::ClockTime) );
+    vRecurrence->setStartDateTime( KDateTime( anniversary.date(), KDateTime::ClockTime ) );
     vRecurrence->setYearly( 1 );
-    if ( anniversary.date().month()==2 && anniversary.date().day()==29 ) {
+    if ( anniversary.date().month() == 2 && anniversary.date().day() == 29 ) {
       vRecurrence->addYearlyDay( 60 );
     }
 
@@ -292,19 +306,19 @@ bool ResourceKABC::doLoad()
 
     if ( mAlarm ) {
       // Set the alarm
-      Alarm* vAlarm = ev->newAlarm();
-      vAlarm->setText(summary);
-      vAlarm->setTime(anniversary);
-      // 24 hours before
-      vAlarm->setStartOffset( -1440 * mAlarmDays );
-      vAlarm->setEnabled(true);
+      Alarm *vAlarm = ev->newAlarm();
+      vAlarm->setText( summary );
+      vAlarm->setTime( anniversary );
+      // N days before
+      vAlarm->setStartOffset( Duration( -mAlarmDays, Duration::Days ) );
+      vAlarm->setEnabled( true );
     }
 
     // insert category
-    ev->setCategories(i18n("Anniversary"));
+    ev->setCategories( i18n( "Anniversary" ) );
 
     ev->setReadOnly( true );
-    mCalendar.addEvent(ev);
+    mCalendar.addEvent( ev );
     kDebug(5800) << "imported " << anniversary.toString() << endl;
   }
 
@@ -367,7 +381,6 @@ KABC::Lock *ResourceKABC::lock()
   return mLock;
 }
 
-
 bool ResourceKABC::addEvent(Event*)
 {
   return false;
@@ -378,45 +391,46 @@ bool ResourceKABC::deleteEvent(Event*)
   return false;
 }
 
-
 Event *ResourceKABC::event( const QString &uid )
 {
   return mCalendar.event( uid );
 }
 
 Event::List ResourceKABC::rawEventsForDate( const QDate &date,
-                                             EventSortField sortField,
-                                             SortDirection sortDirection )
+                                            EventSortField sortField,
+                                            SortDirection sortDirection )
 {
   return mCalendar.rawEventsForDate( date, sortField, sortDirection );
 }
 
 Event::List ResourceKABC::rawEvents( const QDate &start, const QDate &end,
-                                          bool inclusive )
+                                     bool inclusive )
 {
   return mCalendar.rawEvents( start, end, inclusive );
 }
 
-Event::List ResourceKABC::rawEventsForDate(const KDateTime &dt)
+Event::List ResourceKABC::rawEventsForDate( const KDateTime &dt )
 {
   return mCalendar.rawEventsForDate( dt.date() );
 }
 
-Event::List ResourceKABC::rawEvents( EventSortField sortField, SortDirection sortDirection )
+Event::List ResourceKABC::rawEvents( EventSortField sortField,
+                                     SortDirection sortDirection )
 {
   return mCalendar.rawEvents( sortField, sortDirection );
 }
 
-bool ResourceKABC::addTodo(Todo*)
+bool ResourceKABC::addTodo( Todo *todo )
 {
+  Q_UNUSED( todo );
   return false;
 }
 
-bool ResourceKABC::deleteTodo(Todo*)
+bool ResourceKABC::deleteTodo( Todo *todo )
 {
+  Q_UNUSED( todo );
   return false;
 }
-
 
 Todo::List ResourceKABC::rawTodos( TodoSortField sortField, SortDirection sortDirection )
 {
@@ -433,18 +447,19 @@ Todo::List ResourceKABC::rawTodosForDate( const QDate &date )
   return mCalendar.rawTodosForDate( date );
 }
 
-
-bool ResourceKABC::addJournal(Journal*)
+bool ResourceKABC::addJournal( Journal *journal )
 {
+  Q_UNUSED( journal );
   return false;
 }
 
-bool ResourceKABC::deleteJournal(Journal*)
+bool ResourceKABC::deleteJournal( Journal *journal )
 {
+  Q_UNUSED( journal );
   return false;
 }
 
-Journal *ResourceKABC::journal(const QString &uid)
+Journal *ResourceKABC::journal( const QString &uid )
 {
   return mCalendar.journal( uid );
 }
@@ -466,8 +481,6 @@ Alarm::List ResourceKABC::alarmsTo( const KDateTime &to )
 
 Alarm::List ResourceKABC::alarms( const KDateTime &from, const KDateTime &to )
 {
-//  kDebug(5800) << "ResourceKABC::alarms(" << from.dateTime().toString() << " - " << to.dateTime().toString() << ")\n";
-
   return mCalendar.alarms( from, to );
 }
 
@@ -492,7 +505,7 @@ KDateTime::Spec ResourceKABC::timeSpec() const
   return mCalendar.timeSpec();
 }
 
-void ResourceKABC::setTimeZoneId( const QString& tzid )
+void ResourceKABC::setTimeZoneId( const QString &tzid )
 {
   mCalendar.setTimeZoneId( tzid );
 }
@@ -502,7 +515,8 @@ QString ResourceKABC::timeZoneId() const
   return mCalendar.timeZoneId();
 }
 
-void ResourceKABC::shiftTimes(const KDateTime::Spec &oldSpec, const KDateTime::Spec &newSpec)
+void ResourceKABC::shiftTimes( const KDateTime::Spec &oldSpec,
+                               const KDateTime::Spec &newSpec )
 {
   mCalendar.shiftTimes( oldSpec, newSpec );
 }
