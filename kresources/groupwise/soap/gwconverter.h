@@ -56,6 +56,7 @@ class GWConverter
     std::string* qDateTimeToString( const QDateTime &string );
     
     QDateTime stringToQDateTime( const std::string* );
+    KDateTime stringToKDateTime( const std::string*, const KDateTime::Spec &timeSpec );
 
 
   private:

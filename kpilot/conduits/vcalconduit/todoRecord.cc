@@ -114,7 +114,7 @@ bool KCalSync::setTodo(KCal::Todo *e,
 	if (de->getIndefinite()) {
 		e->setHasDueDate(false);
 	} else {
-		e->setDtDue(readTm(de->getDueDate()));
+		e->setDtDue(KDateTime(readTm(de->getDueDate()), KDateTime::Spec::LocalZone()));
 		e->setHasDueDate(true);
 	}
 
@@ -125,9 +125,9 @@ bool KCalSync::setTodo(KCal::Todo *e,
 	e->setPriority(de->getPriority());
 
 	// COMPLETED? //
-	e->setCompleted(de->getComplete());
+	e->setCompleted(KDateTime(de->getComplete(), KDateTime::Spec::LocalZone()));
 	if ( de->getComplete() && !e->hasCompletedDate() ) {
-		e->setCompleted( QDateTime::currentDateTime() );
+		e->setCompleted( KDateTime::currentLocalDateTime() );
 	}
 
 	e->setSummary(de->getDescription());

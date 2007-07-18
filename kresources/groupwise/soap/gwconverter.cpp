@@ -104,6 +104,12 @@ QDateTime GWConverter::stringToQDateTime( const std::string* str )
   return dt;
 }
 
+KDateTime GWConverter::stringToKDateTime( const std::string* str, const KDateTime::Spec &timeSpec )
+{
+  QDateTime dt = QDateTime::fromString( QString::fromUtf8( str->c_str() ), Qt::ISODate );
+  return KDateTime( dt, timeSpec );
+}
+
 char* GWConverter::qDateToChar( const QDate &date )
 {
   return qStringToChar( date.toString( "yyyyMMdd" ) );

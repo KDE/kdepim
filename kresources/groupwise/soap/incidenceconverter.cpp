@@ -194,12 +194,12 @@ KCal::Todo* IncidenceConverter::convertFromTask( ngwt__Task* task )
 
   if ( task->startDate ) {
     todo->setHasStartDate( true );
-    todo->setDtStart( stringToQDateTime( task->startDate ) );
+    todo->setDtStart( stringToKDateTime( task->startDate, mTimezone ) );
   }
 
   if ( task->dueDate ) {
     todo->setHasDueDate( true );
-    todo->setDtDue( stringToQDateTime( task->dueDate ) );
+    todo->setDtDue( stringToKDateTime( task->dueDate, mTimezone ) );
   }
 
   if ( task->taskPriority ) {
@@ -268,7 +268,7 @@ KCal::Journal* IncidenceConverter::convertFromNote( ngwt__Note* note)
   }
 
   if ( note->startDate ) {
-    journal->setDtStart( stringToQDateTime( note->startDate ) );
+    journal->setDtStart( stringToKDateTime( note->startDate, mTimezone ) );
   }
 
   return journal;
