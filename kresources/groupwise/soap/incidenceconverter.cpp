@@ -71,7 +71,8 @@ KCal::Event* IncidenceConverter::convertFromAppointment( ngwt__Appointment* appo
       event->setDtStart( QDateTime::fromString( QString::fromUtf8( appointment->startDay->c_str() ), Qt::ISODate ) );
 
     if ( appointment->endDay != 0 )
-      event->setDtEnd( QDateTime::fromString( QString::fromUtf8( appointment->endDay->c_str() ), Qt::ISODate ).addDays( -1 ) );
+//TODO: Use KDateTime::fromString()?
+      event->setDtEnd( KDateTime( QDateTime::fromString( QString::fromUtf8( appointment->endDay->c_str() ), Qt::ISODate ), mTimezone ).addDays( -1 ) );
     kDebug() << " all day event." << endl;
   }
   else
@@ -79,10 +80,10 @@ KCal::Event* IncidenceConverter::convertFromAppointment( ngwt__Appointment* appo
     event->setFloats( false );
 
     if ( appointment->startDate != 0 )
-      event->setDtStart( charToQDateTime( appointment->startDate, mTimezone ) );
+      event->setDtStart( charToKDateTime( appointment->startDate, mTimezone ) );
 
     if ( appointment->endDate != 0 )
-      event->setDtEnd( charToQDateTime( appointment->endDate, mTimezone ) );
+      event->setDtEnd( charToKDateTime( appointment->endDate, mTimezone ) );
   }
 
   kDebug() << "start date: " << event->dtStart() << endl;
