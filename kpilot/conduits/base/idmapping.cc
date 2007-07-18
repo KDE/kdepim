@@ -36,11 +36,11 @@ IDMapping::IDMapping( const QString &userName, const QString &conduit )
 	fSource.loadMapping();
 }
 
-bool IDMapping::isValid( const QList<QString> &ids )
+bool IDMapping::isValid( const QList<QString> &ids ) const
 {
 	FUNCTIONSETUP;
 	
-	const QMap<QString, QString>* mappings = fSource.mappings();
+	const QMap<QString, QString>* mappings = fSource.constMappings();
 	
 	bool equalSize = (mappings->size() == ids.size());
 	
@@ -50,10 +50,10 @@ bool IDMapping::isValid( const QList<QString> &ids )
 		
 		QList<QString>::const_iterator i;
 		QList<QString> mIds;
-		if( fSource.mappings()->contains( *ids.constBegin() ) )
+		if( fSource.constMappings()->contains( *ids.constBegin() ) )
 		{
 			// The ids are hanhdeld ids.
-			mIds = fSource.mappings()->keys();
+			mIds = fSource.constMappings()->keys();
 			for( i = mIds.constBegin(); i != mIds.constEnd(); ++i )
 			{
 				QString id = *i;
@@ -63,7 +63,7 @@ bool IDMapping::isValid( const QList<QString> &ids )
 		else
 		{
 			// The ids are pc ids.
-			mIds = fSource.mappings()->values();
+			mIds = fSource.constMappings()->values();
 			for( i = mIds.constBegin(); i != mIds.constEnd(); ++i )
 			{
 				QString id = *i;
@@ -84,18 +84,18 @@ void IDMapping::map( const QString &hhRecordId, const QString &pcId )
 	fSource.mappings()->insert( hhRecordId, pcId );
 }
 
-QString IDMapping::pcRecordId( const QString &id )
+QString IDMapping::pcRecordId( const QString &id ) const
 {
 	FUNCTIONSETUP;
 	
-	return fSource.mappings()->value( id );
+	return fSource.constMappings()->value( id );
 }
 
-QString IDMapping::hhRecordId( const QString &id )
+QString IDMapping::hhRecordId( const QString &id ) const
 {
 	FUNCTIONSETUP;
 
-	return fSource.mappings()->key( id );
+	return fSource.constMappings()->key( id );
 }
 
 void IDMapping::removeHHId( const QString &recordId )
@@ -117,18 +117,36 @@ void IDMapping::removePCId( const QString &recordId )
 	}
 }
 
-bool IDMapping::containsHHId( const QString &recordId )
+bool IDMapping::containsHHId( const QString &recordId ) const
 {
 	FUNCTIONSETUP;
 	
-	return fSource.mappings()->contains( recordId );
+	return fSource.constMappings()->contains( recordId );
 }
 
-bool IDMapping::containsPCId( const QString &recordId )
+bool IDMapping::containsPCId( const QString &recordId ) const
 {
 	FUNCTIONSETUP;
 	
-	return fSource.mappings()->values().contains( recordId );
+	return fSource.constMappings()->values().contains( recordId );
+}
+
+bool IDMapping::isArchivedRecord( const QString &pcRecordId ) const
+{
+	FUNCTIONSETUP;
+	
+	return fSource.constArchivedRecords()->contains( pcRecordId );
+}
+
+void IDMapping::archiveRecord( const QString &hhRecordId )
+{
+	FUNCTIONSETUP;
+	
+	if( containsHHId( hhRecordId ) )
+	{
+		QString pcRecordId = this->pcRecordId( hhRecordId );
+		fSource.archivedRecords()->append( pcRecordId );
+	}
 }
 
 void IDMapping::setLastSyncedDate( const QDateTime &dateTime )

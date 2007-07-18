@@ -33,6 +33,7 @@
 #include "cudcounter.h"
 #include "dataproxy.h"
 #include "record.h"
+#include "hhrecord.h"
 
 #include "recordconduitSettings.h"
 
@@ -306,7 +307,6 @@ void RecordConduit::syncRecords( Record *pcRecord, Record *backupRecord,
 	Record *hhRecord )
 {
 	FUNCTIONSETUP;
-	#warning implemented, but needs work
 	
 	// Two records for which we seem to have a mapping.
 	if( hhRecord && pcRecord )
@@ -383,14 +383,23 @@ void RecordConduit::syncRecords( Record *pcRecord, Record *backupRecord,
 	}
 	else if( pcRecord )
 	{
-		// Case: 6.5.5 or 6.5.8
-		DEBUGKPILOT << fname << ": Case 6.5.5 or 6.5.8" << endl;
-		hhRecord = new Record( *pcRecord );
-		QString id = fHHDataProxy->create( hhRecord );
-		fMapping->map( id, pcRecord->id() );
-		
-		pcRecord->synced();
-		hhRecord->synced();
+		if( fMapping->containsPCId( pcRecord->id() ) && pcRecord->isDeleted() )
+		{
+			DEBUGKPILOT << fname << ": Case 6.5.17" << endl;
+			fMapping->removePCId( pcRecord->id() );
+			fPCDataProxy->remove( pcRecord->id() );
+		}
+		else
+		{
+			// Case: 6.5.5 or 6.5.8
+			DEBUGKPILOT << fname << ": Case 6.5.5 or 6.5.8" << endl;
+			hhRecord = new Record( *pcRecord );
+			QString id = fHHDataProxy->create( hhRecord );
+			fMapping->map( id, pcRecord->id() );
+			
+			pcRecord->synced();
+			hhRecord->synced();
+		}
 	}
 	else
 	{
@@ -476,6 +485,12 @@ void RecordConduit::syncConflictedRecords( Record *pcRecord, Record *hhRecord
 	{
 		if( hhRecord->isDeleted() )
 		{
+			if( pcRecord->isModified() )
+			{
+				DEBUGKPILOT << fname << ": Case 6.5.16" << endl;
+				syncFields( hhRecord, pcRecord );
+			}
+			// else { DEBUGKPILOT << fname << ": Case 6.5.15" << endl; }
 			deleteRecords( pcRecord, hhRecord );
 		}
 		else
@@ -488,13 +503,17 @@ void RecordConduit::syncConflictedRecords( Record *pcRecord, Record *hhRecord
 
 void RecordConduit::deleteRecords( Record *pcRecord, Record *hhRecord )
 {
-	fMapping->removePCId( pcRecord->id() );
 	fHHDataProxy->remove( hhRecord->id() );
-	// TODO: Subclass record for Handheld records and remove commenting slashes.
-	// if( !hhRecord->isArchived() )
-	// {
-	fPCDataProxy->remove( pcRecord->id() );
-	// }
+	
+	if( !static_cast<HHRecord*>( hhRecord )->isArchived() )
+	{
+		fPCDataProxy->remove( pcRecord->id() );
+		fMapping->removePCId( pcRecord->id() );
+	}
+	else
+	{
+		fMapping->archiveRecord( hhRecord->id() );
+	}
 }
 
 void RecordConduit::solveConflict( Record *pcRecord, Record *hhRecord )
@@ -503,7 +522,7 @@ void RecordConduit::solveConflict( Record *pcRecord, Record *hhRecord )
 	
 	// NOTE: One of the two records might be 0L, which means that it's deleted.
 	
-	DEBUGKPILOT << fname << ": solving conflict for pc:" << pcRecord->id() 
+	DEBUGKPILOT << fname << ": solving conflict for pc: " << pcRecord->id() 
 		<< " and hh: " << hhRecord->id() << endl;
 	
 	int res = getConflictResolution();

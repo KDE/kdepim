@@ -31,6 +31,7 @@
 #include "testdataproxy.h"
 #include "idmapping.h"
 #include "record.h"
+#include "hhrecord.h"
 
 TestRecordConduit::TestRecordConduit( const QStringList &args, bool createRecs )
 	: RecordConduit( 0L, args, CSL1( "test-db" ), CSL1( "test-conduit" ) )
@@ -59,24 +60,27 @@ void TestRecordConduit::initDataProxies()
 		/*
 		 * The following table gives the status of the TestRecordConduit befor sync.
 		 *
-		 * CASE  |      PC   || HH & BACKUP    |
-		 *       |   Id |STAT|| BU | HH | Id   |
-		 * 5.5.1 | pc-1 |  - ||  - |  - | hh-1 |
-		 * 5.5.2 |      |  X ||  X |  N | hh-2 |
-		 * 5.5.3 | pc-2 |  - ||  - |  M | hh-3 |
-		 * 5.5.4 | pc-3 |  - ||  - |  D | hh-4 |
-		 * 5.5.5 | pc-4 |  N ||  X |  X |      |
-		 * 5.5.6 | pc-5 |  M ||  - |  - | hh-5 |
-		 * 5.5.7 | pc-6 |  D ||  - |  - | hh-6 |
-		 * 5.5.8 | pc-7 |  N ||  X |  N | hh-7 |
-		 * 5.5.9 | pc-8 |  M ||  - |  M | hh-8 |
-		 * 5.5.10| pc-9 |  M ||  - |  D | hh-9 |
-		 * 5.5.11| pc-10|  D ||  - |  M | hh-10|
-		 * 5.5.12| pc-11|  D ||  - |  D | hh-11|
-		 * 5.5.13|      |  X ||  X |  - | hh-12|
-		 * 5.5.14| pc-12|  - ||  X |  X |      |
+		 * CASE  |      PC   |M| HH & BACKUP    |
+		 *       |   Id |STAT| | BU | HH | Id   |
+		 * 5.5.1 | pc-1 |  - |Y|  - |  - | hh-1 |
+		 * 5.5.2 |      |  X |N|  X |  N | hh-2 |
+		 * 5.5.3 | pc-2 |  - |Y|  - |  M | hh-3 |
+		 * 5.5.4 | pc-3 |  - |Y|  - |  D | hh-4 |
+		 * 5.5.5 | pc-4 |  N |N|  X |  X |      |
+		 * 5.5.6 | pc-5 |  M |Y|  - |  - | hh-5 |
+		 * 5.5.7 | pc-6 |  D |Y|  - |  - | hh-6 |
+		 * 5.5.8 | pc-7 |  N |N|  X |  N | hh-7 |
+		 * 5.5.9 | pc-8 |  M |Y|  - |  M | hh-8 |
+		 * 5.5.10| pc-9 |  M |Y|  - |  D | hh-9 |
+		 * 5.5.11| pc-10|  D |Y|  - |  M | hh-10|
+		 * 5.5.12| pc-11|  D |Y|  - |  D | hh-11|
+		 * 5.5.13|      |  X |N|  X |  - | hh-12|
+		 * 5.5.14| pc-12|  - |N|  X |  X |      |
+		 * 6.5.15| pc-13|  - |Y|  - |  A | hh-13|
+		 * 6.5.16| pc-14|  M |Y|  - |  A | hh-14|
+		 * 6.5.17| pc-15|  D |A|  X |  X | hh-15|
 		 */
-		fHHDataProxy = new TestDataProxy( 12, CSL1( "hh-" ) );
+		fHHDataProxy = new TestDataProxy( 14, CSL1( "hh-" ), true );
 		fHHDataProxy->find( CSL1( "hh-2" ) )->setModified();
 		fHHDataProxy->find( CSL1( "hh-3" ) )->setModified();
 		fHHDataProxy->find( CSL1( "hh-4" ) )->setDeleted();
@@ -84,12 +88,15 @@ void TestRecordConduit::initDataProxies()
 		fHHDataProxy->find( CSL1( "hh-9" ) )->setDeleted();
 		fHHDataProxy->find( CSL1( "hh-10" ) )->setModified();
 		fHHDataProxy->find( CSL1( "hh-11" ) )->setDeleted();
+		static_cast<HHRecord*>( fHHDataProxy->find( CSL1( "hh-13" ) ) )->setArchived();
+		static_cast<HHRecord*>( fHHDataProxy->find( CSL1( "hh-14" ) ) )->setArchived();
 		
-		fBackupDataProxy = new TestDataProxy( 11, CSL1( "hh-" ) );
+		fBackupDataProxy = new TestDataProxy( 14, CSL1( "hh-" ), true );
 		fBackupDataProxy->remove( CSL1( "hh-2" ) );
 		fBackupDataProxy->remove( CSL1( "hh-7" ) );
+		fBackupDataProxy->remove( CSL1( "hh-12" ) );
 		
-		fPCDataProxy = new TestDataProxy( 12, CSL1( "pc-" ) );
+		fPCDataProxy = new TestDataProxy( 15, CSL1( "pc-" ), false );
 		fPCDataProxy->find( CSL1( "pc-4" ) )->setModified();
 		fPCDataProxy->find( CSL1( "pc-5" ) )->setModified();
 		fPCDataProxy->find( CSL1( "pc-6" ) )->setDeleted();
@@ -97,6 +104,8 @@ void TestRecordConduit::initDataProxies()
 		fPCDataProxy->find( CSL1( "pc-9" ) )->setModified();
 		fPCDataProxy->find( CSL1( "pc-10" ) )->setDeleted();
 		fPCDataProxy->find( CSL1( "pc-11" ) )->setDeleted();
+		fPCDataProxy->find( CSL1( "pc-14" ) )->setModified();
+		fPCDataProxy->find( CSL1( "pc-15" ) )->setDeleted();
 		 
 		fMapping->map( CSL1( "hh-1" ), CSL1( "pc-1" ) );
 		fMapping->map( CSL1( "hh-3" ), CSL1( "pc-2" ) );
@@ -108,6 +117,11 @@ void TestRecordConduit::initDataProxies()
 		fMapping->map( CSL1( "hh-9" ), CSL1( "pc-9" ) );
 		fMapping->map( CSL1( "hh-10" ), CSL1( "pc-10" ) );
 		fMapping->map( CSL1( "hh-11" ), CSL1( "pc-11" ) );
+		fMapping->map( CSL1( "hh-13" ), CSL1( "pc-13" ) );
+		fMapping->map( CSL1( "hh-14" ), CSL1( "pc-14" ) );
+		fMapping->map( CSL1( "hh-15" ), CSL1( "pc-15" ) );
+		
+		fMapping->archiveRecord( CSL1( "hh-15" ) );
 	}
 	else
 	{

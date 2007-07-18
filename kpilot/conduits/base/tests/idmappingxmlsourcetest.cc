@@ -123,7 +123,9 @@ void TestIDMappingXmlSource::testSaveLoad()
 	IDMappingXmlSource source( fUser, fConduit );
 	source.setLastSyncedDate( dt );
 	source.setLastSyncedPC( pc );
-	source.mappings()->insert( CSL1( "test-pc" ) , CSL1( "test-hh" ) );
+	source.mappings()->insert( CSL1( "test-hh" ), CSL1( "test-pc" ) );
+	source.mappings()->insert( CSL1( "test-hh2" ), CSL1( "test-pc2" ) );
+	source.archivedRecords()->append( "test-pc2" );
 	
 	source.saveMapping();
 	
@@ -143,9 +145,14 @@ void TestIDMappingXmlSource::testSaveLoad()
 	
 	QVERIFY( pc == source2.lastSyncedPC() );
 	QVERIFY( dt == source2.lastSyncedDate() );
-	QVERIFY( source2.mappings()->size() == 1 );
-	QVERIFY( source2.mappings()->value( CSL1( "test-pc" ) ) 
-		== CSL1( "test-hh" ) );
+	QVERIFY( source2.mappings()->size() == 2 );
+	QVERIFY( source2.mappings()->value( CSL1( "test-hh" ) ) 
+		== CSL1( "test-pc" ) );
+	QVERIFY( source2.mappings()->value( CSL1( "test-hh2" ) ) 
+		== CSL1( "test-pc2" ) );
+		
+	QVERIFY( source2.archivedRecords()->size() == 1 );
+	QVERIFY( source2.archivedRecords()->contains( CSL1( "test-pc2" ) ) );
 }
 
 void TestIDMappingXmlSource::cleanDir()

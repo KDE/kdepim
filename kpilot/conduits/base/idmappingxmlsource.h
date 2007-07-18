@@ -51,6 +51,12 @@ public:
 	
 	QMap<QString, QString>* mappings() { return &fMappings; }
 	
+	const QMap<QString, QString>* constMappings() const { return &fMappings; }
+	
+	QStringList* archivedRecords() { return &fArchivedRecords; }
+	
+	const QStringList* constArchivedRecords() const { return &fArchivedRecords; }
+	
 	void loadMapping();
 	
 	bool saveMapping();
@@ -71,6 +77,7 @@ private:
 	 * Mappings between handheld ids (keys) and pc ids (values).
 	 */
 	QMap<QString, QString> fMappings;
+	QStringList fArchivedRecords;
 	QDateTime fLastSyncedDateTime;
 	QString fLastSyncedPC;
 };

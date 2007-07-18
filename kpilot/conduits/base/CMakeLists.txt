@@ -9,6 +9,7 @@ set(conduit_base_SRCS
 	idmapping.cc
 	cudcounter.cc
 	record.cc
+	hhrecord.cc
 	dataproxy.cc
 	pcdataproxy.cc
 	hhdataproxy.cc

@@ -27,12 +27,13 @@
 
 #include "testdataproxy.h"
 #include "record.h"
+#include "testhhrecord.h"
 
 #include "options.h"
 
 TestDataProxy::TestDataProxy() {}
 
-TestDataProxy::TestDataProxy( int count, const QString &idPref )
+TestDataProxy::TestDataProxy( int count, const QString &idPref, bool isHandheldProxy )
 {
 	QStringList fields;
 	fields << CSL1( "f1" ) << CSL1( "f2" );
@@ -41,7 +42,15 @@ TestDataProxy::TestDataProxy( int count, const QString &idPref )
 	{
 		QString id = idPref + QString::number( i );
 		
-		Record *rec = new Record( fields, id );
+		Record *rec;
+		if( isHandheldProxy )
+		{
+			rec = new TestHHRecord( fields, id );
+		}
+		else
+		{
+			rec = new Record( fields, id );
+		}
 		rec->setValue( CSL1( "f1" )
 			, CSL1( "Value 1: " ) + QString::number( qrand() ) );
 		rec->setValue( CSL1( "f2" )

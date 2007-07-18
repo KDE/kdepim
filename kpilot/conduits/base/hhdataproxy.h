@@ -30,6 +30,7 @@
 #include "dataproxy.h"
 
 class PilotDatabase;
+class HHRecord;
 
 class HHDataProxy : public DataProxy {
 public:

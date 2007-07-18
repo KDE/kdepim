@@ -37,7 +37,7 @@ public:
 	 * Creates a dataproxy with @p count records in it. The ids are prefixed with
 	 * @p idPref.
 	 */
-	TestDataProxy( int count, const QString &idPref );
+	TestDataProxy( int count, const QString &idPref, bool isHandheldProxy );
 
 	void printRecords();
 

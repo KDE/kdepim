@@ -1,4 +1,6 @@
-/* hhdataproxy.cc			KPilot
+#ifndef HHRECORD_H
+#define HHRECORD_H
+/* hhrecord.h			KPilot
 **
 ** Copyright (C) 2007 by Bertjan Broeksema
 ** Copyright (C) 2007 by Jason "vanRijn" Kasper
@@ -25,15 +27,31 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
-#include "hhdataproxy.h"
-#include "hhrecord.h"
-#include "pilotDatabase.h"
+#include "kpilot_export.h"
 
-HHDataProxy::HHDataProxy()
-{
-}
+#include "record.h"
 
-void HHDataProxy::resetSyncFlags()
-{
-	fDatabase->resetSyncFlags();
-}
+class PilotRecordBase;
+
+class KPILOT_EXPORT HHRecord : public Record {
+
+protected:
+	PilotRecordBase *fRecord;
+	
+public:
+	HHRecord( const Record &other );
+	
+	HHRecord( PilotRecordBase *record, const QStringList& fields );
+	
+	HHRecord( PilotRecordBase *record, const QStringList& fields, const QString &id );
+
+	virtual ~HHRecord();
+	
+	virtual bool isArchived() const;
+	
+	/**
+	 * Marks the record for deletion and for archiving.
+	 */
+	virtual void setArchived();
+};
+#endif

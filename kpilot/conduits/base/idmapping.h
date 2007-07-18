@@ -57,13 +57,13 @@ public:
 	 * Searches for a mapping which contains @p hhRecordId and returns the id to
 	 * which it is mapped. Returns QString() if no mapping is found.
 	 */
-	QString pcRecordId( const QString &hhRecordId );
+	QString pcRecordId( const QString &hhRecordId ) const;
 	
 	/**
 	 * Searches for a mapping which contains @p pcRecordId and returns the id to
 	 * which it is mapped. Returns QString() if no mapping is found.
 	 */
-	QString hhRecordId( const QString &pcRecordId );
+	QString hhRecordId( const QString &pcRecordId ) const;
 	
 	/**
 	 * Search for a mapping for which the hh id == @p hhRecordId and if one is
@@ -81,13 +81,13 @@ public:
 	 * Method to find out wether or not there is a mapping for hh record with 
 	 * @p hhRecordId.
 	 */
-	bool containsHHId( const QString &hhRecordId );
+	bool containsHHId( const QString &hhRecordId ) const;
 
 	/**
 	 * Method to find out wether or not there is a mapping for pc record with 
 	 * @p pcRecordId.
 	 */
-	bool containsPCId( const QString &pcRecordId );
+	bool containsPCId( const QString &pcRecordId ) const;
 	
 	/**
 	 * Validates the mapping file with given dataproxy. The mapping is considered 
@@ -98,7 +98,21 @@ public:
 	 * NOTE: The list of id's should be a list of handheld ids or a list of pc 
 	 * ids. Not a mix of them.
 	 */
-	bool isValid( const QList<QString> &recordIds );
+	bool isValid( const QList<QString> &recordIds ) const;
+
+	/**
+	 * Returns true when the record from the pc data store with @p pcRecordId is
+	 * marked as an archived record. This means that there was once a record on
+	 * the handheld, which is deleted by the user, but was marked to be archived
+	 * on the pc.
+	 */
+	bool isArchivedRecord( const QString &pcRecordId ) const;
+	
+	/**
+	 * Marks the pcRecord to which @p hhRecordId is mapped as archived. Does
+	 * nothing if there exists no mapping.
+	 */
+	void archiveRecord( const QString &hhRecordId );
 
 	/**
 	 * Sets the date/time on which the last sync is executed to @p dateTime.

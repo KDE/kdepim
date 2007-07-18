@@ -1,4 +1,6 @@
-/* hhdataproxy.cc			KPilot
+#ifndef TESTHHRECORD_H
+#define TESTHHRECORD_H
+/* testhhrecord.h			KPilot
 **
 ** Copyright (C) 2007 by Bertjan Broeksema
 ** Copyright (C) 2007 by Jason "vanRijn" Kasper
@@ -25,15 +27,24 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
-#include "hhdataproxy.h"
+#include "kpilot_export.h"
+
 #include "hhrecord.h"
-#include "pilotDatabase.h"
 
-HHDataProxy::HHDataProxy()
-{
-}
+class PilotRecordBase;
 
-void HHDataProxy::resetSyncFlags()
-{
-	fDatabase->resetSyncFlags();
-}
+class KPILOT_EXPORT TestHHRecord : public HHRecord {
+private:
+	bool fArchived;
+
+public:
+	TestHHRecord( const QStringList& fields
+		, const QString &id );
+
+	virtual ~TestHHRecord() {};
+	
+	virtual bool isArchived() const { return fArchived; }
+	
+	virtual void setArchived();
+};
+#endif

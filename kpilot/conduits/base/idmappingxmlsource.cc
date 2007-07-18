@@ -161,6 +161,11 @@ bool IDMappingXmlSource::saveMapping()
 		mappingElement.setAttribute( CSL1("hh"), it.key() );
 		mappingElement.setAttribute( CSL1("pc"), it.value() );
 		
+		if( fArchivedRecords.contains( it.value() ) )
+		{
+			mappingElement.setAttribute( CSL1( "archived" ), CSL1( "yes" ) );
+		}
+		
 		root.appendChild( mappingElement );
 	}
 	
@@ -232,6 +237,11 @@ bool IDMappingXmlSource::startElement( const QString &namespaceURI
 	{
 		QString hh( attribs.value( CSL1( "hh" ) ) );
 		QString pc( attribs.value( CSL1( "pc" ) ) );
+		
+		if( attribs.value( CSL1( "archived" ) ) == CSL1( "yes" ) )
+		{
+			fArchivedRecords.append( pc );
+		}
 		
 		fMappings.insert( hh, pc );
 	}
