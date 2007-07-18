@@ -262,7 +262,7 @@ Module::verify( Block& block )
   // ok now try to verify the message.
   retval = pgp->verify( block );
 
-  if(retval & ERROR)
+  if(retval & Kpgp::ERROR)
   {
     errMsg = pgp->lastErrorMessage();
     return false;
@@ -302,7 +302,7 @@ Module::decrypt( Block& block )
   // erase the passphrase if we do not want to keep it
   cleanupPass();
 
-  if(retval & ERROR)
+  if(retval & Kpgp::ERROR)
   {
     errMsg = pgp->lastErrorMessage();
     return false;
@@ -435,7 +435,7 @@ Module::encrypt( Block& block,
     return Kpgp::Ok;
   }
 
-  if( status & ERROR ) {
+  if( status & Kpgp::ERROR ) {
     // show error dialog
     errMsg = i18n( "The following error occurred:\n%1" ,
                pgp->lastErrorMessage() );
@@ -477,12 +477,12 @@ Module::doEncSign( Block& block,
       case -1:
         return CANCEL;
       case 0:
-        return ERROR;
+        return Kpgp::ERROR;
     }
     retval = pgp->encsign( block, recipientKeyIds, passphrase );
   }
   else {
-    if( !prepare( false, &block ) ) return ERROR;
+    if( !prepare( false, &block ) ) return Kpgp::ERROR;
     retval = pgp->encrypt( block, recipientKeyIds );
   }
   // erase the passphrase if we do not want to keep it
@@ -692,7 +692,7 @@ Module::signKey(const KeyID& keyId)
 
   if( prepare( true ) != 1 )
     return false;
-  if(pgp->signKey(keyId, passphrase) & ERROR)
+  if(pgp->signKey(keyId, passphrase) & Kpgp::ERROR)
   {
     errMsg = pgp->lastErrorMessage();
     return false;
