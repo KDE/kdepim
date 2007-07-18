@@ -30,5 +30,5 @@ else(NOT WIN32)
 kde4_add_executable(kabc2mutt NOGUI ${kabcclient_SRCS})
 target_link_libraries(kabc2mutt ${KDE4_KABC_LIBS} ${KDE4_KDEUI_LIBS} )
 install(TARGETS kabc2mutt DESTINATION ${BIN_INSTALL_DIR})
-#endif(NOT WIN32)
+endif(NOT WIN32)
 
