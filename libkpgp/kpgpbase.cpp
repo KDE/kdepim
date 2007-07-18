@@ -16,6 +16,7 @@
     Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA
  */
 
+#include <config.h>
 
 #include "kpgpbase.h"
 #include "kpgp.h"
@@ -30,7 +31,11 @@
 #include <stdlib.h> /* setenv, unsetenv */
 #include <unistd.h> /* pipe, close, fork, dup2, execl, _exit, write, read */
 #include <errno.h>
+
+#ifdef HAVE_SYS_POLL_H
 #include <sys/poll.h>  /* poll, etc. */
+#endif
+
 #include <sys/types.h> /* pid_t */
 #include <sys/wait.h> /* waitpid */
 
@@ -61,6 +66,7 @@ Base::clear()
 int
 Base::run( const char *cmd, const char *passphrase, bool onlyReadFromPGP )
 {
+#ifdef HAVE_SYS_POLL_H
   /* the pipe ppass is used for to pass the password to
    * pgp. passing the password together with the normal input through
    * stdin doesn't seem to work as expected (at least for pgp5.0)
@@ -371,12 +377,17 @@ Base::run( const char *cmd, const char *passphrase, bool onlyReadFromPGP )
   kDebug( 5326 ) << error << endl;
 
   return childExitStatus;
+#else // HAVE_SYS_POLL_H
+#warning WIN32 libkpgp: PGP support not ported to win32!
+return 1;
+#endif
 }
 
 
 int
 Base::runGpg( const char *cmd, const char *passphrase, bool onlyReadFromGnuPG )
 {
+#ifdef HAVE_SYS_POLL_H
   /* the pipe ppass is used for to pass the password to
    * pgp. passing the password together with the normal input through
    * stdin doesn't seem to work as expected (at least for pgp5.0)
@@ -662,6 +673,10 @@ Base::runGpg( const char *cmd, const char *passphrase, bool onlyReadFromGnuPG )
   kDebug( 5326 ) << "gpg stderr:\n" << error << endl;
 
   return childExitStatus;
+#else // HAVE_SYS_POLL_H
+#warning WIN32 libkpgp: GnuPG support not ported to WIN32!
+return 1;
+#endif
 }
 
 

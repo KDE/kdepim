@@ -18,6 +18,8 @@ if (WIN32)
    set(CMAKE_REQUIRED_INCLUDES  ${KDEWIN32_INCLUDES} )
 endif (WIN32)
 
+check_include_files(sys/poll.h HAVE_SYS_POLL_H) # libkpgp
+
 OPTION(KDE4_KDEPIM_NEW_DISTRLISTS   "Whether to use new distribution lists, to store them like normal contacts; useful for Kolab") 
 
 macro_bool_to_01(KDE4_KDEPIM_NEW_DISTRLISTS KDEPIM_NEW_DISTRLISTS)
@@ -29,3 +31,4 @@ macro_bool_to_01(WITH_INDEXLIB HAVE_INDEXLIB)
 
 check_type_size("long" SIZEOF_LONG)
 check_type_size("unsigned long" SIZEOF_UNSIGNED_LONG)
+
