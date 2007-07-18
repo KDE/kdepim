@@ -33,6 +33,16 @@
 # endif
 #endif
 
+#ifndef KCM_KNODE_EXPORT
+# if defined(MAKE_KCM_KNODE_LIB)
+   /* We are building this library */
+#  define KCM_KNODE_EXPORT KDE_EXPORT
+# else
+   /* We are using this library */
+#  define KCM_KNODE_EXPORT KDE_IMPORT
+# endif
+#endif
+
 # ifndef KNODE_EXPORT_DEPRECATED
 #  define KNODE_EXPORT_DEPRECATED KDE_DEPRECATED KNODE_EXPORT
 # endif
