@@ -378,8 +378,10 @@ Base::run( const char *cmd, const char *passphrase, bool onlyReadFromPGP )
 
   return childExitStatus;
 #else // HAVE_SYS_POLL_H
+#ifdef __GNUC__
 #warning WIN32 libkpgp: PGP support not ported to win32!
-return 1;
+#endif
+  return 1;
 #endif
 }
 
@@ -674,8 +676,10 @@ Base::runGpg( const char *cmd, const char *passphrase, bool onlyReadFromGnuPG )
 
   return childExitStatus;
 #else // HAVE_SYS_POLL_H
+#ifdef __GNUC__
 #warning WIN32 libkpgp: GnuPG support not ported to WIN32!
-return 1;
+#endif
+  return 1;
 #endif
 }
 
