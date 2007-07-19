@@ -71,19 +71,34 @@ KCAL_RESOURCEBLOG_EXPORT ResourceBlogConfig::ResourceBlogConfig
   mainLayout->addWidget( label, 4, 0 );
   mainLayout->addWidget( mAPI, 4, 1 );
 
+  //FIXME: Disable on use of MetaWeblog
+  label = new QLabel( i18n( "Blog:" ), this );
+  mBlogs = new KComboBox( false, this );
+
+  mainLayout->addWidget( label, 5, 0 );
+  mainLayout->addWidget( mBlogs, 5, 1 );
+
   // Add the subwidget for the cache reload settings.
   mReloadConfig = new ResourceCachedReloadConfig( this );
-  mainLayout->addWidget( mReloadConfig, 5, 0, 1, 2 );
+  mainLayout->addWidget( mReloadConfig, 6, 0, 1, 2 );
 }
 
 void ResourceBlogConfig::loadSettings( KRES::Resource *res )
 {
   ResourceBlog *resource = static_cast<ResourceBlog *>( res );
   if ( resource ) {
+    connect ( resource, SIGNAL( signalBlogInfoRetrieved( const QString &,
+                                                         const QString & ) ),
+              this, SLOT( slotBlogInfoRetrieved( const QString &, const QString & ) ) );
+    resource->fetchBlogs();
     mUrl->setUrl( resource->url().url() );
     mUser->setText( resource->user() );
     mPassword->setText( resource->password() );
     mAPI->setCurrentIndex( resource->API() );
+    QPair<QString, QString> blog = resource->blog();
+    if ( !blog.second.isEmpty() ) {
+      mBlogs->addItem( blog.second, blog.first );
+    }
     mReloadConfig->loadSettings( resource );
     kDebug( 5700 ) << "ResourceBlogConfig::loadSettings(): reloaded" << endl;
   } else {
@@ -100,11 +115,25 @@ void ResourceBlogConfig::saveSettings( KRES::Resource *res )
     resource->setUser( mUser->text() );
     resource->setPassword( mPassword->text() );
     resource->setAPI( resource->QStringToAPIType( mAPI->currentText() ) );
+    QPair<QString, QString> blog = resource->blog();
+    if ( !mBlogs->currentText().isEmpty() ) {
+      resource->setBlog( mBlogs->currentText() );
+    }
     mReloadConfig->saveSettings( resource );
     kDebug( 5700 ) << "ResourceBlogConfig::saveSettings(): saved" << endl;
   } else {
     kError( 5700 ) << "ResourceBlogConfig::saveSettings():"
       " no ResourceBlog, cast failed" << endl;
+  }
+}
+
+void ResourceBlogConfig::slotBlogInfoRetrieved( const QString &id,
+                                                const QString &name )
+{
+  kDebug( 5700 ) << "ResourceBlogConfig::slotBlogInfoRetrieved( id=" << id <<
+      ", name=" << name << endl;
+  if ( !mBlogs->contains( name ) ) {
+    mBlogs->addItem( name );
   }
 }
 

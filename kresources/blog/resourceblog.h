@@ -204,6 +204,28 @@ class ResourceBlog : public ResourceCached
     */
     bool addJournal( Journal *journal );
 
+    /**
+      Fetches the list of postable blogs.
+
+      @return The success of the fetch call.
+    */
+    bool fetchBlogs();
+
+    /**
+      Returns the current blog to post to.
+
+      @return A pair of the blog ID and the blog name.
+    */
+    QPair<QString, QString> blog();
+
+    /**
+      Updates the blog to post to.
+
+      @param name The name of the blog.
+      @return Returns if index of the blog was found from the name.
+    */
+    bool setBlog( const QString &name );
+
     // Posts cannot be deleted from the server.
     bool deleteJournal( Journal *journal )
     {
@@ -245,6 +267,15 @@ class ResourceBlog : public ResourceCached
     void deleteAllTodos()
     {}
 
+  Q_SIGNALS:
+    /**
+      Signals an available blog to post to.
+
+      @param id The unique ID of the blog.
+      @param name The name of the blog.
+    */
+    void signalBlogInfoRetrieved( const QString &id, const QString &name );
+
   protected Q_SLOTS:
     /**
       Converts a listed posting to a journal and adds to the cached resource.
@@ -259,13 +290,29 @@ class ResourceBlog : public ResourceCached
     void slotListPostingsFinished();
 
     /**
-      Prints an error on a XML-RPC failure
+      Prints an error on a XML-RPC failure.
 
       @param type The type of the error.
       @param errorMessage The specific cause of the error.
     */
     void slotError( const KBlog::APIBlog::errorType &type,
                     const QString &errorMessage );
+
+    /**
+      Updates the latest stored post ID to the ID returned from the blog post
+      creation operation.
+
+      @param id The ID of the last blog post created on the server.
+    */
+    void slotCreatedPosting( const QString &id );
+
+    /**
+      Updates the local list of available blogs to post to.
+
+      @param id The unique ID of the blog.
+      @param name The name of the blog.
+    */
+    void slotBlogInfoRetrieved( const QString &id, const QString &name );
 
   protected:
     /**
@@ -294,6 +341,11 @@ class ResourceBlog : public ResourceCached
     void init();
 
     /**
+      The latest known numerical post ID used on the server.
+    */
+    int mPostID;
+
+    /**
       The URL used for XML-RPC access.
     */
     KUrl mUrl;
@@ -314,9 +366,24 @@ class ResourceBlog : public ResourceCached
     KBlog::APIBlog *mAPI;
 
     /**
-      The list of created journal objects.
+      The unique ID of the blog to send posts to.
     */
-    Journal::List *mJournalList;
+    QString mBlogID;
+
+    /**
+      The name of the blog to send posts to.
+    */
+    QString mBlogName;
+
+    /**
+      The map of created journal objects.
+    */
+    QHash<QString, Journal *> mJournalsMap;
+
+    /**
+      The map of possible blogs to post to.
+    */
+    QHash<QString, QString> mBlogsMap;
 
     /**
       Whether the progress of operations are displayed.

@@ -53,17 +53,29 @@ class ResourceBlogConfig : public KRES::ConfigWidget
   public Q_SLOTS:
     /**
       Loads the settings for the blog resource for the widget's defaults.
+
+      @param resource The ResourceBlog object.
     */
-    virtual void loadSettings( KRES::Resource *resource );
+    void loadSettings( KRES::Resource *resource );
 
     /**
       Saves the entered settings from the widget to the blog resource.
+
+      @param resource The ResourceBlog object.
     */
-    virtual void saveSettings( KRES::Resource *resource );
+    void saveSettings( KRES::Resource *resource );
+
+    /**
+      Saves the entered settings from the widget to the blog resource.
+
+      @param id The unique ID for the blog to post to.
+      @param name The name for the blog to post to.
+    */
+    void slotBlogInfoRetrieved( const QString &id, const QString &name );
 
   private:
     /**
-      Used to the URL used for XML-RPC access to the blog.
+      Used to enter the URL used for XML-RPC access to the blog.
     */
     KUrlRequester *mUrl;
 
@@ -81,6 +93,11 @@ class ResourceBlogConfig : public KRES::ConfigWidget
       The combobox used to select the XML-RPC API used to access the blog.
     */
     KComboBox *mAPI;
+
+    /**
+      The combobox used to select the blog to post to.
+    */
+    KComboBox *mBlogs;
 
     /**
       A widget to configure the cache reload options.
