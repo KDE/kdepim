@@ -1,4 +1,24 @@
-Current Release is Proko2 2.1.7
+Current Release is Proko2 2.1.8
+
+Bugfixes
+=========
+
+Kontact
+--------
+* Kolab/issue1672 Kontact crashes when saving a mail twice.
+
+KMail
+---------
+* Kolab/issue1715 Other disconnected Imap folders good as sources for client filters.
+* Kolab/issue1858  Filters applying to new emails in groupware folders, changing filter behaviour
+
+Misc
+---------
+* Kolab/issue1657 Some ldap entries lead to extra commas in completion.
+* Kolab/issue1706 (addressbook: real adress type is broken) - introducing bugs in the GUI due to outlook compatibility,
+* Kolab/issue1363 (Phone number types display quirks) part a: Select phone types that are set, rather than the defaults.
+
+Changes since Proko2 2.1.6 up to Proko2 2.1.7 (released 8.5.2007)
 
 Features
 =========
