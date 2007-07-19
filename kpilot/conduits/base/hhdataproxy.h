@@ -38,6 +38,11 @@ public:
 	HHDataProxy( PilotDatabase *db );
 
 	void resetSyncFlags();
+	
+	/**
+	 * Returns wheter or not the pilot database is opened.
+	 */
+	virtual bool isOpen() const;
 
 protected:
 	void loadAllRecords();
@@ -45,13 +50,23 @@ protected:
 	//virtual void readAppBlock() = 0;
 
 	//virtual void writeAppBlock() = 0;
-
+	
 	/** THese functions must be implemented by the subclassing conduit **/
 	
 	/**
 	 * This function creates a (subclass of) HHRecord for @p rec.
 	 */
 	virtual HHRecord* createHHRecord( PilotRecord *rec ) = 0;
+	
+	/**
+	 * Commits created record @p rec to the datastore.
+	 */
+	virtual QString commitCreate( const Record *rec );
+	
+	/**
+	 * Undo the commit of created record @p rec to the datastore.
+	 */
+	virtual void undoCommitCreate( const Record *rec );
 
 protected:
 	PilotDatabase *fDatabase;

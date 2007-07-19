@@ -32,9 +32,10 @@
 
 #include "options.h"
 
-TestDataProxy::TestDataProxy() {}
+TestDataProxy::TestDataProxy() : fCreateCount(0) {}
 
 TestDataProxy::TestDataProxy( int count, const QString &idPref, bool isHandheldProxy )
+	: fCreateCount(0)
 {
 	QStringList fields;
 	fields << CSL1( "f1" ) << CSL1( "f2" );
@@ -82,16 +83,18 @@ bool TestDataProxy::isOpen() const
 	return true;
 }
 
-bool TestDataProxy::commit()
-{
-	return true;
-}
-
-bool TestDataProxy::rollback()
-{
-	return true;
-}
-
 void TestDataProxy::loadAllRecords()
 {
+}
+
+QString TestDataProxy::commitCreate( const Record *rec )
+{
+	fCreateCount += 1;
+	return rec->id();
+}
+	
+void TestDataProxy::undoCommitCreate( const Record *rec )
+{
+	Q_UNUSED( rec );
+	fCreateCount -= 1;
 }

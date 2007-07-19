@@ -65,16 +65,17 @@ bool TestHHDataProxy::isOpen() const
 	return true;
 }
 
-bool TestHHDataProxy::commit()
-{
-	return true;
-}
-
-bool TestHHDataProxy::rollback()
-{
-	return true;
-}
-
 void TestHHDataProxy::loadAllRecords()
 {
+}
+
+QString TestHHDataProxy::commitCreate( const Record *rec )
+{
+	Q_UNUSED( rec );
+	return QString();
+}
+	
+void TestHHDataProxy::undoCommitCreate( const Record *rec )
+{
+	Q_UNUSED( rec );
 }

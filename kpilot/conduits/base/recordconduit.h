@@ -85,7 +85,6 @@ protected:
 
 	virtual bool createBackupDatabase() = 0;
 
-protected:
 	/**
 	 * Executes the HotSync flow (see 4.1)
 	 */

@@ -27,7 +27,10 @@
 
 #include "hhdataproxy.h"
 #include "hhrecord.h"
+
 #include "pilotDatabase.h"
+#include "pilotRecord.h"
+#include "options.h"
 
 HHDataProxy::HHDataProxy( PilotDatabase *db ) : fDatabase( db )
 {
@@ -35,11 +38,69 @@ HHDataProxy::HHDataProxy( PilotDatabase *db ) : fDatabase( db )
 
 void HHDataProxy::resetSyncFlags()
 {
+	FUNCTIONSETUP;
+	
 	fDatabase->resetSyncFlags();
+}
+
+QString HHDataProxy::commitCreate( const Record *rec )
+{
+	FUNCTIONSETUP;
+	
+	if( !rec )
+	{
+		return QString();
+	}
+	else
+	{
+		if( HHRecord *hhRec = static_cast<HHRecord*>( rec->duplicate() ) )
+		{
+			recordid_t newId = fDatabase->writeRecord( hhRec->pilotRecord() );
+			return QString::number( newId );
+		}
+		else
+		{
+			DEBUGKPILOT << fname << ": Record " << rec->id() 
+				<< " is not of type HHRecord*." << endl;
+		}
+	}
+	
+	return QString();
+}
+
+void HHDataProxy::undoCommitCreate( const Record *rec )
+{
+	FUNCTIONSETUP;
+	
+	if( !rec )
+	{
+		return;
+	}
+	else
+	{
+		if( HHRecord *hhRec = static_cast<HHRecord*>( rec->duplicate() ) )
+		{
+			fDatabase->deleteRecord( hhRec->pilotRecord()->id() );
+		}
+		else
+		{
+			DEBUGKPILOT << fname << ": Record " << rec->id() 
+				<< " is not of type HHRecord*." << endl;
+		}
+	}
+}
+
+bool HHDataProxy::isOpen() const
+{
+	FUNCTIONSETUP;
+	
+	return fDatabase->isOpen();
 }
 
 void HHDataProxy::loadAllRecords()
 {
+	FUNCTIONSETUP;
+	
 	int index = 0;
 	
 	PilotRecord *pRec = fDatabase->readRecordByIndex( index );

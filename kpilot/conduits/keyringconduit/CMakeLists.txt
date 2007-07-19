@@ -4,6 +4,7 @@ include_directories(
 )
 
 set(keyring_SRCS
+	keyringhhdataproxy.cc
 	keyringconduit.cc
 )
 

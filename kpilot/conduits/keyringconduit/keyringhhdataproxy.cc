@@ -1,6 +1,4 @@
-#ifndef HHRECORD_H
-#define HHRECORD_H
-/* hhrecord.h			KPilot
+/* keyringhhdataproxy.cc			KPilot
 **
 ** Copyright (C) 2007 by Bertjan Broeksema
 ** Copyright (C) 2007 by Jason "vanRijn" Kasper
@@ -27,29 +25,23 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
-#include "kpilot_export.h"
+#include "keyringhhdataproxy.h"
 
-#include "record.h"
+KeyringHHDataProxy::KeyringHHDataProxy( PilotDatabase *db ) : HHDataProxy( db )
+{
 
-class PilotRecord;
+}
 
-class KPILOT_EXPORT HHRecord : public Record {
+bool KeyringHHDataProxy::rollback()
+{
+	#warning not implemented
+	return false;
+}
 
-protected:
-	PilotRecord *fRecord;
-	
-public:
-	HHRecord( PilotRecord *record );
 
-	virtual ~HHRecord();
-	
-	PilotRecord* pilotRecord();
-	
-	virtual bool isArchived() const;
-	
-	/**
-	 * Marks the record for deletion and for archiving.
-	 */
-	virtual void setArchived();
-};
-#endif
+HHRecord* KeyringHHDataProxy::createHHRecord( PilotRecord *rec )
+{
+	#warning not implemented
+	Q_UNUSED( rec );
+	return 0L;
+}

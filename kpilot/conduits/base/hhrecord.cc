@@ -30,7 +30,7 @@
 #include "options.h"
 #include "pilotRecord.h"
 
-HHRecord::HHRecord( PilotRecordBase *record )
+HHRecord::HHRecord( PilotRecord *record )
 {
 	fRecord = record;
 }
@@ -38,6 +38,11 @@ HHRecord::HHRecord( PilotRecordBase *record )
 HHRecord::~HHRecord()
 {
 	delete fRecord;
+}
+
+PilotRecord* HHRecord::pilotRecord()
+{
+	return fRecord;
 }
 
 bool HHRecord::isArchived() const

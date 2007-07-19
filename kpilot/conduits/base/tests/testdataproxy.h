@@ -30,6 +30,9 @@
 #include "dataproxy.h"
 
 class KPILOT_EXPORT TestDataProxy : public DataProxy {
+private:
+	int fCreateCount;
+	
 public:
 	TestDataProxy();
 	
@@ -39,6 +42,12 @@ public:
 	 */
 	TestDataProxy( int count, const QString &idPref, bool isHandheldProxy );
 
+	/** Added for test purposes **/
+	
+	int createCount() { return fCreateCount; }
+	
+	QStringList createdCommitted() { return fCreatedCommitted; }
+
 	virtual void printRecords();
 
 	/*
@@ -47,10 +56,10 @@ public:
 	 */
 	virtual bool isOpen() const;
 	
-	virtual bool commit();
-	
-	virtual bool rollback();
-	
 	virtual void loadAllRecords();
+	
+	virtual QString commitCreate( const Record *rec );
+	
+	virtual void undoCommitCreate( const Record *rec );
 };
 #endif

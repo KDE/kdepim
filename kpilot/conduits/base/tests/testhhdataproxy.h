@@ -31,8 +31,10 @@
 #include "testdataproxy.h"
 
 class KPILOT_EXPORT TestHHDataProxy : public HHDataProxy {
+	
 public:
 	TestHHDataProxy();
+	
 	/**
 	 * Creates a dataproxy with @p count records in it. The ids are prefixed with
 	 * @p idPref.
@@ -43,10 +45,10 @@ public:
 
 	virtual bool isOpen() const;
 	
-	virtual bool commit();
-	
-	virtual bool rollback();
-	
 	virtual void loadAllRecords();
+	
+	virtual QString commitCreate( const Record *rec );
+	
+	virtual void undoCommitCreate( const Record *rec );
 };
 #endif

@@ -58,6 +58,7 @@ private slots:
 	void testSyncFinished();
 	void testIterationModeAll();
 	void testIterationModeModified();
+	void testCommitCreated();
 };
 
 DataProxyTest::DataProxyTest()
@@ -221,39 +222,26 @@ void DataProxyTest::testIterationModeModified()
 {
 	TestDataProxy fProxy;
 	
-	qDebug() << CSL1( "test-1" );
-	
 	Record *rec1 = new TestRecord( fFields );
 	rec1->setValue( CSL1( "f1" ), CSL1( "A test value" ) );
 	rec1->setValue( CSL1( "f2" ), CSL1( "Another test value" ) );
 	
-	qDebug() << CSL1( "test-2" );
-	
 	Record *rec2 = new TestRecord( fFields );
 	rec2->setValue( CSL1( "f1" ), CSL1( "And more test value" ) );
 	rec2->setValue( CSL1( "f2" ), CSL1( "Yet another one" ) );
-	qDebug() << CSL1( "test-3: " ) << rec2;
 	rec2->synced();
-	
-	qDebug() << CSL1( "test-3" );
 	
 	Record *rec3 = new TestRecord( fFields );
 	rec3->setValue( CSL1( "f1" ), CSL1( "One for the third" ) );
 	rec3->setValue( CSL1( "f2" ), CSL1( "Two for the third" ) );
 	
-	qDebug() << CSL1( "test-4" );
-	
 	fProxy.create( rec1 );
 	fProxy.create( rec2 );
 	fProxy.create( rec3 );
 	
-	qDebug() << CSL1( "test-5" );
-	
 	QVERIFY( rec1->isModified() );
 	QVERIFY( !rec2->isModified() );
 	QVERIFY( rec3->isModified() );
-	
-	qDebug() << CSL1( "test-6" );
 	
 	fProxy.setIterateMode( DataProxy::Modified );
 	fProxy.resetIterator();
@@ -263,6 +251,47 @@ void DataProxyTest::testIterationModeModified()
 	QVERIFY( fProxy.hasNext() );
 	QVERIFY( fProxy.next() == rec3 );
 	QVERIFY( !fProxy.hasNext() );
+}
+
+void DataProxyTest::testCommitCreated()
+{
+	TestDataProxy fProxy;
+	
+	Record *rec1 = new TestRecord( fFields );
+	rec1->setValue( CSL1( "f1" ), CSL1( "A test value" ) );
+	rec1->setValue( CSL1( "f2" ), CSL1( "Another test value" ) );
+	
+	Record *rec2 = new TestRecord( fFields );
+	rec2->setValue( CSL1( "f1" ), CSL1( "And more test value" ) );
+	rec2->setValue( CSL1( "f2" ), CSL1( "Yet another one" ) );
+	rec2->synced();
+	
+	Record *rec3 = new TestRecord( fFields );
+	rec3->setValue( CSL1( "f1" ), CSL1( "One for the third" ) );
+	rec3->setValue( CSL1( "f2" ), CSL1( "Two for the third" ) );
+	
+	fProxy.create( rec1 );
+	fProxy.create( rec2 );
+	fProxy.create( rec3 );
+	
+	// Make sure that we know what ids the records have.
+	rec1->setId( CSL1( "1" ) );
+	rec2->setId( CSL1( "2" ) );
+	rec3->setId( CSL1( "3" ) );
+	
+	fProxy.commit();
+	
+	qDebug() << fProxy.createdCommitted();
+	
+	QVERIFY( fProxy.createCount() == 3 );
+	QVERIFY( fProxy.createdCommitted().contains( CSL1( "1" ) ) );
+	QVERIFY( fProxy.createdCommitted().contains( CSL1( "2" ) ) );
+	QVERIFY( fProxy.createdCommitted().contains( CSL1( "3" ) ) );
+	
+	fProxy.rollback();
+	
+	QVERIFY( fProxy.createCount() == 0 );
+	QVERIFY( fProxy.createdCommitted().size() == 0 );
 }
 
 QTEST_KDEMAIN(DataProxyTest, NoGUI)

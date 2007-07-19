@@ -26,6 +26,7 @@
 */
 
 #include "keyringconduit.h"
+#include "keyringhhdataproxy.h"
 
 void KeyringConduit::loadSettings()
 {
@@ -34,7 +35,7 @@ void KeyringConduit::loadSettings()
 	
 void KeyringConduit::initDataProxies()
 {
-
+	fHHDataProxy = new KeyringHHDataProxy( fDatabase );
 }
 
 void KeyringConduit::test()

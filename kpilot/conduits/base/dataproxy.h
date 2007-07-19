@@ -30,6 +30,7 @@
 #include "cudcounter.h"
 
 #include <QMap>
+#include <QStringList>
 
 #include "kpilot_export.h"
 
@@ -116,28 +117,40 @@ public:
 	Record* next();
 	
 	/**
+	 * Commits all changes to the data store.
+	 */
+	bool commit();
+	
+	/**
+	 * Reverts all changes that are committed to the data store.
+	 */
+	bool rollback();
+	
+	/**
 	 * Returns true when the proxy was able to open the underlying data store 
 	 * in read/write mode.
 	 */
 	virtual bool isOpen() const = 0;
 
 	/**
-	 * Commits all changes to the data store.
-	 */
-	virtual bool commit() = 0;
-	
-	/**
-	 * Reverts all changes that are committed to the data store.
-	 */
-	virtual bool rollback() = 0;
-
-	/**
 	 * Loads all records from underlying data source, sets the startcount of the
 	 * counter and resets the iterator.
 	 */
 	virtual void loadAllRecords() = 0;
+
+protected: // Functions
+	/**
+	 * Commits created record @p rec to the datastore. Returns the id that the
+	 * data store created for this record.
+	 */
+	virtual QString commitCreate( const Record *rec ) = 0;
 	
-protected:
+	/**
+	 * Undo the commit of created record @p rec to the datastore.
+	 */
+	virtual void undoCommitCreate( const Record *rec ) = 0;
+
+protected: // Members
 	Mode fMode;
 	CUDCounter fCounter;
 	QMap<QString, Record*> fRecords;
@@ -147,7 +160,12 @@ protected:
 	/**
 	 * Id's from created records.
 	 */
-	QList<QString> fCreated;
+	QStringList fCreated;
+	
+	/**
+	 * Id's from committed new records.
+	 */
+	QStringList fCreatedCommitted;
 	
 	/**
 	 * Old values of updated records.
