@@ -4,7 +4,7 @@
 */
 
 /****************************************************************************
- ** Copyright (C)  2001-2004 Klar‰lvdalens Datakonsult AB.  All rights reserved.
+ ** Copyright (C)  2002-2004 Kl√§rlvdalens Datakonsult AB.  All rights reserved.
  **
  ** This file is part of the KDGantt library.
  **
@@ -400,7 +400,6 @@ private slots:
   void slotMouseButtonPressed (  int button, QListViewItem * item, const QPoint & pos, int c );
     void slotmouseButtonClicked ( int button, QListViewItem * item, const QPoint & pos, int c );
     void slotcontextMenuRequested ( QListViewItem * item, const QPoint & pos, int col );
-    void slotdoubleClicked ( QListViewItem * item );
     void slotHeaderSizeChanged();
     void addTickRight();
     void addTickLeft();
