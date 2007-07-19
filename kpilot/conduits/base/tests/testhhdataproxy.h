@@ -1,5 +1,5 @@
-#ifndef TESTDATAPROXY_H
-#define TESTDATAPROXY_H
+#ifndef TESTHHDATAPROXY_H
+#define TESTHHDATAPROXY_H
 /* hhdataproxy.h			KPilot
 **
 ** Copyright (C) 2007 by Bertjan Broeksema
@@ -27,24 +27,20 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
-#include "dataproxy.h"
+#include "hhdataproxy.h"
+#include "testdataproxy.h"
 
-class KPILOT_EXPORT TestDataProxy : public DataProxy {
+class KPILOT_EXPORT TestHHDataProxy : public HHDataProxy {
 public:
-	TestDataProxy();
-	
+	TestHHDataProxy();
 	/**
 	 * Creates a dataproxy with @p count records in it. The ids are prefixed with
 	 * @p idPref.
 	 */
-	TestDataProxy( int count, const QString &idPref, bool isHandheldProxy );
+	TestHHDataProxy( int count );
 
-	virtual void printRecords();
+	virtual HHRecord* createHHRecord( PilotRecord *rec );
 
-	/*
-	 * Implement virtual methods to be able to instantiate this. The testclass 
-	 * will only test the non-virtual methods of DataProxy end Record.
-	 */
 	virtual bool isOpen() const;
 	
 	virtual bool commit();

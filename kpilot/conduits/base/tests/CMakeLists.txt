@@ -25,8 +25,10 @@ MACRO( RECORD_CONDUIT_EXECUTABLE_TESTS )
 ENDMACRO( RECORD_CONDUIT_EXECUTABLE_TESTS )
 
 set(testlib_SRCS
+	testrecord.cc
 	testhhrecord.cc
 	testdataproxy.cc
+	testhhdataproxy.cc
 	testrecordconduit.cc
 )
 

@@ -33,6 +33,7 @@ class IDMapping;
 class HHDataProxy;
 class PCDataProxy;
 class DataProxy;
+class HHRecord;
 class Record;
 
 /**
@@ -46,8 +47,8 @@ class KPILOT_EXPORT RecordConduit : public ConduitAction {
 protected:
 	QString fDatabaseName;
 	IDMapping *fMapping;
-	DataProxy *fHHDataProxy;
-	DataProxy *fBackupDataProxy;
+	HHDataProxy *fHHDataProxy;
+	HHDataProxy *fBackupDataProxy;
 	DataProxy *fPCDataProxy;
 
 // Methods
@@ -62,6 +63,10 @@ protected:
 	virtual bool exec();
 	
 	virtual void loadSettings() = 0;
+	
+	virtual Record* createPCRecord( const HHRecord *hhRec ) = 0;
+	
+	virtual HHRecord* createHHRecord( const Record *pcRec ) = 0;
 	
 	/**
 	 * Initialize the data proxies data are needed during sync. The following 
@@ -93,12 +98,12 @@ protected:
 	 * that either the record does not exist (and needs to be created), or it is
 	 * deleted and should be deleted on the other side.
 	 */
-	void syncRecords( Record *pcRecord, Record *backupRecord, Record *hhRecord );
+	void syncRecords( Record *pcRecord, HHRecord *backupRecord, HHRecord *hhRecord );
 	
 	/**
 	 * Synchronizes the two conflicted records and lets one of the two overide.
 	 */
-	void syncConflictedRecords( Record *pcRecord, Record *hhRecord
+	void syncConflictedRecords( Record *pcRecord, HHRecord *hhRecord
 		, bool pcOverides );
 	
 	/**
@@ -113,8 +118,8 @@ protected:
 	/**
 	 * Deletes the mapping for those records and removes them from the proxies.
 	 */
-	void deleteRecords( Record *pcRecord, Record *hhRecord );
+	void deleteRecords( Record *pcRecord, HHRecord *hhRecord );
 	
-	void solveConflict( Record *pcRecord, Record *hhRecord );
+	void solveConflict( Record *pcRecord, HHRecord *hhRecord );
 };
 #endif

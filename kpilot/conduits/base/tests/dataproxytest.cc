@@ -36,6 +36,7 @@
 
 #include "testdataproxy.h"
 #include "record.h"
+#include "testrecord.h"
 
 class DataProxyTest : public QObject
 {
@@ -68,8 +69,8 @@ void DataProxyTest::testCreate()
 {
 	TestDataProxy fProxy;
 	
-	Record *rec1 = new Record( fFields );
-	Record *rec2 = new Record( fFields );
+	Record *rec1 = new TestRecord( fFields );
+	Record *rec2 = new TestRecord( fFields );
 	
 	QString id1 = fProxy.create( rec1 );
 	QString id2 = fProxy.create( rec2 );
@@ -84,7 +85,7 @@ void DataProxyTest::testFind()
 {
 	TestDataProxy fProxy;
 	
-	Record *rec1 = new Record( fFields );
+	Record *rec1 = new TestRecord( fFields );
 	
 	QString id1 = fProxy.create( rec1 );
 	
@@ -96,7 +97,7 @@ void DataProxyTest::testUpdate()
 {
 	TestDataProxy fProxy;
 	
-	Record *rec1 = new Record( fFields );
+	Record *rec1 = new TestRecord( fFields );
 	rec1->setValue( CSL1( "f1" ), CSL1( "A TEST VALUE" ) );
 	rec1->setValue( CSL1( "f2" ), CSL1( "ANOTHER TEST VALUE" ) );
 	
@@ -104,7 +105,7 @@ void DataProxyTest::testUpdate()
 	// works.
 	QVERIFY( rec1->value( CSL1( "f1" ) ) == CSL1( "A TEST VALUE" ) );
 	
-	Record *rec2 = new Record( fFields );
+	Record *rec2 = new TestRecord( fFields );
 	rec2->setValue( CSL1( "f1" ), CSL1( "And Yet another test value" ) );
 	rec2->setValue( CSL1( "f2" ), CSL1( "And the last one" ) );
 	
@@ -120,7 +121,7 @@ void DataProxyTest::testRemove()
 {
 	TestDataProxy fProxy;
 	
-	Record *rec1 = new Record( fFields );
+	Record *rec1 = new TestRecord( fFields );
 	rec1->setValue( CSL1( "f1" ), CSL1( "A TEST VALUE" ) );
 	rec1->setValue( CSL1( "f2" ), CSL1( "ANOTHER TEST VALUE" ) );
 	
@@ -138,8 +139,8 @@ void DataProxyTest::testRecordCount()
 {
 	TestDataProxy fProxy;
 	
-	Record *rec1 = new Record( fFields );
-	Record *rec2 = new Record( fFields );
+	Record *rec1 = new TestRecord( fFields );
+	Record *rec2 = new TestRecord( fFields );
 	
 	QVERIFY( fProxy.recordCount() == 0 );
 	
@@ -157,8 +158,8 @@ void DataProxyTest::testIds()
 {
 	TestDataProxy fProxy;
 	
-	Record *rec1 = new Record( fFields );
-	Record *rec2 = new Record( fFields );
+	Record *rec1 = new TestRecord( fFields );
+	Record *rec2 = new TestRecord( fFields );
 	
 	QString id1 = fProxy.create( rec1 );
 	QString id2 = fProxy.create( rec2 );
@@ -172,8 +173,8 @@ void DataProxyTest::testSyncFinished()
 {
 	TestDataProxy fProxy;
 	
-	Record *rec1 = new Record( fFields );
-	Record *rec2 = new Record( fFields );
+	Record *rec1 = new TestRecord( fFields );
+	Record *rec2 = new TestRecord( fFields );
 	
 	fProxy.create( rec1 );
 	fProxy.create( rec2 );
@@ -188,15 +189,15 @@ void DataProxyTest::testIterationModeAll()
 	// First test the mode: All
 	TestDataProxy fProxy;
 	
-	Record *rec1 = new Record( fFields );
+	Record *rec1 = new TestRecord( fFields );
 	rec1->setValue( CSL1( "f1" ), CSL1( "A test value" ) );
 	rec1->setValue( CSL1( "f2" ), CSL1( "Another test value" ) );
 	
-	Record *rec2 = new Record( fFields );
+	Record *rec2 = new TestRecord( fFields );
 	rec2->setValue( CSL1( "f1" ), CSL1( "And more test value" ) );
 	rec2->setValue( CSL1( "f2" ), CSL1( "Yet another one" ) );
 	
-	Record *rec3 = new Record( fFields );
+	Record *rec3 = new TestRecord( fFields );
 	rec3->setValue( CSL1( "f1" ), CSL1( "One for the third" ) );
 	rec3->setValue( CSL1( "f2" ), CSL1( "Two for the third" ) );
 	
@@ -222,13 +223,13 @@ void DataProxyTest::testIterationModeModified()
 	
 	qDebug() << CSL1( "test-1" );
 	
-	Record *rec1 = new Record( fFields );
+	Record *rec1 = new TestRecord( fFields );
 	rec1->setValue( CSL1( "f1" ), CSL1( "A test value" ) );
 	rec1->setValue( CSL1( "f2" ), CSL1( "Another test value" ) );
 	
 	qDebug() << CSL1( "test-2" );
 	
-	Record *rec2 = new Record( fFields );
+	Record *rec2 = new TestRecord( fFields );
 	rec2->setValue( CSL1( "f1" ), CSL1( "And more test value" ) );
 	rec2->setValue( CSL1( "f2" ), CSL1( "Yet another one" ) );
 	qDebug() << CSL1( "test-3: " ) << rec2;
@@ -236,7 +237,7 @@ void DataProxyTest::testIterationModeModified()
 	
 	qDebug() << CSL1( "test-3" );
 	
-	Record *rec3 = new Record( fFields );
+	Record *rec3 = new TestRecord( fFields );
 	rec3->setValue( CSL1( "f1" ), CSL1( "One for the third" ) );
 	rec3->setValue( CSL1( "f2" ), CSL1( "Two for the third" ) );
 	

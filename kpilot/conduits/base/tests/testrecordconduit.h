@@ -43,19 +43,23 @@ public:
 	
 	virtual bool createBackupDatabase() { return true; }
 	
+	virtual Record* createPCRecord( const HHRecord* record );
+	
+	virtual HHRecord* createHHRecord( const Record* record );
+	
 	/** Methods below are added for testpurposes **/
 	
 	bool syncFieldsTest( Record *from, Record *to );
 	
-	void solveConflictTest( Record *pcRecord, Record *hhRecord );
+	void solveConflictTest( Record *pcRecord, HHRecord *hhRecord );
 	
 	void hotSyncTest();
 	
 	DataProxy *pcDataProxy() { return fPCDataProxy; }
 	
-	DataProxy *hhDataProxy() { return fHHDataProxy; }
+	HHDataProxy *hhDataProxy() { return fHHDataProxy; }
 	
-	DataProxy *backupDataProxy() { return fBackupDataProxy; }
+	HHDataProxy *backupDataProxy() { return fBackupDataProxy; }
 	
 	IDMapping *mapping() { return fMapping; }
 

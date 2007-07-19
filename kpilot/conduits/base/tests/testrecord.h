@@ -1,6 +1,6 @@
-#ifndef TESTHHRECORD_H
-#define TESTHHRECORD_H
-/* testhhrecord.h			KPilot
+#ifndef TESTRECORD_H
+#define TESTRECORD_H
+/* testrecord.h			KPilot
 **
 ** Copyright (C) 2007 by Bertjan Broeksema
 ** Copyright (C) 2007 by Jason "vanRijn" Kasper
@@ -29,28 +29,25 @@
 
 #include "kpilot_export.h"
 
+#include "record.h"
 #include "recordbase.h"
-#include "hhrecord.h"
 
-#include <QString>
-
-class PilotRecordBase;
-
-class KPILOT_EXPORT TestHHRecord : public HHRecord {
+class KPILOT_EXPORT TestRecord : public Record {
 private:
 	QString fId;
 	QStringList fFields;
 	bool fModified;
 	bool fDeleted;
-	bool fArchived;
 	QMap<QString, QVariant> fValues;
-
+	
 public:
-	TestHHRecord( const QStringList& fields, const QString &id );
-		
-	TestHHRecord( const Record *other );
+	TestRecord( const Record *other );
 
-	virtual ~TestHHRecord() {};
+	TestRecord( const QStringList& fields );
+	
+	TestRecord( const QStringList& fields, const QString &id );
+	
+	virtual ~TestRecord() {};
 	
 	/** METHODS FOR TESTPURPOSES **/
 	
@@ -58,11 +55,7 @@ public:
 	
 	virtual void setDeleted();
 	
-	void setArchived();
-	
 	/** IMPLEMTED VIRTUAL FUNCTIONS FROM BASECLASS **/
-	
-	virtual bool isArchived() const { return fArchived; }
 	
 	virtual const QString id() const;
 	

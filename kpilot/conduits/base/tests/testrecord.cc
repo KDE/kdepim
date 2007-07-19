@@ -1,4 +1,4 @@
-/* testhhrecord.cc			KPilot
+/* testrecord.cc			KPilot
 **
 ** Copyright (C) 2007 by Bertjan Broeksema
 ** Copyright (C) 2007 by Jason "vanRijn" Kasper
@@ -25,16 +25,21 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
-#include "testhhrecord.h"
+#include "testrecord.h"
 #include "options.h"
 
-TestHHRecord::TestHHRecord( const QStringList& fields, const QString &id )
-	: HHRecord( 0L ), fId( id ), fFields( fields ), fModified( false )
-		, fDeleted( false ), fArchived( false )
+TestRecord::TestRecord( const QStringList& fields )
+	: fFields( fields ), fModified( false ), fDeleted( false )
 {
 }
 
-TestHHRecord::TestHHRecord( const Record *other ) : HHRecord( 0L )
+
+TestRecord::TestRecord( const QStringList& fields, const QString &id )
+	: fId( id ), fFields( fields ), fModified( false ), fDeleted( false )
+{
+}
+
+TestRecord::TestRecord( const Record *other )
 {
 	fId = other->id();
 	fFields = other->fields();
@@ -50,64 +55,57 @@ TestHHRecord::TestHHRecord( const Record *other ) : HHRecord( 0L )
 	
 	fModified = other->isModified();
 	fDeleted = other->isDeleted();
-	fArchived = false;
 }
 
-void TestHHRecord::setArchived()
-{
-	setDeleted();
-	fArchived = true;
-}
-
-void TestHHRecord::setDeleted()
+void TestRecord::setDeleted()
 {
 	fDeleted = true;
 }
 
-void TestHHRecord::setModified()
+void TestRecord::setModified()
 {
 	fModified = true;
 }
 
-const QString TestHHRecord::id() const 
+const QString TestRecord::id() const 
 {
 	return fId;
 }
 	
-void TestHHRecord::setId( const QString &id )
+void TestRecord::setId( const QString &id )
 {
 	fId = id;
 }
 
-QVariant TestHHRecord::value( const QString &field ) const
+QVariant TestRecord::value( const QString &field ) const
 {
 	return fValues.value( field );
 }
 
-bool TestHHRecord::setValue( const QString &field, const QVariant &value )
+bool TestRecord::setValue( const QString &field, const QVariant &value )
 {
 	fValues.insert( field, value );
 	fModified = true;
 	return true;
 }
 
-bool TestHHRecord::isModified() const
+bool TestRecord::isModified() const
 {
 	return fModified || isDeleted();
 }
 
-bool TestHHRecord::isDeleted() const
+bool TestRecord::isDeleted() const
 {
 	return fDeleted;
 }
 
-void TestHHRecord::synced()
+void TestRecord::synced()
 {
 	fDeleted = false;
 	fModified = false;
 }
 
-QString TestHHRecord::toString() const
+QString TestRecord::toString() const
 {
 	QString representation = fId + CSL1( " [" );
 	QStringListIterator it(fFields);
@@ -118,9 +116,8 @@ QString TestHHRecord::toString() const
 		
 		representation += CSL1( " " );
 		representation += field;
-		representation += CSL1( "=\"" );
+		representation += CSL1( "=" );
 		representation += fValues.value( field ).toString();
-		representation += CSL1( "\"" );
 	}
 	
 	representation += CSL1( " ]" );
@@ -128,17 +125,18 @@ QString TestHHRecord::toString() const
 	return representation;
 }
 
-const QStringList TestHHRecord::fields() const
+const QStringList TestRecord::fields() const
 {
 	return fFields;
 }
 
-Record* TestHHRecord::duplicate() const
+Record* TestRecord::duplicate() const
 {
-	return new TestHHRecord( this );
+	return new TestRecord( this );
 }
 
-bool TestHHRecord::operator==( const Record &other ) const
+
+bool TestRecord::operator==( const Record &other ) const
 {
 	QStringList fields = other.fields();
 	QStringListIterator it(fields);
@@ -155,8 +153,7 @@ bool TestHHRecord::operator==( const Record &other ) const
 	return allEqual && (fields == fFields);
 }
 
-bool TestHHRecord::operator!=( const Record &other ) const
+bool TestRecord::operator!=( const Record &other ) const
 {
 	return !(operator==( other ));
 }
-

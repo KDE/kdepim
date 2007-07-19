@@ -30,18 +30,28 @@
 #include "dataproxy.h"
 
 class PilotDatabase;
+class PilotRecord;
 class HHRecord;
 
-class HHDataProxy : public DataProxy {
+class KPILOT_EXPORT HHDataProxy : public DataProxy {
 public:
-	HHDataProxy();
+	HHDataProxy( PilotDatabase *db );
 
 	void resetSyncFlags();
 
-	virtual void readAppBlock() = 0;
+protected:
+	void loadAllRecords();
+	
+	//virtual void readAppBlock() = 0;
 
-	virtual void writeAppBlock() = 0;
+	//virtual void writeAppBlock() = 0;
 
+	/** THese functions must be implemented by the subclassing conduit **/
+	
+	/**
+	 * This function creates a (subclass of) HHRecord for @p rec.
+	 */
+	virtual HHRecord* createHHRecord( PilotRecord *rec ) = 0;
 
 protected:
 	PilotDatabase *fDatabase;

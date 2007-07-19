@@ -29,11 +29,29 @@
 #include "hhrecord.h"
 #include "pilotDatabase.h"
 
-HHDataProxy::HHDataProxy()
+HHDataProxy::HHDataProxy( PilotDatabase *db ) : fDatabase( db )
 {
 }
 
 void HHDataProxy::resetSyncFlags()
 {
 	fDatabase->resetSyncFlags();
+}
+
+void HHDataProxy::loadAllRecords()
+{
+	int index = 0;
+	
+	PilotRecord *pRec = fDatabase->readRecordByIndex( index );
+	
+	while( pRec )
+	{
+		// Create a record object.
+		Record *rec = createHHRecord( pRec );
+		fRecords.insert( rec->id(), rec );
+		
+		// Read the next one.
+		index++;
+		pRec = fDatabase->readRecordByIndex( index );
+	}
 }

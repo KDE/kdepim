@@ -32,11 +32,12 @@
 
 #include "options.h"
 #include "dataproxy.h"
+#include "hhdataproxy.h"
 #include "idmapping.h"
 
 #include "testrecordconduit.h"
-#include "record.h"
-#include "hhrecord.h"
+#include "testrecord.h"
+#include "testhhrecord.h"
 
 /**
  * This class tests all cases that can occur when doing an hotsync. The conflict
@@ -117,11 +118,11 @@ void RCHotSyncHHTest::testSyncfFields()
 	TestRecordConduit conduit( args );
 	conduit.initDataProxies();
 	
-	Record *rec1 = new Record( fFields );
+	Record *rec1 = new TestRecord( fFields );
 	rec1->setValue( CSL1( "f1" ), CSL1( "A test value" ) );
 	rec1->setValue( CSL1( "f2" ), CSL1( "Another test value" ) );
 	
-	Record *rec2 = new Record( fFields );
+	Record *rec2 = new TestRecord( fFields );
 	rec2->setValue( CSL1( "f1" ), CSL1( "And more test value" ) );
 	rec2->setValue( CSL1( "f2" ), CSL1( "Yet another one" ) );
 	
@@ -133,7 +134,7 @@ void RCHotSyncHHTest::testSyncfFields()
 	// Make a record with other fFields
 	QStringList fFields2 = QStringList() << CSL1( "afield" ) << CSL1( "f2" );
 	
-	Record *rec3 = new Record( fFields2 );
+	Record *rec3 = new TestRecord( fFields2 );
 	rec3->setValue( CSL1( "afield" ), CSL1( "Test 3-1" ) );
 	rec3->setValue( CSL1( "f2" ), CSL1( "Test 3-2" ) );
 	
@@ -169,10 +170,9 @@ void RCHotSyncHHTest::testCase_6_5_1()
 	initTestCase_1();
 	
 	// Duplicate the records before the sync.
-	Record *pcRec = new Record( *(fConduit->pcDataProxy()->find( CSL1( "pc-1" )) ) );
-	Record *hhRec = new Record( *(fConduit->hhDataProxy()->find( CSL1( "hh-1" )) ) );
-	Record *backupRec = new Record( 
-		*(fConduit->backupDataProxy()->find( CSL1( "hh-1" )) ) );
+	Record *pcRec = fConduit->pcDataProxy()->find( CSL1( "pc-1" ) )->duplicate();
+	Record *hhRec = fConduit->hhDataProxy()->find( CSL1( "hh-1" ) )->duplicate();
+	Record *backupRec = fConduit->backupDataProxy()->find( CSL1( "hh-1" ) )->duplicate();
 	
 	// Verify the startsituation
 	QVERIFY( !pcRec->isModified() );
@@ -212,7 +212,7 @@ void RCHotSyncHHTest::testCase_6_5_2()
 	initTestCase_1();
 	
 	// Duplicate the records before the sync.
-	Record *hhRec = new Record( *(fConduit->hhDataProxy()->find( CSL1( "hh-2" )) ) );
+	Record *hhRec = fConduit->hhDataProxy()->find( CSL1( "hh-2" ) )->duplicate();
 	
 	// Verify the startsituation
 	QVERIFY( hhRec->isModified() );
@@ -252,10 +252,9 @@ void RCHotSyncHHTest::testCase_6_5_3()
 	initTestCase_1();
 	
 	// Duplicate the records before the sync.
-	Record *pcRec = new Record( *(fConduit->pcDataProxy()->find( CSL1( "pc-2" )) ) );
-	Record *hhRec = new Record( *(fConduit->hhDataProxy()->find( CSL1( "hh-3" )) ) );
-	Record *backupRec = new Record( 
-		*(fConduit->backupDataProxy()->find( CSL1( "hh-3" )) ) );
+	Record *pcRec = fConduit->pcDataProxy()->find( CSL1( "pc-2" ) )->duplicate();
+	Record *hhRec = fConduit->hhDataProxy()->find( CSL1( "hh-3" ) )->duplicate();
+	Record *backupRec = fConduit->backupDataProxy()->find( CSL1( "hh-3" ) )->duplicate();
 	
 	// Verify the startsituation
 	QVERIFY( !pcRec->isModified() );
@@ -301,10 +300,9 @@ void RCHotSyncHHTest::testCase_6_5_4()
 	initTestCase_1();
 	
 	// Duplicate the records before the sync.
-	Record *pcRec = new Record( *(fConduit->pcDataProxy()->find( CSL1( "pc-3" )) ) );
-	Record *hhRec = new Record( *(fConduit->hhDataProxy()->find( CSL1( "hh-4" ) ) ) );
-	Record *backupRec = new Record( 
-		*(fConduit->backupDataProxy()->find( CSL1( "hh-4" )) ) );
+	Record *pcRec = fConduit->pcDataProxy()->find( CSL1( "pc-3" ) )->duplicate();
+	Record *hhRec = fConduit->hhDataProxy()->find( CSL1( "hh-4" ) )->duplicate();
+	Record *backupRec = fConduit->backupDataProxy()->find( CSL1( "hh-4" ) )->duplicate();
 	
 	// Verify the startsituation
 	QVERIFY( !pcRec->isModified() );
@@ -341,7 +339,7 @@ void RCHotSyncHHTest::testCase_6_5_5()
 	initTestCase_1();
 	
 	// Duplicate the records before the sync.
-	Record *pcRec = new Record( *(fConduit->pcDataProxy()->find( CSL1( "pc-4" )) ) );
+	Record *pcRec = fConduit->pcDataProxy()->find( CSL1( "pc-4" ) )->duplicate();
 	
 	// Verify the startsituation
 	QVERIFY( pcRec->isModified() );
@@ -381,10 +379,9 @@ void RCHotSyncHHTest::testCase_6_5_6()
 	initTestCase_1();
 	
 	// Duplicate the records before the sync.
-	Record *pcRec = new Record( *(fConduit->pcDataProxy()->find( CSL1( "pc-5" )) ) );
-	Record *hhRec = new Record( *(fConduit->hhDataProxy()->find( CSL1( "hh-5" )) ) );
-	Record *backupRec = new Record( 
-		*(fConduit->backupDataProxy()->find( CSL1( "hh-5" )) ) );
+	Record *pcRec = fConduit->pcDataProxy()->find( CSL1( "pc-5" ) )->duplicate();
+	Record *hhRec = fConduit->hhDataProxy()->find( CSL1( "hh-5" ) )->duplicate();
+	Record *backupRec = fConduit->backupDataProxy()->find( CSL1( "hh-5" ) )->duplicate();
 	
 	// Verify the startsituation
 	QVERIFY( pcRec->isModified() );
@@ -427,10 +424,9 @@ void RCHotSyncHHTest::testCase_6_5_7()
 	initTestCase_1();
 	
 	// Duplicate the records before the sync.
-	Record *pcRec = new Record( *(fConduit->pcDataProxy()->find( CSL1( "pc-6" ) ) ) );
-	Record *hhRec = new Record( *(fConduit->hhDataProxy()->find( CSL1( "hh-6" ) ) ) );
-	Record *backupRec = new Record( 
-		*(fConduit->backupDataProxy()->find( CSL1( "hh-6" )) ) );
+	Record *pcRec = fConduit->pcDataProxy()->find( CSL1( "pc-6" ) )->duplicate();
+	Record *hhRec = fConduit->hhDataProxy()->find( CSL1( "hh-6" ) )->duplicate();
+	Record *backupRec = fConduit->backupDataProxy()->find( CSL1( "hh-6" ) )->duplicate();
 	
 	// Verify the startsituation
 	QVERIFY( pcRec->isDeleted() );
@@ -464,10 +460,9 @@ void RCHotSyncHHTest::testCase_6_5_9()
 	initTestCase_1();
 	
 	// Duplicate the records before the sync.
-	Record *pcRec = new Record( *(fConduit->pcDataProxy()->find( CSL1( "pc-8" )) ) );
-	Record *hhRec = new Record( *(fConduit->hhDataProxy()->find( CSL1( "hh-8" )) ) );
-	Record *backupRec = new Record( 
-		*(fConduit->backupDataProxy()->find( CSL1( "hh-8" )) ) );
+	Record *pcRec = fConduit->pcDataProxy()->find( CSL1( "pc-8" ) )->duplicate();
+	Record *hhRec = fConduit->hhDataProxy()->find( CSL1( "hh-8" ) )->duplicate();
+	Record *backupRec = fConduit->backupDataProxy()->find( CSL1( "hh-8" ) )->duplicate();
 	
 	// Verify the startsituation
 	QVERIFY( pcRec->isModified() );
@@ -511,10 +506,9 @@ void RCHotSyncHHTest::testCase_6_5_10()
 	initTestCase_1();
 	
 	// Duplicate the records before the sync.
-	Record *pcRec = new Record( *(fConduit->pcDataProxy()->find( CSL1( "pc-9" )) ) );
-	Record *hhRec = new Record( *(fConduit->hhDataProxy()->find( CSL1( "hh-9" ) ) ) );
-	Record *backupRec = new Record( 
-		*(fConduit->backupDataProxy()->find( CSL1( "hh-9" )) ) );
+	Record *pcRec = fConduit->pcDataProxy()->find( CSL1( "pc-9" ) )->duplicate();
+	Record *hhRec = fConduit->hhDataProxy()->find( CSL1( "hh-9" ) )->duplicate();
+	Record *backupRec = fConduit->backupDataProxy()->find( CSL1( "hh-9" ) )->duplicate();
 	
 	// Verify the startsituation
 	QVERIFY( pcRec->isModified() );
@@ -551,10 +545,9 @@ void RCHotSyncHHTest::testCase_6_5_11()
 	initTestCase_1();
 	
 	// Duplicate the records before the sync.
-	Record *pcRec = new Record( *(fConduit->pcDataProxy()->find( CSL1( "pc-10" )) ) );
-	Record *hhRec = new Record( *(fConduit->hhDataProxy()->find( CSL1( "hh-10" ) ) ) );
-	Record *backupRec = new Record( 
-		*(fConduit->backupDataProxy()->find( CSL1( "hh-10" )) ) );
+	Record *pcRec = fConduit->pcDataProxy()->find( CSL1( "pc-10" ) )->duplicate();
+	Record *hhRec = fConduit->hhDataProxy()->find( CSL1( "hh-10" ) )->duplicate();
+	Record *backupRec = fConduit->backupDataProxy()->find( CSL1( "hh-10" ) )->duplicate();
 	
 	// Verify the startsituation
 	QVERIFY( pcRec->isDeleted() );
@@ -590,10 +583,9 @@ void RCHotSyncHHTest::testCase_6_5_12()
 	initTestCase_1();
 	
 	// Duplicate the records before the sync.
-	Record *pcRec = new Record( *(fConduit->pcDataProxy()->find( CSL1( "pc-11" )) ) );
-	Record *hhRec = new Record( *(fConduit->hhDataProxy()->find( CSL1( "hh-11" ) ) ) );
-	Record *backupRec = new Record( 
-		*(fConduit->backupDataProxy()->find( CSL1( "hh-11" )) ) );
+	Record *pcRec = fConduit->pcDataProxy()->find( CSL1( "pc-11" ) )->duplicate();
+	Record *hhRec = fConduit->hhDataProxy()->find( CSL1( "hh-11" ) )->duplicate();
+	Record *backupRec = fConduit->backupDataProxy()->find( CSL1( "hh-11" ) )->duplicate();
 	
 	// Verify the startsituation
 	QVERIFY( pcRec->isDeleted() );
@@ -630,7 +622,7 @@ void RCHotSyncHHTest::testCase_6_5_13()
 	initTestCase_1();
 	
 	// Duplicate the records before the sync.
-	Record *hhRec = new Record( *(fConduit->hhDataProxy()->find( CSL1( "hh-12" )) ) );
+	Record *hhRec = fConduit->hhDataProxy()->find( CSL1( "hh-12" ) )->duplicate();
 	
 	// Verify the startsituation
 	QVERIFY( !hhRec->isModified() );
@@ -665,7 +657,7 @@ void RCHotSyncHHTest::testCase_6_5_14()
 	initTestCase_1();
 	
 	// Duplicate the records before the sync.
-	Record *pcRec = new Record( *(fConduit->pcDataProxy()->find( CSL1( "pc-12" )) ) );
+	Record *pcRec = fConduit->pcDataProxy()->find( CSL1( "pc-12" ) )->duplicate();
 	
 	// Verify the startsituation
 	QVERIFY( !pcRec->isModified() );
@@ -700,9 +692,9 @@ void RCHotSyncHHTest::testCase_6_5_15()
 	initTestCase_1();
 	
 	// Duplicate the records before the sync.
-	Record *pcRec = new Record( *(fConduit->pcDataProxy()->find( CSL1( "pc-13" )) ) );
-	Record *hhRec = new Record( *(fConduit->hhDataProxy()->find( CSL1( "hh-13" )) ) );
-	Record *bkRec = new Record( *(fConduit->backupDataProxy()->find( CSL1( "hh-13" )) ) );
+	Record *pcRec = fConduit->pcDataProxy()->find( CSL1( "pc-13" ) )->duplicate();
+	Record *hhRec = fConduit->hhDataProxy()->find( CSL1( "hh-13" ) )->duplicate();
+	Record *bkRec = fConduit->backupDataProxy()->find( CSL1( "hh-13" ) )->duplicate();
 	
 	// Verify the startsituation
 	QVERIFY( !pcRec->isModified() );
@@ -754,9 +746,9 @@ void RCHotSyncHHTest::testCase_6_5_16()
 	initTestCase_1();
 	
 	// Duplicate the records before the sync.
-	Record *pcRec = new Record( *(fConduit->pcDataProxy()->find( CSL1( "pc-14" )) ) );
-	Record *hhRec = new Record( *(fConduit->hhDataProxy()->find( CSL1( "hh-14" )) ) );
-	Record *bkRec = new Record( *(fConduit->backupDataProxy()->find( CSL1( "hh-14" )) ) );
+	Record *pcRec = fConduit->pcDataProxy()->find( CSL1( "pc-14" ) )->duplicate();
+	Record *hhRec = fConduit->hhDataProxy()->find( CSL1( "hh-14" ) )->duplicate();
+	Record *bkRec = fConduit->backupDataProxy()->find( CSL1( "hh-14" ) )->duplicate();
 	
 	// Verify the startsituation
 	QVERIFY( pcRec->isModified() );
@@ -808,7 +800,7 @@ void RCHotSyncHHTest::testCase_6_5_17()
 	initTestCase_1();
 	
 	// Duplicate the records before the sync.
-	Record *pcRec = new Record( *(fConduit->pcDataProxy()->find( CSL1( "pc-15" ) ) ) );
+	Record *pcRec = fConduit->pcDataProxy()->find( CSL1( "pc-15" ) )->duplicate();
 	
 	// Verify the startsituation
 	QVERIFY( pcRec->isDeleted() );

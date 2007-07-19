@@ -29,9 +29,11 @@
 
 #include "testrecordconduit.h"
 #include "testdataproxy.h"
+#include "testhhdataproxy.h"
 #include "idmapping.h"
 #include "record.h"
-#include "hhrecord.h"
+#include "testrecord.h"
+#include "testhhrecord.h"
 
 TestRecordConduit::TestRecordConduit( const QStringList &args, bool createRecs )
 	: RecordConduit( 0L, args, CSL1( "test-db" ), CSL1( "test-conduit" ) )
@@ -80,32 +82,32 @@ void TestRecordConduit::initDataProxies()
 		 * 6.5.16| pc-14|  M |Y|  - |  A | hh-14|
 		 * 6.5.17| pc-15|  D |A|  X |  X | hh-15|
 		 */
-		fHHDataProxy = new TestDataProxy( 14, CSL1( "hh-" ), true );
-		fHHDataProxy->find( CSL1( "hh-2" ) )->setModified();
-		fHHDataProxy->find( CSL1( "hh-3" ) )->setModified();
-		fHHDataProxy->find( CSL1( "hh-4" ) )->setDeleted();
-		fHHDataProxy->find( CSL1( "hh-8" ) )->setModified();
-		fHHDataProxy->find( CSL1( "hh-9" ) )->setDeleted();
-		fHHDataProxy->find( CSL1( "hh-10" ) )->setModified();
-		fHHDataProxy->find( CSL1( "hh-11" ) )->setDeleted();
-		static_cast<HHRecord*>( fHHDataProxy->find( CSL1( "hh-13" ) ) )->setArchived();
-		static_cast<HHRecord*>( fHHDataProxy->find( CSL1( "hh-14" ) ) )->setArchived();
+		fHHDataProxy = new TestHHDataProxy( 14 );
+		static_cast<TestHHRecord*>( fHHDataProxy->find( CSL1( "hh-2" ) ) )->setModified();
+		static_cast<TestHHRecord*>( fHHDataProxy->find( CSL1( "hh-3" ) ) )->setModified();
+		static_cast<TestHHRecord*>( fHHDataProxy->find( CSL1( "hh-4" ) ) )->setDeleted();
+		static_cast<TestHHRecord*>( fHHDataProxy->find( CSL1( "hh-8" ) ) )->setModified();
+		static_cast<TestHHRecord*>( fHHDataProxy->find( CSL1( "hh-9" ) ) )->setDeleted();
+		static_cast<TestHHRecord*>( fHHDataProxy->find( CSL1( "hh-10" ) ) )->setModified();
+		static_cast<TestHHRecord*>( fHHDataProxy->find( CSL1( "hh-11" ) ) )->setDeleted();
+		static_cast<TestHHRecord*>( fHHDataProxy->find( CSL1( "hh-13" ) ) )->setArchived();
+		static_cast<TestHHRecord*>( fHHDataProxy->find( CSL1( "hh-14" ) ) )->setArchived();
 		
-		fBackupDataProxy = new TestDataProxy( 14, CSL1( "hh-" ), true );
+		fBackupDataProxy = new TestHHDataProxy( 14 );
 		fBackupDataProxy->remove( CSL1( "hh-2" ) );
 		fBackupDataProxy->remove( CSL1( "hh-7" ) );
 		fBackupDataProxy->remove( CSL1( "hh-12" ) );
 		
 		fPCDataProxy = new TestDataProxy( 15, CSL1( "pc-" ), false );
-		fPCDataProxy->find( CSL1( "pc-4" ) )->setModified();
-		fPCDataProxy->find( CSL1( "pc-5" ) )->setModified();
-		fPCDataProxy->find( CSL1( "pc-6" ) )->setDeleted();
-		fPCDataProxy->find( CSL1( "pc-8" ) )->setModified();
-		fPCDataProxy->find( CSL1( "pc-9" ) )->setModified();
-		fPCDataProxy->find( CSL1( "pc-10" ) )->setDeleted();
-		fPCDataProxy->find( CSL1( "pc-11" ) )->setDeleted();
-		fPCDataProxy->find( CSL1( "pc-14" ) )->setModified();
-		fPCDataProxy->find( CSL1( "pc-15" ) )->setDeleted();
+		static_cast<TestRecord*>( fPCDataProxy->find( CSL1( "pc-4" ) ) )->setModified();
+		static_cast<TestRecord*>( fPCDataProxy->find( CSL1( "pc-5" ) ) )->setModified();
+		static_cast<TestRecord*>( fPCDataProxy->find( CSL1( "pc-6" ) ) )->setDeleted();
+		static_cast<TestRecord*>( fPCDataProxy->find( CSL1( "pc-8" ) ) )->setModified();
+		static_cast<TestRecord*>( fPCDataProxy->find( CSL1( "pc-9" ) ) )->setModified();
+		static_cast<TestRecord*>( fPCDataProxy->find( CSL1( "pc-10" ) ) )->setDeleted();
+		static_cast<TestRecord*>( fPCDataProxy->find( CSL1( "pc-11" ) ) )->setDeleted();
+		static_cast<TestRecord*>( fPCDataProxy->find( CSL1( "pc-14" ) ) )->setModified();
+		static_cast<TestRecord*>( fPCDataProxy->find( CSL1( "pc-15" ) ) )->setDeleted();
 		 
 		fMapping->map( CSL1( "hh-1" ), CSL1( "pc-1" ) );
 		fMapping->map( CSL1( "hh-3" ), CSL1( "pc-2" ) );
@@ -125,10 +127,20 @@ void TestRecordConduit::initDataProxies()
 	}
 	else
 	{
-		fHHDataProxy = new TestDataProxy();
-		fBackupDataProxy = new TestDataProxy();
+		fHHDataProxy = new TestHHDataProxy();
+		fBackupDataProxy = new TestHHDataProxy();
 		fPCDataProxy = new TestDataProxy();
 	}
+}
+
+Record* TestRecordConduit::createPCRecord( const HHRecord* record )
+{
+	return new TestRecord( record );
+}
+
+HHRecord* TestRecordConduit::createHHRecord( const Record* record )
+{
+	return new TestHHRecord( record );
 }
 
 void TestRecordConduit::test()
@@ -146,7 +158,7 @@ bool TestRecordConduit::syncFieldsTest( Record *from, Record *to )
 	return syncFields( from, to );
 }
 
-void TestRecordConduit::solveConflictTest( Record *pcRecord, Record *hhRecord )
+void TestRecordConduit::solveConflictTest( Record *pcRecord, HHRecord *hhRecord )
 {
 	solveConflict( pcRecord, hhRecord );
 }

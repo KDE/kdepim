@@ -1,4 +1,4 @@
-/* hhdataproxy.cc			KPilot
+/* testhhdataproxy.cc			KPilot
 **
 ** Copyright (C) 2007 by Bertjan Broeksema
 ** Copyright (C) 2007 by Jason "vanRijn" Kasper
@@ -25,33 +25,23 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
-#include "testdataproxy.h"
-#include "record.h"
-#include "testrecord.h"
+#include "testhhdataproxy.h"
 #include "testhhrecord.h"
 
 #include "options.h"
 
-TestDataProxy::TestDataProxy() {}
+TestHHDataProxy::TestHHDataProxy() : HHDataProxy( 0l ) {}
 
-TestDataProxy::TestDataProxy( int count, const QString &idPref, bool isHandheldProxy )
+TestHHDataProxy::TestHHDataProxy( int count ) : HHDataProxy( 0l )
 {
 	QStringList fields;
 	fields << CSL1( "f1" ) << CSL1( "f2" );
 	
 	for( int i = 1; i <= count; i++ )
 	{
-		QString id = idPref + QString::number( i );
+		QString id = CSL1( "hh-" ) + QString::number( i );
 		
-		Record *rec;
-		if( isHandheldProxy )
-		{
-			rec = new TestHHRecord( fields, id );
-		}
-		else
-		{
-			rec = new TestRecord( fields, id );
-		}
+		TestHHRecord *rec = new TestHHRecord( fields, id );
 		rec->setValue( CSL1( "f1" )
 			, CSL1( "Value 1: " ) + QString::number( qrand() ) );
 		rec->setValue( CSL1( "f2" )
@@ -64,34 +54,27 @@ TestDataProxy::TestDataProxy( int count, const QString &idPref, bool isHandheldP
 	fIterator = QMapIterator<QString, Record*>( fRecords );
 }
 
-void TestDataProxy::printRecords()
+HHRecord* TestHHDataProxy::createHHRecord( PilotRecord *rec )
 {
-	QMapIterator<QString, Record*> i(fRecords);
-	while (i.hasNext()) {
-		i.next();
-		qDebug() << i.value()->toString();
-	}
+	Q_UNUSED( rec );
+	return 0L;
 }
 
-/*
-	* Implement virtual methods to be able to instantiate this. The testclass 
-	* will only test the non-virtual methods of DataProxy end Record.
-	*/
-bool TestDataProxy::isOpen() const
+bool TestHHDataProxy::isOpen() const
 {
 	return true;
 }
 
-bool TestDataProxy::commit()
+bool TestHHDataProxy::commit()
 {
 	return true;
 }
 
-bool TestDataProxy::rollback()
+bool TestHHDataProxy::rollback()
 {
 	return true;
 }
 
-void TestDataProxy::loadAllRecords()
+void TestHHDataProxy::loadAllRecords()
 {
 }

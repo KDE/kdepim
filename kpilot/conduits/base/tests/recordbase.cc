@@ -1,4 +1,4 @@
-/* hhrecord.h			KPilot
+/* recordbase.cc			KPilot
 **
 ** Copyright (C) 2007 by Bertjan Broeksema
 ** Copyright (C) 2007 by Jason "vanRijn" Kasper
@@ -25,32 +25,68 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
-#include "hhrecord.h"
-
+#include "recordbase.h"
 #include "options.h"
-#include "pilotRecord.h"
 
-HHRecord::HHRecord( PilotRecordBase *record )
+RecordBase::RecordBase( const QStringList& fields, const QString &id )
+	: fId( id ), fFields( fields ), fModified( false ), fDeleted( false )
 {
-	fRecord = record;
 }
 
-HHRecord::~HHRecord()
+void RecordBase::setDeleted()
 {
-	delete fRecord;
+	fDeleted = true;
 }
 
-bool HHRecord::isArchived() const
+void RecordBase::setModified()
 {
-	FUNCTIONSETUP;
+	fModified = true;
+}
+
+const QString RecordBase::id() const 
+{
+	return fId;
+}
 	
-	return fRecord->isArchived();
+void RecordBase::setId( const QString &id )
+{
+	fId = id;
 }
 
-void HHRecord::setArchived()
+QVariant RecordBase::value( const QString &field ) const
 {
-	FUNCTIONSETUP;
-	
-	fRecord->setDeleted();
-	fRecord->setArchived();
+	return fValues.value( field );
+}
+
+bool RecordBase::setValue( const QString &field, const QVariant &value )
+{
+	fValues.insert( field, value );
+	fModified = true;
+	return true;
+}
+
+bool RecordBase::isModified() const
+{
+	return fModified || isDeleted();
+}
+
+bool RecordBase::isDeleted() const
+{
+	return fDeleted;
+}
+
+void RecordBase::synced()
+{
+	fDeleted = false;
+	fModified = false;
+}
+
+QString RecordBase::toString() const
+{
+	return QString();
+}
+
+const QStringList RecordBase::fields() const
+{
+	return fFields;
 }

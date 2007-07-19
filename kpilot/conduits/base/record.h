@@ -39,103 +39,68 @@
  * in this class, contact the kpilot developers.
  */
 class KPILOT_EXPORT Record {
-protected:
-	/**
-	 * Record id
-	 */
-	QString fId;
-	
-	/**
-	 * The list of supported fields for this record.
-	 */
-	QStringList fFields;
-	
-	/**
-	 * Values for the fields.
-	 */
-	QMap<QString, QVariant> fFieldValues;
-	
-	/**
-	 * Indicator for dirtyness of this record.
-	 */
-	bool fModified;
-	
-	/**
-	 * Indicates wheter or not this record is deleted.
-	 */
-	bool fDeleted;
 	
 public:
-	Record( const QStringList& fields );
+	virtual ~Record() {};
 	
-	Record( const QStringList& fields, const QString &id );
-	
-	Record( const Record &other );
-	
-	virtual ~Record() {}
-	
-	const QString id() const;
+	virtual const QString id() const = 0;
 	
 	/**
 	 * Sets the id of this record to @p id;
 	 */
-	void setId( const QString &id );
+	virtual void setId( const QString &id ) = 0;
 
 	/**
 	 * Returns the value for @p field or an invalid QVariant if the field does not
 	 * exists.
 	 */
-	QVariant value( const QString &field ) const;
+	virtual QVariant value( const QString &field ) const = 0;
 
 	/**
 	 * Sets the value of @p field to @p value and returns true. Returns false if 
 	 * the field does not exists or if the value is not of an appropriate type for
 	 * the field. If this succeeds the record must return true for isModified().
 	 */
-	bool setValue( const QString &field, const QVariant &value );
+	virtual bool setValue( const QString &field, const QVariant &value ) = 0;
 
 	/**
-	 * Returns true if the record is modified and if it's marked as deleted.
+	 * Returns true if the record is modified and/or if it's marked as deleted.
 	 */
-	bool isModified() const;
-	
-	void setModified();
-	
-	void setDeleted();
+	virtual bool isModified() const = 0;
 	
 	/**
 	 * Returns true when this record is marked for deletion.
 	 */
-	bool isDeleted() const;
+	virtual bool isDeleted() const = 0;
 	
 	/**
 	 * Notify the record that syncing is finished so that it can reset flags.
 	 */
-	void synced();
+	virtual void synced() = 0;
 	
 	/**
 	 * Returns a string representation of the record.
 	 */
-	QString toString() const;
+	virtual QString toString() const = 0;
 	
 	/**
 	 * Returns the list of fields that this record has.
 	 */
-	const QStringList fields() const { return fFields; }
+	virtual const QStringList fields() const = 0;
+
+	/**
+	 * Returns a duplicate of this record.
+	 */
+	virtual Record* duplicate() const = 0;
 
 	/**
 	 * Compares the fields and the field values of this record with @p other.
 	 */
-	bool operator==( const Record &other ) const;
+	virtual bool operator==( const Record &other ) const = 0;
 	
-	bool operator!=( const Record &other ) const;
-
-protected:
 	/**
-	 * Virtual function which can be overloaded by the implementing record class
-	 * to check if the QVariant @p value contains a valid type/value for @p field.
-	 * Default implementation returns always true.
+	 * Compares the fields and the field values of this record with @p other.
 	 */
-	virtual bool isValid( const QString &field, const QVariant &value );
+	virtual bool operator!=( const Record &other ) const = 0;
 };
 #endif

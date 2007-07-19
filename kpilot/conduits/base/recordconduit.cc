@@ -32,6 +32,7 @@
 #include "idmapping.h"
 #include "cudcounter.h"
 #include "dataproxy.h"
+#include "hhdataproxy.h"
 #include "record.h"
 #include "hhrecord.h"
 
@@ -266,8 +267,9 @@ void RecordConduit::hotSync()
 	fHHDataProxy->resetIterator();
 	while( fHHDataProxy->hasNext() )
 	{
-		Record *hhRecord = fHHDataProxy->next();
-		Record *backupRecord = fBackupDataProxy->find( hhRecord->id() );
+		HHRecord *hhRecord = static_cast<HHRecord*>( fHHDataProxy->next() );
+		HHRecord *backupRecord = static_cast<HHRecord*>( 
+			fBackupDataProxy->find( hhRecord->id() ) );
 		Record *pcRecord = 0L;
 		
 		QString pcRecordId = fMapping->pcRecordId( hhRecord->id() );
@@ -288,23 +290,23 @@ void RecordConduit::hotSync()
 	while( fPCDataProxy->hasNext() )
 	{
 		Record *pcRecord = fPCDataProxy->next();
-		Record *backupRecord = 0L;
-		Record *hhRecord = 0L;
+		HHRecord *backupRecord = 0L;
+		HHRecord *hhRecord = 0L;
 		
 		QString hhRecordId = fMapping->hhRecordId( pcRecord->id() );
 		
 		if( !hhRecordId.isNull() ) {
 			// There is a mapping.
-			backupRecord = fBackupDataProxy->find( hhRecordId );
-			hhRecord = fHHDataProxy->find( hhRecordId );
+			backupRecord = static_cast<HHRecord*>( fBackupDataProxy->find( hhRecordId ) );
+			hhRecord = static_cast<HHRecord*>( fHHDataProxy->find( hhRecordId ) );
 		}
 		
 		syncRecords( pcRecord, backupRecord, hhRecord );
 	}
 }
 
-void RecordConduit::syncRecords( Record *pcRecord, Record *backupRecord,
-	Record *hhRecord )
+void RecordConduit::syncRecords( Record *pcRecord, HHRecord *backupRecord,
+	HHRecord *hhRecord )
 {
 	FUNCTIONSETUP;
 	
@@ -374,7 +376,7 @@ void RecordConduit::syncRecords( Record *pcRecord, Record *backupRecord,
 		// assigned to the record. So on commit the proxy should get the mapping
 		// so that it can change the mapping.
 		DEBUGKPILOT << fname << ": Case 6.5.2 and 6.5.8" << endl;
-		pcRecord = new Record( *hhRecord );
+		pcRecord = createPCRecord( hhRecord );
 		QString id = fPCDataProxy->create( pcRecord );
 		fMapping->map( hhRecord->id(), id );
 		
@@ -393,7 +395,7 @@ void RecordConduit::syncRecords( Record *pcRecord, Record *backupRecord,
 		{
 			// Case: 6.5.5 or 6.5.8
 			DEBUGKPILOT << fname << ": Case 6.5.5 or 6.5.8" << endl;
-			hhRecord = new Record( *pcRecord );
+			hhRecord = createHHRecord( pcRecord );
 			QString id = fHHDataProxy->create( hhRecord );
 			fMapping->map( id, pcRecord->id() );
 			
@@ -464,7 +466,7 @@ bool RecordConduit::syncFields( Record *from, Record *to )
 	return true;
 }
 
-void RecordConduit::syncConflictedRecords( Record *pcRecord, Record *hhRecord
+void RecordConduit::syncConflictedRecords( Record *pcRecord, HHRecord *hhRecord
 	, bool pcOverides )
 {
 	FUNCTIONSETUP;
@@ -501,11 +503,11 @@ void RecordConduit::syncConflictedRecords( Record *pcRecord, Record *hhRecord
 	}
 }
 
-void RecordConduit::deleteRecords( Record *pcRecord, Record *hhRecord )
+void RecordConduit::deleteRecords( Record *pcRecord, HHRecord *hhRecord )
 {
 	fHHDataProxy->remove( hhRecord->id() );
 	
-	if( !static_cast<HHRecord*>( hhRecord )->isArchived() )
+	if( !hhRecord->isArchived() )
 	{
 		fPCDataProxy->remove( pcRecord->id() );
 		fMapping->removePCId( pcRecord->id() );
@@ -516,7 +518,7 @@ void RecordConduit::deleteRecords( Record *pcRecord, Record *hhRecord )
 	}
 }
 
-void RecordConduit::solveConflict( Record *pcRecord, Record *hhRecord )
+void RecordConduit::solveConflict( Record *pcRecord, HHRecord *hhRecord )
 {
 	FUNCTIONSETUP;
 	
@@ -585,12 +587,12 @@ void RecordConduit::solveConflict( Record *pcRecord, Record *hhRecord )
 		 */
 		fMapping->removePCId( pcRecord->id() );
 		
-		Record *rec = new Record( *pcRecord );
-		QString id = fHHDataProxy->create( rec );
+		HHRecord *hhRec = createHHRecord( pcRecord );
+		QString id = fHHDataProxy->create( hhRec );
 		fMapping->map( id, pcRecord->id() );
 		
-		rec = new Record( *hhRecord );
-		id = fPCDataProxy->create( rec );
+		Record *pcRec = createPCRecord( hhRecord );
+		id = fPCDataProxy->create( pcRec );
 		fMapping->map( id, pcRecord->id() );
 	}
 	else if( res == ePreviousSyncOverrides )

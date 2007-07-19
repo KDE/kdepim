@@ -1,6 +1,6 @@
-#ifndef HHRECORD_H
-#define HHRECORD_H
-/* hhrecord.h			KPilot
+#ifndef RECORDBASE_H
+#define RECORDBASE_H
+/* testrecord.h			KPilot
 **
 ** Copyright (C) 2007 by Bertjan Broeksema
 ** Copyright (C) 2007 by Jason "vanRijn" Kasper
@@ -31,23 +31,48 @@
 
 #include "record.h"
 
-class PilotRecordBase;
+class KPILOT_EXPORT RecordBase : virtual Record {
 
-class KPILOT_EXPORT HHRecord : public Record {
+private:
+	QString fId;
+	QStringList fFields;
+	bool fModified;
+	bool fDeleted;
+	QMap<QString, QVariant> fValues;
 
-protected:
-	PilotRecordBase *fRecord;
-	
 public:
-	HHRecord( PilotRecordBase *record );
+	RecordBase( const QStringList& fields, const QString &id );
+	
+	virtual ~RecordBase() {};
+	
+	/** METHODS FOR TESTPURPOSES **/
+	
+	virtual void setModified();
+	
+	virtual void setDeleted();
+	
+	/** IMPLEMTED VIRTUAL FUNCTIONS FROM BASECLASS **/
+	
+	virtual const QString id() const;
+	
+	virtual void setId( const QString &id );
 
-	virtual ~HHRecord();
-	
-	virtual bool isArchived() const;
-	
-	/**
-	 * Marks the record for deletion and for archiving.
-	 */
-	virtual void setArchived();
+	virtual QVariant value( const QString &field ) const;
+
+	virtual bool setValue( const QString &field, const QVariant &value );
+
+	virtual bool isModified() const;
+
+	virtual bool isDeleted() const;
+
+	virtual void synced();
+
+	virtual QString toString() const;
+
+	virtual const QStringList fields() const;
+
+	//virtual bool operator==( const Record &other ) const;
+
+	//virtual bool operator!=( const Record &other ) const;
 };
 #endif
