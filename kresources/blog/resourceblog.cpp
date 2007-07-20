@@ -67,6 +67,7 @@ ResourceBlog::~ResourceBlog()
   delete mLock;
 
   //FIXME: Delete contents of mJournalList
+  //kDebug() << mJournalsMap << endl;
   //qDeleteAll( mJournalsMap );
   mJournalsMap.clear();
 }
@@ -228,7 +229,6 @@ bool ResourceBlog::doLoad( bool fullReload )
         mAPI->setDownloadCount( 100 );
       }
 
-      kDebug( 5800 ) << "Downloading blog posts from: " << mUrl << endl;
       mAPI->setBlogId( mBlogID );
       connect ( mAPI, SIGNAL( listedPosting( KBlog::BlogPosting & ) ),
                 this, SLOT( slotListedPosting( KBlog::BlogPosting & ) ) );

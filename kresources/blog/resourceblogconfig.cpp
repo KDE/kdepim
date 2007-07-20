@@ -31,7 +31,6 @@
 
 #include <kcal/resourcecachedconfig.h>
 
-#include "resourceblog.h"
 #include "resourceblogconfig.h"
 
 using namespace KCal;
@@ -71,9 +70,9 @@ KCAL_RESOURCEBLOG_EXPORT ResourceBlogConfig::ResourceBlogConfig
   mainLayout->addWidget( label, 4, 0 );
   mainLayout->addWidget( mAPI, 4, 1 );
 
-  //FIXME: Disable on use of MetaWeblog
   label = new QLabel( i18n( "Blog:" ), this );
   mBlogs = new KComboBox( false, this );
+  mBlogs->setEnabled( false );
 
   mainLayout->addWidget( label, 5, 0 );
   mainLayout->addWidget( mBlogs, 5, 1 );
@@ -87,10 +86,6 @@ void ResourceBlogConfig::loadSettings( KRES::Resource *res )
 {
   ResourceBlog *resource = static_cast<ResourceBlog *>( res );
   if ( resource ) {
-    connect ( resource, SIGNAL( signalBlogInfoRetrieved( const QString &,
-                                                         const QString & ) ),
-              this, SLOT( slotBlogInfoRetrieved( const QString &, const QString & ) ) );
-    resource->fetchBlogs();
     mUrl->setUrl( resource->url().url() );
     mUser->setText( resource->user() );
     mPassword->setText( resource->password() );
@@ -98,7 +93,10 @@ void ResourceBlogConfig::loadSettings( KRES::Resource *res )
     QPair<QString, QString> blog = resource->blog();
     if ( !blog.second.isEmpty() ) {
       mBlogs->addItem( blog.second, blog.first );
+      mBlogs->setEnabled( true );
     }
+    connect ( mAPI, SIGNAL( currentIndexChanged( int ) ),
+        this, SLOT( slotBlogAPIChanged( int ) ) );
     mReloadConfig->loadSettings( resource );
     kDebug( 5700 ) << "ResourceBlogConfig::loadSettings(): reloaded" << endl;
   } else {
@@ -111,6 +109,7 @@ void ResourceBlogConfig::saveSettings( KRES::Resource *res )
 {
   ResourceBlog *resource = static_cast<ResourceBlog*>( res );
   if ( resource ) {
+    mResource = resource;
     resource->setUrl( mUrl->url().url() );
     resource->setUser( mUser->text() );
     resource->setPassword( mPassword->text() );
@@ -134,7 +133,24 @@ void ResourceBlogConfig::slotBlogInfoRetrieved( const QString &id,
       ", name=" << name << endl;
   if ( !mBlogs->contains( name ) ) {
     mBlogs->addItem( name );
+    mBlogs->setEnabled( true );
   }
+}
+
+void ResourceBlogConfig::slotBlogAPIChanged( int index )
+{
+  kDebug( 5700 ) << "ResourceBlogConfig::slotBlogAPIChanged" << endl;
+#if 0
+  if ( !mBlogs->count() && mResource ) {
+    mResource->setUrl( KUrl("http://soctest.wordpress.com/xmlrpc.php") );
+    mResource->setUser( mUser->text() );
+    mResource->setPassword( mPassword->text() );
+    mResource->setAPI( mResource->QStringToAPIType( mAPI->itemText( index ) ) );
+    connect ( mResource, SIGNAL( signalBlogInfoRetrieved( const QString &, const QString & ) ),
+              this, SLOT( slotBlogInfoRetrieved( const QString &, const QString & ) ) );
+    mResource->fetchBlogs();
+  }
+#endif
 }
 
 #include "resourceblogconfig.moc"

@@ -25,6 +25,8 @@
 #include <kresources/configwidget.h>
 #include "blog_export.h"
 
+#include "resourceblog.h"
+
 class KUrlRequester;
 class KLineEdit;
 class KComboBox;
@@ -73,6 +75,13 @@ class ResourceBlogConfig : public KRES::ConfigWidget
     */
     void slotBlogInfoRetrieved( const QString &id, const QString &name );
 
+    /**
+      Performs operations on an API change.
+
+      @param index The index of the new API selected.
+    */
+    void slotBlogAPIChanged( int index );
+
   private:
     /**
       Used to enter the URL used for XML-RPC access to the blog.
@@ -103,6 +112,11 @@ class ResourceBlogConfig : public KRES::ConfigWidget
       A widget to configure the cache reload options.
     */
     ResourceCachedReloadConfig *mReloadConfig;
+
+    /**
+      The blog resource.
+    */
+    ResourceBlog *mResource;
 };
 
 }
