@@ -79,7 +79,7 @@ void HHDataProxy::commitUpdate( Record *rec )
 	}
 }
 
-void HHDataProxy::undoCommitCreate( Record *rec )
+void HHDataProxy::commitDelete( Record *rec )
 {
 	FUNCTIONSETUP;
 	

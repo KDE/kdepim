@@ -77,6 +77,7 @@ void DataProxy::remove( const QString &id )
 	
 	// Update rollback/volatility information.
 	fDeletedRecords.insert( rec->id(), rec );
+	fDeleted.insert( rec->id(), false );
 	fCounter.deleted();
 }
 
@@ -200,7 +201,8 @@ bool DataProxy::commit()
 	// Commit created records.
 	QStringListIterator it( fCreated.keys() );
 	
-	while( it.hasNext() ) {
+	while( it.hasNext() )
+	{
 		QString id = it.next();
 		
 		Record *rec = find( id );
@@ -250,8 +252,20 @@ bool DataProxy::commit()
 			fUpdated.insert( rec->id(), true );
 		}
 	}
-
-	//QList<Record*> fDeleted;
+	
+	// Commit deleted records
+	i = QListIterator<Record*>( fDeletedRecords.values() );
+	while( i.hasNext() )
+	{
+		Record *oldRec = i.next();
+		
+		if( !fDeleted.value( oldRec->id() ) )
+		{
+			DEBUGKPILOT << fname << ": deleting record " << oldRec->id() << endl;
+			commitDelete( oldRec );
+			fDeleted.insert( oldRec->id(), true );
+		}
+	}
 	
 	return true;
 }
@@ -273,7 +287,9 @@ bool DataProxy::rollback()
 		Record *rec = find( id );
 		if( rec && fCreated.value( id ) )
 		{
-			undoCommitCreate( rec );
+			DEBUGKPILOT << fname << ": deleting created record " << rec->id() << endl;
+			
+			commitDelete( rec );
 			fCreated.insert( rec->id(), false );
 		}
 	}
@@ -285,11 +301,43 @@ bool DataProxy::rollback()
 		Record *oldRec = i.next();
 		if( fUpdated.value( oldRec->id() ) )
 		{
+			DEBUGKPILOT << fname << ": restoring changed record " << oldRec->id() << endl;
+			
+			QString oldId = oldRec->id();
 			commitUpdate( oldRec );
+			
+			// Id might have changed
+			if( oldRec->id() != oldId )
+			{
+				fUpdated.remove( oldId );	
+			}
+			
 			fUpdated.insert( oldRec->id(), false );
 		}
 	}
 	
+	// Restore deleted records.
+	i = QListIterator<Record*>( fDeletedRecords.values() );
+	while( i.hasNext() )
+	{
+		Record *oldRec = i.next();
+		
+		if( fDeleted.value( oldRec->id() ) )
+		{
+			DEBUGKPILOT << fname << ": restoring deleted record " << oldRec->id() << endl;
+		
+			QString oldId = oldRec->id();
+			commitCreate( oldRec );
+			
+			// Id might have changed
+			if( oldRec->id() != oldId )
+			{
+				fDeleted.remove( oldId );	
+			}
+			
+			fDeleted.insert( oldRec->id(), false );
+		}
+	}
 	
 	return true;
 }

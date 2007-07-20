@@ -60,6 +60,7 @@ private slots:
 	void testIterationModeModified();
 	void testCommitCreated();
 	void testCommitUpdated();
+	void testCommitDeleted();
 };
 
 DataProxyTest::DataProxyTest()
@@ -289,7 +290,7 @@ void DataProxyTest::testCommitCreated()
 	
 	fProxy.rollback();
 	
-	QVERIFY( fProxy.createCount() == 0 );
+	QVERIFY( fProxy.deleteCount() == 3 );
 	QVERIFY( !fProxy.created().value( CSL1( "1" ) ) );
 	QVERIFY( !fProxy.created().value( CSL1( "2" ) ) );
 	QVERIFY( !fProxy.created().value( CSL1( "3" ) ) );
@@ -346,6 +347,40 @@ void DataProxyTest::testCommitUpdated()
 	QVERIFY( *fProxy.updatedRecords()->value( rec4->id() ) != *rec4 );
 }
 
+void DataProxyTest::testCommitDeleted()
+{
+	TestDataProxy fProxy;
+	
+	Record *rec1 = new TestRecord( fFields );
+	rec1->setId( CSL1( "1" ) );
+	rec1->setValue( CSL1( "f1" ), CSL1( "A test value" ) );
+	rec1->setValue( CSL1( "f2" ), CSL1( "Another test value" ) );
+	rec1->synced();
+	
+	Record *rec2 = new TestRecord( fFields );
+	rec2->setId( CSL1( "2" ) );
+	rec2->setValue( CSL1( "f1" ), CSL1( "And more test value" ) );
+	rec2->setValue( CSL1( "f2" ), CSL1( "Yet another one" ) );
+	rec2->synced();
+	
+	// Add records to proxy as if they where there already.
+	fProxy.records()->insert( rec1->id(), rec1 );
+	fProxy.records()->insert( rec2->id(), rec2 );
+	
+	// Now update the records.
+	fProxy.remove( rec1->id() );
+	fProxy.remove( rec2->id() );
+	fProxy.commit();
+	
+	QVERIFY( fProxy.deleteCount() == 2 );
+	QVERIFY( *fProxy.deletedRecords()->value( rec1->id() ) == *rec1 );
+	QVERIFY( *fProxy.deletedRecords()->value( rec2->id() ) == *rec2 );
+	
+	fProxy.rollback();
+	
+	QVERIFY( fProxy.createCount() == 2 );
+	QVERIFY( fProxy.deletedRecords()->size() == 0 );
+}
 QTEST_KDEMAIN(DataProxyTest, NoGUI)
 
 #include "dataproxytest.moc"

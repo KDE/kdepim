@@ -152,9 +152,9 @@ protected: // Functions
 	virtual void commitUpdate( Record *rec ) = 0;
 	
 	/**
-	 * Undo the commit of created record @p rec to the datastore.
+	 * Delete record @p rec from the datastore.
 	 */
-	virtual void undoCommitCreate( Record *rec ) = 0;
+	virtual void commitDelete( Record *rec ) = 0;
 
 protected: // Members
 	Mode fMode;
@@ -184,6 +184,12 @@ protected: // Members
 	 * Deleted records;
 	 */
 	QMap<QString, Record*> fDeletedRecords;
+	
+	/**
+	 * Id's from deleted records. The bool indicates wheter or not the records
+	 * are deleted from the data store.
+	 */
+	QMap<QString, bool> fDeleted;
 
 private:
 	int fLastId;

@@ -33,7 +33,9 @@ class KPILOT_EXPORT TestDataProxy : public DataProxy {
 private:
 	int fCreateCount;
 	int fUpdateCount;
+	int fDeleteCount;
 	QMap<QString, Record*> fUpdatedRecord;
+	QMap<QString, Record*> fDeletedRecord;
 	
 public:
 	TestDataProxy();
@@ -50,11 +52,15 @@ public:
 	
 	int updateCount() { return fUpdateCount; }
 	
+	int deleteCount() { return fDeleteCount; }
+	
 	QMap<QString, bool> created() { return fCreated; }
 
 	QMap<QString, Record*>* records() { return &fRecords; }
 	
 	QMap<QString, Record*>* updatedRecords() { return &fUpdatedRecord; }
+	
+	QMap<QString, Record*>* deletedRecords() { return &fDeletedRecord; }
 	
 	virtual void printRecords();
 
@@ -68,7 +74,7 @@ public:
 	
 	virtual void commitCreate( Record *rec );
 	
-	virtual void undoCommitCreate( Record *rec );
+	virtual void commitDelete( Record *rec );
 	
 	virtual void commitUpdate( Record *rec );
 };

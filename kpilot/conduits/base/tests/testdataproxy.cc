@@ -32,10 +32,10 @@
 
 #include "options.h"
 
-TestDataProxy::TestDataProxy() : fCreateCount(0), fUpdateCount(0) {}
+TestDataProxy::TestDataProxy() : fCreateCount(0), fUpdateCount(0), fDeleteCount(0) {}
 
 TestDataProxy::TestDataProxy( int count, const QString &idPref, bool isHandheldProxy )
-	: fCreateCount(0), fUpdateCount(0)
+	: fCreateCount(0), fUpdateCount(0), fDeleteCount(0)
 {
 	QStringList fields;
 	fields << CSL1( "f1" ) << CSL1( "f2" );
@@ -91,12 +91,15 @@ void TestDataProxy::commitCreate( Record *rec )
 {
 	Q_UNUSED( rec );
 	fCreateCount += 1;
+	
+	// This is for the delete test.
+	fDeletedRecord.remove( rec->id() );
 }
 	
-void TestDataProxy::undoCommitCreate( Record *rec )
+void TestDataProxy::commitDelete( Record *rec )
 {
-	Q_UNUSED( rec );
-	fCreateCount -= 1;
+	fDeleteCount += 1;
+	fDeletedRecord.insert( rec->id(), rec );
 }
 
 void TestDataProxy::commitUpdate( Record *rec )

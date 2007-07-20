@@ -71,7 +71,7 @@ protected:
 	/**
 	 * Undo the commit of created record @p rec to the datastore.
 	 */
-	virtual void undoCommitCreate( Record *rec );
+	virtual void commitDelete( Record *rec );
 
 protected:
 	PilotDatabase *fDatabase;
