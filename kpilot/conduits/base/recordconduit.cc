@@ -24,9 +24,6 @@
 /*
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
-#include <KMessageBox>
-
-#include "options.h"
 
 #include "recordconduit.h"
 #include "idmapping.h"
@@ -35,8 +32,11 @@
 #include "hhdataproxy.h"
 #include "record.h"
 #include "hhrecord.h"
-
 #include "recordconduitSettings.h"
+
+#include "options.h"
+
+#include <KMessageBox>
 
 RecordConduit::RecordConduit( KPilotLink *o, const QStringList &a
 	, const QString &databaseName, const QString &conduitName ) :
@@ -229,7 +229,7 @@ bool RecordConduit::checkVolatility()
 		DEBUGKPILOT << fname << ": high volatility."
 			<< " Check with user: [" << query << "]." << endl;
 		
-		rc = questionYesNo( query, caption, QString::null, 0 );
+		rc = questionYesNo( query, caption, QString(), 0 );
 	}
 	
 	if (pcVolatility > allowedVolatility)
@@ -243,7 +243,7 @@ bool RecordConduit::checkVolatility()
 		DEBUGKPILOT << fname << ": high volatility."
 			<< "  Check with user: [" << query << "]." << endl;
 		
-		rc = questionYesNo( query, caption, QString::null, 0 );
+		rc = questionYesNo( query, caption, QString(), 0 );
 	}
 	
 	// Allow the changes
@@ -556,7 +556,7 @@ void RecordConduit::solveConflict( Record *pcRecord, HHRecord *hhRecord )
 		if( KMessageBox::No == questionYesNo(
 			query,
 			i18n( "Conflicting Entries" ),
-			QString::null,
+			QString(),
 			0 /* Never timeout */,
 			i18n( "Handheld" ), i18n( "PC" )) )
 		{

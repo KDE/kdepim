@@ -300,7 +300,7 @@ static inline bool checkBackupDirectory( const QString &backupDir )
 		return false;
 	}
 
-	if ( !backupDir.endsWith("/") )
+	if ( !backupDir.endsWith('/') )
 	{
 		WARNINGKPILOT << "Backup dir does not end with a / "
 			<< endl;

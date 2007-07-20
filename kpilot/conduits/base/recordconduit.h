@@ -93,7 +93,7 @@ protected:
 	bool checkVolatility();
 	
 	/**
-	 * Synchronizes the three records. If one of the parameters is 0L we asume 
+	 * Synchronizes the three records. If one of the parameters is 0L we assume 
 	 * that either the record does not exist (and needs to be created), or it is
 	 * deleted and should be deleted on the other side.
 	 */

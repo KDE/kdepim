@@ -77,7 +77,7 @@ public:
 	const CUDCounter* counter() const;
 
 	/**
-	 * Notifies the proxy that the synchronisation is finished and that
+	 * Notifies the proxy that the synchronization is finished and that
 	 * no modifications will be done after this.
 	 */
 	void syncFinished();

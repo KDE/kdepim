@@ -82,4 +82,4 @@ private:
 	QString fLastSyncedPC;
 };
 
-#endif
+#endif /*IDMAPPERXMLSOURCE_H */

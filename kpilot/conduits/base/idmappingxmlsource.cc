@@ -188,7 +188,7 @@ bool IDMappingXmlSource::rollback()
 {
 	FUNCTIONSETUP;
 	
-	QFile backup( fPath + "~" );
+	QFile backup( fPath + '~' );
 	
 	if( !backup.exists() )
 	{

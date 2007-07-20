@@ -25,11 +25,10 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
-#include "options.h"
-
 #include "dataproxy.h"
-
 #include "record.h"
+
+#include "options.h"
 
 DataProxy::DataProxy() : fIterator( fRecords )
 {
@@ -196,8 +195,6 @@ bool DataProxy::commit()
 {
 	FUNCTIONSETUP;
 	
-	#warning not completly implemented, needs tests.
-	
 	// Commit created records.
 	QStringListIterator it( fCreated.keys() );
 	
@@ -273,8 +270,6 @@ bool DataProxy::commit()
 bool DataProxy::rollback()
 {
 	FUNCTIONSETUP;
-	
-	#warning not completly implemented, needs tests.
 	
 	// Delete committed new records.
 	QStringListIterator it( fCreated.keys() );

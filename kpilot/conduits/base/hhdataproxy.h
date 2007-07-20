@@ -40,7 +40,7 @@ public:
 	void resetSyncFlags();
 	
 	/**
-	 * Returns wheter or not the pilot database is opened.
+	 * Returns whether or not the pilot database is opened.
 	 */
 	virtual bool isOpen() const;
 
