@@ -530,7 +530,7 @@ bool ResourceKolab::addIncidence( KCal::Incidence* incidence, const QString& _su
       if ( !incidence->location().isEmpty() )
         text += i18n( "<b>Location:</b> %1" ).arg( incidence->location() );
       text += "<br>";
-      if ( !incidence->recurrence()->doesFloat() )
+      if ( !incidence->recurrence()->floats() )
         text += i18n( "<b>Start:</b> %1, %2" )
                 .arg( incidence->dtStartDateStr(), incidence->dtStartTimeStr() );
       else
@@ -539,7 +539,7 @@ bool ResourceKolab::addIncidence( KCal::Incidence* incidence, const QString& _su
       if ( incidence->type() == "Event" ) {
         Event* event = static_cast<Event*>( incidence );
         if ( event->hasEndDate() )
-          if ( !event->recurrence()->doesFloat() )
+          if ( !event->recurrence()->floats() )
             text += i18n( "<b>End:</b> %1, %2" )
                     .arg( event->dtEndDateStr(), event->dtEndTimeStr() );
           else

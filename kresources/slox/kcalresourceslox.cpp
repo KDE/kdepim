@@ -313,7 +313,7 @@ void KCalResourceSlox::uploadIncidences()
   // Don't try to upload recurring incidences as long as the resource doesn't
   // correctly write them in order to avoid corrupting data on the server.
   // FIXME: Remove when recurrences are correctly written.
-  if ( mUploadedIncidence->doesRecur() && type() == "slox" ) {
+  if ( mUploadedIncidence->recurs() && type() == "slox" ) {
     clearChange( mUploadedIncidence );
     uploadIncidences();
     return;
@@ -511,7 +511,7 @@ void KCalResourceSlox::createRecurrenceAttributes( QDomDocument &doc,
                                                    QDomElement &parent,
                                                    KCal::Incidence *incidence )
 {
-  if ( !incidence->doesRecur() ) {
+  if ( !incidence->recurs() ) {
     WebdavHandler::addSloxElement( this, doc, parent, fieldName( RecurrenceType ),
                                    type() == "ox" ? "none" : "no" );
     return;

@@ -642,7 +642,7 @@ void Incidence::setFields( const KCal::Incidence* incidence )
     mAttachments.push_back( a );
   }
 
-  if ( incidence->doesRecur() ) {
+  if ( incidence->recurs() ) {
     setRecurrence( incidence->recurrence() );
     mRecurrence.exclusions = incidence->recurrence()->exDates();
   }

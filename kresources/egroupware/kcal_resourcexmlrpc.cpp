@@ -973,7 +973,7 @@ void ResourceXMLRPC::writeEvent( Event *event, QMap<QString, QVariant> &args )
 
   // RECURRENCE
   Recurrence *rec = event->recurrence();
-  if ( !rec->doesRecur() ) {
+  if ( !rec->recurs() ) {
     args.insert( "recur_type", int( 0 ) );
     args.insert( "recur_interval", int( 0 ) );
     args.insert( "recur_enddate", QDateTime() );
