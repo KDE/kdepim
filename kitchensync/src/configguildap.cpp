@@ -37,13 +37,9 @@ ConfigGuiLdap::ConfigGuiLdap( const QSync::Member &member, QWidget *parent )
 {
   initGUI();
 
-  bindModeChanged( false );
-
   mSearchScope->insertItem( i18n( "Base" ) );
   mSearchScope->insertItem( i18n( "One" ) );
   mSearchScope->insertItem( i18n( "Sub" ) );
-
-  mAuthMech->insertItem( i18n( "Simple" ) );
 }
 
 void ConfigGuiLdap::load( const QString &xml )
@@ -55,43 +51,36 @@ void ConfigGuiLdap::load( const QString &xml )
   for( node = docElement.firstChild(); !node.isNull(); node = node.nextSibling() ) {
     QDomElement element = node.toElement();
     if ( element.tagName() == "servername" ) {
-      mServerName->setText( element.text() );
+      mLdapWidget->setHost( element.text() );
     } else if ( element.tagName() == "serverport" ) {
-      mPort->setValue( element.text().toInt() );
+      mLdapWidget->setPort( element.text().toInt() );
     } else if ( element.tagName() == "binddn" ) {
-      mBindDn->setText( element.text() );
+      mLdapWidget->setBindDN( element.text() );
     } else if ( element.tagName() == "password" ) {
-      mPassword->setText( element.text() );
-    } else if ( element.tagName() == "anonymous" ) {
-      mAnonymousBind->setChecked( element.text().toInt() == 1 );
+      mLdapWidget->setPassword( element.text() );
+    } else if ( element.tagName() == "anonymous" ) { 
+        mLdapWidget->setAuthAnon( element.text().toInt() == 1 );
     } else if ( element.tagName() == "searchbase" ) {
-      mSearchBase->setText( element.text() );
+      mLdapWidget->setDn( element.text() );
     } else if ( element.tagName() == "searchfilter" ) {
-      mSearchFilter->setText( element.text() );
+      mLdapWidget->setFilter( element.text() );
     } else if ( element.tagName() == "storebase" ) {
-      mStoreBase->setText( element.text() );
+      mLdapWidget->setDn( element.text() );
     } else if ( element.tagName() == "keyattr" ) {
       mKeyAttribute->setText( element.text() );
     } else if ( element.tagName() == "scope" ) {
       QStringList list;
       list << "base" << "one" << "sub";
-
       for ( uint i = 0; i < list.count(); ++i )
         if ( list[ i ] == element.text() )
           mSearchScope->setCurrentItem( i );
 
     } else if ( element.tagName() == "authmech" ) {
-      QStringList list;
-      list << "SIMPLE";
-
-      for ( uint i = 0; i < list.count(); ++i )
-        if ( list[ i ] == element.text() )
-          mAuthMech->setCurrentItem( i );
-
+      if ( element.text() == "SIMPLE" ) {
+        mLdapWidget->setAuthSimple( true );
+      }
     } else if ( element.tagName() == "encryption" ) {
-      mEncryption->setChecked( element.text().toInt() == 1 );
-    } else if ( element.tagName() == "encryption" ) {
-      mEncryption->setChecked( element.text().toInt() == 1 );
+        mEncryption->setChecked( element.text().toInt() == 1 );
     } else if ( element.tagName() == "ldap_read" ) {
       mReadLdap->setChecked( element.text().toInt() == 1 );
     } else if ( element.tagName() == "ldap_write" ) {
@@ -100,46 +89,34 @@ void ConfigGuiLdap::load( const QString &xml )
   }
 }
 
-QString ConfigGuiLdap::save() const
+QString ConfigGuiLdap::save()
 {
-  QString config = "<config>";
+  QString config = "<config>\n";
 
-  config += QString( "<servername>%1</servername>" ).arg( mServerName->text() );
-  config += QString( "<serverport>%1</serverport>" ).arg( mPort->value() );
-  config += QString( "<binddn>%1</binddn>" ).arg( mBindDn->text() );
-  config += QString( "<password>%1</password>" ).arg( mPassword->text() );
-  config += QString( "<anonymous>%1</anonymous>" ).arg( mAnonymousBind->isChecked() ? "1" : "0" );
-  config += QString( "<searchbase>%1</searchbase>" ).arg( mSearchBase->text() );
-  config += QString( "<searchfilter>%1</searchfilter>" ).arg( mSearchFilter->text() );
-  config += QString( "<storebase>%1</storebase>" ).arg( mStoreBase->text() );
-  config += QString( "<keyattr>%1</keyattr>" ).arg( mKeyAttribute->text() );
+  config += QString( "<servername>%1</servername>\n" ).arg( mLdapWidget->host() );
+  config += QString( "<serverport>%1</serverport>\n" ).arg( mLdapWidget->port() );
+  config += QString( "<binddn>%1</binddn>\n" ).arg( mLdapWidget->bindDN() );
+  config += QString( "<password>%1</password>\n" ).arg( mLdapWidget->password() );
+  config += QString( "<anonymous>%1</anonymous>\n" ).arg( mLdapWidget->isAuthAnon() ? "1" : "0" );
+  config += QString( "<searchbase>%1</searchbase>\n" ).arg( mLdapWidget->dn() );
+  config += QString( "<searchfilter>%1</searchfilter>\n" ).arg( mLdapWidget->filter() );
+  config += QString( "<storebase>%1</storebase>\n" ).arg( mLdapWidget->dn() );
+  config += QString( "<keyattr>%1</keyattr>\n" ).arg( mKeyAttribute->text() );
 
   QStringList scopes;
   scopes << "base" << "one" << "sub";
 
-  config += QString( "<scope>%1</scope>" ).arg( scopes[ mSearchScope->currentItem() ] );
+  config += QString( "<scope>%1</scope>\n" ).arg( scopes[ mSearchScope->currentItem() ] );
 
-  QStringList authMechs;
-  authMechs << "SIMPLE";
+  config += QString( "<authmech>SIMPLE</authmech>\n" );
+  config += QString( "<encryption>%1</encryption>\n" ).arg( mEncryption->isChecked() ? "1" : "0" );
 
-  config += QString( "<authmech>%1</authmech>" ).arg( authMechs[ mAuthMech->currentItem() ] );
-  config += QString( "<encryption>%1</encryption>" ).arg( mEncryption->isChecked() ? "1" : "0" );
-
-  config += QString( "<ldap_read>%1</ldap_read>" ).arg( mReadLdap->isChecked() ? "1" : "0" );
-  config += QString( "<ldap_write>%1</ldap_write>" ).arg( mWriteLdap->isChecked() ? "1" : "0" );
+  config += QString( "<ldap_read>%1</ldap_read>\n" ).arg( mReadLdap->isChecked() ? "1" : "0" );
+  config += QString( "<ldap_write>%1</ldap_write>\n" ).arg( mWriteLdap->isChecked() ? "1" : "0" );
 
   config += "</config>";
 
   return config;
-}
-
-void ConfigGuiLdap::bindModeChanged( bool checked )
-{
-  mBindLabel->setEnabled( !checked );
-  mBindDn->setEnabled( !checked );
-
-  mPasswordLabel->setEnabled( !checked );
-  mPassword->setEnabled( !checked );
 }
 
 void ConfigGuiLdap::initGUI()
@@ -147,63 +124,30 @@ void ConfigGuiLdap::initGUI()
   QGridLayout *layout = new QGridLayout( topLayout(), 12, 4, KDialog::spacingHint() );
   layout->setMargin( KDialog::marginHint() );
 
-  layout->addWidget( new QLabel( i18n( "Server:" ), this ), 0, 0 );
-  mServerName = new KLineEdit( this );
-  layout->addWidget( mServerName, 0, 1 );
+  mLdapWidget = new KABC::LdapConfigWidget( KABC::LdapConfigWidget::W_HOST |
+                                            KABC::LdapConfigWidget::W_PORT |
+                                            KABC::LdapConfigWidget::W_USER |
+                                            KABC::LdapConfigWidget::W_PASS |
+                                            KABC::LdapConfigWidget::W_BINDDN |
+                                            KABC::LdapConfigWidget::W_DN |
+                                            KABC::LdapConfigWidget::W_FILTER |
+                                            KABC::LdapConfigWidget::W_AUTHBOX, this );
 
-  layout->addWidget( new QLabel( i18n( "Port:" ), this ), 0, 2, Qt::AlignRight );
-  mPort = new QSpinBox( 1, 65536, 1, this );
-  layout->addWidget( mPort, 0, 3 );
-
-  mAnonymousBind = new QCheckBox( i18n( "Use anonymous bind" ), this );
-  layout->addMultiCellWidget( mAnonymousBind, 1, 1, 0, 1 );
-
-  connect( mAnonymousBind, SIGNAL( toggled( bool ) ),
-           this, SLOT( bindModeChanged( bool ) ) );
-
-  mBindLabel = new QLabel( i18n( "Bind Dn:" ), this );
-  layout->addWidget( mBindLabel, 2, 0 );
-  mBindDn = new KLineEdit( this );
-  layout->addMultiCellWidget( mBindDn, 2, 2, 1, 3 );
-
-  mPasswordLabel = new QLabel( i18n( "Password:" ), this );
-  layout->addWidget( mPasswordLabel, 3, 0 );
-  mPassword = new KLineEdit( this );
-  mPassword->setEchoMode( QLineEdit::Password );
-  layout->addMultiCellWidget( mPassword, 3, 3, 1, 3 );
-
-  layout->addWidget( new QLabel( i18n( "Search Base:" ), this ), 4, 0 );
-  mSearchBase = new KLineEdit( this );
-  layout->addMultiCellWidget( mSearchBase, 4, 4, 1, 3 );
-
-  layout->addWidget( new QLabel( i18n( "Search Filter:" ), this ), 5, 0 );
-  mSearchFilter = new KLineEdit( this );
-  layout->addMultiCellWidget( mSearchFilter, 5, 5, 1, 3 );
-
-  layout->addWidget( new QLabel( i18n( "Storage Base:" ), this ), 6, 0 );
-  mStoreBase = new KLineEdit( this );
-  layout->addMultiCellWidget( mStoreBase, 6, 6, 1, 3 );
-
-  layout->addWidget( new QLabel( i18n( "Key Attribute:" ), this ), 7, 0 );
   mKeyAttribute = new KLineEdit( this );
-  layout->addMultiCellWidget( mKeyAttribute, 7, 7, 1, 3 );
-
-  layout->addWidget( new QLabel( i18n( "Search Scope:" ), this ), 8, 0 );
   mSearchScope = new KComboBox( this );
-  layout->addMultiCellWidget( mSearchScope, 8, 8, 1, 3 );
-
-  layout->addWidget( new QLabel( i18n( "Authentication Mechanism:" ), this ), 9, 0 );
-  mAuthMech = new KComboBox( this );
-  layout->addMultiCellWidget( mAuthMech, 9, 9, 1, 3 );
-
   mEncryption = new QCheckBox( i18n( "Use encryption" ), this );
-  layout->addMultiCellWidget( mEncryption, 10, 10, 0, 3 );
-
   mReadLdap = new QCheckBox( i18n( "Load data from LDAP" ), this );
-  layout->addMultiCellWidget( mReadLdap, 11, 11, 0, 1 );
-
   mWriteLdap = new QCheckBox( i18n( "Save data to LDAP" ), this );
-  layout->addMultiCellWidget( mWriteLdap, 11, 11, 2, 3 );
+
+  layout->addMultiCellWidget( mLdapWidget, 0, 9, 0, 3 );
+  layout->addWidget( new QLabel( i18n( "Key Attribute:" ), this ), 10, 0 );
+  layout->addMultiCellWidget( mKeyAttribute, 10, 10, 1, 2 );
+  layout->addWidget( new QLabel( i18n( "Search Scope:" ), this ), 11, 0 );
+  layout->addMultiCellWidget( mSearchScope, 11, 11, 1, 2 );
+  layout->addWidget( mEncryption, 12, 0 );
+  layout->addWidget( mReadLdap, 13, 0 );
+  layout->addWidget( mWriteLdap, 13, 3 );
+
 }
 
 #include "configguildap.moc"

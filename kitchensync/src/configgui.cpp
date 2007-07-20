@@ -37,6 +37,7 @@
 #include "configguievo2.h"
 #include "configguimoto.h"
 #include "configguisynce.h"
+#include "configguisunbird.h"
 
 #include "memberinfo.h"
 
@@ -108,6 +109,8 @@ ConfigGui *ConfigGui::Factory::create( const QSync::Member &member,
     return new ConfigGuiMoto( member, parent );
   } else if ( name == "synce-plugin" ) {
     return new ConfigGuiSynce( member, parent );
+  } else if ( name == "sunbird-sync" ) {
+    return new ConfigGuiSunbird( member, parent );
   } else {
     return new ConfigGuiXml( member, parent );
   }
@@ -126,7 +129,7 @@ void ConfigGuiXml::load( const QString &xml )
   mTextEdit->setText( xml );
 }
 
-QString ConfigGuiXml::save() const
+QString ConfigGuiXml::save()
 {
   return mTextEdit->text();
 }
