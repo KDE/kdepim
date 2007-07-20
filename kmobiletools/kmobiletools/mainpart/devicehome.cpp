@@ -334,7 +334,6 @@ void DeviceHome::loadEngine()
     connect(engine->constEngineData()->smsList(), SIGNAL(updated()), this, SLOT(updateSMSList() ) );
 
     connect(engine->constEngineData(), SIGNAL(ringing( bool )), this, SLOT(slotRing( bool ) ) );
-    connect(engine, SIGNAL(fullPhonebook()), this, SLOT(fullPhonebook()) );
 
     connect(engine, SIGNAL(jobFinished(KMobileTools::Job::JobType)), this, SLOT(jobDone(KMobileTools::Job::JobType)));
 
@@ -969,16 +968,6 @@ void SMSFolderListViewItem::paintCell( QPainter * p, const QColorGroup & cg,
     if( i_smsType & SMS::Unsent) cg2.setColor(QColorGroup::Text, Qt::red);
     else cg2.setColor(QColorGroup::Text, Qt::blue);
     K3ListViewItem::paintCell( p, cg2, column, width, align );
-}
-
-
-
-/*!
-    \fn DeviceHome::fullPhonebook()
- */
-void DeviceHome::fullPhonebook()
-{
-    KMessageBox::error( m_widget, i18n("Could not import all contacts. Phonebook is full.") );
 }
 
 

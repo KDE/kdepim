@@ -38,6 +38,9 @@
 #include <libkmobiletools/weaver.h>
 #include <libkmobiletools/enginedata.h>
 
+// Error handling includes
+#include <libkmobiletools/errorhandler.h>
+
 // Jobs includes
 #include "at_jobs.h"
 #include "sms_jobs.h"
@@ -190,12 +193,18 @@ void AT_Engine::processSlot(KMobileTools::Job* job)
         break;
         case KMobileTools::Job::addAddressee:
             slotFetchPhonebook();
-            if( ((EditAddressees*)job)->pbIsFull() ) emit fullPhonebook();
+            if( ((EditAddressees*)job)->pbIsFull() ) {
+                /// @TODO replace BaseError with a more appropriate type as soon as the type is defined ;-)
+                ErrorHandler::instance()->addError( new BaseError(ERROR_META_INFO) );
+            }
             suspendStatusJobs(false);
             break;
         case KMobileTools::Job::editAddressee:
             slotFetchPhonebook();
-            if( ((EditAddressees*)job)->pbIsFull() ) emit fullPhonebook();
+            if( ((EditAddressees*)job)->pbIsFull() ) {
+                /// @TODO replace BaseError with a more appropriate type as soon as the type is defined ;-)
+                ErrorHandler::instance()->addError( new BaseError(ERROR_META_INFO) );
+            }
             suspendStatusJobs(false);
             break;
         case KMobileTools::Job::delAddressee:
@@ -329,7 +338,6 @@ void AT_Engine::slotFetchSMS()
 void AT_Engine::slotAddAddressee(const KABC::Addressee::List& abclist)
 {
     EditAddressees *tempjob=new EditAddressees(p_lastJob, abclist, device, false, this );
-    connect(tempjob, SIGNAL(fullPhonebook() ), this, SIGNAL(fullPhonebook() ) );
     p_lastJob=tempjob;
     if(device) enqueueJob( tempjob ) ;
 }
@@ -376,7 +384,6 @@ void AT_Engine::slotEditAddressee(const KABC::Addressee& p_oldAddressee, const K
 {
     EditAddressees *tempjob=new EditAddressees( p_lastJob, p_oldAddressee, p_newAddressee, device, this );
     p_lastJob=tempjob;
-    connect(tempjob, SIGNAL(fullPhonebook() ), this, SIGNAL(fullPhonebook() ) );
     if(device) enqueueJob( tempjob );
 }
 

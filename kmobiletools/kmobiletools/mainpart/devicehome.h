@@ -218,7 +218,6 @@ public slots:
     void slotNewSMS(const QString &);
     void openURL(const KUrl &url);
     void updateSMSCount();
-    void fullPhonebook();
     void slotFetchCalendar();
     void slotCalendarFetched();
     void slotExportSMSList();

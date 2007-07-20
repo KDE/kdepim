@@ -24,10 +24,13 @@
 
 #include <kdialog.h>
 
+class Q3ListViewItem;
+
+namespace KMobileTools {
+
 /**
 	@author Marco Gulino <marco@kmobiletools.org>
 */
-class Q3ListViewItem;
 class PickSMSCenterPrivate;
 class KMOBILETOOLS_EXPORT PickSMSCenter : public KDialog
 {
@@ -46,5 +49,7 @@ public Q_SLOTS:
     void clicked ( Q3ListViewItem * item );
     void doubleClicked( Q3ListViewItem *, const QPoint &, int );
 };
+
+}
 
 #endif

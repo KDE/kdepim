@@ -312,13 +312,6 @@ class KMOBILETOOLS_EXPORT Engine : public QObject
          * add and remove sms folders so the signal gets emitted automatically)
          */
         void smsFoldersAdded();
-
-        /**
-         * This signal is emitted when phonebook is full.
-         *
-         * @TODO should be handled by errorOccured
-         */
-        void fullPhonebook();
 };
 }
 #endif

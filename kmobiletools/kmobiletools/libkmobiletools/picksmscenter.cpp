@@ -29,6 +29,10 @@
 #include <kstandarddirs.h>
 #include <kmessagebox.h>
 
+using namespace KMobileTools;
+
+namespace KMobileTools {
+
 class PickSMSCenterPrivate {
     public:
         PickSMSCenterPrivate()
@@ -144,4 +148,6 @@ QString PickSMSCenter::smsCenterName(const QString &smsCenter)
     }
     delete config;
     return smsCenter;
+}
+
 }

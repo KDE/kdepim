@@ -235,8 +235,6 @@ namespace KMobileTools {
              * Sets the phone contact list.
              *
              * @return phone contact list
-             *
-             * @TODO better usage
              */
             void setContactsList( ContactsList* contactsList );
 
