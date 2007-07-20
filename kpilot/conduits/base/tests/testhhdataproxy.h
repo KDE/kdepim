@@ -50,5 +50,7 @@ public:
 	virtual QString commitCreate( const Record *rec );
 	
 	virtual void undoCommitCreate( const Record *rec );
+	
+	virtual QString commitUpdate( const Record *rec );
 };
 #endif

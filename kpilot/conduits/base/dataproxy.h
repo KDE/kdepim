@@ -143,12 +143,18 @@ protected: // Functions
 	 * Commits created record @p rec to the datastore. Returns the id that the
 	 * data store created for this record.
 	 */
-	virtual QString commitCreate( const Record *rec ) = 0;
+	virtual void commitCreate( Record *rec ) = 0;
+	
+	/**
+	 * Commits updated record @p rec to the datastore. Must return rec->id() even
+	 * if it's unchanged.
+	 */
+	virtual void commitUpdate( Record *rec ) = 0;
 	
 	/**
 	 * Undo the commit of created record @p rec to the datastore.
 	 */
-	virtual void undoCommitCreate( const Record *rec ) = 0;
+	virtual void undoCommitCreate( Record *rec ) = 0;
 
 protected: // Members
 	Mode fMode;
@@ -158,24 +164,26 @@ protected: // Members
 	
 	// These are kept for rollback.
 	/**
-	 * Id's from created records.
+	 * Id's from created records. The bool indicates wheter or not the created
+	 * records are committed to the data store.
 	 */
-	QStringList fCreated;
-	
-	/**
-	 * Id's from committed new records.
-	 */
-	QStringList fCreatedCommitted;
+	QMap<QString, bool> fCreated;
 	
 	/**
 	 * Old values of updated records.
 	 */
-	QList<Record*> fUpdated;
+	QMap<QString, Record*> fOldRecords;
+	
+	/**
+	 * Id's from updated records. The bool indicates wheter or not the updated
+	 * records are committed to the data store.
+	 */
+	QMap<QString, bool> fUpdated;
 	
 	/**
 	 * Deleted records;
 	 */
-	QList<Record*> fDeleted;
+	QMap<QString, Record*> fDeletedRecords;
 
 private:
 	int fLastId;

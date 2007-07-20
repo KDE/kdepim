@@ -26,21 +26,16 @@
 */
 
 #include "keyringhhdataproxy.h"
+#include "options.h"
 
 KeyringHHDataProxy::KeyringHHDataProxy( PilotDatabase *db ) : HHDataProxy( db )
 {
 
 }
 
-bool KeyringHHDataProxy::rollback()
-{
-	#warning not implemented
-	return false;
-}
-
-
 HHRecord* KeyringHHDataProxy::createHHRecord( PilotRecord *rec )
 {
+	FUNCTIONSETUP;
 	#warning not implemented
 	Q_UNUSED( rec );
 	return 0L;

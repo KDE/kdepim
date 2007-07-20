@@ -43,20 +43,15 @@ void HHDataProxy::resetSyncFlags()
 	fDatabase->resetSyncFlags();
 }
 
-QString HHDataProxy::commitCreate( const Record *rec )
+void HHDataProxy::commitCreate( Record *rec )
 {
 	FUNCTIONSETUP;
 	
-	if( !rec )
+	if( rec )
 	{
-		return QString();
-	}
-	else
-	{
-		if( HHRecord *hhRec = static_cast<HHRecord*>( rec->duplicate() ) )
+		if( HHRecord *hhRec = static_cast<HHRecord*>( rec ) )
 		{
-			recordid_t newId = fDatabase->writeRecord( hhRec->pilotRecord() );
-			return QString::number( newId );
+			fDatabase->writeRecord( hhRec->pilotRecord() );
 		}
 		else
 		{
@@ -64,11 +59,27 @@ QString HHDataProxy::commitCreate( const Record *rec )
 				<< " is not of type HHRecord*." << endl;
 		}
 	}
-	
-	return QString();
 }
 
-void HHDataProxy::undoCommitCreate( const Record *rec )
+void HHDataProxy::commitUpdate( Record *rec )
+{
+	FUNCTIONSETUP;
+
+	if( rec )
+	{
+		if( HHRecord *hhRec = static_cast<HHRecord*>( rec ) )
+		{
+			fDatabase->writeRecord( hhRec->pilotRecord() );
+		}
+		else
+		{
+			DEBUGKPILOT << fname << ": Record " << rec->id() 
+				<< " is not of type HHRecord*." << endl;
+		}
+	}
+}
+
+void HHDataProxy::undoCommitCreate( Record *rec )
 {
 	FUNCTIONSETUP;
 	
@@ -78,7 +89,7 @@ void HHDataProxy::undoCommitCreate( const Record *rec )
 	}
 	else
 	{
-		if( HHRecord *hhRec = static_cast<HHRecord*>( rec->duplicate() ) )
+		if( HHRecord *hhRec = static_cast<HHRecord*>( rec ) )
 		{
 			fDatabase->deleteRecord( hhRec->pilotRecord()->id() );
 		}

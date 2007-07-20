@@ -61,12 +61,17 @@ protected:
 	/**
 	 * Commits created record @p rec to the datastore.
 	 */
-	virtual QString commitCreate( const Record *rec );
+	virtual void commitCreate( Record *rec );
+	
+	/**
+	 * Commits updated record @p rec to the datastore.
+	 */
+	virtual void commitUpdate( Record *rec );
 	
 	/**
 	 * Undo the commit of created record @p rec to the datastore.
 	 */
-	virtual void undoCommitCreate( const Record *rec );
+	virtual void undoCommitCreate( Record *rec );
 
 protected:
 	PilotDatabase *fDatabase;

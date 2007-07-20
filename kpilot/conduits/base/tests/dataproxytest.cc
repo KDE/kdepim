@@ -59,6 +59,7 @@ private slots:
 	void testIterationModeAll();
 	void testIterationModeModified();
 	void testCommitCreated();
+	void testCommitUpdated();
 };
 
 DataProxyTest::DataProxyTest()
@@ -281,17 +282,68 @@ void DataProxyTest::testCommitCreated()
 	
 	fProxy.commit();
 	
-	qDebug() << fProxy.createdCommitted();
-	
 	QVERIFY( fProxy.createCount() == 3 );
-	QVERIFY( fProxy.createdCommitted().contains( CSL1( "1" ) ) );
-	QVERIFY( fProxy.createdCommitted().contains( CSL1( "2" ) ) );
-	QVERIFY( fProxy.createdCommitted().contains( CSL1( "3" ) ) );
+	QVERIFY( fProxy.created().value( CSL1( "1" ) ) );
+	QVERIFY( fProxy.created().value( CSL1( "2" ) ) );
+	QVERIFY( fProxy.created().value( CSL1( "3" ) ) );
 	
 	fProxy.rollback();
 	
 	QVERIFY( fProxy.createCount() == 0 );
-	QVERIFY( fProxy.createdCommitted().size() == 0 );
+	QVERIFY( !fProxy.created().value( CSL1( "1" ) ) );
+	QVERIFY( !fProxy.created().value( CSL1( "2" ) ) );
+	QVERIFY( !fProxy.created().value( CSL1( "3" ) ) );
+}
+
+void DataProxyTest::testCommitUpdated()
+{
+	TestDataProxy fProxy;
+	
+	Record *rec1 = new TestRecord( fFields );
+	rec1->setId( CSL1( "1" ) );
+	rec1->setValue( CSL1( "f1" ), CSL1( "A test value" ) );
+	rec1->setValue( CSL1( "f2" ), CSL1( "Another test value" ) );
+	rec1->synced();
+	
+	Record *rec2 = new TestRecord( fFields );
+	rec2->setId( CSL1( "2" ) );
+	rec2->setValue( CSL1( "f1" ), CSL1( "And more test value" ) );
+	rec2->setValue( CSL1( "f2" ), CSL1( "Yet another one" ) );
+	rec2->synced();
+	
+	// Add records to proxy as if they where there already.
+	fProxy.records()->insert( rec1->id(), rec1 );
+	fProxy.records()->insert( rec2->id(), rec2 );
+	
+	// New  values for the existing records.
+	Record *rec3 = new TestRecord( fFields );
+	rec3->setId( CSL1( "1" ) );
+	rec3->setValue( CSL1( "f1" ), CSL1( "An updated test value" ) );
+	rec3->setValue( CSL1( "f2" ), CSL1( "Another updated test value" ) );
+	
+	Record *rec4 = new TestRecord( fFields );
+	rec4->setId( CSL1( "2" ) );
+	rec4->setValue( CSL1( "f1" ), CSL1( "And more updated test value" ) );
+	rec4->setValue( CSL1( "f2" ), CSL1( "Yet another updated one" ) );
+	
+	// Now update the records.
+	fProxy.update( rec3->id(), rec3 );
+	fProxy.update( rec4->id(), rec4 );
+	fProxy.commit();
+	
+	QVERIFY( fProxy.updateCount() == 2 );
+	QVERIFY( *fProxy.updatedRecords()->value( rec3->id() ) != *rec1 );
+	QVERIFY( *fProxy.updatedRecords()->value( rec4->id() ) != *rec2 );
+	QVERIFY( *fProxy.updatedRecords()->value( rec3->id() ) == *rec3 );
+	QVERIFY( *fProxy.updatedRecords()->value( rec4->id() ) == *rec4 );
+	
+	fProxy.rollback();
+	
+	QVERIFY( fProxy.updateCount() == 4 );
+	QVERIFY( *fProxy.updatedRecords()->value( rec3->id() ) == *rec1 );
+	QVERIFY( *fProxy.updatedRecords()->value( rec4->id() ) == *rec2 );
+	QVERIFY( *fProxy.updatedRecords()->value( rec3->id() ) != *rec3 );
+	QVERIFY( *fProxy.updatedRecords()->value( rec4->id() ) != *rec4 );
 }
 
 QTEST_KDEMAIN(DataProxyTest, NoGUI)

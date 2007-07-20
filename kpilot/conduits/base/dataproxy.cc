@@ -55,7 +55,7 @@ QString DataProxy::create( Record *record )
 	fRecords.insert( recordId, record );
 	
 	// Update rollback/volatility information.
-	fCreated.append( recordId );
+	fCreated.insert( recordId, false );
 	fCounter.created();
 	
 	return recordId;
@@ -76,7 +76,7 @@ void DataProxy::remove( const QString &id )
 	fRecords.remove( id );
 	
 	// Update rollback/volatility information.
-	fDeleted.append( rec );
+	fDeletedRecords.insert( rec->id(), rec );
 	fCounter.deleted();
 }
 
@@ -98,7 +98,7 @@ void DataProxy::update( const QString &id, Record *newRecord )
 	fRecords.insert( id, newRecord );
 	
 	// Update rollback/volatility information.
-	fUpdated.append( oldRecord->duplicate() );
+	fOldRecords.insert( id, oldRecord->duplicate() );
 	fCounter.updated();
 }
 
@@ -195,38 +195,61 @@ bool DataProxy::commit()
 {
 	FUNCTIONSETUP;
 	
-	#warning not completly implemented and needs tests.
+	#warning not completly implemented, needs tests.
 	
 	// Commit created records.
-	QStringListIterator it( fCreated );
+	QStringListIterator it( fCreated.keys() );
 	
 	while( it.hasNext() ) {
 		QString id = it.next();
 		
 		Record *rec = find( id );
-		if( rec )
+		if( rec && !fCreated.value( id ) )
 		{
-			QString newId = commitCreate( rec );
-			
-			// Id most probably changed.
-			rec->setId( newId );
-			fCreatedCommitted.append( newId );
+			commitCreate( rec );
 			
 			// Put the record with the new id in.
-			fRecords.remove( id );
-			fRecords.insert( newId, rec );
+			if( rec->id() != id )
+			{
+				fCreated.remove( id );
+				fCreated.insert( rec->id(), true );
 			
-			// TODO: save the (newId, id) pair somewhere to change the mapping.
-		}
-		else
-		{
-			// This realy shouldn't happen.
-			DEBUGKPILOT << fname << ": " << "Record does " << id << " not exist." << endl;
-			return false;
+				fRecords.remove( id );
+				fRecords.insert( rec->id(), rec );
+			
+				// TODO: store the (rec->id(), id) pair somewhere to change the mapping.
+			}
+			else
+			{
+				fCreated.insert( rec->id(), true );
+			}
 		}
 	}
 	
-	//QList<Record*> fUpdated;
+	// Commit updated records.
+	QListIterator<Record*> i( fOldRecords.values() );
+	while( i.hasNext() )
+	{
+		// i.next() contains the old values.
+		Record *oldRec = i.next();
+		QString id = oldRec->id();
+		
+		// Look up the new values
+		Record *rec = find( id );
+		
+		if( rec && !fCreated.value( id ) )
+		{
+			commitUpdate( rec );
+			QString newId = rec->id();
+			
+			if( newId != id )
+			{
+				oldRec->setId( newId );
+				// TODO: store the (newId, id) pair somewhere to change the mapping.
+			}
+			fUpdated.insert( rec->id(), true );
+		}
+	}
 
 	//QList<Record*> fDeleted;
 	
@@ -237,27 +260,36 @@ bool DataProxy::rollback()
 {
 	FUNCTIONSETUP;
 	
-	#warning not completly implemented and needs tests.
+	#warning not completly implemented, needs tests.
 	
 	// Delete committed new records.
-	QStringListIterator it( fCreatedCommitted );
+	QStringListIterator it( fCreated.keys() );
 	
-	while( it.hasNext() ) {
+	while( it.hasNext() )
+	{
 		QString id = it.next();
 		
+		// Only undo creates that are committed.
 		Record *rec = find( id );
-		if( rec )
+		if( rec && fCreated.value( id ) )
 		{
 			undoCommitCreate( rec );
-			fCreatedCommitted.removeAll( rec->id() );
-		}
-		else
-		{
-			// This realy shouldn't happen.
-			DEBUGKPILOT << fname << ": " << "Record does " << id << " not exist." << endl;
-			return false;
+			fCreated.insert( rec->id(), false );
 		}
 	}
+	
+	// Undo changes to updated records.
+	QListIterator<Record*> i( fOldRecords.values() );
+	while( i.hasNext() )
+	{
+		Record *oldRec = i.next();
+		if( fUpdated.value( oldRec->id() ) )
+		{
+			commitUpdate( oldRec );
+			fUpdated.insert( oldRec->id(), false );
+		}
+	}
+	
 	
 	return true;
 }

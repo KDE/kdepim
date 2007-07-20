@@ -36,9 +36,6 @@ public:
 	KeyringHHDataProxy( PilotDatabase *db );
 
 protected:
-	
-	virtual bool rollback();
-
 	/**
 	 * This function creates a (subclass of) HHRecord for @p rec.
 	 */

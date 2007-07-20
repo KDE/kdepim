@@ -79,3 +79,9 @@ void TestHHDataProxy::undoCommitCreate( const Record *rec )
 {
 	Q_UNUSED( rec );
 }
+
+QString TestHHDataProxy::commitUpdate( const Record *rec )
+{
+	Q_UNUSED( rec );
+	return QString();
+}
