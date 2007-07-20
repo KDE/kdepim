@@ -101,7 +101,7 @@ class ConfigGuiSunbird : public ConfigGui
 
     void load( const QString &xml );
 
-    QString save(); //const;
+    QString save() const;
 
   public slots:
     void addLocalCalendar();

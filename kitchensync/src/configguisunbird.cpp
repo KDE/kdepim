@@ -133,33 +133,31 @@ void ConfigGuiSunbird::load( const QString &xml )
   }
 }
 
-QString ConfigGuiSunbird::save() //const
+QString ConfigGuiSunbird::save() const
 {
   QString config = "<config>\n";
 
-  qDebug( "1" );
   for ( uint i = 0; i < mLocalList.count(); ++i ) {
     LocalCalendar *lcal = mLocalList[ i ];
     config += QString( "<file " );
     config += QString( "path=\"%1\" " ).arg( lcal->mPathRequester->url() );
+
     if ( lcal->mDaysCheckBox->isChecked() ) {
       config += QString( "deletedaysold=\"%1\" " ).arg( lcal->mDaysSpinBox->value() );
     }
-  qDebug( "1.2" );
     if ( lcal->mDefaultCheckBox->isChecked() ) {
       config += QString( "default=\"1\" " );
     }
     config += QString( "/>\n" );
   }
 
-  qDebug( "2" );
   for ( uint i = 0; i < mWebdavList.count(); ++i ) {
     WebdavCalendar *wcal = mWebdavList[ i ];
     config += QString( "<webdav " );
     config += QString( "username=\"%1\" " ).arg( wcal->mUsername->text() );
     config += QString( "password=\"%1\" " ).arg( wcal->mPassword->text() );
     config += QString( "url=\"%1\" " ).arg( wcal->mUrl->text() );
-  qDebug( "2.2" );
+
     if ( wcal->mDaysCheckBox->isChecked() ) {
       config += QString( "deletedaysold=\"%1\" " ).arg( wcal->mDaysSpinBox->value() );
     }
