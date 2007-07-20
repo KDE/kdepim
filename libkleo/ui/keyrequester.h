@@ -57,9 +57,6 @@
 
 #include <vector>
 
-namespace Kleo {
-  class KeyListView;
-}
 
 namespace GpgME {
   class Key;
