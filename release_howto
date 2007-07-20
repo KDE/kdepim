@@ -9,7 +9,7 @@ David Faure <faure@kde.org>, 02-Aug-2005.
 #
 
 cd kde-common/release
-mkdir clean cache dirty sources
+mkdir clean cache dirty sources sources-old
 
 echo kdepim > modules
 
