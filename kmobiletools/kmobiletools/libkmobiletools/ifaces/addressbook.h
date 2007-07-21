@@ -44,7 +44,7 @@ public:
     /**
      * Returns an OR-combination of available memory slots
      */
-    virtual KMobileTools::Addressbook::MemorySlots availableMemorySlots() = 0;
+    virtual KMobileTools::Addressbook::MemorySlots availableMemorySlots() const = 0;
 
     /**
      * Fetches the address book from the phone
