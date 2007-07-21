@@ -1,4 +1,3 @@
-add_subdirectory( errortypes )
 add_subdirectory( akonadi )
 add_subdirectory( icons )
 
@@ -10,7 +9,8 @@ ENDIF (USE_CRASHHANDLER)
 
 ########### next target ###############
 
-set(kmobiletools_LIB_SRCS 
+set(kmobiletools_LIB_SRCS
+   ifaces/addressbook.cpp
    aboutdata.cpp 
    ${crashhandler_SRCS}
    contactslist.cpp  
@@ -56,6 +56,8 @@ install( FILES kmobiletools_devices.kcfg kmobiletools_devices.kcfg DESTINATION  
 
 install( FILES  kmobiletoolsengine.desktop DESTINATION ${SERVICETYPES_INSTALL_DIR} )
 install(FILES
+   ifaces/addressbook.h
+   addressbook.h
    kmobiletools_export.h
    picksmscenter.h
    kmobiletoolshelper.h

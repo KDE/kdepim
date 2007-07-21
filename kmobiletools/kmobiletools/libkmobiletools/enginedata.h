@@ -229,14 +229,14 @@ namespace KMobileTools {
              *
              * @return phone contact list
              */
-            ContactsList* contactsList() const;
+            ContactsList* contactsList() const;  /// @TODO remove
 
             /**
              * Sets the phone contact list.
              *
              * @return phone contact list
              */
-            void setContactsList( ContactsList* contactsList );
+            void setContactsList( ContactsList* contactsList );  /// @TODO remove
 
             /**
              * Sets the current list of sms
@@ -336,7 +336,7 @@ namespace KMobileTools {
             /**
             * This signal is emitted when the mobile's phone book has been changed.
             */
-            void phoneBookChanged();
+            void phoneBookChanged(); /// @TODO remove
 
             /**
             * This signal is emitted when calendar is modified.

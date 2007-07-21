@@ -1,6 +1,5 @@
 /***************************************************************************
-   Copyright (C) 2007
-   by Marco Gulino <marco@kmobiletools.org>
+   Copyright (C) 2007 by Matthias Lechner <matthias@lmme.de>
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -17,33 +16,15 @@
    Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
    Boston, MA 02110-1301, USA.
  ***************************************************************************/
-#ifndef CONTACTPTRLIST_H
-#define CONTACTPTRLIST_H
 
-#include <libkmobiletools/kmobiletools_export.h>
+#include "addressbook.h"
 
-#include <kabc/addressee.h>
+namespace KMobileTools {
+namespace Ifaces {
 
-/**
-@author Marco Gulino
-
-@TODO change name to AddresseeList
-*/
-class ContactsListPrivate;
-namespace KMobileTools
+Addressbook::~Addressbook()
 {
-    typedef QListIterator<KABC::Addressee> ContactsListIterator;
-    class KMOBILETOOLS_EXPORT ContactsList : public KABC::Addressee::List
-    {
-    public:
-        ContactsList();
-        ContactsList(const KABC::Addressee::List&);
-        ~ContactsList();
-    KABC::Addressee findAddressee(int memslot, const QString & index);
-    KABC::Addressee findAddressee(const QString &posInfos);
-    ContactsList& operator =(const KMobileTools::ContactsList&);
-    private:
-        ContactsListPrivate *const d;
-    };
 }
-#endif
+
+}
+}

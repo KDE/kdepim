@@ -59,14 +59,14 @@ class KMOBILETOOLS_EXPORT Engine : public QObject
     Q_OBJECT
 
     public:
-        /**
-         * This enum type defines the type of phone book memory slot.
-         *
-         * - PB_SIM : Sim card
-         * - PB_Phone : Phone
-         * - PB_DataCard : Data card
-         */
-        enum PhoneBookMemorySlot { PB_SIM = 2, PB_Phone = 1, PB_DataCard = 4 };
+    /**
+     * This enum type defines the type of phone book memory slot.
+     *
+     * - PB_SIM : Sim card
+     * - PB_Phone : Phone
+     * - PB_DataCard : Data card
+     */
+    enum PhoneBookMemorySlot { PB_SIM = 2, PB_Phone = 1, PB_DataCard = 4 }; /// @TODO remove
 
 //      enum SMSSlots { SMS_SIM = 0x1, SMS_PHONE = 0x2, SMS_DATACARD = 0x4 }; // krazy:exclude=inline
 /*
@@ -125,7 +125,7 @@ class KMOBILETOOLS_EXPORT Engine : public QObject
          *
          * @return the numbers of phonebook memory slots
          */ 
-        virtual int availPbSlots() = 0;
+        virtual int availPbSlots() = 0;  /// @TODO remove
 
         /**
          * Set the SMS slot (sim, phone, datacard) to be used.
@@ -163,8 +163,8 @@ class KMOBILETOOLS_EXPORT Engine : public QObject
         KPluginInfo *pluginInfo();
 
         virtual QStringList encodings() = 0;
-        int currentPBMemSlot();
-        void setCurrentPBMemSlot(int type);
+        int currentPBMemSlot(); /// @TODO remove
+        void setCurrentPBMemSlot(int type); /// @TODO remove
 
         /**
          * Adds the specified @p job to the queue
@@ -227,7 +227,7 @@ class KMOBILETOOLS_EXPORT Engine : public QObject
         */
 
         virtual void slotFetchSMS() = 0;
-        virtual void slotFetchPhonebook() = 0;
+        virtual void slotFetchPhonebook() = 0;  /// @TODO remove
         virtual void slotPollStatus() = 0;
         virtual void slotFetchInfos() = 0;
         virtual void slotDial(DialActions, const QString & =QString() ) = 0;
@@ -246,15 +246,15 @@ class KMOBILETOOLS_EXPORT Engine : public QObject
          */
         virtual void slotSearchPhone() = 0;
 
-        virtual void slotAddAddressee(const KABC::Addressee::List&) = 0;
-        virtual void slotDelAddressee(const KABC::Addressee::List&) = 0;
+        virtual void slotAddAddressee(const KABC::Addressee::List&) = 0; /// @TODO remove
+        virtual void slotDelAddressee(const KABC::Addressee::List&) = 0; /// @TODO remove
         virtual void slotDelSMS(SMS*) = 0;
         virtual void slotStoreSMS(const QString &number, const QString &text) = 0;
         virtual void slotSendSMS(const QString &number, const QString &text) = 0;
         virtual void slotStoreSMS(SMS*) = 0;
         virtual void slotSendSMS(SMS*) = 0;
         virtual void slotSendStoredSMS(SMS*) = 0;
-        virtual void slotEditAddressee(const KABC::Addressee&, const KABC::Addressee&) = 0;
+        virtual void slotEditAddressee(const KABC::Addressee&, const KABC::Addressee&) = 0; /// @TODO remove
         virtual void slotStopDevice();
         virtual void slotResumeDevice();
         virtual void slotWeaverSuspended();

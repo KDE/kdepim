@@ -1,6 +1,5 @@
 /***************************************************************************
-   Copyright (C) 2007
-   by Marco Gulino <marco@kmobiletools.org>
+   Copyright (C) 2007 by Matthias Lechner <matthias@lmme.de>
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -17,33 +16,33 @@
    Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
    Boston, MA 02110-1301, USA.
  ***************************************************************************/
-#ifndef CONTACTPTRLIST_H
-#define CONTACTPTRLIST_H
+
+#ifndef KMOBILETOOLSADDRESSBOOK_H
+#define KMOBILETOOLSADDRESSBOOK_H
 
 #include <libkmobiletools/kmobiletools_export.h>
 
-#include <kabc/addressee.h>
+namespace KMobileTools {
 
 /**
-@author Marco Gulino
-
-@TODO change name to AddresseeList
+    @author Matthias Lechner <matthias@lmme.de>
 */
-class ContactsListPrivate;
-namespace KMobileTools
-{
-    typedef QListIterator<KABC::Addressee> ContactsListIterator;
-    class KMOBILETOOLS_EXPORT ContactsList : public KABC::Addressee::List
-    {
-    public:
-        ContactsList();
-        ContactsList(const KABC::Addressee::List&);
-        ~ContactsList();
-    KABC::Addressee findAddressee(int memslot, const QString & index);
-    KABC::Addressee findAddressee(const QString &posInfos);
-    ContactsList& operator =(const KMobileTools::ContactsList&);
-    private:
-        ContactsListPrivate *const d;
-    };
+class KMOBILETOOLS_EXPORT Addressbook {
+public:
+    /**
+    * This enum type defines the type of phone book memory slots.
+    *
+    * - Sim : Sim card
+    * - Phone : Phone
+    * - DataCard : Data card
+    */
+    enum MemorySlot { Phone = 1, Sim = 2, DataCard = 4 };
+
+    Q_DECLARE_FLAGS(MemorySlots, MemorySlot)
+};
+
 }
+
+Q_DECLARE_OPERATORS_FOR_FLAGS(KMobileTools::Addressbook::MemorySlots)
+
 #endif
