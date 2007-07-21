@@ -60,7 +60,7 @@ public:
     void addError( const BaseError* error );
 
     /**
-     * Returns how many errors have occured during the current session
+     * Returns how many errors have occurred during the current session
      * 
      * @return the error count
      */
