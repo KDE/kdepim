@@ -13,6 +13,7 @@ set(kmobiletools_LIB_SRCS
    ifaces/addressbook.cpp
    ifaces/dialaction.cpp
    ifaces/shortmessages.cpp
+   ifaces/smsfolders.cpp
    aboutdata.cpp 
    ${crashhandler_SRCS}
    contactslist.cpp  
@@ -61,6 +62,7 @@ install(FILES
    ifaces/addressbook.h
    ifaces/dialaction.h
    ifaces/shortmessages.h
+   ifaces/smsfolders.h
    addressbook.h
    kmobiletools_export.h
    picksmscenter.h

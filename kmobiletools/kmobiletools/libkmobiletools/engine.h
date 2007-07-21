@@ -118,7 +118,7 @@ class KMOBILETOOLS_EXPORT Engine : public QObject
          *
          * @return the phone SMS folders
          */
-        QStringList smsFolders();
+        QStringList smsFolders(); /// @TODO remove
 
         /**
          * Retrieves the numbers of phonebook memory slots.
@@ -132,21 +132,21 @@ class KMOBILETOOLS_EXPORT Engine : public QObject
          *
          * @param slot the slot that be used
          */
-        void setSMSSlot( int slot );
+        void setSMSSlot( int slot ); /// @TODO remove
 
         /**
          * Retrieves the SMS slot used.
          *
          * @return the sms slot used.
          */
-        int smsSlot();
+        int smsSlot(); /// @TODO remove
 
         /**
          * Shows if mobile phone can encode text in PDU mode.
          *
          * @return true if mobile phone is PDU able.
          */
-        virtual bool pdu()=0; /// @TODO check removal
+        virtual bool pdu()=0; /// @TODO remove
 
         /**
          * Ask engine to close before calling the destructor.
@@ -248,7 +248,7 @@ class KMOBILETOOLS_EXPORT Engine : public QObject
 
         virtual void slotAddAddressee(const KABC::Addressee::List&) = 0; /// @TODO remove
         virtual void slotDelAddressee(const KABC::Addressee::List&) = 0; /// @TODO remove
-        virtual void slotDelSMS(SMS*) = 0;
+        virtual void slotDelSMS(SMS*) = 0; /// @TODO remove
         virtual void slotStoreSMS(const QString &number, const QString &text) = 0; /// @TODO remove
         virtual void slotSendSMS(const QString &number, const QString &text) = 0; /// @TODO remove
         virtual void slotStoreSMS(SMS*) = 0; /// @TODO remove
@@ -311,7 +311,7 @@ class KMOBILETOOLS_EXPORT Engine : public QObject
          * @TODO move this signal to engineData (and add a method to explicitly
          * add and remove sms folders so the signal gets emitted automatically)
          */
-        void smsFoldersAdded();
+        void smsFoldersAdded(); /// @TODO remove
 };
 }
 #endif

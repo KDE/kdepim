@@ -201,14 +201,14 @@ namespace KMobileTools {
              *
              * @return the SMS center number
              */
-            QString smsCenter() const;
+            QString smsCenter() const; /// @TODO remove
 
             /**
              * Sets the SMS center number.
              *
              * @param smsc the SMS center number
              */
-            void setSMSCenter( const QString& smsc );
+            void setSMSCenter( const QString& smsc ); /// @TODO remove
 
             /**
              * Retrieves the phone firmware revision.
@@ -317,21 +317,21 @@ namespace KMobileTools {
             *
             * @param sms the sms that is added
             */
-            void smsAdded( const QString & sms );
+            void smsAdded( const QString & sms ); /// @TODO remove
 
             /**
             * This signal is emitted when a SMS is deleted.
             *
             * @param sms the sms that is deleted
             */
-            void smsDeleted( const QString & sms );
+            void smsDeleted( const QString & sms ); /// @TODO remove
 
             /**
             * This signal is emitted when a SMS is modified.
             *
             * @param sms the sms that is modified
             */
-            void smsModified( const QString & sms );
+            void smsModified( const QString & sms ); /// @TODO remove
 
             /**
             * This signal is emitted when the mobile's phone book has been changed.
