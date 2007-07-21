@@ -17,33 +17,14 @@
    Boston, MA 02110-1301, USA.
  ***************************************************************************/
 
-#ifndef KMOBILETOOLSADDRESSBOOK_H
-#define KMOBILETOOLSADDRESSBOOK_H
-
-#include <libkmobiletools/kmobiletools_export.h>
+#include "shortmessages.h"
 
 namespace KMobileTools {
+namespace Ifaces {
 
-/**
-    @author Matthias Lechner <matthias@lmme.de>
-*/
-class KMOBILETOOLS_EXPORT Addressbook {
-public:
-    /**
-    * This enum type defines the type of phone book memory slots.
-    *
-    * - Sim : Sim card
-    * - Phone : Phone
-    * - DataCard : Data card
-    * - Unknown: Unknown storage location
-    */
-    enum MemorySlot { Phone = 1, Sim = 2, DataCard = 4, Unknown = 10 };
-
-    Q_DECLARE_FLAGS(MemorySlots, MemorySlot)
-};
-
+ShortMessages::~ShortMessages()
+{
 }
 
-Q_DECLARE_OPERATORS_FOR_FLAGS(KMobileTools::Addressbook::MemorySlots)
-
-#endif
+}
+}

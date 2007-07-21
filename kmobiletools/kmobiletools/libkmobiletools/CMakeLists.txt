@@ -12,6 +12,7 @@ ENDIF (USE_CRASHHANDLER)
 set(kmobiletools_LIB_SRCS
    ifaces/addressbook.cpp
    ifaces/dialaction.cpp
+   ifaces/shortmessages.cpp
    aboutdata.cpp 
    ${crashhandler_SRCS}
    contactslist.cpp  
@@ -58,6 +59,8 @@ install( FILES kmobiletools_devices.kcfg kmobiletools_devices.kcfg DESTINATION  
 install( FILES  kmobiletoolsengine.desktop DESTINATION ${SERVICETYPES_INSTALL_DIR} )
 install(FILES
    ifaces/addressbook.h
+   ifaces/dialaction.h
+   ifaces/shortmessages.h
    addressbook.h
    kmobiletools_export.h
    picksmscenter.h

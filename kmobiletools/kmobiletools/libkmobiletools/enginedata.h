@@ -243,14 +243,14 @@ namespace KMobileTools {
              *
              * @param smsList the current list of sms
              */
-            void setSMSList( SMSList* smsList );
+            void setSMSList( SMSList* smsList );  /// @TODO remove
 
             /**
              * Returns the fetched sms list for reading
              *
              * @return a SMSList object containing all fetched SMS.
              */
-            const SMSList* smsList() const;
+            const SMSList* smsList() const;  /// @TODO remove
 
             /**
              * Sets the phone calendar

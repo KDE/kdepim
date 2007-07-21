@@ -226,7 +226,7 @@ class KMOBILETOOLS_EXPORT Engine : public QObject
             virtual int parseAddressBook() = 0;
         */
 
-        virtual void slotFetchSMS() = 0;
+        virtual void slotFetchSMS() = 0;  /// @TODO remove
         virtual void slotFetchPhonebook() = 0;  /// @TODO remove
         virtual void slotPollStatus() = 0;
         virtual void slotFetchInfos() = 0;
@@ -249,11 +249,11 @@ class KMOBILETOOLS_EXPORT Engine : public QObject
         virtual void slotAddAddressee(const KABC::Addressee::List&) = 0; /// @TODO remove
         virtual void slotDelAddressee(const KABC::Addressee::List&) = 0; /// @TODO remove
         virtual void slotDelSMS(SMS*) = 0;
-        virtual void slotStoreSMS(const QString &number, const QString &text) = 0;
-        virtual void slotSendSMS(const QString &number, const QString &text) = 0;
-        virtual void slotStoreSMS(SMS*) = 0;
-        virtual void slotSendSMS(SMS*) = 0;
-        virtual void slotSendStoredSMS(SMS*) = 0;
+        virtual void slotStoreSMS(const QString &number, const QString &text) = 0; /// @TODO remove
+        virtual void slotSendSMS(const QString &number, const QString &text) = 0; /// @TODO remove
+        virtual void slotStoreSMS(SMS*) = 0; /// @TODO remove
+        virtual void slotSendSMS(SMS*) = 0; /// @TODO remove
+        virtual void slotSendStoredSMS(SMS*) = 0; /// @TODO remove
         virtual void slotEditAddressee(const KABC::Addressee&, const KABC::Addressee&) = 0; /// @TODO remove
         virtual void slotStopDevice();
         virtual void slotResumeDevice();
