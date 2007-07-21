@@ -52,7 +52,7 @@ public:
                const QDateTime& dateTime,
                const QString& methodName,
                const DebugHash& customDebugInformation = DebugHash() );
-    ~BaseError();
+    virtual ~BaseError();
 
     bool operator==( const BaseError& error ) const;
     bool operator!=( const BaseError& error ) const;
@@ -106,7 +106,7 @@ public:
      *
      * @return custom debug information
      */
-    DebugHash customDebugInformation() const;
+    virtual DebugHash customDebugInformation() const;
 
 protected:
     /**
