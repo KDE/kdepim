@@ -73,7 +73,7 @@ class KMOBILETOOLS_EXPORT Engine : public QObject
         enum ProbeType { PROBE_Manufacturer = 0x1, PROBE_Model = 0x2, PROBE_Revision = 0x4,
                          PROBE_IMEI = 0x8, PROBE_SMSSLOTS = 0x10, PROBE_PBSLOTS = 0x20,
                          PROBE_CHARSET = 0x40, PROBE_SMSCENTER=0x80 };*/
-        enum DialActions { DIAL_DIAL = 0x1, DIAL_HANGUP = 0x2 };
+        enum DialActions { DIAL_DIAL = 0x1, DIAL_HANGUP = 0x2 }; /// @TODO remove
 
         /**
          * This enum type defines the phone manufacturers.
@@ -171,10 +171,10 @@ class KMOBILETOOLS_EXPORT Engine : public QObject
          *
          * @param job the job to be added to the queue
          */
-        void enqueueJob( KMobileTools::Job* job );
+        void enqueueJob( KMobileTools::Job* job ); /// @TODO move to protected (wizard class can be a friend)
 
-        void suspendStatusJobs(bool suspend);
-        int statusJobsSuspended() const;
+        void suspendStatusJobs(bool suspend); /// @TODO move to protected
+        int statusJobsSuspended() const; /// @TODO remove?!
         /**
          * Format a string to be displayed in the final page of the wizard, to show device parameters.
          *
@@ -230,7 +230,7 @@ class KMOBILETOOLS_EXPORT Engine : public QObject
         virtual void slotFetchPhonebook() = 0;  /// @TODO remove
         virtual void slotPollStatus() = 0;
         virtual void slotFetchInfos() = 0;
-        virtual void slotDial(DialActions, const QString & =QString() ) = 0;
+        virtual void slotDial(DialActions, const QString & =QString() ) = 0; /// @TODO remove
         /**
          * This slot is called when slotSearchPhone has finished probing devices.
          * It will establish a link to the found device, and properly initialize engine communication.

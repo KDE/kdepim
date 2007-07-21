@@ -11,6 +11,7 @@ ENDIF (USE_CRASHHANDLER)
 
 set(kmobiletools_LIB_SRCS
    ifaces/addressbook.cpp
+   ifaces/dialaction.cpp
    aboutdata.cpp 
    ${crashhandler_SRCS}
    contactslist.cpp  
