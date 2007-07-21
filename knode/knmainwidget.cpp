@@ -970,7 +970,7 @@ bool KNMainWidget::requestShutdown()
   if( a_rtFactory->jobsPending() &&
       KMessageBox::No==KMessageBox::warningYesNo(this, i18n(
 "KNode is currently sending articles. If you quit now you might lose these \
-    articles.\nDo you want to quit anyway?"), QString(), KStandardGuiItem::quit(), KStandardGuiItem::cancel())
+articles.\nDo you want to quit anyway?"), QString(), KStandardGuiItem::quit(), KStandardGuiItem::cancel())
     )
     return false;
 

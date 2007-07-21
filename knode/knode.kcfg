@@ -65,7 +65,7 @@
           <label>Localized format</label>
         </choice>
         <choice name="Fancy">
-          <label>Fance format</label>
+          <label>Fancy format</label>
         </choice>
         <choice name="Iso">
           <label>ISO format</label>
