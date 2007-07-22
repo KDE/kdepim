@@ -42,7 +42,7 @@ namespace KMobileTools {
     {
         Q_OBJECT
         public:
-            enum ChargeType { Unknown = -1, Battery = 0, ACAdaptor = 1 };
+            enum ChargeType { Unknown = -1, Battery = 0, ACAdaptor = 1 }; /// @TODO remove
 
             /**
              * Creates a new EngineData object.
@@ -281,28 +281,28 @@ namespace KMobileTools {
             *
             * @param signalStrength the signal level in percent
             */
-            void signalStrengthChanged( int signalStrength );
+            void signalStrengthChanged( int signalStrength ); /// @TODO remove
 
             /**
             * This signal is whenever the phone charge changes
             *
             * @param charge the charge level in percent
             */
-            void chargeChanged( int charge );
+            void chargeChanged( int charge ); /// @TODO remove
 
             /**
             * This signal is emitted whenever the phone's charge type changed
             *
             * @param chargeType the charge type
             */
-            void chargeTypeChanged( ChargeType chargeType );
+            void chargeTypeChanged( ChargeType chargeType ); /// @TODO remove
 
             /**
             * This signal whenever the phone is ringing
             *
             * @param ringing true if phone is ringing
             */
-            void ringing( bool ringing );
+            void ringing( bool ringing ); /// @TODO remove
 
             /**
             * This signal is emitted whenever the current network changes
