@@ -227,7 +227,7 @@ class KMOBILETOOLS_EXPORT Engine : public QObject
         virtual void slotFetchSMS() = 0;  /// @TODO remove
         virtual void slotFetchPhonebook() = 0;  /// @TODO remove
         virtual void slotPollStatus() = 0; /// @TODO remove
-        virtual void slotFetchInfos() = 0;
+        virtual void slotFetchInfos() = 0; /// @TODO remove
         virtual void slotDial(DialActions, const QString & =QString() ) = 0; /// @TODO remove
         /**
          * This slot is called when slotSearchPhone has finished probing devices.

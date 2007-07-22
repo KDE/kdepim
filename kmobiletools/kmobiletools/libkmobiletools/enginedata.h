@@ -128,56 +128,56 @@ namespace KMobileTools {
              * 
              * @return the network name
              */
-            QString networkName() const;
+            QString networkName() const; /// @TODO remove
 
             /**
              * Sets the network name the phone is currently logged in
              * 
              * @param networkName the network name
              */
-            void setNetworkName( const QString& networkName );
+            void setNetworkName( const QString& networkName ); /// @TODO remove
 
             /**
              * Retrieves the phone manufacturer as returned by the mobile phone.
              *
              * @return a QString containing the phone manufacturer.
              */
-            QString manufacturer() const;
+            QString manufacturer() const; /// @TODO remove
 
             /**
              * Sets phone manufacturer as returned by the mobile phone.
              *
              * @param manufacturer the manufacturer string.
              */
-            void setManufacturer( const QString &manufacturer );
+            void setManufacturer( const QString &manufacturer ); /// @TODO remove
 
             /**
              * Retrieves the manufacturer ID.
              *
              * @return the manufacturer ID
              */
-            int manufacturerID() const;
+            int manufacturerID() const; /// @TODO remove
 
             /**
              * Sets the manufacturer ID.
              *
              * @param manufacturerID the manufacturer id
              */
-            void setManufacturerID( int manufacturerID );
+            void setManufacturerID( int manufacturerID ); /// @TODO remove
 
             /**
              * Retrieves the phone model.
              *
              * @return the phone model
              */
-            QString model() const;
+            QString model() const; /// @TODO remove
 
             /**
              * Sets the phone model
              *
              * @param model the phone model
              */
-            void setModel( const QString& model );
+            void setModel( const QString& model ); /// @TODO remove
 
             /**
              * Retrieves the phone raw IMEI.
@@ -185,7 +185,7 @@ namespace KMobileTools {
              *
              * @return the phone raw IMEI
              */
-            QString imei() const;
+            QString imei() const; /// @TODO remove
 
             /**
              * Sets the phone raw IMEI.
@@ -193,7 +193,7 @@ namespace KMobileTools {
              *
              * @param imei the phone's imei
              */
-            void setIMEI( const QString& imei );
+            void setIMEI( const QString& imei ); /// @TODO remove
 
             /**
              * Retrieves the SMS center number.
@@ -214,14 +214,14 @@ namespace KMobileTools {
              *
              * @return the phone firmware revision
              */
-            QString revision() const;
+            QString revision() const; /// @TODO remove
 
             /**
              * Sets the phone firmware revision.
              *
              * @param revision the phone's firmware revision
              */
-            void setRevision( const QString& revision );
+            void setRevision( const QString& revision ); /// @TODO remove
 
             /**
              * Retrieves the phone contact list.

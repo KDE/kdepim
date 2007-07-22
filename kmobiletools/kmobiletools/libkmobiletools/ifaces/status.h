@@ -47,60 +47,60 @@ public:
      *
      * @return the signal strength in percent
      */
-    virtual int signalStrength() = 0;
+    virtual int signalStrength() const = 0;
 
     /**
      * Returns the phone's charge in percent
      *
      * @return the charge in percent
      */
-    virtual int charge() = 0;
+    virtual int charge() const = 0;
 
     /**
      * Returns the phone's current power supply type
      *
      * @return the power supply type
      */
-    virtual KMobileTools::Status::PowerSupplyType powerSupplyType() = 0;
+    virtual KMobileTools::Status::PowerSupplyType powerSupplyType() const = 0;
 
     /**
      * Returns whether the phone is ringing
      *
      * @return true if the phone is ringing
      */
-    virtual bool ringing() = 0;
+    virtual bool ringing() const = 0;
 
     virtual ~Status();
 
 protected:
 //Q_SIGNALS:
-            /**
-            * This signal is emitted whenever the signal strength has changed.
-            *
-            * @param signalStrength the signal level in percent
-            */
-            virtual void signalStrengthChanged( int signalStrength ) = 0;
+    /**
+      * This signal is emitted whenever the signal strength has changed.
+      *
+      * @param signalStrength the signal level in percent
+      */
+    virtual void signalStrengthChanged( int signalStrength ) = 0;
 
-            /**
-            * This signal is whenever the phone charge changes
-            *
-            * @param charge the charge level in percent
-            */
-            virtual void chargeChanged( int charge ) = 0;
+    /**
+     * This signal is whenever the phone charge changes
+     *
+     * @param charge the charge level in percent
+     */
+    virtual void chargeChanged( int charge ) = 0;
 
-            /**
-            * This signal is emitted whenever the phone's power supply source changes
-            *
-            * @param powerSupplyType the power supply type
-            */
-            virtual void chargeTypeChanged( KMobileTools::Status::PowerSupplyType powerSupplyType ) = 0;
+    /**
+     * This signal is emitted whenever the phone's power supply source changes
+     *
+     * @param powerSupplyType the power supply type
+     */
+    virtual void chargeTypeChanged( KMobileTools::Status::PowerSupplyType powerSupplyType ) = 0;
 
-            /**
-            * This signal whenever the phone is ringing
-            *
-            * @param ringing true if phone is ringing
-            */
-            virtual void phoneRinging( bool ringing ) = 0;
+    /**
+     * This signal whenever the phone is ringing
+     *
+     * @param ringing true if phone is ringing
+     */
+    virtual void phoneRinging( bool ringing ) = 0;
 };
 
 }
