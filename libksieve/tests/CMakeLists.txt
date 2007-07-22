@@ -22,5 +22,5 @@ set(parsertest_SRCS parsertest.cpp )
 
 kde4_add_test_executable(parsertest ${parsertest_SRCS})
 
-target_link_libraries(parsertest  ksieve ${KDE4_KDECORE_LIBS} )
+target_link_libraries(parsertest  ksieve ${KDE4_KDECORE_LIBS} ${KDE4_KDE3SUPPORT_LIBS})
 
