@@ -86,6 +86,14 @@ public:
     virtual QString revision() const = 0;
 
     virtual ~Information();
+
+protected:
+//Q_SIGNALS:
+
+    /**
+     * This signal is emitted whenever the network name changes
+     */
+    virtual void networkNameChanged( const QString& networkName ) = 0;
 };
 
 }
