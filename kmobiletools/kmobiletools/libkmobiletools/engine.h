@@ -34,10 +34,6 @@
 #include <libkmobiletools/job.h>
 // #define HAVE_KCAL 1
 
-/**
-@author Marco Gulino
-*/
-
 class KPluginInfo;
 class SMSList;
 class QWizardPage;
@@ -111,7 +107,7 @@ class KMOBILETOOLS_EXPORT Engine : public QObject
          *
          * @return the thread weaver instance
          */
-        KMobileTools::Weaver *ThreadWeaver();
+        KMobileTools::Weaver *ThreadWeaver(); /// @TODO move to protected
 
         /**
          * Retrieves the phone SMS folders.
@@ -162,7 +158,9 @@ class KMOBILETOOLS_EXPORT Engine : public QObject
         virtual QString engineLibName() const=0;
         KPluginInfo *pluginInfo();
 
-        virtual QStringList encodings() = 0;
+        virtual QStringList encodings() = 0; /** @TODO remove?! strings should be passed as utf8
+                                               * and converted by the engine if needed
+                                               */
         int currentPBMemSlot(); /// @TODO remove
         void setCurrentPBMemSlot(int type); /// @TODO remove
 
@@ -255,9 +253,10 @@ class KMOBILETOOLS_EXPORT Engine : public QObject
         virtual void slotSendSMS(SMS*) = 0; /// @TODO remove
         virtual void slotSendStoredSMS(SMS*) = 0; /// @TODO remove
         virtual void slotEditAddressee(const KABC::Addressee&, const KABC::Addressee&) = 0; /// @TODO remove
-        virtual void slotStopDevice();
-        virtual void slotResumeDevice();
-        virtual void slotWeaverSuspended();
+        virtual void slotStopDevice(); /// @TODO remove?! method is not actively used anyway
+        virtual void slotResumeDevice(); /// @TODO remove?! method is not actively used anyway
+        virtual void slotWeaverSuspended(); /// @TODO move to protected
+
         virtual void slotFetchCalendar() = 0;
         virtual void slotSwitchToFSMode();
 
@@ -286,12 +285,12 @@ class KMOBILETOOLS_EXPORT Engine : public QObject
         /**
          * This signal is emitted when the engine is suspended.
          */
-        void suspended();
+        void suspended(); /// @TODO this signal is needed for dialing only, so probably remove
 
         /**
          * This signal is emitted when the engine is resumed.
          */
-        void resumed();
+        void resumed(); /// @TODO this signal is needed for dialing only, so probably remove
 
         /**
          * This signal is emitted when a job is enqueued.

@@ -73,56 +73,55 @@ namespace KMobileTools {
              * 
              * @return the signal strength in percent
              */
-            int signalStrength() const;
+            int signalStrength() const; /// @TODO remove
 
             /**
              * Sets the phone's signal strength
              * 
              * @p signalStrength the signal strength in percent
              */
-            void setSignalStrength( int signalStrength );
+            void setSignalStrength( int signalStrength ); /// @TODO remove
 
             /**
              * Returns the phone's charge in percent
              * 
              * @return the phone's charge in percent
              */
-            int charge() const;
+            int charge() const; /// @TODO remove
 
             /**
              * Sets the phone's charge in percent
              * 
              * @p charge the phone's charge in percent
              */
-            void setCharge( int charge );
-
+            void setCharge( int charge ); /// @TODO remove
             /**
              * Returns the phone's charge type
              * 
              * @return the phone's charge type
              */
-            int chargeType() const;
+            int chargeType() const; /// @TODO remove
 
             /**
              * Sets the phone's charge type
              * 
              * @p chargeType the phone's charge type
              */
-            void setChargeType( ChargeType chargeType );
+            void setChargeType( ChargeType chargeType ); /// @TODO remove
 
             /**
              * Returns whether the phone is ringing
              * 
              * @return true if the phone is ringing
              */
-            bool phoneRinging() const;
+            bool phoneRinging() const; /// @TODO remove
 
             /**
              * Sets whether the phone is ringing
              * 
              * @p chargeType true if the phone is ringing
              */
-            void setPhoneRinging( bool ringing );
+            void setPhoneRinging( bool ringing ); /// @TODO remove
 
             /**
              * Returns the network the phone is currently logged in
