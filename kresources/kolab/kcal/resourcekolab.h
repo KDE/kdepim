@@ -134,7 +134,7 @@ public:
   /** What is the label for this subresource? */
   virtual const QString labelForSubresource( const QString& resource ) const;
 
-  virtual QString subresourceIdentifier( Incidence *incidence );
+  virtual QString subresourceIdentifier( KCal::Incidence *incidence );
 
   //TODO need to implement them
   virtual void deleteAllEvents() {}

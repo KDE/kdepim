@@ -1104,7 +1104,7 @@ bool ResourceKolab::removeSubresource( const QString& resource )
 }
 
 /*virtual*/
-QString ResourceKolab::subresourceIdentifier( Incidence *incidence )
+QString ResourceKolab::subresourceIdentifier( KCal::Incidence *incidence )
 {
   QString uid = incidence->uid();
   if ( mUidMap.contains( uid ) )
