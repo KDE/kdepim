@@ -14,14 +14,13 @@
 #define KNODE_NNTPJOBS_H
 
 #include "knjobdata.h"
+#include "kngroupmanager.h"
 
 #include <kio/job.h>
 
 #include <Q3SortedList>
 
 class KJob;
-
-class KNGroupInfo;
 
 namespace KNode {
 
