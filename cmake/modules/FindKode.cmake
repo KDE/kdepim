@@ -15,8 +15,10 @@
 # check if we are currently building kdepim
 if ( EXISTS ${CMAKE_SOURCE_DIR}/libkdepim/kdepim_export.h )
 	if (WIN32)
-		set( KODE_XML_COMPILER_EXECUTABLE ${CMAKE_BINARY_DIR}/bin/kxml_compiler.exe.bat )
+		# CMAKE_CFG_INTDIR is the output subdirectory created e.g. by XCode and MSVC
+		set( KODE_XML_COMPILER_EXECUTABLE ${CMAKE_BINARY_DIR}/bin/${CMAKE_CFG_INTDIR}/kxml_compiler.exe.bat )
 	else(WIN32)
+		# On problems when building with XCode try adding ${CMAKE_CFG_INTDIR}, see also FindKDE4Internal.cmake
 		set( KODE_XML_COMPILER_EXECUTABLE ${CMAKE_BINARY_DIR}/kode/kxml_compiler/kxml_compiler.shell )
 	endif(WIN32)
 	set( _KODE_XML_COMPILER_DEP kxml_compiler )
