@@ -66,8 +66,10 @@ set(kabc_xmlrpc_plugin_PART_SRCS kabc_resourcexmlrpcplugin.cpp )
 
 
 kde4_add_plugin(kabc_xmlrpc_plugin ${kabc_xmlrpc_plugin_PART_SRCS})
+# TODO: plugin and shared lib could not have the same name
+if (NOT MSVC) 
 set_target_properties(kabc_xmlrpc_plugin PROPERTIES OUTPUT_NAME kabc_xmlrpc)
-
+endif (NOT MSVC) 
 
 
 target_link_libraries(kabc_xmlrpc_plugin  ${KDE4_KDECORE_LIBS} kabc_xmlrpc)
@@ -81,8 +83,10 @@ set(kcal_xmlrpc_plugin_PART_SRCS kcal_resourcexmlrpcplugin.cpp )
 
 
 kde4_add_plugin(kcal_xmlrpc_plugin ${kcal_xmlrpc_plugin_PART_SRCS})
+# TODO: plugin and shared lib could not have the same name
+if (NOT MSVC) 
 set_target_properties(kcal_xmlrpc_plugin PROPERTIES OUTPUT_NAME kcal_xmlrpc)
-
+endif (NOT MSVC) 
 
 
 target_link_libraries(kcal_xmlrpc_plugin ${KDE4_KDECORE_LIBS} kcal_xmlrpc)
@@ -96,8 +100,10 @@ set(knotes_xmlrpc_plugin_PART_SRCS knotes_resourcexmlrpcplugin.cpp )
 
 
 kde4_add_plugin(knotes_xmlrpc_plugin ${knotes_xmlrpc_plugin_PART_SRCS})
+# TODO: plugin and shared lib could not have the same name
+if (NOT MSVC) 
 set_target_properties(knotes_xmlrpc_plugin PROPERTIES OUTPUT_NAME knotes_xmlrpc)
-
+endif (NOT MSVC) 
 
 
 target_link_libraries(knotes_xmlrpc_plugin knotes_xmlrpc ${KDE4_KDECORE_LIBS} knotes_xmlrpc )

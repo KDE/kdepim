@@ -43,8 +43,10 @@ set(kcal_groupdav_plugin_PART_SRCS kcal_resourcegroupdav_plugin.cpp)
 
 
 kde4_add_plugin(kcal_groupdav_plugin ${kcal_groupdav_plugin_PART_SRCS})
+# TODO: plugin and shared lib could not have the same name
+if (NOT MSVC) 
 set_target_properties(kcal_groupdav_plugin PROPERTIES OUTPUT_NAME kcal_groupdav)
-
+endif (NOT MSVC) 
 
 target_link_libraries(kcal_groupdav_plugin  ${KDE4_KDECORE_LIBS} kcal_groupdav)
 
@@ -57,8 +59,10 @@ set(kabc_groupdav_plugin_PART_SRCS kabc_resourcegroupdav_plugin.cpp )
 
 
 kde4_add_plugin(kabc_groupdav_plugin ${kabc_groupdav_plugin_PART_SRCS})
+# TODO: plugin and shared lib could not have the same name
+if (NOT MSVC) 
 set_target_properties(kabc_groupdav_plugin PROPERTIES OUTPUT_NAME kabc_groupdav)
-
+endif (NOT MSVC) 
 
 target_link_libraries(kabc_groupdav_plugin  ${KDE4_KDECORE_LIBS} kabc_groupdav)
 
