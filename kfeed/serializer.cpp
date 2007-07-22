@@ -74,7 +74,7 @@ public:
             writer.writeStartElement( name );
     }
 
-    void write( const QVariant& value , QXmlStreamWriter& writer, TextMode mode = ::PlainText ) const
+    void write( const QVariant& value , QXmlStreamWriter& writer, TextMode mode = PlainText ) const
     {
         if ( value == defaultValue )
             return;
@@ -83,7 +83,7 @@ public:
             writer.writeStartElement( name );
         else
             writer.writeStartElement( ns, name );
-        if ( mode == ::Html )
+        if ( mode == Html )
         {
             writer.writeAttribute( "type", "html" );
         }
@@ -97,7 +97,7 @@ public:
 struct Elements 
 {
     Elements() : atomNS( Syndication::Atom::atom1Namespace() ), 
-                 kfeedNS( ::kfeedNamespace() ),
+                 kfeedNS( kfeedNamespace() ),
                  commentNS( Syndication::commentApiNamespace() ),
                  title( atomNS, "title", QString() ),
                  summary( atomNS, "summary", QString() ),
@@ -178,7 +178,7 @@ void writeLink( const QString& url, QXmlStreamWriter& writer )
 {
     if ( url.isEmpty() )
         return;
-    ::Elements::instance.link.writeStartElement( writer );
+    Elements::instance.link.writeStartElement( writer );
     writer.writeAttribute( "rel", "alternate" );
     writeAttributeIfNotEmpty( "href", url, writer );
     writer.writeEndElement();
@@ -186,7 +186,7 @@ void writeLink( const QString& url, QXmlStreamWriter& writer )
 
 void writeCategory( const KFeed::Category& category, QXmlStreamWriter& writer )
 {
-    ::Elements::instance.category.writeStartElement( writer );
+    Elements::instance.category.writeStartElement( writer );
     writeAttributeIfNotEmpty( "term", category.term(), writer );
     writeAttributeIfNotEmpty( "scheme", category.scheme(), writer );
     writeAttributeIfNotEmpty( "label", category.label(), writer );
@@ -195,18 +195,18 @@ void writeCategory( const KFeed::Category& category, QXmlStreamWriter& writer )
 
 void writeAuthor( const KFeed::Person& person, QXmlStreamWriter& writer )
 {
-    const ::Elements el;
+    const Elements el;
     const QString atomNS = Syndication::Atom::atom1Namespace();
-    ::Elements::instance.author.writeStartElement( writer );
-    ::Elements::instance.name.write( person.name(), writer );
-    ::Elements::instance.uri.write( person.uri(), writer );
-    ::Elements::instance.email.write( person.email(), writer );
+    Elements::instance.author.writeStartElement( writer );
+    Elements::instance.name.write( person.name(), writer );
+    Elements::instance.uri.write( person.uri(), writer );
+    Elements::instance.email.write( person.email(), writer );
     writer.writeEndElement();
 }
 
 void writeEnclosure( const KFeed::Enclosure& enclosure, QXmlStreamWriter& writer )
 {
-    ::Elements::instance.link.writeStartElement( writer );
+    Elements::instance.link.writeStartElement( writer );
     writeAttributeIfNotEmpty( "rel", "enclosure", writer );
     writeAttributeIfNotEmpty( "href", enclosure.url(), writer );
     writeAttributeIfNotEmpty( "title", enclosure.title(), writer );
@@ -220,23 +220,23 @@ void writeEnclosure( const KFeed::Enclosure& enclosure, QXmlStreamWriter& writer
 
 void writeItem( const KFeed::Item& item, QXmlStreamWriter& writer )
 {
-    const ::Elements el;
+    const Elements el;
     const QString atomNS = Syndication::Atom::atom1Namespace();
     const QString commentNS = Syndication::commentApiNamespace();
-    const QString kfeedNS = ::kfeedNamespace(); 
+    const QString kfeedNS = kfeedNamespace(); 
     writer.writeDefaultNamespace( atomNS );
     writer.writeNamespace( commentNS, "comment" );
     writer.writeNamespace( kfeedNS, "kfeed" );
     writer.writeNamespace( Syndication::itunesNamespace(), "itunes" );
 
     el.entry.writeStartElement( writer );
-    el.title.write( item.title(), writer, ::Html );
+    el.title.write( item.title(), writer, Html );
     const QString description = item.description();
-    el.summary.write( description, writer, ::Html );
+    el.summary.write( description, writer, Html );
     const QString content = item.content();
     if ( content != description )
-        el.content.write( content, writer, ::Html );
-    ::writeLink( item.link(), writer );
+        el.content.write( content, writer, Html );
+    writeLink( item.link(), writer );
     el.language.write( item.language(), writer );
     el.id.write( item.id(), writer );
 
@@ -255,15 +255,15 @@ void writeItem( const KFeed::Item& item, QXmlStreamWriter& writer )
 
     Q_FOREACH( const KFeed::Category i, item.categories() )
     {
-        ::writeCategory( i, writer );
+        writeCategory( i, writer );
     }
     Q_FOREACH( const KFeed::Person i, item.authors() )
     {
-        ::writeAuthor( i, writer );
+        writeAuthor( i, writer );
     }
     Q_FOREACH( const KFeed::Enclosure i, item.enclosures() )
     {
-        ::writeEnclosure( i, writer );
+        writeEnclosure( i, writer );
     }
 
     el.status.write( item.status(), writer );
@@ -321,11 +321,11 @@ void readAuthor( KFeed::Item& item, QXmlStreamReader& reader )
             --depth;
         else if ( reader.isStartElement() )
         {
-            if ( ::Elements::instance.name.isNextIn( reader ) )
+            if ( Elements::instance.name.isNextIn( reader ) )
                 author.setName( reader.readElementText() );
-            else if ( ::Elements::instance.uri.isNextIn( reader ) )
+            else if ( Elements::instance.uri.isNextIn( reader ) )
                 author.setUri( reader.readElementText() );
-            else if ( ::Elements::instance.email.isNextIn( reader ) )
+            else if ( Elements::instance.email.isNextIn( reader ) )
                 author.setEmail( reader.readElementText() );
         }
 
@@ -359,9 +359,9 @@ void readCustomProperty( KFeed::Item& item, QXmlStreamReader& reader )
             --depth;
         else if ( reader.isStartElement() )
         {
-            if ( ::Elements::instance.key.isNextIn( reader ) )
+            if ( Elements::instance.key.isNextIn( reader ) )
                 key = reader.readElementText();
-            else if ( ::Elements::instance.value.isNextIn( reader ) )
+            else if ( Elements::instance.value.isNextIn( reader ) )
                 value = reader.readElementText();
         }
     }

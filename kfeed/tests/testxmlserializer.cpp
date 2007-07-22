@@ -56,8 +56,8 @@ void testItem( const KFeed::Item& item )
     QVERIFY2( success, "Deserialization failed" );
     if ( item != deserialized )
     {
-        ::printItem( item );
-        ::printItem( deserialized );
+        printItem( item );
+        printItem( deserialized );
     }
     QCOMPARE( item, deserialized );
 }
