@@ -41,7 +41,7 @@ class ResourceCachedReloadConfig;
 
   @see ResourceBlog
 */
-class ResourceBlogConfig : public KRES::ConfigWidget
+class KCAL_RESOURCEBLOG_EXPORT ResourceBlogConfig : public KRES::ConfigWidget
 {
   Q_OBJECT
   public:

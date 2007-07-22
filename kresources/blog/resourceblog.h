@@ -38,7 +38,7 @@ namespace KCal
 /**
   This class provides a journal stored on a blog.
 */
-class ResourceBlog : public ResourceCached
+class KCAL_RESOURCEBLOG_EXPORT ResourceBlog : public ResourceCached
 {
   Q_OBJECT
     friend class ResourceBlogConfig;

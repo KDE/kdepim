@@ -35,7 +35,7 @@
 
 using namespace KCal;
 
-KCAL_RESOURCEBLOG_EXPORT ResourceBlogConfig::ResourceBlogConfig
+ResourceBlogConfig::ResourceBlogConfig
 ( QWidget *parent ) : KRES::ConfigWidget( parent )
 {
   //FIXME: Resize to abritary size to fix KOrganizer bug.

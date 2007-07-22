@@ -39,13 +39,13 @@
 
 using namespace KCal;
 
-KCAL_RESOURCEBLOG_EXPORT ResourceBlog::ResourceBlog()
+ResourceBlog::ResourceBlog()
     : ResourceCached(), mUseProgressManager( true ), mUseCacheFile( true )
 {
   init();
 }
 
-KCAL_RESOURCEBLOG_EXPORT ResourceBlog::ResourceBlog( const KConfigGroup &group )
+ResourceBlog::ResourceBlog( const KConfigGroup &group )
     : ResourceCached( group ), mUseProgressManager( true ),
     mUseCacheFile( true )
 {
@@ -53,7 +53,7 @@ KCAL_RESOURCEBLOG_EXPORT ResourceBlog::ResourceBlog( const KConfigGroup &group )
   readConfig( group );
 }
 
-KCAL_RESOURCEBLOG_EXPORT ResourceBlog::ResourceBlog( const KUrl &url )
+ResourceBlog::ResourceBlog( const KUrl &url )
     : ResourceCached(), mUseProgressManager( false ), mUseCacheFile( false )
 {
   init();
