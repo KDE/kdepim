@@ -92,7 +92,7 @@ protected:
 	 * @param numberOfNewMessages The number of unread messages.
 	 * @param newMessages Are there any new messages (important for displaying it)?
 	 */
-	virtual void setCount( int numberOfNewMessages, bool newMessages ) = 0;
+	virtual void setCount( const int numberOfNewMessages, const bool newMessages ) = 0;
 
 	/**
 	 * This functions sets a new Tooltip. Boxes must override this method
