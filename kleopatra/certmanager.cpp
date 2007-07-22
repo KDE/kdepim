@@ -41,24 +41,23 @@
 #include "conf/configuredialog.h"
 
 // libkleopatra
-#include <kleo/cryptobackendfactory.h>
-#include <kleo/downloadjob.h>
-#include <kleo/importjob.h>
-#include <kleo/exportjob.h>
-#include <kleo/multideletejob.h>
-#include <kleo/deletejob.h>
-#include <kleo/keylistjob.h>
-#include <kleo/dn.h>
-#include <kleo/keyfilter.h>
-#include <kleo/keyfiltermanager.h>
-#include <kleo/hierarchicalkeylistjob.h>
-#include <kleo/refreshkeysjob.h>
-#include <kleo/cryptoconfig.h>
-
-#include <kleo/ui/progressdialog.h>
-#include <kleo/ui/progressbar.h>
-#include <kleo/ui/keyselectiondialog.h>
-#include <kleo/ui/cryptoconfigdialog.h>
+#include "libkleo/kleo/cryptobackendfactory.h"
+#include "libkleo/kleo/downloadjob.h"
+#include "libkleo/kleo/importjob.h"
+#include "libkleo/kleo/exportjob.h"
+#include "libkleo/kleo/multideletejob.h"
+#include "libkleo/kleo/deletejob.h"
+#include "libkleo/kleo/keylistjob.h"
+#include "libkleo/kleo/dn.h"
+#include "libkleo/kleo/keyfilter.h"
+#include "libkleo/kleo/keyfiltermanager.h"
+#include "libkleo/kleo/hierarchicalkeylistjob.h"
+#include "libkleo/kleo/refreshkeysjob.h"
+#include "libkleo/kleo/cryptoconfig.h"
+#include "libkleo/ui/progressdialog.h"
+#include "libkleo/ui/progressbar.h"
+#include "libkleo/ui/keyselectiondialog.h"
+#include "libkleo/ui/cryptoconfigdialog.h"
 
 // GPGME++
 #include <gpgmepp/importresult.h>

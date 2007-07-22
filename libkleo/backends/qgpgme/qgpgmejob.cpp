@@ -33,7 +33,7 @@
 #include "qgpgmejob.h"
 #include "qgpgmeprogresstokenmapper.h"
 
-#include <kleo/job.h>
+#include "libkleo/kleo/job.h"
 #include <kpassworddialog.h>
 
 #include <qgpgme/eventloopinteractor.h>

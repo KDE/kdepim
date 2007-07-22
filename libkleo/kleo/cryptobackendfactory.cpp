@@ -32,15 +32,15 @@
 
 #include "cryptobackendfactory.h"
 
-#include <backends/qgpgme/qgpgmebackend.h>
+#include "libkleo/backends/qgpgme/qgpgmebackend.h"
 #if 0 // disabled for kde-3.3
-#include <backends/kpgp/pgp2backend.h>
-#include <backends/kpgp/pgp5backend.h>
-#include <backends/kpgp/pgp6backend.h>
-#include <backends/kpgp/gpg1backend.h>
+#include "libkleo/backends/kpgp/pgp2backend.h"
+#include "libkleo/backends/kpgp/pgp5backend.h"
+#include "libkleo/backends/kpgp/pgp6backend.h"
+#include "libkleo/backends/kpgp/gpg1backend.h"
 #endif
-#include <backends/chiasmus/chiasmusbackend.h>
-#include <ui/backendconfigwidget.h>
+#include "libkleo/backends/chiasmus/chiasmusbackend.h"
+#include "libkleo/ui/backendconfigwidget.h"
 
 #include <kconfig.h>
 #include <klocale.h>

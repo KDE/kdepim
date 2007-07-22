@@ -40,7 +40,7 @@
 #include "keyrequester.h"
 
 #include <cryptplugfactory.h>
-#include <kleo/cryptobackend.h>
+#include "libkleo/kleo/cryptobackend.h"
 #include <kpushbutton.h>
 #include <klocale.h>
 #include <kglobalsettings.h>

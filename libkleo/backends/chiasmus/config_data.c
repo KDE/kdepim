@@ -30,8 +30,8 @@
     your version.
 */
 
+/* include "config-chiasmus.h" */
 #include "config_data.h"
-#include <config-chiasmus.h>
 
 #include "kleo/cryptoconfig.h" /* for the enum values */
 

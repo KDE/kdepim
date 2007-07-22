@@ -33,12 +33,11 @@
 #include "certificatewizardimpl.h"
 
 // libkleopatra
-#include <kleo/oidmap.h>
-#include <kleo/keygenerationjob.h>
-#include <kleo/dn.h>
-#include <kleo/cryptobackendfactory.h>
-
-#include <kleo/ui/progressdialog.h>
+#include "libkleo/kleo/oidmap.h"
+#include "libkleo/kleo/keygenerationjob.h"
+#include "libkleo/kleo/dn.h"
+#include "libkleo/kleo/cryptobackendfactory.h"
+#include "libkleo/ui/progressdialog.h"
 
 // gpgme++
 #include <gpgmepp/keygenerationresult.h>

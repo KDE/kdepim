@@ -86,7 +86,9 @@ add_subdirectory(libkholidays)
 
 if(GPGME_FOUND)
    macro_optional_add_subdirectory(kleopatra)
+   add_subdirectory(libkleo)
 endif(GPGME_FOUND)
+
 add_subdirectory(libkpgp)
 add_subdirectory(libksieve)
 add_subdirectory(mimelib)

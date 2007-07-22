@@ -35,8 +35,8 @@
 #include "kwatchgnupg.h"
 #include "tray.h"
 
-#include <kleo/cryptobackendfactory.h>
-#include <kleo/cryptoconfig.h>
+#include "libkleo/kleo/cryptobackendfactory.h"
+#include "libkleo/kleo/cryptoconfig.h"
 
 #include <kdebug.h>
 #include <kmessagebox.h>

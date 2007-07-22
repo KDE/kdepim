@@ -33,8 +33,8 @@
 
 #include "appearanceconfigwidget.h"
 
-#include <kleo/cryptobackendfactory.h>
-#include <kleo/keyfiltermanager.h>
+#include "libkleo/kleo/cryptobackendfactory.h"
+#include "libkleo/kleo/keyfiltermanager.h"
 
 #include <k3listview.h>
 #include <kconfig.h>

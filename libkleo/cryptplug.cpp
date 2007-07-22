@@ -24,7 +24,7 @@
   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA
 */
 
-#include "kleo/oidmap.h"
+#include "libkleo/kleo/oidmap.h"
 
 #include <gpgmepp/context.h>
 #include <gpgmepp/data.h>

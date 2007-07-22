@@ -37,7 +37,7 @@
 #include "dn.h"
 
 #include "oidmap.h"
-#include "ui/dnattributeorderconfigwidget.h"
+#include "libkleo/ui/dnattributeorderconfigwidget.h"
 
 #include <kconfig.h>
 #include <klocale.h>

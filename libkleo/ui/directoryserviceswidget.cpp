@@ -36,7 +36,7 @@
 #include "cryptplugwrapper.h"
 
 #include <klineedit.h>
-#include <kleo/cryptoconfig.h>
+#include "libkleo/kleo/cryptoconfig.h"
 #include <kiconloader.h>
 #include <kdebug.h>
 

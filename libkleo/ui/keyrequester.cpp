@@ -50,9 +50,9 @@
 
 #include "keyselectiondialog.h"
 
-#include <kleo/keylistjob.h>
-#include <kleo/dn.h>
-#include <kleo/cryptobackendfactory.h>
+#include "libkleo/kleo/keylistjob.h"
+#include "libkleo/kleo/dn.h"
+#include "libkleo/kleo/cryptobackendfactory.h"
 
 // gpgme++
 #include <gpgmepp/key.h>

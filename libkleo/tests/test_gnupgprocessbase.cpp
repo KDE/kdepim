@@ -36,7 +36,7 @@
 
 #include "gnupgviewer.h"
 
-#include <backends/qgpgme/gnupgprocessbase.h>
+#include "libkleo/backends/qgpgme/gnupgprocessbase.h"
 
 #include <kapplication.h>
 #include <kaboutdata.h>

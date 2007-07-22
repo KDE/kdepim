@@ -33,7 +33,7 @@
 #include "aboutdata.h"
 #include "certmanager.h"
 
-#include <kleo/cryptobackendfactory.h>
+#include "libkleo/kleo/cryptobackendfactory.h"
 
 #include <kapplication.h>
 #include <kcmdlineargs.h>

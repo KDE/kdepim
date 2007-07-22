@@ -25,7 +25,7 @@ kde4_add_ui_files(kleopatra_bin_SRCS certificateinfowidget.ui certificatewizard.
 kde4_add_executable(kleopatra_bin ${kleopatra_bin_SRCS})
 set_target_properties(kleopatra_bin  PROPERTIES OUTPUT_NAME kleopatra)
 
-target_link_libraries(kleopatra_bin ${KDE4_KUTILS_LIBS} ${KDE4_KDE3SUPPORT_LIBS} ${KDE4_KABC_LIBS} ${KDE4_KLEO_LIBS} ${KDE4_GPGMEPP_LIBS} ${KDE4_QGPGME_LIBS} ${GPGME_LIBRARIES})
+target_link_libraries(kleopatra_bin ${KDE4_KUTILS_LIBS} ${KDE4_KDE3SUPPORT_LIBS} ${KDE4_KABC_LIBS} kleo ${KDE4_GPGMEPP_LIBS} ${KDE4_QGPGME_LIBS} ${GPGME_LIBRARIES})
 
 install(TARGETS kleopatra_bin  DESTINATION ${BIN_INSTALL_DIR} )
 

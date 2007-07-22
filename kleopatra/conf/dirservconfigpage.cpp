@@ -30,9 +30,8 @@
 */
 
 #include "dirservconfigpage.h"
-#include <kleo/ui/directoryserviceswidget.h>
-
-#include <kleo/cryptobackendfactory.h>
+#include "libkleo/ui/directoryserviceswidget.h"
+#include "libkleo/kleo/cryptobackendfactory.h"
 
 #include <kmessagebox.h>
 #include <klocale.h>

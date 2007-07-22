@@ -33,7 +33,7 @@
 #define DIRSERVCONFIGPAGE_H
 
 #include <kcmodule.h>
-#include <kleo/cryptoconfig.h>
+#include "libkleo/kleo/cryptoconfig.h"
 
 class QCheckBox;
 class QTimeEdit;

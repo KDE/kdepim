@@ -31,9 +31,9 @@
 
 #include "test_keylister.h"
 
-#include <kleo/keylistjob.h>
-#include <cryptplugwrapper.h>
-#include <kleo/cryptobackendfactory.h>
+#include "libkleo/kleo/keylistjob.h"
+#include "libkleo/cryptplugwrapper.h"
+#include "libkleo/kleo/cryptobackendfactory.h"
 
 #include <gpgmepp/keylistresult.h>
 #include <gpgmepp/key.h>

@@ -12,7 +12,7 @@ set(kwatchgnupg_SRCS
 
 kde4_add_executable(kwatchgnupg ${kwatchgnupg_SRCS})
 
-target_link_libraries(kwatchgnupg ${KDE4_KUTILS_LIBS} ${KDE4_KLEO_LIBS})
+target_link_libraries(kwatchgnupg ${KDE4_KUTILS_LIBS} kleo)
 
 install(TARGETS kwatchgnupg  DESTINATION ${BIN_INSTALL_DIR} )
 

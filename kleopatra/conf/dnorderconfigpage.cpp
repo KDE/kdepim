@@ -31,8 +31,8 @@
 
 #include "dnorderconfigpage.h"
 
-#include <kleo/ui/dnattributeorderconfigwidget.h>
-#include <kleo/dn.h>
+#include "libkleo/ui/dnattributeorderconfigwidget.h"
+#include "libkleo/kleo/dn.h"
 #include <kcomponentdata.h>
 
 #include <QLayout>

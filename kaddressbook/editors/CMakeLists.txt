@@ -2,7 +2,7 @@
 add_subdirectory( protocols ) 
 add_subdirectory( icons ) 
 
-include_directories( ${CMAKE_SOURCE_DIR}/kaddressbook/interfaces ${CMAKE_SOURCE_DIR}/kaddressbook ${KDE4_INCLUDE_DIR} ${GPGME_INCLUDES} ${QT_INCLUDES} )
+include_directories( ${CMAKE_SOURCE_DIR}/kaddressbook/interfaces ${CMAKE_SOURCE_DIR}/kaddressbook ${KDE4_INCLUDE_DIR} ${GPGME_INCLUDES} ${CMAKE_SOURCE_DIR}/libkleo ${QT_INCLUDES} )
 
 
 ########### next target ###############
@@ -14,7 +14,7 @@ kde4_add_plugin(kaddrbk_cryptosettings WITH_PREFIX ${kaddrbk_cryptosettings_PART
 
 
 
-target_link_libraries(kaddrbk_cryptosettings  ${KDE4_KDECORE_LIBS} ${KDE4_KABC_LIBS} ${KDE4_KLEO_LIBS} kaddressbook)
+target_link_libraries(kaddrbk_cryptosettings  ${KDE4_KDECORE_LIBS} ${KDE4_KABC_LIBS} kleo kaddressbook)
 
 install(TARGETS kaddrbk_cryptosettings  DESTINATION ${PLUGIN_INSTALL_DIR})
 
