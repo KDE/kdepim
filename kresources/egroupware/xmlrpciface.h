@@ -92,8 +92,8 @@ namespace KXMLRPC
 
       template <typename T>
       void call( const QString &method, const QList<T> &arg,
-        QObject* obj, const char* faultSlot,
-        QObject* obj, const char* messageSlot, const QVariant &id = QVariant() );
+        QObject* obj1, const char* faultSlot,
+        QObject* obj2, const char* messageSlot, const QVariant &id = QVariant() );
 
 
     public slots:
