@@ -42,7 +42,7 @@
 #include "ui_imeditorbase.h"
 #include "imeditorwidget.h"
 
-IMAddressLVI::IMAddressLVI( K3ListView *parent, KPluginInfo *protocol,
+IMAddressLVI::IMAddressLVI( K3ListView *parent, const KPluginInfo &protocol,
                             const QString &address, const IMContext &context )
   : K3ListViewItem( parent )
 {
@@ -109,15 +109,15 @@ void IMAddressLVI::setContext( const IMContext &context )
 */
 }
 
-void IMAddressLVI::setProtocol( KPluginInfo *protocol )
+void IMAddressLVI::setProtocol( const KPluginInfo &protocol )
 {
   mProtocol = protocol;
 
-  setPixmap( 0, SmallIcon( mProtocol->icon() ) );
-  setText( 0, mProtocol->name() );
+  setPixmap( 0, SmallIcon( mProtocol.icon() ) );
+  setText( 0, mProtocol.name() );
 }
 
-KPluginInfo * IMAddressLVI::protocol() const
+KPluginInfo IMAddressLVI::protocol() const
 {
   return mProtocol;
 }
@@ -173,11 +173,11 @@ IMEditorWidget::IMEditorWidget( QWidget *parent, const QString &preferredIM )
 
   // order the protocols by putting them in a qmap, then sorting
   // the set of keys and recreating the list
-  QMap<QString, KPluginInfo *> protocolMap;
-  QList<KPluginInfo *>::ConstIterator it;
-  QList<KPluginInfo *> sorted;
+  QMap<QString, KPluginInfo> protocolMap;
+  QList<KPluginInfo>::ConstIterator it;
+  QList<KPluginInfo> sorted;
   for ( it = mProtocols.begin(); it != mProtocols.end(); ++it ) {
-    protocolMap.insert( (*it)->name(), (*it) );
+    protocolMap.insert( it->name(), (*it) );
   }
 
   QStringList keys = protocolMap.keys();
@@ -190,7 +190,7 @@ IMEditorWidget::IMEditorWidget( QWidget *parent, const QString &preferredIM )
   mProtocols = sorted;
 }
 
-QList<KPluginInfo *> IMEditorWidget::availableProtocols() const
+QList<KPluginInfo> IMEditorWidget::availableProtocols() const
 {
   return mProtocols;
 }
@@ -212,8 +212,8 @@ void IMEditorWidget::loadContact( KABC::Addressee *addr )
 
     if ( app.startsWith( QString::fromLatin1( "messaging/" ) ) ) {
       if ( name == QString::fromLatin1( "All" ) ) {
-        KPluginInfo *protocol = protocolFromString( app );
-        if ( protocol ) {
+        const KPluginInfo protocol = protocolFromString( app );
+        if ( protocol.isValid() ) {
           QStringList addresses = value.split( QChar( 0xE000 ), QString::SkipEmptyParts );
           QStringList::iterator end = addresses.end();
           for ( QStringList::ConstIterator it = addresses.begin(); it != end; ++it ) {
@@ -240,7 +240,7 @@ void IMEditorWidget::storeContact( KABC::Addressee *addr )
 {
   // for each changed protocol, write a new custom field containing the current set of
   // addresses
-  QList<KPluginInfo *>::ConstIterator protocolIt;
+  QList<KPluginInfo>::ConstIterator protocolIt;
   for ( protocolIt = mChangedProtocols.begin();
         protocolIt != mChangedProtocols.end(); ++protocolIt ) {
     QStringList lst;
@@ -253,7 +253,7 @@ void IMEditorWidget::storeContact( KABC::Addressee *addr )
       ++addressIt;
     }
 
-    QString addrBookField = (*protocolIt)->property( "X-KDE-InstantMessagingKABCField" ).toString();
+    QString addrBookField = protocolIt->property( "X-KDE-InstantMessagingKABCField" ).toString();
     if ( !lst.isEmpty() ) {
       addr->insertCustom( addrBookField, QString::fromLatin1( "All" ),
                           lst.join( QString( 0xE000 ) ) );
@@ -491,18 +491,16 @@ QString IMEditorWidget::preferred() const
   return retval.replace( QChar( 0xE120 ), " on " );
 }
 
-KPluginInfo * IMEditorWidget::protocolFromString( const QString &fieldValue ) const
+KPluginInfo IMEditorWidget::protocolFromString( const QString &fieldValue ) const
 {
-  QList<KPluginInfo *>::ConstIterator it;
-  KPluginInfo * protocol = 0;
+  QList<KPluginInfo>::ConstIterator it;
   for ( it = mProtocols.begin(); it != mProtocols.end(); ++it ) {
-    if ( (*it)->property( "X-KDE-InstantMessagingKABCField" ).toString() == fieldValue ) {
-      protocol = *it;
-      break;
+    if ( it->property( "X-KDE-InstantMessagingKABCField" ).toString() == fieldValue ) {
+      return *it;
     }
   }
 
-  return protocol;
+  return KPluginInfo();
 }
 
 void IMEditorWidget::splitField( const QString &str, QString &app, QString &name, QString &value )

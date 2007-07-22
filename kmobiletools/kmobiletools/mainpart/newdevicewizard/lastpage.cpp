@@ -63,7 +63,7 @@ QString LastPage::getHTMLTemplate() const
                 i18nc("Wizard summary - Advanced Phone Information", "Advanced Phone Information")
                );
     ret=ret.arg( field("phonename").toString(),
-                i18n("Engine: %1", KMobileTools::EnginesList::instance()->wizardEngine()->pluginInfo()->name() )
+                i18n("Engine: %1", KMobileTools::EnginesList::instance()->wizardEngine()->pluginInfo().name() )
                );
     return KMobileTools::EnginesList::instance()->wizardEngine()->parseWizardSummary(ret, wizard()->objectName() );
 }

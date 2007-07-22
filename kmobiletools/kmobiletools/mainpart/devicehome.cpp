@@ -300,15 +300,15 @@ void DeviceHome::loadEngine()
 {
     QString libName;
     devIsConnected=false;
-    KPluginInfo *infos=KMobileTools::EnginesList::instance()->engineInfo( DEVCFG(objectName() )->engine() );
-    if(!infos)
+    KPluginInfo infos=KMobileTools::EnginesList::instance()->engineInfo( DEVCFG(objectName() )->engine() );
+    if(!infos.isValid())
     {
         engine=0;
         KMessageBox::error(m_widget, i18n("The selected engine could not be found. Please reinstall KMobileTools.") );
         emit deleteThis( objectName() );
         return;
     }
-    libName=infos->service()->library();
+    libName=infos.service()->library();
     kDebug() << "**************** libname printable: " << qPrintable(libName) << endl;
     engine=KMobileTools::Engine::load(libName, this);
     if(!engine)

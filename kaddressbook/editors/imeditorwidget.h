@@ -27,10 +27,10 @@
 
 #include <k3listview.h>
 #include <kdialog.h>
+#include <KPluginInfo>
 
 #include "contacteditorwidget.h"
 
-class KPluginInfo;
 class Ui_IMEditorBase;
 
 enum IMContext {
@@ -58,7 +58,7 @@ class IMEditorWidget : public KDialog
     void loadContact( KABC::Addressee *addr );
     void storeContact( KABC::Addressee *addr );
     void setReadOnly( bool readOnly );
-    QList<KPluginInfo *> availableProtocols() const;
+    QList<KPluginInfo> availableProtocols() const;
     bool isModified() const;
     QString preferred() const;
 
@@ -78,7 +78,7 @@ class IMEditorWidget : public KDialog
     /**
      * Find a protocol that matches the KABC key, or 0 if none found
      */
-    KPluginInfo * protocolFromString( const QString &fieldValue ) const;
+    KPluginInfo protocolFromString( const QString &fieldValue ) const;
 
   private:
     bool mReadOnly;
@@ -88,8 +88,8 @@ class IMEditorWidget : public KDialog
     void setModified( bool modified );
 
     // Used to track changed protocols to reduce KABC writes
-    QList<KPluginInfo *> mChangedProtocols;
-    QList<KPluginInfo *> mProtocols;
+    QList<KPluginInfo> mChangedProtocols;
+    QList<KPluginInfo> mProtocols;
 };
 
 /**
@@ -100,15 +100,15 @@ class IMEditorWidget : public KDialog
 class IMAddressLVI : public K3ListViewItem
 {
   public:
-    IMAddressLVI( K3ListView *parent, KPluginInfo * protocol,
+    IMAddressLVI( K3ListView *parent, const KPluginInfo & protocol,
                   const QString &address, const IMContext &context = Any );
 
     void setAddress( const QString &address );
-    void setProtocol( KPluginInfo * protocol );
+    void setProtocol( const KPluginInfo & protocol );
     void setContext( const IMContext &context );
     void activate();
 
-    KPluginInfo * protocol() const;
+    KPluginInfo protocol() const;
     QString address() const;
     IMContext context() const;
 
@@ -120,7 +120,7 @@ class IMAddressLVI : public K3ListViewItem
                             int width, int alignment );
 
   private:
-    KPluginInfo * mProtocol;
+    KPluginInfo mProtocol;
     bool mPreferred;
     IMContext mContext;
     QString mAddress;

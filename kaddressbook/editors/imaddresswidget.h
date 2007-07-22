@@ -42,15 +42,15 @@ class IMAddressWidget : public QWidget, Ui::IMAddressBase
   Q_OBJECT
 
   public:
-    IMAddressWidget( QWidget *parent, QList<KPluginInfo *> protocols );
-    IMAddressWidget( QWidget *parent, QList<KPluginInfo *> protocols,
-                     KPluginInfo *protocol, const QString &address,
+    IMAddressWidget( QWidget *parent, QList<KPluginInfo> protocols );
+    IMAddressWidget( QWidget *parent, QList<KPluginInfo> protocols,
+                     const KPluginInfo &protocol, const QString &address,
                      const IMContext &context = Any );
 
-    KPluginInfo *protocol() const;
+    KPluginInfo protocol() const;
     IMContext context() const;
     QString address() const ;
-    QList<KPluginInfo *> mProtocols;
+    QList<KPluginInfo> mProtocols;
 
   signals:
     void inValidState( bool );

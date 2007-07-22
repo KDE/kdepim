@@ -32,9 +32,9 @@ using namespace KMobileTools;
 
 class KMobileTools::EnginePrivate {
 public:
-    EnginePrivate() : p_pluginInfo(NULL), enginedata(NULL)
+    EnginePrivate() : enginedata(NULL)
     {}
-        KPluginInfo *p_pluginInfo;
+        KPluginInfo p_pluginInfo;
         KMobileTools::Weaver *weaver;
 
         QList<KMobileTools::Job*> jobs;
@@ -154,7 +154,7 @@ void Engine::slotSwitchToFSMode()
 }
 
 
-KPluginInfo *Engine::pluginInfo()
+KPluginInfo Engine::pluginInfo()
 {
     return EnginesList::instance()->engineInfo(engineLibName(), true );
 }
@@ -166,12 +166,12 @@ QString Engine::currentDeviceName() const
 
 QString Engine::shortDesc()
 {
-    return pluginInfo()->comment();
+    return pluginInfo().comment();
 }
 
 QString Engine::longDesc()
 {
-    return pluginInfo()->property("Description").toString();
+    return pluginInfo().property("Description").toString();
 }
 
 

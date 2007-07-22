@@ -77,7 +77,7 @@ w_fsConfig=new QWidget();
     firstPage->kcfg_engine->hide(); // @TODO fix this ugly hack
     KPluginInfo::List engines=KMobileTools::EnginesList::instance()->availEngines();
     for(int i=0; i<engines.count(); i++)
-        firstPage->combo_engine->addItem(engines[i]->name(), engines[i]->service()->library() );
+        firstPage->combo_engine->addItem(engines[i].name(), engines[i].service()->library() );
 
 #ifdef ENABLE_FS
     fsConfig=new Ui::cfgFilesystem(); fsConfig->setupUi(w_fsConfig());

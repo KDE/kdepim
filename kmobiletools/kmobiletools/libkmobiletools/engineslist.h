@@ -54,7 +54,7 @@ public:
     bool lock(const QString &device);
     void unlock(const QString &device);
     KPluginInfo::List availEngines();
-    KPluginInfo* engineInfo(const QString &s, bool searchByLibrary=true);
+    KPluginInfo engineInfo(const QString &s, bool searchByLibrary=true);
 
     /**
      * A convenience method that allows to access a global engine object to be used in the wizard.

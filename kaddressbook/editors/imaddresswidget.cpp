@@ -34,7 +34,7 @@
 
 #include "imaddresswidget.h"
 
-IMAddressWidget::IMAddressWidget( QWidget *parent, QList<KPluginInfo *> protocols )
+IMAddressWidget::IMAddressWidget( QWidget *parent, QList<KPluginInfo> protocols )
   : QWidget( parent )
 {
   setupUi( this );
@@ -43,8 +43,8 @@ IMAddressWidget::IMAddressWidget( QWidget *parent, QList<KPluginInfo *> protocol
   init();
 }
 
-IMAddressWidget::IMAddressWidget( QWidget *parent, QList<KPluginInfo *> protocols,
-                                  KPluginInfo *protocol, const QString &address,
+IMAddressWidget::IMAddressWidget( QWidget *parent, QList<KPluginInfo> protocols,
+                                  const KPluginInfo &protocol, const QString &address,
                                   const IMContext &context )
   : QWidget( parent )
 {
@@ -76,7 +76,7 @@ void IMAddressWidget::slotAddressChanged( const QString &text )
   emit inValidState( !text.trimmed().isEmpty() );
 }
 
-KPluginInfo * IMAddressWidget::protocol() const
+KPluginInfo IMAddressWidget::protocol() const
 {
   int protocolIndex = cmbProtocol->currentIndex();
 
@@ -112,7 +112,7 @@ QString IMAddressWidget::address() const
 {
   // The protocol irc is a special case and hard coded in.
   // It's not nice, but the simplest way that I can see.
-  if ( protocol()->name() == "IRC" && !edtNetwork->text().trimmed().isEmpty() ) {
+  if ( protocol().name() == "IRC" && !edtNetwork->text().trimmed().isEmpty() ) {
     return edtAddress->text().trimmed() + QChar( 0xE120 ) + edtNetwork->text().trimmed();
   } else {
     return edtAddress->text().trimmed();
@@ -122,15 +122,15 @@ QString IMAddressWidget::address() const
 void IMAddressWidget::populateProtocols()
 {
   // insert the protocols in order
-  QList<KPluginInfo *>::ConstIterator it;
+  QList<KPluginInfo>::ConstIterator it;
   for ( it = mProtocols.begin(); it != mProtocols.end(); ++it ) {
-    cmbProtocol->addItem( SmallIcon( (*it)->icon() ), (*it)->name() );
+    cmbProtocol->addItem( SmallIcon( it->icon() ), it->name() );
   }
 }
 
 void IMAddressWidget::slotProtocolChanged()
 {
-  if ( protocol()->name() == "IRC" ) {
+  if ( protocol().name() == "IRC" ) {
     edtNetwork->show();
     labelNetwork->show();
   } else {

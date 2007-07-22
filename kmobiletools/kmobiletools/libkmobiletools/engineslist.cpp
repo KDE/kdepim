@@ -143,13 +143,13 @@ KPluginInfo::List KMobileTools::EnginesList::availEngines()
     return KPluginInfo::fromServices(trader->query("KMobileTools/Engine") );
 }
 
-KPluginInfo *KMobileTools::EnginesList::engineInfo(const QString &s, bool searchByLibrary)
+KPluginInfo KMobileTools::EnginesList::engineInfo(const QString &s, bool searchByLibrary)
 {
-    QList<KPluginInfo *> l_engines=availEngines();
-    for(QList<KPluginInfo *>::const_iterator it=l_engines.begin(); it!=l_engines.end(); it++)
-        if( ( (!searchByLibrary) && s==(*it)->name() ) ||
-                (searchByLibrary && s==(*it)->service()->library() ) ) return (*it);
-    return NULL;
+    QList<KPluginInfo> l_engines=availEngines();
+    for(QList<KPluginInfo>::const_iterator it=l_engines.begin(); it!=l_engines.end(); it++)
+        if( ( (!searchByLibrary) && s==it->name() ) ||
+                (searchByLibrary && s==it->service()->library() ) ) return (*it);
+    return KPluginInfo();
 }
 
 bool KMobileTools::EnginesList::closing() const

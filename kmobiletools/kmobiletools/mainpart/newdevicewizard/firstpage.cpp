@@ -54,8 +54,8 @@ QString FirstPage::engineLibrary() const {
 void FirstPage::engineSelected(int index)
 {
     kDebug() << "FirstPage::engineSelected(" << index << ")\n";
-    KPluginInfo *engInfo=KMobileTools::EnginesList::instance()->engineInfo(engineSelection->itemData(index).toString() );
-    if(!engInfo)
+    KPluginInfo engInfo=KMobileTools::EnginesList::instance()->engineInfo(engineSelection->itemData(index).toString() );
+    if(!engInfo.isValid())
     {
         kDebug() << "No data found for " << index << endl;
         KMobileTools::EnginesList::instance()->setWizardEngine();
@@ -63,9 +63,9 @@ void FirstPage::engineSelected(int index)
         emit engineLibraryChanged( engineLibrary() );
         return;
     }
-    engineDescLabel->setText(engInfo->property("Description").toString().replace('\n',"<br>") );
+    engineDescLabel->setText(engInfo.property("Description").toString().replace('\n',"<br>") );
 //     setNextEnabled ( currentPage(), true );
-    d->enginelibname=engInfo->service()->library();
+    d->enginelibname=engInfo.service()->library();
     emit engineLibraryChanged( engineLibrary() );
 //     setField("engine",d->enginelibname);
     // now let's load the engine library
@@ -74,7 +74,7 @@ void FirstPage::engineSelected(int index)
     if(!engine)
     {
         KMessageBox::error(this, i18n("Could not load the engine %1.\nIf this error persists, please restart KMobileTools.",
-                           engInfo->name() ) );
+                           engInfo.name() ) );
         KMobileTools::EnginesList::instance()->setWizardEngine();
         return;
     }
@@ -106,7 +106,7 @@ void FirstPage::initializePage()
         d->hasEngines=true;
         for(int i=0; i<engines.count(); i++ )
             // Adding libname as userdata
-            engineSelection->addItem(engines[i]->name(), engines[i]->service()->library() );
+            engineSelection->addItem(engines[i].name(), engines[i].service()->library() );
         engineSelected(engineSelection->currentIndex());
     }
     else

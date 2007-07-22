@@ -136,22 +136,22 @@ const QString DevicesConfig::firstFreeGroup()
 const QPixmap DevicesConfig::deviceTypeIcon(const QString &groupName, K3Icon::Group group, int size)
 {
     kDebug() << "deviceTypeIcon(); groupName=" << groupName << ", engine=" << DevicesConfig::prefs(groupName)->engine()<< endl;
-    KPluginInfo *info=EnginesList::instance()->engineInfo(DevicesConfig::prefs(groupName)->engine() );
-    if(!info) return QPixmap();
-    kDebug() << "icon:" << info->icon() << endl;
-    return KIconLoader::global()->loadIcon(info->icon(), group, size);
+    KPluginInfo info=EnginesList::instance()->engineInfo(DevicesConfig::prefs(groupName)->engine() );
+    if(!info.isValid()) return QPixmap();
+    kDebug() << "icon:" << info.icon() << endl;
+    return KIconLoader::global()->loadIcon(info.icon(), group, size);
 }
 
 const QString DevicesConfig::engineTypeName(const QString &libName)
 {
-    KPluginInfo *info=EnginesList::instance()->engineInfo(libName);
-    if(!info) return QString();
-    return info->name();
+    KPluginInfo info=EnginesList::instance()->engineInfo(libName);
+    if(!info.isValid()) return QString();
+    return info.name();
 }
 
 const QString DevicesConfig::deviceTypeIconPath(const QString &groupName, int groupOrSize)
 {
-    KPluginInfo *info=EnginesList::instance()->engineInfo(DevicesConfig::prefs(groupName)->engine() );
-    if(!info) return QString();
-    return KIconLoader::global()->iconPath(info->icon(), groupOrSize);
+    KPluginInfo info=EnginesList::instance()->engineInfo(DevicesConfig::prefs(groupName)->engine() );
+    if(!info.isValid()) return QString();
+    return KIconLoader::global()->iconPath(info.icon(), groupOrSize);
 }

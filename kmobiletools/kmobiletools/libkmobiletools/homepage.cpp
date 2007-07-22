@@ -154,8 +154,8 @@ void homepagePart::printIndexPage()
     {
         htmlData+="<a href=\"mobile:%3\"><img src=\"%1\" align=\"left\" style=\"background-image : url('%5');\"><p><font size=\"+1\">&nbsp;&nbsp;%2</font></p><p>&nbsp;&nbsp;%4</p><br clear=\"ALL\"></a><br>";
         QString iconDev;
-        KPluginInfo *infos=KMobileTools::EnginesList::instance()->engineInfo( DEVCFG(*it)->engine() );
-        if(infos) iconDev=infos->icon();
+        KPluginInfo infos=KMobileTools::EnginesList::instance()->engineInfo( DEVCFG(*it)->engine() );
+        if(infos.isValid()) iconDev=infos.icon();
         kDebug() << "Loaded icon: " << iconDev << endl;
 
 //         MainIFace_stub *mainStub=new MainIFace_stub(kapp->dcopClient(), "kmobiletools", "KMobileTools" );
