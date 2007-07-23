@@ -34,7 +34,7 @@
 #define __KLEO_QGPGMESECRETKEYEXPORTJOB_H__
 
 #include "libkleo/kleo/exportjob.h"
-#include "gpgmepp/context.h"
+#include "gpgme++/context.h"
 
 #include <q3cstring.h>
 

@@ -39,7 +39,7 @@
 #include "libkleo/ui/progressdialog.h"
 
 // gpgme++
-#include <gpgmepp/keylistresult.h>
+#include <gpgme++/keylistresult.h>
 
 // KDE
 #include <klocale.h>

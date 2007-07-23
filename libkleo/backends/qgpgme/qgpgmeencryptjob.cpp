@@ -38,9 +38,9 @@
 #include <qgpgme/eventloopinteractor.h>
 #include <qgpgme/dataprovider.h>
 
-#include <gpgmepp/context.h>
-#include <gpgmepp/encryptionresult.h>
-#include <gpgmepp/data.h>
+#include <gpgme++/context.h>
+#include <gpgme++/encryptionresult.h>
+#include <gpgme++/data.h>
 
 #include <assert.h>
 

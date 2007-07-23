@@ -35,8 +35,8 @@
 #include "libkleo/cryptplugwrapper.h"
 #include "libkleo/kleo/cryptobackendfactory.h"
 
-#include <gpgmepp/keylistresult.h>
-#include <gpgmepp/key.h>
+#include <gpgme++/keylistresult.h>
+#include <gpgme++/key.h>
 
 #include <kapplication.h>
 #include <kaboutdata.h>

@@ -35,10 +35,10 @@
 #include <qgpgme/eventloopinteractor.h>
 #include <qgpgme/dataprovider.h>
 
-#include <gpgmepp/context.h>
-#include <gpgmepp/signingresult.h>
-#include <gpgmepp/data.h>
-#include <gpgmepp/key.h>
+#include <gpgme++/context.h>
+#include <gpgme++/signingresult.h>
+#include <gpgme++/data.h>
+#include <gpgme++/key.h>
 
 #include <kmessagebox.h>
 #include <klocale.h>

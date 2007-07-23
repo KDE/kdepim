@@ -35,9 +35,9 @@
 
 #include "libkleo/kleo_export.h"
 
-#include <gpgmepp/interfaces/progressprovider.h>
-#include <gpgmepp/interfaces/passphraseprovider.h>
-#include <gpgmepp/key.h>
+#include <gpgme++/interfaces/progressprovider.h>
+#include <gpgme++/interfaces/passphraseprovider.h>
+#include <gpgme++/key.h>
 
 #include <q3cstring.h>
 

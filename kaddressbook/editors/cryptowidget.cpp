@@ -27,8 +27,8 @@
 #include "libkleo/cryptplugwrapper.h"
 #include "libkleo/kleo/enum.h"
 
-#include "gpgmepp/data.h"
-#include "gpgmepp/key.h"
+#include "gpgme++/data.h"
+#include "gpgme++/key.h"
 
 #include <kdebug.h>
 #include <kdialog.h>

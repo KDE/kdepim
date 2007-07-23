@@ -35,7 +35,7 @@
 
 #include "ui_certificateinfowidget.h"
 
-#include <gpgmepp/key.h>
+#include <gpgme++/key.h>
 
 #include <q3valuelist.h>
 //Added by qt3to4:

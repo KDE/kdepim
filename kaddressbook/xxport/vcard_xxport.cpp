@@ -41,10 +41,10 @@
 #include <libkdepim/addresseeview.h>
 #include <kpushbutton.h>
 
-#include "config.h" // needed for gpgmepp
-#include "gpgmepp/context.h"
-#include "gpgmepp/data.h"
-#include "gpgmepp/key.h"
+#include "config.h" // needed for gpgme++
+#include "gpgme++/context.h"
+#include "gpgme++/data.h"
+#include "gpgme++/key.h"
 #include "qgpgme/dataprovider.h"
 
 #include "xxportmanager.h"

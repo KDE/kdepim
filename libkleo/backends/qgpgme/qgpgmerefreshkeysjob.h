@@ -34,7 +34,7 @@
 #define __KLEO_QGPGMEREFRESHKEYSJOB_H__
 
 #include "libkleo/kleo/refreshkeysjob.h"
-#include "gpgmepp/context.h"
+#include "gpgme++/context.h"
 
 #include <QStringList>
 

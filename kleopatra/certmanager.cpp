@@ -60,9 +60,9 @@
 #include "libkleo/ui/cryptoconfigdialog.h"
 
 // GPGME++
-#include <gpgmepp/importresult.h>
-#include <gpgmepp/keylistresult.h>
-#include <gpgmepp/key.h>
+#include <gpgme++/importresult.h>
+#include <gpgme++/keylistresult.h>
+#include <gpgme++/key.h>
 
 // KDE
 #include <kicon.h>

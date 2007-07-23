@@ -33,7 +33,7 @@
 #ifndef __KLEO_SIGNJOB_H__
 #define __KLEO_SIGNJOB_H__
 
-#include <gpgmepp/context.h> // for Context::SignatureMode (or should
+#include <gpgme++/context.h> // for Context::SignatureMode (or should
 			     // we roll our own enum here?)
 #include "job.h"
 #include <QtCore/QByteArray>

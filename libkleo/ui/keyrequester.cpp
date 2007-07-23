@@ -55,8 +55,8 @@
 #include "libkleo/kleo/cryptobackendfactory.h"
 
 // gpgme++
-#include <gpgmepp/key.h>
-#include <gpgmepp/keylistresult.h>
+#include <gpgme++/key.h>
+#include <gpgme++/keylistresult.h>
 
 // KDE
 #include <klocale.h>

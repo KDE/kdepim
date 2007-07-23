@@ -35,9 +35,9 @@
 #include <qgpgme/dataprovider.h>
 #include <qgpgme/eventloopinteractor.h>
 
-#include <gpgmepp/context.h>
-#include <gpgmepp/keygenerationresult.h>
-#include <gpgmepp/data.h>
+#include <gpgme++/context.h>
+#include <gpgme++/keygenerationresult.h>
+#include <gpgme++/data.h>
 
 #include <assert.h>
 

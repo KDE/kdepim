@@ -33,7 +33,7 @@
 #ifndef __HIERARCHYANALYSER_H__
 #define __HIERARCHYANALYSER_H__
 
-#include <gpgmepp/key.h>
+#include <gpgme++/key.h>
 
 #include <QObject>
 

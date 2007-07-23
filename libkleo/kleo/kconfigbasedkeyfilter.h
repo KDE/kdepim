@@ -39,7 +39,7 @@
 #include <QString>
 #include <QColor>
 
-#include <gpgmepp/key.h>
+#include <gpgme++/key.h>
 
 class KConfigGroup;
 

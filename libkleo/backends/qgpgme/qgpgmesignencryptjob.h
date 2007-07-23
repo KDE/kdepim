@@ -37,8 +37,8 @@
 #include "libkleo/kleo/signencryptjob.h"
 #include "qgpgmejob.h"
 
-#include <gpgmepp/signingresult.h>
-#include <gpgmepp/encryptionresult.h>
+#include <gpgme++/signingresult.h>
+#include <gpgme++/encryptionresult.h>
 
 #include <q3cstring.h>
 

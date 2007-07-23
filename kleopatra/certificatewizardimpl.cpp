@@ -40,7 +40,7 @@
 #include "libkleo/ui/progressdialog.h"
 
 // gpgme++
-#include <gpgmepp/keygenerationresult.h>
+#include <gpgme++/keygenerationresult.h>
 
 // KDE
 #include <kabc/stdaddressbook.h>

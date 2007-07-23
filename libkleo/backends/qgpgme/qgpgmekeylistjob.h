@@ -35,7 +35,7 @@
 
 #include "libkleo/kleo/keylistjob.h"
 
-#include <gpgmepp/keylistresult.h>
+#include <gpgme++/keylistresult.h>
 
 #include "qgpgmejob.h"
 

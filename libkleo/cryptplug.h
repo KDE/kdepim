@@ -24,7 +24,7 @@
 
 #include "libkleo/kleo_export.h"
 
-#include <gpgmepp/context.h>
+#include <gpgme++/context.h>
 #include <gpgme.h> // need it for gpgme_protocol_t :(
 
 #include <stdlib.h>

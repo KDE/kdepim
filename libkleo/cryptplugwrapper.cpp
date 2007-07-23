@@ -50,9 +50,9 @@
 #include <qgpgme/dataprovider.h>
 
 // gpgme++
-#include <gpgmepp/data.h>
-#include <gpgmepp/importresult.h>
-#include <gpgmepp/keygenerationresult.h>
+#include <gpgme++/data.h>
+#include <gpgme++/importresult.h>
+#include <gpgme++/keygenerationresult.h>
 
 // kde
 #include <kdebug.h>

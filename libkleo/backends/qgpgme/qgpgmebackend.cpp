@@ -35,8 +35,8 @@
 #include "qgpgmecryptoconfig.h"
 #include "cryptplugwrapper.h"
 
-#include <gpgmepp/context.h>
-#include <gpgmepp/engineinfo.h>
+#include <gpgme++/context.h>
+#include <gpgme++/engineinfo.h>
 
 #include <klocale.h>
 #include <kstandarddirs.h>

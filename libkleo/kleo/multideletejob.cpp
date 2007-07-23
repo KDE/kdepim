@@ -36,9 +36,9 @@
 
 #include <klocale.h>
 
-#include <gpgmepp/key.h>
-#include <gpgmepp/context.h>
-#include <gpgmepp/data.h>
+#include <gpgme++/key.h>
+#include <gpgme++/context.h>
+#include <gpgme++/data.h>
 
 #include <iterator>
 

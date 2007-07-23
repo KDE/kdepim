@@ -35,7 +35,7 @@
 
 #include "libkleo/kleo_export.h"
 
-#include <gpgmepp/key.h>
+#include <gpgme++/key.h>
 
 #include <k3listview.h>
 

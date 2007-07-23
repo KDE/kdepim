@@ -34,7 +34,7 @@
 
 #include <qgpgme/eventloopinteractor.h>
 
-#include <gpgmepp/context.h>
+#include <gpgme++/context.h>
 
 #include <assert.h>
 

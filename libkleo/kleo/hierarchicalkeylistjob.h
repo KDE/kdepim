@@ -37,7 +37,7 @@
 #include "libkleo/kleo/keylistjob.h"
 #include "libkleo/kleo/cryptobackend.h"
 
-#include <gpgmepp/keylistresult.h>
+#include <gpgme++/keylistresult.h>
 
 #include <QtCore/QPointer>
 

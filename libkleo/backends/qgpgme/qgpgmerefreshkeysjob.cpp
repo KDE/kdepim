@@ -39,7 +39,7 @@
 
 #include <kdebug.h>
 
-#include <gpgmepp/context.h>
+#include <gpgme++/context.h>
 
 #include <qgpgme/eventloopinteractor.h>
 

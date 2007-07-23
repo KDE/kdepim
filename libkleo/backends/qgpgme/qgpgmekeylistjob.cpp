@@ -34,9 +34,9 @@
 
 #include <qgpgme/eventloopinteractor.h>
 
-#include <gpgmepp/key.h>
-#include <gpgmepp/context.h>
-#include <gpgmepp/keylistresult.h>
+#include <gpgme++/key.h>
+#include <gpgme++/context.h>
+#include <gpgme++/keylistresult.h>
 #include <gpg-error.h>
 
 #include <kmessagebox.h>

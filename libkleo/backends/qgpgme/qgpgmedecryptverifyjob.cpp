@@ -35,10 +35,10 @@
 #include <qgpgme/eventloopinteractor.h>
 #include <qgpgme/dataprovider.h>
 
-#include <gpgmepp/context.h>
-#include <gpgmepp/decryptionresult.h>
-#include <gpgmepp/verificationresult.h>
-#include <gpgmepp/data.h>
+#include <gpgme++/context.h>
+#include <gpgme++/decryptionresult.h>
+#include <gpgme++/verificationresult.h>
+#include <gpgme++/data.h>
 
 #include <assert.h>
 

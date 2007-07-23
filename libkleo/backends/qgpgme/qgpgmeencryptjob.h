@@ -37,7 +37,7 @@
 
 #include "qgpgmejob.h"
 
-#include <gpgmepp/encryptionresult.h>
+#include <gpgme++/encryptionresult.h>
 
 #include <q3cstring.h>
 

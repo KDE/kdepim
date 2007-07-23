@@ -42,7 +42,7 @@
 
 #include <kdialog.h>
 
-#include <gpgmepp/key.h>
+#include <gpgme++/key.h>
 
 #include <vector>
 

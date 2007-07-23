@@ -34,7 +34,7 @@
 #endif
 
 #include "libkleo/ui/keyselectiondialog.h"
-#include <gpgmepp/key.h>
+#include <gpgme++/key.h>
 
 #include <kcmdlineargs.h>
 #include <kaboutdata.h>

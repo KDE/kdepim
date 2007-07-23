@@ -37,7 +37,7 @@
 
 #include "qgpgmejob.h"
 
-#include <gpgmepp/signingresult.h>
+#include <gpgme++/signingresult.h>
 
 #include <q3cstring.h>
 
