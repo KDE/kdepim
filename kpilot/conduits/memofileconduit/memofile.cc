@@ -82,7 +82,7 @@ bool Memofile::load()
 
 	QString text,title,body;
 	title = filename();
-	body = ts.read();
+	body = ts.readAll();
 
 	// funky magic.  we want the text of the memofile to have the filename
 	// as the first line....
