@@ -360,7 +360,7 @@ void ResourceKolab::resolveConflict( KCal::Incidence* inc, const QString& subres
 {
     if ( ! inc )
         return;
-    if ( ! mResolveConflict ) {
+    if ( ! isResolveConflictSet() ) {
         // we should do no conflict resolution
         delete inc;
         return;
