@@ -1078,7 +1078,7 @@ void CertManager::slotDeleteCertificate() {
     }
     return;
   } else
-    disconnectJobFromStatusBarProgress( 0 );
+    disconnectJobFromStatusBarProgress( GpgME::Error() );
 
   std::vector<GpgME::Key> keysToDelete = keys;
   for ( std::vector<GpgME::Key>::const_iterator it = keys.begin() ; it != keys.end() ; ++it )
