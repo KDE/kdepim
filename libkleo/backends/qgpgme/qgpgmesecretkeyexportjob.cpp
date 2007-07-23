@@ -68,7 +68,7 @@ GpgME::Error Kleo::QGpgMESecretKeyExportJob::start( const QStringList & patterns
 
   if ( patterns.size() != 1 || patterns.front().isEmpty() ) {
     deleteLater();
-    return mError = gpg_err_make( GPG_ERR_SOURCE_GPGSM, GPG_ERR_INV_VALUE );
+    return mError = GpgME::Error( gpg_err_make( GPG_ERR_SOURCE_GPGSM, GPG_ERR_INV_VALUE ) );
   }
 
   // create and start gpgsm process:
@@ -95,18 +95,18 @@ GpgME::Error Kleo::QGpgMESecretKeyExportJob::start( const QStringList & patterns
 	   SLOT(slotStatus(Kleo::GnuPGProcessBase*,const QString&,const QStringList&)) );
 
   if ( !mProcess->start( K3Process::NotifyOnExit, K3Process::AllOutput ) ) {
-    mError = gpg_err_make( GPG_ERR_SOURCE_GPGSM, GPG_ERR_ENOENT ); // what else?
+    mError = GpgME::Error( gpg_err_make( GPG_ERR_SOURCE_GPGSM, GPG_ERR_ENOENT ) ); // what else?
     deleteLater();
     return mError;
   } else
-    return 0;
+    return GpgME::Error();
 }
 
 void Kleo::QGpgMESecretKeyExportJob::slotCancel() {
   if ( mProcess )
     mProcess->kill();
   mProcess = 0;
-  mError = gpg_err_make( GPG_ERR_SOURCE_GPGSM, GPG_ERR_CANCELED );
+  mError = GpgME::Error( gpg_err_make( GPG_ERR_SOURCE_GPGSM, GPG_ERR_CANCELED ) );
 }
 
 void Kleo::QGpgMESecretKeyExportJob::slotStatus( GnuPGProcessBase * proc, const QString & type, const QStringList & args ) {
@@ -133,7 +133,7 @@ void Kleo::QGpgMESecretKeyExportJob::slotStatus( GnuPGProcessBase * proc, const 
       kDebug( 5150 ) << "Kleo::QGpgMESecretKeyExportJob::slotStatus() expected number for second ERROR arg, got something else" << endl;
       return;
     }
-    mError = gpg_err_make( (gpg_err_source_t)source, (gpg_err_code_t)code );
+    mError = GpgME::Error( gpg_err_make( (gpg_err_source_t)source, (gpg_err_code_t)code ) );
 
 
   } else if ( type == "PROGRESS" ) {
@@ -185,7 +185,7 @@ void Kleo::QGpgMESecretKeyExportJob::slotProcessExited( K3Process * proc ) {
   emit done();
   if ( !mError &&
        ( !mProcess->normalExit() || mProcess->exitStatus() != 0 ) )
-    mError = gpg_err_make( GPG_ERR_SOURCE_GPGSM, GPG_ERR_GENERAL );
+    mError = GpgME::Error( gpg_err_make( GPG_ERR_SOURCE_GPGSM, GPG_ERR_GENERAL ) );
   emit result( mError, mKeyData );
   deleteLater();
 }

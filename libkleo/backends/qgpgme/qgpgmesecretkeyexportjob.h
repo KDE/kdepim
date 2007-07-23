@@ -34,6 +34,7 @@
 #define __KLEO_QGPGMESECRETKEYEXPORTJOB_H__
 
 #include "libkleo/kleo/exportjob.h"
+#include "gpgmepp/context.h"
 
 #include <q3cstring.h>
 
@@ -42,7 +43,6 @@ namespace Kleo {
 }
 
 namespace GpgME {
-  class Error;
   class Data;
 }
 
@@ -71,7 +71,7 @@ namespace Kleo {
   private:
     GnuPGProcessBase * mProcess;
     QByteArray mKeyData;
-    int mError;
+    GpgME::Error mError;
     bool mArmour;
     QString mCharset;
   };

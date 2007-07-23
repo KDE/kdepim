@@ -34,15 +34,12 @@
 #define __KLEO_QGPGMEREFRESHKEYSJOB_H__
 
 #include "libkleo/kleo/refreshkeysjob.h"
+#include "gpgmepp/context.h"
 
 #include <QStringList>
 
 namespace Kleo {
   class GnuPGProcessBase;
-}
-
-namespace GpgME {
-  class Error;
 }
 
 class K3Process;
@@ -71,7 +68,7 @@ namespace Kleo {
 
   private:
     GnuPGProcessBase * mProcess;
-    int mError;
+    GpgME::Error mError;
     QStringList mPatternsToDo;
   };
 

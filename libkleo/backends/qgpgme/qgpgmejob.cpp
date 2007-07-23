@@ -217,7 +217,7 @@ GpgME::Error Kleo::QGpgMEJob::setSigningKeys( const std::vector<GpgME::Key> & si
     if ( const GpgME::Error err = mCtx->addSigningKey( *it ) )
       return err;
   }
-  return 0;
+  return GpgME::Error();
 }
 
 void Kleo::QGpgMEJob::createInData( const QByteArray & in ) {

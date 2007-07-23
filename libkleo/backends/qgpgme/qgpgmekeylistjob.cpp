@@ -99,7 +99,7 @@ GpgME::Error Kleo::QGpgMEKeyListJob::start( const QStringList & pats, bool secre
     return err;
   }
   mResult = GpgME::KeyListResult( 0, 0 );
-  return 0;
+  return GpgME::Error();
 }
 
 GpgME::KeyListResult Kleo::QGpgMEKeyListJob::exec( const QStringList & pats, bool secretOnly, std::vector<GpgME::Key> & keys ) {
