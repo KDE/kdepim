@@ -83,7 +83,7 @@ bool ResourceFeaturePlan::doLoad( bool )
 {
   kDebug() << "ResourceFeaturePlan::load()" << endl;
 
-  mCalendar.close();
+  calendar()->close();
 
   FeaturesParser parser;
 
@@ -96,7 +96,7 @@ bool ResourceFeaturePlan::doLoad( bool )
     if ( !categories.isEmpty() ) {
       KCal::Todo *masterTodo = new KCal::Todo;
       masterTodo->setSummary( i18n("Feature Plan") );
-      mCalendar.addTodo( masterTodo );
+      calendar()->addTodo( masterTodo );
 
       insertCategories( categories, masterTodo );
       emit resourceChanged( this );
@@ -135,7 +135,7 @@ void ResourceFeaturePlan::insertCategories( const Category::List &categories,
       else completed = 0;
       todo->setPercentComplete( completed );
 
-      mCalendar.addTodo( todo );
+      calendar()->addTodo( todo );
     }
   }
 }

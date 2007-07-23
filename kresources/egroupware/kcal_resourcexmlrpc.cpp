@@ -216,7 +216,7 @@ bool ResourceXMLRPC::doLoad( bool )
 {
   kDebug() << "ResourceXMLRPC::load()" << endl;
 
-  mCalendar.close();
+  calendar()->close();
 
   disableChangeNotification();
   loadFromCache();
@@ -267,7 +267,7 @@ bool ResourceXMLRPC::doSave( bool )
 
   saveToCache();
 
-  const Event::List events = mCalendar.rawEvents();
+  const Event::List events = calendar()->rawEvents();
   Event::List::ConstIterator evIt;
 
   uint counter = 0;
@@ -284,7 +284,7 @@ bool ResourceXMLRPC::doSave( bool )
     }
   }
 
-  const Todo::List todos = mCalendar.rawTodos();
+  const Todo::List todos = calendar()->rawTodos();
   Todo::List::ConstIterator todoIt;
 
   for ( todoIt = todos.begin(); todoIt != todos.end(); ++todoIt ) {
@@ -326,7 +326,7 @@ bool ResourceXMLRPC::addEvent( Event* ev )
   disableChangeNotification();
 
   setRights( ev, EGW_ACCESS_ALL );
-  Event *oldEvent = mCalendar.event( ev->uid() );
+  Event *oldEvent = calendar()->event( ev->uid() );
   if ( oldEvent ) { // already exists
     if ( !oldEvent->isReadOnly() ) {
       writeEvent( ev, args );
@@ -335,8 +335,8 @@ bool ResourceXMLRPC::addEvent( Event* ev )
                      this, SLOT( updateEventFinished( const QList<QVariant>&, const QVariant& ) ),
                      this, SLOT( fault( int, const QString&, const QVariant& ) ) );
 
-      mCalendar.deleteIncidence( oldEvent );
-      mCalendar.addIncidence( ev );
+      calendar()->deleteIncidence( oldEvent );
+      calendar()->addIncidence( ev );
       saveToCache();
     }
   } else { // new event
@@ -346,7 +346,7 @@ bool ResourceXMLRPC::addEvent( Event* ev )
                    this, SLOT( fault( int, const QString&, const QVariant& ) ),
                    QVariant( ev->uid() ) );
 
-    mCalendar.addEvent( ev );
+    calendar()->addEvent( ev );
     saveToCache();
   }
 
@@ -371,31 +371,31 @@ bool ResourceXMLRPC::deleteEvent( Event* ev )
 
 Event *ResourceXMLRPC::event( const QString& uid )
 {
-  return mCalendar.event( uid );
+  return calendar()->event( uid );
 }
 
 Event::List ResourceXMLRPC::rawEventsForDate( const QDate& qd,
                                               EventSortField sortField,
                                               SortDirection sortDirection )
 {
-  return mCalendar.rawEventsForDate( qd, sortField, sortDirection );
+  return calendar()->rawEventsForDate( qd, sortField, sortDirection );
 }
 
 
 Event::List ResourceXMLRPC::rawEvents( const QDate& start, const QDate& end,
                                        bool inclusive )
 {
-  return mCalendar.rawEvents( start, end, inclusive );
+  return calendar()->rawEvents( start, end, inclusive );
 }
 
 Event::List ResourceXMLRPC::rawEventsForDate( const KDateTime& dt )
 {
-  return mCalendar.rawEventsForDate( dt.date() );
+  return calendar()->rawEventsForDate( dt.date() );
 }
 
 Event::List ResourceXMLRPC::rawEvents()
 {
-  return mCalendar.rawEvents();
+  return calendar()->rawEvents();
 }
 
 
@@ -406,7 +406,7 @@ bool ResourceXMLRPC::addTodo( Todo *todo )
   disableChangeNotification();
 
   setRights( todo, EGW_ACCESS_ALL );
-  Todo *oldTodo = mCalendar.todo( todo->uid() );
+  Todo *oldTodo = calendar()->todo( todo->uid() );
   if ( oldTodo ) { // already exists
     if ( !oldTodo->isReadOnly() ) {
       writeTodo( todo, args );
@@ -415,8 +415,8 @@ bool ResourceXMLRPC::addTodo( Todo *todo )
                      this, SLOT( updateTodoFinished( const QList<QVariant>&, const QVariant& ) ),
                      this, SLOT( fault( int, const QString&, const QVariant& ) ) );
 
-      mCalendar.deleteIncidence( oldTodo );
-      mCalendar.addIncidence( todo );
+      calendar()->deleteIncidence( oldTodo );
+      calendar()->addIncidence( todo );
       saveToCache();
     }
   } else { // new todo
@@ -426,7 +426,7 @@ bool ResourceXMLRPC::addTodo( Todo *todo )
                    this, SLOT( fault( int, const QString&, const QVariant& ) ),
                    QVariant( todo->uid() ) );
 
-    mCalendar.addTodo( todo );
+    calendar()->addTodo( todo );
     saveToCache();
   }
 
@@ -450,48 +450,48 @@ bool ResourceXMLRPC::deleteTodo( Todo *todo )
 
 Todo::List ResourceXMLRPC::rawTodos()
 {
-  return mCalendar.rawTodos();
+  return calendar()->rawTodos();
 }
 
 Todo *ResourceXMLRPC::todo( const QString& uid )
 {
-  return mCalendar.todo( uid );
+  return calendar()->todo( uid );
 }
 
 Todo::List ResourceXMLRPC::rawTodosForDate( const QDate& date )
 {
-  return mCalendar.rawTodosForDate( date );
+  return calendar()->rawTodosForDate( date );
 }
 
 bool ResourceXMLRPC::addJournal( Journal* journal )
 {
-  return mCalendar.addJournal( journal );
+  return calendar()->addJournal( journal );
 }
 
 bool ResourceXMLRPC::deleteJournal( Journal* journal )
 {
-  return mCalendar.deleteJournal( journal );
+  return calendar()->deleteJournal( journal );
 }
 
 Journal::List ResourceXMLRPC::journals( const QDate& date )
 {
-  return mCalendar.journals( date );
+  return calendar()->journals( date );
 }
 
 Journal *ResourceXMLRPC::journal( const QString& uid )
 {
-  return mCalendar.journal( uid );
+  return calendar()->journal( uid );
 }
 
 
 Alarm::List ResourceXMLRPC::alarmsTo( const KDateTime& to )
 {
-  return mCalendar.alarmsTo( to );
+  return calendar()->alarmsTo( to );
 }
 
 Alarm::List ResourceXMLRPC::alarms( const KDateTime& from, const KDateTime& to )
 {
-  return mCalendar.alarms( from, to );
+  return calendar()->alarms( from, to );
 }
 
 void ResourceXMLRPC::dump() const
@@ -566,15 +566,15 @@ void ResourceXMLRPC::listEventsFinished( const QList<QVariant>& list,
     Event *oldEvent = 0;
     QString localUid = idMapper().localId( uid );
     if ( !localUid.isEmpty() )
-      oldEvent = mCalendar.event( localUid );
+      oldEvent = calendar()->event( localUid );
 
     if ( oldEvent ) {
       event->setUid( oldEvent->uid() );
       event->setCreated( oldEvent->created() );
 
       if ( !(*oldEvent == *event) ) {
-        mCalendar.deleteEvent( oldEvent );
-        mCalendar.addEvent( event );
+        calendar()->deleteEvent( oldEvent );
+        calendar()->addEvent( event );
         retrievedEvents.append( event );
         changed = true;
       } else
@@ -583,7 +583,7 @@ void ResourceXMLRPC::listEventsFinished( const QList<QVariant>& list,
       if ( !localUid.isEmpty() )
         event->setUid( localUid );
       idMapper().setRemoteId( event->uid(), uid );
-      mCalendar.addEvent( event );
+      calendar()->addEvent( event );
       retrievedEvents.append( event );
       changed = true;
     }
@@ -608,10 +608,10 @@ void ResourceXMLRPC::deleteEventFinished( const QList<QVariant>&,
 {
   idMapper().removeRemoteId( idMapper().remoteId( id.toString() ) );
 
-  Event *ev = mCalendar.event( id.toString() );
+  Event *ev = calendar()->event( id.toString() );
 
   disableChangeNotification();
-  mCalendar.deleteEvent( ev );
+  calendar()->deleteEvent( ev );
   saveToCache();
   enableChangeNotification();
 
@@ -676,22 +676,22 @@ void ResourceXMLRPC::listTodosFinished( const QList<QVariant>& list,
     Todo *oldTodo = 0;
     QString localUid = idMapper().localId( uid );
     if ( !localUid.isEmpty() )
-      oldTodo = mCalendar.todo( localUid );
+      oldTodo = calendar()->todo( localUid );
 
     if ( oldTodo ) {
       todo->setUid( oldTodo->uid() );
       todo->setCreated( oldTodo->created() );
 
       if ( !(*oldTodo == *todo) ) {
-        mCalendar.deleteTodo( oldTodo );
-        mCalendar.addTodo( todo );
+        calendar()->deleteTodo( oldTodo );
+        calendar()->addTodo( todo );
         retrievedTodos.append( todo );
         changed = true;
       } else
         delete todo;
     } else {
       idMapper().setRemoteId( todo->uid(), uid );
-      mCalendar.addTodo( todo );
+      calendar()->addTodo( todo );
       retrievedTodos.append( todo );
       changed = true;
     }
@@ -714,9 +714,9 @@ void ResourceXMLRPC::deleteTodoFinished( const QList<QVariant>&,
   idMapper().removeRemoteId( idMapper().remoteId( id.toString() ) );
   mTodoStateMapper.remove( idMapper().remoteId( id.toString() ) );
 
-  Todo *todo = mCalendar.todo( id.toString() );
+  Todo *todo = calendar()->todo( id.toString() );
   disableChangeNotification();
-  mCalendar.deleteTodo( todo );
+  calendar()->deleteTodo( todo );
   saveToCache();
   enableChangeNotification();
 
@@ -1164,7 +1164,7 @@ void ResourceXMLRPC::readTodo( const QMap<QString, QVariant>& args, Todo *todo, 
   if ( parentId != "0" ) { // we are a sub todo
     QString localParentUid = idMapper().localId( parentId );
     if ( !localParentUid.isEmpty() ) { // found parent todo
-      Todo *parent = mCalendar.todo( localParentUid );
+      Todo *parent = calendar()->todo( localParentUid );
       if ( parent )
         todo->setRelatedTo( parent );
     }

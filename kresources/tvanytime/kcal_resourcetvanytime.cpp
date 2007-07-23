@@ -159,7 +159,7 @@ bool ResourceTVAnytime::doLoad( bool )
   }
 
   mUidMap.clear();
-  mCalendar.close();
+  calendar()->close();
 
   disableChangeNotification();
   // FIXME - reenable cache

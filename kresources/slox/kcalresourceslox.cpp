@@ -164,7 +164,7 @@ bool KCalResourceSlox::doLoad( bool )
     return false;
   }
 
-  mCalendar.close();
+  calendar()->close();
 
   disableChangeNotification();
   loadFromCache();
@@ -936,14 +936,14 @@ void KCalResourceSlox::slotLoadTodosResult( KJob *job )
       SloxItem item = *it;
       QString uid = sloxIdToTodoUid( item.sloxId );
       if ( item.status == SloxItem::Delete ) {
-        Todo *todo = mCalendar.todo( uid );
+        Todo *todo = calendar()->todo( uid );
         if ( todo ) {
-          mCalendar.deleteTodo( todo );
+          calendar()->deleteTodo( todo );
           changed = true;
         }
       } else if ( item.status == SloxItem::Create ) {
         Todo *newTodo = 0;
-        Todo *todo = mCalendar.todo( uid );
+        Todo *todo = calendar()->todo( uid );
         if ( !todo ) {
           newTodo = new Todo;
           todo = newTodo;
@@ -965,7 +965,7 @@ void KCalResourceSlox::slotLoadTodosResult( KJob *job )
 
         mWebdavHandler.setSloxAttributes( todo );
 
-        if ( newTodo ) mCalendar.addTodo( todo );
+        if ( newTodo ) calendar()->addTodo( todo );
 
         changed = true;
       }
@@ -1010,14 +1010,14 @@ void KCalResourceSlox::slotLoadEventsResult( KJob *job )
       SloxItem item = *it;
       QString uid = sloxIdToEventUid( item.sloxId );
       if ( item.status == SloxItem::Delete ) {
-        Event *event = mCalendar.event( uid );
+        Event *event = calendar()->event( uid );
         if ( event ) {
-          mCalendar.deleteEvent( event );
+          calendar()->deleteEvent( event );
           changed = true;
         }
       } else if ( item.status == SloxItem::Create ) {
         Event *newEvent = 0;
-        Event *event = mCalendar.event( uid );
+        Event *event = calendar()->event( uid );
         if ( !event ) {
           newEvent = new Event;
           event = newEvent;
@@ -1053,7 +1053,7 @@ void KCalResourceSlox::slotLoadEventsResult( KJob *job )
 
 //        kDebug() << "EVENT " << item.uid << " " << event->summary() << endl;
 
-        if ( newEvent ) mCalendar.addEvent( event );
+        if ( newEvent ) calendar()->addEvent( event );
 
         changed = true;
       }
@@ -1164,8 +1164,8 @@ void KCalResourceSlox::slotUploadResult( KJob *job )
           i->setCustomProperty( "SLOX", "ID", sloxId );
 
           disableChangeNotification();
-          mCalendar.deleteIncidence( mUploadedIncidence );
-          mCalendar.addIncidence( i );
+          calendar()->deleteIncidence( mUploadedIncidence );
+          calendar()->addIncidence( i );
           saveToCache();
           enableChangeNotification();
 
@@ -1277,7 +1277,7 @@ void KCalResourceSlox::doClose()
   if ( mUploadJob ) {
     kError() << "KCalResourceSlox::doClose() Still saving" << endl;
   } else {
-    mCalendar.close();
+    calendar()->close();
   }
 }
 

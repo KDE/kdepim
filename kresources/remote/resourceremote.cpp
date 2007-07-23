@@ -182,7 +182,7 @@ bool ResourceRemote::doLoad( bool )
     return false;
   }
 
-  mCalendar.close();
+  calendar()->close();
 
   if ( mUseCacheFile ) {
     disableChangeNotification();
@@ -229,7 +229,7 @@ void ResourceRemote::slotLoadJobResult( KJob *job )
   } else {
     kDebug(5800) << "ResourceRemote::slotLoadJobResult() success" << endl;
 
-    mCalendar.close();
+    calendar()->close();
     disableChangeNotification();
     loadFromCache();
     enableChangeNotification();

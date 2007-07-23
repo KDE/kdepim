@@ -136,7 +136,7 @@ bool ResourceGroupwise::doLoad( bool )
     return true;
   }
 
-  mCalendar.close();
+  calendar()->close();
 
   disableChangeNotification();
   loadFromCache();
