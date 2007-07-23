@@ -93,7 +93,7 @@ void Kleo::MultiDeleteJob::slotResult( const GpgME::Error & err ) {
 
 GpgME::Error Kleo::MultiDeleteJob::startAJob() {
   if ( mIt == mKeys.end() )
-    return 0;
+    return GpgME::Error(0);
   mJob = mProtocol->deleteJob();
   assert( mJob ); // FIXME: we need a way to generate errors ourselves,
 		  // but I don't like the dependency on gpg-error :/

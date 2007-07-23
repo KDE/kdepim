@@ -71,7 +71,7 @@ Kleo::HierarchicalKeyListJob::~HierarchicalKeyListJob() {
 
 GpgME::Error Kleo::HierarchicalKeyListJob::start( const QStringList & patterns, bool secretOnly ) {
   if ( secretOnly || patterns.empty() )
-    return gpg_err_make( GPG_ERR_SOURCE_GPGME, GPG_ERR_UNSUPPORTED_OPERATION );
+    return GogME::Error( gpg_err_make( GPG_ERR_SOURCE_GPGME, GPG_ERR_UNSUPPORTED_OPERATION ) );
   qCopy( patterns.begin(), patterns.end(),
 	 std::inserter( mNextSet, mNextSet.begin() ) );
   const GpgME::Error err = startAJob();
