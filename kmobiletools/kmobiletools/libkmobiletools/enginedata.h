@@ -309,7 +309,7 @@ namespace KMobileTools {
             *
             * @param name the name of the network.
             */
-            void networkNameChanged( const QString& name );
+            void networkNameChanged( const QString& name ); /// @TODO remove
 
             /**
             * This signal is emitted when a SMS is added.

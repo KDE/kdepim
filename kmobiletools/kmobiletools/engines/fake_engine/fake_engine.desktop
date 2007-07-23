@@ -1,0 +1,8 @@
+[Desktop Entry]
+Encoding=UTF-8
+Type=Service
+Name=Fake engine
+Comment=A KMobileTools fake engine
+ServiceTypes=KMobileTools/Engine
+Description=A KMobileTools fake engine that is used as a proof of concept for the api redesign.
+X-KDE-Library=libkmobiletools_fake

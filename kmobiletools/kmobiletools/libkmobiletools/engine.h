@@ -81,7 +81,7 @@ class KMOBILETOOLS_EXPORT Engine : public QObject
          * - Nokia : Nokia
          */
         enum ManufacturerEnum { Unknown = 0, Motorola = 1, Siemens = 2,
-                                SonyEricsson = 3, Nokia = 4 };
+                                SonyEricsson = 3, Nokia = 4 }; /// @TODO remove
 
         /**
          * Creates a new Engine object.
