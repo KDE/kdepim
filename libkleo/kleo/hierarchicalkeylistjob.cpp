@@ -83,7 +83,7 @@ GpgME::Error Kleo::HierarchicalKeyListJob::start( const QStringList & patterns, 
 GpgME::KeyListResult Kleo::HierarchicalKeyListJob::exec( const QStringList &, bool,
 							 std::vector<GpgME::Key> & keys ) {
   keys.clear();
-  return GpgME::KeyListResult( gpg_err_make( GPG_ERR_SOURCE_GPGME, GPG_ERR_UNSUPPORTED_OPERATION ) );
+  return GpgME::KeyListResult( GpgME::Error( gpg_err_make( GPG_ERR_SOURCE_GPGME, GPG_ERR_UNSUPPORTED_OPERATION ) ) );
 }
 
 void Kleo::HierarchicalKeyListJob::slotNextKey( const GpgME::Key & key ) {
@@ -134,7 +134,7 @@ void Kleo::HierarchicalKeyListJob::slotResult( const GpgME::KeyListResult & res 
 
 GpgME::Error Kleo::HierarchicalKeyListJob::startAJob() {
   if ( mNextSet.empty() )
-    return 0;
+    return GpgME::Error(0);
   mJob = mProtocol->keyListJob( mRemote, mIncludeSigs, mValidating );
   assert( mJob ); // FIXME: we need a way to generate errors ourselves,
 		  // but I don't like the dependency on gpg-error :/

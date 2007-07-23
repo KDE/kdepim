@@ -67,7 +67,7 @@ Kleo::ObtainKeysJob::~ObtainKeysJob() {}
 
 GpgME::Error Kleo::ObtainKeysJob::start() {
   QTimer::singleShot( 0, this, SLOT(slotPerform()) );
-  return mError = 0;
+  return mError = GpgME::Error();
 }
 
 GpgME::Error Kleo::ObtainKeysJob::exec() {
@@ -85,7 +85,7 @@ void Kleo::ObtainKeysJob::slotPerform() {
 
 void Kleo::ObtainKeysJob::slotPerform( bool async ) {
   if ( mCanceled && !mError )
-    mError = gpg_error( GPG_ERR_CANCELED );
+    mError = GpgME::Error( gpg_error( GPG_ERR_CANCELED ) );
   if ( int(mIndex) >= mKeyPaths.size() || mError ) {
     emit done();
     emit SpecialJob::result( mError, QVariant( mResult ) );
