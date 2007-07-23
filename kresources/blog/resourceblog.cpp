@@ -176,7 +176,7 @@ void ResourceBlog::setAPI( const APIType &API )
     kError() << "ResourceBlog::setAPI(): Unrecognised API: " << API << endl;
     return;
   }
-  mAPI->setUsername( mUser );
+  //mAPI->setUsername( mUser );
   mAPI->setPassword( mPassword );
 }
 
