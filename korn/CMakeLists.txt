@@ -72,8 +72,8 @@ install(TARGETS korn  DESTINATION ${BIN_INSTALL_DIR} )
 
 ########### install files ###############
 
-install( FILES KOrn.desktop  DESTINATION ${XDG_APPS_DIR})
-install( FILES org.kde.korn.BoxContainerItem.xml org.kde.korn.MailDrop.xml DESTINATION ${DBUS_INTERFACES_DIR} )
+install( FILES KOrn.desktop  DESTINATION ${XDG_APPS_INSTALL_DIR})
+install( FILES org.kde.korn.BoxContainerItem.xml org.kde.korn.MailDrop.xml DESTINATION ${DBUS_INTERFACES_INSTALL_DIR} )
 
 
 kde4_install_icons( ${ICON_INSTALL_DIR}   )

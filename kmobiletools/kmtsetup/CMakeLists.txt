@@ -15,7 +15,7 @@ install(TARGETS kmtsetup DESTINATION ${BIN_INSTALL_DIR})
 
 ########### install files ###############
 
-install( FILES  kmtsetup.desktop DESTINATION ${XDG_APPS_DIR} )
+install( FILES  kmtsetup.desktop DESTINATION ${XDG_APPS_INSTALL_DIR} )
 install( FILES  kmtsetupui.rc kmobilewizard.png DESTINATION ${DATA_INSTALL_DIR}/kmtsetup )
 
 kde4_install_icons( ${ICON_INSTALL_DIR} )

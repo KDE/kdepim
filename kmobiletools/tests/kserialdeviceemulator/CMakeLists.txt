@@ -20,7 +20,7 @@ install(TARGETS kserialdeviceemulator DESTINATION ${BIN_INSTALL_DIR})
 ########### install files ###############
 
 install( FILES  kserialdeviceemulatorui.rc DESTINATION ${DATA_INSTALL_DIR}/kserialdeviceemulator )
-install( FILES  kserialdeviceemulator.desktop DESTINATION ${XDG_APPS_DIR})
+install( FILES  kserialdeviceemulator.desktop DESTINATION ${XDG_APPS_INSTALL_DIR})
 
 kde4_install_icons( ${ICON_INSTALL_DIR} )
 

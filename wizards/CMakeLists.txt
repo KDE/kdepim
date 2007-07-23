@@ -76,6 +76,6 @@ install(TARGETS kolabwizard  DESTINATION ${BIN_INSTALL_DIR})
 
 ########### install files ###############
 
-install( FILES groupwarewizard.desktop  DESTINATION ${XDG_APPS_DIR})
+install( FILES groupwarewizard.desktop  DESTINATION ${XDG_APPS_INSTALL_DIR})
 install( FILES egroupware.kcfg slox.kcfg kolab.kcfg groupwise.kcfg  DESTINATION ${KCFG_INSTALL_DIR})
 

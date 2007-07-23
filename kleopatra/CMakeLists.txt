@@ -32,7 +32,7 @@ install(TARGETS kleopatra_bin  DESTINATION ${BIN_INSTALL_DIR} )
 
 ########### install files ###############
 
-install( FILES kleopatra_import.desktop  DESTINATION ${XDG_APPS_DIR})
+install( FILES kleopatra_import.desktop  DESTINATION ${XDG_APPS_INSTALL_DIR})
 install( FILES kleopatraui.rc  DESTINATION ${DATA_INSTALL_DIR}/kleopatra)
 
 

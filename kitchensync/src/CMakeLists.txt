@@ -85,5 +85,5 @@ INSTALL(TARGETS kitchensyncpart DESTINATION ${PLUGIN_INSTALL_DIR} )
 
 ########### install files ###############
 
-INSTALL( FILES kitchensync.desktop DESTINATION ${XDG_APPS_DIR} )
+INSTALL( FILES kitchensync.desktop DESTINATION ${XDG_APPS_INSTALL_DIR} )
 INSTALL( FILES kitchensyncui.rc kitchensync_part.rc DESTINATION ${DATA_INSTALL_DIR}/kitchensync )

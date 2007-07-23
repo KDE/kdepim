@@ -54,7 +54,7 @@ install(
 )
 
 install(
-	FILES kpalmdoc.desktop DESTINATION ${XDG_APPS_DIR}
+	FILES kpalmdoc.desktop DESTINATION ${XDG_APPS_INSTALL_DIR}
 )
 
 install(

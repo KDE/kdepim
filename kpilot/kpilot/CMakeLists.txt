@@ -140,7 +140,7 @@ install(TARGETS kpilotDaemon  DESTINATION ${BIN_INSTALL_DIR})
 
 install( FILES kpilotui.rc DESTINATION ${DATA_INSTALL_DIR}/kpilot)
 
-install(FILES kpilot.desktop kpilotdaemon.desktop DESTINATION ${XDG_APPS_DIR})
+install(FILES kpilot.desktop kpilotdaemon.desktop DESTINATION ${XDG_APPS_INSTALL_DIR})
 
 install(FILES kpilotconduit.desktop DESTINATION ${SERVICETYPES_INSTALL_DIR})
 

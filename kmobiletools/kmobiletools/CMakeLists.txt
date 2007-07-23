@@ -30,6 +30,6 @@ install(TARGETS kmobiletools_bin DESTINATION ${BIN_INSTALL_DIR})
 
 ########### install files ###############
 
-install( FILES  kmobiletools.desktop DESTINATION ${XDG_APPS_DIR} )
+install( FILES  kmobiletools.desktop DESTINATION ${XDG_APPS_INSTALL_DIR} )
 install( FILES  kmobiletoolsui.rc DESTINATION ${DATA_INSTALL_DIR}/kmobiletools )
 
