@@ -26,7 +26,7 @@
 #ifdef Q_WS_WIN
 
 #ifndef KLEO_EXPORT
-# ifdef MAKE_KLEO_GPL_LIB
+# ifdef MAKE_KLEO_LIB
 #  define KLEO_EXPORT KDE_EXPORT
 # else
 #  define KLEO_EXPORT KDE_IMPORT
