@@ -90,6 +90,16 @@ public:
 	bool containsPCId( const QString &pcRecordId ) const;
 	
 	/**
+	 * Change the HH id @p from to @p to.
+	 */
+	void changeHHId( const QString &from, const QString &to );
+	
+	/**
+	 * Change the PC id @p from to @p to.
+	 */
+	void changePCId( const QString &from, const QString &to );
+	
+	/**
 	 * Validates the mapping file with given dataproxy. The mapping is considered 
 	 * valid if:
 	 * 1. The number of mappings matches the number of records in @p ids.

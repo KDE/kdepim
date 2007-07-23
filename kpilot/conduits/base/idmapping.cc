@@ -131,6 +131,23 @@ bool IDMapping::containsPCId( const QString &recordId ) const
 	return fSource.constMappings()->values().contains( recordId );
 }
 
+void IDMapping::changeHHId( const QString &from, const QString &to )
+{
+	FUNCTIONSETUP;
+	
+	QString pcId = pcRecordId( from );
+	fSource.mappings()->remove( from );
+	fSource.mappings()->insert( to, pcId );
+}
+
+void IDMapping::changePCId( const QString &from, const QString &to )
+{
+	FUNCTIONSETUP;
+	
+	QString hhId = hhRecordId( from );
+	fSource.mappings()->insert( hhId, to );
+}
+
 bool IDMapping::isArchivedRecord( const QString &pcRecordId ) const
 {
 	FUNCTIONSETUP;

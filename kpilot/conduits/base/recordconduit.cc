@@ -154,26 +154,9 @@ RecordConduit::~RecordConduit()
 	 * very best to deliver sane data) some of the data (mapping, hh database or
 	 * pc database) will be corrupted.
 	 */
-	if( !fMapping->commit() )
-	{
-		// Solution: restore mapping file backup.
-		fMapping->rollback();
-		return false;
-	}
-	
-	// If commit fails every commit should be undone and the user should be 
-	// notified about the failure.
-	if( !createBackupDatabase() )
-	{
-		fMapping->rollback();
-		// TODO: notify user.
-		return false;
-	}
-	
 	if( !fHHDataProxy->commit() )
 	{
 		fHHDataProxy->rollback();
-		fMapping->rollback();
 		// TODO: notify user.
 		return false;
 	}
@@ -182,7 +165,41 @@ RecordConduit::~RecordConduit()
 	{
 		fPCDataProxy->rollback();
 		fHHDataProxy->rollback();
+		// TODO: notify user.
+		return false;
+	}
+	
+	// Fix the ids.
+	QMapIterator<QString,QString> it( fHHDataProxy->changedIds() );
+	while( it.hasNext() )
+	{
+		it.next();
+		fMapping->changeHHId( it.key(), it.value() );
+	}
+	
+	it = QMapIterator<QString,QString>( fPCDataProxy->changedIds() );
+	while( it.hasNext() )
+	{
+		it.next();
+		fMapping->changePCId( it.key(), it.value() );
+	}
+	
+	// Now we can commit the mapping.
+	if( !fMapping->commit() )
+	{
 		fMapping->rollback();
+		fPCDataProxy->rollback();
+		fHHDataProxy->rollback();
+		return false;
+	}
+	
+	// If commit fails every commit should be undone and the user should be 
+	// notified about the failure.
+	if( !createBackupDatabase() )
+	{
+		fMapping->rollback();
+		fPCDataProxy->rollback();
+		fHHDataProxy->rollback();
 		// TODO: notify user.
 		return false;
 	}

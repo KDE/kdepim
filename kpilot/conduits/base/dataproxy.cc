@@ -198,6 +198,9 @@ bool DataProxy::commit()
 	// Commit created records.
 	QStringListIterator it( fCreated.keys() );
 	
+	// Reset the map
+	fCreated.clear();
+	
 	while( it.hasNext() )
 	{
 		QString id = it.next();
@@ -216,7 +219,7 @@ bool DataProxy::commit()
 				fRecords.remove( id );
 				fRecords.insert( rec->id(), rec );
 			
-				// TODO: store the (rec->id(), id) pair somewhere to change the mapping.
+				fChangedIds.insert( id, rec->id() );
 			}
 			else
 			{
@@ -244,7 +247,8 @@ bool DataProxy::commit()
 			if( newId != id )
 			{
 				oldRec->setId( newId );
-				// TODO: store the (newId, id) pair somewhere to change the mapping.
+				
+				fChangedIds.insert( id, newId );
 			}
 			fUpdated.insert( rec->id(), true );
 		}
@@ -273,6 +277,9 @@ bool DataProxy::rollback()
 	
 	// Delete committed new records.
 	QStringListIterator it( fCreated.keys() );
+	
+	// Reset the map
+	fCreated.clear();
 	
 	while( it.hasNext() )
 	{
@@ -304,7 +311,9 @@ bool DataProxy::rollback()
 			// Id might have changed
 			if( oldRec->id() != oldId )
 			{
-				fUpdated.remove( oldId );	
+				fUpdated.remove( oldId );
+				
+				fChangedIds.insert( oldId, oldRec->id() );
 			}
 			
 			fUpdated.insert( oldRec->id(), false );
@@ -319,7 +328,8 @@ bool DataProxy::rollback()
 		
 		if( fDeleted.value( oldRec->id() ) )
 		{
-			DEBUGKPILOT << fname << ": restoring deleted record " << oldRec->id() << endl;
+			DEBUGKPILOT << fname << ": restoring deleted record " << oldRec->id() 
+				<< endl;
 		
 			QString oldId = oldRec->id();
 			commitCreate( oldRec );
@@ -327,7 +337,9 @@ bool DataProxy::rollback()
 			// Id might have changed
 			if( oldRec->id() != oldId )
 			{
-				fDeleted.remove( oldId );	
+				fDeleted.remove( oldId );
+				
+				fChangedIds.insert( oldId, oldRec->id() );
 			}
 			
 			fDeleted.insert( oldRec->id(), false );
@@ -335,4 +347,9 @@ bool DataProxy::rollback()
 	}
 	
 	return true;
+}
+
+QMap<QString,QString> DataProxy::changedIds()
+{
+	return fChangedIds;
 }

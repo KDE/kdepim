@@ -51,6 +51,9 @@ void HHDataProxy::commitCreate( Record *rec )
 	{
 		if( HHRecord *hhRec = static_cast<HHRecord*>( rec ) )
 		{
+			// Set the id to 0 to make sure that the database asigns a valid id to the
+			// record.
+			hhRec->setId( 0 );
 			fDatabase->writeRecord( hhRec->pilotRecord() );
 		}
 		else

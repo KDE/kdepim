@@ -31,6 +31,7 @@
 
 #include <QMap>
 #include <QStringList>
+#include <QPair>
 
 #include "kpilot_export.h"
 
@@ -127,6 +128,13 @@ public:
 	bool rollback();
 	
 	/**
+	 * After a commit/rollback this returns a list of pairs with ids that have
+	 * changed. The keys are the old ids and the values are the new ids for the
+	 * records. Note: before a commit or a rollback the list is cleared.
+	 */
+	QMap<QString, QString> changedIds();
+	
+	/**
 	 * Returns true when the proxy was able to open the underlying data store 
 	 * in read/write mode.
 	 */
@@ -190,6 +198,11 @@ protected: // Members
 	 * are deleted from the data store.
 	 */
 	QMap<QString, bool> fDeleted;
+	
+	/**
+	 * The list of ids that has changed during a commit or a rollback.
+	 */
+	QMap<QString, QString> fChangedIds;
 
 private:
 	int fLastId;
