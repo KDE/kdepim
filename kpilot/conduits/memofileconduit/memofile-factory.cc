@@ -37,7 +37,7 @@
 #include <kaboutdata.h>
 #include <kurlrequester.h>
 
-#include "setup_base.h"
+#include "ui_setup_base.h"
 #include "memofile-conduit.h"
 #include "memofileSettings.h"
 
@@ -50,12 +50,12 @@ public:
 	virtual void commit();
 	virtual void load();
 protected:
-	MemofileWidget *fConfigWidget;
+	Ui::MemofileWidget *fConfigWidget;
 } ;
 
 MemofileConduitConfig::MemofileConduitConfig(QWidget *p, const char *n) :
 	ConduitConfigBase(p,n),
-	fConfigWidget(new MemofileWidget(p))
+	fConfigWidget(new Ui::MemofileWidget())
 {
 	FUNCTIONSETUP;
 	fConduitName = i18n("Memofile");
@@ -71,7 +71,9 @@ MemofileConduitConfig::MemofileConduitConfig(QWidget *p, const char *n) :
 		"http://www.cs.kun.nl/~adridg/kpilot");
 
 	ConduitConfigBase::addAboutPage(fConfigWidget->tabWidget,about);
-	fWidget=fConfigWidget;
+	
+	fConfigWidget->setupUi( fWidget );
+	
 	QObject::connect(fConfigWidget->fDirectory,SIGNAL(textChanged(const QString&)),
 		this,SLOT(modified()));
 	QObject::connect(fConfigWidget->fSyncPrivate,SIGNAL(toggled(bool)),

@@ -27,6 +27,8 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
+#include "vcal-setupbase.h"
+
 #include "options.h"
 
 #include <qcheckbox.h>
@@ -35,16 +37,16 @@
 
 #include <kurlrequester.h>
 
-#include "korganizerConduit.h"
+#include "ui_setup_base.h"
 #include "vcalconduitSettings.h"
-#include "vcal-setupbase.h"
+//#include "ui_korganizerConduit.h"
 
 VCalWidgetSetupBase::VCalWidgetSetupBase(QWidget *w) :
 	ConduitConfigBase(w),
-	fConfigWidget(new VCalWidget(w))
+	fConfigWidget(new Ui::VCalWidget())
 {
 	FUNCTIONSETUP;
-	fWidget=fConfigWidget;
+	fConfigWidget->setupUi( fWidget );
 
 	fConfigWidget->fCalendarFile->setMode(KFile::File);
 	fConfigWidget->fCalendarFile->setFilter(CSL1("*.vcs *.ics|ICalendars\n*.*|All Files (*.*)"));
@@ -83,7 +85,7 @@ VCalWidgetSetupBase::~VCalWidgetSetupBase()
 
 	// Conflicts page
 	config()->setConflictResolution(
-		fConfigWidget->fConflictResolution->currentItem()+SyncAction::eCROffset);
+		fConfigWidget->fConflictResolution->currentIndex()+SyncAction::eCROffset);
 
 	config()->writeConfig();
 	unmodified();
@@ -101,7 +103,7 @@ VCalWidgetSetupBase::~VCalWidgetSetupBase()
 	fConfigWidget->fArchive->setChecked( config()->syncArchived() );
 
 	// Conflicts page
-	fConfigWidget->fConflictResolution->setCurrentItem(
+	fConfigWidget->fConflictResolution->setCurrentIndex(
 		config()->conflictResolution() - SyncAction::eCROffset);
 
 	config()->writeConfig();

@@ -81,7 +81,7 @@ int TodoConduitPrivate::updateIncidences()
 
 void TodoConduitPrivate::removeIncidence(KCal::Incidence *e)
 {
-	fAllTodos.remove(static_cast<KCal::Todo*>(e));
+	fAllTodos.removeAll(static_cast<KCal::Todo*>(e));
 	if (!fCalendar) return;
 	fCalendar->deleteTodo(static_cast<KCal::Todo*>(e));
 	// now just in case we're in the middle of reading through our list

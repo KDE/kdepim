@@ -124,8 +124,9 @@ bool KCalSync::setTodo(KCal::Todo *e,
 	// PRIORITY //
 	e->setPriority(de->getPriority());
 
-	// COMPLETED? //
-	e->setCompleted(KDateTime(de->getComplete(), KDateTime::Spec::LocalZone()));
+	// COMPLETED? // de->getComplete(),
+	#warning Line below commented out.
+	//e->setCompleted(KDateTime( KDateTime::LocalZone));
 	if ( de->getComplete() && !e->hasCompletedDate() ) {
 		e->setCompleted( KDateTime::currentLocalDateTime() );
 	}

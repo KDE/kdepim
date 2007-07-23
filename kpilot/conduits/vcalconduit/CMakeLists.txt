@@ -20,7 +20,7 @@ set(conduit_SHARED
 )
 
 kde4_add_kcfg_files(conduit_SHARED vcalconduitSettings.kcfgc)
-kde4_add_ui3_files(conduit_SHARED korganizerConduit.ui)
+kde4_add_ui_files(conduit_SHARED setup_base.ui)
 
 set(conduit_vcal_SRCS
 	${conduit_SHARED}

@@ -50,7 +50,7 @@ static void setStartEndTimes(KCal::Event *e, const PilotDateEntry *de)
 		<< "# Start time on Palm: "
 		<< readTm(de->getEventStart()).toString() << endl;
 
-	e->setDtStart(KDateTime(readTm(de->getEventStart()), KDateTime::Spec::LocalZone());
+	e->setDtStart(KDateTime(readTm(de->getEventStart()), KDateTime::Spec::LocalZone()));
 	e->setFloats(de->isEvent());
 
 	if (de->isMultiDay())
@@ -59,7 +59,7 @@ static void setStartEndTimes(KCal::Event *e, const PilotDateEntry *de)
 	}
 	else
 	{
-		e->setDtEnd(KDateTime(readTm(de->getEventEnd()), KDateTime::Spec::LocalZone());
+		e->setDtEnd(KDateTime(readTm(de->getEventEnd()), KDateTime::Spec::LocalZone()));
 	}
 }
 

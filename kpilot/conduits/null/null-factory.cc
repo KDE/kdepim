@@ -39,7 +39,7 @@
 
 #include "pluginfactory.h"
 
-#include "setup_base.h"
+#include "ui_setup_base.h"
 #include "null-conduit.h"
 #include "nullSettings.h"
 
@@ -51,13 +51,13 @@ public:
 	virtual void commit();
 	virtual void load();
 protected:
-	NullWidget *fConfigWidget;
+	Ui::NullWidget *fConfigWidget;
 	KAboutData *fAbout;
 } ;
 
 NullConduitConfig::NullConduitConfig(QWidget *p, const char *n) :
 	ConduitConfigBase(p,n),
-	fConfigWidget(new NullWidget(p))
+	fConfigWidget(new Ui::NullWidget())
 {
 	FUNCTIONSETUP;
 	fConduitName = i18n("Null");
@@ -73,7 +73,7 @@ NullConduitConfig::NullConduitConfig(QWidget *p, const char *n) :
 		"http://www.kpilot.org");
 
 	ConduitConfigBase::addAboutPage(fConfigWidget->tabWidget,fAbout);
-	fWidget=fConfigWidget;
+	fConfigWidget->setupUi( fWidget );
 	QObject::connect(fConfigWidget->fLogMessage,SIGNAL(textChanged(const QString&)),
 		this,SLOT(modified()));
 }

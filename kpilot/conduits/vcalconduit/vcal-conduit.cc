@@ -79,7 +79,7 @@ int VCalConduitPrivate::updateIncidences()
 void VCalConduitPrivate::removeIncidence(KCal::Incidence *e)
 {
 	// use dynamic_cast which returns a null pointer if the class does not match...
-	fAllEvents.remove(dynamic_cast<KCal::Event*>(e));
+	fAllEvents.removeAll(dynamic_cast<KCal::Event*>(e));
 	if (!fCalendar) return;
 	fCalendar->deleteEvent(dynamic_cast<KCal::Event*>(e));
 	// now just in case we're in the middle of reading through our list

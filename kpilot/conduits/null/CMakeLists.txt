@@ -16,7 +16,7 @@ set(conduit_null_KCFGS
 )
 
 kde4_add_kcfg_files(conduit_null_SRCS ${conduit_null_KCFGS})
-kde4_add_ui3_files(conduit_null_SRCS ${conduit_null_UIS})
+kde4_add_ui_files(conduit_null_SRCS ${conduit_null_UIS})
 
 kde4_add_plugin(conduit_null WITH_PREFIX ${conduit_null_SRCS})
 target_link_libraries(conduit_null ${KDE4_KDEUI_LIBS} kpilot)

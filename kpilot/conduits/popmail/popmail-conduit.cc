@@ -37,7 +37,7 @@
 #include <Q3CString>
 
 
-#include <q3socket.h>
+//#include <q3socket.h>
 #include <qregexp.h>
 
 

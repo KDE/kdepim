@@ -216,7 +216,7 @@ void NotepadActionThread::saveImage(struct NotePad *n)
 	int height = n->body.height;
 
 
-	QImage image(width, height, 8, 2);
+	QImage image(width, height, QImage::Format_RGB32 );
 
 	switch (n->body.dataType)
 	{

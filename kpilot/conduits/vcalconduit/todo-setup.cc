@@ -32,7 +32,7 @@
 #include <q3buttongroup.h>
 #include <kaboutdata.h>
 
-#include "korganizerConduit.h"
+#include "ui_setup_base.h"
 #include "todo-conduit.h"
 #include "todo-setup.h"
 

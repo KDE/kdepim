@@ -7,21 +7,21 @@ add_subdirectory(keyringconduit)
 
 #add_subdirectory(abbrowserconduit)
 #add_subdirectory(docconduit)
-#add_subdirectory(memofileconduit)
-#add_subdirectory(notepadconduit)
-#add_subdirectory(null)
-#add_subdirectory(popmail)
+add_subdirectory(memofileconduit)
+add_subdirectory(notepadconduit)
+add_subdirectory(null)
+add_subdirectory(popmail)
 #add_subdirectory(sysinfoconduit)
-#add_subdirectory(timeconduit)
+add_subdirectory(timeconduit)
 #add_subdirectory(recordconduit)
 
-#FIND_PATH( HAVE_CALENDARLOCAL_H "kcal/calendarlocal.h" ${KDE4_INCLUDE_DIR} )
+FIND_PATH( HAVE_CALENDARLOCAL_H "kcal/calendarlocal.h" ${KDE4_INCLUDE_DIR} )
 
-#IF (HAVE_CALENDARLOCAL_H)
-#	add_subdirectory(vcalconduit)
-#ELSE (HAVE_CALENDARLOCAL_H)
-#	MESSAGE(STATUS "No KDE PIM development headers were found. Install it if you want to build it")
-#ENDIF (HAVE_CALENDARLOCAL_H)
+IF (HAVE_CALENDARLOCAL_H)
+	add_subdirectory(vcalconduit)
+ELSE (HAVE_CALENDARLOCAL_H)
+	MESSAGE(STATUS "No KDE PIM development headers were found. Install it if you want to build it")
+ENDIF (HAVE_CALENDARLOCAL_H)
 
 ###
 #

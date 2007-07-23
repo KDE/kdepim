@@ -64,8 +64,7 @@ RecordConduit::~RecordConduit()
 	
 	// Try to open the handheld database and the local backup database.
 	bool retrieved = false;
-	// FIXME: It was this: CSL1( "fDatabaseName" .... I don't how to handle
-	// QString properly at this point.
+	
 	bool hhDatabaseOpen = openDatabases( fDatabaseName, &retrieved );
 	// If retrieved is true there is no local backup database so a first sync 
 		// should be done then (see 6.3.2).
@@ -75,6 +74,13 @@ RecordConduit::~RecordConduit()
 	// NOTE: Do not forget that the HHData proxy and the backup proxy must use
 	// the opened databases, maybe we should pass them for clearity to this method.
 	initDataProxies();
+	
+	// Make sure that the implementing class did initialize all proxies.
+	if( !fPCDataProxy || !fHHDataProxy || !fBackupDataProxy )
+	{
+		DEBUGKPILOT << fname << ": One of the dataproxies was not initialized" << endl;
+		return false;
+	}
 	
 	// For the pc data proxy we can only after initilisation know if it could be
 	// opened.

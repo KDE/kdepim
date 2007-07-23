@@ -31,7 +31,10 @@
 
 #include "plugin.h"
 
-class VCalWidget;
+#warning this include is for the Ui namespace, there is probably a better way.
+#include "ui_setup_base.h"
+
+class Ui::VCalWidget;
 class VCalConduitSettings;
 
 class VCalWidgetSetupBase : public ConduitConfigBase
@@ -45,7 +48,7 @@ public:
 
 protected:
 	virtual VCalConduitSettings*config()=0;
-	VCalWidget *fConfigWidget;
-} ;
+	Ui::VCalWidget *fConfigWidget;
+};
 
 #endif
