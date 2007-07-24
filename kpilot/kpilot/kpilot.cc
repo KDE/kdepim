@@ -222,22 +222,25 @@ void KPilotInstaller::readConfig()
 static QWidget *initComponents( QWidget *parent, QList<PilotComponent *> &l )
 {
 	FUNCTIONSETUP;
-	QTabWidget *w = new QTabWidget( parent );
+	KPageWidget *w = new KPageWidget( parent );
 	w->setObjectName( "main_tab_widget" );
 
 	QString defaultDBPath = KPilotConfig::getDefaultDBPath();
 
 	PilotComponent *p;
+	KPageWidgetItem *item;
 
-#define ADDPAGE(cls,label) \
+#define ADDICONPAGE(cls,label,iconname) \
 	p = new cls(w,defaultDBPath); \
-	w->addTab(p, label); \
+    	item = new KPageWidgetItem( p, label ); \
+	item->setIcon(KIcon(iconname)); \
+	w->addPage(item); \
 	l.append(p);
 
-	ADDPAGE(TodoWidget, i18n("To-do Viewer"))
-	ADDPAGE(AddressWidget, i18n("Address Viewer"))
-	ADDPAGE(MemoWidget, i18n("Memo Viewer"))
-	ADDPAGE(GenericDBWidget, i18n("Generic DB Viewer"))
+	ADDICONPAGE(TodoWidget, i18n("To-do Viewer"),CSL1("kpilot_todo"))
+	ADDICONPAGE(AddressWidget, i18n("Address Viewer"),CSL1("kpilot_address"))
+	ADDICONPAGE(MemoWidget, i18n("Memo Viewer"),CSL1("kpilot_knotes"))
+	ADDICONPAGE(GenericDBWidget, i18n("Generic DB Viewer"),CSL1("kpilot_db"))
 
 #undef ADDPAGE
 
