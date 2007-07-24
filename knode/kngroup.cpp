@@ -422,10 +422,11 @@ void KNGroup::insortNewHeaders( const KIO::UDSEntryList &list, KNProtocolClient 
   // get a list of additional headers provided in the listing
   if ( mOptionalHeaders.isEmpty() ) {
     KIO::UDSEntry entry = list.first();
-    for ( KIO::UDSEntry::ConstIterator it = entry.begin(); it != entry.end(); ++it ) {
-      if ( it.key() < KIO::UDSEntry::UDS_EXTRA || it.key() > KIO::UDSEntry::UDS_EXTRA_END )
+    const QList<uint> fields = entry.listFields();
+    foreach ( uint field, fields ) {
+      if ( field < KIO::UDSEntry::UDS_EXTRA || field > KIO::UDSEntry::UDS_EXTRA_END )
         continue;
-      QString value = it.value().toString();
+      QString value = entry.stringValue( field );
       kDebug(5003) << k_funcinfo << value << endl;
       QString hdrName = value.left( value.indexOf( ':' ) );
       if ( hdrName == "Subject" || hdrName == "From" || hdrName == "Date"
@@ -444,13 +445,14 @@ void KNGroup::insortNewHeaders( const KIO::UDSEntryList &list, KNProtocolClient 
     art=new KNRemoteArticle(this);
     art->setNew(true);
 
-    for ( KIO::UDSEntry::ConstIterator it2 = (*it).begin(); it2 != (*it).end(); ++it2 ) {
+    const QList<uint> fields = (*it).listFields();
+    foreach ( uint field, fields ) {
 
-      if ( it2.key() == KIO::UDSEntry::UDS_NAME ) {
+      if ( field == KIO::UDSEntry::UDS_NAME ) {
         //Article Number
-        art->setArticleNumber( (*it2).toNumber() );
-      } else if ( it2.key() >= KIO::UDSEntry::UDS_EXTRA && it2.key() <= KIO::UDSEntry::UDS_EXTRA_END ) {
-        QString value = it2.value().toString();
+        art->setArticleNumber( (*it).numberValue( field ) );
+      } else if ( field >= KIO::UDSEntry::UDS_EXTRA && field <= KIO::UDSEntry::UDS_EXTRA_END ) {
+        QString value = (*it).stringValue( field );
         int pos = value.indexOf( ':' );
         if ( pos >= value.length() - 1 )
           continue; // value is empty
