@@ -91,7 +91,7 @@ class KCAL_RESOURCEBLOG_EXPORT ResourceBlogConfig : public KRES::ConfigWidget
     /**
       Used to enter the username for the blog's XML-RPC authentication.
     */
-    KLineEdit *mUser;
+    KLineEdit *mUsername;
 
     /**
       Used to enter the password for the blog's XML-RPC authentication.
@@ -112,11 +112,6 @@ class KCAL_RESOURCEBLOG_EXPORT ResourceBlogConfig : public KRES::ConfigWidget
       A widget to configure the cache reload options.
     */
     ResourceCachedReloadConfig *mReloadConfig;
-
-    /**
-      The blog resource.
-    */
-    ResourceBlog *mResource;
 };
 
 }

@@ -32,6 +32,7 @@
 
 #include <libkdepim/progressmanager.h>
 
+#include <kblog/blogposting.h>
 #include <kblog/blogger.h>
 #include <kblog/metaweblog.h>
 
@@ -51,13 +52,6 @@ ResourceBlog::ResourceBlog( const KConfigGroup &group )
 {
   init();
   readConfig( group );
-}
-
-ResourceBlog::ResourceBlog( const KUrl &url )
-    : ResourceCached(), mUseProgressManager( false ), mUseCacheFile( false )
-{
-  init();
-  mUrl = url;
 }
 
 ResourceBlog::~ResourceBlog()
@@ -109,9 +103,9 @@ void ResourceBlog::readConfig( const KConfigGroup &group )
 {
   kDebug( 5800 ) << "ResourceBlog::readConfig()" << endl;
 
-  QString url = group.readEntry( "Url" );
+  QString url = group.readEntry( "URL" );
   mUrl = KUrl( url );
-  mUser = group.readEntry( "User" );
+  mUsername = group.readEntry( "Username" );
   mPassword = group.readEntry( "Password" );
   setAPI( QStringToAPIType ( group.readEntry( "API" ) ) );
   mBlogID = group.readEntry( "BlogID" );
@@ -125,8 +119,8 @@ void ResourceBlog::writeConfig( KConfigGroup &group )
 {
   kDebug( 5800 ) << "ResourceBlog::writeConfig()" << endl;
 
-  group.writeEntry( "Url", mUrl.url() );
-  group.writeEntry( "User", mUser );
+  group.writeEntry( "URL", mUrl.url() );
+  group.writeEntry( "Username", mUsername );
   group.writeEntry( "Password", mPassword );
   group.writeEntry( "API", APITypeToQString ( API() ) );
   group.writeEntry( "BlogID", mBlogID );
@@ -146,14 +140,14 @@ KUrl ResourceBlog::url() const
   return mUrl;
 }
 
-void ResourceBlog::setUser( const QString &user )
+void ResourceBlog::setUsername( const QString &username )
 {
-  mUser = user;
+  mUsername = username;
 }
 
-QString ResourceBlog::user() const
+QString ResourceBlog::username() const
 {
-  return mUser;
+  return mUsername;
 }
 
 void ResourceBlog::setPassword( const QString &password )
@@ -176,7 +170,7 @@ void ResourceBlog::setAPI( const APIType &API )
     kError() << "ResourceBlog::setAPI(): Unrecognised API: " << API << endl;
     return;
   }
-  //mAPI->setUsername( mUser );
+  mAPI->setUsername( mUsername );
   mAPI->setPassword( mPassword );
 }
 
@@ -234,8 +228,8 @@ bool ResourceBlog::doLoad( bool fullReload )
                 this, SLOT( slotListedPosting( KBlog::BlogPosting & ) ) );
       connect ( mAPI, SIGNAL( listPostingsFinished() ),
                 this, SLOT( slotListPostingsFinished() ));
-      connect ( mAPI, SIGNAL( error( const errorType &, const QString & ) ),
-                this, SLOT( slotError( const errorType &, const QString & ) ) );
+      connect ( mAPI, SIGNAL( error( const KBlog::APIBlog::ErrorType &, const QString & ) ),
+                this, SLOT( slotError( const KBlog::APIBlog::ErrorType &, const QString & ) ) );
 
       if ( mUseProgressManager ) {
         mProgress = KPIM::ProgressManager::createProgressItem(
@@ -258,13 +252,13 @@ void ResourceBlog::slotListedPosting( KBlog::BlogPosting &blogPosting )
 {
   kDebug( 5800 ) << "ResourceBlog::slotListedPosting()" << endl;
   Journal *journalBlog = new Journal();
-  QString id = "kblog-" + mUrl.url() + "-" + mUser + "-" +
+  QString id = "kblog-" + mUrl.url() + "-" + mUsername + "-" +
       blogPosting.postingId();
   if ( mJournalsMap.value( id ) == 0 ) {
     connect ( mAPI, SIGNAL( createdPosting( QString & ) ),
       this, SLOT( slotCreatedPosting( QString & ) ) );
-    connect ( mAPI, SIGNAL( error( const errorType &, const QString & ) ),
-      this, SLOT( slotError( const errorType &, const QString & ) ) );
+    connect ( mAPI, SIGNAL( error( const KBlog::APIBlog::ErrorType &, const QString & ) ),
+      this, SLOT( slotError( const KBlog::APIBlog::ErrorType &, const QString & ) ) );
     journalBlog->setUid( id );
     journalBlog->setSummary( blogPosting.title() );
     journalBlog->setCategories( blogPosting.categories() );
@@ -292,7 +286,7 @@ void ResourceBlog::slotListPostingsFinished()
   emit resourceLoaded( this );
 }
 
-void ResourceBlog::slotError( const KBlog::APIBlog::errorType &type,
+void ResourceBlog::slotError( const KBlog::APIBlog::ErrorType &type,
                               const QString &errorMessage )
 {
   kError( 5800 ) << "ResourceBlog: " << type << ": " << errorMessage << endl;
@@ -337,8 +331,8 @@ KABC::Lock *ResourceBlog::lock ()
 void ResourceBlog::dump() const
 {
   ResourceCalendar::dump();
-  kDebug( 5800 ) << "  Url: " << mUrl.url() << endl;
-  kDebug( 5800 ) << "  User: " << mUser << endl;
+  kDebug( 5800 ) << "  URL: " << mUrl.url() << endl;
+  kDebug( 5800 ) << "  Username: " << mUsername << endl;
   kDebug( 5800 ) << "  API: " << API() << endl;
   kDebug( 5800 ) << "  ReloadPolicy: " << reloadPolicy() << endl;
 }
@@ -355,8 +349,8 @@ bool ResourceBlog::setValue( const QString &key, const QString &value )
   if ( key == "URL" ) {
     setUrl( KUrl( value ) );
     return true;
-  } else if ( key == "User" ) {
-    setUser( value );
+  } else if ( key == "Username" ) {
+    setUsername( value );
     return true;
   } else if ( key == "Password" ) {
     setPassword( value );
@@ -376,13 +370,16 @@ bool ResourceBlog::addJournal( Journal *journal )
   QString content = journal->description();
   KDateTime date = journal->dtStart();
   QStringList categories = journal->categories();
-  KBlog::BlogPosting *post;
-  post = new KBlog::BlogPosting( title, content, categories );
+  //TODO: Delete
+  KBlog::BlogPosting *post = new KBlog::BlogPosting();
+  post->setTitle( title );
+  post->setContent( content );
+  post->setCategories( categories );
   if ( mAPI ) {
     mAPI->setBlogId( mBlogID );
     post->setCreationDateTime( date );
-    connect ( mAPI, SIGNAL( error( const errorType &, const QString & ) ),
-              this, SLOT( slotError( const errorType &, const QString & ) ) );
+    connect ( mAPI, SIGNAL( error( const KBlog::APIBlog::ErrorType &, const QString & ) ),
+              this, SLOT( slotError( const KBlog::APIBlog::ErrorType &, const QString & ) ) );
     mAPI->createPosting( post );
     return true;
   }

@@ -57,13 +57,6 @@ class KCAL_RESOURCEBLOG_EXPORT ResourceBlog : public ResourceCached
     ResourceBlog( const KConfigGroup &group );
 
     /**
-      Create the blog resource from a XML-RPC access URL.
-
-      @param url The URL used for XML-RPC access.
-    */
-    ResourceBlog( const KUrl &url );
-
-    /**
       Destroy the blog resource.
     */
     ~ResourceBlog();
@@ -78,12 +71,12 @@ class KCAL_RESOURCEBLOG_EXPORT ResourceBlog : public ResourceCached
     /**
       Convert the API type enumerator to a QString.
     */
-    QString APITypeToQString( const APIType &type ) ;
+    static QString APITypeToQString( const APIType &type ) ;
 
     /**
       Convert the API type enumerator to a QString.
     */
-    APIType QStringToAPIType( const QString &type ) ;
+    static APIType QStringToAPIType( const QString &type ) ;
 
     /**
       Read resource parameters from configuration information.
@@ -114,14 +107,14 @@ class KCAL_RESOURCEBLOG_EXPORT ResourceBlog : public ResourceCached
     /**
       Set the username for the blog's XML-RPC authentication.
     */
-    void setUser( const QString & );
+    void setUsername( const QString & );
 
     /**
       Get the username for the blog's XML-RPC authentication.
 
       @return The username for the blog.
     */
-    QString user() const;
+    QString username() const;
 
     /**
       Set the password for the blog's XML-RPC authentication.
@@ -295,7 +288,7 @@ class KCAL_RESOURCEBLOG_EXPORT ResourceBlog : public ResourceCached
       @param type The type of the error.
       @param errorMessage The specific cause of the error.
     */
-    void slotError( const KBlog::APIBlog::errorType &type,
+    void slotError( const KBlog::APIBlog::ErrorType &type,
                     const QString &errorMessage );
 
     /**
@@ -353,7 +346,7 @@ class KCAL_RESOURCEBLOG_EXPORT ResourceBlog : public ResourceCached
     /**
       The username for the blog's XML-RPC authentication.
     */
-    QString mUser;
+    QString mUsername;
 
     /**
       The password for the blog's XML-RPC authentication.

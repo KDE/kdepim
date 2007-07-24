@@ -49,11 +49,11 @@ ResourceBlogConfig::ResourceBlogConfig
   mainLayout->addWidget( label, 1, 0 );
   mainLayout->addWidget( mUrl, 1, 1 );
 
-  label = new QLabel( i18n( "User:" ), this );
-  mUser = new KLineEdit( this );
+  label = new QLabel( i18n( "Username:" ), this );
+  mUsername = new KLineEdit( this );
 
   mainLayout->addWidget( label, 2, 0 );
-  mainLayout->addWidget( mUser, 2, 1 );
+  mainLayout->addWidget( mUsername, 2, 1 );
 
   label = new QLabel( i18n( "Password:" ), this );
   mPassword = new KLineEdit( this );
@@ -87,7 +87,7 @@ void ResourceBlogConfig::loadSettings( KRES::Resource *res )
   ResourceBlog *resource = static_cast<ResourceBlog *>( res );
   if ( resource ) {
     mUrl->setUrl( resource->url().url() );
-    mUser->setText( resource->user() );
+    mUsername->setText( resource->username() );
     mPassword->setText( resource->password() );
     mAPI->setCurrentIndex( resource->API() );
     QPair<QString, QString> blog = resource->blog();
@@ -109,9 +109,8 @@ void ResourceBlogConfig::saveSettings( KRES::Resource *res )
 {
   ResourceBlog *resource = static_cast<ResourceBlog*>( res );
   if ( resource ) {
-    mResource = resource;
     resource->setUrl( mUrl->url().url() );
-    resource->setUser( mUser->text() );
+    resource->setUsername( mUsername->text() );
     resource->setPassword( mPassword->text() );
     resource->setAPI( resource->QStringToAPIType( mAPI->currentText() ) );
     QPair<QString, QString> blog = resource->blog();
@@ -140,17 +139,17 @@ void ResourceBlogConfig::slotBlogInfoRetrieved( const QString &id,
 void ResourceBlogConfig::slotBlogAPIChanged( int index )
 {
   kDebug( 5700 ) << "ResourceBlogConfig::slotBlogAPIChanged" << endl;
-#if 0
-  if ( !mBlogs->count() && mResource ) {
-    mResource->setUrl( KUrl("http://soctest.wordpress.com/xmlrpc.php") );
-    mResource->setUser( mUser->text() );
-    mResource->setPassword( mPassword->text() );
-    mResource->setAPI( mResource->QStringToAPIType( mAPI->itemText( index ) ) );
-    connect ( mResource, SIGNAL( signalBlogInfoRetrieved( const QString &, const QString & ) ),
+  if ( !mBlogs->count() ) {
+    // TODO Delete
+    ResourceBlog *blog =  new ResourceBlog();
+    blog->setUrl( mUrl->url() );
+    blog->setUsername( mUsername->text() );
+    blog->setPassword( mPassword->text() );
+    blog->setAPI( blog->QStringToAPIType( mAPI->itemText( index ) ) );
+    connect ( blog, SIGNAL( signalBlogInfoRetrieved( const QString &, const QString & ) ),
               this, SLOT( slotBlogInfoRetrieved( const QString &, const QString & ) ) );
-    mResource->fetchBlogs();
+    blog->fetchBlogs();
   }
-#endif
 }
 
 #include "resourceblogconfig.moc"
