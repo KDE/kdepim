@@ -34,7 +34,7 @@
 #include "directoryserviceswidget.h"
 #include "kdhorizontalline.h"
 
-#include "libkleo/kleo/cryptoconfig.h"
+#include "kleo/cryptoconfig.h"
 
 #include <klineedit.h>
 #include <klocale.h>

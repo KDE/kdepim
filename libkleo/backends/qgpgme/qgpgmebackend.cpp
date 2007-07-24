@@ -33,7 +33,7 @@
 #include "qgpgmebackend.h"
 
 #include "qgpgmecryptoconfig.h"
-#include "cryptplugwrapper.h"
+#include "kleo/cryptplugwrapper.h"
 
 #include <gpgme++/context.h>
 #include <gpgme++/engineinfo.h>

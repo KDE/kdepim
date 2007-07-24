@@ -34,7 +34,7 @@
 #ifndef __KLEO_QGPGMEBACKEND_H__
 #define __KLEO_QGPGMEBACKEND_H__
 
-#include "libkleo/kleo/cryptobackend.h"
+#include "kleo/cryptobackend.h"
 
 class CryptPlugWrapper;
 

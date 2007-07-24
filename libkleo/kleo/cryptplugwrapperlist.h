@@ -22,7 +22,7 @@
 #ifndef __CRYPTPLUGWRAPPERLIST_H__
 #define __CRYPTPLUGWRAPPERLIST_H__
 
-#include "cryptplugwrapper.h"
+#include "kleo/cryptplugwrapper.h"
 
 #include <Qt3Support/Q3PtrList>
 

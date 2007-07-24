@@ -33,7 +33,7 @@
 #ifndef __KLEO_QGPGMEDELETEJOB_H__
 #define __KLEO_QGPGMEDELETEJOB_H__
 
-#include "libkleo/kleo/deletejob.h"
+#include "kleo/deletejob.h"
 
 #include "qgpgmejob.h"
 

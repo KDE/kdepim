@@ -33,7 +33,7 @@
 #ifndef __KLEO_QGPGMEDOWNLOADJOB_H__
 #define __KLEO_QGPGMEDOWNLOADJOB_H__
 
-#include "libkleo/kleo/downloadjob.h"
+#include "kleo/downloadjob.h"
 
 #include "qgpgmejob.h"
 

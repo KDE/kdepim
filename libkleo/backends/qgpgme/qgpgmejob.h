@@ -33,7 +33,7 @@
 #ifndef __KLEO_QGPGMEJOB_H__
 #define __KLEO_QGPGMEJOB_H__
 
-#include "libkleo/kleo_export.h"
+#include "kleo/kleo_export.h"
 
 #include <gpgme++/interfaces/progressprovider.h>
 #include <gpgme++/interfaces/passphraseprovider.h>

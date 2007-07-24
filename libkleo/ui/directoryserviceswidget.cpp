@@ -33,10 +33,10 @@
 #include "directoryserviceswidget.h"
 #include "ui_directoryserviceswidgetbase.h"
 #include "adddirectoryservicedialogimpl.h"
-#include "cryptplugwrapper.h"
+#include "kleo/cryptplugwrapper.h"
 
 #include <klineedit.h>
-#include "libkleo/kleo/cryptoconfig.h"
+#include "kleo/cryptoconfig.h"
 #include <kiconloader.h>
 #include <kdebug.h>
 

@@ -33,7 +33,7 @@
 #ifndef __KLEO_QGPGMEIMPORTJOB_H__
 #define __KLEO_QGPGMEIMPORTJOB_H__
 
-#include "libkleo/kleo/importjob.h"
+#include "kleo/importjob.h"
 
 #include "qgpgmejob.h"
 

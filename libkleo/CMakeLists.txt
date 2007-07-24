@@ -76,10 +76,10 @@ kde4_add_ui_files(libkleo_ui_SRCS
 )
 
 set(kleo_LIB_SRCS ${libkleo_core_SRCS} ${libkleo_ui_SRCS} ${libkleo_backend_chiasmus_SRCS}
-   cryptplug.cpp 
-   cryptplugwrapper.cpp 
-   cryptplugwrapperlist.cpp 
-   cryptplugfactory.cpp )
+   kleo/cryptplug.cpp 
+   kleo/cryptplugwrapper.cpp 
+   kleo/cryptplugwrapperlist.cpp 
+   kleo/cryptplugfactory.cpp )
 
 if(NOT WIN32)
    set(kleo_LIB_SRCS ${kleo_LIB_SRCS} ${libkleo_backend_qgpgme_SRCS})
@@ -93,11 +93,11 @@ set_target_properties(kleo PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION $
 install(TARGETS kleo DESTINATION ${LIB_INSTALL_DIR})
 
 install( FILES 
-	cryptplug.h
-	cryptplugfactory.h
-	cryptplugwrapper.h
-	cryptplugwrapperlist.h
-	kleo_export.h
+	kleo/cryptplug.h
+	kleo/cryptplugfactory.h
+	kleo/cryptplugwrapper.h
+	kleo/cryptplugwrapperlist.h
+	kleo/kleo_export.h
 	kleo/enum.h  
 	kleo/oidmap.h
 	kleo/cryptobackend.h 

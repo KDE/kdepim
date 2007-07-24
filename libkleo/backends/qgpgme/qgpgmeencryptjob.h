@@ -33,7 +33,7 @@
 #ifndef __KLEO_QGPGMEENCRYPTJOB_H__
 #define __KLEO_QGPGMEENCRYPTJOB_H__
 
-#include "libkleo/kleo/encryptjob.h"
+#include "kleo/encryptjob.h"
 
 #include "qgpgmejob.h"
 

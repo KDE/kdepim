@@ -33,8 +33,8 @@
 #ifndef __KLEO_QGPGMEKEYGENERATIONJOB_H__
 #define __KLEO_QGPGMEKEYGENERATIONJOB_H__
 
-#include "libkleo/kleo_export.h"
-#include "libkleo/kleo/keygenerationjob.h"
+#include "kleo/kleo_export.h"
+#include "kleo/keygenerationjob.h"
 #include "qgpgmejob.h"
 
 namespace GpgME {

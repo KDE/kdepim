@@ -34,7 +34,7 @@
 
 #include "progressbar.h"
 
-#include "libkleo/kleo/job.h"
+#include "kleo/job.h"
 
 #include <kdebug.h>
 #include <klocale.h>

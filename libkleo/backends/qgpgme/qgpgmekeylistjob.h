@@ -33,7 +33,7 @@
 #ifndef __KLEO_QGPGMEKEYLISTJOB_H__
 #define __KLEO_QGPGMEKEYLISTJOB_H__
 
-#include "libkleo/kleo/keylistjob.h"
+#include "kleo/keylistjob.h"
 
 #include <gpgme++/keylistresult.h>
 

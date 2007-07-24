@@ -1,4 +1,4 @@
-include_directories( ${CMAKE_SOURCE_DIR}/kleo  )
+include_directories( ${CMAKE_SOURCE_DIR}/libkleo  )
 
 
 ########### next target ###############
