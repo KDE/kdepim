@@ -242,7 +242,7 @@ static QWidget *initComponents( QWidget *parent, QList<PilotComponent *> &l )
 	ADDICONPAGE(MemoWidget, i18n("Memo Viewer"),CSL1("kpilot_knotes"))
 	ADDICONPAGE(GenericDBWidget, i18n("Generic DB Viewer"),CSL1("kpilot_db"))
 
-#undef ADDPAGE
+#undef ADDICONPAGE
 
 	l[0]->showKPilotComponent(true);
 
