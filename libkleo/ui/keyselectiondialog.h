@@ -37,8 +37,8 @@
 #ifndef __KLEO_UI_KEYSELECTIONDIALOG_H__
 #define __KLEO_UI_KEYSELECTIONDIALOG_H__
 
-#include "kleo/kleo_export.h"
-#include "kleo/cryptobackend.h"
+#include "libkleo/kleo/kleo_export.h"
+#include "libkleo/kleo/cryptobackend.h"
 
 #include <gpgme++/key.h>
 

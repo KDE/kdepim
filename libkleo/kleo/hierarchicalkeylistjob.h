@@ -33,7 +33,7 @@
 #ifndef __KLEO_HIERARCHICALKEYLISTJOB_H__
 #define __KLEO_HIERARCHICALKEYLISTJOB_H__
 
-#include "kleo/kleo_export.h"
+#include "libkleo/kleo/kleo_export.h"
 #include "libkleo/kleo/keylistjob.h"
 #include "libkleo/kleo/cryptobackend.h"
 

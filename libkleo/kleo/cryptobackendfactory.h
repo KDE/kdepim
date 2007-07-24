@@ -33,7 +33,7 @@
 #ifndef __KLEO_CRYPTOBACKENDFACTORY_H__
 #define __KLEO_CRYPTOBACKENDFACTORY_H__
 
-#include "kleo/kleo_export.h"
+#include "libkleo/kleo/kleo_export.h"
 #include "libkleo/kleo/cryptobackend.h"
 
 #include <QtCore/QObject>
