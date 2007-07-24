@@ -131,8 +131,9 @@ QWidget *ConduitConfigBase::aboutPage(QWidget *parent, KAboutData *ad)
 	QPixmap applicationIcon =
 		l->loadIcon(p->appName(),
 		K3Icon::Desktop,
-		64, K3Icon::DefaultState, 0L,
-		true);
+		64, K3Icon::DefaultState,
+		QStringList(),
+		0L, true);
 
 	if (applicationIcon.isNull())
 	{
