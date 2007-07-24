@@ -28,6 +28,8 @@
 #include <kcal/resourcecached.h>
 #include <kcal/icalformat.h>
 
+#include <kresources/idmapper.h>
+
 #include <kio/job.h>
 
 #include <kdebug.h>

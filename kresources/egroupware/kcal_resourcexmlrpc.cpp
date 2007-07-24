@@ -45,6 +45,8 @@
 #include <kcal/alarm.h>
 #include <kcal/icaltimezones.h>
 
+#include <kresources/idmapper.h>
+
 #include "kcal_egroupwareprefs.h"
 #include "kcal_resourcexmlrpcconfig.h"
 #include "kcal_resourcexmlrpc.h"

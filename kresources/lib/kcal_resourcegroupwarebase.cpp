@@ -30,6 +30,7 @@
 #include "groupwareuploadjob.h"
 
 #include <kcal/icalformat.h>
+#include <kcal/calendarlocal.h>
 #include <kcal/confirmsavedialog.h>
 #include <kio/job.h>
 #include <klocale.h>

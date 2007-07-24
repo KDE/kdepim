@@ -40,6 +40,7 @@
 #include <kstringhandler.h>
 #include <kurl.h>
 #include <libkdepim/kpimprefs.h>
+#include <kcal/calendarlocal.h>
 
 using namespace KCal;
 
