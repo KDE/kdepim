@@ -41,24 +41,24 @@ KIO::UDSEntry Stat::stat( ReadMBox& mbox, const UrlInfo& info )
 	kDebug() << "Stat::stat()" << endl;
 	KIO::UDSEntry entry;
 	QString url;
-	
+
 	if( info.type() == UrlInfo::invalid )
 		return entry;
 	else if( info.type() == UrlInfo::message )
 		mbox.searchMessage( info.id() );
 
-	entry.insert( KIO::UDS_FILE_TYPE, S_IFREG );
-        entry.insert( KIO::UDS_MIME_TYPE, QString( "message/rfc822" ) );
-		        
-	url = QString( "mbox:%1/%2" ).arg( info.filename(), mbox.currentID() );
-	entry.insert( KIO::UDS_URL, url );
-	if( mbox.currentID().isEmpty() )
-		entry.insert( KIO::UDS_NAME, QString( "" ) );
-	else
-	        entry.insert( KIO::UDS_NAME, mbox.currentID() );
-	
+	entry.insert( KIO::UDSEntry::UDS_FILE_TYPE, S_IFREG );
+        entry.insert( KIO::UDSEntry::UDS_MIME_TYPE, QString( "message/rfc822" ) );
 
-	entry.insert( KIO::UDS_SIZE, mbox.skipMessage() );
+	url = QString( "mbox:%1/%2" ).arg( info.filename(), mbox.currentID() );
+	entry.insert( KIO::UDSEntry::UDS_URL, url );
+	if( mbox.currentID().isEmpty() )
+		entry.insert( KIO::UDSEntry::UDS_NAME, QString( "" ) );
+	else
+	        entry.insert( KIO::UDSEntry::UDS_NAME, mbox.currentID() );
+
+
+	entry.insert( KIO::UDSEntry::UDS_SIZE, mbox.skipMessage() );
 
 	return entry;
 }
@@ -69,8 +69,8 @@ KIO::UDSEntry Stat::statDirectory( const UrlInfo& info )
 	KIO::UDSEntry entry;
 
 	//Specific things for a directory
-	entry.insert( KIO::UDS_FILE_TYPE, S_IFDIR );
-	entry.insert( KIO::UDS_NAME, info.filename() );
+	entry.insert( KIO::UDSEntry::UDS_FILE_TYPE, S_IFDIR );
+	entry.insert( KIO::UDSEntry::UDS_NAME, info.filename() );
 
 	return entry;
 }
@@ -82,12 +82,12 @@ KIO::UDSEntry Stat::statMessage( const UrlInfo& info )
 	QString url = QString( "mbox:%1" ).arg( info.url() );
 
 	//Specific things for a message
-	entry.insert( KIO::UDS_FILE_TYPE, S_IFREG );
-	entry.insert( KIO::UDS_MIME_TYPE, QString( "message/rfc822" ) );
-	
-	entry.insert( KIO::UDS_URL, url );
+	entry.insert( KIO::UDSEntry::UDS_FILE_TYPE, S_IFREG );
+	entry.insert( KIO::UDSEntry::UDS_MIME_TYPE, QString( "message/rfc822" ) );
+
+	entry.insert( KIO::UDSEntry::UDS_URL, url );
 	url = url.right( url.length() - url.lastIndexOf( "/" ) - 1 );
-	entry.insert( KIO::UDS_NAME, url );
+	entry.insert( KIO::UDSEntry::UDS_NAME, url );
 
 	return entry;
 }

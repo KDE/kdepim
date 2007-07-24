@@ -20,6 +20,7 @@
 #define STAT_H
 
 #include <kio/global.h>
+#include <kio/udsentry.h>
 
 class ReadMBox;
 class UrlInfo;
@@ -42,7 +43,7 @@ public:
 	 * Emtpy destructor
 	 */
 	~Stat() {}
-	
+
 	/**
 	 * This functions gives information with a given UrlInfo.
 	 * @param info The file information
@@ -58,7 +59,7 @@ public:
 	 * @return The requesteds information.
 	 */
 	static KIO::UDSEntry stat( ReadMBox& mbox, const UrlInfo& info );
-	
+
 	/**
 	 * This function gets the stats of a given mbox-file in an UDSEntry.
 	 * @param info The location of the mbox-file.

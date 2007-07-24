@@ -1720,7 +1720,7 @@ IMAP4Protocol::stat (const KUrl & _url)
 
   UDSEntry entry;
 
-  entry.insert( UDS_NAME, aBox);
+  entry.insert( UDSEntry::UDS_NAME, aBox);
 
   if (!aSection.isEmpty())
   {
@@ -1769,7 +1769,7 @@ IMAP4Protocol::stat (const KUrl & _url)
     if ((aSection == "UIDNEXT" && getStatus().uidNextAvailable())
       || (aSection == "UNSEEN" && getStatus().unseenAvailable()))
     {
-	entry.insert( UDS_SIZE, (aSection == "UIDNEXT") ? getStatus().uidNext()
+	entry.insert( UDSEntry::UDS_SIZE, (aSection == "UIDNEXT") ? getStatus().uidNext()
 			        : getStatus().unseen());
     }
   } else
@@ -1824,23 +1824,23 @@ IMAP4Protocol::stat (const KUrl & _url)
     }
   }
 
-  entry.insert( UDS_MIME_TYPE,getMimeType (aType));
+  entry.insert( UDSEntry::UDS_MIME_TYPE,getMimeType (aType));
 
   //kDebug(7116) << "IMAP4: stat: " << atom.m_str << endl;
   switch (aType)
   {
   case ITYPE_DIR:
-	entry.insert( UDS_FILE_TYPE, S_IFDIR);
+	entry.insert( UDSEntry::UDS_FILE_TYPE, S_IFDIR);
     break;
 
   case ITYPE_BOX:
   case ITYPE_DIR_AND_BOX:
-	entry.insert(UDS_FILE_TYPE, S_IFDIR);
+	entry.insert(UDSEntry::UDS_FILE_TYPE, S_IFDIR);
     break;
 
   case ITYPE_MSG:
   case ITYPE_ATTACH:
-	entry.insert(UDS_FILE_TYPE, S_IFREG);
+	entry.insert(UDSEntry::UDS_FILE_TYPE, S_IFREG);
     break;
 
   case ITYPE_UNKNOWN:
@@ -2130,23 +2130,23 @@ IMAP4Protocol::doListEntry (const QString & encodedUrl, int stretch, imapCache *
       if (header)
         tmp += " " + header->getSubject();
     }
-    entry.insert (UDS_NAME,tmp);
+    entry.insert (UDSEntry::UDS_NAME,tmp);
 
     tmp = encodedUrl; // utf-8
     if (tmp[tmp.length () - 1] != '/')
       tmp += '/';
     tmp += ";UID=" + uid;
-	entry.insert( UDS_URL, tmp);
+	entry.insert( UDSEntry::UDS_URL, tmp);
 
-	entry.insert(UDS_FILE_TYPE,S_IFREG);
+	entry.insert(UDSEntry::UDS_FILE_TYPE,S_IFREG);
 
-	entry.insert(UDS_SIZE, cache->getSize());
+	entry.insert(UDSEntry::UDS_SIZE, cache->getSize());
 
-	entry.insert( UDS_MIME_TYPE, QString::fromLatin1("message/rfc822"));
+	entry.insert( UDSEntry::UDS_MIME_TYPE, QString::fromLatin1("message/rfc822"));
 
-	entry.insert(UDS_USER,myUser);
+	entry.insert(UDSEntry::UDS_USER,myUser);
 
-	entry.insert( KIO::UDS_ACCESS, (withFlags) ? cache->getFlags() : S_IRUSR | S_IXUSR | S_IWUSR);
+	entry.insert( KIO::UDSEntry::UDS_ACCESS, (withFlags) ? cache->getFlags() : S_IRUSR | S_IXUSR | S_IWUSR);
 
     listEntry (entry, false);
   }
@@ -2191,7 +2191,7 @@ IMAP4Protocol::doListEntry (const KUrl & _url, const QString & myBox,
 
     if (!tmp.isEmpty ())
     {
-	  entry.insert(UDS_NAME,tmp);
+	  entry.insert(UDSEntry::UDS_NAME,tmp);
 
       if (!item.noSelect ())
       {
@@ -2201,24 +2201,24 @@ IMAP4Protocol::doListEntry (const KUrl & _url, const QString & myBox,
         } else {
           tmp = "message/digest";
         }
-		entry.insert(UDS_MIME_TYPE,tmp);
+		entry.insert(UDSEntry::UDS_MIME_TYPE,tmp);
 
 		mailboxName += '/';
 
         // explicitly set this as a directory for KFileDialog
-		entry.insert(UDS_FILE_TYPE,S_IFDIR);
+		entry.insert(UDSEntry::UDS_FILE_TYPE,S_IFDIR);
       }
       else if (!item.noInferiors ())
       {
-		entry.insert(UDS_MIME_TYPE, QString::fromLatin1("inode/directory"));
+		entry.insert(UDSEntry::UDS_MIME_TYPE, QString::fromLatin1("inode/directory"));
         mailboxName += '/';
 
         // explicitly set this as a directory for KFileDialog
-		entry.insert(UDS_FILE_TYPE,S_IFDIR);
+		entry.insert(UDSEntry::UDS_FILE_TYPE,S_IFDIR);
       }
       else
       {
-		entry.insert(UDS_MIME_TYPE,QString::fromLatin1("unknown/unknown"));
+		entry.insert(UDSEntry::UDS_MIME_TYPE,QString::fromLatin1("unknown/unknown"));
       }
 
       QString path = aURL.path();
@@ -2238,13 +2238,13 @@ IMAP4Protocol::doListEntry (const KUrl & _url, const QString & myBox,
       }
       aURL.setPath(path);
       tmp = aURL.url(KUrl::LeaveTrailingSlash); // utf-8
-	  entry.insert(UDS_URL, tmp);
+	  entry.insert(UDSEntry::UDS_URL, tmp);
 
-	  entry.insert( UDS_USER, myUser);
+	  entry.insert( UDSEntry::UDS_USER, myUser);
 
-      entry.insert( UDS_ACCESS, S_IRUSR | S_IXUSR | S_IWUSR);
+      entry.insert( UDSEntry::UDS_ACCESS, S_IRUSR | S_IXUSR | S_IWUSR);
 
-	  entry.insert( UDS_EXTRA,item.attributesAsString());
+	  entry.insert( UDSEntry::UDS_EXTRA,item.attributesAsString());
 
       listEntry (entry, false);
     }
