@@ -621,8 +621,11 @@ protected:
     KDGanttView* mySignalSender;
     KDGanttViewItem* currentItem, *lastClickedItem, *cuttedItem;
     QCanvasRectangle* movingItem;
+    KDGanttViewTaskItem* movingGVItem;
     QPoint movingStart;
-    enum { Moving, ResizingLeft, ResizingRight } movingOperation;
+    QDateTime movingStartDate;
+    enum MovingOperation { Moving, ResizingLeft, ResizingRight };
+    MovingOperation movingOperation;
     KDGanttViewTaskLink* currentLink;
     KDGanttViewItem::Connector currentConnector;
     KDCanvasWhatsThis* myWhatsThis;
@@ -692,6 +695,7 @@ private:
 
     KDGanttViewItem *mTaskLinkFromItem;
     QCanvasLine *mLinkLine;
+  MovingOperation gvItemHitTest( KDGanttViewItem *item, KDTimeHeaderWidget* timeHeader, const QPoint &pos );
 };
 
 #if QT_VERSION >= 0x040000

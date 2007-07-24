@@ -395,6 +395,8 @@ public:
     KDTimeTableWidget * timeTableWidget() { return myTimeTable; }
     KDTimeHeaderWidget * timeHeaderWidget() { return myTimeHeader; }
 
+    void setFixedHorizon( bool f ) { mFixedHorizon = f; }
+
 public slots:
     void editItem( KDGanttViewItem* );
     void zoomToSelection( const QDateTime& start,  const QDateTime&  end);
@@ -438,7 +440,7 @@ signals:
     void itemDeleted( KDGanttViewItem* );
     void timeIntervallSelected( const QDateTime& start,  const QDateTime&  end);
     void timeIntervalSelected( const QDateTime& start,  const QDateTime&  end);
-    void rescaling( Scale );
+    void rescaling( KDGanttView::Scale );
     void intervalColorRectangleMoved( const QDateTime& start, const QDateTime& end );
 
     // the following signals are emitted if an item is clicked in the
@@ -464,6 +466,7 @@ signals:
     void gvItemDoubleClicked( KDGanttViewItem* );
     // the point is the global position!!
     void gvContextMenuRequested ( KDGanttViewItem * item, const QPoint & pos );
+    void gvItemMoved( KDGanttViewItem* );
 
     void gvCreateTaskLink( KDGanttViewItem*, int, KDGanttViewItem*, int );
 
@@ -612,6 +615,7 @@ private:
     KDGanttMinimizeSplitter *mySplitter;
     int mAddTickcountForTimeline;
     RepaintMode mRepaintMode;
+    bool  mFixedHorizon;
 };
 
 

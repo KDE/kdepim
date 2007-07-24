@@ -5,7 +5,7 @@
 
 /****************************************************************************
  ** Copyright (C)  2002-2004 Klarälvdalens Datakonsult AB.  All rights reserved.
- **(
+ **
  ** This file is part of the KDGantt library.
  **
  ** This file may be distributed and/or modified under the terms of the
@@ -3521,7 +3521,10 @@ KDCanvasRectangle::KDCanvasRectangle( KDTimeTableWidget* canvas,
 }
 
 
-KDGanttCanvasView::KDGanttCanvasView( KDGanttView* sender,QCanvas* canvas, QWidget* parent,  const char* name ) : QCanvasView ( canvas, parent, name )
+KDGanttCanvasView::KDGanttCanvasView( KDGanttView* sender,QCanvas* canvas, QWidget* parent,  const
+    char* name ) : QCanvasView ( canvas, parent, name ),
+    movingGVItem( 0 ),
+    scrollBarTimer( 0, "scrollBarTimer" )
 {
     setHScrollBarMode (QScrollView::AlwaysOn );
     setVScrollBarMode( QScrollView::AlwaysOn );
@@ -3909,6 +3912,19 @@ QString  KDGanttCanvasView::getWhatsThisText(QPoint p)
 }
 
 
+KDGanttCanvasView::MovingOperation KDGanttCanvasView::gvItemHitTest( KDGanttViewItem *item, KDTimeHeaderWidget* timeHeader, const QPoint &pos )
+{
+  const int left = timeHeader->getCoordX( item->startTime() );
+  const int right = timeHeader->getCoordX( item->endTime() );
+  const int width = right - left + 1;
+  const int x = pos.x();
+  if ( x < left + width / 10 )
+    return KDGanttCanvasView::ResizingLeft;
+  if ( x > right - width / 10 )
+    return KDGanttCanvasView::ResizingRight;
+  return KDGanttCanvasView::Moving;
+}
+
 /**
    Handles the mouseevent if a mousekey is pressed
 
@@ -3964,6 +3980,23 @@ void KDGanttCanvasView::contentsMousePressEvent ( QMouseEvent * e )
                         if ( mySignalSender->editable() )
                             currentConnector = currentItem->getConnector( e->pos() );
                     }
+                }
+                {
+                  KDCanvasRectangle *rect = dynamic_cast<KDCanvasRectangle*>( *it );
+                  if ( rect ) {
+                    movingGVItem = dynamic_cast<KDGanttViewTaskItem*>( getItem( rect ) );
+                    if ( movingGVItem ) {
+                      movingStart = e->pos();
+                      movingStartDate = movingGVItem->startTime();
+                      movingOperation = gvItemHitTest( movingGVItem, mySignalSender->myTimeHeader, e->pos() );
+                      if ( movingOperation == Moving && !movingGVItem->isMoveable() )
+                        movingGVItem = 0;
+                      else if ( movingOperation != Moving && !movingGVItem->isResizeable() )
+                        movingOperation = Moving;
+                    } else {
+                      movingGVItem = 0;
+                    }
+                  }
                 }
                 break;
             case Type_is_KDGanttTaskLink:
@@ -4119,6 +4152,10 @@ void KDGanttCanvasView::contentsMouseReleaseEvent ( QMouseEvent * e )
                     mySignalSender->gvCreateTaskLink( mTaskLinkFromItem, currentConnector, toItem, toItem->getConnector( e->pos(), true ) );
                 }
             }
+            if ( movingGVItem ) {
+              mySignalSender->gvItemMoved( movingGVItem );
+              movingGVItem = 0;
+            }
             break;
         case Qt::RightButton:
             {
@@ -4224,6 +4261,45 @@ void KDGanttCanvasView::contentsMouseDoubleClickEvent ( QMouseEvent * e )
 
 void KDGanttCanvasView::contentsMouseMoveEvent ( QMouseEvent * e )
 {
+    if ( !mouseDown ) {
+      // Update cursor
+      bool found = false;
+      QCanvasItemList il = canvas() ->collisions ( e->pos() );
+      QCanvasItemList::Iterator it;
+      for ( it = il.begin(); it != il.end(); ++it ) {
+        if ( (*it)->rtti() == KDIntervalColorRectangle::RTTI ) {
+          found = true;
+          KDIntervalColorRectangle* icr = static_cast<KDIntervalColorRectangle *>( *it );
+          KDIntervalColorRectangle::HitTest hitTest = icr->hitTest( mySignalSender->myTimeHeader, e->pos() );
+          switch ( hitTest ) {
+          case KDIntervalColorRectangle::Start:
+          case KDIntervalColorRectangle::End:
+            setCursor( Qt::SplitHCursor );
+            break;
+          default:
+            unsetCursor();
+          }
+        }
+        KDGanttViewItem *gvItem = getItem( *it );
+        if ( dynamic_cast<KDGanttViewTaskItem*>( gvItem ) ) {
+          found = true;
+          MovingOperation op = gvItemHitTest( gvItem, mySignalSender->myTimeHeader, e->pos() );
+          switch ( op ) {
+            case ResizingLeft:
+            case ResizingRight:
+              if ( gvItem->isResizeable() )
+                setCursor( Qt::SplitHCursor );
+              break;
+            default:
+              unsetCursor();
+          }
+        }
+      }
+      if ( !found )
+        unsetCursor();
+      return;
+    }
+
     const QPoint p = e->pos();
     if ( movingItem ) {
       int x = qRound( movingItem->x() );
@@ -4255,6 +4331,30 @@ void KDGanttCanvasView::contentsMouseMoveEvent ( QMouseEvent * e )
 
     //qDebug("mousemove! ");
     mySignalSender->gvMouseMove( e->button(), currentItem ,  e->globalPos() );
+    if ( movingGVItem ) {
+      int dx = movingStart.x() - e->pos().x();
+      int x = movingGVItem->middleLeft().x() - dx;
+      QDateTime dt = mySignalSender->getDateTimeForCoordX( x, false );
+      int duration = movingGVItem->startTime().secsTo( movingGVItem->endTime() );
+      if ( movingOperation == Moving ) {
+        movingGVItem->setStartTime( dt );
+        movingGVItem->setEndTime( dt.addSecs( duration ) );
+      } else if ( movingOperation == ResizingLeft ) {
+        movingGVItem->setStartTime( dt );
+      } else if ( movingOperation == ResizingRight ) {
+        movingGVItem->setEndTime( dt.addSecs( duration ) );
+      }
+      movingStart = e->pos();
+    }
+
+    static int moves = 0;
+    if ( (currentLink || currentItem) && (moves < 3) ) {
+        ++moves;
+    } else {
+        moves = 0;
+        currentLink = 0;
+        currentItem = 0;
+    }
     if (autoScrollEnabled)
         mousePos = e->pos()- QPoint(contentsX(),contentsY()); // make mousePos relative 0
     if ( !currentItem && mySignalSender->editable() ) {

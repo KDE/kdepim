@@ -1698,6 +1698,10 @@ void KDGanttViewItem::initColorAndShapes(Type t)
     mCurrentConnectorCoordX = -1;
     mCurrentConnectorDiffX = 0;
     mCurrentCoord_Y = 0;
+    _isMoveable = false;
+    _isResizeable = false;
+    setTextOffset(QPoint(0,0));
+  //_isCalendar = false;
     _callListViewOnSetOpen = true;
     myType = t;
     blockUpdating = true;
@@ -2958,12 +2962,12 @@ void KDGanttViewItem::moveTextCanvas(int x, int y)
     int my = y + myTextOffset.y();
     if (myTextOffset.x() != 0)
         mx -= 2*myItemSize; // keep old behaviour
-        
+
     mTextCanvas->move(mx+2*myItemSize,my-myItemSize/2);
     //qDebug("%s: moveTextCanvas(%d,%d) offset: %d,%d moved to  %d,%d",listViewText(0).toLatin1(),x,y,myTextOffset.x(),myTextOffset.y(),mx+2*myItemSize,my-myItemSize/2);
 }
 
-void KDGanttViewItem::moveTextCanvas() 
+void KDGanttViewItem::moveTextCanvas()
 {
     QPoint m = myTextOffset+middleRight();
     mTextCanvas->move(m.x(), m.y()-myItemSize/2);
@@ -2972,7 +2976,7 @@ void KDGanttViewItem::moveTextCanvas()
 /*!
   Sets with how much the item text is offset from the end of the item.
  */
-void KDGanttViewItem::setTextOffset(QPoint p) 
+void KDGanttViewItem::setTextOffset(QPoint p)
 {
     //qDebug("%s: setTextOffset() offset: %d,%d",listViewText(0).toLatin1(),p.x(),p.y());
     myTextOffset.setX(p.x());
@@ -3011,7 +3015,7 @@ void KDGanttViewItem::setFloatStartTime(const QDateTime &start)
 {
     myFloatStartTime = start;
 }
-    
+
 /*!
   \fn void KDGanttViewItem::setFloatEndTime(const QDateTime &end)
   
@@ -3023,4 +3027,24 @@ void KDGanttViewItem::setFloatStartTime(const QDateTime &start)
 void KDGanttViewItem::setFloatEndTime(const QDateTime &end)
 {
     myFloatEndTime = end;
+}
+
+void KDGanttViewItem::setMoveable(bool m)
+{
+  _isMoveable = m;
+}
+
+bool KDGanttViewItem::isMoveable() const
+{
+  return _isMoveable;
+}
+
+bool KDGanttViewItem::isResizeable() const
+{
+  return _isResizeable;
+}
+
+void KDGanttViewItem::setResizeable(bool r)
+{
+  _isResizeable = r;
 }

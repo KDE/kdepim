@@ -4,7 +4,7 @@
 */
 
 /****************************************************************************
- ** Copyright (C)  2002-2004 KlarÃ€lvdalens Datakonsult AB.  All rights reserved.
+ ** Copyright (C)  2002-2004 Klarälvdalens Datakonsult AB.  All rights reserved.
  **
  ** This file is part of the KDGantt library.
  **
@@ -91,7 +91,8 @@
 KDGanttView::KDGanttView( QWidget* parent, const char* name  )
     : KDGanttMinimizeSplitter( Qt::Vertical, parent ),
       myCanvasView(0),
-      myTimeHeaderScroll(0)
+      myTimeHeaderScroll(0),
+      mFixedHorizon( false )
 {
   setObjectName( name );
 
@@ -4870,7 +4871,7 @@ int  KDGanttView::addTickcountForTimeline() const
 
 void KDGanttView::addTickRight()
 {
-  if ( _enableAdding && myCanvasView->horizontalScrollBar()->value() ==  myCanvasView->horizontalScrollBar()->maximum()) {
+  if ( !mFixedHorizon && _enableAdding && myCanvasView->horizontalScrollBar()->value() ==  myCanvasView->horizontalScrollBar()->maximum()) {
     //myCanvasView->horizontalScrollBar()->blockSignals( true );
     myTimeHeader->addTickRight();
     //myCanvasView->horizontalScrollBar()->blockSignals( false );
@@ -4888,6 +4889,12 @@ void KDGanttView::addTickLeft()
     if (  myCanvasView->horizontalScrollBar()->value() == 0 ) {
         myTimeHeader->addTickLeft( mAddTickcountForTimeline );
     }
+  if ( !mFixedHorizon && _enableAdding && myCanvasView->horizontalScrollBar()->value() == 0 ) {
+    myCanvasView->horizontalScrollBar()->blockSignals( true );
+    myTimeHeader->addTickLeft();
+    myCanvasView->horizontalScrollBar()->blockSignals( false );
+    setTimelineToStart();
+  }
 }
 
 

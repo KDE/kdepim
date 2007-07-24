@@ -211,6 +211,11 @@ protected:
     virtual void userWriteToElement( QDomDocument& doc,
                                      QDomElement& parentElement );
 
+    void setMoveable( bool m );
+    bool isMoveable() const;
+    void setResizeable( bool r );
+    bool isResizeable() const;
+
 private:
     friend class KDGanttView;
     friend class KDTimeTableWidget;
@@ -270,6 +275,9 @@ private:
     bool shapeDefined;
     int _priority;
     static QDict<KDGanttViewItem> sItemDict;
+
+    bool _isMoveable;
+    bool _isResizeable;
 };
 
 
