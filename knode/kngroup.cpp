@@ -423,7 +423,7 @@ void KNGroup::insortNewHeaders( const KIO::UDSEntryList &list, KNProtocolClient 
   if ( mOptionalHeaders.isEmpty() ) {
     KIO::UDSEntry entry = list.first();
     for ( KIO::UDSEntry::ConstIterator it = entry.begin(); it != entry.end(); ++it ) {
-      if ( it.key() < KIO::UDS_EXTRA || it.key() > KIO::UDS_EXTRA_END )
+      if ( it.key() < KIO::UDSEntry::UDS_EXTRA || it.key() > KIO::UDSEntry::UDS_EXTRA_END )
         continue;
       QString value = it.value().toString();
       kDebug(5003) << k_funcinfo << value << endl;
@@ -446,10 +446,10 @@ void KNGroup::insortNewHeaders( const KIO::UDSEntryList &list, KNProtocolClient 
 
     for ( KIO::UDSEntry::ConstIterator it2 = (*it).begin(); it2 != (*it).end(); ++it2 ) {
 
-      if ( it2.key() == KIO::UDS_NAME ) {
+      if ( it2.key() == KIO::UDSEntry::UDS_NAME ) {
         //Article Number
         art->setArticleNumber( (*it2).toNumber() );
-      } else if ( it2.key() >= KIO::UDS_EXTRA && it2.key() <= KIO::UDS_EXTRA_END ) {
+      } else if ( it2.key() >= KIO::UDSEntry::UDS_EXTRA && it2.key() <= KIO::UDSEntry::UDS_EXTRA_END ) {
         QString value = it2.value().toString();
         int pos = value.indexOf( ':' );
         if ( pos >= value.length() - 1 )

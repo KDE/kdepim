@@ -58,10 +58,10 @@ void KNode::GroupListJob::slotEntries( KIO::Job * job, const KIO::UDSEntryList &
   KNGroup::Status access;
   for( KIO::UDSEntryList::ConstIterator it = list.begin(); it != list.end(); ++it ) {
     access = KNGroup::unknown;
-    name = (*it).stringValue( KIO::UDS_NAME );
-    desc = (*it).stringValue( KIO::UDS_EXTRA );
+    name = (*it).stringValue( KIO::UDSEntry::UDS_NAME );
+    desc = (*it).stringValue( KIO::UDSEntry::UDS_EXTRA );
 
-    int value = (*it).numberValue( KIO::UDS_ACCESS, -1 );
+    int value = (*it).numberValue( KIO::UDSEntry::UDS_ACCESS, -1 );
     if ( value != -1 ) {
       if( value & S_IWOTH )
         access = KNGroup::postingAllowed;

@@ -799,11 +799,11 @@ void kio_sieveProtocol::stat(const KUrl& url)
 	QString filename = url.fileName(false);
 
 	if (filename.isEmpty()) {
-		entry.insert(KIO::UDS_NAME, QString::fromLatin1("/"));
+		entry.insert(KIO::UDSEntry::UDS_NAME, QString::fromLatin1("/"));
 
-		entry.insert(KIO::UDS_FILE_TYPE, S_IFDIR);
+		entry.insert(KIO::UDSEntry::UDS_FILE_TYPE, S_IFDIR);
 
-		entry.insert(KIO::UDS_ACCESS, 0700);
+		entry.insert(KIO::UDSEntry::UDS_ACCESS, 0700);
 
 		statEntry(entry);
 
@@ -821,16 +821,16 @@ void kio_sieveProtocol::stat(const KUrl& url)
 				if (filename == QString::fromUtf8(r.getKey())) {
 					entry.clear();
 
-					entry.insert(KIO::UDS_NAME,QString::fromUtf8(r.getKey()));
+					entry.insert(KIO::UDSEntry::UDS_NAME,QString::fromUtf8(r.getKey()));
 
-					entry.insert(KIO::UDS_FILE_TYPE, S_IFREG);
+					entry.insert(KIO::UDSEntry::UDS_FILE_TYPE, S_IFREG);
 
 					if ( r.getExtra() == "ACTIVE" )
-						entry.insert(KIO::UDS_ACCESS,0700);
+						entry.insert(KIO::UDSEntry::UDS_ACCESS,0700);
 					else
-						entry.insert(KIO::UDS_ACCESS,0600);
+						entry.insert(KIO::UDSEntry::UDS_ACCESS,0600);
 
-					entry.insert( KIO::UDS_MIME_TYPE, QString::fromLatin1( "application/sieve" ) );
+					entry.insert( KIO::UDSEntry::UDS_MIME_TYPE, QString::fromLatin1( "application/sieve" ) );
 
 					//setMetaData("active", (r.getExtra() == "ACTIVE") ? "yes" : "no");
 
@@ -863,16 +863,16 @@ void kio_sieveProtocol::listDir(const KUrl& url)
 
 		} else {
 			entry.clear();
-			entry.insert(KIO::UDS_NAME,QString::fromUtf8(r.getKey()));
+			entry.insert(KIO::UDSEntry::UDS_NAME,QString::fromUtf8(r.getKey()));
 
-			entry.insert(KIO::UDS_FILE_TYPE,S_IFREG);
+			entry.insert(KIO::UDSEntry::UDS_FILE_TYPE,S_IFREG);
 
 			if ( r.getExtra() == "ACTIVE" )
-				entry.insert(KIO::UDS_ACCESS, 0700);// mark exec'able
+				entry.insert(KIO::UDSEntry::UDS_ACCESS, 0700);// mark exec'able
 			else
-				entry.insert(KIO::UDS_ACCESS,0600);
+				entry.insert(KIO::UDSEntry::UDS_ACCESS,0600);
 
-			entry.insert( KIO::UDS_MIME_TYPE, QString::fromLatin1( "application/sieve" ) );
+			entry.insert( KIO::UDSEntry::UDS_MIME_TYPE, QString::fromLatin1( "application/sieve" ) );
 
 			//asetMetaData("active", (r.getExtra() == "ACTIVE") ? "true" : "false");
 

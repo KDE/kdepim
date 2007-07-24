@@ -167,14 +167,14 @@ static void addAtom(KIO::UDSEntry &entry, unsigned int ID, long l,
 void P2KImpl::createTopLevelEntry(KIO::UDSEntry &entry) const
 {
 	entry.clear();
-	addAtom(entry, KIO::UDS_NAME, 0, ".");
-	addAtom(entry, KIO::UDS_FILE_TYPE, S_IFDIR);
-	addAtom(entry, KIO::UDS_ACCESS, 0777);
-	addAtom(entry, KIO::UDS_MIME_TYPE, 0, "inode/directory");
-	addAtom(entry, KIO::UDS_ICON_NAME, 0, "p2k");
-	addAtom(entry, KIO::UDS_USER, 0, "root");
-	addAtom(entry, KIO::UDS_GROUP, 0, "root");
-    addAtom(entry, KIO::UDS_NAME, 0, ".");
+	addAtom(entry, KIO::UDSEntry::UDS_NAME, 0, ".");
+	addAtom(entry, KIO::UDSEntry::UDS_FILE_TYPE, S_IFDIR);
+	addAtom(entry, KIO::UDSEntry::UDS_ACCESS, 0777);
+	addAtom(entry, KIO::UDSEntry::UDS_MIME_TYPE, 0, "inode/directory");
+	addAtom(entry, KIO::UDSEntry::UDS_ICON_NAME, 0, "p2k");
+	addAtom(entry, KIO::UDSEntry::UDS_USER, 0, "root");
+	addAtom(entry, KIO::UDSEntry::UDS_GROUP, 0, "root");
+    addAtom(entry, KIO::UDSEntry::UDS_NAME, 0, ".");
 }
 
 void P2KImpl::createEntry(KIO::UDSEntry &entry, const KUrl &url, p2k_fileInfo &file)
@@ -191,14 +191,14 @@ void P2KImpl::createEntry(KIO::UDSEntry &entry, const KUrl &url, p2k_fileInfo &f
 
     entry.clear();
 
-    addAtom(entry, KIO::UDS_NAME, 0, filename);
-    addAtom(entry, KIO::UDS_SIZE, file.size);
-    addAtom(entry, KIO::UDS_URL, 0, url.url() );
-    //  kDebug() << "*******debug UDS_URL: obex:/" << directory << filename << endl;
-    //  addAtom(entry, KIO::UDS_FILE_TYPE, (S_IRUSR | S_IRGRP | S_IROTH | S_IXUSR | S_IXGRP | S_IXOTH) );
-    addAtom(entry, KIO::UDS_FILE_TYPE, /*file.attr*/ S_IFREG );
-//     addAtom(entry, KIO::UDS_CREATION_TIME, file.mtime );
-    addAtom(entry, KIO::UDS_MIME_TYPE, 0, mimetype.name() );
+    addAtom(entry, KIO::UDSEntry::UDS_NAME, 0, filename);
+    addAtom(entry, KIO::UDSEntry::UDS_SIZE, file.size);
+    addAtom(entry, KIO::UDSEntry::UDS_URL, 0, url.url() );
+    //  kDebug() << "*******debug UDSEntry::UDS_URL: obex:/" << directory << filename << endl;
+    //  addAtom(entry, KIO::UDSEntry::UDS_FILE_TYPE, (S_IRUSR | S_IRGRP | S_IROTH | S_IXUSR | S_IXGRP | S_IXOTH) );
+    addAtom(entry, KIO::UDSEntry::UDS_FILE_TYPE, /*file.attr*/ S_IFREG );
+//     addAtom(entry, KIO::UDSEntry::UDS_CREATION_TIME, file.mtime );
+    addAtom(entry, KIO::UDSEntry::UDS_MIME_TYPE, 0, mimetype.name() );
 
     kDebug() << filepath << " mime type: " << mimetype.name() << "; file attributes: " << QString::number(file.attr) << endl;
 
@@ -223,7 +223,7 @@ void P2KImpl::createEntry(KIO::UDSEntry &entry, const KUrl &url, p2k_fileInfo &f
         if (m_lastListingEmpty) icon = empty_icon;
     }
                                        */
-    addAtom(entry, KIO::UDS_ICON_NAME, 0, icon);
+    addAtom(entry, KIO::UDSEntry::UDS_ICON_NAME, 0, icon);
 }
 
 
@@ -239,13 +239,13 @@ void P2KImpl::createEntry(KIO::UDSEntry &entry,
 
     entry.clear();
 
-    addAtom(entry, KIO::UDS_NAME, 0, file);
-    addAtom(entry, KIO::UDS_URL, 0,directory + QDir::separator() + file);
+    addAtom(entry, KIO::UDSEntry::UDS_NAME, 0, file);
+    addAtom(entry, KIO::UDSEntry::UDS_URL, 0,directory + QDir::separator() + file);
 
-    addAtom(entry, KIO::UDS_FILE_TYPE, S_IFDIR);
+    addAtom(entry, KIO::UDSEntry::UDS_FILE_TYPE, S_IFDIR);
     if(isDrive)
-        addAtom(entry, KIO::UDS_MIME_TYPE, 0, "media/hdd_mounted");
-    else addAtom(entry, KIO::UDS_MIME_TYPE, 0, "inode/directory");
+        addAtom(entry, KIO::UDSEntry::UDS_MIME_TYPE, 0, "media/hdd_mounted");
+    else addAtom(entry, KIO::UDSEntry::UDS_MIME_TYPE, 0, "inode/directory");
 
     QString icon = desktop.readIcon();
     QString empty_icon = desktop.readEntry("EmptyIcon");
@@ -268,7 +268,7 @@ void P2KImpl::createEntry(KIO::UDSEntry &entry,
         if (m_lastListingEmpty) icon = empty_icon;
     }
 
-    addAtom(entry, KIO::UDS_ICON_NAME, 0, icon);
+    addAtom(entry, KIO::UDSEntry::UDS_ICON_NAME, 0, icon);
 }
 
 void P2KImpl::createEntry(KIO::UDSEntry &entry,
@@ -282,16 +282,16 @@ void P2KImpl::createEntry(KIO::UDSEntry &entry,
 
     entry.clear();
 
-    addAtom(entry, KIO::UDS_NAME, 0, filename);
-    addAtom(entry, KIO::UDS_SIZE, file.size);
-//     addAtom(entry, KIO::UDS_URL, 0, "p2k:/"+directory + filename);
-//     kDebug() << "*******debug UDS_URL: p2k:/" << directory << filename << endl;
-    addAtom(entry, KIO::UDS_FILE_TYPE, (S_IRUSR | S_IRGRP | S_IROTH | S_IXUSR | S_IXGRP | S_IXOTH) );
+    addAtom(entry, KIO::UDSEntry::UDS_NAME, 0, filename);
+    addAtom(entry, KIO::UDSEntry::UDS_SIZE, file.size);
+//     addAtom(entry, KIO::UDSEntry::UDS_URL, 0, "p2k:/"+directory + filename);
+//     kDebug() << "*******debug UDSEntry::UDS_URL: p2k:/" << directory << filename << endl;
+    addAtom(entry, KIO::UDSEntry::UDS_FILE_TYPE, (S_IRUSR | S_IRGRP | S_IROTH | S_IXUSR | S_IXGRP | S_IXOTH) );
     // Attributes: 0=nothing, 2=hidden, 4=system, 1=readonly
-//     if (file.attr & 1 ) addAtom(entry, KIO::UDS_ACCESS, 0555);
-//     if (file.attr & 2 ) addAtom( entry, KIO::UDS_HIDDEN, true);
+//     if (file.attr & 1 ) addAtom(entry, KIO::UDSEntry::UDS_ACCESS, 0555);
+//     if (file.attr & 2 ) addAtom( entry, KIO::UDSEntry::UDS_HIDDEN, true);
 //     if (file.attr & 4 );
-    addAtom(entry, KIO::UDS_MIME_TYPE, 0, mimetype.name() );
+    addAtom(entry, KIO::UDSEntry::UDS_MIME_TYPE, 0, mimetype.name() );
     kDebug() << filename << " mime type: " << mimetype.name() << "; file attributes: " << file.attr << endl;
     QString icon = desktop.readIcon();
     QString empty_icon = desktop.readEntry("EmptyIcon");
@@ -314,7 +314,7 @@ void P2KImpl::createEntry(KIO::UDSEntry &entry,
         if (m_lastListingEmpty) icon = empty_icon;
     }
 
-    addAtom(entry, KIO::UDS_ICON_NAME, 0, icon);
+    addAtom(entry, KIO::UDSEntry::UDS_ICON_NAME, 0, icon);
 }
 
 void P2KImpl::slotEntries(KIO::Job *job, const KIO::UDSEntryList &list)

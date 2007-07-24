@@ -266,35 +266,35 @@ void KIO_Count::entries( KIO::Job* job, const KIO::UDSEntryList &list )
 		 */
 		isFile=false;
 		KKioDrop::FileInfo fileinfo;
-		fileinfo.name = (*it1).stringValue( KIO::UDS_URL );
-		fileinfo.size = (*it1).numberValue( KIO::UDS_SIZE, 0 );
+		fileinfo.name = (*it1).stringValue( KIO::UDSEntry::UDS_URL );
+		fileinfo.size = (*it1).numberValue( KIO::UDSEntry::UDS_SIZE, 0 );
 
-		if( (*it1).contains( KIO::UDS_NAME ) && fileinfo.name.isNull() )
-		{ //The file kioslave doesn't return UDS_URL, so use UDS_NAME.
+		if( (*it1).contains( KIO::UDSEntry::UDS_NAME ) && fileinfo.name.isNull() )
+		{ //The file kioslave doesn't return UDSEntry::UDS_URL, so use UDS_NAME.
 			kurl = *_kurl;
 			metadata = *_metadata;
 			_protocol->recheckKUrl( kurl, metadata );
-			kurl.addPath( (*it1).stringValue( KIO::UDS_NAME ) );
+			kurl.addPath( (*it1).stringValue( KIO::UDSEntry::UDS_NAME ) );
 			fileinfo.name = kurl.url();
 		}
 
-		isFile = (*it1).numberValue( KIO::UDS_FILE_TYPE, 0 ) & S_IFREG;
+		isFile = (*it1).numberValue( KIO::UDSEntry::UDS_FILE_TYPE, 0 ) & S_IFREG;
 		/*for ( it2 = (*it1).begin() ; it2 != (*it1).end() ; it2++ )
 		{
-			if( (*it2).m_uds == KIO::UDS_FILE_TYPE &&
+			if( (*it2).m_uds == KIO::UDSEntry::UDS_FILE_TYPE &&
 			   ((long)(*it2).m_long & S_IFREG ) )
 				isFile=true;
-			else if( (*it2).m_uds == KIO::UDS_URL )
+			else if( (*it2).m_uds == KIO::UDSEntry::UDS_URL )
 				fileinfo.name = (*it2).m_str;
-			else if( (*it2).m_uds == KIO::UDS_NAME )
-			{ //The file kioslave doesn't return UDS_URL.
+			else if( (*it2).m_uds == KIO::UDSEntry::UDS_NAME )
+			{ //The file kioslave doesn't return UDSEntry::UDS_URL.
 				kurl = *_kurl;
 				metadata = *_metadata;
 				_protocol->recheckKUrl( kurl, metadata );
 				kurl.addPath ( (*it2).m_str );
 				fileinfo.name = kurl.url();
 			}
-			else if( (*it2).m_uds == KIO::UDS_SIZE )
+			else if( (*it2).m_uds == KIO::UDSEntry::UDS_SIZE )
 			{
 				fileinfo.size = (*it2).m_long;
 			}
