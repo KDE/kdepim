@@ -53,13 +53,15 @@ class Event : public Incidence {
 public:
   /// Use this to parse an xml string to a event entry
   /// The caller is responsible for deleting the returned event
-  static KCal::Event* xmlToEvent( const QString& xml, const QString& tz );
+  static KCal::Event* xmlToEvent( const QString& xml, const QString& tz, KCal::ResourceKolab* res = 0,
+                                  const QString& subResource = QString::null, quint32 sernum = 0 );
 
   /// Use this to get an xml string describing this event entry
   static QString eventToXML( KCal::Event*, const QString& tz );
 
   /// Create a event object and
-  explicit Event( const QString& tz, KCal::Event* event = 0 );
+  explicit Event( KCal::ResourceKolab *res, const QString &subResource, quint32 sernum,
+                  const QString& tz, KCal::Event* event = 0 );
   virtual ~Event();
 
   void saveTo( KCal::Event* event );

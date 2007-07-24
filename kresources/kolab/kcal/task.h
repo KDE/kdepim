@@ -42,6 +42,7 @@ class QDomElement;
 
 namespace KCal {
   class Todo;
+  class ResourceKolab;
 }
 
 namespace Kolab {
@@ -56,12 +57,14 @@ class Task : public Incidence {
 public:
   /// Use this to parse an xml string to a task entry
   /// The caller is responsible for deleting the returned task
-  static KCal::Todo* xmlToTask( const QString& xml, const QString& tz );
+  static KCal::Todo* xmlToTask( const QString& xml, const QString& tz, KCal::ResourceKolab *res = 0,
+                                const QString& subResource = QString::null, quint32 sernum = 0 );
 
   /// Use this to get an xml string describing this task entry
   static QString taskToXML( KCal::Todo*, const QString& tz );
 
-  explicit Task( const QString& tz, KCal::Todo* todo = 0 );
+  explicit Task( KCal::ResourceKolab *res, const QString& subResource, quint32 sernum,
+                 const QString& tz, KCal::Todo* todo = 0 );
   virtual ~Task();
 
   virtual QString type() const { return "Task"; }

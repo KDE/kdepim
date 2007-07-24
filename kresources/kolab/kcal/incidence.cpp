@@ -32,19 +32,27 @@
 */
 
 #include "incidence.h"
+#include "resourcekolab.h"
 
+#include <QFile>
 #include <QList>
 
 #include <kcal/journal.h>
 #include <korganizer/version.h>
 #include <kdebug.h>
+#include <kurl.h>
+#include <kio/netaccess.h>
 
 using namespace Kolab;
 
 
-Incidence::Incidence( const QString& tz )
+Incidence::Incidence( KCal::ResourceKolab *res, const QString &subResource, quint32 sernum,
+                      const QString& tz, KCal::Incidence* incidence )
   : KolabBase( tz ), mFloatingStatus( Unset ), mHasAlarm( false ),
-    mRevision( 0 )
+    mRevision( 0 ),
+    mResource( res ),
+    mSubResource( subResource ),
+    mSernum( sernum )
 {
 }
 
@@ -235,7 +243,7 @@ void Incidence::saveAttachments( QDomElement& element ) const
     if ( a->isUri() ) {
       writeString( element, "link-attachment", a->uri() );
     } else if ( a->isBinary() ) {
-      // TODO
+      writeString( element, "inline-attachment", a->label() );
     }
   }
 }
@@ -327,7 +335,21 @@ bool Incidence::loadAttribute( QDomElement& element )
     } else
       return false;
   } else if ( tagName == "inline-attachment" ) {
-    // TODO
+    QString attachmentName = element.text();
+    QByteArray data;
+    KUrl url;
+    if ( mResource->kmailGetAttachment( url, mSubResource, mSernum, attachmentName ) && !url.isEmpty() ) {
+      QFile f( url.path() );
+      if ( f.open( QFile::ReadOnly ) ) {
+        data = f.readAll();
+        QString mimeType = KIO::NetAccess::mimetype( url, 0 );
+        KCal::Attachment *a = new KCal::Attachment( data.toBase64().constData(), mimeType );
+        a->setLabel( attachmentName );
+        mAttachments.append( a );
+        f.close();
+      }
+      f.remove();
+    }
   } else if ( tagName == "link-attachment" ) {
     mAttachments.push_back( new KCal::Attachment( element.text() ) );
   } else if ( tagName == "alarm" )
@@ -652,8 +674,8 @@ void Incidence::setFields( const KCal::Incidence* incidence )
     // There is no scheduling ID
     setInternalUID( QString::null );
   } else {
-    // We've internally been using a different uid, so save that as the 
-    // temporary (internal) uid and restore the original uid, the one that 
+    // We've internally been using a different uid, so save that as the
+    // temporary (internal) uid and restore the original uid, the one that
     // is used in the folder and the outside world
     setUid( incidence->schedulingID() );
     setInternalUID( incidence->uid() );

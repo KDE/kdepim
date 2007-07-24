@@ -39,9 +39,10 @@
 using namespace Kolab;
 
 
-KCal::Todo* Task::xmlToTask( const QString& xml, const QString& tz )
+KCal::Todo* Task::xmlToTask( const QString& xml, const QString& tz, KCal::ResourceKolab *res,
+                             const QString& subResource, quint32 sernum )
 {
-  Task task( tz );
+  Task task( res, subResource, sernum, tz );
   task.load( xml );
   KCal::Todo* todo = new KCal::Todo();
   task.saveTo( todo );
@@ -50,12 +51,14 @@ KCal::Todo* Task::xmlToTask( const QString& xml, const QString& tz )
 
 QString Task::taskToXML( KCal::Todo* todo, const QString& tz )
 {
-  Task task( tz, todo );
+  Task task( 0, QString::null, 0, tz, todo );
   return task.saveXML();
 }
 
-Task::Task( const QString& tz, KCal::Todo* task )
-  : Incidence( tz ), mPriority( 5 ), mPercentCompleted( 0 ),
+Task::Task( KCal::ResourceKolab *res, const QString &subResource, quint32 sernum,
+            const QString& tz, KCal::Todo* task )
+  : Incidence( res, subResource, sernum, tz, task ),
+    mPriority( 5 ), mPercentCompleted( 0 ),
     mStatus( KCal::Incidence::StatusNone ),
     mHasStartDate( false ), mHasDueDate( false ),
     mHasCompletedDate( false )

@@ -39,9 +39,10 @@
 using namespace Kolab;
 
 
-KCal::Event* Event::xmlToEvent( const QString& xml, const QString& tz  )
+KCal::Event* Event::xmlToEvent( const QString& xml, const QString& tz, KCal::ResourceKolab* res,
+                                const QString& subResource, quint32 sernum )
 {
-  Event event( tz );
+  Event event( res, subResource, sernum, tz );
   event.load( xml );
   KCal::Event* kcalEvent = new KCal::Event();
   event.saveTo( kcalEvent );
@@ -50,12 +51,14 @@ KCal::Event* Event::xmlToEvent( const QString& xml, const QString& tz  )
 
 QString Event::eventToXML( KCal::Event* kcalEvent, const QString& tz  )
 {
-  Event event( tz, kcalEvent );
+  Event event( 0, QString::null, 0, tz, kcalEvent );
   return event.saveXML();
 }
 
-Event::Event( const QString& tz, KCal::Event* event )
-  : Incidence( tz ), mShowTimeAs( KCal::Event::Opaque ), mHasEndDate( false )
+Event::Event( KCal::ResourceKolab *res, const QString &subResource, quint32 sernum,
+              const QString& tz, KCal::Event* event )
+  : Incidence( res, subResource, sernum, tz, event ),
+  mShowTimeAs( KCal::Event::Opaque ), mHasEndDate( false )
 {
   if ( event )
     setFields( event );

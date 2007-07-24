@@ -44,6 +44,7 @@
 #include <kmainwindow.h>
 #include <klocale.h>
 #include <kinputdialog.h>
+#include <ktemporaryfile.h>
 
 #include <QObject>
 #include <QTimer>
@@ -476,6 +477,22 @@ bool ResourceKolab::sendKMailUpdate( KCal::IncidenceBase* incidencebase, const Q
 //  kDebug() << k_funcinfo << "Data string:\n" << data << endl;
 
   KCal::Incidence* incidence = static_cast<KCal::Incidence *>( incidencebase );
+
+  KCal::Attachment::List atts = incidence->attachments();
+  QStringList attURLs, attMimeTypes, attNames;
+  QList<KTemporaryFile*> tmpFiles;
+  for ( KCal::Attachment::List::ConstIterator it = atts.constBegin(); it != atts.constEnd(); ++it ) {
+    KTemporaryFile* tempFile = new KTemporaryFile;
+    QByteArray decoded = QByteArray::fromBase64( (*it)->data() );
+    tempFile->write( decoded );
+    KUrl url;
+    url.setPath( tempFile->fileName() );
+    attURLs.append( url.url() );
+    attMimeTypes.append( (*it)->mimeType() );
+    attNames.append( (*it)->label() );
+    tempFile->close();
+  }
+
   CustomHeaderMap customHeaders;
   if ( incidence->schedulingID() != incidence->uid() )
     customHeaders.insert( "X-Kolab-SchedulingID", incidence->schedulingID() );
@@ -484,11 +501,17 @@ bool ResourceKolab::sendKMailUpdate( KCal::IncidenceBase* incidencebase, const Q
   if ( !isXMLStorageFormat ) subject.prepend( "iCal " ); // conform to the old style
 
   // behold, sernum is an in-parameter
-  const bool rc = kmailUpdate( subresource, sernum, data, mimetype, subject, customHeaders );
+  const bool rc = kmailUpdate( subresource, sernum, data, mimetype, subject, customHeaders, attURLs, attMimeTypes, attNames );
   // update the serial number
   if ( mUidMap.contains( incidencebase->uid() ) ) {
     mUidMap[ incidencebase->uid() ].setSerialNumber( sernum );
   }
+
+  for( QList<KTemporaryFile *>::Iterator it = tmpFiles.begin(); it != tmpFiles.end(); ++it ) {
+    (*it)->setAutoRemove( true );
+    delete (*it);
+  }
+
   return rc;
 }
 
@@ -582,7 +605,7 @@ bool ResourceKolab::addIncidence( KCal::Incidence* incidence, const QString& _su
       mUidMap[ uid ] = StorageReference( subResource, sernum );
     } else {
       /* This is a real add, from KMail, we didn't trigger this ourselves.
-       * If this uid already exists in this folder, do conflict resolution, 
+       * If this uid already exists in this folder, do conflict resolution,
        * unless the folder is read-only, in which case the user should not be
        * offered a means of putting mails in a folder she'll later be unable to
        * upload. Skip the incidence, in this case. */
@@ -645,7 +668,7 @@ bool ResourceKolab::addEvent( KCal::Event* event )
 void ResourceKolab::addEvent( const QString& xml, const QString& subresource,
                               quint32 sernum )
 {
-  KCal::Event* event = Kolab::Event::xmlToEvent( xml, mCalendar.timeZoneId() );
+  KCal::Event* event = Kolab::Event::xmlToEvent( xml, mCalendar.timeZoneId(), this, subresource, sernum );
   Q_ASSERT( event );
   if( event ) {
       addIncidence( event, subresource, sernum );
@@ -717,7 +740,7 @@ bool ResourceKolab::addTodo( KCal::Todo* todo )
 void ResourceKolab::addTodo( const QString& xml, const QString& subresource,
                              quint32 sernum )
 {
-  KCal::Todo* todo = Kolab::Task::xmlToTask( xml, mCalendar.timeZoneId() );
+  KCal::Todo* todo = Kolab::Task::xmlToTask( xml, mCalendar.timeZoneId(), this, subresource, sernum );
   Q_ASSERT( todo );
   if( todo )
       addIncidence( todo, subresource, sernum );
