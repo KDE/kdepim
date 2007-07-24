@@ -47,6 +47,7 @@
 #include <kcal/calendar.h>
 #include <kcal/event.h>
 #include <kcal/htmlexport.h>
+#include <kcal/htmlexportsettings.h>
 
 #include "libkdepim/kpimprefs.h"
 
