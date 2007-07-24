@@ -33,6 +33,8 @@
 
 #include <KXmlGuiWindow>
 
+#include "pilotComponent.h"
+
 
 
 class OrgKdeKpilotDaemonInterface;
@@ -45,6 +47,8 @@ Q_OBJECT
 public:
 	KPilotInstaller();
 	~KPilotInstaller();
+
+	typedef QList<PilotComponent *> ComponentList;
 
 	enum DaemonMessages {
 		None=0,
@@ -110,6 +114,8 @@ protected slots:
 protected:
 	void readConfig();
 
+	QWidget *initComponents( QWidget *parent, QList<PilotComponent *> &l );
+
 
 	/**
 	* Run all the internal conduits' presync functions.
@@ -139,6 +145,7 @@ private:
 	*/
 	class KPilotPrivate;
 	KPilotPrivate *fP;
+
 };
 
 

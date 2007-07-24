@@ -86,8 +86,6 @@
 class KPilotInstaller::KPilotPrivate
 {
 public:
-	typedef QList<PilotComponent *> ComponentList;
-
 	ComponentList  fPilotComponentList;
 
 	/** Was the daemon running before KPilot started? If not, then we
@@ -104,6 +102,8 @@ public:
 	 */
 	bool fFirstLoad;
 
+	FileInstallWidget *fFileInstallWidget;
+
 	KPilotStatus fAppStatus;
 } ;
 
@@ -115,6 +115,7 @@ KPilotInstaller::KPilotInstaller() :
 	fP->fDaemonWasRunning = true; // Assume it was
 	fP->fConfigureKPilotDialogInUse = false;
 	fP->fFirstLoad = true;
+	fP->fFileInstallWidget = 0L;
 
 	new KpilotAdaptor(this);
 	QDBusConnection::sessionBus().registerObject("/KPilot", this);
@@ -219,7 +220,7 @@ void KPilotInstaller::readConfig()
 		"the handheld.",Pilot::codecName()));
 }
 
-static QWidget *initComponents( QWidget *parent, QList<PilotComponent *> &l )
+QWidget *KPilotInstaller::initComponents( QWidget *parent, QList<PilotComponent *> &l )
 {
 	FUNCTIONSETUP;
 	KPageWidget *w = new KPageWidget( parent );
@@ -230,17 +231,30 @@ static QWidget *initComponents( QWidget *parent, QList<PilotComponent *> &l )
 	PilotComponent *p;
 	KPageWidgetItem *item;
 
-#define ADDICONPAGE(cls,label,iconname) \
-	p = new cls(w,defaultDBPath); \
-    	item = new KPageWidgetItem( p, label ); \
+#define ADDICONPAGE(widget,label,iconname) \
+    	item = new KPageWidgetItem(widget,label); \
 	item->setIcon(KIcon(iconname)); \
 	w->addPage(item); \
-	l.append(p);
+	l.append(widget);
 
-	ADDICONPAGE(TodoWidget, i18n("To-do Viewer"),CSL1("kpilot_todo"))
-	ADDICONPAGE(AddressWidget, i18n("Address Viewer"),CSL1("kpilot_address"))
-	ADDICONPAGE(MemoWidget, i18n("Memo Viewer"),CSL1("kpilot_knotes"))
-	ADDICONPAGE(GenericDBWidget, i18n("Generic DB Viewer"),CSL1("kpilot_db"))
+	p = new LogWidget(w);
+	ADDICONPAGE(p,i18n("HotSync"),CSL1("kpilot_bhotsync"))
+
+	p = new TodoWidget(w, defaultDBPath);
+	ADDICONPAGE(p,i18n("To-do Viewer"),CSL1("kpilot_todo"))
+
+	p = new AddressWidget(w, defaultDBPath);
+	ADDICONPAGE(p,i18n("Address Viewer"),CSL1("kpilot_address"))
+
+	p = new MemoWidget(w, defaultDBPath);
+	ADDICONPAGE(p,i18n("Memo Viewer"),CSL1("kpilot_knotes"))
+	
+	p = new GenericDBWidget(w, defaultDBPath);
+	ADDICONPAGE(p,i18n("Generic DB Viewer"),CSL1("kpilot_db"))
+
+	fP->fFileInstallWidget = new FileInstallWidget(w, defaultDBPath);
+	ADDICONPAGE(fP->fFileInstallWidget, i18n("File Installer"),CSL1("kpilot_fileinstaller"))
+
 
 #undef ADDICONPAGE
 
@@ -248,8 +262,9 @@ static QWidget *initComponents( QWidget *parent, QList<PilotComponent *> &l )
 
 	QObject::connect(w, SIGNAL(currentChanged(int)),
 		parent,SLOT(componentChanged(int)));
-
+	
 	return w;
+
 }
 
 void initMenu( KXmlGuiWindow *parent )
