@@ -30,6 +30,7 @@
 #include "kio.h" //Alsewise, no access to KKioDrop::FileInfo (needed in template)
 
 #include <kio/global.h> //FIXME: without this, moc-compiler fails.
+#include <kio/udsentry.h>
 
 class AccountSettings;
 class KIO_Protocol;
