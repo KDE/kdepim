@@ -35,6 +35,7 @@
 #include "recordconduitSettings.h"
 
 #include "options.h"
+#include "kpilotSettings.h"
 
 #include <KMessageBox>
 
@@ -87,8 +88,7 @@ RecordConduit::~RecordConduit()
 	bool pcDatabaseOpen = fPCDataProxy->isOpen();
 	
 	// See 6.2
-	// FIXME: Retrieve the username.
-	fMapping = new IDMapping( QString(""), fConduitName );
+	fMapping = new IDMapping( KPilotSettings::userName(), fConduitName );
 	if( !fMapping->isValid( fBackupDataProxy->ids() ) )
 	{
 		setFirstSync( true );

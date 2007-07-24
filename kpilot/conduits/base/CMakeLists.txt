@@ -2,9 +2,19 @@ add_subdirectory(tests)
 
 include_directories(
 	${CMAKE_CURRENT_BINARY_DIR}
+	${CMAKE_BINARY_DIR}/kpilot
 )
 
+# A bit ugly? Maybe settings should be shared.
+set(settings_SRC
+	${CMAKE_CURRENT_SOURCE_DIR}/../../kpilot/kpilotConfig.cc
+)
+
+kde4_add_kcfg_files(settings_SRC
+	${CMAKE_CURRENT_SOURCE_DIR}/../../kpilot/kpilotSettings.kcfgc)
+
 set(conduit_base_SRCS
+	${settings_SRC}
 	idmappingxmlsource.cc
 	idmapping.cc
 	cudcounter.cc
@@ -23,4 +33,4 @@ kde4_add_kcfg_files(conduit_base_SRCS ${conduit_base_KCFGS})
 kde4_add_library(conduit_base SHARED ${conduit_base_SRCS})
 target_link_libraries(conduit_base ${QT_LIBRARIES} kpilot)
 
-#install(TARGETS recordConduit LIBRARY DESTINATION ${LIB_INSTALL_DIR})
+install(TARGETS conduit_base LIBRARY DESTINATION ${LIB_INSTALL_DIR})
