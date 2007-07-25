@@ -38,7 +38,6 @@
 
 #include "qgpgmejob.h"
 
-#include <q3cstring.h>
 
 namespace GpgME {
   class Error;

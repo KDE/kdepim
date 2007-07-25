@@ -36,7 +36,6 @@
 #include "kleo/exportjob.h"
 #include "gpgme++/context.h"
 
-#include <q3cstring.h>
 
 namespace Kleo {
   class GnuPGProcessBase;

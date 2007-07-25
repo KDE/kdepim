@@ -39,7 +39,6 @@
 #include <gpgme++/interfaces/passphraseprovider.h>
 #include <gpgme++/key.h>
 
-#include <q3cstring.h>
 
 #include <vector>
 

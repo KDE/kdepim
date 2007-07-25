@@ -40,7 +40,6 @@
 #include <gpgme++/signingresult.h>
 #include <gpgme++/encryptionresult.h>
 
-#include <q3cstring.h>
 
 #include <utility>
 
