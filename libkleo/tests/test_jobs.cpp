@@ -29,9 +29,6 @@
     your version.
 */
 
-#ifdef HAVE_CONFIG_H
-#include <config.h>
-#endif
 
 #include "libkleo/kleo/cryptobackendfactory.h"
 #include "libkleo/kleo/signjob.h"
