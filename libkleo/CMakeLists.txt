@@ -9,70 +9,70 @@ add_subdirectory( tests )
 
 ########### next target ###############
 set(libkleo_backend_qgpgme_SRCS
-	${CMAKE_SOURCE_DIR}/libkleo/backends/qgpgme/gnupgprocessbase.cpp 
-	${CMAKE_SOURCE_DIR}/libkleo/backends/qgpgme/qgpgmeprogresstokenmapper.cpp 
-	${CMAKE_SOURCE_DIR}/libkleo/backends/qgpgme/qgpgmebackend.cpp 
-	${CMAKE_SOURCE_DIR}/libkleo/backends/qgpgme/qgpgmejob.cpp 
-	${CMAKE_SOURCE_DIR}/libkleo/backends/qgpgme/qgpgmekeylistjob.cpp 
-	${CMAKE_SOURCE_DIR}/libkleo/backends/qgpgme/qgpgmekeygenerationjob.cpp 
-	${CMAKE_SOURCE_DIR}/libkleo/backends/qgpgme/qgpgmeimportjob.cpp 
-	${CMAKE_SOURCE_DIR}/libkleo/backends/qgpgme/qgpgmeexportjob.cpp 
-	${CMAKE_SOURCE_DIR}/libkleo/backends/qgpgme/qgpgmesecretkeyexportjob.cpp 
-	${CMAKE_SOURCE_DIR}/libkleo/backends/qgpgme/qgpgmedownloadjob.cpp 
-	${CMAKE_SOURCE_DIR}/libkleo/backends/qgpgme/qgpgmedeletejob.cpp 
-	${CMAKE_SOURCE_DIR}/libkleo/backends/qgpgme/qgpgmeencryptjob.cpp 
-	${CMAKE_SOURCE_DIR}/libkleo/backends/qgpgme/qgpgmedecryptjob.cpp 
-	${CMAKE_SOURCE_DIR}/libkleo/backends/qgpgme/qgpgmesignjob.cpp 
-	${CMAKE_SOURCE_DIR}/libkleo/backends/qgpgme/qgpgmeverifydetachedjob.cpp 
-	${CMAKE_SOURCE_DIR}/libkleo/backends/qgpgme/qgpgmeverifyopaquejob.cpp 
-	${CMAKE_SOURCE_DIR}/libkleo/backends/qgpgme/qgpgmesignencryptjob.cpp 
-	${CMAKE_SOURCE_DIR}/libkleo/backends/qgpgme/qgpgmedecryptverifyjob.cpp 
-	${CMAKE_SOURCE_DIR}/libkleo/backends/qgpgme/qgpgmecryptoconfig.cpp 
-	${CMAKE_SOURCE_DIR}/libkleo/backends/qgpgme/qgpgmerefreshkeysjob.cpp
+	backends/qgpgme/gnupgprocessbase.cpp 
+	backends/qgpgme/qgpgmeprogresstokenmapper.cpp 
+	backends/qgpgme/qgpgmebackend.cpp 
+	backends/qgpgme/qgpgmejob.cpp 
+	backends/qgpgme/qgpgmekeylistjob.cpp 
+	backends/qgpgme/qgpgmekeygenerationjob.cpp 
+	backends/qgpgme/qgpgmeimportjob.cpp 
+	backends/qgpgme/qgpgmeexportjob.cpp 
+	backends/qgpgme/qgpgmesecretkeyexportjob.cpp 
+	backends/qgpgme/qgpgmedownloadjob.cpp 
+	backends/qgpgme/qgpgmedeletejob.cpp 
+	backends/qgpgme/qgpgmeencryptjob.cpp 
+	backends/qgpgme/qgpgmedecryptjob.cpp 
+	backends/qgpgme/qgpgmesignjob.cpp 
+	backends/qgpgme/qgpgmeverifydetachedjob.cpp 
+	backends/qgpgme/qgpgmeverifyopaquejob.cpp 
+	backends/qgpgme/qgpgmesignencryptjob.cpp 
+	backends/qgpgme/qgpgmedecryptverifyjob.cpp 
+	backends/qgpgme/qgpgmecryptoconfig.cpp 
+	backends/qgpgme/qgpgmerefreshkeysjob.cpp
 	)
 
 
 set(libkleo_backend_chiasmus_SRCS 
-	${CMAKE_SOURCE_DIR}/libkleo/backends/chiasmus/config_data.c 
-	${CMAKE_SOURCE_DIR}/libkleo/backends/chiasmus/obtainkeysjob.cpp 
-	${CMAKE_SOURCE_DIR}/libkleo/backends/chiasmus/symcryptrunprocessbase.cpp 
-	${CMAKE_SOURCE_DIR}/libkleo/backends/chiasmus/chiasmusjob.cpp 
-	${CMAKE_SOURCE_DIR}/libkleo/backends/chiasmus/chiasmuslibrary.cpp 
-	${CMAKE_SOURCE_DIR}/libkleo/backends/chiasmus/chiasmusbackend.cpp
+	backends/chiasmus/config_data.c 
+	backends/chiasmus/obtainkeysjob.cpp 
+	backends/chiasmus/symcryptrunprocessbase.cpp 
+	backends/chiasmus/chiasmusjob.cpp 
+	backends/chiasmus/chiasmuslibrary.cpp 
+	backends/chiasmus/chiasmusbackend.cpp
 	)
 
 
 set(libkleo_core_SRCS
-   ${CMAKE_SOURCE_DIR}/libkleo/kleo/cryptobackend.cpp 
-   ${CMAKE_SOURCE_DIR}/libkleo/kleo/cryptobackendfactory.cpp 
-   ${CMAKE_SOURCE_DIR}/libkleo/kleo/enum.cpp 
-   ${CMAKE_SOURCE_DIR}/libkleo/kleo/dn.cpp 
-   ${CMAKE_SOURCE_DIR}/libkleo/kleo/job.cpp 
-   ${CMAKE_SOURCE_DIR}/libkleo/kleo/multideletejob.cpp 
-   ${CMAKE_SOURCE_DIR}/libkleo/kleo/hierarchicalkeylistjob.cpp 
-   ${CMAKE_SOURCE_DIR}/libkleo/kleo/kconfigbasedkeyfilter.cpp 
-   ${CMAKE_SOURCE_DIR}/libkleo/kleo/keyfiltermanager.cpp
+   kleo/cryptobackend.cpp 
+   kleo/cryptobackendfactory.cpp 
+   kleo/enum.cpp 
+   kleo/dn.cpp 
+   kleo/job.cpp 
+   kleo/multideletejob.cpp 
+   kleo/hierarchicalkeylistjob.cpp 
+   kleo/kconfigbasedkeyfilter.cpp 
+   kleo/keyfiltermanager.cpp
    )
 
 set(libkleo_ui_SRCS
-   ${CMAKE_SOURCE_DIR}/libkleo/ui/kdhorizontalline.cpp 
-   ${CMAKE_SOURCE_DIR}/libkleo/ui/progressbar.cpp 
-   ${CMAKE_SOURCE_DIR}/libkleo/ui/progressdialog.cpp 
-   ${CMAKE_SOURCE_DIR}/libkleo/ui/keylistview.cpp 
-   ${CMAKE_SOURCE_DIR}/libkleo/ui/keyselectiondialog.cpp 
-   ${CMAKE_SOURCE_DIR}/libkleo/ui/keyrequester.cpp 
-   ${CMAKE_SOURCE_DIR}/libkleo/ui/keyapprovaldialog.cpp 
-   ${CMAKE_SOURCE_DIR}/libkleo/ui/backendconfigwidget.cpp 
-   ${CMAKE_SOURCE_DIR}/libkleo/ui/dnattributeorderconfigwidget.cpp 
-   ${CMAKE_SOURCE_DIR}/libkleo/ui/cryptoconfigmodule.cpp 
-   ${CMAKE_SOURCE_DIR}/libkleo/ui/cryptoconfigdialog.cpp 
-   ${CMAKE_SOURCE_DIR}/libkleo/ui/directoryserviceswidget.cpp 
-   ${CMAKE_SOURCE_DIR}/libkleo/ui/adddirectoryservicedialogimpl.cpp
+   ui/kdhorizontalline.cpp 
+   ui/progressbar.cpp 
+   ui/progressdialog.cpp 
+   ui/keylistview.cpp 
+   ui/keyselectiondialog.cpp 
+   ui/keyrequester.cpp 
+   ui/keyapprovaldialog.cpp 
+   ui/backendconfigwidget.cpp 
+   ui/dnattributeorderconfigwidget.cpp 
+   ui/cryptoconfigmodule.cpp 
+   ui/cryptoconfigdialog.cpp 
+   ui/directoryserviceswidget.cpp 
+   ui/adddirectoryservicedialogimpl.cpp
 )
 
 kde4_add_ui_files(libkleo_ui_SRCS
-	${CMAKE_SOURCE_DIR}/libkleo/ui/adddirectoryservicedialog.ui
-	${CMAKE_SOURCE_DIR}/libkleo/ui/directoryserviceswidgetbase.ui
+	ui/adddirectoryservicedialog.ui
+	ui/directoryserviceswidgetbase.ui
 )
 
 set(kleo_LIB_SRCS ${libkleo_core_SRCS} ${libkleo_ui_SRCS} ${libkleo_backend_chiasmus_SRCS}
