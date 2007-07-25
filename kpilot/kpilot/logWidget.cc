@@ -66,7 +66,7 @@ LogWidget::LogWidget(QWidget * parent) :
 {
 	FUNCTIONSETUP;
 
-	new LoggerAdaptor(this);
+	new LoggerAdaptorGUI(this);
 	QDBusConnection::sessionBus().registerObject("/Logger", this);
 
 	QGridLayout *grid = new QGridLayout(this);
