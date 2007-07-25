@@ -157,10 +157,10 @@ bool KMailConnection::connectToKMail()
       kError(5650) << "DCOP connection to incidenceDeleted failed" << endl;
     if ( !connectKMailSignal( "signalRefresh(QString,QString)",
                               "fromKMailRefresh(QString,QString)" ) )
-      kdError(5650) << "DCOP connection to signalRefresh failed" << endl;
+      kError(5650) << "DCOP connection to signalRefresh failed" << endl;
     if ( !connectKMailSignal( "subresourceAdded( QString, QString, QString, bool, bool )",
                               "fromKMailAddSubresource( QString, QString, QString, bool, bool )" ) )
-      kdError(5650) << "DCOP connection to subresourceAdded failed" << endl;
+      kError(5650) << "DCOP connection to subresourceAdded failed" << endl;
     if ( !connectKMailSignal( "subresourceDeleted(QString,QString)",
                               "fromKMailDelSubresource(QString,QString)" ) )
       kError(5650) << "DCOP connection to subresourceDeleted failed" << endl;

@@ -60,10 +60,10 @@ TestClient::~TestClient()
 
 void TestClient::networkStatusChanged( NetworkStatus::Status status )
 {
-    kdDebug() << k_funcinfo << endl;
+    kDebug() << k_funcinfo << endl;
 //enum EnumStatus { NoNetworks = 1, Unreachable, OfflineDisconnected,  OfflineFailed, ShuttingDown
 //  , Offline, Establishing, Online };
-    kdDebug() << "Networking is now: " << NetworkStatus::toString( status ) << " (" << status << ")" << endl;
+    kDebug() << "Networking is now: " << NetworkStatus::toString( status ) << " (" << status << ")" << endl;
     m_view->netStatusLabel->setText( NetworkStatus::toString( status ) );
     m_view->netStatusLabel->setPaletteBackgroundColor( toQColor( status ) );
     switch ( status ) {
@@ -102,7 +102,7 @@ void TestClient::networkStatusChanged( NetworkStatus::Status status )
 
 void TestClient::connectButtonToggled( bool on )
 {
-  kdDebug() << k_funcinfo << endl;
+  kDebug() << k_funcinfo << endl;
   if ( on && m_status == AppDisconnected ) {
     switch ( ConnectionManager::self()->status() )
     {
@@ -122,14 +122,14 @@ void TestClient::connectButtonToggled( bool on )
 
 void TestClient::appWaiting()
 {
-  kdDebug() << k_funcinfo << endl;
+  kDebug() << k_funcinfo << endl;
   m_status = AppWaitingForConnect;
   m_view->appStatusLabel->setText( "Waiting" );
 }
 
 void TestClient::appIsConnected()
 {
-  kdDebug() << k_funcinfo << endl;
+  kDebug() << k_funcinfo << endl;
   m_view->connectButton->setEnabled( true );
   m_view->connectButton->setText( "Disconnect" );
   m_view->appStatusLabel->setText( "Connected" );
@@ -138,21 +138,21 @@ void TestClient::appIsConnected()
 
 void TestClient::appEstablishing()
 {
-  kdDebug() << k_funcinfo << endl;
+  kDebug() << k_funcinfo << endl;
   m_view->netStatusLabel->setText( "Establishing" );
   m_view->connectButton->setEnabled( false );
 }
 
 void TestClient::appDisestablishing( )
 {
-  kdDebug() << k_funcinfo << endl;
+  kDebug() << k_funcinfo << endl;
   m_view->connectButton->setEnabled( false );
   m_view->appStatusLabel->setText( "Disconnected" );
 }
 
 void TestClient::appDisconnected( )
 {
-  kdDebug() << k_funcinfo << endl;
+  kDebug() << k_funcinfo << endl;
   m_view->connectButton->setEnabled( true );
   m_view->connectButton->setText( "Start Connect" );
   m_view->appStatusLabel->setText( "Disconnected" );

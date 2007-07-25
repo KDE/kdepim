@@ -47,7 +47,7 @@ void SendSMSJob::run() {
             break;
 
         default:
-            kdDebug() << "Gammu engine: SendSMSJob called with unknown job type" << endl;
-            kdDebug() << "Gammu engine: This should not happen and is a coding error ;-)" << endl;
+            kDebug() << "Gammu engine: SendSMSJob called with unknown job type" << endl;
+            kDebug() << "Gammu engine: This should not happen and is a coding error ;-)" << endl;
     }
 }
