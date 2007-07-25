@@ -83,6 +83,7 @@ private:
 	QLabel *fLabel;
 	QProgressBar *fProgress;
 	KHBox *fButtonBox;
+	QString fInitialText;
 } ;
 
 #endif

@@ -62,7 +62,7 @@ set(kpilotTest_SRCS
 	pilotComponent.cc
 	main-test.cc
 )
-# Acts as a receiver for DCOP log messages
+# Acts as a receiver for DBUS log messages
 qt4_add_dbus_adaptor(kpilotTest_SRCS org.kde.kpilot.logger.xml logFile.h LogFile  )
 
 
@@ -82,7 +82,7 @@ set(kpilotDaemon_SRCS
 	pilotDaemon.cc
 )
 
-qt4_add_dbus_adaptor( kpilotDaemon_SRCS org.kde.kpilot.logger.xml logFile.h LogFile  )
+qt4_add_dbus_adaptor( kpilotDaemon_SRCS org.kde.kpilot.logger.xml logFile.h LogFile)
 qt4_add_dbus_adaptor( kpilotDaemon_SRCS org.kde.kpilot.daemon.xml pilotDaemon.h PilotDaemon  )
 qt4_add_dbus_interface(kpilotDaemon_SRCS org.kde.kpilot.logger.xml logfile_interface)
 qt4_add_dbus_interface(kpilotDaemon_SRCS org.kde.kpilot.kpilot.xml kpilot_interface)

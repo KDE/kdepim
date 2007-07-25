@@ -32,6 +32,7 @@
 
 #include "qobject.h"
 #include <QTextStream>
+
 class QFile;
 
 class LogFile : public QObject

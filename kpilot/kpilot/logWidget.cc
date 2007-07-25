@@ -53,7 +53,7 @@
 #include "logWidget.moc"
 #include "loggeradaptor.h"
 
-#define TE_EOL "\n"
+#define TE_EOL "<br/>\n"
 
 
 LogWidget::LogWidget(QWidget * parent) :
@@ -64,10 +64,11 @@ LogWidget::LogWidget(QWidget * parent) :
 	fProgress(0L),
 	fButtonBox(0L)
 {
+	FUNCTIONSETUP;
+
 	//new LoggerAdaptor(this);
 	//QDBusConnection::sessionBus().registerObject("/Logger", this);
 
-	FUNCTIONSETUP;
 	QGridLayout *grid = new QGridLayout(this);
 	grid->setSpacing(SPACING);
 
@@ -82,6 +83,7 @@ LogWidget::LogWidget(QWidget * parent) :
 
 	fLog = new QTextEdit(this);
 	fLog->setReadOnly(true);
+	fLog->setWordWrapMode(QTextOption::WordWrap);
 	fLog->setTextFormat(Qt::LogText);
 
 	fLog->setWhatsThis( i18n("<qt>This lists all the messages received "
@@ -89,11 +91,9 @@ LogWidget::LogWidget(QWidget * parent) :
 	grid->addMultiCellWidget(fLog, 1, 1,1,2);
 
 
-	QString initialText ;
-
-	initialText.append(CSL1("<b>Version:</b> KPilot %1" TE_EOL)
+	fInitialText.append(CSL1("<b>Version:</b> KPilot %1" TE_EOL)
 		.arg(QString::fromLatin1(KPILOT_VERSION)));
-	initialText.append(CSL1("<b>Version:</b> pilot-link %1.%2.%3%4" TE_EOL)
+	fInitialText.append(CSL1("<b>Version:</b> pilot-link %1.%2.%3%4" TE_EOL)
 		.arg(PILOT_LINK_VERSION)
 		.arg(PILOT_LINK_MAJOR)
 		.arg(PILOT_LINK_MINOR)
@@ -104,19 +104,19 @@ LogWidget::LogWidget(QWidget * parent) :
 #endif
 		);
 #ifdef KDE_VERSION_STRING
-	initialText.append(CSL1("<b>Version:</b> KDE %1" TE_EOL)
+	fInitialText.append(CSL1("<b>Version:</b> KDE %1" TE_EOL)
 		.arg(QString::fromLatin1(KDE_VERSION_STRING)));
 #endif
 #ifdef QT_VERSION_STR
-	initialText.append(CSL1("<b>Version:</b> Qt %1" TE_EOL)
+	fInitialText.append(CSL1("<b>Version:</b> Qt %1" TE_EOL)
 		.arg(QString::fromLatin1(QT_VERSION_STR)));
 #endif
 
-	initialText.append(CSL1(TE_EOL));
-	initialText.append(i18n("<qt><b>HotSync Log</b></qt>"));
-	initialText.append(CSL1(TE_EOL));
+	fInitialText.append(CSL1(TE_EOL));
+	fInitialText.append(i18n("<qt><b>HotSync Log</b></qt>"));
+	fInitialText.append(CSL1(TE_EOL));
 
-	fLog->setText(initialText);
+	fLog->setText(fInitialText);
 	fLog->moveCursor( QTextCursor::End );
 
 	KHBox *h = new KHBox(this);
@@ -234,7 +234,7 @@ void LogWidget::logEndSync()
 
 	if (fLog)
 	{
-		fLog->setText(QString::null);
+		fLog->setText(fInitialText);
 	}
 }
 
@@ -297,7 +297,7 @@ bool LogWidget::saveFile(const QString &saveFileName)
 	else
 	{
 		QTextStream t(&f);
-		t << fLog->text();
+		t << fLog->toPlainText();
 	}
 
 	f.close();

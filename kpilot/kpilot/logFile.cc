@@ -46,9 +46,10 @@
 
 LogFile::LogFile() : QObject(), fOutfile(0L), fSyncing(false)
 {
+	FUNCTIONSETUP;
+
 	new LoggerAdaptor(this);
 	QDBusConnection::sessionBus().registerObject("/Logger", this);
-	FUNCTIONSETUP;
 }
 
 
