@@ -107,14 +107,19 @@ GpgME::Error Kleo::QGpgMERefreshKeysJob::startAProcess() {
 
   mProcess->setUseStatusFD( true );
 
-  connect( mProcess, SIGNAL(processExited(K3Process*)),
-	   SLOT(slotProcessExited(K3Process*)) );
-  connect( mProcess, SIGNAL(receivedStderr(K3Process*,char*,int)),
-	   SLOT(slotStderr(K3Process*,char*,int)) );
+  connect( mProcess, SIGNAL(processExited(int, QProcess::ExitStatus)),
+	   SLOT(slotProcessExited( int, QProcess::ExitStatus)) );
+  connect( mProcess, SIGNAL(receivedStdout()),
+	   SLOT(slotStdout()) );
+  connect( mProcess, SIGNAL(receivedStderr()),
+	   SLOT(slotStderr()) );
+
   connect( mProcess, SIGNAL(status(Kleo::GnuPGProcessBase*,const QString&,const QStringList&)),
 	   SLOT(slotStatus(Kleo::GnuPGProcessBase*,const QString&,const QStringList&)) );
 
-  if ( !mProcess->start( K3Process::NotifyOnExit, K3Process::Stderr ) ) {
+  mProcess->setOutputChannelMode( KProcess::SeparateChannels );
+  mProcess->start();
+   if ( !mProcess->waitForStarted() ) {
     mError = GpgME::Error( gpg_err_make( GPG_ERR_SOURCE_GPGSM, GPG_ERR_ENOENT ) ); // what else?
     deleteLater();
     return mError;
@@ -182,14 +187,11 @@ void Kleo::QGpgMERefreshKeysJob::slotStatus( GnuPGProcessBase * proc, const QStr
   }
 }
 
-void Kleo::QGpgMERefreshKeysJob::slotStderr( K3Process *, char *, int ) {
+void Kleo::QGpgMERefreshKeysJob::slotStderr() {
   // implement? or not?
 }
 
-void Kleo::QGpgMERefreshKeysJob::slotProcessExited( K3Process * proc ) {
-  if ( proc != mProcess )
-    return;
-
+void Kleo::QGpgMERefreshKeysJob::slotProcessExited(int exitCode, QProcess::ExitStatus exitStatus) {
   if ( !mError && !mPatternsToDo.empty() )
     if ( const GpgME::Error err = startAProcess() )
       mError = err;
@@ -198,7 +200,7 @@ void Kleo::QGpgMERefreshKeysJob::slotProcessExited( K3Process * proc ) {
 
   emit done();
   if ( !mError &&
-       ( !mProcess->normalExit() || mProcess->exitStatus() != 0 ) )
+       ( exitStatus != QProcess::NormalExit || exitCode != 0 ) )
     mError = GpgME::Error( gpg_err_make( GPG_ERR_SOURCE_GPGSM, GPG_ERR_GENERAL ) );
   emit result( mError );
   deleteLater();

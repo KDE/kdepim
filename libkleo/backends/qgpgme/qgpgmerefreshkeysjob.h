@@ -37,12 +37,11 @@
 #include "gpgme++/context.h"
 
 #include <QStringList>
+#include <QProcess>
 
 namespace Kleo {
   class GnuPGProcessBase;
 }
-
-class K3Process;
 
 namespace Kleo {
 
@@ -60,8 +59,8 @@ namespace Kleo {
     void slotCancel();
 
     void slotStatus( Kleo::GnuPGProcessBase *, const QString &, const QStringList & );
-    void slotStderr( K3Process *, char *, int );
-    void slotProcessExited( K3Process * );
+    void slotStderr();
+    void slotProcessExited(int exitCode, QProcess::ExitStatus exitStatus);
 
   private:
     GpgME::Error startAProcess();

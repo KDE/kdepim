@@ -68,9 +68,7 @@ Kleo::CryptoBackendFactory::CryptoBackendFactory()
     mAvailableProtocols( availableProtocols, availableProtocols + numAvailableProtocols )
 {
   setObjectName("CryptoBackendFactory::instance()");
-#ifndef _WIN32                                           
    mBackendList.push_back( new QGpgMEBackend() );
-#endif                                                   
 #if 0 // disabled for kde-3.3
   mBackendList.push_back( new PGP2Backend() );
   mBackendList.push_back( new PGP5Backend() );

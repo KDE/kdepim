@@ -46,6 +46,7 @@
 #include <assert.h>
 #include <stdio.h>
 
+#if 0
 struct Kleo::GnuPGProcessBase::Private {
   Private() : useStatusFD( false ), statnot( 0 ) {
     statusFD[0] = statusFD[1] = -1;
@@ -56,23 +57,24 @@ struct Kleo::GnuPGProcessBase::Private {
   QSocketNotifier * statnot;
   QByteArray statusBuffer;
 };
-
+#endif
 
 Kleo::GnuPGProcessBase::GnuPGProcessBase( QObject * parent )
-  : K3Process( parent )
+  : KProcess( parent )
 {
-  d = new Private();
+  //d = new Private();
 }
 
 Kleo::GnuPGProcessBase::~GnuPGProcessBase() {
-  delete d; d = 0;
+  //delete d; d = 0;
 }
 
-void Kleo::GnuPGProcessBase::setUseStatusFD( bool use ) {
-  assert( d );
-  d->useStatusFD = use;
+void Kleo::GnuPGProcessBase::setUseStatusFD( bool /*use*/ ) {
+  //assert( d );
+  //d->useStatusFD = use;
 }
 
+#if 0
 bool Kleo::GnuPGProcessBase::start( RunMode runmode, Communication comm ) {
   if ( d->useStatusFD ) {
     // set up the status-fd. This should be in setupCommunication(),
@@ -192,5 +194,6 @@ void Kleo::GnuPGProcessBase::parseStatusOutput() {
   }
   d->statusBuffer = d->statusBuffer.mid( lineStart );
 }
+#endif
 
 #include "gnupgprocessbase.moc"

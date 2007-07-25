@@ -35,7 +35,7 @@
 
 #include "kleo/exportjob.h"
 #include "gpgme++/context.h"
-
+#include <QProcess>
 
 namespace Kleo {
   class GnuPGProcessBase;
@@ -45,7 +45,6 @@ namespace GpgME {
   class Data;
 }
 
-class K3Process;
 
 namespace Kleo {
 
@@ -63,9 +62,9 @@ namespace Kleo {
     void slotCancel();
 
     void slotStatus( Kleo::GnuPGProcessBase *, const QString &, const QStringList & );
-    void slotStdout( K3Process *, char *, int );
-    void slotStderr( K3Process *, char *, int );
-    void slotProcessExited( K3Process * );
+    void slotStdout();
+    void slotStderr();
+    void slotProcessExited(int exitCode, QProcess::ExitStatus exitStatus);
 
   private:
     GnuPGProcessBase * mProcess;

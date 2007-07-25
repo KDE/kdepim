@@ -34,7 +34,7 @@
 #define __KLEO_GNUPGPROCESSBASE_H__
 
 #include "kleo/kleo_export.h"
-#include <k3process.h>
+#include <kprocess.h>
 
 namespace Kleo {
 
@@ -46,7 +46,7 @@ namespace Kleo {
    *
    * @author Marc Mutz <mutz@kde.org>
    */
-  class KLEO_EXPORT GnuPGProcessBase : public K3Process {
+  class KLEO_EXPORT GnuPGProcessBase : public KProcess {
     Q_OBJECT
   public:
     GnuPGProcessBase( QObject * parent=0 );
@@ -55,29 +55,29 @@ namespace Kleo {
     void setUseStatusFD( bool use );
 
     /*! reimplementation */
-    bool start( RunMode runmode, Communication comm );
+    //bool start( RunMode runmode, Communication comm );
 
-    bool closeStatus();
+    //bool closeStatus();
 
   signals:
     void status( Kleo::GnuPGProcessBase * proc, const QString & type, const QStringList & args );
 
   protected:
     /*! reimplementation */
-    int setupCommunication( Communication comm );
+    //int setupCommunication( Communication comm );
     /*! reimplementation */
-    int commSetupDoneP();
+    //int commSetupDoneP();
     /*! reimplementation */
-    int commSetupDoneC();
+    //int commSetupDoneC();
 
-    int childStatus( int fd );
+    //int childStatus( int fd );
 
 
   private slots:
-    void slotChildStatus( int fd );
+    //void slotChildStatus( int fd );
 
   private:
-    void parseStatusOutput();
+    //void parseStatusOutput();
 
   private:
     class Private;
