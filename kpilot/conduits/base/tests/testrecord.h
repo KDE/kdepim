@@ -32,6 +32,8 @@
 #include "record.h"
 #include "recordbase.h"
 
+class TestHHRecord;
+
 class KPILOT_EXPORT TestRecord : public Record {
 private:
 	QString fId;
@@ -41,7 +43,9 @@ private:
 	QMap<QString, QVariant> fValues;
 	
 public:
-	TestRecord( const Record *other );
+	TestRecord( const TestHHRecord *other );
+	
+	TestRecord( const TestRecord *other );
 
 	TestRecord( const QStringList& fields );
 	
@@ -51,19 +55,19 @@ public:
 	
 	/** METHODS FOR TESTPURPOSES **/
 	
-	virtual void setModified();
+	void setModified();
 	
-	virtual void setDeleted();
+	void setDeleted();
+	
+	QVariant value( const QString &field ) const;
+
+	bool setValue( const QString &field, const QVariant &value );
 	
 	/** IMPLEMTED VIRTUAL FUNCTIONS FROM BASECLASS **/
 	
 	virtual const QString id() const;
 	
 	virtual void setId( const QString &id );
-
-	virtual QVariant value( const QString &field ) const;
-
-	virtual bool setValue( const QString &field, const QVariant &value );
 
 	virtual bool isModified() const;
 
@@ -76,7 +80,7 @@ public:
 	virtual const QStringList fields() const;
 	
 	virtual Record* duplicate() const;
-
+	
 	virtual bool operator==( const Record &other ) const;
 
 	virtual bool operator!=( const Record &other ) const;

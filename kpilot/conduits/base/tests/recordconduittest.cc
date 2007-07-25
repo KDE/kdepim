@@ -119,11 +119,11 @@ void RCHotSyncHHTest::testSyncfFields()
 	TestRecordConduit conduit( args );
 	conduit.initDataProxies();
 	
-	Record *rec1 = new TestRecord( fFields );
+	TestRecord *rec1 = new TestRecord( fFields );
 	rec1->setValue( CSL1( "f1" ), CSL1( "A test value" ) );
 	rec1->setValue( CSL1( "f2" ), CSL1( "Another test value" ) );
 	
-	HHRecord *rec2 = new TestHHRecord( fFields, CSL1( "2" ) );
+	TestHHRecord *rec2 = new TestHHRecord( fFields, CSL1( "2" ) );
 	rec2->setValue( CSL1( "f1" ), CSL1( "And more test value" ) );
 	rec2->setValue( CSL1( "f2" ), CSL1( "Yet another one" ) );
 	
@@ -132,7 +132,7 @@ void RCHotSyncHHTest::testSyncfFields()
 	QVERIFY( rec2->value( CSL1( "f1" ) ) == CSL1( "A test value" ) );
 	QVERIFY( rec2->value( CSL1( "f2" ) ) == CSL1( "Another test value" ) );
 	
-	HHRecord *rec3 = new TestHHRecord( fFields, CSL1( "3" ) );
+	TestHHRecord *rec3 = new TestHHRecord( fFields, CSL1( "3" ) );
 	rec3->setValue( CSL1( "f1" ), CSL1( "Test 3-1" ) );
 	rec3->setValue( CSL1( "f2" ), CSL1( "Test 3-2" ) );
 	

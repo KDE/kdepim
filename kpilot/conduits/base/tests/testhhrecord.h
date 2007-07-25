@@ -35,6 +35,7 @@
 #include <QString>
 
 class PilotRecordBase;
+class TestRecord;
 
 class KPILOT_EXPORT TestHHRecord : public HHRecord {
 private:
@@ -48,7 +49,9 @@ private:
 public:
 	TestHHRecord( const QStringList& fields, const QString &id );
 		
-	TestHHRecord( const Record *other );
+	TestHHRecord( const TestHHRecord *other );
+	
+	TestHHRecord( const TestRecord *other );
 
 	virtual ~TestHHRecord() {};
 	
@@ -83,7 +86,7 @@ public:
 	virtual const QStringList fields() const;
 	
 	virtual Record* duplicate() const;
-
+	
 	virtual bool operator==( const Record &other ) const;
 
 	virtual bool operator!=( const Record &other ) const;

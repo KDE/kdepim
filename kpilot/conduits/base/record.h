@@ -51,19 +51,6 @@ public:
 	virtual void setId( const QString &id ) = 0;
 
 	/**
-	 * Returns the value for @p field or an invalid QVariant if the field does not
-	 * exists.
-	 */
-	virtual QVariant value( const QString &field ) const = 0;
-
-	/**
-	 * Sets the value of @p field to @p value and returns true. Returns false if 
-	 * the field does not exists or if the value is not of an appropriate type for
-	 * the field. If this succeeds the record must return true for isModified().
-	 */
-	virtual bool setValue( const QString &field, const QVariant &value ) = 0;
-
-	/**
 	 * Returns true if the record is modified and/or if it's marked as deleted.
 	 */
 	virtual bool isModified() const = 0;
@@ -93,6 +80,13 @@ public:
 	 */
 	virtual Record* duplicate() const = 0;
 
+	/**
+	 *****************************************************************************
+	 * These functions are for test purposes, it's not needed to give an usefull
+	 * implementation
+	 *****************************************************************************
+	 */
+	
 	/**
 	 * Compares the fields and the field values of this record with @p other.
 	 */

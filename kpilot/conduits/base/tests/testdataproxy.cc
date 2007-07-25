@@ -34,7 +34,7 @@
 
 TestDataProxy::TestDataProxy() : fCreateCount(0), fUpdateCount(0), fDeleteCount(0) {}
 
-TestDataProxy::TestDataProxy( int count, const QString &idPref, bool isHandheldProxy )
+TestDataProxy::TestDataProxy( int count, const QString &idPref )
 	: fCreateCount(0), fUpdateCount(0), fDeleteCount(0)
 {
 	QStringList fields;
@@ -44,15 +44,8 @@ TestDataProxy::TestDataProxy( int count, const QString &idPref, bool isHandheldP
 	{
 		QString id = idPref + QString::number( i );
 		
-		Record *rec;
-		if( isHandheldProxy )
-		{
-			rec = new TestHHRecord( fields, id );
-		}
-		else
-		{
-			rec = new TestRecord( fields, id );
-		}
+		TestRecord *rec;
+		rec = new TestRecord( fields, id );
 		rec->setValue( CSL1( "f1" )
 			, CSL1( "Value 1: " ) + QString::number( qrand() ) );
 		rec->setValue( CSL1( "f2" )
@@ -99,12 +92,12 @@ void TestDataProxy::commitCreate( Record *rec )
 void TestDataProxy::commitDelete( Record *rec )
 {
 	fDeleteCount += 1;
-	fDeletedRecord.insert( rec->id(), rec );
+	fDeletedRecord.insert( rec->id(), static_cast<TestRecord*>( rec ) );
 }
 
 void TestDataProxy::commitUpdate( Record *rec )
 {
 	Q_UNUSED( rec );
 	fUpdateCount += 1;
-	fUpdatedRecord.insert( rec->id(), rec );
+	fUpdatedRecord.insert( rec->id(), static_cast<TestRecord*>( rec ) );
 }

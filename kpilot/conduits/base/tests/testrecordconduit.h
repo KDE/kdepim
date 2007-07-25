@@ -47,7 +47,7 @@ public:
 	
 	virtual HHRecord* createHHRecord( const Record* record );
 	
-	virtual bool equal( Record *rec, HHRecord *hhRec ) { return true; }
+	virtual bool equal( Record *rec, HHRecord *hhRec );
 	
 	virtual HHRecord* newHHRecord( Record *pcRecord ) { return 0L; }
 	

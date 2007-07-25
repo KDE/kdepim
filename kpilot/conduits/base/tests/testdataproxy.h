@@ -29,13 +29,15 @@
 
 #include "dataproxy.h"
 
+class TestRecord;
+
 class KPILOT_EXPORT TestDataProxy : public DataProxy {
 private:
 	int fCreateCount;
 	int fUpdateCount;
 	int fDeleteCount;
-	QMap<QString, Record*> fUpdatedRecord;
-	QMap<QString, Record*> fDeletedRecord;
+	QMap<QString, TestRecord*> fUpdatedRecord;
+	QMap<QString, TestRecord*> fDeletedRecord;
 	
 public:
 	TestDataProxy();
@@ -44,7 +46,7 @@ public:
 	 * Creates a dataproxy with @p count records in it. The ids are prefixed with
 	 * @p idPref.
 	 */
-	TestDataProxy( int count, const QString &idPref, bool isHandheldProxy );
+	TestDataProxy( int count, const QString &idPref );
 
 	/** Added for test purposes **/
 	
@@ -58,9 +60,9 @@ public:
 
 	QMap<QString, Record*>* records() { return &fRecords; }
 	
-	QMap<QString, Record*>* updatedRecords() { return &fUpdatedRecord; }
+	QMap<QString, TestRecord*>* updatedRecords() { return &fUpdatedRecord; }
 	
-	QMap<QString, Record*>* deletedRecords() { return &fDeletedRecord; }
+	QMap<QString, TestRecord*>* deletedRecords() { return &fDeletedRecord; }
 	
 	virtual void printRecords();
 

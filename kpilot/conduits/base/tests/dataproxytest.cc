@@ -100,7 +100,7 @@ void DataProxyTest::testUpdate()
 {
 	TestDataProxy fProxy;
 	
-	Record *rec1 = new TestRecord( fFields );
+	TestRecord *rec1 = new TestRecord( fFields );
 	rec1->setValue( CSL1( "f1" ), CSL1( "A TEST VALUE" ) );
 	rec1->setValue( CSL1( "f2" ), CSL1( "ANOTHER TEST VALUE" ) );
 	
@@ -108,7 +108,7 @@ void DataProxyTest::testUpdate()
 	// works.
 	QVERIFY( rec1->value( CSL1( "f1" ) ) == CSL1( "A TEST VALUE" ) );
 	
-	Record *rec2 = new TestRecord( fFields );
+	TestRecord *rec2 = new TestRecord( fFields );
 	rec2->setValue( CSL1( "f1" ), CSL1( "And Yet another test value" ) );
 	rec2->setValue( CSL1( "f2" ), CSL1( "And the last one" ) );
 	
@@ -124,7 +124,7 @@ void DataProxyTest::testRemove()
 {
 	TestDataProxy fProxy;
 	
-	Record *rec1 = new TestRecord( fFields );
+	TestRecord *rec1 = new TestRecord( fFields );
 	rec1->setValue( CSL1( "f1" ), CSL1( "A TEST VALUE" ) );
 	rec1->setValue( CSL1( "f2" ), CSL1( "ANOTHER TEST VALUE" ) );
 	
@@ -192,15 +192,15 @@ void DataProxyTest::testIterationModeAll()
 	// First test the mode: All
 	TestDataProxy fProxy;
 	
-	Record *rec1 = new TestRecord( fFields );
+	TestRecord *rec1 = new TestRecord( fFields );
 	rec1->setValue( CSL1( "f1" ), CSL1( "A test value" ) );
 	rec1->setValue( CSL1( "f2" ), CSL1( "Another test value" ) );
 	
-	Record *rec2 = new TestRecord( fFields );
+	TestRecord *rec2 = new TestRecord( fFields );
 	rec2->setValue( CSL1( "f1" ), CSL1( "And more test value" ) );
 	rec2->setValue( CSL1( "f2" ), CSL1( "Yet another one" ) );
 	
-	Record *rec3 = new TestRecord( fFields );
+	TestRecord *rec3 = new TestRecord( fFields );
 	rec3->setValue( CSL1( "f1" ), CSL1( "One for the third" ) );
 	rec3->setValue( CSL1( "f2" ), CSL1( "Two for the third" ) );
 	
@@ -224,16 +224,16 @@ void DataProxyTest::testIterationModeModified()
 {
 	TestDataProxy fProxy;
 	
-	Record *rec1 = new TestRecord( fFields );
+	TestRecord *rec1 = new TestRecord( fFields );
 	rec1->setValue( CSL1( "f1" ), CSL1( "A test value" ) );
 	rec1->setValue( CSL1( "f2" ), CSL1( "Another test value" ) );
 	
-	Record *rec2 = new TestRecord( fFields );
+	TestRecord *rec2 = new TestRecord( fFields );
 	rec2->setValue( CSL1( "f1" ), CSL1( "And more test value" ) );
 	rec2->setValue( CSL1( "f2" ), CSL1( "Yet another one" ) );
 	rec2->synced();
 	
-	Record *rec3 = new TestRecord( fFields );
+	TestRecord *rec3 = new TestRecord( fFields );
 	rec3->setValue( CSL1( "f1" ), CSL1( "One for the third" ) );
 	rec3->setValue( CSL1( "f2" ), CSL1( "Two for the third" ) );
 	
@@ -259,16 +259,16 @@ void DataProxyTest::testCommitCreated()
 {
 	TestDataProxy fProxy;
 	
-	Record *rec1 = new TestRecord( fFields );
+	TestRecord *rec1 = new TestRecord( fFields );
 	rec1->setValue( CSL1( "f1" ), CSL1( "A test value" ) );
 	rec1->setValue( CSL1( "f2" ), CSL1( "Another test value" ) );
 	
-	Record *rec2 = new TestRecord( fFields );
+	TestRecord *rec2 = new TestRecord( fFields );
 	rec2->setValue( CSL1( "f1" ), CSL1( "And more test value" ) );
 	rec2->setValue( CSL1( "f2" ), CSL1( "Yet another one" ) );
 	rec2->synced();
 	
-	Record *rec3 = new TestRecord( fFields );
+	TestRecord *rec3 = new TestRecord( fFields );
 	rec3->setValue( CSL1( "f1" ), CSL1( "One for the third" ) );
 	rec3->setValue( CSL1( "f2" ), CSL1( "Two for the third" ) );
 	
@@ -300,13 +300,13 @@ void DataProxyTest::testCommitUpdated()
 {
 	TestDataProxy fProxy;
 	
-	Record *rec1 = new TestRecord( fFields );
+	TestRecord *rec1 = new TestRecord( fFields );
 	rec1->setId( CSL1( "1" ) );
 	rec1->setValue( CSL1( "f1" ), CSL1( "A test value" ) );
 	rec1->setValue( CSL1( "f2" ), CSL1( "Another test value" ) );
 	rec1->synced();
 	
-	Record *rec2 = new TestRecord( fFields );
+	TestRecord *rec2 = new TestRecord( fFields );
 	rec2->setId( CSL1( "2" ) );
 	rec2->setValue( CSL1( "f1" ), CSL1( "And more test value" ) );
 	rec2->setValue( CSL1( "f2" ), CSL1( "Yet another one" ) );
@@ -317,12 +317,12 @@ void DataProxyTest::testCommitUpdated()
 	fProxy.records()->insert( rec2->id(), rec2 );
 	
 	// New  values for the existing records.
-	Record *rec3 = new TestRecord( fFields );
+	TestRecord *rec3 = new TestRecord( fFields );
 	rec3->setId( CSL1( "1" ) );
 	rec3->setValue( CSL1( "f1" ), CSL1( "An updated test value" ) );
 	rec3->setValue( CSL1( "f2" ), CSL1( "Another updated test value" ) );
 	
-	Record *rec4 = new TestRecord( fFields );
+	TestRecord *rec4 = new TestRecord( fFields );
 	rec4->setId( CSL1( "2" ) );
 	rec4->setValue( CSL1( "f1" ), CSL1( "And more updated test value" ) );
 	rec4->setValue( CSL1( "f2" ), CSL1( "Yet another updated one" ) );
@@ -351,13 +351,13 @@ void DataProxyTest::testCommitDeleted()
 {
 	TestDataProxy fProxy;
 	
-	Record *rec1 = new TestRecord( fFields );
+	TestRecord *rec1 = new TestRecord( fFields );
 	rec1->setId( CSL1( "1" ) );
 	rec1->setValue( CSL1( "f1" ), CSL1( "A test value" ) );
 	rec1->setValue( CSL1( "f2" ), CSL1( "Another test value" ) );
 	rec1->synced();
 	
-	Record *rec2 = new TestRecord( fFields );
+	TestRecord *rec2 = new TestRecord( fFields );
 	rec2->setId( CSL1( "2" ) );
 	rec2->setValue( CSL1( "f1" ), CSL1( "And more test value" ) );
 	rec2->setValue( CSL1( "f2" ), CSL1( "Yet another one" ) );

@@ -98,7 +98,7 @@ void TestRecordConduit::initDataProxies()
 		fBackupDataProxy->remove( CSL1( "hh-7" ) );
 		fBackupDataProxy->remove( CSL1( "hh-12" ) );
 		
-		fPCDataProxy = new TestDataProxy( 15, CSL1( "pc-" ), false );
+		fPCDataProxy = new TestDataProxy( 15, CSL1( "pc-" ) );
 		static_cast<TestRecord*>( fPCDataProxy->find( CSL1( "pc-4" ) ) )->setModified();
 		static_cast<TestRecord*>( fPCDataProxy->find( CSL1( "pc-5" ) ) )->setModified();
 		static_cast<TestRecord*>( fPCDataProxy->find( CSL1( "pc-6" ) ) )->setDeleted();
@@ -135,12 +135,14 @@ void TestRecordConduit::initDataProxies()
 
 Record* TestRecordConduit::createPCRecord( const HHRecord* record )
 {
-	return new TestRecord( record );
+	const TestHHRecord *hhRec = static_cast<const TestHHRecord*>( record );
+	return new TestRecord( hhRec );
 }
 
 HHRecord* TestRecordConduit::createHHRecord( const Record* record )
 {
-	return new TestHHRecord( record );
+	const TestRecord *pcRec = static_cast<const TestRecord*>( record );
+	return new TestHHRecord( pcRec );
 }
 
 void TestRecordConduit::syncFields( Record *pcRecord, HHRecord *hhRecord
@@ -154,17 +156,44 @@ void TestRecordConduit::syncFields( Record *pcRecord, HHRecord *hhRecord
 		
 		if( fromHH )
 		{
-			pcRecord->setValue( field, hhRecord->value( field ) );
+			TestRecord *pcRec = static_cast<TestRecord*>( pcRecord );
+			TestHHRecord *hhRec = static_cast<TestHHRecord*>( hhRecord );
+			
+			pcRec->setValue( field, hhRec->value( field ) );
 		}
 		else
 		{
-			hhRecord->setValue( field, pcRecord->value( field ) );
+			TestRecord *pcRec = static_cast<TestRecord*>( pcRecord );
+			TestHHRecord *hhRec = static_cast<TestHHRecord*>( hhRecord );
+			
+			hhRec->setValue( field, pcRec->value( field ) );
 		}
 	}
 	
 	// Both records are in sync so they are no longer modified.
 	pcRecord->synced();
 	hhRecord->synced();
+}
+
+bool TestRecordConduit::equal( Record *pcRecord, HHRecord *hhRecord )
+{
+	TestRecord *pcRec = static_cast<TestRecord*>( pcRecord );
+	TestHHRecord *hhRec = static_cast<TestHHRecord*>( hhRecord );
+	
+	
+	QStringList fields = pcRec->fields();
+	QStringListIterator it( fields );
+	
+	bool allEqual = true;
+	
+	while( it.hasNext() )
+	{
+		QString field = it.next();
+		
+		allEqual = allEqual && ( pcRec->value( field ) == hhRec->value( field ) );
+	}
+	
+	return allEqual && ( fields == hhRec->fields() );
 }
 
 void TestRecordConduit::test()

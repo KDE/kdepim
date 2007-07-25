@@ -26,6 +26,7 @@
 */
 
 #include "testhhrecord.h"
+#include "testrecord.h"
 #include "options.h"
 
 TestHHRecord::TestHHRecord( const QStringList& fields, const QString &id )
@@ -34,7 +35,26 @@ TestHHRecord::TestHHRecord( const QStringList& fields, const QString &id )
 {
 }
 
-TestHHRecord::TestHHRecord( const Record *other ) : HHRecord( 0L )
+TestHHRecord::TestHHRecord( const TestHHRecord *other ) : HHRecord( 0L )
+{
+	fId = other->id();
+	fFields = other->fields();
+	
+	QStringListIterator it(fFields);
+	
+	while( it.hasNext() )
+	{
+		QString field = it.next();
+		
+		setValue( field, other->value( field ) );
+	}
+	
+	fModified = other->isModified();
+	fDeleted = other->isDeleted();
+	fArchived = false;
+}
+
+TestHHRecord::TestHHRecord( const TestRecord *other ) : HHRecord( 0L )
 {
 	fId = other->id();
 	fFields = other->fields();
@@ -138,21 +158,42 @@ Record* TestHHRecord::duplicate() const
 	return new TestHHRecord( this );
 }
 
-bool TestHHRecord::operator==( const Record &other ) const
+bool TestHHRecord::operator==( const Record &rec ) const
 {
-	QStringList fields = other.fields();
-	QStringListIterator it(fields);
-	
-	bool allEqual = true;
-	
-	while( it.hasNext() )
+	if( const TestRecord *other = dynamic_cast<const TestRecord*>( &rec ) )
 	{
-		QString field = it.next();
+		QStringList fields = other->fields();
+		QStringListIterator it(fields);
 		
-		allEqual = allEqual && ( fValues.value( field ) == other.value( field ) );
+		bool allEqual = true;
+		
+		while( it.hasNext() )
+		{
+			QString field = it.next();
+			
+			allEqual = allEqual && ( fValues.value( field ) == other->value( field ) );
+		}
+		
+		return allEqual && (fields == fFields);
+	}
+	else if( const TestHHRecord *other = dynamic_cast<const TestHHRecord*>( &rec ) )
+	{
+		QStringList fields = other->fields();
+		QStringListIterator it(fields);
+		
+		bool allEqual = true;
+		
+		while( it.hasNext() )
+		{
+			QString field = it.next();
+			
+			allEqual = allEqual && ( fValues.value( field ) == other->value( field ) );
+		}
+		
+		return allEqual && (fields == fFields);
 	}
 	
-	return allEqual && (fields == fFields);
+	return false;
 }
 
 bool TestHHRecord::operator!=( const Record &other ) const
