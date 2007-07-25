@@ -30,10 +30,6 @@
     your version.
 */
 
-#ifdef HAVE_CONFIG_H
-#include <config.h>
-#endif
-
 #include "gnupgviewer.h"
 
 #include "libkleo/backends/qgpgme/gnupgprocessbase.h"
@@ -62,19 +58,19 @@ void GnuPGViewer::setProcess( Kleo::GnuPGProcessBase * process ) {
   if ( !process )
     return;
   mProcess = process;
-  connect( mProcess, SIGNAL(processExited(K3Process*)),
-	   SLOT(slotProcessExited(K3Process*)) );
-  connect( mProcess, SIGNAL(receivedStdout(K3Process*,char*,int)),
-	   SLOT(slotStdout(K3Process*,char*,int)) );
-  connect( mProcess, SIGNAL(receivedStderr(K3Process*,char*,int)),
-	   SLOT(slotStderr(K3Process*,char*,int)) );
+  connect( mProcess, SIGNAL(processExited(int, QProcess::ExitStatus)),
+	   SLOT(slotProcessExited(int, QProcess::ExitStatus)) );
+  connect( mProcess, SIGNAL(readyReadStandardOutput()),
+	   SLOT(slotStdout()) );
+  connect( mProcess, SIGNAL(readyReadStandardError()),
+	   SLOT(slotStderr()) );
   connect( mProcess, SIGNAL(status(Kleo::GnuPGProcessBase*,const QString&,const QStringList&)),
 	   SLOT(slotStatus(Kleo::GnuPGProcessBase*,const QString&,const QStringList&)) );
 }
 
-static QStringList split( char * buffer, int buflen, QString & old ) {
+static QStringList split( const QString & newLine, QString & old ) {
   // when done right, this would need to use QTextCodec...
-  const QString str = old + QString::fromLocal8Bit( buffer, buflen );
+  const QString str = old + newLine;
   QStringList l = str.split( '\n' );
   if ( l.empty() )
     return l;
@@ -91,25 +87,25 @@ static QString escape( QString str ) {
   return str.replace( '&', "&amp" ).replace( '<', "&lt;" ).replace( '>', "&gt;" );
 }
 
-void GnuPGViewer::slotStdout( K3Process *, char * buffer, int buflen ) {
-  const QStringList l = split( buffer, buflen, mLastStdout );
+void GnuPGViewer::slotStdout() {
+  QString line = mProcess-> readAllStandardOutput ();
+  const QStringList l = split( line, mLastStdout );
   for ( QStringList::const_iterator it = l.begin() ; it != l.end() ; ++it )
     append( "stdout: " + escape( *it ) );
 }
 
-void GnuPGViewer::slotStderr( K3Process *, char * buffer, int buflen ) {
-  const QStringList l = split( buffer, buflen, mLastStderr );
+void GnuPGViewer::slotStderr() {
+  QString line = mProcess->readAllStandardError ();
+  const QStringList l = split( line, mLastStderr );
   for ( QStringList::const_iterator it = l.begin() ; it != l.end() ; ++it )
     append( "<b>stderr: " + escape( *it ) + "</b>" );
 }
 void GnuPGViewer::slotStatus( Kleo::GnuPGProcessBase *, const QString & type, const QStringList & args ) {
   append( "<b><font color=\"red\">status: " + escape( type + ' ' + args.join( " " ) ) + "</font></b>" );
 }
-void GnuPGViewer::slotProcessExited( K3Process * proc ) {
-  if ( !proc )
-    return;
-  if ( proc->normalExit() )
-    append( QString( "<b>Process exit: return code %1</b>" ).arg ( proc->exitStatus() ) );
+void GnuPGViewer::slotProcessExited(int exitCode, QProcess::ExitStatus exitStatus) {
+  if ( exitStatus==QProcess::NormalExit )
+    append( QString( "<b>Process exit: return code %1</b>" ).arg ( exitCode ) );
   else
     append( "<b>Process exit: killed</b>" );
 }
@@ -135,7 +131,8 @@ int main( int argc, char** argv ) {
   app.setMainWidget( gv );
   gv->show();
 
-  gpg.start( K3Process::NotifyOnExit, K3Process::AllOutput );
+  gpg.setOutputChannelMode(KProcess::SeparateChannels);
+  gpg.start();
 
   return app.exec();
 }

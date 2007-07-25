@@ -35,11 +35,10 @@
 
 #include <qtextedit.h>
 #include <QString>
-
+#include <QProcess>
 namespace Kleo {
   class GnuPGProcessBase;
 }
-class K3Process;
 class QStringList;
 
 class GnuPGViewer : public QTextEdit {
@@ -51,10 +50,10 @@ public:
   void setProcess( Kleo::GnuPGProcessBase * process );
 
 private slots:
-  void slotStdout( K3Process *, char *, int );
-  void slotStderr( K3Process *, char *, int );
+  void slotStdout( );
+  void slotStderr();
   void slotStatus( Kleo::GnuPGProcessBase *, const QString &, const QStringList & );
-  void slotProcessExited( K3Process * );
+  void slotProcessExited( int, QProcess::ExitStatus );
 
 private:
   Kleo::GnuPGProcessBase * mProcess;
