@@ -287,6 +287,17 @@ bool KMailConnection::kmailGetAttachment( KUrl& url,
   return (mKmailGroupwareInterface->lastError().type()==QDBusError::NoError);
 }
 
+bool KMailConnection::kmailListAttachments(QStringList &list,
+                                            const QString & resource, quint32 sernum)
+{
+  if ( !connectToKMail() )
+    return false;
+
+  QDBusReply<QStringList> r = mKmailGroupwareInterface->call( "listAttachments", resource, sernum );
+  list = r;
+  return (mKmailGroupwareInterface->lastError().type()==QDBusError::NoError);
+}
+
 bool KMailConnection::kmailDeleteIncidence( const QString& resource,
                                             quint32 sernum )
 {

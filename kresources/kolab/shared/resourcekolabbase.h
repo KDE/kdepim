@@ -132,6 +132,10 @@ public: // for Contact
                            quint32 sernum,
                            const QString& filename ) const;
 
+  /// List all attachments of a mail.
+  bool kmailListAttachments( QStringList &list, const QString &resource,
+                             quint32 sernum ) const;
+
 protected:
   /// Delete an incidence.
   bool kmailDeleteIncidence( const QString& resource, quint32 sernum );

@@ -143,6 +143,8 @@ protected:
   void saveCustomAttributes( QDomElement& element ) const;
   void loadCustomAttributes( QDomElement& element );
 
+  void loadAttachments();
+
   QString productID() const;
 
   QString mSummary;

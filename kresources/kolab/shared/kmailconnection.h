@@ -86,6 +86,8 @@ public:
 
   bool kmailGetAttachment( KUrl& url, const QString& resource, quint32 sernum,
                            const QString& filename );
+  bool kmailListAttachments( QStringList &list, const QString &resource,
+                             quint32 sernum );
   bool kmailDeleteIncidence( const QString& resource, quint32 sernum );
   bool kmailUpdate( const QString& resource,
                     quint32& sernum,

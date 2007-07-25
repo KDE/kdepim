@@ -96,6 +96,13 @@ bool ResourceKolabBase::kmailGetAttachment( KUrl& url, const QString& resource,
   return mConnection->kmailGetAttachment( url, resource, sernum, filename );
 }
 
+bool ResourceKolabBase::kmailListAttachments( QStringList &list,
+                                              const QString & resource,
+                                              quint32 sernum ) const
+{
+  return mConnection->kmailListAttachments( list, resource, sernum );
+}
+
 bool ResourceKolabBase::kmailDeleteIncidence( const QString& resource,
                                               quint32 sernum )
 {
