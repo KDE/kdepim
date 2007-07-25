@@ -28,6 +28,8 @@
 */
 
 #include "recordconduit.h"
+#include "testdataproxy.h"
+#include "testhhdataproxy.h"
 
 class KPILOT_EXPORT TestRecordConduit : public RecordConduit {
 public:
@@ -49,9 +51,9 @@ public:
 	
 	virtual bool equal( Record *rec, HHRecord *hhRec );
 	
-	virtual HHRecord* newHHRecord( Record *pcRecord ) { return 0L; }
+	virtual HHRecord* newHHRecord( Record *pcRecord );
 	
-	virtual Record* newPCRecord( HHRecord *hhRecord ) { return 0L; }
+	virtual Record* newPCRecord( HHRecord *hhRecord );
 	
 	virtual void syncFields( Record *pcRecord, HHRecord *hhRecord
 		, bool fromHH = true );
@@ -64,11 +66,22 @@ public:
 	
 	void hotSyncTest();
 	
-	DataProxy *pcDataProxy() { return fPCDataProxy; }
+	void firstSyncTest();
 	
-	HHDataProxy *hhDataProxy() { return fHHDataProxy; }
+	TestDataProxy *pcDataProxy()
+	{
+		return static_cast<TestDataProxy*>( fPCDataProxy );
+	}
 	
-	HHDataProxy *backupDataProxy() { return fBackupDataProxy; }
+	TestHHDataProxy *hhDataProxy()
+	{
+		return static_cast<TestHHDataProxy*>( fHHDataProxy );
+	}
+	
+	TestHHDataProxy *backupDataProxy()
+	{
+		return static_cast<TestHHDataProxy*>( fBackupDataProxy );
+	}
 	
 	IDMapping *mapping() { return fMapping; }
 

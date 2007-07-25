@@ -83,7 +83,6 @@ private slots:
 	/** HotSync and HH overides tests (See table below) **/
 	void testCase_6_5_1();
 	void testCase_6_5_2();
-	/**/
 	void testCase_6_5_3();
 	void testCase_6_5_4();
 	void testCase_6_5_5();
@@ -98,7 +97,6 @@ private slots:
 	void testCase_6_5_15();
 	void testCase_6_5_16();
 	void testCase_6_5_17();
-	/**/
 
 private:
 	QStringList fFields;

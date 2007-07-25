@@ -39,12 +39,14 @@ RECORD_CONDUIT_EXECUTABLE_TESTS(
 	idmappingxmlsourcetest
 	idmappingtest
 	dataproxytest
-	recordconduittest
+	rchotsynchhtest
+	rcfirstsynctest
 )
 
 RECORD_CONDUIT_UNIT_TESTS (
 	idmappingxmlsourcetest
 	idmappingtest
 	dataproxytest
-	recordconduittest
+	rchotsynchhtest
+	rcfirstsynctest
 )

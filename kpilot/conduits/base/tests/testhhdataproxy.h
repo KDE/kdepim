@@ -52,5 +52,7 @@ public:
 	virtual void undoCommitCreate( const Record *rec );
 	
 	virtual QString commitUpdate( const Record *rec );
+	
+	QMap<QString, Record*>* records() { return &fRecords; }
 };
 #endif

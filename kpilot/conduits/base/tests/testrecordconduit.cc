@@ -180,7 +180,6 @@ bool TestRecordConduit::equal( Record *pcRecord, HHRecord *hhRecord )
 	TestRecord *pcRec = static_cast<TestRecord*>( pcRecord );
 	TestHHRecord *hhRec = static_cast<TestHHRecord*>( hhRecord );
 	
-	
 	QStringList fields = pcRec->fields();
 	QStringListIterator it( fields );
 	
@@ -189,11 +188,26 @@ bool TestRecordConduit::equal( Record *pcRecord, HHRecord *hhRecord )
 	while( it.hasNext() )
 	{
 		QString field = it.next();
-		
 		allEqual = allEqual && ( pcRec->value( field ) == hhRec->value( field ) );
 	}
 	
 	return allEqual && ( fields == hhRec->fields() );
+}
+
+HHRecord* TestRecordConduit::newHHRecord( Record *pcRecord )
+{
+	TestRecord *pcRec = static_cast<TestRecord*>( pcRecord );
+	TestHHRecord *hhRec = new TestHHRecord( pcRec );
+	
+	return hhRec;
+}
+
+Record* TestRecordConduit::newPCRecord( HHRecord *hhRecord )
+{
+	TestHHRecord *hhRec = static_cast<TestHHRecord*>( hhRecord );
+	TestRecord *pcRec = new TestRecord( hhRec );
+	
+	return pcRec;
 }
 
 void TestRecordConduit::test()
@@ -219,4 +233,9 @@ void TestRecordConduit::solveConflictTest( Record *pcRecord, HHRecord *hhRecord 
 void TestRecordConduit::hotSyncTest()
 {
 	hotSync();
+}
+
+void TestRecordConduit::firstSyncTest()
+{
+	firstSync();
 }

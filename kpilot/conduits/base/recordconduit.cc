@@ -348,14 +348,24 @@ void RecordConduit::firstSync()
 			// record should be used. For now the handheld record overides.
 			
 			// Overide pcRecord values with hhRecord values.
+			DEBUGKPILOT << fname << ": Match found: " << pcRecord->id() 
+				<< hhRecord->id() << endl;
 			syncFields( pcRecord, hhRecord );
 			
 			fMapping->map( hhRecord->id(), pcRecord->id() );
 		}
+		else
+		{
+			DEBUGKPILOT << fname << ": No match found for: " << hhRecord->id() << endl;
+			Record *pcRecord = newPCRecord( hhRecord );
+			fPCDataProxy->create( pcRecord );
+			fMapping->map( hhRecord->id(), pcRecord->id() );
+		}
 	}
 	
-	fPCDataProxy->resetIterator();
+	DEBUGKPILOT << fname << ": Walking over all pc records." << endl;
 	
+	fPCDataProxy->resetIterator();
 	while( fPCDataProxy->hasNext() )
 	{
 		Record *pcRecord = fPCDataProxy->next();
@@ -372,6 +382,8 @@ void RecordConduit::firstSync()
 
 Record* RecordConduit::findMatch( HHRecord *hhRec )
 {
+	FUNCTIONSETUP;
+	
 	fPCDataProxy->resetIterator();
 	
 	while( fPCDataProxy->hasNext() )
@@ -491,63 +503,6 @@ void RecordConduit::syncRecords( Record *pcRecord, HHRecord *backupRecord,
 		DEBUGKPILOT << fname << ": This should not happen." << endl;
 	}
 }
-
-/*
-bool RecordConduit::syncFields( Record *from, Record *to )
-{
-	FUNCTIONSETUP;
-	
-	// This shouldn't happen.
-	if( !to || !from )
-	{
-		DEBUGKPILOT << fname << ": one of the two records is zero! Not syncing"
-			<< endl;
-		return false;
-	}
-	
-	if( to->fields().size() != from->fields().size() )
-	{
-		DEBUGKPILOT << fname << ": fieldcount of both records differ. Not syncing"
-			<< endl;
-		return false;
-	}
-	else
-	{
-		QStringList fields = from->fields();
-		QStringListIterator it( fields );
-		while( it.hasNext() )
-		{
-			QString field = it.next();
-			if( !to->fields().contains( field ) )
-			{
-				DEBUGKPILOT << fname << ": One of the fields is not present in the "
-					<< "to-record. Not syncing." << endl;
-				return false;
-			}
-		}
-	}
-	
-	QStringList fields = from->fields();
-	QStringListIterator it( fields );
-	while( it.hasNext() )
-	{
-		QString field = it.next();
-		bool result = to->setValue( field, from->value( field ) );
-		if( !result )
-		{
-			DEBUGKPILOT << fname << ": error, field " << field << " does not exists ";
-			DEBUGKPILOT	<< "or the value given is not valid!" << endl;
-			return false;
-		}
-	}
-	
-	// Both records are in sync so they are no longer modified.
-	from->synced();
-	to->synced();
-	
-	return true;
-}
-*/
 
 void RecordConduit::syncConflictedRecords( Record *pcRecord, HHRecord *hhRecord
 	, bool pcOverides )
