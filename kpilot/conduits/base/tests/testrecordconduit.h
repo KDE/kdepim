@@ -47,9 +47,18 @@ public:
 	
 	virtual HHRecord* createHHRecord( const Record* record );
 	
+	virtual bool equal( Record *rec, HHRecord *hhRec ) { return true; }
+	
+	virtual HHRecord* newHHRecord( Record *pcRecord ) { return 0L; }
+	
+	virtual Record* newPCRecord( HHRecord *hhRecord ) { return 0L; }
+	
+	virtual void syncFields( Record *pcRecord, HHRecord *hhRecord
+		, bool fromHH = true );
+	
 	/** Methods below are added for testpurposes **/
 	
-	bool syncFieldsTest( Record *from, Record *to );
+	void syncFieldsTest( Record *pcRec, HHRecord *to, bool fromHH );
 	
 	void solveConflictTest( Record *pcRecord, HHRecord *hhRecord );
 	

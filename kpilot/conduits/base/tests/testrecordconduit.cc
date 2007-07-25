@@ -143,6 +143,30 @@ HHRecord* TestRecordConduit::createHHRecord( const Record* record )
 	return new TestHHRecord( record );
 }
 
+void TestRecordConduit::syncFields( Record *pcRecord, HHRecord *hhRecord
+	, bool fromHH )
+{
+	QStringList fields = hhRecord->fields();
+	QStringListIterator it( fields );
+	while( it.hasNext() )
+	{
+		QString field = it.next();
+		
+		if( fromHH )
+		{
+			pcRecord->setValue( field, hhRecord->value( field ) );
+		}
+		else
+		{
+			hhRecord->setValue( field, pcRecord->value( field ) );
+		}
+	}
+	
+	// Both records are in sync so they are no longer modified.
+	pcRecord->synced();
+	hhRecord->synced();
+}
+
 void TestRecordConduit::test()
 {
 	qDebug() << "************** HANDHELD ******************";
@@ -153,9 +177,9 @@ void TestRecordConduit::test()
 	((TestDataProxy*)fPCDataProxy)->printRecords();
 }
 
-bool TestRecordConduit::syncFieldsTest( Record *from, Record *to )
+void TestRecordConduit::syncFieldsTest( Record *pcRec, HHRecord *hhRec, bool fromHH )
 {
-	return syncFields( from, to );
+	syncFields( pcRec, hhRec, fromHH );
 }
 
 void TestRecordConduit::solveConflictTest( Record *pcRecord, HHRecord *hhRecord )

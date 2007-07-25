@@ -278,9 +278,6 @@ bool DataProxy::rollback()
 	// Delete committed new records.
 	QStringListIterator it( fCreated.keys() );
 	
-	// Reset the map
-	fCreated.clear();
-	
 	while( it.hasNext() )
 	{
 		QString id = it.next();
@@ -295,6 +292,9 @@ bool DataProxy::rollback()
 			fCreated.insert( rec->id(), false );
 		}
 	}
+	
+	// Reset the map
+	fCreated.clear();
 	
 	// Undo changes to updated records.
 	QListIterator<Record*> i( fOldRecords.values() );

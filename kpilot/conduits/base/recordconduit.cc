@@ -109,7 +109,7 @@ RecordConduit::~RecordConduit()
 		setFirstSync( true ); // 6.3.2
 		fHHDataProxy->setIterateMode( DataProxy::All );
 		fPCDataProxy->setIterateMode( DataProxy::All );
-		//firstSync();
+		firstSync();
 	}
 	else if( hhDatabaseOpen && !pcDatabaseOpen )
 	{
@@ -328,6 +328,65 @@ void RecordConduit::hotSync()
 	}
 }
 
+void RecordConduit::firstSync()
+{
+	FUNCTIONSETUP;
+	
+	DEBUGKPILOT << fname << ": Walking over all hh records." << endl;
+	
+	fHHDataProxy->resetIterator();
+	while( fHHDataProxy->hasNext() )
+	{
+		HHRecord *hhRecord = static_cast<HHRecord*>( fHHDataProxy->next() );
+		Record *pcRecord = findMatch( hhRecord );
+		
+		if( pcRecord )
+		{
+			// TODO: Make this configurable or something, maybe pcRecord should
+			// overide or user should be asked which record should be used. In this
+			// case it might even be usefull to let the user select per field which
+			// record should be used. For now the handheld record overides.
+			
+			// Overide pcRecord values with hhRecord values.
+			syncFields( pcRecord, hhRecord );
+			
+			fMapping->map( hhRecord->id(), pcRecord->id() );
+		}
+	}
+	
+	fPCDataProxy->resetIterator();
+	
+	while( fPCDataProxy->hasNext() )
+	{
+		Record *pcRecord = fPCDataProxy->next();
+		
+		if( !fMapping->containsPCId( pcRecord->id() ) )
+		{
+			HHRecord *hhRecord = newHHRecord( pcRecord );
+			fHHDataProxy->create( hhRecord );
+			
+			fMapping->map( hhRecord->id(), pcRecord->id() );
+		}
+	}
+}
+
+Record* RecordConduit::findMatch( HHRecord *hhRec )
+{
+	fPCDataProxy->resetIterator();
+	
+	while( fPCDataProxy->hasNext() )
+	{
+		Record *pcRec = fPCDataProxy->next();
+		
+		if( equal( pcRec, hhRec ) )
+		{
+			return pcRec;
+		}
+	}
+	
+	return 0L;
+}
+
 void RecordConduit::syncRecords( Record *pcRecord, HHRecord *backupRecord,
 	HHRecord *hhRecord )
 {
@@ -364,9 +423,10 @@ void RecordConduit::syncRecords( Record *pcRecord, HHRecord *backupRecord,
 				else
 				{
 					// Case 6.5.3 or 6.5.1 (fullSync)
-					//          from      to
 					DEBUGKPILOT << fname << ": Case 6.5.3 or 6.5.1 (fullSync)" << endl;
-					syncFields( hhRecord, pcRecord );
+
+					// Keep hhRecord values.
+					syncFields( pcRecord, hhRecord );
 				}
 			}
 		}
@@ -382,8 +442,8 @@ void RecordConduit::syncRecords( Record *pcRecord, HHRecord *backupRecord,
 			{
 				// Case: 6.5.6
 				DEBUGKPILOT << fname << ": Case 6.5.6" << endl;
-				//          from      to
-				syncFields( pcRecord, hhRecord );
+				// Keep pc record values.
+				syncFields( pcRecord, hhRecord, false );
 			}
 		}
 		else
@@ -432,6 +492,7 @@ void RecordConduit::syncRecords( Record *pcRecord, HHRecord *backupRecord,
 	}
 }
 
+/*
 bool RecordConduit::syncFields( Record *from, Record *to )
 {
 	FUNCTIONSETUP;
@@ -484,10 +545,9 @@ bool RecordConduit::syncFields( Record *from, Record *to )
 	from->synced();
 	to->synced();
 	
-	// TODO: Save the new hash of the to record somewhere
-	
 	return true;
 }
+*/
 
 void RecordConduit::syncConflictedRecords( Record *pcRecord, HHRecord *hhRecord
 	, bool pcOverides )
@@ -503,7 +563,7 @@ void RecordConduit::syncConflictedRecords( Record *pcRecord, HHRecord *hhRecord
 		else
 		{
 			// Keep pcRecord. The hhRecord is changed so undo that changes.
-			syncFields( pcRecord, hhRecord );
+			syncFields( pcRecord, hhRecord, false );
 		}
 	}
 	else
@@ -513,7 +573,8 @@ void RecordConduit::syncConflictedRecords( Record *pcRecord, HHRecord *hhRecord
 			if( pcRecord->isModified() )
 			{
 				DEBUGKPILOT << fname << ": Case 6.5.16" << endl;
-				syncFields( hhRecord, pcRecord );
+				// Keep hhRecordValues.
+				syncFields( pcRecord, hhRecord );
 			}
 			// else { DEBUGKPILOT << fname << ": Case 6.5.15" << endl; }
 			deleteRecords( pcRecord, hhRecord );
@@ -521,7 +582,7 @@ void RecordConduit::syncConflictedRecords( Record *pcRecord, HHRecord *hhRecord
 		else
 		{
 			// Keep hhRecord. The pcRecord is changed so undo that changes.
-			syncFields( hhRecord, pcRecord );
+			syncFields( pcRecord, hhRecord );
 		}
 	}
 }

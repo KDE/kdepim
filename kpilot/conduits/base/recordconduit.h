@@ -78,10 +78,34 @@ protected:
 	virtual void initDataProxies() = 0;
 
 	/**
+	 * Compares @p pcRecord with @p hhRec and returns true if they are equal.
+	 */
+	virtual bool equal( Record *pcRec, HHRecord *hhRec ) = 0;
+	
+	/**
+	 * Synchronizes the field values of @p hhRecord to @p pcRecord. If @p fromHH
+	 * is false the fields are synchronized from the pcRecord to the hhRecord.
+	 * After calling this method, RecordConduit::equal( pcRecord, hhRecord ) must
+	 * return true.
+	 */
+	virtual void syncFields( Record *pcRecord, HHRecord *hhRecord
+		, bool fromHH = true ) = 0;
+	
+	/**
 	 * This method is called when the conduit is run in Test Mode. The 
 	 * implementing class can do whatever it wants to do for test purposes.
 	 */
 	virtual void test() = 0;
+	
+	/**
+	 * Returns a HHRecord that is a copy of @p pcRecord.
+	 */
+	virtual HHRecord* newHHRecord( Record *pcRecord ) = 0;
+	
+	/**
+	 * Returns a Record that is a copy of @p hhRecord.
+	 */
+	virtual Record* newPCRecord( HHRecord *hhRecord ) = 0;
 
 	virtual bool createBackupDatabase() = 0;
 
@@ -90,7 +114,24 @@ protected:
 	 */
 	void hotSync();
 	
+	/**
+	 * Executes the FirstSync flow (see 5.1)
+	 */
+	void firstSync();
+	
 	bool checkVolatility();
+	
+	/**
+	 * Iterates over the records from the pc data proxy and tries to find a
+	 * matching record for @p rec. If no matching record is found 0L is returned.
+	 * The method makes use of the matchFields() method of Record.
+	 */
+	Record* findMatch( HHRecord *rec );
+	
+	/**
+	 * Deletes the mapping for those records and removes them from the proxies.
+	 */
+	void deleteRecords( Record *pcRecord, HHRecord *hhRecord );
 	
 	/**
 	 * Synchronizes the three records. If one of the parameters is 0L we assume 
@@ -99,26 +140,12 @@ protected:
 	 */
 	void syncRecords( Record *pcRecord, HHRecord *backupRecord, HHRecord *hhRecord );
 	
+	void solveConflict( Record *pcRecord, HHRecord *hhRecord );
+	
 	/**
 	 * Synchronizes the two conflicted records and lets one of the two overide.
 	 */
 	void syncConflictedRecords( Record *pcRecord, HHRecord *hhRecord
 		, bool pcOverides );
-	
-	/**
-	 * Changes the fields in @p to so that they are in sync with the fields from
-	 * @p from. Returns false if:
-	 * - one of the fields of @p from is not in @p to
-	 * - If the field count of both records is not the same.
-	 * - If one of the values is not accepted by @p to.
-	 */
-	bool syncFields( Record *from, Record *to );
-	
-	/**
-	 * Deletes the mapping for those records and removes them from the proxies.
-	 */
-	void deleteRecords( Record *pcRecord, HHRecord *hhRecord );
-	
-	void solveConflict( Record *pcRecord, HHRecord *hhRecord );
 };
 #endif

@@ -83,6 +83,7 @@ private slots:
 	/** HotSync and HH overides tests (See table below) **/
 	void testCase_6_5_1();
 	void testCase_6_5_2();
+	/**/
 	void testCase_6_5_3();
 	void testCase_6_5_4();
 	void testCase_6_5_5();
@@ -97,6 +98,7 @@ private slots:
 	void testCase_6_5_15();
 	void testCase_6_5_16();
 	void testCase_6_5_17();
+	/**/
 
 private:
 	QStringList fFields;
@@ -113,7 +115,6 @@ RCHotSyncHHTest::RCHotSyncHHTest()
 void RCHotSyncHHTest::testSyncfFields()
 {
 	QStringList args = QStringList() << CSL1( "--hotsync" );
-		//<< CSL1( "--conflictResolution 1" );
 	
 	TestRecordConduit conduit( args );
 	conduit.initDataProxies();
@@ -122,28 +123,23 @@ void RCHotSyncHHTest::testSyncfFields()
 	rec1->setValue( CSL1( "f1" ), CSL1( "A test value" ) );
 	rec1->setValue( CSL1( "f2" ), CSL1( "Another test value" ) );
 	
-	Record *rec2 = new TestRecord( fFields );
+	HHRecord *rec2 = new TestHHRecord( fFields, CSL1( "2" ) );
 	rec2->setValue( CSL1( "f1" ), CSL1( "And more test value" ) );
 	rec2->setValue( CSL1( "f2" ), CSL1( "Yet another one" ) );
 	
-	//                             ( from, to )
-	QVERIFY( conduit.syncFieldsTest( rec1, rec2 ) );
+	//                    ( pc  , hh  , fromHH )
+	conduit.syncFieldsTest( rec1, rec2, false );
 	QVERIFY( rec2->value( CSL1( "f1" ) ) == CSL1( "A test value" ) );
 	QVERIFY( rec2->value( CSL1( "f2" ) ) == CSL1( "Another test value" ) );
 	
-	// Make a record with other fFields
-	QStringList fFields2 = QStringList() << CSL1( "afield" ) << CSL1( "f2" );
-	
-	Record *rec3 = new TestRecord( fFields2 );
-	rec3->setValue( CSL1( "afield" ), CSL1( "Test 3-1" ) );
+	HHRecord *rec3 = new TestHHRecord( fFields, CSL1( "3" ) );
+	rec3->setValue( CSL1( "f1" ), CSL1( "Test 3-1" ) );
 	rec3->setValue( CSL1( "f2" ), CSL1( "Test 3-2" ) );
 	
-	// Then try to sync, because not all fFields are the same the to record should
-	// remain unmodified.
-	//                              ( from, to )
-	QVERIFY( !conduit.syncFieldsTest( rec1, rec3 ) );
-	QVERIFY( rec3->value( CSL1( "afield" ) ) == CSL1( "Test 3-1" ) );
-	QVERIFY( rec3->value( CSL1( "f2" ) ) == CSL1( "Test 3-2" ) );
+	//                    ( pc  , hh  , fromHH )
+	conduit.syncFieldsTest( rec1, rec3, true );
+	QVERIFY( rec1->value( CSL1( "f1" ) ) == CSL1( "Test 3-1" ) );
+	QVERIFY( rec1->value( CSL1( "f2" ) ) == CSL1( "Test 3-2" ) );
 }
 
 void RCHotSyncHHTest::initTestCase_1()
