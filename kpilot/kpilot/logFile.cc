@@ -42,7 +42,7 @@
 #include "kpilotConfig.h"
 
 #include "logFile.moc"
-#include "loggeradaptor.h"
+#include "loggeradaptorfile.h"
 
 LogFile::LogFile() : QObject(), fOutfile(0L), fSyncing(false)
 {

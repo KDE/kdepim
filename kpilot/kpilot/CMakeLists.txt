@@ -63,7 +63,7 @@ set(kpilotTest_SRCS
 	main-test.cc
 )
 # Acts as a receiver for DBUS log messages
-qt4_add_dbus_adaptor(kpilotTest_SRCS org.kde.kpilot.logger.xml logFile.h LogFile  )
+qt4_add_dbus_adaptor(kpilotTest_SRCS org.kde.kpilot.logger.xml logWidget.h LogWidget loggeradaptorgui )
 
 
 kde4_add_executable(kpilotTest ${kpilotTest_SRCS})
@@ -82,7 +82,7 @@ set(kpilotDaemon_SRCS
 	pilotDaemon.cc
 )
 
-qt4_add_dbus_adaptor( kpilotDaemon_SRCS org.kde.kpilot.logger.xml logFile.h LogFile)
+qt4_add_dbus_adaptor( kpilotDaemon_SRCS org.kde.kpilot.logger.xml logFile.h LogFile loggeradaptorfile )
 qt4_add_dbus_adaptor( kpilotDaemon_SRCS org.kde.kpilot.daemon.xml pilotDaemon.h PilotDaemon  )
 qt4_add_dbus_interface(kpilotDaemon_SRCS org.kde.kpilot.logger.xml logfile_interface)
 qt4_add_dbus_interface(kpilotDaemon_SRCS org.kde.kpilot.kpilot.xml kpilot_interface)
@@ -123,7 +123,7 @@ set(kpilot_UIS
 kde4_add_ui3_files(kpilot_bin_SRCS ${kpilot_UIS})
 
 # Talks to the daemon. Listens as itself.
-qt4_add_dbus_adaptor( kpilot_bin_SRCS org.kde.kpilot.logger.xml logFile.h LogFile  )
+qt4_add_dbus_adaptor( kpilot_bin_SRCS org.kde.kpilot.logger.xml logWidget.h LogWidget loggeradaptorgui )
 qt4_add_dbus_adaptor( kpilot_bin_SRCS org.kde.kpilot.kpilot.xml kpilot.h KPilotInstaller  )
 qt4_add_dbus_interface(kpilot_bin_SRCS org.kde.kpilot.daemon.xml daemon_interface)
 

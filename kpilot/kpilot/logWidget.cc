@@ -51,7 +51,7 @@
 #include <pi-version.h>
 
 #include "logWidget.moc"
-#include "loggeradaptor.h"
+#include "loggeradaptorgui.h"
 
 #define TE_EOL "<br/>\n"
 
@@ -66,8 +66,8 @@ LogWidget::LogWidget(QWidget * parent) :
 {
 	FUNCTIONSETUP;
 
-	//new LoggerAdaptor(this);
-	//QDBusConnection::sessionBus().registerObject("/Logger", this);
+	new LoggerAdaptor(this);
+	QDBusConnection::sessionBus().registerObject("/Logger", this);
 
 	QGridLayout *grid = new QGridLayout(this);
 	grid->setSpacing(SPACING);
