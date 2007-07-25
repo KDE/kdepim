@@ -398,7 +398,7 @@ void ResourceKolab::resolveConflict( KCal::Incidence* inc, const QString& subres
         addedIncidence = inc;
     } else if ( result == 0 ) { // take both
         addedIncidence = inc;
-        addedIncidence->setSummary( i18n("Copy of: %1").arg( addedIncidence->summary() ) );
+        addedIncidence->setSummary( i18n("Copy of: %1", addedIncidence->summary() ) );
         addedIncidence->setUid( CalFormat::createUniqueId() );
         localIncidence = local;
     }
@@ -554,15 +554,15 @@ bool ResourceKolab::addIncidence( KCal::Incidence* incidence, const QString& _su
         text += i18n( "Choose the folder where you want to store this incidence" );
       text += "<font></b><br>";
       if ( !incidence->summary().isEmpty() )
-        text += i18n( "<b>Summary:</b> %1" ).arg( incidence->summary() ) + "<br>";
+        text += i18n( "<b>Summary:</b> %1", incidence->summary() ) + "<br>";
       if ( !incidence->location().isEmpty() )
-        text += i18n( "<b>Location:</b> %1" ).arg( incidence->location() );
+        text += i18n( "<b>Location:</b> %1", incidence->location() );
       text += "<br>";
       if ( !incidence->recurrence()->floats() )
         text += i18n( "<b>Start:</b> %1, %2" )
                 .arg( incidence->dtStartDateStr(), incidence->dtStartTimeStr() );
       else
-        text += i18n( "<b>Start:</b> %1" ).arg( incidence->dtStartDateStr() );
+        text += i18n( "<b>Start:</b> %1", incidence->dtStartDateStr() );
       text += "<br>";
       if ( incidence->type() == "Event" ) {
         Event* event = static_cast<Event*>( incidence );
@@ -571,7 +571,7 @@ bool ResourceKolab::addIncidence( KCal::Incidence* incidence, const QString& _su
             text += i18n( "<b>End:</b> %1, %2" )
                     .arg( event->dtEndDateStr(), event->dtEndTimeStr() );
           else
-            text += i18n( "<b>End:</b> %1" ).arg( event->dtEndDateStr() );
+            text += i18n( "<b>End:</b> %1", event->dtEndDateStr() );
         text += "<br>";
       }
       subResource = findWritableResource( *map, text );
