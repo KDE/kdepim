@@ -239,3 +239,8 @@ void TestRecordConduit::firstSyncTest()
 {
 	firstSync();
 }
+
+void TestRecordConduit::copyHHToPCTest()
+{
+	copyHHToPC();
+}

@@ -68,6 +68,8 @@ public:
 	
 	void firstSyncTest();
 	
+	void copyHHToPCTest();
+	
 	TestDataProxy *pcDataProxy()
 	{
 		return static_cast<TestDataProxy*>( fPCDataProxy );
