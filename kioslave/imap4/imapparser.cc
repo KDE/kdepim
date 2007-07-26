@@ -261,9 +261,9 @@ imapParser::clientAuthenticate ( KIO::SlaveBase *slave, KIO::AuthInfo &ai,
   }
   imapCommand *cmd;
 
-  tmp.setRawData( out, outlen );
+  tmp = QByteArray::fromRawData( out, outlen );
   KCodecs::base64Encode( tmp, challenge );
-  tmp.resetRawData( out, outlen );
+  tmp.clear();
   // then lets try it
   QString firstCommand = aAuth;
   if ( !challenge.isEmpty() ) {
@@ -282,10 +282,10 @@ imapParser::clientAuthenticate ( KIO::SlaveBase *slave, KIO::AuthInfo &ai,
     {
 //      kDebug(7116) << "S: " << QCString(continuation.data(),continuation.size()+1) << endl;
       if ( continuation.size() > 4 ) {
-        tmp.setRawData( continuation.data() + 2, continuation.size() - 4 );
+        tmp = QByteArray::fromRawData( continuation.data() + 2, continuation.size() - 4 );
         KCodecs::base64Decode( tmp, challenge );
 //        kDebug(7116) << "S-1: " << QCString(challenge.data(),challenge.size()+1) << endl;
-        tmp.resetRawData( continuation.data() + 2, continuation.size() - 4 );
+        tmp.clear();
       }
 
       do {
@@ -309,10 +309,10 @@ imapParser::clientAuthenticate ( KIO::SlaveBase *slave, KIO::AuthInfo &ai,
         return false;
       }
 
-      tmp.setRawData( out, outlen );
+      tmp = QByteArray::fromRawData( out, outlen );
 //      kDebug(7116) << "C-1: " << QCString(tmp.data(),tmp.size()+1) << endl;
       KCodecs::base64Encode( tmp, challenge );
-      tmp.resetRawData( out, outlen );
+      tmp.clear();
 //      kDebug(7116) << "C: " << QCString(challenge.data(),challenge.size()+1) << endl;
       parseWriteLine (challenge);
       continuation.resize(0);
