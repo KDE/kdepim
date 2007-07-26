@@ -86,6 +86,13 @@
 class KPilotInstaller::KPilotPrivate
 {
 public:
+	KPilotPrivate() {
+		fDaemonWasRunning = false;
+		fConfigureKPilotDialogInUse = false;
+		fFirstLoad = true;
+		fFileInstallWidget = NULL;
+		fLogWidget = NULL;
+	}
 	ComponentList  fPilotComponentList;
 
 	/** Was the daemon running before KPilot started? If not, then we
@@ -104,6 +111,8 @@ public:
 
 	FileInstallWidget *fFileInstallWidget;
 
+	LogWidget *fLogWidget;
+
 	KPilotStatus fAppStatus;
 } ;
 
@@ -111,6 +120,8 @@ KPilotInstaller::KPilotInstaller() :
 	KXmlGuiWindow(0),
 	fP(new KPilotPrivate)
 {
+	FUNCTIONSETUP;
+	
 	fP->fAppStatus = Startup;
 	fP->fDaemonWasRunning = true; // Assume it was
 	fP->fConfigureKPilotDialogInUse = false;
@@ -121,7 +132,6 @@ KPilotInstaller::KPilotInstaller() :
 	QDBusConnection::sessionBus().registerObject("/KPilot", this);
 	//TODO verify it
 	fDaemonInterface = new OrgKdeKpilotDaemonInterface("org.kde.kpilot.daemon", "/Daemon", QDBusConnection::sessionBus());
-	FUNCTIONSETUP;
 
 	readConfig();
 	setupWidget();
@@ -140,6 +150,14 @@ KPilotInstaller::~KPilotInstaller()
 	(void) PilotDatabase::instanceCount();
 }
 
+void KPilotInstaller::log(QString msg)
+{
+	if (fP->fLogWidget) 
+	{
+		fP->fLogWidget->addMessage(msg);
+	}
+}
+
 void KPilotInstaller::killDaemonIfNeeded()
 {
 	FUNCTIONSETUP;
@@ -156,15 +174,12 @@ void KPilotInstaller::killDaemonIfNeeded()
 void KPilotInstaller::startDaemonIfNeeded()
 {
 	FUNCTIONSETUP;
-	fP->fAppStatus=Normal;
-	WARNINGKPILOT << fname << "Skipping daemon initialization." << endl;
-	return;
-
 
 	fP->fAppStatus=WaitingForDaemon;
 
 	QString daemonError;
 	QString daemonPID;
+	bool daemonStarted = false;
 
 	QString s = getDaemon().statusString();
 
@@ -176,36 +191,49 @@ void KPilotInstaller::startDaemonIfNeeded()
 		DEBUGKPILOT << fname
 			<< ": Daemon not responding, trying to start it."
 			<< endl;
-		statusMessage(i18n("Starting the KPilot daemon ..."));
+		log(i18n("Starting the KPilot daemon ..."));
 		fP->fDaemonWasRunning = false;
+
+		// success (== 0) or failure (> 0).
+		daemonStarted = (KToolInvocation::startServiceByDesktopName( 
+		    CSL1("kpilotdaemon"), QStringList(), &daemonError, &daemonPID )) == 0;
+
+		if (!daemonStarted)
+		{
+			WARNINGKPILOT << ": Can't start daemon : " << daemonError << endl;
+			log(i18n("Could not start the "
+				"KPilot daemon. The system error message "
+				"was: &quot;%1&quot;",daemonError));
+			fP->fAppStatus=Error;
+			return;
+		} 
+		else
+		{
+			log(i18n("Daemon started."));
+		}
 	}
 	else
 	{
 		fP->fDaemonWasRunning = true;
 	}
-	if (!fP->fDaemonWasRunning && KToolInvocation::startServiceByDesktopName( CSL1("kpilotdaemon"), QStringList(), &daemonError, &daemonPID ) )
-	{
-		WARNINGKPILOT << ": Can't start daemon : " << daemonError << endl;
-		statusMessage(i18n("Could not start the "
-			"KPilot daemon. The system error message "
-			"was: &quot;%1&quot;",daemonError));
-		fP->fAppStatus=Error;
-	}
-	else
-	{
-		DEBUGKPILOT << fname << ": Daemon status is " << s << endl;
-		int wordoffset;
-		s.remove(0,12);
-		wordoffset=s.indexOf(';');
-		if (wordoffset>0)
-		{
-			s.truncate(wordoffset);
-		}
 
-		statusMessage(
-			i18n("Daemon status is `%1'",s.isEmpty() ? i18n("not running") : s ));
-		fP->fAppStatus=Normal;
+	// if we're here, it means that either the daemon was running or we think
+	// that we were able to start it
+	s = getDaemon().statusString();
+
+	DEBUGKPILOT << fname << ": Daemon status is " << s << endl;
+	int wordoffset;
+	s.remove(0,12);
+	wordoffset=s.indexOf(';');
+	if (wordoffset>0)
+	{
+		s.truncate(wordoffset);
 	}
+
+	log(
+		i18n("Daemon status is `%1'",s.isEmpty() ? i18n("not running") : s ));
+
+	fP->fAppStatus=Normal;
 }
 
 void KPilotInstaller::readConfig()
@@ -216,7 +244,7 @@ void KPilotInstaller::readConfig()
 
 	(void) Pilot::setupPilotCodec(KPilotSettings::encoding());
 
-	statusMessage(i18n("Using character set %1 on "
+	log(i18n("Using character set %1 on "
 		"the handheld.",Pilot::codecName()));
 }
 
@@ -237,8 +265,9 @@ QWidget *KPilotInstaller::initComponents( QWidget *parent, QList<PilotComponent 
 	w->addPage(item); \
 	l.append(widget);
 
-	p = new LogWidget(w);
-	ADDICONPAGE(p,i18n("HotSync"),CSL1("kpilot_bhotsync"))
+	fP->fLogWidget = new LogWidget(w);
+	fP->fLogWidget->setShowTime(true);
+	ADDICONPAGE(fP->fLogWidget, i18n("HotSync"),CSL1("kpilot_bhotsync"))
 
 	p = new TodoWidget(w, defaultDBPath);
 	ADDICONPAGE(p,i18n("To-do Viewer"),CSL1("kpilot_todo"))
@@ -260,8 +289,9 @@ QWidget *KPilotInstaller::initComponents( QWidget *parent, QList<PilotComponent 
 
 	l[0]->showKPilotComponent(true);
 
-	QObject::connect(w, SIGNAL(currentChanged(int)),
-		parent,SLOT(componentChanged(int)));
+	QObject::connect(w, 
+		SIGNAL(currentPageChanged(KPageWidgetItem*,KPageWidgetItem *)),
+		parent,SLOT(componentChanged(KPageWidgetItem*,KPageWidgetItem *)) );
 	
 	return w;
 
@@ -437,8 +467,10 @@ void KPilotInstaller::daemonStatus(int i)
 		}
 		break;
 	case KPilotInstaller::DaemonQuit :
-		statusMessage(i18n("The daemon has exited. "
-			"No further HotSyncs are possible."));
+		log(i18n("The daemon has exited."));
+		log(i18n("No further HotSyncs are possible."));
+		log(i18n("Restart the daemon to HotSync again."));
+
 		fP->fAppStatus=WaitingForDaemon;
 		break;
 	case KPilotInstaller::None :
@@ -498,7 +530,7 @@ void KPilotInstaller::setupSync(int kind, const QString & message)
 	}
 	if (!message.isEmpty())
 	{
-		statusMessage(message);
+		log(message);
 	}
 	getDaemon().requestSync(kind);
 }
@@ -527,7 +559,7 @@ void KPilotInstaller::quit()
 void KPilotInstaller::slotResetLink()
 {
 	FUNCTIONSETUP;
-	statusMessage( i18n("Resetting device connection ...") );
+	log( i18n("Resetting device connection ...") );
 	getDaemon().reloadSettings();
 }
 
@@ -608,7 +640,7 @@ void KPilotInstaller::componentUpdate()
 
 	// Otherwise, need to re-load the databases
 	//
-	statusMessage(i18n("Changed username to `%1'.",KPilotSettings::userName()));
+	log(i18n("Changed username to `%1'.",KPilotSettings::userName()));
 
 	for (int i = 0; i<e; ++i)
 	{
@@ -620,17 +652,34 @@ void KPilotInstaller::componentUpdate()
 	}
 }
 
-void KPilotInstaller::componentChanged(int which)
+void KPilotInstaller::componentChanged(KPageWidgetItem *current, 
+					KPageWidgetItem * before)
 {
 	FUNCTIONSETUP;
-	DEBUGKPILOT << fname << ": Selected component " << which << endl;
+	if (! current) 
+	{
+		WARNINGKPILOT << fname 
+			<< ": current null. nothing to do." << endl;
+		return;
+	}
+	
+	DEBUGKPILOT << fname << ": Selected component " <<
+		current->name() << endl;
 	
 	int e = fP->fPilotComponentList.size();
 	for (int i = 0; i<e; ++i)
 	{
 		PilotComponent *p = fP->fPilotComponentList[i];
-		p->showKPilotComponent( which == i );
+		if (current->widget() == p)
+		{
+			p->showKPilotComponent(true);
+	
+			DEBUGKPILOT << fname 
+				<< ": found component. telling it to show." << endl;
+		}
 	}
+
+	Q_UNUSED(before);
 }
 
 void KPilotInstaller::configure()
@@ -639,7 +688,7 @@ void KPilotInstaller::configure()
 
 	if ( kpilotStatus()!=Normal || fP->fConfigureKPilotDialogInUse )
 	{
-		statusMessage(i18n("Cannot configure KPilot right now (KPilot's UI is already busy)."));
+		log(i18n("Cannot configure KPilot right now (KPilot's UI is already busy)."));
 		return;
 	}
 	fP->fAppStatus=UIBusy;
@@ -651,15 +700,6 @@ void KPilotInstaller::configure()
 
 	fP->fConfigureKPilotDialogInUse = false;
 	fP->fAppStatus=Normal;
-}
-
-void KPilotInstaller::statusMessage( const QString &s )
-{
-	QStatusBar *b = statusBar();
-	if (b)
-	{
-		b->showMessage( s );
-	}
 }
 
 // Command line options descriptions.
@@ -699,11 +739,11 @@ int main(int argc, char **argv)
 	about.addAuthor(ki18n("Adriaan de Groot"),
 		ki18n("Maintainer"),
 		"groot@kde.org", "http://www.kpilot.org/");
+	about.addAuthor(ki18n("Jason 'vanRijn' Kasper"),
+		ki18n("Core and conduits developer, Maintainer"),
+		"vR@movingparts.net", "http://movingparts.net/");
 	about.addAuthor(ki18n("Reinhold Kainhofer"),
 		ki18n("Core and conduits developer"), "reinhold@kainhofer.com", "http://reinhold.kainhofer.com/Linux/");
-	about.addAuthor(ki18n("Jason 'vanRijn' Kasper"),
-		ki18n("Core and conduits developer"),
-		"vR@movingparts.net", "http://movingparts.net/");
 	about.addCredit(ki18n("Preston Brown"), ki18n("VCal conduit"));
 	about.addCredit(ki18n("Greg Stern"), ki18n("Abbrowser conduit"));
 	about.addCredit(ki18n("Chris Molnar"), ki18n("Expenses conduit"));
@@ -718,7 +758,7 @@ int main(int argc, char **argv)
 	about.addCredit(ki18n("Aaron J. Seigo"),
 		ki18n("Bugfixer, coolness"));
 	about.addCredit(ki18n("Bertjan Broeksema"),
-		ki18n("VCalconduit state machine, CMake"));
+		ki18n("VCalconduit state machine, CMake, Base Conduit rewrite"));
 	about.addCredit(ki18n("Montel Laurent"),
 		ki18n("KDE4 port"));
 	KCmdLineArgs::init(argc, argv, &about);

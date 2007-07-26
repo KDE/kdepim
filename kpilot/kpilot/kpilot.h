@@ -33,6 +33,8 @@
 
 #include <KXmlGuiWindow>
 
+#include <kpagewidgetmodel.h>
+
 #include "pilotComponent.h"
 
 
@@ -106,10 +108,8 @@ protected slots:
 	 */
 	void slotResetLink();
 
-	void statusMessage( const QString & );
-
 	void componentUpdate();
-	void componentChanged(int);
+	void componentChanged(KPageWidgetItem*,KPageWidgetItem *);
 
 protected:
 	void readConfig();
@@ -138,6 +138,8 @@ protected:
 
 private:
 	OrgKdeKpilotDaemonInterface *fDaemonInterface;
+
+	void log(QString s);
 
 	/**
 	* This is the private-d-pointer, KPilot style. Not everything
