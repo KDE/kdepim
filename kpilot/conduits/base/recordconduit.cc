@@ -99,6 +99,8 @@ RecordConduit::~RecordConduit()
 	//        here?
 	if( hhDatabaseOpen && pcDatabaseOpen && backupDatabaseOpen )
 	{
+		// FIXME: Do a full sync on user request, configured, or when pc ids are
+		// different.
 		changeSync( SyncMode::eHotSync ); // 6.3.1
 		fHHDataProxy->setIterateMode( DataProxy::Modified );
 		fPCDataProxy->setIterateMode( DataProxy::Modified );
@@ -116,7 +118,7 @@ RecordConduit::~RecordConduit()
 		changeSync( SyncMode::eCopyHHToPC ); // 6.3.3 and 6.3.4
 		fHHDataProxy->setIterateMode( DataProxy::All );
 		fPCDataProxy->setIterateMode( DataProxy::All );
-		//copyHHToPC();
+		copyHHToPC();
 	}
 	else if( !hhDatabaseOpen && pcDatabaseOpen )
 	{
@@ -279,6 +281,8 @@ bool RecordConduit::checkVolatility()
 	return false;
 }
 
+
+// 4.1
 void RecordConduit::hotSync()
 {
 	FUNCTIONSETUP;
@@ -328,6 +332,7 @@ void RecordConduit::hotSync()
 	}
 }
 
+// 5.1
 void RecordConduit::firstSync()
 {
 	FUNCTIONSETUP;
@@ -376,6 +381,68 @@ void RecordConduit::firstSync()
 			fHHDataProxy->create( hhRecord );
 			
 			fMapping->map( hhRecord->id(), pcRecord->id() );
+		}
+	}
+}
+
+// 5.3
+void RecordConduit::copyHHToPC()
+{
+	FUNCTIONSETUP;
+	
+	DEBUGKPILOT << fname << ": Walking over all hh records." << endl;
+	
+	// 5.3.4
+	fHHDataProxy->resetIterator();
+	while( fHHDataProxy->hasNext() )
+	{
+		HHRecord *hhRecord = static_cast<HHRecord*>( fHHDataProxy->next() );
+		HHRecord *backupRecord = 0L;
+		Record *pcRecord = 0L;
+		
+		QString hhId = hhRecord->id();
+		
+		if( fMapping->containsHHId( hhId ) )
+		{
+			DEBUGKPILOT << fname << ": Mapping exists, syncing records." << endl;
+			backupRecord = static_cast<HHRecord*>( fBackupDataProxy->find( hhId ) );
+			pcRecord = fPCDataProxy->find( fMapping->pcRecordId( hhId ) );
+			syncRecords( pcRecord, backupRecord, hhRecord );
+		}
+		else
+		{
+			DEBUGKPILOT << fname << ": Mapping does not exists, copy hh to pc." << endl;
+			
+			Record *pcRecord = newPCRecord( hhRecord );
+			fPCDataProxy->create( pcRecord );
+			fMapping->map( hhRecord->id(), pcRecord->id() );
+		}
+	}
+	
+	DEBUGKPILOT << fname << ": Walking over all pc records." << endl;
+	
+	fPCDataProxy->resetIterator();
+	// 5.3.5
+	while( fPCDataProxy->hasNext() )
+	{
+		Record *pcRecord = fPCDataProxy->next();
+		
+		if( !fMapping->containsPCId( pcRecord->id() ) )
+		{
+			// 5.3.5.1
+			fPCDataProxy->remove( pcRecord->id() );
+		}
+		else
+		{
+			QString hhId = fMapping->hhRecordId( pcRecord->id() );
+			
+			// Remove the pc record if there is no record on the handheld anymore.
+			if( !fHHDataProxy->find( hhId ) )
+			{
+				// 5.3.5.2
+				fPCDataProxy->remove( pcRecord->id() );
+				fMapping->removePCId( pcRecord->id() );
+			}
 		}
 	}
 }

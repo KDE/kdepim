@@ -119,6 +119,11 @@ protected:
 	 */
 	void firstSync();
 	
+	/**
+	 * Executes the copyHHToPC flow (see 5.3)
+	 */
+	void copyHHToPC();
+	
 	bool checkVolatility();
 	
 	/**
