@@ -53,6 +53,8 @@ public:
 	
 	virtual QString commitUpdate( const Record *rec );
 	
+	virtual bool createDataStore() { return true; }
+	
 	QMap<QString, Record*>* records() { return &fRecords; }
 };
 #endif

@@ -40,3 +40,9 @@ HHRecord* KeyringHHDataProxy::createHHRecord( PilotRecord *rec )
 	Q_UNUSED( rec );
 	return 0L;
 }
+
+bool KeyringHHDataProxy::createDataStore()
+{
+	#warning not implemented
+	return false;
+}

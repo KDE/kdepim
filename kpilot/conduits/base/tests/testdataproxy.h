@@ -79,5 +79,7 @@ public:
 	virtual void commitDelete( Record *rec );
 	
 	virtual void commitUpdate( Record *rec );
+	
+	virtual bool createDataStore() { return true; }
 };
 #endif

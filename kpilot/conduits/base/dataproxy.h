@@ -145,6 +145,11 @@ public:
 	 * counter and resets the iterator.
 	 */
 	virtual void loadAllRecords() = 0;
+	
+	/**
+	 * Tries to create a new Datastore and returns wheter or not it succeeded.
+	 */
+	virtual bool createDataStore() = 0;
 
 protected: // Functions
 	/**

@@ -40,6 +40,8 @@ protected:
 	 * This function creates a (subclass of) HHRecord for @p rec.
 	 */
 	virtual HHRecord* createHHRecord( PilotRecord *rec );
+	
+	virtual bool createDataStore();
 
 protected:
 	PilotDatabase *fDatabase;

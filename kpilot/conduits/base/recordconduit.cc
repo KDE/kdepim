@@ -99,35 +99,59 @@ RecordConduit::~RecordConduit()
 	//        here?
 	if( hhDatabaseOpen && pcDatabaseOpen && backupDatabaseOpen )
 	{
-		// FIXME: Do a full sync on user request, configured, or when pc ids are
-		// different.
-		changeSync( SyncMode::eHotSync ); // 6.3.1
-		fHHDataProxy->setIterateMode( DataProxy::Modified );
-		fPCDataProxy->setIterateMode( DataProxy::Modified );
-		hotSync();
+		// So what are we going to do this time?!
+		switch( syncMode().mode() ) {
+			case SyncMode::eHotSync:
+				hotSync();
+				break;
+			case SyncMode::eFullSync:
+				//FIXME: fullSync();
+				break;
+			case SyncMode::eCopyPCToHH:
+				copyPCToHH();
+				break;
+			case SyncMode::eCopyHHToPC:
+				copyHHToPC();
+				break;
+			// Backup and restore should not happen here, if so default to hotsync.
+			default:
+				hotSync();
+				break;
+		}
 	}
 	else if( hhDatabaseOpen && pcDatabaseOpen && !backupDatabaseOpen )
 	{
 		setFirstSync( true ); // 6.3.2
-		fHHDataProxy->setIterateMode( DataProxy::All );
-		fPCDataProxy->setIterateMode( DataProxy::All );
 		firstSync();
 	}
 	else if( hhDatabaseOpen && !pcDatabaseOpen )
 	{
-		// FIXME: Let the pc dataproxy try to create a database.
-		changeSync( SyncMode::eCopyHHToPC ); // 6.3.3 and 6.3.4
-		fHHDataProxy->setIterateMode( DataProxy::All );
-		fPCDataProxy->setIterateMode( DataProxy::All );
-		copyHHToPC();
+		if( fPCDataProxy->createDataStore() )
+		{
+			changeSync( SyncMode::eCopyHHToPC ); // 6.3.3 and 6.3.4
+			copyHHToPC();
+		}
+		else
+		{
+			DEBUGKPILOT << fname << ": Could not open pc data store and was not able"
+			 << " to create a new one." << endl;
+			return false;
+		}
 	}
 	else if( !hhDatabaseOpen && pcDatabaseOpen )
 	{
-		// FIXME: Let the hh dataproxy try to create a database.
-		changeSync( SyncMode::eCopyPCToHH ); // 6.3.5 and 6.3.6
-		fHHDataProxy->setIterateMode( DataProxy::All );
-		fPCDataProxy->setIterateMode( DataProxy::All );
-		copyPCToHH();
+		if( fHHDataProxy->createDataStore() )
+		{
+			changeSync( SyncMode::eCopyPCToHH ); // 6.3.5 and 6.3.6
+			copyPCToHH();
+		}
+		else
+		{
+			DEBUGKPILOT << fname << ": Could not open hand held data store and was "
+			 << "not able to create a new one." << endl;
+			return false;
+		}
+		
 	}
 	else
 	{
@@ -288,6 +312,11 @@ bool RecordConduit::checkVolatility()
 void RecordConduit::hotSync()
 {
 	FUNCTIONSETUP;
+	
+	// A hotsync only does modified records.
+	fHHDataProxy->setIterateMode( DataProxy::Modified );
+	fPCDataProxy->setIterateMode( DataProxy::Modified );
+	
 	// Walk through all modified hand held records. The proxy is responsible for
 	// serving the right records.
 	
@@ -338,6 +367,10 @@ void RecordConduit::hotSync()
 void RecordConduit::firstSync()
 {
 	FUNCTIONSETUP;
+	
+	// A firstSync iterates over all records.
+	fHHDataProxy->setIterateMode( DataProxy::All );
+	fPCDataProxy->setIterateMode( DataProxy::All );
 	
 	DEBUGKPILOT << fname << ": Walking over all hh records." << endl;
 	
@@ -391,6 +424,9 @@ void RecordConduit::firstSync()
 void RecordConduit::copyHHToPC()
 {
 	FUNCTIONSETUP;
+	
+	fHHDataProxy->setIterateMode( DataProxy::All );
+	fPCDataProxy->setIterateMode( DataProxy::All );
 	
 	DEBUGKPILOT << fname << ": Walking over all hh records." << endl;
 	
@@ -453,6 +489,9 @@ void RecordConduit::copyHHToPC()
 void RecordConduit::copyPCToHH()
 {
 	FUNCTIONSETUP;
+	
+	fHHDataProxy->setIterateMode( DataProxy::All );
+	fPCDataProxy->setIterateMode( DataProxy::All );
 	
 	DEBUGKPILOT << fname << ": Walking over all pc records." << endl;
 	
