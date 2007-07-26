@@ -124,6 +124,17 @@ protected:
 	 */
 	void copyHHToPC();
 	
+	/**
+	 * Executes the copyPCToHH flow (see 5.4)
+	 */
+	void copyPCToHH();
+	
+	/**
+	 * Checks the number of changes (Creates, updates, deletes) as wel as the
+	 * number of changes. When one of these exceeds the configured values it will
+	 * warn the user and return false if the user doesn't want to commit the
+	 * changes to the data stores.
+	 */
 	bool checkVolatility();
 	
 	/**

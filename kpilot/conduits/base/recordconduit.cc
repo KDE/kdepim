@@ -115,6 +115,7 @@ RecordConduit::~RecordConduit()
 	}
 	else if( hhDatabaseOpen && !pcDatabaseOpen )
 	{
+		// FIXME: Let the pc dataproxy try to create a database.
 		changeSync( SyncMode::eCopyHHToPC ); // 6.3.3 and 6.3.4
 		fHHDataProxy->setIterateMode( DataProxy::All );
 		fPCDataProxy->setIterateMode( DataProxy::All );
@@ -122,10 +123,11 @@ RecordConduit::~RecordConduit()
 	}
 	else if( !hhDatabaseOpen && pcDatabaseOpen )
 	{
+		// FIXME: Let the hh dataproxy try to create a database.
 		changeSync( SyncMode::eCopyPCToHH ); // 6.3.5 and 6.3.6
 		fHHDataProxy->setIterateMode( DataProxy::All );
 		fPCDataProxy->setIterateMode( DataProxy::All );
-		//copyPCToHH();
+		copyPCToHH();
 	}
 	else
 	{
@@ -442,6 +444,71 @@ void RecordConduit::copyHHToPC()
 				// 5.3.5.2
 				fPCDataProxy->remove( pcRecord->id() );
 				fMapping->removePCId( pcRecord->id() );
+			}
+		}
+	}
+}
+
+// 5.4
+void RecordConduit::copyPCToHH()
+{
+	FUNCTIONSETUP;
+	
+	DEBUGKPILOT << fname << ": Walking over all pc records." << endl;
+	
+	// 5.4.4
+	fPCDataProxy->resetIterator();
+	while( fPCDataProxy->hasNext() )
+	{
+		Record *pcRecord = fPCDataProxy->next();
+		HHRecord *backupRecord = 0L;
+		HHRecord *hhRecord = 0L;
+		
+		QString pcId = pcRecord->id();
+		
+		if( fMapping->containsPCId( pcId ) )
+		{
+			DEBUGKPILOT << fname << ": Mapping exists, syncing records." << endl;
+			
+			QString hhId = fMapping->hhRecordId( pcId );
+			
+			backupRecord = static_cast<HHRecord*>( fBackupDataProxy->find( hhId ) );
+			hhRecord = static_cast<HHRecord*>( fHHDataProxy->find( hhId ) );
+			syncRecords( pcRecord, backupRecord, hhRecord );
+		}
+		else
+		{
+			DEBUGKPILOT << fname << ": Mapping does not exists, copy pc to hh." << endl;
+			
+			HHRecord *hhRecord = newHHRecord( pcRecord );
+			fHHDataProxy->create( hhRecord );
+			fMapping->map( hhRecord->id(), pcRecord->id() );
+		}
+	}
+	
+	DEBUGKPILOT << fname << ": Walking over all hh records." << endl;
+	
+	fHHDataProxy->resetIterator();
+	// 5.4.5
+	while( fHHDataProxy->hasNext() )
+	{
+		Record *hhRecord = fHHDataProxy->next();
+		
+		if( !fMapping->containsHHId( hhRecord->id() ) )
+		{
+			// 5.4.5.1
+			fHHDataProxy->remove( hhRecord->id() );
+		}
+		else
+		{
+			QString pcId = fMapping->pcRecordId( hhRecord->id() );
+			
+			// Remove the hh record if there is no record on the pc anymore.
+			if( !fPCDataProxy->find( pcId ) )
+			{
+				// 5.4.5.2
+				fHHDataProxy->remove( hhRecord->id() );
+				fMapping->removeHHId( hhRecord->id() );
 			}
 		}
 	}

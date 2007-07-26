@@ -43,7 +43,7 @@
 
 
 /**
- * See 5.1 in the use case document for a better explanation of what should
+ * See 5.3 in the use case document for a better explanation of what should
  * happen.
  *
  * There are a couple of things to test currently.

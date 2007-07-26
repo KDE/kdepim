@@ -244,3 +244,9 @@ void TestRecordConduit::copyHHToPCTest()
 {
 	copyHHToPC();
 }
+
+void TestRecordConduit::copyPCToHHTest()
+{
+	copyPCToHH();
+}
+

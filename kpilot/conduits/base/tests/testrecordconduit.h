@@ -70,6 +70,8 @@ public:
 	
 	void copyHHToPCTest();
 	
+	void copyPCToHHTest();
+	
 	TestDataProxy *pcDataProxy()
 	{
 		return static_cast<TestDataProxy*>( fPCDataProxy );

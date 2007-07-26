@@ -42,6 +42,7 @@ RECORD_CONDUIT_EXECUTABLE_TESTS(
 	rchotsynchhtest
 	rcfirstsynctest
 	rccopyhhtopc
+	rccopypctohh
 )
 
 RECORD_CONDUIT_UNIT_TESTS (
@@ -50,5 +51,5 @@ RECORD_CONDUIT_UNIT_TESTS (
 	dataproxytest
 	rchotsynchhtest
 	rcfirstsynctest
-	rccopyhhtopc
+	rccopypctohh
 )
