@@ -67,8 +67,9 @@ GpgME::Error Kleo::QGpgMEKeyGenerationJob::start( const QString & parameters ) {
 
   hookupContextToEventLoopInteractor();
 
+  GpgME::Data null = GpgME::Data::null;
   const GpgME::Error err =
-    mCtx->startKeyGeneration( parameters.toUtf8().data(), mPubKey ? *mPubKey : GpgME::Data::null );
+    mCtx->startKeyGeneration( parameters.toUtf8().data(), mPubKey ? *mPubKey : null );
 
   if ( err )
     deleteLater();
