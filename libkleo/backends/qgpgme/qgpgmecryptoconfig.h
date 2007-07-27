@@ -40,6 +40,7 @@
 #include <QStringList>
 #include <QObject>
 #include <QVariant>
+class KProcess;
 class K3ProcIO;
 
 class QGpgMECryptoConfigComponent;
@@ -66,7 +67,7 @@ public:
   virtual void sync( bool runtime );
 
 private slots:
-  void slotCollectStdOut( K3ProcIO* proc );
+  void slotCollectStdOut();
 private:
   /// @param showErrors if true, a messagebox will be shown if e.g. gpgconf wasn't found
   void runGpgConf( bool showErrors );
@@ -74,6 +75,7 @@ private:
 private:
   QHash<QString, QGpgMECryptoConfigComponent*> mComponents;
   bool mParsed;
+  KProcess *mProcess;
 };
 
 class QGpgMECryptoConfigGroup;
