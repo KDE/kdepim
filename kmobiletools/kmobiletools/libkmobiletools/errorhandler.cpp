@@ -85,7 +85,7 @@ QStack<const BaseError*> ErrorHandler::errorStack() {
 }
 
 void ErrorHandler::displayError( const BaseError* error ) {
-    if( receivers( SIGNAL( errorOccurred( const BaseError* ) ) ) > 0 )
+    if( receivers( SIGNAL(errorOccurred(QString,BaseError::Priority)) ) > 0 )
         emit errorOccurred( error->description(), error->priority() );
     else
         KMessageBox::error( 0, error->description() );

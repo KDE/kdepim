@@ -21,6 +21,7 @@
 #define KMOBILETOOLSFAKEENGINE_H
 
 #include <QtCore/QObject>
+#include <KLibFactory>
 
 #include <libkmobiletools/enginexp.h>
 
@@ -41,12 +42,11 @@ public:
     FakeEngine( QObject *parent );
     virtual ~FakeEngine();
 
-    void initialize() {};
+    void initialize( const QString& deviceName ) {};
 
     //
     // Status interface implementation
     //
-    void fetchStatusInformation() {};
     int signalStrength() const {};
     int charge() const {};
     KMobileTools::Status::PowerSupplyType powerSupplyType() const {};
@@ -55,7 +55,6 @@ public:
     //
     // Information interface implementation
     //
-    void fetchInformation() {};
     QString networkName() const {};
     QString manufacturer() const {};
     KMobileTools::Information::Manufacturer manufacturerID() const {};
@@ -63,7 +62,12 @@ public:
     QString imei() const {};
     QString revision() const {};
 
+public Q_SLOTS:
+    void fetchStatusInformation() {};
+    void fetchInformation() {};
+
 Q_SIGNALS:
+    void initialized( bool successful );
 
     //
     // Status interface implementation
@@ -78,8 +82,17 @@ Q_SIGNALS:
     //
     void networkNameChanged( const QString& );
 
-    void initialized( bool successful );
+};
 
+class FakeEngineFactory : public KLibFactory
+{
+   Q_OBJECT
+public:
+    FakeEngineFactory();
+    virtual ~FakeEngineFactory();
+    virtual FakeEngine* createObject( QObject *parent, const char *classname, const QStringList &args );
+
+private:
 };
 
 #endif

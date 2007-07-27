@@ -18,6 +18,7 @@
  ***************************************************************************/
 
 #include "fakeengine.h"
+#include <libkmobiletools/ifaces/addressbook.h>
 
 FakeEngine::FakeEngine( QObject *parent )
  : EngineXP( parent )
@@ -27,6 +28,19 @@ FakeEngine::FakeEngine( QObject *parent )
 
 FakeEngine::~FakeEngine()
 {
+}
+
+K_EXPORT_COMPONENT_FACTORY( libkmobiletools_fake, FakeEngineFactory )
+
+FakeEngineFactory::FakeEngineFactory()
+{
+}
+FakeEngineFactory::~FakeEngineFactory()
+{
+}
+FakeEngine *FakeEngineFactory::createObject(QObject *parent, const char */*classname*/, const QStringList &/*args*/ )
+{
+    return new FakeEngine(parent);
 }
 
 #include "fakeengine.moc"

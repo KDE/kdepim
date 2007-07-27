@@ -14,6 +14,7 @@ add_subdirectory( libkmobiletools )
 add_subdirectory( about )
 add_subdirectory( mainpart )
 add_subdirectory( engines )
+add_subdirectory( tests )
 
 ########### next target ###############
 

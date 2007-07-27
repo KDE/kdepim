@@ -79,6 +79,25 @@ public:
      */
     virtual void initialize( const QString& deviceName ) = 0;
 
+    /**
+     * Checks if the engine implements a given interface
+     *
+     * @param interfaceName the plain name of the interface, e.g. "Status"
+     *
+     * @return true, if the engine implements the given interface
+     */
+    bool implements( const QString& interfaceName );
+
+    /**
+     * A convenience method to load an engine
+     *
+     * @param parent the engine's parent object
+     * @param libname the engine's library name, e.g. libkmobiletools_at
+     *
+     * @return an engine instance if loading is successful, else 0
+     */
+    static EngineXP* load( QObject* parent, const QString& libname );
+
 Q_SIGNALS:
     /**
      * This signal is emitted when the engine was initialized.
