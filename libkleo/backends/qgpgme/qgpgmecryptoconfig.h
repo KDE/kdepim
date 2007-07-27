@@ -40,7 +40,6 @@
 #include <QStringList>
 #include <QObject>
 #include <QVariant>
-class KProcess;
 class K3ProcIO;
 
 class QGpgMECryptoConfigComponent;
@@ -75,7 +74,6 @@ private:
 private:
   QHash<QString, QGpgMECryptoConfigComponent*> mComponents;
   bool mParsed;
-  KProcess *mProcess;
 };
 
 class QGpgMECryptoConfigGroup;

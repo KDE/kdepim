@@ -74,23 +74,22 @@ QGpgMECryptoConfig::~QGpgMECryptoConfig()
 void QGpgMECryptoConfig::runGpgConf( bool showErrors )
 {
   // Run gpgconf --list-components to make the list of components
+  KProcess process;
+  process << "gpgconf"; // must be in the PATH
+  process << "--list-components";
 
-  mProcess =new KProcess;
-  *mProcess << "gpgconf"; // must be in the PATH
-  *mProcess << "--list-components";
 
-
-  QObject::connect( mProcess, SIGNAL(readyReadStandardOutput()),
+  QObject::connect( &process, SIGNAL(readyReadStandardOutput()),
                     this, SLOT( slotCollectStdOut() ) );
 
   // run the process:
   int rc = 0;
-  mProcess->setOutputChannelMode(KProcess::MergedChannels);
-  mProcess->start();
-  if ( !mProcess->waitForFinished() )
+  process.setOutputChannelMode(KProcess::MergedChannels);
+  process.start();
+  if ( !process.waitForFinished() )
     rc = -2;
   else
-    rc = ( mProcess->exitStatus () == QProcess::NormalExit ) ? mProcess->exitCode() : -1 ;
+    rc = ( process.exitStatus () == QProcess::NormalExit ) ? process.exitCode() : -1 ;
 
   // handle errors, if any (and if requested)
   if ( showErrors && rc != 0 ) {
@@ -112,9 +111,10 @@ void QGpgMECryptoConfig::slotCollectStdOut()
 {
   QString line;
   int result;
-  while( mProcess->canReadLine() ) {
-     line = QString::fromLocal8Bit(mProcess->readLine());
-    kDebug(5150) << "GOT LINE:" << line << endl;
+  KProcess * proc = static_cast<KProcess*>(QObject::sender());
+  while( proc->canReadLine() ) {
+     line = QString::fromUtf8(proc->readLine());
+    //kDebug(5150) << "GOT LINE:" << line << endl;
     // Format: NAME:DESCRIPTION
     QStringList lst = line.split( ':' );
     if ( lst.count() >= 2 ) {
