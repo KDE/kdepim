@@ -156,7 +156,7 @@ class KMOBILETOOLS_EXPORT Engine : public QObject
          */
         virtual QString currentDeviceName() const;
         virtual QString engineLibName() const=0;
-        KPluginInfo* pluginInfo();
+        KPluginInfo pluginInfo();
 
         virtual QStringList encodings() = 0; /** @TODO remove?! strings should be passed as utf8
                                                * and converted by the engine if needed
