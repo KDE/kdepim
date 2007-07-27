@@ -40,11 +40,7 @@ class SMSList;
 */
 class KMOBILETOOLS_EXPORT ShortMessages {
 public:
-    /**
-     * Returns an OR-combination of available memory slots
-     */
-    virtual KMobileTools::ShortMessages::MemorySlots availableMemorySlots() const = 0;
-
+//public Q_SLOTS:
     /**
      * Fetches all short messages from the phone
      */
@@ -54,6 +50,17 @@ public:
      * Fetches the short messages stored in the given @p memorySlot
      */
     virtual void fetchSMS( KMobileTools::ShortMessages::MemorySlot memorySlot ) = 0;
+
+    /**
+     * Fetches the set sms center (SMSC) from the phone
+     */
+    virtual void fetchSMSCenter() = 0;
+
+public:
+    /**
+     * Returns an OR-combination of available memory slots
+     */
+    virtual KMobileTools::ShortMessages::MemorySlots availableMemorySlots() const = 0;
 
     /**
      * Returns the fetched list of sms
@@ -100,11 +107,6 @@ public:
     virtual void removeSMS( const SMS& sms ) = 0;
 
     /**
-     * Fetches the set sms center (SMSC) from the phone
-     */
-    virtual void fetchSMSCenter() = 0;
-
-    /**
      * Returns the fetched sms center (SMSC)
      *
      * @return the fetched sms center as a <number,name> pair
@@ -123,7 +125,6 @@ public:
 
 protected:
 //Q_SIGNALS:
-
     /**
      * This signal is emitted when the short messages have been fetched from
      * the phone

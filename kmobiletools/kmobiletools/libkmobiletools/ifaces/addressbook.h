@@ -48,11 +48,7 @@ namespace Ifaces {
 */
 class KMOBILETOOLS_EXPORT Addressbook {
 public:
-    /**
-     * Returns an OR-combination of available memory slots
-     */
-    virtual KMobileTools::Addressbook::MemorySlots availableMemorySlots() const = 0;
-
+//public Q_SLOTS:
     /**
      * Fetches the address book from the phone
      */
@@ -62,6 +58,12 @@ public:
      * Fetches the address book stored in the given @p memorySlot
      */
     virtual void fetchAddressbook( KMobileTools::Addressbook::MemorySlot memorySlot ) = 0;
+
+public:
+    /**
+     * Returns an OR-combination of available memory slots
+     */
+    virtual KMobileTools::Addressbook::MemorySlots availableMemorySlots() const = 0;
 
     /**
      * Returns the fetched address book
@@ -112,7 +114,6 @@ public:
 
 protected:
 //Q_SIGNALS:
-
     /**
      * This signal is emitted when the address book has been fetched from
      * the phone

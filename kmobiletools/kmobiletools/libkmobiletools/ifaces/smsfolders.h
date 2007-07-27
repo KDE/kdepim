@@ -46,11 +46,13 @@ class SMSFolder;
 */
 class KMOBILETOOLS_EXPORT SMSFolders {
 public:
+//public Q_SLOTS:
     /**
      * Fetches information about the phone's sms folders
      */
     virtual void fetchSMSFolders() = 0;
 
+public:
     /**
      * Returns the list of the fetched sms folders
      *
@@ -84,7 +86,6 @@ public:
 
 protected:
 //Q_SIGNALS:
-
     /**
      * This signal is emitted when the sms folder information has been fetched from
      * the phone

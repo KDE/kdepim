@@ -37,11 +37,13 @@ namespace Ifaces {
 */
 class KMOBILETOOLS_EXPORT Information {
 public:
+//public Q_SLOTS:
     /**
      * Fetches information about the phone
      */
     virtual void fetchInformation() = 0;
 
+public:
     /**
      * Returns the network the phone is currently logged in
      *
@@ -89,7 +91,6 @@ public:
 
 protected:
 //Q_SIGNALS:
-
     /**
      * This signal is emitted whenever the network name changes
      */

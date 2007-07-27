@@ -37,11 +37,13 @@ namespace Ifaces {
 */
 class KMOBILETOOLS_EXPORT Status {
 public:
+//public Q_SLOTS:
     /**
      * Fetches status information from the phone
      */
     virtual void fetchStatusInformation() = 0;
 
+public:
     /**
      * Returns the phone's signal strength in percent
      *
