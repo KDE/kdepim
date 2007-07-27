@@ -81,9 +81,7 @@ set(kleo_LIB_SRCS ${libkleo_core_SRCS} ${libkleo_ui_SRCS} ${libkleo_backend_chia
    kleo/cryptplugwrapperlist.cpp 
    kleo/cryptplugfactory.cpp )
 
-if(NOT WIN32)
-   set(kleo_LIB_SRCS ${kleo_LIB_SRCS} ${libkleo_backend_qgpgme_SRCS})
-endif(NOT WIN32)
+set(kleo_LIB_SRCS ${kleo_LIB_SRCS} ${libkleo_backend_qgpgme_SRCS})
 
 kde4_add_library(kleo SHARED ${kleo_LIB_SRCS})
 
