@@ -70,10 +70,6 @@ public:
 
 	void enableRunKPilot(bool);
 
-	virtual void dragEnterEvent(QDragEnterEvent *);
-	virtual void dropEvent(QDropEvent *);
-
-
 protected:
 	void setupWidget();
 	/**
@@ -87,12 +83,6 @@ protected slots:
 	void slotShowNormal();
 	void slotShowNotListening();
 	void slotBusyTimer();
-
-	// "Regular" QT actions
-	//
-	//
-	virtual void mousePressEvent(QMouseEvent* e);
-	virtual void closeEvent(QCloseEvent *e);
 
 protected:
 	void startHotSync();

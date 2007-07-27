@@ -91,57 +91,9 @@ PilotDaemonTray::PilotDaemonTray(PilotDaemon * p) :
 	kap(0L),
 	fBlinkTimer(0L)
 {
+	FUNCTIONSETUP;
 	setObjectName("pilotDaemon");
-	FUNCTIONSETUP;
 	setupWidget();
-#ifdef __GNUC__
-#warning "kde4 port it"
-#endif
-	//setAcceptDrops(true);
-}
-
-/* virtual */ void PilotDaemonTray::dragEnterEvent(QDragEnterEvent * e)
-{
-	FUNCTIONSETUP;
-	e->setAccepted(KUrl::List::canDecode(e->mimeData()));
-}
-
-/* virtual */ void PilotDaemonTray::dropEvent(QDropEvent * e)
-{
-	FUNCTIONSETUP;
-
-	KUrl::List list = KUrl::List::fromMimeData(e->mimeData());
-
-	QStringList files;
-	for(KUrl::List::ConstIterator it = list.begin(); it != list.end(); ++it)
-	{
-	 	if ((*it).isLocalFile())
-	 	{
-	 		files << (*it).path();
-	 	}
-	}
-
-	daemon->addInstallFiles(files);
-}
-
-/* virtual */ void PilotDaemonTray::mousePressEvent(QMouseEvent * e)
-{
-	FUNCTIONSETUP;
-#ifdef __GNUC__
-#warning "kde4 port"
-#endif
-	if ( e->button() == Qt::RightButton )
-	{
-		QMenu *menu = contextMenu();
-		menu->popup(e->globalPos());
-		e->accept();
-	}
-}
-
-/* virtual */ void PilotDaemonTray::closeEvent(QCloseEvent *)
-{
-	FUNCTIONSETUP;
-	daemon->quitNow();
 }
 
 void PilotDaemonTray::setupWidget()
@@ -194,10 +146,8 @@ void PilotDaemonTray::setupWidget()
 	KHelpMenu *help = new KHelpMenu(menu,aboutData);
 	menu->insertItem(KIcon(CSL1("help")),i18n("&Help"),help->menu());
 
-
-#ifdef DEBUG
 	DEBUGKPILOT << fname << ": Finished getting icons" << endl;
-#endif
+
 }
 
 void PilotDaemonTray::slotShowAbout()
