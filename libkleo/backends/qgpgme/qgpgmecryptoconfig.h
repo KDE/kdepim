@@ -40,7 +40,6 @@
 #include <QStringList>
 #include <QObject>
 #include <QVariant>
-class K3ProcIO;
 
 class QGpgMECryptoConfigComponent;
 class QGpgMECryptoConfigEntry;
@@ -95,7 +94,7 @@ public:
   void sync( bool runtime );
 
 private slots:
-  void slotCollectStdOut( K3ProcIO* proc );
+  void slotCollectStdOut();
 private:
   void runGpgConf();
 

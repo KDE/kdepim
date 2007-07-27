@@ -35,17 +35,16 @@
 #include <QList>
 #include <QByteArray>
 #include <kdebug.h>
-#include <k3procio.h>
 #include <kprocess.h>
 #include <errno.h>
 #include <kmessagebox.h>
 #include <klocale.h>
 #include <kshell.h>
 
-#include <assert.h>
+#include <cassert>
 #include <ktemporaryfile.h>
 #include <QFile>
-#include <stdlib.h>
+#include <cstdlib>
 #include <QTextCodec>
 
 // Just for the Q_ASSERT in the dtor. Not thread-safe, but who would
@@ -79,17 +78,19 @@ void QGpgMECryptoConfig::runGpgConf( bool showErrors )
   process << "--list-components";
 
 
-  QObject::connect( &process, SIGNAL(readyReadStandardOutput()),
-                    this, SLOT( slotCollectStdOut() ) );
+  connect( &process, SIGNAL(readyReadStandardOutput()),
+           this, SLOT(slotCollectStdOut()) );
 
   // run the process:
   int rc = 0;
-  process.setOutputChannelMode(KProcess::MergedChannels);
+  process.setOutputChannelMode( KProcess::OnlyStdoutChannel );
   process.start();
   if ( !process.waitForFinished() )
     rc = -2;
+  else if ( process.exitStatus() == QProcess::NormalExit )
+    rc = process.exitCode();
   else
-    rc = ( process.exitStatus () == QProcess::NormalExit ) ? process.exitCode() : -1 ;
+    rc = -1;
 
   // handle errors, if any (and if requested)
   if ( showErrors && rc != 0 ) {
@@ -109,14 +110,17 @@ void QGpgMECryptoConfig::runGpgConf( bool showErrors )
 
 void QGpgMECryptoConfig::slotCollectStdOut()
 {
-  QString line;
-  int result;
-  KProcess * proc = static_cast<KProcess*>(QObject::sender());
+  assert( qobject_cast<KProcess*>( QObject::sender() ) );
+  KProcess * const proc = static_cast<KProcess*>( QObject::sender() );
   while( proc->canReadLine() ) {
-     line = QString::fromUtf8(proc->readLine());
+    QString line = QString::fromUtf8( proc->readLine() );
+    if ( line.endsWith( '\n' ) )
+      line.chop( 1 );
+    if ( line.endsWith( '\r' ) )
+      line.chop( 1 );
     //kDebug(5150) << "GOT LINE:" << line << endl;
     // Format: NAME:DESCRIPTION
-    QStringList lst = line.split( ':' );
+    const QStringList lst = line.split( ':' );
     if ( lst.count() >= 2 ) {
       mComponents.insert( lst[0], new QGpgMECryptoConfigComponent( this, lst[0], lst[1] ) );
     } else {
@@ -178,23 +182,27 @@ void QGpgMECryptoConfigComponent::runGpgConf()
 {
   // Run gpgconf --list-options <component>, and create all groups and entries for that component
 
-  K3ProcIO proc( QTextCodec::codecForName( "utf8" ) );
+  KProcess proc;
   proc << "gpgconf"; // must be in the PATH
   proc << "--list-options";
   proc << mName;
 
   //kDebug(5150) << "Running gpgconf --list-options " << mName << endl;
 
-  QObject::connect( &proc, SIGNAL( readReady(K3ProcIO*) ),
-                    this, SLOT( slotCollectStdOut(K3ProcIO*) ) );
+  connect( &proc, SIGNAL(readyReadStandardOutput()),
+           this, SLOT(slotCollectStdOut()) );
   mCurrentGroup = 0;
 
   // run the process:
   int rc = 0;
-  if ( !proc.start( K3Process::Block ) )
+  proc.setOutputChannelMode( KProcess::OnlyStdoutChannel );
+  proc.start();
+  if ( !proc.waitForFinished() )
     rc = -2;
+  else if ( proc.exitStatus() == QProcess::NormalExit )
+    rc = proc.exitCode();
   else
-    rc = ( proc.normalExit() ) ? proc.exitStatus() : -1 ;
+    rc = -1;
 
   if( rc != 0 ) // can happen when using the wrong version of gpg...
     kWarning(5150) << "Running 'gpgconf --list-options " << mName << "' failed. " << strerror( rc ) << ", but try that command to see the real output" << endl;
@@ -204,11 +212,16 @@ void QGpgMECryptoConfigComponent::runGpgConf()
   }
 }
 
-void QGpgMECryptoConfigComponent::slotCollectStdOut( K3ProcIO* proc )
+void QGpgMECryptoConfigComponent::slotCollectStdOut()
 {
-  QString line;
-  int result;
-  while( ( result = proc->readln(line) ) != -1 ) {
+  assert( qobject_cast<KProcess*>( QObject::sender() ) );
+  KProcess * const proc = static_cast<KProcess*>( QObject::sender() );
+  while( proc->canReadLine() ) {
+    QString line = QString::fromUtf8( proc->readLine() );
+    if ( line.endsWith( '\n' ) )
+      line.chop( 1 );
+    if ( line.endsWith( '\r' ) )
+      line.chop( 1 );
     //kDebug(5150) << "GOT LINE:" << line << endl;
     // Format: NAME:FLAGS:LEVEL:DESCRIPTION:TYPE:ALT-TYPE:ARGNAME:DEFAULT:ARGDEF:VALUE
     const QStringList lst = line.split( ':' );
@@ -803,7 +816,7 @@ QString QGpgMECryptoConfigEntry::toString( bool escape ) const
         }
       }
       QString res = lst.join( "," );
-      kDebug(5150) << "toString: " << res << endl;
+      //kDebug(5150) << "toString: " << res << endl;
       return res;
     } else { // normal string
       QString res = mValue.toString();
