@@ -51,7 +51,7 @@ TestHHRecord::TestHHRecord( const TestHHRecord *other ) : HHRecord( 0L )
 	
 	fModified = other->isModified();
 	fDeleted = other->isDeleted();
-	fArchived = false;
+	fArchived = other->isArchived();;
 }
 
 TestHHRecord::TestHHRecord( const TestRecord *other ) : HHRecord( 0L )
@@ -158,9 +158,9 @@ Record* TestHHRecord::duplicate() const
 	return new TestHHRecord( this );
 }
 
-bool TestHHRecord::operator==( const Record &rec ) const
+bool TestHHRecord::equal( const Record *rec ) const
 {
-	if( const TestRecord *other = dynamic_cast<const TestRecord*>( &rec ) )
+	if( const TestRecord *other = dynamic_cast<const TestRecord*>( rec ) )
 	{
 		QStringList fields = other->fields();
 		QStringListIterator it(fields);
@@ -176,7 +176,7 @@ bool TestHHRecord::operator==( const Record &rec ) const
 		
 		return allEqual && (fields == fFields);
 	}
-	else if( const TestHHRecord *other = dynamic_cast<const TestHHRecord*>( &rec ) )
+	else if( const TestHHRecord *other = dynamic_cast<const TestHHRecord*>( rec ) )
 	{
 		QStringList fields = other->fields();
 		QStringListIterator it(fields);
@@ -195,9 +195,3 @@ bool TestHHRecord::operator==( const Record &rec ) const
 	
 	return false;
 }
-
-bool TestHHRecord::operator!=( const Record &other ) const
-{
-	return !(operator==( other ));
-}
-

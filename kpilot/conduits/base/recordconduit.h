@@ -35,6 +35,7 @@ class PCDataProxy;
 class DataProxy;
 class HHRecord;
 class Record;
+class QStringList;
 
 /**
  * This is the base class for all record based conduits. Each of them should 
@@ -50,6 +51,7 @@ protected:
 	HHDataProxy *fHHDataProxy;
 	HHDataProxy *fBackupDataProxy;
 	DataProxy *fPCDataProxy;
+	QStringList *fSyncedPcRecords;
 
 // Methods
 public:
@@ -78,18 +80,28 @@ protected:
 	virtual void initDataProxies() = 0;
 
 	/**
-	 * Compares @p pcRecord with @p hhRec and returns true if they are equal.
+	 * Compares @p pcRecord with @p hhRec and returns true if they are considered
+	 * equal.
 	 */
 	virtual bool equal( Record *pcRec, HHRecord *hhRec ) = 0;
 	
 	/**
-	 * Synchronizes the field values of @p hhRecord to @p pcRecord. If @p fromHH
-	 * is false the fields are synchronized from the pcRecord to the hhRecord.
-	 * After calling this method, RecordConduit::equal( pcRecord, hhRecord ) must
-	 * return true.
+	 * Copies the field values of @p from to @p to. The method should only touch
+	 * data that can be synced between the two records and leave the rest of the
+	 * records data unchanged. After calling this method
+	 *
+	 * RecordConduit::equal( pcRecord, hhRecord ) must return true.
 	 */
-	virtual void syncFields( Record *pcRecord, HHRecord *hhRecord
-		, bool fromHH = true ) = 0;
+	virtual void copy( const Record *from, HHRecord *to ) = 0;
+	
+	/**
+	 * Copies the field values of @p from to @p to. The method should only touch
+	 * data that can be synced between the two records and leave the rest of the
+	 * records data unchanged. After calling this method
+	 *
+	 * RecordConduit::equal( pcRecord, hhRecord ) must return true.
+	 */
+	virtual void copy( const HHRecord *from, Record *to  ) = 0;
 	
 	/**
 	 * This method is called when the conduit is run in Test Mode. The 
@@ -110,9 +122,10 @@ protected:
 	virtual bool createBackupDatabase() = 0;
 
 	/**
-	 * Executes the HotSync flow (see 4.1)
+	 * Executes the HotSync or the FullSync flow (see 4.1 and 5.2). What actualy
+	 * is executed depends on syncMode().mode().
 	 */
-	void hotSync();
+	void hotOrFullSync();
 	
 	/**
 	 * Executes the FirstSync flow (see 5.1)

@@ -122,10 +122,6 @@ void RCFirstSyncTest::testMatch()
 	TestRecordConduit conduit( args );
 	conduit.initDataProxies();
 	
-	// Set the right iteration mode for a hotsync.
-	conduit.pcDataProxy()->setIterateMode( DataProxy::All );
-	conduit.hhDataProxy()->setIterateMode( DataProxy::All );
-	
 	// Add some records to the data proxies.
 	QStringList fields = QStringList() << CSL1( "f1" ) << CSL1( "f2" );
 	
@@ -159,10 +155,6 @@ void RCFirstSyncTest::testNoMatch()
 	
 	TestRecordConduit conduit( args );
 	conduit.initDataProxies();
-	
-	// Set the right iteration mode for a hotsync.
-	conduit.pcDataProxy()->setIterateMode( DataProxy::All );
-	conduit.hhDataProxy()->setIterateMode( DataProxy::All );
 	
 	// Add some records to the data proxies.
 	QStringList fields = QStringList() << CSL1( "f1" ) << CSL1( "f2" );

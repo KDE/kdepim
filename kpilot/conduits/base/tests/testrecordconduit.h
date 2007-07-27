@@ -55,12 +55,11 @@ public:
 	
 	virtual Record* newPCRecord( HHRecord *hhRecord );
 	
-	virtual void syncFields( Record *pcRecord, HHRecord *hhRecord
-		, bool fromHH = true );
+	virtual void copy( const Record *from, HHRecord *to );
+	
+	virtual void copy( const HHRecord *from, Record *to  );
 	
 	/** Methods below are added for testpurposes **/
-	
-	void syncFieldsTest( Record *pcRec, HHRecord *to, bool fromHH );
 	
 	void solveConflictTest( Record *pcRecord, HHRecord *hhRecord );
 	

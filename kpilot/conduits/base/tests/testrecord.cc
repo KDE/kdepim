@@ -155,9 +155,9 @@ Record* TestRecord::duplicate() const
 }
 
 
-bool TestRecord::operator==( const Record &rec ) const
+bool TestRecord::equal( const Record *rec ) const
 {
-	if( const TestRecord *other = dynamic_cast<const TestRecord*>( &rec ) )
+	if( const TestRecord *other = dynamic_cast<const TestRecord*>( rec ) )
 	{
 		QStringList fields = other->fields();
 		QStringListIterator it(fields);
@@ -173,7 +173,7 @@ bool TestRecord::operator==( const Record &rec ) const
 		
 		return allEqual && (fields == fFields);
 	}
-	else if( const TestHHRecord *other = dynamic_cast<const TestHHRecord*>( &rec ) )
+	else if( const TestHHRecord *other = dynamic_cast<const TestHHRecord*>( rec ) )
 	{
 		QStringList fields = other->fields();
 		QStringListIterator it(fields);
@@ -191,9 +191,4 @@ bool TestRecord::operator==( const Record &rec ) const
 	}
 	
 	return false;
-}
-
-bool TestRecord::operator!=( const Record &other ) const
-{
-	return !(operator==( other ));
 }

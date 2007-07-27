@@ -69,32 +69,19 @@ public:
 	 * Returns a string representation of the record.
 	 */
 	virtual QString toString() const = 0;
-	
-	/**
-	 * Returns the list of fields that this record has.
-	 */
-	virtual const QStringList fields() const = 0;
 
 	/**
-	 * Returns a duplicate of this record.
+	 * Returns a duplicate of this record. If Record *rec2 = rec1->duplicate() 
+	 * then rec2->equal( rec1 ) should be true.
 	 */
 	virtual Record* duplicate() const = 0;
-
-	/**
-	 *****************************************************************************
-	 * These functions are for test purposes, it's not needed to give an usefull
-	 * implementation
-	 *****************************************************************************
-	 */
 	
 	/**
-	 * Compares the fields and the field values of this record with @p other.
+	 * Returns wheter or not the current record is equal to @p other. Implementing 
+	 * conduits should add support for both implementing records for this. This
+	 * means that if pcRec->equal( hhRec ) is true, then also hhRec->equal( pcRec )
+	 * should be true.
 	 */
-	virtual bool operator==( const Record &other ) const = 0;
-	
-	/**
-	 * Compares the fields and the field values of this record with @p other.
-	 */
-	virtual bool operator!=( const Record &other ) const = 0;
+	virtual bool equal( const Record* other ) const = 0;
 };
 #endif

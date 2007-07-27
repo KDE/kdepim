@@ -59,6 +59,8 @@ public:
 	
 	void setDeleted();
 	
+	const QStringList fields() const;
+	
 	QVariant value( const QString &field ) const;
 
 	bool setValue( const QString &field, const QVariant &value );
@@ -76,13 +78,9 @@ public:
 	virtual void synced();
 
 	virtual QString toString() const;
-
-	virtual const QStringList fields() const;
 	
 	virtual Record* duplicate() const;
 	
-	virtual bool operator==( const Record &other ) const;
-
-	virtual bool operator!=( const Record &other ) const;
+	virtual bool equal( const Record *other ) const;
 };
 #endif

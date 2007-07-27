@@ -102,10 +102,10 @@ RecordConduit::~RecordConduit()
 		// So what are we going to do this time?!
 		switch( syncMode().mode() ) {
 			case SyncMode::eHotSync:
-				hotSync();
+				hotOrFullSync();
 				break;
 			case SyncMode::eFullSync:
-				//FIXME: fullSync();
+				hotOrFullSync();
 				break;
 			case SyncMode::eCopyPCToHH:
 				copyPCToHH();
@@ -115,7 +115,8 @@ RecordConduit::~RecordConduit()
 				break;
 			// Backup and restore should not happen here, if so default to hotsync.
 			default:
-				hotSync();
+				changeSync( SyncMode::eHotSync );
+				hotOrFullSync();
 				break;
 		}
 	}
@@ -151,7 +152,6 @@ RecordConduit::~RecordConduit()
 			 << "not able to create a new one." << endl;
 			return false;
 		}
-		
 	}
 	else
 	{
@@ -308,19 +308,32 @@ bool RecordConduit::checkVolatility()
 }
 
 
-// 4.1
-void RecordConduit::hotSync()
+// 4.1 || 5.2
+void RecordConduit::hotOrFullSync()
 {
 	FUNCTIONSETUP;
 	
-	// A hotsync only does modified records.
-	fHHDataProxy->setIterateMode( DataProxy::Modified );
-	fPCDataProxy->setIterateMode( DataProxy::Modified );
+	fSyncedPcRecords = new QStringList();
+	
+	if( syncMode().mode() == SyncMode::eHotSync )
+	{
+		// A hotsync only does modified records.
+		DEBUGKPILOT << fname << ": Doing HotSync" << endl;
+		fHHDataProxy->setIterateMode( DataProxy::Modified );
+		fPCDataProxy->setIterateMode( DataProxy::Modified );
+	}
+	else
+	{
+		DEBUGKPILOT << fname << ": Doing FullSync" << endl;
+		// Fullsync, all records.
+		fHHDataProxy->setIterateMode( DataProxy::All );
+		fPCDataProxy->setIterateMode( DataProxy::All );
+	}
 	
 	// Walk through all modified hand held records. The proxy is responsible for
 	// serving the right records.
 	
-	DEBUGKPILOT << fname << ": Walking over modified hh records." << endl;
+	DEBUGKPILOT << fname << ": Walking over hh records." << endl;
 	
 	fHHDataProxy->resetIterator();
 	while( fHHDataProxy->hasNext() )
@@ -331,36 +344,51 @@ void RecordConduit::hotSync()
 		Record *pcRecord = 0L;
 		
 		QString pcRecordId = fMapping->pcRecordId( hhRecord->id() );
-		if( !pcRecordId.isNull() ) {
+		if( !pcRecordId.isEmpty() ) {
 			// There is a mapping.
 			pcRecord = fPCDataProxy->find( pcRecordId );
 		}
 		
 		syncRecords( pcRecord, backupRecord, hhRecord );
+		
+		// This is a full sync so keep track of the pc records that are in sync.
+		// Which is needed to avoid strange result when iterating over the pc records.
+		if( pcRecord )
+		{
+			fSyncedPcRecords->append( pcRecord->id() );
+		}
 	}
 	
 	// Walk through all modified pc records. The proxy is responsible for
 	// serving the right records.
 	
-	DEBUGKPILOT << fname << ": Walking over modified pc records." << endl;
+	DEBUGKPILOT << fname << ": Walking over pc records." << endl;
 	
 	fPCDataProxy->resetIterator();
 	while( fPCDataProxy->hasNext() )
 	{
 		Record *pcRecord = fPCDataProxy->next();
-		HHRecord *backupRecord = 0L;
-		HHRecord *hhRecord = 0L;
 		
-		QString hhRecordId = fMapping->hhRecordId( pcRecord->id() );
-		
-		if( !hhRecordId.isNull() ) {
-			// There is a mapping.
-			backupRecord = static_cast<HHRecord*>( fBackupDataProxy->find( hhRecordId ) );
-			hhRecord = static_cast<HHRecord*>( fHHDataProxy->find( hhRecordId ) );
+		// Only sync those records which wheren't touched by the iteration over
+		// hand held records.
+		if( !fSyncedPcRecords->contains( pcRecord->id() ) )
+		{
+			HHRecord *backupRecord = 0L;
+			HHRecord *hhRecord = 0L;
+			
+			QString hhRecordId = fMapping->hhRecordId( pcRecord->id() );
+			
+			if( !hhRecordId.isEmpty() ) {
+				// There is a mapping.
+				backupRecord = static_cast<HHRecord*>( fBackupDataProxy->find( hhRecordId ) );
+				hhRecord = static_cast<HHRecord*>( fHHDataProxy->find( hhRecordId ) );
+			}
+			
+			syncRecords( pcRecord, backupRecord, hhRecord );
 		}
-		
-		syncRecords( pcRecord, backupRecord, hhRecord );
 	}
+	
+	delete fSyncedPcRecords;
 }
 
 // 5.1
@@ -390,7 +418,11 @@ void RecordConduit::firstSync()
 			// Overide pcRecord values with hhRecord values.
 			DEBUGKPILOT << fname << ": Match found: " << pcRecord->id() 
 				<< hhRecord->id() << endl;
-			syncFields( pcRecord, hhRecord );
+			//  ( from    , to       );
+			copy( hhRecord, pcRecord );
+			// Both records are in sync so they are no longer modified.
+			hhRecord->synced();
+			pcRecord->synced();
 			
 			fMapping->map( hhRecord->id(), pcRecord->id() );
 		}
@@ -563,7 +595,7 @@ Record* RecordConduit::findMatch( HHRecord *hhRec )
 	{
 		Record *pcRec = fPCDataProxy->next();
 		
-		if( equal( pcRec, hhRec ) )
+		if( pcRec->equal( hhRec ) )
 		{
 			return pcRec;
 		}
@@ -580,7 +612,7 @@ void RecordConduit::syncRecords( Record *pcRecord, HHRecord *backupRecord,
 	// Two records for which we seem to have a mapping.
 	if( hhRecord && pcRecord )
 	{
-		if( hhRecord->isModified() || isFullSync() )
+		if( hhRecord->isModified() )
 		{
 			if( pcRecord->isModified() )
 			{
@@ -611,7 +643,10 @@ void RecordConduit::syncRecords( Record *pcRecord, HHRecord *backupRecord,
 					DEBUGKPILOT << fname << ": Case 6.5.3 or 6.5.1 (fullSync)" << endl;
 
 					// Keep hhRecord values.
-					syncFields( pcRecord, hhRecord );
+					copy( hhRecord, pcRecord );
+					// Both records are in sync so they are no longer modified.
+					hhRecord->synced();
+					pcRecord->synced();
 				}
 			}
 		}
@@ -628,7 +663,37 @@ void RecordConduit::syncRecords( Record *pcRecord, HHRecord *backupRecord,
 				// Case: 6.5.6
 				DEBUGKPILOT << fname << ": Case 6.5.6" << endl;
 				// Keep pc record values.
-				syncFields( pcRecord, hhRecord, false );
+				copy( pcRecord, hhRecord );
+				// Both records are in sync so they are no longer modified.
+				hhRecord->synced();
+				pcRecord->synced();
+			}
+		} 
+		else if( isFullSync() )
+		{
+			if( !equal( pcRecord, backupRecord ) )
+			{
+				// Two handheld records.
+				if( !hhRecord->equal( backupRecord ) )
+				{
+					solveConflict( pcRecord, hhRecord );
+				}
+				else
+				{
+					//  ( from    , to       )
+					copy( pcRecord, hhRecord );
+					// Both records are in sync so they are no longer modified.
+					hhRecord->synced();
+					pcRecord->synced();
+				}
+			}
+			else if( !hhRecord->equal( backupRecord ) )
+			{
+				//  ( from    , to       )
+				copy( hhRecord, pcRecord );
+				// Both records are in sync so they are no longer modified.
+				hhRecord->synced();
+				pcRecord->synced();
 			}
 		}
 		else
@@ -655,7 +720,7 @@ void RecordConduit::syncRecords( Record *pcRecord, HHRecord *backupRecord,
 	{
 		if( fMapping->containsPCId( pcRecord->id() ) && pcRecord->isDeleted() )
 		{
-			DEBUGKPILOT << fname << ": Case 6.5.17" << endl;
+			DEBUGKPILOT << fname << ": Case 6.5.17 - pc: " << pcRecord->id() << endl;
 			fMapping->removePCId( pcRecord->id() );
 			fPCDataProxy->remove( pcRecord->id() );
 		}
@@ -691,7 +756,10 @@ void RecordConduit::syncConflictedRecords( Record *pcRecord, HHRecord *hhRecord
 		else
 		{
 			// Keep pcRecord. The hhRecord is changed so undo that changes.
-			syncFields( pcRecord, hhRecord, false );
+			copy( pcRecord, hhRecord );
+			// Both records are in sync so they are no longer modified.
+			hhRecord->synced();
+			pcRecord->synced();
 		}
 	}
 	else
@@ -702,7 +770,10 @@ void RecordConduit::syncConflictedRecords( Record *pcRecord, HHRecord *hhRecord
 			{
 				DEBUGKPILOT << fname << ": Case 6.5.16" << endl;
 				// Keep hhRecordValues.
-				syncFields( pcRecord, hhRecord );
+				copy( hhRecord, pcRecord );
+				// Both records are in sync so they are no longer modified.
+				hhRecord->synced();
+				pcRecord->synced();
 			}
 			// else { DEBUGKPILOT << fname << ": Case 6.5.15" << endl; }
 			deleteRecords( pcRecord, hhRecord );
@@ -710,22 +781,29 @@ void RecordConduit::syncConflictedRecords( Record *pcRecord, HHRecord *hhRecord
 		else
 		{
 			// Keep hhRecord. The pcRecord is changed so undo that changes.
-			syncFields( pcRecord, hhRecord );
+			copy( hhRecord, pcRecord );
+			// Both records are in sync so they are no longer modified.
+			hhRecord->synced();
+			pcRecord->synced();
 		}
 	}
 }
 
 void RecordConduit::deleteRecords( Record *pcRecord, HHRecord *hhRecord )
 {
+	FUNCTIONSETUP;
+	
 	fHHDataProxy->remove( hhRecord->id() );
 	
 	if( !hhRecord->isArchived() )
 	{
+		DEBUGKPILOT << fname << ": record not archived: " << hhRecord->id() << endl;
 		fPCDataProxy->remove( pcRecord->id() );
 		fMapping->removePCId( pcRecord->id() );
 	}
 	else
 	{
+		DEBUGKPILOT << fname << ": record archived: " << hhRecord->id() << endl;
 		fMapping->archiveRecord( hhRecord->id() );
 	}
 }

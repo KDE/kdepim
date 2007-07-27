@@ -40,6 +40,7 @@ RECORD_CONDUIT_EXECUTABLE_TESTS(
 	idmappingtest
 	dataproxytest
 	rchotsynchhtest
+	rcfullsynchhtest
 	rcfirstsynctest
 	rccopyhhtopctest
 	rccopypctohhtest
@@ -53,4 +54,5 @@ RECORD_CONDUIT_UNIT_TESTS (
 	rcfirstsynctest
 	rccopyhhtopctest
 	rccopypctohhtest
+	rcfullsynchhtest
 )

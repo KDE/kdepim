@@ -57,11 +57,17 @@ public:
 	
 	/** METHODS FOR TESTPURPOSES **/
 	
-	virtual void setModified();
+	void setModified();
 	
-	virtual void setDeleted();
+	void setDeleted();
 	
 	void setArchived();
+	
+	const QStringList fields() const;
+	
+	QVariant value( const QString &field ) const;
+
+	bool setValue( const QString &field, const QVariant &value );
 	
 	/** IMPLEMTED VIRTUAL FUNCTIONS FROM BASECLASS **/
 	
@@ -71,10 +77,6 @@ public:
 	
 	virtual void setId( const QString &id );
 
-	virtual QVariant value( const QString &field ) const;
-
-	virtual bool setValue( const QString &field, const QVariant &value );
-
 	virtual bool isModified() const;
 
 	virtual bool isDeleted() const;
@@ -82,13 +84,9 @@ public:
 	virtual void synced();
 
 	virtual QString toString() const;
-
-	virtual const QStringList fields() const;
 	
 	virtual Record* duplicate() const;
 	
-	virtual bool operator==( const Record &other ) const;
-
-	virtual bool operator!=( const Record &other ) const;
+	virtual bool equal( const Record *other ) const;
 };
 #endif
