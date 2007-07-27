@@ -521,7 +521,7 @@ HHRecord* TestRecordConduit::createHHRecord( const Record* record )
 	
 void TestRecordConduit::copy( const HHRecord *from, Record *to  )
 {
-	TestHHRecord *hhRec = static_cast<const TestHHRecord*>( from );
+	const TestHHRecord *hhRec = static_cast<const TestHHRecord*>( from );
 	TestRecord *pcRec = static_cast<TestRecord*>( to );
 
 	QStringList fields = hhRec->fields();
@@ -536,7 +536,7 @@ void TestRecordConduit::copy( const HHRecord *from, Record *to  )
 
 void TestRecordConduit::copy( const Record *from, HHRecord *to )
 {
-	TestRecord *pcRec = static_cast<const TestRecord*>( from );
+	const TestRecord *pcRec = static_cast<const TestRecord*>( from );
 	TestHHRecord *hhRec = static_cast<TestHHRecord*>( to );
 
 	QStringList fields = pcRec->fields();
