@@ -1,5 +1,5 @@
-#ifndef IDMAPPERXMLSOURCE_H
-#define IDMAPPERXMLSOURCE_H
+#ifndef IDMAPPINGXMLSOURCE_H
+#define IDMAPPINGXMLSOURCE_H
 /* idmappingxmlsource.h			KPilot
 **
 ** Copyright (C) 2007 by Bertjan Broeksema

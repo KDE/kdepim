@@ -147,7 +147,7 @@ public:
 	virtual void loadAllRecords() = 0;
 	
 	/**
-	 * Tries to create a new Datastore and returns wheter or not it succeeded.
+	 * Tries to create a new Datastore and returns whether or not it succeeded.
 	 */
 	virtual bool createDataStore() = 0;
 
@@ -177,7 +177,7 @@ protected: // Members
 	
 	// These are kept for rollback.
 	/**
-	 * Id's from created records. The bool indicates wheter or not the created
+	 * Id's from created records. The bool indicates whether or not the created
 	 * records are committed to the data store.
 	 */
 	QMap<QString, bool> fCreated;
@@ -188,7 +188,7 @@ protected: // Members
 	QMap<QString, Record*> fOldRecords;
 	
 	/**
-	 * Id's from updated records. The bool indicates wheter or not the updated
+	 * Id's from updated records. The bool indicates whether or not the updated
 	 * records are committed to the data store.
 	 */
 	QMap<QString, bool> fUpdated;
@@ -199,7 +199,7 @@ protected: // Members
 	QMap<QString, Record*> fDeletedRecords;
 	
 	/**
-	 * Id's from deleted records. The bool indicates wheter or not the records
+	 * Id's from deleted records. The bool indicates whether or not the records
 	 * are deleted from the data store.
 	 */
 	QMap<QString, bool> fDeleted;
