@@ -137,7 +137,7 @@ void CertificateInfoWidgetImpl::setKey( const GpgME::Key & key  ) {
   item = new Q3ListViewItem( listView, item, i18n("Issuer"), Kleo::DN( key.issuerName() ).prettyDN() );
   item = new Q3ListViewItem( listView, item, i18n("Serial Number"), key.issuerSerial() );
 
-  const Kleo::DN dn = key.userID(0).id();
+  const Kleo::DN dn( key.userID(0).id() );
 
   // FIXME: use the attributeLabelMap from certificatewizardimpl.cpp:
   static QMap<QString,QString> dnComponentNames;
@@ -395,7 +395,7 @@ void CertificateInfoWidgetImpl::slotImportCertificate()
 {
   if ( mChain.empty() || mChain.back().isNull() )
     return;
-  const Kleo::DN dn = mChain.back().userID( 0 ).id();
+  const Kleo::DN dn( mChain.back().userID( 0 ).id() );
   emit requestCertificateDownload( mChain.back().primaryFingerprint(), dn.prettyDN() );
   importButton->setEnabled( false );
 }

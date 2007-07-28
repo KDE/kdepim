@@ -81,8 +81,8 @@ namespace Kleo {
     typedef AttributeList::const_iterator const_iterator;
 
     DN();
-    DN( const QString & dn );
-    DN( const char * utf8DN );
+    explicit DN( const QString & dn );
+    explicit DN( const char * utf8DN );
     DN( const DN & other );
     ~DN();
 
@@ -112,7 +112,7 @@ namespace Kleo {
   public:
     typedef DN::AttributeList List;
 
-    Attribute( const QString & name=QString(), const QString & value=QString() )
+    explicit Attribute( const QString & name=QString(), const QString & value=QString() )
       : mName( name.toUpper() ), mValue( value ) {}
     Attribute( const Attribute & other )
       : mName( other.name() ), mValue( other.value() ) {}
