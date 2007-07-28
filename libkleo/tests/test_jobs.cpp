@@ -79,7 +79,7 @@ static void testSign()
 
   QByteArray signature;
   const GpgME::SigningResult res =
-    job->exec( signingKeys, plainText, GpgME::Context::Clearsigned, signature );
+    job->exec( signingKeys, plainText, GpgME::Clearsigned, signature );
   if ( res.error().isCanceled() ) {
     kDebug() << "signing was canceled by user" << endl;
     return;
