@@ -36,56 +36,37 @@ class KToggleAction;
  * statusbar but relies on the "Part" to do all the real work.
  *
  * @short Application Shell
-           * @author Marco Gulino <marco.gulino@gmail.com>
-           * @version 0.5.0
+ * @author Marco Gulino <marco.gulino@gmail.com>
+ * @version 0.5.0
  */
-                  class kmobiletools : public KParts::MainWindow
+
+class kmobiletools : public KParts::MainWindow
 {
     Q_OBJECT
     public:
-    /**
-     * Default Constructor
-     */
+        /**
+        * Default Constructor
+        */
         kmobiletools();
 
-    /**
+        /**
          * Default Destructor
-     */
+        */
         virtual ~kmobiletools();
 
     protected:
-    /**
-     * This method is called when it is time for the app to save its
-     * properties for session management purposes.
-     */
-        void saveProperties(KConfig *);
-
-    /**
-         * This method is called when this app is restored.  The KConfig
-         * object points to the session management config file that was saved
-         * with @ref saveProperties
-     */
-        void readProperties(KConfig *);
         bool queryClose();
 
     private slots:
-        void optionsShowToolbar();
-        void optionsShowStatusbar();
         void optionsConfigureKeys();
         void optionsConfigureToolbars();
-        void slotUpdateToolbars(KParts::Part *);
         void applyNewToolbarConfig();
-        void slotQuit();
 
     private:
-        void setupAccel();
         void setupActions();
 
     private:
         KParts::Part *m_part;
-
-        KToggleAction *m_toolbarAction;
-        KToggleAction *m_statusbarAction;
 };
 
 #endif // _KMOBILETOOLS_H_
