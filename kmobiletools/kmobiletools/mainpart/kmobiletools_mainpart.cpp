@@ -1,6 +1,7 @@
 /***************************************************************************
    Copyright (C) 2007
    by Marco Gulino <marco@kmobiletools.org>
+   by Matthias Lechner <matthias@lmme.de>
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -19,36 +20,35 @@
  ***************************************************************************/
 #include "kmobiletools_mainpart.h"
 
-#include <kcomponentdata.h>
-#include <kaction.h>
-#include <kstandardaction.h>
-#include <kglobal.h>
-#include <klocale.h>
-#include <kapplication.h>
-#include <kparts/partmanager.h>
-#include <kparts/part.h>
-#include <kparts/genericfactory.h>
-#include <ktar.h>
-// #include <kparts/statusbarextension.h>
-//#include <dcopclient.h>
+// KDE4 includes
+#include <KParts/GenericFactory>
+#include <KAction>
+#include <KStandardAction>
+#include <KActionCollection>
+#include <KStandardDirs>
+#include <KGlobal>
+#include <KApplication>
+#include <KTar>
 #include <KStandardGuiItem>
-#include <ksystemtrayicon.h>
-#include <kactioncollection.h>
-#include <kmessagebox.h>
-#include <kstandarddirs.h>
-#include <kiconloader.h>
-#include <q3widgetstack.h>
-#include <qsplitter.h>
-#include <khtmlview.h>
-#include <k3listview.h>
-#include <kstatusbar.h>
-#include <qtimer.h>
-#include <krun.h>
-#include <kinputdialog.h>
-#include <kplugininfo.h>
-#include <q3sqlpropertymap.h>
-#include <knotifyconfigwidget.h>
+#include <KSystemTrayIcon>
+#include <KMessageBox>
+#include <KIconLoader>
+#include <KHTMLView>
+#include <KRun>
+#include <KInputDialog>
+#include <KPluginInfo>
+#include <KNotifyConfigWidget>
+#include <KLocale>
 
+// KDE3 includes
+#include <K3ListView>
+
+// Qt includes
+#include <QSplitter>
+#include <QTimer>
+#include <QStackedWidget>
+
+// KMobileTools library includes
 #include <libkmobiletools/kmobiletools_cfg.h>
 #include <libkmobiletools/devicesconfig.h>
 #include <libkmobiletools/homepage.h>
@@ -57,15 +57,13 @@
 #include <libkmobiletools/engineslist.h>
 #include <libkmobiletools/engine.h>
 #include <libkmobiletools/kmobiletoolshelper.h>
+
 #include "devicemanager.h"
 #include "devicehome.h"
-// #include "devicehome.h"
-//#include "deviceIFace_stub.h"
-
+#include "errorlogdialog.h"
 
 #define CURCFGVER 20070329
 
-#define TAG_SPACING "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"
 typedef KParts::GenericFactory<kmobiletoolsMainPart> kmobiletoolsMainPartFactory;
 K_EXPORT_COMPONENT_FACTORY( libkmobiletoolsmainpart, kmobiletoolsMainPartFactory )
 
@@ -74,100 +72,55 @@ KAboutData *kmobiletoolsMainPart::createAboutData()
     return new AboutData();
 }
 
-kmobiletoolsMainPart *kmobiletoolsMainPart::m_mainpart=0;
 
 kmobiletoolsMainPart::kmobiletoolsMainPart( QWidget *parentWidget, QObject *parent, const QStringList &args )
     : /*DCOPObject("KMobileTools"),*/ ///@TODO port to dbus
-    KParts::ReadOnlyPart(parent),
+    KParts::ReadOnlyPart( parent ),
     l_devicesList()
 {
-    m_mainpart=this;
-//     new KMobileTools::EnginesList();
+    Q_UNUSED(args)
 
-    // we need an instance
-//     setInstance( kmobiletoolsMainPartFactory::instance() );
     // set our XML-UI resource file
     setXMLFile("kmobiletools_mainpart.rc");
-    // this should be your custom internal widget
-//     if ( QString(kapp->name() ) != "kmobiletools" )
-//     {
-//         p_dcopClient=new DCOPClient();
-//         kDebug() << "DCopClient registration as 'kmobiletools'..: " <<
-//                 p_dcopClient->registerAs("kmobiletools", false) << endl;
-//     } else p_dcopClient=kapp->dcopClient();
 
-//     m_statusBarExt=new KParts::StatusBarExtension(this, "StatusBarExtension");
-    QSplitter *splitter=new QSplitter( parentWidget );
-    splitter->setObjectName(QLatin1String("kmobiletools-splitter"));
-    p_listview=new K3ListView(splitter);
-    p_listview->addColumn( i18n("Devices") );
-    p_listview->setAutoOpen( true );
-    p_listview->setResizeMode(K3ListView::AllColumns);
-    p_listview->setRootIsDecorated(true);
-    p_listview->setSizePolicy (QSizePolicy(QSizePolicy::Preferred,QSizePolicy::Preferred));
-    p_listview->setMinimumWidth(200);
-    p_listview->resize(200,p_listview->height() );
-    m_widget = new Q3WidgetStack( splitter );
-    // notify the part that this is our internal widget
-    splitter->setResizeMode(p_listview, QSplitter::KeepSize);
-    setWidget(splitter);
-//     setView( m_widget );
-    // create our actions
-    KAction *curAction=0;
-    curAction=new KAction( KIcon("package-utilities"), i18n("Device Manager"), this);
-    connect(curAction, SIGNAL(triggered(bool)), this,SLOT(deviceManager()));
-    actionCollection()->addAction("device_manager", curAction);
+    // setup gui
+    setupGUI( parentWidget );
 
-    curAction=new KAction( KIcon("go-home") ,i18n("Homepage"), this );
-    connect(curAction, SIGNAL(triggered(bool)),this,SLOT(goHome()) );
-    actionCollection()->addAction("home", curAction);
+    // setup actions
+    setupActions();
 
-    curAction = new KAction( KIcon("text-enriched"), i18n("Show error log"), this );
-    connect(curAction, SIGNAL(triggered(bool)), this, SLOT( showErrorLog() ) );
-    actionCollection()->addAction( "error_log", curAction );
+    // setup additional dialogs like Device Manager
+    setupDialogs();
 
-    curAction=KStandardAction::next(this, SLOT(nextPart() ), this);
-    actionCollection()->addAction(KStandardAction::Next, "next", this, SLOT(nextPart() ) );
-    actionCollection()->addAction(KStandardAction::Prior, "prev", this, SLOT(prevPart() ) );
-//     actionCollection()->addAction(KStandardAction::Preferences, "options_configure", this, SLOT(showPreference() ) );
-    actionCollection()->addAction(KStandardAction::Quit, "file_quit", this, SLOT(slotQuit() ) );
-    actionCollection()->addAction(KStandardAction::ConfigureNotifications, "options_configure_notifications", this, SLOT(slotConfigNotify() ) );
+    // setup homepage part
+    p_homepage=new KMobileTools::homepagePart( m_widget );
+    m_widget->addWidget( p_homepage->view() );
+    connect( p_homepage, SIGNAL(switchDevice(const QString& )), SLOT(switchPart(const QString& ) ) );
+    connect( p_homepage, SIGNAL(loadDevice(const QString& )), SLOT(loadDevicePart(const QString&) ) );
+    connect( p_homepage, SIGNAL(unloadDevice(const QString& )), SLOT(deleteDevicePart(const QString&) ) );
+    connect( p_homepage, SIGNAL(configCmd(const QString& ) ), SLOT(configSlot(const QString& ) ) );
+    connect( this, SIGNAL(devicesUpdated()), p_homepage, SLOT(printIndexPage() ));
+    connect( this, SIGNAL(devicesUpdated() ), this, SLOT(checkShowDeviceList()) );
 
-    m_errorLogDialog = 0;
-
-//     partManager=new KParts::PartManager(m_widget, this);
-    p_homepage=new KMobileTools::homepagePart(m_widget);
-    m_widget->addWidget( p_homepage->view(), 0 );
-//     partManager->addPart( p_homepage );
-//     connect(partManager, SIGNAL(activePartChanged (KParts::Part *) ), this, SLOT(activePartChanged(KParts::Part* ) ) );
-    // Loading startup devices
-
-    p_sysTray=new KSystemTrayIcon("kmobiletools", parentWidget);
-//     p_sysTray->setPixmap( p_sysTray->loadIcon("kmobiletools") );
+    // Placing KMobileTools in systray
+    p_sysTray = new KSystemTrayIcon( "kmobiletools", parentWidget );
     p_sysTray->show();
     KMobileTools::KMobiletoolsHelper::instance()->setSystray( p_sysTray );
-    connect(p_homepage, SIGNAL(switchDevice(const QString& )), SLOT(switchPart(const QString& ) ) );
-    connect(p_homepage, SIGNAL(loadDevice(const QString& )), SLOT(loadDevicePart(const QString&) ) );
-    connect(p_homepage, SIGNAL(unloadDevice(const QString& )), SLOT(deleteDevicePart(const QString&) ) );
-    connect(p_homepage, SIGNAL(configCmd(const QString& ) ), SLOT(configSlot(const QString& ) ) );
-    connect(m_widget, SIGNAL( aboutToShow ( int ) ), this, SLOT(widgetStackItemChanged( int )) );
-    connect(this, SIGNAL(devicesUpdated()), p_homepage, SLOT(printIndexPage() ));
-    connect(p_listview, SIGNAL(clicked(Q3ListViewItem *)), SLOT(listviewClicked(Q3ListViewItem* ) ) );
-    connect(this, SIGNAL(devicesUpdated() ), this, SLOT(devicesChanged()) );
-//     connect(partManager, SIGNAL(activePartChanged (KParts::Part *)), SLOT(partChanged(KParts::Part* ) ) );
-//     connect(p_sysTray, SIGNAL(quitSelected() ), kapp, SLOT(quit() ) );
-    connect(p_sysTray, SIGNAL(quitSelected() ), SLOT(slotQuit() ) );
-//     p_statusbar=new KStatusBar();
-    p_statusBarExtension=new KParts::StatusBarExtension(this);
-//     p_statusBarExtension->setStatusBar(p_statusbar);
+    connect( p_sysTray, SIGNAL(quitSelected()), SLOT(slotQuit()) );
+
+    // create extended status bar
+    p_statusBarExtension = new KParts::StatusBarExtension( this );
 
     updateStatus();
-    switchPart("homepage");
-    if(!checkConfigVersion()) return;
-    QTimer::singleShot( 3000, this, SLOT(slotAutoLoadDevices() ) );
+    switchPart( "homepage" );
 
-    if(qApp->isSessionRestored() )
-        QTimer::singleShot( 100, this, SLOT(slotHide()) );
+    if( !checkConfigVersion() )
+        return;
+
+    QTimer::singleShot( 1000, this, SLOT(slotAutoLoadDevices() ) );
+
+    /// @TODO move to AT engine
+    /*
     QFile testfile(QString("/var/lock/testLock.%1").arg(KDateTime::currentLocalDateTime().toTime_t() ) );
     if(testfile.open( QIODevice::WriteOnly ) )
     {
@@ -176,258 +129,192 @@ kmobiletoolsMainPart::kmobiletoolsMainPart( QWidget *parentWidget, QObject *pare
     } else
     {
         int ret=KMessageBox::questionYesNo( m_widget, i18n("<qt>You have no write access to lockfiles directory <b>/var/lock/</b>. Please correct this using the permission fixer wizard, or by hand with \"chmod -R a+rwx /var/lock\"<br>Do you want to run the Permission Wizard now?</qt>"), i18n("Locking Failed"), KGuiItem(i18n("Run Wizard")), KStandardGuiItem::cancel() );
-        if(ret==KMessageBox::Yes) KRun::runCommand("kmtsetup", m_widget->topLevelWidget());
+        if(ret==KMessageBox::Yes)
+            KRun::runCommand( "kmtsetup", m_widget->window() );
     }
+    */
 }
 
 
-void kmobiletoolsMainPart::slotHide()
-{
-//     p_sysTray->setInactive(); @TODO port this
-}
 
 kmobiletoolsMainPart::~kmobiletoolsMainPart()
 {
     kDebug() << "kmobiletoolsMainPart::~kmobiletoolsMainPart()\n";
 }
 
+
 void kmobiletoolsMainPart::slotAutoLoadDevices()
 {
-    QStringList sl_parts=KMobileTools::MainConfig::devicelist();
+    QStringList sl_parts = KMobileTools::MainConfig::devicelist();
     for ( QStringList::Iterator it = sl_parts.begin(); it != sl_parts.end(); ++it ) {
         if( DEVCFG( *it )->autoload() )
             loadDevicePart(*it, false );
     }
 }
 
-/*!
-    \fn kmobiletoolsMainPart::activePartChanged(KParts::Part *newPart)
- */
-void kmobiletoolsMainPart::activePartChanged(KParts::Part *newPart)
-{
-    if(!newPart) return;
-    m_widget->raiseWidget( newPart->widget() );
-}
 
-
-/*!
-    \fn kmobiletoolsMainPart::loadDevicePart(const QString &devicename)
- */
-void kmobiletoolsMainPart::loadDevicePart(const QString &deviceName, bool setActive)
+void kmobiletoolsMainPart::loadDevicePart( const QString &deviceName, bool setActive )
 {
     kDebug() << "KMobileTools::EnginesList::instance()->locklist(): " << KMobileTools::EnginesList::instance()->locklist() << endl;
-    if(!KMobileTools::EnginesList::instance()->lock(deviceName) )return;
-//     if( !sl_toloadList.isEmpty() && sl_toloadList.contains(deviceName) ) return;
-    DeviceHome *newPart=new DeviceHome(m_widget, deviceName, this);
-    if(!newPart) { KMobileTools::EnginesList::instance()->unlock(deviceName); return; }
-    m_widget->addWidget( (QWidget*) newPart->widget() );
-    l_devicesList.append(newPart);
+
+    // try to lock device
+    if( !KMobileTools::EnginesList::instance()->lock(deviceName) )
+        return;
+
+    DeviceHome *newPart = new DeviceHome( m_widget, deviceName, this );
+    if( !newPart ) {
+        /// @TODO add call to ErrorHandler here
+        KMobileTools::EnginesList::instance()->unlock( deviceName );
+        return;
+    }
+
+    m_widget->addWidget( newPart->widget() );
+    l_devicesList.append( newPart );
+
     connect( newPart, SIGNAL(connected() ), SLOT(deviceConnected() ) );
     connect( newPart, SIGNAL(disconnected() ), SLOT(deviceDisconnected() ) );
     connect( newPart, SIGNAL(setStatusBarText(const QString&) ), this, SIGNAL(setStatusBarText(const QString&) ) );
-    connect( newPart, SIGNAL(command( const QString& )), this, SLOT(configSlot( const QString &)));
+    connect( newPart, SIGNAL(command( const QString& )), this, SLOT(configSlot( const QString &)) );
     connect( newPart, SIGNAL(deleteThis( const QString &)), this, SLOT(deleteDevicePart( const QString& )) );
-    connect( newPart, SIGNAL(phonebookUpdated()), this, SLOT(phonebookUpdated()));
+    connect( newPart, SIGNAL(phonebookUpdated()), this, SLOT(phonebookUpdated()) );
 
-    DEVCFG(deviceName)->setLoaded(true);
+    DEVCFG(deviceName)->setLoaded( true );
     emit devicesUpdated();
-    emit deviceChanged(deviceName);
-    if(setActive) switchPart( deviceName );
+    emit deviceChanged( deviceName );
+
+    if( setActive )
+        switchPart( deviceName );
 }
 
 
-/*!
-    \fn kmobiletoolsMainPart::updateStatus()
- */
 void kmobiletoolsMainPart::updateStatus()
 {
     p_homepage->printIndexPage();
-//     devicesUpdated();
-    devicesChanged();
+    checkShowDeviceList();
 }
 
-void kmobiletoolsMainPart::devicesChanged()
+void kmobiletoolsMainPart::checkShowDeviceList()
 {
-    if (l_devicesList.count() != 0 )
+    if( l_devicesList.count() != 0 )
         p_listview->show();
-    else p_listview->hide();
-    return;
+    else
+        p_listview->hide();
 }
 
 
-
-/*!
-    \fn kmobiletoolsMainPart::switchPart( QString  &partName )
- */
-void kmobiletoolsMainPart::switchPart( const QString  &partName )
+void kmobiletoolsMainPart::switchPart( const QString& partName )
 {
-    kDebug() << "kmobiletoolsMainPart::switchPart( const QString  &partName == " << partName << " )\n";
-    if (! partName.length() ) return;
-    if ( partName == "homepage")
-    {
+    if (! partName.length() )
+        return;
+
+    if ( partName == "homepage" ) {
         goHome();
         return;
     }
-/*    KParts::Part* cur_part;
-    QPtrList<KParts::Part>list( *(partManager->parts() ) );
-    bool found=false;
-    for( cur_part=list.first(); cur_part; cur_part=list.next() )
-    {
-        if( partName == cur_part->name() )
-        {
-            partManager->setActivePart( cur_part, cur_part->widget() );
-            found=true;
-        }
-    }
-    if (!found && partName!="homepage") loadDevicePart( partName, true);*/
-    int found=0;
-    found = l_devicesList.find(partName);
-    if ( found== -1)
-    {
-        loadDevicePart(partName, true);
+
+    int found = l_devicesList.find( partName );
+    if ( found == -1 ) {
+        // device is currently not loaded, so load now
+        loadDevicePart( partName, true );
         return;
+    } else {
+        // device loaded, switch view
+        m_widget->setCurrentWidget( l_devicesList.at( found )->widget() );
     }
-    DeviceHome *curDev=l_devicesList.at(found);
-    if(!curDev) return;
-    QWidget *widget=curDev->widget();
-    if(!widget) return;
-    m_widget->raiseWidget( widget );
 }
 
 
-/*!
-    \fn kmobiletoolsMainPart::nextPart()
- */
-void kmobiletoolsMainPart::nextPart()
-{
-
-    if (l_devicesList.isEmpty() ) return;
-    DeviceHome *curPart;
-    if( l_devicesList.last()->widget() == m_widget->visibleWidget() )
-    {
-        goHome();
-        return;
-    }    if(m_widget->visibleWidget() == p_homepage->view() )
-    {
-        m_widget->raiseWidget( l_devicesList.first()->widget() );
-        return;
-    }
-    curPart=l_devicesList.at(l_devicesList.find(m_widget->visibleWidget()));
-    curPart=l_devicesList.next();
-    m_widget->raiseWidget( curPart->widget() );
-}
-
-/*!
-    \fn kmobiletoolsMainPart::goHome()
- */
 void kmobiletoolsMainPart::goHome()
 {
-    m_widget->raiseWidget( 0 );
+    m_widget->setCurrentIndex( 0 );
 }
 
-/*!
-    \fn kmobiletoolsMainPart::prevPart()
- */
-void kmobiletoolsMainPart::prevPart()
+
+void kmobiletoolsMainPart::nextPart()
 {
-    if (l_devicesList.isEmpty() ) return;
-    DeviceHome *curPart;
-    if( l_devicesList.first()->widget() == m_widget->visibleWidget() )
-    {
+    if ( l_devicesList.isEmpty() )
+        return;
+
+    else if( l_devicesList.last()->widget() == m_widget->currentWidget() ) {
         goHome();
         return;
     }
-    if(m_widget->visibleWidget() == p_homepage->view() )
-    {
-        m_widget->raiseWidget( l_devicesList.last()->widget() );
+
+    else if( m_widget->currentWidget() == p_homepage->view() ) {
+        m_widget->setCurrentWidget( l_devicesList.first()->widget() );
         return;
     }
-    curPart=l_devicesList.at(l_devicesList.find(m_widget->visibleWidget()));
-    curPart=l_devicesList.prev();
-    m_widget->raiseWidget( curPart->widget() );
-}
 
-DeviceManager *kmobiletoolsMainPart::deviceManager()
-{
-    DeviceManager* devman=new DeviceManager(m_widget);
-    devman->show();
-    connect(devman, SIGNAL(deviceAdded(const QString& ) ), this, SLOT(addDevice(const QString& )) );
-    connect(devman, SIGNAL(deviceRemoved(const QString& )), this, SLOT(delDevice(const QString& )) );
-    connect(devman, SIGNAL(loadDevice(const QString& )), this, SLOT(loadDevicePart(const QString&) ) );
-    connect(devman, SIGNAL(unloadDevice(const QString& )), this, SLOT(deleteDevicePart(const QString&) ) );
-//     connect(this, SIGNAL(devicesUpdated() ), devman, SLOT(updateView() ) );
-    connect(this, SIGNAL(deviceChanged(const QString& ) ), devman, SLOT(deviceChanged(const QString& ) ) );
-    return devman;
-}
-
-void kmobiletoolsMainPart::showPreference()
-{
-    configSlot("configDevices");
+    int currentPosition = l_devicesList.find( m_widget->currentWidget() );
+    m_widget->setCurrentWidget( l_devicesList.at( currentPosition+1 )->widget() );
 }
 
 
-/*!
-    \fn kmobiletoolsMainPart::newDevice()
- */
-void kmobiletoolsMainPart::configSlot(const QString &command)
+void kmobiletoolsMainPart::prevPart()
 {
-    kDebug() << "kmobiletoolsMainPart::configSlot(" << command << ")\n";
-    if(command == "newDevWiz")
-    {
-/*        DeviceManager* devman=new DeviceManager(m_widget);
-        devman->show();
-        connect(devman, SIGNAL(devicesAdded(const QStringList& ) ), this, SLOT(addDevices(const QStringList& )) );
-        connect(devman, SIGNAL(devicesRemoved(const QStringList& )), this, SLOT(delDevices(const QStringList& )) );
-        connect(devman, SIGNAL(loadDevice(const QString& )), this, SLOT(loadDevicePart(const QString&) ) );
-        connect(devman, SIGNAL(unloadDevice(const QString& )), this, SLOT(deleteDevicePart(const QString&) ) );
-        connect(this, SIGNAL(devicesUpdated() ), devman, SLOT(updateView() ) );
-        devman*/ deviceManager()->slotNewDevice();
+    if ( l_devicesList.isEmpty() )
+        return;
+
+    else if( l_devicesList.first()->widget() == m_widget->currentWidget() ) {
+        goHome();
         return;
     }
-    if(command=="configDevices")
-    {
-        deviceManager();
+
+    else if( m_widget->currentWidget() == p_homepage->view() ) {
+        m_widget->setCurrentWidget( l_devicesList.last()->widget() );
         return;
     }
-    if(command.contains( "configure:") )
-    {
-        kDebug() << "trying to configure device " << command.section( ':',1,1) << endl;
-        deviceManager()->showDeviceConfigDialog( command.section( ':',1,1) );
+
+    int currentPosition = l_devicesList.find( m_widget->currentWidget() );
+    m_widget->setCurrentWidget( l_devicesList.at( currentPosition-1 )->widget() );
+}
+
+
+void kmobiletoolsMainPart::configSlot( const QString& command )
+{
+    if( command == "newDevWiz" ) {
+        m_deviceManager->show();
+        m_deviceManager->slotNewDevice();
+    }
+    else if( command=="configDevices" )
+        m_deviceManager->show();
+    else if(command.contains( "configure:") ) {
+        m_deviceManager->show();
+        m_deviceManager->showDeviceConfigDialog( command.section( ':',1,1) );
     }
 }
 
-void kmobiletoolsMainPart::addDevice(const QString &newDevice)
-{
-  loadDevicePart(newDevice, false);
-  updateStatus();
-}
 
-void kmobiletoolsMainPart::delDevice(const QString &delDevice)
+void kmobiletoolsMainPart::addDevice( const QString& newDevice )
 {
-  deleteDevicePart(delDevice);
-  updateStatus();
+    loadDevicePart( newDevice, false );
+    updateStatus();
 }
 
 
-
-/*!
-    \fn kmobiletoolsMainPart::deleteDevicePart(const QString &deviceName)
- */
-void kmobiletoolsMainPart::deleteDevicePart(const QString &deviceName)
+void kmobiletoolsMainPart::delDevice( const QString &delDevice )
 {
-    int found=l_devicesList.find( deviceName );
-    if( found==-1) return;
+    deleteDevicePart( delDevice );
+    updateStatus();
+}
+
+
+void kmobiletoolsMainPart::deleteDevicePart( const QString& deviceName )
+{
+    int found = l_devicesList.find( deviceName );
+    if( found == -1 )
+        return;
+
     goHome();
-    l_devicesList.dump();
+
     m_widget->removeWidget( l_devicesList.at(found)->widget() );
-    KMobileTools::Engine *t_engine=KMobileTools::EnginesList::instance()->find( deviceName );
-    if(t_engine)
-    {
-        kDebug() << "****** removing engine " << t_engine->objectName() << endl;
+    KMobileTools::Engine *t_engine = KMobileTools::EnginesList::instance()->find( deviceName );
+    if( t_engine ) {
         t_engine->queryClose();
+        KMobileTools::EnginesList::instance()->unlock( deviceName );
         delete t_engine;
     }
-//     l_devicesList.at(found)->engine()->queryClose();
+
     Q3ListViewItemIterator it( p_listview );
     while ( it.current() ) {
         kDebug() << KMobileTools::DevicesConfig::deviceGroup(it.current()->text(0)) << "==" << deviceName << endl;
@@ -446,38 +333,26 @@ void kmobiletoolsMainPart::deleteDevicePart(const QString &deviceName)
 }
 
 
-/*!
-    \fn kmobiletoolsMainPart::listviewClicked(QListViewItem *)
- */
-void kmobiletoolsMainPart::listviewClicked(Q3ListViewItem *i)
+void kmobiletoolsMainPart::listviewClicked( Q3ListViewItem* i )
 {
-    if(!i) return;
+    if( !i )
+        return;
+
     DeviceListViewItem *item;
     kDebug() << "kmobiletoolsMainPart::listviewClicked(); i->depth()=" << i->depth() << endl;
-    if(i->depth() )
-        item=static_cast<DeviceListViewItem*>(i->parent());
-    else item=static_cast<DeviceListViewItem*>(i);
+    if( i->depth() )
+        item = static_cast<DeviceListViewItem*>( i->parent() );
+    else
+        item = static_cast<DeviceListViewItem*>( i );
+
     switchPart( item->deviceName() );
-    l_devicesList.current()->clicked(i);
+
+    int index = l_devicesList.find( item->deviceName() );
+    if( index != -1 )
+        l_devicesList.at(index)->clicked( i );
 }
 
 
-/*!
-    \fn kmobiletoolsMainPart::activePartChanged(KParts::Part *newPart)
- */
-// void kmobiletoolsMainPart::partChanged(KParts::Part *newPart)
-// {
-//     if(QString("DeviceHome") == newPart->className() )
-//     {
-//         emit setStatusBarText( "" );
-// //         m_statusBarExt->setStatusBar (( (DeviceHome* ) (newPart) )->statusbar() );
-//     } else emit setStatusBarText( "KMobileTools" );
-// }
-
-
-/*!
-    \fn kmobiletoolsMainPart::slotQuit()
- */
 void kmobiletoolsMainPart::slotQuit()
 {
     kDebug() << "@@@@@@@@@@@@@@@@@@@ Debugging closing: KMobileTools::EnginesList::instance()->queryClose();\n";
@@ -490,15 +365,13 @@ void kmobiletoolsMainPart::slotQuit()
 
 bool kmobiletoolsMainPart::deviceIsLoaded( const QString &deviceName )
 {
-    if( l_devicesList.find( deviceName ) == -1 ) return false;
+    if( l_devicesList.find( deviceName ) == -1 )
+        return false;
+
     return true;
 }
 
 
-
-/*!
-    \fn kmobiletoolsMainPart::deviceDisconnected()
- */
 void kmobiletoolsMainPart::deviceDisconnected()
 {
     /// @todo implement me
@@ -506,51 +379,34 @@ void kmobiletoolsMainPart::deviceDisconnected()
 }
 
 
-/*!
-    \fn kmobiletoolsMainPart::deviceConnected()
- */
 void kmobiletoolsMainPart::deviceConnected()
 {
     /// @todo implement me
     updateStatus();
-//     p_sysTray->setActive(); // @TODO fix this
-}
-void kmobiletoolsMainPart::guiActivateEvent( KParts::GUIActivateEvent * )
-{
-//     if (! partManager->activePart() ) return;
-//     QApplication::postEvent(partManager->activePart(),new KParts::GUIActivateEvent( event->activated() ) );
-//     KParts::ReadOnlyPart::guiActivateEvent(event);
-//     if(QString("DeviceHome") == partManager->activePart()->className() )
-//         emit setStatusBarText( "" );
-//     else emit setStatusBarText( "KMobileTools" );
+    p_sysTray->parentWidget()->window()->show(); // @TODO does this work?! untested...
 }
 
 
-
-/*!
-    \fn kmobiletoolsMainPart::widgetStackItemChanged(int item)
- */
-void kmobiletoolsMainPart::widgetStackItemChanged(int item)
+void kmobiletoolsMainPart::widgetStackItemChanged( int item )
 {
     // Find the current visible item, and remove the statusbar if it's not the HomePagePart
-    if( m_widget->visibleWidget() != p_homepage->view() )
-    {
-        DeviceHome *oldPart=l_devicesList.at( l_devicesList.find(m_widget->visibleWidget()) );
+    if( m_widget->currentWidget() != p_homepage->view() ) {
+        DeviceHome *oldPart = l_devicesList.at( l_devicesList.find(m_widget->currentWidget()) );
         oldPart->clearStatusBar();
-        unplugActionList("kmobiletools_devicepart.rc");
+        unplugActionList( "kmobiletools_devicepart.rc" );
     }
-    if(!item) return; // exit if destination widget is the HomePagePart
-    DeviceHome *newPart=l_devicesList.at(l_devicesList.find( m_widget->widget( item ) ));
+
+    if( !item )
+        return; // exit if destination widget is the HomePagePart
+
+    DeviceHome *newPart = l_devicesList.at( l_devicesList.find( m_widget->widget( item ) ) );
     newPart->setupStatusBar();
-    plugActionList("kmobiletools_devicepart.rc", newPart->actionList() );
+    plugActionList( "kmobiletools_devicepart.rc", newPart->actionList() );
 }
 
 #include "kmobiletools_mainpart.moc"
 
-
-/*!
-    \fn kmobiletoolsMainPart::newSMS()
- */
+/*
 void kmobiletoolsMainPart::newSMS()
 {
     if( ! KMobileTools::EnginesList::instance()->count() )
@@ -571,7 +427,7 @@ void kmobiletoolsMainPart::newSMS()
     engine=KMobileTools::EnginesList::instance()->find( engine, true)->objectName();
 //     DeviceIFace_stub( "kmobiletools", engine.latin1() ).slotNewSMS() ; @TODO port this
 }
-
+*/
 
 bool kmobiletoolsMainPart::checkConfigVersion()
 {
@@ -612,48 +468,89 @@ bool kmobiletoolsMainPart::checkConfigVersion()
 }
 
 
-/*!
-    \fn kmobiletoolsMainPart::loadedEngines()
- */
-QStringList kmobiletoolsMainPart::loadedEngines(bool friendly)
-{
-    return KMobileTools::EnginesList::instance()->namesList( friendly );
-}
-
-
-
-/*!
-    \fn kmobiletoolsMainPart::phonebookUpdated()
- */
 void kmobiletoolsMainPart::phonebookUpdated()
 {
     // Some engine got the phonebook updated, updating then all device parts phonebooks.
-    DeviceHome *curPart;
-    Q3PtrListIterator<DeviceHome> it(l_devicesList);
-    while( (curPart=it.current() ) )
-    {
-        ++it;
-        kDebug() << "Updating device part " << curPart->objectName() << endl;
-        curPart->updateAllContacts();
-    }
+    for( int i=0; i<l_devicesList.size(); i++ )
+        l_devicesList.at(i)->updateAllContacts();
 }
 
 
-/*!
-    \fn kmobiletoolsMainPart::slotConfigNotify()
- */
 void kmobiletoolsMainPart::slotConfigNotify()
 {
     KNotifyConfigWidget::configure(m_widget, 0);
 }
 
-void kmobiletoolsMainPart::showErrorLog() {
-    /// @TODO this file is a mess ;) ErrorLogDialog should actually be passed the parent widget here
-    /// but this is not available outside the constructor
-    ///
-    /// don't forget to remove the "delete" in the destructor when the real parent is passed!
-    if( m_errorLogDialog == 0 )
-        m_errorLogDialog = new ErrorLogDialog( 0 );
 
-    m_errorLogDialog->show();
+void kmobiletoolsMainPart::setupGUI( QWidget* parent ) {
+    QSplitter *splitter = new QSplitter( parent );
+    splitter->setObjectName( QString("kmobiletools-splitter") );
+
+    // create devices list-view
+    p_listview = new K3ListView( splitter );
+    p_listview->addColumn( i18n("Devices") );
+    p_listview->setAutoOpen( true );
+    p_listview->setResizeMode( K3ListView::AllColumns );
+    p_listview->setRootIsDecorated( true );
+    p_listview->setSizePolicy( QSizePolicy(QSizePolicy::Preferred,QSizePolicy::Preferred) );
+    p_listview->setMinimumWidth( 200 );
+    p_listview->resize( 200, p_listview->height() );
+
+    m_widget = new QStackedWidget( splitter );
+
+    splitter->setStretchFactor( splitter->indexOf( p_listview ), 0 );
+    splitter->setStretchFactor( splitter->indexOf( m_widget ), 1 );
+    // notify the part that this is our internal widget
+    setWidget( splitter );
+
+    connect(m_widget, SIGNAL( currentChanged ( int ) ), this, SLOT(widgetStackItemChanged( int )) );
+    connect(p_listview, SIGNAL(clicked(Q3ListViewItem *)), SLOT(listviewClicked(Q3ListViewItem* ) ) );
+}
+
+
+void kmobiletoolsMainPart::setupActions() {
+    KAction *curAction=0;
+
+    // "Go home" action
+    curAction = new KAction( KIcon("go-home") ,i18n("Homepage"), this );
+    connect( curAction, SIGNAL(triggered(bool)), this, SLOT(goHome()) );
+    actionCollection()->addAction( "home", curAction );
+
+    // "Next" action
+    actionCollection()->addAction( KStandardAction::Next, "next", this, SLOT(nextPart()) );
+
+    // "Previous" action
+    actionCollection()->addAction( KStandardAction::Prior, "prev", this, SLOT(prevPart()) );
+
+    // "Quit" action
+    actionCollection()->addAction( KStandardAction::Quit, "file_quit", this, SLOT(slotQuit()) );
+
+    // "Configure notifications" action
+    actionCollection()->addAction( KStandardAction::ConfigureNotifications, "options_configure_notifications",
+                                   this, SLOT(slotConfigNotify() ) );
+}
+
+void kmobiletoolsMainPart::setupDialogs() {
+    // create device manager
+    m_deviceManager=new DeviceManager( m_widget );
+    connect( m_deviceManager, SIGNAL(deviceAdded(const QString& ) ), this, SLOT(addDevice(const QString& )) );
+    connect( m_deviceManager, SIGNAL(deviceRemoved(const QString& )), this, SLOT(delDevice(const QString& )) );
+    connect( m_deviceManager, SIGNAL(loadDevice(const QString& )), this, SLOT(loadDevicePart(const QString&) ) );
+    connect( m_deviceManager, SIGNAL(unloadDevice(const QString& )), this, SLOT(deleteDevicePart(const QString&) ) );
+    connect( this, SIGNAL(deviceChanged(const QString& ) ), m_deviceManager, SLOT(deviceChanged(const QString& ) ) );
+
+    // create error log dialog
+    m_errorLogDialog = new ErrorLogDialog( m_widget );
+
+    KAction *curAction=0;
+
+    // "Device manager" action
+    curAction = new KAction( KIcon("package-utilities"), i18n("Device Manager"), this );
+    connect( curAction, SIGNAL(triggered(bool)), m_deviceManager, SLOT(show()) );
+    actionCollection()->addAction( "device_manager", curAction );
+
+    // "Show error log" action
+    curAction = new KAction( KIcon("text-enriched"), i18n("Show error log"), this );
+    connect( curAction, SIGNAL(triggered(bool)), m_errorLogDialog, SLOT(show()) );
+    actionCollection()->addAction( "error_log", curAction );
 }

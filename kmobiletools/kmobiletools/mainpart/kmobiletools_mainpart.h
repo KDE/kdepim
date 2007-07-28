@@ -1,6 +1,7 @@
 /***************************************************************************
    Copyright (C) 2007
    by Marco Gulino <marco@kmobiletools.org>
+   by Matthias Lechner <matthias@lmme.de>
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -20,120 +21,121 @@
 #ifndef _KMOBILETOOLSMAINPART_H_
 #define _KMOBILETOOLSMAINPART_H_
 
-#include <kparts/part.h>
-#include <kparts/factory.h>
-#include <kparts/statusbarextension.h>
+#include <KParts/Part>
+#include <KParts/StatusBarExtension>
+#include <KParts/MainWindow>
 
-#include <qstringlist.h>
-#include <kdebug.h>
+#include <QStringList>
 
-#include "errorlogdialog.h"
-
-//#include "mainIFace.h"
 #include "deviceslist.h"
 
-class Q3WidgetStack;
+class QStackedWidget;
 class QString;
 class K3ListView;
-class K3ListViewItem;
 class Q3ListViewItem;
 class DeviceManager;
 class KAboutData;
 class KSystemTrayIcon;
+class ErrorLogDialog;
+class DeviceHome;
 
 namespace KMobileTools {
-class homepagePart;
+    class homepagePart;
 }
-// class KParts::StatusBarExtension;
-#include <kparts/partmanager.h>
-#include <kparts/mainwindow.h>
+
 /**
  * This is a "Part".  It that does all the real work in a KPart
  * application.
  *
  * @short Main Part
-           * @author Marco Gulino <marco.gulino@gmail.com>
-           * @version 0.5.0
+ * @author Marco Gulino <marco.gulino@gmail.com>
+ * @author Matthias Lechner <matthias@lmme.de>
+ * @version 0.5.0
  */
-/*class DeviceHome : public KParts::Part
-{
-Q_OBJECT
-public:
-    DeviceHome(QWidget *parentWidget, const char *widgetName,QObject *parent, const char *name)
-        : KParts::Part( parent, name ) {}
-    virtual K3ListViewItem *listViewItem() { return p_listViewItem; }
-private:
-    K3ListViewItem *p_listViewItem;
-public slots:
-    virtual void clicked ( QListViewItem * item ) =0;
-};
-*/
+
 class kmobiletoolsMainPart : public KParts::ReadOnlyPart/*, virtual public MainIFace*/
 {
     Q_OBJECT
     public:
+        /**
+         * Constructs a new part (@see KParts::GenericFactory)
+         */
         kmobiletoolsMainPart(QWidget *parentWidget, QObject *parent, const QStringList &args=QStringList() );
-        virtual ~kmobiletoolsMainPart();
-        K3ListView *listview() { return p_listview; }
-        bool openFile() { return false; }
-        static KAboutData *createAboutData();
-//        DCOPClient * dcopClient() { return p_dcopClient; }
-        KSystemTrayIcon * sysTray() { return p_sysTray; }
-//         KParts::PartManager *partmanager(){ return partManager;}
-        const DevicesList devicesList() { return l_devicesList;}
-        KParts::StatusBarExtension *statusBarExtension() { return p_statusBarExtension;}
-        static kmobiletoolsMainPart *staticInstance() { return m_mainpart; }
-        bool checkConfigVersion();
 
-    public slots:
-    void activePartChanged(KParts::Part *newPart);
-    void loadDevicePart(const QString &deviceName, bool setActive=false);
-    void updateStatus();
-    void switchPart( const QString  &partName );
-    void nextPart();
-    void goHome();
-    void prevPart();
-    DeviceManager *deviceManager();
-    void configSlot(const QString &command);
-    void showErrorLog();
-    void showPreference();
-    void addDevice(const QString &newDevice);
-    void delDevice(const QString &newDevice);
-    void deleteDevicePart(const QString &deviceName);
-    void listviewClicked(Q3ListViewItem *);
-//     void partChanged(KParts::Part *newPart);
-    void slotQuit();
-    void deviceDisconnected();
-    void deviceConnected();
-    void widgetStackItemChanged(int item);
-    void slotAutoLoadDevices();
-    void devicesChanged ();
-    bool deviceIsLoaded(const QString &deviceName);
-    void slotHide();
-    void newSMS();
-    QStringList loadedEngines(bool friendly=false);
-    void phonebookUpdated();
-    void slotConfigNotify();
+        /**
+         * Destructs the part
+         */
+        virtual ~kmobiletoolsMainPart();
+
+        /**
+         * This method is needed for @see KParts::GenericFactory
+         *
+         * @return about data of our part
+         */
+        static KAboutData *createAboutData();
+
+        /**
+         * @see KParts::ReadOnlyPart
+         */
+        bool openFile() { return false; }
+
+        K3ListView *listview() { return p_listview; }
+        KSystemTrayIcon * sysTray() { return p_sysTray; }
+        KParts::StatusBarExtension *statusBarExtension() { return p_statusBarExtension;}
+
+//        DCOPClient * dcopClient() { return p_dcopClient; }
+
+    public Q_SLOTS:
+        void loadDevicePart(const QString &deviceName, bool setActive=false);
+        void configSlot( const QString& command );
+        void deleteDevicePart(const QString &deviceName);
+        void deviceDisconnected();
+        void deviceConnected();
+        bool deviceIsLoaded(const QString &deviceName);
+        //void newSMS(); /// @TODO remove
+        void phonebookUpdated();
+        void slotConfigNotify();
+
+    private Q_SLOTS:
+        void switchPart( const QString& partName );
+        void goHome();
+        void nextPart();
+        void prevPart();
+
+        void slotQuit();
+        void checkShowDeviceList();
+        void slotAutoLoadDevices();
+        void addDevice(const QString &newDevice);
+        void delDevice(const QString &newDevice);
+        void updateStatus();
+
+        void widgetStackItemChanged(int item);
+        void listviewClicked(Q3ListViewItem *);
 
     private:
-        Q3WidgetStack *m_widget;
-//         KParts::PartManager *partManager;
-        KMobileTools::homepagePart* p_homepage;
+        void setupGUI( QWidget* parent );
+        void setupActions();
+        void setupDialogs();
+
+        bool checkConfigVersion();
+
+        QStackedWidget *m_widget;
         K3ListView *p_listview;
+        KSystemTrayIcon * p_sysTray;
+
         KParts::MainWindow *mainwindow;
-        DevicesList l_devicesList;
-        QStringList sl_toloadList;
         KParts::StatusBarExtension *p_statusBarExtension;
-        static kmobiletoolsMainPart *m_mainpart;
+        KMobileTools::homepagePart* p_homepage;
+        DevicesList l_devicesList;
 
         ErrorLogDialog* m_errorLogDialog;
+        DeviceManager* m_deviceManager;
+
     signals:
         void devicesUpdated();
         void deviceChanged(const QString &);
 protected:
 //    DCOPClient * p_dcopClient;
-    KSystemTrayIcon * p_sysTray;
-    void guiActivateEvent  ( KParts::GUIActivateEvent *event);
 
 };
 

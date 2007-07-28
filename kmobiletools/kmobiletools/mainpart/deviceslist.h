@@ -1,6 +1,7 @@
 /***************************************************************************
    Copyright (C) 2007
    by Marco Gulino <marco@kmobiletools.org>
+   by Matthias Lechner <matthias@lmme.de>
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -20,23 +21,35 @@
 #ifndef DEVICESLIST_H
 #define DEVICESLIST_H
 
-#include <q3ptrlist.h>
-#include <qstring.h>
-#include <qwidget.h>
+#include <QtCore/QList>
+#include <QtCore/QString>
+#include <QtGui/QWidget>
+
 class DeviceHome;
 /**
-	@author Marco Gulino <marco@kmobiletools.org>
+    @author Marco Gulino <marco@kmobiletools.org>
+    @author Matthias Lechner <matthias@lmme.de>
 */
-class DevicesList : public Q3PtrList<DeviceHome>
+class DevicesList : public QList<DeviceHome*>
 {
 public:
     DevicesList();
 
     ~DevicesList();
-    int find(const QString &deviceName);
-    int find(QWidget *deviceWidget);
-    void dump();
 
+    /**
+     * Returns the index that contains the part with the specified @p deviceName
+     *
+     * @param deviceName the device name to search for
+     */
+    int find( const QString &deviceName );
+
+    /**
+     * Returns the index that contains the part with the specified @p deviceWidget
+     *
+     * @param deviceWidget the widget 
+     */
+    int find( const QWidget *deviceWidget );
 };
 
 #endif

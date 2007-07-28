@@ -1,6 +1,7 @@
 /***************************************************************************
    Copyright (C) 2007
    by Marco Gulino <marco@kmobiletools.org>
+   by Matthias Lechner <matthias@lmme.de>
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -19,64 +20,36 @@
  ***************************************************************************/
 #include "deviceslist.h"
 #include "devicehome.h"
-//Added by qt3to4:
-#include <Q3PtrList>
+
 DevicesList::DevicesList()
-    : Q3PtrList<DeviceHome>()
+    : QList<DeviceHome*>()
 {
 }
 
 
 DevicesList::~DevicesList()
 {
-    setAutoDelete(true);
+    qDeleteAll( begin(), end() );
 }
 
 
-/*!
-    \fn DevicesList::find(const QString &deviceName)
- */
-int DevicesList::find(const QString &deviceName)
+int DevicesList::find( const QString &deviceName )
 {
-    int found=0;
-    DeviceHome *curDevice=0;
-    Q3PtrListIterator<DeviceHome> it( *this);
-    while( (curDevice=it.current()) !=0 )
-    {
-        ++it;
-        if(curDevice->objectName() == deviceName)
-            return found;
-        found++;
+    for( int i = 0; i < size(); ++i ) {
+        if( at(i)->objectName() == deviceName )
+            return i;
     }
-    return -1;
-}
-/*!
-    \fn DevicesList::find(QWidget *deviceWidget)
- */
-int DevicesList::find(QWidget *deviceWidget)
-{
-    int found=0;
-    DeviceHome *curDevice=0;
-    Q3PtrListIterator<DeviceHome> it( *this);
-    while( (curDevice=it.current()) !=0 )
-    {
-        ++it;
-        if(curDevice->widget() == deviceWidget)
-            return found;
-        found++;
-    }
+
     return -1;
 }
 
-void DevicesList::dump()
+
+int DevicesList::find( const QWidget *deviceWidget )
 {
-    DeviceHome *tempDevice;
-    int i=0;
-    // Parsing the current DevicesList. If some items are not found in the new one, they'll be removed
-    Q3PtrListIterator<DeviceHome> it (*this);
-    while( (( tempDevice=it.current()) != 0) && !this->isEmpty()  )
-    {
-        kDebug() << "DevicesList::dump(): " << QString("%1").arg(i,2) << "|" << tempDevice->objectName() << "|" << tempDevice->friendlyName() << endl;
-        ++it; i++;
+    for( int i = 0; i < size(); ++i ) {
+        if( at(i)->widget() == deviceWidget )
+            return i;
     }
+
+    return -1;
 }

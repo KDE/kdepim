@@ -137,6 +137,7 @@ public:
     void setupWidgets();
     kmobiletoolsMainPart *parent() { return (kmobiletoolsMainPart *) QObject::parent(); }
     KCal::CalendarLocal * calendar() { return p_calendar; }
+
 private:
     Ui::mainWidget ui;
     QWidget *m_widget;
