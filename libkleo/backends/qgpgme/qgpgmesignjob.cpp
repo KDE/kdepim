@@ -68,7 +68,7 @@ GpgME::Error Kleo::QGpgMESignJob::setup( const std::vector<GpgME::Key> & signers
 
 GpgME::Error Kleo::QGpgMESignJob::start( const std::vector<GpgME::Key> & signers,
 					 const QByteArray & plainText,
-					 GpgME::Context::SignatureMode mode ) {
+					 GpgME::SignatureMode mode ) {
   if ( const GpgME::Error error = setup( signers, plainText ) ) {
     deleteLater();
     return error;
@@ -85,7 +85,7 @@ GpgME::Error Kleo::QGpgMESignJob::start( const std::vector<GpgME::Key> & signers
 
 GpgME::SigningResult Kleo::QGpgMESignJob::exec( const std::vector<GpgME::Key> & signers,
 						const QByteArray & plainText,
-						GpgME::Context::SignatureMode mode,
+						GpgME::SignatureMode mode,
 						QByteArray & signature ) {
   if ( const GpgME::Error err = setup( signers, plainText ) )
     return mResult = GpgME::SigningResult( 0, err );

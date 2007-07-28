@@ -59,7 +59,7 @@ GpgME::Error Kleo::QGpgMEKeyGenerationJob::start( const QString & parameters ) {
   assert( !mPubKey );
 
   // set up empty data object for the public key data
-  if ( mCtx->protocol() == GpgME::Context::CMS ) {
+  if ( mCtx->protocol() == GpgME::CMS ) {
     mPubKeyDataProvider = new QGpgME::QByteArrayDataProvider();
     mPubKey = new GpgME::Data( mPubKeyDataProvider );
     assert( !mPubKey->isNull() );

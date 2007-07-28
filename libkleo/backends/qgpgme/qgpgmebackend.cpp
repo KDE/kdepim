@@ -35,7 +35,7 @@
 #include "qgpgmecryptoconfig.h"
 #include "kleo/cryptplugwrapper.h"
 
-#include <gpgme++/context.h>
+#include <gpgme++/error.h>
 #include <gpgme++/engineinfo.h>
 
 #include <klocale.h>
@@ -76,7 +76,7 @@ Kleo::CryptoConfig * Kleo::QGpgMEBackend::config() const {
   return mCryptoConfig;
 }
 
-static bool check( GpgME::Context::Protocol proto, QString * reason ) {
+static bool check( GpgME::Protocol proto, QString * reason ) {
   if ( !GpgME::checkEngine( proto ) )
     return true;
   if ( !reason )
@@ -84,7 +84,7 @@ static bool check( GpgME::Context::Protocol proto, QString * reason ) {
   // error, check why:
   const GpgME::EngineInfo ei = GpgME::engineInfo( proto );
   if ( ei.isNull() )
-    *reason = i18n("GPGME was compiled without support for %1.", proto == GpgME::Context::CMS ? "S/MIME" : "OpenPGP" );
+    *reason = i18n("GPGME was compiled without support for %1.", proto == GpgME::CMS ? "S/MIME" : "OpenPGP" );
   else if ( ei.fileName() && !ei.version() )
     *reason = i18n("Engine %1 is not installed properly.", QFile::decodeName( ei.fileName() ) );
   else if ( ei.fileName() && ei.version() && ei.requiredVersion() )
@@ -92,23 +92,23 @@ static bool check( GpgME::Context::Protocol proto, QString * reason ) {
 		   "but at least version %3 is required.",
       QFile::decodeName( ei.fileName() ), ei.version(), ei.requiredVersion() );
   else
-    *reason = i18n("Unknown problem with engine for protocol %1.", proto == GpgME::Context::CMS ? "S/MIME" : "OpenPGP" );
+    *reason = i18n("Unknown problem with engine for protocol %1.", proto == GpgME::CMS ? "S/MIME" : "OpenPGP" );
   return false;
 }
 
 bool Kleo::QGpgMEBackend::checkForOpenPGP( QString * reason ) const {
-  return check( GpgME::Context::OpenPGP, reason );
+  return check( GpgME::OpenPGP, reason );
 }
 
 bool Kleo::QGpgMEBackend::checkForSMIME( QString * reason ) const {
-  return check( GpgME::Context::CMS, reason );
+  return check( GpgME::CMS, reason );
 }
 
 bool Kleo::QGpgMEBackend::checkForProtocol( const char * name, QString * reason ) const {
   if ( qstricmp( name, OpenPGP ) == 0 )
-    return check( GpgME::Context::OpenPGP, reason );
+    return check( GpgME::OpenPGP, reason );
   if ( qstricmp( name, SMIME ) == 0 )
-    return check( GpgME::Context::CMS, reason );
+    return check( GpgME::CMS, reason );
   if ( reason )
     *reason = i18n( "Unsupported protocol \"%1\"", name );
   return false;

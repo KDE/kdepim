@@ -175,10 +175,10 @@ bool Kleo::KConfigBasedKeyFilter::matches( const GpgME::Key & key ) const {
   MATCH( mHasSecret, isSecret );
 #undef MATCH
   if ( mIsOpenPGP != DoesNotMatter &&
-       bool( key.protocol() == GpgME::Context::OpenPGP ) != bool( mIsOpenPGP == Set ) )
+       bool( key.protocol() == GpgME::OpenPGP ) != bool( mIsOpenPGP == Set ) )
     return false;
   if ( mWasValidated != DoesNotMatter &&
-       bool( key.keyListMode() & GpgME::Context::Validate ) != bool( mWasValidated == Set ) )
+       bool( key.keyListMode() & GpgME::Validate ) != bool( mWasValidated == Set ) )
     return false;
   switch ( mOwnerTrust ) {
   default:

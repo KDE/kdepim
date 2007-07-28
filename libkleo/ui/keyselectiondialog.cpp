@@ -130,7 +130,7 @@ static bool checkKeyUsage( const GpgME::Key & key, unsigned int keyUsage ) {
   }
 
   if ( keyUsage & Kleo::KeySelectionDialog::TrustedKeys &&
-       key.protocol() == GpgME::Context::OpenPGP &&
+       key.protocol() == GpgME::OpenPGP &&
        // only check this for secret keys for now.
        // Seems validity isn't checked for secret keylistings...
        !key.isSecret() ) {
@@ -222,7 +222,7 @@ namespace {
     case 1:
       {
 	const char * uid = key.userID(0).id();
-	if ( key.protocol() == GpgME::Context::OpenPGP )
+	if ( key.protocol() == GpgME::OpenPGP )
 	  return uid && *uid ? QString::fromUtf8( uid ) : QString() ;
 	else // CMS
 	  return Kleo::DN( uid ).prettyDN();
@@ -239,7 +239,7 @@ namespace {
     const GpgME::Subkey subkey = key.subkey(0);
     const QString expiry = subkey.neverExpires() ? i18n("never") : time_t2string( subkey.expirationTime() ) ;
     const QString creation = time_t2string( subkey.creationTime() );
-    if ( key.protocol() == GpgME::Context::OpenPGP )
+    if ( key.protocol() == GpgME::OpenPGP )
       return i18n( "OpenPGP key for %1\n"
 		   "Created: %2\n"
 		   "Expiry: %3\n"
@@ -263,13 +263,13 @@ namespace {
     if ( col != 0 )
       return 0;
     // this key did not undergo a validating keylisting yet:
-    if ( !( key.keyListMode() & GpgME::Context::Validate ) )
+    if ( !( key.keyListMode() & GpgME::Validate ) )
       return &mKeyUnknownPix;
 
     if ( !checkKeyUsage( key, mKeyUsage ) )
       return &mKeyBadPix;
 
-    if ( key.protocol() == GpgME::Context::CMS )
+    if ( key.protocol() == GpgME::CMS )
       return &mKeyGoodPix;
 
     switch ( key.userID(0).validity() ) {
@@ -452,8 +452,9 @@ void Kleo::KeySelectionDialog::disconnectSignals() {
 }
 
 const GpgME::Key & Kleo::KeySelectionDialog::selectedKey() const {
+  static const GpgME::Key null = GpgME::Key::null;
   if ( mKeyListView->isMultiSelection() || !mKeyListView->selectedItem() )
-    return GpgME::Key::null;
+    return null;
   return mKeyListView->selectedItem()->key();
 }
 
@@ -472,7 +473,7 @@ QStringList Kleo::KeySelectionDialog::fingerprints() const {
 QStringList Kleo::KeySelectionDialog::pgpKeyFingerprints() const {
   QStringList result;
   for ( std::vector<GpgME::Key>::const_iterator it = mSelectedKeys.begin() ; it != mSelectedKeys.end() ; ++it )
-    if ( it->protocol() == GpgME::Context::OpenPGP )
+    if ( it->protocol() == GpgME::OpenPGP )
       if ( const char * fpr = it->primaryFingerprint() )
         result.push_back( fpr );
   return result;
@@ -481,7 +482,7 @@ QStringList Kleo::KeySelectionDialog::pgpKeyFingerprints() const {
 QStringList Kleo::KeySelectionDialog::smimeFingerprints() const {
   QStringList result;
   for ( std::vector<GpgME::Key>::const_iterator it = mSelectedKeys.begin() ; it != mSelectedKeys.end() ; ++it )
-    if ( it->protocol() == GpgME::Context::CMS )
+    if ( it->protocol() == GpgME::CMS )
       if ( const char * fpr = it->primaryFingerprint() )
         result.push_back( fpr );
   return result;
@@ -626,7 +627,7 @@ void Kleo::KeySelectionDialog::slotSelectionChanged() {
 namespace {
   struct AlreadyChecked {
     bool operator()( const GpgME::Key & key ) const {
-      return key.keyListMode() & GpgME::Context::Validate ;
+      return key.keyListMode() & GpgME::Validate ;
     }
   };
 }
@@ -674,7 +675,7 @@ void Kleo::KeySelectionDialog::startValidatingKeyListing() {
 
   std::vector<GpgME::Key> smime, openpgp;
   for ( std::vector<GpgME::Key>::const_iterator it = mKeysToCheck.begin() ; it != mKeysToCheck.end() ; ++it )
-    if ( it->protocol() == GpgME::Context::OpenPGP )
+    if ( it->protocol() == GpgME::OpenPGP )
       openpgp.push_back( *it );
     else
       smime.push_back( *it );

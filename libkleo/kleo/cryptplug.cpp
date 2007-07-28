@@ -103,7 +103,7 @@
 
 SMIMECryptPlug::SMIMECryptPlug() : CryptPlug() {
   GPGMEPLUG_PROTOCOL = GPGME_PROTOCOL_CMS;
-  mProtocol = GpgME::Context::CMS;
+  mProtocol = GpgME::CMS;
 
   /* definitions for signing */
   // 1. opaque signatures (only used for S/MIME)
@@ -165,7 +165,7 @@ SMIMECryptPlug::SMIMECryptPlug() : CryptPlug() {
 
 OpenPGPCryptPlug::OpenPGPCryptPlug() : CryptPlug() {
   GPGMEPLUG_PROTOCOL = GPGME_PROTOCOL_OpenPGP;
-  mProtocol = GpgME::Context::OpenPGP;
+  mProtocol = GpgME::OpenPGP;
 
   /* definitions for signing */
   // 1. opaque signatures (only used for S/MIME)

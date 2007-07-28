@@ -148,8 +148,9 @@ const std::vector<GpgME::Key> & Kleo::KeyRequester::keys() const {
 }
 
 const GpgME::Key & Kleo::KeyRequester::key() const {
+  static const GpgME::Key null = GpgME::Key::null;
   if ( mKeys.empty() )
-    return GpgME::Key::null;
+    return null;
   else
     return mKeys.front();
 }
@@ -210,7 +211,7 @@ void Kleo::KeyRequester::updateKeys() {
     labelTexts.push_back( fpr.right(8) );
     toolTipText += fpr.right(8) + ": ";
     if ( const char * uid = it->userID(0).id() )
-      if ( it->protocol() == GpgME::Context::OpenPGP )
+      if ( it->protocol() == GpgME::OpenPGP )
         toolTipText += QString::fromUtf8( uid );
       else
         toolTipText += Kleo::DN( uid ).prettyDN();

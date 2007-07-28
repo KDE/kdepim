@@ -57,12 +57,12 @@ namespace Kleo {
     /*! \reimp from SignJob */
     GpgME::Error start( const std::vector<GpgME::Key> & signers,
 			const QByteArray & plainText,
-			GpgME::Context::SignatureMode mode );
+			GpgME::SignatureMode mode );
 
     /*! \reimp from SignJob */
     GpgME::SigningResult exec( const std::vector<GpgME::Key> & signers,
 			       const QByteArray & plainText,
-			       GpgME::Context::SignatureMode mode,
+			       GpgME::SignatureMode mode,
 			       QByteArray & signature );
 
     /*! \reimp from Job */

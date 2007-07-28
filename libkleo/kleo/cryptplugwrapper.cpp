@@ -669,14 +669,14 @@ Kleo::KeyListJob * CryptPlugWrapper::keyListJob( bool remote, bool includeSigs, 
 
   unsigned int mode = context->keyListMode();
   if ( remote ) {
-    mode |= GpgME::Context::Extern;
-    mode &= ~GpgME::Context::Local;
+    mode |= GpgME::Extern;
+    mode &= ~GpgME::Local;
   } else {
-    mode |= GpgME::Context::Local;
-    mode &= ~GpgME::Context::Extern;
+    mode |= GpgME::Local;
+    mode &= ~GpgME::Extern;
   }
-  if ( includeSigs ) mode |= GpgME::Context::Signatures;
-  if ( validate ) mode |= GpgME::Context::Validate;
+  if ( includeSigs ) mode |= GpgME::Signatures;
+  if ( validate ) mode |= GpgME::Validate;
   context->setKeyListMode( mode );
   return new Kleo::QGpgMEKeyListJob( context );
 }
@@ -774,7 +774,7 @@ Kleo::ExportJob * CryptPlugWrapper::publicKeyExportJob( bool armor ) const {
 }
 
 Kleo::ExportJob * CryptPlugWrapper::secretKeyExportJob( bool armor, const QString& charset ) const {
-  if ( !_cp || _cp->mProtocol != GpgME::Context::CMS ) // fixme: add support for gpg, too
+  if ( !_cp || _cp->mProtocol != GpgME::CMS ) // fixme: add support for gpg, too
     return 0;
 
   // this operation is not supported by gpgme, so we have to call gpgsm ourselves:
@@ -782,7 +782,7 @@ Kleo::ExportJob * CryptPlugWrapper::secretKeyExportJob( bool armor, const QStrin
 }
 
 Kleo::RefreshKeysJob * CryptPlugWrapper::refreshKeysJob() const {
-  if ( !_cp || _cp->mProtocol != GpgME::Context::CMS ) // fixme: add support for gpg, too
+  if ( !_cp || _cp->mProtocol != GpgME::CMS ) // fixme: add support for gpg, too
     return 0;
 
   // this operation is not supported by gpgme, so we have to call gpgsm ourselves:
@@ -799,7 +799,7 @@ Kleo::DownloadJob * CryptPlugWrapper::downloadJob( bool armor ) const {
 
   context->setArmor( armor );
   // this is the hackish interface for downloading from keyserers currently:
-  context->setKeyListMode( GpgME::Context::Extern );
+  context->setKeyListMode( GpgME::Extern );
   return new Kleo::QGpgMEDownloadJob( context );             
 }
 

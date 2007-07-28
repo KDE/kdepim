@@ -355,7 +355,7 @@ void VCardXXPort::addKey( KABC::Addressee &addr, KABC::Key::Type type )
   if ( fingerprint.isEmpty() )
     return;
 
-  GpgME::Context * context = GpgME::Context::createForProtocol( GpgME::Context::OpenPGP );
+  GpgME::Context * context = GpgME::Context::createForProtocol( GpgME::OpenPGP );
   if ( !context ) {
     kError() << "No context available" << endl;
     return;

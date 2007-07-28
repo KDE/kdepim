@@ -33,10 +33,10 @@
 #ifndef __KLEO_SIGNJOB_H__
 #define __KLEO_SIGNJOB_H__
 
-#include <gpgme++/context.h> // for Context::SignatureMode (or should
-			     // we roll our own enum here?)
 #include "job.h"
 #include <QtCore/QByteArray>
+
+#include <gpgme++/global.h>
 
 #include <vector>
 
@@ -75,10 +75,10 @@ namespace Kleo {
     */
     virtual GpgME::Error start( const std::vector<GpgME::Key> & signers,
 				const QByteArray & plainText,
-				GpgME::Context::SignatureMode mode ) = 0;
+				GpgME::SignatureMode mode ) = 0;
     virtual GpgME::SigningResult exec( const std::vector<GpgME::Key> & signers,
 				       const QByteArray & plainText,
-				       GpgME::Context::SignatureMode mode,
+				       GpgME::SignatureMode mode,
 				       QByteArray & signature ) = 0;
 
   Q_SIGNALS:

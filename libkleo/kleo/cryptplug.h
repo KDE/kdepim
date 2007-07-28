@@ -24,7 +24,7 @@
 
 #include "kleo/kleo_export.h"
 
-#include <gpgme++/context.h>
+#include <gpgme++/global.h>
 #include <gpgme.h> // need it for gpgme_protocol_t :(
 
 #include <stdlib.h>
@@ -305,7 +305,7 @@ protected:
 
   // these must be set by subclasses:
   gpgme_protocol_t GPGMEPLUG_PROTOCOL;
-  GpgME::Context::Protocol mProtocol;
+  GpgME::Protocol mProtocol;
 
   /* definitions for signing */
   // 1. opaque signatures (only used for S/MIME)
