@@ -1,6 +1,6 @@
 project(kleopatra)
 
-include_directories( ${CMAKE_SOURCE_DIR}/libkleo )
+include_directories( ${CMAKE_SOURCE_DIR}/libkleo ${Boost_INCLUDE_DIR} )
 add_definitions (-DQT3_SUPPORT -DQT3_SUPPORT_WARNINGS)
 
 set(libconf_SRCS  ${CMAKE_SOURCE_DIR}/kleopatra/conf/configuredialog.cpp )
@@ -10,6 +10,7 @@ add_subdirectory( kwatchgnupg )
 ########### next target ###############
 
 set(kleopatra_bin_SRCS ${libconf_SRCS}
+   models/keylistmodel.cpp
    customactions.cpp 
    aboutdata.cpp 
    main.cpp 
