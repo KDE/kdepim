@@ -57,9 +57,6 @@
     <method name="killDaemonOnExit">
         <arg type="b" direction="out"/>
     </method>
-    <method name="addInstallFiles">
-        <arg type="as" direction="in"/>
-    </method>
     <!-- <method name="lastSyncDate">
         <arg type="(iii)" direction="out"/>
       <annotation name="com.trolltech.QtDBus.QtTypeName.Out0" value="QDateTime"/>

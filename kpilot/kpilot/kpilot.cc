@@ -682,6 +682,12 @@ void KPilotInstaller::componentChanged(KPageWidgetItem *current,
 	Q_UNUSED(before);
 }
 
+void KPilotInstaller::raise()
+{
+    FUNCTIONSETUP;
+    QWidget::raise();
+}
+
 void KPilotInstaller::configure()
 {
 	FUNCTIONSETUP;

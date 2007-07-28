@@ -6,6 +6,9 @@
 	<annotation name="org.freedesktop.DBus.Method.NoReply" value="true"/>
 	<arg type="i" direction="in"/>
     </method>
+    <method name="raise">
+        <annotation name="org.freedesktop.DBus.Method.NoReply" value="true"/>
+    </method>
     <method name="configure">
         <annotation name="org.freedesktop.DBus.Method.NoReply" value="true"/>
     </method>

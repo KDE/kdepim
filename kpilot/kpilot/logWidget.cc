@@ -67,7 +67,7 @@ LogWidget::LogWidget(QWidget * parent) :
 	FUNCTIONSETUP;
 
 	new LoggerAdaptorGUI(this);
-	QDBusConnection::sessionBus().registerObject("/Logger", this);
+	QDBusConnection::sessionBus().registerObject("/LoggerGUI", this);
 
 	QGridLayout *grid = new QGridLayout(this);
 	grid->setSpacing(SPACING);

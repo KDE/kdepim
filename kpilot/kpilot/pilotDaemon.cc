@@ -1,8 +1,9 @@
 /* KPilot
 **
 ** Copyright (C) 1998-2001 by Dan Pilone
-** Copyright (C) 2001-2004 by Adriaan de Groot
+** Copyright (C) 2001-2007 by Adriaan de Groot
 ** Copyright (C) 2003-2004 Reinhold Kainhofer <reinhold@kainhofer.com>
+** Copyright (C) 2006-2007 Jason 'vanRijn' Kasper
 **
 ** This is the KPilot Daemon, which does the actual communication with
 ** the Pilot and with the conduits.
@@ -33,10 +34,9 @@
 
 #include <stdlib.h>
 
-#include <qtimer.h>
+#include <QTimer>
 #include <qtooltip.h>
 #include <qpixmap.h>
-//Added by qt3to4:
 #include <Q3Dict>
 #include <QDragEnterEvent>
 #include <QDropEvent>
@@ -45,7 +45,6 @@
 #include <QMenu>
 
 #include <kuniqueapplication.h>
-#include <k3aboutapplication.h>
 #include <kcmdlineargs.h>
 #include <kurl.h>
 #include <kmenu.h>
@@ -55,7 +54,6 @@
 #include <kservice.h>
 #include <khelpmenu.h>
 #include <ktoolinvocation.h>
-#include <K3AboutApplication>
 #include <kaboutdata.h>
 
 #include "pilotRecord.h"
@@ -100,31 +98,36 @@ void PilotDaemonTray::setupWidget()
 {
 	FUNCTIONSETUP;
 	KIconLoader::global()->addAppDir( CSL1("kpilot") );
+
 #define L(idx,name) \
-	icons[idx]=loadIcon( CSL1(name) ).pixmap(); \
+	icons[idx]=loadIcon( CSL1(name) ); \
 	if (icons[idx].isNull()) { WARNINGKPILOT << fname << ": No icon " << name << endl; } \
 	else { DEBUGKPILOT << fname << ": Loaded icon " << name << endl; }
 
 	L(Normal,"kpilotDaemon")
 	L(Busy,"kpilot_busysync")
 	L(NotListening,"kpilot_nosync")
+#undef L
+
 	slotShowNotListening();
 	QTimer::singleShot(2000,this,SLOT(slotShowNormal()));
 
 	QMenu *menu = contextMenu();
 
-	menuKPilotItem = menu->insertItem(i18n("Start &KPilot"), daemon,
+	menuKPilotItem = menu->insertItem(i18n("Start &KPilot"), this,
 		SLOT(slotRunKPilot()));
 	menuConfigureConduitsItem = menu->insertItem(i18n("&Configure KPilot..."),
-		daemon, SLOT(slotRunConfig()));
+		this, SLOT(slotRunConfig()));
 	menu->addSeparator();
 
 	fSyncTypeMenu = new QMenu(menu);
 	fSyncTypeMenu->setObjectName("sync_type_menu");
 	QString once = i18nc("Appended to names of sync types to indicate the sync will happen just one time"," (once)");
+
 #define MI(a) fSyncTypeMenu->insertItem( \
 		SyncAction::SyncMode::name(SyncAction::SyncMode::a) + once, \
 		(int)(SyncAction::SyncMode::a));
+
 	fSyncTypeMenu->insertItem(i18n("Default (%1)",SyncAction::SyncMode::name((SyncAction::SyncMode::Mode)KPilotSettings::syncType())),
 		0);
 	fSyncTypeMenu->addSeparator();
@@ -140,6 +143,7 @@ void PilotDaemonTray::setupWidget()
 	fSyncTypeMenu->setCheckable(true);
 	fSyncTypeMenu->setItemChecked(0,true);
 #undef MI
+
 	connect(fSyncTypeMenu,SIGNAL(activated(int)),daemon,SLOT(requestSync(int)));
 	menu->insertItem(i18n("Next &Sync"),fSyncTypeMenu);
 
@@ -156,7 +160,7 @@ void PilotDaemonTray::slotShowAbout()
 
 	if (!kap)
 	{
-		kap = new K3AboutApplication(0, false);
+		kap = new KAboutApplicationDialog(aboutData, false);
 	}
 
 	kap->show();
@@ -232,6 +236,57 @@ void PilotDaemonTray::endHotSync()
 	}
 }
 
+void PilotDaemonTray::slotRunKPilot()
+{
+	FUNCTIONSETUP;
+
+	QString kpilotError;
+	QString kpilotPID;
+
+	if (KToolInvocation::startServiceByDesktopName(CSL1("kpilot"),
+			QStringList(), &kpilotError, &kpilotPID
+		))
+	{
+		WARNINGKPILOT << "Couldn't start KPilot! " << kpilotError << endl;
+	}
+}
+
+void PilotDaemonTray::slotRunConfig()
+{
+	FUNCTIONSETUP;
+
+	// This function tries to send the raise() call to kpilot.
+	// If it succeeds, we can assume kpilot is running and then try
+	// to send the configure() call.
+	// If it fails (probably because kpilot isn't running) it tries
+	// to start kpilot (using a command line switch to
+	// only bring up the configure dialog).
+	//
+	// Implementing the function this way catches all cases.
+	// ie 1 KPilot running with configure dialog open (raise())
+	//    2 KPilot running with dialog NOT open (configureConduits())
+	//    3 KPilot NOT running (start it)
+
+	// This DCOP call to kpilot's raise function solves the final case
+	// ie when kpilot already has the dialog open
+
+	//TODO verify
+	if ( QDBusConnection::sessionBus().interface()->isServiceRegistered( "org.kde.kpilot.kpilot" ) )
+	{
+		OrgKdeKpilotKpilotInterface * kpilot = new OrgKdeKpilotKpilotInterface("org.kde.kpilot.kpilot", "/KPilot",QDBusConnection::sessionBus());
+		kpilot->raise();
+		kpilot->configure();
+	}
+	else
+	{
+		// KPilot not running
+		QProcess *p = new QProcess;
+		QStringList arguments;
+		arguments<<"-s";
+		p->start("kpilot", arguments);
+	}
+}
+
 
 PilotDaemon::PilotDaemon() :
 	fDaemonStatus(INIT),
@@ -242,19 +297,17 @@ PilotDaemon::PilotDaemon() :
 	fTray(0L),
 	fInstaller(0L),
 	fLogFile(0L),
-	/*fLogStub(new LoggerDCOP_stub("kpilot", "LogIface")),
-	fLogFileStub(new LoggerDCOP_stub("kpilotDaemon", "LogIface")),
-	fKPilotStub(new KPilotDCOP_stub("kpilot", "KPilotIface")),*/
 	fTempDevice(QString::null)
 {
+	FUNCTIONSETUP;
+
         new DaemonAdaptor(this);
         QDBusConnection::sessionBus().registerObject("/Daemon", this);
 
 	//TODO verify it
-        fLogInterface = new OrgKdeKpilotLoggerInterface("org.kde.kpilot.kpilot", "/KPilot", QDBusConnection::sessionBus());
-	fLogFileInterface = new OrgKdeKpilotLoggerInterface("org.kde.kpilot.daemon", "/Daemon", QDBusConnection::sessionBus());
+        fLogInterface = new OrgKdeKpilotLoggerInterface("org.kde.kpilot.logger", "/LoggerGUI", QDBusConnection::sessionBus());
+	fLogFileInterface = new OrgKdeKpilotLoggerInterface("org.kde.kpilot.daemon", "/LoggerFile", QDBusConnection::sessionBus());
 	fKPilotInterface = new OrgKdeKpilotKpilotInterface("org.kde.kpilot.kpilot", "/KPilot",QDBusConnection::sessionBus());
-	FUNCTIONSETUP;
 
 	setupPilotLink();
 	reloadSettings();
@@ -267,16 +320,12 @@ PilotDaemon::PilotDaemon() :
 
 	fInstaller = new FileInstaller;
 	fLogFile = new LogFile;
-	connect(fInstaller, SIGNAL(filesChanged()),
-		this, SLOT(slotFilesChanged()));
 
 	fNextSyncType.setMode( KPilotSettings::syncType() );
 
-#ifdef DEBUG
 	DEBUGKPILOT << fname
 		<< ": The daemon is ready with status "
 		<< statusString() << " (" << (int) fDaemonStatus << ")" << endl;
-#endif
 }
 
 PilotDaemon::~PilotDaemon()
@@ -288,15 +337,6 @@ PilotDaemon::~PilotDaemon()
 	KPILOT_DELETE(fInstaller);
 
 	(void) PilotDatabase::instanceCount();
-}
-
-void PilotDaemon::addInstallFiles(const QStringList &l)
-{
-	FUNCTIONSETUP;
-#ifdef __GNUC__
-#warning "kde4 port it"
-#endif
-	//fInstaller->addFiles( l, fTray );
 }
 
 int PilotDaemon::getPilotSpeed()
@@ -333,11 +373,9 @@ int PilotDaemon::getPilotSpeed()
 		speedname = "PILOTRATE=9600";
 	}
 
-#ifdef DEBUG
 	DEBUGKPILOT << fname
 		<< ": Speed set to "
 		<< speedname << " (" << speed << ")" << endl;
-#endif
 
 	putenv((char *) speedname);
 
@@ -456,12 +494,8 @@ void PilotDaemon::reloadSettings()
 		if (!fTray)
 		{
 			fTray = new PilotDaemonTray(this);
-			fTray->show();
 		}
-		else
-		{
-			fTray->show();
-		}
+		fTray->show();
 	}
 	else
 	{
@@ -1177,71 +1211,7 @@ launch:
 }
 
 
-void PilotDaemon::slotFilesChanged()
-{
-	FUNCTIONSETUP;
-}
 
-void PilotDaemon::slotRunKPilot()
-{
-	FUNCTIONSETUP;
-
-	QString kpilotError;
-	QString kpilotPID;
-
-	if (KToolInvocation::startServiceByDesktopName(CSL1("kpilot"),
-			QStringList(), &kpilotError, &kpilotPID
-		))
-	{
-		WARNINGKPILOT << "Couldn't start KPilot! " << kpilotError << endl;
-	}
-	else
-	{
-#ifdef DEBUG
-		//DEBUGKPILOT << fname
-		//	<< ": Started KPilot with DCOP name "
-		//	<< kpilotDCOP << " (pid " << kpilotPID << ")" << endl;
-#endif
-	}
-}
-
-void PilotDaemon::slotRunConfig()
-{
-	FUNCTIONSETUP;
-
-	// This function tries to send the raise() DCOP call to kpilot.
-	// If it succeeds, we can assume kpilot is running and then try
-	// to send the configure() DCOP call.
-	// If it fails (probably because kpilot isn't running) it tries
-	// to call kpilot via K3Process (using a command line switch to
-	// only bring up the configure dialog).
-	//
-	// Implementing the function this way catches all cases.
-	// ie 1 KPilot running with configure dialog open (raise())
-	//    2 KPilot running with dialog NOT open (configureConduits())
-	//    3 KPilot NOT running (K3Process)
-
-	// This DCOP call to kpilot's raise function solves the final case
-	// ie when kpilot already has the dialog open
-
-	//TODO verify
-	if ( QDBusConnection::sessionBus().interface()->isServiceRegistered( "org.kde.kpilot" ) )
-	{
-#ifdef __GNUC__
-#warning "kde4 port it"
-#endif
-		//client->send("kpilot", "kpilot-mainwindow#1", "raise()",QString::null);
-		//client->send("kpilot", "KPilotIface", "configure()", QString::null);
-	}
-	else
-	{
-		// KPilot not running
-		QProcess *p = new QProcess;
-		QStringList arguments;
-		arguments<<"-s";
-		p->start("kpilot", arguments);
-	}
-}
 
 void PilotDaemon::updateTrayStatus(const QString &s)
 {
@@ -1285,7 +1255,7 @@ int main(int argc, char **argv)
 		KPILOT_VERSION,
 		ki18n("KPilot - HotSync software for KDE\n\n"),
 		KAboutData::License_GPL,
-		ki18n("(c) 1998-2000,2001, Dan Pilone (c) 2000-2004, Adriaan de Groot"),
+		ki18n("(c) 1998-2000,2001, Dan Pilone\n(c) 2000-2007, Adriaan de Groot\n(c) 2005-2007, Jason 'vanRijn' Kasper"),
 		ki18n(0L),
 		"http://www.kpilot.org/"
 		);
@@ -1298,6 +1268,9 @@ int main(int argc, char **argv)
 	about.addAuthor(ki18n("Reinhold Kainhofer"),
 		ki18n("Developer"),
 		"reinhold@kainhofer.com", "http://reinhold.kainhofer.com/Linux/");
+	about.addAuthor(ki18n("Jason 'vanRijn' Kasper"),
+		ki18n("Developer, Maintainer"),
+		"vR@movingparts.net", "http://movingparts.net/");
 	aboutData = &about;
 
 
@@ -1352,22 +1325,22 @@ int main(int argc, char **argv)
 	}
 
 
-	PilotDaemon *gPilotDaemon = new PilotDaemon();
+	PilotDaemon *pilotDaemon = new PilotDaemon();
 
 	if (p->isSet("device"))
-		gPilotDaemon->setTempDevice(p->getOption("device"));
+		pilotDaemon->setTempDevice(p->getOption("device"));
 
-	if (gPilotDaemon->status() == PilotDaemon::ERROR)
+	if (pilotDaemon->status() == PilotDaemon::ERROR)
 	{
-		delete gPilotDaemon;
+		delete pilotDaemon;
 
-		gPilotDaemon = 0;
+		pilotDaemon = 0;
 		WARNINGKPILOT << "Failed to start up daemon "
 			"due to errors constructing it." << endl;
 		return 2;
 	}
 
-	gPilotDaemon->showTray();
+	pilotDaemon->showTray();
 
 	return a.exec();
 }

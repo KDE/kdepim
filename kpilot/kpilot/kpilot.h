@@ -69,6 +69,9 @@ public:
 	*/
 	virtual void daemonStatus(int);
 	virtual int kpilotStatus() const; ///< Returns KPilotStatus values
+	virtual void raise();
+	virtual void configure();
+
 
 
 public slots:
@@ -84,12 +87,6 @@ public slots:
 	void slotPCtoHHRequested();
 
 
-
-	/**
-	* This is the D-Bus interface from the daemon to KPilot
-	* to configure KPilot.
-	*/
-	virtual void configure();
 
 protected slots:
 	/**

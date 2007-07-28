@@ -33,13 +33,14 @@
 
 #include "kpilotlink.h"
 #include "syncAction.h"
-//Added by qt3to4:
 #include <QCloseEvent>
 #include <QDropEvent>
 #include <QPixmap>
 #include <QMouseEvent>
 #include <QDragEnterEvent>
 #include <KSystemTrayIcon>
+#include <kaboutapplicationdialog.h>
+
 class QMenu;
 class QPixmap;
 class QTimer;
@@ -84,12 +85,23 @@ protected slots:
 	void slotShowNotListening();
 	void slotBusyTimer();
 
+	/**
+	* Start up KPilot.
+	*/
+	void slotRunKPilot();
+	/**
+	* Run conduit configuration using "kpilot -c"
+	*/
+	void slotRunConfig();
+
+
+
 protected:
 	void startHotSync();
 	void endHotSync();
 
 private:
-	QPixmap icons[((int) NotListening) + 1];
+	QIcon icons[((int) NotListening) + 1];
 	IconShape fCurrentIcon;
 	PilotDaemon *daemon;
 
@@ -110,7 +122,7 @@ private:
 	/**
 	* Window for the "About KPilot" information.
 	*/
-	K3AboutApplication *kap;
+	KAboutApplicationDialog *kap;
 
 	/**
 	* Timer for blinking.
@@ -152,7 +164,6 @@ public:
 	* setting in the config file)
 	*/
 	void showTray();
-	virtual void addInstallFiles(const QStringList &);
 
 	// The next few functions are the D-Bus interface.
 	// Some are also slots.
@@ -234,23 +245,6 @@ private:
 	FileInstaller *fInstaller;
 
 protected slots:
-	/**
-	* Called after a file has been installed to notify any observers, like
-	* KPilot, that files have been installed. [Here that means: copied
-	* to the pending_install directory and thus *waiting* for
-	* installation on the Palm]
-	*/
-	void slotFilesChanged();
-
-	/**
-	* Start up KPilot.
-	*/
-	void slotRunKPilot();
-
-	/**
-	* Run conduit configuration using "kpilot -c"
-	*/
-	void slotRunConfig();
 
 	/**
 	* Provide access to KPilot's DCOP interface through a stub.
