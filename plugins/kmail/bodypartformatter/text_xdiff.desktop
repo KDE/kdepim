@@ -34,6 +34,7 @@ Name[tg]=Миқдори зиёди бинарии барномот
 Name[tr]=Uygulama Sekizli Akışı
 Name[x-test]=xxApplication Octetstreamxx
 Comment=A bodypart formatter plugin for text/x-patch
+Comment[bg]=Редактор с поддръжка на форматиране за текст/x-diff
 Comment[el]=Ένα πρόσθετο μορφοποιητή για text/x-patch
 Comment[es]=Una extensión de formato para el cuerpo de text/x-patch
 Comment[fa]=یک وصلۀ قالب‌دهندۀ جزء بدنه برای text/x-patch

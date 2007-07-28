@@ -48,6 +48,7 @@ Name[x-test]=xxKAB LDIF XXPort Pluginxx
 Name[zh_TW]=KAB LDIF XXPort 外掛程式
 Comment=Plugin to import and export contacts in Netscape and Mozilla LDIF format
 Comment[af]=Inprop module wat kontakte in Netscape/Mozilla LDIF formaat invoer en uitvoer
+Comment[bg]=Приставка за импортиране/експортиране на контактите във формат на Netscape и Mozilla (LDIF)
 Comment[ca]=Endollable per a importar i exportar contactes en el format LDIF de Mozilla i Netscape
 Comment[cs]=Modul pro import a export kontaktů ve formátu Netscape a Mozilla LDIF
 Comment[cy]=Ategyn i fewnforio ac allforio cysylltau yn fformat LDIF Netscape a Mozilla

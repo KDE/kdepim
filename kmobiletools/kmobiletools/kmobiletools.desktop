@@ -19,6 +19,7 @@ Icon=kmobiletools
 Type=Application
 DocPath=kmobiletools/index.html
 Comment=KDE Mobile Phones Suite
+Comment[bg]=KAB Mobile Phone XXPort Plugin
 Comment[el]=Σουίτα διαχείρισης κινητών τηλεφώνων του KDE
 Comment[es]=Suite para teléfonos móviles de KDE
 Comment[fa]=دنباله تلفنهای همراه KDE

@@ -8,6 +8,7 @@ Name[pt_BR]=Motor falso
 Name[sv]=Falskt gränssnitt
 Name[zh_TW]=Fake 引擎
 Comment=A KMobileTools fake engine
+Comment[bg]=KAB Mobile Phone XXPort Plugin
 Comment[fa]=موتور جعلی KMobileTools
 Comment[ga]=Bréaginneall KMmobileTools
 Comment[pt]=Um motor falso do KMobileTools

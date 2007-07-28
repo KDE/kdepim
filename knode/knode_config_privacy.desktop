@@ -14,6 +14,7 @@ X-KDE-CfgDlgHierarchy=KNode
 
 Name=Signing/Verifying
 Name[af]=Teken/Bevestig
+Name[bg]=Подпис/проверка
 Name[ca]=Signat/Verificació
 Name[cs]=Podepisování/ověřování
 Name[da]=Underskriver/Verificerer
@@ -58,6 +59,7 @@ Name[x-test]=xxSigning/Verifyingxx
 Name[zh_TW]=簽署/檢查
 Comment=Protect your privacy by signing and verifying postings
 Comment[af]=Beskerm you privaatheid deur pos stukke te onderteken en te bevestig
+Comment[bg]=Защита на личната кореспонденция чрез подписване и проверка на съобщенията
 Comment[ca]=Protegiu la vostra privadesa signant i verificant els missatges
 Comment[cs]=Chraňte své soukromí pomocí podepisování a ověřování podpisů
 Comment[da]=Beskyt dine private oplysninger ved at underskrive og verificere indsendelser

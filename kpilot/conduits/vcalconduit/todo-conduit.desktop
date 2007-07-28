@@ -3,6 +3,7 @@ Encoding=UTF-8
 Type=Service
 Comment=This conduit syncs the ToDo list from your handheld to KOrganizer.
 Comment[af]=Hierdie pad sinkroniseer die Te-doen lys vanaf jou draagbare toestel na KOrganizer.
+Comment[bg]=Синхронизация на списъка със задачи на мобилно устройство с организатора в KDE
 Comment[ca]=Aquest conducte sincronitza la llista de pendents des de la vostra agenda electrònica a KOrganizer.
 Comment[cs]=Toto propojení synchronizuje seznam úkolů s KOrganizérem
 Comment[cy]=Mae'r cwndid yma yn cydamseru'r rhestr I-Wneud o'ch llawiadur i KTrefnydd.

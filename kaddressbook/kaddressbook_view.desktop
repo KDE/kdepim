@@ -4,6 +4,7 @@ Type=ServiceType
 X-KDE-ServiceType=KAddressBook/View
 Comment=KAddressBook View Plugin
 Comment[af]=KAddressBook besigtig inprop module
+Comment[bg]=Приставка за преглед на адресника
 Comment[br]=Lugent gwell KAddressBook
 Comment[ca]=Endollable visor de la llibreta d'adreces
 Comment[cs]=Modul knihu adres pro zobrazování

@@ -14,6 +14,7 @@ X-KDE-ParentComponents=kleopatra
 X-KDE-CfgDlgHierarchy=Kleopatra
 
 Name=DN-Attribute Order
+Name[bg]=Подредба
 Name[ca]=Ordre d'atributs DN
 Name[cs]=Pořadí DN atributů
 Name[da]=DN-Attributrækkefølge
@@ -59,6 +60,7 @@ Name[x-test]=xxDN-Attribute Orderxx
 Name[zh_TW]=DN-屬性順序
 Comment=Configure the order in which DN attributes are shown
 Comment[af]=Stel die volgorde op waarin DN eienskappe vertoon word
+Comment[bg]=Настройки на подредбата на атрибутите на индекса (DN)
 Comment[ca]=Configura l'ordre en què es mostren els atributs DN
 Comment[cs]=Nastavení pořadí zobrazení DN atributů
 Comment[da]=Indstil rækkefølgen i hvilken DN-attributter vises
@@ -105,6 +107,7 @@ Comment[zh_TW]=設定 DN 屬性顯示順序
 Keywords=DN,order,RDN,attribute
 Keywords[af]=DN,order,RDN,attribute,volgorde,eienskap
 Keywords[be]=парадак,атрыбут,DN,order,RDN,attribute
+Keywords[bg]=Keywords=индекс, ред, подредба, атрибут DN, order, RDN, attribute
 Keywords[ca]=DN,ordre,RDN,atribut
 Keywords[cs]=DN,pořadí,RDN,atribut
 Keywords[da]=DN,rækkefølge,RDN,attribut

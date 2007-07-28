@@ -14,6 +14,7 @@ X-KDE-ParentComponents=kleopatra
 X-KDE-CfgDlgHierarchy=Kleopatra
 
 Name=Directory Services
+Name[bg]=Директорийни услуги
 Name[ca]=Serveis de directori
 Name[cs]=Adresářové služby
 Name[da]=Opslagstjeneste
@@ -61,6 +62,7 @@ Name[x-test]=xxDirectory Servicesxx
 Name[zh_TW]=目錄服務
 Comment=Configuration of LDAP directory services
 Comment[af]=Opstelling van LDAP gids diens
+Comment[bg]=Настройки на директорийните услуги LDAP
 Comment[ca]=Configuractió dels serveis de directori LDAP
 Comment[cs]=Nastavení adresářových služeb LDAP
 Comment[da]=Indstilling af LDAP opslagstjeneste
@@ -107,6 +109,7 @@ Comment[zh_TW]=設定 LDAP 目錄服務
 Keywords=ldap,directory,services
 Keywords[af]=ldap,directory,services,gids
 Keywords[be]=каталог,сэрвісы,ldap,directory,services
+Keywords[bg]=Keywords=директорийни, услуги, ldap, directory, services
 Keywords[br]=ldap,renkell,servijeroù
 Keywords[ca]=ldap,directori,serveis
 Keywords[cs]=LDAP,adresář,služby

@@ -45,6 +45,7 @@ Name[x-test]=xxKAB MS Exchange Personal Addressbook XXPort Pluginxx
 Name[zh_TW]=KAB MS Exchange Personal Addressbook XXPort 外掛程式
 Comment=Plugin to import MS Exchange Personal Address Books
 Comment[af]=Inprop module wat kontakte in MS Exchange adresboek formaat invoer
+Comment[bg]=Приставка за импортиране на контактите от MS Exchange Personal Address Books
 Comment[ca]=Endollable per a importar des de la llibreta d'adreces personal d'MS Exchange
 Comment[cs]=Modul pro import osobní knihy adres MS Exchange
 Comment[cy]=Ategyn i fewnforio Llyfrau Cyfeiriadau Personol MS Exchange

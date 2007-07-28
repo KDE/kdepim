@@ -58,6 +58,7 @@ Name[uk]=Налаштування KPilot
 Name[zh_TW]=KPilot 設定
 Comment=KPilot Main Configuration
 Comment[af]=KPilot hoof opstelling
+Comment[bg]=Главни настройки на KPilot
 Comment[br]=Kefluniadur kentañ KPilot
 Comment[ca]=Configuració principal de KPilot
 Comment[cs]=Hlavní nastavení KPilotu
@@ -101,6 +102,7 @@ Comment[tr]=KPilot Ana Yapılandırması
 Comment[uk]=Загальні параметри KPilot
 Comment[zh_TW]=KPilot 主設定
 Keywords=kpilot,main
+Keywords[bg]=Keywords=главни, настройки, мобилен, мобилни, устройство, устройства, kpilot, main
 Keywords[ca]=kpilot,principal
 Keywords[cs]=kpilot,hlavní
 Keywords[da]=kpilot,hoved
