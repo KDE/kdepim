@@ -82,11 +82,7 @@ public:
     private:
         EnginesListPrivate *d;
 
-    public slots:
-        void dump();
-//         void emitPhonebookUpdated();
     signals:
-        void phonebookUpdated(); /// Emitted when one of the engines has updated internal phonebook;
         void engineAdded(const KMobileTools::Engine *);
         void engineRemoved(const KMobileTools::Engine *);
 

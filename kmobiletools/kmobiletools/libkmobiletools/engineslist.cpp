@@ -83,27 +83,13 @@ void KMobileTools::EnginesList::queryClose()
 void KMobileTools::EnginesList::append( KMobileTools::Engine* item )
 {
     emit engineAdded( item );
-    connect(item->constEngineData(), SIGNAL(phoneBookChanged()), this, SIGNAL( phonebookUpdated() ));
-
     QList<KMobileTools::Engine*>::append(item);
 }
 
 void KMobileTools::EnginesList::remove( KMobileTools::Engine* item )
 {
     emit engineRemoved( item );
-    disconnect(item->constEngineData(), SIGNAL(phoneBookChanged()), this, SIGNAL(phonebookUpdated() ));
     QList<KMobileTools::Engine*>::removeAll(item);
-}
-/*
-void KMobileTools::EnginesList::emitPhonebookUpdated()
-{
-    kDebug() << "KMobileTools::EnginesList::emitPhonebookUpdated()\n";
-    emit phonebookUpdated();
-}*/
-
-void KMobileTools::EnginesList::dump()
-{
-    kDebug() << "KMobileTools::EnginesList::dump()\n";
 }
 
 const QStringList KMobileTools::EnginesList::namesList(bool friendlyNames)
