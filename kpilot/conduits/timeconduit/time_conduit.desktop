@@ -16,6 +16,7 @@ Comment[eu]=Kanal honek zure agenda elektronikoko ordua PC-aren ordura ezartzen 
 Comment[fa]=این لوله، از طریق ساعت PC زمان دستی شما را تنظیم می‌کند.
 Comment[fi]=Tämä yhdyskäytävä asettaa taskutietokoneen kellonajan PC:n kellosta.
 Comment[fr]=Ce canal règle l'heure de votre périphérique depuis celle du PC.
+Comment[fy]=Comment=Dit conduit set de tiid fan jo handheld oan d ehÃ¢n fan de pc-klok.
 Comment[gl]=Este conducto pon a hora do seu aparello portátil dende o reloxo do seu PC.
 Comment[hu]=Ez a csatoló beállítja a kéziszámítógép óráját a számítógépé alapján
 Comment[is]=Þessi rás stillir klukku lófatölvunnar eftir klukku PC tölvunnar.
@@ -59,6 +60,7 @@ Name[eu]=Ordu sinkronizazioa
 Name[fa]=همگام‌سازی زمان
 Name[fi]=Ajan synkronointi
 Name[fr]=Synchronisation de l'heure
+Name[fy]=Tiidssyngronisaasje
 Name[ga]=Sioncrónú an Ama
 Name[gl]=Sincronización Horaria
 Name[hu]=Időszinkronizálás

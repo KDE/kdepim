@@ -16,6 +16,7 @@ Name[eu]=KAB-en laster-marka in/esportazio plugin-a
 Name[fa]=وصلۀ XXPort چوب الف KAB
 Name[fi]=KAB-kirjanmerkkiliitännäinen
 Name[fr]=Module d'import / export de signets pour KAB
+Name[fy]=KAB BlÃªdwizer XXPort-plugin
 Name[gl]=Extensión XXPort de Marcadores para KAB
 Name[hu]=KAB könyvjelzőkezelő XXPort bővítőmodul
 Name[is]=Íforrit fyrir KAB XXPort bókarmerki
@@ -59,6 +60,7 @@ Comment[eu]=Kontaktuen web-helbideak laster-markak bezala esportatzeko plugin-a
 Comment[fa]=وصله برای صادرات نشانیهای وب تماسها به عنوان چوب الفها
 Comment[fi]=Liitännäinen, joka muuntaa kontaktien sisältämät verkko-osoitteet kirjanmerkeiksi
 Comment[fr]=Module d'export des adresses internet des contacts en signets
+Comment[fy]=Comment=Plugin foar it eksportearjen fan de webadressen fan de kontaktpersoanen as blÃªdwizers
 Comment[gl]=Extensión para exportar os enderezos web dos contactos como marcadores
 Comment[hu]=Bővítőmodul webcímek exportáláshoz, könyvjelzőként
 Comment[is]=Íforrit til að skrá vefföng tengiliða sem bókarmerki

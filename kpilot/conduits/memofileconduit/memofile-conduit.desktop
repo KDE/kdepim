@@ -14,6 +14,7 @@ Name[eu]=Ohar fitxategia
 Name[fa]=پروندۀ Memo
 Name[fi]=Muistiotiedosto
 Name[fr]=Fichier mémo
+Name[fy]=Memotriem
 Name[ga]=Comhad Meamraim
 Name[gl]=Ficheiro Memo
 Name[hu]=Memófájl
@@ -54,6 +55,7 @@ Comment[eu]=Kanal honek zure agendako oharrak direktorio lokal batekin sinkroniz
 Comment[fa]=این لوله، memo‌های دستی خود را با فهرست راهنمای محلی همگام‌سازی می‌کند.
 Comment[fi]=Tämä yhdyskäytävä synkronoi taskutietokoneen muistiot paikalliseen kansioon.
 Comment[fr]=Ce canal synchronise les mémos du Palm avec ceux de KDE.
+Comment[fy]=Comment=Dit conduit syngronisearret de memo's fan jo handheld mei in lokale triemtafel.
 Comment[gl]=Este conducto sincroniza os memos do seu aparello portátil cun cartafol local.
 Comment[hu]=Ezzel a csatolóval egy kézi számítógép memóit lehet szinkronizálni a helyi címjegyzékkel.
 Comment[is]=Þessi rás samstillir minnismiða lófatölvunnar þinnar við staðbundna möppu.

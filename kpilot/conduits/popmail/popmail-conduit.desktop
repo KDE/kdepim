@@ -15,6 +15,7 @@ Comment[eu]=Bidali posta zure agenda elektronikotik KMail-en bidez.
 Comment[fa]=ارسال نامه از طریق KMail، از دستی شما.
 Comment[fi]=Lähetä sähköpostia taskutietokoneelta KMailin kautta.
 Comment[fr]=Permet d'envoyer des messages du Palm vers KMail
+Comment[fy]=Comment=Dit conduit ferstjoerd e-post fan jo handheld mei help fan KMail.
 Comment[gl]=Enviar correo dende o seu aparello de man a través de KMail.
 Comment[hu]=Ezzel a csatolóval kézi számítógépről lehet levelet küldeni a KMailen keresztül.
 Comment[is]=Sendu tölvupóst frá lófatölvunni þinni gegnum KMail.
@@ -55,6 +56,7 @@ Name[eu]=Posta
 Name[fa]=نامه
 Name[fi]=Sähköposti
 Name[fr]=Messages
+Name[fy]=E-post
 Name[ga]=Ríomhphost
 Name[gl]=Correo-e
 Name[he]=דוא"ל
