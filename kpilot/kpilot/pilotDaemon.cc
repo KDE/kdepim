@@ -612,7 +612,7 @@ void PilotDaemon::quitNow()
 		fPostSyncAction |= Quit;
 		break;
 	}
-	QDBusMessage message = QDBusMessage::createSignal( "/Daemon", "org.kde.kpilot.daemon", "kpilotDaemonStatusChanged()");
+	QDBusMessage message = QDBusMessage::createSignal( "/Daemon", "org.kde.kpilot.daemon", "kpilotDaemonStatusChanged");
 	QDBusConnection::sessionBus().send( message );
 }
 
@@ -784,54 +784,34 @@ bool PilotDaemon::killDaemonOnExit()
 typedef enum { KDL_NotLocked=0, KDL_Locked=1, KDL_Error=2 } KDesktopLockStatus;
 static KDesktopLockStatus isKDesktopLockRunning()
 {
+    
 	if (!KPilotSettings::screenlockSecure())
 	{
 		return KDL_NotLocked;
 	}
 
-#ifdef __GNUC__
-#warning "kde4 port it"
-#endif
-#if 0
-	DCOPClient *dcopptr = KApplication::kApplication()->dcopClient();
+	QDBusInterface screensaver("org.freedesktop.ScreenSaver", "/ScreenSaver", 
+				   "org.freedesktop.ScreenSaver");
+	QDBusReply<bool> reply = screensaver.call( "GetActive" );
 
-	// Can't tell, very weird, err on the side of safety.
-	if (!dcopptr || !dcopptr->isAttached())
+	bool locked = true;
+
+	if ( reply.isValid() ) 
 	{
-		WARNINGKPILOT << "Could not make DCOP connection. "
-			<< "Assuming screensaver is active." << endl;
-		return DCOPError;
-	}
-
-	QByteArray data,returnValue;
-	Q3CString returnType;
-
-	if (!dcopptr->call("kdesktop","KScreensaverIface","isBlanked()",
-		data,returnType,returnValue,true))
-	{
-		WARNINGKPILOT << "Check for screensaver failed."
-			<< "Assuming screensaver is active." << endl;
-		// Err on the side of safety again.
-		return DCOPError;
-	}
-
-	if (returnType == "bool")
-	{
-		bool b;
-		QDataStream reply(returnValue,QIODevice::ReadOnly);
-		reply >> b;
-		return (b ? KDL_Locked : KDL_NotLocked);
+		locked = reply.value();
+		DEBUGKPILOT <<  "isDesktopLockRunning: reply from screensaver.GetActive: [" << locked << "]" << endl;
 	}
 	else
 	{
-		WARNINGKPILOT << "Strange return value from screensaver. "
-			<< "Assuming screensaver is active." << endl;
-		// Err on the side of safety.
-		return DCOPError;
+		WARNINGKPILOT << "isDesktopLockRunning: Could not make DBUS connection. "
+			<< "Error: [" << reply.error().type() <<"], message: ["<< reply.error().message()
+			<< "], name: [" << reply.error().name()
+			<< "]. Assuming screensaver is active." << endl;
+		return KDL_Error;
 	}
-#endif
 
-	return KDL_Locked;
+	return (locked ? KDL_Locked : KDL_NotLocked);
+
 }
 
 
@@ -870,10 +850,6 @@ static bool isSyncPossible(ActionQueue *fSyncStack,
 	* If the call fails, then KPilot is probably not running
 	* and we can behave normally.
 	*/
-	if(val.isValid())
-	{
-		kpilotstatus = val;
-	}
 	if (val.isValid())
 	{
 		kpilotstatus = val;
@@ -934,9 +910,6 @@ static void queueConduits(ActionQueue *fSyncStack,
 	if (conduits.count() > 0)
 	{
 		fSyncStack->queueConduits(conduits,e);
-		// QString s = i18n("Conduit flags: ");
-		// s.append(ConduitProxy::flagsForMode(e).join(CSL1(" ")));
-		// logMessage(s);
 	}
 }
 
@@ -1187,7 +1160,7 @@ void PilotDaemon::updateTrayStatus(const QString &s)
 	tipText.append( CSL1("</qt>") );
 
 	fTray->setToolTip(tipText);
-	QDBusMessage message = QDBusMessage::createSignal( "/Daemon", "org.kde.kpilot.daemon", "kpilotDaemonStatusChanged()");
+	QDBusMessage message = QDBusMessage::createSignal( "/Daemon", "org.kde.kpilot.daemon", "kpilotDaemonStatusChanged");
 	QDBusConnection::sessionBus().send( message );
 
 	// emit the same signal but including the information needed by Kontact to update its kpilot summary widget
@@ -1264,11 +1237,7 @@ int main(int argc, char **argv)
 	KUniqueApplication a(true, true);
 
 	// A block just to keep variables local.
-	//
-	//
 	{
-//		KPilotSettings::self()->config()->setReadOnly(false);
-
 		if (KPilotSettings::configVersion() < KPilotConfig::ConfigurationVersion)
 		{
 			WARNINGKPILOT << "Is still not configured for use."
