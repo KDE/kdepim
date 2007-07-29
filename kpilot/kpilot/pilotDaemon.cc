@@ -267,10 +267,9 @@ void PilotDaemonTray::slotRunConfig()
 	//    2 KPilot running with dialog NOT open (configureConduits())
 	//    3 KPilot NOT running (start it)
 
-	// This DCOP call to kpilot's raise function solves the final case
+	// This call to kpilot's raise function solves the final case
 	// ie when kpilot already has the dialog open
 
-	//TODO verify
 	if ( QDBusConnection::sessionBus().interface()->isServiceRegistered( "org.kde.kpilot.kpilot" ) )
 	{
 		DEBUGKPILOT << fname << ": kpilot running. telling it to raise/configure." << endl;
@@ -308,7 +307,7 @@ PilotDaemon::PilotDaemon() :
         QDBusConnection::sessionBus().registerObject("/Daemon", this);
 
 	//TODO verify it
-        fLogInterface = new OrgKdeKpilotLoggerInterface("org.kde.kpilot.logger", "/LoggerGUI", QDBusConnection::sessionBus());
+        fLogInterface = new OrgKdeKpilotLoggerInterface("org.kde.kpilot.kpilot", "/LoggerGUI", QDBusConnection::sessionBus());
 	fLogFileInterface = new OrgKdeKpilotLoggerInterface("org.kde.kpilot.daemon", "/LoggerFile", QDBusConnection::sessionBus());
 	fKPilotInterface = new OrgKdeKpilotKpilotInterface("org.kde.kpilot.kpilot", "/KPilot",QDBusConnection::sessionBus());
 
