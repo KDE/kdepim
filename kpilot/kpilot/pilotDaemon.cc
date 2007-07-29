@@ -395,15 +395,7 @@ void PilotDaemon::showTray()
 
 		return;
 	}
-#ifdef __GNUC__
-#warning "kde4 port it"
-#endif
-#if 0
-	// Copied from Klipper
-	KWM::setSystemTrayWindowFor(fTray->winId(), 0);
-	fTray->setGeometry(-100, -100, 42, 42);
 	fTray->show();
-#endif
 	DEBUGKPILOT << fname << ": Tray icon displayed." << endl;
 
 	updateTrayStatus();
@@ -440,7 +432,6 @@ void PilotDaemon::reloadSettings()
 		break;
 	}
 
-	// TODO: Is this bunch of calls really necessary to reload the settings???
 	KPilotSettings::self()->config()->reparseConfiguration();
 	KPilotSettings::self()->readConfig();
 	getPilotSpeed();
@@ -474,7 +465,7 @@ void PilotDaemon::reloadSettings()
 		if ( KPilotSettings::workarounds() == KPilotSettings::eWorkaroundUSB )
 		{
 			DEBUGKPILOT << fname
-				<< ": Using Zire31 USB workaround." << endl;
+				<< ": Using USB connect/disconnect/connect workaround." << endl;
 			fPilotLink->setWorkarounds(true);
 		}
 	}
