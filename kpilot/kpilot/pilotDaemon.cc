@@ -612,10 +612,8 @@ void PilotDaemon::quitNow()
 		fPostSyncAction |= Quit;
 		break;
 	}
-#ifdef __GNUC__
-#warning "kde4 port"
-#endif
-	//emitDCOPSignal( "kpilotDaemonStatusChanged()", QByteArray() );
+	QDBusMessage message = QDBusMessage::createSignal( "/Daemon", "org.kde.kpilot.daemon", "kpilotDaemonStatusChanged()");
+	QDBusConnection::sessionBus().send( message );
 }
 
 void PilotDaemon::requestRegularSyncNext()
@@ -694,7 +692,7 @@ int PilotDaemon::nextSyncType() const
 }
 
 /**
-* DCOP Functions reporting some status data, e.g. for the kontact plugin.
+* Functions reporting some status data, e.g. for the kontact plugin.
 */
 QDateTime PilotDaemon::lastSyncDate()
 {
@@ -783,7 +781,7 @@ bool PilotDaemon::killDaemonOnExit()
 	return KPilotSettings::killDaemonAtExit();
 }
 
-typedef enum { NotLocked=0, Locked=1, DCOPError=2 } KDesktopLockStatus;
+typedef enum { NotLocked=0, Locked=1, Error=2 } KDesktopLockStatus;
 static KDesktopLockStatus isKDesktopLockRunning()
 {
 	if (!KPilotSettings::screenlockSecure())
@@ -1189,12 +1187,16 @@ void PilotDaemon::updateTrayStatus(const QString &s)
 	tipText.append( CSL1("</qt>") );
 
 	fTray->setToolTip(tipText);
-#ifdef __GNUC__
-#warning "kde4 port it"
-#endif
-#if 0
-	emitDCOPSignal( "kpilotDaemonStatusChanged()", QByteArray() );
-	// emit the same dcop signal but including the information needed by Kontact to update its kpilot summary widget
+	QDBusMessage message = QDBusMessage::createSignal( "/Daemon", "org.kde.kpilot.daemon", "kpilotDaemonStatusChanged()");
+	QDBusConnection::sessionBus().send( message );
+
+	// emit the same signal but including the information needed by Kontact to update its kpilot summary widget
+	/* 
+	* not going to finish doing this since we don't have a kontact component yet, but if 
+	* we want one, here's how to get it working (from the dcop code):
+	*/
+	/*
+	message = QDBusMessage::createSignal( "/Daemon", "org.kde.kpilot.daemon", "kpilotDaemonStatusDetails()");
 	QByteArray data;
 	QDataStream arg(data, QIODevice::WriteOnly);
 	arg << lastSyncDate();
@@ -1204,8 +1206,9 @@ void PilotDaemon::updateTrayStatus(const QString &s)
 	arg << userName();
 	arg << pilotDevice();
 	arg << killDaemonOnExit();
+
 	emitDCOPSignal( "kpilotDaemonStatusDetails(QDateTime,QString,QStringList,QString,QString,QString,bool)", data );
-#endif
+	*/
 }
 
 
