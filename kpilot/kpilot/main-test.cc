@@ -297,9 +297,7 @@ int main(int argc, char **argv)
 		KPILOT_VERSION,
 		ki18n("KPilot Tester"),
 		KAboutData::License_GPL, ki18n("(C) 2001-2004, Adriaan de Groot"));
-	about.addAuthor(ki18n("Adriaan de Groot"),
-		ki18n("KPilot Maintainer"),
-		"groot@kde.org", "http://www.kpilot.org/");
+	KPILOT_ABOUT_INIT(about);
 
 	KCmdLineArgs::init(argc, argv, &about);
 

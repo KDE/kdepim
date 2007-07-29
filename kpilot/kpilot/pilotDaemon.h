@@ -85,13 +85,7 @@ protected slots:
 	void slotShowNotListening();
 	void slotBusyTimer();
 
-	/**
-	* Start up KPilot.
-	*/
 	void slotRunKPilot();
-	/**
-	* Run conduit configuration using "kpilot -c"
-	*/
 	void slotRunConfig();
 
 

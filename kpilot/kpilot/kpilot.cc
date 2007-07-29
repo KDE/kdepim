@@ -694,6 +694,7 @@ void KPilotInstaller::configure()
 
 	if ( kpilotStatus()!=Normal || fP->fConfigureKPilotDialogInUse )
 	{
+    		DEBUGKPILOT << fname << ": can't configure. in use." << endl;
 		log(i18n("Cannot configure KPilot right now (KPilot's UI is already busy)."));
 		return;
 	}
@@ -733,40 +734,14 @@ int main(int argc, char **argv)
 
 	KAboutData about("kpilot", 0, ki18n("KPilot"),
 		KPILOT_VERSION,
-		ki18n("KPilot - HotSync software for KDE\n\n"),
+		ki18n("KPilot - HotSync software for KDE"),
 		KAboutData::License_GPL,
-		ki18n("(c) 1998-2000,2001, Dan Pilone (c) 2000-2006, Adriaan de Groot"),
+		KPILOT_ABOUT_AUTHORS,
 		ki18n(0L),
 		"http://www.kpilot.org/"
 		);
-	about.addAuthor(ki18n("Dan Pilone"),
-		ki18n("Project Leader"),
-		"pilone@slac.com" );
-	about.addAuthor(ki18n("Adriaan de Groot"),
-		ki18n("Maintainer"),
-		"groot@kde.org", "http://www.kpilot.org/");
-	about.addAuthor(ki18n("Jason 'vanRijn' Kasper"),
-		ki18n("Core and conduits developer, Maintainer"),
-		"vR@movingparts.net", "http://movingparts.net/");
-	about.addAuthor(ki18n("Reinhold Kainhofer"),
-		ki18n("Core and conduits developer"), "reinhold@kainhofer.com", "http://reinhold.kainhofer.com/Linux/");
-	about.addCredit(ki18n("Preston Brown"), ki18n("VCal conduit"));
-	about.addCredit(ki18n("Greg Stern"), ki18n("Abbrowser conduit"));
-	about.addCredit(ki18n("Chris Molnar"), ki18n("Expenses conduit"));
-	about.addCredit(ki18n("Jörn Ahrens"), ki18n("Notepad conduit, Bugfixer"));
-	about.addCredit(ki18n("Heiko Purnhagen"), ki18n("Bugfixer"));
-	about.addCredit(ki18n("Jörg Habenicht"), ki18n("Bugfixer"));
-	about.addCredit(ki18n("Martin Junius"),
-		ki18n("XML GUI"),
-		"mj@m-j-s.net", "http://www.m-j-s.net/kde/");
-	about.addCredit(ki18n("David Bishop"),
-		ki18n(".ui files"));
-	about.addCredit(ki18n("Aaron J. Seigo"),
-		ki18n("Bugfixer, coolness"));
-	about.addCredit(ki18n("Bertjan Broeksema"),
-		ki18n("VCalconduit state machine, CMake, Base Conduit rewrite"));
-	about.addCredit(ki18n("Montel Laurent"),
-		ki18n("KDE4 port"));
+	KPILOT_ABOUT_INIT(about);
+
 	KCmdLineArgs::init(argc, argv, &about);
 
 	KCmdLineOptions kpilotoptions;

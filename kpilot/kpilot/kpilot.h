@@ -70,7 +70,6 @@ public:
 	virtual void daemonStatus(int);
 	virtual int kpilotStatus() const; ///< Returns KPilotStatus values
 	virtual void raise();
-	virtual void configure();
 
 
 
@@ -86,6 +85,7 @@ public slots:
 	void slotHHtoPCRequested();
 	void slotPCtoHHRequested();
 
+	virtual void configure();
 
 
 protected slots:

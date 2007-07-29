@@ -273,12 +273,15 @@ void PilotDaemonTray::slotRunConfig()
 	//TODO verify
 	if ( QDBusConnection::sessionBus().interface()->isServiceRegistered( "org.kde.kpilot.kpilot" ) )
 	{
+		DEBUGKPILOT << fname << ": kpilot running. telling it to raise/configure." << endl;
+
 		OrgKdeKpilotKpilotInterface * kpilot = new OrgKdeKpilotKpilotInterface("org.kde.kpilot.kpilot", "/KPilot",QDBusConnection::sessionBus());
 		kpilot->raise();
 		kpilot->configure();
 	}
 	else
 	{
+		DEBUGKPILOT << fname << ": kpilot not running. starting it." << endl;
 		// KPilot not running
 		QProcess *p = new QProcess;
 		QStringList arguments;
@@ -389,9 +392,7 @@ void PilotDaemon::showTray()
 
 	if (!fTray)
 	{
-#ifdef DEBUG
 		DEBUGKPILOT << fname << ": No tray icon to display!" << endl;
-#endif
 
 		return;
 	}
@@ -404,9 +405,7 @@ void PilotDaemon::showTray()
 	fTray->setGeometry(-100, -100, 42, 42);
 	fTray->show();
 #endif
-#ifdef DEBUG
 	DEBUGKPILOT << fname << ": Tray icon displayed." << endl;
-#endif
 
 	updateTrayStatus();
 }
@@ -449,7 +448,6 @@ void PilotDaemon::reloadSettings()
 
 	(void) Pilot::setupPilotCodec(KPilotSettings::encoding());
 
-#ifdef DEBUG
 	DEBUGKPILOT << fname
 		<< ": Got configuration "
 		<< KPilotSettings::pilotDevice()
@@ -458,33 +456,26 @@ void PilotDaemon::reloadSettings()
 		<< ": Got conduit list "
 		<< (KPilotSettings::installedConduits().join(CSL1(",")))
 		<< endl;
-#endif
 
 	requestSync(0);
 
 
 	if (fPilotLink)
 	{
-#ifdef DEBUG
 		DEBUGKPILOT << fname
 			<< ": Resetting with device "
 			<< KPilotSettings::pilotDevice()
 			<< endl;
-#endif
 
 		fPilotLink->reset( KPilotSettings::pilotDevice() );
-#ifdef DEBUG
 		DEBUGKPILOT << fname
 			<< ": Using workarounds "
 			<< KPilotSettings::workarounds()
 			<< endl;
-#endif
 		if ( KPilotSettings::workarounds() == KPilotSettings::eWorkaroundUSB )
 		{
-#ifdef DEBUG
 			DEBUGKPILOT << fname
 				<< ": Using Zire31 USB workaround." << endl;
-#endif
 			fPilotLink->setWorkarounds(true);
 		}
 	}
@@ -878,7 +869,6 @@ static bool isSyncPossible(ActionQueue *fSyncStack,
 	*/
 	QDBusReply<int> val = kpilot.kpilotStatus();
 	int kpilotstatus=0;
-#ifdef DEBUG
 	if (!val.isValid())
 	{
 		DEBUGKPILOT << fname <<
@@ -888,7 +878,6 @@ static bool isSyncPossible(ActionQueue *fSyncStack,
 	{
 		DEBUGKPILOT << fname << ": KPilot status " << kpilotstatus << endl;
 	}
-#endif
 	/**
 	* If the call fails, then KPilot is probably not running
 	* and we can behave normally.
@@ -971,10 +960,8 @@ bool PilotDaemon::shouldBackup()
 	bool ret = false;
 	int backupfreq = KPilotSettings::backupFrequency();
 
-#ifdef DEBUG
 	DEBUGKPILOT << fname << ": Backup Frequency is: [" << backupfreq <<
 	"]. " << endl;
-#endif
 
 	if ( (fNextSyncType == SyncAction::SyncMode::eHotSync) ||
 		(fNextSyncType == SyncAction::SyncMode::eFullSync) )
@@ -984,16 +971,12 @@ bool PilotDaemon::shouldBackup()
 		 */
 		if ( backupfreq == SyncAction::eOnRequestOnly )
 		{
-#ifdef DEBUG
 	DEBUGKPILOT << fname << ": Should not do backup..." << endl;
-#endif
 			ret = false;
 		}
 		else if ( backupfreq == SyncAction::eEveryHotSync )
 		{
-#ifdef DEBUG
 	DEBUGKPILOT << fname << ": Should do backup..." << endl;
-#endif
 			ret = true;
 		}
 	}
@@ -1011,13 +994,11 @@ bool PilotDaemon::shouldBackup()
 	QStringList conduits ; // list of conduits to run
 	QString s; // a generic string for stuff
 
-#ifdef DEBUG
 	DEBUGKPILOT << fname
 		<< ": Starting Sync with type "
 		<< fNextSyncType.name() << endl;
 	DEBUGKPILOT << fname << ": Status is " << shortStatusString() << endl;
 	(void) PilotDatabase::instanceCount();
-#endif
 
 	fDaemonStatus = HOTSYNC_START ;
 	if (fTray)
@@ -1049,22 +1030,16 @@ bool PilotDaemon::shouldBackup()
 
 		if (pcchanged)
 		{
-#ifdef DEBUG
 			DEBUGKPILOT << fname << ": PC changed. Last sync PC: [" << usr.getLastSyncPC()
 				<< "], me: [" << (unsigned long) gethostid() << "]" << endl;
-#endif
  			if ( KPilotSettings::fullSyncOnPCChange() )
 			{
-#ifdef DEBUG
 				DEBUGKPILOT << fname << ": Setting sync mode to full sync. " << endl;
-#endif
 				fNextSyncType = SyncAction::SyncMode::eFullSync;
 			}
 			else
 			{
-#ifdef DEBUG
 				DEBUGKPILOT << fname << ": Not changing sync mode because of settings. " << endl;
-#endif
 			}
 		}
 	}
@@ -1253,24 +1228,14 @@ int main(int argc, char **argv)
 	KAboutData about("kpilotDaemon", 0,
 		ki18n("KPilot Daemon"),
 		KPILOT_VERSION,
-		ki18n("KPilot - HotSync software for KDE\n\n"),
+		ki18n("KPilot - HotSync software for KDE"),
 		KAboutData::License_GPL,
-		ki18n("(c) 1998-2000,2001, Dan Pilone\n(c) 2000-2007, Adriaan de Groot\n(c) 2005-2007, Jason 'vanRijn' Kasper"),
+		KPILOT_ABOUT_AUTHORS,
 		ki18n(0L),
 		"http://www.kpilot.org/"
 		);
-	about.addAuthor(ki18n("Dan Pilone"),
-		ki18n("Project Leader"),
-		"pilone@slac.com");
-	about.addAuthor(ki18n("Adriaan de Groot"),
-		ki18n("Maintainer"),
-		"groot@kde.org", "http://www.kpilot.org/");
-	about.addAuthor(ki18n("Reinhold Kainhofer"),
-		ki18n("Developer"),
-		"reinhold@kainhofer.com", "http://reinhold.kainhofer.com/Linux/");
-	about.addAuthor(ki18n("Jason 'vanRijn' Kasper"),
-		ki18n("Developer, Maintainer"),
-		"vR@movingparts.net", "http://movingparts.net/");
+	KPILOT_ABOUT_INIT(about);
+	
 	aboutData = &about;
 
 
@@ -1317,11 +1282,9 @@ int main(int argc, char **argv)
 			return 1;
 		}
 
-#ifdef DEBUG
 		DEBUGKPILOT << fname
 			<< ": Configuration version "
 			<< KPilotSettings::configVersion() << endl;
-#endif
 	}
 
 
