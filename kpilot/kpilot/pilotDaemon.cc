@@ -895,7 +895,7 @@ static bool isSyncPossible(ActionQueue *fSyncStack,
 		fSyncStack->addAction(new SorryAction(pilotLink,
 			i18n("HotSync is disabled while the screen is locked.")));
 		return false;
-	case DCOPError :
+	case Error :
 		fSyncStack->queueInit();
 		fSyncStack->addAction(new SorryAction(pilotLink,
 			i18n("HotSync is disabled because KPilot could not "
