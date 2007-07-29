@@ -781,12 +781,12 @@ bool PilotDaemon::killDaemonOnExit()
 	return KPilotSettings::killDaemonAtExit();
 }
 
-typedef enum { NotLocked=0, Locked=1, Error=2 } KDesktopLockStatus;
+typedef enum { KDL_NotLocked=0, KDL_Locked=1, KDL_Error=2 } KDesktopLockStatus;
 static KDesktopLockStatus isKDesktopLockRunning()
 {
 	if (!KPilotSettings::screenlockSecure())
 	{
-		return NotLocked;
+		return KDL_NotLocked;
 	}
 
 #ifdef __GNUC__
@@ -820,7 +820,7 @@ static KDesktopLockStatus isKDesktopLockRunning()
 		bool b;
 		QDataStream reply(returnValue,QIODevice::ReadOnly);
 		reply >> b;
-		return (b ? Locked : NotLocked);
+		return (b ? KDL_Locked : KDL_NotLocked);
 	}
 	else
 	{
@@ -831,7 +831,7 @@ static KDesktopLockStatus isKDesktopLockRunning()
 	}
 #endif
 
-	return Locked;
+	return KDL_Locked;
 }
 
 
@@ -888,14 +888,14 @@ static bool isSyncPossible(ActionQueue *fSyncStack,
 	}
 	switch (isKDesktopLockRunning())
 	{
-	case NotLocked :
+	case KDL_NotLocked :
 		break; /* Fall through to return true below */
-	case Locked :
+	case KDL_Locked :
 		fSyncStack->queueInit();
 		fSyncStack->addAction(new SorryAction(pilotLink,
 			i18n("HotSync is disabled while the screen is locked.")));
 		return false;
-	case Error :
+	case KDL_Error :
 		fSyncStack->queueInit();
 		fSyncStack->addAction(new SorryAction(pilotLink,
 			i18n("HotSync is disabled because KPilot could not "
