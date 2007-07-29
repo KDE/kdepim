@@ -1235,6 +1235,7 @@ int main(int argc, char **argv)
 		return 0;
 	}
 	KUniqueApplication a(true, true);
+	a.setQuitOnLastWindowClosed(false);
 
 	// A block just to keep variables local.
 	{
