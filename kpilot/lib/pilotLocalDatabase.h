@@ -31,8 +31,6 @@
 
 #include "pilotDatabase.h"
 
-#include <Qt3Support/Q3ValueList>
-
 /** @file
 * Defines the PilotLocalDatabase class, for databases stored
 * on disk (as opposed to in a handheld).
@@ -87,8 +85,8 @@ public:
 	virtual int writeAppBlock(unsigned char* buffer, int len);
 	// returns the number of records in the database, 0 if not open
 	virtual unsigned int recordCount() const;
-	// Returns a QValueList of all record ids in the database.
-	virtual Q3ValueList<recordid_t> idList();
+	// Returns a QList of all record ids in the database.
+	virtual QList<recordid_t> idList();
 	// Reads a record from database by id, returns record
 	virtual PilotRecord* readRecordById(recordid_t id);
 	// Reads a record from database, returns the record

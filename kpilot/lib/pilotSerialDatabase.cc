@@ -35,8 +35,6 @@
 #include <pi-dlp.h>
 
 #include <qfile.h>
-//Added by qt3to4:
-#include <Q3ValueList>
 
 #include <klocale.h>
 #include <kdebug.h>
@@ -145,9 +143,9 @@ unsigned int PilotSerialDatabase::recordCount() const
 
 
 // Returns a QValueList of all record ids in the database.
-Q3ValueList<recordid_t> PilotSerialDatabase::idList()
+QList<recordid_t> PilotSerialDatabase::idList()
 {
-	Q3ValueList<recordid_t> idlist;
+	QList<recordid_t> idlist;
 	int idlen=recordCount();
 	if (idlen<=0) return idlist;
 

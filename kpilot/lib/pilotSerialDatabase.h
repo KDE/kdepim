@@ -33,7 +33,6 @@
 
 #include "pilotDatabase.h"
 #include "pilotRecord.h"
-#include <Qt3Support/Q3ValueList>
 
 /** @file
 * Database class for a database on the pilot connected
@@ -63,7 +62,7 @@ public:
 	/**  returns the number of records in the database, 0 if not open */
 	virtual unsigned int recordCount() const;
 	/** Returns a QValueList of all record ids in the database. */
-	 virtual Q3ValueList<recordid_t> idList();
+	 virtual QList<recordid_t> idList();
 	/** Reads a record from database by id, returns record length */
 	virtual PilotRecord* readRecordById(recordid_t id);
 	/** Reads a record from database, returns the record length */

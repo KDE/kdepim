@@ -32,7 +32,6 @@
 #include "kpilot_export.h"
 
 #include <QtCore/QStringList>
-#include <Qt3Support/Q3ValueList>
 
 #include "pilotLinkVersion.h"
 
@@ -74,7 +73,7 @@ namespace Pilot
 	/** Maximum size (in bytes) of a record's data */
 	static const int MAX_RECORD_SIZE = 65535;
 
-	typedef Q3ValueList<recordid_t> RecordIDList;
+	typedef QList<recordid_t> RecordIDList;
 
 	/** Static translation function that maps handheld native (8 bit,
 	* usually latin1 but sometimes someting else) encoded data to

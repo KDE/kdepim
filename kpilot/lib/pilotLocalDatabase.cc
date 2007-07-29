@@ -42,9 +42,6 @@
 #include <qfile.h>
 #include <qregexp.h>
 #include <qdatetime.h>
-#include <q3valuevector.h>
-//Added by qt3to4:
-#include <Q3ValueList>
 
 #include <kdebug.h>
 #include <kglobal.h>
@@ -54,7 +51,7 @@
 #include "pilotRecord.h"
 #include "pilotLocalDatabase.h"
 
-typedef Q3ValueVector<PilotRecord *> Records;
+typedef QVector<PilotRecord *> Records;
 
 class PilotLocalDatabase::Private : public Records
 {
@@ -272,10 +269,10 @@ unsigned int PilotLocalDatabase::recordCount() const
 
 
 // Returns a QValueList of all record ids in the database.
-Q3ValueList<recordid_t> PilotLocalDatabase::idList()
+QList<recordid_t> PilotLocalDatabase::idList()
 {
 	int idlen=recordCount();
-	Q3ValueList<recordid_t> idlist;
+	QList<recordid_t> idlist;
 	if (idlen<=0)
 	{
 		return idlist;
