@@ -55,7 +55,7 @@ namespace Kleo {
         std::vector<GpgME::Key> keys( const QList<QModelIndex> & indexes ) const;
 
         using QAbstractItemModel::index;
-        QModelIndex index( const GpgME::Key & key ) const;
+        QModelIndex index( const GpgME::Key & key, int col=0 ) const;
         QList<QModelIndex> indexes( const std::vector<GpgME::Key> & keys ) const;
 
         QModelIndex addKey( const GpgME::Key & key );

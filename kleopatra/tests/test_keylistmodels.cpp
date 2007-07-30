@@ -4,7 +4,7 @@
 #include <kaboutdata.h>
 #include <kcmdlineargs.h>
 
-#include <QTableView>
+#include <QTreeView>
 
 #include <gpgme++/context.h>
 #include <gpgme++/error.h>
@@ -12,6 +12,8 @@
 
 #include <memory>
 #include <vector>
+#include <string>
+#include <cassert>
 
 int main( int argc, char * argv[] ) {
 
@@ -19,16 +21,14 @@ int main( int argc, char * argv[] ) {
     KCmdLineArgs::init( argc, argv, &aboutData );
     KApplication app;
 
-    QTableView view;
+    QTreeView flat, hierarchical;
+
+    flat.setWindowTitle( QLatin1String( "Flat Key Listing" ) );
+    hierarchical.setWindowTitle( QLatin1String( "Hierarchical Key Listing" ) );
     
-    Kleo::AbstractKeyListModel * const model = Kleo::AbstractKeyListModel::createFlatKeyListModel( &view );
-
-    view.setModel( model );
-    view.show();
-
     std::vector<GpgME::Key> keys;
 
-    {    
+    {
 	std::auto_ptr<GpgME::Context> pgp( GpgME::Context::createForProtocol( GpgME::OpenPGP ) );
 	pgp->setKeyListMode( GpgME::Local );
 
@@ -74,7 +74,18 @@ int main( int argc, char * argv[] ) {
 	qDebug() << "cmsKeys" << cmsKeys;
     }
 	
-    model->addKeys( keys );
+    if ( Kleo::AbstractKeyListModel * const model = Kleo::AbstractKeyListModel::createFlatKeyListModel( &flat ) ) {
+	model->addKeys( keys );
+	flat.setModel( model );
+    }
+
+    if ( Kleo::AbstractKeyListModel * const model = Kleo::AbstractKeyListModel::createHierarchicalKeyListModel( &hierarchical ) ) {
+	model->addKeys( keys );
+	hierarchical.setModel( model );
+    }
+
+    flat.show();
+    hierarchical.show();
 
     return app.exec();
 }

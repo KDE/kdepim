@@ -2,9 +2,9 @@ include_directories( ${CMAKE_SOURCE_DIR}/kleopatra ${CMAKE_SOURCE_DIR}/libkleo $
 
 ########### next target ###############
 
-set(test_flatkeylistmodel_SRCS test_flatkeylistmodel.cpp ../models/keylistmodel.cpp )
+set(test_keylistmodels_SRCS test_keylistmodels.cpp ../models/keylistmodel.cpp )
 
-kde4_add_test_executable(test_flatkeylistmodel ${test_flatkeylistmodel_SRCS})
+kde4_add_test_executable(test_keylistmodels ${test_keylistmodels_SRCS})
 
-target_link_libraries(test_flatkeylistmodel kleo gpgme++ ${KDE4_KDECORE_LIBS} )
+target_link_libraries(test_keylistmodels kleo gpgme++ ${KDE4_KDECORE_LIBS} )
 
