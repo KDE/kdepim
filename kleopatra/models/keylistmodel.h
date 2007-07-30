@@ -43,10 +43,10 @@ namespace GpgME {
 namespace Kleo {
 
     class AbstractKeyListModel : public QAbstractItemModel {
-	Q_OBJECT
+        Q_OBJECT
     public:
-	explicit AbstractKeyListModel( QObject * parent=0 );
-	~AbstractKeyListModel();
+        explicit AbstractKeyListModel( QObject * parent=0 );
+        ~AbstractKeyListModel();
 
         static AbstractKeyListModel * createFlatKeyListModel( QObject * parent=0 );
         static AbstractKeyListModel * createHierarchicalKeyListModel( QObject * parent=0 );
@@ -63,35 +63,35 @@ namespace Kleo {
 
         void clear();
 
-	enum Columns {
-	    PrettyName,
-	    PrettyEMail,
-	    ValidFrom,
-	    ValidUntil,
-	    TechnicalDetails,
-	    Fingerprint,
+        enum Columns {
+            PrettyName,
+            PrettyEMail,
+            ValidFrom,
+            ValidUntil,
+            TechnicalDetails,
+            Fingerprint,
 #if 0
-	    /* OpenPGP only, really */
-	    LongKeyID,
-	    ShortKeyID,
-	    /* X509 only, really */
-	    Issuer,
-	    Subject,
-	    SerialNumber,
+            /* OpenPGP only, really */
+            LongKeyID,
+            ShortKeyID,
+            /* X509 only, really */
+            Issuer,
+            Subject,
+            SerialNumber,
 #endif
 
-	    NumColumns,
-	    Icon = PrettyName // which column shall the icon be displayed in?
-	};
+            NumColumns,
+            Icon = PrettyName // which column shall the icon be displayed in?
+        };
 
-	/* reimp */ int numColumns() const;
-	/* reimp */ QVariant headerData( int section, Qt::Orientation o, Qt::ItemDataRole role=Qt::DisplayRole ) const;
-	/* reimp */ QVariant data( const QModelIndex & index, Qt::ItemDataRole role=Qt::DisplayRole ) const;
+        /* reimp */ int numColumns() const;
+        /* reimp */ QVariant headerData( int section, Qt::Orientation o, Qt::ItemDataRole role=Qt::DisplayRole ) const;
+        /* reimp */ QVariant data( const QModelIndex & index, Qt::ItemDataRole role=Qt::DisplayRole ) const;
 
     private:
         virtual GpgME::Key doMapToKey( const QModelIndex & index ) const = 0;
         virtual QModelIndex doMapFromKey( const GpgME::Key & key ) const = 0;
-	virtual QList<QModelIndex> doAddKeys( const std::vector<GpgME::Key> & keys ) = 0;
+        virtual QList<QModelIndex> doAddKeys( const std::vector<GpgME::Key> & keys ) = 0;
     };
 
 }
