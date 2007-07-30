@@ -1117,6 +1117,7 @@ display birthdays, anniversaries, holidays, and special occasions from both
 the calendar and the contact list in one place.
 </para>
 
+<!-- TODO: create this screenshot if it will be in KDE 4
 <screenshot>
 <screeninfo>&kontact; Special Dates Plugin</screeninfo>
 <mediaobject>
@@ -1133,6 +1134,7 @@ the calendar and the contact list in one place.
 </caption>
 </mediaobject>
 </screenshot>
+-->
 </sect2>
 
 <sect2 id="summary-view-config-weather">
