@@ -81,6 +81,8 @@ public:
 	RCFullSyncHHTest();
 
 private slots:
+	void testCUD();
+	
 	/** FullSync and HH overides tests (See table below) **/
 	void testCase_6_5_1();
 	void testCase_6_5_2();
@@ -126,6 +128,41 @@ void RCFullSyncHHTest::initTestCase_1()
 	
 	// Prints out all records from all datastores..
 	//fConduit->test();
+}
+
+void RCFullSyncHHTest::testCUD()
+{
+	// This tests if the CUD counters gets updated correctly.
+	initTestCase_1();
+	
+	const CUDCounter *cudHH = fConduit->hhDataProxy()->counter();
+	const CUDCounter *cudPC = fConduit->pcDataProxy()->counter();
+	
+	int C = cudHH->countCreated();
+	int U = cudHH->countUpdated();
+	int D = cudHH->countDeleted();
+	
+	QCOMPARE( C, 0 );
+	QCOMPARE( U, 0 );
+	QCOMPARE( D, 0 );
+	
+	fConduit->hotSyncTest();
+	
+	C = cudHH->countCreated();
+	U = cudHH->countUpdated();
+	D = cudHH->countDeleted();
+	
+	QCOMPARE( C, 3 ); // 6.5.{5, 8, 14}
+	QCOMPARE( U, 2 ); // 6.5.{6, 18}
+	QCOMPARE( D, 6 ); // 6.5.{4, 7, 10, 12, 15, 17}
+	
+	C = cudPC->countCreated();
+	U = cudPC->countUpdated();
+	D = cudPC->countDeleted();
+	
+	QCOMPARE( C, 3 ); // 6.5.{2, 8, 13}
+	QCOMPARE( U, 6 ); // 6.5.{3, 9, 11, 16, 19, 20}
+	QCOMPARE( D, 5 ); // 6.5.{4, 10, 12, 15, 16}
 }
 
 void RCFullSyncHHTest::testCase_6_5_1()

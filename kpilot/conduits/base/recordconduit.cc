@@ -351,11 +351,13 @@ void RecordConduit::hotOrFullSync()
 		
 		syncRecords( pcRecord, backupRecord, hhRecord );
 		
-		// This is a full sync so keep track of the pc records that are in sync.
-		// Which is needed to avoid strange result when iterating over the pc records.
-		if( pcRecord )
+		// Keep track of the pc records that are in sync. Which is needed to avoid
+		// strange result when iterating over the pc records. Getting the pc id from
+		// the mapping assures that create pc records are taken also.
+		QString pcId = fMapping->pcRecordId( hhRecord->id() );
+		if( !pcId.isEmpty() )
 		{
-			fSyncedPcRecords->append( pcRecord->id() );
+			fSyncedPcRecords->append( pcId );
 		}
 	}
 	
@@ -644,6 +646,7 @@ void RecordConduit::syncRecords( Record *pcRecord, HHRecord *backupRecord,
 
 					// Keep hhRecord values.
 					copy( hhRecord, pcRecord );
+					fPCDataProxy->update( pcRecord->id(), pcRecord );
 					// Both records are in sync so they are no longer modified.
 					hhRecord->synced();
 					pcRecord->synced();
@@ -664,6 +667,7 @@ void RecordConduit::syncRecords( Record *pcRecord, HHRecord *backupRecord,
 				DEBUGKPILOT << fname << ": Case 6.5.6" << endl;
 				// Keep pc record values.
 				copy( pcRecord, hhRecord );
+				fHHDataProxy->update( hhRecord->id(), hhRecord );
 				// Both records are in sync so they are no longer modified.
 				hhRecord->synced();
 				pcRecord->synced();
@@ -683,6 +687,7 @@ void RecordConduit::syncRecords( Record *pcRecord, HHRecord *backupRecord,
 					//  ( from    , to       )
 					copy( pcRecord, hhRecord );
 					// Both records are in sync so they are no longer modified.
+					fHHDataProxy->update( hhRecord->id(), hhRecord );
 					hhRecord->synced();
 					pcRecord->synced();
 				}
@@ -692,6 +697,7 @@ void RecordConduit::syncRecords( Record *pcRecord, HHRecord *backupRecord,
 				//  ( from    , to       )
 				copy( hhRecord, pcRecord );
 				// Both records are in sync so they are no longer modified.
+				fPCDataProxy->update( pcRecord->id(), pcRecord );
 				hhRecord->synced();
 				pcRecord->synced();
 			}
@@ -757,6 +763,7 @@ void RecordConduit::syncConflictedRecords( Record *pcRecord, HHRecord *hhRecord
 		{
 			// Keep pcRecord. The hhRecord is changed so undo that changes.
 			copy( pcRecord, hhRecord );
+			fHHDataProxy->update( hhRecord->id(), hhRecord );
 			// Both records are in sync so they are no longer modified.
 			hhRecord->synced();
 			pcRecord->synced();
@@ -766,11 +773,12 @@ void RecordConduit::syncConflictedRecords( Record *pcRecord, HHRecord *hhRecord
 	{
 		if( hhRecord->isDeleted() )
 		{
-			if( pcRecord->isModified() )
+			if( pcRecord->isModified() && hhRecord->isArchived() )
 			{
 				DEBUGKPILOT << fname << ": Case 6.5.16" << endl;
 				// Keep hhRecordValues.
 				copy( hhRecord, pcRecord );
+				fPCDataProxy->update( pcRecord->id(), pcRecord );
 				// Both records are in sync so they are no longer modified.
 				hhRecord->synced();
 				pcRecord->synced();
@@ -782,6 +790,7 @@ void RecordConduit::syncConflictedRecords( Record *pcRecord, HHRecord *hhRecord
 		{
 			// Keep hhRecord. The pcRecord is changed so undo that changes.
 			copy( hhRecord, pcRecord );
+			fPCDataProxy->update( pcRecord->id(), pcRecord );
 			// Both records are in sync so they are no longer modified.
 			hhRecord->synced();
 			pcRecord->synced();

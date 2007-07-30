@@ -34,6 +34,7 @@
 #include "dataproxy.h"
 #include "hhdataproxy.h"
 #include "idmapping.h"
+#include "cudcounter.h"
 
 #include "testrecordconduit.h"
 #include "testrecord.h"
@@ -59,7 +60,7 @@
  * 6.5.5 |pc-4 |  N |N| X| X|     | add to hh
  * 6.5.6 |pc-5 |  M |Y| -| -|hh-5 | sync pc to hh
  * 6.5.7 |pc-6 |  D |Y| -| -|hh-6 | delete from hh
- * 6.5.8 |pc-7 |  N |N| X| N|hh-7 | Same data, create mapping
+ * 6.5.8 |pc-7 |  N |N| X| N|hh-7 | Same data, do not find match, add both records.
  * 6.5.9 |pc-8 |  M |Y| -| M|hh-8 | Sync hh to pc
  * 6.5.10|pc-9 |  M |Y| -| D|hh-9 | delete from pc
  * 6.5.11|pc-10|  D |Y| -| M|hh-10| Sync hh to pc
@@ -82,6 +83,7 @@ public:
 
 private slots:
 	void testCopy();
+	void testCUD();
 	
 	/** HotSync and HH overides tests (See table below) **/
 	void testCase_6_5_1();
@@ -116,6 +118,20 @@ RCHotSyncHHTest::RCHotSyncHHTest()
 	fFields << CSL1( "f1" ) << CSL1( "f2" );
 }
 
+void RCHotSyncHHTest::initTestCase_1()
+{
+	
+	// NOTE: 2 == eHHOverrides, this is important for the solveConflict() method
+	QStringList args = QStringList() << CSL1( "--hotsync" )
+		<< CSL1( "--conflictResolution 2" );
+	
+	fConduit = new TestRecordConduit( args, true );
+	fConduit->initDataProxies();
+	
+	// Prints out all records from all datastores..
+	//fConduit->test();
+}
+
 void RCHotSyncHHTest::testCopy()
 {
 	QStringList args = QStringList() << CSL1( "--hotsync" );
@@ -145,18 +161,39 @@ void RCHotSyncHHTest::testCopy()
 	QVERIFY( pcRec->value( CSL1( "f2" ) ) == CSL1( "Test 3-2" ) );
 }
 
-void RCHotSyncHHTest::initTestCase_1()
+void RCHotSyncHHTest::testCUD()
 {
+	// This tests if the CUD counters gets updated correctly.
+	initTestCase_1();
 	
-	// NOTE: 2 == eHHOverrides, this is important for the solveConflict() method
-	QStringList args = QStringList() << CSL1( "--hotsync" )
-		<< CSL1( "--conflictResolution 2" );
+	const CUDCounter *cudHH = fConduit->hhDataProxy()->counter();
+	const CUDCounter *cudPC = fConduit->pcDataProxy()->counter();
 	
-	fConduit = new TestRecordConduit( args, true );
-	fConduit->initDataProxies();
+	int C = cudHH->countCreated();
+	int U = cudHH->countUpdated();
+	int D = cudHH->countDeleted();
 	
-	// Prints out all records from all datastores..
-	//fConduit->test();
+	QCOMPARE( C, 0 );
+	QCOMPARE( U, 0 );
+	QCOMPARE( D, 0 );
+	
+	fConduit->hotSyncTest();
+	
+	C = cudHH->countCreated();
+	U = cudHH->countUpdated();
+	D = cudHH->countDeleted();
+	
+	QCOMPARE( C, 2 ); // 6.5.{5, 8}
+	QCOMPARE( U, 1 ); // 6.5.6
+	QCOMPARE( D, 6 ); // 6.5.{4, 7, 10, 12, 15, 17}
+	
+	C = cudPC->countCreated();
+	U = cudPC->countUpdated();
+	D = cudPC->countDeleted();
+	
+	QCOMPARE( C, 2 ); // 6.5.{2, 8}
+	QCOMPARE( U, 4 ); // 6.5.{3, 9, 11, 16}
+	QCOMPARE( D, 5 ); // 6.5.{4, 10, 12, 15, 16}
 }
 
 void RCHotSyncHHTest::testCase_6_5_1()

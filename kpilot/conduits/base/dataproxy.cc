@@ -49,6 +49,8 @@ QString DataProxy::create( Record *record )
 	fLastId = fLastId--;
 	QString recordId = QString::number( fLastId );
 	
+	DEBUGKPILOT << fname << ": Creating record: " << recordId << endl;
+	
 	// Make sure that the new record has the right id and add the record.
 	record->setId( recordId );
 	fRecords.insert( recordId, record );
@@ -71,6 +73,7 @@ void DataProxy::remove( const QString &id )
 		return;
 	}
 	
+	DEBUGKPILOT << fname << ": Removing record: " << id << endl;
 	// Remove record.
 	fRecords.remove( id );
 	
@@ -92,7 +95,7 @@ void DataProxy::update( const QString &id, Record *newRecord )
 			<< ". Record not updated and not added" << endl;
 		return;
 	}
-	
+	DEBUGKPILOT << fname << ": Updating record: " << id << endl;
 	// Make sure that the new record has the right id and update the old record.
 	newRecord->setId( id );
 	fRecords.insert( id, newRecord );
