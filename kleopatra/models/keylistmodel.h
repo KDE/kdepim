@@ -84,14 +84,15 @@ namespace Kleo {
             Icon = PrettyName // which column shall the icon be displayed in?
         };
 
-        /* reimp */ int numColumns() const;
-        /* reimp */ QVariant headerData( int section, Qt::Orientation o, Qt::ItemDataRole role=Qt::DisplayRole ) const;
-        /* reimp */ QVariant data( const QModelIndex & index, Qt::ItemDataRole role=Qt::DisplayRole ) const;
+        /* reimp */ int columnCount( const QModelIndex & pidx ) const;
+        /* reimp */ QVariant headerData( int section, Qt::Orientation o, int role=Qt::DisplayRole ) const;
+        /* reimp */ QVariant data( const QModelIndex & index, int role=Qt::DisplayRole ) const;
 
     private:
         virtual GpgME::Key doMapToKey( const QModelIndex & index ) const = 0;
-        virtual QModelIndex doMapFromKey( const GpgME::Key & key ) const = 0;
+        virtual QModelIndex doMapFromKey( const GpgME::Key & key, int column ) const = 0;
         virtual QList<QModelIndex> doAddKeys( const std::vector<GpgME::Key> & keys ) = 0;
+	virtual void doClear() = 0;
     };
 
 }

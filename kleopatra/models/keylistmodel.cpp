@@ -48,10 +48,32 @@
 
 #include <algorithm>
 #include <iterator>
+#include <cassert>
+
+#ifdef __GNUC__
+#include <ext/algorithm> // for is_sorted
+#endif
 
 using namespace GpgME;
 using namespace Kleo;
 using namespace boost;
+
+namespace {
+    template <template <typename T> class Op>
+    struct ByFingerprint {
+        typedef bool result_type;
+
+        bool operator()( const Key & lhs, const Key & rhs ) const {
+            return Op<int>()( qstricmp( lhs.primaryFingerprint(), rhs.primaryFingerprint() ), 0 );
+        }
+        bool operator()( const Key & lhs, const char * rhs ) const {
+            return Op<int>()( qstricmp( lhs.primaryFingerprint(), rhs ), 0 );
+        }
+        bool operator()( const char * lhs, const Key & rhs ) const {
+            return Op<int>()( qstricmp( lhs, rhs.primaryFingerprint() ), 0 );
+        }
+    };
+}
 
 AbstractKeyListModel::AbstractKeyListModel( QObject * p )
     : QAbstractItemModel( p )
@@ -66,7 +88,7 @@ Key AbstractKeyListModel::key( const QModelIndex & idx ) const {
     if ( idx.isValid() )
         return doMapToKey( idx );
     else
-        return GpgME::Key::null;
+        return Key::null;
 }
 
 std::vector<Key> AbstractKeyListModel::keys( const QList<QModelIndex> & indexes ) const {
@@ -82,7 +104,7 @@ QModelIndex AbstractKeyListModel::index( const Key & key ) const {
     if ( key.isNull() )
         return QModelIndex();
     else
-        return doMapFromKey( key );
+        return doMapFromKey( key, 0 );
 }
 
 QList<QModelIndex> AbstractKeyListModel::indexes( const std::vector<Key> & keys ) const {
@@ -102,14 +124,21 @@ QModelIndex AbstractKeyListModel::addKey( const Key & key ) {
 }
 
 QList<QModelIndex> AbstractKeyListModel::addKeys( const std::vector<Key> & keys ) {
-    return doAddKeys( keys );
+    std::vector<Key> sorted = keys;
+    std::sort( sorted.begin(), sorted.end(), ByFingerprint<std::less>() );
+    return doAddKeys( sorted );
 }
 
-int AbstractKeyListModel::numColumns() const {
+void AbstractKeyListModel::clear() {
+    doClear();
+    reset();
+}
+
+int AbstractKeyListModel::columnCount( const QModelIndex & ) const {
     return NumColumns;
 }
 
-QVariant AbstractKeyListModel::headerData( int section, Qt::Orientation o, Qt::ItemDataRole role ) const {
+QVariant AbstractKeyListModel::headerData( int section, Qt::Orientation o, int role ) const {
     if ( o == Qt::Horizontal )
         if ( role == Qt::DisplayRole || role == Qt::EditRole || role == Qt::ToolTipRole )
             switch ( section ) {
@@ -124,8 +153,8 @@ QVariant AbstractKeyListModel::headerData( int section, Qt::Orientation o, Qt::I
     return QVariant();
 }
 
-QVariant AbstractKeyListModel::data( const QModelIndex & index, Qt::ItemDataRole role ) const {
-    const GpgME::Key key = this->key( index );
+QVariant AbstractKeyListModel::data( const QModelIndex & index, int role ) const {
+    const Key key = this->key( index );
     if ( key.isNull() )
         return QVariant();
 
@@ -134,8 +163,8 @@ QVariant AbstractKeyListModel::data( const QModelIndex & index, Qt::ItemDataRole
     if ( role == Qt::DisplayRole || role == Qt::EditRole || role == Qt::ToolTipRole )
         switch ( column ) {
         case PrettyName:
-	    if ( key.protocol() == GpgME::OpenPGP ) {
-                const GpgME::UserID uid = key.userID( 0 );
+	    if ( key.protocol() == OpenPGP ) {
+                const UserID uid = key.userID( 0 );
                 const QString name = QString::fromUtf8( uid.name() );
                 if ( name.isEmpty() )
                     return QString::fromLatin1( key.primaryFingerprint() );
@@ -143,7 +172,7 @@ QVariant AbstractKeyListModel::data( const QModelIndex & index, Qt::ItemDataRole
                 if ( comment.isEmpty() )
                     return name;
                 return QString::fromLatin1( "%1 (%2)" ).arg( name, comment );
-	    } else if ( key.protocol() == GpgME::CMS ) {
+	    } else if ( key.protocol() == CMS ) {
                 const DN subject( key.userID( 0 ).id() );
                 const QString cn = subject["CN"];
                 if ( cn.isEmpty() )
@@ -157,15 +186,10 @@ QVariant AbstractKeyListModel::data( const QModelIndex & index, Qt::ItemDataRole
         case ValidFrom:
         case ValidUntil:
             {
-                const GpgME::Subkey subkey = key.subkey( 0 );
-                time_t t;
-                if ( column == ValidUntil )
-                    if ( subkey.neverExpires() )
-                        return tr("Never");
-                    else
-                        t = subkey.expirationTime();
-                else
-                    t = subkey.creationTime();
+                const Subkey subkey = key.subkey( 0 );
+		if ( column == ValidUntil && subkey.neverExpires() )
+		    return QVariant();//tr("Indefinitely");
+                const time_t t = column == ValidUntil ? subkey.expirationTime() : subkey.creationTime() ;
                 QDateTime dt;
                 dt.setTime_t( t );
                 return dt.date().toString();
@@ -177,29 +201,130 @@ QVariant AbstractKeyListModel::data( const QModelIndex & index, Qt::ItemDataRole
         case NumColumns:
             break;
         }
-    else if ( role == Qt::DecorationRole || role == Qt::FontRole || role == Qt::BackgroundRole || role == Qt::ForegroundRole ) {
+    else if ( role == Qt::FontRole ) {
+	QFont font = qApp->font(); // ### correct font?
+	if ( column == Fingerprint )
+	    font.setFamily( "courier" );
+	if ( const KeyFilter * const filter = KeyFilterManager::instance()->filterMatching( key ) )
+	    return filter->font( font );
+	else
+	    return font;
+    } else if ( role == Qt::DecorationRole || role == Qt::BackgroundRole || role == Qt::ForegroundRole ) {
         if ( const KeyFilter * const filter = KeyFilterManager::instance()->filterMatching( key ) ) {
             switch ( role ) {
             case Qt::DecorationRole: return column == Icon ? QIcon( filter->icon() ) : QVariant() ;
-            case Qt::FontRole:       return filter->font( qApp->font() ); // ### correct font?
             case Qt::BackgroundRole: return filter->bgColor();
             case Qt::ForegroundRole: return filter->fgColor();
             default: ; // silence compiler
             }
         }
-    } else if ( role == Qt::TextAlignmentRole )
+    } else if ( role == Qt::TextAlignmentRole ) // needed?
         ;
     return QVariant();
 }
 
 
-// static
-AbstractKeyListModel * AbstractKeyListModel::createFlatKeyListModel( QObject * p ) {
-    return 0;//new FlatKeyListModel( p );
+namespace {
+    template <typename Base>
+    class TableModelMixin : public Base {
+    public:
+        explicit TableModelMixin( QObject * p=0 ) : Base( p ) {}
+        ~TableModelMixin() {}
+
+        /* reimp */ QModelIndex index( int row, int column, const QModelIndex & pidx=QModelIndex() ) const {
+            return this->hasIndex( row, column, pidx ) ? this->createIndex( row, column, 0 ) : QModelIndex() ;
+        }
+
+    private:
+        /* reimp */ QModelIndex parent( const QModelIndex & ) const { return QModelIndex(); }
+        /* reimp */ bool hasChildren( const QModelIndex & pidx ) const {
+            return ( pidx.model() == this || !pidx.isValid() ) && this->rowCount( pidx ) > 0 && this->columnCount( pidx ) > 0 ;
+        }
+    };
+
+    class FlatKeyListModel
+#ifndef Q_MOC_RUN
+        : public TableModelMixin<AbstractKeyListModel>
+#else
+        : public AbstractKeyListModel
+#endif
+    {
+        Q_OBJECT
+    public:
+        explicit FlatKeyListModel( QObject * parent=0 );
+        ~FlatKeyListModel();
+
+        /* reimp */ int rowCount( const QModelIndex & pidx ) const { return pidx.isValid() ? 0 : mKeysByFingerprint.size() ; }
+
+    private:
+        /* reimp */ Key doMapToKey( const QModelIndex & index ) const;
+        /* reimp */ QModelIndex doMapFromKey( const Key & key, int col ) const;
+        /* reimp */ QList<QModelIndex> doAddKeys( const std::vector<Key> & keys );
+        /* reimp */ void doClear() {
+            mKeysByFingerprint.clear();
+        }
+
+    private:
+        std::vector<Key> mKeysByFingerprint;
+    };
 }
 
+
+FlatKeyListModel::FlatKeyListModel( QObject * p )
+    : TableModelMixin<AbstractKeyListModel>( p ),
+      mKeysByFingerprint()
+{
+
+}
+
+FlatKeyListModel::~FlatKeyListModel() {}
+
+Key FlatKeyListModel::doMapToKey( const QModelIndex & idx ) const {
+    assert( idx.isValid() );
+    if ( static_cast<unsigned>( idx.row() ) < mKeysByFingerprint.size() && idx.column() < NumColumns )
+        return mKeysByFingerprint[ idx.row() ];
+    else
+        return Key::null;
+}
+
+QModelIndex FlatKeyListModel::doMapFromKey( const Key & key, int col ) const {
+    assert( !key.isNull() );
+    const std::vector<Key>::const_iterator it
+	= qBinaryFind( mKeysByFingerprint.begin(), mKeysByFingerprint.end(),
+		       key, ByFingerprint<std::less>() );
+    if ( it == mKeysByFingerprint.end() )
+	return QModelIndex();
+    else
+	return createIndex( it - mKeysByFingerprint.begin(), col );
+}
+
+QList<QModelIndex> FlatKeyListModel::doAddKeys( const std::vector<Key> & keys ) {
+#ifdef __GNUC__
+    assert( __gnu_cxx::is_sorted( keys.begin(), keys.end(), ByFingerprint<std::less>() ) );
+#endif
+    if ( keys.empty() )
+	return QList<QModelIndex>();
+    std::vector<Key> merged;
+    merged.reserve( keys.size() + mKeysByFingerprint.size() );
+    std::merge( mKeysByFingerprint.begin(), mKeysByFingerprint.end(),
+                keys.begin(), keys.end(),
+                std::back_inserter( merged ), ByFingerprint<std::less>() );
+    merged.erase( std::unique( merged.begin(), merged.end(), ByFingerprint<std::equal_to>() ), merged.end() );
+    
+    mKeysByFingerprint.swap( merged );
+    reset(); // ### be better here...
+    return QList<QModelIndex>(); // ### FIXME
+}
+
+// static
+AbstractKeyListModel * AbstractKeyListModel::createFlatKeyListModel( QObject * p ) {
+    return new FlatKeyListModel( p );
+}
+
+// static
 AbstractKeyListModel * AbstractKeyListModel::createHierarchicalKeyListModel( QObject * p ) {
     return 0;//new HierarchicalKeyListModel( p );
 }
 
 #include "moc_keylistmodel.cpp"
+#include "keylistmodel.moc"
