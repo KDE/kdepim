@@ -91,6 +91,7 @@ class KCAL_XMLRPC_EXPORT ResourceXMLRPC : public ResourceCached
      */
     Event::List rawEventsForDate(
       const QDate& date,
+      const KDateTime::Spec& timespec = KDateTime::Spec(),
       EventSortField sortField=EventSortUnsorted,
       SortDirection sortDirection=SortDirectionAscending );
 
@@ -104,6 +105,7 @@ class KCAL_XMLRPC_EXPORT ResourceXMLRPC : public ResourceCached
       only events are returned, which are completely included in the range.
      */
     Event::List rawEvents( const QDate& start, const QDate& end,
+                           const KDateTime::Spec& timespec = KDateTime::Spec(),
                            bool inclusive = false );
 
 

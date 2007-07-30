@@ -161,6 +161,7 @@ bool KonsoleKalendar::showInstance()
           Event::List sortedList =
             m_variables->getCalendar()->events( EventSortStartDate );
           if ( sortedList.count() > 0 ) {
+            KDateTime::Spec timeSpec = m_variables->getCalendar()->timeSpec();
             QDate dt, firstdate, lastdate;
             firstdate = sortedList.first()->dtStart().date();
             lastdate = sortedList.last()->dtStart().date();
@@ -168,7 +169,7 @@ bool KonsoleKalendar::showInstance()
                   dt <= lastdate && status != false;
                   dt = dt.addDays( 1 ) ) {
               Event::List events =
-                m_variables->getCalendar()->events( dt,
+                m_variables->getCalendar()->events( dt, timeSpec,
                                                     EventSortStartDate,
                                                     SortDirectionAscending );
               status = printEventList( &ts, &events, dt );
@@ -193,12 +194,13 @@ bool KonsoleKalendar::showInstance()
           QDateTime datetime = m_variables->getStartDateTime();
           datetime = datetime.addDays( 720 );
 
+          KDateTime::Spec timeSpec = m_variables->getCalendar()->timeSpec();
           QDate dt;
           for ( dt = m_variables->getStartDateTime().date();
                 dt <= datetime.date();
                 dt = dt.addDays( 1 ) ) {
             Event::List events =
-              m_variables->getCalendar()->events( dt,
+              m_variables->getCalendar()->events( dt, timeSpec,
                                                   EventSortStartDate,
                                                   SortDirectionAscending );
             // finished here when we get the next event
@@ -215,12 +217,13 @@ bool KonsoleKalendar::showInstance()
                     << "view raw events within date range list"
                     << endl;
 
+          KDateTime::Spec timeSpec = m_variables->getCalendar()->timeSpec();
           QDate dt;
           for ( dt = m_variables->getStartDateTime().date();
                 dt <= m_variables->getEndDateTime().date() && status != false;
                 dt = dt.addDays( 1 ) ) {
             Event::List events =
-              m_variables->getCalendar()->events( dt,
+              m_variables->getCalendar()->events( dt, timeSpec,
                                                   EventSortStartDate,
                                                   SortDirectionAscending );
             status = printEventList( &ts, &events, dt );
@@ -421,7 +424,7 @@ bool KonsoleKalendar::isEvent( QDateTime startdate,
 
   KDateTime::Spec timeSpec = m_variables->getCalendar()->timeSpec();
   Event::List eventList( m_variables->getCalendar()->
-                         rawEventsForDate( startdate.date(),
+                         rawEventsForDate( startdate.date(), timeSpec,
                                            EventSortStartDate,
                                            SortDirectionAscending ) );
   for ( it = eventList.begin(); it != eventList.end(); ++it ) {

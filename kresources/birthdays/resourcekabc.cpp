@@ -397,16 +397,18 @@ Event *ResourceKABC::event( const QString &uid )
 }
 
 Event::List ResourceKABC::rawEventsForDate( const QDate &date,
+                                            const KDateTime::Spec &timespec,
                                             EventSortField sortField,
                                             SortDirection sortDirection )
 {
-  return mCalendar.rawEventsForDate( date, sortField, sortDirection );
+  return mCalendar.rawEventsForDate( date, timespec, sortField, sortDirection );
 }
 
 Event::List ResourceKABC::rawEvents( const QDate &start, const QDate &end,
+                                     const KDateTime::Spec &timespec,
                                      bool inclusive )
 {
-  return mCalendar.rawEvents( start, end, inclusive );
+  return mCalendar.rawEvents( start, end, timespec, inclusive );
 }
 
 Event::List ResourceKABC::rawEventsForDate( const KDateTime &dt )

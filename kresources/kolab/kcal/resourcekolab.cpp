@@ -716,10 +716,11 @@ KCal::Event::List ResourceKolab::rawEvents( EventSortField sortField, SortDirect
 }
 
 KCal::Event::List ResourceKolab::rawEventsForDate( const QDate& date,
+                                                   const KDateTime::Spec& timespec,
                                                    EventSortField sortField,
                                                    SortDirection sortDirection )
 {
-  return mCalendar.rawEventsForDate( date, sortField, sortDirection );
+  return mCalendar.rawEventsForDate( date, timespec, sortField, sortDirection );
 }
 
 KCal::Event::List ResourceKolab::rawEventsForDate( const KDateTime& dt )
@@ -729,9 +730,10 @@ KCal::Event::List ResourceKolab::rawEventsForDate( const KDateTime& dt )
 
 KCal::Event::List ResourceKolab::rawEvents( const QDate& start,
                                             const QDate& end,
+                                            const KDateTime::Spec& timespec,
                                             bool inclusive )
 {
-  return mCalendar.rawEvents( start, end, inclusive );
+  return mCalendar.rawEvents( start, end, timespec, inclusive );
 }
 
 bool ResourceKolab::addTodo( KCal::Todo* todo )

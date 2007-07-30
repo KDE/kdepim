@@ -78,11 +78,12 @@ public:
   KCal::Event* event( const QString &UniqueStr );
   KCal::Event::List rawEvents( EventSortField sortField = EventSortUnsorted, SortDirection sortDirection = SortDirectionAscending );
   KCal::Event::List rawEventsForDate(
-    const QDate& date,
+    const QDate& date, const KDateTime::Spec& timespec = KDateTime::Spec(),
     EventSortField sortField=EventSortUnsorted,
     SortDirection sortDirection=SortDirectionAscending );
   KCal::Event::List rawEventsForDate( const KDateTime& dt );
   KCal::Event::List rawEvents( const QDate& start, const QDate& end,
+                               const KDateTime::Spec& timespec = KDateTime::Spec(),
                                bool inclusive = false );
 
   bool addTodo( KCal::Todo* todo );

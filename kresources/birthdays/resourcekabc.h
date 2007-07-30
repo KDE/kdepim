@@ -84,7 +84,8 @@ class ResourceKABC : public ResourceCalendar
       Builds and then returns a list of all events that match for the
       date specified. useful for dayView, etc. etc.
     */
-    Event::List rawEventsForDate( const QDate &date, EventSortField sortField = EventSortUnsorted, SortDirection sortDirection = SortDirectionAscending );
+    Event::List rawEventsForDate( const QDate &date, const KDateTime::Spec &timespec = KDateTime::Spec(),
+                                  EventSortField sortField = EventSortUnsorted, SortDirection sortDirection = SortDirectionAscending );
     /**
       Get unfiltered events for date \a dt.
     */
@@ -94,6 +95,7 @@ class ResourceKABC : public ResourceCalendar
       only events are returned, which are completely included in the range.
     */
     Event::List rawEvents( const QDate &start, const QDate &end,
+                           const KDateTime::Spec &timespec = KDateTime::Spec(),
                            bool inclusive = false );
 
     /**

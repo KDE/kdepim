@@ -377,17 +377,19 @@ Event *ResourceXMLRPC::event( const QString& uid )
 }
 
 Event::List ResourceXMLRPC::rawEventsForDate( const QDate& qd,
+                                              const KDateTime::Spec& timespec,
                                               EventSortField sortField,
                                               SortDirection sortDirection )
 {
-  return calendar()->rawEventsForDate( qd, sortField, sortDirection );
+  return calendar()->rawEventsForDate( qd, timespec, sortField, sortDirection );
 }
 
 
 Event::List ResourceXMLRPC::rawEvents( const QDate& start, const QDate& end,
+                                       const KDateTime::Spec& timespec,
                                        bool inclusive )
 {
-  return calendar()->rawEvents( start, end, inclusive );
+  return calendar()->rawEvents( start, end, timespec, inclusive );
 }
 
 Event::List ResourceXMLRPC::rawEventsForDate( const KDateTime& dt )
