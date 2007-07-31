@@ -17,8 +17,8 @@
    Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
    Boston, MA 02110-1301, USA.
  ***************************************************************************/
-#ifndef CONNPAGE_H
-#define CONNPAGE_H
+#ifndef CONNECTIONSPAGE_H
+#define CONNECTIONSPAGE_H
 
 #include <QtGui/QWizardPage>
 #include "engineui_export.h"

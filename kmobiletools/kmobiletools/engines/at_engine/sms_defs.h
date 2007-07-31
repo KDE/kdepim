@@ -19,6 +19,9 @@
    Boston, MA 02110-1301, USA.
  ***************************************************************************/
 
+#ifndef SMS_DEFS_H
+#define SMS_DEFS_H
+
 /*
  * Flags for SMS decoding according to GSM03.40
  */
@@ -55,3 +58,6 @@
 #define SMSGSMCharset 1
 #define SMS8BitCharset 2
 #define SMSUCS2Charset 3
+
+#endif
+

@@ -128,7 +128,7 @@ kmobiletoolsMainPart::kmobiletoolsMainPart( QWidget *parentWidget, QObject *pare
         testfile.remove();
     } else
     {
-        int ret=KMessageBox::questionYesNo( m_widget, i18n("<qt>You have no write access to lockfiles directory <b>/var/lock/</b>. Please correct this using the permission fixer wizard, or by hand with \"chmod -R a+rwx /var/lock\"<br>Do you want to run the Permission Wizard now?</qt>"), i18n("Locking Failed"), KGuiItem(i18n("Run Wizard")), KStandardGuiItem::cancel() );
+        int ret=KMessageBox::questionYesNo( m_widget, i18n("<qt><p>You have no write access to lockfiles directory <b>/var/lock/</b>. Please correct this using the permission fixer wizard, or by hand with \"chmod -R a+rwx /var/lock\"</p><p>Do you want to run the Permission Wizard now?</p></qt>"), i18n("Locking Failed"), KGuiItem(i18n("Run Wizard")), KStandardGuiItem::cancel() );
         if(ret==KMessageBox::Yes)
             KRun::runCommand( "kmtsetup", m_widget->window() );
     }
@@ -421,7 +421,7 @@ void kmobiletoolsMainPart::newSMS()
         return;
     }
     bool ok;
-    QString engine=KInputDialog::getItem( i18nc("Select engine for new sms dialog", "Select engine"), i18n("<qt>You have loaded multiple mobile phones.<br>Choose the one for the new sms.</qt>"),
+    QString engine=KInputDialog::getItem( i18nc("Select engine for new sms dialog", "Select engine"), i18n("<qt>You have loaded multiple mobile phones.<br/>Choose the one for the new sms.</qt>"),
     KMobileTools::EnginesList::instance()->namesList(true), 0, false, &ok, m_widget);
     if(!ok) return;
     engine=KMobileTools::EnginesList::instance()->find( engine, true)->objectName();
@@ -445,11 +445,11 @@ bool kmobiletoolsMainPart::checkConfigVersion()
     }
     QString archiveName=KGlobal::dirs()->saveLocation("tmp") + "kmobiletools-" +
             QDate::currentDate().toString(Qt::ISODate) + ".tar.gz";
-    KMessageBox::information( widget(), i18n("<qt>KMobileTools has found an old or invalid configuration file.<br>To work correctly, it needs to delete your configuration files.<br>Your old files will be saved in <b>%1</b></qt>", archiveName ) );
+    KMessageBox::information( widget(), i18n("<qt><p>KMobileTools has found an old or invalid configuration file.</p><p>To work correctly, it needs to delete your configuration files. Your old files will be saved in <b>%1</b></p></qt>", archiveName ) );
     KTar arch(archiveName);
     if(!arch.open( QIODevice::WriteOnly))
     {
-        KMessageBox::error( widget(), i18n("<qt>KMobileTools could not archive your config files.<br>Please remove them manually.</qt>") );
+        KMessageBox::error( widget(), i18n("<qt><p>KMobileTools could not archive your config files.</p><p>Please remove them manually.</p></qt>") );
         return true;
     }
     for(QStringList::Iterator it=entries.begin(); it!=entries.end(); ++it)
@@ -459,7 +459,7 @@ bool kmobiletoolsMainPart::checkConfigVersion()
         kDebug() << "Entry ::" << cfgdir.path() + QDir::separator() + (*it) << " archived and removed." << endl;
     }
     arch.close();
-    KMessageBox::information(widget(), i18n("<qt>Your old configuration files were saved in <b>%1</b>.<br>KMobileTools will now close. You can restart it.</qt>", archiveName));
+    KMessageBox::information(widget(), i18n("<qt><p>Your old configuration files were saved in <b>%1</b>.</p><p>KMobileTools will now close. You can restart it.</p></qt>", archiveName));
     KMobileTools::MainConfig::self()->readConfig();
     KMobileTools::MainConfig::self()->setConfigversion(CURCFGVER);
     KMobileTools::MainConfig::self()->writeConfig();

@@ -19,8 +19,8 @@
    Boston, MA 02110-1301, USA.
  ***************************************************************************/
 
-#ifndef KMOBILETOOLSKAMMU_ENGINE_H
-#define KMOBILETOOLSKAMMU_ENGINE_H
+#ifndef KMOBILETOOLSGAMMU_ENGINE_H
+#define KMOBILETOOLSGAMMU_ENGINE_H
 
 #include "kmobiletoolsengine.h"
 

@@ -111,7 +111,7 @@ void AT_DevicesFoundPage::showDetails(KMobileTools::EngineData* engineData)
     "<qt><ul><li>Manufacturer: %1</li>\
     <li>Model: %2</li>\
     <li>IMEI: %3</li>\
-    <li>Device: %4</li>",
+    <li>Device: %4</li></ul></qt>",
     engineData->manufacturer(), engineData->model(), engineData->imei(), engineData->property("devicePath").toString()
     ) );
 }

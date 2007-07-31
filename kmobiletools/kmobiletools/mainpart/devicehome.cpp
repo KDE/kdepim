@@ -495,7 +495,7 @@ void DeviceHome::jobDone(KMobileTools::Job::JobType jobtype)
 
     if(newsmscnt && engine->ThreadWeaver()->isEmpty() && engine->ThreadWeaver()->isIdle() && newsmscnt!=smsnotifynum) {
         smsnotifynum=newsmscnt;
-        QString eventString(i18n("<qt>%1 New Messages.<br>Mobile Phone: %2</qt>", newsmscnt, DEVCFG(name() )->devicename() ) );
+        QString eventString(i18n("<qt>%1 New Messages.<br/>Mobile Phone: %2</qt>", newsmscnt, DEVCFG(name() )->devicename() ) );
         KNotification::event( QString("kmobiletools_sms"), eventString, QPixmap(),
             KMobileTools::KMobiletoolsHelper::instance()->systray()->contextMenu() );
     }
@@ -1030,7 +1030,7 @@ void DeviceHome::slotExportSMSList()
     KMobileTools::KMobiletoolsHelper::createMailDir( objectName() );
     engine->constEngineData()->smsList()->saveToMailBox();
     kDebug() << "STARTING SMS EXPORT\n";
-    KMessageBox::information( m_widget, i18n("<qt>SMS List for the mobile phone <b>%1</b> was exported to KMail default directory (%2).<br>To view exported messages, close and reopen KMail.</qt>", DEVCFG(objectName() )->devicename(), DEVCFG(objectName() )->maildir_path() ), i18n("SMS List Exported."), "smslistexported_infobox" );
+    KMessageBox::information( m_widget, i18n("<qt><p>SMS List for the mobile phone <b>%1</b> was exported to KMail default directory (%2).</p><p>To view exported messages, close and reopen KMail.</p></qt>", DEVCFG(objectName() )->devicename(), DEVCFG(objectName() )->maildir_path() ), i18n("SMS List Exported."), "smslistexported_infobox" );
 }
 
 /*!

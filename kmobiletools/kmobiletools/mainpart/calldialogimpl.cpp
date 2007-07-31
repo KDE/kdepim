@@ -88,12 +88,12 @@ int callDialogImpl::call(const QString &number, const QString &showName)
     if(showName.isNull())
     {
         setWindowTitle(windowTitle().arg(number) );
-        ui.lInfo->setText(i18n("<qt>Calling phone number: <b>%1</b><br><br></qt>",
+        ui.lInfo->setText(i18n("<qt>Calling phone number: <b>%1</b><br/><br/></qt>",
                 number));
     }
     else
     {
-        ui.lInfo->setText(i18n("<qt>Calling <b>%1</b><br>Phone number: <b>%2</b><br><br></qt>",
+        ui.lInfo->setText(i18n("<qt>Calling <b>%1</b><br/>Phone number: <b>%2</b><br/><br/></qt>",
                 showName, number));
         setWindowTitle(windowTitle().arg(showName));
     }

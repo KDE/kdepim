@@ -859,10 +859,10 @@ QString SMSEncoder::encodeNumber( const QString &_number )
 {
     QString res;
     QString number = _number;
-    if ( number.startsWith("+") ) number = number.mid( 1 );
+    if ( number.startsWith('+') ) number = number.mid( 1 );
     int len = number.length();
     res += QString("%1").arg( len, 2, 16 ).replace(" ", "0");
-    res += number.startsWith("+") ? "91" : "81"; // is the number type octet here?
+    res += number.startsWith('+') ? "91" : "81"; // is the number type octet here?
 
     if ( odd(number.length()) ) number+='F';
     for(int i=0; i<number.length(); i+=2)

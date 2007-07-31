@@ -99,7 +99,7 @@ void smsPart::show( SMS *sms)
     if ( sms->type() & SMS::Unread || sms->type() & SMS::Read )
     {
         text=text
-                .arg( i18n("From: <a href=\"number:%1\" title=\"%2\">%3</a><br>Received Date: %4",
+                .arg( i18n("From: <a href=\"number:%1\" title=\"%2\">%3</a><br/>Received Date: %4",
                 sms->getFrom(),
                 Qt::escape( sms->getFrom() ),
                 Qt::escape( KMobiletoolsHelper::translateNumber( sms->getFrom() ) ),
@@ -121,7 +121,7 @@ void smsPart::show( SMS *sms)
                     Qt::escape( KMobiletoolsHelper::translateNumber( *it ) ));
         }
         text=text
-                .arg( i18n("To: %1<br>Stored Date: %2",
+                .arg( i18n("To: %1<br/>Stored Date: %2",
                     receivers, Qt::escape( sms->getDate()) )
                     );
         if( sms->type() & SMS::Unsent )

@@ -678,7 +678,7 @@ QString AT_Engine::parseWizardSummary(const QString &strtemplate, const QString 
     QString tempstr=i18ncp("AT Wizard summary - using <connection types>", "Using connection: %2", "Using connections: %2",
         tmpstrlist.count(), tmpstrlist.join(", ") );
     retstr=retstr.arg(tempstr);
-    tempstr=i18nc("AT Wizard summary - Basic parameters", "Manufacturer: %1<br>Model: %2", cfg->rawdevicevendor(), cfg->rawdevicename() );
+    tempstr=i18nc("AT Wizard summary - Basic parameters", "Manufacturer: %1<br/>Model: %2", cfg->rawdevicevendor(), cfg->rawdevicename() );
     retstr=retstr.arg(tempstr);
     tempstr=i18nc("AT Wizard summary - Advanced parameters", "IMEI: %1", cfg->mobileimei() );
     retstr=retstr.arg(tempstr);

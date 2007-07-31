@@ -21,6 +21,9 @@
    Boston, MA 02110-1301, USA.
  ***************************************************************************/
 
+#ifndef ATENGINECONFIG_ADDONS_H
+#define ATENGINECONFIG_ADDONS_H
+
 public:
     enum Connection { ConnectionUSB=0x1, ConnectionSerial=0x2, ConnectionBluetooth=0x4, ConnectionIrDA=0x8, ConnectionUser=0x10 };
 
@@ -40,4 +43,6 @@ public:
         setAt_connBluetooth(c & ATDevicesConfig::ConnectionBluetooth);
         setAt_connCustom(c & ATDevicesConfig::ConnectionUser);
     }
+
+#endif
 

@@ -17,8 +17,8 @@
    Boston, MA 02110-1301, USA.
  ***************************************************************************/
 
-#ifndef SYSTEMIMPL_H
-#define SYSTEMIMPL_H
+#ifndef P2KIMPL_H
+#define P2KIMPL_H
 
 #include <kio/global.h>
 #include <kio/job.h>

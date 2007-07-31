@@ -19,8 +19,8 @@
 */
 
 
-#ifndef __AKONADI_SERIALIZER_MAIL_H__
-#define __AKONADI_SERIALIZER_MAIL_H__
+#ifndef __AKONADI_SERIALIZER_SMS_H__
+#define __AKONADI_SERIALIZER_SMS_H__
 
 #include <libakonadi/itemserializerplugin.h>
 

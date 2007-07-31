@@ -17,8 +17,8 @@
    Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
    Boston, MA 02110-1301, USA.
  ***************************************************************************/
-#ifndef _KMOBILETOOLSDEVICEPART_H_
-#define _KMOBILETOOLSDEVICEPART_H_
+#ifndef _KMOBILETOOLS_MAINPART_DEVICEHOME_H_
+#define _KMOBILETOOLS_MAINPART_DEVICEHOME_H_
 
 #include <kdebug.h>
 #include <kabc/addressbook.h>

@@ -106,7 +106,7 @@ QString KMobiletoolsHelper::removeIntPrefix( const QString &number )
 {
     if ( number.startsWith( "00" ) )
         return QString("0")+number.mid( 4 );
-    if ( number.startsWith( "+" ) )
+    if ( number.startsWith( '+' ) )
         return QString("0")+number.mid( 3 );
     return number;
 }

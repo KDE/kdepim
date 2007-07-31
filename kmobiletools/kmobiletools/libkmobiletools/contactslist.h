@@ -17,8 +17,8 @@
    Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
    Boston, MA 02110-1301, USA.
  ***************************************************************************/
-#ifndef CONTACTPTRLIST_H
-#define CONTACTPTRLIST_H
+#ifndef CONTACTSLIST_H
+#define CONTACTSLIST_H
 
 #include <libkmobiletools/kmobiletools_export.h>
 

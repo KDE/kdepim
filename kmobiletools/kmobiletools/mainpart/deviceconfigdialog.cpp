@@ -170,7 +170,7 @@ void deviceConfigDialog::slotEngineChanged(const QString &enginename)
     if( currentEngine==runningEngine )
     {
         if(enginepages.count()) return;
-        KMessageBox::information(this, i18n("<qt>After changing the mobile phone engine you must reload the configuration dialog.<br>This window will now close.</qt>"));
+        KMessageBox::information(this, i18n("<qt><p>After changing the mobile phone engine you must reload the configuration dialog.</p><p>This window will now close.</p></qt>"));
         done(QDialog::Accepted);
     }
     currentEngine=runningEngine;

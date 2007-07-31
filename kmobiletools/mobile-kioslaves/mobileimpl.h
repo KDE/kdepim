@@ -18,8 +18,8 @@
  ***************************************************************************/
 
 
-#ifndef SYSTEMIMPL_H
-#define SYSTEMIMPL_H
+#ifndef MOBILEIMPL_H
+#define MOBILEIMPL_H
 
 #include <kio/global.h>
 #include <kio/job.h>
