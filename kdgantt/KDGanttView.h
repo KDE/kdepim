@@ -403,6 +403,8 @@ signals:
     void taskLinkRightClicked( KDGanttViewTaskLink* );
     void taskLinkDoubleClicked( KDGanttViewTaskLink* );
 
+    void dateTimeDoubleClicked (const QDateTime& );
+
     void dropped ( QDropEvent * e, KDGanttViewItem* droppedItem, KDGanttViewItem* itemBelowMouse);
 private slots:
     void forceRepaint( int val = 0 );
@@ -426,6 +428,8 @@ private:
     };
     bool loadXML( const QDomDocument& doc );
     QDomDocument saveXML( bool withPI = true ) const;
+
+    void emptySpaceDoubleClicked( QMouseEvent* e );
 
     static QString scaleToString( Scale scale );
     static QString yearFormatToString( YearFormat format );
