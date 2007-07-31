@@ -107,7 +107,7 @@ GpgME::Error Kleo::QGpgMERefreshKeysJob::startAProcess() {
 
   mProcess->setUseStatusFD( true );
 
-  connect( mProcess, SIGNAL(processExited(int, QProcess::ExitStatus)),
+  connect( mProcess, SIGNAL(finished(int, QProcess::ExitStatus)),
 	   SLOT(slotProcessExited( int, QProcess::ExitStatus)) );
   connect( mProcess, SIGNAL(receivedStdout()),
 	   SLOT(slotStdout()) );

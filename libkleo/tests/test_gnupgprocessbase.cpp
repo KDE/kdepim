@@ -58,7 +58,7 @@ void GnuPGViewer::setProcess( Kleo::GnuPGProcessBase * process ) {
   if ( !process )
     return;
   mProcess = process;
-  connect( mProcess, SIGNAL(processExited(int, QProcess::ExitStatus)),
+  connect( mProcess, SIGNAL(finished (int, QProcess::ExitStatus)),
 	   SLOT(slotProcessExited(int, QProcess::ExitStatus)) );
   connect( mProcess, SIGNAL(readyReadStandardOutput()),
 	   SLOT(slotStdout()) );
