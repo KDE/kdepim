@@ -13,7 +13,6 @@ moving=false
 Icon=remote
 Description=An ioslave for the Sieve mail filtering protocol
 Description[af]='n <i>IOSlave</i> vir die Sieve e-pos filter protokol
-Description[bg]=Description=An ioslave for the Sieve mail filtering protocol
 Description[ca]=Un ioslave pel protocol de filtrar de correu Sieve
 Description[cs]=ioslave pro protokol filtrování zpráv Sieve
 Description[da]=En ioslave for Sieve mail filtreringsprotokollen
