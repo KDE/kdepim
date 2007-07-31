@@ -34,6 +34,7 @@
 #include "kolabbase.h"
 
 #include <kabc/addressee.h>
+#include <kcal/incidence.h>
 #include <kcal/journal.h>
 #include <libkdepim/kpimprefs.h>
 #include <ksystemtimezone.h>
@@ -41,7 +42,6 @@
 #include <QFile>
 
 using namespace Kolab;
-
 
 KolabBase::KolabBase( const QString& tz )
   : mCreationDate( QDateTime::currentDateTime() ),
@@ -77,7 +77,18 @@ void KolabBase::saveTo( KCal::Incidence* incidence ) const
   incidence->setCategories( categories() );
   incidence->setCreated( utcToLocal( creationDate() ) );
   incidence->setLastModified( lastModified() );
-  incidence->setSecrecy( sensitivity() );
+  switch( sensitivity() ) {
+  case 1:
+    incidence->setSecrecy( KCal::Incidence::SecrecyPrivate );
+    break;
+  case 2:
+    incidence->setSecrecy( KCal::Incidence::SecrecyConfidential );
+    break;
+  default:
+    incidence->setSecrecy( KCal::Incidence::SecrecyPublic );
+    break;
+  }
+
   // TODO: Attachments
 }
 
