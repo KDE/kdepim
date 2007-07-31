@@ -62,23 +62,6 @@ class KCAL_RESOURCEBLOG_EXPORT ResourceBlog : public ResourceCached
     ~ResourceBlog();
 
     /**
-      The available APIs for accessing blogs.
-    */
-    enum APIType {
-      MetaWeblog, Blogger, Unknown
-    };
-
-    /**
-      Convert the API type enumerator to a QString.
-    */
-    static QString APITypeToQString( const APIType &type ) ;
-
-    /**
-      Convert the API type enumerator to a QString.
-    */
-    static APIType QStringToAPIType( const QString &type ) ;
-
-    /**
       Read resource parameters from configuration information.
 
       @param group The configuration information.
@@ -131,14 +114,14 @@ class KCAL_RESOURCEBLOG_EXPORT ResourceBlog : public ResourceCached
     /**
       Set the XML-RPC API used to access the blog.
     */
-    void setAPI( const APIType & );
+    void setAPI( const QString & );
 
     /**
       Get name of the XML-RPC API used to access the blog.
 
       @return The enumeration of the chosen API.
     */
-    APIType API() const;
+    QString API() const;
 
     /**
       Set whether to display the progress of operations.
@@ -288,7 +271,7 @@ class KCAL_RESOURCEBLOG_EXPORT ResourceBlog : public ResourceCached
       @param type The type of the error.
       @param errorMessage The specific cause of the error.
     */
-    void slotError( const KBlog::APIBlog::ErrorType &type,
+    void slotError( const KBlog::Blog::ErrorType &type,
                     const QString &errorMessage );
 
     /**
@@ -356,7 +339,7 @@ class KCAL_RESOURCEBLOG_EXPORT ResourceBlog : public ResourceCached
     /**
       The XML-RPC object used to access the blog.
     */
-    KBlog::APIBlog *mAPI;
+    KBlog::Blog *mAPI;
 
     /**
       The unique ID of the blog to send posts to.

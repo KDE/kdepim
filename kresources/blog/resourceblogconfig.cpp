@@ -64,8 +64,8 @@ ResourceBlogConfig::ResourceBlogConfig
 
   label = new QLabel( i18n( "API:" ), this );
   mAPI = new KComboBox( false, this );
-  mAPI->addItem( "MetaWeblog", ResourceBlog::MetaWeblog );
-  mAPI->addItem( "Blogger", ResourceBlog::Blogger );
+  mAPI->addItem( "MetaWeblog" );
+  mAPI->addItem( "Blogger 1.0" );
 
   mainLayout->addWidget( label, 4, 0 );
   mainLayout->addWidget( mAPI, 4, 1 );
@@ -89,7 +89,7 @@ void ResourceBlogConfig::loadSettings( KRES::Resource *res )
     mUrl->setUrl( resource->url().url() );
     mUsername->setText( resource->username() );
     mPassword->setText( resource->password() );
-    mAPI->setCurrentIndex( resource->API() );
+    mAPI->setCurrentItem( resource->API(), false );
     QPair<QString, QString> blog = resource->blog();
     if ( !blog.second.isEmpty() ) {
       mBlogs->addItem( blog.second, blog.first );
@@ -98,10 +98,10 @@ void ResourceBlogConfig::loadSettings( KRES::Resource *res )
     connect ( mAPI, SIGNAL( currentIndexChanged( int ) ),
         this, SLOT( slotBlogAPIChanged( int ) ) );
     mReloadConfig->loadSettings( resource );
-    kDebug( 5700 ) << "ResourceBlogConfig::loadSettings(): reloaded" << endl;
+    kDebug( 5700 ) << "ResourceBlogConfig::loadSettings(): reloaded";
   } else {
     kError( 5700 ) << "ResourceBlogConfig::loadSettings():"
-                   << " no ResourceBlog, cast failed" << endl;
+                   << " no ResourceBlog, cast failed";
   }
 }
 
@@ -112,16 +112,16 @@ void ResourceBlogConfig::saveSettings( KRES::Resource *res )
     resource->setUrl( mUrl->url().url() );
     resource->setUsername( mUsername->text() );
     resource->setPassword( mPassword->text() );
-    resource->setAPI( resource->QStringToAPIType( mAPI->currentText() ) );
+    resource->setAPI( mAPI->currentText() );
     QPair<QString, QString> blog = resource->blog();
     if ( !mBlogs->currentText().isEmpty() ) {
       resource->setBlog( mBlogs->currentText() );
     }
     mReloadConfig->saveSettings( resource );
-    kDebug( 5700 ) << "ResourceBlogConfig::saveSettings(): saved" << endl;
+    kDebug( 5700 ) << "ResourceBlogConfig::saveSettings(): saved";
   } else {
     kError( 5700 ) << "ResourceBlogConfig::saveSettings():"
-      " no ResourceBlog, cast failed" << endl;
+      " no ResourceBlog, cast failed";
   }
 }
 
@@ -129,7 +129,7 @@ void ResourceBlogConfig::slotBlogInfoRetrieved( const QString &id,
                                                 const QString &name )
 {
   kDebug( 5700 ) << "ResourceBlogConfig::slotBlogInfoRetrieved( id=" << id <<
-      ", name=" << name << endl;
+      ", name=" << name;
   if ( !mBlogs->contains( name ) ) {
     mBlogs->addItem( name );
     mBlogs->setEnabled( true );
@@ -138,14 +138,14 @@ void ResourceBlogConfig::slotBlogInfoRetrieved( const QString &id,
 
 void ResourceBlogConfig::slotBlogAPIChanged( int index )
 {
-  kDebug( 5700 ) << "ResourceBlogConfig::slotBlogAPIChanged" << endl;
+  kDebug( 5700 ) << "ResourceBlogConfig::slotBlogAPIChanged";
   if ( !mBlogs->count() ) {
     // TODO Delete
     ResourceBlog *blog =  new ResourceBlog();
     blog->setUrl( mUrl->url() );
     blog->setUsername( mUsername->text() );
     blog->setPassword( mPassword->text() );
-    blog->setAPI( blog->QStringToAPIType( mAPI->itemText( index ) ) );
+    blog->setAPI( mAPI->itemText( index ) );
     connect ( blog, SIGNAL( signalBlogInfoRetrieved( const QString &, const QString & ) ),
               this, SLOT( slotBlogInfoRetrieved( const QString &, const QString & ) ) );
     blog->fetchBlogs();
