@@ -1,16 +1,25 @@
 Current Release is Proko2 2.1.8
 
+Features
+=========
+
+KMail
+---------
+* Kolab/issue1715 Other disconnected Imap folders good as sources for client filters.
+* Kolab/issue1858  Filters applying to new emails in groupware folders, changing filter behaviour
+
+*** WARNING ***
+A special case of this feature is problematic.
+Filtering is applied on newly shared groupware folders to which the user 
+has full access.
+(See: kolab/issue 1858)
+
 Bugfixes
 =========
 
 Kontact
 --------
 * Kolab/issue1672 Kontact crashes when saving a mail twice.
-
-KMail
----------
-* Kolab/issue1715 Other disconnected Imap folders good as sources for client filters.
-* Kolab/issue1858  Filters applying to new emails in groupware folders, changing filter behaviour
 
 Misc
 ---------
