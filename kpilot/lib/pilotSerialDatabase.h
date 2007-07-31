@@ -59,6 +59,8 @@ public:
 	virtual int readAppBlock(unsigned char* buffer, int maxLen);
 	/** Writes the application block info. */
 	virtual int writeAppBlock(unsigned char* buffer, int len);
+	/** Returns the DBInfo struct of this database */
+	virtual const struct DBInfo &getDBInfo() const { return fDBInfo; }
 	/**  returns the number of records in the database, 0 if not open */
 	virtual unsigned int recordCount() const;
 	/** Returns a QValueList of all record ids in the database. */
@@ -130,9 +132,10 @@ protected:
 private:
 	void setDBHandle(int handle) { fDBHandle = handle; }
 
-	QString     fDBName;
-	int         fDBHandle;
-	int         fDBSocket;
+	QString       fDBName;
+	int           fDBHandle;
+	int           fDBSocket;
+	struct DBInfo fDBInfo;
 	// Pilot-link 0.12 allocates buffers as needed and resizes them.
 	// Start with a buffer that is _probably_ big enough for most
 	// PIM records, but much smaller than the 64k that we use otherwise.

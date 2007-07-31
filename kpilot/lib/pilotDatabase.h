@@ -84,6 +84,9 @@ public:
 
 	/** Writes the application block info. */
 	virtual int writeAppBlock(unsigned char* buffer, int len) = 0;
+	
+	/** Returns the DBInfo struct of this database */
+	virtual const struct DBInfo &getDBInfo() const = 0;
 
 	/** Returns the number of records in the database.
 	 *  If the database is not open, return -1.

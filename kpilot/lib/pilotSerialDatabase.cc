@@ -61,7 +61,8 @@ PilotSerialDatabase::PilotSerialDatabase( KPilotDeviceLink *l, const DBInfo *inf
 	PilotDatabase( info ? Pilot::fromPilot( info->name ) : QString::null ),
 	fDBName( QString::null ),
 	fDBHandle( -1 ),
-	fDBSocket( l->pilotSocket() )
+	fDBSocket( l->pilotSocket() ),
+	fDBInfo( info ? DBInfo( *info ) : DBInfo() )
 {
 	// Rather unclear  why both the base class and this one have separate names.
 	fDBName = name();
@@ -377,7 +378,15 @@ void PilotSerialDatabase::openDatabase()
 		WARNINGKPILOT << "Cannot open database on handheld." << endl;
 		return;
 	}
+	
 	setDBHandle(db);
+	
+	if (dlp_FindDBByOpenHandle(fDBSocket, fDBHandle, 0, 0, &fDBInfo, 0 ) < 0)
+	{
+		WARNINGKPILOT << "Cannot read DBInfo from handheld." << endl;
+		fDBInfo = DBInfo();
+	}
+	
 	setDBOpen(true);
 }
 
