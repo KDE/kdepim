@@ -60,6 +60,7 @@ SyncAction::SyncAction(KPilotLink  *p,
 	fParent(0L)
 {
 	FUNCTIONSETUP;
+	DEBUGKPILOT << fname << ": name:[" << name << "]" << endl;
 	setObjectName(name);
 }
 
@@ -71,6 +72,7 @@ SyncAction::SyncAction(KPilotLink *p,
 	fParent(visibleparent)
 {
 	FUNCTIONSETUP;
+	DEBUGKPILOT << fname << ": name:[" << name << "]" << endl;
 	setObjectName(name);
 }
 
