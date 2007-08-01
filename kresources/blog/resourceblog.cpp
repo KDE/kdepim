@@ -22,7 +22,6 @@
 #include <QDateTime>
 #include <QString>
 
-#include <KDebug>
 #include <KUrl>
 #include <KLocale>
 
@@ -58,6 +57,7 @@ ResourceBlog::~ResourceBlog()
   close();
 
   delete mLock;
+  delete mJournalsMap;
 }
 
 void ResourceBlog::init()
@@ -69,6 +69,7 @@ void ResourceBlog::init()
   setType( "blog" );
 
   mLock = new KABC::Lock( cacheFile() );
+  mJournalsMap = new QMap<QString, Journal *>();
 
   enableChangeNotification();
 }
@@ -192,16 +193,18 @@ bool ResourceBlog::doLoad( bool fullReload )
       //FIXME Actually do something? Calculate posts for non-full reload.
       if ( fullReload ) {
         // TODO: downloadCount = math;
-        mJournalsMap.clear();
+        mJournalsMap->clear();
         ResourceCached::deleteAllJournals();
       }
       mAPI->setBlogId( mBlogID );
-      connect ( mAPI, SIGNAL( listedPosting( KBlog::BlogPosting & ) ),
-                this, SLOT( slotListedPosting( KBlog::BlogPosting & ) ) );
-      connect ( mAPI, SIGNAL( listPostingsFinished() ),
-                this, SLOT( slotListPostingsFinished() ));
-      connect ( mAPI, SIGNAL( error( const KBlog::Blog::ErrorType &, const QString & ) ),
-                this, SLOT( slotError( const KBlog::Blog::ErrorType &, const QString & ) ) );
+      connect ( mAPI, SIGNAL( listedRecentPostings(
+                const QList<KBlog::BlogPosting*> & ) ),
+                this, SLOT( slotListedPostings(
+                const QList<KBlog::BlogPosting*> & ) ) );
+      connect ( mAPI, SIGNAL( error( const KBlog::Blog::ErrorType &,
+                const QString & ) ),
+                this, SLOT( slotError( const KBlog::Blog::ErrorType &,
+                const QString & ) ) );
 
       if ( mUseProgressManager ) {
         mProgress = KPIM::ProgressManager::createProgressItem(
@@ -221,33 +224,36 @@ bool ResourceBlog::doLoad( bool fullReload )
   return false;
 }
 
-void ResourceBlog::slotListedPosting( KBlog::BlogPosting &blogPosting )
+void ResourceBlog::slotListedPostings(
+    const QList<KBlog::BlogPosting*> &postings )
 {
-  kDebug( 5800 ) << "ResourceBlog::slotListedPosting()";
-  Journal *journalBlog = new Journal();
-  QString id = "kblog-" + mUrl.url() + "-" + mUsername + "-" +
-      blogPosting.postingId();
-  if ( mJournalsMap.value( id ) == 0 ) {
-    connect ( mAPI, SIGNAL( createdPosting( QString & ) ),
-      this, SLOT( slotCreatedPosting( QString & ) ) );
-    connect ( mAPI, SIGNAL( error( const KBlog::Blog::ErrorType &, const QString & ) ),
-      this, SLOT( slotError( const KBlog::Blog::ErrorType &, const QString & ) ) );
-    journalBlog->setUid( id );
-    journalBlog->setSummary( blogPosting.title() );
-    journalBlog->setCategories( blogPosting.categories() );
-    journalBlog->setDescription( blogPosting.content() );
-    journalBlog->setDtStart( blogPosting.creationDateTime() );
-    if ( ResourceCached::addJournal( journalBlog ) ) {
-      kDebug( 5800 ) << "ResourceBlog::slotListedPosting(): Journal added"
-         ;
-      mJournalsMap.insert( id, journalBlog );
+  kDebug( 5800 ) << "ResourceBlog::slotListedPostings()";
+  QList<KBlog::BlogPosting*>::const_iterator i;
+  KBlog::BlogPosting* posting;
+  Journal *journalBlog;
+  for (i = postings.constBegin(); i != postings.constEnd(); ++i) {
+    posting = *i;
+    journalBlog = new Journal();
+    QString id = "kblog-" + mUrl.url() + "-" + mUsername + "-" +
+        posting->postingId();
+    if ( mJournalsMap->value( id ) == 0 ) {
+      connect ( mAPI, SIGNAL( createdPosting( QString & ) ),
+                this, SLOT( slotCreatedPosting( QString & ) ) );
+      connect ( mAPI, SIGNAL( error( const KBlog::Blog::ErrorType &,
+                const QString & ) ),
+                this, SLOT( slotError( const KBlog::Blog::ErrorType &,
+                const QString & ) ) );
+      journalBlog->setUid( id );
+      journalBlog->setSummary( posting->title() );
+      journalBlog->setCategories( posting->categories() );
+      journalBlog->setDescription( posting->content() );
+      journalBlog->setDtStart( posting->creationDateTime() );
+      if ( ResourceCached::addJournal( journalBlog ) ) {
+        kDebug( 5800 ) << "ResourceBlog::slotListedPosting(): Journal added";
+        mJournalsMap->insert( id, journalBlog );
+      }
     }
   }
-}
-
-void ResourceBlog::slotListPostingsFinished()
-{
-  kDebug( 5800 ) << "ResourceBlog::slotListPostingsFinished()";
 
   emit resourceChanged( this );
 
@@ -272,13 +278,10 @@ void ResourceBlog::slotCreatedPosting( const QString &id )
   mPostID = id.toInt();
 }
 
-void ResourceBlog::slotBlogInfoRetrieved( const QString &id,
-                                          const QString &name )
+void ResourceBlog::slotBlogInfoRetrieved( const QMap<QString,QString> &blogs )
 {
-  kDebug( 5800 ) << "ResourceBlog::slotBlogInfoRetrieved( id=" << id <<
-      ", name=" << name;
-  mBlogsMap.insert( name, id );
-  emit signalBlogInfoRetrieved( id, name );
+  kDebug( 5800 ) << "ResourceBlog::slotBlogInfoRetrieved()" << blogs;
+  emit signalBlogInfoRetrieved( blogs );
 }
 
 bool ResourceBlog::doSave( bool )
@@ -351,8 +354,10 @@ bool ResourceBlog::addJournal( Journal *journal )
   if ( mAPI ) {
     mAPI->setBlogId( mBlogID );
     post->setCreationDateTime( date );
-    connect ( mAPI, SIGNAL( error( const KBlog::Blog::ErrorType &, const QString & ) ),
-              this, SLOT( slotError( const KBlog::Blog::ErrorType &, const QString & ) ) );
+    connect ( mAPI, SIGNAL( error( const KBlog::Blog::ErrorType &,
+                  const QString & ) ),
+              this, SLOT( slotError( const KBlog::Blog::ErrorType &,
+                  const QString & ) ) );
     mAPI->createPosting( post );
     return true;
   }
@@ -361,32 +366,29 @@ bool ResourceBlog::addJournal( Journal *journal )
 }
 
 bool ResourceBlog::fetchBlogs() {
-  if ( mAPI ) {
-    connect ( mAPI, SIGNAL( blogInfoRetrieved( const QString &,
-                                               const QString & ) ),
-        this, SLOT( slotBlogInfoRetrieved( const QString &,
-                                           const QString & ) ) );
-    //Check if we're using Blogger or higher
-    //mAPI->listBlogs();
+  KBlog::Blogger1* blogger = qobject_cast<KBlog::Blogger1*>( mAPI );
+  if ( blogger ) {
+    connect ( blogger, SIGNAL( listedBlogs( const QMap<QString,QString> & ) ),
+              this, SLOT( slotBlogInfoRetrieved(
+                    const QMap<QString,QString> & ) ) );
+    blogger->listBlogs();
     return true;
   }
-  kError( 5800 ) << "ResourceBlog::fetchBlogs(): Journal not initialised.";
+  kError( 5800 ) << "ResourceBlog::fetchBlogs(): "
+      << "API does not support multiple blogs.";
   return false;
 }
 
-bool ResourceBlog::setBlog( const QString &name ) {
-  if ( mBlogsMap.contains( name ) ) {
-    mBlogID = mBlogsMap.value( name );
-    mBlogName = name;
-    kDebug( 5800 ) << "ResourceBlog::setBlog( id=" << mBlogID <<
-      ", name=" << mBlogName;
-    return true;
-  }
-  return false;
+void ResourceBlog::setBlog( const QString &id, const QString &name ) {
+  mBlogID = id;
+  mBlogName = name;
+  kDebug( 5800 ) << "ResourceBlog::setBlog( id=" << mBlogID <<
+        ", name=" << mBlogName << " )";
 }
 
-QPair<QString, QString> ResourceBlog::blog() {
+QPair<QString, QString> ResourceBlog::blog() const {
   return qMakePair( mBlogID, mBlogName );
 }
+
 
 #include "resourceblog.moc"

@@ -21,8 +21,8 @@
 #ifndef KCAL_RESOURCEBLOGCONFIG_H
 #define KCAL_RESOURCEBLOGCONFIG_H
 
-#include <kresources/resource.h>
 #include <kresources/configwidget.h>
+
 #include "blog_export.h"
 
 #include "resourceblog.h"
@@ -70,10 +70,9 @@ class KCAL_RESOURCEBLOG_EXPORT ResourceBlogConfig : public KRES::ConfigWidget
     /**
       Saves the entered settings from the widget to the blog resource.
 
-      @param id The unique ID for the blog to post to.
-      @param name The name for the blog to post to.
+      @param blogs A map containing the blogs' ID and description.
     */
-    void slotBlogInfoRetrieved( const QString &id, const QString &name );
+    void slotBlogInfoRetrieved( const QMap<QString,QString> &blogs );
 
     /**
       Performs operations on an API change.

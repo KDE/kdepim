@@ -22,12 +22,11 @@
 #include <QLabel>
 #include <QGridLayout>
 
-#include <klocale.h>
-#include <kdebug.h>
-#include <kdialog.h>
-#include <kurlrequester.h>
-#include <klineedit.h>
-#include <kcombobox.h>
+#include <KLocale>
+#include <KDialog>
+#include <KUrlRequester>
+#include <KLineEdit>
+#include <KComboBox>
 
 #include <kcal/resourcecachedconfig.h>
 
@@ -115,7 +114,8 @@ void ResourceBlogConfig::saveSettings( KRES::Resource *res )
     resource->setAPI( mAPI->currentText() );
     QPair<QString, QString> blog = resource->blog();
     if ( !mBlogs->currentText().isEmpty() ) {
-      resource->setBlog( mBlogs->currentText() );
+      resource->setBlog( mBlogs->itemData( mBlogs->currentIndex() ).toString(),
+                         mBlogs->currentText() );
     }
     mReloadConfig->saveSettings( resource );
     kDebug( 5700 ) << "ResourceBlogConfig::saveSettings(): saved";
@@ -125,13 +125,15 @@ void ResourceBlogConfig::saveSettings( KRES::Resource *res )
   }
 }
 
-void ResourceBlogConfig::slotBlogInfoRetrieved( const QString &id,
-                                                const QString &name )
+void ResourceBlogConfig::slotBlogInfoRetrieved(
+    const QMap<QString, QString> &blogs )
 {
-  kDebug( 5700 ) << "ResourceBlogConfig::slotBlogInfoRetrieved( id=" << id <<
-      ", name=" << name;
-  if ( !mBlogs->contains( name ) ) {
-    mBlogs->addItem( name );
+  kDebug( 5700 ) << "ResourceBlogConfig::slotBlogInfoRetrieved()";
+  QMap<QString,QString>::const_iterator i;
+  for (i = blogs.constBegin(); i != blogs.constEnd(); ++i) {
+    mBlogs->addItem( i.value(), i.key() );
+  }
+  if ( mBlogs->count() ) {
     mBlogs->setEnabled( true );
   }
 }
@@ -139,17 +141,19 @@ void ResourceBlogConfig::slotBlogInfoRetrieved( const QString &id,
 void ResourceBlogConfig::slotBlogAPIChanged( int index )
 {
   kDebug( 5700 ) << "ResourceBlogConfig::slotBlogAPIChanged";
-  if ( !mBlogs->count() ) {
-    // TODO Delete
-    ResourceBlog *blog =  new ResourceBlog();
-    blog->setUrl( mUrl->url() );
-    blog->setUsername( mUsername->text() );
-    blog->setPassword( mPassword->text() );
-    blog->setAPI( mAPI->itemText( index ) );
-    connect ( blog, SIGNAL( signalBlogInfoRetrieved( const QString &, const QString & ) ),
-              this, SLOT( slotBlogInfoRetrieved( const QString &, const QString & ) ) );
-    blog->fetchBlogs();
-  }
+  //FIXME Delete me somehow?
+  ResourceBlog *blog =  new ResourceBlog();
+  blog->setUrl( mUrl->url() );
+  blog->setUsername( mUsername->text() );
+  blog->setPassword( mPassword->text() );
+  blog->setAPI( mAPI->itemText( index ) );
+  connect ( blog, SIGNAL( signalBlogInfoRetrieved(
+                const QMap<QString,QString> & ) ),
+            this, SLOT( slotBlogInfoRetrieved(
+                        const QMap<QString,QString> & ) ) );
+  blog->fetchBlogs();
+  mBlogs->clear();
+  mBlogs->setEnabled( false );
 }
 
 #include "resourceblogconfig.moc"

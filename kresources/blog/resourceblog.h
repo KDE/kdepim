@@ -192,15 +192,15 @@ class KCAL_RESOURCEBLOG_EXPORT ResourceBlog : public ResourceCached
 
       @return A pair of the blog ID and the blog name.
     */
-    QPair<QString, QString> blog();
+    QPair<QString, QString> blog() const;
 
     /**
       Updates the blog to post to.
 
+      @param id The unique ID of the blog.
       @param name The name of the blog.
-      @return Returns if index of the blog was found from the name.
     */
-    bool setBlog( const QString &name );
+    void setBlog( const QString &id, const QString &name );
 
     // Posts cannot be deleted from the server.
     bool deleteJournal( Journal *journal )
@@ -245,25 +245,20 @@ class KCAL_RESOURCEBLOG_EXPORT ResourceBlog : public ResourceCached
 
   Q_SIGNALS:
     /**
-      Signals an available blog to post to.
+      Signals an available blog(s) to post to.
 
-      @param id The unique ID of the blog.
-      @param name The name of the blog.
+      @param blogs A map containing the blogs' ID and description.
     */
-    void signalBlogInfoRetrieved( const QString &id, const QString &name );
+    void signalBlogInfoRetrieved( const QMap<QString,QString> &blogs );
 
   protected Q_SLOTS:
     /**
-      Converts a listed posting to a journal and adds to the cached resource.
+      Converts listed postings to journal entries and adds them to the cached
+      resource.
 
-      @param blogPosting A posting from the blog.
+      @param postings A list of the postings from the blog.
     */
-    void slotListedPosting( KBlog::BlogPosting &blogPosting );
-
-    /**
-      Cleans up after the posting's listing completed.
-    */
-    void slotListPostingsFinished();
+    void slotListedPostings( const QList<KBlog::BlogPosting*> &postings );
 
     /**
       Prints an error on a XML-RPC failure.
@@ -285,10 +280,9 @@ class KCAL_RESOURCEBLOG_EXPORT ResourceBlog : public ResourceCached
     /**
       Updates the local list of available blogs to post to.
 
-      @param id The unique ID of the blog.
-      @param name The name of the blog.
+      @param blogs A map containing the blogs' ID and description.
     */
-    void slotBlogInfoRetrieved( const QString &id, const QString &name );
+    void slotBlogInfoRetrieved( const QMap<QString,QString> &blogs );
 
   protected:
     /**
@@ -354,12 +348,7 @@ class KCAL_RESOURCEBLOG_EXPORT ResourceBlog : public ResourceCached
     /**
       The map of created journal objects.
     */
-    QHash<QString, Journal *> mJournalsMap;
-
-    /**
-      The map of possible blogs to post to.
-    */
-    QHash<QString, QString> mBlogsMap;
+    QMap<QString, Journal *> *mJournalsMap;
 
     /**
       Whether the progress of operations are displayed.
