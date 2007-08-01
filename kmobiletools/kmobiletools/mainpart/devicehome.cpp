@@ -95,6 +95,8 @@
 //#include "mainIFace_stub.h"
 
 
+#include <QtGui/QTreeWidgetItem>
+
 #include <libkmobiletools/errorhandler.h>
 #include <libkmobiletools/errortypes/baseerror.h>
 
@@ -210,16 +212,27 @@ void DeviceHome::setupWidgets()
     ui.widgetStack->raiseWidget(INDEX_WIDGET_ID);
     m_widget->setFocusPolicy(Qt::ClickFocus);
 
-    p_listViewItem=new DeviceListViewItem(p_mainPart->listview() , DEVCFG(objectName() )->devicename());
+    p_listViewItem=new DeviceListViewItem(DEVCFG(objectName() )->devicename(), p_mainPart->listview() );
     p_listViewItem->setDeviceName( objectName() );
-    p_listViewItem->setOpen(true);
-    p_listViewItem->setPixmap(0,DEVCFG(objectName() )->deviceTypeIcon(DEVCFG(objectName() )->currentGroup(), K3Icon::NoGroup, K3Icon::SizeSmall ));
+    p_listViewItem->setIcon( 0, DEVCFG(objectName() )->deviceTypeIcon(DEVCFG(objectName() )->currentGroup(), K3Icon::NoGroup, K3Icon::SizeSmall ) );
+
+    (new QTreeWidgetItem( p_listViewItem, QStringList("Calls") ) )
+    ->setIcon( 0, KIconLoader::global()->loadIcon( "kaddressbook", K3Icon::NoGroup, K3Icon::SizeSmall) );
+
+    (new QTreeWidgetItem( p_listViewItem, QStringList( i18n( "PhoneBook") ) ) )
+    ->setIcon( 0, KIconLoader::global()->loadIcon( "kontact_contacts", K3Icon::NoGroup, K3Icon::SizeSmall) );
+
+    p_smsItem = new QTreeWidgetItem( p_listViewItem, QStringList( i18n("SMS") ) );
+    p_smsItem->setIcon( 0, KIconLoader::global()->loadIcon( "mail_generic", K3Icon::NoGroup, K3Icon::SizeSmall) );
+
+    //p_listViewItem->setOpen(true);
+    //p_listViewItem->setPixmap(0,DEVCFG(objectName() )->deviceTypeIcon(DEVCFG(objectName() )->currentGroup(), K3Icon::NoGroup, K3Icon::SizeSmall ));
 //     (new K3ListViewItem(p_listViewItem, "Calls") )
 //             ->setPixmap(0,KIconLoader::global()->loadIcon("kaddressbook", K3Icon::NoGroup, K3Icon::SizeSmall) );
-    (new K3ListViewItem(p_listViewItem, i18n("PhoneBook") ) )
-            ->setPixmap(0,KIconLoader::global()->loadIcon("kontact_contacts", K3Icon::NoGroup, K3Icon::SizeSmall) );
-    p_smsItem = new K3ListViewItem(p_listViewItem, i18n("SMS") );
-    p_smsItem->setPixmap(0,KIconLoader::global()->loadIcon("mail_generic", K3Icon::NoGroup, K3Icon::SizeSmall) );
+    //(new K3ListViewItem(p_listViewItem, i18n("PhoneBook") ) )
+    //        ->setPixmap(0,KIconLoader::global()->loadIcon("kontact_contacts", K3Icon::NoGroup, K3Icon::SizeSmall) );
+    //p_smsItem = new K3ListViewItem(p_listViewItem, i18n("SMS") );
+    //p_smsItem->setPixmap(0,KIconLoader::global()->loadIcon("mail_generic", K3Icon::NoGroup, K3Icon::SizeSmall) );
 
     // SMS Tree ListView
     SMSFolderListViewItem *sms_inbox= new SMSFolderListViewItem(ui.SMSFolderView, SMS::SIM | SMS::Phone, SMS::Unread | SMS::Read, i18n("Inbox") );
@@ -430,8 +443,8 @@ void DeviceHome::addSMSFolders()
     for ( QStringList::Iterator it = list.begin(); it != list.end(); ++it ) 
     {
         int fn = 1;
-        K3ListViewItem* i = new K3ListViewItem(p_smsItem, *it );
-        i->setPixmap(0,KIconLoader::global()->loadIcon("mail_generic", K3Icon::NoGroup, K3Icon::SizeSmall) );
+        QTreeWidgetItem* i = new QTreeWidgetItem( p_smsItem, QStringList( *it ) );
+        i->setIcon(0,KIconLoader::global()->loadIcon("mail_generic", K3Icon::NoGroup, K3Icon::SizeSmall) );
         i->setText( 1, "SMSFolder" );
         i->setText( 2, QString::number( fn ) );
      }
@@ -441,9 +454,11 @@ void DeviceHome::addSMSFolders()
 /*!
     \fn DeviceHome::clicked ( QListViewItem * item )
  */
-void DeviceHome::clicked ( Q3ListViewItem * item )
+void DeviceHome::clicked ( QTreeWidgetItem * item )
 {
-    if (! item) return;
+    if (! item)
+        return;
+
     if ( item->text(0) == i18n("PhoneBook") )
     {
         ui.widgetStack->raiseWidget(PHONEBOOK_WIDGET_ID);

@@ -41,7 +41,7 @@
 #include <KLocale>
 
 // KDE3 includes
-#include <K3ListView>
+#include <QTreeWidget>
 
 // Qt includes
 #include <QSplitter>
@@ -315,12 +315,12 @@ void kmobiletoolsMainPart::deleteDevicePart( const QString& deviceName )
         delete t_engine;
     }
 
-    Q3ListViewItemIterator it( p_listview );
-    while ( it.current() ) {
-        kDebug() << KMobileTools::DevicesConfig::deviceGroup(it.current()->text(0)) << "==" << deviceName << endl;
-        if ( KMobileTools::DevicesConfig::deviceGroup(it.current()->text(0))==deviceName )
+    QTreeWidgetItemIterator it( p_listview );
+    while ( *it ) {
+        kDebug() << KMobileTools::DevicesConfig::deviceGroup((*it)->text(0)) << "==" << deviceName << endl;
+        if ( KMobileTools::DevicesConfig::deviceGroup((*it)->text(0))==deviceName )
         {
-            delete it.current();
+            delete *it;
             break;
         }
         ++it;
@@ -333,23 +333,22 @@ void kmobiletoolsMainPart::deleteDevicePart( const QString& deviceName )
 }
 
 
-void kmobiletoolsMainPart::listviewClicked( Q3ListViewItem* i )
+void kmobiletoolsMainPart::listviewClicked( QTreeWidgetItem* item, int column )
 {
-    if( !i )
+    if( !item )
         return;
 
-    DeviceListViewItem *item;
-    kDebug() << "kmobiletoolsMainPart::listviewClicked(); i->depth()=" << i->depth() << endl;
-    if( i->depth() )
-        item = static_cast<DeviceListViewItem*>( i->parent() );
+    DeviceListViewItem *deviceItem;
+    if( item->parent() )
+        deviceItem = static_cast<DeviceListViewItem*>( item->parent() );
     else
-        item = static_cast<DeviceListViewItem*>( i );
+        deviceItem = static_cast<DeviceListViewItem*>( item );
 
-    switchPart( item->deviceName() );
+    switchPart( deviceItem->deviceName() );
 
-    int index = l_devicesList.find( item->deviceName() );
+    int index = l_devicesList.find( deviceItem->deviceName() );
     if( index != -1 )
-        l_devicesList.at(index)->clicked( i );
+        l_devicesList.at(index)->clicked( item );
 }
 
 
@@ -487,14 +486,11 @@ void kmobiletoolsMainPart::setupGUI( QWidget* parent ) {
     splitter->setObjectName( QString("kmobiletools-splitter") );
 
     // create devices list-view
-    p_listview = new K3ListView( splitter );
-    p_listview->addColumn( i18n("Devices") );
-    p_listview->setAutoOpen( true );
-    p_listview->setResizeMode( K3ListView::AllColumns );
-    p_listview->setRootIsDecorated( true );
-    p_listview->setSizePolicy( QSizePolicy(QSizePolicy::Preferred,QSizePolicy::Preferred) );
+    p_listview = new QTreeWidget( splitter );
+    p_listview->setColumnCount( 1 );
+    p_listview->setHeaderLabel( i18n( "Devices " ) );
     p_listview->setMinimumWidth( 200 );
-    p_listview->resize( 200, p_listview->height() );
+    p_listview->setRootIsDecorated( true );
 
     m_widget = new QStackedWidget( splitter );
 
@@ -504,7 +500,11 @@ void kmobiletoolsMainPart::setupGUI( QWidget* parent ) {
     setWidget( splitter );
 
     connect(m_widget, SIGNAL( currentChanged ( int ) ), this, SLOT(widgetStackItemChanged( int )) );
-    connect(p_listview, SIGNAL(clicked(Q3ListViewItem *)), SLOT(listviewClicked(Q3ListViewItem* ) ) );
+    connect(p_listview, SIGNAL(itemClicked(QTreeWidgetItem*, int)), 
+            this, SLOT(listviewClicked(QTreeWidgetItem*, int)) );
+    /// @TODO is there a better way to auto-expand all items on change?
+    connect(p_listview, SIGNAL(itemChanged(QTreeWidgetItem*, int)), 
+            p_listview, SLOT(expandAll()) );
 }
 
 

@@ -25,10 +25,9 @@
 #include <KLocale>
 #include <KActionCollection>
 #include <KStandardAction>
-
 #include <KLibLoader>
-
 #include <KMessageBox>
+#include <KApplication>
 
 #include <libkmobiletools/engineslist.h>
 

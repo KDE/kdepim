@@ -25,9 +25,7 @@
 #include <config.h>
 #endif
 
-#include <kdebug.h>
-#include <kapplication.h>
-#include <kparts/mainwindow.h>
+#include <KParts/MainWindow>
 
 class KToggleAction;
 

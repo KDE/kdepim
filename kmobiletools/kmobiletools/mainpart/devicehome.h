@@ -39,11 +39,15 @@
 #include <libkmobiletools/homepage.h>
 #include <libkmobiletools/enginedata.h> //@TODO remove me
 
+#include <QtGui/QTreeWidgetItem>
+
 class QWidget;
 // class mainWidget;
 class QString;
 class K3ListView;
+class K3ListViewItem;
 class Q3ListViewItem;
+class QTreeWidgetItem;
 class StatusBar;
 class addressDetails;
 class smsPart;
@@ -51,6 +55,7 @@ class QProgressBar;
 class QLabel;
 class kmobiletoolsMainPart;
 class StatusBarProgressBox;
+
 namespace KParts
 {
     class StatusBarExtension;
@@ -62,20 +67,24 @@ namespace KMobileTools
 }
 
 /**
- * This is a "Part".  It that does all the real work in a KPart
- * application.
  *
- * @short Device Part
  * @author Marco Gulino <marco.gulino@gmail.com>
+ * @author Matthias Lechner <matthias@lmme.de>
  * @version 0.5.0
  */
 
-class DeviceListViewItem : public K3ListViewItem
+class DeviceListViewItem : public QTreeWidgetItem
 {
     public:
-        explicit DeviceListViewItem (Q3ListView *parent, QString s1) : K3ListViewItem(parent,s1) {}
+        explicit DeviceListViewItem  ( const QString& text, QTreeWidget* parent = 0 )
+        : QTreeWidgetItem( parent ) {
+            setText( 0, text );
+        }
+
         QString deviceName() const { return devicename; }
-        void setDeviceName(const QString &devname) { devicename=devname; }
+        void setDeviceName(const QString& devname) {
+            devicename=devname;
+        }
     private:
         QString devicename;
 };
@@ -119,7 +128,7 @@ class DeviceHome : public QObject/*, virtual public DeviceIFace*/
 public:
     explicit DeviceHome(QWidget *parentWidget, const QString &devicename,kmobiletoolsMainPart *parent);
     virtual ~DeviceHome();
-    virtual K3ListViewItem *listViewItem() { return p_listViewItem; }
+    virtual QTreeWidgetItem *listViewItem() { return p_listViewItem; }
     bool isConnected() { return devIsConnected; }
     void stopDevice();
     void resumeDevice();
@@ -144,7 +153,7 @@ private:
     ContactsSearchLineWidget *slwidget;
     StatusBar *m_statusbar;
     KMobileTools::Engine* engine;
-    K3ListViewItem *p_smsItem;
+    QTreeWidgetItem *p_smsItem;
     DeviceListViewItem *p_listViewItem;
     KMobileTools::homepagePart *home;
     QTimer *statusPollTimer;
@@ -183,7 +192,7 @@ public slots:
     void updateAllContacts();
     void updateAllContacts(KMobileTools::ContactsList *addressBook);
     void updateSMSList();
-    void clicked ( Q3ListViewItem * item );
+    void clicked ( QTreeWidgetItem * item );
     void printInfoPage(int i) { home->printInfoPage(i, engine); }
     void pb_clicked ( Q3ListViewItem * item );
     void devDisconnected();

@@ -136,8 +136,11 @@ const QString DevicesConfig::firstFreeGroup()
 const QPixmap DevicesConfig::deviceTypeIcon(const QString &groupName, K3Icon::Group group, int size)
 {
     kDebug() << "deviceTypeIcon(); groupName=" << groupName << ", engine=" << DevicesConfig::prefs(groupName)->engine()<< endl;
-    KPluginInfo info=EnginesList::instance()->engineInfo(DevicesConfig::prefs(groupName)->engine() );
-    if(!info.isValid()) return QPixmap();
+
+    KPluginInfo info = EnginesList::instance()->engineInfo(DevicesConfig::prefs(groupName)->engine() );
+    if( !info.isValid() )
+        return QPixmap();
+
     kDebug() << "icon:" << info.icon() << endl;
     return KIconLoader::global()->loadIcon(info.icon(), group, size);
 }

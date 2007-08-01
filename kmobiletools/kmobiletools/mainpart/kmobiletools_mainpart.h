@@ -31,8 +31,8 @@
 
 class QStackedWidget;
 class QString;
-class K3ListView;
-class Q3ListViewItem;
+class QTreeWidgetItem;
+class QTreeWidget;
 class DeviceManager;
 class KAboutData;
 class KSystemTrayIcon;
@@ -79,7 +79,7 @@ class kmobiletoolsMainPart : public KParts::ReadOnlyPart/*, virtual public MainI
          */
         bool openFile() { return false; }
 
-        K3ListView *listview() { return p_listview; }
+        QTreeWidget *listview() { return p_listview; }
         KSystemTrayIcon * sysTray() { return p_sysTray; }
         KParts::StatusBarExtension *statusBarExtension() { return p_statusBarExtension;}
 
@@ -110,7 +110,7 @@ class kmobiletoolsMainPart : public KParts::ReadOnlyPart/*, virtual public MainI
         void updateStatus();
 
         void widgetStackItemChanged(int item);
-        void listviewClicked(Q3ListViewItem *);
+        void listviewClicked( QTreeWidgetItem* item, int column );
 
     private:
         void setupGUI( QWidget* parent );
@@ -120,7 +120,7 @@ class kmobiletoolsMainPart : public KParts::ReadOnlyPart/*, virtual public MainI
         bool checkConfigVersion();
 
         QStackedWidget *m_widget;
-        K3ListView *p_listview;
+        QTreeWidget *p_listview;
         KSystemTrayIcon * p_sysTray;
 
         KParts::MainWindow *mainwindow;
