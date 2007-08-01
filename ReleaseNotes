@@ -1,5 +1,11 @@
-Current Release is Proko2 2.1.8
+Current Release is Proko2 2.1.9
 
+Bugfixes
+--------
+* Kolab/issue1858  Filters applying to new emails in groupware folders, changing filter behaviour
+
+
+Changes since Proko2 2.1.7 up to Proko2 2.1.8 (released 20.07.2007)
 Features
 =========
 
@@ -10,7 +16,7 @@ KMail
 
 *** WARNING ***
 A special case of this feature is problematic.
-Filtering is applied on newly shared groupware folders to which the user 
+Filtering is applied on newly shared groupware folders to which the user
 has full access.
 (See: kolab/issue 1858)
 
