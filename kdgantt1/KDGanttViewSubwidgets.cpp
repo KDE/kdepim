@@ -1337,13 +1337,11 @@ void KDTimeHeaderWidget::zoom(double factor, bool absolute)
         qDebug("KDGanttView::zoom() : Zoom factor too low. Nothing zoomed. ");
         return;
     }
-    double newZoom;
-    if (absolute)
-        newZoom = factor;
-    else
-        newZoom = myZoomFactor * factor;
-    double relativeZoom;
-    relativeZoom = newZoom / myZoomFactor;
+    double newZoom = factor;
+    if (!absolute)
+        newZoom *= myZoomFactor;
+
+    double relativeZoom = newZoom / myZoomFactor;
 
     //qDebug("zooming relative %f ", relativeZoom);
     //qDebug("zooming absolute %f ", newZoom);
@@ -1426,8 +1424,6 @@ void KDTimeHeaderWidget::setScale(Scale unit, bool update  )
     myZoomFactor = 1.0;
     if ( update )
         computeTicks();
-
-
 }
 
 
@@ -2316,10 +2312,10 @@ void KDTimeHeaderWidget::computeTicks(bool doNotComputeRealScale) // default fal
     majorTicks.clear();
     minorText.clear();
     majorText.clear();
-    if ( !doNotComputeRealScale )
+    if (!doNotComputeRealScale) {
         saveCenterDateTime();
-    if (!doNotComputeRealScale)
         computeRealScale(myHorizonStart);
+    }
     myRealStart = getEvenTimeDate(myHorizonStart ,myRealScale);
     if (!doNotComputeRealScale)
         computeRealScale(myRealStart);
@@ -2330,7 +2326,7 @@ void KDTimeHeaderWidget::computeTicks(bool doNotComputeRealScale) // default fal
     //qDebug("tempMinorScaleCount %d scale: %d  - real scale: %d", tempMinorScaleCount, myScale, myRealScale);
     //qDebug("Zoom factor %f ",myZoomFactor );
     //qDebug("sta %s - %s end %s ",myRealStart.toString().toLatin1(), myHorizonStart.toString().toLatin1(),myHorizonEnd.toString().toLatin1());
-    QString testTextMinor,testTextMajor, tempStr;
+    QString testTextMinor, testTextMajor, tempStr;
     QRect itemRectMinor, itemRectMajor;
     QDate tempDate = myRealStart.date();
     myRealEnd = myRealStart;
