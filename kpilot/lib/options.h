@@ -122,8 +122,8 @@ inline std::ostream& operator <<(std::ostream &o, const KPilotDepthCount &d)
 // no debugging at all
 //
 #define DEBUGSTREAM   kndbgstream
-#define DEBUGKPILOT   kndDebug()
-#define WARNINGKPILOT kndDebug()
+#define DEBUGKPILOT   kDebugDevNull()
+#define WARNINGKPILOT kDebugDevNull()
 
 // With debugging turned off, FUNCTIONSETUP doesn't do anything.
 //
