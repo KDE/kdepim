@@ -352,18 +352,16 @@ void CertManager::createActions() {
   mDownloadCertificateAction->setText( i18n( "Download") );
   connect(mDownloadCertificateAction, SIGNAL(triggered(bool) ), SLOT(slotDownloadCertificate()));
 
-  const QString dirmngr = KStandardDirs::findExe( "gpgsm" );
-  mDirMngrFound = !dirmngr.isEmpty();
-
+  mDirMngrFound = !KStandardDirs::findExe( "dirmngr" ).isEmpty() && !KStandardDirs::findExe( "gpgsm" ).isEmpty();
   action = coll->addAction( "crl_dump_crl_cache" );
   action->setText( i18n("Dump CRL Cache...") );
   connect(action, SIGNAL(triggered(bool) ), SLOT(slotViewCRLs()));
-  action->setEnabled( mDirMngrFound ); // we also need dirmngr for this
+  action->setEnabled( mDirMngrFound );
 
   action = coll->addAction( "crl_clear_crl_cache" );
   action->setText( i18n("Clear CRL Cache..." ) );
   connect(action, SIGNAL(triggered(bool) ), SLOT(slotClearCRLs()));
-  action->setEnabled( mDirMngrFound ); // we also need dirmngr for this
+  action->setEnabled( mDirMngrFound );
 
   action = coll->addAction( "tools_start_kwatchgnupg");
   action->setIcon( KIcon("pgp-keys") );
