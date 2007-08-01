@@ -46,7 +46,7 @@
 
                                                                           */
 #include "kleo/kleo_export.h"
-#include "libkleo/kleo/cryptobackend.h"
+#include "kleo/cryptobackend.h"
 
 #include <QtCore/QMap>
 #include <QtCore/QString>

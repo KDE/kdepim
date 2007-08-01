@@ -33,7 +33,7 @@
 #ifndef __KLEO_KEYFILTERMANAGER_H__
 #define __KLEO_KEYFILTERMANAGER_H__
 
-#include "libkleo/kleo/kleo_export.h"
+#include "kleo/kleo_export.h"
 #include <QtCore/QObject>
 
 namespace GpgME {
