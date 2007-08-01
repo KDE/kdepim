@@ -43,6 +43,8 @@ public:
 
 	virtual ~HHRecord();
 	
+	/** HHRecord methods */
+	
 	PilotRecord* pilotRecord();
 	
 	virtual bool isArchived() const;
@@ -51,5 +53,35 @@ public:
 	 * Marks the record for deletion and for archiving.
 	 */
 	virtual void setArchived();
+	
+	/** Record methods */
+	
+	virtual const QString id() const;
+	
+	/**
+	 * Sets the id of this record to @p id;
+	 */
+	virtual void setId( const QString &id );
+	
+	/**
+	 * Returns true if the record is modified and/or if it's marked as deleted.
+	 */
+	virtual bool isModified() const;
+	
+	/**
+	 * Returns true when this record is marked for deletion.
+	 */
+	virtual bool isDeleted() const;
+	
+	/**
+	 * Notify the record that syncing is finished so that it can reset flags.
+	 * After calling this function Record::isModified() should return false.
+	 */
+	virtual void synced();
+	
+	/**
+	 * Returns a string representation of the record.
+	 */
+	virtual QString toString() const;
 };
 #endif

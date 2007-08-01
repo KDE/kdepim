@@ -59,3 +59,53 @@ void HHRecord::setArchived()
 	fRecord->setDeleted();
 	fRecord->setArchived();
 }
+
+/** Record methods */
+
+const QString HHRecord::id() const
+{
+	FUNCTIONSETUP;
+	
+	return QString::number( fRecord->id() );
+}
+	
+	/**
+	 * Sets the id of this record to @p id;
+	 */
+void HHRecord::setId( const QString &id )
+{
+	FUNCTIONSETUP;
+	
+	recordid_t rid = id.toULong();
+	
+	if( !rid )
+	{
+		DEBUGKPILOT << "Could not convert " << id << " to ulong. Id not set!";
+		return;
+	}
+	else
+	{
+		fRecord->setID( rid );
+	}
+}
+
+bool HHRecord::isModified() const
+{
+	return fRecord->isModified() || isDeleted();
+}
+
+bool HHRecord::isDeleted() const
+{
+	return fRecord->isDeleted();
+}
+
+void HHRecord::synced()
+{
+	fRecord->setDeleted( false );
+	fRecord->setModified( false );
+}
+
+QString HHRecord::toString() const
+{
+	return fRecord->textRepresentation();
+}

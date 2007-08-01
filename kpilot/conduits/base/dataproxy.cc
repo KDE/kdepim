@@ -101,7 +101,7 @@ void DataProxy::update( const QString &id, Record *newRecord )
 	fRecords.insert( id, newRecord );
 	
 	// Update rollback/volatility information.
-	fOldRecords.insert( id, oldRecord->duplicate() );
+	fOldRecords.insert( id, oldRecord );
 	fCounter.updated();
 }
 

@@ -153,7 +153,7 @@ const QStringList TestHHRecord::fields() const
 	return fFields;
 }
 
-Record* TestHHRecord::duplicate() const
+TestHHRecord* TestHHRecord::duplicate() const
 {
 	return new TestHHRecord( this );
 }

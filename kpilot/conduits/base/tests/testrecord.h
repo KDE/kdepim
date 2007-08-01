@@ -65,6 +65,8 @@ public:
 
 	bool setValue( const QString &field, const QVariant &value );
 	
+	TestRecord* duplicate() const;
+	
 	/** IMPLEMTED VIRTUAL FUNCTIONS FROM BASECLASS **/
 	
 	virtual const QString id() const;
@@ -78,8 +80,6 @@ public:
 	virtual void synced();
 
 	virtual QString toString() const;
-	
-	virtual Record* duplicate() const;
 	
 	virtual bool equal( const Record *other ) const;
 };

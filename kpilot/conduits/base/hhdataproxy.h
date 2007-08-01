@@ -45,6 +45,10 @@ public:
 	virtual bool isOpen() const;
 
 protected:
+	/**
+	 * Implementing class should call this method in there constructor if they
+	 * implement HHDataProxy::createHHRecord( PilotRecord *rec ).
+	 */
 	void loadAllRecords();
 	
 	//virtual void readAppBlock() = 0;

@@ -62,6 +62,7 @@ public:
 	
 	/**
 	 * Notify the record that syncing is finished so that it can reset flags.
+	 * After calling this function Record::isModified() should return false.
 	 */
 	virtual void synced() = 0;
 	
@@ -69,12 +70,6 @@ public:
 	 * Returns a string representation of the record.
 	 */
 	virtual QString toString() const = 0;
-
-	/**
-	 * Returns a duplicate of this record. If Record *rec2 = rec1->duplicate() 
-	 * then rec2->equal( rec1 ) should be true.
-	 */
-	virtual Record* duplicate() const = 0;
 	
 	/**
 	 * Returns wheter or not the current record is equal to @p other. Implementing 

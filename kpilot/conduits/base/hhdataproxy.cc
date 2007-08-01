@@ -126,7 +126,6 @@ void HHDataProxy::loadAllRecords()
 		fRecords.insert( rec->id(), rec );
 		
 		// Read the next one.
-		index++;
-		pRec = fDatabase->readRecordByIndex( index );
+		pRec = fDatabase->readRecordByIndex( ++index );
 	}
 }

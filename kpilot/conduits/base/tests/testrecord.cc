@@ -149,7 +149,7 @@ const QStringList TestRecord::fields() const
 	return fFields;
 }
 
-Record* TestRecord::duplicate() const
+TestRecord* TestRecord::duplicate() const
 {
 	return new TestRecord( this );
 }

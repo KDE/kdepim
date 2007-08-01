@@ -69,6 +69,8 @@ public:
 
 	bool setValue( const QString &field, const QVariant &value );
 	
+	TestHHRecord* duplicate() const;
+	
 	/** IMPLEMTED VIRTUAL FUNCTIONS FROM BASECLASS **/
 	
 	virtual bool isArchived() const { return fArchived; }
@@ -84,8 +86,6 @@ public:
 	virtual void synced();
 
 	virtual QString toString() const;
-	
-	virtual Record* duplicate() const;
 	
 	virtual bool equal( const Record *other ) const;
 };

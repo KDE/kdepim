@@ -1,4 +1,6 @@
-/* keyringhhdataproxy.cc			KPilot
+#ifndef KEYRINGHHRECORD_H
+#define KEYRINGHHRECORD_H
+/* keyringhhdataproxy.h			KPilot
 **
 ** Copyright (C) 2007 by Bertjan Broeksema
 ** Copyright (C) 2007 by Jason "vanRijn" Kasper
@@ -25,33 +27,22 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
-#include "keyringhhdataproxy.h"
+#include "hhrecord.h"
 
-#include "options.h"
-#include "pilotDatabase.h"
-#include "pilotRecord.h"
+class PilotRecord;
 
-#include "keyringhhrecord.h"
-
-static int set_password_hash(unsigned char *buf, int buf_size, char *passwd);
-
-KeyringHHDataProxy::KeyringHHDataProxy( PilotDatabase *db ) : HHDataProxy( db )
+class KeyringHHRecord : public HHRecord
 {
-	loadAllRecords();
+public:
+	KeyringHHRecord( PilotRecord *rec );
 	
-	// Hash-key record
-	PilotRecord *hkRec = fDatabase->readRecordByIndex( 0 );
-}
+	/**
+	 * Returns wheter or not the current record is equal to @p other. Implementing 
+	 * conduits should add support for both implementing records for this. This
+	 * means that if pcRec->equal( hhRec ) is true, then also hhRec->equal( pcRec )
+	 * should be true.
+	 */
+	virtual bool equal( const Record* other ) const;
+};
 
-HHRecord* KeyringHHDataProxy::createHHRecord( PilotRecord *rec )
-{
-	FUNCTIONSETUP;
-	
-	return new KeyringHHRecord( rec );
-}
-
-bool KeyringHHDataProxy::createDataStore()
-{
-	#warning not implemented
-	return false;
-}
+#endif
