@@ -24,7 +24,7 @@
 #include <QtCore/QString>
 #include <QtCore/QObject>
 
-#include <errortypes/baseerror.h>
+#include <libkmobiletools/errortypes/baseerror.h>
 #include "kmobiletools_export.h"
 
 namespace KMobileTools {

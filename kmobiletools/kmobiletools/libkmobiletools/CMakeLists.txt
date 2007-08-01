@@ -68,6 +68,9 @@ install(FILES
    ifaces/smsfolders.h
    ifaces/status.h
    ifaces/information.h
+   status.h
+   shortmessages.h
+   information.h
    enginexp.h
    addressbook.h
    kmobiletools_export.h
