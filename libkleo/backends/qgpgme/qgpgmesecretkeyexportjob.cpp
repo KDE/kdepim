@@ -87,9 +87,9 @@ GpgME::Error Kleo::QGpgMESecretKeyExportJob::start( const QStringList & patterns
 
   connect( mProcess, SIGNAL(finished(int, QProcess::ExitStatus)),
 	   SLOT(slotProcessExited( int, QProcess::ExitStatus)) );
-  connect( mProcess, SIGNAL(receivedStdout()),
+  connect( mProcess, SIGNAL(readyReadStandardOutput()),
 	   SLOT(slotStdout()) );
-  connect( mProcess, SIGNAL(receivedStderr()),
+  connect( mProcess, SIGNAL(readyReadStandardError()),
 	   SLOT(slotStderr()) );
 
   connect( mProcess, SIGNAL(status(Kleo::GnuPGProcessBase*,const QString&,const QStringList&)),
