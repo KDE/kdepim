@@ -46,6 +46,7 @@
 #include "incidenceconverter.h"
 #include "kcal_resourcegroupwise.h"
 #include "soapH.h"
+#include "stdsoap2.h"
 #include "soapGroupWiseBindingProxy.h"
 #include <stdlib.h>
 #include <stdio.h>
@@ -99,7 +100,7 @@ size_t myReceiveCallback( struct soap *soap, char *s, size_t n )
   return (*it)->gSoapReceiveCallback( soap, s, n );
 }
 
-int GroupwiseServer::gSoapOpen( struct soap *, const char *,
+int GroupwiseServer::gSoapOpen( struct soap *soap, const char *,
   const char *host, int port )
 {
 //  kdDebug() << "GroupwiseServer::gSoapOpen()" << endl;
@@ -124,8 +125,18 @@ int GroupwiseServer::gSoapOpen( struct soap *, const char *,
   m_sock->setSocketFlags( KExtendedSocket::inetSocket );
 
   m_sock->setAddress( host, port );
-  m_sock->lookup();
-  int rc = m_sock->connect();
+  int rc = m_sock->lookup();
+  if (rc != 0 ) {
+    kdError() << "gSoapOpen: lookup of " << host << " failed " << rc << endl;
+    QString errorMessage;
+    errorMessage = QString::fromLatin1( strerror( errno ) );
+    perror( 0 );
+    soap->error = SOAP_TCP_ERROR;
+    mErrorText = i18n("Connect failed: %1.").arg( errorMessage );
+    return SOAP_INVALID_SOCKET;
+  }
+
+  rc = m_sock->connect();
   if ( rc != 0 ) {
     kdError() << "gSoapOpen: connect failed " << rc << endl;
     QString errorMessage;
@@ -133,12 +144,14 @@ int GroupwiseServer::gSoapOpen( struct soap *, const char *,
       errorMessage = QString::fromLatin1( strerror( errno ) );
       perror( 0 );
     }
+	//set the soap struct's error here!
     else {
       if ( rc == -3 )
         errorMessage = QString::fromLatin1( "Connection timed out.  Check host and port number" );
     }
     mErrorText = i18n("Connect failed: %1.").arg( errorMessage );
-    return SOAP_INVALID_SOCKET;
+    soap->error =SOAP_TCP_ERROR;
+   return SOAP_INVALID_SOCKET;
   }
   m_sock->enableRead( true );
   m_sock->enableWrite( true );
@@ -165,17 +178,19 @@ int GroupwiseServer::gSoapClose( struct soap * )
    return SOAP_OK;
 }
 
-int GroupwiseServer::gSoapSendCallback( struct soap *, const char *s, size_t n )
+int GroupwiseServer::gSoapSendCallback( struct soap * soap, const char *s, size_t n )
 {
 //  kdDebug() << "GroupwiseServer::gSoapSendCallback()" << endl;
 
   if ( !m_sock ) {
     kdError() << "no open connection" << endl;
+    soap->error = SOAP_TCP_ERROR;
     return SOAP_TCP_ERROR;
   }
   if ( mError ) {
     kdError() << "SSL is in error state." << endl;
-    return SOAP_SSL_ERROR;
+     soap->error = SOAP_SSL_ERROR;
+     return SOAP_SSL_ERROR;
   }
 
   if ( getenv("DEBUG_GW_RESOURCE") ) {
@@ -194,6 +209,7 @@ int GroupwiseServer::gSoapSendCallback( struct soap *, const char *s, size_t n )
     if ( ret < 0 ) {
       kdError() << "Send failed: " << strerror( m_sock->systemError() )
         << " " << m_sock->socketStatus() << " " << m_sock->fd() << endl;
+      soap->error = SOAP_TCP_ERROR;
       return SOAP_TCP_ERROR;
     }
     n -= ret;
@@ -202,6 +218,7 @@ int GroupwiseServer::gSoapSendCallback( struct soap *, const char *s, size_t n )
   if ( n !=0 ) {
     kdError() << "Send failed: " << strerror( m_sock->systemError() )
       << " " << m_sock->socketStatus() << " " << m_sock->fd() << endl;
+    soap->error = SOAP_TCP_ERROR;
   }
 
   m_sock->flush();

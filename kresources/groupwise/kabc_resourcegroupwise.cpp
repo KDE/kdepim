@@ -648,7 +648,9 @@ ResourceGroupwise::SABState ResourceGroupwise::systemAddressBookState()
       return InSync;
     }
   }
-  
+  else
+    emit loadingError( this, mServer->errorText() );
+
   if ( storedFirstSequence == 0 || storedLastSequence == 0 )
   {
     kdDebug() << "  Fallthrough - no fetched SAB exists yet, refresh" << endl;
