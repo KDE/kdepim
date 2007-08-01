@@ -61,6 +61,8 @@ install( FILES kmobiletools_devices.kcfg kmobiletools_devices.kcfg DESTINATION  
 
 
 install( FILES  kmobiletoolsengine.desktop DESTINATION ${SERVICETYPES_INSTALL_DIR} )
+
+# install interfaces
 install(FILES
    ifaces/addressbook.h
    ifaces/dialaction.h
@@ -68,6 +70,13 @@ install(FILES
    ifaces/smsfolders.h
    ifaces/status.h
    ifaces/information.h
+   DESTINATION ${INCLUDE_INSTALL_DIR}/libkmobiletools/ifaces)
+
+install(FILES
+   errortypes/baseerror.h
+   DESTINATION ${INCLUDE_INSTALL_DIR}/libkmobiletools/errortypes)
+
+install(FILES
    status.h
    shortmessages.h
    information.h
