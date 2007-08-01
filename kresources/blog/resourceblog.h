@@ -185,7 +185,7 @@ class KCAL_RESOURCEBLOG_EXPORT ResourceBlog : public ResourceCached
 
       @return The success of the fetch call.
     */
-    bool fetchBlogs();
+    bool listBlogs();
 
     /**
       Returns the current blog to post to.

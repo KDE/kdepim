@@ -63,6 +63,10 @@ ResourceBlogConfig::ResourceBlogConfig
 
   label = new QLabel( i18n( "API:" ), this );
   mAPI = new KComboBox( false, this );
+  //TODO: When these are more stable/featureful, add them.
+  //mAPI->addItem( "Google Blogger Data" );
+  //mAPI->addItem( "LiveJournal" );
+  //mAPI->addItem( "Movable Type" );
   mAPI->addItem( "MetaWeblog" );
   mAPI->addItem( "Blogger 1.0" );
 
@@ -151,7 +155,7 @@ void ResourceBlogConfig::slotBlogAPIChanged( int index )
                 const QMap<QString,QString> & ) ),
             this, SLOT( slotBlogInfoRetrieved(
                         const QMap<QString,QString> & ) ) );
-  blog->fetchBlogs();
+  blog->listBlogs();
   mBlogs->clear();
   mBlogs->setEnabled( false );
 }

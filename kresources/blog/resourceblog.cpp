@@ -382,7 +382,7 @@ bool ResourceBlog::addJournal( Journal *journal )
   return false;
 }
 
-bool ResourceBlog::fetchBlogs() {
+bool ResourceBlog::listBlogs() {
   // Only children of Blogger 1.0 and Google Blogger Data support listBlogs()
   KBlog::Blogger1* blogger = qobject_cast<KBlog::Blogger1*>( mAPI );
   if ( blogger ) {
@@ -400,7 +400,7 @@ bool ResourceBlog::fetchBlogs() {
     gdata->listBlogs();
     return true;
   }
-  kError( 5800 ) << "ResourceBlog::fetchBlogs(): "
+  kError( 5800 ) << "ResourceBlog::listBlogs(): "
       << "API does not support multiple blogs.";
   return false;
 }
