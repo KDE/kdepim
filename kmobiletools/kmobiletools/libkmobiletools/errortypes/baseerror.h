@@ -20,7 +20,7 @@
 #ifndef KMOBILETOOLSBASEERROR_H
 #define KMOBILETOOLSBASEERROR_H
 
-#include "kmobiletools_export.h"
+#include <libkmobiletools/kmobiletools_export.h>
 
 #include <QtCore/QString>
 #include <QtCore/QVariant>
