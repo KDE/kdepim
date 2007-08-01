@@ -251,22 +251,25 @@ void ResourceBlog::slotListedPostings(
   for (i = postings.constBegin(); i != postings.constEnd(); ++i) {
     posting = *i;
     journalBlog = new Journal();
-    QString id = "kblog-" + mUrl.url() + "-" + mUsername + "-" +
-        posting->postingId();
+    QString id = "kblog-" + mUrl.url() + '-' + mBlogID  + '-' + mUsername +
+        '-' + posting->postingId();
     if ( mJournalsMap->value( id ) == 0 ) {
-      connect ( mAPI, SIGNAL( createdPosting( QString & ) ),
-                this, SLOT( slotCreatedPosting( QString & ) ) );
+      connect ( mAPI, SIGNAL( createdPosting( KBlog::BlogPosting * ) ),
+                this, SLOT( slotCreatedPosting( KBlog::BlogPosting * ) ) );
       connect ( mAPI, SIGNAL( error( const KBlog::Blog::ErrorType &,
                 const QString & ) ),
                 this, SLOT( slotError( const KBlog::Blog::ErrorType &,
                 const QString & ) ) );
       journalBlog->setUid( id );
+      journalBlog->setCustomProperty( "KBLOG", "URL", mUrl.url() );
+      journalBlog->setCustomProperty( "KBLOG", "USER", mUsername );
+      journalBlog->setCustomProperty( "KBLOG", "BLOG", mBlogID );
+      journalBlog->setCustomProperty( "KBLOG", "ID", posting->postingId() );
       journalBlog->setSummary( posting->title() );
       journalBlog->setCategories( posting->categories() );
       journalBlog->setDescription( posting->content() );
       journalBlog->setDtStart( posting->creationDateTime() );
       if ( ResourceCached::addJournal( journalBlog ) ) {
-        kDebug( 5800 ) << "ResourceBlog::slotListedPosting(): Journal added";
         mJournalsMap->insert( id, journalBlog );
       }
     }
@@ -286,13 +289,15 @@ void ResourceBlog::slotError( const KBlog::Blog::ErrorType &type,
                               const QString &errorMessage )
 {
   kError( 5800 ) << "ResourceBlog: " << type << ": " << errorMessage;
-  //Q_ASSERT(false);
+  Q_ASSERT(false);
 }
 
-void ResourceBlog::slotCreatedPosting( const QString &id )
+void ResourceBlog::slotCreatedPosting( KBlog::BlogPosting *posting )
 {
-  kDebug( 5800 ) << "ResourceBlog: Posting created with id " << id;
-  mPostID = id.toInt();
+  //TODO Delete posting? Signals?
+  kDebug( 5800 ) << "ResourceBlog: Posting created with id " <<
+      posting->postingId();
+  mLastKnownPostID = posting->postingId().toInt();
 }
 
 void ResourceBlog::slotBlogInfoRetrieved( const QMap<QString,QString> &blogs )
@@ -359,23 +364,37 @@ bool ResourceBlog::setValue( const QString &key, const QString &value )
 bool ResourceBlog::addJournal( Journal *journal )
 {
   kDebug( 5800 ) << "ResourceBlog::addJournal()";
-  QString title = journal->summary();
-  QString content = journal->description();
-  KDateTime date = journal->dtStart();
-  QStringList categories = journal->categories();
   //TODO: Delete
   KBlog::BlogPosting *post = new KBlog::BlogPosting();
-  post->setTitle( title );
-  post->setContent( content );
-  post->setCategories( categories );
   if ( mAPI ) {
     mAPI->setBlogId( mBlogID );
-    post->setCreationDateTime( date );
+    post->setTitle( journal->summary() );
+    post->setContent( journal->description() );
+    post->setCategories( journal->categories() );
+    post->setCreationDateTime( journal->dtStart() );
     connect ( mAPI, SIGNAL( error( const KBlog::Blog::ErrorType &,
                   const QString & ) ),
               this, SLOT( slotError( const KBlog::Blog::ErrorType &,
                   const QString & ) ) );
     mAPI->createPosting( post );
+    return true;
+  }
+  kError() << "ResourceBlog::addJournal(): Journal not initialised.";
+  return false;
+}
+
+bool ResourceBlog::deleteJournal( Journal *journal )
+{
+  kDebug( 5800 ) << "ResourceBlog::deleteJournal()";
+  if ( mAPI ) {
+    KBlog::BlogPosting *post = new KBlog::BlogPosting();
+    mAPI->setBlogId( mBlogID );
+    post->setPostingId( journal->customProperty( "KBLOG", "ID" ) );
+    connect ( mAPI, SIGNAL( error( const KBlog::Blog::ErrorType &,
+              const QString & ) ),
+              this, SLOT( slotError( const KBlog::Blog::ErrorType &,
+                          const QString & ) ) );
+    mAPI->removePosting( post );
     return true;
   }
   kError() << "ResourceBlog::addJournal(): Journal not initialised.";

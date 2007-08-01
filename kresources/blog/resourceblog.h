@@ -181,6 +181,14 @@ class KCAL_RESOURCEBLOG_EXPORT ResourceBlog : public ResourceCached
     bool addJournal( Journal *journal );
 
     /**
+      Removes a journal from the blog server.
+
+      @param key The journal to remove.
+      @return The success of the journal removal.
+     */
+    bool deleteJournal( Journal *journal );
+
+    /**
       Fetches the list of postable blogs.
 
       @return The success of the fetch call.
@@ -202,17 +210,9 @@ class KCAL_RESOURCEBLOG_EXPORT ResourceBlog : public ResourceCached
     */
     void setBlog( const QString &id, const QString &name );
 
-    // Posts cannot be deleted from the server.
-    bool deleteJournal( Journal *journal )
-    {
-      Q_UNUSED( journal )
-      return false;
-    }
-
     // The blog resource only handles journals.
-    bool addEvent( Event *anEvent )
+    bool addEvent( Event * )
     {
-      Q_UNUSED( anEvent )
       return false;
     }
 
@@ -227,10 +227,9 @@ class KCAL_RESOURCEBLOG_EXPORT ResourceBlog : public ResourceCached
     {}
 
     // The blog resource only handles journals.
-    bool addTodo( Todo *todo )
+    bool addTodo( Todo * )
     {
-      Q_UNUSED( todo )
-      return false;
+       return false;
     }
 
     // The blog resource only handles journals.
@@ -273,9 +272,9 @@ class KCAL_RESOURCEBLOG_EXPORT ResourceBlog : public ResourceCached
       Updates the latest stored post ID to the ID returned from the blog post
       creation operation.
 
-      @param id The ID of the last blog post created on the server.
+    @param posting The last blog post created on the server.
     */
-    void slotCreatedPosting( const QString &id );
+    void slotCreatedPosting( KBlog::BlogPosting *posting );
 
     /**
       Updates the local list of available blogs to post to.
@@ -313,7 +312,7 @@ class KCAL_RESOURCEBLOG_EXPORT ResourceBlog : public ResourceCached
     /**
       The latest known numerical post ID used on the server.
     */
-    int mPostID;
+    int mLastKnownPostID;
 
     /**
       The URL used for XML-RPC access.
