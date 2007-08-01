@@ -488,7 +488,7 @@ void kmobiletoolsMainPart::setupGUI( QWidget* parent ) {
     // create devices list-view
     p_listview = new QTreeWidget( splitter );
     p_listview->setColumnCount( 1 );
-    p_listview->setHeaderLabel( i18n( "Devices " ) );
+    p_listview->setHeaderLabel( i18n( "Devices" ) );
     p_listview->setMinimumWidth( 200 );
     p_listview->setRootIsDecorated( true );
 
