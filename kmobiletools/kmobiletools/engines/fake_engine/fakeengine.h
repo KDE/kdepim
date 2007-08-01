@@ -42,29 +42,29 @@ public:
     FakeEngine( QObject *parent );
     virtual ~FakeEngine();
 
-    void initialize( const QString& deviceName ) {};
+    void initialize( const QString& deviceName );
 
     //
     // Status interface implementation
     //
-    int signalStrength() const {};
-    int charge() const {};
-    KMobileTools::Status::PowerSupplyType powerSupplyType() const {};
-    bool ringing() const {};
+    int signalStrength() const;
+    int charge() const;
+    KMobileTools::Status::PowerSupplyType powerSupplyType() const;
+    bool ringing() const;
 
     //
     // Information interface implementation
     //
-    QString networkName() const {};
-    QString manufacturer() const {};
-    KMobileTools::Information::Manufacturer manufacturerID() const {};
-    QString model() const {};
-    QString imei() const {};
-    QString revision() const {};
+    QString networkName() const;
+    QString manufacturer() const;
+    KMobileTools::Information::Manufacturer manufacturerID() const;
+    QString model() const;
+    QString imei() const;
+    QString revision() const;
 
 public Q_SLOTS:
-    void fetchStatusInformation() {};
-    void fetchInformation() {};
+    void fetchStatusInformation();
+    void fetchInformation();
 
 Q_SIGNALS:
     void initialized( bool successful );

@@ -30,6 +30,60 @@ FakeEngine::~FakeEngine()
 {
 }
 
+void FakeEngine::initialize( const QString& deviceName )
+{
+    Q_UNUSED( deviceName )
+}
+
+int FakeEngine::signalStrength() const
+{
+}
+
+int FakeEngine::charge() const
+{
+}
+
+KMobileTools::Status::PowerSupplyType FakeEngine::powerSupplyType() const
+{
+}
+
+bool FakeEngine::ringing() const
+{
+    return false;
+}
+
+QString FakeEngine::networkName() const
+{
+}
+
+QString FakeEngine::manufacturer() const
+{
+}
+
+KMobileTools::Information::Manufacturer FakeEngine::manufacturerID() const
+{
+}
+
+QString FakeEngine::model() const
+{
+}
+
+QString FakeEngine::imei() const
+{
+}
+
+QString FakeEngine::revision() const
+{
+}
+
+void FakeEngine::fetchStatusInformation()
+{
+}
+
+void FakeEngine::fetchInformation()
+{
+}
+
 K_EXPORT_COMPONENT_FACTORY( libkmobiletools_fake, FakeEngineFactory )
 
 FakeEngineFactory::FakeEngineFactory()
