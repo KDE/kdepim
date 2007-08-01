@@ -139,10 +139,10 @@ ContactListViewItem::ContactListViewItem(Q3ListView *parent, const KABC::Address
 
 
 
-DeviceHome::DeviceHome( QWidget *parentWidget, const QString &devicename, kmobiletoolsMainPart *parent ) : QObject( parent ), p_mainPart(parent), statusBarExtension(0), memslotSelected(0), signalProgress(0),
-    smsTypeSelected(0), networkLabel(0), batteryProgress(0), devNameLabel(0), voidLabel(0),
-    batteryLabel(0), signalLabel(0), statusBarBox(0), suspends_count(0), engine(0), p_calendar(0),
-    b_dialing(false), b_dialing_called(false)
+DeviceHome::DeviceHome( QWidget *parentWidget, const QString &devicename, kmobiletoolsMainPart *parent ) : QObject( parent ), engine(0), suspends_count(0), statusBarExtension(0), memslotSelected(0),
+    smsTypeSelected(0), p_mainPart(parent), p_calendar(0), statusBarBox(0), signalProgress(0),
+    batteryProgress(0), networkLabel(0), devNameLabel(0), voidLabel(0), batteryLabel(0),
+    signalLabel(0), b_dialing(false), b_dialing_called(false)
 {
     m_widget = new QWidget(parentWidget);
     ui.setupUi(m_widget);

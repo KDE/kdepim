@@ -141,6 +141,7 @@ public:
     QWidget *widget() { return m_widget;}
     QList<QAction*> actionList() { return l_actionList;}
     const SMSList *smsList() {
+        return 0; // @TODO
             //return engine->constEngineData()->smsList();
     }
     void setupWidgets();
