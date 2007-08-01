@@ -149,6 +149,7 @@ void KWatchGnuPGMainWindow::startWatcher()
   *mWatcher << "--force";
   *mWatcher << config.readEntry("Socket", WATCHGNUPGSOCKET);
   config.changeGroup(QString());
+  mWatcher->setOutputChannelMode( KProcess::OnlyStdoutChannel );
   mWatcher->start();
   const bool ok = mWatcher->waitForStarted();
   if( !ok) {
@@ -207,17 +208,19 @@ void KWatchGnuPGMainWindow::slotReadStdout()
 {
   if ( !mWatcher )
     return;
-  QString str = QString::fromLocal8Bit( mWatcher->readAllStandardOutput() );
-/*
-  while( mWatcher->readln(str,false) > 0 ) {
-	mCentralWidget->append( str );
+  while(mWatcher->canReadLine()){
+        QString str = QString::fromUtf8( mWatcher->readLine() );
+	if ( str.endsWith( '\n' ) )
+	   str.chop( 1 );
+	if ( str.endsWith( '\r' ) )
+	   str.chop( 1 );
+	mCentralWidget->append(str);
 	if( !isVisible() ) {
-	  // Change tray icon to show something happened
-	  // PENDING(steffen)
-	  mSysTray->setAttention(true);
+	    // Change tray icon to show something happened
+	    // PENDING(steffen)
+            mSysTray->setAttention(true);
 	}
-	}
-*/
+  }
 }
 
 void KWatchGnuPGMainWindow::show()
