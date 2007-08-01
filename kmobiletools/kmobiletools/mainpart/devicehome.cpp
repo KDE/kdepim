@@ -217,13 +217,13 @@ void DeviceHome::setupWidgets()
     p_listViewItem->setIcon( 0, DEVCFG(objectName() )->deviceTypeIcon(DEVCFG(objectName() )->currentGroup(), K3Icon::NoGroup, K3Icon::SizeSmall ) );
 
     (new QTreeWidgetItem( p_listViewItem, QStringList("Calls") ) )
-    ->setIcon( 0, KIconLoader::global()->loadIcon( "kaddressbook", K3Icon::NoGroup, K3Icon::SizeSmall) );
+    ->setIcon( 0, KIcon( "kaddressbook" ) );
 
     (new QTreeWidgetItem( p_listViewItem, QStringList( i18n( "PhoneBook") ) ) )
-    ->setIcon( 0, KIconLoader::global()->loadIcon( "kontact_contacts", K3Icon::NoGroup, K3Icon::SizeSmall) );
+    ->setIcon( 0, KIcon( "kontact_contacts" ) );
 
     p_smsItem = new QTreeWidgetItem( p_listViewItem, QStringList( i18n("SMS") ) );
-    p_smsItem->setIcon( 0, KIconLoader::global()->loadIcon( "mail_generic", K3Icon::NoGroup, K3Icon::SizeSmall) );
+    p_smsItem->setIcon( 0, KIcon( "mail_generic" ) );
 
     //p_listViewItem->setOpen(true);
     //p_listViewItem->setPixmap(0,DEVCFG(objectName() )->deviceTypeIcon(DEVCFG(objectName() )->currentGroup(), K3Icon::NoGroup, K3Icon::SizeSmall ));
@@ -444,7 +444,7 @@ void DeviceHome::addSMSFolders()
     {
         int fn = 1;
         QTreeWidgetItem* i = new QTreeWidgetItem( p_smsItem, QStringList( *it ) );
-        i->setIcon(0,KIconLoader::global()->loadIcon("mail_generic", K3Icon::NoGroup, K3Icon::SizeSmall) );
+        i->setIcon( 0, KIcon("mail_generic") );
         i->setText( 1, "SMSFolder" );
         i->setText( 2, QString::number( fn ) );
      }

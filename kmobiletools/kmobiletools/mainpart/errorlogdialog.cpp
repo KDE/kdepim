@@ -188,15 +188,11 @@ ErrorLogItem::ErrorLogItem( const KMobileTools::BaseError* errorObject, QListWid
             break;
 
         case BaseError::Medium:
-            icon.addPixmap( KIconLoader::global()->loadIcon("dialog-warning",
-                                                            K3Icon::NoGroup,
-                                                            K3Icon::SizeMedium ) );
+            icon = KIcon("dialog-warning");
             break;
 
         case BaseError::High:
-            icon.addPixmap( KIconLoader::global()->loadIcon("dialog-error",
-                                                            K3Icon::NoGroup,
-                                                            K3Icon::SizeMedium ) );
+            icon = KIcon("dialog-error");
             break;
     }
     setIcon( icon );
