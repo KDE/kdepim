@@ -32,7 +32,9 @@
 #include <libkdepim/progressmanager.h>
 
 #include <kblog/blogposting.h>
-#include <kblog/metaweblog.h>
+#include <kblog/movabletype.h>
+#include <kblog/livejournal.h>
+#include <kblog/gdata.h>
 
 #include "resourceblog.h"
 
@@ -138,7 +140,13 @@ QString ResourceBlog::password() const
 void ResourceBlog::setAPI( const QString &API )
 {
   kDebug( 5800 ) << "ResourceBlog::setAPI(): " << API;
-  if ( API == "MetaWeblog" ) {
+  if ( API == "Google Blogger Data" ) {
+    mAPI = new KBlog::GData( mUrl, this );
+  } else if ( API == "LiveJournal" ) {
+    mAPI = new KBlog::LiveJournal( mUrl, this );
+  } else if ( API == "Movable Type" ) {
+    mAPI = new KBlog::MovableType( mUrl, this );
+  } else if ( API == "MetaWeblog" ) {
     mAPI = new KBlog::MetaWeblog( mUrl, this );
   } else if ( API == "Blogger 1.0" ) {
     mAPI = new KBlog::Blogger1( mUrl, this );
@@ -153,7 +161,16 @@ void ResourceBlog::setAPI( const QString &API )
 QString ResourceBlog::API() const
 {
   if ( mAPI ) {
-    if ( qobject_cast<KBlog::MetaWeblog*>( mAPI ) ) {
+    if ( qobject_cast<KBlog::GData*>( mAPI ) ) {
+      return "Google Blogger Data";
+    }
+    else if ( qobject_cast<KBlog::LiveJournal*>( mAPI ) ) {
+      return "LiveJournal";
+    }
+    else if ( qobject_cast<KBlog::MovableType*>( mAPI ) ) {
+      return "Movable Type";
+    }
+    else if ( qobject_cast<KBlog::MetaWeblog*>( mAPI ) ) {
       return "MetaWeblog";
     }
     else if ( qobject_cast<KBlog::Blogger1*>( mAPI ) ) {
@@ -366,12 +383,21 @@ bool ResourceBlog::addJournal( Journal *journal )
 }
 
 bool ResourceBlog::fetchBlogs() {
+  // Only children of Blogger 1.0 and Google Blogger Data support listBlogs()
   KBlog::Blogger1* blogger = qobject_cast<KBlog::Blogger1*>( mAPI );
   if ( blogger ) {
     connect ( blogger, SIGNAL( listedBlogs( const QMap<QString,QString> & ) ),
               this, SLOT( slotBlogInfoRetrieved(
                     const QMap<QString,QString> & ) ) );
     blogger->listBlogs();
+    return true;
+  }
+  KBlog::GData* gdata = qobject_cast<KBlog::GData*>( mAPI );
+  if ( gdata ) {
+    connect ( gdata, SIGNAL( listedBlogs( const QMap<QString,QString> & ) ),
+              this, SLOT( slotBlogInfoRetrieved(
+                          const QMap<QString,QString> & ) ) );
+    gdata->listBlogs();
     return true;
   }
   kError( 5800 ) << "ResourceBlog::fetchBlogs(): "
