@@ -47,9 +47,11 @@ class KPILOT_EXPORT SyncAction : public QObject
 Q_OBJECT
 
 public:
-	SyncAction(KPilotLink *p);
-	SyncAction(KPilotLink *p,
-		QWidget *visibleparent);
+        SyncAction(KPilotLink *p,
+                const char *name);
+        SyncAction(KPilotLink *p,
+                QWidget *visibleparent,
+                const char *name);  
 	~SyncAction();
 
 	typedef enum { Error=-1 } Status;

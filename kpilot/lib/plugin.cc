@@ -45,6 +45,7 @@
 #include <qtabwidget.h>
 #include <qtimer.h>
 #include <QPixmap>
+#include <QString>
 #include <qtextedit.h>
 
 #include <kglobal.h>
@@ -267,8 +268,9 @@ QWidget *ConduitConfigBase::aboutPage(QWidget *parent, KAboutData *ad)
 
 
 ConduitAction::ConduitAction(KPilotLink *p,
+	const char *name,
 	const QStringList &args) :
-	SyncAction(p),
+	SyncAction(p, name),
 	fDatabase(0L),
 	fLocalDatabase(0L),
 	fSyncDirection(args),
@@ -443,7 +445,7 @@ bool ConduitAction::changeSync(SyncMode::Mode m)
 ConduitProxy::ConduitProxy(KPilotLink *p,
 	const QString &name,
 	const SyncAction::SyncMode &m) :
-	ConduitAction(p,m.list()),
+	ConduitAction(p,name.toLatin1(),m.list()),
 	fDesktopName(name)
 {
 	FUNCTIONSETUP;

@@ -40,10 +40,9 @@
 
 
 ActionQueue::ActionQueue(KPilotLink *d) :
-	SyncAction(d)
+	SyncAction(d, "ActionQueue")
 	// The string lists have default constructors
 {
-	setObjectName("ActionQueue");
 	FUNCTIONSETUP;
 }
 

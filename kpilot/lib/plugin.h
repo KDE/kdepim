@@ -193,6 +193,7 @@ Q_OBJECT
 
 public:
 	ConduitAction(KPilotLink *,
+		const char *name,
 		const QStringList &args = QStringList());
 	virtual ~ConduitAction();
 

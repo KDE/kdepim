@@ -42,9 +42,8 @@
 
 
 WelcomeAction::WelcomeAction(KPilotLink *p) :
-	SyncAction(p)
+	SyncAction(p, "welcomeAction")
 {
-	setObjectName("welcomeAction");
 	FUNCTIONSETUP;
 }
 
@@ -60,10 +59,9 @@ WelcomeAction::WelcomeAction(KPilotLink *p) :
 }
 
 SorryAction::SorryAction(KPilotLink *p, const QString &s) :
-	SyncAction(p),
+	SyncAction(p, "sorryAction"),
 	fMessage(s)
 {
-	setObjectName("sorryAction");
 	if (fMessage.isEmpty())
 	{
 		fMessage = i18n("KPilot is busy and cannot process the "
@@ -79,9 +77,8 @@ bool SorryAction::exec()
 	return delayDone();
 }
 
-CleanupAction::CleanupAction(KPilotLink *p)  : SyncAction(p)
+CleanupAction::CleanupAction(KPilotLink *p)  : SyncAction(p, "cleanupAction")
 {
-	setObjectName("cleanupAction");
 	FUNCTIONSETUP;
 }
 
@@ -99,9 +96,8 @@ CleanupAction::CleanupAction(KPilotLink *p)  : SyncAction(p)
 
 
 TestLink::TestLink(KPilotLink * p) :
-	SyncAction(p)
+	SyncAction(p, "testLink")
 {
-	setObjectName("testLink");
 	FUNCTIONSETUP;
 
 }

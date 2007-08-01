@@ -174,11 +174,10 @@ public:
 } ;
 
 BackupAction::BackupAction(KPilotLink * p, bool full) :
-	SyncAction(p),
+	SyncAction(p, "backupAction"),
 	fP( new Private ),
 	fBackupThread( 0L )
 {
-	setObjectName("backupAction");
 	FUNCTIONSETUP;
 
 	fP->fFullBackup = full;
@@ -579,12 +578,11 @@ void BackupAction::endBackup()
 
 FileInstallAction::FileInstallAction(KPilotLink * p,
 	const QString & d) :
-	SyncAction(p),
+	SyncAction(p, "fileInstall"),
 	fDBIndex(-1),
 	fTimer(0L),
 	fDir(d)
 {
-	setObjectName("fileInstall");
 	FUNCTIONSETUP;
 }
 
@@ -775,9 +773,8 @@ bool FileInstallAction::resourceOK(const QString &fileName, const QString &fileP
 }
 
 CheckUser::CheckUser(KPilotLink * p, QWidget * vp):
-	SyncAction(p, vp)
+	SyncAction(p, vp, "userCheck")
 {
-	setObjectName("userCheck");
 	FUNCTIONSETUP;
 
 }
@@ -954,9 +951,8 @@ public:
 
 
 RestoreAction::RestoreAction(KPilotLink * p, QWidget * visible ) :
-	SyncAction(p, visible)
+	SyncAction(p, visible, "restoreAction")
 {
-	setObjectName("restoreAction");
 	FUNCTIONSETUP;
 
 	fP = new Private;

@@ -50,7 +50,7 @@
 #include <QEvent>
 
 NotepadConduit::NotepadConduit(KPilotLink *d,
-	const QStringList &args) : ConduitAction(d, args)
+	const QStringList &args) : ConduitAction(d, "Notepad", args)
 {
 	FUNCTIONSETUP;
 	fConduitName=i18n("Notepad");

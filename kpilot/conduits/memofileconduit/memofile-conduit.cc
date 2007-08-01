@@ -55,7 +55,7 @@
  */
 MemofileConduit::MemofileConduit(KPilotLink *d,
                                  const QStringList &l) :
-		ConduitAction(d,l),
+		ConduitAction(d, "Memofile", l),
 		_DEFAULT_MEMODIR(QDir::homePath() + CSL1("/MyMemos")),
 		fMemoAppInfo(0L),
 		_memofiles(0L)

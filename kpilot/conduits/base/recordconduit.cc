@@ -41,7 +41,7 @@
 
 RecordConduit::RecordConduit( KPilotLink *o, const QStringList &a
 	, const QString &databaseName, const QString &conduitName ) :
-	ConduitAction(o, a),
+	ConduitAction(o, "RecordConduitBase", a),
 	fHHDataProxy(0L),
 	fBackupDataProxy(0L),
 	fPCDataProxy(0L)

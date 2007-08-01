@@ -53,21 +53,25 @@
 #include "syncAction.moc"
 #include "kpilotlibSettings.h"
 
-SyncAction::SyncAction(KPilotLink  *p)
+SyncAction::SyncAction(KPilotLink  *p,
+	const char * name)
 	: QObject(p),
 	fHandle(p),
 	fParent(0L)
 {
 	FUNCTIONSETUP;
+	setObjectName(name);
 }
 
 SyncAction::SyncAction(KPilotLink *p,
-	QWidget * visibleparent):
+	QWidget * visibleparent,
+	const char *name) :
 	QObject(p),
 	fHandle(p),
 	fParent(visibleparent)
 {
 	FUNCTIONSETUP;
+	setObjectName(name);
 }
 
 SyncAction::~SyncAction()

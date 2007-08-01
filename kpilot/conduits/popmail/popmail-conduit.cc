@@ -74,7 +74,7 @@ static QString DATE_FORMAT("ddd, d MMM yyyy hh:mm:ss");
 
 PopMailConduit::PopMailConduit(KPilotLink *d,
 	const QStringList &l) :
-	ConduitAction(d,l)
+	ConduitAction(d,"Popmail",l)
 {
 	FUNCTIONSETUP;
 	fConduitName=i18n("KMail");

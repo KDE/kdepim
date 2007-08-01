@@ -53,9 +53,8 @@
 using namespace KHE;
 
 InternalEditorAction::InternalEditorAction(KPilotLink * p) :
-	SyncAction(p)
+	SyncAction(p, "internalSync")
 {
-	setObjectName("internalSync");
 	FUNCTIONSETUP;
 }
 
