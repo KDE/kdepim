@@ -4195,6 +4195,13 @@ void KDGanttCanvasView::contentsMouseReleaseEvent ( QMouseEvent * e )
 void KDGanttCanvasView::contentsMouseDoubleClickEvent ( QMouseEvent * e )
 {
     QCanvasItemList il = canvas() ->collisions ( e->pos() );
+
+    if ( il.isEmpty() && e->button() == Qt::LeftButton ) {
+        //not directly sending a signal here (encapsulation and whatnot)
+        mySignalSender->emptySpaceDoubleClicked( e );
+        return;
+    }
+
     QCanvasItemList::Iterator it;
     for ( it = il.begin(); it != il.end(); ++it ) {
         switch ( e->button() ) {

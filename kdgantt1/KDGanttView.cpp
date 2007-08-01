@@ -850,6 +850,12 @@ void KDGanttView::slotdoubleClicked ( QListViewItem * item )
 }
 
 
+void KDGanttView::emptySpaceDoubleClicked( QMouseEvent * e )
+{
+    emit dateTimeDoubleClicked( getDateTimeForCoordX( e->x(), false ) );
+}
+
+
 /*
   Implements a casted pass-through of the currentChanged() signal.
 */

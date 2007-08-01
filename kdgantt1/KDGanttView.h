@@ -493,6 +493,7 @@ signals:
     void taskLinkDoubleClicked( KDGanttViewTaskLink* );
 
     void dropped ( QDropEvent * e, KDGanttViewItem* droppedItem, KDGanttViewItem* itemBelowMouse);
+    void dateTimeDoubleClicked ( const QDateTime& );
     void addOneTickRight();
     void addOneTickLeft();
 
@@ -548,6 +549,8 @@ private:
     };
     bool loadXML( const QDomDocument& doc );
     QDomDocument saveXML( bool withPI = true ) const;
+
+    void emptySpaceDoubleClicked( QMouseEvent* e );
 
     static QString scaleToString( Scale scale );
     static QString yearFormatToString( YearFormat format );
