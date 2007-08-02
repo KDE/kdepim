@@ -32,5 +32,4 @@ install(TARGETS kcal_blog  DESTINATION ${PLUGIN_INSTALL_DIR})
 ########### install files ###############
 
 install( FILES blog.desktop  DESTINATION ${SERVICES_INSTALL_DIR}/kresources/kcal)
-install( FILES blog_export.h resourceblogconfig.h resourceblog.h  DESTINATION ${INCLUDE_INSTALL_DIR}/kcal)
 
