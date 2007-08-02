@@ -255,11 +255,11 @@ bool ResourceBlog::doLoad( bool )
 void ResourceBlog::slotListedPostings(
     const QList<KBlog::BlogPosting*> &postings )
 {
-  // TODO: Delete postings?
   kDebug( 5800 ) << "ResourceBlog::slotListedPostings() BEGIN";
   QList<KBlog::BlogPosting*>::const_iterator i;
   for (i = postings.constBegin(); i != postings.constEnd(); ++i) {
     Journal* newJournal = (**i).journal( *mBlog );
+    delete *i;
     kDebug( 5800 ) << "ResourceBlog::slotListedPostings(): 0: " << newJournal->uid();
     Journal* existingJournal = journal( newJournal->uid() );
     if ( existingJournal ) {
@@ -394,25 +394,28 @@ KABC::Lock *ResourceBlog::lock ()
 
 void ResourceBlog::dump() const
 {
-  //TODO
   ResourceCalendar::dump();
   kDebug( 5800 ) << "  URL: " << mUrl.url();
   kDebug( 5800 ) << "  Username: " << mUsername;
   kDebug( 5800 ) << "  API: " << API();
   kDebug( 5800 ) << "  ReloadPolicy: " << reloadPolicy();
+  kDebug( 5800 ) << "  BlogID: " << mBlogID;
+  kDebug( 5800 ) << "  BlogName: " << mBlogName;
+  kDebug( 5800 ) << "  DownloadCount: " << mDownloadCount;
 }
 
 void ResourceBlog::addInfoText( QString &txt ) const
 {
-  //TODO
   txt += "<br>";
   txt += i18n( "URL: %1", mUrl.prettyUrl() );
+  txt += i18n( "Username: %1", mUsername );
   txt += i18n( "API: %1", API() );
+  txt += i18n( "BlogName: %1", mBlogName );
+  txt += i18n( "DownloadCount: %1", mDownloadCount );
 }
 
 bool ResourceBlog::setValue( const QString &key, const QString &value )
 {
-  //TODO
   if ( key == "URL" ) {
     setUrl( KUrl( value ) );
     return true;
