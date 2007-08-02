@@ -19,6 +19,8 @@
   Boston, MA 02110-1301, USA.
 */
 
+#include "resourceblog.h"
+
 #include <QDateTime>
 #include <QString>
 
@@ -36,8 +38,6 @@
 #include <kblog/movabletype.h>
 #include <kblog/livejournal.h>
 #include <kblog/gdata.h>
-
-#include "resourceblog.h"
 
 using namespace KCal;
 

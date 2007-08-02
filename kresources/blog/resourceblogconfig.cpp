@@ -19,6 +19,8 @@
   Boston, MA 02110-1301, USA.
 */
 
+#include "resourceblogconfig.h"
+
 #include <QLabel>
 #include <QGridLayout>
 
@@ -29,8 +31,6 @@
 #include <KComboBox>
 
 #include <kcal/resourcecachedconfig.h>
-
-#include "resourceblogconfig.h"
 
 using namespace KCal;
 
