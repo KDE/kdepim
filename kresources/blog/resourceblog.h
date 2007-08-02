@@ -253,7 +253,7 @@ class KCAL_RESOURCEBLOG_EXPORT ResourceBlog : public ResourceCached
 
       @param postings A list of the postings from the blog.
     */
-    void slotListedPostings( const QList<KBlog::BlogPosting*> &postings );
+    void slotListedPostings( const QList<KBlog::BlogPosting> &postings );
 
     /**
       Prints an error on a XML-RPC failure.

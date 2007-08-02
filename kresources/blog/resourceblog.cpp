@@ -221,9 +221,9 @@ bool ResourceBlog::doLoad( bool )
   if ( mBlog ) {
     if ( mLock->lock() ) {
       connect ( mBlog, SIGNAL( listedRecentPostings(
-                const QList<KBlog::BlogPosting*> & ) ),
+                const QList<KBlog::BlogPosting> & ) ),
                 this, SLOT( slotListedPostings(
-                const QList<KBlog::BlogPosting*> & ) ) );
+                const QList<KBlog::BlogPosting> & ) ) );
       connect ( mBlog, SIGNAL( error( const KBlog::Blog::ErrorType &,
                 const QString & ) ),
                 this, SLOT( slotError( const KBlog::Blog::ErrorType &,
@@ -248,13 +248,12 @@ bool ResourceBlog::doLoad( bool )
 }
 
 void ResourceBlog::slotListedPostings(
-    const QList<KBlog::BlogPosting*> &postings )
+    const QList<KBlog::BlogPosting> &postings )
 {
   kDebug() << "ResourceBlog::slotListedPostings()";
-  QList<KBlog::BlogPosting*>::const_iterator i;
+  QList<KBlog::BlogPosting>::const_iterator i;
   for (i = postings.constBegin(); i != postings.constEnd(); ++i) {
-    Journal* newJournal = (**i).journal( *mBlog );
-    delete *i;
+    Journal* newJournal = (*i).journal( *mBlog );
     Journal* existingJournal = journal( newJournal->uid() );
     if ( existingJournal ) {
       existingJournal->setSummary( newJournal->summary() );
