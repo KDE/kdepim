@@ -30,6 +30,7 @@ set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules" ${CMAKE_MODULE
 
 macro_optional_find_package(Pilotlink)
 macro_optional_find_package(Mal)
+macro_optional_find_package(QCA2)
 macro_log_feature(PILOTLINK_FOUND "pilot-link" "Pilot-link Development Library" "http://www.pilot-link.org/" FALSE "0.12" "Needed for KPilot.")
 macro_log_feature(MAL_FOUND "libmal" "libmal Development Library" "http://jasonday.home.att.net/code/libmal" FALSE "0.40" "Needed for KPilot's Avantgo conduit.")
 
@@ -55,7 +56,7 @@ endif(NOT builddebug AND NOT builddebugfull)
 include_directories(
 	${CMAKE_CURRENT_SOURCE_DIR}
 	${CMAKE_CURRENT_BINARY_DIR}
-	${KDE4_INCLUDES} 
+	${KDE4_INCLUDES}
 	${PILOTLINK_INCLUDE_DIR} 
 	${QT_INCLUDE_DIR} 
 	${QT_QTDBUS_INCLUDE_DIR})

@@ -1,7 +1,7 @@
 include_directories(
 	${CMAKE_CURRENT_SOURCE_DIR}/../base
 	${CMAKE_CURRENT_BINARY_DIR}
-	${KDE4_INCLUDE_DIR}/QtCrypto/
+	${QCA2_INCLUDE_DIR}
 )
 
 add_subdirectory(tests)
@@ -18,5 +18,5 @@ set(keyring_SRCS
 
 #kde4_add_kcfg_files(keyring_SRCS ${conduit_base_KCFGS})
 kde4_add_library(keyring SHARED ${keyring_SRCS})
-target_link_libraries(keyring qca conduit_base ${QT_LIBRARIES})
+target_link_libraries(keyring conduit_base ${QT_LIBRARIES} ${QCA2_LIBRARIES})
 install(TARGETS keyring LIBRARY DESTINATION ${LIB_INSTALL_DIR})

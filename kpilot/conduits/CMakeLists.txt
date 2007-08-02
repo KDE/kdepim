@@ -3,7 +3,6 @@ include_directories(
 )
 
 add_subdirectory(base)
-add_subdirectory(keyringconduit)
 
 #add_subdirectory(abbrowserconduit)
 #add_subdirectory(docconduit)
@@ -22,6 +21,12 @@ IF (HAVE_CALENDARLOCAL_H)
 ELSE (HAVE_CALENDARLOCAL_H)
 	MESSAGE(STATUS "No KDE PIM development headers were found. Install it if you want to build it")
 ENDIF (HAVE_CALENDARLOCAL_H)
+
+IF (QCA2_FOUND)
+	add_subdirectory(keyringconduit)
+ELSE (QCA2_FOUND)
+	MESSAGE(STATUS "Couldn't find qca. Won't be able to build keyringconduit")
+ENDIF(QCA2_FOUND)
 
 ###
 #
