@@ -124,6 +124,18 @@ class KCAL_RESOURCEBLOG_EXPORT ResourceBlog : public ResourceCached
     QString API() const;
 
     /**
+      Sets the number of posts to download when loading from the blog.
+    */
+    void setDownloadCount( int downloadCount );
+
+    /**
+      Gets the number of posts to download when loading from the blog.
+
+      @return The number of posts to download.
+    */
+    int downloadCount() const;
+
+    /**
       Set whether to display the progress of operations.
 
       @param useProgressManager Whether to display the progress of operations.
@@ -327,6 +339,11 @@ class KCAL_RESOURCEBLOG_EXPORT ResourceBlog : public ResourceCached
       The name of the blog to send posts to.
     */
     QString mBlogName;
+
+    /**
+      The number of posts to download when loading from the blog.
+    */
+    int mDownloadCount;
 
     /**
       Whether the progress of operations are displayed.

@@ -80,13 +80,20 @@ ResourceBlogConfig::ResourceBlogConfig
   mainLayout->addWidget( label, 5, 0 );
   mainLayout->addWidget( mBlogs, 5, 1 );
 
+  label = new QLabel( i18n( "Posts to download:" ), this );
+  mDownloadCount = new KLineEdit( this );
+  mDownloadCount->setValidator( new QIntValidator( 1, 1000, mDownloadCount ) );
+
+  mainLayout->addWidget( label, 6, 0 );
+  mainLayout->addWidget( mDownloadCount, 6, 1 );
+
   // Add the subwidget for the cache reload settings.
   mReloadConfig = new ResourceCachedReloadConfig( this );
-  mainLayout->addWidget( mReloadConfig, 6, 0, 1, 2 );
+  mainLayout->addWidget( mReloadConfig, 7, 0, 1, 2 );
 
   // Add the subwidget for the cache save settings.
   mSaveConfig = new ResourceCachedSaveConfig( this );
-  mainLayout->addWidget( mSaveConfig, 7, 0, 1, 2 );
+  mainLayout->addWidget( mSaveConfig, 8, 0, 1, 2 );
 }
 
 void ResourceBlogConfig::loadSettings( KRES::Resource *res )
@@ -97,6 +104,7 @@ void ResourceBlogConfig::loadSettings( KRES::Resource *res )
     mUsername->setText( resource->username() );
     mPassword->setText( resource->password() );
     mAPI->setCurrentItem( resource->API(), false );
+    mDownloadCount->setText( QString::number( resource->downloadCount() ) );
     QPair<QString, QString> blog = resource->blog();
     if ( !blog.second.isEmpty() ) {
       mBlogs->addItem( blog.second, blog.first );
@@ -121,6 +129,7 @@ void ResourceBlogConfig::saveSettings( KRES::Resource *res )
     resource->setUsername( mUsername->text() );
     resource->setPassword( mPassword->text() );
     resource->setAPI( mAPI->currentText() );
+    resource->setDownloadCount( mDownloadCount->text().toInt() );
     QPair<QString, QString> blog = resource->blog();
     if ( !mBlogs->currentText().isEmpty() ) {
       resource->setBlog( mBlogs->itemData( mBlogs->currentIndex() ).toString(),

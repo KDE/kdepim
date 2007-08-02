@@ -87,6 +87,7 @@ void ResourceBlog::readConfig( const KConfigGroup &group )
   mBlogID = group.readEntry( "BlogID" );
   mBlog->setBlogId( mBlogID );
   mBlogName = group.readEntry( "BlogName" );
+  mDownloadCount = group.readEntry( "DownloadCount" ).toInt();
 
   ResourceCached::readConfig( group );
 }
@@ -101,6 +102,7 @@ void ResourceBlog::writeConfig( KConfigGroup &group )
   group.writeEntry( "API", API() );
   group.writeEntry( "BlogID", mBlogID );
   group.writeEntry( "BlogName", mBlogName );
+  group.writeEntry( "DownloadCount", mDownloadCount );
 
   ResourceCalendar::writeConfig( group );
   ResourceCached::writeConfig( group );
@@ -179,6 +181,16 @@ QString ResourceBlog::API() const
   return "Unknown";
 }
 
+void ResourceBlog::setDownloadCount( int downloadCount )
+{
+  mDownloadCount = downloadCount;
+}
+
+int ResourceBlog::downloadCount() const
+{
+  return mDownloadCount;
+}
+
 void ResourceBlog::setUseProgressManager( bool useProgressManager )
 {
   mUseProgressManager = useProgressManager;
@@ -199,16 +211,20 @@ bool ResourceBlog::useCacheFile() const
   return mUseCacheFile;
 }
 
-bool ResourceBlog::doLoad( bool fullReload )
+bool ResourceBlog::doLoad( bool )
 {
   kDebug( 5800 ) << "ResourceBlog::load()";
 
+  if ( mUseCacheFile ) {
+    disableChangeNotification();
+    loadFromCache();
+    enableChangeNotification();
+  }
+
+  clearChanges();
+
   if ( mBlog ) {
     if ( mLock->lock() ) {
-      int downloadCount = 100;
-      //if ( fullReload ) {
-        // TODO: downloadCount = math;
-      //}
       connect ( mBlog, SIGNAL( listedRecentPostings(
                 const QList<KBlog::BlogPosting*> & ) ),
                 this, SLOT( slotListedPostings(
@@ -224,7 +240,7 @@ bool ResourceBlog::doLoad( bool fullReload )
             i18n("Downloading blog posts") );
         mProgress->setProgress( 0 );
       }
-      mBlog->listRecentPostings( downloadCount );
+      mBlog->listRecentPostings( downloadCount() );
       mLock->unlock();
       return true;
     } else {

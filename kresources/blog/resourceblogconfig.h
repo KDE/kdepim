@@ -109,6 +109,11 @@ class KCAL_RESOURCEBLOG_EXPORT ResourceBlogConfig : public KRES::ConfigWidget
     KComboBox *mBlogs;
 
     /**
+      Used to enter the number of posts to download when loading from the blog.
+    */
+    KLineEdit *mDownloadCount;
+
+    /**
       A widget to configure the cache reload options.
     */
     ResourceCachedReloadConfig *mReloadConfig;
