@@ -77,8 +77,6 @@ void ResourceBlog::init()
 
 void ResourceBlog::readConfig( const KConfigGroup &group )
 {
-  kDebug( 5800 ) << "ResourceBlog::readConfig()";
-
   QString url = group.readEntry( "URL" );
   mUrl = KUrl( url );
   mUsername = group.readEntry( "Username" );
@@ -94,8 +92,6 @@ void ResourceBlog::readConfig( const KConfigGroup &group )
 
 void ResourceBlog::writeConfig( KConfigGroup &group )
 {
-  kDebug( 5800 ) << "ResourceBlog::writeConfig()";
-
   group.writeEntry( "URL", mUrl.url() );
   group.writeEntry( "Username", mUsername );
   group.writeEntry( "Password", mPassword );
@@ -140,7 +136,6 @@ QString ResourceBlog::password() const
 
 void ResourceBlog::setAPI( const QString &API )
 {
-  kDebug( 5800 ) << "ResourceBlog::setAPI(): " << API;
   if ( API == "Google Blogger Data" ) {
     mBlog = new KBlog::GData( mUrl, this );
   } else if ( API == "LiveJournal" ) {
@@ -213,7 +208,7 @@ bool ResourceBlog::useCacheFile() const
 
 bool ResourceBlog::doLoad( bool )
 {
-  kDebug( 5800 ) << "ResourceBlog::load()";
+  kDebug() << "ResourceBlog::doLoad()";
 
   if ( mUseCacheFile ) {
     disableChangeNotification();
@@ -244,23 +239,22 @@ bool ResourceBlog::doLoad( bool )
       mLock->unlock();
       return true;
     } else {
-      kDebug( 5800 ) << "ResourceBlog::load(): cache file is locked"
+      kDebug() << "ResourceBlog::doLoad(): cache file is locked"
           << " - something else must be loading the file";
     }
   }
-  kError( 5800 ) << "ResourceBlog::load(): null mBlog";
+  kError() << "ResourceBlog::doLoad(): Blog not initialised";
   return false;
 }
 
 void ResourceBlog::slotListedPostings(
     const QList<KBlog::BlogPosting*> &postings )
 {
-  kDebug( 5800 ) << "ResourceBlog::slotListedPostings() BEGIN";
+  kDebug() << "ResourceBlog::slotListedPostings()";
   QList<KBlog::BlogPosting*>::const_iterator i;
   for (i = postings.constBegin(); i != postings.constEnd(); ++i) {
     Journal* newJournal = (**i).journal( *mBlog );
     delete *i;
-    kDebug( 5800 ) << "ResourceBlog::slotListedPostings(): 0: " << newJournal->uid();
     Journal* existingJournal = journal( newJournal->uid() );
     if ( existingJournal ) {
       existingJournal->setSummary( newJournal->summary() );
@@ -286,16 +280,14 @@ void ResourceBlog::slotListedPostings(
 void ResourceBlog::slotError( const KBlog::Blog::ErrorType &type,
                               const QString &errorMessage )
 {
-  kError( 5800 ) << "ResourceBlog: " << type << ": " << errorMessage;
+  kError() << "ResourceBlog::slotError " << type << ": " << errorMessage;
   Q_ASSERT(false);
 }
 
 void ResourceBlog::slotSavedPosting( KBlog::BlogPosting *posting )
 {
-  kDebug( 5800 ) << "ResourceBlog::slotSavedPosting: Posting saved with id" <<
-      posting->postingId();
-  kDebug( 5800 ) << "ResourceBlog::slotSavedPosting: Journal saved with id" <<
-      (*posting).journalId();
+  kDebug() << "ResourceBlog::slotSavedPosting: Posting saved with ID"
+      << posting->postingId();
   if ( posting->status() == KBlog::BlogPosting::Created ) {
     mLastKnownPostID = posting->postingId().toInt();
   }
@@ -304,7 +296,6 @@ void ResourceBlog::slotSavedPosting( KBlog::BlogPosting *posting )
 
   Incidence::List changes = allChanges();
   if ( changes.begin() == changes.end() ) {
-    kDebug( 5800 ) << "ResourceBlog::slotSavedPosting: Saved to cache ";
     saveToCache();
     emit resourceSaved( this );
   }
@@ -312,13 +303,12 @@ void ResourceBlog::slotSavedPosting( KBlog::BlogPosting *posting )
 
 void ResourceBlog::slotBlogInfoRetrieved( const QMap<QString,QString> &blogs )
 {
-  kDebug( 5800 ) << "ResourceBlog::slotBlogInfoRetrieved()" << blogs;
   emit signalBlogInfoRetrieved( blogs );
 }
 
 bool ResourceBlog::doSave( bool )
 {
-  kDebug( 5800 ) << "ResourceBlog::doSave()";
+  kDebug() << "ResourceBlog::doSave()";
 
   if ( readOnly() || !hasChanges() ) {
     emit resourceSaved( this );
@@ -345,7 +335,8 @@ bool ResourceBlog::doSave( bool )
               this, SLOT( slotError( const KBlog::Blog::ErrorType &,
                           const QString & ) ) );
     mBlog->createPosting( posting );
-    kDebug( 5800 ) << "ResourceBlog::doSave(): adding " << journal->uid();
+    //FIXME: Fix memory leak on error
+    kDebug() << "ResourceBlog::doSave(): adding " << journal->uid();
   }
 
   Incidence::List changed = changedIncidences();
@@ -362,7 +353,8 @@ bool ResourceBlog::doSave( bool )
               this, SLOT( slotError( const KBlog::Blog::ErrorType &,
                           const QString & ) ) );
     mBlog->modifyPosting( posting );
-    kDebug( 5800 ) << "ResourceBlog::doSave(): changing " << journal->uid();
+    //FIXME: Fix memory leak on error
+    kDebug() << "ResourceBlog::doSave(): changing " << journal->uid();
   }
 
   Incidence::List deleted = deletedIncidences();
@@ -379,7 +371,8 @@ bool ResourceBlog::doSave( bool )
               this, SLOT( slotError( const KBlog::Blog::ErrorType &,
                           const QString & ) ) );
     mBlog->removePosting( posting );
-    kDebug( 5800 ) << "ResourceBlog::doSave(): removing " << journal->uid();
+    //FIXME: Fix memory leak on error
+    kDebug() << "ResourceBlog::doSave(): removing " << journal->uid();
     //FIXME: Just a hack at the moment until we have slotRemovePosting
     clearChange( journal );
   }
@@ -395,13 +388,13 @@ KABC::Lock *ResourceBlog::lock ()
 void ResourceBlog::dump() const
 {
   ResourceCalendar::dump();
-  kDebug( 5800 ) << "  URL: " << mUrl.url();
-  kDebug( 5800 ) << "  Username: " << mUsername;
-  kDebug( 5800 ) << "  API: " << API();
-  kDebug( 5800 ) << "  ReloadPolicy: " << reloadPolicy();
-  kDebug( 5800 ) << "  BlogID: " << mBlogID;
-  kDebug( 5800 ) << "  BlogName: " << mBlogName;
-  kDebug( 5800 ) << "  DownloadCount: " << mDownloadCount;
+  kDebug() << "  URL: " << mUrl.url();
+  kDebug() << "  Username: " << mUsername;
+  kDebug() << "  API: " << API();
+  kDebug() << "  ReloadPolicy: " << reloadPolicy();
+  kDebug() << "  BlogID: " << mBlogID;
+  kDebug() << "  BlogName: " << mBlogName;
+  kDebug() << "  DownloadCount: " << mDownloadCount;
 }
 
 void ResourceBlog::addInfoText( QString &txt ) const
@@ -451,7 +444,7 @@ bool ResourceBlog::listBlogs() {
     gdata->listBlogs();
     return true;
   }
-  kError( 5800 ) << "ResourceBlog::listBlogs(): "
+  kError() << "ResourceBlog::listBlogs(): "
       << "API does not support multiple blogs.";
   return false;
 }
@@ -459,8 +452,6 @@ bool ResourceBlog::listBlogs() {
 void ResourceBlog::setBlog( const QString &id, const QString &name ) {
   mBlogID = id;
   mBlogName = name;
-  kDebug( 5800 ) << "ResourceBlog::setBlog( id=" << mBlogID <<
-        ", name=" << mBlogName << " )";
 }
 
 QPair<QString, QString> ResourceBlog::blog() const {
