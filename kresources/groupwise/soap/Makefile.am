@@ -11,13 +11,13 @@ soapdebug_LDADD   = libgwsoap.la -lkdecore \
                    $(top_builddir)/libkdepim/libkdepim.la
 soapdebug_SOURCES = soapdebug.cpp
 
-noinst_LTLIBRARIES = libgwsoap.la
+lib_LTLIBRARIES = libgwsoap.la
 
 libgwsoap_la_SOURCES = contactconverter.cpp gwconverter.cpp incidenceconverter.cpp \
                        groupwiseserver.cpp gwjobs.cpp ksslsocket.cpp \
                        soapC.cpp soapClient.cpp stdsoap2.cpp
-libgwsoap_la_LDFLAGS = $(KDE_RPATH) $(all_libraries)
-libgwsoap_la_LIBADD	= -lkabc
+libgwsoap_la_LDFLAGS = $(KDE_RPATH) $(all_libraries) -no-undefined
+libgwsoap_la_LIBADD = $(top_builddir)/libkcal/libkcal.la $(top_builddir)/libkdepim/libkdepim.la
 
 # the following rule does:
 # make a header file from the wsdl

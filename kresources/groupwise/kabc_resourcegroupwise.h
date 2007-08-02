@@ -73,7 +73,7 @@ class KDE_EXPORT ResourceGroupwise : public ResourceCached
     bool asyncLoad();
     bool save( Ticket * );
     bool asyncSave( Ticket * );
-    enum SABState { Stale, InSync, RefreshNeeded };
+    enum SABState { Error, Stale, InSync, RefreshNeeded };
 
     /**
      * Clears the cached data, in memory and on disk
