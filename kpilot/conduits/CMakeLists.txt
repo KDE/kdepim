@@ -24,8 +24,6 @@ ENDIF (HAVE_CALENDARLOCAL_H)
 
 IF (QCA2_FOUND)
 	add_subdirectory(keyringconduit)
-ELSE (QCA2_FOUND)
-	MESSAGE(STATUS "Couldn't find qca. Won't be able to build keyringconduit")
 ENDIF(QCA2_FOUND)
 
 ###
