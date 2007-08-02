@@ -33,25 +33,76 @@
 
 #include "keyringhhrecord.h"
 
-static int set_password_hash(unsigned char *buf, int buf_size, char *passwd);
-
 KeyringHHDataProxy::KeyringHHDataProxy( PilotDatabase *db ) : HHDataProxy( db )
 {
-	loadAllRecords();
-	
 	// Hash-key record
-	PilotRecord *hkRec = fDatabase->readRecordByIndex( 0 );
+	fZeroRecord = fDatabase->readRecordByIndex( 0 );
+	
+	// salt should be put in a QCA::SecureArray, but it gave me segfaults.
+	QCA::Initializer init;
+	QCA::SecureArray recordZero( fZeroRecord->data() );
+	QCA::SecureArray pass( "test" );
+	QCA::SecureArray hash = getDigest( recordZero, pass );
+	
+	// The salt and password hash are stored in recordZero.
+	if( recordZero.toByteArray().contains( hash.toByteArray() ) )
+	{
+		DEBUGKPILOT << "Password correct!" << endl;
+		
+		QCA::Hash passHash( "md5" );
+		passHash.update( pass );
+		
+		// generate the DES keypair (snib = A,B; desKeyData = A,B,A)
+		fDesKey = QCA::SymmetricKey( passHash.final() );
+		fDesKey.append( fDesKey.toByteArray().left( 8 ) );
+		
+		// Pass is correct and DES encryption key known, load the records.
+		loadAllRecords();
+		
+		// For now remove the zero record from the record list.
+		fRecords.remove( QString::number( fZeroRecord->id() ) );
+	}
+	else
+	{
+		DEBUGKPILOT << "Password incorrect!" << endl;
+	}
+}
+
+KeyringHHDataProxy::~KeyringHHDataProxy()
+{
+	delete fZeroRecord;
 }
 
 HHRecord* KeyringHHDataProxy::createHHRecord( PilotRecord *rec )
 {
 	FUNCTIONSETUP;
 	
-	return new KeyringHHRecord( rec );
+	return new KeyringHHRecord( rec, fDesKey );
 }
 
 bool KeyringHHDataProxy::createDataStore()
 {
 	#warning not implemented
 	return false;
+}
+	
+QCA::SecureArray KeyringHHDataProxy::getDigest(
+	const QCA::SecureArray &recordZero, const QCA::SecureArray &pass )
+{
+	QCA::SecureArray msg( SALT_SIZE, 0 );
+	
+	// 32 bit salt -> first four byte of recordZero are the salt.
+	for( int i = 0; i < SALT_SIZE; i++ )
+	{
+		msg[i] = recordZero[i];
+	}
+
+	// S A L T P A S S W O R D 0 ...
+	msg.append( pass );
+	msg.append( QCA::SecureArray( MD5_CBLOCK - SALT_SIZE - pass.size(), 0 ) );
+	
+	QCA::Hash hash1( "md5" );
+	hash1.update( msg );
+	
+	return QCA::SecureArray( hash1.final() );
 }

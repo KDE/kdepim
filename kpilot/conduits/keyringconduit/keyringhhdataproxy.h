@@ -29,11 +29,15 @@
 
 #include "hhdataproxy.h"
 
+#include <QtCrypto>
+
 class HHRecord;
 
 class KPILOT_EXPORT KeyringHHDataProxy : public HHDataProxy {
 public:
 	KeyringHHDataProxy( PilotDatabase *db );
+	
+	virtual ~KeyringHHDataProxy();
 
 protected:
 	/**
@@ -42,8 +46,17 @@ protected:
 	virtual HHRecord* createHHRecord( PilotRecord *rec );
 	
 	virtual bool createDataStore();
+	
+	static const int MD5_DIGEST_LENGTH = 16;
+	static const int MD5_CBLOCK = 64;
+	static const int SALT_SIZE = 4;
 
-protected:
-	PilotDatabase *fDatabase;
+private: // functions
+	QCA::SecureArray getDigest( const QCA::SecureArray &salt
+		, const QCA::SecureArray &pass );
+
+private: // members
+	PilotRecord *fZeroRecord;
+	QCA::SymmetricKey fDesKey;
 };
 #endif

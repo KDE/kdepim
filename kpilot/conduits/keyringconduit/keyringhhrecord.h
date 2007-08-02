@@ -29,12 +29,14 @@
 
 #include "hhrecord.h"
 
+#include <QtCrypto>
+
 class PilotRecord;
 
 class KeyringHHRecord : public HHRecord
 {
 public:
-	KeyringHHRecord( PilotRecord *rec );
+	KeyringHHRecord( PilotRecord *rec, const QCA::SymmetricKey &key );
 	
 	/**
 	 * Returns wheter or not the current record is equal to @p other. Implementing 
@@ -43,6 +45,14 @@ public:
 	 * should be true.
 	 */
 	virtual bool equal( const Record* other ) const;
+
+	/**
+	 * Returns a string representation of the record.
+	 */
+	virtual QString toString() const;
+	
+private:
+	const QCA::SymmetricKey fKey;
 };
 
 #endif
