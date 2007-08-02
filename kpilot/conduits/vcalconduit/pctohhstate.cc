@@ -54,7 +54,7 @@ void PCToHHState::startSync( ConduitAction *ca )
 		return;
 	}
 
-	DEBUGKPILOT << fname << ": Starting PCToHHState." << endl;
+	DEBUGKPILOT << fname <<": Starting PCToHHState.";
 
 	// if we are asked to copy HH to PC, we shouldn't look for deleted records
 	// on the Palm, since we've just copied them all.  =:)  Otherwise, look for
@@ -111,12 +111,12 @@ void PCToHHState::handleRecord( ConduitAction *ca )
 	e->pilotId();
 #endif
 
-	DEBUGKPILOT << fname << ": found PC entry with pilotID " << id <<endl;
-	DEBUGKPILOT << fname << ": Description: " << e->summary() << endl;
+	DEBUGKPILOT << fname <<": found PC entry with pilotID" << id;
+	DEBUGKPILOT << fname <<": Description:" << e->summary();
 
 	KDateTime start_time = e->dtStart();
 	KDateTime end_time = e->dtEnd();
-	DEBUGKPILOT << fname << ": Time: "<< start_time.toString() << " until "
+	DEBUGKPILOT << fname <<": Time:"<< start_time.toString() <<" until"
 		<< end_time.toString() << endl;
 
 	PilotRecord *s = 0L;
@@ -140,9 +140,9 @@ void PCToHHState::handleRecord( ConduitAction *ca )
 #ifdef DEBUG
 		if (id > 0 )
 		{
-			DEBUGKPILOT << "-------------------------------------------------"
+			DEBUGKPILOT <<"-------------------------------------------------"
 				<< "--------------------------" << endl;
-			DEBUGKPILOT << fname << ": Could not read palm record with ID "
+			DEBUGKPILOT << fname <<": Could not read palm record with ID"
 				<< id << endl;
 		}
 #endif
@@ -160,6 +160,6 @@ void PCToHHState::finishSync( ConduitAction *ca )
 		return;
 	}
 
-	DEBUGKPILOT << fname << ": Finished PCToHHState." << endl;
+	DEBUGKPILOT << fname <<": Finished PCToHHState.";
 	vccb->setState( fNextState );
 }

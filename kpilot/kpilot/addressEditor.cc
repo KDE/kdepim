@@ -94,7 +94,7 @@ AddressEditor::~AddressEditor()
 	}
 
 #ifdef DEBUG
-	DEBUGKPILOT << fname << ": Help! I'm deleting!" << endl;
+	DEBUGKPILOT << fname <<": Help! I'm deleting!";
 #endif
 }
 

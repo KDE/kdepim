@@ -128,12 +128,12 @@ AbbrowserConduit::~AbbrowserConduit()
 
 	if (fTicket)
 	{
-		DEBUGKPILOT << fname << ": Releasing ticket" << endl;
+		DEBUGKPILOT << fname <<": Releasing ticket";
 		aBook->releaseSaveTicket(fTicket);
 		fTicket=0L;
 	}
 
-	DEBUGKPILOT << fname << ": Deleting addressbook" << endl;
+	DEBUGKPILOT << fname <<": Deleting addressbook";
 	KPILOT_DELETE(aBook);
 
 	// unused function warnings.
@@ -174,7 +174,7 @@ void AbbrowserConduit::_mapContactsToPilot(AddresseeMapType &idContactMap)
 			}
 			else
 			{
-		DEBUGKPILOT << fname << ": found duplicate pilot key: ["
+		DEBUGKPILOT << fname <<": found duplicate pilot key: ["
 						<< id << "], removing pilot id from addressee: ["
 						<< aContact.realName() << "]" << endl;
 				aContact.removeCustom(KABCSync::appString, KABCSync::idString);
@@ -183,7 +183,7 @@ void AbbrowserConduit::_mapContactsToPilot(AddresseeMapType &idContactMap)
 			}
 		}
 	}
-	DEBUGKPILOT << fname << ": Loaded " << idContactMap.size() <<
+	DEBUGKPILOT << fname <<": Loaded" << idContactMap.size() <<
 	    " addresses from the addressbook. " << endl;
 }
 
@@ -274,12 +274,12 @@ bool AbbrowserConduit::_loadAddressBook()
 	switch ( AbbrowserSettings::addressbookType() )
 	{
 		case AbbrowserSettings::eAbookResource:
-			DEBUGKPILOT<<"Loading standard addressbook"<<endl;
+			DEBUGKPILOT<<"Loading standard addressbook";
 			aBook = StdAddressBook::self( true );
 			break;
 		case AbbrowserSettings::eAbookFile:
 		{ // initialize the abook with the given file
-			DEBUGKPILOT<<"Loading custom addressbook"<<endl;
+			DEBUGKPILOT<<"Loading custom addressbook";
 			KUrl kurl(AbbrowserSettings::fileName());
 			if(!KIO::NetAccess::download(AbbrowserSettings::fileName(), fABookFile, 0L) &&
 				!kurl.isLocalFile())
@@ -301,12 +301,12 @@ bool AbbrowserConduit::_loadAddressBook()
 			}
 			fBookResource = new ResourceFile(fABookFile, CSL1("vcard") );
 			fBookResource = 0L;
-			WARNINGKPILOT << fname << ": File resource unavailable, will crash soon." << endl;
+			WARNINGKPILOT << fname <<": File resource unavailable, will crash soon.";
 
 			bool r = aBook->addResource( fBookResource );
 			if ( !r )
 			{
-				DEBUGKPILOT << "Unable to open resource for file " << fABookFile << endl;
+				DEBUGKPILOT <<"Unable to open resource for file" << fABookFile;
 				KPILOT_DELETE( aBook );
 				stopTickle();
 				return false;
@@ -323,7 +323,7 @@ bool AbbrowserConduit::_loadAddressBook()
 		// Something went wrong, so tell the user and return false to exit the conduit
 		emit logError(i18n("Unable to initialize and load the addressbook for the sync.") );
 		addSyncLogEntry(i18n("Unable to initialize and load the addressbook for the sync.") );
-		WARNINGKPILOT << "Unable to initialize the addressbook for the sync." << endl;
+		WARNINGKPILOT <<"Unable to initialize the addressbook for the sync.";
 		KPILOT_DELETE(aBook);
 		stopTickle();
 		return false;
@@ -333,7 +333,7 @@ bool AbbrowserConduit::_loadAddressBook()
 	fTicket=aBook->requestSaveTicket();
 	if (!fTicket)
 	{
-		WARNINGKPILOT << "Unable to lock addressbook for writing " << endl;
+		WARNINGKPILOT <<"Unable to lock addressbook for writing";
 		emit logError(i18n("Unable to lock addressbook for writing.  Cannot sync!"));
 		addSyncLogEntry(i18n("Unable to lock addressbook for writing.  Cannot sync!"));
 		KPILOT_DELETE(aBook);
@@ -378,7 +378,7 @@ bool AbbrowserConduit::_saveAddressBook()
 	}
 	if ( !saveSuccessful ) // didn't save, delete ticket manually
 	{
-		WARNINGKPILOT << fname << ": Failed to save." << endl;
+		WARNINGKPILOT << fname <<": Failed to save.";
 	}
 	aBook->releaseSaveTicket(fTicket);
 	fTicket=0L;
@@ -388,7 +388,7 @@ bool AbbrowserConduit::_saveAddressBook()
 		KUrl kurl(AbbrowserSettings::fileName());
 		if(!kurl.isLocalFile())
 		{
-			DEBUGKPILOT << fname << "Deleting local addressbook tempfile" << endl;
+			DEBUGKPILOT << fname <<"Deleting local addressbook tempfile";
 			if(!KIO::NetAccess::upload(fABookFile, AbbrowserSettings::fileName(), 0L)) {
 				emit logError(i18n("An error occurred while uploading \"%1\". You can try to upload "
 					"the temporary local file \"%2\" manually",AbbrowserSettings::fileName(),fABookFile));
@@ -408,7 +408,7 @@ bool AbbrowserConduit::_saveAddressBook()
 		bool r = aBook->removeResource( fBookResource );
 		if ( !r )
 		{
-			DEBUGKPILOT << fname <<": Unable to close resource." << endl;
+			DEBUGKPILOT << fname <<": Unable to close resource.";
 		}
 	}
 
@@ -456,10 +456,10 @@ void AbbrowserConduit::showPilotAddress(const PilotAddress *pilotAddress)
 	}
 	if (!pilotAddress)
 	{
-		DEBUGKPILOT<< fname << "| EMPTY"<<endl;
+		DEBUGKPILOT<< fname <<"| EMPTY";
 		return;
 	}
-	DEBUGKPILOT << fname << "\n"
+	DEBUGKPILOT << fname <<""
 			<< pilotAddress->getTextRepresentation(
 				fAddressAppInfo,Qt::PlainText) << endl;
 }
@@ -473,13 +473,13 @@ void AbbrowserConduit::showAddresses(
 	FUNCTIONSETUPL(3);
 	if (debug_level >= 3)
 	{
-		DEBUGKPILOT << fname << "abEntry:" << endl;
+		DEBUGKPILOT << fname <<"abEntry:";
 		KABCSync::showAddressee(pcAddr);
-		DEBUGKPILOT << fname << "pilotAddress:" << endl;
+		DEBUGKPILOT << fname <<"pilotAddress:";
 		showPilotAddress(palmAddr);
-		DEBUGKPILOT << fname << "backupAddress:" << endl;
+		DEBUGKPILOT << fname <<"backupAddress:";
 		showPilotAddress(backupAddr);
-		DEBUGKPILOT << fname << "------------------------------------------------" << endl;
+		DEBUGKPILOT << fname <<"------------------------------------------------";
 	}
 }
 
@@ -510,7 +510,7 @@ void AbbrowserConduit::showAddresses(
 	// Local block
 	{
 		QString dbpath = fLocalDatabase->dbPathName();
-		DEBUGKPILOT << fname << ": Local database path " << dbpath << endl;
+		DEBUGKPILOT << fname <<": Local database path" << dbpath;
 	}
 
 	if ( syncMode().isTest() )
@@ -526,7 +526,7 @@ void AbbrowserConduit::showAddresses(
 	}
 	setFirstSync( isFirstSync() || (aBook->begin() == aBook->end()) );
 
-	DEBUGKPILOT << fname << ": First sync now " << isFirstSync()
+	DEBUGKPILOT << fname <<": First sync now" << isFirstSync()
 		<< " and addressbook is "
 		<< ((aBook->begin() == aBook->end()) ? "" : "non-")
 		<< "empty." << endl;
@@ -534,12 +534,12 @@ void AbbrowserConduit::showAddresses(
 	// perform syncing from palm to abbrowser
 	// iterate through all records in palm pilot
 
-	DEBUGKPILOT << fname << ": fullsync=" << isFullSync() << ", firstSync=" <<    isFirstSync() << endl;
-	DEBUGKPILOT << fname << ": "
+	DEBUGKPILOT << fname <<": fullsync=" << isFullSync() <<", firstSync=" <<    isFirstSync();
+	DEBUGKPILOT << fname <<":"
 		<< "syncDirection=" << syncMode().name() << ", "
 		<< "archive = " << AbbrowserSettings::archiveDeleted() << endl;
-	DEBUGKPILOT << fname << ": conflictRes="<< getConflictResolution() << endl;
-	DEBUGKPILOT << fname << ": PilotStreetHome=" << AbbrowserSettings::pilotStreet() << ", PilotFaxHOme" << AbbrowserSettings::pilotFax() << endl;
+	DEBUGKPILOT << fname <<": conflictRes="<< getConflictResolution();
+	DEBUGKPILOT << fname <<": PilotStreetHome=" << AbbrowserSettings::pilotStreet() <<", PilotFaxHOme" << AbbrowserSettings::pilotFax();
 
 	if (!isFirstSync())
 	{
@@ -579,7 +579,7 @@ void AbbrowserConduit::slotPalmRecToPC()
 
 	if ( syncMode() == SyncMode::eCopyPCToHH )
 	{
-		DEBUGKPILOT << fname << ": Done; change to PCtoHH phase." << endl;
+		DEBUGKPILOT << fname <<": Done; change to PCtoHH phase.";
 		abiter = aBook->begin();
 		QTimer::singleShot(0, this, SLOT(slotPCRecToPalm()));
 		return;
@@ -647,7 +647,7 @@ void AbbrowserConduit::slotPCRecToPalm()
 	if ( (syncMode()==SyncMode::eCopyHHToPC) ||
 		abiter == aBook->end() || (*abiter).isEmpty() )
 	{
-		DEBUGKPILOT << fname << ": Done; change to delete records." << endl;
+		DEBUGKPILOT << fname <<": Done; change to delete records.";
 		pilotindex = 0;
 		QTimer::singleShot(0, this, SLOT(slotDeletedRecord()));
 		return;
@@ -661,7 +661,7 @@ void AbbrowserConduit::slotPCRecToPalm()
 	// If marked as archived, don't sync!
 	if (KABCSync::isArchived(ad))
 	{
-		DEBUGKPILOT << fname << ": address with id " << ad.uid() <<
+		DEBUGKPILOT << fname <<": address with id" << ad.uid() <<
 			" marked archived, so don't sync." << endl;
 		QTimer::singleShot(0, this, SLOT(slotPCRecToPalm()));
 		return;
@@ -673,7 +673,7 @@ void AbbrowserConduit::slotPCRecToPalm()
 	recordid_t rid = recID.toLong(&ok);
 	if (recID.isEmpty() || !ok || !rid)
 	{
-		DEBUGKPILOT << fname << ": This is a new record." << endl;
+		DEBUGKPILOT << fname <<": This is a new record.";
 		// it's a new item(no record ID and not inserted by the Palm -> PC sync), so add it
 		syncAddressee(ad, 0L, 0L);
 		QTimer::singleShot(0, this, SLOT(slotPCRecToPalm()));
@@ -683,7 +683,7 @@ void AbbrowserConduit::slotPCRecToPalm()
 	// look into the list of already synced record ids to see if the addressee hasn't already been synced
 	if (syncedIds.contains(rid))
 	{
-		DEBUGKPILOT << ": address with id " << rid << " already synced." << endl;
+		DEBUGKPILOT <<": address with id" << rid <<" already synced.";
 		QTimer::singleShot(0, this, SLOT(slotPCRecToPalm()));
 		return;
 	}
@@ -699,7 +699,7 @@ void AbbrowserConduit::slotPCRecToPalm()
 	}
 	if(!backupRec || isFirstSync() || !_equal(backupAddr, ad)  )
 	{
-		DEBUGKPILOT << fname << ": Updating entry." << endl;
+		DEBUGKPILOT << fname <<": Updating entry.";
 		palmRec = fDatabase->readRecordById(rid);
 		PilotAddress *palmAddr = 0L;
 		if (palmRec)
@@ -708,7 +708,7 @@ void AbbrowserConduit::slotPCRecToPalm()
 		}
 		else
 		{
-		DEBUGKPILOT << fname << ": No HH record with id " << rid << endl;
+		DEBUGKPILOT << fname <<": No HH record with id" << rid;
 		}
 		syncAddressee(ad, backupAddr, palmAddr);
 		// update the id just in case it changed
@@ -718,12 +718,12 @@ void AbbrowserConduit::slotPCRecToPalm()
 	}
 	else
 	{
-		DEBUGKPILOT << fname << ": Entry not updated." << endl;
+		DEBUGKPILOT << fname <<": Entry not updated.";
 	}
 	KPILOT_DELETE(backupAddr);
 	KPILOT_DELETE(backupRec);
 
-	DEBUGKPILOT << fname << ": adding id:["<< rid << "] to syncedIds." << endl;
+	DEBUGKPILOT << fname <<": adding id:["<< rid <<"] to syncedIds.";
 
 	syncedIds.append(rid);
 	// done with the sync process, go on with the next one:
@@ -749,7 +749,7 @@ void AbbrowserConduit::slotDeletedRecord()
 	QString uid = addresseeMap[id];
 	Addressee e = aBook->findByUid(uid);
 
-		DEBUGKPILOT << fname << ": now looking at palm id: ["
+		DEBUGKPILOT << fname <<": now looking at palm id: ["
 					<< id << "], kabc uid: [" << uid << "]." << endl;
 
 	PilotAddress*backupAddr=0L;
@@ -761,17 +761,17 @@ void AbbrowserConduit::slotDeletedRecord()
 
 	if ( e.isEmpty() )
 	{
-		DEBUGKPILOT << fname << ": no Addressee found for this id." << endl;
-		DEBUGKPILOT << fname << "\n"
+		DEBUGKPILOT << fname <<": no Addressee found for this id.";
+		DEBUGKPILOT << fname <<""
 			<< backupAddr->getTextRepresentation(
 				fAddressAppInfo,Qt::PlainText) << endl;
 
 		if (palmRec) {
-		DEBUGKPILOT << fname << ": deleting from database on palm." << endl;
+		DEBUGKPILOT << fname <<": deleting from database on palm.";
 			fDatabase->deleteRecord(id);
 			fCtrHH->deleted();
 		}
-		DEBUGKPILOT << fname << ": deleting from backup database." << endl;
+		DEBUGKPILOT << fname <<": deleting from backup database.";
 		fLocalDatabase->deleteRecord(id);
 
 		// because we just deleted a record, we need to go back one
@@ -806,7 +806,7 @@ void AbbrowserConduit::slotDeleteUnsyncedPCRecords()
 		{
 			if (!uids.contains((*abit).uid()))
 			{
-				DEBUGKPILOT<<"Deleting addressee "<<(*abit).realName()<<" from PC (is not on HH, and syncing with HH->PC direction)"<<endl;
+				DEBUGKPILOT<<"Deleting addressee"<<(*abit).realName()<<" from PC (is not on HH, and syncing with HH->PC direction)";
 				abChanged = true;
 				// TODO: Can I really remove the current iterator???
 				aBook->removeAddressee(*abit);
@@ -830,7 +830,7 @@ void AbbrowserConduit::slotDeleteUnsyncedHHRecords()
 		{
 			if (!syncedIds.contains(*it))
 			{
-				DEBUGKPILOT<<"Deleting record with ID "<<*it<<" from handheld (is not on PC, and syncing with PC->HH direction)"<<endl;
+				DEBUGKPILOT<<"Deleting record with ID"<<*it<<" from handheld (is not on PC, and syncing with PC->HH direction)";
 				fDatabase->deleteRecord(*it);
 				fCtrHH->deleted();
 				fLocalDatabase->deleteRecord(*it);
@@ -860,11 +860,11 @@ void AbbrowserConduit::slotCleanup()
 
 	// Write out the sync maps
 	QString syncFile = fLocalDatabase->dbPathName() + CSL1(".sync");
-	DEBUGKPILOT << fname << ": Writing sync map to " << syncFile << endl;
+	DEBUGKPILOT << fname <<": Writing sync map to" << syncFile;
 	KSaveFile map( syncFile );
 	if ( map.error() == QFile::NoError )
 	{
-		DEBUGKPILOT << fname << ": Writing sync map ..." << endl;
+		DEBUGKPILOT << fname <<": Writing sync map ...";
 		QDataStream s( &map );
 		s << addresseeMap ;
 		map.finalize();
@@ -873,7 +873,7 @@ void AbbrowserConduit::slotCleanup()
 	// This also picks up errors from map.close()
 	if ( map.error() != QFile::NoError )
 	{
-		WARNINGKPILOT << "Could not make backup of sync map." << endl;
+		WARNINGKPILOT <<"Could not make backup of sync map.";
 	}
 
 	_saveAddressBook();
@@ -921,7 +921,7 @@ bool AbbrowserConduit::syncAddressee(Addressee &pcAddr, PilotAddress*backupAddr,
 
 	if ( !backupAddr || isFirstSync() )
 	{
-			DEBUGKPILOT<< fname << ": Special case: no backup." << endl;
+			DEBUGKPILOT<< fname <<": Special case: no backup.";
 		/*
 		Resolution matrix (0..does not exist, E..exists, D..deleted flag set, A..archived):
 		  HH    PC  | Resolution
@@ -939,20 +939,20 @@ bool AbbrowserConduit::syncAddressee(Addressee &pcAddr, PilotAddress*backupAddr,
 		}
 		else if (!palmAddr && !pcAddr.isEmpty())
 		{
-			DEBUGKPILOT << fname << ": case: 1a"<<endl;
+			DEBUGKPILOT << fname <<": case: 1a";
 			// PC->HH
 			bool res=_copyToHH(pcAddr, 0L, 0L);
 			return res;
 		}
 		else if (!palmAddr && pcAddr.isEmpty())
 		{
-			DEBUGKPILOT << fname << ": case: 1b"<<endl;
+			DEBUGKPILOT << fname <<": case: 1b";
 			// everything's empty -> ERROR
 			return false;
 		}
 		else if ( (isDeleted(palmAddr) || isArchived(palmAddr)) && pcAddr.isEmpty())
 		{
-			DEBUGKPILOT << fname << ": case: 1c"<<endl;
+			DEBUGKPILOT << fname <<": case: 1c";
 			if (isArchived(palmAddr))
 				return _copyToPC(pcAddr, 0L, palmAddr);
 			else
@@ -961,26 +961,26 @@ bool AbbrowserConduit::syncAddressee(Addressee &pcAddr, PilotAddress*backupAddr,
 		}
 		else if ((isDeleted(palmAddr)||isArchived(palmAddr)) && !pcAddr.isEmpty())
 		{
-			DEBUGKPILOT << fname << ": case: 1d"<<endl;
+			DEBUGKPILOT << fname <<": case: 1d";
 			// CR (ERROR)
 			return _smartMergeAddressee(pcAddr, 0L, palmAddr);
 		}
 		else if (pcAddr.isEmpty())
 		{
-			DEBUGKPILOT << fname << ": case: 1e"<<endl;
+			DEBUGKPILOT << fname <<": case: 1e";
 			// HH->PC
 			return _copyToPC(pcAddr, 0L, palmAddr);
 		}
 		else
 		{
-			DEBUGKPILOT << fname << ": case: 1f"<<endl;
+			DEBUGKPILOT << fname <<": case: 1f";
 			// Conflict Resolution
 			return _smartMergeAddressee(pcAddr, 0L, palmAddr);
 		}
 	} // !backupAddr
 	else
 	{
-			DEBUGKPILOT << fname << ": case: 2"<<endl;
+			DEBUGKPILOT << fname <<": case: 2";
 		/*
 		Resolution matrix:
 		  1) if HH.(empty| (deleted &! archived) ) -> { if (PC==B) -> delete, else -> CR }
@@ -995,7 +995,7 @@ bool AbbrowserConduit::syncAddressee(Addressee &pcAddr, PilotAddress*backupAddr,
 
 		if (!palmAddr || isDeleted(palmAddr) )
 		{
-			DEBUGKPILOT << fname << ": case: 2a"<<endl;
+			DEBUGKPILOT << fname <<": case: 2a";
 			if (_equal(backupAddr, pcAddr) || pcAddr.isEmpty())
 			{
 				return _deleteAddressee(pcAddr, backupAddr, 0L);
@@ -1007,7 +1007,7 @@ bool AbbrowserConduit::syncAddressee(Addressee &pcAddr, PilotAddress*backupAddr,
 		}
 		else if (pcAddr.isEmpty())
 		{
-			DEBUGKPILOT << fname << ": case: 2b"<<endl;
+			DEBUGKPILOT << fname <<": case: 2b";
 			if (*palmAddr == *backupAddr)
 			{
 				return _deleteAddressee(pcAddr, backupAddr, palmAddr);
@@ -1019,14 +1019,14 @@ bool AbbrowserConduit::syncAddressee(Addressee &pcAddr, PilotAddress*backupAddr,
 		}
 		else if (_equal(palmAddr, pcAddr))
 		{
-			DEBUGKPILOT << fname << ": case: 2c"<<endl;
+			DEBUGKPILOT << fname <<": case: 2c";
 			// update Backup, update ID of PC if neededd
 			return _writeBackup(palmAddr);
 		}
 		else if (_equal(backupAddr, pcAddr))
 		{
-			DEBUGKPILOT << fname << ": case: 2d"<<endl;
-			DEBUGKPILOT << fname << ": Flags: "<<palmAddr->attributes()<<", isDeleted="<<
+			DEBUGKPILOT << fname <<": case: 2d";
+			DEBUGKPILOT << fname <<": Flags:"<<palmAddr->attributes()<<", isDeleted="<<
 				isDeleted(palmAddr)<<", isArchived="<<isArchived(palmAddr)<<endl;
 			if (isDeleted(palmAddr))
 				return _deleteAddressee(pcAddr, backupAddr, palmAddr);
@@ -1035,12 +1035,12 @@ bool AbbrowserConduit::syncAddressee(Addressee &pcAddr, PilotAddress*backupAddr,
 		}
 		else if (*palmAddr == *backupAddr)
 		{
-			DEBUGKPILOT << fname << ": case: 2e"<<endl;
+			DEBUGKPILOT << fname <<": case: 2e";
 			return _copyToHH(pcAddr, backupAddr, palmAddr);
 		}
 		else
 		{
-			DEBUGKPILOT << fname << ": case: 2f"<<endl;
+			DEBUGKPILOT << fname <<": case: 2f";
 			// CR, since all are different
 			return _smartMergeAddressee(pcAddr, backupAddr, palmAddr);
 		}
@@ -1070,7 +1070,7 @@ bool AbbrowserConduit::_copyToHH(Addressee &pcAddr, PilotAddress*backupAddr,
 	}
 	KABCSync::copy(*paddr, pcAddr, *fAddressAppInfo, fSyncSettings);
 
-	DEBUGKPILOT << fname << "palmAddr->id=" << paddr->id()
+	DEBUGKPILOT << fname <<"palmAddr->id=" << paddr->id()
 		<< ", pcAddr.ID=" << pcAddr.custom(KABCSync::appString, KABCSync::idString) << endl;
 
 	if(_savePalmAddr(paddr, pcAddr))
@@ -1138,7 +1138,7 @@ bool AbbrowserConduit::_deleteAddressee(Addressee &pcAddr, PilotAddress*backupAd
 	if (palmAddr)
 	{
 		if (!syncedIds.contains(palmAddr->id())) {
-		DEBUGKPILOT << fname << ": adding id:["<< palmAddr->id() << "] to syncedIds." << endl;
+		DEBUGKPILOT << fname <<": adding id:["<< palmAddr->id() <<"] to syncedIds.";
 			syncedIds.append(palmAddr->id());
 		}
 		fDatabase->deleteRecord(palmAddr->id());
@@ -1148,14 +1148,14 @@ bool AbbrowserConduit::_deleteAddressee(Addressee &pcAddr, PilotAddress*backupAd
 	else if (backupAddr)
 	{
 		if (!syncedIds.contains(backupAddr->id())) {
-		DEBUGKPILOT << fname << ": adding id:["<< backupAddr->id() << "] to syncedIds." << endl;
+		DEBUGKPILOT << fname <<": adding id:["<< backupAddr->id() <<"] to syncedIds.";
 			syncedIds.append(backupAddr->id());
 		}
 		fLocalDatabase->deleteRecord(backupAddr->id());
 	}
 	if (!pcAddr.isEmpty())
 	{
-		DEBUGKPILOT << fname << " removing " << pcAddr.formattedName() << endl;
+		DEBUGKPILOT << fname <<" removing" << pcAddr.formattedName();
 		abChanged = true;
 		aBook->removeAddressee(pcAddr);
 		fCtrPC->deleted();
@@ -1176,15 +1176,15 @@ bool AbbrowserConduit::_savePalmAddr(PilotAddress *palmAddr, Addressee &pcAddr)
 {
 	FUNCTIONSETUP;
 
-	DEBUGKPILOT << fname << ": Saving to pilot " << palmAddr->id()
+	DEBUGKPILOT << fname <<": Saving to pilot" << palmAddr->id()
 		<< " " << palmAddr->getField(entryFirstname)
 		<< " " << palmAddr->getField(entryLastname)<< endl;
 
 	PilotRecord *pilotRec = palmAddr->pack();
-	DEBUGKPILOT << fname << ": record with id=" << pilotRec->id()
+	DEBUGKPILOT << fname <<": record with id=" << pilotRec->id()
 		<< " len=" << pilotRec->size() << endl;
 	recordid_t pilotId = fDatabase->writeRecord(pilotRec);
-	DEBUGKPILOT << fname << ": Wrote "<<pilotId<<": ID="<<pilotRec->id()<<endl;
+	DEBUGKPILOT << fname <<": Wrote"<<pilotId<<": ID="<<pilotRec->id();
 	fLocalDatabase->writeRecord(pilotRec);
 	KPILOT_DELETE(pilotRec);
 
@@ -1193,7 +1193,7 @@ bool AbbrowserConduit::_savePalmAddr(PilotAddress *palmAddr, Addressee &pcAddr)
 	{
 		palmAddr->setID(pilotId);
 		if (!syncedIds.contains(pilotId)) {
-		DEBUGKPILOT << fname << ": adding id:["<< pilotId << "] to syncedIds." << endl;
+		DEBUGKPILOT << fname <<": adding id:["<< pilotId <<"] to syncedIds.";
 			syncedIds.append(pilotId);
 		}
 	}
@@ -1216,7 +1216,7 @@ bool AbbrowserConduit::_savePCAddr(Addressee &pcAddr, PilotAddress*,
 {
 	FUNCTIONSETUP;
 
-	DEBUGKPILOT<<"Before _savePCAddr, pcAddr.custom="<<pcAddr.custom(KABCSync::appString, KABCSync::idString)<<endl;
+	DEBUGKPILOT<<"Before _savePCAddr, pcAddr.custom="<<pcAddr.custom(KABCSync::appString, KABCSync::idString);
 	QString pilotId = pcAddr.custom(KABCSync::appString, KABCSync::idString);
 	long pilotIdL = pilotId.toLong();
 	if(!pilotId.isEmpty())
@@ -1259,11 +1259,11 @@ bool AbbrowserConduit::_equal(const PilotAddress *piAddress, const Addressee &ab
 
 	// empty records are never equal!
 	if (!piAddress) {
-		DEBUGKPILOT << fname  << ": no pilot address passed" << endl;
+		DEBUGKPILOT << fname  <<": no pilot address passed";
 		return false;
 	}
 	if (abEntry.isEmpty()) {
-		DEBUGKPILOT << fname  << ":abEntry.isEmpty()" << endl;
+		DEBUGKPILOT << fname  <<":abEntry.isEmpty()";
 		return false;
 	}
 	//  Archived records match anything so they won't be copied to the HH again
@@ -1274,7 +1274,7 @@ bool AbbrowserConduit::_equal(const PilotAddress *piAddress, const Addressee &ab
 	{
 		if(!_equal(abEntry.familyName(), piAddress->getField(entryLastname)))
 		{
-		DEBUGKPILOT << fname  << ": last name not equal" << endl;
+		DEBUGKPILOT << fname  <<": last name not equal";
 			return false;
 		}
 		// goofiness that we do in _copy(), duplicated here for your viewing pleasure... *grrr*
@@ -1283,24 +1283,24 @@ bool AbbrowserConduit::_equal(const PilotAddress *piAddress, const Addressee &ab
 
 		if(!_equal(firstAndMiddle, piAddress->getField(entryFirstname)))
 		{
-		DEBUGKPILOT << fname  << ": first name not equal" << endl;
+		DEBUGKPILOT << fname  <<": first name not equal";
 			return false;
 		}
 		if(!_equal(abEntry.prefix(), piAddress->getField(entryTitle)))
 		{
-		DEBUGKPILOT << fname  << ": title/prefix not equal" << endl;
+		DEBUGKPILOT << fname  <<": title/prefix not equal";
 			return false;
 		}
 		if(!_equal(abEntry.organization(), piAddress->getField(entryCompany)))
 		{
-		DEBUGKPILOT << fname  << ": company/organization not equal" << endl;
+		DEBUGKPILOT << fname  <<": company/organization not equal";
 			return false;
 		}
 	}
 	if (flags & eqFlagsNote)
 		if(!_equal(abEntry.note(), piAddress->getField(entryNote)))
 	{
-		DEBUGKPILOT << fname  << ": note not equal" << endl;
+		DEBUGKPILOT << fname  <<": note not equal";
 			return false;
 	}
 
@@ -1313,7 +1313,7 @@ bool AbbrowserConduit::_equal(const PilotAddress *piAddress, const Addressee &ab
 			*fAddressAppInfo, piAddress->category());
 		if(!_equal(cat, addressCategoryLabel))
 		{
-			DEBUGKPILOT << fname  << ": category not equal" << endl;
+			DEBUGKPILOT << fname  <<": category not equal";
 			return false;
 		}
 	}
@@ -1326,20 +1326,20 @@ bool AbbrowserConduit::_equal(const PilotAddress *piAddress, const Addressee &ab
 
 		if (abEmails.count() != piEmails.count())
 		{
-		DEBUGKPILOT << fname  << ": email count not equal" << endl;
+		DEBUGKPILOT << fname  <<": email count not equal";
 			return false;
 		}
 		for (QStringList::Iterator it = abEmails.begin(); it != abEmails.end(); it++) {
 			if (!piEmails.contains(*it))
 			{
-		DEBUGKPILOT << fname  << ": pilot e-mail missing" << endl;
+		DEBUGKPILOT << fname  <<": pilot e-mail missing";
 			return false;
 			}
 		}
 		for (QStringList::Iterator it = piEmails.begin(); it != piEmails.end(); it++) {
 			if (!abEmails.contains(*it))
 			{
-		DEBUGKPILOT << fname  << ": kabc e-mail missing" << endl;
+		DEBUGKPILOT << fname  <<": kabc e-mail missing";
 			return false;
 			}
 		}
@@ -1366,7 +1366,7 @@ bool AbbrowserConduit::_equal(const PilotAddress *piAddress, const Addressee &ab
 				}
 			}
 			if (!found) {
-		DEBUGKPILOT << fname  << ": not equal because kabc phone not found." << endl;
+		DEBUGKPILOT << fname  <<": not equal because kabc phone not found.";
 				return false;
 			}
 		}
@@ -1384,7 +1384,7 @@ bool AbbrowserConduit::_equal(const PilotAddress *piAddress, const Addressee &ab
 			}
 			if (!found)
 			{
-				DEBUGKPILOT << fname  << ": not equal because pilot phone not found." << endl;
+				DEBUGKPILOT << fname  <<": not equal because pilot phone not found.";
 				return false;
 			}
 		}
@@ -1392,7 +1392,7 @@ bool AbbrowserConduit::_equal(const PilotAddress *piAddress, const Addressee &ab
 		if(!_equal(KABCSync::getFieldForHHOtherPhone(abEntry,fSyncSettings),
 			piAddress->getPhoneField(PilotAddressInfo::eOther)))
 		{
-			DEBUGKPILOT << fname  << ": not equal because of other phone field." << endl;
+			DEBUGKPILOT << fname  <<": not equal because of other phone field.";
 		   	return false;
 		}
 	}
@@ -1402,27 +1402,27 @@ bool AbbrowserConduit::_equal(const PilotAddress *piAddress, const Addressee &ab
 		KABC::Address address = KABCSync::getAddress(abEntry,fSyncSettings);
 		if(!_equal(address.street(), piAddress->getField(entryAddress)))
 		{
-			DEBUGKPILOT << fname  << ": address not equal" << endl;
+			DEBUGKPILOT << fname  <<": address not equal";
 			return false;
 		}
 		if(!_equal(address.locality(), piAddress->getField(entryCity)))
 		{
-			DEBUGKPILOT << fname  << ": city not equal" << endl;
+			DEBUGKPILOT << fname  <<": city not equal";
 			return false;
 		}
 		if(!_equal(address.region(), piAddress->getField(entryState)))
 		{
-		DEBUGKPILOT << fname  << ": state not equal" << endl;
+		DEBUGKPILOT << fname  <<": state not equal";
 			return false;
 		}
 		if(!_equal(address.postalCode(), piAddress->getField(entryZip)))
 		{
-		DEBUGKPILOT << fname  << ": zip not equal" << endl;
+		DEBUGKPILOT << fname  <<": zip not equal";
 			return false;
 		}
 		if(!_equal(address.country(), piAddress->getField(entryCountry)))
 		{
-		DEBUGKPILOT << fname  << ": country not equal" << endl;
+		DEBUGKPILOT << fname  <<": country not equal";
 			return false;
 		}
 	}
@@ -1437,7 +1437,7 @@ bool AbbrowserConduit::_equal(const PilotAddress *piAddress, const Addressee &ab
 			if (!_equal(KABCSync::getFieldForHHCustom(customIndex, abEntry, fSyncSettings),
 				piAddress->getField(hhField)))
 			{
-				DEBUGKPILOT << fname << ": Custom field " << customIndex
+				DEBUGKPILOT << fname <<": Custom field" << customIndex
 					<< " (HH field " << hhField << ") differs." << endl;
 				return false;
 			}
@@ -1448,7 +1448,7 @@ bool AbbrowserConduit::_equal(const PilotAddress *piAddress, const Addressee &ab
 	// are not equal.
 	if ( (flags & eqFlagsFlags) && (isArchived(piAddress) || KABCSync::isArchived(abEntry) ) )
 	{
-		DEBUGKPILOT << fname  << ": archived flags don't match" << endl;
+		DEBUGKPILOT << fname  <<": archived flags don't match";
 		return false;
 	}
 
@@ -1605,7 +1605,7 @@ bool AbbrowserConduit::_applyResolutionTable(ResolutionTable*tab, Addressee &pcA
 	FUNCTIONSETUP;
 	if (!tab) return false;
 	if (!palmAddr) {
-		WARNINGKPILOT << "Empty palmAddr after conflict resolution." << endl;
+		WARNINGKPILOT <<"Empty palmAddr after conflict resolution.";
 		return false;
 	}
 
@@ -1830,12 +1830,12 @@ Addressee AbbrowserConduit::_findMatch(const PilotAddress & pilotAddress) const
 	if( !isFirstSync() && (pilotAddress.id() > 0) )
 	{
 		QString id(addresseeMap[pilotAddress.id()]);
-		DEBUGKPILOT << fname << ": PilotRecord has id " << pilotAddress.id() << ", mapped to " << id << endl;
+		DEBUGKPILOT << fname <<": PilotRecord has id" << pilotAddress.id() <<", mapped to" << id;
 		if(!id.isEmpty())
 		{
 			Addressee res(aBook->findByUid(id));
 			if(!res.isEmpty()) return res;
-			DEBUGKPILOT << fname << ": PilotRecord has id " << pilotAddress.id() << ", but could not be found in the addressbook" << endl;
+			DEBUGKPILOT << fname <<": PilotRecord has id" << pilotAddress.id() <<", but could not be found in the addressbook";
 		}
 	}
 
@@ -1860,7 +1860,7 @@ Addressee AbbrowserConduit::_findMatch(const PilotAddress & pilotAddress) const
 			return abEntry;
 		}
 	}
-	DEBUGKPILOT << fname << ": Could not find any addressbook enty matching " << pilotAddress.getField(entryLastname) << endl;
+	DEBUGKPILOT << fname <<": Could not find any addressbook enty matching" << pilotAddress.getField(entryLastname);
 	return Addressee();
 }
 

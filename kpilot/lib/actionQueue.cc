@@ -138,7 +138,7 @@ void ActionQueue::actionCompleted(SyncAction *b)
 
 	if (!a)
 	{
-		WARNINGKPILOT << "NULL action on stack."
+		WARNINGKPILOT <<"NULL action on stack."
 			<< endl;
 		return;
 	}

@@ -64,7 +64,7 @@
 
 	if (version < ConfigurationVersion)
 	{
-		WARNINGKPILOT << "Config file has old version " << version << endl;
+		WARNINGKPILOT <<"Config file has old version" << version;
 	}
 	else
 	{
@@ -233,7 +233,7 @@ void KPilotConfig::addFlagsChangedDatabase(QString db)
 		return Cancel;
 	}
 
-	DEBUGKPILOT << fname << ": Updating from "
+	DEBUGKPILOT << fname <<": Updating from"
 		<< fileVersion << " to " << ConfigurationVersion << endl;
 
 	KPilotConfig::updateConfigVersion();

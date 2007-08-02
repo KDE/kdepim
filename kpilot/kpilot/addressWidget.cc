@@ -92,7 +92,7 @@ int AddressWidget::getAllAddresses(PilotDatabase * addressDB)
 
 
 #ifdef DEBUG
-	DEBUGKPILOT << fname << ": Reading AddressDB..." << endl;
+	DEBUGKPILOT << fname <<": Reading AddressDB...";
 #endif
 
 	while ((pilotRec = addressDB->readRecordByIndex(currentRecord)) != 0L)
@@ -103,7 +103,7 @@ int AddressWidget::getAllAddresses(PilotDatabase * addressDB)
 			address = new PilotAddress(pilotRec);
 			if (address == 0L)
 			{
-				WARNINGKPILOT << "Couldn't allocate record "
+				WARNINGKPILOT <<"Couldn't allocate record"
 					<< currentRecord++
 					<< endl;
 				break;
@@ -149,7 +149,7 @@ void AddressWidget::showComponent()
 	else
 	{
 		populateCategories(fCatList, 0L);
-		WARNINGKPILOT << "Could not open local AddressDB" << endl;
+		WARNINGKPILOT <<"Could not open local AddressDB";
 	}
 
 	KPILOT_DELETE( addressDB );
@@ -298,7 +298,7 @@ void AddressWidget::updateWidget()
 	fAddressList.first();
 
 #ifdef DEBUG
-	DEBUGKPILOT << fname << ": Adding records..." << endl;
+	DEBUGKPILOT << fname <<": Adding records...";
 #endif
 
 	while (fAddressList.current())
@@ -325,7 +325,7 @@ void AddressWidget::updateWidget()
 
 	fListBox->sort();
 #ifdef DEBUG
-	DEBUGKPILOT << fname << ": " << listIndex << " records" << endl;
+	DEBUGKPILOT << fname <<":" << listIndex <<" records";
 #endif
 
 	slotUpdateButtons();
@@ -633,7 +633,7 @@ void AddressWidget::writeAddress(PilotAddress * which,
 	if (!myDB->isOpen())
 	{
 #ifdef DEBUG
-		DEBUGKPILOT << fname << ": Address database is not open" <<
+		DEBUGKPILOT << fname <<": Address database is not open" <<
 			endl;
 #endif
 		return;
@@ -680,7 +680,7 @@ void AddressWidget::slotExport()
 	if (saveFile.isEmpty())
 	{
 #ifdef DEBUG
-		DEBUGKPILOT << fname << ": No save file selected." << endl;
+		DEBUGKPILOT << fname <<": No save file selected.";
 #endif
 		return;
 	}
@@ -691,7 +691,7 @@ void AddressWidget::slotExport()
 			KGuiItem(i18n("Overwrite")))!=KMessageBox::Continue)
 	{
 #ifdef DEBUG
-		DEBUGKPILOT << fname << ": Overwrite file canceled." << endl;
+		DEBUGKPILOT << fname <<": Overwrite file canceled.";
 #endif
 		return;
 	}
@@ -706,7 +706,7 @@ void AddressWidget::slotExport()
 	fAddressList.first();
 
 #ifdef DEBUG
-	DEBUGKPILOT << fname << ": Adding records..." << endl;
+	DEBUGKPILOT << fname <<": Adding records...";
 #endif
 
 	while (fAddressList.current())

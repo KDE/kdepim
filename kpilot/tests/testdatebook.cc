@@ -60,7 +60,7 @@ int main(int argc, char **argv)
 #endif
 	QString datadir = args->getOption("data-dir");
 
-	DEBUGKPILOT << "### testdatebook\n#\n#" << endl;
+	DEBUGKPILOT <<"### testdatebook\n#\n#";
 
 	Pilot::setupPilotCodec( CSL1("Latin1") );
 
@@ -73,16 +73,16 @@ int main(int argc, char **argv)
 
 		if (r)
 		{
-			DEBUGKPILOT << "# Record @" << (void *)r << " ID=" << r->id() << endl;
+			DEBUGKPILOT <<"# Record @" << (void *)r <<" ID=" << r->id();
 			PilotDateEntry a( r );
-			DEBUGKPILOT << "# Text Representation:" << endl << a.getTextRepresentation(Qt::PlainText) << endl;
-			DEBUGKPILOT << "# Category#" << a.category() << endl;
-			DEBUGKPILOT << "# Category Label " << appinfo.categoryName(a.category()) << endl;
-			DEBUGKPILOT << "# ID " << a.id() << endl;
+			DEBUGKPILOT <<"# Text Representation:" << endl << a.getTextRepresentation(Qt::PlainText);
+			DEBUGKPILOT <<"# Category#" << a.category();
+			DEBUGKPILOT <<"# Category Label" << appinfo.categoryName(a.category());
+			DEBUGKPILOT <<"# ID" << a.id();
 			int cat = appinfo.findCategory( CSL1("Fake Cat") );
 			a.setCategory( cat );
-			DEBUGKPILOT << "# Category#" << a.category() << endl;
-			DEBUGKPILOT << "# Category Label " << appinfo.categoryName(a.category()) << endl;
+			DEBUGKPILOT <<"# Category#" << a.category();
+			DEBUGKPILOT <<"# Category Label" << appinfo.categoryName(a.category());
 		}
 	}
 

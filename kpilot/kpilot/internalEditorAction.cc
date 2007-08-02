@@ -90,7 +90,7 @@ void InternalEditorAction::syncDirtyDB()
 		return;
 	}
 #ifdef DEBUG
-	DEBUGKPILOT<<"syncDirtyDB for DB "<<(*dbIter)<<endl;
+	DEBUGKPILOT<<"syncDirtyDB for DB"<<(*dbIter);
 #endif
 	// open the local and the serial database and copy every
 	// changed record from the PC to the handheld
@@ -108,8 +108,8 @@ void InternalEditorAction::syncDirtyDB()
 	{
 		int id=rec->id();
 #ifdef DEBUG
-		DEBUGKPILOT<<"ID of modified record is "<<id<<endl;
-		DEBUGKPILOT<<endl<<endl;
+		DEBUGKPILOT<<"ID of modified record is"<<id;
+		DEBUGKPILOT;
 #endif
 		if (id>0)
 		{
@@ -128,15 +128,15 @@ void InternalEditorAction::syncDirtyDB()
 		else
 		{
 #ifdef DEBUG
-			DEBUGKPILOT<<"Generating ID for Record "<<rec->id()<<" with data "<<endl;
-			DEBUGKPILOT<<rec->data()<<endl;
-			DEBUGKPILOT<<"-----------------------------------------"<<endl;
+			DEBUGKPILOT<<"Generating ID for Record"<<rec->id()<<" with data";
+			DEBUGKPILOT<<rec->data();
+			DEBUGKPILOT<<"-----------------------------------------";
 #endif
 			int id=serialDB->writeRecord(rec);
 			rec->setID(id);
 #ifdef DEBUG
-			DEBUGKPILOT<<"New ID is "<<id<<endl;
-			DEBUGKPILOT<<endl<<endl<<endl;
+			DEBUGKPILOT<<"New ID is"<<id;
+			DEBUGKPILOT<<endl;
 #endif
 			//localDB->writeRecord(rec);
 			localDB->updateID(id);
@@ -333,7 +333,7 @@ void InternalEditorAction::syncFlagsChangedDB()
 	}
 
 #ifdef DEBUG
-	DEBUGKPILOT<<"syncFlagsChangedDB for DB "<<(*dbIter)<<endl;
+	DEBUGKPILOT<<"syncFlagsChangedDB for DB"<<(*dbIter);
 #endif
 emit logError(i18n("Setting the database flags on the handheld is not yet supported."));
 QTimer::singleShot(0, this, SLOT(syncAppBlockChangedDB()));
@@ -373,7 +373,7 @@ void InternalEditorAction::syncAppBlockChangedDB()
 		return;
 	}
 #ifdef DEBUG
-	DEBUGKPILOT<<"syncAppBlockChangedDB for DB "<<(*dbIter)<<endl;
+	DEBUGKPILOT<<"syncAppBlockChangedDB for DB"<<(*dbIter);
 #endif
 
 	PilotLocalDatabase*localDB=new PilotLocalDatabase(*dbIter, false);

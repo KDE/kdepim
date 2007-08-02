@@ -71,11 +71,11 @@ NullConduit::~NullConduit()
 {
 	FUNCTIONSETUP;
 
-	DEBUGKPILOT << fname << ": Mode " << syncMode().name() << endl;
+	DEBUGKPILOT << fname <<": Mode" << syncMode().name();
 
 	if ( fFailImmediately )
 	{
-		DEBUGKPILOT << fname << ": Config says to fail now." << endl;
+		DEBUGKPILOT << fname <<": Config says to fail now.";
 		emit logError(i18n("NULL conduit is programmed to fail."));
 		return false;
 	}

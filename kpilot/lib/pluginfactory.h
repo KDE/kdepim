@@ -71,7 +71,7 @@ protected:
 			}
 			else
 			{
-				WARNINGKPILOT << "Could not cast parent to widget." << endl;
+				WARNINGKPILOT <<"Could not cast parent to widget.";
 				return 0L;
 			}
 		}
@@ -91,7 +91,7 @@ protected:
 			}
 			else
 			{
-				WARNINGKPILOT << "Could not cast parent to KPilotLink" << endl;
+				WARNINGKPILOT <<"Could not cast parent to KPilotLink";
 				return 0L;
 			}
 		}

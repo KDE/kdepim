@@ -316,7 +316,7 @@ void ConduitConfigWidget::fillLists()
 	// List of installed (enabled) actions and conduits.
 	QStringList potentiallyInstalled = KPilotSettings::installedConduits();
 
-	DEBUGKPILOT << fname << potentiallyInstalled.join( QString(',') ) << endl;
+	DEBUGKPILOT << fname << potentiallyInstalled.join( QString(',') );
 
 	// "Install Files" is treated as a conduit
 	q = createCheckableItem( conduits, i18n("Install Files"),
@@ -333,13 +333,13 @@ void ConduitConfigWidget::fillLists()
 	{
 		const KService::Ptr o = *i;
 
-		DEBUGKPILOT << fname << ": "
+		DEBUGKPILOT << fname <<":"
 			<< o->desktopEntryName()
 			<< " = " << o->name() << endl;
 
 		if (!o->exec().isEmpty())
 		{
-			WARNINGKPILOT << "Old-style conduit found "
+			WARNINGKPILOT <<"Old-style conduit found"
 				<< o->name()
 				<< endl;
 		}
@@ -355,7 +355,7 @@ void ConduitConfigWidget::fillLists()
 static void dumpConduitInfo(const KLibrary *lib)
 {
 	FUNCTIONSETUP;
-	DEBUGKPILOT << "Plugin version = " << PluginUtility::pluginVersion(lib) << endl;
+	DEBUGKPILOT <<"Plugin version =" << PluginUtility::pluginVersion(lib);
 
 	QString symbol_value;
 	QString symbol= CSL1("id_");
@@ -364,7 +364,7 @@ static void dumpConduitInfo(const KLibrary *lib)
 	if (lib->resolveSymbol(symbol.toLatin1()))
 	{
 		symbol_value = QString::fromLatin1(*((const char **)(lib->resolveSymbol(symbol.toLatin1()))));
-		DEBUGKPILOT << "Plugin id      = " << symbol_value << endl;
+		DEBUGKPILOT <<"Plugin id      =" << symbol_value;
 	}
 }
 
@@ -398,7 +398,7 @@ static ConduitConfigBase *handleGeneralPages(QWidget *w, QTreeWidgetItem *p)
 
 	if (!o)
 	{
-		WARNINGKPILOT << fname << "Got unknown page name " << s << endl;
+		WARNINGKPILOT << fname <<"Got unknown page name" << s;
 	}
 
 	return o;
@@ -575,7 +575,7 @@ void ConduitConfigWidget::unselect()
 void ConduitConfigWidget::selected(QTreeWidgetItem *curr, QTreeWidgetItem *)
 {
 	FUNCTIONSETUP;
-	DEBUGKPILOT << fname << ": "
+	DEBUGKPILOT << fname <<":"
 		<< ( curr ? curr->text(CONDUIT_NAME) : CSL1("None") )
 		<< endl;
 
@@ -613,7 +613,7 @@ void ConduitConfigWidget::warnNoExec(const QTreeWidgetItem * p)
 		"found for the conduit %1. This means that the "
 		"conduit was not installed properly.</qt>", p->text(CONDUIT_NAME));
 
-	DEBUGKPILOT << fname << ": No library for "
+	DEBUGKPILOT << fname <<": No library for"
 		<< p->text(CONDUIT_NAME) << endl;
 
 	KMessageBox::error(this, msg, i18n("Conduit Error"));
@@ -627,7 +627,7 @@ void ConduitConfigWidget::warnNoLibrary(const QTreeWidgetItem *p)
 		"for the conduit %1. This means that the "
 		"conduit was not installed properly.</qt>", p->text(CONDUIT_NAME));
 
-	DEBUGKPILOT << fname << ": Can't load library for "
+	DEBUGKPILOT << fname <<": Can't load library for"
 		<< p->text(CONDUIT_NAME) << endl;
 
 	KMessageBox::error(this, msg, i18n("Conduit Error"));

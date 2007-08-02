@@ -76,7 +76,7 @@ void TimeConduit::readConfig()
 	if (syncMode().isLocal())
 	{
 #ifdef DEBUG
-		DEBUGKPILOT << fname << ": Would have set time to "
+		DEBUGKPILOT << fname <<": Would have set time to"
 			<< QDateTime::currentDateTime().toString() << endl;
 #endif
 		return delayDone();
@@ -110,6 +110,6 @@ void TimeConduit::syncHHfromPC()
 	}
 	else
 	{
-		WARNINGKPILOT << "Link is not a real device." << endl;
+		WARNINGKPILOT <<"Link is not a real device.";
 	}
 }

@@ -67,18 +67,18 @@ int main(int argc, char **argv)
 
 	if (datadir.isEmpty())
 	{
-		WARNINGKPILOT << "! Must provide a data-directory." << endl;
+		WARNINGKPILOT <<"! Must provide a data-directory.";
 	}
 	if (vcalfile.isEmpty())
 	{
-		WARNINGKPILOT << "! Must provide a vcal-file to read." << endl;
+		WARNINGKPILOT <<"! Must provide a vcal-file to read.";
 	}
 	if (datadir.isEmpty() || vcalfile.isEmpty())
 	{
 		return 1;
 	}
 
-	DEBUGKPILOT << "Using vcal-file: [" << vcalfile 
+	DEBUGKPILOT <<"Using vcal-file: [" << vcalfile 
 		<< "], creating DatebookDB in: [" << datadir
 		<< "]" << endl;
 
@@ -88,7 +88,7 @@ int main(int argc, char **argv)
 		return 1;
 	}
 
-	DEBUGKPILOT << "Opened calendar with: [" 
+	DEBUGKPILOT <<"Opened calendar with: [" 
 		<< calendar->incidences().count() << "] incidences." << endl;
 
 	Pilot::setupPilotCodec( CSL1("Latin1") );
@@ -107,11 +107,11 @@ int main(int argc, char **argv)
 		PilotDateEntry * d = new PilotDateEntry();
 
 		const KCal::Event *e = *i;
-		DEBUGKPILOT << "event: [" << e->summary() << "]" << endl;
+		DEBUGKPILOT <<"event: [" << e->summary() <<"]";
 
 		if (KCalSync::setDateEntry(d,e,*appInfo.categoryInfo()))
 		{
-DEBUGKPILOT << "got here." << endl;
+DEBUGKPILOT <<"got here.";
 			PilotRecord *r = d->pack();
 			if (r)
 			{

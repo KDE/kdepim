@@ -57,7 +57,7 @@ void HHToPCState::startSync( ConduitAction *ca )
 		return;
 	}
 
-	DEBUGKPILOT << fname << ": Starting HHToPCState." << endl;
+	DEBUGKPILOT << fname <<": Starting HHToPCState.";
 
 	if ( vccb->syncMode() == ConduitAction::SyncMode::eCopyHHToPC )
 	{
@@ -112,10 +112,10 @@ void HHToPCState::handleRecord( ConduitAction *ca )
 #ifdef DEBUG
 		if ( r->id() > 0 && !s )
 		{
-			DEBUGKPILOT << "-------------------------------------------------";
-			DEBUGKPILOT << "--------------------------" << endl;
-			DEBUGKPILOT << fname << ": Could not read palm record with ID ";
-			DEBUGKPILOT << r->id() << endl;
+			DEBUGKPILOT <<"-------------------------------------------------";
+			DEBUGKPILOT <<"--------------------------";
+			DEBUGKPILOT << fname <<": Could not read palm record with ID";
+			DEBUGKPILOT << r->id();
 		}
 #endif
 		if ( !r->isDeleted()
@@ -162,7 +162,7 @@ void HHToPCState::finishSync( ConduitAction *ca )
 		return;
 	}
 
-	DEBUGKPILOT << fname << ": Finished HHToPCState." << endl;
+	DEBUGKPILOT << fname <<": Finished HHToPCState.";
 	vccb->setState( fNextState );
 }
 
@@ -202,8 +202,8 @@ void VCalConduitBase::slotPalmRecToPC()
 	// let subclasses do something with the record before we try to sync
 	preRecord(r);
 
-//	DEBUGKPILOT<<fname<<": Event: "<<e->dtStart()<<" until "<<e->dtEnd()<<endl;
-//	DEBUGKPILOT<<fname<<": Time: "<<e->dtStart()<<" until "<<e->dtEnd()<<endl;
+//	DEBUGKPILOT<<fname<<": Event:"<<e->dtStart()<<" until"<<e->dtEnd();
+//	DEBUGKPILOT<<fname<<": Time:"<<e->dtStart()<<" until"<<e->dtEnd();
 	bool archiveRecord=(r->isArchived());
 
 	s = fLocalDatabase->readRecordById(r->id());
@@ -212,8 +212,8 @@ void VCalConduitBase::slotPalmRecToPC()
 #ifdef DEBUG
 		if (r->id()>0 && !s)
 		{
-			DEBUGKPILOT<<"---------------------------------------------------------------------------"<<endl;
-			DEBUGKPILOT<< fname<<": Could not read palm record with ID "<<r->id()<<endl;
+			DEBUGKPILOT<<"---------------------------------------------------------------------------";
+			DEBUGKPILOT<< fname<<": Could not read palm record with ID"<<r->id();
 		}
 #endif
 		if (!r->isDeleted() || (config()->syncArchived() && archiveRecord))

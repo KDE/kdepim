@@ -69,14 +69,14 @@ PilotSerialDatabase::PilotSerialDatabase( KPilotDeviceLink *l, const DBInfo *inf
 	setDBOpen(false);
 	if (fDBName.isEmpty() || !info)
 	{
-		WARNINGKPILOT << "Bad database name requested." << endl;
+		WARNINGKPILOT <<"Bad database name requested.";
 		return;
 	}
 
 	int db;
 	if (dlp_OpenDB(fDBSocket, 0, dlpOpenReadWrite, info->name, &db) < 0)
 	{
-		WARNINGKPILOT << "Cannot open database on handheld." << endl;
+		WARNINGKPILOT <<"Cannot open database on handheld.";
 		return;
 	}
 	setDBHandle(db);
@@ -102,7 +102,7 @@ int PilotSerialDatabase::readAppBlock(unsigned char *buffer, int maxLen)
 	FUNCTIONSETUP;
 	if (!isOpen())
 	{
-		WARNINGKPILOT << "DB not open" << endl;
+		WARNINGKPILOT <<"DB not open";
 		return -1;
 	}
 	pi_buffer_t *buf = pi_buffer_new(maxLen);
@@ -121,7 +121,7 @@ int PilotSerialDatabase::writeAppBlock(unsigned char *buffer, int len)
 	FUNCTIONSETUP;
 	if (!isOpen())
 	{
-		WARNINGKPILOT << "DB not open" << endl;
+		WARNINGKPILOT <<"DB not open";
 		return -1;
 	}
 	return dlp_WriteAppBlock(fDBSocket, getDBHandle(), buffer, len);
@@ -156,7 +156,7 @@ QList<recordid_t> PilotSerialDatabase::idList()
 
 	if ( (r<0) || (idlenread<1) )
 	{
-		WARNINGKPILOT << "Failed to read ID list from database." << endl;
+		WARNINGKPILOT <<"Failed to read ID list from database.";
 		return idlist;
 	}
 
@@ -178,12 +178,12 @@ PilotRecord *PilotSerialDatabase::readRecordById(recordid_t id)
 
 	if (!isOpen())
 	{
-		WARNINGKPILOT << "DB not open" << endl;
+		WARNINGKPILOT <<"DB not open";
 		return 0L;
 	}
 	if (id>0xFFFFFF)
 	{
-		WARNINGKPILOT <<  "Encountered an invalid record id "
+		WARNINGKPILOT <<"Encountered an invalid record id"
 			<< id << endl;
 		return 0L;
 	}
@@ -202,7 +202,7 @@ PilotRecord *PilotSerialDatabase::readRecordByIndex(int index)
 
 	if (!isOpen())
 	{
-		WARNINGKPILOT << "DB not open" << endl;
+		WARNINGKPILOT <<"DB not open";
 		return 0L;
 	}
 
@@ -230,7 +230,7 @@ PilotRecord *PilotSerialDatabase::readNextRecInCategory(int category)
 
 	if (!isOpen())
 	{
-		WARNINGKPILOT << "DB not open" << endl;
+		WARNINGKPILOT <<"DB not open";
 		return 0L;
 	}
 	pi_buffer_t *b = pi_buffer_new(InitialBufferSize);
@@ -249,7 +249,7 @@ PilotRecord *PilotSerialDatabase::readNextModifiedRec(int *ind)
 
 	if (!isOpen())
 	{
-		WARNINGKPILOT << "DB not open" << endl;
+		WARNINGKPILOT <<"DB not open";
 		return 0L;
 	}
 	pi_buffer_t *b = pi_buffer_new(InitialBufferSize);
@@ -270,7 +270,7 @@ recordid_t PilotSerialDatabase::writeRecord(PilotRecord * newRecord)
 
 	if (!isOpen())
 	{
-		WARNINGKPILOT << "DB not open" << endl;
+		WARNINGKPILOT <<"DB not open";
 		return 0;
 	}
 	// Do some sanity checking to prevent invalid UniqueIDs from being written
@@ -279,7 +279,7 @@ recordid_t PilotSerialDatabase::writeRecord(PilotRecord * newRecord)
 	// someone messed up full time...
 	if (newRecord->id()>0xFFFFFF)
 	{
-		WARNINGKPILOT << "Encountered an invalid record id "
+		WARNINGKPILOT <<"Encountered an invalid record id"
 			<< newRecord->id() << ", resetting it to zero." << endl;
 		newRecord->setID(0);
 	}
@@ -299,7 +299,7 @@ int PilotSerialDatabase::deleteRecord(recordid_t id, bool all)
 	FUNCTIONSETUP;
 	if (!isOpen())
 	{
-		WARNINGKPILOT <<"DB not open"<<endl;
+		WARNINGKPILOT <<"DB not open";
 		return -1;
 	}
 	return dlp_DeleteRecord(fDBSocket, getDBHandle(), all?1:0, id);
@@ -312,7 +312,7 @@ int PilotSerialDatabase::resetSyncFlags()
 	FUNCTIONSETUP;
 	if (!isOpen())
 	{
-		WARNINGKPILOT << "DB not open" << endl;
+		WARNINGKPILOT <<"DB not open";
 		return -1;
 	}
 	return dlp_ResetSyncFlags(fDBSocket, getDBHandle());
@@ -324,7 +324,7 @@ int PilotSerialDatabase::resetDBIndex()
 	FUNCTIONSETUP;
 	if (!isOpen())
 	{
-		WARNINGKPILOT << "DB not open" << endl;
+		WARNINGKPILOT <<"DB not open";
 		return -1;
 	}
 	return dlp_ResetDBIndex(fDBSocket, getDBHandle());
@@ -336,7 +336,7 @@ int PilotSerialDatabase::cleanup()
 	FUNCTIONSETUP;
 	if (!isOpen())
 	{
-		WARNINGKPILOT << "DB not open" << endl;
+		WARNINGKPILOT <<"DB not open";
 		return -1;
 	}
 	return dlp_CleanUpDatabase(fDBSocket, getDBHandle());
@@ -352,14 +352,14 @@ void PilotSerialDatabase::openDatabase()
 	QString s = getDBName();
 	if (s.isEmpty())
 	{
-		WARNINGKPILOT << "Bad DB name, " << s << " string given." << endl;
+		WARNINGKPILOT <<"Bad DB name," << s <<" string given.";
 		return;
 	}
 
 	QByteArray encodedName = QFile::encodeName(s);
 	if (encodedName.isEmpty())
 	{
-		WARNINGKPILOT << "Bad DB name, "
+		WARNINGKPILOT <<"Bad DB name,"
 			<< (encodedName.isNull() ? "null" : "empty")
 			<< " string given."
 			<< endl;
@@ -369,13 +369,13 @@ void PilotSerialDatabase::openDatabase()
 	char encodedNameBuffer[PATH_MAX];
 	strlcpy(encodedNameBuffer,(const char *)encodedName,PATH_MAX);
 
-	DEBUGKPILOT << fname << ": opening database: [" 
+	DEBUGKPILOT << fname <<": opening database: [" 
 		<< encodedNameBuffer << "]" << endl;
 
 	if (dlp_OpenDB(fDBSocket, 0, dlpOpenReadWrite,
 		encodedNameBuffer, &db) < 0)
 	{
-		WARNINGKPILOT << "Cannot open database on handheld." << endl;
+		WARNINGKPILOT <<"Cannot open database on handheld.";
 		return;
 	}
 	
@@ -383,7 +383,7 @@ void PilotSerialDatabase::openDatabase()
 	
 	if (dlp_FindDBByOpenHandle(fDBSocket, fDBHandle, 0, 0, &fDBInfo, 0 ) < 0)
 	{
-		WARNINGKPILOT << "Cannot read DBInfo from handheld." << endl;
+		WARNINGKPILOT <<"Cannot read DBInfo from handheld.";
 		fDBInfo = DBInfo();
 	}
 	
@@ -402,7 +402,7 @@ bool PilotSerialDatabase::createDatabase(long creator, long type, int cardno, in
 		creator, type, cardno, flags, version,
 		Pilot::toPilot(getDBName()), &db);
 	if (res<0) {
-		WARNINGKPILOT << "Cannot create database " << getDBName() << " on the handheld" << endl;
+		WARNINGKPILOT <<"Cannot create database" << getDBName() <<" on the handheld";
 		return false;
 	}
 	// TODO: Do I have to open it explicitly???
@@ -419,9 +419,9 @@ void PilotSerialDatabase::closeDatabase()
 		return;
 	}
 
-	DEBUGKPILOT << fname << ": Closing DB handle #" << getDBHandle() << endl;
+	DEBUGKPILOT << fname <<": Closing DB handle #" << getDBHandle();
 	dlp_CloseDB(fDBSocket, getDBHandle());
-	DEBUGKPILOT << fname << ": after closing" << endl;
+	DEBUGKPILOT << fname <<": after closing";
 	setDBOpen(false);
 }
 

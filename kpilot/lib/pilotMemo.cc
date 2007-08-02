@@ -56,7 +56,7 @@ PilotRecord *PilotMemo::pack()
 	pi_buffer_t *b = pi_buffer_new(len);
 	i = pack_Memo(&buf, b, memo_v1);
 
-	DEBUGKPILOT << fname << ": original text: [" << fText 
+	DEBUGKPILOT << fname <<": original text: [" << fText 
 		<< "], buf.text: [" << buf.text 
 		<< "], b->data: [" << b->data << "]" << endl;
 

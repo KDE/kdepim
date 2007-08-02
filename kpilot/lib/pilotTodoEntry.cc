@@ -212,7 +212,7 @@ void PilotTodoEntry::setDescriptionP(const char *desc, int len)
 		}
 		else
 		{
-			WARNINGKPILOT << "malloc() failed, description not set"
+			WARNINGKPILOT <<"malloc() failed, description not set"
 				<< endl;
 		}
 	}
@@ -258,7 +258,7 @@ void PilotTodoEntry::setNoteP(const char *note, int len)
 		}
 		else
 		{
-			WARNINGKPILOT << "malloc() failed, note not set" << endl;
+			WARNINGKPILOT <<"malloc() failed, note not set";
 		}
 	}
 	else

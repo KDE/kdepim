@@ -481,7 +481,7 @@ void SysInfoConduit::writeFile()
 	bool loaded=false;
 	if (!templatefile.isEmpty()){
 #ifdef DEBUG
-		DEBUGKPILOT<<"Loading template file "<<templatefile<<endl;
+		DEBUGKPILOT<<"Loading template file"<<templatefile;
 #endif
 		QFile infile(templatefile);
 		if (infile.open(QIODevice::ReadOnly)) {
@@ -494,7 +494,7 @@ void SysInfoConduit::writeFile()
 
 	if (!loaded)
 	{
-		WARNINGKPILOT << "Loading template file " << templatefile
+		WARNINGKPILOT <<"Loading template file" << templatefile
 			<<" failed. Using default template instead." << endl;
 		output=defaultpage;
 	}
@@ -569,17 +569,17 @@ void SysInfoConduit::writeFile()
 	// Write out the result
 	QFile outfile(fOutputFile);
 #ifdef DEBUG
-	DEBUGKPILOT << fname << ": Writing file <" << fOutputFile << ">" << endl;
+	DEBUGKPILOT << fname <<": Writing file <" << fOutputFile <<">";
 #endif
 	if (fOutputFile.isEmpty() || (!outfile.open(QIODevice::WriteOnly)) ) {
 		QFileInfo fi(QDir::home(), CSL1("KPilotSysInfo.")+QFileInfo(templatefile).suffix() );
 		fOutputFile=fi.absoluteFilePath();
-		WARNINGKPILOT << "Unable to open output file, using " << fOutputFile << " instead." << endl;
+		WARNINGKPILOT <<"Unable to open output file, using" << fOutputFile <<" instead.";
 		emit logMessage(i18n("Unable to open output file, using %1 instead.",fOutputFile));
 		outfile.setFileName(fOutputFile);
 		if (!outfile.open(QIODevice::WriteOnly))
 		{
-			WARNINGKPILOT<< "Unable to open " << fOutputFile << endl;
+			WARNINGKPILOT<<"Unable to open" << fOutputFile;
 			emit logError(i18n("Unable to open %1",fOutputFile));
 			QTimer::singleShot(0, this, SLOT(cleanup()));
 			return;

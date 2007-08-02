@@ -63,7 +63,7 @@ void LogFile::logStartSync()
 	
 	if (!fOutfile || !fOutfile->open(QIODevice::WriteOnly)) 
 	{
-		WARNINGKPILOT << "Unable to open log file " << KPilotSettings::logFileName() << endl;
+		WARNINGKPILOT <<"Unable to open log file" << KPilotSettings::logFileName();
 		KPILOT_DELETE( fOutfile );
 		fSyncing = false;
 		return;

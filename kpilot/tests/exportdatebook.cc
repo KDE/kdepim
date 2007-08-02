@@ -70,11 +70,11 @@ int main(int argc, char **argv)
 
 	if (datadir.isEmpty())
 	{
-		WARNINGKPILOT << "! Must provide a data-directory." << endl;
+		WARNINGKPILOT <<"! Must provide a data-directory.";
 	}
 	if (vcalfile.isEmpty())
 	{
-		WARNINGKPILOT << "! Must provide a vcal-file to write to." << endl;
+		WARNINGKPILOT <<"! Must provide a vcal-file to write to.";
 	}
 	if (datadir.isEmpty() || vcalfile.isEmpty())
 	{
@@ -88,7 +88,7 @@ int main(int argc, char **argv)
 	korgcfg.setGroup( "Time & Date" );
 	QString tz(korgcfg.readEntry( "TimeZoneId" ) );
 
-	DEBUGKPILOT << fname << ": KOrganizer's time zone = " << tz << endl;
+	DEBUGKPILOT << fname <<": KOrganizer's time zone =" << tz;
 
 	KCal::CalendarLocal *calendar = new KCal::CalendarLocal( tz );
 	*/
@@ -96,7 +96,7 @@ int main(int argc, char **argv)
 
 	if (!calendar)
 	{
-		WARNINGKPILOT << "! Can't create calendar object." << endl;
+		WARNINGKPILOT <<"! Can't create calendar object.";
 		return 1;
 	}
 

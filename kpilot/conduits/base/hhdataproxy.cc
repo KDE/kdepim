@@ -58,7 +58,7 @@ void HHDataProxy::commitCreate( Record *rec )
 		}
 		else
 		{
-			DEBUGKPILOT << fname << ": Record " << rec->id() 
+			DEBUGKPILOT << fname <<": Record" << rec->id() 
 				<< " is not of type HHRecord*." << endl;
 		}
 	}
@@ -76,7 +76,7 @@ void HHDataProxy::commitUpdate( Record *rec )
 		}
 		else
 		{
-			DEBUGKPILOT << fname << ": Record " << rec->id() 
+			DEBUGKPILOT << fname <<": Record" << rec->id() 
 				<< " is not of type HHRecord*." << endl;
 		}
 	}
@@ -98,7 +98,7 @@ void HHDataProxy::commitDelete( Record *rec )
 		}
 		else
 		{
-			DEBUGKPILOT << fname << ": Record " << rec->id() 
+			DEBUGKPILOT << fname <<": Record" << rec->id() 
 				<< " is not of type HHRecord*." << endl;
 		}
 	}

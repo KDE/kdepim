@@ -173,7 +173,7 @@ void LogWidget::addError(const QString & s)
 
 	if (s.isEmpty()) return;
 
-	WARNINGKPILOT << "KPilot error: " << s << endl;
+	WARNINGKPILOT <<"KPilot error:" << s;
 
 	if (!fLog) return;
 

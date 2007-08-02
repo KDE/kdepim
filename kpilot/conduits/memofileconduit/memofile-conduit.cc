@@ -77,19 +77,19 @@ MemofileConduit::~MemofileConduit()
 
 	setFirstSync( false );
 	// try new format first...
-	DEBUGKPILOT << fname << ": trying new format database first." << endl;
+	DEBUGKPILOT << fname <<": trying new format database first.";
 	bool _open = false;
 	_open = openDatabases(CSL1("MemosDB-PMem"));
 	if(!_open) {
-		DEBUGKPILOT << fname << ": unable to open new format database. trying old one." << endl;
+		DEBUGKPILOT << fname <<": unable to open new format database. trying old one.";
 		_open = openDatabases(CSL1("MemoDB"));
 	} else {
-		DEBUGKPILOT << fname << ": able to open new format database." << endl;
+		DEBUGKPILOT << fname <<": able to open new format database.";
 	}
 
 	if(!_open) {
 		emit logError(i18n("Unable to open the memo databases on the handheld."));
-		DEBUGKPILOT << fname << ": unable to open new or old format database." << endl;
+		DEBUGKPILOT << fname <<": unable to open new or old format database.";
 		return false;
 	}
 
@@ -114,14 +114,14 @@ MemofileConduit::~MemofileConduit()
 
 	if ( (syncMode() == SyncAction::SyncMode::eCopyHHToPC) || _memofiles->isFirstSync() ) {
 		addSyncLogEntry(i18n(" Copying Pilot to PC..."));
-		DEBUGKPILOT << fname << ": copying Pilot to PC." << endl;
+		DEBUGKPILOT << fname <<": copying Pilot to PC.";
 		copyHHToPC();
 	} else if ( syncMode() == SyncAction::SyncMode::eCopyPCToHH ) {
-		DEBUGKPILOT << fname << ": copying PC to Pilot." << endl;
+		DEBUGKPILOT << fname <<": copying PC to Pilot.";
 		addSyncLogEntry(i18n(" Copying PC to Pilot..."));
 		copyPCToHH();
 	} else {
-		DEBUGKPILOT << fname << ": doing regular sync." << endl;
+		DEBUGKPILOT << fname <<": doing regular sync.";
 		addSyncLogEntry(i18n(" Doing regular sync..."));
 		sync();
 	}
@@ -358,7 +358,7 @@ void MemofileConduit::getModifiedFromPilot()
 {
 	FUNCTIONSETUP;
 
-	DEBUGKPILOT << fname << ": Now in state " << fActionStatus << endl;
+	DEBUGKPILOT << fname <<": Now in state" << fActionStatus;
 }
 
 

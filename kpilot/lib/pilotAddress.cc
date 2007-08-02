@@ -455,7 +455,7 @@ void PilotAddress::setEmails(const QStringList &list)
 		QString email = *listIter;
 		if (!setPhoneField(PilotAddressInfo::eEmail, email, NoFlags).isValid())
 		{
-			WARNINGKPILOT << "Email accounts overflowed, silently dropped." << endl;
+			WARNINGKPILOT <<"Email accounts overflowed, silently dropped.";
 		}
 	}
 }
@@ -508,7 +508,7 @@ PhoneSlot PilotAddress::setPhoneField(PilotAddressInfo::EPhoneType type,
 	// store the overflow phone
 	if ( !fieldSlot.isValid() )
 	{
-		DEBUGKPILOT << fname << ": Phone would overflow." << endl;
+		DEBUGKPILOT << fname <<": Phone would overflow.";
 	}
 	else			// phone field 1 - 5; straight forward storage
 	{

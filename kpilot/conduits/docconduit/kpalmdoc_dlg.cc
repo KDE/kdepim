@@ -123,7 +123,7 @@ void ConverterDlg::readSettings()
 	dlg->fVerbose->setChecked( KPalmDocSettings::verboseMessages() );
 	QString encoding = KPalmDocSettings::encoding();
 #ifdef DEBUG
-	DEBUGKPILOT << fname << ": Encoding=" << encoding << endl;
+	DEBUGKPILOT << fname <<": Encoding=" << encoding;
 #endif
 	dlg->fEncoding->setCurrentText( KPalmDocSettings::encoding() );
 
@@ -237,16 +237,16 @@ void ConverterDlg::slotToText()
 
 
 		// Now that we have both directories, create the converter object
-		DEBUGKPILOT<<"Pdbinfo.dir="<<pdbinfo.dir().absPath()<<endl;
-		DEBUGKPILOT<<"txtinfo.dir="<<txtinfo.dir().absPath()<<endl;
+		DEBUGKPILOT<<"Pdbinfo.dir="<<pdbinfo.dir().absPath();
+		DEBUGKPILOT<<"txtinfo.dir="<<txtinfo.dir().absPath();
 		QStringList pdbfiles(pdbinfo.dir().entryList(CSL1("*.pdb")));
 		QStringList converted_Files;
 
-		DEBUGKPILOT<<"Length of filename list: "<<pdbfiles.size()<<endl;
+		DEBUGKPILOT<<"Length of filename list:"<<pdbfiles.size();
 		for ( QStringList::Iterator it = pdbfiles.begin(); it != pdbfiles.end(); ++it )
 		{
 			QString txtfile=QFileInfo(*it).baseName(true)+CSL1(".txt");
-			DEBUGKPILOT<<"pdbfile="<<*it<<", pdbdir="<<pdburl<<", txtfile="<<txtfile<<", txtdir="<<txturl<<endl;
+			DEBUGKPILOT<<"pdbfile="<<*it<<", pdbdir="<<pdburl<<", txtfile="<<txtfile<<", txtdir="<<txturl;
 			if (convertPDBtoTXT(pdburl, *it, txturl, txtfile, &conv))
 			{
 				converted_Files.append(*it);
@@ -382,7 +382,7 @@ void ConverterDlg::slotToPDB()
 		QStringList txtfiles(txtinfo.dir().entryList( QStringList(CSL1("*.txt"))));
 		QStringList converted_Files;
 
-		DEBUGKPILOT << fname << "Length of filename list: "
+		DEBUGKPILOT << fname <<"Length of filename list:"
 			<< txtfiles.size() << endl;
 		for ( QStringList::Iterator it = txtfiles.begin(); it != txtfiles.end(); ++it )
 		{
@@ -437,7 +437,7 @@ void ConverterDlg::slotUser1()
 void ConverterDlg::slotDirectories(bool dir)
 {
 	FUNCTIONSETUP;
-	DEBUGKPILOT<<"Slot Directories: "<<dir<<endl;
+	DEBUGKPILOT<<"Slot Directories:"<<dir;
 	if (dir)
 	{
 		dlg->fTextLabel->setText(i18n("&Text folder:"));
@@ -458,7 +458,7 @@ bool ConverterDlg::convertTXTtoPDB(QString txtdir, QString txtfile,
 	FUNCTIONSETUP;
 	bool res=false;
 	QFileInfo dbfileinfo(pdbdir, pdbfile);
-	DEBUGKPILOT<<"Working  on file "<<pdbfile<<endl;
+	DEBUGKPILOT<<"Working  on file"<<pdbfile;
 	if (!dbfileinfo.exists() || !askOverwrite ||
 			(KMessageBox::Yes==KMessageBox::questionYesNo(this,
 			i18n("<qt>The database file <em>%1</em> already exists. Overwrite it?</qt>",
@@ -470,7 +470,7 @@ bool ConverterDlg::convertTXTtoPDB(QString txtdir, QString txtfile,
 			if (!pdbdb->isOpen())
 			{
 #ifdef DEBUG
-				DEBUGKPILOT<<pdbfile<<" does not yet exist. Creating it"<<endl;
+				DEBUGKPILOT<<pdbfile<<" does not yet exist. Creating it";
 #endif
 				if (!pdbdb->createDatabase(get_long("REAd"), get_long("TEXt")) ) {
 				}
@@ -480,7 +480,7 @@ bool ConverterDlg::convertTXTtoPDB(QString txtdir, QString txtfile,
 			{
 				conv->setPDB(pdbdb);
 				conv->setTXTpath(txtdir, txtfile);
-				DEBUGKPILOT<<"Converting "<<txtfile<<" (dir "<<txtdir<<") to "<<dbfileinfo.filePath()<<endl;
+				DEBUGKPILOT<<"Converting"<<txtfile<<" (dir"<<txtdir<<") to"<<dbfileinfo.filePath();
 				if (conv->convertTXTtoPDB()) res=true;
 			}
 			delete pdbdb;
@@ -492,7 +492,7 @@ bool ConverterDlg::convertTXTtoPDB(QString txtdir, QString txtfile,
 	}
 	else
 	{
-		DEBUGKPILOT<<"Ignoring the file "<<txtfile<<endl;
+		DEBUGKPILOT<<"Ignoring the file"<<txtfile;
 	}
 	return res;
 }
@@ -503,7 +503,7 @@ bool ConverterDlg::convertPDBtoTXT(QString pdbdir, QString pdbfile,
 	FUNCTIONSETUP;
 	bool res=false;
 	QFileInfo txtfileinfo(txtdir, txtfile);
-	DEBUGKPILOT<<"Working  on file "<<txtfile<<endl;
+	DEBUGKPILOT<<"Working  on file"<<txtfile;
 	if (!txtfileinfo.exists() || !askOverwrite ||
 			(KMessageBox::Yes==KMessageBox::questionYesNo(this,
 			i18n("<qt>The text file <em>%1</em> already exists. Overwrite it?</qt>",
@@ -516,7 +516,7 @@ bool ConverterDlg::convertPDBtoTXT(QString pdbdir, QString pdbfile,
 			{
 				conv->setPDB(pdbdb);
 				conv->setTXTpath(txtdir, txtfile);
-				DEBUGKPILOT<<"Converting "<<txtfile<<" (dir "<<txtdir<<") from "<<pdbfile<<" (dir "<<pdbdir<<")"<<endl;
+				DEBUGKPILOT<<"Converting"<<txtfile<<" (dir"<<txtdir<<") from"<<pdbfile<<" (dir"<<pdbdir<<")";
 				if (conv->convertPDBtoTXT()) res=true;
 			}
 			delete pdbdb;
@@ -528,7 +528,7 @@ bool ConverterDlg::convertPDBtoTXT(QString pdbdir, QString pdbfile,
 	}
 	else
 	{
-		DEBUGKPILOT<<"Ignoring the file "<<pdbfile<<endl;
+		DEBUGKPILOT<<"Ignoring the file"<<pdbfile;
 	}
 	return res;
 

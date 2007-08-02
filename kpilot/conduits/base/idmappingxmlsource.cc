@@ -109,11 +109,11 @@ void IDMappingXmlSource::loadMapping()
 	
 	if( !file.exists() )
 	{
-		DEBUGKPILOT << fname << ": File does not exist, empty map." << endl;
+		DEBUGKPILOT << fname <<": File does not exist, empty map.";
 	}
 	else
 	{
-		DEBUGKPILOT << fname << ": Parsing file " << file.fileName() << endl;
+		DEBUGKPILOT << fname <<": Parsing file" << file.fileName();
 		QXmlSimpleReader reader;
 		reader.setContentHandler( this );
 		
@@ -130,9 +130,9 @@ bool IDMappingXmlSource::saveMapping()
 {
 	FUNCTIONSETUP;
 	
-	DEBUGKPILOT << fname << ": Saving " << fMappings.count();
-	DEBUGKPILOT << " mappings..." << endl;
-	DEBUGKPILOT << fname << ": ";
+	DEBUGKPILOT << fname <<": Saving" << fMappings.count();
+	DEBUGKPILOT <<" mappings...";
+	DEBUGKPILOT << fname <<":";
 	
 	QDomDocument doc;
 	QDomElement root = doc.createElement( CSL1("mappings") );
@@ -155,7 +155,7 @@ bool IDMappingXmlSource::saveMapping()
 	QMap<QString, QString>::const_iterator it;
 	for( it = fMappings.begin(); it != fMappings.end(); ++it )
 	{
-		DEBUGKPILOT << ".";
+		DEBUGKPILOT <<".";
 		
 		QDomElement mappingElement = doc.createElement( CSL1("mapping") );
 		mappingElement.setAttribute( CSL1("hh"), it.key() );
@@ -176,7 +176,7 @@ bool IDMappingXmlSource::saveMapping()
 		doc.save( out, 4 );
 		file.close();
 		
-		DEBUGKPILOT << endl << fname << ": finished saving." << endl;
+		DEBUGKPILOT << endl << fname <<": finished saving.";
 		
 		return true;
 	}
@@ -206,7 +206,7 @@ bool IDMappingXmlSource::rollback()
 	if( !renamed )
 	{
 		// Could not rename the file, rollback failed.
-		DEBUGKPILOT << "Rename failed" << endl;
+		DEBUGKPILOT <<"Rename failed";
 		return false;
 	}
 	
@@ -219,7 +219,7 @@ bool IDMappingXmlSource::rollback()
 		return true;
 	}
 	
-	DEBUGKPILOT << "Copy failed" << endl;
+	DEBUGKPILOT <<"Copy failed";
 	// There went something wrong during copy. Rollback failed.
 	return false;
 }

@@ -106,7 +106,7 @@ unsigned int KPilotLocalLink::findAvailableDatabases( KPilotLocalLink::Private &
 
 		if (PilotLocalDatabase::infoFromFile( path + CSL1("/") + (*i), &dbi))
 		{
-			DEBUGKPILOT << fname << ": Loaded "
+			DEBUGKPILOT << fname <<": Loaded"
 				<< dbname << endl;
 			dbi.index = counter;
 			info.fDBs.append( DatabaseDescriptor(dbname,dbi) );
@@ -114,7 +114,7 @@ unsigned int KPilotLocalLink::findAvailableDatabases( KPilotLocalLink::Private &
 		}
 	}
 
-	DEBUGKPILOT << fname << ": Total " << info.fDBs.count()
+	DEBUGKPILOT << fname <<": Total" << info.fDBs.count()
 		<< " databases." << endl;
 	return info.fDBs.count();
 }
@@ -163,7 +163,7 @@ KPilotLocalLink::~KPilotLocalLink()
 	}
 	else
 	{
-		WARNINGKPILOT << "The local link path <"
+		WARNINGKPILOT <<"The local link path <"
 			<< fPath
 			<< "> does not exist or is not a directory. No sync can be done."
 			<< endl;
@@ -204,13 +204,13 @@ KPilotLocalLink::~KPilotLocalLink()
 
 	if ( (index<0) || (index>=(int)d->fDBs.count()) )
 	{
-		WARNINGKPILOT << "Index out of range." << endl;
+		WARNINGKPILOT <<"Index out of range.";
 		return -1;
 	}
 
 	DatabaseDescriptor dd = d->fDBs[index];
 
-	DEBUGKPILOT << fname << ": Getting database " << dd.first << endl;
+	DEBUGKPILOT << fname <<": Getting database" << dd.first;
 
 	if (info)
 	{
@@ -227,18 +227,18 @@ KPilotLocalLink::~KPilotLocalLink()
 
 	if ( (index<0) || (index>=(int)d->fDBs.count()) )
 	{
-		WARNINGKPILOT << "Index out of range." << endl;
+		WARNINGKPILOT <<"Index out of range.";
 		return -1;
 	}
 
 	if (!name)
 	{
-		WARNINGKPILOT << "NULL name." << endl;
+		WARNINGKPILOT <<"NULL name.";
 		return -1;
 	}
 
 	QString desiredName = Pilot::fromPilot(name);
-	DEBUGKPILOT << fname << ": Looking for DB " << desiredName << endl;
+	DEBUGKPILOT << fname <<": Looking for DB" << desiredName;
 	for ( DatabaseDescriptorList::ConstIterator i = d->fDBs.at(index);
 		i != d->fDBs.end(); ++i)
 	{
@@ -265,7 +265,7 @@ KPilotLocalLink::~KPilotLocalLink()
 /* virtual */ void KPilotLocalLink::addSyncLogEntryImpl(QString const &s)
 {
 	FUNCTIONSETUP;
-	DEBUGKPILOT << fname << ": " << s << endl ;
+	DEBUGKPILOT << fname <<":" << s;
 }
 
 /* virtual */ bool KPilotLocalLink::installFile(QString const &path, bool deletefile)
@@ -303,25 +303,25 @@ KPilotLocalLink::~KPilotLocalLink()
 	QString sourcefile = fPath + CSL1("/") + dbname ;
 	QString destfile = path ;
 
-	DEBUGKPILOT << fname << ": src=" << sourcefile << endl;
-	DEBUGKPILOT << fname << ": dst=" << destfile << endl;
+	DEBUGKPILOT << fname <<": src=" << sourcefile;
+	DEBUGKPILOT << fname <<": dst=" << destfile;
 
 	QFile in( sourcefile );
 	if ( !in.exists() )
 	{
-		WARNINGKPILOT << "Source file " << sourcefile << " doesn't exist." << endl;
+		WARNINGKPILOT <<"Source file" << sourcefile <<" doesn't exist.";
 		return false;
 	}
 	if ( !in.open( QIODevice::ReadOnly | QIODevice::Unbuffered ) )
 	{
-		WARNINGKPILOT << "Can't read source file " << sourcefile << endl;
+		WARNINGKPILOT <<"Can't read source file" << sourcefile;
 		return false;
 	}
 
 	QFile out( destfile );
 	if ( !out.open( QIODevice::WriteOnly | QIODevice::Truncate | QIODevice::Unbuffered ) )
 	{
-		WARNINGKPILOT << "Can't write destination file " << destfile << endl;
+		WARNINGKPILOT <<"Can't write destination file" << destfile;
 		return false;
 	}
 

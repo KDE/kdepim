@@ -169,7 +169,7 @@ MALWidgetSetup::~MALWidgetSetup()
 	fConfigWidget->proxyPassword->insert(MALConduitSettings::proxyPassword());
 
 #ifdef DEBUG
-	DEBUGKPILOT << fname << ": Got proxy password <"
+	DEBUGKPILOT << fname <<": Got proxy password <"
 		<< MALConduitSettings::proxyPassword()
 		<< "> set Text <"
 		<< fConfigWidget->proxyPassword->text()

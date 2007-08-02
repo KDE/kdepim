@@ -68,7 +68,7 @@ NotepadConduit::~NotepadConduit()
 	FUNCTIONSETUP;
 
 #ifdef DEBUG
-	DEBUGKPILOT << fname << ": In exec() @" << (unsigned long) this << endl;
+	DEBUGKPILOT << fname <<": In exec() @" << (unsigned long) this;
 #endif
 
 	QDir dir(NotepadConduitSettings::outputDirectory());
@@ -94,7 +94,7 @@ bool NotepadConduit::event(QEvent *e)
 
 	if(e->type() == QEvent::User) {
 #ifdef DEBUG
-		DEBUGKPILOT << fname << ": Notepad thread done." << endl;
+		DEBUGKPILOT << fname <<": Notepad thread done.";
 #endif
 //		stopTickle();
 		delayDone();
@@ -231,7 +231,7 @@ void NotepadActionThread::saveImage(struct NotePad *n)
 		break;
 	default :
 		// Unknown data type
-		WARNINGKPILOT << "Unknown data type: " << n->body.dataType << endl;
+		WARNINGKPILOT <<"Unknown data type:" << n->body.dataType;
 		return;
 
 		// TODO: Post a warning to the UI
@@ -252,7 +252,7 @@ void NotepadActionThread::saveImage(struct NotePad *n)
 
 
 #ifdef DEBUG
-	DEBUGKPILOT << fname << ": Notepad " << imgname << endl;
+	DEBUGKPILOT << fname <<": Notepad" << imgname;
 #endif
 	if(!image.save(imgname, "PNG", -1))
 		++notSaved;

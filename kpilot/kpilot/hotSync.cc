@@ -131,7 +131,7 @@ public:
 			fDeviceDBs << dbname;
 		}
 
-		DEBUGKPILOT << fname << ": Added <" << dbname
+		DEBUGKPILOT << fname <<": Added <" << dbname
 			<< "> " << creator << endl;
 	}
 
@@ -246,7 +246,7 @@ static inline void initNoBackup(QStringList &dbnames,
 		{
 			if (s.length() != 6)
 			{
-				WARNINGKPILOT << "Creator ID " << s << " is malformed." << endl;
+				WARNINGKPILOT <<"Creator ID" << s <<" is malformed.";
 			}
 			else
 			{
@@ -260,7 +260,7 @@ static inline void initNoBackup(QStringList &dbnames,
 		}
 	}
 
-	DEBUGKPILOT << fname << ": Will skip databases "
+	DEBUGKPILOT << fname <<": Will skip databases"
 		<< dbnames.join(CSL1(",")) << endl;
 	QString creatorids;
 	char buf[5];
@@ -272,7 +272,7 @@ static inline void initNoBackup(QStringList &dbnames,
 		buf[4]=0;
 		creatorids.append(CSL1("[%1]").arg(buf));
 	}
-	DEBUGKPILOT << fname << ": Will skip creators " << creatorids << endl;
+	DEBUGKPILOT << fname <<": Will skip creators" << creatorids;
 }
 
 /** Make sure that the backup directory @p backupDir
@@ -292,7 +292,7 @@ static inline bool checkBackupDirectory( const QString &backupDir )
 
 	if (fi.exists() && !fi.isDir())
 	{
-		WARNINGKPILOT << "Requested backup directory "
+		WARNINGKPILOT <<"Requested backup directory"
 			<< backupDir
 			<< " exists but is not a directory."
 			<< endl;
@@ -301,7 +301,7 @@ static inline bool checkBackupDirectory( const QString &backupDir )
 
 	if ( !backupDir.endsWith('/') )
 	{
-		WARNINGKPILOT << "Backup dir does not end with a / "
+		WARNINGKPILOT <<"Backup dir does not end with a /"
 			<< endl;
 		return false;
 	}
@@ -420,7 +420,7 @@ static inline bool checkBackupDirectory( const QString &backupDir )
 
 			if (!startBackupThread(&info))
 			{
-				WARNINGKPILOT << "Could not create local database for <"
+				WARNINGKPILOT <<"Could not create local database for <"
 					<< info.name << ">" << endl;
 			}
 			else
@@ -436,13 +436,13 @@ static inline bool checkBackupDirectory( const QString &backupDir )
 		else
 		{
 			// Just skip resource DBs during an update hotsync.
-			DEBUGKPILOT << fname << ": Skipping database <" << info.name
+			DEBUGKPILOT << fname <<": Skipping database <" << info.name
 				<< "> (resource database)" << endl;
 		}
 	}
 	else
 	{
-		DEBUGKPILOT << fname << ": Skipping database <" << info.name
+		DEBUGKPILOT << fname <<": Skipping database <" << info.name
 			<< "> (no-backup list)" << endl;
 		QString s = i18n("Skipping %1",Pilot::fromPilot(info.name));
 		addSyncLogEntry(s);
@@ -476,7 +476,7 @@ bool BackupAction::startBackupThread(DBInfo *info)
 		PilotDatabase *serial=deviceLink()->database(info);
 		if (!serial->isOpen())
 		{
-			WARNINGKPILOT << "Unable to open database <" << info->name << ">" << endl;
+			WARNINGKPILOT <<"Unable to open database <" << info->name <<">";
 			KPILOT_DELETE(serial);
 			addSyncLogEntry(i18n("Backup of %1 failed.\n",Pilot::fromPilot(info->name)));
 			return false;
@@ -486,7 +486,7 @@ bool BackupAction::startBackupThread(DBInfo *info)
 		PilotRecord*rec=serial->readNextModifiedRec(&index);
 		if (!rec)
 		{
-			DEBUGKPILOT << fname << ": No modified records." << endl;
+			DEBUGKPILOT << fname <<": No modified records.";
 			KPILOT_DELETE(serial);
 			return false;
 		}
@@ -520,7 +520,7 @@ bool BackupAction::startBackupThread(DBInfo *info)
 
 	if (fBackupThread)
 	{
-		WARNINGKPILOT << "Starting new backup thread before the old one is done." << endl;
+		WARNINGKPILOT <<"Starting new backup thread before the old one is done.";
 		return false;
 	}
 
@@ -659,7 +659,7 @@ FileInstallAction::~FileInstallAction()
 	fDBIndex++;
 
 #ifdef DEBUG
-	DEBUGKPILOT << fname << ": Installing file " << filePath << endl;
+	DEBUGKPILOT << fname <<": Installing file" << filePath;
 #endif
 
 	QString m = i18n("Installing %1",fileName);
@@ -682,7 +682,7 @@ FileInstallAction::~FileInstallAction()
 	if (pi_file_install(f, pilotSocket(), 0, NULL) < 0)
 #endif
 	{
-		WARNINGKPILOT << "Failed to install." << endl;
+		WARNINGKPILOT <<"Failed to install.";
 
 
 		emit logError(i18n("Cannot install file &quot;%1&quot;.",fileName));
@@ -978,7 +978,7 @@ void RestoreAction::setDirectory( const QString &path )
 	}
 
 #ifdef DEBUG
-	DEBUGKPILOT << fname << ": Restoring user " << dirname << endl;
+	DEBUGKPILOT << fname <<": Restoring user" << dirname;
 #endif
 
 	QDir dir(dirname, QString::null, QDir::Name,
@@ -986,7 +986,7 @@ void RestoreAction::setDirectory( const QString &path )
 
 	if (!dir.exists())
 	{
-		WARNINGKPILOT << "Restore directory "
+		WARNINGKPILOT <<"Restore directory"
 			<< dirname << " does not exist." << endl;
 		fActionStatus = Error;
 		addSyncLogEntry(i18n("Restore directory does not exist.") +
@@ -1034,7 +1034,7 @@ void RestoreAction::setDirectory( const QString &path )
 		}
 		else
 		{
-			WARNINGKPILOT << "Can't open " << s << endl;
+			WARNINGKPILOT <<"Can't open" << s;
 			logMessage(i18n("File '%1' cannot be read.",s));
 		}
 	}
@@ -1072,11 +1072,11 @@ void RestoreAction::setDirectory( const QString &path )
 	++(fP->fDBIterator);
 	++(fP->fDBIndex);
 
-	DEBUGKPILOT << fname << ": Trying to install " << dbi.path << endl;
+	DEBUGKPILOT << fname <<": Trying to install" << dbi.path;
 
 	if (openConduit() < 0)
 	{
-		WARNINGKPILOT << "Restore apparently canceled." << endl;
+		WARNINGKPILOT <<"Restore apparently canceled.";
 		logMessage(i18n("Restore incomplete."));
 		fActionStatus = Done;
 		emit syncDone(this);
@@ -1093,7 +1093,7 @@ void RestoreAction::setDirectory( const QString &path )
 	listFile<<dbi.path;
 	if ( !deviceLink()->installFiles( listFile, false /* don't delete */ ) )
 	{
-		WARNINGKPILOT << "Couldn't  restore " << dbi.path << endl;
+		WARNINGKPILOT <<"Couldn't  restore" << dbi.path;
 		logError(i18n("Cannot restore file `%1'.",databaseInfo.fileName()));
 	}
 }

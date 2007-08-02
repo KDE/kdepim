@@ -80,7 +80,7 @@ void HHRecord::setId( const QString &id )
 	
 	if( !rid )
 	{
-		DEBUGKPILOT << "Could not convert " << id << " to ulong. Id not set!";
+		DEBUGKPILOT <<"Could not convert" << id <<" to ulong. Id not set!";
 		return;
 	}
 	else

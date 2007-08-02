@@ -182,7 +182,7 @@ void FileInstallWidget::dropEvent(QDropEvent * drop)
 		return;
 
 #ifdef DEBUG
-	DEBUGKPILOT << ": Got " << list.first().prettyUrl() << endl;
+	DEBUGKPILOT <<": Got" << list.first().prettyUrl();
 #endif
 
 	QStringList files;

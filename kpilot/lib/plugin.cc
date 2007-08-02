@@ -291,7 +291,7 @@ ConduitAction::ConduitAction(KPilotLink *p,
 	}
 	else
 	{
-		DEBUGKPILOT << fname << ": No conflict resolution given, defaulting to: "
+		DEBUGKPILOT << fname <<": No conflict resolution given, defaulting to:"
 			<< " SyncAction::eAskUser" << endl;
 		fConflictResolution = SyncAction::eAskUser;
 	}
@@ -300,10 +300,10 @@ ConduitAction::ConduitAction(KPilotLink *p,
 		it != args.end();
 		++it)
 	{
-		DEBUGKPILOT << fname << ": " << *it << endl;
+		DEBUGKPILOT << fname <<":" << *it;
 	}
 
-	DEBUGKPILOT << fname << ": Direction=" << fSyncDirection.name() << endl;
+	DEBUGKPILOT << fname <<": Direction=" << fSyncDirection.name();
 }
 
 /* virtual */ ConduitAction::~ConduitAction()
@@ -336,14 +336,14 @@ bool ConduitAction::openDatabases(const QString &name, bool *retrieved)
 	// for record keeping separate
 	localPathName.replace(CSL1("DBBackup/"), CSL1("conduits/"));
 
-	DEBUGKPILOT << fname << ": localPathName: [" << localPathName
+	DEBUGKPILOT << fname <<": localPathName: [" << localPathName
 		<< "]" << endl;
 
 	PilotLocalDatabase *localDB = new PilotLocalDatabase( localPathName );
 
 	if (!localDB)
 	{
-		WARNINGKPILOT << "Could not initialize object for local copy of database \""
+		WARNINGKPILOT <<"Could not initialize object for local copy of database \""
 			<< name
 			<< "\"" << endl;
 		if (retrieved) *retrieved = false;
@@ -363,7 +363,7 @@ bool ConduitAction::openDatabases(const QString &name, bool *retrieved)
 // TODO Extend findDatabase() with extra overload?
 		if (deviceLink()->findDatabase(Pilot::toPilot( name ), &dbinfo)<0 )
 		{
-			WARNINGKPILOT << "Could not get DBInfo for " << name << endl;
+			WARNINGKPILOT <<"Could not get DBInfo for" << name;
 			if (retrieved) *retrieved = false;
 			return false;
 		}
@@ -392,14 +392,14 @@ bool ConduitAction::openDatabases(const QString &name, bool *retrieved)
 		}
 		if (!KStandardDirs::exists(path))
 		{
-			DEBUGKPILOT << fname << ": Database directory does not exist." << endl;
+			DEBUGKPILOT << fname <<": Database directory does not exist.";
 			if (retrieved) *retrieved = false;
 			return false;
 		}
 
 		if (!deviceLink()->retrieveDatabase(dbpath, &dbinfo) )
 		{
-			WARNINGKPILOT << "Could not retrieve database "
+			WARNINGKPILOT <<"Could not retrieve database"
 				<< name << " from the handheld." << endl;
 			if (retrieved) *retrieved = false;
 			return false;
@@ -407,7 +407,7 @@ bool ConduitAction::openDatabases(const QString &name, bool *retrieved)
 		localDB = new PilotLocalDatabase( localPathName );
 		if (!localDB || !localDB->isOpen())
 		{
-			WARNINGKPILOT << "local backup of database " << name << " could not be initialized." << endl;
+			WARNINGKPILOT <<"local backup of database" << name <<" could not be initialized.";
 			if (retrieved) *retrieved = false;
 			return false;
 		}
@@ -419,7 +419,7 @@ bool ConduitAction::openDatabases(const QString &name, bool *retrieved)
 
 	if (!fDatabase)
 	{
-		WARNINGKPILOT << "Could not open database \""
+		WARNINGKPILOT <<"Could not open database \""
 			<< name
 			<< "\" on the pilot."
 			<< endl;
@@ -459,7 +459,7 @@ ConduitProxy::ConduitProxy(KPilotLink *p,
 	KSharedPtr < KService > o = KService::serviceByDesktopName(fDesktopName);
 	if (!o)
 	{
-		WARNINGKPILOT << "Can't find desktop file for conduit "
+		WARNINGKPILOT <<"Can't find desktop file for conduit"
 			<< fDesktopName
 			<< endl;
 		addSyncLogEntry(i18n("Could not find conduit %1.",fDesktopName));
@@ -480,7 +480,7 @@ ConduitProxy::ConduitProxy(KPilotLink *p,
 		QFile::encodeName(fLibraryName));
 	if (!library)
 	{
-		WARNINGKPILOT << "Can't load library "
+		WARNINGKPILOT <<"Can't load library"
 			<< fLibraryName
 			<< " - "
 			<< KLibLoader::self()->lastErrorMessage()
@@ -492,7 +492,7 @@ ConduitProxy::ConduitProxy(KPilotLink *p,
 	unsigned long version = PluginUtility::pluginVersion(library);
 	if ( Pilot::PLUGIN_API != version )
 	{
-		WARNINGKPILOT << "Library "
+		WARNINGKPILOT <<"Library"
 			<< fLibraryName
 			<< " has version "
 			<< version
@@ -504,7 +504,7 @@ ConduitProxy::ConduitProxy(KPilotLink *p,
 	KLibFactory *factory = library->factory();
 	if (!factory)
 	{
-		WARNINGKPILOT << "Can't find factory in library "
+		WARNINGKPILOT <<"Can't find factory in library"
 			<< fLibraryName
 			<< endl;
 		addSyncLogEntry(i18n("Could not initialize conduit %1.",fDesktopName));
@@ -513,13 +513,13 @@ ConduitProxy::ConduitProxy(KPilotLink *p,
 
 	QStringList l = syncMode().list();
 
-	DEBUGKPILOT << fname << ": Flags: " << syncMode().name() << endl;
+	DEBUGKPILOT << fname <<": Flags:" << syncMode().name();
 
 	QObject *object = factory->create(fHandle,"SyncAction",l);
 
 	if (!object)
 	{
-		WARNINGKPILOT << "Can't create SyncAction." << endl;
+		WARNINGKPILOT <<"Can't create SyncAction.";
 		addSyncLogEntry(i18n("Could not create conduit %1.",fDesktopName));
 		return false;
 	}
@@ -528,7 +528,7 @@ ConduitProxy::ConduitProxy(KPilotLink *p,
 
 	if (!fConduit)
 	{
-		WARNINGKPILOT << "Can't cast to ConduitAction." << endl;
+		WARNINGKPILOT <<"Can't cast to ConduitAction.";
 		addSyncLogEntry(i18n("Could not create conduit %1.",fDesktopName));
 		return false;
 	}
@@ -556,7 +556,7 @@ void ConduitProxy::execDone(SyncAction *p)
 
 	if (p!=fConduit)
 	{
-		WARNINGKPILOT << "Unknown conduit @"
+		WARNINGKPILOT <<"Unknown conduit @"
 			<< (void *) p
 			<< " finished."
 			<< endl;
@@ -611,7 +611,7 @@ QString findArgument(const QStringList &a, const QString &arg)
 	QString symbol = CSL1("version_");
 	symbol.append(lib->name());
 
-	DEBUGKPILOT << fname << ": Symbol <" << symbol << '>' << endl;
+	DEBUGKPILOT << fname <<": Symbol <" << symbol << '>';
 
 	unsigned long *p = (unsigned long *)(lib->resolveSymbol(symbol.toLatin1()));
         if ( !p )

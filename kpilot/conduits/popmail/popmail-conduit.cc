@@ -125,7 +125,7 @@ int PopMailConduit::sendPendingMail(int mode)
 
 	if (count == 0)
 	{
-		WARNINGKPILOT << "Mail was not sent at all!" << endl;
+		WARNINGKPILOT <<"Mail was not sent at all!";
 		emit logError(i18n("No mail was sent."));
 	}
 	else if (count < 0)
@@ -183,7 +183,7 @@ int PopMailConduit::sendViaKMail()
 	DCOPClient *dcopptr = KApplication::kApplication()->dcopClient();
 	if (!dcopptr)
 	{
-		WARNINGKPILOT << "Cannot get DCOP client."
+		WARNINGKPILOT <<"Cannot get DCOP client."
 			<< endl;
 		KMessageBox::error(0L,
 			i18n("Could not connect to DCOP server for "
@@ -219,7 +219,7 @@ int PopMailConduit::sendViaKMail()
 
 		if (t.status())
 		{
-			WARNINGKPILOT << "Cannot open temp file." << endl;
+			WARNINGKPILOT <<"Cannot open temp file.";
 			KMessageBox::error(0L,
 				i18n("Cannot open temporary file to store "
 					"mail from Pilot in."),
@@ -260,7 +260,7 @@ int PopMailConduit::sendViaKMail()
 			returnValue,
 			true))
 		{
-			WARNINGKPILOT << "DCOP call failed." << endl;
+			WARNINGKPILOT <<"DCOP call failed.";
 
 			KMessageBox::error(0L,
 				i18n("DCOP connection with KMail failed."),
@@ -327,12 +327,12 @@ void PopMailConduit::writeMessageToFile(FILE* sendf, struct Mail& theMail)
 	mailPipe << "\r\n";
 
 
-	DEBUGKPILOT << fname << ": To: " << theMail.to << endl;
+	DEBUGKPILOT << fname <<": To:" << theMail.to;
 
 
 	if(theMail.body)
 	{
-		DEBUGKPILOT << fname << ": Sent body." << endl;
+		DEBUGKPILOT << fname <<": Sent body.";
 		mailPipe << theMail.body << "\r\n";
 	}
 
@@ -340,7 +340,7 @@ void PopMailConduit::writeMessageToFile(FILE* sendf, struct Mail& theMail)
 	QString signature = MailConduitSettings::signature();
 	if(!signature.isEmpty())
 	{
-		DEBUGKPILOT << fname << ": Reading signature" << endl;
+		DEBUGKPILOT << fname <<": Reading signature";
 
 		QFile f(signature);
 		if ( f.open(QIODevice::ReadOnly) )
@@ -356,7 +356,7 @@ void PopMailConduit::writeMessageToFile(FILE* sendf, struct Mail& theMail)
 	}
 	mailPipe << "\r\n";
 
-	DEBUGKPILOT << fname << ": Done" << endl;
+	DEBUGKPILOT << fname <<": Done";
 }
 
 
@@ -374,7 +374,7 @@ void PopMailConduit::writeMessageToFile(FILE* sendf, struct Mail& theMail)
 	QDateTime date = QDateTime::currentDateTime();
 	QString dateString = date.toString(DATE_FORMAT);
 
-	DEBUGKPILOT << fname << ": Date format example: [" << dateString
+	DEBUGKPILOT << fname <<": Date format example: [" << dateString
 		<< "]" << endl;
 }
 

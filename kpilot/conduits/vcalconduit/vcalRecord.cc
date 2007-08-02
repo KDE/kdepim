@@ -111,7 +111,7 @@ static void setRecurrence(KCal::Event *event,const PilotDateEntry *dateEntry)
 	if ((dateEntry->getRepeatType() == repeatNone) || dateEntry->isMultiDay())
 	{
 #ifdef DEBUG
-		DEBUGKPILOT<<fname<<": no recurrence to set"<<endl;
+		DEBUGKPILOT<<fname<<": no recurrence to set";
 #endif
 		return;
 	}
@@ -125,11 +125,11 @@ static void setRecurrence(KCal::Event *event,const PilotDateEntry *dateEntry)
 	{
 		endDate = readTm(dateEntry->getRepeatEnd()).date();
 #ifdef DEBUG
-		DEBUGKPILOT << fname << "-- end " << endDate.toString() << endl;
+		DEBUGKPILOT << fname <<"-- end" << endDate.toString();
 	}
 	else
 	{
-		DEBUGKPILOT << fname << "-- noend" << endl;
+		DEBUGKPILOT << fname <<"-- noend";
 #endif
 	}
 
@@ -265,7 +265,7 @@ static void setAlarms(PilotDateEntry*de, const KCal::Event *e)
 	if (!de || !e )
 	{
 #ifdef DEBUG
-		DEBUGKPILOT << fname << ": NULL entry given to setAlarms. "<<endl;
+		DEBUGKPILOT << fname <<": NULL entry given to setAlarms.";
 #endif
 		return;
 	}
@@ -287,7 +287,7 @@ static void setAlarms(PilotDateEntry*de, const KCal::Event *e)
 	if (!alm )
 	{
 #ifdef DEBUG
-		DEBUGKPILOT << fname << ": no enabled alarm found (should exist!!!)"<<endl;
+		DEBUGKPILOT << fname <<": no enabled alarm found (should exist!!!)";
 #endif
 		de->setAlarmEnabled( false );
 		return;
@@ -337,7 +337,7 @@ static void setRecurrence(PilotDateEntry*dateEntry, const KCal::Event *event)
 		dateEntry->setRepeatFrequency(1);
 		dateEntry->setRepeatEnd(dateEntry->getEventEnd());
 #ifdef DEBUG
-		DEBUGKPILOT << fname <<": Setting single-day recurrence (" << startDt.toString() << " - " << endDt.toString() << ")" <<endl;
+		DEBUGKPILOT << fname <<": Setting single-day recurrence (" << startDt.toString() <<" -" << endDt.toString() <<")";
 #endif
 	}
 
@@ -365,8 +365,8 @@ static void setRecurrence(PilotDateEntry*dateEntry, const KCal::Event *event)
 	}
 	dateEntry->setRepeatFrequency(freq);
 #ifdef DEBUG
-	DEBUGKPILOT<<" Event: "<<event->summary()<<" ("<<event->description()<<")"<<endl;
-	DEBUGKPILOT<< "duration: "<<r->duration() << ", endDate: "<<endDate.toString()<< ", ValidEndDate: "<<endDate.isValid()<<", NullEndDate: "<<endDate.isNull()<<endl;
+	DEBUGKPILOT<<" Event:"<<event->summary()<<" ("<<event->description()<<")";
+	DEBUGKPILOT<<"duration:"<<r->duration() <<", endDate:"<<endDate.toString()<<", ValidEndDate:"<<endDate.isValid()<<", NullEndDate:"<<endDate.isNull();
 #endif
 
 	QBitArray dayArray(7), dayArrayPalm(7);
@@ -421,7 +421,7 @@ static void setRecurrence(PilotDateEntry*dateEntry, const KCal::Event *event)
 		break;
 	default:
 #ifdef DEBUG
-		DEBUGKPILOT << fname << ": Unknown recurrence type "<< recType << " with frequency "
+		DEBUGKPILOT << fname <<": Unknown recurrence type"<< recType <<" with frequency"
 			<< freq << " and duration " << r->duration() << endl;
 #endif
 		break;
@@ -436,7 +436,7 @@ static void setExceptions(PilotDateEntry *dateEntry, const KCal::Event *vevent )
 
 	if (!dateEntry || !vevent)
 	{
-		WARNINGKPILOT << "NULL dateEntry or NULL vevent given for exceptions. Skipping exceptions" << endl;
+		WARNINGKPILOT <<"NULL dateEntry or NULL vevent given for exceptions. Skipping exceptions";
 		return;
 	}
 	// first, we need to delete the old exceptions list, if it existed...
@@ -458,7 +458,7 @@ static void setExceptions(PilotDateEntry *dateEntry, const KCal::Event *vevent )
 	ex_List=new struct tm[excount];
 	if (!ex_List)
 	{
-		WARNINGKPILOT << "Couldn't allocate memory for the exceptions" << endl;
+		WARNINGKPILOT <<"Couldn't allocate memory for the exceptions";
 		dateEntry->setExceptionCount(0);
 		dateEntry->setExceptions(0);
 		return;

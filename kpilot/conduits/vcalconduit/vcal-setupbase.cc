@@ -71,7 +71,7 @@ VCalWidgetSetupBase::~VCalWidgetSetupBase()
 
 	// General page
 #ifdef DEBUG
-	DEBUGKPILOT << fname << ": Selected type="
+	DEBUGKPILOT << fname <<": Selected type="
 		<< fConfigWidget->fSyncDestination->selected()
 		<< " with id="
 		<< fConfigWidget->fSyncDestination->id(fConfigWidget->fSyncDestination->selected())

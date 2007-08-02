@@ -75,12 +75,12 @@ int docMatchBookmark::findMatches(QString doctext, bmkList &fBookmarks)
 {
 	FUNCTIONSETUP;
 	int pos = 0, nr=0, found=0;
-	DEBUGKPILOT << fname << "Finding matches of " << pattern << endl;
+	DEBUGKPILOT << fname <<"Finding matches of" << pattern;
 
 	while (pos >= 0 && found<to)
 	{
 		pos = doctext.indexOf(pattern, pos);
-		DEBUGKPILOT << fname << "Result of search: pos=" << pos << endl;
+		DEBUGKPILOT << fname <<"Result of search: pos=" << pos;
 		if (pos >= 0)
 		{
 			++found;
@@ -256,14 +256,14 @@ int DOCConverter::findBmkEndtags(QString &text, bmkList&fBmks) {
 		} else {
 			int endpos = pos;
 			doSearch=true;
-			DEBUGKPILOT<<"Found the ending >, now looking for the opening <"<<endl;
+			DEBUGKPILOT<<"Found the ending >, now looking for the opening <";
 
 			// Search for the opening <. There must not be a newline in the bookmark text.
 			while (doSearch && pos > 0) {
-//				DEBUGKPILOT<<"pos="<<pos<<", char="<<text[pos].latin1()<<endl;
+//				DEBUGKPILOT<<"pos="<<pos<<", char="<<text[pos].latin1();
 				pos--;
 				if (text[pos] == '\n') {
-					DEBUGKPILOT<<"Found carriage return at position "<<pos<<" inside the bookmark text, assuming this is not a bookmark, and the text ends in a >"<<endl;
+					DEBUGKPILOT<<"Found carriage return at position"<<pos<<" inside the bookmark text, assuming this is not a bookmark, and the text ends in a >";
 					doSearch = false;
 					pos = -1;
 					break;
@@ -271,14 +271,14 @@ int DOCConverter::findBmkEndtags(QString &text, bmkList&fBmks) {
 				if (text[pos] == '<') {
 					fBmks.append(new docMatchBookmark(text.mid(pos + 1, endpos - pos - 1)));
 					++nr;
-					DEBUGKPILOT<<"Found opening < at position "<<pos<<", bookmarktext ="<<text.mid(pos+1, endpos-pos-1)<<endl;
+					DEBUGKPILOT<<"Found opening < at position"<<pos<<", bookmarktext ="<<text.mid(pos+1, endpos-pos-1);
 					text.remove(pos, text.length());
 					pos--;
 					doSearch = false;
 				}
 			}
 		}
-		DEBUGKPILOT<<"Finished processing the next bookmark, current position: "<<pos<<endl;
+		DEBUGKPILOT<<"Finished processing the next bookmark, current position:"<<pos;
 	}
 	return nr;
 }
@@ -331,7 +331,7 @@ int DOCConverter::findBmkFile(QString &, bmkList &fBmks) {
 		}
 	}
 
-	DEBUGKPILOT<<"Bookmark file: "<<bmkfilename<<endl;
+	DEBUGKPILOT<<"Bookmark file:"<<bmkfilename;
 
 	QTextStream bmkstream(&bmkfile);
 	QString line;
@@ -343,7 +343,7 @@ int DOCConverter::findBmkFile(QString &, bmkList &fBmks) {
 			//   <bookmark>,<string-to-search>,<bookmark-name-string>,<starting-bookmark>,<ending-bookmark>
 			// For an explanation see: http://home.kc.rr.com/krzysztow/PalmPilot/MakeDocJ/index.html
 			if (fieldnr>0){
-				DEBUGKPILOT<<"Working on bookmark \""<<line<<"\""<<endl;
+				DEBUGKPILOT<<"Working on bookmark \""<<line<<"\"";
 				docMatchBookmark*bmk=0L;
 				QString bookmark=bmkinfo[0];
 				bool ok;
@@ -351,7 +351,7 @@ int DOCConverter::findBmkFile(QString &, bmkList &fBmks) {
 				if (ok) {
 					if (fieldnr>1) {
 						QString name(bmkinfo[1]);
-						DEBUGKPILOT<<"Bookmark \""<<name<<"\" set at position "<<pos<<endl;
+						DEBUGKPILOT<<"Bookmark \""<<name<<"\" set at position"<<pos;
 						fBmks.append(new docBookmark(name, pos));
 					}
 				} else if (bookmark==CSL1("-") || bookmark==CSL1("+")) {
@@ -370,7 +370,7 @@ int DOCConverter::findBmkFile(QString &, bmkList &fBmks) {
 							bmk=new docRegExpBookmark(patt, name);
 						}
 						// The third entry in the line (optional) denotes the index of a capture subexpression (if an integer) or the bookmark text as regexp (if a string)
-						DEBUGKPILOT<<"RegExp Bookmark, pattern="<<patt<<", name="<<name<<endl;
+						DEBUGKPILOT<<"RegExp Bookmark, pattern="<<patt<<", name="<<name;
 						if (bmk) {
 							if (bookmark==CSL1("-")) {
 								bmk->from=1;
@@ -389,16 +389,16 @@ int DOCConverter::findBmkFile(QString &, bmkList &fBmks) {
 							fBmks.append(bmk);
 							bmk=0L;
 						} else {
-							DEBUGKPILOT<<"Could not allocate bookmark "<<name<<endl;
+							DEBUGKPILOT<<"Could not allocate bookmark"<<name;
 						}
 					} else {
-						DEBUGKPILOT<<"RegExp bookmark found with no other information (no bookmark pattern nor name)"<<endl;
+						DEBUGKPILOT<<"RegExp bookmark found with no other information (no bookmark pattern nor name)";
 					}
 				} else {
 					QString pattern(bookmark);
 					if (fieldnr>1) pattern=bmkinfo[1];
 					if (fieldnr>2) bookmark=bmkinfo[2];
-					DEBUGKPILOT<<"RegExp Bookmark, pattern="<<pattern<<", name="<<bookmark<<endl;
+					DEBUGKPILOT<<"RegExp Bookmark, pattern="<<pattern<<", name="<<bookmark;
 					bmk=new docRegExpBookmark(pattern, bookmark);
 					if (bmk) {
 						bmk->from=1;
@@ -465,10 +465,10 @@ bool DOCConverter::convertTXTtoPDB() {
 	}
 
 #ifdef DEBUG
-	DEBUGKPILOT << "Bookmarks: "<<endl;
+	DEBUGKPILOT <<"Bookmarks:";
 	for (bmk = pdbBookmarks.first(); bmk; bmk = pdbBookmarks.next())
 	{
-		DEBUGKPILOT<<bmk->bmkName.left(20)<<" at position "<<bmk->position<<endl;
+		DEBUGKPILOT<<bmk->bmkName.left(20)<<" at position"<<bmk->position;
 	}
 #endif
 
@@ -492,7 +492,7 @@ bool DOCConverter::convertTXTtoPDB() {
 	docdb->writeRecord(rec);
 	KPILOT_DELETE(rec);
 
-	DEBUGKPILOT << "Write header record: length="<<text.length()<<", compress="<<compress<<endl;
+	DEBUGKPILOT <<"Write header record: length="<<text.length()<<", compress="<<compress;
 
 	// First compress the text, then write out the bookmarks and - if existing - also the annotations
 	int len=text.length();
@@ -501,7 +501,7 @@ bool DOCConverter::convertTXTtoPDB() {
 	while (start<len)
 	{
 		reclen=qMin(len-start, PilotDOCEntry::TEXT_SIZE);
-		DEBUGKPILOT << "Record #"<<recnum<<", reclen="<<reclen<<", compress="<<compress<<endl;
+		DEBUGKPILOT <<"Record #"<<recnum<<", reclen="<<reclen<<", compress="<<compress;
 
 		PilotDOCEntry recText;
 //		recText.setText(text.mid(start, reclen), reclen);
@@ -521,7 +521,7 @@ bool DOCConverter::convertTXTtoPDB() {
 //	for (bmkList::const_iterator it=pdbBookmarks.begin(); it!=pdbBookmarks.end(); ++it)
 	{
 		++recnum;
-		DEBUGKPILOT << "Bookmark #"<<recnum<<", Name="<<bmk->bmkName.left(20)<<", Position="<<bmk->position<<endl;
+		DEBUGKPILOT <<"Bookmark #"<<recnum<<", Name="<<bmk->bmkName.left(20)<<", Position="<<bmk->position;
 
 		PilotDOCBookmark bmkEntry;
 		bmkEntry.pos=bmk->position;
@@ -563,7 +563,7 @@ bool DOCConverter::convertPDBtoTXT()
 	PilotDOCHead header(headerRec);
 	KPILOT_DELETE(headerRec);
 
-	DEBUGKPILOT<<"Database "<<docdb->dbPathName()<<" has "<<header.numRecords<<" text records, "<<endl
+	DEBUGKPILOT<<"Database"<<docdb->dbPathName()<<" has"<<header.numRecords<<" text records,"<<endl
 		<<" total number of records: "<<docdb->recordCount()<<endl
 		<<" position="<<header.position<<endl
 		<<" recordSize="<<header.recordSize<<endl
@@ -588,7 +588,7 @@ bool DOCConverter::convertPDBtoTXT()
 		{
 			PilotDOCEntry recText(rec, header.version==DOC_COMPRESSED);
 			doctext.append(recText.getText());
-			DEBUGKPILOT<<"Record "<<i<<endl;
+			DEBUGKPILOT<<"Record"<<i;
 			KPILOT_DELETE(rec);
 		} else {
 			emit logMessage(i18n("Could not read text record #%1 from Database %2",i,docdb->dbPathName()));
@@ -632,7 +632,7 @@ bool DOCConverter::convertPDBtoTXT()
 		}
 		else
 		{
-			DEBUGKPILOT<<"Writing "<<upperBmkRec-header.numRecords<<
+			DEBUGKPILOT<<"Writing"<<upperBmkRec-header.numRecords<<
 				"("<<upperBmkRec<<") bookmarks to file "<<bmkfilename<<endl;
 			QTextStream bmkstream(&bmkfile);
 			for (docBookmark*bmk=bmks.first(); bmk; bmk=bmks.next())

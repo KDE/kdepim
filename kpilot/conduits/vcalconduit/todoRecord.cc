@@ -46,7 +46,7 @@ bool KCalSync::setTodoEntry(PilotTodoEntry *de,
 {
 	FUNCTIONSETUP;
 	if (!de || !todo) {
-		DEBUGKPILOT << fname << ": NULL todo given... Skipping it" << endl;
+		DEBUGKPILOT << fname <<": NULL todo given... Skipping it";
 		return false;
 	}
 
@@ -81,7 +81,7 @@ bool KCalSync::setTodoEntry(PilotTodoEntry *de,
 	// what we call description pilot puts as a separate note
 	de->setNote(todo->description());
 
-	DEBUGKPILOT << "-------- " << todo->summary() << endl;
+	DEBUGKPILOT <<"--------" << todo->summary();
 	return de->pack();
 }
 
@@ -107,7 +107,7 @@ bool KCalSync::setTodo(KCal::Todo *e,
 
 #if BADLY_PORTED
 	e->setPilotId(de->id());
-	DEBUGKPILOT<<fname<<": set KCal item to pilotId: [" << e->pilotId() << "] ..."<<endl;
+	DEBUGKPILOT<<fname<<": set KCal item to pilotId: [" << e->pilotId() <<"] ...";
 #endif
 	e->setSecrecy(de->isSecret() ? KCal::Todo::SecrecyPrivate : KCal::Todo::SecrecyPublic);
 

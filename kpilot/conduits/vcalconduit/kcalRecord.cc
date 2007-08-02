@@ -108,7 +108,7 @@ void KCalSync::setCategory(KCal::Incidence *e,
 
 	if (!e || !de)
 	{
-		DEBUGKPILOT << fname << ": error.  unable to set kcal category. e: ["
+		DEBUGKPILOT << fname <<": error.  unable to set kcal category. e: ["
 			<< (void *)e << "], de: [" << (void *)de << "]" << endl;
 		return;
 	}
@@ -117,7 +117,7 @@ void KCalSync::setCategory(KCal::Incidence *e,
 	int cat = de->category();
 	QString newcat = Pilot::categoryName(&info,cat);
 
-	DEBUGKPILOT << fname << ": palm category id: [" << cat <<
+	DEBUGKPILOT << fname <<": palm category id: [" << cat <<
 		"], label: [" << newcat << "]" << endl;
 
 	if ( Pilot::validCategory(cat) && (cat != Pilot::Unfiled))
@@ -139,5 +139,5 @@ void KCalSync::setCategory(KCal::Incidence *e,
 		}
 	}
 
-	DEBUGKPILOT << fname << ": kcal categories now: [" << cats.join(",") << "]" << endl;
+	DEBUGKPILOT << fname <<": kcal categories now: [" << cats.join(",") <<"]";
 }

@@ -212,7 +212,7 @@ void VCalConduitBase::slotProcess() {
 	// No state so sync is finished
 	else
 	{
-		DEBUGKPILOT << fname << ": Sync finished." << endl;
+		DEBUGKPILOT << fname <<": Sync finished.";
 		delayDone();
 	}
 }
@@ -230,11 +230,11 @@ static void listResources( KCal::CalendarResources *p )
 	FUNCTIONSETUP;
 	KCal::CalendarResourceManager *manager = p->resourceManager();
 
-	DEBUGKPILOT << fname << ": Resources in calendar:" << endl;
+	DEBUGKPILOT << fname <<": Resources in calendar:";
 	KCal::CalendarResourceManager::Iterator it;
 	for( it = manager->begin(); it != manager->end(); ++it )
 	{
-		DEBUGKPILOT << fname << ": " << (*it)->resourceName() << endl;
+		DEBUGKPILOT << fname <<":" << (*it)->resourceName();
 	}
 }
 
@@ -253,24 +253,24 @@ static inline bool isLocalTime(KCal::Calendar *p)
 	korgcfg.setGroup( "Time & Date" );
 	QString tz(korgcfg.readEntry( "TimeZoneId" ) );
 
-	DEBUGKPILOT << fname << ": KOrganizer's time zone = " << tz << endl;
+	DEBUGKPILOT << fname <<": KOrganizer's time zone =" << tz;
 
 	// Need a subclass ptr. for the ResourceCalendar methods
 	KCal::CalendarResources *rescal = 0L;
 
-	DEBUGKPILOT << fname << ": Got calendar type " << config()->calendarType()
+	DEBUGKPILOT << fname <<": Got calendar type" << config()->calendarType()
 		<< endl;
 
 	switch(config()->calendarType())
 	{
 		case VCalConduitSettings::eCalendarLocal:
 		{
-			DEBUGKPILOT << fname << "Using CalendarLocal, file = "
+			DEBUGKPILOT << fname <<"Using CalendarLocal, file ="
 				<< config()->calendarFile() << endl;
 
 			if ( config()->calendarFile().isEmpty() )
 			{
-				DEBUGKPILOT << fname << "Empty calendar file name." << endl;
+				DEBUGKPILOT << fname <<"Empty calendar file name.";
 
 				emit logError( i18n( "You selected to sync with an iCalendar"
 						" file, but did not give a filename. Please select a"
@@ -288,9 +288,9 @@ static inline bool isLocalTime(KCal::Calendar *p)
 				return false;
 			}
 
-			DEBUGKPILOT << fname << "Calendar's timezone: "
+			DEBUGKPILOT << fname <<"Calendar's timezone:"
 				<< fCalendar->timeZoneId() << endl;
-			DEBUGKPILOT << fname << "Calendar is local time: "
+			DEBUGKPILOT << fname <<"Calendar is local time:"
 				<< isLocalTime(fCalendar) << endl;
 
 			emit logMessage( isLocalTime(fCalendar) ?
@@ -313,7 +313,7 @@ static inline bool isLocalTime(KCal::Calendar *p)
 			// the calendar is initialized, so nothing more to do...
 			if (!dynamic_cast<KCal::CalendarLocal*>(fCalendar)->load(fCalendarFile) )
 			{
-				DEBUGKPILOT << fname << "Calendar file " << fCalendarFile
+				DEBUGKPILOT << fname <<"Calendar file" << fCalendarFile
 					<< " could not be opened. Will create a new one" << endl;
 
 				// Try to create empty file. if it fails,
@@ -321,7 +321,7 @@ static inline bool isLocalTime(KCal::Calendar *p)
 				QFile fl(fCalendarFile);
 				if (!fl.open(QIODevice::WriteOnly | QIODevice::Append))
 				{
-					DEBUGKPILOT << fname << "Invalid calendar file name "
+					DEBUGKPILOT << fname <<"Invalid calendar file name"
 						<< fCalendarFile << endl;
 
 					emit logError( i18n( "You chose to sync with the file \"%1\", which "
@@ -338,14 +338,14 @@ static inline bool isLocalTime(KCal::Calendar *p)
 		}
 
 		case VCalConduitSettings::eCalendarResource:
-			DEBUGKPILOT << "Using CalendarResource!" << endl;
+			DEBUGKPILOT <<"Using CalendarResource!";
 
 			rescal = new KCal::CalendarResources( tz );
 			listResources(rescal);
 			fCalendar = rescal;
 			if ( !fCalendar)
 			{
-				WARNINGKPILOT << "Cannot initialize calendar " <<
+				WARNINGKPILOT <<"Cannot initialize calendar" <<
 					"object for ResourceCalendar" << endl;
 				return false;
 			}
@@ -369,7 +369,7 @@ static inline bool isLocalTime(KCal::Calendar *p)
 
 	if ( !fCalendar )
 	{
-		WARNINGKPILOT << "Unable to initialize calendar object."
+		WARNINGKPILOT <<"Unable to initialize calendar object."
 			<< " Please check the conduit's setup." << endl;
 		emit logError( i18n( "Unable to initialize the calendar object. Please"
 			" check the conduit's setup") );
@@ -381,7 +381,7 @@ static inline bool isLocalTime(KCal::Calendar *p)
 		return false;
 	}
 	int rc = fP->updateIncidences();
-	DEBUGKPILOT << fname << ": return from updateIncidences: [" << rc
+	DEBUGKPILOT << fname <<": return from updateIncidences: [" << rc
 		<< "]" << endl;
 
 	if ( fP->count() < 1 )
@@ -397,7 +397,7 @@ KCal::Incidence* VCalConduitBase::addRecord( PilotRecord *r )
 	FUNCTIONSETUP;
 
 	recordid_t id = fLocalDatabase->writeRecord( r );
-	DEBUGKPILOT<<fname<<": Pilot Record ID = " << r->id() << ", backup ID = "
+	DEBUGKPILOT<<fname<<": Pilot Record ID =" << r->id() <<", backup ID ="
 		<< id << endl;
 
 	PilotRecordBase *de = newPilotEntry( r );
@@ -454,7 +454,7 @@ KCal::Incidence*VCalConduitBase::changeRecord(PilotRecord *r,PilotRecord *)
 	PilotRecordBase *de = newPilotEntry( r );
 	KCal::Incidence *e = fP->findIncidence( r->id() );
 
-	DEBUGKPILOT << fname << ": Pilot Record ID: [" << r->id() << "]" << endl;
+	DEBUGKPILOT << fname <<": Pilot Record ID: [" << r->id() <<"]";
 
 	if ( e && de )
 	{
@@ -536,7 +536,7 @@ void VCalConduitBase::deletePalmRecord( KCal::Incidence *e, PilotRecord *s )
 	FUNCTIONSETUP;
 	if ( s )
 	{
-		DEBUGKPILOT << fname << ": deleting record " << s->id() << endl;
+		DEBUGKPILOT << fname <<": deleting record" << s->id();
 		s->setDeleted();
 		fDatabase->writeRecord( s );
 		fLocalDatabase->writeRecord( s );
@@ -544,9 +544,9 @@ void VCalConduitBase::deletePalmRecord( KCal::Incidence *e, PilotRecord *s )
 	}
 	else
 	{
-		DEBUGKPILOT << fname << ": could not find record to delete (" << endl;
+		DEBUGKPILOT << fname <<": could not find record to delete (";
 #if BADLY_PORTED
-		DEBUGKPILOT << e->pilotId() << ")" << endl;
+		DEBUGKPILOT << e->pilotId() <<")";
 #endif
 	}
 
@@ -561,13 +561,13 @@ void VCalConduitBase::updateIncidenceOnPalm( KCal::Incidence *e,
 {
 	FUNCTIONSETUP;
 	if ( !de || !e ) {
-		DEBUGKPILOT << fname << ": NULL event given... Skipping it" << endl;
+		DEBUGKPILOT << fname <<": NULL event given... Skipping it";
 		return;
 	}
 #if BADLY_PORTED
 	if ( e->syncStatus() == KCal::Incidence::SYNCDEL )
 	{
-		DEBUGKPILOT << fname << ": don't write deleted incidence "
+		DEBUGKPILOT << fname <<": don't write deleted incidence"
 			<< e->summary() << " to the palm" << endl;
 		return;
 	}

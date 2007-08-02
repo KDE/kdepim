@@ -41,27 +41,27 @@ int main(int, char **)
 	PilotAppInfoBase info;
 
 
-	DEBUGKPILOT << "### testconstants\n#" << endl;
-	DEBUGKPILOT << "# Sizes of structures\n#" << endl;
-	DEBUGKPILOT << "#     AppInfoBase: " << sizeof(PilotAppInfoBase) << endl;
-	DEBUGKPILOT << "#    CategoryInfo: " << sizeof(info.categoryInfo()) << endl;
-	DEBUGKPILOT << "#    CategoryInfo: " << sizeof(*info.categoryInfo()) << endl;
-	DEBUGKPILOT << "#  Category names: " << sizeof(info.categoryInfo()->name) << endl;
-	DEBUGKPILOT << "# Single category: " << sizeof(info.categoryInfo()->name[0]) << endl;
+	DEBUGKPILOT <<"### testconstants\n#";
+	DEBUGKPILOT <<"# Sizes of structures\n#";
+	DEBUGKPILOT <<"#     AppInfoBase:" << sizeof(PilotAppInfoBase);
+	DEBUGKPILOT <<"#    CategoryInfo:" << sizeof(info.categoryInfo());
+	DEBUGKPILOT <<"#    CategoryInfo:" << sizeof(*info.categoryInfo());
+	DEBUGKPILOT <<"#  Category names:" << sizeof(info.categoryInfo()->name);
+	DEBUGKPILOT <<"# Single category:" << sizeof(info.categoryInfo()->name[0]);
 
-	DEBUGKPILOT << "#\n# Sanity checking structure sizes\n#" << endl;
+	DEBUGKPILOT <<"#\n# Sanity checking structure sizes\n#";
 	if ( sizeof(info.categoryInfo()->name[0]) != Pilot::CATEGORY_SIZE )
 	{
-		WARNINGKPILOT << "! Category names are not 16 bytes." << endl;
+		WARNINGKPILOT <<"! Category names are not 16 bytes.";
 		return 1;
 	}
 	if ( sizeof(info.categoryInfo()->name) / sizeof(info.categoryInfo()->name[0]) != Pilot::CATEGORY_COUNT )
 	{
-		WARNINGKPILOT << "! There are not " << Pilot::CATEGORY_COUNT << " categories available." << endl;
+		WARNINGKPILOT <<"! There are not" << Pilot::CATEGORY_COUNT <<" categories available.";
 		return 1;
 	}
 
-	DEBUGKPILOT << "# OK.\n" << endl;
+	DEBUGKPILOT <<"# OK.";
 	return 0;
 }
 

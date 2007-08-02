@@ -95,18 +95,18 @@ void categoryNames( const QString &dir )
 	PilotLocalDatabase *database = new PilotLocalDatabase( dir, MEMO_NAME );
 	if (!database->isOpen())
 	{
-		WARNINGKPILOT << "Can not open database '" << MEMO_NAME << "'" << endl;
+		WARNINGKPILOT <<"Can not open database '" << MEMO_NAME <<"'";
 		return;
 	}
 
 	PilotAppInfoBase *appinfo = new PilotAppInfoBase( database );
 	appinfo->dump();
 
-	DEBUGKPILOT << "# Done dumping" << endl;
+	DEBUGKPILOT <<"# Done dumping";
 
 	if (!appinfo->categoryInfo())
 	{
-		WARNINGKPILOT << "Could not read required database" << endl;
+		WARNINGKPILOT <<"Could not read required database";
 		return;
 	}
 
@@ -115,25 +115,25 @@ void categoryNames( const QString &dir )
 
 	if (funnyname_length < 20)
 	{
-		WARNINGKPILOT << "String of example category names is too short." << endl;
+		WARNINGKPILOT <<"String of example category names is too short.";
 		return;
 	}
 
-	DEBUGKPILOT << "# Updating category names with various lengths." << endl;
-	DEBUGKPILOT << "# Expect three truncation errors and two bad category numbers." << endl;
+	DEBUGKPILOT <<"# Updating category names with various lengths.";
+	DEBUGKPILOT <<"# Expect three truncation errors and two bad category numbers.";
 	for (unsigned int i=0; i<Pilot::CATEGORY_COUNT+2; i++)
 	{
 		QString name = QString::fromLatin1(funnyname+funnyname_length-i-3);
 		if (!appinfo->setCategoryName(i,name))
 		{
-			WARNINGKPILOT << "Failed to set category " << i << " name to <" << name << ">" << endl;
+			WARNINGKPILOT <<"Failed to set category" << i <<" name to <" << name <<">";
 		}
 		else
 		{
 			QString categoryname = appinfo->categoryName(i);
 			if (categoryname != name)
 			{
-				WARNINGKPILOT << "Category name " << i
+				WARNINGKPILOT <<"Category name" << i
 					<< " set to <" << name
 					<< "> and returns <"
 					<< categoryname << ">" << endl;
@@ -141,7 +141,7 @@ void categoryNames( const QString &dir )
 		}
 	}
 
-	DEBUGKPILOT << "# Final categories\n#   " << categories( appinfo ).join("\n#   ") << endl;
+	DEBUGKPILOT <<"# Final categories\n#" << categories( appinfo ).join("\n#");
 }
 
 
@@ -177,8 +177,8 @@ int main(int argc, char **argv)
 
 	QString datadir = args->getOption("data-dir");
 
-	DEBUGKPILOT << "### testcategories\n#\n#" << endl;
-	DEBUGKPILOT << "# Listing categories from database files.\n#" << endl;
+	DEBUGKPILOT <<"### testcategories\n#\n#";
+	DEBUGKPILOT <<"# Listing categories from database files.\n#";
 
 	Pilot::setupPilotCodec( CSL1("Latin1") );
 
@@ -189,23 +189,23 @@ int main(int argc, char **argv)
 		{
 			break;
 		}
-		DEBUGKPILOT << "# Categories (" << files[i] << "): " << endl;
-		DEBUGKPILOT << "#   " << listCategories( datadir, files[i] ).join("\n#   ") << "\n#\n";
+		DEBUGKPILOT <<"# Categories (" << files[i] <<"):";
+		DEBUGKPILOT <<"#" << listCategories( datadir, files[i] ).join("\n#") <<"\n#";
 	}
 	// Should bail, not crash
-	DEBUGKPILOT << "# Categories (nonexistent): " << endl;
+	DEBUGKPILOT <<"# Categories (nonexistent):";
 	(void) listCategories( datadir, "nonexistent" );
 
-	DEBUGKPILOT << "# Categories (bogus): " << endl;
+	DEBUGKPILOT <<"# Categories (bogus):";
 	(void) listCategories( datadir, BOGUS_NAME );
 
-	DEBUGKPILOT << "#\n# Trying to pass broken pointers to category functions.\n# Four errors are expected.\n#" << endl;
+	DEBUGKPILOT <<"#\n# Trying to pass broken pointers to category functions.\n# Four errors are expected.\n#";
 	badAppInfoCreation();
 
-	DEBUGKPILOT << "#\n# Checking category names." << endl;
+	DEBUGKPILOT <<"#\n# Checking category names.";
 	categoryNames( datadir );
 
-	DEBUGKPILOT << "# OK.\n" << endl;
+	DEBUGKPILOT <<"# OK.";
 	return 0;
 }
 

@@ -195,12 +195,12 @@ void TodoConduit::_setAppInfo()
 
 	if( !fTodoAppInfo )
 	{
-		DEBUGKPILOT << fname << ": fTodoAppInfo is NULL" << endl;
+		DEBUGKPILOT << fname <<": fTodoAppInfo is NULL";
 		return;
 	}
 	if( !fDatabase )
 	{
-		DEBUGKPILOT << fname << ": fDatabase is NULL" << endl;
+		DEBUGKPILOT << fname <<": fDatabase is NULL";
 		return;
 	}
 
@@ -244,7 +244,7 @@ void TodoConduit::readConfig()
 	{
 		changeSync(SyncMode::eFullSync);
 	}
-	DEBUGKPILOT<<"categoriesSynced=" << categoriesSynced << endl;
+	DEBUGKPILOT<<"categoriesSynced=" << categoriesSynced;
 }
 
 void TodoConduit::preSync()
@@ -287,7 +287,7 @@ PilotRecord *TodoConduit::recordFromIncidence(PilotRecordBase *de, const KCal::I
 	const KCal::Todo *todo = dynamic_cast<const KCal::Todo *>(e);
 	if (!todo)
 	{
-		DEBUGKPILOT << fname << ": Incidence is not a todo." << endl;
+		DEBUGKPILOT << fname <<": Incidence is not a todo.";
 		return 0L;
 	}
 
@@ -316,14 +316,14 @@ KCal::Incidence *TodoConduit::incidenceFromRecord(KCal::Incidence *e, const Pilo
 	const PilotTodoEntry *todoEntry = dynamic_cast<const PilotTodoEntry *>(de);
 	if (!todoEntry)
 	{
-		DEBUGKPILOT << fname << ": HH record not a todo entry." << endl;
+		DEBUGKPILOT << fname <<": HH record not a todo entry.";
 		return 0L;
 	}
 
 	KCal::Todo *todo = dynamic_cast<KCal::Todo *>(e);
 	if (!todo)
 	{
-		DEBUGKPILOT << fname << ": Incidence is not a todo." << endl;
+		DEBUGKPILOT << fname <<": Incidence is not a todo.";
 		return 0L;
 	}
 

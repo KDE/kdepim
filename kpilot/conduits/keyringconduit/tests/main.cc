@@ -63,7 +63,7 @@ int main(int argc, char **argv)
 	
 	KeyringHHDataProxy proxy( &database );
 	
-	DEBUGKPILOT << "Recordcount: " << proxy.recordCount()  << endl;
+	DEBUGKPILOT <<"Recordcount:" << proxy.recordCount();
 	
 	proxy.setIterateMode( DataProxy::All );
 	proxy.resetIterator();
@@ -71,7 +71,7 @@ int main(int argc, char **argv)
 	while( proxy.hasNext() )
 	{
 		Record *rec = proxy.next();
-		DEBUGKPILOT << "Record: " << rec->toString() << endl;
+		DEBUGKPILOT <<"Record:" << rec->toString();
 	}
 	
 	return 0;

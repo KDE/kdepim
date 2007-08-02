@@ -83,7 +83,7 @@ KABC::PhoneNumber::List KABCSync::getPhoneNumbers(const PilotAddress &a)
 
 	PhoneSlot shownPhone = a.getShownPhone();
 
-	DEBUGKPILOT << fname << ": preferred pilot index is: ["
+	DEBUGKPILOT << fname <<": preferred pilot index is: ["
 		<< shownPhone << "], preferred phone number is: ["
 		<< a.getField(shownPhone) << "]" << endl;
 
@@ -112,7 +112,7 @@ KABC::PhoneNumber::List KABCSync::getPhoneNumbers(const PilotAddress &a)
 			if (shownPhone == i)
 			{
 				phoneType |= KABC::PhoneNumber::Pref;
-				DEBUGKPILOT << fname << ": found preferred pilot index: ["
+				DEBUGKPILOT << fname <<": found preferred pilot index: ["
 					<< i << "], text: [" << test << "]" << endl;
 			}
 			KABC::PhoneNumber ph(test, phoneType);
@@ -120,13 +120,13 @@ KABC::PhoneNumber::List KABCSync::getPhoneNumbers(const PilotAddress &a)
 		}
 		else
 		{
-			DEBUGKPILOT << fname << ": whoopsie.  pilot phone number: ["
+			DEBUGKPILOT << fname <<": whoopsie.  pilot phone number: ["
 				<< test << "], index: [" << i << "], type: ["
 				<< phoneType << "], has no corresponding PhoneNumber type." << endl;
 		}
 	}
 
-	DEBUGKPILOT << fname << ": returning: ["
+	DEBUGKPILOT << fname <<": returning: ["
 		<< list.count() << "] phone numbers." << endl;
 
 	return list;
@@ -166,7 +166,7 @@ void KABCSync::setPhoneNumbers(const PilotAddressInfo &info,
 			int phoneKey = pilotToPhoneMap[pilotPhoneType];
 			if ( phone.type() & phoneKey)
 			{
-				DEBUGKPILOT << fname << ": found pilot type: ["
+				DEBUGKPILOT << fname <<": found pilot type: ["
 					<< pilotPhoneType << "] ("
 					<< info.phoneLabel( (PilotAddressInfo::EPhoneType)pilotPhoneType)
 					<< ") for PhoneNumber: ["
@@ -182,7 +182,7 @@ void KABCSync::setPhoneNumbers(const PilotAddressInfo &info,
 		// if this is the preferred phone number, then set it as such
 		if (fieldSlot.isValid() && (phone.type() & KABC::PhoneNumber::Pref))
 		{
-			DEBUGKPILOT << fname << ": found preferred PhoneNumber. "
+			DEBUGKPILOT << fname <<": found preferred PhoneNumber."
 				<< "setting showPhone to index: ["
 				<< fieldSlot << "], PhoneNumber: ["
 				<< phone.number() << "]" << endl;
@@ -191,11 +191,11 @@ void KABCSync::setPhoneNumbers(const PilotAddressInfo &info,
 
 		if (!fieldSlot.isValid())
 		{
-			DEBUGKPILOT << fname << ": Phone listing overflowed." << endl;
+			DEBUGKPILOT << fname <<": Phone listing overflowed.";
 		}
 	}
 
-	DEBUGKPILOT << fname << ": Pilot's showPhone now: ["
+	DEBUGKPILOT << fname <<": Pilot's showPhone now: ["
 		<< a.getShownPhone() << "]." << endl;
 
 	// after setting the numbers, make sure that something sensible is set as the
@@ -203,7 +203,7 @@ void KABCSync::setPhoneNumbers(const PilotAddressInfo &info,
 	QString pref = a.getField(a.getShownPhone());
 	if (!a.getShownPhone().isValid() || pref.isEmpty())
 	{
-		DEBUGKPILOT << fname << ": Pilot's showPhone: ["
+		DEBUGKPILOT << fname <<": Pilot's showPhone: ["
 			<< a.getShownPhone()
 			<< "] not properly set to a default."
 			<< endl;
@@ -214,7 +214,7 @@ void KABCSync::setPhoneNumbers(const PilotAddressInfo &info,
 			if (!pref.isEmpty())
 			{
 				a.setShownPhone( i );
-				DEBUGKPILOT << fname << ": Pilot's showPhone now: ["
+				DEBUGKPILOT << fname <<": Pilot's showPhone now: ["
 					<< a.getShownPhone()
 					<< "], and that's final." << endl;
 				break;
@@ -279,12 +279,12 @@ QString KABCSync::getFieldForHHCustom(
 
 	if (index>3)
 	{
-		WARNINGKPILOT << "Bad index number " << index << endl;
+		WARNINGKPILOT <<"Bad index number" << index;
 		retval = QString();
 	}
 	if (settings.customMapping().count() != 4)
 	{
-		WARNINGKPILOT << "Mapping does not have 4 elements." << index << endl;
+		WARNINGKPILOT <<"Mapping does not have 4 elements." << index;
 		retval = QString();
 	}
 
@@ -329,12 +329,12 @@ void KABCSync::setFieldFromHHCustom(
 
 	if (index>3)
 	{
-		WARNINGKPILOT << "Bad index number " << index << endl;
+		WARNINGKPILOT <<"Bad index number" << index;
 		return;
 	}
 	if (settings.customMapping().count() != 4)
 	{
-		WARNINGKPILOT << "Mapping does not have 4 elements." << index << endl;
+		WARNINGKPILOT <<"Mapping does not have 4 elements." << index;
 		return;
 	}
 
@@ -362,9 +362,9 @@ void KABCSync::setFieldFromHHCustom(
 			format.remove(re); // Remove references to year and following punctuation
 			bdate = KGlobal::locale()->readDate(value, format, &ok);
 		}
-		DEBUGKPILOT << "Birthdate from " << index << "-th custom field: "
+		DEBUGKPILOT <<"Birthdate from" << index <<"-th custom field:"
 			<< bdate.toString() << endl;
-		DEBUGKPILOT << "Is Valid: " << bdate.isValid() << endl;
+		DEBUGKPILOT <<"Is Valid:" << bdate.isValid();
 		if (bdate.isValid())
 		{
 			abEntry.setBirthday( QDateTime(bdate) );
@@ -475,7 +475,7 @@ void KABCSync::setFieldFromHHOtherPhone(KABC::Addressee & abEntry, const QString
 		phoneType = KABC::PhoneNumber::Pcs;
 		break;
 	default:
-		WARNINGKPILOT << "Unknown phone mapping " << s.fieldForOtherPhone() << endl;
+		WARNINGKPILOT <<"Unknown phone mapping" << s.fieldForOtherPhone();
 		phoneType = 0;
 	}
 	KABC::PhoneNumber phone = abEntry.phoneNumber(phoneType);
@@ -540,7 +540,7 @@ void KABCSync::copy(PilotAddress &toPilotAddr,
 	// Other field is an oddball and if the user has more than one field set
 	// as "Other" then only one will be carried over.
 	QString oth = KABCSync::getFieldForHHOtherPhone(fromAbEntry,syncSettings);
-	DEBUGKPILOT << fname << ": putting: ["<<oth<<"] into Palm's other"<<endl;
+	DEBUGKPILOT << fname <<": putting: ["<<oth<<"] into Palm's other";
 	toPilotAddr.setPhoneField(PilotAddressInfo::eOther,
 		oth, PilotAddress::Replace);
 
@@ -664,34 +664,34 @@ void KABCSync::showAddressee(const KABC::Addressee & abAddress)
 {
 	FUNCTIONSETUP;
 #ifdef DEBUG
-	DEBUGKPILOT << "\tAbbrowser Contact Entry" << endl;
+	DEBUGKPILOT <<"\tAbbrowser Contact Entry";
 	if (abAddress.isEmpty())
 	{
-		DEBUGKPILOT<< "\t\tEMPTY"<<endl;
+		DEBUGKPILOT<<"\t\tEMPTY";
 		return;
 	}
-	DEBUGKPILOT << "\t\tLast name = " << abAddress.familyName() << endl;
-	DEBUGKPILOT << "\t\tFirst name = " << abAddress.givenName() << endl;
-	DEBUGKPILOT << "\t\tCompany = " << abAddress.organization() << endl;
-	DEBUGKPILOT << "\t\tJob Title = " << abAddress.prefix() << endl;
-	DEBUGKPILOT << "\t\tNote = " << abAddress.note() << endl;
-	DEBUGKPILOT << "\t\tCategory = " << abAddress.categories().first() << endl;
-	DEBUGKPILOT << "\t\tEmail = " << abAddress.emails().join(",") << endl;
+	DEBUGKPILOT <<"\t\tLast name =" << abAddress.familyName();
+	DEBUGKPILOT <<"\t\tFirst name =" << abAddress.givenName();
+	DEBUGKPILOT <<"\t\tCompany =" << abAddress.organization();
+	DEBUGKPILOT <<"\t\tJob Title =" << abAddress.prefix();
+	DEBUGKPILOT <<"\t\tNote =" << abAddress.note();
+	DEBUGKPILOT <<"\t\tCategory =" << abAddress.categories().first();
+	DEBUGKPILOT <<"\t\tEmail =" << abAddress.emails().join(",");
 
 	KABC::PhoneNumber::List phs = abAddress.phoneNumbers();
 	for (KABC::PhoneNumber::List::Iterator it = phs.begin(); it != phs.end(); ++it) {
 		KABC::PhoneNumber phone = *it;
-		DEBUGKPILOT << "\t\t" << phone.toString() << endl;
+		DEBUGKPILOT <<"\t\t" << phone.toString();
 	}
 
 	KABC::Address::List ads = abAddress.addresses();
 	for (KABC::Address::List::Iterator it = ads.begin(); it != ads.end(); ++it) {
 		const KABC::Address addr = *it;
-		DEBUGKPILOT << "\t\tAddress = " << addr.street() <<endl;
-		DEBUGKPILOT << "\t\tLocality = " << addr.locality() <<endl;
-		DEBUGKPILOT << "\t\tRegion = " << addr.region() <<endl;
-		DEBUGKPILOT << "\t\tPostal code = " << addr.postalCode() <<endl;
-		DEBUGKPILOT << "\t\tCountry = " << addr.country() <<endl << endl;
+		DEBUGKPILOT <<"\t\tAddress =" << addr.street();
+		DEBUGKPILOT <<"\t\tLocality =" << addr.locality();
+		DEBUGKPILOT <<"\t\tRegion =" << addr.region();
+		DEBUGKPILOT <<"\t\tPostal code =" << addr.postalCode();
+		DEBUGKPILOT <<"\t\tCountry =" << addr.country();
 	}
 #else
 	Q_UNUSED( abAddress );

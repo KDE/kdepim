@@ -126,7 +126,7 @@ void SysInfoWidgetConfig::commit()
 	while(ci)
 	{
 #ifdef DEBUG
-		DEBUGKPILOT << fname << ": Saving " << ci->text(PART_NAME)
+		DEBUGKPILOT << fname <<": Saving" << ci->text(PART_NAME)
 			<< (ci->isOn() ? " on" : " off") << endl;
 #endif
 		int index=ci->text(PART_KEY).toInt();
@@ -158,7 +158,7 @@ void SysInfoWidgetConfig::load()
 		i->setText(PART_KEY, QString::number(p-sysinfoEntries)); // store index there
 		updateSetting(i);
 #ifdef DEBUG
-		DEBUGKPILOT << fname << ": Loaded " << p->name
+		DEBUGKPILOT << fname <<": Loaded" << p->name
 			<< (i->isOn() ? " on" : " off") << endl;
 #endif
 
@@ -183,7 +183,7 @@ void SysInfoWidgetConfig::load()
 		bool current = ci->isOn();
 		bool original = !ci->text(PART_SETTING).isEmpty();
 #ifdef DEBUG
-		DEBUGKPILOT << fname << ": Checking " << ci->text(PART_KEY)
+		DEBUGKPILOT << fname <<": Checking" << ci->text(PART_KEY)
 			<<  " was " << (original ? " on" : " off")
 			<< " now " << (current ? " on" : " off") << endl;
 #endif

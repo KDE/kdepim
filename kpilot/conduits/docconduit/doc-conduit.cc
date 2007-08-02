@@ -153,7 +153,7 @@ bool DOCConduit::pcTextChanged(QString txtfn)
 		return true;
 	}
 #ifdef DEBUG
-	DEBUGKPILOT<<"Old digest is "<<oldDigest<<endl;
+	DEBUGKPILOT<<"Old digest is"<<oldDigest;
 #endif
 
 	KMD5 docmd5;
@@ -162,7 +162,7 @@ bool DOCConduit::pcTextChanged(QString txtfn)
 		docmd5.update(txtfile);
 		QString thisDigest(docmd5.hexDigest() /* .data() */);
 #ifdef DEBUG
-		DEBUGKPILOT<<"New digest is "<<thisDigest<<endl;
+		DEBUGKPILOT<<"New digest is"<<thisDigest;
 #endif
 		return (thisDigest.length()<=0) || (thisDigest!=oldDigest);
 	} else {
@@ -191,7 +191,7 @@ bool DOCConduit::hhTextChanged(PilotDatabase*docdb)
 	int modRecInd=-1;
 	PilotRecord*modRec=docdb->readNextModifiedRec(&modRecInd);
 #ifdef DEBUG
-	DEBUGKPILOT<<"Index of first changed record: "<<modRecInd<<endl;
+	DEBUGKPILOT<<"Index of first changed record:"<<modRecInd;
 #endif
 
 	KPILOT_DELETE(modRec);
@@ -200,7 +200,7 @@ bool DOCConduit::hhTextChanged(PilotDatabase*docdb)
 	if (modRecInd==0) {
 		modRec=docdb->readNextModifiedRec(&modRecInd);
 #ifdef DEBUG
-		DEBUGKPILOT<<"Reread Index of first changed records: "<<modRecInd<<endl;
+		DEBUGKPILOT<<"Reread Index of first changed records:"<<modRecInd;
 #endif
 		KPILOT_DELETE(modRec);
 	}
@@ -216,7 +216,7 @@ bool DOCConduit::hhTextChanged(PilotDatabase*docdb)
 			return true;
 	} else {
 #ifdef DEBUG
-		DEBUGKPILOT<<"Handheld side has NOT changed!"<<endl;
+		DEBUGKPILOT<<"Handheld side has NOT changed!";
 #endif
 		return false;
 	}
@@ -281,7 +281,7 @@ bool DOCConduit::doSync(docSyncInfo &sinfo)
 	if (sinfo.direction==eSyncDelete) {
 		if (!sinfo.txtfilename.isEmpty()) {
 			if (!QFile::remove(sinfo.txtfilename)) {
-				WARNINGKPILOT << "Unable to delete the text file " << sinfo.txtfilename << " on the PC" << endl;
+				WARNINGKPILOT <<"Unable to delete the text file" << sinfo.txtfilename <<" on the PC";
 			}
 			QString bmkfilename = sinfo.txtfilename;
 			if (bmkfilename.endsWith(CSL1(".txt"))){
@@ -290,7 +290,7 @@ bool DOCConduit::doSync(docSyncInfo &sinfo)
 			bmkfilename+=CSL1(PDBBMK_SUFFIX);
 			if (!QFile::remove(bmkfilename)) {
 #ifdef DEBUG
-				DEBUGKPILOT<<"Could not remove bookmarks file "<<bmkfilename<<" for database "<<sinfo.handheldDB<<endl;
+				DEBUGKPILOT<<"Could not remove bookmarks file"<<bmkfilename<<" for database"<<sinfo.handheldDB;
 #endif
 			}
 		}
@@ -299,7 +299,7 @@ bool DOCConduit::doSync(docSyncInfo &sinfo)
 				QString::fromLatin1(sinfo.dbinfo.name), false);
 			if (database) {
 				if ( database->deleteDatabase() !=0 ) {
-					WARNINGKPILOT << "Unable to delete database " << sinfo.dbinfo.name << " on the PC" << endl;
+					WARNINGKPILOT <<"Unable to delete database" << sinfo.dbinfo.name <<" on the PC";
 				}
 				KPILOT_DELETE(database);
 			}
@@ -307,7 +307,7 @@ bool DOCConduit::doSync(docSyncInfo &sinfo)
 		if (!DOCConduitSettings::localSync()) {
 			PilotDatabase *database=deviceLink()->database( sinfo.dbinfo.name );
 			if ( database->deleteDatabase() !=0 ) {
-					WARNINGKPILOT << "Unable to delete database " << sinfo.dbinfo.name << " from the handheld" << endl;
+					WARNINGKPILOT <<"Unable to delete database" << sinfo.dbinfo.name <<" from the handheld";
 			}
 			KPILOT_DELETE(database);
 		}
@@ -320,11 +320,11 @@ bool DOCConduit::doSync(docSyncInfo &sinfo)
 
 	if (database && ( !database->isOpen() ) ) {
 #ifdef DEBUG
-		DEBUGKPILOT<<"Database "<<sinfo.dbinfo.name<<" does not yet exist. Creating it:"<<endl;
+		DEBUGKPILOT<<"Database"<<sinfo.dbinfo.name<<" does not yet exist. Creating it:";
 #endif
 		if (!database->createDatabase(dbcreator(), dbtype()) ) {
 #ifdef DEBUG
-			DEBUGKPILOT<<"Failed"<<endl;
+			DEBUGKPILOT<<"Failed";
 			emit logMessage(i18n("Database created."));
 #endif
 		}
@@ -363,11 +363,11 @@ bool DOCConduit::doSync(docSyncInfo &sinfo)
 				DOCConduitSettings::self()->config()->writeEntry(docconverter.txtFilename(), thisDigest);
 				DOCConduitSettings::self()->config()->sync();
 #ifdef DEBUG
-				DEBUGKPILOT<<"MD5 Checksum of the text "<<sinfo.txtfilename<<" is "<<thisDigest<<endl;
+				DEBUGKPILOT<<"MD5 Checksum of the text"<<sinfo.txtfilename<<" is"<<thisDigest;
 #endif
 			} else {
 #ifdef DEBUG
-				DEBUGKPILOT<<"couldn't open file "<<docconverter.txtFilename()<<" for reading!!!"<<endl;
+				DEBUGKPILOT<<"couldn't open file"<<docconverter.txtFilename()<<" for reading!!!";
 #endif
 			}
 		}
@@ -405,7 +405,7 @@ void DOCConduit::syncNextDB() {
 	}
 	dbnr=dbinfo.index+1;
 #ifdef DEBUG
-	DEBUGKPILOT<<"Next Palm database to sync: "<<dbinfo.name<<", Index="<<dbinfo.index<<endl;
+	DEBUGKPILOT<<"Next Palm database to sync:"<<dbinfo.name<<", Index="<<dbinfo.index;
 #endif
 
 	// if creator and/or type don't match, go to next db
@@ -480,7 +480,7 @@ void DOCConduit::syncNextTXT()
 		fDBNames.append(QString::fromLatin1(dbinfo.name));
 	} else {
 #ifdef DEBUG
-		DEBUGKPILOT<<txtfilename<<" has already been synced, skipping it."<<endl;
+		DEBUGKPILOT<<txtfilename<<" has already been synced, skipping it.";
 #endif
 	}
 
@@ -540,7 +540,7 @@ void DOCConduit::checkPDBFiles() {
 			fDBNames.append(dbname);
 		} else {
 #ifdef DEBUG
-			DEBUGKPILOT<<"Could not install database "<<dbname<<" ("<<pdbfilename<<") to the handheld"<<endl;
+			DEBUGKPILOT<<"Could not install database"<<dbname<<" ("<<pdbfilename<<") to the handheld";
 #endif
 		}
 	}
@@ -584,25 +584,25 @@ void DOCConduit::resolve() {
 		// the remaining conflicts will be resolved in the resolution dialog
 		if ((*fSyncInfoListIterator).direction==eSyncConflict){
 #ifdef DEBUG
-			DEBUGKPILOT<<"We have a conflict for "<<(*fSyncInfoListIterator).handheldDB<<", default="<<eConflictResolution<<endl;
+			DEBUGKPILOT<<"We have a conflict for"<<(*fSyncInfoListIterator).handheldDB<<", default="<<eConflictResolution;
 #endif
 			switch (eConflictResolution)
 			{
 				case eSyncPDAToPC:
 #ifdef DEBUG
-					DEBUGKPILOT<<"PDA overrides for database "<<(*fSyncInfoListIterator).handheldDB<<endl;
+					DEBUGKPILOT<<"PDA overrides for database"<<(*fSyncInfoListIterator).handheldDB;
 #endif
 					(*fSyncInfoListIterator).direction = eSyncPDAToPC;
 					break;
 				case eSyncPCToPDA:
 #ifdef DEBUG
-					DEBUGKPILOT<<"PC overrides for database "<<(*fSyncInfoListIterator).handheldDB<<endl;
+					DEBUGKPILOT<<"PC overrides for database"<<(*fSyncInfoListIterator).handheldDB;
 #endif
 					(*fSyncInfoListIterator).direction = eSyncPCToPDA;
 					break;
 				case eSyncNone:
 #ifdef DEBUG
-					DEBUGKPILOT<<"No sync for database "<<(*fSyncInfoListIterator).handheldDB<<endl;
+					DEBUGKPILOT<<"No sync for database"<<(*fSyncInfoListIterator).handheldDB;
 #endif
 					(*fSyncInfoListIterator).direction = eSyncNone;
 					break;
@@ -610,7 +610,7 @@ void DOCConduit::resolve() {
 				case eSyncConflict:
 				default:
 #ifdef DEBUG
-					DEBUGKPILOT<<"Conflict remains due to default resolution setting for database "<<(*fSyncInfoListIterator).handheldDB<<endl;
+					DEBUGKPILOT<<"Conflict remains due to default resolution setting for database"<<(*fSyncInfoListIterator).handheldDB;
 #endif
 					break;
 			}
@@ -654,7 +654,7 @@ void DOCConduit::syncDatabases() {
 	switch (sinfo.direction) {
 		case eSyncConflict:
 #ifdef DEBUG
-			DEBUGKPILOT<<"Entry "<<sinfo.handheldDB<<"( txtfilename: "<<sinfo.txtfilename<<
+			DEBUGKPILOT<<"Entry"<<sinfo.handheldDB<<"( txtfilename:"<<sinfo.txtfilename<<
 				", pdbfilename: "<<sinfo.pdbfilename<<") had sync direction eSyncConflict!!!"<<endl;
 #endif
 			break;
@@ -665,7 +665,7 @@ void DOCConduit::syncDatabases() {
 			if (!doSync(sinfo)) {
 				// The sync could not be done, so inform the user (the error message should probably issued inside doSync)
 #ifdef DEBUG
-				DEBUGKPILOT<<"There was some error syncing the text \""<<sinfo.handheldDB<<"\" with the file "<<sinfo.txtfilename<<endl;
+				DEBUGKPILOT<<"There was some error syncing the text \""<<sinfo.handheldDB<<"\" with the file"<<sinfo.txtfilename;
 #endif
 			}
 			break;
@@ -701,7 +701,7 @@ bool DOCConduit::needsSync(docSyncInfo &sinfo)
 	if (!fDBListSynced.contains(sinfo.handheldDB)) {
 		// the database wasn't included on last sync, so it has to be new.
 #ifdef DEBUG
-		DEBUGKPILOT<<"Database "<<sinfo.dbinfo.name<<" wasn't included in the previous sync!"<<endl;
+		DEBUGKPILOT<<"Database"<<sinfo.dbinfo.name<<" wasn't included in the previous sync!";
 #endif
 
 		/* Resolution Table:
@@ -738,7 +738,7 @@ bool DOCConduit::needsSync(docSyncInfo &sinfo)
 					else {
 						sinfo.direction=eSyncNone;
 #ifdef DEBUG
-						DEBUGKPILOT<<"I'm supposed to find a sync direction, but the "<<
+						DEBUGKPILOT<<"I'm supposed to find a sync direction, but the"<<
 						" text "<<sinfo.dbinfo.name<<" doesn't exist on either "<<
 						" the handheld or the PC"<<endl;
 #endif
@@ -756,24 +756,24 @@ bool DOCConduit::needsSync(docSyncInfo &sinfo)
 	else if(pcTextChanged(sinfo.txtfilename)) {
 		sinfo.fPCStatus=eStatChanged;
 #ifdef DEBUG
-		DEBUGKPILOT<<"PC side has changed!"<<endl;
+		DEBUGKPILOT<<"PC side has changed!";
 #endif
 		// TODO: Check for changed bookmarks on the PC side
 #ifdef DEBUG
 	} else {
-		DEBUGKPILOT<<"PC side has NOT changed!"<<endl;
+		DEBUGKPILOT<<"PC side has NOT changed!";
 #endif
 	}
 
 	if (!docdb || !docdb->isOpen()) sinfo.fPalmStatus=eStatDeleted;
 	else if (hhTextChanged(docdb)) {
 #ifdef DEBUG
-		DEBUGKPILOT<<"Handheld side has changed!"<<endl;
+		DEBUGKPILOT<<"Handheld side has changed!";
 #endif
 		sinfo.fPalmStatus=eStatChanged;
 #ifdef DEBUG
 	} else {
-		DEBUGKPILOT<<"Handheld side has NOT changed!"<<endl;
+		DEBUGKPILOT<<"Handheld side has NOT changed!";
 #endif
 	}
 	KPILOT_DELETE(docdb);
@@ -798,7 +798,7 @@ bool DOCConduit::needsSync(docSyncInfo &sinfo)
 
 	if (sinfo.fPCStatus == eStatNone && sinfo.fPalmStatus==eStatNone) {
 #ifdef DEBUG
-		DEBUGKPILOT<<"Nothing has changed, not need for a sync."<<endl;
+		DEBUGKPILOT<<"Nothing has changed, not need for a sync.";
 #endif
 		sinfo.direction=eSyncNone;
 		return false;
@@ -830,7 +830,7 @@ bool DOCConduit::needsSync(docSyncInfo &sinfo)
 	     ((sinfo.fPalmStatus==eStatDeleted) && (sinfo.fPCStatus!=eStatChanged)) )
 	{
 #ifdef DEBUG
-		DEBUGKPILOT<<"DB was deleted on one side and not changed on "
+		DEBUGKPILOT<<"DB was deleted on one side and not changed on"
 			"the other -> Delete it."<<endl;
 #endif
 		sinfo.direction=eSyncDelete;
@@ -841,7 +841,7 @@ bool DOCConduit::needsSync(docSyncInfo &sinfo)
 	// other values in combination with eStatNone, just copy the texts.
 	if (sinfo.fPCStatus==eStatNone) {
 #ifdef DEBUG
-		DEBUGKPILOT<<"PC side has changed!"<<endl;
+		DEBUGKPILOT<<"PC side has changed!";
 #endif
 		sinfo.direction=eSyncPDAToPC;
 		return true;
@@ -888,14 +888,14 @@ PilotDatabase *DOCConduit::preSyncAction(docSyncInfo &sinfo) const
 					dir.mkdir(dir.absPath());
 				}
 #ifdef DEBUG
-				DEBUGKPILOT<<"Need to fetch database "<<dbinfo.name<<
+				DEBUGKPILOT<<"Need to fetch database"<<dbinfo.name<<
 					" to the directory "<<dir.absPath()<<endl;
 #endif
 				dbinfo.flags &= ~dlpDBFlagOpen;
 
 				if (!fHandle->retrieveDatabase(sinfo.pdbfilename, &dbinfo) )
 				{
-					WARNINGKPILOT << "Unable to retrieve database " << dbinfo.name <<
+					WARNINGKPILOT <<"Unable to retrieve database" << dbinfo.name <<
 						" from the handheld into " << sinfo.pdbfilename << "." << endl;
 					return 0L;
 				}
@@ -940,7 +940,7 @@ bool DOCConduit::postSyncAction(PilotDatabase * database,
 	case eSyncPDAToPC:
 		// also reset the sync flags on the handheld
 #ifdef DEBUG
-		DEBUGKPILOT<<"Resetting sync flags for database "
+		DEBUGKPILOT<<"Resetting sync flags for database"
 			<<sinfo.dbinfo.name<<endl;
 #endif
 		if (DOCConduitSettings::keepPDBsLocally() && !DOCConduitSettings::localSync())
@@ -948,7 +948,7 @@ bool DOCConduit::postSyncAction(PilotDatabase * database,
 			PilotDatabase*db=deviceLink()->database(
 				QString::fromLatin1(sinfo.dbinfo.name));
 #ifdef DEBUG
-			DEBUGKPILOT<<"Middle 1 Resetting sync flags for database "
+			DEBUGKPILOT<<"Middle 1 Resetting sync flags for database"
 				<<sinfo.dbinfo.name<<endl;
 #endif
 			if (db)
@@ -958,7 +958,7 @@ bool DOCConduit::postSyncAction(PilotDatabase * database,
 			}
 		}
 #ifdef DEBUG
-		DEBUGKPILOT<<"End Resetting sync flags for database "
+		DEBUGKPILOT<<"End Resetting sync flags for database"
 			<<sinfo.dbinfo.name<<endl;
 #endif
 		break;
@@ -970,7 +970,7 @@ bool DOCConduit::postSyncAction(PilotDatabase * database,
 			if (localdb)
 			{
 #ifdef DEBUG
-				DEBUGKPILOT<<"Installing file "<<localdb->dbPathName()<<" ("
+				DEBUGKPILOT<<"Installing file"<<localdb->dbPathName()<<" ("
 					<<sinfo.handheldDB<<") to the handheld"<<endl;
 #endif
 				QString dbpathname=localdb->dbPathName();
@@ -980,7 +980,7 @@ bool DOCConduit::postSyncAction(PilotDatabase * database,
 				{
 					rs = false;
 #ifdef DEBUG
-					DEBUGKPILOT<<"Could not install the database "<<dbpathname<<" ("
+					DEBUGKPILOT<<"Could not install the database"<<dbpathname<<" ("
 						<<sinfo.handheldDB<<")"<<endl;
 #endif
 				}
@@ -991,12 +991,12 @@ bool DOCConduit::postSyncAction(PilotDatabase * database,
 	}
 
 #ifdef DEBUG
-	DEBUGKPILOT<<"Vor KPILOT_DELETE(database)"<<endl;
+	DEBUGKPILOT<<"Vor KPILOT_DELETE(database)";
 #endif
 
 	KPILOT_DELETE(database);
 #ifdef DEBUG
-	DEBUGKPILOT<<"End postSyncAction"<<endl;
+	DEBUGKPILOT<<"End postSyncAction";
 #endif
 	return rs;
 }

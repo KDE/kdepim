@@ -164,12 +164,12 @@ bool PilotLocalDatabase::createDatabase(long creator, long type, int, int flags,
 	// creating it again)
 	if (isOpen())
 	{
-		DEBUGKPILOT << fname << ": Database " << fDBName
+		DEBUGKPILOT << fname <<": Database" << fDBName
 			<< " already open. Cannot recreate it." << endl;
 		return true;
 	}
 
-	DEBUGKPILOT << fname << ": Creating database " << fDBName << endl;
+	DEBUGKPILOT << fname <<": Creating database" << fDBName;
 
 	// Database names seem to be latin1.
 	Pilot::toPilot(fDBName, fDBInfo.name, sizeof(fDBInfo.name));
@@ -227,7 +227,7 @@ int PilotLocalDatabase::readAppBlock(unsigned char *buffer, int size)
 
 	if (!isOpen())
 	{
-		WARNINGKPILOT << "DB not open!" << endl;
+		WARNINGKPILOT <<"DB not open!";
 		memset(buffer,0,m);
 		return -1;
 	}
@@ -242,7 +242,7 @@ int PilotLocalDatabase::writeAppBlock(unsigned char *buffer, int len)
 
 	if (!isOpen())
 	{
-		WARNINGKPILOT << "DB not open!" << endl;
+		WARNINGKPILOT <<"DB not open!";
 		return -1;
 	}
 	delete[]fAppInfo;
@@ -294,7 +294,7 @@ PilotRecord *PilotLocalDatabase::readRecordById(recordid_t id)
 
 	if (!isOpen())
 	{
-		WARNINGKPILOT << "Database '" << fDBName << " not open!" << endl;
+		WARNINGKPILOT <<"Database '" << fDBName <<" not open!";
 		return 0L;
 	}
 
@@ -319,18 +319,18 @@ PilotRecord *PilotLocalDatabase::readRecordByIndex(int index)
 
 	if (index < 0)
 	{
-		DEBUGKPILOT << fname << ": Index " << index << " is bogus." << endl;
+		DEBUGKPILOT << fname <<": Index" << index <<" is bogus.";
 		return 0L;
 	}
 
 	d->pending = -1;
 	if (!isOpen())
 	{
-		WARNINGKPILOT << "DB not open!" << endl;
+		WARNINGKPILOT <<"DB not open!";
 		return 0L;
 	}
 
-	DEBUGKPILOT << fname << ": Index=" << index << " Count=" << recordCount() << endl;
+	DEBUGKPILOT << fname <<": Index=" << index <<" Count=" << recordCount();
 
 	if ( (unsigned int)index >= recordCount() )
 	{
@@ -349,7 +349,7 @@ PilotRecord *PilotLocalDatabase::readNextRecInCategory(int category)
 	d->pending  = -1;
 	if (!isOpen())
 	{
-		WARNINGKPILOT << "DB not open!" << endl;
+		WARNINGKPILOT <<"DB not open!";
 		return 0L;
 	}
 
@@ -373,10 +373,10 @@ const PilotRecord *PilotLocalDatabase::findNextNewRecord()
 
 	if (!isOpen())
 	{
-		WARNINGKPILOT << "DB not open!" << endl;
+		WARNINGKPILOT <<"DB not open!";
 		return 0L;
 	}
-	DEBUGKPILOT << fname << ": looking for new record from " << d->current << endl;
+	DEBUGKPILOT << fname <<": looking for new record from" << d->current;
 	// Should this also check for deleted?
 	while ((d->current < d->size())
 		&& ((*d)[d->current]->id() != 0 ))
@@ -398,7 +398,7 @@ PilotRecord *PilotLocalDatabase::readNextModifiedRec(int *ind)
 
 	if (!isOpen())
 	{
-		WARNINGKPILOT << "DB not open!" << endl;
+		WARNINGKPILOT <<"DB not open!";
 		return 0L;
 	}
 
@@ -432,12 +432,12 @@ recordid_t PilotLocalDatabase::updateID(recordid_t id)
 
 	if (!isOpen())
 	{
-		WARNINGKPILOT << "DB not open!" << endl;
+		WARNINGKPILOT <<"DB not open!";
 		return 0;
 	}
 	if (d->pending  < 0)
 	{
-		WARNINGKPILOT << "Last call was NOT readNextModifiedRec()" << endl;
+		WARNINGKPILOT <<"Last call was NOT readNextModifiedRec()";
 		return 0;
 	}
 	(*d)[d->pending]->setID(id);
@@ -452,14 +452,14 @@ recordid_t PilotLocalDatabase::writeRecord(PilotRecord * newRecord)
 
 	if (!isOpen())
 	{
-		WARNINGKPILOT << "DB not open!" << endl;
+		WARNINGKPILOT <<"DB not open!";
 		return 0;
 	}
 
 	d->pending = -1;
 	if (!newRecord)
 	{
-		WARNINGKPILOT << "Record to be written is invalid!" << endl;
+		WARNINGKPILOT <<"Record to be written is invalid!";
 		return 0;
 	}
 
@@ -492,7 +492,7 @@ int PilotLocalDatabase::deleteRecord(recordid_t id, bool all)
 	FUNCTIONSETUP;
 	if (!isOpen())
 	{
-		WARNINGKPILOT <<"DB not open"<<endl;
+		WARNINGKPILOT <<"DB not open";
 		return -1;
 	}
 	d->resetIndex();
@@ -530,7 +530,7 @@ int PilotLocalDatabase::resetSyncFlags()
 
 	if (!isOpen())
 	{
-		WARNINGKPILOT << "DB not open!" << endl;
+		WARNINGKPILOT <<"DB not open!";
 		return -1;
 	}
 	d->pending = -1;
@@ -547,7 +547,7 @@ int PilotLocalDatabase::resetDBIndex()
 	FUNCTIONSETUP;
 	if (!isOpen())
 	{
-		WARNINGKPILOT << "DB not open!" << endl;
+		WARNINGKPILOT <<"DB not open!";
 		return -1;
 	}
 	d->resetIndex();
@@ -560,7 +560,7 @@ int PilotLocalDatabase::cleanup()
 	FUNCTIONSETUP;
 	if (!isOpen())
 	{
-		WARNINGKPILOT << "DB not open!" << endl;
+		WARNINGKPILOT <<"DB not open!";
 		return -1;
 	}
 	d->resetIndex();
@@ -611,7 +611,7 @@ void PilotLocalDatabase::openDatabase()
 	if (dbFile == 0L)
 	{
 		QString path = dbPathName();
-		DEBUGKPILOT << fname << ": Failed to open " << path << endl;
+		DEBUGKPILOT << fname <<": Failed to open" << path;
 		return;
 	}
 
@@ -658,7 +658,7 @@ void PilotLocalDatabase::closeDatabase()
 
 	if (!isOpen())
 	{
-		DEBUGKPILOT << fname << ": Database " << fDBName
+		DEBUGKPILOT << fname <<": Database" << fDBName
 			<< " is not open. Cannot close and write it"
 			<< endl;
 		return;
@@ -749,7 +749,7 @@ void PilotLocalDatabase::setDBPath(const QString &s)
 	f = pi_file_open( fileName );
 	if (!f)
 	{
-		WARNINGKPILOT << "Can't open " << path << endl;
+		WARNINGKPILOT <<"Can't open" << path;
 		return false;
 	}
 

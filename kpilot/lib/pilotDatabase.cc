@@ -70,10 +70,10 @@ PilotDatabase::PilotDatabase(const QString &s) :
 /* static */ int PilotDatabase::instanceCount()
 {
 	FUNCTIONSETUP;
-	DEBUGKPILOT << fname << ": " << creationCount << " databases." << endl;
+	DEBUGKPILOT << fname <<":" << creationCount <<" databases.";
 	if (createdNames)
 	{
-		DEBUGKPILOT << fname << ": "
+		DEBUGKPILOT << fname <<":"
 			<< createdNames->join(CSL1(",")) << endl;
 	}
 	return creationCount;

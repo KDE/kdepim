@@ -133,7 +133,7 @@ void PopMailWidgetConfig::load()
 {
 	FUNCTIONSETUP;
 #ifdef DEBUG
-	DEBUGKPILOT << fname << ": Got mode " << i << endl;
+	DEBUGKPILOT << fname <<": Got mode" << i;
 #endif
 
 #define E(a,b) fConfigWidget->a->setEnabled(b)

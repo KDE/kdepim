@@ -115,12 +115,12 @@ KPilotDepthCount::KPilotDepthCount(int, int level, const char *s) :
 	fLevel(level),
 	fName(s)
 {
-	DEBUGKPILOT << "! DEPRECATED Depth call.\n!   "
+	DEBUGKPILOT <<"! DEPRECATED Depth call.\n!"
 		<< kBacktrace(4) << endl;
 
 	if (debug_level>=fLevel)
 	{
-		DEBUGKPILOT << indent() << ">" << name() << endl;
+		DEBUGKPILOT << indent() <<">" << name();
 	}
 	depth++;
 }
@@ -132,7 +132,7 @@ KPilotDepthCount::KPilotDepthCount(int level, const char *s) :
 {
 	if (debug_level>=fLevel)
 	{
-		DEBUGKPILOT << indent() << ">" << name() << endl;
+		DEBUGKPILOT << indent() <<">" << name();
 	}
 	depth++;
 }
