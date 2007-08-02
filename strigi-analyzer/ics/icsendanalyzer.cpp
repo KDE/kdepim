@@ -58,7 +58,7 @@ char IcsEndAnalyzer::analyze( Strigi::AnalysisResult& idx, Strigi::InputStream* 
   const char* data;
   //FIXME: large calendars will exhaust memory; incremental loading would be nice
   if ( in->read( data, 1, in->size() ) < 0 ) {
-    //kDebug() << "Reading data from input stream failed" << endl;
+    //kDebug() <<"Reading data from input stream failed";
     return Strigi::Error;
   }
 
@@ -66,7 +66,7 @@ char IcsEndAnalyzer::analyze( Strigi::AnalysisResult& idx, Strigi::InputStream* 
   if ( !ical.fromRawString( &cal, data ) ) {
     VCalFormat vcal;
     if ( !vcal.fromRawString( &cal, data ) ) {
-      //kDebug() << "Could not load calendar" << endl;
+      //kDebug() <<"Could not load calendar";
       return Strigi::Error;
     }
   }

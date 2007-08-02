@@ -85,7 +85,7 @@ bool FolderLister::isActive( const QString &id ) const
 
 QStringList FolderLister::contentTypeToStrings( ContentType type )
 {
-kDebug() << "FolderLister::contentTypeToStrings( type=" << type << ")" << endl;
+kDebug() <<"FolderLister::contentTypeToStrings( type=" << type <<")";
   QStringList cont;
   if ( type == All ) {
     cont << "All";
@@ -129,7 +129,7 @@ QList<FolderLister::ContentType> FolderLister::supportedTypes()
 
 void FolderLister::readConfig( KPIM::GroupwarePrefsBase *newprefs )
 {
-  kDebug(7000) << "FolderLister::readConfig()" << endl;
+  kDebug(7000) <<"FolderLister::readConfig()";
   mFolders.clear();
 
   QStringList active = newprefs->activeFolders();
@@ -238,7 +238,7 @@ void FolderLister::folderSubitemRetrieved( const KUrl &url, bool isFolder )
 
 void FolderLister::retrieveFolders( const KUrl &u )
 {
-kDebug()<<"FolderLister::retrieveFolders( "<<u.url()<<" )"<<endl;
+kDebug()<<"FolderLister::retrieveFolders("<<u.url()<<" )";
   mUrls.clear();
   mProcessedPathes.clear();
   bool firstRetrieve = mFolders.isEmpty();
@@ -258,30 +258,30 @@ kDebug()<<"FolderLister::retrieveFolders( "<<u.url()<<" )"<<endl;
 
 void FolderLister::doRetrieveFolder( const KUrl &u )
 {
-  kDebug(7000) << "FolderLister::doRetrieveFolder: " << u.prettyUrl() << endl;
+  kDebug(7000) <<"FolderLister::doRetrieveFolder:" << u.prettyUrl();
 
   KUrl url( u );
   if ( adaptor() ) adaptor()->adaptDownloadUrl( url );
   if ( mUrls.contains( url ) || mProcessedPathes.contains( url.path( KUrl::RemoveTrailingSlash ) ) ) {
-    kDebug()<<"Item "<<u.path( KUrl::RemoveTrailingSlash )<<" is already being downloaded "<<endl;
+    kDebug()<<"Item"<<u.path( KUrl::RemoveTrailingSlash )<<" is already being downloaded";
   } else {
 
     KIO::Job *listjob = createListFoldersJob( url );
     if ( listjob ) {
       mUrls.append( url );
 
-      kDebug(7000) << "FolderLister::retrieveFolders: adjustedURL=" 
+      kDebug(7000) <<"FolderLister::retrieveFolders: adjustedURL=" 
                     << url.prettyUrl() << endl;
       connect( listjob, SIGNAL( result( KJob * ) ),
                SLOT( slotListJobResult( KJob * ) ) );
     } else {
       // TODO: Indicate a problem to the user!
-      kWarning() << "Unable to create the folder list job for the url " 
+      kWarning() <<"Unable to create the folder list job for the url" 
                   << url.prettyUrl() << endl;
     }
   }
   if ( mUrls.isEmpty() ) {
-    kDebug()<<"No more URLS to download, emitting foldersRead()"<<endl;
+    kDebug()<<"No more URLS to download, emitting foldersRead()";
     emit foldersRead();
   }
 }
@@ -299,7 +299,7 @@ void FolderLister::processFolderResult( const KUrl &href,
                                         const QString &displayName, 
                                         ContentType type )
 {
-kDebug() << "FolderLister::processFolderResult( href=" << href.url() << ", displayName=" << displayName << ", type=" << int(type) << endl;
+kDebug() <<"FolderLister::processFolderResult( href=" << href.url() <<", displayName=" << displayName <<", type=" << int(type);
   if ( ( mType == Calendar && ( type & ( Event | Todo |Journal) ) ) ||
        ( mType == AddressBook && (type & Contact ) ) ) {
 
@@ -312,18 +312,18 @@ kDebug() << "FolderLister::processFolderResult( href=" << href.url() << ", displ
 
       mFolders.append( entry );
     }
-    kDebug(7000) << "FOLDER: " << displayName << endl;
-kDebug()<<"mFolders.size="<<mFolders.size()<<endl;
+    kDebug(7000) <<"FOLDER:" << displayName;
+kDebug()<<"mFolders.size="<<mFolders.size();
   } else {
-kDebug() << "Folder "<< href << " is not of correct type ("<<type<<")"<<endl;
+kDebug() <<"Folder"<< href <<" is not of correct type ("<<type<<")";
   }
 }
 
 void FolderLister::slotListJobResult( KJob *job )
 {
-  kDebug(7000) << "OpenGroupware::slotListJobResult(): " << endl;
-  kDebug() << "URLS (" << mUrls.count() << "): " << mUrls.toStringList().join(" | ") << endl;
-  kDebug() << "Processed URLS (" << mProcessedPathes.count() << "): "
+  kDebug(7000) <<"OpenGroupware::slotListJobResult():";
+  kDebug() <<"URLS (" << mUrls.count() <<"):" << mUrls.toStringList().join(" |");
+  kDebug() <<"Processed URLS (" << mProcessedPathes.count() <<"):"
             << mProcessedPathes.join(" | ") << endl;
   KIO::SimpleJob *j = dynamic_cast<KIO::SimpleJob*>(job);
   if ( j ) {
@@ -332,16 +332,16 @@ void FolderLister::slotListJobResult( KJob *job )
   }
 
   if ( job->error() ) {
-    kError() << "Unable to retrieve folders." << endl;
+    kError() <<"Unable to retrieve folders.";
   } else {
     interpretListFoldersJob( static_cast<KIO::Job*>(job) );
   }
-  kDebug() << "After URLS (" << mUrls.count() << "): " 
+  kDebug() <<"After URLS (" << mUrls.count() <<"):" 
             << mUrls.toStringList().join(" | ") << endl;
-  kDebug() << "After Processed URLS (" << mProcessedPathes.count() << "): "
+  kDebug() <<"After Processed URLS (" << mProcessedPathes.count() <<"):"
             << mProcessedPathes.join(" | ") << endl;
   if ( mUrls.isEmpty() ) {
-    kDebug()<<"No more URLS to download, emitting foldersRead()"<<endl;
+    kDebug()<<"No more URLS to download, emitting foldersRead()";
     emit foldersRead();
   }
 }
@@ -352,7 +352,7 @@ void FolderLister::interpretListFoldersJob( KIO::Job *job )
     adaptor()->interpretListFoldersJob( job, this );
   } else {
     // TODO: Error handling should show a message to the user!
-    kError() << "The FolderLister does not have a GroupwareDataAdaptor, so "
+    kError() <<"The FolderLister does not have a GroupwareDataAdaptor, so"
                  "it cannot interpret the response!" << endl;
   }
 }
@@ -363,7 +363,7 @@ KIO::Job *FolderLister::createListFoldersJob( const KUrl &url )
     return adaptor()->createListFoldersJob( url );
   } else {
     // TODO: Error handling should show a message to the user!
-    kError() << "The FolderLister does not have a GroupwareDataAdaptor, so "
+    kError() <<"The FolderLister does not have a GroupwareDataAdaptor, so"
                  "it cannot create the job for the folder list!" << endl;
     return 0;
   }

@@ -32,7 +32,7 @@
 
 Device::Device( const char* name )
  : QObject(NULL, name) {
-    kDebug() << "Gammu engine: [!!!!!] device object created." << endl;
+    kDebug() <<"Gammu engine: [!!!!!] device object created.";
 
     m_isConnected = false;
 
@@ -104,7 +104,7 @@ void Device::initPhone() {
     if( m_isConnected )
         return;
 
-    kDebug() << "Gammu engine: initialising phone" << endl;
+    kDebug() <<"Gammu engine: initialising phone";
 
     // initialise gammu's state machine
     m_stateMachine.opened = false;
@@ -113,13 +113,13 @@ void Device::initPhone() {
     INI_Section *config;
     m_error = GSM_FindGammuRC( &config );
     if (config == NULL) {
-        kDebug() << "Gammu engine: could not find gammu config file" << endl;
+        kDebug() <<"Gammu engine: could not find gammu config file";
         return;
     }
 
     // read config file 
     if ( !GSM_ReadConfig( config, &m_stateMachine.Config[0], 0 ) ) {
-        kDebug() << "Gammu engine: could not open gammu config file" << endl;
+        kDebug() <<"Gammu engine: could not open gammu config file";
         return;
     }
 
@@ -142,7 +142,7 @@ void Device::initPhone() {
         return;
     }
 
-    kDebug() << "Gammu engine: phone connected!" << endl;
+    kDebug() <<"Gammu engine: phone connected!";
     m_isConnected = true;
 
     // this provides easy access to phone functions
@@ -161,7 +161,7 @@ void Device::terminatePhone()  {
 }
 
 void Device::printErrorMessage( int errorCode, const QString& methodName ) {
-    kDebug() << "Gammu engine: [" << methodName << "()] "
+    kDebug() <<"Gammu engine: [" << methodName <<"()]"
              <<  m_errorCodes[errorCode] << endl;
 }
 
@@ -463,7 +463,7 @@ KABC::Addressee::List Device::phonebook() {
 
     m_error = ERR_NONE;
 
-    kDebug() << "Gammu engine: start reading ME slot" << endl;
+    kDebug() <<"Gammu engine: start reading ME slot";
 
     bool start = true;
     while( m_error == ERR_NONE ) {
@@ -471,7 +471,7 @@ KABC::Addressee::List Device::phonebook() {
         if( m_error == ERR_NONE ) {
             phonebook.push_back( toKAbc( memoryEntry ) );
             KABC::Addressee& currentAddressee = phonebook.last();
-            kDebug() << "memory index: " << memoryEntry.Location << endl;
+            kDebug() <<"memory index:" << memoryEntry.Location;
             currentAddressee.insertCustom( "KMobileTools", "index", 
                                            QString::number( memoryEntry.Location ) );
             currentAddressee.insertCustom( "KMobileTools", "memslot",
@@ -481,8 +481,8 @@ KABC::Addressee::List Device::phonebook() {
         start = false;
     }
 
-    kDebug() << "Gammu engine: finished reading ME slot" << endl;
-    kDebug() << "Gammu engine: start reading SM slot" << endl;
+    kDebug() <<"Gammu engine: finished reading ME slot";
+    kDebug() <<"Gammu engine: start reading SM slot";
     // now check out the sim phonebook (slot SM)
     memoryEntry.MemoryType = MEM_SM;
 
@@ -493,7 +493,7 @@ KABC::Addressee::List Device::phonebook() {
         if( m_error == ERR_NONE ) {
             phonebook.push_back( toKAbc( memoryEntry ) );
             KABC::Addressee& currentAddressee = phonebook.last();
-            kDebug() << "memory index: " << memoryEntry.Location << endl;
+            kDebug() <<"memory index:" << memoryEntry.Location;
             currentAddressee.insertCustom( "KMobileTools", "index", 
                                            QString::number( memoryEntry.Location ) );
             currentAddressee.insertCustom( "KMobileTools", "memslot",
@@ -503,7 +503,7 @@ KABC::Addressee::List Device::phonebook() {
         start = false;
     }
 
-    kDebug() << "Gammu engine: finished reading SM slot" << endl;
+    kDebug() <<"Gammu engine: finished reading SM slot";
 
     m_mutex.unlock();
 
@@ -799,7 +799,7 @@ GSM_MemoryEntry Device::toMemoryEntry( KABC::Addressee* addressee ) {
 
     if( !addressee->formattedName().isEmpty() )
     {
-        kDebug() << "[ !!! ] !addressee->formattedName().isEmpty()" << endl;
+        kDebug() <<"[ !!! ] !addressee->formattedName().isEmpty()";
         EncodeUnicode( memoryEntry.Entries[ memoryEntry.EntriesNum ].Text, addressee->formattedName().utf8(), addressee->formattedName().utf8().length() );
         memoryEntry.Entries[ memoryEntry.EntriesNum ].EntryType = PBK_Text_Name;
         memoryEntry.EntriesNum++;
@@ -807,7 +807,7 @@ GSM_MemoryEntry Device::toMemoryEntry( KABC::Addressee* addressee ) {
 
     if( !addressee->familyName().isEmpty() )
     {
-        kDebug() << "[ !!! ] !addressee->familyName().isEmpty()" << endl;
+        kDebug() <<"[ !!! ] !addressee->familyName().isEmpty()";
         memoryEntry.Entries[ memoryEntry.EntriesNum ].EntryType = PBK_Text_LastName;
         EncodeUnicode( memoryEntry.Entries[ memoryEntry.EntriesNum ].Text, addressee->familyName().utf8(), addressee->familyName().utf8().length() );
         memoryEntry.EntriesNum++;
@@ -815,7 +815,7 @@ GSM_MemoryEntry Device::toMemoryEntry( KABC::Addressee* addressee ) {
 
     if( !addressee->givenName().isEmpty() )
     {
-        kDebug() << "[ !!! ] !addressee->givenName().isEmpty()" << endl;
+        kDebug() <<"[ !!! ] !addressee->givenName().isEmpty()";
         memoryEntry.Entries[ memoryEntry.EntriesNum ].EntryType = PBK_Text_FirstName;
         EncodeUnicode( memoryEntry.Entries[ memoryEntry.EntriesNum ].Text, addressee->givenName().utf8(), addressee->givenName().utf8().length() );
         memoryEntry.EntriesNum++;
@@ -823,7 +823,7 @@ GSM_MemoryEntry Device::toMemoryEntry( KABC::Addressee* addressee ) {
 
     if( !addressee->categories().isEmpty() ) 
     {
-        kDebug() << "[ !!! ] !addressee->categories().isEmpty()" << endl;
+        kDebug() <<"[ !!! ] !addressee->categories().isEmpty()";
         QStringList list( addressee->categories() );
 
         for ( QStringList::Iterator it = list.begin(); it != list.end(); ++it ) {
@@ -836,7 +836,7 @@ GSM_MemoryEntry Device::toMemoryEntry( KABC::Addressee* addressee ) {
 
     if( !addressee->phoneNumbers().isEmpty() )
     {
-        kDebug() << "[ !!! ] !addressee->phoneNumbers().isEmpty()" << endl;
+        kDebug() <<"[ !!! ] !addressee->phoneNumbers().isEmpty()";
         QValueList<KABC::PhoneNumber> phonenumbers=addressee->phoneNumbers();
         QValueList<KABC::PhoneNumber>::iterator it;
 
@@ -845,42 +845,42 @@ GSM_MemoryEntry Device::toMemoryEntry( KABC::Addressee* addressee ) {
             switch( (*it).type() ) {
 
                 case KABC::PhoneNumber::Work:
-                    kDebug() << "[ !!! ] Adding KABC::PhoneNumber::Work" << endl;
+                    kDebug() <<"[ !!! ] Adding KABC::PhoneNumber::Work";
                     memoryEntry.Entries[ memoryEntry.EntriesNum ].EntryType = PBK_Number_Work;
                     EncodeUnicode( memoryEntry.Entries[ memoryEntry.EntriesNum ].Text, (*it).number().utf8(), (*it).number().utf8().length() );
                     memoryEntry.EntriesNum++;
                 break;
 
                 case KABC::PhoneNumber::Home:
-                    kDebug() << "[ !!! ] Adding KABC::PhoneNumber::Home" << endl;
+                    kDebug() <<"[ !!! ] Adding KABC::PhoneNumber::Home";
                     memoryEntry.Entries[ memoryEntry.EntriesNum ].EntryType = PBK_Number_Home;
                     EncodeUnicode( memoryEntry.Entries[ memoryEntry.EntriesNum ].Text, (*it).number().utf8(), (*it).number().utf8().length() );
                     memoryEntry.EntriesNum++;
                 break;
 
                 case KABC::PhoneNumber::Pref:
-                    kDebug() << "[ !!! ] Adding KABC::PhoneNumber::Pref" << endl;
+                    kDebug() <<"[ !!! ] Adding KABC::PhoneNumber::Pref";
                     memoryEntry.Entries[ memoryEntry.EntriesNum ].EntryType = PBK_Number_Work;
                     EncodeUnicode( memoryEntry.Entries[ memoryEntry.EntriesNum ].Text, (*it).number().utf8(), (*it).number().utf8().length() );
                     memoryEntry.EntriesNum++;
                 break;
 
                 case KABC::PhoneNumber::Cell:
-                    kDebug() << "[ !!! ] Adding KABC::PhoneNumber::Mobile" << endl;
+                    kDebug() <<"[ !!! ] Adding KABC::PhoneNumber::Mobile";
                     memoryEntry.Entries[ memoryEntry.EntriesNum ].EntryType = PBK_Number_Mobile;
                     EncodeUnicode( memoryEntry.Entries[ memoryEntry.EntriesNum ].Text, (*it).number().utf8(), (*it).number().utf8().length() );
                     memoryEntry.EntriesNum++;
                 break;
 
                 case KABC::PhoneNumber::Fax:
-                    kDebug() << "[ !!! ] Adding KABC::PhoneNumber::Fax" << endl;
+                    kDebug() <<"[ !!! ] Adding KABC::PhoneNumber::Fax";
                     memoryEntry.Entries[ memoryEntry.EntriesNum ].EntryType = PBK_Number_Fax;
                     EncodeUnicode( memoryEntry.Entries[ memoryEntry.EntriesNum ].Text, (*it).number().utf8(), (*it).number().utf8().length() );
                     memoryEntry.EntriesNum++;
                 break;
 
                 case KABC::PhoneNumber::Pager:
-                    kDebug() << "[ !!! ] Adding KABC::PhoneNumber::Pager" << endl;
+                    kDebug() <<"[ !!! ] Adding KABC::PhoneNumber::Pager";
                     memoryEntry.Entries[ memoryEntry.EntriesNum ].EntryType = PBK_Number_Pager;
                     EncodeUnicode( memoryEntry.Entries[ memoryEntry.EntriesNum ].Text, (*it).number().utf8(), (*it).number().utf8().length() );
                     memoryEntry.EntriesNum++;
@@ -893,7 +893,7 @@ GSM_MemoryEntry Device::toMemoryEntry( KABC::Addressee* addressee ) {
 
     if( !addressee->note().isEmpty() ) 
     {
-        kDebug() << "[ !!! ] !addressee->note().isEmpty()" << endl;
+        kDebug() <<"[ !!! ] !addressee->note().isEmpty()";
         memoryEntry.Entries[ memoryEntry.EntriesNum ].EntryType = PBK_Text_Note;
         memcpy( memoryEntry.Entries[ memoryEntry.EntriesNum ].Text, addressee->note().utf8(), addressee->note().utf8().length() );
         memoryEntry.EntriesNum++;
@@ -901,7 +901,7 @@ GSM_MemoryEntry Device::toMemoryEntry( KABC::Addressee* addressee ) {
 
     if( !addressee->url().isEmpty() ) 
     {
-        kDebug() << "[ !!! ] !addressee->url().isEmpty()" << endl;
+        kDebug() <<"[ !!! ] !addressee->url().isEmpty()";
         memoryEntry.Entries[ memoryEntry.EntriesNum ].EntryType = PBK_Text_URL;
         memcpy( memoryEntry.Entries[ memoryEntry.EntriesNum ].Text, addressee->url().url().utf8(), addressee->url().url().utf8().length() );
         memoryEntry.EntriesNum++;
@@ -909,7 +909,7 @@ GSM_MemoryEntry Device::toMemoryEntry( KABC::Addressee* addressee ) {
 
     if( !addressee->organization().isEmpty() ) 
     {
-        kDebug() << "[ !!! ] !addressee->organization().isEmpty()" << endl;
+        kDebug() <<"[ !!! ] !addressee->organization().isEmpty()";
         memoryEntry.Entries[ memoryEntry.EntriesNum ].EntryType = PBK_Text_Company;
         memcpy( memoryEntry.Entries[ memoryEntry.EntriesNum ].Text, addressee->organization().utf8(), addressee->organization().utf8().length() );
         memoryEntry.EntriesNum++;
@@ -917,7 +917,7 @@ GSM_MemoryEntry Device::toMemoryEntry( KABC::Addressee* addressee ) {
 
     if( !addressee->title().isEmpty() ) 
     {
-        kDebug() << "[ !!! ] !addressee->title().isEmpty()" << endl;
+        kDebug() <<"[ !!! ] !addressee->title().isEmpty()";
         memoryEntry.Entries[ memoryEntry.EntriesNum ].EntryType = PBK_Text_JobTitle;
         memcpy( memoryEntry.Entries[ memoryEntry.EntriesNum ].Text, addressee->title().utf8(), addressee->title().utf8().length() );
         memoryEntry.EntriesNum++;
@@ -926,7 +926,7 @@ GSM_MemoryEntry Device::toMemoryEntry( KABC::Addressee* addressee ) {
     //hmm uid never seems to be empty...
     //if( !addressee->uid().isEmpty() ) 
     //{
-    //    kDebug() << "[ !!! ] !addressee->uid().isEmpty()" << endl;
+    //    kDebug() <<"[ !!! ] !addressee->uid().isEmpty()";
     //    memoryEntry.Entries[ memoryEntry.EntriesNum ].EntryType = PBK_Text_UserID;
     //    EncodeUnicode( memoryEntry.Entries[ memoryEntry.EntriesNum ].Text, (const unsigned char*)addressee->uid().utf8(), //addressee->uid().utf8().length() );
     //    memoryEntry.EntriesNum++;
@@ -934,7 +934,7 @@ GSM_MemoryEntry Device::toMemoryEntry( KABC::Addressee* addressee ) {
 
     if( !addressee->custom("KMobileTools", "custom_1" ).isEmpty() ) 
     {
-        kDebug() << "[ !!! ] !custom_1.isEmpty()" << endl;
+        kDebug() <<"[ !!! ] !custom_1.isEmpty()";
         memoryEntry.Entries[ memoryEntry.EntriesNum ].EntryType = PBK_Text_Custom1;
         memcpy( memoryEntry.Entries[ memoryEntry.EntriesNum ].Text, addressee->custom("KMobileTools", "custom_1" ).utf8(), addressee->custom("KMobileTools", "custom_1" ).utf8().length() );
         memoryEntry.EntriesNum++;
@@ -942,7 +942,7 @@ GSM_MemoryEntry Device::toMemoryEntry( KABC::Addressee* addressee ) {
 
     if( !addressee->custom("KMobileTools", "custom_2" ).isEmpty() ) 
     {
-        kDebug() << "[ !!! ] !custom_2.isEmpty()" << endl;
+        kDebug() <<"[ !!! ] !custom_2.isEmpty()";
         memoryEntry.Entries[ memoryEntry.EntriesNum ].EntryType = PBK_Text_Custom2;
         memcpy( memoryEntry.Entries[ memoryEntry.EntriesNum ].Text, addressee->custom("KMobileTools", "custom_2" ).utf8(), addressee->custom("KMobileTools", "custom_2" ).utf8().length() );
         memoryEntry.EntriesNum++;
@@ -950,7 +950,7 @@ GSM_MemoryEntry Device::toMemoryEntry( KABC::Addressee* addressee ) {
 
     if( !addressee->custom("KMobileTools", "custom_3" ).isEmpty() ) 
     {
-        kDebug() << "[ !!! ] !custom_3.isEmpty()" << endl;
+        kDebug() <<"[ !!! ] !custom_3.isEmpty()";
         memoryEntry.Entries[ memoryEntry.EntriesNum ].EntryType = PBK_Text_Custom3;
         memcpy( memoryEntry.Entries[ memoryEntry.EntriesNum ].Text, addressee->custom("KMobileTools", "custom_3" ).utf8(), addressee->custom("KMobileTools", "custom_3" ).utf8().length() );
         memoryEntry.EntriesNum++;
@@ -958,7 +958,7 @@ GSM_MemoryEntry Device::toMemoryEntry( KABC::Addressee* addressee ) {
 
     if( !addressee->custom("KMobileTools", "custom_4" ).isEmpty() ) 
     {
-        kDebug() << "[ !!! ] !custom_4.isEmpty()" << endl;
+        kDebug() <<"[ !!! ] !custom_4.isEmpty()";
         memoryEntry.Entries[ memoryEntry.EntriesNum ].EntryType = PBK_Text_Custom4;
         memcpy( memoryEntry.Entries[ memoryEntry.EntriesNum ].Text, addressee->custom("KMobileTools", "custom_4" ).utf8(), addressee->custom("KMobileTools", "custom_4" ).utf8().length() );
         memoryEntry.EntriesNum++;
@@ -966,7 +966,7 @@ GSM_MemoryEntry Device::toMemoryEntry( KABC::Addressee* addressee ) {
 
     if( !addressee->custom("KMobileTools", "caller_grp" ).isEmpty() ) 
     {
-        kDebug() << "[ !!! ] !caller_grp.isEmpty()" << endl;
+        kDebug() <<"[ !!! ] !caller_grp.isEmpty()";
         memoryEntry.Entries[ memoryEntry.EntriesNum ].EntryType = PBK_Caller_Group;
         memcpy( memoryEntry.Entries[ memoryEntry.EntriesNum ].Text, addressee->custom("KMobileTools", "caller_grp" ).utf8(), addressee->custom("KMobileTools", "caller_grp" ).utf8().length() );
         memoryEntry.EntriesNum++;
@@ -974,7 +974,7 @@ GSM_MemoryEntry Device::toMemoryEntry( KABC::Addressee* addressee ) {
 
     if( !addressee->custom("KMobileTools", "ringtone_id" ).isEmpty() ) 
     {
-        kDebug() << "[ !!! ] !ringtone_id.isEmpty()" << endl;
+        kDebug() <<"[ !!! ] !ringtone_id.isEmpty()";
         memoryEntry.Entries[ memoryEntry.EntriesNum ].EntryType = PBK_RingtoneID;
         memcpy( memoryEntry.Entries[ memoryEntry.EntriesNum ].Text, addressee->custom("KMobileTools", "ringtone_id" ).utf8(), addressee->custom("KMobileTools", "ringtone_id" ).utf8().length() );
         memoryEntry.EntriesNum++;
@@ -982,7 +982,7 @@ GSM_MemoryEntry Device::toMemoryEntry( KABC::Addressee* addressee ) {
 
     if( !addressee->custom("KMobileTools", "ringtone_fs_id" ).isEmpty() ) 
     {
-        kDebug() << "[ !!! ] !ringtone_fs_id.isEmpty()" << endl;
+        kDebug() <<"[ !!! ] !ringtone_fs_id.isEmpty()";
         memoryEntry.Entries[ memoryEntry.EntriesNum ].EntryType = PBK_RingtoneFileSystemID;
         memcpy( memoryEntry.Entries[ memoryEntry.EntriesNum ].Text, addressee->custom("KMobileTools", "ringtone_fs_id" ).utf8(), addressee->custom("KMobileTools", "ringtone_fs_id" ).utf8().length() );
         memoryEntry.EntriesNum++;
@@ -990,7 +990,7 @@ GSM_MemoryEntry Device::toMemoryEntry( KABC::Addressee* addressee ) {
 
     if( !addressee->custom("KMobileTools", "sms_list_id" ).isEmpty() ) 
     {
-        kDebug() << "[ !!! ] !sms_list_id.isEmpty()" << endl;
+        kDebug() <<"[ !!! ] !sms_list_id.isEmpty()";
         memoryEntry.Entries[ memoryEntry.EntriesNum ].EntryType = PBK_SMSListID;
         memcpy( memoryEntry.Entries[ memoryEntry.EntriesNum ].Text, addressee->custom("KMobileTools", "sms_list_id" ).utf8(), addressee->custom("KMobileTools", "sms_list_id" ).utf8().length() );
         memoryEntry.EntriesNum++;
@@ -998,7 +998,7 @@ GSM_MemoryEntry Device::toMemoryEntry( KABC::Addressee* addressee ) {
 
     if( !addressee->custom("KMobileTools", "picture_id" ).isEmpty() ) 
     {
-        kDebug() << "[ !!! ] !picture_id.isEmpty()" << endl;
+        kDebug() <<"[ !!! ] !picture_id.isEmpty()";
         memoryEntry.Entries[ memoryEntry.EntriesNum ].EntryType = PBK_PictureID;
         memcpy( memoryEntry.Entries[ memoryEntry.EntriesNum ].Text, addressee->custom("KMobileTools", "picture_id" ).utf8(), addressee->custom("KMobileTools", "picture_id" ).utf8().length() );
         memoryEntry.EntriesNum++;
@@ -1006,7 +1006,7 @@ GSM_MemoryEntry Device::toMemoryEntry( KABC::Addressee* addressee ) {
 
     if( !addressee->custom("KMobileTools", "text_postal" ).isEmpty() ) 
     {
-        kDebug() << "[ !!! ] !text_postal.isEmpty()" << endl;
+        kDebug() <<"[ !!! ] !text_postal.isEmpty()";
         memoryEntry.Entries[ memoryEntry.EntriesNum ].EntryType = PBK_Text_Postal;
         memcpy( memoryEntry.Entries[ memoryEntry.EntriesNum ].Text, addressee->custom("KMobileTools", "text_postal" ).utf8(), addressee->custom("KMobileTools", "text_postal" ).utf8().length() );
         memoryEntry.EntriesNum++;
@@ -1052,7 +1052,7 @@ SMSList* Device::smsList() {
                         kmobileSMS->setSlot( SMS::SIM );
                         break;
                     default:
-                        kDebug() << "Gammu engine: sms stored using unknown memory slot" << endl;
+                        kDebug() <<"Gammu engine: sms stored using unknown memory slot";
                         kmobileSMS->setSlot( SMS::Phone );
                         break;
                 }
@@ -1100,14 +1100,14 @@ SMSList* Device::smsList() {
                 kmobileSMS->setFolder( sms.SMS[0].Folder );
                 kmobileSMS->setLocation( sms.SMS[0].Location );
 
-                kDebug() << "=========================" << endl;
-                kDebug() << "Number: " << number[0] << endl;
-                kDebug() << "Date: " << KDateTime( date, time ) << endl;
-                kDebug() << "Slot: " << kmobileSMS->slot() << endl;
-                kDebug() << "Folder: " << kmobileSMS->folder() << endl;
-                kDebug() << "Location: " << kmobileSMS->location() << endl;
-                kDebug() << text << endl;
-                kDebug() << "=========================" << endl;
+                kDebug() <<"=========================";
+                kDebug() <<"Number:" << number[0];
+                kDebug() <<"Date:" << KDateTime( date, time );
+                kDebug() <<"Slot:" << kmobileSMS->slot();
+                kDebug() <<"Folder:" << kmobileSMS->folder();
+                kDebug() <<"Location:" << kmobileSMS->location();
+                kDebug() << text;
+                kDebug() <<"=========================";
 
                 if ( smsList->find( kmobileSMS->uid() ) >= 0 )
                     break;

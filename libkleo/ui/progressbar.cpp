@@ -56,7 +56,7 @@ void Kleo::ProgressBar::slotProgress( const QString &, int, int cur, int tot ) {
 }
 
 void Kleo::ProgressBar::setMaximum( int total ) {
-  kDebug() << "Kleo::ProgressBar::setMaximum( " << total << " )" << endl;
+  kDebug() <<"Kleo::ProgressBar::setMaximum(" << total <<" )";
   if ( total == maximum() )
     return;
   QProgressBar::setMaximum( 0 );
@@ -64,7 +64,7 @@ void Kleo::ProgressBar::setMaximum( int total ) {
 }
 
 void Kleo::ProgressBar::setValue( int p ) {
-  kDebug() << "Kleo::ProgressBar::setValue( " << p << " )" << endl;
+  kDebug() <<"Kleo::ProgressBar::setValue(" << p <<" )";
   mRealProgress = p;
   fixup( true );
 }
@@ -84,23 +84,23 @@ void Kleo::ProgressBar::fixup( bool newValue ) {
   const int cur = QProgressBar::value();
   const int tot = QProgressBar::maximum();
 
-  kDebug() << "Kleo::ProgressBar::startStopBusyTimer() cur = " << cur << "; tot = " << tot << "; real = " << mRealProgress << endl;
+  kDebug() <<"Kleo::ProgressBar::startStopBusyTimer() cur =" << cur <<"; tot =" << tot <<"; real =" << mRealProgress;
 
   if ( ( newValue && mRealProgress < 0 ) || ( !newValue && cur < 0 ) ) {
-    kDebug() << "(new value) switch to reset" << endl;
+    kDebug() <<"(new value) switch to reset";
     mBusyTimer->stop();
     if ( newValue )
       QProgressBar::reset();
     mRealProgress = -1;
   } else if ( tot == 0 ) {
-    kDebug() << "(new value) switch or stay in busy" << endl;
+    kDebug() <<"(new value) switch or stay in busy";
     if ( !mBusyTimer->isActive() ) {
       mBusyTimer->start( busyTimerTickInterval );
       if ( newValue )
 	QProgressBar::setValue( mRealProgress );
     }
   } else {
-    kDebug() << "(new value) normal progress" << endl;
+    kDebug() <<"(new value) normal progress";
     mBusyTimer->stop();
     if ( QProgressBar::value() != mRealProgress )
       QProgressBar::setValue( mRealProgress );

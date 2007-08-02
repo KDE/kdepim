@@ -38,7 +38,7 @@ KIO::UDSEntry Stat::stat( const UrlInfo& info )
 
 KIO::UDSEntry Stat::stat( ReadMBox& mbox, const UrlInfo& info )
 {
-	kDebug() << "Stat::stat()" << endl;
+	kDebug() <<"Stat::stat()";
 	KIO::UDSEntry entry;
 	QString url;
 
@@ -65,7 +65,7 @@ KIO::UDSEntry Stat::stat( ReadMBox& mbox, const UrlInfo& info )
 
 KIO::UDSEntry Stat::statDirectory( const UrlInfo& info )
 {
-	kDebug() << "statDirectory()" << endl;
+	kDebug() <<"statDirectory()";
 	KIO::UDSEntry entry;
 
 	//Specific things for a directory
@@ -77,7 +77,7 @@ KIO::UDSEntry Stat::statDirectory( const UrlInfo& info )
 
 KIO::UDSEntry Stat::statMessage( const UrlInfo& info )
 {
-	kDebug() << "statMessage( " << info.url()  << " )" << endl;
+	kDebug() <<"statMessage(" << info.url()  <<" )";
 	KIO::UDSEntry entry;
 	QString url = QString( "mbox:%1" ).arg( info.url() );
 

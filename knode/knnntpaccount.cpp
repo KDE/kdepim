@@ -109,7 +109,7 @@ bool KNNntpAccount::readInfo(const QString &confPath)
   i_dentity=new KNode::Identity(false);
   i_dentity->loadConfig(conf);
   if(!i_dentity->isEmpty()) {
-    kDebug(5003) << "KNGroup::readInfo(const QString &confPath) : using alternative user for " << n_ame << endl;
+    kDebug(5003) <<"KNGroup::readInfo(const QString &confPath) : using alternative user for" << n_ame;
   } else {
     delete i_dentity;
     i_dentity=0;

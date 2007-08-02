@@ -132,9 +132,9 @@ void SMSList::dump() const
     {
         tempSMS=it.next();
         i++;
-        kDebug() << "SMSList::dump(): " << QString("%1").arg(i,2) << "|" << tempSMS->uid() << "|" << tempSMS->type() << "|" << tempSMS->getText() << endl;
+        kDebug() <<"SMSList::dump():" << QString("%1").arg(i,2) <<"|" << tempSMS->uid() <<"|" << tempSMS->type() <<"|" << tempSMS->getText();
     }
-//     kDebug() << "SMSList::dump(): Unread=" << i_unread << "; Read=" << i_read << "; Sent=" << i_sent << "; Unsent=" << i_unsent << endl;
+//     kDebug() <<"SMSList::dump(): Unread=" << i_unread <<"; Read=" << i_read <<"; Sent=" << i_sent <<"; Unsent=" << i_unsent;
 }
 
 void SMSList::calcSMSNumber() const
@@ -145,7 +145,7 @@ void SMSList::calcSMSNumber() const
     while( it2.hasNext() )
     {
         tempSMS=it2.next();
-//         kDebug() << QString("SMS Type: %1").arg(tempSMS->type() ,8,2) << endl;
+//         kDebug() << QString("SMS Type: %1").arg(tempSMS->type() ,8,2);
         switch (tempSMS->type())
         {
             case SMS::Unread:
@@ -231,9 +231,9 @@ void SMSList::saveToMailBox() const
  */
 int SMSList::saveToCSV(const QString &filename) const
 {
-    kDebug() << k_funcinfo << endl;
+    kDebug() << k_funcinfo;
     SMS *sms;
-    kDebug() << "SMSList::saveToCSV(): saving CSV file to: " << filename << endl;
+    kDebug() <<"SMSList::saveToCSV(): saving CSV file to:" << filename;
     bool ok=true;
 /*    QListIterator<SMS*> it(*this);
     while( (it.hasNext()) )
@@ -261,7 +261,7 @@ int SMSList::saveToCSV() const
     if(saveFile.isEmpty() ) return -1;
 
     if ( QFile::exists(saveFile)) {
-        kDebug() << "SMSList::saveToCSV(): File already exists " << endl;
+        kDebug() <<"SMSList::saveToCSV(): File already exists";
 
         int retval;
         retval=KMessageBox::warningContinueCancel(NULL,

@@ -52,7 +52,7 @@ KAddressBookView::KAddressBookView( KAB::Core *core, QWidget *parent )
 
 KAddressBookView::~KAddressBookView()
 {
-  kDebug(5720) << "KAddressBookView::~KAddressBookView: destroying - "
+  kDebug(5720) <<"KAddressBookView::~KAddressBookView: destroying -"
                 << objectName() << endl;
 }
 
@@ -161,7 +161,7 @@ KAB::Core *KAddressBookView::core() const
 void KAddressBookView::popup( const QPoint &point )
 {
   if ( !mCore->guiClient() ) {
-    kWarning() << "No GUI client set!" << endl;
+    kWarning() <<"No GUI client set!";
     return;
   }
 

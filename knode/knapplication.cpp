@@ -29,14 +29,14 @@
 
 int KNApplication::newInstance()
 {
-  kDebug(5003) << "KNApplication::newInstance()" << endl;
+  kDebug(5003) <<"KNApplication::newInstance()";
 
   KConfigGroup conf(knGlobals.config(), "GENERAL");
   QString ver=conf.readEntry("Version");
 
   if(!ver.isEmpty() && ver!=KNODE_VERSION) { //new version installed
     if(KNConvert::needToConvert(ver)) { //we need to convert
-      kDebug(5003) << "KNApplication::newInstance() : conversion needed" << endl;
+      kDebug(5003) <<"KNApplication::newInstance() : conversion needed";
       KNConvert *convDlg=new KNConvert(ver);
       if(!convDlg->exec()) { //reject()
         if(convDlg->conversionDone()) //conversion has already happened but the user has canceled afterwards
@@ -80,7 +80,7 @@ int KNApplication::newInstance()
   KNMainWidget *w = static_cast<KNMainWindow*>(mainWidget())->mainWidget();
   w->handleCommandLine();
 
-  kDebug(5003) << "KNApplication::newInstance() done" << endl;
+  kDebug(5003) <<"KNApplication::newInstance() done";
   return 0;
 }
 

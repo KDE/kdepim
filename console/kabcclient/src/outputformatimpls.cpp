@@ -195,7 +195,7 @@ bool VCardOutput::writeAddressee(const KABC::Addressee& addressee, std::ostream&
             break;
 
         default:
-            kDebug() << "Unknown vCard version " << m_vCardVersion << endl;
+            kDebug() <<"Unknown vCard version" << m_vCardVersion;
             break;
     }
 
@@ -226,7 +226,7 @@ bool VCardOutput::writeAddresseeList(const KABC::AddresseeList& addresseeList,
             break;
 
         default:
-            kDebug() << "Unknown vCard version " << m_vCardVersion << endl;
+            kDebug() <<"Unknown vCard version" << m_vCardVersion;
             break;
     }
 

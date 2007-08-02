@@ -42,7 +42,7 @@
 KWatchGnuPGTray::KWatchGnuPGTray( KWatchGnuPGMainWindow* mainwin )
   : KSystemTrayIcon( mainwin )
 {
-  kDebug() << "KWatchGnuPGTray::KWatchGnuPGTray" << endl;
+  kDebug() <<"KWatchGnuPGTray::KWatchGnuPGTray";
 
   setObjectName( "KWatchGnuPG Tray Window" );
   KIconLoader::global()->addAppDir( "kwatchgnupg" );

@@ -122,7 +122,7 @@ KMailConnection::~KMailConnection()
 
 bool KMailConnection::connectToKMail()
 {
-   kDebug()<<" bool KMailConnection::connectToKMail()\n";
+   kDebug()<<" bool KMailConnection::connectToKMail()";
   if ( !mKmailGroupwareInterface ) {
     QString error;
     QString dbusService;
@@ -130,7 +130,7 @@ bool KMailConnection::connectToKMail()
       findServiceFor( "DBUS/ResourceBackend/IMAP", QString(),
                       &error, &dbusService );
     if ( result != 0 ) {
-      kError(5650) << "Couldn't connect to the IMAP resource backend\n";
+      kError(5650) <<"Couldn't connect to the IMAP resource backend";
       // TODO: You might want to show "error" (if not empty) here,
       // using e.g. KMessageBox
       return false;
@@ -151,22 +151,22 @@ bool KMailConnection::connectToKMail()
     // Attach to the KMail signals
     if ( !connectKMailSignal( "incidenceAdded(QString,QString,quint32,int,QString)",
                               "fromKMailAddIncidence(QString,QString,quint32,int,QString)" ) )
-      kError(5650) << "DCOP connection to incidenceAdded failed" << endl;
+      kError(5650) <<"DCOP connection to incidenceAdded failed";
     if ( !connectKMailSignal( "incidenceDeleted(QString,QString,QString)",
                               "fromKMailDelIncidence(QString,QString,QString)" ) )
-      kError(5650) << "DCOP connection to incidenceDeleted failed" << endl;
+      kError(5650) <<"DCOP connection to incidenceDeleted failed";
     if ( !connectKMailSignal( "signalRefresh(QString,QString)",
                               "fromKMailRefresh(QString,QString)" ) )
-      kError(5650) << "DCOP connection to signalRefresh failed" << endl;
+      kError(5650) <<"DCOP connection to signalRefresh failed";
     if ( !connectKMailSignal( "subresourceAdded( QString, QString, QString, bool, bool )",
                               "fromKMailAddSubresource( QString, QString, QString, bool, bool )" ) )
-      kError(5650) << "DCOP connection to subresourceAdded failed" << endl;
+      kError(5650) <<"DCOP connection to subresourceAdded failed";
     if ( !connectKMailSignal( "subresourceDeleted(QString,QString)",
                               "fromKMailDelSubresource(QString,QString)" ) )
-      kError(5650) << "DCOP connection to subresourceDeleted failed" << endl;
+      kError(5650) <<"DCOP connection to subresourceDeleted failed";
     if ( !connectKMailSignal( "asyncLoadResult(QMap<quint32, QString>, QString, QString)",
                               "fromKMailAsyncLoadResult(QMap<quint32, QString>, QString, QString)" ) )
-      kError(5650) << "DCOP connection to asyncLoadResult failed" << endl;
+      kError(5650) <<"DCOP connection to asyncLoadResult failed";
 */
   }
   return ( mKmailGroupwareInterface != 0 );
@@ -181,7 +181,7 @@ bool KMailConnection::fromKMailAddIncidence( const QString& type,
   if ( format != KMail::StorageXML
       && format != KMail::StorageIcalVcard )
     return false;
-//   kDebug(5650) << "KMailConnection::fromKMailAddIncidence( " << type << ", "
+//   kDebug(5650) <<"KMailConnection::fromKMailAddIncidence(" << type <<","
 //                 << folder << " ). iCal:\n" << ical << endl;
   return mResource->fromKMailAddIncidence( type, folder, sernum, format, data );
 }
@@ -190,14 +190,14 @@ void KMailConnection::fromKMailDelIncidence( const QString& type,
                                              const QString& folder,
                                              const QString& xml )
 {
-//   kDebug(5650) << "KMailConnection::fromKMailDelIncidence( " << type << ", "
+//   kDebug(5650) <<"KMailConnection::fromKMailDelIncidence(" << type <<","
 //                 << folder << ", " << uid << " )\n";
   mResource->fromKMailDelIncidence( type, folder, xml );
 }
 
 void KMailConnection::fromKMailRefresh( const QString& type, const QString& folder )
 {
-//   kDebug(5650) << "KMailConnection::fromKMailRefresh( " << type << ", "
+//   kDebug(5650) <<"KMailConnection::fromKMailRefresh(" << type <<","
 //                 << folder << " )\n";
   mResource->fromKMailRefresh( type, folder );
 }
@@ -208,7 +208,7 @@ void KMailConnection::fromKMailAddSubresource( const QString& type,
                                                bool writable,
                                                bool alarmRelevant )
 {
-//   kDebug(5650) << "KMailConnection::fromKMailAddSubresource( " << type << ", "
+//   kDebug(5650) <<"KMailConnection::fromKMailAddSubresource(" << type <<","
 //                 << resource << " )\n";
   mResource->fromKMailAddSubresource( type, resource, label,
                                       writable, alarmRelevant );
@@ -217,7 +217,7 @@ void KMailConnection::fromKMailAddSubresource( const QString& type,
 void KMailConnection::fromKMailDelSubresource( const QString& type,
                                                const QString& resource )
 {
-//   kDebug(5650) << "KMailConnection::fromKMailDelSubresource( " << type << ", "
+//   kDebug(5650) <<"KMailConnection::fromKMailDelSubresource(" << type <<","
 //                 << resource << " )\n";
   mResource->fromKMailDelSubresource( type, resource );
 }

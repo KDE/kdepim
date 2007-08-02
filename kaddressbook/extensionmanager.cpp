@@ -208,14 +208,14 @@ void ExtensionManager::createExtensionWidgets()
   for ( it = plugins.begin(); it != plugins.end(); ++it ) {
     KLibFactory *factory = KLibLoader::self()->factory( (*it)->library().toLatin1() );
     if ( !factory ) {
-      kDebug(5720) << "ExtensionManager::loadExtensions(): Factory creation failed" << endl;
+      kDebug(5720) <<"ExtensionManager::loadExtensions(): Factory creation failed";
       continue;
     }
 
     KAB::ExtensionFactory *extensionFactory = static_cast<KAB::ExtensionFactory*>( factory );
 
     if ( !extensionFactory ) {
-      kDebug(5720) << "ExtensionManager::loadExtensions(): Cast failed" << endl;
+      kDebug(5720) <<"ExtensionManager::loadExtensions(): Cast failed";
       continue;
     }
 

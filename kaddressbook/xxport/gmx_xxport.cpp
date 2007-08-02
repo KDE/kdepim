@@ -132,7 +132,7 @@ KABC::Addressee::List GMXXXPort::importContacts( const QString& ) const
   // now read the address records
   line  = gmxStream.readLine();
   if (!line.startsWith("AB_ADDRESS_RECORDS:")) {
-	kWarning() << "Could not find address records!\n";
+	kWarning() <<"Could not find address records!";
 	return addrList;
   }
   // Address_id,Record_id,Street,Country,Zipcode,City,Phone,Fax,Mobile,Mobile_type,Email,
@@ -183,7 +183,7 @@ KABC::Addressee::List GMXXXPort::importContacts( const QString& ) const
 	// strList[20]=Status (should always be "1")
 	addr->insertAddress(adr);
     } else {
-	kWarning() << "unresolved line: " << line << endl;
+	kWarning() <<"unresolved line:" << line;
     }
 
     line = gmxStream.readLine();

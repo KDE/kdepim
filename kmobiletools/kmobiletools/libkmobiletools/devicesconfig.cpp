@@ -77,7 +77,7 @@ DevicesConfig *DevicesConfig::prefs(const QString &groupName)
     devicesPrefs->readConfig();
     QString libname=devicesPrefs->engine();
     delete devicesPrefs;
-    kDebug() << "DevicesConfig::prefs(" << groupName << "); loading engine " << libname << endl;
+    kDebug() <<"DevicesConfig::prefs(" << groupName <<"); loading engine" << libname;
     Engine *engine=Engine::load(libname);
     if(!engine) return NULL;
     devicesPrefs=engine->config(true, groupName);
@@ -112,7 +112,7 @@ const QString DevicesConfig::deviceGroup( const QString &devicename)
         if( cfg.group(cgroup).readEntry("devicename") == devicename) {
       if ( ! validDevices.contains(cgroup) ) {
         DevicesConfig::deletePrefs(cgroup);
-        kDebug() << "Removed stale group " << cgroup << endl;
+        kDebug() <<"Removed stale group" << cgroup;
       } else
         return cgroup;
     }
@@ -135,13 +135,13 @@ const QString DevicesConfig::firstFreeGroup()
 
 const QPixmap DevicesConfig::deviceTypeIcon(const QString &groupName, K3Icon::Group group, int size)
 {
-    kDebug() << "deviceTypeIcon(); groupName=" << groupName << ", engine=" << DevicesConfig::prefs(groupName)->engine()<< endl;
+    kDebug() <<"deviceTypeIcon(); groupName=" << groupName <<", engine=" << DevicesConfig::prefs(groupName)->engine();
 
     KPluginInfo info = EnginesList::instance()->engineInfo(DevicesConfig::prefs(groupName)->engine() );
     if( !info.isValid() )
         return QPixmap();
 
-    kDebug() << "icon:" << info.icon() << endl;
+    kDebug() <<"icon:" << info.icon();
     return KIconLoader::global()->loadIcon(info.icon(), group, size);
 }
 

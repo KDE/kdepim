@@ -147,7 +147,7 @@ void ResourceBlog::setAPI( const QString &API )
   } else if ( API == "Blogger 1.0" ) {
     mBlog = new KBlog::Blogger1( mUrl, this );
   } else {
-    kError() << "ResourceBlog::setAPI(): Unrecognised API: " << API;
+    kError() << "ResourceBlog::setAPI(): Unrecognised API:" << API;
     return;
   }
   mBlog->setUsername( mUsername );

@@ -406,7 +406,7 @@ void TestPhoneFeatures::run ()
 
     // Test PDU Mode
     buffer = p_device->sendATCommand(this,  "AT+CMGF=0\r" );
-    kDebug() << "KMobileTools::SerialManager::ATError(buffer): " << buffer.length() - buffer.lastIndexOf("ERROR") << endl;
+    kDebug() <<"KMobileTools::SerialManager::ATError(buffer):" << buffer.length() - buffer.lastIndexOf("ERROR");
     if ( !KMobileTools::SerialManager::ATError(buffer) )
         abilities.smsPDUMode = true;
     slotPercentDone( 4 * 100 /12);

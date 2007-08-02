@@ -87,7 +87,7 @@ int main( int argc, char **argv )
     Features features = FeaturesParser::parseFile( filename, &ok );
 
     if ( !ok ) {
-      kError() << "Parse error" << endl;
+      kError() <<"Parse error";
       return 1;
     }
   }

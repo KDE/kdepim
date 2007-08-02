@@ -99,7 +99,7 @@ void PickPhoneNumberDialog::slotSourceChanged(int index)
 
 void PickPhoneNumberDialog::updatePhonebook()
 {
-    kDebug() << "PickPhoneNumberDialog::updatePhonebook()\n";
+    kDebug() <<"PickPhoneNumberDialog::updatePhonebook()";
     KMobileTools::Engine *engine= KMobileTools::EnginesList::instance()->find( d->ui.pbSource->currentText(), true );
     if(!engine)
     {

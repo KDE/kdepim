@@ -47,13 +47,13 @@ KNodePart::KNodePart( QWidget *parentWidget, QObject *parent, const QStringList 
   : KParts::ReadOnlyPart( parent ),
   mParentWidget( parentWidget )
 {
-  kDebug(5003) << "KNodePart()" << endl;
-  kDebug(5003) << "  InstanceName: " << KGlobal::mainComponent().componentName() << endl;
+  kDebug(5003) <<"KNodePart()";
+  kDebug(5003) <<"  InstanceName:" << KGlobal::mainComponent().componentName();
 
   setComponentData( KNodeFactory::componentData() );
 
-  kDebug(5003) << "KNodePart()..." << endl;
-  kDebug(5003) << "  InstanceName: " << KGlobal::mainComponent().componentName() << endl;
+  kDebug(5003) <<"KNodePart()...";
+  kDebug(5003) <<"  InstanceName:" << KGlobal::mainComponent().componentName();
 
   KGlobal::locale()->insertCatalog("libkdepim");
   KGlobal::locale()->insertCatalog("libkpgp");
@@ -98,7 +98,7 @@ KAboutData *KNodePart::createAboutData()
 
 bool KNodePart::openFile()
 {
-  kDebug(5003) << "KNodePart:openFile()" << endl;
+  kDebug(5003) <<"KNodePart:openFile()";
 
   mainWidget->show();
   return true;
@@ -106,7 +106,7 @@ bool KNodePart::openFile()
 
 void KNodePart::guiActivateEvent(KParts::GUIActivateEvent *e)
 {
-  kDebug(5003) << "KNodePart::guiActivateEvent" << endl;
+  kDebug(5003) <<"KNodePart::guiActivateEvent";
   KParts::ReadOnlyPart::guiActivateEvent(e);
 }
 

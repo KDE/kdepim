@@ -502,7 +502,7 @@ void KNComposer::slotCut()
     ((Q3MultiLineEdit*)fw)->cut();
   else if (fw->inherits("QLineEdit"))
     ((QLineEdit*)fw)->cut();
-  else kDebug(5003) << "wrong focus widget" << endl;
+  else kDebug(5003) <<"wrong focus widget";
 }
 
 void KNComposer::slotCopy()
@@ -514,7 +514,7 @@ void KNComposer::slotCopy()
     ((Q3MultiLineEdit*)fw)->copy();
   else if (fw->inherits("QLineEdit"))
     ((QLineEdit*)fw)->copy();
-  else kDebug(5003) << "wrong focus widget" << endl;
+  else kDebug(5003) <<"wrong focus widget";
 
 }
 
@@ -528,7 +528,7 @@ void KNComposer::slotPaste()
     ((Q3MultiLineEdit*)fw)->paste();
   else if (fw->inherits("QLineEdit"))
     ((QLineEdit*)fw)->paste();
-  else kDebug(5003) << "wrong focus widget" << endl;
+  else kDebug(5003) <<"wrong focus widget";
 }
 
 void KNComposer::slotSelectAll()
@@ -890,7 +890,7 @@ bool KNComposer::applyChanges()
               codec=KGlobal::locale()->codecForEncoding();
 
           block.setText( codec->fromUnicode(tmpText) );
-          kDebug(5003) << "signing article from " << article()->from()->addresses() << endl;
+          kDebug(5003) <<"signing article from" << article()->from()->addresses();
           if( block.clearsign( signingKey, codec->name() ) == Kpgp::Ok ) {
               QByteArray result = block.text();
               tmp = codec->toUnicode(result.data(), result.length() );
@@ -1624,7 +1624,7 @@ void KNComposer::slotSpellStarted( K3Spell *)
 //todo fixme
 //quotePrefix = mComposer->msg()->formatString(quotePrefix);
 
-        kDebug(5003) << "spelling: new SpellingFilter with prefix=\"" << quotePrefix << "\"" << endl;
+        kDebug(5003) <<"spelling: new SpellingFilter with prefix=\"" << quotePrefix <<"\"";
         mSpellingFilter = new SpellingFilter(v_iew->e_dit->text(), quotePrefix, SpellingFilter::FilterUrls,
                                              SpellingFilter::FilterEmailAddresses);
 
@@ -1656,8 +1656,8 @@ void KNComposer::slotSpellDone(const QString &newtext)
         }
         else
         {
-            kDebug(5003) << "spelling: canceled - restoring text from SpellingFilter" << endl;
-            kDebug(5003)<<" mSpellingFilter->originalText() :"<<mSpellingFilter->originalText()<<endl;
+            kDebug(5003) <<"spelling: canceled - restoring text from SpellingFilter";
+            kDebug(5003)<<" mSpellingFilter->originalText() :"<<mSpellingFilter->originalText();
             v_iew->e_dit->setText(mSpellingFilter->originalText());
 
             //v_iew->e_dit->setModified(mWasModifiedBeforeSpellCheck);
@@ -1676,7 +1676,7 @@ void KNComposer::slotSpellFinished()
   delete s_pellChecker;
   s_pellChecker=0;
 
-  kDebug(5003) << "spelling: delete SpellingFilter" << endl;
+  kDebug(5003) <<"spelling: delete SpellingFilter";
   delete mSpellingFilter;
   mSpellingFilter = 0;
 

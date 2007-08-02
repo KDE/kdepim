@@ -115,7 +115,7 @@ void ResourceGroupwiseConfig::loadSettings( KRES::Resource *res )
   mResource = dynamic_cast<ResourceGroupwise*>( res );
   
   if ( !mResource ) {
-    kDebug(5700) << "ResourceGroupwiseConfig::loadSettings(): cast failed" << endl;
+    kDebug(5700) <<"ResourceGroupwiseConfig::loadSettings(): cast failed";
     return;
   }
 
@@ -131,7 +131,7 @@ void ResourceGroupwiseConfig::saveSettings( KRES::Resource *res )
   ResourceGroupwise *resource = dynamic_cast<ResourceGroupwise*>( res );
   
   if ( !resource ) {
-    kDebug(5700) << "ResourceGroupwiseConfig::saveSettings(): cast failed" << endl;
+    kDebug(5700) <<"ResourceGroupwiseConfig::saveSettings(): cast failed";
     return;
   }
 

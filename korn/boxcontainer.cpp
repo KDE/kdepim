@@ -56,7 +56,7 @@ void BoxContainer::writeConfig( Settings *settings )
 		if( settings->getBox( index ) )
 			_items->at( index )->writeConfig( settings->getBox( index ), index );
 		else
-			kWarning() << "Could not update information: configuration file does not match real number of boxes" << endl;
+			kWarning() <<"Could not update information: configuration file does not match real number of boxes";
 	
 }
 

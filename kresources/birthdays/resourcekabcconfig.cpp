@@ -102,7 +102,7 @@ void ResourceKABCConfig::loadSettings( KRES::Resource *resource )
     mCategoryView->setSelected(categories);
     mUseCategories->setChecked( res->useCategories() );
   } else {
-    kDebug(5700) << "ERROR: ResourceKABCConfig::loadSettings(): no ResourceKABC, cast failed" << endl;
+    kDebug(5700) <<"ERROR: ResourceKABCConfig::loadSettings(): no ResourceKABC, cast failed";
   }
 }
 
@@ -120,7 +120,7 @@ void ResourceKABCConfig::saveSettings( KRES::Resource *resource )
     res->setCategories( categories );
     res->setUseCategories( mUseCategories->isChecked() );
   } else {
-    kDebug(5700) << "ERROR: ResourceKABCConfig::saveSettings(): no ResourceKABC, cast failed" << endl;
+    kDebug(5700) <<"ERROR: ResourceKABCConfig::saveSettings(): no ResourceKABC, cast failed";
   }
 }
 

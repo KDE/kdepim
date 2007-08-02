@@ -41,7 +41,7 @@ int main( int argc, char **argv )
   KUniqueApplication::addCmdLineOptions();
 
   if ( !KUniqueApplication::start() ) {
-    kDebug(5200) << "kitchensync already runs." << endl;
+    kDebug(5200) <<"kitchensync already runs.";
     exit( 0 );
   };
 

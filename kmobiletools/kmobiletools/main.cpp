@@ -52,16 +52,16 @@ int main(int argc, char **argv)
     {
 #if 0 // FIXME port to D-Bus
         Q3CString dcopclient=app.dcopClient()->registerAs("kmobiletools",false) ;
-        kDebug() << "DCOPClient registration: " << dcopclient << endl;
+        kDebug() <<"DCOPClient registration:" << dcopclient;
         if(dcopclient!="kmobiletools")
         {
-            kDebug() << "Previous instance detected, exiting\n";
-            kDebug() << app.dcopClient()->send( "kmobiletools", "kmobiletools", "show()", QString() ) << endl;
+            kDebug() <<"Previous instance detected, exiting";
+            kDebug() << app.dcopClient()->send("kmobiletools","kmobiletools","show()", QString() );
             return 0;
         }
 #endif
         // no session.. just start up normally
-    kDebug() << "Starting '" << aboutdata->programName() << "` version '" << aboutdata->version() << "`" << endl;
+    kDebug() <<"Starting '" << aboutdata->programName() <<"` version '" << aboutdata->version() <<"`";
         KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
 #ifdef USE_CRASHHANDLER
         KCrash::setCrashHandler( KMobileTools::Crash::crashHandler );

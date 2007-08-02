@@ -56,7 +56,7 @@ WebdavHandler::WebdavHandler()
   const KConfigGroup cg( &cfg, "General" );
   mLogFile = cg.readEntry( "LogFile" );
 
-  kDebug() << "LOG FILE: " << mLogFile << endl;
+  kDebug() <<"LOG FILE:" << mLogFile;
 }
 
 void WebdavHandler::setUserId( const QString &id )
@@ -77,7 +77,7 @@ void WebdavHandler::log( const QString &text )
   QString filename = mLogFile + "-" + QString::number( mLogCount );
   QFile file( filename );
   if ( !file.open( QIODevice::WriteOnly ) ) {
-    kWarning() << "Unable to open log file '" << filename << "'" << endl;
+    kWarning() <<"Unable to open log file '" << filename <<"'";
     return;
   }
 
@@ -89,7 +89,7 @@ void WebdavHandler::log( const QString &text )
 
 QList<SloxItem> WebdavHandler::getSloxItems( SloxBase *res, const QDomDocument &doc )
 {
-  kDebug() << "getSloxItems" << endl;
+  kDebug() <<"getSloxItems";
 
   QList<SloxItem> items;
 
@@ -104,20 +104,20 @@ QList<SloxItem> WebdavHandler::getSloxItems( SloxBase *res, const QDomDocument &
 
       QDomNode propstat = responseElement.namedItem( "propstat" );
       if ( propstat.isNull() ) {
-        kError() << "Unable to find propstat tag." << endl;
+        kError() <<"Unable to find propstat tag.";
         continue;
       }
 
       QDomNode prop = propstat.namedItem( "prop" );
       if ( prop.isNull() ) {
-        kError() << "Unable to find WebDAV property" << endl;
+        kError() <<"Unable to find WebDAV property";
         continue;
       }
       item.domNode = prop;
 
       QDomNode sloxIdNode = prop.namedItem( res->fieldName( SloxBase::ObjectId ) );
       if ( sloxIdNode.isNull() ) {
-        kError() << "Unable to find SLOX id." << endl;
+        kError() <<"Unable to find SLOX id.";
         continue;
       }
       QDomElement sloxIdElement = sloxIdNode.toElement();
@@ -143,14 +143,14 @@ QList<SloxItem> WebdavHandler::getSloxItems( SloxBase *res, const QDomDocument &
 
       QDomNode status = propstat.namedItem( "status" );
       if ( status.isNull() ) {
-        kError() << "Unable to find WebDAV status" << endl;
+        kError() <<"Unable to find WebDAV status";
         continue;
       }
       item.response = status.toElement().text();
 
       QDomNode desc = propstat.namedItem( "responsedescription" );
       if ( desc.isNull() ) {
-        kError() << "Unable to find WebDAV responsedescription" << endl;
+        kError() <<"Unable to find WebDAV responsedescription";
         continue;
       }
       item.responseDescription = desc.toElement().text();
@@ -257,7 +257,7 @@ QDomElement WebdavHandler::addSloxElement( SloxBase *res,
 
 void WebdavHandler::parseSloxAttribute( const QDomElement &e )
 {
-//  kDebug() << "parseSloxAttribute" << endl;
+//  kDebug() <<"parseSloxAttribute";
 
   QString tag = e.tagName();
   QString text = QString::fromUtf8( e.text().toLatin1() );

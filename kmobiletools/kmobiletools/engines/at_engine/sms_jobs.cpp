@@ -158,7 +158,7 @@ ATSMS *SMSDecoder::decodeSMS( const QString &abuffer, bool incoming )
     if ( DCS & 0xC8 == DCSUCS2Encoding ) charset = SMSUCS2Charset;*/
     charset=(DCS >> 2) & 11;
     charset++;
-    kDebug() << "SMS Charset: " << DCS << "; " << charset << endl;
+    kDebug() <<"SMS Charset:" << DCS <<";" << charset;
 
     // Validity Period
     uint VP = 0;
@@ -187,7 +187,7 @@ ATSMS *SMSDecoder::decodeSMS( const QString &abuffer, bool incoming )
     // User data header
     if ( HAS_USERDATAHEADER(SMTL) )
         parseUserDataHeader();
-    kDebug() << "Raw message:" << buffer << endl;
+    kDebug() <<"Raw message:" << buffer;
 //     while( userDataLen>0 )
 //         message.append( getUDChar() );
     message=getUserMessage();
@@ -228,7 +228,7 @@ void SMSDecoder::parseUserDataHeader()
     }
     if ( udhrem!=0 )
     {
-        kDebug() << "Spurious SMS (trailing characters parsing user data header)" << endl;
+        kDebug() <<"Spurious SMS (trailing characters parsing user data header)";
     }
 
     // recalculate user data len
@@ -244,7 +244,7 @@ void SMSDecoder::parseUserDataHeader()
             }
             break;
         case SMSUCS2Charset:
-            kDebug() << "UCS2 header\n";
+            kDebug() <<"UCS2 header";
             bitsLeft = ( (udhlen+1)*8 ) % 16;
             userDataLen -= ((udhlen+1)*8+6)/16;
             if ( bitsLeft!=0 )
@@ -254,7 +254,7 @@ void SMSDecoder::parseUserDataHeader()
             }
             break;
         default:
-            kDebug() << "Fixme: Unsupported character encoding (SMS: " << ( DCS & DCSAlphabetMask ) << ")" << endl;
+            kDebug() <<"Fixme: Unsupported character encoding (SMS:" << ( DCS & DCSAlphabetMask ) <<")";
     }
 }
 
@@ -280,7 +280,7 @@ QString SMSDecoder::getUserMessage()
     switch (charset)
     {
         case SMSGSMCharset:
-            kDebug() << "Decoding from GSM Charset\n";
+            kDebug() <<"Decoding from GSM Charset";
             while( userDataLen>0 )
             {
                 i++;
@@ -289,13 +289,13 @@ QString SMSDecoder::getUserMessage()
             }
             return KMobileTools::EncodingsHelper::decodeGSM( parsedBuffer );
         case SMS8BitCharset:
-            kDebug() << "Decoding from 8 BIT Charset\n";
+            kDebug() <<"Decoding from 8 BIT Charset";
             return KMobileTools::EncodingsHelper::from8bit( buffer );
         case SMSUCS2Charset:
-            kDebug() << "Decoding from UCS2 16BIT Charset\n";
+            kDebug() <<"Decoding from UCS2 16BIT Charset";
             return KMobileTools::EncodingsHelper::fromUCS2( buffer );
         default:
-            kDebug() << "Fixme: Unsupported character encoding (SMS: " << ( DCS & DCSAlphabetMask ) << ")" << endl;
+            kDebug() <<"Fixme: Unsupported character encoding (SMS:" << ( DCS & DCSAlphabetMask ) <<")";
             return i18n("Unsupported character encoding");
     }
 }
@@ -425,7 +425,7 @@ void FetchSMS::run()
     }
     if (in_memslot=="ME" || in_memslot== "MT" || in_memslot=="OM" || in_memslot=="IM") sms_Slot= SMS::Phone;
     if (in_memslot=="SM" || in_memslot== "MT" || in_memslot=="OM" || in_memslot=="IM") sms_Slot= SMS::SIM;
-//     kDebug() << "Current SMS Slot:" << in_memslot << ";" << memslot2 << ";" << memslot3 << ";\n";
+//     kDebug() <<"Current SMS Slot:" << in_memslot <<";" << memslot2 <<";" << memslot3 <<";";
     if(! sms_Slot) sms_Slot=SMS::Phone; // if we've no slots just assign the SMS to the phone as default.
     
     // Get the slot number
@@ -459,7 +459,7 @@ void FetchSMS::run()
             buffer = p_device->sendATCommand(this,  "AT+CMGL=\""+SMS::SMSTypeString( fetchType  )+"\"\r", 10000 );
 
 //     if ( KMobileTools::SerialManager::ATError(buffer) ) return;
-    kDebug() << "Buffer:\n" << buffer << endl;
+    kDebug() <<"Buffer:" << buffer;
     // format
     QStringList tempbuffer = kmobiletoolsATJob::formatBuffer( buffer );
      if( engine->getATAbilities().isPDU() )
@@ -469,7 +469,7 @@ void FetchSMS::run()
          CMGL.setPattern( "^(\\+CMGL|\\^SMGL)[\\s]*:[\\s]*([\\d]*)[\\s]*,[\\s]*\"*([A-Za-z\\s]*)\"*,[\\s]*\"*([+\\d]*)\"*,*\"*([\\d+:,/-]*)\"*$" );
 
     QStringList::Iterator it = tempbuffer.begin();
-    kDebug() << "Decoding sms list: tempbuffer==" << endl;
+    kDebug() <<"Decoding sms list: tempbuffer==";
     while ( it != tempbuffer.end() )
     {
         if (engine->getATAbilities().isPDU() )
@@ -484,19 +484,19 @@ void FetchSMS::run()
                 sms->setSlot( sms_Slot );
 //                 sms->setUID(index + (engine->smsSlot() * 0x100) );
 //                 sms->setText( sms->getText().prepend( QString("UID=").append(QString::number(sms->uid() )).append(";") ) );
-//                 kDebug() << "New sms MD5SUM: " << sms->uid() << endl;
+//                 kDebug() <<"New sms MD5SUM:" << sms->uid();
                 addToList( sms );
                 };
                 ++it;
         } else
         {
-//             kDebug() << "Regexp searching..." << CMGL.search( *it ) << endl;
+//             kDebug() <<"Regexp searching..." << CMGL.search( *it );
                 if (CMGL.indexIn(*it) == 0 )
                 {
                     index = CMGL.cap(2).toInt();
                     QString perhapsdate=CMGL.cap( 5 );
                     stat = SMS::SMSIntType(CMGL.cap(3).trimmed().replace("\"","") );
-                    kDebug() << CMGL.cap(1) << "<-->" << CMGL.cap(2) << "(" << index << ")<-->" << CMGL.cap(3) << "(" << stat << ")<-->" << CMGL.cap(4) << endl;
+                    kDebug() << CMGL.cap(1) <<"<-->" << CMGL.cap(2) <<"(" << index <<")<-->" << CMGL.cap(3) <<"(" << stat <<")<-->" << CMGL.cap(4);
                     ATSMS *sms = new ATSMS( QStringList( decodeString( CMGL.cap(4)) ) , decodeString(*(++it) ) );
                     sms->setRawSlot(in_memslot);
                     sms->idList()->append( index );
@@ -510,14 +510,14 @@ void FetchSMS::run()
                         QStringList tempSL=kmobiletoolsATJob::formatBuffer( buffer );
                         QStringList::Iterator j;
                         CMGR.setPattern( "^\\+CMGR:[\\s]*\"*[A-Z\\s]*\"*,[\\s]*\"*[\\+\\d]*\"*,*[\\s]*\"*([\\d/,+:]*)\"*$" );
-//                         kDebug() << "CMGR search pattern:" << CMGR.pattern() << endl;
+//                         kDebug() <<"CMGR search pattern:" << CMGR.pattern();
                         for(j=tempSL.begin(); j!=tempSL.end(); ++j)
                         {
                             if(CMGR.indexIn( *j )!=-1)
                             {
                                 header=*j;/*
-                                kDebug() << CMGR.capturedTexts().join("\n") << endl;
-                                kDebug() << "Date/time detected:" << CMGR.cap(1) << endl;*/
+                                kDebug() << CMGR.capturedTexts().join("");
+                                kDebug() <<"Date/time detected:" << CMGR.cap(1);*/
                                 perhapsdate=CMGR.cap(1);
                                 break;
                             }
@@ -553,7 +553,7 @@ void FetchSMS::run()
 void FetchSMS::addToList( ATSMS *sms )
 {
     if (smsList->find( sms->uid() ) >=0 ) return;
-//     kDebug() << "FetchSMS::addToList(" << sms->uid() << ")\n";
+//     kDebug() <<"FetchSMS::addToList(" << sms->uid() <<")";
     if ( sms->isMultiPart() )
     {
         ATSMS *smsit=0;
@@ -661,24 +661,24 @@ bool SendSMS::sendSingleSMS(const QString &number, const QString &text)
         QRegExp tempRegexp;
         tempRegexp.setPattern( ".*\"(.*)\".*");
         if(tempRegexp.indexIn(smscenter)>=0) smscenter=tempRegexp.cap( 1 ); else smscenter.clear();
-        kDebug() << "*************** SMS Center found:" << smscenter << "\\n" << endl;
+        kDebug() <<"*************** SMS Center found:" << smscenter;
         if(! KMobileTools::KMobiletoolsHelper::compareNumbers(smscenter, engine->config()->smscenter()) )
         {
-            kDebug() << "It seems that SMS center is NOT correct on your phone, setting it...\n";
+            kDebug() <<"It seems that SMS center is NOT correct on your phone, setting it...";
             buffer=p_device->sendATCommand(this,  QString("AT+CSCA=\"%1\"\r")
                     .arg( encodeString( engine->config()->smscenter() ) ) );
             buffer=p_device->sendATCommand(this,  "AT+CSCA?\r" );
             if(! buffer.contains(  encodeString(engine->config()->smscenter() ) ) )
-            kDebug() << "SendSMS::run() ********** WARNING ******* Could not set SMS Center\n";
+            kDebug() <<"SendSMS::run() ********** WARNING ******* Could not set SMS Center";
         }
     }
     if(pdu)
     {
         QString pduSMS=SMSEncoder::encodeSMS( number, text );
-        kDebug() << "SendSMS::run() pduLength=" << pduSMS.length() << endl;
+        kDebug() <<"SendSMS::run() pduLength=" << pduSMS.length();
         buffer=p_device->sendATCommand(this,  QString("AT+CMGS=%1\r").arg((pduSMS.length()/2 )-1),5  );
         buffer=p_device->sendATCommand(this,  pduSMS.append( "\x1A") );
-        kDebug() << "SendSMS::run() buffer saved:" << buffer << ";\n";
+        kDebug() <<"SendSMS::run() buffer saved:" << buffer <<";";
     }
     else {
         buffer=p_device->sendATCommand(this,  QString("AT+CMGS=\"%1\"\r").arg(encodeString(number)), 5 );
@@ -687,7 +687,7 @@ bool SendSMS::sendSingleSMS(const QString &number, const QString &text)
 
 //         if ( KMobileTools::SerialManager::ATError(buffer) ) return;
         buffer=p_device->sendATCommand(this,  QString("%1\x1A").arg(encodeString(text)) , 10000  );
-        kDebug() << "SendSMS::run() done; result=" << buffer << endl;
+        kDebug() <<"SendSMS::run() done; result=" << buffer;
 //         QRegExp CMGW;
 //         CMGW.setPattern(".*\\+CMGW[\\s]*:[\\s*]([\\d]*).*");
 //         if(CMGW.search(buffer) == -1 ) return;
@@ -720,8 +720,8 @@ StoreSMS::StoreSMS( KMobileTools::Job *pjob, SMS *sms, KMobileTools::SerialManag
 
 void StoreSMS::run()
 {
-//     kDebug() << "StoreSMS::run()\n";
-//     kDebug() << "Numbers: " << p_sms->getTo() << endl;
+//     kDebug() <<"StoreSMS::run()";
+//     kDebug() <<"Numbers:" << p_sms->getTo();
     p_device->lockMutex();
     QStringList::iterator num, txt;
     QStringList numbers=p_sms->getTo();
@@ -745,15 +745,15 @@ int StoreSMS::storeSingleSMS(const QString &number, const QString &text)
         QRegExp tempRegexp;
         tempRegexp.setPattern( ".*\"(.*)\".*");
         if(tempRegexp.indexIn(smscenter)>=0) smscenter=tempRegexp.cap( 1 ); else smscenter.clear();
-        kDebug() << "*************** SMS Center found:" << smscenter << "\\n" << endl;
+        kDebug() <<"*************** SMS Center found:" << smscenter;
         if(! KMobileTools::KMobiletoolsHelper::compareNumbers(smscenter, engine->config()->smscenter()) )
         {
-            kDebug() << "It seems that SMS center is NOT correct on your phone, setting it...\n";
+            kDebug() <<"It seems that SMS center is NOT correct on your phone, setting it...";
             buffer=p_device->sendATCommand(this,  QString("AT+CSCA=\"%1\"\r")
                     .arg( encodeString( engine->config()->smscenter() ) ) );
             buffer=p_device->sendATCommand(this,  "AT+CSCA?\r" );
             if(! buffer.contains(  encodeString(engine->config()->smscenter() ) ) )
-                kDebug() << "StoreSMS::run() ********** WARNING ******* Could not set SMS Center\n";
+                kDebug() <<"StoreSMS::run() ********** WARNING ******* Could not set SMS Center";
         }
     }
     if ( pdu )
@@ -816,16 +816,16 @@ QString SMSEncoder::encodeSMS( const QString &number, const QString &message )
 QString SMSEncoder::encodeText(const QString &o_text, int encoding)
 {
 //     for(int i=0; i<text.length(); i++)
-//         kDebug() << QString("SMSEncoder; original string; at %1:%2(%3)\n")
+//         kDebug() << QString("SMSEncoder; original string; at %1:%2(%3)")
 //                 .arg(i,2).arg(text.at(i)).arg( (uint) ( (uchar) text.at(i).latin1()), 8,2 );
     QString out;
     QString debugOut;
     Q3MemArray<QChar> text;
 //     int encoding=KMobileTools::EncodingsHelper::hasEncoding( o_text, true);
-    kDebug() << "Using encoding " << encoding << endl;
+    kDebug() <<"Using encoding" << encoding;
     if(encoding==KMobileTools::EncodingsHelper::GSM )
             text=KMobileTools::EncodingsHelper::encodeGSM(o_text);
-//     kDebug() << "SMSEncoder; Sizeof char=" << sizeof(char) << endl;
+//     kDebug() <<"SMSEncoder; Sizeof char=" << sizeof(char);
     uchar curChar, nextChar, stolenBits, stolenMask;
     uint strAt=0, septetsAt=0;
     switch( encoding ){

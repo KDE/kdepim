@@ -28,7 +28,7 @@ EditAddressBookJob::EditAddressBookJob( kmobiletoolsJob::JobType jobType,
                                         kmobiletoolsGammu_engine *parent,
                                         const char *name )
                                       : GammuJob( device, parent, name ) {
-    kDebug() << "Gammu engine: edit addressbook job created." << endl;
+    kDebug() <<"Gammu engine: edit addressbook job created.";
     m_jobType = jobType;
     m_device = device;
     m_addresseeList = addresseeList;
@@ -69,7 +69,7 @@ void EditAddressBookJob::run() {
             break;
 
         default:
-            kDebug() << "Gammu engine: EditAddressBookJob::run(): "
+            kDebug() <<"Gammu engine: EditAddressBookJob::run():"
                      << "unsupported job type requested" << endl;
             break;
     }

@@ -26,7 +26,7 @@
 #include <qdir.h>
 //Added by qt3to4:
 #include <Q3ValueList>
-#define EXITDEBUG(msg, retval) { kDebug() << msg << endl; return retval; }
+#define EXITDEBUG(msg, retval) { kDebug() << msg; return retval; }
 
 using namespace std;
 
@@ -43,7 +43,7 @@ P2KWrapper::P2KWrapper(int vendor, int at_prodID, int p2k_prodID, const QString 
     p2k_setACMdevice( acmDevice.latin1() );
     p2k_setATconfig( vendor, at_prodID );
     p2k_setP2Kconfig( vendor, p2k_prodID );
-    kDebug() << "Initialized p2k lib\n";
+    kDebug() <<"Initialized p2k lib";
     n_files=0;
 }
 
@@ -53,7 +53,7 @@ P2KWrapper::P2KWrapper(QObject *parent, const char *name)
     b_connected=false;
     p2k_init();
 
-    kDebug() << "Initialized p2k lib\n";
+    kDebug() <<"Initialized p2k lib";
     n_files=0;
 }
 
@@ -67,7 +67,7 @@ void P2KWrapper::setATConfig(int v, int p)
 
 void P2KWrapper::setP2KConfig(int v, int p)
 {
-    kDebug() << "Set p2k config: vendor=" << v << "; prodID=" << p << endl;
+    kDebug() <<"Set p2k config: vendor=" << v <<"; prodID=" << p;
     p2k_init();
     i_vendor=v;
     i_p2k_prodID=p;
@@ -77,33 +77,33 @@ void P2KWrapper::setP2KConfig(int v, int p)
 bool P2KWrapper::findDevice(const QString &acmDevice, const QString &rawVendor, const QString &rawProduct)
 {
     p2k_init();
-    kDebug() << "P2KWrapper::findDevice(" << acmDevice << "," << rawVendor << "," << rawProduct << ")\n";
+    kDebug() <<"P2KWrapper::findDevice(" << acmDevice <<"," << rawVendor <<"," << rawProduct <<")";
     p2k_setACMdevice( acmDevice.latin1() );
     p2k_devInfo* devList=p2k_getDevList();
     int i=0;
     while( devList[i].vendor >=0 ){
-        kDebug() << "Current device infos: " << QString::number(devList[i].vendor,16)
+        kDebug() <<"Current device infos:" << QString::number(devList[i].vendor,16)
                 << "::" << QString::number(devList[i].product,16) << endl;
         if ( ! (devList[i].vendor==0x22b8) )
         {
-            kDebug() << "Vendor not found\n";
+            kDebug() <<"Vendor not found";
             i++; continue;
         }
-        kDebug() << "Found phone from vendor " << rawVendor << endl;
+        kDebug() <<"Found phone from vendor" << rawVendor;
         QString model=QStringList::split( "MODEL=", rawProduct ).last();
-        kDebug() << "Phone model from p2k:" << devList[i].productStr << ";\n";
+        kDebug() <<"Phone model from p2k:" << devList[i].productStr <<";";
         if ( QString( devList[i].productStr ).contains( model ) )
         {
             p2k_setACMdevice( acmDevice.latin1() );
             if ( devList[i].product%2 )
             {
-                kDebug() << "Setting AT to " << QString::number(devList[i].product+1,16) << " and p2k to "
+                kDebug() <<"Setting AT to" << QString::number(devList[i].product+1,16) <<" and p2k to"
                         << QString::number(devList[i].product,16) << endl;
                 p2k_setATconfig( devList[i].vendor, devList[i].product+1 );
                 p2k_setP2Kconfig( devList[i].vendor, devList[i].product );
             } else
             {
-                kDebug() << "Setting AT to " << QString::number(devList[i].product,16) << " and p2k to "
+                kDebug() <<"Setting AT to" << QString::number(devList[i].product,16) <<" and p2k to"
                         << QString::number(devList[i].product-1,16) << endl;
                 p2k_setATconfig( devList[i].vendor, devList[i].product );
                 p2k_setP2Kconfig( devList[i].vendor, devList[i].product -1);
@@ -123,15 +123,15 @@ extern "C" { Q3ValueList<p2k_fileInfo> kiop2k_fileList; }
 extern "C"
         void onFile( p2k_fileInfo file)
 {
-//     kDebug() << "onFile " << throbber[state%4] << " :: " << state++ << endl;
+//     kDebug() <<"onFile" << throbber[state%4] <<" ::" << state++;
     kiop2k_fileList+=(file);
 }
 
 
 P2KWrapper::~P2KWrapper()
 {
-    kDebug() << "P2KWrapper::~P2KWrapper()\n";
-    kDebug() << "P2KWrapper::ClosingPhone\n";
+    kDebug() <<"P2KWrapper::~P2KWrapper()";
+    kDebug() <<"P2KWrapper::ClosingPhone";
     p2k_closePhone();
 }
 
@@ -145,26 +145,26 @@ P2KWrapper::~P2KWrapper()
 bool P2KWrapper::connectPhone()
 {
     if (b_connected) EXITDEBUG("phone already connected", true);
-    kDebug() << " P2KWrapper::connectPhone()\n";
+    kDebug() <<" P2KWrapper::connectPhone()";
     int err=p2k_findPhone();
-    kDebug() << "err==" << err << endl;
+    kDebug() <<"err==" << err;
     if(err==P2K_PHONE_NONE)
         EXITDEBUG("ERROR! Phone not found", false);
     if(err==P2K_PHONE_AT)
     {
-        kDebug() << "Phone found in AT mode\n";
+        kDebug() <<"Phone found in AT mode";
         if(p2k_setP2Kmode(1000) )
             EXITDEBUG("Could not set phone to p2k mode", false);
     }
     for( int i=0; i<10 ; i++ ){
         err=p2k_openPhone(100000);
-        if( err ) kDebug() << "Can't connect to the phone (try " << i << ", error number: " << err << ")\n";
+        if( err ) kDebug() <<"Can't connect to the phone (try" << i <<", error number:" << err <<")";
         else break;
         sleep (4);
     }
     if (err)
         EXITDEBUG("Couldn't connect to phone", false);
-    kDebug() << "Phone connected in p2k mode\n";
+    kDebug() <<"Phone connected in p2k mode";
     b_connected=true;
     int i_files=p2k_fileCount();
 //     if (i_files != n_files) fetchFileList(false);
@@ -173,14 +173,14 @@ bool P2KWrapper::connectPhone()
 
 void P2KWrapper::closePhone()
 {
-    kDebug() << "P2KWrapper::closePhone()\n";
+    kDebug() <<"P2KWrapper::closePhone()";
     if (  p2k_closePhone() )
     {
-        kDebug() << "!!!!!!!!!!!!!!!! Error while closing phone\n";
+        kDebug() <<"!!!!!!!!!!!!!!!! Error while closing phone";
         return;
     }
     b_connected=false;
-    kDebug() << "**************** Phone disconnected\n";
+    kDebug() <<"**************** Phone disconnected";
 }
 
 /*!
@@ -188,7 +188,7 @@ void P2KWrapper::closePhone()
  */
 QStringList P2KWrapper::getRoot()
 {
-    kDebug() << "P2KWrapper::getRoot()\n";
+    kDebug() <<"P2KWrapper::getRoot()";
     if (!connectPhone() ) return QStringList(QString() );
     char *buffer=new char[256];
     int err=p2k_FSAC_getVolumes( buffer );
@@ -199,7 +199,7 @@ QStringList P2KWrapper::getRoot()
     }
     QString drives( (char*) buffer);
     delete [] buffer;
-    kDebug() << drives << endl;
+    kDebug() << drives;
     if(drives=="FLASH")
     {
         return QStringList("/");
@@ -211,18 +211,18 @@ QStringList P2KWrapper::getRoot()
 void P2KWrapper::fetchFileList()
 {
     ::state=0;
-    kDebug() << "P2KWrapper::fetchFileList()\n";
+    kDebug() <<"P2KWrapper::fetchFileList()";
     if (!connectPhone() ) 
     {
-        kDebug() << "***** ERROR: Couldn't connect to the phone\n";
+        kDebug() <<"***** ERROR: Couldn't connect to the phone";
         return;
     }
     files.clear();
     dirs.clear();
     ::kiop2k_fileList.clear();
     p2k_FSAC_fileList( onFile );
-    kDebug() << "\nkio_p2k: ************************************* Finished listing files **********************************\n";
-    kDebug() << "Files count: " << files.count() << ", while reported " << countFiles() << endl;
+    kDebug() <<"\nkio_p2k: ************************************* Finished listing files **********************************";
+    kDebug() <<"Files count:" << files.count() <<", while reported" << countFiles();
     files=::kiop2k_fileList;
 //     dirs.clear();
     Q3ValueListIterator<p2k_fileInfo> it;
@@ -231,7 +231,7 @@ void P2KWrapper::fetchFileList()
     for( it=files.begin(); it!=files.end(); ++it)
     {
         p_url.setPath((*it).name);
-//         kDebug() << "found filename: " << (*it).name << "; parent dir=" << p_url.directory() << endl;
+//         kDebug() <<"found filename:" << (*it).name <<"; parent dir=" << p_url.directory();
 //         filename=QString( (*it).name);
 //         filename=filename.left( filename.findRev('/') ) ;
         if( dirs.findIndex( p_url.directory() ) <0 ) dirs.append( p_url.directory() );
@@ -271,12 +271,12 @@ int P2KWrapper::countFiles()
  */
 int P2KWrapper::getFile(const QString &name, char* buffer)
 {
-    kDebug() << "P2KWrapper::getFile(" << name << ",...)\n";
+    kDebug() <<"P2KWrapper::getFile(" << name <<",...)";
     if( ! connectPhone()  || getFiles().count() == 0)
     {
-        kDebug() << "\\-/ <<----- Couldn't connect to phone\n";
+        kDebug() <<"\\-/ <<----- Couldn't connect to phone";
         return 0;
-    } else kDebug() << "\\-/ <<----- Connected to phone\n";
+    } else kDebug() <<"\\-/ <<----- Connected to phone";
     p2k_FSAC_close();
 //     QByteArray retval=0;
     p2k_fileInfo file;
@@ -293,26 +293,26 @@ int P2KWrapper::getFile(const QString &name, char* buffer)
     }
     if(!found) { return 0; }
     if( ! buffer ) return file.size;
-    kDebug() << "kio_p2k: ******* trying to open " << file.name << endl;
+    kDebug() <<"kio_p2k: ******* trying to open" << file.name;
     if( p2k_FSAC_open( file.name, file.attr ) ) {
-        kDebug() << "******\\\\\\\\\\////// <<<<<<<<<<<>>>>>>>> openFile failed\n";
+        kDebug() <<"******\\\\\\\\\\////// <<<<<<<<<<<>>>>>>>> openFile failed";
         return 0;
     }
-    kDebug() << "kio_p2k: Open done, now reading to uchar[" << file.size << "]\n";
+    kDebug() <<"kio_p2k: Open done, now reading to uchar[" << file.size <<"]";
 /*    if( ! p2k_FSAC_read( (uchar*) buffer, file.size) )
     {
         p2k_FSAC_close();
         return file.size;
     }*/
 //     while( pt<file.size ){
-//         kDebug() << "Seek success #" << pt << ":" << p2k_FSAC_seek( pt, P2K_SEEK_BEGIN ) << endl;
+//         kDebug() <<"Seek success #" << pt <<":" << p2k_FSAC_seek( pt, P2K_SEEK_BEGIN );
 //         if(file.size-pt >= 0x400 )
 //             p2k_FSAC_read( (uchar*) &buffer[pt], 0x400 );
 //         else p2k_FSAC_read( (uchar*) &buffer[pt], file.size % 0x400 );
 // 
 //         pt+=0x400;
 //     }
-    kDebug() << "File opened, now reading\n";
+    kDebug() <<"File opened, now reading";
     uchar *buf=new uchar[file.size];
     uchar *buf2=buf;
     int b_read=0, toread=0;
@@ -320,7 +320,7 @@ int P2KWrapper::getFile(const QString &name, char* buffer)
     {
         if( (file.size-b_read)>=READ_BUF_SIZE) toread=READ_BUF_SIZE; else
         {
-            kDebug() << "Last record, remaining size=" << toread << endl;
+            kDebug() <<"Last record, remaining size=" << toread;
             toread=(file.size-b_read);
         }
         if(p2k_FSAC_read(buf2, toread)!=0 )
@@ -347,15 +347,15 @@ int P2KWrapper::getFile(const QString &name, char* buffer)
 
 bool P2KWrapper::putFile( const QString &name, char* buffer, int size)
 {
-    kDebug() << "P2KWrapper::putFile(" << name << ",.......,......)\n";
+    kDebug() <<"P2KWrapper::putFile(" << name <<",.......,......)";
     if( ! connectPhone() ) return false;
 
-    kDebug() << "Writing " << name << " to the phone, size: " << size << "bytes.\n";
-    kDebug() << "Opening connection: " << p2k_FSAC_open( (char*) name.latin1(), '\0' ) << endl;
+    kDebug() <<"Writing" << name <<" to the phone, size:" << size <<"bytes.";
+    kDebug() <<"Opening connection:" << p2k_FSAC_open( (char*) name.latin1(), '\0' );
     int pt=0;
     while ( pt<size )
     {
-        kDebug() << "Seek to trunk #" << pt << ": " << p2k_FSAC_seek( pt, P2K_SEEK_BEGIN ) << endl;
+        kDebug() <<"Seek to trunk #" << pt <<":" << p2k_FSAC_seek( pt, P2K_SEEK_BEGIN );
         if(size>=0x400) p2k_FSAC_write( (uchar*) &buffer[pt], 0x400 );
         else p2k_FSAC_write( (uchar*) &buffer[pt], size%0x400 );
         pt+=0x400;
@@ -366,10 +366,10 @@ bool P2KWrapper::putFile( const QString &name, char* buffer, int size)
 
 bool P2KWrapper::deleteFile( const QString &name )
 {
-    kDebug() << "P2KWrapper::deleteFile(" << name << ")\n";
+    kDebug() <<"P2KWrapper::deleteFile(" << name <<")";
     if( ! connectPhone() ) return false;
     int result=p2k_FSAC_delete( (char*) name.latin1() );
-    kDebug() << "Deleting " << name << ": " << result << endl;
+    kDebug() <<"Deleting" << name <<":" << result;
 //     p2k_FSAC_close();
     return !result;
 }

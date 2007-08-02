@@ -66,7 +66,7 @@ AT_Engine::AT_Engine(QObject *parent, const QString &name)
 
 AT_Engine::~AT_Engine()
 {
-    kDebug() << "AT_Engine::~AT_Engine()\n";
+    kDebug() <<"AT_Engine::~AT_Engine()";
 //      weaver->finish();
 //     closeDevice();
 //     delete weaver;
@@ -100,7 +100,7 @@ AT_Engine *AT_EngineFactory::createObject(QObject *parent, const char */*classna
  */
 void AT_Engine::slotSearchPhone()
 {
-    kDebug() << "********** engine instance name: " << objectName() << endl;
+    kDebug() <<"********** engine instance name:" << objectName();
     searchPhones(static_cast<ATDevicesConfig::Connection>(config()->at_connections()), QStringList(), config()->at_userdevices() );
 //     devicesList()->probeDevices( config()->atdevices(), engineLibName(), QStringList(config()->at_initString())+=config()->at_initString2(), false, 0, config()->mobileimei() );
     /// @TODO reimplement
@@ -111,14 +111,14 @@ void AT_Engine::slotInitPhone()
 {
 /** @TODO replace this
     setFoundDevice(devicesList()->findByIMEI(config()->mobileimei()) );
-    kDebug() << "Was searching for imei=\"" << config()->mobileimei() << "\"; list of devices found::\n";
+    kDebug() <<"Was searching for imei=\"" << config()->mobileimei() <<"\"; list of devices found::";
     devicesList()->dump();
     if(!foundDevice() )
     {
-        kDebug() << "Device not found\n";
+        kDebug() <<"Device not found";
         emit disconnected();
         return;
-    } else kDebug() << "Device found on " << foundDevice()->foundPath() << endl;
+    } else kDebug() <<"Device found on" << foundDevice()->foundPath();
     */
     device=new KMobileTools::SerialManager(this, this->objectName(), engineData()->property("devicePath").toString(), initStrings() );
     connect(device, SIGNAL(disconnected()), this, SLOT(connectionStateChanged()));
@@ -139,15 +139,15 @@ QStringList AT_Engine::initStrings()
 void AT_Engine::processSlot(KMobileTools::Job* job)
 {
     KMobileTools::Engine::processSlot(job);
-//     kDebug() << "job Owner: " << p_job->jobOwner() << "; job class: " << p_job->className() << endl;
+//     kDebug() <<"job Owner:" << p_job->jobOwner() <<"; job class:" << p_job->className();
     if(job->property("owner") != objectName() ) return;
-//     kDebug() << "KMobileTools::Engine::processSlot; jobType=" << job->type() << endl;
+//     kDebug() <<"KMobileTools::Engine::processSlot; jobType=" << job->type();
     p_lastJob=0;
-//     kDebug() << "is KMobileToolsJob: " << p_job->inherits("KMobileTools::Job") << endl;
+//     kDebug() <<"is KMobileToolsJob:" << p_job->inherits("KMobileTools::Job");
     KMobileTools::DevicesConfig *wconfig=KMobileTools::DevicesConfig::prefs(objectName() );
     switch( job->type() ){
         case KMobileTools::Job::initPhone:
-            kDebug() << "Device is connected: " << device->isConnected() << endl;
+            kDebug() <<"Device is connected:" << device->isConnected();
             engineData()->setPhoneConnected( device->isConnected() );
             break;
         case KMobileTools::Job::pollStatus:
@@ -175,7 +175,7 @@ void AT_Engine::processSlot(KMobileTools::Job* job)
         case KMobileTools::Job::fetchAddressBook:
             suspendStatusJobs(false);
             engineData()->setContactsList( (ContactsList*) &((FetchAddressee*) job )->fullAddresseeList() );
-//                 kDebug() << "trying to call KMobileTools::EnginesList::instance()->emitPhonebookUpdated();\n";
+//                 kDebug() <<"trying to call KMobileTools::EnginesList::instance()->emitPhonebookUpdated();";
 //                 KMobileTools::EnginesList::instance()->emitPhonebookUpdated();
 //                 if( ! ((FetchAddressee*) job )->partialUpdates() )
             //emit phoneBookChanged();
@@ -235,13 +235,13 @@ void AT_Engine::processSlot(KMobileTools::Job* job)
             l_testphonejobs.removeAll((TestPhoneDeviceJob*)job);
             if( ((TestPhoneDeviceJob*)job)->found() &&
                 ((TestPhoneDeviceJob*)job)->data()->imei() == config()->mobileimei() ) {
-                kDebug() << "Probe finished: phone found in " << ((TestPhoneDeviceJob*)job)->path() << endl;
+                kDebug() <<"Probe finished: phone found in" << ((TestPhoneDeviceJob*)job)->path();
                 while(!l_testphonejobs.isEmpty())
                     ThreadWeaver()->dequeue(l_testphonejobs.takeFirst());
                 engineData()->setProperty("devicePath", ((TestPhoneDeviceJob*)job)->path());
                 slotInitPhone();
             }
-            kDebug() << "jobs remaining: " << l_testphonejobs.count() << endl;
+            kDebug() <<"jobs remaining:" << l_testphonejobs.count();
             break;
         case FindDeviceData:
             emit foundDeviceData((FindDeviceDataJob*) job);
@@ -316,7 +316,7 @@ void AT_Engine::slotFetchSMS()
     if(queue_sms) return;
     QStringList sl_slots=config()->at_smsslots();
     if( ! sl_slots.count() ) {
-        kDebug() << "**** WARNING - this phone is NOT reporting having SMS slots. Perhaps it can't provide SMS. I'm trying anyway to fetch them.\n";
+        kDebug() <<"**** WARNING - this phone is NOT reporting having SMS slots. Perhaps it can't provide SMS. I'm trying anyway to fetch them.";
         p_lastJob=new FetchSMS(p_lastJob, SMS::All, device, true, this );
         enqueueJob(p_lastJob);
         queue_sms=true;
@@ -442,12 +442,12 @@ void AT_Engine::setDevice ( const QString &deviceName)
 /*
 DeviceInfos *AT_Engine::slotProbePhoneCaps( KMobileTools::Job *job, bool fullprobe, const QString &deviceName, const QStringList &params ) const
 {
-    kDebug() << "AT_Engine::probePhoneCaps: device path: " << deviceName << endl;
+    kDebug() <<"AT_Engine::probePhoneCaps: device path:" << deviceName;
     KMobileTools::SerialManager *device=new KMobileTools::SerialManager(0, "nodevice", deviceName, params );
     connect(device, SIGNAL(invalidLockFile( const QString& )), this, SIGNAL(invalidLockFile( const QString& )) );
-//     kDebug() << "Probing device " << deviceName << endl;
+//     kDebug() <<"Probing device" << deviceName;
     if(! device->open(job) ) return new DeviceInfos();
-//     kDebug() << deviceName << " opened" << endl;
+//     kDebug() << deviceName <<" opened";
     QString buffer, temp;
     DeviceInfos *retval=new DeviceInfos;
     retval->setFoundPath( deviceName );
@@ -674,7 +674,7 @@ QString AT_Engine::parseWizardSummary(const QString &strtemplate, const QString 
     if(conn & ATDevicesConfig::ConnectionBluetooth)  tmpstrlist+=i18nc("Bluetooth Connection", "Bluetooth");
     if(conn & ATDevicesConfig::ConnectionIrDA)       tmpstrlist+=i18nc("IrDA Connection", "Infrared");
     if(conn & ATDevicesConfig::ConnectionUser)       tmpstrlist+=i18nc("User-defined Connection", "User defined");
-    kDebug() << "conn=" << conn << "; stringlist: " << tmpstrlist << endl;
+    kDebug() <<"conn=" << conn <<"; stringlist:" << tmpstrlist;
     QString tempstr=i18ncp("AT Wizard summary - using <connection types>", "Using connection: %2", "Using connections: %2",
         tmpstrlist.count(), tmpstrlist.join(", ") );
     retstr=retstr.arg(tempstr);
@@ -689,7 +689,7 @@ QString AT_Engine::parseWizardSummary(const QString &strtemplate, const QString 
 ATDevicesConfig *AT_Engine::config(bool forceNew, const QString &groupName) {
     QString gpname;
     if(groupName.isEmpty()) gpname=objectName(); else gpname=groupName;
-    kDebug() << "ATEngine config : force new=" << forceNew << "; groupname=" << gpname << endl;
+    kDebug() <<"ATEngine config : force new=" << forceNew <<"; groupname=" << gpname;
     if(forceNew)
         return new ATDevicesConfig( gpname, gpname );
     return (ATDevicesConfig*) ATDevicesConfig::prefs(gpname );

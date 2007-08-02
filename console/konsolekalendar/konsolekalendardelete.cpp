@@ -53,7 +53,7 @@ bool KonsoleKalendarDelete::deleteEvent()
 {
   bool status = false;
 
-  kDebug() << "konsolekalendardelete.cpp::deleteEvent()" << endl;
+  kDebug() <<"konsolekalendardelete.cpp::deleteEvent()";
 
   /*
    * Retrieve event on the basis of the unique string ID
@@ -65,7 +65,7 @@ bool KonsoleKalendarDelete::deleteEvent()
            << endl;
       printSpecs( event );
     } else {
-      kDebug() << "konsolekalendardelete.cpp:deleteEvent() : "
+      kDebug() <<"konsolekalendardelete.cpp:deleteEvent() :"
                 << m_variables->getUID().data()
                 << endl;
 
@@ -85,7 +85,7 @@ bool KonsoleKalendarDelete::deleteEvent()
     }
   }
 
-  kDebug() << "konsolekalendardelete.cpp::deleteEvent() | Done " << endl;
+  kDebug() <<"konsolekalendardelete.cpp::deleteEvent() | Done";
   return status;
 }
 

@@ -53,7 +53,7 @@ void KIO_Read::readMail( const QVariant mailid, KKioDrop* drop )
 	
 	if( mailid.type() != QVariant::String )
 	{
-		kDebug() << "Got wrong type of id in KIO_Read::readMail" << endl;
+		kDebug() <<"Got wrong type of id in KIO_Read::readMail";
 		return;
 	}
 	kurl = mailid.toString();
@@ -77,10 +77,10 @@ void KIO_Read::canceled( )
 void KIO_Read::slotResult( KJob* job )
 {
 	if( job != _job )
-		kWarning() << i18n( "Unknown job returned; I will try if this one will do... " ) << endl;
+		kWarning() << i18n("Unknown job returned; I will try if this one will do..." );
 
 	if( job->error() )
-		kWarning() << i18n( "An error occurred when fetching the requested email: %1.", job->errorString() ) << endl;
+		kWarning() << i18n("An error occurred when fetching the requested email: %1.", job->errorString() );
 		
 	_kio->emitReadMailReady( _message );
 	
@@ -91,7 +91,7 @@ void KIO_Read::slotResult( KJob* job )
 void KIO_Read::slotData( KIO::Job* job, const QByteArray & data )
 {
 	if( job != _job )
-		kWarning() << i18n( "Unknown job returned; I will try if this one will do... " ) << endl;
+		kWarning() << i18n("Unknown job returned; I will try if this one will do..." );
 	
 	if( !data.isEmpty() )
 		_message->append( data );

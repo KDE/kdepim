@@ -79,17 +79,17 @@ public:
     bool parsePhoneNumberString(const QString &s)
     {
         /// @TODO handle more charset
-        kDebug() << k_funcinfo << "() " << s << endl;
+        kDebug() << k_funcinfo <<"()" << s;
         QString number, name;
         QRegExp src;
         src.setMinimal(true);
         if(! s.contains('\"') )
             src.setPattern("(.*)<(.*)>");
         else src.setPattern("^\"(.*)\"[\\s]*<(.*)>");
-        kDebug() << "Regexp Pattern: " << src.pattern() << endl;
-        if( src.indexIn( s.trimmed() )==-1 ) { kDebug() << " search failed\n"; return false;}
+        kDebug() <<"Regexp Pattern:" << src.pattern();
+        if( src.indexIn( s.trimmed() )==-1 ) { kDebug() <<" search failed"; return false;}
         numbers[src.cap(2)]=src.cap(1);
-        kDebug() << "adding contact: <<" << src.cap(1).trimmed() << ">> <<" << src.cap(2).trimmed() << ">>\n";
+        kDebug() <<"adding contact: <<" << src.cap(1).trimmed() <<">> <<" << src.cap(2).trimmed() <<">>";
         return true;
     }
 };
@@ -116,7 +116,7 @@ bool Sender::isEmpty() const { return d->numbers.isEmpty(); }
 bool Sender::parse(const char *&scursor, const char *const send, bool isCRLF)
 {
 /// @TODO handle more charset
-    kDebug() << k_funcinfo << "() " << scursor << ", " << int(send-scursor) << ", " << isCRLF << endl;
+    kDebug() << k_funcinfo <<"()" << scursor <<"," << int(send-scursor) <<"," << isCRLF;
 //     return false;
     QStringList singlenums;
     // strip out type()
@@ -127,7 +127,7 @@ bool Sender::parse(const char *&scursor, const char *const send, bool isCRLF)
     bool hadQuotes=false;
     char *start=(char*) scursor;
     for( int i=0; i<(send-scursor); i++){
-//         kDebug() << "checking char '" << scursor[i] << "' (" << int(scursor[i]) << ")\n";
+//         kDebug() <<"checking char '" << scursor[i] <<"' (" << int(scursor[i]) <<")";
         if(scursor[i]=='"' && scursor[i-1]!='\\')
             hadQuotes=!hadQuotes;
         if( !hadQuotes && scursor[i]==',' )
@@ -137,7 +137,7 @@ bool Sender::parse(const char *&scursor, const char *const send, bool isCRLF)
         }
     }
     singlenums+=QString(const_cast<char*>(start) );
-//     kDebug() << "Single nums found: >>>\n" << singlenums.join("|||\n|||") << "|||;" << endl;
+//     kDebug() <<"Single nums found: >>>" << singlenums.join("|||\n|||") <<"|||;";
     bool ret=true;
     for( int i=0; i<singlenums.size(); i++ )
         ret&=d->parsePhoneNumberString( singlenums.at(i) );
@@ -146,7 +146,7 @@ bool Sender::parse(const char *&scursor, const char *const send, bool isCRLF)
 
 QByteArray Sender::as7BitString(bool withHeaderType) const
 {
-    kDebug() << k_funcinfo << "() " << withHeaderType << endl;
+    kDebug() << k_funcinfo <<"()" << withHeaderType;
     QByteArray ret;
     if( isEmpty() ) return ret;
     if(withHeaderType) {
@@ -333,7 +333,7 @@ bool SMS::writeToSlot(const QString &dir)
     text+="\n\n" + KCodecs::quotedPrintableEncode( getText().toUtf8() )+ '\n';
     filename=filename + QDir::separator() + "cur" + QDir::separator() +
             QString::number(getDateTime().toTime_t()) + '.' + QString(uid()) + '.' + "kmobiletools";
-    kDebug() << "Writing sms to " << filename << endl;
+    kDebug() <<"Writing sms to" << filename;
     QFile file(filename);
     if(! file.open( QIODevice::WriteOnly | QIODevice::Truncate ) ) return false;
     QTextStream stream( &file );
@@ -347,7 +347,7 @@ bool SMS::writeToSlot(const QString &dir)
  */
 bool SMS::exportCSV(const QString &filename)
 {
-    kDebug() << k_funcinfo << endl;
+    kDebug() << k_funcinfo;
     bool retval=false;
     if (d->i_slot & Phone )
         retval = retval | writeToSlotCSV( filename );
@@ -356,7 +356,7 @@ bool SMS::exportCSV(const QString &filename)
 
 bool SMS::writeToSlotCSV(const QString &filename)
 {
-    kDebug() << k_funcinfo << endl;
+    kDebug() << k_funcinfo;
     QString text;
 
     if((type() & Unsent) || (type() & Sent) )
@@ -382,7 +382,7 @@ bool SMS::writeToSlotCSV(const QString &filename)
     //text+="\"" + KCodecs::quotedPrintableEncode( getText().utf8() ) + "\"";
     //text+="\"" + getText().utf8() + "\"";
     text+="\"" + getText() + "\"";
-    kDebug() << "Writing sms to " << filename << endl;
+    kDebug() <<"Writing sms to" << filename;
     QFile file(filename);
     QString lastFile = file.readAll();
     if(! file.open( QIODevice::WriteOnly | QIODevice::Append ) ) return false;

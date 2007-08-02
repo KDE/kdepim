@@ -106,7 +106,7 @@ bool KNGroup::readInfo(const QString &confPath)
   i_dentity=new KNode::Identity(false);
   i_dentity->loadConfig(info);
   if(!i_dentity->isEmpty()) {
-    kDebug(5003) << "KNGroup::readInfo(const QString &confPath) : using alternative user for " << g_roupname << endl;
+    kDebug(5003) <<"KNGroup::readInfo(const QString &confPath) : using alternative user for" << g_roupname;
   }
   else {
     delete i_dentity;
@@ -180,11 +180,11 @@ KNNntpAccount* KNGroup::account()
 bool KNGroup::loadHdrs()
 {
   if(isLoaded()) {
-    kDebug(5003) << "KNGroup::loadHdrs() : nothing to load" << endl;
+    kDebug(5003) <<"KNGroup::loadHdrs() : nothing to load";
     return true;
   }
 
-  kDebug(5003) << "KNGroup::loadHdrs() : loading headers" << endl;
+  kDebug(5003) <<"KNGroup::loadHdrs() : loading headers";
   QByteArray buffer, hdrValue;
   QFile f;
   int cnt=0, id, lines, fileFormatVersion, artNumber;
@@ -208,10 +208,10 @@ bool KNGroup::loadHdrs()
       buffer = f.readLine();
       if ( buffer.isEmpty() ){
         if ( f.error() == QFile::NoError ) {
-          kWarning(5003) << "Found broken line in static-file: Ignored!" << endl;
+          kWarning(5003) <<"Found broken line in static-file: Ignored!";
           continue;
         } else {
-          kError(5003) << "Corrupted static file, IO-error!" << endl;
+          kError(5003) <<"Corrupted static file, IO-error!";
           clear();
           return false;
         }
@@ -219,7 +219,7 @@ bool KNGroup::loadHdrs()
 
       QList<QByteArray> splits = buffer.split( '\t' );
       if ( splits.size() < 4 ) {
-        kWarning(5003) << "Found broken line in static-file: Ignored!" << endl;
+        kWarning(5003) <<"Found broken line in static-file: Ignored!";
         continue;
       }
       QList<QByteArray>::ConstIterator it = splits.constBegin();
@@ -317,10 +317,10 @@ bool KNGroup::loadHdrs()
         byteCount = f.read((char*)(&data1), dataSize);
       if ((byteCount == -1)||(byteCount!=dataSize))
         if ( f.error() == QFile::NoError ) {
-          kWarning(5003) << "Found broken entry in dynamic-file: Ignored!" << endl;
+          kWarning(5003) <<"Found broken entry in dynamic-file: Ignored!";
           continue;
         } else {
-          kError(5003) << "Corrupted dynamic file, IO-error!" << endl;
+          kError(5003) <<"Corrupted dynamic file, IO-error!";
           clear();
           return false;
         }
@@ -352,7 +352,7 @@ bool KNGroup::loadHdrs()
     return false;
   }
 
-  kDebug(5003) << cnt << " articles read from file" << endl;
+  kDebug(5003) << cnt <<" articles read from file";
   c_ount=length();
 
   // convert old data files into current format:
@@ -427,13 +427,13 @@ void KNGroup::insortNewHeaders( const KIO::UDSEntryList &list, KNProtocolClient 
       if ( field < KIO::UDSEntry::UDS_EXTRA || field > KIO::UDSEntry::UDS_EXTRA_END )
         continue;
       QString value = entry.stringValue( field );
-      kDebug(5003) << k_funcinfo << value << endl;
+      kDebug(5003) << k_funcinfo << value;
       QString hdrName = value.left( value.indexOf( ':' ) );
       if ( hdrName == "Subject" || hdrName == "From" || hdrName == "Date"
            || hdrName == "Message-ID" || hdrName == "References"
            || hdrName == "Bytes" || hdrName == "Lines" )
         continue;
-      kDebug(5003) << k_funcinfo << "Adding optional header: " << hdrName << endl;
+      kDebug(5003) << k_funcinfo <<"Adding optional header:" << hdrName;
       mOptionalHeaders.append( hdrName.toLatin1() );
     }
   }
@@ -664,7 +664,7 @@ void KNGroup::syncDynamicData()
 
       f.close();
 
-      kDebug(5003) << g_roupname << " => updated " << cnt << " entries of dynamic data" << endl;
+      kDebug(5003) << g_roupname <<" => updated" << cnt <<" entries of dynamic data";
 
       r_eadCount=readCnt;
     }
@@ -918,7 +918,7 @@ KNRemoteArticle* KNGroup::findReference(KNRemoteArticle *a)
 
 void KNGroup::scoreArticles(bool onlynew)
 {
-  kDebug(5003) << "KNGroup::scoreArticles()" << endl;
+  kDebug(5003) <<"KNGroup::scoreArticles()";
   int len=length(),
       todo=(onlynew)? lastFetchCount():length();
 
@@ -927,8 +927,8 @@ void KNGroup::scoreArticles(bool onlynew)
     delete KNScorableArticle::notifyC;
     KNScorableArticle::notifyC = 0;
 
-    kDebug(5003) << "scoring " << newCount() << " articles" << endl;
-    kDebug(5003) << "(total " << length() << " article in group)" << endl;
+    kDebug(5003) <<"scoring" << newCount() <<" articles";
+    kDebug(5003) <<"(total" << length() <<" article in group)";
     knGlobals.top->setCursorBusy(true);
     knGlobals.setStatusMsg(i18n(" Scoring..."));
 
@@ -938,7 +938,7 @@ void KNGroup::scoreArticles(bool onlynew)
     for(int idx=0; idx<todo; idx++) {
       KNRemoteArticle *a = at(len-idx-1);
       if ( !a ) {
-        kWarning( 5003 ) << "found no article at " << len-idx-1 << endl;
+        kWarning( 5003 ) <<"found no article at" << len-idx-1;
         continue;
       }
 
@@ -965,7 +965,7 @@ void KNGroup::scoreArticles(bool onlynew)
     knGlobals.setStatusMsg( QString() );
     knGlobals.top->setCursorBusy(false);
 
-    //kDebug(5003) << KNScorableArticle::notifyC->collection() << endl;
+    //kDebug(5003) << KNScorableArticle::notifyC->collection();
     if (KNScorableArticle::notifyC)
       KNScorableArticle::notifyC->displayCollection(knGlobals.topWidget);
   }
@@ -974,7 +974,7 @@ void KNGroup::scoreArticles(bool onlynew)
 
 void KNGroup::reorganize()
 {
-  kDebug(5003) << "KNGroup::reorganize()" << endl;
+  kDebug(5003) <<"KNGroup::reorganize()";
 
   knGlobals.top->setCursorBusy(true);
   knGlobals.setStatusMsg(i18n(" Reorganizing headers..."));
@@ -1031,7 +1031,7 @@ void KNGroup::updateThreadInfo()
   }
 
   if(brokenThread) {
-    kWarning(5003) << "KNGroup::updateThreadInfo() : Found broken threading infos! Restoring ..." << endl;
+    kWarning(5003) <<"KNGroup::updateThreadInfo() : Found broken threading infos! Restoring ...";
     reorganize();
     updateThreadInfo();
   }

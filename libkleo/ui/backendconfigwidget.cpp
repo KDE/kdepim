@@ -283,7 +283,7 @@ void Kleo::BackendConfigWidget::load() {
 void Kleo::BackendConfigWidget::slotSelectionChanged( Q3ListViewItem * ) {
   const CryptoBackend* backend = d->listView->currentBackend();
   if ( backend && !backend->config() )
-    kDebug(5150) << "Backend w/o config object!" << endl;
+    kDebug(5150) <<"Backend w/o config object!";
   d->configureButton->setEnabled( backend && backend->config() );
 }
 
@@ -315,7 +315,7 @@ void Kleo::BackendConfigWidget::slotConfigureButtonClicked() {
     }
   }
   else // shouldn't happen, button is disabled
-    kWarning(5150) << "Can't configure backend, no config object available" << endl;
+    kWarning(5150) <<"Can't configure backend, no config object available";
 }
 
 void Kleo::BackendConfigWidget::save() const {

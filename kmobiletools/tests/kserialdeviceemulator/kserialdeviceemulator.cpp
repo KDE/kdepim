@@ -64,7 +64,7 @@ KSerialDeviceEmulator::KSerialDeviceEmulator()
     serial->open(QIODevice::ReadWrite);
 //     serial->open(QIODevice::WriteOnly, false);
     QString buffer="ERROR12135";
-    kDebug() << "FindError:" << buffer.mid( buffer.findRev( "ERROR" ) + 5) << endl;
+    kDebug() <<"FindError:" << buffer.mid( buffer.findRev("ERROR" ) + 5);
 }
 
 using namespace KMobileTools;
@@ -84,7 +84,7 @@ KSerialDeviceEmulator::~KSerialDeviceEmulator()
  */
 void KSerialDeviceEmulator::gotData()
 {
-//     kDebug() << "gotData()" << endl;
+//     kDebug() <<"gotData()";
 //     QMutexLocker locker(mutex);
     weaver->enqueue(new CommandJob(serial, weaver, "commandjob"));
 }
@@ -143,13 +143,13 @@ void CommandJob::gotCMD(const QString &cmd)
     serial->flush();
     thread()->msleep(70);
 //     usleep(100);
-//     kDebug() << "cmd sent\n";
+//     kDebug() <<"cmd sent";
 //     QString reply;
-//     kDebug() << "Got Command: " << cmd << endl;
+//     kDebug() <<"Got Command:" << cmd;
 //     if(cmd.contains("AT+CGSN"))
 //     {
 //         reply="\r\n+CGSN: PROVA\r\n";
-//         kDebug() << "Replying to " << cmd << " with " << reply.replace("\r", "" ).replace("\n","") << endl;
+//         kDebug() <<"Replying to" << cmd <<" with" << reply.replace("\r","" ).replace("","");
 //     }
 //     serial->writeBlock(reply.latin1(), reply.length() );
 //     reply="\r\nOK\r\n";
@@ -164,7 +164,7 @@ void CommandJob::gotCMD(const QString &cmd)
  */
 QString CommandJob::getAnswer(const QString &cmd)
 {
-//     kDebug() << "gotCMD " << cmd << endl;
+//     kDebug() <<"gotCMD" << cmd;
 //     QMutexLocker locker(mutex);
     QString reply;
     if(cmd.length() == 1 ) return QString("\nERROR\n");
@@ -178,10 +178,10 @@ QString CommandJob::getAnswer(const QString &cmd)
         bool isSMS=(regexpSMS.search(cmd)!=-1 || (regexpSlot.search(cmd)!=-1 && regexpSlot.cap(1) == "AT+CPMS") );
         if(isSMS && !CommandsList::instance()->hasSMSSlots()) {
             command=CommandsList::instance()->searchCmd(cmd);
-            kDebug() << "NO SMS Slots to be found\n";
+            kDebug() <<"NO SMS Slots to be found";
         }
         else {
-//         kDebug() << "Searching for sms:" << isSMS << endl;
+//         kDebug() <<"Searching for sms:" << isSMS;
             regexpSlot.setPattern( "(AT\\+CP[MB]S)=\"*[\\w]+\"*");
             bool rightSlot=false;
             for(Q3ValueList<Command>::ConstIterator it=CommandsList::instance()->begin(); it!=CommandsList::instance()->end(); ++it)
@@ -192,12 +192,12 @@ QString CommandJob::getAnswer(const QString &cmd)
                     if( (regexpSlot.cap(1)=="AT+CPMS" && !isSMS ) || (regexpSlot.cap(1)=="AT+CPBS" && isSMS ) ) continue;
                     if( smsSlot==(*it).cmd() || pbSlot==(*it).cmd() )
                     {
-                        kDebug() << "Searching for slot ok; was searching for " << (*it).origPos() << endl;
+                        kDebug() <<"Searching for slot ok; was searching for" << (*it).origPos();
                         rightSlot=true;
                     }
                     else
                     {
-                        kDebug() << "Was searching for a slot, but we've found another one: index: " << (*it).origPos() << endl;
+                        kDebug() <<"Was searching for a slot, but we've found another one: index:" << (*it).origPos();
                         rightSlot=false;
                     }
                     continue;
@@ -205,7 +205,7 @@ QString CommandJob::getAnswer(const QString &cmd)
                 if(rightSlot && (*it).cmd()==cmd)
                 {
                     command=(*it);
-                    kDebug() << "Found correct slot command: " << command.origPos() << endl;
+                    kDebug() <<"Found correct slot command:" << command.origPos();
                     break;
                 }
             }
@@ -219,9 +219,9 @@ QString CommandJob::getAnswer(const QString &cmd)
     regexpSlot.setPattern( "(AT\\+CP[MB]S)=\"*[\\w]+\"*");
     if( regexpSlot.search( command.cmd()) != -1 )
     {
-        if(regexpSlot.cap( 1 ) == "AT+CPBS" ) { kDebug() << "Setting pb slot: " << cmd << endl;
+        if(regexpSlot.cap( 1 ) == "AT+CPBS" ) { kDebug() <<"Setting pb slot:" << cmd;
             pbSlot=command.cmd(); }
-            else { kDebug() << "Setting sms slot: " << cmd << endl;
+            else { kDebug() <<"Setting sms slot:" << cmd;
                 smsSlot=command.cmd(); }
     }
     return reply;
@@ -260,6 +260,6 @@ void KSerialDeviceEmulator::loadFile(const QString &file)
 
 void KSerialDeviceEmulator::sendEvent(const QString &event)
 {
-    kDebug() << "Send event:::" << event << ":::\n";
+    kDebug() <<"Send event:::" << event <<":::";
     weaver->enqueue(new SendEventJob(serial, event, weaver, "sendeventjob"));
 }

@@ -136,7 +136,7 @@ void ResourceGroupwise::readAddressBooks()
 
   if ( ids.count() != names.count() || ids.count() != personals.count() ||
     ids.count() != frequents.count() ) {
-    kError() << "Corrupt addressbook configuration" << endl;
+    kError() <<"Corrupt addressbook configuration";
     return;
   }
 
@@ -210,7 +210,7 @@ void ResourceGroupwise::retrieveAddressBooks()
 Ticket *ResourceGroupwise::requestSaveTicket()
 {
   if ( !addressBook() ) {
-    kDebug(5700) << "no addressbook" << endl;
+    kDebug(5700) <<"no addressbook";
     return 0;
   }
 
@@ -229,7 +229,7 @@ bool ResourceGroupwise::doOpen()
 
 void ResourceGroupwise::doClose()
 {
-  kDebug() << "ResourceGroupwise::doClose()" << endl;
+  kDebug() <<"ResourceGroupwise::doClose()";
 
   cancelLoad();
 }
@@ -241,17 +241,17 @@ bool ResourceGroupwise::load()
 
 bool ResourceGroupwise::asyncLoad()
 {
-  kDebug() << "ResourceGroupwise::asyncLoad()" << endl;
+  kDebug() <<"ResourceGroupwise::asyncLoad()";
 
   if ( mDownloadJob ) {
-    kDebug() << "Download still in progress" << endl;
+    kDebug() <<"Download still in progress";
     return true;
   }
 
   loadFromCache();
 
   if ( addressBooks().isEmpty() ) {
-    kDebug() << "Retrieving default addressbook list." << endl;
+    kDebug() <<"Retrieving default addressbook list.";
     retrieveAddressBooks();
     writeAddressBooks();
   }
@@ -262,12 +262,12 @@ bool ResourceGroupwise::asyncLoad()
   if ( ( ids.find( mPrefs->systemAddressBook() ) != ids.end() ) &&
      mPrefs->lastSequenceNumber() != 0 ) 
   {
-    kDebug() << "ResourceGroupwise::asyncLoad() - Found previous sequence number, updating SAB" << endl;
+    kDebug() <<"ResourceGroupwise::asyncLoad() - Found previous sequence number, updating SAB";
     ids.remove( mPrefs->systemAddressBook() ); // we don't need to read this one again
     mUpdateSystemAddressBook = true;
     if ( ids.isEmpty() )
     {
-      kDebug() << "ResourceGroupwise::asyncLoad() - No user addressbooks specified, just updating SAB" << endl;
+      kDebug() <<"ResourceGroupwise::asyncLoad() - No user addressbooks specified, just updating SAB";
       updateAddressBooks();
       mUpdateSystemAddressBook = false;
       return true; 
@@ -288,13 +288,13 @@ bool ResourceGroupwise::asyncLoad()
   QStringList::ConstIterator it;
   for( it = ids.begin(); it != ids.end(); ++it ) {
     if ( *it == mPrefs->systemAddressBook() )
-      kDebug() << "fetching SAB" << (ids.size() > 1 ? ", and user addressbooks" : ", and only SAB" ) << endl;
+      kDebug() <<"fetching SAB" << (ids.size() > 1 ?", and user addressbooks" :", and only SAB" );
     if ( it != ids.begin() ) query += "&";
     query += "addressbookid=" + *it;
   }
   url.setQuery( query );
 
-  kDebug() << "Download URL: " << url << endl;
+  kDebug() <<"Download URL:" << url;
 
   mJobData.clear();
 
@@ -355,10 +355,10 @@ bool ResourceGroupwise::asyncSave( Ticket* )
 
 void ResourceGroupwise::slotFetchJobResult( KJob *job )
 {
-  kDebug() << "ResourceGroupwise::slotFetchJobResult() " << endl;
+  kDebug() <<"ResourceGroupwise::slotFetchJobResult()";
 
   if ( job->error() ) {
-    kError() << job->errorString() << endl;
+    kError() << job->errorString();
     emit loadingError( this, job->errorString() );
   }
 
@@ -374,19 +374,19 @@ void ResourceGroupwise::slotFetchJobResult( KJob *job )
   {
     if ( mUpdateSystemAddressBook )
     {
-      kDebug() << "updating system addressbook" << endl;
+      kDebug() <<"updating system addressbook";
       updateAddressBooks();
       mUpdateSystemAddressBook = false;
     }
     else // we just fetched the entire SAB, now get the delta info so we know the last sequence number we have.
     {
-      kDebug() << "fetched whole SAB, now fetching delta info" << endl;
+      kDebug() <<"fetched whole SAB, now fetching delta info";
       if ( mServer->login() )
       {
         GroupWise::DeltaInfo deltaInfo = mServer->getDeltaInfo( mPrefs->systemAddressBook() );
         mServer->logout();
     
-        kDebug() << "storing delta info to prefs" << endl;
+        kDebug() <<"storing delta info to prefs";
         mPrefs->setFirstSequenceNumber( deltaInfo.firstSequence );
         mPrefs->setLastSequenceNumber( deltaInfo.lastSequence );
         mPrefs->writeConfig();
@@ -398,10 +398,10 @@ void ResourceGroupwise::slotFetchJobResult( KJob *job )
 
 void ResourceGroupwise::slotUpdateJobResult( KJob *job )
 {
-  kDebug() << "ResourceGroupwise::slotUpdateJobResult() " << endl;
+  kDebug() <<"ResourceGroupwise::slotUpdateJobResult()";
 
   if ( job->error() ) {
-    kError() << job->errorString() << endl;
+    kError() << job->errorString();
     emit loadingError( this, job->errorString() );
   }
   saveToCache();
@@ -416,15 +416,15 @@ void ResourceGroupwise::slotUpdateJobResult( KJob *job )
 
 bool ResourceGroupwise::updateAddressBooks()
 {
-  kDebug() << "ResourceGroupwise::updateAddressBooks() - Updating address books." << endl;
+  kDebug() <<"ResourceGroupwise::updateAddressBooks() - Updating address books.";
     
   if ( mDownloadJob ) {
-    kWarning() << "Download still in progress" << endl;
+    kWarning() <<"Download still in progress";
     return false;
   }
 
   if ( addressBooks().isEmpty() ) {
-    kDebug() << "Retrieving default addressbook list." << endl;
+    kDebug() <<"Retrieving default addressbook list.";
     retrieveAddressBooks();
     writeAddressBooks();
   }
@@ -453,7 +453,7 @@ bool ResourceGroupwise::updateAddressBooks()
 
   url.setQuery( query );
 
-  kDebug() << "Update URL: " << url << endl;
+  kDebug() <<"Update URL:" << url;
 
   mJobData.clear();
 
@@ -476,7 +476,7 @@ bool ResourceGroupwise::updateAddressBooks()
 
 void ResourceGroupwise::slotReadJobData( KIO::Job *, const QByteArray &data )
 {
-  kDebug() << "ResourceGroupwise::slotReadJobData()" << endl;
+  kDebug() <<"ResourceGroupwise::slotReadJobData()";
 
   mJobData.append( data.data() );
   //mAddrMap.clear(); //ideally we would remove all the contacts from the personal addressbooks and keep the ones from the SAB
@@ -486,7 +486,7 @@ void ResourceGroupwise::slotReadJobData( KIO::Job *, const QByteArray &data )
   QTime profile;
   profile.start();
   Addressee::List addressees = conv.parseVCards( mJobData );
-  kDebug() << "ResourceGroupwise::slotReadJobData() - parsed " << addressees.count() << " contacts in "  << profile.elapsed() << "ms, now adding to resource..." << endl;
+  kDebug() <<"ResourceGroupwise::slotReadJobData() - parsed" << addressees.count() <<" contacts in"  << profile.elapsed() <<"ms, now adding to resource...";
 
   Addressee::List::ConstIterator it;
   for( it = addressees.begin(); it != addressees.end(); ++it ) {
@@ -548,7 +548,7 @@ void ResourceGroupwise::slotUpdateJobData( KIO::Job *, const QByteArray &data )
           }
         }
         else 
-          kError() << "Addressee to delete did not have a remote UID, unable to find the corresponding local contact" << endl;
+          kError() <<"Addressee to delete did not have a remote UID, unable to find the corresponding local contact";
       }
     }
   }
@@ -556,7 +556,7 @@ void ResourceGroupwise::slotUpdateJobData( KIO::Job *, const QByteArray &data )
 
 void ResourceGroupwise::slotJobPercent( KJob *, unsigned long percent )
 {
-  kDebug() << "ResourceGroupwise::slotJobPercent() " << percent << endl;
+  kDebug() <<"ResourceGroupwise::slotJobPercent()" << percent;
   if ( mProgress ) mProgress->setProgress( percent );
 }
 

@@ -42,7 +42,7 @@ public:
 
 public Q_SLOTS:
     void printError( const QString& errorMessage, BaseError::Priority ) {
-        kDebug() << "Error occurred: " << errorMessage << endl;
+        kDebug() <<"Error occurred:" << errorMessage;
     }
 };
 
@@ -79,17 +79,17 @@ int main( int argc, char *argv[] ) {
     QString engineLibName = QString( "libkmobiletools_%1" ).arg( engineName );
     KMobileTools::EngineXP *fakeEngine = KMobileTools::EngineXP::load( 0, engineLibName );
     if( fakeEngine ) {
-        kDebug() << engineName << " engine loaded." << endl;
+        kDebug() << engineName <<" engine loaded.";
     } else {
-        kDebug() << engineName << " engine could not be loaded." << endl;
+        kDebug() << engineName <<" engine could not be loaded.";
         return -1;
     }
 
     if( fakeEngine->implements( "Status" ) )
-        kDebug() << "- Implements Status interface" << endl;
+        kDebug() <<"- Implements Status interface";
 
     if( fakeEngine->implements( "Information" ) ) {
-        kDebug() << "- Implements Information interface" << endl;
+        kDebug() <<"- Implements Information interface";
         KMobileTools::Ifaces::Status* status = qobject_cast<KMobileTools::Ifaces::Status*> ( fakeEngine );
         Q_ASSERT(status != 0);
         status->fetchStatusInformation();

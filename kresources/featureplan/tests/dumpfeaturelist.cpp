@@ -86,12 +86,12 @@ int main( int argc, char **argv )
   if ( ok ) {
     displayCategory( features.categoryList() );
   } else {
-    kError() << "Parse error" << endl;
+    kError() <<"Parse error";
   }
 
   QString out = filename + ".out";
   if ( !features.writeFile( out ) ) {
-    kError() << "Write error" << endl;
+    kError() <<"Write error";
   }
   return 0;
 }

@@ -110,7 +110,7 @@ extern "C"
 int
 kdemain (int argc, char **argv)
 {
-  kDebug(7116) << "IMAP4::kdemain" << endl;
+  kDebug(7116) <<"IMAP4::kdemain";
 
   KComponentData instance ("kio_imap4");
   if (argc != 4)
@@ -184,14 +184,14 @@ IMAP4Protocol::IMAP4Protocol (const QByteArray & pool, const QByteArray & app, b
 IMAP4Protocol::~IMAP4Protocol ()
 {
   closeDescriptor();
-  kDebug(7116) << "IMAP4: Finishing" << endl;
+  kDebug(7116) <<"IMAP4: Finishing";
 }
 
 void
 IMAP4Protocol::get (const KUrl & _url)
 {
   if (!makeLogin()) return;
-  kDebug(7116) << "IMAP4::get -  " << _url.prettyUrl() << endl;
+  kDebug(7116) <<"IMAP4::get -" << _url.prettyUrl();
   QString aBox, aSequence, aType, aSection, aValidity, aDelimiter, aInfo;
   enum IMAP_TYPE aEnum =
     parseURL (_url, aBox, aSection, aType, aSequence, aValidity, aDelimiter, aInfo);
@@ -396,13 +396,13 @@ IMAP4Protocol::get (const KUrl & _url)
   finished ();
   relayEnabled = false;
   cacheOutput = false;
-  kDebug(7116) << "IMAP4::get -  finished" << endl;
+  kDebug(7116) <<"IMAP4::get -  finished";
 }
 
 void
 IMAP4Protocol::listDir (const KUrl & _url)
 {
-  kDebug(7116) << " IMAP4::listDir - " << _url.prettyUrl() << endl;
+  kDebug(7116) <<" IMAP4::listDir -" << _url.prettyUrl();
 
   if (_url.path().isEmpty())
   {
@@ -436,7 +436,7 @@ IMAP4Protocol::listDir (const KUrl & _url)
     } else if (mySection == "COMPLETE") {
       listStr += "*";
     }
-    kDebug(7116) << "IMAP4Protocol::listDir - listStr=" << listStr << endl;
+    kDebug(7116) <<"IMAP4Protocol::listDir - listStr=" << listStr;
     cmd =
       doCommand (imapCommand::clientList ("", listStr,
             (myLType == "LSUB" || myLType == "LSUBNOCHECK")));
@@ -448,7 +448,7 @@ IMAP4Protocol::listDir (const KUrl & _url)
       if ( aURL.path().contains(';') )
         aURL.setPath(aURL.path().left(aURL.path().indexOf(';')));
 
-      kDebug(7116) << "IMAP4Protocol::listDir - got " << listResponses.count () << endl;
+      kDebug(7116) <<"IMAP4Protocol::listDir - got" << listResponses.count ();
 
       if (myLType == "LSUB")
       {
@@ -473,7 +473,7 @@ IMAP4Protocol::listDir (const KUrl & _url)
           if (boxOk)
             doListEntry (aURL, myBox, (*it), (mySection != "FOLDERONLY"));
           else // this folder is dead
-            kDebug(7116) << "IMAP4Protocol::listDir - suppress " << (*it).name() << endl;
+            kDebug(7116) <<"IMAP4Protocol::listDir - suppress" << (*it).name();
         }
         listResponses = listResponsesSave;
       }
@@ -547,21 +547,21 @@ IMAP4Protocol::listDir (const KUrl & _url)
     {
       if (!assureBox (myBox, true)) return;
 
-      kDebug(7116) << "IMAP4: select returned:" << endl;
+      kDebug(7116) <<"IMAP4: select returned:";
       if (selectInfo.recentAvailable ())
-        kDebug(7116) << "Recent: " << selectInfo.recent () << "d" << endl;
+        kDebug(7116) <<"Recent:" << selectInfo.recent () <<"d";
       if (selectInfo.countAvailable ())
-        kDebug(7116) << "Count: " << selectInfo.count () << "d" << endl;
+        kDebug(7116) <<"Count:" << selectInfo.count () <<"d";
       if (selectInfo.unseenAvailable ())
-        kDebug(7116) << "Unseen: " << selectInfo.unseen () << "d" << endl;
+        kDebug(7116) <<"Unseen:" << selectInfo.unseen () <<"d";
       if (selectInfo.uidValidityAvailable ())
-        kDebug(7116) << "uidValidity: " << selectInfo.uidValidity () << "d" << endl;
+        kDebug(7116) <<"uidValidity:" << selectInfo.uidValidity () <<"d";
       if (selectInfo.flagsAvailable ())
-        kDebug(7116) << "Flags: " << selectInfo.flags () << "d" << endl;
+        kDebug(7116) <<"Flags:" << selectInfo.flags () <<"d";
       if (selectInfo.permanentFlagsAvailable ())
-        kDebug(7116) << "PermanentFlags: " << selectInfo.permanentFlags () << "d" << endl;
+        kDebug(7116) <<"PermanentFlags:" << selectInfo.permanentFlags () <<"d";
       if (selectInfo.readWriteAvailable ())
-        kDebug(7116) << "Access: " << (selectInfo.readWrite ()? "Read/Write" : "Read only") << endl;
+        kDebug(7116) <<"Access:" << (selectInfo.readWrite ()?"Read/Write" :"Read only");
 
 #ifdef USE_VALIDITY
       if (selectInfo.uidValidityAvailable ()
@@ -572,7 +572,7 @@ IMAP4Protocol::listDir (const KUrl & _url)
 
         newUrl.setPath ("/" + myBox + ";UIDVALIDITY=" +
                         QString::number(selectInfo.uidValidity ()));
-        kDebug(7116) << "IMAP4::listDir - redirecting to " << newUrl.prettyUrl() << endl;
+        kDebug(7116) <<"IMAP4::listDir - redirecting to" << newUrl.prettyUrl();
         redirection (newUrl);
 
 
@@ -585,7 +585,7 @@ IMAP4Protocol::listDir (const KUrl & _url)
 
         if (selectInfo.uidNextAvailable ())
           stretch = QString::number(selectInfo.uidNext ()).length ();
-        //        kDebug(7116) << selectInfo.uidNext() << "d used to stretch " << stretch << endl;
+        //        kDebug(7116) << selectInfo.uidNext() <<"d used to stretch" << stretch;
         UDSEntry entry;
 
         if (mySequence.isEmpty()) mySequence = "1:*";
@@ -622,7 +622,7 @@ IMAP4Protocol::listDir (const KUrl & _url)
     selectInfo.setAlert( 0 );
   }
 
-  kDebug(7116) << "IMAP4Protocol::listDir - Finishing listDir" << endl;
+  kDebug(7116) <<"IMAP4Protocol::listDir - Finishing listDir";
   finished ();
 }
 
@@ -680,7 +680,7 @@ bool IMAP4Protocol::parseRead(QByteArray & buffer, long len, long relay)
     ssize_t readLen = myRead(buf, qMin(len - buffer.size(), bufLen - 1));
     if (readLen == 0)
     {
-      kDebug(7116) << "parseRead: readLen == 0 - connection broken" << endl;
+      kDebug(7116) <<"parseRead: readLen == 0 - connection broken";
       error (ERR_CONNECTION_BROKEN, myHost);
       setState(ISTATE_CONNECT);
       closeConnection();
@@ -726,7 +726,7 @@ bool IMAP4Protocol::parseReadLine (QByteArray & buffer, long relay)
         relayData = QByteArray::fromRawData (readBuffer, relay);
         parseRelay (relayData);
         relayData.clear();
-//        kDebug(7116) << "relayed : " << relay << "d" << endl;
+//        kDebug(7116) <<"relayed :" << relay <<"d";
       }
       // append to buffer
       {
@@ -736,7 +736,7 @@ bool IMAP4Protocol::parseReadLine (QByteArray & buffer, long relay)
         stream.seek (buffer.size ());
         stream.write (readBuffer, copyLen);
         stream.close ();
-//        kDebug(7116) << "appended " << copyLen << "d got now " << buffer.size() << endl;
+//        kDebug(7116) <<"appended" << copyLen <<"d got now" << buffer.size();
       }
 
       readBufferLen -= copyLen;
@@ -746,7 +746,7 @@ bool IMAP4Protocol::parseReadLine (QByteArray & buffer, long relay)
     }
     if (!isConnectionValid())
     {
-      kDebug(7116) << "parseReadLine - connection broken" << endl;
+      kDebug(7116) <<"parseReadLine - connection broken";
       error (ERR_CONNECTION_BROKEN, myHost);
       setState(ISTATE_CONNECT);
       closeConnection();
@@ -762,7 +762,7 @@ bool IMAP4Protocol::parseReadLine (QByteArray & buffer, long relay)
     readBufferLen = read(readBuffer, IMAP_BUFFER - 1);
     if (readBufferLen == 0)
     {
-      kDebug(7116) << "parseReadLine: readBufferLen == 0 - connection broken" << endl;
+      kDebug(7116) <<"parseReadLine: readBufferLen == 0 - connection broken";
       error (ERR_CONNECTION_BROKEN, myHost);
       setState(ISTATE_CONNECT);
       closeConnection();
@@ -774,14 +774,14 @@ bool IMAP4Protocol::parseReadLine (QByteArray & buffer, long relay)
 void
 IMAP4Protocol::setSubURL (const KUrl & _url)
 {
-  kDebug(7116) << "IMAP4::setSubURL - " << _url.prettyUrl() << endl;
+  kDebug(7116) <<"IMAP4::setSubURL -" << _url.prettyUrl();
   KIO::TCPSlaveBase::setSubUrl (_url);
 }
 
 void
 IMAP4Protocol::put (const KUrl & _url, int, bool, bool)
 {
-  kDebug(7116) << "IMAP4::put - " << _url.prettyUrl() << endl;
+  kDebug(7116) <<"IMAP4::put -" << _url.prettyUrl();
 //  KIO::TCPSlaveBase::put(_url,permissions,overwrite,resume);
   QString aBox, aSequence, aLType, aSection, aValidity, aDelimiter, aInfo;
   enum IMAP_TYPE aType =
@@ -917,15 +917,15 @@ IMAP4Protocol::put (const KUrl & _url, int, bool, bool)
 void
 IMAP4Protocol::mkdir (const KUrl & _url, int)
 {
-  kDebug(7116) << "IMAP4::mkdir - " << _url.prettyUrl() << endl;
+  kDebug(7116) <<"IMAP4::mkdir -" << _url.prettyUrl();
   QString aBox, aSequence, aLType, aSection, aValidity, aDelimiter, aInfo;
   parseURL(_url, aBox, aSection, aLType, aSequence, aValidity, aDelimiter, aInfo);
-  kDebug(7116) << "IMAP4::mkdir - create " << aBox << endl;
+  kDebug(7116) <<"IMAP4::mkdir - create" << aBox;
   imapCommand *cmd = doCommand (imapCommand::clientCreate(aBox));
 
   if (cmd->result () != "OK")
   {
-    kDebug(7116) << "IMAP4::mkdir - " << cmd->resultInfo() << endl;
+    kDebug(7116) <<"IMAP4::mkdir -" << cmd->resultInfo();
     error (ERR_COULD_NOT_MKDIR, _url.prettyUrl());
     completeQueue.removeRef (cmd);
     return;
@@ -967,7 +967,7 @@ IMAP4Protocol::mkdir (const KUrl & _url, int)
 void
 IMAP4Protocol::copy (const KUrl & src, const KUrl & dest, int, bool overwrite)
 {
-  kDebug(7116) << "IMAP4::copy - [" << (overwrite ? "Overwrite" : "NoOverwrite") << "] " << src.prettyUrl() << " -> " << dest.prettyUrl() << endl;
+  kDebug(7116) <<"IMAP4::copy - [" << (overwrite ?"Overwrite" :"NoOverwrite") <<"]" << src.prettyUrl() <<" ->" << dest.prettyUrl();
   QString sBox, sSequence, sLType, sSection, sValidity, sDelimiter, sInfo;
   QString dBox, dSequence, dLType, dSection, dValidity, dDelimiter, dInfo;
   enum IMAP_TYPE sType =
@@ -993,11 +993,11 @@ IMAP4Protocol::copy (const KUrl & src, const KUrl & dest, int, bool overwrite)
         parseURL (testDir, topDir, dSection, dLType, dSequence, dValidity,
           dDelimiter, dInfo);
 
-      kDebug(7116) << "IMAP4::copy - checking this destination " << topDir << endl;
+      kDebug(7116) <<"IMAP4::copy - checking this destination" << topDir;
       // see if this is what the user wants
       if (dType == ITYPE_BOX || dType == ITYPE_DIR_AND_BOX)
       {
-        kDebug(7116) << "IMAP4::copy - assuming this destination " << topDir << endl;
+        kDebug(7116) <<"IMAP4::copy - assuming this destination" << topDir;
         dBox = topDir;
       }
       else
@@ -1006,7 +1006,7 @@ IMAP4Protocol::copy (const KUrl & src, const KUrl & dest, int, bool overwrite)
         // maybe if we create a new mailbox
         topDir = "/" + topDir + subDir;
         testDir.setPath (topDir);
-        kDebug(7116) << "IMAP4::copy - checking this destination " << topDir << endl;
+        kDebug(7116) <<"IMAP4::copy - checking this destination" << topDir;
         dType =
           parseURL (testDir, topDir, dSection, dLType, dSequence, dValidity,
             dDelimiter, dInfo);
@@ -1018,7 +1018,7 @@ IMAP4Protocol::copy (const KUrl & src, const KUrl & dest, int, bool overwrite)
           // on success we'll use it, else we'll just try to create the given dir
           if (cmd->result () == "OK")
           {
-            kDebug(7116) << "IMAP4::copy - assuming this destination " << topDir << endl;
+            kDebug(7116) <<"IMAP4::copy - assuming this destination" << topDir;
             dType = ITYPE_BOX;
             dBox = topDir;
           }
@@ -1041,14 +1041,14 @@ IMAP4Protocol::copy (const KUrl & src, const KUrl & dest, int, bool overwrite)
   {
     //select the source box
     if (!assureBox(sBox, true)) return;
-    kDebug(7116) << "IMAP4::copy - " << sBox << " -> " << dBox << endl;
+    kDebug(7116) <<"IMAP4::copy -" << sBox <<" ->" << dBox;
 
     //issue copy command
     imapCommand *cmd =
       doCommand (imapCommand::clientCopy (dBox, sSequence));
     if (cmd->result () != "OK")
     {
-      kError(5006) << "IMAP4::copy - " << cmd->resultInfo() << endl;
+      kError(5006) <<"IMAP4::copy -" << cmd->resultInfo();
       error (ERR_COULD_NOT_WRITE, dest.prettyUrl());
       completeQueue.removeRef (cmd);
       return;
@@ -1077,7 +1077,7 @@ IMAP4Protocol::copy (const KUrl & src, const KUrl & dest, int, bool overwrite)
 void
 IMAP4Protocol::del (const KUrl & _url, bool isFile)
 {
-  kDebug(7116) << "IMAP4::del - [" << (isFile ? "File" : "NoFile") << "] " << _url.prettyUrl() << endl;
+  kDebug(7116) <<"IMAP4::del - [" << (isFile ?"File" :"NoFile") <<"]" << _url.prettyUrl();
   QString aBox, aSequence, aLType, aSection, aValidity, aDelimiter, aInfo;
   enum IMAP_TYPE aType =
     parseURL (_url, aBox, aSection, aLType, aSequence, aValidity, aDelimiter, aInfo);
@@ -1217,7 +1217,7 @@ IMAP4Protocol::del (const KUrl & _url, bool isFile)
 void
 IMAP4Protocol::special (const QByteArray & aData)
 {
-  kDebug(7116) << "IMAP4Protocol::special" << endl;
+  kDebug(7116) <<"IMAP4Protocol::special";
   if (!makeLogin()) return;
 
   QDataStream stream( aData );
@@ -1248,7 +1248,7 @@ IMAP4Protocol::special (const QByteArray & aData)
     imapCommand *cmd = doCommand(imapCommand::clientNoop());
     if (cmd->result () != "OK")
     {
-      kDebug(7116) << "NOOP did not succeed - connection broken" << endl;
+      kDebug(7116) <<"NOOP did not succeed - connection broken";
       completeQueue.removeRef (cmd);
       error (ERR_CONNECTION_BROKEN, myHost);
       return;
@@ -1387,7 +1387,7 @@ IMAP4Protocol::special (const QByteArray & aData)
     break;
   }
   default:
-    kWarning(7116) << "Unknown command in special(): " << tmp << endl;
+    kWarning(7116) <<"Unknown command in special():" << tmp;
     error( ERR_UNSUPPORTED_ACTION, QString(QChar(tmp)) );
     break;
   }
@@ -1407,7 +1407,7 @@ IMAP4Protocol::specialACLCommand( int command, QDataStream& stream )
   {
     QString user, acl;
     stream >> user >> acl;
-    kDebug(7116) << "SETACL " << aBox << " " << user << " " << acl << endl;
+    kDebug(7116) <<"SETACL" << aBox <<"" << user <<"" << acl;
     imapCommand *cmd = doCommand(imapCommand::clientSetACL(aBox, user, acl));
     if (cmd->result () != "OK")
     {
@@ -1426,7 +1426,7 @@ IMAP4Protocol::specialACLCommand( int command, QDataStream& stream )
   {
     QString user;
     stream >> user;
-    kDebug(7116) << "DELETEACL " << aBox << " " << user << endl;
+    kDebug(7116) <<"DELETEACL" << aBox <<"" << user;
     imapCommand *cmd = doCommand(imapCommand::clientDeleteACL(aBox, user));
     if (cmd->result () != "OK")
     {
@@ -1443,7 +1443,7 @@ IMAP4Protocol::specialACLCommand( int command, QDataStream& stream )
   }
   case 'G': // GETACL
   {
-    kDebug(7116) << "GETACL " << aBox << endl;
+    kDebug(7116) <<"GETACL" << aBox;
     imapCommand *cmd = doCommand(imapCommand::clientGetACL(aBox));
     if (cmd->result () != "OK")
     {
@@ -1457,7 +1457,7 @@ IMAP4Protocol::specialACLCommand( int command, QDataStream& stream )
     // I'm reusing the infoMessage trick seen above (for capabilities), but this
     // limits me to a string instead of a stringlist. I'm using space as separator,
     // since I don't think it can be used in login names.
-    kDebug(7116) << getResults() << endl;
+    kDebug(7116) << getResults();
     infoMessage(getResults().join( " " ));
     finished();
     break;
@@ -1470,7 +1470,7 @@ IMAP4Protocol::specialACLCommand( int command, QDataStream& stream )
   }
   case 'M': // MYRIGHTS
   {
-    kDebug(7116) << "MYRIGHTS " << aBox << endl;
+    kDebug(7116) <<"MYRIGHTS" << aBox;
     imapCommand *cmd = doCommand(imapCommand::clientMyRights(aBox));
     if (cmd->result () != "OK")
     {
@@ -1481,7 +1481,7 @@ IMAP4Protocol::specialACLCommand( int command, QDataStream& stream )
       return;
     }
     QStringList lst = getResults();
-    kDebug(7116) << "myrights results: " << lst << endl;
+    kDebug(7116) <<"myrights results:" << lst;
     if ( !lst.isEmpty() ) {
       Q_ASSERT( lst.count() == 1 );
       infoMessage( lst.first() );
@@ -1490,7 +1490,7 @@ IMAP4Protocol::specialACLCommand( int command, QDataStream& stream )
     break;
   }
   default:
-    kWarning(7116) << "Unknown special ACL command:" << command << endl;
+    kWarning(7116) <<"Unknown special ACL command:" << command;
     error( ERR_UNSUPPORTED_ACTION, QString(QChar(command)) );
   }
 }
@@ -1498,7 +1498,7 @@ IMAP4Protocol::specialACLCommand( int command, QDataStream& stream )
 void
 IMAP4Protocol::specialSearchCommand( QDataStream& stream )
 {
-  kDebug(7116) << "IMAP4Protocol::specialSearchCommand" << endl;
+  kDebug(7116) <<"IMAP4Protocol::specialSearchCommand";
   KUrl _url;
   stream >> _url;
   QString aBox, aSequence, aLType, aSection, aValidity, aDelimiter, aInfo;
@@ -1516,7 +1516,7 @@ IMAP4Protocol::specialSearchCommand( QDataStream& stream )
   }
   completeQueue.removeRef(cmd);
   QStringList lst = getResults();
-  kDebug(7116) << "IMAP4Protocol::specialSearchCommand '" << aSection <<
+  kDebug(7116) <<"IMAP4Protocol::specialSearchCommand '" << aSection <<
     "' returns " << lst << endl;
   infoMessage( lst.join( " " ) );
 
@@ -1542,7 +1542,7 @@ IMAP4Protocol::specialAnnotateMoreCommand( int command, QDataStream& stream )
     QString entry;
     QMap<QString, QString> attributes;
     stream >> entry >> attributes;
-    kDebug(7116) << "SETANNOTATION " << aBox << " " << entry << " " << attributes.count() << " attributes" << endl;
+    kDebug(7116) <<"SETANNOTATION" << aBox <<"" << entry <<"" << attributes.count() <<" attributes";
     imapCommand *cmd = doCommand(imapCommand::clientSetAnnotation(aBox, entry, attributes));
     if (cmd->result () != "OK")
     {
@@ -1566,7 +1566,7 @@ IMAP4Protocol::specialAnnotateMoreCommand( int command, QDataStream& stream )
     QString entry;
     QStringList attributeNames;
     stream >> entry >> attributeNames;
-    kDebug(7116) << "GETANNOTATION " << aBox << " " << entry << " " << attributeNames << endl;
+    kDebug(7116) <<"GETANNOTATION" << aBox <<"" << entry <<"" << attributeNames;
     imapCommand *cmd = doCommand(imapCommand::clientGetAnnotation(aBox, entry, attributeNames));
     if (cmd->result () != "OK")
     {
@@ -1580,13 +1580,13 @@ IMAP4Protocol::specialAnnotateMoreCommand( int command, QDataStream& stream )
     // Returning information to the application from a special() command isn't easy.
     // I'm reusing the infoMessage trick seen above (for capabilities and acls), but this
     // limits me to a string instead of a stringlist. Let's use \r as separator.
-    kDebug(7116) << getResults() << endl;
+    kDebug(7116) << getResults();
     infoMessage(getResults().join( "\r" ));
     finished();
     break;
   }
   default:
-    kWarning(7116) << "Unknown special annotate command:" << command << endl;
+    kWarning(7116) <<"Unknown special annotate command:" << command;
     error( ERR_UNSUPPORTED_ACTION, QString(QChar(command)) );
   }
 }
@@ -1603,7 +1603,7 @@ IMAP4Protocol::specialQuotaCommand( int command, QDataStream& stream )
   switch( command ) {
     case 'R': // GETQUOTAROOT
       {
-        kDebug(7116) << "QUOTAROOT " << aBox << endl;
+        kDebug(7116) <<"QUOTAROOT" << aBox;
         imapCommand *cmd = doCommand(imapCommand::clientGetQuotaroot( aBox ) );
         if (cmd->result () != "OK")
         {
@@ -1618,18 +1618,18 @@ IMAP4Protocol::specialQuotaCommand( int command, QDataStream& stream )
       }
     case 'G': // GETQUOTA
       {
-        kDebug(7116) << "GETQUOTA command" << endl;
-        kWarning(7116) << "UNIMPLEMENTED" << endl;
+        kDebug(7116) <<"GETQUOTA command";
+        kWarning(7116) <<"UNIMPLEMENTED";
         break;
       }
     case 'S': // SETQUOTA
       {
-        kDebug(7116) << "SETQUOTA command" << endl;
-        kWarning(7116) << "UNIMPLEMENTED" << endl;
+        kDebug(7116) <<"SETQUOTA command";
+        kWarning(7116) <<"UNIMPLEMENTED";
         break;
       }
     default:
-      kWarning(7116) << "Unknown special quota command:" << command << endl;
+      kWarning(7116) <<"Unknown special quota command:" << command;
       error( ERR_UNSUPPORTED_ACTION, QString(QChar(command)) );
   }
 }
@@ -1638,7 +1638,7 @@ IMAP4Protocol::specialQuotaCommand( int command, QDataStream& stream )
 void
 IMAP4Protocol::rename (const KUrl & src, const KUrl & dest, bool overwrite)
 {
-  kDebug(7116) << "IMAP4::rename - [" << (overwrite ? "Overwrite" : "NoOverwrite") << "] " << src << " -> " << dest << endl;
+  kDebug(7116) <<"IMAP4::rename - [" << (overwrite ?"Overwrite" :"NoOverwrite") <<"]" << src <<" ->" << dest;
   QString sBox, sSequence, sLType, sSection, sValidity, sDelimiter, sInfo;
   QString dBox, dSequence, dLType, dSection, dValidity, dDelimiter, dInfo;
   enum IMAP_TYPE sType =
@@ -1656,7 +1656,7 @@ IMAP4Protocol::rename (const KUrl & src, const KUrl & dest, bool overwrite)
       {
         if (getState() == ISTATE_SELECT && sBox == getCurrentBox())
         {
-          kDebug(7116) << "IMAP4::rename - close " << getCurrentBox() << endl;
+          kDebug(7116) <<"IMAP4::rename - close" << getCurrentBox();
           // mailbox can only be renamed if it is closed
           imapCommand *cmd = doCommand (imapCommand::clientClose());
           bool ok = cmd->result() == "OK";
@@ -1697,21 +1697,21 @@ void
 IMAP4Protocol::slave_status ()
 {
   bool connected = (getState() != ISTATE_NO) && isConnectionValid();
-  kDebug(7116) << "IMAP4::slave_status " << connected << endl;
+  kDebug(7116) <<"IMAP4::slave_status" << connected;
   slaveStatus ( connected ? myHost : QString(), connected );
 }
 
 void
 IMAP4Protocol::dispatch (int command, const QByteArray & data)
 {
-  kDebug(7116) << "IMAP4::dispatch - command=" << command << endl;
+  kDebug(7116) <<"IMAP4::dispatch - command=" << command;
   KIO::TCPSlaveBase::dispatch (command, data);
 }
 
 void
 IMAP4Protocol::stat (const KUrl & _url)
 {
-  kDebug(7116) << "IMAP4::stat - " << _url.prettyUrl() << endl;
+  kDebug(7116) <<"IMAP4::stat -" << _url.prettyUrl();
   QString aBox, aSequence, aLType, aSection, aValidity, aDelimiter, aInfo;
   // parseURL with caching
   enum IMAP_TYPE aType =
@@ -1805,7 +1805,7 @@ IMAP4Protocol::stat (const KUrl & _url)
 
         newUrl.setPath ("/" + aBox + ";UIDVALIDITY=" +
                         QString::number(validity));
-        kDebug(7116) << "IMAP4::stat - redirecting to " << newUrl.prettyUrl() << endl;
+        kDebug(7116) <<"IMAP4::stat - redirecting to" << newUrl.prettyUrl();
         redirection (newUrl);
       }
     }
@@ -1819,14 +1819,14 @@ IMAP4Protocol::stat (const KUrl & _url)
       if (validity > 0 && validity != aValidity.toULong ())
       {
         aType = ITYPE_UNKNOWN;
-        kDebug(7116) << "IMAP4::stat - url has invalid validity [" << validity << "d] " << _url.prettyUrl() << endl;
+        kDebug(7116) <<"IMAP4::stat - url has invalid validity [" << validity <<"d]" << _url.prettyUrl();
       }
     }
   }
 
   entry.insert( UDSEntry::UDS_MIME_TYPE,getMimeType (aType));
 
-  //kDebug(7116) << "IMAP4: stat: " << atom.m_str << endl;
+  //kDebug(7116) <<"IMAP4: stat:" << atom.m_str;
   switch (aType)
   {
   case ITYPE_DIR:
@@ -1849,7 +1849,7 @@ IMAP4Protocol::stat (const KUrl & _url)
   }
 
   statEntry (entry);
-  kDebug(7116) << "IMAP4::stat - Finishing stat" << endl;
+  kDebug(7116) <<"IMAP4::stat - Finishing stat";
   finished ();
 }
 
@@ -1885,9 +1885,9 @@ bool IMAP4Protocol::makeLogin ()
   if (getState () == ISTATE_LOGIN || getState () == ISTATE_SELECT)
     return true;
 
-  kDebug(7116) << "IMAP4::makeLogin - checking login" << endl;
+  kDebug(7116) <<"IMAP4::makeLogin - checking login";
   bool alreadyConnected = getState() == ISTATE_CONNECT;
-  kDebug(7116) << "IMAP4::makeLogin - alreadyConnected " << alreadyConnected << endl;
+  kDebug(7116) <<"IMAP4::makeLogin - alreadyConnected" << alreadyConnected;
   if (alreadyConnected || connectToHost (( mySSL ? IMAP_SSL_PROTOCOL : IMAP_PROTOCOL ), myHost,
         myPort))
   {
@@ -1897,7 +1897,7 @@ bool IMAP4Protocol::makeLogin ()
 
     myAuth = metaData("auth");
     myTLS  = metaData("tls");
-    kDebug(7116) << "myAuth: " << myAuth << endl;
+    kDebug(7116) <<"myAuth:" << myAuth;
 
     imapCommand *cmd;
 
@@ -1908,11 +1908,11 @@ bool IMAP4Protocol::makeLogin ()
     unhandled.clear ();       //get rid of it
     cmd = doCommand (new imapCommand ("CAPABILITY", ""));
 
-    kDebug(7116) << "IMAP4: setHost: capability" << endl;
+    kDebug(7116) <<"IMAP4: setHost: capability";
     for (QStringList::Iterator it = imapCapabilities.begin ();
          it != imapCapabilities.end (); ++it)
     {
-      kDebug(7116) << "'" << (*it) << "'" << endl;
+      kDebug(7116) <<"'" << (*it) <<"'";
     }
     completeQueue.removeRef (cmd);
 
@@ -1944,16 +1944,16 @@ bool IMAP4Protocol::makeLogin ()
         int tlsrc = startTLS();
         if (tlsrc == 1)
         {
-          kDebug(7116) << "TLS mode has been enabled." << endl;
+          kDebug(7116) <<"TLS mode has been enabled.";
           imapCommand *cmd2 = doCommand (new imapCommand ("CAPABILITY", ""));
           for (QStringList::Iterator it = imapCapabilities.begin ();
                                      it != imapCapabilities.end (); ++it)
           {
-            kDebug(7116) << "'" << (*it) << "'" << endl;
+            kDebug(7116) <<"'" << (*it) <<"'";
           }
           completeQueue.removeRef (cmd2);
         } else {
-          kWarning(7116) << "TLS mode setup has failed.  Aborting." << endl;
+          kWarning(7116) <<"TLS mode setup has failed.  Aborting.";
           error (ERR_COULD_NOT_LOGIN, i18n("Starting TLS failed."));
           closeConnection();
           return false;
@@ -1974,14 +1974,14 @@ bool IMAP4Protocol::makeLogin ()
       removeCapability( "ANNOTATEMORE" );
     }
 
-    kDebug(7116) << "IMAP4::makeLogin - attempting login" << endl;
+    kDebug(7116) <<"IMAP4::makeLogin - attempting login";
 
     KIO::AuthInfo authInfo;
     authInfo.username = myUser;
     authInfo.password = myPass;
     authInfo.prompt = i18n ("Username and password for your IMAP account:");
 
-    kDebug(7116) << "IMAP4::makeLogin - open_PassDlg said user=" << myUser << " pass=xx" << endl;
+    kDebug(7116) <<"IMAP4::makeLogin - open_PassDlg said user=" << myUser <<" pass=xx";
 
     QString resultInfo;
     if (myAuth.isEmpty () || myAuth == "*")
@@ -2015,7 +2015,7 @@ bool IMAP4Protocol::makeLogin ()
       cmd = doCommand( imapCommand::clientNamespace() );
       if (cmd->result () == "OK")
       {
-        kDebug(7116) << "makeLogin - registered namespaces" << endl;
+        kDebug(7116) <<"makeLogin - registered namespaces";
       }
       completeQueue.removeRef (cmd);
     }
@@ -2027,7 +2027,7 @@ bool IMAP4Protocol::makeLogin ()
       if ( it != listResponses.end() )
       {
         namespaceToDelimiter[QString()] = (*it).hierarchyDelimiter();
-        kDebug(7116) << "makeLogin - delimiter for empty ns='" << (*it).hierarchyDelimiter() << "'" << endl;
+        kDebug(7116) <<"makeLogin - delimiter for empty ns='" << (*it).hierarchyDelimiter() <<"'";
         if ( !hasCapability("NAMESPACE") )
         {
           // server does not support namespaces
@@ -2038,7 +2038,7 @@ bool IMAP4Protocol::makeLogin ()
     }
     completeQueue.removeRef (cmd);
   } else {
-    kDebug(7116) << "makeLogin - NO login" << endl;
+    kDebug(7116) <<"makeLogin - NO login";
   }
 
   return getState() == ISTATE_LOGIN;
@@ -2047,7 +2047,7 @@ bool IMAP4Protocol::makeLogin ()
 void
 IMAP4Protocol::parseWriteLine (const QString & aStr)
 {
-  //kDebug(7116) << "Writing: " << aStr << endl;
+  //kDebug(7116) <<"Writing:" << aStr;
   QByteArray writer = aStr.toUtf8();
   int len = writer.length();
 
@@ -2261,20 +2261,20 @@ IMAP4Protocol::parseURL (const KUrl & _url, QString & _box,
   retVal = ITYPE_UNKNOWN;
 
   imapParser::parseURL (_url, _box, _section, _type, _uid, _validity, _info);
-//  kDebug(7116) << "URL: query - '" << KUrl::fromPercentEncoding(_url.query()) << "'" << endl;
+//  kDebug(7116) <<"URL: query - '" << KUrl::fromPercentEncoding(_url.query()) <<"'";
 
   // get the delimiter
   QString myNamespace = namespaceForBox( _box );
-  kDebug(7116) << "IMAP4::parseURL - namespace=" << myNamespace << endl;
+  kDebug(7116) <<"IMAP4::parseURL - namespace=" << myNamespace;
   if ( namespaceToDelimiter.contains(myNamespace) )
   {
     _hierarchyDelimiter = namespaceToDelimiter[myNamespace];
-    kDebug(7116) << "IMAP4::parseURL - delimiter=" << _hierarchyDelimiter << endl;
+    kDebug(7116) <<"IMAP4::parseURL - delimiter=" << _hierarchyDelimiter;
   }
 
   if (!_box.isEmpty ())
   {
-    kDebug(7116) << "IMAP4::parseURL - box=" << _box << endl;
+    kDebug(7116) <<"IMAP4::parseURL - box=" << _box;
 
     if (makeLogin ())
     {
@@ -2296,7 +2296,7 @@ IMAP4Protocol::parseURL (const KUrl & _url, QString & _box,
             for (QList< imapList >::Iterator it = listResponses.begin ();
                 it != listResponses.end (); ++it)
             {
-              //kDebug(7116) << "IMAP4::parseURL - checking " << _box << " to " << (*it).name() << endl;
+              //kDebug(7116) <<"IMAP4::parseURL - checking" << _box <<" to" << (*it).name();
               if (_box == (*it).name ())
               {
                 if ( !(*it).hierarchyDelimiter().isEmpty() )
@@ -2321,7 +2321,7 @@ IMAP4Protocol::parseURL (const KUrl & _url, QString & _box,
               retVal = ITYPE_DIR;
             }
           } else {
-            kDebug(7116) << "IMAP4::parseURL - got error for " << _box << endl;
+            kDebug(7116) <<"IMAP4::parseURL - got error for" << _box;
           }
           completeQueue.removeRef (cmd);
         } // cache
@@ -2332,13 +2332,13 @@ IMAP4Protocol::parseURL (const KUrl & _url, QString & _box,
       }
     }
     else
-      kDebug(7116) << "IMAP4::parseURL: no login!" << endl;
+      kDebug(7116) <<"IMAP4::parseURL: no login!";
 
   }
   else // empty box
   {
     // the root is just a dir
-    kDebug(7116) << "IMAP4: parseURL: box [root]" << endl;
+    kDebug(7116) <<"IMAP4: parseURL: box [root]";
     retVal = ITYPE_DIR;
   }
 
@@ -2369,13 +2369,13 @@ IMAP4Protocol::parseURL (const KUrl & _url, QString & _box,
       int start = _url.path().lastIndexOf(_box);
       if (start != -1)
         _hierarchyDelimiter = _url.path().mid(start-1, start);
-      kDebug(7116) << "IMAP4::parseURL - reconstructed delimiter:" << _hierarchyDelimiter
+      kDebug(7116) <<"IMAP4::parseURL - reconstructed delimiter:" << _hierarchyDelimiter
         << " from URL " << _url.path() << endl;
     }
     if (_hierarchyDelimiter.isEmpty())
       _hierarchyDelimiter = "/";
   }
-  kDebug(7116) << "IMAP4::parseURL - return " << retVal << endl;
+  kDebug(7116) <<"IMAP4::parseURL - return" << retVal;
 
   return retVal;
 }
@@ -2429,7 +2429,7 @@ void IMAP4Protocol::flushOutput(QString contentEncoding)
       decoded = outputCache;
 
     QString mimetype = KMimeType::findByContent( decoded )->name();
-    kDebug(7116) << "IMAP4::flushOutput - mimeType " << mimetype << endl;
+    kDebug(7116) <<"IMAP4::flushOutput - mimeType" << mimetype;
     mimeType(mimetype);
     decodeContent = false;
     data( decoded );
@@ -2468,7 +2468,7 @@ IMAP4Protocol::assureBox (const QString & aBox, bool readonly)
   if (aBox != getCurrentBox () || (!getSelected().readWrite() && !readonly))
   {
     // open the box with the appropriate mode
-    kDebug(7116) << "IMAP4Protocol::assureBox - opening box" << endl;
+    kDebug(7116) <<"IMAP4Protocol::assureBox - opening box";
     selectInfo = imapInfo();
     cmd = doCommand (imapCommand::clientSelect (aBox, readonly));
     bool ok = cmd->result() == "OK";
@@ -2506,12 +2506,12 @@ IMAP4Protocol::assureBox (const QString & aBox, bool readonly)
     // Give the server a chance to deliver updates every ten seconds.
     // Doing this means a server roundtrip and since assureBox is called
     // after every mail, we do it with a timeout.
-    kDebug(7116) << "IMAP4Protocol::assureBox - reusing box" << endl;
+    kDebug(7116) <<"IMAP4Protocol::assureBox - reusing box";
     if ( mTimeOfLastNoop.secsTo( QDateTime::currentDateTime() ) > 10 ) {
       cmd = doCommand (imapCommand::clientNoop ());
       completeQueue.removeRef (cmd);
       mTimeOfLastNoop = QDateTime::currentDateTime();
-      kDebug(7116) << "IMAP4Protocol::assureBox - noop timer fired" << endl;
+      kDebug(7116) <<"IMAP4Protocol::assureBox - noop timer fired";
     }
   }
 

@@ -128,7 +128,7 @@ void imapList::parseAttributes( parseString & str )
     else if ( attribute.contains ("\\hasnochildren"))
       hasNoChildren_ = true;
     else
-      kDebug(7116) << "imapList::imapList: bogus attribute " << attribute << endl;
+      kDebug(7116) <<"imapList::imapList: bogus attribute" << attribute;
   }
 }
 

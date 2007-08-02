@@ -341,7 +341,7 @@ mimeHeader::setParameter (const QByteArray& aLabel, const QString& aValue,
     {
       val = KIMAP::encodeRFC2231String (aValue);
     }
-     //kDebug(7116) << "mimeHeader::setParameter() - val = '" << val << "'" << endl;
+     //kDebug(7116) <<"mimeHeader::setParameter() - val = '" << val <<"'";
     //see if it needs to be truncated
     vlen = val.length();
     llen = aLabel.length();
@@ -390,9 +390,9 @@ mimeHeader::setParameter (const QByteArray& aLabel, const QString& aValue,
           }
           shortLabel += "*";
         }
-        //kDebug(7116) << "mimeHeader::setParameter() - shortLabel = '" << shortLabel << "'" << endl;
-        //kDebug(7116) << "mimeHeader::setParameter() - shortValue = '" << shortValue << "'" << endl;
-        //kDebug(7116) << "mimeHeader::setParameter() - val        = '" << val << "'" << endl;
+        //kDebug(7116) <<"mimeHeader::setParameter() - shortLabel = '" << shortLabel <<"'";
+        //kDebug(7116) <<"mimeHeader::setParameter() - shortValue = '" << shortValue <<"'";
+        //kDebug(7116) <<"mimeHeader::setParameter() - val        = '" << val <<"'";
         aDict->insert (shortLabel, new QString (shortValue));
         i++;
       }
@@ -464,7 +464,7 @@ mimeHeader::parsePart (mimeIO & useIO, const QString& boundary)
   QByteArray preNested, postNested;
   mbox = parseHeader (useIO);
 
-  kDebug(7116) << "mimeHeader::parsePart - parsing part '" << getType () << "'" << endl;
+  kDebug(7116) <<"mimeHeader::parsePart - parsing part '" << getType () <<"'";
   if (!qstrnicmp (getType (), "Multipart", 9))
   {
     retVal = parseBody (useIO, preNested, getTypeParm ("boundary"));  //this is a message in mime format stuff
@@ -554,7 +554,7 @@ bool mimeHeader::parseHeader (mimeIO & useIO)
   mimeHdrLine my_line;
   QByteArray inputStr;
 
-  kDebug(7116) << "mimeHeader::parseHeader - starting parsing" << endl;
+  kDebug(7116) <<"mimeHeader::parseHeader - starting parsing";
   while (useIO.inputLine (inputStr))
   {
     int appended;
@@ -578,7 +578,7 @@ bool mimeHeader::parseHeader (mimeIO & useIO)
     inputStr = QByteArray();
   }
 
-  kDebug(7116) << "mimeHeader::parseHeader - finished parsing" << endl;
+  kDebug(7116) <<"mimeHeader::parseHeader - finished parsing";
   return mbox;
 }
 
@@ -595,12 +595,12 @@ mimeHeader::bodyPart (const QString & _str)
     tempStr = _str.right (_str.length () - pt - 1);
     if (nestedMessage)
     {
-      kDebug(7116) << "mimeHeader::bodyPart - recursing message" << endl;
+      kDebug(7116) <<"mimeHeader::bodyPart - recursing message";
       tempPart = nestedMessage->nestedParts.at (_str.left(pt).toULong() - 1);
     }
     else
     {
-      kDebug(7116) << "mimeHeader::bodyPart - recursing mixed" << endl;
+      kDebug(7116) <<"mimeHeader::bodyPart - recursing mixed";
       tempPart = nestedParts.at (_str.left(pt).toULong() - 1);
     }
     if (tempPart)
@@ -608,14 +608,14 @@ mimeHeader::bodyPart (const QString & _str)
     return tempPart;
   }
 
-  kDebug(7116) << "mimeHeader::bodyPart - returning part " << _str << endl;
+  kDebug(7116) <<"mimeHeader::bodyPart - returning part" << _str;
   // or pick just the plain part
   if (nestedMessage)
   {
-    kDebug(7116) << "mimeHeader::bodyPart - message" << endl;
+    kDebug(7116) <<"mimeHeader::bodyPart - message";
     return nestedMessage->nestedParts.at (_str.toULong () - 1);
   }
-  kDebug(7116) << "mimeHeader::bodyPart - mixed" << endl;
+  kDebug(7116) <<"mimeHeader::bodyPart - mixed";
   return nestedParts.at (_str.toULong () - 1);
 }
 
@@ -654,7 +654,7 @@ void mimeHeader::serialize(QDataStream& stream)
 QString
 mimeHeader::bodyDecoded ()
 {
-  kDebug(7116) << "mimeHeader::bodyDecoded" << endl;
+  kDebug(7116) <<"mimeHeader::bodyDecoded";
   QByteArray temp = bodyDecodedBinary ();
   return QString::fromLatin1 (temp.data (), temp.count ());
 }
@@ -670,7 +670,7 @@ mimeHeader::bodyDecodedBinary ()
     KCodecs::base64Decode(postMultipartBody, retVal);
   else retVal = postMultipartBody;
 
-  kDebug(7116) << "mimeHeader::bodyDecodedBinary - size is " << retVal.size () << endl;
+  kDebug(7116) <<"mimeHeader::bodyDecodedBinary - size is" << retVal.size ();
   return retVal;
 }
 
@@ -685,17 +685,17 @@ mimeHeader::setBodyEncoded (const QByteArray & _arr)
 {
   QByteArray setVal;
 
-  kDebug(7116) << "mimeHeader::setBodyEncoded - in size " << _arr.size () << endl;
+  kDebug(7116) <<"mimeHeader::setBodyEncoded - in size" << _arr.size ();
   if (contentEncoding.startsWith ("quoted-printable", Qt::CaseInsensitive) )
     setVal = KCodecs::quotedPrintableEncode(_arr);
   else if (contentEncoding.startsWith ("base64", Qt::CaseInsensitive) )
     KCodecs::base64Encode(_arr, setVal);
   else
     setVal.duplicate (_arr);
-  kDebug(7116) << "mimeHeader::setBodyEncoded - out size " << setVal.size () << endl;
+  kDebug(7116) <<"mimeHeader::setBodyEncoded - out size" << setVal.size ();
 
   postMultipartBody.duplicate (setVal);
-  kDebug(7116) << "mimeHeader::setBodyEncoded - out size " << postMultipartBody.size () << endl;
+  kDebug(7116) <<"mimeHeader::setBodyEncoded - out size" << postMultipartBody.size ();
 }
 
 QString

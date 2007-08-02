@@ -215,7 +215,7 @@ void BoxContainerItem::drawLabel( QLabel *label, const int count, const bool new
 
 	if( !_settings )
 	{
-		kWarning() << "Drawing label before settings are initialized!" << endl;
+		kWarning() <<"Drawing label before settings are initialized!";
 		return;
 	}
 	

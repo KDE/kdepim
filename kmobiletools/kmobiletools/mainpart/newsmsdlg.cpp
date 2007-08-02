@@ -41,7 +41,7 @@ newSMSDlg::newSMSDlg(QWidget *parent, const QString &name)
     setObjectName(name);
     setCaption(i18n("New SMS"));
     setButtons(Cancel | User1 | User2);
-    kDebug() << "newSMSDlg with name " << name << endl;
+    kDebug() <<"newSMSDlg with name" << name;
     p_sms=0;
     ui.setupUi(mainWidget());
 //     ui.smsText->setText(name);
@@ -181,7 +181,7 @@ void newSMSDlg::slotUser2()
 
 void newSMSDlg::createSMSItem()
 {
-//     kDebug() << "newSMSDlg; numbers: " << sl_numbers << endl;
+//     kDebug() <<"newSMSDlg; numbers:" << sl_numbers;
     p_sms=new KMobileTools::SMS(sl_numbers, ui.smsText->text() );
     p_sms->setType( KMobileTools::SMS::Unsent );
 }

@@ -158,7 +158,7 @@ const QString WebdavHandler::getEtagFromHeaders( const QString& headers )
 QDateTime WebdavHandler::utcAsZone( const QDateTime& utc, const QString& timeZoneId )
 {
   if ( utc.timeSpec() != Qt::UTC ) {
-    kError() << "WebdavHandler::utcAsZone(): non-UTC time supplied" << endl;
+    kError() <<"WebdavHandler::utcAsZone(): non-UTC time supplied";
     return utc;
   }
   KTimeZone tz = KSystemTimeZones::zone( timeZoneId );
@@ -174,7 +174,7 @@ QDateTime WebdavHandler::utcAsZone( const QDateTime& utc, const QString& timeZon
 QDateTime WebdavHandler::zoneAsUtc( const QDateTime& zone, const QString& timeZoneId )
 {
   if ( zone.timeSpec() == Qt::UTC ) {
-    kError() << "WebdavHandler::zoneAsUtc(): UTC time supplied" << endl;
+    kError() <<"WebdavHandler::zoneAsUtc(): UTC time supplied";
     return zone;
   }
   KTimeZone tz = KSystemTimeZones::zone( timeZoneId );

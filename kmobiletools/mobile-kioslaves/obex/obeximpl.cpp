@@ -51,16 +51,16 @@ OBEXImpl::OBEXImpl() : QObject()
 void OBEXImpl::setHostConfig(const QString &device, int port, transport i_transport )
 {
     obexWrapper->disconnectClient();
-    kDebug() << "OBEXImpl::setHostConfig(" << device << ", " << port << ", " << (int) i_transport << ")" << endl;
-    kDebug() << "Using transport " << i_transport << endl;
+    kDebug() <<"OBEXImpl::setHostConfig(" << device <<"," << port <<"," << (int) i_transport <<")";
+    kDebug() <<"Using transport" << i_transport;
     obexWrapper->setupParameters(i_transport, port, device, UUID_FBS, sizeof(UUID_FBS) , 1, 1);
     obexWrapper->connectClient();
 }
 
 bool OBEXImpl::listDirectory(const KUrl &url, Q3ValueList<KIO::UDSEntry> &list)
 {
-    kDebug() << "OBEXImpl::listDirectory: " << url << endl;
-    kDebug() << "OBEXImpl::listDirectory---- directory path only: " << url.path() << endl;
+    kDebug() <<"OBEXImpl::listDirectory:" << url;
+    kDebug() <<"OBEXImpl::listDirectory---- directory path only:" << url.path();
 
     QString neededPath = url.path();
     
@@ -114,20 +114,20 @@ void OBEXImpl::createEntry(KIO::UDSEntry &entry,
     
     KMimeType mimetype=(* KMimeType::findByURL( directory+filename, file.mode, false,  true));
     KDesktopFile desktop(directory+file.name, true);
-    kDebug() << "KDesktopFile:: " << desktop.fileName() << endl;
+    kDebug() <<"KDesktopFile::" << desktop.fileName();
 
     entry.clear();
 
     addAtom(entry, KIO::UDSEntry::UDS_NAME, 0, file.name);
     addAtom(entry, KIO::UDSEntry::UDS_SIZE, file.size);
     //  addAtom(entry, KIO::UDSEntry::UDS_URL, 0, "obex:/"+directory + filename);
-    //  kDebug() << "*******debug UDSEntry::UDS_URL: obex:/" << directory << filename << endl;
+    //  kDebug() <<"*******debug UDSEntry::UDS_URL: obex:/" << directory << filename;
     //  addAtom(entry, KIO::UDSEntry::UDS_FILE_TYPE, (S_IRUSR | S_IRGRP | S_IROTH | S_IXUSR | S_IXGRP | S_IXOTH) );
     addAtom(entry, KIO::UDSEntry::UDS_FILE_TYPE, file.mode );
     addAtom(entry, KIO::UDSEntry::UDS_CREATION_TIME, file.mtime );
     addAtom(entry, KIO::UDSEntry::UDS_MIME_TYPE, 0, mimetype.name() );
 
-    kDebug() << directory+file.name << " mime type: " << mimetype.name() << "; file attributes: " << file.mode << endl;
+    kDebug() << directory+file.name <<" mime type:" << mimetype.name() <<"; file attributes:" << file.mode;
 
     QString icon = desktop.readIcon();
     QString empty_icon = desktop.readEntry("EmptyIcon");
@@ -188,7 +188,7 @@ void OBEXImpl::fetchFilesList( const QString &path )
 
 int OBEXImpl::getFile(const KUrl &url)
 {
-    kDebug() << "kio_obex::getFile " << url.path() << endl;
+    kDebug() <<"kio_obex::getFile" << url.path();
     return obexWrapper->getFile( url.path());
     return 0;
 }
@@ -199,7 +199,7 @@ int OBEXImpl::getFile(const KUrl &url)
 
 bool OBEXImpl::statEntry(const KUrl &url, KIO::UDSEntry &entry)
 {
-    kDebug() << "Stat for " << url.path() << endl;
+    kDebug() <<"Stat for" << url.path();
 
     QString neededPath = url.path().latin1();
     stat_entry_t* currentEntry;

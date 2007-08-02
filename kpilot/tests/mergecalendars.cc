@@ -60,11 +60,11 @@ int main(int argc, char **argv)
 
 	if (korgfile.isEmpty())
 	{
-		kError() << "! Must provide a korganizer file." << endl;
+		kError() <<"! Must provide a korganizer file.";
 	}
 	if (newfile.isEmpty())
 	{
-		kError() << "! Must provide a newfile file." << endl;
+		kError() <<"! Must provide a newfile file.";
 	}
 	if (korgfile.isEmpty() || newfile.isEmpty())
 	{
@@ -74,35 +74,35 @@ int main(int argc, char **argv)
 	QString korgsave = QString("%1.updated").arg(korgfile);
 	QString newfilesave = QString("%1.updated").arg(newfile);
 
-	kDebug() << "Using korgfile: [" << korgfile 
+	kDebug() <<"Using korgfile: [" << korgfile 
 		<< "]" << endl;
-	kDebug() << "Using newfile: [" << newfile
+	kDebug() <<"Using newfile: [" << newfile
 		<< "]" << endl;
-	kDebug() << "Will save korgfile to: [" << korgsave 
+	kDebug() <<"Will save korgfile to: [" << korgsave 
 		<< "]" << endl;
-	kDebug() << "Will save newfile to: [" << newfilesave
+	kDebug() <<"Will save newfile to: [" << newfilesave
 		<< "]" << endl << endl;
 
 	KCal::CalendarLocal *calkorg = new KCal::CalendarLocal( QString::fromLatin1("UTC") );
 	KCal::CalendarLocal *calnew = new KCal::CalendarLocal( QString::fromLatin1("UTC") );
 	if (!calkorg || !calnew)
 	{
-		kError() << "Unable to create base calendar objects." << endl;
+		kError() <<"Unable to create base calendar objects.";
 		return 1;
 	}
 
 	if (!calkorg->load(korgfile) || !calnew->load(newfile))
 	{
-		kError() << "Unable to load calendar files." << endl;
+		kError() <<"Unable to load calendar files.";
 		return 1;
 	}
 
 	int numkorgstart = calkorg->incidences().count();
 	int numnewstart = calnew->incidences().count();
 
-	kDebug() << "  - Opened korganizer calendar with: [" 
+	kDebug() <<"  - Opened korganizer calendar with: [" 
 		<< numkorgstart << "] incidences." << endl;
-	kDebug() << "  - Opened newfile calendar with: [" 
+	kDebug() <<"  - Opened newfile calendar with: [" 
 		<< numnewstart << "] incidences." << endl;
 	
 
@@ -116,7 +116,7 @@ int main(int argc, char **argv)
 	newEvents = calnew->events();
 	newEvents.setAutoDelete(false);
 
-	kDebug() << "Looking for previous pilot ids for exchange events..." << endl;
+	kDebug() <<"Looking for previous pilot ids for exchange events...";
 
 	// iterate through all events and try to find a korganizer event
 	// that matches up with this external event's UID
@@ -127,7 +127,7 @@ int main(int argc, char **argv)
 		ev = *newIt;
 		QString uid = ev->uid();
 		if (debug_level)
-			kDebug() << "  - Looking at event: [" 
+			kDebug() <<"  - Looking at event: [" 
 			<< ev->summary() << "], uid: ["
 			<< uid << "]" << endl;
 
@@ -137,7 +137,7 @@ int main(int argc, char **argv)
 			unsigned long pilotId = evkorg->pilotId();
 
 			if (debug_level)
-				kDebug() << "Found korg event for uid: ["
+				kDebug() <<"Found korg event for uid: ["
 				<< uid << "], pilotId: [" 
 				<< pilotId << "]" << endl;
 
@@ -148,9 +148,9 @@ int main(int argc, char **argv)
 		}
 	}
 
-	kDebug() << "Matched: [" << numkorgpilotids << "] events."<< endl;
+	kDebug() <<"Matched: [" << numkorgpilotids <<"] events.";
 
-	kDebug() << "Now searching for previous WorkXChange events in korganizer's calendar." << endl;
+	kDebug() <<"Now searching for previous WorkXChange events in korganizer's calendar.";
 
 	// iterate through all events and try to find a korganizer event
 	// that matches up with this external event's UID
@@ -176,7 +176,7 @@ int main(int argc, char **argv)
 		if (ev->categoriesStr().contains(categoryToken))
 		{
 			if (debug_level)
-				kDebug() << "  - Found matching event: [" 
+				kDebug() <<"  - Found matching event: [" 
 				<< ev->summary() << "], uid: ["
 				<< ev->uid() << "]. Removing." << endl;
 
@@ -187,11 +187,11 @@ int main(int argc, char **argv)
 		}
 	}
 
-	kDebug() << "  - Found: [" << numkorgremoved
+	kDebug() <<"  - Found: [" << numkorgremoved
 		<< "] prior: [" << categoryToken 
 		<< "] category events." << endl;
 	
-	kDebug() << "Merging new events into korganizer calendar..." 
+	kDebug() <<"Merging new events into korganizer calendar..." 
 		<< endl;
 
 	for (newIt = newEvents.begin(); newIt != newEvents.end(); ++newIt ) 
@@ -201,13 +201,13 @@ int main(int argc, char **argv)
 		calkorg->addEvent(ev);
 	}
 
-	kDebug() << "Ended up with: [" << korgEvents.count() 
+	kDebug() <<"Ended up with: [" << korgEvents.count() 
 		<< "] events in korganizer calendar." << endl;
 
-	kDebug() << "Saving updated korganizer file..." << endl;
+	kDebug() <<"Saving updated korganizer file...";
 	calkorg->save(korgsave);
 
-	kDebug() << "Saving updated newfile file..." << endl;
+	kDebug() <<"Saving updated newfile file...";
 	calnew->save(newfilesave);
 
 	return 0;

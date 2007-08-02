@@ -110,13 +110,13 @@ void ResourceSlox::init()
 
 ResourceSlox::~ResourceSlox()
 {
-  kDebug() << "KABC::~ResourceSlox()" << endl;
+  kDebug() <<"KABC::~ResourceSlox()";
 
   if ( mDownloadJob ) mDownloadJob->kill();
 
   delete mPrefs;
 
-  kDebug() << "KABC::~ResourceSlox() done" << endl;
+  kDebug() <<"KABC::~ResourceSlox() done";
 }
 
 void ResourceSlox::readConfig( const KConfigGroup & )
@@ -126,8 +126,8 @@ void ResourceSlox::readConfig( const KConfigGroup & )
 
 void ResourceSlox::writeConfig( KConfigGroup &group )
 {
-  kDebug() << "ResourceSlox::writeConfig() " << endl;
-  kDebug() << mPrefs->url() << endl;
+  kDebug() <<"ResourceSlox::writeConfig()";
+  kDebug() << mPrefs->url();
 
   Resource::writeConfig( group );
 
@@ -137,7 +137,7 @@ void ResourceSlox::writeConfig( KConfigGroup &group )
 Ticket *ResourceSlox::requestSaveTicket()
 {
   if ( !addressBook() ) {
-	  kDebug(5700) << "no addressbook" << endl;
+	  kDebug(5700) <<"no addressbook";
     return 0;
   }
 
@@ -162,22 +162,22 @@ void ResourceSlox::doClose()
 
 bool ResourceSlox::load()
 {
-  kDebug() << "KABC::ResourceSlox::load()" << endl;
+  kDebug() <<"KABC::ResourceSlox::load()";
 
 #if 0
   return asyncLoad();
 #else
-  kDebug() << "KABC::ResourceSlox::load() is a nop." << endl;
+  kDebug() <<"KABC::ResourceSlox::load() is a nop.";
   return true;
 #endif
 }
 
 bool ResourceSlox::asyncLoad()
 {
-  kDebug() << "KABC::ResourceSlox::asyncLoad()" << endl;
+  kDebug() <<"KABC::ResourceSlox::asyncLoad()";
 
   if ( mDownloadJob ) {
-    kDebug() << "KABC::ResourceSlox::asyncLoad(): Loading still in progress."
+    kDebug() <<"KABC::ResourceSlox::asyncLoad(): Loading still in progress."
                 << endl;
     return true;
   }
@@ -208,7 +208,7 @@ bool ResourceSlox::asyncLoad()
   } else
     WebdavHandler::addSloxElement( this, doc, prop, fieldName( ObjectType ), "all" );
 
-  kDebug() << "REQUEST CONTACTS: \n" << doc.toString( 2 ) << endl;
+  kDebug() <<"REQUEST CONTACTS:" << doc.toString( 2 );
 
   mDownloadJob = KIO::davPropFind( url, doc, "0", false );
   connect( mDownloadJob, SIGNAL( result( KJob * ) ),
@@ -229,12 +229,12 @@ bool ResourceSlox::asyncLoad()
 
 void ResourceSlox::slotResult( KJob *job )
 {
-  kDebug() << "ResourceSlox::slotResult()" << endl;
+  kDebug() <<"ResourceSlox::slotResult()";
 
   if ( job->error() ) {
     static_cast<KIO::Job*>(job)->ui()->showErrorMessage();
   } else {
-    kDebug() << "ResourceSlox::slotResult() success" << endl;
+    kDebug() <<"ResourceSlox::slotResult() success";
 
     QDomDocument doc = mDownloadJob->response();
 
@@ -294,16 +294,16 @@ void ResourceSlox::slotResult( KJob *job )
 
 void ResourceSlox::slotUploadResult( KJob *job )
 {
-  kDebug() << "ResourceSlox::slotUploadResult()" << endl;
+  kDebug() <<"ResourceSlox::slotUploadResult()";
 
   if ( job->error() ) {
     static_cast<KIO::Job*>(job)->ui()->showErrorMessage();
   } else {
-    kDebug() << "ResourceSlox::slotUploadResult() success" << endl;
+    kDebug() <<"ResourceSlox::slotUploadResult() success";
 
     QDomDocument doc = mUploadJob->response();
-    kDebug() << k_funcinfo << "Upload result: " << endl;
-    kDebug() << doc.toString() << endl;
+    kDebug() << k_funcinfo <<"Upload result:";
+    kDebug() << doc.toString();
 
     QList<SloxItem> items = WebdavHandler::getSloxItems( this, doc );
 
@@ -449,7 +449,7 @@ KABC::PhoneNumber::Type ResourceSlox::phoneNumberType( const QString &fieldName 
 
 bool ResourceSlox::save( Ticket* )
 {
-  kDebug() << k_funcinfo << endl;
+  kDebug() << k_funcinfo;
 
   if ( readOnly() || !hasChanges() || type() != "ox" ) {
     emit savingFinished( this );
@@ -457,11 +457,11 @@ bool ResourceSlox::save( Ticket* )
   }
 
   if ( mDownloadJob ) {
-    kWarning() << k_funcinfo << "download still in progress" << endl;
+    kWarning() << k_funcinfo <<"download still in progress";
     return false;
   }
   if ( mUploadJob ) {
-    kWarning() << k_funcinfo << "upload still in progress" << endl;
+    kWarning() << k_funcinfo <<"upload still in progress";
     return false;
   }
 
@@ -499,7 +499,7 @@ void ResourceSlox::uploadContacts()
     mUploadAddressee = deletedAddr.first();
     isDelete = true;
   } else {
-    kDebug() << k_funcinfo << "Upload finished." << endl;
+    kDebug() << k_funcinfo <<"Upload finished.";
     emit savingFinished( this );
     return;
   }
@@ -512,7 +512,7 @@ void ResourceSlox::uploadContacts()
     WebdavHandler::addSloxElement( this, doc, prop, "method", "DELETE" );
   }
 
-  kDebug() << k_funcinfo << doc.toString() << endl;
+  kDebug() << k_funcinfo << doc.toString();
 
   KUrl url = mPrefs->url();
   url.setPath( "/servlet/webdav.contacts/" );
@@ -608,7 +608,7 @@ void ResourceSlox::createAddresseeFields( QDomDocument &doc, QDomElement &prop,
         pnSaveMap.remove( (*it).type() );
       WebdavHandler::addSloxElement( this, doc, prop, fn, (*it).number() );
     } else
-      kDebug() << k_funcinfo << "Can't save phone number " << (*it).number() << " of type " << (*it).type() << endl;
+      kDebug() << k_funcinfo <<"Can't save phone number" << (*it).number() <<" of type" << (*it).type();
   }
   // send empty fields for the remaining ohone number fields
   // it's not possible to delete phone numbers otherwise

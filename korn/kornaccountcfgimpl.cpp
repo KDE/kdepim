@@ -110,7 +110,7 @@ void KornAccountCfgImpl::writeConfig()
 
 	if( !protocol )
 	{
-		kWarning() << "An error occurred during writing the account information: protocol does not exist" << endl;
+		kWarning() <<"An error occurred during writing the account information: protocol does not exist";
 		return;
 	}
 

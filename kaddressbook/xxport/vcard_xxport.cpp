@@ -357,7 +357,7 @@ void VCardXXPort::addKey( KABC::Addressee &addr, KABC::Key::Type type )
 
   GpgME::Context * context = GpgME::Context::createForProtocol( GpgME::OpenPGP );
   if ( !context ) {
-    kError() << "No context available" << endl;
+    kError() <<"No context available";
     return;
   }
 
@@ -370,7 +370,7 @@ void VCardXXPort::addKey( KABC::Addressee &addr, KABC::Key::Type type )
   delete context;
 
   if ( error ) {
-    kError() << error.asString() << endl;
+    kError() << error.asString();
     return;
   }
 

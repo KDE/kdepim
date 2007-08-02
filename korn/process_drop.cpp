@@ -71,7 +71,7 @@ void ProcessDrop::recheck()
 		_process->start();
 		_valid = _process->waitForStarted();
 		if( !_valid )
-			kWarning() << i18n( "Could not start process %1", *_program ) << endl;
+			kWarning() << i18n("Could not start process %1", *_program );
 	}
 
 }

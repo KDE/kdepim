@@ -43,7 +43,7 @@
 SloxAccounts::SloxAccounts( SloxBase *res, const KUrl &baseUrl )
   : mBaseUrl( baseUrl ), mRes( res )
 {
-  kDebug() << "SloxAccounts(): " << baseUrl << endl;
+  kDebug() <<"SloxAccounts():" << baseUrl;
 
   mDownloadJob = 0;
 
@@ -59,14 +59,14 @@ SloxAccounts::SloxAccounts( SloxBase *res, const KUrl &baseUrl )
 
 SloxAccounts::~SloxAccounts()
 {
-  kDebug() << "~SloxAccounts()" << endl;
+  kDebug() <<"~SloxAccounts()";
 
   if ( mDownloadJob ) mDownloadJob->kill();
 }
 
 void SloxAccounts::insertUser( const QString &id, const KABC::Addressee &a )
 {
-  kDebug() << "SloxAccount::insertUser() " << id << endl;
+  kDebug() <<"SloxAccount::insertUser()" << id;
 
   mUsers.insert( id, a );
 
@@ -92,12 +92,12 @@ KABC::Addressee SloxAccounts::lookupUser( const QString &id )
 
 QString SloxAccounts::lookupId( const QString &email )
 {
-  kDebug() << "SloxAccounts::lookupId() " << email << endl;
+  kDebug() <<"SloxAccounts::lookupId()" << email;
 
   QMap<QString, KABC::Addressee>::ConstIterator it;
   for( it = mUsers.begin(); it != mUsers.end(); ++it ) {
-    kDebug() << "PREF: " << (*it).preferredEmail() << endl;
-    kDebug() << "KEY: " << it.key() << endl;
+    kDebug() <<"PREF:" << (*it).preferredEmail();
+    kDebug() <<"KEY:" << it.key();
     if ( (*it).preferredEmail() == email ) return it.key();
   }
   requestAccounts();
@@ -109,10 +109,10 @@ QString SloxAccounts::lookupId( const QString &email )
 
 void SloxAccounts::requestAccounts()
 {
-  kDebug() << "SloxAccounts::requestAccounts()" << endl;
+  kDebug() <<"SloxAccounts::requestAccounts()";
 
   if ( mDownloadJob ) {
-    kDebug() << "SloxAccount::requestAccounts(): Download still in progress"
+    kDebug() <<"SloxAccount::requestAccounts(): Download still in progress"
               << endl;
     return;
   }
@@ -122,7 +122,7 @@ void SloxAccounts::requestAccounts()
     url.addPath( "/servlet/webdav.groupuser" );
     url.setQuery( "?user=*&group=*&groupres=*&res=*&details=t" );
 
-    kDebug() << "SloxAccounts::requestAccounts() URL: " << url << endl;
+    kDebug() <<"SloxAccounts::requestAccounts() URL:" << url;
 
     mDownloadJob = KIO::file_copy( url, cacheFile(), -1, true, false, false );
   } else if ( mRes->resType() == "ox" ) {
@@ -137,7 +137,7 @@ void SloxAccounts::requestAccounts()
     WebdavHandler::addSloxElement( mRes, doc, prop, "resource", "*" );
     WebdavHandler::addSloxElement( mRes, doc, prop, "resourcegroup", "*" );
 
-    kDebug() << k_funcinfo << doc.toString( 2 ) << endl;
+    kDebug() << k_funcinfo << doc.toString( 2 );
 
     mDownloadJob = KIO::davPropFind( url, doc, "0", false );
   }
@@ -148,7 +148,7 @@ void SloxAccounts::requestAccounts()
 
 void SloxAccounts::slotResult( KJob *job )
 {
-  kDebug() << "SloxAccounts::slotResult()" << endl;
+  kDebug() <<"SloxAccounts::slotResult()";
 
   if ( job->error() ) {
     static_cast<KIO::Job*>(job)->ui()->showErrorMessage();
@@ -156,7 +156,7 @@ void SloxAccounts::slotResult( KJob *job )
     if ( mRes->resType() == "ox" ) {
       QFile f( cacheFile() );
       if ( !f.open( QIODevice::WriteOnly ) ) {
-        kWarning() << "Unable to open '" << cacheFile() << "'" << endl;
+        kWarning() <<"Unable to open '" << cacheFile() <<"'";
         return;
       }
       QTextStream stream ( &f );
@@ -175,18 +175,18 @@ QString SloxAccounts::cacheFile() const
 
   QString file = KStandardDirs::locateLocal( "cache", "slox/accounts_" + host );
 
-  kDebug() << "SloxAccounts::cacheFile(): " << file << endl;
+  kDebug() <<"SloxAccounts::cacheFile():" << file;
 
   return file;
 }
 
 void SloxAccounts::readAccounts()
 {
-  kDebug() << "SloxAccounts::readAccounts()" << endl;
+  kDebug() <<"SloxAccounts::readAccounts()";
 
   QFile f( cacheFile() );
   if ( !f.open( QIODevice::ReadOnly ) ) {
-    kDebug() << "Unable to open '" << cacheFile() << "'" << endl;
+    kDebug() <<"Unable to open '" << cacheFile() <<"'";
     requestAccounts();
     return;
   }
@@ -194,7 +194,7 @@ void SloxAccounts::readAccounts()
   QDomDocument doc;
   doc.setContent( &f );
 
-//  kDebug() << "SLOX ACCOUNTS: " << doc.toString( 2 ) << endl;
+//  kDebug() <<"SLOX ACCOUNTS:" << doc.toString( 2 );
 
   QDomElement docElement = doc.documentElement();
 
@@ -217,7 +217,7 @@ void SloxAccounts::readAccounts()
       else if ( tag == "forename" ) a.setGivenName( value );
       else if ( tag == "surename" ) a.setFamilyName( value );
     }
-//     kDebug() << "MAIL: " << a.preferredEmail() << endl;
+//     kDebug() <<"MAIL:" << a.preferredEmail();
     insertUser( id, a );
   }
 }

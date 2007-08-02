@@ -217,7 +217,7 @@ QString ResourceKolabBase::findWritableResource( const ResourceMap& resources,
   }
 
   if ( possible.isEmpty() ) { // None found!!
-    kWarning(5650) << "No writable resource found!" << endl;
+    kWarning(5650) <<"No writable resource found!";
     KMessageBox::error( 0, i18n( "No writable resource was found, saving will not be possible. Reconfigure KMail first." ) );
     return QString();
   }

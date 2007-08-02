@@ -40,7 +40,7 @@ host (lr.host),
 rawFullName (lr.rawFullName),
 rawComment (lr.rawComment)
 {
-//  kDebug(7116) << "mailAddress::mailAddress - " << getStr() << endl;
+//  kDebug(7116) <<"mailAddress::mailAddress -" << getStr();
 }
 
 mailAddress & mailAddress::operator = (const mailAddress & lr)
@@ -54,7 +54,7 @@ mailAddress & mailAddress::operator = (const mailAddress & lr)
   rawFullName = lr.rawFullName;
   rawComment = lr.rawComment;
 
-//  kDebug(7116) << "mailAddress::operator= - " << getStr() << endl;
+//  kDebug(7116) <<"mailAddress::operator= -" << getStr();
 
   return *this;
 }
@@ -221,7 +221,7 @@ const QByteArray mailAddress::getStr ()
   {
     retVal = '(' + rawComment + ')';
   }
-//  kDebug(7116) << "mailAddress::getStr - '" << retVal << "'" << endl;
+//  kDebug(7116) <<"mailAddress::getStr - '" << retVal <<"'";
   return retVal;
 }
 

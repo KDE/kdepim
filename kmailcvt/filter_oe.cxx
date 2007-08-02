@@ -101,9 +101,9 @@ void FilterOE::import(FilterInfo *info)
     info->addLog(i18n("Finished importing Outlook Express emails"));
     if (info->shouldTerminate()) info->addLog( i18n("Finished import, canceled by user."));
 
-    kDebug() << "\n" << "total emails in current file: " << totalEmails << endl;
-    kDebug() << "0x84 Mails: " << count0x84 << endl;
-    kDebug() << "0x04 Mails: " << count0x04 << endl;
+    kDebug() <<"" <<"total emails in current file:" << totalEmails;
+    kDebug() <<"0x84 Mails:" << count0x84;
+    kDebug() <<"0x04 Mails:" << count0x04;
 }
 
 void FilterOE::importMailBox( FilterInfo *info, const QString& fileName)
@@ -168,7 +168,7 @@ void FilterOE::mbxImport( FilterInfo *info, QDataStream& ds)
     // Read the header
     ds >> msgCount >> lastMsgNum >> fileSize;
     ds.device()->seek( ds.device()->pos() + 64 ); // Skip 0's
-    kDebug() << "This mailbox has " << msgCount << " messages" << endl;
+    kDebug() <<"This mailbox has" << msgCount <<" messages";
     if (msgCount == 0)
         return; // Don't import empty mailbox
 
@@ -217,7 +217,7 @@ void FilterOE::dbxImport( FilterInfo *info, QDataStream& ds)
     ds >> itemCount;
     ds.device()->seek(0xe4);
     ds >> indexPtr;
-    kDebug() << "Item count is " << itemCount << ", Index at " << indexPtr << endl;
+    kDebug() <<"Item count is" << itemCount <<", Index at" << indexPtr;
 
     if (itemCount == 0)
         return; // Empty file
@@ -239,25 +239,25 @@ void FilterOE::dbxReadIndex( FilterInfo *info, QDataStream& ds, int filePos)
     ds.device()->seek(filePos);
 
 
-    kDebug() << "Reading index of file " << folderName << endl;
+    kDebug() <<"Reading index of file" << folderName;
     ds >> self >> unknown >> nextIndexPtr >> parent >> unknown2 >> ptrCount >> unknown3 >> indexCount; // _dbx_tableindexstruct
 
-    kDebug() << "This index has " << (int) ptrCount << " data pointers" << endl;
+    kDebug() <<"This index has" << (int) ptrCount <<" data pointers";
     for (int count = 0; count < ptrCount; count++) {
         if(info->shouldTerminate()) return;
         quint32 dataIndexPtr, anotherIndexPtr, anotherIndexCount; // _dbx_indexstruct
         ds >> dataIndexPtr >> anotherIndexPtr >> anotherIndexCount;
 
         if (anotherIndexCount > 0) {
-            kDebug() << "Recursing to another table @ " << anotherIndexPtr << endl;
+            kDebug() <<"Recursing to another table @" << anotherIndexPtr;
             dbxReadIndex(info, ds, anotherIndexPtr);
         }
-        kDebug() << "Data index @ " << dataIndexPtr << endl;
+        kDebug() <<"Data index @" << dataIndexPtr;
         dbxReadDataBlock(info, ds, dataIndexPtr);
     }
 
     if (indexCount > 0) { // deal with nextTablePtr
-        kDebug() << "Recuring to next table @ " << nextIndexPtr << endl;
+        kDebug() <<"Recuring to next table @" << nextIndexPtr;
         dbxReadIndex(info, ds, nextIndexPtr);
     }
 
@@ -276,7 +276,7 @@ void FilterOE::dbxReadDataBlock( FilterInfo *info, QDataStream& ds, int filePos)
     ds.device()->seek(filePos);
 
     ds >> curOffset >> blockSize >> unknown >> count >> unknown2; // _dbx_email_headerstruct
-    kDebug() << "Data block has " << (int) count << " elements" << endl;
+    kDebug() <<"Data block has" << (int) count <<" elements";
 
     for (int c = 0; c < count; c++) {
         if(info->shouldTerminate()) return;
@@ -289,7 +289,7 @@ void FilterOE::dbxReadDataBlock( FilterInfo *info, QDataStream& ds, int filePos)
 
         if(!currentIsFolderFile) {
             if (type == 0x84) { // It's an email!
-                kDebug() << "**** Offset of emaildata (0x84) " << value << " ****" << endl;
+                kDebug() <<"**** Offset of emaildata (0x84)" << value <<" ****";
                 dbxReadEmail(info, ds, value);
                 ++count0x84;
             } else if( type == 0x04) {
@@ -297,7 +297,7 @@ void FilterOE::dbxReadDataBlock( FilterInfo *info, QDataStream& ds, int filePos)
                 ds.device()->seek(filePos + 12 + value + (count*4) );
                 quint32 newOFF;
                 ds >> newOFF;
-                kDebug() << "**** Offset of emaildata (0x04) " <<  newOFF << endl;
+                kDebug() <<"**** Offset of emaildata (0x04)" <<  newOFF;
                 ds.device()->seek(currentFilePos);
                 dbxReadEmail(info, ds, newOFF);
                 ++count0x04;
@@ -306,18 +306,18 @@ void FilterOE::dbxReadDataBlock( FilterInfo *info, QDataStream& ds, int filePos)
         else {
             // this is a folderfile
             if(type == 0x02) {
-                // kDebug() << "**** FOLDER: descriptive name ****" << endl;
+                // kDebug() <<"**** FOLDER: descriptive name ****";
                 folderEntry[0] = parseFolderString(ds, filePos + 12 + value + (count*4) );
             } else if (type == 0x03) {
-                // kDebug() << "**** FOLDER: filename ****" << endl;
+                // kDebug() <<"**** FOLDER: filename ****";
                 folderEntry[1] = parseFolderString(ds, filePos + 12 + value + (count*4) );
                 
             } else if (type == 0x80) {
-                // kDebug() << "**** FOLDER: current ID ****" << endl;
+                // kDebug() <<"**** FOLDER: current ID ****";
                 folderEntry[2] = QString::number(value); 
                 
             } else if (type == 0x81) {
-                // kDebug() << "**** FOLDER: parent ID ****" << endl;
+                // kDebug() <<"**** FOLDER: parent ID ****";
                 folderEntry[3] =  QString::number(value);
             }
         }

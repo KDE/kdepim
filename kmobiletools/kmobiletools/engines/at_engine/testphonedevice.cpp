@@ -44,7 +44,7 @@ void TestPhoneDeviceJob::run() {
     QString buffer;
     const int probeTimeout=600;
     buffer=p_device->sendATCommand(this, "AT+CGSN\r", probeTimeout);
-    kDebug() << "Sent CGSN probe, got " << buffer << endl;
+    kDebug() <<"Sent CGSN probe, got" << buffer;
     if( !KMobileTools::SerialManager::ATError(buffer) ) // Phone imei
         enginedata->setIMEI( kmobiletoolsATJob::parseInfo( buffer ) );
         else {

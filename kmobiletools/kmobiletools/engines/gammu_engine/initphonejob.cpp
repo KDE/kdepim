@@ -26,7 +26,7 @@
 InitPhoneJob::InitPhoneJob( Device *device, kmobiletoolsGammu_engine* parent,
                             const char* name )
     : GammuJob( device, parent, name ) {
-    kDebug() << "Gammu engine: InitPhone job created." << endl;
+    kDebug() <<"Gammu engine: InitPhone job created.";
 }
 
 void InitPhoneJob::run () {

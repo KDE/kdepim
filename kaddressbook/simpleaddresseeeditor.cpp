@@ -37,14 +37,14 @@ SimpleAddresseeEditor::SimpleAddresseeEditor( QWidget *parent )
     mDirty( false ),
     mBlockModified( false )
 {
-  kDebug(5720) << "SimpleAddresseeEditor()" << endl;
+  kDebug(5720) <<"SimpleAddresseeEditor()";
 
   initGui();
 }
 
 SimpleAddresseeEditor::~SimpleAddresseeEditor()
 {
-  kDebug(5720) << "~SimpleAddresseeEditor()" << endl;
+  kDebug(5720) <<"~SimpleAddresseeEditor()";
 }
 
 void SimpleAddresseeEditor::setAddressee( const KABC::Addressee &addr )
@@ -89,10 +89,10 @@ void SimpleAddresseeEditor::initGui()
 
 void SimpleAddresseeEditor::load()
 {
-  kDebug(5720) << "SimpleAddresseeEditor::load()" << endl;
+  kDebug(5720) <<"SimpleAddresseeEditor::load()";
 
-  kDebug(5720) << "ASSEMBLED NAME: " << mAddressee.assembledName() << endl;
-  kDebug(5720) << "EMAIL NAME: " << mAddressee.preferredEmail() << endl;
+  kDebug(5720) <<"ASSEMBLED NAME:" << mAddressee.assembledName();
+  kDebug(5720) <<"EMAIL NAME:" << mAddressee.preferredEmail();
 
   mBlockModified = true;
 

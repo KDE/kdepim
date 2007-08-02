@@ -93,11 +93,11 @@ KMobiletoolsHelper *KMobiletoolsHelper::instance()
 
 bool KMobiletoolsHelper::compareNumbers(const QString &number1, const QString &number2)
 {
-//     kDebug() << "KMobiletoolsHelper::compareNumbers(" << number1 << ", " << number2 << ")\n";
+//     kDebug() <<"KMobiletoolsHelper::compareNumbers(" << number1 <<"," << number2 <<")";
     if( abs( number1.length() - number2.length() ) > 4 ) return false;
     int minlen=(number1.length() < number2.length() ) ? number1.length() -1 : number2.length() -1 ;
-//     kDebug() << "Number1.length()=" << number1.length() << "; Number2.length()=" << number2.length() << "; minlen=" << minlen << endl;
-//     kDebug() << "Now comparing " << number1.right( minlen ) << "==" << number2.right( minlen ) << endl;
+//     kDebug() <<"Number1.length()=" << number1.length() <<"; Number2.length()=" << number2.length() <<"; minlen=" << minlen;
+//     kDebug() <<"Now comparing" << number1.right( minlen ) <<"==" << number2.right( minlen );
     return number1.right( minlen )==number2.right( minlen );
 }
 
@@ -114,7 +114,7 @@ QString KMobiletoolsHelper::removeIntPrefix( const QString &number )
 QString KMobiletoolsHelper::translateNumber( const QString &s_number )
 {
     if(! s_number.length() ) return QString();
-//     kDebug() << "KMobiletoolsHelper::translateNumber(" << s_number << ")\n";
+//     kDebug() <<"KMobiletoolsHelper::translateNumber(" << s_number <<")";
     KMobileTools::Engine *engine;
     QString retval;
     QList<KMobileTools::Engine*>::ConstIterator it=KMobileTools::EnginesList::instance()->begin(), itEnd=KMobileTools::EnginesList::instance()->end();
@@ -132,7 +132,7 @@ QString KMobiletoolsHelper::translateNumber( const QString &s_number )
 QString KMobiletoolsHelper::translateNumber( const QString &s_number, ContactsList *phoneBook )
 {
     if(! s_number.length() ) return QString();
-//     kDebug() << "KMobiletoolsHelper::translateNumber(" << s_number << ", phonebook)\n";
+//     kDebug() <<"KMobiletoolsHelper::translateNumber(" << s_number <<", phonebook)";
     ContactsListIterator it_addressee(*phoneBook);
     KABC::Addressee addressee;
     KABC::PhoneNumber::List numberslist;
@@ -229,7 +229,7 @@ void KMobileTools::KMobiletoolsHelper::createMailDir(const QString &dirname)
  */
 QString KMobileTools::KMobiletoolsHelper::mkMailDir(const QString &dirname, bool isParent)
 {
-    kDebug() << "Trying to make " << dirname << endl;
+    kDebug() <<"Trying to make" << dirname;
     QDir MailDir(dirname);
     MailDir.mkdir( dirname );
     MailDir.mkdir( dirname + QDir::separator()+( "cur" ) );

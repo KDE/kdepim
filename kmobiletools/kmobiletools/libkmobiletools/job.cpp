@@ -55,7 +55,7 @@ quint8 KMobileTools::Job::percentDone() { return d->ji_percent; }
 
 void KMobileTools::Job::slotPercentDone()
 {
-//     kDebug() << "*****slotPercentDone with percentDone==" << ji_percent << endl;
+//     kDebug() <<"*****slotPercentDone with percentDone==" << ji_percent;
     if(!percentDone() ) return;
     emit percentDone( percentDone() );
     setPercentDone(0);
@@ -64,7 +64,7 @@ void KMobileTools::Job::slotPercentDone()
 
 void KMobileTools::Job::slotPercentDone(quint8 p)
 {
-//     kDebug() << "|||||Calling triggerSPR with percentDone==" << p << endl;
+//     kDebug() <<"|||||Calling triggerSPR with percentDone==" << p;
     setPercentDone(p);
 //     triggerSPR(); @TODO look for new api
 }

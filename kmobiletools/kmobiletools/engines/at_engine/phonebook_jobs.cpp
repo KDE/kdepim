@@ -80,7 +80,7 @@ void FetchAddressee::fetchMemSlot(int i_slot, bool updatePercent)
     buffer=p_device->sendATCommand(this,  "AT+CPBS?\r" );
     if( expr.indexIn( buffer ) != -1)
         busyMem=expr.cap(2).toInt();
-    kDebug() << "Busy memory positions: " << busyMem << endl;
+    kDebug() <<"Busy memory positions:" << busyMem;
     if(updatePercent) {thisJobPercent=10;
         slotPercentDone( ( (jdone*100) + thisJobPercent) / total );}
 
@@ -120,7 +120,7 @@ void FetchAddressee::fetchMemSlot(int i_slot, bool updatePercent)
         for(int i=leftIndex; i<=rightIndex; i++)
         {
             tbuffer=p_device->sendATCommand(this,  command.arg(i) );
-            kDebug() << "Contact found:" << bool(tbuffer.contains( "+CPBR:") || tbuffer.contains( "+MPBR:")) << "; contacts found: " << founds << endl;
+            kDebug() <<"Contact found:" << bool(tbuffer.contains("+CPBR:") || tbuffer.contains("+MPBR:")) <<"; contacts found:" << founds;
             if( tbuffer.contains( "+CPBR:") || tbuffer.contains( "+MPBR:") )
             {
                 founds++;
@@ -246,7 +246,7 @@ void FetchAddresseeSiemens::fetchVCF()
         buffer = KMobileTools::SerialManager::decodePDU( buffer );
 
         addresseeList.append( KABC::Addressee( converter.parseVCard( buffer.toLocal8Bit() /** @TODO look if this conversion is the best one fitting.. */ ) ) );
-        kDebug() << buffer << endl;
+        kDebug() << buffer;
 
         index++;
     }
@@ -276,7 +276,7 @@ void FetchAddresseeSiemens::fetchSDBR()
     int leftIndex = list[0].toInt();
     int rightIndex = list[1].toInt();
 
-    kDebug() << "SDBR" << leftIndex << "-" << rightIndex << endl;
+    kDebug() <<"SDBR" << leftIndex <<"-" << rightIndex;
 
     for( int index=leftIndex; index <= rightIndex; index++ )
     {
@@ -462,7 +462,7 @@ void EditAddressees::run()
         curmemslot=(*it).custom("KMobileTools","memslot").toInt();
         if(curmemslot==-1) continue;
         KABC::Addressee addressee(*it);
-//         kDebug() << addressee->formattedName() << endl;
+//         kDebug() << addressee->formattedName();
         if(todelete) delAddressee(addressee);
         else
         {

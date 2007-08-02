@@ -656,7 +656,7 @@ void CardView::setCurrentItem( CardViewItem *item )
   if ( !item )
     return;
   else if ( item->cardView() != this ) {
-    kDebug(5720)<<"CardView::setCurrentItem: Item ("<<item<<") not owned! Backing out.."<<endl;
+    kDebug(5720)<<"CardView::setCurrentItem: Item ("<<item<<") not owned! Backing out..";
     return;
   } else if ( item == currentItem() ) {
     return;
@@ -836,7 +836,7 @@ CardViewItem *CardView::findItem( const QString &text, const QString &label,
         return *iter;
     }
   } else {
-    kDebug(5720) << "CardView::findItem: search method not implemented" << endl;
+    kDebug(5720) <<"CardView::findItem: search method not implemented";
   }
 
   return 0;

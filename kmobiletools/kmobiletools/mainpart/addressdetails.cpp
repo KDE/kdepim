@@ -39,7 +39,7 @@ addressDetails::addressDetails(QWidget *parentWidget, const QString &objectname,
  : KHTMLPart(parentWidget, parent)
 {
     setObjectName(objectname);
-    kDebug() << "addressDetails:: device name: " << objectName() << endl;
+    kDebug() <<"addressDetails:: device name:" << objectName();
     connect(this, SIGNAL(popupMenu(const QString &,const QPoint &)), SLOT(popupMenu ( const QString &, const QPoint &) ) );
     connect( browserExtension(), SIGNAL( openUrlRequest(const KUrl &, const KParts::URLArgs &) ), this, SLOT( openUrlRequest(const KUrl &) ) );
     showHP();

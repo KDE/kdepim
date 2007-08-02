@@ -120,7 +120,7 @@ void KeyGenerator::slotStartKeyGeneration() {
     proto = Kleo::CryptoBackendFactory::instance()->smime();
   assert( proto );
 
-  kDebug() << "Using protocol " << proto->name() << endl;
+  kDebug() <<"Using protocol" << proto->name();
 
   Kleo::KeyGenerationJob * job = proto->keyGenerationJob();
   assert( job );

@@ -164,7 +164,7 @@ bool ResourceKolab::loadSubResource( const QString& subResource,
 {
   int count = 0;
   if ( !kmailIncidencesCount( count, mimetype, subResource ) ) {
-    kError(5650) << "Communication problem in ResourceKolab::load()\n";
+    kError(5650) <<"Communication problem in ResourceKolab::load()";
     return false;
   }
 
@@ -205,7 +205,7 @@ bool ResourceKolab::loadSubResource( const QString& subResource,
   for ( int startIndex = 0; startIndex < count; startIndex += nbMessages ) {
     QMap<quint32, QString> lst;
     if ( !kmailIncidences( lst, mimetype, subResource, startIndex, nbMessages ) ) {
-      kError(5650) << "Communication problem in ResourceKolab::load()\n";
+      kError(5650) <<"Communication problem in ResourceKolab::load()";
 #if  0
       if ( progressId )
         uiserver.call( "jobFinished",  progressId, errorCode ); //TODO
@@ -324,7 +324,7 @@ void ResourceKolab::incidenceUpdatedSilent( KCal::IncidenceBase* incidencebase)
 {
   if ( incidencebase->isReadOnly() ) return; // Should not happen (TM)
   const QString uid = incidencebase->uid();
-  //kDebug() << k_funcinfo << uid << endl;
+  //kDebug() << k_funcinfo << uid;
 
   if ( mUidsPendingUpdate.contains( uid ) || mUidsPendingAdding.contains( uid ) ) {
     /* We are currently processing this event ( removing and readding or
@@ -471,10 +471,10 @@ bool ResourceKolab::sendKMailUpdate( KCal::IncidenceBase* incidencebase, const Q
           Scheduler::Request );
     }
   } else {
-    kWarning(5006) << "Can't happen: unhandled type=" << type << endl;
+    kWarning(5006) <<"Can't happen: unhandled type=" << type;
   }
 
-//  kDebug() << k_funcinfo << "Data string:\n" << data << endl;
+//  kDebug() << k_funcinfo <<"Data string:" << data;
 
   KCal::Incidence* incidence = static_cast<KCal::Incidence *>( incidencebase );
 
@@ -538,7 +538,7 @@ bool ResourceKolab::addIncidence( KCal::Incidence* incidence, const QString& _su
   else if ( type == "Journal" )
     map = &mJournalSubResources;
   else
-    kWarning() << "unknown type " << type << endl;
+    kWarning() <<"unknown type" << type;
 
   if ( !mSilent ) { /* We got this one from the user, tell KMail. */
     // Find out if this event was previously stored in KMail
@@ -583,7 +583,7 @@ bool ResourceKolab::addIncidence( KCal::Incidence* incidence, const QString& _su
     mNewIncidencesMap.insert( uid, subResource );
 
     if ( !sendKMailUpdate( incidence, subResource, sernum ) ) {
-      kError(5650) << "Communication problem in ResourceKolab::addIncidence()\n";
+      kError(5650) <<"Communication problem in ResourceKolab::addIncidence()";
       return false;
     } else {
       // KMail is doing it's best to add the event now, put a sticker on it,
@@ -619,7 +619,7 @@ bool ResourceKolab::addIncidence( KCal::Incidence* incidence, const QString& _su
           if ( (*map)[ subResource ].writable() ) {
             resolveConflict( incidence, subResource, sernum );
           } else {
-            kWarning( 5650 ) << "Duplicate event in a read-only folder detected! "
+            kWarning( 5650 ) <<"Duplicate event in a read-only folder detected!"
               "Please inform the owner of the folder. " << endl;
           }
           return true;
@@ -831,7 +831,7 @@ KCal::Alarm::List ResourceKolab::relevantAlarms( const KCal::Alarm::List &alarms
        if ( subResource->alarmRelevant() )
            relevantAlarms.append ( a );
        else {
-         kDebug(5650) << "Alarm skipped, not relevant." << endl;
+         kDebug(5650) <<"Alarm skipped, not relevant.";
        }
      }
   }
@@ -933,7 +933,7 @@ void ResourceKolab::fromKMailRefresh( const QString& type,
   else if ( type == "Journal" )
     loadAllJournals();
   else
-    kWarning(5006) << "KCal Kolab resource: fromKMailRefresh: unknown type " << type << endl;
+    kWarning(5006) <<"KCal Kolab resource: fromKMailRefresh: unknown type" << type;
   mResourceChangedTimer.start( 100 );
 }
 
@@ -1038,7 +1038,7 @@ bool ResourceKolab::subresourceActive( const QString& subresource ) const
     return mJournalSubResources[ subresource ].active();
 
   // Safe default bet:
-  kDebug(5650) << "subresourceActive( " << subresource << " ): Safe bet\n";
+  kDebug(5650) <<"subresourceActive(" << subresource <<" ): Safe bet";
 
   return true;
 }
@@ -1073,7 +1073,7 @@ void ResourceKolab::setSubresourceActive( const QString &subresource, bool v )
 
 void ResourceKolab::slotEmitResourceChanged()
 {
-   kDebug(5650) << "KCal Kolab resource: emitting resource changed " << endl;
+   kDebug(5650) <<"KCal Kolab resource: emitting resource changed";
    mResourceChangedTimer.stop();
    emit resourceChanged( this );
 }
@@ -1101,7 +1101,7 @@ Kolab::ResourceMap* ResourceKolab::subResourceMap( const QString& contentsType )
 /*virtual*/
 bool ResourceKolab::addSubresource( const QString& resource, const QString& parent )
 {
-   kDebug(5650) << "KCal Kolab resource - adding subresource: " << resource << endl;
+   kDebug(5650) <<"KCal Kolab resource - adding subresource:" << resource;
    QString contentsType = kmailCalendarContentsType;
    if ( !parent.isEmpty() ) {
      if ( mEventSubResources.contains( parent ) )
@@ -1129,7 +1129,7 @@ bool ResourceKolab::addSubresource( const QString& resource, const QString& pare
 /*virtual*/
 bool ResourceKolab::removeSubresource( const QString& resource )
 {
-   kDebug(5650) << "KCal Kolab resource - removing subresource: " << resource << endl;
+   kDebug(5650) <<"KCal Kolab resource - removing subresource:" << resource;
    return kmailRemoveSubresource( resource );
 }
 

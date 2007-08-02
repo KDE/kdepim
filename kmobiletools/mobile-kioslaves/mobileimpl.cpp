@@ -45,12 +45,12 @@ MobileImpl::MobileImpl() : QObject()
 
 bool MobileImpl::listRoot(Q3ValueList<KIO::UDSEntry> &list)
 {
-    kDebug() << "MobileImpl::listRoot" << endl;
+    kDebug() <<"MobileImpl::listRoot";
 
     QStringList names_found;
     KMobileTools::MainConfig::self()->readConfig();
     QStringList dirList = KMobileTools::MainConfig::devicelist();
-    kDebug() << "MobileImpl::" << dirList << endl;
+    kDebug() <<"MobileImpl::" << dirList;
     QStringList::ConstIterator dirpath = dirList.begin();
     QStringList::ConstIterator end = dirList.end();
     for(; dirpath!=end; ++dirpath)
@@ -69,11 +69,11 @@ bool MobileImpl::listRoot(Q3ValueList<KIO::UDSEntry> &list)
 
 bool MobileImpl::listDirectory(const QString &directory, Q3ValueList<KIO::UDSEntry> &list)
 {
-    kDebug() << "MobileImpl::listDirectory" << endl;
+    kDebug() <<"MobileImpl::listDirectory";
 
     QStringList names_found;
     QStringList dirList = QStringList("a");
-    kDebug() << "MobileImpl::" << dirList << endl;
+    kDebug() <<"MobileImpl::" << dirList;
     QStringList::ConstIterator dirpath = dirList.begin();
     QStringList::ConstIterator end = dirList.end();
     for(; dirpath!=end; ++dirpath)
@@ -118,11 +118,11 @@ void MobileImpl::createEntry(KIO::UDSEntry &entry,
                              const QString &directory,
                              const QString &file)
 {
-    kDebug() << "MobileImpl::createEntry: " << directory << "<->" << file << endl;
+    kDebug() <<"MobileImpl::createEntry:" << directory <<"<->" << file;
 
 	KDesktopFile desktop(directory+file, true);
 
-	kDebug() << "path = " << directory << file << endl;
+	kDebug() <<"path =" << directory << file;
 
 	entry.clear();
 

@@ -80,7 +80,7 @@ kmobiletools::kmobiletools()
 kmobiletools::~kmobiletools()
 {
     delete m_part;
-    kDebug() << "kmobiletools::~kmobiletools()\n";
+    kDebug() <<"kmobiletools::~kmobiletools()";
 }
 
 void kmobiletools::setupActions()

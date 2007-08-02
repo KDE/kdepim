@@ -36,15 +36,15 @@ GroupwareUploadItem::GroupwareUploadItem( UploadType type ) : mItemType( KPIM::F
 KUrl GroupwareUploadItem::adaptNewItemUrl( GroupwareDataAdaptor *adaptor,
                                            const KUrl &baseurl )
 {
-kDebug()<<"GroupwareUploadItem::adaptNewItemUrl, baseurl=" << baseurl.url() << endl;
+kDebug()<<"GroupwareUploadItem::adaptNewItemUrl, baseurl=" << baseurl.url();
   if ( adaptor ) {
     QString path( adaptor->defaultNewItemName( this ) );
-kDebug() << "path=" << path << endl;
+kDebug() <<"path=" << path;
     KUrl u( baseurl );
     if ( path.isEmpty() ) return u;
     else {
       u.addPath( path );
-kDebug() << "Final Path for new item: " << u.url() << endl;
+kDebug() <<"Final Path for new item:" << u.url();
       return u;
     }
   } else return baseurl;
@@ -56,11 +56,11 @@ KIO::TransferJob *GroupwareUploadItem::createRawUploadJob(
   Q_ASSERT( adaptor );
   if ( !adaptor ) return 0;
   const QString dta = data();
-  //kDebug(7000) << "Uploading: " << data << endl;
+  //kDebug(7000) <<"Uploading:" << data;
   KUrl upUrl( url() );
   if ( adaptor )
     adaptor->adaptUploadUrl( upUrl );
-  kDebug(7000) << "Uploading to: " << upUrl.prettyUrl() << endl;
+  kDebug(7000) <<"Uploading to:" << upUrl.prettyUrl();
   KIO::TransferJob *job = KIO::storedPut( dta.toUtf8(), upUrl, -1, true,
                                           false, false );
   job->addMetaData( "PropagateHttpHeader", "true" );
@@ -73,11 +73,11 @@ KIO::TransferJob *GroupwareUploadItem::createRawUploadJob(
 KIO::TransferJob *GroupwareUploadItem::createUploadNewJob(
       GroupwareDataAdaptor *adaptor, const KUrl &baseurl )
 {
-kDebug()<<"GroupwareUploadItem::createUploadNewJob, baseurl=" << baseurl.url() << endl;
+kDebug()<<"GroupwareUploadItem::createUploadNewJob, baseurl=" << baseurl.url();
   setUrl( adaptNewItemUrl( adaptor, baseurl ) );
   KIO::TransferJob *job = createRawUploadJob( adaptor, baseurl );
   if ( job ) {
-    kDebug() << "Adding If-None-Match " << endl;
+    kDebug() <<"Adding If-None-Match";
     QString header;
     if ( job->outgoingMetaData().contains("customHTTPHeader") ) {
       header = job->outgoingMetaData()["customHTTPHeader"];
@@ -92,18 +92,18 @@ kDebug()<<"GroupwareUploadItem::createUploadNewJob, baseurl=" << baseurl.url() <
 KIO::TransferJob *GroupwareUploadItem::createUploadJob(
                            GroupwareDataAdaptor *adaptor, const KUrl &baseurl )
 {
-kDebug()<<"GroupwareUploadItem::createUploadJob" << endl;
+kDebug()<<"GroupwareUploadItem::createUploadJob";
   KIO::TransferJob *job = createRawUploadJob( adaptor, baseurl );
   if ( job && adaptor ) {
-  kDebug()<<"Adding If-Match header: " << adaptor->idMapper()->fingerprint( uid() ) << endl;
+  kDebug()<<"Adding If-Match header:" << adaptor->idMapper()->fingerprint( uid() );
     QString header;
     if ( job->outgoingMetaData().contains("customHTTPHeader") ) {
       header = job->outgoingMetaData()["customHTTPHeader"];
       header += "\r\n";
     }
-kDebug()<<"old HEADER: " << header << endl;
+kDebug()<<"old HEADER:" << header;
     header += "If-Match: " + adaptor->idMapper()->fingerprint( uid() );
-kDebug()<<"new HEADER: " << header << endl;
+kDebug()<<"new HEADER:" << header;
     job->addMetaData( "customHTTPHeader", header );
   }
   return job;
@@ -121,7 +121,7 @@ GroupwareDataAdaptor::~GroupwareDataAdaptor()
 
 void GroupwareDataAdaptor::setUserPassword( KUrl &url )
 {
-  kDebug(5800) << "GroupwareDataAdaptor::setUserPassword, mUser="
+  kDebug(5800) <<"GroupwareDataAdaptor::setUserPassword, mUser="
                 << mUser << endl;
   url.setUser( mUser );
   url.setPass( mPassword );
@@ -145,7 +145,7 @@ KIO::TransferJob *GroupwareDataAdaptor::createUploadJob( const KUrl &url,
 KIO::TransferJob *GroupwareDataAdaptor::createUploadNewJob( const KUrl &url,
                                                      GroupwareUploadItem *item )
 {
-kDebug()<<"GroupwareDataAdaptor::createUploadNewJob, url=" << url.url() << endl;
+kDebug()<<"GroupwareDataAdaptor::createUploadNewJob, url=" << url.url();
   if ( item ) {
     KIO::TransferJob *job = item->createUploadNewJob( this, url );
     setUidForJob( job, item->uid() );
@@ -162,28 +162,28 @@ void GroupwareDataAdaptor::processDownloadListItem( const KUrl &entry,
   emit itemOnServer( entry );
   // if not locally present, download
   const QString &localId = idMapper()->localId( location );
-  kDebug(5800) << "Looking up remote: " << location
+  kDebug(5800) <<"Looking up remote:" << location
                 << " found: " << localId << endl;
   if ( localId.isEmpty() || !localItemExists( localId ) ) {
-    //kDebug(7000) << "Not locally present, download: " << location << endl;
+    //kDebug(7000) <<"Not locally present, download:" << location;
     download = true;
   } else {
-    kDebug(5800) << "Locally present " << endl;
+    kDebug(5800) <<"Locally present";
     // locally present, let's check if it's newer than what we have
     const QString &oldFingerprint = idMapper()->fingerprint( localId );
       if ( oldFingerprint != newFingerprint ) {
-      kDebug(5800) << "Fingerprint changed old: " << oldFingerprint <<
+      kDebug(5800) <<"Fingerprint changed old:" << oldFingerprint <<
         " new: " << newFingerprint << endl;
       // something changed on the server, check if we also changed it locally
       if ( localItemHasChanged( localId ) ) {
         // TODO conflict resolution
-        kDebug(5800) << "TODO conflict resolution" << endl;
+        kDebug(5800) <<"TODO conflict resolution";
         download = true;
       } else {
         download = true;
       }
     } else {
-      kDebug(5800) << "Fingerprint not changed, don't download this " << endl;
+      kDebug(5800) <<"Fingerprint not changed, don't download this";
     }
   }
   if ( download ) {
@@ -217,7 +217,7 @@ bool GroupwareDataAdaptor::interpretRemoveJob( KIO::Job *job, const QString &/*j
 
 bool GroupwareDataAdaptor::interpretUploadJob( KIO::Job *job, const QString &/*jobData*/ )
 {
-  kDebug(7000) << "GroupwareDataAdaptor::interpretUploadJob " << endl;
+  kDebug(7000) <<"GroupwareDataAdaptor::interpretUploadJob";
   KIO::TransferJob *trfjob = dynamic_cast<KIO::TransferJob*>(job);
   bool error = job->error();
   const QString err = job->errorString();
@@ -240,7 +240,7 @@ bool GroupwareDataAdaptor::interpretUploadJob( KIO::Job *job, const QString &/*j
 bool GroupwareDataAdaptor::interpretUploadNewJob( KIO::Job *job, const QString &/*jobData*/ )
 {
 // TODO: How does the incidence mapper know the old/new ids???
-  kDebug(7000) << "GroupwareDataAdaptor::interpretUploadNewJob " << endl;
+  kDebug(7000) <<"GroupwareDataAdaptor::interpretUploadNewJob";
   KIO::TransferJob *trfjob = dynamic_cast<KIO::TransferJob*>(job);
   bool error = job->error();
   const QString err = job->errorString();
@@ -262,9 +262,9 @@ bool GroupwareDataAdaptor::interpretUploadNewJob( KIO::Job *job, const QString &
 
 QString GroupwareDataAdaptor::uidFromJob( KIO::Job *job ) const
 {
-kDebug()<<"GroupwareDataAdaptor::uidFromJob( "<<job<<")"<<endl;
+kDebug()<<"GroupwareDataAdaptor::uidFromJob("<<job<<")";
   if ( mJobUIDMap.contains( job ) ) {
-    kDebug()<<"  Contained: "<< mJobUIDMap[job] << endl;
+    kDebug()<<"  Contained:"<< mJobUIDMap[job];
     return mJobUIDMap[ job ];
   } else {
     return QString();

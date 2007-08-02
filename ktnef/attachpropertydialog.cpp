@@ -79,7 +79,7 @@ void AttachPropertyDialog::setAttachment(KTNEFAttach *attach)
 
 void AttachPropertyDialog::saveClicked()
 {
-	kDebug()<<" AttachPropertyDialog::saveClicked()\n";
+	kDebug()<<" AttachPropertyDialog::saveClicked()";
 	saveProperty( properties_, m_attach, this );
 }
 
@@ -94,7 +94,7 @@ void formatProperties( const QMap<int,KTNEFProperty*>& props, Q3ListView *lv, Q3
 			newItem = new Q3ListViewItem( item, ( *it )->keyString() );
 		else
 		{
-			kWarning() << "formatProperties() called with no listview and no item" << endl;
+			kWarning() <<"formatProperties() called with no listview and no item";
 			return;
 		}
 

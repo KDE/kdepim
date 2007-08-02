@@ -39,7 +39,7 @@ SyncProcess::SyncProcess( const QSync::Group &group )
 
   Result result = mEngine->initialize();
   if ( result.isError() ) {
-    kDebug(5200) << "SyncProcess::SyncProcess: " << result.message() << endl;
+    kDebug(5200) <<"SyncProcess::SyncProcess:" << result.message();
   }
 }
 
@@ -81,7 +81,7 @@ void SyncProcess::reinitEngine()
   mEngine = new QSync::Engine( mGroup );
   Result result = mEngine->initialize();
   if ( result.isError() ) {
-    kDebug(5200) << "SyncProcess::reinitEngine: " << result.message() << endl;
+    kDebug(5200) <<"SyncProcess::reinitEngine:" << result.message();
   }
 
   applyObjectTypeFilter();
@@ -97,7 +97,7 @@ void SyncProcess::applyObjectTypeFilter()
 
   for ( int i = 0; i < objectTypes.count(); ++i ) {
     if ( activeObjectTypes.contains( objectTypes[ i ] ) ) {
-      kDebug(5200) << "Enabled object type: " <<  objectTypes[ i ] << endl;
+      kDebug(5200) <<"Enabled object type:" <<  objectTypes[ i ];
       /*
        * This is not required. Also this lead to filtering problems when sync with "file-sync".
        * Uncomment this line again when OpenSync is fixed!
@@ -105,7 +105,7 @@ void SyncProcess::applyObjectTypeFilter()
        * mGroup.setObjectTypeEnabled( objectTypes[ i ], true );
        */
     } else {
-      kDebug(5200) << "Disabled object type: " <<  objectTypes[ i ] << endl;
+      kDebug(5200) <<"Disabled object type:" <<  objectTypes[ i ];
       mGroup.setObjectTypeEnabled( objectTypes[ i ], false );
     }
   }

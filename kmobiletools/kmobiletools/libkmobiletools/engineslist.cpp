@@ -56,7 +56,7 @@ KMobileTools::EnginesList::EnginesList()
 
 KMobileTools::EnginesList::~EnginesList()
 {
-    kDebug() << "KMobileTools::EnginesList::~EnginesList()\n";
+    kDebug() <<"KMobileTools::EnginesList::~EnginesList()";
     delete d;
 }
 

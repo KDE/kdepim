@@ -107,7 +107,7 @@ bool KIO_Delete::setupSlave( KUrl kurl, KIO::MetaData metadata, const KIO_Protoc
 		
 	if( ! ( _slave = KIO::Scheduler::getConnectedSlave( kurl, metadata ) ) )
 	{
-		kWarning() << i18n( "Could not get a connected slave; I cannot delete this way..." ) << endl;
+		kWarning() << i18n("Could not get a connected slave; I cannot delete this way..." );
 		_valid = false;
 		return false;
 	}
@@ -121,7 +121,7 @@ void KIO_Delete::deleteItem( const QVariant item, KUrl kurl, KIO::MetaData metad
 
 	if( item.type() != QVariant::String )
 	{
-		kDebug() << "Got wrong id type in KIO_Delete::deleteItem!" << endl;
+		kDebug() <<"Got wrong id type in KIO_Delete::deleteItem!";
 		return;
 	}
 	kurl = item.toString();
@@ -187,7 +187,7 @@ void KIO_Delete::slotResult( KJob* job )
 {
 	if( job->error() )
 	{
-		kWarning() << i18n( "An error occurred when deleting email: %1.", job->errorString() ) << endl;
+		kWarning() << i18n("An error occurred when deleting email: %1.", job->errorString() );
 		_valid = false;
 	}
 	

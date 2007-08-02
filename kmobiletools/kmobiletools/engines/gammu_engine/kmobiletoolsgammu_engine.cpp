@@ -39,7 +39,7 @@
 kmobiletoolsGammu_engine::kmobiletoolsGammu_engine(QObject *parent, const char *name)
  : kmobiletoolsEngine(parent, name)
 {
-    kDebug() << "Initialized Gammu engine" << endl;
+    kDebug() <<"Initialized Gammu engine";
 
     m_device = new Device( this->name() );
 }
@@ -208,7 +208,7 @@ void kmobiletoolsGammu_engine::processSlot( Job* p_job ) {
 
 
 void kmobiletoolsGammu_engine::probePhone() {
-    kDebug() << "Gammu engine: probePhone() called" << endl;
+    kDebug() <<"Gammu engine: probePhone() called";
     b_connected = false;
 
     // since we don't use DeviceList, we need to call initPhone() ourselves
@@ -220,7 +220,7 @@ void kmobiletoolsGammu_engine::probePhone() {
 
 void kmobiletoolsGammu_engine::initPhone()
 {
-    kDebug() << "Gammu engine: initPhone() called" << endl;
+    kDebug() <<"Gammu engine: initPhone() called";
     enqueueJob( new InitPhoneJob( m_device, this, this->name() ) );
 }
 
@@ -245,7 +245,7 @@ DeviceInfos kmobiletoolsGammu_engine::probeDevice( ThreadWeaver::Job *job, bool 
             return deviceInfos;
     }
 
-    kDebug() << "Gammu engine: device name:" << deviceName << endl;
+    kDebug() <<"Gammu engine: device name:" << deviceName;
 
 
     deviceInfos.setFoundPath( deviceName );
@@ -276,7 +276,7 @@ void kmobiletoolsGammu_engine::dial( DialActions dialActions, const QString &num
             break;
 
         default:
-            kDebug() << "Gammu engine: dialActions == " << dialActions << endl;
+            kDebug() <<"Gammu engine: dialActions ==" << dialActions;
             break;
     }
 }

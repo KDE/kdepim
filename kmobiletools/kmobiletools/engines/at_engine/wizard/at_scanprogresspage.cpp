@@ -47,7 +47,7 @@ AT_ScanProgressPage::~AT_ScanProgressPage()
  */
 bool AT_ScanProgressPage::isComplete() const {
     bool complete=(donejobs!=0 && totaljobs==donejobs);
-    kDebug() << "isComplete==" << complete << " (progress=" << donejobs << "/" << totaljobs << ")\n";
+    kDebug() <<"isComplete==" << complete <<" (progress=" << donejobs <<"/" << totaljobs <<")";
     return complete;
 }
 
@@ -57,7 +57,7 @@ bool AT_ScanProgressPage::isComplete() const {
  */
 void AT_ScanProgressPage::cleanupPage()
 {
-    kDebug() << "AT_ScanProgressPage::cleanupPage()\n";
+    kDebug() <<"AT_ScanProgressPage::cleanupPage()";
     ScanProgressPage::cleanupPage();
     disconnect(engine, SIGNAL(foundDeviceData(FindDeviceDataJob*)), this, SLOT(deviceProbed(FindDeviceDataJob*)) );
     /// @todo implement me
@@ -70,7 +70,7 @@ void AT_ScanProgressPage::cleanupPage()
     \fn AT_ScanProgressPage::initializePage()
  */
 void AT_ScanProgressPage::initializePage() {
-    kDebug() << "AT_ScanProgressPage::initializePage()\n";
+    kDebug() <<"AT_ScanProgressPage::initializePage()";
     wizard()->setProperty("scanprogress_id", wizard()->currentId());
     engine=(AT_Engine*) KMobileTools::EnginesList::instance()->wizardEngine();
     connect(engine, SIGNAL(foundDeviceData(FindDeviceDataJob*)), this, SLOT(deviceProbed(FindDeviceDataJob*)) );
@@ -84,7 +84,7 @@ void AT_ScanProgressPage::initializePage() {
  */
 void AT_ScanProgressPage::deviceProbed(FindDeviceDataJob* job)
 {
-    kDebug() << "Job done: " << job->path() << "; found: " << job->found() << endl;
+    kDebug() <<"Job done:" << job->path() <<"; found:" << job->found();
     if(job->found()) l_devices+=job->data();
     donejobs++;
     setProgress( (donejobs*100)/totaljobs);

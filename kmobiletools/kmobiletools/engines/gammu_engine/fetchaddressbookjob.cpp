@@ -29,7 +29,7 @@ FetchAddressBookJob::FetchAddressBookJob( Device *device,
 }
 
 void FetchAddressBookJob::run() {
-    kDebug() << "Gammu engine: FetchMemory job is running..." << endl;
+    kDebug() <<"Gammu engine: FetchMemory job is running...";
     m_addresseeList = device()->phonebook();
 }
 

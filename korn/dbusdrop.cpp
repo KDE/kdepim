@@ -76,7 +76,7 @@ bool DBUSDrop::readConfigGroup( const QMap< QString, QString > &map, const Proto
 {
 	if( !map.contains( "dbusname" ) )
 		//The mapping MUST contain dbusname.
-		kDebug() << "mapping is niet compleet" << endl;
+		kDebug() <<"mapping is niet compleet";
 
 	this->setDBUSName( *map.find( "dbusname" ) );
 	
@@ -127,7 +127,7 @@ bool DBUSDrop::deleteMails( QList<QVariant> * ids, bool * )
 			if( _msgList->contains( ids->at( xx ).toInt() ) )
 				_msgList->remove( ids->at( xx ).toInt() );
 		} else {
-			kDebug() << "Got a non-int in DBUSDrop::deleteMails()!" << endl;
+			kDebug() <<"Got a non-int in DBUSDrop::deleteMails()!";
 		}
 		
 	}

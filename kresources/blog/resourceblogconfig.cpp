@@ -116,7 +116,7 @@ void ResourceBlogConfig::loadSettings( KRES::Resource *res )
     mSaveConfig->loadSettings( resource );
     kDebug( 5700 ) << "ResourceBlogConfig::loadSettings(): reloaded";
   } else {
-    kError( 5700 ) << "ResourceBlogConfig::loadSettings():"
+    kError( 5700 ) <<"ResourceBlogConfig::loadSettings():"
                    << " no ResourceBlog, cast failed";
   }
 }
@@ -139,7 +139,7 @@ void ResourceBlogConfig::saveSettings( KRES::Resource *res )
     mSaveConfig->saveSettings( resource );
     kDebug( 5700 ) << "ResourceBlogConfig::saveSettings(): saved";
   } else {
-    kError( 5700 ) << "ResourceBlogConfig::saveSettings():"
+    kError( 5700 ) <<"ResourceBlogConfig::saveSettings():"
       " no ResourceBlog, cast failed";
   }
 }
@@ -147,7 +147,7 @@ void ResourceBlogConfig::saveSettings( KRES::Resource *res )
 void ResourceBlogConfig::slotBlogInfoRetrieved(
     const QMap<QString, QString> &blogs )
 {
-  kDebug( 5700 ) << "ResourceBlogConfig::slotBlogInfoRetrieved()";
+  kDebug( 5700 ) <<"ResourceBlogConfig::slotBlogInfoRetrieved()";
   QMap<QString,QString>::const_iterator i;
   for (i = blogs.constBegin(); i != blogs.constEnd(); ++i) {
     mBlogs->addItem( i.value(), i.key() );
@@ -159,7 +159,7 @@ void ResourceBlogConfig::slotBlogInfoRetrieved(
 
 void ResourceBlogConfig::slotBlogAPIChanged( int index )
 {
-  kDebug( 5700 ) << "ResourceBlogConfig::slotBlogAPIChanged";
+  kDebug( 5700 ) <<"ResourceBlogConfig::slotBlogAPIChanged";
   //FIXME Delete me somehow?
   ResourceBlog *blog =  new ResourceBlog();
   blog->setUrl( mUrl->url() );

@@ -94,7 +94,7 @@ void Incidence::setStartDate( const KDateTime& startDate )
 {
   mStartDate = startDate;
   if ( mFloatingStatus == AllDay )
-    kDebug() << "ERROR: Time on start date but no time on the event\n";
+    kDebug() <<"ERROR: Time on start date but no time on the event";
   mFloatingStatus = HasTime;
 }
 
@@ -102,7 +102,7 @@ void Incidence::setStartDate( const QDate& startDate )
 {
   mStartDate = KDateTime( startDate );
   if ( mFloatingStatus == HasTime )
-    kDebug() << "ERROR: No time on start date but time on the event\n";
+    kDebug() <<"ERROR: No time on start date but time on the event";
   mFloatingStatus = AllDay;
 }
 
@@ -203,9 +203,9 @@ bool Incidence::loadAttendeeAttribute( QDomElement& element,
         attendee.delegator = e.text();
       else
         // TODO: Unhandled tag - save for later storage
-        kDebug() << "Warning: Unhandled tag " << e.tagName() << endl;
+        kDebug() <<"Warning: Unhandled tag" << e.tagName();
     } else
-      kDebug() << "Node is not a comment or an element???" << endl;
+      kDebug() <<"Node is not a comment or an element???";
   }
 
   return true;
@@ -303,7 +303,7 @@ void Incidence::loadRecurrence( const QDomElement& element )
         mRecurrence.exclusions.append( stringToDate( e.text() ) );
       } else
         // TODO: Unhandled tag - save for later storage
-        kDebug() << "Warning: Unhandled tag " << e.tagName() << endl;
+        kDebug() <<"Warning: Unhandled tag" << e.tagName();
     }
   }
 }
@@ -352,7 +352,7 @@ bool Incidence::loadAttribute( QDomElement& element )
     bool ok = KolabBase::loadAttribute( element );
     if ( !ok ) {
         // Unhandled tag - save for later storage
-        kDebug() << "Saving unhandled tag " << element.tagName() << endl;
+        kDebug() <<"Saving unhandled tag" << element.tagName();
         Custom c;
         c.key = QByteArray( "X-KDE-KolabUnhandled-" ) + element.tagName().toLatin1();
         c.value = element.text();
@@ -757,7 +757,7 @@ void Incidence::saveTo( KCal::Incidence* incidence )
         recur->addMonthlyPos( mRecurrence.dayNumber.toInt(), daysListToBitArray( mRecurrence.days ) );
       } else if ( mRecurrence.type == "daynumber" ) {
         recur->addMonthlyDate( mRecurrence.dayNumber.toInt() );
-      } else kWarning() << "Unhandled monthly recurrence type " << mRecurrence.type << endl;
+      } else kWarning() <<"Unhandled monthly recurrence type" << mRecurrence.type;
     } else if ( mRecurrence.cycle == "yearly" ) {
       recur->setYearly( mRecurrence.interval );
       if ( mRecurrence.type == "monthday" ) {
@@ -772,8 +772,8 @@ void Incidence::saveTo( KCal::Incidence* incidence )
           if ( s_monthName[ i ] == mRecurrence.month )
             recur->addYearlyMonth( i+1 );
         recur->addYearlyPos( mRecurrence.dayNumber.toInt(), daysListToBitArray( mRecurrence.days ) );
-      } else kWarning() << "Unhandled yearly recurrence type " << mRecurrence.type << endl;
-    } else kWarning() << "Unhandled recurrence cycle " << mRecurrence.cycle << endl;
+      } else kWarning() <<"Unhandled yearly recurrence type" << mRecurrence.type;
+    } else kWarning() <<"Unhandled recurrence cycle" << mRecurrence.cycle;
 
     if ( mRecurrence.rangeType == "number" ) {
       recur->setDuration( mRecurrence.range.toInt() );

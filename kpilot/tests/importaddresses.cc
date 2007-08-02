@@ -68,11 +68,11 @@ int main(int argc, char **argv)
 
 	if (datadir.isEmpty())
 	{
-		kWarning() << "! Must provide a data-directory." << endl;
+		kWarning() <<"! Must provide a data-directory.";
 	}
 	if (addressfile.isEmpty())
 	{
-		kWarning() << "! Must provide an address-file to read." << endl;
+		kWarning() <<"! Must provide an address-file to read.";
 	}
 	if (datadir.isEmpty() || addressfile.isEmpty())
 	{
@@ -84,7 +84,7 @@ int main(int argc, char **argv)
 	book.addResource( file );
 	if (!book.load())
 	{
-		kWarning() << "! Failed to load the address-file <" << addressfile << ">" << endl;
+		kWarning() <<"! Failed to load the address-file <" << addressfile <<">";
 		return 1;
 	}
 
@@ -98,15 +98,15 @@ int main(int argc, char **argv)
 
 	KABCSync::Settings settings;
 
-	kDebug() << "# Printing address book." << endl;
+	kDebug() <<"# Printing address book.";
 	unsigned int count = 1;
 	KABC::AddressBook::ConstIterator it = book.begin();
 	while (it != book.end())
 	{
 		const KABC::Addressee &a = *it;
-		kDebug() << "# Entry #" << count << endl;
-		kDebug() << "#  " << a.name() << endl;
-		kDebug() << "#  " << a.formattedName() << endl;
+		kDebug() <<"# Entry #" << count;
+		kDebug() <<"#" << a.name();
+		kDebug() <<"#" << a.formattedName();
 		PilotAddress *p = new PilotAddress();
 		KABCSync::copy(*p,a,info,settings);
 		PilotRecord *r = p->pack();

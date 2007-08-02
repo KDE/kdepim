@@ -133,7 +133,7 @@ deviceConfigDialog::~deviceConfigDialog()
 
 void deviceConfigDialog::fs_selected(int item)
 {
-    kDebug() << "Filesystem ID: "<< item << endl;
+    kDebug() <<"Filesystem ID:"<< item;
 #ifdef ENABLE_FS
     fsConfig->fs_stack->raiseWidget(item);
 #endif
@@ -166,7 +166,7 @@ void deviceConfigDialog::slotEngineChanged(const QString &enginename)
 {
     QString runningEngine=firstPage->combo_engine->itemData(firstPage->combo_engine->currentIndex() ).toString();
     firstPage->kcfg_engine->setText( runningEngine );
-    kDebug() << "Changed engine: " << runningEngine << endl;
+    kDebug() <<"Changed engine:" << runningEngine;
     if( currentEngine==runningEngine )
     {
         if(enginepages.count()) return;

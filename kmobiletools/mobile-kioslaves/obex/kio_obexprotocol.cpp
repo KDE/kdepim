@@ -54,20 +54,20 @@ using namespace KIO;
 kio_obexProtocol::kio_obexProtocol(const Q3CString &pool_socket, const Q3CString &app_socket)
     : SlaveBase("kio_obex2", pool_socket, app_socket)
 {
-    kDebug() << "kio_obexProtocol::kio_obexProtocol()\n" << endl;
+    kDebug() <<"kio_obexProtocol::kio_obexProtocol()";
 
 }
 
 
 kio_obexProtocol::~kio_obexProtocol()
 {
-    kDebug() << "kio_obexProtocol::~kio_obexProtocol()\n" << endl;
+    kDebug() <<"kio_obexProtocol::~kio_obexProtocol()";
     m_impl.wrapper()->disconnectClient();
 }
 
 void kio_obexProtocol::setHost( const QString & host, int port, const QString &user, const QString &pass )
 {
-    kDebug() << "kio_obexProtocol::setHost(host=" << host << ", port=" << port << ", user=" << user <<", pass=" << pass << ")\n";
+    kDebug() <<"kio_obexProtocol::setHost(host=" << host <<", port=" << port <<", user=" << user <<", pass=" << pass <<")";
     QString bhost=user;
     bhost=bhost.replace('\\', "/");
     if(bhost.contains("nodevice")) bhost.clear() ;
@@ -91,7 +91,7 @@ void kio_obexProtocol::setHost( const QString & host, int port, const QString &u
 
 void kio_obexProtocol::listDir(const KUrl &url)
 {
-    kDebug() << "obexProtocol::listDir: " << url << endl;
+    kDebug() <<"obexProtocol::listDir:" << url;
     //if (! setHostConfig( url.host() ) )return;
 
     KIO::UDSEntry entry;
@@ -107,7 +107,7 @@ void kio_obexProtocol::listDir(const KUrl &url)
 
     m_impl.createTopLevelEntry(entry);
     
-    kDebug() << "obexProtocol::listDir: mobile_entries.count()+1 =  " << mobile_entries.count()+1 << endl;
+    kDebug() <<"obexProtocol::listDir: mobile_entries.count()+1 =" << mobile_entries.count()+1;
 
     listEntry(entry, false);
 
@@ -132,7 +132,7 @@ void kio_obexProtocol::listDir(const KUrl &url)
 
 void kio_obexProtocol::stat(const KUrl &url)
 {
-    kDebug() << "**************** obexProtocol::stat: " << url << endl;
+    kDebug() <<"**************** obexProtocol::stat:" << url;
     
     //if (! setHostConfig( url.host() ) )return;
 
@@ -161,7 +161,7 @@ void kio_obexProtocol::stat(const KUrl &url)
 
 void kio_obexProtocol::listRoot(const KUrl &url)
 {
-    kDebug() << "obexProtocol::listRoot()\n";
+    kDebug() <<"obexProtocol::listRoot()";
     listDir(url);
 }
 
@@ -172,7 +172,7 @@ void kio_obexProtocol::listRoot(const KUrl &url)
 
 void kio_obexProtocol::get(const KUrl &url)
 {
-    kDebug() << "***************** kio_obex getFile: " <<  url << endl;
+    kDebug() <<"***************** kio_obex getFile:" <<  url;
 
     if ( m_impl.getFile(url) ) return;
 
@@ -180,7 +180,7 @@ void kio_obexProtocol::get(const KUrl &url)
 
     char* buffer = (char*)m_impl.wrapper()->getClient()->buf_data;
 
-    kDebug() << "**************************GetFile processed; size returned: " << size <</*"; raw data:" << buffer <<*/ endl;
+    kDebug() <<"**************************GetFile processed; size returned:" << size <</*"; raw data:" << buffer <<*/ endl;
 
     if(size<=0)
     {
@@ -205,7 +205,7 @@ void kio_obexProtocol::get(const KUrl &url)
 */
 void kio_obexProtocol::put(const KUrl &url, int permissions, bool overwrite, bool resume)
 {
-    kDebug() << "kio_obexProtocol::put()  URL: " << url << "; permissions: " << permissions << "; overwrite: " << overwrite << "; resume: " << resume << endl;
+    kDebug() <<"kio_obexProtocol::put()  URL:" << url <<"; permissions:" << permissions <<"; overwrite:" << overwrite <<"; resume:" << resume;
 
     QByteArray buffer;
     dataReq();
@@ -216,7 +216,7 @@ void kio_obexProtocol::put(const KUrl &url, int permissions, bool overwrite, boo
         ret = m_impl.wrapper()->putFile( url.path(), buffer.data(), buffer.size() );
     }
 
-    kDebug() << "SendData result code: " << ret << endl;
+    kDebug() <<"SendData result code:" << ret;
 
     finished();
     disconnectTimeout();
@@ -228,7 +228,7 @@ void kio_obexProtocol::put(const KUrl &url, int permissions, bool overwrite, boo
 */
 void kio_obexProtocol::del (const KUrl &url, bool isfile)
 {
-    kDebug() << "Deleting " << url << "; is file? " << isfile << "; result: " << m_impl.wrapper()->deleteFile( url.path() ) << endl;
+    kDebug() <<"Deleting" << url <<"; is file?" << isfile <<"; result:" << m_impl.wrapper()->deleteFile( url.path() );
     finished();
     disconnectTimeout();
 }
@@ -236,7 +236,7 @@ void kio_obexProtocol::del (const KUrl &url, bool isfile)
 
 void kio_obexProtocol::disconnectTimeout()
 {
-    kDebug() << "Finished, trying to disconnect.\n";
+    kDebug() <<"Finished, trying to disconnect.";
     QByteArray cmd( 1 );
     cmd[0] = 'd';
     setTimeoutSpecialCommand( 2, cmd );
@@ -255,7 +255,7 @@ void kio_obexProtocol::special(const QByteArray &data)
 
 void kio_obexProtocol::mkdir( const KUrl &url, int permissions )
 {
-    kDebug() << "Makeing dir " << url << "; permissions " << permissions << "; result: " << m_impl.wrapper()->mkDir( url.path() ) << endl;
+    kDebug() <<"Makeing dir" << url <<"; permissions" << permissions <<"; result:" << m_impl.wrapper()->mkDir( url.path() );
     finished();
     disconnectTimeout();
 }
@@ -267,18 +267,18 @@ int kdemain(int argc, char **argv)
 {
     KInstance instance( "kio_obex2" );
 
-    kDebug(7101) << "*** Starting kio_obex " << endl;
+    kDebug(7101) <<"*** Starting kio_obex";
 
     if (argc != 4)
     {
-    kDebug(7101) << "Usage: kio_obex  protocol domain-socket1 domain-socket2" << endl;
+    kDebug(7101) <<"Usage: kio_obex  protocol domain-socket1 domain-socket2";
     exit(-1);
     }
 
     kio_obexProtocol slave(argv[2], argv[3]);
     slave.dispatchLoop();
 
-    kDebug(7101) << "*** kio_obex Done" << endl;
+    kDebug(7101) <<"*** kio_obex Done";
     return 0;
 }
 }

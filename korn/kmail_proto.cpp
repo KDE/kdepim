@@ -75,7 +75,7 @@ const Protocol* KMail_Protocol::getProtocol( AccountSettings* settings ) const
 		return Protocols::getProto( "qmail" );
 
 	//Type not recognized, or does not exist in KOrn
-	kWarning() << "KMail configuration not found" << endl;
+	kWarning() <<"KMail configuration not found";
 	return 0;
 }
 
@@ -93,7 +93,7 @@ KMailDrop* KMail_Protocol::createMaildrop( AccountSettings *settings ) const
 	if( type == "imap" || type == "cachedimap" || type == "pop" || type == "local" || type == "maildir" )
 		return new KKioDrop();
 	
-	kWarning() << "KMail configuration not found" << endl;
+	kWarning() <<"KMail configuration not found";
 	return 0;
 }
 

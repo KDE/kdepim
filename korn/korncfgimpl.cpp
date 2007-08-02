@@ -199,12 +199,12 @@ void KornCfgImpl::slotMoveUp()
 		return; //Already first, or there is no item selected
 	m_settings->swapBox( lsBoxes->currentRow() - 1, lsBoxes->currentRow() );
 	if( !m_settings->getBox( lsBoxes->currentRow() ) )
-		kWarning() << "The settings do not match with the list widget" << endl;
+		kWarning() <<"The settings do not match with the list widget";
 	else
 		lsBoxes->currentItem()->setText( m_settings->getBox( lsBoxes->currentRow() )->boxName() );
 	lsBoxes->setCurrentRow( lsBoxes->currentRow() - 1 );
 	if( !m_settings->getBox( lsBoxes->currentRow() ) )
-		kWarning() << "The settings do not match with the list widget" << endl;
+		kWarning() <<"The settings do not match with the list widget";
 	else
 		lsBoxes->currentItem()->setText( m_settings->getBox( lsBoxes->currentRow() )->boxName() );
 }
@@ -215,12 +215,12 @@ void KornCfgImpl::slotMoveDown()
 		return; //Already last, or there is no item selected
 	m_settings->swapBox( lsBoxes->currentRow(), lsBoxes->currentRow() + 1 );
 	if( !m_settings->getBox( lsBoxes->currentRow() ) )
-		kWarning() << "The settings do not match with the list widget" << endl;
+		kWarning() <<"The settings do not match with the list widget";
 	else
 		lsBoxes->currentItem()->setText( m_settings->getBox( lsBoxes->currentRow() )->boxName() );
 	lsBoxes->setCurrentRow( lsBoxes->currentRow() + 1 );
 	if( !m_settings->getBox( lsBoxes->currentRow() ) )
-		kWarning() << "The settings do not match with the list widget" << endl;
+		kWarning() <<"The settings do not match with the list widget";
 	else
 		lsBoxes->currentItem()->setText( m_settings->getBox( lsBoxes->currentRow() )->boxName() );
 }

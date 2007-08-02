@@ -46,7 +46,7 @@ void FetchCalendar::run()
 
 void FetchCalendar::fetchMotorolaCalendar()
 {
-    kDebug() << "void FetchCalendar::fetchMotorolaCalendar()\n";
+    kDebug() <<"void FetchCalendar::fetchMotorolaCalendar()";
     QString buffer;
     QRegExp regexp;
     buffer=p_device->sendATCommand(this,  "AT+MDBL=1\r" );
@@ -57,7 +57,7 @@ void FetchCalendar::fetchMotorolaCalendar()
     regexp.setPattern( "^[+]MDBR:[\\s]*([\\d]*),.*");
     regexp.search(buffer);
     int maxcal=regexp.cap(1).toInt();
-    kDebug() << "Max number of calendar entries: " << maxcal << endl;
+    kDebug() <<"Max number of calendar entries:" << maxcal;
     QStringList entries;
     for(int i=0; i<maxcal; i+=10)
     {
@@ -78,7 +78,7 @@ void FetchCalendar::fetchMotorolaCalendar()
         text=decodeString(regexp.cap(2));
         timed=(bool) regexp.cap(3).toInt();
         enabled=(bool) regexp.cap(4).toInt();
-        kDebug() << "Index=" << index << "|| Text=" << text << "|| Timed=" << timed << "|| Enabled=" << enabled << "||end\n";
+        kDebug() <<"Index=" << index <<"|| Text=" << text <<"|| Timed=" << timed <<"|| Enabled=" << enabled <<"||end";
         buffer=(*it).replace(regexp.cap(0), "");
         regexp.setPattern(",\"([\\d:]*)\",\"([\\d-]*)\",([\\d]*),\"([\\d:]*)\",\"([\\d-]*)\",([\\d]*)");
         regexp.search(buffer);
@@ -94,7 +94,7 @@ void FetchCalendar::fetchMotorolaCalendar()
         tempday=buffer.section('-',1,1).toInt();
         tempDate.setYMD( tempyear, tempmonth, tempday );
         startDT.setDate(tempDate);
-        kDebug() << "Setdate args for " << buffer << ": " << tempyear << ", " << tempmonth << ", " << tempday << endl;
+        kDebug() <<"Setdate args for" << buffer <<":" << tempyear <<"," << tempmonth <<"," << tempday;
 
         buffer=regexp.cap(5);
         tempyear=buffer.section('-',2,2).toInt();
@@ -103,9 +103,9 @@ void FetchCalendar::fetchMotorolaCalendar()
         tempday=buffer.section('-',1,1).toInt();
         tempDate.setYMD( tempyear, tempmonth, tempday );
         alDT.setDate(tempDate);
-        kDebug() << "Setdate args for " << buffer << ": " << tempyear << ", " << tempmonth << ", " << tempday << endl;
+        kDebug() <<"Setdate args for" << buffer <<":" << tempyear <<"," << tempmonth <<"," << tempday;
 
-        kDebug() << "Start time=" << startDT.time() << "|| Start Date="
+        kDebug() <<"Start time=" << startDT.time() <<"|| Start Date="
                 << startDT.date() << "|| Duration="
                 << duration << "|| Alarm time="
                 << alDT.time() << "|| Alarm date="

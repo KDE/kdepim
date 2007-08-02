@@ -55,14 +55,14 @@ void OBEXWrapper::setupParameters(	int transport,
     i_use_path = use_path;
     i_use_uuid_len = use_uuid_len;
     client=0;
-    kDebug() << "Initialized obex lib" << endl;
+    kDebug() <<"Initialized obex lib";
     n_files=0;
 }
 
 OBEXWrapper::~OBEXWrapper()
 {
-    kDebug() << "OBEXWrapper::~OBEXWrapper()\n";
-    kDebug() << "OBEXWrapper::ClosingPhone\n";
+    kDebug() <<"OBEXWrapper::~OBEXWrapper()";
+    kDebug() <<"OBEXWrapper::ClosingPhone";
 
     if (client != NULL) {
         /* Disconnect */
@@ -77,69 +77,69 @@ static void info_cb(int event, const char *msg, int len, void *data)
 {
     static unsigned int i = 0;
     char progress[] = "\\|/-";
-    kDebug() << "Info_cb: " << endl;
+    kDebug() <<"Info_cb:";
 
     switch (event) {
 
     case OBEXFTP_EV_ERRMSG:
-        kDebug() << "Error: " << msg << endl;
+        kDebug() <<"Error:" << msg;
         i=0;
         break;
 
     case OBEXFTP_EV_ERR:
-        kDebug() << "failed: " << msg << endl;
+        kDebug() <<"failed:" << msg;
         i=0;
         break;
     case OBEXFTP_EV_OK:
-        kDebug() << "done" << endl;
+        kDebug() <<"done";
         i=0;
         break;
 
     case OBEXFTP_EV_CONNECTING:
-        kDebug() << "Connecting..." << endl;
+        kDebug() <<"Connecting...";
 //        fprintf(stderr, "");
         break;
     case OBEXFTP_EV_DISCONNECTING:
-        kDebug() << "Disconnecting..." << endl;
+        kDebug() <<"Disconnecting...";
         break;
     case OBEXFTP_EV_SENDING:
-        kDebug() << "Sending \"" << msg << "\"... " << endl;
+        kDebug() <<"Sending \"" << msg <<"\"...";
         break;
     case OBEXFTP_EV_RECEIVING:
-        kDebug() << "Reciving \"" << msg << "\"... " << endl;
+        kDebug() <<"Reciving \"" << msg <<"\"...";
         break;
 
     case OBEXFTP_EV_LISTENING:
-        kDebug() << "Waiting for incoming connection" << endl;
+        kDebug() <<"Waiting for incoming connection";
         break;
 
     case OBEXFTP_EV_CONNECTIND:
-        kDebug() << "Incoming connection" << endl;
+        kDebug() <<"Incoming connection";
         break;
     case OBEXFTP_EV_DISCONNECTIND:
-        kDebug() << "Disconnecting" << endl;
+        kDebug() <<"Disconnecting";
         break;
 
     case OBEXFTP_EV_INFO:
-        kDebug() << "Got info " << msg << ": " << endl; // 64 bit problems ?
+        kDebug() <<"Got info" << msg <<":"; // 64 bit problems ?
         break;
 
     case OBEXFTP_EV_BODY:
         //if (c == 'l' || c == 'X' || c == 'P') {
             if (msg == NULL)
-                kDebug() << "No body." << endl;
+                kDebug() <<"No body.";
             else if (len == 0)
-                kDebug() << "Empty body." << endl;
+                kDebug() <<"Empty body.";
             else
-                kDebug() << msg << endl;
+                kDebug() << msg;
                 write(STDOUT_FILENO, msg, len);
                 ;
         //}  <- if
         break;
 
     case OBEXFTP_EV_PROGRESS:
-        kDebug() <<  "Progress: " << i++ << "; " << progress[i % strlen(progress) ] << endl;
-        kDebug() << "Current buffer size: " << OBEXWrapper::instance()->bufferSize() << endl;
+        kDebug() <<"Progress:" << i++ <<";" << progress[i % strlen(progress) ];
+        kDebug() <<"Current buffer size:" << OBEXWrapper::instance()->bufferSize();
         break;
     }
 }
@@ -157,17 +157,17 @@ extern "C"
 
 bool OBEXWrapper::connectClient()
 {
-    kDebug() << " OBEXWrapper::connectClient(): checking client;" << endl;
+    kDebug() <<" OBEXWrapper::connectClient(): checking client;";
     if (client)
     {
-        kDebug() << "Already connected\n";
+        kDebug() <<"Already connected";
         return true;
     }
-    kDebug() << "Opening client, transport: " << i_transport << endl ;
+    kDebug() <<"Opening client, transport:" << i_transport;
         /* Open */
     client = obexftp_open (i_transport, NULL, info_cb, NULL);
     if(!client) {
-        kDebug() << "Error opening obexftp-client" << endl;
+        kDebug() <<"Error opening obexftp-client";
         return false;
     }
     if (!i_use_conn) {
@@ -177,14 +177,14 @@ bool OBEXWrapper::connectClient()
         client->quirks &= ~OBEXFTP_SPLIT_SETPATH;
     }
     for (int retry = 0; retry < 3; retry++) {
-        kDebug() << "Connecting: " << c_device << endl;
+        kDebug() <<"Connecting:" << c_device;
         /* Connect*/
         if (obexftp_connect_uuid (client, c_device, i_channel , UUID_FBS, sizeof(UUID_FBS)) >= 0) {
-            kDebug() << "Phone connected in obex mode" << endl;
+            kDebug() <<"Phone connected in obex mode";
             return true;
         }
         sleep (2);
-        kDebug() << "Still trying to connect ( try " << retry << " )" << endl;
+        kDebug() <<"Still trying to connect ( try" << retry <<" )";
         perror("Connection error: ");
     } // <- for
 
@@ -195,7 +195,7 @@ bool OBEXWrapper::connectClient()
 
 void OBEXWrapper::disconnectClient()
 {
-    kDebug() << "OBEXWrapper::disconnectClient()" << endl;
+    kDebug() <<"OBEXWrapper::disconnectClient()";
 
     if (client != NULL) {
         /* Disconnect */
@@ -205,12 +205,12 @@ void OBEXWrapper::disconnectClient()
         client = NULL;
     }
 
-    kDebug() << "**************** Client disconnected" << endl;
+    kDebug() <<"**************** Client disconnected";
 }
 
 bool OBEXWrapper::fetchFileList(const QString &path) 
 {
-    kDebug() << "OBEXWrapper::fetchFileList()" << endl;
+    kDebug() <<"OBEXWrapper::fetchFileList()";
 
     files.clear();
     n_files = 0;
@@ -230,7 +230,7 @@ bool OBEXWrapper::fetchFileList(const QString &path)
         }
         obexftp_closedir(dir);
 
-        kDebug() << "OBEXWrapper::fetchFileList() number of files:  " << n_files  << endl;
+        kDebug() <<"OBEXWrapper::fetchFileList() number of files:" << n_files;
         
         return true;
     }
@@ -244,7 +244,7 @@ bool OBEXWrapper::fetchFileList(const QString &path)
 */
 int OBEXWrapper::getFile(const QString &path)
 {
-    kDebug() << "OBEXWrapper::getFile(" << path << ",...)\n";
+    kDebug() <<"OBEXWrapper::getFile(" << path <<",...)";
     
 
     if( ! connectClient() ) return 0;
@@ -257,9 +257,9 @@ int OBEXWrapper::getFile(const QString &path)
 
 int OBEXWrapper::putFile( const QString &path, char* buffer, int size)
 {
-    kDebug() << "OBEXWrapper::putFile(" << path << ",.......,......)\n";
+    kDebug() <<"OBEXWrapper::putFile(" << path <<",.......,......)";
     if( ! connectClient() ) return -1;
-    kDebug() << "Writing " << path << " to the client, size: " << size << " bytes.\n";
+    kDebug() <<"Writing" << path <<" to the client, size:" << size <<" bytes.";
 
     int ret = obexftp_put_data( client, buffer, size, path.latin1() );
 
@@ -270,7 +270,7 @@ int OBEXWrapper::putFile( const QString &path, char* buffer, int size)
 
 bool OBEXWrapper::deleteFile( const QString &path )
 {
-    kDebug() << "OBEXWrapper::deleteFile(" << path << ")\n";
+    kDebug() <<"OBEXWrapper::deleteFile(" << path <<")";
     if( ! connectClient() ) return false;
 
     bool ret = obexftp_del( client, path.latin1() );
@@ -280,7 +280,7 @@ bool OBEXWrapper::deleteFile( const QString &path )
 
 bool OBEXWrapper::mkDir( const QString &path )
 {
-    kDebug() << "OBEXWrapper::makeDir(" << path << ")\n";
+    kDebug() <<"OBEXWrapper::makeDir(" << path <<")";
     if( ! connectClient() ) return false;
 
     bool ret = obexftp_mkpath( client, path.latin1() );

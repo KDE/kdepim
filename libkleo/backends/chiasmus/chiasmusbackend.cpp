@@ -383,7 +383,7 @@ public:
       return new ChiasmusJob( ChiasmusJob::Encrypt );
     if ( qstricmp( type, "x-decrypt" ) == 0 && args.size() == 0 )
       return new ChiasmusJob( ChiasmusJob::Decrypt );
-    kDebug(5150) << "ChiasmusBackend::Protocol: tried to instantiate unknown job type \""
+    kDebug(5150) <<"ChiasmusBackend::Protocol: tried to instantiate unknown job type \""
                   << type << "\"" << endl;
 
     return 0;

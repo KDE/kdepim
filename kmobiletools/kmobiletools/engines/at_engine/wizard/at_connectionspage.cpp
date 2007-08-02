@@ -54,7 +54,7 @@ int AT_ConnectionsPage::selectedConnections() {
     int ret=0;
     for(int i=0; i<sel.count(); i++)
         ret|=(sel[i]->type()-QListWidgetItem::UserType);
-    kDebug() << "selectedConnections now is " << ret << endl;
+    kDebug() <<"selectedConnections now is" << ret;
     i_connections=ret;
     return ret;
 }
@@ -93,21 +93,21 @@ void AT_ConnectionsPage::selChanged() {
 
 bool AT_ConnectionsPage::validatePage() {
     ATDevicesConfig *cfg=(ATDevicesConfig*) DEVCFG(wizard()->objectName() );
-    kDebug() << "Saving settings to " << wizard()->objectName() << endl;
+    kDebug() <<"Saving settings to" << wizard()->objectName();
     cfg->setAt_connections(field("connections").toInt());
     if(usrConnWidget) cfg->setAt_userdevices( usrConnWidget->devicePaths()->items() );
-    kDebug() << "Connections: " << field("connections").toInt() << endl;
+    kDebug() <<"Connections:" << field("connections").toInt();
     cfg->writeConfig();
     return true;
 }
 
 bool AT_ConnectionsPage::isComplete() const {
-    kDebug() << "AT_ConnectionsPage::isComplete()" << endl;
+    kDebug() <<"AT_ConnectionsPage::isComplete()";
 //     if(!QWizardPage::isComplete() ) return false; it seems to not work...
     if(i_connections==0) return false;
     if(blueWidget && (! blueWidget->isComplete()) ) return false;
     if(usrConnWidget && (! usrConnWidget->isComplete() ) ) return false;
-    kDebug() << "true" << endl;
+    kDebug() <<"true";
     return true;
 }
 

@@ -82,7 +82,7 @@ void ResourceFeaturePlan::writeConfig( KConfigGroup &group )
 
 bool ResourceFeaturePlan::doLoad( bool )
 {
-  kDebug() << "ResourceFeaturePlan::load()" << endl;
+  kDebug() <<"ResourceFeaturePlan::load()";
 
   calendar()->close();
 

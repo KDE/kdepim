@@ -49,7 +49,7 @@ AddresseeEditorDialog::AddresseeEditorDialog( KAB::Core * /*core*/,
   // modal subdialogs will only affect this dialog, not the other windows
   setAttribute( Qt::WA_GroupLeader );
 
-  kDebug(5720) << "AddresseeEditorDialog()" << endl;
+  kDebug(5720) <<"AddresseeEditorDialog()";
 
   QFrame *page = new QFrame( this );
   setMainWidget( page );
@@ -77,7 +77,7 @@ AddresseeEditorDialog::AddresseeEditorDialog( KAB::Core * /*core*/,
 
 AddresseeEditorDialog::~AddresseeEditorDialog()
 {
-  kDebug(5720) << "~AddresseeEditorDialog()" << endl;
+  kDebug(5720) <<"~AddresseeEditorDialog()";
 
   KConfig _config( "kaddressbookrc" );
   KConfigGroup config(&_config, "AddresseeEditor" );

@@ -125,7 +125,7 @@ void KAddressbookPart::exit()
 
 bool KAddressbookPart::openURL( const KUrl &url )
 {
-  kDebug(5720) << "KAddressbookPart:openFile()" << endl;
+  kDebug(5720) <<"KAddressbookPart:openFile()";
 
   mCore->widget()->show();
 
@@ -149,7 +149,7 @@ bool KAddressbookPart::handleCommandLine()
 
 void KAddressbookPart::guiActivateEvent( KParts::GUIActivateEvent *e )
 {
-  kDebug(5720) << "KAddressbookPart::guiActivateEvent" << endl;
+  kDebug(5720) <<"KAddressbookPart::guiActivateEvent";
   KParts::ReadOnlyPart::guiActivateEvent( e );
 
   if ( e->activated() )

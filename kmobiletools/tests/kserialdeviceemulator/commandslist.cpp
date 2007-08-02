@@ -64,7 +64,7 @@ void CommandsList::loadFile(const QString &filen)
             if (line.left(2) == "##") { // Command directive
                 if (line.contains("NOSMSSLOTS")) {
                     b_hassmsslots=false;
-                    kDebug() << "Setting NO sms slots\n";
+                    kDebug() <<"Setting NO sms slots";
                 }
             }
             continue;
@@ -73,7 +73,7 @@ void CommandsList::loadFile(const QString &filen)
         {
             if(cmd.length() && answer.length())
             {
-//                 kDebug() << "Found command set: cmd==" << cmd << ";; answer==" << answer << ";;\n";
+//                 kDebug() <<"Found command set: cmd==" << cmd <<";; answer==" << answer <<";;";
                 append( Command(i,cmd, answer));
                 cmd.clear();
                 answer.clear();

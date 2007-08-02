@@ -74,7 +74,7 @@ void Query::call( const QString &server, const QString &method,
 
   KIO::TransferJob *job = KIO::http_post( KUrl( server ), postData, false );
   if ( !job ) {
-    kWarning() << "Unable to create KIO job for " << server << endl;
+    kWarning() <<"Unable to create KIO job for" << server;
     return;
   }
   job->addMetaData( "UserAgent", userAgent );
@@ -253,7 +253,7 @@ QString Query::marshal( const QVariant &arg ) const
         return markup;
       }
       default:
-      kWarning() << "Failed to marshal unknown variant type: " << arg.type() << endl;
+      kWarning() <<"Failed to marshal unknown variant type:" << arg.type();
   };
   return QString();
 }
@@ -307,7 +307,7 @@ QVariant Query::demarshal( const QDomElement &elem ) const
     return QVariant( map );
   }
   else
-    kWarning() << "Cannot demarshal unknown type " << typeName << endl;
+    kWarning() <<"Cannot demarshal unknown type" << typeName;
 
   return QVariant();
 }
@@ -362,7 +362,7 @@ void Server::call( const QString &method, const QList<QVariant> &args,
                    QObject* faultObj, const char* faultSlot, const QVariant &id )
 {
   if ( m_url.isEmpty() )
-    kWarning() << "Cannot execute call to " << method << ": empty server URL" << endl;
+    kWarning() <<"Cannot execute call to" << method <<": empty server URL";
 
   Query *query = Query::create( id, this );
   connect( query, SIGNAL( message( const QList<QVariant> &, const QVariant& ) ), msgObj, messageSlot );

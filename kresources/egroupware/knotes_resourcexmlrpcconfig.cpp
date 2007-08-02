@@ -74,7 +74,7 @@ void ResourceXMLRPCConfig::loadSettings( KRES::Resource *res )
   ResourceXMLRPC *resource = dynamic_cast<ResourceXMLRPC*>( res );
 
   if ( !resource ) {
-    kDebug(5700) << "ResourceXMLRPCConfig::loadSettings(): cast failed" << endl;
+    kDebug(5700) <<"ResourceXMLRPCConfig::loadSettings(): cast failed";
     return;
   }
 
@@ -89,7 +89,7 @@ void ResourceXMLRPCConfig::saveSettings( KRES::Resource *res )
   ResourceXMLRPC *resource = dynamic_cast<ResourceXMLRPC*>( res );
 
   if ( !resource ) {
-    kDebug(5700) << "ResourceXMLRPCConfig::saveSettings(): cast failed" << endl;
+    kDebug(5700) <<"ResourceXMLRPCConfig::saveSettings(): cast failed";
     return;
   }
 

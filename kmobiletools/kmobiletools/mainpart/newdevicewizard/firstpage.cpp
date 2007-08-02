@@ -53,11 +53,11 @@ QString FirstPage::engineLibrary() const {
 
 void FirstPage::engineSelected(int index)
 {
-    kDebug() << "FirstPage::engineSelected(" << index << ")\n";
+    kDebug() <<"FirstPage::engineSelected(" << index <<")";
     KPluginInfo engInfo=KMobileTools::EnginesList::instance()->engineInfo(engineSelection->itemData(index).toString() );
     if(!engInfo.isValid())
     {
-        kDebug() << "No data found for " << index << endl;
+        kDebug() <<"No data found for" << index;
         KMobileTools::EnginesList::instance()->setWizardEngine();
         d->enginelibname.clear();
         emit engineLibraryChanged( engineLibrary() );
@@ -69,7 +69,7 @@ void FirstPage::engineSelected(int index)
     emit engineLibraryChanged( engineLibrary() );
 //     setField("engine",d->enginelibname);
     // now let's load the engine library
-    kDebug() << "Engine Library field changed: " << field("engine").toString() << endl;
+    kDebug() <<"Engine Library field changed:" << field("engine").toString();
     KMobileTools::Engine *engine=KMobileTools::Engine::load( engineLibrary() , wizard() );
     if(!engine)
     {
@@ -88,14 +88,14 @@ void FirstPage::engineSelected(int index)
 
 void FirstPage::slotCompleteChanged()
 {
-    kDebug() << "FirstPage::slotCompleteChanged(); is complete: " << isComplete() << endl;
+    kDebug() <<"FirstPage::slotCompleteChanged(); is complete:" << isComplete();
     if(wizard()) wizard()->button(QWizard::CommitButton)->setEnabled(isComplete() );
 }
 
 
 void FirstPage::initializePage()
 {
-    kDebug() << "FirstPage::initializePage()" << endl;
+    kDebug() <<"FirstPage::initializePage()";
     connect(this, SIGNAL(completeChanged()), this, SLOT(slotCompleteChanged()));
     registerField("phonename*", phonename);
     registerField("engine*", this, "engineLibrary", SIGNAL(engineLibraryChanged(const QString&)) );
@@ -114,14 +114,14 @@ void FirstPage::initializePage()
         engineSelection->addItem(i18n("No engines found. Reinstall KMobileTools") );
 //         setNextEnabled(currentPage(), false); @TODO port to new QWizard API
     }
-    kDebug() << "is complete? " << isComplete() << endl;
+    kDebug() <<"is complete?" << isComplete();
     connect(engineSelection, SIGNAL(currentIndexChanged (int)), this, SLOT(engineSelected(int)) );
 }
 
 bool FirstPage::isFinalPage() const { return false; }
 bool FirstPage::validatePage() {
     if(!EnginesList::instance()->wizardEngine()) return false; // just for safety
-    kDebug() << "Creating config entry named " << wizard()->objectName() << ";" << endl;
+    kDebug() <<"Creating config entry named" << wizard()->objectName() <<";";
     KMobileTools::DevicesConfig *cfg=EnginesList::instance()->wizardEngine()->config(true, wizard()->objectName() );
     cfg->setDevicename(field("phonename").toString() );
     cfg->setEngine(field("engine").toString() );

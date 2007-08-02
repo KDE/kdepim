@@ -51,11 +51,11 @@ P2KImpl::P2KImpl() : QObject()
 
 bool P2KImpl::listRoot(const KUrl &url, Q3ValueList<KIO::UDSEntry> &list)
 {
-    kDebug() << "P2KImpl::listRoot" << endl;
-    if(p2kWrapper->connectPhone() ) kDebug() << "Files count: " << p2kWrapper->countFiles() << endl;
+    kDebug() <<"P2KImpl::listRoot";
+    if(p2kWrapper->connectPhone() ) kDebug() <<"Files count:" << p2kWrapper->countFiles();
     QStringList names_found;
     QStringList dirList = p2kWrapper->getRoot();
-    kDebug() << "P2KImpl::" << dirList << endl;
+    kDebug() <<"P2KImpl::" << dirList;
     QStringList::ConstIterator dirpath = dirList.begin();
     QStringList::ConstIterator end = dirList.end();
     for(; dirpath!=end; ++dirpath)
@@ -73,12 +73,12 @@ bool P2KImpl::listRoot(const KUrl &url, Q3ValueList<KIO::UDSEntry> &list)
 bool P2KImpl::listDirectory(const KUrl &url, Q3ValueList<KIO::UDSEntry> &list)
 {
     if (!p2kWrapper->getFiles().count() ) p2kWrapper->fetchFileList();
-    kDebug() << "P2KImpl::listDirectory: " << url << endl;
-    kDebug() << "P2KImpl::listDirectory---- directory path only: " << url.path() << endl;
+    kDebug() <<"P2KImpl::listDirectory:" << url;
+    kDebug() <<"P2KImpl::listDirectory---- directory path only:" << url.path();
     QStringList names_found;
     QStringList dirList = p2kWrapper->getDirs();
 //     dirList << "/b" << "/b/prova";
-//     kDebug() << "Directory list: " << dirList << endl;
+//     kDebug() <<"Directory list:" << dirList;
     QRegExp regexp;
     regexp.setPattern(QString("^").append(QRegExp::escape(url.path()) ) );
     names_found=dirList.grep(regexp);
@@ -89,7 +89,7 @@ bool P2KImpl::listDirectory(const KUrl &url, Q3ValueList<KIO::UDSEntry> &list)
         foundstr=(*it).replace(regexp, "");
         if(foundstr[foundstr.length()-1]==QDir::separator()) foundstr=foundstr.left(foundstr.length()-2);
         if(foundstr[0]==QDir::separator()) foundstr=foundstr.mid(1);
-//         kDebug() << "P2KImpl Listing directory `" << foundstr << "` in " << url.path() << endl;
+//         kDebug() <<"P2KImpl Listing directory `" << foundstr <<"` in" << url.path();
         if(foundstr.contains(QDir::separator() )) continue;
 //         foundstr=foundstr.remove(url.path());
         KIO::UDSEntry entry;
@@ -103,16 +103,16 @@ bool P2KImpl::listDirectory(const KUrl &url, Q3ValueList<KIO::UDSEntry> &list)
     {
         fname=(*fileInfo).name;
         if(!fname.contains(regexp) ) continue;
-//         kDebug() << "P2KImpl Listing files: " << fname.replace(regexp, "").mid(1) << endl;
+//         kDebug() <<"P2KImpl Listing files:" << fname.replace(regexp,"").mid(1);
         if(fname.replace(regexp, "").mid(1).contains(QDir::separator() ) ) continue;
-        kDebug() << "Listing files: `" << (*fileInfo).name << "`" << endl;
+        kDebug() <<"Listing files: `" << (*fileInfo).name <<"`";
         KIO::UDSEntry entry;
         createEntry(entry, url.url() + QDir::separator() + KUrl((*fileInfo).name).fileName(), *fileInfo);
         list.append(entry);
     }
 
     /*
-//     kDebug() << "P2KImpl::" << dirList << endl;
+//     kDebug() <<"P2KImpl::" << dirList;
 //     QStringList::ConstIterator dirpath = dirList.begin();
 //     QStringList::ConstIterator end = dirList.end();
     QString s_entry;
@@ -122,7 +122,7 @@ bool P2KImpl::listDirectory(const KUrl &url, Q3ValueList<KIO::UDSEntry> &list)
         if( ! s_entry.contains( url.path() ) ) continue;
         s_entry=s_entry.replace( 0,url.path().length(), "").mid(1);
         if(! s_entry.length() || s_entry.contains('/') ) continue;
-        kDebug() << "************ Creating entry " << s_entry << endl;
+        kDebug() <<"************ Creating entry" << s_entry;
         KIO::UDSEntry entry;
         entry.clear();
 //         QString dir_found=directory.append("/").append(*dirpath);
@@ -179,28 +179,28 @@ void P2KImpl::createTopLevelEntry(KIO::UDSEntry &entry) const
 
 void P2KImpl::createEntry(KIO::UDSEntry &entry, const KUrl &url, p2k_fileInfo &file)
 {
-    kDebug() << "Using ***NEW*** createEntry `" << url.url() << "`\n";
+    kDebug() <<"Using ***NEW*** createEntry `" << url.url() <<"`";
     QString filepath=url.path();
     QString filename=url.fileName();
     QString directory = /*url.host() +*/ url.directory();
-    kDebug() << "File name: `" << filename << "`; file path: `" << filepath << "`; directory: `" << directory << "`\n";
+    kDebug() <<"File name: `" << filename <<"`; file path: `" << filepath <<"`; directory: `" << directory <<"`";
     
     KMimeType mimetype=(* KMimeType::findByURL( filepath, file.attr, false,  true));
     KDesktopFile desktop(filepath, true);
-    kDebug() << "KDesktopFile:: " << desktop.fileName() << endl;
+    kDebug() <<"KDesktopFile::" << desktop.fileName();
 
     entry.clear();
 
     addAtom(entry, KIO::UDSEntry::UDS_NAME, 0, filename);
     addAtom(entry, KIO::UDSEntry::UDS_SIZE, file.size);
     addAtom(entry, KIO::UDSEntry::UDS_URL, 0, url.url() );
-    //  kDebug() << "*******debug UDSEntry::UDS_URL: obex:/" << directory << filename << endl;
+    //  kDebug() <<"*******debug UDSEntry::UDS_URL: obex:/" << directory << filename;
     //  addAtom(entry, KIO::UDSEntry::UDS_FILE_TYPE, (S_IRUSR | S_IRGRP | S_IROTH | S_IXUSR | S_IXGRP | S_IXOTH) );
     addAtom(entry, KIO::UDSEntry::UDS_FILE_TYPE, /*file.attr*/ S_IFREG );
 //     addAtom(entry, KIO::UDSEntry::UDS_CREATION_TIME, file.mtime );
     addAtom(entry, KIO::UDSEntry::UDS_MIME_TYPE, 0, mimetype.name() );
 
-    kDebug() << filepath << " mime type: " << mimetype.name() << "; file attributes: " << QString::number(file.attr) << endl;
+    kDebug() << filepath <<" mime type:" << mimetype.name() <<"; file attributes:" << QString::number(file.attr);
 
     QString icon = desktop.readIcon();
     QString empty_icon = desktop.readEntry("EmptyIcon");
@@ -231,11 +231,11 @@ void P2KImpl::createEntry(KIO::UDSEntry &entry,
                           const QString &directory,
                           const QString &file, bool isDrive)
 {
-    kDebug() << "P2KImpl::createEntry: " << directory << "<->" << file << endl;
+    kDebug() <<"P2KImpl::createEntry:" << directory <<"<->" << file;
 
     KDesktopFile desktop(directory+file, true);
 
-    kDebug() << "path = " << directory << file << endl;
+    kDebug() <<"path =" << directory << file;
 
     entry.clear();
 
@@ -285,14 +285,14 @@ void P2KImpl::createEntry(KIO::UDSEntry &entry,
     addAtom(entry, KIO::UDSEntry::UDS_NAME, 0, filename);
     addAtom(entry, KIO::UDSEntry::UDS_SIZE, file.size);
 //     addAtom(entry, KIO::UDSEntry::UDS_URL, 0, "p2k:/"+directory + filename);
-//     kDebug() << "*******debug UDSEntry::UDS_URL: p2k:/" << directory << filename << endl;
+//     kDebug() <<"*******debug UDSEntry::UDS_URL: p2k:/" << directory << filename;
     addAtom(entry, KIO::UDSEntry::UDS_FILE_TYPE, (S_IRUSR | S_IRGRP | S_IROTH | S_IXUSR | S_IXGRP | S_IXOTH) );
     // Attributes: 0=nothing, 2=hidden, 4=system, 1=readonly
 //     if (file.attr & 1 ) addAtom(entry, KIO::UDSEntry::UDS_ACCESS, 0555);
 //     if (file.attr & 2 ) addAtom( entry, KIO::UDSEntry::UDS_HIDDEN, true);
 //     if (file.attr & 4 );
     addAtom(entry, KIO::UDSEntry::UDS_MIME_TYPE, 0, mimetype.name() );
-    kDebug() << filename << " mime type: " << mimetype.name() << "; file attributes: " << file.attr << endl;
+    kDebug() << filename <<" mime type:" << mimetype.name() <<"; file attributes:" << file.attr;
     QString icon = desktop.readIcon();
     QString empty_icon = desktop.readEntry("EmptyIcon");
 
@@ -350,7 +350,7 @@ void P2KImpl::fetchFilesList()
  */
 int P2KImpl::getFile(const KUrl &url, char* buffer)
 {
-    kDebug() << "kio_p2k::getFile " << url.path() << endl;
+    kDebug() <<"kio_p2k::getFile" << url.path();
     return p2kWrapper->getFile( url.path(), buffer );
 }
 
@@ -360,7 +360,7 @@ int P2KImpl::getFile(const KUrl &url, char* buffer)
  */
 bool P2KImpl::statEntry(const KUrl &url, KIO::UDSEntry &entry)
 {
-    kDebug() << "Stat for " << url.path() << endl;
+    kDebug() <<"Stat for" << url.path();
 
     Q3ValueList<p2k_fileInfo> fileList=p2kWrapper->getFiles();
     Q3ValueListIterator<p2k_fileInfo> files_it;
@@ -375,14 +375,14 @@ bool P2KImpl::statEntry(const KUrl &url, KIO::UDSEntry &entry)
     }
     if ( ! found ) return false;
     QString s_entry=(*files_it).name;
-    kDebug() << "s_entry(1) == " << s_entry << endl;
+    kDebug() <<"s_entry(1) ==" << s_entry;
     if( ! s_entry.contains( url.path() ) ) return false;
     /*s_entry=s_entry.replace( 0,url.path().length(), "").mid(1);
-    kDebug() << "s_entry(2) == " << s_entry << endl;
+    kDebug() <<"s_entry(2) ==" << s_entry;
 
     if(! s_entry.length() || s_entry.contains('/') ) return false;*/
     s_entry=QStringList::split('/', s_entry).last();
-    kDebug() << "OK, creating entry " << s_entry << endl;
+    kDebug() <<"OK, creating entry" << s_entry;
     entry.clear();
 //         QString dir_found=directory.append("/").append(*dirpath);
 //         if(!dir_found.find('/') ) dir_found=dir_found.mid(1);

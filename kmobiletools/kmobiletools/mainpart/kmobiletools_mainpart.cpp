@@ -139,7 +139,7 @@ kmobiletoolsMainPart::kmobiletoolsMainPart( QWidget *parentWidget, QObject *pare
 
 kmobiletoolsMainPart::~kmobiletoolsMainPart()
 {
-    kDebug() << "kmobiletoolsMainPart::~kmobiletoolsMainPart()\n";
+    kDebug() <<"kmobiletoolsMainPart::~kmobiletoolsMainPart()";
 }
 
 
@@ -155,7 +155,7 @@ void kmobiletoolsMainPart::slotAutoLoadDevices()
 
 void kmobiletoolsMainPart::loadDevicePart( const QString &deviceName, bool setActive )
 {
-    kDebug() << "KMobileTools::EnginesList::instance()->locklist(): " << KMobileTools::EnginesList::instance()->locklist() << endl;
+    kDebug() <<"KMobileTools::EnginesList::instance()->locklist():" << KMobileTools::EnginesList::instance()->locklist();
 
     // try to lock device
     if( !KMobileTools::EnginesList::instance()->lock(deviceName) )
@@ -317,7 +317,7 @@ void kmobiletoolsMainPart::deleteDevicePart( const QString& deviceName )
 
     QTreeWidgetItemIterator it( p_listview );
     while ( *it ) {
-        kDebug() << KMobileTools::DevicesConfig::deviceGroup((*it)->text(0)) << "==" << deviceName << endl;
+        kDebug() << KMobileTools::DevicesConfig::deviceGroup((*it)->text(0)) <<"==" << deviceName;
         if ( KMobileTools::DevicesConfig::deviceGroup((*it)->text(0))==deviceName )
         {
             delete *it;
@@ -354,11 +354,11 @@ void kmobiletoolsMainPart::listviewClicked( QTreeWidgetItem* item, int column )
 
 void kmobiletoolsMainPart::slotQuit()
 {
-    kDebug() << "@@@@@@@@@@@@@@@@@@@ Debugging closing: KMobileTools::EnginesList::instance()->queryClose();\n";
+    kDebug() <<"@@@@@@@@@@@@@@@@@@@ Debugging closing: KMobileTools::EnginesList::instance()->queryClose();";
     KMobileTools::EnginesList::instance()->queryClose();
-    kDebug() << "@@@@@@@@@@@@@@@@@@@ Debugging closing: delete this;\n";
+    kDebug() <<"@@@@@@@@@@@@@@@@@@@ Debugging closing: delete this;";
     delete this;
-    kDebug() << "@@@@@@@@@@@@@@@@@@@ Debugging closing: kapp->quit();\n";
+    kDebug() <<"@@@@@@@@@@@@@@@@@@@ Debugging closing: kapp->quit();";
     kapp->quit();
 }
 
@@ -434,12 +434,12 @@ bool kmobiletoolsMainPart::checkConfigVersion()
     // @TODO fix this, anyway
     uint cfgver=KMobileTools::MainConfig::self()->configversion();
     if(cfgver>=CURCFGVER) return true;
-    kDebug() << "Checking config version::" << cfgver << endl;
+    kDebug() <<"Checking config version::" << cfgver;
     QDir cfgdir(KGlobal::dirs()->saveLocation("config") );
     QStringList entries=cfgdir.entryList( QStringList() << "*kmobiletools*", QDir::Files );
     if(entries.isEmpty())
     {
-        kDebug() << "No config files found, skipping checkConfigVersion;\n";
+        kDebug() <<"No config files found, skipping checkConfigVersion;";
         return true;
     }
     QString archiveName=KGlobal::dirs()->saveLocation("tmp") + "kmobiletools-" +
@@ -455,7 +455,7 @@ bool kmobiletoolsMainPart::checkConfigVersion()
     {
         arch.addLocalFile( cfgdir.path() + QDir::separator() + (*it), (*it));
         QFile::remove( cfgdir.path() + QDir::separator() + (*it) );
-        kDebug() << "Entry ::" << cfgdir.path() + QDir::separator() + (*it) << " archived and removed." << endl;
+        kDebug() <<"Entry ::" << cfgdir.path() + QDir::separator() + (*it) <<" archived and removed.";
     }
     arch.close();
     KMessageBox::information(widget(), i18n("<qt><p>Your old configuration files were saved in <b>%1</b>.</p><p>KMobileTools will now close. You can restart it.</p></qt>", archiveName));

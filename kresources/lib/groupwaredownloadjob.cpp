@@ -43,7 +43,7 @@ GroupwareDownloadJob::GroupwareDownloadJob( GroupwareDataAdaptor *adaptor )
 
 void GroupwareDownloadJob::run()
 {
-  kDebug(5800) << "GroupwareDownloadJob::run()" << endl;
+  kDebug(5800) <<"GroupwareDownloadJob::run()";
 
   if ( !adaptor() ) {
     error( i18n("Unable to initialize the download job.") );
@@ -92,15 +92,15 @@ void GroupwareDownloadJob::listItems()
     downloadItem();
   } else {
 
-    //kDebug(7000) << "props: " << props.toString() << endl;
+    //kDebug(7000) <<"props:" << props.toString();
     KUrl url = mFoldersForDownload.front();
     mFoldersForDownload.pop_front();
-    kDebug(5800) << "listItems: " << url.url() << endl;
+    kDebug(5800) <<"listItems:" << url.url();
 
     adaptor()->adaptDownloadUrl( url );
-    kDebug(5800) << "listItems, after adaptDownloadUrl: " << url.url() << endl;
+    kDebug(5800) <<"listItems, after adaptDownloadUrl:" << url.url();
 
-    kDebug(5800) << "OpenGroupware::listIncidences(): " << url << endl;
+    kDebug(5800) <<"OpenGroupware::listIncidences():" << url;
 
     mListItemsData.clear();
     mListEventsJob = adaptor()->createListItemsJob( url );
@@ -115,7 +115,7 @@ void GroupwareDownloadJob::listItems()
 
 void GroupwareDownloadJob::slotListItemsData( KIO::Job *, const QByteArray &data )
 {
-  kDebug(5800) << "OpenGroupware::slotListItemsData()" << endl;
+  kDebug(5800) <<"OpenGroupware::slotListItemsData()";
 
   mListItemsData.append( data.data() );
 }
@@ -123,7 +123,7 @@ void GroupwareDownloadJob::slotListItemsData( KIO::Job *, const QByteArray &data
 
 void GroupwareDownloadJob::slotListItemsResult( KJob *job )
 {
-  kDebug(5800) << "GroupwareDownloadJob::slotListItemsResult(): " << endl;
+  kDebug(5800) <<"GroupwareDownloadJob::slotListItemsResult():";
 
   if ( job->error() ) {
     if ( mProgress ) {
@@ -157,7 +157,7 @@ void GroupwareDownloadJob::deleteIncidencesGoneFromServer()
 
 void GroupwareDownloadJob::downloadItem()
 {
-  kDebug(7000) << " downloadItem " << endl;
+  kDebug(7000) <<" downloadItem";
   if ( mItemsForDownload.isEmpty() ) { 
     if ( mProgress ) mProgress->setComplete();
     
@@ -196,7 +196,7 @@ void GroupwareDownloadJob::downloadItem()
 
 void GroupwareDownloadJob::slotDownloadItemResult( KJob *job )
 {
-  kDebug(5800) << "GroupwareDownloadJob::slotDownloadItemResult(): " << endl;
+  kDebug(5800) <<"GroupwareDownloadJob::slotDownloadItemResult():";
 
   KIO::TransferJob *trfjob = dynamic_cast<KIO::TransferJob*>(job);
   if ( !trfjob ) return;
@@ -219,7 +219,7 @@ void GroupwareDownloadJob::slotDownloadItemResult( KJob *job )
 
 void GroupwareDownloadJob::slotDownloadItemData( KIO::Job *, const QByteArray &data )
 {
-  kDebug(5800) << "OpenGroupware::slotDownloadItemData()" << endl;
+  kDebug(5800) <<"OpenGroupware::slotDownloadItemData()";
 
   mDownloadItemsData.append( QString::fromUtf8( data.data(), data.size() ) );
 }
@@ -239,7 +239,7 @@ void GroupwareDownloadJob::slotItemToDownload( const KUrl &remoteURL,
 
 void GroupwareDownloadJob::slotItemOnServer( const KUrl &remoteURL )
 {
-kDebug()<<"GroupwareDownloadJob::slotItemOnServer( " << remoteURL.url() << ")" << endl;
+kDebug()<<"GroupwareDownloadJob::slotItemOnServer(" << remoteURL.url() <<")";
   if ( !mCurrentlyOnServer.contains( remoteURL ) ) {
     mCurrentlyOnServer.append( remoteURL );
   }
@@ -260,7 +260,7 @@ void GroupwareDownloadJob::slotItemDownloadError( const KUrl &remoteURL, const Q
 void GroupwareDownloadJob::slotItemDownloaded( const QString &localID,
          const KUrl &remoteURL, const QString &fingerprint )
 {
-kDebug()<<"GroupwareDownloadJob::slotItemDownloaded( " << localID << ", " << remoteURL.url() << ", " << fingerprint << ")" << endl;
+kDebug()<<"GroupwareDownloadJob::slotItemDownloaded(" << localID <<"," << remoteURL.url() <<"," << fingerprint <<")";
   if ( mItemsForDownload.contains( remoteURL ) ) {
     mItemsDownloaded[ remoteURL ] = mItemsForDownload[ remoteURL ];
     mItemsForDownload.remove( remoteURL );

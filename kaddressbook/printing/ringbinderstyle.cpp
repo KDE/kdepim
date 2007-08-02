@@ -257,7 +257,7 @@ bool RingBinderPrintStyle::printEntries( const KABC::Addressee::List &contacts,
         }
       }
       // print it:
-      kDebug(5720) << "RingBinderPrintStyle::printEntries: printing addressee "
+      kDebug(5720) <<"RingBinderPrintStyle::printEntries: printing addressee"
       << addressee.realName() << endl;
 
       // get the bounding rect:
@@ -273,7 +273,7 @@ bool RingBinderPrintStyle::printEntries( const KABC::Addressee::List &contacts,
       printEntry( addressee, window, painter, ypos );
       ypos += entryheight;
     } else {
-      kDebug(5720) << "RingBinderPrintStyle::printEntries: strange, addressee "
+      kDebug(5720) <<"RingBinderPrintStyle::printEntries: strange, addressee"
       << "with UID " << addressee.uid() << " not available." << endl;
     }
 

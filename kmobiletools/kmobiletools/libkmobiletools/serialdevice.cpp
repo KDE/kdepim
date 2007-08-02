@@ -162,7 +162,7 @@ bool SerialManager::open(KMobileTools::Job *job)
         d->serial=(d->rfcomm);
         d->rfcomm->setBlocking(false);
         isOpen=d->rfcomm->isOpen();
-//         kDebug() << "RFComm socket now should be connected: isOpen is returning " << d->serial->isOpen() << endl;
+//         kDebug() <<"RFComm socket now should be connected: isOpen is returning" << d->serial->isOpen();
     } else {
 #endif
     d->bluetooth=false;
@@ -183,7 +183,7 @@ bool SerialManager::open(KMobileTools::Job *job)
     if(d->log)
     {
         d->logfile.setFileName(KGlobal::dirs()->saveLocation("tmp", "kmobiletools", true) + objectName() + ".log" );
-        kDebug() << "Starting log to " << d->logfile.fileName() << endl;
+        kDebug() <<"Starting log to" << d->logfile.fileName();
         d->logfile.open(QIODevice::WriteOnly);
         d->logstream.setDevice(&(d->logfile));
     }
@@ -191,7 +191,7 @@ bool SerialManager::open(KMobileTools::Job *job)
     d->buffer=sendATCommand(job, "ATZ\r", 300);
     if(ATError(d->buffer))
     {
-        kDebug() << "Error while sending ATZ. Device closed.\n";
+        kDebug() <<"Error while sending ATZ. Device closed.";
         close();
         return false;
     }
@@ -202,7 +202,7 @@ bool SerialManager::open(KMobileTools::Job *job)
             d->buffer=sendATCommand(job, *it + "\r");
             if(ATError(d->buffer))
             {
-                kDebug() << "Error while sending " << *it << ". Device closed.\n";
+                kDebug() <<"Error while sending" << *it <<". Device closed.";
                 close();
                 return false;
             }
@@ -236,17 +236,17 @@ QString SerialManager::sendATCommand(KMobileTools::Job *job, const QString &cmd,
 {
 //     timeout=timeout*100;
     if(!d || ! d->mutex) return QString("\rERROR\r");
-    kDebug() << "sendATCommand: " << cmd << endl;
+    kDebug() <<"sendATCommand:" << cmd;
     QTime timer;
-//     kDebug() << "Mutex is locked::" << d->mutex->locked() << endl;
+//     kDebug() <<"Mutex is locked::" << d->mutex->locked();
     QMutexLocker mlocker(d->mutex);
-    kDebug() << "Mutex locked\n";
+    kDebug() <<"Mutex locked";
     if(!cmd.length() || ! d->serial || !d->serial->isOpen()) return QString();
-    kDebug() << "Serial port is open, continuing\n";
+    kDebug() <<"Serial port is open, continuing";
 //     QString classcmd=cmd.section( QRegExp("^AT"), 1,1,QString::SectionCaseInsensitiveSeps);
 //     classcmd=classcmd.left(classcmd.find(QRegExp("[^\\w]"), 1) );
 //     d->commandQueueStack+=classcmd;
-//     kDebug() << "QueueStack: " << d->commandQueueStack << endl;
+//     kDebug() <<"QueueStack:" << d->commandQueueStack;
 //     timeout=(timeout * 1000)+1;
 
     d->buffer.clear();
@@ -258,7 +258,7 @@ QString SerialManager::sendATCommand(KMobileTools::Job *job, const QString &cmd,
     err=d->serial->write(cmd.toLatin1(), cmd.length());
     if(err<0)
     {
-        kDebug() << "Write error: closing device link: error=" << err << "\n";
+        kDebug() <<"Write error: closing device link: error=" << err <<"";
         close();
         return QString();
     }
@@ -269,7 +269,7 @@ QString SerialManager::sendATCommand(KMobileTools::Job *job, const QString &cmd,
 #endif
         d->serial->flush(); /// @TODO look if this can be valid for bluetooth socket too
         }
-//     kDebug() << "Sent cmd: " << cmd.latin1() << endl;
+//     kDebug() <<"Sent cmd:" << cmd.latin1();
 //     std::cout << ">>>" << QString(cmd).replace("\r","\n").replace("\n\n", "\n") << endl;
 //     std::cout << "<<<";
     log(false, cmd);
@@ -282,10 +282,10 @@ QString SerialManager::sendATCommand(KMobileTools::Job *job, const QString &cmd,
         if( d->gotData )
         {
             timer.restart();
-//             kDebug() << "Got Chars, resetting timer: " << timer.elapsed() << endl;
+//             kDebug() <<"Got Chars, resetting timer:" << timer.elapsed();
             d->gotData=0;
         }
-//         if(cmd.contains( "CPBR" ) || cmd.contains( "MPBR" ) ) kDebug() << "Time elapsed: " << timer.elapsed() << "; buflen:" << buflen << "; buflen==buffer:" << (buflen==d->buffer.length() ) << endl;
+//         if(cmd.contains( "CPBR" ) || cmd.contains( "MPBR" ) ) kDebug() <<"Time elapsed:" << timer.elapsed() <<"; buflen:" << buflen <<"; buflen==buffer:" << (buflen==d->buffer.length() );
         if( timer.elapsed() >=3000 &&
             (timer.elapsed()%3000 == 0) && tryBreakingTimeout)
         {
@@ -300,13 +300,13 @@ QString SerialManager::sendATCommand(KMobileTools::Job *job, const QString &cmd,
             d->serial->flush(); /// @TODO look if this can be valid for bluetooth socket too
             if(err==-1)
             {
-                kDebug() << "Write error: closing device link\n";
+                kDebug() <<"Write error: closing device link";
                 close();
                 return QString();
             }
-            kDebug() << "****************** WARNING!!!! Sending AT\\r to unblock the phone.\n";
-            kDebug() << "****************** this can be a bug of the phone, or of kmobiletools.\n";
-            kDebug() << "****************** please report to marco AT kmobiletools.org: AT command=" << cmd << endl;
+            kDebug() <<"****************** WARNING!!!! Sending AT\\r to unblock the phone.";
+            kDebug() <<"****************** this can be a bug of the phone, or of kmobiletools.";
+            kDebug() <<"****************** please report to marco AT kmobiletools.org: AT command=" << cmd;
         }
 /*        if(job
 #ifdef KBLUETOOTH
@@ -321,7 +321,7 @@ QString SerialManager::sendATCommand(KMobileTools::Job *job, const QString &cmd,
 #ifdef KBLUETOOTH
         if(d && d->bluetooth)
         {
-//             kDebug() << "Bluetooth reading: try " << i_try << endl;
+//             kDebug() <<"Bluetooth reading: try" << i_try;
 //             i_try++;
             char *buf=new char[MAXBUFSIZE+1];
             memset(buf, 0, MAXBUFSIZE+1);
@@ -330,11 +330,11 @@ QString SerialManager::sendATCommand(KMobileTools::Job *job, const QString &cmd,
 //             {
 //                 delete [] buf;
 //                 continue;
-//                 kDebug() << "Read error: closing device link\n";
+//                 kDebug() <<"Read error: closing device link";
 //                 close();
 //                 return QString();
 //             }
-//             kDebug() << "Reading " << err << " characters.\n";
+//             kDebug() <<"Reading" << err <<" characters.";
             if(err>0) d->buffer+=buf;
             d->gotData=strlen(buf);
             delete [] buf;
@@ -349,12 +349,12 @@ QString SerialManager::sendATCommand(KMobileTools::Job *job, const QString &cmd,
         {
             if( (uint) timer.elapsed() >timeout)
             {
-                kDebug() << "Timeout exit: max timeout was " << timeout << ", timer: " << timer.elapsed() << endl;
+                kDebug() <<"Timeout exit: max timeout was" << timeout <<", timer:" << timer.elapsed();
                 break;
             }
             if(d->buffer.contains(exitExp) )
             {
-//                 kDebug() << "Regexp exit\n";
+//                 kDebug() <<"Regexp exit";
                 break;
             }
         }
@@ -363,12 +363,12 @@ QString SerialManager::sendATCommand(KMobileTools::Job *job, const QString &cmd,
     if( timeout<10 // Don't generate warnings for _wanted_ timeout-exit commands
         && (uint) timer.elapsed() >=timeout )
     {
-        kDebug() << "****************** WARNING!!!! Phone seems to be locked.\n";
-        kDebug() << "****************** this can be a bug of the phone, or of kmobiletools.\n";
-        kDebug() << "****************** please report to marco AT kmobiletools.org: AT command=" << cmd << endl;
+        kDebug() <<"****************** WARNING!!!! Phone seems to be locked.";
+        kDebug() <<"****************** this can be a bug of the phone, or of kmobiletools.";
+        kDebug() <<"****************** please report to marco AT kmobiletools.org: AT command=" << cmd;
     }
     int found=d->buffer.indexOf(cmd);
-//     kDebug() << "Got buffer: " << d->buffer << endl;
+//     kDebug() <<"Got buffer:" << d->buffer;
     if(found!=-1 && found < 2)
         d->buffer=d->buffer.remove( found, cmd.length() );
     /// @TODO handle also partial errors
@@ -386,16 +386,16 @@ KMobileTools::QSerial *SerialManager::qserial()
 
 void SerialManager::gotData()
 {
-    kDebug() << "gotData()" << endl;
+    kDebug() <<"gotData()";
     uint availData;
 #ifdef KBLUETOOTH
     if(d->bluetooth)
         availData=d->rfcomm->size(); else
 #endif
         availData=d->serial->size();
-    kDebug() << "gotData() : got "<< availData << "bytes to read" << endl;
+    kDebug() <<"gotData() : got"<< availData <<"bytes to read";
 if(!availData) availData=MAXBUFSIZE; // fix for rfcomm wrong size
-//     kDebug() << "GotData: Size=" << availData << endl;
+//     kDebug() <<"GotData: Size=" << availData;
     QByteArray buffer( availData+1, 0 );
     int readdata;
 #ifdef KBLUETOOTH
@@ -405,13 +405,13 @@ if(!availData) availData=MAXBUFSIZE; // fix for rfcomm wrong size
     readdata=d->serial->read(buffer.data(), availData);
     if(readdata==-1)
     {
-        kDebug() << "Read error: closing device link\n";
+        kDebug() <<"Read error: closing device link";
         close();
         return;
     }
     if(readdata>0)
     {
-        kDebug() << "got data: " << buffer << endl;
+        kDebug() <<"got data:" << buffer;
         d->buffer+=buffer;
         d->gotData=availData;
 //         std::cout << QString(buffer).replace("\r", "\n").replace("\n\n", "\n");

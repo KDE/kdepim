@@ -100,7 +100,7 @@ KABC::Addressee::List EudoraXXPort::importContacts( const QString& ) const
       tmp = get( line, "address" ).trimmed();
       if ( !tmp.isEmpty() ) {
         KABC::Address addr;
-        kDebug(5720) << tmp << endl; // dump complete address
+        kDebug(5720) << tmp; // dump complete address
         addr.setLabel( tmp );
         a->insertAddress( addr );
       }

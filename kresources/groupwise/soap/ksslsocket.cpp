@@ -49,7 +49,7 @@ struct KSSLSocketPrivate
 
 KSSLSocket::KSSLSocket() : KExtendedSocket()
 {
-//  kDebug() << "KSSLSocket() " << (void*)this << endl;
+//  kDebug() <<"KSSLSocket()" << (void*)this;
 
 	d = new KSSLSocketPrivate;
 	d->kssl = 0L;
@@ -68,7 +68,7 @@ KSSLSocket::KSSLSocket() : KExtendedSocket()
 
 KSSLSocket::~KSSLSocket()
 {
-//  kDebug() << "KSSLSocket()::~KSSLSocket() " << (void*)this << endl;
+//  kDebug() <<"KSSLSocket()::~KSSLSocket()" << (void*)this;
 
 	//Close connection
 	closeNow();
@@ -93,17 +93,17 @@ Q_LONG KSSLSocket::read( char* data, Q_ULONG maxLen )
 
 Q_LONG KSSLSocket::write( const char* data, Q_ULONG len )
 {
-//  kDebug() << "KSSLSocket::write() " << (void*)this  << endl;
-//  kDebug() << "  d->kssl: " << (void*)d->kssl << endl;
+//  kDebug() <<"KSSLSocket::write()" << (void*)this;
+//  kDebug() <<"  d->kssl:" << (void*)d->kssl;
 	return d->kssl->write( data, len );
 }
 
 void KSSLSocket::slotConnected()
 {
-//  kDebug() << "KSSLSocket::slotConnected() " << (void*)this << endl;
+//  kDebug() <<"KSSLSocket::slotConnected()" << (void*)this;
 	if( KSSL::doesSSLWork() )
 	{
-		kDebug(0) << k_funcinfo << "Trying SSL connection..." << endl;
+		kDebug(0) << k_funcinfo <<"Trying SSL connection...";
 		if( !d->kssl )
 		{
 			d->kssl = new KSSL();
@@ -113,11 +113,11 @@ void KSSLSocket::slotConnected()
 			d->kssl->reInitialize();
 		}
 		d->kssl->setPeerHost(host());
-                kDebug() << "SOCKET STATUS: " << socketStatus() << endl;
+                kDebug() <<"SOCKET STATUS:" << socketStatus();
 		int rc = d->kssl->connect( sockfd );
                 if ( rc <= 0 ) {
-                  kError() << "Error connecting KSSL: " << rc << endl;
-                  kDebug() << "SYSTEM ERROR: " << systemError() << endl;
+                  kError() <<"Error connecting KSSL:" << rc;
+                  kDebug() <<"SYSTEM ERROR:" << systemError();
                   emit sslFailure();
                   closeNow();
                 } else {
@@ -131,7 +131,7 @@ void KSSLSocket::slotConnected()
 	}
 	else
 	{
-		kError(0) << k_funcinfo << "SSL not functional!" << endl;
+		kError(0) << k_funcinfo <<"SSL not functional!";
 
 		d->kssl = 0L;
 		emit sslFailure();
@@ -141,7 +141,7 @@ void KSSLSocket::slotConnected()
 
 void KSSLSocket::slotDisconnected()
 {
-//  kDebug() << "KSSLSocket::slotDisconnected() " << (void*)this << endl;
+//  kDebug() <<"KSSLSocket::slotDisconnected()" << (void*)this;
 	if( readNotifier() )
 		readNotifier()->setEnabled(false);
 }
@@ -175,7 +175,7 @@ I basically copied the below from tcpKIO::SlaveBase.hpp, with some modificaions 
 int KSSLSocket::messageBox( KIO::SlaveBase::MessageBoxType type, const QString &text, const QString &caption,
 	const QString &buttonYes, const QString &buttonNo )
 {
-	kDebug(0) << "messageBox " << type << " " << text << " - " << caption << buttonYes << buttonNo << endl;
+	kDebug(0) <<"messageBox" << type <<"" << text <<" -" << caption << buttonYes << buttonNo;
 	QByteArray data, result;
 	QByteArray returnType;
 	QDataStream arg( &data,QIODevice::WriteOnly);
@@ -228,7 +228,7 @@ int KSSLSocket::verifyCertificate()
 	KSSLCertificate::KSSLValidationList ksvl = pc.validateVerbose(KSSLCertificate::SSLServer);
 
         if ( ksvl.count() == 1 && ksvl.first() == KSSLCertificate::Unknown ) {
-          kDebug() << "Unknown validation error" << endl;
+          kDebug() <<"Unknown validation error";
           return 0;
         }
 
@@ -375,8 +375,7 @@ int KSSLSocket::verifyCertificate()
 				break;
 		}
 		default:
-		kDebug(0) << "SSL error in cert code."
-				<< endl;
+		kDebug(0) <<"SSL error in cert code.";
 		break;
 		}
 	}
@@ -391,7 +390,7 @@ int KSSLSocket::verifyCertificate()
 		return rc;
 
   if ( getenv("DEBUG_GW_RESOURCE") ) {
-  	kDebug(0) << "SSL connection information follows:" << endl
+  	kDebug(0) <<"SSL connection information follows:" << endl
 		  << "+-----------------------------------------------" << endl
 		  << "| Cipher: " << d->kssl->connectionInfo().getCipher() << endl
 		  << "| Description: " << d->kssl->connectionInfo().getCipherDescription() << endl
@@ -404,8 +403,7 @@ int KSSLSocket::verifyCertificate()
 		  << "| Issuer: " << d->kssl->peerInfo().getPeerCertificate().getIssuer() << endl
 		  << "| Validation: " << (int)ksv << endl
 		  << "| Certificate matches IP: " << _IPmatchesCN << endl
-		  << "+-----------------------------------------------"
-		  << endl;
+		  << "+-----------------------------------------------";
     }
 	return rc;
 }

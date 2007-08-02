@@ -215,7 +215,7 @@ Base5::decrypt( Block& block, const char *passphrase )
   index = error.indexOf("Cannot decrypt message");
   if(index != -1)
   {
-    //kDebug( 5326 ) << "message is encrypted" << endl;
+    //kDebug( 5326 ) <<"message is encrypted";
     status |= ENCRYPTED;
 
     // ok. we have an encrypted message. Is the passphrase bad,
@@ -225,7 +225,7 @@ Base5::decrypt( Block& block, const char *passphrase )
       if(passphrase != 0)
       {
 	errMsg = i18n("Bad passphrase; could not decrypt.");
-	kDebug( 5326 ) << "Base: passphrase is bad" << endl;
+	kDebug( 5326 ) <<"Base: passphrase is bad";
 	status |= BADPHRASE;
 	status |= ERROR;
       }
@@ -236,7 +236,7 @@ Base5::decrypt( Block& block, const char *passphrase )
       status |= NO_SEC_KEY;
       status |= ERROR;
       errMsg = i18n("You do not have the secret key needed to decrypt this message.");
-      kDebug( 5326 ) << "Base: no secret key for this message" << endl;
+      kDebug( 5326 ) <<"Base: no secret key for this message";
     }
     // check for persons
 #if 0
@@ -263,7 +263,7 @@ Base5::decrypt( Block& block, const char *passphrase )
   index = error.indexOf("Good signature");
   if(index != -1)
   {
-    //kDebug( 5326 ) << "good signature" << endl;
+    //kDebug( 5326 ) <<"good signature";
     status |= SIGNED;
     status |= GOODSIG;
 
@@ -282,7 +282,7 @@ Base5::decrypt( Block& block, const char *passphrase )
   index = error.indexOf("BAD signature");
   if(index != -1)
   {
-    //kDebug( 5326 ) << "BAD signature" << endl;
+    //kDebug( 5326 ) <<"BAD signature";
     status |= SIGNED;
     status |= ERROR;
 
@@ -312,7 +312,7 @@ Base5::decrypt( Block& block, const char *passphrase )
     block.setSignatureDate( "" );
   }
 
-  //kDebug( 5326 ) << "status = " << status << endl;
+  //kDebug( 5326 ) <<"status =" << status;
   block.setStatus( status );
   return status;
 }
@@ -466,7 +466,7 @@ Base5::parseKeyData( const QByteArray& output, int& offset, Key* key /* = 0 */ )
   if( ( strncmp( output.data() + offset, "pub", 3 ) != 0 ) &&
       ( strncmp( output.data() + offset, "sec", 3 ) != 0 ) )
   {
-    kDebug( 5326 ) << "Unknown key type or corrupt key data.\n";
+    kDebug( 5326 ) <<"Unknown key type or corrupt key data.";
     return 0;
   }
 
@@ -487,13 +487,13 @@ Base5::parseKeyData( const QByteArray& output, int& offset, Key* key /* = 0 */ )
     if( ( eol == -1 ) || ( eol == offset ) )
       break;
 
-    //kDebug( 5326 ) << "Parsing: " << output.mid(offset, eol-offset) << endl;
+    //kDebug( 5326 ) <<"Parsing:" << output.mid(offset, eol-offset);
 
     if( !strncmp( output.data() + offset, "pub", 3 ) ||
         !strncmp( output.data() + offset, "sec", 3 ) ||
         !strncmp( output.data() + offset, "sub", 3 ) )
     { // line contains key data
-      //kDebug( 5326 )<<"Key data:\n";
+      //kDebug( 5326 )<<"Key data:";
       int pos, pos2;
 
       subkey = new Subkey( "", false );
@@ -517,7 +517,7 @@ Base5::parseKeyData( const QByteArray& output, int& offset, Key* key /* = 0 */ )
         key->setDisabled( true );
         break;
       default: // all other flags are ignored
-        //kDebug( 5326 ) << "Unknown key flag.\n";
+        //kDebug( 5326 ) <<"Unknown key flag.";
         ;
       }
 
@@ -527,7 +527,7 @@ Base5::parseKeyData( const QByteArray& output, int& offset, Key* key /* = 0 */ )
         pos++;
       pos2 = output.indexOf( ' ', pos );
       subkey->setKeyLength( output.mid( pos, pos2-pos ).toUInt() );
-      //kDebug( 5326 ) << "Key Length: "<<subkey->keyLength()<<endl;
+      //kDebug( 5326 ) <<"Key Length:"<<subkey->keyLength();
 
       // Key ID
       pos = pos2 + 1;
@@ -536,7 +536,7 @@ Base5::parseKeyData( const QByteArray& output, int& offset, Key* key /* = 0 */ )
       pos += 2; // skip the '0x'
       pos2 = output.indexOf( ' ', pos );
       subkey->setKeyID( output.mid( pos, pos2-pos ) );
-      //kDebug( 5326 ) << "Key ID: "<<subkey->keyID()<<endl;
+      //kDebug( 5326 ) <<"Key ID:"<<subkey->keyID();
 
       // Creation Date
       pos = pos2 + 1;
@@ -606,7 +606,7 @@ Base5::parseKeyData( const QByteArray& output, int& offset, Key* key /* = 0 */ )
       else if( !strncmp( output.data() + pos, "Diffie-Hellman", 14 ) )
         encr = true;
       else
-        kDebug( 5326 )<<"Unknown key algorithm\n";
+        kDebug( 5326 )<<"Unknown key algorithm";
 
       // set key capabilities of the subkey
       subkey->setCanEncrypt( encr );
@@ -632,7 +632,7 @@ Base5::parseKeyData( const QByteArray& output, int& offset, Key* key /* = 0 */ )
         else if( !strncmp( output.data() + pos, "Encrypt only", 12 ) )
           canEncr = true;
         else
-          kDebug( 5326 )<<"Unknown key capability\n";
+          kDebug( 5326 )<<"Unknown key capability";
 
         // set the global key capabilities
         if( !key->expired() && !key->revoked() )
@@ -641,7 +641,7 @@ Base5::parseKeyData( const QByteArray& output, int& offset, Key* key /* = 0 */ )
           key->setCanSign( canSign );
           key->setCanCertify( canSign );
         }
-        //kDebug( 5326 )<<"Key capabilities: "<<(key->canEncrypt()?"E":"")<<(key->canSign()?"SC":"")<<endl;
+        //kDebug( 5326 )<<"Key capabilities:"<<(key->canEncrypt()?"E":"")<<(key->canSign()?"SC":"");
         primaryKey = false;
       }
     }
@@ -660,7 +660,7 @@ Base5::parseKeyData( const QByteArray& output, int& offset, Key* key /* = 0 */ )
 	fingerprint.replace( idx, 1, "" );
       assert( subkey != 0 );
       subkey->setFingerprint( fingerprint );
-      //kDebug( 5326 )<<"Fingerprint: "<<fingerprint<<endl;
+      //kDebug( 5326 )<<"Fingerprint:"<<fingerprint;
     }
     else if( !strncmp( output.data() + offset, "uid", 3 ) )
     { // line contains a uid
@@ -712,7 +712,7 @@ Base5::parseSingleKey( const QByteArray& output, Key* key /* = 0 */ )
 
   key = parseKeyData( output, offset, key );
 
-  //kDebug( 5326 ) << "finished parsing keys" << endl;
+  //kDebug( 5326 ) <<"finished parsing keys";
 
   return key;
 }
@@ -754,7 +754,7 @@ Base5::parseKeyList( const QByteArray& output, bool onlySecretKeys )
   }
   while( key != 0 );
 
-  //kDebug( 5326 ) << "finished parsing keys" << endl;
+  //kDebug( 5326 ) <<"finished parsing keys";
 
   return keys;
 }
@@ -814,7 +814,7 @@ Base5::parseTrustDataForKey( Key* key, const QByteArray& str )
       for( UserIDListIterator it( userIDs ); it.current(); ++it )
         if( (*it)->text() == uid )
         {
-          kDebug( 5326 )<<"Setting the validity of "<<uid<<" to "<<validity<<endl;
+          kDebug( 5326 )<<"Setting the validity of"<<uid<<" to"<<validity;
           (*it)->setValidity( validity );
           break;
         }

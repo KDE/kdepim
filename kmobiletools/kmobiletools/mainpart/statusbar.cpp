@@ -88,7 +88,7 @@ StatusBarScrollView::~ StatusBarScrollView()
 */
 void StatusBarScrollView::resizeContents( int w, int h )
 {
-  //kDebug(5300) << k_funcinfo << w << "," << h << endl;
+  //kDebug(5300) << k_funcinfo << w <<"," << h;
     Q3ScrollView::resizeContents( w, h );
   // Tell the layout in the parent (progressdialog) that our size changed
     updateGeometry();

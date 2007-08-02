@@ -62,7 +62,7 @@ void AccountManager::readConfig( BoxSettings *box_settings, BoxSettings *config_
 
 		if( !proto )
 		{
-			kWarning() << "Protocol werd niet gevonden" << endl;
+			kWarning() <<"Protocol werd niet gevonden";
 			++counter;
 			continue;
 		}

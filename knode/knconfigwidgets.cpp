@@ -208,7 +208,7 @@ void KNode::IdentityWidget::textFileNameChanged(const QString &text)
 
 void KNode::IdentityWidget::load()
 {
-  kDebug() << "void KNConfig::IdentityWidget::load()" << endl;
+  kDebug() <<"void KNConfig::IdentityWidget::load()";
   n_ame->setText(d_ata->n_ame);
   o_rga->setText(d_ata->o_rga);
   e_mail->setText(d_ata->e_mail);
@@ -1495,7 +1495,7 @@ void KNode::PostNewsTechnicalWidget::load()
 {
   KCModule::load();
 
-  kDebug(5003) << k_funcinfo << knGlobals.settings()->charset() << endl;
+  kDebug(5003) << k_funcinfo << knGlobals.settings()->charset();
   mCharset->setCurrentIndex( mCharset->findText( knGlobals.settings()->charset() ) );
   mEncoding->setCurrentIndex( knGlobals.settings()->allow8BitBody() ? 0 : 1 );
 

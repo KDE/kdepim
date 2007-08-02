@@ -265,7 +265,7 @@ public:
           for( itDN = dn.begin(); itDN != dn.end(); ++itDN ){
             if( (*itOrder) == (*itDN).first ){
               dnNew << *itDN;
-              //kDebug(5150) << QString((*itDN).first) <<" = " << QString((*itDN).second) << endl;;
+              //kDebug(5150) << QString((*itDN).first) <<" =" << QString((*itDN).second);;
             }
           }
         }
@@ -500,7 +500,7 @@ bool CryptPlugWrapper::initialize( InitStatus* initStatus, QString* errorMsg )
     /* make sure we have a lib name */
     if ( _libName.isEmpty() ) {
       _initStatus = InitStatus_NoLibName;
-      kDebug(5150) << "No library name was given.\n" << endl;
+      kDebug(5150) <<"No library name was given.";
     } else {
       if ( _libName.contains( "smime" ) ) {
 	_cp = new SMIMECryptPlug();
@@ -515,12 +515,12 @@ bool CryptPlugWrapper::initialize( InitStatus* initStatus, QString* errorMsg )
 
       if ( !_cp ) {
 	_initStatus = InitStatus_LoadError;
-	kDebug(5150) << "Couldn't create '" << _libName.toLatin1() << "'" << endl;
+	kDebug(5150) <<"Couldn't create '" << _libName.toLatin1() <<"'";
       } else {
 	/* now call the init function */
 	if( !_cp->initialize() ) {
 	  _initStatus = InitStatus_InitError;
-	  kDebug(5150) << "Error while executing function 'initialize' on plugin " << _libName << endl;
+	  kDebug(5150) <<"Error while executing function 'initialize' on plugin" << _libName;
 	  _lastError = i18n("Error while initializing plugin \"%1\"", _libName );
 	  if ( errorMsg )
 	    *errorMsg = _lastError;

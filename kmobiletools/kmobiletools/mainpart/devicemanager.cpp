@@ -97,7 +97,7 @@ void DeviceManager::slotRemoveDevice() /// Remove device
 
     /* If the device is not in the list, well, just skip it */
     if ( ! sl_devices.contains(deviceName) ) {
-      kDebug() << "Asked to remove the non-present device " << deviceName << endl;
+      kDebug() <<"Asked to remove the non-present device" << deviceName;
       return;
     }
 

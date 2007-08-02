@@ -245,7 +245,7 @@ void ResourceXMLRPC::logoutFinished( const QList<QVariant>& variant,
   QMap<QString, QVariant> map = variant[ 0 ].toMap();
 
   if ( map[ "GOODBYE" ].toString() != "XOXO" )
-    kError() << "logout failed" << endl;
+    kError() <<"logout failed";
 
   KUrl url = KUrl( mPrefs->url() );
   mSessionID = mKp3 = "";
@@ -310,7 +310,7 @@ void ResourceXMLRPC::deleteNoteFinished( const QList<QVariant>&, const QVariant 
 
 void ResourceXMLRPC::fault( int error, const QString& errorMsg, const QVariant& )
 {
-  kError() << "Server send error " << error << ": " << errorMsg << endl;
+  kError() <<"Server send error" << error <<":" << errorMsg;
   mSynchronizer->stop();
 }
 

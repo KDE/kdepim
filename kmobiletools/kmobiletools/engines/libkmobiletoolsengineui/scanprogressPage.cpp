@@ -59,7 +59,7 @@ int ScanProgressPage::progress() {
 }
 
 void ScanProgressPage::cleanupPage() {
-    kDebug() << "void ScanProgressPage::cleanupPage()\n";
+    kDebug() <<"void ScanProgressPage::cleanupPage()";
     setProgress(0);
 }
 

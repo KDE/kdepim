@@ -73,7 +73,7 @@ AddresseeEditorWidget::AddresseeEditorWidget( QWidget *parent )
   : AddresseeEditorBase( parent ),
     mBlockSignals( false ), mReadOnly( false )
 {
-  kDebug(5720) << "AddresseeEditorWidget()" << endl;
+  kDebug(5720) <<"AddresseeEditorWidget()";
 
   initGUI();
   mCategorySelectDialog = 0;
@@ -87,7 +87,7 @@ AddresseeEditorWidget::AddresseeEditorWidget( QWidget *parent )
 
 AddresseeEditorWidget::~AddresseeEditorWidget()
 {
-  kDebug(5720) << "~AddresseeEditorWidget()" << endl;
+  kDebug(5720) <<"~AddresseeEditorWidget()";
 }
 
 void AddresseeEditorWidget::setAddressee( const KABC::Addressee &addr )
@@ -502,7 +502,7 @@ void AddresseeEditorWidget::setupCustomFieldsTabs()
 
 void AddresseeEditorWidget::load()
 {
-  kDebug(5720) << "AddresseeEditorWidget::load()" << endl;
+  kDebug(5720) <<"AddresseeEditorWidget::load()";
 
   // Block signals in case anything tries to emit modified
   // CS: This doesn't seem to work.

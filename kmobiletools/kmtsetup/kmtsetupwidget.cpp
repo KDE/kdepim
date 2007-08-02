@@ -134,7 +134,7 @@ void KMTSetupWidget::btnAddDevice_clicked(){
     if(device.isNull() ) return;
     if(!QFile::exists(device))
     {
-        kDebug() << "Device doesn't exist: <<" << device << ">>\n";
+        kDebug() <<"Device doesn't exist: <<" << device <<">>";
         KMessageBox::error(this, i18n("You must enter a valid directory or filename."));
         return;
     }
@@ -145,7 +145,7 @@ void KMTSetupWidget::btnAddDevice_clicked(){
 
 void KMTSetupWidget::slotOk(){
     QString groups = "";
-    kDebug() << "grouplist:" << groupslist << endl;
+    kDebug() <<"grouplist:" << groupslist;
 
     for (unsigned int i = 0; i < userslist.count(); ++i){
         for(QStringList::Iterator it=groupslist.begin(); it!=groupslist.end(); ++it)

@@ -247,7 +247,7 @@ void CertificateWizardImpl::slotGenerateCertificate()
       certParms += "\nname-email: " + email;
     certParms += "\n</GnupgKeyParms>\n";
 
-    kDebug() << certParms << endl;
+    kDebug() << certParms;
 
     Kleo::KeyGenerationJob * job =
       Kleo::CryptoBackendFactory::instance()->smime()->keyGenerationJob();
@@ -274,7 +274,7 @@ void CertificateWizardImpl::slotGenerateCertificate()
 
 void CertificateWizardImpl::slotResult( const GpgME::KeyGenerationResult & res,
 					const QByteArray & keyData ) {
-    //kDebug() << "keyData.size(): " << keyData.size() << endl;
+    //kDebug() <<"keyData.size():" << keyData.size();
     _keyData = keyData;
 
     if ( res.error().isCanceled() || res.error() ) {
@@ -433,7 +433,7 @@ void CertificateWizardImpl::sendCertificate( const QString& email, const QByteAr
   QString dbusService;
   int result = KDBusServiceStarter::self()->findServiceFor( "DBUS/Mailer", QString::null, &error, &dbusService );
   if ( result != 0 ) {
-    kDebug() << "Couldn't connect to KMail\n";
+    kDebug() <<"Couldn't connect to KMail";
     KMessageBox::error( this,
                         i18n( "DCOP Communication Error, unable to send certificate using KMail.\n%1", error ) );
     return;
@@ -469,7 +469,7 @@ void CertificateWizardImpl::sendCertificate( const QString& email, const QByteAr
     if ( reply.isValid() && (bool)reply ) {
       Q_ASSERT( kapp->dcopClient()->findObject( dcopService, dcopObjectId, "", QByteArray(), dummy, dummy ) );
     } else
-      kWarning() << "Error loading " << dcopService << endl;
+      kWarning() <<"Error loading" << dcopService;
   }
 
   DCOPClient* dcopClient = kapp->dcopClient();

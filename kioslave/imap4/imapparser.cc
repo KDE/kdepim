@@ -113,7 +113,7 @@ imapParser::sendCommand (imapCommand * aCmd)
     parseString p;
     p.fromString(aCmd->parameter());
     currentBox = parseOneWord(p);
-    kDebug(7116) << "imapParser::sendCommand - setting current box to " << currentBox << endl;
+    kDebug(7116) <<"imapParser::sendCommand - setting current box to" << currentBox;
   }
   else if (command == "CLOSE")
   {
@@ -166,7 +166,7 @@ imapParser::clientLogin (const QString & aUser, const QString & aPass,
 #ifdef HAVE_LIBSASL2
 static bool sasl_interact( KIO::SlaveBase *slave, KIO::AuthInfo &ai, void *in )
 {
-  kDebug(7116) << "sasl_interact" << endl;
+  kDebug(7116) <<"sasl_interact";
   sasl_interact_t *interact = ( sasl_interact_t * ) in;
 
   //some mechanisms do not require username && pass, so it doesn't need a popup
@@ -185,16 +185,16 @@ static bool sasl_interact( KIO::SlaveBase *slave, KIO::AuthInfo &ai, void *in )
 
   interact = ( sasl_interact_t * ) in;
   while( interact->id != SASL_CB_LIST_END ) {
-    kDebug(7116) << "SASL_INTERACT id: " << interact->id << endl;
+    kDebug(7116) <<"SASL_INTERACT id:" << interact->id;
     switch( interact->id ) {
       case SASL_CB_USER:
       case SASL_CB_AUTHNAME:
-        kDebug(7116) << "SASL_CB_[USER|AUTHNAME]: '" << ai.username << "'" << endl;
+        kDebug(7116) <<"SASL_CB_[USER|AUTHNAME]: '" << ai.username <<"'";
         interact->result = strdup( ai.username.toUtf8() );
         interact->len = strlen( (const char *) interact->result );
         break;
       case SASL_CB_PASS:
-        kDebug(7116) << "SASL_CB_PASS: [hidden] " << endl;
+        kDebug(7116) <<"SASL_CB_PASS: [hidden]";
         interact->result = strdup( ai.password.toUtf8() );
         interact->len = strlen( (const char *) interact->result );
         break;
@@ -223,7 +223,7 @@ imapParser::clientAuthenticate ( KIO::SlaveBase *slave, KIO::AuthInfo &ai,
   const char *mechusing = 0;
   QByteArray tmp, challenge;
 
-  kDebug(7116) << "aAuth: " << aAuth << " FQDN: " << aFQDN << " isSSL: " << isSSL << endl;
+  kDebug(7116) <<"aAuth:" << aAuth <<" FQDN:" << aFQDN <<" isSSL:" << isSSL;
 
   // see if server supports this authenticator
   if (!hasCapability ("AUTH=" + aAuth))
@@ -236,7 +236,7 @@ imapParser::clientAuthenticate ( KIO::SlaveBase *slave, KIO::AuthInfo &ai,
                        0, 0, callbacks, 0, &conn );
 
   if ( result != SASL_OK ) {
-    kDebug(7116) << "sasl_client_new failed with: " << result << endl;
+    kDebug(7116) <<"sasl_client_new failed with:" << result;
     resultInfo = QString::fromUtf8( sasl_errdetail( conn ) );
     return false;
   }
@@ -254,7 +254,7 @@ imapParser::clientAuthenticate ( KIO::SlaveBase *slave, KIO::AuthInfo &ai,
   } while ( result == SASL_INTERACT );
 
   if ( result != SASL_CONTINUE && result != SASL_OK ) {
-    kDebug(7116) << "sasl_client_start failed with: " << result << endl;
+    kDebug(7116) <<"sasl_client_start failed with:" << result;
     resultInfo = QString::fromUtf8( sasl_errdetail( conn ) );
     sasl_dispose( &conn );
     return false;
@@ -280,11 +280,11 @@ imapParser::clientAuthenticate ( KIO::SlaveBase *slave, KIO::AuthInfo &ai,
 
     if (!continuation.isEmpty())
     {
-//      kDebug(7116) << "S: " << QCString(continuation.data(),continuation.size()+1) << endl;
+//      kDebug(7116) <<"S:" << QCString(continuation.data(),continuation.size()+1);
       if ( continuation.size() > 4 ) {
         tmp = QByteArray::fromRawData( continuation.data() + 2, continuation.size() - 4 );
         KCodecs::base64Decode( tmp, challenge );
-//        kDebug(7116) << "S-1: " << QCString(challenge.data(),challenge.size()+1) << endl;
+//        kDebug(7116) <<"S-1:" << QCString(challenge.data(),challenge.size()+1);
         tmp.clear();
       }
 
@@ -303,17 +303,17 @@ imapParser::clientAuthenticate ( KIO::SlaveBase *slave, KIO::AuthInfo &ai,
       } while ( result == SASL_INTERACT );
 
       if ( result != SASL_CONTINUE && result != SASL_OK ) {
-        kDebug(7116) << "sasl_client_step failed with: " << result << endl;
+        kDebug(7116) <<"sasl_client_step failed with:" << result;
         resultInfo = QString::fromUtf8( sasl_errdetail( conn ) );
         sasl_dispose( &conn );
         return false;
       }
 
       tmp = QByteArray::fromRawData( out, outlen );
-//      kDebug(7116) << "C-1: " << QCString(tmp.data(),tmp.size()+1) << endl;
+//      kDebug(7116) <<"C-1:" << QCString(tmp.data(),tmp.size()+1);
       KCodecs::base64Encode( tmp, challenge );
       tmp.clear();
-//      kDebug(7116) << "C: " << QCString(challenge.data(),challenge.size()+1) << endl;
+//      kDebug(7116) <<"C:" << QCString(challenge.data(),challenge.size()+1);
       parseWriteLine (challenge);
       continuation.resize(0);
     }
@@ -335,7 +335,7 @@ imapParser::clientAuthenticate ( KIO::SlaveBase *slave, KIO::AuthInfo &ai,
 void
 imapParser::parseUntagged (parseString & result)
 {
-  //kDebug(7116) << "imapParser::parseUntagged - '" << result.cstr() << "'" << endl;
+  //kDebug(7116) <<"imapParser::parseUntagged - '" << result.cstr() <<"'";
 
   parseOneWord(result);        // *
   QByteArray what = parseLiteral (result); // see whats coming next
@@ -628,7 +628,7 @@ imapParser::parseResult (QByteArray & result, parseString & rest,
           currentState = ISTATE_LOGIN;
         currentBox.clear();
       }
-      kDebug(7116) << "imapParser::parseResult - current box is now " << currentBox << endl;
+      kDebug(7116) <<"imapParser::parseResult - current box is now" << currentBox;
     }
     break;
 
@@ -643,7 +643,7 @@ imapParser::parseResult (QByteArray & result, parseString & rest,
           currentState = ISTATE_LOGIN;
         currentBox.clear();
       }
-      kDebug(7116) << "imapParser::parseResult - current box is now " << currentBox << endl;
+      kDebug(7116) <<"imapParser::parseResult - current box is now" << currentBox;
     }
     break;
 
@@ -1319,13 +1319,13 @@ void imapParser::parseBody (parseString & inWords)
 
       if (!envelope || seenUid.isEmpty ())
       {
-        kDebug(7116) << "imapParser::parseBody - discarding " << envelope << " " << seenUid.toAscii () << endl;
+        kDebug(7116) <<"imapParser::parseBody - discarding" << envelope <<"" << seenUid.toAscii ();
         // don't know where to put it, throw it away
         parseLiteral(inWords, true);
       }
       else
       {
-        kDebug(7116) << "imapParser::parseBody - reading " << envelope << " " << seenUid.toAscii () << endl;
+        kDebug(7116) <<"imapParser::parseBody - reading" << envelope <<"" << seenUid.toAscii ();
         // fill it up with data
         QString theHeader = parseLiteral(inWords, true);
         mimeIOQString myIO;
@@ -1338,7 +1338,7 @@ void imapParser::parseBody (parseString & inWords)
     else if (qstrncmp(specifier, "HEADER.FIELDS", specifier.size()) == 0)
     {
       // BODY[HEADER.FIELDS (References)] {n}
-      //kDebug(7116) << "imapParser::parseBody - HEADER.FIELDS: "
+      //kDebug(7116) <<"imapParser::parseBody - HEADER.FIELDS:"
       // << QCString(label.data(), label.size()+1) << endl;
       if (qstrncmp(label, "REFERENCES", label.size()) == 0)
       {
@@ -1348,7 +1348,7 @@ void imapParser::parseBody (parseString & inWords)
 
        if (!envelope || seenUid.isEmpty ())
        {
-         kDebug(7116) << "imapParser::parseBody - discarding " << envelope << " " << seenUid.toAscii () << endl;
+         kDebug(7116) <<"imapParser::parseBody - discarding" << envelope <<"" << seenUid.toAscii ();
          // don't know where to put it, throw it away
          parseLiteral (inWords, true);
        }
@@ -1381,7 +1381,7 @@ void imapParser::parseBody (parseString & inWords)
         return;
       }
       // throw it away
-      kDebug(7116) << "imapParser::parseBody - discarding " << seenUid.toAscii () << endl;
+      kDebug(7116) <<"imapParser::parseBody - discarding" << seenUid.toAscii ();
       parseLiteral(inWords, true);
     }
 
@@ -1394,13 +1394,13 @@ void imapParser::parseBody (parseString & inWords)
 
     if (!envelope || seenUid.isEmpty ())
     {
-      kDebug(7116) << "imapParser::parseBody - discarding " << envelope << " " << seenUid.toAscii () << endl;
+      kDebug(7116) <<"imapParser::parseBody - discarding" << envelope <<"" << seenUid.toAscii ();
       // don't know where to put it, throw it away
       parseSentence (inWords);
     }
     else
     {
-      kDebug(7116) << "imapParser::parseBody - reading " << envelope << " " << seenUid.toAscii () << endl;
+      kDebug(7116) <<"imapParser::parseBody - reading" << envelope <<"" << seenUid.toAscii ();
       // fill it up with data
       QString section;
       mimeHeader *body = parseBodyStructure (inWords, section, envelope);
@@ -1502,7 +1502,7 @@ void imapParser::parseFetch (ulong /* value */, parseString & inWords)
           if (seenUid.isEmpty ())
           {
             // unknown what to do
-            kDebug(7116) << "imapParser::parseFetch - UID empty" << endl;
+            kDebug(7116) <<"imapParser::parseFetch - UID empty";
           }
           else
           {
@@ -1541,7 +1541,7 @@ void imapParser::parseFetch (ulong /* value */, parseString & inWords)
       case 'F':
         if (word == "FLAGS")
         {
-	  //kDebug(7116) << "GOT FLAGS " << inWords.cstr() << endl;
+	  //kDebug(7116) <<"GOT FLAGS" << inWords.cstr();
           if (!lastHandled) lastHandled = new imapCache();
           lastHandled->setFlags (imapInfo::_flags (inWords.cstr()));
         }
@@ -1648,7 +1648,7 @@ void imapParser::parseNamespace (parseString & result)
       QString prefix = QString::fromLatin1( parseOneWord( result ) );
       // delimiter
       QString delim = QString::fromLatin1( parseOneWord( result ) );
-      kDebug(7116) << "imapParser::parseNamespace ns='" << prefix << "',delim='" << delim << "'" << endl;
+      kDebug(7116) <<"imapParser::parseNamespace ns='" << prefix <<"',delim='" << delim <<"'";
       if ( ns == 0 )
       {
         // at least one personal ns
@@ -1684,7 +1684,7 @@ void imapParser::parseNamespace (parseString & result)
     if ( !personalAvailable )
     {
       // at least one personal ns would be nice
-      kDebug(7116) << "imapParser::parseNamespace - registering own personal ns" << endl;
+      kDebug(7116) <<"imapParser::parseNamespace - registering own personal ns";
       QString nsentry = "0==" + delimEmpty;
       imapNamespaces.append( nsentry );
     }
@@ -1704,7 +1704,7 @@ int imapParser::parseLoop ()
   if (!sentQueue.count ())
   {
     // maybe greeting or BYE everything else SHOULD not happen, use NOOP or IDLE
-    kDebug(7116) << "imapParser::parseLoop - unhandledResponse: \n" << result.cstr() << endl;
+    kDebug(7116) <<"imapParser::parseLoop - unhandledResponse:" << result.cstr();
     unhandled << result.cstr();
   }
   else
@@ -1737,7 +1737,7 @@ int imapParser::parseLoop ()
         }
         else
         {
-          kDebug(7116) << "imapParser::parseLoop - unknown tag '" << tag << "'" << endl;
+          kDebug(7116) <<"imapParser::parseLoop - unknown tag '" << tag <<"'";
           QByteArray cstr = tag + " " + result.cstr();
           result.data = cstr;
           result.pos = 0;
@@ -1801,7 +1801,7 @@ imapParser::parseURL (const KUrl & _url, QString & _box, QString & _section,
   QStringList parameters;
 
   _box = _url.path ();
-  kDebug(7116) << "imapParser::parseURL " << _box << endl;
+  kDebug(7116) <<"imapParser::parseURL" << _box;
   int paramStart = _box.indexOf("/;");
   if ( paramStart > -1 )
   {
@@ -1830,10 +1830,10 @@ imapParser::parseURL (const KUrl & _url, QString & _box, QString & _section,
     else if (temp.startsWith("info=", Qt::CaseInsensitive))
       _info = temp.right (temp.length () - 5);
   }
-//  kDebug(7116) << "URL: section= " << _section << ", type= " << _type << ", uid= " << _uid << endl;
-//  kDebug(7116) << "URL: user() " << _url.user() << endl;
-//  kDebug(7116) << "URL: path() " << _url.path() << endl;
-//  kDebug(7116) << "URL: encodedPathAndQuery() " << _url.encodedPathAndQuery() << endl;
+//  kDebug(7116) <<"URL: section=" << _section <<", type=" << _type <<", uid=" << _uid;
+//  kDebug(7116) <<"URL: user()" << _url.user();
+//  kDebug(7116) <<"URL: path()" << _url.path();
+//  kDebug(7116) <<"URL: encodedPathAndQuery()" << _url.encodedPathAndQuery();
 
   if (!_box.isEmpty ())
   {
@@ -1843,7 +1843,7 @@ imapParser::parseURL (const KUrl & _url, QString & _box, QString & _section,
     if (!_box.isEmpty () && _box[_box.length () - 1] == '/')
       _box.truncate(_box.length() - 1);
   }
-  kDebug(7116) << "URL: box= " << _box << ", section= " << _section << ", type= "
+  kDebug(7116) <<"URL: box=" << _box <<", section=" << _section <<", type="
     << _type << ", uid= " << _uid << ", validity= " << _validity << ", info= " << _info << endl;
 }
 
@@ -1880,13 +1880,13 @@ QByteArray imapParser::parseLiteral(parseString & inWords, bool relay, bool stop
       }
       else
       {
-        kDebug(7116) << "imapParser::parseLiteral - error parsing {} - " /*<< strLen*/ << endl;
+        kDebug(7116) <<"imapParser::parseLiteral - error parsing {} -" /*<< strLen*/;
       }
     }
     else
     {
       inWords.clear();
-      kDebug(7116) << "imapParser::parseLiteral - error parsing unmatched {" << endl;
+      kDebug(7116) <<"imapParser::parseLiteral - error parsing unmatched {";
     }
     skipWS (inWords);
     return retVal;
@@ -1935,7 +1935,7 @@ QByteArray imapParser::parseOneWord (parseString & inWords, bool stopAtBracket)
     }
     else
     {
-      kDebug(7116) << "imapParser::parseOneWord - error parsing unmatched \"" << endl;
+      kDebug(7116) <<"imapParser::parseOneWord - error parsing unmatched \"";
       QByteArray retVal = inWords.cstr();
       inWords.clear();
       return retVal;
@@ -1976,11 +1976,11 @@ bool imapParser::parseOneNumber (parseString & inWords, ulong & num)
 bool imapParser::hasCapability (const QString & cap)
 {
   QString c = cap.toLower();
-//  kDebug(7116) << "imapParser::hasCapability - Looking for '" << cap << "'" << endl;
+//  kDebug(7116) <<"imapParser::hasCapability - Looking for '" << cap <<"'";
   for (QStringList::ConstIterator it = imapCapabilities.begin ();
        it != imapCapabilities.end (); ++it)
   {
-//    kDebug(7116) << "imapParser::hasCapability - Examining '" << (*it) << "'" << endl;
+//    kDebug(7116) <<"imapParser::hasCapability - Examining '" << (*it) <<"'";
     if ( !(kasciistricmp(c.toAscii(), (*it).toAscii())) )
     {
       return true;
@@ -1996,7 +1996,7 @@ void imapParser::removeCapability (const QString & cap)
 
 QString imapParser::namespaceForBox( const QString & box )
 {
-  kDebug(7116) << "imapParse::namespaceForBox " << box << endl;
+  kDebug(7116) <<"imapParse::namespaceForBox" << box;
   QString myNamespace;
   if ( !box.isEmpty() )
   {

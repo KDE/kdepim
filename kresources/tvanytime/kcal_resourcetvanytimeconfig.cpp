@@ -63,13 +63,13 @@ ResourceTVAnytimeConfig::ResourceTVAnytimeConfig( QWidget* parent,  const char* 
 
 void ResourceTVAnytimeConfig::loadSettings( KRES::Resource *resource )
 {
-  kDebug() << "KCal::ResourceTVAnytimeConfig::loadSettings()" << endl;
+  kDebug() <<"KCal::ResourceTVAnytimeConfig::loadSettings()";
   ResourceTVAnytime *res = static_cast<ResourceTVAnytime *>( resource );
   mResource = res;
   
   if ( res ) {
     if ( !res->prefs() ) {
-      kError() << "No PREF" << endl;
+      kError() <<"No PREF";
       return;
     }
     KConfigSkeleton::ItemInt * daysItem = res->prefs()->daysItem();
@@ -80,7 +80,7 @@ void ResourceTVAnytimeConfig::loadSettings( KRES::Resource *resource )
     mDays->setValue( res->prefs()->days() );
     mReloadConfig->loadSettings( res );
   } else {
-    kError(5700) << "KCalResourceTVAnytimeConfig::loadSettings(): no KCalResourceTVAnytime, cast failed" << endl;
+    kError(5700) <<"KCalResourceTVAnytimeConfig::loadSettings(): no KCalResourceTVAnytime, cast failed";
   }
 }
 
@@ -92,7 +92,7 @@ void ResourceTVAnytimeConfig::saveSettings( KRES::Resource *resource )
     res->prefs()->setDays( mDays->value() );
     mReloadConfig->saveSettings( res );
   } else {
-    kError(5700) << "KCalResourceTVAnytimeConfig::saveSettings(): no KCalResourceTVAnytime, cast failed" << endl;
+    kError(5700) <<"KCalResourceTVAnytimeConfig::saveSettings(): no KCalResourceTVAnytime, cast failed";
   }
 }
 

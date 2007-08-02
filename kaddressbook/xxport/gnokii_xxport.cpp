@@ -63,7 +63,7 @@ extern "C" {
 #define GNOKII_CHECK_ERROR(error) \
 	do { \
 		if (error) \
-			kError() << QString("ERROR %1: %2\n").arg(error).arg(gn_error_print(error));\
+			kError() << QString("ERROR %1: %2").arg(error).arg(gn_error_print(error));\
 	} while (0)
 
 // Locale conversion routines:

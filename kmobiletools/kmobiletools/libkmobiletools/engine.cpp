@@ -92,7 +92,7 @@ const KMobileTools::EngineData* Engine::constEngineData() const {
 
 Engine::~Engine()
 {
-    kDebug() << "Engine::~Engine()\n";
+    kDebug() <<"Engine::~Engine()";
 //     weaver->dequeue();
 //     weaver->finish();
 //     delete weaver;
@@ -133,7 +133,7 @@ int Engine::smsSlot()
 
 void Engine::queryClose()
 {
-    kDebug() << "Engine::queryClose()\n";
+    kDebug() <<"Engine::queryClose()";
 //     if(!ownWeaver) return;
     d->weaver->dequeue();
     d->weaver->suspend();
@@ -213,10 +213,10 @@ int Engine::statusJobsSuspended() const
 
 Engine *Engine::load(const QString &libname, QObject *parent)
 {
-    kDebug() << "Engine::load(" << libname << ")" << endl;
+    kDebug() <<"Engine::load(" << libname <<")";
     KLibFactory *factory=KLibLoader::self()->factory(qPrintable(libname));
     if(!factory) {
-        kDebug() << "Error loading library: " << KLibLoader::self()->lastErrorMessage() << endl;
+        kDebug() <<"Error loading library:" << KLibLoader::self()->lastErrorMessage();
         return NULL;
     }
     Engine *ret=static_cast<KMobileTools::Engine *>(factory->create(parent, "KMobileTools::Engine" ) );

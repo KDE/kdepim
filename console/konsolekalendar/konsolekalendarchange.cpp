@@ -54,7 +54,7 @@ bool KonsoleKalendarChange::changeEvent()
 {
   bool status = false;
 
-  kDebug() << "konsolekalendarchange.cpp::changeEvent()" << endl;
+  kDebug() <<"konsolekalendarchange.cpp::changeEvent()";
 
   /*
    * Retrieve event on the basis of the unique string ID
@@ -70,7 +70,7 @@ bool KonsoleKalendarChange::changeEvent()
            << endl;
       printSpecs();
     } else {
-      kDebug() << "konsolekalendarchange.cpp:changeEvent() : "
+      kDebug() <<"konsolekalendarchange.cpp:changeEvent() :"
                 << m_variables->getUID().toLocal8Bit().data()
                 << endl;
 
@@ -122,7 +122,7 @@ bool KonsoleKalendarChange::changeEvent()
     }
   }
 
-  kDebug() << "konsolekalendarchange.cpp::changeEvent() | Done " << endl;
+  kDebug() <<"konsolekalendarchange.cpp::changeEvent() | Done";
   return status;
 }
 

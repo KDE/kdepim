@@ -68,7 +68,7 @@ bool KonsoleKalendarAdd::addEvent()
 {
   bool status = true;
 
-  kDebug() << "konsolekalendaradd.cpp::addEvent()" << endl;
+  kDebug() <<"konsolekalendaradd.cpp::addEvent()";
 
   if ( m_variables->isDryRun() ) {
     cout << i18n( "Insert Event <Dry Run>:" ).toLocal8Bit().data()
@@ -106,7 +106,7 @@ bool KonsoleKalendarAdd::addEvent()
     }
   }
 
-  kDebug() << "konsolekalendaradd.cpp::addEvent() | Done " << endl;
+  kDebug() <<"konsolekalendaradd.cpp::addEvent() | Done";
   return status;
 }
 

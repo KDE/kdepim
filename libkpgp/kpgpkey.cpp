@@ -105,7 +105,7 @@ Key::Key(const KeyID& keyid, const QString& uid, const bool secret) :
 
 Key::~Key()
 {
-  //kDebug( 5326 ) << "Kpgp::Key: Deleting key " << primaryUserID() << endl;
+  //kDebug( 5326 ) <<"Kpgp::Key: Deleting key" << primaryUserID();
   mUserIDs.setAutoDelete(true);
   mUserIDs.clear();
   mSubkeys.setAutoDelete(true);
@@ -255,7 +255,7 @@ void Key::setFingerprint(const KeyID& keyID, const QByteArray &fpr)
     key->setFingerprint(fpr);
   }
   else
-    kDebug(5326) << "Error: Can't set fingerprint. A subkey with key ID 0x"
+    kDebug(5326) <<"Error: Can't set fingerprint. A subkey with key ID 0x"
                   << keyID << " doesn't exist." << endl;
 }
 

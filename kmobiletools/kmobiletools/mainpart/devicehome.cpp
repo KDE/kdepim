@@ -322,12 +322,12 @@ void DeviceHome::loadEngine()
         return;
     }
     libName=infos.service()->library();
-    kDebug() << "**************** libname printable: " << qPrintable(libName) << endl;
+    kDebug() <<"**************** libname printable:" << qPrintable(libName);
     engine=KMobileTools::Engine::load(libName, this);
     if(!engine)
     {
         engine=0;
-        kDebug() << "Library error message: " << KLibLoader::self()->lastErrorMessage() << endl;
+        kDebug() <<"Library error message:" << KLibLoader::self()->lastErrorMessage();
         KMessageBox::error(m_widget, i18n("Could not load the device %1.\nIf this error persists, please restart KMobileTools.", objectName() ) );
         emit deleteThis( objectName() );
         return;
@@ -395,7 +395,7 @@ QString DeviceHome::friendlyName()
 
 DeviceHome::~DeviceHome()
 {
-    kDebug() << "DeviceHome::~DeviceHome()\n";
+    kDebug() <<"DeviceHome::~DeviceHome()";
     KMobileTools::EnginesList::instance()->unlock(objectName() );
 //     f_pidfile.remove();
 //     delete m_widget;
@@ -498,7 +498,7 @@ void DeviceHome::updateAllContacts()
     {
         p_engine = *it;
         if( engine && QString(p_engine->objectName())==QString(engine->objectName())) continue;
-        kDebug() << "DevicePart " << objectName() << ": adding contacts from engine " << p_engine->objectName() << endl;
+        kDebug() <<"DevicePart" << objectName() <<": adding contacts from engine" << p_engine->objectName();
         updateAllContacts( p_engine->constEngineData()->contactsList() );
     }
 }
@@ -584,7 +584,7 @@ void DeviceHome::devDisconnected()
 
 void DeviceHome::devConnected()
 {
-//     kDebug() << "DeviceHome::devConnected()" << endl;
+//     kDebug() <<"DeviceHome::devConnected()";
     devIsConnected=true;
     emit connected();
     DEVCFG(objectName() )->setLastpath(engine->currentDeviceName());
@@ -801,7 +801,7 @@ void DeviceHome::raiseDevice()
  */
 void DeviceHome::smsModified(const QString & smsUID)
 {
-    kDebug( ) << "DeviceHome::smsModified(" << smsUID << ")\n";
+    kDebug( ) <<"DeviceHome::smsModified(" << smsUID <<")";
 }
 
 
@@ -812,7 +812,7 @@ void DeviceHome::smsAdded(const QString & smsUID)
 {
     updateSMSCount();
     home->printInfoPage( home->currentInfoPage(), engine );
-    kDebug( ) << "DeviceHome::smsAdded(" << smsUID << ")\n";
+    kDebug( ) <<"DeviceHome::smsAdded(" << smsUID <<")";
     const SMSList *smsList = engine->constEngineData()->smsList();
     int newSMSIndex=smsList->find( smsUID );
     if(newSMSIndex<0) return;
@@ -837,7 +837,7 @@ QString DeviceHome::currentDeviceName() const
  */
 void DeviceHome::smsRemoved(const QString & smsUID)
 {
-//     kDebug( ) << "DeviceHome::smsRemoved(" << smsUID << ")\n";
+//     kDebug( ) <<"DeviceHome::smsRemoved(" << smsUID <<")";
 //     updateSMSList();
 //     return;
     updateSMSCount();
@@ -925,7 +925,7 @@ void DeviceHome::storeSMS(const QString& number, const QString& text)
  */
 void DeviceHome::openURL(const KUrl &url)
 {
-    kDebug() << "Parsing url " << url << endl;
+    kDebug() <<"Parsing url" << url;
     if(url.path() == "sms") ui.widgetStack->raiseWidget(SMS_WIDGET_ID);
     if(url.path() == "phonebook") ui.widgetStack->raiseWidget(PHONEBOOK_WIDGET_ID);
     if(url.path() == "tryconnect")
@@ -937,7 +937,7 @@ void DeviceHome::openURL(const KUrl &url)
     if(url.path() == "configure")
     {
         emit command( QString("configure:") + objectName() );
-        kDebug() << "emitted command(" << QString("configure:") + objectName() << ")\n";
+        kDebug() <<"emitted command(" << QString("configure:") + objectName() <<")";
     }
 }
 
@@ -997,7 +997,7 @@ void DeviceHome::slotCalendarFetched()
     QString savefile=KGlobal::dirs()->saveLocation( "data", "kmobiletools", true).append( "%1.vcs" ).arg(objectName() );
 
     korgpart->closeUrl();
-    kDebug() << "DeviceHome::slotCalendarFetched()\n";
+    kDebug() <<"DeviceHome::slotCalendarFetched()";
     Calendar *engineCal=constEngineData->calendar();
     p_calendar->deleteAllEvents ();
     for(Calendar::Iterator it=engineCal->begin(); it!=engineCal->end(); ++it)
@@ -1044,7 +1044,7 @@ void DeviceHome::slotExportSMSList()
 //     if ( KMobileTools::MainConfig::self()->maildir() )
     KMobileTools::KMobiletoolsHelper::createMailDir( objectName() );
     engine->constEngineData()->smsList()->saveToMailBox();
-    kDebug() << "STARTING SMS EXPORT\n";
+    kDebug() <<"STARTING SMS EXPORT";
     KMessageBox::information( m_widget, i18n("<qt><p>SMS List for the mobile phone <b>%1</b> was exported to KMail default directory (%2).</p><p>To view exported messages, close and reopen KMail.</p></qt>", DEVCFG(objectName() )->devicename(), DEVCFG(objectName() )->maildir_path() ), i18n("SMS List Exported."), "smslistexported_infobox" );
 }
 
@@ -1055,7 +1055,7 @@ void DeviceHome::slotExportSMSListToCSV()
 {
     int result;
     
-    kDebug() << "STARTING SMS EXPORT TO CSV\n";
+    kDebug() <<"STARTING SMS EXPORT TO CSV";
     result = engine->constEngineData()->smsList()->saveToCSV();
     if (result >= 1) {
         KMessageBox::information( m_widget, i18n("<qt>SMS List for the mobile phone <b>%1</b> was exported to the selected Directory.</qt>", DEVCFG(objectName() )->devicename() ), i18n("SMS List Exported."), "smslistexportedtocsv_infobox" );
@@ -1130,7 +1130,7 @@ void DeviceHome::slotSaveAddressBook()
     KABC::Ticket *ticket=p_addressbook->requestSaveTicket( p_resourcefile );
     if(!ticket)
     {
-        kDebug() << "Error: Unable to save to KAddressBook (engine " << objectName() << ", " << DEVCFG(objectName() )->devicename() << "; filename: " << p_resourcefile->fileName() << ")\n";
+        kDebug() <<"Error: Unable to save to KAddressBook (engine" << objectName() <<"," << DEVCFG(objectName() )->devicename() <<"; filename:" << p_resourcefile->fileName() <<")";
         return;
     }
     p_addressbook->save( ticket );
@@ -1157,7 +1157,7 @@ void DeviceHome::slotSendStoredSMS( SMS *sms)
 void DeviceHome::slotRing( bool ringing)
 {
     if(!ringing) return;
-    kDebug() << "KNotify for ring event\n";
+    kDebug() <<"KNotify for ring event";
     KNotification::event( QString("kmobiletools_ring"), i18n("Incoming Call"), QPixmap(),
         KMobileTools::KMobiletoolsHelper::instance()->systray()->contextMenu() );
 }
@@ -1202,7 +1202,7 @@ void DeviceHome::switch2filesystem()
  */
 void DeviceHome::contactsTabChanged()
 {
-    kDebug() << "Contacts tab index: " <<ui.contactsTab->currentIndex() << endl;
+    kDebug() <<"Contacts tab index:" <<ui.contactsTab->currentIndex();
     if(ui.contactsTab->currentIndex())
         slwidget->searchLine()->setListView(ui.phonebookListViewFull);
     else slwidget->searchLine()->setListView(ui.phonebookListView);

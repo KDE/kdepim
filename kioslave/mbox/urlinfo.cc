@@ -103,7 +103,7 @@ bool UrlInfo::isDirectory( const KUrl& url )
 	*m_filename = filename;
 	*m_id = QString();
 	m_type = directory;
-	kDebug() << "urlInfo::isDirectory( " << url << " )" << endl;
+	kDebug() <<"urlInfo::isDirectory(" << url <<" )";
 	return true;
 }
 
@@ -123,7 +123,7 @@ bool UrlInfo::isMessage( const KUrl& url )
 		return false;
 	
 	//Settings parameters
-	kDebug() << "urlInfo::isMessage( " << url << " )" << endl;
+	kDebug() <<"urlInfo::isMessage(" << url <<" )";
 	m_type = message;
 	*m_id = path.right( path.length() - cutindex - 1 );
 	*m_filename = path.left( cutindex );

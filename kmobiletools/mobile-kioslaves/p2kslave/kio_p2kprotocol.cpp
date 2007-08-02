@@ -52,7 +52,7 @@ using namespace KIO;
 kio_p2kProtocol::kio_p2kProtocol(const Q3CString &pool_socket, const Q3CString &app_socket)
     : SlaveBase("kio_p2k", pool_socket, app_socket)
 {
-    kDebug() << "kio_p2kProtocol::kio_p2kProtocol\n";
+    kDebug() <<"kio_p2kProtocol::kio_p2kProtocol";
 //     kmt_stub=0;
 //     p_dcop=new DCOPClient();
 //     p_dcop->attach();
@@ -63,13 +63,13 @@ kio_p2kProtocol::~kio_p2kProtocol()
 {
 //     if ( kmt_stub ) kmt_stub->resumeDevice();
 
-    kDebug() << "kio_p2kProtocol::~kio_p2kProtocol\n";
+    kDebug() <<"kio_p2kProtocol::~kio_p2kProtocol";
 }
 
 
 void kio_p2kProtocol::disconnectTimeout()
 {
-    kDebug() << "Finished, trying to disconnect.\n";
+    kDebug() <<"Finished, trying to disconnect.";
     QByteArray cmd( 1 );
     cmd[0] = 'd';
     setTimeoutSpecialCommand( 2, cmd );
@@ -88,14 +88,14 @@ void kio_p2kProtocol::special(const QByteArray &data)
 
 void kio_p2kProtocol::listDir(const KUrl &url)
 {
-    kDebug() << "P2KProtocol::listDir: " << url << endl;
+    kDebug() <<"P2KProtocol::listDir:" << url;
     if ( url.path().length() <= 1 )
     {
         listRoot(url);
         disconnectTimeout();
         return;
     }
-    kDebug() << "not root, listing current directory\n";
+    kDebug() <<"not root, listing current directory";
 
 
     KIO::UDSEntry entry;
@@ -131,7 +131,7 @@ void kio_p2kProtocol::listDir(const KUrl &url)
 
 void kio_p2kProtocol::setHost(const QString &host, int port, const QString &user, const QString &pass)
 {
-    kDebug() << "kio_p2kProtocol::setHost(" << host <<"," << port << "," << user << "," << pass << ")\n";
+    kDebug() <<"kio_p2kProtocol::setHost(" << host <<"," << port <<"," << user <<"," << pass <<")";
     int v, p;
     v=host.section('.', 0, 0).toInt(0, 16);
     p=host.section('.', 1, 1).toInt(0, 16);
@@ -141,7 +141,7 @@ void kio_p2kProtocol::setHost(const QString &host, int port, const QString &user
 
 void kio_p2kProtocol::stat(const KUrl &url)
 {
-    kDebug() << "**************** P2KProtocol::stat: " << url << endl;
+    kDebug() <<"**************** P2KProtocol::stat:" << url;
 
 //     listDir(url);
 //     finished();
@@ -149,7 +149,7 @@ void kio_p2kProtocol::stat(const KUrl &url)
     KIO::UDSEntry entry;
     if ( url.path().isEmpty() || url.path() == "/" )
     {
-        kDebug() << "<<<<<<<--------Stat for root directory //////////\n";
+        kDebug() <<"<<<<<<<--------Stat for root directory //////////";
         m_impl.createTopLevelEntry( entry );
         statEntry( entry );
         finished();
@@ -160,7 +160,7 @@ void kio_p2kProtocol::stat(const KUrl &url)
     bool ok=m_impl.statEntry( url, entry );
     if (!ok)
     {
-        kDebug() << ">>>>><<<<<m stat standard entry\n";
+        kDebug() <<">>>>><<<<<m stat standard entry";
         m_impl.createTopLevelEntry(entry);
         statEntry(entry);
         finished();
@@ -168,7 +168,7 @@ void kio_p2kProtocol::stat(const KUrl &url)
 
         return;
     } else {
-        kDebug() << "<<<<<<<<<<<<---------- stat void entry\n";
+        kDebug() <<"<<<<<<<<<<<<---------- stat void entry";
     statEntry( entry );
     disconnectTimeout();
 
@@ -190,7 +190,7 @@ void kio_p2kProtocol::stat(const KUrl &url)
 
 void kio_p2kProtocol::listRoot(const KUrl &url)
 {
-    kDebug() << "P2KProtocol::listRoot()\n";
+    kDebug() <<"P2KProtocol::listRoot()";
 
     KIO::UDSEntry entry;
 
@@ -230,17 +230,17 @@ extern "C"
     {
         KInstance instance( "kio_p2k" );
         
-        kDebug(7101) << "*** Starting kio_p2k " << endl;
+        kDebug(7101) <<"*** Starting kio_p2k";
         
         if (argc != 4) {
-            kDebug(7101) << "Usage: kio_p2k  protocol domain-socket1 domain-socket2" << endl;
+            kDebug(7101) <<"Usage: kio_p2k  protocol domain-socket1 domain-socket2";
             exit(-1);
         }
         
         kio_p2kProtocol slave(argv[2], argv[3]);
         slave.dispatchLoop();
         
-        kDebug(7101) << "*** kio_p2k Done" << endl;
+        kDebug(7101) <<"*** kio_p2k Done";
         return 0;
     }
 }
@@ -251,11 +251,11 @@ extern "C"
  */
 void kio_p2kProtocol::get(const KUrl &url)
 {
-    kDebug() << "***************** kio_p2k getFile: " <<  url << endl;
+    kDebug() <<"***************** kio_p2k getFile:" <<  url;
     int size=m_impl.getFile(url, 0);
     char* buffer=new char[size];
     m_impl.getFile(url,buffer);
-    kDebug() << "**************************GetFile processed; size returned: " << size <<"; raw data:" << buffer << endl;
+    kDebug() <<"**************************GetFile processed; size returned:" << size <<"; raw data:" << buffer;
     if(size<=0)
     {
         delete [] buffer;
@@ -281,11 +281,11 @@ void kio_p2kProtocol::get(const KUrl &url)
  */
 void kio_p2kProtocol::put(const KUrl &url, int permissions, bool overwrite, bool resume)
 {
-    kDebug() << "URL: " << url << "; permissions: " << permissions << "; overwrite: " << overwrite << "; resume: " << resume << endl;
+    kDebug() <<"URL:" << url <<"; permissions:" << permissions <<"; overwrite:" << overwrite <<"; resume:" << resume;
     QByteArray buffer;
     dataReq();
     int result= readData( buffer );
-    kDebug() << "SendData result code: " << m_impl.wrapper()->putFile( url.path(), buffer.data(), buffer.size() );
+    kDebug() <<"SendData result code:" << m_impl.wrapper()->putFile( url.path(), buffer.data(), buffer.size() );
     disconnectTimeout();
     finished();
 }
@@ -296,7 +296,7 @@ void kio_p2kProtocol::put(const KUrl &url, int permissions, bool overwrite, bool
  */
 void kio_p2kProtocol::del (const KUrl &url, bool isfile)
 {
-    kDebug() << "Deleting " << url << "; is file? " << isfile << "; result: " << m_impl.wrapper()->deleteFile( url.path() ) << endl;
+    kDebug() <<"Deleting" << url <<"; is file?" << isfile <<"; result:" << m_impl.wrapper()->deleteFile( url.path() );
     disconnectTimeout();
     finished();
 }

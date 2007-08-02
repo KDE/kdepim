@@ -263,12 +263,12 @@ void KornBoxCfgImpl::slotMoveUp()
 		return; //Already first, or no item selected
 	m_settings->swapAccounts( lsAccounts->currentRow() - 1, lsAccounts->currentRow() );
 	if( !m_settings->account( lsAccounts->currentRow() ) )
-		kWarning() << "The settings do not match with the list widget" << endl;
+		kWarning() <<"The settings do not match with the list widget";
 	else
 		lsAccounts->currentItem()->setText( m_settings->account( lsAccounts->currentRow() )->accountName() );
 	lsAccounts->setCurrentRow( lsAccounts->currentRow() - 1 );
 	if( !m_settings->account( lsAccounts->currentRow() ) )
-		kWarning() << "The settings do not match with the list widget" << endl;
+		kWarning() <<"The settings do not match with the list widget";
 	else
 		lsAccounts->currentItem()->setText( m_settings->account( lsAccounts->currentRow() )->accountName() );
 }
@@ -279,12 +279,12 @@ void KornBoxCfgImpl::slotMoveDown()
 		return; //Already last, or no item selected
 	m_settings->swapAccounts( lsAccounts->currentRow(), lsAccounts->currentRow() + 1 );
 	if( !m_settings->account( lsAccounts->currentRow() ) )
-		kWarning() << "The settings do not match with the list widget" << endl;
+		kWarning() <<"The settings do not match with the list widget";
 	else
 		lsAccounts->currentItem()->setText( m_settings->account( lsAccounts->currentRow() )->accountName() );
 	lsAccounts->setCurrentRow( lsAccounts->currentRow() + 1 );
 	if( !m_settings->account( lsAccounts->currentRow() ) )
-		kWarning() << "The settings do not match with the list widget" << endl;
+		kWarning() <<"The settings do not match with the list widget";
 	else
 		lsAccounts->currentItem()->setText( m_settings->account( lsAccounts->currentRow() )->accountName() );
 }
@@ -297,7 +297,7 @@ void KornBoxCfgImpl::slotEditBox()
 		return; //No item selected
 	if( !m_settings->account( lsAccounts->currentRow() ) )
 	{
-		kWarning() << "The settings do not match with the list widget" << endl;
+		kWarning() <<"The settings do not match with the list widget";
 		return;
 	}
 

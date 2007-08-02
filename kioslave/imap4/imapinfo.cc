@@ -130,7 +130,7 @@ permanentFlagsAvailable_ (false), readWriteAvailable_ (false)
     line.truncate(line.length() - 2);
     QStringList tokens(line.split (' ', QString::SkipEmptyParts));
 
-    kDebug(7116) << "Processing: " << line << endl;
+    kDebug(7116) <<"Processing:" << line;
     if (tokens[0] != "*")
       continue;
 
@@ -150,7 +150,7 @@ permanentFlagsAvailable_ (false), readWriteAvailable_ (false)
         int flagsStart = line.indexOf('(');
         int flagsEnd = line.indexOf(')');
 
-        kDebug(7116) << "Checking permFlags from " << flagsStart << " to " << flagsEnd << endl;
+        kDebug(7116) <<"Checking permFlags from" << flagsStart <<" to" << flagsEnd;
         if ((-1 != flagsStart) && (-1 != flagsEnd) && flagsStart < flagsEnd)
           setPermanentFlags (_flags (line.mid (flagsStart, flagsEnd).toLatin1()));
 
@@ -165,7 +165,7 @@ permanentFlagsAvailable_ (false), readWriteAvailable_ (false)
       }
       else
       {
-        kDebug(7116) << "unknown token2: " << tokens[2] << endl;
+        kDebug(7116) <<"unknown token2:" << tokens[2];
       }
     }
     else if (tokens[1] == "FLAGS")
@@ -185,7 +185,7 @@ permanentFlagsAvailable_ (false), readWriteAvailable_ (false)
         setRecent (tokens[1].toULong ());
 
       else
-        kDebug(7116) << "unknown token1/2: " << tokens[1] << " " << tokens[2] << endl;
+        kDebug(7116) <<"unknown token1/2:" << tokens[1] <<"" << tokens[2];
     }
   }
 

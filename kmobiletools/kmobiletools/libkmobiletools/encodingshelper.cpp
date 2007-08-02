@@ -47,7 +47,7 @@ QString EncodingsHelper::fromUCS2(const QString &s)
     if(s.length()%4 || s.contains( QRegExp("[^\\dA-F]+") ) != 0 ) return s;
     for(int i=0; i<s.length(); i+=4)
     {
-//         kDebug() << s.mid(i, 4) << "<<--->>"<< (s.mid(i, 4).toUInt(0, 16)) << "<<--->>" << QChar(s.mid(i, 4).toUInt(0, 16)) << endl;
+//         kDebug() << s.mid(i, 4) <<"<<--->>"<< (s.mid(i, 4).toUInt(0, 16)) <<"<<--->>" << QChar(s.mid(i, 4).toUInt(0, 16));
         out+= QChar(s.mid(i, 4).toUInt(0, 16));
     }
     return out;
@@ -177,7 +177,7 @@ Q3MemArray<QChar> EncodingsHelper::encodeGSM(const QString &s)
         }
     }
 //     retval.setRawData( data, foundlen );
-//     kDebug() << retval.nrefs() << endl;
+//     kDebug() << retval.nrefs();
 //     retval=retval.copy();
 //     retval2=retval.copy();
 //     delete [] data;
@@ -213,7 +213,7 @@ Q3MemArray<QChar> EncodingsHelper::hexstring2memarray( const QString &s)
     Q3MemArray<QChar> out(s.length() / 2 );
     for(int i=0; i<s.length(); i+=2){
         out[i/2]=(uchar) s.mid( i, 2 ).toInt( NULL, 16 );
-//         kDebug() << s.mid( i, 2 ) << " <--> " << uint((uchar) out[i/2]) << " (i/2==" << i/2 << ")\n";
+//         kDebug() << s.mid( i, 2 ) <<" <-->" << uint((uchar) out[i/2]) <<" (i/2==" << i/2 <<")";
     }
     return out;
 }

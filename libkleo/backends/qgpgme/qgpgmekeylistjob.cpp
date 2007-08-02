@@ -90,7 +90,7 @@ GpgME::Error Kleo::QGpgMEKeyListJob::start( const QStringList & pats, bool secre
     if ( err.code() == GPG_ERR_LINE_TOO_LONG ) {
       setChunkSize( chunkSize()/2 );
       if ( chunkSize() >= 1 ) {
-	kDebug(5150) << "QGpgMEKeyListJob::start(): retrying keylisting with chunksize " << chunkSize() << endl;
+	kDebug(5150) <<"QGpgMEKeyListJob::start(): retrying keylisting with chunksize" << chunkSize();
 	continue;
       }
     }
@@ -124,9 +124,9 @@ GpgME::KeyListResult Kleo::QGpgMEKeyListJob::exec( const QStringList & pats, boo
     if ( chunkSize() < 1 )
       // chunks smaller than one can't be -> return the error.
       return mResult;
-    kDebug(5150) << "QGpgMEKeyListJob::exec(): retrying keylisting with chunksize " << chunkSize() << endl;
+    kDebug(5150) <<"QGpgMEKeyListJob::exec(): retrying keylisting with chunksize" << chunkSize();
   }
-  kFatal(5150) << "QGpgMEKeyListJob::exec(): Oops, this is not supposed to happen!" << endl;
+  kFatal(5150) <<"QGpgMEKeyListJob::exec(): Oops, this is not supposed to happen!";
   return GpgME::KeyListResult();
 }
 

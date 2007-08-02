@@ -121,7 +121,7 @@ void homepagePart::refreshData(const QString &data)
  */
 void homepagePart::openUrlRequest(const KUrl &url)
 {
-    kDebug() << "openUrlRequest: " << url << endl;
+    kDebug() <<"openUrlRequest:" << url;
     if(url.protocol() == "mobile")
         emit switchDevice( url.path() );
     if(url.protocol() == "config")
@@ -156,7 +156,7 @@ void homepagePart::printIndexPage()
         QString iconDev;
         KPluginInfo infos=KMobileTools::EnginesList::instance()->engineInfo( DEVCFG(*it)->engine() );
         if(infos.isValid()) iconDev=infos.icon();
-        kDebug() << "Loaded icon: " << iconDev << endl;
+        kDebug() <<"Loaded icon:" << iconDev;
 
 //         MainIFace_stub *mainStub=new MainIFace_stub(kapp->dcopClient(), "kmobiletools", "KMobileTools" );
 //         bool isLoaded=mainStub->deviceIsLoaded( *it );
@@ -263,7 +263,7 @@ void homepagePart::printInfoPage(int i, const QString &mobileName, KMobileTools:
 
 void homepagePart::debugPage(const QString &htmlData)
 {
-    kDebug() << "debugPage::" << htmlData.left(10) << "...\n";
+    kDebug() <<"debugPage::" << htmlData.left(10) <<"...";
     QTextStream str(stdout);
     str << htmlData;
 }
@@ -280,7 +280,7 @@ const QString homepagePart::htmlIcon(const QString &iconName, int groupOrSize)
  */
 void homepagePart::slotContextMenu(const QString& urlString, const QPoint& point )
 {
-    kDebug() << "homepagePart::slotContextMenu(\"" << urlString << "\", " << point << ") engine:" << d->p_engine <<";\n";
+    kDebug() <<"homepagePart::slotContextMenu(\"" << urlString <<"\"," << point <<") engine:" << d->p_engine <<";";
     KUrl url(urlString);
 //     if(urlString==QString::null && p_engine) url=KUrl::fromPathOrUrl( QString("mobile:%1").arg(p_engine->objectName() ));
     KMenu *m_popup=0;

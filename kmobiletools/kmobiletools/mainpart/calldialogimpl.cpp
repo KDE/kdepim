@@ -33,7 +33,7 @@ callDialogImpl::callDialogImpl(KMobileTools::Engine *engine, QWidget *parent, co
     setObjectName(QLatin1String(name));
     setWindowFlags(Qt::WindowStaysOnTopHint);
     this->engine=engine;
-    kDebug() << "callDialogImpl::callDialogImpl()\n";
+    kDebug() <<"callDialogImpl::callDialogImpl()";
     disconnect(ui.timerStart, SIGNAL(linkClicked(const QString &)), ui.timerStart, SLOT(openLink(const QString &)));
     connect(ui.timerStart, SIGNAL(linkClicked(const QString &)), this, SLOT(slotTimerStart()));
     ui.timerStack->setCurrentIndex(0);
@@ -100,7 +100,7 @@ int callDialogImpl::call(const QString &number, const QString &showName)
     connect(engine->ThreadWeaver(), SIGNAL(suspended()), this, SLOT(triggerCall()));
     engine->suspendStatusJobs( true );
     engine->ThreadWeaver()->suspend();
-    kDebug() << "callDialogImpl: suspending jobs in engine\n";
+    kDebug() <<"callDialogImpl: suspending jobs in engine";
     ui.lStatus->setText(i18n("Suspending current tasks before calling."));
     return exec();
 }
@@ -114,7 +114,7 @@ void callDialogImpl::triggerCall()
     disconnect(engine->ThreadWeaver(), SIGNAL(suspended()), this, SLOT(triggerCall()));
     b_dialing=true;
     ui.lStatus->setText(i18n("Dialing number."));
-    kDebug() << "callDialogImpl: jobs suspended, now dialing number\n";
+    kDebug() <<"callDialogImpl: jobs suspended, now dialing number";
     ui.lStatus->setText(i18n("Phone status: calling."));
     engine->slotDial( KMobileTools::Engine::DIAL_DIAL, number );
 
@@ -135,7 +135,7 @@ void callDialogImpl::endCall()
     }
     engine->slotDial( KMobileTools::Engine::DIAL_HANGUP );
     engine->suspendStatusJobs( false );
-    kDebug() << "DevicePart: call finished, now resuming job queue\n";
+    kDebug() <<"DevicePart: call finished, now resuming job queue";
     engine->ThreadWeaver()->resume();
     b_dialing=false;
 }

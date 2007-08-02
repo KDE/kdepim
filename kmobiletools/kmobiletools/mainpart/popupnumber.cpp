@@ -40,7 +40,7 @@ popupNumber::popupNumber(const QString &deviceName, const QString &number, QWidg
  : KMenu(parent)
 {
     setObjectName(deviceName);
-    kDebug() << "popupNumber " << this << endl;
+    kDebug() <<"popupNumber" << this;
     addTitle(number);
     this->number=number;
     addAction(KIcon("kaddressbook"), i18n("Call with this mobile phone"), this, SLOT(call() ) );
@@ -73,7 +73,7 @@ void popupNumber::call() { call(objectName()); }
 
 void popupNumber::call(const QString &deviceName)
 {
-    kDebug() << "call: " << deviceName << endl;
+    kDebug() <<"call:" << deviceName;
 #if 0
     DeviceIFace_stub *stub=new DeviceIFace_stub("kmobiletools", deviceName.latin1() );
     stub->raiseDevice();
@@ -84,7 +84,7 @@ void popupNumber::call(const QString &deviceName)
 
 void popupNumber::newSMS(const QString &deviceName)
 {
-    kDebug() << "sms: " << deviceName << endl;
+    kDebug() <<"sms:" << deviceName;
 #if 0
     (new DeviceIFace_stub("kmobiletools", deviceName.latin1() ))->slotNewSMS(number);
 #endif
@@ -116,7 +116,7 @@ devicesPopup::~devicesPopup()
 
 void devicesPopup::activated( QAction * action )
 {
-    kDebug() << "devicesPopup::activated(" << action->objectName() << ")\n";
+    kDebug() <<"devicesPopup::activated(" << action->objectName() <<")";
     emit deviceActivated( action->objectName() );
 }
 

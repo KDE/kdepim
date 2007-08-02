@@ -402,9 +402,9 @@ bool Contact::loadNameAttribute( QDomElement& element )
         setSuffix( e.text() );
       else
         // TODO: Unhandled tag - save for later storage
-        kDebug() << "Warning: Unhandled tag " << e.tagName() << endl;
+        kDebug() <<"Warning: Unhandled tag" << e.tagName();
     } else
-      kDebug() << "Node is not a comment or an element???" << endl;
+      kDebug() <<"Node is not a comment or an element???";
   }
 
   return true;
@@ -440,9 +440,9 @@ bool Contact::loadPhoneAttribute( QDomElement& element )
         number.number = e.text();
       else
         // TODO: Unhandled tag - save for later storage
-        kDebug() << "Warning: Unhandled tag " << e.tagName() << endl;
+        kDebug() <<"Warning: Unhandled tag" << e.tagName();
     } else
-      kDebug() << "Node is not a comment or an element???" << endl;
+      kDebug() <<"Node is not a comment or an element???";
   }
 
   addPhoneNumber( number );
@@ -524,9 +524,9 @@ bool Contact::loadAddressAttribute( QDomElement& element )
         address.country = e.text();
       else
         // TODO: Unhandled tag - save for later storage
-        kDebug() << "Warning: Unhandled tag " << e.tagName() << endl;
+        kDebug() <<"Warning: Unhandled tag" << e.tagName();
     } else
-      kDebug() << "Node is not a comment or an element???" << endl;
+      kDebug() <<"Node is not a comment or an element???";
   }
 
   addAddress( address );
@@ -832,7 +832,7 @@ bool Contact::loadXML( const QDomDocument& document )
       QDomElement e = n.toElement();
       if ( !loadAttribute( e ) ) {
         // Unhandled tag - save for later storage
-        //kDebug() << "Saving unhandled tag " << e.tagName() << endl;
+        //kDebug() <<"Saving unhandled tag" << e.tagName();
         Custom c;
         c.app = s_unhandledTagAppName;
         c.name = e.tagName();
@@ -840,7 +840,7 @@ bool Contact::loadXML( const QDomDocument& document )
         mCustomList.append( c );
       }
     } else
-      kDebug() << "Node is not a comment or an element???" << endl;
+      kDebug() <<"Node is not a comment or an element???";
   }
 
   return true;
@@ -1119,7 +1119,7 @@ void Contact::setFields( const KABC::Addressee* addressee )
     QString value = name.mid( pos + 1 );
     name = name.left( pos );
     if ( !knownCustoms.contains( name ) ) {
-      //kDebug() << k_funcinfo << "app=" << app << " name=" << name << " value=" << value << endl;
+      //kDebug() << k_funcinfo <<"app=" << app <<" name=" << name <<" value=" << value;
       Custom c;
       if ( app != "KADDRESSBOOK" ) // that's the default
         c.app = app;
@@ -1244,7 +1244,7 @@ void Contact::saveTo( KABC::Addressee* addressee )
     QString app = (*it).app.isEmpty() ? QString::fromLatin1( "KADDRESSBOOK" ) : (*it).app;
     addressee->insertCustom( app, (*it).name, (*it).value );
   }
-  //kDebug(5006) << addressee->customs() << endl;
+  //kDebug(5006) << addressee->customs();
 }
 
 QImage Contact::loadPictureFromKMail( const QString& attachmentName, KABC::ResourceKolab* resource, const QString& subResource, quint32 sernum )

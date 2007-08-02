@@ -69,7 +69,7 @@ QSerial::QSerial()
 
 QSerial::QSerial( const QString &deviceName )
 {
-    kDebug() << "QSerial(" << deviceName << ")" << endl;
+    kDebug() <<"QSerial(" << deviceName <<")";
     createObject();
     setName(deviceName);
 }
@@ -89,7 +89,7 @@ QSerial::~QSerial()
 
 bool QSerial::open(OpenMode mode, bool createLockFile)
 {
-    kDebug() << "QSerial::open: device " << d->m_device << ", mode: " << mode << ", createlock=" << createLockFile << endl;
+    kDebug() <<"QSerial::open: device" << d->m_device <<", mode:" << mode <<", createlock=" << createLockFile;
     int iomode=0, retry=3;
     // Fixing weird behaviour of QIODevice open flags
     if (mode & QIODevice::ReadWrite) iomode = iomode | O_RDWR;
@@ -106,14 +106,14 @@ bool QSerial::open(OpenMode mode, bool createLockFile)
         d->b_lock=lockFile( true );
         if(! d->b_lock)
         {
-            kDebug() << "ERROR! Couldn't create lockfile for " << d->m_device << endl;
+            kDebug() <<"ERROR! Couldn't create lockfile for" << d->m_device;
             return false;
         }
     }
     // Retry a few times.
     while( retry > 0 ) {
         d->i_modem = ::open( d->m_device.toLatin1() , iomode | O_NONBLOCK | O_NOCTTY /*| O_NOCTTY | O_NONBLOCK*/ );
-//     kDebug() << "Trying to open " << d->m_device << " in mode " << iomode << ".." << d->i_modem << endl;
+//     kDebug() <<"Trying to open" << d->m_device <<" in mode" << iomode <<".." << d->i_modem;
         if( d->i_modem != -1 ) break;
 
             KMobileTools::Thread::sleep(1);
@@ -139,7 +139,7 @@ bool QSerial::open(OpenMode mode, bool createLockFile)
 
 void QSerial::slotNotifierData(int fd)
 {
-    kDebug() << "Serial::slotNotifierData(" << fd << ")" << endl;
+    kDebug() <<"Serial::slotNotifierData(" << fd <<")";
     if(fd!=d->i_modem) return;
     emit gotData();
 }
@@ -156,7 +156,7 @@ void QSerial::setupParameters()
 //     memset(&newtio, 0, sizeof(newtio));
     if (tcgetattr(d->i_modem, &newtio)!=0)
     {
-        kDebug() <<"tcgetattr() 3 failed"<<endl;
+        kDebug() <<"tcgetattr() 3 failed";
         perror("Error on setup: ");
     }
     /* We generate mark and space parity ourself. */
@@ -206,10 +206,10 @@ void QSerial::setupParameters()
     cfsetispeed(&newtio, (speed_t)d->m_baudrate );
     cfsetospeed(&newtio, (speed_t)d->m_baudrate );
 
-    kDebug() << "BaudRate:" << d->m_baudrate<< endl;
+    kDebug() <<"BaudRate:" << d->m_baudrate;
     if (tcsetattr(d->i_modem, TCSANOW, &newtio)!=0)
     {
-        kDebug() << "Unable to setup serial parameters (tcsetattr() 1)\n";
+        kDebug() <<"Unable to setup serial parameters (tcsetattr() 1)";
         perror("Error on setup: ");
     }
     int mcs=0;
@@ -220,7 +220,7 @@ void QSerial::setupParameters()
 
     if (tcgetattr(d->i_modem, &newtio)!=0)
     {
-        kDebug() << "Unable to setup serial parameters (tcsetattr() 4)\n";
+        kDebug() <<"Unable to setup serial parameters (tcsetattr() 4)";
         perror("Error on setup: ");
     }
 //hardware handshake
@@ -234,7 +234,7 @@ void QSerial::setupParameters()
     newtio.c_cflag &= ~CRTSCTS;*/
     if (tcsetattr(d->i_modem, TCSANOW, &newtio)!=0)
     {
-        kDebug() << "Unable to setup serial parameters (tcsetattr() 2)\n";
+        kDebug() <<"Unable to setup serial parameters (tcsetattr() 2)";
         perror("Error on setup: ");
     }
     n = fcntl(d->i_modem, F_GETFL, 0);
@@ -269,7 +269,7 @@ bool QSerial::lockFile(bool lock)
 {
     if(!lock)
     {
-        kDebug() << "removing lockfile " << d->m_device << endl;
+        kDebug() <<"removing lockfile" << d->m_device;
         // Here we close lock file.
         if(!d->b_lock) return false;
         if(unlink( d->s_lockFile.toLatin1() )==-1)
@@ -286,7 +286,7 @@ bool QSerial::lockFile(bool lock)
     // Now for creating it.
     if(d->b_lock || d->m_device.isNull() ) return false;
     d->s_lockFile=lockFileName();
-    kDebug() << "LockFileName==" << d->s_lockFile << endl;
+    kDebug() <<"LockFileName==" << d->s_lockFile;
 
     // First check if it already exists.
     QFile lck(d->s_lockFile);
@@ -302,15 +302,15 @@ bool QSerial::lockFile(bool lock)
         if( kill(pid,0)==-1 && errno==ESRCH )
         {
             if(lck.remove())
-                kDebug() << "Correctly removed stale lock: " << lck.fileName() << endl;
+                kDebug() <<"Correctly removed stale lock:" << lck.fileName();
             else
             {
-                kDebug() << "!!! WARNING !!! couldn't remove stale lock file " << lck.fileName() << endl;
+                kDebug() <<"!!! WARNING !!! couldn't remove stale lock file" << lck.fileName();
                 return false;
             }
         } else
         {
-            kDebug() << "QSerial::lockFile(): is already locked by another application\n";
+            kDebug() <<"QSerial::lockFile(): is already locked by another application";
             return false;
         }
     }
@@ -323,7 +323,7 @@ bool QSerial::lockFile(bool lock)
         if( ::write(i_lockfile, towrite.toLatin1(), towrite.length() ) ==-1) perror("Error on write: ");
     }
     ::close (i_lockfile);
-    kDebug() << "LockFile created: " << (i_lockfile!=-1) << endl;
+    kDebug() <<"LockFile created:" << (i_lockfile!=-1);
     return (i_lockfile!=-1);
 }
 
@@ -341,13 +341,13 @@ void QSerial::flush()
 
 qint64 QSerial::writeData( const char *data, qint64 len )
 {
-    kDebug() << "QSerial::writeData()\n";
+    kDebug() <<"QSerial::writeData()";
     if (!isOpen())
     {
-        kDebug() << "Can't write to serial port: device \"" << d->m_device << "\" is still closed\n";
+        kDebug() <<"Can't write to serial port: device \"" << d->m_device <<"\" is still closed";
         return -1;
     }
-//     kDebug() << "Serial port: sending " << data << " with length " << len << endl;
+//     kDebug() <<"Serial port: sending" << data <<" with length" << len;
 #define TEMPBUFFERSIZE 30
     char temp[TEMPBUFFERSIZE];
     long retval=0;
@@ -394,7 +394,7 @@ qint64 QSerial::size() const
     qint64 u_toread=0;
     if(! isOpen() )
     {
-        kDebug() << "Trying to get size() without having the serial port open, returning 0\n";
+        kDebug() <<"Trying to get size() without having the serial port open, returning 0";
         return 0;
     }
     if( ioctl(d->i_modem,FIONREAD,&u_toread)== -1)
@@ -402,7 +402,7 @@ qint64 QSerial::size() const
         perror("Error reading avail size: ");
         return 0;
     }
-//     kDebug() << "Reading size ok: avail size=" << u_toread << endl;
+//     kDebug() <<"Reading size ok: avail size=" << u_toread;
     return u_toread;
 }
 

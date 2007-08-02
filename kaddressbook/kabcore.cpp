@@ -109,7 +109,7 @@ KABCore::KABCore( KXMLGUIClient *client, bool readWrite, QWidget *parent,
   if ( file.isEmpty() ) {
     mAddressBook = KABC::StdAddressBook::self( true );
   } else {
-    kDebug(5720) << "KABCore(): document '" << file << "'" << endl;
+    kDebug(5720) <<"KABCore(): document '" << file <<"'";
     mAddressBook = KABC::StdAddressBook::self( true );
     /*
     mAddressBook = new KABC::AddressBook;

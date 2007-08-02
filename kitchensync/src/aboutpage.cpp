@@ -37,7 +37,7 @@ static QString readFile( const QString &fileName )
 {
   QFile file( fileName );
   if ( !file.open( QIODevice::ReadOnly ) ) {
-    kDebug(5200) << "Unable to open file '" << fileName << "'" << endl;
+    kDebug(5200) <<"Unable to open file '" << fileName <<"'";
     return QString();
   }
 

@@ -132,12 +132,12 @@ void smsPart::show( SMS *sms)
     QString testString="prova ";
     for (uint i=0; i<8; i++) testString+=testString;*/ // Long sms emulation
     text=text.arg( Qt::convertFromPlainText( sms->getText() , Qt::WhiteSpaceNormal) );
-//     kDebug() << text << endl;
+//     kDebug() << text;
     begin();
     write(text);
-//     kDebug() << "------------------------------ SMS Part ----------------------------------\n";
+//     kDebug() <<"------------------------------ SMS Part ----------------------------------";
 //     printf( text.latin1());
-//     kDebug() << "\n------------------------------ End SMS ----------------------------------\n";
+//     kDebug() <<"\n------------------------------ End SMS ----------------------------------";
     end();
 }
 

@@ -119,7 +119,7 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
   public:
     UrlHandler()
     {
-      kDebug() << "UrlHandler() (iCalendar)" << endl;
+      kDebug() <<"UrlHandler() (iCalendar)";
     }
 
     Incidence* icalToString( const QString& iCal ) const
@@ -287,17 +287,17 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
           DCOPRef ref( dcopService, dbusService ); // talk to the KUniqueApplication or its kontact wrapper
           DCOPReply reply = ref.call( "load()" );
           if ( reply.isValid() && (bool)reply ) {
-            kDebug() << "Loaded " << dbusService << " successfully" << endl;
+            kDebug() <<"Loaded" << dbusService <<" successfully";
             Q_ASSERT( kapp->dcopClient()->findObject( dbusService, dcopObjectId, "", QByteArray(), dummy, dummy ) );
           } else
-            kWarning() << "Error loading " << dbusService << endl;
+            kWarning() <<"Error loading" << dbusService;
         }*/
 
         // We don't do anything with it, we just need it to be running so that it handles
         // the incoming directory.
       }
       else
-        kWarning() << "Couldn't start DBUS/Organizer: " << dbusService << " " << error << endl;
+        kWarning() <<"Couldn't start DBUS/Organizer:" << dbusService <<"" << error;
 
       return true;
     }

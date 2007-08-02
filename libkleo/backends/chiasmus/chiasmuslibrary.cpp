@@ -74,7 +74,7 @@ Kleo::ChiasmusLibrary::main_func Kleo::ChiasmusLibrary::chiasmus( QString * reas
     if ( reason )
       *reason = i18n( "Failed to load %1: %2",
                       libfile, KLibLoader::self()->lastErrorMessage() );
-    kDebug(5150) << "ChiasmusLibrary: loading \"" << libfile
+    kDebug(5150) <<"ChiasmusLibrary: loading \"" << libfile
                   << "\" failed: " << KLibLoader::self()->lastErrorMessage() << endl;
     return 0;
   }
@@ -83,7 +83,7 @@ Kleo::ChiasmusLibrary::main_func Kleo::ChiasmusLibrary::chiasmus( QString * reas
     if ( reason )
       *reason = i18n( "Failed to load %1: %2",
                       libfile, i18n( "Library does not contain the symbol \"Chiasmus\"." ) );
-    kDebug(5150) << "ChiasmusLibrary: loading \"" << libfile
+    kDebug(5150) <<"ChiasmusLibrary: loading \"" << libfile
                   << "\" failed: " << "Library does not contain the symbol \"Chiasmus\"." << endl;
     return 0;
   }

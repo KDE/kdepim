@@ -50,20 +50,20 @@ using namespace KIO;
 kio_mobileProtocol::kio_mobileProtocol(const Q3CString &pool_socket, const Q3CString &app_socket)
     : SlaveBase("kio_mobile", pool_socket, app_socket)
 {
-    kDebug() << "kio_mobileProtocol::kio_mobileProtocol()" << endl;
+    kDebug() <<"kio_mobileProtocol::kio_mobileProtocol()";
     m_dcop.attach();
 }
 
 
 kio_mobileProtocol::~kio_mobileProtocol()
 {
-    kDebug() << "kio_mobileProtocol::~kio_mobileProtocol()" << endl;
+    kDebug() <<"kio_mobileProtocol::~kio_mobileProtocol()";
 }
 
 // From here, it's copied and adapted from kdebase/kioslave/system
 void kio_mobileProtocol::listDir(const KUrl &url)
 {
-    kDebug() << "MobileProtocol::listDir: " << url << endl;
+    kDebug() <<"MobileProtocol::listDir:" << url;
 
     if ( url.path().length() <= 1 )
     {
@@ -73,12 +73,12 @@ void kio_mobileProtocol::listDir(const KUrl &url)
     QString host=QStringList::split("/",url.path() ).first();
     KMobileTools::DevicesConfig *hostCFG=KMobileTools::DevicesConfig::prefs(host);
     hostCFG->readConfig();
-    kDebug() << "Reading config\n";
-    kDebug() << "FSType:" << hostCFG->fstype() << endl;
+    kDebug() <<"Reading config";
+    kDebug() <<"FSType:" << hostCFG->fstype();
     KUrl target;
     switch( hostCFG->fstype() ){
         case 1:
-            kDebug() << "P2K Filesystem\n";
+            kDebug() <<"P2K Filesystem";
             target.setProtocol("p2k");
             target.setUser( host);
             target.setHost(QString("%1.%2")
@@ -86,7 +86,7 @@ void kio_mobileProtocol::listDir(const KUrl &url)
                     .arg(hostCFG->p2k_prodid()) );
             break;
         case 2:
-            kDebug() << "ObexFTP Filesystem\n";
+            kDebug() <<"ObexFTP Filesystem";
             target.setProtocol("obex2");
             switch( hostCFG->obex_transp() ){
                 case 0:
@@ -101,22 +101,22 @@ void kio_mobileProtocol::listDir(const KUrl &url)
                 case 4:
                     target.setHost("usb"); break;
             }
-            kDebug() << "Obex transport: " << hostCFG->obex_transp() << "; device: " << hostCFG->obex_device() << "; port: " << hostCFG->obex_port() << endl;
+            kDebug() <<"Obex transport:" << hostCFG->obex_transp() <<"; device:" << hostCFG->obex_device() <<"; port:" << hostCFG->obex_port();
             target.setUser(hostCFG->obex_device().replace("/", "\\") );
             if(hostCFG->obex_port()) target.setPort(hostCFG->obex_port());
             break;
     }
-    kDebug() << "Resulting URL: \"" << target << "\"; is valid: " << target.isValid() << endl;
+    kDebug() <<"Resulting URL: \"" << target <<"\"; is valid:" << target.isValid();
 //     target.setProtocol("p2k");
 //     target.setHost(host);
-//     kDebug() << "Path: " << url.path() << "; host: " << url.host() << endl;
-//     kDebug() << "possible redirection target : " << target << endl;
+//     kDebug() <<"Path:" << url.path() <<"; host:" << url.host();
+//     kDebug() <<"possible redirection target :" << target;
     if( target.isValid() )
     {
         DeviceIFace_stub dcopDevice(&m_dcop, Q3CString("kmobiletools"), host.utf8() );
-        kDebug() << "launching switch2filesystem() to `" << dcopDevice.app() << "` -- `" << dcopDevice.obj() << "`" << endl;
+        kDebug() <<"launching switch2filesystem() to `" << dcopDevice.app() <<"` -- `" << dcopDevice.obj() <<"`";
         dcopDevice.switch2filesystem();
-        kDebug() << "Call failed: " << (dcopDevice.status() == DCOPStub::CallFailed) << endl;
+        kDebug() <<"Call failed:" << (dcopDevice.status() == DCOPStub::CallFailed);
         redirection(target);
         finished();
         return;
@@ -127,7 +127,7 @@ void kio_mobileProtocol::listDir(const KUrl &url)
 
 void kio_mobileProtocol::stat(const KUrl &url)
 {
-    kDebug() << "MobileProtocol::stat: " << url << endl;
+    kDebug() <<"MobileProtocol::stat:" << url;
 
     QString path = url.path();
     if ( path.isEmpty() || path == "/" )
@@ -185,17 +185,17 @@ extern "C"
     {
         KInstance instance( "kio_mobile" );
         
-        kDebug(7101) << "*** Starting kio_mobile " << endl;
+        kDebug(7101) <<"*** Starting kio_mobile";
         
         if (argc != 4) {
-            kDebug(7101) << "Usage: kio_mobile  protocol domain-socket1 domain-socket2" << endl;
+            kDebug(7101) <<"Usage: kio_mobile  protocol domain-socket1 domain-socket2";
             exit(-1);
         }
         
         kio_mobileProtocol slave(argv[2], argv[3]);
         slave.dispatchLoop();
         
-        kDebug(7101) << "*** kio_mobile Done" << endl;
+        kDebug(7101) <<"*** kio_mobile Done";
         return 0;
     }
 } 

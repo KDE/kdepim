@@ -142,7 +142,7 @@ QString KornMailSubject::decodeRFC2047String(const QByteArray& aStr)
 
 			// valid encoding: decode and throw away separating LWSP
 			const KMime::Codec * c = KMime::Codec::codecForName( encoding );
-			kFatal( !c, 5006 ) << "No \"" << encoding << "\" codec!?" << endl;
+			kFatal( !c, 5006 ) <<"No \"" << encoding <<"\" codec!?";
 
 			QByteArray in = QByteArray::fromRawData( enc_start, pos - enc_start );
 			const QByteArray enc = c->decode( in );

@@ -105,7 +105,7 @@ TVAnytimePrefsBase *ResourceTVAnytime::prefs()
 
 void ResourceTVAnytime::readConfig( const KConfigGroup &group )
 {
-  kDebug() << "KCal::ResourceTVAnytime::readConfig()" << endl;
+  kDebug() <<"KCal::ResourceTVAnytime::readConfig()";
 
   mPrefs->readConfig();
 
@@ -119,7 +119,7 @@ void ResourceTVAnytime::readConfig( const KConfigGroup &group )
 
 void ResourceTVAnytime::writeConfig( KConfigGroup &group )
 {
-  kDebug() << "KCal::ResourceTVAnytime::writeConfig()" << endl;
+  kDebug() <<"KCal::ResourceTVAnytime::writeConfig()";
 
   ResourceCalendar::writeConfig( group );
 
@@ -146,15 +146,15 @@ void ResourceTVAnytime::doClose()
 
 bool ResourceTVAnytime::doLoad( bool )
 {
-  kDebug() << "ResourceTVAnytime::load()" << endl;
+  kDebug() <<"ResourceTVAnytime::load()";
 
   if ( mIsShowingError ) {
-    kDebug() << "Still showing error" << endl;
+    kDebug() <<"Still showing error";
     return true;
   }
 
   if ( mDownloadJob ) {
-    kWarning() << "Download still in progress" << endl;
+    kWarning() <<"Download still in progress";
     return false;
   }
 
@@ -177,8 +177,8 @@ bool ResourceTVAnytime::doLoad( bool )
 
   KUrl destination = KUrl( mDestination->fileName() );
 
-  kDebug(5850) << "  SOURCE: " << url.url() << endl;
-  kDebug(5850) << "  DESTINATION: " << destination.url() << endl;
+  kDebug(5850) <<"  SOURCE:" << url.url();
+  kDebug(5850) <<"  DESTINATION:" << destination.url();
 
   // TODO: find out if the file to download is fresh.  if not, just work with the cache.
   mDownloadJob = KIO::file_copy( url, destination, -1, true );
@@ -197,7 +197,7 @@ bool ResourceTVAnytime::doLoad( bool )
 
 void ResourceTVAnytime::slotJobResult( KJob *job )
 {
-  kDebug() << "ResourceTVAnytime::slotJobResult(): " << endl;
+  kDebug() <<"ResourceTVAnytime::slotJobResult():";
 
   if ( job->error() ) {
     mIsShowingError = true;
@@ -276,7 +276,7 @@ bool ResourceTVAnytime::readSchedule()
 
 bool ResourceTVAnytime::readServiceInformation( const QDomDocument & serviceInfo )
 {
-  kDebug() << k_funcinfo << endl;
+  kDebug() << k_funcinfo;
   QDomElement docElem = serviceInfo.documentElement();
 
   QDomNode n = docElem.firstChild();
@@ -300,15 +300,15 @@ bool ResourceTVAnytime::readServiceInformation( const QDomDocument & serviceInfo
             }
           }
           else 
-            kDebug() << " couldn't find ServiceInformation: " << e3.tagName() << endl;
+            kDebug() <<" couldn't find ServiceInformation:" << e3.tagName();
           n3 = n3.nextSibling();
         }
       }
       else 
-        kDebug() << " couldn't find ServiceInformationTable: " << e2.tagName() << endl;
+        kDebug() <<" couldn't find ServiceInformationTable:" << e2.tagName();
     }
     else 
-      kDebug() << " couldn't find ProgramDescription: " << e.tagName() << endl;
+      kDebug() <<" couldn't find ProgramDescription:" << e.tagName();
     n = n.nextSibling();
   }
   return true;
@@ -316,7 +316,7 @@ bool ResourceTVAnytime::readServiceInformation( const QDomDocument & serviceInfo
 
 bool ResourceTVAnytime::readService( const QString & serviceId )
 {
-  kDebug() << k_funcinfo << endl;
+  kDebug() << k_funcinfo;
   // open programme information table
   Service service = mServiceMap[ serviceId ];
 
@@ -339,7 +339,7 @@ bool ResourceTVAnytime::readService( const QString & serviceId )
     }
   }
 
-  kDebug() << "reading schedule for " << serviceId << " on " << dates << endl;
+  kDebug() <<"reading schedule for" << serviceId <<" on" << dates;
 
   KTimeZone london = KSystemTimeZones::zone( "Europe/London" );
 
@@ -362,7 +362,7 @@ bool ResourceTVAnytime::readService( const QString & serviceId )
               QDomElement e3 = n3.toElement();
               ProgramInformation pi; 
               if ( pi.loadXML( e3 ) ) {
-                //kDebug() << "Found programme: " << pi.id() << "," << pi.title() << "," << pi.synopsis() << endl;
+                //kDebug() <<"Found programme:" << pi.id() <<"," << pi.title() <<"," << pi.synopsis();
                 progInfoMap.insert( pi.id(), pi );
               }
               n3 = n3.nextSibling();
@@ -374,7 +374,7 @@ bool ResourceTVAnytime::readService( const QString & serviceId )
       service.setProgramInformation( progInfoMap );
     }
     else
-      kDebug() << "Service file: " << programInfoFileName << " not found in archive" << endl;
+      kDebug() <<"Service file:" << programInfoFileName <<" not found in archive";
     // open programme location table, iterate and create incidences
   
     QString programLocationFileName = QString( *it + serviceId + "_pl.xml" );
@@ -399,7 +399,7 @@ bool ResourceTVAnytime::readService( const QString & serviceId )
                   ScheduleEvent se;
                   if ( se.loadXML( e4 ) ) {
                     ProgramInformation pi = progInfoMap[ se.crid() ];
-                    //kDebug() << "programme incidence: " << se.crid()  << "," << se.startTime() << "," << se.duration() << "," << pi.title() << "," << pi.synopsis() << endl;
+                    //kDebug() <<"programme incidence:" << se.crid()  <<"," << se.startTime() <<"," << se.duration() <<"," << pi.title() <<"," << pi.synopsis();
                     KCal::Event *event = new KCal::Event();
                     event->setFloats( false );
                     event->setSummary( pi.title() );
@@ -422,7 +422,7 @@ bool ResourceTVAnytime::readService( const QString & serviceId )
                 }
               }
               else
-                kDebug() << " file contains schedule for another service!" << endl;
+                kDebug() <<" file contains schedule for another service!";
             }
           }
         }
@@ -430,7 +430,7 @@ bool ResourceTVAnytime::readService( const QString & serviceId )
       }
     }
     else
-      kDebug() << "Program location file: " << programLocationFileName << " not found in archive" << endl;
+      kDebug() <<"Program location file:" << programLocationFileName <<" not found in archive";
   }
   return true;
 }

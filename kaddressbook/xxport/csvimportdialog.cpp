@@ -187,7 +187,7 @@ KABC::AddresseeList CSVImportDialog::contacts() const
       Q3ComboTableItem *item = static_cast<Q3ComboTableItem*>( mTable->item( 0,
                                                              col ) );
       if ( !item ) {
-        kError() << "ERROR: item cast failed" << endl;
+        kError() <<"ERROR: item cast failed";
         continue;
       }
 

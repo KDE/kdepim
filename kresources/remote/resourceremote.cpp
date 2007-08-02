@@ -117,7 +117,7 @@ void ResourceRemote::readConfig( const KConfigGroup &group )
 
 void ResourceRemote::writeConfig( KConfigGroup &group )
 {
-  kDebug(5800) << "ResourceRemote::writeConfig()" << endl;
+  kDebug(5800) <<"ResourceRemote::writeConfig()";
 
   ResourceCalendar::writeConfig( group );
 
@@ -169,15 +169,15 @@ bool ResourceRemote::useCacheFile() const
 
 bool ResourceRemote::doLoad( bool )
 {
-  kDebug(5800) << "ResourceRemote::load()" << endl;
+  kDebug(5800) <<"ResourceRemote::load()";
 
   if ( mDownloadJob ) {
-    kWarning() << "ResourceRemote::load(): download still in progress."
+    kWarning() <<"ResourceRemote::load(): download still in progress."
                 << endl;
     return true;
   }
   if ( mUploadJob ) {
-    kWarning() << "ResourceRemote::load(): upload still in progress."
+    kWarning() <<"ResourceRemote::load(): upload still in progress."
                 << endl;
     return false;
   }
@@ -195,7 +195,7 @@ bool ResourceRemote::doLoad( bool )
   emit resourceChanged( this );
 
   if ( mLock->lock() ) {
-    kDebug() << "Download from: " << mDownloadUrl << endl;
+    kDebug() <<"Download from:" << mDownloadUrl;
 
     mDownloadJob = KIO::file_copy( mDownloadUrl, KUrl( cacheFile() ), -1, true,
                                    false, !mUseProgressManager );
@@ -210,14 +210,14 @@ bool ResourceRemote::doLoad( bool )
       mProgress->setProgress( 0 );
     }
   } else {
-    kDebug() << "ResourceRemote::load(): cache file is locked - something else must be loading the file" << endl;
+    kDebug() <<"ResourceRemote::load(): cache file is locked - something else must be loading the file";
   }
   return true;
 }
 
 void ResourceRemote::slotPercent( KJob *, unsigned long percent )
 {
-  kDebug() << "ResourceRemote::slotPercent(): " << percent << endl;
+  kDebug() <<"ResourceRemote::slotPercent():" << percent;
 
   mProgress->setProgress( percent );
 }
@@ -227,7 +227,7 @@ void ResourceRemote::slotLoadJobResult( KJob *job )
   if ( job->error() ) {
     static_cast<KIO::Job*>(job)->ui()->showErrorMessage();
   } else {
-    kDebug(5800) << "ResourceRemote::slotLoadJobResult() success" << endl;
+    kDebug(5800) <<"ResourceRemote::slotLoadJobResult() success";
 
     calendar()->close();
     disableChangeNotification();
@@ -249,7 +249,7 @@ void ResourceRemote::slotLoadJobResult( KJob *job )
 
 bool ResourceRemote::doSave( bool )
 {
-  kDebug(5800) << "ResourceRemote::save()" << endl;
+  kDebug(5800) <<"ResourceRemote::save()";
 
   if ( readOnly() || !hasChanges() ) {
     emit resourceSaved( this );
@@ -257,12 +257,12 @@ bool ResourceRemote::doSave( bool )
   }
 
   if ( mDownloadJob ) {
-    kWarning() << "ResourceRemote::save(): download still in progress."
+    kWarning() <<"ResourceRemote::save(): download still in progress."
                 << endl;
     return false;
   }
   if ( mUploadJob ) {
-    kWarning() << "ResourceRemote::save(): upload still in progress."
+    kWarning() <<"ResourceRemote::save(): upload still in progress."
                 << endl;
     return false;
   }
@@ -288,7 +288,7 @@ void ResourceRemote::slotSaveJobResult( KJob *job )
   if ( job->error() ) {
     static_cast<KIO::Job*>(job)->ui()->showErrorMessage();
   } else {
-    kDebug(5800) << "ResourceRemote::slotSaveJobResult() success" << endl;
+    kDebug(5800) <<"ResourceRemote::slotSaveJobResult() success";
 
     Incidence::List::ConstIterator it;
     for( it = mChangedIncidences.begin(); it != mChangedIncidences.end();
@@ -311,9 +311,9 @@ KABC::Lock *ResourceRemote::lock()
 void ResourceRemote::dump() const
 {
   ResourceCalendar::dump();
-  kDebug(5800) << "  DownloadUrl: " << mDownloadUrl.url() << endl;
-  kDebug(5800) << "  UploadUrl: " << mUploadUrl.url() << endl;
-  kDebug(5800) << "  ReloadPolicy: " << reloadPolicy() << endl;
+  kDebug(5800) <<"  DownloadUrl:" << mDownloadUrl.url();
+  kDebug(5800) <<"  UploadUrl:" << mUploadUrl.url();
+  kDebug(5800) <<"  ReloadPolicy:" << reloadPolicy();
 }
 
 void ResourceRemote::addInfoText( QString &txt ) const

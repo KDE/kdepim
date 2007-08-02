@@ -59,7 +59,7 @@ void KABTools::mailVCards( const QStringList &uids, KABC::AddressBook *ab )
   KTempDir tempDir;
   tempDir.setAutoRemove(false); //TODO: Should this be left on disk?
   if ( tempDir.status() != 0 ) {
-    kWarning() << strerror( tempDir.status() ) << endl;
+    kWarning() << strerror( tempDir.status() );
     return;
   }
 

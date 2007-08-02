@@ -128,7 +128,7 @@ void KIO_Single_Subject::parseMail( QString * message, KornMailSubject *subject,
 void KIO_Single_Subject::slotData( KIO::Job* job, const QByteArray& data )
 {
 	if( job != _job )
-		kWarning() << i18n( "Got invalid job; something strange happened?" ) << endl;
+		kWarning() << i18n("Got invalid job; something strange happened?" );
 	if( !data.isEmpty() )
 		_message->append( data );
 }
@@ -137,11 +137,11 @@ void KIO_Single_Subject::slotData( KIO::Job* job, const QByteArray& data )
 void KIO_Single_Subject::slotResult( KJob *job )
 {
 	if( job != _job )
-		kWarning() << i18n( "Got invalid job; something strange happened?" ) << endl;
+		kWarning() << i18n("Got invalid job; something strange happened?" );
 
 	if( job->error() )
 	{
-		kWarning() << i18n( "Error when fetching %1: %2", *_name, job->errorString() ) << endl;
+		kWarning() << i18n("Error when fetching %1: %2", *_name, job->errorString() );
 	} else {
 		KornMailSubject * mailSubject = new KornMailSubject( QVariant( *_name ), 0 );
 		parseMail( _message, mailSubject, _protocol->fullMessage() );

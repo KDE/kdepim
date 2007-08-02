@@ -203,7 +203,7 @@ void KKioDrop::setUser(const QString & user, const QString & password,
 	emit validChanged( valid() );
 
 	if( ! _valid )
-		kWarning() << i18n( "url is not valid" ) << endl;
+		kWarning() << i18n("url is not valid" );
 
 	_count->stopActiveCount();
 }
@@ -326,7 +326,7 @@ bool KKioDrop::readConfigGroup( const QMap< QString, QString > &map, const Proto
 	if( !map.contains( "server" ) || !map.contains( "port" ) || !map.contains( "ssl" ) || !map.contains( "username" ) ||
 	    !map.contains( "mailbox" ) || !map.contains( "password" ) || !map.contains( "metadata" ) || !map.contains( "name" ) )
 	{
-		kWarning() << "Bug: map niet compleet" << endl;
+		kWarning() <<"Bug: map niet compleet";
 		return false;
 	}
 
@@ -394,19 +394,19 @@ void KKioDrop::deleteMailsCanceled()
 //Private slots for displaying connection errors
 void KKioDrop::slotConnectionError( int number, const QString& arg )
 {
-	kError() << KIO::buildErrorString( number, arg ) << endl;
+	kError() << KIO::buildErrorString( number, arg );
 //	if( passivePopup() )
 		emitShowPassivePopup( KIO::buildErrorString( number, arg ) );
 }
 
 void KKioDrop::slotConnectionWarning( const QString& msg )
 {
-	kWarning() << msg << endl;
+	kWarning() << msg;
 }
 
 void KKioDrop::slotConnectionInfoMessage( const QString& msg )
 {
-	kDebug() << msg << endl; //Display only in debug modes
+	kDebug() << msg; //Display only in debug modes
 }
 
 #include "kio.moc"

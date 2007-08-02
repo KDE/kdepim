@@ -38,7 +38,7 @@ static const char version[] = "0.1";
 bool sudoRun(KCmdLineArgs *args)
 {
     QString thisAppName=KStandardDirs::findExe(args->appName());
-    kDebug() << "Trying to start " << thisAppName << endl;
+    kDebug() <<"Trying to start" << thisAppName;
     KProcess process;
     process << "kdesu" << "-t" << KShell::quoteArg(thisAppName);
     if(process.execute()==0 ) return true;
@@ -73,7 +73,7 @@ int main(int argc, char **argv)
     {
         if (sudoRun(args)) return 0; else return -1;
     }
-    else kDebug() << "We're ROOT! Yuppie!\n";
+    else kDebug() <<"We're ROOT! Yuppie!";
     mainWin = new KMTSetupWidget();
     app.setMainWidget( mainWin );
     mainWin->show();

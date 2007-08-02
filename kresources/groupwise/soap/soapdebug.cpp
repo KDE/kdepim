@@ -59,15 +59,15 @@ int main( int argc, char **argv )
 
 #if 1
   if ( user.isEmpty() ) {
-    kError() << "Need user." << endl;
+    kError() <<"Need user.";
     return 1; 
   }
   if ( pass.isEmpty() ) {
-    kError() << "Need password." << endl;
+    kError() <<"Need password.";
     return 1; 
   }
   if ( url.isEmpty() ) {
-    kError() << "Need server." << endl;
+    kError() <<"Need server.";
     return 1; 
   }
 #endif
@@ -76,7 +76,7 @@ int main( int argc, char **argv )
 
 #if 1
   if ( !server.login() ) {
-    kError() << "Unable to login to server " << url << endl;
+    kError() <<"Unable to login to server" << url;
     return 1;
   }
 #endif
@@ -96,7 +96,7 @@ int main( int argc, char **argv )
 #if 0
   QString fbUser = args->getOption( "freebusy-user" );
   if ( fbUser.isEmpty() ) {
-    kError() << "Need user for which the freebusy data should be retrieved."
+    kError() <<"Need user for which the freebusy data should be retrieved."
               << endl;
   } else {
     KCal::FreeBusy *fb = new KCal::FreeBusy;
@@ -114,51 +114,51 @@ int main( int argc, char **argv )
   resource.setActive( true );
   KCal::CalendarResources calendar;
   calendar.resourceManager()->add( &resource );
-  kDebug() << "Login" << endl;
+  kDebug() <<"Login";
 
   if ( !server.login() ) {
-    kDebug() << "Unable to login." << endl;
+    kDebug() <<"Unable to login.";
   } else {
-    kDebug() << "Read calendar" << endl;
+    kDebug() <<"Read calendar";
     if ( !server.readCalendarSynchronous( &resource ) ) {
-      kDebug() << "Unable to read calendar data." << endl;
+      kDebug() <<"Unable to read calendar data.";
     }
-    kDebug() << "Logout" << endl;
+    kDebug() <<"Logout";
     server.logout();
   }
   KCal::ICalFormat format;
 
   QString ical = format.toString( &calendar );
 
-  kDebug() << "ICALENDAR: " << ical << endl;
+  kDebug() <<"ICALENDAR:" << ical;
 #endif
 
 #if 0
   QString id = args->getOption( "addressbook-id" );
 
-  kDebug() << "ADDRESSBOOK ID: " << id << endl;
+  kDebug() <<"ADDRESSBOOK ID:" << id;
 
   QStringList ids;
   ids.append( id );
 
   KABC::ResourceMemory resource;
 
-  kDebug() << "Login" << endl;
+  kDebug() <<"Login";
   if ( !server.login() ) {
-    kError() << "Unable to login." << endl;
+    kError() <<"Unable to login.";
   } else {
-    kDebug() << "Read Addressbook" << endl;
+    kDebug() <<"Read Addressbook";
     if ( !server.readAddressBooksSynchronous( ids, &resource ) ) {
-      kError() << "Unable to read addressbook data." << endl;
+      kError() <<"Unable to read addressbook data.";
     }
-    kDebug() << "Logout" << endl;
+    kDebug() <<"Logout";
     server.logout();
   }
 
   KABC::Addressee::List addressees;
   KABC::Resource::Iterator it2;
   for( it2 = resource.begin(); it2 != resource.end(); ++it2 ) {
-    kDebug() << "ADDRESSEE: " << (*it2).fullEmail() << endl;
+    kDebug() <<"ADDRESSEE:" << (*it2).fullEmail();
     addressees.append( *it2 );
   }
 #endif

@@ -175,7 +175,7 @@ void KSerialDeviceEmulatorWidget::resetEvent()
  */
 void KSerialDeviceEmulatorWidget::eventSelected(int i)
 {
-    kDebug() << "Selected " << i << endl;
+    kDebug() <<"Selected" << i;
     if(!i) return;
     switch( i ){
         case 1:

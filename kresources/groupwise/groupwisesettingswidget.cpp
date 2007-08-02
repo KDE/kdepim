@@ -33,7 +33,7 @@ GroupWiseSettingsWidget::GroupWiseSettingsWidget( QWidget * parent )
 
 void GroupWiseSettingsWidget::slotItemRenamed( Q3ListViewItem * item, int )
 {
-  kDebug() << "GroupWiseSettingsWidget::slotItemRenamed() - " << item->text( 1 ) << " changed to " << item->text( 2 ) << endl;
+  kDebug() <<"GroupWiseSettingsWidget::slotItemRenamed() -" << item->text( 1 ) <<" changed to" << item->text( 2 );
   m_dirtySettings.insert( item->text( 1 ), item->text( 2 ) );
 }
 
