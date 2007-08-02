@@ -91,8 +91,6 @@ public:
     FakeEngineFactory();
     virtual ~FakeEngineFactory();
     virtual FakeEngine* createObject( QObject *parent, const char *classname, const QStringList &args );
-
-private:
 };
 
 #endif

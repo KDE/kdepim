@@ -89,11 +89,15 @@ K_EXPORT_COMPONENT_FACTORY( libkmobiletools_fake, FakeEngineFactory )
 FakeEngineFactory::FakeEngineFactory()
 {
 }
+
 FakeEngineFactory::~FakeEngineFactory()
 {
 }
-FakeEngine *FakeEngineFactory::createObject(QObject *parent, const char */*classname*/, const QStringList &/*args*/ )
+
+FakeEngine *FakeEngineFactory::createObject(QObject *parent, const char *classname, const QStringList& args)
 {
+    Q_UNUSED(classname)
+    Q_UNUSED(args)
     return new FakeEngine(parent);
 }
 
