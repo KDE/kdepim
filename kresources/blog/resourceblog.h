@@ -173,22 +173,6 @@ class KCAL_RESOURCEBLOG_EXPORT ResourceBlog : public ResourceCached
     bool setValue( const QString &key, const QString &value );
 
     /**
-      Posts a journal to the blog.
-
-      @param key The journal to post.
-      @return The success of the journal addition.
-    */
-    bool addJournal( Journal *journal );
-
-    /**
-      Removes a journal from the blog server.
-
-      @param key The journal to remove.
-      @return The success of the journal removal.
-     */
-    bool deleteJournal( Journal *journal );
-
-    /**
       Fetches the list of postable blogs.
 
       @return The success of the fetch call.
@@ -270,11 +254,11 @@ class KCAL_RESOURCEBLOG_EXPORT ResourceBlog : public ResourceCached
 
     /**
       Updates the latest stored post ID to the ID returned from the blog post
-      creation operation.
+      creation/update/deletion operation.
 
-    @param posting The last blog post created on the server.
+    @param posting The last blog post modified on the server.
     */
-    void slotCreatedPosting( KBlog::BlogPosting *posting );
+    void slotSavedPosting( KBlog::BlogPosting *posting );
 
     /**
       Updates the local list of available blogs to post to.
@@ -332,7 +316,7 @@ class KCAL_RESOURCEBLOG_EXPORT ResourceBlog : public ResourceCached
     /**
       The XML-RPC object used to access the blog.
     */
-    KBlog::Blog *mAPI;
+    KBlog::Blog *mBlog;
 
     /**
       The unique ID of the blog to send posts to.
@@ -343,11 +327,6 @@ class KCAL_RESOURCEBLOG_EXPORT ResourceBlog : public ResourceCached
       The name of the blog to send posts to.
     */
     QString mBlogName;
-
-    /**
-      The map of created journal objects.
-    */
-    QMap<QString, Journal *> *mJournalsMap;
 
     /**
       Whether the progress of operations are displayed.

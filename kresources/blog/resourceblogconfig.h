@@ -35,6 +35,7 @@ namespace KCal
 {
 
 class ResourceCachedReloadConfig;
+class ResourceCachedSaveConfig;
 
 /**
   The class provides a configuration widget for blog resource.
@@ -111,6 +112,11 @@ class KCAL_RESOURCEBLOG_EXPORT ResourceBlogConfig : public KRES::ConfigWidget
       A widget to configure the cache reload options.
     */
     ResourceCachedReloadConfig *mReloadConfig;
+
+    /**
+      A widget to configure the cache save options.
+    */
+    ResourceCachedSaveConfig *mSaveConfig;
 };
 
 }

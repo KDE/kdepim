@@ -26,6 +26,7 @@
 #include <KLocale>
 
 #include <kcal/journal.h>
+#include <kcal/calendarlocal.h>
 
 #include <kresources/configwidget.h>
 
@@ -59,19 +60,17 @@ ResourceBlog::~ResourceBlog()
   close();
 
   delete mLock;
-  delete mJournalsMap;
 }
 
 void ResourceBlog::init()
 {
   mProgress = 0;
 
-  mAPI = 0;
+  mBlog = 0;
 
   setType( "blog" );
 
   mLock = new KABC::Lock( cacheFile() );
-  mJournalsMap = new QMap<QString, Journal *>();
 
   enableChangeNotification();
 }
@@ -86,7 +85,7 @@ void ResourceBlog::readConfig( const KConfigGroup &group )
   mPassword = group.readEntry( "Password" );
   setAPI( group.readEntry( "API" ) );
   mBlogID = group.readEntry( "BlogID" );
-  kDebug( 5800 ) << "ResourceBlog::readConfig(): ID: " << mBlogID;
+  mBlog->setBlogId( mBlogID );
   mBlogName = group.readEntry( "BlogName" );
 
   ResourceCached::readConfig( group );
@@ -141,39 +140,39 @@ void ResourceBlog::setAPI( const QString &API )
 {
   kDebug( 5800 ) << "ResourceBlog::setAPI(): " << API;
   if ( API == "Google Blogger Data" ) {
-    mAPI = new KBlog::GData( mUrl, this );
+    mBlog = new KBlog::GData( mUrl, this );
   } else if ( API == "LiveJournal" ) {
-    mAPI = new KBlog::LiveJournal( mUrl, this );
+    mBlog = new KBlog::LiveJournal( mUrl, this );
   } else if ( API == "Movable Type" ) {
-    mAPI = new KBlog::MovableType( mUrl, this );
+    mBlog = new KBlog::MovableType( mUrl, this );
   } else if ( API == "MetaWeblog" ) {
-    mAPI = new KBlog::MetaWeblog( mUrl, this );
+    mBlog = new KBlog::MetaWeblog( mUrl, this );
   } else if ( API == "Blogger 1.0" ) {
-    mAPI = new KBlog::Blogger1( mUrl, this );
+    mBlog = new KBlog::Blogger1( mUrl, this );
   } else {
     kError() << "ResourceBlog::setAPI(): Unrecognised API: " << API;
     return;
   }
-  mAPI->setUsername( mUsername );
-  mAPI->setPassword( mPassword );
+  mBlog->setUsername( mUsername );
+  mBlog->setPassword( mPassword );
 }
 
 QString ResourceBlog::API() const
 {
-  if ( mAPI ) {
-    if ( qobject_cast<KBlog::GData*>( mAPI ) ) {
+  if ( mBlog ) {
+    if ( qobject_cast<KBlog::GData*>( mBlog ) ) {
       return "Google Blogger Data";
     }
-    else if ( qobject_cast<KBlog::LiveJournal*>( mAPI ) ) {
+    else if ( qobject_cast<KBlog::LiveJournal*>( mBlog ) ) {
       return "LiveJournal";
     }
-    else if ( qobject_cast<KBlog::MovableType*>( mAPI ) ) {
+    else if ( qobject_cast<KBlog::MovableType*>( mBlog ) ) {
       return "Movable Type";
     }
-    else if ( qobject_cast<KBlog::MetaWeblog*>( mAPI ) ) {
+    else if ( qobject_cast<KBlog::MetaWeblog*>( mBlog ) ) {
       return "MetaWeblog";
     }
-    else if ( qobject_cast<KBlog::Blogger1*>( mAPI ) ) {
+    else if ( qobject_cast<KBlog::Blogger1*>( mBlog ) ) {
       return "Blogger 1.0";
     }
   }
@@ -204,21 +203,17 @@ bool ResourceBlog::doLoad( bool fullReload )
 {
   kDebug( 5800 ) << "ResourceBlog::load()";
 
-  if ( mAPI ) {
+  if ( mBlog ) {
     if ( mLock->lock() ) {
       int downloadCount = 100;
-      //FIXME Actually do something? Calculate posts for non-full reload.
-      if ( fullReload ) {
+      //if ( fullReload ) {
         // TODO: downloadCount = math;
-        mJournalsMap->clear();
-        ResourceCached::deleteAllJournals();
-      }
-      mAPI->setBlogId( mBlogID );
-      connect ( mAPI, SIGNAL( listedRecentPostings(
+      //}
+      connect ( mBlog, SIGNAL( listedRecentPostings(
                 const QList<KBlog::BlogPosting*> & ) ),
                 this, SLOT( slotListedPostings(
                 const QList<KBlog::BlogPosting*> & ) ) );
-      connect ( mAPI, SIGNAL( error( const KBlog::Blog::ErrorType &,
+      connect ( mBlog, SIGNAL( error( const KBlog::Blog::ErrorType &,
                 const QString & ) ),
                 this, SLOT( slotError( const KBlog::Blog::ErrorType &,
                 const QString & ) ) );
@@ -229,7 +224,7 @@ bool ResourceBlog::doLoad( bool fullReload )
             i18n("Downloading blog posts") );
         mProgress->setProgress( 0 );
       }
-      mAPI->listRecentPostings( downloadCount );
+      mBlog->listRecentPostings( downloadCount );
       mLock->unlock();
       return true;
     } else {
@@ -237,46 +232,33 @@ bool ResourceBlog::doLoad( bool fullReload )
           << " - something else must be loading the file";
     }
   }
-  kError( 5800 ) << "ResourceBlog::load(): null mAPI";
+  kError( 5800 ) << "ResourceBlog::load(): null mBlog";
   return false;
 }
 
 void ResourceBlog::slotListedPostings(
     const QList<KBlog::BlogPosting*> &postings )
 {
-  kDebug( 5800 ) << "ResourceBlog::slotListedPostings()";
+  // TODO: Delete postings?
+  kDebug( 5800 ) << "ResourceBlog::slotListedPostings() BEGIN";
   QList<KBlog::BlogPosting*>::const_iterator i;
-  KBlog::BlogPosting* posting;
-  Journal *journalBlog;
   for (i = postings.constBegin(); i != postings.constEnd(); ++i) {
-    posting = *i;
-    journalBlog = new Journal();
-    QString id = "kblog-" + mUrl.url() + '-' + mBlogID  + '-' + mUsername +
-        '-' + posting->postingId();
-    if ( mJournalsMap->value( id ) == 0 ) {
-      connect ( mAPI, SIGNAL( createdPosting( KBlog::BlogPosting * ) ),
-                this, SLOT( slotCreatedPosting( KBlog::BlogPosting * ) ) );
-      connect ( mAPI, SIGNAL( error( const KBlog::Blog::ErrorType &,
-                const QString & ) ),
-                this, SLOT( slotError( const KBlog::Blog::ErrorType &,
-                const QString & ) ) );
-      journalBlog->setUid( id );
-      journalBlog->setCustomProperty( "KBLOG", "URL", mUrl.url() );
-      journalBlog->setCustomProperty( "KBLOG", "USER", mUsername );
-      journalBlog->setCustomProperty( "KBLOG", "BLOG", mBlogID );
-      journalBlog->setCustomProperty( "KBLOG", "ID", posting->postingId() );
-      journalBlog->setSummary( posting->title() );
-      journalBlog->setCategories( posting->categories() );
-      journalBlog->setDescription( posting->content() );
-      journalBlog->setDtStart( posting->creationDateTime() );
-      if ( ResourceCached::addJournal( journalBlog ) ) {
-        mJournalsMap->insert( id, journalBlog );
-      }
+    Journal* newJournal = (**i).journal( *mBlog );
+    kDebug( 5800 ) << "ResourceBlog::slotListedPostings(): 0: " << newJournal->uid();
+    Journal* existingJournal = journal( newJournal->uid() );
+    if ( existingJournal ) {
+      existingJournal->setSummary( newJournal->summary() );
+      existingJournal->setCategories( newJournal->categories() );
+      existingJournal->setDescription( newJournal->description() );
+      existingJournal->setDtStart( newJournal->dtStart() );
+      delete newJournal;
+    }
+    else {
+      addJournal( newJournal );
+      clearChange( newJournal );
     }
   }
-
   emit resourceChanged( this );
-
   if ( mProgress ) {
     mProgress->setComplete();
     mProgress = 0;
@@ -292,12 +274,24 @@ void ResourceBlog::slotError( const KBlog::Blog::ErrorType &type,
   Q_ASSERT(false);
 }
 
-void ResourceBlog::slotCreatedPosting( KBlog::BlogPosting *posting )
+void ResourceBlog::slotSavedPosting( KBlog::BlogPosting *posting )
 {
-  //TODO Delete posting? Signals?
-  kDebug( 5800 ) << "ResourceBlog: Posting created with id " <<
+  kDebug( 5800 ) << "ResourceBlog::slotSavedPosting: Posting saved with id" <<
       posting->postingId();
-  mLastKnownPostID = posting->postingId().toInt();
+  kDebug( 5800 ) << "ResourceBlog::slotSavedPosting: Journal saved with id" <<
+      (*posting).journalId();
+  if ( posting->status() == KBlog::BlogPosting::Created ) {
+    mLastKnownPostID = posting->postingId().toInt();
+  }
+  clearChange( (*posting).journalId() );
+  delete posting;
+
+  Incidence::List changes = allChanges();
+  if ( changes.begin() == changes.end() ) {
+    kDebug( 5800 ) << "ResourceBlog::slotSavedPosting: Saved to cache ";
+    saveToCache();
+    emit resourceSaved( this );
+  }
 }
 
 void ResourceBlog::slotBlogInfoRetrieved( const QMap<QString,QString> &blogs )
@@ -308,15 +302,71 @@ void ResourceBlog::slotBlogInfoRetrieved( const QMap<QString,QString> &blogs )
 
 bool ResourceBlog::doSave( bool )
 {
-  kDebug( 5800 ) << "ResourceBlog::save()";
+  kDebug( 5800 ) << "ResourceBlog::doSave()";
 
   if ( readOnly() || !hasChanges() ) {
     emit resourceSaved( this );
     return true;
   }
 
-  saveToCache();
-  emit resourceSaved( this );
+  if ( !mBlog ) {
+    kError() << "ResourceBlog::addJournal(): Blog not initialised.";
+    return false;
+  }
+
+  Incidence::List::Iterator i;
+  Incidence::List added = addedIncidences();
+  for ( i = added.begin(); i != added.end(); ++i ) {
+    Journal* journal = dynamic_cast<Journal*>( *i );
+    if ( !journal ) {
+      return false;
+    }
+    KBlog::BlogPosting *posting = new KBlog::BlogPosting( *journal );
+    connect ( mBlog, SIGNAL( createdPosting( KBlog::BlogPosting * ) ),
+              this, SLOT( slotSavedPosting( KBlog::BlogPosting * ) ) );
+    connect ( mBlog, SIGNAL( error( const KBlog::Blog::ErrorType &,
+              const QString & ) ),
+              this, SLOT( slotError( const KBlog::Blog::ErrorType &,
+                          const QString & ) ) );
+    mBlog->createPosting( posting );
+    kDebug( 5800 ) << "ResourceBlog::doSave(): adding " << journal->uid();
+  }
+
+  Incidence::List changed = changedIncidences();
+  for( i = changed.begin(); i != changed.end(); ++i ) {
+    Journal* journal = dynamic_cast<Journal*>( *i );
+    if ( !journal ) {
+      return false;
+    }
+    KBlog::BlogPosting *posting = new KBlog::BlogPosting( *journal );
+    connect ( mBlog, SIGNAL( modifiedPosting( KBlog::BlogPosting * ) ),
+              this, SLOT( slotSavedPosting( KBlog::BlogPosting * ) ) );
+    connect ( mBlog, SIGNAL( error( const KBlog::Blog::ErrorType &,
+              const QString & ) ),
+              this, SLOT( slotError( const KBlog::Blog::ErrorType &,
+                          const QString & ) ) );
+    mBlog->modifyPosting( posting );
+    kDebug( 5800 ) << "ResourceBlog::doSave(): changing " << journal->uid();
+  }
+
+  Incidence::List deleted = deletedIncidences();
+  for( i = deleted.begin(); i != deleted.end(); ++i ) {
+    Journal* journal = dynamic_cast<Journal*>( *i );
+    if ( !journal ) {
+      return false;
+    }
+    KBlog::BlogPosting *posting = new KBlog::BlogPosting( *journal );
+    connect ( mBlog, SIGNAL( removedPosting( KBlog::BlogPosting * ) ),
+              this, SLOT( slotSavedPosting( KBlog::BlogPosting * ) ) );
+    connect ( mBlog, SIGNAL( error( const KBlog::Blog::ErrorType &,
+              const QString & ) ),
+              this, SLOT( slotError( const KBlog::Blog::ErrorType &,
+                          const QString & ) ) );
+    mBlog->removePosting( posting );
+    kDebug( 5800 ) << "ResourceBlog::doSave(): removing " << journal->uid();
+    //FIXME: Just a hack at the moment until we have slotRemovePosting
+    clearChange( journal );
+  }
 
   return true;
 }
@@ -328,6 +378,7 @@ KABC::Lock *ResourceBlog::lock ()
 
 void ResourceBlog::dump() const
 {
+  //TODO
   ResourceCalendar::dump();
   kDebug( 5800 ) << "  URL: " << mUrl.url();
   kDebug( 5800 ) << "  Username: " << mUsername;
@@ -337,6 +388,7 @@ void ResourceBlog::dump() const
 
 void ResourceBlog::addInfoText( QString &txt ) const
 {
+  //TODO
   txt += "<br>";
   txt += i18n( "URL: %1", mUrl.prettyUrl() );
   txt += i18n( "API: %1", API() );
@@ -344,6 +396,7 @@ void ResourceBlog::addInfoText( QString &txt ) const
 
 bool ResourceBlog::setValue( const QString &key, const QString &value )
 {
+  //TODO
   if ( key == "URL" ) {
     setUrl( KUrl( value ) );
     return true;
@@ -361,49 +414,9 @@ bool ResourceBlog::setValue( const QString &key, const QString &value )
   }
 }
 
-bool ResourceBlog::addJournal( Journal *journal )
-{
-  kDebug( 5800 ) << "ResourceBlog::addJournal()";
-  //TODO: Delete
-  KBlog::BlogPosting *post = new KBlog::BlogPosting();
-  if ( mAPI ) {
-    mAPI->setBlogId( mBlogID );
-    post->setTitle( journal->summary() );
-    post->setContent( journal->description() );
-    post->setCategories( journal->categories() );
-    post->setCreationDateTime( journal->dtStart() );
-    connect ( mAPI, SIGNAL( error( const KBlog::Blog::ErrorType &,
-                  const QString & ) ),
-              this, SLOT( slotError( const KBlog::Blog::ErrorType &,
-                  const QString & ) ) );
-    mAPI->createPosting( post );
-    return true;
-  }
-  kError() << "ResourceBlog::addJournal(): Journal not initialised.";
-  return false;
-}
-
-bool ResourceBlog::deleteJournal( Journal *journal )
-{
-  kDebug( 5800 ) << "ResourceBlog::deleteJournal()";
-  if ( mAPI ) {
-    KBlog::BlogPosting *post = new KBlog::BlogPosting();
-    mAPI->setBlogId( mBlogID );
-    post->setPostingId( journal->customProperty( "KBLOG", "ID" ) );
-    connect ( mAPI, SIGNAL( error( const KBlog::Blog::ErrorType &,
-              const QString & ) ),
-              this, SLOT( slotError( const KBlog::Blog::ErrorType &,
-                          const QString & ) ) );
-    mAPI->removePosting( post );
-    return true;
-  }
-  kError() << "ResourceBlog::addJournal(): Journal not initialised.";
-  return false;
-}
-
 bool ResourceBlog::listBlogs() {
   // Only children of Blogger 1.0 and Google Blogger Data support listBlogs()
-  KBlog::Blogger1* blogger = qobject_cast<KBlog::Blogger1*>( mAPI );
+  KBlog::Blogger1* blogger = qobject_cast<KBlog::Blogger1*>( mBlog );
   if ( blogger ) {
     connect ( blogger, SIGNAL( listedBlogs( const QMap<QString,QString> & ) ),
               this, SLOT( slotBlogInfoRetrieved(
@@ -411,7 +424,7 @@ bool ResourceBlog::listBlogs() {
     blogger->listBlogs();
     return true;
   }
-  KBlog::GData* gdata = qobject_cast<KBlog::GData*>( mAPI );
+  KBlog::GData* gdata = qobject_cast<KBlog::GData*>( mBlog );
   if ( gdata ) {
     connect ( gdata, SIGNAL( listedBlogs( const QMap<QString,QString> & ) ),
               this, SLOT( slotBlogInfoRetrieved(

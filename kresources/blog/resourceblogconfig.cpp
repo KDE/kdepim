@@ -83,6 +83,10 @@ ResourceBlogConfig::ResourceBlogConfig
   // Add the subwidget for the cache reload settings.
   mReloadConfig = new ResourceCachedReloadConfig( this );
   mainLayout->addWidget( mReloadConfig, 6, 0, 1, 2 );
+
+  // Add the subwidget for the cache save settings.
+  mSaveConfig = new ResourceCachedSaveConfig( this );
+  mainLayout->addWidget( mSaveConfig, 7, 0, 1, 2 );
 }
 
 void ResourceBlogConfig::loadSettings( KRES::Resource *res )
@@ -101,6 +105,7 @@ void ResourceBlogConfig::loadSettings( KRES::Resource *res )
     connect ( mAPI, SIGNAL( currentIndexChanged( int ) ),
         this, SLOT( slotBlogAPIChanged( int ) ) );
     mReloadConfig->loadSettings( resource );
+    mSaveConfig->loadSettings( resource );
     kDebug( 5700 ) << "ResourceBlogConfig::loadSettings(): reloaded";
   } else {
     kError( 5700 ) << "ResourceBlogConfig::loadSettings():"
@@ -122,6 +127,7 @@ void ResourceBlogConfig::saveSettings( KRES::Resource *res )
                          mBlogs->currentText() );
     }
     mReloadConfig->saveSettings( resource );
+    mSaveConfig->saveSettings( resource );
     kDebug( 5700 ) << "ResourceBlogConfig::saveSettings(): saved";
   } else {
     kError( 5700 ) << "ResourceBlogConfig::saveSettings():"
