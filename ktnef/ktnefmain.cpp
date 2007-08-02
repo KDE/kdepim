@@ -200,12 +200,12 @@ void KTNEFMain::viewFile()
 
 	if (mimename.isEmpty() || mimename == "application/octet-stream")
 	{
-		kDebug() << "No mime type found in attachment object, trying to guess..." << endl;
+		kDebug() <<"No mime type found in attachment object, trying to guess...";
 		mimename = KMimeType::findByUrl(url, 0, true)->name();
-		kDebug() << "Detected mime type: " << mimename << endl;
+		kDebug() <<"Detected mime type:" << mimename;
 	}
 	else
-		kDebug() << "Mime type from attachment object: " << mimename << endl;
+		kDebug() <<"Mime type from attachment object:" << mimename;
 
 	KRun::runUrl(url, mimename, this);
 }

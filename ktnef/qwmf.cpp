@@ -139,13 +139,13 @@ bool QWinMetaFile::load( const QString &filename )
 
     if ( !file.exists() )
     {
-        kDebug() << "File " << QFile::encodeName(filename) << " does not exist" << endl;
+        kDebug() <<"File" << QFile::encodeName(filename) <<" does not exist";
         return false;
     }
 
     if ( !file.open( QIODevice::ReadOnly ) )
     {
-        kDebug() << "Cannot open file " << QFile::encodeName(filename) << endl;
+        kDebug() <<"Cannot open file" << QFile::encodeName(filename);
         return false;
     }
 
@@ -203,13 +203,13 @@ bool QWinMetaFile::load( QBuffer &buffer )
         mHeaderBoundingBox = mBBox;
         if ( QWMF_DEBUG )
         {
-            kDebug() << endl << "-------------------------------------------------" << endl;
-            kDebug() << "WMF Placeable Header ( " << static_cast<int>(sizeof( pheader ) ) << "):" << endl;
-            kDebug() << "  bbox=( " << mBBox.left() << "; " << mBBox.top() << "; " << mBBox.width()
-                      << "; " << mBBox.height() << ")" << endl;
-            kDebug() << "  inch=" << pheader.inch << endl;
-            kDebug() << "  checksum=" << pheader.checksum << "( "
-                      << (pheader.checksum==checksum?"ok":"wrong") << " )" << endl;
+            kDebug() << "\n-------------------------------------------------";
+            kDebug() <<"WMF Placeable Header (" << static_cast<int>(sizeof( pheader ) ) <<"):";
+            kDebug() <<"  bbox=(" << mBBox.left() <<";" << mBBox.top() <<";" << mBBox.width()
+                      << "; " << mBBox.height() << ")";
+            kDebug() <<"  inch=" << pheader.inch;
+            kDebug() <<"  checksum=" << pheader.checksum <<"("
+                      << (pheader.checksum==checksum?"ok":"wrong") << " )";
         }
     }
     else buffer.at( 0 );
@@ -245,16 +245,16 @@ bool QWinMetaFile::load( QBuffer &buffer )
 
         if ( QWMF_DEBUG )
         {
-            kDebug() << endl << "-------------------------------------------------" << endl;
-            kDebug() << "WMF Extended Header:" << endl;
-            kDebug() << "  iType=" << eheader.iType << endl;
-            kDebug() << "  nSize=" << eheader.nSize << endl;
-            kDebug() << "  rclBounds=( " << eheader.rclBounds.left << "; " << eheader.rclBounds.top << "; "
-                      << eheader.rclBounds.right << "; " << eheader.rclBounds.bottom << ")" << endl;
-            kDebug() << "  rclFrame=( " << eheader.rclFrame.left << "; " << eheader.rclFrame.top << "; "
-                      << eheader.rclFrame.right << "; " << eheader.rclFrame.bottom << ")" << endl;
-            kDebug() << "  nBytes=" << eheader.nBytes << endl;
-            kDebug() << "\nNOT YET IMPLEMENTED, SORRY." << endl;
+            kDebug() << "\n-------------------------------------------------";
+            kDebug() <<"WMF Extended Header:";
+            kDebug() <<"  iType=" << eheader.iType;
+            kDebug() <<"  nSize=" << eheader.nSize;
+            kDebug() <<"  rclBounds=(" << eheader.rclBounds.left <<";" << eheader.rclBounds.top <<";"
+                      << eheader.rclBounds.right << "; " << eheader.rclBounds.bottom << ")";
+            kDebug() <<"  rclFrame=(" << eheader.rclFrame.left <<";" << eheader.rclFrame.top <<";"
+                      << eheader.rclFrame.right << "; " << eheader.rclFrame.bottom << ")";
+            kDebug() <<"  nBytes=" << eheader.nBytes;
+            kDebug() <<"\nNOT YET IMPLEMENTED, SORRY.";
         }
     }
     else // no, not enhanced
@@ -269,7 +269,7 @@ bool QWinMetaFile::load( QBuffer &buffer )
         st >> header.mtMaxRecord;
         st >> header.mtNoParameters;
         if ( QWMF_DEBUG ) {
-            kDebug() << "WMF Header: " <<  "mtSize=" << header.mtSize << endl;
+            kDebug() <<"WMF Header:" <<"mtSize=" << header.mtSize;
         }
     }
 
@@ -312,18 +312,18 @@ bool QWinMetaFile::load( QBuffer &buffer )
 
             if ( i<rdSize )
             {
-                kDebug() << "WMF : file truncated !" << endl;
+                kDebug() <<"WMF : file truncated !";
                 return false;
             }
         }
         //----- Test records validities
         mValid = (rdFunc == 0) && (mBBox.width() != 0) && (mBBox.height() != 0);
         if ( !mValid ) {
-            kDebug() << "WMF : incorrect file format !" << endl;
+            kDebug() <<"WMF : incorrect file format !";
         }
     }
     else {
-        kDebug() << "WMF Header : incorrect header !" << endl;
+        kDebug() <<"WMF Header : incorrect header !";
     }
 
     buffer.close();
@@ -353,8 +353,8 @@ bool QWinMetaFile::paint( const QPaintDevice* aTarget, bool absolute )
 
     mPainter.begin( aTarget );
     if ( QWMF_DEBUG )  {
-        kDebug() << "Bounding box : " << mBBox.left()
-        << " " << mBBox.top() << " " << mBBox.right() << " " << mBBox.bottom() << endl;
+        kDebug() <<"Bounding box :" << mBBox.left()
+        << " " << mBBox.top() << " " << mBBox.right() << " " << mBBox.bottom();
     }
 
     if ( mAbsoluteCoord ) {
@@ -383,7 +383,7 @@ bool QWinMetaFile::paint( const QPaintDevice* aTarget, bool absolute )
                 str += param;
                 str += " ";
             }
-            kDebug() << str << endl;
+            kDebug() << str;
         }
     }
 /*
@@ -391,7 +391,7 @@ bool QWinMetaFile::paint( const QPaintDevice* aTarget, bool absolute )
     // because actually QPicture::boundingBox() != mBBox()
     mWindowsCoord += 1;
     if ( mWindowsCoord == 2 )  {
-        kDebug() << "DRAW ANGLES " << endl;
+        kDebug() <<"DRAW ANGLES";
         mPainter.setPen( Qt::white );
         mPainter.drawPoint( mBBox.left(), mBBox.top()  );
         mPainter.drawPoint( mBBox.right(), mBBox.bottom() );
@@ -820,7 +820,7 @@ void QWinMetaFile::dibBitBlt( long num, short* parm )
         }
     }
     else {
-        kDebug() << "QWinMetaFile::dibBitBlt without image: not implemented " << endl;
+        kDebug() <<"QWinMetaFile::dibBitBlt without image: not implemented";
     }
 }
 
@@ -921,7 +921,7 @@ void QWinMetaFile::createEmptyObject( long, short* )
     // allocation of an empty object (to keep object counting in sync)
     WinObjPenHandle* handle = new WinObjPenHandle;
     addHandle( handle );
-    kDebug() << "QWinMetaFile: unimplemented createObject " << endl;
+    kDebug() <<"QWinMetaFile: unimplemented createObject";
 }
 
 
@@ -959,7 +959,7 @@ void QWinMetaFile::createBrushIndirect( long, short* parm )
         if ( arg>=0 && arg<5 ) style = hatchedStyleTab[ arg ];
         else
         {
-            kDebug() << "QWinMetaFile::createBrushIndirect: invalid hatched brush " << arg << endl;
+            kDebug() <<"QWinMetaFile::createBrushIndirect: invalid hatched brush" << arg;
             style = Qt::SolidPattern;
         }
     }
@@ -967,7 +967,7 @@ void QWinMetaFile::createBrushIndirect( long, short* parm )
         style = styleTab[ arg ];
     else
     {
-        kDebug() << "QWinMetaFile::createBrushIndirect: invalid brush " << arg << endl;
+        kDebug() <<"QWinMetaFile::createBrushIndirect: invalid brush" << arg;
         style = Qt::SolidPattern;
     }
     handle->brush.setStyle( style );
@@ -988,7 +988,7 @@ void QWinMetaFile::createPenIndirect( long, short* parm )
     if ( parm[ 0 ]>=0 && parm[ 0 ]<6 ) style=styleTab[ parm[ 0 ] ];
     else
     {
-        kDebug() << "QWinMetaFile::createPenIndirect: invalid pen " << parm[ 0 ] << endl;
+        kDebug() <<"QWinMetaFile::createPenIndirect: invalid pen" << parm[ 0 ];
         style = Qt::SolidLine;
     }
 
@@ -1003,10 +1003,10 @@ void QWinMetaFile::createPenIndirect( long, short* parm )
     QRect devRec;
     devRec = mPainter.transformed( mBBox );
     width = ( parm[ 0 ] * devRec.width() ) / mBBox.width() ;
-    kDebug() << "CreatePenIndirect: " <<  endl;
-    kDebug() << "   log coord. : " << mBBox.width() << "   " << mBBox.height() << endl;
-    kDebug() << "   log. pen : " << parm[ 1 ] << "   " << parm[ 2 ] << endl;
-    kDebug() << "   dev. pen : " << width << endl;
+    kDebug() <<"CreatePenIndirect:";
+    kDebug() <<"   log coord. :" << mBBox.width() <<"" << mBBox.height();
+    kDebug() <<"   log. pen :" << parm[ 1 ] <<"" << parm[ 2 ];
+    kDebug() <<"   dev. pen :" << width;
     handle->pen.setWidth( width );
 */
 }
@@ -1043,7 +1043,7 @@ void QWinMetaFile::noop( long, short* )
 void QWinMetaFile::end( long, short* )
 {
     // end of file :
-//    kDebug() << "END bbox=( " << mBBox.left() << "; " << mBBox.top() << "; " << mBBox.width() << "; " << mBBox.height() << ")" << endl;
+//    kDebug() <<"END bbox=(" << mBBox.left() <<";" << mBBox.top() <<";" << mBBox.width() <<";" << mBBox.height() <<")";
 }
 
 
@@ -1151,7 +1151,7 @@ void QWinMetaFile::addHandle( WinObjHandle* handle )
     if ( idx < MAX_OBJHANDLE )
         mObjHandleTab[ idx ] = handle;
     else
-        kDebug() << "QWinMetaFile error: handle table full !" << endl;
+        kDebug() <<"QWinMetaFile error: handle table full !";
 }
 
 //-----------------------------------------------------------------------------
@@ -1248,7 +1248,7 @@ bool QWinMetaFile::dibToBmp( QImage& bmp, const char* dib, long size )
     bmpHeader->bmSize = sizeBmp;
 
     if ( !bmp.loadFromData( (const uchar*)bmpHeader, pattern.size(), "BMP" ) ) {
-        kDebug() << "QWinMetaFile::dibToBmp: invalid bitmap " << endl;
+        kDebug() <<"QWinMetaFile::dibToBmp: invalid bitmap";
         return false;
     }
     else {
