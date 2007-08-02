@@ -57,7 +57,7 @@ bool KNArticleVector::resize(int s)
   }
   else {
     s_ize=nSize;
-    //kDebug(5003) <<"size :" << siz <<"";
+    //kDebug(5003) <<"size :" << siz;
     return true;
   }
 

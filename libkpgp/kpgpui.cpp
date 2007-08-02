@@ -934,7 +934,7 @@ void KeySelectionDialog::slotCheckSelection( Q3ListViewItem* plvi /* = 0 */ )
             // some items of this key are selected and the key wasn't selected
             // before => the user selected something
             kDebug( 5326 ) <<"selectedCount:"<<selectedCount<<"/"<<itemCount
-                          <<" --- User selected key "<<lvi->text(0)<<endl;
+                          <<"--- User selected key"<<lvi->text(0);
             userAction = SELECTED;
           }
           else if( ( itemCount > selectedCount ) &&
@@ -942,7 +942,7 @@ void KeySelectionDialog::slotCheckSelection( Q3ListViewItem* plvi /* = 0 */ )
             // some items of this key are unselected and the key was selected
             // before => the user deselected something
             kDebug( 5326 ) <<"selectedCount:"<<selectedCount<<"/"<<itemCount
-                          <<" --- User deselected key "<<lvi->text(0)<<endl;
+                          <<"--- User deselected key"<<lvi->text(0);
             userAction = DESELECTED;
           }
         }
@@ -1516,7 +1516,7 @@ KeyApprovalDialog::slotChangeEncryptionKey( int nr )
   Kpgp::Module *pgp = Kpgp::Module::getKpgp();
 
   kDebug( 5326 )<<"Key approval dialog size is"
-               <<width()<<"x"<<height()<<endl;
+               <<width()<<"x"<<height();
 
   if( pgp == 0 )
     return;

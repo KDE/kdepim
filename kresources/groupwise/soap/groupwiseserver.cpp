@@ -184,16 +184,16 @@ int GroupwiseServer::gSoapSendCallback( struct soap *, const char *s, size_t n )
   while ( n > 0 ) {
     ret = m_sock->write( s, n );
     if ( ret < 0 ) {
-      kError() <<"Send failed:" << strerror( m_sock->systemError() )
-        << " " << m_sock->socketStatus() << " " << m_sock->fd() << endl;
+      kError() << "Send failed:" << strerror( m_sock->systemError() )
+               << m_sock->socketStatus() << m_sock->fd();
       return SOAP_TCP_ERROR;
     }
     n -= ret;
   }
 
   if ( n !=0 ) {
-    kError() <<"Send failed:" << strerror( m_sock->systemError() )
-      << " " << m_sock->socketStatus() << " " << m_sock->fd() << endl;
+    kError() << "Send failed:" << strerror( m_sock->systemError() )
+             << m_sock->socketStatus() << m_sock->fd();
   }
 
   m_sock->flush();
@@ -220,8 +220,8 @@ size_t GroupwiseServer::gSoapReceiveCallback( struct soap *soap, char *s,
 //   m_sock->open();
   long ret = m_sock->read( s, n );
   if ( ret < 0 ) {
-    kError() <<"Receive failed:" << strerror( m_sock->systemError() )
-      << " " << m_sock->socketStatus() << " " << m_sock->fd() << endl;
+    kError() << "Receive failed:" << strerror( m_sock->systemError() )
+             << m_sock->socketStatus() << m_sock->fd();
   } else {
     if ( getenv("DEBUG_GW_RESOURCE") ) {
       qDebug("*************************");
@@ -333,8 +333,8 @@ bool GroupwiseServer::login()
     if ( userinfo->uuid ) mUserUuid = conv.stringToQString( userinfo->uuid );
   }
 
-  kDebug() <<"USER: name:" << mUserName <<" email:" << mUserEmail <<
-    " uuid: " << mUserUuid << endl;
+  kDebug() << "USER: name:" << mUserName << "email:" << mUserEmail <<
+              "uuid:" << mUserUuid;
 
   return true;
 }
@@ -905,8 +905,7 @@ bool GroupwiseServer::addIncidence( KCal::Incidence *incidence,
     return false;
   }
 
-  kDebug() <<"GroupwiseServer::addIncidence()" << incidence->summary()
-            << endl;
+  kDebug() << "GroupwiseServer::addIncidence()" << incidence->summary();
 
   QString gwRecordIDFromIcal = incidence->nonKDECustomProperty( "X-GWRECORDID" );
   if( !gwRecordIDFromIcal.isEmpty() || !incidence->customProperty( "GWRESOURCE", "UID" ).isEmpty() ) {
@@ -931,7 +930,7 @@ bool GroupwiseServer::addIncidence( KCal::Incidence *incidence,
     item = converter.convertToNote( static_cast<KCal::Journal *>( incidence ) );;
   } else {
     kError() <<"KCal::GroupwiseServer::addIncidence(): Unknown type:"
-              << incidence->type() << endl;
+              << incidence->type();
     return false;
   }
 
@@ -964,8 +963,7 @@ bool GroupwiseServer::changeIncidence( KCal::Incidence *incidence )
     return false;
   }
 
-  kDebug() <<"GroupwiseServer::changeIncidence()" << incidence->summary()
-            << endl;
+  kDebug() <<"GroupwiseServer::changeIncidence()" << incidence->summary();
 
   if ( iAmTheOrganizer( incidence ) )
   {
@@ -1016,7 +1014,7 @@ bool GroupwiseServer::changeIncidence( KCal::Incidence *incidence )
     item = converter.convertToNote( static_cast<KCal::Journal *>( incidence ) );;
   } else {
     kError() <<"KCal::GroupwiseServer::changeIncidence(): Unknown type:"
-              << incidence->type() << endl;
+              << incidence->type();
     return false;
   }
 
@@ -1068,8 +1066,7 @@ bool GroupwiseServer::deleteIncidence( KCal::Incidence *incidence )
     return false;
   }
 
-  kDebug() <<"GroupwiseServer::deleteIncidence():" << incidence->summary()
-            << endl;
+  kDebug() <<"GroupwiseServer::deleteIncidence():" << incidence->summary();
 
   // decline if necessary on the server
   QString gwRecordIDFromIcal = incidence->nonKDECustomProperty( "X-GWRECORDID" );
@@ -1090,10 +1087,8 @@ bool GroupwiseServer::deleteIncidence( KCal::Incidence *incidence )
 
 
 #if 0
-  kDebug() <<"UID:" << incidence->customProperty("GWRESOURCE","UID" )
-            << endl;
-  kDebug() <<"CONTAINER:" << incidence->customProperty("GWRESOURCE","CONTAINER" )
-            << endl;
+  kDebug() <<"UID:" << incidence->customProperty("GWRESOURCE","UID" );
+  kDebug() <<"CONTAINER:" << incidence->customProperty("GWRESOURCE","CONTAINER" );
 #endif
 
   if ( incidence->customProperty( "GWRESOURCE", "UID" ).isEmpty() ||
@@ -1120,8 +1115,7 @@ bool GroupwiseServer::retractRequest( KCal::Incidence *incidence, RetractCause c
     return false;
   }
 
-  kDebug() <<"GroupwiseServer::retractRequest():" << incidence->summary()
-            << endl;
+  kDebug() <<"GroupwiseServer::retractRequest():" << incidence->summary();
 
   _ngwm__retractRequest request;
   _ngwm__retractResponse response;
@@ -1309,8 +1303,8 @@ bool GroupwiseServer::readFreeBusy( const QString &email,
     if ( !stats ) {
       kDebug() <<"NO STATS!";
     } else {
-      kDebug() <<"COUNT:" << stats->responded <<"" << stats->outstanding
-        << " " << stats->total << endl; 
+      kDebug() << "COUNT:" << stats->responded << stats->outstanding
+               << stats->total; 
     }
 
     std::vector<class ngwt__FreeBusyInfo *> *infos = 0;
@@ -1389,8 +1383,7 @@ void GroupwiseServer::log( const QString &prefix, const char *s, size_t n )
 {
   if ( mLogFile.isEmpty() ) return;
 
-  kDebug() <<"GroupwiseServer::log()" << prefix <<"" << n <<" bytes"
-    << endl;
+  kDebug() <<"GroupwiseServer::log()" << prefix << n << "bytes";
 
   QString log = mLogFile + "_" + QString::number( getpid() ) +
     "_" + prefix + ".log";

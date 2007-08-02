@@ -112,8 +112,7 @@ void SloxAccounts::requestAccounts()
   kDebug() <<"SloxAccounts::requestAccounts()";
 
   if ( mDownloadJob ) {
-    kDebug() <<"SloxAccount::requestAccounts(): Download still in progress"
-              << endl;
+    kDebug() <<"SloxAccount::requestAccounts(): Download still in progress";
     return;
   }
 

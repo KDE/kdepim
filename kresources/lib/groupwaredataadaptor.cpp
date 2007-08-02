@@ -122,7 +122,7 @@ GroupwareDataAdaptor::~GroupwareDataAdaptor()
 void GroupwareDataAdaptor::setUserPassword( KUrl &url )
 {
   kDebug(5800) <<"GroupwareDataAdaptor::setUserPassword, mUser="
-                << mUser << endl;
+                << mUser;
   url.setUser( mUser );
   url.setPass( mPassword );
 }
@@ -163,7 +163,7 @@ void GroupwareDataAdaptor::processDownloadListItem( const KUrl &entry,
   // if not locally present, download
   const QString &localId = idMapper()->localId( location );
   kDebug(5800) <<"Looking up remote:" << location
-                << " found: " << localId << endl;
+                << "found:" << localId;
   if ( localId.isEmpty() || !localItemExists( localId ) ) {
     //kDebug(7000) <<"Not locally present, download:" << location;
     download = true;
@@ -173,7 +173,7 @@ void GroupwareDataAdaptor::processDownloadListItem( const KUrl &entry,
     const QString &oldFingerprint = idMapper()->fingerprint( localId );
       if ( oldFingerprint != newFingerprint ) {
       kDebug(5800) <<"Fingerprint changed old:" << oldFingerprint <<
-        " new: " << newFingerprint << endl;
+        "new:" << newFingerprint;
       // something changed on the server, check if we also changed it locally
       if ( localItemHasChanged( localId ) ) {
         // TODO conflict resolution

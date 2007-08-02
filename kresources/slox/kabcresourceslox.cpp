@@ -177,8 +177,7 @@ bool ResourceSlox::asyncLoad()
   kDebug() <<"KABC::ResourceSlox::asyncLoad()";
 
   if ( mDownloadJob ) {
-    kDebug() <<"KABC::ResourceSlox::asyncLoad(): Loading still in progress."
-                << endl;
+    kDebug() <<"KABC::ResourceSlox::asyncLoad(): Loading still in progress.";
     return true;
   }
 

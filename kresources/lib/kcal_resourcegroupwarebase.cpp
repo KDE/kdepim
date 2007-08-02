@@ -379,7 +379,7 @@ void ResourceGroupwareBase::slotUploadJobResult( KPIM::GroupwareJob *job )
           SLOT( slotDownloadJobResult( KPIM::GroupwareJob * ) ) );
     } else {
       kWarning() << k_funcinfo <<"Download still in progress."
-                                   "Can't happen. (TM)" << endl;
+                                   "Can't happen. (TM)";
     }
   }
 

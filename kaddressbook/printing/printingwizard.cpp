@@ -121,8 +121,8 @@ void PrintingWizard::slotStyleSelected( int index )
   else {
     PrintStyleFactory *factory = mStyleFactories.at( index );
     kDebug(5720) <<"PrintingWizardImpl::slotStyleSelected:"
-                  << "creating print style "
-                  << factory->description() << endl;
+                  << "creating print style"
+                  << factory->description();
     mStyle = factory->create();
     mStyleList.insert( index, mStyle );
   }
@@ -207,7 +207,7 @@ void PrintingWizard::print()
   }
 
   kDebug(5720) <<"PrintingWizardImpl::print: printing"
-                << list.count() << " contacts." << endl;
+                << list.count() << "contacts.";
 
   // ... print:
   setBackEnabled( progress, false );

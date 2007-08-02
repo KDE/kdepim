@@ -1319,13 +1319,13 @@ void imapParser::parseBody (parseString & inWords)
 
       if (!envelope || seenUid.isEmpty ())
       {
-        kDebug(7116) <<"imapParser::parseBody - discarding" << envelope <<"" << seenUid.toAscii ();
+        kDebug(7116) <<"imapParser::parseBody - discarding" << envelope << seenUid.toAscii ();
         // don't know where to put it, throw it away
         parseLiteral(inWords, true);
       }
       else
       {
-        kDebug(7116) <<"imapParser::parseBody - reading" << envelope <<"" << seenUid.toAscii ();
+        kDebug(7116) <<"imapParser::parseBody - reading" << envelope << seenUid.toAscii ();
         // fill it up with data
         QString theHeader = parseLiteral(inWords, true);
         mimeIOQString myIO;
@@ -1339,7 +1339,7 @@ void imapParser::parseBody (parseString & inWords)
     {
       // BODY[HEADER.FIELDS (References)] {n}
       //kDebug(7116) <<"imapParser::parseBody - HEADER.FIELDS:"
-      // << QCString(label.data(), label.size()+1) << endl;
+      // << QCString(label.data(), label.size()+1);
       if (qstrncmp(label, "REFERENCES", label.size()) == 0)
       {
        mailHeader *envelope = 0;
@@ -1348,7 +1348,7 @@ void imapParser::parseBody (parseString & inWords)
 
        if (!envelope || seenUid.isEmpty ())
        {
-         kDebug(7116) <<"imapParser::parseBody - discarding" << envelope <<"" << seenUid.toAscii ();
+         kDebug(7116) <<"imapParser::parseBody - discarding" << envelope << seenUid.toAscii ();
          // don't know where to put it, throw it away
          parseLiteral (inWords, true);
        }
@@ -1394,13 +1394,13 @@ void imapParser::parseBody (parseString & inWords)
 
     if (!envelope || seenUid.isEmpty ())
     {
-      kDebug(7116) <<"imapParser::parseBody - discarding" << envelope <<"" << seenUid.toAscii ();
+      kDebug(7116) <<"imapParser::parseBody - discarding" << envelope << seenUid.toAscii ();
       // don't know where to put it, throw it away
       parseSentence (inWords);
     }
     else
     {
-      kDebug(7116) <<"imapParser::parseBody - reading" << envelope <<"" << seenUid.toAscii ();
+      kDebug(7116) <<"imapParser::parseBody - reading" << envelope << seenUid.toAscii ();
       // fill it up with data
       QString section;
       mimeHeader *body = parseBodyStructure (inWords, section, envelope);
@@ -1844,7 +1844,7 @@ imapParser::parseURL (const KUrl & _url, QString & _box, QString & _section,
       _box.truncate(_box.length() - 1);
   }
   kDebug(7116) <<"URL: box=" << _box <<", section=" << _section <<", type="
-    << _type << ", uid= " << _uid << ", validity= " << _validity << ", info= " << _info << endl;
+    << _type << ", uid=" << _uid << ", validity=" << _validity << ", info=" << _info;
 }
 
 

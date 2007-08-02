@@ -333,7 +333,7 @@ bool KNFolder::loadArticle(KNLocalArticle *a)
   closeFiles();
   if(!m_boxFile.open(QIODevice::ReadOnly)) {
     kError(5003) <<"KNFolder::loadArticle(KNLocalArticle *a) : cannot open mbox file:"
-                  << m_boxFile.fileName() << endl;
+                  << m_boxFile.fileName();
     return false;
   }
 

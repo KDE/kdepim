@@ -175,7 +175,7 @@ I basically copied the below from tcpKIO::SlaveBase.hpp, with some modificaions 
 int KSSLSocket::messageBox( KIO::SlaveBase::MessageBoxType type, const QString &text, const QString &caption,
 	const QString &buttonYes, const QString &buttonNo )
 {
-	kDebug(0) <<"messageBox" << type <<"" << text <<" -" << caption << buttonYes << buttonNo;
+	kDebug(0) <<"messageBox" << type << text <<" -" << caption << buttonYes << buttonNo;
 	QByteArray data, result;
 	QByteArray returnType;
 	QDataStream arg( &data,QIODevice::WriteOnly);

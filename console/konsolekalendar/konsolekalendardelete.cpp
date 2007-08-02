@@ -65,9 +65,8 @@ bool KonsoleKalendarDelete::deleteEvent()
            << endl;
       printSpecs( event );
     } else {
-      kDebug() <<"konsolekalendardelete.cpp:deleteEvent() :"
-                << m_variables->getUID().data()
-                << endl;
+      kDebug() << "konsolekalendardelete.cpp:deleteEvent() :"
+               << m_variables->getUID().data();
 
       if ( m_variables->isVerbose() ) {
 	cout << i18n( "Delete Event <Verbose>:" ).data()

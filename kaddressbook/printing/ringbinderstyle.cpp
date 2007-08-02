@@ -258,7 +258,7 @@ bool RingBinderPrintStyle::printEntries( const KABC::Addressee::List &contacts,
       }
       // print it:
       kDebug(5720) <<"RingBinderPrintStyle::printEntries: printing addressee"
-      << addressee.realName() << endl;
+      << addressee.realName();
 
       // get the bounding rect:
       int entryheight = entryMetrics( addressee, window, painter, ypos ).height();
@@ -274,7 +274,7 @@ bool RingBinderPrintStyle::printEntries( const KABC::Addressee::List &contacts,
       ypos += entryheight;
     } else {
       kDebug(5720) <<"RingBinderPrintStyle::printEntries: strange, addressee"
-      << "with UID " << addressee.uid() << " not available." << endl;
+      << "with UID" << addressee.uid() << "not available.";
     }
 
     mPrintProgress->setProgress( (count++ * 100) / contacts.count() );

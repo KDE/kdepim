@@ -220,7 +220,7 @@ void Kleo::KeyListView::slotUpdateTimeout() {
   if ( wasUpdatesEnabled )
     viewport()->setUpdatesEnabled( false );
   kDebug( 5150 ) <<"Kleo::KeyListView::slotUpdateTimeout(): processing"
-		  << d->keyBuffer.size() << " items en block" << endl;
+		  << d->keyBuffer.size() << "items en block";
   if ( hierarchical() ) {
     for ( std::vector<GpgME::Key>::const_iterator it = d->keyBuffer.begin() ; it != d->keyBuffer.end() ; ++it )
       doHierarchicalInsert( *it );

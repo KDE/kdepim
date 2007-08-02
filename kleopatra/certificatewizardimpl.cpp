@@ -158,9 +158,9 @@ static bool requirementsAreMet( const CertificateWizardImpl::AttrPairList & list
 #else
     kndbgstream s = kDebug();
 #endif
-    s << "requirementsAreMet(): checking \"" << key << "\" against \"" << le->text() << "\": ";
+    s << "requirementsAreMet(): checking \"" << key << "\" against \"" << le->text() << "\":";
     if ( key.endsWith("!") && le->text().trimmed().isEmpty() ) {
-      s << "required field is empty!" << endl;
+      s << "required field is empty!";
       return false;
     }
     s << "ok" << endl;

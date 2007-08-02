@@ -49,7 +49,7 @@ bool run_modes(bool test, bool local)
 		SyncAction::SyncMode mode2(mode.list());
 		if (!(mode==mode2)) {
 			kDebug() <<"E" <<"Modes mismatch [" << mode.name() <<"] ["
-				<< mode2.name() << "]" << endl;
+				<< mode2.name() << "]";
 			ok = false;
 		}
 	}
@@ -61,7 +61,7 @@ bool single_mode(int m, bool test, bool local)
 {
 	SyncAction::SyncMode mode((SyncAction::SyncMode::Mode)m,test,local);
 
-	kDebug() <<"*" << m <<"" << test <<"" << local;
+	kDebug() <<"*" << m << test << local;
 
 	if ((mode.mode() == m) && (mode.isTest() == test) && (mode.isLocal() == local))
 	{
@@ -69,8 +69,8 @@ bool single_mode(int m, bool test, bool local)
 	}
 	else
 	{
-		kDebug() <<"E" <<"Modes mismatch" << m <<"" << test <<"" << local
-			<< "[" << mode.name() << "]" << endl;
+		kDebug() <<"E" <<"Modes mismatch" << m << test << local
+			<< "[" << mode.name() << "]";
 		return false;
 	}
 }

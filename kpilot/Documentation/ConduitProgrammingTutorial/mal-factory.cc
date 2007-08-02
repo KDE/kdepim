@@ -79,8 +79,7 @@ MALConduitFactory::~MALConduitFactory()
 #ifdef DEBUG
     DEBUGKPILOT << fname
         << ": Creating object of class "
-        << c
-        << endl;
+        << c;
 #endif
 
     if (qstrcmp(c,"ConduitConfig")==0)
@@ -94,8 +93,7 @@ MALConduitFactory::~MALConduitFactory()
         else 
         {
             kError() << k_funcinfo
-                << ": Couldn't cast parent to widget."
-                << endl;
+                << ": Couldn't cast parent to widget.";
             return 0L;
         }
     }
@@ -111,8 +109,7 @@ MALConduitFactory::~MALConduitFactory()
         else
         {
             kError() << k_funcinfo
-                << ": Couldn't cast parent to KPilotDeviceLink"
-                << endl;
+                << ": Couldn't cast parent to KPilotDeviceLink";
             return 0L;
         }
     }

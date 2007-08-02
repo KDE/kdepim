@@ -127,7 +127,7 @@ void ResourceItem::createSubresourceItems()
 
 void ResourceItem::stateChange( bool active )
 {
-  //kDebug(5720) << k_funcinfo << this <<"" << text( 0 ) <<" active=" << active;
+  //kDebug(5720) << k_funcinfo << this << text( 0 ) <<" active=" << active;
   if ( active && !mIsSubresource ) {
     if ( !mSubItemsCreated )
       createSubresourceItems();
@@ -337,7 +337,7 @@ void ResourceSelection::slotSubresourceAdded( KPIM::ResourceABC *resource,
                                               const QString& /*type*/,
                                               const QString& subResource )
 {
-  kDebug(5720) << k_funcinfo << resource->resourceName() <<"" << subResource;
+  kDebug(5720) << k_funcinfo << resource->resourceName() << subResource;
   Q3ListViewItem *i = mListView->findItem( resource->resourceName(), 0 );
   if ( !i )
     // Not found
@@ -352,7 +352,7 @@ void ResourceSelection::slotSubresourceRemoved( KPIM::ResourceABC* resource,
                                                 const QString& /*type*/,
                                                 const QString& subResource )
 {
-  kDebug(5720) << k_funcinfo << resource->resourceName() <<"" << subResource;
+  kDebug(5720) << k_funcinfo << resource->resourceName() << subResource;
   // TODO
   //delete findItemByIdentifier( resource );
   //emitResourcesChanged();

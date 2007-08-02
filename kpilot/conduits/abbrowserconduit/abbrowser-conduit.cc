@@ -459,7 +459,7 @@ void AbbrowserConduit::showPilotAddress(const PilotAddress *pilotAddress)
 		DEBUGKPILOT<< fname <<"| EMPTY";
 		return;
 	}
-	DEBUGKPILOT << fname <<""
+	DEBUGKPILOT << fname
 			<< pilotAddress->getTextRepresentation(
 				fAddressAppInfo,Qt::PlainText) << endl;
 }
@@ -762,7 +762,7 @@ void AbbrowserConduit::slotDeletedRecord()
 	if ( e.isEmpty() )
 	{
 		DEBUGKPILOT << fname <<": no Addressee found for this id.";
-		DEBUGKPILOT << fname <<""
+		DEBUGKPILOT << fname
 			<< backupAddr->getTextRepresentation(
 				fAddressAppInfo,Qt::PlainText) << endl;
 

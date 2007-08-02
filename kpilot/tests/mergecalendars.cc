@@ -75,13 +75,13 @@ int main(int argc, char **argv)
 	QString newfilesave = QString("%1.updated").arg(newfile);
 
 	kDebug() <<"Using korgfile: [" << korgfile 
-		<< "]" << endl;
+		<< "]";
 	kDebug() <<"Using newfile: [" << newfile
-		<< "]" << endl;
+		<< "]";
 	kDebug() <<"Will save korgfile to: [" << korgsave 
-		<< "]" << endl;
+		<< "]";
 	kDebug() <<"Will save newfile to: [" << newfilesave
-		<< "]" << endl << endl;
+		<< "]";
 
 	KCal::CalendarLocal *calkorg = new KCal::CalendarLocal( QString::fromLatin1("UTC") );
 	KCal::CalendarLocal *calnew = new KCal::CalendarLocal( QString::fromLatin1("UTC") );
@@ -101,9 +101,9 @@ int main(int argc, char **argv)
 	int numnewstart = calnew->incidences().count();
 
 	kDebug() <<"  - Opened korganizer calendar with: [" 
-		<< numkorgstart << "] incidences." << endl;
+		<< numkorgstart << "] incidences.";
 	kDebug() <<"  - Opened newfile calendar with: [" 
-		<< numnewstart << "] incidences." << endl;
+		<< numnewstart << "] incidences.";
 	
 
 	KCal::Event::List korgEvents;
@@ -129,7 +129,7 @@ int main(int argc, char **argv)
 		if (debug_level)
 			kDebug() <<"  - Looking at event: [" 
 			<< ev->summary() << "], uid: ["
-			<< uid << "]" << endl;
+			<< uid << "]";
 
 		KCal::Event * evkorg = calkorg->event(uid);
 		if ( evkorg && (evkorg->pilotId() > 0) )
@@ -139,7 +139,7 @@ int main(int argc, char **argv)
 			if (debug_level)
 				kDebug() <<"Found korg event for uid: ["
 				<< uid << "], pilotId: [" 
-				<< pilotId << "]" << endl;
+				<< pilotId << "]";
 
 			ev->setPilotId(pilotId);
 			ev->setSyncStatus(KCal::Incidence::SYNCMOD);
@@ -178,7 +178,7 @@ int main(int argc, char **argv)
 			if (debug_level)
 				kDebug() <<"  - Found matching event: [" 
 				<< ev->summary() << "], uid: ["
-				<< ev->uid() << "]. Removing." << endl;
+				<< ev->uid() << "]. Removing.";
 
 			korgEvents.remove(ev);
 			calkorg->deleteEvent(ev);
@@ -189,10 +189,9 @@ int main(int argc, char **argv)
 
 	kDebug() <<"  - Found: [" << numkorgremoved
 		<< "] prior: [" << categoryToken 
-		<< "] category events." << endl;
+		<< "] category events.";
 	
-	kDebug() <<"Merging new events into korganizer calendar..." 
-		<< endl;
+	kDebug() <<"Merging new events into korganizer calendar...";
 
 	for (newIt = newEvents.begin(); newIt != newEvents.end(); ++newIt ) 
 	{
@@ -202,7 +201,7 @@ int main(int argc, char **argv)
 	}
 
 	kDebug() <<"Ended up with: [" << korgEvents.count() 
-		<< "] events in korganizer calendar." << endl;
+		<< "] events in korganizer calendar.";
 
 	kDebug() <<"Saving updated korganizer file...";
 	calkorg->save(korgsave);

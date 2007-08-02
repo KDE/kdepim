@@ -1407,7 +1407,7 @@ IMAP4Protocol::specialACLCommand( int command, QDataStream& stream )
   {
     QString user, acl;
     stream >> user >> acl;
-    kDebug(7116) <<"SETACL" << aBox <<"" << user <<"" << acl;
+    kDebug(7116) <<"SETACL" << aBox << user << acl;
     imapCommand *cmd = doCommand(imapCommand::clientSetACL(aBox, user, acl));
     if (cmd->result () != "OK")
     {
@@ -1426,7 +1426,7 @@ IMAP4Protocol::specialACLCommand( int command, QDataStream& stream )
   {
     QString user;
     stream >> user;
-    kDebug(7116) <<"DELETEACL" << aBox <<"" << user;
+    kDebug(7116) <<"DELETEACL" << aBox << user;
     imapCommand *cmd = doCommand(imapCommand::clientDeleteACL(aBox, user));
     if (cmd->result () != "OK")
     {
@@ -1517,7 +1517,7 @@ IMAP4Protocol::specialSearchCommand( QDataStream& stream )
   completeQueue.removeRef(cmd);
   QStringList lst = getResults();
   kDebug(7116) <<"IMAP4Protocol::specialSearchCommand '" << aSection <<
-    "' returns " << lst << endl;
+    "' returns" << lst;
   infoMessage( lst.join( " " ) );
 
   finished();
@@ -1542,7 +1542,7 @@ IMAP4Protocol::specialAnnotateMoreCommand( int command, QDataStream& stream )
     QString entry;
     QMap<QString, QString> attributes;
     stream >> entry >> attributes;
-    kDebug(7116) <<"SETANNOTATION" << aBox <<"" << entry <<"" << attributes.count() <<" attributes";
+    kDebug(7116) <<"SETANNOTATION" << aBox << entry << attributes.count() <<" attributes";
     imapCommand *cmd = doCommand(imapCommand::clientSetAnnotation(aBox, entry, attributes));
     if (cmd->result () != "OK")
     {
@@ -1566,7 +1566,7 @@ IMAP4Protocol::specialAnnotateMoreCommand( int command, QDataStream& stream )
     QString entry;
     QStringList attributeNames;
     stream >> entry >> attributeNames;
-    kDebug(7116) <<"GETANNOTATION" << aBox <<"" << entry <<"" << attributeNames;
+    kDebug(7116) <<"GETANNOTATION" << aBox << entry << attributeNames;
     imapCommand *cmd = doCommand(imapCommand::clientGetAnnotation(aBox, entry, attributeNames));
     if (cmd->result () != "OK")
     {
@@ -2370,7 +2370,7 @@ IMAP4Protocol::parseURL (const KUrl & _url, QString & _box,
       if (start != -1)
         _hierarchyDelimiter = _url.path().mid(start-1, start);
       kDebug(7116) <<"IMAP4::parseURL - reconstructed delimiter:" << _hierarchyDelimiter
-        << " from URL " << _url.path() << endl;
+        << "from URL" << _url.path();
     }
     if (_hierarchyDelimiter.isEmpty())
       _hierarchyDelimiter = "/";

@@ -185,7 +185,7 @@ void KNCleanUp::expireGroup( KNGroup *g, bool showResult )
   leftCnt=g->count();
 
   kDebug(5003) <<"KNCleanUp::expireGroup() :" << g->groupname() <<":"
-    << delCnt << " deleted , " << leftCnt << " left" << endl;
+    << delCnt << "deleted ," << leftCnt << "left";
 
   if(showResult)
     KMessageBox::information(knGlobals.topWidget,

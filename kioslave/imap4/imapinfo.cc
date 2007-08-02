@@ -185,7 +185,7 @@ permanentFlagsAvailable_ (false), readWriteAvailable_ (false)
         setRecent (tokens[1].toULong ());
 
       else
-        kDebug(7116) <<"unknown token1/2:" << tokens[1] <<"" << tokens[2];
+        kDebug(7116) <<"unknown token1/2:" << tokens[1] << tokens[2];
     }
   }
 

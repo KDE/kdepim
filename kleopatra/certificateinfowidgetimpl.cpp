@@ -236,10 +236,10 @@ void CertificateInfoWidgetImpl::startCertificateChainListing() {
 
   kDebug() <<"Going to fetch" << endl
 	    << "  issuer  : \"" << mChain.front().issuerName() << "\"" << endl
-	    << "  chain id: " << mChain.front().chainID() << endl
+	    << "  chain id:" << mChain.front().chainID() << endl
 	    << "for" << endl
 	    << "  subject : \"" << mChain.front().userID(0).id() << "\"" << endl
-	    << "  subj.fpr: " << mChain.front().primaryFingerprint() << endl;
+	    << "  subj.fpr:" << mChain.front().primaryFingerprint();
 
   const GpgME::Error err = job->start( QStringList( mChain.front().chainID() ) );
 
@@ -305,7 +305,7 @@ void CertificateInfoWidgetImpl::slotDumpProcessExited(int, QProcess::ExitStatus)
 
 void CertificateInfoWidgetImpl::slotNextKey( const GpgME::Key & key ) {
   kDebug() <<"CertificateInfoWidgetImpl::slotNextKey( \""
-	    << key.userID(0).id() << "\" )" << endl;
+	    << key.userID(0).id() << "\" )";
   if ( key.isNull() )
     return;
 

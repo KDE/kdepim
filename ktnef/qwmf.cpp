@@ -1004,8 +1004,8 @@ void QWinMetaFile::createPenIndirect( long, short* parm )
     devRec = mPainter.transformed( mBBox );
     width = ( parm[ 0 ] * devRec.width() ) / mBBox.width() ;
     kDebug() <<"CreatePenIndirect:";
-    kDebug() <<"   log coord. :" << mBBox.width() <<"" << mBBox.height();
-    kDebug() <<"   log. pen :" << parm[ 1 ] <<"" << parm[ 2 ];
+    kDebug() <<"   log coord. :" << mBBox.width() << mBBox.height();
+    kDebug() <<"   log. pen :" << parm[ 1 ] << parm[ 2 ];
     kDebug() <<"   dev. pen :" << width;
     handle->pen.setWidth( width );
 */

@@ -53,7 +53,7 @@ KAddressBookView::KAddressBookView( KAB::Core *core, QWidget *parent )
 KAddressBookView::~KAddressBookView()
 {
   kDebug(5720) <<"KAddressBookView::~KAddressBookView: destroying -"
-                << objectName() << endl;
+                << objectName();
 }
 
 void KAddressBookView::readConfig( KConfigGroup &config )

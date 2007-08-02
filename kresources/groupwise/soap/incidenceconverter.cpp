@@ -453,8 +453,7 @@ void IncidenceConverter::setAttendees( KCal::Incidence *incidence,
   for( it = attendees.begin(); it != attendees.end(); ++it ) {
     if ( !to.isEmpty() )
       to += QString::fromLatin1( ";  %1" ).arg( (*it)->name() );
-    kDebug() <<"IncidenceConverter::setAttendees(), adding" << (*it)->fullName()
-      << endl;
+    kDebug() <<"IncidenceConverter::setAttendees(), adding" << (*it)->fullName();
     QString uuid;
     QList<KABC::Addressee> addList = KABC::StdAddressBook::self()->findByEmail( (*it)->email() );
     if ( !addList.first().isEmpty() )
@@ -589,8 +588,7 @@ void IncidenceConverter::setItemDescription( KCal::Incidence *incidence,
 
 void IncidenceConverter::getAttendees( ngwt__CalendarItem *item, KCal::Incidence *incidence )
 {
-//   kDebug() <<"IncidenceConverter::getAttendees()" << ( item->subject ? item->subject->c_str() :"no subject" )
-//     << endl;
+//   kDebug() <<"IncidenceConverter::getAttendees()" << ( item->subject ? item->subject->c_str() :"no subject" );
 
   if ( item->distribution && item->distribution->from ) {
 /*    kDebug() <<"-- from";*/

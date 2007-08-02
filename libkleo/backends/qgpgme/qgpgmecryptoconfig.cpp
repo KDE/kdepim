@@ -515,7 +515,7 @@ QGpgMECryptoConfigEntry::~QGpgMECryptoConfigEntry()
 #ifndef NDEBUG
   if ( !s_duringClear && mDirty )
     kWarning(5150) <<"Deleting a QGpgMECryptoConfigEntry that was modified (" << mDescription <<")"
-                    << "You forgot to call sync() (to commit) or clear() (to discard)" << endl;
+                    << "You forgot to call sync() (to commit) or clear() (to discard)";
 #endif
 }
 

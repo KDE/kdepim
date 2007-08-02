@@ -130,7 +130,7 @@ QDateTime GWConverter::charToQDateTime( const char *str )
   if ( !str ) return QDateTime();
 //  kDebug() <<"charToQDateTime():" << str;
   QDateTime dt = QDateTime::fromString( QString::fromUtf8( str ), Qt::ISODate );
-//  kDebug() <<"" << dt.toString();
+//  kDebug() << dt.toString();
   return dt;
 }
 

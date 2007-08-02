@@ -101,7 +101,7 @@ void FilterOE::import(FilterInfo *info)
     info->addLog(i18n("Finished importing Outlook Express emails"));
     if (info->shouldTerminate()) info->addLog( i18n("Finished import, canceled by user."));
 
-    kDebug() <<"" <<"total emails in current file:" << totalEmails;
+    kDebug() <<"total emails in current file:" << totalEmails;
     kDebug() <<"0x84 Mails:" << count0x84;
     kDebug() <<"0x04 Mails:" << count0x04;
 }

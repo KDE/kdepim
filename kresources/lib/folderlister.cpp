@@ -271,13 +271,13 @@ void FolderLister::doRetrieveFolder( const KUrl &u )
       mUrls.append( url );
 
       kDebug(7000) <<"FolderLister::retrieveFolders: adjustedURL=" 
-                    << url.prettyUrl() << endl;
+                    << url.prettyUrl();
       connect( listjob, SIGNAL( result( KJob * ) ),
                SLOT( slotListJobResult( KJob * ) ) );
     } else {
       // TODO: Indicate a problem to the user!
       kWarning() <<"Unable to create the folder list job for the url" 
-                  << url.prettyUrl() << endl;
+                  << url.prettyUrl();
     }
   }
   if ( mUrls.isEmpty() ) {
@@ -324,7 +324,7 @@ void FolderLister::slotListJobResult( KJob *job )
   kDebug(7000) <<"OpenGroupware::slotListJobResult():";
   kDebug() <<"URLS (" << mUrls.count() <<"):" << mUrls.toStringList().join(" |");
   kDebug() <<"Processed URLS (" << mProcessedPathes.count() <<"):"
-            << mProcessedPathes.join(" | ") << endl;
+            << mProcessedPathes.join(" | ");
   KIO::SimpleJob *j = dynamic_cast<KIO::SimpleJob*>(job);
   if ( j ) {
     mUrls.removeAll( j->url() );
@@ -337,9 +337,9 @@ void FolderLister::slotListJobResult( KJob *job )
     interpretListFoldersJob( static_cast<KIO::Job*>(job) );
   }
   kDebug() <<"After URLS (" << mUrls.count() <<"):" 
-            << mUrls.toStringList().join(" | ") << endl;
+            << mUrls.toStringList().join(" | ");
   kDebug() <<"After Processed URLS (" << mProcessedPathes.count() <<"):"
-            << mProcessedPathes.join(" | ") << endl;
+            << mProcessedPathes.join(" | ");
   if ( mUrls.isEmpty() ) {
     kDebug()<<"No more URLS to download, emitting foldersRead()";
     emit foldersRead();
@@ -353,7 +353,7 @@ void FolderLister::interpretListFoldersJob( KIO::Job *job )
   } else {
     // TODO: Error handling should show a message to the user!
     kError() <<"The FolderLister does not have a GroupwareDataAdaptor, so"
-                 "it cannot interpret the response!" << endl;
+                 "it cannot interpret the response!";
   }
 }
 
@@ -364,7 +364,7 @@ KIO::Job *FolderLister::createListFoldersJob( const KUrl &url )
   } else {
     // TODO: Error handling should show a message to the user!
     kError() <<"The FolderLister does not have a GroupwareDataAdaptor, so"
-                 "it cannot create the job for the folder list!" << endl;
+                 "it cannot create the job for the folder list!";
     return 0;
   }
 }

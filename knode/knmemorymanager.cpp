@@ -67,7 +67,7 @@ void KNMemoryManager::removeCacheEntry(KNArticleCollection *c)
     delete ci;
 
     kDebug(5003) <<"KNMemoryManager::removeCacheEntry() : collection removed (" << c->name() <<"),"
-                  << mColList.count() << " collections left in cache" << endl;
+                  << mColList.count() << "collections left in cache";
   }
 }
 
@@ -112,7 +112,7 @@ void KNMemoryManager::removeCacheEntry(KNArticle *a)
     delete ai;
 
     kDebug(5003) <<"KNMemoryManager::removeCacheEntry() : article removed,"
-                  << mArtList.count() << " articles left in cache" << endl;
+                  << mArtList.count() << "articles left in cache";
 
   }
 }
@@ -173,8 +173,8 @@ void KNMemoryManager::checkMemoryUsageCollections()
   }
 
   kDebug(5003) <<"KNMemoryManager::checkMemoryUsageCollections() :"
-                << mColList.count() << " collections in cache => Usage : "
-                << ( c_ollCacheSize*100.0 / maxSize ) << "%" << endl;
+                << mColList.count() << "collections in cache => Usage :"
+                << ( c_ollCacheSize*100.0 / maxSize ) << "%";
 }
 
 
@@ -197,8 +197,8 @@ void KNMemoryManager::checkMemoryUsageArticles()
   }
 
   kDebug(5003) <<"KNMemoryManager::checkMemoryUsageArticles() :"
-                << mArtList.count() << " articles in cache => Usage : "
-                << ( a_rtCacheSize*100.0 / maxSize ) << "%" << endl;
+                << mArtList.count() << "articles in cache => Usage :"
+                << ( a_rtCacheSize*100.0 / maxSize ) << "%";
 }
 
 

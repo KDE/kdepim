@@ -70,7 +70,7 @@ void EditAddressBookJob::run() {
 
         default:
             kDebug() <<"Gammu engine: EditAddressBookJob::run():"
-                     << "unsupported job type requested" << endl;
+                     << "unsupported job type requested";
             break;
     }
 }

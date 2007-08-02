@@ -172,13 +172,11 @@ bool ResourceRemote::doLoad( bool )
   kDebug(5800) <<"ResourceRemote::load()";
 
   if ( mDownloadJob ) {
-    kWarning() <<"ResourceRemote::load(): download still in progress."
-                << endl;
+    kWarning() <<"ResourceRemote::load(): download still in progress.";
     return true;
   }
   if ( mUploadJob ) {
-    kWarning() <<"ResourceRemote::load(): upload still in progress."
-                << endl;
+    kWarning() <<"ResourceRemote::load(): upload still in progress.";
     return false;
   }
 
@@ -257,13 +255,11 @@ bool ResourceRemote::doSave( bool )
   }
 
   if ( mDownloadJob ) {
-    kWarning() <<"ResourceRemote::save(): download still in progress."
-                << endl;
+    kWarning() <<"ResourceRemote::save(): download still in progress.";
     return false;
   }
   if ( mUploadJob ) {
-    kWarning() <<"ResourceRemote::save(): upload still in progress."
-                << endl;
+    kWarning() <<"ResourceRemote::save(): upload still in progress.";
     return false;
   }
 

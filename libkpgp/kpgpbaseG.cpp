@@ -730,7 +730,7 @@ BaseG::parseKeyData( const QByteArray& output, int& offset, Key* key /* = 0 */ )
             // The user id isn't utf-8 encoded. It was most likely
             // created with PGP which either used latin1 or koi8-r.
             kDebug( 5326 ) <<"User Id '" << uid
-                          << "' doesn't seem to be utf-8 encoded." << endl;
+                          << "' doesn't seem to be utf-8 encoded.";
 
             // We determine the ratio between non-ASCII and ASCII chars.
             // A koi8-r user id should have lots of non-ASCII chars.
@@ -748,7 +748,7 @@ BaseG::parseKeyData( const QByteArray& output, int& offset, Key* key /* = 0 */ )
                 ++nonAsciiCount;
             }
             kDebug( 5326 ) <<"ascii-nonAscii ratio :" << asciiCount
-                          << ":" << nonAsciiCount << endl;
+                          << ":" << nonAsciiCount;
             if( nonAsciiCount > asciiCount ) {
               // assume koi8-r encoding
               kDebug( 5326 ) <<"Assume koi8-r encoding.";
@@ -767,7 +767,7 @@ BaseG::parseKeyData( const QByteArray& output, int& offset, Key* key /* = 0 */ )
                 // koi8-r decoded user id has inverted case, so assume
                 // CP1251 encoding
                 kDebug( 5326 ) <<"No, it doesn't seem to be koi8-r."
-                                 "Use CP 1251 instead." << endl;
+                                 "Use CP 1251 instead.";
                 QTextCodec *codec = QTextCodec::codecForName("CP1251");
                 uidString = codec->toUnicode( uid.data() );
               }

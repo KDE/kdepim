@@ -96,8 +96,7 @@ int main( int argc, char **argv )
 #if 0
   QString fbUser = args->getOption( "freebusy-user" );
   if ( fbUser.isEmpty() ) {
-    kError() <<"Need user for which the freebusy data should be retrieved."
-              << endl;
+    kError() <<"Need user for which the freebusy data should be retrieved.";
   } else {
     KCal::FreeBusy *fb = new KCal::FreeBusy;
 

@@ -89,7 +89,7 @@ static void testSign()
     return;
   }
   kDebug() << k_funcinfo <<"signing resulted in signature="
-	    << Q3CString( signature.data(), signature.size() + 1 ) << endl;
+	    << Q3CString( signature.data(), signature.size() + 1 );
 }
 
 int main( int argc, char** argv ) {

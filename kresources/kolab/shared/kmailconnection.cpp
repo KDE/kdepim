@@ -182,7 +182,7 @@ bool KMailConnection::fromKMailAddIncidence( const QString& type,
       && format != KMail::StorageIcalVcard )
     return false;
 //   kDebug(5650) <<"KMailConnection::fromKMailAddIncidence(" << type <<","
-//                 << folder << " ). iCal:\n" << ical << endl;
+//                 << folder << "). iCal:\n" << ical;
   return mResource->fromKMailAddIncidence( type, folder, sernum, format, data );
 }
 

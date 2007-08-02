@@ -187,7 +187,7 @@ namespace {
       mKeyUsage( keyUsage )
   {
     kWarning( keyUsage == 0, 5150 )
-      << "KeySelectionDialog: keyUsage == 0. You want to use AllKeys instead." << endl;
+      << "KeySelectionDialog: keyUsage == 0. You want to use AllKeys instead.";
   }
 
   QString ColumnStrategy::title( int col ) const {

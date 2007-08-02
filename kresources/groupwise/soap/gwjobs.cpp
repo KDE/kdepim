@@ -132,7 +132,7 @@ void ReadAddressBooksJob::readAddressBook( std::string &id )
         kDebug() <<"ITEM:" << item->name->c_str();
       if ( item->id )
         kDebug() <<"ITEM: (" << item->id->c_str()
-        << ")" << endl;
+        << ")";
     else 
       kDebug() <<"ITEM is null";
 #endif
@@ -162,8 +162,7 @@ void ReadAddressBooksJob::readAddressBook( std::string &id )
       int progress = int( mProgress + count++ * 100. / maxCount );
 
       kDebug() <<"PROGRESS: mProgress:" << mProgress <<" count:"
-        << count << " maxCount: " << maxCount << " progress: " << progress
-        << endl;
+        << count << "maxCount:" << maxCount << "progress:" << progress;
 
       mServer->emitReadAddressBookProcessedSize( progress );
     }
@@ -243,7 +242,7 @@ void ReadAddressBooksJob::readAddressBook( std::string &id )
             kDebug() <<"ITEM:" << item->name->c_str();
           if ( item->id )
             kDebug() <<"ITEM: (" << item->id->c_str()
-            << ")" << endl;
+            << ")";
         else 
           kDebug() <<"ITEM is null";
 #endif
@@ -666,7 +665,7 @@ void UpdateAddressBooksJob::run()
         kDebug() <<"ITEM:" << item->name->c_str();
       if ( item->id )
         kDebug() <<"ITEM: ID (" << item->id->c_str()
-        << ")" << endl;
+        << ")";
     else 
       kDebug() <<"ITEM is null";
 #endif

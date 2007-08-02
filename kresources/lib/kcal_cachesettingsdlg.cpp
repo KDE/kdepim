@@ -74,7 +74,7 @@ void CacheSettingsDialog::loadSettings( KRES::Resource *resource )
     
   } else {
     kError(5700) <<"CacheSettingsDialog::loadSettings():"
-                     "no ResourceGroupwareBase, cast failed" << endl;
+                     "no ResourceGroupwareBase, cast failed";
   }
 }
 
@@ -86,7 +86,7 @@ void CacheSettingsDialog::saveSettings( KRES::Resource *resource )
     mSaveConfig->saveSettings( res );
   } else {
     kError(5700) <<"CacheSettingsDialog::saveSettings():"
-                     "no ResourceGroupwareBase, cast failed" << endl;
+                     "no ResourceGroupwareBase, cast failed";
   }
 }
 

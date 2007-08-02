@@ -170,7 +170,7 @@ void Kleo::GnuPGProcessBase::parseStatusOutput() {
     // check status token
     if ( line.left( startTokenLen ) != startToken ) {
       kDebug( 5150 ) <<"Kleo::GnuPGProcessBase::childStatus: status-fd protocol error: line doesn't begin with \""
-		      << startToken << "\"" << endl;
+		      << startToken << "\"";
       continue;
     }
     // remove status token:

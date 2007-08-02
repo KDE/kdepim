@@ -256,7 +256,7 @@ void Key::setFingerprint(const KeyID& keyID, const QByteArray &fpr)
   }
   else
     kDebug(5326) <<"Error: Can't set fingerprint. A subkey with key ID 0x"
-                  << keyID << " doesn't exist." << endl;
+                  << keyID << "doesn't exist.";
 }
 
 } // namespace Kpgp

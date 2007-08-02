@@ -297,7 +297,7 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
         // the incoming directory.
       }
       else
-        kWarning() <<"Couldn't start DBUS/Organizer:" << dbusService <<"" << error;
+        kWarning() <<"Couldn't start DBUS/Organizer:" << dbusService << error;
 
       return true;
     }

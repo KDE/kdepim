@@ -162,7 +162,7 @@ void Device::terminatePhone()  {
 
 void Device::printErrorMessage( int errorCode, const QString& methodName ) {
     kDebug() <<"Gammu engine: [" << methodName <<"()]"
-             <<  m_errorCodes[errorCode] << endl;
+             <<  m_errorCodes[errorCode];
 }
 
 bool Device::phoneConnected() {

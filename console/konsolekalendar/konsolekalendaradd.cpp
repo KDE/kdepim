@@ -128,17 +128,15 @@ bool KonsoleKalendarAdd::addImportedCalendar()
        !cal->load( m_variables->getImportFile() ) ||
        !cal->save( fileName ) ) {
     kDebug()
-      << "konsolekalendaradd.cpp::importCalendar() | "
-      << "Can't import file: "
-      << m_variables->getImportFile()
-      << endl;
+      << "konsolekalendaradd.cpp::importCalendar() |"
+      << "Can't import file:"
+      << m_variables->getImportFile();
     return false;
   }
   kDebug()
-    << "konsolekalendaradd.cpp::importCalendar() | "
-    << "Successfully imported file: "
-    << m_variables->getImportFile()
-    << endl;
+    << "konsolekalendaradd.cpp::importCalendar() |"
+    << "Successfully imported file:"
+    << m_variables->getImportFile();
   return true;
 }
 

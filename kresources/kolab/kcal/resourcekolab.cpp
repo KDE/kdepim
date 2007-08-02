@@ -620,7 +620,7 @@ bool ResourceKolab::addIncidence( KCal::Incidence* incidence, const QString& _su
             resolveConflict( incidence, subResource, sernum );
           } else {
             kWarning( 5650 ) <<"Duplicate event in a read-only folder detected!"
-              "Please inform the owner of the folder. " << endl;
+              "Please inform the owner of the folder.";
           }
           return true;
         } else {

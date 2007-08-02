@@ -258,7 +258,7 @@ QString SerialManager::sendATCommand(KMobileTools::Job *job, const QString &cmd,
     err=d->serial->write(cmd.toLatin1(), cmd.length());
     if(err<0)
     {
-        kDebug() <<"Write error: closing device link: error=" << err <<"";
+        kDebug() <<"Write error: closing device link: error=" << err;
         close();
         return QString();
     }

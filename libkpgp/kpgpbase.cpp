@@ -105,7 +105,7 @@ Base::run( const char *cmd, const char *passphrase, bool onlyReadFromPGP )
   //Uncomment these lines for testing only! Doing so will decrease security!
   kDebug( 5326 ) <<"pgp cmd =" << cmd;
   //kDebug( 5326 ) <<"pgp input =" << QString(input)
-  //          << "input length = " << input.length() << endl;
+  //          << "input length =" << input.length();
 
   error = "";
   output = "";
@@ -181,11 +181,11 @@ Base::run( const char *cmd, const char *passphrase, bool onlyReadFromPGP )
         }
         else if (!pollstatus) {
           //kDebug( 5326 ) <<"Timeout while polling pin[1]:"
-          //              << pollin.revents << endl;
+          //              << pollin.revents;
         }
         else if (pollstatus == -1) {
           kDebug( 5326 ) <<"Error while polling pin[1]:"
-                        << pollin.revents << endl;
+                        << pollin.revents;
         }
 
         if (pout[0] >= 0) {
@@ -208,7 +208,7 @@ Base::run( const char *cmd, const char *passphrase, bool onlyReadFromPGP )
             }
             else if (pollstatus == -1) {
               kDebug( 5326 ) <<"Error while polling pout[0]:"
-                            << pollout.revents << endl;
+                            << pollout.revents;
             }
           } while ((pollstatus == 1) && (pollout.revents & POLLIN));
         }
@@ -233,7 +233,7 @@ Base::run( const char *cmd, const char *passphrase, bool onlyReadFromPGP )
             }
             else if (pollstatus == -1) {
               kDebug( 5326 ) <<"Error while polling perr[0]:"
-                            << pollerr.revents << endl;
+                            << pollerr.revents;
             }
           } while ((pollstatus == 1) && (pollerr.revents & POLLIN));
         }
@@ -298,7 +298,7 @@ Base::run( const char *cmd, const char *passphrase, bool onlyReadFromPGP )
         }
         else if (pollstatus == -1) {
           kDebug( 5326 ) <<"Error while polling pout[0]:"
-                        << pollout.revents << endl;
+                        << pollout.revents;
         }
       } while ((pollstatus == 1) && (pollout.revents & POLLIN));
     }
@@ -342,7 +342,7 @@ Base::run( const char *cmd, const char *passphrase, bool onlyReadFromPGP )
         }
         else if (pollstatus == -1) {
           kDebug( 5326 ) <<"Error while polling perr[0]:"
-                        << pollerr.revents << endl;
+                        << pollerr.revents;
         }
       } while ((pollstatus == 1) && (pollerr.revents & POLLIN));
     }
@@ -359,8 +359,7 @@ Base::run( const char *cmd, const char *passphrase, bool onlyReadFromPGP )
   if (WIFEXITED(childExitStatus) != 0) {
     // Get the return code of the child
     childExitStatus = WEXITSTATUS(childExitStatus);
-    kDebug( 5326 ) <<"PGP exited with exit status" << childExitStatus
-                  << endl;
+    kDebug( 5326 ) <<"PGP exited with exit status" << childExitStatus;
   }
   else {
     childExitStatus = -1;
@@ -425,7 +424,7 @@ Base::runGpg( const char *cmd, const char *passphrase, bool onlyReadFromGnuPG )
   //Uncomment these lines for testing only! Doing so will decrease security!
   //kDebug( 5326 ) <<"pgp cmd =" << cmd;
   //kDebug( 5326 ) <<"pgp input =" << QString(input)
-  //          << "input length = " << input.length() << endl;
+  //          << "input length =" << input.length();
 
   error = "";
   output = "";
@@ -659,8 +658,7 @@ Base::runGpg( const char *cmd, const char *passphrase, bool onlyReadFromGnuPG )
   if (WIFEXITED(childExitStatus) != 0) {
     // Get the return code of the child
     childExitStatus = WEXITSTATUS(childExitStatus);
-    kDebug( 5326 ) <<"GnuPG exited with exit status" << childExitStatus
-                  << endl;
+    kDebug( 5326 ) <<"GnuPG exited with exit status" << childExitStatus;
   }
   else {
     childExitStatus = -1;

@@ -316,7 +316,7 @@ void ResourceKolab::fromKMailDelIncidence( const QString& type,
   if( type != kmailContentsType ) return;
 
   kDebug(5500) <<"ResourceKolab::fromKMailDelIncidence(" << type <<"," << uid
-                << " )" << endl;
+                << ")";
 
   const bool silent = mSilent;
   mSilent = true;

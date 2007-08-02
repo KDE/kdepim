@@ -180,7 +180,7 @@ void kio_obexProtocol::get(const KUrl &url)
 
     char* buffer = (char*)m_impl.wrapper()->getClient()->buf_data;
 
-    kDebug() <<"**************************GetFile processed; size returned:" << size <</*"; raw data:" << buffer <<*/ endl;
+    kDebug() <<"**************************GetFile processed; size returned:" << size;
 
     if(size<=0)
     {

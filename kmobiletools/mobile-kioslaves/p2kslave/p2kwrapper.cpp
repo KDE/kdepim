@@ -83,7 +83,7 @@ bool P2KWrapper::findDevice(const QString &acmDevice, const QString &rawVendor, 
     int i=0;
     while( devList[i].vendor >=0 ){
         kDebug() <<"Current device infos:" << QString::number(devList[i].vendor,16)
-                << "::" << QString::number(devList[i].product,16) << endl;
+                << "::" << QString::number(devList[i].product,16);
         if ( ! (devList[i].vendor==0x22b8) )
         {
             kDebug() <<"Vendor not found";
@@ -97,14 +97,14 @@ bool P2KWrapper::findDevice(const QString &acmDevice, const QString &rawVendor, 
             p2k_setACMdevice( acmDevice.latin1() );
             if ( devList[i].product%2 )
             {
-                kDebug() <<"Setting AT to" << QString::number(devList[i].product+1,16) <<" and p2k to"
-                        << QString::number(devList[i].product,16) << endl;
+                kDebug() <<"Setting AT to" << QString::number(devList[i].product+1,16) <<"and p2k to"
+                        << QString::number(devList[i].product,16);
                 p2k_setATconfig( devList[i].vendor, devList[i].product+1 );
                 p2k_setP2Kconfig( devList[i].vendor, devList[i].product );
             } else
             {
-                kDebug() <<"Setting AT to" << QString::number(devList[i].product,16) <<" and p2k to"
-                        << QString::number(devList[i].product-1,16) << endl;
+                kDebug() <<"Setting AT to" << QString::number(devList[i].product,16) <<"and p2k to"
+                        << QString::number(devList[i].product-1,16);
                 p2k_setATconfig( devList[i].vendor, devList[i].product );
                 p2k_setP2Kconfig( devList[i].vendor, devList[i].product -1);
             }

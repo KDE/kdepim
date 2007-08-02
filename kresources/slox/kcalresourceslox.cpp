@@ -153,13 +153,11 @@ bool KCalResourceSlox::doLoad( bool )
   kDebug() <<"KCalResourceSlox::load()" << long( this );
 
   if ( mLoadEventsJob || mLoadTodosJob ) {
-    kDebug() <<"KCalResourceSlox::load(): download still in progress."
-                << endl;
+    kDebug() <<"KCalResourceSlox::load(): download still in progress.";
     return true;
   }
   if ( mUploadJob ) {
-    kWarning() <<"KCalResourceSlox::load(): upload still in progress."
-                << endl;
+    kWarning() <<"KCalResourceSlox::load(): upload still in progress.";
     loadError( "Upload still in progress." );
     return false;
   }
@@ -342,7 +340,7 @@ void KCalResourceSlox::uploadIncidences()
       url.setPath( "/servlet/webdav.tasks/" + sloxId );
     } else {
       kWarning() <<"uploadIncidences(): Unsupported incidence type:"
-                  << mUploadedIncidence->type() << endl;
+                  << mUploadedIncidence->type();
       return;
     }
 
@@ -366,7 +364,7 @@ void KCalResourceSlox::uploadIncidences()
       createTodoAttributes( doc, prop, static_cast<Todo *>( mUploadedIncidence ) );
     } else {
       kWarning() <<"uploadIncidences(): Unsupported incidence type:"
-                  << mUploadedIncidence->type() << endl;
+                  << mUploadedIncidence->type();
       return;
     }
   }
@@ -637,7 +635,7 @@ void KCalResourceSlox::parseMembersAttribute( const QDomElement &e,
       }
     } else {
       kDebug() <<"Unknown tag in members attribute:"
-                << memberElement.tagName() << endl;
+                << memberElement.tagName();
     }
   }
 }
@@ -1051,7 +1049,7 @@ void KCalResourceSlox::slotLoadEventsResult( KJob *job )
 
         mWebdavHandler.setSloxAttributes( event );
 
-//        kDebug() <<"EVENT" << item.uid <<"" << event->summary();
+//        kDebug() <<"EVENT" << item.uid << event->summary();
 
         if ( newEvent ) calendar()->addEvent( event );
 
@@ -1158,7 +1156,7 @@ void KCalResourceSlox::slotUploadResult( KJob *job )
           else if ( i->type() == "Todo" ) uid = sloxIdToTodoUid( sloxId );
           else {
             kError() <<"KCalResourceSlox::slotUploadResult(): Unknown type:"
-                      << i->type() << endl;
+                      << i->type();
           }
           i->setUid( uid );
           i->setCustomProperty( "SLOX", "ID", sloxId );
@@ -1243,13 +1241,11 @@ bool KCalResourceSlox::doSave( bool )
   }
 
   if ( mLoadEventsJob || mLoadTodosJob ) {
-    kWarning() <<"KCalResourceSlox::save(): download still in progress."
-                << endl;
+    kWarning() <<"KCalResourceSlox::save(): download still in progress.";
     return false;
   }
   if ( mUploadJob ) {
-    kWarning() <<"KCalResourceSlox::save(): upload still in progress."
-                << endl;
+    kWarning() <<"KCalResourceSlox::save(): upload still in progress.";
     return false;
   }
 

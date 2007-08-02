@@ -274,8 +274,8 @@ void KNArticleFilter::doFilter(KNGroup *g)
   }
 
   kDebug(5003) <<"KNArticleFilter::doFilter() : matched" << c_ount
-                << " articles , merged " << mergeCnt
-                << " threads by subject" << endl;
+                << "articles , merged" << mergeCnt
+                << "threads by subject";
 
 }
 

@@ -1194,7 +1194,7 @@ Module::getEncryptionKeys( const QString& person )
   if( !keyIds.isEmpty() ) {
     kDebug( 5326 ) <<"Using encryption keys 0x"
                   << keyIds.toStringList().join( ", 0x" )
-                  << " for " << person << endl;
+                  << "for" << person;
     // Check if all of the keys are a trusted and valid encryption keys
     bool keysOk = true;
     for( KeyIDList::ConstIterator it = keyIds.begin();
@@ -1246,7 +1246,7 @@ Module::getEncryptionKeys( const QString& person )
       if( ( (*it)->isValidEncryptionKey() ) &&
           ( (*it)->keyTrust() >= KPGP_VALIDITY_MARGINAL ) ) {
         kDebug( 5326 ) <<"Matching trusted key found:"
-                      << (*it)->primaryKeyID() << endl;
+                      << (*it)->primaryKeyID();
         matchingKeys.append( *it );
       }
     }
@@ -1264,7 +1264,7 @@ Module::getEncryptionKeys( const QString& person )
         if( ( (*it)->isValidEncryptionKey() ) &&
             ( (*it)->keyTrust() >= KPGP_VALIDITY_MARGINAL ) ) {
           kDebug( 5326 ) <<"Matching trusted key found:"
-                        << (*it)->primaryKeyID() << endl;
+                        << (*it)->primaryKeyID();
           matchingKeys.append( *it );
         }
       }
@@ -1745,7 +1745,7 @@ Module::readAddressData()
                                                           int(UnknownEncryptPref ));
 //     kDebug( 5326 ) <<"Read address" << i <<":" << address
 //                   << "\nKey IDs: 0x" << data.keyIds.toStringList().join(", 0x")
-//                   << "\nEncryption preference: " << data.encrPref << endl;
+//                   << "\nEncryption preference:" << data.encrPref;
     if ( !address.isEmpty() ) {
       addressDataDict.insert( address, data );
     }

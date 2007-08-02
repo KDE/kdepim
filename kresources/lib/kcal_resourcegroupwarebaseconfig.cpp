@@ -104,7 +104,7 @@ void ResourceGroupwareBaseConfig::loadSettings( KRES::Resource *resource )
     mFolderConfig->updateFolderList();
   } else {
     kError(5700) <<"KCalResourceGroupwareBaseConfig::loadSettings():"
-                     "no KCalOpenGroupware, cast failed" << endl;
+                     "no KCalOpenGroupware, cast failed";
   }
 }
 
@@ -119,7 +119,7 @@ void ResourceGroupwareBaseConfig::saveSettings( KRES::Resource *resource )
     mFolderConfig->saveSettings();
   } else {
     kError(5700) <<"KCalResourceGroupwareBaseConfig::saveSettings():"
-                     "no KCalOpenGroupware, cast failed" << endl;
+                     "no KCalOpenGroupware, cast failed";
   }
 }
 

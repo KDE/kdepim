@@ -174,8 +174,8 @@ bool ResourceKABC::doLoad()
       ev->setCustomProperty( "KABC", "NAME-1", name_1 );
       ev->setCustomProperty( "KABC", "EMAIL-1", email_1 );
       kDebug(5800) <<"ResourceKABC::doLoad: uid:" << uid_1
-                   << " name: " << name_1
-                   << " email: " << email_1 << endl;
+                   << "name:" << name_1
+                   << "email:" << email_1;
       ev->setSummary( summary );
 
       // Set the recurrence

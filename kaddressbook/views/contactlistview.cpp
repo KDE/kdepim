@@ -81,7 +81,7 @@ void DynamicTip::maybeTip( const QPoint &pos )
   r.moveBy( posVp.x(), posVp.y() );
 
     //kDebug(5720) <<"Tip rec:" << r.x() <<"," << r.y() <<"," << r.width()
-    //          << "," << r.height() << endl;
+    //          << "," << r.height();
 
   KABC::Addressee a = plvi->addressee();
   if (a.isEmpty())
