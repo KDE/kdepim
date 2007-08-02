@@ -198,9 +198,6 @@ DFARS 252.227-7013 or 48 CFR 52.227-19, as applicable.
 #endif
 
 #include <string.h>
-#if !defined(__FreeBSD__) && !defined(__APPLE__)
-#include <malloc.h>
-#endif
 #include <stdio.h>
 #include <stdlib.h>
 #include <ctype.h>
