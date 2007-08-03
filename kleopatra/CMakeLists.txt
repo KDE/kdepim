@@ -12,6 +12,7 @@ add_subdirectory( tests )
 
 set(kleopatra_bin_SRCS ${libconf_SRCS}
    models/keylistmodel.cpp
+   controllers/keylistcontroller.cpp
    customactions.cpp 
    aboutdata.cpp 
    main.cpp 
