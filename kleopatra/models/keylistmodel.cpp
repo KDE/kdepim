@@ -41,6 +41,7 @@
 #include <QFont>
 #include <QColor>
 #include <QApplication>
+#include <QTextDocument> // for Qt::escape()
 
 #include <gpgme++/key.h>
 
@@ -75,6 +76,87 @@ namespace {
             return Op<int>()( qstricmp( lhs, rhs.primaryFingerprint() ), 0 );
         }
     };
+
+    template <typename T_arg>
+    QString format_row( const QString & field, const T_arg & arg ) {
+	return AbstractKeyListModel::tr( "<tr><th>%1:</th><td>%2</td></tr>" ).arg( field ).arg( arg );
+    }
+    QString format_row( const QString & field, const QString & arg ) {
+	return AbstractKeyListModel::tr( "<tr><th>%1:</th><td>%2</td></tr>" ).arg( field, Qt::escape( arg ) );
+    }
+    QString format_row( const QString & field, const char * arg ) {
+	return format_row( field, QString::fromUtf8( arg ) );
+    }
+
+    QString format_keytype( const Key & key ) {
+	const Subkey subkey = key.subkey( 0 );
+	if ( key.hasSecret() )
+	    return AbstractKeyListModel::tr( "%1-bit %2 (secret key available)" ).arg( subkey.length() ).arg( subkey.publicKeyAlgorithmAsString() );
+	else
+	    return AbstractKeyListModel::tr( "%1-bit %2" ).arg( subkey.length() ).arg( subkey.publicKeyAlgorithmAsString() );
+    }
+
+    QString format_keyusage( const Key & key ) {
+	QStringList capabilites;
+	if ( key.canSign() )
+	    if ( key.isQualified() )
+		capabilites.push_back( AbstractKeyListModel::tr( "Signing EMails and Files (Qualified)" ) );
+	    else
+		capabilites.push_back( AbstractKeyListModel::tr( "Signing EMails and Files" ) );
+	if ( key.canEncrypt() )
+	    capabilites.push_back( AbstractKeyListModel::tr( "Encrypting EMails and Files" ) );
+	if ( key.canCertify() )
+	    capabilites.push_back( AbstractKeyListModel::tr( "Certifying other Certificates" ) );
+	if ( key.canAuthenticate() )
+	    capabilites.push_back( AbstractKeyListModel::tr( "Authenticate against Servers" ) );
+	return capabilites.join( AbstractKeyListModel::tr(", ") );
+    }
+
+    static QString time_t2string( time_t t ) {
+	QDateTime dt;
+	dt.setTime_t( t );
+	return dt.toString();
+    }
+
+    static QString make_red( const QString & txt ) {
+	return QLatin1String( "<font color=\"red\">" ) + Qt::escape( txt ) + QLatin1String( "</font>" );
+    }
+
+    static QString format_tooltip( const Key & key ) {
+	if ( key.protocol() != CMS && key.protocol() != OpenPGP )
+	    return QString();
+
+	const Subkey subkey = key.subkey( 0 );
+	
+	QString result = QLatin1String( "<table border=\"0\">" );
+	if ( key.protocol() == CMS ) {
+	    result += format_row( AbstractKeyListModel::tr("Serial number"), key.issuerSerial() );
+	    result += format_row( AbstractKeyListModel::tr("Issuer"), key.issuerName() );
+	}
+	result += format_row( key.protocol() == CMS
+			      ? AbstractKeyListModel::tr("Subject")
+			      : AbstractKeyListModel::tr("User-ID"), key.userID( 0 ).id() );
+	for ( unsigned int i = 1, end = key.numUserIDs() ; i < end ; ++i )
+	    result += format_row( AbstractKeyListModel::tr("a.k.a."), key.userID( i ).id() );
+	result += format_row( AbstractKeyListModel::tr("Validity"),
+			      subkey.neverExpires()
+			      ? AbstractKeyListModel::tr( "from %1 until forever" ).arg( time_t2string( subkey.creationTime() ) )
+			      : AbstractKeyListModel::tr( "from %1 through %2" ).arg( time_t2string( subkey.creationTime() ), time_t2string( subkey.expirationTime() ) ) );
+	result += format_row( AbstractKeyListModel::tr("Certificate type"), format_keytype( key ) );
+	result += format_row( AbstractKeyListModel::tr("Certificate usage"), format_keyusage( key ) );
+	result += format_row( AbstractKeyListModel::tr("Fingerprint"), key.primaryFingerprint() );
+	result += QLatin1String( "</table><br>" );
+
+	if ( key.protocol() == OpenPGP || ( key.keyListMode() & Validate ) )
+	    if ( key.isRevoked() )
+		result += make_red( AbstractKeyListModel::tr( "This certificate has been revoked." ) );
+	    else if ( key.isExpired() )
+		result += make_red( AbstractKeyListModel::tr( "This certificate has expired." ) );
+	    else if ( key.isDisabled() )
+		result += AbstractKeyListModel::tr( "This certificate has been disabled locally." );
+
+	return result;
+    }
 }
 
 AbstractKeyListModel::AbstractKeyListModel( QObject * p )
@@ -166,7 +248,7 @@ QVariant AbstractKeyListModel::data( const QModelIndex & index, int role ) const
 
     const int column = index.column();
 
-    if ( role == Qt::DisplayRole || role == Qt::EditRole || role == Qt::ToolTipRole )
+    if ( role == Qt::DisplayRole || role == Qt::EditRole )
         switch ( column ) {
         case PrettyName:
 	    if ( key.protocol() == OpenPGP ) {
@@ -219,6 +301,8 @@ QVariant AbstractKeyListModel::data( const QModelIndex & index, int role ) const
         case NumColumns:
             break;
         }
+    else if ( role == Qt::ToolTipRole )
+	return format_tooltip( key );
     else if ( role == Qt::FontRole ) {
 	QFont font = qApp->font(); // ### correct font?
 	if ( column == Fingerprint )
