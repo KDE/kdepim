@@ -165,7 +165,7 @@ void KPilotInstaller::killDaemonIfNeeded()
 	{
 		if (!fP->fDaemonWasRunning)
 		{
-			DEBUGKPILOT << fname <<": Killing daemon.";
+			DEBUGKPILOT << fname << "Killing daemon.";
 			getDaemon().quitNow();
 		}
 	}
@@ -183,7 +183,7 @@ void KPilotInstaller::startDaemonIfNeeded()
 
 	QString s = getDaemon().statusString();
 
-	DEBUGKPILOT << fname <<": Daemon status is"
+	DEBUGKPILOT << fname << "Daemon status is"
 		<< ( s.isEmpty() ? CSL1("<none>") : s ) << endl;
 
 	if ((s.isEmpty()) || (!getDaemon().isValid()))
@@ -200,7 +200,7 @@ void KPilotInstaller::startDaemonIfNeeded()
 
 		if (!daemonStarted)
 		{
-			WARNINGKPILOT <<": Can't start daemon :" << daemonError;
+			WARNINGKPILOT << "Can't start daemon :" << daemonError;
 			log(i18n("Could not start the "
 				"KPilot daemon. The system error message "
 				"was: &quot;%1&quot;",daemonError));
@@ -221,7 +221,7 @@ void KPilotInstaller::startDaemonIfNeeded()
 	// that we were able to start it
 	s = getDaemon().statusString();
 
-	DEBUGKPILOT << fname <<": Daemon status is" << s;
+	DEBUGKPILOT << fname << "Daemon status is" << s;
 	int wordoffset;
 	s.remove(0,12);
 	wordoffset=s.indexOf(';');
@@ -448,7 +448,7 @@ void KPilotInstaller::slotPCtoHHRequested()
 void KPilotInstaller::daemonStatus(int i)
 {
 	FUNCTIONSETUP;
-	DEBUGKPILOT << fname <<": Received daemon message" << i;
+	DEBUGKPILOT << fname << "Received daemon message" << i;
 
 	switch(i)
 	{
@@ -474,7 +474,7 @@ void KPilotInstaller::daemonStatus(int i)
 		fP->fAppStatus=WaitingForDaemon;
 		break;
 	case KPilotInstaller::None :
-		WARNINGKPILOT <<"Unhandled status message" << i;
+		WARNINGKPILOT << "Unhandled status message" << i;
 		break;
 	}
 }
@@ -584,7 +584,7 @@ static bool runConfigure(OrgKdeKpilotDaemonInterface &daemon,QWidget *parent)
 
 	if (!options)
 	{
-		WARNINGKPILOT <<"Can't allocate KPilotOptions object";
+		WARNINGKPILOT << "Can't allocate KPilotOptions object";
 		daemon.requestSync(rememberedSync);
 		return false;
 	}
@@ -593,7 +593,7 @@ static bool runConfigure(OrgKdeKpilotDaemonInterface &daemon,QWidget *parent)
 
 	if ( r && options->result() )
 	{
-		DEBUGKPILOT << fname <<": Updating settings.";
+		DEBUGKPILOT << fname << "Updating settings.";
 
 		// The settings are changed in the external module!!!
 		KPilotSettings::self()->config()->sync();
@@ -663,7 +663,7 @@ void KPilotInstaller::componentChanged(KPageWidgetItem *current,
 		return;
 	}
 	
-	DEBUGKPILOT << fname <<": Selected component" <<
+	DEBUGKPILOT << fname << "Selected component" <<
 		current->name() << endl;
 	
 	int e = fP->fPilotComponentList.size();
@@ -694,7 +694,7 @@ void KPilotInstaller::configure()
 
 	if ( kpilotStatus()!=Normal || fP->fConfigureKPilotDialogInUse )
 	{
-    		DEBUGKPILOT << fname <<": can't configure. in use.";
+    		DEBUGKPILOT << fname << "can't configure. in use.";
 		log(i18n("Cannot configure KPilot right now (KPilot's UI is already busy)."));
 		return;
 	}
@@ -757,9 +757,7 @@ int main(int argc, char **argv)
 	KUniqueApplication::addCmdLineOptions();
 	KCmdLineArgs *p = KCmdLineArgs::parsedArgs();
 
-#ifdef DEBUG
 	KPilotConfig::getDebugLevel(p);
-#endif
 
 
 	if (!KUniqueApplication::start())
@@ -775,7 +773,7 @@ int main(int argc, char **argv)
 	}
 	else if (KPilotSettings::configVersion() < KPilotConfig::ConfigurationVersion)
 	{
-		WARNINGKPILOT <<"KPilot configuration version"
+		WARNINGKPILOT << "KPilot configuration version"
 			<< KPilotConfig::ConfigurationVersion
 			<< " newer than stored version "
 			<< KPilotSettings::configVersion() << endl;
@@ -809,7 +807,7 @@ int main(int argc, char **argv)
 
 	if (KPilotSettings::configVersion() < KPilotConfig::ConfigurationVersion)
 	{
-		WARNINGKPILOT <<"Still not configured for use.";
+		WARNINGKPILOT << "Still not configured for use.";
 		KPilotConfig::sorryVersionOutdated( KPilotSettings::configVersion());
 		return 1;
 	}

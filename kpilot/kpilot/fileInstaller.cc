@@ -113,7 +113,7 @@ void FileInstaller::deleteFiles(const QStringList &files)
 		return false;
 	}
 
-	DEBUGKPILOT << fname <<": Copying" << s;
+	DEBUGKPILOT << fname << "Copying" << s;
 
 	KUrl src;
 	KUrl dest;

@@ -101,8 +101,8 @@ void PilotDaemonTray::setupWidget()
 
 #define L(idx,name) \
 	icons[idx]=loadIcon( CSL1(name) ); \
-	if (icons[idx].isNull()) { WARNINGKPILOT << fname <<": No icon" << name; } \
-	else { DEBUGKPILOT << fname <<": Loaded icon" << name; }
+	if (icons[idx].isNull()) { WARNINGKPILOT << fname << "No icon" << name; } \
+	else { DEBUGKPILOT << fname << "Loaded icon" << name; }
 
 	L(Normal,"kpilotDaemon")
 	L(Busy,"kpilot_busysync")
@@ -150,7 +150,7 @@ void PilotDaemonTray::setupWidget()
 	KHelpMenu *help = new KHelpMenu(menu,aboutData);
 	menu->insertItem(KIcon(CSL1("help")),i18n("&Help"),help->menu());
 
-	DEBUGKPILOT << fname <<": Finished getting icons";
+	DEBUGKPILOT << fname << "Finished getting icons";
 
 }
 
@@ -180,7 +180,7 @@ void PilotDaemonTray::changeIcon(IconShape i)
 	FUNCTIONSETUP;
 	if (icons[i].isNull())
 	{
-		WARNINGKPILOT <<"Icon #"<<i<<" is NULL!";
+		WARNINGKPILOT << "Icon #"<<i<< " is NULL!";
 	}
 	setIcon ( icons[i] );
 	fCurrentIcon = i;
@@ -247,7 +247,7 @@ void PilotDaemonTray::slotRunKPilot()
 			QStringList(), &kpilotError, &kpilotPID
 		))
 	{
-		WARNINGKPILOT <<"Couldn't start KPilot!" << kpilotError;
+		WARNINGKPILOT << "Couldn't start KPilot!" << kpilotError;
 	}
 }
 
@@ -272,7 +272,7 @@ void PilotDaemonTray::slotRunConfig()
 
 	if ( QDBusConnection::sessionBus().interface()->isServiceRegistered( "org.kde.kpilot.kpilot" ) )
 	{
-		DEBUGKPILOT << fname <<": kpilot running. telling it to raise/configure.";
+		DEBUGKPILOT << fname << "kpilot running. telling it to raise/configure.";
 
 		OrgKdeKpilotKpilotInterface * kpilot = new OrgKdeKpilotKpilotInterface("org.kde.kpilot.kpilot", "/KPilot",QDBusConnection::sessionBus());
 		kpilot->raise();
@@ -280,11 +280,11 @@ void PilotDaemonTray::slotRunConfig()
 	}
 	else
 	{
-		DEBUGKPILOT << fname <<": kpilot not running. starting it.";
+		DEBUGKPILOT << fname << "kpilot not running. starting it.";
 		// KPilot not running
 		QProcess *p = new QProcess;
 		QStringList arguments;
-		arguments<<"-s";
+		arguments<< "-s";
 		p->start("kpilot", arguments);
 	}
 }
@@ -316,7 +316,7 @@ PilotDaemon::PilotDaemon() :
 
 	if (fDaemonStatus == ERROR)
 	{
-		WARNINGKPILOT <<"Connecting to device failed.";
+		WARNINGKPILOT << "Connecting to device failed.";
 		return;
 	}
 
@@ -391,12 +391,12 @@ void PilotDaemon::showTray()
 
 	if (!fTray)
 	{
-		DEBUGKPILOT << fname <<": No tray icon to display!";
+		DEBUGKPILOT << fname << "No tray icon to display!";
 
 		return;
 	}
 	fTray->show();
-	DEBUGKPILOT << fname <<": Tray icon displayed.";
+	DEBUGKPILOT << fname << "Tray icon displayed.";
 
 	updateTrayStatus();
 }
@@ -571,7 +571,7 @@ bool PilotDaemon::setupPilotLink()
 	fPilotLink = new KPilotDeviceLink( 0, 0, fTempDevice );
 	if (!fPilotLink)
 	{
-		WARNINGKPILOT <<"Can't get pilot link.";
+		WARNINGKPILOT << "Can't get pilot link.";
 		return false;
 	}
 
@@ -633,7 +633,7 @@ void PilotDaemon::requestSync(int mode)
 
 	if ( !fNextSyncType.setMode(mode) )
 	{
-		WARNINGKPILOT <<"Ignored fake sync type" << mode;
+		WARNINGKPILOT << "Ignored fake sync type" << mode;
 		return;
 	}
 
@@ -668,7 +668,7 @@ void PilotDaemon::requestSyncType(QString s)
 	else if (s.startsWith(CSL1("D"))) requestSync(0);
 	else
 	{
-		WARNINGKPILOT <<"Unknown sync type" << ( s.isEmpty() ? CSL1("<none>") : s )
+		WARNINGKPILOT << "Unknown sync type" << ( s.isEmpty() ? CSL1("<none>") : s )
 			<< endl;
 	}
 }
@@ -677,7 +677,7 @@ void PilotDaemon::requestSyncOptions(bool test, bool local)
 {
 	if ( !fNextSyncType.setOptions(test,local) )
 	{
-		WARNINGKPILOT <<"Nonsensical request for"
+		WARNINGKPILOT << "Nonsensical request for"
 			<< (test ? "test" : "notest")
 			<< ' '
 			<< (local ? "local" : "nolocal")
@@ -727,7 +727,7 @@ static void fillConduitNameMap()
 			KSharedPtr < KService > o = KService::serviceByDesktopName(*i);
 			if (!o)
 			{
-				WARNINGKPILOT <<"No service for" << *i;
+				WARNINGKPILOT << "No service for" << *i;
 			}
 			else
 			{
@@ -800,12 +800,12 @@ static KDesktopLockStatus isKDesktopLockRunning()
 	if ( reply.isValid() )
 	{
 		locked = reply.value();
-		DEBUGKPILOT <<"isDesktopLockRunning: reply from screensaver.GetActive: [" << locked <<"]";
+		DEBUGKPILOT << "isDesktopLockRunning: reply from screensaver.GetActive: [" << locked << "]";
 	}
 	else
 	{
-		WARNINGKPILOT <<"isDesktopLockRunning: Could not make DBUS connection."
-			<< "Error: [" << reply.error().type() <<"], message: ["<< reply.error().message()
+		WARNINGKPILOT << "isDesktopLockRunning: Could not make DBUS connection."
+			<< "Error: [" << reply.error().type() << "], message: ["<< reply.error().message()
 			<< "], name: [" << reply.error().name()
 			<< "]. Assuming screensaver is active." << endl;
 		return KDL_Error;
@@ -845,7 +845,7 @@ static bool isSyncPossible(ActionQueue *fSyncStack,
 	}
 	else
 	{
-		DEBUGKPILOT << fname <<": KPilot status" << kpilotstatus;
+		DEBUGKPILOT << fname << "KPilot status" << kpilotstatus;
 	}
 	/**
 	* If the call fails, then KPilot is probably not running
@@ -856,7 +856,7 @@ static bool isSyncPossible(ActionQueue *fSyncStack,
 		kpilotstatus = val;
 		if(kpilotstatus != KPilotInstaller::WaitingForDaemon)
 		{
-			WARNINGKPILOT <<"KPilot returned status" << kpilotstatus;
+			WARNINGKPILOT << "KPilot returned status" << kpilotstatus;
 
 			fSyncStack->queueInit();
 			fSyncStack->addAction(new SorryAction(pilotLink));
@@ -922,7 +922,7 @@ bool PilotDaemon::shouldBackup()
 	bool ret = false;
 	int backupfreq = KPilotSettings::backupFrequency();
 
-	DEBUGKPILOT << fname <<": Backup Frequency is: [" << backupfreq <<
+	DEBUGKPILOT << fname << "Backup Frequency is: [" << backupfreq <<
 	"]. " << endl;
 
 	if ( (fNextSyncType == SyncAction::SyncMode::eHotSync) ||
@@ -933,12 +933,12 @@ bool PilotDaemon::shouldBackup()
 		 */
 		if ( backupfreq == SyncAction::eOnRequestOnly )
 		{
-	DEBUGKPILOT << fname <<": Should not do backup...";
+	DEBUGKPILOT << fname << "Should not do backup...";
 			ret = false;
 		}
 		else if ( backupfreq == SyncAction::eEveryHotSync )
 		{
-	DEBUGKPILOT << fname <<": Should do backup...";
+	DEBUGKPILOT << fname << "Should do backup...";
 			ret = true;
 		}
 	}
@@ -959,7 +959,7 @@ bool PilotDaemon::shouldBackup()
 	DEBUGKPILOT << fname
 		<< ": Starting Sync with type "
 		<< fNextSyncType.name() << endl;
-	DEBUGKPILOT << fname <<": Status is" << shortStatusString();
+	DEBUGKPILOT << fname << "Status is" << shortStatusString();
 	(void) PilotDatabase::instanceCount();
 
 	fDaemonStatus = HOTSYNC_START ;
@@ -992,16 +992,16 @@ bool PilotDaemon::shouldBackup()
 
 		if (pcchanged)
 		{
-			DEBUGKPILOT << fname <<": PC changed. Last sync PC: [" << usr.getLastSyncPC()
+			DEBUGKPILOT << fname << "PC changed. Last sync PC: [" << usr.getLastSyncPC()
 				<< "], me: [" << (unsigned long) gethostid() << "]" << endl;
  			if ( KPilotSettings::fullSyncOnPCChange() )
 			{
-				DEBUGKPILOT << fname <<": Setting sync mode to full sync.";
+				DEBUGKPILOT << fname << "Setting sync mode to full sync.";
 				fNextSyncType = SyncAction::SyncMode::eFullSync;
 			}
 			else
 			{
-				DEBUGKPILOT << fname <<": Not changing sync mode because of settings.";
+				DEBUGKPILOT << fname << "Not changing sync mode because of settings.";
 			}
 		}
 	}
@@ -1242,7 +1242,7 @@ int main(int argc, char **argv)
 	{
 		if (KPilotSettings::configVersion() < KPilotConfig::ConfigurationVersion)
 		{
-			WARNINGKPILOT <<"Is still not configured for use."
+			WARNINGKPILOT << "Is still not configured for use."
 				<< endl;
 			if (!p->isSet("fail-silently"))
 			{
@@ -1267,7 +1267,7 @@ int main(int argc, char **argv)
 		delete pilotDaemon;
 
 		pilotDaemon = 0;
-		WARNINGKPILOT <<"Failed to start up daemon"
+		WARNINGKPILOT << "Failed to start up daemon"
 			"due to errors constructing it." << endl;
 		return 2;
 	}

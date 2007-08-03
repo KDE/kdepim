@@ -106,16 +106,14 @@ unsigned int KPilotLocalLink::findAvailableDatabases( KPilotLocalLink::Private &
 
 		if (PilotLocalDatabase::infoFromFile( path + CSL1("/") + (*i), &dbi))
 		{
-			DEBUGKPILOT << fname <<": Loaded"
-				<< dbname << endl;
+			DEBUGKPILOT << "Loaded [" << dbname << ']';
 			dbi.index = counter;
 			info.fDBs.append( DatabaseDescriptor(dbname,dbi) );
 			++counter;
 		}
 	}
 
-	DEBUGKPILOT << fname <<": Total" << info.fDBs.count()
-		<< " databases." << endl;
+	DEBUGKPILOT << "Total" << info.fDBs.count() << " databases.";
 	return info.fDBs.count();
 }
 
@@ -210,7 +208,7 @@ KPilotLocalLink::~KPilotLocalLink()
 
 	DatabaseDescriptor dd = d->fDBs[index];
 
-	DEBUGKPILOT << fname <<": Getting database" << dd.first;
+	DEBUGKPILOT << "Getting database " << dd.first;
 
 	if (info)
 	{
@@ -238,7 +236,7 @@ KPilotLocalLink::~KPilotLocalLink()
 	}
 
 	QString desiredName = Pilot::fromPilot(name);
-	DEBUGKPILOT << fname <<": Looking for DB" << desiredName;
+	DEBUGKPILOT << "Looking for DB [" << desiredName << ']';
 	for ( DatabaseDescriptorList::ConstIterator i = d->fDBs.at(index);
 		i != d->fDBs.end(); ++i)
 	{
@@ -265,7 +263,6 @@ KPilotLocalLink::~KPilotLocalLink()
 /* virtual */ void KPilotLocalLink::addSyncLogEntryImpl(QString const &s)
 {
 	FUNCTIONSETUP;
-	DEBUGKPILOT << fname <<":" << s;
 }
 
 /* virtual */ bool KPilotLocalLink::installFile(QString const &path, bool deletefile)
@@ -303,18 +300,18 @@ KPilotLocalLink::~KPilotLocalLink()
 	QString sourcefile = fPath + CSL1("/") + dbname ;
 	QString destfile = path ;
 
-	DEBUGKPILOT << fname <<": src=" << sourcefile;
-	DEBUGKPILOT << fname <<": dst=" << destfile;
+	DEBUGKPILOT << "src=[" << sourcefile << ']'
+		<< "dst=[" << destfile << ']';
 
 	QFile in( sourcefile );
 	if ( !in.exists() )
 	{
-		WARNINGKPILOT <<"Source file" << sourcefile <<" doesn't exist.";
+		WARNINGKPILOT << "Source file [" << sourcefile << "] doesn't exist.";
 		return false;
 	}
 	if ( !in.open( QIODevice::ReadOnly | QIODevice::Unbuffered ) )
 	{
-		WARNINGKPILOT <<"Can't read source file" << sourcefile;
+		WARNINGKPILOT << "Can't read source file [" << sourcefile << ']';
 		return false;
 	}
 

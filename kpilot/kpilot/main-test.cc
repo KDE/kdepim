@@ -346,7 +346,7 @@ int main(int argc, char **argv)
 	KApplication a(needGUI);
 #ifdef DEBUG
 	KPilotConfig::getDebugLevel(p);
-	DEBUGKPILOT  << fname <<"Created KApplication.";
+	DEBUGKPILOT  << fname << "Created KApplication.";
 #endif
 
 	Pilot::setupPilotCodec(KPilotSettings::encoding());

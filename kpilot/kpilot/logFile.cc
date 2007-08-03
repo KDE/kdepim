@@ -63,7 +63,7 @@ void LogFile::logStartSync()
 	
 	if (!fOutfile || !fOutfile->open(QIODevice::WriteOnly)) 
 	{
-		WARNINGKPILOT <<"Unable to open log file" << KPilotSettings::logFileName();
+		WARNINGKPILOT << "Unable to open log file" << KPilotSettings::logFileName();
 		KPILOT_DELETE( fOutfile );
 		fSyncing = false;
 		return;
@@ -124,7 +124,7 @@ void LogFile::addMessage(const QString & s)
 	FUNCTIONSETUP;
 	if ( fSyncing && !s.isEmpty() ) 
 	{
-		fLogStream<<QTime::currentTime().toString()<<"  "<<s<<endl;
+		fLogStream<<QTime::currentTime().toString()<< "  "<<s<<endl;
 	}
 }
 

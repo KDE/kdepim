@@ -173,7 +173,7 @@ void MemoWidget::showComponent()
 		new PilotLocalDatabase(dbPath(), CSL1("MemoDB"));
 	if (memoDB == NULL || !memoDB->isOpen())
 	{
-		WARNINGKPILOT <<"Can't open local database MemoDB";
+		WARNINGKPILOT << "Can't open local database MemoDB";
 
 		populateCategories(fCatList, 0L);
 		updateWidget();
@@ -305,7 +305,7 @@ void MemoWidget::slotUpdateButtons()
 			highlight=true;
 
 #ifdef DEBUG
-	DEBUGKPILOT << fname <<": Selected items" << highlight;
+	DEBUGKPILOT << fname << "Selected items" << highlight;
 #endif
 
 	if (fExportButton)
@@ -338,7 +338,7 @@ void MemoWidget::slotDeleteMemo()
 	if (item == -1)
 	{
 #ifdef DEBUG
-		DEBUGKPILOT << fname <<": No current item selected";
+		DEBUGKPILOT << fname << "No current item selected";
 #endif
 		return;
 	}
@@ -359,13 +359,13 @@ void MemoWidget::slotDeleteMemo()
 	if (selectedMemo->id() == 0x0)
 	{
 #ifdef DEBUG
-		DEBUGKPILOT << fname <<": Searching for record to delete (it's fresh)";
+		DEBUGKPILOT << fname << "Searching for record to delete (it's fresh)";
 #endif
 		PilotLocalDatabase *memoDB = new PilotLocalDatabase(dbPath(), CSL1("MemoDB"));
 		if (!memoDB || (!memoDB->isOpen()))
 		{
 			// Err.. peculiar.
-			WARNINGKPILOT <<"Can't open MemoDB";
+			WARNINGKPILOT << "Can't open MemoDB";
 			KMessageBox::sorry(this,
 				i18n("Cannot open MemoDB to delete record."),
 				i18n("Cannot Delete Memo"));
@@ -373,19 +373,19 @@ void MemoWidget::slotDeleteMemo()
 		}
 		memoDB->resetDBIndex();
 #ifdef DEBUG
-		DEBUGKPILOT << fname <<": Searching for new record.";
+		DEBUGKPILOT << fname << "Searching for new record.";
 #endif
 		const PilotRecord *r = 0L;
 		while ((r = memoDB->findNextNewRecord()))
 		{
 #ifdef DEBUG
-			DEBUGKPILOT << fname <<": got record" << (void *) r;
+			DEBUGKPILOT << fname << "got record" << (void *) r;
 #endif
 			PilotMemo m(r);
 			if (m.text() == selectedMemo->text())
 			{
 #ifdef DEBUG
-				DEBUGKPILOT << fname <<": I think I found the memo.";
+				DEBUGKPILOT << fname << "I think I found the memo.";
 #endif
 				(const_cast<PilotRecord *>(r))->setDeleted(true);
 				break;
@@ -411,7 +411,7 @@ void MemoWidget::updateWidget()
 	if (fCatList->currentIndex() == -1)
 	{
 #ifdef DEBUG
-		DEBUGKPILOT << fname <<": No category selected.";
+		DEBUGKPILOT << fname << "No category selected.";
 #endif
 		return;
 	}
@@ -448,14 +448,14 @@ void MemoWidget::updateWidget()
 			fListBox->insertItem(p);
 
 #ifdef DEBUG
-			DEBUGKPILOT << fname <<": Added memo"
+			DEBUGKPILOT << fname << "Added memo"
 				<< curr->getTitle() << endl;
 #endif
 		}
 		else
 		{
 #ifdef DEBUG
-			DEBUGKPILOT << fname <<": Skipped memo"
+			DEBUGKPILOT << fname << "Skipped memo"
 				<< curr->getTitle() << endl;
 #endif
 		}
@@ -480,8 +480,8 @@ void MemoWidget::showMemo(const PilotMemo *m)
 	{
 		PilotMemo *p = (PilotMemo *) ((PilotListItem *)fListBox->item(x))->rec();
 #ifdef DEBUG
-		DEBUGKPILOT << fname <<": Memo @" << (void *) p;
-		DEBUGKPILOT << fname <<"       :" << fListBox->item(x)->text();
+		DEBUGKPILOT << fname << "Memo @" << (void *) p;
+		DEBUGKPILOT << fname << "       :" << fListBox->item(x)->text();
 #endif
 		if (m==p)
 		{
@@ -511,7 +511,7 @@ void MemoWidget::slotShowMemo(int which)
 
 
 #ifdef DEBUG
-	DEBUGKPILOT << fname <<": Displaying memo" << which;
+	DEBUGKPILOT << fname << "Displaying memo" << which;
 #endif
 	fTextWidget->blockSignals(true);
 	PilotListItem *p = (PilotListItem *) fListBox->item(which);
@@ -583,7 +583,7 @@ bool MemoWidget::addMemo(const QString &s, int category)
 	writeMemo(aMemo);
 	updateWidget();
 #ifdef DEBUG
-	DEBUGKPILOT << fname <<": New memo @" << (void *)aMemo;
+	DEBUGKPILOT << fname << "New memo @" << (void *)aMemo;
 #endif
 	showMemo(aMemo);
 	return true;

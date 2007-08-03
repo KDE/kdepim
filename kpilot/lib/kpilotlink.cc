@@ -105,9 +105,8 @@ void TickleThread::run()
 	int subseconds = ChecksPerSecond;
 	int ticktock = SecondsPerTickle;
 	int timeout = fTimeout;
-	DEBUGKPILOT << fname <<": Running for"
-		<< timeout << " seconds." << endl;
-	DEBUGKPILOT << fname <<": Done @" << (void *) fDone;
+	DEBUGKPILOT << "Running for" << timeout << " seconds.";
+	DEBUGKPILOT << "Done @" << (void *) fDone;
 
 	while (!(*fDone))
 	{
@@ -206,7 +205,7 @@ void KPilotLink::startTickle(unsigned int timeout)
 		KPILOT_DELETE(fTickleThread);
 	}
 
-	DEBUGKPILOT << fname <<": Done @" << (void *) (&fTickleDone);
+	DEBUGKPILOT << "Done @" << (void *) (&fTickleDone);
 
 	fTickleDone = false;
 	fTickleThread = new TickleThread(this,&fTickleDone,timeout);

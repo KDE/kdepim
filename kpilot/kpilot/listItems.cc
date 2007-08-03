@@ -206,23 +206,13 @@ unsigned long PilotListViewItem::colValue(int col, bool *ok) const
 
 int PilotListViewItem::compare( Q3ListViewItem *i, int col, bool ascending ) const
 {
-// 	FUNCTIONSETUP;
 	PilotListViewItem*item=dynamic_cast<PilotListViewItem*>(i);
-/*#ifdef DEBUG
-	DEBUGKPILOT<<"Item of dyn cast:"<<item;
-#endif*/
 	if (item && numericCols.contains(col))
 	{
-/*#ifdef DEBUG
-	DEBUGKPILOT<<"Comparing: col"<<col<<", Ascending:"<<ascending;
-#endif*/
 		bool ok1, ok2;
 		/// Do the toULong call just once if the sorting column changed:
 		unsigned long l1=colValue(col, &ok1);
 		unsigned long l2=item->colValue(col, &ok2);
-/*#ifdef DEBUG
-	DEBUGKPILOT<<"l1="<<l1<<"(ok:"<<ok1<<"), l2="<<l2<<"(ok:"<<ok2<<")";
-#endif*/
 		if (ok1 && ok2)
 		{
 			// Returns -1 if this item is less than i, 0 if they are
@@ -231,9 +221,6 @@ int PilotListViewItem::compare( Q3ListViewItem *i, int col, bool ascending ) con
 			if (l1<l2) res=-1;
 			else if (l1>l2) res=1;
 			//else res=0;
-/*#ifdef DEBUG
-	DEBUGKPILOT<<"RESULT="<<res;
-#endif*/
 			return res;
 		}
 	}

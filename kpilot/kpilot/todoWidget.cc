@@ -189,7 +189,7 @@ int TodoWidget::getAllTodos(PilotDatabase *todoDB)
 	PilotRecord *pilotRec;
 	PilotTodoEntry *todo;
 
-	DEBUGKPILOT << fname <<": Reading ToDoDB...";
+	DEBUGKPILOT << fname << "Reading ToDoDB...";
 
 	while ((pilotRec = todoDB->readRecordByIndex(currentRecord)) != 0L)
 	{
@@ -199,7 +199,7 @@ int TodoWidget::getAllTodos(PilotDatabase *todoDB)
 			todo = new PilotTodoEntry(pilotRec);
 			if (todo == 0L)
 			{
-				WARNINGKPILOT <<"Couldn't allocate record"
+				WARNINGKPILOT << "Couldn't allocate record"
 					<< currentRecord++
 					<< endl;
 				break;
@@ -244,7 +244,7 @@ void TodoWidget::showComponent()
 	else
 	{
 		populateCategories(fCategoryList, 0L);
-		WARNINGKPILOT <<"Could not open local TodoDB";
+		WARNINGKPILOT << "Could not open local TodoDB";
 	}
 	KPILOT_DELETE( fP->fTodoDB );
 
@@ -305,7 +305,7 @@ void TodoWidget::updateWidget()
 	int currentCatID = findSelectedCategory(fCategoryList,
 		fAppInfo->categoryInfo());
 
-	DEBUGKPILOT << fname <<": Adding records...";
+	DEBUGKPILOT << fname << "Adding records...";
 
 	PilotTodoEntry*todo;
 	while (fTodoList.current())
@@ -325,7 +325,7 @@ void TodoWidget::updateWidget()
 	}
 
 #ifdef DEBUG
-	DEBUGKPILOT << fname <<":" << listIndex <<" records";
+	DEBUGKPILOT << fname  << listIndex << " records";
 #endif
 
 	slotUpdateButtons();
@@ -349,17 +349,17 @@ void TodoWidget::updateWidget()
 void TodoWidget::slotSetCategory(int category)
 {
 	FUNCTIONSETUP;
-	DEBUGKPILOT << fname <<": Selected category index" << category;
+	DEBUGKPILOT << fname << "Selected category index" << category;
 	int category_value = fCategoryList->itemData(category).toInt();
-	DEBUGKPILOT << fname <<": Selected category value" << category_value;
+	DEBUGKPILOT << fname << "Selected category value" << category_value;
 
 	int e = fP->fItems.size();
-	DEBUGKPILOT << fname <<": Scanning" << e <<" items.";
+	DEBUGKPILOT << fname << "Scanning" << e << " items.";
 	for (int i = 0; i<e; ++i)
 	{
 		TodoItem *item = fP->fItems[i];
 		int item_category = item->record()->category();
-		DEBUGKPILOT << fname <<": Item <" << item->text()
+		DEBUGKPILOT << fname << "Item <" << item->text()
 			<< "> category " << item_category << endl;
 		item->setHidden(category && (item_category != category_value));
 	}
@@ -561,14 +561,14 @@ void TodoWidget::slotShowTodo(QListWidgetItem *item)
 	FUNCTIONSETUP;
 	if (!isVisible())
 	{
-		DEBUGKPILOT << fname <<": Widget is not shown. Ignoring.";
+		DEBUGKPILOT << fname << "Widget is not shown. Ignoring.";
 		return;
 	}
 
 	TodoItem *p = dynamic_cast<TodoItem*>(item);
 	if (!p)
 	{
-		DEBUGKPILOT << fname <<": Item is not a TodoItem.";
+		DEBUGKPILOT << fname << "Item is not a TodoItem.";
 		return;
 	}
 
@@ -607,7 +607,7 @@ void TodoWidget::writeTodo(PilotTodoEntry * which,
 	if (!myDB->isOpen())
 	{
 #ifdef DEBUG
-		DEBUGKPILOT << fname <<": Todo database is not open" <<
+		DEBUGKPILOT << fname << "Todo database is not open" <<
 			endl;
 #endif
 		return;

@@ -118,10 +118,8 @@ TestLink::TestLink(KPilotLink * p) :
 		count++;
 		dbindex = db.index + 1;
 
-		DEBUGKPILOT << fname
-			<< ": Read database " << db.name
-			<< " with index " << db.index
-			<< endl;
+		DEBUGKPILOT << ": Read database " << db.name
+			<< " with index " << db.index;
 
 		// Let the Pilot User know what's happening
 		openConduit();

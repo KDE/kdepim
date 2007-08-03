@@ -64,7 +64,7 @@
 
 	if (version < ConfigurationVersion)
 	{
-		WARNINGKPILOT <<"Config file has old version" << version;
+		WARNINGKPILOT << "Config file has old version" << version;
 	}
 	else
 	{
@@ -104,6 +104,8 @@
 			debug_level = p->getOption("debug").toInt();
 		}
 	}
+
+	std::cerr << "\n\n### Debug level " << debug_level << std::endl;
 
 	return debug_level;
 }
@@ -233,7 +235,7 @@ void KPilotConfig::addFlagsChangedDatabase(QString db)
 		return Cancel;
 	}
 
-	DEBUGKPILOT << fname <<": Updating from"
+	DEBUGKPILOT << fname << "Updating from"
 		<< fileVersion << " to " << ConfigurationVersion << endl;
 
 	KPilotConfig::updateConfigVersion();

@@ -100,7 +100,7 @@ int PilotComponent::findSelectedCategory(QComboBox * fCatList,
 	{
 		currentCatID = (-1);
 #ifdef DEBUG
-		DEBUGKPILOT << fname <<": Category 'All' selected.";
+		DEBUGKPILOT << fname << "Category 'All' selected.";
 #endif
 	}
 	else
@@ -161,7 +161,7 @@ void PilotComponent::slotShowComponent()
 	FUNCTIONSETUP;
 
 #ifdef DEBUG
-	DEBUGKPILOT << fname <<": Showing component @" << (long) this;
+	DEBUGKPILOT << fname << "Showing component @" << (long) this;
 #endif
 
 	emit showComponent(this);

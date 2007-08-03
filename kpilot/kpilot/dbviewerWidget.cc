@@ -166,7 +166,7 @@ void GenericDBWidget::slotSelected(const QString &dbname)
 {
 	FUNCTIONSETUP;
 #ifdef DEBUG
-	DEBUGKPILOT << fname <<": Selected DB" << dbname;
+	DEBUGKPILOT << fname << "Selected DB" << dbname;
 #endif
 	struct DBInfo dbinfo;
 	QString display;
@@ -207,7 +207,7 @@ void GenericDBWidget::slotSelected(const QString &dbname)
 		PilotRecord *pilotRec;
 
 #ifdef DEBUG
-		DEBUGKPILOT << fname <<": Reading database"<<dbname<<"...";
+		DEBUGKPILOT << fname << "Reading database"<<dbname<< "...";
 #endif
 
 		while ((pilotRec = fDB->readRecordByIndex(currentRecord)) != 0L)
@@ -401,8 +401,8 @@ void GenericDBWidget::slotShowDBInfo()
 	if (dlg->exec())
 	{
 #ifdef DEBUG
-		DEBUGKPILOT<<"OK pressed, assiging DBInfo, flags="<<
-			db.flags<<",  miscFlag="<<db.miscFlags<<endl;
+		DEBUGKPILOT<< "OK pressed, assiging DBInfo, flags="<<
+			db.flags<< ",  miscFlag="<<db.miscFlags<<endl;
 #endif
 		fDB->setDBInfo(db);
 

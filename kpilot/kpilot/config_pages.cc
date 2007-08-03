@@ -116,7 +116,7 @@ void DeviceConfigPage::load()
 		fConfigWidget->fWorkaround->setCurrentIndex(1);
 		break;
 	default:
-		WARNINGKPILOT <<"Unknown workaround number"
+		WARNINGKPILOT << "Unknown workaround number"
 			<< (int) KPilotSettings::workarounds()
 			<< endl;
 		KPilotSettings::setWorkarounds(KPilotSettings::eWorkaroundNone);
@@ -144,7 +144,7 @@ void DeviceConfigPage::load()
 		KPilotSettings::setWorkarounds(KPilotSettings::eWorkaroundUSB);
 		break;
 	default :
-		WARNINGKPILOT <<"Unknown workaround number"
+		WARNINGKPILOT << "Unknown workaround number"
 			<< fConfigWidget->fWorkaround->currentIndex()
 			<< endl;
 		KPilotSettings::setWorkarounds(KPilotSettings::eWorkaroundNone);
@@ -168,7 +168,7 @@ void DeviceConfigPage::load()
 		fConfigWidget->fPilotSpeed->setEnabled(false);
 		break;
 	default:
-		WARNINGKPILOT <<"Unknown port type" << i;
+		WARNINGKPILOT << "Unknown port type" << i;
 	}
 }
 
@@ -193,7 +193,7 @@ void DeviceConfigPage::setEncoding()
 	QString enc = fConfigWidget->fPilotEncoding->currentText();
 	if (enc.isEmpty())
 	{
-		WARNINGKPILOT <<"Empty encoding. Will ignore it.";
+		WARNINGKPILOT << "Empty encoding. Will ignore it.";
 	}
 	else
 	{
@@ -489,9 +489,9 @@ void StartExitConfigPage::load()
 	}
 
 #ifdef DEBUG
-	DEBUGKPILOT << fname <<": Autostart=" << autostart;
-	DEBUGKPILOT << fname <<": desktop=" << desktopfile;
-	DEBUGKPILOT << fname <<": location=" << location;
+	DEBUGKPILOT << fname << "Autostart=" << autostart;
+	DEBUGKPILOT << fname << "desktop=" << desktopfile;
+	DEBUGKPILOT << fname << "location=" << location;
 #endif
 
 	KPilotSettings::setStartDaemonAtLogin(fConfigWidget->fStartDaemonAtLogin->isChecked());

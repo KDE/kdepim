@@ -110,10 +110,10 @@ private:
 	{
 		if ( !(mBoundDevices.count() > 0) ) return;
 		FUNCTIONSETUPL(3);
-		DEBUGKPILOT << fname <<": Bound devices: ["
+		DEBUGKPILOT << ": Bound devices: ["
 			<< ((mBoundDevices.count() > 0) ?
 			mBoundDevices.join(CSL1(", ")) : CSL1("<none>")) 
-			<< "]" << endl;
+			<< "]";
 	}
 } ;
 
@@ -253,9 +253,9 @@ private:
 		else
 		{
 			FUNCTIONSETUP;
-			WARNINGKPILOT <<"Link asked for, but either I'm"
+			WARNINGKPILOT << "Link asked for, but either I'm"
 				<< "done or I don't have a valid handle.  "
-				<< "Shutting down comm thread." << endl;
+				<< "Shutting down comm thread.";
 			QThread::exit();
 			return 0;
 		}
@@ -338,8 +338,8 @@ bool DeviceCommThread::openDevice()
 	// path...
 	if (!fDone && link()->fPilotPath.length() > 0)
 	{
-		DEBUGKPILOT << fname <<": Opening main pilot path: [" 
-			<< link()->fPilotPath << "]." << endl;
+		DEBUGKPILOT << ": Opening main pilot path: [" 
+			<< link()->fPilotPath << "].";
 		deviceOpened = open( link()->fPilotPath ); 
 	}
 
@@ -354,9 +354,9 @@ bool DeviceCommThread::openDevice()
 	// device, try the temp device...
 	if (!fDone && tryTemp)
 	{
-		DEBUGKPILOT << fname <<": Couldn't open main pilot path."
+		DEBUGKPILOT << ": Couldn't open main pilot path."
 			<< "Now trying temp device: [" 
-			<< link()->fTempDevice << "]." << endl;
+			<< link()->fTempDevice << "].";
 		deviceOpened = open( link()->fTempDevice );
 	}
 
@@ -389,7 +389,7 @@ bool DeviceCommThread::open(const QString &device)
 	}
 
 
-	DEBUGKPILOT << fname <<": Trying to create socket.";
+	DEBUGKPILOT << ": Trying to create socket.";
 
 	fTempSocket = pi_socket(PI_AF_PILOT, PI_SOCK_STREAM, PI_PF_DLP);
 
@@ -409,20 +409,18 @@ bool DeviceCommThread::open(const QString &device)
 		return false;
 	}
 
-	DEBUGKPILOT << fname <<": Got socket: [" << fTempSocket <<"]";
+	DEBUGKPILOT << ": Got socket: [" << fTempSocket << "]" ;
 
 	link()->fLinkStatus = CreatedSocket;
 
-	DEBUGKPILOT << fname <<": Binding to path: [" 
-		<< link()->fRealPilotPath << "]" << endl;
+	DEBUGKPILOT << ": Binding to path: [" 
+		<< link()->fRealPilotPath << "]";
 
 	ret = pi_bind(fTempSocket, QFile::encodeName(link()->fRealPilotPath));
 
 	if (ret < 0)
 	{
-		DEBUGKPILOT << fname
-			<< ": pi_bind error: ["
-			<< strerror(errno) << "]" << endl;
+		DEBUGKPILOT << ": pi_bind error: [" << strerror(errno) << "]";
 
 		e = errno;
 		msg = i18n("Cannot open Pilot port \"%1\". ",link()->fRealPilotPath);
@@ -443,17 +441,16 @@ bool DeviceCommThread::open(const QString &device)
 	link()->fLinkStatus = DeviceOpen;
 	DeviceMap::self()->bindDevice( link()->fRealPilotPath );
 
-	DEBUGKPILOT << fname
-		<< ": Current status: ["
+	DEBUGKPILOT << ": Current status: ["
 		<< link()->statusString()
-		<< "] and socket: [" << fTempSocket << "]" << endl;
+		<< "] and socket: [" << fTempSocket << "]";
 
 	ret = pi_listen(fTempSocket, 1);
 	if (ret < 0)
 	{
 		char *s = strerror(errno);
 
-		WARNINGKPILOT <<"pi_listen returned: [" << s <<"]";
+		WARNINGKPILOT << "pi_listen returned: [" << s << ']';
 
 		// Presumably, strerror() returns things in
 		// local8Bit and not latin1.
@@ -468,8 +465,7 @@ bool DeviceCommThread::open(const QString &device)
 	QApplication::postEvent(link(),
 		new DeviceCommEvent(EventLogProgress, QString::null, 10));
 
-	DEBUGKPILOT << fname <<
-		": Listening to pilot. Now trying accept..." << endl;
+	DEBUGKPILOT << ": Listening to pilot. Now trying accept...";
 
 	int timeout=20;
 	if (link()->fWorkaroundUSB)
@@ -490,7 +486,7 @@ bool DeviceCommThread::open(const QString &device)
 		return false;
 	}
 
-	DEBUGKPILOT << fname <<": Link accept done.";
+	DEBUGKPILOT << ": Link accept done.";
 
 	if ((link()->fLinkStatus != DeviceOpen) || (fPilotSocket == -1))
 	{
@@ -506,7 +502,7 @@ bool DeviceCommThread::open(const QString &device)
 	QApplication::postEvent(link(),
 		new DeviceCommEvent(EventLogProgress, QString::null, 30));
 
-	DEBUGKPILOT << fname <<": doing dlp_ReadSysInfo...";
+	DEBUGKPILOT << ": doing dlp_ReadSysInfo...";
 
 	struct SysInfo sys_info;
 	if (dlp_ReadSysInfo(fPilotSocket, &sys_info) < 0)
@@ -520,15 +516,14 @@ bool DeviceCommThread::open(const QString &device)
 	}
 	else
 	{
-		DEBUGKPILOT << fname <<": dlp_ReadSysInfo successful...";
+		DEBUGKPILOT << "dlp_ReadSysInfo successful...";
 
         	KPILOT_DELETE(link()->fPilotSysInfo);
 		link()->fPilotSysInfo = new KPilotSysInfo(&sys_info);
-		DEBUGKPILOT << fname
-			<< ": RomVersion: [" << link()->fPilotSysInfo->getRomVersion()
+		DEBUGKPILOT << "RomVersion: [" << link()->fPilotSysInfo->getRomVersion()
 			<< "] Locale: [" << link()->fPilotSysInfo->getLocale()
 			<< "] Product: [" << link()->fPilotSysInfo->getProductID()
-			<< "]" << endl;
+			<< "]";
 	}
 
 	QApplication::postEvent(link(),
@@ -537,14 +532,13 @@ bool DeviceCommThread::open(const QString &device)
         KPILOT_DELETE(link()->fPilotUser);
 	link()->fPilotUser = new KPilotUser;
 
-	DEBUGKPILOT << fname <<": doing dlp_ReadUserInfo...";
+	DEBUGKPILOT << "doing dlp_ReadUserInfo...";
 
 	/* Ask the pilot who it is.  And see if it's who we think it is. */
 	dlp_ReadUserInfo(fPilotSocket, link()->fPilotUser->data());
 
 	QString n = link()->getPilotUser().name();
-	DEBUGKPILOT << fname
-		<< ": Read user name: [" << n << "]" << endl;
+	DEBUGKPILOT << ": Read user name: [" << n << "]";
 
 	QApplication::postEvent(link(),
 		new DeviceCommEvent(EventLogProgress, i18n("Checking last PC..."), 90));
@@ -552,8 +546,7 @@ bool DeviceCommThread::open(const QString &device)
 	/* Tell user (via Pilot) that we are starting things up */
 	if ((ret=dlp_OpenConduit(fPilotSocket)) < 0)
 	{
-		DEBUGKPILOT << fname
-			<< ": dlp_OpenConduit returned: [" << ret << "]" << endl;
+		DEBUGKPILOT << ": dlp_OpenConduit returned: [" << ret << "]";
 
 		QApplication::postEvent(link(),
 			new DeviceCommEvent(EventLogError,
@@ -577,9 +570,8 @@ void DeviceCommThread::close()
 
 	if (fPilotSocket != -1)
 	{
-		DEBUGKPILOT << fname
-			<< ": device comm thread closing socket: ["
-			<< fPilotSocket << "]" << endl;
+		DEBUGKPILOT << ": device comm thread closing socket: ["
+			<< fPilotSocket << "]";
 
 		pi_close(fPilotSocket);
 	}
@@ -595,8 +587,8 @@ void DeviceCommThread::run()
 	int sleepBetweenPoll = SecondsBetweenPoll;
 	fDone = false;
 
-	DEBUGKPILOT << fname <<": Polling every: ["
-		<< sleepBetweenPoll << "] seconds." << endl;
+	DEBUGKPILOT << ": Polling every: ["
+		<< sleepBetweenPoll << "] seconds.";
 
 	while (!fDone)
 	{
@@ -625,7 +617,7 @@ void DeviceCommThread::run()
 		}
 	}
 
-	DEBUGKPILOT << fname <<": comm thread waiting to be done...";
+	DEBUGKPILOT << "comm thread waiting to be done...";
 
 	// keep the thread alive until we're supposed to be done
 	while (!fDone)
@@ -638,7 +630,7 @@ void DeviceCommThread::run()
 	// pilot-link (potentially, if it's libusb) is done before we exit
 	QThread::sleep(1);
 
-	DEBUGKPILOT << fname <<": comm thread now done...";
+	DEBUGKPILOT << "comm thread now done...";
 }
 
 
@@ -655,9 +647,7 @@ KPilotDeviceLink::KPilotDeviceLink(QObject * parent, const char *name, const QSt
 {
 	FUNCTIONSETUP;
 
-	DEBUGKPILOT << fname
-		<< ": Pilot-link version: [" << PILOT_LINK_NUMBER
-		<< "]" << endl;
+	DEBUGKPILOT << ": Pilot-link version: " << PILOT_LINK_NUMBER;
 }
 
 KPilotDeviceLink::~KPilotDeviceLink()
@@ -688,8 +678,8 @@ void KPilotDeviceLink::customEvent(QEvent *e)
 		}
 		else
 		{
-			DEBUGKPILOT << fname
-				<< ": unable to cast event: [" << e << "]" << endl;
+			DEBUGKPILOT 
+				<< ": unable to cast event: [" << e << "]";
 		}
 	}
 	else if ((int)e->type() == EventLogMessage)
@@ -701,8 +691,8 @@ void KPilotDeviceLink::customEvent(QEvent *e)
 		}
 		else
 		{
-			DEBUGKPILOT << fname
-				<< ": unable to cast event: [" << e << "]" << endl;
+			DEBUGKPILOT
+				<< ": unable to cast event: [" << e << "]";
 		}
 	}
 	else if ((int)e->type() == EventLogError)
@@ -714,8 +704,8 @@ void KPilotDeviceLink::customEvent(QEvent *e)
 		}
 		else
 		{
-			DEBUGKPILOT << fname
-				<< ": unable to cast event: [" << e << "]" << endl;
+			DEBUGKPILOT 
+				<< ": unable to cast event: [" << e << "]";
 		}
 	}
 	else if ((int)e->type() == EventLogProgress)
@@ -727,8 +717,8 @@ void KPilotDeviceLink::customEvent(QEvent *e)
 		}
 		else
 		{
-			DEBUGKPILOT << fname
-				<< ": unable to cast event: [" << e << "]" << endl;
+			DEBUGKPILOT 
+				<< ": unable to cast event: [" << e << "]";
 		}
 	}
 	else
@@ -748,17 +738,15 @@ void KPilotDeviceLink::stopCommThread()
 		// block the main thread forever
 		if (fDeviceCommThread->isRunning()) 
 		{
-			DEBUGKPILOT << fname
-				<< ": comm thread still running. "
-				<< "waiting for it to complete." << endl;
+			DEBUGKPILOT
+				<< "comm thread still running. Waiting for it to complete.";
 			bool done = fDeviceCommThread->wait(30000);
 			if (!done)
 			{
-				DEBUGKPILOT << fname
-					<< ": comm thread still running "
+				DEBUGKPILOT
+					<< "comm thread still running "
 					<< "after wait(). "
-					<< "going to have to terminate it."
-					<< endl;
+					<< "going to have to terminate it.";
 				// not normally to be done, but we must make sure
 				// that this device doesn't come back alive
 				fDeviceCommThread->terminate();
@@ -893,20 +881,21 @@ bool KPilotDeviceLink::installFile(const QString & f, const bool deleteFile)
 {
 	FUNCTIONSETUP;
 
-	DEBUGKPILOT << fname <<": Installing file" << f;
+	DEBUGKPILOT << "Installing file [" << f << ']';
 
 	if (!QFile::exists(f))
+	{
 		return false;
+	}
 
 	char buffer[PATH_MAX];
 	memset(buffer,0,PATH_MAX);
 	strlcpy(buffer,QFile::encodeName(f),PATH_MAX);
-	struct pi_file *pf =
-		pi_file_open(buffer);
+	struct pi_file *pf = pi_file_open(buffer);
 
 	if (f.isEmpty())
 	{
-		WARNINGKPILOT <<"Cannot open file" << f;
+		WARNINGKPILOT << "Cannot open file [" << f << ']';
 		emit logError(i18n
 			("<qt>Cannot install the file &quot;%1&quot;.</qt>", f));
 		return false;
@@ -984,7 +973,7 @@ void KPilotDeviceLink::endSync( EndOfSyncFlags f )
 		getPilotUser().setLastSyncPC((unsigned long) gethostid());
 		getPilotUser().setLastSyncDate(time(0));
 
-		DEBUGKPILOT << fname <<": Writing username" << getPilotUser().name();
+		DEBUGKPILOT << "Writing username" << getPilotUser().name();
 
 		dlp_WriteUserInfo(pilotSocket(),getPilotUser().data());
 		addSyncLogEntry(i18n("End of HotSync\n"));
@@ -1028,21 +1017,21 @@ bool KPilotDeviceLink::retrieveDatabase(const QString &fullBackupName,	DBInfo *i
 		return false;
 	}
 
-	DEBUGKPILOT << fname <<": Writing DB <" << info->name <<">"
-		<< " to " << fullBackupName << endl;
+	DEBUGKPILOT << "Writing DB [" << info->name << ']'
+		<< " to [" << fullBackupName << ']';
 
 	QByteArray encodedName = QFile::encodeName(fullBackupName);
 	struct pi_file *f = pi_file_create(encodedName,info);
 
 	if (!f)
 	{
-		WARNINGKPILOT <<"Failed, unable to create file";
+		WARNINGKPILOT << "Failed, unable to create file.";
 		return false;
 	}
 
 	if (pi_file_retrieve(f, pilotSocket(), 0, 0L) < 0)
 	{
-		WARNINGKPILOT <<"Failed, unable to back up database";
+		WARNINGKPILOT << "Failed, unable to back up database.";
 
 		pi_file_close(f);
 		return false;
@@ -1091,8 +1080,7 @@ const KPilotCard *KPilotDeviceLink::getCardInfo(int card)
 	KPilotCard *cardinfo=new KPilotCard();
 	if (dlp_ReadStorageInfo(pilotSocket(), card, cardinfo->cardInfo())<0)
 	{
-		WARNINGKPILOT <<"Could not get info for card"
-			<< card << endl;
+		WARNINGKPILOT << "Could not get info for card " << card;
 
 		KPILOT_DELETE(cardinfo);
 		return 0L;
