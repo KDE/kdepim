@@ -42,6 +42,12 @@ public:
 	
 	virtual QString account() const;
 	
+	virtual QString password() const;
+	
+	virtual QString notes() const;
+	
+	virtual QDateTime lastChangedDate() const;
+	
 	/** Implemented virtual methods */
 	
 	/**

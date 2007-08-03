@@ -46,6 +46,8 @@ KeyringViewer::KeyringViewer( QWidget *parent, KeyringHHDataProxy *proxy )
 	
 	connect( fUi.fAccountList, SIGNAL( clicked( const QModelIndex& ) )
 		, this, SLOT( selectionChanged( const QModelIndex& ) ) );
+	connect( fUi.fPasswordBox, SIGNAL( clicked() )
+		, this, SLOT( togglePasswordVisibility() ) );
 	
 }
 
@@ -54,5 +56,27 @@ void KeyringViewer::selectionChanged( const QModelIndex &index )
 	KeyringHHRecord *rec = static_cast<KeyringListModel*>( 
 		fUi.fAccountList->model() )->record( index );
 
+	fUi.fNameEdit->setText( rec->name() );
 	fUi.fAccountEdit->setText( rec->account() );
+	fUi.fPasswordEdit->setText( rec->password() );
+	fUi.fNotesEdit->setText( rec->notes() );
+	fUi.fDateEdit->setDateTime( rec->lastChangedDate() );
+	
+	// Don't show the password by default
+	if( fUi.fPasswordEdit->echoMode() == QLineEdit::Normal )
+	{
+		togglePasswordVisibility();
+	}
+}
+
+void KeyringViewer::togglePasswordVisibility()
+{
+	if( fUi.fPasswordEdit->echoMode() == QLineEdit::Password )
+	{
+		fUi.fPasswordEdit->setEchoMode( QLineEdit::Normal );
+	}
+	else
+	{
+		fUi.fPasswordEdit->setEchoMode( QLineEdit::Password );
+	}
 }

@@ -40,6 +40,7 @@ public:
 
 private slots:
 	void selectionChanged( const QModelIndex &index );
+	void togglePasswordVisibility();
 
 private:
 	Ui::Editor fUi;
