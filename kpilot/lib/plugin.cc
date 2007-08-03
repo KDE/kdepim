@@ -75,6 +75,8 @@ ConduitConfigBase::ConduitConfigBase(QWidget *parent,
 	{
 		setObjectName(name);
 	}
+
+	WARNINGKPILOT << "foo" ;
 }
 
 ConduitConfigBase::~ConduitConfigBase()
@@ -278,7 +280,7 @@ ConduitAction::ConduitAction(KPilotLink *p,
 	fFirstSync(false)
 {
 	FUNCTIONSETUP;
-	
+
 	QStringList cResolutions = args.filter(QRegExp(CSL1("--conflictResolution \\d*")));
 	if(!cResolutions.isEmpty())
 	{
@@ -385,7 +387,7 @@ bool ConduitAction::openDatabases(const QString &name, bool *retrieved)
 		}
 		if (!KStandardDirs::exists(path))
 		{
-			DEBUGKPILOT << fname 
+			DEBUGKPILOT << fname
 				<< ": Trying to create path for database: <"
 				<< path << '>' << endl;
 			KStandardDirs::makeDir(path);
@@ -556,10 +558,9 @@ void ConduitProxy::execDone(SyncAction *p)
 
 	if (p!=fConduit)
 	{
-		WARNINGKPILOT <<"Unknown conduit @"
+		WARNINGKPILOT << "Unknown conduit @"
 			<< (void *) p
-			<< " finished."
-			<< endl;
+			<< " finished." ;
 		emit syncDone(this);
 		return;
 	}
@@ -621,3 +622,4 @@ QString findArgument(const QStringList &a, const QString &arg)
 }
 
 }
+

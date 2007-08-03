@@ -71,9 +71,9 @@ MemofileConduitConfig::MemofileConduitConfig(QWidget *p, const char *n) :
 		"http://www.cs.kun.nl/~adridg/kpilot");
 
 	ConduitConfigBase::addAboutPage(fConfigWidget->tabWidget,about);
-	
+
 	fConfigWidget->setupUi( fWidget );
-	
+
 	QObject::connect(fConfigWidget->fDirectory,SIGNAL(textChanged(const QString&)),
 		this,SLOT(modified()));
 	QObject::connect(fConfigWidget->fSyncPrivate,SIGNAL(toggled(bool)),
@@ -87,8 +87,7 @@ MemofileConduitConfig::MemofileConduitConfig(QWidget *p, const char *n) :
 
 	DEBUGKPILOT << fname
 		<< ": Directory="
-		<< fConfigWidget->fDirectory->url().url()
-		<< endl;
+		<< fConfigWidget->fDirectory->url().url();
 
 	MemofileConduitSettings::setDirectory( fConfigWidget->fDirectory->url().url() );
 	MemofileConduitSettings::setSyncPrivate( fConfigWidget->fSyncPrivate->isChecked() );
@@ -109,7 +108,7 @@ MemofileConduitConfig::MemofileConduitConfig(QWidget *p, const char *n) :
 		<< fConfigWidget->fDirectory->url().url()
 		<< "], sync private records: ["
 		<< fConfigWidget->fSyncPrivate
-		<< "]" << endl;
+		<< ']';
 
 	unmodified();
 }

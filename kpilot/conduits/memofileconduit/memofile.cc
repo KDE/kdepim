@@ -63,18 +63,16 @@ Memofile::Memofile(int category, QString categoryName, QString fileName, QString
 bool Memofile::load()
 {
 	FUNCTIONSETUP;
-	if (filename().isEmpty()) {
-		DEBUGKPILOT << fname
-		<< ": I was asked to load, but have no filename to load.  "
-		<< endl;
+	if (filename().isEmpty())
+	{
+		DEBUGKPILOT << ": I was asked to load, but have no filename to load.";
 		return false;
 	}
 
 	QFile f( filenameAbs() );
-	if ( !f.open( QIODevice::ReadOnly ) ) {
-		DEBUGKPILOT << fname
-		<< ": Couldn't open file: [" << filenameAbs() << "] to read.  "
-		<< endl;
+	if ( !f.open( QIODevice::ReadOnly ) )
+	{
+		DEBUGKPILOT << ": Couldn't open file: [" << filenameAbs() << "] to read.";
 		return false;
 	}
 
@@ -89,9 +87,8 @@ bool Memofile::load()
 	if (body.startsWith(title)) {
 		text = body;
 	} else {
-		DEBUGKPILOT << fname
-		<< ": text of your memofile: [" << filename()
- 		<< "] didn't include the filename as the first line.  fixing it..." << endl;
+		DEBUGKPILOT << ": text of your memofile: [" << filename()
+ 			<< "] didn't include the filename as the first line.  fixing it...";
 		text = title + CSL1("\n") + body;
 	}
 
@@ -123,10 +120,8 @@ bool Memofile::save()
 bool Memofile::deleteFile()
 {
 	FUNCTIONSETUP;
-	DEBUGKPILOT << fname
-	<< ": deleting file: [" << filenameAbs() << "]." << endl;
+	DEBUGKPILOT << ": deleting file: [" << filenameAbs() << "].";
 	return QFile::remove(filenameAbs());
-
 }
 
 bool Memofile::saveFile()
@@ -134,22 +129,17 @@ bool Memofile::saveFile()
 	FUNCTIONSETUP;
 
 	if (filename().isEmpty()) {
-		DEBUGKPILOT << fname
-		<< ": I was asked to save, but have no filename to save to.  "
-		<< endl;
+		DEBUGKPILOT << ": I was asked to save, but have no filename to save to.";
 		return false;
 	}
 
-	DEBUGKPILOT << fname
-	<< ": saving memo to file: ["
-	<< filenameAbs() << "]" << endl;
+	DEBUGKPILOT << ": saving memo to file: [" << filenameAbs() << ']';
 
 
 	QFile f( filenameAbs() );
 	if ( !f.open( QIODevice::WriteOnly ) ) {
-		DEBUGKPILOT << fname
-		<< ": Couldn't open file: [" << filenameAbs() << "] to write your memo to.  "
-		<< "This won't end well." << endl;
+		DEBUGKPILOT << ": Couldn't open file: [" << filenameAbs() << "] to write your memo to.  "
+			<< "This won't end well.";
 		return false;
 	}
 

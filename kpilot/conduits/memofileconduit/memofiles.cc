@@ -34,9 +34,9 @@
 
 QString Memofiles::FIELD_SEP = CSL1("\t");
 
-Memofiles::Memofiles (MemoCategoryMap & categories, PilotMemoInfo &appInfo, 
+Memofiles::Memofiles (MemoCategoryMap & categories, PilotMemoInfo &appInfo,
 	QString & baseDirectory) :
-	_categories(categories), _memoAppInfo(appInfo), 
+	_categories(categories), _memoAppInfo(appInfo),
 	_baseDirectory(baseDirectory)
 {
 	FUNCTIONSETUP;
@@ -59,8 +59,7 @@ void Memofiles::load (bool loadAll)
 {
 	FUNCTIONSETUP;
 
-	DEBUGKPILOT << fname
-	<< ": now looking at all memofiles in your directory." << endl;
+	DEBUGKPILOT << ": now looking at all memofiles in your directory.";
 
 	// now go through each of our known categories and look in each directory
 	// for that category for memo files
@@ -74,9 +73,8 @@ void Memofiles::load (bool loadAll)
 
 		QDir dir = QDir(categoryDirname);
 		if (! dir.exists() ) {
-			DEBUGKPILOT << fname
-			<< ": category directory: [" << categoryDirname
-			<< "] doesn't exist. skipping." << endl;
+			DEBUGKPILOT << ": category directory: [" << categoryDirname
+				<< "] doesn't exist. skipping.";
 			continue;
 		}
 
@@ -88,18 +86,15 @@ void Memofiles::load (bool loadAll)
 			QFileInfo info(dir, file);
 
 			if(info.isFile() && info.isReadable()) {
-// 				DEBUGKPILOT << fname
-// 				<< ": checking category: [" << categoryName
-// 				<< "], file: [" << file << "]." << endl;
 				Memofile * memofile = find(categoryName, file);
 				if (NULL == memofile) {
 					memofile = new Memofile(category, categoryName, file, _baseDirectory);
 					memofile->setModified(true);
 					_memofiles.append(memofile);
-					DEBUGKPILOT << fname
-					<< ": looks like we didn't know about this one until now. "
-					<< "created new memofile for category: ["
-					<< categoryName << "], file: [" << file << "]." << endl;
+					DEBUGKPILOT
+						<< ": looks like we didn't know about this one until now. "
+						<< "created new memofile for category: ["
+						<< categoryName << "], file: [" << file << ']';
 
 				}
 
@@ -109,20 +104,18 @@ void Memofiles::load (bool loadAll)
 				// to load its text...
 				if (memofile->isModified() || loadAll) {
 					DEBUGKPILOT << fname
-					<< ": now loading text for: [" << info.filePath() << "]." << endl;
+					<< ": now loading text for: [" << info.filePath() << ']';
 					memofile->load();
 				}
 			} else {
-				DEBUGKPILOT << fname
-				<< ": couldn't read file: [" << info.filePath() << "]. skipping it." << endl;
+				DEBUGKPILOT << ": couldn't read file: [" << info.filePath() << "]. skipping it.";
 
 			}
 		} // end of iterating through files in this directory
 
 	} // end of iterating through our categories/directories
 
-	DEBUGKPILOT << fname
-	<< ": looked at: [" << counter << "] files from your directories." << endl;
+	DEBUGKPILOT << ": looked at: [" << counter << "] files from your directories.";
 
 
 	// okay, now we've loaded everything from our directories.  make one last
@@ -161,8 +154,7 @@ bool Memofiles::ensureDirectoryReady()
 		_category_name = it.value();
 		dir = _baseDirectory + QDir::separator() + _category_name;
 
-		DEBUGKPILOT << fname
-		<< ": checking directory: [" << dir		<< "]" << endl;
+		DEBUGKPILOT << ": checking directory: [" << dir		<< ']';
 
 		if (!checkDirectory(dir))
 			failures++;
@@ -180,28 +172,18 @@ bool Memofiles::checkDirectory(QString & dir)
 
 	if ( ! fid.isDir() ) {
 
-		DEBUGKPILOT << fname
-		<< ": directory: [" << dir
-		<< "] doesn't exist. creating...."
-		<< endl;
+		DEBUGKPILOT << ": directory: [" << dir << "] doesn't exist. creating....";
 
 		if (!d.mkdir(dir)) {
 
-			DEBUGKPILOT << fname
-			<< ": could not create directory: [" << dir
-			<< "].  this won't end well." << endl;
+			DEBUGKPILOT << ": could not create directory: [" << dir << "].  this won't end well.";
 			return false;
 		} else {
-			DEBUGKPILOT << fname
-			<< ": directory created: ["
-			<< dir << "]." << endl;
+			DEBUGKPILOT << ": directory created: [" << dir << ']';
 
 		}
 	} else {
-		DEBUGKPILOT << fname
-		<< ": directory already existed: ["
-		<< dir << "]." << endl;
-
+		DEBUGKPILOT << ": directory already existed: [" << dir << ']';
 	}
 
 	return true;
@@ -217,9 +199,7 @@ void Memofiles::eraseLocalMemos ()
 		QString dir = _baseDirectory + QDir::separator() + it.value();
 
 		if (!folderRemove(QDir(dir))) {
-			DEBUGKPILOT << fname
-			<< ": couldn't erase all local memos from: ["
-			<< dir << "]." << endl;
+			DEBUGKPILOT << ": couldn't erase all local memos from: ["<< dir << ']';
 		}
 	}
 	QDir d(_baseDirectory);
@@ -242,9 +222,7 @@ void Memofiles::setPilotMemos (Q3PtrList<PilotMemo> & memos)
 		addModifiedMemo(memo);
 	}
 
-	DEBUGKPILOT << fname
-	<< ": set: ["
-	<< _memofiles.count() << "] from Palm to local." << endl;
+	DEBUGKPILOT << ": set: [" << _memofiles.count() << "] from Palm to local.";
 
 }
 
@@ -256,9 +234,7 @@ bool Memofiles::loadFromMetadata ()
 
 	QFile f( _memoMetadataFile );
 	if ( !f.open( QIODevice::ReadOnly ) ) {
-		DEBUGKPILOT << fname
-		<< ": ooh, bad.  couldn't open your memo-id file for reading."
-		<< endl;
+		DEBUGKPILOT << ": ooh, bad.  couldn't open your memo-id file for reading.";
 		return false;
 	}
 
@@ -292,29 +268,19 @@ bool Memofiles::loadFromMetadata ()
 				memofile = new Memofile(id, category, lastModified, size,
 				                        _categories[category], filename, _baseDirectory);
 				_memofiles.append(memofile);
-				// 				DEBUGKPILOT << fname
-				// 				<< ": created memofile from metadata. id: [" << id
-				// 				<< "], category: ["
-				// 				<< _categories[category] << "], filename: [" << filename << "]."
-				// 				<< endl;
 			}
 		} else {
 			errors++;
 		}
 
 		if (errors > 0) {
-			DEBUGKPILOT << fname
-			<< ": error: couldn't understand this line: [" << data << "]."
-			<< endl;
+			DEBUGKPILOT << ": error: couldn't understand this line: [" << data << ']';
 		}
 	}
 
-	DEBUGKPILOT << fname
-	<< ": loaded: [" << _memofiles.count() << "] memofiles."
-	<< endl;
+	DEBUGKPILOT << ": loaded: [" << _memofiles.count() << "] memofiles.";
 
 	f.close();
-
 	return (_memofiles.count() > 0);
 }
 
@@ -393,9 +359,6 @@ void Memofiles::addModifiedMemo (PilotMemo * memo)
 		debug += CSL1(" modified from pilot.");
 	}
 
-	DEBUGKPILOT << fname
-	<< debug << endl;
-
 	memofile = new Memofile(memo, _categories[memo->category()], filename(memo), _baseDirectory);
 	memofile->setModifiedByPalm(true);
 	_memofiles.append(memofile);
@@ -417,8 +380,7 @@ Q3PtrList<Memofile> Memofiles::getModified ()
 		}
 	}
 
-	DEBUGKPILOT << fname
-	<< ": found: [" << modList.count() << "] memofiles modified on filesystem." << endl;
+	DEBUGKPILOT << ": found: [" << modList.count() << "] memofiles modified on filesystem.";
 
 	return modList;
 }
@@ -439,17 +401,13 @@ bool Memofiles::saveMemoMetadata()
 {
 	FUNCTIONSETUP;
 
-	DEBUGKPILOT << fname
-	<< ": saving memo metadata to file: ["
-	<< _memoMetadataFile << "]" << endl;
+	DEBUGKPILOT << ": saving memo metadata to file: [" << _memoMetadataFile << ']';
 
 	QFile f( _memoMetadataFile );
 	QTextStream stream(&f);
 
 	if( !f.open(QIODevice::WriteOnly) ) {
-		DEBUGKPILOT << fname
-		<< ": ooh, bad.  couldn't open your memo-id file for writing."
-		<< endl;
+		DEBUGKPILOT << ": ooh, bad.  couldn't open your memo-id file for writing.";
 		return false;
 	}
 
@@ -479,9 +437,8 @@ MemoCategoryMap Memofiles::readCategoryMetadata()
 {
 	FUNCTIONSETUP;
 
-	DEBUGKPILOT << fname
-	<< ": reading categories from file: ["
-	<< _categoryMetadataFile << "]" << endl;
+	DEBUGKPILOT
+		<< ": reading categories from file: [" << _categoryMetadataFile << ']';
 
 	MemoCategoryMap map;
 	map.clear();
@@ -490,9 +447,7 @@ MemoCategoryMap Memofiles::readCategoryMetadata()
 	QTextStream stream(&f);
 
 	if( !f.open(QIODevice::ReadOnly) ) {
-		DEBUGKPILOT << fname
-		<< ": ooh, bad.  couldn't open your categories file for reading."
-		<< endl;
+		DEBUGKPILOT << ": ooh, bad.  couldn't open your categories file for reading.";
 		return map;
 	}
 
@@ -519,15 +474,11 @@ MemoCategoryMap Memofiles::readCategoryMetadata()
 		}
 
 		if (errors > 0) {
-			DEBUGKPILOT << fname
-			<< ": error: couldn't understand this line: [" << data << "]."
-			<< endl;
+			DEBUGKPILOT << ": error: couldn't understand this line: [" << data << ']';
 		}
 	}
 
-	DEBUGKPILOT << fname
-	<< ": loaded: [" << map.count() << "] categories."
-	<< endl;
+	DEBUGKPILOT << ": loaded: [" << map.count() << "] categories.";
 
 	f.close();
 
@@ -539,17 +490,13 @@ bool Memofiles::saveCategoryMetadata()
 	FUNCTIONSETUP;
 
 
-	DEBUGKPILOT << fname
-	<< ": saving categories to file: ["
-	<< _categoryMetadataFile << "]" << endl;
+	DEBUGKPILOT << ": saving categories to file: [" << _categoryMetadataFile << ']';
 
 	QFile f( _categoryMetadataFile );
 	QTextStream stream(&f);
 
 	if( !f.open(QIODevice::WriteOnly) ) {
-		DEBUGKPILOT << fname
-		<< ": ooh, bad.  couldn't open your categories file for writing."
-		<< endl;
+		DEBUGKPILOT << ": ooh, bad.  couldn't open your categories file for writing.";
 		return false;
 	}
 
@@ -588,11 +535,10 @@ bool Memofiles::saveMemos()
 			//        this memo will never make its way onto the PC, but at least
 			//        we won't delete it from the Pilot erroneously either.  *sigh*
 			if (!result) {
-				DEBUGKPILOT << fname
+				DEBUGKPILOT
 					<< ": unable to save memofile: ["
-					<< memofile->filename() 
-					<< "], now removing it from the metadata list."
-					<< endl;
+					<< memofile->filename()
+					<< "], now removing it from the metadata list.";
 				_memofiles.remove(memofile);
 			}
 		}
@@ -611,7 +557,7 @@ bool Memofiles::isFirstSync()
 	DEBUGKPILOT << fname
 	<< ": local metadata exists: [" << metadataExists
 	<< "], metadata loaded: [" << _metadataLoaded
-	<< "], returning: [" << ! valid << "]" << endl;
+	<< "], returning: [" << ! valid << ']';
 	return ! valid;
 }
 
@@ -632,8 +578,8 @@ bool Memofiles::folderRemove(const QDir &_d)
 			if(!folderRemove(QDir(info.filePath())))
 				return false;
 		} else {
-			DEBUGKPILOT << fname
-			<< ": deleting file: [" << info.filePath() << "]" << endl;
+			DEBUGKPILOT
+			<< ": deleting file: [" << info.filePath() << ']';
 			d.remove(info.filePath());
 		}
 	}
@@ -641,7 +587,7 @@ bool Memofiles::folderRemove(const QDir &_d)
 	if(!d.cdUp())
 		return false;
 	DEBUGKPILOT << fname
-	<< ": removing folder: [" << name << "]" << endl;
+	<< ": removing folder: [" << name << "]";
 	d.rmdir(name);
 
 	return true;

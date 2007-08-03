@@ -94,7 +94,7 @@ void PopMailConduit::doSync()
 
 	DEBUGKPILOT << fname
 		<< ": Outgoing mail disposition "
-		<< mode << endl;
+		<< mode;
 
 	if(mode)
 	{
@@ -131,8 +131,7 @@ int PopMailConduit::sendPendingMail(int mode)
 	else if (count < 0)
 	{
 		WARNINGKPILOT
-			<< "Mail sending returned error " << count
-			<< endl;
+			<< "Mail sending returned error " << count;
 		emit logError(i18n("No mail could be sent."));
 	}
 	else
@@ -140,8 +139,7 @@ int PopMailConduit::sendPendingMail(int mode)
 		DEBUGKPILOT << fname
 			<< ": Sent "
 			<< count
-			<< " messages"
-			<< endl;
+			<< " messages";
 	}
 
 	return count;
@@ -368,14 +366,13 @@ void PopMailConduit::writeMessageToFile(FILE* sendf, struct Mail& theMail)
 
 	DEBUGKPILOT << fname
 		<< ": KMail's outbox is "
-		<< outbox
-		<< endl;
+		<< outbox;
 
 	QDateTime date = QDateTime::currentDateTime();
 	QString dateString = date.toString(DATE_FORMAT);
 
 	DEBUGKPILOT << fname <<": Date format example: [" << dateString
-		<< "]" << endl;
+		<< "]" ;
 }
 
 /* virtual */ bool PopMailConduit::exec()

@@ -142,7 +142,7 @@ bool MemofileConduit::readConfig()
 		DEBUGKPILOT << fname
 			<< ": no directory given to us.  defaulting to: ["
 			<< _DEFAULT_MEMODIR
-			<< "]" << endl;
+			<< "]";
 	}
 
 	_memo_directory = dir;
@@ -154,7 +154,7 @@ bool MemofileConduit::readConfig()
 		<< "  directory: [" << _memo_directory
 		<< "], first sync: [" << isFirstSync()
 		<< "], sync private: [" << _sync_private
-		<< "]" << endl;
+		<< "]";
 
 	return true;
 
@@ -169,7 +169,7 @@ bool MemofileConduit::setAppInfo()
 
 	if (map.count() <=0) {
 		DEBUGKPILOT << fname
-			<< ": category metadata map is empty, nothing to do." << endl;
+			<< ": category metadata map is empty, nothing to do.";
 		return true;
 	}
 
@@ -245,7 +245,7 @@ bool MemofileConduit::loadPilotCategories()
 				<< " has ID "
 				<< _category_id
 				<< " and name "
-				<<_category_name << endl;
+				<<_category_name ;
 		}
 	}
 	return true;
@@ -260,7 +260,7 @@ void MemofileConduit::getAllFromPilot()
 
 	DEBUGKPILOT << fname
 		<< ": Database has " << fDatabase->recordCount()
-		<< " records." << endl;
+		<< " records.";
 
 	fMemoList.clear();
 
@@ -282,14 +282,14 @@ void MemofileConduit::getAllFromPilot()
 				<< fCategories[memo->category()]
 				<< "], title: ["
 				<< memo->getTitle()
-				<< "]" << endl;
+				<< "]";
 		} else {
 			DEBUGKPILOT << fname
 				<< ": Skipped secret record: ["
 				<< currentRecord
 				<< "], title: ["
 				<< memo->getTitle()
-				<< "]" << endl;
+				<< "]";
 		}
 
 		KPILOT_DELETE(pilotRec);
@@ -299,7 +299,7 @@ void MemofileConduit::getAllFromPilot()
 
 	DEBUGKPILOT << fname
 		<< ": read: [" << fMemoList.count()
-		<< "] records from palm." << endl;
+		<< "] records from palm.";
 }
 
 /**
@@ -333,14 +333,14 @@ void MemofileConduit::getModifiedFromPilot()
 				<< memo->id()
 				<< "], title: ["
 				<< memo->getTitle()
-				<< "]" << endl;
+				<< "]";
 		} else {
 			DEBUGKPILOT << fname
 				<< ": skipped secret modified record id: ["
 				<< memo->id()
 				<< "], title: ["
 				<< memo->getTitle()
-				<< "]" << endl;
+				<< "]" ;
 		}
 
 		KPILOT_DELETE(pilotRec);
@@ -350,7 +350,7 @@ void MemofileConduit::getModifiedFromPilot()
 
 	DEBUGKPILOT << fname
 		<< ": read: [" << fMemoList.count()
-		<< "] modified records from palm." << endl;
+		<< "] modified records from palm." ;
 }
 
 
@@ -375,7 +375,7 @@ void MemofileConduit::listPilotMemos()
 			<< "] category id: [" << memo->category()
 			<< "] category name: [" << _category_name
 			<< "] title: [" << memo->getTitle()
-			<< "]" << endl;
+			<< "]" ;
 	}
 }
 
@@ -442,8 +442,7 @@ void MemofileConduit::deleteUnsyncedHHRecords()
 			{
 				DEBUGKPILOT << fname
 					<< "Deleting record with ID "<< *it <<" from handheld "
-					<< "(is not on PC, and syncing with PC->HH direction)"
-					<< endl;
+					<< "(is not on PC, and syncing with PC->HH direction)";
 				fDatabase->deleteRecord(*it);
 				fLocalDatabase->deleteRecord(*it);
 			}
@@ -462,8 +461,7 @@ int MemofileConduit::writeToPilot(Memofile * memofile)
 	if (!r) {
 		DEBUGKPILOT << fname
 			<< ": ERROR: [" << memofile->toString()
-			<< "] could not be written to the pilot."
-			<< endl;
+			<< "] could not be written to the pilot.";
 		return -1;
 	}
 
@@ -485,8 +483,7 @@ int MemofileConduit::writeToPilot(Memofile * memofile)
 
 	DEBUGKPILOT << fname
 		<< ": memofile: [" << memofile->toString()
-		<< "] written to the pilot, [" << status << "]."
-		<< endl;
+		<< "] written to the pilot, [" << status << "].";
 
 	return newid;
 }
@@ -507,8 +504,7 @@ void MemofileConduit::deleteFromPilot(PilotMemo * memo)
 
 	DEBUGKPILOT << fname
 		<< ": memo: [" << memo->getTitle()
-		<< "] deleted from the pilot."
-		<< endl;
+		<< "] deleted from the pilot.";
 }
 
 bool MemofileConduit::sync()

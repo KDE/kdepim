@@ -4,12 +4,9 @@
 **
 ** Copyright (C) 1998-2001,2002,2003 by Dan Pilone
 ** Copyright (C) 2003-2004 Reinhold Kainhofer <reinhold@kainhofer.com>
+** Copyright (C) 2004-2007 Adriaan de Groot <groot@kde.org>
 **
 ** This file defines some global constants and macros for KPilot.
-** In particular, KDE2 is defined when KDE2 seems to be the environment
-** (is there a better way to do this?). Use of KDE2 to #ifdef sections
-** of code is deprecated though.
-**
 ** Many debug functions are defined as well.
 */
 
@@ -46,29 +43,13 @@
 
 #include <iostream>
 
-using namespace std;
-inline std::ostream& operator <<(std::ostream &o, const QString &s)
-{
-	if (s.isEmpty())
-	{
-		return o<<"<empty>";
-	}
-	else
-	{
-		return o<<s.toLatin1().constData();
-	}
-}
-
-#ifndef NDEBUG
-#define DEBUG	(1)
-#endif
+#define KPILOT_VERSION	"5.0.0-pre1 (swedish chef)"
 
 extern KDE_EXPORT int debug_level;
 
 class KPILOT_EXPORT KPilotDepthCount
 {
 public:
-	KPilotDepthCount(int, int level, const char *s);
 	KPilotDepthCount(int level, const char *s);
 	~KPilotDepthCount();
 	const char *indent() const;
@@ -82,8 +63,64 @@ protected:
 	const char *fName;
 } ;
 
+inline std::ostream& operator <<(std::ostream &o, const KPilotDepthCount &d)
+{
+	return o << d.indent() << ' ' << d.name();
+}
 
-#ifdef DEBUG
+inline std::ostream& operator <<(std::ostream &o, const QString &s)
+{
+	if (s.isEmpty())
+	{
+		return o << "<empty>";
+	}
+	else
+	{
+		return o << s.toLatin1().constData();
+	}
+}
+
+class KPILOT_EXPORT KPilotDebugStream
+{
+public:
+	KPilotDebugStream(int dummy) :
+		my_level(1000), // Sufficiently large to avoid printing
+		has_printed(false)
+	{ Q_UNUSED(dummy); }
+	KPilotDebugStream(const KPilotDepthCount &d) :
+		my_level(d.level()),
+		has_printed(false)
+	{
+	}
+	KPilotDebugStream() : // For warnings, needs no fname / depth
+		my_level(-1),
+		has_printed(false)
+	{
+	}
+	~KPilotDebugStream()
+	{
+		if (has_printed)
+		{
+			std::cerr << std::endl;
+		}
+	}
+
+	template <typename T> KPilotDebugStream &operator <<(const T &v)
+	{
+		if (debug_level >= my_level)
+		{
+			has_printed = true;
+			std::cerr << v;
+		}
+		return *this;
+	}
+
+private:
+	int my_level;
+	bool has_printed;
+} ;
+
+
 #ifdef __GNUC__
 #define KPILOT_FNAMEDEF(l)	KPilotDepthCount fname(l,__FUNCTION__)
 #else
@@ -96,43 +133,22 @@ protected:
 // stderr / iostream-based debugging.
 //
 //
-#define DEBUGKPILOT   std::cerr
-#define WARNINGKPILOT std::cerr.clear(std::ios_base::goodbit),\
-	std::cerr << "! " << k_funcinfo << std::endl << "!   "
+#define DEBUGKPILOT   KPilotDebugStream(fname) << fname
+#define WARNINGKPILOT KPilotDebugStream() \
+	<< "! " << k_funcinfo << "\n!   "
 
 
 
 
-inline std::ostream& operator <<(std::ostream &o, const KPilotDepthCount &d)
-{
-	if (debug_level >= d.level())
-	{
-		o.clear(std::ios_base::goodbit);
-		return o << d.indent() << ' ' << d.name();
-	}
-	else
-	{
-		o.setstate(std::ios_base::badbit | std::ios_base::failbit);
-		return o;
-	}
-}
-
-#else
-
-// no debugging at all
+#if 0
+// No debugging at all
 //
 #define DEBUGSTREAM   kndbgstream
 #define DEBUGKPILOT   kDebugDevNull()
 #define WARNINGKPILOT kDebugDevNull()
-
-// With debugging turned off, FUNCTIONSETUP doesn't do anything.
-//
-//
 #define FUNCTIONSETUP const int fname = 0; Q_UNUSED(fname);
 #define FUNCTIONSETUPL(a) const int fname = a; Q_UNUSED(fname);
 #endif
-
-#define KPILOT_VERSION	"5.0.0-pre1 (swedish chef)"
 
 
 // Function to expand newlines in rich text to <br>\n

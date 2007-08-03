@@ -110,37 +110,17 @@ struct tm writeTm(const QDate &d)
 	return writeTm(dt);
 }
 
-KPilotDepthCount::KPilotDepthCount(int, int level, const char *s) :
-	fDepth(depth),
-	fLevel(level),
-	fName(s)
-{
-	DEBUGKPILOT <<"! DEPRECATED Depth call.\n!"
-		<< kBacktrace(4) << endl;
-
-	if (debug_level>=fLevel)
-	{
-		DEBUGKPILOT << indent() <<">" << name();
-	}
-	depth++;
-}
-
 KPilotDepthCount::KPilotDepthCount(int level, const char *s) :
 	fDepth(depth),
 	fLevel(level),
 	fName(s)
 {
-	if (debug_level>=fLevel)
-	{
-		DEBUGKPILOT << indent() <<">" << name();
-	}
 	depth++;
 }
 
 KPilotDepthCount::~KPilotDepthCount()
 {
 	depth--;
-	std::cerr.clear(std::ios_base::goodbit);
 }
 
 const char *KPilotDepthCount::indent() const

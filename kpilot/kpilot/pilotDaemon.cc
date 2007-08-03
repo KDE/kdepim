@@ -784,19 +784,20 @@ bool PilotDaemon::killDaemonOnExit()
 typedef enum { KDL_NotLocked=0, KDL_Locked=1, KDL_Error=2 } KDesktopLockStatus;
 static KDesktopLockStatus isKDesktopLockRunning()
 {
-    
+	FUNCTIONSETUP;
+
 	if (!KPilotSettings::screenlockSecure())
 	{
 		return KDL_NotLocked;
 	}
 
-	QDBusInterface screensaver("org.freedesktop.ScreenSaver", "/ScreenSaver", 
+	QDBusInterface screensaver("org.freedesktop.ScreenSaver", "/ScreenSaver",
 				   "org.freedesktop.ScreenSaver");
 	QDBusReply<bool> reply = screensaver.call( "GetActive" );
 
 	bool locked = true;
 
-	if ( reply.isValid() ) 
+	if ( reply.isValid() )
 	{
 		locked = reply.value();
 		DEBUGKPILOT <<"isDesktopLockRunning: reply from screensaver.GetActive: [" << locked <<"]";
@@ -1164,8 +1165,8 @@ void PilotDaemon::updateTrayStatus(const QString &s)
 	QDBusConnection::sessionBus().send( message );
 
 	// emit the same signal but including the information needed by Kontact to update its kpilot summary widget
-	/* 
-	* not going to finish doing this since we don't have a kontact component yet, but if 
+	/*
+	* not going to finish doing this since we don't have a kontact component yet, but if
 	* we want one, here's how to get it working (from the dcop code):
 	*/
 	/*
@@ -1191,9 +1192,9 @@ int main(int argc, char **argv)
 
 	KLocale::setMainCatalog("kpilot");
 
-	// a non-intuitive note about this... now that we're using dbus, the way that the path 
+	// a non-intuitive note about this... now that we're using dbus, the way that the path
 	// is constructed to communicate with our objects on the bus are of 2 pieces...
-	// in the dbus interface string "org.kde.kpilot.foo", 
+	// in the dbus interface string "org.kde.kpilot.foo",
 	// the "org.kde.kpilot" part comes from setOrganizationDomain, found in
 	// KPILOT_ABOUT_INIT.  the "foo" part comes in the first argument to KAboutData below...
 	KAboutData about("daemon", 0,
@@ -1206,7 +1207,7 @@ int main(int argc, char **argv)
 		"http://www.kpilot.org/"
 		);
 	KPILOT_ABOUT_INIT(about);
-	
+
 	aboutData = &about;
 
 

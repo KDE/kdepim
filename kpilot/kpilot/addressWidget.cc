@@ -91,9 +91,7 @@ int AddressWidget::getAllAddresses(PilotDatabase * addressDB)
 	PilotAddress *address;
 
 
-#ifdef DEBUG
-	DEBUGKPILOT << fname <<": Reading AddressDB...";
-#endif
+	DEBUGKPILOT << ": Reading AddressDB...";
 
 	while ((pilotRec = addressDB->readRecordByIndex(currentRecord)) != 0L)
 	{
@@ -104,8 +102,7 @@ int AddressWidget::getAllAddresses(PilotDatabase * addressDB)
 			if (address == 0L)
 			{
 				WARNINGKPILOT <<"Couldn't allocate record"
-					<< currentRecord++
-					<< endl;
+					<< currentRecord++ ;
 				break;
 			}
 			fAddressList.append(address);
@@ -115,10 +112,7 @@ int AddressWidget::getAllAddresses(PilotDatabase * addressDB)
 		currentRecord++;
 	}
 
-#ifdef DEBUG
-	DEBUGKPILOT << fname
-		<< ": Total " << currentRecord << " records" << endl;
-#endif
+	DEBUGKPILOT << ": Total " << currentRecord << " records";
 
 	return currentRecord;
 }
@@ -128,10 +122,8 @@ void AddressWidget::showComponent()
 	FUNCTIONSETUP;
 	if ( fPendingAddresses>0 ) return;
 
-#ifdef DEBUG
 	DEBUGKPILOT << fname
-		<< ": Reading from directory " << dbPath() << endl;
-#endif
+		<< ": Reading from directory " << dbPath();
 
 	PilotDatabase *addressDB =
 		new PilotLocalDatabase(dbPath(), CSL1("AddressDB"));
@@ -177,8 +169,7 @@ void AddressWidget::hideComponent()
 	{
 		DEBUGKPILOT << fname
 			<< ": fPendingAddress="
-			<< fPendingAddresses
-			<< endl;
+			<< fPendingAddresses;
 
 		s = i18np("There is still an address editing window open.",
 			"There are still %1 address editing windows open.",
