@@ -43,7 +43,7 @@ PilotAppInfoBase::PilotAppInfoBase(PilotDatabase *d) :
 
 	if (!d || !d->isOpen())
 	{
-		WARNINGKPILOT <<"Bad database pointer.";
+		WARNINGKPILOT << "Bad database pointer.";
 		fLen = 0;
 		KPILOT_DELETE( fC );
 		return;

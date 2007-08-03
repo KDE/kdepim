@@ -70,11 +70,10 @@ PilotDatabase::PilotDatabase(const QString &s) :
 /* static */ int PilotDatabase::instanceCount()
 {
 	FUNCTIONSETUP;
-	DEBUGKPILOT << fname <<":" << creationCount <<" databases.";
+	DEBUGKPILOT << creationCount << " databases.";
 	if (createdNames)
 	{
-		DEBUGKPILOT << fname <<":"
-			<< createdNames->join(CSL1(",")) << endl;
+		DEBUGKPILOT << createdNames->join(CSL1(","));
 	}
 	return creationCount;
 }
@@ -86,7 +85,10 @@ PilotDatabase::PilotDatabase(const QString &s) :
 	for (unsigned int i = 0 ; ; i++)
 	{
 		PilotRecord *r = readRecordByIndex(i);
-		if (!r) break;
+		if (!r)
+		{
+			break;
+		}
 		l.append(r->id());
 		delete r;
 	}

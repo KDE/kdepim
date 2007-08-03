@@ -376,8 +376,8 @@ bool DeviceCommThread::open(const QString &device)
 	if ( !DeviceMap::self()->canBind( link()->fRealPilotPath ) ) {
 		msg = i18n("Already listening on that device");
 		
-		WARNINGKPILOT <<"Pilot Path: ["
-			<< link()->fRealPilotPath << "] already connected." << endl;
+		WARNINGKPILOT << "Pilot Path: ["
+			<< link()->fRealPilotPath << "] already connected.";
 		WARNINGKPILOT << msg;
 
 		link()->fLinkStatus = PilotLinkError;
@@ -399,7 +399,7 @@ bool DeviceCommThread::open(const QString &device)
 		msg = i18n("Cannot create socket for communicating "
 			"with the Pilot (%1)",errorMessage(e));
 		WARNINGKPILOT << msg;
-		WARNINGKPILOT <<"(" << strerror(e) <<")";
+		WARNINGKPILOT << "(" << strerror(e) << ")";
 	
 		link()->fLinkStatus = PilotLinkError;
 		
@@ -425,7 +425,7 @@ bool DeviceCommThread::open(const QString &device)
 		e = errno;
 		msg = i18n("Cannot open Pilot port \"%1\". ",link()->fRealPilotPath);
 		
-		DEBUGKPILOT << msg <<" (" << strerror(e) << ')';
+		DEBUGKPILOT << msg << " (" << strerror(e) << ')';
 	
 		link()->fLinkStatus = PilotLinkError;
 		
@@ -477,7 +477,7 @@ bool DeviceCommThread::open(const QString &device)
 	{
 		char *s = strerror(errno);
 
-		WARNINGKPILOT <<"pi_accept returned: [" << s <<"]";
+		WARNINGKPILOT << "pi_accept returned: [" << s << "]";
 
 		QApplication::postEvent(link(),
 			new DeviceCommEvent(EventLogError, i18n("Cannot accept Pilot (%1)",QString::fromLocal8Bit(s))));
@@ -491,7 +491,7 @@ bool DeviceCommThread::open(const QString &device)
 	if ((link()->fLinkStatus != DeviceOpen) || (fPilotSocket == -1))
 	{
 		link()->fLinkStatus = PilotLinkError;
-		WARNINGKPILOT <<"Already connected or unable to connect!";
+		WARNINGKPILOT << "Already connected or unable to connect!";
 
 		QApplication::postEvent(link(),
 			new DeviceCommEvent(EventLogError, i18n("Cannot accept Pilot (%1)",i18n("already connected"))));
@@ -797,8 +797,7 @@ void KPilotDeviceLink::startCommThread()
 
 	if (fTempDevice.isEmpty() && pilotPath().isEmpty())
 	{
-		WARNINGKPILOT <<"No point in trying empty device."
-			<< endl;
+		WARNINGKPILOT << "No point in trying empty device.";
 
 		QString msg = i18n("The Pilot device is not configured yet.");
 		WARNINGKPILOT << msg;
@@ -903,7 +902,7 @@ bool KPilotDeviceLink::installFile(const QString & f, const bool deleteFile)
 
 	if (pi_file_install(pf, fPilotSocket, 0, 0L) < 0)
 	{
-		WARNINGKPILOT <<"Cannot pi_file_install" << f;
+		WARNINGKPILOT << "Cannot pi_file_install" << f;
 		emit logError(i18n
 			("<qt>Cannot install the file &quot;%1&quot;.</qt>", f));
 		return false;

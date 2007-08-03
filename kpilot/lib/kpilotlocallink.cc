@@ -161,10 +161,9 @@ KPilotLocalLink::~KPilotLocalLink()
 	}
 	else
 	{
-		WARNINGKPILOT <<"The local link path <"
+		WARNINGKPILOT << "The local link path ["
 			<< fPath
-			<< "> does not exist or is not a directory. No sync can be done."
-			<< endl;
+			<< "] does not exist or is not a directory. No sync can be done.";
 	}
 }
 
@@ -202,7 +201,7 @@ KPilotLocalLink::~KPilotLocalLink()
 
 	if ( (index<0) || (index>=(int)d->fDBs.count()) )
 	{
-		WARNINGKPILOT <<"Index out of range.";
+		WARNINGKPILOT << "Index out of range.";
 		return -1;
 	}
 
@@ -225,13 +224,13 @@ KPilotLocalLink::~KPilotLocalLink()
 
 	if ( (index<0) || (index>=(int)d->fDBs.count()) )
 	{
-		WARNINGKPILOT <<"Index out of range.";
+		WARNINGKPILOT << "Index out of range.";
 		return -1;
 	}
 
 	if (!name)
 	{
-		WARNINGKPILOT <<"NULL name.";
+		WARNINGKPILOT << "NULL name.";
 		return -1;
 	}
 
@@ -260,7 +259,7 @@ KPilotLocalLink::~KPilotLocalLink()
 	return -1;
 }
 
-/* virtual */ void KPilotLocalLink::addSyncLogEntryImpl(QString const &s)
+/* virtual */ void KPilotLocalLink::addSyncLogEntryImpl(QString const &)
 {
 	FUNCTIONSETUP;
 }
@@ -318,7 +317,7 @@ KPilotLocalLink::~KPilotLocalLink()
 	QFile out( destfile );
 	if ( !out.open( QIODevice::WriteOnly | QIODevice::Truncate | QIODevice::Unbuffered ) )
 	{
-		WARNINGKPILOT <<"Can't write destination file" << destfile;
+		WARNINGKPILOT << "Can't write destination file" << destfile;
 		return false;
 	}
 

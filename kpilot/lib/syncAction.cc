@@ -60,7 +60,7 @@ SyncAction::SyncAction(KPilotLink  *p,
 	fParent(0L)
 {
 	FUNCTIONSETUP;
-	DEBUGKPILOT << fname <<": name:[" << name <<"]";
+	DEBUGKPILOT << "name:[" << name << "]";
 	setObjectName(name);
 }
 
@@ -72,7 +72,7 @@ SyncAction::SyncAction(KPilotLink *p,
 	fParent(visibleparent)
 {
 	FUNCTIONSETUP;
-	DEBUGKPILOT << fname <<": name:[" << name <<"]";
+	DEBUGKPILOT << "name:[" << name << "]";
 	setObjectName(name);
 }
 
@@ -95,8 +95,8 @@ SyncAction::~SyncAction()
 
 	bool r = this->exec();
 
-	DEBUGKPILOT << fname <<": Exec" << objectName()
-		<< (r ? " is running" : " failed to start") << endl;
+	DEBUGKPILOT << "Exec" << objectName()
+		<< (r ? " is running" : " failed to start");
 
 	if (!r)
 	{
@@ -152,8 +152,8 @@ SyncAction::SyncMode::SyncMode(const QStringList &args) :
 
 	if (!maps[i].name)
 	{
-		WARNINGKPILOT <<"No mode set by arguments ("
-			<< args.join(",") << ") defaulting to HotSync." << endl;
+		WARNINGKPILOT << "No mode set by arguments ("
+			<< args.join(",") << ") defaulting to HotSync.";
 	}
 }
 
@@ -164,8 +164,8 @@ SyncAction::SyncMode::SyncMode(Mode m, bool test, bool local) :
 {
 	if ( ((int)m<(int)eHotSync) || ((int)m>(int)eRestore) )
 	{
-		WARNINGKPILOT <<"Mode value" << (int)m <<" is illegal"
-			", defaulting to HotSync." << endl;
+		WARNINGKPILOT << "Mode value" << (int)m << " is illegal"
+			", defaulting to HotSync.";
 		fMode = eHotSync;
 	}
 }
@@ -188,7 +188,7 @@ QStringList SyncAction::SyncMode::list() const
 	}
 	if ( !maps[i].name )
 	{
-		WARNINGKPILOT <<"Mode" << fMode <<" does not have a name.";
+		WARNINGKPILOT << "Mode" << fMode << " does not have a name.";
 		l.append(QString::fromLatin1(maps[0].name));
 	}
 
@@ -238,7 +238,7 @@ bool SyncAction::SyncMode::setMode(int mode)
 	}
 	else
 	{
-		WARNINGKPILOT <<"Bad sync mode" << mode <<" requested.";
+		WARNINGKPILOT << "Bad sync mode" << mode << " requested.";
 		fMode = eHotSync;
 		return false;
 	}
@@ -257,7 +257,7 @@ bool SyncAction::SyncMode::setMode(SyncAction::SyncMode::Mode m)
 		i++;
 	}
 
-	WARNINGKPILOT <<"Bad sync mode" << m <<" requested.";
+	WARNINGKPILOT << "Bad sync mode" << m << " requested.";
 	fMode = eHotSync;
 	return false;
 }
@@ -268,7 +268,7 @@ void SyncAction::startTickle(unsigned timeout)
 
 	if (!deviceLink())
 	{
-		WARNINGKPILOT <<"Trying to tickle without a device.";
+		WARNINGKPILOT << "Trying to tickle without a device.";
 	}
 	else
 	{
@@ -282,7 +282,7 @@ void SyncAction::stopTickle()
 	FUNCTIONSETUP;
 	if (!deviceLink())
 	{
-		WARNINGKPILOT <<"Trying to tickle without a device.";
+		WARNINGKPILOT << "Trying to tickle without a device.";
 	}
 	else
 	{

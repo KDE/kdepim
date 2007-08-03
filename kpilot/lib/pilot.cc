@@ -117,15 +117,15 @@ bool setupPilotCodec(const QString &s)
 	FUNCTIONSETUP;
 	QString encoding(KGlobal::charsets()->encodingForName(s));
 
-	DEBUGKPILOT << fname <<": Using codec name" << s;
-	DEBUGKPILOT << fname <<": Creating codec" << encoding;
+	DEBUGKPILOT << "Using codec name" << s;
+	DEBUGKPILOT << "Creating codec" << encoding;
 
 	// if the desired codec can't be found, latin1 will be returned anyway, no need to do this manually
 	codec = KGlobal::charsets()->codecForName(encoding);
 
 	if (codec)
 	{
-		DEBUGKPILOT << fname <<": Got codec" << codec->name().constData();
+		DEBUGKPILOT << "Got codec" << codec->name().constData();
 	}
 
 	return codec;
@@ -155,7 +155,7 @@ int findCategory(const struct CategoryAppInfo *info,
 
 	if (!info)
 	{
-		WARNINGKPILOT <<"Bad CategoryAppInfo pointer";
+		WARNINGKPILOT << "Bad CategoryAppInfo pointer";
 		return -1;
 	}
 
@@ -172,12 +172,12 @@ int findCategory(const struct CategoryAppInfo *info,
 
 	if (-1 == currentCatID)
 	{
-		DEBUGKPILOT << fname <<": Category name"
-			<< selectedCategory << " not found." << endl;
+		DEBUGKPILOT << "Category name ["
+			<< selectedCategory << "] not found.";
 	}
 	else
 	{
-		DEBUGKPILOT << fname <<": Matched category" << currentCatID;
+		DEBUGKPILOT << "Matched category" << currentCatID;
 	}
 
 	if ((currentCatID == -1) && unknownIsUnfiled)
@@ -193,7 +193,7 @@ int insertCategory(struct CategoryAppInfo *info,
 
 	if (!info)
 	{
-		WARNINGKPILOT <<"Bad CategoryAppInfo pointer";
+		WARNINGKPILOT << "Bad CategoryAppInfo pointer";
 		return -1;
 	}
 
@@ -219,9 +219,9 @@ int insertCategory(struct CategoryAppInfo *info,
 		}
 		else
 		{
-			WARNINGKPILOT <<"Category name"
+			WARNINGKPILOT << "Category name ["
 				<< label
-				<< " could not be added." << endl;
+				<< "] could not be added.";
 			c = -1;
 		}
 	}
@@ -235,18 +235,18 @@ void dumpCategories(const struct CategoryAppInfo *info)
 
 	if (!info)
 	{
-		WARNINGKPILOT <<"Dumping bad pointer.";
+		WARNINGKPILOT << "Dumping bad pointer.";
 		return;
 	}
 
-	DEBUGKPILOT << fname <<" lastUniqueId:"
-		<< (int) info->lastUniqueID << endl;
+	DEBUGKPILOT << "lastUniqueId:"
+		<< (int) info->lastUniqueID;
 	for (unsigned int i = 0; i < CATEGORY_COUNT; i++)
 	{
 		if (!info->name[i][0]) continue;
-		DEBUGKPILOT << fname <<":" << i <<" ="
-			<< (int)(info->ID[i]) << " <"
-			<< info->name[i] << ">" << endl;
+		DEBUGKPILOT << i << "="
+			<< (int)(info->ID[i]) << " ["
+			<< info->name[i] << "]";
 	}
 }
 

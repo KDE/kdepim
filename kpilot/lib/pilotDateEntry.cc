@@ -104,7 +104,7 @@ void PilotDateEntry::_copyExceptions(const PilotDateEntry & e)
 		}
 		else
 		{
-			WARNINGKPILOT <<"malloc() failed, exceptions not copied";
+			WARNINGKPILOT << "malloc() failed, exceptions not copied";
 			fAppointmentInfo.exceptions = 0;
 		}
 	}
@@ -369,7 +369,7 @@ void PilotDateEntry::setDescriptionP(const char *desc, int l)
 		}
 		else
 		{
-			WARNINGKPILOT <<"malloc() failed, description not set";
+			WARNINGKPILOT << "malloc() failed, description not set";
 		}
 	}
 	else
@@ -393,7 +393,7 @@ void PilotDateEntry::setNoteP(const char *note, int l)
 		}
 		else
 		{
-			WARNINGKPILOT <<"malloc() failed, note not set";
+			WARNINGKPILOT << "malloc() failed, note not set";
 		}
 	}
 	else
