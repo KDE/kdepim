@@ -37,6 +37,8 @@
 
 #include <QTreeView>
 
+#include <qgpgme/eventloopinteractor.h>
+
 #include <gpgme++/context.h>
 #include <gpgme++/error.h>
 #include <gpgme++/key.h>
@@ -46,77 +48,76 @@
 #include <string>
 #include <cassert>
 
+class Relay : public QObject {
+    Q_OBJECT
+public:
+    explicit Relay( QObject * p=0 ) : QObject( p ) {}
+
+public Q_SLOTS:
+    void slotNextKeyEvent( GpgME::Context *, const GpgME::Key & key ) {
+	mKeys.push_back( key );
+	// push out keys in chunks of 1..16 keys
+	if ( mKeys.size() > qrand() % 16 ) {
+	    emit nextKeys( mKeys );
+	    mKeys.clear();
+	}
+    }
+
+Q_SIGNALS:
+    void nextKeys( const std::vector<GpgME::Key> & keys );
+
+private:
+    std::vector<GpgME::Key> mKeys;
+};
+
 int main( int argc, char * argv[] ) {
 
     KAboutData aboutData( "test_flatkeylistmodel", 0, ki18n("FlatKeyListModel Test"), "0.1" );
     KCmdLineArgs::init( argc, argv, &aboutData );
     KApplication app;
 
+    qsrand( QDateTime::currentDateTime().toTime_t() );
+
     QTreeView flat, hierarchical;
 
     flat.setWindowTitle( QLatin1String( "Flat Key Listing" ) );
     hierarchical.setWindowTitle( QLatin1String( "Hierarchical Key Listing" ) );
+
+    Relay relay;
+    QObject::connect( QGpgME::EventLoopInteractor::instance(), SIGNAL(nextKeyEventSignal(GpgME::Context*,GpgME::Key)),
+                      &relay, SLOT(slotNextKeyEvent(GpgME::Context*,GpgME::Key)) );
     
-    std::vector<GpgME::Key> keys;
-
-    {
-	std::auto_ptr<GpgME::Context> pgp( GpgME::Context::createForProtocol( GpgME::OpenPGP ) );
-	pgp->setKeyListMode( GpgME::Local );
-
-	if ( GpgME::Error e = pgp->startKeyListing() ) {
-	    qDebug() << "pgp" << e.asString();
-	    return 1;
-	}
-
-	int pgpKeys = 0;
-	for (;;) {
-	    GpgME::Error e;
-	    const GpgME::Key key = pgp->nextKey( e );
-	    if ( key.isNull() ) {
-		qDebug() << "pgp null key" << e.asString();
-		break;
-	    }
-	    keys.push_back( key );
-	    ++pgpKeys;
-	}
-	qDebug() << "pgpKeys" << pgpKeys;
-    }
-
-    {
-	std::auto_ptr<GpgME::Context> cms( GpgME::Context::createForProtocol( GpgME::CMS ) );
-	cms->setKeyListMode( GpgME::Local );
-
-	if ( GpgME::Error e = cms->startKeyListing() ) {
-	    qDebug() << "cms" << e.asString();
-	    return 1;
-	}
-
-	int cmsKeys = 0;
-	for (;;) {
-	    GpgME::Error e;
-	    const GpgME::Key key = cms->nextKey( e );
-	    if ( key.isNull() ) {
-		qDebug() << "cms null key" << e.asString();
-		break;
-	    }
-	    keys.push_back( key );
-	    ++cmsKeys;
-	}
-	qDebug() << "cmsKeys" << cmsKeys;
-    }
-	
     if ( Kleo::AbstractKeyListModel * const model = Kleo::AbstractKeyListModel::createFlatKeyListModel( &flat ) ) {
-	model->addKeys( keys );
-	flat.setModel( model );
+        QObject::connect( &relay, SIGNAL(nextKeys(std::vector<GpgME::Key>)), model, SLOT(addKeys(std::vector<GpgME::Key>)) );
+        flat.setModel( model );
     }
 
     if ( Kleo::AbstractKeyListModel * const model = Kleo::AbstractKeyListModel::createHierarchicalKeyListModel( &hierarchical ) ) {
-	model->addKeys( keys );
-	hierarchical.setModel( model );
+        QObject::connect( &relay, SIGNAL(nextKeys(std::vector<GpgME::Key>)), model, SLOT(addKeys(std::vector<GpgME::Key>)) );
+        hierarchical.setModel( model );
     }
 
     flat.show();
     hierarchical.show();
 
+
+    const std::auto_ptr<GpgME::Context> pgp( GpgME::Context::createForProtocol( GpgME::OpenPGP ) );
+    pgp->setManagedByEventLoopInteractor( true );
+    pgp->setKeyListMode( GpgME::Local );
+
+    if ( const GpgME::Error e = pgp->startKeyListing() )
+        qDebug() << "pgp->startKeyListing() ->" << e.asString();
+
+
+    const std::auto_ptr<GpgME::Context> cms( GpgME::Context::createForProtocol( GpgME::CMS ) );
+    cms->setManagedByEventLoopInteractor( true );
+    cms->setKeyListMode( GpgME::Local );
+
+    if ( const GpgME::Error e = cms->startKeyListing() )
+        qDebug() << "cms" << e.asString();
+
+
     return app.exec();
 }
+
+#include "test_flatkeylistmodel.moc"
