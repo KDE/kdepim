@@ -189,7 +189,7 @@ int TodoWidget::getAllTodos(PilotDatabase *todoDB)
 	PilotRecord *pilotRec;
 	PilotTodoEntry *todo;
 
-	DEBUGKPILOT << fname << "Reading ToDoDB...";
+	DEBUGKPILOT << "Reading ToDoDB...";
 
 	while ((pilotRec = todoDB->readRecordByIndex(currentRecord)) != 0L)
 	{
@@ -200,8 +200,7 @@ int TodoWidget::getAllTodos(PilotDatabase *todoDB)
 			if (todo == 0L)
 			{
 				WARNINGKPILOT << "Couldn't allocate record"
-					<< currentRecord++
-					<< endl;
+					<< currentRecord++;
 				break;
 			}
 			fP->fItems.append( new TodoItem( fTodoList, todo ) );
@@ -211,8 +210,7 @@ int TodoWidget::getAllTodos(PilotDatabase *todoDB)
 		currentRecord++;
 	}
 
-	DEBUGKPILOT << fname
-		<< ": Total " << currentRecord << " records" << endl;
+	DEBUGKPILOT << "Total " << currentRecord << " records.";
 
 	return currentRecord;
 }
@@ -222,13 +220,11 @@ void TodoWidget::showComponent()
 	FUNCTIONSETUP;
 	if ( fP->fPendingTodos>0 )
 	{
-		WARNINGKPILOT << fname
-			<< "Open todo editors prevent re-reading data." << endl;
+		WARNINGKPILOT << "Open todo editors prevent re-reading data.";
 		return;
 	}
 
-	DEBUGKPILOT << fname
-		<< ": Reading from directory " << dbPath() << endl;
+	DEBUGKPILOT << "Reading from directory [" << dbPath() << ']';
 
 	fP->fItems.clear();
 	fTodoList->clear();
@@ -258,10 +254,7 @@ void TodoWidget::showComponent()
 
 	if (fP->fPendingTodos)
 	{
-		DEBUGKPILOT << fname
-			<< ": fPendingTodo="
-			<< fP->fPendingTodos
-			<< endl;
+		DEBUGKPILOT << "fPendingTodo=" << fP->fPendingTodos;
 
 		s = i18np("There is still a to-do editing window open.",
 			"There are still %1 to-do editing windows open.",
@@ -305,7 +298,7 @@ void TodoWidget::updateWidget()
 	int currentCatID = findSelectedCategory(fCategoryList,
 		fAppInfo->categoryInfo());
 
-	DEBUGKPILOT << fname << "Adding records...";
+	DEBUGKPILOT << "Adding records...";
 
 	PilotTodoEntry*todo;
 	while (fTodoList.current())
@@ -325,7 +318,7 @@ void TodoWidget::updateWidget()
 	}
 
 #ifdef DEBUG
-	DEBUGKPILOT << fname  << listIndex << " records";
+	DEBUGKPILOT  << listIndex << " records";
 #endif
 
 	slotUpdateButtons();
@@ -349,18 +342,18 @@ void TodoWidget::updateWidget()
 void TodoWidget::slotSetCategory(int category)
 {
 	FUNCTIONSETUP;
-	DEBUGKPILOT << fname << "Selected category index" << category;
+	DEBUGKPILOT << "Selected category index" << category;
 	int category_value = fCategoryList->itemData(category).toInt();
-	DEBUGKPILOT << fname << "Selected category value" << category_value;
+	DEBUGKPILOT << "Selected category value" << category_value;
 
 	int e = fP->fItems.size();
-	DEBUGKPILOT << fname << "Scanning" << e << " items.";
+	DEBUGKPILOT << "Scanning" << e << " items.";
 	for (int i = 0; i<e; ++i)
 	{
 		TodoItem *item = fP->fItems[i];
 		int item_category = item->record()->category();
-		DEBUGKPILOT << fname << "Item <" << item->text()
-			<< "> category " << item_category << endl;
+		DEBUGKPILOT << "Item [" << item->text()
+			<< "] category " << item_category;
 		item->setHidden(category && (item_category != category_value));
 	}
 }
@@ -426,17 +419,12 @@ void TodoWidget::slotCreateNewRecord()
 
 	if (!myDB || !myDB->isOpen())
 	{
-#ifdef DEBUG
-		DEBUGKPILOT << fname
-			<< ": Tried to open "
+		DEBUGKPILOT << "Tried to open ToDoDB in ["
 			<< dbPath()
-			<< "/ToDoDB"
-			<< " and got pointer @"
+			<< "] and got pointer @"
 			<< (void *) myDB
 			<< " with status "
-			<< ( myDB ? myDB->isOpen() : false )
-			<< endl;
-#endif
+			<< ( myDB ? myDB->isOpen() : false );
 
 		KMessageBox::sorry(this,
 			i18n("You cannot add to-dos to the to-do list "
@@ -444,8 +432,7 @@ void TodoWidget::slotCreateNewRecord()
 				"to retrieve the database layout from your Pilot."),
 			i18n("Cannot Add New To-do"));
 
-		if (myDB)
-			KPILOT_DELETE( myDB );
+		KPILOT_DELETE( myDB );
 
 		return;
 	}
@@ -561,14 +548,14 @@ void TodoWidget::slotShowTodo(QListWidgetItem *item)
 	FUNCTIONSETUP;
 	if (!isVisible())
 	{
-		DEBUGKPILOT << fname << "Widget is not shown. Ignoring.";
+		DEBUGKPILOT << "Widget is not shown. Ignoring.";
 		return;
 	}
 
 	TodoItem *p = dynamic_cast<TodoItem*>(item);
 	if (!p)
 	{
-		DEBUGKPILOT << fname << "Item is not a TodoItem.";
+		DEBUGKPILOT << "Item is not a TodoItem.";
 		return;
 	}
 
@@ -606,10 +593,7 @@ void TodoWidget::writeTodo(PilotTodoEntry * which,
 	//
 	if (!myDB->isOpen())
 	{
-#ifdef DEBUG
-		DEBUGKPILOT << fname << "Todo database is not open" <<
-			endl;
-#endif
+		DEBUGKPILOT << "Todo database is not open.";
 		return;
 	}
 

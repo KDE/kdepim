@@ -127,17 +127,12 @@ void InternalEditorAction::syncDirtyDB()
 		}
 		else
 		{
-#ifdef DEBUG
-			DEBUGKPILOT<< "Generating ID for Record"<<rec->id()<< " with data";
-			DEBUGKPILOT<<rec->data();
-			DEBUGKPILOT<< "-----------------------------------------";
-#endif
+			DEBUGKPILOT << "Generating ID for Record " << rec->id();
+			DEBUGKPILOT << rec->data();
+			DEBUGKPILOT << "-----------------------------------------";
 			int id=serialDB->writeRecord(rec);
 			rec->setID(id);
-#ifdef DEBUG
-			DEBUGKPILOT<< "New ID is"<<id;
-			DEBUGKPILOT<<endl;
-#endif
+			DEBUGKPILOT << "New ID is " << id;
 			//localDB->writeRecord(rec);
 			localDB->updateID(id);
 		}

@@ -47,8 +47,7 @@
 /* static */ void PilotListItem::counts()
 {
 	FUNCTIONSETUP;
-	DEBUGKPILOT << fname
-		<< ": created=" << crt << " deletions=" << del << endl;
+	DEBUGKPILOT << "created=" << crt << " deletions=" << del;
 }
 #endif
 
@@ -89,8 +88,7 @@ PilotListItem::~PilotListItem()
 /* static */ void PilotCheckListItem::counts()
 {
 	FUNCTIONSETUP;
-	DEBUGKPILOT << fname
-		<< ": created=" << crt << " deletions=" << del << endl;
+	DEBUGKPILOT << "created=" << crt << " deletions=" << del;
 }
 #endif
 
@@ -137,8 +135,7 @@ void PilotCheckListItem::stateChange ( bool on)
 /* static */ void PilotListViewItem::counts()
 {
 	FUNCTIONSETUP;
-	DEBUGKPILOT << fname
-		<< ": created=" << crt << " deletions=" << del << endl;
+	DEBUGKPILOT << "created=" << crt << " deletions=" << del;
 }
 #endif
 

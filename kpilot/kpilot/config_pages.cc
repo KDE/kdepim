@@ -116,9 +116,8 @@ void DeviceConfigPage::load()
 		fConfigWidget->fWorkaround->setCurrentIndex(1);
 		break;
 	default:
-		WARNINGKPILOT << "Unknown workaround number"
-			<< (int) KPilotSettings::workarounds()
-			<< endl;
+		WARNINGKPILOT << "Unknown workaround number "
+			<< (int) KPilotSettings::workarounds();
 		KPilotSettings::setWorkarounds(KPilotSettings::eWorkaroundNone);
 		fConfigWidget->fWorkaround->setCurrentIndex(0);
 	}
@@ -144,9 +143,8 @@ void DeviceConfigPage::load()
 		KPilotSettings::setWorkarounds(KPilotSettings::eWorkaroundUSB);
 		break;
 	default :
-		WARNINGKPILOT << "Unknown workaround number"
-			<< fConfigWidget->fWorkaround->currentIndex()
-			<< endl;
+		WARNINGKPILOT << "Unknown workaround number "
+			<< fConfigWidget->fWorkaround->currentIndex();
 		KPilotSettings::setWorkarounds(KPilotSettings::eWorkaroundNone);
 	}
 	KPilotConfig::updateConfigVersion();
@@ -489,9 +487,9 @@ void StartExitConfigPage::load()
 	}
 
 #ifdef DEBUG
-	DEBUGKPILOT << fname << "Autostart=" << autostart;
-	DEBUGKPILOT << fname << "desktop=" << desktopfile;
-	DEBUGKPILOT << fname << "location=" << location;
+	DEBUGKPILOT << "Autostart=" << autostart;
+	DEBUGKPILOT << "desktop=" << desktopfile;
+	DEBUGKPILOT << "location=" << location;
 #endif
 
 	KPilotSettings::setStartDaemonAtLogin(fConfigWidget->fStartDaemonAtLogin->isChecked());

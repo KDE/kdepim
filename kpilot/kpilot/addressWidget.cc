@@ -122,7 +122,7 @@ void AddressWidget::showComponent()
 	FUNCTIONSETUP;
 	if ( fPendingAddresses>0 ) return;
 
-	DEBUGKPILOT << fname
+	DEBUGKPILOT
 		<< ": Reading from directory " << dbPath();
 
 	PilotDatabase *addressDB =
@@ -167,7 +167,7 @@ void AddressWidget::hideComponent()
 
 	if ( fPendingAddresses )
 	{
-		DEBUGKPILOT << fname
+		DEBUGKPILOT
 			<< ": fPendingAddress="
 			<< fPendingAddresses;
 
@@ -272,25 +272,17 @@ void AddressWidget::updateWidget()
 	FUNCTIONSETUP;
 
 	if( !fAddressAppInfo )
-			return;
+	{
+		return;
+	}
+
 	int addressDisplayMode = KPilotSettings::addressDisplayMode();
-
 	int listIndex = 0;
-
-#ifdef DEBUG
-	DEBUGKPILOT << fname
-		<< ": Display Mode=" << addressDisplayMode << endl;
-#endif
-
 	int currentCatID = findSelectedCategory(fCatList,
 		fAddressAppInfo->categoryInfo());
 
 	fListBox->clear();
 	fAddressList.first();
-
-#ifdef DEBUG
-	DEBUGKPILOT << fname << "Adding records...";
-#endif
 
 	while (fAddressList.current())
 	{
@@ -316,7 +308,7 @@ void AddressWidget::updateWidget()
 
 	fListBox->sort();
 #ifdef DEBUG
-	DEBUGKPILOT << fname  << listIndex << " records";
+	DEBUGKPILOT  << listIndex << " records";
 #endif
 
 	slotUpdateButtons();
@@ -448,17 +440,13 @@ void AddressWidget::slotCreateNewRecord()
 
 	if (!myDB || !myDB->isOpen())
 	{
-#ifdef DEBUG
-		DEBUGKPILOT << fname
-			<< ": Tried to open "
+		DEBUGKPILOT << ": Tried to open AddressDB in ["
 			<< dbPath()
-			<< "/AddressDB"
+			<< ']'
 			<< " and got pointer @"
-			<< (long) myDB
+			<< (void *) myDB
 			<< " with status "
-			<< ( myDB ? myDB->isOpen() : false )
-			<< endl;
-#endif
+			<< ( myDB ? myDB->isOpen() : false );
 
 		KMessageBox::sorry(this,
 			i18n("You cannot add addresses to the address book "
@@ -580,14 +568,10 @@ void AddressWidget::slotShowAddress(int which)
 	PilotListItem *p = (PilotListItem *) fListBox->item(which);
 	PilotAddress *addr = (PilotAddress *) p->rec();
 
-#ifdef DEBUG
-	DEBUGKPILOT << fname
-		<< ": Showing "
+	DEBUGKPILOT << "Showing ["
 		<< addr->getField(entryLastname)
-		<< " "
-		<< addr->getField(entryFirstname)
-		<< endl;
-#endif
+		<< "] ["
+		<< addr->getField(entryFirstname) << ']';
 
 	QString text(CSL1("<qt>"));
 	text += addr->getTextRepresentation(fAddressAppInfo,Qt::RichText);
@@ -623,10 +607,7 @@ void AddressWidget::writeAddress(PilotAddress * which,
 	//
 	if (!myDB->isOpen())
 	{
-#ifdef DEBUG
-		DEBUGKPILOT << fname << "Address database is not open" <<
-			endl;
-#endif
+		DEBUGKPILOT << "Address database is not open.";
 		return;
 	}
 
@@ -671,7 +652,7 @@ void AddressWidget::slotExport()
 	if (saveFile.isEmpty())
 	{
 #ifdef DEBUG
-		DEBUGKPILOT << fname << "No save file selected.";
+		DEBUGKPILOT << "No save file selected.";
 #endif
 		return;
 	}
@@ -682,7 +663,7 @@ void AddressWidget::slotExport()
 			KGuiItem(i18n("Overwrite")))!=KMessageBox::Continue)
 	{
 #ifdef DEBUG
-		DEBUGKPILOT << fname << "Overwrite file canceled.";
+		DEBUGKPILOT << "Overwrite file canceled.";
 #endif
 		return;
 	}
@@ -697,7 +678,7 @@ void AddressWidget::slotExport()
 	fAddressList.first();
 
 #ifdef DEBUG
-	DEBUGKPILOT << fname << "Adding records...";
+	DEBUGKPILOT << "Adding records...";
 #endif
 
 	while (fAddressList.current())

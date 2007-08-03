@@ -68,10 +68,7 @@
 	}
 	else
 	{
-#ifdef DEBUG
-		DEBUGKPILOT << fname
-			<< ": Config file has version " << version << endl;
-#endif
+		DEBUGKPILOT << "Config file has version " << version;
 	}
 
 	return version;
@@ -104,8 +101,6 @@
 			debug_level = p->getOption("debug").toInt();
 		}
 	}
-
-	std::cerr << "\n\n### Debug level " << debug_level << std::endl;
 
 	return debug_level;
 }
@@ -235,8 +230,8 @@ void KPilotConfig::addFlagsChangedDatabase(QString db)
 		return Cancel;
 	}
 
-	DEBUGKPILOT << fname << "Updating from"
-		<< fileVersion << " to " << ConfigurationVersion << endl;
+	DEBUGKPILOT << "Updating from "
+		<< fileVersion << " to " << ConfigurationVersion;
 
 	KPilotConfig::updateConfigVersion();
 	KPilotSettings::self()->writeConfig();

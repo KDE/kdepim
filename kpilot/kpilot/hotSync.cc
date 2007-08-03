@@ -131,8 +131,8 @@ public:
 			fDeviceDBs << dbname;
 		}
 
-		DEBUGKPILOT << fname << "Added <" << dbname
-			<< "> " << creator << endl;
+		DEBUGKPILOT << "Added [" << dbname
+			<< "] " << creator;
 	}
 
 
@@ -260,8 +260,7 @@ static inline void initNoBackup(QStringList &dbnames,
 		}
 	}
 
-	DEBUGKPILOT << fname << "Will skip databases"
-		<< dbnames.join(CSL1(",")) << endl;
+	DEBUGKPILOT << "Will skip databases " << dbnames.join(CSL1(","));
 	QString creatorids;
 	char buf[5];
 	for (QList<unsigned long>::ConstIterator i = dbcreators.begin();
@@ -272,7 +271,7 @@ static inline void initNoBackup(QStringList &dbnames,
 		buf[4]=0;
 		creatorids.append(CSL1("[%1]").arg(buf));
 	}
-	DEBUGKPILOT << fname << "Will skip creators" << creatorids;
+	DEBUGKPILOT << "Will skip creators" << creatorids;
 }
 
 /** Make sure that the backup directory @p backupDir
@@ -292,24 +291,21 @@ static inline bool checkBackupDirectory( const QString &backupDir )
 
 	if (fi.exists() && !fi.isDir())
 	{
-		WARNINGKPILOT << "Requested backup directory"
+		WARNINGKPILOT << "Requested backup directory ["
 			<< backupDir
-			<< " exists but is not a directory."
-			<< endl;
+			<< "] exists but is not a directory.";
 		return false;
 	}
 
 	if ( !backupDir.endsWith('/') )
 	{
-		WARNINGKPILOT << "Backup dir does not end with a /"
-			<< endl;
+		WARNINGKPILOT << "Backup dir does not end with a /";
 		return false;
 	}
 
 	Q_ASSERT(!fi.exists());
 
-	DEBUGKPILOT << fname
-		<< ": Creating directory " << backupDir << endl;
+	DEBUGKPILOT << "Creating directory " << backupDir;
 
 	KStandardDirs::makeDir( backupDir );
 
@@ -338,13 +334,10 @@ static inline bool checkBackupDirectory( const QString &backupDir )
 
 	logMessage(i18n("Backup directory: %1.",fP->fBackupDir));
 
-	DEBUGKPILOT << fname
-		<< ": This Pilot user's name is \""
-		<< deviceLink()->getPilotUser().name() << "\"" << endl;
-	DEBUGKPILOT << fname
-		<< ": Using backup dir: " << fP->fBackupDir << endl;
-	DEBUGKPILOT << fname
-		<< ": Full Backup? " << fP->fFullBackup << endl;
+	DEBUGKPILOT << "This Pilot user's name is ["
+		<< deviceLink()->getPilotUser().name() << ']';
+	DEBUGKPILOT << "Using backup dir [" << fP->fBackupDir << ']';
+	DEBUGKPILOT << "Full Backup? " << fP->fFullBackup;
 
 
 	if (fP->fFullBackup)
@@ -420,8 +413,8 @@ static inline bool checkBackupDirectory( const QString &backupDir )
 
 			if (!startBackupThread(&info))
 			{
-				WARNINGKPILOT << "Could not create local database for <"
-					<< info.name << ">" << endl;
+				WARNINGKPILOT << "Could not create local db ["
+					<< info.name << ']';
 			}
 			else
 			{
@@ -436,14 +429,14 @@ static inline bool checkBackupDirectory( const QString &backupDir )
 		else
 		{
 			// Just skip resource DBs during an update hotsync.
-			DEBUGKPILOT << fname << "Skipping database <" << info.name
-				<< "> (resource database)" << endl;
+			DEBUGKPILOT << "Skipping database [" << info.name
+				<< "] (resource database)";
 		}
 	}
 	else
 	{
-		DEBUGKPILOT << fname << "Skipping database <" << info.name
-			<< "> (no-backup list)" << endl;
+		DEBUGKPILOT << "Skipping database [" << info.name
+			<< "] (no-backup list)";
 		QString s = i18n("Skipping %1",Pilot::fromPilot(info.name));
 		addSyncLogEntry(s);
 	}
@@ -486,7 +479,7 @@ bool BackupAction::startBackupThread(DBInfo *info)
 		PilotRecord*rec=serial->readNextModifiedRec(&index);
 		if (!rec)
 		{
-			DEBUGKPILOT << fname << "No modified records.";
+			DEBUGKPILOT << "No modified records.";
 			KPILOT_DELETE(serial);
 			return false;
 		}
@@ -512,8 +505,7 @@ bool BackupAction::startBackupThread(DBInfo *info)
 		fullBackupName.append(CSL1(".pdb"));
 	}
 
-	DEBUGKPILOT << fname
-		<< ": Backing up database to: [" << fullBackupName << "]" << endl;
+	DEBUGKPILOT << "Backing up database to [" << fullBackupName << ']';
 
 	/* Ensure that DB-open flag is not kept */
 	info->flags &= ~dlpDBFlagOpen;
@@ -600,10 +592,7 @@ FileInstallAction::~FileInstallAction()
 	QDir installDir(fDir);
 	fList = installDir.entryList(QDir::Files |
 		QDir::NoSymLinks | QDir::Readable);
-#ifdef DEBUG
-	DEBUGKPILOT << fname
-		<< ": Installing " << fList.count() << " files" << endl;
-#endif
+	DEBUGKPILOT << "Installing " << fList.count() << " files.";
 
 	fDBIndex = 0;
 	emit logMessage(i18n("[File Installer]"));
@@ -634,18 +623,12 @@ FileInstallAction::~FileInstallAction()
 	Q_ASSERT(fDBIndex >= 0);
 	Q_ASSERT(fDBIndex <= fList.count());
 
-#ifdef DEBUG
-	DEBUGKPILOT << fname
-		<< ": Installing file index "
-		<< fDBIndex << " (of " << fList.count() << ")" << endl;
-#endif
+	DEBUGKPILOT << "Installing file index "
+		<< fDBIndex << " of " << fList.count();
 
 	if ((!fList.count()) || (fDBIndex >= fList.count()))
 	{
-#ifdef DEBUG
-		DEBUGKPILOT << fname
-			<< ": Peculiar file index, bailing out." << endl;
-#endif
+		DEBUGKPILOT << "Peculiar file index, bailing out.";
 		KPILOT_DELETE(fTimer);
 		fDBIndex = (-1);
 		emit logProgress(i18n("Done Installing Files"), 100);
@@ -659,7 +642,7 @@ FileInstallAction::~FileInstallAction()
 	fDBIndex++;
 
 #ifdef DEBUG
-	DEBUGKPILOT << fname << "Installing file" << filePath;
+	DEBUGKPILOT << "Installing file" << filePath;
 #endif
 
 	QString m = i18n("Installing %1",fileName);
@@ -853,9 +836,8 @@ CheckUser::~CheckUser()
 			switch (r)
 			{
 			case KMessageBox::Yes:
-				DEBUGKPILOT << fname
-					<< ": Setting user name in pilot to "
-					<< guiUserName << endl;
+				DEBUGKPILOT << "Setting user name in pilot to ["
+					<< guiUserName << ']';
 				fHandle->getPilotUser().setName(guiUserName);
 				pilotUserName=guiUserName;
 				break;
@@ -904,13 +886,10 @@ CheckUser::~CheckUser()
 	}
 
 
-#ifdef DEBUG
-	DEBUGKPILOT << fname
-		<< ": User name set to pc <"
+	DEBUGKPILOT << "User name set to PC ["
 		<< guiUserName
-		<< "> hh <"
-		<< fHandle->getPilotUser().name() << ">" << endl;
-#endif
+		<< "] HH ["
+		<< fHandle->getPilotUser().name() << ']';
 
 	KPilotSettings::self()->writeConfig();
 
@@ -978,7 +957,7 @@ void RestoreAction::setDirectory( const QString &path )
 	}
 
 #ifdef DEBUG
-	DEBUGKPILOT << fname << "Restoring user" << dirname;
+	DEBUGKPILOT << "Restoring user" << dirname;
 #endif
 
 	QDir dir(dirname, QString::null, QDir::Name,
@@ -986,8 +965,8 @@ void RestoreAction::setDirectory( const QString &path )
 
 	if (!dir.exists())
 	{
-		WARNINGKPILOT << "Restore directory"
-			<< dirname << " does not exist." << endl;
+		WARNINGKPILOT << "Restore directory ["
+			<< dirname << "] does not exist.";
 		fActionStatus = Error;
 		addSyncLogEntry(i18n("Restore directory does not exist.") +
 			CSL1(" ") + i18n("Restore not performed."));
@@ -1024,8 +1003,7 @@ void RestoreAction::setDirectory( const QString &path )
 
 		s = dirname + QDir::separator() + dir[i];
 
-		DEBUGKPILOT << fname
-			<< ": Adding " << s << " to restore list." << endl;
+		DEBUGKPILOT << "Adding [" << s << "] to restore list.";
 
 		if ( PilotLocalDatabase::infoFromFile( s, &info.DBInfo ) )
 		{
@@ -1072,7 +1050,7 @@ void RestoreAction::setDirectory( const QString &path )
 	++(fP->fDBIterator);
 	++(fP->fDBIndex);
 
-	DEBUGKPILOT << fname << "Trying to install" << dbi.path;
+	DEBUGKPILOT << "Trying to install" << dbi.path;
 
 	if (openConduit() < 0)
 	{

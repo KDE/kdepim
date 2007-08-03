@@ -166,7 +166,7 @@ void GenericDBWidget::slotSelected(const QString &dbname)
 {
 	FUNCTIONSETUP;
 #ifdef DEBUG
-	DEBUGKPILOT << fname << "Selected DB" << dbname;
+	DEBUGKPILOT << "Selected DB" << dbname;
 #endif
 	struct DBInfo dbinfo;
 	QString display;
@@ -207,7 +207,7 @@ void GenericDBWidget::slotSelected(const QString &dbname)
 		PilotRecord *pilotRec;
 
 #ifdef DEBUG
-		DEBUGKPILOT << fname << "Reading database"<<dbname<< "...";
+		DEBUGKPILOT << "Reading database"<<dbname<< "...";
 #endif
 
 		while ((pilotRec = fDB->readRecordByIndex(currentRecord)) != 0L)
@@ -228,10 +228,7 @@ void GenericDBWidget::slotSelected(const QString &dbname)
 			currentRecord++;
 		}
 
-#ifdef DEBUG
-		DEBUGKPILOT << fname
-			<< ": Total " << currentRecord << " records" << endl;
-#endif
+		DEBUGKPILOT << "Total " << currentRecord << " records.";
 
 	}
 	else
@@ -400,10 +397,8 @@ void GenericDBWidget::slotShowDBInfo()
 	DBFlagsEditor*dlg=new DBFlagsEditor(&db, this);
 	if (dlg->exec())
 	{
-#ifdef DEBUG
-		DEBUGKPILOT<< "OK pressed, assiging DBInfo, flags="<<
-			db.flags<< ",  miscFlag="<<db.miscFlags<<endl;
-#endif
+		DEBUGKPILOT<< "OK pressed, assiging DBInfo, flags="
+			<< db.flags << ",  miscFlag=" << db.miscFlags;
 		fDB->setDBInfo(db);
 
 		KPilotConfig::addFlagsChangedDatabase(getCurrentDB());

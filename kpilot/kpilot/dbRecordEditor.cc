@@ -92,8 +92,8 @@ void DBRecordEditor::slotOk()
 
 		if ( fRecordDataIf->isModified() )
 		{
-			DEBUGKPILOT << "record data changed, new Length of record:" <<
-				fRecordDataIf->dataSize() << endl;
+			DEBUGKPILOT << "Record data changed, new Length " 
+				<< fRecordDataIf->dataSize();
 			// take over data
 			rec->setData( fRecordDataIf->data(), fRecordDataIf->dataSize() );
 		}

@@ -101,8 +101,8 @@ void PilotDaemonTray::setupWidget()
 
 #define L(idx,name) \
 	icons[idx]=loadIcon( CSL1(name) ); \
-	if (icons[idx].isNull()) { WARNINGKPILOT << fname << "No icon" << name; } \
-	else { DEBUGKPILOT << fname << "Loaded icon" << name; }
+	if (icons[idx].isNull()) { WARNINGKPILOT << "No icon" << name; } \
+	else { DEBUGKPILOT << "Loaded icon" << name; }
 
 	L(Normal,"kpilotDaemon")
 	L(Busy,"kpilot_busysync")
@@ -150,7 +150,7 @@ void PilotDaemonTray::setupWidget()
 	KHelpMenu *help = new KHelpMenu(menu,aboutData);
 	menu->insertItem(KIcon(CSL1("help")),i18n("&Help"),help->menu());
 
-	DEBUGKPILOT << fname << "Finished getting icons";
+	DEBUGKPILOT << "Finished getting icons";
 
 }
 
@@ -272,7 +272,7 @@ void PilotDaemonTray::slotRunConfig()
 
 	if ( QDBusConnection::sessionBus().interface()->isServiceRegistered( "org.kde.kpilot.kpilot" ) )
 	{
-		DEBUGKPILOT << fname << "kpilot running. telling it to raise/configure.";
+		DEBUGKPILOT << "kpilot running. telling it to raise/configure.";
 
 		OrgKdeKpilotKpilotInterface * kpilot = new OrgKdeKpilotKpilotInterface("org.kde.kpilot.kpilot", "/KPilot",QDBusConnection::sessionBus());
 		kpilot->raise();
@@ -280,7 +280,7 @@ void PilotDaemonTray::slotRunConfig()
 	}
 	else
 	{
-		DEBUGKPILOT << fname << "kpilot not running. starting it.";
+		DEBUGKPILOT << "kpilot not running. starting it.";
 		// KPilot not running
 		QProcess *p = new QProcess;
 		QStringList arguments;
@@ -325,9 +325,8 @@ PilotDaemon::PilotDaemon() :
 
 	fNextSyncType.setMode( KPilotSettings::syncType() );
 
-	DEBUGKPILOT << fname
-		<< ": The daemon is ready with status "
-		<< statusString() << " (" << (int) fDaemonStatus << ")" << endl;
+	DEBUGKPILOT << "The daemon is ready with status "
+		<< statusString() << " (" << (int) fDaemonStatus << ')';
 }
 
 PilotDaemon::~PilotDaemon()
@@ -375,9 +374,8 @@ int PilotDaemon::getPilotSpeed()
 		speedname = "PILOTRATE=9600";
 	}
 
-	DEBUGKPILOT << fname
-		<< ": Speed set to "
-		<< speedname << " (" << speed << ")" << endl;
+	DEBUGKPILOT << "Speed set to "
+		<< speedname << " (" << speed << ')';
 
 	putenv((char *) speedname);
 
@@ -391,12 +389,12 @@ void PilotDaemon::showTray()
 
 	if (!fTray)
 	{
-		DEBUGKPILOT << fname << "No tray icon to display!";
+		DEBUGKPILOT << "No tray icon to display!";
 
 		return;
 	}
 	fTray->show();
-	DEBUGKPILOT << fname << "Tray icon displayed.";
+	DEBUGKPILOT << "Tray icon displayed.";
 
 	updateTrayStatus();
 }
@@ -438,34 +436,25 @@ void PilotDaemon::reloadSettings()
 
 	(void) Pilot::setupPilotCodec(KPilotSettings::encoding());
 
-	DEBUGKPILOT << fname
-		<< ": Got configuration "
-		<< KPilotSettings::pilotDevice()
-		<< endl;
-	DEBUGKPILOT << fname
-		<< ": Got conduit list "
-		<< (KPilotSettings::installedConduits().join(CSL1(",")))
-		<< endl;
+	DEBUGKPILOT << "Got configuration "
+		<< KPilotSettings::pilotDevice();
+	DEBUGKPILOT << "Got conduit list "
+		<< (KPilotSettings::installedConduits().join(CSL1(",")));
 
 	requestSync(0);
 
 
 	if (fPilotLink)
 	{
-		DEBUGKPILOT << fname
-			<< ": Resetting with device "
-			<< KPilotSettings::pilotDevice()
-			<< endl;
+		DEBUGKPILOT << "Resetting with device "
+			<< KPilotSettings::pilotDevice();
 
 		fPilotLink->reset( KPilotSettings::pilotDevice() );
-		DEBUGKPILOT << fname
-			<< ": Using workarounds "
-			<< KPilotSettings::workarounds()
-			<< endl;
+		DEBUGKPILOT << "Using workarounds "
+			<< KPilotSettings::workarounds();
 		if ( KPilotSettings::workarounds() == KPilotSettings::eWorkaroundUSB )
 		{
-			DEBUGKPILOT << fname
-				<< ": Using USB connect/disconnect/connect workaround." << endl;
+			DEBUGKPILOT << "Using USB connect/disconnect/connect workaround.";
 			fPilotLink->setWorkarounds(true);
 		}
 	}
@@ -668,8 +657,7 @@ void PilotDaemon::requestSyncType(QString s)
 	else if (s.startsWith(CSL1("D"))) requestSync(0);
 	else
 	{
-		WARNINGKPILOT << "Unknown sync type" << ( s.isEmpty() ? CSL1("<none>") : s )
-			<< endl;
+		WARNINGKPILOT << "Unknown sync type " << ( s.isEmpty() ? CSL1("<none>") : s );
 	}
 }
 
@@ -677,12 +665,12 @@ void PilotDaemon::requestSyncOptions(bool test, bool local)
 {
 	if ( !fNextSyncType.setOptions(test,local) )
 	{
-		WARNINGKPILOT << "Nonsensical request for"
+		WARNINGKPILOT << "Nonsensical request for "
 			<< (test ? "test" : "notest")
 			<< ' '
 			<< (local ? "local" : "nolocal")
 			<< " in mode "
-			<< fNextSyncType.name() << endl;
+			<< fNextSyncType.name();
 	}
 }
 
@@ -804,10 +792,10 @@ static KDesktopLockStatus isKDesktopLockRunning()
 	}
 	else
 	{
-		WARNINGKPILOT << "isDesktopLockRunning: Could not make DBUS connection."
+		WARNINGKPILOT << "isDesktopLockRunning: Could not make DBUS connection. "
 			<< "Error: [" << reply.error().type() << "], message: ["<< reply.error().message()
 			<< "], name: [" << reply.error().name()
-			<< "]. Assuming screensaver is active." << endl;
+			<< "]. Assuming screensaver is active.";
 		return KDL_Error;
 	}
 
@@ -840,12 +828,11 @@ static bool isSyncPossible(ActionQueue *fSyncStack,
 	int kpilotstatus=0;
 	if (!val.isValid())
 	{
-		DEBUGKPILOT << fname <<
-			": Could not call KPilot for status." << endl;
+		DEBUGKPILOT << "Could not call KPilot for status.";
 	}
 	else
 	{
-		DEBUGKPILOT << fname << "KPilot status" << kpilotstatus;
+		DEBUGKPILOT << "KPilot status" << kpilotstatus;
 	}
 	/**
 	* If the call fails, then KPilot is probably not running
@@ -922,8 +909,7 @@ bool PilotDaemon::shouldBackup()
 	bool ret = false;
 	int backupfreq = KPilotSettings::backupFrequency();
 
-	DEBUGKPILOT << fname << "Backup Frequency is: [" << backupfreq <<
-	"]. " << endl;
+	DEBUGKPILOT << "Backup Frequency is: " << backupfreq;
 
 	if ( (fNextSyncType == SyncAction::SyncMode::eHotSync) ||
 		(fNextSyncType == SyncAction::SyncMode::eFullSync) )
@@ -933,12 +919,12 @@ bool PilotDaemon::shouldBackup()
 		 */
 		if ( backupfreq == SyncAction::eOnRequestOnly )
 		{
-	DEBUGKPILOT << fname << "Should not do backup...";
+	DEBUGKPILOT << "Should not do backup...";
 			ret = false;
 		}
 		else if ( backupfreq == SyncAction::eEveryHotSync )
 		{
-	DEBUGKPILOT << fname << "Should do backup...";
+	DEBUGKPILOT << "Should do backup...";
 			ret = true;
 		}
 	}
@@ -956,10 +942,8 @@ bool PilotDaemon::shouldBackup()
 	QStringList conduits ; // list of conduits to run
 	QString s; // a generic string for stuff
 
-	DEBUGKPILOT << fname
-		<< ": Starting Sync with type "
-		<< fNextSyncType.name() << endl;
-	DEBUGKPILOT << fname << "Status is" << shortStatusString();
+	DEBUGKPILOT << "Starting Sync with type " << fNextSyncType.name();
+	DEBUGKPILOT << "Status is " << shortStatusString();
 	(void) PilotDatabase::instanceCount();
 
 	fDaemonStatus = HOTSYNC_START ;
@@ -992,16 +976,16 @@ bool PilotDaemon::shouldBackup()
 
 		if (pcchanged)
 		{
-			DEBUGKPILOT << fname << "PC changed. Last sync PC: [" << usr.getLastSyncPC()
-				<< "], me: [" << (unsigned long) gethostid() << "]" << endl;
+			DEBUGKPILOT << "PC changed. Last sync PC: " << usr.getLastSyncPC()
+				<< ", me: " << (unsigned long) gethostid();
  			if ( KPilotSettings::fullSyncOnPCChange() )
 			{
-				DEBUGKPILOT << fname << "Setting sync mode to full sync.";
+				DEBUGKPILOT << "Setting sync mode to full sync.";
 				fNextSyncType = SyncAction::SyncMode::eFullSync;
 			}
 			else
 			{
-				DEBUGKPILOT << fname << "Not changing sync mode because of settings.";
+				DEBUGKPILOT << "Not changing sync mode because of settings.";
 			}
 		}
 	}
@@ -1242,8 +1226,7 @@ int main(int argc, char **argv)
 	{
 		if (KPilotSettings::configVersion() < KPilotConfig::ConfigurationVersion)
 		{
-			WARNINGKPILOT << "Is still not configured for use."
-				<< endl;
+			WARNINGKPILOT << "Still not configured for use.";
 			if (!p->isSet("fail-silently"))
 			{
 				KPilotConfig::sorryVersionOutdated(KPilotSettings::configVersion());
@@ -1251,9 +1234,8 @@ int main(int argc, char **argv)
 			return 1;
 		}
 
-		DEBUGKPILOT << fname
-			<< ": Configuration version "
-			<< KPilotSettings::configVersion() << endl;
+		DEBUGKPILOT << "Configuration version "
+			<< KPilotSettings::configVersion();
 	}
 
 
@@ -1267,8 +1249,8 @@ int main(int argc, char **argv)
 		delete pilotDaemon;
 
 		pilotDaemon = 0;
-		WARNINGKPILOT << "Failed to start up daemon"
-			"due to errors constructing it." << endl;
+		WARNINGKPILOT << "Failed to start up daemon "
+			"due to errors constructing it.";
 		return 2;
 	}
 

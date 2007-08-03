@@ -72,17 +72,9 @@ TodoEditor::~TodoEditor()
 
 	if (fDeleteOnCancel && fTodo)
 	{
-#ifdef DEBUG
-		DEBUGKPILOT << fname
-			<< ": Deleting private todo record." << endl;
-#endif
 		delete fTodo;
 		fTodo = 0L;
 	}
-
-#ifdef DEBUG
-	DEBUGKPILOT << fname << "Help! I'm deleting!";
-#endif
 }
 
 

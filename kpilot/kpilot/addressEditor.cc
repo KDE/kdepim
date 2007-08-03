@@ -83,19 +83,9 @@ AddressEditor::~AddressEditor()
 
 	if (fDeleteOnCancel && fAddress)
 	{
-#ifdef DEBUG
-		DEBUGKPILOT << fname
-			<< ": Deleting private address record." << endl;
-#endif
-
-		delete fAddress;
-
-		fAddress = 0L;
+		DEBUGKPILOT << "Deleting private address record.";
+		KPILOT_DELETE(fAddress);
 	}
-
-#ifdef DEBUG
-	DEBUGKPILOT << fname << "Help! I'm deleting!";
-#endif
 }
 
 

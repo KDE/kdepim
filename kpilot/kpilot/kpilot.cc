@@ -165,7 +165,7 @@ void KPilotInstaller::killDaemonIfNeeded()
 	{
 		if (!fP->fDaemonWasRunning)
 		{
-			DEBUGKPILOT << fname << "Killing daemon.";
+			DEBUGKPILOT << "Killing daemon.";
 			getDaemon().quitNow();
 		}
 	}
@@ -183,14 +183,12 @@ void KPilotInstaller::startDaemonIfNeeded()
 
 	QString s = getDaemon().statusString();
 
-	DEBUGKPILOT << fname << "Daemon status is"
-		<< ( s.isEmpty() ? CSL1("<none>") : s ) << endl;
+	DEBUGKPILOT << "Daemon status is"
+		<< ( s.isEmpty() ? CSL1("<none>") : s );
 
 	if ((s.isEmpty()) || (!getDaemon().isValid()))
 	{
-		DEBUGKPILOT << fname
-			<< ": Daemon not responding, trying to start it."
-			<< endl;
+		DEBUGKPILOT << "Daemon not responding, trying to start it.";
 		log(i18n("Starting the KPilot daemon ..."));
 		fP->fDaemonWasRunning = false;
 
@@ -221,7 +219,7 @@ void KPilotInstaller::startDaemonIfNeeded()
 	// that we were able to start it
 	s = getDaemon().statusString();
 
-	DEBUGKPILOT << fname << "Daemon status is" << s;
+	DEBUGKPILOT << "Daemon status is" << s;
 	int wordoffset;
 	s.remove(0,12);
 	wordoffset=s.indexOf(';');
@@ -448,7 +446,7 @@ void KPilotInstaller::slotPCtoHHRequested()
 void KPilotInstaller::daemonStatus(int i)
 {
 	FUNCTIONSETUP;
-	DEBUGKPILOT << fname << "Received daemon message" << i;
+	DEBUGKPILOT << "Received daemon message" << i;
 
 	switch(i)
 	{
@@ -545,10 +543,8 @@ void KPilotInstaller::quit()
 		QString reason;
 		if (!fP->fPilotComponentList[i]->preHotSync(reason))
 		{
-			WARNINGKPILOT
-				<< "Couldn't save "
-				<< fP->fPilotComponentList[i]->objectName()
-				<< endl;
+			WARNINGKPILOT << "Couldn't save ["
+				<< fP->fPilotComponentList[i]->objectName() << ']';
 		}
 	}
 
@@ -593,7 +589,7 @@ static bool runConfigure(OrgKdeKpilotDaemonInterface &daemon,QWidget *parent)
 
 	if ( r && options->result() )
 	{
-		DEBUGKPILOT << fname << "Updating settings.";
+		DEBUGKPILOT << "Updating settings.";
 
 		// The settings are changed in the external module!!!
 		KPilotSettings::self()->config()->sync();
@@ -656,15 +652,13 @@ void KPilotInstaller::componentChanged(KPageWidgetItem *current,
 					KPageWidgetItem * before)
 {
 	FUNCTIONSETUP;
-	if (! current) 
+	if (!current) 
 	{
-		WARNINGKPILOT << fname 
-			<< ": current null. nothing to do." << endl;
+		WARNINGKPILOT << "Current NULL. nothing to do.";
 		return;
 	}
 	
-	DEBUGKPILOT << fname << "Selected component" <<
-		current->name() << endl;
+	DEBUGKPILOT << "Selected component [" << current->name() << ']';
 	
 	int e = fP->fPilotComponentList.size();
 	for (int i = 0; i<e; ++i)
@@ -673,9 +667,6 @@ void KPilotInstaller::componentChanged(KPageWidgetItem *current,
 		if (current->widget() == p)
 		{
 			p->showKPilotComponent(true);
-	
-			DEBUGKPILOT << fname 
-				<< ": found component. telling it to show." << endl;
 		}
 	}
 
@@ -694,7 +685,7 @@ void KPilotInstaller::configure()
 
 	if ( kpilotStatus()!=Normal || fP->fConfigureKPilotDialogInUse )
 	{
-    		DEBUGKPILOT << fname << "can't configure. in use.";
+    		DEBUGKPILOT << "can't configure. in use.";
 		log(i18n("Cannot configure KPilot right now (KPilot's UI is already busy)."));
 		return;
 	}
@@ -773,10 +764,10 @@ int main(int argc, char **argv)
 	}
 	else if (KPilotSettings::configVersion() < KPilotConfig::ConfigurationVersion)
 	{
-		WARNINGKPILOT << "KPilot configuration version"
+		WARNINGKPILOT << "KPilot configuration version "
 			<< KPilotConfig::ConfigurationVersion
 			<< " newer than stored version "
-			<< KPilotSettings::configVersion() << endl;
+			<< KPilotSettings::configVersion();
 		// Only force a reconfigure and continue if the
 		// user is expecting normal startup. Otherwise,
 		// do the configuration they're explicitly asking for.
@@ -788,9 +779,8 @@ int main(int argc, char **argv)
 	if ( (run_mode == KPilotConfig::ConfigureKPilot) ||
 		(run_mode == KPilotConfig::ConfigureAndContinue) )
 	{
-		DEBUGKPILOT << fname
-			<< ": Running setup first."
-			<< " (mode " << run_mode << ")" << endl;
+		DEBUGKPILOT << "Running setup first."
+			<< " (mode " << run_mode << ')';
 		OrgKdeKpilotDaemonInterface * daemon = new OrgKdeKpilotDaemonInterface("org.kde.kpilot.daemon", "/Daemon", QDBusConnection::sessionBus());
 		bool r = runConfigure(*daemon,0L);
 		delete daemon;

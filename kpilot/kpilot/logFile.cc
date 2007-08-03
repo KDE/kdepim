@@ -72,23 +72,23 @@ void LogFile::logStartSync()
 	fSyncing = true;
 	fLogStream.setDevice(fOutfile);
 
-	fLogStream<<(CSL1("KPilot HotSync log, %1").arg(QDateTime::currentDateTime().toString()))<<endl<<endl<<endl;
-	fLogStream<<(CSL1("Version: KPilot %1").arg(QString::fromLatin1(KPILOT_VERSION)))<<endl;
-	fLogStream<<(CSL1("Version: pilot-link %1.%2.%3%4" )
+	fLogStream << (CSL1("KPilot HotSync log, %1").arg(QDateTime::currentDateTime().toString())) << endl << endl << endl;
+	fLogStream << (CSL1("Version: KPilot %1").arg(QString::fromLatin1(KPILOT_VERSION))) << endl;
+	fLogStream << (CSL1("Version: pilot-link %1.%2.%3%4" )
 		.arg(PILOT_LINK_VERSION).arg(PILOT_LINK_MAJOR).arg(PILOT_LINK_MINOR)
 #ifdef PILOT_LINK_PATCH
 		.arg(QString::fromLatin1(PILOT_LINK_PATCH))
 #else
 		.arg(QString())
 #endif
-		)<<endl;
+		) << endl;
 #ifdef KDE_VERSION_STRING
-	fLogStream<<(CSL1("Version: KDE %1" ).arg(QString::fromLatin1(KDE_VERSION_STRING)) )<<endl;
+	fLogStream << (CSL1("Version: KDE %1" ).arg(QString::fromLatin1(KDE_VERSION_STRING)) ) << endl;
 #endif
 #ifdef QT_VERSION_STR
-	fLogStream<<(CSL1("Version: Qt %1" ).arg(QString::fromLatin1(QT_VERSION_STR)) )<<endl;
+	fLogStream << (CSL1("Version: Qt %1" ).arg(QString::fromLatin1(QT_VERSION_STR)) ) << endl;
 #endif
-	fLogStream<<endl<<endl;
+	fLogStream << endl << endl;
 		
 }
 
@@ -124,7 +124,7 @@ void LogFile::addMessage(const QString & s)
 	FUNCTIONSETUP;
 	if ( fSyncing && !s.isEmpty() ) 
 	{
-		fLogStream<<QTime::currentTime().toString()<< "  "<<s<<endl;
+		fLogStream << QTime::currentTime().toString() << "  " << s << endl;
 	}
 }
 

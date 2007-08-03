@@ -100,7 +100,7 @@ int PilotComponent::findSelectedCategory(QComboBox * fCatList,
 	{
 		currentCatID = (-1);
 #ifdef DEBUG
-		DEBUGKPILOT << fname << "Category 'All' selected.";
+		DEBUGKPILOT << "Category 'All' selected.";
 #endif
 	}
 	else
@@ -121,9 +121,8 @@ void PilotComponent::populateCategories(QComboBox * c,
 {
 	FUNCTIONSETUP;
 
-	DEBUGKPILOT << fname
-		<< ": Combo box @"
-		<< (void *) c << " and info @" << (void *) info << endl;
+	DEBUGKPILOT << "Combo box @"
+		<< (void *) c << " and info @" << (void *) info;
 
 	c->clear();
 
@@ -142,10 +141,9 @@ void PilotComponent::populateCategories(QComboBox * c,
 	{
 		if (info->name[i][0])
 		{
-			DEBUGKPILOT << fname
-				<< ": Adding category: "
+			DEBUGKPILOT << "Adding category: "
 				<< info->name[i]
-				<< " with ID: " << (int) info->ID[i] << endl;
+				<< " with ID: " << (int) info->ID[i];
 			QVariant v( info->ID[i] );
 			c->addItem(Pilot::fromPilot(info->name[i]), v);
 		}
@@ -161,7 +159,7 @@ void PilotComponent::slotShowComponent()
 	FUNCTIONSETUP;
 
 #ifdef DEBUG
-	DEBUGKPILOT << fname << "Showing component @" << (long) this;
+	DEBUGKPILOT << "Showing component @" << (long) this;
 #endif
 
 	emit showComponent(this);
