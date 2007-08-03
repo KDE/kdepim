@@ -35,6 +35,8 @@
 
 KeyringHHDataProxy::KeyringHHDataProxy( PilotDatabase *db ) : HHDataProxy( db )
 {
+	FUNCTIONSETUP;
+
 	// Hash-key record
 	fZeroRecord = fDatabase->readRecordByIndex( 0 );
 	
@@ -47,7 +49,7 @@ KeyringHHDataProxy::KeyringHHDataProxy( PilotDatabase *db ) : HHDataProxy( db )
 	// The salt and password hash are stored in recordZero.
 	if( recordZero.toByteArray().contains( hash.toByteArray() ) )
 	{
-		DEBUGKPILOT << "Password correct!" << endl;
+		DEBUGKPILOT << "Password correct!";
 		
 		QCA::Hash passHash( "md5" );
 		passHash.update( pass );
@@ -64,7 +66,7 @@ KeyringHHDataProxy::KeyringHHDataProxy( PilotDatabase *db ) : HHDataProxy( db )
 	}
 	else
 	{
-		DEBUGKPILOT << "Password incorrect!" << endl;
+		DEBUGKPILOT << "Password incorrect!";
 	}
 }
 
