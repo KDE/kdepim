@@ -23,7 +23,7 @@
 #ifndef __KDTOOLSCORE__PIMPL_PTR_H__
 #define __KDTOOLSCORE__PIMPL_PTR_H__
 
-#include <util/kdtoolsglobal.h>
+#include <utils/kdtoolsglobal.h>
 
 namespace kdtools {
 
