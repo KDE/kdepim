@@ -51,18 +51,6 @@ namespace Kleo {
         static AbstractKeyListModel * createFlatKeyListModel( QObject * parent=0 );
         static AbstractKeyListModel * createHierarchicalKeyListModel( QObject * parent=0 );
 
-        GpgME::Key key( const QModelIndex & idx ) const;
-        std::vector<GpgME::Key> keys( const QList<QModelIndex> & indexes ) const;
-
-        using QAbstractItemModel::index;
-        QModelIndex index( const GpgME::Key & key, int col=0 ) const;
-        QList<QModelIndex> indexes( const std::vector<GpgME::Key> & keys ) const;
-
-        QModelIndex addKey( const GpgME::Key & key );
-        QList<QModelIndex> addKeys( const std::vector<GpgME::Key> & keys );
-
-        void clear();
-
         enum Columns {
             PrettyName,
             PrettyEMail,
@@ -84,6 +72,20 @@ namespace Kleo {
             Icon = PrettyName // which column shall the icon be displayed in?
         };
 
+        GpgME::Key key( const QModelIndex & idx ) const;
+        std::vector<GpgME::Key> keys( const QList<QModelIndex> & indexes ) const;
+
+        using QAbstractItemModel::index;
+        QModelIndex index( const GpgME::Key & key, int col=0 ) const;
+        QList<QModelIndex> indexes( const std::vector<GpgME::Key> & keys ) const;
+
+    public Q_SLOTS:
+        QModelIndex addKey( const GpgME::Key & key );
+        QList<QModelIndex> addKeys( const std::vector<GpgME::Key> & keys );
+
+        void clear();
+
+    public:
         /* reimp */ int columnCount( const QModelIndex & pidx ) const;
         /* reimp */ QVariant headerData( int section, Qt::Orientation o, int role=Qt::DisplayRole ) const;
         /* reimp */ QVariant data( const QModelIndex & index, int role=Qt::DisplayRole ) const;
