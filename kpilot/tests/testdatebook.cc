@@ -42,6 +42,7 @@
 
 int main(int argc, char **argv)
 {
+	FUNCTIONSETUP;
 
 	KAboutData aboutData("testdatebook", 0,ki18n("Test Date Book"),"0.1");
 	KCmdLineArgs::init(argc,argv,&aboutData);

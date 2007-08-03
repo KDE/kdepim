@@ -92,6 +92,8 @@ void badAppInfoCreation()
 
 void categoryNames( const QString &dir )
 {
+	FUNCTIONSETUP;
+
 	PilotLocalDatabase *database = new PilotLocalDatabase( dir, MEMO_NAME );
 	if (!database->isOpen())
 	{
@@ -147,6 +149,7 @@ void categoryNames( const QString &dir )
 
 int main(int argc, char **argv)
 {
+	FUNCTIONSETUP;
 
 	KAboutData aboutData("testcategories", 0,ki18n("Test Categories"),"0.1");
 	KCmdLineArgs::init(argc,argv,&aboutData);

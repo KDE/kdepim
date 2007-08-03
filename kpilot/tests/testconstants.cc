@@ -35,6 +35,7 @@
 
 int main(int, char **)
 {
+	FUNCTIONSETUP;
 #ifdef DEBUG
 	debug_level = 1;
 #endif
