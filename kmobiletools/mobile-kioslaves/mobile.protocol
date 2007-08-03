@@ -16,6 +16,7 @@ Class=:internet
 Description=A kioslave for mobile
 Description[el]=Ένα kioslave για κινητά τηλέφωνα
 Description[es]=Un kioslave para móviles
+Description[ga]=kioslave le haghaidh mobile
 Description[ja]=携帯電話のための kioslave
 Description[pt]=Um kioslave para o 'mobile'
 Description[pt_BR]=Um kioslave para o 'mobile'

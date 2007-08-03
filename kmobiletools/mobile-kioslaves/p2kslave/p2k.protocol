@@ -19,6 +19,7 @@ determineMimetypeFromExtension=true
 Description=A kioslave for p2k Motorola Phones
 Description[el]=Ένα kioslave για τηλέφωνα Motorola p2k
 Description[es]=Un kioslave para teléfonos p2k de Motorola
+Description[ga]=kioslave le haghaidh Fóin p2k Motorola
 Description[ja]=p2k Motorola 電話のための kioslave
 Description[pt]=Um 'kioslave' para os Telefones Motorola p2k
 Description[pt_BR]=Um 'kioslave' para os Telefones Motorola p2k
