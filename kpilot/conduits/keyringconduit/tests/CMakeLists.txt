@@ -4,8 +4,11 @@ include_directories(
 )
 
 set(tests_SRCS
+	keyringlistmodel.cc
+	keyringviewer.cc
 	main.cc
 )
 
+kde4_add_ui_files(tests_SRCS viewer.ui)
 kde4_add_executable(testje ${tests_SRCS})
-target_link_libraries(testje ${QT_QTCORE_LIBRARY} kpilot keyring)
+target_link_libraries(testje ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY} kpilot keyring)

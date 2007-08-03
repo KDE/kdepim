@@ -13,12 +13,16 @@
 #include "keyringhhdataproxy.h"
 #include "record.h"
 
+#include "keyringviewer.h"
+
 using namespace std;
 
 int main(int argc, char **argv)
 {
 	FUNCTIONSETUP;
-
+	
+	debug_level = 1;
+	
 	KAboutData aboutData("testdatebook", 0,ki18n("Test Date Book"),"0.1");
 	KCmdLineArgs::init(argc,argv,&aboutData);
 
@@ -29,7 +33,7 @@ int main(int argc, char **argv)
 	options.add( "", ki18n("Example: ./testje ~/data KeyRing secret_pass") );
 	KCmdLineArgs::addCmdLineOptions( options );
 
-	KApplication app( false );
+	KApplication app( true );
 
 	KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
 	
@@ -61,20 +65,16 @@ int main(int argc, char **argv)
 	cout << "- Opening database: " << dbPath + dbName + ".pdb" << endl;
 	
 	// Create the database.
-	PilotLocalDatabase database( dbPath + "/" + dbName );
-	
+	PilotLocalDatabase database( dbPath + "/" + dbName );	
 	KeyringHHDataProxy proxy( &database );
 	
+	KeyringViewer *viewer = new KeyringViewer( 0, &proxy );
+	viewer->show();
+	
+	/*
 	DEBUGKPILOT <<"Recordcount:" << proxy.recordCount();
 	
-	proxy.setIterateMode( DataProxy::All );
-	proxy.resetIterator();
 	
-	while( proxy.hasNext() )
-	{
-		Record *rec = proxy.next();
-		DEBUGKPILOT <<"Record:" << rec->toString();
-	}
-	
-	return 0;
+	*/
+	return app.exec();
 }

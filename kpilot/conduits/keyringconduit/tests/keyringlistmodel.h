@@ -1,9 +1,8 @@
-#ifndef KEYRINGHHDATAPROXY_H
-#define KEYRINGHHDATAPROXY_H
-/* keyringhhdataproxy.h			KPilot
+#ifndef KEYRINGLISTMODEL_H
+#define KEYRINGLISTMODEL_H
+/* keyringlistmodel.h			KPilot
 **
 ** Copyright (C) 2007 by Bertjan Broeksema
-** Copyright (C) 2007 by Jason "vanRijn" Kasper
 */
 
 /*
@@ -27,36 +26,37 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
-#include "hhdataproxy.h"
+#include <QAbstractListModel>
 
-#include <QtCrypto>
+class KeyringHHDataProxy;
+class KeyringHHRecord;
 
-class HHRecord;
-
-class KPILOT_EXPORT KeyringHHDataProxy : public HHDataProxy {
+class KeyringListModel : public QAbstractListModel
+{
 public:
-	KeyringHHDataProxy( PilotDatabase *db );
+	KeyringListModel( KeyringHHDataProxy *proxy, QObject *parent = 0 );
 	
-	virtual ~KeyringHHDataProxy();
-
-protected:
 	/**
-	 * This function creates a (subclass of) HHRecord for @p rec.
+	 * Returns the number of rows under the given parent.
 	 */
-	virtual HHRecord* createHHRecord( PilotRecord *rec );
+	int rowCount ( const QModelIndex & parent = QModelIndex() ) const;
 	
-	virtual bool createDataStore();
+	/**
+	 * Returns the data stored under the given role for the item referred to by
+	 * the index.
+	 */
+	QVariant data ( const QModelIndex & index, int role = Qt::DisplayRole ) const;
 	
-	static const int MD5_DIGEST_LENGTH = 16;
-	static const int MD5_CBLOCK = 64;
-	static const int SALT_SIZE = 4;
+	QVariant headerData ( int section, Qt::Orientation orientation
+		, int role = Qt::DisplayRole ) const;
+		
+	KeyringHHRecord *record( const QModelIndex & index );
 
-private: // functions
-	QCA::SecureArray getDigest( const QCA::SecureArray &salt
-		, const QCA::SecureArray &pass );
+private:
+	KeyringHHDataProxy *fProxy;
+	QList<KeyringHHRecord*> fRecords;
 
-private: // members
-	PilotRecord *fZeroRecord;
-	QString fDesKey;
 };
+
+
 #endif

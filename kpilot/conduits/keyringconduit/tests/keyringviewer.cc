@@ -1,9 +1,6 @@
-#ifndef KEYRINGHHDATAPROXY_H
-#define KEYRINGHHDATAPROXY_H
-/* keyringhhdataproxy.h			KPilot
+/* keyringeditor.h			KPilot
 **
 ** Copyright (C) 2007 by Bertjan Broeksema
-** Copyright (C) 2007 by Jason "vanRijn" Kasper
 */
 
 /*
@@ -27,36 +24,35 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
-#include "hhdataproxy.h"
+#include "keyringviewer.h"
 
-#include <QtCrypto>
+#include "keyringhhrecord.h"
 
-class HHRecord;
+#include "keyringlistmodel.h"
 
-class KPILOT_EXPORT KeyringHHDataProxy : public HHDataProxy {
-public:
-	KeyringHHDataProxy( PilotDatabase *db );
+KeyringViewer::KeyringViewer( QWidget *parent, KeyringHHDataProxy *proxy )
+	: QDialog( parent )
+{
+	fModel = new KeyringListModel( proxy );
 	
-	virtual ~KeyringHHDataProxy();
-
-protected:
-	/**
-	 * This function creates a (subclass of) HHRecord for @p rec.
-	 */
-	virtual HHRecord* createHHRecord( PilotRecord *rec );
+	fUi.setupUi(this);
+	fUi.fNameEdit->setEnabled( false );
+	fUi.fAccountEdit->setEnabled( false );
+	fUi.fPasswordEdit->setEnabled( false );
+	fUi.fCategoryEdit->setEnabled( false );
+	fUi.fDateEdit->setEnabled( false );
+	fUi.fNotesEdit->setEnabled( false );
+	fUi.fAccountList->setModel( fModel );
 	
-	virtual bool createDataStore();
+	connect( fUi.fAccountList, SIGNAL( clicked( const QModelIndex& ) )
+		, this, SLOT( selectionChanged( const QModelIndex& ) ) );
 	
-	static const int MD5_DIGEST_LENGTH = 16;
-	static const int MD5_CBLOCK = 64;
-	static const int SALT_SIZE = 4;
+}
 
-private: // functions
-	QCA::SecureArray getDigest( const QCA::SecureArray &salt
-		, const QCA::SecureArray &pass );
+void KeyringViewer::selectionChanged( const QModelIndex &index )
+{
+	KeyringHHRecord *rec = static_cast<KeyringListModel*>( 
+		fUi.fAccountList->model() )->record( index );
 
-private: // members
-	PilotRecord *fZeroRecord;
-	QString fDesKey;
-};
-#endif
+	fUi.fAccountEdit->setText( rec->account() );
+}

@@ -36,7 +36,13 @@ class PilotRecord;
 class KeyringHHRecord : public HHRecord
 {
 public:
-	KeyringHHRecord( PilotRecord *rec, const QCA::SymmetricKey &key );
+	KeyringHHRecord( PilotRecord *rec, const QString &key );
+	
+	virtual QString name() const;
+	
+	virtual QString account() const;
+	
+	/** Implemented virtual methods */
 	
 	/**
 	 * Returns wheter or not the current record is equal to @p other. Implementing 
@@ -50,9 +56,20 @@ public:
 	 * Returns a string representation of the record.
 	 */
 	virtual QString toString() const;
+
+private: // functions
+	enum Field {
+		eAccount = 0,
+		ePassword,
+		eNotes,
+		eLastChangeTime
+	};
 	
-private:
-	const QCA::SymmetricKey fKey;
+	QVariant getEncryptedField( const Field f ) const;
+	
+private: // members
+	QString fKey;
+	QString fName;
 };
 
 #endif

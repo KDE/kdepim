@@ -36,7 +36,7 @@
 KeyringHHDataProxy::KeyringHHDataProxy( PilotDatabase *db ) : HHDataProxy( db )
 {
 	FUNCTIONSETUP;
-
+	
 	// Hash-key record
 	fZeroRecord = fDatabase->readRecordByIndex( 0 );
 	
@@ -55,8 +55,9 @@ KeyringHHDataProxy::KeyringHHDataProxy( PilotDatabase *db ) : HHDataProxy( db )
 		passHash.update( pass );
 		
 		// generate the DES keypair (snib = A,B; desKeyData = A,B,A)
-		fDesKey = QCA::SymmetricKey( passHash.final() );
-		fDesKey.append( fDesKey.toByteArray().left( 8 ) );
+		QCA::SymmetricKey key = QCA::SymmetricKey( passHash.final() );
+		key.append( key.toByteArray().left( 8 ) );
+		fDesKey = QCA::arrayToHex( key.toByteArray() );
 		
 		// Pass is correct and DES encryption key known, load the records.
 		loadAllRecords();
