@@ -450,7 +450,7 @@ void KNGroup::insortNewHeaders( const KIO::UDSEntryList &list, KNProtocolClient 
 
       if ( field == KIO::UDSEntry::UDS_NAME ) {
         //Article Number
-        art->setArticleNumber( (*it).numberValue( field ) );
+        art->setArticleNumber( (*it).stringValue( field ).toInt() );
       } else if ( field >= KIO::UDSEntry::UDS_EXTRA && field <= KIO::UDSEntry::UDS_EXTRA_END ) {
         QString value = (*it).stringValue( field );
         int pos = value.indexOf( ':' );

@@ -409,13 +409,13 @@ void KNode::Cleanup::saveConfig(KConfigGroup &conf)
   conf.writeEntry( "expInterval", e_xpireInterval );
   conf.writeEntry( "readDays", r_eadMaxAge );
   conf.writeEntry( "unreadDays", u_nreadMaxAge );
-  conf.writeEntry( "lastExpire", mLastExpDate );
+  conf.writeEntry( "lastExpire", QDateTime(mLastExpDate) );
 
   // folder compaction settings (only available globally)
   if (mGlobal) {
     conf.writeEntry( "doCompact", d_oCompact );
     conf.writeEntry( "comInterval", c_ompactInterval );
-    conf.writeEntry( "lastCompact", mLastCompDate );
+    conf.writeEntry( "lastCompact", QDateTime(mLastCompDate) );
   }
 
   if (!mGlobal)
