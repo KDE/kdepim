@@ -244,9 +244,9 @@ void dumpCategories(const struct CategoryAppInfo *info)
 	for (unsigned int i = 0; i < CATEGORY_COUNT; i++)
 	{
 		if (!info->name[i][0]) continue;
-		DEBUGKPILOT << i << "="
+		DEBUGKPILOT << i << '='
 			<< (int)(info->ID[i]) << " ["
-			<< info->name[i] << "]";
+			<< info->name[i] << ']';
 	}
 }
 

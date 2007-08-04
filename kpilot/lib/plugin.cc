@@ -298,13 +298,7 @@ ConduitAction::ConduitAction(KPilotLink *p,
 		fConflictResolution = SyncAction::eAskUser;
 	}
 
-	for (QStringList::ConstIterator it = args.begin();
-		it != args.end();
-		++it)
-	{
-		DEBUGKPILOT << ":" << *it;
-	}
-
+	DEBUGKPILOT << args.join(",");
 	DEBUGKPILOT << "Direction=" << fSyncDirection.name();
 }
 

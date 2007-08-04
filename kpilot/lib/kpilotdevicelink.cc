@@ -110,10 +110,10 @@ private:
 	{
 		if ( !(mBoundDevices.count() > 0) ) return;
 		FUNCTIONSETUPL(3);
-		DEBUGKPILOT << ": Bound devices: ["
+		DEBUGKPILOT << "Bound devices: ["
 			<< ((mBoundDevices.count() > 0) ?
 			mBoundDevices.join(CSL1(", ")) : CSL1("<none>")) 
-			<< "]";
+			<< ']';
 	}
 } ;
 
@@ -389,8 +389,6 @@ bool DeviceCommThread::open(const QString &device)
 	}
 
 
-	DEBUGKPILOT << ": Trying to create socket.";
-
 	fTempSocket = pi_socket(PI_AF_PILOT, PI_SOCK_STREAM, PI_PF_DLP);
 
 	if (fTempSocket < 0)
@@ -398,8 +396,7 @@ bool DeviceCommThread::open(const QString &device)
 		e = errno;
 		msg = i18n("Cannot create socket for communicating "
 			"with the Pilot (%1)",errorMessage(e));
-		WARNINGKPILOT << msg;
-		WARNINGKPILOT << "(" << strerror(e) << ")";
+		WARNINGKPILOT << msg << " (" << strerror(e) << ')';
 	
 		link()->fLinkStatus = PilotLinkError;
 		
@@ -409,18 +406,18 @@ bool DeviceCommThread::open(const QString &device)
 		return false;
 	}
 
-	DEBUGKPILOT << ": Got socket: [" << fTempSocket << "]" ;
+	DEBUGKPILOT << "Got socket: [" << fTempSocket << ']' ;
 
 	link()->fLinkStatus = CreatedSocket;
 
-	DEBUGKPILOT << ": Binding to path: [" 
-		<< link()->fRealPilotPath << "]";
+	DEBUGKPILOT << "Binding to path: [" 
+		<< link()->fRealPilotPath << ']';
 
 	ret = pi_bind(fTempSocket, QFile::encodeName(link()->fRealPilotPath));
 
 	if (ret < 0)
 	{
-		DEBUGKPILOT << ": pi_bind error: [" << strerror(errno) << "]";
+		DEBUGKPILOT << "pi_bind error [" << strerror(errno) << ']';
 
 		e = errno;
 		msg = i18n("Cannot open Pilot port \"%1\". ",link()->fRealPilotPath);
@@ -441,9 +438,9 @@ bool DeviceCommThread::open(const QString &device)
 	link()->fLinkStatus = DeviceOpen;
 	DeviceMap::self()->bindDevice( link()->fRealPilotPath );
 
-	DEBUGKPILOT << ": Current status: ["
+	DEBUGKPILOT << "Current status: ["
 		<< link()->statusString()
-		<< "] and socket: [" << fTempSocket << "]";
+		<< "] and socket: [" << fTempSocket << ']';
 
 	ret = pi_listen(fTempSocket, 1);
 	if (ret < 0)
@@ -477,7 +474,7 @@ bool DeviceCommThread::open(const QString &device)
 	{
 		char *s = strerror(errno);
 
-		WARNINGKPILOT << "pi_accept returned: [" << s << "]";
+		WARNINGKPILOT << "pi_accept returned message [" << s << ']';
 
 		QApplication::postEvent(link(),
 			new DeviceCommEvent(EventLogError, i18n("Cannot accept Pilot (%1)",QString::fromLocal8Bit(s))));
@@ -523,7 +520,7 @@ bool DeviceCommThread::open(const QString &device)
 		DEBUGKPILOT << "RomVersion: [" << link()->fPilotSysInfo->getRomVersion()
 			<< "] Locale: [" << link()->fPilotSysInfo->getLocale()
 			<< "] Product: [" << link()->fPilotSysInfo->getProductID()
-			<< "]";
+			<< ']';
 	}
 
 	QApplication::postEvent(link(),
@@ -538,7 +535,7 @@ bool DeviceCommThread::open(const QString &device)
 	dlp_ReadUserInfo(fPilotSocket, link()->fPilotUser->data());
 
 	QString n = link()->getPilotUser().name();
-	DEBUGKPILOT << ": Read user name: [" << n << "]";
+	DEBUGKPILOT << "Read user name: [" << n << ']';
 
 	QApplication::postEvent(link(),
 		new DeviceCommEvent(EventLogProgress, i18n("Checking last PC..."), 90));
@@ -546,7 +543,7 @@ bool DeviceCommThread::open(const QString &device)
 	/* Tell user (via Pilot) that we are starting things up */
 	if ((ret=dlp_OpenConduit(fPilotSocket)) < 0)
 	{
-		DEBUGKPILOT << ": dlp_OpenConduit returned: [" << ret << "]";
+		DEBUGKPILOT << "dlp_OpenConduit returned: [" << ret << ']';
 
 		QApplication::postEvent(link(),
 			new DeviceCommEvent(EventLogError,
@@ -570,8 +567,8 @@ void DeviceCommThread::close()
 
 	if (fPilotSocket != -1)
 	{
-		DEBUGKPILOT << ": device comm thread closing socket: ["
-			<< fPilotSocket << "]";
+		DEBUGKPILOT << "Device comm thread closing socket: ["
+			<< fPilotSocket << ']';
 
 		pi_close(fPilotSocket);
 	}
@@ -678,8 +675,7 @@ void KPilotDeviceLink::customEvent(QEvent *e)
 		}
 		else
 		{
-			DEBUGKPILOT 
-				<< ": unable to cast event: [" << e << "]";
+			DEBUGKPILOT << "Unable to cast event: [" << e << ']';
 		}
 	}
 	else if ((int)e->type() == EventLogMessage)
@@ -691,8 +687,7 @@ void KPilotDeviceLink::customEvent(QEvent *e)
 		}
 		else
 		{
-			DEBUGKPILOT
-				<< ": unable to cast event: [" << e << "]";
+			DEBUGKPILOT << "Unable to cast event: [" << e << ']';
 		}
 	}
 	else if ((int)e->type() == EventLogError)
@@ -704,8 +699,7 @@ void KPilotDeviceLink::customEvent(QEvent *e)
 		}
 		else
 		{
-			DEBUGKPILOT 
-				<< ": unable to cast event: [" << e << "]";
+			DEBUGKPILOT << "Unable to cast event: [" << e << ']';
 		}
 	}
 	else if ((int)e->type() == EventLogProgress)
@@ -717,8 +711,7 @@ void KPilotDeviceLink::customEvent(QEvent *e)
 		}
 		else
 		{
-			DEBUGKPILOT 
-				<< ": unable to cast event: [" << e << "]";
+			DEBUGKPILOT << "Unable to cast event: [" << e << ']';
 		}
 	}
 	else

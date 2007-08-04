@@ -65,7 +65,7 @@ protected:
 
 inline std::ostream& operator <<(std::ostream &o, const KPilotDepthCount &d)
 {
-	return o << d.indent() << ' ' << d.name();
+	return o << d.indent() << ' ' << d.name() << ": ";
 }
 
 inline std::ostream& operator <<(std::ostream &o, const QString &s)
