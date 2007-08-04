@@ -84,22 +84,22 @@ class KPILOT_EXPORT KPilotDebugStream
 {
 public:
 	KPilotDebugStream(int dummy) :
-		my_level(1000), // Sufficiently large to avoid printing
+		enabled(false),
 		has_printed(false)
 	{ Q_UNUSED(dummy); }
 	KPilotDebugStream(const KPilotDepthCount &d) :
-		my_level(d.level()),
+		enabled(debug_level >= d.level()),
 		has_printed(false)
 	{
 	}
 	KPilotDebugStream() : // For warnings, needs no fname / depth
-		my_level(-1),
+		enabled(true),
 		has_printed(false)
 	{
 	}
 	~KPilotDebugStream()
 	{
-		if (has_printed)
+		if (enabled && has_printed)
 		{
 			std::cerr << std::endl;
 		}
@@ -107,7 +107,7 @@ public:
 
 	template <typename T> KPilotDebugStream &operator <<(const T &v)
 	{
-		if (debug_level >= my_level)
+		if (enabled)
 		{
 			has_printed = true;
 			std::cerr << v;
@@ -116,8 +116,7 @@ public:
 	}
 
 private:
-	int my_level;
-	bool has_printed;
+	bool enabled,has_printed;
 } ;
 
 
