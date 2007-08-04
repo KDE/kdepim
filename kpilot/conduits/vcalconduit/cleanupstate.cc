@@ -57,7 +57,7 @@ void CleanUpState::startSync( ConduitAction *ca )
 		return;
 	}
 
-	DEBUGKPILOT << fname <<": Starting CleanUpState.";
+	DEBUGKPILOT << "Starting CleanUpState.";
 
 	vccb->addLogMessage( i18n( "Cleaning up ..." ) );
 	vccb->postSync();
@@ -127,6 +127,6 @@ void CleanUpState::finishSync( ConduitAction *ca )
 		return;
 	}
 
-	DEBUGKPILOT << fname <<": Finished CleanUpState.";
+	DEBUGKPILOT << "Finished CleanUpState.";
 	vccb->setState( 0L );
 }

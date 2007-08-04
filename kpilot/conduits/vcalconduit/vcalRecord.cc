@@ -46,9 +46,6 @@
 static void setStartEndTimes(KCal::Event *e, const PilotDateEntry *de)
 {
 	FUNCTIONSETUP;
-	DEBUGKPILOT << fname
-		<< "# Start time on Palm: "
-		<< readTm(de->getEventStart()).toString() << endl;
 
 	e->setDtStart(KDateTime(readTm(de->getEventStart()), KDateTime::Spec::LocalZone()));
 	e->setFloats(de->isEvent());
@@ -87,12 +84,7 @@ static void setAlarms(KCal::Event *e, const PilotDateEntry *de)
 		advanceUnits = 60*24;
 		break;
 	default:
-#ifdef DEBUG
-		DEBUGKPILOT << fname
-			<< ": Unknown advance units "
-			<< advanceUnits
-			<< endl;
-#endif
+		WARNINGKPILOT << "Unknown advance units " << advanceUnits;
 		advanceUnits=1;
 	}
 
@@ -110,9 +102,7 @@ static void setRecurrence(KCal::Event *event,const PilotDateEntry *dateEntry)
 
 	if ((dateEntry->getRepeatType() == repeatNone) || dateEntry->isMultiDay())
 	{
-#ifdef DEBUG
-		DEBUGKPILOT<<fname<<": no recurrence to set";
-#endif
+		DEBUGKPILOT << "No recurrence to set.";
 		return;
 	}
 
@@ -124,13 +114,6 @@ static void setRecurrence(KCal::Event *event,const PilotDateEntry *dateEntry)
 	if (!repeatsForever)
 	{
 		endDate = readTm(dateEntry->getRepeatEnd()).date();
-#ifdef DEBUG
-		DEBUGKPILOT << fname <<"-- end" << endDate.toString();
-	}
-	else
-	{
-		DEBUGKPILOT << fname <<"-- noend";
-#endif
 	}
 
 	QBitArray dayArray(7);
@@ -144,14 +127,10 @@ static void setRecurrence(KCal::Event *event,const PilotDateEntry *dateEntry)
 		{
 		const int *days = dateEntry->getRepeatDays();
 
-#ifdef DEBUG
-		DEBUGKPILOT << fname
-			<< ": Got repeat-weekly entry, by-days="
-			<< days[0] << " "<< days[1] << " "<< days[2] << " "
+		DEBUGKPILOT << "Got repeat-weekly entry, by-days="
+			<< days[0] << " " << days[1] << " " << days[2] << " "
 			<< days[3] << " "
-			<< days[4] << " "<< days[5] << " "<< days[6] << " "
-			<< endl;
-#endif
+			<< days[4] << " " << days[5] << " " << days[6];
 
 		// Rotate the days of the week, since day numbers on the Pilot and
 		// in vCal / Events are different.
@@ -159,7 +138,10 @@ static void setRecurrence(KCal::Event *event,const PilotDateEntry *dateEntry)
 		if (days[0]) dayArray.setBit(6);
 		for (int i = 1; i < 7; i++)
 		{
-			if (days[i]) dayArray.setBit(i-1);
+			if (days[i])
+			{
+				dayArray.setBit(i-1);
+			}
 		}
 		recur->setWeekly( freq, dayArray );
 		}
@@ -192,12 +174,7 @@ static void setRecurrence(KCal::Event *event,const PilotDateEntry *dateEntry)
 		break;
 	case repeatNone:
 	default :
-#ifdef DEBUG
-		DEBUGKPILOT << fname
-			<< ": Can't handle repeat type "
-			<< dateEntry->getRepeatType()
-			<< endl;
-#endif
+		WARNINGKPILOT << "Can't handle repeat type " << dateEntry->getRepeatType();
 		break;
 	}
 	if (!repeatsForever)
@@ -224,13 +201,6 @@ static void setExceptions(KCal::Event *vevent,const PilotDateEntry *dateEntry)
 	}
 	else
 	{
-#ifdef DEBUG
-	if (dateEntry->getExceptionCount()>0)
-	DEBUGKPILOT << fname
-		<< ": WARNING Exceptions ignored for multi-day event "
-		<< dateEntry->getDescription()
-		<< endl ;
-#endif
 		return;
 	}
 	vevent->recurrence()->setExDates(dl);
@@ -265,7 +235,7 @@ static void setAlarms(PilotDateEntry*de, const KCal::Event *e)
 	if (!de || !e )
 	{
 #ifdef DEBUG
-		DEBUGKPILOT << fname <<": NULL entry given to setAlarms.";
+		DEBUGKPILOT << "NULL entry given to setAlarms.";
 #endif
 		return;
 	}
@@ -287,7 +257,7 @@ static void setAlarms(PilotDateEntry*de, const KCal::Event *e)
 	if (!alm )
 	{
 #ifdef DEBUG
-		DEBUGKPILOT << fname <<": no enabled alarm found (should exist!!!)";
+		DEBUGKPILOT << "no enabled alarm found (should exist!!!)";
 #endif
 		de->setAlarmEnabled( false );
 		return;
@@ -337,7 +307,7 @@ static void setRecurrence(PilotDateEntry*dateEntry, const KCal::Event *event)
 		dateEntry->setRepeatFrequency(1);
 		dateEntry->setRepeatEnd(dateEntry->getEventEnd());
 #ifdef DEBUG
-		DEBUGKPILOT << fname <<": Setting single-day recurrence (" << startDt.toString() <<" -" << endDt.toString() <<")";
+		DEBUGKPILOT << "Setting single-day recurrence (" << startDt.toString() <<" -" << endDt.toString() <<")";
 #endif
 	}
 
@@ -411,8 +381,8 @@ static void setRecurrence(PilotDateEntry*dateEntry, const KCal::Event *event)
 		break;
 	case KCal::Recurrence::rYearlyDay:
 	case KCal::Recurrence::rYearlyPos:
-		DEBUGKPILOT << fname
-			<< "! Unsupported yearly recurrence type." << endl;
+		WARNINGKPILOT << "Unsupported yearly recurrence type.";
+		break;
 	case KCal::Recurrence::rYearlyMonth:
 		dateEntry->setRepeatType(repeatYearly);
 		break;
@@ -420,10 +390,9 @@ static void setRecurrence(PilotDateEntry*dateEntry, const KCal::Event *event)
 		if (!isMultiDay) dateEntry->setRepeatType(repeatNone);
 		break;
 	default:
-#ifdef DEBUG
-		DEBUGKPILOT << fname <<": Unknown recurrence type"<< recType <<" with frequency"
-			<< freq << " and duration " << r->duration() << endl;
-#endif
+		WARNINGKPILOT << "Unknown recurrence type " << recType
+			<<" with frequency " << freq
+			<< " and duration " << r->duration();
 		break;
 	}
 }
@@ -483,14 +452,10 @@ bool KCalSync::setEvent(KCal::Event *e,
 	FUNCTIONSETUP;
 	if (!e)
 	{
-		DEBUGKPILOT << fname
-			<< "! NULL event given... Skipping it" << endl;
 		return false;
 	}
 	if (!de)
 	{
-		DEBUGKPILOT << fname
-			<< "! NULL date entry given... Skipping it" << endl;
 		return false;
 	}
 
@@ -528,8 +493,6 @@ bool KCalSync::setDateEntry(PilotDateEntry *de,
 {
 	FUNCTIONSETUP;
 	if (!de || !e) {
-		DEBUGKPILOT << fname
-			<< ": NULL event given... Skipping it" << endl;
 		return false;
 	}
 

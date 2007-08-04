@@ -494,8 +494,8 @@ void SysInfoConduit::writeFile()
 
 	if (!loaded)
 	{
-		WARNINGKPILOT <<"Loading template file" << templatefile
-			<<" failed. Using default template instead." << endl;
+		WARNINGKPILOT << "Loading template file [" << templatefile
+			<< "] failed. Using default template instead.";
 		output=defaultpage;
 	}
 
@@ -569,7 +569,7 @@ void SysInfoConduit::writeFile()
 	// Write out the result
 	QFile outfile(fOutputFile);
 #ifdef DEBUG
-	DEBUGKPILOT << fname <<": Writing file <" << fOutputFile <<">";
+	DEBUGKPILOT << "Writing file <" << fOutputFile <<">";
 #endif
 	if (fOutputFile.isEmpty() || (!outfile.open(QIODevice::WriteOnly)) ) {
 		QFileInfo fi(QDir::home(), CSL1("KPilotSysInfo.")+QFileInfo(templatefile).suffix() );

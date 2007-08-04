@@ -87,17 +87,6 @@ ConduitConfig::ConduitConfig(QWidget *p, const char *n) :
 {
 	FUNCTIONSETUP;
 
-#ifdef DEBUG
-	DEBUGKPILOT << fname
-		<< ": Message="
-		<< fConfigWidget->fLogMessage->text()
-		<< endl;
-	DEBUGKPILOT << fname
-		<< ": Databases="
-		<< fConfigWidget->fDatabases->text()
-		<< endl;
-#endif
-
 	ConduitSettings::setLogMessage( fConfigWidget->fLogMessage->text() );
 	ConduitSettings::setDatabases( fConfigWidget->fDatabases->text() );
 	ConduitSettings::setFailImmediately( fConfigWidget->fFailImmediately->isChecked());
@@ -113,17 +102,6 @@ ConduitConfig::ConduitConfig(QWidget *p, const char *n) :
 	fConfigWidget->fLogMessage->setText( ConduitSettings::logMessage() );
 	fConfigWidget->fDatabases->setText( ConduitSettings::databases().join(",") );
 	fConfigWidget->fFailImmediately->setChecked( ConduitSettings::failImmediately() );
-
-#ifdef DEBUG
-	DEBUGKPILOT << fname
-		<< ": Read Message="
-		<< fConfigWidget->fLogMessage->text()
-		<< endl;
-	DEBUGKPILOT << fname
-		<< ": Read Database="
-		<< fConfigWidget->fDatabases->text()
-		<< endl;
-#endif
 
 	unmodified();
 }

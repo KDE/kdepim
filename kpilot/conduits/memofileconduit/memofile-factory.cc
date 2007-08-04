@@ -85,7 +85,7 @@ MemofileConduitConfig::MemofileConduitConfig(QWidget *p, const char *n) :
 {
 	FUNCTIONSETUP;
 
-	DEBUGKPILOT << fname
+	DEBUGKPILOT
 		<< ": Directory="
 		<< fConfigWidget->fDirectory->url().url();
 
@@ -103,7 +103,7 @@ MemofileConduitConfig::MemofileConduitConfig(QWidget *p, const char *n) :
 	fConfigWidget->fDirectory->setUrl( MemofileConduitSettings::directory() );
 	fConfigWidget->fSyncPrivate->setChecked( MemofileConduitSettings::syncPrivate() );
 
-	DEBUGKPILOT << fname
+	DEBUGKPILOT
 		<< ": Read Directory: ["
 		<< fConfigWidget->fDirectory->url().url()
 		<< "], sync private records: ["

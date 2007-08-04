@@ -55,7 +55,7 @@ void DeleteUnsyncedPCState::startSync( ConduitAction *ca )
 		return;
 	}
 
-	DEBUGKPILOT << fname <<": Starting DeleteUnsyncedPCState.";
+	DEBUGKPILOT << "Starting DeleteUnsyncedPCState.";
 
 	fPilotIndex = 0;
 	fNextState = new CleanUpState();
@@ -108,13 +108,11 @@ void DeleteUnsyncedPCState::handleRecord( ConduitAction *ca )
 	// record.
 	if ( id <=0 || !s )
 	{
-#ifdef DEBUG
-		DEBUGKPILOT << fname <<": found PC entry with pilotID: [" << id
+		DEBUGKPILOT << "found PC entry with pilotID: [" << id
 			<< "], Description: [" << e->summary()
 			<< "], Time: ["<< e->dtStart().toString() << "] until: ["
 			<< e->dtEnd().toString() << "]. Can't find it on Palm, "
-			<< "so I'm deleting it from the local calendar." << endl;
-#endif
+			<< "so I'm deleting it from the local calendar.";
 		vccb->privateBase()->removeIncidence(e);
 	}
 
@@ -132,6 +130,6 @@ void DeleteUnsyncedPCState::finishSync( ConduitAction *ca )
 		return;
 	}
 
-	DEBUGKPILOT << fname <<": Finishing DeleteUnsyncedPCState.";
+	DEBUGKPILOT << "Finishing DeleteUnsyncedPCState.";
 	vccb->setState( fNextState );
 }

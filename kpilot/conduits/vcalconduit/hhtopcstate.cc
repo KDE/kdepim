@@ -57,7 +57,7 @@ void HHToPCState::startSync( ConduitAction *ca )
 		return;
 	}
 
-	DEBUGKPILOT << fname <<": Starting HHToPCState.";
+	DEBUGKPILOT << "Starting HHToPCState.";
 
 	if ( vccb->syncMode() == ConduitAction::SyncMode::eCopyHHToPC )
 	{
@@ -114,7 +114,7 @@ void HHToPCState::handleRecord( ConduitAction *ca )
 		{
 			DEBUGKPILOT <<"-------------------------------------------------";
 			DEBUGKPILOT <<"--------------------------";
-			DEBUGKPILOT << fname <<": Could not read palm record with ID";
+			DEBUGKPILOT << "Could not read palm record with ID";
 			DEBUGKPILOT << r->id();
 		}
 #endif
@@ -162,7 +162,7 @@ void HHToPCState::finishSync( ConduitAction *ca )
 		return;
 	}
 
-	DEBUGKPILOT << fname <<": Finished HHToPCState.";
+	DEBUGKPILOT << "Finished HHToPCState.";
 	vccb->setState( fNextState );
 }
 
@@ -202,20 +202,15 @@ void VCalConduitBase::slotPalmRecToPC()
 	// let subclasses do something with the record before we try to sync
 	preRecord(r);
 
-//	DEBUGKPILOT<<fname<<": Event:"<<e->dtStart()<<" until"<<e->dtEnd();
-//	DEBUGKPILOT<<fname<<": Time:"<<e->dtStart()<<" until"<<e->dtEnd();
 	bool archiveRecord=(r->isArchived());
 
 	s = fLocalDatabase->readRecordById(r->id());
 	if (!s || isFirstSync())
 	{
-#ifdef DEBUG
 		if (r->id()>0 && !s)
 		{
-			DEBUGKPILOT<<"---------------------------------------------------------------------------";
-			DEBUGKPILOT<< fname<<": Could not read palm record with ID"<<r->id();
+			DEBUGKPILOT << "Could not read palm record with ID"<<r->id();
 		}
-#endif
 		if (!r->isDeleted() || (config()->syncArchived() && archiveRecord))
 		{
 			KCal::Incidence*e=addRecord(r);

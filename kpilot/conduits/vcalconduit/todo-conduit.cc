@@ -195,12 +195,12 @@ void TodoConduit::_setAppInfo()
 
 	if( !fTodoAppInfo )
 	{
-		DEBUGKPILOT << fname <<": fTodoAppInfo is NULL";
+		DEBUGKPILOT << "fTodoAppInfo is NULL";
 		return;
 	}
 	if( !fDatabase )
 	{
-		DEBUGKPILOT << fname <<": fDatabase is NULL";
+		DEBUGKPILOT << "fDatabase is NULL";
 		return;
 	}
 
@@ -272,8 +272,7 @@ PilotRecord *TodoConduit::recordFromIncidence(PilotRecordBase *de, const KCal::I
 
 	if (!de || !e)
 	{
-		DEBUGKPILOT << fname
-			<< ": got NULL entry or NULL incidence." << endl;
+		DEBUGKPILOT << "Got NULL entry or NULL incidence.";
 		return 0L;
 	}
 
@@ -287,7 +286,7 @@ PilotRecord *TodoConduit::recordFromIncidence(PilotRecordBase *de, const KCal::I
 	const KCal::Todo *todo = dynamic_cast<const KCal::Todo *>(e);
 	if (!todo)
 	{
-		DEBUGKPILOT << fname <<": Incidence is not a todo.";
+		DEBUGKPILOT << "Incidence is not a todo.";
 		return 0L;
 	}
 
@@ -308,22 +307,21 @@ KCal::Incidence *TodoConduit::incidenceFromRecord(KCal::Incidence *e, const Pilo
 
 	if (!de || !e)
 	{
-		DEBUGKPILOT << fname
-			<< ": Got NULL entry or NULL incidence." << endl;
+		DEBUGKPILOT << "Got NULL entry or NULL incidence.";
 		return 0L;
 	}
 
 	const PilotTodoEntry *todoEntry = dynamic_cast<const PilotTodoEntry *>(de);
 	if (!todoEntry)
 	{
-		DEBUGKPILOT << fname <<": HH record not a todo entry.";
+		DEBUGKPILOT << "HH record not a todo entry.";
 		return 0L;
 	}
 
 	KCal::Todo *todo = dynamic_cast<KCal::Todo *>(e);
 	if (!todo)
 	{
-		DEBUGKPILOT << fname <<": Incidence is not a todo.";
+		DEBUGKPILOT << "Incidence is not a todo.";
 		return 0L;
 	}
 

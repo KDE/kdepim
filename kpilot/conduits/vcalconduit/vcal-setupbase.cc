@@ -70,13 +70,10 @@ VCalWidgetSetupBase::~VCalWidgetSetupBase()
 	config()->readConfig();
 
 	// General page
-#ifdef DEBUG
-	DEBUGKPILOT << fname <<": Selected type="
+	DEBUGKPILOT << "Selected type="
 		<< fConfigWidget->fSyncDestination->selected()
 		<< " with id="
-		<< fConfigWidget->fSyncDestination->id(fConfigWidget->fSyncDestination->selected())
-		<< endl;
-#endif
+		<< fConfigWidget->fSyncDestination->id(fConfigWidget->fSyncDestination->selected());
 	config()->setCalendarType( fConfigWidget->fSyncDestination->id(
 			fConfigWidget->fSyncDestination->selected()));
 	config()->setCalendarFile( fConfigWidget->fCalendarFile->url().url());

@@ -218,12 +218,6 @@ bool MALConduit::skip()
 			}
 			syncMessage = i18n("Using proxy server: %1",proxyServer);
 
-#ifdef DEBUG
-			DEBUGKPILOT<<" Using HTTP proxy server \""<<proxyServer<<
-				"\", Port "<<proxyPort<<", User "<<MALConduitSettings::proxyUser()<<
-				", Password "<<( (MALConduitSettings::proxyPassword().isEmpty())?QString("not "):QString())<<"set"
-				<<endl;
-#endif
 #ifdef LIBMAL20
 			setHttpProxy(const_cast<char *>(proxyServer.toLatin1()));
 			if (proxyPort>0 && proxyPort<65536) setHttpProxyPort( proxyPort );

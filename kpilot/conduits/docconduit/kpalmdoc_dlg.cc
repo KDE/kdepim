@@ -123,7 +123,7 @@ void ConverterDlg::readSettings()
 	dlg->fVerbose->setChecked( KPalmDocSettings::verboseMessages() );
 	QString encoding = KPalmDocSettings::encoding();
 #ifdef DEBUG
-	DEBUGKPILOT << fname <<": Encoding=" << encoding;
+	DEBUGKPILOT << "Encoding=" << encoding;
 #endif
 	dlg->fEncoding->setCurrentText( KPalmDocSettings::encoding() );
 
@@ -375,23 +375,16 @@ void ConverterDlg::slotToPDB()
 
 
 		// Now that we have both directories, create the converter object
-		DEBUGKPILOT << fname 
-			<< "Pdbinfo.dir=" << pdbinfo.absolutePath() << endl;
-		DEBUGKPILOT << fname
-			<< "txtinfo.dir=" << txtinfo.absolutePath() << endl;
 		QStringList txtfiles(txtinfo.dir().entryList( QStringList(CSL1("*.txt"))));
 		QStringList converted_Files;
 
-		DEBUGKPILOT << fname <<"Length of filename list:"
-			<< txtfiles.size() << endl;
 		for ( QStringList::Iterator it = txtfiles.begin(); it != txtfiles.end(); ++it )
 		{
 			QString pdbfile=QFileInfo(*it).completeBaseName() + CSL1(".pdb");
-			DEBUGKPILOT << fname
-				<< "pdbfile=" << pdbfile 
+			DEBUGKPILOT << "pdbfile=" << pdbfile 
 				<< ", pdbdir=" << pdburl
 				<< ", txtfile=" << *it
-				<< ", txtdir=" << txturl << endl;
+				<< ", txtdir=" << txturl;
 			if (convertTXTtoPDB(txturl, *it, pdburl, pdbfile, &conv))
 			{
 				converted_Files.append(*it);

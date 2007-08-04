@@ -118,18 +118,6 @@ AbbrowserWidgetSetup::~AbbrowserWidgetSetup()
 	AbbrowserSettings::setCustom1(fConfigWidget->fCustom1->currentItem());
 	AbbrowserSettings::setCustom2(fConfigWidget->fCustom2->currentItem());
 	AbbrowserSettings::setCustom3(fConfigWidget->fCustom3->currentItem());
-#ifdef DEBUG
-	DEBUGKPILOT <<fname<<
-	  "Custom0: "<<fConfigWidget->fCustom0->currentItem()<<"   "<<
-	  "Custom1: "<<fConfigWidget->fCustom1->currentItem()<<"   "<<
-	  "Custom2: "<<fConfigWidget->fCustom2->currentItem()<<"   "<<
-	  "Custom3: "<<fConfigWidget->fCustom3->currentItem()<<"   "
-		<< " eCustom[0]=" << AbbrowserSettings::custom0()<<"    "
-		<< " eCustom[1]=" << AbbrowserSettings::custom1()<<"    "
-		<< " eCustom[2]=" << AbbrowserSettings::custom2()<<"    "
-		<< " eCustom[3]=" << AbbrowserSettings::custom3()<<"    "<<
-		endl;
-#endif
 	int fmtindex=fConfigWidget->fCustomDate->currentItem();
 	AbbrowserSettings::setCustomDateFormat(
 	  (fmtindex==0)?(QString::null):fConfigWidget->fCustomDate->currentText() );
@@ -142,19 +130,6 @@ AbbrowserWidgetSetup::~AbbrowserWidgetSetup()
 {
 	FUNCTIONSETUP;
 	AbbrowserSettings::self()->readConfig();
-
-#ifdef DEBUG
-	DEBUGKPILOT << fname
-		<< ": Settings "
-		<< " fPilotStreetHome=" << AbbrowserSettings::pilotStreet()
-		<< " fPilotFaxHome=" << AbbrowserSettings::pilotFax()
-		<< " fArchive=" << AbbrowserSettings::archiveDeleted()
-		<< " eCustom[0]=" << AbbrowserSettings::custom0()
-		<< " eCustom[1]=" << AbbrowserSettings::custom1()
-		<< " eCustom[2]=" << AbbrowserSettings::custom2()
-		<< " eCustom[3]=" << AbbrowserSettings::custom3()
-		<< endl;
-#endif
 
 	// General page
 	fConfigWidget->fSyncDestination->setButton(AbbrowserSettings::addressbookType());

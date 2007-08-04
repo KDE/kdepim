@@ -109,11 +109,11 @@ void IDMappingXmlSource::loadMapping()
 	
 	if( !file.exists() )
 	{
-		DEBUGKPILOT << fname <<": File does not exist, empty map.";
+		DEBUGKPILOT << "File does not exist, empty map.";
 	}
 	else
 	{
-		DEBUGKPILOT << fname <<": Parsing file" << file.fileName();
+		DEBUGKPILOT << "Parsing file" << file.fileName();
 		QXmlSimpleReader reader;
 		reader.setContentHandler( this );
 		
@@ -130,9 +130,9 @@ bool IDMappingXmlSource::saveMapping()
 {
 	FUNCTIONSETUP;
 	
-	DEBUGKPILOT << fname <<": Saving" << fMappings.count();
+	DEBUGKPILOT << "Saving" << fMappings.count();
 	DEBUGKPILOT <<" mappings...";
-	DEBUGKPILOT << fname <<":";
+	DEBUGKPILOT <<":";
 	
 	QDomDocument doc;
 	QDomElement root = doc.createElement( CSL1("mappings") );
@@ -175,9 +175,6 @@ bool IDMappingXmlSource::saveMapping()
 		QTextStream out( &file );
 		doc.save( out, 4 );
 		file.close();
-		
-		DEBUGKPILOT << endl << fname <<": finished saving.";
-		
 		return true;
 	}
 	

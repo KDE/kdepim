@@ -103,7 +103,7 @@ void Memofiles::load (bool loadAll)
 				// okay, we should have a memofile for this file now.  see if we need
 				// to load its text...
 				if (memofile->isModified() || loadAll) {
-					DEBUGKPILOT << fname
+					DEBUGKPILOT
 					<< ": now loading text for: [" << info.filePath() << ']';
 					memofile->load();
 				}
@@ -419,11 +419,11 @@ bool Memofiles::saveMemoMetadata()
 		// don't save deleted memos to our id file
 		if (! memofile->isDeleted()) {
 			stream  << memofile->id() << FIELD_SEP
-			<< memofile->category() << FIELD_SEP
-			<< memofile->lastModified() << FIELD_SEP
-			<< memofile->size() << FIELD_SEP
-			<< memofile->filename()
-			<< endl;
+				<< memofile->category() << FIELD_SEP
+				<< memofile->lastModified() << FIELD_SEP
+				<< memofile->size() << FIELD_SEP
+				<< memofile->filename()
+				<< endl;
 		}
 	}
 
@@ -437,8 +437,7 @@ MemoCategoryMap Memofiles::readCategoryMetadata()
 {
 	FUNCTIONSETUP;
 
-	DEBUGKPILOT
-		<< ": reading categories from file: [" << _categoryMetadataFile << ']';
+	DEBUGKPILOT << "Reading categories from file [" << _categoryMetadataFile << ']';
 
 	MemoCategoryMap map;
 	map.clear();
@@ -447,7 +446,7 @@ MemoCategoryMap Memofiles::readCategoryMetadata()
 	QTextStream stream(&f);
 
 	if( !f.open(QIODevice::ReadOnly) ) {
-		DEBUGKPILOT << ": ooh, bad.  couldn't open your categories file for reading.";
+		DEBUGKPILOT << "Couldn't open your categories file for reading.";
 		return map;
 	}
 
@@ -503,9 +502,9 @@ bool Memofiles::saveCategoryMetadata()
 	MemoCategoryMap::Iterator it;
 	for ( it = _categories.begin(); it != _categories.end(); ++it ) {
 		stream  << it.key()
-		<< FIELD_SEP
-		<< it.value()
-		<< endl;
+			<< FIELD_SEP
+			<< it.value()
+			<< endl;
 	}
 
 	f.close();
@@ -554,7 +553,7 @@ bool Memofiles::isFirstSync()
 
 	bool valid = metadataExists && _metadataLoaded;
 
-	DEBUGKPILOT << fname
+	DEBUGKPILOT
 	<< ": local metadata exists: [" << metadataExists
 	<< "], metadata loaded: [" << _metadataLoaded
 	<< "], returning: [" << ! valid << ']';
@@ -586,7 +585,7 @@ bool Memofiles::folderRemove(const QDir &_d)
 	QString name = d.dirName();
 	if(!d.cdUp())
 		return false;
-	DEBUGKPILOT << fname
+	DEBUGKPILOT
 	<< ": removing folder: [" << name << "]";
 	d.rmdir(name);
 

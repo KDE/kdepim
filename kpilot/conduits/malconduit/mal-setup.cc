@@ -168,16 +168,6 @@ MALWidgetSetup::~MALWidgetSetup()
 	fConfigWidget->proxyPassword->setText(QString::null);
 	fConfigWidget->proxyPassword->insert(MALConduitSettings::proxyPassword());
 
-#ifdef DEBUG
-	DEBUGKPILOT << fname <<": Got proxy password <"
-		<< MALConduitSettings::proxyPassword()
-		<< "> set Text <"
-		<< fConfigWidget->proxyPassword->text()
-		<< "> and Pwd <"
-//		<< fConfigWidget->proxyPassword->password()
-		<< ">" << endl;
-#endif
-
 	// MAL Server settings (not yet possible!!!)
 	fConfigWidget->malServerName->setEditText(MALConduitSettings::mALServer());
 

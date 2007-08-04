@@ -213,8 +213,7 @@ PilotRecord *VCalConduit::recordFromIncidence(PilotRecordBase *de, const KCal::I
 	FUNCTIONSETUP;
 	if (!de || !e)
 	{
-		DEBUGKPILOT << fname
-			<< ": got NULL entry or NULL incidence." << endl;
+		DEBUGKPILOT << "Got NULL entry or NULL incidence.";
 		return 0L;
 	}
 
@@ -235,7 +234,7 @@ PilotRecord *VCalConduit::recordFromIncidence(PilotRecordBase *de, const KCal::I
 	const KCal::Event *event = dynamic_cast<const KCal::Event *>(e);
 	if (!event)
 	{
-		DEBUGKPILOT << fname <<": Incidence is not an event.";
+		DEBUGKPILOT << "Incidence is not an event.";
 		return 0L;
 	}
 
@@ -255,22 +254,21 @@ KCal::Incidence *VCalConduit::incidenceFromRecord(KCal::Incidence *e, const Pilo
 
 	if (!de || !e)
 	{
-		DEBUGKPILOT << fname
-			<< ": Got NULL entry or NULL incidence." << endl;
+		DEBUGKPILOT << "Got NULL entry or NULL incidence.";
 		return 0L;
 	}
 
 	const PilotDateEntry *dateEntry = dynamic_cast<const PilotDateEntry *>(de);
 	if (!dateEntry)
 	{
-		DEBUGKPILOT << fname <<": HH record not a date entry.";
+		DEBUGKPILOT << "HH record not a date entry.";
 		return 0L;
 	}
 
 	KCal::Event *event = dynamic_cast<KCal::Event *>(e);
 	if (!event)
 	{
-		DEBUGKPILOT << fname <<": Incidence is not an event.";
+		DEBUGKPILOT << "Incidence is not an event.";
 		return 0L;
 	}
 

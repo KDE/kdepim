@@ -83,9 +83,9 @@ KABC::PhoneNumber::List KABCSync::getPhoneNumbers(const PilotAddress &a)
 
 	PhoneSlot shownPhone = a.getShownPhone();
 
-	DEBUGKPILOT << fname <<": preferred pilot index is: ["
+	DEBUGKPILOT << "Preferred pilot index is: ["
 		<< shownPhone << "], preferred phone number is: ["
-		<< a.getField(shownPhone) << "]" << endl;
+		<< a.getField(shownPhone) << ']';
 
 	for (PhoneSlot i = PhoneSlot::begin(); i.isValid(); ++i)
 	{
@@ -112,22 +112,21 @@ KABC::PhoneNumber::List KABCSync::getPhoneNumbers(const PilotAddress &a)
 			if (shownPhone == i)
 			{
 				phoneType |= KABC::PhoneNumber::Pref;
-				DEBUGKPILOT << fname <<": found preferred pilot index: ["
-					<< i << "], text: [" << test << "]" << endl;
+				DEBUGKPILOT <<"Found preferred pilot index: ["
+					<< i << "], text: [" << test << ']';
 			}
 			KABC::PhoneNumber ph(test, phoneType);
 			list.append(ph);
 		}
 		else
 		{
-			DEBUGKPILOT << fname <<": whoopsie.  pilot phone number: ["
+			DEBUGKPILOT <<"Pilot phone number: ["
 				<< test << "], index: [" << i << "], type: ["
-				<< phoneType << "], has no corresponding PhoneNumber type." << endl;
+				<< phoneType << "], has no corresponding PhoneNumber type.";
 		}
 	}
 
-	DEBUGKPILOT << fname <<": returning: ["
-		<< list.count() << "] phone numbers." << endl;
+	DEBUGKPILOT << "Returning " << list.count() << " phone numbers.";
 
 	return list;
 }
@@ -166,11 +165,11 @@ void KABCSync::setPhoneNumbers(const PilotAddressInfo &info,
 			int phoneKey = pilotToPhoneMap[pilotPhoneType];
 			if ( phone.type() & phoneKey)
 			{
-				DEBUGKPILOT << fname <<": found pilot type: ["
+				DEBUGKPILOT << "Found pilot type: ["
 					<< pilotPhoneType << "] ("
 					<< info.phoneLabel( (PilotAddressInfo::EPhoneType)pilotPhoneType)
 					<< ") for PhoneNumber: ["
-					<< phone.number() << "]" << endl;
+					<< phone.number() << ']';
 
 				phoneType = (PilotAddressInfo::EPhoneType) pilotPhoneType;
 				break;
@@ -182,31 +181,29 @@ void KABCSync::setPhoneNumbers(const PilotAddressInfo &info,
 		// if this is the preferred phone number, then set it as such
 		if (fieldSlot.isValid() && (phone.type() & KABC::PhoneNumber::Pref))
 		{
-			DEBUGKPILOT << fname <<": found preferred PhoneNumber."
+			DEBUGKPILOT << "Found preferred PhoneNumber."
 				<< "setting showPhone to index: ["
 				<< fieldSlot << "], PhoneNumber: ["
-				<< phone.number() << "]" << endl;
+				<< phone.number() << ']';
 			a.setShownPhone( fieldSlot );
 		}
 
 		if (!fieldSlot.isValid())
 		{
-			DEBUGKPILOT << fname <<": Phone listing overflowed.";
+			DEBUGKPILOT << "Phone listing overflowed.";
 		}
 	}
 
-	DEBUGKPILOT << fname <<": Pilot's showPhone now: ["
-		<< a.getShownPhone() << "]." << endl;
+	DEBUGKPILOT << "Pilot's showPhone now: [" << a.getShownPhone() << ']';
 
 	// after setting the numbers, make sure that something sensible is set as the
 	// shownPhone on the Pilot if nothing is yet...
 	QString pref = a.getField(a.getShownPhone());
 	if (!a.getShownPhone().isValid() || pref.isEmpty())
 	{
-		DEBUGKPILOT << fname <<": Pilot's showPhone: ["
+		DEBUGKPILOT << "Pilot's showPhone: ["
 			<< a.getShownPhone()
-			<< "] not properly set to a default."
-			<< endl;
+			<< "] not properly set to a default.";
 
 		for (PhoneSlot i = PhoneSlot::begin(); i.isValid(); ++i)
 		{
@@ -214,9 +211,9 @@ void KABCSync::setPhoneNumbers(const PilotAddressInfo &info,
 			if (!pref.isEmpty())
 			{
 				a.setShownPhone( i );
-				DEBUGKPILOT << fname <<": Pilot's showPhone now: ["
+				DEBUGKPILOT << "Pilot's showPhone now: ["
 					<< a.getShownPhone()
-					<< "], and that's final." << endl;
+					<< "], and that's final.";
 				break;
 			}
 		}
@@ -362,8 +359,8 @@ void KABCSync::setFieldFromHHCustom(
 			format.remove(re); // Remove references to year and following punctuation
 			bdate = KGlobal::locale()->readDate(value, format, &ok);
 		}
-		DEBUGKPILOT <<"Birthdate from" << index <<"-th custom field:"
-			<< bdate.toString() << endl;
+		DEBUGKPILOT << "Birthdate from" << index <<"-th custom field:"
+			<< bdate.toString();
 		DEBUGKPILOT <<"Is Valid:" << bdate.isValid();
 		if (bdate.isValid())
 		{
@@ -540,7 +537,7 @@ void KABCSync::copy(PilotAddress &toPilotAddr,
 	// Other field is an oddball and if the user has more than one field set
 	// as "Other" then only one will be carried over.
 	QString oth = KABCSync::getFieldForHHOtherPhone(fromAbEntry,syncSettings);
-	DEBUGKPILOT << fname <<": putting: ["<<oth<<"] into Palm's other";
+	DEBUGKPILOT << "putting: ["<<oth<<"] into Palm's other";
 	toPilotAddr.setPhoneField(PilotAddressInfo::eOther,
 		oth, PilotAddress::Replace);
 

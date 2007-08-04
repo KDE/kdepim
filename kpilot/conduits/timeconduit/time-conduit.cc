@@ -75,10 +75,6 @@ void TimeConduit::readConfig()
 
 	if (syncMode().isLocal())
 	{
-#ifdef DEBUG
-		DEBUGKPILOT << fname <<": Would have set time to"
-			<< QDateTime::currentDateTime().toString() << endl;
-#endif
 		return delayDone();
 	}
 

@@ -75,12 +75,12 @@ int docMatchBookmark::findMatches(QString doctext, bmkList &fBookmarks)
 {
 	FUNCTIONSETUP;
 	int pos = 0, nr=0, found=0;
-	DEBUGKPILOT << fname <<"Finding matches of" << pattern;
+	DEBUGKPILOT <<"Finding matches of" << pattern;
 
 	while (pos >= 0 && found<to)
 	{
 		pos = doctext.indexOf(pattern, pos);
-		DEBUGKPILOT << fname <<"Result of search: pos=" << pos;
+		DEBUGKPILOT <<"Result of search: pos=" << pos;
 		if (pos >= 0)
 		{
 			++found;
@@ -107,8 +107,6 @@ int docRegExpBookmark::findMatches(QString doctext, bmkList &fBookmarks)
 
 	while (pos>=0 && found<=to)
 	{
-		DEBUGKPILOT << fname
-			<< "Searching for bookmark " << pattern << endl;
 		pos=rx.indexIn(doctext, pos);
 		if (pos > -1)
 		{
@@ -230,27 +228,15 @@ int DOCConverter::findBmkEndtags(QString &text, bmkList&fBmks) {
 	bool doSearch=true;
 	while (pos >= 0)
 	{
-		DEBUGKPILOT << fname
-			<< "Current character is \'"
-			<< text[pos].toLatin1() << "\'" << endl;
 		// skip whitespace until we reach a >
 		while (text[pos].isSpace() && pos >= 0)
 		{
-			DEBUGKPILOT << fname
-				<< "Skipping whitespaces at the end of the file" << endl;
 			pos--;
 		}
 		// every other character than a > is assumed to belong to the
 		// text, so there are no more bookmarks.
 		if (pos < 0 || text[pos] != '>')
 		{
-			DEBUGKPILOT << fname
-				<< "Current character \'"
-				<< text[pos].toLatin1()
-				<< "\' at position " << pos
-				<< " is not an ending >. "
-				<< "Finish searching for bookmarks." << endl;
-
 			pos=-1;
 			break;
 		} else {
@@ -322,11 +308,6 @@ int DOCConverter::findBmkFile(QString &, bmkList &fBmks) {
 		bmkfile.setFileName(bmkfilename);
 		if (!bmkfile.open(QIODevice::ReadOnly))
 		{
-			DEBUGKPILOT << fname
-				<< "Unable to open bookmarks file "
-				<< bmkfilename
-				<< " for reading the bookmarks of "
-				<< docdb->dbPathName() << endl;
 			return 0;
 		}
 	}
@@ -563,16 +544,8 @@ bool DOCConverter::convertPDBtoTXT()
 	PilotDOCHead header(headerRec);
 	KPILOT_DELETE(headerRec);
 
-	DEBUGKPILOT<<"Database"<<docdb->dbPathName()<<" has"<<header.numRecords<<" text records,"<<endl
-		<<" total number of records: "<<docdb->recordCount()<<endl
-		<<" position="<<header.position<<endl
-		<<" recordSize="<<header.recordSize<<endl
-		<<" spare="<<header.spare<<endl
-		<<" storyLen="<<header.storyLen<<endl
-//		<<" textRecordSize="<<header.textRecordSize<<endl
-		<<" version="<<header.version<<endl;
-
-	// next come the header.numRecords real document records (might be compressed, see the version flag in the header)
+	// next come the header.numRecords real document records 
+	// (might be compressed, see the version flag in the header)
 	QFile docfile(txtfilename);
 	if (!docfile.open(QIODevice::WriteOnly))
 	{
@@ -632,12 +605,10 @@ bool DOCConverter::convertPDBtoTXT()
 		}
 		else
 		{
-			DEBUGKPILOT<<"Writing"<<upperBmkRec-header.numRecords<<
-				"("<<upperBmkRec<<") bookmarks to file "<<bmkfilename<<endl;
 			QTextStream bmkstream(&bmkfile);
 			for (docBookmark*bmk=bmks.first(); bmk; bmk=bmks.next())
 			{
-				bmkstream<<bmk->position<<", "<<bmk->bmkName<<endl;
+				bmkstream << bmk->position << ", " << bmk->bmkName << endl;
 			}
 			//bmkstream.close();
 			bmkfile.close();

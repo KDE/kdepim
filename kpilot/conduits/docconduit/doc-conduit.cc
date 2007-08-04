@@ -124,19 +124,6 @@ void DOCConduit::readConfig()
 	}
 
 	eSyncDirection = (enum eSyncDirectionEnum)(DOCConduitSettings::syncDirection() );
-
-#ifdef DEBUG
-	DEBUGKPILOT << fname
-		<< ": Settings "
-		<< " tXTDirectory=" << DOCConduitSettings::tXTDirectory()
-		<< " pDBDirectory=" << DOCConduitSettings::pDBDirectory()
-		<< " keepPDBLocally=" << DOCConduitSettings::keepPDBsLocally()
-		<< " eConflictResolution=" << eConflictResolution
-		<< " tXTBookmarks=" << fTXTBookmarks
-		<< " pDBBookmarks=" << DOCConduitSettings::bookmarksToPC()
-		<< " compress=" << DOCConduitSettings::compress()
-		<< " eSyncDirection=" << eSyncDirection << endl;
-#endif
 }
 
 
@@ -208,16 +195,9 @@ bool DOCConduit::hhTextChanged(PilotDatabase*docdb)
 	// The record index starts with 0, so only a negative number means
 	// no modified record was found
 	if (modRecInd >= 0) {
-#ifdef DEBUG
-		DEBUGKPILOT<<"Handheld side has changed, condition="<<
-			((!DOCConduitSettings::ignoreBmkChanges()) || (modRecInd <= storyRecs))<<endl;
-#endif
 		if ((!DOCConduitSettings::ignoreBmkChanges()) || (modRecInd <= storyRecs))
 			return true;
 	} else {
-#ifdef DEBUG
-		DEBUGKPILOT<<"Handheld side has NOT changed!";
-#endif
 		return false;
 	}
 	return false;
@@ -653,10 +633,6 @@ void DOCConduit::syncDatabases() {
 
 	switch (sinfo.direction) {
 		case eSyncConflict:
-#ifdef DEBUG
-			DEBUGKPILOT<<"Entry"<<sinfo.handheldDB<<"( txtfilename:"<<sinfo.txtfilename<<
-				", pdbfilename: "<<sinfo.pdbfilename<<") had sync direction eSyncConflict!!!"<<endl;
-#endif
 			break;
 		case eSyncDelete:
 		case eSyncPDAToPC:
@@ -664,13 +640,13 @@ void DOCConduit::syncDatabases() {
 			emit logMessage(i18n("Synchronizing text \"%1\"",sinfo.handheldDB));
 			if (!doSync(sinfo)) {
 				// The sync could not be done, so inform the user (the error message should probably issued inside doSync)
-#ifdef DEBUG
-				DEBUGKPILOT<<"There was some error syncing the text \""<<sinfo.handheldDB<<"\" with the file"<<sinfo.txtfilename;
-#endif
+				DEBUGKPILOT << "There was some error syncing ["
+					<< sinfo.handheldDB
+					<< "] with file ["
+					<< sinfo.txtfilename << ']';
 			}
 			break;
 		case eSyncNone:
-//		case eSyncAll:
 			break;
 	}
 	if (sinfo.direction != eSyncDelete) fDBNames.append(sinfo.handheldDB);
@@ -737,11 +713,6 @@ bool DOCConduit::needsSync(docSyncInfo &sinfo)
 					if (sinfo.fPalmStatus==eStatNew) sinfo.direction=eSyncPDAToPC;
 					else {
 						sinfo.direction=eSyncNone;
-#ifdef DEBUG
-						DEBUGKPILOT<<"I'm supposed to find a sync direction, but the"<<
-						" text "<<sinfo.dbinfo.name<<" doesn't exist on either "<<
-						" the handheld or the PC"<<endl;
-#endif
 					}
 				}
 				break;
@@ -829,10 +800,7 @@ bool DOCConduit::needsSync(docSyncInfo &sinfo)
 	if ( ((sinfo.fPCStatus==eStatDeleted) && (sinfo.fPalmStatus!=eStatChanged)) ||
 	     ((sinfo.fPalmStatus==eStatDeleted) && (sinfo.fPCStatus!=eStatChanged)) )
 	{
-#ifdef DEBUG
-		DEBUGKPILOT<<"DB was deleted on one side and not changed on"
-			"the other -> Delete it."<<endl;
-#endif
+		DEBUGKPILOT << "DB was deleted on one side and not changed on the other -> Delete it.";
 		sinfo.direction=eSyncDelete;
 		return true;
 	}
@@ -840,9 +808,7 @@ bool DOCConduit::needsSync(docSyncInfo &sinfo)
 	// eStatDeleted (and both not changed) have already been treated, for all
 	// other values in combination with eStatNone, just copy the texts.
 	if (sinfo.fPCStatus==eStatNone) {
-#ifdef DEBUG
-		DEBUGKPILOT<<"PC side has changed!";
-#endif
+		DEBUGKPILOT << "PC side has changed!";
 		sinfo.direction=eSyncPDAToPC;
 		return true;
 	}
@@ -887,16 +853,18 @@ PilotDatabase *DOCConduit::preSyncAction(docSyncInfo &sinfo) const
 				{
 					dir.mkdir(dir.absPath());
 				}
-#ifdef DEBUG
-				DEBUGKPILOT<<"Need to fetch database"<<dbinfo.name<<
-					" to the directory "<<dir.absPath()<<endl;
-#endif
+				DEBUGKPILOT << "Need to fetch database "
+					<< dbinfo.name
+					<< " to the directory ["
+					<< dir.absPath() << ']';
 				dbinfo.flags &= ~dlpDBFlagOpen;
 
 				if (!fHandle->retrieveDatabase(sinfo.pdbfilename, &dbinfo) )
 				{
-					WARNINGKPILOT <<"Unable to retrieve database" << dbinfo.name <<
-						" from the handheld into " << sinfo.pdbfilename << "." << endl;
+					WARNINGKPILOT << "Unable to retrieve database"
+						<< dbinfo.name
+						<< " from the handheld into [" 
+						<< sinfo.pdbfilename << ']';
 					return 0L;
 				}
 			}
@@ -939,28 +907,18 @@ bool DOCConduit::postSyncAction(PilotDatabase * database,
 	{
 	case eSyncPDAToPC:
 		// also reset the sync flags on the handheld
-#ifdef DEBUG
-		DEBUGKPILOT<<"Resetting sync flags for database"
-			<<sinfo.dbinfo.name<<endl;
-#endif
+		DEBUGKPILOT << "Resetting sync flags for database ["
+			<< sinfo.dbinfo.name << ']';
 		if (DOCConduitSettings::keepPDBsLocally() && !DOCConduitSettings::localSync())
 		{
 			PilotDatabase*db=deviceLink()->database(
 				QString::fromLatin1(sinfo.dbinfo.name));
-#ifdef DEBUG
-			DEBUGKPILOT<<"Middle 1 Resetting sync flags for database"
-				<<sinfo.dbinfo.name<<endl;
-#endif
 			if (db)
 			{
 				db->resetSyncFlags();
 				KPILOT_DELETE(db);
 			}
 		}
-#ifdef DEBUG
-		DEBUGKPILOT<<"End Resetting sync flags for database"
-			<<sinfo.dbinfo.name<<endl;
-#endif
 		break;
 	case eSyncPCToPDA:
 		if (DOCConduitSettings::keepPDBsLocally() && !DOCConduitSettings::localSync() && res)
@@ -969,20 +927,18 @@ bool DOCConduit::postSyncAction(PilotDatabase * database,
 			PilotLocalDatabase*localdb=dynamic_cast<PilotLocalDatabase*>(database);
 			if (localdb)
 			{
-#ifdef DEBUG
-				DEBUGKPILOT<<"Installing file"<<localdb->dbPathName()<<" ("
-					<<sinfo.handheldDB<<") to the handheld"<<endl;
-#endif
+				DEBUGKPILOT << "Installing file ["
+					<< localdb->dbPathName() << "] DB ["
+					<< sinfo.handheldDB
+					<< "] to the handheld.";
 				QString dbpathname=localdb->dbPathName();
 				// This deletes localdb as well, which is just a cast from database
 				KPILOT_DELETE(database);
 				if (!fHandle->installFiles( QStringList(dbpathname), false))
 				{
 					rs = false;
-#ifdef DEBUG
-					DEBUGKPILOT<<"Could not install the database"<<dbpathname<<" ("
-						<<sinfo.handheldDB<<")"<<endl;
-#endif
+					DEBUGKPILOT << "Could not install ["
+						<< dbpathname << ']';
 				}
 			}
 		}

@@ -92,7 +92,7 @@ void PopMailConduit::doSync()
 	int sent_count=0;
 	int mode=MailConduitSettings::syncOutgoing();
 
-	DEBUGKPILOT << fname
+	DEBUGKPILOT
 		<< ": Outgoing mail disposition "
 		<< mode;
 
@@ -136,7 +136,7 @@ int PopMailConduit::sendPendingMail(int mode)
 	}
 	else
 	{
-		DEBUGKPILOT << fname
+		DEBUGKPILOT
 			<< ": Sent "
 			<< count
 			<< " messages";
@@ -181,8 +181,7 @@ int PopMailConduit::sendViaKMail()
 	DCOPClient *dcopptr = KApplication::kApplication()->dcopClient();
 	if (!dcopptr)
 	{
-		WARNINGKPILOT <<"Cannot get DCOP client."
-			<< endl;
+		WARNINGKPILOT << "Cannot get DCOP client.";
 		KMessageBox::error(0L,
 			i18n("Could not connect to DCOP server for "
 				"the KMail connection."),
@@ -197,17 +196,10 @@ int PopMailConduit::sendViaKMail()
 
 	while (PilotRecord *pilotRec = fDatabase->readNextRecInCategory(1))
 	{
-		DEBUGKPILOT << fname
-			<< ": Reading "
-			<< count + 1
-			<< "th message"
-			<< endl;
+		DEBUGKPILOT << "Reading message " << count + 1;
 
 		if (pilotRec->isDeleted() || pilotRec->isArchived())
 		{
-			DEBUGKPILOT << fname
-				<< ": Skipping record."
-				<< endl;
 			continue;
 		}
 
@@ -229,8 +221,7 @@ int PopMailConduit::sendViaKMail()
 
 		if (!sendf)
 		{
-			WARNINGKPILOT
-				<< "Cannot open temporary file for writing!" << endl;
+			WARNINGKPILOT << "Cannot open temporary file for writing!";
 			KMessageBox::error(0L,
 				i18n("Cannot open temporary file to store "
 					"mail from Pilot in."),
@@ -258,7 +249,7 @@ int PopMailConduit::sendViaKMail()
 			returnValue,
 			true))
 		{
-			WARNINGKPILOT <<"DCOP call failed.";
+			WARNINGKPILOT << "DCOP call failed.";
 
 			KMessageBox::error(0L,
 				i18n("DCOP connection with KMail failed."),
@@ -266,12 +257,10 @@ int PopMailConduit::sendViaKMail()
 			continue;
 		}
 
-		DEBUGKPILOT << fname
-			<< ": DCOP call returned "
+		DEBUGKPILOT << "DCOP call returned "
 			<< returnType
 			<< " of "
-			<< (const char *)returnValue
-			<< endl;
+			<< (const char *)returnValue;
 
 		// Mark it as filed...
 		pilotRec->setCategory(3);
@@ -325,12 +314,12 @@ void PopMailConduit::writeMessageToFile(FILE* sendf, struct Mail& theMail)
 	mailPipe << "\r\n";
 
 
-	DEBUGKPILOT << fname <<": To:" << theMail.to;
+	DEBUGKPILOT << "To:" << theMail.to;
 
 
 	if(theMail.body)
 	{
-		DEBUGKPILOT << fname <<": Sent body.";
+		DEBUGKPILOT << "Sent body.";
 		mailPipe << theMail.body << "\r\n";
 	}
 
@@ -338,7 +327,7 @@ void PopMailConduit::writeMessageToFile(FILE* sendf, struct Mail& theMail)
 	QString signature = MailConduitSettings::signature();
 	if(!signature.isEmpty())
 	{
-		DEBUGKPILOT << fname <<": Reading signature";
+		DEBUGKPILOT << "Reading signature";
 
 		QFile f(signature);
 		if ( f.open(QIODevice::ReadOnly) )
@@ -354,7 +343,7 @@ void PopMailConduit::writeMessageToFile(FILE* sendf, struct Mail& theMail)
 	}
 	mailPipe << "\r\n";
 
-	DEBUGKPILOT << fname <<": Done";
+	DEBUGKPILOT << "Done";
 }
 
 
@@ -364,14 +353,14 @@ void PopMailConduit::writeMessageToFile(FILE* sendf, struct Mail& theMail)
 
 	QString outbox = getKMailOutbox();
 
-	DEBUGKPILOT << fname
+	DEBUGKPILOT
 		<< ": KMail's outbox is "
 		<< outbox;
 
 	QDateTime date = QDateTime::currentDateTime();
 	QString dateString = date.toString(DATE_FORMAT);
 
-	DEBUGKPILOT << fname <<": Date format example: [" << dateString
+	DEBUGKPILOT << "Date format example: [" << dateString
 		<< "]" ;
 }
 

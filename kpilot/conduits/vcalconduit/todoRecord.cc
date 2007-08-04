@@ -46,7 +46,7 @@ bool KCalSync::setTodoEntry(PilotTodoEntry *de,
 {
 	FUNCTIONSETUP;
 	if (!de || !todo) {
-		DEBUGKPILOT << fname <<": NULL todo given... Skipping it";
+		DEBUGKPILOT << "NULL todo given... Skipping it";
 		return false;
 	}
 
@@ -93,21 +93,18 @@ bool KCalSync::setTodo(KCal::Todo *e,
 
 	if (!e)
 	{
-		DEBUGKPILOT << fname
-			<< ": null todo entry given. skipping..." << endl;
+		DEBUGKPILOT << "NULL todo entry given.";
 		return false;
 	}
 	if (!de)
 	{
-		DEBUGKPILOT << fname
-			<< "! NULL todo entry given... Skipping it" << endl;
+		DEBUGKPILOT << "NULL todo entry given.";
 		return false;
 	}
 
 
 #if BADLY_PORTED
 	e->setPilotId(de->id());
-	DEBUGKPILOT<<fname<<": set KCal item to pilotId: [" << e->pilotId() <<"] ...";
 #endif
 	e->setSecrecy(de->isSecret() ? KCal::Todo::SecrecyPrivate : KCal::Todo::SecrecyPublic);
 

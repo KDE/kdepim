@@ -242,11 +242,6 @@ void ResolutionDlg::fillListView()
 	fWidget->fResolutionView->clear();
 	for ( ResolutionItem* it = fTable->last(); it; it = fTable->prev() )
 	{
-#ifdef DEBUG
-		DEBUGKPILOT<<"Building table, items="<<it->fExistItems<<", PC="<<
-			it->fEntries[0]<<", Palm="<<it->fEntries[1]<<", Backup="<<
-			it->fEntries[2]<<endl;
-#endif
 		bool hasValidValues=false;
 		if (it->fExistItems & eExistsPC)
 			hasValidValues = hasValidValues || !(it->fEntries[0].isEmpty());

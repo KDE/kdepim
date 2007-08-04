@@ -68,7 +68,7 @@ NotepadConduit::~NotepadConduit()
 	FUNCTIONSETUP;
 
 #ifdef DEBUG
-	DEBUGKPILOT << fname <<": In exec() @" << (unsigned long) this;
+	DEBUGKPILOT << "In exec() @" << (unsigned long) this;
 #endif
 
 	QDir dir(NotepadConduitSettings::outputDirectory());
@@ -94,7 +94,7 @@ bool NotepadConduit::event(QEvent *e)
 
 	if(e->type() == QEvent::User) {
 #ifdef DEBUG
-		DEBUGKPILOT << fname <<": Notepad thread done.";
+		DEBUGKPILOT << "Notepad thread done.";
 #endif
 //		stopTickle();
 		delayDone();
@@ -252,7 +252,7 @@ void NotepadActionThread::saveImage(struct NotePad *n)
 
 
 #ifdef DEBUG
-	DEBUGKPILOT << fname <<": Notepad" << imgname;
+	DEBUGKPILOT << "Notepad" << imgname;
 #endif
 	if(!image.save(imgname, "PNG", -1))
 		++notSaved;

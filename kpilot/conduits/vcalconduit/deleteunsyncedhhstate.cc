@@ -56,7 +56,7 @@ void DeleteUnsyncedHHState::startSync( ConduitAction *ca )
 		return;
 	}
 
-	DEBUGKPILOT << fname <<": Starting DeleteUnsyncedHHState.";
+	DEBUGKPILOT << "Starting DeleteUnsyncedHHState.";
 	
 	fPilotIndex = 0;
 	fNextState = new DeleteUnsyncedPCState();
@@ -92,8 +92,8 @@ void DeleteUnsyncedHHState::handleRecord( ConduitAction *ca )
 	KCal::Incidence *e = vccb->privateBase()->findIncidence( r->id() );
 	if ( !e )
 	{
-		DEBUGKPILOT <<"Didn't find incidence with id =" << r->id()
-			<< ", deleting it" << endl;
+		DEBUGKPILOT << "Didn't find incidence with id =" << r->id()
+			<< ", deleting it.";
 		vccb->deletePalmRecord( NULL, r );
 	}
 
@@ -110,6 +110,6 @@ void DeleteUnsyncedHHState::finishSync( ConduitAction *ca )
 		return;
 	}
 
-	DEBUGKPILOT << fname <<": Finishing DeleteUnsyncedHHState.";
+	DEBUGKPILOT << "Finishing DeleteUnsyncedHHState.";
 	vccb->setState( fNextState );
 }

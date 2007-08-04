@@ -82,11 +82,6 @@ NullConduitConfig::NullConduitConfig(QWidget *p, const char *n) :
 {
 	FUNCTIONSETUP;
 
-	DEBUGKPILOT << fname
-		<< ": Message="
-		<< fConfigWidget->fLogMessage->text()
-		<< endl;
-
 	NullConduitSettings::setLogMessage( fConfigWidget->fLogMessage->text() );
 	NullConduitSettings::self()->writeConfig();
 	unmodified();
@@ -96,15 +91,7 @@ NullConduitConfig::NullConduitConfig(QWidget *p, const char *n) :
 {
 	FUNCTIONSETUP;
 	NullConduitSettings::self()->readConfig();
-
 	fConfigWidget->fLogMessage->setText( NullConduitSettings::logMessage() );
-#ifdef DEBUG
-	DEBUGKPILOT << fname
-		<< ": Read Message="
-		<< fConfigWidget->fLogMessage->text()
-		<< endl;
-#endif
-
 	unmodified();
 }
 
