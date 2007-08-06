@@ -355,7 +355,7 @@ bool kio_sieveProtocol::connect(bool useTLSIfAvailable)
 			if (retval == 1) {
 				ksDebug() << "TLS enabled successfully." << endl;
 				// reparse capabilities:
-				parseCapabilities(true);
+				parseCapabilities(false);
 			} else {
 				ksDebug() << "TLS initiation failed, code " << retval << endl;
 				disconnect(true);
@@ -625,10 +625,16 @@ void kio_sieveProtocol::put(const KUrl& url, int /*permissions*/, bool /*overwri
 
 				// clear the rest of the incoming data
 				receiveData();
-			} else
+                        } else if (r.getType() == kio_sieveResponse::KEY_VAL_PAIR) {
+                              error(ERR_INTERNAL_SERVER,
+                                              i18n("The script did not upload successfully.\n"
+                                                       "This is probably due to errors in the script.\n"
+                                                       "The server responded:\n%1", QString::fromUtf8(r.getKey())));
+                        } else {
 				error(ERR_INTERNAL_SERVER,
 					i18n("The script did not upload successfully.\n"
 						"The script may contain errors."));
+                        }
 		} else
 			error(ERR_INTERNAL_SERVER,
 				i18n("The script did not upload successfully.\n"
@@ -1138,7 +1144,7 @@ bool kio_sieveProtocol::receiveData(bool waitForData, const QByteArray &reparse)
 		  {
 			// expecting {quantity}
 			start = 0;
-			end = interpret.indexOf('}', start + 1);
+			end = interpret.indexOf('}', start + 1) - 1;
 
 			bool ok = false;
 			r.setQuantity(interpret.mid(start + 1, end - start - 1).toUInt( &ok ));
