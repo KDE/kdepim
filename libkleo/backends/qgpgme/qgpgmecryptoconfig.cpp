@@ -100,7 +100,7 @@ void QGpgMECryptoConfig::runGpgConf( bool showErrors )
     else if ( rc == -2 )
         reason = i18n( "program not found or cannot be started" );
     else
-        reason = strerror(rc); // XXX errno as an exit code?
+      reason = QString::fromLocal8Bit( strerror(rc) ); // XXX errno as an exit code?
     QString wmsg = i18n("<qt>Failed to execute gpgconf:<p>%1</p></qt>", reason);
     kWarning(5150) << wmsg; // to see it from test_cryptoconfig.cpp
     KMessageBox::error(0, wmsg);
@@ -331,7 +331,7 @@ void QGpgMECryptoConfigComponent::sync( bool runtime )
   }
   else if( rc != 0 ) // Happens due to bugs in gpgconf (e.g. issues 104/115)
   {
-    QString wmsg = i18n( "Error from gpgconf while saving configuration: %1", strerror( rc ) );
+    QString wmsg = i18n( "Error from gpgconf while saving configuration: %1", QString::fromLocal8Bit( strerror( rc ) ) );
     kWarning(5150) << k_funcinfo <<":" << strerror( rc );
     KMessageBox::error(0, wmsg);
   }
