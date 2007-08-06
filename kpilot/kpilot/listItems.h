@@ -51,12 +51,10 @@ protected:
 	recordid_t fid;
 	void *fr;
 
-#ifdef DEBUG
 public:
 	static void counts();
 private:
 	static int crt,del,bal,count;
-#endif
 };
 
 class PilotCheckListItem : public Q3CheckListItem
@@ -70,12 +68,11 @@ protected:
 	virtual void stateChange ( bool );
 	recordid_t fid;
 	void *fr;
-#ifdef DEBUG
+
 public:
 	static void counts();
 private:
 	static int crt, del, bal, count;
-#endif
 };
 
 struct PilotListViewItemData
@@ -105,12 +102,10 @@ protected:
 	// Caching to make sorting faster:
 	PilotListViewItemData*d;
 	unsigned long colValue(int col, bool *ok) const;
-#ifdef DEBUG
 public:
 	static void counts();
 private:
 	static int crt, del, bal, count;
-#endif
 };
 
 

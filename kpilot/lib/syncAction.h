@@ -52,7 +52,7 @@ public:
         SyncAction(KPilotLink *p,
                 QWidget *visibleparent,
                 const char *name);  
-	~SyncAction();
+	virtual ~SyncAction();
 
 	typedef enum { Error=-1 } Status;
 

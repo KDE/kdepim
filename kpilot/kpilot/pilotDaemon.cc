@@ -1198,18 +1198,15 @@ int main(int argc, char **argv)
 	KCmdLineArgs::init(argc, argv, &about);
 
 	KCmdLineOptions daemonoptions;
-	#ifdef DEBUG
 	daemonoptions.add("debug <level>", ki18n("Set debugging level"), "0");
-	#endif
 	daemonoptions.add("device <device>", ki18n("Device to try first"));
 	daemonoptions.add("fail-silently", ki18n("Exit instead of complaining about bad configuration files"));
 	KCmdLineArgs::addCmdLineOptions(daemonoptions, ki18n("kpilotconfig"));
 	KUniqueApplication::addCmdLineOptions();
 	KCmdLineArgs *p = KCmdLineArgs::parsedArgs();
 
-#ifdef DEBUG
 	KPilotConfig::getDebugLevel(p);
-#endif
+
 	if (!KUniqueApplication::start())
 	{
 		if (p->isSet("device")){

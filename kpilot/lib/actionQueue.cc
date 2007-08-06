@@ -112,7 +112,7 @@ void ActionQueue::actionCompleted(SyncAction *b)
 	if (b)
 	{
 		DEBUGKPILOT << ": Completed action " << b->objectName();
-		delete b;
+		b->deleteLater();
 	}
 
 	if (isEmpty())
