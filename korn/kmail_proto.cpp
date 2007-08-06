@@ -59,7 +59,9 @@ const Protocol* KMail_Protocol::getProtocol( KConfigGroup* config ) const
 
 	if( type == "imap" )
 		return Protocols::getProto( "imap" );
-	if( type == "pop3" )
+        if( type == "cachedimap" )
+                return Protocols::getProto( "imap" );
+	if( type == "pop" )
 		return Protocols::getProto( "pop3" );
 	if( type == "local" )
 		return Protocols::getProto( "mbox" );
@@ -77,7 +79,7 @@ KMailDrop* KMail_Protocol::createMaildrop( KConfigGroup *config ) const
 	KConfig kmailconfig( "kmailrc", true, false );
 	QString type = getTypeAndConfig( config->readEntry( "kmailname" ), kmailconfig, id );
 
-	if( type == "imap" || type == "cachedimap" || type == "pop3" || type == "local" || type == "maildir" )
+	if( type == "imap" || type == "cachedimap" || type == "pop" || type == "local" || type == "maildir" )
 		return new KKioDrop();
 	
 	kdWarning() << "KMail configuration not found" << endl;
@@ -118,7 +120,7 @@ QMap< QString, QString > * KMail_Protocol::createConfig( KConfigGroup* config, c
 		result->insert( "password", readPassword( kmailconfig.readBoolEntry( "store-passwd", false ), kmailconfig, id ) );
 		result->insert( "savepassword", kmailconfig.readEntry( "store-passwd", "false" ) );
 	}
-	if( type == "pop3" )
+	if( type == "pop" )
 	{
 		//Constructing metadata
 		if( kmailconfig.hasKey( "auth" ) )
@@ -188,7 +190,7 @@ void KMail_Protocol::configFields( QPtrVector< QWidget >* vector, const QObject*
 		kmailconfig.setGroup( QString( kmailGroupName ).arg( nummer ) );
 		type = kmailconfig.readEntry( kmailKeyType, QString::null );
 		name = kmailconfig.readEntry( kmailKeyName, QString::null );
-		if( type == "imap" || type == "cachedimap" || type == "pop3" || type == "local" )
+		if( type == "imap" || type == "cachedimap" || type == "pop" || type == "local" )
 		{
 			accountList.insert( name, name );
 		}

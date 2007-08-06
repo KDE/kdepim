@@ -1,6 +1,8 @@
 #ifndef MailSubject_h
 #define MailSubject_h
 
+class QTextCodec;
+
 class KMailDrop;
 
 #include "mailid.h"
@@ -147,6 +149,39 @@ public:
 	 * Returns the KMailDrop instance of the Maildrop which owns the subject
 	 */
 	KMailDrop* getMailDrop() const { return _drop; }
+
+        /**
+         * decodes headers using decodeRFC2047String
+         */
+        void decodeHeaders();
+
+private:
+
+        /**
+         * Decode a string based on RFC2047
+         */
+        QString decodeRFC2047String(const QCString& aStr);
+
+        /**
+         * Unfolding a string (basically changing tabs to spaces
+         */
+        QCString unfold( const QCString & header );
+
+        /**
+         * Returns true if the parameter is a blank (or tab)
+         *
+         * Note from KMail's code, where this function is taken from:
+         * don't rely on isblank(), which is a GNU extension in
+         * <cctype>. But if someone wants to write a configure test for
+         * isblank(), we can then rename this function to isblank and #ifdef
+         * it's definition...
+         */
+        inline bool isBlank( char ch ) { return ch == ' ' || ch == '\t' ; }
+
+        /**
+         * ??
+         */
+        const QTextCodec* codecForName(const QCString& _str);
 };
 
 #endif

@@ -1,13 +1,14 @@
 KDE_CXXFLAGS = $(USE_RTTI)
 
-INCLUDES = $(all_includes)
+INCLUDES = -I$(top_srcdir)/libkmime \
+  	$(all_includes)
 #INCLUDES = -I$(top_srcdir)/mimelib -I$(top_srcdir)/libkmime $(all_includes)
 AM_LDFLAGS = $(all_libraries) $(KDE_RPATH)
 
 METASOURCES = AUTO
 
 bin_PROGRAMS = korn
-korn_LDADD = $(LIB_KIO)
+korn_LDADD = $(LIB_KIO) $(top_builddir)/libkmime/libkmime.la
 #korn_LDADD = $(top_builddir)/mimelib/libmimelib.la $(LIB_KFILE) $(LIBSOCKET) $(top_builddir)/libkmime/libkmime.la
 
 korn_SOURCES = \
