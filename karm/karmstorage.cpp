@@ -308,7 +308,7 @@ void KarmStorage::closeStorage(TaskView* view)
 QString KarmStorage::save(TaskView* taskview)
 {
   kdDebug(5970) << "entering KarmStorage::save" << endl;
-  QString err;
+  QString err=QString();
 
   QPtrStack< KCal::Todo > parents;
 
