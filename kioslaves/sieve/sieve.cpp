@@ -357,7 +357,7 @@ bool kio_sieveProtocol::connect(bool useTLSIfAvailable)
 			if (retval == 1) {
 				ksDebug() << "TLS enabled successfully." << endl;
 				// reparse capabilities:
-				parseCapabilities(true);
+				parseCapabilities(false);
 			} else {
 				ksDebug() << "TLS initiation failed, code " << retval << endl;
 				disconnect(true);
@@ -612,7 +612,7 @@ void kio_sieveProtocol::put(const KURL& url, int /*permissions*/, bool /*overwri
 			// send the extra message off for re-processing
 			receiveData(false, &extra);
 
-			if (r.getAction() == kio_sieveResponse::QUANTITY) {
+			if (r.getType() == kio_sieveResponse::QUANTITY) {
 				// length of the error message
 				uint len = r.getQuantity();
 
@@ -627,7 +627,12 @@ void kio_sieveProtocol::put(const KURL& url, int /*permissions*/, bool /*overwri
 
 				// clear the rest of the incoming data
 				receiveData();
-			} else
+			} else if (r.getType() == kio_sieveResponse::KEY_VAL_PAIR) {
+				error(ERR_INTERNAL_SERVER,
+						i18n("The script did not upload successfully.\n"
+							"This is probably due to errors in the script.\n"
+							"The server responded:\n%1").arg(r.getKey()));
+			} else 
 				error(ERR_INTERNAL_SERVER,
 					i18n("The script did not upload successfully.\n"
 						"The script may contain errors."));
@@ -1184,7 +1189,7 @@ bool kio_sieveProtocol::receiveData(bool waitForData, QCString *reparse)
 		  {
 			// expecting {quantity}
 			start = 0;
-			end = interpret.find('}', start + 1);
+			end = interpret.find('}', start + 1)-1;
 
 			bool ok = false;
 			r.setQuantity(interpret.mid(start + 1, end - start - 1).toUInt( &ok ));
