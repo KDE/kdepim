@@ -34,4 +34,4 @@
 #include "abbrowser-conduit.h"
 #include "abbrowser-setup.h"
 
-DECLARE_KPILOT_PLUGIN(conduit_address,AbbrowserWidgetSetup,AbbrowserConduit)
+DECLARE_KPILOT_PLUGIN(kpilot_conduit_address,AbbrowserWidgetSetup,AbbrowserConduit)

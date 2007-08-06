@@ -83,4 +83,4 @@ Comment[uk]=Цей акведук синхронізує примітки киш
 Comment[zh_TW]=此導管將您的掌上型裝置的備忘與本地端目錄同步。
 Implemented=file
 ServiceTypes=KPilotConduit
-X-KDE-Library=conduit_memofile
+X-KDE-Library=kpilot_conduit_memofile

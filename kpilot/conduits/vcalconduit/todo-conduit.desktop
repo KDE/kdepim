@@ -89,4 +89,4 @@ Name[uk]=Завдання (KOrganizer)
 Name[zh_TW]=待辦事項（KOrganizer）
 Implemented=file
 ServiceTypes=KPilotConduit
-X-KDE-Library=conduit_todo
+X-KDE-Library=kpilot_conduit_todo

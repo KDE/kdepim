@@ -94,4 +94,4 @@ Name[uz]=Тизим ҳақида маълумот
 Name[zh_TW]=系統資訊
 Implemented=file
 ServiceTypes=KPilotConduit
-X-KDE-Library=conduit_sysinfo
+X-KDE-Library=kpilot_conduit_sysinfo

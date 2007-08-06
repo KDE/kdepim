@@ -126,6 +126,6 @@ NotepadConduitConfig::NotepadConduitConfig(QWidget *p, const char *n) :
 
 
 
-DECLARE_KPILOT_PLUGIN(conduit_notepad,NotepadConduitConfig,NotepadConduit)
+DECLARE_KPILOT_PLUGIN(kpilot_conduit_notepad,NotepadConduitConfig,NotepadConduit)
 
 

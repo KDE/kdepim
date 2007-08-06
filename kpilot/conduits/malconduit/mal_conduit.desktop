@@ -86,4 +86,4 @@ Comment[uk]=Синхронізація AvantGo (або вміст сервері
 Comment[zh_TW]=將 AvantGo（或一般的 MAL 伺服器內容）與掌上型裝置同步。讓您可以在掌上型裝置離線檢視網頁，如您的影片或電視節目表等等。
 Implemented=file
 ServiceTypes=KPilotConduit
-X-KDE-Library=conduit_mal
+X-KDE-Library=kpilot_conduit_mal

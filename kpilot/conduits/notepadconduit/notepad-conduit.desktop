@@ -61,4 +61,4 @@ Comment[uk]=Цей акведук створює резервну копію н�
 Comment[zh_TW]=此導管將筆記本上的內容備份到本地端目錄。
 Implemented=file
 ServiceTypes=KPilotConduit
-X-KDE-Library=conduit_notepad
+X-KDE-Library=kpilot_conduit_notepad

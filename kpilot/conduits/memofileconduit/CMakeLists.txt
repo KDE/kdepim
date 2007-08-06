@@ -2,26 +2,26 @@ include_directories(
 	${CMAKE_CURRENT_BINARY_DIR}
 )
 
-set(conduit_memofile_SRCS
+set(kpilot_conduit_memofile_SRCS
 	memofile-factory.cc
 	memofile.cc
 	memofiles.cc
 	memofile-conduit.cc
 )
 
-set(conduit_memofile_UIS
+set(kpilot_conduit_memofile_UIS
 	setup_base.ui
 )
 
-set(conduit_memofile_KCFGS
+set(kpilot_conduit_memofile_KCFGS
 	memofileSettings.kcfgc
 )
 
-kde4_add_kcfg_files(conduit_memofile_SRCS ${conduit_memofile_KCFGS})
-kde4_add_ui_files(conduit_memofile_SRCS ${conduit_memofile_UIS})
-kde4_add_plugin(conduit_memofile WITH_PREFIX ${conduit_memofile_SRCS})
-target_link_libraries(conduit_memofile  ${KDE4_KIO_LIBS} kpilot)
-install(TARGETS conduit_memofile DESTINATION ${PLUGIN_INSTALL_DIR})
+kde4_add_kcfg_files(kpilot_conduit_memofile_SRCS ${kpilot_conduit_memofile_KCFGS})
+kde4_add_ui_files(kpilot_conduit_memofile_SRCS ${kpilot_conduit_memofile_UIS})
+kde4_add_plugin(kpilot_conduit_memofile ${kpilot_conduit_memofile_SRCS})
+target_link_libraries(kpilot_conduit_memofile  ${KDE4_KIO_LIBS} kpilot)
+install(TARGETS kpilot_conduit_memofile DESTINATION ${PLUGIN_INSTALL_DIR})
 
 install(FILES memofile-conduit.desktop DESTINATION ${SERVICES_INSTALL_DIR})
 

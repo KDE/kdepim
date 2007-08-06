@@ -2,24 +2,24 @@ include_directories(
 	${CMAKE_CURRENT_BINARY_DIR}
 )
 
-set(conduit_notepad_SRCS
+set(kpilot_conduit_notepad_SRCS
 	notepad-factory.cc
 	notepad-conduit.cc
 )
 
-set(conduit_notepad_UIS
+set(kpilot_conduit_notepad_UIS
 	notepad-setup.ui
 )
 
-set(conduit_notepad_KCFGS
+set(kpilot_conduit_notepad_KCFGS
 	notepadconduit.kcfgc
 )
 
-kde4_add_kcfg_files(conduit_notepad_SRCS ${conduit_notepad_KCFGS})
-kde4_add_ui_files(conduit_notepad_SRCS ${conduit_notepad_UIS})
-kde4_add_plugin(conduit_notepad WITH_PREFIX ${conduit_notepad_SRCS})
-target_link_libraries(conduit_notepad  ${KDE4_KIO_LIBS} kpilot)
+kde4_add_kcfg_files(kpilot_conduit_notepad_SRCS ${kpilot_conduit_notepad_KCFGS})
+kde4_add_ui_files(kpilot_conduit_notepad_SRCS ${kpilot_conduit_notepad_UIS})
+kde4_add_plugin(kpilot_conduit_notepad ${kpilot_conduit_notepad_SRCS})
+target_link_libraries(kpilot_conduit_notepad  ${KDE4_KIO_LIBS} kpilot)
 
-install(TARGETS conduit_notepad DESTINATION ${PLUGIN_INSTALL_DIR})
+install(TARGETS kpilot_conduit_notepad DESTINATION ${PLUGIN_INSTALL_DIR})
 
 install(FILES notepad-conduit.desktop DESTINATION ${SERVICES_INSTALL_DIR})

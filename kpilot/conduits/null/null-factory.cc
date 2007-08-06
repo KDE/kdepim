@@ -96,5 +96,5 @@ NullConduitConfig::NullConduitConfig(QWidget *p, const char *n) :
 }
 
 
-DECLARE_KPILOT_PLUGIN(conduit_null,NullConduitConfig,NullConduit)
+DECLARE_KPILOT_PLUGIN(kpilot_conduit_null,NullConduitConfig,NullConduit)
 

@@ -90,4 +90,4 @@ Comment[uk]=Цей акведук синхронізує ваш кишенько
 Comment[zh_TW]=此導管將您的掌上型裝置與 KOrganizer 行事曆同步。
 Implemented=file
 ServiceTypes=KPilotConduit
-X-KDE-Library=conduit_vcal
+X-KDE-Library=kpilot_conduit_vcal

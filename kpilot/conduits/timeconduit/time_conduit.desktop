@@ -94,4 +94,4 @@ Name[uk]=Синхронізація часу
 Name[zh_TW]=時間同步
 Implemented=file
 ServiceTypes=KPilotConduit
-X-KDE-Library=conduit_time
+X-KDE-Library=kpilot_conduit_time

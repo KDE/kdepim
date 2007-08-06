@@ -97,4 +97,4 @@ Name[uz]=Манзиллар дафтари
 Name[zh_TW]=通訊錄
 Implemented=file
 ServiceTypes=KPilotConduit
-X-KDE-Library=conduit_address
+X-KDE-Library=kpilot_conduit_address

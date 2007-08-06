@@ -35,6 +35,6 @@
 #include "todo-conduit.h"
 
 
-DECLARE_KPILOT_PLUGIN(conduit_todo,ToDoWidgetSetup,TodoConduit)
+DECLARE_KPILOT_PLUGIN(kpilot_conduit_todo,ToDoWidgetSetup,TodoConduit)
 
 

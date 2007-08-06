@@ -53,4 +53,4 @@ Name[pt]=DOC do Palm
 Name[ta]=பாம் ஆவணம்
 Implemented=file
 ServiceTypes=KPilotConduit
-X-KDE-Library=conduit_doc
+X-KDE-Library=kpilot_conduit_doc

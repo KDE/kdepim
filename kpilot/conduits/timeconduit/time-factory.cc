@@ -32,7 +32,7 @@
 #include "time-conduit.h"
 #include "time-setup.h"
 
-DECLARE_KPILOT_PLUGIN(conduit_time,TimeWidgetConfig,TimeConduit)
+DECLARE_KPILOT_PLUGIN(kpilot_conduit_time,TimeWidgetConfig,TimeConduit)
 
 
 

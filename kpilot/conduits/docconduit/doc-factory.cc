@@ -34,7 +34,7 @@
 #include "doc-setup.h"
 
 
-DECLARE_KPILOT_PLUGIN(conduit_doc,DOCWidgetConfig,DOCConduit)
+DECLARE_KPILOT_PLUGIN(kpilot_conduit_doc,DOCWidgetConfig,DOCConduit)
 
 
 

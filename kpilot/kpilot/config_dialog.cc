@@ -460,7 +460,7 @@ void ConduitConfigWidget::loadAndConfigure(QTreeWidgetItem *p)
 	}
 	else
 	{
-		QByteArray library = QFile::encodeName(CSL1("lib") + libraryName);
+		QByteArray library = QFile::encodeName(libraryName);
 
 		KLibFactory *f = KLibLoader::self()->factory(library);
 		if (!f)

@@ -10,7 +10,7 @@ set(doc_shared_SRCS
 	DOC-converter.cc
 )
 
-set(conduit_doc_SRCS
+set(kpilot_conduit_doc_SRCS
 	${doc_shared_SRCS}
 	doc-factory.cc
 	doc-setup.cc
@@ -18,19 +18,19 @@ set(conduit_doc_SRCS
 	doc-conflictdialog.cc
 )
 
-set(conduit_doc_UIS
+set(kpilot_conduit_doc_UIS
 	doc-setupdialog.ui
 )
 
-set(conduit_doc_KCFGS
+set(kpilot_conduit_doc_KCFGS
 	docconduitSettings.kcfgc
 )
 
-kde4_add_kcfg_files(conduit_doc_SRCS ${conduit_doc_KCFGS})
-kde4_add_ui_files(conduit_doc_SRCS ${conduit_doc_UIS})
-kde4_add_plugin(conduit_doc WITH_PREFIX ${conduit_doc_SRCS})
-target_link_libraries(conduit_doc ${QT_LIBRARIES} kpilot  ${KDE4_KIO_LIBS})
-install(TARGETS conduit_doc DESTINATION ${PLUGIN_INSTALL_DIR})
+kde4_add_kcfg_files(kpilot_conduit_doc_SRCS ${kpilot_conduit_doc_KCFGS})
+kde4_add_ui_files(kpilot_conduit_doc_SRCS ${kpilot_conduit_doc_UIS})
+kde4_add_plugin(kpilot_conduit_doc ${kpilot_conduit_doc_SRCS})
+target_link_libraries(kpilot_conduit_doc ${QT_LIBRARIES} kpilot  ${KDE4_KIO_LIBS})
+install(TARGETS kpilot_conduit_doc DESTINATION ${PLUGIN_INSTALL_DIR})
 
 set(kpalmdoc_SRCS
 	${doc_shared_SRCS}

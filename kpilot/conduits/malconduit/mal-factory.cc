@@ -36,7 +36,7 @@
 #include "mal-conduit.h"
 #include "mal-setup.h"
 
-DECLARE_KPILOT_PLUGIN(conduit_mal,MALWidgetSetup,MALConduit)
+DECLARE_KPILOT_PLUGIN(kpilot_conduit_mal,MALWidgetSetup,MALConduit)
 
 
 

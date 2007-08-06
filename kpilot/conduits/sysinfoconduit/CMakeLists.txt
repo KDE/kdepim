@@ -2,27 +2,27 @@ include_directories(
 	${CMAKE_CURRENT_BINARY_DIR}
 )
 
-set(conduit_sysinfo_SRCS
+set(kpilot_conduit_sysinfo_SRCS
 	sysinfo-setup.cc
 	sysinfo-factory.cc
 	sysinfo-conduit.cc
 )
 
-set(conduit_sysinfo_UIS
+set(kpilot_conduit_sysinfo_UIS
 	sysinfo-setup_dialog.ui
 )
 
-set(conduit_sysinfo_KCFGS
+set(kpilot_conduit_sysinfo_KCFGS
 	sysinfoSettings.kcfgc
 )
 
-kde4_add_kcfg_files(conduit_sysinfo_SRCS ${conduit_sysinfo_KCFGS})
-kde4_add_ui3_files(conduit_sysinfo_SRCS ${conduit_sysinfo_UIS})
+kde4_add_kcfg_files(kpilot_conduit_sysinfo_SRCS ${kpilot_conduit_sysinfo_KCFGS})
+kde4_add_ui3_files(kpilot_conduit_sysinfo_SRCS ${kpilot_conduit_sysinfo_UIS})
 
-kde4_add_plugin(conduit_sysinfo WITH_PREFIX ${conduit_sysinfo_SRCS})
-target_link_libraries(conduit_sysinfo  ${KDE4_KIO_LIBS} kpilot)
+kde4_add_plugin(kpilot_conduit_sysinfo ${kpilot_conduit_sysinfo_SRCS})
+target_link_libraries(kpilot_conduit_sysinfo  ${KDE4_KIO_LIBS} kpilot)
 
-install(TARGETS conduit_sysinfo	DESTINATION ${PLUGIN_INSTALL_DIR})
+install(TARGETS kpilot_conduit_sysinfo	DESTINATION ${PLUGIN_INSTALL_DIR})
 
 install(FILES sysinfo_conduit.desktop DESTINATION ${SERVICES_INSTALL_DIR})
 

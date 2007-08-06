@@ -34,5 +34,5 @@
 
 
 
-DECLARE_KPILOT_PLUGIN(conduit_sysinfo,SysInfoWidgetConfig,SysInfoConduit)
+DECLARE_KPILOT_PLUGIN(kpilot_conduit_sysinfo,SysInfoWidgetConfig,SysInfoConduit)
 

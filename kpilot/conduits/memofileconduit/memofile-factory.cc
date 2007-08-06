@@ -113,6 +113,6 @@ MemofileConduitConfig::MemofileConduitConfig(QWidget *p, const char *n) :
 	unmodified();
 }
 
-DECLARE_KPILOT_PLUGIN(conduit_memofile,MemofileConduitConfig,MemofileConduit)
+DECLARE_KPILOT_PLUGIN(kpilot_conduit_memofile,MemofileConduitConfig,MemofileConduit)
 
 

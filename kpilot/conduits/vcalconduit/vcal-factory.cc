@@ -36,6 +36,6 @@
 
 
 
-DECLARE_KPILOT_PLUGIN(conduit_vcal,VCalWidgetSetup,VCalConduit)
+DECLARE_KPILOT_PLUGIN(kpilot_conduit_vcal,VCalWidgetSetup,VCalConduit)
 
 

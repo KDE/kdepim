@@ -96,4 +96,4 @@ Name[x-test]=xxMailxx
 Name[zh_TW]=郵件
 Implemented=file
 ServiceTypes=KPilotConduit
-X-KDE-Library=conduit_popmail
+X-KDE-Library=kpilot_conduit_popmail

@@ -37,6 +37,6 @@
 
 
 
-DECLARE_KPILOT_PLUGIN(conduit_popmail,PopMailWidgetConfig,PopMailConduit)
+DECLARE_KPILOT_PLUGIN(kpilot_conduit_popmail,PopMailWidgetConfig,PopMailConduit)
 
 

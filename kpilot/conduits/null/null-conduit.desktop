@@ -59,4 +59,4 @@ Comment[uk]=Цей акведук нічого не робить.
 Comment[zh_TW]=此導管不做任何事情。
 Implemented=file
 ServiceTypes=KPilotConduit
-X-KDE-Library=conduit_null
+X-KDE-Library=kpilot_conduit_null
