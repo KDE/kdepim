@@ -64,7 +64,8 @@ QString MemberInfo::name() const
     nameMap.insert( "google-calendar", i18n( "Google Calendar" ) );
     nameMap.insert( "gpe-sync", i18n( "Handheld" ) );
     nameMap.insert( "sunbird-sync", i18n( "Sunbird Calendar" ) );
-
+    nameMap.insert( "jescs-sync", i18n( "Java Enterprise System Calendar" ) );
+    nameMap.insert( "synce-plugin", i18n( "WinCE Devices" ) );
   }
 
   if ( mMember.name().isEmpty() )
@@ -82,6 +83,7 @@ QString MemberInfo::pluginIconName( const QString &pluginName )
   if ( pluginName == "irmc-sync" ) return "mobile_phone";
   if ( pluginName == "evo2-sync" ) return "evolution";
   if ( pluginName == "opie-sync" ) return "pda_blue";
+  if ( pluginName == "synce-plugin" ) return "pda_blue";
   if ( pluginName == "ldap-sync" ) return "contents2";
   if ( pluginName == "syncml-obex-client" ) return "mobile_phone";
   if ( pluginName == "syncml-http-server" ) return "pda_blue";
@@ -90,6 +92,7 @@ QString MemberInfo::pluginIconName( const QString &pluginName )
   if ( pluginName == "google-calendar" ) return "www";
   if ( pluginName == "gpe-sync" ) return "pda_blue";
   if ( pluginName == "sunbird-sync" ) return "www";
+  if ( pluginName == "jescs-sync" ) return "www";
 
 
   return QString::null;
