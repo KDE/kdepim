@@ -126,7 +126,7 @@ void ConfigGuiXml::load( const QString &xml )
   mTextEdit->setText( xml );
 }
 
-QString ConfigGuiXml::save()
+QString ConfigGuiXml::save() const
 {
   return mTextEdit->text();
 }

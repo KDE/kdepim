@@ -32,7 +32,7 @@ class ConfigGuiGoogleCalendar : public ConfigGui
     ConfigGuiGoogleCalendar( const QSync::Member &, QWidget *parent );
 
     void load( const QString &xml );
-    QString save();
+    QString save() const;
 
   private:
     QLineEdit *mUsername;

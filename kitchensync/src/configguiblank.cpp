@@ -37,7 +37,7 @@ void ConfigGuiBlank::load( const QString& )
 {
 }
 
-QString ConfigGuiBlank::save()
+QString ConfigGuiBlank::save() const
 {
   QString xml = "<config></config>";
   return xml;

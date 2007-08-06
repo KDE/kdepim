@@ -188,7 +188,7 @@ void ConfigGuiGnokii::load( const QString &xml )
   }
 }
 
-QString ConfigGuiGnokii::save()
+QString ConfigGuiGnokii::save() const
 {
   QString xml;
   xml = "<config>";

@@ -35,7 +35,7 @@ void ConfigGuiJescs::load( const QString &xml )
   }
 }
 
-QString ConfigGuiJescs::save()
+QString ConfigGuiJescs::save() const
 {
   int delNotifyState;
   QString config = "<config>\n";

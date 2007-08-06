@@ -35,7 +35,7 @@ void ConfigGuiEvo2::load( const QString &xml )
   }
 }
 
-QString ConfigGuiEvo2::save()
+QString ConfigGuiEvo2::save() const
 {
   QString config = "<config>\n";
 

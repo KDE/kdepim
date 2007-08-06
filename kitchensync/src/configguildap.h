@@ -39,7 +39,7 @@ class ConfigGuiLdap : public ConfigGui
     ConfigGuiLdap( const QSync::Member &, QWidget *parent );
 
     void load( const QString &xml );
-    QString save();
+    QString save() const;
 
   private slots:
     void bindModeChanged( bool );
