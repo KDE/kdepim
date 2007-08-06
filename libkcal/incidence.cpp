@@ -321,9 +321,12 @@ void Incidence::addRelation( Incidence *event )
 }
 
 void Incidence::removeRelation(Incidence *event)
+// Remove the relation of our incident. E.g. if you have a task t and a
+// subtask, the subtask will have its relation to the task t.
 {
   mRelations.removeRef(event);
 //  if (event->getRelatedTo() == this) event->setRelatedTo(0);
+  mRelatedToUid=QString();
 }
 
 
