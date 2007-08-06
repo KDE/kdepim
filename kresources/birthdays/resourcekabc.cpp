@@ -200,8 +200,8 @@ bool ResourceKABC::doLoad()
         Alarm* vAlarm = ev->newAlarm();
         vAlarm->setText(summary);
         vAlarm->setTime(birthdate);
-        // 24 hours before
-        vAlarm->setStartOffset( -1440 * mAlarmDays );
+        // 24 hours before. duration is in seconds.
+        vAlarm->setStartOffset( -86400 * mAlarmDays );
         vAlarm->setEnabled(true);
       }
 
@@ -305,8 +305,8 @@ bool ResourceKABC::doLoad()
       Alarm* vAlarm = ev->newAlarm();
       vAlarm->setText(summary);
       vAlarm->setTime(anniversary);
-      // 24 hours before
-      vAlarm->setStartOffset( -1440 * mAlarmDays );
+      // 24 hours before. duration is in seconds.
+      vAlarm->setStartOffset( -86400 * mAlarmDays );
       vAlarm->setEnabled(true);
     }
 
