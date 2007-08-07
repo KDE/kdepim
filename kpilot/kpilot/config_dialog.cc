@@ -216,11 +216,11 @@ ConduitConfigWidget::ConduitConfigWidget(QWidget *parent, const QStringList &arg
 	fillLists();
 
 	fConduitList->resize(fConduitList->sizeHint());
-	fConduitList->setMinimumSize(fConduitList->sizeHint());
+	fConduitList->setMinimumSize(QSize(200,200));
 	fConduitList->setColumnWidth(0, fConduitList->sizeHint().width());
 
 	fStack->resize(fStack->sizeHint()+QSize(10,40));
-	fStack->setMinimumSize(fStack->sizeHint()+QSize(10,40));
+	fStack->setMinimumSize(QSize(400,400));
 
 	QObject::connect(fConduitList,
 		SIGNAL(currentItemChanged(QTreeWidgetItem *, QTreeWidgetItem *)),
