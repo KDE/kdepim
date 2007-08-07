@@ -34,6 +34,7 @@
 
 #include "options.h"
 
+#include "keyringsettings.h"
 
 static KAboutData *createAbout()
 {
@@ -61,6 +62,11 @@ KeyringWidgetSetup::KeyringWidgetSetup( QWidget *w ) :
 
 	fWidget = new QWidget();
 	fUi.setupUi( fWidget );
+	fUi.fLocalDatabaseUrl->setMode( KFile::ExistingOnly );
+	fUi.fLocalDatabaseUrl->setFilter( CSL1( "*.pdb") );
+	
+	QObject::connect( fUi.fLocalDatabaseUrl
+		, SIGNAL( textChanged( const QString& ) ), this, SLOT( modified() ) );
 
 	fConduitName = i18n( "Keyring Conduit" );
 	fAbout = createAbout();
@@ -75,11 +81,29 @@ KeyringWidgetSetup::~KeyringWidgetSetup()
 /* virtual */ void KeyringWidgetSetup::commit()
 {
 	FUNCTIONSETUP;
+
+	DEBUGKPILOT
+		<< ": Database file="
+		<< fUi.fLocalDatabaseUrl->url().url();
+
+	KeyringConduitSettings::setDatabaseUrl( fUi.fLocalDatabaseUrl->url().url() );
+	KeyringConduitSettings::self()->writeConfig();
+	unmodified();
 }
 
 /* virtual */ void KeyringWidgetSetup::load()
 {
 	FUNCTIONSETUP;
+	KeyringConduitSettings::self()->readConfig();
+
+	fUi.fLocalDatabaseUrl->setUrl( KeyringConduitSettings::databaseUrl() );
+
+	DEBUGKPILOT
+		<< ": Local database file: ["
+		<< fUi.fLocalDatabaseUrl->url().url()
+		<< ']';
+
+	unmodified();
 }
 
 /* static */ ConduitConfigBase *KeyringWidgetSetup::create( QWidget *w )
