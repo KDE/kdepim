@@ -108,7 +108,7 @@ bool LDIFXXPort::exportContacts( const KABC::AddresseeList &list, const QString&
 
   if ( !url.isLocalFile() ) {
     KTemporaryFile tmpFile;
-    if ( !tmpFile.status() ) {
+    if ( !tmpFile.open() ) {
       QString txt = i18n( "<qt>Unable to open file <b>%1</b></qt>", url.url());
       KMessageBox::error( parentWidget(), txt );
       return false;
