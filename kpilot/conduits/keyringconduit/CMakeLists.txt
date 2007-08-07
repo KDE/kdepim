@@ -7,9 +7,11 @@ include_directories(
 add_subdirectory(tests)
 
 set(keyring_SRCS
+	keyringsetup.cc
 	keyringhhrecord.cc
 	keyringhhdataproxy.cc
 	keyringconduit.cc
+	keyringfactory.cc
 )
 
 #set(conduit_base_KCFGS
@@ -17,6 +19,16 @@ set(keyring_SRCS
 #)
 
 #kde4_add_kcfg_files(keyring_SRCS ${conduit_base_KCFGS})
-kde4_add_library(keyring SHARED ${keyring_SRCS})
-target_link_libraries(keyring conduit_base ${QT_LIBRARIES} ${QCA2_LIBRARIES})
-install(TARGETS keyring LIBRARY DESTINATION ${LIB_INSTALL_DIR})
+kde4_add_ui_files(keyring_SRCS keyringwidget.ui)
+kde4_add_library(kpilot_conduit_keyring SHARED ${keyring_SRCS})
+
+target_link_libraries(kpilot_conduit_keyring
+	conduit_base
+	${QT_LIBRARIES}
+	${QCA2_LIBRARIES}
+)
+
+set_target_properties(kpilot_conduit_keyring PROPERTIES PREFIX "")
+
+install(TARGETS kpilot_conduit_keyring LIBRARY DESTINATION ${PLUGIN_INSTALL_DIR})
+install(FILES kpilot-conduit-keyring.desktop DESTINATION ${SERVICES_INSTALL_DIR})

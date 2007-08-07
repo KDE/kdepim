@@ -33,6 +33,15 @@
 
 class PilotRecord;
 
+class KeyringHHRecordBase
+{
+	public:
+		QString account;
+		QString password;
+		QString notes;
+		QDateTime lastChanged;
+};
+
 class KeyringHHRecord : public HHRecord
 {
 public:
@@ -47,6 +56,16 @@ public:
 	virtual QString notes() const;
 	
 	virtual QDateTime lastChangedDate() const;
+	
+	virtual void setName( const QString &name );
+	
+	virtual void setAccount( const QString &account  );
+	
+	virtual void setPassword( const QString &password  );
+	
+	virtual void setNotes( const QString &notes  );
+	
+	virtual void setLastChangedDate( const QDateTime &lastChangedDate );
 	
 	/** Implemented virtual methods */
 	
@@ -64,14 +83,15 @@ public:
 	virtual QString toString() const;
 
 private: // functions
-	enum Field {
-		eAccount = 0,
-		ePassword,
-		eNotes,
-		eLastChangeTime
-	};
+	/**
+	 * Returns a KeyringHHRecordBase with the unencrypted values in it.
+	 */
+	KeyringHHRecordBase unpack() const;
 	
-	QVariant getEncryptedField( const Field f ) const;
+	/**
+	 * Puts the unencrypted data in the pilotRecord.
+	 */
+	void pack( const KeyringHHRecordBase &data );
 	
 private: // members
 	QString fKey;

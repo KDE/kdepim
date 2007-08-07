@@ -39,6 +39,13 @@ public:
 	
 	virtual ~KeyringHHDataProxy();
 
+	/**
+	 * Tries to read the database with given password (which is used to
+	 * {en/de}crypt the database). Returns false if the password is incorrect. If
+	 * the password is correct, all records will be loaded from the database.
+	 */
+	bool openDatabase( const QString &pass );
+	
 protected:
 	/**
 	 * This function creates a (subclass of) HHRecord for @p rec.

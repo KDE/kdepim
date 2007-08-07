@@ -1,0 +1,8 @@
+[Desktop Entry]
+Encoding=UTF-8
+Type=Service
+Comment=This conduit syncs the handheld keyring database with a database stored on the pc.
+Name=Keyring
+Implemented=file
+ServiceTypes=KPilotConduit
+X-KDE-Library=kpilot_conduit_keyring

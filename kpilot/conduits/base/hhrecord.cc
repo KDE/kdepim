@@ -40,7 +40,7 @@ HHRecord::~HHRecord()
 	delete fRecord;
 }
 
-PilotRecord* HHRecord::pilotRecord()
+PilotRecord* HHRecord::pilotRecord() const
 {
 	return fRecord;
 }
@@ -68,10 +68,7 @@ const QString HHRecord::id() const
 	
 	return QString::number( fRecord->id() );
 }
-	
-	/**
-	 * Sets the id of this record to @p id;
-	 */
+
 void HHRecord::setId( const QString &id )
 {
 	FUNCTIONSETUP;

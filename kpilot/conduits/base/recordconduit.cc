@@ -425,7 +425,7 @@ void RecordConduit::firstSync()
 		else
 		{
 			DEBUGKPILOT << "No match found for:" << hhRecord->id();
-			Record *pcRecord = newPCRecord( hhRecord );
+			Record *pcRecord = createPCRecord( hhRecord );
 			fPCDataProxy->create( pcRecord );
 			fMapping->map( hhRecord->id(), pcRecord->id() );
 		}
@@ -440,7 +440,7 @@ void RecordConduit::firstSync()
 		
 		if( !fMapping->containsPCId( pcRecord->id() ) )
 		{
-			HHRecord *hhRecord = newHHRecord( pcRecord );
+			HHRecord *hhRecord = createHHRecord( pcRecord );
 			fHHDataProxy->create( hhRecord );
 			
 			fMapping->map( hhRecord->id(), pcRecord->id() );
@@ -479,7 +479,7 @@ void RecordConduit::copyHHToPC()
 		{
 			DEBUGKPILOT << "Mapping does not exists, copy hh to pc.";
 			
-			Record *pcRecord = newPCRecord( hhRecord );
+			Record *pcRecord = createPCRecord( hhRecord );
 			fPCDataProxy->create( pcRecord );
 			fMapping->map( hhRecord->id(), pcRecord->id() );
 		}
@@ -547,7 +547,7 @@ void RecordConduit::copyPCToHH()
 		{
 			DEBUGKPILOT << "Mapping does not exists, copy pc to hh.";
 			
-			HHRecord *hhRecord = newHHRecord( pcRecord );
+			HHRecord *hhRecord = createHHRecord( pcRecord );
 			fHHDataProxy->create( hhRecord );
 			fMapping->map( hhRecord->id(), pcRecord->id() );
 		}

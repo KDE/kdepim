@@ -33,18 +33,29 @@
 
 #include "keyringhhrecord.h"
 
-KeyringHHDataProxy::KeyringHHDataProxy( PilotDatabase *db ) : HHDataProxy( db )
+KeyringHHDataProxy::KeyringHHDataProxy( PilotDatabase *db )
+	: HHDataProxy( db )
 {
 	FUNCTIONSETUP;
 	
 	// Hash-key record
 	fZeroRecord = fDatabase->readRecordByIndex( 0 );
+}
+
+KeyringHHDataProxy::~KeyringHHDataProxy()
+{
+	delete fZeroRecord;
+}
+
+bool KeyringHHDataProxy::openDatabase( const QString &pass )
+{
+	FUNCTIONSETUP;
 	
-	// salt should be put in a QCA::SecureArray, but it gave me segfaults.
 	QCA::Initializer init;
 	QCA::SecureArray recordZero( fZeroRecord->data() );
-	QCA::SecureArray pass( "test" );
-	QCA::SecureArray hash = getDigest( recordZero, pass );
+	QCA::SecureArray passArray = pass.toLatin1();
+
+	QCA::SecureArray hash = getDigest( recordZero, QCA::SecureArray( passArray ) );
 	
 	// The salt and password hash are stored in recordZero.
 	if( recordZero.toByteArray().contains( hash.toByteArray() ) )
@@ -52,7 +63,7 @@ KeyringHHDataProxy::KeyringHHDataProxy( PilotDatabase *db ) : HHDataProxy( db )
 		DEBUGKPILOT << "Password correct!";
 		
 		QCA::Hash passHash( "md5" );
-		passHash.update( pass );
+		passHash.update( passArray );
 		
 		// generate the DES keypair (snib = A,B; desKeyData = A,B,A)
 		QCA::SymmetricKey key = QCA::SymmetricKey( passHash.final() );
@@ -64,16 +75,14 @@ KeyringHHDataProxy::KeyringHHDataProxy( PilotDatabase *db ) : HHDataProxy( db )
 		
 		// For now remove the zero record from the record list.
 		fRecords.remove( QString::number( fZeroRecord->id() ) );
+		
+		return true;
 	}
 	else
 	{
 		DEBUGKPILOT << "Password incorrect!";
+		return false;
 	}
-}
-
-KeyringHHDataProxy::~KeyringHHDataProxy()
-{
-	delete fZeroRecord;
 }
 
 HHRecord* KeyringHHDataProxy::createHHRecord( PilotRecord *rec )

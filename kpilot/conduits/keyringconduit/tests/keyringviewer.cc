@@ -78,5 +78,6 @@ void KeyringViewer::togglePasswordVisibility()
 	else
 	{
 		fUi.fPasswordEdit->setEchoMode( QLineEdit::Password );
+		fUi.fPasswordBox->setCheckState( Qt::Unchecked );
 	}
 }

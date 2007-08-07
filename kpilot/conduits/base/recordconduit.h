@@ -56,8 +56,8 @@ protected:
 // Methods
 public:
 	explicit RecordConduit( KPilotLink *o, const QStringList &a = QStringList()
-		, const QString &databaseName = QString()
-		, const QString &conduitName = QString() );
+		, const QString &conduitName = QString()
+		, const QString &databaseName = QString() );
 	
 	virtual ~RecordConduit();
 
@@ -65,10 +65,6 @@ protected:
 	virtual bool exec();
 	
 	virtual void loadSettings() = 0;
-	
-	virtual Record* createPCRecord( const HHRecord *hhRec ) = 0;
-	
-	virtual HHRecord* createHHRecord( const Record *pcRec ) = 0;
 	
 	/**
 	 * Initialize the data proxies data are needed during sync. The following 
@@ -84,6 +80,16 @@ protected:
 	 * equal.
 	 */
 	virtual bool equal( Record *pcRec, HHRecord *hhRec ) = 0;
+	
+	/**
+	 * Creates a new Record object with the same data as @p hhRec.
+	 */
+	virtual Record* createPCRecord( const HHRecord *hhRec ) = 0;
+	
+	/**
+	 * Creates a new HHRecord object with the same data as @p pcRec.
+	 */
+	virtual HHRecord* createHHRecord( const Record *pcRec ) = 0;
 	
 	/**
 	 * Copies the field values of @p from to @p to. The method should only touch
@@ -108,16 +114,6 @@ protected:
 	 * implementing class can do whatever it wants to do for test purposes.
 	 */
 	virtual void test() = 0;
-	
-	/**
-	 * Returns a HHRecord that is a copy of @p pcRecord.
-	 */
-	virtual HHRecord* newHHRecord( Record *pcRecord ) = 0;
-	
-	/**
-	 * Returns a Record that is a copy of @p hhRecord.
-	 */
-	virtual Record* newPCRecord( HHRecord *hhRecord ) = 0;
 
 	virtual bool createBackupDatabase() = 0;
 

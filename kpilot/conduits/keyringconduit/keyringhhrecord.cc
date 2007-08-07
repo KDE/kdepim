@@ -12,7 +12,8 @@ KeyringHHRecord::KeyringHHRecord( PilotRecord *rec, const QString &key)
 bool KeyringHHRecord::equal( const Record* other ) const
 {
 	FUNCTIONSETUP;
-	
+	#warning not implemented.
+	// Do not compare last synced date, that's unecessary.
 	const KeyringHHRecord *rec = dynamic_cast<const KeyringHHRecord*>( other );
 	
 	if( rec )
@@ -36,32 +37,59 @@ QString KeyringHHRecord::account() const
 {
 	FUNCTIONSETUP;
 	
-	return getEncryptedField( eAccount ).toString();
+	return unpack().account;
 }
 
 QString KeyringHHRecord::password() const
 {
 	FUNCTIONSETUP;
 	
-	return getEncryptedField( ePassword ).toString();
+	return unpack().password;
 }
 
 QString KeyringHHRecord::notes() const
 {
 	FUNCTIONSETUP;
 	
-	return getEncryptedField( eNotes ).toString();
+	return unpack().notes;
 }
 
 QDateTime KeyringHHRecord::lastChangedDate() const
 {
 	FUNCTIONSETUP;
 	
-	return getEncryptedField( eLastChangeTime ).toDateTime();
+	return unpack().lastChanged;
 }
 
-QVariant KeyringHHRecord::getEncryptedField( const Field f ) const
+void KeyringHHRecord::setName( const QString &name )
 {
+	
+}
+
+void KeyringHHRecord::setAccount( const QString &account  )
+{
+
+}
+
+void KeyringHHRecord::setPassword( const QString &password  )
+{
+
+}
+
+void KeyringHHRecord::setNotes( const QString &notes  )
+{
+
+}
+
+void KeyringHHRecord::setLastChangedDate( const QDateTime &lastChangedDate )
+{
+
+}
+
+KeyringHHRecordBase KeyringHHRecord::unpack() const
+{
+	KeyringHHRecordBase data;
+
 	int n = fName.size() + 1; // Stringlengt + zero.
 	int size = fRecord->size();
 
@@ -78,10 +106,7 @@ QVariant KeyringHHRecord::getEncryptedField( const Field f ) const
 	
 	int pos = 0;
 	
-	QString account;
-	QString pass;
-	QString notes;
-	QByteArray date;
+	QByteArray dateArray;
 	
 	for( int i = 0; i < result.size(); i++ )
 	{
@@ -90,16 +115,16 @@ QVariant KeyringHHRecord::getEncryptedField( const Field f ) const
 			switch( pos )
 			{
 				case 0:
-					account.append( QChar( result[i] ) );
+					data.account.append( QChar( result[i] ) );
 					break;
 				case 1:
-					pass.append( QChar( result[i] ) );
+					data.password.append( QChar( result[i] ) );
 					break;
 				case 2:
-					notes.append( QChar( result[i] ) );
+					data.notes.append( QChar( result[i] ) );
 					break;
 				case 3:
-					date.append( result[i] );
+					dateArray.append( result[i] );
 					break;
 				default:
 					break;
@@ -112,32 +137,20 @@ QVariant KeyringHHRecord::getEncryptedField( const Field f ) const
 		}
 	}
 	
-	switch( f )
-	{
-		case eAccount:
-			return account;
-		case ePassword:
-			return pass;
-		case eNotes:
-			return notes;
-		case eLastChangeTime:
-			struct tm t;
-			
-			// Copied from keyring.c (j-pilot conduit)
-			unsigned short packed_date = get_short( date.data() );
-			t.tm_year = ((packed_date & 0xFE00) >> 9) + 4;
-			t.tm_mon  = ((packed_date & 0x01E0) >> 5) - 1;
-			t.tm_mday = (packed_date & 0x001F);
-			t.tm_hour = 0;
-			t.tm_min  = 0;
-			t.tm_sec  = 0;
-			t.tm_isdst= -1;
-			
-			QDateTime dateTime = readTm( t );
-			return dateTime;
-	}
+	// Copied from keyring.c (j-pilot conduit)
+	unsigned short packed_date = get_short( dateArray.data() );
+	struct tm t;
+	t.tm_year = ((packed_date & 0xFE00) >> 9) + 4;
+	t.tm_mon  = ((packed_date & 0x01E0) >> 5) - 1;
+	t.tm_mday = (packed_date & 0x001F);
+	t.tm_hour = 0;
+	t.tm_min  = 0;
+	t.tm_sec  = 0;
+	t.tm_isdst= -1;
 	
-	return QVariant();
+	data.lastChanged = readTm( t );
+	
+	return data;
 }
 
 QString KeyringHHRecord::toString() const

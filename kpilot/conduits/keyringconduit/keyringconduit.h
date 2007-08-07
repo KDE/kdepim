@@ -30,12 +30,57 @@
 #include "recordconduit.h"
 
 class KeyringConduit : public RecordConduit {
+private:
+	QString fDesKey;
+	
 public:
+	KeyringConduit( KPilotLink *o, const QStringList &a = QStringList() );
+
 	virtual void loadSettings();
 	
 	virtual void initDataProxies();
 	
-	virtual void test();
+	/**
+	 * Compares @p pcRecord with @p hhRec and returns true if they are considered
+	 * equal.
+	 */
+	virtual bool equal( Record *pcRec, HHRecord *hhRec );
+	
+	/**
+	 * Creates a new Record object with the same data as @p hhRec.
+	 */
+	virtual Record* createPCRecord( const HHRecord *hhRec );
+	
+	/**
+	 * Creates a new HHRecord object with the same data as @p pcRec.
+	 */
+	virtual HHRecord* createHHRecord( const Record *pcRec );
+	
+	/**
+	 * Copies the field values of @p from to @p to. The method should only touch
+	 * data that can be synced between the two records and leave the rest of the
+	 * records data unchanged. After calling this method
+	 *
+	 * RecordConduit::equal( pcRecord, hhRecord ) must return true.
+	 */
+	virtual void copy( const Record *from, HHRecord *to );
+	
+	/**
+	 * Copies the field values of @p from to @p to. The method should only touch
+	 * data that can be synced between the two records and leave the rest of the
+	 * records data unchanged. After calling this method
+	 *
+	 * RecordConduit::equal( pcRecord, hhRecord ) must return true.
+	 */
+	virtual void copy( const HHRecord *from, Record *to  );
+	
+	/**
+	 * This method is called when the conduit is run in Test Mode. The 
+	 * implementing class can do whatever it wants to do for test purposes.
+	 */
+	virtual void test() {}
+
+	virtual bool createBackupDatabase();
 };
 
 #endif

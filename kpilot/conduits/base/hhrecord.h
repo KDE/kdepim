@@ -45,7 +45,7 @@ public:
 	
 	/** HHRecord methods */
 	
-	PilotRecord* pilotRecord();
+	PilotRecord* pilotRecord() const;
 	
 	virtual bool isArchived() const;
 	
