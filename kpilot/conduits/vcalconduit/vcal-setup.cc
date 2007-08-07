@@ -65,8 +65,8 @@ VCalWidgetSetup::VCalWidgetSetup(QWidget *w) :
 	fAbout->addCredit(ki18n("Philipp Hullmann"),
 		ki18n("Bugfixer"));
 
-	ConduitConfigBase::addAboutPage(fConfigWidget->tabWidget, fAbout);
-	fConfigWidget->fSyncDestination->setTitle(i18n("Calendar Destination"));
+	ConduitConfigBase::addAboutPage(fConfigWidget.tabWidget, fAbout);
+	fConfigWidget.fSyncDestination->setTitle(i18n("Calendar Destination"));
 	fConduitName=i18n("Calendar");
 
 }

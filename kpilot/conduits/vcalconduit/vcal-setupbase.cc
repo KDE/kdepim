@@ -42,16 +42,17 @@
 //#include "ui_korganizerConduit.h"
 
 VCalWidgetSetupBase::VCalWidgetSetupBase(QWidget *w) :
-	ConduitConfigBase(w),
-	fConfigWidget(new Ui::VCalWidget())
+	ConduitConfigBase(w)
 {
 	FUNCTIONSETUP;
-	fConfigWidget->setupUi( fWidget );
 
-	fConfigWidget->fCalendarFile->setMode(KFile::File);
-	fConfigWidget->fCalendarFile->setFilter(CSL1("*.vcs *.ics|ICalendars\n*.*|All Files (*.*)"));
+	fWidget = new QWidget();
+	fConfigWidget.setupUi( fWidget );
 
-#define CM(a,b) connect(fConfigWidget->a,b,this,SLOT(modified()));
+	fConfigWidget.fCalendarFile->setMode(KFile::File);
+	fConfigWidget.fCalendarFile->setFilter(CSL1("*.vcs *.ics|ICalendars\n*.*|All Files (*.*)"));
+
+#define CM(a,b) connect(fConfigWidget.a,b,this,SLOT(modified()));
 	CM(fSyncDestination,SIGNAL(clicked(int)));
 	CM(fCalendarFile,SIGNAL(textChanged(const QString &)));
 	CM(fArchive,SIGNAL(toggled(bool)));
@@ -71,18 +72,18 @@ VCalWidgetSetupBase::~VCalWidgetSetupBase()
 
 	// General page
 	DEBUGKPILOT << "Selected type="
-		<< fConfigWidget->fSyncDestination->selected()
+		<< fConfigWidget.fSyncDestination->selected()
 		<< " with id="
-		<< fConfigWidget->fSyncDestination->id(fConfigWidget->fSyncDestination->selected());
-	config()->setCalendarType( fConfigWidget->fSyncDestination->id(
-			fConfigWidget->fSyncDestination->selected()));
-	config()->setCalendarFile( fConfigWidget->fCalendarFile->url().url());
+		<< fConfigWidget.fSyncDestination->id(fConfigWidget.fSyncDestination->selected());
+	config()->setCalendarType( fConfigWidget.fSyncDestination->id(
+			fConfigWidget.fSyncDestination->selected()));
+	config()->setCalendarFile( fConfigWidget.fCalendarFile->url().url());
 
-	config()->setSyncArchived( fConfigWidget->fArchive->isChecked() );
+	config()->setSyncArchived( fConfigWidget.fArchive->isChecked() );
 
 	// Conflicts page
 	config()->setConflictResolution(
-		fConfigWidget->fConflictResolution->currentIndex()+SyncAction::eCROffset);
+		fConfigWidget.fConflictResolution->currentIndex()+SyncAction::eCROffset);
 
 	config()->writeConfig();
 	unmodified();
@@ -94,13 +95,13 @@ VCalWidgetSetupBase::~VCalWidgetSetupBase()
 	config()->readConfig();
 
 	// General page
-	fConfigWidget->fSyncDestination->setButton( config()->calendarType());
-	fConfigWidget->fCalendarFile->setUrl( config()->calendarFile() );
+	fConfigWidget.fSyncDestination->setButton( config()->calendarType());
+	fConfigWidget.fCalendarFile->setUrl( config()->calendarFile() );
 
-	fConfigWidget->fArchive->setChecked( config()->syncArchived() );
+	fConfigWidget.fArchive->setChecked( config()->syncArchived() );
 
 	// Conflicts page
-	fConfigWidget->fConflictResolution->setCurrentIndex(
+	fConfigWidget.fConflictResolution->setCurrentIndex(
 		config()->conflictResolution() - SyncAction::eCROffset);
 
 	config()->writeConfig();

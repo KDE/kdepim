@@ -48,7 +48,7 @@ public:
 
 protected:
 	virtual VCalConduitSettings*config()=0;
-	Ui::VCalWidget *fConfigWidget;
+	Ui::VCalWidget fConfigWidget;
 };
 
 #endif

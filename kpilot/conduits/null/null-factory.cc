@@ -51,16 +51,20 @@ public:
 	virtual void commit();
 	virtual void load();
 protected:
-	Ui::NullWidget *fConfigWidget;
+	Ui::NullWidget fConfigWidget;
 	KAboutData *fAbout;
 } ;
 
 NullConduitConfig::NullConduitConfig(QWidget *p, const char *n) :
-	ConduitConfigBase(p,n),
-	fConfigWidget(new Ui::NullWidget())
+	ConduitConfigBase(p,n)
 {
 	FUNCTIONSETUP;
+
+	fWidget = new QWidget();
+	fConfigWidget.setupUi( fWidget );
+
 	fConduitName = i18n("Null");
+
 	fAbout = new KAboutData("nullConduit", 0,
 		ki18n("Null Conduit for KPilot"),
 		KPILOT_VERSION,
@@ -72,9 +76,8 @@ NullConduitConfig::NullConduitConfig(QWidget *p, const char *n) :
 		"groot@kde.org",
 		"http://www.kpilot.org");
 
-	ConduitConfigBase::addAboutPage(fConfigWidget->tabWidget,fAbout);
-	fConfigWidget->setupUi( fWidget );
-	QObject::connect(fConfigWidget->fLogMessage,SIGNAL(textChanged(const QString&)),
+	ConduitConfigBase::addAboutPage(fConfigWidget.tabWidget,fAbout);
+	QObject::connect(fConfigWidget.fLogMessage,SIGNAL(textChanged(const QString&)),
 		this,SLOT(modified()));
 }
 
@@ -82,7 +85,7 @@ NullConduitConfig::NullConduitConfig(QWidget *p, const char *n) :
 {
 	FUNCTIONSETUP;
 
-	NullConduitSettings::setLogMessage( fConfigWidget->fLogMessage->text() );
+	NullConduitSettings::setLogMessage( fConfigWidget.fLogMessage->text() );
 	NullConduitSettings::self()->writeConfig();
 	unmodified();
 }
@@ -91,7 +94,7 @@ NullConduitConfig::NullConduitConfig(QWidget *p, const char *n) :
 {
 	FUNCTIONSETUP;
 	NullConduitSettings::self()->readConfig();
-	fConfigWidget->fLogMessage->setText( NullConduitSettings::logMessage() );
+	fConfigWidget.fLogMessage->setText( NullConduitSettings::logMessage() );
 	unmodified();
 }
 

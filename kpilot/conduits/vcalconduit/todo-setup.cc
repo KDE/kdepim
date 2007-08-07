@@ -64,9 +64,9 @@ ToDoWidgetSetup::ToDoWidgetSetup(QWidget *w) :
 		"reinhold@kainhofer.com",
 		"http://reinhold.kainhofer.com/Linux/");
 
-	ConduitConfigBase::addAboutPage(fConfigWidget->tabWidget,fAbout);
+	ConduitConfigBase::addAboutPage(fConfigWidget.tabWidget,fAbout);
 
-	fConfigWidget->fSyncDestination->setTitle(i18n("To-do Destination"));
+	fConfigWidget.fSyncDestination->setTitle(i18n("To-do Destination"));
 }
 
 ToDoWidgetSetup::~ToDoWidgetSetup()
