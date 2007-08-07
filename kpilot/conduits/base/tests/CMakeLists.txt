@@ -6,7 +6,7 @@ MACRO( RECORD_CONDUIT_UNIT_TESTS )
 	FOREACH( _testname ${ARGN} )
 		kde4_add_unit_test( ${_testname} ${_testname}.cc ${${_testname}_SRCS} )
 		target_link_libraries( ${_testname} 
-			conduit_base
+			kpilot_conduit_base
 			testlib
 			${QT_QTTEST_LIBRARY} 
 		)
@@ -17,7 +17,7 @@ MACRO( RECORD_CONDUIT_EXECUTABLE_TESTS )
 	FOREACH( _testname ${ARGN} )
 		kde4_add_test_executable( ${_testname} ${_testname}.cc )
 		target_link_libraries( ${_testname} 
-			conduit_base
+			kpilot_conduit_base
 			testlib
 			${QT_QTTEST_LIBRARY} 
 		)
@@ -33,7 +33,7 @@ set(testlib_SRCS
 )
 
 kde4_add_library(testlib SHARED ${testlib_SRCS})
-target_link_libraries(testlib conduit_base)
+target_link_libraries(testlib kpilot_conduit_base)
 
 RECORD_CONDUIT_EXECUTABLE_TESTS(
 	idmappingxmlsourcetest
