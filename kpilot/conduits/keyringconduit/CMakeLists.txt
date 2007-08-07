@@ -5,7 +5,7 @@ include_directories(
 )
 
 # Doesn't work, can't link to a plugin.
-#add_subdirectory(tests)
+add_subdirectory(tests)
 
 set(keyring_SRCS
 	keyringsetup.cc
