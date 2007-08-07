@@ -34,19 +34,16 @@
 #include <unistd.h>
 #include <assert.h>
 
-#include <iostream>
-
 #include <pi-file.h>
 
 
+#include <qdatetime.h>
 #include <qfile.h>
 #include <qregexp.h>
-#include <qdatetime.h>
 
-#include <kdebug.h>
 #include <kglobal.h>
-#include <kstandarddirs.h>
 #include <ksavefile.h>
+#include <kstandarddirs.h>
 
 #include "pilotRecord.h"
 #include "pilotLocalDatabase.h"

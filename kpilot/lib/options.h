@@ -34,7 +34,6 @@
 #include <QtCore/qglobal.h>
 #include <QtCore/qnamespace.h>
 
-#include <kdebug.h>
 #include <kdeversion.h>
 #include <klocale.h>
 
@@ -65,7 +64,7 @@ protected:
 
 inline std::ostream& operator <<(std::ostream &o, const KPilotDepthCount &d)
 {
-	return o << d.indent() << ' ' << d.name() << ": ";
+	return o << d.indent() << "> " << d.name();
 }
 
 inline std::ostream& operator <<(std::ostream &o, const QString &s)
@@ -84,22 +83,19 @@ class KPILOT_EXPORT KPilotDebugStream
 {
 public:
 	KPilotDebugStream(int dummy) :
-		enabled(false),
-		has_printed(false)
+		enabled(false)
 	{ Q_UNUSED(dummy); }
 	KPilotDebugStream(const KPilotDepthCount &d) :
-		enabled(debug_level >= d.level()),
-		has_printed(false)
+		enabled(debug_level >= d.level())
 	{
 	}
 	KPilotDebugStream() : // For warnings, needs no fname / depth
-		enabled(true),
-		has_printed(false)
+		enabled(true)
 	{
 	}
 	~KPilotDebugStream()
 	{
-		if (enabled && has_printed)
+		if (enabled)
 		{
 			std::cerr << std::endl;
 		}
@@ -109,44 +105,47 @@ public:
 	{
 		if (enabled)
 		{
-			has_printed = true;
 			std::cerr << v;
 		}
 		return *this;
 	}
 
 private:
-	bool enabled,has_printed;
+	bool enabled;
 } ;
 
 
+#ifndef NDEBUG
+#define DEBUG
 #ifdef __GNUC__
 #define KPILOT_FNAMEDEF(l)	KPilotDepthCount fname(l,__FUNCTION__)
 #else
 #define	KPILOT_FNAMEDEF(l)	KPilotDepthCount fname(l,__FILE__ ":" "__LINE__")
 #endif
 
-#define FUNCTIONSETUP		KPILOT_FNAMEDEF(1)
-#define FUNCTIONSETUPL(l)	KPILOT_FNAMEDEF(l)
+#define FUNCTIONSETUP		KPILOT_FNAMEDEF(1) ; \
+				KPilotDebugStream(fname) << fname ;
+#define FUNCTIONSETUPL(l)	KPILOT_FNAMEDEF(l) ; \
+				KPilotDebugStream(fname) << fname ;
 
 // stderr / iostream-based debugging.
 //
 //
-#define DEBUGKPILOT   KPilotDebugStream(fname) << fname
+#define DEBUGKPILOT   KPilotDebugStream(fname) << fname.indent() << "  "
 #define WARNINGKPILOT KPilotDebugStream() \
 	<< "! " << k_funcinfo << "\n!   "
 
 
 
 
-#if 0
+#else
 // No debugging at all
 //
 #define DEBUGSTREAM   kndbgstream
 #define DEBUGKPILOT   kDebugDevNull()
 #define WARNINGKPILOT kDebugDevNull()
-#define FUNCTIONSETUP const int fname = 0; Q_UNUSED(fname);
-#define FUNCTIONSETUPL(a) const int fname = a; Q_UNUSED(fname);
+#define FUNCTIONSETUP
+#define FUNCTIONSETUPL(a)
 #endif
 
 

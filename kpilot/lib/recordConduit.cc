@@ -86,9 +86,7 @@ long version_record_conduit = Pilot::PLUGIN_API;
 	FUNCTIONSETUP;
 	SyncProgress p = Error;
 
-#ifdef DEBUG
-	DEBUGKPILOT << "From state" << name(fState);
-#endif
+	DEBUGKPILOT << "From state " << name(fState);
 
 	switch(fState)
 	{
@@ -106,9 +104,7 @@ long version_record_conduit = Pilot::PLUGIN_API;
 		break;
 	}
 
-#ifdef DEBUG
-	DEBUGKPILOT << "Step returned" << name(p);
-#endif
+	DEBUGKPILOT << "Step returned " << name(p);
 
 	switch(p)
 	{
@@ -124,9 +120,7 @@ long version_record_conduit = Pilot::PLUGIN_API;
 		break;
 	}
 
-#ifdef DEBUG
 	DEBUGKPILOT << "Step is done, moving to next state.";
-#endif
 
 	// Here the previous call was done.
 	switch(fState)
@@ -163,10 +157,7 @@ long version_record_conduit = Pilot::PLUGIN_API;
 		break;
 	}
 
-#ifdef DEBUG
 	DEBUGKPILOT << "Next state is" << name(fState);
-#endif
-
 }
 
 
@@ -232,8 +223,8 @@ bool RecordConduit::PCData::mapContactsToPilot( QMap<recordid_t,QString> &idCont
 		}
 		++it;
 	}
-	DEBUGKPILOT << "Loaded" << idContactMap.size()
-		<< " Entries on the PC and mapped them to records on the handheld.";
+	DEBUGKPILOT << "Loaded " << idContactMap.size()
+		<< " entries on the PC and mapped them to HH.";
 	return true;
 }
 
@@ -527,9 +518,9 @@ void RecordConduit::slotDeleteUnsyncedPCRecords()
 		{
 			if ( !uids.contains( *uidit ) )
 			{
-#ifdef DEBUG
-				DEBUGKPILOT << "Deleting PCEntry with uid" << (*uidit) << " from PC (is not on HH, and syncing with HH->PC direction)";
-#endif
+				DEBUGKPILOT << "Deleting PCEntry with uid " 
+					<< (*uidit) 
+					<< " from PC (not on HH, sync HH->PC)";
 				mPCData->removeEntry( *uidit );
 			}
 		}
@@ -550,9 +541,9 @@ void RecordConduit::slotDeleteUnsyncedHHRecords()
 		{
 			if ( !mSyncedIds.contains(*it) )
 			{
-#ifdef DEBUG
-				DEBUGKPILOT << "Deleting record with ID" << *it << " from handheld (is not on PC, and syncing with PC->HH direction)";
-#endif
+				DEBUGKPILOT << "Deleting record with ID "
+					<< *it 
+					<< " from HH (not on PC, sync PC->HH)";
 				fDatabase->deleteRecord(*it);
 				fLocalDatabase->deleteRecord(*it);
 			}
@@ -932,9 +923,7 @@ bool RecordConduit::palmSaveEntry( PilotAppCategory *palmEntry, PCEntry *pcEntry
 {
 	FUNCTIONSETUP;
 
-#ifdef DEBUG
-	DEBUGKPILOT << "Saving to pilot" << palmEntry->id();
-#endif
+	DEBUGKPILOT << "Saving to pilot " << palmEntry->id();
 
 	PilotRecord *pilotRec = palmEntry->pack();
 	recordid_t pilotId = fDatabase->writeRecord(pilotRec);
@@ -968,12 +957,11 @@ bool RecordConduit::palmSaveEntry( PilotAppCategory *palmEntry, PCEntry *pcEntry
 bool RecordConduit::backupSaveEntry( PilotAppCategory *backup )
 {
 	FUNCTIONSETUP;
-	if ( !backup ) return false;
+	if ( !backup )
+	{
+		return false;
+	}
 
-
-#ifdef DEBUG
-//	showPilotAppCategory( backup );
-#endif
 	PilotRecord *pilotRec = backup->pack();
 	fLocalDatabase->writeRecord( pilotRec );
 	KPILOT_DELETE( pilotRec );
@@ -987,10 +975,8 @@ bool RecordConduit::pcSaveEntry( PCEntry *pcEntry, PilotAppCategory *,
 {
 	FUNCTIONSETUP;
 
-#ifdef DEBUG
-	DEBUGKPILOT << "Before _savepcEntry, pcEntry->uid()=" <<
-		pcEntry->uid();
-#endif
+	DEBUGKPILOT << "Before _savepcEntry, pcEntry->uid()=" 
+		<< pcEntry->uid();
 	if ( pcEntry->recid() != 0 )
 	{
 		mEntryMap.insert( pcEntry->recid(), pcEntry->uid() );
@@ -1075,18 +1061,15 @@ RecordConduit::PCEntry *RecordConduit::findMatch( PilotAppCategory *palmEntry ) 
 	if( !isFirstSync() && ( palmEntry->id() > 0) )
 	{
 		QString id( mEntryMap[palmEntry->id()] );
-#ifdef DEBUG
-		DEBUGKPILOT << "PilotRecord has id" << palmEntry->id() << ", mapped to" << id;
-#endif
+		DEBUGKPILOT << "PilotRecord has id " << palmEntry->id()
+			<< ", mapped to" << id;
 		if( !id.isEmpty() )
 		{
 			PCEntry *res = mPCData->findByUid( id );
 			if ( !res && !res->isEmpty() ) return res;
 			KPILOT_DELETE( res );
-#ifdef DEBUG
-			DEBUGKPILOT << "PilotRecord has id" << palmEntry->id() <<
-				", but could not be found on the PC side";
-#endif
+			DEBUGKPILOT << "PilotRecord has id " << palmEntry->id()
+				<< " but could not be found on the PC side";
 		}
 	}
 
@@ -1108,9 +1091,8 @@ RecordConduit::PCEntry *RecordConduit::findMatch( PilotAppCategory *palmEntry ) 
 		}
 		KPILOT_DELETE( abEntry );
 	}
-#ifdef DEBUG
-	DEBUGKPILOT << "Could not find any entry matching Palm record with id" << QString::number( palmEntry->id() );
-#endif
+	DEBUGKPILOT << "Could not find any entry matching HH record with id " 
+		<< palmEntry->id();
 	return 0;
 }
 

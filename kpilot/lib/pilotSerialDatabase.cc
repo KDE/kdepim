@@ -30,15 +30,13 @@
 #include "options.h"
 
 #include <time.h>
-#include <iostream>
 
 #include <pi-dlp.h>
 
 #include <qfile.h>
 
-#include <klocale.h>
-#include <kdebug.h>
 #include <kglobal.h>
+#include <klocale.h>
 
 #include "pilotRecord.h"
 #include "pilotSerialDatabase.h"

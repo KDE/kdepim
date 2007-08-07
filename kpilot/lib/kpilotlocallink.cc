@@ -47,18 +47,18 @@
 #include <pi-file.h>
 #include <pi-buffer.h>
 
-#include <qdir.h>
-#include <qtimer.h>
-#include <qdatetime.h>
-#include <qthread.h>
-//Added by qt3to4:
 #include <Q3ValueList>
+#include <qdatetime.h>
+#include <qdir.h>
+#include <qthread.h>
+#include <qtimer.h>
 
 #include <kconfig.h>
+#include <kio/job.h>
+#include <kio/netaccess.h>
 #include <kmessagebox.h>
 #include <kstandarddirs.h>
 #include <kurl.h>
-#include <kio/netaccess.h>
 
 #include "pilotSerialDatabase.h"
 #include "pilotLocalDatabase.h"
@@ -281,7 +281,8 @@ KPilotLocalLink::~KPilotLocalLink()
 	KUrl src( canonicalSrcPath );
 	KUrl dst( canonicalDstPath );
 
-	KIO::NetAccess::file_copy(src,dst,-1,true);
+	KIO::Job *my_job = KIO::file_copy(src,dst,-1,true);
+	KIO::NetAccess::synchronousRun(my_job, 0L);
 
 	if (deletefile)
 	{

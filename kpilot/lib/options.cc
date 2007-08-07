@@ -31,13 +31,8 @@
 #include "options.h"
 
 
-#include <iostream>
-
-#include <qsize.h>
-
-#include <kconfig.h>
-#include <kdebug.h>
 #include <kcmdlineargs.h>
+#include <kconfig.h>
 
 #include <config-kpilot.h>
 

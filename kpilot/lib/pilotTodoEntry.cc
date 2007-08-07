@@ -35,7 +35,6 @@
 #include <qnamespace.h>
 
 #include <kglobal.h>
-#include <kdebug.h>
 
 
 #include "pilotTodoEntry.h"

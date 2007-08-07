@@ -26,14 +26,13 @@
 /*
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
+#include "options.h"
 
 #include <QtGui/QWidget>
 
 #include <kcomponentdata.h>
-#include <kdebug.h>
 #include <klibloader.h>
 
-#include "options.h"
 
 /** @file Defines a template class for factories for KPilot's conduits. */
 
