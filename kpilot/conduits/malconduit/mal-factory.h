@@ -32,11 +32,4 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
-extern "C"
-{
-
-void *init_libmalconduit();
-
-}
-
 #endif

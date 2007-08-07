@@ -31,11 +31,5 @@
 */
 
 
-extern "C"
-{
-
-void *init_libvcalconduit();
-
-}
 
 #endif
