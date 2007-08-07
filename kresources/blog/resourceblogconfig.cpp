@@ -37,8 +37,6 @@ using namespace KCal;
 ResourceBlogConfig::ResourceBlogConfig
 ( QWidget *parent ) : KRES::ConfigWidget( parent )
 {
-  //FIXME: Resize to abritary size to fix KOrganizer bug.
-  //resize( 245, 115 );
   QGridLayout *mainLayout = new QGridLayout( this );
   mainLayout->setSpacing( KDialog::spacingHint() );
 
