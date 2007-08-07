@@ -71,9 +71,9 @@ class KCAL_RESOURCEBLOG_EXPORT ResourceBlogConfig : public KRES::ConfigWidget
     /**
       Saves the entered settings from the widget to the blog resource.
 
-      @param blogs A map containing the blogs' ID and description.
+      @param blogs A list of maps containing the blogs' IDs and descriptions.
     */
-    void slotBlogInfoRetrieved( const QMap<QString,QString> &blogs );
+    void slotBlogInfoRetrieved( const QList<QMap<QString,QString> > &blogs );
 
     /**
       Performs operations on an API change.
@@ -122,6 +122,11 @@ class KCAL_RESOURCEBLOG_EXPORT ResourceBlogConfig : public KRES::ConfigWidget
       A widget to configure the cache save options.
     */
     ResourceCachedSaveConfig *mSaveConfig;
+
+    /**
+      The local blog resource used to retrieve list of the blogs for mBlogs.
+    */
+    ResourceBlog *mBlog;
 };
 
 }

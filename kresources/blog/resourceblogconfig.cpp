@@ -38,7 +38,7 @@ ResourceBlogConfig::ResourceBlogConfig
 ( QWidget *parent ) : KRES::ConfigWidget( parent )
 {
   //FIXME: Resize to abritary size to fix KOrganizer bug.
-  resize( 245, 115 );
+  //resize( 245, 115 );
   QGridLayout *mainLayout = new QGridLayout( this );
   mainLayout->setSpacing( KDialog::spacingHint() );
 
@@ -63,10 +63,9 @@ ResourceBlogConfig::ResourceBlogConfig
 
   label = new QLabel( i18n( "API:" ), this );
   mAPI = new KComboBox( false, this );
-  //TODO: When these are more stable/featureful, add them.
-  //mAPI->addItem( "Google Blogger Data" );
-  //mAPI->addItem( "LiveJournal" );
-  //mAPI->addItem( "Movable Type" );
+  mAPI->addItem( "Google Blogger Data" );
+  mAPI->addItem( "LiveJournal" );
+  mAPI->addItem( "Movable Type" );
   mAPI->addItem( "MetaWeblog" );
   mAPI->addItem( "Blogger 1.0" );
 
@@ -114,9 +113,9 @@ void ResourceBlogConfig::loadSettings( KRES::Resource *res )
         this, SLOT( slotBlogAPIChanged( int ) ) );
     mReloadConfig->loadSettings( resource );
     mSaveConfig->loadSettings( resource );
-    kDebug( 5700 ) << "ResourceBlogConfig::loadSettings(): reloaded";
+    kDebug( 5650 ) << "ResourceBlogConfig::loadSettings(): reloaded";
   } else {
-    kError( 5700 ) <<"ResourceBlogConfig::loadSettings():"
+    kError( 5650 ) <<"ResourceBlogConfig::loadSettings():"
                    << " no ResourceBlog, cast failed";
   }
 }
@@ -137,40 +136,45 @@ void ResourceBlogConfig::saveSettings( KRES::Resource *res )
     }
     mReloadConfig->saveSettings( resource );
     mSaveConfig->saveSettings( resource );
-    kDebug( 5700 ) << "ResourceBlogConfig::saveSettings(): saved";
+    kDebug( 5650 ) << "ResourceBlogConfig::saveSettings(): saved";
   } else {
-    kError( 5700 ) <<"ResourceBlogConfig::saveSettings():"
+    kError( 5650 ) <<"ResourceBlogConfig::saveSettings():"
       " no ResourceBlog, cast failed";
   }
 }
 
 void ResourceBlogConfig::slotBlogInfoRetrieved(
-    const QMap<QString, QString> &blogs )
+    const QList<QMap<QString,QString> > &blogs )
 {
-  kDebug( 5700 ) <<"ResourceBlogConfig::slotBlogInfoRetrieved()";
-  QMap<QString,QString>::const_iterator i;
+  kDebug( 5650 ) <<"ResourceBlogConfig::slotBlogInfoRetrieved()";
+  QList<QMap<QString,QString> >::const_iterator i;
   for (i = blogs.constBegin(); i != blogs.constEnd(); ++i) {
-    mBlogs->addItem( i.value(), i.key() );
+    mBlogs->addItem( (*i).value( "name" ), (*i).value( "id" ) );
   }
   if ( mBlogs->count() ) {
     mBlogs->setEnabled( true );
+  }
+  if ( mBlog ) {
+    delete mBlog;
   }
 }
 
 void ResourceBlogConfig::slotBlogAPIChanged( int index )
 {
-  kDebug( 5700 ) <<"ResourceBlogConfig::slotBlogAPIChanged";
-  //FIXME Delete me somehow?
-  ResourceBlog *blog =  new ResourceBlog();
-  blog->setUrl( mUrl->url() );
-  blog->setUsername( mUsername->text() );
-  blog->setPassword( mPassword->text() );
-  blog->setAPI( mAPI->itemText( index ) );
-  connect ( blog, SIGNAL( signalBlogInfoRetrieved(
-                const QMap<QString,QString> & ) ),
+  kDebug( 5650 ) <<"ResourceBlogConfig::slotBlogAPIChanged";
+  mBlog = new ResourceBlog();
+  if ( !mBlog ) {
+    return;
+  }
+  mBlog->setUrl( mUrl->url() );
+  mBlog->setUsername( mUsername->text() );
+  mBlog->setPassword( mPassword->text() );
+  mBlog->setAPI( mAPI->itemText( index ) );
+  connect ( mBlog, SIGNAL( signalBlogInfoRetrieved(
+            const QList<QMap<QString,QString> > & ) ),
             this, SLOT( slotBlogInfoRetrieved(
-                        const QMap<QString,QString> & ) ) );
-  blog->listBlogs();
+                        const QList<QMap<QString,QString> > & ) ) );
+  mBlog->listBlogs();
   mBlogs->clear();
   mBlogs->setEnabled( false );
 }

@@ -242,9 +242,9 @@ class KCAL_RESOURCEBLOG_EXPORT ResourceBlog : public ResourceCached
     /**
       Signals an available blog(s) to post to.
 
-      @param blogs A map containing the blogs' ID and description.
+      @param blogs A list of maps containing the blogs' IDs and descriptions.
     */
-    void signalBlogInfoRetrieved( const QMap<QString,QString> &blogs );
+    void signalBlogInfoRetrieved( const QList<QMap<QString,QString> > &blogs );
 
   protected Q_SLOTS:
     /**
@@ -260,9 +260,11 @@ class KCAL_RESOURCEBLOG_EXPORT ResourceBlog : public ResourceCached
 
       @param type The type of the error.
       @param errorMessage The specific cause of the error.
+      @param posting The relevent posting, if any.
     */
     void slotError( const KBlog::Blog::ErrorType &type,
-                    const QString &errorMessage );
+                    const QString &errorMessage,
+                    KBlog::BlogPosting *posting = 0 );
 
     /**
       Updates the latest stored post ID to the ID returned from the blog post
@@ -277,7 +279,7 @@ class KCAL_RESOURCEBLOG_EXPORT ResourceBlog : public ResourceCached
 
       @param blogs A map containing the blogs' ID and description.
     */
-    void slotBlogInfoRetrieved( const QMap<QString,QString> &blogs );
+    void slotBlogInfoRetrieved( const QList<QMap<QString,QString> > &blogs );
 
   protected:
     /**
@@ -364,6 +366,11 @@ class KCAL_RESOURCEBLOG_EXPORT ResourceBlog : public ResourceCached
       The cachefile lock.
     */
     KABC::Lock *mLock;
+
+    /**
+      A map of all the blog postings awaiting server responses.
+    */
+    QMap<QString,KBlog::BlogPosting*> *mPostingMap;
 };
 
 }
