@@ -50,15 +50,19 @@ public:
 	virtual void commit();
 	virtual void load();
 protected:
-	Ui::MemofileWidget *fConfigWidget;
+	Ui::MemofileWidget fConfigWidget;
 } ;
 
 MemofileConduitConfig::MemofileConduitConfig(QWidget *p, const char *n) :
-	ConduitConfigBase(p,n),
-	fConfigWidget(new Ui::MemofileWidget())
+	ConduitConfigBase(p,n)
 {
 	FUNCTIONSETUP;
+
+	fWidget = new QWidget();
+	fConfigWidget.setupUi( fWidget );
+	
 	fConduitName = i18n("Memofile");
+	
 	KAboutData *about = new KAboutData("MemofileConduit", 0,
 		ki18n("Memofile Conduit for KPilot"),
 		KPILOT_VERSION,
@@ -70,15 +74,12 @@ MemofileConduitConfig::MemofileConduitConfig(QWidget *p, const char *n) :
 		"vR@movingparts.net",
 		"http://www.cs.kun.nl/~adridg/kpilot");
 
-	ConduitConfigBase::addAboutPage(fConfigWidget->tabWidget,about);
+	ConduitConfigBase::addAboutPage(fConfigWidget.tabWidget,about);
 
-	fConfigWidget->setupUi( fWidget );
-
-	QObject::connect(fConfigWidget->fDirectory,SIGNAL(textChanged(const QString&)),
+	QObject::connect(fConfigWidget.fDirectory,SIGNAL(textChanged(const QString&)),
 		this,SLOT(modified()));
-	QObject::connect(fConfigWidget->fSyncPrivate,SIGNAL(toggled(bool)),
+	QObject::connect(fConfigWidget.fSyncPrivate,SIGNAL(toggled(bool)),
 					 this,SLOT(modified()));
-
 }
 
 /* virtual */ void MemofileConduitConfig::commit()
@@ -87,10 +88,10 @@ MemofileConduitConfig::MemofileConduitConfig(QWidget *p, const char *n) :
 
 	DEBUGKPILOT
 		<< ": Directory="
-		<< fConfigWidget->fDirectory->url().url();
+		<< fConfigWidget.fDirectory->url().url();
 
-	MemofileConduitSettings::setDirectory( fConfigWidget->fDirectory->url().url() );
-	MemofileConduitSettings::setSyncPrivate( fConfigWidget->fSyncPrivate->isChecked() );
+	MemofileConduitSettings::setDirectory( fConfigWidget.fDirectory->url().url() );
+	MemofileConduitSettings::setSyncPrivate( fConfigWidget.fSyncPrivate->isChecked() );
 	MemofileConduitSettings::self()->writeConfig();
 	unmodified();
 }
@@ -100,14 +101,14 @@ MemofileConduitConfig::MemofileConduitConfig(QWidget *p, const char *n) :
 	FUNCTIONSETUP;
 	MemofileConduitSettings::self()->readConfig();
 
-	fConfigWidget->fDirectory->setUrl( MemofileConduitSettings::directory() );
-	fConfigWidget->fSyncPrivate->setChecked( MemofileConduitSettings::syncPrivate() );
+	fConfigWidget.fDirectory->setUrl( MemofileConduitSettings::directory() );
+	fConfigWidget.fSyncPrivate->setChecked( MemofileConduitSettings::syncPrivate() );
 
 	DEBUGKPILOT
 		<< ": Read Directory: ["
-		<< fConfigWidget->fDirectory->url().url()
+		<< fConfigWidget.fDirectory->url().url()
 		<< "], sync private records: ["
-		<< fConfigWidget->fSyncPrivate
+		<< fConfigWidget.fSyncPrivate
 		<< ']';
 
 	unmodified();
