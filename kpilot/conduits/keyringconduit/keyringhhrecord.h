@@ -47,25 +47,25 @@ class KeyringHHRecord : public HHRecord
 public:
 	KeyringHHRecord( PilotRecord *rec, const QString &key );
 	
-	virtual QString name() const;
+	QString name() const;
 	
-	virtual QString account() const;
+	QString account() const;
 	
-	virtual QString password() const;
+	QString password() const;
 	
-	virtual QString notes() const;
+	QString notes() const;
 	
-	virtual QDateTime lastChangedDate() const;
+	QDateTime lastChangedDate() const;
 	
-	virtual void setName( const QString &name );
+	void setName( const QString &name );
 	
-	virtual void setAccount( const QString &account  );
+	void setAccount( const QString &account  );
 	
-	virtual void setPassword( const QString &password  );
+	void setPassword( const QString &password  );
 	
-	virtual void setNotes( const QString &notes  );
+	void setNotes( const QString &notes  );
 	
-	virtual void setLastChangedDate( const QDateTime &lastChangedDate );
+	void setLastChangedDate( const QDateTime &lastChangedDate );
 	
 	/** Implemented virtual methods */
 	

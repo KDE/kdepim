@@ -4,7 +4,8 @@ include_directories(
 	${QCA2_INCLUDE_DIR}
 )
 
-add_subdirectory(tests)
+# Doesn't work, can't link to a plugin.
+#add_subdirectory(tests)
 
 set(keyring_SRCS
 	keyringsetup.cc
@@ -23,7 +24,7 @@ kde4_add_ui_files(keyring_SRCS keyringwidget.ui)
 kde4_add_library(kpilot_conduit_keyring SHARED ${keyring_SRCS})
 
 target_link_libraries(kpilot_conduit_keyring
-	conduit_base
+	kpilot_conduit_base
 	${QT_LIBRARIES}
 	${QCA2_LIBRARIES}
 )
