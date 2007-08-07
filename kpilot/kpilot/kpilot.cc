@@ -48,7 +48,6 @@
 #include <kaboutdata.h>
 #include <kcmdlineargs.h>
 #include <kiconloader.h>
-#include <kdebug.h>
 #include <kaction.h>
 #include <kactioncollection.h>
 #include <kstandardaction.h>
@@ -743,7 +742,9 @@ int main(int argc, char **argv)
 	KCmdLineOptions kpilotoptions;
 	kpilotoptions.add("s");
 	kpilotoptions.add("setup", ki18n("Setup the Pilot device, conduits and other parameters"), 0L);
+#ifdef DEBUG
 	kpilotoptions.add("debug <level>", ki18n("Set debugging level"), "0");
+#endif
 	KCmdLineArgs::addCmdLineOptions(kpilotoptions, ki18n("kpilot"));
 	KUniqueApplication::addCmdLineOptions();
 	KCmdLineArgs *p = KCmdLineArgs::parsedArgs();

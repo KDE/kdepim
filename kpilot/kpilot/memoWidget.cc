@@ -163,7 +163,7 @@ void MemoWidget::showComponent()
 		new PilotLocalDatabase(dbPath(), CSL1("MemoDB"));
 	if (memoDB == NULL || !memoDB->isOpen())
 	{
-		WARNINGKPILOT << "Can't open local database MemoDB";
+		WARNINGKPILOT << "Could not open local MemoDB in [" << dbPath() << ']';
 
 		populateCategories(fCatList, 0L);
 		updateWidget();
@@ -288,22 +288,16 @@ void MemoWidget::slotUpdateButtons()
 {
 	FUNCTIONSETUP;
 
-	bool highlight = false;
-
-	if ((fListBox->currentItem() != -1) &&
-		(fListBox->isSelected(fListBox->currentItem())))
-			highlight=true;
-
-#ifdef DEBUG
-	DEBUGKPILOT << "Selected items" << highlight;
-#endif
+	bool highlight = 
+		(fListBox->currentItem() != -1) &&
+		(fListBox->isSelected(fListBox->currentItem()));
 
 	if (fExportButton)
 	{
 		fExportButton->setEnabled(highlight);
 	}
 
-	//  The remaining buttons are relevant only if the
+	// The remaining buttons are relevant only if the
 	// internal editors are editable.
 	highlight &= KPilotSettings::internalEditors() ;
 	if (fDeleteButton)
@@ -327,19 +321,13 @@ void MemoWidget::slotDeleteMemo()
 
 	if (item == -1)
 	{
-#ifdef DEBUG
-		DEBUGKPILOT << "No current item selected";
-#endif
 		return;
 	}
 	if (KMessageBox::questionYesNo(this,
 			i18n("Delete currently selected memo?"),
 			i18n("Delete Memo?"), KStandardGuiItem::del(), KStandardGuiItem::cancel()) != KMessageBox::Yes)
 	{
-#ifdef DEBUG
-		DEBUGKPILOT <<
-			": User decided not to delete memo.\n";
-#endif
+		DEBUGKPILOT << "User decided not to delete memo.";
 		return;
 	}
 
@@ -348,9 +336,7 @@ void MemoWidget::slotDeleteMemo()
 
 	if (selectedMemo->id() == 0x0)
 	{
-#ifdef DEBUG
 		DEBUGKPILOT << "Searching for record to delete (it's fresh)";
-#endif
 		PilotLocalDatabase *memoDB = new PilotLocalDatabase(dbPath(), CSL1("MemoDB"));
 		if (!memoDB || (!memoDB->isOpen()))
 		{
@@ -362,21 +348,14 @@ void MemoWidget::slotDeleteMemo()
 			return;
 		}
 		memoDB->resetDBIndex();
-#ifdef DEBUG
 		DEBUGKPILOT << "Searching for new record.";
-#endif
 		const PilotRecord *r = 0L;
 		while ((r = memoDB->findNextNewRecord()))
 		{
-#ifdef DEBUG
-			DEBUGKPILOT << "got record" << (void *) r;
-#endif
 			PilotMemo m(r);
 			if (m.text() == selectedMemo->text())
 			{
-#ifdef DEBUG
 				DEBUGKPILOT << "I think I found the memo.";
-#endif
 				(const_cast<PilotRecord *>(r))->setDeleted(true);
 				break;
 			}
@@ -400,9 +379,6 @@ void MemoWidget::updateWidget()
 
 	if (fCatList->currentIndex() == -1)
 	{
-#ifdef DEBUG
-		DEBUGKPILOT << "No category selected.";
-#endif
 		return;
 	}
 
@@ -451,9 +427,7 @@ void MemoWidget::updateWidget()
 	}
 
 	fTextWidget->clear();
-
 	slotUpdateButtons();
-
 	lastSelectedMemo=-1;
 }
 
@@ -465,10 +439,8 @@ void MemoWidget::showMemo(const PilotMemo *m)
 	for (int x = 0; x < index; x++)
 	{
 		PilotMemo *p = (PilotMemo *) ((PilotListItem *)fListBox->item(x))->rec();
-#ifdef DEBUG
-		DEBUGKPILOT << "Memo @" << (void *) p;
-		DEBUGKPILOT << "       :" << fListBox->item(x)->text();
-#endif
+		DEBUGKPILOT << "Memo @" << (void *) p
+			<< '[' << fListBox->item(x)->text() << ']';
 		if (m==p)
 		{
 			fListBox->setSelected(x,true);
@@ -482,8 +454,12 @@ void MemoWidget::showMemo(const PilotMemo *m)
 void MemoWidget::slotShowMemo(int which)
 {
 	FUNCTIONSETUP;
-	if ( which == -1 ) return;
-	if (!isVisible()) return;
+	if ( ( which == -1 ) || !isVisible() )
+	{
+		return;
+	}
+
+	DEBUGKPILOT << "Displaying memo " << which;
 
 	slotUpdateButtons();
 	if ( !fListBox->isSelected(which) )
@@ -496,9 +472,7 @@ void MemoWidget::slotShowMemo(int which)
 	}
 
 
-#ifdef DEBUG
-	DEBUGKPILOT << "Displaying memo" << which;
-#endif
+
 	fTextWidget->blockSignals(true);
 	PilotListItem *p = (PilotListItem *) fListBox->item(which);
 	PilotMemo *theMemo = (PilotMemo *) p->rec();
@@ -565,9 +539,7 @@ bool MemoWidget::addMemo(const QString &s, int category)
 	d->fMemoList.append(aMemo);
 	writeMemo(aMemo);
 	updateWidget();
-#ifdef DEBUG
 	DEBUGKPILOT << "New memo @" << (void *)aMemo;
-#endif
 	showMemo(aMemo);
 	return true;
 }
@@ -583,7 +555,10 @@ void MemoWidget::slotAddMemo()
 void MemoWidget::slotImportMemo()
 {
 	FUNCTIONSETUP;
-	if (!isVisible() || !d->fMemoAppInfo ) return;
+	if (!isVisible() || !d->fMemoAppInfo )
+	{
+		return;
+	}
 
 	int currentCatID = findSelectedCategory(fCatList,
 		d->fMemoAppInfo->categoryInfo(), true);

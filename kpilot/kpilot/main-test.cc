@@ -288,9 +288,7 @@ int show( const QString &what )
 
 int main(int argc, char **argv)
 {
-#ifdef DEBUG
 	debug_level = 1;
-#endif
 	FUNCTIONSETUP;
 	KAboutData about("kpilotTest", 0,
 		ki18n("KPilotTest"),
@@ -316,9 +314,9 @@ int main(int argc, char **argv)
 	generalOptions.add("check <what>", ki18n("Run a specific check (with the device)"), "help");
 	generalOptions.add("s");
 	generalOptions.add("show <what>", ki18n("Show KPilot configuration information"), "help");
-	#ifdef DEBUG
+#ifdef DEBUG
 	generalOptions.add("debug <level>", ki18n("Set the debug level"), "1");
-	#endif
+#endif
 	KCmdLineArgs::addCmdLineOptions(generalOptions, ki18n("General"));
 
 	KCmdLineOptions conduitOptions;
@@ -344,10 +342,8 @@ int main(int argc, char **argv)
 	needGUI |= (p->isSet("restore"));
 
 	KApplication a(needGUI);
-#ifdef DEBUG
 	KPilotConfig::getDebugLevel(p);
 	DEBUGKPILOT  << "Created KApplication.";
-#endif
 
 	Pilot::setupPilotCodec(KPilotSettings::encoding());
 

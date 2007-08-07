@@ -29,31 +29,27 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
-#ifndef _KPILOT_OPTIONS_H
 #include "options.h"
-#endif
-
-#include <unistd.h>
 
 #include <q3listbox.h>
 
-#include <qlabel.h>
-#include <qpushbutton.h>
-#include <qlayout.h>
-
 #include <q3multilineedit.h>
-#include <qpixmap.h>
 #include <q3popupmenu.h>
-#include <QDropEvent>
 #include <Q3ValueList>
-#include <QMouseEvent>
-#include <QEvent>
 #include <QDragEnterEvent>
+#include <QDropEvent>
+#include <QEvent>
+#include <qlabel.h>
+#include <qlayout.h>
+#include <QMouseEvent>
+#include <qpixmap.h>
+#include <qpushbutton.h>
 
-#include <kfiledialog.h>
-#include <kiconloader.h>
+
 #include <k3iconview.h>
+#include <kfiledialog.h>
 #include <kglobal.h>
+#include <kiconloader.h>
 #include <kurl.h>
 
 #include "kpilotConfig.h"
@@ -70,7 +66,7 @@ FileInstallWidget::FileInstallWidget(QWidget * parent,
 {
 	FUNCTIONSETUP;
 
-	QGridLayout *grid = new QGridLayout(this, 5, 5);
+	QGridLayout *grid = new QGridLayout(this);
 	grid->setMargin(SPACING);
 
 	QLabel *label = new QLabel(i18n("Files to install:"), this);
@@ -173,17 +169,17 @@ bool FileInstallWidget::eventFilter(QObject *watched, QEvent *event)
 
 void FileInstallWidget::dropEvent(QDropEvent * drop)
 {
-	FUNCTIONSETUP;
-	if (!isVisible()) return;
+	if (!isVisible())
+	{
+		return;
+	}
 
 	KUrl::List list = KUrl::List::fromMimeData(drop->mimeData());
 
 	if (list.isEmpty())
+	{
 		return;
-
-#ifdef DEBUG
-	DEBUGKPILOT << "Got" << list.first().prettyUrl();
-#endif
+	}
 
 	QStringList files;
 	for(KUrl::List::ConstIterator it = list.begin(); it != list.end(); ++it)
@@ -216,7 +212,10 @@ void FileInstallWidget::showComponent()
 void FileInstallWidget::slotAddFile()
 {
 	FUNCTIONSETUP;
-	if (!isVisible()) return;
+	if (!isVisible())
+	{
+		return;
+	}
 
 	QStringList fileNames = KFileDialog::getOpenFileNames(
 		KUrl(), i18n("*.pdb *.prc|PalmOS Databases (*.pdb *.prc)"));

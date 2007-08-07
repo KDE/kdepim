@@ -1,8 +1,8 @@
 /* dbViewerWidget.cc		KPilot
 **
 ** Copyright (C) 2003 by Dan Pilone.
-** Copyright (C) 2003 Reinhold Kainhofer <reinhold@kainhofer.com>
-**	Written 2003 by Reinhold Kainhofer and Adriaan de Groot
+** Copyright (C) 2003 by Reinhold Kainhofer <reinhold@kainhofer.com>
+** Copyright (C) 2003,2007 by Adriaan de Groot <groot@kde.org>
 **
 ** This is the generic DB viewer widget.
 */
@@ -31,24 +31,21 @@
 
 #include "options.h"
 
-#include <unistd.h>
-#include <stdio.h>
-
 #include <pi-file.h>
 #include <pi-dlp.h>
 
-#include <qlayout.h>
-#include <qdir.h>
-#include <qregexp.h>
 #include <q3listview.h>
+#include <qdir.h>
 #include <QGridLayout>
+#include <qlayout.h>
+#include <qregexp.h>
 
 #include <k3listbox.h>
 #include <k3listview.h>
-#include <ktextedit.h>
-#include <kpushbutton.h>
 #include <kcombobox.h>
 #include <kmessagebox.h>
+#include <kpushbutton.h>
+#include <ktextedit.h>
 
 #include "listItems.h"
 
@@ -76,20 +73,19 @@ GenericDBWidget::GenericDBWidget(QWidget *parent, const QString &dbpath) :
 
 void GenericDBWidget::setupWidget()
 {
-	QGridLayout *g = new QGridLayout( this, 1, 1 );
+	QGridLayout *g = new QGridLayout( this );
 	g->setMargin(SPACING);
 
 	fDBList = new K3ListBox( this );
 	g->addWidget( fDBList, 0, 0 );
 	fDBType = new KComboBox( false, this );
 	g->addWidget( fDBType, 1, 0 );
-	fDBType->insertItem( i18n( "All Databases" ) );
-	fDBType->insertItem( i18n( "Only Applications (*.prc)" ) );
-	fDBType->insertItem( i18n( "Only Databases (*.pdb)" ) );
+	fDBType->addItem( i18n( "All Databases" ) );
+	fDBType->addItem( i18n( "Only Applications (*.prc)" ) );
+	fDBType->addItem( i18n( "Only Databases (*.pdb)" ) );
 
-	QGridLayout *g1 = new QGridLayout( 0, 1, 1);
+	QGridLayout *g1 = new QGridLayout( this );
 	fDBInfo = new KTextEdit( this );
-	fDBInfo->setSizePolicy( QSizePolicy( (QSizePolicy::SizeType)3, (QSizePolicy::SizeType)0, 0, 0, fDBInfo->sizePolicy().hasHeightForWidth() ) );
 	fDBInfo->setReadOnly( true );
 	g1->addWidget( fDBInfo, 0, 0 );
 	fDBInfoButton = new KPushButton( i18n( "General Database &Information" ), this );
@@ -97,9 +93,9 @@ void GenericDBWidget::setupWidget()
 	fAppInfoButton = new KPushButton( i18n( "&Application Info Block (Categories etc.)" ), this );
 	g1->addWidget( fAppInfoButton, 2, 0 );
 
-	QGridLayout *g2 = new QGridLayout( 0, 1, 1);
+	QGridLayout *g2 = new QGridLayout( this );
 	fRecordList = new K3ListView( this );
-	g2->addMultiCellWidget( fRecordList, 0, 0, 0, 2 );
+	g2->addWidget( fRecordList, 0, 0, 1, 2 );
 	fRecordList->addColumn(i18n("Rec. Nr."));
 	fRecordList->addColumn(i18n("Length"));
 	fRecordList->addColumn(i18n("Record ID"));
@@ -118,7 +114,7 @@ void GenericDBWidget::setupWidget()
 	g1->addLayout( g2, 3, 0 );
 
 
-	g->addMultiCellLayout( g1, 0, 1, 1, 1 );
+	g->addLayout( g1, 0, 1, 2, 1 );
 	resize( QSize(682, 661).expandedTo(minimumSizeHint()) );
 
 	connect(fDBList, SIGNAL(highlighted(const QString &)),
@@ -165,9 +161,8 @@ void GenericDBWidget::hideComponent()
 void GenericDBWidget::slotSelected(const QString &dbname)
 {
 	FUNCTIONSETUP;
-#ifdef DEBUG
-	DEBUGKPILOT << "Selected DB" << dbname;
-#endif
+	DEBUGKPILOT << "Selected DB [" << dbname << ']';
+
 	struct DBInfo dbinfo;
 	QString display;
 	fRecList.clear();
@@ -205,10 +200,6 @@ void GenericDBWidget::slotSelected(const QString &dbname)
 
 		int currentRecord = 0;
 		PilotRecord *pilotRec;
-
-#ifdef DEBUG
-		DEBUGKPILOT << "Reading database"<<dbname<< "...";
-#endif
 
 		while ((pilotRec = fDB->readRecordByIndex(currentRecord)) != 0L)
 		{

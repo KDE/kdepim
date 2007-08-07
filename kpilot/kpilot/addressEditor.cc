@@ -28,27 +28,14 @@
 */
 
 
-#ifndef _KPILOT_OPTIONS_H
 #include "options.h"
-#endif
 
-#ifndef QLINEEDIT_H
-#include <qlineedit.h>
-#endif
-#ifndef QLAYOUT_H
-#include <qlayout.h>
-#endif
-#ifndef QLABEL_H
-#include <qlabel.h>
 #include <QFrame>
-#endif
-#ifndef _KDEBUG_H
-#include <kdebug.h>
-#endif
+#include <qlabel.h>
+#include <qlayout.h>
+#include <qlineedit.h>
 
-#ifndef _KPILOT_PILOTADDRESS_H
 #include "pilotAddress.h"
-#endif
 
 #include "addressEditor.moc"
 
@@ -62,11 +49,12 @@ AddressEditor::AddressEditor(PilotAddress * p,
 	fAddress(p),
 	fAppInfo(appInfo)
 {
+	FUNCTIONSETUP;
+
 	setModal(false);
 	setCaption(i18n("Address Editor"));
 	setButtons(Ok | Cancel);
 	setDefaultButton(Ok);
-	FUNCTIONSETUP;
 
 	initLayout();
 	fillFields();

@@ -226,9 +226,7 @@ void ProbeDialog::startDetection()
 		{
 			link = new KPilotDeviceLink();
 			link->setDevice((*it));
-#ifdef DEBUG
-			DEBUGKPILOT<< "new kpilotDeviceLink for"<<(*it);
-#endif
+			DEBUGKPILOT << "new kpilotDeviceLink for " << (*it);
 			fDeviceLinks[i].append( link );
 			connect( link, SIGNAL(deviceReady(KPilotLink*)), this, SLOT(connection(KPilotLink*)) );
 			processEvents();

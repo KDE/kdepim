@@ -30,31 +30,24 @@
 */
 
 
-#ifndef _KPILOT_OPTIONS_H
 #include "options.h"
-#endif
 
-#include <iostream>
-#include <cstring>
-#include <cstdlib>
-
-#include <q3ptrlist.h>
 #include <q3listbox.h>
-#include <qfile.h>
-#include <qpushbutton.h>
-#include <q3textstream.h>
-#include <qlayout.h>
-#include <qlabel.h>
 #include <q3multilineedit.h>
-#include <qcombobox.h>
-
+#include <q3ptrlist.h>
+#include <q3textstream.h>
 #include <q3textview.h>
-#include <qtextcodec.h>
+#include <qcombobox.h>
+#include <qfile.h>
+#include <qlabel.h>
+#include <qlayout.h>
+#include <qpushbutton.h>
 #include <qregexp.h>
+#include <qtextcodec.h>
 
-#include <kmessagebox.h>
-#include <kdebug.h>
+
 #include <kfiledialog.h>
+#include <kmessagebox.h>
 
 #include "kpilotConfig.h"
 #include "listItems.h"
@@ -91,7 +84,7 @@ int AddressWidget::getAllAddresses(PilotDatabase * addressDB)
 	PilotAddress *address;
 
 
-	DEBUGKPILOT << ": Reading AddressDB...";
+	DEBUGKPILOT << "Reading AddressDB...";
 
 	while ((pilotRec = addressDB->readRecordByIndex(currentRecord)) != 0L)
 	{
@@ -122,8 +115,7 @@ void AddressWidget::showComponent()
 	FUNCTIONSETUP;
 	if ( fPendingAddresses>0 ) return;
 
-	DEBUGKPILOT
-		<< ": Reading from directory " << dbPath();
+	DEBUGKPILOT << "Reading from directory [" << dbPath() << ']';
 
 	PilotDatabase *addressDB =
 		new PilotLocalDatabase(dbPath(), CSL1("AddressDB"));
@@ -141,7 +133,7 @@ void AddressWidget::showComponent()
 	else
 	{
 		populateCategories(fCatList, 0L);
-		WARNINGKPILOT << "Could not open local AddressDB";
+		WARNINGKPILOT << "Could not open local AddressDB in [" << dbPath() << ']';
 	}
 
 	KPILOT_DELETE( addressDB );
@@ -197,7 +189,7 @@ void AddressWidget::setupWidget()
 	FUNCTIONSETUP;
 
 	QLabel *label;
-	QGridLayout *grid = new QGridLayout(this, 6, 4);
+	QGridLayout *grid = new QGridLayout(this);
 	grid->setMargin(SPACING);
 
 	fCatList = new QComboBox(this);
@@ -212,7 +204,7 @@ void AddressWidget::setupWidget()
 	grid->addWidget(label, 0, 0);
 
 	fListBox = new Q3ListBox(this);
-	grid->addMultiCellWidget(fListBox, 1, 1, 0, 1);
+	grid->addWidget(fListBox, 1, 0, 1, 2);
 	connect(fListBox, SIGNAL(highlighted(int)),
 		this, SLOT(slotShowAddress(int)));
 	connect(fListBox, SIGNAL(selected(int)),
@@ -227,7 +219,7 @@ void AddressWidget::setupWidget()
 
 	// address info text view
 	fAddrInfo = new Q3TextView(this);
-	grid->addMultiCellWidget(fAddrInfo, 1, 4, 2, 2);
+	grid->addWidget(fAddrInfo, 1, 2, 3, 1);
 
 	QPushButton *button;
 	QString wt;
@@ -246,7 +238,7 @@ void AddressWidget::setupWidget()
 	wt = KPilotSettings::internalEditors() ?
 		i18n("<qt>Add a new address to the address book.</qt>") :
 		i18n("<qt><i>Adding is disabled by the 'internal editors' setting.</i></qt>") ;
-	button->setWhatsThis( wt);
+	button->setWhatsThis(wt);
 	button->setEnabled(KPilotSettings::internalEditors());
 
 
@@ -257,14 +249,14 @@ void AddressWidget::setupWidget()
 	wt = KPilotSettings::internalEditors() ?
 		i18n("<qt>Delete the selected address from the address book.</qt>") :
 		i18n("<qt><i>Deleting is disabled by the 'internal editors' setting.</i></qt>") ;
+	fDeleteButton->setWhatsThis(wt);
 
-	button = new QPushButton(i18nc("Export addresses to file","Export..."), this);
-	grid->addWidget(button, 3,1);
-	connect(button, SIGNAL(clicked()), this, SLOT(slotExport()));
-	button->setWhatsThis(
+	fExportButton = new QPushButton(i18nc("Export addresses to file","Export..."), this);
+	grid->addWidget(fExportButton, 3,1);
+	connect(fExportButton, SIGNAL(clicked()), this, SLOT(slotExport()));
+	fExportButton->setWhatsThis(
 		i18n("<qt>Export all addresses in the selected category to CSV format.</qt>") );
 
-	fDeleteButton->setWhatsThis(wt);
 }
 
 void AddressWidget::updateWidget()
@@ -307,9 +299,7 @@ void AddressWidget::updateWidget()
 	}
 
 	fListBox->sort();
-#ifdef DEBUG
-	DEBUGKPILOT  << listIndex << " records";
-#endif
+	DEBUGKPILOT << listIndex << " records";
 
 	slotUpdateButtons();
 }
@@ -318,8 +308,6 @@ void AddressWidget::updateWidget()
 
 QString AddressWidget::createTitle(PilotAddress * address, int displayMode)
 {
-	// FUNCTIONSETUP;
-
 	QString title;
 
 	switch (displayMode)
@@ -379,6 +367,9 @@ QString AddressWidget::createTitle(PilotAddress * address, int displayMode)
 	FUNCTIONSETUP;
 
 	bool enabled = (fListBox->currentItem() != -1);
+
+	// Always enabled by state, regardless of availability of internal edt
+	fExportButton->setEnabled(enabled);
 
 	enabled &= KPilotSettings::internalEditors();
 	fEditButton->setEnabled(enabled);
@@ -651,9 +642,7 @@ void AddressWidget::slotExport()
 		);
 	if (saveFile.isEmpty())
 	{
-#ifdef DEBUG
 		DEBUGKPILOT << "No save file selected.";
-#endif
 		return;
 	}
 	if (QFile::exists(saveFile) &&
@@ -662,9 +651,7 @@ void AddressWidget::slotExport()
 			i18n("Overwrite File?"),
 			KGuiItem(i18n("Overwrite")))!=KMessageBox::Continue)
 	{
-#ifdef DEBUG
 		DEBUGKPILOT << "Overwrite file canceled.";
-#endif
 		return;
 	}
 
@@ -677,9 +664,7 @@ void AddressWidget::slotExport()
 	}
 	fAddressList.first();
 
-#ifdef DEBUG
 	DEBUGKPILOT << "Adding records...";
-#endif
 
 	while (fAddressList.current())
 	{

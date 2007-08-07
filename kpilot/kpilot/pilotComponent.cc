@@ -35,10 +35,8 @@
 
 #include <pi-appinfo.h>
 
-#include <qwidget.h>
 #include <qcombobox.h>
-
-#include <kdebug.h>
+#include <qwidget.h>
 
 #include "kpilotConfig.h"
 #include "pilotRecord.h"
@@ -99,9 +97,7 @@ int PilotComponent::findSelectedCategory(QComboBox * fCatList,
 	if (fCatList->currentIndex() == 0)
 	{
 		currentCatID = (-1);
-#ifdef DEBUG
 		DEBUGKPILOT << "Category 'All' selected.";
-#endif
 	}
 	else
 	{
@@ -156,19 +152,12 @@ CategoryAll:
 
 void PilotComponent::slotShowComponent()
 {
-	FUNCTIONSETUP;
-
-#ifdef DEBUG
-	DEBUGKPILOT << "Showing component @" << (long) this;
-#endif
-
 	emit showComponent(this);
 }
 
 /* virtual */ bool PilotComponent::preHotSync(QString &)
 {
 	FUNCTIONSETUP;
-
 	return true;
 }
 

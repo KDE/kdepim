@@ -240,7 +240,7 @@ void TodoWidget::showComponent()
 	else
 	{
 		populateCategories(fCategoryList, 0L);
-		WARNINGKPILOT << "Could not open local TodoDB";
+		WARNINGKPILOT << "Could not open local TodoDB in [" << dbPath() << ']';
 	}
 	KPILOT_DELETE( fP->fTodoDB );
 
@@ -290,7 +290,7 @@ void TodoWidget::hideComponent()
 void TodoWidget::updateWidget()
 {
 	FUNCTIONSETUP;
-#if 0
+#if BADLY_PORTED
 	if (!shown || !fP->fAppInfo ) return;
 
 	int listIndex = 0;
@@ -317,9 +317,7 @@ void TodoWidget::updateWidget()
 		fTodoList.next();
 	}
 
-#ifdef DEBUG
 	DEBUGKPILOT  << listIndex << " records";
-#endif
 
 	slotUpdateButtons();
 #endif

@@ -34,27 +34,23 @@
 
 #include "options.h"
 
-#include <time.h>
-#include <unistd.h>
-#include <stdio.h>
-
 #include <pi-file.h>
 #include <pi-util.h>
 
-#include <qtimer.h>
+#include <QApplication>
+#include <qdir.h>
+#include <QEvent>
 #include <qfile.h>
 #include <qfileinfo.h>
-#include <qdir.h>
+#include <QList>
 #include <qregexp.h>
 #include <qstringlist.h>
 #include <qthread.h>
-#include <QApplication>
-#include <QEvent>
-#include <QList>
+#include <qtimer.h>
 
 #include <kglobal.h>
-#include <kstandarddirs.h>
 #include <kmessagebox.h>
+#include <kstandarddirs.h>
 
 #include "pilotUser.h"
 #include "pilotRecord.h"
@@ -641,9 +637,7 @@ FileInstallAction::~FileInstallAction()
 
 	fDBIndex++;
 
-#ifdef DEBUG
-	DEBUGKPILOT << "Installing file" << filePath;
-#endif
+	DEBUGKPILOT << "Installing file [" << filePath << ']';
 
 	QString m = i18n("Installing %1",fileName);
 	emit logProgress(m,(100 * fDBIndex) / (fList.count()+1));
@@ -956,9 +950,7 @@ void RestoreAction::setDirectory( const QString &path )
 		dirname = fP->fPreferRestoreDir;
 	}
 
-#ifdef DEBUG
-	DEBUGKPILOT << "Restoring user" << dirname;
-#endif
+	DEBUGKPILOT << "Restoring user from [" << dirname << ']';
 
 	QDir dir(dirname, QString::null, QDir::Name,
 		QDir::Files | QDir::Readable | QDir::NoSymLinks);

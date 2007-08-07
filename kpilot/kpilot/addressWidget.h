@@ -129,7 +129,7 @@ private:
 	PilotAddressInfo     *fAddressAppInfo;
 	Q3PtrList<PilotAddress>   fAddressList;
 	Q3ListBox             *fListBox;
-	QPushButton	     *fEditButton,*fDeleteButton;
+	QPushButton	     *fEditButton, *fDeleteButton, *fExportButton;
 
 protected:
 	/**

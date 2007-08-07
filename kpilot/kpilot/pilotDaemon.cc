@@ -34,27 +34,26 @@
 
 #include <stdlib.h>
 
-#include <QTimer>
-#include <qtooltip.h>
-#include <qpixmap.h>
 #include <Q3Dict>
+#include <QCloseEvent>
 #include <QDragEnterEvent>
 #include <QDropEvent>
-#include <QMouseEvent>
-#include <QCloseEvent>
 #include <QMenu>
-
-#include <kuniqueapplication.h>
-#include <kcmdlineargs.h>
-#include <kurl.h>
-#include <kmenu.h>
-#include <kiconloader.h>
-#include <kdebug.h>
+#include <QMouseEvent>
+#include <qpixmap.h>
 #include <QProcess>
-#include <kservice.h>
-#include <khelpmenu.h>
-#include <ktoolinvocation.h>
+#include <QTimer>
+#include <qtooltip.h>
+
 #include <kaboutdata.h>
+#include <kcmdlineargs.h>
+#include <kiconloader.h>
+#include <khelpmenu.h>
+#include <kmenu.h>
+#include <kservice.h>
+#include <ktoolinvocation.h>
+#include <kuniqueapplication.h>
+#include <kurl.h>
 
 #include "pilotRecord.h"
 
@@ -1198,7 +1197,9 @@ int main(int argc, char **argv)
 	KCmdLineArgs::init(argc, argv, &about);
 
 	KCmdLineOptions daemonoptions;
+#ifdef DEBUG
 	daemonoptions.add("debug <level>", ki18n("Set debugging level"), "0");
+#endif
 	daemonoptions.add("device <device>", ki18n("Device to try first"));
 	daemonoptions.add("fail-silently", ki18n("Exit instead of complaining about bad configuration files"));
 	KCmdLineArgs::addCmdLineOptions(daemonoptions, ki18n("kpilotconfig"));

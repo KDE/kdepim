@@ -94,12 +94,15 @@
 {
 	FUNCTIONSETUP;
 
+	debug_level = 0;
 	if (p)
 	{
+#ifdef DEBUG
 		if (p->isSet("debug"))
 		{
 			debug_level = p->getOption("debug").toInt();
 		}
+#endif
 	}
 
 	return debug_level;

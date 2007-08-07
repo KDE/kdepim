@@ -1,7 +1,7 @@
 /* KPilot
 **
 ** Copyright (C) 2003 by Dan Pilone.
-**	Authored by Adriaan de Groot
+** Copyright (C) 2003, 2007 by Adriaan de Groot <groot@kde.org>
 **
 ** This is the viewer for datebook data.
 */
@@ -31,8 +31,8 @@
 #include "options.h"
 
 
-#include <qlayout.h>
 #include <qdir.h>
+#include <qlayout.h>
 #include <qpushbutton.h>
 
 #include <k3listview.h>
@@ -46,14 +46,13 @@ DatebookWidget::DatebookWidget(QWidget *parent, const QString &dbpath) :
 {
 	FUNCTIONSETUP;
 
-	QGridLayout *g = new QGridLayout(this,1,1);
+	QGridLayout *g = new QGridLayout(this);
 	g->setSpacing(SPACING);
 
 	fDatePicker = new KDatePicker( this);
-	fDatePicker->setSizePolicy( QSizePolicy( (QSizePolicy::SizeType)4, (QSizePolicy::SizeType)5, 0, 0, fDatePicker->sizePolicy().hasHeightForWidth() ) );
-	g->addMultiCellWidget(fDatePicker,0,0,0,2);
+	g->addWidget(fDatePicker,0,0,1,2);
 
-	QSpacerItem* spacer = new QSpacerItem( 20, 180, QSizePolicy::Minimum, QSizePolicy::Expanding );
+	QSpacerItem *spacer = new QSpacerItem( 20, 180, QSizePolicy::Minimum, QSizePolicy::Expanding );
 	g->addItem( spacer, 1, 1 );
 
 	fAddButton = new QPushButton( i18n( "&Add..." ), this );
@@ -73,13 +72,11 @@ DatebookWidget::DatebookWidget(QWidget *parent, const QString &dbpath) :
 	fEventList->addColumn( i18n( "Al" ) );
 	fEventList->addColumn( i18n( "Rec" ) );
 	fEventList->addColumn( i18n( "Description" ) );
-//	fEventList->setSizePolicy( QSizePolicy( (QSizePolicy::SizeType)7, (QSizePolicy::SizeType)7, 0, 0, fEventList->sizePolicy().hasHeightForWidth() ) );
 	fEventList->setAllColumnsShowFocus( true );
 	fEventList->setShowSortIndicator( true );
 	fEventList->setResizeMode( K3ListView::/*LastColumn*/AllColumns );
 	fEventList->setFullWidth( true );
-//	fEventList->setAlternateBackground( QColor( 221, 146, 240 ) );
-	g->addMultiCellWidget(fEventList, 0, 2, 3, 3);
+	g->addWidget(fEventList, 0, 3, 2, 1);
 
 	connect(fDatePicker, SIGNAL(dateChanged()), SLOT(slotDayChanged()));
 	connect(fAddButton, SIGNAL(clicked()), SLOT(slotAddEvent()));

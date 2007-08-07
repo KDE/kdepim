@@ -30,22 +30,23 @@
 
 #include "options.h"
 
-#include <qcombobox.h>
 #include <qcheckbox.h>
-#include <qradiobutton.h>
-#include <qpushbutton.h>
-#include <qlineedit.h>
-#include <qtabwidget.h>
-#include <qspinbox.h>
+#include <qcombobox.h>
 #include <qfile.h>
+#include <qlineedit.h>
+#include <qpushbutton.h>
+#include <qradiobutton.h>
+#include <qspinbox.h>
+#include <qtabwidget.h>
 
-#include <kmessagebox.h>
+#include <kautostart.h>
 #include <kcharsets.h>
-#include <kstandarddirs.h>
 #include <kglobal.h>
-#include <kurl.h>
-#include <kio/netaccess.h>
 #include <KGlobalSettings>
+#include <kio/netaccess.h>
+#include <kmessagebox.h>
+#include <kstandarddirs.h>
+#include <kurl.h>
 
 #include "syncAction.h"
 
@@ -477,37 +478,11 @@ void StartExitConfigPage::load()
 {
 	FUNCTIONSETUP;
 
-	QString autostart = KGlobalSettings::autostartPath();
-	QString desktopfile = CSL1("kpilotdaemon.desktop");
-	QString desktopcategory = CSL1("kde/");
-	QString location = KGlobal::dirs()->findResource("xdgdata-apps",desktopcategory + desktopfile);
-	if (location.isEmpty()) // Fallback to KDE 3.0?
-	{
-		location = KGlobal::dirs()->findResource("apps",desktopfile);
-	}
-
-#ifdef DEBUG
-	DEBUGKPILOT << "Autostart=" << autostart;
-	DEBUGKPILOT << "desktop=" << desktopfile;
-	DEBUGKPILOT << "location=" << location;
-#endif
-
 	KPilotSettings::setStartDaemonAtLogin(fConfigWidget->fStartDaemonAtLogin->isChecked());
-	if (KPilotSettings::startDaemonAtLogin())
-	{
-		if (!location.isEmpty())
-		{
-			KUrl src;
-			src.setPath(location);
-			KUrl dst;
-			dst.setPath(autostart+desktopfile);
-			KIO::NetAccess::file_copy(src,dst,-1,true /* overwrite */);
-		}
-	}
-	else
-	{
-		QFile::remove(autostart+desktopfile);
-	}
+	KAutostart autostart( CSL1("KPilotDaemon") );
+	autostart.setAutostarts( KPilotSettings::startDaemonAtLogin() );
+	autostart.setStartPhase( KAutostart::Applications );
+
 	KPilotSettings::setDockDaemon(fConfigWidget->fDockDaemon->isChecked());
 	KPilotSettings::setKillDaemonAtExit(fConfigWidget->fKillDaemonOnExit->isChecked());
 	KPilotSettings::setQuitAfterSync(fConfigWidget->fQuitAfterSync->isChecked());

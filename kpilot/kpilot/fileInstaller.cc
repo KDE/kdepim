@@ -32,17 +32,15 @@
 
 #include "options.h"
 
-#include <unistd.h>
-
-
 #include <q3strlist.h>
 #include <qdir.h>
 
 #include <kglobal.h>
-#include <kstandarddirs.h>
-#include <kurl.h>
+#include <kio/job.h>
 #include <kio/netaccess.h>
 #include <kmessagebox.h>
+#include <kstandarddirs.h>
+#include <kurl.h>
 
 #include "fileInstaller.moc"
 
@@ -121,7 +119,8 @@ void FileInstaller::deleteFiles(const QStringList &files)
 	dest.setPath(fDirName + CSL1("/") + src.fileName());
 
 	// Permissions -1, overwrite, no resume
-	return KIO::NetAccess::file_copy(src, dest, -1, true, false, w);
+	KIO::Job *my_job = KIO::file_copy(src,dest,-1,true);
+	return KIO::NetAccess::synchronousRun(my_job, w);
 }
 
 

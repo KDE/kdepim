@@ -107,7 +107,6 @@ set(kpilot_bin_SRCS
 	memoWidget.cc
 	addressWidget.cc
 	addressEditor.cc
-	datebookWidget.cc
 	todoWidget.cc
 	todoEditor.cc
 	fileInstaller.cc
