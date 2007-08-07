@@ -7,13 +7,11 @@
     <x>0</x>
     <y>0</y>
     <width>593</width>
-    <height>209</height>
+    <height>287</height>
    </rect>
   </property>
   <property name="sizePolicy" >
-   <sizepolicy>
-    <hsizetype>5</hsizetype>
-    <vsizetype>5</vsizetype>
+   <sizepolicy vsizetype="Preferred" hsizetype="Preferred" >
     <horstretch>0</horstretch>
     <verstretch>0</verstretch>
    </sizepolicy>
@@ -28,22 +26,26 @@
    <string>Calendar-Conduit Options</string>
   </property>
   <layout class="QGridLayout" >
-   <property name="margin" >
+   <property name="leftMargin" >
     <number>0</number>
    </property>
-   <property name="spacing" >
+   <property name="topMargin" >
+    <number>0</number>
+   </property>
+   <property name="rightMargin" >
+    <number>0</number>
+   </property>
+   <property name="bottomMargin" >
+    <number>0</number>
+   </property>
+   <property name="horizontalSpacing" >
+    <number>6</number>
+   </property>
+   <property name="verticalSpacing" >
     <number>6</number>
    </property>
    <item row="0" column="0" >
     <widget class="QTabWidget" name="tabWidget" >
-     <property name="sizePolicy" >
-      <sizepolicy>
-       <hsizetype>7</hsizetype>
-       <vsizetype>7</vsizetype>
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
      <property name="currentIndex" >
       <number>0</number>
      </property>
@@ -51,30 +53,8 @@
       <attribute name="title" >
        <string>General</string>
       </attribute>
-      <layout class="QGridLayout" >
-       <property name="margin" >
-        <number>0</number>
-       </property>
-       <property name="spacing" >
-        <number>6</number>
-       </property>
-       <item row="2" column="0" >
-        <spacer>
-         <property name="orientation" >
-          <enum>Qt::Vertical</enum>
-         </property>
-         <property name="sizeType" >
-          <enum>QSizePolicy::Expanding</enum>
-         </property>
-         <property name="sizeHint" >
-          <size>
-           <width>20</width>
-           <height>20</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
-       <item row="0" column="0" >
+      <layout class="QVBoxLayout" >
+       <item>
         <widget class="Q3ButtonGroup" name="fSyncDestination" >
          <property name="title" >
           <string>Sync Destination</string>
@@ -83,10 +63,22 @@
           <enum>Qt::Vertical</enum>
          </property>
          <layout class="QGridLayout" >
-          <property name="margin" >
-           <number>0</number>
+          <property name="leftMargin" >
+           <number>6</number>
           </property>
-          <property name="spacing" >
+          <property name="topMargin" >
+           <number>6</number>
+          </property>
+          <property name="rightMargin" >
+           <number>6</number>
+          </property>
+          <property name="bottomMargin" >
+           <number>6</number>
+          </property>
+          <property name="horizontalSpacing" >
+           <number>6</number>
+          </property>
+          <property name="verticalSpacing" >
            <number>6</number>
           </property>
           <item row="0" column="0" colspan="2" >
@@ -113,14 +105,12 @@
            </widget>
           </item>
           <item row="1" column="1" >
-           <widget class="KUrlRequester" native="1" name="fCalendarFile" >
+           <widget class="KUrlRequester" name="fCalendarFile" >
             <property name="enabled" >
              <bool>false</bool>
             </property>
             <property name="sizePolicy" >
-             <sizepolicy>
-              <hsizetype>3</hsizetype>
-              <vsizetype>5</vsizetype>
+             <sizepolicy vsizetype="Preferred" hsizetype="MinimumExpanding" >
               <horstretch>0</horstretch>
               <verstretch>0</verstretch>
              </sizepolicy>
@@ -133,7 +123,7 @@
          </layout>
         </widget>
        </item>
-       <item row="1" column="0" >
+       <item>
         <widget class="QCheckBox" name="fArchive" >
          <property name="whatsThis" >
           <string>When this box is checked, archived records will still
@@ -144,25 +134,33 @@ be saved in the calendar on the PC.</string>
          </property>
         </widget>
        </item>
+       <item>
+        <spacer>
+         <property name="orientation" >
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeType" >
+          <enum>QSizePolicy::Expanding</enum>
+         </property>
+         <property name="sizeHint" >
+          <size>
+           <width>20</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
       </layout>
      </widget>
      <widget class="QWidget" name="tab" >
       <attribute name="title" >
        <string>Conflicts</string>
       </attribute>
-      <layout class="QGridLayout" >
-       <property name="margin" >
-        <number>0</number>
-       </property>
-       <property name="spacing" >
-        <number>6</number>
-       </property>
-       <item row="0" column="0" >
+      <layout class="QVBoxLayout" >
+       <item>
         <widget class="QLabel" name="fTextLabel" >
          <property name="sizePolicy" >
-          <sizepolicy>
-           <hsizetype>4</hsizetype>
-           <vsizetype>5</vsizetype>
+          <sizepolicy vsizetype="Preferred" hsizetype="Maximum" >
            <horstretch>0</horstretch>
            <verstretch>0</verstretch>
           </sizepolicy>
@@ -178,7 +176,7 @@ be saved in the calendar on the PC.</string>
          </property>
         </widget>
        </item>
-       <item row="0" column="1" >
+       <item>
         <widget class="QComboBox" name="fConflictResolution" >
          <property name="whatsThis" >
           <string>&lt;qt>Select in this list how conflicting entries (entries which were edited both on your handheld and on the PC) are resolved. Possibly values are "Use KPilot's Global Setting" to use the settings defined in KPilot HotSync configuration, "Ask User" to let you decide case by case, "Do Nothing" to allow the entries to be different, "PC overrides", "Handheld overrides", "Use values from last sync" and "Use both entries" to create a new entry on both the PC and handheld. Note that this does &lt;i>not&lt;/i> handle double-scheduling conflicts.&lt;/qt></string>
@@ -223,7 +221,7 @@ be saved in the calendar on the PC.</string>
          </item>
         </widget>
        </item>
-       <item row="1" column="1" >
+       <item>
         <spacer>
          <property name="orientation" >
           <enum>Qt::Vertical</enum>
@@ -249,15 +247,15 @@ be saved in the calendar on the PC.</string>
  <pixmapfunction>qPixmapFromMimeSource</pixmapfunction>
  <customwidgets>
   <customwidget>
-   <class>KUrlRequester</class>
-   <extends>QWidget</extends>
-   <header>kurlrequester.h</header>
-   <container>1</container>
-  </customwidget>
-  <customwidget>
    <class>Q3ButtonGroup</class>
    <extends>Q3GroupBox</extends>
    <header>Qt3Support/Q3ButtonGroup</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>KUrlRequester</class>
+   <extends>QFrame</extends>
+   <header>kurlrequester.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>
