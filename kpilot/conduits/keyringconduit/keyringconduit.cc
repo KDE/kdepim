@@ -27,6 +27,8 @@
 
 #include "keyringconduit.h"
 
+#include <kpassworddialog.h>
+
 #include "options.h"
 #include "pilotRecord.h"
 
@@ -34,9 +36,8 @@
 #include "keyringhhrecord.h"
 
 KeyringConduit::KeyringConduit( KPilotLink *o, const QStringList &a )
- : RecordConduit( o, a, CSL1( "Keyring Conduit" ) )
+ : RecordConduit( o, a, CSL1( "Keyring Conduit" ), CSL1( "Keys-Gtkr.pdb" ) )
 {
-
 }
 
 void KeyringConduit::loadSettings()
@@ -48,8 +49,19 @@ void KeyringConduit::initDataProxies()
 {
 	FUNCTIONSETUP;
 	
-	//TODO: Ask password from user.
-	QString pass = CSL1( "test" );
+	
+	// TODO: read password from wallet, or ask user for it.
+	/*
+	KPasswordDialog dlg( this, KPasswordDialog::ShowKeepPassword );
+	dlg.setPrompt( i18n( "Enter your Keyring password" );
+	if( !dlg.exec() )
+  {
+		addSyncLogEntry( i18n( "No password given,  ." ) );
+		return; //the user canceled
+  }
+  */
+
+	QString pass = "Test"; //dlg.password();
 	KeyringHHDataProxy *hhDataProxy = new KeyringHHDataProxy( fDatabase );
 	
 	// TODO: keep user asking for password.
