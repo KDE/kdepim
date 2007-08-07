@@ -47,10 +47,9 @@ include(ConfigureChecks.cmake)
 configure_file(config-kpilot.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-kpilot.h )
 
 STRING(COMPARE EQUAL "${CMAKE_BUILD_TYPE}" "debug" builddebug)
-STRING(COMPARE EQUAL "${CMAKE_BUILD_TYPE}" "debugfull" builddebugfull)
-if (NOT builddebug AND NOT builddebugfull)
+if (NOT builddebug)
 	add_definitions(-DNDEBUG)
-endif(NOT builddebug AND NOT builddebugfull)
+endif(NOT builddebug)
 
 
 # tell cmake where to search for Qt/KDE headers:
