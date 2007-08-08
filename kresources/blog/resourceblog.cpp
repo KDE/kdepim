@@ -73,6 +73,8 @@ void ResourceBlog::init()
 
   mBlog = 0;
 
+  mDownloadCount = 10;
+
   setType( "blog" );
 
   mLock = new KABC::Lock( cacheFile() );
