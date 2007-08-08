@@ -35,6 +35,7 @@ using KMail::ActionScheduler;
 #include <kprocess.h>
 #include <kaudioplayer.h>
 #include <kurlrequester.h>
+#include <kmessagebox.h>
 
 #include <qlabel.h>
 #include <qlayout.h>
@@ -1311,6 +1312,14 @@ KMFilterAction::ReturnCode KMFilterActionMove::process(KMMessage* msg) const
 {
   if ( !mFolder )
     return ErrorButGoOn;
+
+  if ( msg->parent() && msg->parent()->isReadOnly() ) {
+    KMessageBox::information( 0, i18n("The message '%1' could not be moved from folder '%2'"
+        " to folder '%3' by a filter because the source folder is read-only.")
+            .arg( msg->subject() ).arg( msg->parent()->label() ).arg( mFolder->label() ),
+        i18n( "Moving not possible" ), "FilterReadOnlySourceFolder" );
+    return ErrorButGoOn;
+  }
 
   MessageProperty::setFilterFolder( msg, mFolder );
   return GoOn;
