@@ -29,12 +29,17 @@
 
 #include "keyringsetup.h"
 
+#include <QApplication>
+
 #include <kurlrequester.h>
 #include <kaboutdata.h>
+#include <kwallet.h>
 
 #include "options.h"
 
 #include "keyringsettings.h"
+
+using namespace KWallet;
 
 static KAboutData *createAbout()
 {
@@ -67,6 +72,12 @@ KeyringWidgetSetup::KeyringWidgetSetup( QWidget *w ) :
 	
 	QObject::connect( fUi.fLocalDatabaseUrl
 		, SIGNAL( textChanged( const QString& ) ), this, SLOT( modified() ) );
+	QObject::connect( fUi.fSavePassButton, SIGNAL( toggled( bool ) ), this
+		, SLOT( modified() ) );
+	QObject::connect( fUi.fAskPassButton, SIGNAL( toggled( bool ) ), this
+		, SLOT( modified() ) );
+	QObject::connect( fUi.fPassEdit
+		, SIGNAL( textChanged( const QString& ) ), this, SLOT( modified() ) );
 
 	fConduitName = i18n( "Keyring Conduit" );
 	fAbout = createAbout();
@@ -87,6 +98,17 @@ KeyringWidgetSetup::~KeyringWidgetSetup()
 		<< fUi.fLocalDatabaseUrl->url().url();
 
 	KeyringConduitSettings::setDatabaseUrl( fUi.fLocalDatabaseUrl->url().url() );
+	
+	if( fUi.fSavePassButton->isChecked() )
+	{
+		KeyringConduitSettings::setPasswordSetting( KeyringConduitSettings::Wallet );
+		savePassword();
+	}
+	else
+	{
+		KeyringConduitSettings::setPasswordSetting( KeyringConduitSettings::Ask );
+	}
+	
 	KeyringConduitSettings::self()->writeConfig();
 	unmodified();
 }
@@ -97,11 +119,18 @@ KeyringWidgetSetup::~KeyringWidgetSetup()
 	KeyringConduitSettings::self()->readConfig();
 
 	fUi.fLocalDatabaseUrl->setUrl( KeyringConduitSettings::databaseUrl() );
-
-	DEBUGKPILOT
-		<< ": Local database file: ["
-		<< fUi.fLocalDatabaseUrl->url().url()
-		<< ']';
+	
+	if( KeyringConduitSettings::passwordSetting() == KeyringConduitSettings::Wallet )
+	{
+		fUi.fSavePassButton->setChecked( true );
+		fUi.fPassEdit->setEnabled( true );
+		fUi.fPassEdit->setText( loadPassword() );
+	}
+	else
+	{
+		fUi.fAskPassButton->setChecked( true );
+		fUi.fPassEdit->setEnabled( false );
+	}
 
 	unmodified();
 }
@@ -111,3 +140,45 @@ KeyringWidgetSetup::~KeyringWidgetSetup()
 	return new KeyringWidgetSetup( w );
 }
 
+void KeyringWidgetSetup::savePassword()
+{
+	// FIXME: Is this save? Or is there a good change that qApp->activeWindow()
+	// return 0?
+	WId window = qApp->activeWindow()->winId();
+	
+	Wallet *wallet = Wallet::openWallet( Wallet::LocalWallet(), window );
+	
+	QString passwordFolder = Wallet::PasswordFolder();
+	if ( !wallet->hasFolder( passwordFolder ) )
+	{
+		wallet->createFolder( passwordFolder );
+	}
+
+	wallet->setFolder( passwordFolder );
+	wallet->writePassword( CSL1( "kpilot-keyring" ), fUi.fPassEdit->text() );
+	
+	// Save the wallet to disk.
+	wallet->sync();
+	Wallet::disconnectApplication( Wallet::LocalWallet(), CSL1( "KPilot" ) );
+}
+
+QString KeyringWidgetSetup::loadPassword()
+{
+	WId window = qApp->activeWindow()->winId();
+	
+	Wallet *wallet = Wallet::openWallet( Wallet::LocalWallet(), window );
+	
+	QString passwordFolder = Wallet::PasswordFolder();
+	if ( !wallet->hasFolder( passwordFolder ) )
+	{
+		return QString();
+	}
+
+	wallet->setFolder( passwordFolder );
+	
+	QString pass;
+	wallet->readPassword( CSL1( "kpilot-keyring" ), pass );
+	Wallet::disconnectApplication( Wallet::LocalWallet(), CSL1( "KPilot" ) );
+	
+	return pass;
+}

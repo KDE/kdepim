@@ -43,8 +43,13 @@ public:
 	virtual void load();
 	virtual void commit();
 	static ConduitConfigBase *create( QWidget * );
+
+private: // Functions
+	void savePassword();
 	
-private:
+	QString loadPassword();
+
+private: // Members
 	Ui::KeyringWidget fUi;
 	KAboutData *fAbout;
 };
