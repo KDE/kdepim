@@ -270,7 +270,7 @@ AddressEditDialog::AddressEditDialog( const KABC::Address::List &list,
   label->setAlignment( Qt::AlignTop | Qt::AlignLeft );
   topLayout->addWidget( label, 1, 0 );
   mStreetTextEdit = new QTextEdit( page );
-  mStreetTextEdit->setTextFormat( Qt::PlainText );
+  mStreetTextEdit->setAcceptRichText( false );
   label->setBuddy( mStreetTextEdit );
   topLayout->addWidget( mStreetTextEdit, 1, 1 );
 
