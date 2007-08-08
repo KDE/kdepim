@@ -46,11 +46,6 @@ include(ConfigureChecks.cmake)
 # now create config headers
 configure_file(config-kpilot.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-kpilot.h )
 
-STRING(COMPARE EQUAL "${CMAKE_BUILD_TYPE}" "debug" builddebug)
-if (NOT builddebug)
-	add_definitions(-DNDEBUG)
-endif(NOT builddebug)
-
 
 # tell cmake where to search for Qt/KDE headers:
 include_directories(
@@ -63,25 +58,19 @@ include_directories(
 
 # Only build stuff if p-l is found
 if (PILOTLINK_FOUND)
-# tell cmake to process CMakeLists.txt in that subdirectory
-add_subdirectory(lib)
-add_subdirectory(kpilot)
-add_subdirectory(conduits)
+	# tell cmake to process CMakeLists.txt in that subdirectory
+	add_subdirectory(lib)
+	add_subdirectory(kpilot)
+	add_subdirectory(conduits)
 
-STRING(COMPARE EQUAL ${KDE4_BUILD_TESTS} "ON" buildtests)
-if (buildtests)
-	MESSAGE(STATUS "KPILOT: Test suite enabled.")
-	enable_testing()
-	add_subdirectory(tests)
-else (buildtests)
-	MESSAGE(STATUS "KPILOT: Test suite disabled.")
-endif(buildtests)
-
-if (builddebug)
-	MESSAGE(STATUS "KPILOT: Debug build selected.")
-else(builddebug)
-	MESSAGE(STATUS "KPILOT: Normal build selected.")
-endif(builddebug)
+	STRING(COMPARE EQUAL ${KDE4_BUILD_TESTS} "ON" buildtests)
+	if (buildtests)
+		MESSAGE(STATUS "KPILOT: Test suite enabled.")
+		enable_testing()
+		add_subdirectory(tests)
+	else (buildtests)
+		MESSAGE(STATUS "KPILOT: Test suite disabled.")
+	endif(buildtests)
 endif (PILOTLINK_FOUND)
 
 

@@ -115,7 +115,6 @@ private:
 } ;
 
 
-#ifndef NDEBUG
 #define DEBUG
 #ifdef __GNUC__
 #define KPILOT_FNAMEDEF(l)	KPilotDepthCount fname(l,__FUNCTION__)
@@ -136,17 +135,6 @@ private:
 	<< "! " << k_funcinfo << "\n!   "
 
 
-
-
-#else
-// No debugging at all
-//
-#define DEBUGSTREAM   kndbgstream
-#define DEBUGKPILOT   kDebugDevNull()
-#define WARNINGKPILOT kDebugDevNull()
-#define FUNCTIONSETUP
-#define FUNCTIONSETUPL(a)
-#endif
 
 
 // Function to expand newlines in rich text to <br>\n

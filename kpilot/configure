@@ -22,8 +22,6 @@ Hi there.  You can use this script to configure parameters used by cmake.
 Currently, understood parameters are as follows:
 
   --prefix=PREFIX         install architecture-independent files in PREFIX
-  --disable-debug         disables debug output (see --enable-debug)
-  --enable-debug=ARG      enables debug symbols (yes|no) [default=yes]
   --enable-tests=ARG      enable test suite (yes|no) [default=no]
   --with-pilot-link=PATH  set prefix for pilot-link files [default=check]
   --with-mal=PATH         set path for libmal files [default=check]
@@ -66,7 +64,6 @@ outputCmakeValues()
 CMAKE_FLAGS=""
 
 getvalue CMAKE_INSTALL_PREFIX n
-getvalue CMAKE_BUILD_TYPE n
 getvalue KDE4_BUILD_TESTS n
 getvalue PILOTLINK_BASE n
 getvalue MAL_BASE n
@@ -91,7 +88,6 @@ if test -z "$1"; then
 	exit
 fi
 
-CMAKE_BUILD_TYPE="debug"
 ENABLE_TESTS="NO"
 BUILD_DIR=build-`uname -sr | tr -d [:space:] | tr -Cs a-zA-Z0-9 _`
 
@@ -100,17 +96,6 @@ do
 	case "$1" in
 		--prefix=*)
 			CMAKE_INSTALL_PREFIX=$(echo $1 | cut -d "=" -f2)
-			;;
-		--disable-debug)
-			CMAKE_BUILD_TYPE=normal
-			;;
-		--enable-debug*)
-			T=$(echo $1 | cut -d "=" -f2 | tr '[A-Z]' '[a-z]')
-			if test "$T" = "$1" || test "yes" = "$T" || test "full" = "$T" ; then
-				CMAKE_BUILD_TYPE=debug
-			else
-				CMAKE_BUILD_TYPE=normal
-			fi
 			;;
 		--enable-test*)
 			T=$(echo "$1" | cut -d = -f2 | tr '[A-Z]' '[a-z]')
@@ -145,6 +130,9 @@ do
 			sed 's/^set(\([A-Z_]*\) "\(.*\)")/\1="\2"/' "$CMAKEOUTFILE" 2>/dev/null
 			echo "-----------"
 			exit
+			;;
+		--)
+			:
 			;;
 		*)
 			usage

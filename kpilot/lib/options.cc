@@ -36,7 +36,7 @@
 
 #include <config-kpilot.h>
 
-#ifdef DEBUG
+#ifndef NDEBUG
 int debug_level = 1;
 #else
 int debug_level = 0;
