@@ -94,6 +94,17 @@ void KMReaderMainWin::showMsg( const QString & encoding, KMMessage *msg )
   setCaption( msg->subject() );
   mMsg = msg;
   toolBar( "mainToolBar" )->show();
+
+  connect ( msg->parent(), SIGNAL( destroyed( QObject* ) ), this, SLOT( slotFolderRemoved( QObject* ) ) );
+
+}
+
+void KMReaderMainWin::slotFolderRemoved( QObject* folderPtr )
+{
+  assert(mMsg);
+  assert(folderPtr == mMsg->parent());
+  if( mMsg && folderPtr == mMsg->parent() )
+    mMsg->setParent( 0 );
 }
 
 //-----------------------------------------------------------------------------

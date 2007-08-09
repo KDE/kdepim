@@ -45,6 +45,7 @@ private slots:
   void slotBounceMsg();
 
   void slotConfigChanged();
+  void slotFolderRemoved( QObject* folderPtr );
 
  protected slots:
   /** XML-GUI stuff */
