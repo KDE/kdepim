@@ -12,6 +12,7 @@ set(tests_SRCS
 	../keyringhhrecord.cc
 )
 
+kde4_add_kcfg_files(tests_SRCS ../keyringsettings.kcfgc)
 kde4_add_ui_files(tests_SRCS viewer.ui)
 kde4_add_executable(testje ${tests_SRCS})
 target_link_libraries(testje ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY} kpilot kpilot_conduit_base ${QCA2_LIBRARIES})

@@ -9,16 +9,43 @@ KeyringHHRecord::KeyringHHRecord( PilotRecord *rec, const QString &key)
 	fName = QString( fRecord->data() );
 }
 
+KeyringHHRecord::KeyringHHRecord( const QString &name, const QString &account
+	, const QString &password, const QString &notes, const QString &key )
+	: HHRecord( 0l ), fKey( key ), fName( name )
+{
+	KeyringHHRecordBase data;
+	data.account = account;
+	data.password = password;
+	data.notes = notes;
+	data.lastChanged = QDateTime::currentDateTime();
+	
+	pi_buffer_t *buf = pi_buffer_new( QString( "" ).size() );
+	Pilot::toPilot( QString(""), buf->data, 0 );
+		
+	fRecord = new PilotRecord( buf, 0, 0, 0);
+	
+	pack( data );
+}
+
 bool KeyringHHRecord::equal( const Record* other ) const
 {
 	FUNCTIONSETUP;
-	#warning not implemented.
-	// Do not compare last synced date, that's unecessary.
-	const KeyringHHRecord *rec = dynamic_cast<const KeyringHHRecord*>( other );
 	
-	if( rec )
+	// Do not compare last synced date, that's unecessary.
+	const KeyringHHRecord *krOther = dynamic_cast<const KeyringHHRecord*>( other );
+	
+	if( krOther )
 	{
-		return false;
+		bool equal = true;
+		
+		KeyringHHRecordBase data = unpack();
+		
+		equal = equal && ( fName == krOther->name() );
+		equal = equal && ( data.account == krOther->account() );
+		equal = equal && ( data.password == krOther->password() );
+		equal = equal && ( data.notes == krOther->notes() );
+		
+		return equal;
 	}
 	else
 	{
@@ -63,31 +90,41 @@ QDateTime KeyringHHRecord::lastChangedDate() const
 
 void KeyringHHRecord::setName( const QString &name )
 {
-	
+	fName = name;
 }
 
 void KeyringHHRecord::setAccount( const QString &account  )
 {
-
+	KeyringHHRecordBase data = unpack();
+	data.account = account;
+	pack( data );
 }
 
 void KeyringHHRecord::setPassword( const QString &password  )
 {
-
+	KeyringHHRecordBase data = unpack();
+	data.password = password;
+	pack( data );
 }
 
 void KeyringHHRecord::setNotes( const QString &notes  )
 {
-
+	KeyringHHRecordBase data = unpack();
+	data.notes = notes;
+	pack( data );
 }
 
 void KeyringHHRecord::setLastChangedDate( const QDateTime &lastChangedDate )
 {
-
+	KeyringHHRecordBase data = unpack();
+	data.lastChanged = lastChangedDate;
+	pack( data );
 }
 
 KeyringHHRecordBase KeyringHHRecord::unpack() const
 {
+	FUNCTIONSETUP;
+	
 	KeyringHHRecordBase data;
 
 	int n = fName.size() + 1; // Stringlengt + zero.
@@ -99,6 +136,7 @@ KeyringHHRecordBase KeyringHHRecord::unpack() const
 	
 	// Encrypted data is in fRecord->data()[n..size]
 	QCA::SymmetricKey sKey( QCA::hexToArray( fKey ) );
+	
 	QCA::Cipher::Cipher cipher( "tripledes", QCA::Cipher::ECB
 		, QCA::Cipher::NoPadding , QCA::Decode, sKey );
 	QCA::SecureArray result = cipher.update( encryptedData );
@@ -151,6 +189,85 @@ KeyringHHRecordBase KeyringHHRecord::unpack() const
 	data.lastChanged = readTm( t );
 	
 	return data;
+}
+
+void KeyringHHRecord::pack( const KeyringHHRecordBase &data )
+{
+	FUNCTIONSETUP;
+	
+	QByteArray unencryptedData;
+	
+	// Make sure that at least an empty string is added.
+	if( data.account.isNull() )
+	{
+		unencryptedData.append( Pilot::toPilot( QString( "" ) ) );
+	}
+	else
+	{
+		unencryptedData.append( Pilot::toPilot( data.account ) );
+	}
+	unencryptedData.append( (char) 0x00 );
+	
+	if( data.password.isNull() )
+	{
+		unencryptedData.append( Pilot::toPilot( QString( "" ) ) );
+	}
+	else
+	{
+		unencryptedData.append( Pilot::toPilot( data.password ) );
+	}
+	unencryptedData.append( (char) 0x00 );
+	
+	if( data.notes.isNull() )
+	{
+		unencryptedData.append( Pilot::toPilot( QString( "" ) ) );
+	}
+	else
+	{
+		unencryptedData.append( Pilot::toPilot( data.notes ) );
+	}
+	unencryptedData.append( (char) 0x00 );
+	
+	// Copied from JPilot keyring conduit.
+	tm dataLastChanged = writeTm( data.lastChanged );
+	char lastChanged[2];
+	
+	unsigned short packedDate = ( ( ( dataLastChanged.tm_year - 4) << 9 ) & 0xFE00 )
+		| ( ( ( dataLastChanged.tm_mon + 1 ) << 5 ) & 0x01E0 )
+		| ( dataLastChanged.tm_mday & 0x001F );
+	set_short( lastChanged, packedDate );
+	// End of Copied code
+	unencryptedData.append( lastChanged );
+	
+	// The encrypted portion must be a multiple of 8
+	int size = unencryptedData.size();
+	int zeroCount = 0;
+	if( ( size % 8 ) )
+	{
+		zeroCount = ( 8 - ( size % 8 ) );
+	}
+	
+	unencryptedData.append( QByteArray( zeroCount, (char) 0x00 ) );
+	
+	// Encrypt the stuff.
+	QCA::Initializer init;
+	QCA::SymmetricKey sKey( QCA::hexToArray( fKey ) );
+	
+	QCA::Cipher::Cipher cipher( "tripledes", QCA::Cipher::ECB
+		, QCA::Cipher::NoPadding , QCA::Encode, sKey );
+		
+	QCA::SecureArray result = cipher.update( unencryptedData );
+	cipher.final();
+	
+	QByteArray recordData;
+	recordData.append( Pilot::toPilot( name() ) );
+	recordData.append( (char) 0x00 );
+	recordData.append( result.toByteArray() );
+	
+	pi_buffer_t *buf = pi_buffer_new( recordData.size() );
+	memcpy( buf->data, (unsigned char*) recordData.data(), recordData.size() );
+	
+	fRecord->setData( buf );
 }
 
 QString KeyringHHRecord::toString() const

@@ -47,6 +47,12 @@ class KeyringHHRecord : public HHRecord
 public:
 	KeyringHHRecord( PilotRecord *rec, const QString &key );
 	
+	KeyringHHRecord( const QString &name = QString()
+		, const QString &account = QString()
+		, const QString &password = QString()
+		, const QString &notes = QString()
+		, const QString &key = QString() );
+	
 	QString name() const;
 	
 	QString account() const;

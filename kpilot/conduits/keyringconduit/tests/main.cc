@@ -8,6 +8,8 @@
 #include <kapplication.h>
 
 #include "options.h"
+#include "pilot.h"
+#include "pilotRecord.h"
 #include "pilotDatabase.h"
 #include "pilotLocalDatabase.h"
 #include "keyringhhdataproxy.h"
@@ -21,7 +23,7 @@ int main(int argc, char **argv)
 {
 	FUNCTIONSETUP;
 	
-	debug_level = 1;
+	debug_level = 0;
 	
 	KAboutData aboutData("testdatebook", 0,ki18n("Test Date Book"),"0.1");
 	KCmdLineArgs::init(argc,argv,&aboutData);
@@ -61,20 +63,45 @@ int main(int argc, char **argv)
 	{
 		dbPath.append( '/' );
 	}
-	
+
 	cout << "- Opening database: " << dbPath + dbName + ".pdb" << endl;
 	
+	Pilot::setupPilotCodec( CSL1( "ISO8859-15" ) );
+	
 	// Create the database.
-	PilotLocalDatabase database( dbPath + "/" + dbName );	
+	/*
+	PilotLocalDatabase database( dbPath + "/" + dbName );
+	
+	qDebug() << database.recordCount();
+	
 	KeyringHHDataProxy proxy( &database );
+	proxy.openDatabase( pass );
 	
 	KeyringViewer *viewer = new KeyringViewer( 0, &proxy );
 	viewer->show();
-	
-	/*
-	DEBUGKPILOT <<"Recordcount:" << proxy.recordCount();
-	
-	
 	*/
-	return app.exec();
+	
+	PilotLocalDatabase database2( CSL1( "CreatedByKPilot" ) );
+	if( database2.isOpen() )
+	{
+		int i = 0;
+		PilotRecord *rec = database2.readRecordByIndex( i );
+		
+		while( rec )
+		{
+			qDebug() << rec->size();
+			rec = database2.readRecordByIndex( ++i );
+		}
+	}
+	else
+	{
+		qDebug() << "Database not open, trying to create one.";
+		KeyringHHDataProxy proxy2( &database2 );
+		proxy2.openDatabase( pass );
+		proxy2.createDataStore();
+		// We should have a database with pass test now.
+	}
+	
+	return 0;
+	//return app.exec();
 }

@@ -41,9 +41,8 @@ KeyringListModel::KeyringListModel( KeyringHHDataProxy *proxy, QObject *parent )
 	{
 		KeyringHHRecord *rec = static_cast<KeyringHHRecord*>( proxy->next() );
 		fRecords.append( rec );
-		qDebug() << "Test1";
+		qDebug() << "Added:" << rec->name();
 	}
-	qDebug() << "Test2";
 }
 
 int KeyringListModel::rowCount( const QModelIndex &parent ) const

@@ -27,13 +27,19 @@
 
 #include "keyringconduit.h"
 
+#include <QApplication>
+
 #include <kpassworddialog.h>
+#include <kwallet.h>
 
 #include "options.h"
 #include "pilotRecord.h"
 
 #include "keyringhhdataproxy.h"
 #include "keyringhhrecord.h"
+#include "keyringsettings.h"
+
+using namespace KWallet;
 
 KeyringConduit::KeyringConduit( KPilotLink *o, const QStringList &a )
  : RecordConduit( o, a, CSL1( "Keyring Conduit" ), CSL1( "Keys-Gtkr.pdb" ) )
@@ -43,31 +49,59 @@ KeyringConduit::KeyringConduit( KPilotLink *o, const QStringList &a )
 void KeyringConduit::loadSettings()
 {
 	FUNCTIONSETUP;
+	
+	fPcDatastoreUrl = KeyringConduitSettings::databaseUrl();
+	
+	if( KeyringConduitSettings::passwordSetting() == KeyringConduitSettings::Wallet )
+	{
+		fAskPass = false;
+	}
+	else
+	{
+		fAskPass = true;
+	}
 }
 	
 void KeyringConduit::initDataProxies()
 {
 	FUNCTIONSETUP;
 	
-	
-	// TODO: read password from wallet, or ask user for it.
-	/*
-	KPasswordDialog dlg( this, KPasswordDialog::ShowKeepPassword );
-	dlg.setPrompt( i18n( "Enter your Keyring password" );
-	if( !dlg.exec() )
-  {
-		addSyncLogEntry( i18n( "No password given,  ." ) );
-		return; //the user canceled
-  }
-  */
-
-	QString pass = "Test"; //dlg.password();
 	KeyringHHDataProxy *hhDataProxy = new KeyringHHDataProxy( fDatabase );
 	
-	// TODO: keep user asking for password.
-	while( !hhDataProxy->openDatabase( pass ) )
+	QString pass;
+	
+	if( fAskPass )
 	{
-		hhDataProxy->openDatabase( pass );
+		pass = askPassword();
+		
+		while( !hhDataProxy->openDatabase( pass ) )
+		{
+			addSyncLogEntry( i18n( "Password invalid!" ) );
+			pass = askPassword();
+			hhDataProxy->openDatabase( pass );
+		}
+	}
+	else
+	{
+		// Read pass from wallet.
+		WId window = qApp->activeWindow()->winId();
+	
+		Wallet *wallet = Wallet::openWallet( Wallet::LocalWallet(), window );
+		
+		QString passwordFolder = Wallet::PasswordFolder();
+		if ( wallet->hasFolder( passwordFolder ) )
+		{
+			wallet->setFolder( passwordFolder );
+			
+			wallet->readPassword( CSL1( "kpilot-keyring" ), pass );
+			Wallet::disconnectApplication( Wallet::LocalWallet(), CSL1( "KPilot" ) );
+			
+			if( !hhDataProxy->openDatabase( pass ) )
+			{
+				addSyncLogEntry( i18n( "Password invalid! Update your password in "
+					"the settings dialog." ) );
+			}
+		}
 	}
 	
 	fHHDataProxy = hhDataProxy;
@@ -92,20 +126,51 @@ void KeyringConduit::initDataProxies()
 		fBackupDataProxy = backupDataProxy;
 	}
 	
-	//TODO: Open the local database from a file
+	// TODO: For now we assume that the pc datastore has the same pass as the
+	//       handheld datastore.
+	KeyringHHDataProxy *pcDataProxy = new KeyringHHDataProxy( fPcDatastoreUrl );
+	pcDataProxy->openDatabase( pass );
+	
+	fPCDataProxy = pcDataProxy;
 	
 	// Do not keep the password any longer in memory then necessary.
 	pass.clear();
 }
 
-bool KeyringConduit::equal( Record *pcRec, HHRecord *hhRec )
+QString KeyringConduit::askPassword() const
+{
+	KPasswordDialog dlg( 0, KPasswordDialog::NoFlags );
+	dlg.setPrompt( i18n( "Enter your Keyring password" ) );
+	if( !dlg.exec() )
+	{
+		return QString();
+	}
+	else
+	{
+		return dlg.password();
+	}
+}
+
+bool KeyringConduit::equal( const Record *pcRec, const HHRecord *hhRec ) const
 {
 	FUNCTIONSETUP;
 	
-	#warning not implemented
-	Q_UNUSED( pcRec );
-	Q_UNUSED( hhRec );
-	return false;
+	if( !pcRec || !hhRec )
+	{
+		return false;
+	}
+	
+	const KeyringHHRecord *krPCRec = static_cast<const KeyringHHRecord*>( pcRec );
+	const KeyringHHRecord *krHHRec = static_cast<const KeyringHHRecord*>( hhRec );
+	
+	bool equal = true;
+	
+	equal = equal && ( krPCRec->name() == krHHRec->name() );
+	equal = equal && ( krPCRec->account() == krHHRec->account() );
+	equal = equal && ( krPCRec->password() == krHHRec->password() );
+	equal = equal && ( krPCRec->notes() == krHHRec->notes() );
+	
+	return equal;
 }
 
 Record* KeyringConduit::createPCRecord( const HHRecord *hhRec )
@@ -169,4 +234,5 @@ void KeyringConduit::copy( const HHRecord *from, Record *to  )
 bool KeyringConduit::createBackupDatabase()
 {
 	#warning not implemented.
+	return false;
 }

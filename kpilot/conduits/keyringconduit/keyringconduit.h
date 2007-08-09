@@ -44,7 +44,7 @@ public:
 	 * Compares @p pcRecord with @p hhRec and returns true if they are considered
 	 * equal.
 	 */
-	virtual bool equal( Record *pcRec, HHRecord *hhRec );
+	virtual bool equal( const Record *pcRec, const HHRecord *hhRec ) const;
 	
 	/**
 	 * Creates a new Record object with the same data as @p hhRec.
@@ -81,6 +81,13 @@ public:
 	virtual void test() {}
 
 	virtual bool createBackupDatabase();
+
+private: // functions
+ QString askPassword() const;
+
+private: // members
+	QString fPcDatastoreUrl;
+	bool fAskPass;
 };
 
 #endif

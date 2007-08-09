@@ -27,24 +27,52 @@
 
 #include "keyringhhdataproxy.h"
 
+#include <pi-util.h>
+
+#include <QtCrypto>
+
 #include "options.h"
+#include "pilot.h"
 #include "pilotDatabase.h"
+#include "pilotLocalDatabase.h"
 #include "pilotRecord.h"
 
 #include "keyringhhrecord.h"
 
 KeyringHHDataProxy::KeyringHHDataProxy( PilotDatabase *db )
-	: HHDataProxy( db )
+	: HHDataProxy( db ), fZeroRecord( 0l )
 {
 	FUNCTIONSETUP;
 	
 	// Hash-key record
-	fZeroRecord = fDatabase->readRecordByIndex( 0 );
+	if( fDatabase && fDatabase->isOpen() )
+	{
+		fZeroRecord = fDatabase->readRecordByIndex( 0 );
+	}
+}
+
+KeyringHHDataProxy::KeyringHHDataProxy( const QString &dbPath )
+	: HHDataProxy( 0l ), fZeroRecord( 0l )
+{
+	FUNCTIONSETUP;
+	
+	if( dbPath.right( 4 ) == CSL1( ".pdb" ) )
+	{
+		fDatabase = new PilotLocalDatabase( dbPath.left( dbPath.length() - 4 ) );
+	}
+	else
+	{
+		DEBUGKPILOT << "invalid file name.";
+	}
 }
 
 KeyringHHDataProxy::~KeyringHHDataProxy()
 {
-	delete fZeroRecord;
+	if( fZeroRecord )
+	{
+		delete fZeroRecord;
+		fZeroRecord = 0l;
+	}
 }
 
 bool KeyringHHDataProxy::openDatabase( const QString &pass )
@@ -52,37 +80,65 @@ bool KeyringHHDataProxy::openDatabase( const QString &pass )
 	FUNCTIONSETUP;
 	
 	QCA::Initializer init;
-	QCA::SecureArray recordZero( fZeroRecord->data() );
-	QCA::SecureArray passArray = pass.toLatin1();
-
-	QCA::SecureArray hash = getDigest( recordZero, QCA::SecureArray( passArray ) );
 	
-	// The salt and password hash are stored in recordZero.
-	if( recordZero.toByteArray().contains( hash.toByteArray() ) )
+	QCA::SecureArray passArray = pass.toLatin1();
+	
+	QCA::Hash passHash( "md5" );
+	passHash.update( passArray );
+	
+	// generate the DES keypair (snib = A,B; desKeyData = A,B,A)
+	QCA::SymmetricKey key = QCA::SymmetricKey( passHash.final() );
+	key.append( key.toByteArray().left( 8 ) );
+	fDesKey = QCA::arrayToHex( key.toByteArray() );
+	
+	if( fDatabase && fZeroRecord )
 	{
-		DEBUGKPILOT << "Password correct!";
+		QCA::SecureArray recordZero( fZeroRecord->data() );
+		QCA::SecureArray hash = getDigest( recordZero, passArray );
 		
-		QCA::Hash passHash( "md5" );
-		passHash.update( passArray );
-		
-		// generate the DES keypair (snib = A,B; desKeyData = A,B,A)
-		QCA::SymmetricKey key = QCA::SymmetricKey( passHash.final() );
-		key.append( key.toByteArray().left( 8 ) );
-		fDesKey = QCA::arrayToHex( key.toByteArray() );
-		
-		// Pass is correct and DES encryption key known, load the records.
-		loadAllRecords();
-		
-		// For now remove the zero record from the record list.
-		fRecords.remove( QString::number( fZeroRecord->id() ) );
-		
-		return true;
+		// The salt and password hash are stored in recordZero.
+		if( recordZero.toByteArray().contains( hash.toByteArray() ) )
+		{
+			qDebug() << "Password correct!";
+			
+			// Pass is correct and DES encryption key known, load the records.
+			loadAllRecords();
+			
+			// For now remove the zero record from the record list.
+			fRecords.remove( QString::number( fZeroRecord->id() ) );
+			
+			return true;
+		}
+		else
+		{
+			qDebug() << "Password incorrect!";
+			return false;
+		}
 	}
 	else
 	{
-		DEBUGKPILOT << "Password incorrect!";
+		// There is no data base so most probably createDataStore() will be called.
+		// But for that we need a hash that is stored in the zerorecord and by that
+		// time this class doesn't know the password anymore. We also don't want to
+		// store it plain text so we create a salt and a hash right here and store
+		// that so that it can be used by createDataStore().
+		QCA::SecureArray salt = QCA::Random::randomArray( SALT_SIZE );
+		QCA::SecureArray saltedHashData( salt );
+		saltedHashData.append( passArray );
+		
+		QCA::Hash hash( "md5" );
+		hash.update( saltedHashData );
+		
+		QByteArray saltedHash;
+		saltedHash.append( salt.toByteArray() );
+		saltedHash.append( hash.final().toByteArray() );
+		
+		fSaltedHash = QCA::arrayToHex( saltedHash );
+		
 		return false;
 	}
+	
+	return false;
 }
 
 HHRecord* KeyringHHDataProxy::createHHRecord( PilotRecord *rec )
@@ -94,13 +150,58 @@ HHRecord* KeyringHHDataProxy::createHHRecord( PilotRecord *rec )
 
 bool KeyringHHDataProxy::createDataStore()
 {
-	#warning not implemented
-	return false;
+	FUNCTIONSETUP;
+	
+	if( !fDatabase )
+	{
+		return false;
+	}
+	
+	// No usefull data for the zero record.
+	if( fDesKey.isEmpty() )
+	{
+		return false;
+	}
+	
+	if( !fDatabase->isOpen() )
+	{
+		// File did not exist
+		long creator = pi_mktag( 'G', 'k','t','r' );
+		long type = pi_mktag( 'G', 'k','y','r' );
+		fDatabase->createDatabase( creator, type, 0, 0, 4 );
+		
+		QByteArray saltedHash = QCA::hexToArray( fSaltedHash );
+		
+		pi_buffer_t *buf = pi_buffer_new( saltedHash.size() );
+		memcpy( buf->data, (unsigned char*) saltedHash.data(), saltedHash.size() );
+		
+		fZeroRecord = new PilotRecord( buf, 0, 0, 0);
+		fZeroRecord->setSecret();
+		
+		fDatabase->writeRecord( fZeroRecord );
+		
+		// Create a record to show KPilot was there =:)
+		KeyringHHRecord *rec = new KeyringHHRecord( CSL1( "KPilot" )
+			, CSL1( "KPilot" ), CSL1( "KPilot" )
+			, CSL1( "This database is created with KPilot."
+					"\nThanks for using kpilot!" )
+			, fDesKey );
+		fDatabase->writeRecord( rec->pilotRecord() );
+		
+		return true;
+	}
+	else
+	{
+		// There seems to be a database already. But this shouldn't happen i think.
+		return true;
+	}
 }
 	
 QCA::SecureArray KeyringHHDataProxy::getDigest(
 	const QCA::SecureArray &recordZero, const QCA::SecureArray &pass )
 {
+	FUNCTIONSETUP;
+	
 	QCA::SecureArray msg( SALT_SIZE, 0 );
 	
 	// 32 bit salt -> first four byte of recordZero are the salt.

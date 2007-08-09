@@ -79,7 +79,7 @@ protected:
 	 * Compares @p pcRecord with @p hhRec and returns true if they are considered
 	 * equal.
 	 */
-	virtual bool equal( Record *pcRec, HHRecord *hhRec ) = 0;
+	virtual bool equal( const Record *pcRec, const HHRecord *hhRec ) const  = 0;
 	
 	/**
 	 * Creates a new Record object with the same data as @p hhRec.

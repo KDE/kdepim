@@ -1,0 +1,4 @@
+TODO:
+* Add support for different passwords on pc data store and hh datastore.
+* Extend base conduit with settings that each implementing conduit should have
+  and add settings to keyringsettings dialog.

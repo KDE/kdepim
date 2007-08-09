@@ -34,8 +34,18 @@
 class HHRecord;
 
 class KPILOT_EXPORT KeyringHHDataProxy : public HHDataProxy {
+
 public:
+	/**
+	 * Creates a new keyring data proxy with @p db.
+	 */
 	KeyringHHDataProxy( PilotDatabase *db );
+	
+	/**
+	 * Creates a new keyring data proxy and tries to open a database file at
+	 * @p dbPath.
+	 */
+	KeyringHHDataProxy( const QString &dbPath );
 	
 	virtual ~KeyringHHDataProxy();
 
@@ -46,7 +56,6 @@ public:
 	 */
 	bool openDatabase( const QString &pass );
 	
-protected:
 	/**
 	 * This function creates a (subclass of) HHRecord for @p rec.
 	 */
@@ -54,6 +63,7 @@ protected:
 	
 	virtual bool createDataStore();
 	
+protected:
 	static const int MD5_DIGEST_LENGTH = 16;
 	static const int MD5_CBLOCK = 64;
 	static const int SALT_SIZE = 4;
@@ -65,5 +75,6 @@ private: // functions
 private: // members
 	PilotRecord *fZeroRecord;
 	QString fDesKey;
+	QString fSaltedHash;
 };
 #endif

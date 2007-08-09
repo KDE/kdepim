@@ -549,7 +549,8 @@ void TestRecordConduit::copy( const Record *from, HHRecord *to )
 	}
 }
 
-bool TestRecordConduit::equal( Record *pcRecord, HHRecord *hhRecord )
+bool TestRecordConduit::equal( const Record *pcRecord, const HHRecord *hhRecord 
+	) const
 {
 	// This is possible because of the implementation of equal in TestRecord.
 	return pcRecord->equal( hhRecord );

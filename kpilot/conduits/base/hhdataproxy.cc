@@ -40,14 +40,17 @@ void HHDataProxy::resetSyncFlags()
 {
 	FUNCTIONSETUP;
 	
-	fDatabase->resetSyncFlags();
+	if( fDatabase )
+	{
+		fDatabase->resetSyncFlags();
+	}
 }
 
 void HHDataProxy::commitCreate( Record *rec )
 {
 	FUNCTIONSETUP;
 	
-	if( rec )
+	if( fDatabase && rec )
 	{
 		if( HHRecord *hhRec = static_cast<HHRecord*>( rec ) )
 		{
@@ -67,7 +70,7 @@ void HHDataProxy::commitUpdate( Record *rec )
 {
 	FUNCTIONSETUP;
 
-	if( rec )
+	if( fDatabase && rec )
 	{
 		if( HHRecord *hhRec = static_cast<HHRecord*>( rec ) )
 		{
@@ -84,7 +87,7 @@ void HHDataProxy::commitDelete( Record *rec )
 {
 	FUNCTIONSETUP;
 	
-	if( !rec )
+	if( !rec || !fDatabase )
 	{
 		return;
 	}
@@ -105,24 +108,34 @@ bool HHDataProxy::isOpen() const
 {
 	FUNCTIONSETUP;
 	
-	return fDatabase->isOpen();
+	if( fDatabase )
+	{
+		return fDatabase->isOpen();
+	}
+	else
+	{
+		return false;
+	}
 }
 
 void HHDataProxy::loadAllRecords()
 {
 	FUNCTIONSETUP;
 	
-	int index = 0;
-	
-	PilotRecord *pRec = fDatabase->readRecordByIndex( index );
-	
-	while( pRec )
+	if( fDatabase )
 	{
-		// Create a record object.
-		Record *rec = createHHRecord( pRec );
-		fRecords.insert( rec->id(), rec );
+		int index = 0;
 		
-		// Read the next one.
-		pRec = fDatabase->readRecordByIndex( ++index );
+		PilotRecord *pRec = fDatabase->readRecordByIndex( index );
+		
+		while( pRec )
+		{
+			// Create a record object.
+			Record *rec = createHHRecord( pRec );
+			fRecords.insert( rec->id(), rec );
+			
+			// Read the next one.
+			pRec = fDatabase->readRecordByIndex( ++index );
+		}
 	}
 }

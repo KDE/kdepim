@@ -49,7 +49,7 @@ public:
 	
 	virtual HHRecord* createHHRecord( const Record* record );
 	
-	virtual bool equal( Record *rec, HHRecord *hhRec );
+	virtual bool equal( const Record *rec, const HHRecord *hhRec ) const;
 	
 	virtual HHRecord* newHHRecord( Record *pcRecord );
 	
