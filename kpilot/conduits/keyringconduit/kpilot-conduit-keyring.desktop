@@ -2,7 +2,13 @@
 Encoding=UTF-8
 Type=Service
 Comment=This conduit syncs the handheld keyring database with a database stored on the pc.
+Comment[ja]=このコンジットはハンドヘルドのキーリングデータベースを PC のデータベースと同期させます。
+Comment[sv]=Den här kanalen synkroniserar handdatorns nyckelringsdatabas med en databas lagrad på PC:n.
+Comment[zh_TW]=此導管將掌上型裝置的金鑰鍊與 PC 上的資料庫同步。
 Name=Keyring
+Name[ja]=キーリング
+Name[sv]=Nyckelring
+Name[zh_TW]=金鑰鍊
 Implemented=file
 ServiceTypes=KPilotConduit
 X-KDE-Library=kpilot_conduit_keyring
