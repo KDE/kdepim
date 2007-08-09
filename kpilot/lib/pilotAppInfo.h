@@ -72,6 +72,19 @@ public:
 	*/
 	PilotAppInfoBase(PilotDatabase *d);
 
+	/** Constructor, intended to create an empty category block and
+	 * nothing more. Dummy argument distinguishes it from the default
+	 * constructor and means nothing.
+	 */
+	explicit PilotAppInfoBase(int dummy) :
+		fC(new CategoryAppInfo),
+		fLen(sizeof(struct CategoryAppInfo)),
+		fOwn(true)
+	{
+		Q_UNUSED(dummy);
+		memset(fC,0,fLen);
+	}
+
 	/** Destructor. */
 	virtual ~PilotAppInfoBase();
 
