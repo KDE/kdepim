@@ -52,7 +52,7 @@ void DBUS_Protocol::configFillGroupBoxes( QStringList* groupBoxes ) const
 
 void DBUS_Protocol::configFields( QVector< QWidget* >* vector, const QObject*, QList< AccountInput* >* result ) const
 {
-	result->append( new TextInput( vector->at( 0 ), i18n( "DBUS name" ), TextInput::text, "korn_dbus", "dbusname" ) );
+	result->append( new TextInput( vector->at( 0 ), i18n( "D-Bus name" ), TextInput::text, "korn_dbus", "dbusname" ) );
 }
 
 void DBUS_Protocol::readEntries( QMap< QString, QString >* ) const
