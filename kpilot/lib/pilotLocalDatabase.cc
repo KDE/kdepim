@@ -53,8 +53,8 @@ typedef QVector<PilotRecord *> Records;
 class PilotLocalDatabase::Private : public Records
 {
 public:
-	static const int DEFAULT_SIZE = 128;
-	Private(int size=DEFAULT_SIZE) : Records(size) { resetIndex(); }
+	inline Private() : Records() { resetIndex(); }
+	inline Private(int size) : Records(size) { resetIndex(); }
 	~Private() { deleteRecords(); }
 
 	void deleteRecords()
