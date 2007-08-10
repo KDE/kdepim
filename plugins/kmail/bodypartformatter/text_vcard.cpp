@@ -142,7 +142,12 @@ namespace {
       return validIndex( idx ) ? "text" : 0 ;
     }
     const char * subtype( int idx ) const {
-      return idx == 0 ? "x-vcard" : idx == 1 ? "vcard" : 0 ;
+      switch( idx ) {
+        case 0: return "x-vcard";
+        case 1: return "vcard";
+        case 2: return "directory";
+        default: return 0;
+      }
     }
 
     const KMail::Interface::BodyPartURLHandler * urlHandler( int idx ) const {
@@ -150,7 +155,7 @@ namespace {
     }
   private:
     bool validIndex( int idx ) const {
-      return ( idx >= 0 && idx <= 1 );
+      return ( idx >= 0 && idx <= 2 );
     }
   };
 

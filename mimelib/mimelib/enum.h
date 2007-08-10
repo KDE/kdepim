@@ -78,6 +78,7 @@ enum {
     kSubtypeEnriched,
     kSubtypeHtml,
     kSubtypeXVCard,
+    kSubtypeDirectory,
     kSubtypeVCal,
     kSubtypeRtf,
     kSubtypeXDiff,

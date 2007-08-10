@@ -215,6 +215,9 @@ int DwSubtypeStrToEnum(const DwString& aStr)
         if (DwStrcasecmp(aStr, "digest") == 0) {
             type = DwMime::kSubtypeDigest;
         }
+        if (DwStrcasecmp(aStr, "directory") == 0) {
+            type = DwMime::kSubtypeDirectory;
+        }
 	else if (DwStrcasecmp(aStr, "disposition-notification") == 0 ) {
 	    type = DwMime::kSubtypeDispositionNotification;
 	}
@@ -374,6 +377,9 @@ void DwSubtypeEnumToStr(int aEnum, DwString& aStr)
         break;
     case DwMime::kSubtypeXVCard:
         aStr = "X-VCard";
+        break;
+    case DwMime::kSubtypeDirectory:
+        aStr = "Directory";
         break;
     case DwMime::kSubtypeXDiff:
         aStr = "X-Diff";
