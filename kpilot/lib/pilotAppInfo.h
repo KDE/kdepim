@@ -1,8 +1,8 @@
 #ifndef _KPILOT_PILOTAPPINFO_H
 #define _KPILOT_PILOTAPPINFO_H
-/* pilotAppInfo.h			KPilot
+/* KPilot
 **
-** Copyright (C) 2005-2006 Adriaan de Groot <groot@kde.org>
+** Copyright (C) 2005-2007 Adriaan de Groot <groot@kde.org>
 **
 */
 
@@ -50,6 +50,12 @@
 class KPILOT_EXPORT PilotAppInfoBase
 {
 protected:
+	/** Constructor. This is for use by derived classes (using the template below
+	* only, and says that the category info in the base class aliases data in
+	* the derived class. Remember to call init()!
+	*/
+	PilotAppInfoBase() : fC(0L), fLen(0), fOwn(false) { } ;
+
 	/** Initialize class members after reading header, to alias data elsewhere.
 	* Only for use by the (derived) template classes below.
 	*/
@@ -60,30 +66,11 @@ protected:
 	} ;
 
 public:
-	/** Constructor. This is for use by derived classes (using the template below
-	* only, and says that the category info in the base class aliases data in
-	* the derived class. Remember to call init()!
-	*/
-	PilotAppInfoBase() : fC(0L), fLen(0), fOwn(false) { } ;
-
 	/** Constructor, intended for untyped access to the AppInfo only. This throws
 	* away everything but the category information. In this variety, the
 	* CategoryAppInfo structure is owned by the PilotAppInfoBase object.
 	*/
 	PilotAppInfoBase(PilotDatabase *d);
-
-	/** Constructor, intended to create an empty category block and
-	 * nothing more. Dummy argument distinguishes it from the default
-	 * constructor and means nothing.
-	 */
-	explicit PilotAppInfoBase(const QString &dummy) :
-		fC(new CategoryAppInfo),
-		fLen(sizeof(struct CategoryAppInfo)),
-		fOwn(true)
-	{
-		Q_UNUSED(dummy);
-		memset(fC,0,fLen);
-	}
 
 	/** Destructor. */
 	virtual ~PilotAppInfoBase();
@@ -227,6 +214,5 @@ public:
 protected:
 	appinfo fInfo;
 } ;
-
 
 #endif
