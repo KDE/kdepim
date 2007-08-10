@@ -179,9 +179,8 @@ public:
 		}
 		else
 		{
-			delete fC;
-			fC = 0L;
-			fLen = 0;
+			// Assume info block will be size of data structure.
+			// See default constructor, below.
 			init(&fInfo.category,sizeof(fInfo));
 		}
 	} ;
@@ -189,6 +188,10 @@ public:
 	PilotAppInfo()
 	{
 		memset(&fInfo,0,sizeof(fInfo));
+		// Pretend the appinfo block is the same size as the
+		// unpacked structure. This is probably wrong, since
+		// the in-memory structure is normally larger than the
+		// binary blob.
 		init(&fInfo.category,sizeof(fInfo));
 	}
 
