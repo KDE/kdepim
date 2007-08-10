@@ -1,11 +1,16 @@
 Current Release is Proko2 2.1.9
+Features
+========
+* The filter behaviour was redesigned. Now it is possible to select some
+  folders which are the source for filtering. The default source is the
+  inbox folder.
 
 Bugfixes
---------
+========
 * Kolab/issue1858  Filters applying to new emails in groupware folders, changing filter behaviour
 
-
 Changes since Proko2 2.1.7 up to Proko2 2.1.8 (released 20.07.2007)
+Proko2 2.1.8 was not full released.
 Features
 =========
 
