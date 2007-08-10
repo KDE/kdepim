@@ -76,7 +76,7 @@ public:
 	 * nothing more. Dummy argument distinguishes it from the default
 	 * constructor and means nothing.
 	 */
-	explicit PilotAppInfoBase(int dummy) :
+	explicit PilotAppInfoBase(const QString &dummy) :
 		fC(new CategoryAppInfo),
 		fLen(sizeof(struct CategoryAppInfo)),
 		fOwn(true)
