@@ -68,50 +68,25 @@ int main(int argc, char **argv)
 	
 	Pilot::setupPilotCodec( CSL1( "ISO8859-15" ) );
 	
-	// Create the database.
+	// If the database is not open the file did not exist. Let's create a new one.
 	PilotLocalDatabase database( dbPath + "/" + dbName );
-	
-	DEBUGKPILOT << "Recordcount: " << database.recordCount();
-	
-	int i = 0;
-	
-	PilotRecord *rec = database.readRecordByIndex( i );
-	
-	while( rec )
+	if( database.isOpen() )
 	{
-		DEBUGKPILOT << "- Record id: " << rec->id();
-		rec = database.readRecordByIndex( ++i );
-	}
-	
-	KeyringHHDataProxy proxy( &database );
-	proxy.openDatabase( pass );
-	
-	KeyringViewer *viewer = new KeyringViewer( 0, &proxy );
-	viewer->show();
-	
-	// This code is to test generation of an empty database.
-	PilotLocalDatabase database2( CSL1( "CreatedByKPilot" ) );
-	if( database2.isOpen() )
-	{
-		int i = 0;
-		PilotRecord *rec = database2.readRecordByIndex( i );
+		KeyringHHDataProxy proxy( &database );
+		proxy.openDatabase( pass );
 		
-		while( rec )
-		{
-			qDebug() << rec->size();
-			rec = database2.readRecordByIndex( ++i );
-		}
-		
-		KeyringHHDataProxy proxy2( &database2 );
-		proxy2.openDatabase( pass );
+		KeyringViewer *viewer = new KeyringViewer( 0, &proxy );
+		viewer->show();
 	}
 	else
 	{
 		qDebug() << "Database not open, trying to create one.";
-		KeyringHHDataProxy proxy2( &database2 );
-		proxy2.openDatabase( pass );
-		proxy2.createDataStore();
-		// We should have a database with pass test now.
+		KeyringHHDataProxy proxy( &database );
+		proxy.openDatabase( pass );
+		proxy.createDataStore();
+		
+		KeyringViewer *viewer = new KeyringViewer( 0, &proxy );
+		viewer->show();
 	}
 	
 	//return 0;

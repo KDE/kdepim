@@ -39,7 +39,7 @@ public:
 	
 	virtual void loadSettings();
 	
-	virtual void initDataProxies();
+	virtual bool initDataProxies();
 	
 	virtual void test();
 	

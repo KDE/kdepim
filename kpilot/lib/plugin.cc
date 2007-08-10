@@ -317,7 +317,8 @@ bool ConduitAction::openDatabases(const QString &name, bool *retrieved)
 	DEBUGKPILOT << "Trying to open database [" << name << ']';
 	DEBUGKPILOT << "Mode="
 		<< (syncMode().isTest() ? "test " : "")
-		<< (syncMode().isLocal() ? "local " : "");
+		<< (syncMode().isLocal() ? "local " : "")
+		<< (syncMode().isSync() ? "sync " : "");
 
 	KPILOT_DELETE(fLocalDatabase);
 

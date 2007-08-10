@@ -53,7 +53,7 @@ void TestRecordConduit::loadSettings()
 {
 }
 	
-void TestRecordConduit::initDataProxies()
+bool TestRecordConduit::initDataProxies()
 {
 	if( fCreateRecords )
 	{
@@ -504,6 +504,8 @@ void TestRecordConduit::initDataProxies()
 		fBackupDataProxy = new TestHHDataProxy();
 		fPCDataProxy = new TestDataProxy();
 	}
+	
+	return true;
 }
 
 Record* TestRecordConduit::createPCRecord( const HHRecord* record )

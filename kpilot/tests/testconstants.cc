@@ -39,7 +39,7 @@ int main(int, char **)
 #ifdef DEBUG
 	debug_level = 1;
 #endif
-	PilotAppInfoBase info;
+	PilotAppInfoBase info(0L);
 
 
 	DEBUGKPILOT <<"### testconstants\n#";

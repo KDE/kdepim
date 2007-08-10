@@ -67,17 +67,14 @@ RecordConduit::~RecordConduit()
 	bool retrieved = false;
 	
 	bool hhDatabaseOpen = openDatabases( fDatabaseName, &retrieved );
-	// If retrieved is true there is no local backup database so a first sync 
-		// should be done then (see 6.3.2).
+	// If retrieved is true there was no local backup database so a first sync 
+	// should be done then (see 6.3.2).
 	bool backupDatabaseOpen = !retrieved;
 	setFirstSync( retrieved );
 	
 	// NOTE: Do not forget that the HHData proxy and the backup proxy must use
 	// the opened databases, maybe we should pass them for clearity to this method.
-	initDataProxies();
-	
-	// Make sure that the implementing class did initialize all proxies.
-	if( !fPCDataProxy || !fHHDataProxy || !fBackupDataProxy )
+	if( !initDataProxies() )
 	{
 		DEBUGKPILOT << "One of the dataproxies was not initialized";
 		return false;
@@ -97,6 +94,9 @@ RecordConduit::~RecordConduit()
 	// Determine syncmode, see 6.3
 	// FIXME: Is this the most efficient way, or is it even possible what i do 
 	//        here?
+	DEBUGKPILOT << "Databases open [hh,pc,bu]: [" << hhDatabaseOpen << "," 
+		<< pcDatabaseOpen << "," << backupDatabaseOpen << "]";
+	
 	if( hhDatabaseOpen && pcDatabaseOpen && backupDatabaseOpen )
 	{
 		// So what are we going to do this time?!

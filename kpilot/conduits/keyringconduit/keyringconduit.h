@@ -38,7 +38,7 @@ public:
 
 	virtual void loadSettings();
 	
-	virtual void initDataProxies();
+	virtual bool initDataProxies();
 	
 	/**
 	 * Compares @p pcRecord with @p hhRec and returns true if they are considered

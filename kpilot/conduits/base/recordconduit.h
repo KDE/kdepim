@@ -72,8 +72,10 @@ protected:
 	 * - fLocalDatase
 	 * - fDatastore
 	 * - fBackupdb
+	 *
+	 * Returns false if one of the dataproxies could not be initialized.
 	 */
-	virtual void initDataProxies() = 0;
+	virtual bool initDataProxies() = 0;
 
 	/**
 	 * Compares @p pcRecord with @p hhRec and returns true if they are considered

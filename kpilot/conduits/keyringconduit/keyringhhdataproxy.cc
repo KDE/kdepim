@@ -122,6 +122,7 @@ bool KeyringHHDataProxy::openDatabase( const QString &pass )
 	}
 	else
 	{
+		DEBUGKPILOT << "fDatabase: " << fDatabase << " fZeroRecord: " << fZeroRecord;
 		// There is no data base so most probably createDataStore() will be called.
 		// But for that we need a hash that is stored in the zerorecord and by that
 		// time this class doesn't know the password anymore. We also don't want to
@@ -203,8 +204,7 @@ bool KeyringHHDataProxy::createDataStore()
 		fZeroRecord->setSecret();
 		// First record, id 0
 		
-		int id = fDatabase->writeRecord( fZeroRecord );
-		DEBUGKPILOT << "New id for zeroRecord: " << id << " " << fZeroRecord->id();
+		fDatabase->writeRecord( fZeroRecord );
 		
 		// Create a record to show KPilot was there =:)
 		KeyringHHRecord *rec = new KeyringHHRecord( CSL1( "KPilot" )
@@ -218,11 +218,8 @@ bool KeyringHHDataProxy::createDataStore()
 		{
 			rec->setId( CSL1( "1" ) );
 		}
-		DEBUGKPILOT << "Id for test record: " << rec->id() << " count: "
-			<< fDatabase->recordCount();
 		
-		id = fDatabase->writeRecord( rec->pilotRecord() );
-		DEBUGKPILOT << "New id for test record: " << id << " " << rec->id();
+		fDatabase->writeRecord( rec->pilotRecord() );
 		
 		return true;
 	}

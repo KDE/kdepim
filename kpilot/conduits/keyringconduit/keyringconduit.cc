@@ -42,7 +42,7 @@
 using namespace KWallet;
 
 KeyringConduit::KeyringConduit( KPilotLink *o, const QStringList &a )
- : RecordConduit( o, a, CSL1( "Keyring Conduit" ), CSL1( "Keys-Gtkr.pdb" ) )
+ : RecordConduit( o, a, CSL1( "Keys-Gtkr" ), CSL1( "Keyring Conduit" ) )
 {
 }
 
@@ -62,7 +62,7 @@ void KeyringConduit::loadSettings()
 	}
 }
 	
-void KeyringConduit::initDataProxies()
+bool KeyringConduit::initDataProxies()
 {
 	FUNCTIONSETUP;
 	
@@ -74,17 +74,33 @@ void KeyringConduit::initDataProxies()
 	{
 		pass = askPassword();
 		
+		// User pressed cancel
+		if( pass.isNull() )
+		{
+			return false;
+		}
+		
 		while( !hhDataProxy->openDatabase( pass ) )
 		{
+			// User pressed cancel
+			if( pass.isNull() )
+			{
+				return false;
+			}
+			
+			DEBUGKPILOT << "Trying password: " << pass;
+			
 			addSyncLogEntry( i18n( "Password invalid!" ) );
 			pass = askPassword();
-			hhDataProxy->openDatabase( pass );
 		}
 	}
 	else
 	{
+		//FIXME: Find a good way to handle this!
 		// Read pass from wallet.
-		WId window = qApp->activeWindow()->winId();
+		//DEBUGKPILOT << "fParent: " << QApplication::topLevelWidgets().first();
+		WId window = QApplication::topLevelWidgets().at(1)->winId();
+		//WId window = qApp->activeWindow()->winId();
 	
 		Wallet *wallet = Wallet::openWallet( Wallet::LocalWallet(), window );
 		
@@ -126,6 +142,12 @@ void KeyringConduit::initDataProxies()
 		fBackupDataProxy = backupDataProxy;
 	}
 	
+	// We cannot create a keyring datastore if we don't have a url.
+	if( fPcDatastoreUrl.isEmpty() )
+	{
+		return false;
+	}
+	
 	// TODO: For now we assume that the pc datastore has the same pass as the
 	//       handheld datastore.
 	KeyringHHDataProxy *pcDataProxy = new KeyringHHDataProxy( fPcDatastoreUrl );
@@ -135,6 +157,8 @@ void KeyringConduit::initDataProxies()
 	
 	// Do not keep the password any longer in memory then necessary.
 	pass.clear();
+	
+	return true;
 }
 
 QString KeyringConduit::askPassword() const
