@@ -29,9 +29,10 @@
 #include <klocale.h>
 #include <ktemporaryfile.h>
 #include <kurlrequester.h>
-#include <phonon/audioplayer.h>
+#include <Phonon/MediaObject>
 
 #include <QCheckBox>
+#include <QtCore/QBuffer>
 #include <QLabel>
 #include <QLayout>
 #include <QPushButton>
@@ -128,18 +129,13 @@ void SoundWidget::setReadOnly( bool readOnly )
 
 void SoundWidget::playSound()
 {
-  KTemporaryFile tmp;
-  tmp.setAutoRemove(false);
-  tmp.open();
-
-  tmp.write( mSound.data() );
-  tmp.flush();
-
-  Phonon::AudioPlayer* player = new Phonon::AudioPlayer( Phonon::NotificationCategory, this );
-  player->play( tmp.fileName() );
-
-  // we can't remove the sound file from within the program, because
-  // KAudioPlay uses a async dcop call... :(
+  Phonon::MediaObject* player = Phonon::createPlayer( Phonon::NotificationCategory );
+  QBuffer* soundData = new QBuffer( player );
+  soundData->setData( mSound.data() );
+  player->setCurrentSource( soundData );
+  player->setParent( this );
+  connect( player, SIGNAL( finished() ), player, SLOT( deleteLater() ) );
+  player->play();
 }
 
 void SoundWidget::loadSound()

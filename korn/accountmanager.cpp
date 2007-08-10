@@ -29,7 +29,7 @@
 #include <kconfig.h>
 #include <kdebug.h>
 #include <kurl.h>
-#include <phonon/audioplayer.h>
+#include <Phonon/MediaObject>
 
 #include <QList>
 
@@ -204,8 +204,10 @@ bool AccountManager::hasNewMessages()
 
 void AccountManager::playSound( const QString& file )
 {
-	Phonon::AudioPlayer* player = new Phonon::AudioPlayer( Phonon::CommunicationCategory, this );
-	player->play( KUrl( file ) );
+	Phonon::MediaObject* player = Phonon::createPlayer( Phonon::CommunicationCategory, file ); // Communication? don't you think this is a notificiation?
+	player->play();
+	player->setParent( this );
+	connect( player, SIGNAL( finished() ), player, SLOT( deleteLater() ) );
 }
 
 void AccountManager::slotChanged( int count, KMailDrop* mailDrop )
