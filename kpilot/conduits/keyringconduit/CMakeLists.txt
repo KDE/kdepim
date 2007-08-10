@@ -8,6 +8,7 @@ include_directories(
 add_subdirectory(tests)
 
 set(keyring_SRCS
+	pi-keyring.cc
 	keyringsetup.cc
 	keyringhhrecord.cc
 	keyringhhdataproxy.cc

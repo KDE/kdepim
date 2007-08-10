@@ -34,10 +34,12 @@
 #include "options.h"
 #include "pilot.h"
 #include "pilotDatabase.h"
+#include "pilotAppInfo.h"
 #include "pilotLocalDatabase.h"
 #include "pilotRecord.h"
 
 #include "keyringhhrecord.h"
+#include "pi-keyring.h"
 
 KeyringHHDataProxy::KeyringHHDataProxy( PilotDatabase *db )
 	: HHDataProxy( db ), fZeroRecord( 0l )
@@ -47,6 +49,7 @@ KeyringHHDataProxy::KeyringHHDataProxy( PilotDatabase *db )
 	// Hash-key record
 	if( fDatabase && fDatabase->isOpen() )
 	{
+		DEBUGKPILOT << "Database open, reading zeroRecord.";
 		fZeroRecord = fDatabase->readRecordByIndex( 0 );
 	}
 }
@@ -68,6 +71,8 @@ KeyringHHDataProxy::KeyringHHDataProxy( const QString &dbPath )
 
 KeyringHHDataProxy::~KeyringHHDataProxy()
 {
+	FUNCTIONSETUP;
+	
 	if( fZeroRecord )
 	{
 		delete fZeroRecord;
@@ -99,7 +104,7 @@ bool KeyringHHDataProxy::openDatabase( const QString &pass )
 		// The salt and password hash are stored in recordZero.
 		if( recordZero.toByteArray().contains( hash.toByteArray() ) )
 		{
-			qDebug() << "Password correct!";
+			DEBUGKPILOT << "Password correct!";
 			
 			// Pass is correct and DES encryption key known, load the records.
 			loadAllRecords();
@@ -111,7 +116,7 @@ bool KeyringHHDataProxy::openDatabase( const QString &pass )
 		}
 		else
 		{
-			qDebug() << "Password incorrect!";
+			DEBUGKPILOT << "Password incorrect!";
 			return false;
 		}
 	}
@@ -125,6 +130,8 @@ bool KeyringHHDataProxy::openDatabase( const QString &pass )
 		QCA::SecureArray salt = QCA::Random::randomArray( SALT_SIZE );
 		QCA::SecureArray saltedHashData( salt );
 		saltedHashData.append( passArray );
+		saltedHashData.append(
+			QCA::SecureArray( MD5_CBLOCK - SALT_SIZE - passArray.size(), 0 ) );
 		
 		QCA::Hash hash( "md5" );
 		hash.update( saltedHashData );
@@ -170,15 +177,34 @@ bool KeyringHHDataProxy::createDataStore()
 		long type = pi_mktag( 'G', 'k','y','r' );
 		fDatabase->createDatabase( creator, type, 0, 0, 4 );
 		
+		PilotKeyringInfo appInfo;
+		appInfo.setCategoryName( 0, CSL1( "Unfiled" ) );
+		appInfo.writeTo( fDatabase );
+		
 		QByteArray saltedHash = QCA::hexToArray( fSaltedHash );
 		
 		pi_buffer_t *buf = pi_buffer_new( saltedHash.size() );
+		buf->used = saltedHash.size();
 		memcpy( buf->data, (unsigned char*) saltedHash.data(), saltedHash.size() );
 		
+		
+		/*
+		 * Warning: PilotLocalDatabase does not work as expected. The documentation
+		 * of writeRecord states:
+		 *
+		 * "Writes a new record to database (if 'id' == 0, one will be
+		 *  assigned to newRecord)"
+		 *
+		 * Howevere this doesn't happen when calling
+		 * PilotLocalDatabase::writeRecord( PilotRecord * ). Even if the id is 0 it
+		 * remains unchanged.
+		 */
 		fZeroRecord = new PilotRecord( buf, 0, 0, 0);
 		fZeroRecord->setSecret();
+		// First record, id 0
 		
-		fDatabase->writeRecord( fZeroRecord );
+		int id = fDatabase->writeRecord( fZeroRecord );
+		DEBUGKPILOT << "New id for zeroRecord: " << id << " " << fZeroRecord->id();
 		
 		// Create a record to show KPilot was there =:)
 		KeyringHHRecord *rec = new KeyringHHRecord( CSL1( "KPilot" )
@@ -186,7 +212,17 @@ bool KeyringHHDataProxy::createDataStore()
 			, CSL1( "This database is created with KPilot."
 					"\nThanks for using kpilot!" )
 			, fDesKey );
-		fDatabase->writeRecord( rec->pilotRecord() );
+		
+		// Second record and localDb? Set id.
+		if( fDatabase->dbType() == PilotDatabase::eLocalDB )
+		{
+			rec->setId( CSL1( "1" ) );
+		}
+		DEBUGKPILOT << "Id for test record: " << rec->id() << " count: "
+			<< fDatabase->recordCount();
+		
+		id = fDatabase->writeRecord( rec->pilotRecord() );
+		DEBUGKPILOT << "New id for test record: " << id << " " << rec->id();
 		
 		return true;
 	}

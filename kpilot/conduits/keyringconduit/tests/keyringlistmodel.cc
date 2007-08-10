@@ -34,14 +34,18 @@
 KeyringListModel::KeyringListModel( KeyringHHDataProxy *proxy, QObject *parent )
 	: QAbstractListModel( parent ), fProxy ( proxy )
 {
+	FUNCTIONSETUP;
+	
 	proxy->setIterateMode( DataProxy::All );
 	proxy->resetIterator();
+	
+	DEBUGKPILOT << "Records in proxy: " << proxy->recordCount();
 	
 	while( proxy->hasNext() )
 	{
 		KeyringHHRecord *rec = static_cast<KeyringHHRecord*>( proxy->next() );
 		fRecords.append( rec );
-		qDebug() << "Added:" << rec->name();
+		qDebug() << "Added: " << rec->name();
 	}
 }
 

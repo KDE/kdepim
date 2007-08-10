@@ -7,6 +7,7 @@ set(tests_SRCS
 	keyringlistmodel.cc
 	keyringviewer.cc
 	main.cc
+	../pi-keyring.cc
 	../keyringconduit.cc
 	../keyringhhdataproxy.cc
 	../keyringhhrecord.cc
