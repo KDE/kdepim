@@ -107,7 +107,6 @@ using namespace KABC;
 
 AddressBook *AbbrowserConduit::aBook=0L;
 
-
 /*********************************************************************
                         C O N S T R U C T O R
  *********************************************************************/
@@ -123,6 +122,7 @@ AbbrowserConduit::AbbrowserConduit(KPilotLink * o, const char *n, const QStringL
 		syncedIds(),
 		abiter(),
 		fTicket(0L),
+		fCreatedBook(false),
 		fBookResource(0L)
 {
 	FUNCTIONSETUP;
@@ -142,9 +142,7 @@ AbbrowserConduit::~AbbrowserConduit()
 		fTicket=0L;
 	}
 
-	DEBUGKPILOT << fname << ": Deleting addressbook" << endl;
-	KPILOT_DELETE(aBook);
-
+	_cleanupAddreessBookPointer();
 	// unused function warnings.
 	compile_time_check();
 }
@@ -285,6 +283,7 @@ bool AbbrowserConduit::_loadAddressBook()
 		case AbbrowserSettings::eAbookResource:
 			DEBUGKPILOT<<"Loading standard addressbook"<<endl;
 			aBook = StdAddressBook::self( true );
+			fCreatedBook=false;
 			break;
 		case AbbrowserSettings::eAbookFile:
 		{ // initialize the abook with the given file
@@ -318,6 +317,7 @@ bool AbbrowserConduit::_loadAddressBook()
 				stopTickle();
 				return false;
 			}
+			fCreatedBook=true;
 			break;
 		}
 		default: break;
@@ -331,7 +331,7 @@ bool AbbrowserConduit::_loadAddressBook()
 		emit logError(i18n("Unable to initialize and load the addressbook for the sync.") );
 		addSyncLogEntry(i18n("Unable to initialize and load the addressbook for the sync.") );
 		WARNINGKPILOT << "Unable to initialize the addressbook for the sync." << endl;
-		KPILOT_DELETE(aBook);
+		_cleanupAddreessBookPointer();
 		stopTickle();
 		return false;
 	}
@@ -343,7 +343,7 @@ bool AbbrowserConduit::_loadAddressBook()
 		WARNINGKPILOT << "Unable to lock addressbook for writing " << endl;
 		emit logError(i18n("Unable to lock addressbook for writing.  Can't sync!"));
 		addSyncLogEntry(i18n("Unable to lock addressbook for writing.  Can't sync!"));
-		KPILOT_DELETE(aBook);
+		_cleanupAddreessBookPointer();
 		stopTickle();
 		return false;
 	}
@@ -442,7 +442,18 @@ void AbbrowserConduit::_setAppInfo()
 }
 
 
-
+void AbbrowserConduit::_cleanupAddreessBookPointer()
+{
+        if (fCreatedBook)
+        {
+                KPILOT_DELETE(aBook);
+                fCreatedBook=false;
+        }
+        else
+        {
+                aBook=0L;
+	}												         
+}
 
 
 
