@@ -67,7 +67,7 @@ KeyringWidgetSetup::KeyringWidgetSetup( QWidget *w ) :
 
 	fWidget = new QWidget();
 	fUi.setupUi( fWidget );
-	fUi.fLocalDatabaseUrl->setMode( KFile::ExistingOnly );
+	fUi.fLocalDatabaseUrl->setMode( KFile::ExistingOnly | KFile::LocalOnly );
 	fUi.fLocalDatabaseUrl->setFilter( CSL1( "*.pdb") );
 	
 	QObject::connect( fUi.fLocalDatabaseUrl

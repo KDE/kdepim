@@ -608,7 +608,7 @@ void PilotLocalDatabase::openDatabase()
 	if (dbFile == 0L)
 	{
 		QString path = dbPathName();
-		DEBUGKPILOT << "Failed to open" << path;
+		DEBUGKPILOT << "Failed to open: " << path;
 		return;
 	}
 

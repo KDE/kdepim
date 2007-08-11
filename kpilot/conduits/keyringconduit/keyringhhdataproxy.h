@@ -76,5 +76,6 @@ private: // members
 	PilotRecord *fZeroRecord;
 	QString fDesKey;
 	QString fSaltedHash;
+	bool fOwner; // Are we the owner of the database pointer?
 };
 #endif

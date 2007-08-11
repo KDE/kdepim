@@ -42,7 +42,7 @@
 #include "pi-keyring.h"
 
 KeyringHHDataProxy::KeyringHHDataProxy( PilotDatabase *db )
-	: HHDataProxy( db ), fZeroRecord( 0l )
+	: HHDataProxy( db ), fZeroRecord( 0l ), fOwner( false )
 {
 	FUNCTIONSETUP;
 	
@@ -55,7 +55,7 @@ KeyringHHDataProxy::KeyringHHDataProxy( PilotDatabase *db )
 }
 
 KeyringHHDataProxy::KeyringHHDataProxy( const QString &dbPath )
-	: HHDataProxy( 0l ), fZeroRecord( 0l )
+	: HHDataProxy( 0l ), fZeroRecord( 0l ), fOwner( true )
 {
 	FUNCTIONSETUP;
 	
@@ -72,6 +72,13 @@ KeyringHHDataProxy::KeyringHHDataProxy( const QString &dbPath )
 KeyringHHDataProxy::~KeyringHHDataProxy()
 {
 	FUNCTIONSETUP;
+	
+	if( fOwner )
+	{
+		// We created the database ourself so we should delete it.
+		delete fDatabase;
+		fDatabase = 0l;
+	}
 	
 	if( fZeroRecord )
 	{
@@ -162,17 +169,21 @@ bool KeyringHHDataProxy::createDataStore()
 	
 	if( !fDatabase )
 	{
+		DEBUGKPILOT << "No database object.";
 		return false;
 	}
 	
 	// No usefull data for the zero record.
 	if( fDesKey.isEmpty() )
 	{
+		DEBUGKPILOT << "No deskey object.";
 		return false;
 	}
 	
 	if( !fDatabase->isOpen() )
 	{
+		DEBUGKPILOT << "Creating database: " << fDatabase->dbPathName();
+		
 		// File did not exist
 		long creator = pi_mktag( 'G', 'k','t','r' );
 		long type = pi_mktag( 'G', 'k','y','r' );
@@ -225,6 +236,7 @@ bool KeyringHHDataProxy::createDataStore()
 	}
 	else
 	{
+		DEBUGKPILOT << "Database already open.";
 		// There seems to be a database already. But this shouldn't happen i think.
 		return true;
 	}

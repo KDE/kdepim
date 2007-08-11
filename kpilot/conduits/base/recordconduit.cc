@@ -99,6 +99,7 @@ RecordConduit::~RecordConduit()
 	
 	if( hhDatabaseOpen && pcDatabaseOpen && backupDatabaseOpen )
 	{
+		DEBUGKPILOT << "All proxies are initialized and open.";
 		// So what are we going to do this time?!
 		switch( syncMode().mode() ) {
 			case SyncMode::eHotSync:
@@ -122,11 +123,13 @@ RecordConduit::~RecordConduit()
 	}
 	else if( hhDatabaseOpen && pcDatabaseOpen && !backupDatabaseOpen )
 	{
+		DEBUGKPILOT << "HHDatabase open, PCDatabase open, Bakcupdatabase closed.";
 		setFirstSync( true ); // 6.3.2
 		firstSync();
 	}
 	else if( hhDatabaseOpen && !pcDatabaseOpen )
 	{
+		DEBUGKPILOT << "Pc database not open, trying to create an empty datastore.";
 		if( fPCDataProxy->createDataStore() )
 		{
 			changeSync( SyncMode::eCopyHHToPC ); // 6.3.3 and 6.3.4
@@ -134,12 +137,14 @@ RecordConduit::~RecordConduit()
 		}
 		else
 		{
-			DEBUGKPILOT << "Could not open pc data store and was not able to create a new one.";
+			DEBUGKPILOT << "Could not open or create pc data store.";
 			return false;
 		}
 	}
 	else if( !hhDatabaseOpen && pcDatabaseOpen )
 	{
+		DEBUGKPILOT << "HHDatabase closed, PCDatabase open, Bakcupdatabase closed.";
+		
 		if( fHHDataProxy->createDataStore() )
 		{
 			changeSync( SyncMode::eCopyPCToHH ); // 6.3.5 and 6.3.6
@@ -147,7 +152,7 @@ RecordConduit::~RecordConduit()
 		}
 		else
 		{
-			DEBUGKPILOT << "Could not open hand held data store and was not able to create a new one.";
+			DEBUGKPILOT << "Could not open or create hand held data store.";
 			return false;
 		}
 	}

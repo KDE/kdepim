@@ -50,7 +50,12 @@ void KeyringConduit::loadSettings()
 {
 	FUNCTIONSETUP;
 	
-	fPcDatastoreUrl = KeyringConduitSettings::databaseUrl();
+	// The url is of the form: file:///home/user/more/dirs/database.pdb
+	// The localdatabase class expects: /home/user/more/dirs/database
+	// So lets strip of somee stuff:
+	// TODO: Maybe we should do some checks here of the string.
+	QString url = KeyringConduitSettings::databaseUrl();
+	fPcDatastoreUrl = url.mid( 7, url.length() - 4 );
 	
 	if( KeyringConduitSettings::passwordSetting() == KeyringConduitSettings::Wallet )
 	{
@@ -150,6 +155,7 @@ bool KeyringConduit::initDataProxies()
 	
 	// TODO: For now we assume that the pc datastore has the same pass as the
 	//       handheld datastore.
+	DEBUGKPILOT << "Local keyring file: " << fPcDatastoreUrl;
 	KeyringHHDataProxy *pcDataProxy = new KeyringHHDataProxy( fPcDatastoreUrl );
 	pcDataProxy->openDatabase( pass );
 	
