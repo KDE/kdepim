@@ -167,6 +167,11 @@ QString KeyringWidgetSetup::loadPassword()
 	WId window = qApp->activeWindow()->winId();
 	
 	Wallet *wallet = Wallet::openWallet( Wallet::LocalWallet(), window );
+
+	if (! wallet)
+	{
+		return QString();
+	}
 	
 	QString passwordFolder = Wallet::PasswordFolder();
 	if ( !wallet->hasFolder( passwordFolder ) )

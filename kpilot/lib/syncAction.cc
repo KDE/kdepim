@@ -93,7 +93,7 @@ SyncAction::~SyncAction()
 
 	bool r = this->exec();
 
-	DEBUGKPILOT << "Exec" << objectName()
+	DEBUGKPILOT << "Exec, " << objectName()
 		<< (r ? " is running" : " failed to start");
 
 	if (!r)

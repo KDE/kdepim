@@ -1021,8 +1021,6 @@ bool PilotDaemon::shouldBackup()
 			queueInstaller(fSyncStack,pilotLink,fInstaller,conduits);
 			queueEditors(fSyncStack,pilotLink);
 			queueConduits(fSyncStack,conduits,fNextSyncType);
-			// After running the conduits, install new databases
-			queueInstaller(fSyncStack,pilotLink,fInstaller,conduits);
 			// And sync the remaining databases if needed.
 			if (shouldBackup())
 			{
@@ -1095,7 +1093,7 @@ launch:
 		fTray->endHotSync();
 	}
 
-	KPILOT_DELETE(fSyncStack);
+	fSyncStack->deleteLater();
 	fPilotLink->close();
 
 	getLogger().logProgress(i18n("HotSync Completed.<br>"), 100);

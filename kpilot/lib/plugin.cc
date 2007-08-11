@@ -515,7 +515,7 @@ ConduitProxy::ConduitProxy(KPilotLink *p,
 		return false;
 	}
 
-	addSyncLogEntry(i18n("[Conduit %1]",fDesktopName));
+	addSyncLogEntry(i18n("[Conduit %1]\n",fDesktopName));
 
 	// Handle the syncDone signal properly & unload the conduit.
 	QObject::connect(fConduit,SIGNAL(syncDone(SyncAction *)),
@@ -541,15 +541,15 @@ void ConduitProxy::execDone(SyncAction *p)
 		WARNINGKPILOT << "Unknown conduit @"
 			<< (void *) p
 			<< " finished." ;
-		emit syncDone(this);
+		delayDone();
 		return;
 	}
 
 	addSyncLogEntry(CSL1("\n"),false); // Put bits of the conduit logs on separate lines
 
-	KPILOT_DELETE(p);
+	p->deleteLater();
 
-	emit syncDone(this);
+	delayDone();
 }
 
 

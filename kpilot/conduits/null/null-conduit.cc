@@ -71,7 +71,7 @@ NullConduit::~NullConduit()
 {
 	FUNCTIONSETUP;
 
-	DEBUGKPILOT << "Mode" << syncMode().name();
+	DEBUGKPILOT << "Mode: " << syncMode().name();
 
 	if ( fFailImmediately )
 	{
@@ -86,6 +86,5 @@ NullConduit::~NullConduit()
 		addSyncLogEntry(m);
 	}
 
-	emit syncDone(this);
-	return true;
+	return delayDone();
 }

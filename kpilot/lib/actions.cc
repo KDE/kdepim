@@ -54,8 +54,7 @@ WelcomeAction::WelcomeAction(KPilotLink *p) :
 	addSyncLogEntry(i18n("KPilot %1 HotSync starting...\n",
 		QString::fromLatin1(KPILOT_VERSION)));
 	emit logMessage( i18n("Using encoding %1 on the handheld.",Pilot::codecName()) );
-	emit syncDone(this);
-	return true;
+	return delayDone();
 }
 
 SorryAction::SorryAction(KPilotLink *p, const QString &s) :
@@ -90,8 +89,7 @@ CleanupAction::CleanupAction(KPilotLink *p)  : SyncAction(p, "cleanupAction")
 	{
 		deviceLink()->endSync( KPilotLink::UpdateUserInfo );
 	}
-	emit syncDone(this);
-	return true;
+	return delayDone();
 }
 
 
@@ -129,6 +127,5 @@ TestLink::TestLink(KPilotLink * p) :
 	}
 
 	emit logMessage(i18n("HotSync finished."));
-	emit syncDone(this);
-	return true;
+	return delayDone();
 }

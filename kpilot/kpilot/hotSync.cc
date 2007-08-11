@@ -653,11 +653,7 @@ FileInstallAction::~FileInstallAction()
 		((const char *) QFile::encodeName(filePath)));
 
 
-#if PILOT_LINK_NUMBER < PILOT_LINK_0_12_0
-	if (pi_file_install(f, pilotSocket(), 0) < 0)
-#else
 	if (pi_file_install(f, pilotSocket(), 0, NULL) < 0)
-#endif
 	{
 		WARNINGKPILOT << "Failed to install.";
 
