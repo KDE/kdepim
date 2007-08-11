@@ -32,12 +32,12 @@
 
 #include "plugin.h"
 #include "ui_config_page_sync.h"
+#include "ui_config_page_viewers.h"
 
 // class KPilotConfigWidget;
 class StartExitConfigWidget;
 class SyncConfigWidget;
 class DeviceConfigWidget;
-class ViewersConfigWidget;
 class BackupConfigWidget;
 
 class ConfigPage : public ConduitConfigBase
@@ -134,7 +134,7 @@ protected:
 	virtual void commit();
 
 private:
-	ViewersConfigWidget *fConfigWidget;
+	Ui::ViewersConfigWidget fConfigWidget;
 } ;
 
 #endif

@@ -395,12 +395,10 @@ ViewersConfigPage::ViewersConfigPage(QWidget * w, const char *n ) : ConfigPage( 
 {
 	FUNCTIONSETUP;
 
-	fConfigWidget = new ViewersConfigWidget( w );
-	fConfigWidget->resize(fConfigWidget->size());
-	fWidget = fConfigWidget;
+	fWidget = new QWidget(w);
+	fConfigWidget.setupUi(fWidget);
 
-#define CM(a,b) connect(fConfigWidget->a,b,this,SLOT(modified()));
-	CM(fInternalEditors, SIGNAL(toggled(bool)));
+#define CM(a,b) connect(fConfigWidget.a,b,this,SLOT(modified()));
 	CM(fUseSecret, SIGNAL(toggled(bool)));
 	CM(fAddressGroup, SIGNAL(clicked(int)));
 	CM(fUseKeyField, SIGNAL(toggled(bool)));
@@ -414,10 +412,9 @@ void ViewersConfigPage::load()
 	FUNCTIONSETUP;
 	KPilotSettings::self()->readConfig();
 
-	fConfigWidget->fInternalEditors->setChecked( false /* KPilotSettings::internalEditors() */ );
-	fConfigWidget->fUseSecret->setChecked(KPilotSettings::showSecrets());
-	fConfigWidget->fAddressGroup->setButton(KPilotSettings::addressDisplayMode());
-	fConfigWidget->fUseKeyField->setChecked(KPilotSettings::useKeyField());
+	fConfigWidget.fUseSecret->setChecked(KPilotSettings::showSecrets());
+	fConfigWidget.fAddressGroup->setButton(KPilotSettings::addressDisplayMode());
+	fConfigWidget.fUseKeyField->setChecked(KPilotSettings::useKeyField());
 	unmodified();
 }
 
@@ -425,11 +422,10 @@ void ViewersConfigPage::load()
 {
 	FUNCTIONSETUP;
 
-	KPilotSettings::setInternalEditors( fConfigWidget->fInternalEditors->isChecked());
-	KPilotSettings::setShowSecrets(fConfigWidget->fUseSecret->isChecked());
-	KPilotSettings::setAddressDisplayMode(fConfigWidget->fAddressGroup->id(
-		fConfigWidget->fAddressGroup->selected()));
-	KPilotSettings::setUseKeyField(fConfigWidget->fUseKeyField->isChecked());
+	KPilotSettings::setShowSecrets(fConfigWidget.fUseSecret->isChecked());
+	KPilotSettings::setAddressDisplayMode(fConfigWidget.fAddressGroup->id(
+		fConfigWidget.fAddressGroup->selected()));
+	KPilotSettings::setUseKeyField(fConfigWidget.fUseKeyField->isChecked());
 	KPilotConfig::updateConfigVersion();
 	KPilotSettings::self()->writeConfig();
 	unmodified();
