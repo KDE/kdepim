@@ -112,7 +112,7 @@ private:
 	bool _saveAddressBook();
 	void _getAppInfo();
 	void _setAppInfo();
-
+	void _cleanupAddreessBookPointer();
 
 
 
@@ -211,6 +211,7 @@ private:
 	*   at all.
 	*/
 	Ticket *fTicket;
+	bool fCreatedBook;
 
 	/** if we add a resource from the addressbook, track it to remove it
 	 *  later...

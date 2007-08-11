@@ -114,6 +114,7 @@ AbbrowserConduit::AbbrowserConduit(KPilotLink * o, const QStringList & a):
 		syncedIds(),
 		abiter(),
 		fTicket(0L),
+		fCreatedBook(false),
 		fBookResource(0L)
 {
 	FUNCTIONSETUP;
@@ -133,8 +134,7 @@ AbbrowserConduit::~AbbrowserConduit()
 		fTicket=0L;
 	}
 
-	DEBUGKPILOT << "Deleting addressbook";
-	KPILOT_DELETE(aBook);
+	_cleanupAddreessBookPointer();
 
 	// unused function warnings.
 	compile_time_check();
@@ -255,6 +255,7 @@ bool AbbrowserConduit::_loadAddressBook()
 		case AbbrowserSettings::eAbookResource:
 			DEBUGKPILOT<<"Loading standard addressbook";
 			aBook = StdAddressBook::self( true );
+			fCreatedBook=false;
 			break;
 		case AbbrowserSettings::eAbookFile:
 		{ // initialize the abook with the given file
@@ -290,6 +291,7 @@ bool AbbrowserConduit::_loadAddressBook()
 				stopTickle();
 				return false;
 			}
+			fCreatedBook=true;
 			break;
 		}
 		default: break;
@@ -303,7 +305,7 @@ bool AbbrowserConduit::_loadAddressBook()
 		emit logError(i18n("Unable to initialize and load the addressbook for the sync.") );
 		addSyncLogEntry(i18n("Unable to initialize and load the addressbook for the sync.") );
 		WARNINGKPILOT <<"Unable to initialize the addressbook for the sync.";
-		KPILOT_DELETE(aBook);
+		_cleanupAddreessBookPointer();
 		stopTickle();
 		return false;
 	}
@@ -315,7 +317,7 @@ bool AbbrowserConduit::_loadAddressBook()
 		WARNINGKPILOT <<"Unable to lock addressbook for writing";
 		emit logError(i18n("Unable to lock addressbook for writing.  Cannot sync!"));
 		addSyncLogEntry(i18n("Unable to lock addressbook for writing.  Cannot sync!"));
-		KPILOT_DELETE(aBook);
+		_cleanupAddreessBookPointer();
 		stopTickle();
 		return false;
 	}
@@ -411,7 +413,18 @@ void AbbrowserConduit::_setAppInfo()
 	if (fLocalDatabase) fAddressAppInfo->writeTo(fLocalDatabase);
 }
 
-
+void AbbrowserConduit::_cleanupAddreessBookPointer()
+{
+        if (fCreatedBook)
+        {
+                KPILOT_DELETE(aBook);
+                fCreatedBook=false;
+        }
+        else
+        {
+                aBook=0L;
+        }
+}
 
 
 
