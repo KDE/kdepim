@@ -5,7 +5,7 @@ Type=Service
 ServiceTypes=KCModule
 DocPath=kaddressbook/preferences.html
 
-X-KDE-Library=kabconfig
+X-KDE-Library=kcm_kabconfig
 X-KDE-FactoryName=kabconfig
 X-KDE-ParentApp=kaddressbook
 X-KDE-ParentComponents=kaddressbook,kontact_kaddressbookplugin

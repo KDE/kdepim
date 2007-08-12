@@ -6,7 +6,7 @@ ServiceTypes=KCModule
 DocPath=kleopatra/configuration.html#configuration-directory-services
 
 X-KDE-ModuleType=Library
-X-KDE-Library=kleopatra
+X-KDE-Library=kcm_kleopatra
 X-KDE-FactoryName=kleopatra_config_dirserv
 X-KDE-HasReadOnlyMode=false
 X-KDE-ParentApp=kleopatra
