@@ -31,9 +31,7 @@
 */
 
 #include "keylistcontroller.h"
-
-using namespace Kleo;
-//using namespace GpgME;
+#include "commands/detailscommand.h"
 
 #include <models/keylistmodel.h>
 
@@ -42,9 +40,13 @@ using namespace Kleo;
 #include <QTreeView>
 #include <QTableView>
 #include <QPointer>
+#include <QItemSelectionModel>
 
 #include <algorithm>
 #include <cassert>
+
+using namespace Kleo;
+//using namespace GpgME;
 
 static const QHeaderView::ResizeMode resize_modes[Kleo::AbstractKeyListModel::NumColumns] = {
     QHeaderView::Stretch,          // Name
@@ -57,9 +59,9 @@ static const QHeaderView::ResizeMode resize_modes[Kleo::AbstractKeyListModel::Nu
 
 static QHeaderView * get_header_view( QAbstractItemView * view ) {
     if ( const QTableView * const table = qobject_cast<QTableView*>( view ) )
-	return table->horizontalHeader();
+        return table->horizontalHeader();
     if ( const QTreeView * const tree = qobject_cast<QTreeView*>( view ) )
-	return tree->header();
+        return tree->header();
     return 0;
 }
 
@@ -71,19 +73,29 @@ public:
     ~Private();
 
     void connectView( QAbstractItemView * view );
+    void connectCommand( Command * cmd );
     void connectModel();
+    void addCommand( Command * cmd ) {
+        connectCommand( cmd );
+        commands.push_back( cmd );
+        std::inplace_merge( commands.begin(), commands.end() - 1, commands.end() );
+    }
+
 
 public:
     void slotDestroyed( QObject * o ) {
-	views.erase( std::remove( views.begin(), views.end(), o ), views.end() );
+        views.erase( std::remove( views.begin(), views.end(), o ), views.end() );
+	commands.erase( std::remove( commands.begin(), commands.end(), o ), commands.end() );
     }
     void slotDoubleClicked( const QModelIndex & idx );
     void slotActivated( const QModelIndex & idx );
     void slotSelectionChanged( const QItemSelection & old, const QItemSelection & new_ );
     void slotContextMenu( const QPoint & pos );
+    void slotCommandFinished();
 
 private:
     std::vector<QAbstractItemView*> views;
+    std::vector<Command*> commands;
     QPointer<AbstractKeyListModel> model;
 };
 
@@ -91,6 +103,7 @@ private:
 KeyListController::Private::Private( KeyListController * qq )
     : q( qq ),
       views(),
+      commands(),
       model( 0 )
 {
 
@@ -110,7 +123,7 @@ KeyListController::~KeyListController() {}
 
 void KeyListController::addView( QAbstractItemView * view ) {
     if ( view && std::binary_search( d->views.begin(), d->views.end(), view ) )
-	return;
+        return;
 
     // merge 'view' in:
     d->views.push_back( view );
@@ -121,7 +134,7 @@ void KeyListController::addView( QAbstractItemView * view ) {
 
 void KeyListController::removeView( QAbstractItemView * view ) {
     if ( !view )
-	return;
+        return;
     view->disconnect( this );
     d->views.erase( std::remove( d->views.begin(), d->views.end(), view ), d->views.end() );
 }
@@ -132,17 +145,17 @@ std::vector<QAbstractItemView*> KeyListController::views() const {
 
 void KeyListController::setModel( AbstractKeyListModel * model ) {
     if ( model == d->model )
-	return;
+        return;
 
     if ( d->model )
-	d->model->disconnect( this );
+        d->model->disconnect( this );
 
     d->model = model;
     
     if ( model )
-	d->connectModel();
+        d->connectModel();
 }
-    
+
 AbstractKeyListModel * KeyListController::model() const {
     return d->model;
 }
@@ -151,16 +164,18 @@ AbstractKeyListModel * KeyListController::model() const {
 void KeyListController::Private::connectView( QAbstractItemView * view ) {
     assert( std::binary_search( views.begin(), views.end(), view ) );
 
+    connect( view, SIGNAL(destroyed(QObject*)),
+             q, SLOT(slotDestroyed(QObject*)) );
     connect( view, SIGNAL(doubleClicked(QModelIndex)),
-	     q, SLOT(slotDoubleClicked(QModelIndex)) );
+             q, SLOT(slotDoubleClicked(QModelIndex)) );
     connect( view, SIGNAL(activated(QModelIndex)),
-	     q, SLOT(slotActivated(QModelIndex)) );
+             q, SLOT(slotActivated(QModelIndex)) );
     connect( view->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
-	     q, SLOT(slotSelectionChanged(QItemSelection,QItemSelection)) );
+             q, SLOT(slotSelectionChanged(QItemSelection,QItemSelection)) );
 
     view->setContextMenuPolicy( Qt::CustomContextMenu );
     connect( view, SIGNAL(customContextMenuRequested(QPoint)),
-	     q, SLOT(slotContextMenu(QPoint)) );
+             q, SLOT(slotContextMenu(QPoint)) );
 
     view->setSelectionBehavior( QAbstractItemView::SelectRows );
     view->setSelectionMode( QAbstractItemView::ExtendedSelection );
@@ -168,33 +183,64 @@ void KeyListController::Private::connectView( QAbstractItemView * view ) {
     view->setProperty( "allColumnsShowFocus", true );
 
     if ( QHeaderView * const hv = get_header_view( view ) )
-	for ( int i = 0, end = std::min<int>( hv->count(), AbstractKeyListModel::NumColumns ) ; i < end ; ++i )
-	    hv->setResizeMode( i, resize_modes[i] );
+        for ( int i = 0, end = std::min<int>( hv->count(), AbstractKeyListModel::NumColumns ) ; i < end ; ++i )
+            hv->setResizeMode( i, resize_modes[i] );
+}
 
-    
+void KeyListController::Private::connectCommand( Command * cmd ) {
+    if ( !cmd )
+        return;
+    connect( cmd, SIGNAL(destroyed(QObject*)), q, SLOT(slotDestroyed(QObject*)) );
+    connect( cmd, SIGNAL(finished()), q, SLOT(slotCommandFinished()) );
 }
 
 
 void KeyListController::Private::connectModel() {
     if ( !model )
-	return;
+        return;
+    // ### anything we want from the model??
 }
 
 
 void KeyListController::Private::slotDoubleClicked( const QModelIndex & idx ) {
+    QAbstractItemView * const view = qobject_cast<QAbstractItemView*>( q->sender() );
+    if ( !view || !std::binary_search( views.begin(), views.end(), view ) )
+	return;
 
+    DetailsCommand * const c = new DetailsCommand( q );
+    addCommand( c );
+
+    c->setIndex( idx );
+    c->setView( view );
+    c->start();
 }
 
 void KeyListController::Private::slotActivated( const QModelIndex & idx ) {
+    QAbstractItemView * const view = qobject_cast<QAbstractItemView*>( q->sender() );
+    if ( !view || !std::binary_search( views.begin(), views.end(), view ) )
+	return;
     
 }
 
 void KeyListController::Private::slotSelectionChanged( const QItemSelection & old, const QItemSelection & new_ ) {
-
+    const QItemSelectionModel * const sm = qobject_cast<QItemSelectionModel*>( q->sender() );
+    if ( !sm )
+	return;
+    // ### enable/disable actions
 }
 
 void KeyListController::Private::slotContextMenu( const QPoint & p ) {
+    QAbstractItemView * const view = qobject_cast<QAbstractItemView*>( q->sender() );
+    if ( !view || !std::binary_search( views.begin(), views.end(), view ) )
+	return;
     
+}
+
+void KeyListController::Private::slotCommandFinished() {
+    Command * const cmd = qobject_cast<Command*>( q->sender() );
+    if ( !cmd || !std::binary_search( commands.begin(), commands.end(), cmd ) )
+        return;
+    // ### anything here?
 }
 
 #include "moc_keylistcontroller.cpp"

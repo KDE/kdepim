@@ -67,7 +67,8 @@ namespace Kleo {
         Q_PRIVATE_SLOT( d, void slotDoubleClicked(QModelIndex) )
         Q_PRIVATE_SLOT( d, void slotActivated(QModelIndex) )
         Q_PRIVATE_SLOT( d, void slotSelectionChanged(QItemSelection,QItemSelection) )
-        Q_PRIVATE_SLOT( d, void slotContextMenu(QPoint))
+        Q_PRIVATE_SLOT( d, void slotContextMenu(QPoint) )
+        Q_PRIVATE_SLOT( d, void slotCommandFinished() )
     };
 
 }
