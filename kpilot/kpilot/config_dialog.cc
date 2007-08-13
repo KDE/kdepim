@@ -619,7 +619,7 @@ void ConduitConfigWidget::save()
 {
 	FUNCTIONSETUP;
 
-	// Only new-style conduits and the general setup have changes that need to be commited
+	// Only new-style conduits and the general setup have changes that need to be committed
 	// old-style conduits have their own config dlg which commits them itself
 	if ( fStack->currentIndex ()==NEW_CONDUIT )
 	{
@@ -658,7 +658,7 @@ void ConduitConfigWidget::load()
 	}
 
 
-	// Only new-style conduits and the general setup have changes that need to be commited
+	// Only new-style conduits and the general setup have changes that need to be committed
 	// old-style conduits have their own config dlg which commits them itself
 	if ( fStack->currentIndex ()==NEW_CONDUIT )
 	{

@@ -415,7 +415,7 @@ void RecordConduit::firstSync()
 		{
 			// TODO: Make this configurable or something, maybe pcRecord should
 			// overide or user should be asked which record should be used. In this
-			// case it might even be usefull to let the user select per field which
+			// case it might even be useful to let the user select per field which
 			// record should be used. For now the handheld record overides.
 			
 			// Overide pcRecord values with hhRecord values.

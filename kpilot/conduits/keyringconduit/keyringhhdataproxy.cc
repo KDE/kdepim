@@ -173,7 +173,7 @@ bool KeyringHHDataProxy::createDataStore()
 		return false;
 	}
 	
-	// No usefull data for the zero record.
+	// No useful data for the zero record.
 	if( fDesKey.isEmpty() )
 	{
 		DEBUGKPILOT << "No deskey object.";

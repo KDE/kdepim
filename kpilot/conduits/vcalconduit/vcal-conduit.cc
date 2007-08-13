@@ -135,7 +135,7 @@ KCal::Incidence *VCalConduitPrivate::getNextIncidence()
 
 /** Find the next incidence in the list which ddoes not have the SYNCNONE flag set. The
  *  current position is always stored in the iteratoor fAllEventsIterator, so we can just
- *  start from there. Only if reading==false, we haven't yet started goind through the
+ *  start from there. Only if reading==false, we haven't yet started going through the
  *  incidents, so start at fAllEvents.begin() in that case */
 KCal::Incidence *VCalConduitPrivate::getNextModifiedIncidence()
 {

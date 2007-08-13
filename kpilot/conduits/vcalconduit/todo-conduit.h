@@ -8,7 +8,7 @@
 ** Copyright (C) 1998 Herwin-Jan Steehouwer
 **
 ** This file is part of the todo conduit, a conduit for KPilot that
-** synchronises the Pilot's todo application with the outside world,
+** synchronizes the Pilot's todo application with the outside world,
 ** which currently means KOrganizer.
 */
 

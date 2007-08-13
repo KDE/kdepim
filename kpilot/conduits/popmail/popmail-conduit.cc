@@ -4,7 +4,7 @@
 ** Copyright (C) 1999,2000 Michael Kropfberger
 **
 ** This file is part of the popmail conduit, a conduit for KPilot that
-** synchronises the Pilot's email application with the outside world,
+** synchronizes the Pilot's email application with the outside world,
 ** which currently means:
 **	-- sendmail or SMTP for outgoing mail
 **	-- POP or mbox for incoming mail

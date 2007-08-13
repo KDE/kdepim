@@ -622,14 +622,14 @@ QString Memofiles::filename(PilotMemo * memo)
 		return filename;
 	}
 
-	int uniq = 2;
+	int memonameindex = 2;
 	QString newfilename;
 
 	// try to find a good filename, but only do this 20 times at the most.
 	// if our user has 20 memos with the same filename, he/she is asking
 	// for trouble.
-	while (NULL != memofile && uniq <=20) {
-		newfilename = QString(filename + CSL1(".") + QString::number(uniq++) );
+	while (NULL != memofile && memonameindex <=20) {
+		newfilename = QString(filename + CSL1(".") + QString::number(memonameindex++) );
 		memofile = find(category, newfilename);
 	}
 

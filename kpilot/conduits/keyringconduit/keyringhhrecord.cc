@@ -58,7 +58,7 @@ bool KeyringHHRecord::equal( const Record* other ) const
 {
 	FUNCTIONSETUP;
 	
-	// Do not compare last synced date, that's unecessary.
+	// Do not compare last synced date, that's unnecessary.
 	const KeyringHHRecord *krOther = dynamic_cast<const KeyringHHRecord*>( other );
 	
 	if( krOther )

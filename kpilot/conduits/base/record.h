@@ -72,7 +72,7 @@ public:
 	virtual QString toString() const = 0;
 	
 	/**
-	 * Returns wheter or not the current record is equal to @p other. Implementing 
+	 * Returns whether or not the current record is equal to @p other. Implementing 
 	 * conduits should add support for both implementing records for this. This
 	 * means that if pcRec->equal( hhRec ) is true, then also hhRec->equal( pcRec )
 	 * should be true.
