@@ -1,8 +1,13 @@
+#!/bin/bash
+
+find "$@" -name '*.h' -o -name '*.cpp' | while read FILE; do
+    if grep -qiE "Copyright \(C\) 2001-[0-9]{4} Klar.*lvdalens Datakonsult AB" "$FILE" ; then continue; fi
+    cat <<EOF > "$FILE".tmp
 /* -*- mode: c++; c-basic-offset:4 -*-
-    commands/command.h
+    $FILE
 
     This file is part of Kleopatra, the KDE keymanager
-    Copyright (c) 2007 Klarälvdalens Datakonsult AB
+    Copyright (c) $(date +%Y) Klarälvdalens Datakonsult AB
 
     Kleopatra is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -30,50 +35,7 @@
     your version.
 */
 
-#ifndef __KLEOPATRA_COMMANDS_COMMAND_H__
-#define __KLEOPATRA_COMMANDS_COMMAND_H__
-
-#include <QObject>
-
-#include <utils/pimpl_ptr.h>
-
-class QModelIndex;
-template <typename T> class QList;
-class QAbstractItemView;
-
-namespace Kleo {
-
-    class KeyListController;
-
-    class Command : public QObject {
-        Q_OBJECT
-    public:
-        explicit Command( KeyListController * parent );
-        ~Command();
-
-        void setView( QAbstractItemView * view );
-        void setIndex( const QModelIndex & idx );
-        void setIndexes( const QList<QModelIndex> & idx );
-
-    public Q_SLOTS:
-        void start();
-	void cancel();
-
-    Q_SIGNALS:
-        void finished();
-	void canceled();
-
-    private:
-        virtual void doStart() = 0;
-	virtual void doCancel() = 0;
-
-    protected:
-        class Private;
-        kdtools::pimpl_ptr<Private> d;
-    protected:
-        explicit Command( KeyListController * parent, Private * pp );
-    };
-
-}
-
-#endif /* __KLEOPATRA_COMMANDS_COMMAND_H__ */
+EOF
+    cat "$FILE" >> "$FILE".tmp
+    mv "$FILE".tmp "$FILE"
+done
