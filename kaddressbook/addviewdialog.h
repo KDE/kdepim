@@ -24,14 +24,13 @@
 #ifndef ADDVIEWDIALOG_H
 #define ADDVIEWDIALOG_H
 
-#include <kdialog.h>
-#include <q3dict.h>
-#include <QString>
+#include <QHash>
 
-class Q3ButtonGroup;
+#include <KDialog>
+
+class QButtonGroup;
 class QLineEdit;
 class ViewFactory;
-
 
 /**
   Modal dialog used for adding a new view. The dialog asks for the name of
@@ -43,7 +42,7 @@ class AddViewDialog : public KDialog
   Q_OBJECT
 
   public:
-    AddViewDialog( Q3Dict<ViewFactory> *viewFactoryDict, QWidget *parent,
+    AddViewDialog( QHash<QString, ViewFactory*> *viewFactoryDict, QWidget *parent,
                    const char *name = 0 );
     ~AddViewDialog();
 
@@ -63,9 +62,9 @@ class AddViewDialog : public KDialog
     void textChanged( const QString &text );
 
   private:
-    Q3Dict<ViewFactory> *mViewFactoryDict;
+    QHash<QString, ViewFactory*> *mViewFactoryDict;
     QLineEdit *mViewNameEdit;
-    Q3ButtonGroup *mTypeGroup;
+    QButtonGroup *mTypeGroup;
 
     int mTypeId;
 };

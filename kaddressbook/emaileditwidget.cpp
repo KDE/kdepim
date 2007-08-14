@@ -32,7 +32,7 @@
 
 //Added by qt3to4:
 #include <QGridLayout>
-#include <Q3ListBox>
+#include <QListWidget>
 #include <kacceleratormanager.h>
 #include <kconfig.h>
 #include <kcombobox.h>
@@ -57,31 +57,24 @@ class EmailValidator : public QRegExpValidator
     }
 };
 
-class EmailItem : public Q3ListBoxText
+class EmailItem : public QListWidgetItem
 {
   public:
-    EmailItem( Q3ListBox *parent, const QString &text, bool preferred )
-      : Q3ListBoxText( parent, text ), mPreferred( preferred )
-    {}
-
-    void setPreferred( bool preferred ) { mPreferred = preferred; }
-    bool preferred() const { return mPreferred; }
-
-    void setText( const QString &text )
+    EmailItem( const QString &text, QListWidget *parent, bool preferred )
+      : QListWidgetItem( text, parent ), mPreferred( preferred )
     {
-      Q3ListBoxText::setText( text );
+      format();
     }
 
-  protected:
-    virtual void paint( QPainter *p )
-    {
-      if ( mPreferred ) {
-        QFont font = p->font();
-        font.setBold( true );
-        p->setFont( font );
-      }
+    void setPreferred( bool preferred ) { mPreferred = preferred; format(); }
+    bool preferred() const { return mPreferred; }
 
-      Q3ListBoxText::paint( p );
+  private:
+    void format()
+    {
+      QFont f = font();
+      f.setBold( mPreferred );
+      setFont( f );
     }
 
   private:
@@ -185,13 +178,14 @@ EmailEditDialog::EmailEditDialog( const QStringList &list, QWidget *parent,
   topLayout->setSpacing( spacingHint() );
   topLayout->setMargin( 0 );
 
-  mEmailListBox = new Q3ListBox( page );
+  mEmailListBox = new QListWidget( page );
+  mEmailListBox->setSelectionMode( QAbstractItemView::SingleSelection );
 
   // Make sure there is room for the scrollbar
   mEmailListBox->setMinimumHeight( mEmailListBox->sizeHint().height() + 30 );
-  connect( mEmailListBox, SIGNAL( highlighted( int ) ),
-           SLOT( selectionChanged( int ) ) );
-  connect( mEmailListBox, SIGNAL( selected( int ) ),
+  connect( mEmailListBox, SIGNAL( currentItemChanged( QListWidgetItem *, QListWidgetItem * ) ),
+           SLOT( selectionChanged() ) );
+  connect( mEmailListBox, SIGNAL( itemDoubleClicked( QListWidgetItem * ) ),
            SLOT( edit() ) );
   topLayout->addWidget( mEmailListBox, 0, 0, 4, 2 );
 
@@ -200,14 +194,17 @@ EmailEditDialog::EmailEditDialog( const QStringList &list, QWidget *parent,
   topLayout->addWidget( mAddButton, 0, 2 );
 
   mEditButton = new QPushButton( i18n( "Edit..." ), page );
+  mEditButton->setEnabled( false );
   connect( mEditButton, SIGNAL( clicked() ), SLOT( edit() ) );
   topLayout->addWidget( mEditButton, 1, 2 );
 
   mRemoveButton = new QPushButton( i18n( "Remove" ), page );
+  mRemoveButton->setEnabled( false );
   connect( mRemoveButton, SIGNAL( clicked() ), SLOT( remove() ) );
   topLayout->addWidget( mRemoveButton, 2, 2 );
 
   mStandardButton = new QPushButton( i18n( "Set Standard" ), page );
+  mStandardButton->setEnabled( false );
   connect( mStandardButton, SIGNAL( clicked() ), SLOT( standard() ) );
   topLayout->addWidget( mStandardButton, 3, 2 );
 
@@ -222,12 +219,11 @@ EmailEditDialog::EmailEditDialog( const QStringList &list, QWidget *parent,
   QStringList::ConstIterator it;
   bool preferred = true;
   for ( it = items.begin(); it != items.end(); ++it ) {
-    new EmailItem( mEmailListBox, *it, preferred );
+    new EmailItem( *it, mEmailListBox, preferred );
     preferred = false;
   }
 
   // set default state
-  selectionChanged( -1 );
   KAcceleratorManager::manage( this );
 
   setInitialSize( QSize( 400, 200 ) );
@@ -241,7 +237,7 @@ QStringList EmailEditDialog::emails() const
 {
   QStringList emails;
 
-  for ( uint i = 0; i < mEmailListBox->count(); ++i ) {
+  for ( int i = 0; i < mEmailListBox->count(); ++i ) {
     EmailItem *item = static_cast<EmailItem*>( mEmailListBox->item( i ) );
     if ( item->preferred() )
       emails.prepend( item->text() );
@@ -264,12 +260,12 @@ void EmailEditDialog::add()
     return;
 
   // check if item already available, ignore if so...
-  for ( uint i = 0; i < mEmailListBox->count(); ++i ) {
-    if ( mEmailListBox->text( i ) == email )
+  for ( int i = 0; i < mEmailListBox->count(); ++i ) {
+    if ( mEmailListBox->item( i )->text() == email )
       return;
   }
 
-  new EmailItem( mEmailListBox, email, (mEmailListBox->count() == 0) );
+  new EmailItem( email, mEmailListBox, (mEmailListBox->count() == 0) );
 
   mChanged = true;
 }
@@ -279,40 +275,39 @@ void EmailEditDialog::edit()
   EmailValidator *validator = new EmailValidator;
   bool ok = false;
 
-  int editPos = mEmailListBox->currentItem();
+  QListWidgetItem *item = mEmailListBox->currentItem();
 
   QString email = KInputDialog::getText( i18n( "Edit Email" ), i18n( "Email:" ),
-                                         mEmailListBox->text( editPos ), &ok, this,
+                                         item->text(), &ok, this,
                                          validator );
 
   if ( !ok )
     return;
 
   // check if item already available, ignore if so...
-  for ( uint i = 0; i < mEmailListBox->count(); ++i ) {
-    if ( mEmailListBox->text( i ) == email )
+  for ( int i = 0; i < mEmailListBox->count(); ++i ) {
+    if ( mEmailListBox->item( i )->text() == email )
       return;
   }
 
-  EmailItem *item = static_cast<EmailItem*>( mEmailListBox->item( editPos ) );
-  item->setText( email );
-  mEmailListBox->triggerUpdate( true );
+  EmailItem *eitem = static_cast<EmailItem*>( item );
+  eitem->setText( email );
 
   mChanged = true;
 }
 
 void EmailEditDialog::remove()
 {
-  QString address = mEmailListBox->currentText();
+  QString address = mEmailListBox->currentItem()->text();
 
   QString text = i18n( "<qt>Are you sure that you want to remove the email address <b>%1</b>?</qt>", address );
   QString caption = i18n( "Confirm Remove" );
 
   if ( KMessageBox::warningContinueCancel( this, text, caption, KGuiItem( i18n( "&Delete" ), "edit-delete" ) ) == KMessageBox::Continue ) {
-    EmailItem *item = static_cast<EmailItem*>( mEmailListBox->item( mEmailListBox->currentItem() ) );
+    EmailItem *item = static_cast<EmailItem*>( mEmailListBox->currentItem() );
 
     bool preferred = item->preferred();
-    mEmailListBox->removeItem( mEmailListBox->currentItem() );
+    mEmailListBox->takeItem( mEmailListBox->currentRow() );
     if ( preferred ) {
       item = dynamic_cast<EmailItem*>( mEmailListBox->item( 0 ) );
       if ( item )
@@ -330,21 +325,20 @@ bool EmailEditDialog::changed() const
 
 void EmailEditDialog::standard()
 {
-  for ( uint i = 0; i < mEmailListBox->count(); ++i ) {
+  for ( int i = 0; i < mEmailListBox->count(); ++i ) {
     EmailItem *item = static_cast<EmailItem*>( mEmailListBox->item( i ) );
-    if ( (int)i == mEmailListBox->currentItem() )
+    if ( i == mEmailListBox->currentRow() )
       item->setPreferred( true );
     else
       item->setPreferred( false );
   }
 
-  mEmailListBox->triggerUpdate( true );
-
   mChanged = true;
 }
 
-void EmailEditDialog::selectionChanged( int index )
+void EmailEditDialog::selectionChanged()
 {
+  int index = mEmailListBox->currentRow();
   bool value = ( index >= 0 ); // An item is selected
 
   mRemoveButton->setEnabled( value );

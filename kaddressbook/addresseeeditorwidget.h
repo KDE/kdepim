@@ -25,7 +25,7 @@
 #define ADDRESSEEEDITORWIDGET_H
 
 #include <QDateTime>
-#include <Q3Dict>
+#include <QHash>
 #include <kabc/addressee.h>
 #include <kdialog.h>
 
@@ -154,7 +154,7 @@ class AddresseeEditorWidget : public AddresseeEditorBase
     KDateEdit *mAnniversaryPicker;
     QTextEdit *mNoteEdit;
 
-    Q3Dict<ContactEditorTabPage> mTabPages;
+    QHash<QString, ContactEditorTabPage*> mTabPages;
 };
 
 #endif

@@ -21,21 +21,21 @@
     without including the source code for Qt in the source distribution.
 */
 
-#include <q3buttongroup.h>
+#include <QButtonGroup>
+#include <QGridLayout>
+#include <QGroupBox>
 #include <QLabel>
 #include <QLayout>
 #include <QLineEdit>
 #include <QRadioButton>
-//Added by qt3to4:
-#include <QGridLayout>
 
-#include <klocale.h>
+#include <KLocale>
 
 #include "kaddressbookview.h"
 
 #include "addviewdialog.h"
 
-AddViewDialog::AddViewDialog( Q3Dict<ViewFactory> *viewFactoryDict,
+AddViewDialog::AddViewDialog( QHash<QString, ViewFactory*> *viewFactoryDict,
                               QWidget *parent, const char *name )
   : KDialog( parent),
    mViewFactoryDict( viewFactoryDict )
@@ -62,21 +62,26 @@ AddViewDialog::AddViewDialog( Q3Dict<ViewFactory> *viewFactoryDict,
            SLOT( textChanged( const QString& ) ) );
   layout->addWidget( mViewNameEdit, 0, 1 );
 
-  mTypeGroup = new Q3ButtonGroup( 0, Qt::Horizontal, i18n( "View Type" ), page );
+  QGroupBox *group = new QGroupBox( i18n( "View Type" ), page );
+  mTypeGroup = new QButtonGroup;
   mTypeGroup->setExclusive( true );
-  connect( mTypeGroup, SIGNAL( clicked( int ) ), this, SLOT( clicked( int ) ) );
-  layout->addWidget( mTypeGroup, 1, 0, 1, 2 );
+  connect( mTypeGroup, SIGNAL( buttonClicked( int ) ), 
+           this, SLOT( clicked( int ) ) );
+  layout->addWidget( group, 1, 0, 1, 2 );
   QGridLayout *groupLayout = new QGridLayout();
-  mTypeGroup->layout()->addItem( groupLayout );
-  groupLayout->setSpacing( spacingHint() );
+  groupLayout->setMargin( KDialog::marginHint() );
+  groupLayout->setSpacing( KDialog::spacingHint() );
+  group->setLayout( groupLayout );
 
   int row = 0;
-  Q3DictIterator<ViewFactory> iter( *mViewFactoryDict );
-  for ( iter.toFirst(); iter.current(); ++iter ) {
-    QRadioButton *button = new QRadioButton( i18n((*iter)->type().toUtf8()),
-                                             mTypeGroup );
-    button->setObjectName( (*iter)->type().toLatin1() );
-    label = new QLabel( (*iter)->description(), mTypeGroup );
+  QHashIterator<QString, ViewFactory*> iter( *mViewFactoryDict );
+  while ( iter.hasNext() ) {
+    iter.next();
+    QRadioButton *button = new QRadioButton( i18n( iter.value()->type().toUtf8() ),
+                                             group );
+    button->setObjectName( iter.value()->type().toLatin1() );
+    mTypeGroup->addButton( button, row );
+    label = new QLabel( iter.value()->description(), group );
     label->setWordWrap( true );
 
     groupLayout->addWidget( button, row, 0, Qt::AlignTop );
@@ -85,7 +90,7 @@ AddViewDialog::AddViewDialog( Q3Dict<ViewFactory> *viewFactoryDict,
     row++;
   }
 
-  mTypeGroup->setButton( 0 );
+  mTypeGroup->button( 0 )->setChecked( true );
   mViewNameEdit->setFocus();
   enableButton( KDialog::Ok, false );
 }
@@ -102,7 +107,7 @@ QString AddViewDialog::viewName()const
 QString AddViewDialog::viewType()const
 {
   // we missuse the name property for storing the type
-  return mTypeGroup->find( mTypeId )->objectName();
+  return mTypeGroup->button( mTypeId )->objectName();
 }
 
 void AddViewDialog::clicked( int id )

@@ -25,12 +25,10 @@
 
 #include <QCheckBox>
 #include <QComboBox>
-#include <q3datetimeedit.h>
 #include <QLayout>
 #include <QObject>
 #include <QSpinBox>
 #include <QRegExp>
-#include <q3textedit.h>
 //Added by qt3to4:
 #include <QVBoxLayout>
 

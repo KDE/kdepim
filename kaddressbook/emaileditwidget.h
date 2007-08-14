@@ -27,6 +27,7 @@
 #include <kabc/addressee.h>
 #include <kdialog.h>
 
+class QListWidget;
 
 class KLineEdit;
 
@@ -77,10 +78,10 @@ class EmailEditDialog : public KDialog
     void edit();
     void remove();
     void standard();
-    void selectionChanged( int );
+    void selectionChanged();
 
   private:
-    Q3ListBox *mEmailListBox;
+    QListWidget *mEmailListBox;
     QPushButton *mAddButton;
     QPushButton *mRemoveButton;
     QPushButton *mEditButton;

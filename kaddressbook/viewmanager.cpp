@@ -61,8 +61,6 @@ ViewManager::ViewManager( KAB::Core *core, QWidget *parent, const char *name )
   initGUI();
   initActions();
 
-  mViewDict.setAutoDelete( true );
-
   createViewFactories();
 }
 
@@ -86,10 +84,11 @@ void ViewManager::restoreSettings()
 
   // Tell the views to reread their config, since they may have
   // been modified by global settings
-  Q3DictIterator<KAddressBookView> it( mViewDict );
-  for ( it.toFirst(); it.current(); ++it ) {
-    KConfigGroup group( mCore->config(), it.currentKey() );
-    it.current()->readConfig( group );
+  QHashIterator<QString, KAddressBookView* > it( mViewDict );
+  while ( it.hasNext() ) {
+    it.next();
+    KConfigGroup group( mCore->config(), it.key() );
+    it.value()->readConfig( group );
   }
 
   setActiveView( activeViewName );
@@ -99,10 +98,11 @@ void ViewManager::restoreSettings()
 
 void ViewManager::saveSettings()
 {
-  Q3DictIterator<KAddressBookView> it( mViewDict );
-  for ( it.toFirst(); it.current(); ++it ) {
-    KConfigGroup group( mCore->config(), it.currentKey() );
-    (*it)->writeConfig( group );
+  QHashIterator<QString, KAddressBookView*> it( mViewDict );
+  while ( it.hasNext() ) {
+    it.next();
+    KConfigGroup group( mCore->config(), it.key() );
+    it.value()->writeConfig( group );
   }
 
   Filter::save( mCore->config(), "Filter", mFilterList );
@@ -183,7 +183,11 @@ void ViewManager::setFirstSelected( bool selected )
 
 void ViewManager::unloadViews()
 {
-  mViewDict.clear();
+  while ( mViewDict.count() ) {
+    KAddressBookView *view = *(mViewDict.begin());
+    mViewDict.remove( mViewDict.key( view ) );
+    delete view;
+  }
   mActiveView = 0;
 }
 
@@ -200,17 +204,17 @@ void ViewManager::setActiveView( const QString &name )
   // we can't find it, it means it hasn't been instantiated, so we will
   // create it on demand.
 
-  view = mViewDict.find( name );
+  view = mViewDict.value( name );
 
   // Check if we found the view. If we didn't, then we need to create it
-  if ( view == 0 ) {
+  if ( !view ) {
     KConfig *config = mCore->config();
     KConfigGroup group( config, name );
     QString type = group.readEntry( "Type", "Table" );
 
     kDebug(5720) <<"ViewManager::setActiveView: creating view -" << name;
 
-    ViewFactory *factory = mViewFactoryDict.find( type );
+    ViewFactory *factory = mViewFactoryDict.value( type );
     if ( factory )
       view = factory->view( mCore, mViewWidgetStack );
 
@@ -270,7 +274,7 @@ void ViewManager::editView()
   if ( !mActiveView )
     return;
 
-  ViewFactory *factory = mViewFactoryDict.find( mActiveView->type() );
+  ViewFactory *factory = mViewFactoryDict.value( mActiveView->type() );
   ViewConfigureWidget *wdg = 0;
 
   if ( factory ) {
@@ -322,7 +326,9 @@ void ViewManager::deleteView()
     KConfig *config = mCore->config();
     config->deleteGroup( mActiveView->windowTitle() );
 
+    KAddressBookView *view = mViewDict[ mActiveView->windowTitle() ];
     mViewDict.remove( mActiveView->windowTitle() );
+    delete view;
     mActiveView = 0;
 
     // we are in an invalid state now, but that should be fixed after

@@ -25,13 +25,11 @@
 
 #include <QLabel>
 #include <QLayout>
-#include <q3listbox.h>
 #include <QPushButton>
 #include <QTabWidget>
 #include <QTextEdit>
 #include <QToolButton>
 
-//Added by qt3to4:
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 #include <QGridLayout>
@@ -469,9 +467,11 @@ void AddresseeEditorWidget::setupAdditionalTabs()
   }
 
   // query the layout update
-  Q3DictIterator<ContactEditorTabPage> it( mTabPages );
-  for ( ; it.current(); ++it )
-    it.current()->updateLayout();
+  QHashIterator<QString, ContactEditorTabPage*> it( mTabPages );
+  while ( it.hasNext() ) {
+    it.next();
+    it.value()->updateLayout();
+  }
 }
 
 void AddresseeEditorWidget::setupCustomFieldsTabs()
@@ -565,9 +565,11 @@ void AddresseeEditorWidget::load()
   mProfessionEdit->setText( mAddressee.custom( "KADDRESSBOOK", "X-Profession" ) );
   mTitleEdit->setText( mAddressee.title() );
 
-  Q3DictIterator<ContactEditorTabPage> it( mTabPages );
-  for ( ; it.current(); ++it )
-    it.current()->loadContact( &mAddressee );
+  QHashIterator<QString, ContactEditorTabPage*> it( mTabPages );
+  while ( it.hasNext() ) {
+    it.next();
+    it.value()->loadContact( &mAddressee );
+  }
 
   blockSignals( block );
   mBlockSignals = false;
@@ -666,9 +668,11 @@ void AddresseeEditorWidget::save()
         ++addressIter )
     mAddressee.insertAddress( *addressIter );
 
-  Q3DictIterator<ContactEditorTabPage> it( mTabPages );
-  for ( ; it.current(); ++it )
-    it.current()->storeContact( &mAddressee );
+  QHashIterator<QString, ContactEditorTabPage*> it( mTabPages );
+  while ( it.hasNext() ) {
+    it.next();
+    it.value()->storeContact( &mAddressee );
+  }
 
   mDirty = false;
 }
@@ -882,9 +886,11 @@ void AddresseeEditorWidget::setReadOnly( bool readOnly )
   mAnniversaryPicker->setEnabled( !readOnly );
   mNoteEdit->setReadOnly( mReadOnly );
 
-  Q3DictIterator<ContactEditorTabPage> it( mTabPages );
-  for ( ; it.current(); ++it )
-    it.current()->setReadOnly( readOnly );
+  QHashIterator<QString, ContactEditorTabPage*> it( mTabPages );
+  while ( it.hasNext() ) {
+    it.next();
+    it.value()->setReadOnly( readOnly );
+  }
 }
 
 #include "addresseeeditorwidget.moc"

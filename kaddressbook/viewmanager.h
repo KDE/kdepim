@@ -24,10 +24,10 @@
 #ifndef VIEWMANAGER_H
 #define VIEWMANAGER_H
 
-#include <q3dict.h>
 #include <QWidget>
-//Added by qt3to4:
 #include <QDropEvent>
+#include <QHash>
+#include <KSharedPtr>
 #include <kaddressbookview.h>
 
 class QDropEvent;
@@ -147,8 +147,8 @@ class ViewManager : public QWidget
     Filter mCurrentFilter;
     Filter::List mFilterList;
 
-    Q3Dict<KAddressBookView> mViewDict;
-    Q3Dict<ViewFactory> mViewFactoryDict;
+    QHash<QString, KAddressBookView* > mViewDict;
+    QHash<QString, ViewFactory*> mViewFactoryDict;
     QStringList mViewNameList;
 
     QStackedWidget *mViewWidgetStack;
