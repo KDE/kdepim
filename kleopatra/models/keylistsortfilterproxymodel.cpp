@@ -32,6 +32,9 @@ KeyListSortFilterProxyModel::KeyListSortFilterProxyModel( QObject * p )
     : QSortFilterProxyModel( p ), d( new Private )
 {
     setDynamicSortFilter( true );
+    setSortRole( Qt::EditRole );  // EditRole can be expected to be in a less formatted way, better for sorting
+    setFilterRole( Qt::DisplayRole );
+    setFilterCaseSensitivity( Qt::CaseInsensitive );
 }
 
 KeyListSortFilterProxyModel::~KeyListSortFilterProxyModel() {}
@@ -67,8 +70,9 @@ bool KeyListSortFilterProxyModel::filterAcceptsRow( int source_row, const QModel
     const QModelIndex nameIndex = sourceModel()->index( source_row, AbstractKeyListModel::PrettyName, source_parent );
     const QModelIndex emailIndex = sourceModel()->index( source_row, AbstractKeyListModel::PrettyEMail, source_parent );
 
-    const QString name = nameIndex.data().toString();
-    const QString email = emailIndex.data().toString();
+    const int role = filterRole();
+    const QString name = nameIndex.data( role ).toString();
+    const QString email = emailIndex.data( role ).toString();
 
     const QRegExp rx = filterRegExp();
     if ( !name.contains( rx ) && !email.contains( rx ) )
