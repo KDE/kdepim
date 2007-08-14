@@ -45,7 +45,6 @@
 #include <QVBoxLayout>
 
 #include <kacceleratormanager.h>
-#include <k3activelabel.h>
 #include <kapplication.h>
 #include <kcombobox.h>
 #include <kconfig.h>
@@ -102,11 +101,13 @@ AddressEditWidget::AddressEditWidget( QWidget *parent, const char *name )
            SLOT( updateAddressEdit() ) );
   layout->addWidget( mTypeCombo );
 
-  mAddressField = new K3ActiveLabel( this );
+  mAddressField = new QLabel( this );
   mAddressField->setFrameStyle( QFrame::Panel | QFrame::Sunken );
   mAddressField->setMinimumHeight( 20 );
   mAddressField->setAlignment( Qt::AlignTop );
-  mAddressField->setAcceptRichText( false );
+  mAddressField->setTextFormat( Qt::PlainText );
+  mAddressField->setTextInteractionFlags( 
+    Qt::TextSelectableByKeyboard | Qt::TextSelectableByMouse );
   layout->addWidget( mAddressField );
 
   mEditButton = new QPushButton( i18nc( "street/postal", "&Edit Addresses..." ), this );
@@ -228,16 +229,16 @@ void AddressEditWidget::updateAddressEdit()
   bool block = signalsBlocked();
   blockSignals( true );
 
-  mAddressField->setPlainText( "" );
+  mAddressField->setText( "" );
 
   if ( it != mAddressList.end() ) {
     KABC::Address a = *it;
     if ( !a.isEmpty() ) {
       if ( a.type() & KABC::Address::Work && mAddressee.realName() != mAddressee.organization() ) {
-        mAddressField->setPlainText( a.formattedAddress( mAddressee.realName(),
+        mAddressField->setText( a.formattedAddress( mAddressee.realName(),
                                    mAddressee.organization() ) );
       } else {
-        mAddressField->setPlainText( a.formattedAddress( mAddressee.realName() ) );
+        mAddressField->setText( a.formattedAddress( mAddressee.realName() ) );
       }
     }
   }

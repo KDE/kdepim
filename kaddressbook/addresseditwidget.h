@@ -36,9 +36,9 @@
 
 class QButtonGroup;
 class QCheckBox;
+class QLabel;
 class QTextEdit;
 
-class K3ActiveLabel;
 class KComboBox;
 class KLineEdit;
 
@@ -77,7 +77,7 @@ class AddressEditWidget : public QWidget
     AddressTypeCombo *mTypeCombo;
 
     QPushButton *mEditButton;
-    K3ActiveLabel *mAddressField;
+    QLabel *mAddressField;
 
     KABC::Address::List mAddressList;
     KABC::Addressee mAddressee;
