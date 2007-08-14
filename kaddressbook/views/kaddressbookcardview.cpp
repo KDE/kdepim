@@ -155,6 +155,7 @@ KAddressBookCardView::KAddressBookCardView( KAB::Core *core,
   mShowEmptyFields = false;
 
   QVBoxLayout *layout = new QVBoxLayout( viewWidget() );
+  layout->setMargin( 0 );
 
   mCardView = new AddresseeCardView( viewWidget(), "mCardView" );
   mCardView->setSelectionMode( CardView::Extended );
