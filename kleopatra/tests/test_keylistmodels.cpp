@@ -30,12 +30,15 @@
     your version.
 */
 #include <models/keylistmodel.h>
+#include <models/keylistsortfilterproxymodel.h>
 
 #include <kapplication.h>
 #include <kaboutdata.h>
 #include <kcmdlineargs.h>
 
 #include <QTreeView>
+#include <QLineEdit>
+#include <QLayout>
 
 #include <qgpgme/eventloopinteractor.h>
 
@@ -57,7 +60,7 @@ public Q_SLOTS:
     void slotNextKeyEvent( GpgME::Context *, const GpgME::Key & key ) {
 	mKeys.push_back( key );
 	// push out keys in chunks of 1..16 keys
-	if ( mKeys.size() > qrand() % 16 ) {
+	if ( mKeys.size() > qrand() % 16U ) {
 	    emit nextKeys( mKeys );
 	    mKeys.clear();
 	}
@@ -78,10 +81,29 @@ int main( int argc, char * argv[] ) {
 
     qsrand( QDateTime::currentDateTime().toTime_t() );
 
-    QTreeView flat, hierarchical;
+    QWidget flatWidget, hierarchicalWidget;
+    QVBoxLayout flatLay( &flatWidget ), hierarchicalLay( &hierarchicalWidget );
+    QLineEdit flatLE( &flatWidget ), hierarchicalLE( &hierarchicalWidget );
+    QTreeView flat( &flatWidget ), hierarchical( &hierarchicalWidget );
 
-    flat.setWindowTitle( QLatin1String( "Flat Key Listing" ) );
-    hierarchical.setWindowTitle( QLatin1String( "Hierarchical Key Listing" ) );
+    flat.setSortingEnabled( true );
+    flat.sortByColumn( Kleo::AbstractKeyListModel::Fingerprint, Qt::AscendingOrder );
+    hierarchical.setSortingEnabled( true );
+    hierarchical.sortByColumn( Kleo::AbstractKeyListModel::Fingerprint, Qt::AscendingOrder );
+
+    flatLay.addWidget( &flatLE );
+    flatLay.addWidget( &flat );
+
+    hierarchicalLay.addWidget( &hierarchicalLE );
+    hierarchicalLay.addWidget( &hierarchical );
+
+    flatWidget.setWindowTitle( QLatin1String( "Flat Key Listing" ) );
+    hierarchicalWidget.setWindowTitle( QLatin1String( "Hierarchical Key Listing" ) );
+
+    Kleo::KeyListSortFilterProxyModel flatProxy, hierarchicalProxy;
+
+    QObject::connect( &flatLE, SIGNAL(textChanged(QString)), &flatProxy, SLOT(setFilterFixedString(QString)) );
+    QObject::connect( &hierarchicalLE, SIGNAL(textChanged(QString)), &hierarchicalProxy, SLOT(setFilterFixedString(QString)) );
 
     Relay relay;
     QObject::connect( QGpgME::EventLoopInteractor::instance(), SIGNAL(nextKeyEventSignal(GpgME::Context*,GpgME::Key)),
@@ -89,16 +111,18 @@ int main( int argc, char * argv[] ) {
     
     if ( Kleo::AbstractKeyListModel * const model = Kleo::AbstractKeyListModel::createFlatKeyListModel( &flat ) ) {
         QObject::connect( &relay, SIGNAL(nextKeys(std::vector<GpgME::Key>)), model, SLOT(addKeys(std::vector<GpgME::Key>)) );
-        flat.setModel( model );
+        flatProxy.setSourceModel( model );
+	flat.setModel( &flatProxy );
     }
 
     if ( Kleo::AbstractKeyListModel * const model = Kleo::AbstractKeyListModel::createHierarchicalKeyListModel( &hierarchical ) ) {
         QObject::connect( &relay, SIGNAL(nextKeys(std::vector<GpgME::Key>)), model, SLOT(addKeys(std::vector<GpgME::Key>)) );
-        hierarchical.setModel( model );
+        hierarchicalProxy.setSourceModel( model );
+	hierarchical.setModel( &hierarchicalProxy );
     }
 
-    flat.show();
-    hierarchical.show();
+    flatWidget.show();
+    hierarchicalWidget.show();
 
 
     const std::auto_ptr<GpgME::Context> pgp( GpgME::Context::createForProtocol( GpgME::OpenPGP ) );

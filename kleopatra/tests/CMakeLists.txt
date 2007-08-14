@@ -2,7 +2,7 @@ include_directories( ${CMAKE_SOURCE_DIR}/kleopatra ${CMAKE_SOURCE_DIR}/libkleo $
 
 ########### next target ###############
 
-set(test_keylistmodels_SRCS test_keylistmodels.cpp ../models/keylistmodel.cpp )
+set(test_keylistmodels_SRCS test_keylistmodels.cpp ../models/keylistmodel.cpp ../models/keylistsortfilterproxymodel.cpp )
 
 kde4_add_test_executable(test_keylistmodels ${test_keylistmodels_SRCS})
 
