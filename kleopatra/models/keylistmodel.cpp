@@ -568,8 +568,8 @@ QList<QModelIndex> HierarchicalKeyListModel::doAddKeys( const std::vector<Key> &
         return QList<QModelIndex>();
     std::vector<Key> merged;
     merged.reserve( keys.size() + mKeysByFingerprint.size() );
-    std::merge( mKeysByFingerprint.begin(), mKeysByFingerprint.end(),
-                keys.begin(), keys.end(),
+    std::merge( keys.begin(), keys.end(),
+                mKeysByFingerprint.begin(), mKeysByFingerprint.end(),
                 std::back_inserter( merged ), ByFingerprint<std::less>() );
     merged.erase( std::unique( merged.begin(), merged.end(), ByFingerprint<std::equal_to>() ), merged.end() );
     
@@ -591,7 +591,6 @@ QList<QModelIndex> HierarchicalKeyListModel::doAddKeys( const std::vector<Key> &
         while ( it1 != end1 && it2 != end2 ) {
             const std::vector<Key> & v1 = it1->second;
             const std::vector<Key> & v2 = it2->second;
-            // first sort the new list:
             if ( it1->first < it2->first ) {
                 // take *it1:
                 mKeysByChainId.insert( it2, *it1 );
@@ -607,6 +606,7 @@ QList<QModelIndex> HierarchicalKeyListModel::doAddKeys( const std::vector<Key> &
                             v2.begin(), v2.end(),
                             std::back_inserter( tmp ),
                             ByFingerprint<std::less>() );
+		tmp.erase( std::unique( tmp.begin(), tmp.end(), ByFingerprint<std::equal_to>() ), tmp.end() );
                 it2->second.swap( tmp );
                 ++it1;
                 ++it2;
