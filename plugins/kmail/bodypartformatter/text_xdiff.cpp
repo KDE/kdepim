@@ -107,9 +107,9 @@ namespace {
             style = fileAddStyle;
           } else if ( line.startsWith( "---" ) ) {
             style = fileRemoveStyle;
-          } else if ( line.startsWith( "+" ) || line.startsWith( ">" ) ) {
+          } else if ( line.startsWith( '+' ) || line.startsWith( '>' ) ) {
             style = addedLineStyle;
-          } else if ( line.startsWith( "-" ) || line.startsWith( "<" ) ) {
+          } else if ( line.startsWith( '-' ) || line.startsWith( '<' ) ) {
             style = removedLineStyle;
           } else if ( line.startsWith( "==") ) {
             style = sepStyle;
