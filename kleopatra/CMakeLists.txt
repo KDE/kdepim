@@ -12,6 +12,7 @@ add_subdirectory( tests )
 
 set(kleopatra_bin_SRCS ${libconf_SRCS}
    models/keylistmodel.cpp
+   models/keylistsortfilterproxymodel.cpp
    controllers/keylistcontroller.cpp
    commands/command.cpp
    commands/detailscommand.cpp
