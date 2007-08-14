@@ -28,7 +28,7 @@ using namespace KCal;
 
 typedef KRES::PluginFactory<KCalResourceSlox,KCalResourceSloxConfig> SLOXFactory;
 // FIXME: Use K_EXPORT_COMPONENT_FACTORY( kcal_slox, SLOXFactory ); here
-// Problem: How do I insert the catalogue???
+// Problem: How do I insert the catalog???
 extern "C"
 {
   KDE_EXPORT void *init_kcal_slox()

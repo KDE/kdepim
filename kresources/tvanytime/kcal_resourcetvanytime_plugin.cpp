@@ -28,7 +28,7 @@ using namespace KCal;
 
 typedef KRES::PluginFactory< ResourceTVAnytime, ResourceTVAnytimeConfig > TVAnytimeFactory;
 // FIXME: Use K_EXPORT_COMPONENT_FACTORY( kcal_tvanytime, TVAnytimeFactory ); here
-// Problem: How do I insert the catalogue???
+// Problem: How do I insert the catalog???
 extern "C"
 {
   KDE_EXPORT void *init_kcal_tvanytime()

@@ -186,7 +186,7 @@ bool ResourceTVAnytime::doLoad( bool )
            SLOT( slotJobResult( KJob * ) ) );
 
   mProgress = KPIM::ProgressManager::instance()->createProgressItem(
-    KPIM::ProgressManager::getUniqueID(), i18n("Downloading programme schedule") );
+    KPIM::ProgressManager::getUniqueID(), i18n("Downloading program schedule") );
 
   connect( mProgress,
            SIGNAL( progressItemCanceled( KPIM::ProgressItem * ) ),
@@ -317,7 +317,7 @@ bool ResourceTVAnytime::readServiceInformation( const QDomDocument & serviceInfo
 bool ResourceTVAnytime::readService( const QString & serviceId )
 {
   kDebug() << k_funcinfo;
-  // open programme information table
+  // open program information table
   Service service = mServiceMap[ serviceId ];
 
   QStringList entries = mScheduleArchive->directory()->entries();
@@ -362,7 +362,7 @@ bool ResourceTVAnytime::readService( const QString & serviceId )
               QDomElement e3 = n3.toElement();
               ProgramInformation pi; 
               if ( pi.loadXML( e3 ) ) {
-                //kDebug() <<"Found programme:" << pi.id() <<"," << pi.title() <<"," << pi.synopsis();
+                //kDebug() <<"Found program:" << pi.id() <<"," << pi.title() <<"," << pi.synopsis();
                 progInfoMap.insert( pi.id(), pi );
               }
               n3 = n3.nextSibling();
@@ -375,7 +375,7 @@ bool ResourceTVAnytime::readService( const QString & serviceId )
     }
     else
       kDebug() <<"Service file:" << programInfoFileName <<" not found in archive";
-    // open programme location table, iterate and create incidences
+    // open program location table, iterate and create incidences
   
     QString programLocationFileName = QString( *it + serviceId + "_pl.xml" );
     QDomDocument programLocation = archiveFileXml( programLocationFileName );
@@ -399,7 +399,7 @@ bool ResourceTVAnytime::readService( const QString & serviceId )
                   ScheduleEvent se;
                   if ( se.loadXML( e4 ) ) {
                     ProgramInformation pi = progInfoMap[ se.crid() ];
-                    //kDebug() <<"programme incidence:" << se.crid()  <<"," << se.startTime() <<"," << se.duration() <<"," << pi.title() <<"," << pi.synopsis();
+                    //kDebug() <<"program incidence:" << se.crid()  <<"," << se.startTime() <<"," << se.duration() <<"," << pi.title() <<"," << pi.synopsis();
                     KCal::Event *event = new KCal::Event();
                     event->setFloats( false );
                     event->setSummary( pi.title() );

@@ -29,7 +29,7 @@ using namespace KCal;
 
 typedef KRES::PluginFactory<ResourceRemote,ResourceRemoteConfig> RemoteFactory;
 // FIXME: Use K_EXPORT_COMPONENT_FACTORY( kcal_remote, RemoteFactory ); here
-// Problem: How do I insert the catalogue???
+// Problem: How do I insert the catalog???
 extern "C"
 {
   KDE_EXPORT void *init_kcal_remote()

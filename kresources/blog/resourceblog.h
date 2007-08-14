@@ -260,7 +260,7 @@ class KCAL_RESOURCEBLOG_EXPORT ResourceBlog : public ResourceCached
 
       @param type The type of the error.
       @param errorMessage The specific cause of the error.
-      @param posting The relevent posting, if any.
+      @param posting The relevant posting, if any.
     */
     void slotError( const KBlog::Blog::ErrorType &type,
                     const QString &errorMessage,

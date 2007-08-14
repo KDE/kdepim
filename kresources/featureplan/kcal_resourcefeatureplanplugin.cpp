@@ -29,7 +29,7 @@ using namespace KCal;
 
 typedef KRES::PluginFactory< ResourceFeaturePlan, ResourceFeaturePlanConfig > FeatureplanFactory;
 // FIXME K_EXPORT_COMPONENT_FACTORY( kcal_resourcefeatureplan, FeatureplanFactory )
-// Problem: How to insert the catalogue!
+// Problem: How to insert the catalog!
 extern "C"
 {
   KDE_EXPORT void* init_kcal_resourcefeatureplan()

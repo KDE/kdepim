@@ -291,7 +291,7 @@ Q_OBJECT
 
     // Interpreting the result of the jobs
     /** Extract the success information from the login job, created by
-     *  createLoginJob. Return true, if the login was successfull, or false
+     *  createLoginJob. Return true, if the login was successful, or false
      *  if the user could not be authenticated or something else went wrong.
      *  In that case the resource will not be marked as open. */
     virtual bool interpretLoginJobResult( KIO::Job * ) { return true; }

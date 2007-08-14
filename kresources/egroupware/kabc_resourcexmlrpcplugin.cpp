@@ -29,7 +29,7 @@ using namespace KABC;
 typedef KRES::PluginFactory< ResourceXMLRPC, ResourceXMLRPCConfig > XMLRPCFactory;
 
 // FIXME: Use K_EXPORT_COMPONENT_FACTORY( kabc_xmlrpc, XMLRPCFactory ); here
-// Problem: How to insert the catalogue!
+// Problem: How to insert the catalog!
 extern "C"
 {
   KDE_EXPORT void *init_kabc_xmlrpc()

@@ -28,7 +28,7 @@ using namespace KABC;
 
 typedef KRES::PluginFactory<ResourceGroupwise, ResourceGroupwiseConfig> GroupwiseFactory;
 // FIXME: Use K_EXPORT_COMPONENT_FACTORY( kabc_groupwise, GroupwiseFactory ); here
-// Problem: How do I insert the catalogue???
+// Problem: How do I insert the catalog???
 extern "C"
 {
   KDE_EXPORT void *init_kabc_groupwise()
