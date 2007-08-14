@@ -267,7 +267,7 @@ void FilterDialog::initGUI()
   topLayout->addWidget( mFilterListBox, 0, 0 );
   connect( mFilterListBox, SIGNAL( currentItemChanged( QListWidgetItem *, QListWidgetItem * ) ),
            SLOT( selectionChanged() ) );
-  connect( mFilterListBox, SIGNAL( doubleClicked ( Q3ListBoxItem * ) ),
+  connect( mFilterListBox, SIGNAL( itemDoubleClicked( QListWidgetItem * ) ),
            SLOT( edit() ) );
 
   KDialogButtonBox *buttonBox = new KDialogButtonBox( page, Qt::Vertical );
