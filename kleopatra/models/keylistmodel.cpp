@@ -444,18 +444,19 @@ QList<QModelIndex> FlatKeyListModel::doAddKeys( const std::vector<Key> & keys ) 
 #endif
     if ( keys.empty() )
         return QList<QModelIndex>();
-    std::vector<Key> merged;
-    merged.reserve( keys.size() + mKeysByFingerprint.size() );
-    std::merge( mKeysByFingerprint.begin(), mKeysByFingerprint.end(),
-                keys.begin(), keys.end(),
-                std::back_inserter( merged ), ByFingerprint<std::less>() );
-    merged.erase( std::unique( merged.begin(), merged.end(), ByFingerprint<std::equal_to>() ), merged.end() );
-    
-    mKeysByFingerprint.swap( merged );
-    reset(); // ### be better here...
+
+    for ( std::vector<Key>::const_iterator it = keys.begin(), end = keys.end() ; it != end ; ++it ) {
+
+        const std::vector<Key>::iterator pos = std::upper_bound( mKeysByFingerprint.begin(), mKeysByFingerprint.end(), *it, ByFingerprint<std::less>() );
+        const unsigned int idx = std::distance( mKeysByFingerprint.begin(), pos );
+
+        beginInsertRows( QModelIndex(), idx, idx );
+        mKeysByFingerprint.insert( pos, *it );
+        endInsertRows();
+    }
+
     return indexes( keys );
 }
-
 
 
 HierarchicalKeyListModel::HierarchicalKeyListModel( QObject * p )
