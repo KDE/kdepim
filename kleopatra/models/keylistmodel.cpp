@@ -287,12 +287,15 @@ QVariant AbstractKeyListModel::data( const QModelIndex & index, int role ) const
         case ValidUntil:
             {
                 const Subkey subkey = key.subkey( 0 );
-		if ( column == ValidUntil && subkey.neverExpires() )
-		    return QVariant();//tr("Indefinitely");
+                if ( column == ValidUntil && subkey.neverExpires() )
+                    return QVariant();//tr("Indefinitely");
                 const time_t t = column == ValidUntil ? subkey.expirationTime() : subkey.creationTime() ;
                 QDateTime dt;
                 dt.setTime_t( t );
-                return dt.date().toString();
+                if ( role == Qt::EditRole )
+                    return dt.date();
+                else
+                    return dt.date().toString();
             }
         case TechnicalDetails:
             return QString::fromUtf8( key.protocolAsString() );
@@ -302,15 +305,15 @@ QVariant AbstractKeyListModel::data( const QModelIndex & index, int role ) const
             break;
         }
     else if ( role == Qt::ToolTipRole )
-	return format_tooltip( key );
+        return format_tooltip( key );
     else if ( role == Qt::FontRole ) {
-	QFont font = qApp->font(); // ### correct font?
-	if ( column == Fingerprint )
-	    font.setFamily( "courier" );
-	if ( const KeyFilter * const filter = KeyFilterManager::instance()->filterMatching( key ) )
-	    return filter->font( font );
-	else
-	    return font;
+        QFont font = qApp->font(); // ### correct font?
+        if ( column == Fingerprint )
+            font.setFamily( "courier" );
+        if ( const KeyFilter * const filter = KeyFilterManager::instance()->filterMatching( key ) )
+            return filter->font( font );
+        else
+            return font;
     } else if ( role == Qt::DecorationRole || role == Qt::BackgroundRole || role == Qt::ForegroundRole ) {
         if ( const KeyFilter * const filter = KeyFilterManager::instance()->filterMatching( key ) ) {
             switch ( role ) {
