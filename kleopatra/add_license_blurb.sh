@@ -1,7 +1,7 @@
 #!/bin/bash
 
 find "$@" -name '*.h' -o -name '*.cpp' | while read FILE; do
-    if grep -qiE "Copyright \(C\) 2001-[0-9]{4} Klar.*lvdalens Datakonsult AB" "$FILE" ; then continue; fi
+    if grep -qiE "Copyright \(C\) [0-9, -]{4,} Klar.*lvdalens Datakonsult AB" "$FILE" ; then continue; fi
     cat <<EOF > "$FILE".tmp
 /* -*- mode: c++; c-basic-offset:4 -*-
     $FILE
