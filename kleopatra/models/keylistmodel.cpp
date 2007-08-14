@@ -447,12 +447,20 @@ QList<QModelIndex> FlatKeyListModel::doAddKeys( const std::vector<Key> & keys ) 
 
     for ( std::vector<Key>::const_iterator it = keys.begin(), end = keys.end() ; it != end ; ++it ) {
 
+	// find an insertion point:
         const std::vector<Key>::iterator pos = std::upper_bound( mKeysByFingerprint.begin(), mKeysByFingerprint.end(), *it, ByFingerprint<std::less>() );
         const unsigned int idx = std::distance( mKeysByFingerprint.begin(), pos );
 
-        beginInsertRows( QModelIndex(), idx, idx );
-        mKeysByFingerprint.insert( pos, *it );
-        endInsertRows();
+	if ( idx > 0 && qstrcmp( mKeysByFingerprint[idx-1].primaryFingerprint(), it->primaryFingerprint() ) == 0 ) {
+	    // key existed before - replace with new one:
+	    mKeysByFingerprint[idx-1] = *it;
+	    emit dataChanged( createIndex( idx-1, 0 ), createIndex( idx-1, NumColumns-1 ) );
+	} else {
+	    // new key - insert:
+	    beginInsertRows( QModelIndex(), idx, idx );
+	    mKeysByFingerprint.insert( pos, *it );
+	    endInsertRows();
+	}
     }
 
     return indexes( keys );
