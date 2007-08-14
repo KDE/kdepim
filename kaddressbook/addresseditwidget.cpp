@@ -22,42 +22,34 @@
     without including the source code for Qt in the source distribution.
 */
 
-#include <q3buttongroup.h>
 #include <QCheckBox>
 
+#include <QBoxLayout>
+#include <QButtonGroup>
+#include <QEvent>
+#include <QFrame>
+#include <QGridLayout>
+#include <QGroupBox>
+#include <QKeyEvent>
 #include <QLabel>
 #include <QLayout>
-#include <q3listbox.h>
-#include <q3listview.h>
+#include <QList>
 #include <QPushButton>
-#include <q3signal.h>
-#include <QString>
 #include <QTextEdit>
 #include <QToolButton>
 
-//Added by qt3to4:
-#include <QGridLayout>
-#include <QKeyEvent>
-#include <QEvent>
-#include <QFrame>
-#include <QBoxLayout>
-#include <QList>
-#include <QVBoxLayout>
-
-#include <kacceleratormanager.h>
-#include <kapplication.h>
-#include <kcombobox.h>
-#include <kconfig.h>
-#include <kdebug.h>
-#include <kdialog.h>
-#include <kiconloader.h>
-#include <kinputdialog.h>
-#include <klineedit.h>
-#include <k3listview.h>
-#include <klocale.h>
-#include <kmessagebox.h>
-#include <kseparator.h>
-#include <kvbox.h>
+#include <KAcceleratorManager>
+#include <KApplication>
+#include <KComboBox>
+#include <KConfig>
+#include <KDebug>
+#include <KIconLoader>
+#include <KInputDialog>
+#include <KLineEdit>
+#include <KLocale>
+#include <KMessageBox>
+#include <KSeparator>
+#include <KVBox>
 
 #include "addresseditwidget.h"
 
@@ -247,8 +239,7 @@ void AddressEditWidget::updateAddressEdit()
 }
 
 AddressEditDialog::AddressEditDialog( const KABC::Address::List &list,
-                                      int selected, QWidget *parent,
-                                      const char *name )
+                                      int selected, QWidget *parent )
   : KDialog(parent),
     mPreviousAddress( 0 )
 {

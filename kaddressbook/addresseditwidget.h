@@ -25,9 +25,9 @@
 #define ADDRESSEDITWIDGET_H
 
 #include <QWidget>
-#include <QLabel>
 
-#include <kdialog.h>
+#include <KDialog>
+
 #include <kabc/address.h>
 #include <kabc/addressee.h>
 
@@ -93,7 +93,7 @@ class AddressEditDialog : public KDialog
 
   public:
     AddressEditDialog( const KABC::Address::List &list, int selected,
-                       QWidget *parent, const char *name = 0 );
+                       QWidget *parent );
     ~AddressEditDialog();
 
     KABC::Address::List addresses();
