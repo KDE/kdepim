@@ -39,6 +39,8 @@
 #include <QTreeView>
 #include <QLineEdit>
 #include <QLayout>
+#include <QTimer>
+#include <QEventLoop>
 
 #include <qgpgme/eventloopinteractor.h>
 
@@ -58,12 +60,12 @@ public:
 
 public Q_SLOTS:
     void slotNextKeyEvent( GpgME::Context *, const GpgME::Key & key ) {
-	mKeys.push_back( key );
-	// push out keys in chunks of 1..16 keys
-	if ( mKeys.size() > qrand() % 16U ) {
-	    emit nextKeys( mKeys );
-	    mKeys.clear();
-	}
+        mKeys.push_back( key );
+        // push out keys in chunks of 1..16 keys
+        if ( mKeys.size() > qrand() % 16U ) {
+            emit nextKeys( mKeys );
+            mKeys.clear();
+        }
     }
 
 Q_SIGNALS:
@@ -112,13 +114,13 @@ int main( int argc, char * argv[] ) {
     if ( Kleo::AbstractKeyListModel * const model = Kleo::AbstractKeyListModel::createFlatKeyListModel( &flat ) ) {
         QObject::connect( &relay, SIGNAL(nextKeys(std::vector<GpgME::Key>)), model, SLOT(addKeys(std::vector<GpgME::Key>)) );
         flatProxy.setSourceModel( model );
-	flat.setModel( &flatProxy );
+        flat.setModel( &flatProxy );
     }
 
     if ( Kleo::AbstractKeyListModel * const model = Kleo::AbstractKeyListModel::createHierarchicalKeyListModel( &hierarchical ) ) {
         QObject::connect( &relay, SIGNAL(nextKeys(std::vector<GpgME::Key>)), model, SLOT(addKeys(std::vector<GpgME::Key>)) );
         hierarchicalProxy.setSourceModel( model );
-	hierarchical.setModel( &hierarchicalProxy );
+        hierarchical.setModel( &hierarchicalProxy );
     }
 
     flatWidget.show();
@@ -139,6 +141,17 @@ int main( int argc, char * argv[] ) {
 
     if ( const GpgME::Error e = cms->startKeyListing() )
         qDebug() << "cms" << e.asString();
+
+    QEventLoop loop;
+    QTimer::singleShot( 2000, &loop, SLOT(quit()) );
+    loop.exec();
+
+    const std::auto_ptr<GpgME::Context> cms2( GpgME::Context::createForProtocol( GpgME::CMS ) );
+    cms2->setManagedByEventLoopInteractor( true );
+    cms2->setKeyListMode( GpgME::Local );
+
+    if ( const GpgME::Error e = cms2->startKeyListing() )
+        qDebug() << "cms2" << e.asString();
 
 
     return app.exec();
