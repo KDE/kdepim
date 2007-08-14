@@ -477,19 +477,29 @@ void CustomFieldsWidget::removeField()
 
 void CustomFieldsWidget::initGUI()
 {
-  QGridLayout *layout = new QGridLayout( this );
+  QVBoxLayout *layout = new QVBoxLayout( this );
   layout->setSpacing( KDialog::spacingHint() );
-  layout->setMargin( KDialog::marginHint() );
+  layout->setMargin( 0 );
 
   mFieldWidget = new FieldWidget( this );
-  layout->addWidget( mFieldWidget, 0, 0, 1, 3 );
+  layout->addWidget( mFieldWidget );
+  layout->addStretch();
 
-  mAddButton = new QPushButton( i18n( "Add Field..." ), this );
-  layout->addWidget( mAddButton, 1, 1, Qt::AlignRight );
+  QWidget *buttonGroup = new QWidget( this );
+  QHBoxLayout *buttonGroupLayout = new QHBoxLayout;
+  buttonGroupLayout->setMargin( 0 );
+  buttonGroupLayout->setSpacing( KDialog::spacingHint() );
 
-  mRemoveButton = new QPushButton( i18n( "Remove Field..." ), this );
+  mAddButton = new QPushButton( i18n( "Add Field..." ), buttonGroup );
+  buttonGroupLayout->addStretch();
+  buttonGroupLayout->addWidget( mAddButton );
+
+  mRemoveButton = new QPushButton( i18n( "Remove Field..." ), buttonGroup );
   mRemoveButton->setEnabled( false );
-  layout->addWidget( mRemoveButton, 1, 2, Qt::AlignRight );
+  buttonGroupLayout->addWidget( mRemoveButton );
+
+  buttonGroup->setLayout( buttonGroupLayout );
+  layout->addWidget( buttonGroup );
 
   // load global fields
   QStringList globalFields = KABPrefs::instance()->globalCustomFields();
