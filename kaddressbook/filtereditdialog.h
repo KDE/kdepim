@@ -24,13 +24,12 @@
 #ifndef FILTEREDITDIALOG_H
 #define FILTEREDITDIALOG_H
 
-class Q3ButtonGroup;
-class Q3ListBoxItem;
+class QButtonGroup;
 class QString;
 class QWidget;
 
 class KLineEdit;
-class K3ListBox;
+class KListWidget;
 
 namespace KPIM {
 class CategorySelectWidget;
@@ -47,7 +46,7 @@ class FilterDialog : public KDialog
   Q_OBJECT
 
   public:
-    FilterDialog( QWidget *parent, const char *name = 0 );
+    FilterDialog( QWidget *parent );
     ~FilterDialog();
 
     void setFilters( const Filter::List &list );
@@ -57,7 +56,7 @@ class FilterDialog : public KDialog
     void add();
     void edit();
     void remove();
-    void selectionChanged( Q3ListBoxItem* );
+    void selectionChanged();
 
   private:
     void initGUI();
@@ -66,7 +65,7 @@ class FilterDialog : public KDialog
     Filter::List mFilterList;
     Filter::List mInternalFilterList;
 
-    K3ListBox *mFilterListBox;
+    KListWidget *mFilterListBox;
     QPushButton *mAddButton;
     QPushButton *mEditButton;
     QPushButton *mRemoveButton;
@@ -76,7 +75,7 @@ class FilterEditDialog : public KDialog
 {
     Q_OBJECT
   public:
-    FilterEditDialog( QWidget *parent, const char *name = 0 );
+    FilterEditDialog( QWidget *parent );
     ~FilterEditDialog();
 
     void setFilter( const Filter &filter );
@@ -93,7 +92,7 @@ class FilterEditDialog : public KDialog
 
     KLineEdit *mNameEdit;
     KPIM::CategorySelectWidget *mCategoriesView;
-    Q3ButtonGroup *mMatchRuleGroup;
+    QButtonGroup *mMatchRuleGroup;
     QPushButton *mEditButton;
     QPushButton *mRemoveButton;
 };

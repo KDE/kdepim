@@ -32,7 +32,7 @@
 
 //Added by qt3to4:
 #include <QGridLayout>
-#include <QListWidget>
+#include <KListWidget>
 #include <kacceleratormanager.h>
 #include <kconfig.h>
 #include <kcombobox.h>
@@ -178,7 +178,7 @@ EmailEditDialog::EmailEditDialog( const QStringList &list, QWidget *parent,
   topLayout->setSpacing( spacingHint() );
   topLayout->setMargin( 0 );
 
-  mEmailListBox = new QListWidget( page );
+  mEmailListBox = new KListWidget( page );
   mEmailListBox->setSelectionMode( QAbstractItemView::SingleSelection );
 
   // Make sure there is room for the scrollbar

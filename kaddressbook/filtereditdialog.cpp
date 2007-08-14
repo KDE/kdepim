@@ -21,7 +21,8 @@
     without including the source code for Qt in the source distribution.
 */
 
-#include <q3buttongroup.h>
+#include <QButtonGroup>
+#include <QGroupBox>
 #include <QLabel>
 #include <QLayout>
 #include <QPushButton>
@@ -31,7 +32,6 @@
 #include <QToolButton>
 
 #include <QWidget>
-//Added by qt3to4:
 #include <QVBoxLayout>
 #include <QGridLayout>
 #include <QBoxLayout>
@@ -41,8 +41,7 @@
 #include <kdebug.h>
 #include <kiconloader.h>
 #include <klineedit.h>
-#include <k3listbox.h>
-#include <k3listview.h>
+#include <KListWidget>
 #include <klocale.h>
 #include <ktoolinvocation.h>
 #include <libkdepim/categoryselectdialog.h>
@@ -50,7 +49,7 @@
 #include "kabprefs.h"
 #include "filtereditdialog.h"
 
-FilterEditDialog::FilterEditDialog( QWidget *parent, const char *name )
+FilterEditDialog::FilterEditDialog( QWidget *parent )
   : KDialog( parent)
 {
   setCaption( i18n( "Edit Address Book Filter" ) );
@@ -74,9 +73,9 @@ void FilterEditDialog::setFilter( const Filter &filter )
   mCategoriesView->setSelected(filter.categories());
 
   if ( filter.matchRule() == Filter::Matching )
-    mMatchRuleGroup->setButton( 0 );
+    mMatchRuleGroup->button( 0 )->setChecked( true );
   else
-    mMatchRuleGroup->setButton( 1 );
+    mMatchRuleGroup->button( 1 )->setChecked( true );
 }
 
 Filter FilterEditDialog::filter()
@@ -88,7 +87,7 @@ Filter FilterEditDialog::filter()
   QString lst;
   filter.setCategories( mCategoriesView->selectedCategories(lst));
 
-  if ( mMatchRuleGroup->find( 0 )->isChecked() )
+  if ( mMatchRuleGroup->button( 0 )->isChecked() )
     filter.setMatchRule( Filter::Matching );
   else
     filter.setMatchRule( Filter::NotMatching );
@@ -118,25 +117,29 @@ void FilterEditDialog::initGUI()
   mCategoriesView = new KPIM::CategorySelectWidget(page,KABPrefs::instance());
   mCategoriesView->setCategories(KABPrefs::instance()->customCategories());
   mCategoriesView->hideButton();
+  mCategoriesView->layout()->setMargin( 0 );
   topLayout->addWidget( mCategoriesView, 1, 0, 1, 2 );
 
-  mMatchRuleGroup = new Q3ButtonGroup( page );
+  mMatchRuleGroup = new QButtonGroup;
   mMatchRuleGroup->setExclusive( true );
 
-  QBoxLayout *gbLayout = new QVBoxLayout( mMatchRuleGroup );
+  QGroupBox *group = new QGroupBox( page );
+
+  QBoxLayout *gbLayout = new QVBoxLayout;
   gbLayout->setSpacing( KDialog::spacingHint() );
   gbLayout->setMargin( KDialog::marginHint() );
+  group->setLayout( gbLayout );
 
-  QRadioButton *radio = new QRadioButton( i18n( "Show only contacts matching the selected categories" ), mMatchRuleGroup );
+  QRadioButton *radio = new QRadioButton( i18n( "Show only contacts matching the selected categories" ), group );
+  mMatchRuleGroup->addButton( radio, 0 );
   radio->setChecked( true );
-  mMatchRuleGroup->insert( radio );
   gbLayout->addWidget( radio );
 
-  radio = new QRadioButton( i18n( "Show all contacts except those matching the selected categories" ), mMatchRuleGroup );
-  mMatchRuleGroup->insert( radio );
+  radio = new QRadioButton( i18n( "Show all contacts except those matching the selected categories" ), group );
+  mMatchRuleGroup->addButton( radio, 1 );
   gbLayout->addWidget( radio );
 
-  topLayout->addWidget( mMatchRuleGroup, 2, 0, 1, 2 );
+  topLayout->addWidget( group, 2, 0, 1, 2 );
   connect(this, SIGNAL(helpClicked()),this,SLOT(slotHelp()));
 }
 
@@ -150,7 +153,7 @@ void FilterEditDialog::slotHelp()
   KToolInvocation::invokeHelp( "using-filters" );
 }
 
-FilterDialog::FilterDialog( QWidget *parent, const char *name )
+FilterDialog::FilterDialog( QWidget *parent )
   : KDialog( parent)
 {
   setButtons( Ok | Cancel );
@@ -196,14 +199,14 @@ void FilterDialog::add()
 
   refresh();
 
-  mFilterListBox->setCurrentItem( mFilterListBox->count() - 1 );
+  mFilterListBox->setCurrentRow( mFilterListBox->count() - 1 );
 }
 
 void FilterDialog::edit()
 {
   FilterEditDialog dlg( this );
 
-  uint pos = mFilterListBox->currentItem();
+  int pos = mFilterListBox->currentRow();
 
   dlg.setFilter( mFilterList[ pos ] );
 
@@ -217,7 +220,7 @@ void FilterDialog::edit()
 
   refresh();
 
-  mFilterListBox->setCurrentItem( pos );
+  mFilterListBox->setCurrentRow( pos );
 }
 
 void FilterDialog::remove()
@@ -225,9 +228,9 @@ void FilterDialog::remove()
 #ifdef __GNUC__
 #warning "kde4: correct ?"
 #endif
-  mFilterList.removeAt( mFilterListBox->currentItem()  );
+  mFilterList.removeAt( mFilterListBox->currentRow()  );
 
-  selectionChanged( 0 );
+  selectionChanged();
 
   refresh();
 }
@@ -238,15 +241,15 @@ void FilterDialog::refresh()
 
   Filter::List::ConstIterator it;
   for ( it = mFilterList.begin(); it != mFilterList.end(); ++it )
-    mFilterListBox->insertItem( (*it).name() );
+    mFilterListBox->addItem( new QListWidgetItem( (*it).name() ) );
 }
 
-void FilterDialog::selectionChanged( Q3ListBoxItem *item )
+void FilterDialog::selectionChanged()
 {
-  bool state = ( item != 0 );
+  QListWidgetItem *item = mFilterListBox->currentItem();
 
-  mEditButton->setEnabled( state );
-  mRemoveButton->setEnabled( state );
+  mEditButton->setEnabled( item );
+  mRemoveButton->setEnabled( item );
 }
 
 void FilterDialog::initGUI()
@@ -259,10 +262,11 @@ void FilterDialog::initGUI()
   topLayout->setSpacing( spacingHint() );
   topLayout->setMargin( 0 );
 
-  mFilterListBox = new K3ListBox( page );
+  mFilterListBox = new KListWidget( page );
+  mFilterListBox->setSelectionMode( QAbstractItemView::SingleSelection );
   topLayout->addWidget( mFilterListBox, 0, 0 );
-  connect( mFilterListBox, SIGNAL( selectionChanged( Q3ListBoxItem * ) ),
-           SLOT( selectionChanged( Q3ListBoxItem * ) ) );
+  connect( mFilterListBox, SIGNAL( currentItemChanged( QListWidgetItem *, QListWidgetItem * ) ),
+           SLOT( selectionChanged() ) );
   connect( mFilterListBox, SIGNAL( doubleClicked ( Q3ListBoxItem * ) ),
            SLOT( edit() ) );
 

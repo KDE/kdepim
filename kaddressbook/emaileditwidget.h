@@ -27,9 +27,8 @@
 #include <kabc/addressee.h>
 #include <kdialog.h>
 
-class QListWidget;
-
 class KLineEdit;
+class KListWidget;
 
 /**
   This widget displays a list box of the email addresses as well as buttons
@@ -81,7 +80,7 @@ class EmailEditDialog : public KDialog
     void selectionChanged();
 
   private:
-    QListWidget *mEmailListBox;
+    KListWidget *mEmailListBox;
     QPushButton *mAddButton;
     QPushButton *mRemoveButton;
     QPushButton *mEditButton;
