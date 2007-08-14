@@ -374,7 +374,7 @@ ImageWidget::ImageWidget( KABC::AddressBook *ab, QWidget *parent )
 {
   QHBoxLayout *layout = new QHBoxLayout( this );
   layout->setSpacing( KDialog::spacingHint() );
-  layout->setMargin( KDialog::marginHint() );
+  layout->setMargin( 0 );
 
   mPhotoWidget = new ImageBaseWidget( KABC::Addressee::photoLabel(), this );
   layout->addWidget( mPhotoWidget );
