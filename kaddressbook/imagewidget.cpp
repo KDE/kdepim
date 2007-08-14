@@ -39,7 +39,7 @@
 
 #include <QApplication>
 #include <QCheckBox>
-#include <q3groupbox.h>
+#include <QGroupBox>
 #include <QLabel>
 #include <QLayout>
 #include <QPixmap>
@@ -124,10 +124,11 @@ ImageBaseWidget::ImageBaseWidget( const QString &title, QWidget *parent )
   QHBoxLayout *topLayout = new QHBoxLayout( this );
   topLayout->setSpacing( KDialog::spacingHint() );
   topLayout->setMargin( KDialog::marginHint() );
-  Q3GroupBox *box = new Q3GroupBox( 0, Qt::Vertical, title, this );
+  QGroupBox *box = new QGroupBox( title, this );
   QGridLayout *boxLayout = new QGridLayout();
-  box->layout()->addItem( boxLayout );
+  box->setLayout( boxLayout );
   boxLayout->setSpacing( KDialog::spacingHint() );
+  boxLayout->setMargin( KDialog::marginHint() );
   boxLayout->setRowStretch( 3, 1 );
 
   mImageLabel = new ImageLabel( i18n( "Picture" ), box );

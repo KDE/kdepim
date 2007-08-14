@@ -32,10 +32,9 @@
 
 #include <QCheckBox>
 #include <QFile>
-#include <q3groupbox.h>
+#include <QGroupBox>
 #include <QLabel>
 #include <QLayout>
-#include <q3listbox.h>
 #include <QPainter>
 #include <QPixmap>
 #include <QPushButton>
