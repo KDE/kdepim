@@ -211,12 +211,12 @@ bool InternalEditorAction::queryUseKPilotChanges(QString dbName, recordid_t id, 
 
 	QWidget*page=new QWidget(resdlg);
 	resdlg->setMainWidget(page);
-	QGridLayout*layout = new QGridLayout( page, 1, 1);
+	QGridLayout*layout = new QGridLayout( page );
 	layout->setSpacing(0);
 
 	QLabel *label=new QLabel(dialogText, page);
 	label->setWordWrap(true);
-	layout->addMultiCellWidget( label,  0,0, 0,1 );
+	layout->addWidget( label,  0, 0, 1, 2 );
 
  	layout->addItem( new QSpacerItem( 20, 10, QSizePolicy::Minimum,
 		QSizePolicy::Fixed ), 1, 0 );
@@ -240,7 +240,7 @@ bool InternalEditorAction::queryUseKPilotChanges(QString dbName, recordid_t id, 
 	else
 	{
 		label=new QLabel(i18n("Entry in KPilot"), page);
-		layout->addMultiCellWidget( label, 2,2,0,1);
+		layout->addWidget( label, 2, 0, 1, 2 );
 
 		// directly display the record's data:
 		QWidget *hexEdit = KHE::createBytesEditWidget( page );
@@ -258,18 +258,17 @@ bool InternalEditorAction::queryUseKPilotChanges(QString dbName, recordid_t id, 
 		}
 		else
 		{
-			QLabel*tmpW = new QLabel( i18n("To view and edit the record data, please install a hex editor (e.g. khexedit from kdeutils)."), page );
-			tmpW->setBackgroundMode( Qt::PaletteMid );
+			QLabel *tmpW = new QLabel( i18n("To view and edit the record data, please install a hex editor (e.g. khexedit from kdeutils)."), page );
 			tmpW->setAlignment( Qt::AlignHCenter | Qt::AlignVCenter );
 			tmpW->setWordWrap( true );
 			tmpW->setFrameShape( Q3Frame::Panel );
 			tmpW->setFrameShadow( Q3Frame::Sunken );
 			hexEdit = tmpW;
 		}
-		layout->addMultiCellWidget( hexEdit, 3,3,0,1);
+		layout->addWidget( hexEdit, 3, 0, 1, 2 );
 
 		label=new QLabel(i18n("Entry on Handheld"), page);
-		layout->addMultiCellWidget( label, 4,4,0,1);
+		layout->addWidget( label, 4, 0, 1, 2 );
 
 		// directly display the record's data:
 		hexEdit = KHE::createBytesEditWidget( page );
@@ -280,22 +279,19 @@ bool InternalEditorAction::queryUseKPilotChanges(QString dbName, recordid_t id, 
 			if( hexEditIf )
 			{
 				hexEditIf->setData( serialrec->data(), serialrec->size() );
-// 					Do we need the following call at all???
-//				hexEditIf->setMaxDataSize( serialrec->getLen() );
 				hexEditIf->setReadOnly( true );
 			}
 		}
 		else
 		{
 			QLabel*tmpW = new QLabel( i18n("To view and edit the record data, please install a hex editor (e.g. khexedit from kdeutils)."), page );
-			tmpW->setBackgroundMode( Qt::PaletteMid );
 			tmpW->setAlignment( Qt::AlignHCenter | Qt::AlignVCenter );
 			tmpW->setWordWrap( true );
 			tmpW->setFrameShape( Q3Frame::Panel );
 			tmpW->setFrameShadow( Q3Frame::Sunken );
 			hexEdit = tmpW;
 		}
-		layout->addMultiCellWidget( hexEdit, 5,5,0,1);
+		layout->addWidget( hexEdit, 5, 0, 1, 2 );
 	}
 
 	int res=resdlg->exec();

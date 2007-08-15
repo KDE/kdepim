@@ -156,7 +156,7 @@ ConduitConfigWidgetBase::ConduitConfigWidgetBase(QWidget *parent, const QStringL
 	mainLayout->addWidget(fConduitList);
 
 	// Create the title
-	QVBoxLayout *vbox = new QVBoxLayout(this);
+	QVBoxLayout *vbox = new QVBoxLayout;
 	vbox->setMargin(0);
 	vbox->setSpacing(KDialog::spacingHint());
 
@@ -315,15 +315,15 @@ void ConduitConfigWidget::fillLists()
 	// List of installed (enabled) actions and conduits.
 	QStringList potentiallyInstalled = KPilotSettings::installedConduits();
 
-	DEBUGKPILOT << potentiallyInstalled.join( QString(',') );
-
 	// "Install Files" is treated as a conduit
 	q = createCheckableItem( conduits, i18n("Install Files"),
 		i18n("Install files that are dragged to KPilot onto the handheld."),
 		CSL1("internal_fileinstall") );
 	// "Install Files" is possibly enabled.
-	if (potentiallyInstalled.indexOf(q->text(CONDUIT_DESKTOP))>=0) \
+	if (potentiallyInstalled.indexOf(q->text(CONDUIT_DESKTOP))>=0)
+	{
 		q->setCheckState(CONDUIT_NAME, Qt::Checked);
+	}
 
 	// Get all conduits installed on the system
 	KService::List offers = KServiceTypeTrader::self()->query( CSL1("KPilotConduit") );
@@ -331,21 +331,30 @@ void ConduitConfigWidget::fillLists()
 	for (KService::List::ConstIterator i = offers.begin(); i!=e; ++i)
 	{
 		const KService::Ptr o = *i;
-
-		DEBUGKPILOT << '[' << o->desktopEntryName()
-			<< "] = [" << o->name() << ']';
+		bool is_active;
 
 		if (!o->exec().isEmpty())
 		{
 			WARNINGKPILOT << "Old-style conduit found in ["
 				<< o->name() << ']';
+			continue;
 		}
 
 		q = createCheckableItem( conduits, o->name(),
 			o->comment(),
 			o->library(), o->desktopEntryName() );
-		if (potentiallyInstalled.indexOf(q->text(CONDUIT_DESKTOP))>=0) \
+		is_active = potentiallyInstalled.indexOf(q->text(CONDUIT_DESKTOP)) >= 0;
+		
+		if (is_active)
+		{
 			q->setCheckState(CONDUIT_NAME, Qt::Checked);
+		}
+		
+		DEBUGKPILOT << '[' << o->desktopEntryName()
+			<< "] = [" << o->name() << ']'
+			<< ( is_active ?  " active" : "" );
+
+
 	}
 }
 
