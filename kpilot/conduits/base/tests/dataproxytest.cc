@@ -55,7 +55,7 @@ private slots:
 	void testRemove();
 	void testRecordCount();
 	void testIds();
-	void testSyncFinished();
+	void testSetEndcount();
 	void testIterationModeAll();
 	void testIterationModeModified();
 	void testCommitCreated();
@@ -172,7 +172,7 @@ void DataProxyTest::testIds()
 	QVERIFY( fProxy.ids().contains( id2 ) );
 }
 
-void DataProxyTest::testSyncFinished()
+void DataProxyTest::testSetEndcount()
 {
 	TestDataProxy fProxy;
 	
@@ -183,7 +183,7 @@ void DataProxyTest::testSyncFinished()
 	fProxy.create( rec2 );
 	
 	QVERIFY( fProxy.counter()->countEnd() == 0 );
-	fProxy.syncFinished();
+	fProxy.setEndcount();
 	QVERIFY( fProxy.counter()->countEnd() == 2 );
 }
 

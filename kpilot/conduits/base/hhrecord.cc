@@ -73,11 +73,12 @@ void HHRecord::setId( const QString &id )
 {
 	FUNCTIONSETUP;
 	
-	recordid_t rid = id.toULong();
+	bool converted;
+	recordid_t rid = id.toULong( &converted );
 	
-	if( !rid )
+	if( !converted )
 	{
-		DEBUGKPILOT <<"Could not convert" << id <<" to ulong. Id not set!";
+		DEBUGKPILOT <<"Could not convert " << id << " to ulong. Id not set!";
 		return;
 	}
 	else

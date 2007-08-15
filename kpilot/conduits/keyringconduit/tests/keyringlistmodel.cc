@@ -69,7 +69,7 @@ QVariant KeyringListModel::data ( const QModelIndex & index, int role ) const
 	
 	if( role == Qt::DisplayRole )
 	{
-		return fRecords.at( index.row() )->name();
+		return fRecords.at( index.row() )->toString();
 	}
 	
 	return QVariant();

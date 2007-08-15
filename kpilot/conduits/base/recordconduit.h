@@ -56,7 +56,7 @@ protected:
 // Methods
 public:
 	explicit RecordConduit( KPilotLink *o, const QStringList &a = QStringList()
-		, const QString &conduitName = QString()
+		, const QString &conduitName = QString( "Conduit name not set." )
 		, const QString &databaseName = QString() );
 	
 	virtual ~RecordConduit();
@@ -117,7 +117,7 @@ protected:
 	 */
 	virtual void test() = 0;
 
-	virtual bool createBackupDatabase() = 0;
+	void updateBackupDatabase();
 
 	/**
 	 * Executes the HotSync or the FullSync flow (see 4.1 and 5.2). What actualy

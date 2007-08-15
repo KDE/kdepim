@@ -36,6 +36,7 @@ private:
 	int fCreateCount;
 	int fUpdateCount;
 	int fDeleteCount;
+	int fId;
 	QMap<QString, TestRecord*> fUpdatedRecord;
 	QMap<QString, TestRecord*> fDeletedRecord;
 	
@@ -65,6 +66,11 @@ public:
 	QMap<QString, TestRecord*>* deletedRecords() { return &fDeletedRecord; }
 	
 	virtual void printRecords();
+
+	/**
+	 * Generates a unique id for a new record.
+	 */
+	 virtual QString generateUniqueId() { return QString::number( --fId );  }
 
 	/*
 	 * Implement virtual methods to be able to instantiate this. The testclass 

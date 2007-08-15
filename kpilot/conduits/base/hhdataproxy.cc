@@ -26,24 +26,43 @@
 */
 
 #include "hhdataproxy.h"
-#include "hhrecord.h"
 
 #include "pilotDatabase.h"
 #include "pilotRecord.h"
 #include "options.h"
 
+#include "hhrecord.h"
+
 HHDataProxy::HHDataProxy( PilotDatabase *db ) : fDatabase( db )
+	, fLastUsedUniqueId( 0L )
 {
 }
 
-void HHDataProxy::resetSyncFlags()
+void HHDataProxy::syncFinished()
 {
 	FUNCTIONSETUP;
 	
-	if( fDatabase )
+	if( fDatabase && fDatabase->isOpen() )
 	{
 		fDatabase->resetSyncFlags();
 	}
+}
+
+QString HHDataProxy::generateUniqueId()
+{
+	recordid_t id = 0;
+	
+	QList<QString> ids = fRecords.keys();
+	
+	for( int i = 0; i < fRecords.size(); i++ )
+	{
+		if( ids.at( i ).toULong() > id )
+		{
+			id = ids.at( i ).toULong();
+		}
+	}
+	
+	return QString::number( id + fCreated.size() + 1 );
 }
 
 void HHDataProxy::commitCreate( Record *rec )
@@ -56,7 +75,7 @@ void HHDataProxy::commitCreate( Record *rec )
 		{
 			// Set the id to 0 to make sure that the database asigns a valid id to the
 			// record.
-			hhRec->setId( 0 );
+			hhRec->setId( QString::number( 0 ) );
 			fDatabase->writeRecord( hhRec->pilotRecord() );
 		}
 		else

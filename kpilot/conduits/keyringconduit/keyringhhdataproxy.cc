@@ -62,6 +62,10 @@ KeyringHHDataProxy::KeyringHHDataProxy( const QString &dbPath )
 	if( dbPath.right( 4 ) == CSL1( ".pdb" ) )
 	{
 		fDatabase = new PilotLocalDatabase( dbPath.left( dbPath.length() - 4 ) );
+		if( fDatabase && fDatabase->isOpen() )
+		{
+			fZeroRecord = fDatabase->readRecordByIndex( 0 );
+		}
 	}
 	else
 	{
@@ -76,6 +80,7 @@ KeyringHHDataProxy::~KeyringHHDataProxy()
 	if( fOwner )
 	{
 		// We created the database ourself so we should delete it.
+		DEBUGKPILOT << "Saving " << fDatabase->recordCount() << " records.";
 		delete fDatabase;
 		fDatabase = 0l;
 	}
@@ -199,38 +204,10 @@ bool KeyringHHDataProxy::createDataStore()
 		buf->used = saltedHash.size();
 		memcpy( buf->data, (unsigned char*) saltedHash.data(), saltedHash.size() );
 		
-		
-		/*
-		 * Warning: PilotLocalDatabase does not work as expected. The documentation
-		 * of writeRecord states:
-		 *
-		 * "Writes a new record to database (if 'id' == 0, one will be
-		 *  assigned to newRecord)"
-		 *
-		 * Howevere this doesn't happen when calling
-		 * PilotLocalDatabase::writeRecord( PilotRecord * ). Even if the id is 0 it
-		 * remains unchanged.
-		 */
 		fZeroRecord = new PilotRecord( buf, 0, 0, 0);
 		fZeroRecord->setSecret();
-		// First record, id 0
 		
 		fDatabase->writeRecord( fZeroRecord );
-		
-		// Create a record to show KPilot was there =:)
-		KeyringHHRecord *rec = new KeyringHHRecord( CSL1( "KPilot" )
-			, CSL1( "KPilot" ), CSL1( "KPilot" )
-			, CSL1( "This database is created with KPilot."
-					"\nThanks for using kpilot!" )
-			, fDesKey );
-		
-		// Second record and localDb? Set id.
-		if( fDatabase->dbType() == PilotDatabase::eLocalDB )
-		{
-			rec->setId( CSL1( "1" ) );
-		}
-		
-		fDatabase->writeRecord( rec->pilotRecord() );
 		
 		return true;
 	}

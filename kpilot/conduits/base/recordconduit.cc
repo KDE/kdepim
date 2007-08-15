@@ -26,6 +26,12 @@
 */
 
 #include "recordconduit.h"
+
+#include "options.h"
+#include "pilotDatabase.h"
+#include "pilotRecord.h"
+#include "kpilotSettings.h"
+
 #include "idmapping.h"
 #include "cudcounter.h"
 #include "dataproxy.h"
@@ -34,19 +40,17 @@
 #include "hhrecord.h"
 #include "recordconduitSettings.h"
 
-#include "options.h"
-#include "kpilotSettings.h"
-
 #include <KMessageBox>
 
 RecordConduit::RecordConduit( KPilotLink *o, const QStringList &a
 	, const QString &databaseName, const QString &conduitName ) :
-	ConduitAction(o, "RecordConduitBase", a),
-	fHHDataProxy(0L),
-	fBackupDataProxy(0L),
-	fPCDataProxy(0L)
+	ConduitAction( o, conduitName.toLatin1(), a ),
+	fDatabaseName( databaseName ),
+	fHHDataProxy( 0L ),
+	fBackupDataProxy( 0L ),
+	fPCDataProxy( 0L )
+	
 {
-	fDatabaseName = databaseName;
 	fConduitName = conduitName;
 }
 
@@ -163,9 +167,9 @@ RecordConduit::~RecordConduit()
 		return false; // 6.3.7 and 6.3.8
 	}
 	
-	// Sync finished, clean up things.
-	fHHDataProxy->syncFinished();
-	fPCDataProxy->syncFinished();
+	// Sync finished, set the endcount of the CUD counters
+	fHHDataProxy->setEndcount();
+	fPCDataProxy->setEndcount();
 	
 	fMapping->setLastSyncedDate( QDateTime::currentDateTime() );
 	if( !fMapping->isValid( fHHDataProxy->ids() ) )
@@ -187,6 +191,7 @@ RecordConduit::~RecordConduit()
 	 */
 	if( !fHHDataProxy->commit() )
 	{
+		DEBUGKPILOT << "Commit of hh dataproxy failed.";
 		fHHDataProxy->rollback();
 		// TODO: notify user.
 		return false;
@@ -194,6 +199,8 @@ RecordConduit::~RecordConduit()
 	
 	if( !fPCDataProxy->commit() )
 	{
+		DEBUGKPILOT << "Commit of pc dataproxy failed.";
+		
 		fPCDataProxy->rollback();
 		fHHDataProxy->rollback();
 		// TODO: notify user.
@@ -218,24 +225,21 @@ RecordConduit::~RecordConduit()
 	// Now we can commit the mapping.
 	if( !fMapping->commit() )
 	{
+		DEBUGKPILOT << "Commit of mapping failed.";
 		fMapping->rollback();
 		fPCDataProxy->rollback();
 		fHHDataProxy->rollback();
 		return false;
 	}
 	
-	// If commit fails every commit should be undone and the user should be 
-	// notified about the failure.
-	if( !createBackupDatabase() )
-	{
-		fMapping->rollback();
-		fPCDataProxy->rollback();
-		fHHDataProxy->rollback();
-		// TODO: notify user.
-		return false;
-	}
+	// Make sure the backup database is an exact copy of the pilot database.
+	updateBackupDatabase();
 	
-	return true;
+	// Clean up things like modified flags.
+	fHHDataProxy->syncFinished();
+	fPCDataProxy->syncFinished();
+	
+	return delayDone();
 }
 
 bool RecordConduit::checkVolatility()
@@ -308,6 +312,36 @@ bool RecordConduit::checkVolatility()
 	return false;
 }
 
+void RecordConduit::updateBackupDatabase()
+{
+	FUNCTIONSETUP;
+	
+	int index = 0;
+	PilotRecord *rec = fDatabase->readRecordByIndex( index );
+	QList<recordid_t> addedIds;
+	
+	// Copy all records from the pilot database to the local copy of it.
+	while( rec )
+	{
+		fLocalDatabase->writeRecord( rec );
+		addedIds.append( rec->id() );
+		rec = fDatabase->readRecordByIndex( ++index );
+	}
+	
+	index = 0;
+	rec = fLocalDatabase->readRecordByIndex( index );
+	
+	// Remove all records that are not explicitly added in the previous loop.
+	while( rec )
+	{
+		if( !addedIds.contains( rec->id() ) )
+		{
+			fLocalDatabase->deleteRecord( rec->id() );
+		}
+		
+		rec = fLocalDatabase->readRecordByIndex( ++index );
+	}
+}
 
 // 4.1 || 5.2
 void RecordConduit::hotOrFullSync()

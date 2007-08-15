@@ -29,6 +29,8 @@
 
 #include "dataproxy.h"
 
+#include <pi-macros.h> // For recordid_t
+
 class PilotDatabase;
 class PilotRecord;
 class HHRecord;
@@ -36,14 +38,18 @@ class HHRecord;
 class KPILOT_EXPORT HHDataProxy : public DataProxy {
 public:
 	HHDataProxy( PilotDatabase *db );
-
-	void resetSyncFlags();
 	
 	/**
 	 * Returns whether or not the pilot database is opened.
 	 */
 	virtual bool isOpen() const;
-
+	
+	/**
+	 * Notifies the proxy that the synchronization is finished and that
+	 * no modifications will be done after this.
+	 */
+	virtual void syncFinished();
+	
 protected:
 	/**
 	 * Implementing class should call this method in there constructor if they
@@ -63,6 +69,11 @@ protected:
 	virtual HHRecord* createHHRecord( PilotRecord *rec ) = 0;
 	
 	/**
+	 * Generates a unique id for a new record.
+	 */
+	 virtual QString generateUniqueId();
+	
+	/**
 	 * Commits created record @p rec to the datastore.
 	 */
 	virtual void commitCreate( Record *rec );
@@ -79,5 +90,7 @@ protected:
 
 protected:
 	PilotDatabase *fDatabase;
+	recordid_t fLastUsedUniqueId;
+	QList<recordid_t> fResettedRecords;
 };
 #endif

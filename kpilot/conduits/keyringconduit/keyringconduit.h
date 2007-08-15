@@ -80,8 +80,6 @@ public:
 	 */
 	virtual void test() {}
 
-	virtual bool createBackupDatabase();
-
 private: // functions
  QString askPassword() const;
 

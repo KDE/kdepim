@@ -302,5 +302,12 @@ QString KeyringHHRecord::toString() const
 {
 	FUNCTIONSETUP;
 	
-	return id() + " - " + fName;
+	QString flags( '[' );
+
+	fRecord->isModified() ? flags.append( 'M' ) : flags.append( '-' );
+	fRecord->isArchived() ? flags.append( 'A' ) : flags.append( '-' );
+	fRecord->isDeleted() ? flags.append( 'D' ) : flags.append( '-' );
+	flags.append( ']' );
+
+	return id() + CSL1( " - " ) + fName + CSL1( " " ) + flags;
 }

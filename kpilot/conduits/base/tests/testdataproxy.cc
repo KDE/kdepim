@@ -32,7 +32,10 @@
 
 #include "options.h"
 
-TestDataProxy::TestDataProxy() : fCreateCount(0), fUpdateCount(0), fDeleteCount(0) {}
+TestDataProxy::TestDataProxy() : fCreateCount(0), fUpdateCount(0)
+	, fDeleteCount(0), fId(0)
+{
+}
 
 TestDataProxy::TestDataProxy( int count, const QString &idPref )
 	: fCreateCount(0), fUpdateCount(0), fDeleteCount(0)

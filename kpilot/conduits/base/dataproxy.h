@@ -78,10 +78,15 @@ public:
 	const CUDCounter* counter() const;
 
 	/**
+	 * Sends the endcount for the CUD counter.
+	 */
+	void setEndcount();
+
+	/**
 	 * Notifies the proxy that the synchronization is finished and that
 	 * no modifications will be done after this.
 	 */
-	void syncFinished();
+	virtual void syncFinished() {}
 
 	/**
 	 * Sets the mode which is used to iterate over the loaded records. It defaults
@@ -153,6 +158,11 @@ public:
 
 protected: // Functions
 	/**
+	 * Generates a unique id for a new record.
+	 */
+	virtual QString generateUniqueId() = 0;
+	
+	/**
 	 * Commits created record @p rec to the datastore. Returns the id that the
 	 * data store created for this record.
 	 */
@@ -208,8 +218,5 @@ protected: // Members
 	 * The list of ids that has changed during a commit or a rollback.
 	 */
 	QMap<QString, QString> fChangedIds;
-
-private:
-	int fLastId;
 };
 #endif

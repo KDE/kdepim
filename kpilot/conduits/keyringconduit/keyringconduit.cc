@@ -260,9 +260,3 @@ void KeyringConduit::copy( const HHRecord *from, Record *to  )
 	// Don't implement things twice, just call the other copy method.
 	copy( (Record*) from, static_cast<HHRecord*>( to ) );
 }
-
-bool KeyringConduit::createBackupDatabase()
-{
-	#warning not implemented.
-	return false;
-}

@@ -190,7 +190,7 @@ void RCFirstSyncTest::testNoMatch()
 	QVERIFY( conduit.equal( rec1, hhRec ) );
 	
 	QString pcId = conduit.mapping()->pcRecordId( rec2->id() );
-	Record *pcRec = conduit.pcDataProxy()->find( hhId );
+	Record *pcRec = conduit.pcDataProxy()->find( pcId );
 	
 	QVERIFY( conduit.equal( pcRec, rec2 ) );
 }
