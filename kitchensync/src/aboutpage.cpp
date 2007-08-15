@@ -84,11 +84,11 @@ AboutPage::AboutPage( QWidget *parent )
   part->end();
 
   connect( part->browserExtension(),
-           SIGNAL( openUrlRequest( const KUrl&, const KParts::URLArgs& ) ),
+           SIGNAL( openUrlRequest( const KUrl&, const KParts::OpenUrlArguments&, const KParts::BrowserArguments& ) ),
            SLOT( handleUrl( const KUrl& ) ) );
 
   connect( part->browserExtension(),
-           SIGNAL( createNewWindow( const KUrl&, const KParts::URLArgs& ) ),
+           SIGNAL( createNewWindow( const KUrl&, const KParts::OpenUrlArguments&, const KParts::BrowserArguments& ) ),
            SLOT( handleUrl( const KUrl& ) ) );
 }
 

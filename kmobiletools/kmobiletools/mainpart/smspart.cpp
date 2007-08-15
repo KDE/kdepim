@@ -45,7 +45,7 @@ smsPart::smsPart(QWidget *parentWidget, const char *widgetname, QObject *parent,
     writeHome();
     setEncoding( "utf16", true );
     setCharset( "utf16", true );
-    connect(browserExtension(), SIGNAL(openUrlRequest(const KUrl &, const KParts::URLArgs &) ), this, SLOT(openUrlRequest(const KUrl& ) ) );
+    connect(browserExtension(), SIGNAL(openUrlRequest(const KUrl &, const KParts::OpenUrlArguments &, const KParts::BrowserArguments &) ), this, SLOT(openUrlRequest(const KUrl& ) ) );
     connect(this, SIGNAL(popupMenu( const QString&, const QPoint& )), this, SLOT(slotPopupMenu( const QString&, const QPoint& )) );
 //     connect(browserExtension(), SIGNAL(selectionInfo(const QString & )), this, SLOT(slotSelectedText( const QString& )) );
     setJScriptEnabled(true);

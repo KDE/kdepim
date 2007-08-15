@@ -113,7 +113,7 @@ ArticleWidget::ArticleWidget( QWidget *parent,
   mViewer->setMetaRefreshEnabled( false );
   mViewer->setOnlyLocalReferences( true );
   mViewer->view()->setFocusPolicy( Qt::WheelFocus );
-  connect( mViewer->browserExtension(), SIGNAL(openUrlRequestDelayed(const KUrl&, const KParts::URLArgs&)),
+  connect( mViewer->browserExtension(), SIGNAL(openUrlRequestDelayed(const KUrl&, const KParts::OpenUrlArguments&, const KParts::BrowserArguments&)),
            SLOT(slotURLClicked(const KUrl&)) );
   connect( mViewer, SIGNAL(popupMenu(const QString&, const QPoint&)),
            SLOT(slotURLPopup(const QString&, const QPoint&)) );

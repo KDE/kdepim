@@ -67,7 +67,7 @@ homepagePart::homepagePart(QWidget *parent, const char *name)
     d=new homepagePartPrivate;
     setObjectName(QLatin1String(name));
     view()->setSizePolicy(QSizePolicy(QSizePolicy::Expanding,QSizePolicy::Expanding/*, 5, 2*/) );
-    connect( browserExtension(), SIGNAL( openUrlRequest(const KUrl &, const KParts::URLArgs &) ),
+    connect( browserExtension(), SIGNAL( openUrlRequest(const KUrl &, const KParts::OpenUrlArguments &, const KParts::BrowserArguments &) ),
              this, SLOT( openUrlRequest(const KUrl &) ) );
     connect( this, SIGNAL(popupMenu(const QString &, const QPoint &) ),
              this, SLOT(slotContextMenu(const QString&, const QPoint& ) ) );
@@ -117,7 +117,7 @@ void homepagePart::refreshData(const QString &data)
 
 
 /*!
-    \fn homepagePart::openUrlRequest(const KUrl &url, const KParts::URLArgs &args=KParts::URLArgs())
+    \fn homepagePart::openUrlRequest(const KUrl &url)
  */
 void homepagePart::openUrlRequest(const KUrl &url)
 {
