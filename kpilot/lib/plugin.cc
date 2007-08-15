@@ -75,8 +75,6 @@ ConduitConfigBase::ConduitConfigBase(QWidget *parent,
 	{
 		setObjectName(name);
 	}
-
-	WARNINGKPILOT << "foo" ;
 }
 
 ConduitConfigBase::~ConduitConfigBase()
