@@ -25,7 +25,6 @@
 #ifndef PRINTINGWIZARD_H
 #define PRINTINGWIZARD_H
 
-#include <q3ptrlist.h>
 #include <QStringList>
 //Added by qt3to4:
 #include <QVBoxLayout>

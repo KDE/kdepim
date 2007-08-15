@@ -22,7 +22,6 @@
 */
 
 
-#include <q3paintdevicemetrics.h>
 #include <QPainter>
 
 #include <kdebug.h>

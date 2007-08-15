@@ -57,11 +57,10 @@ SelectionPage::SelectionPage( QWidget* parent, const char* name )
   mButtonGroup = new QGroupBox( this );
   //mButtonGroup->setFrameShape( QFrame::NoFrame );
  // mButtonGroup->setColumnLayout( 0, Qt::Vertical );
+  QGridLayout *groupLayout = new QGridLayout();
+  mButtonGroup->setLayout( groupLayout );
   mButtonGroup->layout()->setSpacing( KDialog::spacingHint() );
   mButtonGroup->layout()->setMargin( KDialog::marginHint() );
-
-  QGridLayout *groupLayout = new QGridLayout();
-  mButtonGroup->layout()->addItem( groupLayout );
   groupLayout->setAlignment( Qt::AlignTop );
 
   mUseWholeBook = new QRadioButton( i18n( "&All contacts" ), mButtonGroup );

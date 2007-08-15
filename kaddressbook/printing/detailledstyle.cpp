@@ -32,7 +32,6 @@
 #include <QLayout>
 #include <klocale.h>
 #include <knuminput.h>
-#include <q3paintdevicemetrics.h>
 #include <QPainter>
 #include <kprinter.h>
 #include <kstandarddirs.h>

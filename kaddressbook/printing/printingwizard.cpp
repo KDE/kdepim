@@ -23,10 +23,8 @@
 */
 
 #include <QComboBox>
-#include <q3header.h>
 #include <QLabel>
 #include <QLayout>
-#include <q3listview.h>
 #include <QPixmap>
 #include <QPushButton>
 #include <QRadioButton>
@@ -116,9 +114,8 @@ void PrintingWizard::slotStyleSelected( int index )
   if ( mStyle )
     mStyle->hidePages();
 
-  if ( mStyleList.at( index ) != 0 )
-    mStyle = mStyleList.at( index );
-  else {
+  mStyle = mStyleList.value( index );
+  if ( !mStyle ) {
     PrintStyleFactory *factory = mStyleFactories.at( index );
     kDebug(5720) <<"PrintingWizardImpl::slotStyleSelected:"
                   << "creating print style"
