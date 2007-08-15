@@ -33,7 +33,8 @@
 #include <QFrame>
 #include <qlabel.h>
 #include <qlayout.h>
-#include <qlineedit.h>
+
+#include <KLineEdit>
 
 #include "pilotAddress.h"
 
@@ -136,7 +137,7 @@ void AddressEditor::fillFields()
 
 #define MakeField(text,field,row,column) \
 		t=new QLabel(text,p); \
-		field = new QLineEdit(p); \
+		field = new KLineEdit(p); \
 		field->setMinimumWidth(20*SPACING); \
 		t->setBuddy(field); \
 		grid->addWidget(t,row,column); \
@@ -144,7 +145,7 @@ void AddressEditor::fillFields()
 
 #define MakeFieldL(text,label,field,row,column) \
 		label = new QLabel(text,p); \
-		field = new QLineEdit(p); \
+		field = new KLineEdit(p); \
 		field->setMinimumWidth(20*SPACING); \
 		label->setBuddy(field); \
 		grid->addWidget(label,row,column); \

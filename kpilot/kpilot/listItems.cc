@@ -140,8 +140,8 @@ void PilotCheckListItem::stateChange ( bool on)
 #endif
 
 PilotListViewItem::PilotListViewItem( Q3ListView * parent,
-	QString label1, QString label2, QString label3, QString label4,
-	recordid_t pilotid, void *r):
+	const QString &label1, const QString &label2, const QString &label3
+	, const QString &label4, recordid_t pilotid, void *r):
 	Q3ListViewItem(parent, label1, label2, label3, label4,
 		QString::null, QString::null, QString::null, QString::null),
 	fid(pilotid),

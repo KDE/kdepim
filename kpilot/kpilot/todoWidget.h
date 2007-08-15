@@ -30,11 +30,12 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
-class QComboBox;
 class QListWidget;
 class QListWidgetItem;
 class QPushButton;
-class QTextView;
+
+class KComboBox;
+class KTextEdit;
 
 class PilotTodoEntry;
 
@@ -112,7 +113,7 @@ private:
 	QString createTitle(PilotTodoEntry *,int displayMode);
 
 	/**
-	* We use a QComboBox fCatList to hold the user-visible names
+	* We use a KComboBox fCatList to hold the user-visible names
 	* of all the categories. The QTextView fTodoInfo is for
 	* displaying the currently selected todo, if any.
 	* The QListView fListBox lists all the todoes in the
@@ -125,9 +126,9 @@ private:
 	*
 	* The two buttons should speak for themselves.
 	*/
-	QComboBox *fCategoryList;
+	KComboBox *fCategoryList;
 	QListWidget *fTodoList;
-	QTextEdit *fTodoViewer;
+	KTextEdit *fTodoViewer;
 	QPushButton *fEditButton,*fDeleteButton;
 
 	class Private;

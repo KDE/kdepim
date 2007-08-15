@@ -86,8 +86,8 @@ class PilotListViewItem : public Q3ListViewItem
 {
 public:
 	PilotListViewItem( Q3ListView * parent,
-		QString label1, QString label2 = QString::null,
-		QString label3 = QString::null, QString label4 = QString::null,
+		const QString &label1, const QString &label2 = QString::null,
+		const QString &label3 = QString::null, const QString &label4 = QString::null,
 		recordid_t pilotid=0, void *r=0);
 	virtual ~PilotListViewItem();
 	recordid_t id() const {return fid;};

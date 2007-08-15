@@ -398,7 +398,7 @@ void PilotDaemon::showTray()
 	updateTrayStatus();
 }
 
-void PilotDaemon::setTempDevice(QString d)
+void PilotDaemon::setTempDevice(const QString &d)
 {
 	if ( !d.isEmpty() ){
 		fTempDevice = d;
@@ -641,7 +641,7 @@ void PilotDaemon::requestSync(int mode)
 		i18n("Please press the HotSync button."));
 }
 
-void PilotDaemon::requestSyncType(QString s)
+void PilotDaemon::requestSyncType(const QString &s)
 {
 	FUNCTIONSETUP;
 

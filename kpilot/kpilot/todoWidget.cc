@@ -29,17 +29,16 @@
 
 #include "options.h"
 
-#include <QComboBox>
 #include <QGridLayout>
 #include <QLabel>
 #include <QList>
 #include <QListWidget>
 #include <QListWidgetItem>
 #include <QPushButton>
-#include <QTextEdit>
 
-
+#include <KComboBox>
 #include <KMessageBox>
+#include <KTextEdit>
 
 #include "pilot.h"
 #include "pilotLocalDatabase.h"
@@ -113,7 +112,7 @@ TodoWidget::TodoWidget(QWidget *parent, const QString & path) :
 	QGridLayout *grid = new QGridLayout(this);
 	grid->setSpacing( SPACING );
 
-	fCategoryList = new QComboBox(this);
+	fCategoryList = new KComboBox(this);
 	grid->addWidget(fCategoryList, 0, 1);
 	connect(fCategoryList, SIGNAL(activated(int)),
 		this, SLOT(slotSetCategory(int)));
@@ -137,7 +136,7 @@ TodoWidget::TodoWidget(QWidget *parent, const QString & path) :
 	grid->addWidget(label, 0, 2);
 
 	// todo info text view
-	fTodoViewer = new QTextEdit(this);
+	fTodoViewer = new KTextEdit(this);
 	fTodoViewer->setReadOnly( true );
 	grid->addWidget(fTodoViewer, 1, 2, 4, 1);
 

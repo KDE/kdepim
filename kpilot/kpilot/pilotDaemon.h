@@ -165,14 +165,14 @@ public:
 public slots:
 	virtual void requestSync(int);
 public:
-	virtual void requestSyncType(QString);
+	virtual void requestSyncType(const QString&);
 	virtual void requestRegularSyncNext();
 	virtual int nextSyncType() const;
 	virtual void requestSyncOptions(bool,bool);
 
 	virtual void quitNow();
 	virtual void reloadSettings();
-	virtual void setTempDevice(QString d);
+	virtual void setTempDevice(const QString &d);
 
 	virtual void stopListening();
 	virtual void startListening();

@@ -43,11 +43,11 @@
 #include <qlayout.h>
 #include <qdom.h>
 #include <q3textstream.h>
-
 #include <qlabel.h>
 #include <qdatetime.h>
 #include <q3ptrlist.h>
-#include <QComboBox>
+
+#include <KComboBox>
 #include <kmessagebox.h>
 #include <kfiledialog.h>
 #include <kdeversion.h>
@@ -213,10 +213,10 @@ void MemoWidget::setupWidget()
 	QLabel *label = NULL;
 	QPushButton *button = NULL;
 	QGridLayout *grid = new QGridLayout(this, 5, 4);
-	grid->setMargin(SPACING);
+	grid->setSpacing(SPACING);
 	QString wt;
 
-	fCatList = new QComboBox(this);
+	fCatList = new KComboBox(this);
 	grid->addWidget(fCatList, 0, 1);
 	connect(fCatList, SIGNAL(activated(int)),
 		this, SLOT(slotSetCategory(int)));

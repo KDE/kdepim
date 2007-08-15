@@ -136,7 +136,7 @@ protected:
 private:
 	OrgKdeKpilotDaemonInterface *fDaemonInterface;
 
-	void log(QString s);
+	void log(const QString &s);
 
 	/**
 	* This is the private-d-pointer, KPilot style. Not everything

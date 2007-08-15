@@ -36,7 +36,7 @@
 //Added by qt3to4:
 #include <QLabel>
 
-class QLineEdit;
+class KLineEdit;
 
 class AddressEditor : public KDialog
 {
@@ -64,20 +64,20 @@ private:
 	PilotAddress* fAddress;
 	PilotAddressInfo *fAppInfo;
 	// entry fields
-	QLineEdit *fCustom4Field;
-	QLineEdit *fCustom3Field;
-	QLineEdit *fCustom2Field;
-	QLineEdit *fCustom1Field;
-	QLineEdit *fCountryField;
-	QLineEdit *fZipField;
-	QLineEdit *fStateField;
-	QLineEdit *fCityField;
-	QLineEdit *fAddressField;
-	QLineEdit *fPhoneField[5];
-	QLineEdit *fCompanyField;
-	QLineEdit *fTitleField;
-	QLineEdit *fFirstNameField;
-	QLineEdit *fLastNameField;
+	KLineEdit *fCustom4Field;
+	KLineEdit *fCustom3Field;
+	KLineEdit *fCustom2Field;
+	KLineEdit *fCustom1Field;
+	KLineEdit *fCountryField;
+	KLineEdit *fZipField;
+	KLineEdit *fStateField;
+	KLineEdit *fCityField;
+	KLineEdit *fAddressField;
+	KLineEdit *fPhoneField[5];
+	KLineEdit *fCompanyField;
+	KLineEdit *fTitleField;
+	KLineEdit *fFirstNameField;
+	KLineEdit *fLastNameField;
 	// phone labels (changing!)
 	QLabel    *m_phoneLabel[5];
 

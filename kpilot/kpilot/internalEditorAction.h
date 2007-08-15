@@ -52,7 +52,7 @@ private slots:
 	void cleanup();
 
 private:
-	bool queryUseKPilotChanges(QString dbName, recordid_t id,
+	bool queryUseKPilotChanges(const QString &dbName, recordid_t id,
 		PilotRecord*localrec, PilotRecord*serialrec, PilotDatabase*db);
 	QStringList dirtyDBs;
 	QStringList::Iterator dbIter;

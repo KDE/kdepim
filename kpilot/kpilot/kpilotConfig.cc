@@ -124,7 +124,7 @@ static QFont *thefont = 0L;
 }
 
 
-void KPilotConfig::addDirtyDatabase(QString db)
+void KPilotConfig::addDirtyDatabase(const QString &db)
 {
 	FUNCTIONSETUP;
 	QStringList l(KPilotSettings::dirtyDatabases());
@@ -136,7 +136,7 @@ void KPilotConfig::addDirtyDatabase(QString db)
 }
 
 
-void KPilotConfig::addAppBlockChangedDatabase(QString db)
+void KPilotConfig::addAppBlockChangedDatabase(const QString &db)
 {
 	QStringList l(KPilotSettings::appBlockChangedDatabases());
 	if (!l.contains(db))
@@ -146,7 +146,7 @@ void KPilotConfig::addAppBlockChangedDatabase(QString db)
 	}
 }
 
-void KPilotConfig::addFlagsChangedDatabase(QString db)
+void KPilotConfig::addFlagsChangedDatabase(const QString &db)
 {
 	QStringList l(KPilotSettings::flagsChangedDatabases());
 	if (!l.contains(db))

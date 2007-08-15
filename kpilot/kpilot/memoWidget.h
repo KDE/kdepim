@@ -33,8 +33,9 @@
 #include <Q3PtrList>
 
 class Q3ListBox;
-class QComboBox;
 class QPushButton;
+
+class KComboBox;
 class KTextEdit;
 
 class PilotMemo;
@@ -98,7 +99,7 @@ private:
 
 	class Private;
 
-	QComboBox* fCatList;
+	KComboBox* fCatList;
 
 	KTextEdit*		fTextWidget;
 	Private *d;

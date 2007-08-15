@@ -33,7 +33,7 @@
 
 class QLabel;
 class QProgressBar;
-class QTextEdit;
+class KTextEdit;
 
 class KHBox;
 
@@ -53,9 +53,9 @@ public:
 	/**
 	* D-Bus interface.
 	*/
-	virtual void logError(QString);
-	virtual void logMessage(QString);
-	virtual void logProgress(QString,int);
+	virtual void logError(const QString&);
+	virtual void logMessage(const QString&);
+	virtual void logProgress(const QString&,int);
 	virtual void logStartSync();
 	virtual void logEndSync();
 
@@ -78,7 +78,7 @@ private:
 	bool saveFile(const QString &);
 
 private:
-	QTextEdit *fLog;
+	KTextEdit *fLog;
 	bool fShowTime;
 	QLabel *fLabel;
 	QProgressBar *fProgress;

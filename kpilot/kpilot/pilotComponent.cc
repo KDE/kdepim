@@ -161,7 +161,7 @@ void PilotComponent::slotShowComponent()
 	return true;
 }
 
-void PilotComponent::markDBDirty(const QString db)
+void PilotComponent::markDBDirty(const QString &db)
 {
 	FUNCTIONSETUP;
 	KPilotConfig::addDirtyDatabase(db);

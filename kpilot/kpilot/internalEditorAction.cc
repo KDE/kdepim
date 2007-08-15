@@ -146,7 +146,7 @@ nextDB:
 	QTimer::singleShot(0, this, SLOT(syncDirtyDB()));
 }
 
-bool InternalEditorAction::queryUseKPilotChanges(QString dbName, recordid_t id, PilotRecord*localrec, PilotRecord*serialrec, PilotDatabase*db)
+bool InternalEditorAction::queryUseKPilotChanges(const QString &dbName, recordid_t id, PilotRecord*localrec, PilotRecord*serialrec, PilotDatabase*db)
 {
 	FUNCTIONSETUP;
 	bool knownDB=true;

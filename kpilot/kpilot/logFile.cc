@@ -104,17 +104,17 @@ void LogFile::logEndSync()
 	}
 }
 
-void LogFile::logMessage(QString s)
+void LogFile::logMessage(const QString &s)
 {
 	addMessage(s);
 }
 
-void LogFile::logError(QString s)
+void LogFile::logError(const QString &s)
 {
 	addMessage(s);
 }
 
-void LogFile::logProgress(QString, int)
+void LogFile::logProgress(const QString&, int)
 {
 }
 

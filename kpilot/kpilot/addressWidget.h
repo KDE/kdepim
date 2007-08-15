@@ -33,8 +33,9 @@
 #define _KPILOT_ADDRESSWIDGET_H
 
 class Q3ListBox;
-class QComboBox;
 class Q3TextView;
+
+class KComboBox;
 
 class PilotDatabase;
 
@@ -124,7 +125,7 @@ private:
 	*
 	* The two buttons should speak for themselves.
 	*/
-	QComboBox            *fCatList;
+	KComboBox            *fCatList;
 	Q3TextView            *fAddrInfo;
 	PilotAddressInfo     *fAddressAppInfo;
 	Q3PtrList<PilotAddress>   fAddressList;

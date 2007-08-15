@@ -37,11 +37,11 @@
 #include <qpainter.h>
 #include <qpixmap.h>
 #include <qpushbutton.h>
-#include <qtextedit.h>
 #include <qtextstream.h>
 #include <qtimer.h>
 
 #include <kfiledialog.h>
+#include <ktextedit.h>
 #include <kglobal.h>
 #include <khbox.h>
 #include <kmessagebox.h>
@@ -81,7 +81,7 @@ LogWidget::LogWidget(QWidget * parent) :
 	grid->setRowStretch(1, 50);
 	grid->setColStretch(2, 50);
 
-	fLog = new QTextEdit(this);
+	fLog = new KTextEdit(this);
 	fLog->setReadOnly(true);
 	fLog->setWordWrapMode(QTextOption::WordWrap);
 	fLog->setTextFormat(Qt::LogText);
@@ -205,17 +205,17 @@ void LogWidget::syncDone()
 	addMessage(i18n("<b>HotSync Finished.</b>"));
 }
 
-void LogWidget::logMessage(QString s)
+void LogWidget::logMessage(const QString &s)
 {
 	addMessage(s);
 }
 
-void LogWidget::logError(QString s)
+void LogWidget::logError(const QString &s)
 {
 	addError(s);
 }
 
-void  LogWidget::logProgress(QString s, int i)
+void  LogWidget::logProgress(const QString &s, int i)
 {
 	addProgress(s,i);
 }

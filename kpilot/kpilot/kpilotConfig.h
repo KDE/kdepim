@@ -56,9 +56,9 @@ public:
 
 
 	// Conduit configuration information
-	static void addDirtyDatabase(QString db);
-	static void addAppBlockChangedDatabase(QString db);
-	static void addFlagsChangedDatabase(QString db);
+	static void addDirtyDatabase(const QString &db);
+	static void addAppBlockChangedDatabase(const QString &db);
+	static void addFlagsChangedDatabase(const QString &db);
 
 	/**
 	* This number can be changed every time a new

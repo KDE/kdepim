@@ -37,7 +37,6 @@
 #include <q3ptrlist.h>
 #include <q3textstream.h>
 #include <q3textview.h>
-#include <qcombobox.h>
 #include <qfile.h>
 #include <qlabel.h>
 #include <qlayout.h>
@@ -45,7 +44,7 @@
 #include <qregexp.h>
 #include <qtextcodec.h>
 
-
+#include <kcombobox.h>
 #include <kfiledialog.h>
 #include <kmessagebox.h>
 
@@ -192,7 +191,7 @@ void AddressWidget::setupWidget()
 	QGridLayout *grid = new QGridLayout(this);
 	grid->setMargin(SPACING);
 
-	fCatList = new QComboBox(this);
+	fCatList = new KComboBox(this);
 	grid->addWidget(fCatList, 0, 1);
 	connect(fCatList, SIGNAL(activated(int)),
 		this, SLOT(slotSetCategory(int)));

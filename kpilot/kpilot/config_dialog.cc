@@ -220,7 +220,7 @@ ConduitConfigWidget::ConduitConfigWidget(QWidget *parent, const QStringList &arg
 	fConduitList->setColumnWidth(0, fConduitList->sizeHint().width());
 
 	fStack->resize(fStack->sizeHint()+QSize(10,40));
-	fStack->setMinimumSize(QSize(400,400));
+	fStack->setMinimumSize(QSize(520,400));
 
 	QObject::connect(fConduitList,
 		SIGNAL(currentItemChanged(QTreeWidgetItem *, QTreeWidgetItem *)),

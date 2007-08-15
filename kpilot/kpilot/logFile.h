@@ -48,9 +48,9 @@ public:
 	*/
 	virtual void logStartSync();
 	virtual void logEndSync();
-	virtual void logError(QString);
-	virtual void logMessage(QString);
-	virtual void logProgress(QString,int);
+	virtual void logError(const QString&);
+	virtual void logMessage(const QString&);
+	virtual void logProgress(const QString&,int);
 
 	void addMessage(const QString &);
 

@@ -149,7 +149,7 @@ KPilotInstaller::~KPilotInstaller()
 	(void) PilotDatabase::instanceCount();
 }
 
-void KPilotInstaller::log(QString msg)
+void KPilotInstaller::log(const QString &msg)
 {
 	if (fP->fLogWidget) 
 	{
