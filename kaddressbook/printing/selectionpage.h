@@ -28,9 +28,11 @@
 
 class QGroupBox;
 class QComboBox;
-class Q3ListView;
-class Q3ListViewItem;
 class QRadioButton;
+
+namespace KPIM {
+  class CategorySelectWidget;
+}
 
 class SelectionPage : public QWidget
 {
@@ -53,7 +55,6 @@ class SelectionPage : public QWidget
 
   private slots:
     void filterChanged( int );
-    void categoryClicked( Q3ListViewItem * i );
 
   private:
     QGroupBox* mButtonGroup;
@@ -62,7 +63,7 @@ class SelectionPage : public QWidget
     QRadioButton* mUseWholeBook;
     QRadioButton* mUseSelection;
     QComboBox* mFiltersCombo;
-    Q3ListView* mCategoriesView;
+    KPIM::CategorySelectWidget* mCategoriesView;
 };
 
 #endif // SELECTIONPAGE_H

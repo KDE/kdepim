@@ -25,12 +25,10 @@
 #include <kdialog.h>
 #include <klocale.h>
 
-#include <q3buttongroup.h>
 #include <QComboBox>
-#include <q3header.h>
+#include <QGroupBox>
 #include <QLabel>
 #include <QLayout>
-#include <q3listview.h>
 #include <QPushButton>
 #include <QRadioButton>
 #include <QStringList>
@@ -39,6 +37,9 @@
 #include <QVBoxLayout>
 #include <QGridLayout>
 
+#include <libkdepim/categoryselectdialog.h>
+
+#include "kabprefs.h"
 #include "selectionpage.h"
 
 SelectionPage::SelectionPage( QWidget* parent, const char* name )
@@ -88,16 +89,15 @@ SelectionPage::SelectionPage( QWidget* parent, const char* name )
   mFiltersCombo->setWhatsThis( i18n( "Select a filter to decide which contacts to print." ) );
   groupLayout->addWidget( mFiltersCombo, 2, 1 );
 
-  mCategoriesView = new Q3ListView( mButtonGroup );
-  mCategoriesView->addColumn( "" );
-  mCategoriesView->header()->hide();
+  mCategoriesView = new KPIM::CategorySelectWidget( mButtonGroup, KABPrefs::instance() );
+  mCategoriesView->hideButton();
+  mCategoriesView->layout()->setMargin( 0 );
   mCategoriesView->setWhatsThis( i18n( "Check the categories whose members you want to print." ) );
   groupLayout->addWidget( mCategoriesView, 3, 1 );
 
   topLayout->addWidget( mButtonGroup );
 
   connect( mFiltersCombo, SIGNAL( activated(int) ), SLOT( filterChanged(int) ) );
-  connect( mCategoriesView, SIGNAL( clicked(Q3ListViewItem*) ), SLOT( categoryClicked(Q3ListViewItem*) ) );
 }
 
 SelectionPage::~SelectionPage()
@@ -124,25 +124,14 @@ bool SelectionPage::useFilters() const
 
 void SelectionPage::setCategories( const QStringList& list )
 {
-  QStringList::ConstIterator it;
-  for ( it = list.begin(); it != list.end(); ++it )
-    new Q3CheckListItem( mCategoriesView, *it, Q3CheckListItem::CheckBox );
-
+  mCategoriesView->setCategories( list );
   mUseCategories->setEnabled( list.count() > 0 );
 }
 
 QStringList SelectionPage::categories() const
 {
-  QStringList list;
-
-  Q3ListViewItemIterator it( mCategoriesView );
-  for ( ; it.current(); ++it ) {
-    Q3CheckListItem *qcli = static_cast<Q3CheckListItem*>(it.current());
-    if ( qcli->isOn() )
-      list.append( it.current()->text( 0 ) );
-  }
-
-  return list;
+  QString lst;
+  return mCategoriesView->selectedCategories( lst );
 }
 
 bool SelectionPage::useCategories()
@@ -163,13 +152,6 @@ bool SelectionPage::useSelection() const
 void SelectionPage::filterChanged( int )
 {
   mUseFilters->setChecked( true );
-}
-
-void SelectionPage::categoryClicked( Q3ListViewItem *i )
-{
-  Q3CheckListItem *qcli = static_cast<Q3CheckListItem*>( i );
-  if ( i && qcli->isOn() )
-    mUseCategories->setChecked( true );
 }
 
 #include "selectionpage.moc"
