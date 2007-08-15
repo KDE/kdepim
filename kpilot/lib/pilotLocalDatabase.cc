@@ -467,20 +467,40 @@ recordid_t PilotLocalDatabase::writeRecord(PilotRecord * newRecord)
 	newRecord->setModified( true );
 
 	// First check to see if we have this record:
-  	if (newRecord->id() != 0)
-  	{
- 		for (int i = 0; i < d->size(); i++)
- 			if ((*d)[i]->id() == newRecord->id())
-  			{
- 				delete (*d)[i];
+	if (newRecord->id() != 0)
+	{
+	for (int i = 0; i < d->size(); i++)
+		if ((*d)[i]->id() == newRecord->id())
+		{
+			delete (*d)[i];
 
- 				(*d)[i] = new PilotRecord(newRecord);
-  				return 0;
-  			}
-  	}
-  	// Ok, we don't have it, so just tack it on.
- 	d->append( new PilotRecord(newRecord) );
-  	return newRecord->id();
+			(*d)[i] = new PilotRecord(newRecord);
+			return 0;
+		}
+	}
+	// Ok, we don't have it, so create a new id and just tack it on.
+	newRecord->setID( getNewUniqueId() );
+	d->append( new PilotRecord(newRecord) );
+
+	return newRecord->id();
+}
+
+// Partial copied from Model.java -> java keyring editor.
+recordid_t PilotLocalDatabase::getNewUniqueId()
+{
+	recordid_t id = 0;
+
+	for (int i = 0; i < d->size(); i++)
+	{
+		if( d->at( i )->id() > id)
+		{
+			id = d->at( i )->id();
+		}
+	}
+	
+	id = id + 1;
+	
+	return id;
 }
 
 // Deletes a record with the given recordid_t from the database, or all records, if all is set to true. The recordid_t will be ignored in this case

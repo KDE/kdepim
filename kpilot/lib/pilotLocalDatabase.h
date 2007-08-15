@@ -112,6 +112,8 @@ public:
 	virtual PilotRecord* readNextModifiedRec(int *ind=0L);
 	// Writes a new record to database (if 'id' == 0, none is assigned, either)
 	virtual recordid_t writeRecord(PilotRecord* newRecord);
+	// Returns a free id that can be used for a new record.
+	recordid_t getNewUniqueId();
 	/**
 	* Deletes a record with the given recordid_t from the database,
 	* or all records, if all is set to true. The recordid_t will be
