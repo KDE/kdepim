@@ -29,10 +29,10 @@
 
 #include <QString>
 #include <QStringList>
+#include <QUndoCommand>
 
 #include <kabc/addressbook.h>
 #include <kabc/addressee.h>
-#include <k3command.h>
 
 #include "kablock.h"
 
@@ -40,7 +40,7 @@ namespace KAB {
 class Core;
 }
 
-class Command : public K3Command
+class Command : public QUndoCommand
 {
   public:
     Command( KABC::AddressBook *addressBook ) { mAddressBook = addressBook; }
@@ -58,9 +58,9 @@ class DeleteCommand : public Command
   public:
     DeleteCommand( KABC::AddressBook *addressBook, const QStringList &uidList );
 
-    virtual QString name() const;
-    virtual void unexecute();
-    virtual void execute();
+    virtual QString text() const;
+    virtual void undo();
+    virtual void redo();
 
   private:
     KABC::Addressee::List mAddresseeList;
@@ -73,9 +73,9 @@ class PasteCommand : public Command
     PasteCommand( KAB::Core *core,
                   const KABC::Addressee::List &addressees );
 
-    virtual QString name() const;
-    virtual void unexecute();
-    virtual void execute();
+    virtual QString text() const;
+    virtual void undo();
+    virtual void redo();
 
   private:
     KABC::Addressee::List mAddresseeList;
@@ -87,9 +87,9 @@ class CutCommand : public Command
   public:
     CutCommand( KABC::AddressBook *addressBook, const QStringList &uidList );
 
-    virtual QString name() const;
-    virtual void unexecute();
-    virtual void execute();
+    virtual QString text() const;
+    virtual void undo();
+    virtual void redo();
 
   private:
     KABC::Addressee::List mAddresseeList;
@@ -104,9 +104,9 @@ class NewCommand : public Command
     NewCommand( KABC::AddressBook *addressBook,
                 const KABC::Addressee::List &addressees );
 
-    virtual QString name() const;
-    virtual void unexecute();
-    virtual void execute();
+    virtual QString text() const;
+    virtual void undo();
+    virtual void redo();
 
   private:
     KABC::Addressee::List mAddresseeList;
@@ -118,9 +118,9 @@ class EditCommand : public Command
     EditCommand( KABC::AddressBook *addressBook, const KABC::Addressee &oldAddressee,
                  const KABC::Addressee &newAddressee );
 
-    virtual QString name() const;
-    virtual void unexecute();
-    virtual void execute();
+    virtual QString text() const;
+    virtual void undo();
+    virtual void redo();
 
   private:
     KABC::Addressee mOldAddressee;

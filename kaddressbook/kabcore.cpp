@@ -56,6 +56,7 @@
 #include <kstatusbar.h>
 #include <kstandardaction.h>
 #include <KStandardGuiItem>
+#include <kundostack.h>
 #include <kxmlguiclient.h>
 #include <ktoolbar.h>
 #include <libkdepim/addresseeview.h>
@@ -182,8 +183,10 @@ KABCore::KABCore( KXMLGUIClient *client, bool readWrite, QWidget *parent,
 
   mAddressBookService = new KAddressBookService( this );
 
-  mCommandHistory = new K3CommandHistory( actionCollection(), true );
-  connect( mCommandHistory, SIGNAL( commandExecuted(K3Command *) ),
+  mCommandHistory = new KUndoStack( this );
+  mCommandHistory->createUndoAction( actionCollection() );
+  mCommandHistory->createRedoAction( actionCollection() );
+  connect( mCommandHistory, SIGNAL( indexChanged( int ) ),
            mSearchManager, SLOT( reload() ) );
 
   mSearchManager->reload();
@@ -431,7 +434,7 @@ void KABCore::deleteContacts( const QStringList &uids )
       return;
 
     DeleteCommand *command = new DeleteCommand( mAddressBook, uids );
-    mCommandHistory->addCommand( command );
+    mCommandHistory->push( command );
 
     // now if we deleted anything, refresh
     setContactSelected( QString() );
@@ -457,7 +460,7 @@ void KABCore::cutContacts()
 
   if ( uidList.size() > 0 ) {
     CutCommand *command = new CutCommand( mAddressBook, uidList );
-    mCommandHistory->addCommand( command );
+    mCommandHistory->push( command );
 
     setModified( true );
   }
@@ -484,7 +487,7 @@ void KABCore::pasteContacts( KABC::Addressee::List &list )
     (*it).setResource( resource );
 
   PasteCommand *command = new PasteCommand( this, list );
-  mCommandHistory->addCommand( command );
+  mCommandHistory->push( command );
 
   setModified( true );
 }
@@ -508,10 +511,10 @@ void KABCore::mergeContacts()
   }
 
   DeleteCommand *command = new DeleteCommand( mAddressBook, uids );
-  mCommandHistory->addCommand( command );
+  mCommandHistory->push( command );
 
   EditCommand *editCommand = new EditCommand( mAddressBook, origAddr, addr );
-  mCommandHistory->addCommand( editCommand );
+  mCommandHistory->push( editCommand );
 
   mSearchManager->reload();
 }
@@ -593,7 +596,7 @@ void KABCore::contactModified( const KABC::Addressee &addr )
     command = new EditCommand( mAddressBook, origAddr, addr );
   }
 
-  mCommandHistory->addCommand( command );
+  mCommandHistory->push( command );
 
   setContactSelected( addr.uid() );
   setModified( true );
@@ -791,7 +794,7 @@ void KABCore::extensionModified( const KABC::Addressee::List &list )
         command = new EditCommand( mAddressBook, origAddr, *it );
 
       mCommandHistory->blockSignals( true );
-      mCommandHistory->addCommand( command );
+      mCommandHistory->push( command );
       mCommandHistory->blockSignals( false );
     }
 
@@ -802,7 +805,7 @@ void KABCore::extensionModified( const KABC::Addressee::List &list )
 void KABCore::extensionDeleted( const QStringList &uidList )
 {
   DeleteCommand *command = new DeleteCommand( mAddressBook, uidList );
-  mCommandHistory->addCommand( command );
+  mCommandHistory->push( command );
 
   // now if we deleted anything, refresh
   setContactSelected( QString() );

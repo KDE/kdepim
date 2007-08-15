@@ -42,12 +42,12 @@ DeleteCommand::DeleteCommand( KABC::AddressBook *addressBook,
 {
 }
 
-QString DeleteCommand::name() const
+QString DeleteCommand::text() const
 {
   return i18np( "Delete Contact", "Delete %1 Contacts", mUIDList.count() );
 }
 
-void DeleteCommand::unexecute()
+void DeleteCommand::undo()
 {
   // Put it back in the document
   KABC::Addressee::List::ConstIterator it;
@@ -65,7 +65,7 @@ void DeleteCommand::unexecute()
   mAddresseeList.clear();
 }
 
-void DeleteCommand::execute()
+void DeleteCommand::redo()
 {
   KABC::Addressee addr;
 
@@ -93,12 +93,12 @@ PasteCommand::PasteCommand( KAB::Core *core, const KABC::Addressee::List &addres
 {
 }
 
-QString PasteCommand::name() const
+QString PasteCommand::text() const
 {
   return i18np( "Paste Contact", "Paste %1 Contacts", mAddresseeList.count() );
 }
 
-void PasteCommand::unexecute()
+void PasteCommand::undo()
 {
   KABC::Addressee::List::ConstIterator it;
   const KABC::Addressee::List::ConstIterator endIt( mAddresseeList.end() );
@@ -113,7 +113,7 @@ void PasteCommand::unexecute()
   }
 }
 
-void PasteCommand::execute()
+void PasteCommand::redo()
 {
   QStringList uids;
 
@@ -149,12 +149,12 @@ NewCommand::NewCommand( KABC::AddressBook *addressBook, const KABC::Addressee::L
 {
 }
 
-QString NewCommand::name() const
+QString NewCommand::text() const
 {
   return i18np( "New Contact", "New %1 Contacts", mAddresseeList.count() );
 }
 
-void NewCommand::unexecute()
+void NewCommand::undo()
 {
   KABC::Addressee::List::ConstIterator it;
   const KABC::Addressee::List::ConstIterator endIt( mAddresseeList.end() );
@@ -169,7 +169,7 @@ void NewCommand::unexecute()
   }
 }
 
-void NewCommand::execute()
+void NewCommand::redo()
 {
   KABC::Addressee::List::Iterator it;
   const KABC::Addressee::List::Iterator endIt( mAddresseeList.end() );
@@ -193,19 +193,19 @@ EditCommand::EditCommand( KABC::AddressBook *addressBook,
 {
 }
 
-QString EditCommand::name() const
+QString EditCommand::text() const
 {
   return i18n( "Edit Contact" );
 }
 
-void EditCommand::unexecute()
+void EditCommand::undo()
 {
   lock()->lock( mOldAddressee.resource() );
   addressBook()->insertAddressee( mOldAddressee );
   lock()->unlock( mOldAddressee.resource() );
 }
 
-void EditCommand::execute()
+void EditCommand::redo()
 {
   lock()->lock( mNewAddressee.resource() );
   addressBook()->insertAddressee( mNewAddressee );
@@ -218,12 +218,12 @@ CutCommand::CutCommand( KABC::AddressBook *addressBook, const QStringList &uidLi
 {
 }
 
-QString CutCommand::name() const
+QString CutCommand::text() const
 {
   return i18np( "Cut Contact", "Cut %1 Contacts", mUIDList.count() );
 }
 
-void CutCommand::unexecute()
+void CutCommand::undo()
 {
   KABC::Addressee::List::ConstIterator it;
   const KABC::Addressee::List::ConstIterator endIt( mAddresseeList.end() );
@@ -244,7 +244,7 @@ void CutCommand::unexecute()
   cb->setText( mOldText );
 }
 
-void CutCommand::execute()
+void CutCommand::redo()
 {
   KABC::Addressee addr;
 

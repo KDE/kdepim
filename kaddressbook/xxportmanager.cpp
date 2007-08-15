@@ -93,7 +93,7 @@ void XXPortManager::slotImport( const QString &identifier, const QString &data )
 
   if ( !list.isEmpty() ) {
     NewCommand *command = new NewCommand( mCore->addressBook(), list );
-    mCore->commandHistory()->addCommand( command );
+    mCore->commandHistory()->push( command );
     emit modified();
   }
 }

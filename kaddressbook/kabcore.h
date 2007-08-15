@@ -63,6 +63,7 @@ class KIMProxy;
 class LDAPSearchDialog;
 class ViewManager;
 class XXPortManager;
+class KUndoStack;
 
 typedef struct {
   KABC::Ticket *ticket;
@@ -134,7 +135,7 @@ class KADDRESSBOOK_EXPORT KABCore : public KAB::Core
 
     KAB::SearchManager *searchManager() const { return mSearchManager; }
 
-    K3CommandHistory *commandHistory() const { return mCommandHistory; }
+    QUndoStack *commandHistory() const { return ( QUndoStack* )( mCommandHistory ); }
 
 #ifdef KDEPIM_NEW_DISTRLISTS
     /**
@@ -420,7 +421,7 @@ class KADDRESSBOOK_EXPORT KABCore : public KAB::Core
     KToggleAction *mActionJumpBar;
     KToggleAction *mActionDetails;
 
-    K3CommandHistory *mCommandHistory;
+    KUndoStack *mCommandHistory;
 
     KAddressBookService *mAddressBookService;
 

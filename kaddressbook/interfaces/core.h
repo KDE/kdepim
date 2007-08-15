@@ -32,9 +32,10 @@
 
 #include <QObject>
 
+#include <QUndoStack>
+
 #include "kaddressbook_export.h"
 #include <kabc/field.h>
-#include <k3command.h>
 #include <kxmlguiclient.h>
 
 namespace KABC {
@@ -124,7 +125,7 @@ class KABINTERFACES_EXPORT Core : public QObject
     //// This class isn't part of interfaces/, so this method here isn't really useful
     virtual SearchManager *searchManager() const = 0;
 
-    virtual K3CommandHistory *commandHistory() const = 0;
+    virtual QUndoStack *commandHistory() const = 0;
 
     Q_SIGNALS:
     /**
