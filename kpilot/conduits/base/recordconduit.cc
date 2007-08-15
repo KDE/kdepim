@@ -1,7 +1,7 @@
 /* RecordConduit.cc			KPilot
 **
-** Copyright (C) 2007 by Bertjan Broeksema
-** Copyright (C) 2007 by Jason "vanRijn" Kasper
+** Copyright (C) 2007 by Bertjan Broeksema <b.broeksema@kdemail.net>
+** Copyright (C) 2007 by Jason "vanRijn" Kasper <vr@movingparts.net>
 */
 
 /*
@@ -871,7 +871,7 @@ void RecordConduit::solveConflict( Record *pcRecord, HHRecord *hhRecord )
 		}
 		else
 		{
-			query += i18n( "deleted" );
+			query += i18nc( "The pc record is deleted.", "deleted" );
 		}
 		query += i18n( "\nHandheld entry:\n\t" );
 		if( hhRecord )
@@ -880,7 +880,7 @@ void RecordConduit::solveConflict( Record *pcRecord, HHRecord *hhRecord )
 		}
 		else
 		{
-			query += i18n( "deleted" );
+			query += i18nc( "The pilot record is deleted.", "deleted" );
 		}
 		query += i18n( "\n\nWhich entry do you want to keep? It will "
 			"overwrite the other entry." );

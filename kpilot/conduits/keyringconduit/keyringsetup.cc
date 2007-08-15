@@ -1,9 +1,7 @@
 /* KPilot
 **
-** Copyright (C) 2007 Bertjan Broeksema
-** Copyright (C) 2002-2003 Reinhold Kainhofer
-**
-** This file defines the setup dialog for the Keyring-conduit plugin.
+** Copyright (C) 2007 by Bertjan Broeksema <b.broeksema@kdemail.net>
+** Copyright (C) 2007 by Jason "vanRijn" Kasper <vr@movingparts.net>
 */
 
 /*

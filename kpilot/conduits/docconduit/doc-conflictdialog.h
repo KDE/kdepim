@@ -36,19 +36,20 @@
 #include <QLabel>
 
 
-class QComboBox;
 class Q3GridLayout;
 class Q3GroupBox;
-
 class QLabel;
 class QPushButton;
 class QTimer;
+
+class KComboBox;
+
 class KPilotLink;
 
 
 typedef struct conflictEntry {
 	QLabel*dbname;
-	QComboBox* resolution;
+	KComboBox* resolution;
 	QPushButton*info;
 	int index;
 	bool conflict;

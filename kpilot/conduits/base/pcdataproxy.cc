@@ -1,9 +1,8 @@
 /* pcdataproxy.cc			KPilot
 **
-** Copyright (C) 2007 by Bertjan Broeksema
-** Copyright (C) 2007 by Jason "vanRijn" Kasper
+** Copyright (C) 2007 by Bertjan Broeksema <b.broeksema@kdemail.net>
+** Copyright (C) 2007 by Jason "vanRijn" Kasper <vr@movingparts.net>
 */
-
 /*
 ** This program is free software; you can redistribute it and/or modify
 ** it under the terms of the GNU Lesser General Public License as published by

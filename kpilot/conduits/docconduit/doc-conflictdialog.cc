@@ -40,8 +40,9 @@
 #include <kmessagebox.h>
 #include <qtimer.h>
 #include <q3table.h>
-#include <qcombobox.h>
 #include <q3scrollview.h>
+
+#include <KComboBox>
 
 
 ResolutionDialog::ResolutionDialog( QWidget* parent, const QString& caption, syncInfoList*sinfo, KPilotLink*lnk )
@@ -108,7 +109,7 @@ ResolutionDialog::ResolutionDialog( QWidget* parent, const QString& caption, syn
 			cE.dbname=new QLabel(text, big_box);
 			resolutionGroupBoxLayout->addWidget( cE.dbname, cE.index, 0 );
 
-			cE.resolution=new QComboBox( false, big_box);
+			cE.resolution=new KComboBox( false, big_box);
 			cE.resolution->setSizePolicy( QSizePolicy( (QSizePolicy::SizeType)7,
 				(QSizePolicy::SizeType)0, 0, 0,
 				cE.resolution->sizePolicy().hasHeightForWidth() ) );

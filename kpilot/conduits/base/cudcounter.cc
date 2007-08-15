@@ -1,7 +1,7 @@
 /* cudcounter.h			KPilot
 **
-** Copyright (C) 2007 by Bertjan Broeksema
-** Copyright (C) 2007 by Jason "vanRijn" Kasper
+** Copyright (C) 2007 by Bertjan Broeksema <b.broeksema@kdemail.net>
+** Copyright (C) 2007 by Jason "vanRijn" Kasper <vr@movingparts.net>
 */
 
 /*
@@ -77,9 +77,9 @@ QString CUDCounter::moo() const
 {
 	QString result = i18n("Start: %1. End: %2. ",fStart,fEnd);
 
-	if (fC > 0) result += i18n("%1 new. ",fC);
-	if (fU > 0) result += i18n("%1 changed. ",fU);
-	if (fD > 0) result += i18n("%1 deleted. ",fD);
+	if (fC > 0) result += i18nc("Created record count", "%1 new record(s). ",fC);
+	if (fU > 0) result += i18nc("Updated record count", "%1 changed record(s). ",fU);
+	if (fD > 0) result += i18nc("Deleted record count", "%1 deleted record(s). ",fD);
 
 	if ( (fC+fU+fD) <= 0) result += i18n("No changes made. ");
 

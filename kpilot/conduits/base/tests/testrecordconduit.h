@@ -1,9 +1,9 @@
 #ifndef TESTRECORDCONDUIT_H
 #define TESTRECORDCONDUIT_H
-/* keyringconduit.h			KPilot
+/* testrecordconduit.h			KPilot
 **
-** Copyright (C) 2007 by Bertjan Broeksema
-** Copyright (C) 2007 by Jason "vanRijn" Kasper
+** Copyright (C) 2007 by Bertjan Broeksema <b.broeksema@kdemail.net>
+** Copyright (C) 2007 by Jason "vanRijn" Kasper <vr@movingparts.net>
 */
 
 /*

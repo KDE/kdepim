@@ -2,10 +2,8 @@
 #define KEYRINGSETUP_H
 /* keyringsetup.h                       KPilot
 **
-** Copyright (C) 2007 Bertjan Broeksema
-**
-** This file defines the widget and behavior for the config dialog
-** of the Keyring conduit.
+** Copyright (C) 2007 by Bertjan Broeksema <b.broeksema@kdemail.net>
+** Copyright (C) 2007 by Jason "vanRijn" Kasper <vr@movingparts.net>
 */
 
 /*

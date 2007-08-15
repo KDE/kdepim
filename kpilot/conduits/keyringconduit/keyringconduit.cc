@@ -1,7 +1,7 @@
 /* keyringconduit.cc			KPilot
 **
-** Copyright (C) 2007 by Bertjan Broeksema
-** Copyright (C) 2007 by Jason "vanRijn" Kasper
+** Copyright (C) 2007 by Bertjan Broeksema <b.broeksema@kdemail.net>
+** Copyright (C) 2007 by Jason "vanRijn" Kasper <vr@movingparts.net>
 */
 
 /*
@@ -225,7 +225,7 @@ void KeyringConduit::copy( const Record *from, HHRecord *to )
 {
 	FUNCTIONSETUP;
 	
-	// Make sure we don't do unecessary work.
+	// Make sure we don't do unnecessary work.
 	if( !from->equal( to ) )
 	{
 		const KeyringHHRecord *krFrom = static_cast<const KeyringHHRecord*>( from );
