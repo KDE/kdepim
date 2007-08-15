@@ -46,9 +46,9 @@
 #include <qtimer.h>
 #include <QPixmap>
 #include <QString>
-#include <qtextedit.h>
 
 #include <kglobal.h>
+#include <ktextedit.h>
 #include <kiconloader.h>
 #include <kcomponentdata.h>
 #include <kaboutdata.h>
@@ -145,7 +145,6 @@ QWidget *ConduitConfigBase::aboutPage(QWidget *parent, KAboutData *ad)
 	text = new QLabel(w);
 	// Experiment with a long non-<qt> string. Use that to find
 	// sensible widths for the columns.
-	//
 	text->setText(i18n("Send questions and comments to kdepim-users@kde.org"));
 	text->adjustSize();
 
@@ -159,10 +158,9 @@ QWidget *ConduitConfigBase::aboutPage(QWidget *parent, KAboutData *ad)
 	grid->addWidget(text, 0, 1);
 
 
-	QTextEdit *linktext = new QTextEdit(w);
+	KTextEdit *linktext = new KTextEdit(w);
 	linktext->setReadOnly(true);
-	linktext->setMinimumSize(linewidth,qMax(260,60+12*lineheight));
-	linktext->setFixedHeight(qMax(260,60+12*lineheight));
+
 	text = new QLabel(w);
 	grid->addWidget(text,0,2);
 	grid->addWidget(linktext,1,2,1,1);
