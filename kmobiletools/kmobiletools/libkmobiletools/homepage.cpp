@@ -239,8 +239,8 @@ void homepagePart::printInfoPage(int i, const QString &mobileName, KMobileTools:
                     .arg( QString("<a href=\"%1:sms\">").arg( devname ) +
                     htmlIcon("mail_get",-K3Icon::SizeSmallMedium) )
                     .arg(i18nc("sms count in device homepage", "%1 received SMS (%2 unread).",
-                        ( l->count( SMS::Unread | SMS::Read, SMS::Phone | SMS::SIM) ),
-                        ( l->count( SMS::Unread, SMS::Phone | SMS::SIM) ) ) + "</a>")
+                        ( l->count( SMS::Unread | SMS::Read, SMS::Phone | SMS::Sim) ),
+                        ( l->count( SMS::Unread, SMS::Phone | SMS::Sim) ) ) + "</a>")
 //                     .arg( htmlIcon("phonecall",-K3Icon::SizeSmallMedium) ).arg("No new calls")
                     .arg(  QString("<a href=\"%1:phonebook\">").arg(devname ) + htmlIcon("personal",-K3Icon::SizeSmallMedium) )
                     .arg(i18np("%1 contact stored in phonebook.", "%1 contacts stored in phonebook.", engine->constEngineData()->contactsList()->count())

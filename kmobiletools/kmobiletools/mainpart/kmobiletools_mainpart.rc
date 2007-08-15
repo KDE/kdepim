@@ -1,5 +1,5 @@
 <!DOCTYPE kpartgui SYSTEM "kpartgui.dtd">
-<kpartgui name="kmobiletools_mainpart" version="390">
+<kpartgui name="kmobiletools_mainpart" version="600">
     <MenuBar>
         <Menu name="file"><text>&amp;File</text>
             <Action name="home"/>
@@ -18,14 +18,14 @@
             <Merge/>
         </Menu>
     </MenuBar>
-    <ToolBar name="mainpart_toolbar"><text>Main Toolbar</text>
+    <ToolBar newline="true" name="mainpart_toolbar"><text>Main Toolbar</text>
         <Action name="device_manager" />
         <Action name="home" />
         <Action name="prev" />
         <Action name="next" />
         <Action name="help" />
     </ToolBar>
-    <ToolBar nname="deviceToolBar">
-        <ActionList name="kmobiletools_devicepart.rc" />
+    <ToolBar newline="true" hidden="true" name="serviceToolBar">
+	<ActionList name="serviceactions" />
     </ToolBar>
 </kpartgui>

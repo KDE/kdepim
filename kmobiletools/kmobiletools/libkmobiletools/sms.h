@@ -64,14 +64,24 @@ private:
 class KMOBILETOOLS_EXPORT SMS : public KMime::Content
 {
 public:
+    /**
+    * This enum type defines the type of sms memory slots.
+    *
+    * - Sim : Sim card
+    * - Phone : Phone
+    * - DataCard : Data card
+    * - Unknown: Unknown storage location
+    */
+    enum MemorySlot { Phone = 0x01, Sim = 0x02, DataCard = 0x04, Unknown = 0x08 };
+
+    Q_DECLARE_FLAGS(MemorySlots, MemorySlot)
+
     SMS();
     KDE_DEPRECATED SMS(const QStringList & numbers, const QString & text);
     KDE_DEPRECATED SMS(const QStringList & numbers, const QString & text, const KDateTime & datetime);
 
     virtual ~SMS();
 
-    enum MemorySlot
-    { SIM=0x1, Phone=0x2, Unknown=0x10 };
     enum SMSType
     { Unread=0x1, Read=0x2, Unsent=0x4, Sent=0x8, All=0xA };
     static QString SMSTypeString(SMSType smstype);
@@ -133,5 +143,7 @@ Q_SIGNALS:
     void updated();*/
 };
 }
+
+Q_DECLARE_OPERATORS_FOR_FLAGS(KMobileTools::SMS::MemorySlots)
 
 #endif

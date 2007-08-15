@@ -1,6 +1,7 @@
 /***************************************************************************
    Copyright (C) 2007
    by Marco Gulino <marco@kmobiletools.org>
+   by Matthias Lechner <matthias@lmme.de>
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -99,6 +100,11 @@
 
 #include <libkmobiletools/errorhandler.h>
 #include <libkmobiletools/errortypes/baseerror.h>
+#include <libkmobiletools/engine.h>
+#include <libkmobiletools/sms.h>
+#include <libkmobiletools/homepage.h>
+#include <libkmobiletools/enginedata.h>
+
 
 #define INDEX_WIDGET_ID 0
 #define PHONEBOOK_WIDGET_ID 2
@@ -137,6 +143,9 @@ ContactListViewItem::ContactListViewItem(Q3ListView *parent, const KABC::Address
     setText(0, p_contact.formattedName());
 }
 
+KABC::Addressee ContactListViewItem::contact() {
+    return p_contact;
+}
 
 
 DeviceHome::DeviceHome( QWidget *parentWidget, const QString &devicename, kmobiletoolsMainPart *parent ) : QObject( parent ), engine(0), suspends_count(0), statusBarExtension(0), memslotSelected(0),
@@ -212,6 +221,7 @@ void DeviceHome::setupWidgets()
     ui.widgetStack->raiseWidget(INDEX_WIDGET_ID);
     m_widget->setFocusPolicy(Qt::ClickFocus);
 
+    /*
     p_listViewItem=new DeviceListViewItem(DEVCFG(objectName() )->devicename(), p_mainPart->listview() );
     p_listViewItem->setDeviceName( objectName() );
     p_listViewItem->setIcon( 0, DEVCFG(objectName() )->deviceTypeIcon(DEVCFG(objectName() )->currentGroup(), K3Icon::NoGroup, K3Icon::SizeSmall ) );
@@ -222,8 +232,10 @@ void DeviceHome::setupWidgets()
     (new QTreeWidgetItem( p_listViewItem, QStringList( i18n( "PhoneBook") ) ) )
     ->setIcon( 0, KIcon( "kontact_contacts" ) );
 
+
     p_smsItem = new QTreeWidgetItem( p_listViewItem, QStringList( i18n("SMS") ) );
     p_smsItem->setIcon( 0, KIcon( "mail_generic" ) );
+    */
 
     //p_listViewItem->setOpen(true);
     //p_listViewItem->setPixmap(0,DEVCFG(objectName() )->deviceTypeIcon(DEVCFG(objectName() )->currentGroup(), K3Icon::NoGroup, K3Icon::SizeSmall ));
@@ -235,12 +247,12 @@ void DeviceHome::setupWidgets()
     //p_smsItem->setPixmap(0,KIconLoader::global()->loadIcon("mail_generic", K3Icon::NoGroup, K3Icon::SizeSmall) );
 
     // SMS Tree ListView
-    SMSFolderListViewItem *sms_inbox= new SMSFolderListViewItem(ui.SMSFolderView, SMS::SIM | SMS::Phone, SMS::Unread | SMS::Read, i18n("Inbox") );
+    SMSFolderListViewItem *sms_inbox= new SMSFolderListViewItem(ui.SMSFolderView, SMS::Sim | SMS::Phone, SMS::Unread | SMS::Read, i18n("Inbox") );
     SMSFolderListViewItem *sms_inbox_phone= new SMSFolderListViewItem(sms_inbox, SMS::Phone, SMS::Unread | SMS::Read, i18n("Phone") );
-    SMSFolderListViewItem *sms_inbox_sim= new SMSFolderListViewItem(sms_inbox, SMS::SIM, SMS::Unread | SMS::Read, i18n("SIM") );
-    SMSFolderListViewItem *sms_outbox= new SMSFolderListViewItem(ui.SMSFolderView, SMS::SIM | SMS::Phone, SMS::Sent | SMS::Unsent, i18n("Outgoing") );
+    SMSFolderListViewItem *sms_inbox_sim= new SMSFolderListViewItem(sms_inbox, SMS::Sim, SMS::Unread | SMS::Read, i18n("Sim") );
+    SMSFolderListViewItem *sms_outbox= new SMSFolderListViewItem(ui.SMSFolderView, SMS::Sim | SMS::Phone, SMS::Sent | SMS::Unsent, i18n("Outgoing") );
     SMSFolderListViewItem *sms_outbox_phone= new SMSFolderListViewItem(sms_outbox, SMS::Phone, SMS::Sent | SMS::Unsent, i18n("Phone") );
-    SMSFolderListViewItem *sms_outbox_sim= new SMSFolderListViewItem(sms_outbox, SMS::SIM, SMS::Sent | SMS::Unsent, i18n("SIM") );
+    SMSFolderListViewItem *sms_outbox_sim= new SMSFolderListViewItem(sms_outbox, SMS::Sim, SMS::Sent | SMS::Unsent, i18n("Sim") );
     sms_inbox->setPixmap(0,KIconLoader::global()->loadIcon("mail_get", K3Icon::NoGroup, K3Icon::SizeSmall) );
     sms_outbox->setPixmap(0,KIconLoader::global()->loadIcon("mail_send", K3Icon::NoGroup, K3Icon::SizeSmall) );
     sms_inbox_phone->setPixmap(0,KIconLoader::global()->loadIcon("kmobiletools", K3Icon::NoGroup, K3Icon::SizeSmall) );
@@ -397,7 +409,6 @@ DeviceHome::~DeviceHome()
 {
     kDebug() <<"DeviceHome::~DeviceHome()";
     KMobileTools::EnginesList::instance()->unlock(objectName() );
-//     f_pidfile.remove();
 //     delete m_widget;
 //     delete m_statusbar;
 }
@@ -506,7 +517,7 @@ void DeviceHome::updateAllContacts()
 void DeviceHome::jobDone(KMobileTools::Job::JobType jobtype)
 {
     if(jobtype==KMobileTools::Job::fetchAddressBook) emit phonebookUpdated();
-    int newsmscnt=engine->constEngineData()->smsList()->count(SMS::Unread, SMS::SIM | SMS::Phone );
+    int newsmscnt=engine->constEngineData()->smsList()->count(SMS::Unread, SMS::Sim | SMS::Phone );
 
     if(newsmscnt && engine->ThreadWeaver()->isEmpty() && engine->ThreadWeaver()->isIdle() && newsmscnt!=smsnotifynum) {
         smsnotifynum=newsmscnt;

@@ -19,10 +19,6 @@
 
 #include "enginexp.h"
 
-#include <KLibFactory>
-
-#include <libkmobiletools/errorhandler.h>
-
 namespace KMobileTools {
 
 EngineXP::EngineXP( QObject *parent )
@@ -36,39 +32,12 @@ EngineXP::~EngineXP()
 }
 
 
-QString EngineXP::shortDescription() const
-{
-    /// @TODO implement me
-    return QString();
-}
-
-QString EngineXP::longDescription() const
-{
-    /// @TODO implement me
-    return QString();
-}
-
 bool EngineXP::implements( const QString& interfaceName ) {
     QString qualifiedInterfaceName = QString( "KMobileTools::Ifaces::%1" ).arg( interfaceName );
     if( inherits( qualifiedInterfaceName.toUtf8() ) )
         return true;
 
     return false;
-}
-
-EngineXP* EngineXP::load( QObject* parent, const QString& libname ) {
-    KLibFactory *factory = KLibLoader::self()->factory( libname.toUtf8() );
-
-    if( !factory ) {
-        /// @TODO replace BaseError with appropriate error type
-        // error message can be obtained by calling KLibLoader::self()->lastErrorMessage()
-        ErrorHandler::instance()->addError( new BaseError(ERROR_META_INFO) );
-        return 0;
-    }
-
-    EngineXP *engine = static_cast<KMobileTools::EngineXP*>( factory->create( parent, "KMobileTools::EngineXP" ) );
-
-    return engine;
 }
 
 }

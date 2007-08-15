@@ -21,22 +21,29 @@
 #define KMOBILETOOLSFAKEENGINE_H
 
 #include <QtCore/QObject>
+#include <QtGui/QTextEdit>
+#include <QtCore/QMutex>
+#include <QtCore/QStringList>
 #include <KLibFactory>
 
 #include <libkmobiletools/enginexp.h>
+#include <libkmobiletools/contactslist.h>
 
 #include <libkmobiletools/ifaces/status.h>
 #include <libkmobiletools/ifaces/information.h>
+#include <libkmobiletools/ifaces/addressbook.h>
 
 /**
     @author Matthias Lechner <matthias@lmme.de>
 */
 class FakeEngine : public KMobileTools::EngineXP, // base class
                    public KMobileTools::Ifaces::Status,         // interfaces
-                   public KMobileTools::Ifaces::Information
+                   public KMobileTools::Ifaces::Information,
+                   public KMobileTools::Ifaces::Addressbook
 {
     Q_OBJECT
     Q_INTERFACES(KMobileTools::Ifaces::Status KMobileTools::Ifaces::Information)
+    Q_INTERFACES(KMobileTools::Ifaces::Addressbook)
 
 public:
     FakeEngine( QObject *parent );
@@ -62,9 +69,32 @@ public:
     QString imei() const;
     QString revision() const;
 
+    //
+    // Addressbook interface implementation
+    //
+    KMobileTools::AddressbookEntry::MemorySlots availableMemorySlots() const;
+    KMobileTools::Addressbook addressbook() const;
+
 public Q_SLOTS:
+    //
+    // Status interface implementation
+    //
     void fetchStatusInformation();
+
+    //
+    // Information interface implementation
+    //
     void fetchInformation();
+
+    //
+    // Addressbook interface implementation
+    //
+    void fetchAddressbook();
+
+    void addAddressee( const KMobileTools::AddressbookEntry& addressee );
+    void editAddressee( const KMobileTools::AddressbookEntry& oldAddressee,
+                        const KMobileTools::AddressbookEntry& newAddressee );
+    void removeAddressee( const KMobileTools::AddressbookEntry& addressee );
 
 Q_SIGNALS:
     void initialized( bool successful );
@@ -81,6 +111,35 @@ Q_SIGNALS:
     // Information interface implementation
     //
     void networkNameChanged( const QString& );
+
+    //
+    // Addressbook interface implementation
+    //
+    void addressbookFetched();
+    void addresseeAdded( const KMobileTools::AddressbookEntry& addressee );
+
+    void addresseeEdited( const KMobileTools::AddressbookEntry& oldAddressee,
+                          const KMobileTools::AddressbookEntry& newAddressee );
+
+    void addresseeRemoved( const KMobileTools::AddressbookEntry& addressee );
+
+private:
+    void populateAddressbook();
+
+    bool m_statusInformationFetched;
+    bool m_informationFetched;
+    bool m_addressbookFetched;
+
+    QTextEdit* m_status;
+    void status( const QString& statusInformation );
+
+    QMutex m_displayMutex;
+    QMutex m_mutex;
+
+    KMobileTools::Addressbook m_addressbook;
+
+    KMobileTools::Addressbook m_addedAddressees;
+    QStringList m_removedAddressees;
 
 };
 

@@ -28,19 +28,20 @@
 #include <KLibLoader>
 #include <KMessageBox>
 #include <KApplication>
+#include <KToolBar>
 
 #include <libkmobiletools/engineslist.h>
 
 kmobiletools::kmobiletools()
     : KParts::MainWindow()
 {
-    setObjectName(QString("kmobiletools"));
+    setObjectName( QString("kmobiletools") );
 
     setupActions();
     // set the shell's ui resource file
-    setXMLFile("kmobiletoolsui.rc");
+    setXMLFile( "kmobiletoolsui.rc" );
     // then, setup our actions
-    createGUI(0);
+    createGUI( 0 );
 
     // this routine will find and load our Part.  it finds the Part by
     // name which is a bad idea usually.. but it's alright in this
@@ -56,6 +57,10 @@ kmobiletools::kmobiletools()
         {
             // tell the KParts::MainWindow that this is indeed the main widget
             setCentralWidget(m_part->widget());
+
+            // setup tool bar for kmobiletools core services
+            connect( m_part, SIGNAL(showServiceToolBar(bool)),
+                    this, SLOT(showServiceToolBar(bool)) );
         }
     }
     else
@@ -103,6 +108,12 @@ void kmobiletools::optionsConfigureToolbars()
     connect(&dlg, SIGNAL(newToolBarConfig()),
              this, SLOT(applyNewToolbarConfig()));
     dlg.exec();
+}
+
+void kmobiletools::showServiceToolBar( bool showToolBar )
+{
+    /// @TODO why is hidden="true" ignored in the xml file???
+    toolBar( "serviceToolBar" )->setVisible( showToolBar );
 }
 
 void kmobiletools::applyNewToolbarConfig()

@@ -17,33 +17,28 @@
    Boston, MA 02110-1301, USA.
  ***************************************************************************/
 
-#ifndef KMOBILETOOLSSHORTMESSAGES_H
-#define KMOBILETOOLSSHORTMESSAGES_H
-
-#include <libkmobiletools/kmobiletools_export.h>
+#include "addressbookentry.h"
 
 namespace KMobileTools {
 
-/**
-    @author Matthias Lechner <matthias@lmme.de>
-*/
-class KMOBILETOOLS_EXPORT ShortMessages {
-public:
-    /**
-    * This enum type defines the type of sms memory slots.
-    *
-    * - Sim : Sim card
-    * - Phone : Phone
-    * - DataCard : Data card
-    * - Unknown: Unknown storage location
-    */
-    enum MemorySlot { Phone = 1, Sim = 2, DataCard = 4, Unknown = 10 };
-
-    Q_DECLARE_FLAGS(MemorySlots, MemorySlot)
-};
-
+AddressbookEntry::AddressbookEntry( AddressbookEntry::MemorySlot memorySlot )
+ : KABC::Addressee()
+{
+    setMemorySlot( memorySlot );
 }
 
-Q_DECLARE_OPERATORS_FOR_FLAGS(KMobileTools::ShortMessages::MemorySlots)
 
-#endif
+AddressbookEntry::~AddressbookEntry()
+{
+}
+
+void AddressbookEntry::setMemorySlot( AddressbookEntry::MemorySlot memorySlot ) {
+    insertCustom( "KMobileTools", "memslot", QString( memorySlot ) );
+}
+
+AddressbookEntry::MemorySlot AddressbookEntry::memorySlot() const {
+    int memorySlot = QString( custom( "KMobileTools", "memslot" ) ).toInt();
+    return static_cast<MemorySlot>( memorySlot );
+}
+
+}

@@ -60,6 +60,8 @@ class kmobiletools : public KParts::MainWindow
         void optionsConfigureToolbars();
         void applyNewToolbarConfig();
 
+        void showServiceToolBar( bool );
+
     private:
         void setupActions();
 

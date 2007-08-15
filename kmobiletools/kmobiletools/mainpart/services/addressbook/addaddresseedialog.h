@@ -1,6 +1,5 @@
 /***************************************************************************
    Copyright (C) 2007 by Matthias Lechner <matthias@lmme.de>
-   Copyright (C) 2007 by Marco Gulino <marco@kmobiletools.org>
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -18,37 +17,57 @@
    Boston, MA 02110-1301, USA.
  ***************************************************************************/
 
-#ifndef KMOBILETOOLSADDRESSBOOK_H
-#define KMOBILETOOLSADDRESSBOOK_H
+#ifndef ADDADDRESSEEDIALOG_H
+#define ADDADDRESSEEDIALOG_H
 
-#include <QtCore/QList>
+#include <QtGui/QWidget>
+#include <KDialog>
 
-#include <libkmobiletools/kmobiletools_export.h>
 #include <libkmobiletools/addressbookentry.h>
 
-namespace KMobileTools {
+class KPushButton;
+class QComboBox;
+class QTableWidget;
+class KLineEdit;
 /**
- * This class holds a list of contacts (former ContactsList)
- *
  * @author Matthias Lechner <matthias@lmme.de>
- * @author Marco Gulino <marco@kmobiletools.org>
  */
-class KMOBILETOOLS_EXPORT Addressbook : public QList<AddressbookEntry> {
+class AddAddresseeDialog : public KDialog
+{
+    Q_OBJECT
 public:
-    /**
-     * Constructs an empty address book
-     */
-    Addressbook();
+    AddAddresseeDialog( QWidget* parent = 0 );
 
-    /**
-     * Destructs the address book
-     */
-    ~Addressbook();
+    ~AddAddresseeDialog();
 
-    Addressbook( const Addressbook& entry );
-    Addressbook& operator=( const Addressbook& addressbook );
+public Q_SLOTS:
+    void availableSlots( KMobileTools::AddressbookEntry::MemorySlots );
+    void accept();
+    void show();
+
+private Q_SLOTS:
+    void addPhoneNumber();
+    void removePhoneNumber();
+
+Q_SIGNALS:
+    void addAddressee( const KMobileTools::AddressbookEntry& );
+
+private:
+    void setupGui();
+
+    QString memorySlotToString( KMobileTools::AddressbookEntry::MemorySlot memorySlot );
+
+    QWidget* m_widget;
+    KLineEdit* m_name;
+    KLineEdit* m_email;
+
+    KLineEdit* m_phoneNumber;
+    QTableWidget* m_phoneNumberTable;
+    QComboBox* m_phoneNumberTypes;
+    KPushButton* m_addPhoneNumber;
+    KPushButton* m_removePhoneNumber;
+
+    QComboBox* m_storageLocation;
 };
-
-}
 
 #endif

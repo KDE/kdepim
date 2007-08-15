@@ -1,6 +1,5 @@
 /***************************************************************************
    Copyright (C) 2007 by Matthias Lechner <matthias@lmme.de>
-   Copyright (C) 2007 by Marco Gulino <marco@kmobiletools.org>
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -18,37 +17,43 @@
    Boston, MA 02110-1301, USA.
  ***************************************************************************/
 
-#ifndef KMOBILETOOLSADDRESSBOOK_H
-#define KMOBILETOOLSADDRESSBOOK_H
+#ifndef KMOBILETOOLS_IFACESACTIONPROVIDER_H
+#define KMOBILETOOLS_IFACESACTIONPROVIDER_H
 
-#include <QtCore/QList>
+#include "kmobiletools_export.h"
 
-#include <libkmobiletools/kmobiletools_export.h>
-#include <libkmobiletools/addressbookentry.h>
+#include <QtCore/QObject>
+#include <QtCore/QHash>
+#include <QtCore/QString>
+#include <QtGui/QAction>
 
 namespace KMobileTools {
+
+namespace Ifaces {
+
 /**
- * This class holds a list of contacts (former ContactsList)
+ * This interface provides an action collection which can be used by a service
+ * to provide custom actions for the toolbar
  *
  * @author Matthias Lechner <matthias@lmme.de>
- * @author Marco Gulino <marco@kmobiletools.org>
  */
-class KMOBILETOOLS_EXPORT Addressbook : public QList<AddressbookEntry> {
+class KMOBILETOOLS_EXPORT ActionProvider {
 public:
     /**
-     * Constructs an empty address book
+     * Returns a list of actions to add to the main part
+     *
+     * @return a list of actions
      */
-    Addressbook();
+    virtual QList<QAction*> actionList() const = 0;
 
-    /**
-     * Destructs the address book
-     */
-    ~Addressbook();
+    virtual ~ActionProvider();
 
-    Addressbook( const Addressbook& entry );
-    Addressbook& operator=( const Addressbook& addressbook );
 };
 
 }
+
+}
+
+Q_DECLARE_INTERFACE(KMobileTools::Ifaces::ActionProvider, "org.kde.KMobileTools.Ifaces.ActionProvider/0.1")
 
 #endif

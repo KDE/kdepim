@@ -1,0 +1,10 @@
+[Desktop Entry]
+Encoding=UTF-8
+Type=ServiceType
+X-KDE-ServiceType=KMobileTools/CoreService
+X-KDE-Derived=KPluginInfo
+Comment=KMobileTools CoreService
+
+[PropertyDef::Description]
+Type=QString
+

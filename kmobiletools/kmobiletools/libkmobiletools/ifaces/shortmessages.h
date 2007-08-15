@@ -47,36 +47,9 @@ public:
     virtual void fetchSMS() = 0;
 
     /**
-     * Fetches the short messages stored in the given @p memorySlot
-     */
-    virtual void fetchSMS( KMobileTools::ShortMessages::MemorySlot memorySlot ) = 0;
-
-    /**
      * Fetches the set sms center (SMSC) from the phone
      */
     virtual void fetchSMSCenter() = 0;
-
-public:
-    /**
-     * Returns an OR-combination of available memory slots
-     */
-    virtual KMobileTools::ShortMessages::MemorySlots availableMemorySlots() const = 0;
-
-    /**
-     * Returns the fetched list of sms
-     *
-     * @return the fetched sms list
-     */
-    virtual QMap<KMobileTools::ShortMessages::MemorySlot, SMSList> shortMessages() const = 0;
-
-    /**
-     * Returns the fetched short messages at a specific location
-     *
-     * @param memorySlot the slot in which to look for short messages
-     *
-     * @return the fetched short messages
-     */
-    virtual SMSList shortMessagesAtSlot( KMobileTools::ShortMessages::MemorySlot memorySlot ) const = 0;
 
     /**
      * Stores the given @p sms on the phone
@@ -105,6 +78,19 @@ public:
      * @param sms the sms to remove
      */
     virtual void removeSMS( const SMS& sms ) = 0;
+
+public:
+    /**
+     * Returns an OR-combination of available memory slots
+     */
+    virtual KMobileTools::ShortMessages::MemorySlots availableMemorySlots() const = 0;
+
+    /**
+     * Returns the fetched list of sms
+     *
+     * @return the fetched sms list
+     */
+    virtual SMSList shortMessages() const = 0;
 
     /**
      * Returns the fetched sms center (SMSC)

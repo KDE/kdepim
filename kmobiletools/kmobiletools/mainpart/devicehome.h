@@ -1,6 +1,7 @@
 /***************************************************************************
    Copyright (C) 2007
    by Marco Gulino <marco@kmobiletools.org>
+   by Matthias Lechner <matthias@lmme.de>
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -20,13 +21,7 @@
 #ifndef _KMOBILETOOLS_MAINPART_DEVICEHOME_H_
 #define _KMOBILETOOLS_MAINPART_DEVICEHOME_H_
 
-#include <kdebug.h>
-#include <kabc/addressbook.h>
-#include <kabc/addressee.h>
-#include <qfile.h>
 #include <k3listview.h>
-
-#include <kcal/calendarlocal.h>
 
 #include <k3listviewsearchline.h>
 #include "kmobiletools_mainpart.h"
@@ -34,10 +29,7 @@
 #include "ui_mainWidget.h"
 #include "statusbar.h"
 
-#include <libkmobiletools/engine.h>
-#include <libkmobiletools/sms.h>
 #include <libkmobiletools/homepage.h>
-#include <libkmobiletools/enginedata.h> //@TODO remove me
 
 #include <QtGui/QTreeWidgetItem>
 
@@ -55,7 +47,9 @@ class QProgressBar;
 class QLabel;
 class kmobiletoolsMainPart;
 class StatusBarProgressBox;
-
+namespace KCal {
+    class CalendarLocal;
+}
 namespace KParts
 {
     class StatusBarExtension;
@@ -63,7 +57,12 @@ namespace KParts
 }
 namespace KMobileTools
 {
+    class Engine;
     class ContactsList;
+}
+namespace KABC
+{
+    class Addressee;
 }
 
 /**
@@ -93,7 +92,7 @@ class ContactListViewItem : public K3ListViewItem
 {
     public:
         explicit ContactListViewItem(Q3ListView *parent, const KABC::Addressee &contact, bool readOnly=false);
-        KABC::Addressee contact() { return p_contact; }
+        KABC::Addressee contact();
         bool readOnly() { return b_ro; }
     private:
         KABC::Addressee p_contact;
@@ -164,7 +163,6 @@ private:
     bool devIsConnected;
     int suspends_count;
     int smsnotifynum;
-//     QFile f_pidfile;
     KParts::StatusBarExtension *statusBarExtension;
     QList<QAction*> l_actionList;
     int memslotSelected, smsTypeSelected;

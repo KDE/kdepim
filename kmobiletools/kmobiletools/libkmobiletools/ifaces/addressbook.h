@@ -21,26 +21,15 @@
 #define KMOBILETOOLSIFACESADDRESSBOOK_H
 
 #include <QtCore/QObject>
-#include <QtCore/QMap>
+#include <QtCore/QList>
 
-#include <libkmobiletools/addressbook.h>
 #include <libkmobiletools/kmobiletools_export.h>
-
-namespace KABC {
-    class Addressee;
-}
+#include <libkmobiletools/addressbook.h>
 
 namespace KMobileTools {
-class ContactsList;
-
-/**
-  * @TODO think about having our own "addressee" object that holds the memory slot
-  */
-
-
+class AddressbookEntry;
 
 namespace Ifaces {
-
 /**
     This interface provides methods to access the mobile phone's address book
 
@@ -50,65 +39,45 @@ class KMOBILETOOLS_EXPORT Addressbook {
 public:
 //public Q_SLOTS:
     /**
-     * Fetches the address book from the phone
+     * Fetches the phone's address book
      */
     virtual void fetchAddressbook() = 0;
-
-    /**
-     * Fetches the address book stored in the given @p memorySlot
-     */
-    virtual void fetchAddressbook( KMobileTools::Addressbook::MemorySlot memorySlot ) = 0;
-
-public:
-    /**
-     * Returns an OR-combination of available memory slots
-     */
-    virtual KMobileTools::Addressbook::MemorySlots availableMemorySlots() const = 0;
-
-    /**
-     * Returns the fetched address book
-     *
-     * @return the fetched address book
-     */
-    virtual QMap<KMobileTools::Addressbook::MemorySlot,ContactsList> addressbook() const = 0;
-
-    /**
-     * Returns the fetched address book at a specific location
-     *
-     * @param memorySlot the slot in which to look for addressees
-     *
-     * @return the fetched address book
-     */
-    virtual ContactsList addressbookAtSlot( KMobileTools::Addressbook::MemorySlot memorySlot ) const = 0;
 
     /**
      * Adds the @p addressee to the address book
      *
      * @param addressee the addresse to add
-     * @param memorySlot the storage location
      */
-    virtual void addAddressee( const KABC::Addressee& addressee,
-                               KMobileTools::Addressbook::MemorySlot memorySlot ) = 0;
+    virtual void addAddressee( const KMobileTools::AddressbookEntry& addressee ) = 0;
 
     /**
      * Replaces the existing @p oldAddressee on the phone with @p newAddressee
      *
      * @param oldAddressee the existing address book entry
      * @param newAddressee the new address book entry
-     * @param memorySlot the storage location
      */
-    virtual void editAddressee( const KABC::Addressee& oldAddressee,
-                                const KABC::Addressee& newAddressee,
-                                KMobileTools::Addressbook::MemorySlot memorySlot ) = 0;
+    virtual void editAddressee( const KMobileTools::AddressbookEntry& oldAddressee,
+                                const KMobileTools::AddressbookEntry& newAddressee ) = 0;
 
     /**
      * Removes the @p addressee from the address book
      *
      * @param addressee the addresse to remove
-     * @param memorySlot the storage location
      */
-    virtual void removeAddressee( const KABC::Addressee& addressee,
-                                  KMobileTools::Addressbook::MemorySlot memorySlot ) = 0;
+    virtual void removeAddressee( const KMobileTools::AddressbookEntry& addressee ) = 0;
+
+public:
+    /**
+     * Returns an OR-combination of available memory slots
+     */
+    virtual KMobileTools::AddressbookEntry::MemorySlots availableMemorySlots() const = 0;
+
+    /**
+     * Returns the fetched address book
+     *
+     * @return the fetched address book
+     */
+    virtual KMobileTools::Addressbook addressbook() const = 0;
 
     virtual ~Addressbook();
 
@@ -125,10 +94,8 @@ protected:
      * address book
      *
      * @p addressee the addresse that has been added
-     * @p memorySlot the storage location
      */
-    virtual void addresseeAdded( const KABC::Addressee& addressee,
-                                 KMobileTools::Addressbook::MemorySlot memorySlot ) = 0;
+    virtual void addresseeAdded( const KMobileTools::AddressbookEntry& addressee ) = 0;
 
     /**
      * This signal is emitted when an addressee has been edited on the phone's
@@ -136,21 +103,17 @@ protected:
      *
      * @param oldAddressee the old address book entry
      * @param newAddressee the new address book entry
-     * @param memorySlot the storage location
      */
-    virtual void addresseeEdited( const KABC::Addressee& oldAddressee,
-                                  const KABC::Addressee& newAddressee,
-                                  KMobileTools::Addressbook::MemorySlot memorySlot ) = 0;
+    virtual void addresseeEdited( const KMobileTools::AddressbookEntry& oldAddressee,
+                                  const KMobileTools::AddressbookEntry& newAddressee ) = 0;
 
     /**
      * This signal is emitted when an addressee has been removed from the phone's
      * address book
      *
      * @p addressee the addresse that has been removed
-     * @p memorySlot the former storage location
      */
-    virtual void addresseeRemoved( const KABC::Addressee& addressee,
-                                   KMobileTools::Addressbook::MemorySlot memorySlot ) = 0;
+    virtual void addresseeRemoved( const KMobileTools::AddressbookEntry& addressee ) = 0;
 
 };
 

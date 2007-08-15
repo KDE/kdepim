@@ -149,19 +149,19 @@ void SMSList::calcSMSNumber() const
         switch (tempSMS->type())
         {
             case SMS::Unread:
-                if(tempSMS->slot() & SMS::SIM) d->i_unread_sim++;
+                if(tempSMS->slot() & SMS::Sim) d->i_unread_sim++;
                 if(tempSMS->slot() & SMS::Phone) d->i_unread_phone++;
                 break;
             case SMS::Read:
-                if(tempSMS->slot() & SMS::SIM) d->i_read_sim++;
+                if(tempSMS->slot() & SMS::Sim) d->i_read_sim++;
                 if(tempSMS->slot() & SMS::Phone) d->i_read_phone++;
                 break;
             case SMS::Unsent:
-                if(tempSMS->slot() & SMS::SIM) d->i_unsent_sim++;
+                if(tempSMS->slot() & SMS::Sim) d->i_unsent_sim++;
                 if(tempSMS->slot() & SMS::Phone) d->i_unsent_phone++;
                 break;
             case SMS::Sent:
-                if(tempSMS->slot() & SMS::SIM) d->i_sent_sim++;
+                if(tempSMS->slot() & SMS::Sim) d->i_sent_sim++;
                 if(tempSMS->slot() & SMS::Phone) d->i_sent_phone++;
                 break;
             case SMS::All:
@@ -176,22 +176,22 @@ int SMSList::count(int smsType, int memSlot) const
     int result=0;
     if( (smsType & SMS::Unread) )
     {
-        if( memSlot & SMS::SIM ) result+= d->i_unread_sim;
+        if( memSlot & SMS::Sim ) result+= d->i_unread_sim;
         if( memSlot & SMS::Phone) result+=d->i_unread_phone;
     }
     if( (smsType & SMS::Read) )
     {
-        if( memSlot & SMS::SIM ) result+= d->i_read_sim;
+        if( memSlot & SMS::Sim ) result+= d->i_read_sim;
         if( memSlot & SMS::Phone) result+=d->i_read_phone;
     }
     if( (smsType & SMS::Unsent) )
     {
-        if( memSlot & SMS::SIM ) result+= d->i_unsent_sim;
+        if( memSlot & SMS::Sim ) result+= d->i_unsent_sim;
         if( memSlot & SMS::Phone) result+=d->i_unsent_phone;
     }
     if( (smsType & SMS::Sent) )
     {
-        if( memSlot & SMS::SIM ) result+= d->i_sent_sim;
+        if( memSlot & SMS::Sim ) result+= d->i_sent_sim;
         if( memSlot & SMS::Phone) result+=d->i_sent_phone;
     }
     return result;

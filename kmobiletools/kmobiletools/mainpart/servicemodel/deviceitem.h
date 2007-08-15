@@ -1,6 +1,5 @@
 /***************************************************************************
    Copyright (C) 2007 by Matthias Lechner <matthias@lmme.de>
-   Copyright (C) 2007 by Marco Gulino <marco@kmobiletools.org>
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -18,37 +17,25 @@
    Boston, MA 02110-1301, USA.
  ***************************************************************************/
 
-#ifndef KMOBILETOOLSADDRESSBOOK_H
-#define KMOBILETOOLSADDRESSBOOK_H
+#ifndef DEVICEITEM_H
+#define DEVICEITEM_H
 
+#include <QtCore/QString>
 #include <QtCore/QList>
 
-#include <libkmobiletools/kmobiletools_export.h>
-#include <libkmobiletools/addressbookentry.h>
+#include "treeitem.h"
 
-namespace KMobileTools {
 /**
- * This class holds a list of contacts (former ContactsList)
- *
  * @author Matthias Lechner <matthias@lmme.de>
- * @author Marco Gulino <marco@kmobiletools.org>
  */
-class KMOBILETOOLS_EXPORT Addressbook : public QList<AddressbookEntry> {
+class DeviceItem : public TreeItem {
+    Q_OBJECT
 public:
-    /**
-     * Constructs an empty address book
-     */
-    Addressbook();
+    DeviceItem( const QString& name, TreeItem* parent );
+    ~DeviceItem();
 
-    /**
-     * Destructs the address book
-     */
-    ~Addressbook();
-
-    Addressbook( const Addressbook& entry );
-    Addressbook& operator=( const Addressbook& addressbook );
+private:
+    void queryServices();
 };
-
-}
 
 #endif

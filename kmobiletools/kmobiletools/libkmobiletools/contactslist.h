@@ -27,7 +27,8 @@
 /**
 @author Marco Gulino
 
-@TODO change name to AddresseeList
+@TODO look if we need findAddressee methods with current parameters and port to Addressbook class
+finally remove this class
 */
 class ContactsListPrivate;
 namespace KMobileTools

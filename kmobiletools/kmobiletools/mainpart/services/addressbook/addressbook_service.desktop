@@ -1,0 +1,8 @@
+[Desktop Entry]
+Encoding=UTF-8
+Type=Service
+Name=Addressbook service
+Comment=A KMobileTools service that provides address book functions
+ServiceTypes=KMobileTools/CoreService
+Description=This service provides KMobileTools with address book functions
+X-KDE-Library=libkmtaddressbook_service

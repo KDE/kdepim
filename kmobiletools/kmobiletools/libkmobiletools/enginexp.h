@@ -22,6 +22,7 @@
 
 #include <QtCore/QObject>
 #include <QtCore/QString>
+#include <QtGui/QIcon>
 
 #include <libkmobiletools/kmobiletools_export.h>
 
@@ -41,8 +42,6 @@ namespace KMobileTools {
 class KMOBILETOOLS_EXPORT EngineXP : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(QString shortDescription READ shortDescription)
-    Q_PROPERTY(QString longDescription READ longDescription)
 
 public:
     /**
@@ -56,20 +55,6 @@ public:
      * Destructs the Engine object
      */
     virtual ~EngineXP();
-
-    /**
-     * Returns a short description text about the engine
-     *
-     * @return a short description text
-     */
-    QString shortDescription() const;
-
-    /**
-     * Returns a long description text about the engine
-     *
-     * @return a long description text
-     */
-    QString longDescription() const;
 
     /**
      * Initializes the engine and the communication with the
@@ -87,16 +72,6 @@ public:
      * @return true, if the engine implements the given interface
      */
     bool implements( const QString& interfaceName );
-
-    /**
-     * A convenience method to load an engine
-     *
-     * @param parent the engine's parent object
-     * @param libname the engine's library name, e.g. libkmobiletools_at
-     *
-     * @return an engine instance if loading is successful, else 0
-     */
-    static EngineXP* load( QObject* parent, const QString& libname );
 
 Q_SIGNALS:
     /**

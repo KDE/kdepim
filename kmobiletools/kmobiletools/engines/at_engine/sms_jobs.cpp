@@ -424,7 +424,7 @@ void FetchSMS::run()
         memslot3=CMGL.cap( 3 );
     }
     if (in_memslot=="ME" || in_memslot== "MT" || in_memslot=="OM" || in_memslot=="IM") sms_Slot= SMS::Phone;
-    if (in_memslot=="SM" || in_memslot== "MT" || in_memslot=="OM" || in_memslot=="IM") sms_Slot= SMS::SIM;
+    if (in_memslot=="SM" || in_memslot== "MT" || in_memslot=="OM" || in_memslot=="IM") sms_Slot= SMS::Sim;
 //     kDebug() <<"Current SMS Slot:" << in_memslot <<";" << memslot2 <<";" << memslot3 <<";";
     if(! sms_Slot) sms_Slot=SMS::Phone; // if we've no slots just assign the SMS to the phone as default.
     

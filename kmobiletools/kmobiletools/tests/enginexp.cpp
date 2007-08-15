@@ -21,11 +21,13 @@
 #include <libkmobiletools/ifaces/status.h>
 #include <libkmobiletools/errorhandler.h>
 
-#include <kdebug.h>
+#include <KDebug>
 #include <KApplication>
 #include <KCmdLineArgs>
 #include <KLocale>
 #include <KAboutData>
+#include <KService>
+#include <KServiceTypeTrader>
 #include <QtCore/QString>
 
 using namespace KMobileTools;
@@ -76,8 +78,21 @@ int main( int argc, char *argv[] ) {
     errorPrinter.install();
 
     // load lib
-    QString engineLibName = QString( "libkmobiletools_%1" ).arg( engineName );
-    KMobileTools::EngineXP *fakeEngine = KMobileTools::EngineXP::load( 0, engineLibName );
+    KService::List engineList = KServiceTypeTrader::self()->query( "KMobileTools/EngineXP" );
+
+    int serviceNumber = 0;
+    bool engineFound = false;
+    for( ; serviceNumber < engineList.size(); serviceNumber++ ) {
+        if( engineList.at( serviceNumber )->library() == engineName ) {
+            engineFound = true;
+            break;
+        }
+    }
+
+    QStringList arg( "Test device" );
+    KMobileTools::EngineXP* fakeEngine = KService::createInstance<KMobileTools::EngineXP>
+                                     ( engineList.at( serviceNumber ), (QObject*) 0, arg );
+
     if( fakeEngine ) {
         kDebug() << engineName <<" engine loaded.";
     } else {

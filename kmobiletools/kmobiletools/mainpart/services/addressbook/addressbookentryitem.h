@@ -1,6 +1,5 @@
 /***************************************************************************
    Copyright (C) 2007 by Matthias Lechner <matthias@lmme.de>
-   Copyright (C) 2007 by Marco Gulino <marco@kmobiletools.org>
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -18,37 +17,53 @@
    Boston, MA 02110-1301, USA.
  ***************************************************************************/
 
-#ifndef KMOBILETOOLSADDRESSBOOK_H
-#define KMOBILETOOLSADDRESSBOOK_H
+#ifndef ADDRESSBOOKENTRYITEM_H
+#define ADDRESSBOOKENTRYITEM_H
 
-#include <QtCore/QList>
+#include <QtGui/QListWidgetItem>
+#include <QtGui/QListWidget>
 
-#include <libkmobiletools/kmobiletools_export.h>
 #include <libkmobiletools/addressbookentry.h>
 
-namespace KMobileTools {
 /**
- * This class holds a list of contacts (former ContactsList)
- *
  * @author Matthias Lechner <matthias@lmme.de>
- * @author Marco Gulino <marco@kmobiletools.org>
  */
-class KMOBILETOOLS_EXPORT Addressbook : public QList<AddressbookEntry> {
+class AddressbookEntryItem : public QListWidgetItem
+{
 public:
-    /**
-     * Constructs an empty address book
-     */
-    Addressbook();
+    enum State {
+        Default = 0x01,
+        AdditionRequested = 0x02,   // item is marked as to be added
+        EditingRequested = 0x04,    // item is marked as to be edited
+        RemovalRequested = 0x08,    // item is marked as to be removed
+    };
+
+    AddressbookEntryItem( QListWidget* parent = 0 );
 
     /**
-     * Destructs the address book
+     * Sets the addressee this item holds
+     *
+     * @param addressee the addressee
      */
-    ~Addressbook();
+    void setAddressee( const KMobileTools::AddressbookEntry& addressee );
 
-    Addressbook( const Addressbook& entry );
-    Addressbook& operator=( const Addressbook& addressbook );
+    /**
+     * Returns the addressee this item holds
+     *
+     * @return the addressee
+     */
+    KMobileTools::AddressbookEntry addressee() const;
+
+    void setState( AddressbookEntryItem::State state );
+
+    AddressbookEntryItem::State state() const;
+
+    ~AddressbookEntryItem();
+
+private:
+    KMobileTools::AddressbookEntry m_entry;
+    AddressbookEntryItem::State m_state;
+    QFont m_defaultFont;
 };
-
-}
 
 #endif

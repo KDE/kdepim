@@ -16,7 +16,13 @@ set(kmobiletools_LIB_SRCS
    ifaces/smsfolders.cpp
    ifaces/status.cpp
    ifaces/information.cpp
+   ifaces/coreservice.cpp
+   ifaces/guiservice.cpp
+   ifaces/actionprovider.cpp
    enginexp.cpp
+   deviceloader.cpp
+   addressbook.cpp
+   addressbookentry.cpp
    aboutdata.cpp 
    ${crashhandler_SRCS}
    contactslist.cpp  
@@ -61,6 +67,8 @@ install( FILES kmobiletools_devices.kcfg kmobiletools_devices.kcfg DESTINATION  
 
 
 install( FILES  kmobiletoolsengine.desktop DESTINATION ${SERVICETYPES_INSTALL_DIR} )
+install( FILES  kmobiletoolsenginexp.desktop DESTINATION ${SERVICETYPES_INSTALL_DIR} )
+install( FILES  kmobiletoolscoreservice.desktop DESTINATION ${SERVICETYPES_INSTALL_DIR} )
 
 # install interfaces
 install(FILES
@@ -70,24 +78,29 @@ install(FILES
    ifaces/smsfolders.h
    ifaces/status.h
    ifaces/information.h
+   ifaces/coreservice.h
+   ifaces/guiservice.h
+   ifaces/actionprovider.h
    DESTINATION ${INCLUDE_INSTALL_DIR}/libkmobiletools/ifaces)
 
+# install error types
 install(FILES
    errortypes/baseerror.h
    DESTINATION ${INCLUDE_INSTALL_DIR}/libkmobiletools/errortypes)
 
 install(FILES
    status.h
-   shortmessages.h
    information.h
    enginexp.h
    addressbook.h
+   addressbookentry.h
    kmobiletools_export.h
    picksmscenter.h
    kmobiletoolshelper.h
    errorlog.h
    errorhandler.h
    errortypes/baseerror.h
+   deviceloader.h
    engine.h
    sms.h
    smslist.h

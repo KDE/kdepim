@@ -29,10 +29,10 @@
 #include <libkmobiletools/errorhandler.h>
 #include <libkmobiletools/errortypes/baseerror.h>
 
-/**
-    @author Matthias Lechner <matthias@lmme.de>
-*/
 class ErrorLogItem;
+/**
+ * @author Matthias Lechner <matthias@lmme.de>
+ */
 class ErrorLogDialog : public KDialog
 {
     Q_OBJECT

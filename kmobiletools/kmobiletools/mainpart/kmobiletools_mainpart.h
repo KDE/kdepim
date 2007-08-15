@@ -26,6 +26,8 @@
 #include <KParts/MainWindow>
 
 #include <QStringList>
+#include <QList>
+#include <QHash>
 
 #include "deviceslist.h"
 
@@ -33,6 +35,10 @@ class QStackedWidget;
 class QString;
 class QTreeWidgetItem;
 class QTreeWidget;
+class QTreeView;
+class QModelIndex;
+class DeviceItem;
+class ServiceItem;
 class DeviceManager;
 class KAboutData;
 class KSystemTrayIcon;
@@ -52,6 +58,7 @@ namespace KMobileTools {
  * @author Matthias Lechner <matthias@lmme.de>
  * @version 0.5.0
  */
+typedef QList<QWidget*> QWidgetList;
 
 class kmobiletoolsMainPart : public KParts::ReadOnlyPart/*, virtual public MainIFace*/
 {
@@ -79,7 +86,7 @@ class kmobiletoolsMainPart : public KParts::ReadOnlyPart/*, virtual public MainI
          */
         bool openFile() { return false; }
 
-        QTreeWidget *listview() { return p_listview; }
+        QTreeView *listview() { return p_listview; }
         KSystemTrayIcon * sysTray() { return p_sysTray; }
         KParts::StatusBarExtension *statusBarExtension() { return p_statusBarExtension;}
 
@@ -91,26 +98,19 @@ class kmobiletoolsMainPart : public KParts::ReadOnlyPart/*, virtual public MainI
         void deleteDevicePart(const QString &deviceName);
         void deviceDisconnected();
         void deviceConnected();
-        bool deviceIsLoaded(const QString &deviceName);
-        //void newSMS(); /// @TODO remove
-        void phonebookUpdated();
         void slotConfigNotify();
 
     private Q_SLOTS:
-        void switchPart( const QString& partName );
         void goHome();
         void nextPart();
         void prevPart();
 
-        void slotQuit();
-        void checkShowDeviceList();
-        void slotAutoLoadDevices();
-        void addDevice(const QString &newDevice);
-        void delDevice(const QString &newDevice);
-        void updateStatus();
+        void deviceUnloaded( const QString& deviceName );
 
-        void widgetStackItemChanged(int item);
-        void listviewClicked( QTreeWidgetItem* item, int column );
+        void slotQuit();
+        void slotAutoLoadDevices();
+
+        void treeItemClicked( const QModelIndex& index );
 
     private:
         void setupGUI( QWidget* parent );
@@ -119,11 +119,26 @@ class kmobiletoolsMainPart : public KParts::ReadOnlyPart/*, virtual public MainI
 
         bool checkConfigVersion();
 
+        /**
+         * Displays the home page of the given @p deviceItem
+         *
+         * @param deviceItem the device item
+         */
+        void handleDeviceItem( DeviceItem* deviceItem );
+
+        /**
+         * Activates the service associated with the given @p serviceItem
+         *
+         * @param serviceItem the service item
+         */
+        void handleServiceItem( ServiceItem* serviceItem );
+
+        QHash<QString,QWidgetList> m_loadedWidgets;
+
         QStackedWidget *m_widget;
-        QTreeWidget *p_listview;
+        QTreeView *p_listview;
         KSystemTrayIcon * p_sysTray;
 
-        KParts::MainWindow *mainwindow;
         KParts::StatusBarExtension *p_statusBarExtension;
         KMobileTools::homepagePart* p_homepage;
         DevicesList l_devicesList;
@@ -132,6 +147,8 @@ class kmobiletoolsMainPart : public KParts::ReadOnlyPart/*, virtual public MainI
         DeviceManager* m_deviceManager;
 
     signals:
+        void showServiceToolBar( bool );
+
         void devicesUpdated();
         void deviceChanged(const QString &);
 protected:

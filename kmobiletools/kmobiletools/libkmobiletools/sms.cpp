@@ -287,7 +287,7 @@ QStringList SMS::getMultiText() const
 bool SMS::exportMD(const QString &dir)
 {
     bool retval=false;
-    if (d->i_slot & SIM )
+    if (d->i_slot & Sim )
         retval = retval | writeToSlot( dir + QDir::separator() + '.' + i18nc("SIM MailDir", "SIM") + ".directory");
     if (d->i_slot & Phone )
         retval = retval | writeToSlot( dir + QDir::separator() + '.' + i18nc("Phone MailDir", "Phone") + ".directory");

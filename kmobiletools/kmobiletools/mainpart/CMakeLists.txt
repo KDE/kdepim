@@ -1,7 +1,13 @@
 
+add_subdirectory(services/addressbook)
+
 ########### next target ###############
 
-set(kmobiletoolsmainpart_PART_SRCS 
+set(kmobiletoolsmainpart_PART_SRCS
+   servicemodel/servicemodel.cpp
+   servicemodel/deviceitem.cpp
+   servicemodel/serviceitem.cpp
+   servicemodel/treeitem.cpp
    deviceconfigdialog.cpp 
    devicemanager.cpp 
    addressdetails.cpp 
