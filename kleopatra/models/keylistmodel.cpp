@@ -47,6 +47,9 @@
 
 #include <boost/bind.hpp>
 
+#include <boost/graph/adjacency_list.hpp>
+#include <boost/graph/topological_sort.hpp>
+
 #include <algorithm>
 #include <vector>
 #include <map>
@@ -392,11 +395,20 @@ namespace {
         /* reimp */ QList<QModelIndex> doAddKeys( const std::vector<Key> & keys );
         /* reimp */ void doClear() {
             mKeysByFingerprint.clear();
-            mKeysByChainId.clear();
+            mKeysByExistingParent.clear();
+	    mKeysByNonExistingParent.clear();
         }
+
     private:
-        std::vector<Key> mKeysByFingerprint;
-        std::map< std::string, std::vector<Key> > mKeysByChainId;
+	void addTopLevelKey( const Key & key );
+	void addKeyWithParent( const char * issuer_fpr, const Key & key );
+	void addKeyWithoutParent( const char * issuer_fpr, const Key & key );
+
+    private:
+	typedef std::map< std::string, std::vector<Key> > Map;
+        std::vector<Key> mKeysByFingerprint; // all keys
+	Map mKeysByExistingParent, mKeysByNonExistingParent; // parent->child map
+	std::vector<Key> mTopLevels; // all roots + parent-less
     };
 
     static const char * cleanChainID( const Key & key ) {
@@ -467,10 +479,19 @@ QList<QModelIndex> FlatKeyListModel::doAddKeys( const std::vector<Key> & keys ) 
 }
 
 
+
+
+
+
+
+
+
 HierarchicalKeyListModel::HierarchicalKeyListModel( QObject * p )
     : AbstractKeyListModel( p ),
       mKeysByFingerprint(),
-      mKeysByChainId()
+      mKeysByExistingParent(),
+      mKeysByNonExistingParent(),
+      mTopLevels()
 {
 
 }
@@ -479,21 +500,19 @@ HierarchicalKeyListModel::~HierarchicalKeyListModel() {}
 
 int HierarchicalKeyListModel::rowCount( const QModelIndex & pidx ) const {
 
-    std::map< std::string, std::vector<Key> >::const_iterator it;
-    if ( !pidx.isValid() ) {
-        // find the number of toplevel items:
-        it = mKeysByChainId.find( "" );
-    } else {
-        // find the number of subjects for this issuer:
-        const Key issuer = this->key( pidx );
-	const char * const fpr = issuer.primaryFingerprint();
-	if ( !fpr || !*fpr )
-            return 0;
-        it = mKeysByChainId.find( fpr);
-    }
-    if ( it == mKeysByChainId.end() )
+    // toplevel item:
+    if ( !pidx.isValid() )
+	return mTopLevels.size();
+
+    // non-toplevel item - find the number of subjects for this issuer:
+    const Key issuer = this->key( pidx );
+    const char * const fpr = issuer.primaryFingerprint();
+    if ( !fpr || !*fpr )
+	return 0;
+    const Map::const_iterator it = mKeysByExistingParent.find( fpr );
+    if ( it == mKeysByExistingParent.end() )
         return 0;
-    return it->second.size() ;
+    return it->second.size();
 }
 
 QModelIndex HierarchicalKeyListModel::index( int row, int col, const QModelIndex & pidx ) const {
@@ -501,26 +520,27 @@ QModelIndex HierarchicalKeyListModel::index( int row, int col, const QModelIndex
     if ( row < 0 || col < 0 || col >= NumColumns )
         return QModelIndex();
 
-    std::map< std::string, std::vector<Key> >::const_iterator it;
-    if ( !pidx.isValid() ) {
-        // find the row'th toplevel item:
-        it = mKeysByChainId.find( "" );
-    } else {
-        // find the row's subject of this key:
-        const Key issuer = this->key( pidx );
-        const char * const fpr = issuer.primaryFingerprint();
-        if ( !fpr || !*fpr )
-            return QModelIndex();
-        it = mKeysByChainId.find( fpr );
-    }
-    if ( it == mKeysByChainId.end() || static_cast<unsigned>( row ) >= it->second.size() )
+    // toplevel item:
+    if ( !pidx.isValid() )
+	if ( static_cast<unsigned>( row ) < mTopLevels.size() )
+	    return index( mTopLevels[row], col );
+	else
+	    return QModelIndex();
+
+    // non-toplevel item - find the row'th subject of this key:
+    const Key issuer = this->key( pidx );
+    const char * const fpr = issuer.primaryFingerprint();
+    if ( !fpr || !*fpr )
+	return QModelIndex();
+    const Map::const_iterator it = mKeysByExistingParent.find( fpr );
+    if ( it == mKeysByExistingParent.end() || static_cast<unsigned>( row ) >= it->second.size() )
         return QModelIndex();
     return index( it->second[row], col );
 }
 
 QModelIndex HierarchicalKeyListModel::parent( const QModelIndex & idx ) const {
     const Key key = this->key( idx );
-    if ( key.isNull() )
+    if ( key.isNull() || key.isRoot() )
         return QModelIndex();
     const std::vector<Key>::const_iterator it
 	= qBinaryFind( mKeysByFingerprint.begin(), mKeysByFingerprint.end(),
@@ -532,32 +552,148 @@ QModelIndex HierarchicalKeyListModel::parent( const QModelIndex & idx ) const {
 }
 
 Key HierarchicalKeyListModel::doMapToKey( const QModelIndex & idx ) const {
+
     if ( !idx.isValid() )
 	return Key::null;
+
     const char * const issuer_fpr = static_cast<const char*>( idx.internalPointer() );
-    const std::map< std::string, std::vector<Key> >::const_iterator it
-	= mKeysByChainId.find( issuer_fpr );
-    if ( it == mKeysByChainId.end() || static_cast<unsigned>( idx.row() ) >= it->second.size() )
+    if ( !issuer_fpr || !*issuer_fpr )
+	// top-level:
+	if ( static_cast<unsigned>( idx.row() ) >= mTopLevels.size() )
+	    return Key::null;
+	else
+	    return mTopLevels[idx.row()];
+
+    // non-toplevel:
+    const Map::const_iterator it
+	= mKeysByExistingParent.find( issuer_fpr );
+    if ( it == mKeysByExistingParent.end() || static_cast<unsigned>( idx.row() ) >= it->second.size() )
 	return Key::null;
     return it->second[idx.row()];
 }
 
 QModelIndex HierarchicalKeyListModel::doMapFromKey( const Key & key, int col ) const {
+
     if ( key.isNull() )
         return QModelIndex();
-    const char * const issuer_fpr = cleanChainID( key );
-    const std::map< std::string, std::vector<Key> >::const_iterator it
-        = mKeysByChainId.find( issuer_fpr );
-    if ( it == mKeysByChainId.end() )
-        return QModelIndex();
-    const int row
-        = std::distance( it->second.begin(),
-                         qBinaryFind( it->second.begin(), it->second.end(),
-                                      key, ByFingerprint<std::less>() ) );
-    if ( static_cast<unsigned>( row ) >= it->second.size() ) // qBinaryFind returned end()
-        return QModelIndex();
+
+    const char * issuer_fpr = cleanChainID( key );
+
+    // we need to look in the toplevels list,...
+    const std::vector<Key> * v = &mTopLevels;
+    if ( issuer_fpr && *issuer_fpr ) {
+	const std::map< std::string, std::vector<Key> >::const_iterator it
+	    = mKeysByExistingParent.find( issuer_fpr );
+	// ...unless we find an existing parent:
+	if ( it != mKeysByExistingParent.end() )
+	    v = &it->second;
+	else
+	    issuer_fpr = 0; // force internalPointer to zero for toplevels
+    }
+
+    const std::vector<Key>::const_iterator it
+	= qBinaryFind( v->begin(), v->end(), key, ByFingerprint<std::less>() );
+    if ( it == v->end() )
+	return QModelIndex();
+
+    const unsigned int row = std::distance( v->begin(), it );
+    return createIndex( row, col, const_cast<char* /* thanks, Trolls :/ */ >( issuer_fpr ) ); 
+}
+
+void HierarchicalKeyListModel::addKeyWithParent( const char * issuer_fpr, const Key & key ) {
+
+    assert( issuer_fpr ); assert( *issuer_fpr ); assert( !key.isNull() );
+
+    std::vector<Key> & subjects = mKeysByExistingParent[issuer_fpr];
+
+    // find insertion point:
+    const std::vector<Key>::iterator it = std::lower_bound( subjects.begin(), subjects.end(), key, ByFingerprint<std::less>() );
+    const int row = std::distance( subjects.begin(), it );
+
+    if ( it != subjects.end() && qstricmp( it->primaryFingerprint(), key.primaryFingerprint() ) == 0 ) {
+	// exists -> replace
+	*it = key;
+	emit dataChanged( createIndex( row, 0, const_cast<char*>( issuer_fpr ) ), createIndex( row, NumColumns-1, const_cast<char*>( issuer_fpr ) ) );
+    } else {
+	// doesn't exist -> insert
+	const std::vector<Key>::const_iterator pos = qBinaryFind( mKeysByFingerprint.begin(), mKeysByFingerprint.end(), issuer_fpr, ByFingerprint<std::less>() );
+	assert( pos != mKeysByFingerprint.end() );
+	beginInsertRows( index( *pos ), row, row );
+	subjects.insert( it, key );
+	endInsertRows();
+    }
+}
+
+void HierarchicalKeyListModel::addKeyWithoutParent( const char * issuer_fpr, const Key & key ) {
+
+    assert( issuer_fpr ); assert( *issuer_fpr ); assert( !key.isNull() );
+
+    std::vector<Key> & subjects = mKeysByNonExistingParent[issuer_fpr];
+
+    // find insertion point:
+    const std::vector<Key>::iterator it = std::lower_bound( subjects.begin(), subjects.end(), key, ByFingerprint<std::less>() );
+
+    if ( it != subjects.end() && qstricmp( it->primaryFingerprint(), key.primaryFingerprint() ) == 0 )
+	// exists -> replace
+	*it = key;
     else
-        return createIndex( row, col, const_cast<char* /* thanks, Trolls :/ */ >( issuer_fpr ) ); 
+	// doesn't exist -> insert
+	subjects.insert( it, key );
+
+    addTopLevelKey( key );
+}
+
+void HierarchicalKeyListModel::addTopLevelKey( const Key & key ) {
+
+    // find insertion point:
+    const std::vector<Key>::iterator it = std::lower_bound( mTopLevels.begin(), mTopLevels.end(), key, ByFingerprint<std::less>() );
+    const int row = std::distance( mTopLevels.begin(), it );
+
+    if ( it != mTopLevels.end() && qstricmp( it->primaryFingerprint(), key.primaryFingerprint() ) == 0 ) {
+	// exists -> replace
+	*it = key;
+	emit dataChanged( createIndex( row, 0 ), createIndex( row, NumColumns-1 ) );
+    } else {
+	// doesn't exist -> insert
+	beginInsertRows( QModelIndex(), row, row );
+	mTopLevels.insert( it, key );
+	endInsertRows();
+    }
+
+}
+
+namespace {
+
+    // sorts 'keys' such that parent always come before their children:
+    std::vector<Key> topological_sort( const std::vector<Key> & keys ) {
+
+        adjacency_list<> graph( keys.size() );
+
+        // add edges from children to parents:
+        for ( unsigned int i = 0, end = keys.size() ; i != end ; ++i ) {
+            const char * const issuer_fpr = cleanChainID( keys[i] );
+            if ( !issuer_fpr || !*issuer_fpr )
+                continue;
+            const std::vector<Key>::const_iterator it
+                = qBinaryFind( keys.begin(), keys.end(), issuer_fpr, ByFingerprint<std::less>() );
+            if ( it == keys.end() )
+                continue;
+            add_edge( i, std::distance( keys.begin(), it ), graph );
+        }
+
+        std::vector<int> order;
+        order.reserve( keys.size() );
+        topological_sort( graph, std::back_inserter( order ) );
+
+        assert( order.size() == keys.size() );
+
+        std::vector<Key> result;
+        result.reserve( keys.size() );
+        Q_FOREACH( int i, order )
+	    result.push_back( keys[i] );
+        return result;
+    }
+
 }
 
 QList<QModelIndex> HierarchicalKeyListModel::doAddKeys( const std::vector<Key> & keys ) {
@@ -566,6 +702,8 @@ QList<QModelIndex> HierarchicalKeyListModel::doAddKeys( const std::vector<Key> &
 #endif
     if ( keys.empty() )
         return QList<QModelIndex>();
+
+
     std::vector<Key> merged;
     merged.reserve( keys.size() + mKeysByFingerprint.size() );
     std::merge( keys.begin(), keys.end(),
@@ -573,49 +711,24 @@ QList<QModelIndex> HierarchicalKeyListModel::doAddKeys( const std::vector<Key> &
                 std::back_inserter( merged ), ByFingerprint<std::less>() );
     merged.erase( std::unique( merged.begin(), merged.end(), ByFingerprint<std::equal_to>() ), merged.end() );
     
-    mKeysByFingerprint.swap( merged );
+    mKeysByFingerprint = merged;
 
+    Q_FOREACH( const Key & key, topological_sort( keys ) ) {
+	
+	const char * const issuer_fpr = cleanChainID( key );
 
-    std::map< std::string, std::vector<Key> > tmpmap;
-    Q_FOREACH( const Key & key, keys )
-        tmpmap[ cleanChainID( key ) ].push_back( key );
+	if ( !issuer_fpr || !*issuer_fpr )
+	    // root or something...
+	    addTopLevelKey( key );
+	else if ( std::binary_search( mKeysByFingerprint.begin(), mKeysByFingerprint.end(), issuer_fpr, ByFingerprint<std::less>() ) )
+	    // parent exists...
+	    addKeyWithParent( issuer_fpr, key );
+	else
+	    // parent does't exist yet...
+	    addKeyWithoutParent( issuer_fpr, key );
 
-    for ( std::map< std::string, std::vector<Key> >::iterator it = tmpmap.begin(), end = tmpmap.end() ; it != end ; ++it )
-        std::sort( it->second.begin(), it->second.end(), ByFingerprint<std::less>() );
-
-    // in-place merge tmpmap into mKeysByChainId:
-    {
-        std::map< std::string, std::vector<Key> >::iterator
-            it1 = tmpmap.begin(), end1 = tmpmap.end(),
-            it2 = mKeysByChainId.begin(), end2 = mKeysByChainId.end();
-        while ( it1 != end1 && it2 != end2 ) {
-            const std::vector<Key> & v1 = it1->second;
-            const std::vector<Key> & v2 = it2->second;
-            if ( it1->first < it2->first ) {
-                // take *it1:
-                mKeysByChainId.insert( it2, *it1 );
-                ++it1;
-            } else if ( it2->first < it1->first ) {
-                // take *it2 - already in
-                ++it2;
-            } else { // ==
-                // merge {it1,it2}->second's
-                std::vector<Key> tmp;
-                tmp.reserve( v1.size() + v2.size() );
-                std::merge( v1.begin(), v1.end(),
-                            v2.begin(), v2.end(),
-                            std::back_inserter( tmp ),
-                            ByFingerprint<std::less>() );
-		tmp.erase( std::unique( tmp.begin(), tmp.end(), ByFingerprint<std::equal_to>() ), tmp.end() );
-                it2->second.swap( tmp );
-                ++it1;
-                ++it2;
-            }
-        }
-        std::copy( it1, end1, std::copy( it2, end2, std::inserter( mKeysByChainId, mKeysByChainId.end() ) ) );
     }
 
-    reset(); // ### be better here...
     return indexes( keys );
 }
 

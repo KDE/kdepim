@@ -1,7 +1,7 @@
 project(kleopatra)
 
 include_directories( ${CMAKE_SOURCE_DIR}/libkleo ${Boost_INCLUDE_DIR} )
-add_definitions (-DQT3_SUPPORT -DQT3_SUPPORT_WARNINGS)
+add_definitions (-DQT3_SUPPORT -DQT3_SUPPORT_WARNINGS ${KDE4_ENABLE_EXCEPTIONS} )
 
 set(libconf_SRCS  ${CMAKE_SOURCE_DIR}/kleopatra/conf/configuredialog.cpp )
 add_subdirectory( conf ) 
