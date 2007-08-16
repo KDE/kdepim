@@ -31,6 +31,7 @@
 */
 
 #include "plugin.h"
+#include "ui_config_page_device.h"
 #include "ui_config_page_sync.h"
 #include "ui_config_page_viewers.h"
 
@@ -64,7 +65,7 @@ protected slots:
 	void autoDetectDevice();
 
 private:
-	DeviceConfigWidget *fConfigWidget;
+	Ui::DeviceConfigWidget fConfigWidget;
 
 	// Read and write the values of Encoding
 	// and EncodingDD.

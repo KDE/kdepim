@@ -53,7 +53,6 @@
 #include "kpilotConfig.h"
 #include "kpilotSettings.h"
 
-#include "config_page_device.h"
 #include "config_page_startup.h"
 #include "config_page_backup.h"
 #include "config_dialog_probe.h"
@@ -71,21 +70,22 @@ DeviceConfigPage::DeviceConfigPage(QWidget * w, const char *n ) : ConfigPage( w,
 {
 	FUNCTIONSETUP;
 
-	fConfigWidget = new DeviceConfigWidget( w );
+	fWidget = new QWidget(w);
+	fConfigWidget.setupUi( fWidget );
+	
 	// Fill the encodings list
 	{
 		QStringList l = KGlobal::charsets()->descriptiveEncodingNames();
 		for ( QStringList::Iterator it = l.begin(); it != l.end(); ++it )
 		{
-			fConfigWidget->fPilotEncoding->addItem(*it);
+			fConfigWidget.fPilotEncoding->addItem(*it);
 		}
 	}
-	connect( fConfigWidget->fDeviceAutodetect, SIGNAL(clicked()), this, SLOT(autoDetectDevice()));
+	
+	connect( fConfigWidget.fDeviceAutodetect, SIGNAL(clicked()), this
+		, SLOT(autoDetectDevice()));
 
-	fConfigWidget->resize(fConfigWidget->size());
-	fWidget = fConfigWidget;
-
-#define CM(a,b) connect(fConfigWidget->a,b,this,SLOT(modified()));
+#define CM(a,b) connect(fConfigWidget.a,b,this,SLOT(modified()));
 	CM(fPilotDevice, SIGNAL(textChanged(const QString &)));
 	CM(fPilotSpeed, SIGNAL(activated(int)));
 	CM(fPilotEncoding, SIGNAL(textChanged(const QString &)));
@@ -102,24 +102,24 @@ void DeviceConfigPage::load()
 	KPilotSettings::self()->readConfig();
 
 	/* General tab in the setup dialog */
-	fConfigWidget->fPilotDevice->setText(KPilotSettings::pilotDevice());
-	fConfigWidget->fPilotSpeed->setCurrentIndex(KPilotSettings::pilotSpeed());
+	fConfigWidget.fPilotDevice->setText(KPilotSettings::pilotDevice());
+	fConfigWidget.fPilotSpeed->setCurrentIndex(KPilotSettings::pilotSpeed());
 	getEncoding();
-	fConfigWidget->fUserName->setText(KPilotSettings::userName());
+	fConfigWidget.fUserName->setText(KPilotSettings::userName());
 
 	switch(KPilotSettings::workarounds())
 	{
 	case KPilotSettings::eWorkaroundNone :
-		fConfigWidget->fWorkaround->setCurrentIndex(0);
+		fConfigWidget.fWorkaround->setCurrentIndex(0);
 		break;
 	case KPilotSettings::eWorkaroundUSB :
-		fConfigWidget->fWorkaround->setCurrentIndex(1);
+		fConfigWidget.fWorkaround->setCurrentIndex(1);
 		break;
 	default:
 		WARNINGKPILOT << "Unknown workaround number "
 			<< (int) KPilotSettings::workarounds();
 		KPilotSettings::setWorkarounds(KPilotSettings::eWorkaroundNone);
-		fConfigWidget->fWorkaround->setCurrentIndex(0);
+		fConfigWidget.fWorkaround->setCurrentIndex(0);
 	}
 	unmodified();
 }
@@ -129,12 +129,12 @@ void DeviceConfigPage::load()
 	FUNCTIONSETUP;
 
 	// General page
-	KPilotSettings::setPilotDevice(fConfigWidget->fPilotDevice->text());
-	KPilotSettings::setPilotSpeed(fConfigWidget->fPilotSpeed->currentIndex());
+	KPilotSettings::setPilotDevice(fConfigWidget.fPilotDevice->text());
+	KPilotSettings::setPilotSpeed(fConfigWidget.fPilotSpeed->currentIndex());
 	setEncoding();
-	KPilotSettings::setUserName(fConfigWidget->fUserName->text());
+	KPilotSettings::setUserName(fConfigWidget.fUserName->text());
 
-	switch(fConfigWidget->fWorkaround->currentIndex())
+	switch(fConfigWidget.fWorkaround->currentIndex())
 	{
 	case 0 :
 		KPilotSettings::setWorkarounds(KPilotSettings::eWorkaroundNone);
@@ -144,7 +144,7 @@ void DeviceConfigPage::load()
 		break;
 	default :
 		WARNINGKPILOT << "Unknown workaround number "
-			<< fConfigWidget->fWorkaround->currentIndex();
+			<< fConfigWidget.fWorkaround->currentIndex();
 		KPilotSettings::setWorkarounds(KPilotSettings::eWorkaroundNone);
 	}
 	KPilotConfig::updateConfigVersion();
@@ -159,11 +159,11 @@ void DeviceConfigPage::load()
 	switch (i)
 	{
 	case 0:
-		fConfigWidget->fPilotSpeed->setEnabled(true);
+		fConfigWidget.fPilotSpeed->setEnabled(true);
 		break;
 	case 1:
 	case 2:
-		fConfigWidget->fPilotSpeed->setEnabled(false);
+		fConfigWidget.fPilotSpeed->setEnabled(false);
 		break;
 	default:
 		WARNINGKPILOT << "Unknown port type" << i;
@@ -176,11 +176,11 @@ void DeviceConfigPage::getEncoding()
 	QString e = KPilotSettings::encoding();
 	if (e.isEmpty())
 	{
-		fConfigWidget->fPilotEncoding->setEditText(CSL1("ISO8859-15"));
+		fConfigWidget.fPilotEncoding->setEditText(CSL1("ISO8859-15"));
 	}
 	else
 	{
-		fConfigWidget->fPilotEncoding->setEditText(e);
+		fConfigWidget.fPilotEncoding->setEditText(e);
 	}
 }
 
@@ -188,7 +188,7 @@ void DeviceConfigPage::setEncoding()
 {
 	FUNCTIONSETUP;
 
-	QString enc = fConfigWidget->fPilotEncoding->currentText();
+	QString enc = fConfigWidget.fPilotEncoding->currentText();
 	if (enc.isEmpty())
 	{
 		WARNINGKPILOT << "Empty encoding. Will ignore it.";
@@ -203,13 +203,13 @@ void DeviceConfigPage::setEncoding()
 void DeviceConfigPage::autoDetectDevice()
 {
 	FUNCTIONSETUP;
-	ProbeDialog *d = new ProbeDialog( fConfigWidget );
+	ProbeDialog *d = new ProbeDialog( fWidget );
 	d->show();
 	d->exec();
 	if (d->detected())
 	{
-		fConfigWidget->fUserName->setText( d->userName() );
-		fConfigWidget->fPilotDevice->setText( d->device() );
+		fConfigWidget.fUserName->setText( d->userName() );
+		fConfigWidget.fPilotDevice->setText( d->device() );
 	}
 }
 

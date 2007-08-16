@@ -32,13 +32,17 @@ set(kcmpilot_SRCS
 
 
 set(kcmpilot_UIS
-	config_page_device.ui
 	config_page_startup.ui
 	config_page_backup.ui
 	config_dialog_dbselection_base.ui
 )
 
+set(kcmpilot_UIS4
+	config_page_device.ui
+)
+
 kde4_add_ui3_files(kcmpilot_SRCS ${kcmpilot_UIS})
+kde4_add_ui_files(kcmpilot_SRCS ${kcmpilot_UIS4})
 
 kde4_add_ui_files(kcmpilot_SRCS 
 	config_page_sync.ui
