@@ -178,14 +178,14 @@ QWidget *ConduitConfigBase::aboutPage(QWidget *parent, KAboutData *ad)
 
 	if (!p->homepage().isEmpty())
 	{
-		s.clear();
+		s = QString();
 		s += CSL1("<a href=\"%1\">").arg(p->homepage());
 		s += p->homepage();
 		s += CSL1("</a><br>");
 		linktext->append(s);
 	}
 
-	s.clear;
+	s = QString();
 	s += i18n("Send questions and comments to <a href=\"mailto:%1\">%2</a>.", CSL1("kdepim-users@kde.org"), CSL1("kdepim-users@kde.org") );
 	s += ' ';
 	s += i18n("Send bug reports to <a href=\"mailto:%1\">%2</a>.",p->bugAddress(),p->bugAddress());
@@ -216,7 +216,7 @@ QWidget *ConduitConfigBase::aboutPage(QWidget *parent, KAboutData *ad)
 	}
 	linktext->append(s);
 
-	s.clear();
+	s = QString();
 	pl = p->credits();
 	if (pl.count()>0)
 	{
@@ -598,4 +598,3 @@ QString findArgument(const QStringList &a, const QString &arg)
 }
 
 }
-
