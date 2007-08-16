@@ -32,6 +32,7 @@
 #include <pi-macros.h> // For recordid_t
 
 class PilotDatabase;
+class PilotAppInfoBase;
 class PilotRecord;
 class HHRecord;
 
@@ -52,16 +53,16 @@ public:
 	
 protected:
 	/**
-	 * Implementing class should call this method in there constructor if they
-	 * implement HHDataProxy::createHHRecord( PilotRecord *rec ).
+	 * Reads all records from the database.
 	 */
 	void loadAllRecords();
 	
-	//virtual void readAppBlock() = 0;
-
-	//virtual void writeAppBlock() = 0;
-	
 	/** THese functions must be implemented by the subclassing conduit **/
+	
+	/**
+	 * Reads the categories from the database into fAppInfo.
+	 */
+	virtual void loadCategories() = 0;
 	
 	/**
 	 * This function creates a (subclass of) HHRecord for @p rec.
@@ -90,6 +91,7 @@ protected:
 
 protected:
 	PilotDatabase *fDatabase;
+	PilotAppInfoBase *fAppInfo;
 	recordid_t fLastUsedUniqueId;
 	QList<recordid_t> fResettedRecords;
 };

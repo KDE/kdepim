@@ -56,6 +56,11 @@ public:
 	bool openDatabase( const QString &pass );
 	
 	/**
+	 * Reads the categories from the database into fAppInfo.
+	 */
+	virtual void loadCategories();
+	
+	/**
 	 * This function creates a (subclass of) HHRecord for @p rec.
 	 */
 	virtual HHRecord* createHHRecord( PilotRecord *rec );

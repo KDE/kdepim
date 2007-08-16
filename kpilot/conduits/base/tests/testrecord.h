@@ -51,6 +51,10 @@ public:
 	
 	TestRecord( const QStringList& fields, const QString &id );
 	
+	virtual void addCategory( const QString &cat ) { Q_UNUSED( cat ); }
+	
+	virtual QStringList categories() const { return QStringList(); }
+	
 	virtual ~TestRecord() {};
 	
 	/** METHODS FOR TESTPURPOSES **/

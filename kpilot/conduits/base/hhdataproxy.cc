@@ -27,14 +27,17 @@
 
 #include "hhdataproxy.h"
 
+#include <klocalizedstring.h>
+
 #include "pilotDatabase.h"
+#include "pilotAppInfo.h"
 #include "pilotRecord.h"
 #include "options.h"
 
 #include "hhrecord.h"
 
 HHDataProxy::HHDataProxy( PilotDatabase *db ) : fDatabase( db )
-	, fLastUsedUniqueId( 0L )
+	, fAppInfo( 0L ), fLastUsedUniqueId( 0L )
 {
 }
 
@@ -141,8 +144,11 @@ void HHDataProxy::loadAllRecords()
 {
 	FUNCTIONSETUP;
 	
-	if( fDatabase )
+	if( fDatabase && fDatabase->isOpen() )
 	{
+		// This should initialize fAppInfo.
+		loadCategories();
+	
 		int index = 0;
 		
 		PilotRecord *pRec = fDatabase->readRecordByIndex( index );
@@ -152,6 +158,28 @@ void HHDataProxy::loadAllRecords()
 			// Create a record object.
 			Record *rec = createHHRecord( pRec );
 			fRecords.insert( rec->id(), rec );
+			
+			if( fAppInfo )
+			{
+				// Handheld records always only have on category at most.
+				QString cat = fAppInfo->categoryName( pRec->category() );
+				if( cat.isEmpty() )
+				{
+					// This shouldn't happen I think....the category id seems to have some
+					// bogus value. So we set it to 0, which is Unfiled normaly.
+					pRec->setCategory( 0 );
+					 
+					//but if it does we set the category to Unfiled.
+					rec->addCategory( i18nc( "Category not set for the record"
+						, "Unfiled") );
+				}
+				else
+				{
+					// This essentialy doesn't add a category to the record but just the
+					// label for the category which is set in the pilot record.
+					rec->addCategory( cat );
+				}
+			}
 			
 			// Read the next one.
 			pRec = fDatabase->readRecordByIndex( ++index );

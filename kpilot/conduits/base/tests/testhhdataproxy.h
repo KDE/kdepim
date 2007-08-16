@@ -45,6 +45,8 @@ public:
 
 	virtual bool isOpen() const;
 	
+	virtual void loadCategories() {}
+	
 	virtual void loadAllRecords();
 	
 	virtual QString commitCreate( const Record *rec );

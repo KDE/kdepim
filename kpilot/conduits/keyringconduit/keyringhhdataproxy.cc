@@ -161,6 +161,16 @@ bool KeyringHHDataProxy::openDatabase( const QString &pass )
 	return false;
 }
 
+void KeyringHHDataProxy::loadCategories()
+{
+	FUNCTIONSETUP;
+	
+	if( fDatabase && fDatabase->isOpen() )
+	{
+		fAppInfo = new PilotKeyringInfo( fDatabase );
+	}
+}
+
 HHRecord* KeyringHHDataProxy::createHHRecord( PilotRecord *rec )
 {
 	FUNCTIONSETUP;

@@ -40,6 +40,19 @@ HHRecord::~HHRecord()
 	delete fRecord;
 }
 
+void HHRecord::addCategory( const QString &cat )
+{
+	fCategory = cat;
+}
+
+QStringList HHRecord::categories() const
+{
+	QStringList categories;
+	categories << fCategory;
+	
+	return categories;
+}
+
 PilotRecord* HHRecord::pilotRecord() const
 {
 	return fRecord;

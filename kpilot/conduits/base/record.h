@@ -51,6 +51,16 @@ public:
 	virtual void setId( const QString &id ) = 0;
 
 	/**
+	 * Adds a category to this record.
+	 */
+	virtual void addCategory( const QString &cat ) = 0;
+	
+	/**
+	 * Returns the catogories of this record.
+	 */
+	virtual QStringList categories() const = 0;
+
+	/**
 	 * Returns true if the record is modified and/or if it's marked as deleted.
 	 */
 	virtual bool isModified() const = 0;

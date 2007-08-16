@@ -43,6 +43,16 @@ public:
 
 	virtual ~HHRecord();
 	
+	/**
+	 * Adds a category to this record.
+	 */
+	virtual void addCategory( const QString &cat );
+	
+	/**
+	 * Returns the catogories of this record.
+	 */
+	virtual QStringList categories() const;
+	
 	/** HHRecord methods */
 	
 	PilotRecord* pilotRecord() const;
@@ -83,5 +93,8 @@ public:
 	 * Returns a string representation of the record.
 	 */
 	virtual QString toString() const;
+
+private:
+	QString fCategory;
 };
 #endif
