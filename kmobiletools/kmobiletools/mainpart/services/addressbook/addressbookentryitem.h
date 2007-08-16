@@ -35,7 +35,7 @@ public:
         Default = 0x01,
         AdditionRequested = 0x02,   // item is marked as to be added
         EditingRequested = 0x04,    // item is marked as to be edited
-        RemovalRequested = 0x08,    // item is marked as to be removed
+        RemovalRequested = 0x08     // item is marked as to be removed
     };
 
     AddressbookEntryItem( QListWidget* parent = 0 );
