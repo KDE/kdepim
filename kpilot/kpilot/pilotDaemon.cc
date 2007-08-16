@@ -980,7 +980,7 @@ bool PilotDaemon::shouldBackup()
  			if ( KPilotSettings::fullSyncOnPCChange() )
 			{
 				DEBUGKPILOT << "Setting sync mode to full sync.";
-				fNextSyncType = SyncAction::SyncMode::eFullSync;
+				fNextSyncType = SyncAction::SyncMode( SyncAction::SyncMode::eFullSync );
 			}
 			else
 			{
@@ -1028,10 +1028,12 @@ bool PilotDaemon::shouldBackup()
 			}
 			break;
 		case SyncAction::SyncMode::eCopyPCToHH:
-			queueConduits(fSyncStack,conduits,SyncAction::SyncMode::eCopyPCToHH);
+			queueConduits(fSyncStack,conduits
+				,SyncAction::SyncMode(SyncAction::SyncMode::eCopyPCToHH));
 			break;
 		case SyncAction::SyncMode::eCopyHHToPC:
-			queueConduits(fSyncStack,conduits,SyncAction::SyncMode::eCopyHHToPC);
+			queueConduits(fSyncStack,conduits
+				,SyncAction::SyncMode(SyncAction::SyncMode::eCopyHHToPC));
 			break;
 		}
 	}

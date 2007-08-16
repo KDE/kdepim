@@ -1,6 +1,6 @@
 /* KPilot
 **
-** Copyright (C) 2001 by Dan Pilone
+** Copyright (C) 2001 by Dan Pilone <dan@kpilot.org>
 ** Copyright (C) 2003-2004 Reinhold Kainhofer <reinhold@kainhofer.com>
 **
 ** This file defines the base class of all KPilot conduit plugins configuration
@@ -148,11 +148,8 @@ QWidget *ConduitConfigBase::aboutPage(QWidget *parent, KAboutData *ad)
 	text->setText(i18n("Send questions and comments to kdepim-users@kde.org"));
 	text->adjustSize();
 
-	int linewidth = text->size().width();
-	int lineheight = text->size().height();
-
 	// Use the label to display the application icon
-	text->setText(QString::null);	//krazy:exclude=nullstrassign for old broken gcc
+	text->setText(QString());
 	text->setPixmap(applicationIcon);
 	text->adjustSize();
 	grid->addWidget(text, 0, 1);
@@ -194,7 +191,7 @@ QWidget *ConduitConfigBase::aboutPage(QWidget *parent, KAboutData *ad)
 		"<a href=\"help:/kpilot/trademarks.html\">KPilot User's Guide</a>.");
 	s += CSL1("<br>");
 	linktext->append(s);
-	linktext->append(QString::null);	//krazy:exclude=nullstrassign for old broken gcc
+	linktext->append(QString());
 
 
 
@@ -211,7 +208,7 @@ QWidget *ConduitConfigBase::aboutPage(QWidget *parent, KAboutData *ad)
 		s.append(CSL1("%1 (<i>%2</i>)%3")
 			.arg((*i).name())
 			.arg((*i).task())
-			.arg( (count<pl.count()) ? comma : QString::null));	//krazy:exclude=nullstrassign for old broken gcc
+			.arg( (count<pl.count()) ? comma : QString()));
 		count++;
 	}
 	linktext->append(s);
@@ -227,7 +224,7 @@ QWidget *ConduitConfigBase::aboutPage(QWidget *parent, KAboutData *ad)
 			s.append(CSL1("%1 (<i>%2</i>)%3")
 				.arg((*i).name())
 				.arg((*i).task())
-				.arg(count<pl.count() ? comma : QString::null)	//krazy:exclude=nullstrassign for old broken gcc
+				.arg(count<pl.count() ? comma : QString())
 				);
 			count++;
 		}
@@ -598,3 +595,4 @@ QString findArgument(const QStringList &a, const QString &arg)
 }
 
 }
+

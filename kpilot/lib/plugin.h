@@ -2,7 +2,7 @@
 #define _KPILOT_PLUGIN_H
 /* KPilot
 **
-** Copyright (C) 2001 by Dan Pilone
+** Copyright (C) 2001 by Dan Pilone <dan@kpilot.org>
 ** Copyright (C) 2002-2004,2006 Adriaan de Groot <groot@kde.org>
 ** Copyright (C) 2003-2004 Reinhold Kainhofer <reinhold@kainhofer.com>
 **
@@ -83,7 +83,7 @@ public:
 	* Constructor. Creates a conduit configuration support object
 	* with the given parent @p parent and name (optional) @p n.
 	*/
-	ConduitConfigBase(QWidget *parent=0L, const char *n=0L);
+	explicit ConduitConfigBase(QWidget *parent=0L, const char *n=0L);
 
 	/** Destructor. */
 	virtual ~ConduitConfigBase();

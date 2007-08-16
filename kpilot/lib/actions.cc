@@ -1,6 +1,6 @@
 /* KPilot
 **
-** Copyright (C) 1998-2001 by Dan Pilone
+** Copyright (C) 1998-2001 by Dan Pilone <dan@kpilot.org>
 ** Copyright (C) 2003-2004 Reinhold Kainhofer <reinhold@kainhofer.com>
 ** Copyright (C) 2006 Adriaan de Groot <groot@kde.org>
 **
@@ -26,7 +26,7 @@
 /*
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
-#include "options.h"
+#include "actions.h"
 
 #include <qapplication.h>
 #include <qdir.h>
@@ -34,12 +34,9 @@
 
 #include <ksavefile.h>
 
+#include "options.h"
 #include "pilot.h"
 #include "pilotUser.h"
-
-#include "actions.h"
-
-
 
 WelcomeAction::WelcomeAction(KPilotLink *p) :
 	SyncAction(p, "welcomeAction")

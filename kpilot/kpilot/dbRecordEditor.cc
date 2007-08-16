@@ -27,7 +27,6 @@
 
 #include "options.h"
 
-#include <qlineedit.h>
 #include <qcheckbox.h>
 #include <qtooltip.h>
 #include <q3whatsthis.h>
@@ -40,6 +39,7 @@
 #include <Q3Frame>
 
 #include <kmessagebox.h>
+#include <KLineEdit>
 
 #include "pilotRecord.h"
 #include "dbRecordEditor.h"
@@ -138,13 +138,13 @@ void DBRecordEditor::initWidgets()
 	fRecordIDLabel->setObjectName( QLatin1String( "fRecordIDLabel" ) );
 	DBRecordEditorBaseLayout->addWidget( fRecordIDLabel, 0, 2 );
 
-	fRecordIndex = new QLineEdit( fWidget );
+	fRecordIndex = new KLineEdit( fWidget );
 	fRecordIndex->setObjectName( QLatin1String( "fRecordIndex" ) );
 	fRecordIndex->setReadOnly( true );
 
 	DBRecordEditorBaseLayout->addWidget( fRecordIndex, 0, 1 );
 
-	fRecordID = new QLineEdit( fWidget );
+	fRecordID = new KLineEdit( fWidget );
 	fRecordID->setObjectName( QLatin1String( "fRecordID" ) );
 	fRecordID->setReadOnly( true );
 

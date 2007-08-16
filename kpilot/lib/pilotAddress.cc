@@ -1,6 +1,6 @@
 /* KPilot
 **
-** Copyright (C) 1998-2001 by Dan Pilone
+** Copyright (C) 1998-2001 by Dan Pilone <dan@kpilot.org>
 ** Copyright (C) 2003-2004 Reinhold Kainhofer <reinhold@kainhofer.com>
 ** Copyright (C) 2007 by Adriaan de Groot <groot@kde.org>
 **
@@ -27,10 +27,7 @@
 /*
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
-
-
-#include "options.h"
-
+#include "pilotAddress.h"
 
 #include <stdlib.h>
 #include <assert.h>
@@ -38,7 +35,7 @@
 #include <qnamespace.h>
 #include <qstringlist.h>
 
-#include "pilotAddress.h"
+#include "options.h"
 
 static const char *default_address_category_names[] = {
 	"Unfiled",

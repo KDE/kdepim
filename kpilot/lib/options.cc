@@ -1,6 +1,6 @@
 /* KPilot
 **
-** Copyright (C) 2000-2001 by Adriaan de Groot
+** Copyright (C) 2000-2001 by Adriaan de Groot <groot@kde.org>
 ** Copyright (C) 2003-2004 Reinhold Kainhofer <reinhold@kainhofer.com>
 **
 ** This is a file of odds and ends, with debugging functions and stuff.

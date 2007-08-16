@@ -1,6 +1,6 @@
 /* KPilot
 **
-** Copyright (C) 1998-2001 by Dan Pilone
+** Copyright (C) 1998-2001 by Dan Pilone <dan@kpilot.org>
 ** Copyright (C) 2003-2004 Reinhold Kainhofer <reinhold@kainhofer.com>
 **
 ** Databases approached through DLP / Pilot-link look different,
@@ -27,7 +27,7 @@
 /*
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
-#include "options.h"
+#include "pilotSerialDatabase.h"
 
 #include <time.h>
 
@@ -38,11 +38,11 @@
 #include <kglobal.h>
 #include <klocale.h>
 
-#include "pilotRecord.h"
-#include "pilotSerialDatabase.h"
-#include "kpilotdevicelink.h"
-
 #include <config-kpilot.h>
+
+#include "options.h"
+#include "pilotRecord.h"
+#include "kpilotdevicelink.h"
 
 PilotSerialDatabase::PilotSerialDatabase(KPilotDeviceLink *l,
 	const QString &dbName) :
@@ -56,8 +56,8 @@ PilotSerialDatabase::PilotSerialDatabase(KPilotDeviceLink *l,
 }
 
 PilotSerialDatabase::PilotSerialDatabase( KPilotDeviceLink *l, const DBInfo *info ) :
-	PilotDatabase( info ? Pilot::fromPilot( info->name ) : QString::null ),
-	fDBName( QString::null ),
+	PilotDatabase( info ? Pilot::fromPilot( info->name ) : QString() ),
+	fDBName( QString() ),
 	fDBHandle( -1 ),
 	fDBSocket( l->pilotSocket() ),
 	fDBInfo( info ? DBInfo( *info ) : DBInfo() )

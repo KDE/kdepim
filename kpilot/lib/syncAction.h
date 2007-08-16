@@ -2,7 +2,7 @@
 #define _KPILOT_SYNCACTION_H
 /* KPilot
 **
-** Copyright (C) 1998-2001 by Dan Pilone
+** Copyright (C) 1998-2001 by Dan Pilone <dan@kpilot.org>
 ** Copyright (C) 2003-2004 Reinhold Kainhofer <reinhold@kainhofer.com>
 ** Copyright (C) 2006 Adriaan de Groot <groot@kde.org>
 **
@@ -205,7 +205,7 @@ public:
 		* anything at all (test mode) and whether the HH is
 		* to be simulated by local databases.
 		*/
-		SyncMode(Mode m, bool test=false, bool local=false);
+		explicit SyncMode(Mode m, bool test=false, bool local=false);
 
 		/** Create a mode by parsing the string list. This
 		* is used mostly by the conduit proxies, which use
@@ -388,17 +388,17 @@ protected:
 	* @p timeout Timeout, in seconds.
 	*/
 	int questionYesNo(const QString &question ,
-		const QString &caption = QString::null,
-		const QString &key = QString::null,
+		const QString &caption = QString(),
+		const QString &key = QString(),
 		unsigned timeout = 20,
-		const QString &yes = QString::null,
-		const QString &no = QString::null );
+		const QString &yes = QString(),
+		const QString &no = QString() );
 	int questionYesNoCancel(const QString &question ,
-		const QString &caption = QString::null,
-		const QString &key = QString::null,
+		const QString &caption = QString(),
+		const QString &key = QString(),
 		unsigned timeout = 20,
-		const QString &yes = QString::null,
-		const QString &no = QString::null ) ;
+		const QString &yes = QString(),
+		const QString &no = QString() ) ;
 };
 
 

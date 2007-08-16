@@ -52,7 +52,7 @@ int main(int argc, char **argv)
 		return 1;
 	}
 	
-	QFile file( dbPath + "/" + dbName + ".pdb" );
+	QFile file( dbPath + '/' + dbName + ".pdb" );
 	if( !file.exists() )
 	{
 		cout << "Database file: " << dbName << ".pdb does not exist." << endl;
@@ -69,7 +69,7 @@ int main(int argc, char **argv)
 	Pilot::setupPilotCodec( CSL1( "ISO8859-15" ) );
 	
 	// If the database is not open the file did not exist. Let's create a new one.
-	PilotLocalDatabase database( dbPath + "/" + dbName );
+	PilotLocalDatabase database( dbPath + '/' + dbName );
 	if( database.isOpen() )
 	{
 		KeyringHHDataProxy proxy( &database );

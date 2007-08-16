@@ -2,7 +2,7 @@
 #define _KPILOT_PILOTLINKVERSION_H
 /* KPilot
 **
-** Copyright (C) 2005 by Adriaan de Groot
+** Copyright (C) 2005 by Adriaan de Groot <groot@kde.org>
 **
 */
 

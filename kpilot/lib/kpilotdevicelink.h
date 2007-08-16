@@ -2,7 +2,7 @@
 #define _KPILOT_KPILOTDEVICELINK_H
 /*
 **
-** Copyright (C) 1998-2001 by Dan Pilone
+** Copyright (C) 1998-2001 by Dan Pilone <dan@kpilot.org>
 ** Copyright (C) 2003-2004 Reinhold Kainhofer <reinhold@kainhofer.com>
 ** Copyright (C) 2006 Adriaan de Groot <groot@kde.org>
 **
@@ -85,9 +85,9 @@ public:
 	* @param tempDevice Path to device node to use as an alternative
 	*                   to the "normal" one set by KPilot.
 	*/
-	KPilotDeviceLink( QObject *parent = 0,
+	explicit KPilotDeviceLink( QObject *parent = 0,
 		const char *name = 0,
-		const QString &tempDevice = QString::null );
+		const QString &tempDevice = QString() );
 
 	/**
 	* Destructor. This rudely ends the communication with the handheld.

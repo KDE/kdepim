@@ -1,6 +1,6 @@
 /* KPilot
 **
-** Copyright (C) 1998-2001 by Dan Pilone
+** Copyright (C) 1998-2001 by Dan Pilone <dan@kpilot.org>
 ** Copyright (C) 2003-2004 Reinhold Kainhofer <reinhold@kainhofer.com>
 **
 ** This defines an interface to Pilot databases on the local disk.
@@ -26,16 +26,13 @@
 /*
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
-
-
-#include "options.h"
+#include "pilotLocalDatabase.h"
 
 #include <stdio.h>
 #include <unistd.h>
 #include <assert.h>
 
 #include <pi-file.h>
-
 
 #include <qdatetime.h>
 #include <qfile.h>
@@ -45,8 +42,8 @@
 #include <ksavefile.h>
 #include <kstandarddirs.h>
 
+#include "options.h"
 #include "pilotRecord.h"
-#include "pilotLocalDatabase.h"
 
 typedef QVector<PilotRecord *> Records;
 

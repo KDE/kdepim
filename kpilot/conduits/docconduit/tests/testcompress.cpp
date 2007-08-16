@@ -1,7 +1,7 @@
 /* 
 ** Copyright (C) 2003 by Reinhold Kainhofer
 **
-** This is just a very simple programm to check the compress/uncompress 
+** This is just a very simple program to check the compress/uncompress 
 ** routines by taking one string, compress and then decompress it and
 ** see if it is the original string.
 */

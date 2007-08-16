@@ -2,7 +2,7 @@
 #define _KPILOT_PILOTTODOENTRY_H
 /* pilotTodoEntry.h	-*- C++ -*-		KPilot
 **
-** Copyright (C) 1998-2001 by Dan Pilone
+** Copyright (C) 1998-2001 by Dan Pilone <dan@kpilot.org>
 ** Copyright (C) 2003-2004 Reinhold Kainhofer <reinhold@kainhofer.com>
 **
 ** This is a wrapper around the pilot-link Memo structure. It is

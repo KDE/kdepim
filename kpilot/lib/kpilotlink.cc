@@ -1,6 +1,6 @@
 /* KPilot
 **
-** Copyright (C) 1998-2001 by Dan Pilone
+** Copyright (C) 1998-2001 by Dan Pilone <dan@kpilot.org>
 ** Copyright (C) 2003-2004 Reinhold Kainhofer <reinhold@kainhofer.com>
 ** Copyright (C) 2006-2007 Adriaan de Groot <groot@kde.org>
 ** Copyright (C) 2007 Jason 'vanRijn' Kasper <vR@movingparts.net>
@@ -141,7 +141,7 @@ void TickleThread::run()
 
 KPilotLink::KPilotLink( QObject *parent, const char *name ) :
 	QObject( parent ),
-	fPilotPath(QString::null),
+	fPilotPath(QString()),
 	fPilotUser(0L),
 	fPilotSysInfo(0L),
 	fTickleDone(true),
@@ -234,14 +234,14 @@ unsigned int KPilotLink::installFiles(const QStringList & l, const bool deleteFi
 
 	for (i = l.begin(), e = l.end(); i != e; ++i)
 	{
-		emit logProgress(QString::null,
+		emit logProgress(QString(),
 			(int) ((100.0 / total) * (float) n));
 
 		if (installFile(*i, deleteFiles))
 			k++;
 		n++;
 	}
-	emit logProgress(QString::null, 100);
+	emit logProgress(QString(), 100);
 
 	return k;
 }

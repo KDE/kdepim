@@ -60,7 +60,7 @@ bool TestRecordConduit::initDataProxies()
 		// Create all three proxies and mappings. The backup proxy only contains
 		// unmodified records:
 		/*
-		 * The following table gives the status of the TestRecordConduit befor sync.
+		 * The following table gives the status of the TestRecordConduit before sync.
 		 *
 		 * CASE  |      PC   |M| HH & BACKUP    |
 		 *       |   Id |STAT| | BU | HH | Id   |

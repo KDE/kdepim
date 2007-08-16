@@ -2,7 +2,7 @@
 #define _KPILOT_SYSINFO_H
 /* sysInfo.h			KPilot
 **
-** Copyright (C) 2003 by Reinhold Kainhofer
+** Copyright (C) 2003 by Reinhold Kainhofer <reinhold@kainhofer.com>
 **
 ** Wrapper for pilot-link's SysInfo Structure
 */

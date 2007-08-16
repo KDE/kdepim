@@ -1,6 +1,6 @@
 /* KPilot
 **
-** Copyright (C) 1998-2001 by Dan Pilone
+** Copyright (C) 1998-2001 by Dan Pilone <dan@kpilot.org>
 **
 ** This is a C++ wrapper for the Pilot's Memo Pad structures.
 */
@@ -25,15 +25,12 @@
 /*
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
-
-#include "options.h"
+#include "pilotMemo.h"
 
 #include <qnamespace.h>
 
-#include "pilotMemo.h"
+#include "options.h"
 #include "pilotDatabase.h"
-
-
 
 PilotMemo::PilotMemo(const PilotRecord * rec) : PilotRecordBase(rec)
 {
@@ -78,7 +75,7 @@ QString PilotMemo::getTextRepresentation(Qt::TextFormat richText)
 {
 	if (richText==Qt::RichText)
 	{
-		return i18n("<i>Title:</i> %1<br>\n<i>MemoText:</i><br>%2",rtExpand(getTitle(), richText),rtExpand(text(), richText));
+		return i18n("<i>Title:</i> %1<br/>\n<i>MemoText:</i><br/>%2",rtExpand(getTitle(), richText),rtExpand(text(), richText));
 	}
 	else
 	{
@@ -139,7 +136,7 @@ QString PilotMemo::sensibleTitle() const
 	}
 	else
 	{
-		return i18n("[unknown]");
+		return i18nc("No sensible title known for this memo.","[unknown]");
 	}
 }
 

@@ -1,6 +1,6 @@
 /* KPilot
 **
-** Copyright (C) 1998-2001 by Dan Pilone
+** Copyright (C) 1998-2001 by Dan Pilone <dan@kpilot.org>
 ** Copyright (C) 2003-2004 Reinhold Kainhofer <reinhold@kainhofer.com>
 ** Copyright (C) 2006-2007 Adriaan de Groot <groot@kde.org>
 ** Copyright (C) 2007 Jason 'vanRijn' Kasper <vR@movingparts.net>
@@ -283,7 +283,7 @@ protected:
 	* Does the low-level opening of the device and handles the
 	* pilot-link library initialisation.
 	*/
-	bool open( const QString &device = QString::null );
+	bool open( const QString &device = QString() );
 	
 private:
 	inline QString errorMessage(int e) 
@@ -460,7 +460,7 @@ bool DeviceCommThread::open(const QString &device)
 	}
 
 	QApplication::postEvent(link(),
-		new DeviceCommEvent(EventLogProgress, QString::null, 10));
+		new DeviceCommEvent(EventLogProgress, QString(), 10));
 
 	DEBUGKPILOT << ": Listening to pilot. Now trying accept...";
 
@@ -497,7 +497,7 @@ bool DeviceCommThread::open(const QString &device)
 	}
 
 	QApplication::postEvent(link(),
-		new DeviceCommEvent(EventLogProgress, QString::null, 30));
+		new DeviceCommEvent(EventLogProgress, QString(), 30));
 
 	DEBUGKPILOT << ": doing dlp_ReadSysInfo...";
 
@@ -524,7 +524,7 @@ bool DeviceCommThread::open(const QString &device)
 	}
 
 	QApplication::postEvent(link(),
-		new DeviceCommEvent(EventLogProgress, QString::null, 60));
+		new DeviceCommEvent(EventLogProgress, QString(), 60));
 
         KPILOT_DELETE(link()->fPilotUser);
 	link()->fPilotUser = new KPilotUser;
@@ -554,7 +554,7 @@ bool DeviceCommThread::open(const QString &device)
 	link()->fLinkStatus = AcceptedDevice;
 
 	QApplication::postEvent(link(),
-		new DeviceCommEvent(EventLogProgress, QString::null, 100));
+		new DeviceCommEvent(EventLogProgress, QString(), 100));
 
 	return true;
 }
@@ -771,7 +771,7 @@ void KPilotDeviceLink::reset(const QString & dP)
 	// Release all resources
 	//
 	close();
-	fPilotPath = QString::null;
+	fPilotPath = QString();
 
 	fPilotPath = dP;
 	if (fPilotPath.isEmpty())

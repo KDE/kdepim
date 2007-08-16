@@ -1,6 +1,6 @@
 /* KPilot
 **
-** Copyright (C) 1998-2001 by Dan Pilone
+** Copyright (C) 1998-2001 by Dan Pilone <dan@kpilot.org>
 ** Copyright (C) 2003-2004 Reinhold Kainhofer <reinhold@kainhofer.com>
 **
 ** This is a C++ wrapper for the Pilot's datebook structures.
@@ -26,8 +26,7 @@
 /*
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
-
-#include "options.h"
+#include "pilotDateEntry.h"
 
 #include <stdlib.h>
 
@@ -37,9 +36,9 @@
 
 #include <kglobal.h>
 
-#include "pilotDateEntry.h"
-
 #include <config-kpilot.h>
+
+#include "options.h"
 
 static const char *default_date_category_names[] = {
 	"Unfiled",
@@ -274,7 +273,7 @@ QString PilotDateEntry::getTextRepresentation(Qt::TextFormat richText)
 	{
 		text += richText?CSL1("<hr/>"):CSL1("-------------------------\n");
 		text+=par;
-		text+=richText?i18n("<b><em>Note:</em></b><br>"):i18n("Note:\n");
+		text+=richText?i18n("<b><em>Note:</em></b><br/>"):i18n("Note:\n");
 		text+=rtExpand(getNote(), richText);
 		text+=ps;
 	}

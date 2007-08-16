@@ -2,7 +2,7 @@
 #define _KPILOT_OPTIONS_H
 /* options.h			KPilot
 **
-** Copyright (C) 1998-2001,2002,2003 by Dan Pilone
+** Copyright (C) 1998-2001,2002,2003 by Dan Pilone <dan@kpilot.org>
 ** Copyright (C) 2003-2004 Reinhold Kainhofer <reinhold@kainhofer.com>
 ** Copyright (C) 2004-2007 Adriaan de Groot <groot@kde.org>
 **

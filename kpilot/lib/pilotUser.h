@@ -2,7 +2,7 @@
 #define _KPILOT_PILOTUSER_H
 /* pilotUser.h			KPilot
 **
-** Copyright (C) 1998-2001 by Dan Pilone
+** Copyright (C) 1998-2001 by Dan Pilone <dan@kpilot.org>
 **
 ** Wrapper for the PilotUser struct from pilot-link, which describes
 ** the user-data set in the Pilot.

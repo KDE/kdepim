@@ -2,7 +2,7 @@
 #define _KPILOT_PILOTRECORD_H
 /* KPilot
 **
-** Copyright (C) 1998-2001 by Dan Pilone
+** Copyright (C) 1998-2001 by Dan Pilone <dan@kpilot.org>
 ** Copyright (C) 2003-2004 Reinhold Kainhofer <reinhold@kainhofer.com>
 ** Copyright (C) 2006 Adriaan de Groot <groot@kde.org>
 **
@@ -57,7 +57,7 @@ public:
 	*        invalid category means 0 (unfiled) is used.
 	* @param id Unique ID for this entry. May be 0 (non-unique) as well.
 	*/
-	PilotRecordBase(int attrib=0, int cat=0, recordid_t id=0) :
+	explicit PilotRecordBase(int attrib=0, int cat=0, recordid_t id=0) :
 		fAttrib(attrib),fCat(0),fID(id)
 	{
 		setCategory(cat);

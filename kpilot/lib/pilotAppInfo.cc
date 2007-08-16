@@ -24,13 +24,11 @@
 /*
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
-
-
-#include "options.h"
+#include "pilotAppInfo.h"
 
 #include <stdio.h>
 
-#include "pilotAppInfo.h"
+#include "options.h"
 
 PilotAppInfoBase::PilotAppInfoBase(PilotDatabase *d) :
 	fC( 0L ),

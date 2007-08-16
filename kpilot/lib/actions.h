@@ -2,7 +2,7 @@
 #define _KPILOT_ACTIONS_H
 /*
 **
-** Copyright (C) 1998-2001,2003 by Dan Pilone
+** Copyright (C) 1998-2001,2003 by Dan Pilone <dan@kpilot.org>
 ** Copyright (C) 2003-2004 Reinhold Kainhofer <reinhold@kainhofer.com>
 ** Copyright (C) 2006 Adriaan de Groot <groot@kde.org>
 **
@@ -67,7 +67,7 @@ public:
 	* print that message (it must be i18n()ed already) instead of
 	* the standard message.
 	*/
-	SorryAction(KPilotLink *device, const QString &s=QString::null);
+	explicit SorryAction(KPilotLink *device, const QString &s=QString());
 
 protected:
 	/** Reimplemented from SyncAction. */

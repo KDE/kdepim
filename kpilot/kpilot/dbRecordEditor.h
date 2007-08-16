@@ -41,7 +41,8 @@ using namespace KHE;
 class Q3ButtonGroup;
 class QCheckBox;
 class QLabel;
-class QLineEdit;
+
+class KLineEdit;
 
 class DBRecordEditorBase;
 class PilotRecord;
@@ -59,8 +60,8 @@ public:
 protected:
 	QLabel* fRecordIndexLabel;
 	QLabel* fRecordIDLabel;
-	QLineEdit* fRecordIndex;
-	QLineEdit* fRecordID;
+	KLineEdit* fRecordIndex;
+	KLineEdit* fRecordID;
 	Q3ButtonGroup* fFlagsGroup;
 	QCheckBox* fDirty;
 	QCheckBox* fDeleted;

@@ -1,6 +1,6 @@
 /* KPilot
 **
-** Copyright (C) 1998-2001 by Dan Pilone
+** Copyright (C) 1998-2001 by Dan Pilone <dan@kpilot.org>
 ** Copyright (C) 2003-2004 Reinhold Kainhofer <reinhold@kainhofer.com>
 **
 ** This is a wrapper for pilot-link's general
@@ -32,7 +32,7 @@
 /*
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
-#include "options.h"
+#include "pilotRecord.h"
 
 #include <string.h>
 
@@ -41,10 +41,8 @@
 #include <kglobal.h>
 #include <kcharsets.h>
 
+#include "options.h"
 #include "pilot.h"
-#include "pilotRecord.h"
-
-
 
 /* virtual */ QString PilotRecordBase::textRepresentation() const
 {

@@ -1,6 +1,6 @@
 /* KPilot
 **
-** Copyright (C) 1998-2001 by Dan Pilone
+** Copyright (C) 1998-2001 by Dan Pilone <dan@kpilot.org>
 ** Copyright (C) 2003-2004 Reinhold Kainhofer <reinhold@kainhofer.com>
 **
 ** This is a C++ wrapper for the todo-list entry structures.
@@ -26,8 +26,7 @@
 /*
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
-#include "options.h"
-
+#include "pilotTodoEntry.h"
 
 #include <stdlib.h>
 
@@ -36,9 +35,7 @@
 
 #include <kglobal.h>
 
-
-#include "pilotTodoEntry.h"
-
+#include "options.h"
 
 PilotTodoEntry::PilotTodoEntry() :
 	fDescriptionSize(0),
@@ -130,7 +127,7 @@ QString PilotTodoEntry::getTextRepresentation(Qt::TextFormat richText) const
 	text += par;
 	if (getComplete())
 	{
-		text += i18n("Completed");
+		text += i18nc("This todo entry is completed.","Completed");
 	}
 	else
 	{
@@ -158,7 +155,7 @@ QString PilotTodoEntry::getTextRepresentation(Qt::TextFormat richText) const
 	{
 		text += (richText==Qt::RichText) ?CSL1("<hr/>"):CSL1("-------------------------\n");
 		text+=par;
-		text+= (richText==Qt::RichText) ?i18n("<b><em>Note:</em></b><br>"):i18n("Note:\n");
+		text+= (richText==Qt::RichText) ?i18n("<b><em>Note:</em></b><br/>"):i18n("Note:\n");
 		text+=rtExpand(getNote(), richText);
 		text+=ps;
 	}

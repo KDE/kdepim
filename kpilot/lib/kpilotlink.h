@@ -2,7 +2,7 @@
 #define _KPILOT_KPILOTLINK_H
 /* KPilot
 **
-** Copyright (C) 1998-2001 by Dan Pilone
+** Copyright (C) 1998-2001 by Dan Pilone <dan@kpilot.org>
 ** Copyright (C) 2003-2004 Reinhold Kainhofer <reinhold@kainhofer.com>
 ** Copyright (C) 2006 Adriaan de Groot <groot@kde.org>
 **
@@ -177,7 +177,7 @@ public:
 	typedef Q3ValueList<struct DBInfo> DBInfoList;
 
 	/** Constructor. Use reset() to start looking for a device. */
-	KPilotLink( QObject *parent = 0, const char *name = 0 );
+	explicit KPilotLink( QObject *parent = 0, const char *name = 0 );
 
 	/** Destructor. This rudely interrupts any communication in progress.
 	* It is best to call endOfSync() or finishSync() before destroying

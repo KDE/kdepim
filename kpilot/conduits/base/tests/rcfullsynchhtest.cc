@@ -43,7 +43,7 @@
  * This class tests all cases that occur when doing an fullsync. The 
  * conflict resolution used for all testcases is: eHHOverides.
  * 
- * The following table gives the status of the TestRecordConduit befor sync.
+ * The following table gives the status of the TestRecordConduit before sync.
  *
  * N = new, - = Unchanged, X = no record, D = deleted, M = content modified,
  * A = Archived, ~ = Different from backup but no flags set.
@@ -492,7 +492,7 @@ void RCFullSyncHHTest::testCase_6_5_7()
 	QVERIFY( pcRecordId.isNull() );
 	QVERIFY( hhRecordId.isNull() );
 	
-	// After the sync the records should be realy gone from the proxies.
+	// After the sync the records should be really gone from the proxies.
 	QVERIFY( !fConduit->pcDataProxy()->find( CSL1( "pc-6" ) ) );
 	QVERIFY( !fConduit->hhDataProxy()->find( CSL1( "hh-6" ) ) );
 	

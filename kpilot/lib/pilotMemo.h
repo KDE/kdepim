@@ -2,7 +2,7 @@
 #define _KPILOT_PILOTMEMO_H
 /* pilotMemo.h			KPilot
 **
-** Copyright (C) 1998-2001 by Dan Pilone
+** Copyright (C) 1998-2001 by Dan Pilone <dan@kpilot.org>
 **
 ** See the .cc file for an explanation of what this file is for.
 */
