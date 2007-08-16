@@ -77,9 +77,21 @@ private:
 
 int main( int argc, char * argv[] ) {
 
-    KAboutData aboutData( "test_flatkeylistmodel", 0, ki18n("FlatKeyListModel Test"), "0.1" );
+    KAboutData aboutData( "test_flatkeylistmodel", 0, ki18n("FlatKeyListModel Test"), "0.2" );
     KCmdLineArgs::init( argc, argv, &aboutData );
+
+    KCmdLineOptions options;
+    options.add( "flat",         ki18n("Perform flat key listing") );
+    options.add( "hierarchical", ki18n("Perform hierarchical key listing") );
+
+    KCmdLineArgs::addCmdLineOptions( options );
+
     KApplication app;
+
+    KCmdLineArgs * args = KCmdLineArgs::parsedArgs();
+
+    const bool showFlat = args->isSet( "flat" ) || !args->isSet( "hierarchical" );
+    const bool showHier = args->isSet( "hierarchical" ) || !args->isSet( "flat" );
 
     qsrand( QDateTime::currentDateTime().toTime_t() );
 
@@ -110,22 +122,24 @@ int main( int argc, char * argv[] ) {
     Relay relay;
     QObject::connect( QGpgME::EventLoopInteractor::instance(), SIGNAL(nextKeyEventSignal(GpgME::Context*,GpgME::Key)),
                       &relay, SLOT(slotNextKeyEvent(GpgME::Context*,GpgME::Key)) );
-    
-    if ( Kleo::AbstractKeyListModel * const model = Kleo::AbstractKeyListModel::createFlatKeyListModel( &flat ) ) {
-        QObject::connect( &relay, SIGNAL(nextKeys(std::vector<GpgME::Key>)), model, SLOT(addKeys(std::vector<GpgME::Key>)) );
-        flatProxy.setSourceModel( model );
-        flat.setModel( &flatProxy );
-    }
 
-    if ( Kleo::AbstractKeyListModel * const model = Kleo::AbstractKeyListModel::createHierarchicalKeyListModel( &hierarchical ) ) {
-        QObject::connect( &relay, SIGNAL(nextKeys(std::vector<GpgME::Key>)), model, SLOT(addKeys(std::vector<GpgME::Key>)) );
-        hierarchicalProxy.setSourceModel( model );
-        hierarchical.setModel( &hierarchicalProxy );
-    }
+    if ( showFlat )
+        if ( Kleo::AbstractKeyListModel * const model = Kleo::AbstractKeyListModel::createFlatKeyListModel( &flat ) ) {
+            QObject::connect( &relay, SIGNAL(nextKeys(std::vector<GpgME::Key>)), model, SLOT(addKeys(std::vector<GpgME::Key>)) );
+            flatProxy.setSourceModel( model );
+            flat.setModel( &flatProxy );
 
-    flatWidget.show();
-    hierarchicalWidget.show();
+            flatWidget.show();
+        }
 
+    if ( showHier )
+        if ( Kleo::AbstractKeyListModel * const model = Kleo::AbstractKeyListModel::createHierarchicalKeyListModel( &hierarchical ) ) {
+            QObject::connect( &relay, SIGNAL(nextKeys(std::vector<GpgME::Key>)), model, SLOT(addKeys(std::vector<GpgME::Key>)) );
+            hierarchicalProxy.setSourceModel( model );
+            hierarchical.setModel( &hierarchicalProxy );
+
+            hierarchicalWidget.show();
+        }
 
     const std::auto_ptr<GpgME::Context> pgp( GpgME::Context::createForProtocol( GpgME::OpenPGP ) );
     pgp->setManagedByEventLoopInteractor( true );
