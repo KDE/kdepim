@@ -1,7 +1,7 @@
 /* KPilot
 **
-** Copyright (C) 2001 by Dan Pilone
-** Copyright (C) 2002-2004 by Adriaan de Groot
+** Copyright (C) 2001 by Dan Pilone <dan@kpilot.org>
+** Copyright (C) 2002-2004 by Adriaan de Groot <groot@kde.org>
 ** Copyright (C) 2003-2004 Reinhold Kainhofer <reinhold@kainhofer.com>
 **
 ** This file defines the pages that make up part of the configuration dialog.

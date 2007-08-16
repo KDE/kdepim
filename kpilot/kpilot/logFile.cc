@@ -1,7 +1,7 @@
 /* KPilot
 **
-** Copyright (C) 2001 by Dan Pilone
-** Copyright (C) 2004 by Reinhold Kainhofer
+** Copyright (C) 2001 by Dan Pilone <dan@kpilot.org>
+** Copyright (C) 2004 by Reinhold Kainhofer <reinhold@kainhofer.com>
 **
 ** This file defines the log file class, which logs
 ** sync-messages during a HotSync to a file.
@@ -27,8 +27,7 @@
 /*
 ** Bug reports and questions can be sent to kde-pim@kde.org.
 */
-
-#include "options.h"
+#include "logFile.h"
 
 #include <qfile.h>
 #include <qdatetime.h>
@@ -38,9 +37,9 @@
 #ifndef PILOT_LINK_PATCH
 #define PILOT_LINK_PATCH "unknown"
 #endif
-#include "logFile.h"
-#include "kpilotConfig.h"
 
+#include "kpilotConfig.h"
+#include "options.h"
 #include "logFile.moc"
 #include "loggeradaptorfile.h"
 

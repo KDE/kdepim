@@ -1,9 +1,9 @@
 /* KPilot
 **
-** Copyright (C) 1998-2001 by Dan Pilone
-** Copyright (C) 2001-2007 by Adriaan de Groot
+** Copyright (C) 1998-2001 by Dan Pilone <dan@kpilot.org>
+** Copyright (C) 2001-2007 by Adriaan de Groot <groot@kde.org>
 ** Copyright (C) 2003-2004 Reinhold Kainhofer <reinhold@kainhofer.com>
-** Copyright (C) 2006-2007 Jason 'vanRijn' Kasper
+** Copyright (C) 2006-2007 Jason 'vanRijn' Kasper <vr@movingparts.net>
 **
 ** This is the KPilot Daemon, which does the actual communication with
 ** the Pilot and with the conduits.
@@ -298,7 +298,7 @@ PilotDaemon::PilotDaemon() :
 	fTray(0L),
 	fInstaller(0L),
 	fLogFile(0L),
-	fTempDevice(QString::null)
+	fTempDevice(QString())
 {
 	FUNCTIONSETUP;
 
@@ -478,7 +478,7 @@ void PilotDaemon::reloadSettings()
 	}
 
 	updateTrayStatus();
-	logProgress(QString::null,0);
+	logProgress(QString(),0);
 }
 
 void PilotDaemon::stopListening()
@@ -1098,8 +1098,8 @@ launch:
 	fSyncStack->deleteLater();
 	fPilotLink->close();
 
-	getLogger().logProgress(i18n("HotSync Completed.<br>"), 100);
-	getFileLogger().logProgress(i18n("HotSync Completed.<br>"), 100);
+	getLogger().logProgress(i18n("HotSync Completed.<br/>"), 100);
+	getFileLogger().logProgress(i18n("HotSync Completed.<br/>"), 100);
 	getLogger().logEndSync();
 	getFileLogger().logEndSync();
 	getKPilot().daemonStatus(KPilotInstaller::EndOfHotSync);

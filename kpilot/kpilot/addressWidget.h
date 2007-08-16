@@ -2,7 +2,7 @@
 #include <Q3PtrList>
 /* addressWidget.h			KPilot
 **
-** Copyright (C) 1998-2001 by Dan Pilone
+** Copyright (C) 1998-2001 by Dan Pilone <dan@kpilot.org>
 ** Copyright (C) 2003 Reinhold Kainhofer <reinhold@kainhofer.com>
 **
 ** This file defines the address-viewing widget used in KPilot

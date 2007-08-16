@@ -67,7 +67,7 @@ KCal::CalendarLocal *CalendarDumped::retrieve(const QString &fn)
 
 KCal::CalendarLocal *retrieve(DatebookDB *db)
 {
-	KCal::CalendarLocal *cal = new CalendarLocal( QString::null );
+	KCal::CalendarLocal *cal = new CalendarLocal( QString() );
 
 	int count = db->db()->recordCount();
 

@@ -1,6 +1,6 @@
 /* KPilot
 **
-** Copyright (C) 2001 by Dan Pilone
+** Copyright (C) 2001 by Dan Pilone <dan@kpilot.org>
 **
 ** This file defines the log window widget, which logs
 ** sync-messages during a HotSync.
@@ -57,7 +57,7 @@
 
 
 LogWidget::LogWidget(QWidget * parent) :
-	PilotComponent(parent, "component_log", QString::null),
+	PilotComponent(parent, "component_log", QString()),
 	fLog(0L),
 	fShowTime(false),
 	fLabel(0L),

@@ -24,32 +24,30 @@
 /*
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
-
-#include <options.h>
+#include "internalEditorAction.h"
 
 #include <qtimer.h>
 #include <qlayout.h>
 #include <qlabel.h>
 #include <QGridLayout>
 #include <Q3Frame>
+
 #include <kmessagebox.h>
 #include <kdialog.h>
 #include <ktextedit.h>
-#include <kdialog.h>
+#include <khexedit/byteseditinterface.h>
 
-#include <pilotRecord.h>
-#include <pilotLocalDatabase.h>
-#include <pilotDatabase.h>
-#include <pilotSerialDatabase.h>
+#include "options.h"
+#include "pilotRecord.h"
+#include "pilotLocalDatabase.h"
+#include "pilotDatabase.h"
+#include "pilotSerialDatabase.h"
 #include "kpilotConfig.h"
-#include "internalEditorAction.h"
+#include "pilotAddress.h"
+#include "pilotMemo.h"
+#include "pilotDateEntry.h"
+#include "pilotTodoEntry.h"
 
-#include <pilotAddress.h>
-#include <pilotMemo.h>
-#include <pilotDateEntry.h>
-#include <pilotTodoEntry.h>
-
-#include "khexedit/byteseditinterface.h"
 using namespace KHE;
 
 InternalEditorAction::InternalEditorAction(KPilotLink * p) :
@@ -160,7 +158,7 @@ bool InternalEditorAction::queryUseKPilotChanges(const QString &dbName, recordid
 		PilotAddress serialAddr(serialrec);
 		localEntry=localAddr.getTextRepresentation(&info,Qt::RichText);
 		serialEntry=serialAddr.getTextRepresentation(&info,Qt::RichText);
-		recType=i18n("address");
+		recType=i18nc("This is an address record.","address");
 	}
 	else
 	if (dbName==CSL1("ToDoDB") && db)

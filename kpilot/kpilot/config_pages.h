@@ -1,8 +1,8 @@
-#ifndef _KPILOT_KPILOTCONFIGDIALOG_H
-#define _KPILOT_KPILOTCONFIGDIALOG_H
+#ifndef CONFIG_PAGES_H
+#define CONFIG_PAGES_H
 /* KPilot
 **
-** Copyright (C) 2001 by Dan Pilone
+** Copyright (C) 2001 by Dan Pilone <dan@kpilot.org>
 ** Copyright (C) 2003-2004 Reinhold Kainhofer <reinhold@kainhofer.com>
 **
 ** This file defines logic for the pages that make up the configuration

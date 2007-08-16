@@ -24,21 +24,20 @@
 /*
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
-
-#include "options.h"
+#include "dbAppInfoEditor.h"
 
 #include <q3textedit.h>
 #include <qlabel.h>
 //Added by qt3to4:
 #include <Q3Frame>
+
 #include <kdialog.h>
 #include <kmessagebox.h>
-
-#include "dbAppInfoEditor.h"
-
 #include <khexedit/byteseditinterface.h>
-using namespace KHE;
 
+#include "options.h"
+
+using namespace KHE;
 
 /*************************************************
 **************************************************/

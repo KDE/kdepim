@@ -4,7 +4,7 @@
 #define _KPILOT_HOTSYNC_H
 /* hotSync.h                            KPilot
 **
-** Copyright (C) 2001 by Dan Pilone
+** Copyright (C) 2001 by Dan Pilone <dan@kpilot.org>
 ** Copyright (C) 2003-2004 Reinhold Kainhofer <reinhold@kainhofer.com>
 ** Copyright (C) 2006 Adriaan de Groot <groot@kde.org>
 **
@@ -43,7 +43,7 @@ class QTimer;
 class CheckUser : public SyncAction
 {
 public:
-	CheckUser(KPilotLink *p,QWidget *w=0L);
+	explicit CheckUser(KPilotLink *p,QWidget *w=0L);
 	virtual ~CheckUser();
 
 protected:
@@ -147,7 +147,7 @@ class RestoreAction : public SyncAction
 {
 Q_OBJECT
 public:
-	RestoreAction(KPilotLink *,QWidget *w=0L);
+	explicit RestoreAction(KPilotLink *,QWidget *w=0L);
 
 	typedef enum { InstallingFiles, GettingFileInfo,Done } Status;
 	virtual QString statusString() const;

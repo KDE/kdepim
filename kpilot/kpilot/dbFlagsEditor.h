@@ -39,7 +39,7 @@ class DBFlagsEditor : public KDialog
 {
 Q_OBJECT
 public:
-	DBFlagsEditor(DBInfo*dbinfo=0L, QWidget *parent = 0);
+	explicit DBFlagsEditor(DBInfo*dbinfo=0L, QWidget *parent = 0);
 	~DBFlagsEditor();
 
 protected:

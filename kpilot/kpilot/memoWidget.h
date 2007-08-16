@@ -2,7 +2,7 @@
 #define _KPILOT_MEMOWIDGET_H
 /* memoWidget.h			KPilot
 **
-** Copyright (C) 1998-2001 by Dan Pilone
+** Copyright (C) 1998-2001 by Dan Pilone <dan@kpilot.org>
 **
 ** This is the memo viewer widget.
 */

@@ -1,5 +1,5 @@
-#ifndef _KPILOT_DBSELECTIONDIALOG_H
-#define _KPILOT_DBSELECTIONDIALOG_H
+#ifndef CONFIG_DIALOG_DBSELECTION_H
+#define CONFIG_DIALOG_DBSELECTION_H
 /* KPilot
 **
 ** Copyright (C) 2003 Reinhold Kainhofer <reinhold@kainhofer.com>

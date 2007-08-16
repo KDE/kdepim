@@ -1,7 +1,7 @@
 // -*- C++ -*-
 /* KPilot
 **
-** Copyright (C) 2000 by Dan Pilone
+** Copyright (C) 2000 by Dan Pilone <dan@kpilot.org>
 ** Copyright (C) 2003-2004 Reinhold Kainhofer <reinhold@kainhofer.com>
 **
 ** This is a dialog window that edits one single todo record.

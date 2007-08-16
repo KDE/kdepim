@@ -1,7 +1,7 @@
 /* KPilot
 **
-** Copyright (C) 1998-2001 by Dan Pilone
-** Copyright (C) 2003 by Reinhold Kainhofer
+** Copyright (C) 1998-2001 by Dan Pilone <dan@kpilot.org>
+** Copyright (C) 2003 by Reinhold Kainhofer <reinhold@kainhofer.com>
 **
 ** Program description
 */
@@ -27,17 +27,14 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
-#include "options.h"
-
-
+#ifndef _KPILOT_LISTITEMS_H
+#include "listItems.h"
+#endif
 
 #include <q3listbox.h>
 #include <q3listview.h>
 
-
-#ifndef _KPILOT_LISTITEMS_H
-#include "listItems.h"
-#endif
+#include "options.h"
 
 #ifdef DEBUG
 /* static */ int PilotListItem::crt = 0;
@@ -143,7 +140,7 @@ PilotListViewItem::PilotListViewItem( Q3ListView * parent,
 	const QString &label1, const QString &label2, const QString &label3
 	, const QString &label4, recordid_t pilotid, void *r):
 	Q3ListViewItem(parent, label1, label2, label3, label4,
-		QString::null, QString::null, QString::null, QString::null),
+		QString(), QString(), QString(), QString()),
 	fid(pilotid),
 	fr(r),
 	d(new PilotListViewItemData)

@@ -1,8 +1,8 @@
 /* KPilot
 **
-** Copyright (C) 1998-2001 by Dan Pilone
-** Copyright (C) 2001 by David Bishop (XML stuff)
-** Copyright (C) 2004 by Adriaan de Groot
+** Copyright (C) 1998-2001 by Dan Pilone <dan@kpilot.org>
+** Copyright (C) 2001 by David Bishop (XML stuff)  <david@kpilot.org>
+** Copyright (C) 2004 by Adriaan de Groot <groot@kde.org>
 **
 ** This is the memo-viewing widget (internal conduit) used by KPilot.
 */
@@ -45,7 +45,6 @@
 #include <q3textstream.h>
 #include <qlabel.h>
 #include <qdatetime.h>
-#include <q3ptrlist.h>
 
 #include <KComboBox>
 #include <kmessagebox.h>

@@ -1,6 +1,6 @@
 /* KPilot
 **
-** Copyright (C) 2003 by Dan Pilone.
+** Copyright (C) 2003 by Dan Pilone. <dan@kpilot.org>
 ** Copyright (C) 2003, 2007 by Adriaan de Groot <groot@kde.org>
 **
 ** This is the viewer for datebook data.

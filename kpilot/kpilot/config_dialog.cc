@@ -1,7 +1,7 @@
 /* KPilot
 **
-** Copyright (C) 2001 by Dan Pilone
-** Copyright (C) 2002-2004 by Adriaan de Groot
+** Copyright (C) 2001 by Dan Pilone <dan@kpilot.org>
+** Copyright (C) 2002-2004 by Adriaan de Groot <groot@kde.org>
 ** Copyright (C) 2003-2004 Reinhold Kainhofer <reinhold@kainhofer.com>
 **
 ** This file defines the configuration dialog for KPilot.
@@ -179,7 +179,7 @@ ConduitConfigWidgetBase::ConduitConfigWidgetBase(QWidget *parent, const QStringL
 		"be configured.</qt>"));
 
 	addDescriptionPage(fStack,INTERNAL_CONDUIT,
-		QString::null,0L,&fActionDescription);
+		QString(),0L,&fActionDescription);
 
 	addDescriptionPage(fStack,CONDUIT_EXPLN,
 		i18n("<qt><p><i>Conduits</i> are external (possibly third-party) "
@@ -193,7 +193,7 @@ ConduitConfigWidgetBase::ConduitConfigWidgetBase(QWidget *parent, const QStringL
 		"contains settings for your hardware and the way KPilot "
 		"should display your data. For the basic setup, which should fulfill "
 		"the need of most users, just use the setup wizard below.</p>"
-		"If you need some special settings, this dialog provides all the options "
+		"<p>If you need some special settings, this dialog provides all the options "
 		"for fine-tuning KPilot. But be warned: The HotSync settings are "
 		"various esoteric things.</p>"
 		"<p>You can enable an action or conduit by clicking on its checkbox. "

@@ -27,17 +27,16 @@
 /*
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
-
-#include "options.h"
+#include "config_dialog_dbselection_base.h"
 
 #include <qpushbutton.h>
+
 #include <klineedit.h>
 #include <klistwidget.h>
 #include <kmessagebox.h>
 #include <kpushbutton.h>
 
-#include "config_dialog_dbselection_base.h"
-
+#include "options.h"
 #include "config_dialog_dbselection.moc"
 
 static inline void appendStringList(QStringList &items, const QStringList &add)

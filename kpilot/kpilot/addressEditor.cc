@@ -1,7 +1,7 @@
 // -*- C++ -*-
 /* KPilot
 **
-** Copyright (C) 2000 by Dan Pilone
+** Copyright (C) 2000 by Dan Pilone <dan@kpilot.org>
 **
 ** This is a dialog window that edits one single address record.
 */
@@ -165,8 +165,8 @@ void AddressEditor::initLayout()
 
 	MakeField(i18n("Last name:"), fLastNameField, 0, 0);
 	MakeField(i18n("First name:"), fFirstNameField, 1, 0);
-	MakeField(i18n("Title:"), fTitleField, 2, 0);
-	MakeField(i18n("Company:"), fCompanyField, 3, 0);
+	MakeField(i18nc("Tile of the person.", "Title:"), fTitleField, 2, 0);
+	MakeField(i18nc("Company where the person works.", "Company:"), fCompanyField, 3, 0);
 
 	PhoneSlot slot = PhoneSlot::begin();
 	for (int i = 0; slot.isValid(); ++i,++slot)
@@ -175,15 +175,15 @@ void AddressEditor::initLayout()
 			m_phoneLabel[i], fPhoneField[i], 4 + i, 0);
 	}
 
-	MakeField(i18n("Address:"), fAddressField, 0, 4);
-	MakeField(i18n("City:"), fCityField, 1, 4);
-	MakeField(i18n("State:"), fStateField, 2, 4);
-	MakeField(i18n("Zip code:"), fZipField, 3, 4);
-	MakeField(i18n("Country:"), fCountryField, 4, 4);
-	MakeField(i18n("Custom 1:"), fCustom1Field, 5, 4);
-	MakeField(i18n("Custom 2:"), fCustom2Field, 6, 4);
-	MakeField(i18n("Custom 3:"), fCustom3Field, 7, 4);
-	MakeField(i18n("Custom 4:"), fCustom4Field, 8, 4);
+	MakeField(i18nc("Address where the person lives.", "Address:"), fAddressField, 0, 4);
+	MakeField(i18nc("City where the person lives.", "City:"), fCityField, 1, 4);
+	MakeField(i18nc("State where the person lives.", "State:"), fStateField, 2, 4);
+	MakeField(i18nc("Zip or postalcode of Address.", "Zip code:"), fZipField, 3, 4);
+	MakeField(i18nc("Country where the person lives", "Country:"), fCountryField, 4, 4);
+	MakeField(i18nc("Custom field", "Custom 1:"), fCustom1Field, 5, 4);
+	MakeField(i18nc("Custom field", "Custom 2:"), fCustom2Field, 6, 4);
+	MakeField(i18nc("Custom field", "Custom 3:"), fCustom3Field, 7, 4);
+	MakeField(i18nc("Custom field", "Custom 4:"), fCustom4Field, 8, 4);
 
 	grid->addRowSpacing(9, SPACING);
 	grid->addColSpacing(2, SPACING);

@@ -1,6 +1,6 @@
 /* KPilot
 **
-** Copyright (C) 2001 by Dan Pilone
+** Copyright (C) 2001 by Dan Pilone <dan@kpilot.org>
 ** Copyright (C) 2003-2004 Reinhold Kainhofer <reinhold@kainhofer.com>
 ** Copyright (C) 2006 Adriaan de Groot <groot@kde.org>
 **
@@ -369,7 +369,7 @@ static inline bool checkBackupDirectory( const QString &backupDir )
 	struct DBInfo info;
 
 	// TODO: make the progress reporting more accurate
-	emit logProgress(QString::null, fP->fDBIndex);
+	emit logProgress(QString(), fP->fDBIndex);
 
 	if (openConduit() < 0)
 	{
@@ -852,7 +852,7 @@ CheckUser::~CheckUser()
 
 				int r = questionYesNoCancel(q,
 					i18n("User Mismatch"),
-					QString::null,
+					QString(),
 					20,
 					i18n("Use KPilot Name"),
 					i18n("Use Handheld Name"));
@@ -948,7 +948,7 @@ void RestoreAction::setDirectory( const QString &path )
 
 	DEBUGKPILOT << "Restoring user from [" << dirname << ']';
 
-	QDir dir(dirname, QString::null, QDir::Name,
+	QDir dir(dirname, QString(), QDir::Name,
 		QDir::Files | QDir::Readable | QDir::NoSymLinks);
 
 	if (!dir.exists())
@@ -982,7 +982,7 @@ void RestoreAction::setDirectory( const QString &path )
 	}
 
 
-	emit logProgress(i18n("Restoring %1...",QString::null),1);
+	emit logProgress(i18n("Restoring %1...",QString()),1);
 
 	for (unsigned int i = 0; i < dir.count(); i++)
 	{

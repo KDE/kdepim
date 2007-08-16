@@ -1,6 +1,6 @@
 /* KPilot
 **
-** Copyright (C) 1998-2001 by Dan Pilone
+** Copyright (C) 1998-2001 by Dan Pilone <dan@kpilot.org>
 **
 ** This file defines the internal conduit "File Installer"
 ** that accepts drags of URLs containing Palm DBs, prcs, and

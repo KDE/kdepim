@@ -267,12 +267,17 @@ void ProbeDialog::timeout()
 	disconnectDevices();
 	if (!fDetected) {
 		fStatusLabel->setText( i18n("Timeout reached, could not detect a handheld.") );
-		KMessageBox::information ( this, i18n("<qt>A handheld could not be detected. Possible check the following things:</p>"
-			"<ul><li> Have you pressed the hotsync button on the handheld?\n"
-			"<li> Make sure the device sits in the cradle correctly.\n"
-			"<li> Make sure the cradle is correctly plugged in to the computer.\n"
-			"<li> Have you checked that your device is actually supported by kpilot (see http://www.kpilot.org).\n"
-			"</ul>"
+		KMessageBox::information ( this
+			, i18n("<qt>"
+				"<p>A handheld could not be detected. Possible check the following "
+				"things:</p>"
+				"<ul>"
+				"<li>Have you pressed the hotsync button on the handheld?</li>"
+				"<li>Make sure the device sits in the cradle correctly.</li>"
+				"<li>Make sure the cradle is correctly plugged in to the computer.</li>"
+				"<li>Have you checked that your device is actually supported by kpilot"
+				" (see http://www.kpilot.org).</li>"
+				"</ul></qt>"
 			), i18n("Automatic Detection Failed"), "AutoDetectionFailed");
 	}
 }
@@ -320,7 +325,7 @@ void ProbeDialog::retrieveDBList()
 	}
 	fDBs.sort();
 
-	QString old( QString::null );
+	QString old;
 	QStringList::Iterator itr = fDBs.begin();
 	while ( itr != fDBs.end() )
 	{

@@ -24,18 +24,18 @@
 /*
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
-
-#include "options.h"
+#include "dbFlagsEditor.h"
 
 #include <pi-dlp.h>
 
 #include <qlineedit.h>
 #include <qcheckbox.h>
+
 #include <kdatewidget.h>
 #include <kmessagebox.h>
 
+#include "options.h"
 #include "pilotRecord.h"
-#include "dbFlagsEditor.h"
 #include "dbFlagsEditor_base.h"
 
 

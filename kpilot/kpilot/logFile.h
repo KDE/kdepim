@@ -2,8 +2,8 @@
 #define _KPILOT_LOGFILE_H
 /* logFile.h                          KPilot
 **
-** Copyright (C) 2001 by Dan Pilone
-** Copyright (C) 2004 by Reinhold Kainhofer
+** Copyright (C) 2001 by Dan Pilone <dan@kpilot.org>
+** Copyright (C) 2004 by Reinhold Kainhofer <reinhold@kainhofer.com>
 **
 ** This file defines the log window widget, which logs
 ** sync-messages during a HotSync.

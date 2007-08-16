@@ -1,7 +1,7 @@
 /* KPilot
 **
-** Copyright (C) 2001 by Dan Pilone
-** Copyright (C) 2001,2002,2003,2004 by Adriaan de Groot
+** Copyright (C) 2001 by Dan Pilone <dan@kpilot.org>
+** Copyright (C) 2001,2002,2003,2004 by Adriaan de Groot <groot@kde.org>
 **
 ** This is the main program for kpilotTest, which shows a SyncLog and
 ** exercises the KPilotDeviceLink class. It's intended to test if the
@@ -301,23 +301,28 @@ int main(int argc, char **argv)
 
 	KCmdLineOptions generalOptions;
 	generalOptions.add("p");
-	generalOptions.add("port <device>", ki18n("Path to Pilot device node"), "/dev/pilot");
+	generalOptions.add("port &lt;device&gt;>"
+		, ki18n("Path to Pilot device node"), "/dev/pilot");
 	generalOptions.add("l");
 	generalOptions.add("list", ki18n("List DBs"));
 	generalOptions.add("b");
-	generalOptions.add("backup <dest dir>", ki18n("Backup Pilot to <dest dir>"));
+	generalOptions.add("backup &lt;dest dir&gt;"
+		, ki18n("Backup Pilot to &lt;dest dir&gt;"));
 	generalOptions.add("r");
-	generalOptions.add("restore <src dir>", ki18n("Restore Pilot from backup"));
+	generalOptions.add("restore &lt;src dir&gt;", ki18n("Restore Pilot from backup"));
 	generalOptions.add("e");
-	generalOptions.add("exec <filename>", ki18n("Run conduit from desktop file <filename>"));
+	generalOptions.add("exec &lt;filename&gt;"
+		, ki18n("Run conduit from desktop file &lt;filename&gt;"));
 	generalOptions.add("c");
-	generalOptions.add("check <what>", ki18n("Run a specific check (with the device)"), "help");
+	generalOptions.add("check &lt;what&gt;"
+		, ki18n("Run a specific check (with the device)"), "help");
 	generalOptions.add("s");
-	generalOptions.add("show <what>", ki18n("Show KPilot configuration information"), "help");
+	generalOptions.add("show &lt;what&gt;"
+		, ki18n("Show KPilot configuration information"), "help");
 #ifdef DEBUG
-	generalOptions.add("debug <level>", ki18n("Set the debug level"), "1");
+	generalOptions.add("debug &lt;level>", ki18n("Set the debug level"), "1");
 #endif
-	KCmdLineArgs::addCmdLineOptions(generalOptions, ki18n("General"));
+	KCmdLineArgs::addCmdLineOptions(generalOptions, ki18nc("Genral options", "General"));
 
 	KCmdLineOptions conduitOptions;
 	conduitOptions.add("T");

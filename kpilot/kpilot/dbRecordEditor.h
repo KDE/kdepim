@@ -54,7 +54,7 @@ class DBRecordEditor : public KDialog
 {
 Q_OBJECT
 public:
-	DBRecordEditor(PilotRecord*r=0L, int n=-1, QWidget *parent = 0);
+	explicit DBRecordEditor(PilotRecord*r=0L, int n=-1, QWidget *parent = 0);
 	~DBRecordEditor();
 	
 protected:

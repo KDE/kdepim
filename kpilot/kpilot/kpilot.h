@@ -2,7 +2,7 @@
 #define _KPILOT_KPILOT_H
 /* kpilot.h			KPilot
 **
-** Copyright (C) 1998-2001 by Dan Pilone
+** Copyright (C) 1998-2001 by Dan Pilone <dan@kpilot.org>
 ** Copyright (C) 2003-2004 Reinhold Kainhofer <reinhold@kainhofer.com>
 **
 ** This is the main program in KPilot.

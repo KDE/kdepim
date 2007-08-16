@@ -1,6 +1,6 @@
 /* KPilot
 **
-** Copyright (C) 1998-2001 by Dan Pilone
+** Copyright (C) 1998-2001 by Dan Pilone <dan@kpilot.org>
 ** Copyright (C) 2003-2004 Reinhold Kainhofer <reinhold@kainhofer.com>
 **
 ** This file defines a base class for components -- internal conduits --
@@ -146,7 +146,7 @@ void PilotComponent::populateCategories(QComboBox * c,
 	}
 
 CategoryAll:
-	c->insertItem(0, i18n("All"), QVariant(-1));
+	c->insertItem(0, i18nc("This adds the Category all", "All"), QVariant(-1));
 }
 
 

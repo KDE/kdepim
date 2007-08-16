@@ -1,8 +1,8 @@
 /* KPilot
 **
-** Copyright (C) 1998-2001 by Dan Pilone
+** Copyright (C) 1998-2001 by Dan Pilone <dan@kpilot.org>
 ** Copyright (C) 2003 Reinhold Kainhofer <reinhold@kainhofer.com>
-** Copyright (C) 2004 by Adriaan de Groot
+** Copyright (C) 2004 by Adriaan de Groot <groot@kde.org>
 **
 ** This file defines the addressWidget, that part of KPilot that
 ** displays address records from the Pilot.
@@ -353,7 +353,7 @@ QString AddressWidget::createTitle(PilotAddress * address, int displayMode)
 		}
 		if (title.isEmpty())
 		{
-			title = i18n("[unknown]");
+			title = i18nc("The title is inknown.", "[unknown]");
 		}
 	}
 

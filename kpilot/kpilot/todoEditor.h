@@ -1,7 +1,7 @@
 // -*- C++ -*-
 /* todoEditor.h		KPilot
 **
-** Copyright (C) 1998-2000 by Dan Pilone
+** Copyright (C) 1998-2000 by Dan Pilone <dan@kpilot.org>
 **
 ** This is a dialog window that is used to edit a single todo record.
 */

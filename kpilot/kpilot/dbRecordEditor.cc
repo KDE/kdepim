@@ -24,8 +24,7 @@
 /*
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
-
-#include "options.h"
+#include "dbRecordEditor.h"
 
 #include <qcheckbox.h>
 #include <qtooltip.h>
@@ -41,8 +40,8 @@
 #include <kmessagebox.h>
 #include <KLineEdit>
 
+#include "options.h"
 #include "pilotRecord.h"
-#include "dbRecordEditor.h"
 //#include "dbRecordEditor_base.h"
 
 #include <khexedit/byteseditinterface.h>
@@ -114,11 +113,11 @@ void DBRecordEditor::languageChange()
 	fRecordIndex->setText( i18n( "1" ) );
 	fRecordID->setText( i18n( "1" ) );
 	fFlagsGroup->setTitle( i18n( "Flags" ) );
-	fDirty->setText( i18n( "&Dirty" ) );
-	fDeleted->setText( i18n( "De&leted" ) );
-	fBusy->setText( i18n( "&Busy" ) );
-	fSecret->setText( i18n( "&Secret" ) );
-	fArchived->setText( i18n( "&Archived" ) );
+	fDirty->setText( i18nc( "Record marked as dirty?", "&Dirty" ) );
+	fDeleted->setText( i18nc( "Record marked as deleted?", "De&leted" ) );
+	fBusy->setText( i18nc( "Record marked as busy?", "&Busy" ) );
+	fSecret->setText( i18nc( "Record marked as secrect?", "&Secret" ) );
+	fArchived->setText( i18nc( "Record marked as archived?", "&Archived" ) );
 }
 
 void DBRecordEditor::initWidgets()

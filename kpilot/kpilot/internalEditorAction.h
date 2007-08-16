@@ -32,6 +32,7 @@
 
 #include "syncAction.h"
 
+class PilotRecord;
 
 class InternalEditorAction : public SyncAction
 {

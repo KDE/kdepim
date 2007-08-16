@@ -1,6 +1,6 @@
 /* listItems.h			KPilot
 **
-** Copyright (C) 1998-2001 by Dan Pilone
+** Copyright (C) 1998-2001 by Dan Pilone <dan@kpilot.org>
 ** Copyright (C) 2003-2004 Reinhold Kainhofer <reinhold@kainhofer.com>
 **
 ** This file defines a subclasse of QListBoxText that carries
@@ -41,7 +41,7 @@
 class PilotListItem : public Q3ListBoxText
 {
 public:
-	PilotListItem(const QString &text, recordid_t pilotid=0, void *r=0);
+	explicit PilotListItem(const QString &text, recordid_t pilotid=0, void *r=0);
 	virtual ~PilotListItem();
 	recordid_t id() const {return fid;};
 	const void *rec() const {return fr;};
@@ -86,8 +86,8 @@ class PilotListViewItem : public Q3ListViewItem
 {
 public:
 	PilotListViewItem( Q3ListView * parent,
-		const QString &label1, const QString &label2 = QString::null,
-		const QString &label3 = QString::null, const QString &label4 = QString::null,
+		const QString &label1, const QString &label2 = QString(),
+		const QString &label3 = QString(), const QString &label4 = QString(),
 		recordid_t pilotid=0, void *r=0);
 	virtual ~PilotListViewItem();
 	recordid_t id() const {return fid;};

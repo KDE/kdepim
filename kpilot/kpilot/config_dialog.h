@@ -2,7 +2,7 @@
 #define _KPILOT_CONDUITCONFIGDIALOG_H
 /* conduitConfigDialog.h                 KPilot
 **
-** Copyright (C) 2001 by Dan Pilone
+** Copyright (C) 2001 by Dan Pilone <dan@kpilot.org>
 ** Copyright (C) 2003-2004 Reinhold Kainhofer <reinhold@kainhofer.com>
 **
 ** This file defines a dialog for configuring all of KPilot, using

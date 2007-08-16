@@ -1,5 +1,5 @@
-#ifndef _KPILOT_PROBEDIALOG_H
-#define _KPILOT_PROBEDIALOG_H
+#ifndef CONFIG_DIALOG_PROBE_H
+#define CONFIG_DIALOG_PROBE_H
 /* KPilot
 **
 ** Copyright (C) 2004 Reinhold Kainhofer <reinhold@kainhofer.com>
@@ -49,7 +49,7 @@ Q_OBJECT
 public:
 	typedef QList<KPilotDeviceLink*> PilotLinkList;
 
-	ProbeDialog(QWidget *p=0L,const char *n=0L);
+	explicit ProbeDialog(QWidget *p=0L,const char *n=0L);
 	~ProbeDialog();
 
 	bool detected() const { return fDetected; }

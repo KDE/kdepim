@@ -1,6 +1,6 @@
 /* dbViewerWidget.cc		KPilot
 **
-** Copyright (C) 2003 by Dan Pilone.
+** Copyright (C) 2003 by Dan Pilone <dan@kpilot.org>
 ** Copyright (C) 2003 by Reinhold Kainhofer <reinhold@kainhofer.com>
 ** Copyright (C) 2003,2007 by Adriaan de Groot <groot@kde.org>
 **
@@ -28,6 +28,7 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
+#include "dbviewerWidget.h"
 
 #include "options.h"
 
@@ -48,8 +49,6 @@
 #include <ktextedit.h>
 
 #include "listItems.h"
-
-#include "dbviewerWidget.h"
 #include "pilotLocalDatabase.h"
 #include "pilotDatabase.h"
 #include "pilotRecord.h"
@@ -146,7 +145,7 @@ GenericDBWidget::~GenericDBWidget()
 void GenericDBWidget::showComponent()
 {
 	FUNCTIONSETUP;
-	fDBInfo->setText(QString::null);
+	fDBInfo->setText(QString());
 	slotDBType(0);
 
 	fDBList->show();
@@ -188,7 +187,8 @@ void GenericDBWidget::slotSelected(const QString &dbname)
 			return;
 		}
 		dbinfo=fDB->getDBInfo();
-		display.append(i18n("<B>Database:</B> %1, %2 records<BR>",QString::fromLatin1(dbinfo.name),fDB->recordCount()));
+		display.append(i18n("<B>Database:</B> %1, %2 records<BR/>"
+			,QString::fromLatin1(dbinfo.name),fDB->recordCount()));
 		char buff[5];
 		set_long(buff, dbinfo.type);
 		buff[4]='\0';
@@ -196,7 +196,7 @@ void GenericDBWidget::slotSelected(const QString &dbname)
 		set_long(buff, dbinfo.creator);
 		buff[4]='\0';
 		QString cr = QString::fromLatin1(buff);
-		display.append(i18n("<B>Type:</B> %1, <B>Creator:</B> %2<br><br>",tp,cr));
+		display.append(i18n("<B>Type:</B> %1, <B>Creator:</B> %2<br/><br/>",tp,cr));
 
 		int currentRecord = 0;
 		PilotRecord *pilotRec;
@@ -208,7 +208,7 @@ void GenericDBWidget::slotSelected(const QString &dbname)
 				PilotListViewItem*item=new PilotListViewItem(fRecordList,
 					QString::number(currentRecord), QString::number(pilotRec->size()),
 					QString::number(pilotRec->id()),
-					QString::null,
+					QString(),
 					pilotRec->id(), pilotRec);
 				item->setNumericCol(0, true);
 				item->setNumericCol(1, true);
@@ -246,20 +246,20 @@ void GenericDBWidget::slotSelected(const QString &dbname)
 #else
 		pi_file_get_info(pf,&dbinfo);
 #endif
-		display.append(i18n("<B>Application:</B> %1<BR><BR>",dbname));
+		display.append(i18n("<B>Application:</B> %1<BR/><BR/>",dbname));
 	}
 	enableWidgets(currentDBtype==eDatabase);
 
 	QDateTime ttime;
 
 	ttime.setTime_t(dbinfo.createDate);
-	display.append(i18n("Created: %1<BR>",ttime.toString()));
+	display.append(i18n("Created: %1<BR/>",ttime.toString()));
 
 	ttime.setTime_t(dbinfo.modifyDate);
-	display.append(i18n("Modified: %1<BR>",ttime.toString()));
+	display.append(i18n("Modified: %1<BR/>",ttime.toString()));
 
 	ttime.setTime_t(dbinfo.backupDate);
-	display.append(i18n("Backed up: %1<BR>",ttime.toString()));
+	display.append(i18n("Backed up: %1<BR/>",ttime.toString()));
 
 	fDBInfo->setText(display);
 }
@@ -293,7 +293,7 @@ void GenericDBWidget::reset()
 	fDBInfo->clear();
 	fRecordList->clear();
 	if (fDB)  KPILOT_DELETE(fDB);
-	currentDB=QString::null;
+	currentDB=QString();
 }
 
 void GenericDBWidget::slotAddRecord()
@@ -303,7 +303,7 @@ void GenericDBWidget::slotAddRecord()
 	PilotRecord *rec=new PilotRecord(b, 0, 0, 0);
 	PilotListViewItem*item=new PilotListViewItem(fRecordList,
 		QString::number(-1), QString::number(rec->size()),
-		QString::number(rec->id()), QString::null,
+		QString::number(rec->id()), QString(),
 		rec->id(), rec);
 	if (slotEditRecord(item))
 	{
@@ -352,7 +352,11 @@ void GenericDBWidget::slotDeleteRecord()
 {
 	FUNCTIONSETUP;
 	PilotListViewItem*currRecItem=dynamic_cast<PilotListViewItem*>(fRecordList->selectedItem());
-	if (currRecItem && (KMessageBox::questionYesNo(this, i18n("<qt>Do you really want to delete the selected record? This cannot be undone.<br><br>Delete record?<qt>"), i18n("Deleting Record"), KStandardGuiItem::del(), KStandardGuiItem::cancel())==KMessageBox::Yes) )
+	if (currRecItem && (KMessageBox::questionYesNo(this
+		, i18n("<qt><p>Do you really want to delete the selected record?"
+			" This cannot be undone.</p><p>Delete record?</p></qt>")
+			, i18n("Deleting Record"), KStandardGuiItem::del()
+			, KStandardGuiItem::cancel())==KMessageBox::Yes) )
 	{
 		PilotRecord*rec=(PilotRecord*)currRecItem->rec();
 		rec->setDeleted();

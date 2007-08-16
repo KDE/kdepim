@@ -2,7 +2,7 @@
 #define _KPILOT_FILEINSTALLWIDGET_H
 /* fileInstallWidget.h			KPilot
 **
-** Copyright (C) 1998-2001 by Dan Pilone
+** Copyright (C) 1998-2001 by Dan Pilone <dan@kpilot.org>
 **
 ** This file defines the file install widget, which is the thing
 ** that accepts file drags for later installation into the Pilot.

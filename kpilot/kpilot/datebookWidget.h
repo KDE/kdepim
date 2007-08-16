@@ -2,7 +2,7 @@
 #define _KPILOT_DATEBOOKWIDGET_H
 /* datebookWidget.h		KPilot
 **
-** Copyright (C) 2003 by Dan Pilone.
+** Copyright (C) 2003 by Dan Pilone. <dan@kpilot.org>
 **	Authored by Adriaan de Groot
 **
 ** This is the viewer widget for viewing datebook entries in
