@@ -78,6 +78,9 @@ namespace {
         bool operator()( const char * lhs, const Key & rhs ) const {
             return Op<int>()( qstricmp( lhs, rhs.primaryFingerprint() ), 0 );
         }
+        bool operator()( const char * lhs, const char * rhs ) const {
+            return Op<int>()( qstricmp( lhs, rhs ), 0 );
+        }
     };
 
     template <typename T_arg>
@@ -727,6 +730,45 @@ QList<QModelIndex> HierarchicalKeyListModel::doAddKeys( const std::vector<Key> &
 	    // parent does't exist yet...
 	    addKeyWithoutParent( issuer_fpr, key );
 
+        // check to see whether this key is a parent for a previously parent-less group:
+        const char * const fpr = key.primaryFingerprint();
+        if ( !fpr || !*fpr )
+            continue;
+
+        const Map::iterator it = mKeysByNonExistingParent.find( fpr );
+        if ( it == mKeysByNonExistingParent.end() )
+            continue;
+        assert( !it->second.empty() );
+
+        const std::vector<Key> children = it->second;
+
+        // Step 1: Remove children from toplevel:
+        std::vector<Key>::iterator last = mTopLevels.begin();
+        Q_FOREACH( const Key & k, children ) {
+            last = qBinaryFind( last, mTopLevels.end(), k, ByFingerprint<std::less>() );
+            assert( last != mTopLevels.end() );
+            const int row = std::distance( mTopLevels.begin(), last );
+
+            emit rowAboutToBeMoved( QModelIndex(), row );
+            beginRemoveRows( QModelIndex(), row, row );
+            last = mTopLevels.erase( last );
+            endRemoveRows();
+        }
+
+	mKeysByNonExistingParent.erase( it );
+
+        // Step 2: Add children to new parent ( == key )
+        const QModelIndex new_parent = index( key );
+        beginInsertRows( index( key ), 0, children.size()-1 );
+        assert( mKeysByExistingParent.find( fpr ) == mKeysByExistingParent.end() );
+        mKeysByExistingParent[fpr] = children;
+        endInsertRows();
+
+        // emit the rowMoved() signals in reversed direction, so the
+        // implementation can use a stack for mapping.
+        for ( int i = children.size() - 1 ; i >= 0 ; --i )
+            emit rowMoved( new_parent, i );
+
     }
 
     return indexes( keys );
@@ -745,3 +787,40 @@ AbstractKeyListModel * AbstractKeyListModel::createHierarchicalKeyListModel( QOb
 
 #include "moc_keylistmodel.cpp"
 #include "keylistmodel.moc"
+
+/*!
+  \fn AbstractKeyListModel::rowAboutToBeMoved( const QModelIndex & old_parent, int old_row )
+
+  Emitted before the removal of a row from that model. It will later
+  be added to the model again, in reponse to which rowMoved() will be
+  emitted. If multiple rows are moved in one go, multiple
+  rowAboutToBeMoved() signals are emitted before the corresponding
+  number of rowMoved() signals is emitted - in reverse order.
+
+  This works around the absence of move semantics in
+  QAbstractItemModel. Clients can maintain a stack to perform the
+  QModelIndex-mapping themselves, or, e.g., to preserve the selection
+  status of the row:
+
+  \code
+  std::vector<bool> mMovingRowWasSelected; // transient, used when rows are moved
+  // ...
+  void slotRowAboutToBeMoved( const QModelIndex & p, int row ) {
+      mMovingRowWasSelected.push_back( selectionModel()->isSelected( model()->index( row, 0, p ) ) );
+  }
+  void slotRowMoved( const QModelIndex & p, int row ) {
+      const bool wasSelected = mMovingRowWasSelected.back();
+      mMovingRowWasSelected.pop_back();
+      if ( wasSelected )
+          selectionModel()->select( model()->index( row, 0, p ), Select|Rows );
+  }
+  \endcode
+
+  A similar mechanism could be used to preserve the current item during moves.
+*/
+
+/*!
+  \fn AbstractKeyListModel::rowMoved( const QModelIndex & new_parent, int new_parent )
+
+  See rowAboutToBeMoved()
+*/

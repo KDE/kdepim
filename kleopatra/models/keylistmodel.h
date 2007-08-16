@@ -79,6 +79,10 @@ namespace Kleo {
         QModelIndex index( const GpgME::Key & key, int col=0 ) const;
         QList<QModelIndex> indexes( const std::vector<GpgME::Key> & keys ) const;
 
+    Q_SIGNALS:
+        void rowAboutToBeMoved( const QModelIndex & old_parent, int old_row );
+        void rowMoved( const QModelIndex & new_parent, int new_row );
+
     public Q_SLOTS:
         QModelIndex addKey( const GpgME::Key & key );
         QList<QModelIndex> addKeys( const std::vector<GpgME::Key> & keys );
@@ -94,7 +98,7 @@ namespace Kleo {
         virtual GpgME::Key doMapToKey( const QModelIndex & index ) const = 0;
         virtual QModelIndex doMapFromKey( const GpgME::Key & key, int column ) const = 0;
         virtual QList<QModelIndex> doAddKeys( const std::vector<GpgME::Key> & keys ) = 0;
-	virtual void doClear() = 0;
+        virtual void doClear() = 0;
     };
 
 }
