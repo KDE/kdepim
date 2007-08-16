@@ -397,8 +397,8 @@ bool DeviceCommThread::open(const QString &device)
 		e = errno;
 		msg = i18n("Cannot create socket for communicating "
 			"with the Pilot (%1)").arg(errorMessage(e));
-		WARNINGKPILOT << msg << endl;
-		WARNINGKPILOT << "(" << strerror(e) << ")" << endl;
+		DEBUGKPILOT << msg << endl;
+		DEBUGKPILOT << "(" << strerror(e) << ")" << endl;
 	
 		link()->fLinkStatus = PilotLinkError;
 		
@@ -426,8 +426,8 @@ bool DeviceCommThread::open(const QString &device)
 		e = errno;
 		msg = i18n("Cannot open Pilot port \"%1\". ").arg(link()->fRealPilotPath);
 		
-		WARNINGKPILOT << msg << endl;
-		WARNINGKPILOT << "(" << strerror(e) << ")" << endl;
+		DEBUGKPILOT << msg << endl;
+		DEBUGKPILOT << "(" << strerror(e) << ")" << endl;
 	
 		link()->fLinkStatus = PilotLinkError;
 		
@@ -574,7 +574,7 @@ bool DeviceCommThread::open(const QString &device)
 
 void DeviceCommThread::close()
 {
-	FUNCTIONSETUP;
+	FUNCTIONSETUPL(2);
 
 	pi_close(fTempSocket);
 
