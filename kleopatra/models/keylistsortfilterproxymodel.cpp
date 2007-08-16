@@ -97,6 +97,14 @@ void KeyListSortFilterProxyModel::setKeyFilterMatchMode( MatchMode mode ) {
 bool KeyListSortFilterProxyModel::filterAcceptsRow( int source_row, const QModelIndex & source_parent ) const {
 
     //
+    // 0. Keep parents of matching children:
+    //
+    const QModelIndex index = sourceModel()->index( source_row, 0, source_parent );
+    for ( int i = 0, end = sourceModel()->rowCount( index ) ; i != end ; ++i )
+	if ( filterAcceptsRow( i, index ) )
+	    return true;
+
+    //
     // 1. Check that name or email matches filterRegExp
     //
     const QModelIndex nameIndex = sourceModel()->index( source_row, AbstractKeyListModel::PrettyName, source_parent );
