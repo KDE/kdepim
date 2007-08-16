@@ -435,7 +435,7 @@ QString KABCSync::getFieldForHHOtherPhone(const KABC::Addressee & abEntry, const
 		case eTTYTTDPhone:
 			return abEntry.phoneNumber(KABC::PhoneNumber::Pcs).number();
 		default:
-			return QString::null;
+			return QString();
 	}
 }
 

@@ -425,7 +425,7 @@ int VCalConduitBase::resolveConflict( KCal::Incidence *e, PilotRecordBase *de ) 
 		return KMessageBox::No == questionYesNo(
 			query,
 			i18n( "Conflicting Entries" ),
-			QString::null,
+			QString::null,	//krazy:exclude=nullstrassign for old broken gcc
 			0 /* Never timeout */,
 			i18n( "Handheld" ), i18n( "PC" ));
 	}
@@ -579,7 +579,7 @@ void VCalConduitBase::updateIncidenceOnPalm( KCal::Incidence *e,
 
 const QString VCalConduitBase::dbname()
 {
-    return QString::null;
+    return QString();
 }
 
 PilotRecord *VCalConduitBase::readRecordByIndex( int index )

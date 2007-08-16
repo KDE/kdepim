@@ -152,7 +152,7 @@ QWidget *ConduitConfigBase::aboutPage(QWidget *parent, KAboutData *ad)
 	int lineheight = text->size().height();
 
 	// Use the label to display the application icon
-	text->setText(QString::null);
+	text->setText(QString::null);	//krazy:exclude=nullstrassign for old broken gcc
 	text->setPixmap(applicationIcon);
 	text->adjustSize();
 	grid->addWidget(text, 0, 1);
@@ -178,14 +178,14 @@ QWidget *ConduitConfigBase::aboutPage(QWidget *parent, KAboutData *ad)
 
 	if (!p->homepage().isEmpty())
 	{
-		s = QString::null;
+		s.clear();
 		s += CSL1("<a href=\"%1\">").arg(p->homepage());
 		s += p->homepage();
 		s += CSL1("</a><br>");
 		linktext->append(s);
 	}
 
-	s = QString::null;
+	s.clear;
 	s += i18n("Send questions and comments to <a href=\"mailto:%1\">%2</a>.", CSL1("kdepim-users@kde.org"), CSL1("kdepim-users@kde.org") );
 	s += ' ';
 	s += i18n("Send bug reports to <a href=\"mailto:%1\">%2</a>.",p->bugAddress(),p->bugAddress());
@@ -194,7 +194,7 @@ QWidget *ConduitConfigBase::aboutPage(QWidget *parent, KAboutData *ad)
 		"<a href=\"help:/kpilot/trademarks.html\">KPilot User's Guide</a>.");
 	s += CSL1("<br>");
 	linktext->append(s);
-	linktext->append(QString::null);
+	linktext->append(QString::null);	//krazy:exclude=nullstrassign for old broken gcc
 
 
 
@@ -211,12 +211,12 @@ QWidget *ConduitConfigBase::aboutPage(QWidget *parent, KAboutData *ad)
 		s.append(CSL1("%1 (<i>%2</i>)%3")
 			.arg((*i).name())
 			.arg((*i).task())
-			.arg( (count<pl.count()) ? comma : QString::null));
+			.arg( (count<pl.count()) ? comma : QString::null));	//krazy:exclude=nullstrassign for old broken gcc
 		count++;
 	}
 	linktext->append(s);
 
-	s = QString::null;
+	s.clear();
 	pl = p->credits();
 	if (pl.count()>0)
 	{
@@ -227,7 +227,7 @@ QWidget *ConduitConfigBase::aboutPage(QWidget *parent, KAboutData *ad)
 			s.append(CSL1("%1 (<i>%2</i>)%3")
 				.arg((*i).name())
 				.arg((*i).task())
-				.arg(count<pl.count() ? comma : QString::null)
+				.arg(count<pl.count() ? comma : QString::null)	//krazy:exclude=nullstrassign for old broken gcc
 				);
 			count++;
 		}
@@ -579,7 +579,7 @@ QString findArgument(const QStringList &a, const QString &arg)
 		}
 	}
 
-	return QString::null;
+	return QString();
 }
 
 /* static */ unsigned long pluginVersion(const KLibrary *lib)

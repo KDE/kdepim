@@ -140,7 +140,7 @@ QString category(const struct CategoryAppInfo *info, unsigned int i)
 {
 	if (!info || (i>=CATEGORY_COUNT))
 	{
-		return QString::null;
+		return QString();
 	}
 
 	return codec->toUnicode(info->name[i],CATEGORY_SIZE-1);

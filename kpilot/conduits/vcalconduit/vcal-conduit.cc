@@ -203,9 +203,8 @@ const QString VCalConduit::getTitle(PilotRecordBase *de)
 {
 	PilotDateEntry*d=dynamic_cast<PilotDateEntry*>(de);
 	if (d) return QString(d->getDescription());
-	return QString::null;
+	return QString();
 }
-
 
 
 PilotRecord *VCalConduit::recordFromIncidence(PilotRecordBase *de, const KCal::Incidence*e)
@@ -277,7 +276,6 @@ KCal::Incidence *VCalConduit::incidenceFromRecord(KCal::Incidence *e, const Pilo
 }
 
 
-
 PilotRecordBase * VCalConduit::newPilotEntry(PilotRecord*r)
 {
 	return new PilotDateEntry(r);
@@ -304,7 +302,4 @@ VCalConduitSettings *VCalConduit::config() {
 	return theConfig();
 }
 
-
-
 // vim: ts=4:sw=4:noexpandtab:
-

@@ -1469,7 +1469,7 @@ QString AbbrowserConduit::_smartMergeString(const QString &pc, const QString & b
 
 	// If this is a first sync, we don't have a backup record, so
 	if(isFirstSync() || backup.isEmpty()) {
-		if (pc.isEmpty() && palm.isEmpty() ) return QString::null;
+		if (pc.isEmpty() && palm.isEmpty() ) return QString();
 		if(pc.isEmpty()) return palm;
 		if(palm.isEmpty()) return pc;
 	} else {
@@ -1493,7 +1493,7 @@ QString AbbrowserConduit::_smartMergeString(const QString &pc, const QString & b
 		return backup;
 		break;
 	}
-	return QString::null;
+	return QString();
 }
 
 
@@ -1516,9 +1516,9 @@ bool AbbrowserConduit::_buildResolutionTable(ResolutionTable*tab, const Addresse
 
 #define appendGen(desc, abfield, palmfield) \
 	tab->append(new ResolutionItem(desc, tab->fExistItems, \
-		(!pcAddr.isEmpty())?(abfield):(QString::null), \
-		(palmAddr)?(palmAddr->palmfield):(QString::null), \
-		(backupAddr)?(backupAddr->palmfield):(QString::null) ))
+		(!pcAddr.isEmpty())?(abfield):(QString::null), \	//krazy:exclude=nullstrassign for old broken gcc
+		(palmAddr)?(palmAddr->palmfield):(QString::null), \	//krazy:exclude=nullstrassign for old broken gcc
+		(backupAddr)?(backupAddr->palmfield):(QString::null) ))	//krazy:exclude=nullstrassign for old broken gcc
 #define appendAddr(desc, abfield, palmfield) \
 	appendGen(desc, abfield, getField(palmfield))
 #define appendGenPhone(desc, abfield, palmfield) \
@@ -1568,7 +1568,7 @@ bool AbbrowserConduit::_buildResolutionTable(ResolutionTable*tab, const Addresse
 		tab->fExistItems,
 		!pcAddr.isEmpty() ?
 			KABCSync::bestMatchedCategoryName(pcAddr.categories(), *fAddressAppInfo,palmAddr->category()) :
-			QString::null,
+			QString::null,	//krazy:exclude=nullstrassign for old broken gcc
 		palmAddrCategoryLabel,
 		backupAddrCategoryLabel));
 #undef appendGen

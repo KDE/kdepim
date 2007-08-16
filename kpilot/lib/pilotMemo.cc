@@ -91,7 +91,7 @@ QString PilotMemo::getTitle() const
 {
 	if (fText.isEmpty())
 	{
-		return QString::null;
+		return QString();
 	}
 
 	int memoTitleLen = fText.indexOf('\n');

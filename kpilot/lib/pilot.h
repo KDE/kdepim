@@ -137,9 +137,9 @@ namespace Pilot
 	}
 
 	/** Returns the QString for the requested category @p i
-	* in the category structure @p info. Returns @c QString::null
+	* in the category structure @p info. Returns @c QString()
 	* on error (bad pointer or bad category number). May also
-	* return @c QString::null if the category name is empty.
+	* return @c QString() if the category name is empty.
 	*/
 	inline QString categoryName(const struct CategoryAppInfo *info, unsigned int i)
 	{
@@ -149,7 +149,7 @@ namespace Pilot
 		}
 		else
 		{
-			return QString::null;
+			return QString();
 		}
 	}
 

@@ -226,7 +226,7 @@ const QString TodoConduit::getTitle(PilotRecordBase *de)
 	{
 		return QString(d->getDescription());
 	}
-	return QString::null;
+	return QString();
 }
 
 
