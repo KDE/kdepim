@@ -20,7 +20,6 @@ set(conduit_base_SRCS
 	cudcounter.cc
 	hhrecord.cc
 	dataproxy.cc
-	pcdataproxy.cc
 	hhdataproxy.cc
 	recordconduit.cc
 )
