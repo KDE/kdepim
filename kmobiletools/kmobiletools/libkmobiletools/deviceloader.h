@@ -21,7 +21,7 @@
 #define DEVICELOADER_H
 
 #include <QtCore/QObject>
-#include <KPluginInfo>
+#include <KDE/KPluginInfo>
 
 #include "kmobiletools_export.h"
 

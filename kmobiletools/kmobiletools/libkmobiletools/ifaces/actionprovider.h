@@ -20,7 +20,7 @@
 #ifndef KMOBILETOOLS_IFACESACTIONPROVIDER_H
 #define KMOBILETOOLS_IFACESACTIONPROVIDER_H
 
-#include "kmobiletools_export.h"
+#include <libkmobiletools/kmobiletools_export.h>
 
 #include <QtCore/QObject>
 #include <QtCore/QHash>

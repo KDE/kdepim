@@ -20,12 +20,11 @@
 #ifndef KMOBILETOOLSIFACESSERVICE_H
 #define KMOBILETOOLSIFACESSERVICE_H
 
-#include "kmobiletools_export.h"
+#include <libkmobiletools/kmobiletools_export.h>
 
 #include <QtCore/QObject>
 #include <QtCore/QString>
 #include <QtGui/QWidget>
-#include <KIcon>
 
 namespace KMobileTools {
 
