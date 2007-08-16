@@ -25,7 +25,7 @@
 #include <QtCore/QString>
 
 #include <libkmobiletools/kmobiletools_export.h>
-#include <libkmobiletools/shortmessages.h>
+#include <libkmobiletools/sms.h>
 
 namespace KMobileTools {
 
@@ -83,7 +83,7 @@ public:
     /**
      * Returns an OR-combination of available memory slots
      */
-    virtual KMobileTools::ShortMessages::MemorySlots availableMemorySlots() const = 0;
+    virtual KMobileTools::SMS::MemorySlots availableMemorySlots() const = 0;
 
     /**
      * Returns the fetched list of sms
