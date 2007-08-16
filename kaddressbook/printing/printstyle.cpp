@@ -82,6 +82,11 @@ void PrintStyle::addPage( QWidget *page, const QString &title )
   if ( mPageList.indexOf( page ) == -1 ) { // not yet in the list
     mPageList.append( page );
     mPageTitles.append( title );
+
+    KPageWidgetItem *item = new KPageWidgetItem( page, title );
+    mPageItems.insert( page, item );
+    mWizard->addPage( item );
+    mWizard->setAppropriate( item, false );
   }
 }
 
@@ -89,21 +94,20 @@ void PrintStyle::showPages()
 {
   QWidget *wdg = 0;
   int i = 0;
+
   Q_FOREACH( wdg, mPageList ) {
-    mWizard->addPage( wdg, mPageTitles[ i ] );
-    if ( i == 0 )
-      mWizard->setAppropriate( wdg, true );
+    mWizard->setAppropriate( mPageItems[ wdg ], true );
   }
 
-  if ( wdg )
-    mWizard->setFinishEnabled( wdg, true );
+  mWizard->enableButton( KDialog::User2, wdg ); // next button
+  mWizard->enableButton( KDialog::User1, !wdg ); // finish button
 }
 
 void PrintStyle::hidePages()
 {
-
-  Q_FOREACH( QWidget *wdg, mPageList )
-    mWizard->removePage( wdg );
+  Q_FOREACH( QWidget *wdg, mPageList ) {
+    mWizard->setAppropriate( mPageItems[ wdg ], false );
+  }
 }
 
 void PrintStyle::setPreferredSortOptions( KABC::Field *field, bool ascending )

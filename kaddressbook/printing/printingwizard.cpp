@@ -52,14 +52,14 @@
 using namespace KABPrinting;
 
 PrintingWizard::PrintingWizard( KPrinter *printer, KABC::AddressBook* ab,
-                                const QStringList& selection, QWidget *parent,
-                                const char* name )
-  : K3Wizard( parent, name ), mPrinter( printer ), mAddressBook( ab ),
+                                const QStringList& selection, QWidget *parent )
+  : KAssistantDialog( parent ), mPrinter( printer ), mAddressBook( ab ),
     mSelection( selection ), mStyle( 0 )
 {
   mSelectionPage = new SelectionPage( this );
   mSelectionPage->setUseSelection( !selection.isEmpty() );
-  insertPage( mSelectionPage, i18n("Choose Contacts to Print"), -1 );
+  KPageWidgetItem *mSelectionPageItem = new KPageWidgetItem( mSelectionPage, i18n("Choose Contacts to Print") );
+  addPage( mSelectionPageItem );
 
   mFilters = Filter::restore( KGlobal::config().data(), "Filter" );
   QStringList filters;
@@ -70,12 +70,12 @@ PrintingWizard::PrintingWizard( KPrinter *printer, KABC::AddressBook* ab,
 
   mSelectionPage->setCategories( KABPrefs::instance()->customCategories() );
 
-  setAppropriate( mSelectionPage, true );
+  setAppropriate( mSelectionPageItem, true );
 
 
   mStylePage = new StylePage( mAddressBook, this );
   connect( mStylePage, SIGNAL( styleChanged(int) ), SLOT( slotStyleSelected(int) ) );
-  insertPage( mStylePage, i18n("Choose Printing Style"), -1 );
+  addPage( mStylePage, i18n("Choose Printing Style") );
 
   registerStyles();
 
@@ -109,7 +109,7 @@ void PrintingWizard::slotStyleSelected( int index )
   if ( index < 0 || index >= mStyleFactories.count() )
     return;
 
-  setFinishEnabled( mStylePage, false );
+  //enableButton( KDialog::User1, false ); // finish button
 
   if ( mStyle )
     mStyle->hidePages();
@@ -128,7 +128,7 @@ void PrintingWizard::slotStyleSelected( int index )
 
   mStylePage->setPreview( mStyle->preview() );
 
-  setFinishEnabled( page( pageCount() - 1 ), true );
+  //setFinishEnabled( page( pageCount() - 1 ), true );
 
   if ( mStyle->preferredSortField() != 0 ) {
     mStylePage->setSortField( mStyle->preferredSortField() );
@@ -150,8 +150,9 @@ void PrintingWizard::print()
 {
   // create and show print progress widget:
   PrintProgress *progress = new PrintProgress( this );
-  insertPage( progress, i18n( "Print Progress" ), -1 );
-  showPage( progress );
+  KPageWidgetItem *progressItem = new KPageWidgetItem( progress, i18n( "Print Progress" ) );
+  addPage( progressItem );
+  setCurrentPage( progressItem );
   kapp->processEvents();
 
   // prepare list of contacts to print:
@@ -207,8 +208,8 @@ void PrintingWizard::print()
                 << list.count() << "contacts.";
 
   // ... print:
-  setBackEnabled( progress, false );
-  cancelButton()->setEnabled( false );
+  enableButton( KDialog::User3, false ); // back button
+  enableButton( KDialog::Cancel, false );
   mStyle->print( list, progress );
 }
 

@@ -26,10 +26,9 @@
 #define PRINTINGWIZARD_H
 
 #include <QStringList>
-//Added by qt3to4:
 #include <QVBoxLayout>
 
-#include <k3wizard.h>
+#include <KAssistantDialog>
 #include <kabc/addressbook.h>
 
 #include "common/filter.h"
@@ -47,7 +46,7 @@ namespace KABPrinting {
   The PrintingWizard combines pages common for all print styles
   and those provided by the respective style.
 */
-class PrintingWizard : public K3Wizard
+class PrintingWizard : public KAssistantDialog
 {
   Q_OBJECT
 
@@ -58,7 +57,7 @@ class PrintingWizard : public K3Wizard
     PrintingWizard( KPrinter *printer,
                     KABC::AddressBook* ab,
                     const QStringList& selection,
-                    QWidget *parent = 0, const char *name = 0 );
+                    QWidget *parent = 0 );
     ~PrintingWizard();
 
     /**

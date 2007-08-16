@@ -24,11 +24,14 @@
 #ifndef PRINTSTYLE_H
 #define PRINTSTYLE_H
 
+#include <QHash>
 #include <QWidget>
 #include <QStringList>
 #include <QPixmap>
 
 #include <kabc/field.h>
+
+class KPageWidgetItem;
 
 namespace KABPrinting {
 
@@ -134,6 +137,7 @@ class PrintStyle : public QObject
     PrintingWizard *mWizard;
     QPixmap mPreview;
     QList<QWidget*> mPageList;
+    QHash<QWidget*, KPageWidgetItem*> mPageItems;
     QStringList mPageTitles;
 
     KABC::Field *mSortField;
