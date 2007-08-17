@@ -51,7 +51,7 @@ KCal::Event* Event::xmlToEvent( const QString& xml, const QString& tz, KCal::Res
 
 QString Event::eventToXML( KCal::Event* kcalEvent, const QString& tz  )
 {
-  Event event( 0, QString::null, 0, tz, kcalEvent );	//krazy:exclude=nullstrassign for old broken gcc
+  Event event( 0, QString(), 0, tz, kcalEvent );
   return event.saveXML();
 }
 

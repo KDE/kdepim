@@ -193,7 +193,7 @@ static const struct { const char* mimetype; KMail::StorageFormat format; } s_for
 bool KABC::ResourceKolab::loadSubResource( const QString& subResource )
 {
   int count = 0;
-  if ( !kmailIncidencesCount( count, QString::null, subResource ) ) {	//krazy:exclude=nullstrassign for old broken gcc
+  if ( !kmailIncidencesCount( count, QString(), subResource ) ) {
     kError() <<"Communication problem in KABC::ResourceKolab::loadSubResourceHelper()";
     return false;
   }

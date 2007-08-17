@@ -165,7 +165,7 @@ protected:
 
   /// If only one of these is writable, return that. Otherwise return null.
   QString findWritableResource( const ResourceMap& resources,
-                                const QString& text = QString::null );	//krazy:exclude=nullstrassign for old broken gcc
+                                const QString& text = QString() );
 
   bool mSilent;
 

@@ -41,17 +41,17 @@ class KDGanttViewEventItem : public KDGanttViewItem
 {
 public:
     KDGanttViewEventItem( KDGanttView* view,
-                          const QString& lvtext = QString::null,	//krazy:exclude=nullstrassign for old broken gcc
-                          const QString& name = QString::null );	//krazy:exclude=nullstrassign for old broken gcc
+                          const QString& lvtext = QString(),
+                          const QString& name = QString() );
     KDGanttViewEventItem( KDGanttViewItem* parent,
-                          const QString& lvtext = QString::null,	//krazy:exclude=nullstrassign for old broken gcc
-                          const QString& name = QString::null );	//krazy:exclude=nullstrassign for old broken gcc
+                          const QString& lvtext = QString(),
+                          const QString& name = QString() );
     KDGanttViewEventItem( KDGanttView* view, KDGanttViewItem* after,
-                          const QString& lvtext = QString::null,	//krazy:exclude=nullstrassign for old broken gcc
-                          const QString& name = QString::null );	//krazy:exclude=nullstrassign for old broken gcc
+                          const QString& lvtext = QString(),
+                          const QString& name = QString() );
     KDGanttViewEventItem( KDGanttViewItem* parent, KDGanttViewItem* after,
-                          const QString& lvtext = QString::null,	//krazy:exclude=nullstrassign for old broken gcc
-                          const QString& name = QString::null );	//krazy:exclude=nullstrassign for old broken gcc
+                          const QString& lvtext = QString(),
+                          const QString& name = QString() );
     virtual ~KDGanttViewEventItem();
 
     virtual bool moveConnector( Connector, QPoint p );

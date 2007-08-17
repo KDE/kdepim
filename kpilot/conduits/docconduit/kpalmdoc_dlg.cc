@@ -180,7 +180,7 @@ void ConverterDlg::slotToText()
 				i18n("<qt>You selected to sync folders, "
 				"but gave a filename instead (<em>%1</em>)."
 				"<br>Use folder <em>%2</em> instead?</qt>",pdburl,
-				pdbinfo.dirPath(true)), QString::null, KGuiItem(i18n("Use Folder")), KStandardGuiItem::cancel());	//krazy:exclude=nullstrassign for old broken gcc
+				pdbinfo.dirPath(true)), QString(), KGuiItem(i18n("Use Folder")), KStandardGuiItem::cancel());
 			if (res==KMessageBox::Yes)
 			{
 				pdburl=pdbinfo.dirPath(true);
@@ -216,7 +216,7 @@ void ConverterDlg::slotToText()
 				i18n("<qt>You selected to sync folders, "
 				"but gave a filename instead (<em>%1</em>)."
 				"<br>Use folder <em>%2</em> instead?</qt>",txturl,
-				txtinfo.dirPath(true)), QString::null, KGuiItem(i18n("Use Folder")), KStandardGuiItem::cancel());	//krazy:exclude=nullstrassign for old broken gcc
+				txtinfo.dirPath(true)), QString(), KGuiItem(i18n("Use Folder")), KStandardGuiItem::cancel());
 			if (res==KMessageBox::Yes) {
 				txturl=txtinfo.dirPath(true);
 				txtinfo.setFile(txturl);
@@ -329,7 +329,7 @@ void ConverterDlg::slotToPDB()
 				i18n("<qt>You selected to sync folders, "
 				"but gave a filename instead (<em>%1</em>)."
 				"<br>Use folder <em>%2</em> instead?</qt>",txturl,
-				txtinfo.dirPath(true)), QString::null, KGuiItem(i18n("Use Folder")), KStandardGuiItem::cancel());	//krazy:exclude=nullstrassign for old broken gcc
+				txtinfo.dirPath(true)), QString(), KGuiItem(i18n("Use Folder")), KStandardGuiItem::cancel());
 			if (res==KMessageBox::Yes)
 			{
 				txturl=txtinfo.dirPath(true);
@@ -355,7 +355,7 @@ void ConverterDlg::slotToPDB()
 				"but gave a filename instead (<em>%1</em>)."
 				"<br>Use folder <em>%2</em> instead?</qt>",
 				pdburl,
-				pdbinfo.dirPath(true)), QString::null, KGuiItem(i18n("Use Folder")), KStandardGuiItem::cancel());	//krazy:exclude=nullstrassign for old broken gcc
+				pdbinfo.dirPath(true)), QString(), KGuiItem(i18n("Use Folder")), KStandardGuiItem::cancel());
 			if (res==KMessageBox::Yes) {
 				pdburl=pdbinfo.dirPath(true);
 				pdbinfo.setFile(pdburl);
@@ -455,7 +455,7 @@ bool ConverterDlg::convertTXTtoPDB(QString txtdir, QString txtfile,
 	if (!dbfileinfo.exists() || !askOverwrite ||
 			(KMessageBox::Yes==KMessageBox::questionYesNo(this,
 			i18n("<qt>The database file <em>%1</em> already exists. Overwrite it?</qt>",
-			dbfileinfo.filePath()), QString::null, KGuiItem(i18n("Overwrite")), KStandardGuiItem::cancel() ) ))	//krazy:exclude=nullstrassign for old broken gcc
+			dbfileinfo.filePath()), QString(), KGuiItem(i18n("Overwrite")), KStandardGuiItem::cancel() ) ))
 	{
 		PilotLocalDatabase*pdbdb=new PilotLocalDatabase(pdbdir, QFileInfo(pdbfile).baseName(), false);
 		if (pdbdb)
@@ -500,7 +500,7 @@ bool ConverterDlg::convertPDBtoTXT(QString pdbdir, QString pdbfile,
 	if (!txtfileinfo.exists() || !askOverwrite ||
 			(KMessageBox::Yes==KMessageBox::questionYesNo(this,
 			i18n("<qt>The text file <em>%1</em> already exists. Overwrite it?</qt>",
-			txtfileinfo.filePath()), QString::null, KGuiItem(i18n("Overwrite")), KStandardGuiItem::cancel() ) ))	//krazy:exclude=nullstrassign for old broken gcc
+			txtfileinfo.filePath()), QString(), KGuiItem(i18n("Overwrite")), KStandardGuiItem::cancel() ) ))
 	{
 		PilotLocalDatabase*pdbdb=new PilotLocalDatabase(pdbdir, QFileInfo(pdbfile).baseName(), false);
 		if (pdbdb)

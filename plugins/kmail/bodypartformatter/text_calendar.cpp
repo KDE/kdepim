@@ -226,7 +226,7 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
     };
 
     bool mail( Incidence* incidence, KMail::Callback& callback, const QString &status,
-               Scheduler::Method method = Scheduler::Reply, const QString &to = QString::null,	//krazy:exclude=nullstrassign for old broken gcc
+               Scheduler::Method method = Scheduler::Reply, const QString &to = QString(),
                MailType type = Answer ) const
     {
       //status is accepted/tentative/declined
@@ -274,7 +274,7 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
       // (https://intevation.de/roundup/kolab/issue758)
       QString error;
       QString dbusService;
-      int result = KDBusServiceStarter::self()->findServiceFor( "DBUS/Organizer", QString::null, &error, &dbusService );	//krazy:exclude=nullstrassign for old broken gcc
+      int result = KDBusServiceStarter::self()->findServiceFor( "DBUS/Organizer", QString(), &error, &dbusService );
       if ( result == 0 ) {
         // OK, so korganizer (or kontact) is running. Now ensure the object we want is available
         // [that's not the case when kontact was already running, but korganizer not loaded into it...]
@@ -383,7 +383,7 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
                                     true, // RSVP, otherwise we would not be here
                                     status,
                                     heuristicalRole( incidence ),
-                                    QString::null );	//krazy:exclude=nullstrassign for old broken gcc
+                                    QString() );
           incidence->clearAttendees();
           incidence->addAttendee( newMyself );
           ok = mail( incidence, callback, dir, Scheduler::Reply );

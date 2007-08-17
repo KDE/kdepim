@@ -324,13 +324,13 @@ void GMXXXPort::doExport( QFile *fp, const KABC::AddresseeList &list )
 	  << cell.number() << DELIM		// Mobile
 	  << ((cell.type()&KABC::PhoneNumber::Pref)?-1:0) << DELIM // Mobile_type
 	  << email << DELIM			// Email
-	  << ((record_id==0)?addr->url().url():QString::null) << DELIM // Homepage	//krazy:exclude=nullstrassign for old broken gcc
-	  << ((record_id==0)?addr->role():QString::null) << DELIM	// Position	//krazy:exclude=nullstrassign for old broken gcc
+	  << ((record_id==0)?addr->url().url():QString()) << DELIM // Homepage
+	  << ((record_id==0)?addr->role():QString()) << DELIM	// Position
 	  << DELIM				// Comments
 	  << record_id << DELIM			// Record_type_id (0,1,2) - see above
 	  << DELIM				// Record_type (name of this additional record entry)
-	  << ((record_id==0)?addr->organization():QString::null) << DELIM // Company	//krazy:exclude=nullstrassign for old broken gcc
-	  << ((record_id==0)?addr->custom("KADDRESSBOOK", "X-Department"):QString::null) << DELIM // Department	//krazy:exclude=nullstrassign for old broken gcc
+	  << ((record_id==0)?addr->organization():QString()) << DELIM // Company
+	  << ((record_id==0)?addr->custom("KADDRESSBOOK", "X-Department"):QString()) << DELIM // Department
 	  << dateString(addr->revision()) << DELIM	// Change_date
 	  << 5 << DELIM				// Preferred
 	  << 1 << endl;				// Status (should always be "1")

@@ -425,7 +425,7 @@ int VCalConduitBase::resolveConflict( KCal::Incidence *e, PilotRecordBase *de ) 
 		return KMessageBox::No == questionYesNo(
 			query,
 			i18n( "Conflicting Entries" ),
-			QString::null,	//krazy:exclude=nullstrassign for old broken gcc
+			QString(),
 			0 /* Never timeout */,
 			i18n( "Handheld" ), i18n( "PC" ));
 	}

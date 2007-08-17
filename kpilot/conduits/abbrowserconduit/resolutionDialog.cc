@@ -74,7 +74,7 @@ protected:
 
 ResolutionCheckListItem::ResolutionCheckListItem(ResolutionItem*it,
 		ResolutionTable*tb, Q3ListView*parent) :
-	Q3CheckListItem(parent, QString::null, Q3CheckListItem::Controller),	//krazy:exclude=nullstrassign for old broken gcc
+	Q3CheckListItem(parent, QString(), Q3CheckListItem::Controller),
 	fResItem(it),
 	isController(true),
 	fCaption(it?(it->fName):(QString::null)),	//krazy:exclude=nullstrassign for old broken gcc

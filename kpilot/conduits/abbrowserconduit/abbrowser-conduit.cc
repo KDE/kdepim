@@ -1516,9 +1516,9 @@ bool AbbrowserConduit::_buildResolutionTable(ResolutionTable*tab, const Addresse
 
 #define appendGen(desc, abfield, palmfield) \
 	tab->append(new ResolutionItem(desc, tab->fExistItems, \
-		(!pcAddr.isEmpty())?(abfield):(QString::null), \	//krazy:exclude=nullstrassign for old broken gcc
-		(palmAddr)?(palmAddr->palmfield):(QString::null), \	//krazy:exclude=nullstrassign for old broken gcc
-		(backupAddr)?(backupAddr->palmfield):(QString::null) ))	//krazy:exclude=nullstrassign for old broken gcc
+		(!pcAddr.isEmpty())?(abfield):(QString()), \
+		(palmAddr)?(palmAddr->palmfield):(QString()), \
+		(backupAddr)?(backupAddr->palmfield):(QString()) ))
 #define appendAddr(desc, abfield, palmfield) \
 	appendGen(desc, abfield, getField(palmfield))
 #define appendGenPhone(desc, abfield, palmfield) \
@@ -1568,7 +1568,7 @@ bool AbbrowserConduit::_buildResolutionTable(ResolutionTable*tab, const Addresse
 		tab->fExistItems,
 		!pcAddr.isEmpty() ?
 			KABCSync::bestMatchedCategoryName(pcAddr.categories(), *fAddressAppInfo,palmAddr->category()) :
-			QString::null,	//krazy:exclude=nullstrassign for old broken gcc
+			QString(),
 		palmAddrCategoryLabel,
 		backupAddrCategoryLabel));
 #undef appendGen

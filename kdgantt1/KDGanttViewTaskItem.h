@@ -43,17 +43,17 @@ class KDGanttViewTaskItem : public KDGanttViewItem
 {
 public:
     KDGanttViewTaskItem( KDGanttView* view,
-                            const QString& lvtext = QString::null,	//krazy:exclude=nullstrassign for old broken gcc
-                            const QString& name = QString::null );	//krazy:exclude=nullstrassign for old broken gcc
+                            const QString& lvtext = QString(),
+                            const QString& name = QString() );
     KDGanttViewTaskItem( KDGanttViewItem* parent,
-                            const QString& lvtext = QString::null,	//krazy:exclude=nullstrassign for old broken gcc
-                            const QString& name = QString::null );	//krazy:exclude=nullstrassign for old broken gcc
+                            const QString& lvtext = QString(),
+                            const QString& name = QString() );
     KDGanttViewTaskItem( KDGanttView* view, KDGanttViewItem* after,
-                            const QString& lvtext = QString::null,	//krazy:exclude=nullstrassign for old broken gcc
-                            const QString& name = QString::null );	//krazy:exclude=nullstrassign for old broken gcc
+                            const QString& lvtext = QString(),
+                            const QString& name = QString() );
     KDGanttViewTaskItem( KDGanttViewItem* parent, KDGanttViewItem* after,
-                            const QString& lvtext = QString::null,	//krazy:exclude=nullstrassign for old broken gcc
-                            const QString& name = QString::null );	//krazy:exclude=nullstrassign for old broken gcc
+                            const QString& lvtext = QString(),
+                            const QString& name = QString() );
     virtual ~KDGanttViewTaskItem();
 
     virtual bool moveConnector( Connector, QPoint p );

@@ -65,18 +65,18 @@ public:
 
 protected:
     KDGanttViewItem( Type type, KDGanttView* view,
-                     const QString& lvtext = QString::null,	//krazy:exclude=nullstrassign for old broken gcc
-                     const QString& name = QString::null );	//krazy:exclude=nullstrassign for old broken gcc
+                     const QString& lvtext = QString(),
+                     const QString& name = QString() );
     KDGanttViewItem( Type type, KDGanttViewItem* parent,
-                     const QString& lvtext = QString::null,	//krazy:exclude=nullstrassign for old broken gcc
-                     const QString& name = QString::null );	//krazy:exclude=nullstrassign for old broken gcc
+                     const QString& lvtext = QString(),
+                     const QString& name = QString() );
     KDGanttViewItem( Type type, KDGanttView* view, KDGanttViewItem* after,
-                     const QString& lvtext = QString::null,	//krazy:exclude=nullstrassign for old broken gcc
-                     const QString& name = QString::null );	//krazy:exclude=nullstrassign for old broken gcc
+                     const QString& lvtext = QString(),
+                     const QString& name = QString() );
     KDGanttViewItem( Type type, KDGanttViewItem* parent,
                      KDGanttViewItem* after,
-                     const QString& lvtext = QString::null,	//krazy:exclude=nullstrassign for old broken gcc
-                     const QString& name = QString::null );	//krazy:exclude=nullstrassign for old broken gcc
+                     const QString& lvtext = QString(),
+                     const QString& name = QString() );
 
     void checkCoord( int * );
     bool isVisibleInGanttView;

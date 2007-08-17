@@ -165,7 +165,7 @@ MALWidgetSetup::~MALWidgetSetup()
 		fConfigWidget->proxyCustomPort->setText( QString::number(proxyPortNr) );
 	}
 	fConfigWidget->proxyUserName->setText(MALConduitSettings::proxyUser());
-	fConfigWidget->proxyPassword->setText(QString::null);	//krazy:exclude=nullstrassign for old broken gcc
+	fConfigWidget->proxyPassword->setText(QString());
 	fConfigWidget->proxyPassword->insert(MALConduitSettings::proxyPassword());
 
 	// MAL Server settings (not yet possible!!!)
