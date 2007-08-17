@@ -396,7 +396,7 @@ bool DeviceCommThread::open(const QString &device)
 		e = errno;
 		msg = i18n("Cannot create socket for communicating "
 			"with the Pilot (%1)",errorMessage(e));
-		WARNINGKPILOT << msg << " (" << strerror(e) << ')';
+		DEBUGKPILOT << msg << " (" << strerror(e) << ')';
 	
 		link()->fLinkStatus = PilotLinkError;
 		
@@ -561,7 +561,7 @@ bool DeviceCommThread::open(const QString &device)
 
 void DeviceCommThread::close()
 {
-	FUNCTIONSETUPL(4);
+	FUNCTIONSETUPL(2);
 
 	pi_close(fTempSocket);
 
@@ -755,7 +755,7 @@ void KPilotDeviceLink::stopCommThread()
 
 void KPilotDeviceLink::close()
 {
-	FUNCTIONSETUP;
+	FUNCTIONSETUPL(2);
 
 	stopCommThread();
 
