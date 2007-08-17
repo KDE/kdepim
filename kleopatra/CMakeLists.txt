@@ -11,6 +11,7 @@ add_subdirectory( tests )
 ########### next target ###############
 
 set(kleopatra_bin_SRCS ${libconf_SRCS}
+   utils/formatting.cpp
    models/keylistmodel.cpp
    models/keylistsortfilterproxymodel.cpp
    models/subkeylistmodel.cpp

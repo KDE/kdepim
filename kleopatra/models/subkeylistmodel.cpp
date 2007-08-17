@@ -32,10 +32,12 @@
 
 #include "subkeylistmodel.h"
 
+#include <utils/formatting.h>
+
 #include <gpgme++/key.h>
 
 #include <QVariant>
-#include <QDateTime>
+#include <QDate>
 
 #include <boost/bind.hpp>
 
@@ -167,39 +169,23 @@ QVariant SubkeyListModel::data( const QModelIndex & idx, int role ) const {
     if ( subkey.isNull() )
 	return QVariant();
 
-    switch ( const int column = idx.column() ) {
-
+    switch ( idx.column() ) {
     case ID:
 	return QString::fromLatin1( subkey.keyID() );
-
     case Type:
-	return QString::fromUtf8( subkey.publicKeyAlgorithmAsString() );
-
+	return Formatting::type( subkey );
     case ValidFrom:
+	if ( role == Qt::EditRole )
+	    return Formatting::creationDate( subkey );
+	else
+	    return Formatting::creationDateString( subkey );
     case ValidUntil:
-	{
-	    if ( column == ValidUntil && subkey.neverExpires() )
-		return QVariant();//tr("Indefinitely");
-	    const time_t t = column == ValidUntil ? subkey.expirationTime() : subkey.creationTime() ;
-	    QDateTime dt;
-	    dt.setTime_t( t );
-	    if ( role == Qt::EditRole )
-		return dt.date();
-	    else
-		return dt.date().toString();
-	}
-
+	if ( role == Qt::EditRole )
+	    return Formatting::expirationDate( subkey );
+	else
+	    return Formatting::expirationDateString( subkey );
     case Status:
-	if ( subkey.isRevoked() )
-	    return tr("revoked");
-	if ( subkey.isExpired() )
-	    return tr("expired");
-	if ( subkey.isDisabled() )
-	    return tr("disabled");
-	if ( subkey.isInvalid() )
-	    return tr("invalid");
-	return tr("good");
-
+	return Formatting::validityShort( subkey );
     case Bits:
 	return subkey.length();
     }
