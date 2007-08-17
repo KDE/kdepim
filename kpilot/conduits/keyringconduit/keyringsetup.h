@@ -27,6 +27,8 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
+#include <kwallet.h>
+
 #include "plugin.h"
 
 #include "ui_keyringwidget.h"
@@ -50,6 +52,7 @@ private: // Functions
 private: // Members
 	Ui::KeyringWidget fUi;
 	KAboutData *fAbout;
+	KWallet::Wallet * fWallet;
 };
 
 #endif
