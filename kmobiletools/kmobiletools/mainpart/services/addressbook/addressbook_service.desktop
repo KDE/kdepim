@@ -2,7 +2,17 @@
 Encoding=UTF-8
 Type=Service
 Name=Addressbook service
+Name[ga]=Seirbhís leabhair seoltaí
+Name[ja]=アドレス帳サービス
+Name[pt]=Serviço do Livro de Endereços
+Name[pt_BR]=Serviço do Livro de Endereços
 Comment=A KMobileTools service that provides address book functions
+Comment[ja]=アドレス帳の機能を提供する KMobileTools サービス
+Comment[pt]=Um serviço do KMobileTools que oferece o acesso às funções de agenda
+Comment[pt_BR]=Um serviço do KMobileTools que oferece o acesso às funções de agenda
 ServiceTypes=KMobileTools/CoreService
 Description=This service provides KMobileTools with address book functions
+Description[ja]=このサービスは KMobileTools にアドレス帳の機能を提供します
+Description[pt]=Este serviço permite ao KMobileTools o acesso às funções de agenda
+Description[pt_BR]=Este serviço permite ao KMobileTools o acesso às funções de agenda
 X-KDE-Library=libkmtaddressbook_service

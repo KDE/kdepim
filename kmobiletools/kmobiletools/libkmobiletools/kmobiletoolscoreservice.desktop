@@ -4,6 +4,10 @@ Type=ServiceType
 X-KDE-ServiceType=KMobileTools/CoreService
 X-KDE-Derived=KPluginInfo
 Comment=KMobileTools CoreService
+Comment[ga]=CroíSheirbhís KMmobileTools
+Comment[ja]=KMobileTools コアサービス
+Comment[pt]=Serviço Básico do KMobileTools
+Comment[pt_BR]=Serviço Básico do KMobileTools
 
 [PropertyDef::Description]
 Type=QString
