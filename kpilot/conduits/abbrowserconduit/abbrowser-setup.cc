@@ -120,7 +120,7 @@ AbbrowserWidgetSetup::~AbbrowserWidgetSetup()
 	AbbrowserSettings::setCustom3(fConfigWidget->fCustom3->currentItem());
 	int fmtindex=fConfigWidget->fCustomDate->currentItem();
 	AbbrowserSettings::setCustomDateFormat(
-	  (fmtindex==0)?(QString::null):fConfigWidget->fCustomDate->currentText() );
+	  (fmtindex==0)?(QString::null):fConfigWidget->fCustomDate->currentText() );	//krazy:exclude=nullstrassign for old broken gcc
 
 	AbbrowserSettings::self()->writeConfig();
 	unmodified();

@@ -431,7 +431,7 @@ void CertificateWizardImpl::sendCertificate( const QString& email, const QByteAr
 #warning Port me to DBus!
 #endif
   QString dbusService;
-  int result = KDBusServiceStarter::self()->findServiceFor( "DBUS/Mailer", QString::null, &error, &dbusService );
+  int result = KDBusServiceStarter::self()->findServiceFor( "DBUS/Mailer", QString::null, &error, &dbusService );	//krazy:exclude=nullstrassign for old broken gcc
   if ( result != 0 ) {
     kDebug() <<"Couldn't connect to KMail";
     KMessageBox::error( this,

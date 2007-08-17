@@ -379,13 +379,13 @@ public:
     virtual KDGanttViewItem* createNewItem( QString KDGanttViewItemTypeAsString,
                                     KDGanttViewItem* parent = 0,
                                     KDGanttViewItem* after = 0,
-                                    const QString& lvtext = QString::null,
-                                    const QString& name = QString::null  );
+                                    const QString& lvtext = QString::null,	//krazy:exclude=nullstrassign for old broken gcc
+                                    const QString& name = QString::null  );	//krazy:exclude=nullstrassign for old broken gcc
     virtual KDGanttViewItem* createUserDefinedItem( QString KDGanttViewItemTypeAsString,
                                                     KDGanttViewItem* parent = 0,
                                                     KDGanttViewItem* after = 0,
-                                                    const QString& lvtext = QString::null,
-                                                    const QString& name = QString::null  );
+                                                    const QString& lvtext = QString::null,	//krazy:exclude=nullstrassign for old broken gcc
+                                                    const QString& name = QString::null  );	//krazy:exclude=nullstrassign for old broken gcc
 
     void setConnectorEnabled( int connector, bool state );
     bool isConnectorEnabled( int connector ) const;

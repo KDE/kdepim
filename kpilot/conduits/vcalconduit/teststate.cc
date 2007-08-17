@@ -38,7 +38,7 @@
 #include "teststate.h"
 #include "vcal-conduitbase.h"
 
-TestState::TestState() : fCalendar( QString::null )
+TestState::TestState() : fCalendar( QString::null )	//krazy:exclude=nullstrassign for old broken gcc
 {
 	fState = eTest;
 }

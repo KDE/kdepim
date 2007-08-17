@@ -80,7 +80,7 @@ const sysinfoEntry_t sysinfoEntries[] =
 ** This is a convenience define to update an item's "original setting".
 */
 #define updateSetting(i) { Q3CheckListItem *ubbu=(i); \
-	ubbu->setText(PART_SETTING,(ubbu->isOn() ? CSL1("1") : QString::null)); }
+	ubbu->setText(PART_SETTING,(ubbu->isOn() ? CSL1("1") : QString::null)); }	//krazy:exclude=nullstrassign for old broken gcc
 
 
 SysInfoWidgetConfig::SysInfoWidgetConfig(QWidget *w) :

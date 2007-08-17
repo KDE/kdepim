@@ -152,7 +152,7 @@ public:
     * - value @c 1: single quote @c '
     * - value @c 2: no quoting
     *
-    * @return the quoting character/string. Can be @c QString::null
+    * @return the quoting character/string. Can be @c QString()
     *
     * @see delimiter()
     */
@@ -177,7 +177,7 @@ public:
     * @param addressee the addressbook entry to take the data from
     *
     * @return text representation of the specified addressee field's value.
-    *         Can be @c QString::null if the @p column is not mapped or
+    *         Can be @c QString() if the @p column is not mapped or
     *         the @p addressee or field is empty
     *
     * @see setFieldText()
@@ -290,7 +290,7 @@ private:
     * Actually uses the date format created by createDateFormat()
     *
     * @param date the date to format
-    * @return the formatted date or @c QString::null if @p date is not valid
+    * @return the formatted date or @c QString() if @p date is not valid
     *
     * @see QDateTime::toString()
     * @see QDateTime::isValid()

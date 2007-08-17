@@ -51,7 +51,7 @@ KCal::Todo* Task::xmlToTask( const QString& xml, const QString& tz, KCal::Resour
 
 QString Task::taskToXML( KCal::Todo* todo, const QString& tz )
 {
-  Task task( 0, QString::null, 0, tz, todo );
+  Task task( 0, QString::null, 0, tz, todo );	//krazy:exclude=nullstrassign for old broken gcc
   return task.saveXML();
 }
 

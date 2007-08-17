@@ -164,7 +164,7 @@ PilotDateEntry & PilotDateEntry::operator = (const PilotDateEntry & e)
 QString PilotDateEntry::getTextRepresentation(Qt::TextFormat richText)
 {
 	QString text, tmp;
-	QString par = (richText==Qt::RichText) ?CSL1("<p>"):QString::null;
+	QString par = (richText==Qt::RichText) ?CSL1("<p>"):QString();
 	QString ps = (richText==Qt::RichText) ?CSL1("</p>"):CSL1("\n");
 	QString br = (richText==Qt::RichText) ?CSL1("<br/>"):CSL1("\n");
 

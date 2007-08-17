@@ -309,7 +309,7 @@ namespace PluginUtility
 {
 	/** 
 	 * Searches the argument list for --foo=bar and returns bar, 
-	 * QString::null if not found.
+	 * QString() if not found.
 	 * Don't include the -- in the argname.
 	 */
 	KPILOT_EXPORT QString findArgument(const QStringList &a, const QString argname);

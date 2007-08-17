@@ -115,7 +115,7 @@ public:
     * The option description string contains each option and its respective
     * description for displaying to the user.
     *
-    * @return a short description of each option or @c QString::null if
+    * @return a short description of each option or @c QString() if
     *         the input format does not allow configuration options
     *
     * @note Implementations can return any formatting in the string, but
@@ -127,7 +127,7 @@ public:
     * @endcode
     * where tabs is either one or two tab characters depending on the length
     * of the option-name, e.g. two tabs for length < 8
-    * Default implementation returns @c QString::null
+    * Default implementation returns @c QString()
     */
     virtual QString optionUsage() const { return QString(); }
 

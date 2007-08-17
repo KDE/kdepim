@@ -43,17 +43,17 @@ class KDGanttViewTaskItem : public KDGanttViewItem
 {
 public:
     KDGanttViewTaskItem( KDGanttView* view,
-                            const QString& lvtext = QString::null,
-                            const QString& name = QString::null );
+                            const QString& lvtext = QString::null,	//krazy:exclude=nullstrassign for old broken gcc
+                            const QString& name = QString::null );	//krazy:exclude=nullstrassign for old broken gcc
     KDGanttViewTaskItem( KDGanttViewItem* parent,
-                            const QString& lvtext = QString::null,
-                            const QString& name = QString::null );
+                            const QString& lvtext = QString::null,	//krazy:exclude=nullstrassign for old broken gcc
+                            const QString& name = QString::null );	//krazy:exclude=nullstrassign for old broken gcc
     KDGanttViewTaskItem( KDGanttView* view, KDGanttViewItem* after,
-                            const QString& lvtext = QString::null,
-                            const QString& name = QString::null );
+                            const QString& lvtext = QString::null,	//krazy:exclude=nullstrassign for old broken gcc
+                            const QString& name = QString::null );	//krazy:exclude=nullstrassign for old broken gcc
     KDGanttViewTaskItem( KDGanttViewItem* parent, KDGanttViewItem* after,
-                            const QString& lvtext = QString::null,
-                            const QString& name = QString::null );
+                            const QString& lvtext = QString::null,	//krazy:exclude=nullstrassign for old broken gcc
+                            const QString& name = QString::null );	//krazy:exclude=nullstrassign for old broken gcc
     virtual ~KDGanttViewTaskItem();
 
     virtual bool moveConnector( Connector, QPoint p );

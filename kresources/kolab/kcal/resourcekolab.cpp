@@ -1114,7 +1114,7 @@ bool ResourceKolab::addSubresource( const QString& resource, const QString& pare
      QStringList contentTypeChoices;
      contentTypeChoices << i18n("Calendar") << i18n("Tasks") << i18n("Journals");
      const QString caption = i18n("Which kind of subresource should this be?");
-     const QString choice = KInputDialog::getItem( caption, QString::null, contentTypeChoices );
+     const QString choice = KInputDialog::getItem( caption, QString::null, contentTypeChoices );	//krazy:exclude=nullstrassign for old broken gcc
      if ( choice == contentTypeChoices[0] )
        contentsType = kmailCalendarContentsType;
      else if ( choice == contentTypeChoices[1] )

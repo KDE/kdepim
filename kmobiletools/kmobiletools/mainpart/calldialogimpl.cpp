@@ -80,7 +80,7 @@ void callDialogImpl::done(int r)
 
 
 /*!
-    \fn callDialogImpl::call(const QString &number, const QString &showName=QString::null)
+    \fn callDialogImpl::call(const QString &number, const QString &showName=QString())
  */
 int callDialogImpl::call(const QString &number, const QString &showName)
 {

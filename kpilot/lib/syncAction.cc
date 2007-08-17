@@ -333,7 +333,7 @@ int SyncAction::questionYesNo(const QString & text,
 		QMessageBox::Question,
 		text,
 		QStringList(),
-		(key.isEmpty() ? QString::null : i18n("&Do not ask again")),
+		(key.isEmpty() ? QString::null : i18n("&Do not ask again")),	//krazy:exclude=nullstrassign for old broken gcc
 		&checkboxReturn,
 		0);
 
@@ -404,7 +404,7 @@ int SyncAction::questionYesNoCancel(const QString & text,
 		QMessageBox::Question,
 		text,
 		QStringList(),
-		(key.isEmpty() ? QString::null : i18n("&Do not ask again")),
+		(key.isEmpty() ? QString::null : i18n("&Do not ask again")),	//krazy:exclude=nullstrassign for old broken gcc
 		&checkboxReturn,
 		0);
 

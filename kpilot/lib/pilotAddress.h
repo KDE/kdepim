@@ -225,7 +225,7 @@ public:
 		}
 	}
 
-	/** Returns the text value of a given field @p field (or QString::null
+	/** Returns the text value of a given field @p field (or QString()
 	*   if there is no such field).
 	*/
 	QString getField(int field) const;

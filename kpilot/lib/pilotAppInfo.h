@@ -102,7 +102,7 @@ public:
 		return Pilot::findCategory(fC,name,unknownIsUnfiled);
 	} ;
 
-	/** Gets a single category name. Returns QString::null if there is no
+	/** Gets a single category name. Returns QString() if there is no
 	* such category number @p i . */
 	inline QString categoryName(unsigned int i) const
 	{

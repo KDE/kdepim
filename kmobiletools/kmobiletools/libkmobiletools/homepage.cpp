@@ -282,7 +282,7 @@ void homepagePart::slotContextMenu(const QString& urlString, const QPoint& point
 {
     kDebug() <<"homepagePart::slotContextMenu(\"" << urlString <<"\"," << point <<") engine:" << d->p_engine <<";";
     KUrl url(urlString);
-//     if(urlString==QString::null && p_engine) url=KUrl::fromPathOrUrl( QString("mobile:%1").arg(p_engine->objectName() ));
+//     if(urlString==QString() && p_engine) url=KUrl::fromPathOrUrl( QString("mobile:%1").arg(p_engine->objectName() ));
     KMenu *m_popup=0;
     if(url.protocol() == "mobile" || d->p_engine)
     {

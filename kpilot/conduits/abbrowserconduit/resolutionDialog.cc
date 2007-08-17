@@ -74,11 +74,11 @@ protected:
 
 ResolutionCheckListItem::ResolutionCheckListItem(ResolutionItem*it,
 		ResolutionTable*tb, Q3ListView*parent) :
-	Q3CheckListItem(parent, QString::null, Q3CheckListItem::Controller),
+	Q3CheckListItem(parent, QString::null, Q3CheckListItem::Controller),	//krazy:exclude=nullstrassign for old broken gcc
 	fResItem(it),
 	isController(true),
-	fCaption(it?(it->fName):(QString::null)),
-	fText(it?(it->fResolved):(QString::null))
+	fCaption(it?(it->fName):(QString::null)),	//krazy:exclude=nullstrassign for old broken gcc
+	fText(it?(it->fResolved):(QString::null))	//krazy:exclude=nullstrassign for old broken gcc
 {
 	FUNCTIONSETUP;
 	if (it && tb)
@@ -86,7 +86,7 @@ ResolutionCheckListItem::ResolutionCheckListItem(ResolutionItem*it,
 		// If all three texts are identical, there is no need for
 		// resolution so don't show the radio items below
 		bool itemsEqual=true;
-		QString testtext(QString::null);
+		QString testtext(QString::null);	//krazy:exclude=nullstrassign for old broken gcc
 		const enum eExistItems its[3]={eExistsPC, eExistsPalm, eExistsBackup};
 		// get a valid text from a valid field, which will serve as the
 		// test text for the comparison

@@ -656,7 +656,7 @@ void Incidence::setFields( const KCal::Incidence* incidence )
   // Handle the scheduling ID
   if ( incidence->schedulingID() == incidence->uid() ) {
     // There is no scheduling ID
-    setInternalUID( QString::null );
+    setInternalUID( QString::null );	//krazy:exclude=nullstrassign for old broken gcc
   } else {
     // We've internally been using a different uid, so save that as the
     // temporary (internal) uid and restore the original uid, the one that
