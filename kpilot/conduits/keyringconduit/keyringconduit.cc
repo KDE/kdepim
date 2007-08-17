@@ -50,12 +50,7 @@ void KeyringConduit::loadSettings()
 {
 	FUNCTIONSETUP;
 	
-	// The url is of the form: file:///home/user/more/dirs/database.pdb
-	// The localdatabase class expects: /home/user/more/dirs/database
-	// So lets strip of somee stuff:
-	// TODO: Maybe we should do some checks here of the string.
-	QString url = KeyringConduitSettings::databaseUrl();
-	fPcDatastoreUrl = url.mid( 7, url.length() - 4 );
+	fPcDatastoreUrl = KeyringConduitSettings::databaseUrl();
 	
 	if( KeyringConduitSettings::passwordSetting() == KeyringConduitSettings::Wallet )
 	{

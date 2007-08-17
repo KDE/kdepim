@@ -94,9 +94,9 @@ KeyringWidgetSetup::~KeyringWidgetSetup()
 
 	DEBUGKPILOT
 		<< ": Database file="
-		<< fUi.fLocalDatabaseUrl->url().url();
+		<< fUi.fLocalDatabaseUrl->url().path();
 
-	KeyringConduitSettings::setDatabaseUrl( fUi.fLocalDatabaseUrl->url().url() );
+	KeyringConduitSettings::setDatabaseUrl( fUi.fLocalDatabaseUrl->url().path() );
 	
 	if( fUi.fSavePassButton->isChecked() )
 	{
