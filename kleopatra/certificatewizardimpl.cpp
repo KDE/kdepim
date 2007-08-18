@@ -499,7 +499,7 @@ void CertificateWizardImpl::accept()
     // Save in file/URL
     KUrl url = saveFileUrl();
     bool overwrite = false;
-    if ( KIO::NetAccess::exists( url, false /*dest*/, this ) ) {
+    if ( KIO::NetAccess::exists( url, KIO::NetAccess::DestinationSide /*dest*/, this ) ) {
       if ( KMessageBox::Cancel == KMessageBox::warningContinueCancel(
                                                                      this,
                                                                      i18n( "A file named \"%1\" already exists. "

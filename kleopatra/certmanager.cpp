@@ -1270,7 +1270,7 @@ void CertManager::startCertificateExport( const QStringList & fingerprints ) {
 // return true if we should proceed, false if we should abort
 static bool checkOverwrite( const KUrl& url, bool& overwrite, QWidget* w )
 {
-  if ( KIO::NetAccess::exists( url, false /*dest*/, w ) ) {
+  if ( KIO::NetAccess::exists( url, KIO::NetAccess::DestinationSide /*dest*/, w ) ) {
     if ( KMessageBox::Cancel ==
          KMessageBox::warningContinueCancel(
                                             w,
