@@ -21,7 +21,8 @@
 #define SERVICELOADER_H
 
 #include <QtCore/QObject>
-#include <KPluginInfo>
+#include <QtCore/QStringList>
+#include <KDE/KPluginInfo>
 
 #include "kmobiletools_export.h"
 
