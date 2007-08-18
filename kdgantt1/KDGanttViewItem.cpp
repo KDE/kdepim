@@ -2999,8 +2999,8 @@ bool KDGanttViewItem::isMyTextCanvas(QCanvasItem *tc)
 
 void KDGanttViewItem::setProgress(int percent)
 {
-    myProgress = QMAX(0, percent);
-    myProgress = QMIN(100, myProgress);
+    myProgress = qMax(0, percent);
+    myProgress = qMin(100, myProgress);
 }
 
 /*!
