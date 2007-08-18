@@ -21,6 +21,7 @@
 #define SERVICEMODEL_H
 
 #include <QtCore/QAbstractItemModel>
+#include <libkmobiletools/coreservice.h>
 
 class DeviceItem;
 class TreeItem;
@@ -42,6 +43,15 @@ public:
     ServiceModel( QObject* parent = 0 );
     ~ServiceModel();
 
+    /**
+     * Returns the device item associated with the given @p deviceName
+     *
+     * @param deivceName the device name
+     *
+     * @return the device item if available, else null
+     */
+    DeviceItem* deviceItemFromName( const QString& deviceName ) const;
+
     QModelIndex index( int row, int column, const QModelIndex& parent = QModelIndex() ) const;
     QModelIndex parent( const QModelIndex& index ) const;
 
@@ -51,6 +61,8 @@ public:
 
     int columnCount( const QModelIndex& parent = QModelIndex() ) const;
     int rowCount( const QModelIndex& parent = QModelIndex() ) const;
+
+    QList<DeviceItem*> deviceItems() const;
 
 public Q_SLOTS:
     /**
@@ -66,6 +78,22 @@ public Q_SLOTS:
      * @param deviceName the name of the removed device
      */
     void deviceUnloaded( const QString& deviceName );
+
+    /**
+     * This slot adds a new ServiceItem node and should be called whenever a new service was loaded
+     *
+     * @param deviceName the device associated with the service
+     * @param service the service that was added
+     */
+    void serviceLoaded( const QString& deviceName, KMobileTools::CoreService* service );
+
+    /**
+     * This slot removes a ServiceItem node and should be called whenever a service was removed
+     *
+     * @param deviceName the device associated with the service
+     * @param service the service that was removed
+     */
+    void serviceUnloaded( const QString& deviceName, KMobileTools::CoreService* service );
 
 private:
     TreeItem* m_rootItem;

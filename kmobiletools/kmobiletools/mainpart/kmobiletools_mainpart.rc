@@ -1,5 +1,5 @@
 <!DOCTYPE kpartgui SYSTEM "kpartgui.dtd">
-<kpartgui name="kmobiletools_mainpart" version="600">
+<kpartgui name="kmobiletools_mainpart" version="802">
     <MenuBar>
         <Menu name="file"><text>&amp;File</text>
             <Action name="home"/>
@@ -25,7 +25,10 @@
         <Action name="next" />
         <Action name="help" />
     </ToolBar>
-    <ToolBar newline="true" hidden="true" name="serviceToolBar">
-	<ActionList name="serviceactions" />
+    <ToolBar hidden="true" name="serviceToolBar">
+        <ActionList name="serviceactions" />
+    </ToolBar>
+    <ToolBar hidden="true" name="deviceToolBar">
+	<ActionList name="deviceactions" />
     </ToolBar>
 </kpartgui>

@@ -105,9 +105,9 @@ bool DeviceLoader::loadDevice( const QString& deviceName, const QString& engineN
         return false;
 
     // retrieve information about the engine
-    d->m_engineInformation[deviceName] = KPluginInfo( d->m_engineOffers.at( serviceNumber ) );
+    d->m_engineInformation.insert( deviceName, KPluginInfo( d->m_engineOffers.at( serviceNumber ) ) );
 
-    d->m_loadedDevices[deviceName] = engine;
+    d->m_loadedDevices.insert( deviceName, engine );
     emit deviceLoaded( deviceName );
 
     return true;
@@ -115,7 +115,7 @@ bool DeviceLoader::loadDevice( const QString& deviceName, const QString& engineN
 
 bool DeviceLoader::unloadDevice( const QString& deviceName ) {
     if( d->m_loadedDevices.contains( deviceName ) ) {
-        delete d->m_loadedDevices[deviceName];
+        delete d->m_loadedDevices.value( deviceName );
         d->m_loadedDevices.remove( deviceName );
         d->m_engineInformation.remove( deviceName );
 
@@ -127,14 +127,14 @@ bool DeviceLoader::unloadDevice( const QString& deviceName ) {
 
 EngineXP* DeviceLoader::engine( const QString& deviceName ) const {
     if( d->m_loadedDevices.contains( deviceName ) )
-        return d->m_loadedDevices[deviceName];
+        return d->m_loadedDevices.value( deviceName );
 
     return 0;
 }
 
 KPluginInfo DeviceLoader::engineInformation( const QString& deviceName ) const {
     if( d->m_engineInformation.contains( deviceName ) )
-        return d->m_engineInformation[deviceName];
+        return d->m_engineInformation.value( deviceName );
 
     return KPluginInfo();
 }

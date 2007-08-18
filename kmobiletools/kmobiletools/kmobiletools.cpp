@@ -61,6 +61,8 @@ kmobiletools::kmobiletools()
             // setup tool bar for kmobiletools core services
             connect( m_part, SIGNAL(showServiceToolBar(bool)),
                     this, SLOT(showServiceToolBar(bool)) );
+            connect( m_part, SIGNAL(showDeviceToolBar(bool)),
+                    this, SLOT(showDeviceToolBar(bool)) );
         }
     }
     else
@@ -112,8 +114,12 @@ void kmobiletools::optionsConfigureToolbars()
 
 void kmobiletools::showServiceToolBar( bool showToolBar )
 {
-    /// @TODO why is hidden="true" ignored in the xml file???
     toolBar( "serviceToolBar" )->setVisible( showToolBar );
+}
+
+void kmobiletools::showDeviceToolBar( bool showToolBar )
+{
+    toolBar( "deviceToolBar" )->setVisible( showToolBar );
 }
 
 void kmobiletools::applyNewToolbarConfig()

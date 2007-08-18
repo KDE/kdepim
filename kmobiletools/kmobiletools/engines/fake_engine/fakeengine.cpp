@@ -21,6 +21,7 @@
 
 #include <QtGui/QVBoxLayout>
 #include <QtCore/QMutexLocker>
+#include <QtCore/QTimer>
 #include <KDebug>
 
 FakeEngine::FakeEngine( QObject *parent )
@@ -45,6 +46,7 @@ FakeEngine::FakeEngine( QObject *parent )
 
 void FakeEngine::status( const QString& statusInformation )
 {
+    QMutexLocker locker( &m_displayMutex );
     m_status->append( statusInformation );
 }
 
@@ -52,10 +54,24 @@ FakeEngine::~FakeEngine()
 {
 }
 
-void FakeEngine::initialize( const QString& deviceName )
+void FakeEngine::connectDevice( const QString& deviceName )
 {
-    QMutexLocker locker( &m_displayMutex );
     status( QString( "Initialized device %1" ).arg( deviceName ) );
+    m_initialized = true;
+    emit deviceConnected();
+}
+
+void FakeEngine::disconnectDevice()
+{
+    if( !m_initialized ) {
+        status( QString( "Engine is not initialized yet." ) );
+        emit deviceDisconnected();
+        return;
+    }
+
+    m_initialized = false;
+    status( QString( "Shut down succeeded ;-)" ));
+    QTimer::singleShot( 5*1000, this, SIGNAL(deviceDisconnected()) );
 }
 
 int FakeEngine::signalStrength() const
@@ -137,14 +153,39 @@ QString FakeEngine::revision() const
 
 void FakeEngine::fetchStatusInformation()
 {
-    m_statusInformationFetched = true;
+    if( !m_initialized ) {
+        status( QString( "Engine is not initialized yet." ) );
+        return;
+    }
+
+    if( !m_statusInformationFetched ) {
+        m_statusInformationFetched = true;
+
+        emit signalStrengthChanged( signalStrength() );
+        emit chargeChanged( charge() );
+        emit chargeTypeChanged( powerSupplyType() );
+        emit phoneRinging( ringing() );
+    }
+
     status( "Status information fetched." );
+    emit statusInformationFetched();
 }
 
 void FakeEngine::fetchInformation()
 {
-    m_informationFetched = true;
+    if( !m_initialized ) {
+        status( QString( "Engine is not initialized yet." ) );
+        return;
+    }
+
+    if( !m_informationFetched ) {
+        m_informationFetched = true;
+
+        emit networkNameChanged( networkName() );
+    }
+
     status( "Mobile phone information fetched." );
+    emit informationFetched();
 }
 
 void FakeEngine::populateAddressbook()
@@ -170,6 +211,11 @@ void FakeEngine::populateAddressbook()
 
 void FakeEngine::fetchAddressbook()
 {
+    if( !m_initialized ) {
+        status( QString( "Engine is not initialized yet." ) );
+        return;
+    }
+
     // first fetch?
     if( !m_addressbookFetched )
         populateAddressbook();

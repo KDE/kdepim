@@ -19,22 +19,32 @@
 
 #include "deviceitem.h"
 
-#include <libkmobiletools/enginexp.h>
+#include <QtGui/QAction>
+
+#include <KLocale>
+#include <KDebug>
+
 #include <libkmobiletools/deviceloader.h>
-#include <libkmobiletools/ifaces/coreservice.h>
-#include <libkmobiletools/ifaces/guiservice.h>
-
-#include <KService>
-#include <KServiceTypeTrader>
-
-#include <QStringList>
-
-#include "serviceitem.h"
 
 DeviceItem::DeviceItem( const QString& name, TreeItem* parent )
 : TreeItem( name, parent )
 {
-    queryServices();
+    m_engine = KMobileTools::DeviceLoader::instance()->engine( name );
+
+    m_connectDeviceAction = new QAction( i18n( "Connect device" ), this );
+    m_disconnectDeviceAction = new QAction( i18n( "Disconnect device" ), this );
+
+    m_connectDeviceAction->setEnabled( !m_engine->connected() );
+    m_disconnectDeviceAction->setEnabled( m_engine->connected() );
+
+    connect( m_connectDeviceAction, SIGNAL(triggered()), this, SLOT(connectDevice()) );
+    connect( m_disconnectDeviceAction, SIGNAL(triggered()), this, SLOT(disconnectDevice()) );
+
+    connect( m_engine, SIGNAL(deviceConnected()), this, SLOT(deviceConnected()) );
+    connect( m_engine, SIGNAL(deviceDisconnected()), this, SLOT(deviceDisconnected()) );
+
+    m_actionList.append( m_connectDeviceAction );
+    m_actionList.append( m_disconnectDeviceAction );
 }
 
 
@@ -42,55 +52,30 @@ DeviceItem::~DeviceItem()
 {
 }
 
-void DeviceItem::queryServices() {
-    KService::List serviceOffers = KServiceTypeTrader::self()->query( "KMobileTools/CoreService" );
+QList<QAction*> DeviceItem::actionList() const {
+    kDebug() << "action list requested" << endl;
+    return m_actionList;
+}
 
-    if( !serviceOffers.size() )
-        return;
+void DeviceItem::connectDevice() {
+    /// @todo add a timer or something if connecting fails...
+    m_connectDeviceAction->setEnabled( false );
+    m_engine->connectDevice( data().toString() );
+}
 
-    KMobileTools::EngineXP* engine = KMobileTools::DeviceLoader::instance()->engine( data().toString() );
-    if( !engine )
-        return;
+void DeviceItem::disconnectDevice() {
+    m_disconnectDeviceAction->setEnabled( false );
+    m_engine->disconnectDevice();
+}
 
-    // iterate over the services and look which one we can use
-    KMobileTools::Ifaces::CoreService* service;
-    QStringList deviceName;
-    deviceName << data().toString();
-    for( int i=0; i<serviceOffers.size(); i++ ) {
-        QObject* serviceObject = KService::createInstance<QObject>( serviceOffers.at( i ), (QObject*) 0, deviceName );
-        if( !serviceObject )
-            continue;
+void DeviceItem::deviceConnected() {
+    m_connectDeviceAction->setEnabled( false );
+    m_disconnectDeviceAction->setEnabled( true );
+}
 
-        service = qobject_cast<KMobileTools::Ifaces::CoreService*>( serviceObject );
-        if( !service )
-            continue;
-
-        bool fulfillsRequirements = true;
-        QStringList requirements = service->requires();
-        for( int j=0; j<requirements.size(); j++ ) {
-            if( !engine->implements( requirements.at(i) ) )
-                fulfillsRequirements = false;
-        }
-
-        // service fulfills our requirements
-        if( fulfillsRequirements ) {
-            ServiceItem* serviceItem = new ServiceItem( service->name(), this );
-            serviceItem->setService( serviceObject );
-
-            // now check if it's a gui service.. only gui services are worth being displayed ;-)
-            KMobileTools::Ifaces::GuiService* guiService =
-                        qobject_cast<KMobileTools::Ifaces::GuiService*>( serviceObject );
-
-            if( guiService )
-                serviceItem->setIcon( guiService->icon() );
-            else
-                serviceItem->setVisible( false );
-
-            appendChild( serviceItem );
-        }
-        else
-            delete service;
-    }
+void DeviceItem::deviceDisconnected() {
+    m_connectDeviceAction->setEnabled( true );
+    m_disconnectDeviceAction->setEnabled( false );
 }
 
 #include "deviceitem.moc"

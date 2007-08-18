@@ -75,6 +75,9 @@ DevicesConfig *DevicesConfig::prefs(const QString &groupName)
 
     devicesPrefs = new DevicesConfig(groupName);
     devicesPrefs->readConfig();
+
+    /// @TODO port to EngineXP
+    /*
     QString libname=devicesPrefs->engine();
     delete devicesPrefs;
     kDebug() <<"DevicesConfig::prefs(" << groupName <<"); loading engine" << libname;
@@ -83,6 +86,8 @@ DevicesConfig *DevicesConfig::prefs(const QString &groupName)
     devicesPrefs=engine->config(true, groupName);
     delete engine;
     m_prefs->insert(groupName, devicesPrefs);
+    */
+
     return devicesPrefs;
 }
 

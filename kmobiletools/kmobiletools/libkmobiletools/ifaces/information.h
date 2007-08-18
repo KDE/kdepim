@@ -92,6 +92,12 @@ public:
 protected:
 //Q_SIGNALS:
     /**
+     * This signal is emitted when the phone information have been fetched from
+     * the phone
+     */
+    virtual void informationFetched() = 0;
+
+    /**
      * This signal is emitted whenever the network name changes
      */
     virtual void networkNameChanged( const QString& networkName ) = 0;

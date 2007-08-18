@@ -17,25 +17,36 @@
    Boston, MA 02110-1301, USA.
  ***************************************************************************/
 
-#ifndef KMOBILETOOLSIFACESSERVICE_H
-#define KMOBILETOOLSIFACESSERVICE_H
+#ifndef KMOBILETOOLSCORESERVICE_H
+#define KMOBILETOOLSCORESERVICE_H
 
-#include <libkmobiletools/kmobiletools_export.h>
+#include "kmobiletools_export.h"
 
 #include <QtCore/QObject>
 #include <QtCore/QString>
 #include <QtGui/QWidget>
+#include <KDE/KIcon>
 
 namespace KMobileTools {
 
-namespace Ifaces {
 /**
- * This interface defines a KMobileTools core service
+ * This is the base class for KMobileTools' core services
  *
  * @author Matthias Lechner <matthias@lmme.de>
  */
-class KMOBILETOOLS_EXPORT CoreService {
+class KMOBILETOOLS_EXPORT CoreService : public QObject {
+    Q_OBJECT
 public:
+    /**
+     * Constructs a new CoreService object with the given @p parent
+     *
+     * @param parent the object's parent
+     */
+    CoreService( QObject *parent );
+
+
+    virtual ~CoreService();
+
     /**
      * Returns the service's name
      *
@@ -51,14 +62,16 @@ public:
      */
     virtual QStringList requires() const = 0;
 
-    virtual ~CoreService();
-
+    /**
+     * Checks if the service implements a given interface
+     *
+     * @param interfaceName the plain name of the interface, e.g. "GuiService"
+     *
+     * @return true, if the service implements the given interface
+     */
+    bool implements( const QString& interfaceName );
 };
 
 }
-
-}
-
-Q_DECLARE_INTERFACE(KMobileTools::Ifaces::CoreService, "org.kde.KMobileTools.Ifaces.CoreService/0.1")
 
 #endif

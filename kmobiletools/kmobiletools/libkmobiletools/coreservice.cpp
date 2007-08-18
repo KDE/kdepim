@@ -21,12 +21,23 @@
 
 namespace KMobileTools {
 
-namespace Ifaces {
-
-CoreService::~CoreService()
+CoreService::CoreService( QObject* parent )
+: QObject( parent )
 {
 }
 
+CoreService::~CoreService() {
+
+}
+
+bool CoreService::implements( const QString& interfaceName ) {
+    QString qualifiedInterfaceName = QString( "KMobileTools::Ifaces::%1" ).arg( interfaceName );
+    if( inherits( qualifiedInterfaceName.toUtf8() ) )
+        return true;
+
+    return false;
 }
 
 }
+
+#include "coreservice.moc"

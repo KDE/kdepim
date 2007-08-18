@@ -22,9 +22,11 @@
 
 #include <QtCore/QString>
 #include <QtCore/QList>
+#include <libkmobiletools/enginexp.h>
 
 #include "treeitem.h"
 
+class QAction;
 /**
  * @author Matthias Lechner <matthias@lmme.de>
  */
@@ -34,8 +36,21 @@ public:
     DeviceItem( const QString& name, TreeItem* parent );
     ~DeviceItem();
 
+    QList<QAction*> actionList() const;
+
+private Q_SLOTS:
+    void connectDevice();
+    void disconnectDevice();
+
+    void deviceConnected();
+    void deviceDisconnected();
+
 private:
-    void queryServices();
+    QList<QAction*> m_actionList;
+    QAction* m_connectDeviceAction;
+    QAction* m_disconnectDeviceAction;
+
+    KMobileTools::EngineXP* m_engine;
 };
 
 #endif

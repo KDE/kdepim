@@ -25,7 +25,7 @@
 #include <klistwidgetsearchline.h>
 #include <KTextBrowser>
 
-#include <libkmobiletools/ifaces/coreservice.h>
+#include <libkmobiletools/coreservice.h>
 #include <libkmobiletools/ifaces/guiservice.h>
 #include <libkmobiletools/ifaces/actionprovider.h>
 
@@ -56,14 +56,12 @@ class QPoint;
  * @TODO implement html viewer
  * @TODO change KListWidgetSearchLine to a proxy model since it currently causes crashes
  */
-class Addressbook : public QObject,                             // base class
-                    public KMobileTools::Ifaces::CoreService,   // interfaces
-                    public KMobileTools::Ifaces::GuiService,
+class Addressbook : public KMobileTools::CoreService,              // base class
+                    public KMobileTools::Ifaces::GuiService,       // interfaces
                     public KMobileTools::Ifaces::ActionProvider
 {
     Q_OBJECT
-    Q_INTERFACES(KMobileTools::Ifaces::CoreService KMobileTools::Ifaces::GuiService)
-    Q_INTERFACES(KMobileTools::Ifaces::ActionProvider)
+    Q_INTERFACES(KMobileTools::Ifaces::GuiService KMobileTools::Ifaces::ActionProvider)
 
 public:
     Addressbook( QObject* parent, const QString& deviceName );

@@ -28,7 +28,6 @@ ServiceItem::ServiceItem( const QString& name, TreeItem* parent )
 
 ServiceItem::~ServiceItem()
 {
-    delete m_service;
 }
 
 

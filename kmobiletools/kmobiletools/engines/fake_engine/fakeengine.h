@@ -49,8 +49,6 @@ public:
     FakeEngine( QObject *parent );
     virtual ~FakeEngine();
 
-    void initialize( const QString& deviceName );
-
     //
     // Status interface implementation
     //
@@ -76,6 +74,9 @@ public:
     KMobileTools::Addressbook addressbook() const;
 
 public Q_SLOTS:
+    void connectDevice( const QString& deviceName );
+    void disconnectDevice();
+
     //
     // Status interface implementation
     //
@@ -97,11 +98,10 @@ public Q_SLOTS:
     void removeAddressee( const KMobileTools::AddressbookEntry& addressee );
 
 Q_SIGNALS:
-    void initialized( bool successful );
-
     //
     // Status interface implementation
     //
+    void statusInformationFetched();
     void signalStrengthChanged( int );
     void chargeChanged( int );
     void chargeTypeChanged( KMobileTools::Status::PowerSupplyType );
@@ -110,6 +110,7 @@ Q_SIGNALS:
     //
     // Information interface implementation
     //
+    void informationFetched();
     void networkNameChanged( const QString& );
 
     //
@@ -125,6 +126,8 @@ Q_SIGNALS:
 
 private:
     void populateAddressbook();
+
+    bool m_initialized;
 
     bool m_statusInformationFetched;
     bool m_informationFetched;

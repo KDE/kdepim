@@ -24,6 +24,9 @@ namespace KMobileTools {
 EngineXP::EngineXP( QObject *parent )
  : QObject( parent )
 {
+    m_connected = false;
+    connect( this, SIGNAL(deviceConnected()), this, SLOT(setDeviceConnected()) );
+    connect( this, SIGNAL(deviceDisconnected()), this, SLOT(setDeviceDisconnected()) );
 }
 
 
@@ -38,6 +41,18 @@ bool EngineXP::implements( const QString& interfaceName ) {
         return true;
 
     return false;
+}
+
+bool EngineXP::connected() const {
+    return m_connected;
+}
+
+void EngineXP::setDeviceConnected() {
+    m_connected = true;
+}
+
+void EngineXP::setDeviceDisconnected() {
+    m_connected = false;
 }
 
 }

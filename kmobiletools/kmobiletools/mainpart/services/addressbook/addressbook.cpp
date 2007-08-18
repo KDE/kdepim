@@ -37,7 +37,7 @@
 #include <libkmobiletools/enginexp.h>
 
 Addressbook::Addressbook( QObject* parent, const QString& deviceName )
-: QObject( parent )
+: CoreService( parent )
 {
     m_deviceName = deviceName;
 

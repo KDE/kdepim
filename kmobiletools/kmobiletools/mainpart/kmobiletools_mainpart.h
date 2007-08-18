@@ -28,6 +28,7 @@
 #include <QStringList>
 #include <QList>
 #include <QHash>
+#include <QMutex>
 
 #include "deviceslist.h"
 
@@ -44,8 +45,11 @@ class KAboutData;
 class KSystemTrayIcon;
 class ErrorLogDialog;
 class DeviceHome;
+class ServiceModel;
+class QProgressDialog;
 
 namespace KMobileTools {
+    class CoreService;
     class homepagePart;
 }
 
@@ -96,8 +100,6 @@ class kmobiletoolsMainPart : public KParts::ReadOnlyPart/*, virtual public MainI
         void loadDevicePart(const QString &deviceName, bool setActive=false);
         void configSlot( const QString& command );
         void deleteDevicePart(const QString &deviceName);
-        void deviceDisconnected();
-        void deviceConnected();
         void slotConfigNotify();
 
     private Q_SLOTS:
@@ -106,8 +108,11 @@ class kmobiletoolsMainPart : public KParts::ReadOnlyPart/*, virtual public MainI
         void prevPart();
 
         void deviceUnloaded( const QString& deviceName );
+        void removeServiceWidget( const QString&, KMobileTools::CoreService* );
+        void shutDownSucceeded();
 
         void slotQuit();
+        void slotFinallyQuit();
         void slotAutoLoadDevices();
 
         void treeItemClicked( const QModelIndex& index );
@@ -133,7 +138,10 @@ class kmobiletoolsMainPart : public KParts::ReadOnlyPart/*, virtual public MainI
          */
         void handleServiceItem( ServiceItem* serviceItem );
 
-        QHash<QString,QWidgetList> m_loadedWidgets;
+        QProgressDialog* m_shutDownDialog;
+
+        ServiceModel* m_serviceModel;
+        QMultiHash<QString,QWidget*> m_loadedWidgets;
 
         QStackedWidget *m_widget;
         QTreeView *p_listview;
@@ -146,8 +154,11 @@ class kmobiletoolsMainPart : public KParts::ReadOnlyPart/*, virtual public MainI
         ErrorLogDialog* m_errorLogDialog;
         DeviceManager* m_deviceManager;
 
+        QMutex m_mutex;
+
     signals:
         void showServiceToolBar( bool );
+        void showDeviceToolBar( bool );
 
         void devicesUpdated();
         void deviceChanged(const QString &);

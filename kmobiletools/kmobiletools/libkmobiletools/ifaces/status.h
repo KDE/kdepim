@@ -77,6 +77,12 @@ public:
 protected:
 //Q_SIGNALS:
     /**
+     * This signal is emitted when the status information have been fetched from
+     * the phone
+     */
+    virtual void statusInformationFetched() = 0;
+
+    /**
       * This signal is emitted whenever the signal strength has changed.
       *
       * @param signalStrength the signal level in percent

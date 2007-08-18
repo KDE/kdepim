@@ -20,7 +20,7 @@
 #ifndef SERVICEITEM_H
 #define SERVICEITEM_H
 
-#include <libkmobiletools/ifaces/coreservice.h>
+#include <libkmobiletools/coreservice.h>
 
 #include "treeitem.h"
 

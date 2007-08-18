@@ -16,11 +16,12 @@ set(kmobiletools_LIB_SRCS
    ifaces/smsfolders.cpp
    ifaces/status.cpp
    ifaces/information.cpp
-   ifaces/coreservice.cpp
    ifaces/guiservice.cpp
    ifaces/actionprovider.cpp
    enginexp.cpp
+   coreservice.cpp
    deviceloader.cpp
+   serviceloader.cpp
    addressbook.cpp
    addressbookentry.cpp
    aboutdata.cpp 
@@ -78,7 +79,6 @@ install(FILES
    ifaces/smsfolders.h
    ifaces/status.h
    ifaces/information.h
-   ifaces/coreservice.h
    ifaces/guiservice.h
    ifaces/actionprovider.h
    DESTINATION ${INCLUDE_INSTALL_DIR}/libkmobiletools/ifaces)
@@ -92,6 +92,7 @@ install(FILES
    status.h
    information.h
    enginexp.h
+   coreservice.h
    addressbook.h
    addressbookentry.h
    kmobiletools_export.h
@@ -101,6 +102,7 @@ install(FILES
    errorhandler.h
    errortypes/baseerror.h
    deviceloader.h
+   serviceloader.h
    engine.h
    sms.h
    smslist.h
