@@ -261,7 +261,7 @@ private:
 *
 * The actual formatting is delegated to a CSVTemplate instance, fetched
 * through CSVTemplateFactory based on a mandatory name parameter.
-* See @ref csv-handling
+* See @ref csvhandling
 *
 * Available through FormatFactory::outputFormat(), name "csv"
 *

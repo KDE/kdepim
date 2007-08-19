@@ -222,7 +222,7 @@ private:
 *
 * The actual parsing (splitting, unquoting, etc) is delegated to a
 * CSVTemplate instance, fetched through CSVTemplateFactory based on a
-* mandatory name parameter. See @ref csv-handling
+* mandatory name parameter. See @ref csvhandling
 *
 * Available through FormatFactory::inputFormat(), name "csv"
 *
