@@ -20,7 +20,8 @@
 #define FORMATFACTORY_H
 
 // Qt includes
-#include <QByteArray>
+#include <QtCore/QByteArray>
+#include <QtCore/QList>
 
 // forward declarations
 class CSVTemplateFactory;

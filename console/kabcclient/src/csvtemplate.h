@@ -20,7 +20,8 @@
 #define CSVTEMPLATE_H
 
 // Qt includes
-#include <QMap>
+#include <QtCore/QMap>
+#include <QtCore/QString>
 
 // forward declarations
 class KConfigBase;

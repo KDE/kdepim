@@ -16,19 +16,19 @@
 //  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 //
 
+// local includes
+#include "csvtemplate.h"
+#include "csvtemplatefactory.h"
+
 // Qt includes
-#include <QDir>
-#include <QFile>
-#include <QFileInfo>
+#include <QtCore/QDir>
+#include <QtCore/QFile>
+#include <QtCore/QFileInfo>
 
 // KDE includes
 #include <kconfig.h>
 #include <kcomponentdata.h>
 #include <kstandarddirs.h>
-
-// local includes
-#include "csvtemplate.h"
-#include "csvtemplatefactory.h"
 
 ///////////////////////////////////////////////////////////////////////////////
 

@@ -16,12 +16,17 @@
 //  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 //
 
+// local includes
+#include "inputformatimpls.h"
+#include "csvtemplate.h"
+#include "csvtemplatefactory.h"
+
 // standard includes
 #include <iostream>
 #include <string>
 
 // Qt includes
-#include <QTextCodec>
+#include <QtCore/QTextCodec>
 
 // KDE includes
 #include <klocale.h>
@@ -31,11 +36,6 @@
 #include <kabc/addresseedialog.h>
 #include <kabc/addresseelist.h>
 #include <kabc/vcardconverter.h>
-
-// local includes
-#include "csvtemplate.h"
-#include "csvtemplatefactory.h"
-#include "inputformatimpls.h"
 
 using namespace KABC;
 

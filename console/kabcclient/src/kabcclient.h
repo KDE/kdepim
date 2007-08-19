@@ -23,7 +23,7 @@
 #include <istream>
 
 // Qt includes
-#include <QObject>
+#include <QtCore/QObject>
 
 // forward declarations
 class FormatFactory;

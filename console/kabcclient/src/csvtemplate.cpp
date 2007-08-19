@@ -16,8 +16,11 @@
 //  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 //
 
+// local includes
+#include "csvtemplate.h"
+
 // Qt includes
-#include <QDateTime>
+#include <QtCore/QDateTime>
 
 // KDE includes
 #include <kconfigbase.h>
@@ -26,9 +29,6 @@
 // KABC includes
 #include <kabc/address.h>
 #include <kabc/addressee.h>
-
-// local includes
-#include "csvtemplate.h"
 
 using namespace KABC;
 

@@ -22,6 +22,9 @@
 // standard includes
 #include <istream>
 
+// Qt includes
+#include <QtCore/QString>
+
 // forward declarations
 class QTextCodec;
 

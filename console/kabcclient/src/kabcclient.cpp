@@ -17,14 +17,20 @@
 //  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 //
 
+// local includes
+#include "kabcclient.h"
+#include "formatfactory.h"
+#include "inputformat.h"
+#include "outputformat.h"
+
 // standard includes
 #include <iostream>
 #include <set>
 #include <string>
 
 // Qt includes
-#include <QTextCodec>
-#include <QTimer>
+#include <QtCore/QTextCodec>
+#include <QtCore/QTimer>
 
 // KDE includes
 #include <kapplication.h>
@@ -35,12 +41,6 @@
 #include <kabc/addressee.h>
 #include <kabc/addresseelist.h>
 #include <kabc/stdaddressbook.h>
-
-// local includes
-#include "formatfactory.h"
-#include "inputformat.h"
-#include "kabcclient.h"
-#include "outputformat.h"
 
 using namespace KABC;
 

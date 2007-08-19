@@ -20,8 +20,8 @@
 #define CSVTEMPLATEFACTORY_H
 
 // Qt includes
-#include <QMap>
-#include <QStringList>
+#include <QtCore/QMap>
+#include <QtCore/QStringList>
 
 // forward declarations
 class CSVTemplate;

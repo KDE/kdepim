@@ -17,24 +17,24 @@
 //  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 //
 
+// local includes
+#include "formatfactory.h"
+#include "inputformat.h"
+#include "kabcclient.h"
+#include "outputformat.h"
+
 // standard includes
 #include <iostream>
 #include <sstream>
 
 // Qt includes
-#include <QFileInfo>
+#include <QtCore/QFileInfo>
 
 // KDE includes
 #include <kaboutdata.h>
 #include <kapplication.h>
 #include <kcmdlineargs.h>
 #include <klocalizedstring.h>
-
-// local includes
-#include "formatfactory.h"
-#include "inputformat.h"
-#include "kabcclient.h"
-#include "outputformat.h"
 
 static const char version[] = "0.8.1";
 

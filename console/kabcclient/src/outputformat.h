@@ -22,6 +22,9 @@
 // standard includes
 #include <ostream>
 
+// Qt includes
+#include <QtCore/QString>
+
 // forward declarations
 namespace KABC
 {

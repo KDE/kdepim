@@ -17,8 +17,8 @@
 //
 
 // local includes
-#include "csvtemplatefactory.h"
 #include "formatfactory.h"
+#include "csvtemplatefactory.h"
 #include "inputformatimpls.h"
 #include "outputformatimpls.h"
 
