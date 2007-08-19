@@ -51,16 +51,11 @@ template <typename T> static void parseAddrList( const QList<QByteArray> &addrLi
 }
 
 
-void SerializerPluginSMS::deserialize( Item& item, const QString& label, QIODevice& data )
+bool SerializerPluginSMS::deserialize( Item& item, const QString& label, QIODevice& data )
 {
     kDebug() << k_funcinfo <<"()" << label;
     if ( label != "SMS" ) {
-      item.addPart( label, data.readAll() );
-      return;
-    }
-    if ( item.mimeType() != QString::fromLatin1(SMS_MIMETYPE) ) {
-        //throw ItemSerializerException();
-        return;
+      return false;
     }
 
     MessagePtr msg;
@@ -112,6 +107,8 @@ void SerializerPluginSMS::deserialize( Item& item, const QString& label, QIODevi
         // message id
 ///        msg->messageID()->from7BitString( env[9] );
     }*/
+
+    return true;
 }
 
 
