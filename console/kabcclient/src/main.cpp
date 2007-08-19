@@ -431,9 +431,9 @@ int handleKABC2Mutt(int argc, char** argv)
 
     KCmdLineOptions kabc2muttCmdLineOptions;
 
-    kabc2muttCmdLineOptions.add("query <substring>", ki18n("Only show contacts where name or address matches <substring>"));
+    kabc2muttCmdLineOptions.add("query <substring>", ki18n("Only show contacts where name or address matches <placeholder>substring</placeholder>"));
 
-    kabc2muttCmdLineOptions.add("format <format>", ki18n("Default format is 'alias'. 'query' returns email<tab>name<tab>, "
+    kabc2muttCmdLineOptions.add("format <format>", ki18n("Default format is 'alias'. 'query' returns email[tab]name[tab], "
                "as needed by mutt's query_command"), "alias");
 
     kabc2muttCmdLineOptions.add("alternate-key-format", ki18n("Default key format is 'JohDoe', this option turns it into 'jdoe'"));

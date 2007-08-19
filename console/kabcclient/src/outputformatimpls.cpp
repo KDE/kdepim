@@ -247,7 +247,7 @@ EmailOutput::EmailOutput() : m_allEmails(false), m_includeName(false)
 
 QString EmailOutput::description() const
 {
-    return i18n("Writes email address or formatted name <email address>");
+    return i18n("Writes email address or formatted name &lt;email address&gt;");
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -285,7 +285,7 @@ QString EmailOutput::optionUsage() const
     usage += '\n';
 
     usage += "withname\t";
-    usage += i18n("Prepend formatted name, e.g\n\t\tJohn Doe <jdoe@foo.com>");
+    usage += i18n("Prepend formatted name, e.g\n\t\tJohn Doe &lt;jdoe@foo.com&gt;");
 
     return usage;
 }
@@ -430,21 +430,21 @@ QString MuttOutput::optionUsage() const
 
     usage += "query\t\t";
     usage += i18n("Use mutt's query format, e.g.\n\t\t"
-                  "jdoe@foo.com <tab> John Doe\n\t\t"
+                  "jdoe@foo.com [tab] John Doe\n\t\t"
                   "Conflicts with alias");
 
     usage += '\n';
 
     usage += "alias\t\t";
     usage += i18n("Use mutt's alias format, e.g.\n\t\t"
-                  "alias JohDoe<tab>John Doe <jdoe@foo.com>\n\t\t"
+                  "alias JohDoe[tab]John Doe &lt;jdoe@foo.com&gt;\n\t\t"
                   "Conflicts with query");
 
     usage += '\n';
 
     usage += "altkeys\t\t";
     usage += i18n("Use alternative keys with alias format, e.g.\n\t\t"
-                  "alias jdoe<tab>John Doe <jdoe@foo.com>");
+                  "alias jdoe[tab]John Doe &lt;jdoe@foo.com&gt;");
 
     return usage;
 }
