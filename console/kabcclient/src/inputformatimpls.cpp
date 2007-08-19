@@ -230,7 +230,7 @@ KABC::Addressee EmailInput::readAddressee(std::istream& stream)
             addressee.setNameFromString(name);
         }
 
-        addressee.setUid(QString::null);	//krazy:exclude=nullstrassign for old broken gcc
+        addressee.setUid(QString());
     }
 
     return addressee;
@@ -304,7 +304,7 @@ KABC::Addressee SearchInput::readAddressee(std::istream& stream)
         addressee.setNameFromString(rawEmail);
     }
 
-    addressee.setUid(QString::null);	//krazy:exclude=nullstrassign for old broken gcc
+    addressee.setUid(QString());
 
     return addressee;
 }
@@ -361,7 +361,7 @@ KABC::Addressee NameInput::readAddressee(std::istream& stream)
         addressee.setNameFromString(name);
     }
 
-    addressee.setUid(QString::null);	//krazy:exclude=nullstrassign for old broken gcc
+    addressee.setUid(QString());
 
     return addressee;
 }
