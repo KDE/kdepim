@@ -277,7 +277,7 @@ int KNArticleVector::indexForMsgId( const QByteArray &id )
 
     if(currentMid==id)
       found=true;
-    else if( strcmp(currentMid.data(),  id.data()) < 0 )
+    else if( currentMid < id )
       start=mid+1;
     else
       end=mid;
