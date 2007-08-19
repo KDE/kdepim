@@ -36,7 +36,7 @@ void KNode::GroupListJob::execute()
   if ( target->getDescriptions )
     query << "desc=true";
   if ( mIncremental )
-    query << QString( "since=%1%2%3 000000" )
+    query << QString( "since=%1%2%3+000000" )
         .arg( target->fetchSince.year() % 100, 2, 10, QChar( '0' ) )
         .arg( target->fetchSince.month(), 2, 10, QChar( '0' ) )
         .arg( target->fetchSince.day(), 2, 10, QChar( '0' ) );

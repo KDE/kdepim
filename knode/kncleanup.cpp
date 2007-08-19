@@ -257,6 +257,7 @@ KNCleanUp::ProgressDialog::ProgressDialog( int steps, QWidget *parent ) :
             h=160;
 
   setCaption(i18n("Cleaning Up"));
+  setButtons( KDialog::None );
 
   setFixedSize(w,h);
   QFrame *top = new QFrame( this );

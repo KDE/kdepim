@@ -32,7 +32,7 @@ namespace KNode {
 
 /** News group properties dialog. */
 class KNGroupPropDlg : public KPageDialog  {
-
+Q_OBJECT
   public:
     KNGroupPropDlg( KNGroup *group, QWidget *parent=0 );
     ~KNGroupPropDlg();
