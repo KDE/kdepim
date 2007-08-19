@@ -32,6 +32,17 @@ namespace KABC
     class VCardConverter;
 }
 
+/**
+* @brief Output formatter for KABC UIDs
+*
+* Writes each contact's unique identifier, one per line
+*
+* Available through FormatFactory::outputFormat(), name "uid"
+*
+* @author Kevin Krammer, <kevin.krammer@gmx.at>
+*
+* @see @ref formathandling
+*/
 class UIDOutput : public OutputFormat
 {
 public:
@@ -46,9 +57,26 @@ public:
                                     std::ostream& stream);
 
 private:
+    /**
+    * The codec to use for converting QString's UTF encoding to output text
+    *
+    * @see QTextCodec::fromUnicode()
+    */
     QTextCodec* m_codec;
 };
 
+/**
+* @brief Output formatter for VCard data
+*
+* Writes the contacts formatted according to the VCard specification.
+* Delegates the formatting to KABC::VCardConverter
+*
+* Available through FormatFactory::outputFormat(), name "vcard"
+*
+* @author Kevin Krammer, <kevin.krammer@gmx.at>
+*
+* @see @ref formathandling
+*/
 class VCardOutput : public OutputFormat
 {
 public:
@@ -69,9 +97,26 @@ public:
 private:
     KABC::VCardConverter* m_converter;
     int m_vCardVersion;
+    /**
+    * The codec to use for converting QString's UTF encoding to output text
+    *
+    * @see QTextCodec::fromUnicode()
+    */
     QTextCodec* m_codec;
 };
 
+/**
+* @brief Output formatter for email addresses
+*
+* Depending on optional parameters, writes each contacts email addresses,
+* one per line
+*
+* Available through FormatFactory::outputFormat(), name "email"
+*
+* @author Kevin Krammer, <kevin.krammer@gmx.at>
+*
+* @see @ref formathandling
+*/
 class EmailOutput : public OutputFormat
 {
 public:
@@ -89,14 +134,51 @@ public:
                                     std::ostream& stream);
 
 private:
+    /**
+    * When @c true write all email addresses of a contact, otherwise just the
+    * peferred one
+    */
     bool m_allEmails;
+
+    /**
+    * When @c true include the contact's name, i.e. "Name <address>", otherwise
+    * just the email address (also without angle brackets)
+    */
     bool m_includeName;
+    /**
+    * The codec to use for converting QString's UTF encoding to output text
+    *
+    * @see QTextCodec::fromUnicode()
+    */
     QTextCodec* m_codec;
 
 private:
+    /**
+    * @brief Helper method for decorating email addresses
+    *
+    * Handles the adding of the name if #m_includeName is @c true
+    *
+    * @param addressee the addressee to get the name from when required
+    * @param email the email address string to eventually decorate
+    *
+    * @return the properly formatted email address
+    */
     QString decorateEmail(const KABC::Addressee& addressee, const QString& email) const;
 };
 
+/**
+* @brief Output formatter for use as input of the email client "mutt"
+*
+* Writes each contact's email addresses formatted for usage in "mutt".
+* The option names are also from "mutt", the kabbclient program has
+* a special mode so it can be called directly from "mutt"
+*
+* Available through FormatFactory::outputFormat(), name "mutt"
+*
+* @author Kevin Krammer, <kevin.krammer@gmx.at>
+*
+* @see @ref formathandling
+*/
 class MuttOutput : public OutputFormat
 {
 public:
@@ -114,15 +196,79 @@ public:
                                     std::ostream& stream);
 
 private:
+    /**
+    * When @c true write all email addresses for each contact, one per line,
+    * otherwise just the preferred one
+    */
     bool m_allEmails;
+
+    /**
+    * When @c true use the format "mutt" calls "query", i.e.
+    * "emailaddress<tab>name"
+    *
+    * Example: "kevin.krammer@gmx.at<tab>Kevin Krammer"
+    *
+    * Otherwise use the format "mutt" calls "alias", i.e.
+    * "alias key<tab>Name <emailaddress>" where 'key' depend on option
+    * #m_altKeyFormat
+    *
+    * Example: "alias kkrammer<tab>Kevin Krammer <kevin.krammer@gmx.at>"
+    */
     bool m_queryFormat;
+
+    /**
+    * When @c true use what "mutt" calls the "altkey" option of format "alias",
+    * i.e. "xyyyy" where 'x' is the first letter of the person's given name and
+    * 'yyyy' is the person's family name, lower cased and any space replaced
+    * with underscores '_'
+    *
+    * Example: "kkrammer"
+    *
+    * Otherwise use "xxxyyy", where 'xxx' are the first three letters of the
+    * person's given name and 'yyy' are the first three letters of the person's
+    * family name
+    *
+    * Example: "KevKra"
+    */
     bool m_altKeyFormat;
+
+    /**
+    * The codec to use for converting QString's UTF encoding to output text
+    *
+    * @see QTextCodec::fromUnicode()
+    */
     QTextCodec* m_codec;
 
 private:
+    /**
+    * @brief Helper method for creating the "key" part of the output
+    *
+    * Create "key" part for the output in format "alias" depending on
+    * #m_altKeyFormat
+    *
+    * @param addressee the contact to get the name from
+    *
+    * @return the 'key' string
+    */
     QString key(const KABC::Addressee& addressee) const;
 };
 
+/**
+* @brief Output formatter for CSV (comma separated values)
+*
+* Writes each contact to a line of columns, separated by a delimiter string
+* probably quoted if the delimiter is part of a field text.
+*
+* The actual formatting is delegated to a CSVTemplate instance, fetched
+* through CSVTemplateFactory based on a mandatory name parameter.
+* See @ref csv-handling
+*
+* Available through FormatFactory::outputFormat(), name "csv"
+*
+* @author Kevin Krammer, <kevin.krammer@gmx.at>
+*
+* @see @ref formathandling
+*/
 class CSVOutput : public OutputFormat
 {
 public:
@@ -141,8 +287,22 @@ public:
                                     std::ostream& stream);
 
 private:
+    /**
+    * The codec to use for converting QString's UTF encoding to output text
+    *
+    * @see QTextCodec::fromUnicode()
+    */
     QTextCodec*  m_codec;
+
+    /**
+    * The configured template handler for formatting and field mapping.
+    * @see @ref cvs-handling
+    */
     CSVTemplate* m_template;
+
+    /**
+    * The factory for creating the template handler
+    */
     CSVTemplateFactory* m_templateFactory;
 };
 

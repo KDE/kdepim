@@ -67,7 +67,7 @@ private:
 * @brief Input parser for VCard data
 *
 * Treats input as contact data formatted according to the VCard specification.
-* Delegated actual parsing to KABC::VCardConverter
+* Delegates actual parsing to KABC::VCardConverter
 *
 * Available through FormatFactory::inputFormat(), name "vcard"
 *
@@ -220,7 +220,7 @@ private:
 * Treats each line as a record composed columns, where a column is separated
 * from the next column by a separator string, often a comma.
 *
-* The actual parsing (splitting, unescaping, etc) is delegated to a
+* The actual parsing (splitting, unquoting, etc) is delegated to a
 * CSVTemplate instance, fetched through CSVTemplateFactory based on a
 * mandatory name parameter. See @ref csv-handling
 *
@@ -267,7 +267,7 @@ private:
     /**
     * @brief Helper method for splitting and unescaping
     *
-    * Gets its format information, i.e. escape sequence and delimiter, from
+    * Gets its format information, i.e. quoting and delimiter, from
     * the template handler #m_template
     *
     * @param values a line from the input
