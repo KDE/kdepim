@@ -125,7 +125,6 @@ int main(int argc, char** argv)
     KCmdLineArgs* args = KCmdLineArgs::parsedArgs();
 
     qInstallMsgHandler(avoidQPixmapWarning);
-    //KApplication::disableAutoDcopRegistration();
     bool gui = args->getOption("input-format") == "dialog";
     KApplication app(gui);
     qInstallMsgHandler(0);
