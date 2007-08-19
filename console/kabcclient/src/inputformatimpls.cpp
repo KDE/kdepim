@@ -156,6 +156,8 @@ KABC::Addressee VCardInput::readAddressee(std::istream& stream)
     if (line.empty()) return KABC::Addressee();
 
     QString input = m_codec->toUnicode(line.c_str(), line.size());
+    input += '\n';
+
     QString inputLine;
     while (!inputLine.isEmpty() || !stream.eof())
     {
