@@ -96,11 +96,8 @@ bool KeyringConduit::initDataProxies()
 	}
 	else
 	{
-		//FIXME: Find a good way to handle this!
 		// Read pass from wallet.
-		//DEBUGKPILOT << "fParent: " << QApplication::topLevelWidgets().first();
-		WId window = QApplication::topLevelWidgets().at(1)->winId();
-		//WId window = qApp->activeWindow()->winId();
+		WId window(0L);
 	
 		Wallet *wallet = Wallet::openWallet( Wallet::LocalWallet(), window );
 		
