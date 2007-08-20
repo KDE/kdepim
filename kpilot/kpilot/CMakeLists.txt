@@ -112,7 +112,6 @@ set(kpilot_bin_SRCS
 	pilotComponent.cc
 	memoWidget.cc
 	addressWidget.cc
-	addressEditor.cc
 	todoWidget.cc
 	todoEditor.cc
 	fileInstaller.cc

@@ -50,7 +50,6 @@
 
 #include "kpilotConfig.h"
 #include "listItems.h"
-#include "addressEditor.h"
 #include "pilotLocalDatabase.h"
 
 #include "addressWidget.moc"
