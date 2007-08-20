@@ -29,7 +29,6 @@
 */
 
 #include "pilotComponent.h"
-//Added by qt3to4:
 #include <Q3PtrList>
 
 class Q3ListBox;
@@ -67,10 +66,6 @@ protected:
 	void initializeCategories(PilotDatabase *);
 	void initializeMemos(PilotDatabase *);
 
-	void saveChangedMemo();
-
-	bool addMemo(const QString &text, int category);
-
 public slots:
 	/**
 	* Called whenever the selected memo changes in order to:
@@ -81,11 +76,7 @@ public slots:
 	*/
 	void slotShowMemo(int);
 	void slotUpdateButtons();
-
-	void slotImportMemo();
 	void slotExportMemo();
-	void slotDeleteMemo();
-	void slotAddMemo();
 	void slotSetCategory(int);
 
 protected:
@@ -95,7 +86,6 @@ protected:
 private:
 	void setupWidget();
 	void updateWidget(); // Called with the lists have changed..
-	void writeMemo(PilotMemo* which);
 
 	class Private;
 

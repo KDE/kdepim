@@ -101,17 +101,17 @@ TodoWidget::TodoWidget(QWidget *parent, const QString & path) :
 	QLabel *label;
 	QGridLayout *grid = new QGridLayout(this);
 	grid->setSpacing( SPACING );
-
+	
+	label = new QLabel(i18n("Category:"), this);
+	label->setBuddy(fCategoryList);
+	grid->addWidget(label, 0, 0);
+	
 	fCategoryList = new KComboBox(this);
 	grid->addWidget(fCategoryList, 0, 1);
 	connect(fCategoryList, SIGNAL(activated(int)),
 		this, SLOT(slotSetCategory(int)));
 	fCategoryList->setWhatsThis(
 		i18n("<qt>Select the category of to-dos to display here.</qt>"));
-
-	label = new QLabel(i18n("Category:"), this);
-	label->setBuddy(fCategoryList);
-	grid->addWidget(label, 0, 0);
 
 	fTodoList = new QListWidget(this);
 	grid->addWidget(fTodoList, 1, 0, 1, 2);
@@ -124,13 +124,10 @@ TodoWidget::TodoWidget(QWidget *parent, const QString & path) :
 
 	label = new QLabel(i18n("To-do info:"), this);
 	grid->addWidget(label, 0, 2);
-
-	// todo info text view
+	
 	fTodoViewer = new KTextEdit(this);
 	fTodoViewer->setReadOnly( true );
-	grid->addWidget(fTodoViewer, 1, 2, 4, 1);
-
-	QString wt;
+	grid->addWidget(fTodoViewer, 1, 2);
 
 	slotUpdateButtons();
 }
