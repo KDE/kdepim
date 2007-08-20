@@ -1,5 +1,3 @@
-//Added by qt3to4:
-#include <Q3PtrList>
 /* addressWidget.h			KPilot
 **
 ** Copyright (C) 1998-2001 by Dan Pilone <dan@kpilot.org>
@@ -32,6 +30,8 @@
 #ifndef _KPILOT_ADDRESSWIDGET_H
 #define _KPILOT_ADDRESSWIDGET_H
 
+#include <Q3PtrList>
+
 class Q3ListBox;
 class Q3TextView;
 
@@ -63,10 +63,6 @@ public slots:
 	* it in the viewer widget.
 	*/
 	void slotShowAddress(int);
-	void slotEditRecord();
-	void slotCreateNewRecord();
-	void slotDeleteRecord();
-	void slotEditCancelled();
 	void slotExport();
 
 	void slotUpdateButtons();	// Enable/disable buttons
@@ -75,16 +71,6 @@ signals:
 	void recordChanged(PilotAddress *);
 
 protected slots:
-	/**
-	* When an edit window is closed, the corresponding record
-	* is updated and possibly re-displayed.
-	*/
-	void slotUpdateRecord(PilotAddress*);
-
-	/**
-	* Pop up an edit window for a new record.
-	*/
-	void slotAddRecord(PilotAddress*);
 
 	/**
 	* Change category. This means that the display should be
@@ -95,7 +81,6 @@ protected slots:
 private:
 	void setupWidget();
 	void updateWidget(); // Called with the lists have changed..
-	void writeAddress(PilotAddress* which,PilotDatabase *db=0L);
 
 	/**
 	* getAllAddresses reads the database and places all
@@ -130,14 +115,7 @@ private:
 	PilotAddressInfo     *fAddressAppInfo;
 	Q3PtrList<PilotAddress>   fAddressList;
 	Q3ListBox             *fListBox;
-	QPushButton	     *fEditButton, *fDeleteButton, *fExportButton;
-
-protected:
-	/**
-	* Keep track of how many open address editing windows there
-	* are. You can't sync when there are open windows.
-	*/
-	int fPendingAddresses;
+	QPushButton	     *fExportButton;
 
 public:
 	typedef enum { PhoneNumberLength=16 } Constants ;

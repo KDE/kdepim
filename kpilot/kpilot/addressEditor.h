@@ -33,7 +33,6 @@
 #include <kdialog.h>
 
 #include "pilotAddress.h"
-//Added by qt3to4:
 #include <QLabel>
 
 class KLineEdit;

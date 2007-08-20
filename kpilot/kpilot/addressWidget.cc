@@ -60,8 +60,7 @@ AddressWidget::AddressWidget(QWidget * parent,
 	const QString & path) :
 	PilotComponent(parent, "component_address", path),
 	fAddrInfo(0L),
-	fAddressAppInfo(0L),
-	fPendingAddresses(0)
+	fAddressAppInfo(0L)
 {
 	FUNCTIONSETUP;
 
@@ -112,7 +111,6 @@ int AddressWidget::getAllAddresses(PilotDatabase * addressDB)
 void AddressWidget::showComponent()
 {
 	FUNCTIONSETUP;
-	if ( fPendingAddresses>0 ) return;
 
 	DEBUGKPILOT << "Reading from directory [" << dbPath() << ']';
 
@@ -143,30 +141,16 @@ void AddressWidget::showComponent()
 void AddressWidget::hideComponent()
 {
 	FUNCTIONSETUP;
-	if (fPendingAddresses==0 )
-	{
-		fAddressList.clear();
-		fListBox->clear();
+	fAddressList.clear();
+	fListBox->clear();
 
-		updateWidget();
-	}
+	updateWidget();
 }
 
 /* virtual */ bool AddressWidget::preHotSync(QString &s)
 {
 	FUNCTIONSETUP;
-
-	if ( fPendingAddresses )
-	{
-		DEBUGKPILOT
-			<< ": fPendingAddress="
-			<< fPendingAddresses;
-
-		s = i18np("There is still an address editing window open.",
-			"There are still %1 address editing windows open.",
-			fPendingAddresses);
-		return false;
-	}
+	Q_UNUSED(s);
 
 	return true;
 }
@@ -206,8 +190,7 @@ void AddressWidget::setupWidget()
 	grid->addWidget(fListBox, 1, 0, 1, 2);
 	connect(fListBox, SIGNAL(highlighted(int)),
 		this, SLOT(slotShowAddress(int)));
-	connect(fListBox, SIGNAL(selected(int)),
-		this, SLOT(slotEditRecord()));
+
 	fListBox->setWhatsThis(
 		i18n("<qt>This list displays all the addresses "
 			"in the selected category. Click on "
@@ -220,38 +203,8 @@ void AddressWidget::setupWidget()
 	fAddrInfo = new Q3TextView(this);
 	grid->addWidget(fAddrInfo, 1, 2, 3, 1);
 
-	QPushButton *button;
-	QString wt;
-
-	fEditButton = new QPushButton(i18n("Edit Record..."), this);
-	grid->addWidget(fEditButton, 2, 0);
-	connect(fEditButton, SIGNAL(clicked()), this, SLOT(slotEditRecord()));
-	wt = KPilotSettings::internalEditors() ?
-		i18n("<qt>You can edit an address when it is selected.</qt>") :
-		i18n("<qt><i>Editing is disabled by the 'internal editors' setting.</i></qt>");
-	fEditButton->setWhatsThis(wt);
-
-	button = new QPushButton(i18n("New Record..."), this);
-	grid->addWidget(button, 2, 1);
-	connect(button, SIGNAL(clicked()), this, SLOT(slotCreateNewRecord()));
-	wt = KPilotSettings::internalEditors() ?
-		i18n("<qt>Add a new address to the address book.</qt>") :
-		i18n("<qt><i>Adding is disabled by the 'internal editors' setting.</i></qt>") ;
-	button->setWhatsThis(wt);
-	button->setEnabled(KPilotSettings::internalEditors());
-
-
-	fDeleteButton = new QPushButton(i18n("Delete Record"), this);
-	grid->addWidget(fDeleteButton, 3, 0);
-	connect(fDeleteButton, SIGNAL(clicked()),
-		this, SLOT(slotDeleteRecord()));
-	wt = KPilotSettings::internalEditors() ?
-		i18n("<qt>Delete the selected address from the address book.</qt>") :
-		i18n("<qt><i>Deleting is disabled by the 'internal editors' setting.</i></qt>") ;
-	fDeleteButton->setWhatsThis(wt);
-
 	fExportButton = new QPushButton(i18nc("Export addresses to file","Export..."), this);
-	grid->addWidget(fExportButton, 3,1);
+	grid->addWidget(fExportButton, 3,0,1,2);
 	connect(fExportButton, SIGNAL(clicked()), this, SLOT(slotExport()));
 	fExportButton->setWhatsThis(
 		i18n("<qt>Export all addresses in the selected category to CSV format.</qt>") );
@@ -367,12 +320,8 @@ QString AddressWidget::createTitle(PilotAddress * address, int displayMode)
 
 	bool enabled = (fListBox->currentItem() != -1);
 
-	// Always enabled by state, regardless of availability of internal edt
 	fExportButton->setEnabled(enabled);
 
-	enabled &= KPilotSettings::internalEditors();
-	fEditButton->setEnabled(enabled);
-	fDeleteButton->setEnabled(enabled);
 }
 
 void AddressWidget::slotSetCategory(int)
@@ -381,174 +330,6 @@ void AddressWidget::slotSetCategory(int)
 
 	updateWidget();
 }
-
-void AddressWidget::slotEditRecord()
-{
-	FUNCTIONSETUP;
-	if ( !isVisible() ) return;
-
-	int item = fListBox->currentItem();
-
-	if (item == -1)
-		return;
-
-	PilotListItem *p = (PilotListItem *) fListBox->item(item);
-	PilotAddress *selectedRecord = (PilotAddress *) p->rec();
-
-	if (selectedRecord->id() == 0)
-	{
-		KMessageBox::error(0L,
-			i18n("Cannot edit new records until "
-				"HotSynced with Pilot."),
-			i18n("HotSync Required"));
-		return;
-	}
-
-	AddressEditor *editor = new AddressEditor(selectedRecord,
-		fAddressAppInfo, this);
-
-	connect(editor, SIGNAL(recordChangeComplete(PilotAddress *)),
-		this, SLOT(slotUpdateRecord(PilotAddress *)));
-	connect(editor, SIGNAL(cancelClicked()),
-		this, SLOT(slotEditCancelled()));
-	editor->show();
-
-	fPendingAddresses++;
-}
-
-void AddressWidget::slotCreateNewRecord()
-{
-	FUNCTIONSETUP;
-	if ( !isVisible() ) return;
-
-	// Response to bug 18072: Don't even try to
-	// add records to an empty or unopened database,
-	// since we don't have the DBInfo stuff to deal with it.
-	//
-	//
-	PilotDatabase *myDB = new PilotLocalDatabase(dbPath(), CSL1("AddressDB"));
-
-	if (!myDB || !myDB->isOpen())
-	{
-		DEBUGKPILOT << ": Tried to open AddressDB in ["
-			<< dbPath()
-			<< ']'
-			<< " and got pointer @"
-			<< (void *) myDB
-			<< " with status "
-			<< ( myDB ? myDB->isOpen() : false );
-
-		KMessageBox::sorry(this,
-			i18n("You cannot add addresses to the address book "
-				"until you have done a HotSync at least once "
-				"to retrieve the database layout from your Pilot."),
-			i18n("Cannot Add New Address"));
-
-		if (myDB)
-			KPILOT_DELETE( myDB );
-
-		return;
-	}
-
-	AddressEditor *editor = new AddressEditor(0L,
-		fAddressAppInfo, this);
-
-	connect(editor, SIGNAL(recordChangeComplete(PilotAddress *)),
-		this, SLOT(slotAddRecord(PilotAddress *)));
-	connect(editor, SIGNAL(cancelClicked()),
-		this, SLOT(slotEditCancelled()));
-	editor->show();
-
-	fPendingAddresses++;
-}
-
-void AddressWidget::slotAddRecord(PilotAddress * address)
-{
-	FUNCTIONSETUP;
-	if ( !isVisible() && fPendingAddresses==0 ) return;
-
-	int currentCatID = findSelectedCategory(fCatList,
-		fAddressAppInfo->categoryInfo(), true);
-
-
-	address->PilotRecordBase::setCategory(currentCatID);
-	fAddressList.append(address);
-	writeAddress(address);
-	// TODO: Just add the new record to the lists
-	updateWidget();
-
-	// k holds the item number of the address just added.
-	//
-	//
-	int k = fListBox->count() - 1;
-
-	fListBox->setCurrentItem(k);	// Show the newest one
-	fListBox->setBottomItem(k);
-
-	fPendingAddresses--;
-	if ( !isVisible() && fPendingAddresses==0 ) hideComponent();
-}
-
-void AddressWidget::slotUpdateRecord(PilotAddress * address)
-{
-	FUNCTIONSETUP;
-	if ( !isVisible() && fPendingAddresses==0 ) return;
-
-	writeAddress(address);
-	int currentRecord = fListBox->currentItem();
-
-	// TODO: Just change the record
-	updateWidget();
-	fListBox->setCurrentItem(currentRecord);
-
-	emit(recordChanged(address));
-
-	fPendingAddresses--;
-	if ( !isVisible() && fPendingAddresses==0 ) hideComponent();
-}
-
-void AddressWidget::slotEditCancelled()
-{
-	FUNCTIONSETUP;
-
-	fPendingAddresses--;
-	if ( !isVisible() && fPendingAddresses==0 ) hideComponent();
-}
-
-void AddressWidget::slotDeleteRecord()
-{
-	FUNCTIONSETUP;
-	if ( !isVisible() ) return;
-
-	int item = fListBox->currentItem();
-
-	if (item == -1)
-		return;
-
-	PilotListItem *p = (PilotListItem *) fListBox->item(item);
-	PilotAddress *selectedRecord = (PilotAddress *) p->rec();
-
-	if (selectedRecord->id() == 0)
-	{
-		KMessageBox::error(this,
-			i18n("New records cannot be deleted until "
-				"HotSynced with pilot."),
-			i18n("HotSync Required"));
-		return;
-	}
-
-	if (KMessageBox::questionYesNo(this,
-			i18n("Delete currently selected record?"),
-			i18n("Delete Record?"), KStandardGuiItem::del(), KStandardGuiItem::cancel()) == KMessageBox::No)
-		return;
-
-	selectedRecord->setDeleted( true );
-	writeAddress(selectedRecord);
-	emit(recordChanged(selectedRecord));
-	showComponent();
-}
-
-
 
 void AddressWidget::slotShowAddress(int which)
 {
@@ -571,52 +352,6 @@ void AddressWidget::slotShowAddress(int which)
 	slotUpdateButtons();
 }
 
-
-
-void AddressWidget::writeAddress(PilotAddress * which,
-	PilotDatabase * addressDB)
-{
-	FUNCTIONSETUP;
-
-	// Open a database (myDB) only if needed,
-	// i.e. only if the passed-in addressDB
-	// isn't valid.
-	//
-	//
-	PilotDatabase *myDB = addressDB;
-	bool usemyDB = false;
-
-	if (myDB == 0L || !myDB->isOpen())
-	{
-		myDB = new PilotLocalDatabase(dbPath(), CSL1("AddressDB"));
-		usemyDB = true;
-	}
-
-	// Still no valid address database...
-	//
-	//
-	if (!myDB->isOpen())
-	{
-		DEBUGKPILOT << "Address database is not open.";
-		return;
-	}
-
-
-	// Do the actual work.
-	PilotRecord *pilotRec = which->pack();
-
-	myDB->writeRecord(pilotRec);
-	markDBDirty(CSL1("AddressDB"));
-	delete pilotRec;
-
-	// Clean up in the case that we allocated our own DB.
-	//
-	//
-	if (usemyDB)
-	{
-		KPILOT_DELETE( myDB );
-	}
-}
 
 #define plu_quiet 1
 #include "pilot-addresses.c"
