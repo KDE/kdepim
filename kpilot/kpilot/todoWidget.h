@@ -61,42 +61,19 @@ public slots:
 	* it in the viewer widget.
 	*/
 	void slotShowTodo(QListWidgetItem *);
-	void slotEditRecord(QListWidgetItem *item);
-	void slotEditRecord();
-	void slotCreateNewRecord();
-	void slotDeleteRecord();
-	void slotEditCancelled();
 
 	void slotUpdateButtons();	// Enable/disable buttons
 
-signals:
-	void recordChanged(PilotTodoEntry *);
-
 protected slots:
-	/**
-	* When an edit window is closed, the corresponding record
-	* is updated and possibly re-displayed.
-	*/
-	void slotUpdateRecord(PilotTodoEntry *);
-
-	/**
-	* Pop up an edit window for a new record.
-	*/
-	void slotAddRecord(PilotTodoEntry *);
-
 	/**
 	* Change category. This means that the display should be
 	* cleared and that the list should be repopulated.
 	*/
 	void slotSetCategory(int);
 
-
-	void slotItemChecked(QListWidgetItem *item, bool on);
-	void slotItemRenamed(QListWidgetItem *item, const QString &txt, int nr);
 private:
 	void setupWidget();
 	void updateWidget(); // Called with the lists have changed..
-	void writeTodo(PilotTodoEntry* which,PilotDatabase *db=0L);
 
 	/**
 	* getAllTodos reads the database and places all
@@ -129,7 +106,6 @@ private:
 	KComboBox *fCategoryList;
 	QListWidget *fTodoList;
 	KTextEdit *fTodoViewer;
-	QPushButton *fEditButton,*fDeleteButton;
 
 	class Private;
 	Private *fP;

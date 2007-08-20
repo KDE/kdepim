@@ -113,7 +113,6 @@ set(kpilot_bin_SRCS
 	memoWidget.cc
 	addressWidget.cc
 	todoWidget.cc
-	todoEditor.cc
 	fileInstaller.cc
 	fileInstallWidget.cc
 	listItems.cc
@@ -121,7 +120,6 @@ set(kpilot_bin_SRCS
 
 set(kpilot_UIS
 	dbFlagsEditor_base.ui
-	todoEditor_base.ui
 )
 
 kde4_add_ui3_files(kpilot_bin_SRCS ${kpilot_UIS})
