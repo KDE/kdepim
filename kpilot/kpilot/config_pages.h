@@ -33,6 +33,7 @@
 #include "plugin.h"
 #include "ui_config_page_device.h"
 #include "ui_config_page_sync.h"
+#include "ui_config_page_startup.h"
 #include "ui_config_page_viewers.h"
 
 // class KPilotConfigWidget;
@@ -122,7 +123,7 @@ protected:
 	virtual void commit();
 
 private:
-	StartExitConfigWidget *fConfigWidget;
+	Ui::StartExitConfigWidget fConfigWidget;
 } ;
 
 class ViewersConfigPage : public ConfigPage

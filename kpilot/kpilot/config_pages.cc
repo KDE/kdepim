@@ -53,7 +53,6 @@
 #include "kpilotConfig.h"
 #include "kpilotSettings.h"
 
-#include "config_page_startup.h"
 #include "config_page_backup.h"
 #include "config_dialog_probe.h"
 #include "config_dialog_dbselection.h"
@@ -442,11 +441,10 @@ StartExitConfigPage::StartExitConfigPage(QWidget * w, const char *n ) : ConfigPa
 {
 	FUNCTIONSETUP;
 
-	fConfigWidget = new StartExitConfigWidget( w );
-	fConfigWidget->resize(fConfigWidget->size());
-	fWidget = fConfigWidget;
+	fWidget = new QWidget(w);
+	fConfigWidget.setupUi(fWidget);
 
-#define CM(a,b) connect(fConfigWidget->a,b,this,SLOT(modified()));
+#define CM(a,b) connect(fConfigWidget.a,b,this,SLOT(modified()));
 	CM(fStartDaemonAtLogin, SIGNAL(toggled(bool)));
 	CM(fKillDaemonOnExit, SIGNAL(toggled(bool)));
 	CM(fDockDaemon, SIGNAL(toggled(bool)));
@@ -461,10 +459,10 @@ void StartExitConfigPage::load()
 	FUNCTIONSETUP;
 	KPilotSettings::self()->readConfig();
 
-	fConfigWidget->fStartDaemonAtLogin->setChecked(KPilotSettings::startDaemonAtLogin());
-	fConfigWidget->fDockDaemon->setChecked(KPilotSettings::dockDaemon());
-	fConfigWidget->fKillDaemonOnExit->setChecked(KPilotSettings::killDaemonAtExit());
-	fConfigWidget->fQuitAfterSync->setChecked(KPilotSettings::quitAfterSync());
+	fConfigWidget.fStartDaemonAtLogin->setChecked(KPilotSettings::startDaemonAtLogin());
+	fConfigWidget.fDockDaemon->setChecked(KPilotSettings::dockDaemon());
+	fConfigWidget.fKillDaemonOnExit->setChecked(KPilotSettings::killDaemonAtExit());
+	fConfigWidget.fQuitAfterSync->setChecked(KPilotSettings::quitAfterSync());
 	unmodified();
 }
 
@@ -473,14 +471,14 @@ void StartExitConfigPage::load()
 {
 	FUNCTIONSETUP;
 
-	KPilotSettings::setStartDaemonAtLogin(fConfigWidget->fStartDaemonAtLogin->isChecked());
+	KPilotSettings::setStartDaemonAtLogin(fConfigWidget.fStartDaemonAtLogin->isChecked());
 	KAutostart autostart( CSL1("KPilotDaemon") );
 	autostart.setAutostarts( KPilotSettings::startDaemonAtLogin() );
 	autostart.setStartPhase( KAutostart::Applications );
 
-	KPilotSettings::setDockDaemon(fConfigWidget->fDockDaemon->isChecked());
-	KPilotSettings::setKillDaemonAtExit(fConfigWidget->fKillDaemonOnExit->isChecked());
-	KPilotSettings::setQuitAfterSync(fConfigWidget->fQuitAfterSync->isChecked());
+	KPilotSettings::setDockDaemon(fConfigWidget.fDockDaemon->isChecked());
+	KPilotSettings::setKillDaemonAtExit(fConfigWidget.fKillDaemonOnExit->isChecked());
+	KPilotSettings::setQuitAfterSync(fConfigWidget.fQuitAfterSync->isChecked());
 	KPilotConfig::updateConfigVersion();
 	KPilotSettings::self()->writeConfig();
 	unmodified();
