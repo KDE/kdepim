@@ -41,6 +41,7 @@ Comment[es]=Una extensión de formato para el cuerpo de text/x-patch
 Comment[fa]=یک وصلۀ قالب‌دهندۀ جزء بدنه برای text/x-patch
 Comment[ja]=text/x-patch 用の bodypart フォーマッタプラグイン
 Comment[kk]=Text/x-diff бөлімін пішімдеу модулі
+Comment[ne]=text/x-patch का लागि मुख्यभाग ढाँचाबद्ध गर्ने प्लगइन
 Comment[pt]=Um 'plugin' de formatação para text/x-patch
 Comment[pt_BR]=Um 'plugin' de formatação para text/x-patch
 Comment[sv]=Ett insticksprogram för brevtextformatering av text/x-patch

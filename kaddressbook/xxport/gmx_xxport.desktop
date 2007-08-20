@@ -9,6 +9,7 @@ Name[fa]=وصلۀ KAB GMX XXPort
 Name[ga]=Breiseán XXPort GMX KAB
 Name[ja]=KAB GMX XXPort プラグイン
 Name[kk]=GMX-қа экспорт/импорт ету
+Name[ne]=KAB GMX XXPort प्लगइन
 Name[pa]=KAB GMX XX-ਪੋਰਟ ਪਲੱਗਇਨ
 Name[pt]='Plugin' XXPort para CSV do KAB
 Name[pt_BR]='Plugin' XXPort para CSV do KAB
@@ -23,6 +24,7 @@ Comment[fa]=وصله برای واردات و صادرات تماسها در ق�
 Comment[ga]=Breiseán chun teagmhálacha i bhformáid leabhair seoltaí GMX a iompórtáil agus a easpórtáil
 Comment[ja]=GMX アドレス帳のフォーマットで連絡先をインポート/エクスポートするプラグイン
 Comment[kk]=GMX контакттарды экспорт/импорт ету модулі
+Comment[ne]=GMX को ठेगानापुस्तिका ढाँचामा सम्पर्कहरू आयात गर्न र निर्यात गर्न प्लगइन
 Comment[pt]=Um 'plugin' para importar e exportar os contactos no formato vCard
 Comment[pt_BR]=Um 'plugin' para importar e exportar os contactos no formato vCard
 Comment[sv]=Insticksprogram för import och export av kontakter med GMX-adressboksformat

@@ -1,6 +1,7 @@
 [Desktop Entry]
 Encoding=UTF-8
 Name=KMTSetup
+Name[ne]=केएमटी सेटअप
 Name[pa]=KMT-ਸੈਟਅੱਪ
 Name[sv]=KMT-inställning
 Exec=kmtsetup
@@ -12,6 +13,7 @@ Comment[el]=Μία εφαρμογή για τη ρύθμιση των συσκε
 Comment[es]=Una aplicación para configurar dispositivos que utilizan kmobiletools
 Comment[ga]=Feidhmchlár a chumraíonn na gléasanna a úsáideann kmobiletools
 Comment[ja]=KMmobileTools で使用するデバイスを設定するためのアプリケーション
+Comment[ne]=केडीई मोबाइल उपकरणद्वारा प्रयोग गरिएको यन्त्रको कन्फिगरेसनका लागि एउटा अनुप्रयोग
 Comment[pt]=Uma aplicação para configurar os dispositivos usados pelo KMobileTools
 Comment[pt_BR]=Uma aplicação para configurar os dispositivos usados pelo KMobileTools
 Comment[sv]=Ett program för att anpassa enheter använda av Kmobiletools

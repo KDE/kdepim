@@ -1,6 +1,7 @@
 [Desktop Entry]
 Encoding=UTF-8
 Name=kmobiletoolsMainPart
+Name[ne]=केडीई मोबाइल उपकरणको मुख्य भाग
 Name[sv]=Kmobiletools-huvuddel
 ServiceTypes=KParts/ReadOnlyPart,KParts/ReadWritePart
 X-KDE-Library=libkmobiletoolsmainpart

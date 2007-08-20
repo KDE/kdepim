@@ -1,6 +1,7 @@
 [Desktop Entry]
 Encoding=UTF-8
 Name=KMobileTools
+Name[ne]=केडीई मोबाइल उपकरण
 Name[pa]=ਕੇ-ਮੋਬਾਇਲ ਫੋਨ
 Name[sv]=Kmobiletools
 GenericName=Mobile Phones Management
@@ -9,6 +10,7 @@ GenericName[es]=Gestión de teléfonos móviles
 GenericName[fa]=مدیریت تلفنهای همراه
 GenericName[ga]=Bainisteoir Fóin Mhóibíleacha
 GenericName[ja]=携帯電話管理ツール
+GenericName[ne]=मोबाइल फोन व्यवस्थापन
 GenericName[pa]=ਮੋਬਾਇਲ ਫੋਨ ਪਰਬੰਧਕ
 GenericName[pt]=Gestão de Telemóveis
 GenericName[pt_BR]=Gestão de Telemóveis
@@ -25,6 +27,7 @@ Comment[es]=Suite para teléfonos móviles de KDE
 Comment[fa]=دنباله تلفنهای همراه KDE
 Comment[ga]=Sraith Fón Póca KDE
 Comment[ja]=KDE 携帯電話スイート
+Comment[ne]=केडीई मोबाइल फोन सुइट
 Comment[pa]=KDE ਮੋਬਾਇਲ ਫੋਨ ਸੂਟ
 Comment[pt]=Pacote de Telemóveis para o KDE
 Comment[pt_BR]=Pacote de Telemóveis para o KDE
