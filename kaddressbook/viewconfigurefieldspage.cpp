@@ -23,13 +23,12 @@
 
 #include <QLabel>
 #include <QLayout>
-#include <q3listbox.h>
 #include <QPushButton>
 #include <QToolButton>
 #include <QApplication>
-//Added by qt3to4:
 #include <QGridLayout>
 #include <QBoxLayout>
+#include <QListWidget>
 
 #include <kcombobox.h>
 #include <kdebug.h>
@@ -39,15 +38,11 @@
 
 #include "viewconfigurefieldspage.h"
 
-class FieldItem : public Q3ListBoxText
+class FieldItem : public QListWidgetItem
 {
   public:
-    FieldItem( Q3ListBox *parent, KABC::Field *field )
-      : Q3ListBoxText( parent, field->label() ), mField( field ) {}
-
-    FieldItem( Q3ListBox *parent, KABC::Field *field, int index )
-      : Q3ListBoxText( parent, field->label(), parent->item( index ) ),
-        mField( field ) {}
+    FieldItem( QListWidget *parent, KABC::Field *field )
+      : QListWidgetItem( field->label(), parent ), mField( field ) {}
 
     KABC::Field *field() { return mField; }
 
@@ -83,7 +78,7 @@ void ViewConfigureFieldsPage::saveSettings( KConfigGroup &config )
 {
   KABC::Field::List fields;
 
-  for ( uint i = 0; i < mSelectedBox->count(); ++i ) {
+  for ( int i = 0; i < mSelectedBox->count(); ++i ) {
     FieldItem *fieldItem = static_cast<FieldItem *>( mSelectedBox->item( i ) );
     fields.append( fieldItem->field() );
   }
@@ -93,7 +88,7 @@ void ViewConfigureFieldsPage::saveSettings( KConfigGroup &config )
 
 void ViewConfigureFieldsPage::slotShowFields( int index )
 {
-  int currentPos = mUnSelectedBox->currentItem();
+  int currentPos = mUnSelectedBox->currentRow();
   mUnSelectedBox->clear();
 
   int category;
@@ -104,20 +99,21 @@ void ViewConfigureFieldsPage::slotShowFields( int index )
 
   KABC::Field::List::ConstIterator it;
   for ( it = allFields.begin(); it != allFields.end(); ++it ) {
-    Q3ListBoxItem *item = mSelectedBox->firstItem();
-    while( item ) {
-      FieldItem *fieldItem = static_cast<FieldItem *>( item );
-      if ( (*it)->equals( fieldItem->field() ) )
+    bool found = false;
+
+    for ( int i = 0; i < mSelectedBox->count(); ++i ) {
+      FieldItem *fieldItem = static_cast<FieldItem *>( mSelectedBox->item( i ) );
+      if ( (*it)->equals( fieldItem->field() ) ) {
+        found = true;
         break;
-      item = item->next();
+      }
     }
 
-    if ( !item )
+    if ( !found )
       new FieldItem( mUnSelectedBox, *it );
   }
 
-  mUnSelectedBox->sort();
-  mUnSelectedBox->setCurrentItem( currentPos );
+  mUnSelectedBox->setCurrentRow( currentPos );
 }
 
 void ViewConfigureFieldsPage::slotSelect()
@@ -125,14 +121,14 @@ void ViewConfigureFieldsPage::slotSelect()
   // insert selected items in the unselected list to the selected list,
   // directory under the current item if selected, or at the bottonm if
   // nothing is selected in the selected list
-  int where = mSelectedBox->currentItem();
+  int where = mSelectedBox->currentRow();
   if ( !(where > -1 && mSelectedBox->item( where )->isSelected()) )
     where = mSelectedBox->count() - 1;
 
-  for ( uint i = 0; i < mUnSelectedBox->count(); ++i )
-    if ( mUnSelectedBox->isSelected( mUnSelectedBox->item( i ) ) ) {
+  for ( int i = 0; i < mUnSelectedBox->count(); ++i )
+    if ( mUnSelectedBox->item( i )->isSelected() ) {
       FieldItem *fieldItem = static_cast<FieldItem *>( mUnSelectedBox->item( i ) );
-      new FieldItem( mSelectedBox, fieldItem->field(), where );
+      mUnSelectedBox->insertItem( where, new FieldItem( mSelectedBox, fieldItem->field() ) );
       where++;
     }
 
@@ -141,9 +137,9 @@ void ViewConfigureFieldsPage::slotSelect()
 
 void ViewConfigureFieldsPage::slotUnSelect()
 {
-  for ( uint i = 0; i < mSelectedBox->count(); ++i )
-    if ( mSelectedBox->isSelected( mSelectedBox->item( i ) ) ) {
-      mSelectedBox->removeItem( i );
+  for ( int i = 0; i < mSelectedBox->count(); ++i )
+    if ( mSelectedBox->item( i )->isSelected() ) {
+      mSelectedBox->takeItem( i );
       --i;
     }
 
@@ -154,25 +150,26 @@ void ViewConfigureFieldsPage::slotButtonsEnabled()
 {
   bool state = false;
   // add button: enabled if any items are selected in the unselected list
-  for ( uint i = 0; i < mUnSelectedBox->count(); ++i )
+  for ( int i = 0; i < mUnSelectedBox->count(); ++i )
     if ( mUnSelectedBox->item( i )->isSelected() ) {
       state = true;
       break;
     }
   mAddButton->setEnabled( state );
 
-  int j = mSelectedBox->currentItem();
-  state = ( j > -1 && mSelectedBox->isSelected( j ) );
+  QListWidgetItem *item = mSelectedBox->currentItem();
+  int j = mSelectedBox->currentRow();
+  state = ( item && item->isSelected() );
 
   // up button: enabled if there is a current item > 0 and that is selected
-  mUpButton->setEnabled( ( j > 0 && state ) );
+  mUpButton->setEnabled( j > 0 && state );
 
   // down button: enabled if there is a current item < count - 2 and that is selected
-  mDownButton->setEnabled( ( j > -1 && j < (int)mSelectedBox->count() - 1 && state ) );
+  mDownButton->setEnabled( j < (int)mSelectedBox->count() - 1 && state );
 
   // remove button: enabled if any items are selected in the selected list
   state = false;
-  for ( uint i = 0; i < mSelectedBox->count(); ++i )
+  for ( int i = 0; i < mSelectedBox->count(); ++i )
     if ( mSelectedBox->item( i )->isSelected() ) {
       state = true;
       break;
@@ -182,25 +179,25 @@ void ViewConfigureFieldsPage::slotButtonsEnabled()
 
 void ViewConfigureFieldsPage::slotMoveUp()
 {
-  int i = mSelectedBox->currentItem();
+  int i = mSelectedBox->currentRow();
   if ( i > 0 ) {
-    Q3ListBoxItem *item = mSelectedBox->item( i );
-    mSelectedBox->takeItem( item );
-    mSelectedBox->insertItem( item, i - 1 );
+    QListWidgetItem *item = mSelectedBox->item( i );
+    mSelectedBox->takeItem( i );
+    mSelectedBox->insertItem( i - 1, item );
     mSelectedBox->setCurrentItem( item );
-    mSelectedBox->setSelected( i - 1, true );
+    mSelectedBox->item( i - 1 )->setSelected( true );
   }
 }
 
 void ViewConfigureFieldsPage::slotMoveDown()
 {
-  int i = mSelectedBox->currentItem();
+  int i = mSelectedBox->currentRow();
   if ( i > -1 && i < (int)mSelectedBox->count() - 1 ) {
-    Q3ListBoxItem *item = mSelectedBox->item( i );
-    mSelectedBox->takeItem( item );
-    mSelectedBox->insertItem( item, i + 1 );
+    QListWidgetItem *item = mSelectedBox->item( i );
+    mSelectedBox->takeItem( i );
+    mSelectedBox->insertItem( i + 1, item );
     mSelectedBox->setCurrentItem( item );
-    mSelectedBox->setSelected( i + 1, true );
+    mSelectedBox->item( i + 1 )->setSelected( true );
   }
 }
 
@@ -226,13 +223,14 @@ void ViewConfigureFieldsPage::initGUI()
   QLabel *label = new QLabel( i18n( "&Selected fields:" ), this );
   gl->addWidget( label, 0, 2 );
 
-  mUnSelectedBox = new Q3ListBox( this );
-  mUnSelectedBox->setSelectionMode( Q3ListBox::Extended );
+  mUnSelectedBox = new QListWidget( this );
+  mUnSelectedBox->setSelectionMode( QAbstractItemView::ExtendedSelection );
+  mUnSelectedBox->setSortingEnabled( true );
   mUnSelectedBox->setMinimumHeight( 100 );
   gl->addWidget( mUnSelectedBox, 1, 0 );
 
-  mSelectedBox = new Q3ListBox( this );
-  mSelectedBox->setSelectionMode( Q3ListBox::Extended );
+  mSelectedBox = new QListWidget( this );
+  mSelectedBox->setSelectionMode( QAbstractItemView::ExtendedSelection );
   label->setBuddy( mSelectedBox );
   gl->addWidget( mSelectedBox, 1, 2 );
 
@@ -277,15 +275,20 @@ void ViewConfigureFieldsPage::initGUI()
   slotShowFields( 0 );
 
   sizeHint = sizeHint.expandedTo( mSelectedBox->sizeHint() );
-  sizeHint.setWidth( mUnSelectedBox->maxItemWidth() );
+#ifdef __GNUC__
+#warning Port me!
+#endif
+  //sizeHint.setWidth( mUnSelectedBox->maxItemWidth() );
   mUnSelectedBox->setMinimumSize( sizeHint );
   mSelectedBox->setMinimumSize( sizeHint );
 
   gl->activate();
 
-  connect( mUnSelectedBox, SIGNAL( selectionChanged() ), SLOT( slotButtonsEnabled() ) );
-  connect( mSelectedBox, SIGNAL( selectionChanged() ), SLOT( slotButtonsEnabled() ) );
-  connect( mSelectedBox, SIGNAL( currentChanged( Q3ListBoxItem * ) ), SLOT( slotButtonsEnabled() ) );
+  connect( mUnSelectedBox, SIGNAL( itemSelectionChanged() ), SLOT( slotButtonsEnabled() ) );
+  connect( mSelectedBox, SIGNAL( itemSelectionChanged() ), SLOT( slotButtonsEnabled() ) );
+  connect( mSelectedBox, 
+           SIGNAL( currentItemChanged( QListWidgetItem *, QListWidgetItem * ) ), 
+           SLOT( slotButtonsEnabled() ) );
 
   slotButtonsEnabled();
 }
