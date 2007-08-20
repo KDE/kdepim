@@ -32,11 +32,11 @@ set(kcmpilot_SRCS
 
 
 set(kcmpilot_UIS
-	config_page_backup.ui
 	config_dialog_dbselection_base.ui
 )
 
 set(kcmpilot_UIS4
+	config_page_backup.ui
 	config_page_device.ui
 	config_page_startup.ui
 )

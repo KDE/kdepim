@@ -53,7 +53,6 @@
 #include "kpilotConfig.h"
 #include "kpilotSettings.h"
 
-#include "config_page_backup.h"
 #include "config_dialog_probe.h"
 #include "config_dialog_dbselection.h"
 
@@ -299,16 +298,15 @@ BackupConfigPage::BackupConfigPage(QWidget * w, const char *n ) : ConfigPage( w,
 {
 	FUNCTIONSETUP;
 
-	fConfigWidget = new BackupConfigWidget( w );
-	fConfigWidget->resize(fConfigWidget->size());
-	fWidget = fConfigWidget;
+	fWidget = new QWidget(w);
+	fConfigWidget.setupUi(fWidget);
 
-	connect(fConfigWidget->fBackupOnlyChooser, SIGNAL( clicked() ),
+	connect(fConfigWidget.fBackupOnlyChooser, SIGNAL( clicked() ),
 		SLOT( slotSelectNoBackupDBs() ) );
-	connect(fConfigWidget->fSkipDBChooser, SIGNAL(clicked()),
+	connect(fConfigWidget.fSkipDBChooser, SIGNAL(clicked()),
 		SLOT(slotSelectNoRestoreDBs()));
 
-#define CM(a,b) connect(fConfigWidget->a,b,this,SLOT(modified()));
+#define CM(a,b) connect(fConfigWidget.a,b,this,SLOT(modified()));
 	CM(fBackupOnly, SIGNAL(textChanged(const QString &)));
 	CM(fSkipDB, SIGNAL(textChanged(const QString &)));
 	CM(fBackupFrequency, SIGNAL(activated(int)));
@@ -323,13 +321,14 @@ void BackupConfigPage::load()
 	KPilotSettings::self()->readConfig();
 
 	/* Backup tab */
-	fConfigWidget->fBackupOnly->setText(KPilotSettings::skipBackupDB().join(CSL1(",")));
-	fConfigWidget->fSkipDB->setText(KPilotSettings::skipRestoreDB().join(CSL1(",")));
-	fConfigWidget->fRunConduitsWithBackup->setChecked(KPilotSettings::runConduitsWithBackup());
+	fConfigWidget.fBackupOnly->setText(KPilotSettings::skipBackupDB().join(CSL1(",")));
+	fConfigWidget.fSkipDB->setText(KPilotSettings::skipRestoreDB().join(CSL1(",")));
+	fConfigWidget.fRunConduitsWithBackup->setChecked(
+		KPilotSettings::runConduitsWithBackup());
 
-	int backupfreq=KPilotSettings::backupFrequency();
+	int backupfreq = KPilotSettings::backupFrequency();
 
-	fConfigWidget->fBackupFrequency->setCurrentIndex(backupfreq);
+	fConfigWidget.fBackupFrequency->setCurrentIndex(backupfreq);
 
 	unmodified();
 }
@@ -340,11 +339,13 @@ void BackupConfigPage::load()
 
 	/* Backup tab */
 	KPilotSettings::setSkipBackupDB(
-		fConfigWidget->fBackupOnly->text().split( ',' ) );
+		fConfigWidget.fBackupOnly->text().split( ',' ) );
 	KPilotSettings::setSkipRestoreDB(
-		fConfigWidget->fSkipDB->text().split( ',' ) );
-	KPilotSettings::setRunConduitsWithBackup(fConfigWidget->fRunConduitsWithBackup->isChecked());
-	KPilotSettings::setBackupFrequency(fConfigWidget->fBackupFrequency->currentIndex());
+		fConfigWidget.fSkipDB->text().split( ',' ) );
+	KPilotSettings::setRunConduitsWithBackup(
+		fConfigWidget.fRunConduitsWithBackup->isChecked());
+	KPilotSettings::setBackupFrequency(
+		fConfigWidget.fBackupFrequency->currentIndex());
 
 	KPilotConfig::updateConfigVersion();
 	KPilotSettings::self()->writeConfig();
@@ -355,14 +356,15 @@ void BackupConfigPage::slotSelectNoBackupDBs()
 {
 	FUNCTIONSETUP;
 
-	QStringList selectedDBs(fConfigWidget->fBackupOnly->text().split(','));
+	QStringList selectedDBs(fConfigWidget.fBackupOnly->text().split(','));
 
-	QStringList deviceDBs=KPilotSettings::deviceDBs();
-	QStringList addedDBs=KPilotSettings::addedDBs();
-	KPilotDBSelectionDialog *dlg=new KPilotDBSelectionDialog(selectedDBs, deviceDBs, addedDBs, 0, "NoBackupDBs");
-	if (dlg && (dlg->exec()==QDialog::Accepted) )
+	QStringList deviceDBs = KPilotSettings::deviceDBs();
+	QStringList addedDBs = KPilotSettings::addedDBs();
+	KPilotDBSelectionDialog *dlg = new KPilotDBSelectionDialog(selectedDBs
+		, deviceDBs, addedDBs, 0, "NoBackupDBs");
+	if (dlg && (dlg->exec() == QDialog::Accepted) )
 	{
-		fConfigWidget->fBackupOnly->setText(
+		fConfigWidget.fBackupOnly->setText(
 			dlg->getSelectedDBs().join(CSL1(",")));
 		KPilotSettings::setAddedDBs( dlg->getAddedDBs() );
 	}
@@ -373,14 +375,16 @@ void BackupConfigPage::slotSelectNoRestoreDBs()
 {
 	FUNCTIONSETUP;
 
-	QStringList selectedDBs(fConfigWidget->fSkipDB->text().split(','));
+	QStringList selectedDBs(fConfigWidget.fSkipDB->text().split(','));
 
-	QStringList deviceDBs=KPilotSettings::deviceDBs();
-	QStringList addedDBs=KPilotSettings::addedDBs();
-	KPilotDBSelectionDialog *dlg=new KPilotDBSelectionDialog(selectedDBs, deviceDBs, addedDBs, 0, "NoRestoreDBs");
-	if (dlg && (dlg->exec()==QDialog::Accepted) )
+	QStringList deviceDBs = KPilotSettings::deviceDBs();
+	QStringList addedDBs = KPilotSettings::addedDBs();
+	KPilotDBSelectionDialog *dlg = new KPilotDBSelectionDialog(selectedDBs
+		, deviceDBs, addedDBs, 0, "NoRestoreDBs");
+	
+	if (dlg && (dlg->exec() == QDialog::Accepted) )
 	{
-		fConfigWidget->fSkipDB->setText(
+		fConfigWidget.fSkipDB->setText(
 			dlg->getSelectedDBs().join(CSL1(",")));
 		KPilotSettings::setAddedDBs( dlg->getAddedDBs() );
 	}

@@ -32,6 +32,7 @@
 
 #include "plugin.h"
 #include "ui_config_page_device.h"
+#include "ui_config_page_backup.h"
 #include "ui_config_page_sync.h"
 #include "ui_config_page_startup.h"
 #include "ui_config_page_viewers.h"
@@ -110,7 +111,7 @@ protected slots:
 	void slotSelectNoRestoreDBs();
 
 private:
-	BackupConfigWidget *fConfigWidget;
+	Ui::BackupConfigWidget fConfigWidget;
 } ;
 
 class StartExitConfigPage : public ConfigPage

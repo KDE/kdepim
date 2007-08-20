@@ -33,6 +33,7 @@
 #include <QList>
 #include <QString>
 #include <QStringList>
+#include <QGroupBox>
 
 #include <kdialog.h>
 
