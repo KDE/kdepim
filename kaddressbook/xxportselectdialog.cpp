@@ -27,12 +27,11 @@
 #include <kcombobox.h>
 #include <klocale.h>
 
-#include <q3buttongroup.h>
 #include <QComboBox>
-#include <q3header.h>
+#include <QGroupBox>
 #include <QLabel>
 #include <QLayout>
-#include <q3listview.h>
+#include <Q3ListView>
 #include <QPushButton>
 #include <QRadioButton>
 #include <QStringList>
@@ -43,6 +42,8 @@
 #include <QGridLayout>
 #include <ktoolinvocation.h>
 #include <kglobal.h>
+
+#include <libkdepim/categoryselectdialog.h>
 
 #include "core.h"
 #include "kabprefs.h"
@@ -64,8 +65,6 @@ XXPortSelectDialog::XXPortSelectDialog( KAB::Core *core, bool sort,
 
   connect( mFiltersCombo, SIGNAL( activated( int ) ),
            SLOT( filterChanged( int ) ) );
-  connect( mCategoriesView, SIGNAL( clicked( Q3ListViewItem* ) ),
-           SLOT( categoryClicked( Q3ListViewItem* ) ) );
 
   // setup filters
   mFilters = Filter::restore( KGlobal::config().data(), "Filter" );
@@ -78,10 +77,8 @@ XXPortSelectDialog::XXPortSelectDialog( KAB::Core *core, bool sort,
   mUseFilters->setEnabled( filters.count() > 0 );
 
   // setup categories
-  const QStringList categories =  KABPrefs::instance()->customCategories();
-  QStringList::ConstIterator it;
-  for ( it = categories.begin(); it != categories.end(); ++it )
-    new Q3CheckListItem( mCategoriesView, *it, Q3CheckListItem::CheckBox );
+  const QStringList categories = KABPrefs::instance()->customCategories();
+  mCategoriesView->setCategories( categories );
   mUseCategories->setEnabled( categories.count() > 0 );
 
   int count = mCore->selectedUIDs().count();
@@ -155,16 +152,8 @@ KABC::AddresseeList XXPortSelectDialog::contacts()
 
 QStringList XXPortSelectDialog::categories() const
 {
-  QStringList list;
-
-  Q3ListViewItemIterator it( mCategoriesView );
-  for ( ; it.current(); ++it ) {
-    Q3CheckListItem* qcli = static_cast<Q3CheckListItem*>(it.current());
-    if ( qcli->isOn() )
-      list.append( it.current()->text( 0 ) );
-  }
-
-  return list;
+  QString lst;
+  return mCategoriesView->selectedCategories( lst );
 }
 
 void XXPortSelectDialog::filterChanged( int )
@@ -172,14 +161,9 @@ void XXPortSelectDialog::filterChanged( int )
   mUseFilters->setChecked( true );
 }
 
-void XXPortSelectDialog::categoryClicked( Q3ListViewItem *i )
+void XXPortSelectDialog::categoryClicked()
 {
-  if ( !i )
-    return;
-
-  Q3CheckListItem *qcli = static_cast<Q3CheckListItem*>( i );
-  if ( qcli->isOn() )
-    mUseCategories->setChecked( true );
+  mUseCategories->setChecked( true );
 }
 
 void XXPortSelectDialog::slotHelp()
@@ -189,24 +173,22 @@ void XXPortSelectDialog::slotHelp()
 
 void XXPortSelectDialog::initGUI()
 {
-  QFrame *page = new QFrame( this );
+  QWidget *page = new QWidget( this );
   setMainWidget( page );
 
   QVBoxLayout *topLayout = new QVBoxLayout( page );
   topLayout->setSpacing( KDialog::spacingHint() );
-  topLayout->setMargin( KDialog::marginHint() );
+  topLayout->setMargin( 0 );
 
   QLabel *label = new QLabel( i18n( "Which contacts do you want to export?" ), page );
   topLayout->addWidget( label );
 
-  mButtonGroup = new Q3ButtonGroup( i18n( "Selection" ), page );
-  mButtonGroup->setColumnLayout( 0, Qt::Vertical );
-  mButtonGroup->layout()->setSpacing( KDialog::spacingHint() );
-  mButtonGroup->layout()->setMargin( KDialog::marginHint() );
-
+  mButtonGroup = new QGroupBox( i18n( "Selection" ), page );
   QGridLayout *groupLayout = new QGridLayout();
-  mButtonGroup->layout()->addItem( groupLayout );
+  groupLayout->setSpacing( KDialog::spacingHint() );
+  groupLayout->setMargin( KDialog::marginHint() );
   groupLayout->setAlignment( Qt::AlignTop );
+  mButtonGroup->setLayout( groupLayout );
 
   mUseWholeBook = new QRadioButton( i18n( "&All contacts" ), mButtonGroup );
   mUseWholeBook->setChecked( true );
@@ -232,20 +214,21 @@ void XXPortSelectDialog::initGUI()
   mFiltersCombo->setWhatsThis( i18n( "Select a filter to decide which contacts to export." ) );
   groupLayout->addWidget( mFiltersCombo, 2, 1 );
 
-  mCategoriesView = new Q3ListView( mButtonGroup );
-  mCategoriesView->addColumn( "" );
-  mCategoriesView->header()->hide();
-  mCategoriesView->setWhatsThis( i18n( "Check the categories whose members you want to export." ) );
+  mCategoriesView = new KPIM::CategorySelectWidget( mButtonGroup, KABPrefs::instance() );
+  mCategoriesView->hideButton();
+  mCategoriesView->layout()->setMargin( 0 );
+  mCategoriesView->setWhatsThis( i18n( "Check the categories whose members you want to print." ) );
   groupLayout->addWidget( mCategoriesView, 3, 1 );
+  connect( mCategoriesView->listView(), SIGNAL( clicked( Q3ListView* ) ),
+           this, SLOT( categoryClicked() ) );
 
   topLayout->addWidget( mButtonGroup );
 
-  Q3ButtonGroup *sortingGroup = new Q3ButtonGroup( i18n( "Sorting" ), page );
-  sortingGroup->setColumnLayout( 0, Qt::Vertical );
+  QGroupBox *sortingGroup = new QGroupBox( i18n( "Sorting" ), page );
   QGridLayout *sortLayout = new QGridLayout();
-  sortingGroup->layout()->addItem( sortLayout );
   sortLayout->setSpacing( KDialog::spacingHint() );
   sortLayout->setAlignment( Qt::AlignTop );
+  sortingGroup->setLayout( sortLayout );
 
   label = new QLabel( i18n( "Criterion:" ), sortingGroup );
   sortLayout->addWidget( label, 0, 0 );

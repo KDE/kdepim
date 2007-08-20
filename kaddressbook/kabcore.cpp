@@ -26,7 +26,6 @@
 #include <QFile>
 #include <QLayout>
 #include <QRegExp>
-#include <q3vbox.h>
 #include <QSplitter>
 //Added by qt3to4:
 #include <QVBoxLayout>

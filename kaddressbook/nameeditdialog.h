@@ -53,7 +53,7 @@ class NameEditDialog : public KDialog
     };
 
     NameEditDialog( const KABC::Addressee &addr, int type,
-                    bool readOnly, QWidget *parent, const char *name = 0 );
+                    bool readOnly, QWidget *parent );
     ~NameEditDialog();
 
     QString familyName() const;

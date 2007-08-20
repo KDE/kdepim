@@ -23,8 +23,6 @@
 
 #include <QLayout>
 #include <QLabel>
-#include <q3listbox.h>
-#include <q3listview.h>
 
 #include <QPushButton>
 #include <QCheckBox>
@@ -37,7 +35,6 @@
 #include <kapplication.h>
 #include <kconfig.h>
 #include <klineedit.h>
-#include <k3listview.h>
 #include <kcombobox.h>
 #include <klocale.h>
 #include <kdebug.h>
@@ -48,7 +45,7 @@
 #include "nameeditdialog.h"
 
 NameEditDialog::NameEditDialog( const KABC::Addressee &addr, int type,
-                                bool readOnly, QWidget *parent, const char *name )
+                                bool readOnly, QWidget *parent )
   : KDialog( parent), mAddressee( addr )
 {
   setCaption( i18n( "Edit Contact Name" ) );
