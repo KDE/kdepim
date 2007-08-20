@@ -49,16 +49,16 @@ public:
 	 * Sets the id of this record to @p id;
 	 */
 	virtual void setId( const QString &id ) = 0;
-
-	/**
-	 * Adds a category to this record.
-	 */
-	virtual void addCategory( const QString &cat ) = 0;
 	
 	/**
 	 * Returns the catogories of this record.
 	 */
-	virtual QStringList categories() const = 0;
+	virtual QStringList categoryNames() const = 0;
+	
+	/**
+	 * Sets the categories which are filed for this record.
+	 */
+	virtual void setCategoryNames( const QStringList &names ) = 0;
 
 	/**
 	 * Returns true if the record is modified and/or if it's marked as deleted.

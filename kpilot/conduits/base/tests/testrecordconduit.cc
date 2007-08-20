@@ -520,8 +520,17 @@ HHRecord* TestRecordConduit::createHHRecord( const Record* record )
 	return new TestHHRecord( pcRec );
 }
 
-	
+void TestRecordConduit::copy( const Record *from, HHRecord *to )
+{
+	RecordConduit::copy( from, to );
+}
+
 void TestRecordConduit::copy( const HHRecord *from, Record *to  )
+{
+	RecordConduit::copy( from, to );
+}
+
+void TestRecordConduit::_copy( const HHRecord *from, Record *to  )
 {
 	const TestHHRecord *hhRec = static_cast<const TestHHRecord*>( from );
 	TestRecord *pcRec = static_cast<TestRecord*>( to );
@@ -536,7 +545,7 @@ void TestRecordConduit::copy( const HHRecord *from, Record *to  )
 	}
 }
 
-void TestRecordConduit::copy( const Record *from, HHRecord *to )
+void TestRecordConduit::_copy( const Record *from, HHRecord *to )
 {
 	const TestRecord *pcRec = static_cast<const TestRecord*>( from );
 	TestHHRecord *hhRec = static_cast<TestHHRecord*>( to );

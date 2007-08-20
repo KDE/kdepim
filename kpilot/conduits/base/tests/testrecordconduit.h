@@ -56,7 +56,7 @@ public:
 	virtual Record* newPCRecord( HHRecord *hhRecord );
 	
 	virtual void copy( const Record *from, HHRecord *to );
-	
+
 	virtual void copy( const HHRecord *from, Record *to  );
 	
 	/** Methods below are added for testpurposes **/
@@ -87,6 +87,11 @@ public:
 	}
 	
 	IDMapping *mapping() { return fMapping; }
+
+protected:
+	virtual void _copy( const Record *from, HHRecord *to );
+
+	virtual void _copy( const HHRecord *from, Record *to  );
 
 private:
 	bool fCreateRecords;

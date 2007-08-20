@@ -28,11 +28,13 @@
 #include "hhrecord.h"
 
 #include "options.h"
+#include "pilot.h"
 #include "pilotRecord.h"
+#include "pilotAppInfo.h"
 
-HHRecord::HHRecord( PilotRecord *record )
+HHRecord::HHRecord( PilotRecord *record, PilotAppInfoBase *appInfo )
+	: fRecord( record ), fAppInfo( appInfo )
 {
-	fRecord = record;
 }
 
 HHRecord::~HHRecord()
@@ -40,13 +42,65 @@ HHRecord::~HHRecord()
 	delete fRecord;
 }
 
-void HHRecord::addCategory( const QString &cat )
+void HHRecord::setCategoryNames( const QStringList &cats )
 {
-	fCategory = cat;
+	FUNCTIONSETUP;
+	
+	if( cats.size() < 1 )
+	{
+		fCategory = i18nc( "No category set for this record", "Unfiled" );
+		fRecord->setCategory( 0 );
+	}
+	else
+	{
+		if( fAppInfo )
+		{
+			QStringList aiCats = Pilot::categoryNames( fAppInfo->categoryInfo() );
+			
+			if( aiCats.contains( cats.first() ) )
+			{
+				DEBUGKPILOT << "Changin category from " << fCategory << " to "
+					<< cats.first();
+
+				fCategory = cats.first();
+				// We savely can assume that findCategory won't fail.
+				
+				
+				// FIXME: For some weir reason fAppInfo->findCategory( fCategory );
+				// Fails. Below i do exactly the same but this works. *magic* :S.
+				int fCatId = -1;
+				
+				for( unsigned int i = 0; i < Pilot::CATEGORY_COUNT; i++ )
+				{
+					if( fAppInfo->categoryName( i ) == fCategory )
+					{
+						fCatId = i;
+					}
+				}
+				
+				fRecord->setCategory( fCatId );
+			}
+			else
+			{
+				// Category does not exist in appinfo, set it to unfiled.
+				DEBUGKPILOT << "Category " << cats.first() 
+					<< " does not exist, setting to unfiled.";
+					
+				fCategory = i18nc( "No category set for this record", "Unfiled" );
+				fRecord->setCategory( 0 );
+			}
+		}
+		else
+		{
+			DEBUGKPILOT << "fAppInfo not initialized, category not changed";
+		}
+	}
 }
 
-QStringList HHRecord::categories() const
+QStringList HHRecord::categoryNames() const
 {
+	FUNCTIONSETUP;
+	
 	QStringList categories;
 	categories << fCategory;
 	
@@ -55,7 +109,49 @@ QStringList HHRecord::categories() const
 
 PilotRecord* HHRecord::pilotRecord() const
 {
+	FUNCTIONSETUP;
+	
 	return fRecord;
+}
+
+PilotAppInfoBase* HHRecord::appInfo() const
+{
+	FUNCTIONSETUP;
+	
+	return fAppInfo;
+}
+
+void HHRecord::setCategory( int catId, const QString name )
+{
+	FUNCTIONSETUP;
+	
+	DEBUGKPILOT << "Setting category: " << name << " which has id: " << catId;
+	
+	fCategory = name;
+	if( fRecord )
+	{
+		fRecord->setCategory( catId );
+	}
+}
+
+QString HHRecord::categoryName() const
+{
+	FUNCTIONSETUP;
+	
+	return fCategory;
+}
+
+int HHRecord::categoryId() const
+{
+	FUNCTIONSETUP;
+	
+	if( fRecord )
+	{
+		return fRecord->category();
+	}
+	
+	// No record return unfiled.
+	return Pilot::Unfiled;
 }
 
 bool HHRecord::isArchived() const

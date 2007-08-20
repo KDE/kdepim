@@ -105,24 +105,31 @@ RecordConduit::~RecordConduit()
 	{
 		DEBUGKPILOT << "All proxies are initialized and open.";
 		// So what are we going to do this time?!
-		switch( syncMode().mode() ) {
-			case SyncMode::eHotSync:
-				hotOrFullSync();
-				break;
-			case SyncMode::eFullSync:
-				hotOrFullSync();
-				break;
-			case SyncMode::eCopyPCToHH:
-				copyPCToHH();
-				break;
-			case SyncMode::eCopyHHToPC:
-				copyHHToPC();
-				break;
-			// Backup and restore should not happen here, if so default to hotsync.
-			default:
-				changeSync( SyncMode::eHotSync );
-				hotOrFullSync();
-				break;
+		if( isFirstSync() )
+		{
+			firstSync();
+		}
+		else
+		{
+			switch( syncMode().mode() ) {
+				case SyncMode::eHotSync:
+					hotOrFullSync();
+					break;
+				case SyncMode::eFullSync:
+					hotOrFullSync();
+					break;
+				case SyncMode::eCopyPCToHH:
+					copyPCToHH();
+					break;
+				case SyncMode::eCopyHHToPC:
+					copyHHToPC();
+					break;
+				// Backup and restore should not happen here, if so default to hotsync.
+				default:
+					changeSync( SyncMode::eHotSync );
+					hotOrFullSync();
+					break;
+			}
 		}
 	}
 	else if( hhDatabaseOpen && pcDatabaseOpen && !backupDatabaseOpen )
@@ -935,4 +942,127 @@ void RecordConduit::solveConflict( Record *pcRecord, HHRecord *hhRecord )
 	
 	// else: eDoNothing
 	//return true;
+}
+
+void RecordConduit::copy( const Record *from, HHRecord *to )
+{
+	FUNCTIONSETUP;
+	
+	copyCategory( from, to );
+	
+	// Let implementing classess do the rest of the copying.
+	_copy( from, to );
+}
+	
+void RecordConduit::copy( const HHRecord *from, Record *to  )
+{
+	FUNCTIONSETUP;
+	
+	copyCategory( from, to );
+	
+	// Let implementing classess do the rest of the copying.
+	_copy( from, to );
+}
+
+void RecordConduit::copyCategory( const Record *from, HHRecord *to )
+{
+	FUNCTIONSETUP;
+	
+	DEBUGKPILOT << "(Record *from, HHRecord *to)";
+		
+	if( !from || !to )
+	{
+		return;
+	}
+
+	QStringList pcCategories = to->categoryNames();
+	if( pcCategories.size() < 1 )
+	{
+		// The pc record has no categories.
+		to->setCategory( Pilot::Unfiled, i18nc( "No category set for this record"
+			, "Unfiled" ) );
+		return;
+	}
+
+	// Quick check: does the record (not unfiled) have an entry
+	// in the categories list? If so, use that.
+	if( to->categoryId() != Pilot::Unfiled )
+	{
+		QString hhCat = to->categoryName();
+		
+		if( pcCategories.contains( hhCat ) )
+		{
+			// Found, so leave the category unchanged.
+			return;
+		}
+	}
+
+	QStringList availableHandheldCategories = fHHDataProxy->categoryNames();
+
+	// Either the record is unfiled, and should be filed, or
+	// it has a category set which is not in the list of
+	// categories that the event has. So go looking for
+	// a category that is available both for the event
+	// and on the handheld.
+	for ( QStringList::ConstIterator it = pcCategories.begin();
+		it != pcCategories.end(); ++it )
+	{
+		// Odd, an empty category string.
+		if( (*it).isEmpty() )
+		{
+			continue;
+		}
+
+		if( availableHandheldCategories.contains( *it ) )
+		{
+			// Since the string is in the list of available categories,
+			// this *can't* fail.
+			int c = fHHDataProxy->categoryId( *it );
+			Q_ASSERT( Pilot::validCategory(c) );
+			to->setCategory( c, *it );
+			return;
+		}
+	}
+
+	to->setCategory( Pilot::Unfiled, i18nc( "No category set for this record"
+			, "Unfiled" ) );
+}
+
+void RecordConduit::copyCategory( const HHRecord *from, Record *to  )
+{
+	FUNCTIONSETUP;
+	
+	DEBUGKPILOT << "(HHRecord *from, Record  *to)";
+	
+	if( !from || !to )
+	{
+		return;
+	}
+
+	QStringList pcCategories = to->categoryNames();
+	QString hhCategory = from->categoryName();
+	int cat = from->categoryId();
+
+	DEBUGKPILOT << "HH category id " << cat << " label: [" << hhCategory << ']';
+
+	if( Pilot::validCategory( cat ) && ( cat != Pilot::Unfiled ) )
+	{
+		if( !pcCategories.contains( hhCategory ) )
+		{
+			// if this event only has one category associated with it, then we can
+			// safely assume that what we should be doing here is changing it to match
+			// the palm. if there's already more than one category in the event,
+			// however, we won't cause data loss--we'll just append what the palm has
+			// to the event's categories.
+			if( pcCategories.count() <= 1 )
+			{
+				pcCategories.clear();
+			}
+
+			pcCategories.append( hhCategory );
+			to->setCategoryNames( pcCategories );
+		}
+	}
+
+	DEBUGKPILOT << "PC categories now: [" << pcCategories.join( "," ) << ']';
 }

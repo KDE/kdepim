@@ -33,6 +33,7 @@
 #include <kwallet.h>
 
 #include "options.h"
+#include "pilotDatabase.h"
 #include "pilotRecord.h"
 
 #include "keyringhhdataproxy.h"
@@ -133,6 +134,8 @@ bool KeyringConduit::initDataProxies()
 	// Open the other proxies.
 	if( fLocalDatabase )
 	{
+		DEBUGKPILOT << "Local backup: " << fLocalDatabase->dbPathName();
+		
 		KeyringHHDataProxy *backupDataProxy = new KeyringHHDataProxy( fLocalDatabase );
 		backupDataProxy->openDatabase( pass );
 		
@@ -161,6 +164,8 @@ bool KeyringConduit::initDataProxies()
 
 QString KeyringConduit::askPassword() const
 {
+	FUNCTIONSETUP;
+	
 	KPasswordDialog dlg( 0, KPasswordDialog::NoFlags );
 	dlg.setPrompt( i18n( "Enter your Keyring password" ) );
 	if( !dlg.exec() )
@@ -191,6 +196,7 @@ bool KeyringConduit::equal( const Record *pcRec, const HHRecord *hhRec ) const
 	equal = equal && ( krPCRec->account() == krHHRec->account() );
 	equal = equal && ( krPCRec->password() == krHHRec->password() );
 	equal = equal && ( krPCRec->notes() == krHHRec->notes() );
+	equal = equal && ( krPCRec->categoryName() == krHHRec->categoryName() );
 	
 	return equal;
 }
@@ -199,7 +205,8 @@ Record* KeyringConduit::createPCRecord( const HHRecord *hhRec )
 {
 	FUNCTIONSETUP;
 	
-	return new KeyringHHRecord( new PilotRecord( hhRec->pilotRecord() ), fDesKey );
+	return new KeyringHHRecord( new PilotRecord( hhRec->pilotRecord() )
+	, hhRec->appInfo(), fDesKey );
 }
 
 HHRecord* KeyringConduit::createHHRecord( const Record *pcRec )
@@ -210,10 +217,11 @@ HHRecord* KeyringConduit::createHHRecord( const Record *pcRec )
 	// we can do this safely. This conduit only deals with KeyringHHRecord objects.
 	const KeyringHHRecord *hhRec = static_cast<const KeyringHHRecord*>( pcRec );
 	
-	return new KeyringHHRecord( new PilotRecord( hhRec->pilotRecord() ), fDesKey );
+	return new KeyringHHRecord( new PilotRecord( hhRec->pilotRecord() )
+		, hhRec->appInfo(), fDesKey );
 }
 
-void KeyringConduit::copy( const Record *from, HHRecord *to )
+void KeyringConduit::_copy( const Record *from, HHRecord *to )
 {
 	FUNCTIONSETUP;
 	
@@ -247,8 +255,10 @@ void KeyringConduit::copy( const Record *from, HHRecord *to )
 	}
 }
 
-void KeyringConduit::copy( const HHRecord *from, Record *to  )
+void KeyringConduit::_copy( const HHRecord *from, Record *to  )
 {
+	FUNCTIONSETUP;
+	
 	// Don't implement things twice, just call the other copy method.
-	copy( (Record*) from, static_cast<HHRecord*>( to ) );
+	_copy( (Record*) from, static_cast<HHRecord*>( to ) );
 }

@@ -93,13 +93,31 @@ protected:
 	virtual HHRecord* createHHRecord( const Record *pcRec ) = 0;
 	
 	/**
+	 * Copies the categories of @p from to @p to. Delegates the rest of the
+	 * copying to the implementing classes. @see
+	 * _copy( const Record *from, HHRecord *to ).
+	 *
+	 * RecordConduit::equal( pcRecord, hhRecord ) must return true.
+	 */
+	virtual void copy( const Record *from, HHRecord *to );
+	
+	/**
+	 * Copies the category of @p from to @p to. Delegates the rest of the
+	 * copying to the implementing classes. @see
+	 * _copy( const HHRecord *from, Record *to ).
+	 *
+	 * RecordConduit::equal( pcRecord, hhRecord ) must return true.
+	 */
+	virtual void copy( const HHRecord *from, Record *to  );
+	
+		/**
 	 * Copies the field values of @p from to @p to. The method should only touch
 	 * data that can be synced between the two records and leave the rest of the
 	 * records data unchanged. After calling this method
 	 *
 	 * RecordConduit::equal( pcRecord, hhRecord ) must return true.
 	 */
-	virtual void copy( const Record *from, HHRecord *to ) = 0;
+	virtual void _copy( const Record *from, HHRecord *to ) = 0;
 	
 	/**
 	 * Copies the field values of @p from to @p to. The method should only touch
@@ -108,7 +126,7 @@ protected:
 	 *
 	 * RecordConduit::equal( pcRecord, hhRecord ) must return true.
 	 */
-	virtual void copy( const HHRecord *from, Record *to  ) = 0;
+	virtual void _copy( const HHRecord *from, Record *to  ) = 0;
 	
 	/**
 	 * This method is called when the conduit is run in Test Mode. The 
@@ -173,5 +191,20 @@ protected:
 	 */
 	void syncConflictedRecords( Record *pcRecord, HHRecord *hhRecord
 		, bool pcOverides );
+
+private: //Functions
+	/**
+	 * Copies the category from the pc record to the handheld record. It also does
+	 * some checks because handheld records have always only one category while pc
+	 * records may have more then one category.
+	 */
+	void copyCategory( const Record *from, HHRecord *to );
+	
+	/**
+	 * Copies the category from the handheld record to the pc record. It also does
+	 * some checks because handheld records have always only one category while pc
+	 * records may have more then one category.
+	 */
+	void copyCategory( const HHRecord *from, Record *to  );
 };
 #endif

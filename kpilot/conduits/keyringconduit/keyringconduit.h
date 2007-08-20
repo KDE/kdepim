@@ -63,7 +63,7 @@ public:
 	 *
 	 * RecordConduit::equal( pcRecord, hhRecord ) must return true.
 	 */
-	virtual void copy( const Record *from, HHRecord *to );
+	virtual void _copy( const Record *from, HHRecord *to );
 	
 	/**
 	 * Copies the field values of @p from to @p to. The method should only touch
@@ -72,7 +72,7 @@ public:
 	 *
 	 * RecordConduit::equal( pcRecord, hhRecord ) must return true.
 	 */
-	virtual void copy( const HHRecord *from, Record *to  );
+	virtual void _copy( const HHRecord *from, Record *to  );
 	
 	/**
 	 * This method is called when the conduit is run in Test Mode. The 

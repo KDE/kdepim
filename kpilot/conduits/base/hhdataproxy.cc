@@ -47,6 +47,7 @@ void HHDataProxy::syncFinished()
 	
 	if( fDatabase && fDatabase->isOpen() )
 	{
+		fDatabase->cleanup();
 		fDatabase->resetSyncFlags();
 	}
 }
@@ -159,6 +160,8 @@ void HHDataProxy::loadAllRecords()
 			Record *rec = createHHRecord( pRec );
 			fRecords.insert( rec->id(), rec );
 			
+			DEBUGKPILOT << rec->toString();
+			
 			if( fAppInfo )
 			{
 				// Handheld records always only have on category at most.
@@ -168,21 +171,60 @@ void HHDataProxy::loadAllRecords()
 					// This shouldn't happen I think....the category id seems to have some
 					// bogus value. So we set it to 0, which is Unfiled normaly.
 					pRec->setCategory( 0 );
-					 
+					
 					//but if it does we set the category to Unfiled.
-					rec->addCategory( i18nc( "Category not set for the record"
+					QStringList categoryNames;
+					categoryNames.append( i18nc( "Category not set for the record"
 						, "Unfiled") );
+					
+					rec->setCategoryNames( categoryNames );
 				}
 				else
 				{
 					// This essentialy doesn't add a category to the record but just the
 					// label for the category which is set in the pilot record.
-					rec->addCategory( cat );
+					QStringList categoryNames;
+					categoryNames.append( cat );
+					
+					rec->setCategoryNames( categoryNames );
 				}
 			}
-			
+				
 			// Read the next one.
 			pRec = fDatabase->readRecordByIndex( ++index );
 		}
 	}
+}
+
+QStringList HHDataProxy::categoryNames() const
+{
+	if( fAppInfo )
+	{
+		QStringList names;
+		
+		for( unsigned int i = 0; i < Pilot::CATEGORY_COUNT; i++ )
+		{
+			QString catName = fAppInfo->categoryName( i );
+			if( !catName.isEmpty() )
+			{
+				names.append( catName );
+			}
+		}
+		
+		return names;
+	}
+	else
+	{
+		return QStringList();
+	}
+}
+
+int HHDataProxy::categoryId( const QString &name ) const
+{
+	if( fAppInfo )
+	{
+		return fAppInfo->findCategory( name, true );
+	}
+	
+	return 0;
 }

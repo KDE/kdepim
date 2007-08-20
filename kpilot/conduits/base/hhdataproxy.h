@@ -51,6 +51,17 @@ public:
 	 */
 	virtual void syncFinished();
 	
+	/**
+	 * Returns the list of category names.
+	 */
+	virtual QStringList categoryNames() const;
+	
+	/**
+	 * Returns the category id for given category name or 0 if the category does
+	 * not exist.
+	 */
+	int categoryId( const QString &name ) const;
+	
 protected:
 	/**
 	 * Reads all records from the database.

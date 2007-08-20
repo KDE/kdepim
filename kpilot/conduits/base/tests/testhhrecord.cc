@@ -30,12 +30,12 @@
 #include "options.h"
 
 TestHHRecord::TestHHRecord( const QStringList& fields, const QString &id )
-	: HHRecord( 0L ), fId( id ), fFields( fields ), fModified( false )
+	: HHRecord( 0L, 0L ), fId( id ), fFields( fields ), fModified( false )
 		, fDeleted( false ), fArchived( false )
 {
 }
 
-TestHHRecord::TestHHRecord( const TestHHRecord *other ) : HHRecord( 0L )
+TestHHRecord::TestHHRecord( const TestHHRecord *other ) : HHRecord( 0L, 0L )
 {
 	fId = other->id();
 	fFields = other->fields();
@@ -54,7 +54,7 @@ TestHHRecord::TestHHRecord( const TestHHRecord *other ) : HHRecord( 0L )
 	fArchived = other->isArchived();;
 }
 
-TestHHRecord::TestHHRecord( const TestRecord *other ) : HHRecord( 0L )
+TestHHRecord::TestHHRecord( const TestRecord *other ) : HHRecord( 0L, 0L )
 {
 	fId = other->id();
 	fFields = other->fields();

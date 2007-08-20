@@ -80,6 +80,8 @@ public:
 	
 	virtual void loadAllRecords();
 	
+	virtual QStringList categoryNames() const { return QStringList(); }
+	
 	virtual void commitCreate( Record *rec );
 	
 	virtual void commitDelete( Record *rec );

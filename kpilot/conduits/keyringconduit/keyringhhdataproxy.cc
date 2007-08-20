@@ -175,7 +175,7 @@ HHRecord* KeyringHHDataProxy::createHHRecord( PilotRecord *rec )
 {
 	FUNCTIONSETUP;
 	
-	return new KeyringHHRecord( rec, fDesKey );
+	return new KeyringHHRecord( rec, fAppInfo, fDesKey );
 }
 
 bool KeyringHHDataProxy::createDataStore()
@@ -206,6 +206,10 @@ bool KeyringHHDataProxy::createDataStore()
 		
 		PilotKeyringInfo appInfo;
 		appInfo.setCategoryName( 0, CSL1( "Unfiled" ) );
+		appInfo.setCategoryName( 1, CSL1( "Banking" ) );
+		appInfo.setCategoryName( 2, CSL1( "Computer" ) );
+		appInfo.setCategoryName( 3, CSL1( "Phone" ) );
+		appInfo.setCategoryName( 4, CSL1( "Web" ) );
 		appInfo.writeTo( fDatabase );
 		
 		QByteArray saltedHash = QCA::hexToArray( fSaltedHash );
@@ -228,7 +232,7 @@ bool KeyringHHDataProxy::createDataStore()
 		return true;
 	}
 }
-	
+
 QCA::SecureArray KeyringHHDataProxy::getDigest(
 	const QCA::SecureArray &recordZero, const QCA::SecureArray &pass )
 {

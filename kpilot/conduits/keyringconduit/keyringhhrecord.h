@@ -32,6 +32,7 @@
 #include <QtCrypto>
 
 class PilotRecord;
+class PilotAppInfoBase;
 
 class KeyringHHRecordBase
 {
@@ -45,7 +46,8 @@ class KeyringHHRecordBase
 class KeyringHHRecord : public HHRecord
 {
 public:
-	KeyringHHRecord( PilotRecord *rec, const QString &key );
+	KeyringHHRecord( PilotRecord *rec, PilotAppInfoBase *appInfo
+		, const QString &key );
 	
 	KeyringHHRecord( const QString &name = QString()
 		, const QString &account = QString()

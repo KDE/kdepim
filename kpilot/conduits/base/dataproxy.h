@@ -140,6 +140,11 @@ public:
 	QMap<QString, QString> changedIds();
 	
 	/**
+	 * Returns the list of category names.
+	 */
+	virtual QStringList categoryNames() const = 0;
+	
+	/**
 	 * Returns true when the proxy was able to open the underlying data store 
 	 * in read/write mode.
 	 */

@@ -30,15 +30,16 @@
 #include "options.h"
 #include "pilotRecord.h"
 
-KeyringHHRecord::KeyringHHRecord( PilotRecord *rec, const QString &key)
-	: HHRecord( rec ), fKey( key )
+KeyringHHRecord::KeyringHHRecord( PilotRecord *rec, PilotAppInfoBase *appInfo
+	, const QString &key )
+	: HHRecord( rec, appInfo ), fKey( key )
 {
 	fName = QString( fRecord->data() );
 }
 
 KeyringHHRecord::KeyringHHRecord( const QString &name, const QString &account
 	, const QString &password, const QString &notes, const QString &key )
-	: HHRecord( 0l ), fKey( key ), fName( name )
+	: HHRecord( 0L, 0L ), fKey( key ), fName( name )
 {
 	KeyringHHRecordBase data;
 	data.account = account;
@@ -71,6 +72,7 @@ bool KeyringHHRecord::equal( const Record* other ) const
 		equal = equal && ( data.account == krOther->account() );
 		equal = equal && ( data.password == krOther->password() );
 		equal = equal && ( data.notes == krOther->notes() );
+		equal = equal && ( categoryName() == krOther->categoryName() );
 		
 		return equal;
 	}
