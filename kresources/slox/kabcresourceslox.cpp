@@ -301,7 +301,7 @@ void ResourceSlox::slotUploadResult( KJob *job )
     kDebug() <<"ResourceSlox::slotUploadResult() success";
 
     QDomDocument doc = mUploadJob->response();
-    kDebug() << k_funcinfo <<"Upload result:";
+    kDebug() <<"Upload result:";
     kDebug() << doc.toString();
 
     QList<SloxItem> items = WebdavHandler::getSloxItems( this, doc );
@@ -448,7 +448,7 @@ KABC::PhoneNumber::Type ResourceSlox::phoneNumberType( const QString &fieldName 
 
 bool ResourceSlox::save( Ticket* )
 {
-  kDebug() << k_funcinfo;
+  kDebug() ;
 
   if ( readOnly() || !hasChanges() || type() != "ox" ) {
     emit savingFinished( this );
@@ -456,11 +456,11 @@ bool ResourceSlox::save( Ticket* )
   }
 
   if ( mDownloadJob ) {
-    kWarning() << k_funcinfo <<"download still in progress";
+    kWarning() <<"download still in progress";
     return false;
   }
   if ( mUploadJob ) {
-    kWarning() << k_funcinfo <<"upload still in progress";
+    kWarning() <<"upload still in progress";
     return false;
   }
 
@@ -498,7 +498,7 @@ void ResourceSlox::uploadContacts()
     mUploadAddressee = deletedAddr.first();
     isDelete = true;
   } else {
-    kDebug() << k_funcinfo <<"Upload finished.";
+    kDebug() <<"Upload finished.";
     emit savingFinished( this );
     return;
   }
@@ -511,7 +511,7 @@ void ResourceSlox::uploadContacts()
     WebdavHandler::addSloxElement( this, doc, prop, "method", "DELETE" );
   }
 
-  kDebug() << k_funcinfo << doc.toString();
+  kDebug() << doc.toString();
 
   KUrl url = mPrefs->url();
   url.setPath( "/servlet/webdav.contacts/" );
@@ -607,7 +607,7 @@ void ResourceSlox::createAddresseeFields( QDomDocument &doc, QDomElement &prop,
         pnSaveMap.remove( (*it).type() );
       WebdavHandler::addSloxElement( this, doc, prop, fn, (*it).number() );
     } else
-      kDebug() << k_funcinfo <<"Can't save phone number" << (*it).number() <<" of type" << (*it).type();
+      kDebug() <<"Can't save phone number" << (*it).number() <<" of type" << (*it).type();
   }
   // send empty fields for the remaining ohone number fields
   // it's not possible to delete phone numbers otherwise

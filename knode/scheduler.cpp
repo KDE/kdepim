@@ -58,7 +58,7 @@ void Scheduler::addJob(KNJobData *job)
 
   // put jobs which are waiting for the wallet into an extra queue
   if ( job->account() && !job->account()->readyForLogin() ) {
-    kDebug(5003) << k_funcinfo <<"Job waits for KWallet.";
+    kDebug(5003) <<"Job waits for KWallet.";
     mWalletQueue.append( job );
     knGlobals.accountManager()->loadPasswordsAsync();
     job->setStatus( i18n( "Waiting for KWallet..." ) );
@@ -167,7 +167,7 @@ void Scheduler::slotJobFinished( KNJobData * job )
 {
   // handle authentication errors, ie. request password and try again
   if ( job->error() == KIO::ERR_COULD_NOT_LOGIN ) {
-    kDebug(5003) << k_funcinfo <<"authentication error";
+    kDebug(5003) <<"authentication error";
     KNServerInfo *account = job->account();
     if ( account ) {
       QString user = account->user();

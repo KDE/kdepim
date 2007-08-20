@@ -578,7 +578,7 @@ void KCalResourceSlox::createRecurrenceAttributes( QDomDocument &doc,
         WebdavHandler::addSloxElement( this, doc, parent, "interval", "1" );
       break; }
     default:
-      kDebug() << k_funcinfo <<"unsupported recurrence type:" << r->recurrenceType();
+      kDebug() <<"unsupported recurrence type:" << r->recurrenceType();
   }
   WebdavHandler::addSloxElement( this, doc, parent, fieldName( RecurrenceEnd ),
                                  WebdavHandler::kDateTimeToSlox( r->endDateTime() ) );
@@ -760,7 +760,7 @@ void KCalResourceSlox::parseRecurrence( const QDomNode &node, Event *event )
     QDomElement e = n.toElement();
     QString tag = e.tagName();
     QString text = decodeText( e.text() );
-    kDebug() << k_funcinfo << tag <<":" << text;
+    kDebug() << tag <<":" << text;
 
     if ( tag == fieldName( RecurrenceType ) ) {
       type = text;

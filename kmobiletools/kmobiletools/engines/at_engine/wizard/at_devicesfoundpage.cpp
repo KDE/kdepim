@@ -81,7 +81,7 @@ void AT_DevicesFoundPage::initializePage()
 }
 
 void AT_DevicesFoundPage::slotDetails(QListWidgetItem *item) {
-    kDebug() << k_funcinfo;
+    kDebug() ;
     if(!item) return;
     AT_ScanProgressPage *scanpage=(AT_ScanProgressPage *) wizard()->page(wizard()->property("scanprogress_id").toInt() );
 
@@ -101,7 +101,7 @@ void AT_DevicesFoundPage::slotDetails(QListWidgetItem *item) {
  */
 void AT_DevicesFoundPage::showDetails(KMobileTools::EngineData* engineData)
 {
-    kDebug() << k_funcinfo;
+    kDebug() ;
     kDebug() <<"EngineData:" << engineData;
     if(!engineData) {
         b_details->setText(QString() );

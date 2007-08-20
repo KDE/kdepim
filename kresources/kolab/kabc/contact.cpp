@@ -1119,7 +1119,7 @@ void Contact::setFields( const KABC::Addressee* addressee )
     QString value = name.mid( pos + 1 );
     name = name.left( pos );
     if ( !knownCustoms.contains( name ) ) {
-      //kDebug() << k_funcinfo <<"app=" << app <<" name=" << name <<" value=" << value;
+      //kDebug() <<"app=" << app <<" name=" << name <<" value=" << value;
       Custom c;
       if ( app != "KADDRESSBOOK" ) // that's the default
         c.app = app;

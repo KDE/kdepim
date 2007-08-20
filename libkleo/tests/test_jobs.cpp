@@ -73,9 +73,9 @@ static void testSign()
 
   Q3CString cText = "Hallo Leute\n"; // like gpgme's t-sign.c
   QByteArray plainText = QByteArray( cText.data(), cText.length() ); // hrmpf...
-  kDebug() << k_funcinfo <<"plainText=" << cText.data();
+  kDebug() <<"plainText=" << cText.data();
 
-  kDebug() << k_funcinfo <<" signing with" << signingKeys[0].primaryFingerprint();
+  kDebug() <<" signing with" << signingKeys[0].primaryFingerprint();
 
   QByteArray signature;
   const GpgME::SigningResult res =
@@ -88,7 +88,7 @@ static void testSign()
     kDebug() <<"signing failed:" << res.error().asString();
     return;
   }
-  kDebug() << k_funcinfo <<"signing resulted in signature="
+  kDebug() <<"signing resulted in signature="
 	    << Q3CString( signature.data(), signature.size() + 1 );
 }
 

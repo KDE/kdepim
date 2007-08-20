@@ -33,7 +33,7 @@ EngineConfigWidget::EngineConfigWidget(QWidget *parent)
 
 void EngineConfigWidget::kbgChanged(int i)
 {
-    kDebug() << k_funcinfo <<"();" << i;
+    kDebug() <<"();" << i;
 }
 
 #include "engineconfig.moc"

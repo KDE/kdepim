@@ -132,7 +132,7 @@ private:
 //
 #define DEBUGKPILOT   KPilotDebugStream(fname) << fname.indent() << "  "
 #define WARNINGKPILOT KPilotDebugStream() \
-	<< "! " << k_funcinfo << "\n!   "
+	<< "! " << "\n!   "
 
 
 

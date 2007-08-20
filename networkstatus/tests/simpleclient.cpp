@@ -60,7 +60,7 @@ TestClient::~TestClient()
 
 void TestClient::networkStatusChanged( NetworkStatus::Status status )
 {
-    kDebug() << k_funcinfo;
+    kDebug() ;
 //enum EnumStatus { NoNetworks = 1, Unreachable, OfflineDisconnected,  OfflineFailed, ShuttingDown
 //  , Offline, Establishing, Online };
     kDebug() <<"Networking is now:" << NetworkStatus::toString( status ) <<" (" << status <<")";
@@ -102,7 +102,7 @@ void TestClient::networkStatusChanged( NetworkStatus::Status status )
 
 void TestClient::connectButtonToggled( bool on )
 {
-  kDebug() << k_funcinfo;
+  kDebug() ;
   if ( on && m_status == AppDisconnected ) {
     switch ( ConnectionManager::self()->status() )
     {
@@ -122,14 +122,14 @@ void TestClient::connectButtonToggled( bool on )
 
 void TestClient::appWaiting()
 {
-  kDebug() << k_funcinfo;
+  kDebug() ;
   m_status = AppWaitingForConnect;
   m_view->appStatusLabel->setText( "Waiting" );
 }
 
 void TestClient::appIsConnected()
 {
-  kDebug() << k_funcinfo;
+  kDebug() ;
   m_view->connectButton->setEnabled( true );
   m_view->connectButton->setText( "Disconnect" );
   m_view->appStatusLabel->setText( "Connected" );
@@ -138,21 +138,21 @@ void TestClient::appIsConnected()
 
 void TestClient::appEstablishing()
 {
-  kDebug() << k_funcinfo;
+  kDebug() ;
   m_view->netStatusLabel->setText( "Establishing" );
   m_view->connectButton->setEnabled( false );
 }
 
 void TestClient::appDisestablishing( )
 {
-  kDebug() << k_funcinfo;
+  kDebug() ;
   m_view->connectButton->setEnabled( false );
   m_view->appStatusLabel->setText( "Disconnected" );
 }
 
 void TestClient::appDisconnected( )
 {
-  kDebug() << k_funcinfo;
+  kDebug() ;
   m_view->connectButton->setEnabled( true );
   m_view->connectButton->setText( "Start Connect" );
   m_view->appStatusLabel->setText( "Disconnected" );

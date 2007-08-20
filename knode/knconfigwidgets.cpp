@@ -1495,7 +1495,7 @@ void KNode::PostNewsTechnicalWidget::load()
 {
   KCModule::load();
 
-  kDebug(5003) << k_funcinfo << knGlobals.settings()->charset();
+  kDebug(5003) << knGlobals.settings()->charset();
   mCharset->setCurrentIndex( mCharset->findText( knGlobals.settings()->charset() ) );
   mEncoding->setCurrentIndex( knGlobals.settings()->allow8BitBody() ? 0 : 1 );
 

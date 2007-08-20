@@ -427,13 +427,13 @@ void KNGroup::insortNewHeaders( const KIO::UDSEntryList &list, KNProtocolClient 
       if ( field < KIO::UDSEntry::UDS_EXTRA || field > KIO::UDSEntry::UDS_EXTRA_END )
         continue;
       QString value = entry.stringValue( field );
-      kDebug(5003) << k_funcinfo << value;
+      kDebug(5003) << value;
       QString hdrName = value.left( value.indexOf( ':' ) );
       if ( hdrName == "Subject" || hdrName == "From" || hdrName == "Date"
            || hdrName == "Message-ID" || hdrName == "References"
            || hdrName == "Bytes" || hdrName == "Lines" )
         continue;
-      kDebug(5003) << k_funcinfo <<"Adding optional header:" << hdrName;
+      kDebug(5003) <<"Adding optional header:" << hdrName;
       mOptionalHeaders.append( hdrName.toLatin1() );
     }
   }

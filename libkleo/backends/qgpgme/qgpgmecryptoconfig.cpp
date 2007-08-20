@@ -332,7 +332,7 @@ void QGpgMECryptoConfigComponent::sync( bool runtime )
   else if( rc != 0 ) // Happens due to bugs in gpgconf (e.g. issues 104/115)
   {
     QString wmsg = i18n( "Error from gpgconf while saving configuration: %1", QString::fromLocal8Bit( strerror( rc ) ) );
-    kWarning(5150) << k_funcinfo <<":" << strerror( rc );
+    kWarning(5150) <<":" << strerror( rc );
     KMessageBox::error(0, wmsg);
   }
   else

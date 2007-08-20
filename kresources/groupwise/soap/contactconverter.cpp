@@ -563,7 +563,7 @@ ngwt__ImAddressList* ContactConverter::convertImAddresses( const KABC::Addressee
   Change semantics so that convertToContact pulls each 
   IM address out of the addressee and passes it to this
   function, which converts one at a time. */
-  kDebug() << k_funcinfo;
+  kDebug() ;
   ngwt__ImAddressList* imList = soap_new_ngwt__ImAddressList( soap(), -1 );
   std::vector<class ngwt__ImAddress*> *list = soap_new_std__vectorTemplateOfPointerTongwt__ImAddress( soap(), -1 );
 

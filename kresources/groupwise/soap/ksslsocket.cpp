@@ -103,7 +103,7 @@ void KSSLSocket::slotConnected()
 //  kDebug() <<"KSSLSocket::slotConnected()" << (void*)this;
 	if( KSSL::doesSSLWork() )
 	{
-		kDebug(0) << k_funcinfo <<"Trying SSL connection...";
+		kDebug(0) <<"Trying SSL connection...";
 		if( !d->kssl )
 		{
 			d->kssl = new KSSL();
@@ -131,7 +131,7 @@ void KSSLSocket::slotConnected()
 	}
 	else
 	{
-		kError(0) << k_funcinfo <<"SSL not functional!";
+		kError(0) <<"SSL not functional!";
 
 		d->kssl = 0L;
 		emit sslFailure();

@@ -224,7 +224,7 @@ void kio_sieveProtocol::openConnection()
 
 bool kio_sieveProtocol::parseCapabilities(bool requestCapabilities/* = false*/)
 {
-	ksDebug() << k_funcinfo << endl;
+	ksDebug() << endl;
 
 	// Setup...
 	bool ret = false;
@@ -321,7 +321,7 @@ void kio_sieveProtocol::changeCheck( const KUrl &url )
  */
 bool kio_sieveProtocol::connect(bool useTLSIfAvailable)
 {
-	ksDebug() << k_funcinfo << endl;
+	ksDebug() << endl;
 
 	if (isConnectionValid()) return true;
 

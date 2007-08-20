@@ -84,7 +84,7 @@ protected:
 			{
 				if (!parent)
 				{
-					kDebug() << k_funcinfo <<": Using NULL device.";
+					kDebug() <<": Using NULL device.";
 				}
 				return new Action(d,args);
 			}

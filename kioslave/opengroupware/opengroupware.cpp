@@ -221,7 +221,7 @@ void OpenGroupware::debugMessage( const QString &msg )
 void OpenGroupware::slotGetCalendarListingResult( KJob *job )
 {
   
-  kDebug(7000) << k_funcinfo;
+  kDebug(7000) ;
 
   if (  job->error() ) {
     job->showErrorDialog(  0 );

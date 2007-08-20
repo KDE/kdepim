@@ -431,7 +431,7 @@ void KNMainWidget::openURL(const QString &url)
 
 void KNMainWidget::openURL(const KUrl &url)
 {
-  kDebug(5003) << k_funcinfo << url;
+  kDebug(5003) << url;
   QString host = url.host();
   unsigned short int port = url.port();
   KNNntpAccount *acc=0;

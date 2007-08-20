@@ -205,7 +205,7 @@ bool ResourceKolab::addNote( KCal::Journal* journal,
 
   if ( !mSilent ) {
     QString xml = Note::journalToXML( journal );
-    kDebug(5500) << k_funcinfo <<"XML string:" << xml;
+    kDebug(5500) <<"XML string:" << xml;
 
     if( !kmailUpdate( resource, sernum, xml, attachmentMimeType, journal->uid() ) ) {
       kError(5500) <<"Communication problem in ResourceKolab::addNote()";

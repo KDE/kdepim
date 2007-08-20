@@ -324,7 +324,7 @@ void ResourceKolab::incidenceUpdatedSilent( KCal::IncidenceBase* incidencebase)
 {
   if ( incidencebase->isReadOnly() ) return; // Should not happen (TM)
   const QString uid = incidencebase->uid();
-  //kDebug() << k_funcinfo << uid;
+  //kDebug() << uid;
 
   if ( mUidsPendingUpdate.contains( uid ) || mUidsPendingAdding.contains( uid ) ) {
     /* We are currently processing this event ( removing and readding or
@@ -474,7 +474,7 @@ bool ResourceKolab::sendKMailUpdate( KCal::IncidenceBase* incidencebase, const Q
     kWarning(5006) <<"Can't happen: unhandled type=" << type;
   }
 
-//  kDebug() << k_funcinfo <<"Data string:" << data;
+//  kDebug() <<"Data string:" << data;
 
   KCal::Incidence* incidence = static_cast<KCal::Incidence *>( incidencebase );
 

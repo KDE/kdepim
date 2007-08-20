@@ -276,7 +276,7 @@ bool ResourceTVAnytime::readSchedule()
 
 bool ResourceTVAnytime::readServiceInformation( const QDomDocument & serviceInfo )
 {
-  kDebug() << k_funcinfo;
+  kDebug() ;
   QDomElement docElem = serviceInfo.documentElement();
 
   QDomNode n = docElem.firstChild();
@@ -316,7 +316,7 @@ bool ResourceTVAnytime::readServiceInformation( const QDomDocument & serviceInfo
 
 bool ResourceTVAnytime::readService( const QString & serviceId )
 {
-  kDebug() << k_funcinfo;
+  kDebug() ;
   // open program information table
   Service service = mServiceMap[ serviceId ];
 

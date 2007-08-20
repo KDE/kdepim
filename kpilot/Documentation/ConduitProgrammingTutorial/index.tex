@@ -883,7 +883,7 @@ bool MALConduit::skip() {
   FUNCTIONSETUP;
 
   if (!fConfig) {
-    kdWarning() << k_funcinfo << ": No config file was set!" << endl;
+    kdWarning() << ": No config file was set!" << endl;
     return false;
   }
 
@@ -921,7 +921,7 @@ bool MALConduit::skip() {
   // Now initiate the sync.
   PalmSyncInfo* pInfo=syncInfoNew();
   if (!pInfo) {
-    kdWarning() << k_funcinfo << ": Could not allocate SyncInfo!" << endl;
+    kdWarning() << ": Could not allocate SyncInfo!" << endl;
     emit logError(i18n("MAL synchronization failed (no SyncInfo)."));
     return false;
   }

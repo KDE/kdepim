@@ -40,7 +40,7 @@ SloxFolderManager::SloxFolderManager( SloxBase *res, const KUrl & baseUrl ) :
   mBaseUrl( baseUrl ),
   mRes( res )
 {
-  kDebug() << k_funcinfo << baseUrl;
+  kDebug() << baseUrl;
   readFolders();
 }
 
@@ -56,10 +56,10 @@ SloxFolderManager::~SloxFolderManager()
 
 void SloxFolderManager::requestFolders()
 {
-  kDebug() << k_funcinfo;
+  kDebug() ;
 
   if ( mDownloadJob ) {
-    kDebug() << k_funcinfo <<"Download still in progress";
+    kDebug() <<"Download still in progress";
     return;
   }
 
@@ -77,7 +77,7 @@ void SloxFolderManager::requestFolders()
   WebdavHandler::addSloxElement( mRes, doc, prop, "foldertype", "GLOBALADDRESSBOOK" );
   WebdavHandler::addSloxElement( mRes, doc, prop, "foldertype", "INTERNALUSERS" );
 
-  kDebug() << k_funcinfo << doc.toString( 2 );
+  kDebug() << doc.toString( 2 );
 
   mDownloadJob = KIO::davPropFind( url, doc, "0", false );
 
@@ -87,12 +87,12 @@ void SloxFolderManager::requestFolders()
 
 void SloxFolderManager::slotResult( KJob *job )
 {
-  kDebug() << k_funcinfo;
+  kDebug() ;
 
   if ( job->error() ) {
     static_cast<KIO::Job*>(job)->ui()->showErrorMessage();
   } else {
-    kDebug() << k_funcinfo <<" success, writing to" << cacheFile();
+    kDebug() <<" success, writing to" << cacheFile();
     QFile f( cacheFile() );
     if ( !f.open( QIODevice::WriteOnly ) ) {
       kDebug() <<"Unable to open '" << cacheFile() <<"'";
@@ -114,14 +114,14 @@ QString SloxFolderManager::cacheFile() const
 
   QString file = KStandardDirs::locateLocal( "cache", "slox/folders_" + host );
 
-  kDebug() << k_funcinfo << file;
+  kDebug() << file;
 
   return file;
 }
 
 void SloxFolderManager::readFolders()
 {
-  kDebug() << k_funcinfo;
+  kDebug() ;
 
   QFile f( cacheFile() );
   if ( !f.open( QIODevice::ReadOnly ) ) {
@@ -155,7 +155,7 @@ void SloxFolderManager::readFolders()
     if ( id != "-1" && parentId != "-1" ) {
       SloxFolder *folder = new SloxFolder( id, parentId, type, name, def );
       mFolders[id] = folder;
-      kDebug() << k_funcinfo <<"Found folder:" << folder->name();
+      kDebug() <<"Found folder:" << folder->name();
     }
   }
 

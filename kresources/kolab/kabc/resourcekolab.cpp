@@ -290,7 +290,7 @@ bool KABC::ResourceKolab::save( Ticket* )
     }
 
   if ( !rc )
-    kDebug(5650) << k_funcinfo <<" failed.";
+    kDebug(5650) <<" failed.";
   return rc;
 }
 
@@ -421,7 +421,7 @@ bool KABC::ResourceKolab::kmailUpdateAddressee( const Addressee& addr )
 void KABC::ResourceKolab::insertAddressee( const Addressee& addr )
 {
   const QString uid = addr.uid();
-  //kDebug(5650) << k_funcinfo << uid;
+  //kDebug(5650) << uid;
   bool ok = false;
   if ( mUidMap.contains( uid ) ) {
     mUidsPendingUpdate.append( uid );
@@ -439,7 +439,7 @@ void KABC::ResourceKolab::removeAddressee( const Addressee& addr )
 {
   const QString uid = addr.uid();
   if ( mUidMap.find( uid ) == mUidMap.end() ) return;
-  //kDebug(5650) << k_funcinfo << uid;
+  //kDebug(5650) << uid;
   const QString resource = mUidMap[ uid ].resource();
   if ( !subresourceWritable( resource ) ) {
     kWarning() <<"Wow! Something tried to delete a non-writable addressee! Fix this caller:" << kBacktrace();
@@ -472,7 +472,7 @@ bool KABC::ResourceKolab::fromKMailAddIncidence( const QString& type,
   const QString uid = loadContact( contactXML, subResource, sernum,
       ( KMail::StorageFormat )format );
 
-  //kDebug(5650) << k_funcinfo << uid;
+  //kDebug(5650) << uid;
 
   // Emit "addressbook changed" if this comes from kmail and not from the GUI
   if ( !mUidsPendingAdding.contains( uid )
@@ -494,7 +494,7 @@ void KABC::ResourceKolab::fromKMailDelIncidence( const QString& type,
   if( type != s_kmailContentsType || !subresourceActive( subResource ) )
     return;
 
-  //kDebug(5650) << k_funcinfo << uid;
+  //kDebug(5650) << uid;
 
   // Can't be in both, by contract
   if ( mUidsPendingDeletion.contains( uid ) ) {
@@ -516,7 +516,7 @@ void KABC::ResourceKolab::fromKMailRefresh( const QString& type,
   // Check if this is a contact
   if( type != s_kmailContentsType ) return;
 
-  //kDebug(5650) << k_funcinfo;
+  //kDebug(5650) ;
 
   load(); // ### should call loadSubResource(subResource) probably
   addressBook()->emitAddressBookChanged();

@@ -79,7 +79,7 @@ public:
     bool parsePhoneNumberString(const QString &s)
     {
         /// @TODO handle more charset
-        kDebug() << k_funcinfo <<"()" << s;
+        kDebug() <<"()" << s;
         QString number, name;
         QRegExp src;
         src.setMinimal(true);
@@ -116,7 +116,7 @@ bool Sender::isEmpty() const { return d->numbers.isEmpty(); }
 bool Sender::parse(const char *&scursor, const char *const send, bool isCRLF)
 {
 /// @TODO handle more charset
-    kDebug() << k_funcinfo <<"()" << scursor <<"," << int(send-scursor) <<"," << isCRLF;
+    kDebug() <<"()" << scursor <<"," << int(send-scursor) <<"," << isCRLF;
 //     return false;
     QStringList singlenums;
     // strip out type()
@@ -146,7 +146,7 @@ bool Sender::parse(const char *&scursor, const char *const send, bool isCRLF)
 
 QByteArray Sender::as7BitString(bool withHeaderType) const
 {
-    kDebug() << k_funcinfo <<"()" << withHeaderType;
+    kDebug() <<"()" << withHeaderType;
     QByteArray ret;
     if( isEmpty() ) return ret;
     if(withHeaderType) {
@@ -347,7 +347,7 @@ bool SMS::writeToSlot(const QString &dir)
  */
 bool SMS::exportCSV(const QString &filename)
 {
-    kDebug() << k_funcinfo;
+    kDebug() ;
     bool retval=false;
     if (d->i_slot & Phone )
         retval = retval | writeToSlotCSV( filename );
@@ -356,7 +356,7 @@ bool SMS::exportCSV(const QString &filename)
 
 bool SMS::writeToSlotCSV(const QString &filename)
 {
-    kDebug() << k_funcinfo;
+    kDebug() ;
     QString text;
 
     if((type() & Unsent) || (type() & Sent) )

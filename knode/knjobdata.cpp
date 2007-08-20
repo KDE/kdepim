@@ -155,13 +155,13 @@ void KNJobData::createProgressItem()
 
 void KNJobData::slotJobPercent( KJob*, unsigned long percent )
 {
-  kDebug(5003) << k_funcinfo <<"Progress:" << percent;
+  kDebug(5003) <<"Progress:" << percent;
   setProgress( percent );
 }
 
 void KNJobData::slotJobInfoMessage( KJob*, const QString &msg )
 {
-  kDebug(5003) << k_funcinfo <<"Status:" << msg;
+  kDebug(5003) <<"Status:" << msg;
   setStatus( msg );
 }
 

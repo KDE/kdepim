@@ -301,7 +301,7 @@ ngwt__Note* IncidenceConverter::convertToNote( KCal::Journal* journal )
 
 bool IncidenceConverter::convertToCalendarItem( KCal::Incidence* incidence, ngwt__CalendarItem* item )
 {
-  kDebug() << k_funcinfo;
+  kDebug() ;
   //TODO: support the new iCal standard recurrence rule
 
   // ngwt__CalendarItem
@@ -621,7 +621,7 @@ void IncidenceConverter::getAttendees( ngwt__CalendarItem *item, KCal::Incidence
 
 void IncidenceConverter::setRecurrence( KCal::Incidence * incidence, ngwt__CalendarItem * item )
 {
-  kDebug() << k_funcinfo;
+  kDebug() ;
   ngwt__Frequency * freq;
   const KCal::Recurrence * recur = incidence->recurrence();
 

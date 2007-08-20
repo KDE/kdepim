@@ -379,7 +379,7 @@ void DistributionListWidget::addContact()
   KPIM::DistributionList dist = KPIM::DistributionList::findByName(
     core()->addressBook(), mNameCombo->currentText() );
   if ( dist.isEmpty() ) { // not found
-    kDebug(5720) << k_funcinfo << mNameCombo->currentText() <<" not found";
+    kDebug(5720) << mNameCombo->currentText() <<" not found";
     return;
   }
 #else

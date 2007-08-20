@@ -231,7 +231,7 @@ void SMSList::saveToMailBox() const
  */
 int SMSList::saveToCSV(const QString &filename) const
 {
-    kDebug() << k_funcinfo;
+    kDebug() ;
     SMS *sms;
     kDebug() <<"SMSList::saveToCSV(): saving CSV file to:" << filename;
     bool ok=true;

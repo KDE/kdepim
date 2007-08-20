@@ -136,7 +136,7 @@ void SloxAccounts::requestAccounts()
     WebdavHandler::addSloxElement( mRes, doc, prop, "resource", "*" );
     WebdavHandler::addSloxElement( mRes, doc, prop, "resourcegroup", "*" );
 
-    kDebug() << k_funcinfo << doc.toString( 2 );
+    kDebug() << doc.toString( 2 );
 
     mDownloadJob = KIO::davPropFind( url, doc, "0", false );
   }
