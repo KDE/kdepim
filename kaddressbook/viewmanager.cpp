@@ -193,6 +193,8 @@ void ViewManager::unloadViews()
 
 void ViewManager::setActiveView( const QString &name )
 {
+  kDebug() << "entering ViewManager::setActiveView";
+
   KAddressBookView *view = 0;
 
   // Check that this isn't the same as the current active view

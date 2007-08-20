@@ -23,10 +23,8 @@
 
 #include <QApplication>
 #include <QEvent>
-#include <q3iconview.h>
 #include <QLayout>
 #include <QStringList>
-//Added by qt3to4:
 #include <QDragEnterEvent>
 #include <QVBoxLayout>
 #include <QKeyEvent>

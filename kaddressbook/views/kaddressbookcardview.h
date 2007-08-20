@@ -26,7 +26,6 @@
 
 #include <QString>
 #include <QDropEvent>
-#include <k3iconview.h>
 
 #include "cardview.h"
 #include "kaddressbookview.h"

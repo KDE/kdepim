@@ -30,7 +30,8 @@
 //Added by qt3to4:
 #include <QResizeEvent>
 
-class Q3ButtonGroup;
+class QButtonGroup;
+class QGroupBox;
 class QResizeEvent;
 class QPushButton;
 
@@ -49,8 +50,6 @@ class JumpButtonBar : public QWidget
   public:
     JumpButtonBar( KAB::Core *core, QWidget *parent, const char *name = 0 );
     ~JumpButtonBar();
-
-    virtual QSizePolicy sizePolicy() const;
 
   public slots:
     void updateButtons();
@@ -72,7 +71,8 @@ class JumpButtonBar : public QWidget
 
     KAB::Core *mCore;
 
-    Q3ButtonGroup *mGroupBox;
+    QButtonGroup *mButtonGroup;
+    QGroupBox *mGroupBox;
     QList<QPushButton*> mButtons;
 };
 

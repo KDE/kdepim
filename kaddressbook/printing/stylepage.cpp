@@ -22,18 +22,17 @@
     without including the source code for Qt in the source distribution.
 */
 
-#include <q3buttongroup.h>
+#include <QGroupBox>
 #include <QLabel>
 #include <QLayout>
 #include <QPixmap>
 #include <QRadioButton>
-//Added by qt3to4:
 #include <QVBoxLayout>
 #include <QGridLayout>
 
-#include <kcombobox.h>
-#include <kdialog.h>
-#include <klocale.h>
+#include <KComboBox>
+#include <KDialog>
+#include <KLocale>
 
 #include "stylepage.h"
 
@@ -125,11 +124,11 @@ void StylePage::initGUI()
                                     "Choose the style that suits your needs below." ), this );
   topLayout->addWidget( label, 0, 0, 1, 2 );
 
-  Q3ButtonGroup *group = new Q3ButtonGroup( i18n( "Sorting" ), this );
-  group->setColumnLayout( 0, Qt::Vertical );
+  QGroupBox *group = new QGroupBox( i18n( "Sorting" ), this );
   QGridLayout *sortLayout = new QGridLayout();
-  group->layout()->addItem( sortLayout );
+  group->setLayout( sortLayout );
   sortLayout->setSpacing( KDialog::spacingHint() );
+  sortLayout->setMargin( KDialog::marginHint() );
   sortLayout->setAlignment( Qt::AlignTop );
 
   label = new QLabel( i18n( "Criterion:" ), group );
@@ -146,11 +145,11 @@ void StylePage::initGUI()
 
   topLayout->addWidget( group, 1, 0 );
 
-  group = new Q3ButtonGroup( i18n( "Print Style" ), this );
-  group->setColumnLayout( 0, Qt::Vertical );
+  group = new QGroupBox( i18n( "Print Style" ), this );
   QVBoxLayout *styleLayout = new QVBoxLayout();
-  group->layout()->addItem( styleLayout );
+  group->setLayout( styleLayout );
   styleLayout->setSpacing( KDialog::spacingHint() );
+  styleLayout->setMargin( KDialog::marginHint() );
 
   mStyleCombo = new KComboBox( false, group );
   styleLayout->addWidget( mStyleCombo );
