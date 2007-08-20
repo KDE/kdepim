@@ -48,8 +48,9 @@ public:
      * Constructs a new Engine object with the given @p parent
      *
      * @param parent the object's parent
+     * @param deviceName the device name
      */
-    EngineXP( QObject *parent );
+    EngineXP( QObject *parent, const QString& deviceName );
 
     /**
      * Destructs the Engine object
@@ -72,14 +73,19 @@ public:
      */
     bool connected() const;
 
+    /**
+     * Returns the name of the device the engine is associated with
+     *
+     * @return the device name
+     */
+    QString deviceName() const;
+
 public Q_SLOTS:
     /**
      * Initializes the engine and the communication with the
      * device with given @p deviceName
-     *
-     * @param deviceName the name of the device to initialize
      */
-    virtual void connectDevice( const QString& deviceName ) = 0;
+    virtual void connectDevice() = 0;
 
     /**
      * Cancels any open connection
@@ -89,9 +95,6 @@ public Q_SLOTS:
 Q_SIGNALS:
     /**
      * This signal is emitted when the engine was initialized.
-     *
-     * @param successful true if the engine was successfully initialized and
-     *                   the provided device was found
      */
     void deviceConnected();
 
@@ -102,16 +105,17 @@ Q_SIGNALS:
 
 private Q_SLOTS:
     /**
-     * Sets the connection state to "connected"
+     * Sets the connection state to "connected" and emits the signal deviceConnected()
      */
     void setDeviceConnected();
 
     /**
-     * Sets the connection state to "disconnected"
+     * Sets the connection state to "disconnected" and emits the signal deviceDisconnected()
      */
     void setDeviceDisconnected();
 private:
     bool m_connected;
+    QString m_deviceName;
 };
 
 }

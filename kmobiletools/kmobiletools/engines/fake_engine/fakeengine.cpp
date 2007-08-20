@@ -24,8 +24,8 @@
 #include <QtCore/QTimer>
 #include <KDebug>
 
-FakeEngine::FakeEngine( QObject *parent )
- : EngineXP( parent )
+FakeEngine::FakeEngine( QObject *parent, const QString& deviceName )
+ : EngineXP( parent, deviceName )
 {
     QWidget* widget = new QWidget( 0 );
     QVBoxLayout* layout = new QVBoxLayout( widget );
@@ -54,9 +54,9 @@ FakeEngine::~FakeEngine()
 {
 }
 
-void FakeEngine::connectDevice( const QString& deviceName )
+void FakeEngine::connectDevice()
 {
-    status( QString( "Initialized device %1" ).arg( deviceName ) );
+    status( QString( "Initialized device %1" ).arg( deviceName() ) );
     m_initialized = true;
     emit deviceConnected();
 }
@@ -298,8 +298,8 @@ FakeEngineFactory::~FakeEngineFactory()
 FakeEngine *FakeEngineFactory::createObject(QObject *parent, const char *classname, const QStringList& args)
 {
     Q_UNUSED(classname)
-    Q_UNUSED(args)
-    return new FakeEngine(parent);
+    QString deviceName = args.at( 0 );
+    return new FakeEngine( parent, deviceName );
 }
 
 #include "fakeengine.moc"

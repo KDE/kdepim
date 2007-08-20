@@ -46,7 +46,7 @@ class FakeEngine : public KMobileTools::EngineXP, // base class
     Q_INTERFACES(KMobileTools::Ifaces::Addressbook)
 
 public:
-    FakeEngine( QObject *parent );
+    FakeEngine( QObject *parent, const QString& deviceName );
     virtual ~FakeEngine();
 
     //
@@ -74,7 +74,7 @@ public:
     KMobileTools::Addressbook addressbook() const;
 
 public Q_SLOTS:
-    void connectDevice( const QString& deviceName );
+    void connectDevice();
     void disconnectDevice();
 
     //

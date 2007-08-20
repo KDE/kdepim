@@ -22,7 +22,7 @@
 #include <QtGui/QAction>
 
 #include <KLocale>
-#include <KDebug>
+#include <KIcon>
 
 #include <libkmobiletools/deviceloader.h>
 
@@ -45,6 +45,12 @@ DeviceItem::DeviceItem( const QString& name, TreeItem* parent )
 
     m_actionList.append( m_connectDeviceAction );
     m_actionList.append( m_disconnectDeviceAction );
+
+    // set icon for deviceItem
+    KPluginInfo deviceInformation = KMobileTools::DeviceLoader::instance()->engineInformation( name );
+    setIcon( KIcon( deviceInformation.icon() ) );
+
+    /// @todo use KIconEffect to display the connection state (convert to gray-scale on disconnection)
 }
 
 
@@ -60,7 +66,7 @@ QList<QAction*> DeviceItem::actionList() const {
 void DeviceItem::connectDevice() {
     /// @todo add a timer or something if connecting fails...
     m_connectDeviceAction->setEnabled( false );
-    m_engine->connectDevice( data().toString() );
+    m_engine->connectDevice();
 }
 
 void DeviceItem::disconnectDevice() {

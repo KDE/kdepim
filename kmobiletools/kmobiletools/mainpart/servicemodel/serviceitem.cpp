@@ -18,6 +18,7 @@
  ***************************************************************************/
 
 #include "serviceitem.h"
+#include <libkmobiletools/ifaces/guiservice.h>
 
 ServiceItem::ServiceItem( const QString& name, TreeItem* parent )
 : TreeItem( name, parent )
@@ -33,6 +34,15 @@ ServiceItem::~ServiceItem()
 
 void ServiceItem::setService( QObject* service ) {
     m_service = service;
+
+    // check if the provided service is a gui service.. only gui services are worth being displayed ;-)
+    KMobileTools::Ifaces::GuiService* guiService =
+                qobject_cast<KMobileTools::Ifaces::GuiService*>( m_service );
+
+    if( guiService )
+        setIcon( guiService->icon() );
+    else
+        setVisible( false );
 }
 
 

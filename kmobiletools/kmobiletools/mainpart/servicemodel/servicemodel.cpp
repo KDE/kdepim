@@ -150,10 +150,6 @@ int ServiceModel::rowCount( const QModelIndex& parent ) const {
 void ServiceModel::deviceLoaded( const QString& deviceName ) {
     DeviceItem* deviceItem = new DeviceItem( deviceName, m_rootItem );
 
-    // set icon for deviceItem
-    KPluginInfo deviceInformation = KMobileTools::DeviceLoader::instance()->engineInformation( deviceName );
-    deviceItem->setIcon( KIcon( deviceInformation.icon() ) );
-
     // append our item as last child of our root item
     int row = m_rootItem->childCount( TreeItem::AllChildren );
     // inform the views about the appending of an item
@@ -215,15 +211,6 @@ void ServiceModel::serviceLoaded( const QString& deviceName, KMobileTools::CoreS
     if( deviceItem ) {
         ServiceItem* serviceItem = new ServiceItem( service->name(), deviceItem );
         serviceItem->setService( service );
-
-        // now check if it's a gui service.. only gui services are worth being displayed ;-)
-        KMobileTools::Ifaces::GuiService* guiService =
-                    qobject_cast<KMobileTools::Ifaces::GuiService*>( service );
-
-        if( guiService )
-            serviceItem->setIcon( guiService->icon() );
-        else
-            serviceItem->setVisible( false );
 
         deviceItem->appendChild( serviceItem );
     }

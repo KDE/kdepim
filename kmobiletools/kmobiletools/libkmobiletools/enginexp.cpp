@@ -21,9 +21,10 @@
 
 namespace KMobileTools {
 
-EngineXP::EngineXP( QObject *parent )
+EngineXP::EngineXP( QObject *parent, const QString& deviceName )
  : QObject( parent )
 {
+    m_deviceName = deviceName;
     m_connected = false;
     connect( this, SIGNAL(deviceConnected()), this, SLOT(setDeviceConnected()) );
     connect( this, SIGNAL(deviceDisconnected()), this, SLOT(setDeviceDisconnected()) );
@@ -53,6 +54,10 @@ void EngineXP::setDeviceConnected() {
 
 void EngineXP::setDeviceDisconnected() {
     m_connected = false;
+}
+
+QString EngineXP::deviceName() const {
+    return m_deviceName;
 }
 
 }
