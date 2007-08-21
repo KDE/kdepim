@@ -27,7 +27,7 @@
 /*
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
-#include "config_dialog_dbselection_base.h"
+#include "config_dialog_dbselection.h"
 
 #include <qpushbutton.h>
 
@@ -37,7 +37,6 @@
 #include <kpushbutton.h>
 
 #include "options.h"
-#include "config_dialog_dbselection.moc"
 
 static inline void appendStringList(QStringList &items, const QStringList &add)
 {
@@ -67,9 +66,14 @@ KPilotDBSelectionDialog::KPilotDBSelectionDialog(const QStringList &selectedDBs,
 	setButtons(Ok|Cancel);
 	setDefaultButton(Ok);
 	setModal(false);
-
-	fSelectionWidget = new KPilotDBSelectionWidget(this);
-	setMainWidget(fSelectionWidget);
+	
+	if( !w )
+	{
+		w = new QWidget( this );
+	}
+	
+	fSelectionWidget.setupUi( w );
+	setMainWidget( w );
 
 	// Fill the encodings list
 	QStringList items(deviceDBs);
@@ -79,21 +83,24 @@ KPilotDBSelectionDialog::KPilotDBSelectionDialog(const QStringList &selectedDBs,
 
 	for ( QStringList::Iterator it = items.begin(); it != items.end(); ++it )
 	{
-		QListWidgetItem *checkitem = new QListWidgetItem(*it, fSelectionWidget->fDatabaseList);
-		checkitem->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled | Qt::ItemIsUserCheckable);
-		checkitem->setCheckState(fSelectedDBs.contains(*it) ? Qt::Checked : Qt::Unchecked);
+		QListWidgetItem *checkitem = new QListWidgetItem(*it
+			, fSelectionWidget.fDatabaseList);
+		checkitem->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled 
+			| Qt::ItemIsUserCheckable);
+		checkitem->setCheckState(fSelectedDBs.contains(*it) ? Qt::Checked 
+			: Qt::Unchecked);
 	}
 
-	fSelectionWidget->fAddButton->setEnabled(false);
-	fSelectionWidget->fRemoveButton->setEnabled(false);
+	fSelectionWidget.fAddButton->setEnabled(false);
+	fSelectionWidget.fRemoveButton->setEnabled(false);
 
-	connect(fSelectionWidget->fNameEdit, SIGNAL(textChanged( const QString & )),
+	connect(fSelectionWidget.fNameEdit, SIGNAL(textChanged( const QString & )),
 		this, SLOT(textChanged( const QString &)));
-	connect(fSelectionWidget->fAddButton, SIGNAL(clicked()),
+	connect(fSelectionWidget.fAddButton, SIGNAL(clicked()),
 		this, SLOT(addDB()));
-	connect(fSelectionWidget->fRemoveButton, SIGNAL(clicked()),
+	connect(fSelectionWidget.fRemoveButton, SIGNAL(clicked()),
 		this, SLOT(removeDB()));
-	connect(fSelectionWidget->fDatabaseList, SIGNAL(currentRowChanged(int)),
+	connect(fSelectionWidget.fDatabaseList, SIGNAL(currentRowChanged(int)),
 		this, SLOT(dbSelectionChanged(int)) );
 }
 
@@ -105,12 +112,14 @@ KPilotDBSelectionDialog::~KPilotDBSelectionDialog()
 void KPilotDBSelectionDialog::addDB()
 {
 	FUNCTIONSETUP;
-	QString dbname(fSelectionWidget->fNameEdit->text());
+	QString dbname(fSelectionWidget.fNameEdit->text());
 	if (!dbname.isEmpty())
 	{
-		fSelectionWidget->fNameEdit->clear();
-		QListWidgetItem *checkitem = new QListWidgetItem(dbname, fSelectionWidget->fDatabaseList);
-		checkitem->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled | Qt::ItemIsUserCheckable);
+		fSelectionWidget.fNameEdit->clear();
+		QListWidgetItem *checkitem = new QListWidgetItem(dbname
+			, fSelectionWidget.fDatabaseList);
+		checkitem->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled
+			| Qt::ItemIsUserCheckable);
 		checkitem->setCheckState(Qt::Unchecked);
 		fAddedDBs << dbname;
 	}
@@ -119,7 +128,7 @@ void KPilotDBSelectionDialog::addDB()
 void KPilotDBSelectionDialog::removeDB()
 {
 	FUNCTIONSETUP;
-	QListWidgetItem *item(fSelectionWidget->fDatabaseList->currentItem());
+	QListWidgetItem *item(fSelectionWidget.fDatabaseList->currentItem());
 	if (item)
 	{
 		QString dbname=item->text();
@@ -145,10 +154,10 @@ QStringList KPilotDBSelectionDialog::getSelectedDBs()
 	fSelectedDBs.clear();
 
 	//  update the list of selected databases
-	int c = fSelectionWidget->fDatabaseList->count();
+	int c = fSelectionWidget.fDatabaseList->count();
 	for (int i = 0; i<c; ++i)
 	{
-		QListWidgetItem *item = fSelectionWidget->fDatabaseList->item(i);
+		QListWidgetItem *item = fSelectionWidget.fDatabaseList->item(i);
 
 		if ( item && item->checkState() )
 		{
@@ -162,13 +171,13 @@ QStringList KPilotDBSelectionDialog::getSelectedDBs()
 void KPilotDBSelectionDialog::textChanged( const QString& dbname)
 {
 	FUNCTIONSETUP;
-	fSelectionWidget->fAddButton->setDisabled(dbname.isEmpty());
+	fSelectionWidget.fAddButton->setDisabled(dbname.isEmpty());
 }
 
 void KPilotDBSelectionDialog::dbSelectionChanged( int row )
 {
 	FUNCTIONSETUP;
-	fSelectionWidget->fRemoveButton->setEnabled( row >= 0 );
+	fSelectionWidget.fRemoveButton->setEnabled( row >= 0 );
 }
 
 

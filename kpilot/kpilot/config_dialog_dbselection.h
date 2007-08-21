@@ -32,7 +32,7 @@
 
 #include <kdialog.h>
 
-class KPilotDBSelectionWidget;
+#include "ui_config_dialog_dbselection_base.h"
 
 class KPilotDBSelectionDialog : public KDialog
 {
@@ -55,7 +55,7 @@ protected slots:
 	void textChanged( const QString& dbname);
 	void dbSelectionChanged( int );
 private:
-	KPilotDBSelectionWidget *fSelectionWidget;
+	Ui::KPilotDBSelectionWidget fSelectionWidget;
 } ;
 
 #endif
