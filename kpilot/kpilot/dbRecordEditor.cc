@@ -124,7 +124,7 @@ void DBRecordEditor::initWidgets()
 {
 	// FUNCTIONSETUP
 
-	DBRecordEditorBaseLayout = new QGridLayout( fWidget, 1, 1 );
+	DBRecordEditorBaseLayout = new QGridLayout( fWidget );
 	DBRecordEditorBaseLayout->setMargin( 11 );
 	DBRecordEditorBaseLayout->setSpacing( 6 );
 	DBRecordEditorBaseLayout->setObjectName( QLatin1String( "DBRecordEditorBaseLayout" ) );
@@ -149,14 +149,14 @@ void DBRecordEditor::initWidgets()
 
 	DBRecordEditorBaseLayout->addWidget( fRecordID, 0, 3 );
 
-	fFlagsGroup = new Q3ButtonGroup( fWidget, "fFlagsGroup" );
-	fFlagsGroup->setSizePolicy( QSizePolicy( (QSizePolicy::SizeType)5,
-		(QSizePolicy::SizeType)4, 0, 0, fFlagsGroup->sizePolicy().hasHeightForWidth() ) );
-	fFlagsGroup->setColumnLayout(0, Qt::Vertical );
-	fFlagsGroup->layout()->setSpacing( 6 );
-	fFlagsGroup->layout()->setMargin( 11 );
-	fFlagsGroupLayout = new QGridLayout( fFlagsGroup->layout() );
-	fFlagsGroupLayout->setAlignment( Qt::AlignTop );
+	fFlagsGroup = new QGroupBox( fWidget );
+	fFlagsGroup->setSizePolicy( QSizePolicy( (QSizePolicy::SizeType)5
+		, (QSizePolicy::SizeType)4 ) );
+	
+	fFlagsGroupLayout = new QGridLayout( fFlagsGroup );
+	fFlagsGroupLayout->setSpacing( 6 );
+	fFlagsGroupLayout->setMargin( 11 );
+	//fFlagsGroupLayout->setAlignment( Qt::AlignTop );
 
 	fDirty = new QCheckBox( fFlagsGroup );
 	fDirty->setObjectName( QLatin1String( "fDirty" ) );
@@ -172,13 +172,13 @@ void DBRecordEditor::initWidgets()
 
 	fSecret = new QCheckBox( fFlagsGroup );
 	fSecret->setObjectName( QLatin1String( "fSecret" ) );
-	fFlagsGroupLayout->addMultiCellWidget( fSecret, 1, 1, 1, 2 );
+	fFlagsGroupLayout->addWidget( fSecret, 1, 1, 1, 2 );
 
 	fArchived = new QCheckBox( fFlagsGroup );
 	fArchived->setObjectName( QLatin1String( "fArchived" ) );
 	fFlagsGroupLayout->addWidget( fArchived, 0, 2 );
 
-	DBRecordEditorBaseLayout->addMultiCellWidget( fFlagsGroup, 1, 1, 0, 3 );
+	DBRecordEditorBaseLayout->addWidget( fFlagsGroup, 1, 0, 1, 4 );
 	fRecordData = KHE::createBytesEditWidget( fWidget);
 	if( fRecordData )
 	{
@@ -207,7 +207,6 @@ void DBRecordEditor::initWidgets()
 	else
 	{
 		QLabel*tmpW = new QLabel( i18n("To view and edit the record data, please install a hex editor (e.g. kbytesedit from kdeutils)."), fWidget );
-		tmpW->setBackgroundMode( Qt::PaletteMid );
 		tmpW->setAlignment( Qt::AlignHCenter | Qt::AlignVCenter );
 		tmpW->setWordWrap( true );
 		tmpW->setFrameShape( Q3Frame::Panel );
@@ -216,7 +215,7 @@ void DBRecordEditor::initWidgets()
 		fRecordDataIf = 0;
 	}
 
-	DBRecordEditorBaseLayout->addMultiCellWidget( fRecordData, 2, 2, 0, 3 );
+	DBRecordEditorBaseLayout->addWidget( fRecordData, 2, 0, 1, 4 );
 
 	languageChange();
 	resize( QSize(600, 561).expandedTo(minimumSizeHint()) );

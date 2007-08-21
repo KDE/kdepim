@@ -38,7 +38,7 @@ class BytesEditInterface;
 }
 using namespace KHE;
 
-class Q3ButtonGroup;
+class QGroupBox;
 class QCheckBox;
 class QLabel;
 
@@ -62,7 +62,7 @@ protected:
 	QLabel* fRecordIDLabel;
 	KLineEdit* fRecordIndex;
 	KLineEdit* fRecordID;
-	Q3ButtonGroup* fFlagsGroup;
+	QGroupBox* fFlagsGroup;
 	QCheckBox* fDirty;
 	QCheckBox* fDeleted;
 	QCheckBox* fBusy;
