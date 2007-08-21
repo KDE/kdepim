@@ -76,16 +76,8 @@ MemofileConduit::~MemofileConduit()
 	FUNCTIONSETUP;
 
 	setFirstSync( false );
-	// try new format first...
-	DEBUGKPILOT << "trying new format database first.";
 	bool _open = false;
-	_open = openDatabases(CSL1("MemosDB-PMem"));
-	if(!_open) {
-		DEBUGKPILOT << "unable to open new format database. trying old one.";
-		_open = openDatabases(CSL1("MemoDB"));
-	} else {
-		DEBUGKPILOT << "able to open new format database.";
-	}
+	_open = openDatabases(CSL1("MemoDB"));
 
 	if(!_open) {
 		emit logError(i18n("Unable to open the memo databases on the handheld."));

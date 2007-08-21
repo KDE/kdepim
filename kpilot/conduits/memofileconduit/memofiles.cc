@@ -281,7 +281,7 @@ bool Memofiles::loadFromMetadata ()
 	DEBUGKPILOT << ": loaded: [" << _memofiles.count() << "] memofiles.";
 
 	f.close();
-	return (_memofiles.count() > 0);
+	return true;
 }
 
 Memofile * Memofiles::find (recordid_t id)
