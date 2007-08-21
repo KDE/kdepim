@@ -814,7 +814,7 @@ int main(int argc, char **argv)
 
 	QTimer::singleShot(0,tp,SLOT(startDaemonIfNeeded()));
 
-	KGlobal::dirs()->addResourceType("pilotdbs",
+	KGlobal::dirs()->addResourceType("pilotdbs", "data",
 		CSL1("share/apps/kpilot/DBBackup"));
 	tp->show();
 	//a.setMainWidget(tp);
