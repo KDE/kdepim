@@ -72,24 +72,14 @@ LogWidget::LogWidget(QWidget * parent) :
 	QGridLayout *grid = new QGridLayout(this);
 	grid->setSpacing(SPACING);
 
-	grid->addRowSpacing(0, SPACING);
-	grid->addRowSpacing(1, 100);
-	grid->addColSpacing(2, 100);
-	grid->addRowSpacing(3, SPACING);
-	grid->addColSpacing(0, SPACING);
-	grid->addColSpacing(3, SPACING);
-	grid->setRowStretch(1, 50);
-	grid->setColStretch(2, 50);
-
 	fLog = new KTextEdit(this);
 	fLog->setReadOnly(true);
 	fLog->setWordWrapMode(QTextOption::WordWrap);
-	fLog->setTextFormat(Qt::LogText);
 
 	fLog->setWhatsThis( i18n("<qt>This lists all the messages received "
-			"during the current HotSync</qt>"));
-	grid->addMultiCellWidget(fLog, 1, 1,1,2);
-
+		"during the current HotSync</qt>"));
+			
+	grid->addWidget( fLog, 1, 1, 1, 2 );
 
 	fInitialText.append(CSL1("<b>Version:</b> KPilot %1" TE_EOL)
 		.arg(QString::fromLatin1(KPILOT_VERSION)));
@@ -136,7 +126,7 @@ LogWidget::LogWidget(QWidget * parent) :
 
 	fButtonBox = h;
 
-	grid->addMultiCellWidget(h,2,2,1,2);
+	grid->addWidget( h, 2, 1, 1, 2 );
 
 	fLabel = new QLabel(i18n("Sync progress:"),this);
 	grid->addWidget(fLabel,3,1);
