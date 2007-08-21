@@ -1,8 +1,10 @@
 # Don't forget to include output directory, otherwise
-# the UI file won't be wrapped!
+# the UI file won't be wrapped! 
+# TODO: remove KDE4_INCLUDES and clean up headers.
 include_directories(
 	${CMAKE_CURRENT_SOURCE_DIR}/../lib
 	${CMAKE_CURRENT_BINARY_DIR}
+	${KDE4_INCLUDES}
 )
 add_subdirectory(icons)
 

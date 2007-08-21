@@ -25,7 +25,11 @@ kde4_add_kcfg_files(lib_SRCS kpilotlibSettings.kcfgc)
 kde4_add_library(kpilot SHARED ${lib_SRCS})
 set_target_properties(kpilot PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
 
-target_link_libraries(kpilot ${PILOTLINK_LIBRARY} ${QT_LIBRARIES} ${KDE4_KIO_LIBS}  ${QT_QT3SUPPORT_LIBRARY})
+target_link_libraries(kpilot
+	${PILOTLINK_LIBRARY}
+	${QT_LIBRARIES}
+	${KDE4_KIO_LIBS}
+)
 
 #---------- INSTALL -----------------------*
 set(kpilotinclude_HEADERS

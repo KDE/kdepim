@@ -29,15 +29,12 @@
 */
 #include "options.h"
 
-#include <qtimer.h>
+#include <QtCore/QTimer>
 
 #include "actions.h"
 #include "plugin.h"
 
 #include "actionQueue.moc"
-
-
-
 
 ActionQueue::ActionQueue(KPilotLink *d) :
 	SyncAction(d, "ActionQueue")

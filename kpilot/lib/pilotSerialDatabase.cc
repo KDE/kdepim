@@ -33,7 +33,7 @@
 
 #include <pi-dlp.h>
 
-#include <qfile.h>
+#include <QtCore/QFile>
 
 #include <kglobal.h>
 #include <klocale.h>

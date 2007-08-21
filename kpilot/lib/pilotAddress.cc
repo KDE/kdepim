@@ -32,8 +32,7 @@
 #include <stdlib.h>
 #include <assert.h>
 
-#include <qnamespace.h>
-#include <qstringlist.h>
+#include <QtCore/QStringList>
 
 #include "options.h"
 

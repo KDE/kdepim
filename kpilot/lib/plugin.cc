@@ -35,17 +35,16 @@
 
 #include <stdlib.h>
 
-#include <qdir.h>
-#include <qfileinfo.h>
-#include <qlabel.h>
-#include <qlayout.h>
-#include <qpushbutton.h>
-#include <qregexp.h>
-#include <qstringlist.h>
-#include <qtabwidget.h>
-#include <qtimer.h>
-#include <QPixmap>
-#include <QString>
+#include <QtCore/QDir>
+#include <QtCore/QFileInfo>
+#include <QtCore/QRegExp>
+#include <QtCore/QStringList>
+#include <QtCore/QTimer>
+#include <QtGui/QLabel>
+#include <QtGui/QLayout>
+#include <QtGui/QPixmap>
+#include <QtGui/QPushButton>
+#include <QtGui/QTabWidget>
 
 #include <kglobal.h>
 #include <ktextedit.h>

@@ -33,7 +33,6 @@
 #include <pi-macros.h>
 #include <pi-address.h>
 
-#include <qnamespace.h>
 #include <kpilot_export.h>
 #include "pilotRecord.h"
 #include "pilotAppInfo.h"

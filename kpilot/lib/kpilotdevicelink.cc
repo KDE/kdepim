@@ -47,11 +47,11 @@
 #include <pi-file.h>
 #include <pi-buffer.h>
 
-#include <qdir.h>
-#include <qtimer.h>
-#include <qdatetime.h>
-#include <qthread.h>
-#include <QApplication>
+#include <QtCore/QDateTime>
+#include <QtCore/QDir>
+#include <QtCore/QThread>
+#include <QtCore/QTimer>
+#include <QtGui/QApplication>
 
 #include <kconfig.h>
 #include <kmessagebox.h>

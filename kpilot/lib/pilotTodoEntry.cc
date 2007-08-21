@@ -30,8 +30,7 @@
 
 #include <stdlib.h>
 
-#include <qdatetime.h>
-#include <qnamespace.h>
+#include <QtCore/QDateTime>
 
 #include <kglobal.h>
 

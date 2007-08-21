@@ -28,8 +28,7 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
-#include <qnamespace.h>
-
+#include "options.h"
 
 #include <pi-memo.h>
 

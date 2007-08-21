@@ -28,7 +28,7 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
-#include <q3ptrqueue.h>
+#include <QtCore/QQueue>
 
 #include "syncAction.h"
 
@@ -155,7 +155,7 @@ protected slots:
 
 private:
 	/** A queue of actions to take. */
-	Q3PtrQueue < SyncAction > SyncActionQueue;
+	QQueue<SyncAction*> SyncActionQueue;
 };
 
 

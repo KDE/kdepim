@@ -51,10 +51,11 @@ configure_file(config-kpilot.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-kpilot.h
 include_directories(
 	${CMAKE_CURRENT_SOURCE_DIR}
 	${CMAKE_CURRENT_BINARY_DIR}
-	${KDE4_INCLUDES}
-	${PILOTLINK_INCLUDE_DIR} 
-	${QT_INCLUDE_DIR} 
-	${QT_QTDBUS_INCLUDE_DIR})
+	${PILOTLINK_INCLUDE_DIR}
+	${QT_INCLUDE_DIR}
+	${QT_QTDBUS_INCLUDE_DIR}
+	${KDE4_INCLUDE_DIR}
+)
 
 # Only build stuff if p-l is found
 if (PILOTLINK_FOUND)

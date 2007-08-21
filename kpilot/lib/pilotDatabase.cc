@@ -34,7 +34,7 @@
 #include <time.h> // Needed by pilot-link include
 #include <pi-appinfo.h>
 
-#include <qstringlist.h>
+#include <QtCore/QStringList>
 
 #include <kglobal.h>
 

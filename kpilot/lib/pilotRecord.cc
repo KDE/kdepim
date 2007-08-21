@@ -36,7 +36,7 @@
 
 #include <string.h>
 
-#include <qregexp.h>
+#include <QtCore/QRegExp>
 
 #include <kglobal.h>
 #include <kcharsets.h>

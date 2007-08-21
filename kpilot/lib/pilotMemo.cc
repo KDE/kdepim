@@ -27,8 +27,6 @@
 */
 #include "pilotMemo.h"
 
-#include <qnamespace.h>
-
 #include "options.h"
 #include "pilotDatabase.h"
 

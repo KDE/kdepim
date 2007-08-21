@@ -34,15 +34,15 @@
 #include <pi-socket.h>
 #include <pi-dlp.h>
 
-#include <qtimer.h>
-#include <qlayout.h>
-#include <qcheckbox.h>
-#include <qlabel.h>
-#include <qmessagebox.h>
-#include <qdir.h>
-#include <qfile.h>
-#include <qfileinfo.h>
-#include <qstyle.h>
+#include <QtCore/QDir>
+#include <QtCore/QFile>
+#include <QtCore/QFileInfo>
+#include <QtCore/QTimer>
+#include <QtGui/QCheckBox>
+#include <QtGui/QLabel>
+#include <QtGui/QLayout>
+#include <QtGui/QMessageBox>
+#include <QtGui/QStyle>
 
 #include <kdialog.h>
 #include <kglobal.h>

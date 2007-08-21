@@ -30,7 +30,8 @@
 */
 #include "pilot.h"
 
-#include <qtextcodec.h>
+#include <QtCore/QTextCodec>
+
 #include <kcharsets.h>
 #include <kglobal.h>
 

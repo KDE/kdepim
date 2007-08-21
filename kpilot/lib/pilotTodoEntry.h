@@ -35,9 +35,6 @@
 #include <pi-macros.h>
 #include <pi-todo.h>
 
-#include <qnamespace.h>
-
-
 #include "pilotRecord.h"
 #include "pilotAppInfo.h"
 

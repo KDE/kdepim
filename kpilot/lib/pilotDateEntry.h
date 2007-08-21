@@ -34,9 +34,8 @@
 #include <pi-macros.h>
 #include <pi-datebook.h>
 
-#include <qbitarray.h>
-#include <qdatetime.h>
-#include <qnamespace.h>
+#include <QtCore/QBitArray>
+#include <QtCore/QDateTime>
 
 #include "pilotRecord.h"
 #include "pilotAppInfo.h"

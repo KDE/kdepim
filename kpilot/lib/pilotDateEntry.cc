@@ -30,9 +30,8 @@
 
 #include <stdlib.h>
 
-#include <qdatetime.h>
-#include <qnamespace.h>
-#include <qregexp.h>
+#include <QtCore/QDateTime>
+#include <QtCore/QRegExp>
 
 #include <kglobal.h>
 

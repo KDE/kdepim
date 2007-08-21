@@ -28,9 +28,9 @@
 */
 #include "actions.h"
 
-#include <qapplication.h>
-#include <qdir.h>
-#include <qfile.h>
+#include <QtCore/QDir>
+#include <QtCore/QFile>
+#include <QtGui/QApplication>
 
 #include <ksavefile.h>
 

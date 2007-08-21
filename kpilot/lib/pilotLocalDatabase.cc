@@ -34,9 +34,9 @@
 
 #include <pi-file.h>
 
-#include <qdatetime.h>
-#include <qfile.h>
-#include <qregexp.h>
+#include <QtCore/QDateTime>
+#include <QtCore/QFile>
+#include <QtCore/QRegExp>
 
 #include <kglobal.h>
 #include <ksavefile.h>

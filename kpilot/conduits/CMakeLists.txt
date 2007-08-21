@@ -1,6 +1,10 @@
+# TODO: Remove ${KDE4_INCLUDES} and clean up headers/qt3 stuff.
 include_directories(
 	${CMAKE_CURRENT_SOURCE_DIR}/../lib
+	${KDE4_INCLUDES}
 )
+
+link_libraries( ${QT_QT3SUPPORT_LIBRARY} )
 
 add_subdirectory(base)
 
