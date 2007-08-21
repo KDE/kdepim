@@ -17,8 +17,8 @@
 //
 
 // local includes
-#include "csvtemplate.h"
 #include "csvtemplatefactory.h"
+#include "csvtemplate.h"
 
 // Qt includes
 #include <QtCore/QDir>
