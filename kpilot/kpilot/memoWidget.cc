@@ -207,8 +207,8 @@ void MemoWidget::setupWidget()
 {
 	FUNCTIONSETUP;
 
-	QLabel *label = NULL;
-	QGridLayout *grid = new QGridLayout(this, 5, 4);
+	QLabel *label = 0L;
+	QGridLayout *grid = new QGridLayout( this );
 	grid->setSpacing(SPACING);
 	QString wt;
 
@@ -226,7 +226,7 @@ void MemoWidget::setupWidget()
 	grid->addWidget(label, 0, 0);
 
 	fListBox = new Q3ListBox(this);
-	grid->addMultiCellWidget(fListBox, 1, 1, 0, 1);
+	grid->addWidget(fListBox, 1, 0, 1, 2);
 	connect(fListBox, SIGNAL(highlighted(int)),
 		this, SLOT(slotShowMemo(int)));
 	connect(fListBox, SIGNAL(selectionChanged()),
@@ -242,13 +242,12 @@ void MemoWidget::setupWidget()
 	fTextWidget = new KTextEdit(this);
 	fTextWidget->setReadOnly(true);
 	fTextWidget->setWordWrapMode(QTextOption::WordWrap);
-	fTextWidget->setTextFormat(Qt::PlainText);
-	grid->addMultiCellWidget(fTextWidget, 1, 4, 2, 2);
+	grid->addWidget(fTextWidget, 1, 2, 2, 1);
 	fTextWidget->setWhatsThis(
 		i18n("The text of the selected memo appears here."));
 
 	fExportButton = new QPushButton(i18n("Export Memo..."), this);
-	grid->addWidget(fExportButton, 2, 0,1,2);
+	grid->addWidget(fExportButton, 2, 0, 1, 2);
 	connect(fExportButton, SIGNAL(clicked()), this,
 		SLOT(slotExportMemo()));
 	fExportButton->setWhatsThis(
@@ -381,7 +380,7 @@ void MemoWidget::slotShowMemo(int which)
 	fTextWidget->blockSignals(true);
 	PilotListItem *p = (PilotListItem *) fListBox->item(which);
 	PilotMemo *theMemo = (PilotMemo *) p->rec();
-	fTextWidget->setText(theMemo->text());
+	fTextWidget->setPlainText(theMemo->text());
 	fTextWidget->blockSignals(false);
 }
 
