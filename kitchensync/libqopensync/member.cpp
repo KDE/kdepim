@@ -20,9 +20,12 @@
 */
 
 #include <opensync/opensync.h>
+#include <opensync/opensync-group.h>
+
 #include <stdlib.h>
 
 #include "member.h"
+#include "result.h"
 
 using namespace QSync;
 
@@ -43,9 +46,9 @@ bool Member::isValid() const
     return false;
   }
 
-  if ( !osync_member_instance_plugin( mMember, pluginName().toUtf8(), &error ) ) {
+  if ( !osync_member_load( mMember, configurationDirectory().toUtf8(), &error ) ) {
     qDebug( "Plugin %s is not valid: %s", qPrintable( pluginName() ), osync_error_print( &error ) );
-    osync_error_free( &error );
+    osync_error_unref( &error );
     return false;
   }
 
@@ -64,20 +67,6 @@ QString Member::pluginName() const
   Q_ASSERT( mMember );
 
   return QString::fromLatin1( osync_member_get_pluginname( mMember ) );
-}
-
-Plugin Member::plugin() const
-{
-  Q_ASSERT( mMember );
-
-  Plugin plugin;
-
-  OSyncPlugin *oplugin = osync_member_get_plugin( mMember );
-  if ( oplugin ) {
-    plugin.mPlugin = oplugin;
-  }
-
-  return plugin;
 }
 
 int Member::id() const
@@ -105,27 +94,27 @@ void Member::setConfiguration( const QByteArray &configurationData )
 {
   Q_ASSERT( mMember );
 
-  osync_member_set_config( mMember, configurationData.data(), configurationData.size() );
+  osync_member_set_config( mMember, configurationData.data() );
 }
 
 Result Member::configuration( QByteArray &configurationData, bool useDefault ) const
 {
   Q_ASSERT( mMember );
 
-  char *data;
+  const char *data;
   int size;
 
   OSyncError *error = 0;
-  osync_bool ok = false;
   if ( useDefault ) {
-    ok = osync_member_get_config_or_default( mMember, &data, &size, &error );
+    data = osync_member_get_config_or_default( mMember, &error );
   } else {
-    ok = osync_member_get_config( mMember, &data, &size, &error );
+    data = osync_member_get_config( mMember, &error );
   }
 
-  if ( !ok ) {
+  if ( !data ) {
     return Result( &error );
   } else {
+    size = strlen( data );
     configurationData.resize( size );
     memcpy( configurationData.data(), data, size );
 
@@ -145,10 +134,10 @@ Result Member::save() const
   }
 }
 
-Result Member::instance( const Plugin &plugin ) const
+Result Member::instance() const
 {
   OSyncError *error = 0;
-  if ( !osync_member_instance_plugin( mMember, plugin.name().toUtf8(), &error ) ) {
+  if ( !osync_member_load( mMember, configurationDirectory().toUtf8(), &error ) ) {
     return Result( &error );
   } else {
     return Result();
@@ -160,40 +149,13 @@ bool Member::operator==( const Member &member ) const
   return mMember == member.mMember;
 }
 
-QString Member::scanDevices( const QString &query ) const
+Result Member::cleanup() const
 {
   Q_ASSERT( mMember );
 
   OSyncError *error = 0;
-  char *data =
-    (char*)osync_member_call_plugin( mMember, "scan_devices",
-                                     const_cast<char*>( query.toUtf8().data() ),
-                                     &error );
-  if ( error != 0 ) {
-    osync_error_free( &error );
-    return QString();
-  } else {
-    QString xml = QString::fromUtf8( data );
-    free( data );
-    return xml;
-  }
-}
-
-bool Member::testConnection( const QString &configuration ) const
-{
-  Q_ASSERT( mMember );
-
-  OSyncError *error = 0;
-  int *result =
-    (int*)osync_member_call_plugin( mMember, "test_connection",
-                                    const_cast<char*>( configuration.toUtf8().data() ),
-                                    &error );
-  if ( error != 0 ) {
-    osync_error_free( &error );
-    return false;
-  } else {
-    bool value = ( *result == 1 ? true : false );
-    free( result );
-    return value;
-  }
+  if ( !osync_member_delete( mMember, &error ) )
+    return Result( &error );
+  else
+    return Result();
 }

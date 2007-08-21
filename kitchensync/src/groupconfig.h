@@ -22,9 +22,11 @@
 
 #include <QtCore/QList>
 #include <QtGui/QWidget>
+#include <QtCore/QMap>
 
 class QLabel;
 class KPageWidget;
+class QFrame;
 class KPageWidgetItem;
 
 class GroupConfigCommon;
@@ -40,12 +42,19 @@ class GroupConfig : public QWidget
 
     void setSyncProcess( SyncProcess *process );
 
-    void updateMembers();
-
     void saveConfig();
 
-  protected slots:
+  public slots:
     void addMember();
+    void removeMember();
+
+    void updateMembers();
+
+  signals:
+    void memberSelected( bool );
+
+  protected slots:
+    void memberWidgetSelected( KPageWidgetItem* );
 
   private:
     QLabel *mNameLabel;
@@ -55,7 +64,7 @@ class GroupConfig : public QWidget
     SyncProcess *mProcess;
 
     GroupConfigCommon *mCommonConfig;
-    QList<MemberConfig*> mMemberConfigs;
+    QMap<QWidget*, MemberConfig*> mMemberConfigs;
     QList<KPageWidgetItem*> mConfigPages;
 };
 

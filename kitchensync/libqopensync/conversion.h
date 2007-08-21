@@ -25,13 +25,13 @@
 #include <libqopensync/qopensync_export.h>
 #include <QtCore/QStringList>
 
-class OSyncEnv;
+class OSyncGroupEnv;
 
 namespace QSync {
 
 class QSYNC_EXPORT Conversion
 {
-  friend class Environment;
+  friend class PluginEnv;
 
   public:
     Conversion();
@@ -48,7 +48,7 @@ class QSYNC_EXPORT Conversion
     QStringList objectTypes() const;
 
   private:
-    OSyncEnv *mEnvironment;
+    OSyncGroupEnv *mGroupEnv;
 };
 
 }

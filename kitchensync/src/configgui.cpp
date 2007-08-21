@@ -32,6 +32,11 @@
 #include "configguisyncmlhttp.h"
 #include "configguisyncmlobex.h"
 #include "configguigcalendar.h"
+#include "configguievo2.h"
+#include "configguimoto.h"
+#include "configguijescs.h"
+#include "configguisunbird.h"
+#include "configguisynce.h"
 
 #include "memberinfo.h"
 
@@ -101,6 +106,16 @@ ConfigGui *ConfigGui::Factory::create( const QSync::Member &member,
     return new ConfigGuiLdap( member, parent );
   } else if ( name == "kdepim-sync" ) {
     return new ConfigGuiBlank( member, parent );
+  } else if ( name == "jescs-sync" ) {
+    return new ConfigGuiJescs( member, parent );
+  } else if ( name == "evo2-sync" ) {
+    return new ConfigGuiEvo2( member, parent );
+  } else if ( name == "moto-sync" ) {
+    return new ConfigGuiMoto( member, parent );
+  } else if ( name == "synce-plugin" ) {
+    return new ConfigGuiSynce( member, parent );
+  } else if ( name == "sunbird-sync" ) {
+    return new ConfigGuiSunbird( member, parent );
   } else {
     return new ConfigGuiXml( member, parent );
   }

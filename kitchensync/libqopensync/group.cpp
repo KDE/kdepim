@@ -24,6 +24,7 @@
 #include <QtXml/QDomDocument>
 
 #include <opensync/opensync.h>
+#include <opensync/opensync-group.h>
 
 #include "conversion.h"
 #include "group.h"
@@ -123,22 +124,6 @@ bool Group::isValid() const
   return mGroup != 0;
 }
 
-Group::Iterator Group::begin()
-{
-  Iterator it( this );
-  it.mPos = 0;
-
-  return it;
-}
-
-Group::Iterator Group::end()
-{
-  Iterator it( this );
-  it.mPos = memberCount();
-
-  return it;
-}
-
 void Group::setName( const QString &name )
 {
   Q_ASSERT( mGroup );
@@ -194,18 +179,22 @@ Group::LockType Group::lock()
   }
 }
 
-void Group::unlock( bool removeFile )
+void Group::unlock()
 {
   Q_ASSERT( mGroup );
 
-  osync_group_unlock( mGroup, removeFile );
+  osync_group_unlock( mGroup );
 }
 
-Member Group::addMember()
+Member Group::addMember( const QSync::Plugin &plugin )
 {
   Q_ASSERT( mGroup );
 
-  OSyncMember *omember = osync_member_new( mGroup );
+  OSyncError *error = 0;
+
+  OSyncMember *omember = osync_member_new( &error );
+  osync_group_add_member( mGroup, omember );
+  osync_member_set_pluginname( omember, plugin.name().toUtf8() );
 
   Member member;
   member.mMember = omember;
@@ -278,6 +267,30 @@ Result Group::save()
   }
 }
 
+void Group::setUseMerger( bool use )
+{
+  Q_ASSERT( mGroup );
+  osync_group_set_use_merger( mGroup, use );
+}
+
+bool Group::useMerger() const
+{
+  Q_ASSERT( mGroup );
+  return osync_group_get_use_merger( mGroup );
+}
+
+void Group::setUseConverter( bool use )
+{
+  Q_ASSERT( mGroup );
+  osync_group_set_use_converter( mGroup, use );
+}
+
+bool Group::useConverter() const
+{
+  Q_ASSERT( mGroup );
+  return osync_group_get_use_converter( mGroup );
+}
+
 void Group::setObjectTypeEnabled( const QString &objectType, bool enabled )
 {
   Q_ASSERT( mGroup );
@@ -298,4 +311,15 @@ GroupConfig Group::config() const
   config.mGroup = mGroup;
 
   return config;
+}
+
+Result Group::cleanup() const
+{
+  Q_ASSERT( mGroup );
+
+  OSyncError *error = 0;
+  if ( !osync_group_delete( mGroup, &error ) )
+    return Result( &error );
+  else
+    return Result();
 }

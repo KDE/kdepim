@@ -2,6 +2,7 @@
     This file is part of libqopensync.
 
     Copyright (c) 2005 Tobias Koenig <tokoe@kde.org>
+    Copyright (c) 2007 Daniel Gollub <dgollub@suse.de>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
@@ -19,51 +20,63 @@
     Boston, MA 02110-1301, USA.
 */
 
-#ifndef QSYNC_PLUGIN_H
-#define QSYNC_PLUGIN_H
+#ifndef OSYNC_PLUGINENV_H
+#define OSYNC_PLUGINENV_H
 
 #include <QtCore/QString>
 
 #include <libqopensync/qopensync_export.h>
 
-class OSyncPlugin;
+struct OSyncPluginEnv;
 
 namespace QSync {
 
-class QSYNC_EXPORT Plugin
+class Plugin;
+class Result;
+
+class QSYNC_EXPORT PluginEnv
 {
-  friend class PluginEnv;
-  friend class Member;
-
   public:
-    Plugin();
-    ~Plugin();
+    PluginEnv();
+    ~PluginEnv();
 
     /**
-      Returns whether the object is a valid plugin.
+      Initializes the environment ( e.g. loads the groups and plugins ).
+      Has to be called before the groups or plugins can be accessed.
      */
-    bool isValid() const;
+    Result initialize();
 
     /**
-      Returns the name of the plugin.
+      Finalizes the environment ( e.g. unloads the groups and plugins ).
+      Should be the last call before the object is deleted.
      */
-    QString name() const;
+    Result finalize();
 
     /**
-      Returns the long name of the plugin.
+      Returns the number of plugins.
      */
-    QString longName() const;
+    int pluginCount() const;
 
     /**
-      Returns the description of the plugin.
+      Returns the plugin at position @param pos.
      */
-    QString description() const;
+    Plugin pluginAt( int pos ) const;
+
+    /**
+      Returns a plugin by name or an invalid plugin when the plugin with this
+      name doesn't exists.
+     */
+    Plugin pluginByName( const QString &name ) const;
+
+    /**
+      Returns the conversion object of this environment.
+     */
+//    Conversion conversion() const;
 
   private:
-    OSyncPlugin *mPlugin;
+    OSyncPluginEnv *mPluginEnv;
 };
 
 }
 
 #endif
-

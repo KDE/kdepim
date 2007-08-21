@@ -29,7 +29,7 @@
 #include <QtCore/QObject>
 
 class OSyncEngine;
-class OSyncMapping;
+class OSyncMappingEngine;
 class OSyncChangeUpdate;
 class OSyncMappingUpdate;
 class OSyncEngineUpdate;
@@ -61,10 +61,10 @@ class QSYNC_EXPORT CallbackHandler : public QObject
     virtual void customEvent( QEvent *event );
 
   private:
-    static void conflict_callback( OSyncEngine*, OSyncMapping*, void* );
-    static void change_callback( OSyncEngine*, OSyncChangeUpdate*, void* );
+    static void conflict_callback( OSyncEngine*, OSyncMappingEngine*, void* );
+    static void change_callback( OSyncChangeUpdate*, void* );
     static void mapping_callback( OSyncMappingUpdate*, void* );
-    static void engine_callback( OSyncEngine*, OSyncEngineUpdate*, void* );
+    static void engine_callback( OSyncEngineUpdate*, void* );
     static void member_callback( OSyncMemberUpdate*, void* );
 
     Engine* mEngine;

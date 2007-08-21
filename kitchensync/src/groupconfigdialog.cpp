@@ -32,7 +32,7 @@ GroupConfigDialog::GroupConfigDialog( QWidget *parent, SyncProcess *process )
 {
   setModal( true );
   setWindowTitle( i18n("Configure Synchronization Group") );
-  setButtons( Ok );
+  setButtons( Ok | User1 | User2 );
 
   QFrame *topFrame = new QFrame( this );
   setMainWidget( topFrame );
@@ -47,7 +47,14 @@ GroupConfigDialog::GroupConfigDialog( QWidget *parent, SyncProcess *process )
 
   restoreDialogSize( KConfigGroup( KGlobal::config(), "size_groupconfigdialog" ) );
 
+  enableButton( User1, false );
+  setButtonText( User1, i18n( "Remove Member" ) );
+  setButtonText( User2, i18n( "Add Member..." ) );
+
   connect( this, SIGNAL( okClicked() ), this, SLOT( slotOk() ) );
+  connect( this, SIGNAL( user1Clicked() ), this, SLOT( slotUser1() ) );
+  connect( this, SIGNAL( user2Clicked() ), this, SLOT( slotUser2() ) );
+  connect( mConfigWidget, SIGNAL( memberSelected( bool ) ), SLOT( memberSelected( bool ) ) );
 }
 
 GroupConfigDialog::~GroupConfigDialog()
@@ -58,6 +65,21 @@ GroupConfigDialog::~GroupConfigDialog()
 void GroupConfigDialog::slotOk()
 {
   mConfigWidget->saveConfig();
+}
+
+void GroupConfigDialog::slotUser1()
+{
+  mConfigWidget->removeMember();
+}
+
+void GroupConfigDialog::slotUser2()
+{
+  mConfigWidget->addMember();
+}
+
+void GroupConfigDialog::memberSelected( bool selected )
+{
+  enableButton( User1, selected );
 }
 
 #include "groupconfigdialog.moc"

@@ -67,6 +67,7 @@ class ConfigGuiSyncmlObex : public ConfigGui
     KLineEdit *mPassword;
     QCheckBox *mUseStringTable;
     QCheckBox *mOnlyReplace;
+    QCheckBox *mOnlyLocalTime;
     QSpinBox *mRecvLimit;
     QSpinBox *mMaxObjSize;
     QComboBox *mSyncmlVersion;

@@ -40,9 +40,10 @@ class ChangeItem : public KWidgetListItem
       QGridLayout *layout = new QGridLayout( this );
       layout->setMargin( KDialog::marginHint() );
       layout->setSpacing( KDialog::spacingHint() );
-
-      MemberInfo mi( change.member() );
-      layout->addWidget( new QLabel( mi.name(), this ), 0, 0 );
+ // TODO change doesn't contain member as struct member .. use SyncMapping to determine the correct member.
+      //MemberInfo mi( change.member() );
+      //layout->addWidget( new QLabel( mi.name(), this ), 0, 0 );
+      layout->addWidget( new QLabel( "PORTING TODO", this ), 0, 0 );
 
       QString type;
       switch ( change.changeType() ) {

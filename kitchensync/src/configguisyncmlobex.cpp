@@ -88,11 +88,14 @@ ConfigGuiSyncmlObex::ConfigGuiSyncmlObex( const QSync::Member &member, QWidget *
 
   mContactDb->addItem( "addressbook" );
   mContactDb->addItem( "contacts" );
+  mContactDb->addItem( "Contacts" );
 
   mCalendarDb->addItem( "agenda" );
   mCalendarDb->addItem( "calendar" );
+  mCalendarDb->addItem( "Calendar" );
 
   mNoteDb->addItem( "notes" );
+  mNoteDb->addItem( "Notes" );
 
   // Options
   QWidget *optionsWidget = new QWidget( tabWidget );
@@ -119,17 +122,20 @@ ConfigGuiSyncmlObex::ConfigGuiSyncmlObex( const QSync::Member &member, QWidget *
   mGridLayout->addWidget( mPassword, 1, 1 );
 
   mUseStringTable = new QCheckBox( i18n("Use String Table"), optionsWidget );
-  mGridLayout->addWidget( mUseStringTable, 2, 2, 1, 1 );
+  mGridLayout->addWidget( mUseStringTable, 2, 0, 1, 2 );
 
   mOnlyReplace = new QCheckBox( i18n("Only Replace Entries"), optionsWidget );
-  mGridLayout->addWidget( mOnlyReplace, 3, 3, 1, 1 );
+  mGridLayout->addWidget( mOnlyReplace, 3, 0, 1, 2 );
+
+  mOnlyLocalTime = new QCheckBox( i18n( "Use Local Timestamps only" ), optionsWidget );
+  mGridLayout->addWidget( mOnlyLocalTime, 4, 0, 1, 2 );
 
   // SynML Version
   label = new QLabel( i18n("SyncML Version:"), optionsWidget );
-  mGridLayout->addWidget( label, 4, 0 );
+  mGridLayout->addWidget( label, 5, 0 );
 
   mSyncmlVersion = new QComboBox( optionsWidget );
-  mGridLayout->addWidget( mSyncmlVersion, 4, 1 );
+  mGridLayout->addWidget( mSyncmlVersion, 5, 1 );
 
   mSyncmlVersions.append( SyncmlVersion( 0, i18n( "1.0" ) ) );
   mSyncmlVersions.append( SyncmlVersion( 1, i18n( "1.1" ) ) );
@@ -142,7 +148,7 @@ ConfigGuiSyncmlObex::ConfigGuiSyncmlObex( const QSync::Member &member, QWidget *
 
   // WBXML
   mWbxml = new QCheckBox( i18n("WAP Binary XML"), optionsWidget );
-  mGridLayout->addWidget( mWbxml, 12, 12, 1, 1 );
+  mGridLayout->addWidget( mWbxml, 12, 0, 1, 2 );
 
   // Identifier
   label = new QLabel( i18n("Software Identifier:"), optionsWidget );
@@ -246,12 +252,25 @@ void ConfigGuiSyncmlObex::load( const QString &xml )
       mUseStringTable->setChecked( element.text() == "1" );
     } else if ( element.tagName() == "onlyreplace" ) {
       mOnlyReplace->setChecked( element.text() == "1" );
-    } else if ( element.tagName() == "contact_db" ) {
-      mContactDb->setCurrentIndex( mContactDb->findText( element.text() ) );
-    } else if ( element.tagName() == "calendar_db" ) {
-      mCalendarDb->setCurrentIndex( mCalendarDb->findText( element.text() ) );
-    } else if ( element.tagName() == "note_db" ) {
-      mNoteDb->setCurrentIndex( mNoteDb->findText( element.text() ) );
+    } else if ( element.tagName() == "onlyLocaltime" ) {
+      mOnlyLocalTime->setChecked( element.text() == "1" );
+    } else if ( element.tagName() == "database" ) {
+      QString name;
+      QDomNode subNode;
+      for ( subNode = element.firstChild(); !subNode.isNull(); subNode = subNode.nextSibling() ) {
+        QDomElement subElement = subNode.toElement();
+        if ( subElement.tagName() == "name" ) {
+          name = subElement.text();
+        } else if ( subElement.tagName() == "objtype" ) {
+          if ( subElement.text() == "contact" ) {
+            mContactDb->setCurrentIndex( mContactDb->findText( name ) );
+          } else if ( subElement.text() == "event" ) {
+            mCalendarDb->setCurrentIndex( mCalendarDb->findText( name ) );
+          } else if ( subElement.text() == "note" ) {
+            mNoteDb->setCurrentIndex( mNoteDb->findText( name ) );
+          }
+        }
+      }
     }
   }
 }
@@ -260,39 +279,39 @@ QString ConfigGuiSyncmlObex::save()
 {
   QString xml;
   xml = "<config>\n";
-  xml += "<username>" + mUsername->text() + "</username>\n";
-  xml += "<password>" + mPassword->text() + "</password>\n";
+  xml += "  <username>" + mUsername->text() + "</username>\n";
+  xml += "  <password>" + mPassword->text() + "</password>\n";
   ConnectionTypeList::ConstIterator it;
   for ( it = mConnectionTypes.begin(); it != mConnectionTypes.end(); it++ ) {
     if ( mConnection->currentText() == (*it).second ) {
-      xml += "<type>" + QString("%1").arg((*it).first) + "</type>\n";
+      xml += "  <type>" + QString("%1").arg((*it).first) + "</type>\n";
       break;
     }
   }
 
   // Bluetooth Address
-  xml += "<bluetooth_address>" + mBluetooth->address() + "</bluetooth_address>\n";
+  xml += "  <bluetooth_address>" + mBluetooth->address() + "</bluetooth_address>\n";
 
   // Bluetooth Channel
-  xml += "<bluetooth_channel>" + mBluetooth->channel() + "</bluetooth_channel>\n";
+  xml += "  <bluetooth_channel>" + mBluetooth->channel() + "</bluetooth_channel>\n";
 
   // USB Interface
-  xml += "<interface>" + QString::number( mUsb->interface() ) +"</interface>\n";
+  xml += "  <interface>" + QString::number( mUsb->interface() ) +"</interface>\n";
 
   // SyncML Version
   SyncmlVersionList::ConstIterator itVersion;
   for ( itVersion = mSyncmlVersions.begin(); itVersion != mSyncmlVersions.end(); itVersion++ ) {
     if ( mSyncmlVersion->currentText() == (*itVersion).second ) {
-      xml += "<version>" + QString("%1").arg((*itVersion).first) + "</version>\n";
+      xml += "  <version>" + QString("%1").arg((*itVersion).first) + "</version>\n";
       break;
     }
   }
 
   // (Software) Identifier
-  xml += "<identifier>" + mIdentifier->currentText() + "</identifier>\n";
+  xml += "  <identifier>" + mIdentifier->currentText() + "</identifier>\n";
 
   // WBXML
-  xml += "<wbxml>";
+  xml += "  <wbxml>";
   if ( mWbxml->isChecked() ) {
     xml += '1';
   } else {
@@ -301,12 +320,12 @@ QString ConfigGuiSyncmlObex::save()
   xml += "</wbxml>\n";
 
   // Receive Limit
-  xml += "<recvLimit>" + QString::number( mRecvLimit->value() ) + "</recvLimit>\n";
+  xml += "  <recvLimit>" + QString::number( mRecvLimit->value() ) + "</recvLimit>\n";
 
   // Maximal Object Size
-  xml += "<maxObjSize>" + QString::number( mMaxObjSize->value() ) + "</maxObjSize>\n";
+  xml += "  <maxObjSize>" + QString::number( mMaxObjSize->value() ) + "</maxObjSize>\n";
 
-  xml += "<usestringtable>";
+  xml += "  <usestringtable>";
   if ( mUseStringTable->isChecked() ) {
     xml += '1';
   } else {
@@ -314,7 +333,7 @@ QString ConfigGuiSyncmlObex::save()
   }
   xml += "</usestringtable>\n";
 
-  xml += "<onlyreplace>";
+  xml += "  <onlyreplace>";
   if ( mOnlyReplace->isChecked() ) {
     xml += '1';
   } else {
@@ -322,9 +341,28 @@ QString ConfigGuiSyncmlObex::save()
   }
   xml += "</onlyreplace>\n";
 
-  xml += "<contact_db>" + mContactDb->currentText() + "</contact_db>\n";
-  xml += "<calendar_db>" + mCalendarDb->currentText() + "</calendar_db>\n";
-  xml += "<note_db>" + mNoteDb->currentText() + "</note_db>\n";
+  xml += "  <onlyLocaltime>";
+  if ( mOnlyLocalTime->isChecked() ) {
+    xml += '1';
+  } else {
+    xml += '0';
+  }
+  xml += "</onlyLocaltime>\n";
+
+  xml += "  <database>\n";
+  xml += "    <name>" + mContactDb->currentText() + "</name>\n";
+  xml += "    <objtype>contact</objtype>\n";
+  xml += "  </database>\n";
+
+  xml += "  <database>\n";
+  xml += "    <name>" + mCalendarDb->currentText() + "</name>\n";
+  xml += "    <objtype>event</objtype>\n";
+  xml += "  </database>\n";
+
+  xml += "  <database>\n";
+  xml += "    <name>" + mNoteDb->currentText() + "</name>\n";
+  xml += "    <objtype>note</objtype>\n";
+  xml += "  </database>\n";
   xml += "</config>";
 
   return xml;

@@ -43,14 +43,12 @@ class QSYNC_EXPORT SyncMemberUpdate
   public:
     enum Type {
       Connected,
-      SentChanges,
-      CommittedAll,
       Disconnected,
-      ConnectError,
-      GetChangesError,
-      CommittedAllError,
-      SyncDoneError,
-      DisconnectedError
+      Read,
+      Written,
+      SyncDone,
+      Discovered,
+      Error
     };
 
     SyncMemberUpdate();
@@ -73,11 +71,9 @@ class QSYNC_EXPORT SyncChangeUpdate
 
   public:
     enum Type {
-      Received = 1,
-      ReceivedInfo,
-      Sent,
-      WriteError,
-      ReceiveError
+      Read = 1,
+      Written,
+      Error
     };
 
     SyncChangeUpdate();
@@ -87,14 +83,14 @@ class QSYNC_EXPORT SyncChangeUpdate
     Type type() const;
     Result result() const;
     SyncChange change() const;
-    int memberId() const;
+    Member member() const;
     int mappingId() const;
 
   private:
     Type mType;
     Result mResult;
     SyncChange mChange;
-    int mMemberId;
+    Member mMember;
     int mMappingId;
 };
 
@@ -105,8 +101,8 @@ class QSYNC_EXPORT SyncMappingUpdate
   public:
     enum Type {
       Solved = 1,
-      Synced,
-      WriteError
+      //Synced,
+      Error
     };
 
     SyncMappingUpdate();
@@ -131,14 +127,15 @@ class QSYNC_EXPORT SyncEngineUpdate
 
   public:
     enum Type {
-      EndPhaseConnected = 1,
-      EndPhaseRead,
-      EndPhaseWrite,
-      EndPhaseDisconnected,
+      Connected = 1,
+      Read,
+      Written,
+      Disconnected,
       Error,
-      SyncSuccessfull,
+      Successful,
       PrevUnclean,
-      EndConflicts
+      EndConflicts,
+      SyncDone
     };
 
     SyncEngineUpdate();

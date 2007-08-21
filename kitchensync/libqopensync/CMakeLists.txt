@@ -1,13 +1,13 @@
-INCLUDE_DIRECTORIES( ${OPENSYNC_INCLUDE_DIRS} ${OSENGINE_INCLUDE_DIRS} )
+INCLUDE_DIRECTORIES( ${OPENSYNC_INCLUDE_DIRS} ${GLIB_INCLUDE_DIRS} )
 
 
 ########### next target ###############
 
 SET(qopensync_LIB_SRCS
 callbackhandler.cpp
-conversion.cpp
 engine.cpp
-environment.cpp
+groupenv.cpp
+pluginenv.cpp
 filter.cpp
 group.cpp
 member.cpp
@@ -21,7 +21,7 @@ syncchange.cpp
 
 KDE4_ADD_LIBRARY(qopensync SHARED ${qopensync_LIB_SRCS})
 
-TARGET_LINK_LIBRARIES(qopensync  ${QT_QTCORE_LIBRARY} ${QT_QTXML_LIBRARY} ${OPENSYNC_LDFLAGS} ${OSENGINE_LDFLAGS} )
+TARGET_LINK_LIBRARIES(qopensync  ${QT_QTCORE_LIBRARY} ${QT_QTXML_LIBRARY} ${OPENSYNC_LDFLAGS})
 
 SET_TARGET_PROPERTIES(qopensync PROPERTIES VERSION 4.2.0 SOVERSION 4 )
 INSTALL(TARGETS qopensync DESTINATION ${LIB_INSTALL_DIR} )

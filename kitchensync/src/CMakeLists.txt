@@ -1,7 +1,7 @@
 ADD_SUBDIRECTORY( about ) 
 ADD_SUBDIRECTORY( pics ) 
 
-INCLUDE_DIRECTORIES( ${OPENSYNC_INCLUDE_DIRS} ${OSENGINE_INCLUDE_DIRS} )
+INCLUDE_DIRECTORIES( ${OPENSYNC_INCLUDE_DIRS} ${GLIB_INCLUDE_DIRS} )
 
 
 ########### next target ###############
@@ -55,6 +55,11 @@ configguignokii.cpp
 configguigcalendar.cpp
 configguildap.cpp
 configguigpe.cpp
+configguievo2.cpp
+configguimoto.cpp
+configguijescs.cpp
+configguisunbird.cpp
+configguisynce.cpp
 )
 
 

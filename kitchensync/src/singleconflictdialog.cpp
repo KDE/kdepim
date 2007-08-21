@@ -49,11 +49,14 @@ SingleConflictDialog::SingleConflictDialog( QSync::SyncMapping &mapping, QWidget
     mDiffAlgo = new KSync::AddresseeDiffAlgo( leftChange.data(), rightChange.data() );
   }
 
+// TODO: SyncChange doesn't have member as struct member anymore...
+// Use SyncMapping to determine the member ... see msynctool example
+#if 0
   MemberInfo miLeft( leftChange.member() );
   mDiffAlgoDisplay->setLeftSourceTitle( miLeft.name() );
   MemberInfo miRight( rightChange.member() );
   mDiffAlgoDisplay->setRightSourceTitle( miRight.name() );
-
+#endif
   if ( mDiffAlgo ) {
     mDiffAlgo->addDisplay( mDiffAlgoDisplay );
     mDiffAlgo->run();

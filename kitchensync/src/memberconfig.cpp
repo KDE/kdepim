@@ -76,4 +76,9 @@ void MemberConfig::saveData()
   }
 }
 
+QSync::Member MemberConfig::member() const
+{
+  return mMember;
+}
+
 #include "memberconfig.moc"

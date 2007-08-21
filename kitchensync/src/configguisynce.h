@@ -1,7 +1,7 @@
 /*
     This file is part of KitchenSync.
 
-    Copyright (c) 2005 Cornelius Schumacher <schumacher@kde.org>
+    Copyright (c) 2007 Anirudh Ramesh <abattoir@abattoir.in>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -18,50 +18,32 @@
     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,
     USA.
 */
-#ifndef CONFIGGUISYNCML_H
-#define CONFIGGUISYNCML_H
 
-#include <QtXml/QtXml>
+#ifndef CONFIGGUISYNCE_H
+#define CONFIGGUISYNCE_H
 
 #include "configgui.h"
 
 class QCheckBox;
-class QGridLayout;
-class QSpinBox;
-class KComboBox;
+
 class KLineEdit;
 
-class ConfigGuiSyncmlHttp : public ConfigGui
+class ConfigGuiSynce : public ConfigGui
 {
-
-  Q_OBJECT
-
   public:
-    ConfigGuiSyncmlHttp( const QSync::Member &, QWidget *parent );
+    ConfigGuiSynce( const QSync::Member &, QWidget *parent );
 
     void load( const QString &xml );
-    QString save();
+
+    QString save() const;
 
   private:
-    QGridLayout *mGridLayout;
+    void initGUI();
 
-    KLineEdit *mUsername;
-    KLineEdit *mPassword;
-    KLineEdit *mUrl;
-    QSpinBox *mPort;
-    QCheckBox *mUseStringTable;
-    QCheckBox *mOnlyReplace;
-    QCheckBox *mOnlyLocalTime;
-
-    QSpinBox *mRecvLimit;
-    QSpinBox *mMaxObjSize;
-
-    KComboBox *mContactDb;
-    KComboBox *mCalendarDb;
-    KComboBox *mNoteDb;
-
-  protected slots:
-    void addLineEdit( QWidget *parent, const QString &text, KComboBox **edit, int row );
+    QCheckBox *mContacts;
+    QCheckBox *mTodos;
+    QCheckBox *mCalendar;
+    KLineEdit *mFile;
 };
 
 #endif

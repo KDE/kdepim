@@ -26,6 +26,7 @@
 #include <libqopensync/member.h>
 
 class OSyncChange;
+class OSyncObjFormat;
 
 namespace QSync {
 
@@ -74,7 +75,7 @@ class QSYNC_EXPORT SyncChange
     /**
       Sets the data provided by the plugin.
      */
-    void setData( const QString &data );
+    void setData( const QString &data, OSyncObjFormat *format );
 
     /**
       Returns the data provided by the plugin.
@@ -113,4 +114,3 @@ class QSYNC_EXPORT SyncChange
 }
 
 #endif
-

@@ -26,7 +26,7 @@
 #include <libqopensync/syncchange.h>
 
 class OSyncEngine;
-class OSyncMapping;
+class OSyncMappingEngine;
 
 namespace QSync {
 
@@ -36,12 +36,12 @@ class QSYNC_EXPORT SyncMapping
 
   public:
     SyncMapping();
-    SyncMapping( OSyncMapping *map, OSyncEngine *engine );
+    SyncMapping( OSyncMappingEngine *map, OSyncEngine *engine );
     ~SyncMapping();
 
     bool isValid() const;
 
-    long long id() const;
+//     long long id() const;
 
     void duplicate();
     void solve( const SyncChange &change );
@@ -52,7 +52,7 @@ class QSYNC_EXPORT SyncMapping
 
   private:
     OSyncEngine *mEngine;
-    OSyncMapping *mMapping;
+    OSyncMappingEngine *mMappingEngine;
 };
 
 }

@@ -19,10 +19,12 @@
 */
 
 #include <libqopensync/engine.h>
-#include <libqopensync/environment.h>
+#include <libqopensync/member.h>
+#include <libqopensync/result.h>
 
 #include <kdebug.h>
 #include <klocale.h>
+#include <kmessagebox.h>
 
 #include "syncprocess.h"
 #include "syncprocessmanager.h"
@@ -33,7 +35,6 @@ SyncProcess::SyncProcess( const QSync::Group &group )
   : QObject( 0 )
 {
   setObjectName( "SyncProcess" );
-
   mGroup = group;
   mEngine = new QSync::Engine( mGroup );
 
@@ -64,8 +65,8 @@ QString SyncProcess::memberStatus( const QSync::Member &member ) const
 
 QSync::Result SyncProcess::addMember( const QSync::Plugin &plugin )
 {
-  QSync::Member member = mGroup.addMember();
-  QSync::Result result = member.instance( plugin );
+  QSync::Member member = mGroup.addMember( plugin );
+  QSync::Result result = member.instance();
 
   if ( !result.isError() ) {
     mGroup.save();
@@ -73,6 +74,14 @@ QSync::Result SyncProcess::addMember( const QSync::Plugin &plugin )
 
   return result;
 }
+
+void SyncProcess::removeMember( const QSync::Member &member )
+{
+  member.cleanup();
+  mGroup.removeMember( member );
+  mGroup.save();
+}
+
 
 void SyncProcess::reinitEngine()
 {
@@ -82,6 +91,8 @@ void SyncProcess::reinitEngine()
   Result result = mEngine->initialize();
   if ( result.isError() ) {
     kDebug(5200) <<"SyncProcess::reinitEngine:" << result.message();
+    KMessageBox::error( 0, i18n( "Error initializing Synchoronization Engine for group \"%1\":\n %2",
+                                 mGroup.name(), result.message() ) );
   }
 
   applyObjectTypeFilter();
@@ -91,8 +102,10 @@ void SyncProcess::reinitEngine()
 
 void SyncProcess::applyObjectTypeFilter()
 {
-  const QSync::Conversion conversion = SyncProcessManager::self()->environment()->conversion();
-  const QStringList objectTypes = conversion.objectTypes();
+//   const QSync::Conversion conversion = SyncProcessManager::self()->environment()->conversion();
+//   const QStringList objectTypes = conversion.objectTypes();
+
+  const QStringList objectTypes;
   const QStringList activeObjectTypes = mGroup.config().activeObjectTypes();
 
   for ( int i = 0; i < objectTypes.count(); ++i ) {

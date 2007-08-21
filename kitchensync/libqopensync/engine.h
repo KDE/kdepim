@@ -29,6 +29,10 @@ class OSyncEngine;
 
 namespace QSync {
 
+class Group;
+class Member;
+class Result;
+
 class QSYNC_EXPORT Engine
 {
   friend class CallbackHandler;
@@ -60,9 +64,34 @@ class QSYNC_EXPORT Engine
     Result synchronize();
 
     /**
+      Starts the discover process for a certain member.
+     */
+    Result discover( const Member &member );
+
+    /**
       Stops the synchronization process.
      */
     void abort();
+
+    /**
+      Sets whether the merger shall be used for this engine.
+     */
+    void setUseMerger( bool use );
+
+    /**
+      Returns whether the merger shall be used for this engine.
+     */
+    bool useMerger() const;
+
+    /**
+      Sets whether the converter shall be used for this engine.
+     */
+    void setUseConverter( bool use );
+
+    /**
+      Returns whether the converter shall be used for this engine.
+     */
+    bool useConverter() const;
 
   private:
     OSyncEngine *mEngine;

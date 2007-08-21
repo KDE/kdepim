@@ -20,7 +20,11 @@
 */
 
 #include <opensync/opensync.h>
-#include <osengine/engine.h>
+#include <opensync/opensync-engine.h>
+
+#include "group.h"
+#include "member.h"
+#include "result.h"
 
 #include "engine.h"
 
@@ -29,19 +33,21 @@ using namespace QSync;
 Engine::Engine( const Group &group )
 {
   OSyncError *error = 0;
-  mEngine = osengine_new( group.mGroup, &error );
+  mEngine = osync_engine_new( group.mGroup, &error );
 }
 
 Engine::~Engine()
 {
-  osengine_free( mEngine );
+  osync_engine_unref( mEngine );
   mEngine = 0;
 }
 
 Result Engine::initialize()
 {
+  Q_ASSERT( mEngine );
+
   OSyncError *error = 0;
-  if ( !osengine_init( mEngine, &error ) ) {
+  if ( !osync_engine_initialize( mEngine, &error ) ) {
     return Result( &error );
   } else {
     return Result();
@@ -50,13 +56,28 @@ Result Engine::initialize()
 
 void Engine::finalize()
 {
-  osengine_finalize( mEngine );
+  Q_ASSERT( mEngine );
+
+  OSyncError *error = 0;
+  osync_engine_finalize( mEngine, &error );
 }
 
 Result Engine::synchronize()
 {
+  Q_ASSERT( mEngine );
+
   OSyncError *error = 0;
-  if ( !osengine_synchronize( mEngine, &error ) ) {
+  if ( !osync_engine_synchronize( mEngine, &error ) ) {
+    return Result( &error );
+  } else {
+    return Result();
+  }
+}
+
+Result Engine::discover( const Member &member )
+{
+  OSyncError *error = 0;
+  if ( !osync_engine_discover( mEngine, member.mMember, &error ) ) {
     return Result( &error );
   } else {
     return Result();
@@ -65,5 +86,34 @@ Result Engine::synchronize()
 
 void Engine::abort()
 {
-  osengine_abort( mEngine );
+// TODO
+//   osengine_abort( mEngine );
+}
+
+void Engine::setUseMerger( bool use )
+{
+  Q_ASSERT( mEngine );
+
+  osync_engine_set_use_merger( mEngine, use );
+}
+
+bool Engine::useMerger() const
+{
+  Q_ASSERT( mEngine );
+
+  return osync_engine_get_use_merger( mEngine );
+}
+
+void Engine::setUseConverter( bool use )
+{
+  Q_ASSERT( mEngine );
+
+  osync_engine_set_use_converter( mEngine, use );
+}
+
+bool Engine::useConverter() const
+{
+  Q_ASSERT( mEngine );
+
+  return osync_engine_get_use_converter( mEngine );
 }

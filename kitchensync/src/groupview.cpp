@@ -78,15 +78,14 @@ void GroupView::updateView()
 
   for ( int i = 0; i < SyncProcessManager::self()->count(); ++i ) {
     SyncProcess *process = SyncProcessManager::self()->at( i );
-
     GroupItem *item = new GroupItem( mWidgetList, process );
+    if ( !item ) qDebug( "Item not returned" );
     connect( item, SIGNAL( synchronizeGroup( SyncProcess* ) ),
              SIGNAL( synchronizeGroup( SyncProcess* ) ) );
     connect( item, SIGNAL( abortSynchronizeGroup( SyncProcess* ) ),
              SIGNAL( abortSynchronizeGroup( SyncProcess* ) ) );
     connect( item, SIGNAL( configureGroup( SyncProcess* ) ),
              SIGNAL( configureGroup( SyncProcess* ) ) );
-
     mWidgetList->appendItem( item );
   }
 }

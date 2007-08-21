@@ -23,11 +23,13 @@
 #define CONFIGGUILDAP_H
 
 #include "configgui.h"
+#include <kldap/ldapconfigwidget.h>
 
 class QCheckBox;
 class QLabel;
 class QSpinBox;
 
+class KLDAP::LdapConfigWidget;
 class KComboBox;
 class KLineEdit;
 
@@ -39,36 +41,18 @@ class ConfigGuiLdap : public ConfigGui
     ConfigGuiLdap( const QSync::Member &, QWidget *parent );
 
     void load( const QString &xml );
-    QString save();
-
-  private slots:
-    void bindModeChanged( bool );
+    QString save(); // const;
 
   private:
     void initGUI();
 
-    KLineEdit *mServerName;
-    QSpinBox *mPort;
-
-    QLabel *mBindLabel;
-    QLabel *mPasswordLabel;
-    KLineEdit *mBindDn;
-    KLineEdit *mPassword;
-    QCheckBox *mAnonymousBind;
-
-    KLineEdit *mSearchBase;
-    KLineEdit *mSearchFilter;
-    KLineEdit *mStoreBase;
-
+    KLDAP::LdapConfigWidget *mLdapWidget;
     KLineEdit *mKeyAttribute;
-
     KComboBox *mSearchScope;
-    KComboBox *mAuthMech;
-
     QCheckBox *mEncryption;
-
     QCheckBox *mReadLdap;
     QCheckBox *mWriteLdap;
+
 };
 
 #endif

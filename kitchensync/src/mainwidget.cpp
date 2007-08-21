@@ -26,7 +26,7 @@
 #include "syncprocess.h"
 #include "syncprocessmanager.h"
 
-#include <libqopensync/environment.h>
+#include <libqopensync/groupenv.h>
 
 #include <kaboutdata.h>
 #include <kaction.h>
@@ -52,7 +52,6 @@ MainWidget::MainWidget( KXMLGUIClient *guiClient, QWidget *widget )
     SyncProcessManager::self()->at( i )->applyObjectTypeFilter();
   }
   /** apply object type filter hack **/
-
   mGroupView->updateView();
 
   connect( SyncProcessManager::self(), SIGNAL( changed() ),
@@ -142,7 +141,7 @@ void MainWidget::addGroup()
     SyncProcess *process = SyncProcessManager::self()->byGroupName( name );
     if ( process ) {
       editGroup( process );
-    }
+    } else { qDebug( "Error: Process not returned" );}
   }
 }
 

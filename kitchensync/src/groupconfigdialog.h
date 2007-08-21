@@ -35,6 +35,11 @@ class GroupConfigDialog : public KDialog
 
   protected slots:
     void slotOk();
+    void slotUser1();
+    void slotUser2();
+
+  private slots:
+    void memberSelected( bool );
 
   private:
     GroupConfig *mConfigWidget;

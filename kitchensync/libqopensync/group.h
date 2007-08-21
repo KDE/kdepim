@@ -50,7 +50,7 @@ class QSYNC_EXPORT GroupConfig
 class QSYNC_EXPORT Group
 {
   friend class Engine;
-  friend class Environment;
+  friend class GroupEnv;
 
   public:
     enum LockType {
@@ -66,51 +66,6 @@ class QSYNC_EXPORT Group
       Returns whether the object is a valid group.
      */
     bool isValid() const;
-
-    class Iterator
-    {
-      friend class Group;
-
-      public:
-        Iterator( Group *group )
-          : mGroup( group ), mPos( -1 )
-        {
-        }
-
-        Iterator( const Iterator &it )
-        {
-          mGroup = it.mGroup;
-          mPos = it.mPos;
-        }
-
-        Member operator*()
-        {
-          return mGroup->memberAt( mPos );
-        }
-
-        Iterator &operator++() { mPos++; return *this; }
-        Iterator &operator++( int ) { mPos++; return *this; }
-        Iterator &operator--() { mPos--; return *this; }
-        Iterator &operator--( int ) { mPos--; return *this; }
-        bool operator==( const Iterator &it ) { return mGroup == it.mGroup && mPos == it.mPos; }
-        bool operator!=( const Iterator &it ) { return mGroup == it.mGroup && mPos != it.mPos; }
-
-      private:
-        Group *mGroup;
-        int mPos;
-    };
-
-    /**
-      Returns an iterator pointing to the first item in the member list.
-      This iterator equals end() if the member list is empty.
-     */
-    Iterator begin();
-
-    /**
-      Returns an iterator pointing past the last item in the member list.
-      This iterator equals begin() if the member list is empty.
-     */
-    Iterator end();
 
     /**
       Sets the name of the group.
@@ -141,17 +96,15 @@ class QSYNC_EXPORT Group
 
     /**
       Unlocks the group.
-
-      @param removeFile Whether the lock file shall be removed.
      */
-    void unlock( bool removeFile = true );
+    void unlock();
 
     /**
       Adds a new member to the group.
 
       @returns the new member.
      */
-    Member addMember();
+    Member addMember( const QSync::Plugin &plugin );
 
     /**
       Removes a member from the group.
@@ -189,6 +142,25 @@ class QSYNC_EXPORT Group
       synchronization for this group.
      */
     bool isObjectTypeEnabled( const QString &objectType ) const;
+   /**
+      Sets whether this group uses the merger for synchronization.
+     */
+    void setUseMerger( bool use );
+
+    /**
+      Returns whether this group uses the merger for synchronization.
+     */
+    bool useMerger() const;
+
+    /**
+      Sets whether this group uses the converter for synchronization.
+     */
+    void setUseConverter( bool use );
+
+    /**
+      Returns whether this group uses the converter for synchronization.
+     */
+    bool useConverter() const;
 
     /**
       Saves the configuration to hard disc.
@@ -203,6 +175,11 @@ class QSYNC_EXPORT Group
     GroupConfig config() const;
 
     bool operator==( const Group &group ) const { return mGroup == group.mGroup; }
+
+    /**
+      Removes all group configurations from the hard disc.
+     */
+    Result cleanup() const;
 
   private:
     OSyncGroup *mGroup;

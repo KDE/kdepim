@@ -26,7 +26,8 @@
 #include <libqopensync/group.h>
 
 namespace QSync {
-class Environment;
+class GroupEnv;
+class PluginEnv;
 }
 
 class SyncProcess;
@@ -43,10 +44,16 @@ class SyncProcessManager : public QObject
     ~SyncProcessManager();
 
     /**
-      Return OpenSync Environment.
+      Return OpenSync Group Environment.
     */
-    QSync::Environment *environment() const
-      { return mEnvironment; }
+    QSync::GroupEnv *groupenv() const
+      { return mGroupEnv; }
+
+    /**
+      Return OpenSync PluginEnv.
+    */
+    QSync::PluginEnv *pluginEnv() const
+      { return mPluginEnv; }
 
     /**
       Returns the number of SyncProcesses.
@@ -56,17 +63,17 @@ class SyncProcessManager : public QObject
     /**
       Returns the SyncProcess at position @param pos.
      */
-    SyncProcess *at( int pos ) const;
+    SyncProcess* at( int pos ) const;
 
     /**
       Returns the SyncProcess with the given @param group.
      */
-    SyncProcess *byGroup( const QSync::Group &group );
+    SyncProcess* byGroup( const QSync::Group &group );
 
     /**
       Returns the SyncProcess with the given group @param name.
      */
-    SyncProcess *byGroupName( const QString &name );
+    SyncProcess* byGroupName( const QString &name );
 
     /**
       Adds a group with given @param name.
@@ -84,6 +91,12 @@ class SyncProcessManager : public QObject
     QSync::Result addMember( SyncProcess *process,
                              const QSync::Plugin &plugin );
 
+    /**
+      Removes the @param member from the group of @param process.
+     */
+    void removeMember( SyncProcess *process,
+                       const QSync::Member &member );
+
   signals:
     void changed();
     void syncProcessChanged( SyncProcess *process );
@@ -91,10 +104,11 @@ class SyncProcessManager : public QObject
   private:
     SyncProcessManager();
 
-    void init( QSync::Environment *environment );
+    void initGroup( QSync::GroupEnv *groupenv );
 
     QList<SyncProcess*> mProcesses;
-    QSync::Environment *mEnvironment;
+    QSync::GroupEnv *mGroupEnv;
+    QSync::PluginEnv *mPluginEnv;
 
     static SyncProcessManager *mSelf;
 };

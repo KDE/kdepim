@@ -20,13 +20,14 @@
 */
 
 #include <opensync/opensync.h>
+#include <opensync/opensync-format.h>
 
 #include "conversion.h"
 
 using namespace QSync;
 
 Conversion::Conversion()
-  : mEnvironment( 0 )
+  : mGroupEnv( 0 )
 {
 }
 
@@ -36,23 +37,25 @@ Conversion::~Conversion()
 
 bool Conversion::isValid() const
 {
-  return mEnvironment != 0;
+  return mGroupEnv != 0;
 }
 
 QStringList Conversion::objectTypes() const
 {
-  Q_ASSERT( mEnvironment );
+  Q_ASSERT( mGroupEnv );
 
-  OSyncFormatEnv *formatEnv = osync_conv_env_new( mEnvironment );
+  OSyncError *error = NULL;
+  OSyncFormatEnv *formatEnv = osync_format_env_new( &error );
   Q_ASSERT( formatEnv );
 
   QStringList types;
-  for ( int i = 0; i < osync_conv_num_objtypes( formatEnv ); i++ ) {
-    OSyncObjType *type = osync_conv_nth_objtype( formatEnv, i );
-    types.append( QString::fromUtf8( osync_objtype_get_name( type ) ) );
+// osync_conv_num_objtypes() doesn't seem to exist. Is it osync_format_env_num_objformats instead? -- anirudh 20070727
+  for ( int i = 0; i < osync_format_env_num_objformats( formatEnv ); i++ ) {
+    OSyncObjFormat *format = osync_format_env_nth_objformat( formatEnv, i );
+    types.append( QString::fromUtf8( osync_objformat_get_objtype( format ) ) );
   }
 
-  osync_conv_env_free( formatEnv );
+  osync_format_env_free( formatEnv );
 
   return types;
 }

@@ -34,8 +34,10 @@ namespace QSync {
 class QSYNC_EXPORT Member
 {
   friend class Group;
+  friend class Engine;
   friend class SyncChange;
   friend class SyncMemberUpdate;
+  friend class SyncChangeUpdate;
 
   public:
     Member();
@@ -55,11 +57,6 @@ class QSYNC_EXPORT Member
       Returns the name of the plugin, the member belongs to.
      */
     QString pluginName() const;
-
-    /**
-      Returns the plugin, the member belongs to.
-     */
-    Plugin plugin() const;
 
     /**
       Returns the id of the plugin.
@@ -103,7 +100,7 @@ class QSYNC_EXPORT Member
     /**
       Make this member an instance of the given plugin.
     */
-    Result instance( const Plugin &plugin ) const;
+    Result instance() const;
 
     bool operator==( const Member &member ) const;
 
@@ -119,6 +116,11 @@ class QSYNC_EXPORT Member
       to the device with the given configuration.
      */
     bool testConnection( const QString &configuration ) const;
+
+    /**
+     * Deletes the member's information from the hard disc.
+     */
+    Result cleanup() const;
 
   private:
     OSyncMember *mMember;

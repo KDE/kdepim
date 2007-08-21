@@ -35,6 +35,7 @@ class MemberItem;
 class KUrlLabel;
 class QLabel;
 class QProgressBar;
+class QVBoxLayout;
 
 class GroupItem : public KWidgetListItem
 {

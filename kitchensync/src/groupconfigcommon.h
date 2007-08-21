@@ -30,6 +30,8 @@ class KLineEdit;
 class SyncProcess;
 class QCheckBox;
 
+//TODO: Conversion needs to be ported before...
+#if 0
 class ObjectTypeSelector : public QWidget
 {
   public:
@@ -41,6 +43,7 @@ class ObjectTypeSelector : public QWidget
   private:
     QMap<QString,QCheckBox *> mObjectTypeChecks;
 };
+#endif
 
 class GroupConfigCommon : public QWidget
 {
@@ -52,7 +55,7 @@ class GroupConfigCommon : public QWidget
 
   private:
     KLineEdit *mGroupName;
-    ObjectTypeSelector *mObjectTypeSelector;
+//     ObjectTypeSelector *mObjectTypeSelector;
 
     SyncProcess *mSyncProcess;
 };
