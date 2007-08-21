@@ -90,19 +90,17 @@ FileInstallWidget::FileInstallWidget(QWidget * parent,
 	fIconView = new K3IconView(this);
 	connect(fIconView, SIGNAL(dropped(QDropEvent *, const Q3ValueList<Q3IconDragItem> &)),
 		this, SLOT(slotDropEvent(QDropEvent *, const Q3ValueList<Q3IconDragItem> &)));
-	grid->addMultiCellWidget(fIconView, 1, 4, 2, 3);
+	grid->addWidget(fIconView, 1, 2, 4, 2);
 	fIconView->setWhatsThis(
 		i18n
 		("<qt>This lists files that will be installed on the Pilot during the next HotSync. Drag files here or use the Add button.</qt>"));
 	fIconView->setAcceptDrops(true);
-    fIconView->setSelectionMode(Q3IconView::Extended);
+	fIconView->setSelectionMode(Q3IconView::Extended);
 	fIconView->viewport()->installEventFilter(this);
 
 	grid->setRowStretch(2, 100);
-	grid->setColStretch(2, 50);
-	grid->setColStretch(2, 50);
-	grid->addColSpacing(4, SPACING);
-	grid->addRowSpacing(5, SPACING);
+	grid->setColumnStretch(2, 50);
+	grid->setColumnStretch(2, 50);
 
 	fInstaller = new FileInstaller;
 	connect(fInstaller, SIGNAL(filesChanged()),
@@ -274,35 +272,56 @@ void FileInstallWidget::refreshFileInstallList()
 
 void FileInstallWidget::contextMenu(QMouseEvent *event)
 {
-    FUNCTIONSETUP;
+	FUNCTIONSETUP;
 
-    if(event->button() == Qt::LeftButton)
-        return;
+	if(event->button() == Qt::LeftButton)
+	{
+		return;
+	}
 
-    Q3IconViewItem *item;
-    QStringList files;
-    for(item = fIconView->firstItem(); item; item = item->nextItem())
-    {
-        if(item->isSelected())
-            files.append(item->text());
-    }
+	Q3IconViewItem *item;
+	QStringList files;
+	for(item = fIconView->firstItem(); item; item = item->nextItem())
+	{
+		if(item->isSelected())
+		{
+			files.append(item->text());
+		}
+	}
 
-    Q3PopupMenu popup(fIconView);
+	QMenu popup(fIconView);
 
-    item = fIconView->findItem(event->pos());
-    if(item) {
-        // Popup for the right clicked item
-        popup.insertItem(i18nc("Delete a single file item","Delete"), 10);
-    }
+	item = fIconView->findItem(event->pos());
+	if(item)
+	{
+		// Popup for the right clicked itema
+		QAction *deleteItemAction =
+				new QAction( i18nc("Delete a single file item","Delete"), this );
+		deleteItemAction->setData( (int) 10 );
+		popup.addAction( deleteItemAction );
+	}
 
-    popup.insertItem(i18n("Delete selected files"), 11);
-    if(files.empty())
-        popup.setItemEnabled(11, false);
+	QAction *deleteAllItemsAction = new QAction( i18n("Delete selected files")
+		, this );
+	deleteAllItemsAction->setData( (int) 11 );
+	popup.addAction( deleteAllItemsAction );
 
-    int id = popup.exec(fIconView->viewport()->mapToGlobal(event->pos()));
-    if(id == 10)
-        fInstaller->deleteFile(item->text());
-    else if(id == 11)
-        fInstaller->deleteFiles(files);
+	if(files.empty())
+	{
+		deleteAllItemsAction->setEnabled( false );
+	}
 
+	QAction *action = popup.exec(fIconView->viewport()->mapToGlobal(event->pos()));
+	if( !action )
+	{
+		return;
+	}
+	else if(action->data().toInt() == 10)
+	{
+		fInstaller->deleteFile(item->text());
+	}
+	else if(action->data().toInt() == 11)
+	{
+		fInstaller->deleteFiles(files);
+	}
 }
