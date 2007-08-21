@@ -626,7 +626,7 @@ void KNMainWidget::initActions()
   connect(a_ctAccRename, SIGNAL(triggered(bool)), SLOT(slotAccRename()));
 
   a_ctAccSubscribe = actionCollection()->addAction("account_subscribe");
-  a_ctAccSubscribe->setIcon(KIcon("news_subscribe"));
+  a_ctAccSubscribe->setIcon(KIcon("news-subscribe"));
   a_ctAccSubscribe->setText(i18n("&Subscribe to Newsgroups..."));
   connect(a_ctAccSubscribe, SIGNAL(triggered(bool)), SLOT(slotAccSubscribe()));
 
@@ -635,7 +635,7 @@ void KNMainWidget::initActions()
   connect(a_ctAccExpireAll, SIGNAL(triggered(bool) ), SLOT(slotAccExpireAll()));
 
   a_ctAccGetNewHdrs = actionCollection()->addAction("account_dnlHeaders");
-  a_ctAccGetNewHdrs->setIcon(KIcon("mail_get"));
+  a_ctAccGetNewHdrs->setIcon(KIcon("mail-get"));
   a_ctAccGetNewHdrs->setText(i18n("&Get New Articles in All Groups"));
   connect(a_ctAccGetNewHdrs, SIGNAL(triggered(bool)), SLOT(slotAccGetNewHdrs()));
 
@@ -650,7 +650,7 @@ void KNMainWidget::initActions()
   connect(a_ctAccDelete, SIGNAL(triggered(bool)), SLOT(slotAccDelete()));
 
   a_ctAccPostNewArticle = actionCollection()->addAction("article_postNew");
-  a_ctAccPostNewArticle->setIcon(KIcon("mail_new"));
+  a_ctAccPostNewArticle->setIcon(KIcon("mail-new"));
   a_ctAccPostNewArticle->setText(i18n("&Post to Newsgroup..."));
   connect(a_ctAccPostNewArticle, SIGNAL(triggered(bool)), SLOT(slotAccPostNewArticle()));
   a_ctAccPostNewArticle->setShortcut(QKeySequence(Qt::CTRL+Qt::Key_N));
@@ -667,7 +667,7 @@ void KNMainWidget::initActions()
   connect(a_ctGrpRename, SIGNAL(triggered(bool)), SLOT(slotGrpRename()));
 
   a_ctGrpGetNewHdrs = actionCollection()->addAction("group_dnlHeaders");
-  a_ctGrpGetNewHdrs->setIcon(KIcon("mail_get"));
+  a_ctGrpGetNewHdrs->setIcon(KIcon("mail-get"));
   a_ctGrpGetNewHdrs->setText(i18n("&Get New Articles"));
   connect(a_ctGrpGetNewHdrs, SIGNAL(triggered(bool)), SLOT(slotGrpGetNewHdrs()));
 
@@ -681,7 +681,7 @@ void KNMainWidget::initActions()
   connect(a_ctGrpReorganize, SIGNAL(triggered(bool) ), SLOT(slotGrpReorganize()));
 
   a_ctGrpUnsubscribe = actionCollection()->addAction("group_unsubscribe");
-  a_ctGrpUnsubscribe->setIcon(KIcon("news_unsubscribe"));
+  a_ctGrpUnsubscribe->setIcon(KIcon("news-unsubscribe"));
   a_ctGrpUnsubscribe->setText(i18n("&Unsubscribe From Group"));
   connect(a_ctGrpUnsubscribe, SIGNAL(triggered(bool)), SLOT(slotGrpUnsubscribe()));
 
@@ -763,7 +763,7 @@ void KNMainWidget::initActions()
   connect(a_ctArtSortHeadersKeyb, SIGNAL(triggered(bool)), SLOT(slotArtSortHeadersKeyb()));
   a_ctArtSortHeadersKeyb->setShortcut(QKeySequence(Qt::Key_F7));
 
-  a_ctArtFilter             = new KNFilterSelectAction(i18n("&Filter"), "filter",
+  a_ctArtFilter             = new KNFilterSelectAction(i18n("&Filter"), "search-filter",
                               actionCollection(), "view_Filter");
   a_ctArtFilter->setShortcutConfigurable(false);
 
@@ -772,7 +772,7 @@ void KNMainWidget::initActions()
   a_ctArtFilterKeyb->setShortcut(QKeySequence(Qt::Key_F6));
 
   a_ctArtSearch = actionCollection()->addAction("article_search");
-  a_ctArtSearch->setIcon(KIcon("mail_find"));
+  a_ctArtSearch->setIcon(KIcon("mail-find"));
   a_ctArtSearch->setText(i18n("&Search Articles..."));
   connect(a_ctArtSearch, SIGNAL(triggered(bool)), SLOT(slotArtSearch()));
   a_ctArtSearch->setShortcut(QKeySequence(Qt::Key_F4));

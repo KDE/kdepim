@@ -62,13 +62,13 @@ void KNCollectionViewItem::setIcon() {
     // local folders
     switch ( type() ) {
       case KFolderTreeItem::Outbox:
-        setPixmap( 0, SmallIcon("folder_outbox") );
+        setPixmap( 0, SmallIcon("folder-outbox") );
         break;
       case KFolderTreeItem::Drafts:
         setPixmap( 0, SmallIcon("edit") );
         break;
       case KFolderTreeItem::SentMail:
-        setPixmap( 0, SmallIcon("folder_sent_mail") );
+        setPixmap( 0, SmallIcon("mail-folder-sent") );
         break;
       default:
         setPixmap( 0, SmallIcon("folder") );
