@@ -42,7 +42,7 @@ class ConfigGuiSyncmlObex : public ConfigGui
     explicit ConfigGuiSyncmlObex( const QSync::Member &, QWidget *parent = 0 );
 
     void load( const QString &xml );
-    QString save();
+    QString save() const;
 
   public slots:
      void slotConnectionChanged( int pos );

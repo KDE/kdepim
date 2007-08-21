@@ -41,7 +41,7 @@ class ConfigGuiLdap : public ConfigGui
     ConfigGuiLdap( const QSync::Member &, QWidget *parent );
 
     void load( const QString &xml );
-    QString save(); // const;
+    QString save() const;
 
   private:
     void initGUI();

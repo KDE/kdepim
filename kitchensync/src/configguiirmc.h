@@ -39,7 +39,7 @@ class ConfigGuiIRMC : public ConfigGui
     ConfigGuiIRMC( const QSync::Member &, QWidget *parent );
 
     void load( const QString &xml );
-    QString save();
+    QString save() const;
 
   protected slots:
     void connectionTypeChanged( int type );

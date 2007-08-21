@@ -33,11 +33,11 @@ ConfigGuiBlank::ConfigGuiBlank( const QSync::Member &member, QWidget *parent )
   topLayout()->addWidget( label );
 }
 
-void ConfigGuiBlank::load( const QString &name )
+void ConfigGuiBlank::load( const QString& )
 {
 }
 
-QString ConfigGuiBlank::save()
+QString ConfigGuiBlank::save() const
 {
   QString xml = "<config></config>";
   return xml;

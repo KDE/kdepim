@@ -89,7 +89,7 @@ void ConfigGuiPalm::load( const QString &xml )
   }
 }
 
-QString ConfigGuiPalm::save()
+QString ConfigGuiPalm::save() const
 {
   QString config = "<config>";
 

@@ -32,7 +32,7 @@ class ConfigGuiFile : public ConfigGui
     ConfigGuiFile( const QSync::Member &, QWidget *parent );
 
     void load( const QString &xml );
-    QString save();
+    QString save() const;
 
   private:
     KUrlRequester *mFilename;

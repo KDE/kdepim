@@ -19,9 +19,9 @@
 */
 
 #include <kapplication.h>
+#include <kcolorscheme.h>
 #include <kdialog.h>
 #include <kglobal.h>
-#include <kglobalsettings.h>
 #include <kiconloader.h>
 #include <klocale.h>
 #include <kpassivepopup.h>
@@ -153,8 +153,8 @@ GroupItem::GroupItem( KWidgetList *parent, SyncProcess *process )
 
   mCallbackHandler->setEngine( mSyncProcess->engine() );
 
-  setSelectionForegroundColor( KGlobalSettings::textColor() );
-  setSelectionBackgroundColor( KGlobalSettings::alternateBackgroundColor() );
+  setSelectionForegroundColor( KColorScheme( KColorScheme::View ).foreground().color() );
+  setSelectionBackgroundColor( KColorScheme( KColorScheme::View ).background( KColorScheme::AlternateBackground ).color() );
 
   update();
 }

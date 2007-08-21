@@ -122,7 +122,7 @@ void ConfigGuiOpie::load( const QString &xml )
   }
 }
 
-QString ConfigGuiOpie::save()
+QString ConfigGuiOpie::save() const
 {
   QString xml;
   xml = "<config>";

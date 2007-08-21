@@ -74,7 +74,7 @@ void ConfigGuiFile::load( const QString &xml )
   }
 }
 
-QString ConfigGuiFile::save()
+QString ConfigGuiFile::save() const
 {
   QString xml;
   xml = "<config>\n";

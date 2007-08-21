@@ -77,7 +77,7 @@ void ConfigGuiGoogleCalendar::load( const QString &xml )
   }
 }
 
-QString ConfigGuiGoogleCalendar::save()
+QString ConfigGuiGoogleCalendar::save() const
 {
   QDomDocument doc;
   QDomElement root = doc.createElement( "config" );

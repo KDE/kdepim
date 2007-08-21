@@ -44,7 +44,7 @@ class ConfigGui : public QWidget
     QString instanceName() const;
 
     virtual void load( const QString &xml ) = 0;
-    virtual QString save() = 0;
+    virtual QString save() const = 0;
 
     QSync::Member member() const
       { return mMember; }
@@ -65,7 +65,7 @@ class ConfigGuiXml : public ConfigGui
     ConfigGuiXml( const QSync::Member &, QWidget *parent );
 
     void load( const QString & );
-    QString save();
+    QString save() const;
 
   private:
     QTextEdit *mTextEdit;

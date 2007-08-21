@@ -33,7 +33,7 @@ class ConfigGuiOpie : public ConfigGui
     ConfigGuiOpie( const QSync::Member &, QWidget *parent );
 
     void load( const QString &xml );
-    QString save();
+    QString save() const;
 
   private:
     QLineEdit *mDeviceIP;

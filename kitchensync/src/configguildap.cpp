@@ -93,7 +93,7 @@ void ConfigGuiLdap::load( const QString &xml )
   }
 }
 
-QString ConfigGuiLdap::save() //const
+QString ConfigGuiLdap::save() const
 {
   QString config = "<config>\n";
 

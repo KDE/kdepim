@@ -211,7 +211,7 @@ void ConfigGuiSyncmlHttp::load( const QString &xml )
   }
 }
 
-QString ConfigGuiSyncmlHttp::save()
+QString ConfigGuiSyncmlHttp::save() const
 {
   QString xml;
   xml = "<config>\n";

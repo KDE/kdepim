@@ -23,7 +23,7 @@
 #include <QtGui/QKeyEvent>
 #include <QtGui/QVBoxLayout>
 
-#include <kglobalsettings.h>
+#include <kcolorscheme.h>
 
 #include "kwidgetlist.h"
 
@@ -285,10 +285,10 @@ bool KWidgetList::eventFilter( QObject *object, QEvent *event )
 KWidgetListItem::KWidgetListItem( KWidgetList *parent )
   : QWidget( parent )
 {
-  mForegroundColor = KGlobalSettings::textColor();
-  mBackgroundColor = KGlobalSettings::baseColor();
-  mSelectionForegroundColor = KGlobalSettings::highlightedTextColor();
-  mSelectionBackgroundColor = KGlobalSettings::highlightColor();
+  mForegroundColor = KColorScheme( KColorScheme::View ).foreground().color();
+  mBackgroundColor = KColorScheme( KColorScheme::View ).background().color();
+  mSelectionForegroundColor = KColorScheme( KColorScheme::Selection ).foreground().color();
+  mSelectionBackgroundColor = KColorScheme( KColorScheme::Selection ).background().color();
 
   setFocusPolicy( Qt::StrongFocus );
 

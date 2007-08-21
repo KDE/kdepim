@@ -40,7 +40,7 @@ class ConfigGuiSyncmlHttp : public ConfigGui
     ConfigGuiSyncmlHttp( const QSync::Member &, QWidget *parent );
 
     void load( const QString &xml );
-    QString save();
+    QString save() const;
 
   private:
     QGridLayout *mGridLayout;
