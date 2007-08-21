@@ -27,8 +27,10 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
-#include "options.h"
 #include <kdialog.h>
+
+#include "options.h"
+#include "ui_dbFlagsEditor_base.h"
 
 class DBFlagsEditorWidget;
 struct DBInfo;
@@ -45,7 +47,7 @@ public:
 protected:
 	void fillWidgets();
 	DBInfo*dbi;
-	DBFlagsEditorWidget*widget;
+	Ui::DBFlagsEditorWidget widget;
 protected slots:
 	virtual void slotOk();
 	virtual void slotCancel();

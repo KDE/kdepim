@@ -35,14 +35,11 @@ set(kcmpilot_UIS
 	config_page_backup.ui
 	config_page_device.ui
 	config_page_startup.ui
-)
-
-kde4_add_ui_files(kcmpilot_SRCS ${kcmpilot_UIS})
-
-kde4_add_ui_files(kcmpilot_SRCS 
 	config_page_sync.ui
 	config_page_viewers.ui
 )
+
+kde4_add_ui_files(kcmpilot_SRCS ${kcmpilot_UIS})
 
 qt4_add_dbus_interface(kcmpilot_SRCS org.kde.kpilot.daemon.xml kpilot_daemon_interface)
 
@@ -117,7 +114,7 @@ set(kpilot_UIS
 	dbFlagsEditor_base.ui
 )
 
-kde4_add_ui3_files(kpilot_bin_SRCS ${kpilot_UIS})
+kde4_add_ui_files(kpilot_bin_SRCS ${kpilot_UIS})
 
 # Talks to the daemon. Listens as itself.
 qt4_add_dbus_adaptor( kpilot_bin_SRCS org.kde.kpilot.logger.xml logWidget.h LogWidget loggeradaptorgui LoggerAdaptorGUI)

@@ -36,8 +36,6 @@
 
 #include "options.h"
 #include "pilotRecord.h"
-#include "dbFlagsEditor_base.h"
-
 
 DBFlagsEditor::DBFlagsEditor(DBInfo*dbinfo, QWidget *parent) :
 	KDialog(parent)
@@ -46,8 +44,11 @@ DBFlagsEditor::DBFlagsEditor(DBInfo*dbinfo, QWidget *parent) :
 	setButtons(Ok|Cancel);
 	setCaption(i18n("Edit Database Flags"));
 	setDefaultButton(Ok);
-	widget=new DBFlagsEditorWidget(this);
-	setMainWidget(widget);
+	
+	QWidget *w = new QWidget( this );
+	widget.setupUi( w );
+	setMainWidget( w );
+	
 	fillWidgets();
 	connect(this,SIGNAL(okClicked()),this,SLOT(slotOk()));
 	connect(this,SIGNAL(cancelClicked()),this,SLOT(slotCancel()));
@@ -62,10 +63,10 @@ void DBFlagsEditor::slotOk()
 {
 	if (KMessageBox::questionYesNo(this, i18n("Changing the database flags might corrupt the whole database, or make the data unusable. Do not change the values unless you are absolutely sure you know what you are doing.\n\nReally assign these new flags?"), i18n("Changing Database Flags"),KGuiItem(i18n("Assign")),KStandardGuiItem::cancel())==KMessageBox::Yes)
 	{
-		Pilot::toPilot(widget->fDBName->text(),dbi->name,33);
+		Pilot::toPilot(widget.fDBName->text(),dbi->name,33);
 
 		char buff[5];
-		QString type = widget->fType->text();
+		QString type = widget.fType->text();
 		buff[0]=type[0].unicode();
 		buff[1]=type[1].unicode();
 		buff[2]=type[2].unicode();
@@ -73,7 +74,7 @@ void DBFlagsEditor::slotOk()
 		buff[4]=0;
 		dbi->type=get_long(buff);
 
-		type = widget->fCreator->text();
+		type = widget.fCreator->text();
 		buff[0]=type[0].unicode();
 		buff[1]=type[1].unicode();
 		buff[2]=type[2].unicode();
@@ -82,7 +83,7 @@ void DBFlagsEditor::slotOk()
 		dbi->creator=get_long(buff);
 
 
-#define setflag(ctrl, flag) if (widget->ctrl->isChecked()) dbi->flags |=flag;\
+#define setflag(ctrl, flag) if (widget.ctrl->isChecked()) dbi->flags |=flag;\
 	else dbi->flags &= ~flag;
 
 		setflag(fRessourceDB, dlpDBFlagResource);
@@ -92,21 +93,21 @@ void DBFlagsEditor::slotOk()
 		setflag(fReset, dlpDBFlagReset);
 #undef setflag
 
-		if (widget->fExcludeDB->isChecked())
+		if (widget.fExcludeDB->isChecked())
 			dbi->miscFlags |= dlpDBMiscFlagExcludeFromSync;
 		else	dbi->miscFlags &= ~dlpDBMiscFlagExcludeFromSync;
 
 		QDateTime ttime;
-		ttime.setDate(widget->fCreationDate->date());
-		ttime.setTime(widget->fCreationTime->time());
+		ttime.setDate(widget.fCreationDate->date());
+		ttime.setTime(widget.fCreationTime->time());
 		dbi->createDate=ttime.toTime_t();
 
-		ttime.setDate(widget->fModificationDate->date());
-		ttime.setTime(widget->fModificationTime->time());
+		ttime.setDate(widget.fModificationDate->date());
+		ttime.setTime(widget.fModificationTime->time());
 		dbi->modifyDate=ttime.toTime_t();
 
-		ttime.setDate(widget->fBackupDate->date());
-		ttime.setTime(widget->fBackupTime->time());
+		ttime.setDate(widget.fBackupDate->date());
+		ttime.setTime(widget.fBackupTime->time());
 		dbi->backupDate=ttime.toTime_t();
 
 		accept();
@@ -122,35 +123,35 @@ void DBFlagsEditor::fillWidgets()
 {
 	// FUNCTIONSETUP
 
-	widget->fDBName->setText(QString::fromLatin1(dbi->name));
+	widget.fDBName->setText(QString::fromLatin1(dbi->name));
 
 	char buff[5];
 	set_long(buff, dbi->type);
 	buff[4]='\0';
-	widget->fType->setText(QString::fromLatin1(buff));
+	widget.fType->setText(QString::fromLatin1(buff));
 	set_long(buff, dbi->creator);
 	buff[4]='\0';
-	widget->fCreator->setText(QString::fromLatin1(buff));
+	widget.fCreator->setText(QString::fromLatin1(buff));
 
-	widget->fRessourceDB->setChecked(dbi->flags & dlpDBFlagResource);
-	widget->fReadOnly->setChecked(dbi->flags & dlpDBFlagReadOnly);
-	widget->fBackupDB->setChecked(dbi->flags & dlpDBFlagBackup);
-	widget->fCopyProtect->setChecked(dbi->flags & dlpDBFlagCopyPrevention);
+	widget.fRessourceDB->setChecked(dbi->flags & dlpDBFlagResource);
+	widget.fReadOnly->setChecked(dbi->flags & dlpDBFlagReadOnly);
+	widget.fBackupDB->setChecked(dbi->flags & dlpDBFlagBackup);
+	widget.fCopyProtect->setChecked(dbi->flags & dlpDBFlagCopyPrevention);
 
-	widget->fReset->setChecked(dbi->flags & dlpDBFlagReset);
-	widget->fExcludeDB->setChecked(dbi->miscFlags & dlpDBMiscFlagExcludeFromSync);
+	widget.fReset->setChecked(dbi->flags & dlpDBFlagReset);
+	widget.fExcludeDB->setChecked(dbi->miscFlags & dlpDBMiscFlagExcludeFromSync);
 
 	QDateTime ttime;
 	ttime.setTime_t(dbi->createDate);
-	widget->fCreationDate->setDate(ttime.date());
-	widget->fCreationTime->setTime(ttime.time());
+	widget.fCreationDate->setDate(ttime.date());
+	widget.fCreationTime->setTime(ttime.time());
 
 	ttime.setTime_t(dbi->modifyDate);
-	widget->fModificationDate->setDate(ttime.date());
-	widget->fModificationTime->setTime(ttime.time());
+	widget.fModificationDate->setDate(ttime.date());
+	widget.fModificationTime->setTime(ttime.time());
 	ttime.setTime_t(dbi->backupDate);
-	widget->fBackupDate->setDate(ttime.date());
-	widget->fBackupTime->setTime(ttime.time());
+	widget.fBackupDate->setDate(ttime.date());
+	widget.fBackupTime->setTime(ttime.time());
 }
 
 
