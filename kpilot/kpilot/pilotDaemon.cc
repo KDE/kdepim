@@ -113,10 +113,15 @@ void PilotDaemonTray::setupWidget()
 
 	QMenu *menu = contextMenu();
 
-	menuKPilotItem = menu->insertItem(i18n("Start &KPilot"), this,
-		SLOT(slotRunKPilot()));
-	menuConfigureConduitsItem = menu->insertItem(i18n("&Configure KPilot..."),
-		this, SLOT(slotRunConfig()));
+	menuKPilotItem = new QAction( i18n( "Start &KPilot" ), this );
+	connect( menuKPilotItem, SIGNAL( triggered() ), this, SLOT( slotRunKPilot() ) );
+	menu->addAction( menuKPilotItem );
+
+	menuConfigureConduitsItem = new QAction( i18n("&Configure KPilot..."), this );
+	connect( menuConfigureConduitsItem, SIGNAL( triggered() ), this
+		, SLOT( slotRunConfig() ) );
+	menu->addAction( menuConfigureConduitsItem );
+	
 	menu->addSeparator();
 
 	fSyncTypeMenu = new QMenu(menu);
@@ -169,8 +174,9 @@ void PilotDaemonTray::slotShowAbout()
 void PilotDaemonTray::enableRunKPilot(bool b)
 {
 	FUNCTIONSETUP;
-	contextMenu()->setItemEnabled(menuKPilotItem, b);
-	contextMenu()->setItemEnabled(menuConfigureConduitsItem, b);
+	
+	menuKPilotItem->setEnabled( b );
+	menuConfigureConduitsItem->setEnabled( b );
 }
 
 

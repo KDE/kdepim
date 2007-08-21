@@ -104,14 +104,14 @@ private:
 	* is "Run KPilot" so we can enable / disable
 	* it as necessary.
 	*/
-	int menuKPilotItem;
+	QAction *menuKPilotItem;
 
 	/**
 	* Remember which item in the context menu
 	* is "Configure Conduits" so we can enable / disable
 	* it as necessary.
 	*/
-	int menuConfigureConduitsItem;
+	QAction *menuConfigureConduitsItem;
 
 	/**
 	* Window for the "About KPilot" information.
