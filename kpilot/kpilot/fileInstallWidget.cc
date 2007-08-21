@@ -33,15 +33,16 @@
 
 #include <q3listbox.h>
 
-#include <q3multilineedit.h>
-#include <q3popupmenu.h>
-#include <Q3ValueList>
+
 #include <QDragEnterEvent>
 #include <QDropEvent>
 #include <QEvent>
+#include <QMouseEvent>
+#include <QMenu>
+#include <q3multilineedit.h>
+#include <Q3ValueList>
 #include <qlabel.h>
 #include <qlayout.h>
-#include <QMouseEvent>
 #include <qpixmap.h>
 #include <qpushbutton.h>
 
