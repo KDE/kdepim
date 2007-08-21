@@ -20,7 +20,7 @@ parameters, they are read from configuration files, so-called "templates"
 originally invented for KAddressBook's CSV handling.
 See page @ref csvhandling
 
-\authors Kevin Krammer <kevin.krammer@gmx.at>, Tobias KÃ¶nig <tokoe@kde.org>
+\authors Kevin Krammer <kevin.krammer@gmx.at>, Tobias König <tokoe@kde.org>
 
-@licences @gpl
+@licenses @gpl
 */
