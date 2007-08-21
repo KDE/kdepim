@@ -30,13 +30,19 @@
  * @author Tuukka Pasanen
  * @author Allen Winter
  */
+#include "konsolekalendar.h"
+#include "konsolekalendaradd.h"
+#include "konsolekalendarchange.h"
+#include "konsolekalendardelete.h"
+#include "konsolekalendarexports.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <iostream>
 
-#include <QDateTime>
-#include <QFile>
-#include <QTextStream>
+#include <QtCore/QDateTime>
+#include <QtCore/QFile>
+#include <QtCore/QTextStream>
 
 #include <kdebug.h>
 #include <klocale.h>
@@ -50,12 +56,6 @@
 #include <kcal/htmlexportsettings.h>
 
 #include "libkdepim/kpimprefs.h"
-
-#include "konsolekalendar.h"
-#include "konsolekalendaradd.h"
-#include "konsolekalendarchange.h"
-#include "konsolekalendardelete.h"
-#include "konsolekalendarexports.h"
 
 using namespace KCal;
 using namespace std;

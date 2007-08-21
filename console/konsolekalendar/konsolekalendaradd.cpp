@@ -30,11 +30,13 @@
  * @author Tuukka Pasanen
  * @author Allen Winter
  */
+#include "konsolekalendaradd.h"
+
 #include <stdlib.h>
 #include <iostream>
 
-#include <QDateTime>
-#include <QObject>
+#include <QtCore/QDateTime>
+#include <QtCore/QObject>
 
 #include <kdebug.h>
 #include <kstandarddirs.h>
@@ -45,8 +47,6 @@
 #include <kcal/event.h>
 
 #include "libkdepim/kpimprefs.h"
-
-#include "konsolekalendaradd.h"
 
 using namespace KCal;
 using namespace std;

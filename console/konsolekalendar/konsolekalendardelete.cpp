@@ -30,13 +30,13 @@
  * @author Tuukka Pasanen
  * @author Allen Winter
  */
+#include "konsolekalendardelete.h"
+
 #include <stdlib.h>
 #include <iostream>
 
 #include <kdebug.h>
 #include <klocale.h>
-
-#include "konsolekalendardelete.h"
 
 using namespace std;
 

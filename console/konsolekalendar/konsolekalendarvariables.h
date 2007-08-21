@@ -34,8 +34,8 @@
 #include <kcal/resourcecalendar.h>
 #include <kcal/event.h>
 
-#include <QString>
-#include <QDateTime>
+#include <QtCore/QString>
+#include <QtCore/QDateTime>
 
 using namespace KCal;
 

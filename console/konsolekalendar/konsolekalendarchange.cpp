@@ -30,13 +30,13 @@
  * @author Tuukka Pasanen
  * @author Allen Winter
  */
+#include "konsolekalendarchange.h"
+
 #include <stdlib.h>
 #include <iostream>
 
 #include <kdebug.h>
 #include <klocale.h>
-
-#include "konsolekalendarchange.h"
 
 using namespace KCal;
 using namespace std;

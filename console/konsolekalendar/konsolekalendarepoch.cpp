@@ -30,12 +30,12 @@
  * @author Tuukka Pasanen
  * @author Allen Winter
  */
+#include "konsolekalendarepoch.h"
+
 #include <stdlib.h>
 #include <iostream>
 
-#include <QDateTime>
-#include "konsolekalendarepoch.h"
-
+#include <QtCore/QDateTime>
 using namespace std;
 
 KonsoleKalendarEpoch::KonsoleKalendarEpoch()

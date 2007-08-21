@@ -30,10 +30,12 @@
  * @author Tuukka Pasanen
  * @author Allen Winter
  */
+#include "konsolekalendarexports.h"
+
 #include <stdlib.h>
 #include <iostream>
 
-#include <QDateTime>
+#include <QtCore/QDateTime>
 
 #include <kdebug.h>
 #include <klocale.h>
@@ -41,8 +43,6 @@
 #include <kcal/calendarlocal.h>
 #include <kcal/calendar.h>
 #include <kcal/event.h>
-
-#include "konsolekalendarexports.h"
 
 using namespace KCal;
 using namespace std;

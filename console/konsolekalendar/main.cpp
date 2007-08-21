@@ -44,9 +44,9 @@
 #include <kcal/calendarresources.h>
 #include <kcal/resourcelocal.h>
 
-#include <QDateTime>
-#include <QFile>
-#include <QFileInfo>
+#include <QtCore/QDateTime>
+#include <QtCore/QFile>
+#include <QtCore/QFileInfo>
 
 #include <stdlib.h>
 #include <iostream>

@@ -26,6 +26,7 @@
  * @author Cornelius Schumacher
  * @author Allen Winter
  */
+#include "stdcalendar.h"
 
 #include <kconfig.h>
 #include <kstandarddirs.h>
@@ -35,8 +36,6 @@
 #include <kcal/resourcecalendar.h>
 
 #include "libkdepim/kpimprefs.h"
-
-#include "stdcalendar.h"
 
 using namespace KCal;
 

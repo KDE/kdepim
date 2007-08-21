@@ -30,23 +30,23 @@
  * @author Tuukka Pasanen
  * @author Allen Winter
  */
+#include "konsolekalendarvariables.h"
+
 #include <klocale.h>
 #include <kdebug.h>
 #include <kglobal.h>
 #include <kconfig.h>
 #include <kstandarddirs.h>
 
-#include <QDateTime>
-#include <QString>
-#include <QStringList>
+#include <QtCore/QDateTime>
+#include <QtCore/QString>
+#include <QtCore/QStringList>
 
 #include <stdlib.h>
 #include <iostream>
 #include <stdio.h>
 #include <unistd.h>
 #include <time.h>
-
-#include "konsolekalendarvariables.h"
 
 using namespace KCal;
 using namespace std;

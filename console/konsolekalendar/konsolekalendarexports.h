@@ -28,7 +28,7 @@
 #ifndef _KONSOLEKALENDAREXPORTS_H_
 #define _KONSOLEKALENDAREXPORTS_H_
 
-#include <QTextStream>
+#include <QtCore/QTextStream>
 
 #include "konsolekalendarvariables.h"
 
