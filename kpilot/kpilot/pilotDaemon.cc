@@ -124,38 +124,60 @@ void PilotDaemonTray::setupWidget()
 	
 	menu->addSeparator();
 
-	fSyncTypeMenu = new QMenu(menu);
-	fSyncTypeMenu->setObjectName("sync_type_menu");
-	QString once = i18nc("Appended to names of sync types to indicate the sync will happen just one time"," (once)");
+	// Configured default sync
+	menuDefaultSyncActionItem = new QAction( i18n("Default (%1)"
+		, SyncAction::SyncMode::name( (SyncAction::SyncMode::Mode)
+			KPilotSettings::syncType() ) ), this );
+	menuDefaultSyncActionItem->setCheckable( true );
+	menuDefaultSyncActionItem->setData( (int) 0 );
+	
+	connect( menuDefaultSyncActionItem, SIGNAL( toggled( bool ) ), daemon
+		, SLOT( toggleDefaultSync( bool ) ) );
 
-#define MI(a) fSyncTypeMenu->insertItem( \
-		SyncAction::SyncMode::name(SyncAction::SyncMode::a) + once, \
-		(int)(SyncAction::SyncMode::a));
-
-	fSyncTypeMenu->insertItem(i18n("Default (%1)",SyncAction::SyncMode::name((SyncAction::SyncMode::Mode)KPilotSettings::syncType())),
-		0);
+	fSyncTypeMenu = new QMenu( menu );
+	fSyncTypeMenu->setObjectName( "sync_type_menu" );
+	fSyncTypeMenu->addAction( menuDefaultSyncActionItem );
 	fSyncTypeMenu->addSeparator();
+	QString once = i18nc("Appended to names of sync types to indicate the sync"
+		" will happen just one time"," (once)");
 
-        // Keep this synchronized with kpilotui.rc and kpilot.cc if at all possible.
-	MI(eHotSync);
-	MI(eFullSync);
-	MI(eBackup);
-	MI(eRestore);
-	MI(eCopyHHToPC);
-	MI(eCopyPCToHH);
+	QActionGroup *syncTypeActions = new QActionGroup( this );
+	QAction *action;
+	QString syncModeName;
 
-	fSyncTypeMenu->setCheckable(true);
-	fSyncTypeMenu->setItemChecked(0,true);
+#define MI(a,b) \
+	syncModeName = SyncAction::SyncMode::name( a ); \
+	action = new QAction( syncModeName, this ); \
+	action->setCheckable( true ); \
+	action->setChecked( b ); \
+	action->setData( (int) a ); \
+	syncTypeActions->addAction( action ); \
+	fSyncTypeMenu->addAction( action ); \
+
+	// Keep this synchronized with kpilotui.rc and kpilot.cc if at all possible.
+	MI( SyncAction::SyncMode::eHotSync, true );
+	MI( SyncAction::SyncMode::eFullSync, false );
+	MI( SyncAction::SyncMode::eBackup, false );
+	MI( SyncAction::SyncMode::eRestore, false );
+	MI( SyncAction::SyncMode::eCopyHHToPC, false );
+	MI( SyncAction::SyncMode::eCopyPCToHH, false );
 #undef MI
 
-	connect(fSyncTypeMenu,SIGNAL(activated(int)),daemon,SLOT(requestSync(int)));
-	menu->insertItem(i18n("Next &Sync"),fSyncTypeMenu);
+	connect( syncTypeActions, SIGNAL( triggered( QAction* ) ), daemon
+		, SLOT( requestSync( QAction* ) ) );
+	
+	// See toggleDefaultSync(). This is only usefull now all other action are
+	// added to syncTypeActions.
+	menuDefaultSyncActionItem->setChecked( true );
 
-	KHelpMenu *help = new KHelpMenu(menu,aboutData);
-	menu->insertItem(KIcon(CSL1("help")),i18n("&Help"),help->menu());
+	QMenu *nextSyncMenu = new QMenu( i18n( "Next &Sync" ), menu );
+	menu->addMenu( nextSyncMenu );
+
+	KHelpMenu *helpMenu = new KHelpMenu( menu, aboutData );
+	helpMenu->menu()->setIcon( KIcon( CSL1( "help" ) ) );
+	menu->addMenu( helpMenu->menu() );
 
 	DEBUGKPILOT << "Finished getting icons";
-
 }
 
 void PilotDaemonTray::slotShowAbout()
@@ -615,8 +637,30 @@ void PilotDaemon::requestRegularSyncNext()
 	requestSync(SyncAction::SyncMode::eHotSync);
 }
 
+void PilotDaemon::requestSync( QAction *action )
+{
+	FUNCTIONSETUP;
+	
+	if( !action )
+	{
+		WARNINGKPILOT << "Ignored OL action pointer";
+		return;
+	}
+	
+	unsigned int actionData = action->data().toInt();
+	
+	requestSync( actionData );
+	
+	if( fTray )
+	{
+		if( actionData != 0 && actionData != KPilotSettings::syncType() )
+		{
+			fTray->menuDefaultSyncActionItem->setChecked( false );
+		}
+	}
+}
 
-void PilotDaemon::requestSync(int mode)
+void PilotDaemon::requestSync( int mode )
 {
 	FUNCTIONSETUP;
 
@@ -633,18 +677,34 @@ void PilotDaemon::requestSync(int mode)
 
 	updateTrayStatus();
 
-	if (fTray && (fTray->fSyncTypeMenu))
-	{
-		for (int i=((int)SyncAction::SyncMode::eHotSync);
-			i<=((int)SyncAction::SyncMode::eRestore) /* Restore */ ;
-			++i)
-		{
-			fTray->fSyncTypeMenu->setItemChecked(i,mode==i);
-		}
-	}
-
 	getLogger().logMessage(i18n("Next HotSync will be: %1. ",fNextSyncType.name()) +
 		i18n("Please press the HotSync button."));
+}
+
+void PilotDaemon::toggleDefaultSync( bool toggled )
+{
+	// If the default
+	if( toggled )
+	{
+		if( fTray && (fTray->fSyncTypeMenu) )
+		{
+			QList<QAction*> actions = fTray->fSyncTypeMenu->actions();
+			
+			QListIterator<QAction*> i( actions );
+			bool finished = false;
+			QAction *a;
+			
+			while( i.hasNext() && !finished )
+			{
+				a = i.next();
+				if( a->data().toInt() == (int) SyncAction::SyncMode::eHotSync )
+				{
+					a->setChecked( true );
+					finished = true;
+				}
+			}
+		}
+	}
 }
 
 void PilotDaemon::requestSyncType(const QString &s)

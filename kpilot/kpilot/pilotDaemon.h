@@ -77,6 +77,8 @@ protected:
 	* Menu of sync types.
 	*/
 	QMenu *fSyncTypeMenu;
+	
+	QAction *menuDefaultSyncActionItem;
 
 protected slots:
 	void slotShowAbout();
@@ -112,7 +114,7 @@ private:
 	* it as necessary.
 	*/
 	QAction *menuConfigureConduitsItem;
-
+	
 	/**
 	* Window for the "About KPilot" information.
 	*/
@@ -163,7 +165,9 @@ public:
 	// Some are also slots.
 	//
 public slots:
+	virtual void requestSync(QAction*);
 	virtual void requestSync(int);
+	virtual void toggleDefaultSync( bool );
 public:
 	virtual void requestSyncType(const QString&);
 	virtual void requestRegularSyncNext();
