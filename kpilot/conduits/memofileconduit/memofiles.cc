@@ -313,7 +313,7 @@ bool Memofiles::loadFromMetadata ()
 
 	f.close();
 
-	return (_memofiles.count() > 0);
+	return true;
 }
 
 Memofile * Memofiles::find (recordid_t id)
