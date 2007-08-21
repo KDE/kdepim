@@ -53,7 +53,7 @@
   If the start time is equal to the end time, the item is displayed as
   ø, showing that there is no time interval set.
 
-  For a KDGanttViewTaskItem, the text, setted by \a setText(),
+  For a KDGanttViewTaskItem, the text, set by \a setText(),
   is shown in the item itself and the text is truncated automatically
   to fit in the item.
   For all other item types, the text is shown right of the item.

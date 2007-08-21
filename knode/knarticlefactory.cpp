@@ -607,7 +607,7 @@ void KNArticleFactory::edit(KNLocalArticle *a)
   if(id->useSigGenerator() && !id->getSigGeneratorStdErr().isEmpty())
   KMessageBox::information(knGlobals.topWidget,
                             i18n("<qt>The signature generator program produced the "
-                                "following output:<br><br>%1</qt>",
+                                "following output:<br /><br />%1</qt>",
                                  id->getSigGeneratorStdErr()));
 
   mCompList.append( com );
@@ -907,7 +907,7 @@ KNLocalArticle* KNArticleFactory::newArticle(KNCollection *col, QString &sig, QB
     if(id->useSigGenerator() && !id->getSigGeneratorStdErr().isEmpty())
       KMessageBox::information(knGlobals.topWidget,
                                i18n("<qt>The signature generator program produced the "
-                                   "following output:<br><br>%1</qt>",
+                                   "following output:<br><br />%1</qt>",
                                     id->getSigGeneratorStdErr()));
   }
   else
@@ -1119,7 +1119,7 @@ void KNSendErrorDialog::slotHighlighted(int idx)
 {
   ErrorListItem *item = static_cast<ErrorListItem*>( mErrorList->item( idx ) );
   if ( item ) {
-    QString tmp = i18n("<b>Error message:</b><br>") + item->error();
+    QString tmp = i18n("<b>Error message:</b><br />") + item->error();
     mError->setText( tmp );
   }
 }

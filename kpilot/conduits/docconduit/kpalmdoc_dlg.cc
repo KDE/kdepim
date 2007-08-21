@@ -179,7 +179,7 @@ void ConverterDlg::slotToText()
 			int res=KMessageBox::questionYesNo(this,
 				i18n("<qt>You selected to sync folders, "
 				"but gave a filename instead (<em>%1</em>)."
-				"<br>Use folder <em>%2</em> instead?</qt>",pdburl,
+				"<br />Use folder <em>%2</em> instead?</qt>",pdburl,
 				pdbinfo.dirPath(true)), QString(), KGuiItem(i18n("Use Folder")), KStandardGuiItem::cancel());
 			if (res==KMessageBox::Yes)
 			{
@@ -215,7 +215,7 @@ void ConverterDlg::slotToText()
 			int res=KMessageBox::questionYesNo(this,
 				i18n("<qt>You selected to sync folders, "
 				"but gave a filename instead (<em>%1</em>)."
-				"<br>Use folder <em>%2</em> instead?</qt>",txturl,
+				"<br />Use folder <em>%2</em> instead?</qt>",txturl,
 				txtinfo.dirPath(true)), QString(), KGuiItem(i18n("Use Folder")), KStandardGuiItem::cancel());
 			if (res==KMessageBox::Yes) {
 				txturl=txtinfo.dirPath(true);
@@ -328,7 +328,7 @@ void ConverterDlg::slotToPDB()
 			int res=KMessageBox::questionYesNo(this,
 				i18n("<qt>You selected to sync folders, "
 				"but gave a filename instead (<em>%1</em>)."
-				"<br>Use folder <em>%2</em> instead?</qt>",txturl,
+				"<br />Use folder <em>%2</em> instead?</qt>",txturl,
 				txtinfo.dirPath(true)), QString(), KGuiItem(i18n("Use Folder")), KStandardGuiItem::cancel());
 			if (res==KMessageBox::Yes)
 			{
@@ -353,7 +353,7 @@ void ConverterDlg::slotToPDB()
 			int res=KMessageBox::questionYesNo(this,
 				i18n("<qt>You selected to sync folders, "
 				"but gave a filename instead (<em>%1</em>)."
-				"<br>Use folder <em>%2</em> instead?</qt>",
+				"<br />Use folder <em>%2</em> instead?</qt>",
 				pdburl,
 				pdbinfo.dirPath(true)), QString(), KGuiItem(i18n("Use Folder")), KStandardGuiItem::cancel());
 			if (res==KMessageBox::Yes) {

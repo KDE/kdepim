@@ -44,7 +44,7 @@ public:
 protected:
 	/**
 	 * When implemented, this function handles the locking of the file.
-	 * @return true if the locking was done succesfully.
+	 * @return true if the locking was done successfully.
 	 */
 	bool lock();
 

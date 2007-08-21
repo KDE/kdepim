@@ -69,7 +69,7 @@ QFile* KNSaveHelper::getFile(const QString &dialogTitle)
   if (url.isLocalFile()) {
     if (QFileInfo(url.path()).exists() &&
         (KMessageBox::warningContinueCancel(knGlobals.topWidget,
-                                            i18n("<qt>A file named <b>%1</b> already exists.<br>Do you want to replace it?</qt>", url.path()),
+                                            i18n("<qt>A file named <b>%1</b> already exists.<br />Do you want to replace it?</qt>", url.path()),
                                             dialogTitle, KGuiItem(i18n("&Replace"))) != KMessageBox::Continue)) {
       return 0;
     }

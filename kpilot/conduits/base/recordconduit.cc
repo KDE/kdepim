@@ -950,7 +950,7 @@ void RecordConduit::copy( const Record *from, HHRecord *to )
 	
 	copyCategory( from, to );
 	
-	// Let implementing classess do the rest of the copying.
+	// Let implementing classes do the rest of the copying.
 	_copy( from, to );
 }
 	
@@ -960,7 +960,7 @@ void RecordConduit::copy( const HHRecord *from, Record *to  )
 	
 	copyCategory( from, to );
 	
-	// Let implementing classess do the rest of the copying.
+	// Let implementing classes do the rest of the copying.
 	_copy( from, to );
 }
 

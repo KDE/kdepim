@@ -506,7 +506,7 @@ void ArticleWidget::displayArticle()
 
   // partial message
   if(ct->isPartial()) {
-    mViewer->write( i18n("<br/><b>This article has the MIME type &quot;message/partial&quot;, which KNode cannot handle yet.<br>Meanwhile you can save the article as a text file and reassemble it by hand.</b>") );
+    mViewer->write( i18n("<br /><b>This article has the MIME type &quot;message/partial&quot;, which KNode cannot handle yet.<br />Meanwhile you can save the article as a text file and reassemble it by hand.</b>") );
   }
 
   // display body text

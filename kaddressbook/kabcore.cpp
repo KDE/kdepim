@@ -1085,7 +1085,7 @@ void KABCore::initActions()
   action->setText( i18n( "&New Contact..." ) );
   connect(action, SIGNAL(triggered(bool)), SLOT( newContact() ));
   action->setShortcut(QKeySequence(Qt::CTRL+Qt::Key_N));
-  action->setWhatsThis( i18n( "Create a new contact<p>You will be presented with a dialog where you can add all data about a person, including addresses and phone numbers." ) );
+  action->setWhatsThis( i18n( "Create a new contact<p>You will be presented with a dialog where you can add all data about a person, including addresses and phone numbers.</p>" ) );
 
   mActionMailVCard = coll->addAction( "file_mail_vcard" );
   mActionMailVCard->setIcon( KIcon("mail_post_to") );
@@ -1102,7 +1102,7 @@ void KABCore::initActions()
   mActionEditAddressee->setIcon( KIcon("edit") );
   mActionEditAddressee->setText( i18n( "&Edit Contact..." ) );
   connect(mActionEditAddressee, SIGNAL(triggered(bool) ), SLOT( editContact() ));
-  mActionEditAddressee->setWhatsThis( i18n( "Edit a contact<p>You will be presented with a dialog where you can change all data about a person, including addresses and phone numbers." ) );
+  mActionEditAddressee->setWhatsThis( i18n( "Edit a contact<p>You will be presented with a dialog where you can change all data about a person, including addresses and phone numbers.</p>" ) );
 
   mActionMerge = coll->addAction( "edit_merge" );
   mActionMerge->setText( i18n( "&Merge Contacts" ) );
@@ -1132,7 +1132,7 @@ void KABCore::initActions()
   mActionStoreAddresseeIn->setIcon( KIcon("kaddressbook") );
   mActionStoreAddresseeIn->setText( i18n( "St&ore Contact In..." ) );
   connect(mActionStoreAddresseeIn, SIGNAL(triggered(bool) ), SLOT( storeContactIn() ));
-  mActionStoreAddresseeIn->setWhatsThis( i18n( "Store a contact in a different Addressbook<p>You will be presented with a dialog where you can select a new storage place for this contact." ) );
+  mActionStoreAddresseeIn->setWhatsThis( i18n( "Store a contact in a different Addressbook<p>You will be presented with a dialog where you can select a new storage place for this contact.</p>" ) );
 
   // settings menu
   mActionJumpBar = coll->add<KToggleAction>( "options_show_jump_bar" );
@@ -1165,13 +1165,13 @@ void KABCore::initActions()
   action->setIcon( KIcon( "edit-find" ) );
   action->setText( i18n( "&Lookup Addresses in LDAP Directory..." ) );
   connect(action, SIGNAL(triggered(bool)), SLOT( openLDAPDialog() ));
-  action->setWhatsThis( i18n( "Search for contacts on a LDAP server<p>You will be presented with a dialog, where you can search for contacts and select the ones you want to add to your local address book." ) );
+  action->setWhatsThis( i18n( "Search for contacts on a LDAP server<p>You will be presented with a dialog, where you can search for contacts and select the ones you want to add to your local address book.</p>" ) );
 
   mActionWhoAmI = coll->addAction( "edit_set_personal" );
   mActionWhoAmI->setIcon( KIcon("personal") );
   mActionWhoAmI->setText( i18n( "Set as Personal Contact Data" ) );
   connect(mActionWhoAmI, SIGNAL(triggered(bool) ), SLOT( setWhoAmI() ));
-  mActionWhoAmI->setWhatsThis( i18n( "Set the personal contact<p>The data of this contact will be used in many other KDE applications, so you do not have to input your personal data several times." ) );
+  mActionWhoAmI->setWhatsThis( i18n( "Set the personal contact<p>The data of this contact will be used in many other KDE applications, so you do not have to input your personal data several times.</p>" ) );
 
   mActionCategories = coll->addAction( "edit_set_categories" );
   mActionCategories->setText( i18n( "Select Categories..." ) );
@@ -1183,7 +1183,7 @@ void KABCore::initActions()
   clearLocation->setText( i18n( "Clear Search Bar" ) );
   connect(clearLocation, SIGNAL(triggered(bool) ), SLOT( slotClearSearchBar() ));
   clearLocation->setShortcut(QKeySequence(Qt::CTRL+Qt::Key_L));
-  clearLocation->setWhatsThis( i18n( "Clear Search Bar<p>"
+  clearLocation->setWhatsThis( i18n( "Clear Search Bar<br /><br />"
 				     "Clears the content of the quick search bar." ) );
 
   clipboardDataChanged();

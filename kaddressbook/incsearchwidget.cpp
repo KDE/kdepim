@@ -56,7 +56,7 @@ IncSearchWidget::IncSearchWidget( QWidget *parent, const char *name )
   mSearchText = new KLineEdit( this );
   mSearchText->setClearButtonShown(true);
   mSearchText->setSizePolicy( QSizePolicy::MinimumExpanding, QSizePolicy::Preferred );
-  mSearchText->setWhatsThis( i18n( "The incremental search<p>Enter some text here will start the search for the contact, which matches the search pattern best. The part of the contact, which will be used for matching, depends on the field selection." ) );
+  mSearchText->setWhatsThis( i18n( "The incremental search<p>Enter some text here will start the search for the contact, which matches the search pattern best. The part of the contact, which will be used for matching, depends on the field selection.</p>" ) );
   label->setBuddy( mSearchText );
   layout->addWidget( mSearchText );
 

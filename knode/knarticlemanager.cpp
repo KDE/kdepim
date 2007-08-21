@@ -920,7 +920,7 @@ void KNArticleManager::processJob(KNJobData *j)
         msgId = msgId.mid( 1, msgId.length() - 2 );
         ArticleWidget::articleLoadError( a,
             i18n("The article you requested is not available on your news server."
-            "<br>You could try to get it from <a href=\"http://groups.google.com/groups?selm=%1\">groups.google.com</a>.",
+            "<br />You could try to get it from <a href=\"http://groups.google.com/groups?selm=%1\">groups.google.com</a>.",
               msgId ) );
         // mark article as read
         if ( knGlobals.settings()->autoMark() && !a->isOrphant() ) {

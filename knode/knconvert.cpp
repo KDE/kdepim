@@ -80,7 +80,7 @@ KNConvert::KNConvert(const QString &version)
   w1L->setMargin(5);
 
   QLabel *l1=new QLabel(i18n(
-"<b>Congratulations, you have upgraded to KNode version %1.</b><br>\
+"<b>Congratulations, you have upgraded to KNode version %1.</b><br />\
 Unfortunately this version uses a different format for some data-files, so \
 in order to keep your existing data it is necessary to convert it first. This is \
 now done automatically by KNode. If you want to, a backup of your existing data \
@@ -146,11 +146,11 @@ void KNConvert::convert()
   if(errors>0)
     r_esultLabel->setText(i18n(
 "<b>Some errors occurred during the conversion.</b>\
-<br>You should now examine the log to find out what went wrong."));
+<br />You should now examine the log to find out what went wrong."));
   else
     r_esultLabel->setText(i18n(
 "<b>The conversion was successful.</b>\
-<br>Have a lot of fun with this new version of KNode. ;-)"));
+<br />Have a lot of fun with this new version of KNode. ;-)"));
 
   s_tartBtn->setText(i18n("Start KNode"));
   s_tartBtn->setEnabled(true);

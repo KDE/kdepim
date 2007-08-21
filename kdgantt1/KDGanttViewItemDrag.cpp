@@ -143,7 +143,7 @@ bool KDGanttViewItemDrag::decode (  const QMimeSource * e , QString &  string)
 {
     QByteArray arr;
     arr = e->encodedData( "x-application/x-KDGanttViewItemDrag");
-    //qDebug("KDGanttViewItemDrag::decode lenght %d ", arr.count());
+    //qDebug("KDGanttViewItemDrag::decode length %d ", arr.count());
     if ( arr.count() ) {
 #if QT_VERSION < 0x040000
     QDataStream s( arr, IO_ReadOnly );

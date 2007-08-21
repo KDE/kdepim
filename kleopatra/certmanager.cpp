@@ -1126,10 +1126,10 @@ void CertManager::slotDeleteCertificate() {
     QString str = keys.size() == 1
                   ? i18n("<qt><p>An error occurred while trying to delete "
                          "the certificate:</p>"
-                         "<p><b>%1</b><p></qt>", reason )
+                         "<p><b>%1</b></p></qt>", reason )
                   : i18n( "<qt><p>An error occurred while trying to delete "
                           "the certificates:</p>"
-                          "<p><b>%1</b><p></qt>", reason );
+                          "<p><b>%1</b></p></qt>", reason );
     KMessageBox::error( this, str, i18n("Certificate Deletion Failed") );
   }
 

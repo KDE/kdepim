@@ -189,7 +189,7 @@ void KNCleanUp::expireGroup( KNGroup *g, bool showResult )
 
   if(showResult)
     KMessageBox::information(knGlobals.topWidget,
-      i18n("<b>%1</b><br>expired: %2<br>left: %3", g->groupname(), delCnt, leftCnt));
+      i18n("<b>%1</b><br />expired: %2<br />left: %3", g->groupname(), delCnt, leftCnt));
 }
 
 

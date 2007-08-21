@@ -63,10 +63,9 @@ void HHRecord::setCategoryNames( const QStringList &cats )
 					<< cats.first();
 
 				fCategory = cats.first();
-				// We savely can assume that findCategory won't fail.
+				// We safely can assume that findCategory won't fail.
 				
-				
-				// FIXME: For some weir reason fAppInfo->findCategory( fCategory );
+				// FIXME: For some weird reason fAppInfo->findCategory( fCategory );
 				// Fails. Below i do exactly the same but this works. *magic* :S.
 				int fCatId = -1;
 				

@@ -99,7 +99,7 @@ KNode::IdentityWidget::IdentityWidget( Identity *d, const KComponentData &inst, 
   topL->addWidget(l, 2,0);
   topL->addWidget(e_mail, 2, 1, 1,2);
   msg = i18n( "<qt><p>Your email address as it will appear to others "
-      "reading your articles</p><p>Ex: <b>nospam@please.com</b>.</qt>" );
+      "reading your articles</p><p>Ex: <b>nospam@please.com</b>.</p></qt>" );
   l->setWhatsThis( msg );
   e_mail->setWhatsThis( msg );
   connect( e_mail, SIGNAL(textChanged(const QString&)), SLOT(changed()) );

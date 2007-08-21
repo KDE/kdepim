@@ -109,7 +109,7 @@ public:
 private:
 	/**
 	 * Opens a file
-	 * @return true Returns true if opening was succesful.
+	 * @return true Returns true if opening was successful.
 	 */
 	bool open( bool savetime );
 

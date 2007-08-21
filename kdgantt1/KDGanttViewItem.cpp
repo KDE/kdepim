@@ -418,9 +418,9 @@ KDGanttViewItem::Type KDGanttViewItem::type() const
   if this call does not return 0. 
   Please read getTimeForTimespan() for an example when a call of getTimeForTimespan() does not return 0.
 
-  \param  start the start QDateTime of the interval. If an invalid QDateTime is passed it is an open intervall,
+  \param  start the start QDateTime of the interval. If an invalid QDateTime is passed it is an open interval,
                 i.e. all items before the end datetime will be computed
-          end   the end QDateTime of the interval. If an invalid QDateTime is passed it is an open intervall,
+          end   the end QDateTime of the interval. If an invalid QDateTime is passed it is an open interval,
                 i.e. all items after the start datetime will be computed.
                 if start and end are invalid all items will be computed.
   \return  a list of direct subitems of this item which do have some duration during the timespan
@@ -451,7 +451,7 @@ QPtrList <KDGanttViewItem>  KDGanttViewItem::getChildListForTimespan( const QDat
            i.e. it has a duration of 2:30 hours , which are 9000 seconds.
 
            eTask->getTimeForTimespan( QDateTime(),QDateTime() )
-                  returns the complete duration of 9000, because an open intervall was specified
+                  returns the complete duration of 9000, because an open interval was specified
            eTask->getTimeForTimespan( QDateTime(),QDateTime( 24. March 2005 - 18:00 ) )
                   returns 3600.
            eTask->getTimeForTimespan( QDateTime( 24. March 2005 - 17:30 ),QDateTime( 24. March 2005 - 18:00 ) )
@@ -477,15 +477,15 @@ unsigned int KDGanttViewItem::getTimeForTimespan( const QDateTime&, const QDateT
 /*!
   Computes for a set of items recursively the amount of time each item do have in the specified timespan.
   (Specified by the items start datetime and end datetime).
-  The set of items in this method is the list of all childs of this item.
-  I.e. all subchilds ( childs of childs ) are in this list.
+  The set of items in this method is the list of all children of this item.
+  I.e. all subchildren ( children of children ) are in this list.
   The item itself is in the list as well.
   It calls for each item getTimeForTimespan() and returns the sum of the computed times.
   Please read getTimeForTimespan() for an example.
 
-  \param  start the start QDateTime of the interval. If an invalid QDateTime is passed it is an open intervall,
+  \param  start the start QDateTime of the interval. If an invalid QDateTime is passed it is an open interval,
                 i.e. all items before the end datetime will be computed
-          end   the end QDateTime of the interval. If an invalid QDateTime is passed it is an open intervall,
+          end   the end QDateTime of the interval. If an invalid QDateTime is passed it is an open interval,
                 i.e. all items after the start datetime will be computed.
                 if start and end are invalid all items will be computed.
   \return the sum of times of computed items in seconds 
@@ -506,15 +506,15 @@ unsigned int KDGanttViewItem::getAllSubChildTimeForTimespan(  const QDateTime& s
 /*!
   Computes for a set of items the amount of time each item do have in the specified timespan.
   (Specified by the items start datetime and end datetime).
-  The set of items in this method is the list of direct childs of this item.
-  No subchilds ( childs of childs ) are in this list.
+  The set of items in this method is the list of direct children of this item.
+  No subchildren ( children of children ) are in this list.
   The item itself is not in the list.
   It calls for each item getTimeForTimespan() and returns the sum of the computed times.
   Please read getTimeForTimespan() for an example.
 
-  \param  start the start QDateTime of the interval. If an invalid QDateTime is passed it is an open intervall,
+  \param  start the start QDateTime of the interval. If an invalid QDateTime is passed it is an open interval,
                 i.e. all items before the end datetime will be computed
-          end   the end QDateTime of the interval. If an invalid QDateTime is passed it is an open intervall,
+          end   the end QDateTime of the interval. If an invalid QDateTime is passed it is an open interval,
                 i.e. all items after the start datetime will be computed.
                 if start and end are invalid all items will be computed.
   \return the sum of times of computed items in seconds 
@@ -557,7 +557,7 @@ void KDGanttViewItem::setAllSubitemsExpanded ( bool expand )
   Specifies whether this item is enabled. If disabled, the item stays in the
   Gantt view and the item is shown in gray to show that the item is disabled.
   All signals of this item (like itemLeftClicked( this )) are blocked.
-  If the item displays its subitems (childs) as a group,
+  If the item displays its subitems (children) as a group,
   (displaySubitemsAsGroup() == true)
   all changes apply to all subitems as well.
 
@@ -657,7 +657,7 @@ bool KDGanttViewItem::editable() const
   When \a displaySubitemsAsGroup() is set to true, this item has a normal view,
   when it is expanded. If it is not expanded (and has at least one child),
   the item itself is hidden, and all children are displayed instead.
-  To manage the painting priority of the childs (if overlapping),
+  To manage the painting priority of the children (if overlapping),
   you may set \a priority() of these items.
 
   \param show pass true to make this item displaying hidden subitems

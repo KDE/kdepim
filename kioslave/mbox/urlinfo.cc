@@ -99,7 +99,7 @@ bool UrlInfo::isDirectory( const KUrl& url )
 	if( !info.isFile() )
 		return false;
 
-	//Setting paramaters
+	//Setting parameters
 	*m_filename = filename;
 	*m_id = QString();
 	m_type = directory;

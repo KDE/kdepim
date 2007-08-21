@@ -42,7 +42,7 @@ FilterOE::FilterOE() :
                      "<p>You will need to locate the folder where the mailbox has been "
                      "stored by searching for .dbx or .mbx files under "
                      "<ul><li><i>C:\\Windows\\Application Data</i> in Windows 9x"
-                     "<li><i>Documents and Settings</i> in Windows 2000 or later</ul></p>"
+                     "<li><i>Documents and Settings</i> in Windows 2000 or later</li></ul></p>"
                      "<p><b>Note:</b> Since it is possible to recreate the folder structure, the folders from "
                       "Outlook Express 5 and 6 will be stored under: \"OE-Import\" in your local folder.</p>" ))
 {}

@@ -3931,7 +3931,7 @@ bool KDGanttView::loadXML( const QDomDocument& doc )
 */
 QDomDocument KDGanttView::saveXML( bool withPI ) const
 {
-    // Create an inital DOM document
+    // Create an initial DOM document
     QString docstart = "<GanttView/>";
 
     QDomDocument doc( "GanttView" );
@@ -5885,7 +5885,7 @@ QDate KDGanttView::tomorrow() const
 /*!
   This method is provided for convenience.
   It returns the start of the current week
-  dependend on the value weekStartsOnMonday().
+  depending on the value weekStartsOnMonday().
   \return the start of current week
 */
 QDate KDGanttView::currentWeek() const
@@ -5896,7 +5896,7 @@ QDate KDGanttView::currentWeek() const
   This method is provided for convenience.
   It returns the start of the last week
   (the week before current week)
-  dependend on the value weekStartsOnMonday().
+  depending on the value weekStartsOnMonday().
   \return the start of last week (the week before current week)
 */
 QDate KDGanttView::lastWeek() const
@@ -6211,9 +6211,9 @@ void KDGanttView::setAutoScrollEnabled(bool state)
 /*!
     \fn void KDGanttView::rescaling( Scale )
 
-    This signal is emitted if another scale is choosen than the
+    This signal is emitted if another scale is chosen than the
     specified one: i.e. if the horizon has a very wide range from
-    start to end and as scale is choosen minute it may be that the
+    start to end and as scale is chosen minute it may be that the
     size of the Gantt widget would become more than 32000 pixels. In
     this case the scale is automatically changed to Hour and
     rescaling( Hour ) is emitted.  If the widget size would be still

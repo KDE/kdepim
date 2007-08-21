@@ -614,7 +614,7 @@ void ViewManager::initActions()
   action->setIcon( KIcon("search-filter") );
   action->setText( i18n( "Edit &Filters..." ) );
   connect(action, SIGNAL(triggered(bool) ), SLOT( configureFilters() ));
-  action->setWhatsThis( i18n( "Edit the contact filters<p>You will be presented with a dialog, where you can add, remove and edit filters." ) );
+  action->setWhatsThis( i18n( "Edit the contact filters<p>You will be presented with a dialog, where you can add, remove and edit filters.</p>" ) );
 }
 
 void ViewManager::initGUI()
