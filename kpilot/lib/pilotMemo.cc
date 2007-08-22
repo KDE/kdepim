@@ -41,7 +41,7 @@ PilotRecord *PilotMemo::pack()
 	FUNCTIONSETUPL(4);
 	int i;
 	
-	int len = fText.length() + 8;
+	int len = qMin(fText.length() + 8, MAX_MEMO_LEN);
 	struct Memo buf;
 	buf.text = new char[len];
 
