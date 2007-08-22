@@ -30,9 +30,9 @@
 
 #include <stdlib.h>
 
-#include <qlineedit.h>
-#include <qcombobox.h>
-#include <qcheckbox.h>
+#include <QtGui/QLineEdit>
+#include <QtGui/QComboBox>
+#include <QtGui/QCheckBox>
 
 #include <kstandarddirs.h>
 #include <kconfig.h>

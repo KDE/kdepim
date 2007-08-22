@@ -28,11 +28,11 @@
 
 #include "options.h"
 
-#include <QGroupBox>
-#include <QLabel>
-#include <QLayout>
-#include <QMap>
-#include <QTimer>
+#include <QtCore/QMap>
+#include <QtCore/QTimer>
+#include <QtGui/QGroupBox>
+#include <QtGui/QLabel>
+#include <QtGui/QLayout>
 
 #include <kapplication.h>
 #include <kconfigskeleton.h>
@@ -40,7 +40,7 @@
 #include <klocale.h>
 #include <kmessagebox.h>
 #include <kprogressdialog.h>
-#include <KVBox>
+#include <kvbox.h>
 
 #include "kpilotdevicelink.h"
 #include "pilotSysInfo.h"

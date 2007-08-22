@@ -27,16 +27,9 @@
 /*
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
-
-
-#include <QLabel>
-#include <QList>
-#include <QString>
-#include <QStringList>
-#include <QGroupBox>
-
 #include <kdialog.h>
 
+class QGroupBox;
 class QLabel;
 class QProgressBar;
 class QTimer;

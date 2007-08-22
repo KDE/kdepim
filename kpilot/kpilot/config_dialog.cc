@@ -30,17 +30,17 @@
 
 #include "options.h"
 
-#include <qfile.h>
-#include <qlabel.h>
-#include <qlayout.h>
-#include <qpushbutton.h>
-#include <qsplitter.h>
-#include <qtimer.h>
-#include <qtooltip.h>
-#include <QHeaderView>
-#include <QStackedWidget>
-#include <QTreeWidget>
-#include <QTreeWidgetItem>
+#include <QtCore/QFile>
+#include <QtCore/QTimer>
+#include <QtGui/QLabel>
+#include <QtGui/QLayout>
+#include <QtGui/QPushButton>
+#include <QtGui/QSplitter>
+#include <QtGui/QToolTip>
+#include <QtGui/QHeaderView>
+#include <QtGui/QStackedWidget>
+#include <QtGui/QTreeWidget>
+#include <QtGui/QTreeWidgetItem>
 
 #include <kconfigskeleton.h>
 #include <kdialog.h>

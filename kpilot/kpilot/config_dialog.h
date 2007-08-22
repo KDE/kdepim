@@ -31,7 +31,6 @@
 */
 
 #include "kcmodule.h"
-#include <QLabel>
 
 class QTreeWidget;
 class QTreeWidgetItem;
