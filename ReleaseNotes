@@ -1,4 +1,29 @@
-Current Release is Proko2 2.1.9
+Current Release is Proko2 2.1.10
+
+Features
+========
+* Retain the state of the signing and encryption buttons when saving messages 
+  as drafts, even if the message itself is configured to not be signed or
+  encrypted while in the drafts folder. 
+
+Bugfixes
+========
+* Kolab/issue1882 Fix crash when replying to a mail that was opened in a
+  separate reader window, and then its folder was deleted (for example
+  by a loss of access rights).
+
+* Kolab/issue1481 Fix KMail problems with displaying non-ascii characters
+  in CC headers.
+
+* Kolab/issue1492 Fix crash when applying changes to an event or todo
+  while a mailcheck is going on, or if a mailcheck has happened during
+  editing. Apply button removed as a stop gap measure.
+
+* Kolab/issue1640 Enforce miminum interval between syncs.
+
+
+Changes since Proko2 2.1.8 up to Proko2 2.1.9 (released 14.08.2007)
+
 Features
 ========
 * The filter behaviour was redesigned. Now it is possible to select some
@@ -10,6 +35,7 @@ Bugfixes
 * Kolab/issue1858  Filters applying to new emails in groupware folders, changing filter behaviour
 
 Changes since Proko2 2.1.7 up to Proko2 2.1.8 (released 20.07.2007)
+
 Proko2 2.1.8 was not full released.
 Features
 =========
