@@ -51,7 +51,7 @@
 
 KOIncidenceEditor::KOIncidenceEditor( const QString &caption,
                                       Calendar *calendar, QWidget *parent )
-  : KDialogBase( Tabbed, caption, Ok | Apply | Cancel | Default, Ok,
+  : KDialogBase( Tabbed, caption, Ok | Cancel | Default, Ok,
                  parent, 0, false, false ),
     mDetails( 0 ), mAttachments( 0 )
 {
