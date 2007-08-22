@@ -1,5 +1,3 @@
-//Added by qt3to4:
-#include <QEvent>
 #ifndef _KPILOT_HOTSYNC_H
 #define _KPILOT_HOTSYNC_H
 /* hotSync.h                            KPilot

@@ -27,8 +27,7 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
-
-#include <qstringlist.h>
+#include <QtCore/QStringList>
 
 #include "syncAction.h"
 

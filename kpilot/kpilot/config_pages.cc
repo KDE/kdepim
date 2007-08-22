@@ -30,23 +30,8 @@
 
 #include "options.h"
 
-#include <qcheckbox.h>
-#include <qcombobox.h>
-#include <qfile.h>
-#include <qlineedit.h>
-#include <qpushbutton.h>
-#include <qradiobutton.h>
-#include <qspinbox.h>
-#include <qtabwidget.h>
-
-#include <kautostart.h>
 #include <kcharsets.h>
-#include <kglobal.h>
-#include <KGlobalSettings>
-#include <kio/netaccess.h>
-#include <kmessagebox.h>
-#include <kstandarddirs.h>
-#include <kurl.h>
+#include <kautostart.h>
 
 #include "syncAction.h"
 

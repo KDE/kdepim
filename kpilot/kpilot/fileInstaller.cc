@@ -32,8 +32,9 @@
 
 #include "options.h"
 
-#include <q3strlist.h>
-#include <qdir.h>
+#include <QtCore/QDir>
+
+//#include <q3strlist.h>
 
 #include <kglobal.h>
 #include <kio/job.h>

@@ -26,11 +26,10 @@
 */
 #include "internalEditorAction.h"
 
-#include <qtimer.h>
-#include <qlayout.h>
-#include <qlabel.h>
-#include <QGridLayout>
-#include <Q3Frame>
+#include <QtCore/QTimer>
+#include <QtGui/QGridLayout>
+#include <QtGui/QLabel>
+#include <QtGui/QFrame>
 
 #include <kmessagebox.h>
 #include <kdialog.h>
@@ -259,8 +258,8 @@ bool InternalEditorAction::queryUseKPilotChanges(const QString &dbName, recordid
 			QLabel *tmpW = new QLabel( i18n("To view and edit the record data, please install a hex editor (e.g. khexedit from kdeutils)."), page );
 			tmpW->setAlignment( Qt::AlignHCenter | Qt::AlignVCenter );
 			tmpW->setWordWrap( true );
-			tmpW->setFrameShape( Q3Frame::Panel );
-			tmpW->setFrameShadow( Q3Frame::Sunken );
+			tmpW->setFrameShape( QFrame::Panel );
+			tmpW->setFrameShadow( QFrame::Sunken );
 			hexEdit = tmpW;
 		}
 		layout->addWidget( hexEdit, 3, 0, 1, 2 );
@@ -285,8 +284,8 @@ bool InternalEditorAction::queryUseKPilotChanges(const QString &dbName, recordid
 			QLabel*tmpW = new QLabel( i18n("To view and edit the record data, please install a hex editor (e.g. khexedit from kdeutils)."), page );
 			tmpW->setAlignment( Qt::AlignHCenter | Qt::AlignVCenter );
 			tmpW->setWordWrap( true );
-			tmpW->setFrameShape( Q3Frame::Panel );
-			tmpW->setFrameShadow( Q3Frame::Sunken );
+			tmpW->setFrameShape( QFrame::Panel );
+			tmpW->setFrameShadow( QFrame::Sunken );
 			hexEdit = tmpW;
 		}
 		layout->addWidget( hexEdit, 5, 0, 1, 2 );

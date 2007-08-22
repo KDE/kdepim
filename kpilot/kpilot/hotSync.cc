@@ -37,16 +37,12 @@
 #include <pi-file.h>
 #include <pi-util.h>
 
-#include <QApplication>
-#include <qdir.h>
-#include <QEvent>
-#include <qfile.h>
-#include <qfileinfo.h>
-#include <QList>
-#include <qregexp.h>
-#include <qstringlist.h>
-#include <qthread.h>
-#include <qtimer.h>
+#include <QtCore/QThread>
+#include <QtCore/QFileInfo>
+#include <QtCore/QEvent>
+#include <QtCore/QTimer>
+#include <QtCore/QDir>
+#include <QtGui/QApplication>
 
 #include <kglobal.h>
 #include <kmessagebox.h>

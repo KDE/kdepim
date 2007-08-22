@@ -1,3 +1,5 @@
+#ifndef _KPILOT_FILEINSTALLER_H
+#define _KPILOT_FILEINSTALLER_H
 /* fileInstaller.h			KPilot
 **
 ** Copyright (C) 1998-2001 by Dan Pilone <dan@kpilot.org>
@@ -29,12 +31,6 @@
 /*
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
-
-#ifndef _KPILOT_FILEINSTALLER_H
-#define _KPILOT_FILEINSTALLER_H
-
-#include <qobject.h>
-
 
 class QStringList;
 class QString;

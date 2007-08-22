@@ -29,12 +29,7 @@
 */
 #include "config_dialog_dbselection.h"
 
-#include <qpushbutton.h>
-
-#include <klineedit.h>
-#include <klistwidget.h>
 #include <kmessagebox.h>
-#include <kpushbutton.h>
 
 #include "options.h"
 
