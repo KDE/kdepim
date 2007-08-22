@@ -875,7 +875,7 @@ bool FolderDiaGeneralTab::save()
   // something like Calendar -> CalendarFoo -> Calendar inbetween syncs would
   // fail. Therefor let the folder sort it out itself, whether the rename is
   // a noop or not.
-  if ( !mDlg->isNewFolder() ) {
+  if ( !mDlg->isNewFolder() && !mDlg->folder()->isSystemFolder() ) {
     mDlg->folder()->rename(fldName);
   }
 
