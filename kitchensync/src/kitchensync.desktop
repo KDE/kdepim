@@ -1,6 +1,7 @@
 [Desktop Entry]
 Encoding=UTF-8
 Name=KitchenSync
+Name[ne]=किचन समक्रमण
 Name[sv]=Kitchensync
 Name[x-test]=xxKitchenSyncxx
 GenericName=Synchronization
@@ -33,8 +34,8 @@ GenericName[lt]=Sinchronizacija
 GenericName[ms]=Segerakan
 GenericName[nb]=Synkronisering
 GenericName[nds]=Synkroniseren
+GenericName[ne]=समक्रमण
 GenericName[nl]=Synchronisatie
-GenericName[nn]=Synkronisering
 GenericName[pa]=ਸਮਕਾਲੀਕਰਨ
 GenericName[pl]=Synchronizacja
 GenericName[pt]=Sincronização
