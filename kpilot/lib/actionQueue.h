@@ -141,7 +141,15 @@ protected:
 	*/
 	SyncAction *nextAction()
 	{
-		return SyncActionQueue.dequeue();
+		// Make sure the queue isn't empty.
+		if( !SyncActionQueue.isEmpty() )
+		{
+			return SyncActionQueue.dequeue();
+		}
+		else
+		{
+			return 0L;
+		}
 	};
 
 	/** Reimplemented from SyncAction. */
