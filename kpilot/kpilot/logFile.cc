@@ -29,8 +29,8 @@
 */
 #include "logFile.h"
 
-#include <qfile.h>
-#include <qdatetime.h>
+#include <QtCore/QFile>
+#include <QtCore/QDateTime>
 
 #include <pi-version.h>
 

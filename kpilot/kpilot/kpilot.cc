@@ -36,8 +36,7 @@
 #include <QPixmap>
 #include <QTimer>
 
-#include <KShortcutsDialog>
-
+#include <kshortcutsdialog.h>
 #include <kurl.h>
 #include <kmessagebox.h>
 #include <kstatusbar.h>
@@ -57,16 +56,13 @@
 #include <kprogressdialog.h>
 #include <klibloader.h>
 #include <ktoolinvocation.h>
-
-#include <KActionMenu>
-#include <KXMLGUIFactory>
+#include <kactionmenu.h>
+#include <kxmlguifactory.h>
 
 #include "kpilotConfig.h"
-
 #include "pilotComponent.h"
 #include "pilotDatabase.h"
 #include "syncAction.h"
-
 #include "addressWidget.h"
 #include "memoWidget.h"
 #include "fileInstallWidget.h"
@@ -197,7 +193,7 @@ void KPilotInstaller::startDaemonIfNeeded()
 
 		if (!daemonStarted)
 		{
-			WARNINGKPILOT << "Can't start daemon :" << daemonError;
+			WARNINGKPILOT << "Can't start daemon: " << daemonError;
 			log(i18n("Could not start the "
 				"KPilot daemon. The system error message "
 				"was: &quot;%1&quot;",daemonError));

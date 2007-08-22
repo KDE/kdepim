@@ -35,8 +35,7 @@
 
 #include <pi-appinfo.h>
 
-#include <qcombobox.h>
-#include <qwidget.h>
+#include <QtGui/QComboBox>
 
 #include "kpilotConfig.h"
 #include "pilotRecord.h"

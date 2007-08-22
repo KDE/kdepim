@@ -29,15 +29,15 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
-/**
-  * Base class for any module to KPilot
-  */
-#include <qwidget.h>
+#include <QtGui/QWidget>
 
 struct CategoryAppInfo;
 class QComboBox;
 class QString;
 
+/**
+ * Base class for any module to KPilot
+ */
 class PilotComponent : public QWidget
 {
 Q_OBJECT

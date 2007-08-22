@@ -29,18 +29,12 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
-#include <QCloseEvent>
-
-#include <KXmlGuiWindow>
-
-#include <kpagewidgetmodel.h>
+#include <kxmlguiwindow.h>
 
 #include "pilotComponent.h"
 
-
-
 class OrgKdeKpilotDaemonInterface;
-
+class KPageWidgetItem;
 
 class KPilotInstaller : public KXmlGuiWindow
 {

@@ -29,22 +29,22 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
+#include <QtGui/QCloseEvent>
+#include <QtGui/QDropEvent>
+#include <QtGui/QPixmap>
+#include <QtGui/QMouseEvent>
+#include <QtGui/QDragEnterEvent>
 
+#include <ksystemtrayicon.h>
 
 #include "kpilotlink.h"
 #include "syncAction.h"
-#include <QCloseEvent>
-#include <QDropEvent>
-#include <QPixmap>
-#include <QMouseEvent>
-#include <QDragEnterEvent>
-#include <KSystemTrayIcon>
-#include <kaboutapplicationdialog.h>
 
 class QMenu;
 class QPixmap;
 class QTimer;
-class K3AboutApplication;
+
+class KAboutApplicationDialog;
 
 class PilotDaemon;
 class ActionQueue;

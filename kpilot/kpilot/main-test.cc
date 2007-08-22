@@ -36,18 +36,11 @@
 #include <time.h>
 #include <iostream>
 
-#include <qpushbutton.h>
-#include <q3hbox.h>
-#include <qtimer.h>
-
 #include <kapplication.h>
-#include <klocale.h>
-#include <kaboutdata.h>
 #include <kcmdlineargs.h>
 #include <kservice.h>
-#include <kservicetype.h>
-#include <KServiceTypeTrader>
-#include <pi-version.h>
+#include <kservicetypetrader.h>
+#include <kaboutdata.h>
 
 #include "actionQueue.h"
 #include "actions.h"

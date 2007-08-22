@@ -30,8 +30,7 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org.
 */
 
-#include "qobject.h"
-#include <QTextStream>
+#include <QtCore/QTextStream>
 
 class QFile;
 

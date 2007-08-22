@@ -29,24 +29,15 @@
 
 #include "options.h"
 
+#include <QtGui/QGridLayout>
+#include <QtGui/QPushButton>
+#include <QtGui/QLabel>
+#include <QtGui/QProgressBar>
 
-#include <qdatetime.h>
-#include <qfile.h>
-#include <qlabel.h>
-#include <qlayout.h>
-#include <qpainter.h>
-#include <qpixmap.h>
-#include <qpushbutton.h>
-#include <qtextstream.h>
-#include <qtimer.h>
-
-#include <kfiledialog.h>
 #include <ktextedit.h>
-#include <kglobal.h>
 #include <khbox.h>
+#include <kfiledialog.h>
 #include <kmessagebox.h>
-#include <kprogressdialog.h>
-#include <kstandarddirs.h>
 
 #include <pi-version.h>
 

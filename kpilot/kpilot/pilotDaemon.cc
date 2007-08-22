@@ -34,26 +34,22 @@
 
 #include <stdlib.h>
 
-#include <Q3Dict>
-#include <QCloseEvent>
-#include <QDragEnterEvent>
-#include <QDropEvent>
-#include <QMenu>
-#include <QMouseEvent>
-#include <qpixmap.h>
-#include <QProcess>
-#include <QTimer>
-#include <qtooltip.h>
+#include <QtCore/QTimer>
+#include <QtCore/QProcess>
+#include <QtCore/QHash>
+#include <QtGui/QAction>
+#include <QtGui/QMenu>
 
-#include <kaboutdata.h>
-#include <kcmdlineargs.h>
 #include <kiconloader.h>
 #include <khelpmenu.h>
 #include <kmenu.h>
-#include <kservice.h>
+#include <kicon.h>
+#include <kaboutapplicationdialog.h>
 #include <ktoolinvocation.h>
 #include <kuniqueapplication.h>
-#include <kurl.h>
+#include <kservice.h>
+#include <kaboutdata.h>
+#include <kcmdlineargs.h>
 
 #include "pilotRecord.h"
 
@@ -753,14 +749,13 @@ QDateTime PilotDaemon::lastSyncDate()
 }
 
 
-static Q3Dict<QString> *conduitNameMap = 0L;
+static QHash<QString, QString*> *conduitNameMap = 0L;
 
 static void fillConduitNameMap()
 {
 	if ( !conduitNameMap )
 	{
-		conduitNameMap = new Q3Dict<QString>;
-		conduitNameMap->setAutoDelete(true);
+		conduitNameMap = new QHash<QString, QString*>;
 	}
 	conduitNameMap->clear();
 
@@ -774,7 +769,7 @@ static void fillConduitNameMap()
 	QStringList::ConstIterator end = l.end();
 	for (QStringList::ConstIterator i = l.begin(); i != end; ++i)
 	{
-		if (!conduitNameMap->find(*i))
+		if (!conduitNameMap->value(*i))
 		{
 			QString readableName = CSL1("<unknown>");
 			KSharedPtr < KService > o = KService::serviceByDesktopName(*i);
@@ -796,20 +791,14 @@ QStringList PilotDaemon::configuredConduitList()
 {
 	fillConduitNameMap();
 
-	QStringList keys;
-
-	Q3DictIterator<QString> it(*conduitNameMap);
-	for ( ; *it; ++it)
-	{
-		keys << it.currentKey();
-	}
+	QStringList keys = conduitNameMap->keys();
 	keys.sort();
 
 	QStringList::ConstIterator end = keys.end();
 	QStringList result;
 	for (QStringList::ConstIterator i = keys.begin(); i != end; ++i)
 	{
-		result << *(conduitNameMap->find(*i));
+		result << *(conduitNameMap->value(*i));
 	}
 
 	return result;
