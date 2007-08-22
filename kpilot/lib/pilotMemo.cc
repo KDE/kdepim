@@ -42,7 +42,7 @@ PilotRecord *PilotMemo::pack()
 	int i;
 	
 	// Total length including terminating NUL
-	int len = qMin(fText.length() + 1, MAX_MEMO_LEN);
+	int len = qMin(fText.length() + 1, (int)PilotMemo::MAX_MEMO_LEN);
 	pi_buffer_t *b = pi_buffer_new(len);
 	if (!b)
 	{
@@ -50,7 +50,7 @@ PilotRecord *PilotMemo::pack()
 	}
 
 	// put our text into buf; toPilot() doesn't NUL terminate
-	i = Pilot::toPilot(fText, buf.text, len-1);
+	i = Pilot::toPilot(fText, b->data, len-1);
 	b->data[len-1] = 0; // NUL terminate
 
 	if (i<0)

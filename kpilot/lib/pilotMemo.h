@@ -78,7 +78,7 @@ public:
 	QString getTitle(void) const ;
 	PilotRecord* pack();
 
-	static const int MAX_MEMO_LEN=8192;
+	enum { MAX_MEMO_LEN=8192 } ;
 
 	/**
 	* Return a "short but sensible" title. getTitle() returns the
