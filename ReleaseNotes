@@ -21,6 +21,8 @@ Bugfixes
 
 * Kolab/issue1640 Enforce miminum interval between syncs.
 
+* Kolab/issue1568 Keep trash folder from being renamed.
+
 
 Changes since Proko2 2.1.8 up to Proko2 2.1.9 (released 14.08.2007)
 
