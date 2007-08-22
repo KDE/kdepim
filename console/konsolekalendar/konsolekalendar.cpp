@@ -83,7 +83,7 @@ bool KonsoleKalendar::createCalendar()
   CalendarLocal newCalendar( KPimPrefs::timeSpec() );
 
   if ( m_variables->isDryRun() ) {
-    cout << i18n( "Create Calendar <Dry Run>: %1" ,
+    cout << i18n( "Create Calendar &lt;Dry Run&gt;: %1" ,
        m_variables->getCalendarFile() ).toLocal8Bit().data()
          << endl;
   } else {
@@ -92,7 +92,7 @@ bool KonsoleKalendar::createCalendar()
               << m_variables->getCalendarFile().toLocal8Bit().data();
 
     if ( m_variables->isVerbose() ) {
-      cout << i18n( "Create Calendar <Verbose>: %1" ,
+      cout << i18n( "Create Calendar &lt;Verbose&gt;: %1" ,
          m_variables->getCalendarFile() ).toLocal8Bit().data()
            << endl;
     }
@@ -113,7 +113,7 @@ bool KonsoleKalendar::showInstance()
   Event *event;
 
   if ( m_variables->isDryRun() ) {
-    cout << i18n( "View Events <Dry Run>:" ).toLocal8Bit().data()
+    cout << i18n( "View Events &lt;Dry Run&gt;:" ).toLocal8Bit().data()
          << endl;
     printSpecs();
   } else {
@@ -138,7 +138,7 @@ bool KonsoleKalendar::showInstance()
                 << "opened successful";
 
       if ( m_variables->isVerbose() ) {
-        cout << i18n( "View Event <Verbose>:" ).toLocal8Bit().data()
+        cout << i18n( "View Event &lt;Verbose&gt;:" ).toLocal8Bit().data()
              << endl;
         printSpecs();
       }

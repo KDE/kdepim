@@ -61,7 +61,7 @@ bool KonsoleKalendarDelete::deleteEvent()
   Event *event = m_variables->getCalendar()->event( m_variables->getUID() );
   if ( event ) {
     if ( m_variables->isDryRun() ) {
-      cout << i18n( "Delete Event <Dry Run>:" ).data()
+      cout << i18n( "Delete Event &lt;Dry Run&gt;:" ).data()
            << endl;
       printSpecs( event );
     } else {
@@ -69,7 +69,7 @@ bool KonsoleKalendarDelete::deleteEvent()
                << m_variables->getUID().data();
 
       if ( m_variables->isVerbose() ) {
-	cout << i18n( "Delete Event <Verbose>:" ).data()
+	cout << i18n( "Delete Event &lt;Verbose&gt;:" ).data()
              << endl;
 	printSpecs( event );
       }
