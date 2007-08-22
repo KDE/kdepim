@@ -1934,11 +1934,24 @@ void KMMessage::setReplyTo(KMMessage* aMsg)
 
 
 //-----------------------------------------------------------------------------
+static QCString qCStringJoin( const QValueList<QCString> &list, const char *sep )
+{
+  if ( list.isEmpty() )
+    return QCString();
+
+  QCString result = list.first();
+  QValueList<QCString>::ConstIterator it = list.constBegin();
+  ++it;
+  for ( ; it != list.constEnd(); ++it )
+    result += sep + (*it);
+  return result;
+}
+
 QString KMMessage::cc() const
 {
   // get the combined contents of all Cc headers (as workaround for invalid
   // messages with multiple Cc headers)
-  return normalizeAddressesAndDecodeIDNs( headerFields( "Cc" ).join( ", " ) );
+  return normalizeAddressesAndDecodeIDNs( qCStringJoin( rawHeaderFields( "Cc" ), ", " )  );
 }
 
 
