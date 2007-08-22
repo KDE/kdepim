@@ -74,7 +74,7 @@ public:
 
 	virtual QString getTextRepresentation(Qt::TextFormat richText);
 	QString text(void) const { return fText; } ;
-	void setText(const QString &text) { fText = text; } ;
+	void setText(const QString &text) { fText = text.left(MAX_MEMO_LEN); } ;
 	QString getTitle(void) const ;
 	PilotRecord* pack();
 

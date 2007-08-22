@@ -91,6 +91,17 @@ bool Memofile::load()
  			<< "] didn't include the filename as the first line.  fixing it...";
 		text = title + CSL1("\n") + body;
 	}
+	
+	// check length of text.  if it's over the allowable length, warn user.
+	// NOTE: We don't need to truncate this here, since PilotMemo::setText()
+	// does it for us.
+	int _len = text.length();
+	int _maxlen = PilotMemo::MAX_MEMO_LEN;
+	if (_len > _maxlen) {
+		DEBUGKPILOT << ": memofile: [" << filename()
+		 			<< "] length: [" << _len << "] is over maximum: ["
+		 			<< _maxlen << "] and will be truncated to fit.";
+	}
 
 	setText(text);
 	f.close();
