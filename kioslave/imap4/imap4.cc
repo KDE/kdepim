@@ -1380,6 +1380,37 @@ IMAP4Protocol::special (const QByteArray & aData)
     finished();
     break;
   }
+  case 's':
+  {
+    // seen
+    KUrl _url;
+    bool seen;
+    QByteArray newFlags;
+    stream >> _url >> seen;
+
+    QString aBox, aSequence, aLType, aSection, aValidity, aDelimiter, aInfo;
+    parseURL (_url, aBox, aSection, aLType, aSequence, aValidity, aDelimiter, aInfo);
+    if ( !assureBox(aBox, true) ) // read-only because changing SEEN should be possible even then
+      return;
+
+    imapCommand *cmd;
+    if ( seen )
+      cmd = doCommand( imapCommand::clientStore( aSequence, "+FLAGS.SILENT", "\\SEEN" ) );
+    else
+      cmd = doCommand( imapCommand::clientStore( aSequence, "-FLAGS.SILENT", "\\SEEN" ) );
+
+    if (cmd->result () != "OK")
+    {
+      completeQueue.removeRef (cmd);
+      error(ERR_COULD_NOT_WRITE, i18n("Changing the flags of message %1 "
+                                      "failed.").arg(_url.prettyUrl()));
+      return;
+    }
+    completeQueue.removeRef (cmd);
+    finished();
+    break;
+  }
+
   case 'E':
   {
     // search
