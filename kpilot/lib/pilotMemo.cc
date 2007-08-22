@@ -41,30 +41,26 @@ PilotRecord *PilotMemo::pack()
 	FUNCTIONSETUPL(4);
 	int i;
 	
-	int len = qMin(fText.length() + 8, MAX_MEMO_LEN);
-	struct Memo buf;
-	buf.text = new char[len];
-
-	// put our text into buf
-	i = Pilot::toPilot(fText, buf.text, len);
-
+	// Total length including terminating NUL
+	int len = qMin(fText.length() + 1, MAX_MEMO_LEN);
 	pi_buffer_t *b = pi_buffer_new(len);
-	i = pack_Memo(&buf, b, memo_v1);
-
-	DEBUGKPILOT << "Original text: [" << fText 
-		<< "], buf.text: [" << buf.text 
-		<< "], b->data: [" << b->data << ']';
-
-	if (i<0)
+	if (!b)
 	{
-		// Generic error from the pack_*() functions.
-		delete[] buf.text;
 		return 0;
 	}
 
-	// pack_Appointment sets b->used
-	PilotRecord *r = new PilotRecord(b, this);
-	delete[] buf.text;
+	// put our text into buf; toPilot() doesn't NUL terminate
+	i = Pilot::toPilot(fText, buf.text, len-1);
+	b->data[len-1] = 0; // NUL terminate
+
+	if (i<0)
+	{
+		pi_buffer_free(b);
+		return 0;
+	}
+
+	b->used = len;
+	PilotRecord *r = new PilotRecord(b, this); // Ownership of b given to r
 	return r;
 }
 
