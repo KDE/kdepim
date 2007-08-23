@@ -45,6 +45,8 @@ ViewConfigureWidget::ViewConfigureWidget( KABC::AddressBook *ab, QWidget *parent
   : KAB::ConfigureWidget( ab, parent )
 {
   QVBoxLayout *topLayout = new QVBoxLayout( this );
+  topLayout->setMargin( 0 );
+  topLayout->setSpacing( KDialog::spacingHint() );
 
   mMainWidget = new KPageWidget( this );
   mMainWidget->setFaceType( KPageView::List );
