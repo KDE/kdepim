@@ -32,7 +32,7 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
-#include "pilotComponent.h"
+#include "component_page_base.h"
 //Added by qt3to4:
 #include <QMouseEvent>
 #include <QEvent>
@@ -47,7 +47,7 @@ class K3IconView;
 class KPilotInstaller;
 class FileInstaller;
 
-class FileInstallWidget : public PilotComponent
+class FileInstallWidget : public ComponentPageBase
 {
 Q_OBJECT
 
@@ -55,8 +55,9 @@ public:
 	FileInstallWidget(QWidget* parent, const QString& dbPath);
 	virtual ~FileInstallWidget();
 
-	// Pilot Component Methods:
-	void showComponent();
+	// ComponentPageBase Methods:
+	void showPage();
+	void hidePage() {}
 	bool preHotSync(QString &);
 	void postHotSync();
 

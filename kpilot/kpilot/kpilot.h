@@ -31,10 +31,9 @@
 
 #include <kxmlguiwindow.h>
 
-#include "pilotComponent.h"
-
 class OrgKdeKpilotDaemonInterface;
 class KPageWidgetItem;
+class ComponentPageBase;
 
 class KPilotInstaller : public KXmlGuiWindow
 {
@@ -44,7 +43,7 @@ public:
 	KPilotInstaller();
 	~KPilotInstaller();
 
-	typedef QList<PilotComponent *> ComponentList;
+	typedef QList<ComponentPageBase*> PageList;
 
 	enum DaemonMessages {
 		None=0,
@@ -105,7 +104,7 @@ protected slots:
 protected:
 	void readConfig();
 
-	QWidget *initComponents( QWidget *parent, QList<PilotComponent *> &l );
+	QWidget *initPages( QWidget *parent, QList<ComponentPageBase*> &l );
 
 
 	/**

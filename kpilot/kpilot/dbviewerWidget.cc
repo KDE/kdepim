@@ -61,14 +61,20 @@
 #include "dbviewerWidget.moc"
 
 
-GenericDBWidget::GenericDBWidget(QWidget *parent, const QString &dbpath) :
-	PilotComponent(parent,"component_generic",dbpath), fDB(0L)
+GenericDBWidget::GenericDBWidget( QWidget *parent, const QString &dbpath )
+	: ViewerPageBase( parent, dbpath, QString(), i18n( "Generic DB Viewer" ) )
+		, fDB( 0L )
 {
 	FUNCTIONSETUP;
 	setupWidget();
 	fRecList.setAutoDelete(true);
 }
 
+GenericDBWidget::~GenericDBWidget()
+{
+	FUNCTIONSETUP;
+	if (fDB) KPILOT_DELETE(fDB);
+}
 
 void GenericDBWidget::setupWidget()
 {
@@ -135,14 +141,14 @@ void GenericDBWidget::setupWidget()
 
 }
 
-GenericDBWidget::~GenericDBWidget()
+void GenericDBWidget::markDBDirty(const QString &db)
 {
 	FUNCTIONSETUP;
-	if (fDB) KPILOT_DELETE(fDB);
+	KPilotConfig::addDirtyDatabase(db);
+	KPilotConfig::sync();
 }
 
-
-void GenericDBWidget::showComponent()
+void GenericDBWidget::showPage()
 {
 	FUNCTIONSETUP;
 	fDBInfo->setText(QString());
@@ -152,7 +158,7 @@ void GenericDBWidget::showComponent()
 	fDBInfo->show();
 }
 
-void GenericDBWidget::hideComponent()
+void GenericDBWidget::hidePage()
 {
 	reset();
 }

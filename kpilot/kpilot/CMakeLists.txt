@@ -97,6 +97,8 @@ target_link_libraries(kpilotDaemon ${QT_LIBRARIES} kpilot  ${KDE4_KIO_LIBS} ${KD
 #
 set(kpilot_bin_SRCS
 	${settings_SRC}
+	viewer_page_base.cc
+	todoviewer_page.cc
 	logWidget.cc
 	kpilot.cc
 	dbviewerWidget.cc
@@ -113,6 +115,7 @@ set(kpilot_bin_SRCS
 )
 
 set(kpilot_UIS
+	viewer_page_base.ui
 	dbFlagsEditor_base.ui
 )
 

@@ -61,7 +61,7 @@
 
 FileInstallWidget::FileInstallWidget(QWidget * parent,
 	const QString & path) :
-	PilotComponent(parent, "component_files", path),
+	ComponentPageBase( parent ),
 	fSaveFileList(false),
 	fInstaller(0L)
 {
@@ -202,7 +202,7 @@ void FileInstallWidget::slotClearButton()
 	fInstaller->clearPending();
 }
 
-void FileInstallWidget::showComponent()
+void FileInstallWidget::showPage()
 {
 	FUNCTIONSETUP;
 	refreshFileInstallList();

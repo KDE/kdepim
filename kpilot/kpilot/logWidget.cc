@@ -47,8 +47,8 @@
 #define TE_EOL "<br/>\n"
 
 
-LogWidget::LogWidget(QWidget * parent) :
-	PilotComponent(parent, "component_log", QString()),
+LogWidget::LogWidget( QWidget * parent ) :
+	ComponentPageBase( parent ),
 	fLog(0L),
 	fShowTime(false),
 	fLabel(0L),

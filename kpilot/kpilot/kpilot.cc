@@ -60,16 +60,18 @@
 #include <kxmlguifactory.h>
 
 #include "kpilotConfig.h"
-#include "pilotComponent.h"
 #include "pilotDatabase.h"
+#include "pilotRecord.h"
 #include "syncAction.h"
-#include "addressWidget.h"
-#include "memoWidget.h"
-#include "fileInstallWidget.h"
+#include "viewer_page_base.h"
 #include "logWidget.h"
+#include "todoviewer_page.h"
 #include "dbviewerWidget.h"
-#include "datebookWidget.h"
-#include "todoWidget.h"
+#include "fileInstallWidget.h"
+//#include "addressWidget.h"
+//#include "memoWidget.h"
+//#include "datebookWidget.h"
+//#include "todoWidget.h"
 
 #include "config_dialog.h"
 
@@ -85,10 +87,10 @@ public:
 		fDaemonWasRunning = false;
 		fConfigureKPilotDialogInUse = false;
 		fFirstLoad = true;
-		fFileInstallWidget = NULL;
-		fLogWidget = NULL;
+		fFileInstallWidget = 0L;
+		fLogWidget = 0L;
 	}
-	ComponentList  fPilotComponentList;
+	PageList fPilotComponentList;
 
 	/** Was the daemon running before KPilot started? If not, then we
 	 *  started it and it is our responsibility to stop it on exit (if configured
@@ -121,7 +123,7 @@ KPilotInstaller::KPilotInstaller() :
 	fP->fDaemonWasRunning = true; // Assume it was
 	fP->fConfigureKPilotDialogInUse = false;
 	fP->fFirstLoad = true;
-	fP->fFileInstallWidget = 0L;
+	//fP->fFileInstallWidget = 0L;
 
 	new KpilotAdaptor(this);
 	QDBusConnection::sessionBus().registerObject("/KPilot", this);
@@ -147,10 +149,12 @@ KPilotInstaller::~KPilotInstaller()
 
 void KPilotInstaller::log(const QString &msg)
 {
+	/*
 	if (fP->fLogWidget) 
 	{
 		fP->fLogWidget->addMessage(msg);
 	}
+	*/
 }
 
 void KPilotInstaller::killDaemonIfNeeded()
@@ -241,27 +245,38 @@ void KPilotInstaller::readConfig()
 		"the handheld.",Pilot::codecName()));
 }
 
-QWidget *KPilotInstaller::initComponents( QWidget *parent, QList<PilotComponent *> &l )
+QWidget *KPilotInstaller::initPages( QWidget *parent, QList<ComponentPageBase*> &l )
 {
 	FUNCTIONSETUP;
-	KPageWidget *w = new KPageWidget( parent );
-	w->setObjectName( "main_tab_widget" );
+	KPageWidget *pageWidget = new KPageWidget( parent );
+	pageWidget->setObjectName( "main_tab_widget" );
 
 	QString defaultDBPath = KPilotConfig::getDefaultDBPath();
 
-	PilotComponent *p;
+	ViewerPageBase *v;
 	KPageWidgetItem *item;
 
-#define ADDICONPAGE(widget,label,iconname) \
-    	item = new KPageWidgetItem(widget,label); \
-	item->setIcon(KIcon(iconname)); \
-	w->addPage(item); \
-	l.append(widget);
+#define ADDICONPAGE( widget, label, iconname ) \
+    	item = new KPageWidgetItem( widget, label ); \
+	item->setIcon( KIcon( iconname ) ); \
+	pageWidget->addPage( item ); \
+	l.append( widget );
 
-	fP->fLogWidget = new LogWidget(w);
-	fP->fLogWidget->setShowTime(true);
-	ADDICONPAGE(fP->fLogWidget, i18n("HotSync"),CSL1("kpilot_bhotsync"))
+	fP->fLogWidget = new LogWidget( pageWidget );
+	fP->fLogWidget->setShowTime( true );
+	ADDICONPAGE( fP->fLogWidget, i18n( "HotSync" ), CSL1( "kpilot_bhotsync" ) )
 
+	v = new TodoViewerPage( pageWidget, defaultDBPath );
+	ADDICONPAGE( v, i18n("To-do Viewer"), CSL1( "kpilot_todo" ) )
+
+	v = new GenericDBWidget( pageWidget, defaultDBPath );
+	ADDICONPAGE( v, i18n("Generic DB Viewer"), CSL1( "kpilot_db" ) )
+	
+	fP->fFileInstallWidget = new FileInstallWidget( pageWidget, defaultDBPath );
+	ADDICONPAGE( fP->fFileInstallWidget, i18n("File Installer")
+		, CSL1( "kpilot_fileinstaller" ) )
+
+	/*
 	p = new TodoWidget(w, defaultDBPath);
 	ADDICONPAGE(p,i18n("To-do Viewer"),CSL1("kpilot_todo"))
 
@@ -270,24 +285,17 @@ QWidget *KPilotInstaller::initComponents( QWidget *parent, QList<PilotComponent 
 
 	p = new MemoWidget(w, defaultDBPath);
 	ADDICONPAGE(p,i18n("Memo Viewer"),CSL1("kpilot_knotes"))
-	
-	p = new GenericDBWidget(w, defaultDBPath);
-	ADDICONPAGE(p,i18n("Generic DB Viewer"),CSL1("kpilot_db"))
-
-	fP->fFileInstallWidget = new FileInstallWidget(w, defaultDBPath);
-	ADDICONPAGE(fP->fFileInstallWidget, i18n("File Installer"),CSL1("kpilot_fileinstaller"))
-
+	*/
 
 #undef ADDICONPAGE
 
-	l[0]->showKPilotComponent(true);
+	l[0]->showPage();
 
-	QObject::connect(w, 
-		SIGNAL(currentPageChanged(KPageWidgetItem*,KPageWidgetItem *)),
-		parent,SLOT(componentChanged(KPageWidgetItem*,KPageWidgetItem *)) );
+	QObject::connect( pageWidget
+		, SIGNAL( currentPageChanged( KPageWidgetItem*, KPageWidgetItem* ) )
+		, parent, SLOT( componentChanged( KPageWidgetItem*, KPageWidgetItem* ) ) );
 	
-	return w;
-
+	return pageWidget;
 }
 
 void initMenu( KXmlGuiWindow *parent )
@@ -382,7 +390,7 @@ void KPilotInstaller::setupWidget()
 	createStandardStatusBarAction();
 	setStandardToolBarMenuEnabled(true);
 	initMenu( this );
-	setCentralWidget( initComponents( this, fP->fPilotComponentList ) );
+	setCentralWidget( initPages( this, fP->fPilotComponentList ) );
 
 	setMinimumSize(sizeHint() + QSize(10,60));
 
@@ -481,6 +489,8 @@ bool KPilotInstaller::componentPreSync()
 {
 	FUNCTIONSETUP;
 
+	// Maybe we should completely remove pre and postsync
+	/*
 	QString reason;
 
 	int e = fP->fPilotComponentList.size();
@@ -500,17 +510,21 @@ bool KPilotInstaller::componentPreSync()
 		return false;
 	}
 	return true;
+	*/
 }
 
 void KPilotInstaller::componentPostSync()
 {
 	FUNCTIONSETUP;
 
+	// Maybe we should completely remove pre and postsync
+	/*
 	int e = fP->fPilotComponentList.size();
 	for (int i = 0; i<e; ++i)
 	{
 		fP->fPilotComponentList[i]->postHotSync();
 	}
+	*/
 }
 
 void KPilotInstaller::setupSync(int kind, const QString & message)
@@ -532,6 +546,8 @@ void KPilotInstaller::quit()
 {
 	FUNCTIONSETUP;
 
+	// Maybe we should completely remove pre and postsync
+	/*
 	int e = fP->fPilotComponentList.size();
 	for (int i = 0; i<e; ++i)
 	{
@@ -542,6 +558,7 @@ void KPilotInstaller::quit()
 				<< fP->fPilotComponentList[i]->objectName() << ']';
 		}
 	}
+	*/
 
 	killDaemonIfNeeded();
 	kapp->quit();
@@ -608,7 +625,7 @@ static bool runConfigure(OrgKdeKpilotDaemonInterface &daemon,QWidget *parent)
 void KPilotInstaller::componentUpdate()
 {
 	FUNCTIONSETUP;
-
+	/*
 	QString defaultDBPath = KPilotConfig::getDefaultDBPath();
 	bool dbPathChanged = fP->fFirstLoad;
 	fP->fFirstLoad = false;
@@ -641,13 +658,14 @@ void KPilotInstaller::componentUpdate()
 			p->showComponent();
 		}
 	}
+	*/
 }
 
-void KPilotInstaller::componentChanged(KPageWidgetItem *current, 
-					KPageWidgetItem * before)
+void KPilotInstaller::componentChanged( KPageWidgetItem *current,
+	KPageWidgetItem * before )
 {
 	FUNCTIONSETUP;
-	if (!current) 
+	if (!current)
 	{
 		WARNINGKPILOT << "Current NULL. nothing to do.";
 		return;
@@ -656,16 +674,18 @@ void KPilotInstaller::componentChanged(KPageWidgetItem *current,
 	DEBUGKPILOT << "Selected component [" << current->name() << ']';
 	
 	int e = fP->fPilotComponentList.size();
-	for (int i = 0; i<e; ++i)
+	for( int i = 0; i < e; ++i )
 	{
-		PilotComponent *p = fP->fPilotComponentList[i];
-		if (current->widget() == p)
+		ComponentPageBase *p = fP->fPilotComponentList[i];
+		if( current->widget() == p )
 		{
-			p->showKPilotComponent(true);
+			p->showPage();
+		}
+		else if( before && before->widget() == p  )
+		{
+			p->hidePage();
 		}
 	}
-
-	Q_UNUSED(before);
 }
 
 void KPilotInstaller::raise()

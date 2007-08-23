@@ -30,7 +30,7 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
-#include "pilotComponent.h"
+#include "viewer_page_base.h"
 //Added by qt3to4:
 #include <Q3PtrList>
 #include <Q3ListViewItem>
@@ -42,7 +42,7 @@ class PilotLocalDatabase;
 class PilotRecord;
 class K3ListView;
 
-class GenericDBWidget : public PilotComponent
+class GenericDBWidget : public ViewerPageBase
 {
 Q_OBJECT
 
@@ -50,13 +50,16 @@ public:
 	GenericDBWidget(QWidget* parent, const QString& dbpath);
 	virtual ~GenericDBWidget();
 
-	// Pilot component methods
-	/* virtual */ void showComponent();
-	/* virtual */ void hideComponent();
-
+	// ViewerPageBase methods
+	virtual void showPage();
+	virtual void hidePage();
+	virtual PilotAppInfoBase* loadAppInfo() { return 0L; }
+	
 	QString getCurrentDB() const {  return currentDB; }
 protected:
 	void setupWidget();
+	
+	void markDBDirty(const QString &db);
 
 protected slots:
 	void slotSelected(const QString &dbname);

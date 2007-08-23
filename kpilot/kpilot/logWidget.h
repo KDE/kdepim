@@ -29,15 +29,14 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org.
 */
 
-#include "pilotComponent.h"
+#include "component_page_base.h"
 
 class QLabel;
 class QProgressBar;
 class KTextEdit;
-
 class KHBox;
 
-class LogWidget : public PilotComponent
+class LogWidget : public ComponentPageBase
 {
 Q_OBJECT
 
@@ -45,8 +44,12 @@ public:
 	LogWidget(QWidget *);
 	~LogWidget() { } ;
 
-	// Pilot Component Methods:
+	// ComponentPageBase Methods:
 	//
+	virtual void showPage() {}
+	
+	virtual void hidePage() {}
+	
 	bool showTime() const { return fShowTime; } ;
 	void setShowTime(bool b) { fShowTime=b; } ;
 
