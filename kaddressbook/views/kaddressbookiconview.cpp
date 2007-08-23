@@ -147,6 +147,8 @@ KAddressBookIconView::KAddressBookIconView( KAB::Core *core,
   : KAddressBookView( core, parent )
 {
   QVBoxLayout *layout = new QVBoxLayout( viewWidget() );
+  layout->setMargin( 0 );
+  layout->setSpacing( 0 );
 
   mIconView = new AddresseeIconView( viewWidget(), "mIconView" );
   layout->addWidget( mIconView );
