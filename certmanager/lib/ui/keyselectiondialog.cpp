@@ -332,20 +332,17 @@ void Kleo::KeySelectionDialog::init( bool rememberChoice, bool extendedSelection
   if ( mKeyUsage & SMIMEKeys )
     mSMIMEBackend = Kleo::CryptoBackendFactory::instance()->smime();
 
-  QSize dialogSize( 580, 400 );
-  if ( kapp ) {
-    KWin::setIcons( winId(), kapp->icon(), kapp->miniIcon() );
-
-    KConfigGroup dialogConfig( KGlobal::config(), "Key Selection Dialog" );
-    dialogSize = dialogConfig.readSizeEntry( "Dialog size", &dialogSize );
-  }
-  resize( dialogSize );
-
   mCheckSelectionTimer = new QTimer( this );
   mStartSearchTimer = new QTimer( this );
 
   QFrame *page = makeMainWidget();
   mTopLayout = new QVBoxLayout( page, 0, spacingHint() );
+
+  if ( !text.isEmpty() ) {
+    QLabel* textLabel = new QLabel( text, page );
+    textLabel->setAlignment( textLabel->alignment() | Qt::WordBreak );
+    mTopLayout->addWidget( textLabel );
+  }
 
   if ( !text.isEmpty() )
     mTopLayout->addWidget( new QLabel( text, page ) );
@@ -401,6 +398,16 @@ void Kleo::KeySelectionDialog::init( bool rememberChoice, bool extendedSelection
            this, SLOT(slotRereadKeys()) );
 
   slotRereadKeys();
+  mTopLayout->activate();
+
+  if ( kapp ) {
+    KWin::setIcons( winId(), kapp->icon(), kapp->miniIcon() );
+    QSize dialogSize( sizeHint() );
+
+    KConfigGroup dialogConfig( KGlobal::config(), "Key Selection Dialog" );
+    dialogSize = dialogConfig.readSizeEntry( "Dialog size", &dialogSize );
+    resize( dialogSize );
+  }
 }
 
 Kleo::KeySelectionDialog::~KeySelectionDialog() {
