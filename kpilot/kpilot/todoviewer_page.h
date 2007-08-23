@@ -41,6 +41,7 @@ protected:
 	 */
 	virtual PilotAppInfoBase* loadAppInfo();
 
+	virtual QString getListHeader( PilotRecord* rec );
 };
 
 #endif

@@ -31,6 +31,7 @@
 
 class PilotAppInfoBase;
 class PilotDatabase;
+class PilotRecord;
 
 class ViewerPageBase : public ComponentPageBase
 {
@@ -54,6 +55,11 @@ protected:
 	 * Loads the appInfo block.
 	 */
 	virtual PilotAppInfoBase* loadAppInfo() = 0;
+	
+	/**
+	 * Loads the appInfo block.
+	 */
+	virtual QString getListHeader( PilotRecord* rec ) { return QString(""); }
 
 public slots:
 	/**
@@ -68,8 +74,18 @@ public slots:
 	 */
 	virtual void hidePage();
 
+protected slots:
+	
+	/**
+	 * Changes the filter of the category list with the value of the combobox at
+	 * @p index.
+	 */
+	void changeFilter( int index );
+
 private: // methods
 	void populateCategories();
+	
+	void populateRecords();
 
 private: // members
 	class Private;

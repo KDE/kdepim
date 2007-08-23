@@ -30,6 +30,7 @@
 #include "options.h"
 #include "pilotDatabase.h"
 #include "pilotTodoEntry.h"
+#include "kpilotConfig.h"
 
 TodoViewerPage::TodoViewerPage( QWidget *parent, const QString &dbPath )
 	: ViewerPageBase( parent, dbPath, CSL1( "ToDoDB" ), i18n( "To-do Viewer" ) )
@@ -45,4 +46,27 @@ PilotAppInfoBase* TodoViewerPage::loadAppInfo()
 	}
 	
 	return 0L;
+}
+
+QString TodoViewerPage::getListHeader( PilotRecord *rec )
+{
+	if( database()->isOpen() )
+	{
+		PilotTodoEntry *todo;
+	
+		if( !( rec->isDeleted() ) &&
+			( !( rec->isSecret() ) || KPilotSettings::showSecrets() ) )
+		{
+			todo = new PilotTodoEntry( rec );
+			if( todo )
+			{
+				return todo->getDescription();
+			}
+			else
+			{
+				// Could not allocate it.
+				return QString();
+			}
+		}
+	}
 }

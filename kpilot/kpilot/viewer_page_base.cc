@@ -32,6 +32,8 @@
 #include "pilotDatabase.h"
 #include "pilotLocalDatabase.h"
 #include "pilotAppInfo.h"
+#include "recordlistmodel.h"
+#include "pilotRecord.h"
 
 #include "viewer_page_base.moc"
 
@@ -92,12 +94,30 @@ void ViewerPageBase::showPage()
 		fP->fWidgetUi.setupUi( this );
 		fP->fWidgetUi.fRecordInfoLabel->setText( fP->fInfoLabel );
 		fP->fWidgetsInitialized = true;
+		
+		connect( fP->fWidgetUi.fCategories, SIGNAL( activated( int ) )
+			, this, SLOT( changeFilter( int ) ) );
 	}
 	
 	fP->fDatabase = new PilotLocalDatabase( fP->fDbPath, fP->fDbName );
 	fP->fAppInfo = loadAppInfo();
 	
 	populateCategories();
+	populateRecords();
+}
+
+void ViewerPageBase::hidePage()
+{
+	FUNCTIONSETUP;
+	
+	// Clear the ui
+	fP->fWidgetUi.fCategories->clear();
+	//fP->fWidgetUi.fRecordList->clear();
+	fP->fWidgetUi.fRecordInfo->clear();
+	
+	// Free some memory
+	KPILOT_DELETE( fP->fAppInfo );
+	KPILOT_DELETE( fP->fDatabase );
 }
 
 void ViewerPageBase::populateCategories()
@@ -127,17 +147,33 @@ void ViewerPageBase::populateCategories()
 	}
 }
 
-void ViewerPageBase::hidePage()
+void ViewerPageBase::populateRecords()
 {
 	FUNCTIONSETUP;
 	
-	// Clear the ui
-	fP->fWidgetUi.fCategories->clear();
-	fP->fWidgetUi.fCategoryList->clear();
-	fP->fWidgetUi.fRecordInfo->clear();
-	
-	// Free some memory
-	KPILOT_DELETE( fP->fAppInfo );
-	KPILOT_DELETE( fP->fDatabase );
+	if( fP->fDatabase && fP->fDatabase->isOpen() )
+	{
+		RecordListModel *model = new RecordListModel();
+		
+		int i = 0;
+		PilotRecord *rec = fP->fDatabase->readRecordByIndex( i );
+		
+		while( rec )
+		{
+			DEBUGKPILOT << i;
+			
+			// Let the subclass generate some listheader.
+			QString listHeader = getListHeader( rec );
+			model->addItem( rec->id(), listHeader );
+			
+			rec = fP->fDatabase->readRecordByIndex( ++i );
+		}
+		
+		fP->fWidgetUi.fRecordList->setModel( model );
+	}
 }
 
+void ViewerPageBase::changeFilter( int index )
+{
+	
+}
