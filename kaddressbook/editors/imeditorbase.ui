@@ -134,7 +134,7 @@
             </sizepolicy>
           </property>
           <property name="text" >
-            <string>&lt;em>Note:&lt;/em> Please read the help page before adding or editing Instant Messenging Addresses here.</string>
+            <string>&lt;em>Note:&lt;/em> Please read the help page before adding or editing Instant Messaging Addresses here.</string>
           </property>
         </widget>
       </item>
