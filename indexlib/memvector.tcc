@@ -1,6 +1,8 @@
 #include "format.h"
 #include "mmap_manager.h"
 
+#include <cstring>
+
 template <typename T>
 memvector<T>::memvector( std::string fname ):
 	data_( new mmap_manager( fname ) )

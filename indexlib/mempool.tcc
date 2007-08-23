@@ -1,5 +1,6 @@
 #include "format.h"
 #include <iostream>
+#include <cstring>
 #include "logfile.h"
 #include "compat.h"
 
