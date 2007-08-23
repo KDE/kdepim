@@ -49,7 +49,7 @@ AddHostDialog::AddHostDialog( KLDAP::LdapServer *server, QWidget* parent )
   setMainWidget( page );
   QHBoxLayout *layout = new QHBoxLayout( page );
   layout->setSpacing( spacingHint() );
-  layout->setMargin( marginHint() );
+  layout->setMargin( 0 );
 
   mCfg = new KLDAP::LdapConfigWidget(
        KLDAP::LdapConfigWidget::W_USER |
