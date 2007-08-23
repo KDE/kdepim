@@ -30,6 +30,7 @@
 #include "component_page_base.h"
 
 class PilotAppInfoBase;
+class PilotDatabase;
 
 class ViewerPageBase : public ComponentPageBase
 {
@@ -46,6 +47,9 @@ public:
 	const QString& dbPath() const;
 
 protected:
+
+	PilotDatabase* database() const;
+
 	/**
 	 * Loads the appInfo block.
 	 */
@@ -64,7 +68,10 @@ public slots:
 	 */
 	virtual void hidePage();
 
-private:
+private: // methods
+	void populateCategories();
+
+private: // members
 	class Private;
 	Private *fP;
 };

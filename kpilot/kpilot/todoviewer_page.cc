@@ -28,6 +28,8 @@
 #include "todoviewer_page.h"
 
 #include "options.h"
+#include "pilotDatabase.h"
+#include "pilotTodoEntry.h"
 
 TodoViewerPage::TodoViewerPage( QWidget *parent, const QString &dbPath )
 	: ViewerPageBase( parent, dbPath, CSL1( "ToDoDB" ), i18n( "To-do Viewer" ) )
@@ -37,5 +39,10 @@ TodoViewerPage::TodoViewerPage( QWidget *parent, const QString &dbPath )
 
 PilotAppInfoBase* TodoViewerPage::loadAppInfo()
 {
+	if( database()->isOpen() )
+	{
+		return new PilotToDoInfo( database() );
+	}
+	
 	return 0L;
 }

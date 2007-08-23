@@ -78,6 +78,11 @@ const QString& ViewerPageBase::dbPath() const
 	return fP->fDbPath;
 }
 
+PilotDatabase* ViewerPageBase::database() const
+{
+	return fP->fDatabase;
+}
+
 void ViewerPageBase::showPage()
 {
 	FUNCTIONSETUP;
@@ -89,17 +94,45 @@ void ViewerPageBase::showPage()
 		fP->fWidgetsInitialized = true;
 	}
 	
-	fP->fAppInfo = loadAppInfo();
 	fP->fDatabase = new PilotLocalDatabase( fP->fDbPath, fP->fDbName );
+	fP->fAppInfo = loadAppInfo();
+	
+	populateCategories();
 }
 
+void ViewerPageBase::populateCategories()
+{
+	FUNCTIONSETUP;
+	
+	fP->fWidgetUi.fCategories->clear();
+	fP->fWidgetUi.fCategories->insertItem( 0
+		, i18nc( "This adds the Category all", "All" ), QVariant( -1 ) );
+
+	if( fP->fAppInfo )
+	{
+		// Fill up the categories list box with
+		// the categories defined by the user.
+		// These presumably are in the language
+		// the user uses, so no translation is necessary.
+		for( unsigned int i = 0; i < Pilot::CATEGORY_COUNT; i++ )
+		{
+			QString catName = fP->fAppInfo->categoryName( i );
+			if( !catName.isEmpty() )
+			{
+				DEBUGKPILOT << "Adding category: " << catName;
+				QVariant v( i );
+				fP->fWidgetUi.fCategories->addItem( catName, v );
+			}
+		}
+	}
+}
 
 void ViewerPageBase::hidePage()
 {
 	FUNCTIONSETUP;
 	
 	// Clear the ui
-	fP->fWidgetUi.fCategoryCombo->clear();
+	fP->fWidgetUi.fCategories->clear();
 	fP->fWidgetUi.fCategoryList->clear();
 	fP->fWidgetUi.fRecordInfo->clear();
 	
