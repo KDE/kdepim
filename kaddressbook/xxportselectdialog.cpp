@@ -31,7 +31,6 @@
 #include <QGroupBox>
 #include <QLabel>
 #include <QLayout>
-#include <Q3ListView>
 #include <QPushButton>
 #include <QRadioButton>
 #include <QStringList>

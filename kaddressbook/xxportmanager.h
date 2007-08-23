@@ -25,7 +25,7 @@
 #define XXPORTMANAGER_H
 
 #include "xxport.h"
-#include <q3dict.h>
+#include <QHash>
 #include <QObject>
 #include <kurl.h>
 
@@ -61,7 +61,7 @@ class KADDRESSBOOK_EXPORT XXPortManager : public QObject
   private:
     void loadPlugins();
 
-    Q3Dict<KAB::XXPort> mXXPortObjects;
+    QHash< QString, KAB::XXPort * > mXXPortObjects;
 
     KAB::Core *mCore;
 };
