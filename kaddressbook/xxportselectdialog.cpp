@@ -219,7 +219,8 @@ void XXPortSelectDialog::initGUI()
   mCategoriesView->layout()->setMargin( 0 );
   mCategoriesView->setWhatsThis( i18n( "Check the categories whose members you want to print." ) );
   groupLayout->addWidget( mCategoriesView, 3, 1 );
-  connect( mCategoriesView->listView(), SIGNAL( clicked( Q3ListView* ) ),
+  connect( mCategoriesView->listView(), 
+           SIGNAL( itemClicked( QTreeWidgetItem *, int ) ),
            this, SLOT( categoryClicked() ) );
 
   topLayout->addWidget( mButtonGroup );
