@@ -114,6 +114,8 @@ void AddresseeEditorWidget::textChanged( const QString& )
 void AddresseeEditorWidget::initGUI()
 {
   QVBoxLayout *layout = new QVBoxLayout( this );
+  layout->setMargin( 0 );
+  layout->setSpacing( KDialog::spacingHint() );
 
   mTabWidget = new QTabWidget( this );
   layout->addWidget( mTabWidget );

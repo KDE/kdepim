@@ -55,6 +55,8 @@ AddresseeEditorDialog::AddresseeEditorDialog( KAB::Core * /*core*/,
   setMainWidget( page );
 
   QVBoxLayout *layout = new QVBoxLayout( page );
+  layout->setMargin( 0 );
+  layout->setSpacing( KDialog::spacingHint() );
 
   if ( KABPrefs::instance()->editorType() == KABPrefs::SimpleEditor ) {
     mEditorWidget = new SimpleAddresseeEditor( page );
