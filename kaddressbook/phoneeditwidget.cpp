@@ -20,35 +20,30 @@
     with any edition of Qt, and distribute the resulting executable,
     without including the source code for Qt in the source distribution.
 */
+#include "phoneeditwidget.h"
 
-#include <q3buttongroup.h>
+#include <QButtonGroup>
 #include <QCheckBox>
+#include <QGridLayout>
+#include <QGroupBox>
+#include <QHBoxLayout>
 #include <QLabel>
 #include <QLayout>
-#include <q3listbox.h>
-#include <q3listview.h>
+#include <QList>
 #include <QPushButton>
 #include <QSignalMapper>
 #include <QString>
-
-//Added by qt3to4:
 #include <QVBoxLayout>
-#include <QList>
-#include <QHBoxLayout>
-#include <QGridLayout>
 
-#include <kapplication.h>
-#include <kcombobox.h>
-#include <kconfig.h>
-#include <kdebug.h>
-#include <kiconloader.h>
-#include <klineedit.h>
-#include <k3listview.h>
-#include <klocale.h>
+#include <KApplication>
+#include <KComboBox>
+#include <KConfig>
+#include <KDebug>
+#include <KIconLoader>
+#include <KLineEdit>
+#include <KLocale>
 
 #include <kabc/phonenumber.h>
-
-#include "phoneeditwidget.h"
 
 PhoneTypeCombo::PhoneTypeCombo( QWidget *parent )
   : KComboBox( parent ),

@@ -27,7 +27,6 @@
 #include <QLayout>
 #include <QRegExp>
 #include <QSplitter>
-//Added by qt3to4:
 #include <QVBoxLayout>
 #include <QList>
 #include <QHBoxLayout>
@@ -680,7 +679,7 @@ void KABCore::editContact( const QString &uid )
 
   KABC::Addressee addr = mAddressBook->findByUid( localUID );
   if ( !addr.isEmpty() ) {
-    AddresseeEditorDialog *dialog = mEditorDict.find( addr.uid() );
+    AddresseeEditorDialog *dialog = mEditorDict.value( addr.uid() );
     if ( !dialog ) {
 
       if ( addr.resource() && !addr.resource()->readOnly() )

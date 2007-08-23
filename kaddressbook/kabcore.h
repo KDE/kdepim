@@ -27,7 +27,7 @@
 #include "core.h"
 #include <kabc/field.h>
 
-#include <q3dict.h>
+#include <QHash>
 #include <QWidget>
 #include <QHBoxLayout>
 
@@ -396,7 +396,7 @@ class KADDRESSBOOK_EXPORT KABCore : public KAB::Core
     QSplitter *mExtensionBarSplitter;
 
     LDAPSearchDialog *mLdapSearchDialog;
-    Q3Dict<AddresseeEditorDialog> mEditorDict;
+    QHash<QString, AddresseeEditorDialog *> mEditorDict;
 
     bool mReadWrite;
     bool mModified;
