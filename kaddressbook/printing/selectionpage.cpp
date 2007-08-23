@@ -97,7 +97,10 @@ SelectionPage::SelectionPage( QWidget* parent, const char* name )
 
   topLayout->addWidget( mButtonGroup );
 
-  connect( mFiltersCombo, SIGNAL( activated(int) ), SLOT( filterChanged(int) ) );
+  connect( mFiltersCombo, SIGNAL( activated(int) ), SLOT( filterChanged() ) );
+  connect( mCategoriesView->listView(), 
+           SIGNAL( itemClicked( QTreeWidgetItem *, int ) ), 
+           SLOT( categoryChanged() ) );
 }
 
 SelectionPage::~SelectionPage()
@@ -149,9 +152,14 @@ bool SelectionPage::useSelection() const
   return mUseSelection->isChecked();
 }
 
-void SelectionPage::filterChanged( int )
+void SelectionPage::filterChanged()
 {
   mUseFilters->setChecked( true );
+}
+
+void SelectionPage::categoryChanged()
+{
+  mUseCategories->setChecked( true );
 }
 
 #include "selectionpage.moc"

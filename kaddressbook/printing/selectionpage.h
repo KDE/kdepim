@@ -54,7 +54,8 @@ class SelectionPage : public QWidget
     bool useSelection() const;
 
   private slots:
-    void filterChanged( int );
+    void filterChanged();
+    void categoryChanged();
 
   private:
     QGroupBox* mButtonGroup;
