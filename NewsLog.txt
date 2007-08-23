@@ -1,0 +1,147 @@
+Current release is "Enterprise - Snapshot-06"
+
+
+Features:
+=========
+
+korganizer
+-----------
+ - proko35 W-15 forwarding and delegation of iCal invitations
+ - proko35 W1-29 "attaching mails directly to events as either the full message or just the message body"
+
+Aegypten
+-------------
+ - aegypten/issue 370 - Add scrollbar so that the dialog doesn't become too big when gpgconf gives us many options to configure.
+ - aegypten/issue 735 - Support for the NO_CHANGE flag from gpgconf 2.0.3 (readonly widgets)
+
+Bugfixes
+========
+ - kolab/issue 1698 -Ignore denied invitations from not invited attendees.
+ - kolab/issue1706 (addressbook: real adress type is broken) - introducing bugs in the GUI due to outlook compatibility,
+
+
+Miscellaneous
+==============
+ - prokde W1-16: when exporting a secret key to a .p12 file, allow the user to select the encoding (charset) of the passphrase in the p12 file.
+ - proko35 W1-8 Fix for usability issues with changes to the currently selected item when LDAP results come in delayed.
+ - kolab/35- W1-10 Add the possibility to have disabled plugins shown grayed out in the sidebar.
+Configurable by non-gui option.
+
+
+"Enterprise - Snapshot-05"
+Features:
+=========
+
+kmail
+----------
+- proko35 W1-7 (cyclic section changes on tab and backtab keys in the addressee selection completion popup)
+- Better unit test and automated packaging infrastructure.
+
+Bugfixes
+=========
+- Honor default forwarding settings for the toolbar button, the search window RMB and the keyboard shortcuts (issue 1530)
+- Fix documentation related to issue 1530
+- Also change the font of cut messages in case the inactive color is to similar to the normal color.(issue 1180)
+
+
+
+"Enterprise - Snapshot-04"
+
+Features:
+=========
+
+kmail
+----------
+- proko35 W1-14 (automatic moving of not yet synced mails from folders with insufficient access rights to a lost+found folder)
+- Unit tests fixed.
+- Kolab/issue1530 - make preferred form of forwarding configurable
+
+Bugfixes
+=========
+- Fixes related to opening of *mbox files.
+- Aegypten/issue734 - Moving email in dimap breaks signature, because lines removed
+
+Korganizer
+-----------
+- proko35 W1-9 icon alignment was improved.
+
+Additional Fixes
+================
+- Rebranched libkcal and kitchensync.
+
+
+"Enterprise - Snapshot-03"
+Features:
+=========
+
+kmail
+----------
+- Kolab/Merge14/issue1095 -Add local subscription
+- Kolab/issue1206 - kolabziward quirks
+- Kolab/issue1207 - groupware folders only  as local subscription still shows mails in inbox
+- proko35 W1-5: selectable scope when reindexing a dimap cache
+
+
+Bugfixes:
+=========
+- Kolab/issue1583 - Fixing OL compatibility with attachments that have umlauts in the filename.
+- Kolab/issue 1658 - Adding a warning for empty To : field
+- proko35 W1-1 - kontact discards signature settings when signature is deactivated
+
+
+
+"Enterprise - Snapshot-02"
+
+Features:
+=========
+
+kmail
+----------
+- Kolab/issue1385 - add/insert signature
+- kolab/issue1216 - porting semicolon as separator to enterprise.
+- kolab/issue1367 : Made ".mbox" as a default extension/filter while saving messages.
+
+Bugfixes:
+=========
+
+
+kmail
+----------
+- kolab/issue 1632 - kontact sometimes crashs by moving mails from the message find dialog to a folder
+- kolab/issue1384 - Don't allow base64 or qp encoding for message attachements, such
+as when forwarding.
+
+
+"Enterprise - Snapshot-01"
+
+Features:
+=========
+
+kmail
+----------
+
+- proko35 Task - W1-24, Kolab/issue 1180 - Copy/move folders ( related kolab/issues 1294 and 1317 )
+
+- proko35 Task - W1-2 , Ktnef
+
+- proko35 Task - W1-28, Search result DnD
+
+- Kolab/issue 1222 - Reduce the memory consumption. Improve speed.
+
+- IMAP Quota feature - Forward ports of r503566, r504908, r504943, r544380, r550654, r573761, r573797, r573829, and r503568  from proko2
+
+
+
+Bugfixes:
+=========
+
+general
+----------
+
+- Kolab/issue 1362 - PO Box in kolab format.
+
+
+kmail
+----------
+
+- Apply fix for KMAcctCachedImap::processNewMail's crash (r631934)
