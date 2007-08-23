@@ -674,9 +674,10 @@ void CSVImportDialog::reloadCodecs()
 
   mCodecs.clear();
 
-  QTextCodec *codec;
-  for ( int i = 0; ( codec = QTextCodec::codecForIndex( i ) ); i++ )
-    mCodecs.append( codec );
+  QByteArray name;
+  Q_FOREACH( name, QTextCodec::availableCodecs() ) {
+    mCodecs.append( QTextCodec::codecForName( name ) );
+  }
 
   mCodecCombo->addItem( i18n( "Local (%1)", QLatin1String( QTextCodec::codecForLocale()->name() ) ), Local );
   mCodecCombo->addItem( i18n( "[guess]" ), Guess );
