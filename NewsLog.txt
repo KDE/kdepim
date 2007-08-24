@@ -87,6 +87,13 @@ Bugfixes
  - Make sure the crypto state is not restored from headers if there are no headers. (703234)
 
 
+    ==== FIXME =====
+
+    the changes between kdepim_3.5.6.enterprise.0.20070814.700060-kk1 and snapshot 6 will be filled
+    in for the next iteration
+
+    ==== FIXME =====
+
 Current release is "Enterprise - Snapshot-06"
 
 Features:
