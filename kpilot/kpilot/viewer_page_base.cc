@@ -26,15 +26,13 @@
 */
 #include "viewer_page_base.h"
 
-#include "ui_viewer_page_base.h"
-
 #include "options.h"
 #include "pilotDatabase.h"
 #include "pilotLocalDatabase.h"
 #include "pilotAppInfo.h"
-#include "recordlistmodel.h"
 #include "pilotRecord.h"
 
+#include "ui_viewer_page_base.h"
 #include "viewer_page_base.moc"
 
 class ViewerPageBase::Private
@@ -139,7 +137,6 @@ void ViewerPageBase::populateCategories()
 			QString catName = fP->fAppInfo->categoryName( i );
 			if( !catName.isEmpty() )
 			{
-				DEBUGKPILOT << "Adding category: " << catName;
 				QVariant v( i );
 				fP->fWidgetUi.fCategories->addItem( catName, v );
 			}
@@ -153,27 +150,25 @@ void ViewerPageBase::populateRecords()
 	
 	if( fP->fDatabase && fP->fDatabase->isOpen() )
 	{
-		RecordListModel *model = new RecordListModel();
-		
 		int i = 0;
 		PilotRecord *rec = fP->fDatabase->readRecordByIndex( i );
 		
 		while( rec )
 		{
-			DEBUGKPILOT << i;
-			
 			// Let the subclass generate some listheader.
-			QString listHeader = getListHeader( rec );
-			model->addItem( rec->id(), listHeader );
+			//QString listHeader = getListHeader( rec );
+			
+			QListWidgetItem *item = getListWidgetItem( rec );
+			if( item )
+			{
+				fP->fWidgetUi.fRecordList->insertItem( i, item );
+			}
 			
 			rec = fP->fDatabase->readRecordByIndex( ++i );
 		}
-		
-		fP->fWidgetUi.fRecordList->setModel( model );
 	}
 }
 
 void ViewerPageBase::changeFilter( int index )
 {
-	
 }

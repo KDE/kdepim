@@ -97,7 +97,6 @@ target_link_libraries(kpilotDaemon ${QT_LIBRARIES} kpilot  ${KDE4_KIO_LIBS} ${KD
 #
 set(kpilot_bin_SRCS
 	${settings_SRC}
-	recordlistmodel.cc
 	viewer_page_base.cc
 	todoviewer_page.cc
 	logWidget.cc

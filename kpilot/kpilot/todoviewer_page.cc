@@ -50,23 +50,48 @@ PilotAppInfoBase* TodoViewerPage::loadAppInfo()
 
 QString TodoViewerPage::getListHeader( PilotRecord *rec )
 {
-	if( database()->isOpen() )
-	{
-		PilotTodoEntry *todo;
+	PilotTodoEntry *todo;
 	
-		if( !( rec->isDeleted() ) &&
-			( !( rec->isSecret() ) || KPilotSettings::showSecrets() ) )
+	if( !( rec->isDeleted() ) &&
+		( !( rec->isSecret() ) || KPilotSettings::showSecrets() ) )
+	{
+		todo = new PilotTodoEntry( rec );
+		if( todo )
 		{
-			todo = new PilotTodoEntry( rec );
-			if( todo )
+			return todo->getDescription();
+		}
+	}
+	
+	return QString();
+}
+
+QListWidgetItem* TodoViewerPage::getListWidgetItem( PilotRecord *rec )
+{
+	FUNCTIONSETUP;
+	
+	PilotTodoEntry *todo;
+	
+	if( !( rec->isDeleted() ) &&
+		( !( rec->isSecret() ) || KPilotSettings::showSecrets() ) )
+	{
+		todo = new PilotTodoEntry( rec );
+		if( todo )
+		{
+			QListWidgetItem *newItem = new QListWidgetItem;
+			newItem->setText( todo->getDescription() );
+			newItem->setFlags( Qt::ItemIsSelectable | Qt::ItemIsEnabled );
+			if( todo->getComplete() )
 			{
-				return todo->getDescription();
+				newItem->setCheckState( Qt::Checked );
 			}
 			else
 			{
-				// Could not allocate it.
-				return QString();
+				newItem->setCheckState( Qt::Unchecked );
 			}
+			
+			return newItem;
 		}
 	}
+	
+	return 0L;
 }

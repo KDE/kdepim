@@ -42,6 +42,12 @@ protected:
 	virtual PilotAppInfoBase* loadAppInfo();
 
 	virtual QString getListHeader( PilotRecord* rec );
+	
+	/**
+	 * This can be used to change the display of the items in the list. If this
+	 * returns 0 then the default delegate will be used.
+	 */
+	virtual QListWidgetItem* getListWidgetItem( PilotRecord *rec );
 };
 
 #endif

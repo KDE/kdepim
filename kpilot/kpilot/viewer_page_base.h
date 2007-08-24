@@ -29,6 +29,8 @@
 
 #include "component_page_base.h"
 
+#include <QtGui/QListWidgetItem>
+
 class PilotAppInfoBase;
 class PilotDatabase;
 class PilotRecord;
@@ -57,9 +59,23 @@ protected:
 	virtual PilotAppInfoBase* loadAppInfo() = 0;
 	
 	/**
-	 * Loads the appInfo block.
+	 * The QString returned by this function will be displayed in the record list.
 	 */
-	virtual QString getListHeader( PilotRecord* rec ) { return QString(""); }
+	virtual QString getListHeader( PilotRecord *rec ) 
+	{ 
+		Q_UNUSED( rec );
+		return QString(""); 
+	}
+	
+	/**
+	 * This can be used to change the display of the items in the list. If this
+	 * returns 0 then the default delegate will be used.
+	 */
+	virtual QListWidgetItem* getListWidgetItem( PilotRecord *rec )
+	{
+		Q_UNUSED( rec );
+		return new QListWidgetItem();
+	}
 
 public slots:
 	/**
