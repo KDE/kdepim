@@ -1,8 +1,8 @@
 Friday, 24th August 2007
 
-kmail
------------
 
+Features
+----------
  - prokde35-z item 44: keep state of signing and encryption actions across drafts (fully implemented, ported to 3.5, trunk and proko2) (702320)
  - prokde35-z item 35: consistent behavior of pasting URLs via keyboard shortcut, d'n'd and menu (fully implemented, ported to trunk) (702342)
  - prokde35-z item 1:  favourite folders view in KMail (fully implemented, port to trunk pending, merge 36) (702804)
@@ -21,15 +21,8 @@ kmail
  and maildir storage.
  - prokde35 w1-23 Add a font family and size selector to the standalone readerwindow, which
 overrides the usual font for display and printing for that particular mail.
-
-
-korganizer
------------
  - prokde35 w1-30 Add an option to show two agenda views (669438)
  - prokde35 W1-30 Start of a gantt-based view for korganizer (669557)
-
-Miscellaneous
--------------
  - prokde35 W22: prepare printing of notes from Kontact, move existing KNotes printing code to a library
    shared by KNotes and the Notes plugin ( 670739)
  - prokde35 W1-32: add profile support for kontact, with global/user-specific profiles, and profile
@@ -39,6 +32,10 @@ Miscellaneous
 and make them not selectable.(670822)
  - prokde35 W1-19 (sync buttons): Add submenu with "All" and the single accounts, similar as in
 the check mail action
+ - Drag and drop notes - (662503)
+ - Implemented the ability to drag the current meeting time in the freebusy view, in order to visually
+   move the meeting to a spot where the attendees are free.(668059)
+ - Merge (mostly) hidden config options and their uses from proko2
 
 Bugfixes
 =========
@@ -72,14 +69,23 @@ Bugfixes
  - kolab/issue1784 prokde35 Kontact sometimes crashes by creating a new event.
  - kolab/issue1780 i18n of "Agenda View Calender Display" missing
  - kolab/issue1773 (Delegate an event back to the organizator shows strange effects.)
-
-Miscellaneous
-==============
+ - kolab/issue1769 (editing attachment of a new mail stops with couldn't write error)
+ - prokde35 issue1768 - Percentage symbol missing
+ - kolab/issue1529, start date is set correctly when recurrence date is set
+ - kolab/issue1792 (email duplication occurs when using client-side filters and disconnected imap)
+ - kolab/issue1786 (moving folder shows error message)
+ - kolab/issue1794 (kontact mail composer is missing a combobox to choose the encryption type)
+ - kolab/issue1760 (Cannot make reminders for emails if left icon bar is disabled.)
+ - kolab/issue1569 (Kontact sometimes doesn't allow dragging of encrypted messages)
+ - kolab/issue1763 (Kontact still believes imap quota is set after quota is removed)
+ - kolab/issue1803 crash after unsharing a folder.
+ - kolab/issue1844 ("Copy To" on a mail doesn't work for online IMAP to same server)
+ - kolab/issue1839 (Kontact crashes after opening two composer dialogs and switching between summary and notes)
+ - kolab/issue1715 (Other disconnected Imap folders good as sources for client filters.)
+ - kolab/issue1303 (Inform user when a folder gets unshared and move new items (prevent data loss))
+ - kolab/issue1846 (Kontact crashes by moving many folders)
  - Make sure the crypto state is not restored from headers if there are no headers. (703234)
- - Drag and drop notes - (662503)
- - Merge (mostly) hidden config options and their uses from proko2
- - Implemented the ability to drag the current meeting time in the freebusy view, in order to visually
-   move the meeting to a spot where the attendees are free.(668059)
+
 
 Current release is "Enterprise - Snapshot-06"
 
