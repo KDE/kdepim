@@ -292,6 +292,7 @@ KFolderTree::KFolderTree( QWidget *parent, const char* name )
   setAlternateBackground(QColor());
   setFullWidth(true);
   disableAutoSelection();
+  setColumnWidth( 0, 120 ); //reasonable default size
 }
 
 //-----------------------------------------------------------------------------

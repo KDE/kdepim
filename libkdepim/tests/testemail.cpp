@@ -100,6 +100,9 @@ int main(int argc, char *argv[])
   // If multiple emails are there, only return the first one
   checkGetNameAndEmail( "\"Faure, David\" <faure@kde.org>, KHZ <khz@khz.khz>", "Faure, David", "faure@kde.org", true );
 
+  // @ inside the comment
+  checkGetNameAndEmail( "\"Matt@Douhan\" <matt@fruitsalad.org>", "Matt@Douhan", "matt@fruitsalad.org", true );
+
   // No '@'
   checkGetNameAndEmail( "foo <distlist>", "foo", "distlist", true );
 

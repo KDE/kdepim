@@ -27,7 +27,6 @@
     you do not wish to do so, delete this exception statement from
     your version.
 */
-
 #include "email.h"
 #include <kdebug.h>
 
@@ -141,27 +140,26 @@ bool KPIM::getNameAndMail(const QString& aStr, QString& name, QString& mail)
   const int len=aStr.length();
   const char cQuotes = '"';
 
-  bool bInComment, bInQuotesOutsideOfEmail;
+  bool bInComment = false;
+  bool bInQuotesOutsideOfEmail = false;
   int i=0, iAd=0, iMailStart=0, iMailEnd=0;
   QChar c;
+  unsigned int commentstack = 0;
 
   // Find the '@' of the email address
   // skipping all '@' inside "(...)" comments:
-  bInComment = false;
   while( i < len ){
     c = aStr[i];
-    if( !bInComment ){
-      if( '(' == c ){
-        bInComment = true;
-      }else{
-        if( '@' == c ){
-          iAd = i;
-          break; // found it
-        }
-      }
-    }else{
-      if( ')' == c ){
-        bInComment = false;
+    if( '(' == c ) commentstack++;
+    if( ')' == c ) commentstack--;
+    bInComment = commentstack != 0;
+    if( '"' == c && !bInComment ) 
+        bInQuotesOutsideOfEmail = !bInQuotesOutsideOfEmail;
+
+    if( !bInComment && !bInQuotesOutsideOfEmail ){
+      if( '@' == c ){
+        iAd = i;
+        break; // found it
       }
     }
     ++i;
