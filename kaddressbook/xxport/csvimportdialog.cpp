@@ -380,7 +380,7 @@ void CSVImportDialog::initGUI()
 
   QGridLayout *layout = new QGridLayout( mPage );
   layout->setSpacing( spacingHint() );
-  layout->setMargin( marginHint() );
+  layout->setMargin( 0 );
   QHBoxLayout *hbox = new QHBoxLayout();
   hbox->setSpacing( spacingHint() );
 
@@ -748,21 +748,22 @@ void CSVImportDialog::textChanged ( const QString& )
 void CSVImportDialog::delimiterClicked( int id )
 {
   switch ( id ) {
-   case 0: // comma
-    mDelimiter = ",";
-    break;
-   case 4: // other
-    mDelimiter = mDelimiterEdit->text();
-    break;
-   case 2: // tab
-    mDelimiter = "\t";
-    break;
-   case 3: // space
-    mDelimiter = " ";
-    break;
-   case 1: // semicolon
-    mDelimiter = ";";
-    break;
+    case 0: // comma
+      mDelimiter = ",";
+      break;
+    case 4: // other
+      mDelimiterEdit->setFocus( Qt::OtherFocusReason );
+      mDelimiter = mDelimiterEdit->text();
+      break;
+    case 2: // tab
+      mDelimiter = "\t";
+      break;
+    case 3: // space
+      mDelimiter = " ";
+      break;
+    case 1: // semicolon
+      mDelimiter = ";";
+      break;
   }
 
   fillTable();
