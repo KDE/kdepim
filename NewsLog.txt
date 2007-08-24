@@ -4,6 +4,14 @@ Current release is "Enterprise - Snapshot-06"
 Features:
 =========
 
+kmail
+-----------
+ - prokde35-z item 44: keep state of signing and encryption actions across drafts (fully implemented, ported to 3.5, trunk and proko2) (702320)
+ - prokde35-z item 35: consistent behavior of pasting URLs via keyboard shortcut, d'n'd and menu (fully implemented, ported to trunk) (702342)
+ - prokde35-z item 1:  favourite folders view in KMail (fully implemented, port to trunk pending, merge 36) (702804)
+ - prokde35-z item 9:  first part of this item, concerning sync of SEEN flags in read only folders (issue1376) (703473)
+   prokde35-z item 9:  second part, ability to store custom flags on the server (704199) merges
+
 korganizer
 -----------
  - proko35 W-15 forwarding and delegation of iCal invitations
@@ -18,7 +26,22 @@ Bugfixes
 ========
  - kolab/issue 1698 -Ignore denied invitations from not invited attendees.
  - kolab/issue1706 (addressbook: real adress type is broken) - introducing bugs in the GUI due to outlook compatibility,
-
+ - kolab/issue896 naming inconsistencies in Kontact, enterprise only so far (703752)
+ - kolab/issue1318 potential fix for crashes during filtering (703867)
+ - kolab/issue1743 retain the vacation file name through account editing (703997)
+ - kolab/issue1894 better initial name column width in the kmail folder tree (704165)
+ - kolab/issue1713 @ (at) sign in realname confuses kontact when creating appointments (704180)
+ - kolab/issue 1882 (Crash after reply to a revoked mail): The storage needs to be open before
+   remove is called, otherwise  it will not unregister the corresponding serial numbers from
+   the message dict, since its message list is empty, and the .ids file contents are not
+   loaded. That can lead to lookups in the  dict returning stale pointers to the folder later.(700851)
+ - kolab/issue/1815 convert KMHeaders::applyFiltersOnMsg to using serial numbers instead of message pointers [in the case not using action scheduler]. Speculative fix to Intevation issue #1815 (Filtering 1450 mails crashes kontact). ( 703867 )
+ - More comprehensible documentation of KMFolder and friends ( 703507 )
+ - kolab/issue1640 - Minimum sync-interval for kontact ( 703384 )
+ - bugs.kde.org - 77223, 85630, 111419 ( 700059 )
+ - bugs.kde.org - 144303 - When sending an encrypted message, with an empty body, and the
+   encryption key selection or encryption prefs selection dialogs were cancelled, mNewBodyPart was
+   deleted without ever having been initialised. Also init some other vars ASAP. (700035)
 
 Miscellaneous
 ==============
@@ -26,6 +49,7 @@ Miscellaneous
  - proko35 W1-8 Fix for usability issues with changes to the currently selected item when LDAP results come in delayed.
  - kolab/35- W1-10 Add the possibility to have disabled plugins shown grayed out in the sidebar.
 Configurable by non-gui option.
+ - Make sure the crypto state is not restored from headers if there are no headers. (703234)
 
 
 "Enterprise - Snapshot-05"
