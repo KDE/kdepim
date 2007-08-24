@@ -130,7 +130,7 @@ void PilotDaemonTray::setupWidget()
 	connect( menuDefaultSyncActionItem, SIGNAL( toggled( bool ) ), daemon
 		, SLOT( toggleDefaultSync( bool ) ) );
 
-	fSyncTypeMenu = new QMenu( menu );
+	fSyncTypeMenu = new QMenu( i18n( "Next &Sync" ), menu );
 	fSyncTypeMenu->setObjectName( "sync_type_menu" );
 	fSyncTypeMenu->addAction( menuDefaultSyncActionItem );
 	fSyncTypeMenu->addSeparator();
@@ -166,8 +166,7 @@ void PilotDaemonTray::setupWidget()
 	// added to syncTypeActions.
 	menuDefaultSyncActionItem->setChecked( true );
 
-	QMenu *nextSyncMenu = new QMenu( i18n( "Next &Sync" ), menu );
-	menu->addMenu( nextSyncMenu );
+	menu->addMenu( fSyncTypeMenu );
 
 	KHelpMenu *helpMenu = new KHelpMenu( menu, aboutData );
 	helpMenu->menu()->setIcon( KIcon( CSL1( "help" ) ) );

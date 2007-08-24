@@ -123,7 +123,7 @@ KPilotInstaller::KPilotInstaller() :
 	fP->fDaemonWasRunning = true; // Assume it was
 	fP->fConfigureKPilotDialogInUse = false;
 	fP->fFirstLoad = true;
-	//fP->fFileInstallWidget = 0L;
+	fP->fFileInstallWidget = 0L;
 
 	new KpilotAdaptor(this);
 	QDBusConnection::sessionBus().registerObject("/KPilot", this);
@@ -149,12 +149,10 @@ KPilotInstaller::~KPilotInstaller()
 
 void KPilotInstaller::log(const QString &msg)
 {
-	/*
 	if (fP->fLogWidget) 
 	{
 		fP->fLogWidget->addMessage(msg);
 	}
-	*/
 }
 
 void KPilotInstaller::killDaemonIfNeeded()
@@ -509,8 +507,8 @@ bool KPilotInstaller::componentPreSync()
 			i18n("Cannot start Sync"));
 		return false;
 	}
-	return true;
 	*/
+	return true;
 }
 
 void KPilotInstaller::componentPostSync()
