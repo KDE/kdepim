@@ -26,30 +26,32 @@
 
 #include "extensionwidget.h"
 
-#include <qhbox.h>
+#include <qwidget.h>
 #include <qmap.h>
 #include <qptrlist.h>
 #include <qstringlist.h>
+
+class QSignalMapper;
+class KActionCollection;
 
 namespace KAB {
 class Core;
 }
 
-class QSignalMapper;
-class KActionCollection;
-
 class ExtensionData
 {
   public:
+    ExtensionData();
     typedef QValueList<ExtensionData> List;
 
     KToggleAction* action;
     KAB::ExtensionWidget *widget;
     QString identifier;
     QString title;
+    int weight;
 };
 
-class ExtensionManager : public QHBox
+class ExtensionManager : public QWidget
 {
   Q_OBJECT
 
@@ -99,6 +101,7 @@ class ExtensionManager : public QHBox
     QSignalMapper *mMapper;
     QPtrList<KAction> mActionList;
     KActionCollection *mActionCollection;
+    QSplitter* mSplitter;
 };
 
 #endif

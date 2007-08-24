@@ -61,6 +61,7 @@
       <default>resourceselection</default>
     </entry>
     <entry type="StringList" name="activeExtensions"/>
+    <entry type="IntList" name="ExtensionsSplitterSizes"/>
   </group>
 
   <group name="Filters">

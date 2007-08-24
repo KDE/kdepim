@@ -27,7 +27,9 @@
 #include <klocale.h>
 #include <ktrader.h>
 
+#include <qlayout.h>
 #include <qsignalmapper.h>
+#include <qsplitter.h>
 #include <qtimer.h>
 
 #include "addresseeeditorextension.h"
@@ -36,11 +38,20 @@
 
 #include "extensionmanager.h"
 
+ExtensionData::ExtensionData() : action( 0 ), widget( 0 ), weight( 0 )
+{
+}
+
 ExtensionManager::ExtensionManager( KAB::Core *core, QWidget *parent,
                                     const char *name )
-    : QHBox( parent, name ), mCore( core ), 
-    mMapper( 0 )
+    : QWidget( parent, name ), mCore( core ), 
+      mMapper( 0 )
 {
+  QVBoxLayout* layout = new QVBoxLayout( this );
+  mSplitter = new QSplitter( this );
+  mSplitter->setOrientation( QSplitter::Vertical );
+  layout->addWidget( mSplitter );
+
   createExtensionWidgets();
 
   mActionCollection = new KActionCollection( this, "ActionCollection" );
@@ -51,6 +62,7 @@ ExtensionManager::ExtensionManager( KAB::Core *core, QWidget *parent,
 ExtensionManager::~ExtensionManager()
 {
 }
+
 
 void ExtensionManager::restoreSettings() 
 {
@@ -65,11 +77,14 @@ void ExtensionManager::restoreSettings()
       setExtensionActive( it.data().identifier, true );
     }
   }
+  const QValueList<int> sizes = KABPrefs::instance()->extensionsSplitterSizes();
+  mSplitter->setSizes( sizes );
 }
 
 void ExtensionManager::saveSettings()
 {
   KABPrefs::instance()->setActiveExtensions( mActiveExtensions );
+  KABPrefs::instance()->setExtensionsSplitterSizes( mSplitter->sizes() );
 }
 
 void ExtensionManager::reconfigure()
@@ -160,7 +175,7 @@ void ExtensionManager::createExtensionWidgets()
 
   {
     // add addressee editor as default
-    wdg = new AddresseeEditorExtension( mCore, this );
+    wdg = new AddresseeEditorExtension( mCore, mSplitter );
     wdg->hide();
 
     connect( wdg, SIGNAL( modified( const KABC::Addressee::List& ) ),
@@ -169,7 +184,6 @@ void ExtensionManager::createExtensionWidgets()
              SIGNAL( deleted( const QStringList& ) ) );
 
     ExtensionData data;
-    data.action = 0;
     data.identifier = wdg->identifier();
     data.title = wdg->title();
     data.widget = wdg;
@@ -195,7 +209,7 @@ void ExtensionManager::createExtensionWidgets()
       continue;
     }
 
-    wdg = extensionFactory->extension( mCore, this );
+    wdg = extensionFactory->extension( mCore, mSplitter );
     if ( wdg ) {
       wdg->hide();
       connect( wdg, SIGNAL( modified( const KABC::Addressee::List& ) ),
@@ -204,7 +218,6 @@ void ExtensionManager::createExtensionWidgets()
                SIGNAL( deleted( const QStringList& ) ) );
 
       ExtensionData data;
-      data.action = 0;
       data.identifier = wdg->identifier();
       data.title = wdg->title();
       data.widget = wdg;
