@@ -206,6 +206,9 @@ int main(int argc, char *argv[])
   // domain literals also need to work
   checkGetNameAndEmail( "Matt Douhan <matt@[123.123.123.123]>", "Matt Douhan", "matt@[123.123.123.123]", true );
 
+  // @ inside the comment
+  checkGetNameAndEmail( "\"Matt@Douhan\" <matt@fruitsalad.org>", "Matt@Douhan", "matt@fruitsalad.org", true );
+
   // No '@'
   checkGetNameAndEmail(  "foo <distlist>", "foo", "distlist", true );
 
@@ -324,10 +327,10 @@ int main(int argc, char *argv[])
   checkIsValidEmailAddress( "\"testing, \\\"testing\\\" <matt@fruitsalad.org>", "UnbalancedQuote" );
 
   // escape a parens and thus make a comma appear
-  checkIsValidEmailAddress( "Matt (jongel, fibbel\\\) <matt@fruitsalad.org>", "UnbalancedParens" );
+  checkIsValidEmailAddress( "Matt (jongel, fibbel\\) <matt@fruitsalad.org>", "UnbalancedParens" );
 
   // several errors inside doublequotes
-  checkIsValidEmailAddress( "Matt \"(jongel,\\\" < fibbel\\\)\" <matt@fruitsalad.org>", "AddressOk" );
+  checkIsValidEmailAddress( "Matt \"(jongel,\\\" < fibbel\\\\)\" <matt@fruitsalad.org>", "AddressOk" );
 
   // BUG 105705
   checkIsValidEmailAddress( "matt-@fruitsalad.org", "AddressOk" );
@@ -372,7 +375,6 @@ int main(int argc, char *argv[])
   checkIsValidEmailAddress( "matt \"[foobar]\" Douhan <matt@fruitsalad.org>", "AddressOk" );
 
   checkIsValidEmailAddress( "Matt Douhan <matt\"@@\"fruitsalad.org>", "TooFewAts" );
-
 
   // checks for "pure" email addresses in the form of xxx@yyy.tld
   checkIsValidSimpleEmailAddress( "matt@fruitsalad.org", "true" );
