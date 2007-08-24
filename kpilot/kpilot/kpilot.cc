@@ -67,18 +67,13 @@
 #include "logWidget.h"
 #include "todoviewer_page.h"
 #include "addressviewer_page.h"
+#include "memoviewer_page.h"
 #include "dbviewerWidget.h"
 #include "fileInstallWidget.h"
-//#include "addressWidget.h"
-//#include "memoWidget.h"
-//#include "datebookWidget.h"
-//#include "todoWidget.h"
-
 #include "config_dialog.h"
-
 #include "kpilotadaptor.h"
-#include "daemon_interface.h"
 
+#include "daemon_interface.h"
 #include "kpilot.moc"
 
 class KPilotInstaller::KPilotPrivate
@@ -271,17 +266,15 @@ QWidget *KPilotInstaller::initPages( QWidget *parent, QList<ComponentPageBase*> 
 	v = new AddressViewerPage( pageWidget, defaultDBPath );
 	ADDICONPAGE( v, i18n( "Address Viewer" ), CSL1( "kpilot_address" ) )
 
+	v = new MemoViewerPage( pageWidget, defaultDBPath);
+	ADDICONPAGE( v, i18n( "Memo Viewer" ), CSL1( "kpilot_knotes" ) )
+
 	v = new GenericDBWidget( pageWidget, defaultDBPath );
 	ADDICONPAGE( v, i18n("Generic DB Viewer"), CSL1( "kpilot_db" ) )
 	
 	fP->fFileInstallWidget = new FileInstallWidget( pageWidget, defaultDBPath );
 	ADDICONPAGE( fP->fFileInstallWidget, i18n("File Installer")
 		, CSL1( "kpilot_fileinstaller" ) )
-
-	/*
-	p = new MemoWidget(w, defaultDBPath);
-	ADDICONPAGE(p,i18n("Memo Viewer"),CSL1("kpilot_knotes"))
-	*/
 
 #undef ADDICONPAGE
 

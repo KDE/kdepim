@@ -100,6 +100,7 @@ set(kpilot_bin_SRCS
 	viewer_page_base.cc
 	todoviewer_page.cc
 	addressviewer_page.cc
+	memoviewer_page.cc
 	logWidget.cc
 	kpilot.cc
 	dbviewerWidget.cc
