@@ -50,6 +50,7 @@ AddViewDialog::AddViewDialog( QHash<QString, ViewFactory*> *viewFactoryDict,
   setMainWidget( page );
 
   QGridLayout *layout = new QGridLayout( page );
+  layout->setMargin( 0 );
   layout->setSpacing( spacingHint() );
   layout->setRowStretch( 1, 1 );
   layout->setColumnStretch( 1, 1 );
