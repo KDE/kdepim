@@ -97,6 +97,10 @@ void ViewerPageBase::showPage()
 		
 		connect( fP->fWidgetUi.fCategories, SIGNAL( activated( int ) )
 			, this, SLOT( changeFilter( int ) ) );
+			
+		connect( fP->fWidgetUi.fRecordList
+			, SIGNAL( itemClicked( QListWidgetItem* ) ), this
+			, SLOT( changeInfo( QListWidgetItem* ) ) );
 	}
 	
 	fP->fDatabase = new PilotLocalDatabase( fP->fDbPath, fP->fDbName );
@@ -165,16 +169,31 @@ void ViewerPageBase::populateRecords()
 				if( item )
 				{
 					fP->fWidgetUi.fRecordList->insertItem( i, item );
+					
+					item->setData( Qt::UserRole, QVariant( (qlonglong) rec->id() ) );
 				}
 			}
 				
-				rec = fP->fDatabase->readRecordByIndex( ++i );
+			rec = fP->fDatabase->readRecordByIndex( ++i );
 		}
 	}
 }
 
 void ViewerPageBase::changeFilter( int index )
 {
+	fP->fWidgetUi.fRecordInfo->clear();
 	fP->fCurrentCategory = fP->fWidgetUi.fCategories->itemData( index ).toInt();
 	populateRecords();
+}
+
+void ViewerPageBase::changeInfo( QListWidgetItem *item )
+{
+	FUNCTIONSETUP;
+	
+	if( fP->fDatabase && fP->fDatabase->isOpen() )
+	{
+		recordid_t id = item->data( Qt::UserRole ).toLongLong();
+		PilotRecord *rec = fP->fDatabase->readRecordById( id );
+		fP->fWidgetUi.fRecordInfo->setText( getRecordInfo( rec ) );
+	}
 }

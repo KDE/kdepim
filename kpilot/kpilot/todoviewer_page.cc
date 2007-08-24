@@ -50,14 +50,10 @@ PilotAppInfoBase* TodoViewerPage::loadAppInfo()
 
 QListWidgetItem* TodoViewerPage::getListWidgetItem( PilotRecord *rec )
 {
-	FUNCTIONSETUP;
-	
-	PilotTodoEntry *todo;
-	
 	if( !( rec->isDeleted() ) &&
 		( !( rec->isSecret() ) || KPilotSettings::showSecrets() ) )
 	{
-		todo = new PilotTodoEntry( rec );
+		PilotTodoEntry *todo = new PilotTodoEntry( rec );
 		if( todo )
 		{
 			QListWidgetItem *newItem = new QListWidgetItem;
@@ -77,4 +73,23 @@ QListWidgetItem* TodoViewerPage::getListWidgetItem( PilotRecord *rec )
 	}
 	
 	return 0L;
+}
+
+QString TodoViewerPage::getRecordInfo( PilotRecord *rec )
+{
+	if( !( rec->isDeleted() ) &&
+		( !( rec->isSecret() ) || KPilotSettings::showSecrets() ) )
+	{
+		PilotTodoEntry *todo = new PilotTodoEntry( rec );
+		if( todo )
+		{
+			QString text( CSL1( "<qt>" ) );
+			text += todo->getTextRepresentation( Qt::RichText );
+			text += CSL1( "</qt>\n" );
+			
+			return text;
+		}
+	}
+	
+	return QString();
 }

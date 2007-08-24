@@ -31,6 +31,8 @@
 
 #include <QtGui/QListWidgetItem>
 
+#include <klocalizedstring.h>
+
 class PilotAppInfoBase;
 class PilotDatabase;
 class PilotRecord;
@@ -58,14 +60,16 @@ protected:
 	 */
 	virtual PilotAppInfoBase* loadAppInfo() = 0;
 	
-	/**
-	 * This can be used to change the display of the items in the list. If this
-	 * returns 0 then the default delegate will be used.
-	 */
 	virtual QListWidgetItem* getListWidgetItem( PilotRecord *rec )
 	{
 		Q_UNUSED( rec );
-		return new QListWidgetItem();
+		return new QListWidgetItem( i18n( "not implemented by subclass" ) );
+	}
+	
+	virtual QString getRecordInfo( PilotRecord *rec )
+	{
+		Q_UNUSED( rec );
+		return i18n( "not implemented by subclass" );
 	}
 
 public slots:
@@ -88,6 +92,11 @@ protected slots:
 	 * @p index.
 	 */
 	void changeFilter( int index );
+	
+	/**
+	 * Changes the info field with the selected record.
+	 */
+	void changeInfo( QListWidgetItem *item );
 
 private: // methods
 	void populateCategories();
