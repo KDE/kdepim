@@ -162,7 +162,7 @@ KABCore::KABCore( KXMLGUIClient *client, bool readWrite, QWidget *parent,
   connect( mXXPortManager, SIGNAL( modified() ),
            SLOT( setModified() ) );
 
-  connect( mDetails, SIGNAL( highlightedMessage( const QString& ) ),
+  connect( mDetailsViewer, SIGNAL( highlightedMessage( const QString& ) ),
            SLOT( detailsHighlighted( const QString& ) ) );
 
   connect( mIncSearchWidget, SIGNAL( scrollUp() ),
@@ -317,8 +317,8 @@ KStatusBar *KABCore::statusBar() const
 void KABCore::setContactSelected( const QString &uid )
 {
   KABC::Addressee addr = mAddressBook->findByUid( uid );
-  if ( !mDetails->isHidden() )
-    mDetails->setAddressee( addr );
+  if ( !mDetailsViewer->isHidden() )
+    mDetailsViewer->setAddressee( addr );
 
   mExtensionManager->setSelectionChanged();
 
@@ -1017,8 +1017,8 @@ void KABCore::initGUI()
   topLayout->addWidget( searchTB );
   topLayout->addWidget( mDetailsSplitter );
 
-  mExtensionManager = new ExtensionManager( this, mDetailsSplitter );
-
+  mExtensionManager = new ExtensionManager( new QWidget( mDetailsSplitter ), this, this );
+  
   mViewManager = new ViewManager( this, mDetailsSplitter );
   mFilterSelectionWidget = new FilterSelectionWidget( searchTB , "kde toolbar widget" );
   mViewManager->setFilterSelectionWidget( mFilterSelectionWidget );
@@ -1033,13 +1033,12 @@ void KABCore::initGUI()
   mDetailsLayout->addWidget( mDetailsPage );
 
   QHBoxLayout *detailsPageLayout = new QHBoxLayout( mDetailsPage, 0, 0 );
-  mDetails = new KPIM::AddresseeView( mDetailsPage );
-  mDetails->setVScrollBarMode( QScrollView::Auto );
-  detailsPageLayout->addWidget( mDetails );
+  mDetailsViewer = new KPIM::AddresseeView( mDetailsPage );
+  mDetailsViewer->setVScrollBarMode( QScrollView::Auto );
+  detailsPageLayout->addWidget( mDetailsViewer );
 
-  connect( mDetails, SIGNAL( addressClicked( const QString&) ),
+  connect( mDetailsViewer, SIGNAL( addressClicked( const QString&) ),
            this, SLOT( showContactsAddress( const QString& ) ) );
-
 
   topLayout->setStretchFactor( mDetailsSplitter, 1 );
 

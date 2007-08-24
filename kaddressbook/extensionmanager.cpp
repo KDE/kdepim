@@ -43,13 +43,14 @@ ExtensionData::ExtensionData() : action( 0 ), widget( 0 ), weight( 0 )
 {
 }
 
-ExtensionManager::ExtensionManager( KAB::Core *core, QWidget *parent,
+ExtensionManager::ExtensionManager( QWidget* extensionBar, KAB::Core *core, QObject *parent,
                                     const char *name )
-    : QWidget( parent, name ), mCore( core ), 
+    : QObject( parent, name ), mExtensionBar( extensionBar ), mCore( core ), 
       mMapper( 0 )
 {
-  QVBoxLayout* layout = new QVBoxLayout( this );
-  mSplitter = new QSplitter( this );
+  Q_ASSERT( mExtensionBar ); 
+  QVBoxLayout* layout = new QVBoxLayout( mExtensionBar );
+  mSplitter = new QSplitter( mExtensionBar );
   mSplitter->setOrientation( QSplitter::Vertical );
   layout->addWidget( mSplitter );
 
@@ -57,6 +58,7 @@ ExtensionManager::ExtensionManager( KAB::Core *core, QWidget *parent,
 
   mActionCollection = new KActionCollection( this, "ActionCollection" );
 
+  extensionBar->setShown( false );
   QTimer::singleShot( 0, this, SLOT( createActions() ) );
 }
 
@@ -94,7 +96,7 @@ void ExtensionManager::reconfigure()
   createExtensionWidgets();
   createActions();
   restoreSettings();
-  setShown( !mActiveExtensions.isEmpty() );
+  mExtensionBar->setShown( !mActiveExtensions.isEmpty() );
 }
 
 bool ExtensionManager::isQuickEditVisible() const
@@ -119,8 +121,8 @@ void ExtensionManager::activationToggled( const QString &extid ) {
 }
 
 void ExtensionManager::setExtensionActive( const QString& extid, bool active ) {
-  if ( !mExtensionMap.contains( extid ) )
-    return;
+ if ( !mExtensionMap.contains( extid ) )
+   return;
  if ( mActiveExtensions.contains( extid ) == active )
     return; 
   const ExtensionData data = mExtensionMap[ extid ];
@@ -135,6 +137,7 @@ void ExtensionManager::setExtensionActive( const QString& extid, bool active ) {
     if ( data.widget )
       data.widget->hide();
   }
+  mExtensionBar->setShown( !mActiveExtensions.isEmpty() );
 }
  
 void ExtensionManager::createActions()

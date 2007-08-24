@@ -387,7 +387,7 @@ class KDE_EXPORT KABCore : public KAB::Core
     JumpButtonBar *mJumpButtonBar;
     FilterSelectionWidget *mFilterSelectionWidget;
     IncSearchWidget *mIncSearchWidget;
-    KPIM::AddresseeView *mDetails;
+    KPIM::AddresseeView *mDetailsViewer;
     KPIM::CategorySelectDialog *mCategorySelectDialog;
     KPIM::CategoryEditDialog *mCategoryEditDialog;
     QWidget *mDetailsPage;

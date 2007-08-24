@@ -51,12 +51,12 @@ class ExtensionData
     int weight;
 };
 
-class ExtensionManager : public QWidget
+class ExtensionManager : public QObject
 {
   Q_OBJECT
 
   public:
-    ExtensionManager( KAB::Core *core, QWidget *parent, const char *name = 0 );
+    ExtensionManager( QWidget *extensionBar, KAB::Core *core, QObject *parent, const char *name = 0 );
     ~ExtensionManager();
 
     /**
@@ -95,13 +95,15 @@ class ExtensionManager : public QWidget
     void createExtensionWidgets();
     void setExtensionActive( const QString &extid, bool active ); 
 
+  private:
+    QWidget *mExtensionBar;
     KAB::Core *mCore;
     QMap<QString, ExtensionData> mExtensionMap;
     QStringList mActiveExtensions;
     QSignalMapper *mMapper;
     QPtrList<KAction> mActionList;
     KActionCollection *mActionCollection;
-    QSplitter* mSplitter;
+    QSplitter *mSplitter;
 };
 
 #endif
