@@ -220,6 +220,16 @@ ulong imapInfo::_flags (const QCString & inFlags)
       flags ^= Recent;
     else if (0 != entry.contains ("\\*"))
       flags ^= User;
+
+    // non standard kmail falgs
+    else if ( 0 != entry.contains( "KMAILFORWARDED" ) )
+      flags ^= Forwarded;
+    else if ( 0 != entry.contains( "KMAILTODO" ) )
+      flags ^= Todo;
+    else if ( 0 != entry.contains( "KMAILWATCHED" ) )
+      flags ^= Watched;
+    else if ( 0 != entry.contains( "KMAILIGNORED" ) )
+      flags ^= Ignored;
   }
 
   return flags;

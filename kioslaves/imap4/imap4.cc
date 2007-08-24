@@ -1346,9 +1346,16 @@ IMAP4Protocol::special (const QByteArray & aData)
     QString aBox, aSequence, aLType, aSection, aValidity, aDelimiter, aInfo;
     parseURL (_url, aBox, aSection, aLType, aSequence, aValidity, aDelimiter, aInfo);
     if (!assureBox(aBox, false)) return;
+
+    // make sure we only touch flags we know
+    QCString knownFlags = "\\SEEN \\ANSWERED \\FLAGGED \\DRAFT";
+    const imapInfo info = getSelected();
+    if ( info.permanentFlagsAvailable() && (info.permanentFlags() & imapInfo::User) ) {
+      knownFlags += " KMAILFORWARDED KMAILTODO KMAILWATCHED KMAILIGNORED";
+    }
+
     imapCommand *cmd = doCommand (imapCommand::
-                                  clientStore (aSequence, "-FLAGS.SILENT",
-                                               "\\SEEN \\ANSWERED \\FLAGGED \\DRAFT"));
+                                  clientStore (aSequence, "-FLAGS.SILENT", knownFlags));
     if (cmd->result () != "OK")
     {
       completeQueue.removeRef (cmd);
