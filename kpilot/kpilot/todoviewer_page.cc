@@ -48,23 +48,6 @@ PilotAppInfoBase* TodoViewerPage::loadAppInfo()
 	return 0L;
 }
 
-QString TodoViewerPage::getListHeader( PilotRecord *rec )
-{
-	PilotTodoEntry *todo;
-	
-	if( !( rec->isDeleted() ) &&
-		( !( rec->isSecret() ) || KPilotSettings::showSecrets() ) )
-	{
-		todo = new PilotTodoEntry( rec );
-		if( todo )
-		{
-			return todo->getDescription();
-		}
-	}
-	
-	return QString();
-}
-
 QListWidgetItem* TodoViewerPage::getListWidgetItem( PilotRecord *rec )
 {
 	FUNCTIONSETUP;

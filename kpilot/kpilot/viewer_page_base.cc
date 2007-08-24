@@ -38,7 +38,8 @@
 class ViewerPageBase::Private
 {
 public:
-	Private() : fDatabase( 0L ), fAppInfo( 0L ), fWidgetsInitialized( false ) {}
+	Private() : fDatabase( 0L ), fAppInfo( 0L ), fWidgetsInitialized( false )
+		,fCurrentCategory( -1 ) {}
 	
 	~Private()
 	{
@@ -56,6 +57,7 @@ public:
 	bool fWidgetsInitialized;
 	Ui::ViewerPageBase fWidgetUi;
 	QString fInfoLabel;
+	int fCurrentCategory;
 };
 
 ViewerPageBase::ViewerPageBase( QWidget *parent
@@ -150,25 +152,29 @@ void ViewerPageBase::populateRecords()
 	
 	if( fP->fDatabase && fP->fDatabase->isOpen() )
 	{
+		fP->fWidgetUi.fRecordList->clear();
+	
 		int i = 0;
 		PilotRecord *rec = fP->fDatabase->readRecordByIndex( i );
 		
 		while( rec )
 		{
-			// Let the subclass generate some listheader.
-			//QString listHeader = getListHeader( rec );
-			
-			QListWidgetItem *item = getListWidgetItem( rec );
-			if( item )
+			if( fP->fCurrentCategory == -1 | fP->fCurrentCategory == rec->category() )
 			{
-				fP->fWidgetUi.fRecordList->insertItem( i, item );
+				QListWidgetItem *item = getListWidgetItem( rec );
+				if( item )
+				{
+					fP->fWidgetUi.fRecordList->insertItem( i, item );
+				}
 			}
-			
-			rec = fP->fDatabase->readRecordByIndex( ++i );
+				
+				rec = fP->fDatabase->readRecordByIndex( ++i );
 		}
 	}
 }
 
 void ViewerPageBase::changeFilter( int index )
 {
+	fP->fCurrentCategory = fP->fWidgetUi.fCategories->itemData( index ).toInt();
+	populateRecords();
 }

@@ -40,8 +40,6 @@ protected:
 	 * Loads the appInfo block.
 	 */
 	virtual PilotAppInfoBase* loadAppInfo();
-
-	virtual QString getListHeader( PilotRecord* rec );
 	
 	/**
 	 * This can be used to change the display of the items in the list. If this

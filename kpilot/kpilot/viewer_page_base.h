@@ -59,15 +59,6 @@ protected:
 	virtual PilotAppInfoBase* loadAppInfo() = 0;
 	
 	/**
-	 * The QString returned by this function will be displayed in the record list.
-	 */
-	virtual QString getListHeader( PilotRecord *rec ) 
-	{ 
-		Q_UNUSED( rec );
-		return QString(""); 
-	}
-	
-	/**
 	 * This can be used to change the display of the items in the list. If this
 	 * returns 0 then the default delegate will be used.
 	 */
