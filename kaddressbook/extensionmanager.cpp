@@ -28,6 +28,7 @@
 #include <ktrader.h>
 
 #include <qlayout.h>
+#include <qobjectlist.h>
 #include <qsignalmapper.h>
 #include <qsplitter.h>
 #include <qtimer.h>
@@ -93,6 +94,7 @@ void ExtensionManager::reconfigure()
   createExtensionWidgets();
   createActions();
   restoreSettings();
+  setShown( !mActiveExtensions.isEmpty() );
 }
 
 bool ExtensionManager::isQuickEditVisible() const
@@ -132,7 +134,7 @@ void ExtensionManager::setExtensionActive( const QString& extid, bool active ) {
     mActiveExtensions.remove( extid );
     if ( data.widget )
       data.widget->hide();
-  }  
+  }
 }
  
 void ExtensionManager::createActions()
