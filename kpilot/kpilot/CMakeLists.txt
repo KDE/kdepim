@@ -99,16 +99,13 @@ set(kpilot_bin_SRCS
 	${settings_SRC}
 	viewer_page_base.cc
 	todoviewer_page.cc
+	addressviewer_page.cc
 	logWidget.cc
 	kpilot.cc
 	dbviewerWidget.cc
 	dbFlagsEditor.cc
 	dbRecordEditor.cc
 	dbAppInfoEditor.cc
-	pilotComponent.cc
-	memoWidget.cc
-	addressWidget.cc
-	todoWidget.cc
 	fileInstaller.cc
 	fileInstallWidget.cc
 	listItems.cc

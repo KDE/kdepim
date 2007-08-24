@@ -66,6 +66,7 @@
 #include "viewer_page_base.h"
 #include "logWidget.h"
 #include "todoviewer_page.h"
+#include "addressviewer_page.h"
 #include "dbviewerWidget.h"
 #include "fileInstallWidget.h"
 //#include "addressWidget.h"
@@ -267,6 +268,9 @@ QWidget *KPilotInstaller::initPages( QWidget *parent, QList<ComponentPageBase*> 
 	v = new TodoViewerPage( pageWidget, defaultDBPath );
 	ADDICONPAGE( v, i18n("To-do Viewer"), CSL1( "kpilot_todo" ) )
 
+	v = new AddressViewerPage( pageWidget, defaultDBPath );
+	ADDICONPAGE( v, i18n( "Address Viewer" ), CSL1( "kpilot_address" ) )
+
 	v = new GenericDBWidget( pageWidget, defaultDBPath );
 	ADDICONPAGE( v, i18n("Generic DB Viewer"), CSL1( "kpilot_db" ) )
 	
@@ -275,12 +279,6 @@ QWidget *KPilotInstaller::initPages( QWidget *parent, QList<ComponentPageBase*> 
 		, CSL1( "kpilot_fileinstaller" ) )
 
 	/*
-	p = new TodoWidget(w, defaultDBPath);
-	ADDICONPAGE(p,i18n("To-do Viewer"),CSL1("kpilot_todo"))
-
-	p = new AddressWidget(w, defaultDBPath);
-	ADDICONPAGE(p,i18n("Address Viewer"),CSL1("kpilot_address"))
-
 	p = new MemoWidget(w, defaultDBPath);
 	ADDICONPAGE(p,i18n("Memo Viewer"),CSL1("kpilot_knotes"))
 	*/
