@@ -1,16 +1,91 @@
-Current release is "Enterprise - Snapshot-06"
-
-
-Features:
-=========
+Friday, 24th August 2007
 
 kmail
 -----------
+
  - prokde35-z item 44: keep state of signing and encryption actions across drafts (fully implemented, ported to 3.5, trunk and proko2) (702320)
  - prokde35-z item 35: consistent behavior of pasting URLs via keyboard shortcut, d'n'd and menu (fully implemented, ported to trunk) (702342)
  - prokde35-z item 1:  favourite folders view in KMail (fully implemented, port to trunk pending, merge 36) (702804)
  - prokde35-z item 9:  first part of this item, concerning sync of SEEN flags in read only folders (issue1376) (703473)
    prokde35-z item 9:  second part, ability to store custom flags on the server (704199) merges
+- prokde35 w1-20 (665722)
+- prokde35 w1-11: Let the navigator toolbar be always the last one, if it's in the top dockwindow ( 666073)
+ - prokde35 W1-19 / kolab/issue1749 Since mail folders are not groupware folders, do a full sync, when
+  the mail part is already active. (668988)
+ - prokde35 It's now possible to resize the magenta rectangle that represents the event in the freebusy
+ view, to change its start time, end time and duration (not only move it around, which preserved
+  duration).
+ - prokde35 w1-6 Implement a size column in the shared folder tree class and in kmail. Add the ability
+ to use a  configurable color for the folder name and size when it is close to a configurable quota
+ threshold (provided the folder has quota info in the first place). Implement size retrieval for mbox
+ and maildir storage.
+ - prokde35 w1-23 Add a font family and size selector to the standalone readerwindow, which
+overrides the usual font for display and printing for that particular mail.
+
+
+korganizer
+-----------
+ - prokde35 w1-30 Add an option to show two agenda views (669438)
+ - prokde35 W1-30 Start of a gantt-based view for korganizer (669557)
+
+Miscellaneous
+-------------
+ - prokde35 W22: prepare printing of notes from Kontact, move existing KNotes printing code to a library
+   shared by KNotes and the Notes plugin ( 670739)
+ - prokde35 W1-32: add profile support for kontact, with global/user-specific profiles, and profile
+   import/export (671800)
+ - prokde35 w1-15 Show the delegator and delegate in the even preview.(670673)
+ - prokde35 w1-10 Show plugins which failed to load their part as disabled,
+and make them not selectable.(670822)
+ - prokde35 W1-19 (sync buttons): Add submenu with "All" and the single accounts, similar as in
+the check mail action
+
+Bugfixes
+=========
+ - kolab/issue896 naming inconsistencies in Kontact, enterprise only so far (703752)
+ - kolab/issue1318 potential fix for crashes during filtering (703867)
+ - kolab/issue1743 retain the vacation file name through account editing (703997)
+ - kolab/issue1894 better initial name column width in the kmail folder tree (704165)
+ - kolab/issue1713 @ (at) sign in realname confuses kontact when creating appointments (704180)
+ - kolab/issue1882 Crash after reply to a revoked mail(700851)
+ - kolab/issue1815 convert KMHeaders::applyFiltersOnMsg to using serial numbers instead of message pointers [in the case not using action scheduler]. Speculative fix to Intevation issue #1815 (Filtering 1450 mails crashes kontact). ( 703867 )
+ - More comprehensible documentation of KMFolder and friends ( 703507 )
+ - kolab/issue1640 - Minimum sync-interval for kontact ( 703384 )
+ - bugs.kde.org - 77223, 85630, 111419 ( 700059 )
+ - bugs.kde.org - 144303 - When sending an encrypted message, with an empty body, and the
+   encryption key selection or encryption prefs selection dialogs were cancelled, mNewBodyPart was
+   deleted without ever having been initialised. Also init some other vars ASAP. (700035)
+ - kolab/issue1712 Update revision when adding new attendees.(663228)
+ - kolab/issue1672 Make sure to open the folder when saving a single message as well.(664661)
+ - Fix lack of double-quotes around folder name, making GETQUOTAROOT fail on folders with a space in the
+   name.(665276)
+ - Port the ability to add and remove subfolders from korganizer's resource view from proko2. (665274)
+ - kolab/issue1721 Don't exit when the popup menu is canceled.(665679)
+ - Allow to edit attachments of already existing messages.(668156)
+ - kolab/issue1642 kontact crashed after moving some events (670485)
+ - kolab/issue1738 (Kontact escapes part of content type of text/calendar messages, makes Outlook fail
+   to directly recognise invitations)
+ - kolab/issue864  prokde35 freebusy display takes internal or does not honor "nobody" annotation(
+ 669428)
+ - kolab/issue1759 (Dragging emails onto tasks does not enable reminders by default.)
+ - kolab/issue1766 prokde35 Kontact crashes after moving event in a free/busy list (QListViewItem)
+ - kolab/issue1784 prokde35 Kontact sometimes crashes by creating a new event.
+ - kolab/issue1780 i18n of "Agenda View Calender Display" missing
+ - kolab/issue1773 (Delegate an event back to the organizator shows strange effects.)
+
+Miscellaneous
+==============
+ - Make sure the crypto state is not restored from headers if there are no headers. (703234)
+ - Drag and drop notes - (662503)
+ - Merge (mostly) hidden config options and their uses from proko2
+ - Implemented the ability to drag the current meeting time in the freebusy view, in order to visually
+   move the meeting to a spot where the attendees are free.(668059)
+
+Current release is "Enterprise - Snapshot-06"
+
+Features:
+=========
+
 
 korganizer
 -----------
@@ -26,22 +101,7 @@ Bugfixes
 ========
  - kolab/issue 1698 -Ignore denied invitations from not invited attendees.
  - kolab/issue1706 (addressbook: real adress type is broken) - introducing bugs in the GUI due to outlook compatibility,
- - kolab/issue896 naming inconsistencies in Kontact, enterprise only so far (703752)
- - kolab/issue1318 potential fix for crashes during filtering (703867)
- - kolab/issue1743 retain the vacation file name through account editing (703997)
- - kolab/issue1894 better initial name column width in the kmail folder tree (704165)
- - kolab/issue1713 @ (at) sign in realname confuses kontact when creating appointments (704180)
- - kolab/issue 1882 (Crash after reply to a revoked mail): The storage needs to be open before
-   remove is called, otherwise  it will not unregister the corresponding serial numbers from
-   the message dict, since its message list is empty, and the .ids file contents are not
-   loaded. That can lead to lookups in the  dict returning stale pointers to the folder later.(700851)
- - kolab/issue/1815 convert KMHeaders::applyFiltersOnMsg to using serial numbers instead of message pointers [in the case not using action scheduler]. Speculative fix to Intevation issue #1815 (Filtering 1450 mails crashes kontact). ( 703867 )
- - More comprehensible documentation of KMFolder and friends ( 703507 )
- - kolab/issue1640 - Minimum sync-interval for kontact ( 703384 )
- - bugs.kde.org - 77223, 85630, 111419 ( 700059 )
- - bugs.kde.org - 144303 - When sending an encrypted message, with an empty body, and the
-   encryption key selection or encryption prefs selection dialogs were cancelled, mNewBodyPart was
-   deleted without ever having been initialised. Also init some other vars ASAP. (700035)
+
 
 Miscellaneous
 ==============
@@ -49,7 +109,6 @@ Miscellaneous
  - proko35 W1-8 Fix for usability issues with changes to the currently selected item when LDAP results come in delayed.
  - kolab/35- W1-10 Add the possibility to have disabled plugins shown grayed out in the sidebar.
 Configurable by non-gui option.
- - Make sure the crypto state is not restored from headers if there are no headers. (703234)
 
 
 "Enterprise - Snapshot-05"
