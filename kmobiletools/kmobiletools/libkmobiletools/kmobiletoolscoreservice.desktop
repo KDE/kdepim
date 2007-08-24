@@ -8,6 +8,7 @@ Comment[ga]=CroíSheirbhís KMmobileTools
 Comment[ja]=KMobileTools コアサービス
 Comment[pt]=Serviço Básico do KMobileTools
 Comment[pt_BR]=Serviço Básico do KMobileTools
+Comment[zh_TW]=KMobileTools 核心服務
 
 [PropertyDef::Description]
 Type=QString

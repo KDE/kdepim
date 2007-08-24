@@ -7,6 +7,7 @@ Comment=KMobileTools EngineXP
 Comment[ga]=InneallXP KMmobileTools
 Comment[pt]=Motor XP do KMobileTools
 Comment[pt_BR]=Motor XP do KMobileTools
+Comment[zh_TW]=KMobileTools 引擎 XP
 
 [PropertyDef::Description]
 Type=QString
