@@ -28,13 +28,10 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
-
-#include "options.h"
-
-#include <QCloseEvent>
-#include <QFile>
-#include <QPixmap>
-#include <QTimer>
+#include <QtCore/QFile>
+#include <QtCore/QTimer>
+#include <QtGui/QCloseEvent>
+#include <QtGui/QPixmap>
 
 #include <kshortcutsdialog.h>
 #include <kurl.h>
@@ -59,6 +56,7 @@
 #include <kactionmenu.h>
 #include <kxmlguifactory.h>
 
+#include "options.h"
 #include "kpilotConfig.h"
 #include "pilotDatabase.h"
 #include "pilotRecord.h"
