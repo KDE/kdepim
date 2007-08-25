@@ -54,8 +54,13 @@ typedef QList<QByteArray> QByteArrayList;
 *
 * Both kinds of implementations need to be added to the FormatFactory
 * so they can be created by name.
-*
+*/
+
+/**
 * @example converter.cpp
+*
+* Demonstrating the use of format converters and codecs. Reads contact data
+* from STDIN in one format and writes it to STDOUT in another.
 */
 
 /**
