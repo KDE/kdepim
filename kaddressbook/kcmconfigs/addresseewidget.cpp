@@ -21,12 +21,11 @@
     without including the source code for Qt in the source distribution.
 */
 
-#include <q3groupbox.h>
+#include <QGroupBox>
 #include <QLabel>
 #include <QLayout>
-#include <q3listbox.h>
+#include <QListWidget>
 #include <QPushButton>
-//Added by qt3to4:
 #include <QHBoxLayout>
 #include <QGridLayout>
 
@@ -47,15 +46,19 @@ NamePartWidget::NamePartWidget( const QString &title, const QString &label,
 {
   setObjectName( name );
   QHBoxLayout *layout = new QHBoxLayout( this );
+  layout->setSpacing( KDialog::spacingHint() );
+  layout->setMargin( 0 );
 
-  Q3GroupBox *group = new Q3GroupBox( 0, Qt::Vertical, title, this );
+  QGroupBox *group = new QGroupBox( title, this );
   QGridLayout *groupLayout = new QGridLayout();
-  group->layout()->addItem( groupLayout );
   groupLayout->setSpacing( KDialog::spacingHint() );
+  groupLayout->setMargin( KDialog::marginHint() );
+  group->setLayout( groupLayout );
 
-  mBox = new Q3ListBox( group );
-  connect( mBox, SIGNAL( selectionChanged( Q3ListBoxItem* ) ),
-           SLOT( selectionChanged( Q3ListBoxItem* ) ) );
+  mBox = new QListWidget( group );
+  connect( mBox, 
+           SIGNAL( currentItemChanged( QListWidgetItem *, QListWidgetItem * ) ),
+           SLOT( selectionChanged( QListWidgetItem * ) ) );
   groupLayout->addWidget( mBox, 0, 0 );
 
   KDialogButtonBox *bbox = new KDialogButtonBox( group, Qt::Vertical );
@@ -77,14 +80,14 @@ NamePartWidget::~NamePartWidget()
 void NamePartWidget::setNameParts( const QStringList &list )
 {
   mBox->clear();
-  mBox->insertStringList( list );
+  mBox->addItems( list );
 }
 
 QStringList NamePartWidget::nameParts() const
 {
   QStringList parts;
-  for ( uint i = 0; i < mBox->count(); ++i )
-    parts.append( mBox->text( i ) );
+  for ( int i = 0; i < mBox->count(); ++i )
+    parts.append( mBox->item( i )->text() );
 
   return parts;
 }
@@ -96,7 +99,7 @@ void NamePartWidget::add()
   QString namePart = KInputDialog::getText( i18n( "New" ), mLabel,
                                             QString(), &ok );
   if ( ok && !namePart.isEmpty() ) {
-    mBox->insertItem( namePart );
+    mBox->addItem( namePart );
     emit modified();
   }
 }
@@ -105,31 +108,31 @@ void NamePartWidget::edit()
 {
   bool ok;
 
-  int index = mBox->currentItem();
-  if ( index == -1 )
+  QListWidgetItem *item = mBox->currentItem();
+  if ( !item )
     return;
 
   QString namePart = KInputDialog::getText( i18n( "Edit" ), mLabel,
-                                            mBox->text( index ), &ok );
+                                            item->text(), &ok );
   if ( ok && !namePart.isEmpty() ) {
-    mBox->changeItem( namePart, index );
+    item->setText( namePart );
     emit modified();
   }
 }
 
 void NamePartWidget::remove()
 {
-  mBox->removeItem( mBox->currentItem() );
+  mBox->takeItem( mBox->currentRow() );
   if ( mBox->count() == 0 )
     selectionChanged( 0 );
 
   emit modified();
 }
 
-void NamePartWidget::selectionChanged( Q3ListBoxItem *item )
+void NamePartWidget::selectionChanged( QListWidgetItem *item )
 {
-  mEditButton->setEnabled( item != 0 );
-  mRemoveButton->setEnabled( item != 0 );
+  mEditButton->setEnabled( item );
+  mRemoveButton->setEnabled( item );
 }
 
 

@@ -28,8 +28,8 @@
 
 class KComboBox;
 
-class Q3ListBox;
-class Q3ListBoxItem;
+class QListWidget;
+class QListWidgetItem;
 class QPushButton;
 
 class NamePartWidget : public QWidget
@@ -52,10 +52,10 @@ class NamePartWidget : public QWidget
     void edit();
     void remove();
 
-    void selectionChanged( Q3ListBoxItem* );
+    void selectionChanged( QListWidgetItem * );
 
   private:
-    Q3ListBox *mBox;
+    QListWidget *mBox;
     QPushButton *mAddButton;
     QPushButton *mEditButton;
     QPushButton *mRemoveButton;
