@@ -303,12 +303,12 @@ void appendTextWPrefix(QString &result, const QString &text, int wrapAt, const Q
 }
 
 
-QString KNHelper::rewrapStringList(QStringList text, int wrapAt, QChar quoteChar, bool stopAtSig, bool alwaysSpace)
+QString KNHelper::rewrapStringList(const QStringList &text, int wrapAt, QChar quoteChar, bool stopAtSig, bool alwaysSpace)
 {
   QString quoted, lastPrefix, thisPrefix, leftover, thisLine;
   int breakPos;
 
-  for(QStringList::Iterator line=text.begin(); line!=text.end(); ++line) {
+  for(QStringList::ConstIterator line=text.begin(); line!=text.end(); ++line) {
 
     if(stopAtSig && (*line)=="-- ")
       break;

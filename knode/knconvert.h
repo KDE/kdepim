@@ -71,7 +71,7 @@ class KNODE_EXPORT KNConvert : public KDialog {
         bool doConvert();
 
       protected:
-        int convertFolder(QString srcPrefix, QString dstPrefix);
+        int convertFolder(const QString &srcPrefix, const QString &dstPrefix);
 
         struct OldFolderIndex {
           int id,

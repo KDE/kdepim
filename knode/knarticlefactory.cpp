@@ -110,7 +110,7 @@ void KNArticleFactory::createPosting(KNGroup *g)
 }
 
 
-void KNArticleFactory::createReply(KNRemoteArticle *a, QString selectedText, bool post, bool mail)
+void KNArticleFactory::createReply(KNRemoteArticle *a, const QString &selectedText, bool post, bool mail)
 {
   if(!a)
     return;
@@ -781,7 +781,7 @@ void KNArticleFactory::processJob(KNJobData *j)
 }
 
 
-KNLocalArticle* KNArticleFactory::newArticle(KNCollection *col, QString &sig, QByteArray defChset, bool withXHeaders, KNArticle *origPost)
+KNLocalArticle* KNArticleFactory::newArticle(KNCollection *col, QString &sig, const QByteArray &defChset, bool withXHeaders, KNArticle *origPost)
 {
   if ( knGlobals.settings()->generateMessageID() && knGlobals.settings()->hostname().isEmpty() ) {
     KMessageBox::sorry(knGlobals.topWidget, i18n("Please set a hostname for the generation\nof the message-id or disable it."));

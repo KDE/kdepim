@@ -481,7 +481,7 @@ void KNMainWidget::openURL(const KUrl &url)
 
     if (!isMID) {
       QString groupname=url.path( KUrl::RemoveTrailingSlash );
-      while(groupname.startsWith("/"))
+      while(groupname.startsWith('/'))
         groupname.remove(0,1);
       Q3ListViewItem *item=0;
       if(groupname.isEmpty())

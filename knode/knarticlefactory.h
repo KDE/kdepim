@@ -48,7 +48,7 @@ class KNArticleFactory : public QObject , public KNJobConsumer {
     //factory methods
     void createPosting(KNNntpAccount *a);
     void createPosting(KNGroup *g);
-    void createReply( KNRemoteArticle *a, QString selectedText = QString(), bool post = true, bool mail = false );
+    void createReply( KNRemoteArticle *a, const QString &selectedText = QString(), bool post = true, bool mail = false );
     void createForward(KNArticle *a);
     void createCancel(KNArticle *a);
     void createSupersede(KNArticle *a);
@@ -74,7 +74,7 @@ class KNArticleFactory : public QObject , public KNJobConsumer {
 
     //article generation
     // col: group or account
-    KNLocalArticle* newArticle(KNCollection *col, QString &sig, QByteArray defChset, bool withXHeaders=true, KNArticle *origPost=0);
+    KNLocalArticle* newArticle(KNCollection *col, QString &sig, const QByteArray &defChset, bool withXHeaders=true, KNArticle *origPost=0);
 
     //cancel & supersede
     bool cancelAllowed(KNArticle *a);

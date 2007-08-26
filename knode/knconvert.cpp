@@ -305,7 +305,7 @@ bool KNConvert::Converter04::doConvert()
 }
 
 
-int KNConvert::Converter04::convertFolder(QString srcPrefix, QString dstPrefix)
+int KNConvert::Converter04::convertFolder(const QString &srcPrefix, const QString &dstPrefix)
 {
   QFile srcMBox(srcPrefix+".mbox"),
         srcIdx(srcPrefix+".idx"),

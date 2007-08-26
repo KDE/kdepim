@@ -132,7 +132,7 @@ public:
   static QString rot13(const QString &s);
 
   /** used for rewarping a text when replying to a message or inserting a file into a box */
-  static QString rewrapStringList(QStringList text, int wrapAt, QChar quoteChar, bool stopAtSig, bool alwaysSpace);
+  static QString rewrapStringList(const QStringList &text, int wrapAt, QChar quoteChar, bool stopAtSig, bool alwaysSpace);
 
   /** use this for all internal files */
   static void displayInternalFileError(QWidget *w=0);
