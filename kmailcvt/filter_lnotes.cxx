@@ -33,7 +33,7 @@ FilterLNotes::FilterLNotes() :
                      "client into KMail. Use this filter if you want to import mails from Lotus or other "
                      "mailers that use Lotus Notes' Structured Text format.</p>"
                      "<p><b>Note:</b> Since it is possible to recreate the folder structure, the imported "
-                     "messages will be stored in subfolders named by the files they ame from under: "
+                     "messages will be stored in subfolders named by the files they came from under: "
                      "\"LNotes-Import\" in your local folder.</p>"))
 {}
 
