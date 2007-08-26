@@ -7,8 +7,24 @@ for KDE4; for KDE3 applications like KPilot, CMake is also useable.
 You need CMake installed on your system to compile KPilot, but CMake
 is becoming more widespread now. You can get it from www.cmake.org .
 
+First configure KPilot by running
 
-To compile KPilot, just run
+	./configure [options]
+
+If you run configure with no options it will tell you which ones
+are available; you *must* provide at least one for configure to
+work. A most-vanilla configure looks like this:
+
+	./configure --enable-tests=no
+
+Suggested options are at least:
+
+	./configure --enable-debug=yes --enable-tests=yes
+
+You may need to specify a prefix or a location where pilot-link
+is installed; run ./configure --show for a summary of options.
+
+Once configure is done, compile KPilot, by running
 
 	make -f Makefile.cmake
 
@@ -35,12 +51,6 @@ Makefile included with KPilot. To do this,
 	3) Run cmake /path/to/kpilot/sources
 	4) Run make
 
-In order to install KPilot somewhere else, set PREFIX in the
-default Makefile, for instance like so:
-
-	make -f Makefile.cmake PREFIX=/usr/local/kpilot
-	make -f Makefile.cmake install PREFIX=/usr/local/kpilot
-
-If using CMake directly, use -DCMAKE_INSTALL_PREFIX .
+In order to install KPilot somewhere else, use -DCMAKE_INSTALL_PREFIX .
 
 

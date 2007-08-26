@@ -49,12 +49,13 @@ static const KCmdLineOptions options[] =
 
 int main(int argc, char **argv)
 {
+	KApplication::disableAutoDcopRegistration();
+
 	KAboutData aboutData("testdatebook","Test Date Book","0.1");
 	KCmdLineArgs::init(argc,argv,&aboutData);
 	KCmdLineArgs::addCmdLineOptions( options );
 
-	//  KApplication app( false, false );
-	KApplication app;
+	KApplication app( false, false );
 
 	KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
 
@@ -77,14 +78,15 @@ int main(int argc, char **argv)
 		if (r)
 		{
 			DEBUGKPILOT << "# Record @" << (void *)r << " ID=" << r->id() << endl;
-			PilotDateEntry a( *appinfo.info(), r );
-			DEBUGKPILOT << "# Text Representation:" << endl << a.getTextRepresentation() << endl;
+			PilotDateEntry a( r );
+			DEBUGKPILOT << "# Text Representation:" << endl << a.getTextRepresentation(Qt::PlainText) << endl;
 			DEBUGKPILOT << "# Category#" << a.category() << endl;
-			DEBUGKPILOT << "# Category Label " << a.getCategoryLabel() << endl;
+			DEBUGKPILOT << "# Category Label " << appinfo.categoryName(a.category()) << endl;
 			DEBUGKPILOT << "# ID " << a.id() << endl;
-			a.setCategory( CSL1("Fake Cat") );
+			int cat = appinfo.findCategory( CSL1("Fake Cat") );
+			a.setCategory( cat );
 			DEBUGKPILOT << "# Category#" << a.category() << endl;
-			DEBUGKPILOT << "# Category Label " << a.getCategoryLabel() << endl;
+			DEBUGKPILOT << "# Category Label " << appinfo.categoryName(a.category()) << endl;
 		}
 	}
 

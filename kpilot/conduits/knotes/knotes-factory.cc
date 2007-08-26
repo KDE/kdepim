@@ -93,7 +93,7 @@ KNotesConduitFactory::~KNotesConduitFactory()
 	FUNCTIONSETUP;
 
 #ifdef DEBUG
-	DEBUGCONDUIT << fname
+	DEBUGKPILOT << fname
 		<< ": Creating object of class "
 		<< c
 		<< endl;
@@ -122,8 +122,8 @@ KNotesConduitFactory::~KNotesConduitFactory()
 		}
 		else
 		{
-			kdError() << k_funcinfo
-				<< ": Couldn't cast parent to KPilotDeviceLink"
+			WARNINGKPILOT
+				<< "Couldn't cast parent to KPilotDeviceLink"
 				<< endl;
 			return 0L;
 		}

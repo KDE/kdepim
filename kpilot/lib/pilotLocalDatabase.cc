@@ -36,6 +36,8 @@
 
 #include <iostream>
 
+#include <pi-file.h>
+
 #include <qstring.h>
 #include <qfile.h>
 #include <qregexp.h>
@@ -161,14 +163,14 @@ bool PilotLocalDatabase::createDatabase(long creator, long type, int, int flags,
 	// if the database is already open, we cannot create it again.
 	// How about completely resetting it? (i.e. deleting it and then
 	// creating it again)
-	if (isOpen()) 
+	if (isOpen())
 	{
-		DEBUGLIBRARY << fname << ": Database " << fDBName
+		DEBUGKPILOT << fname << ": Database " << fDBName
 			<< " already open. Cannot recreate it." << endl;
 		return true;
 	}
 
-	DEBUGLIBRARY << fname << ": Creating database " << fDBName << endl;
+	DEBUGKPILOT << fname << ": Creating database " << fDBName << endl;
 
 	// Database names seem to be latin1.
 	Pilot::toPilot(fDBName, fDBInfo.name, sizeof(fDBInfo.name));
@@ -226,7 +228,7 @@ int PilotLocalDatabase::readAppBlock(unsigned char *buffer, int size)
 
 	if (!isOpen())
 	{
-		kdError() << k_funcinfo << ": DB not open!" << endl;
+		WARNINGKPILOT << "DB not open!" << endl;
 		memset(buffer,0,m);
 		return -1;
 	}
@@ -241,7 +243,7 @@ int PilotLocalDatabase::writeAppBlock(unsigned char *buffer, int len)
 
 	if (!isOpen())
 	{
-		kdError() << k_funcinfo << ": DB not open!" << endl;
+		WARNINGKPILOT << "DB not open!" << endl;
 		return -1;
 	}
 	delete[]fAppInfo;
@@ -293,7 +295,7 @@ PilotRecord *PilotLocalDatabase::readRecordById(recordid_t id)
 
 	if (!isOpen())
 	{
-		kdWarning() << k_funcinfo << fDBName << ": DB not open!" << endl;
+		WARNINGKPILOT << "Database '" << fDBName << " not open!" << endl;
 		return 0L;
 	}
 
@@ -318,18 +320,18 @@ PilotRecord *PilotLocalDatabase::readRecordByIndex(int index)
 
 	if (index < 0)
 	{
-		DEBUGLIBRARY << fname << ": Index " << index << " is bogus." << endl;
+		DEBUGKPILOT << fname << ": Index " << index << " is bogus." << endl;
 		return 0L;
 	}
 
 	d->pending = -1;
 	if (!isOpen())
 	{
-		kdWarning() << k_funcinfo << ": DB not open!" << endl;
+		WARNINGKPILOT << "DB not open!" << endl;
 		return 0L;
 	}
 
-	DEBUGLIBRARY << fname << ": Index=" << index << " Count=" << recordCount() << endl;
+	DEBUGKPILOT << fname << ": Index=" << index << " Count=" << recordCount() << endl;
 
 	if ( (unsigned int)index >= recordCount() )
 	{
@@ -348,7 +350,7 @@ PilotRecord *PilotLocalDatabase::readNextRecInCategory(int category)
 	d->pending  = -1;
 	if (!isOpen())
 	{
-		kdWarning() << k_funcinfo << ": DB not open!" << endl;
+		WARNINGKPILOT << "DB not open!" << endl;
 		return 0L;
 	}
 
@@ -372,10 +374,10 @@ const PilotRecord *PilotLocalDatabase::findNextNewRecord()
 
 	if (!isOpen())
 	{
-		kdWarning() << k_funcinfo << ": DB not open!" << endl;
+		WARNINGKPILOT << "DB not open!" << endl;
 		return 0L;
 	}
-	DEBUGLIBRARY << fname << ": looking for new record from " << d->current << endl;
+	DEBUGKPILOT << fname << ": looking for new record from " << d->current << endl;
 	// Should this also check for deleted?
 	while ((d->current < d->size())
 		&& ((*d)[d->current]->id() != 0 ))
@@ -397,7 +399,7 @@ PilotRecord *PilotLocalDatabase::readNextModifiedRec(int *ind)
 
 	if (!isOpen())
 	{
-		kdWarning() << k_funcinfo << ": DB not open!" << endl;
+		WARNINGKPILOT << "DB not open!" << endl;
 		return 0L;
 	}
 
@@ -431,13 +433,12 @@ recordid_t PilotLocalDatabase::updateID(recordid_t id)
 
 	if (!isOpen())
 	{
-		kdError() << k_funcinfo << ": DB not open!" << endl;
+		WARNINGKPILOT << "DB not open!" << endl;
 		return 0;
 	}
 	if (d->pending  < 0)
 	{
-		kdError() << k_funcinfo <<
-			": Last call was _NOT_ readNextModifiedRec()" << endl;
+		WARNINGKPILOT << "Last call was NOT readNextModifiedRec()" << endl;
 		return 0;
 	}
 	(*d)[d->pending]->setID(id);
@@ -452,14 +453,14 @@ recordid_t PilotLocalDatabase::writeRecord(PilotRecord * newRecord)
 
 	if (!isOpen())
 	{
-		kdError() << k_funcinfo << ": DB not open!" << endl;
+		WARNINGKPILOT << "DB not open!" << endl;
 		return 0;
 	}
 
 	d->pending = -1;
 	if (!newRecord)
 	{
-		kdError() << k_funcinfo << ": Record to be written is invalid!" << endl;
+		WARNINGKPILOT << "Record to be written is invalid!" << endl;
 		return 0;
 	}
 
@@ -492,7 +493,7 @@ int PilotLocalDatabase::deleteRecord(recordid_t id, bool all)
 	FUNCTIONSETUP;
 	if (!isOpen())
 	{
-		kdError() << k_funcinfo <<": DB not open"<<endl;
+		WARNINGKPILOT <<"DB not open"<<endl;
 		return -1;
 	}
 	d->resetIndex();
@@ -530,7 +531,7 @@ int PilotLocalDatabase::resetSyncFlags()
 
 	if (!isOpen())
 	{
-		kdError() << k_funcinfo << ": DB not open!" << endl;
+		WARNINGKPILOT << "DB not open!" << endl;
 		return -1;
 	}
 	d->pending = -1;
@@ -547,7 +548,7 @@ int PilotLocalDatabase::resetDBIndex()
 	FUNCTIONSETUP;
 	if (!isOpen())
 	{
-		kdWarning() << k_funcinfo << ": DB not open!" << endl;
+		WARNINGKPILOT << "DB not open!" << endl;
 		return -1;
 	}
 	d->resetIndex();
@@ -560,7 +561,7 @@ int PilotLocalDatabase::cleanup()
 	FUNCTIONSETUP;
 	if (!isOpen())
 	{
-		kdWarning() << k_funcinfo << ": DB not open!" << endl;
+		WARNINGKPILOT << "DB not open!" << endl;
 		return -1;
 	}
 	d->resetIndex();
@@ -611,7 +612,7 @@ void PilotLocalDatabase::openDatabase()
 	if (dbFile == 0L)
 	{
 		QString path = dbPathName();
-		DEBUGLIBRARY << fname << ": Failed to open " << path << endl;
+		DEBUGKPILOT << fname << ": Failed to open " << path << endl;
 		return;
 	}
 
@@ -658,7 +659,7 @@ void PilotLocalDatabase::closeDatabase()
 
 	if (!isOpen())
 	{
-		DEBUGLIBRARY << fname << ": Database " << fDBName
+		DEBUGKPILOT << fname << ": Database " << fDBName
 			<< " is not open. Cannot close and write it"
 			<< endl;
 		return;
@@ -666,7 +667,7 @@ void PilotLocalDatabase::closeDatabase()
 
 	QString newName = dbPathName() + CSL1(".new");
 	QString path = dbPathName();
-	DEBUGLIBRARY << fname
+	DEBUGKPILOT << fname
 		<< ": Creating temp file " << newName
 		<< " for the database file " << path << endl;
 
@@ -709,7 +710,7 @@ void PilotLocalDatabase::setDBPath(const QString &s)
 {
 	FUNCTIONSETUP;
 
-	DEBUGLIBRARY << fname
+	DEBUGKPILOT << fname
 		<< ": Setting default DB path to "
 		<< s
 		<< endl;
@@ -749,8 +750,7 @@ void PilotLocalDatabase::setDBPath(const QString &s)
 	f = pi_file_open( fileName );
 	if (!f)
 	{
-		kdWarning() << k_funcinfo
-			<< ": Can't open " << path << endl;
+		WARNINGKPILOT << "Can't open " << path << endl;
 		return false;
 	}
 

@@ -88,8 +88,10 @@ and the module can't be unloaded.
 
 ProbeDialog::ProbeDialog(QWidget *parent, const char *n) :
 	KDialogBase(parent, n, true, i18n("Autodetecting Your Handheld"), KDialogBase::Ok|KDialogBase::Cancel|KDialogBase::User1, KDialogBase::Cancel, true, i18n("Restart Detection")),
-	mDetected(false), mUserName(""), mDevice(""), mUID(0)
+	mDetected(false), mUserName(), mDevice()
 {
+	FUNCTIONSETUP;
+
 	QVBox *mainWidget = makeVBoxMainWidget();
 
 	fInfoText = new QLabel( i18n( "KPilot is now trying to automatically detect the device of your handheld. Please press the hotsync button if you have not done so already." ), mainWidget, "fInfoText" );
@@ -161,6 +163,7 @@ ProbeDialog::ProbeDialog(QWidget *parent, const char *n) :
 
 ProbeDialog::~ProbeDialog()
 {
+	FUNCTIONSETUP;
 }
 
 void ProbeDialog::processEvents()
@@ -177,9 +180,8 @@ void ProbeDialog::progress()
 int ProbeDialog::exec()
 {
 	mDetected = false;
-	mUserName = "";
-	mDevice = "";
-	mUID = 0;
+	mUserName = QString();
+	mDevice = QString();
 	QTimer::singleShot( 0, this, SLOT( startDetection() ) );
 	return KDialogBase::exec();
 }
@@ -199,12 +201,18 @@ void ProbeDialog::startDetection()
 	}
 	KPILOT_DELETE(daemonStub);
 	processEvents();
-	if (!fTimeoutTimer->start( 30000, true ) ) 
-		kdWarning()<<"Could not start fTimeoutTimer"<<endl;
-	if (!fProcessEventsTimer->start( 100, false ) ) 
-		kdWarning()<<"Could not start fProcessEventsTimer"<<endl;
-	if (!fProgressTimer->start( 300, false) ) 
-		kdWarning()<<"Could not start Progress timer"<<endl;
+	if (!fTimeoutTimer->start( 30000, true ) )
+	{
+		WARNINGKPILOT << "Could not start fTimeoutTimer" << endl;
+	}
+	if (!fProcessEventsTimer->start( 100, false ) )
+	{
+		WARNINGKPILOT << "Could not start fProcessEventsTimer" << endl;
+	}
+	if (!fProgressTimer->start( 300, false) )
+	{
+		WARNINGKPILOT << "Could not start Progress timer" << endl;
+	}
 
 	KPilotDeviceLink*link;
 	for (int i=0; i<3; i++)
@@ -213,12 +221,10 @@ void ProbeDialog::startDetection()
 		for (QStringList::iterator it=mDevicesToProbe[i].begin(); it!=end; ++it)
 		{
 			link = new KPilotDeviceLink();
+			link->setDevice((*it));
 #ifdef DEBUG
 			DEBUGKPILOT<<"new kpilotDeviceLink for "<<(*it)<<endl;
 #endif
-			link->reset( *it );
-			link->close();
-//			mDeviceLinkMap[*it] = link;
 			mDeviceLinks[i].append( link );
 			connect( link, SIGNAL(deviceReady(KPilotDeviceLink*)), this, SLOT(connection(KPilotDeviceLink*)) );
 			processEvents();
@@ -228,21 +234,20 @@ void ProbeDialog::startDetection()
 	mProbeDevicesIndex=0;
 
 	detect();
-	if (!fRotateLinksTimer->start( 3000, false) ) 
-		kdWarning()<<"Could not start Device link rotation timer"<<endl;
+	if (!fRotateLinksTimer->start( 3000, false) )
+	{
+		WARNINGKPILOT << "Could not start Device link rotation timer" << endl;
+	}
 }
 
 
 void ProbeDialog::detect(int i)
 {
 	FUNCTIONSETUP;
-	PilotLinkList::iterator end(mDeviceLinks[mProbeDevicesIndex].end());
-	for (PilotLinkList::iterator it=mDeviceLinks[mProbeDevicesIndex].begin(); it!=end; ++it)
-	{
-		if (*it) (*it)->close();
-	}
+
 	mProbeDevicesIndex = i;
-	end=mDeviceLinks[mProbeDevicesIndex].end();
+	PilotLinkList::iterator end(mDeviceLinks[mProbeDevicesIndex].end());
+
 	for (PilotLinkList::iterator it=mDeviceLinks[mProbeDevicesIndex].begin(); it!=end; ++it)
 	{
 		if (*it) (*it)->reset();
@@ -277,8 +282,7 @@ void ProbeDialog::connection( KPilotDeviceLink*lnk)
 	if ( !mActiveLink ) return;
 	const KPilotUser &usr( mActiveLink->getPilotUser() );
 
-	mUserName = usr.getUserName();
-	mUID = usr.getUserID();
+	mUserName = usr.name();
 	mDevice = mActiveLink->pilotPath();
 
 	fStatus->setText( i18n("Found a connected device on %1").arg(mDevice) );
@@ -288,18 +292,18 @@ void ProbeDialog::connection( KPilotDeviceLink*lnk)
 
 	fResultsGroup->setEnabled( true );
 	enableButtonOK(true);
-	
+
 	QTimer::singleShot(0, this, SLOT(retrieveDBList()));
 }
 
 void ProbeDialog::retrieveDBList()
 {
-	DBInfoList dbs = mActiveLink->getDBList();
+	KPilotLink::DBInfoList dbs = mActiveLink->getDBList();
 	mDBs.clear();
 	char buff[7];
 	buff[0] = '[';
 
-	for ( DBInfoList::ConstIterator i = dbs.begin();
+	for ( KPilotLink::DBInfoList::ConstIterator i = dbs.begin();
 		i != dbs.end(); ++i )
 	{
 		set_long( &buff[1], (*i).creator );
@@ -310,8 +314,8 @@ void ProbeDialog::retrieveDBList()
 		mDBs << QString( (*i).name );
 	}
 	mDBs.sort();
-	
-	QString old( QString::null ); 
+
+	QString old( QString::null );
 	QStringList::Iterator itr = mDBs.begin();
 	while ( itr != mDBs.end() ) {
 		if ( old == *itr ) {
@@ -321,7 +325,9 @@ void ProbeDialog::retrieveDBList()
 			++itr;
 		}
 	}
-	mActiveLink->endOfSync();
+
+	// End sync gracefully, but don't change settings on the handheld.
+	mActiveLink->endSync( KPilotLink::NoUpdate );
 
 	QTimer::singleShot(0, this, SLOT(disconnectDevices()));
 }

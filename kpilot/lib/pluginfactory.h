@@ -1,8 +1,8 @@
 #ifndef _KPILOT_PLUGINFACTORY_H
 #define _KPILOT_PLUGINFACTORY_H
-/* pluginfactory.h                        KPilot
+/* KPilot
 **
-** Copyright (C) 2005 by Adriaan de Groot
+** Copyright (C) 2005-2006 by Adriaan de Groot <groot@kde.org>
 **
 */
 
@@ -27,13 +27,16 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
+#include <qwidget.h>
+
+#include <kdebug.h>
+#include <klibloader.h>
+
 /** @file Defines a template class for factories for KPilot's conduits. */
 
-#include <qwidget.h>
-#include <klibloader.h>
-#include <kdebug.h>
-
 class KPilotLink;
+
+
 
 /** Template class that defines a conduit's factory. */
 
@@ -59,9 +62,7 @@ protected:
 			if (w) return new Widget(w,name);
 			else
 			{
-				kdError() << k_funcinfo
-					<< ": Couldn't cast parent to widget."
-					<< endl;
+				WARNINGKPILOT << "Could not cast parent to widget." << endl;
 				return 0L;
 			}
 		}
@@ -81,9 +82,7 @@ protected:
 			}
 			else
 			{
-				kdError() << k_funcinfo
-					<< ": Couldn't cast parent to KPilotLink"
-					<< endl;
+				WARNINGKPILOT << "Could not cast parent to KPilotLink" << endl;
 				return 0L;
 			}
 		}

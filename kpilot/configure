@@ -3,7 +3,8 @@
 # simple configure script for user-friendliness
 
 # file to put output into for cmake to read in...
-OUTFILE=$(dirname $0)/CMakeOptions.txt
+OUTFILE=$(dirname $0)/Makefile.cmake.in
+CMAKEOUTFILE=$(dirname $0)/CMakeOptions.txt
 
 # --- FUNCTIONS ---
 
@@ -41,7 +42,8 @@ getvalue()
 	
 	if test -n "$VAL"
 	then
-		CMAKE_FLAGS="${CMAKE_FLAGS}-D${KEY}=${VAL} "
+		CMAKE_FLAGS="${CMAKE_FLAGS}set(${KEY} \"${VAL}\")
+"
 		if [ "$ECHO" = "y" ]
 		then
 			echo "$KEY=\"$VAL\""
@@ -50,22 +52,27 @@ getvalue()
 
 }
 
-outputvalues()
+outputCmakeValues()
 {
 
 # only include what we're passed
 CMAKE_FLAGS=""
 
-getvalue CMAKE_INSTALL_PREFIX y
-getvalue CMAKE_BUILD_TYPE y
-getvalue ENABLE_TESTS y
-getvalue BUILD_DIR y
-getvalue PILOTLINK_BASE y
-getvalue MAL_BASE y
-getvalue PILOTLINK_INCLUDE_DIR y
-getvalue PILOTLINK_LIBRARY y
+getvalue CMAKE_INSTALL_PREFIX n
+getvalue CMAKE_BUILD_TYPE n
+getvalue ENABLE_TESTS n
+#getvalue BUILD_DIR y
+getvalue PILOTLINK_BASE n
+getvalue MAL_BASE n
+getvalue PILOTLINK_INCLUDE_DIR n
+getvalue PILOTLINK_LIBRARY n
 
-echo "CMAKE_FLAGS=$CMAKE_FLAGS"
+echo "$CMAKE_FLAGS"
+}
+
+outputMakeValues()
+{
+getvalue BUILD_DIR y
 }
 
 # --- MAIN ---
@@ -79,6 +86,7 @@ fi
 
 CMAKE_BUILD_TYPE="normal"
 ENABLE_TESTS="NO"
+BUILD_DIR=build-`uname -sr | tr -d [:space:] | tr -Cs a-zA-Z0-9 _`
 
 while test -n "$1"
 do
@@ -122,7 +130,9 @@ do
 			;;
 		--show)
 			echo "Existing configuration values:"
+			echo "-----------"
 			cat "$OUTFILE" 2>/dev/null
+			sed 's/^set(\([A-Z_]*\) "\(.*\)")/\1="\2"/' "$CMAKEOUTFILE" 2>/dev/null
 			echo "-----------"
 			exit
 			;;
@@ -136,26 +146,18 @@ do
 
 done
 
-echo "
-Thanks.  Here are the values I will be using...
-
-$(outputvalues)
-
-To compile KPilot, now run GNU make, like so:
-"
-
 ###
 #
 # BSD uses gmake for the GNU make which we need ...
 #
 if uname -s | grep BSD > /dev/null 2>&1 ; then
-	echo "    gmake -f Makefile.cmake"
+	MAKE=gmake
 else
-	echo "    make -f Makefile.cmake"
+	MAKE=make
 fi
-echo ""
 
-outputvalues > "$OUTFILE.new"
+outputCmakeValues > "$CMAKEOUTFILE.new"
+outputMakeValues > "$OUTFILE.new"
 
 
 ###
@@ -164,15 +166,48 @@ outputvalues > "$OUTFILE.new"
 # CMakeLists.txt in order to prompt a re-run of cmake.
 #
 update=no
+failed=no
+if test -f "$CMAKEOUTFILE" ; then
+	diff -q "$CMAKEOUTFILE" "$CMAKEOUTFILE.new" > /dev/null 2>&1 || update=yes
+else
+	update=yes
+fi
+
 if test -f "$OUTFILE" ; then
 	diff -q "$OUTFILE" "$OUTFILE.new" > /dev/null 2>&1 || update=yes
 else
 	update=yes
 fi
+
 if test yes = "$update" ; then
+	cp "$CMAKEOUTFILE.new" "$CMAKEOUTFILE"
 	cp "$OUTFILE.new" "$OUTFILE"
 	touch CMakeLists.txt
+	$MAKE -f Makefile.cmake build-check || failed=yes
 fi
-rm -f "$OUTFILE.new"
 
+rm -f "$CMAKEOUTFILE.new"
+rm -f "$OUTFILE.new"
+rm -f build*/CMakeCache.txt
+
+###
+#
+# Inform user and create settings file.
+#
+echo "
+Thanks.  Here are the values I will be using...
+
+$(outputCmakeValues)
+
+$(outputMakeValues)
+
+To compile KPilot, now run GNU make, like so:
+
+    $MAKE -f Makefile.cmake
+
+"
+
+if test "yes" = "$failed" ; then
+	echo "Configuration failed, so take a good look at the build output."
+fi
 

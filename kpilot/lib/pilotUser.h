@@ -54,20 +54,20 @@ public:
 	}
 
 	/** Accessor for the whole PilotUser structure. */
-	PilotUser *pilotUser()
+	PilotUser *data()
 	{
 		return &fUser;
 	}
 
 	/** @return The username set on the handheld. */
-	const char* getUserName() const
+	QString name() const
 	{
-		return fUser.username;
+		return Pilot::fromPilot( fUser.username );
 	}
 	/** Set the user name to the given @p name , truncated
 	*  if necessary to the size of the field on the handheld.
 	*/
-	void setUserName( const QString &name)
+	void setName( const QString &name )
 	{
 		Pilot::toPilot( name, fUser.username, sizeof(fUser.username) );
 	}
@@ -75,38 +75,9 @@ public:
 	/** @return The length of the password on the handheld,
 	*           in bytes.
 	*/
-	const int getPasswordLength() const
+	const int passwordLength() const
 	{
 		return fUser.passwordLength;
-	}
-	/** @return The password on the handheld, NUL terminated. */
-	const char* getPassword() const
-	{
-		return fUser.password;
-	}
-	/** Set the password for the user to @p password , truncated
-	*  to the size of the field on the handheld if needed.
-	*/
-	void setPassword( const QString &password )
-	{
-		Pilot::toPilot( password, fUser.password, sizeof(fUser.password) );
-	}
-
-	/** Accessor for the user ID value; returned as a handheld
-	*  long value (4 bytes).
-	*  @note I have no idea what this is for.
-	*/
-	unsigned long getUserID() const
-	{
-		return fUser.userID;
-	}
-	/** Accessor for the viewer ID value; returned as a handheld
-	*  long value (4 bytes).
-	*  @note I have no idea what this is for.
-	*/
-	unsigned long getViewerID() const
-	{
-		return fUser.viewerID;
 	}
 
 	/** @return the ID (4 bytes) of the last PC to sync this handheld.

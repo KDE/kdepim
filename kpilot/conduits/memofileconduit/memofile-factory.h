@@ -2,7 +2,7 @@
 #define _KPILOT_MEMOFILE_FACTORY_H
 /* memofile-factory.h                       KPilot
 **
-** Copyright (C) 2004-2004 by Jason 'vanRijn' Kasper
+** Copyright (C) 2004-2007 by Jason 'vanRijn' Kasper
 **
 ** This file defines the factory for the Memofile-conduit plugin.
 ** It also defines the class for the behavior of the setup dialog.

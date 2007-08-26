@@ -32,7 +32,7 @@
 						<choice name="eTelex"/>
 						<choice name="eTTYTTDPhone"/>
 				</choices>
-        <default>eAssistant</default>
+        <default>eOtherPhone</default>
     </entry>
     <entry name="PilotStreet" type="Enum">
 				<choices>

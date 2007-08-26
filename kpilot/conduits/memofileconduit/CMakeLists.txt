@@ -38,3 +38,7 @@ install(
 install(
 	FILES memofile-conduit.desktop DESTINATION ${KDE3_SERVICES_DIR}
 )
+
+install(
+	FILES memofileconduit.kcfg DESTINATION ${KDE3_KCFG_DIR}
+)

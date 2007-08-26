@@ -61,8 +61,7 @@ LogFile::LogFile() : DCOPObject("LogIface"), QObject(), fOutfile(0L), fSyncing(f
 	
 	if (!fOutfile || !fOutfile->open(IO_WriteOnly)) 
 	{
-		DEBUGKPILOT<<"Unable to open log file "<<KPilotSettings::logFileName()<<endl;
-		kdWarning()<<"Unable to open log file "<<KPilotSettings::logFileName()<<endl;
+		WARNINGKPILOT << "Unable to open log file " << KPilotSettings::logFileName() << endl;
 		KPILOT_DELETE( fOutfile );
 		fSyncing = false;
 		return;

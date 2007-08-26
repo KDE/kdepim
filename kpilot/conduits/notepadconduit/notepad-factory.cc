@@ -35,7 +35,6 @@
 #include <kmessagebox.h>
 #include <qlineedit.h>
 
-#include "uiDialog.h"
 #include "pluginfactory.h"
 
 #include "notepad-conduit.h"     // Conduit action
@@ -88,7 +87,7 @@ NotepadConduitConfig::NotepadConduitConfig(QWidget *p, const char *n) :
 	FUNCTIONSETUP;
 
 	fConduitName = i18n("Notepad");
-	UIDialog::addAboutPage(fConfigWidget->tabWidget, createAbout());
+	ConduitConfigBase::addAboutPage(fConfigWidget->tabWidget, createAbout());
 	fWidget=fConfigWidget;
 	QObject::connect(fConfigWidget->fOutputDirectory, SIGNAL(textChanged(const QString&)),
 		this, SLOT(modified()));

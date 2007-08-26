@@ -39,15 +39,12 @@ install(
 )
 
 install(
-	FILES sysinfoSettings.kcfgc DESTINATION ${KDE3_KCFG_DIR}
+	FILES sysinfoSettings.kcfgc sysinfoconduit.kcfg
+	DESTINATION ${KDE3_KCFG_DIR}
 )
 
 install(
-	FILES Template.html DESTINATION ${CMAKE_INSTALL_PREFIX}/share
-)
-
-install(
-	FILES Template.txt 
+	FILES Template.html Template.txt 
 	DESTINATION ${CMAKE_INSTALL_PREFIX}/share/apps/kpilot/sysinfoconduit
 )
 

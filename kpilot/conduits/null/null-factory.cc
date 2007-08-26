@@ -36,7 +36,6 @@
 #include <kinstance.h>
 #include <kaboutdata.h>
 
-#include "uiDialog.h"
 #include "pluginfactory.h"
 
 #include "setup_base.h"
@@ -73,7 +72,7 @@ NullConduitConfig::NullConduitConfig(QWidget *p, const char *n) :
 		"groot@kde.org",
 		"http://www.cs.kun.nl/~adridg/kpilot");
 
-	UIDialog::addAboutPage(fConfigWidget->tabWidget,fAbout);
+	ConduitConfigBase::addAboutPage(fConfigWidget->tabWidget,fAbout);
 	fWidget=fConfigWidget;
 	QObject::connect(fConfigWidget->fLogMessage,SIGNAL(textChanged(const QString&)),
 		this,SLOT(modified()));
@@ -84,7 +83,7 @@ NullConduitConfig::NullConduitConfig(QWidget *p, const char *n) :
 	FUNCTIONSETUP;
 
 #ifdef DEBUG
-	DEBUGCONDUIT << fname
+	DEBUGKPILOT << fname
 		<< ": Message="
 		<< fConfigWidget->fLogMessage->text()
 		<< endl;
@@ -102,7 +101,7 @@ NullConduitConfig::NullConduitConfig(QWidget *p, const char *n) :
 
 	fConfigWidget->fLogMessage->setText( NullConduitSettings::logMessage() );
 #ifdef DEBUG
-	DEBUGCONDUIT << fname
+	DEBUGKPILOT << fname
 		<< ": Read Message="
 		<< fConfigWidget->fLogMessage->text()
 		<< endl;

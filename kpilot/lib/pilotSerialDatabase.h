@@ -1,9 +1,10 @@
 #ifndef _KPILOT_PILOTSERIALDATABASE_H
 #define _KPILOT_PILOTSERIALDATABASE_H
-/* pilotSerialDatabase.h			KPilot
+/* KPilot
 **
 ** Copyright (C) 1998-2001 by Dan Pilone
 ** Copyright (C) 2003-2004 Reinhold Kainhofer <reinhold@kainhofer.com>
+** Copyright (C) 2006 Adriaan de Groot <groot@kde.org>
 **
 ** See the .cc file for an explanation of what this file is for.
 */
@@ -29,19 +30,27 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
-// Database class for a database on the pilot connected
-// via the serial port (ie: hot-sync cradle)
 
 #include "pilotDatabase.h"
 #include "pilotRecord.h"
 
+/** @file
+* Database class for a database on the pilot connected
+* via the serial port (ie: hot-sync cradle)
+*/
+
 class KPilotDeviceLink;
 
+/**
+* PilotSerialDatabase represents databases stored on the handheld
+* and accessed through the SLP / DLP protocol.
+*/
 class KDE_EXPORT PilotSerialDatabase : public PilotDatabase
 {
 friend class KPilotDeviceLink;
 protected:
-	PilotSerialDatabase( KPilotDeviceLink *l, const QString &dbName);
+	PilotSerialDatabase( KPilotDeviceLink *l, const QString &dbName );
+	PilotSerialDatabase( KPilotDeviceLink *l, const DBInfo *info );
 
 public:
 	virtual ~PilotSerialDatabase();
@@ -125,9 +134,9 @@ private:
 	int         fDBHandle;
 	int         fDBSocket;
 	// Pilot-link 0.12 allocates buffers as needed and resizes them.
-	// Start with a buffer that is _probably_ big enough for most 
+	// Start with a buffer that is _probably_ big enough for most
 	// PIM records, but much smaller than the 64k that we use otherwise.
-	// Might want to add algorithm for trying to optimize the initial 
+	// Might want to add algorithm for trying to optimize the initial
 	// allocation for a given database.
 	static const int InitialBufferSize = 2048;
 };

@@ -1,13 +1,11 @@
 #ifndef _KPILOT_PILOT_H
 #define _KPILOT_PILOT_H
-/* pilot.h			KPilot
+/* KPilot
 **
 ** Copyright (C) 1998-2001 by Dan Pilone
 ** Copyright (C) 2003-2004 Reinhold Kainhofer <reinhold@kainhofer.com>
 ** Copyright (C) 2003-2006 Adriaan de Groot <groot@kde.org>
 **
-** These are the base class structures that reside on the
-** handheld device -- databases and their parts.
 */
 
 /*
@@ -31,24 +29,26 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
-class QTextCodec;
+#include <pi-appinfo.h>
+#include <pi-buffer.h>
+#include <pi-dlp.h>
+
+#include <qstring.h>
+#include <qstringlist.h>
+#include <qvaluelist.h>
+
+#include "pilotLinkVersion.h"
+
+
+/** @file
+* These are some base structures that reside on the
+* handheld device -- strings and binary data.
+*/
 
 class PilotDatabase;     // A database
 class PilotRecord;       // ... has records
 class PilotCategoryInfo; // ... and category information
 
-#include "pilotLinkVersion.h"
-
-#include <stdio.h>
-
-#include <pi-dlp.h>
-#include <pi-file.h>
-#include <pi-appinfo.h>
-#include <pi-buffer.h>
-
-#include <qstring.h>
-#include <qstringlist.h>
-#include <qvaluelist.h>
 
 /**
 * The Pilot namespace holds constants that are global for
@@ -57,7 +57,6 @@ class PilotCategoryInfo; // ... and category information
 * as mapping user-visible strings from UTF8 (KDE side) to
 * the encoding used on the handheld.
 */
-
 namespace Pilot
 {
 	/** Maximum size of an AppInfo block, taken roughly from the pilot-link source. */
@@ -124,6 +123,19 @@ namespace Pilot
 	* structure. Called by dump(). You must pass a valid reference.
 	*/
 	void dumpCategories(const struct CategoryAppInfo *info);
+
+	/** Check that a given category number is valid. This
+	* restricts the range of integers to [0..CATEGORY_COUNT-1]
+	* (i.e. [0..15]) which is what the handheld supports.
+	*/
+	inline bool validCategory(int c)
+	{
+		if (c<0)
+		{
+			return false;
+		}
+		return ((unsigned int)c<CATEGORY_COUNT);
+	}
 
 	/** Returns the QString for the requested category @p i
 	* in the category structure @p info. Returns @c QString::null
@@ -209,10 +221,69 @@ namespace Pilot
 	{
 		return (info->flags & dlpDBFlagResource);
 	}
-}
 
 
+/** @section Binary blob handling
+*
+* For reading and writing binary blobs -- which has to happen to
+* pack data into the format that the handheld needs -- it is important
+* to remember that the handheld has only four data types (as far
+* as I can tell: byte, short (a 2 byte integer), long (a 4 byte integer)
+* and string (NUL terminated). The sizes of the types on the handheld
+* do not necessarily correspond to the sizes of the same-named types
+* on the desktop. This means that 'reading a long' from a binary
+* blob must always be 4 bytes -- not sizeof(long).
+*
+* The following templates help out in manipulating the blobs.
+* Instantiate them with the type @em name you need (char, short, long or
+* char *) and you get a ::size enum specifying the number of bytes
+* (where applicable) and ::append and ::read methods for appending
+* a value of the given type to a pi_buffer_t or reading one from
+* the buffer, respectively.
+*
+* The usage of ::read and ::append is straightforward:
+*
+* append(pi_buffer_t *b, TYPE_VALUE v) Appends the type value @p v to the
+* buffer @p b , extending the buffer as needed.
+*
+* TYPE_VALUE read(pi_buffer_t *b, unsigned int &offset) Read a value from
+* the buffer @p b at position @p offset and return it. The offset value
+* is increased by the number of bytes read from the buffer.
+*
+* To write a binary blob, a sequence of ::append calls constructs the
+* blob. To read the same blob, a sequence of ::read calls with the
+* @em same type parameters is sufficient.
+*
+* The calls may vary a little: the exact interface differs depending
+* on the needs of the type of data to be written to the blob.
+*/
 template<typename t> struct dlp { } ;
+
+template<> struct dlp<char>
+{
+	enum { size = 1 };
+
+	static void append(pi_buffer_t *b, char v)
+	{
+		pi_buffer_append(b,&v,size);
+	}
+
+	/**
+	* Returns next byte from buffer or 0 on error (0 is also a
+	* valid return value, though).
+	*/
+	static char read(const pi_buffer_t *b, unsigned int &offset)
+	{
+		if (offset+size > b->used)
+		{
+			return 0;
+		}
+		char c = b->data[offset];
+		offset+=size;
+		return c;
+	}
+} ;
+
 template<> struct dlp<short>
 {
 	enum { size = 2 };
@@ -224,9 +295,13 @@ template<> struct dlp<short>
 		pi_buffer_append(b,buf,size);
 	}
 
+	/**
+	* Returns the next short (2 byte) value from the buffer, or
+	* -1 on error (which is also a valid return value).
+	*/
 	static int read(const pi_buffer_t *b, unsigned int &offset)
 	{
-		if ((offset>=b->used) || (offset>=b->allocated))
+		if (offset+size > b->used)
 		{
 			return -1;
 		}
@@ -238,6 +313,10 @@ template<> struct dlp<short>
 		}
 	}
 
+	/**
+	* Overload to read from a data buffer instead of a real pi_buffer;
+	* does no bounds checking.
+	*/
 	static int read(const unsigned char *b, unsigned int &offset)
 	{
 		int r = get_short(b+offset);
@@ -245,6 +324,7 @@ template<> struct dlp<short>
 		return r;
 	}
 } ;
+
 template<> struct dlp<long>
 {
 	enum { size = 4 };
@@ -256,9 +336,13 @@ template<> struct dlp<long>
 		pi_buffer_append(b,buf,size);
 	}
 
+	/**
+	* Returns the next long (4 byte) value from the buffer or
+	* -1 on error (which is also a valid value).
+	*/
 	static int read(const pi_buffer_t *b, unsigned int &offset)
 	{
-		if ((offset>=b->used) || (offset>=b->allocated))
+		if (offset+size > b->used)
 		{
 			return -1;
 		}
@@ -270,6 +354,10 @@ template<> struct dlp<long>
 		}
 	}
 
+	/**
+	* Overload to read a long value from a data buffer; does
+	* no bounds checking.
+	*/
 	static int read(const unsigned char *b, unsigned int &offset)
 	{
 		int r = get_long(b+offset);
@@ -282,9 +370,18 @@ template<> struct dlp<char *>
 {
 	// No size enum, doesn't make sense
 	// No append, use pi_buffer_append
-	static int read(const pi_buffer_t *b, unsigned int &offset, unsigned char *v, size_t s)
+	/**
+	* Read a fixed-length string from the buffer @p b into data buffer
+	* @p v which has size (including terminating NUL) of @p s.
+	* Returns the number of bytes read (which will normally  be @p s
+	* but will be less than @p s on error).
+	*/
+	static int read(const pi_buffer_t *b,
+		unsigned int &offset,
+		unsigned char *v,
+		size_t s)
 	{
-		if ( s+offset > b->allocated )
+		if ( s+offset > b->used )
 		{
 			s = b->allocated - offset;
 		}
@@ -293,11 +390,14 @@ template<> struct dlp<char *>
 		return s;
 	}
 
+	/** Overload for signed char. */
 	inline static int read(const pi_buffer_t *b, unsigned int &offset, char *v, size_t s)
 	{
 		return read(b,offset,(unsigned char *)v,s);
 	}
 } ;
+
+}
 
 #endif
 

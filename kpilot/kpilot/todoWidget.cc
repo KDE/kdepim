@@ -101,11 +101,10 @@ int TodoWidget::getAllTodos(PilotDatabase * todoDB)
 		if (!(pilotRec->isDeleted()) &&
 			(!(pilotRec->isSecret()) || KPilotSettings::showSecrets()))
 		{
-			todo = new PilotTodoEntry(*(fTodoAppInfo->info()), pilotRec);
+			todo = new PilotTodoEntry(pilotRec);
 			if (todo == 0L)
 			{
-				kdWarning() << k_funcinfo
-					<< ": Couldn't allocate record "
+				WARNINGKPILOT << "Couldn't allocate record "
 					<< currentRecord++
 					<< endl;
 				break;
@@ -150,8 +149,7 @@ void TodoWidget::showComponent()
 	else
 	{
 		populateCategories(fCatList, 0L);
-		kdWarning() << k_funcinfo
-			<< ": Could not open local TodoDB" << endl;
+		WARNINGKPILOT << "Could not open local TodoDB" << endl;
 	}
 
 	KPILOT_DELETE( fTodoDB );
@@ -528,7 +526,7 @@ void TodoWidget::slotShowTodo(QListViewItem*item)
 #endif
 
 	QString text(CSL1("<qt>"));
-	text += todo->getTextRepresentation(true);
+	text += todo->getTextRepresentation(Qt::RichText);
 	text += CSL1("</qt>\n");
 	fTodoInfo->setText(text);
 

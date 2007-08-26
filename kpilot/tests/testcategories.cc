@@ -44,6 +44,23 @@
 // Name of an actual DB
 #define MEMO_NAME "MemoDB"
 
+QStringList categories( const PilotAppInfoBase *appinfo )
+{
+	QStringList cats;
+
+	for (unsigned int i=0; i<Pilot::CATEGORY_COUNT; i++)
+	{
+		QString cat = appinfo->categoryName(i);
+		if (!cat.isEmpty())
+		{
+			QString s = CSL1("(%1:%2)").arg(i).arg(cat);
+			cats.append(s);
+		}
+	}
+
+	return cats;
+}
+
 QStringList listCategories( const QString &dir, const char *dbname )
 {
 	QStringList cats;
@@ -53,15 +70,10 @@ QStringList listCategories( const QString &dir, const char *dbname )
 	PilotAppInfoBase *appinfo = new PilotAppInfoBase( database );
 	appinfo->dump();
 
-	for (unsigned int i=0; i<Pilot::CATEGORY_COUNT; i++)
-	{
-		QString s = appinfo->categoryName(i);
-		cats.append(s);
-	}
+	cats = categories( appinfo );
 
 	delete appinfo;
 	delete database;
-
 	return cats;
 }
 
@@ -78,13 +90,12 @@ void badAppInfoCreation()
 	KPILOT_DELETE( appinfo );
 }
 
-void categoryNames()
+void categoryNames( const QString &dir )
 {
-	FUNCTIONSETUP;
-
-	PilotLocalDatabase *database = new PilotLocalDatabase( MEMO_NAME );
+	PilotLocalDatabase *database = new PilotLocalDatabase( dir, MEMO_NAME );
 	if (!database->isOpen())
 	{
+		WARNINGKPILOT << "Can not open database '" << MEMO_NAME << "'" << endl;
 		return;
 	}
 
@@ -95,32 +106,34 @@ void categoryNames()
 
 	if (!appinfo->categoryInfo())
 	{
-		DEBUGKPILOT << "! Could not read required database" << endl;
+		WARNINGKPILOT << "Could not read required database" << endl;
 		return;
 	}
 
-	const char *funnyname = "AardvarkWhaleMooseExplosion";
+	const char *funnyname = "OneTwoThreeFourFiveSixSevenEight";
 	const int funnyname_length = strlen(funnyname);
 
 	if (funnyname_length < 20)
 	{
-		DEBUGKPILOT << "! String of example category names is too short." << endl;
+		WARNINGKPILOT << "String of example category names is too short." << endl;
 		return;
 	}
 
+	DEBUGKPILOT << "# Updating category names with various lengths." << endl;
+	DEBUGKPILOT << "# Expect three truncation errors and two bad category numbers." << endl;
 	for (unsigned int i=0; i<Pilot::CATEGORY_COUNT+2; i++)
 	{
 		QString name = QString::fromLatin1(funnyname+funnyname_length-i-3);
 		if (!appinfo->setCategoryName(i,name))
 		{
-			DEBUGKPILOT << "! Failed to set category " << i << " name to <" << name << ">" << endl;
+			WARNINGKPILOT << "Failed to set category " << i << " name to <" << name << ">" << endl;
 		}
 		else
 		{
 			QString categoryname = appinfo->categoryName(i);
 			if (categoryname != name)
 			{
-				DEBUGKPILOT << "! Category name " << i
+				WARNINGKPILOT << "Category name " << i
 					<< " set to <" << name
 					<< "> and returns <"
 					<< categoryname << ">" << endl;
@@ -128,7 +141,7 @@ void categoryNames()
 		}
 	}
 
-	appinfo->dump();
+	DEBUGKPILOT << "# Final categories\n#   " << categories( appinfo ).join("\n#   ") << endl;
 }
 
 static const KCmdLineOptions options[] =
@@ -141,12 +154,13 @@ static const KCmdLineOptions options[] =
 
 int main(int argc, char **argv)
 {
+	KApplication::disableAutoDcopRegistration();
+
 	KAboutData aboutData("testcategories","Test Categories","0.1");
 	KCmdLineArgs::init(argc,argv,&aboutData);
 	KCmdLineArgs::addCmdLineOptions( options );
 
-	//  KApplication app( false, false );
-	KApplication app;
+	KApplication app( false, false );
 
 	KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
 
@@ -180,7 +194,7 @@ int main(int argc, char **argv)
 			break;
 		}
 		DEBUGKPILOT << "# Categories (" << files[i] << "): " << endl;
-		(void) listCategories( datadir, files[i] );
+		DEBUGKPILOT << "#   " << listCategories( datadir, files[i] ).join("\n#   ") << "\n#\n";
 	}
 	// Should bail, not crash
 	DEBUGKPILOT << "# Categories (nonexistent): " << endl;
@@ -189,11 +203,11 @@ int main(int argc, char **argv)
 	DEBUGKPILOT << "# Categories (bogus): " << endl;
 	(void) listCategories( datadir, BOGUS_NAME );
 
-	DEBUGKPILOT << "\n# Trying to pass broken pointers to category functions.\n#" << endl;
+	DEBUGKPILOT << "#\n# Trying to pass broken pointers to category functions.\n# Four errors are expected.\n#" << endl;
 	badAppInfoCreation();
 
-	DEBUGKPILOT << "\n# Checking category names.\n#" << endl;
-	categoryNames();
+	DEBUGKPILOT << "#\n# Checking category names." << endl;
+	categoryNames( datadir );
 
 	DEBUGKPILOT << "# OK.\n" << endl;
 	return 0;

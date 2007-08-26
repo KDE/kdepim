@@ -40,7 +40,6 @@
 #include "time-setup.moc"
 #include "timeConduitSettings.h"
 
-#include "uiDialog.h"
 
 
 static KAboutData *createAbout()
@@ -64,7 +63,7 @@ TimeWidgetConfig::TimeWidgetConfig(QWidget *w, const char *n) :
 {
 	FUNCTIONSETUP;
 	fAbout = createAbout();
-	UIDialog::addAboutPage(fConfigWidget->tabWidget,fAbout);
+	ConduitConfigBase::addAboutPage(fConfigWidget->tabWidget,fAbout);
 	fWidget=fConfigWidget;
 	fConduitName=i18n("Time");
 }

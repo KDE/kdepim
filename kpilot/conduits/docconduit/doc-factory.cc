@@ -83,7 +83,7 @@ DOCConduitFactory::~DOCConduitFactory()
 	FUNCTIONSETUP;
 
 #ifdef DEBUG
-	DEBUGCONDUIT << fname <<": Creating object of class " <<c <<endl;
+	DEBUGKPILOT << fname <<": Creating object of class " <<c <<endl;
 #endif
 	if (qstrcmp(c, "ConduitConfigBase") == 0)
 	{
@@ -94,8 +94,7 @@ DOCConduitFactory::~DOCConduitFactory()
 		}
 		else
 		{
-			kdError() << k_funcinfo 
-				<< ": Couldn't cast parent to widget." << endl;
+			WARNINGKPILOT << "Couldn't cast parent to widget." << endl;
 			return 0L;
 		}
 	}
@@ -108,8 +107,7 @@ DOCConduitFactory::~DOCConduitFactory()
 		}
 		else
 		{
-			kdError() << k_funcinfo
-				<<": Couldn't cast parent to KPilotLink" <<endl;
+			WARNINGKPILOT << "Couldn't cast parent to KPilotLink" <<endl;
 			return 0L;
 		}
 	}

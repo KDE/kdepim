@@ -34,12 +34,10 @@ class QVBoxLayout;
 class QHBoxLayout;
 class QGridLayout;
 
-#ifdef USE_KHEXEDIT
 namespace KHE {
 class BytesEditInterface;
 }
 using namespace KHE;
-#endif
 
 class QButtonGroup;
 class QCheckBox;
@@ -71,9 +69,7 @@ protected:
 	QCheckBox* fSecret;
 	QCheckBox* fArchived;
 	QWidget* fRecordData;
-#ifdef USE_KHEXEDIT
 	KHE::BytesEditInterface*fRecordDataIf;
-#endif
 	
 protected:
 	QGridLayout* DBRecordEditorBaseLayout;

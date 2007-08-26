@@ -42,14 +42,13 @@
 #include "knotes-setup.h"
 #include "knotesconduitSettings.h"
 
-#include "uiDialog.h"
 
 KNotesConfigBase::KNotesConfigBase(QWidget *w, const char *n) :
 	ConduitConfigBase(w,n),
 	fConfigWidget(0L)
 {
 	fConfigWidget = new KNotesWidget(w);
-	UIDialog::addAboutPage(fConfigWidget->tabWidget,KNotesConduitFactory::about());
+	ConduitConfigBase::addAboutPage(fConfigWidget->tabWidget,KNotesConduitFactory::about());
 	fWidget = fConfigWidget;
 	QObject::connect(fConfigWidget->fDeleteNoteForMemo,SIGNAL(clicked()),
 		this,SLOT(modified()));

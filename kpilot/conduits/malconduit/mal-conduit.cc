@@ -70,7 +70,7 @@ int malconduit_logf(const char *format, ...)
 	else
 	{
 		// write out to stderr
-		kdWarning()<<msg<<endl;
+		WARNINGKPILOT<< msg << endl;
 	}
 	return rval;
 }
@@ -135,7 +135,7 @@ void MALConduit::readConfig()
 	FUNCTIONSETUP;
 	MALConduitSettings::self()->readConfig();
 #ifdef DEBUG
-	DEBUGCONDUIT<<"Last sync was "<<MALConduitSettings::lastMALSync().toString()<<endl;
+	DEBUGKPILOT<<"Last sync was "<<MALConduitSettings::lastMALSync().toString()<<endl;
 #endif
 }
 
@@ -198,7 +198,7 @@ bool MALConduit::skip()
 	// Now initiate the sync.
 	PalmSyncInfo* pInfo=syncInfoNew();
 	if (!pInfo) {
-		kdWarning() << k_funcinfo << ": Could not allocate SyncInfo!" << endl;
+		WARNINGKPILOT << "Could not allocate SyncInfo!" << endl;
 		emit logError(i18n("MAL synchronization failed (no SyncInfo)."));
 		return false;
 	}
@@ -220,7 +220,7 @@ bool MALConduit::skip()
 			syncMessage = i18n("Using proxy server: %1").arg(proxyServer);
 
 #ifdef DEBUG
-			DEBUGCONDUIT<<" Using HTTP proxy server \""<<proxyServer<<
+			DEBUGKPILOT<<" Using HTTP proxy server \""<<proxyServer<<
 				"\", Port "<<proxyPort<<", User "<<MALConduitSettings::proxyUser()<<
 				", Password "<<( (MALConduitSettings::proxyPassword().isEmpty())?QString("not "):QString())<<"set"
 				<<endl;
@@ -261,7 +261,7 @@ bool MALConduit::skip()
 			}
 			syncMessage = i18n("Using SOCKS proxy: %1").arg(proxyServer);
 #ifdef DEBUG
-			DEBUGCONDUIT<<" Using SOCKS proxy server \""<<proxyServer<<"\",  Port "<<proxyPort<<", User "<<MALConduitSettings::proxyUser()<<", Password "<<( (MALConduitSettings::proxyPassword().isEmpty())?QString("not "):QString() )<<"set"<<endl;
+			DEBUGKPILOT<<" Using SOCKS proxy server \""<<proxyServer<<"\",  Port "<<proxyPort<<", User "<<MALConduitSettings::proxyUser()<<", Password "<<( (MALConduitSettings::proxyPassword().isEmpty())?QString("not "):QString() )<<"set"<<endl;
 #endif
 #ifdef LIBMAL20
 			setSocksProxy( const_cast<char *>(proxyServer.latin1()) );

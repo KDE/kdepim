@@ -34,10 +34,8 @@
 
 #include "dbAppInfoEditor.h"
 
-#ifdef USE_KHEXEDIT
 #include <khexedit/byteseditinterface.h>
 using namespace KHE;
-#endif
 
 
 /*************************************************
@@ -50,7 +48,6 @@ DBAppInfoEditor::DBAppInfoEditor(char*appInfoData, int l, QWidget *parent) :
 	appInfo(appInfoData), 
 	len(l)
 {
-#ifdef USE_KHEXEDIT
 	fAppInfoEdit = KHE::createBytesEditWidget( this, "fAppInfoEdit" );
 	if( fAppInfoEdit )
 	{
@@ -76,7 +73,6 @@ DBAppInfoEditor::DBAppInfoEditor(char*appInfoData, int l, QWidget *parent) :
 		fAppInfoEdit = tmpW;
 	}
 	setMainWidget( fAppInfoEdit );
-#endif
 	fillWidgets();
 }
 
@@ -95,12 +91,6 @@ void DBAppInfoEditor::slotOk()
 		// TODO: Copy the data over
 		// TODO: set the length
 		// (*len)=..;
-//#ifdef USE_KHEXEDIT
-//		len = fAppInfoEdit->dataSize();
-//		appInfo = fAppInfoEdit->data();
-//		// don't delete the buffer. It will be used in the database!
-//		fAppInfoEdit->setAutoDelete( false );
-//#endif
 	}*/
 	KDialogBase::slotOk();
 }

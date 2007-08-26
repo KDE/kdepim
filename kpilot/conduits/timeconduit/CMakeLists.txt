@@ -38,3 +38,7 @@ install(
 install(
 	FILES time_conduit.desktop DESTINATION ${KDE3_SERVICES_DIR}
 )
+
+install(
+	FILES timeconduit.kcfg DESTINATION ${KDE3_KCFG_DIR}
+)

@@ -44,7 +44,6 @@
 #include "sysinfo-setup.h"
 #include "sysinfoSettings.h"
 
-#include "uiDialog.h"
 
 typedef struct { const char *name; bool (*accessor)(); void (*mutator)(bool); } sysinfoEntry_t;
 
@@ -101,7 +100,7 @@ SysInfoWidgetConfig::SysInfoWidgetConfig(QWidget *w, const char *n) :
 	fAbout->addAuthor("Reinhold Kainhofer",
 		I18N_NOOP("Primary Author"), "reinhold@kainhofer.com", "http://reinhold.kainhofer.com/");
 
-	UIDialog::addAboutPage(fConfigWidget->tabWidget,fAbout);
+	ConduitConfigBase::addAboutPage(fConfigWidget->tabWidget,fAbout);
 	fWidget=fConfigWidget;
 
 	QObject::connect(fConfigWidget->fOutputFile,SIGNAL(textChanged(const QString&)),
@@ -129,7 +128,7 @@ void SysInfoWidgetConfig::commit()
 	while(ci)
 	{
 #ifdef DEBUG
-		DEBUGCONDUIT << fname << ": Saving " << ci->text(PART_NAME)
+		DEBUGKPILOT << fname << ": Saving " << ci->text(PART_NAME)
 			<< (ci->isOn() ? " on" : " off") << endl;
 #endif
 		int index=ci->text(PART_KEY).toInt();
@@ -161,7 +160,7 @@ void SysInfoWidgetConfig::load()
 		i->setText(PART_KEY, QString::number(p-sysinfoEntries)); // store index there
 		updateSetting(i);
 #ifdef DEBUG
-		DEBUGCONDUIT << fname << ": Loaded " << p->name
+		DEBUGKPILOT << fname << ": Loaded " << p->name
 			<< (i->isOn() ? " on" : " off") << endl;
 #endif
 
@@ -186,7 +185,7 @@ void SysInfoWidgetConfig::load()
 		bool current = ci->isOn();
 		bool original = !ci->text(PART_SETTING).isEmpty();
 #ifdef DEBUG
-		DEBUGCONDUIT << fname << ": Checking " << ci->text(PART_KEY)
+		DEBUGKPILOT << fname << ": Checking " << ci->text(PART_KEY)
 			<<  " was " << (original ? " on" : " off")
 			<< " now " << (current ? " on" : " off") << endl;
 #endif

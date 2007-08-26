@@ -49,12 +49,13 @@ static const KCmdLineOptions options[] =
 
 int main(int argc, char **argv)
 {
+	KApplication::disableAutoDcopRegistration();
+
 	KAboutData aboutData("testaddress","Test Addresses","0.1");
 	KCmdLineArgs::init(argc,argv,&aboutData);
 	KCmdLineArgs::addCmdLineOptions( options );
 
-	//  KApplication app( false, false );
-	KApplication app;
+	KApplication app( false, false );
 
 	KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
 
@@ -79,24 +80,24 @@ int main(int argc, char **argv)
 		if (r)
 		{
 			DEBUGKPILOT << "# Record @" << (void *)r << " ID=" << r->id() << endl;
-			PilotAddress a( &appinfo, r );
-			DEBUGKPILOT << "# Text Representation:" << endl << a.getTextRepresentation() << endl;
+			PilotAddress a( r );
+			DEBUGKPILOT << "# Text Representation:" << endl << a.getTextRepresentation(&appinfo,Qt::PlainText) << endl;
 			DEBUGKPILOT << "# Category#" << a.category() << endl;
-			DEBUGKPILOT << "# Category Label " << a.getCategoryLabel() << endl;
+			DEBUGKPILOT << "# Category Label " << appinfo.categoryName(a.category()) << endl;
 			DEBUGKPILOT << "# ID " << a.id() << endl;
 
 			// With the given address database, where all the
 			// categories are already filled, this should fail
 			// (and give a useful error message).
 			//
-			a.setCategory( CSL1("Fake Cat") );
+			a.setCategory( appinfo.findCategory(CSL1("Fake Cat")) );
 			DEBUGKPILOT << "# Category#" << a.category() << endl;
-			DEBUGKPILOT << "# Category Label " << a.getCategoryLabel() << endl;
+			DEBUGKPILOT << "# Category Label " << appinfo.categoryName(a.category()) << endl;
 			// This category exists, so it should succeed
 			//
-			a.setCategory( CSL1("Business") );
+			a.setCategory( appinfo.findCategory(CSL1("Business")) );
 			DEBUGKPILOT << "# Category#" << a.category() << endl;
-			DEBUGKPILOT << "# Category Label " << a.getCategoryLabel() << endl;
+			DEBUGKPILOT << "# Category Label " << appinfo.categoryName(a.category()) << endl;
 		}
 	}
 

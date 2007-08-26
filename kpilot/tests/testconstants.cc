@@ -38,30 +38,30 @@ int main(int, char **)
 #ifdef DEBUG
 	debug_level = 1;
 #endif
-	PilotAppInfoBase info( 0L );
+	PilotAppInfoBase info;
 
 
-	kdDebug() << "### testconstants\n#" << endl;
-	kdDebug() << "# Sizes of structures\n#" << endl;
-	kdDebug() << "#     AppInfoBase: " << sizeof(PilotAppInfoBase) << endl;
-	kdDebug() << "#    CategoryInfo: " << sizeof(info.categoryInfo()) << endl;
-	kdDebug() << "#    CategoryInfo: " << sizeof(*info.categoryInfo()) << endl;
-	kdDebug() << "#  Category names: " << sizeof(info.categoryInfo()->name) << endl;
-	kdDebug() << "# Single category: " << sizeof(info.categoryInfo()->name[0]) << endl;
+	DEBUGKPILOT << "### testconstants\n#" << endl;
+	DEBUGKPILOT << "# Sizes of structures\n#" << endl;
+	DEBUGKPILOT << "#     AppInfoBase: " << sizeof(PilotAppInfoBase) << endl;
+	DEBUGKPILOT << "#    CategoryInfo: " << sizeof(info.categoryInfo()) << endl;
+	DEBUGKPILOT << "#    CategoryInfo: " << sizeof(*info.categoryInfo()) << endl;
+	DEBUGKPILOT << "#  Category names: " << sizeof(info.categoryInfo()->name) << endl;
+	DEBUGKPILOT << "# Single category: " << sizeof(info.categoryInfo()->name[0]) << endl;
 
-	kdDebug() << "#\n# Sanity checking structure sizes\n#" << endl;
+	DEBUGKPILOT << "#\n# Sanity checking structure sizes\n#" << endl;
 	if ( sizeof(info.categoryInfo()->name[0]) != Pilot::CATEGORY_SIZE )
 	{
-		kdDebug() << "! Category names are not 16 bytes." << endl;
+		WARNINGKPILOT << "! Category names are not 16 bytes." << endl;
 		return 1;
 	}
 	if ( sizeof(info.categoryInfo()->name) / sizeof(info.categoryInfo()->name[0]) != Pilot::CATEGORY_COUNT )
 	{
-		kdDebug() << "! There are not " << Pilot::CATEGORY_COUNT << " categories available." << endl;
+		WARNINGKPILOT << "! There are not " << Pilot::CATEGORY_COUNT << " categories available." << endl;
 		return 1;
 	}
 
-	kdDebug() << "# OK.\n" << endl;
+	DEBUGKPILOT << "# OK.\n" << endl;
 	return 0;
 }
 

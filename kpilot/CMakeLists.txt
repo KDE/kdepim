@@ -1,11 +1,17 @@
 project(kpilot)
 
+if(EXISTS ${CMAKE_SOURCE_DIR}/CMakeOptions.txt)
+	include(${CMAKE_SOURCE_DIR}/CMakeOptions.txt)
+else(EXISTS ${CMAKE_SOURCE_DIR}/CMakeOptions.txt)
+	message(FATAL_ERROR "CMakeOptions.txt not found! Run configure first.")
+endif(EXISTS ${CMAKE_SOURCE_DIR}/CMakeOptions.txt)
 
 # Search our own cmake modules path first
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/modules")
 
 # Need 2.4.3 for its KDE3 support
-cmake_minimum_required(VERSION 2.4.3)
+# Need 2.4.4 for its fixed KDE3 support
+cmake_minimum_required(VERSION 2.4.4)
 
 CONFIGURE_FILE(
   "${CMAKE_CURRENT_SOURCE_DIR}/cmake_uninstall.cmake.in"
@@ -36,10 +42,9 @@ add_definitions(
 )
 
 STRING(COMPARE EQUAL "${CMAKE_BUILD_TYPE}" "debug" builddebug)
-if (builddebug)
-	# Debug build, additional flags
-	add_definitions(-DDEBUG -DDEBUG_CERR)
-endif(builddebug)
+if (NOT builddebug)
+	add_definitions(-DNDEBUG)
+endif(NOT builddebug)
 
 
 # Get the kde3 dir. This is a bit tricky, i'm not sure how well
@@ -77,6 +82,8 @@ if (buildtests)
 	MESSAGE(STATUS "BUILD: Test suite enabled.")
 	enable_testing()
 	add_subdirectory(tests)
+else (buildtests)
+	MESSAGE(STATUS "BUILD: Test suite disabled.")
 endif(buildtests)
 
 if (builddebug)
@@ -85,4 +92,5 @@ else(builddebug)
 	MESSAGE(STATUS "BUILD: Normal build selected.")
 endif(builddebug)
 
+MESSAGE(STATUS "BUILD: Install prefix set to ${CMAKE_INSTALL_PREFIX} .")
 

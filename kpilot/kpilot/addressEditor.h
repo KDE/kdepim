@@ -32,10 +32,9 @@
 
 #include <kdialogbase.h>
 
-#include <pilotAddress.h>
+#include "pilotAddress.h"
 
 class QLineEdit;
-class PilotAddress;
 
 class AddressEditor : public KDialogBase
 {
@@ -82,7 +81,7 @@ private:
 
 	void initLayout();
 	void fillFields();
-	QString phoneLabelText(PilotAddress *, int i);
+	QString phoneLabelText(PilotAddress *, const PhoneSlot &i);
 };
 #endif
 

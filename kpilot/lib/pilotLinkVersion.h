@@ -1,11 +1,8 @@
 #ifndef _KPILOT_PILOTLINKVERSION_H
 #define _KPILOT_PILOTLINKVERSION_H
-
-/* pilotLinkVersion.h                           KPilot
+/* KPilot
 **
 ** Copyright (C) 2005 by Adriaan de Groot
-**
-** Checks the pilot-link version and defines some convenience macros.
 **
 */
 
@@ -32,6 +29,12 @@
 
 
 #include <pi-version.h>
+
+/** @file
+* Checks the pilot-link version and defines some convenience macros.
+* The main point of this file is to complain if you have a version
+* of pilot-link before 0.12, which no longer work with KPilot.
+*/
 
 #ifndef PILOT_LINK_VERSION
 #error "You need at least pilot-link version 0.12.0"

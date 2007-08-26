@@ -58,7 +58,7 @@ void TestState::startSync( ConduitAction *ca )
 		return;
 	}
 	
-	DEBUGCONDUIT << fname << ": Starting teststate." << endl;
+	DEBUGKPILOT << fname << ": Starting teststate." << endl;
 
 	vccb->setHasNextRecord( true );
 	fPilotindex = 0;
@@ -75,7 +75,7 @@ void TestState::handleRecord( ConduitAction *ca )
 		return;
 	}
 
-	DEBUGCONDUIT << fname << ": Handling record " << fPilotindex << endl;
+	DEBUGKPILOT << fname << ": Handling record " << fPilotindex << endl;
 
 	PilotRecord *record = vccb->readRecordByIndex( fPilotindex );
 	
@@ -105,7 +105,7 @@ void TestState::finishSync( ConduitAction *ca )
 		return;
 	}
 
-	DEBUGCONDUIT << fname << ": finishing teststate." << endl;
+	DEBUGKPILOT << fname << ": finishing teststate." << endl;
 
 	// No more records present on the device so lets dump the
 	// readed records in a file.
@@ -118,7 +118,7 @@ void TestState::finishSync( ConduitAction *ca )
 
 	if( !fCalendar.save( CSL1("dump.ics") ) )
 	{
-		DEBUGCONDUIT << fname << ": Can't save calendar file." << endl;
+		DEBUGKPILOT << fname << ": Can't save calendar file." << endl;
 	}
 
 	fCalendar.close();

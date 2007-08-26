@@ -103,15 +103,15 @@ bool setupPilotCodec(const QString &s)
 	FUNCTIONSETUP;
 	QString encoding(KGlobal::charsets()->encodingForName(s));
 
-	DEBUGLIBRARY << fname << ": Using codec name " << s << endl;
-	DEBUGLIBRARY << fname << ": Creating codec " << encoding << endl;
+	DEBUGKPILOT << fname << ": Using codec name " << s << endl;
+	DEBUGKPILOT << fname << ": Creating codec " << encoding << endl;
 
 	// if the desired codec can't be found, latin1 will be returned anyway, no need to do this manually
 	codec = KGlobal::charsets()->codecForName(encoding);
 
 	if (codec)
 	{
-		DEBUGLIBRARY << fname << ": Got codec " << codec->name() << endl;
+		DEBUGKPILOT << fname << ": Got codec " << codec->name() << endl;
 	}
 
 	return codec;
@@ -141,7 +141,7 @@ int findCategory(const struct CategoryAppInfo *info,
 
 	if (!info)
 	{
-		kdError() << k_funcinfo << "! Bad CategoryAppInfo pointer" << endl;
+		WARNINGKPILOT << "Bad CategoryAppInfo pointer" << endl;
 		return -1;
 	}
 
@@ -158,12 +158,12 @@ int findCategory(const struct CategoryAppInfo *info,
 
 	if (-1 == currentCatID)
 	{
-		DEBUGLIBRARY << fname << ": Category name "
+		DEBUGKPILOT << fname << ": Category name "
 			<< selectedCategory << " not found." << endl;
 	}
 	else
 	{
-		DEBUGLIBRARY << fname << ": Matched category " << currentCatID << endl;
+		DEBUGKPILOT << fname << ": Matched category " << currentCatID << endl;
 	}
 
 	if ((currentCatID == -1) && unknownIsUnfiled)
@@ -179,7 +179,7 @@ int insertCategory(struct CategoryAppInfo *info,
 
 	if (!info)
 	{
-		kdError() << k_funcinfo << "! Bad CategoryAppInfo pointer" << endl;
+		WARNINGKPILOT << "Bad CategoryAppInfo pointer" << endl;
 		return -1;
 	}
 
@@ -205,7 +205,7 @@ int insertCategory(struct CategoryAppInfo *info,
 		}
 		else
 		{
-			kdWarning() << k_funcinfo << "! Category name "
+			WARNINGKPILOT << "Category name "
 				<< label
 				<< " could not be added." << endl;
 			c = -1;
@@ -221,16 +221,16 @@ void dumpCategories(const struct CategoryAppInfo *info)
 
 	if (!info)
 	{
-		kdWarning() << "! Dumping bad pointer." << endl;
+		WARNINGKPILOT << "Dumping bad pointer." << endl;
 		return;
 	}
 
-	DEBUGLIBRARY << fname << " lastUniqueId: "
+	DEBUGKPILOT << fname << " lastUniqueId: "
 		<< (int) info->lastUniqueID << endl;
 	for (unsigned int i = 0; i < CATEGORY_COUNT; i++)
 	{
 		if (!info->name[i][0]) continue;
-		DEBUGLIBRARY << fname << ": " << i << " = "
+		DEBUGKPILOT << fname << ": " << i << " = "
 			<< (int)(info->ID[i]) << " <"
 			<< info->name[i] << ">" << endl;
 	}

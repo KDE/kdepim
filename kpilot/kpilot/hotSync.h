@@ -38,16 +38,16 @@ class QTimer;
 
 #include "syncAction.h"
 
-class TestLink : public SyncAction
+class CheckUser : public SyncAction
 {
-Q_OBJECT
-
 public:
-	TestLink(KPilotLink *);
+	CheckUser(KPilotLink *p,QWidget *w=0L);
+	virtual ~CheckUser();
 
 protected:
 	virtual bool exec();
 } ;
+
 
 class BackupAction : public SyncAction
 {
@@ -85,6 +85,9 @@ public:
 	*/
 	void setDirectory( const QString &path );
 
+	// Reimplemented to support threaded backup.
+	virtual bool event( QEvent *e );
+
 protected:
 	virtual bool exec();
 
@@ -95,14 +98,7 @@ private:
 	/** Copy the database indicated by @p info to the local
 	*   disk; returns @c false on failure.
 	*/
-	bool createLocalDatabase(DBInfo *info);
-
-	/** Make sure that the backup directory @p backupDir
-	*   exists and is a directory; returns @c false
-	*   if this is not the case. This method will try
-	*   to create the directory if it doesn't exist yet.
-	*/
-	static bool checkBackupDirectory( const QString &backupDir );
+	bool startBackupThread(DBInfo *info);
 
 private slots:
 	/** Implementation detail: databases get backed-up
@@ -114,6 +110,8 @@ private slots:
 private:
 	class Private;
 	Private *fP;
+	class Thread;
+	Thread *fBackupThread;
 } ;
 
 class FileInstallAction : public SyncAction
@@ -143,14 +141,35 @@ private:
 	bool resourceOK(const QString &, const QString &) /* const */ ;
 } ;
 
-class CleanupAction : public SyncAction
+class RestoreAction : public SyncAction
 {
+Q_OBJECT
 public:
-	CleanupAction(KPilotLink * p);
-	virtual ~CleanupAction();
+	RestoreAction(KPilotLink *,QWidget *w=0L);
+
+	typedef enum { InstallingFiles, GettingFileInfo,Done } Status;
+	virtual QString statusString() const;
+
+	/** By default, a path based on the user name (either
+	*   on the handheld or set in KPilot) is used to
+	*   determine the restory directory name ( generally
+	*   $KDEHOME/share/apps/kpilot/DBBackup/_user_name_ ).
+	*   Use setDirectory() to change that and use a given
+	*   @p path as target for the source. Use an empty
+	*   @p path to restore the default behavior of using
+	*   the username.
+	*/
+	void setDirectory( const QString &path );
 
 protected:
 	virtual bool exec();
+
+protected slots:
+	void installNextFile();
+
+private:
+	class Private;
+	Private *fP;
 } ;
 
 #endif

@@ -100,25 +100,16 @@ AddressEditor::~AddressEditor()
 /*
  * Return phone label from AddressAppInfo + some sanity checking
  */
-QString AddressEditor::phoneLabelText(PilotAddress * addr, int i)
+QString AddressEditor::phoneLabelText(PilotAddress * addr, const PhoneSlot &i)
 {
 	FUNCTIONSETUP;
-
-	QString ret(i18n("Phone"));
-	char *s;
-	int idx = i;
-
-	if (addr)
-		idx = addr->getPhoneLabelIndex(i);
-
-	if (idx >= 0 && idx < 8)	// hard-coded, no constant in pi-address.h
+	if (!addr)
 	{
-		if ((s = fAppInfo->info()->phoneLabels[idx]))
-		{
-			ret = s;
-			ret += CSL1(":");
-		}
+		return i18n("Phone");
 	}
+
+	PilotAddressInfo::EPhoneType idx = addr->getPhoneType(i);
+	QString ret = fAppInfo->phoneLabel(idx) + CSL1(":");
 
 	return ret;
 }
@@ -131,23 +122,22 @@ void AddressEditor::fillFields()
 
 	if (fAddress == 0L)
 	{
-		fAddress = new PilotAddress(fAppInfo);
+		fAddress = new PilotAddress();
 		fDeleteOnCancel = true;
 	}
 
 	// phone labels
-	for (int i = 0; i < 5; i++)
-		m_phoneLabel[i]->setText(phoneLabelText(fAddress, i));
+	unsigned int index = 0;
+	for ( PhoneSlot i = PhoneSlot::begin(); i.isValid(); ++i,++index )
+	{
+		m_phoneLabel[index]->setText(phoneLabelText(fAddress, i));
+		fPhoneField[index]->setText(fAddress->getField(i));
+	}
 
 	// fields
 	fLastNameField->setText(fAddress->getField(entryLastname));
 	fFirstNameField->setText(fAddress->getField(entryFirstname));
 	fCompanyField->setText(fAddress->getField(entryCompany));
-	fPhoneField[0]->setText(fAddress->getField(entryPhone1));
-	fPhoneField[1]->setText(fAddress->getField(entryPhone2));
-	fPhoneField[2]->setText(fAddress->getField(entryPhone3));
-	fPhoneField[3]->setText(fAddress->getField(entryPhone4));
-	fPhoneField[4]->setText(fAddress->getField(entryPhone5));
 	fAddressField->setText(fAddress->getField(entryAddress));
 	fCityField->setText(fAddress->getField(entryCity));
 	fStateField->setText(fAddress->getField(entryState));
@@ -193,9 +183,10 @@ void AddressEditor::initLayout()
 	MakeField(i18n("Title:"), fTitleField, 2, 0);
 	MakeField(i18n("Company:"), fCompanyField, 3, 0);
 
-	for (int i = 0; i < 5; i++)
+	PhoneSlot slot = PhoneSlot::begin();
+	for (int i = 0; slot.isValid(); ++i,++slot)
 	{
-		MakeFieldL(phoneLabelText(NULL, 0),
+		MakeFieldL(phoneLabelText(NULL, slot),
 			m_phoneLabel[i], fPhoneField[i], 4 + i, 0);
 	}
 

@@ -47,9 +47,9 @@ PilotDOCBookmark::PilotDOCBookmark(PilotRecord * rec):PilotRecordBase(rec)
 	{
 		const pi_buffer_t *b = rec->buffer();
 		unsigned int offset = 0;
-		dlp<char *>::read(b,offset,bookmarkName,16);
+		Pilot::dlp<char *>::read(b,offset,bookmarkName,16);
 		bookmarkName[16]='\0';
-		pos = dlp<long>::read(b,offset);
+		pos = Pilot::dlp<long>::read(b,offset);
 	}
 }
 
@@ -78,10 +78,10 @@ PilotDOCBookmark & PilotDOCBookmark::operator =(const PilotDOCBookmark & e)
 
 PilotRecord *PilotDOCBookmark::pack() const
 {
-	pi_buffer_t *b = pi_buffer_new( 16 + dlp<long>::size );
+	pi_buffer_t *b = pi_buffer_new( 16 + Pilot::dlp<long>::size );
 	pi_buffer_append(b, bookmarkName, 16);
 	b->data[16] = 0;
-	dlp<long>::append(b,pos);
+	Pilot::dlp<long>::append(b,pos);
 	PilotRecord* rec =  new PilotRecord(b, this);
 	return rec;
 }

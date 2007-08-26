@@ -50,13 +50,15 @@
 
 #include <pi-version.h>
 
-#include "kpilotConfig.h"
-#include "syncStack.h"
-#include "hotSync.h"
-#include "interactiveSync.h"
-
+#include "actionQueue.h"
+#include "actions.h"
 #include "kpilotdevicelink.h"
 #include "kpilotlocallink.h"
+#include "pilot.h"
+
+#include "kpilotConfig.h"
+#include "hotSync.h"
+
 
 static KCmdLineOptions generalOptions[] = {
 	{"p",0,0},
@@ -170,8 +172,9 @@ int exec(const QString &device, const QString &what, KCmdLineArgs *p)
 
 	KPilotLink *link = createLink( p->isSet("local") );
 	ActionQueue *syncStack = new ActionQueue( link );
-	syncStack->queueInit( ActionQueue::queueCheckUser );
-	syncStack->queueConduits(l,mode,false);
+	syncStack->queueInit();
+	syncStack->addAction(new CheckUser( link ));
+	syncStack->queueConduits(l,mode);
 	syncStack->queueCleanup();
 	connectStack(link,syncStack);
 	link->reset(device);
@@ -240,7 +243,8 @@ int check( const QString &device, const QString &what, KCmdLineArgs *p )
 	{
 		KPilotLink *link = createLink( p->isSet("local") );
 		ActionQueue *syncStack = new ActionQueue( link );
-		syncStack->queueInit( ActionQueue::queueCheckUser ); // Creates usercheck
+		syncStack->queueInit();
+		syncStack->addAction( new CheckUser( link ) );
 		syncStack->queueCleanup();
 		connectStack(link,syncStack);
 		link->reset(device);
@@ -266,12 +270,12 @@ void listConduits()
 	{
 		KSharedPtr < KService > o = (*availList).service();
 
-		std::cout << "File:   " << o->desktopEntryName().latin1() << std::endl;
-		std::cout << "  Desc: " << o->name().latin1()  << std::endl;
+		std::cout << "File:   " << o->desktopEntryName() << std::endl;
+		std::cout << "  Desc: " << o->name()  << std::endl;
 		if (!o->library().isEmpty())
 		{
 			std::cout << "  Lib : "
-				<< o->library().latin1()
+				<< o->library()
 				<< std::endl;
 		}
 
@@ -307,15 +311,15 @@ int show( const QString &what )
 
 	if ( "user" == what )
 	{
-		std::cout << "User: " << KPilotSettings::userName().latin1() << std::endl;
+		std::cout << "User: " << KPilotSettings::userName() << std::endl;
 		return 0;
 	}
 
 	if ( "device" == what )
 	{
-		std::cout << "Device:   " << KPilotSettings::pilotDevice().latin1()
+		std::cout << "Device:   " << KPilotSettings::pilotDevice()
 			<< "\nSpeed:    " << KPilotSettings::pilotSpeed()
-			<< "\nEncoding: " << KPilotSettings::encoding().latin1()
+			<< "\nEncoding: " << KPilotSettings::encoding()
 			<< "\nQuirks:   " << KPilotSettings::workarounds()
 			<< std::endl;
 		return 0;
@@ -371,6 +375,7 @@ int main(int argc, char **argv)
 	DEBUGKPILOT  << fname << "Created KApplication." << endl;
 #endif
 
+	Pilot::setupPilotCodec(KPilotSettings::encoding());
 
 	QString device( "/dev/pilot" );
 

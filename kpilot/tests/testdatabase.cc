@@ -253,12 +253,13 @@ static const KCmdLineOptions options[] =
 
 int main(int argc, char **argv)
 {
+	KApplication::disableAutoDcopRegistration();
+
 	KAboutData aboutData("testdatabase","Test Databases","0.1");
 	KCmdLineArgs::init(argc,argv,&aboutData);
 	KCmdLineArgs::addCmdLineOptions( options );
 
-	//  KApplication app( false, false );
-	KApplication app;
+	KApplication app( false, false );
 
 	KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
 

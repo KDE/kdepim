@@ -46,22 +46,26 @@ int debug_level = 0;
 #endif
 
 // The daemon also has a debug level; debug_spaces is 60 spaces,
-// to align FUNCTIONSETUP output.
+// to align FUNCTIONSETUP output. The one byte extra is for the NUL.
 //
 //
-const char *debug_spaces =
-	"                                                    ";
+static const char debug_spaces[61] =
+	"                    "
+	"                    "
+	"                    ";
 
 
-QString rtExpand(const QString &s, bool richText)
+QString rtExpand(const QString &s, Qt::TextFormat richText)
 {
-	if (richText)
+	if (richText == Qt::RichText)
 	{
 		QString t(s);
-		return t.replace(CSL1("\n"), CSL1("<br>\n"));
+		return t.replace(CSL1("\n"), CSL1("<br/>\n"));
 	}
 	else
+	{
 		return s;
+	}
 
 }
 
@@ -104,20 +108,29 @@ struct tm writeTm(const QDate &d)
 	return writeTm(dt);
 }
 
-KPilotDepthCount::KPilotDepthCount(int area, int level, const char *s) :
+KPilotDepthCount::KPilotDepthCount(int, int level, const char *s) :
+	fDepth(depth),
+	fLevel(level),
+	fName(s)
+{
+	DEBUGKPILOT << "! DEPRECATED Depth call.\n!   "
+		<< kdBacktrace(4) << endl;
+
+	if (debug_level>=fLevel)
+	{
+		DEBUGKPILOT << indent() << ">" << name() << endl;
+	}
+	depth++;
+}
+
+KPilotDepthCount::KPilotDepthCount(int level, const char *s) :
 	fDepth(depth),
 	fLevel(level),
 	fName(s)
 {
 	if (debug_level>=fLevel)
 	{
-#ifdef DEBUG_CERR
-		Q_UNUSED(area);
-		DEBUGLIBRARY
-#else
-		debug(area)
-#endif
-		<< indent() << ">" << name() << endl;
+		DEBUGKPILOT << indent() << ">" << name() << endl;
 	}
 	depth++;
 }
@@ -125,13 +138,19 @@ KPilotDepthCount::KPilotDepthCount(int area, int level, const char *s) :
 KPilotDepthCount::~KPilotDepthCount()
 {
 	depth--;
+	std::cerr.clear(std::ios_base::goodbit);
 }
 
-QString KPilotDepthCount::indent() const
+const char *KPilotDepthCount::indent() const
 {
-	QString s;
-	s.fill(' ',fDepth);
-	return s+s+' ';
+	if (fDepth < 30)
+	{
+		return debug_spaces + 60-fDepth*2;
+	}
+	else
+	{
+		return debug_spaces;
+	}
 }
 
 int KPilotDepthCount::depth = 0;

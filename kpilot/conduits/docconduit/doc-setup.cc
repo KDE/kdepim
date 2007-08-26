@@ -42,7 +42,6 @@
 #include "doc-setup.h"
 #include "docconduitSettings.h"
 
-#include "uiDialog.h"
 
 DOCWidgetConfig::DOCWidgetConfig(QWidget * w, const char *n):
 	ConduitConfigBase(w, n),
@@ -60,7 +59,7 @@ DOCWidgetConfig::DOCWidgetConfig(QWidget * w, const char *n):
 
 	fConfigWidget->fTXTDir->setMode(KFile::Directory);
 	fConfigWidget->fPDBDir->setMode(KFile::Directory);
-	UIDialog::addAboutPage(fConfigWidget->tabWidget,DOCConduitFactory::about());
+	ConduitConfigBase::addAboutPage(fConfigWidget->tabWidget,DOCConduitFactory::about());
 
 	fConduitName=i18n("Palm DOC");
 

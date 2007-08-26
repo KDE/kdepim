@@ -35,6 +35,7 @@
 #include <pi-macros.h>
 #include <pi-todo.h>
 
+#include <qnamespace.h>
 #include <qstring.h>
 
 #include "pilotRecord.h"
@@ -48,11 +49,16 @@
 class KDE_EXPORT PilotTodoEntry : public PilotRecordBase
 {
 public:
-	/** Create an empty ToDo item */
-	PilotTodoEntry(struct ToDoAppInfo &appInfo);
+	/** Create an empty ToDo item. All attributes are 0. */
+	PilotTodoEntry();
 
-	/** Create a ToDo item and fill it with data from the uninterpreted record @p rec. */
-	PilotTodoEntry(struct ToDoAppInfo &appInfo, PilotRecord * rec);
+	/**
+	* Constructor. Create a ToDo item and fill it with data from the
+	* uninterpreted record @p rec. The record may be NULL, in which
+	* case the todo is empty and its category and ID are zero, as in
+	* the constructor above.
+	*/
+	PilotTodoEntry(PilotRecord * rec);
 
 	/** Copy an existing ToDo item. */
 	PilotTodoEntry(const PilotTodoEntry &e);
@@ -66,7 +72,7 @@ public:
 	/** Return a string for the ToDo item. If @param richText is true, then
 	* use qt style markup to make the string clearer when displayed.
 	*/
-	QString getTextRepresentation(bool richText=false);
+	QString getTextRepresentation(Qt::TextFormat richText);
 
 	/** Assign an existing ToDo item to this one. */
 	PilotTodoEntry& operator=(const PilotTodoEntry &e);
@@ -140,17 +146,6 @@ public:
 	/** Returns the label for the category this ToDo item is in. */
 	QString getCategoryLabel() const;
 
-
-	/** If the label already exists, uses the id; if not, adds the label
-	*  to the category list. @return false if category labels are full.
-	*/
-	inline bool setCategory(const QString &label)
-	{
-		int c = Pilot::insertCategory(&fAppInfo.category,label,false);
-		PilotRecordBase::setCategory(c);
-		return c>=0;
-	}
-
 	PilotRecord *pack() const;
 
 protected:
@@ -161,7 +156,6 @@ protected:
 
 private:
 	struct ToDo fTodoInfo;
-	struct ToDoAppInfo &fAppInfo;
 	unsigned int fDescriptionSize, fNoteSize;
 };
 

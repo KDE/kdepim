@@ -64,13 +64,12 @@
 
 	if (version < ConfigurationVersion)
 	{
-		kdWarning() << k_funcinfo <<
-			": Config file has old version " << version << endl;
+		WARNINGKPILOT << "Config file has old version " << version << endl;
 	}
 	else
 	{
 #ifdef DEBUG
-		DEBUGDB << fname
+		DEBUGKPILOT << fname
 			<< ": Config file has version " << version << endl;
 #endif
 	}

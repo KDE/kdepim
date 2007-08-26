@@ -47,10 +47,8 @@
 #include <pilotDateEntry.h>
 #include <pilotTodoEntry.h>
 
-#ifdef USE_KHEXEDIT
 #include "khexedit/byteseditinterface.h"
 using namespace KHE;
-#endif
 
 InternalEditorAction::InternalEditorAction(KPilotLink * p) :
 	SyncAction(p, "internalSync")
@@ -161,10 +159,10 @@ bool InternalEditorAction::queryUseKPilotChanges(QString dbName, recordid_t id, 
 	{
 		PilotAddressInfo info(db);
 
-		PilotAddress localAddr(&info, localrec);
-		PilotAddress serialAddr(&info, serialrec);
-		localEntry=localAddr.getTextRepresentation(true);
-		serialEntry=serialAddr.getTextRepresentation(true);
+		PilotAddress localAddr(localrec);
+		PilotAddress serialAddr(serialrec);
+		localEntry=localAddr.getTextRepresentation(&info,Qt::RichText);
+		serialEntry=serialAddr.getTextRepresentation(&info,Qt::RichText);
 		recType=i18n("address");
 	}
 	else
@@ -172,10 +170,10 @@ bool InternalEditorAction::queryUseKPilotChanges(QString dbName, recordid_t id, 
 	{
 		PilotToDoInfo info(db);
 
-		PilotTodoEntry localTodo(*(info.info()), localrec);
-		PilotTodoEntry serialTodo(*(info.info()), serialrec);
-		localEntry=localTodo.getTextRepresentation(true);
-		serialEntry=serialTodo.getTextRepresentation(true);
+		PilotTodoEntry localTodo(localrec);
+		PilotTodoEntry serialTodo(serialrec);
+		localEntry=localTodo.getTextRepresentation(Qt::RichText);
+		serialEntry=serialTodo.getTextRepresentation(Qt::RichText);
 		recType=i18n("to-do entry");
 	}
 	else
@@ -183,8 +181,8 @@ bool InternalEditorAction::queryUseKPilotChanges(QString dbName, recordid_t id, 
 	{
 		PilotMemo localMemo(localrec);
 		PilotMemo serialMemo(serialrec);
-		localEntry=localMemo.getTextRepresentation(true);
-		serialEntry=serialMemo.getTextRepresentation(true);
+		localEntry=localMemo.getTextRepresentation(Qt::RichText);
+		serialEntry=serialMemo.getTextRepresentation(Qt::RichText);
 		recType=i18n("memo");
 	}
 	else
@@ -192,14 +190,16 @@ bool InternalEditorAction::queryUseKPilotChanges(QString dbName, recordid_t id, 
 	{
 		PilotDateInfo info(db);
 
-		PilotDateEntry localEvent(*(info.info()), localrec);
-		PilotDateEntry serialEvent(*(info.info()), serialrec);
-		localEntry=localEvent.getTextRepresentation(true);
-		serialEntry=serialEvent.getTextRepresentation(true);
+		PilotDateEntry localEvent(localrec);
+		PilotDateEntry serialEvent(serialrec);
+		localEntry=localEvent.getTextRepresentation(Qt::RichText);
+		serialEntry=serialEvent.getTextRepresentation(Qt::RichText);
 		recType=i18n("calendar entry");
 	}
 	else
+	{
 		knownDB=false;
+	}
 
 	QString dialogText(i18n("The %1 with ID %2 of the database \"%3\" was changed "
 		"on the handheld and in the internal editor. Shall the changes in KPilot be copied to the handheld, and so override the changes there?").
@@ -241,7 +241,6 @@ bool InternalEditorAction::queryUseKPilotChanges(QString dbName, recordid_t id, 
 	}
 	else
 	{
-#ifdef USE_KHEXEDIT
 		label=new QLabel(i18n("Entry in KPilot"), page);
 		layout->addMultiCellWidget( label, 2,2,0,1);
 
@@ -297,7 +296,6 @@ bool InternalEditorAction::queryUseKPilotChanges(QString dbName, recordid_t id, 
 			hexEdit = tmpW;
 		}
 		layout->addMultiCellWidget( hexEdit, 5,5,0,1);
-#endif
 	}
 
 	int res=resdlg->exec();

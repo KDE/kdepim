@@ -1,9 +1,10 @@
 #ifndef _KPILOT_PILOTRECORD_H
 #define _KPILOT_PILOTRECORD_H
-/* pilotRecord.h			KPilot
+/* KPilot
 **
 ** Copyright (C) 1998-2001 by Dan Pilone
 ** Copyright (C) 2003-2004 Reinhold Kainhofer <reinhold@kainhofer.com>
+** Copyright (C) 2006 Adriaan de Groot <groot@kde.org>
 **
 */
 
@@ -28,20 +29,17 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
+
+#include "pilot.h"
+
 /**
 * @file This file defines the lowest- denominator representation(s)
 *of the bits used in a Pilot-based database record.
 */
 
 
-#include "pilotLinkVersion.h"
-
-#include "pilot.h"
-
-#include <pi-buffer.h>
-
-
-/** All entries in the Handheld -- whether interpreted or binary blobs --
+/**
+* All entries in the Handheld -- whether interpreted or binary blobs --
 * have some common characteristics, viz. an ID number, a category,
 * and some attributes defined by the handheld. PilotRecordBase is
 * a common base class collecting methods to manipulate those
@@ -89,7 +87,7 @@ public:
 	/** Attributes of this record (deleted, secret, ...);
 	* it's a bitfield.
 	*/
-	inline int attributes() const 
+	inline int attributes() const
 	{
 		return fAttrib;
 	}

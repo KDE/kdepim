@@ -15,6 +15,49 @@ TODO: provide template-based, interpreted databases much like the
 TODO: give the knotes conduit a decent test mode.
 TODO: only re-write a local database if it is changed.
 
+2007-04-15  Jason 'vanRijn' Kasper
+* merging all development and bug fixes from kdepim-3.5.5+ branch into
+  stable branches/KDE/3.5 in preparation for KDE 3.5.7
+* cmake cleanups
+* namespacing and cleanups in sysinfoconduit
+* lots of debugging cleanups.  remove #ifdef DEBUG from much of the code.
+* cleanups in memofile conduit.  now try to use new (OS5) database
+  (MemosDB-PMem) if it's found, otherwise fall back to the legacy one
+  (MemoDB)
+* as a first step to combatting the "kpilot ate my future" e-mails (read:
+  data loss), we now use a CUDCounter (Create/Update/Delete). step 1 is to
+  track these and report on them to the user in their sync log.  step 2 is
+  to catch ill behavior and prompt the user as to whether or not to allow
+  kpilot to make the large amount of changes.  step 3 is to allow the user
+  to configure the count or percentage of changes that kpilot can make
+  without his/her confirmation.  step 1 is done. we'll approach steps 2 and
+  3 post kde 3.5.7.
+* new strings related to the above
+* bug fixing in popconduit... making sure we always have a sent date
+* Bertjan has the start of knotes cleanup going on
+* bug fixing in vcalconduit... long-time bug that existed in libkcal that
+  caused every calendar resource save to mark every calendar event as
+  modified.  now kpilot won't have to sync every record every time.
+* bug fixing kabc resource problems in abbrowser conduit.  although it's
+  not documented in kabc, it looks like we should be removing a local
+  resource from the address book before we delete it.
+* bringing mal conduit back alive again.  none of our small band of merry
+  men use it, though, so it may or may not actually do what it's supposed
+  to.
+* fixing bug where we were saving conduit databases to DBBackup instead of
+  conduits/ directory.
+* changing KPilotDeviceLink to use a separate thread, dedicated to doing
+  device communication.  this is much better design as a start, but fixes
+  the problems kpilot was having (and widely talked about) where kpilot
+  would hang and crash if our user was using "usb:" or "net:any" devices
+  because of how these new "device"s operated (allowed immediate opening,
+  even though there is no physical device connected, and then hung
+  indefinitely until the real device connected).
+* bringing in design documents (jpegs) for memofile conduit from 2004-12-12
+  (they're not installed, but are valuable for documentation and insight)
+* icon naming error bug fix 122582
+
+
 2006-10-24  Jason 'vanRijn' Kasper
 * Getting rid of FastSync.  The only difference between it and HotSync was
   that HotSync did a Backup and FastSync did not.  Having a third

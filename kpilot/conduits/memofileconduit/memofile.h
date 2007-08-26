@@ -2,7 +2,7 @@
 #define _MEMOFILE_MEMOFILE_H
 /* memofile.h			KPilot
 **
-** Copyright (C) 2004-2004 by Jason 'vanRijn' Kasper
+** Copyright (C) 2004-2007 by Jason 'vanRijn' Kasper
 **
 */
 

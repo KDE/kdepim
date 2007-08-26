@@ -107,17 +107,14 @@ protected slots:
 	void slotProcess();
 
 public:
-	// Maybe it's better to make this methods public in ConduitAction. They need
-	// to be public so that the state classes can access them.
-	const SyncMode &syncMode() const { return ConduitAction::syncMode(); };
-	bool isFullSync() const { return ConduitAction::isFullSync(); };
-	bool isFirstSync() const { return ConduitAction::isFirstSync(); };
-
 	/**
 	 * Method used by state classes to indicatie if there are more records to
 	 * deal with.
 	 */
-	void setHasNextRecord( bool b) { hasNextRecord = b; };
+	void setHasNextRecord( bool b ) 
+	{
+		hasNextRecord = b;
+	}
 
 	/**
 	 * Change the current state of the conduit. The state that the conduit has
@@ -129,7 +126,10 @@ public:
 	/**
 	 * Returns the privatebase, that is used to for accessing the local calendar.
 	 */
-	VCalConduitPrivateBase *privateBase() const { return fP; };
+	VCalConduitPrivateBase *privateBase() const
+	{
+		return fP;
+	}
 
 	/**
 	 * Returns the record at index from the palm or 0L if there is no record at
@@ -166,8 +166,8 @@ public:
 /*********************************************************************
           P R E -   A N D   P O S T S Y N C   F U N C T I O N S
  *********************************************************************/
-	virtual void preSync() {};
-	virtual void postSync() {};
+	virtual void preSync();
+	virtual void postSync();
 	virtual void preRecord(PilotRecord*) {};
 
 protected:
@@ -196,7 +196,7 @@ protected:
 	 */
 	virtual int resolveConflict(KCal::Incidence *e, PilotRecordBase *de);
 	virtual bool openCalendar();
-	virtual VCalConduitPrivateBase *newVCalPrivate(KCal::Calendar *fCalendar) = 0;
+	virtual VCalConduitPrivateBase *createPrivateCalendarData(KCal::Calendar *fCalendar) = 0;
 } ;
 
 #endif

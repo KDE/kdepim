@@ -31,11 +31,12 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
-#include <qbitarray.h>
-#include <qdatetime.h>
-
 #include <pi-macros.h>
 #include <pi-datebook.h>
+
+#include <qbitarray.h>
+#include <qdatetime.h>
+#include <qnamespace.h>
 
 #include "pilotRecord.h"
 #include "pilotAppInfo.h"
@@ -45,15 +46,37 @@ namespace KCal
 class Event;
 }
 
+/** Interpreted form of the AppInfo block in the datebook database. */
+typedef PilotAppInfo<
+	AppointmentAppInfo,
+	unpack_AppointmentAppInfo, 
+	pack_AppointmentAppInfo> PilotDateInfo_;
+
+
+class PilotDateInfo : public PilotDateInfo_
+{
+public:
+	PilotDateInfo(PilotDatabase *d) : PilotDateInfo_(d)
+	{
+	}
+
+	/** This resets the entire AppInfo block to one as it would be
+	*   in an English-language handheld, with 3 categories and
+	*   default field labels for everything.
+	*/
+	void resetToDefault();
+
+};
+
 /** This class is a wrapper for pilot-link's datebook entries (struct Appointment). */
 class KDE_EXPORT PilotDateEntry : public PilotRecordBase
 {
 public:
-	/** Constructor. Sets the appinfo structure and zeroes out the appointment. */
-	PilotDateEntry(struct AppointmentAppInfo &appInfo);
+	/** Constructor. Zeroes out the appointment. */
+	PilotDateEntry();
 
 	/** Constructor. Interprets the given record as an appointment. */
-	PilotDateEntry(struct AppointmentAppInfo &appInfo, PilotRecord *rec);
+	PilotDateEntry(PilotRecord *rec);
 
 	/** Copy constructor. */
 	PilotDateEntry(const PilotDateEntry &e);
@@ -71,7 +94,7 @@ public:
 	* If @p richText is true, then the text representation uses qt style
 	* tags as well.
 	*/
-	QString getTextRepresentation(bool richText=false);
+	QString getTextRepresentation(Qt::TextFormat richText);
 
 	/** Is this appointment a "floating" appointment?
 	*
@@ -352,35 +375,13 @@ public:
 		!doesFloat() );
 	}
 
-	inline QString getCategoryLabel() const
-	{
-		return Pilot::categoryName(&(fAppInfo.category),category());
-	}
-	inline bool setCategory(const QString &label)
-	{
-		int c = Pilot::insertCategory(&fAppInfo.category,label,false);
-		PilotRecordBase::setCategory(c);
-		return c>=0;
-	} ;
-
 	PilotRecord *pack() const;
-
-	/** @return A reference to the appinfo block of the database
-	*          holding this entry.
-	*/
-	const AppointmentAppInfo &appInfo()
-	{
-		return fAppInfo;
-	}
 
 private:
 	struct Appointment fAppointmentInfo;
-	struct AppointmentAppInfo &fAppInfo;
 	void _copyExceptions(const PilotDateEntry &e);
 };
 
-
-typedef PilotAppInfo<AppointmentAppInfo,unpack_AppointmentAppInfo, pack_AppointmentAppInfo> PilotDateInfo;
 
 
 #endif
