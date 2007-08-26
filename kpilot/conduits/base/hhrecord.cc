@@ -59,7 +59,7 @@ void HHRecord::setCategoryNames( const QStringList &cats )
 			
 			if( aiCats.contains( cats.first() ) )
 			{
-				DEBUGKPILOT << "Changin category from " << fCategory << " to "
+				DEBUGKPILOT << "Changing category from " << fCategory << " to "
 					<< cats.first();
 
 				fCategory = cats.first();

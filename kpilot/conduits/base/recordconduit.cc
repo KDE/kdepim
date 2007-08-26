@@ -77,14 +77,14 @@ RecordConduit::~RecordConduit()
 	setFirstSync( retrieved );
 	
 	// NOTE: Do not forget that the HHData proxy and the backup proxy must use
-	// the opened databases, maybe we should pass them for clearity to this method.
+	// the opened databases, maybe we should pass them for clarity to this method.
 	if( !initDataProxies() )
 	{
 		DEBUGKPILOT << "One of the dataproxies was not initialized";
 		return false;
 	}
 	
-	// For the pc data proxy we can only after initilisation know if it could be
+	// For the pc data proxy we can only after initialization know if it could be
 	// opened.
 	bool pcDatabaseOpen = fPCDataProxy->isOpen();
 	
@@ -134,7 +134,7 @@ RecordConduit::~RecordConduit()
 	}
 	else if( hhDatabaseOpen && pcDatabaseOpen && !backupDatabaseOpen )
 	{
-		DEBUGKPILOT << "HHDatabase open, PCDatabase open, Bakcupdatabase closed.";
+		DEBUGKPILOT << "HHDatabase open, PCDatabase open, Backupdatabase closed.";
 		setFirstSync( true ); // 6.3.2
 		firstSync();
 	}
@@ -154,7 +154,7 @@ RecordConduit::~RecordConduit()
 	}
 	else if( !hhDatabaseOpen && pcDatabaseOpen )
 	{
-		DEBUGKPILOT << "HHDatabase closed, PCDatabase open, Bakcupdatabase closed.";
+		DEBUGKPILOT << "HHDatabase closed, PCDatabase open.";
 		
 		if( fHHDataProxy->createDataStore() )
 		{

@@ -164,7 +164,7 @@ void HHDataProxy::loadAllRecords()
 			
 			if( fAppInfo )
 			{
-				// Handheld records always only have on category at most.
+				// Handheld records always only have one category.
 				QString cat = fAppInfo->categoryName( pRec->category() );
 				if( cat.isEmpty() )
 				{

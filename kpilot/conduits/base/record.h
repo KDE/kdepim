@@ -33,8 +33,8 @@
 #include "kpilot_export.h"
 
 /**
- * If subclassing Record, the onlything that should be reimplemented is the
- * isValid() function. If other methods are reimplemented it's not garanteed
+ * If subclassing Record, the only thing that should be reimplemented is the
+ * isValid() function. If other methods are reimplemented it's not guaranteed
  * that the conduit will work as expected. If you miss a feature which should be
  * in this class, contact the kpilot developers.
  */
