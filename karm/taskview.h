@@ -157,7 +157,10 @@ class TaskView : public KListView
     void markTaskAsComplete();
     void markTaskAsIncomplete();
 
-    /** Subtracts time from all active tasks, and does not log event. */
+    /** Subtracts time from all active tasks, and does not log event. 
+     * The time is stored in memory and in X-KDE-karm-duration. It is
+     * increased automatically every minute to display the right duration.
+     */
     void extractTime( int minutes );
     void taskTotalTimesChanged( long session, long total)
                                 { emit totalTimesChanged( session, total); };

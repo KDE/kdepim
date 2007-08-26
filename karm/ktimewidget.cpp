@@ -30,9 +30,6 @@ class TimeValidator : public QValidator
       if ( ! ok )
         return Invalid;
 
-      if ( str.contains('-') != 0 )
-        return Invalid;
-
       if ( _tp==MINUTE && val >= 60  )
         return Invalid;
       else

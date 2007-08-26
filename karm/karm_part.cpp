@@ -502,7 +502,7 @@ int karmPart::addTask( const QString& taskname )
 
 QString karmPart::setPerCentComplete( const QString& taskName, int perCent )
 {
-  int index;
+  int index = 0;
   QString err="no such task";
   for (int i=0; i<_taskView->count(); i++)
   {

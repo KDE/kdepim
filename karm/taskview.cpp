@@ -421,7 +421,7 @@ void TaskView::stopAllTimersAt(QDateTime qdt)
 // stops all timers for the time qdt. This makes sense, if the idletimedetector detected
 // the last work has been done 50 minutes ago.
 {
-  kdDebug(5970) << "Entering TaskView::stopAllTimersAt" << endl;
+  kdDebug(5970) << "Entering TaskView::stopAllTimersAt " << qdt << endl;
   for ( unsigned int i = 0; i < activeTasks.count(); i++ )
   {
     activeTasks.at(i)->setRunning(false, _storage, qdt, qdt);
@@ -696,9 +696,14 @@ void TaskView::deleteTask(bool markingascomplete)
 }
 
 void TaskView::extractTime(int minutes)
+// This procedure subtracts ''minutes'' from the active task's time in the memory.
+// It is called by the idletimedetector class.
+// When the desktop has been idle for the past 20 minutes, the past 20 minutes have 
+// already been added to the task's time in order for the time to be displayed correctly.
+// That is why idletimedetector needs to subtract this time first.
 {
   kdDebug(5970) << "Entering extractTime" << endl;
-  addTimeToActiveTasks(-minutes);
+  addTimeToActiveTasks(-minutes,false); // subtract minutes, but do not store it
 }
 
 void TaskView::autoSaveChanged(bool on)
