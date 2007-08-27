@@ -43,7 +43,7 @@
 #include <assert.h>
 
 Kleo::QGpgMEDownloadJob::QGpgMEDownloadJob( GpgME::Context * context )
-  : DownloadJob( QGpgME::EventLoopInteractor::instance(), "Kleo::QGpgMEDownloadJob" ),
+  : DownloadJob( QGpgME::EventLoopInteractor::instance() ),
     QGpgMEJob( this, context )
 {
   assert( context );

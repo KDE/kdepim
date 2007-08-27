@@ -65,7 +65,7 @@ namespace Kleo {
   class SignJob : public Job {
     Q_OBJECT
   protected:
-    SignJob( QObject * parent, const char * name );
+    explicit SignJob( QObject * parent );
   public:
     ~SignJob();
 

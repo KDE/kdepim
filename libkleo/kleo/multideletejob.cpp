@@ -45,7 +45,7 @@
 #include <assert.h>
 
 Kleo::MultiDeleteJob::MultiDeleteJob( const CryptoBackend::Protocol * protocol )
-  : Job( 0, "Kleo::MultiDeleteJob" ),
+  : Job( 0 ),
     mProtocol( protocol ),
     mJob( 0 )
 {

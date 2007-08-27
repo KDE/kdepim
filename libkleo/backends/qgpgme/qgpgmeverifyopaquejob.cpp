@@ -42,7 +42,7 @@
 #include <assert.h>
 
 Kleo::QGpgMEVerifyOpaqueJob::QGpgMEVerifyOpaqueJob( GpgME::Context * context )
-  : VerifyOpaqueJob( QGpgME::EventLoopInteractor::instance(), "Kleo::QGpgMEVerifyOpaqueJob" ),
+  : VerifyOpaqueJob( QGpgME::EventLoopInteractor::instance() ),
     QGpgMEJob( this, context )
 {
   assert( context );

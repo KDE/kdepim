@@ -38,24 +38,17 @@
 #include <kconfig.h>
 #include <kconfiggroup.h>
 
-#include <QApplication>
+#include <QCoreApplication>
 #include <QRegExp>
 #include <QStringList>
 
 #include <algorithm>
 
-namespace {
-  template <typename T>
-  struct Delete {
-    void operator()( T * item ) { delete item; }
-  };
-}
 
 class Kleo::KeyFilterManager::Private {
 public:
   void clear() {
-    std::for_each( filters.begin(), filters.end(), Delete<KeyFilter>() );
-    filters.clear();
+    qDeleteAll( filters );
   }
 
   QVector<KeyFilter*> filters;
@@ -63,15 +56,13 @@ public:
 
 Kleo::KeyFilterManager * Kleo::KeyFilterManager::mSelf = 0;
 
-Kleo::KeyFilterManager::KeyFilterManager( QObject * parent, const char * name )
-  : QObject( parent ), d( 0 )
+Kleo::KeyFilterManager::KeyFilterManager( QObject * parent )
+  : QObject( parent ), d( new Private )
 {
-  setObjectName(name);
   mSelf = this;
-  d = new Private();
   // ### DF: doesn't a KStaticDeleter work more reliably?
-  if ( qApp )
-    connect( qApp, SIGNAL(aboutToQuit()), SLOT(deleteLater()) );
+  if ( QCoreApplication * app = QCoreApplication::instance() )
+    connect( app, SIGNAL(aboutToQuit()), SLOT(deleteLater()) );
   reload();
 }
 
@@ -89,7 +80,7 @@ Kleo::KeyFilterManager * Kleo::KeyFilterManager::instance() {
 }
 
 const Kleo::KeyFilter * Kleo::KeyFilterManager::filterMatching( const GpgME::Key & key ) const {
-  for ( QVector<KeyFilter*>::const_iterator it = d->filters.begin() ; it != d->filters.end() ; ++it )
+    for ( QVector<KeyFilter*>::const_iterator it = d->filters.begin(), end = d->filters.end() ; it != end ; ++it )
     if ( (*it)->matches( key ) )
       return *it;
   return 0;

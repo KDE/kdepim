@@ -60,7 +60,7 @@ namespace Kleo {
   class Job : public QObject {
     Q_OBJECT
   protected:
-    Job( QObject * parent, const char * name );
+    explicit Job( QObject * parent );
   public:
     ~Job();
 

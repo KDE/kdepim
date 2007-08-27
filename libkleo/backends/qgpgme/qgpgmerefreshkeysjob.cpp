@@ -51,7 +51,7 @@
 #include <assert.h>
 
 Kleo::QGpgMERefreshKeysJob::QGpgMERefreshKeysJob()
-  : RefreshKeysJob( QGpgME::EventLoopInteractor::instance(), "Kleo::QGpgMERefreshKeysJob" ),
+  : RefreshKeysJob( QGpgME::EventLoopInteractor::instance() ),
     mProcess( 0 ),
     mError( 0 )
 {

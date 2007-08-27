@@ -66,7 +66,7 @@ namespace Kleo {
     Q_OBJECT
     Q_PROPERTY( QStringList result READ result )
   public:
-    ObtainKeysJob();
+    explicit ObtainKeysJob( QObject * parent=0 );
     ~ObtainKeysJob();
 
     /*!\reimp SpecialJob */
@@ -80,10 +80,10 @@ namespace Kleo {
     //using SpecialJob::result;
     QStringList result() const { return mResult; }
 
-  public slots:
+  public Q_SLOTS:
     void slotCancel();
 
-  private slots:
+  private Q_SLOTS:
     void slotPerform();
     void slotPerform( bool async );
 

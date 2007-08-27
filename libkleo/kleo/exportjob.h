@@ -61,7 +61,7 @@ namespace Kleo {
   class ExportJob : public Job {
     Q_OBJECT
   protected:
-    ExportJob( QObject * parent, const char * name );
+    explicit ExportJob( QObject * parent );
   public:
     ~ExportJob();
 

@@ -50,8 +50,8 @@
 
 #include <cassert>
 
-Kleo::ObtainKeysJob::ObtainKeysJob()
-  : SpecialJob( 0, 0 ),
+Kleo::ObtainKeysJob::ObtainKeysJob( QObject * p )
+  : SpecialJob( p ),
     mIndex( 0 ),
     mCanceled( false )
 {

@@ -61,7 +61,7 @@ namespace Kleo {
   class ImportJob : public Job {
     Q_OBJECT
   protected:
-    ImportJob( QObject * parent, const char * name );
+    explicit ImportJob( QObject * parent );
   public:
     ~ImportJob();
 

@@ -49,7 +49,7 @@ namespace Kleo {
   class KLEO_EXPORT KeyFilterManager : public QObject {
     Q_OBJECT
   protected:
-    KeyFilterManager( QObject * parent=0, const char * name=0 );
+    explicit KeyFilterManager( QObject * parent=0 );
     ~KeyFilterManager();
 
   public:

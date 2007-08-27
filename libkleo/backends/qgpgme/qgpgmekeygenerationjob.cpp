@@ -42,7 +42,7 @@
 #include <assert.h>
 
 Kleo::QGpgMEKeyGenerationJob::QGpgMEKeyGenerationJob( GpgME::Context * context )
-  : KeyGenerationJob( QGpgME::EventLoopInteractor::instance(), "Kleo::QGpgMEKeyGenerationJob" ),
+  : KeyGenerationJob( QGpgME::EventLoopInteractor::instance() ),
     QGpgMEJob( this, context ),
     mPubKeyDataProvider( 0 ),
     mPubKey( 0 )

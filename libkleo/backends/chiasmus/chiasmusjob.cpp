@@ -52,7 +52,7 @@
 #include <cassert>
 
 Kleo::ChiasmusJob::ChiasmusJob( Mode mode )
-  : Kleo::SpecialJob( 0, 0 ),
+  : Kleo::SpecialJob( 0 ),
     mSymCryptRun( 0 ),
     mError( 0 ),
     mCanceled( false ),

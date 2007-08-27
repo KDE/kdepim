@@ -61,7 +61,7 @@ namespace Kleo {
   class VerifyOpaqueJob : public Job {
     Q_OBJECT
   protected:
-    VerifyOpaqueJob( QObject * parent, const char * name );
+    explicit VerifyOpaqueJob( QObject * parent );
   public:
     ~VerifyOpaqueJob();
 

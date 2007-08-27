@@ -52,7 +52,7 @@
 #include <assert.h>
 
 Kleo::QGpgMEKeyListJob::QGpgMEKeyListJob( GpgME::Context * context )
-  : KeyListJob( QGpgME::EventLoopInteractor::instance(), "Kleo::QGpgMEKeyListJob" ),
+  : KeyListJob( QGpgME::EventLoopInteractor::instance() ),
     QGpgMEJob( this, context ),
     mResult(), mSecretOnly( false )
 {

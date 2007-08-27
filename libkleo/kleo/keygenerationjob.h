@@ -61,7 +61,7 @@ namespace Kleo {
   class KeyGenerationJob : public Job {
     Q_OBJECT
   protected:
-    KeyGenerationJob( QObject * parent, const char * name );
+    explicit KeyGenerationJob( QObject * parent );
   public:
     ~KeyGenerationJob();
 

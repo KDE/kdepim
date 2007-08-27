@@ -42,7 +42,7 @@
 #include <assert.h>
 
 Kleo::QGpgMEImportJob::QGpgMEImportJob( GpgME::Context * context )
-  : ImportJob( QGpgME::EventLoopInteractor::instance(), "Kleo::QGpgMEImportJob" ),
+  : ImportJob( QGpgME::EventLoopInteractor::instance() ),
     QGpgMEJob( this, context )
 {
   assert( context );

@@ -39,7 +39,7 @@
 #include <assert.h>
 
 Kleo::QGpgMEDeleteJob::QGpgMEDeleteJob( GpgME::Context * context )
-  : DeleteJob( QGpgME::EventLoopInteractor::instance(), "Kleo::QGpgMEDeleteJob" ),
+  : DeleteJob( QGpgME::EventLoopInteractor::instance() ),
     QGpgMEJob( this, context )
 {
   assert( context );

@@ -42,7 +42,7 @@
 #include <assert.h>
 
 Kleo::QGpgMEDecryptJob::QGpgMEDecryptJob( GpgME::Context * context )
-  : DecryptJob( QGpgME::EventLoopInteractor::instance(), "Kleo::QGpgMEDecryptJob" ),
+  : DecryptJob( QGpgME::EventLoopInteractor::instance() ),
     QGpgMEJob( this, context )
 {
   assert( context );

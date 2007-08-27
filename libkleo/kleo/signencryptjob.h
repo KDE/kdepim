@@ -67,7 +67,7 @@ namespace Kleo {
   class SignEncryptJob : public Job {
     Q_OBJECT
   protected:
-    SignEncryptJob( QObject * parent, const char * name );
+    explicit SignEncryptJob( QObject * parent );
   public:
     ~SignEncryptJob();
 

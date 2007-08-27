@@ -58,7 +58,7 @@ namespace Kleo {
   class DeleteJob : public Job {
     Q_OBJECT
   protected:
-    DeleteJob( QObject * parent, const char * name );
+    explicit DeleteJob( QObject * parent );
   public:
     ~DeleteJob();
 

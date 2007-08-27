@@ -53,7 +53,7 @@
 
 Kleo::HierarchicalKeyListJob::HierarchicalKeyListJob( const CryptoBackend::Protocol * protocol,
 						      bool remote, bool includeSigs, bool validating )
-  : KeyListJob( 0, "Kleo::HierarchicalKeyListJob" ),
+  : KeyListJob( 0 ),
     mProtocol( protocol ),
     mRemote( remote ),
     mIncludeSigs( includeSigs ),

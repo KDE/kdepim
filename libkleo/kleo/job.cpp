@@ -49,15 +49,14 @@
 #include "refreshkeysjob.h"
 #include "specialjob.h"
 
-#include <QApplication>
+#include <QCoreApplication>
 #include <kdebug.h>
 
-Kleo::Job::Job( QObject * parent, const char * name )
+Kleo::Job::Job( QObject * parent )
   : QObject( parent )
 {
-  setObjectName(name);
-  if ( qApp )
-    connect( qApp, SIGNAL(aboutToQuit()), SLOT(slotCancel()) );
+    if ( QCoreApplication * app = QCoreApplication::instance() )
+	connect( app, SIGNAL(aboutToQuit()), SLOT(slotCancel()) );
 }
 
 Kleo::Job::~Job() {
@@ -71,7 +70,7 @@ void Kleo::Job::showErrorDialog( QWidget *, const QString & ) const {
 
 
 #define make_job_subclass(x) \
-  Kleo::x::x( QObject * parent, const char * name ) : Job( parent, name ) {} \
+  Kleo::x::x( QObject * parent ) : Job( parent ) {} \
   Kleo::x::~x() {}
 
 make_job_subclass(KeyListJob)

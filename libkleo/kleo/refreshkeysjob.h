@@ -62,8 +62,7 @@ namespace Kleo {
   class RefreshKeysJob : public Job {
     Q_OBJECT
   protected:
-    RefreshKeysJob( QObject * parent, const char * name );
-
+    explicit RefreshKeysJob( QObject * parent );
   public:
    ~RefreshKeysJob();
 

@@ -65,7 +65,7 @@ namespace Kleo {
   class KeyListJob : public Job {
     Q_OBJECT
   protected:
-    KeyListJob( QObject * parent, const char * name );
+    explicit KeyListJob( QObject * parent );
 
   public:
    ~KeyListJob();

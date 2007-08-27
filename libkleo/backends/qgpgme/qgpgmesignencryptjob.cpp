@@ -45,7 +45,7 @@
 #include <assert.h>
 
 Kleo::QGpgMESignEncryptJob::QGpgMESignEncryptJob( GpgME::Context * context )
-  : SignEncryptJob( QGpgME::EventLoopInteractor::instance(), "Kleo::QGpgMESignEncryptJob" ),
+  : SignEncryptJob( QGpgME::EventLoopInteractor::instance() ),
     QGpgMEJob( this, context )
 {
   assert( context );

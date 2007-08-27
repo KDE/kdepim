@@ -42,7 +42,7 @@
 #include <assert.h>
 
 Kleo::QGpgMEVerifyDetachedJob::QGpgMEVerifyDetachedJob( GpgME::Context * context )
-  : VerifyDetachedJob( QGpgME::EventLoopInteractor::instance(), "Kleo::QGpgMEVerifyDetachedJob" ),
+  : VerifyDetachedJob( QGpgME::EventLoopInteractor::instance() ),
     QGpgMEJob( this, context )
 {
   assert( context );

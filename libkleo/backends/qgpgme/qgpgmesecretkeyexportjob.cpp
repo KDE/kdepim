@@ -50,7 +50,7 @@
 #include <assert.h>
 
 Kleo::QGpgMESecretKeyExportJob::QGpgMESecretKeyExportJob( bool armour, const QString& charset )
-  : ExportJob( QGpgME::EventLoopInteractor::instance(), "Kleo::QGpgMESecretKeyExportJob" ),
+  : ExportJob( QGpgME::EventLoopInteractor::instance() ),
     mProcess( 0 ),
     mError( 0 ),
     mArmour( armour ),

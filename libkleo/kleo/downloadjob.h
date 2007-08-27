@@ -61,7 +61,7 @@ namespace Kleo {
   class DownloadJob : public Job {
     Q_OBJECT
   protected:
-    DownloadJob( QObject * parent, const char * name );
+    explicit DownloadJob( QObject * parent );
   public:
     ~DownloadJob();
 

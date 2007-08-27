@@ -64,7 +64,7 @@ namespace Kleo {
   class DecryptVerifyJob : public Job {
     Q_OBJECT
   protected:
-    DecryptVerifyJob( QObject * parent, const char * name );
+    explicit DecryptVerifyJob( QObject * parent );
   public:
     ~DecryptVerifyJob();
 

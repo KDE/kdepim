@@ -61,7 +61,7 @@ namespace Kleo {
   class VerifyDetachedJob : public Job {
     Q_OBJECT
   protected:
-    VerifyDetachedJob( QObject * parent, const char * name );
+    explicit VerifyDetachedJob( QObject * parent );
   public:
     ~VerifyDetachedJob();
 
