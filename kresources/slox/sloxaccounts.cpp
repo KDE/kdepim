@@ -25,7 +25,6 @@
 
 #include <kcal/freebusyurlstore.h>
 
-#include <kstaticdeleter.h>
 #include <kdebug.h>
 #include <kstandarddirs.h>
 #include <kio/job.h>
