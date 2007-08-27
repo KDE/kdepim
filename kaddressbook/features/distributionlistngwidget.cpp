@@ -118,13 +118,10 @@ KAB::DistributionListNg::MainWidget::MainWidget( KAB::Core *core, QWidget *paren
     layout->setSpacing( KDialog::spacingHint() );
 
     QLabel *label = new QLabel( this );
-    label->setSizePolicy( QSizePolicy::Minimum, QSizePolicy::Fixed );
-
     label->setText( i18n( "Distribution Lists" ) );
     layout->addWidget( label );
 
     mListBox = new ListBox( this );
-    layout->addWidget( mListBox );
     connect( mListBox, SIGNAL( dropped( const QString &, const KABC::Addressee::List & ) ), 
              this, SLOT( contactsDropped( const QString &, const KABC::Addressee::List & ) ) );
     connect( mListBox, SIGNAL( highlighted( int ) ), 
