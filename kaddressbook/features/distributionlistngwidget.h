@@ -82,7 +82,6 @@ private slots:
 
 private:
     ListBox *mListBox;
-    KABC::DistributionListManager *mManager;
 };
 
 } // namespace DistributionListNg

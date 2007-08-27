@@ -23,21 +23,21 @@
 #include "distributionlistngwidget.h"
 #include "interfaces/core.h"
 
+#include <libkdepim/distributionlist.h>
 #include <libkdepim/kvcarddrag.h>
 
-#include <kabc/distributionlist.h>
 #include <kabc/vcardconverter.h>
 
 #include <kdialog.h>
 #include <klistview.h>
 #include <klocale.h>
+#include <kpopupmenu.h>
 
 #include <qevent.h>
+#include <qguardedptr.h>
 #include <qlabel.h>
 #include <qlayout.h>
 #include <qpoint.h>
-
-typedef KABC::DistributionList DistributionList;
 
 KAB::DistributionListNg::ListBox::ListBox( QWidget* parent ) : KListBox( parent )
 {
@@ -130,10 +130,10 @@ KAB::DistributionListNg::MainWidget::MainWidget( KAB::Core *core, QWidget *paren
     connect( core->addressBook(), SIGNAL( addressBookChanged( AddressBook* ) ),
              this, SLOT( updateEntries() ) );
 
-    mManager = new KABC::DistributionListManager( core->addressBook() );
+    // When contacts are changed, update both distr list combo and contents of displayed distr list
+    connect( core, SIGNAL( contactsUpdated() ),
+             this, SLOT( updateNameCombo() ) );
 
-    connect( KABC::DistributionListWatcher::self(), SIGNAL( changed() ),
-             this, SLOT( updateEntries() ) );
 
     updateEntries();
 }
@@ -148,20 +148,23 @@ void KAB::DistributionListNg::MainWidget::contactsDropped( const QString &listNa
     if ( addressees.isEmpty() )
         return;
 
-    KABC::DistributionList *list = mManager->list( listName );
-    if ( !list )
+    KPIM::DistributionList list = KPIM::DistributionList::findByName(
+    core()->addressBook(), listName );
+    if ( list.isEmpty() ) // not found [should be impossible]
         return;
+
     for ( KABC::Addressee::List::ConstIterator it = addressees.begin(); it != addressees.end(); ++it ) {
-        list->insertEntry( *it );
+        list.insertEntry( *it );
     }
-    mManager->save();
+
+    core()->addressBook()->insertAddressee( list );
+//    changed( list ); // TODO
 } 
 
 void KAB::DistributionListNg::MainWidget::updateEntries()
 {
     mListBox->clear();
-    mManager->load();
-    mListBox->insertStringList( mManager->listNames() );
+    mListBox->insertStringList( core()->distributionListNames() );
 }
 
 #include "distributionlistngwidget.moc"
