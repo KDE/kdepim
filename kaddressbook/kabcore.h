@@ -148,6 +148,12 @@ class KDE_EXPORT KABCore : public KAB::Core
       Returns the name of all the distribution lists.
      */
     virtual QStringList distributionListNames() const;
+
+    /**
+      sets the distribution list to display. If null, the regular
+      address book is to be displayed.  
+     */
+    virtual void setSelectedDistributionList( const QString &name );
 #endif
 
   public slots:

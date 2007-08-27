@@ -1343,6 +1343,11 @@ KPIM::DistributionList::List KABCore::distributionLists() const
   return mSearchManager->distributionLists();
 }
 
+void KABCore::setSelectedDistributionList( const QString &name )
+{
+    mSearchManager->setSelectedDistributionList( name );
+}
+
 QStringList KABCore::distributionListNames() const
 {
   return mSearchManager->distributionListNames();

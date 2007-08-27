@@ -29,6 +29,8 @@
 
 #include <klistbox.h>
 
+#include <qstringlist.h>
+
 class QDragEnterEvent;
 class QDragMoveEvent;
 class QDropEvent;
@@ -77,11 +79,12 @@ private slots:
     
     void contextMenuRequested( QListBoxItem *item, const QPoint &point );
     void updateEntries();
-    
+    void itemSelected( const QString &text );
     void contactsDropped( const QString &listName, const KABC::Addressee::List &addressees ); 
 
 private:
     ListBox *mListBox;
+    QStringList mCurrentEntries;
 };
 
 } // namespace DistributionListNg

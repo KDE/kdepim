@@ -22,6 +22,7 @@
 
 #include "distributionlistngwidget.h"
 #include "interfaces/core.h"
+#include "searchmanager.h"
 
 #include <libkdepim/distributionlist.h>
 #include <libkdepim/kvcarddrag.h>
@@ -123,6 +124,8 @@ KAB::DistributionListNg::MainWidget::MainWidget( KAB::Core *core, QWidget *paren
     mListBox = new ListBox( this );
     connect( mListBox, SIGNAL( dropped( const QString &, const KABC::Addressee::List & ) ), 
              this, SLOT( contactsDropped( const QString &, const KABC::Addressee::List & ) ) );
+    connect( mListBox, SIGNAL( highlighted( const QString & ) ), 
+             this, SLOT( itemSelected( const QString & ) ) );
     layout->addWidget( mListBox );
 
     connect( core, SIGNAL( contactsUpdated() ),
@@ -132,7 +135,7 @@ KAB::DistributionListNg::MainWidget::MainWidget( KAB::Core *core, QWidget *paren
 
     // When contacts are changed, update both distr list combo and contents of displayed distr list
     connect( core, SIGNAL( contactsUpdated() ),
-             this, SLOT( updateNameCombo() ) );
+             this, SLOT( updateEntries() ) );
 
 
     updateEntries();
@@ -163,8 +166,18 @@ void KAB::DistributionListNg::MainWidget::contactsDropped( const QString &listNa
 
 void KAB::DistributionListNg::MainWidget::updateEntries()
 {
+    const QStringList newEntries = core()->distributionListNames();
+    if ( newEntries == mCurrentEntries )
+        return;
+    mCurrentEntries = newEntries;
     mListBox->clear();
-    mListBox->insertStringList( core()->distributionListNames() );
+    mListBox->insertStringList( mCurrentEntries );
+}
+
+#include <kdebug.h>
+void KAB::DistributionListNg::MainWidget::itemSelected( const QString &text )
+{
+    core()->setSelectedDistributionList( text );
 }
 
 #include "distributionlistngwidget.moc"
