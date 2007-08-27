@@ -24,7 +24,9 @@
 #ifndef KCMKABLDAPCONFIG_H
 #define KCMKABLDAPCONFIG_H
 
+#define KDE3_SUPPORT
 #include <kcmodule.h>
+#undef KDE3_SUPPORT
 #include <kcomponentdata.h>
 #include <QWidget>
 
