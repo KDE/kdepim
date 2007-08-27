@@ -172,8 +172,10 @@ void SearchManager::reload()
 
 void KAB::SearchManager::setSelectedDistributionList( const QString &name )
 {
-    mSelectedDistributionList = name;
-    reload();
+  if ( mSelectedDistributionList == name )
+    return;     
+  mSelectedDistributionList = name;
+  reload();
 }
 
 KPIM::DistributionList::List KAB::SearchManager::distributionLists() const

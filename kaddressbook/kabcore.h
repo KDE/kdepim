@@ -27,6 +27,7 @@
 #include <kabc/field.h>
 
 #include <qdict.h>
+#include <qlabel.h>
 #include <qwidget.h>
 
 #include "core.h"
@@ -387,6 +388,7 @@ class KDE_EXPORT KABCore : public KAB::Core
     KStatusBar *mStatusBar;
 
     ViewManager *mViewManager;
+    QLabel *mViewHeaderLabel;
     ExtensionManager *mExtensionManager;
     XXPortManager *mXXPortManager;
 

@@ -28,6 +28,7 @@
 #include <qclipboard.h>
 #include <qdir.h>
 #include <qfile.h>
+#include <qlabel.h>
 #include <qlayout.h>
 #include <qptrlist.h>
 #include <qregexp.h>
@@ -1019,7 +1020,16 @@ void KABCore::initGUI()
 
   mExtensionManager = new ExtensionManager( new QWidget( mDetailsSplitter ), this, this );
   
-  mViewManager = new ViewManager( this, mDetailsSplitter );
+  QWidget *viewWidget = new QWidget( mDetailsSplitter );
+  QVBoxLayout *viewLayout = new QVBoxLayout( viewWidget );
+  viewLayout->setSpacing( KDialog::spacingHint() );
+  mViewHeaderLabel = new QLabel( viewWidget );
+  mViewHeaderLabel->setSizePolicy( QSizePolicy::Minimum, QSizePolicy::Fixed );
+  mViewHeaderLabel->setText( i18n( "Contacts" ) );
+  viewLayout->addWidget( mViewHeaderLabel );
+  mViewManager = new ViewManager( this, viewWidget );
+  viewLayout->addWidget( mViewManager );
+
   mFilterSelectionWidget = new FilterSelectionWidget( searchTB , "kde toolbar widget" );
   mViewManager->setFilterSelectionWidget( mFilterSelectionWidget );
 
@@ -1346,6 +1356,7 @@ KPIM::DistributionList::List KABCore::distributionLists() const
 void KABCore::setSelectedDistributionList( const QString &name )
 {
     mSearchManager->setSelectedDistributionList( name );
+    mViewHeaderLabel->setText( name.isNull() ? i18n( "Contacts" ) : i18n( "Distribution List: %1" ).arg( name ) );
 }
 
 QStringList KABCore::distributionListNames() const

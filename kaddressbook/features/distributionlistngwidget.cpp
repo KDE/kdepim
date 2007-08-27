@@ -118,10 +118,13 @@ KAB::DistributionListNg::MainWidget::MainWidget( KAB::Core *core, QWidget *paren
     layout->setSpacing( KDialog::spacingHint() );
 
     QLabel *label = new QLabel( this );
+    label->setSizePolicy( QSizePolicy::Minimum, QSizePolicy::Fixed );
+
     label->setText( i18n( "Distribution Lists" ) );
     layout->addWidget( label );
 
     mListBox = new ListBox( this );
+    layout->addWidget( mListBox );
     connect( mListBox, SIGNAL( dropped( const QString &, const KABC::Addressee::List & ) ), 
              this, SLOT( contactsDropped( const QString &, const KABC::Addressee::List & ) ) );
     connect( mListBox, SIGNAL( highlighted( int ) ), 
@@ -166,6 +169,7 @@ void KAB::DistributionListNg::MainWidget::contactsDropped( const QString &listNa
 
 void KAB::DistributionListNg::MainWidget::updateEntries()
 {
+    const bool hadSelection = mListBox->selectedItem() != 0;
     const QStringList newEntries = core()->distributionListNames();
     if ( newEntries == mCurrentEntries )
         return;
@@ -173,6 +177,8 @@ void KAB::DistributionListNg::MainWidget::updateEntries()
     mListBox->clear();
     mListBox->insertItem( i18n("All Contacts"), 0 );
     mListBox->insertStringList( mCurrentEntries );
+    if ( !hadSelection )
+        mListBox->setSelected( 0, true );
 }
 
 void KAB::DistributionListNg::MainWidget::itemSelected( int index )
