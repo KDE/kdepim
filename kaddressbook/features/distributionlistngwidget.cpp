@@ -64,7 +64,7 @@ void KAB::DistributionListNg::ListBox::dragEnterEvent( QDragEnterEvent *event )
 void KAB::DistributionListNg::ListBox::dropEvent( QDropEvent *event )
 {
     QListBoxItem *item = itemAt( event->pos() );
-    if ( !item )
+    if ( !item || index( item ) == 0 )
         return;
 
     QString vcards;
@@ -124,8 +124,8 @@ KAB::DistributionListNg::MainWidget::MainWidget( KAB::Core *core, QWidget *paren
     mListBox = new ListBox( this );
     connect( mListBox, SIGNAL( dropped( const QString &, const KABC::Addressee::List & ) ), 
              this, SLOT( contactsDropped( const QString &, const KABC::Addressee::List & ) ) );
-    connect( mListBox, SIGNAL( highlighted( const QString & ) ), 
-             this, SLOT( itemSelected( const QString & ) ) );
+    connect( mListBox, SIGNAL( highlighted( int ) ), 
+             this, SLOT( itemSelected( int ) ) );
     layout->addWidget( mListBox );
 
     connect( core, SIGNAL( contactsUpdated() ),
@@ -171,13 +171,13 @@ void KAB::DistributionListNg::MainWidget::updateEntries()
         return;
     mCurrentEntries = newEntries;
     mListBox->clear();
+    mListBox->insertItem( i18n("All Contacts"), 0 );
     mListBox->insertStringList( mCurrentEntries );
 }
 
-#include <kdebug.h>
-void KAB::DistributionListNg::MainWidget::itemSelected( const QString &text )
+void KAB::DistributionListNg::MainWidget::itemSelected( int index )
 {
-    core()->setSelectedDistributionList( text );
+    core()->setSelectedDistributionList( index == 0 ? QString() : mListBox->item( index )->text()  );
 }
 
 #include "distributionlistngwidget.moc"

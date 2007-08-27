@@ -79,7 +79,7 @@ private slots:
     
     void contextMenuRequested( QListBoxItem *item, const QPoint &point );
     void updateEntries();
-    void itemSelected( const QString &text );
+    void itemSelected( int index );
     void contactsDropped( const QString &listName, const KABC::Addressee::List &addressees ); 
 
 private:
