@@ -77,39 +77,36 @@ QByteArray  toPilot( const QString &s )
 
 int toPilot( const QString &s, char *buf, int len)
 {
-	// See toPilot() below.
+	FUNCTIONSETUPL(4);
+	// Clear out the entire buffer
 	memset( buf, 0, len );
-	int used = len;
-	QByteArray cbuf = codec->fromUnicode(s.constData(),used);
+	if (len<1) // short-circuit for bad input
+	{
+		return 0;
+	}
+
+	// Convert at most len characters of s
+	QByteArray cbuf = codec->fromUnicode(
+		(s.length() > len) ? s.left(len) : s );
+	// How many characters was that, then?
+	int used = cbuf.size();
 	if (used > len)
 	{
+		// This ought to be impossible: converting len
+		// unicode characters to 8-bit should never
+		// generate more characters.
 		used=len;
+		WARNINGKPILOT << "Conversion to 8-bit of "
+			<< len << " characters yielded " << used;
 	}
+	// Get what's left (note no NUL termination)
 	memcpy( buf, cbuf.data(), used );
 	return used;
 }
 
 int toPilot( const QString &s, unsigned char *buf, int len)
 {
-	// Clear the buffer
-	memset( buf, 0, len );
-
-	// Convert to 8-bit encoding
-	int used = len;
-	QByteArray cbuf = codec->fromUnicode(s.constData(),used);
-
-	// Will it fit in the buffer?
-	if (used > len)
-	{
-		// Ought to be impossible, anyway, since 8-bit encodings
-		// are shorter than the UTF-8 encodings (1 byte per character
-		// vs. 1-or-more byte per character).
-		used=len;
-	}
-
-	// Fill the buffer with encoded data.
-	memcpy( buf, cbuf.data(), used );
-	return used;
+	return toPilot(s,reinterpret_cast<char *>(buf),len);
 }
 
 bool setupPilotCodec(const QString &s)
