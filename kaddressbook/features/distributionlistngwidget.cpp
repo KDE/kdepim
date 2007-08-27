@@ -22,11 +22,17 @@
 
 #include "distributionlistngwidget.h"
 #include "interfaces/core.h"
+
+#include <libkdepim/kvcarddrag.h>
+
 #include <kabc/distributionlist.h>
+#include <kabc/vcardconverter.h>
+
 #include <kdialog.h>
 #include <klistview.h>
 #include <klocale.h>
 
+#include <qevent.h>
 #include <qlabel.h>
 #include <qlayout.h>
 #include <qpoint.h>
@@ -35,6 +41,37 @@ typedef KABC::DistributionList DistributionList;
 
 KAB::DistributionListNg::ListBox::ListBox( QWidget* parent ) : KListBox( parent )
 {
+    setAcceptDrops( true );
+}
+
+void KAB::DistributionListNg::ListBox::dragMoveEvent( QDragMoveEvent *event )
+{
+    QListBoxItem *item = itemAt( event->pos() );
+    if ( !item ) {
+        event->ignore();
+    }
+    else {
+        event->accept( itemRect( item ) );
+    }   
+} 
+
+void KAB::DistributionListNg::ListBox::dragEnterEvent( QDragEnterEvent *event )
+{
+    KListBox::dragEnterEvent( event );
+}
+
+void KAB::DistributionListNg::ListBox::dropEvent( QDropEvent *event )
+{
+    QListBoxItem *item = itemAt( event->pos() );
+    if ( !item )
+        return;
+
+    QString vcards;
+    if ( !KVCardDrag::decode( event, vcards ) )
+        return;
+
+    KABC::VCardConverter converter;
+    emit dropped( item->text(), converter.parseVCards( vcards ) );
 }
 
 namespace KAB {
@@ -84,6 +121,8 @@ KAB::DistributionListNg::MainWidget::MainWidget( KAB::Core *core, QWidget *paren
     layout->addWidget( label );
 
     mListBox = new ListBox( this );
+    connect( mListBox, SIGNAL( dropped( const QString &, const KABC::Addressee::List & ) ), 
+             this, SLOT( contactsDropped( const QString &, const KABC::Addressee::List & ) ) );
     layout->addWidget( mListBox );
 
     connect( core, SIGNAL( contactsUpdated() ),
@@ -101,6 +140,21 @@ KAB::DistributionListNg::MainWidget::MainWidget( KAB::Core *core, QWidget *paren
  
 void KAB::DistributionListNg::MainWidget::contextMenuRequested( QListBoxItem *item, const QPoint &point )
 {
+} 
+
+
+void KAB::DistributionListNg::MainWidget::contactsDropped( const QString &listName, const KABC::Addressee::List &addressees )
+{
+    if ( addressees.isEmpty() )
+        return;
+
+    KABC::DistributionList *list = mManager->list( listName );
+    if ( !list )
+        return;
+    for ( KABC::Addressee::List::ConstIterator it = addressees.begin(); it != addressees.end(); ++it ) {
+        list->insertEntry( *it );
+    }
+    mManager->save();
 } 
 
 void KAB::DistributionListNg::MainWidget::updateEntries()

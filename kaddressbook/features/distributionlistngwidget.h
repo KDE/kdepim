@@ -25,8 +25,13 @@
 
 #include "extensionwidget.h"
 
+#include <kabc/addressee.h>
+
 #include <klistbox.h>
 
+class QDragEnterEvent;
+class QDragMoveEvent;
+class QDropEvent;
 class QPoint;
 
 namespace KABC {
@@ -41,6 +46,18 @@ class ListBox : public KListBox
     Q_OBJECT
 public:
     ListBox( QWidget* parent = 0 );
+
+signals:
+    
+    void dropped( const QString &listName, const KABC::Addressee::List &addressees ); 
+
+protected:
+    //override
+    void dragEnterEvent( QDragEnterEvent *event );
+    //override
+    void dragMoveEvent( QDragMoveEvent *event ); 
+    //override
+    void dropEvent( QDropEvent *event );
 };
 
 class MainWidget : public KAB::ExtensionWidget
@@ -60,6 +77,8 @@ private slots:
     
     void contextMenuRequested( QListBoxItem *item, const QPoint &point );
     void updateEntries();
+    
+    void contactsDropped( const QString &listName, const KABC::Addressee::List &addressees ); 
 
 private:
     ListBox *mListBox;
