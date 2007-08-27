@@ -85,7 +85,7 @@ set(kleo_LIB_SRCS ${kleo_LIB_SRCS} ${libkleo_backend_qgpgme_SRCS})
 
 kde4_add_library(kleo SHARED ${kleo_LIB_SRCS})
 
-target_link_libraries(kleo ${KDE4_KDE3SUPPORT_LIBS} qgpgme ${GPGME_LIBRARIES} ${QT_QT3SUPPORT_LIBRARY})
+target_link_libraries(kleo ${KDE4_KDE3SUPPORT_LIBS} ${QGPGME_LIBRARIES} ${QT_QT3SUPPORT_LIBRARY})
 
 set_target_properties(kleo PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
 install(TARGETS kleo DESTINATION ${LIB_INSTALL_DIR})
