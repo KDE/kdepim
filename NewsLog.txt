@@ -1,3 +1,10 @@
+Friday, August 31st 2007
+
+Bugfixes
+---------
+* kolab/issue1868: Crash after reply on a mail using search function (705173, merge issue 38)
+
+
 Friday, 24th August 2007
 
 
