@@ -56,7 +56,7 @@ int main(int argc, char **argv)
 	if( !file.exists() )
 	{
 		cout << "Database file: " << dbName << ".pdb does not exist." << endl;
-		return 1;
+		// return 1;
 	}
 	
 	if( dbPath.at( dbPath.size() - 1 ) != '/' )
