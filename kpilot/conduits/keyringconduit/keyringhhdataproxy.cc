@@ -81,15 +81,11 @@ KeyringHHDataProxy::~KeyringHHDataProxy()
 	{
 		// We created the database ourself so we should delete it.
 		DEBUGKPILOT << "Saving " << fDatabase->recordCount() << " records.";
-		delete fDatabase;
-		fDatabase = 0l;
+		KPILOT_DELETE( fDatabase );
 	}
 	
-	if( fZeroRecord )
-	{
-		delete fZeroRecord;
-		fZeroRecord = 0l;
-	}
+	KPILOT_DELETE( fZeroRecord );
+	KPILOT_DELETE( fAppInfo );
 }
 
 bool KeyringHHDataProxy::openDatabase( const QString &pass )
@@ -167,6 +163,7 @@ void KeyringHHDataProxy::loadCategories()
 	
 	if( fDatabase && fDatabase->isOpen() )
 	{
+		KPILOT_DELETE(fAppInfo);
 		fAppInfo = new PilotKeyringInfo( fDatabase );
 	}
 }
@@ -222,6 +219,11 @@ bool KeyringHHDataProxy::createDataStore()
 		fZeroRecord->setSecret();
 		
 		fDatabase->writeRecord( fZeroRecord );
+		
+		KeyringHHRecord * fFirstRecord = 
+			new KeyringHHRecord( i18n("KPilot cares"), i18n("KDE"), "",
+					i18n("Thanks for using KPilot!"), fDesKey);
+		fDatabase->writeRecord( fFirstRecord->pilotRecord() );
 		
 		return true;
 	}

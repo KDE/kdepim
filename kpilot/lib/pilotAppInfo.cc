@@ -68,7 +68,13 @@ bool PilotAppInfoBase::setCategoryName(unsigned int i, const QString &s)
 		return false;
 	}
 
-	(void) Pilot::toPilot(s, categoryInfo()->name[i], Pilot::CATEGORY_SIZE - 1);
+	categoryInfo()->ID[i] = i;
+	// first, clean up target
+	memset( categoryInfo()->name[i], 0, Pilot::CATEGORY_SIZE );
+	// now make sure we only put in 15 characters
+	QString name=s.left(Pilot::CATEGORY_SIZE - 1);
+	// now set the category info, using only the length of our string
+	(void) Pilot::toPilot(s, categoryInfo()->name[i], name.length());
 	return true;
 }
 

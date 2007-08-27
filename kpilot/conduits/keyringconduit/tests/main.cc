@@ -84,6 +84,7 @@ int main(int argc, char **argv)
 		KeyringHHDataProxy proxy( &database );
 		proxy.openDatabase( pass );
 		proxy.createDataStore();
+		proxy.openDatabase( pass );
 		
 		KeyringViewer *viewer = new KeyringViewer( 0, &proxy );
 		viewer->show();
