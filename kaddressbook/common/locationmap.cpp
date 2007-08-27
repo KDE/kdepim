@@ -27,7 +27,7 @@
 #include <kglobal.h>
 #include <klocale.h>
 #include <kmessagebox.h>
-#include <kstaticdeleter.h>
+#include <k3staticdeleter.h>
 #include <kurl.h>
 #include <ktoolinvocation.h>
 
@@ -35,7 +35,7 @@
 #include "locationmap.h"
 
 LocationMap *LocationMap::mSelf = 0;
-static KStaticDeleter<LocationMap> locationMapDeleter;
+static K3StaticDeleter<LocationMap> locationMapDeleter;
 
 LocationMap::LocationMap()
 {

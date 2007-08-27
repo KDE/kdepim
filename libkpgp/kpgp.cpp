@@ -25,7 +25,7 @@
 #include <kmessagebox.h>
 #include <kconfigbase.h>
 #include <kconfig.h>
-#include <kstaticdeleter.h>
+#include <k3staticdeleter.h>
 #include <kconfiggroup.h>
 
 #include <QLabel>
@@ -54,7 +54,7 @@
 namespace Kpgp {
 
 Module *Module::kpgpObject = 0;
-static KStaticDeleter<Module> kpgpod;
+static K3StaticDeleter<Module> kpgpod;
 
 Module::Module()
   : mPublicKeys(),

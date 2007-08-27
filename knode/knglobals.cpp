@@ -17,7 +17,7 @@
 #include <kglobal.h>
 #include <kconfig.h>
 #include <kiconloader.h>
-#include <kstaticdeleter.h>
+#include <k3staticdeleter.h>
 
 #include "knconfigmanager.h"
 #include "knaccountmanager.h"
@@ -32,7 +32,7 @@
 #include "settings.h"
 
 KNGlobals* KNGlobals::mSelf = 0;
-static KStaticDeleter<KNGlobals> staticKNGlobalsDeleter;
+static K3StaticDeleter<KNGlobals> staticKNGlobalsDeleter;
 
 KNGlobals::KNGlobals() :
   mScheduler( 0 ),

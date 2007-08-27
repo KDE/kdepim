@@ -95,7 +95,7 @@ KABC::ResourceKolab::ResourceKolab( const KConfigGroup& config )
 
 KABC::ResourceKolab::~ResourceKolab()
 {
-  // The resource is deleted on exit (StdAddressBook's KStaticDeleter),
+  // The resource is deleted on exit (StdAddressBook's K3StaticDeleter),
   // and it wasn't closed before that, so close here to save the config.
   if ( isOpen() ) {
     close();

@@ -23,12 +23,12 @@
 
 #include <kconfig.h>
 #include <klocale.h>
-#include <kstaticdeleter.h>
+#include <k3staticdeleter.h>
 
 #include "kabprefs.h"
 
 KABPrefs *KABPrefs::mInstance = 0;
-static KStaticDeleter<KABPrefs> staticDeleter;
+static K3StaticDeleter<KABPrefs> staticDeleter;
 
 KABPrefs::KABPrefs()
   : KABPrefsBase()

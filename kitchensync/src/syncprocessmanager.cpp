@@ -28,11 +28,11 @@
 #include <libqopensync/pluginenv.h>
 #include <libqopensync/result.h>
 
-#include <kstaticdeleter.h>
+#include <k3staticdeleter.h>
 #include <kmessagebox.h>
 #include <klocale.h>
 
-static KStaticDeleter<SyncProcessManager> selfDeleter;
+static K3StaticDeleter<SyncProcessManager> selfDeleter;
 
 SyncProcessManager *SyncProcessManager::mSelf = 0;
 

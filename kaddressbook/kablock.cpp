@@ -25,7 +25,7 @@
 #include <kabc/resource.h>
 #include <klocale.h>
 #include <kmessagebox.h>
-#include <kstaticdeleter.h>
+#include <k3staticdeleter.h>
 
 #include "kablock.h"
 
@@ -42,7 +42,7 @@ class AddressBookWrapper : public KABC::AddressBook
 
 KABLock *KABLock::mSelf = 0;
 
-static KStaticDeleter<KABLock> kabLockDeleter;
+static K3StaticDeleter<KABLock> kabLockDeleter;
 
 KABLock::KABLock( KABC::AddressBook *ab )
   : mAddressBook( ab )

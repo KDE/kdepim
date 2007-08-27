@@ -24,7 +24,7 @@
 
 #include <KApplication>
 #include <KDebug>
-#include <KStaticDeleter>
+#include <K3StaticDeleter>
 
 #include "clientinterface.h"
 
@@ -58,7 +58,7 @@ KConnectionManager *KConnectionManager::s_self = 0L;
 
 KConnectionManager *KConnectionManager::self()
 {
-    static KStaticDeleter<KConnectionManager> deleter;
+    static K3StaticDeleter<KConnectionManager> deleter;
     if(!s_self)
         deleter.setObject( s_self, new KConnectionManager( 0 ) );
     return s_self;

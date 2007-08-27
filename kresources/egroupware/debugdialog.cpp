@@ -25,14 +25,14 @@
 #include <QVBoxLayout>
 
 #include <ktextbrowser.h>
-#include <kstaticdeleter.h>
+#include <k3staticdeleter.h>
 
 #include <stdlib.h>
 #include <klocale.h>
 #include "debugdialog.h"
 
 DebugDialog* DebugDialog::mSelf = 0;
-static KStaticDeleter<DebugDialog> debugDialogDeleter;
+static K3StaticDeleter<DebugDialog> debugDialogDeleter;
 
 DebugDialog::DebugDialog()
  : KDialog( 0)

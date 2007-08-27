@@ -22,10 +22,10 @@
 #include "servertypemanager.h"
 #include "egroupwarehandler.h"
 
-#include <kstaticdeleter.h>
+#include <k3staticdeleter.h>
 
 ServerTypeManager* ServerTypeManager::mSelf = 0;
-static KStaticDeleter<ServerTypeManager> serverManagerDeleter;
+static K3StaticDeleter<ServerTypeManager> serverManagerDeleter;
 
 ServerTypeManager::ServerTypeManager( QObject *parent, const char *name )
   : QObject( parent )
