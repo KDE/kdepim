@@ -27,7 +27,6 @@
 #include <ctype.h>
 #include <stdlib.h>
 #include <string.h>
-#include <mimelib/config.h>
 #include <mimelib/address.h>
 #include <mimelib/addrlist.h>
 #include <mimelib/token.h>
