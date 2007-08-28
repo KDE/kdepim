@@ -15,8 +15,8 @@
     Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA
  */
 
-#ifndef KTNEFWIDGET_H
-#define	KTNEFWIDGET_H
+#ifndef KTNEF_KTNEFVIEW_H
+#define	KTNEF_KTNEFVIEW_H
 
 #include <k3listview.h>
 #include <q3ptrlist.h>
@@ -46,4 +46,4 @@ private:
         QList<KTnef::KTNEFAttach*>	attachments_;
 };
 
-#endif
+#endif // KTNEF_KTNEFVIEW_H
