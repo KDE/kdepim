@@ -4,6 +4,7 @@ Type=ServiceType
 X-KDE-ServiceType=KMobileTools/EngineXP
 X-KDE-Derived=KPluginInfo
 Comment=KMobileTools EngineXP
+Comment[el]=EngineXP του KMobileTools
 Comment[ga]=InneallXP KMmobileTools
 Comment[pt]=Motor XP do KMobileTools
 Comment[pt_BR]=Motor XP do KMobileTools
