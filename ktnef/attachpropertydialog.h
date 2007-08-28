@@ -15,8 +15,8 @@
     Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA
  */
 
-#ifndef ATTACHPROPERTYDLG_H
-#define ATTACHPROPERTYDLG_H
+#ifndef KTNEF_ATTACHPROPERTYDIALOG_H
+#define KTNEF_ATTACHPROPERTYDIALOG_H
 
 #include "attachpropertydialogbase.h"
 #include <QMap>
@@ -49,4 +49,4 @@ void formatPropertySet( KTnef::KTNEFPropertySet*, Q3ListView* );
 void saveProperty( Q3ListView*, KTnef::KTNEFPropertySet*, QWidget* );
 QPixmap loadRenderingPixmap( KTnef::KTNEFPropertySet*, const QColor& );
 
-#endif
+#endif // KTNEF_ATTACHPROPERTYDIALOG_H
