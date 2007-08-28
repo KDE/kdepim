@@ -58,6 +58,7 @@ namespace QGpgME {
 
 class QString;
 class QStringList;
+class QEventLoop;
 
 namespace Kleo {
 
@@ -115,6 +116,7 @@ namespace Kleo {
     virtual void doEmitProgressSignal( const QString & what, int current, int total ) = 0;
     virtual void doEmitDoneSignal() = 0;
     void doSlotCancel();
+    void waitForFinished();
 
   private:
     /*! \reimp from GpgME::ProgressProvider */
@@ -141,6 +143,7 @@ namespace Kleo {
     unsigned int mNumPatterns;
     unsigned int mChunkSize;
     unsigned int mPatternStartIndex, mPatternEndIndex;
+    QEventLoop * mEventLoop;
   };
 
 }

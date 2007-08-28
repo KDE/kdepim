@@ -49,6 +49,7 @@
 
 #include <QString>
 #include <QStringList>
+#include <QEventLoop>
 
 #include <algorithm>
 
@@ -89,7 +90,8 @@ Kleo::QGpgMEJob::QGpgMEJob( Kleo::Job * _this, GpgME::Context * context )
     mReplacedPattern( 0 ),
     mNumPatterns( 0 ),
     mChunkSize( 1024 ),
-    mPatternStartIndex( 0 ), mPatternEndIndex( 0 )
+    mPatternStartIndex( 0 ), mPatternEndIndex( 0 ),
+    mEventLoop( 0 )
 {
   InvarianceChecker check( this );
   assert( context );
@@ -153,6 +155,14 @@ void Kleo::QGpgMEJob::hookupContextToEventLoopInteractor() {
 		    SIGNAL(operationDoneEventSignal(GpgME::Context*,const GpgME::Error&)),
 		    mThis, SLOT(slotOperationDoneEvent(GpgME::Context*,const GpgME::Error&)) );
 }
+
+void Kleo::QGpgMEJob::waitForFinished() {
+    QEventLoop loop;
+    mEventLoop = &loop;
+    loop.exec( QEventLoop::ExcludeUserInputEvents );
+    mEventLoop = 0;
+}
+    
 
 void Kleo::QGpgMEJob::setPatterns( const QStringList & sl, bool allowEmpty ) {
   InvarianceChecker check( this );
@@ -236,6 +246,9 @@ void Kleo::QGpgMEJob::doSlotOperationDoneEvent( GpgME::Context * context, const 
   if ( context == mCtx ) {
     doEmitDoneSignal();
     doOperationDoneEvent( e );
+    if ( mEventLoop )
+      mEventLoop->quit();
+    else
     mThis->deleteLater();
   }
 }
