@@ -37,8 +37,6 @@
 #include <kabc/vcardconverter.h>
 
 #include <kcomponentdata.h>
-#include <kdebug.h>
-#include <klocale.h>
 #include <ktemporaryfile.h>
 
 #include <sys/types.h>

@@ -17,8 +17,9 @@
     along with this program; if not, write to the Free Software
     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 */
-#ifndef GROUPWISE_H
-#define GROUPWISE_H
+
+#ifndef KIOSLAVE_OPENGROUPWARE_H
+#define KIOSLAVE_OPENGROUPWARE_H
 
 #include <kio/slavebase.h>
 
@@ -53,4 +54,4 @@ class OpenGroupware : public QObject, public KIO::SlaveBase
     KIO::DavJob *mListEventsJob;
 };
 
-#endif
+#endif // KIOSLAVE_OPENGROUPWARE_H

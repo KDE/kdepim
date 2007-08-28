@@ -1,5 +1,3 @@
-#ifndef _IMAPINFO_H
-#define _IMAPINFO_H
 /**********************************************************************
  *
  *   imapinfo.h  - IMAP4rev1 SELECT / EXAMINE handler
@@ -22,6 +20,9 @@
  *   Send comments and bug fixes to
  *
  *********************************************************************/
+
+#ifndef KIOSLAVE_SELECTINFO_H
+#define KIOSLAVE_SELECTINFO_H
 
 #include <QStringList>
 #include <QString>
@@ -199,4 +200,4 @@ private:
   bool readWriteAvailable_;
 };
 
-#endif
+#endif // KIOSLAVE_SELECTINFO_H
