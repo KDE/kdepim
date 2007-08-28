@@ -354,7 +354,7 @@ void Kleo::KeySelectionDialog::init( bool rememberChoice, bool extendedSelection
   mTopLayout->setSpacing( spacingHint() );
 
   if ( !text.isEmpty() ) {
-    textLabel = new QLabel( text, page );
+    QLabel* textLabel = new QLabel( text, page );
     textLabel->setWordWrap( true );
     mTopLayout->addWidget( textLabel );
   }
@@ -415,7 +415,7 @@ void Kleo::KeySelectionDialog::init( bool rememberChoice, bool extendedSelection
   connect( this, SIGNAL(okClicked()), this, SLOT(slotOk()));
   connect( this, SIGNAL(cancelClicked()),this,SLOT(slotCancel()));
   slotRereadKeys();
-  topLayout->activate();
+  mTopLayout->activate();
 
   if ( qApp ) {
     QSize dialogSize( sizeHint() );
