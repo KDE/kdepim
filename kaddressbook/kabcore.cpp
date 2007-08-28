@@ -31,6 +31,7 @@
 #include <qlabel.h>
 #include <qlayout.h>
 #include <qptrlist.h>
+#include <qwidgetstack.h>
 #include <qregexp.h>
 #include <qvbox.h>
 
@@ -993,6 +994,20 @@ AddresseeEditorDialog *KABCore::createAddresseeEditorDialog( QWidget *parent,
   return dialog;
 }
 
+void KABCore::activateDetailsWidget( QWidget *widget )
+{
+  if ( mDetailsStack->visibleWidget() == widget )
+    return;
+  mDetailsStack->raiseWidget( widget );
+}
+
+void KABCore::deactivateDetailsWidget( QWidget *widget )
+{
+  if ( mDetailsStack->visibleWidget() != widget )
+    return;
+  mDetailsStack->raiseWidget( mDetailsWidget );
+}
+
 void KABCore::slotEditorDestroyed( const QString &uid )
 {
   AddresseeEditorDialog *dialog = mEditorDict.take( uid );
@@ -1020,7 +1035,13 @@ void KABCore::initGUI()
   topLayout->addWidget( searchTB );
   topLayout->addWidget( mDetailsSplitter );
 
-  mExtensionManager = new ExtensionManager( new QWidget( mDetailsSplitter ), this, this );
+  mDetailsStack = new QWidgetStack( mDetailsSplitter );
+  mExtensionManager = new ExtensionManager( new QWidget( mDetailsSplitter ), mDetailsStack, this, this );
+  connect( mExtensionManager, SIGNAL( detailsWidgetDeactivated( QWidget* ) ), 
+           this, SLOT( deactivateDetailsWidget( QWidget* ) ) );
+  connect( mExtensionManager, SIGNAL( detailsWidgetActivated( QWidget* ) ), 
+           this, SLOT( activateDetailsWidget( QWidget* ) ) );
+
   
   QWidget *viewWidget = new QWidget( mDetailsSplitter );
   QVBoxLayout *viewLayout = new QVBoxLayout( viewWidget );
@@ -1070,6 +1091,9 @@ void KABCore::initGUI()
   mDetailsViewer = new KPIM::AddresseeView( mDetailsPage );
   mDetailsViewer->setVScrollBarMode( QScrollView::Auto );
   detailsPageLayout->addWidget( mDetailsViewer );
+
+  mDetailsStack->addWidget( mDetailsWidget );
+  mDetailsSplitter->moveToLast( mDetailsStack );
 
   connect( mDetailsViewer, SIGNAL( addressClicked( const QString&) ),
            this, SLOT( showContactsAddress( const QString& ) ) );

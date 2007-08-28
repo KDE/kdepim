@@ -32,6 +32,7 @@
 #include <qsignalmapper.h>
 #include <qsplitter.h>
 #include <qtimer.h>
+#include <qwidgetstack.h>
 
 #include "addresseeeditorextension.h"
 #include "core.h"
@@ -39,14 +40,14 @@
 
 #include "extensionmanager.h"
 
-ExtensionData::ExtensionData() : action( 0 ), widget( 0 ), weight( 0 )
+ExtensionData::ExtensionData() : action( 0 ), widget( 0 ), weight( 0 ), isDetailsExtension( false )
 {
 }
 
-ExtensionManager::ExtensionManager( QWidget* extensionBar, KAB::Core *core, QObject *parent,
+ExtensionManager::ExtensionManager( QWidget* extensionBar, QWidgetStack* detailsStack, KAB::Core *core, QObject *parent,
                                     const char *name )
     : QObject( parent, name ), mExtensionBar( extensionBar ), mCore( core ), 
-      mMapper( 0 )
+      mMapper( 0 ), mDetailsStack( detailsStack )
 {
   Q_ASSERT( mExtensionBar ); 
   QVBoxLayout* layout = new QVBoxLayout( mExtensionBar );
@@ -112,7 +113,8 @@ void ExtensionManager::setSelectionChanged()
   } 
 }
 
-void ExtensionManager::activationToggled( const QString &extid ) {
+void ExtensionManager::activationToggled( const QString &extid )
+{
   if ( !mExtensionMap.contains( extid ) )
     return;
   const ExtensionData data = mExtensionMap[ extid ];
@@ -120,22 +122,31 @@ void ExtensionManager::activationToggled( const QString &extid ) {
   setExtensionActive( extid, activated );
 }
 
-void ExtensionManager::setExtensionActive( const QString& extid, bool active ) {
- if ( !mExtensionMap.contains( extid ) )
-   return;
- if ( mActiveExtensions.contains( extid ) == active )
+void ExtensionManager::setExtensionActive( const QString& extid, bool active )
+{
+  if ( !mExtensionMap.contains( extid ) )
+    return;
+  if ( mActiveExtensions.contains( extid ) == active )
     return; 
   const ExtensionData data = mExtensionMap[ extid ];
   if ( active ) {
     mActiveExtensions.append( extid );
     if ( data.widget ) {
-      data.widget->show();
+      if ( data.isDetailsExtension ) {
+        emit detailsWidgetActivated( data.widget );
+        mDetailsStack->raiseWidget( data.widget );
+      } else {
+          data.widget->show();
+      }
       data.widget->contactsSelectionChanged();
     }
   } else {
     mActiveExtensions.remove( extid );
-    if ( data.widget )
+    if ( data.widget && !data.isDetailsExtension ) {
       data.widget->hide();
+    }
+    if ( data.isDetailsExtension )
+      emit detailsWidgetDeactivated( data.widget );
   }
   mExtensionBar->setShown( !mActiveExtensions.isEmpty() );
 }
@@ -180,7 +191,7 @@ void ExtensionManager::createExtensionWidgets()
 
   {
     // add addressee editor as default
-    wdg = new AddresseeEditorExtension( mCore, mSplitter );
+    wdg = new AddresseeEditorExtension( mCore, mDetailsStack );
     wdg->hide();
 
     connect( wdg, SIGNAL( modified( const KABC::Addressee::List& ) ),
@@ -192,6 +203,7 @@ void ExtensionManager::createExtensionWidgets()
     data.identifier = wdg->identifier();
     data.title = wdg->title();
     data.widget = wdg;
+    data.isDetailsExtension = true;
     mExtensionMap.insert( data.identifier, data );
   }
 

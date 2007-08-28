@@ -54,6 +54,7 @@ class KXMLGUIClient;
 
 class QSplitter;
 class QHBoxLayout;
+class QWidgetStack;
 
 class AddresseeEditorDialog;
 class ExtensionManager;
@@ -372,6 +373,9 @@ class KDE_EXPORT KABCore : public KAB::Core
     void slotClearSearchBar();
     void slotContactsUpdated();
 
+    void activateDetailsWidget( QWidget *widget );
+    void deactivateDetailsWidget( QWidget *widget );
+
 #ifdef KDEPIM_NEW_DISTRLISTS
     void removeSelectedContactsFromDistList();
     void editSelectedDistributionList();
@@ -413,7 +417,7 @@ class KDE_EXPORT KABCore : public KAB::Core
     QWidget *mDetailsWidget;
     QHBoxLayout *mDetailsLayout;
     QSplitter *mDetailsSplitter;
-
+    QWidgetStack *mDetailsStack;
     LDAPSearchDialog *mLdapSearchDialog;
     QDict<AddresseeEditorDialog> mEditorDict;
 

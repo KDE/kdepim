@@ -32,6 +32,7 @@
 #include <qstringlist.h>
 
 class QSignalMapper;
+class QWidgetStack;
 class KActionCollection;
 
 namespace KAB {
@@ -49,6 +50,7 @@ class ExtensionData
     QString identifier;
     QString title;
     int weight;
+    bool isDetailsExtension;
 };
 
 class ExtensionManager : public QObject
@@ -56,7 +58,7 @@ class ExtensionManager : public QObject
   Q_OBJECT
 
   public:
-    ExtensionManager( QWidget *extensionBar, KAB::Core *core, QObject *parent, const char *name = 0 );
+    ExtensionManager( QWidget *extensionBar, QWidgetStack *detailsStack, KAB::Core *core, QObject *parent, const char *name = 0 );
     ~ExtensionManager();
 
     /**
@@ -85,6 +87,9 @@ class ExtensionManager : public QObject
     void createActions();
 
   signals:
+
+    void detailsWidgetActivated( QWidget* widget );
+    void detailsWidgetDeactivated( QWidget* widget );
     void modified( const KABC::Addressee::List& );
     void deleted( const QStringList& );
 
@@ -104,6 +109,7 @@ class ExtensionManager : public QObject
     QPtrList<KAction> mActionList;
     KActionCollection *mActionCollection;
     QSplitter *mSplitter;
+    QWidgetStack *mDetailsStack; 
 };
 
 #endif
