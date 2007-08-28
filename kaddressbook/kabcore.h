@@ -372,6 +372,11 @@ class KDE_EXPORT KABCore : public KAB::Core
     void slotClearSearchBar();
     void slotContactsUpdated();
 
+#ifdef KDEPIM_NEW_DISTRLISTS
+    void removeSelectedContactsFromDistList();
+    void editSelectedDistributionList();
+#endif
+
   private:
     void initGUI();
     void createJumpButtonBar();
@@ -389,6 +394,12 @@ class KDE_EXPORT KABCore : public KAB::Core
 
     ViewManager *mViewManager;
     QLabel *mViewHeaderLabel;
+
+#ifdef KDEPIM_NEW_DISTRLISTS
+    QString mSelectedDistributionList;
+    QWidget *mDistListButtonWidget;
+#endif
+
     ExtensionManager *mExtensionManager;
     XXPortManager *mXXPortManager;
 
@@ -436,7 +447,6 @@ class KDE_EXPORT KABCore : public KAB::Core
     KAB::SearchManager *mSearchManager;
     // KIMProxy provides access to up to date instant messaging presence data
     ::KIMProxy *mKIMProxy;
-
     class KABCorePrivate;
     KABCorePrivate *d;
 };

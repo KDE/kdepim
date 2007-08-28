@@ -54,6 +54,7 @@
 #include <kmessagebox.h>
 #include <kprinter.h>
 #include <kprotocolinfo.h>
+#include <kpushbutton.h>
 #include <kresources/selectdialog.h>
 #include <kstandarddirs.h>
 #include <kstatusbar.h>
@@ -63,6 +64,7 @@
 #include <libkdepim/addresseeview.h>
 #include <libkdepim/categoryeditdialog.h>
 #include <libkdepim/categoryselectdialog.h>
+#include "distributionlisteditor.h"
 
 #include "addresseeutil.h"
 #include "addresseeeditordialog.h"
@@ -1023,12 +1025,34 @@ void KABCore::initGUI()
   QWidget *viewWidget = new QWidget( mDetailsSplitter );
   QVBoxLayout *viewLayout = new QVBoxLayout( viewWidget );
   viewLayout->setSpacing( KDialog::spacingHint() );
+
   mViewHeaderLabel = new QLabel( viewWidget );
-  mViewHeaderLabel->setSizePolicy( QSizePolicy::Minimum, QSizePolicy::Fixed );
+//  mViewHeaderLabel->setSizePolicy( QSizePolicy::Minimum, QSizePolicy::Fixed );
   mViewHeaderLabel->setText( i18n( "Contacts" ) );
   viewLayout->addWidget( mViewHeaderLabel );
   mViewManager = new ViewManager( this, viewWidget );
-  viewLayout->addWidget( mViewManager );
+  viewLayout->addWidget( mViewManager, 1 );
+
+#ifdef KDEPIM_NEW_DISTRLISTS
+  mDistListButtonWidget = new QWidget( viewWidget );
+  QHBoxLayout *buttonLayout = new QHBoxLayout( mDistListButtonWidget );
+  buttonLayout->setSpacing( KDialog::spacingHint() );
+  buttonLayout->addStretch( 1 );
+
+  KPushButton *addDistListButton = new KPushButton( mDistListButtonWidget );
+  addDistListButton->setText( i18n( "Add" ) );
+  connect( addDistListButton, SIGNAL( clicked() ), 
+           this, SLOT( editSelectedDistributionList() ) );
+  buttonLayout->addWidget( addDistListButton );
+  mDistListButtonWidget->setShown( false );
+  viewLayout->addWidget( mDistListButtonWidget );
+
+  KPushButton *removeDistListButton = new KPushButton( mDistListButtonWidget );
+  removeDistListButton->setText( i18n( "Remove" ) );
+  connect( removeDistListButton, SIGNAL( clicked() ), 
+           this, SLOT( removeSelectedContactsFromDistList() ) );
+  buttonLayout->addWidget( removeDistListButton );
+#endif
 
   mFilterSelectionWidget = new FilterSelectionWidget( searchTB , "kde toolbar widget" );
   mViewManager->setFilterSelectionWidget( mFilterSelectionWidget );
@@ -1348,6 +1372,38 @@ bool KABCore::handleCommandLine( KAddressBookIface* iface )
 }
 
 #ifdef KDEPIM_NEW_DISTRLISTS
+void KABCore::removeSelectedContactsFromDistList()
+{
+  KPIM::DistributionList dist = KPIM::DistributionList::findByName( addressBook(), mSelectedDistributionList );
+  if ( dist.isEmpty() )
+    return;
+  const QStringList uids = selectedUIDs();
+  if ( uids.isEmpty() )
+      return;
+  for ( QStringList::ConstIterator it = uids.begin(); it != uids.end(); ++it ) {
+      dist.removeEntry ( *it );
+  }
+  addressBook()->insertAddressee( dist );
+  setModified();
+}
+
+void KABCore::editSelectedDistributionList()
+{
+  const KPIM::DistributionList dist = KPIM::DistributionList::findByName( addressBook(), mSelectedDistributionList );
+  if ( dist.isEmpty() )
+    return;
+  QGuardedPtr<KPIM::DistributionListEditor::EditorWidget> dlg = new KPIM::DistributionListEditor::EditorWidget( addressBook(), widget() );
+  dlg->setDistributionList( dist );
+  if ( dlg->exec() == QDialog::Accepted ) {
+    const KPIM::DistributionList newDist = dlg->distributionList();
+    if ( newDist != dist ) {
+      addressBook()->insertAddressee( newDist );
+      setModified();
+    }
+  }
+  delete dlg;
+}
+
 KPIM::DistributionList::List KABCore::distributionLists() const
 {
   return mSearchManager->distributionLists();
@@ -1355,8 +1411,11 @@ KPIM::DistributionList::List KABCore::distributionLists() const
 
 void KABCore::setSelectedDistributionList( const QString &name )
 {
+    mSelectedDistributionList = name;
     mSearchManager->setSelectedDistributionList( name );
     mViewHeaderLabel->setText( name.isNull() ? i18n( "Contacts" ) : i18n( "Distribution List: %1" ).arg( name ) );
+    mDistListButtonWidget->setShown( !mSelectedDistributionList.isNull() );
+    
 }
 
 QStringList KABCore::distributionListNames() const
