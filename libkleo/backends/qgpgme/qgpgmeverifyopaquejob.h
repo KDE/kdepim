@@ -54,10 +54,7 @@ namespace Kleo {
     /*! \reimp from VerifyOpaqueJob */
     GpgME::Error start( const QByteArray & signedData );
 
-    /*! \reimp form VerifyOpaqueJob */
-    GpgME::VerificationResult exec( const QByteArray & signedData, QByteArray & plainData );
-
-  private slots:
+  private Q_SLOTS:
     void slotOperationDoneEvent( GpgME::Context * context, const GpgME::Error & e ) {
       QGpgMEJob::doSlotOperationDoneEvent( context, e );
     }

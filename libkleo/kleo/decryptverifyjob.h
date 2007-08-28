@@ -74,10 +74,6 @@ namespace Kleo {
     */
     virtual GpgME::Error start( const QByteArray & cipherText ) = 0;
 
-    /** Synchronous equivalent of start() */
-    virtual KDE_DEPRECATED std::pair<GpgME::DecryptionResult,GpgME::VerificationResult>
-      exec( const QByteArray & cipherText, QByteArray & plainText ) = 0;
-
   Q_SIGNALS:
     void result( const GpgME::DecryptionResult & decryptionresult,
 		 const GpgME::VerificationResult & verificationresult,

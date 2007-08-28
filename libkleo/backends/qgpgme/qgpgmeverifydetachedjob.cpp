@@ -76,12 +76,6 @@ GpgME::Error Kleo::QGpgMEVerifyDetachedJob::start( const QByteArray & signature,
   return err;
 }
 
-GpgME::VerificationResult Kleo::QGpgMEVerifyDetachedJob::exec( const QByteArray & signature,
-							       const QByteArray & signedData ) {
-  setup( signature, signedData );
-  return mCtx->verifyDetachedSignature( *mInData, *mOutData );
-}
-
 void Kleo::QGpgMEVerifyDetachedJob::doOperationDoneEvent( const GpgME::Error & ) {
   emit result( mCtx->verificationResult() );
 }

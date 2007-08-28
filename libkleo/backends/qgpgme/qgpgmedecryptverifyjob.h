@@ -55,11 +55,7 @@ namespace Kleo {
     /*! \reimp from DecryptVerifyJob */
     GpgME::Error start( const QByteArray & cipherText );
 
-    /*! \reimp from DecryptVerifyJob */
-    std::pair<GpgME::DecryptionResult,GpgME::VerificationResult>
-      exec( const QByteArray & cipherText, QByteArray & plainText );
-
-  private slots:
+  private Q_SLOTS:
     void slotOperationDoneEvent( GpgME::Context * context, const GpgME::Error & e ) {
       QGpgMEJob::doSlotOperationDoneEvent( context, e );
     }

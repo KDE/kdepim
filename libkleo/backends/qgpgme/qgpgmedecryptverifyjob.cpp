@@ -72,15 +72,6 @@ GpgME::Error Kleo::QGpgMEDecryptVerifyJob::start( const QByteArray & cipherText 
   return err;
 }
 
-std::pair<GpgME::DecryptionResult,GpgME::VerificationResult>
-Kleo::QGpgMEDecryptVerifyJob::exec( const QByteArray & cipherText, QByteArray & plainText ) {
-  setup( cipherText );
-  const std::pair<GpgME::DecryptionResult,GpgME::VerificationResult> result =
-    mCtx->decryptAndVerify( *mInData, *mOutData );
-  plainText = mOutDataDataProvider->data();
-  return result;
-}
-
 void Kleo::QGpgMEDecryptVerifyJob::doOperationDoneEvent( const GpgME::Error & ) {
   emit result( mCtx->decryptionResult(),
 	       mCtx->verificationResult(),

@@ -71,13 +71,6 @@ GpgME::Error Kleo::QGpgMEVerifyOpaqueJob::start( const QByteArray & signedData )
   return err;
 }
 
-GpgME::VerificationResult Kleo::QGpgMEVerifyOpaqueJob::exec( const QByteArray & signedData, QByteArray & plainText ) {
-  setup( signedData );
-  const GpgME::VerificationResult res = mCtx->verifyOpaqueSignature( *mInData, *mOutData );
-  plainText = mOutDataDataProvider->data();
-  return res;
-}
-
 void Kleo::QGpgMEVerifyOpaqueJob::doOperationDoneEvent( const GpgME::Error & ) {
   emit result( mCtx->verificationResult(), mOutDataDataProvider->data() );
 }

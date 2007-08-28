@@ -55,11 +55,7 @@ namespace Kleo {
     GpgME::Error start( const QByteArray & signature,
 			const QByteArray & signedData );
 
-    /*! \reimp from VerifyDetachedJob */
-    GpgME::VerificationResult exec( const QByteArray & signature,
-				    const QByteArray & signedData );
-
-  private slots:
+  private Q_SLOTS:
     void slotOperationDoneEvent( GpgME::Context * context, const GpgME::Error & e ) {
       QGpgMEJob::doSlotOperationDoneEvent( context, e );
     }

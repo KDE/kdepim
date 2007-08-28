@@ -71,14 +71,6 @@ GpgME::Error Kleo::QGpgMEDecryptJob::start( const QByteArray & cipherText ) {
   return err;
 }
 
-GpgME::DecryptionResult Kleo::QGpgMEDecryptJob::exec( const QByteArray & cipherText,
-						      QByteArray & plainText ) {
-  setup( cipherText );
-  const GpgME::DecryptionResult result = mCtx->decrypt( *mInData, *mOutData );
-  plainText = mOutDataDataProvider->data();
-  return result;
-}
-
 void Kleo::QGpgMEDecryptJob::doOperationDoneEvent( const GpgME::Error & ) {
   emit result( mCtx->decryptionResult(), mOutDataDataProvider->data() );
 }
