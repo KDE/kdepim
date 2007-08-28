@@ -37,5 +37,10 @@ engelen@genivia.com / engelen@acm.org
 --------------------------------------------------------------------------------
 */
 
+#ifndef SOAP_STLLIST_H
+#define SOAP_STLLIST_H
+
 #include <list>
 template <class T> class std::list;
+
+#endif // SOAP_STLLIST_H

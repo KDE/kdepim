@@ -17,8 +17,8 @@
     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 */
 
-#ifndef SLOXUTILS_H
-#define SLOXUTILS_H
+#ifndef SLOX_SLOXBASE_H
+#define SLOX_SLOXBASE_H
 
 #include <QString>
 #include "slox_export.h"
@@ -112,4 +112,4 @@ class KSLOX_EXPORT SloxBase {
     KRES::Resource *mRes;
 };
 
-#endif
+#endif // SLOX_SLOXBASE_H

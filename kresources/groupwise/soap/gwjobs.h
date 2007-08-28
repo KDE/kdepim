@@ -17,8 +17,8 @@
     along with this program; if not, write to the Free Software
     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 */
-#ifndef GROUPWISE_JOBS_H
-#define GROUPWISE_JOBS_H
+#ifndef SOAP_GWJOBS_H
+#define SOAP_GWJOBS_H
 
 #include <qobject.h>
 
@@ -123,4 +123,4 @@ class UpdateAddressBooksJob : public GWJob
                               // and are used to determine which deltas to download
 };
 
-#endif
+#endif // SOAP_GWJOBS_H

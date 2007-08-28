@@ -37,5 +37,10 @@ engelen@genivia.com / engelen@acm.org
 --------------------------------------------------------------------------------
 */
 
+#ifndef SOAP_STLDEQUE_H
+#define SOAP_STLDEQUE_H
+
 #include <deque>
 template <class T> class std::deque;
+
+#endif // SOAP_STLDEQUE_H

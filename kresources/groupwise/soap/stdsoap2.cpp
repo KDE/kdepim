@@ -214,7 +214,7 @@ static const struct soap_code_map html_entity_codes[] = /* entities for XHTML pa
   { 161, "iexcl" },
   { 162, "cent" },
   { 163, "pound" },
-  { 164, "curren" },
+  { 164, "curren" },	//krazy:exclude=spelling
   { 165, "yen" },
   { 166, "brvbar" },
   { 167, "sect" },

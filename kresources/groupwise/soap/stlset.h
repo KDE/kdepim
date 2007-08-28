@@ -37,5 +37,10 @@ engelen@genivia.com / engelen@acm.org
 --------------------------------------------------------------------------------
 */
 
+#ifndef SOAP_STLSET_H
+#define SOAP_STLSET_H
+
 #include <set>
 template <class T> class std::set;
+
+#endif // SOAP_STLSET_H

@@ -37,7 +37,12 @@ engelen@genivia.com / engelen@acm.org
 --------------------------------------------------------------------------------
 */
 
+#ifndef SOAP_STL_H
+#define SOAP_STL_H
+
 #import "stldeque.h"
 #import "stllist.h"
 #import "stlvector.h"
 #import "stlset.h"
+
+#endif // SOAP_STL_H

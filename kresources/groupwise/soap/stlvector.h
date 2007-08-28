@@ -37,5 +37,10 @@ engelen@genivia.com / engelen@acm.org
 --------------------------------------------------------------------------------
 */
 
+#ifndef SOAP_STLVECTOR_H
+#define SOAP_STLVECTOR_H
+
 #include <vector>
 template <class T> class std::vector;
+
+#endif // SOAP_STLVECTOR_H

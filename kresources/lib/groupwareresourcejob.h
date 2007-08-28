@@ -20,8 +20,8 @@
     the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
     Boston, MA 02110-1301, USA.
 */
-#ifndef KPIM_GROUPWAREJOB_H
-#define KPIM_GROUPWAREJOB_H
+#ifndef KRESOURCES_GROUPWARERESOURCEJOB_H
+#define KRESOURCES_GROUPWARERESOURCEJOB_H
 
 #include <QObject>
 #include <QString>
@@ -65,4 +65,4 @@ class GroupwareJob : public QObject
 
 }
 
-#endif
+#endif // KRESOURCES_GROUPWARERESOURCEJOB_H
