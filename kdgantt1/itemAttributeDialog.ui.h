@@ -36,6 +36,9 @@
 ** a constructor, and a destroy() slot in place of a destructor.
 *****************************************************************************/
 
+#ifndef ITEMATTRIBUTEDIALOG_UI_H
+#define ITEMATTRIBUTEDIALOG_UI_H
+
 #include <QColorDialog>
 void itemAttributeDialog::init( )
 {
@@ -533,3 +536,5 @@ KDGanttViewItem* itemAttributeDialog::getItem()
 {
  return myItem;
 }
+
+#endif // ITEMATTRIBUTEDIALOG_UI_H

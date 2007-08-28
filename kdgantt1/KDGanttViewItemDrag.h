@@ -29,8 +29,8 @@
  **********************************************************************/
 
 
-#ifndef KDGANTTVIEWITEMGRAG_H
-#define KDGANTTVIEWITEMGRAG_H
+#ifndef KDGANTTVIEWITEMDRAG_H
+#define KDGANTTVIEWITEMDRAG_H
 
 #include <QWidget>
 
@@ -54,7 +54,4 @@ private:
   KDGanttViewItem* myItem;
 };
 
-
-
-
-#endif
+#endif // KDGANTTVIEWITEMDRAG_H
