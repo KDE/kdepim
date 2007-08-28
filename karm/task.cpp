@@ -160,7 +160,7 @@ void Task::setPercentComplete(const int percent, KarmStorage *storage)
   else
     _percentcomplete = percent;
 
-  if (isRunning() && _percentcomplete==100) setRunning(false, storage);
+  if (isRunning() && _percentcomplete==100) taskView()->stopTimerFor(this);
 
   setPixmapProgress();
 
