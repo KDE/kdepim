@@ -19,8 +19,8 @@
    Boston, MA 02110-1301, USA.
 */
 
-#ifndef CSV_IMPORT_DLG_H
-#define CSV_IMPORT_DLG_H
+#ifndef KADDRESSBOOK_CVSIMPORTDIALOG_H
+#define KADDRESSBOOK_CVSIMPORTDIALOG_H
 
 #include <kabc/addressbook.h>
 #include <kabc/addresseelist.h>
@@ -120,4 +120,4 @@ class CSVImportDialog : public KDialog
     QList<int> mTypeStore;
 };
 
-#endif
+#endif // KADDRESSBOOK_CVSIMPORTDIALOG_H

@@ -16,8 +16,8 @@
  ***************************************************************************/
 
 
-#ifndef PAB_LIB_HXX
-#define PAB_LIB_HXX
+#ifndef KADDRESSBOOK_PAB_PABLIB_H
+#define KADDRESSBOOK_PAB_PABLIB_H
 
 #include <klocale.h>
 #include <QFile>
@@ -73,5 +73,4 @@ class pab
     bool convert(void);
 };
 
-
-#endif
+#endif // KADDRESSBOOK_PAB_PABLIB_H

@@ -18,8 +18,8 @@
     Boston, MA 02110-1301, USA.
 */
 
-#ifndef VCARD_LDIFCREATOR_H
-#define VCARD_LDIFCREATOR_H
+#ifndef KADDRESSBOOK_LDIFVCARDCREATOR_H
+#define KADDRESSBOOK_LDIFVCARDCREATOR_H
 
 #include <QPixmap>
 #include <kio/thumbcreator.h>
@@ -47,4 +47,4 @@ class VCard_LDIFCreator : public ThumbCreator
     bool createImageBig();
 };
 
-#endif
+#endif // KADDRESSBOOK_LDIFVCARDCREATOR_H

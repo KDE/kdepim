@@ -40,7 +40,6 @@
 #include <kabc/vcardconverter.h>
 #include <kpixmapsplitter.h>
 #include <kstandarddirs.h>
-#include <kglobalsettings.h>
 
 #include "ldifvcardcreator.h"
 

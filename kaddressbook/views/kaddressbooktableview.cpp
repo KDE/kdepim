@@ -30,7 +30,6 @@
 #include <QFile>
 #include <QImage>
 #include <QComboBox>
-#include <QApplication>
 #include <QEvent>
 #include <q3url.h>
 #include <QPixmap>
