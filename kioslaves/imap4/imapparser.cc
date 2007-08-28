@@ -130,7 +130,8 @@ imapParser::sendCommand (imapCommand * aCmd)
            || command == "NAMESPACE"
            || command == "GETQUOTAROOT"
            || command == "GETQUOTA"
-           || command == "X-GET-OTHER-USERS")
+           || command == "X-GET-OTHER-USERS"
+           || command == "X-GET-DELEGATES")
   {
     lastResults.clear ();
   }
@@ -380,6 +381,11 @@ imapParser::parseUntagged (parseString & result)
       parseResult (what, result);
     } else if (qstrncmp(what, "OTHER-USER", 10) == 0) { // X-GET-OTHER-USER
       parseOtherUser (result);
+    }
+    break;
+  case 'D':
+    if (qstrncmp(what, "DELEGATE", 8) == 0) { // X-GET-DELEGATES
+      parseDelegate (result);
     }
     break;
 
@@ -792,6 +798,20 @@ void imapParser::parseCustom (parseString & result)
 void imapParser::parseOtherUser (parseString & result)
 {
   lastResults.append( parseOneWordC( result ) );
+}
+
+void imapParser::parseDelegate (parseString & result)
+{
+  const QString email = parseOneWordC( result );
+
+  QStringList rights;
+  int outlen = 1;
+  while ( outlen && !result.isEmpty() ) {
+    QCString word = parseLiteralC( result, false, false, &outlen );
+    rights.append( word );
+  }
+
+  lastResults.append( email + ":" + rights.join( "," ) );
 }
 
 void imapParser::parseMyRights (parseString & result)

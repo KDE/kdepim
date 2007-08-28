@@ -298,6 +298,8 @@ public:
   void parseCustom (parseString & result);
   /** @brief parse a OTHER-USER line */
   void parseOtherUser (parseString & result);
+  /** @brief parse a DELEGATE line */
+  void parseDelegate (parseString & result);
 
   /**
    * parses the results of a fetch command
