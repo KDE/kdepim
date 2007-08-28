@@ -31,9 +31,9 @@
 
 #ifndef __KLEOPATRA_CONF_DNORDERCONFIGPAGE_H__
 #define __KLEOPATRA_CONF_DNORDERCONFIGPAGE_H__
-
+#define KDE3_SUPPORT
 #include <kcmodule.h>
-
+#undef KDE3_SUPPORT
 namespace Kleo {
   class DNAttributeOrderConfigWidget;
 }

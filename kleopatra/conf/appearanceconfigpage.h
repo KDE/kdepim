@@ -31,9 +31,9 @@
 
 #ifndef KLEOPATRA_APPEARANCECONFIGPAGE_H
 #define KLEOPATRA_APPEARANCECONFIGPAGE_H
-
+#define KDE3_SUPPORT
 #include <kcmodule.h>
-
+#undef KDE3_SUPPORT
 namespace Kleo {
   class AppearanceConfigWidget;
 }
