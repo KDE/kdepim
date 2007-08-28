@@ -1093,6 +1093,7 @@ void KABCore::initGUI()
   detailsPageLayout->addWidget( mDetailsViewer );
 
   mDetailsStack->addWidget( mDetailsWidget );
+  mDetailsStack->raiseWidget( mDetailsWidget );
   mDetailsSplitter->moveToLast( mDetailsStack );
 
   connect( mDetailsViewer, SIGNAL( addressClicked( const QString&) ),
