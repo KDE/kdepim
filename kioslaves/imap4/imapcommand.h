@@ -371,6 +371,14 @@ public:
    */
   static imapCommand *clientGetQuotaroot ( const QString& box );
 
+  /**
+   * @brief Create a custom command
+   * @param command The custom command
+   * @param arguments The custom arguments
+   * @return a custom imapCommand
+   */
+  static imapCommand *clientCustom ( const QString& command, const QString& arguments );
+
 protected:
   QString aCommand;
   QString mId;

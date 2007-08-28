@@ -129,7 +129,8 @@ imapParser::sendCommand (imapCommand * aCmd)
            || command == "GETANNOTATION"
            || command == "NAMESPACE"
            || command == "GETQUOTAROOT"
-           || command == "GETQUOTA")
+           || command == "GETQUOTA"
+           || command == "X-GET-OTHER-USERS")
   {
     lastResults.clear ();
   }
@@ -377,6 +378,8 @@ imapParser::parseUntagged (parseString & result)
     if (what[1] == 'K' && what.size() == 2)
     {
       parseResult (what, result);
+    } else if (qstrncmp(what, "OTHER-USER", 10) == 0) { // X-GET-OTHER-USER
+      parseOtherUser (result);
     }
     break;
 
@@ -454,7 +457,12 @@ imapParser::parseUntagged (parseString & result)
     {
       parseQuota( result );
     }
-
+    break;
+  case 'X': // Custom command
+    {
+      parseCustom( result );
+    }
+    break;
   default:
     //better be a number
     {
@@ -772,6 +780,18 @@ void imapParser::parseQuotaRoot (parseString & result)
     roots.append (word);
   }
   lastResults.append( roots.join(" ") );
+}
+
+void imapParser::parseCustom (parseString & result)
+{
+  int outlen = 1;
+  QCString word = parseLiteralC (result, false, false, &outlen);
+  lastResults.append( word );
+}
+
+void imapParser::parseOtherUser (parseString & result)
+{
+  lastResults.append( parseOneWordC( result ) );
 }
 
 void imapParser::parseMyRights (parseString & result)

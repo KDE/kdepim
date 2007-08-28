@@ -1206,6 +1206,7 @@ IMAP4Protocol::del (const KURL & _url, bool isFile)
  * AnnotateMore commands: data = 'M' + 'G'et/'S'et + URL + entry + command-dependent args
  * Search: data = 'E' + URL (KURL)
  * Quota commands: data = 'Q' + 'R'oot/'G'et/'S'et + URL + entry + command-dependent args
+ * Custom command: data = 'X' + 'N'ormal/'E'xtended + command + command-dependent args
  */
 void
 IMAP4Protocol::special (const QByteArray & aData)
@@ -1417,6 +1418,12 @@ IMAP4Protocol::special (const QByteArray & aData)
     specialSearchCommand( stream );
     break;
   }
+  case 'X':
+  {
+    // custom command
+    specialCustomCommand( stream );
+    break;
+  }
   default:
     kdWarning(7116) << "Unknown command in special(): " << tmp << endl;
     error( ERR_UNSUPPORTED_ACTION, QString(QChar(tmp)) );
@@ -1552,6 +1559,85 @@ IMAP4Protocol::specialSearchCommand( QDataStream& stream )
   infoMessage( lst.join( " " ) );
 
   finished();
+}
+
+void
+IMAP4Protocol::specialCustomCommand( QDataStream& stream )
+{
+  kdDebug(7116) << "IMAP4Protocol::specialCustomCommand" << endl;
+
+  QString command, arguments;
+  int type;
+  stream >> type;
+  stream >> command >> arguments;
+
+  /**
+   * In 'normal' mode we send the command with all information in one go
+   * and retrieve the result.
+   */
+  if ( type == 'N' ) {
+    kdDebug(7116) << "IMAP4Protocol::specialCustomCommand: normal mode" << endl;
+    imapCommand *cmd = doCommand (imapCommand::clientCustom( command, arguments ));
+    if (cmd->result () != "OK")
+    {
+      error(ERR_SLAVE_DEFINED, i18n("Custom command %1:%2 "
+            "failed. The server returned: %3")
+          .arg(command)
+          .arg(arguments)
+          .arg(cmd->resultInfo()));
+      return;
+    }
+    completeQueue.removeRef(cmd);
+    QStringList lst = getResults();
+    kdDebug(7116) << "IMAP4Protocol::specialCustomCommand '" << command <<
+      ":" << arguments <<
+      "' returns " << lst << endl;
+    infoMessage( lst.join( " " ) );
+
+    finished();
+  } else
+  /**
+   * In 'extended' mode we send a first header and push the data of the request in
+   * streaming mode.
+   */
+  if ( type == 'E' ) {
+    kdDebug(7116) << "IMAP4Protocol::specialCustomCommand: extended mode" << endl;
+    imapCommand *cmd = sendCommand (imapCommand::clientCustom( command, QString() ));
+    while ( !parseLoop () );
+
+    // see if server is waiting
+    if (!cmd->isComplete () && !getContinuation ().isEmpty ())
+    {
+      const QByteArray buffer = arguments.utf8();
+
+      // send data to server
+      bool sendOk = (write (buffer.data (), buffer.size ()) == (ssize_t)buffer.size ());
+      processedSize( buffer.size() );
+
+      if ( !sendOk ) {
+        error ( ERR_CONNECTION_BROKEN, myHost );
+        completeQueue.removeRef ( cmd );
+        setState(ISTATE_CONNECT);
+        closeConnection();
+        return;
+      }
+    }
+    parseWriteLine ("");
+
+    do
+    {
+      while (!parseLoop ());
+    }
+    while (!cmd->isComplete ());
+
+    completeQueue.removeRef (cmd);
+
+    QStringList lst = getResults();
+    kdDebug(7116) << "IMAP4Protocol::specialCustomCommand: returns " << lst << endl;
+    infoMessage( lst.join( " " ) );
+
+    finished ();
+  }
 }
 
 void

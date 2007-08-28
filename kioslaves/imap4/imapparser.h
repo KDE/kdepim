@@ -294,6 +294,10 @@ public:
   void parseQuotaRoot (parseString & result);
   /** @brief parse a QUOTA line */
   void parseQuota (parseString & result);
+  /** @brief parse a custom command line */
+  void parseCustom (parseString & result);
+  /** @brief parse a OTHER-USER line */
+  void parseOtherUser (parseString & result);
 
   /**
    * parses the results of a fetch command

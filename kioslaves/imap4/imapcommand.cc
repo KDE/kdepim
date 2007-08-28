@@ -400,3 +400,9 @@ imapCommand::clientGetQuotaroot( const QString& box )
   return new imapCommand ("GETQUOTAROOT", parameter);
 }
 
+imapCommand *
+imapCommand::clientCustom( const QString& command, const QString& arguments )
+{
+  return new imapCommand (command, arguments);
+}
+
