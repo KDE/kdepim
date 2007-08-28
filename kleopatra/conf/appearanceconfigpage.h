@@ -29,8 +29,8 @@
     your version.
 */
 
-#ifndef _APPEARANCE_CONFIGURE_PAGE_H_
-#define _APPEARANCE_CONFIGURE_PAGE_H_
+#ifndef KLEOPATRA_APPEARANCECONFIGPAGE_H
+#define KLEOPATRA_APPEARANCECONFIGPAGE_H
 
 #include <kcmodule.h>
 
@@ -57,4 +57,4 @@ private:
   Kleo::AppearanceConfigWidget* mWidget;
 };
 
-#endif // _APPEARANCE_CONFIGURE_DIALOG_PRIVATE_H_
+#endif // KLEOPATRA_APPEARANCECONFIGPAGE_H
