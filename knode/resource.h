@@ -12,9 +12,8 @@
     Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, US
 */
 
-#ifndef RESSOURCE_H
-#define RESSOURCE_H
-
+#ifndef KNODE_RESOURCE_H
+#define KNODE_RESOURCE_H
 
 //========= KNode Version Information ============
 
@@ -26,7 +25,6 @@
 #define SB_GROUP      4000010
 #define SB_FILTER   4000030
 
-
 //================== Folders =====================
 
 #define FOLD_DRAFTS 200010
@@ -34,4 +32,4 @@
 #define FOLD_OUTB   200030
 
 
-#endif // RESOURCE_H
+#endif // KNODE_RESOURCE_H

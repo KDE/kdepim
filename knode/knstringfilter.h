@@ -12,8 +12,8 @@
     Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, US
 */
 
-#ifndef KNODE_STRINGFILTER_H
-#define KNODE_STRINGFILTER_H
+#ifndef KNODE_KNSTRINGFILTER_H
+#define KNODE_KNSTRINGFILTER_H
 
 #include <QGroupBox>
 
@@ -84,5 +84,4 @@ class StringFilterWidget : public QGroupBox
 
 }
 
-#endif
-
+#endif // KNODE_KNSTRINGFILTER_H

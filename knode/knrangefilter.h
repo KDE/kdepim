@@ -12,8 +12,8 @@
     Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, US
 */
 
-#ifndef KNODE_RANGEFILTER_H
-#define KNODE_RANGEFILTER_H
+#ifndef KNODE_KNRANGEFILTER_H
+#define KNODE_KNRANGEFILTER_H
 
 #include <QGroupBox>
 
@@ -96,4 +96,4 @@ class RangeFilterWidget : public QGroupBox
 
 }
 
-#endif
+#endif // KNODE_KNRANGEFILTER_H

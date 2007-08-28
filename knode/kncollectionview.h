@@ -11,8 +11,8 @@
     Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, US
 */
 
-#ifndef KNCOLLECTIONTREE_H
-#define KNCOLLECTIONTREE_H
+#ifndef KNODE_KNCOLLECTIONVIEW_H
+#define KNODE_KNCOLLECTIONVIEW_H
 
 #include <kfoldertree.h>
 //Added by qt3to4:
@@ -88,4 +88,4 @@ class KNCollectionView : public KFolderTree {
 
 };
 
-#endif
+#endif // KNODE_KNCOLLECTIONVIEW_H

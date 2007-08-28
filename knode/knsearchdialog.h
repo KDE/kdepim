@@ -12,8 +12,8 @@
     Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, US
 */
 
-#ifndef KNODE_SEARCHDIALOG_H
-#define KNODE_SEARCHDIALOG_H
+#ifndef KNODE_KNSEARCHDIALOG_H
+#define KNODE_KNSEARCHDIALOG_H
 
 #include <kdialog.h>
 
@@ -61,4 +61,4 @@ class SearchDialog : public KDialog
 
 }
 
-#endif
+#endif // KNODE_KNSEARCHDIALOG_H

@@ -12,8 +12,8 @@
     Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, US
 */
 
-#ifndef KNODE_STATUSFILTER_H
-#define KNODE_STATUSFILTER_H
+#ifndef KNODE_KNSTATUSFILTER_H
+#define KNODE_KNSTATUSFILTER_H
 
 #include <QComboBox>
 #include <QBitArray>
@@ -87,4 +87,4 @@ class StatusFilterWidget : public QWidget
 
 }
 
-#endif
+#endif // KNODE_KNSTATUSFILTER_H

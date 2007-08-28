@@ -55,7 +55,6 @@ using KRecentAddress::RecentAddresses;
 using MailTransport::TransportManager;
 
 //GUI
-#include "knmainwidget.h"
 #include "knarticlewindow.h"
 #include "kncollectionview.h"
 #include "kncollectionviewitem.h"

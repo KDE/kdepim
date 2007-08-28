@@ -12,8 +12,8 @@
     Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, US
 */
 
-#ifndef KNODE_ARTICLEWINDOW_H
-#define KNODE_ARTICLEWINDOW_H
+#ifndef KNODE_KNARTICLEWINDOW_H
+#define KNODE_KNARTICLEWINDOW_H
 
 #include <kxmlguiwindow.h>
 
@@ -77,4 +77,4 @@ class ArticleWindow : public KXmlGuiWindow  {
 
 }
 
-#endif
+#endif // KNODE_KNARTICLEWINDOW_H
