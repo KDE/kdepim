@@ -19,9 +19,8 @@
 *  Boston, MA 02110-1301, USA.                                            *
 ***************************************************************************/
 
-
-#ifndef SYSTEMIMPL_H
-#define SYSTEMIMPL_H
+#ifndef KMOBILETOOLS_OBEXIMPL_H
+#define KMOBILETOOLS_OBEXIMPL_H
 
 #include <kio/global.h>
 #include <kio/job.h>
@@ -78,4 +77,4 @@ private:
     OBEXWrapper *obexWrapper;
 };
 
-#endif
+#endif // KMOBILETOOLS_OBEXIMPL_H

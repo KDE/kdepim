@@ -95,16 +95,13 @@
 #include "calldialogimpl.h"
 //#include "mainIFace_stub.h"
 
-
 #include <QtGui/QTreeWidgetItem>
 
 #include <libkmobiletools/errorhandler.h>
 #include <libkmobiletools/errortypes/baseerror.h>
-#include <libkmobiletools/engine.h>
 #include <libkmobiletools/sms.h>
 #include <libkmobiletools/homepage.h>
 #include <libkmobiletools/enginedata.h>
-
 
 #define INDEX_WIDGET_ID 0
 #define PHONEBOOK_WIDGET_ID 2
