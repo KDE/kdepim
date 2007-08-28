@@ -133,7 +133,7 @@
   If the item is closed (i.e., its children are hidden in the left
   list view), the item itself is hidden, and its children are displayed
   on the timeline of this item instead. To control the painting of
-  overlapping children, call \a setPriority() for the childs.
+  overlapping children, call \a setPriority() for the children.
 
   Blocking of user interaction to open item:
   If you want to block users to open items used as parents of calendar items,
@@ -463,10 +463,10 @@ QPtrList <KDGanttViewItem>  KDGanttViewItem::getChildListForTimespan( const QDat
            eTask->getTimeForTimespan( QDateTime( 1. Jan 2004 - 12:30 ),QDateTime( 1. April 2004 - 1:00 ) )
                   returns 0.
 
-  \param  start the start QDateTime of the interval. If an invalid QDateTime is passed it is an open intervall.
-          end   the end QDateTime of the interval. If an invalid QDateTime is passed it is an open intervall.
+  \param  start the start QDateTime of the interval. If an invalid QDateTime is passed it is an open interval.
+          end   the end QDateTime of the interval. If an invalid QDateTime is passed it is an open interval.
                 if start and end are invalid the duration (start time to end time in seconds) is returned.
-  \return the time of this item in the intervall in seconds 
+  \return the time of this item in the interval in seconds 
   \sa getChildTimeForTimespan()  getAllSubChildTimeForTimespan() getChildListForTimespan()
 */ 
 unsigned int KDGanttViewItem::getTimeForTimespan( const QDateTime&, const QDateTime&)
