@@ -25,8 +25,9 @@
 /*
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
-#ifndef CONVERTERDLG_H
-#define CONVERTERDLG_H
+
+#ifndef DOCCONDUIT_KPALMDOC_DLG_H
+#define DOCCONDUIT_KPALMDOC_DLG_H
 
 #include <kdialog.h>
 class ConverterDlgBase;
@@ -64,4 +65,4 @@ protected:
 	bool verbose;
 };
 
-#endif // CONVERTERDLG_H
+#endif // DOCCONDUIT_KPALMDOC_DLG_H

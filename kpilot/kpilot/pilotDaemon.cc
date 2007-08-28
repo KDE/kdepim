@@ -162,7 +162,7 @@ void PilotDaemonTray::setupWidget()
 	connect( syncTypeActions, SIGNAL( triggered( QAction* ) ), daemon
 		, SLOT( requestSync( QAction* ) ) );
 	
-	// See toggleDefaultSync(). This is only usefull now all other action are
+	// See toggleDefaultSync(). This is only useful now all other action are
 	// added to syncTypeActions.
 	menuDefaultSyncActionItem->setChecked( true );
 

@@ -1,11 +1,12 @@
-#ifndef _TIME_FACTORY_H
-#define _TIME_FACTORY_H
 /* MAL-factory.h                       KPilot
 **
 ** Copyright (C) 2002 by Reinhold Kainhofer
 **
 ** This file defines the factory for the mal-conduit plugin.
 */
+
+#ifndef COUNDUITPROGRAMMINGTUTORIAL_MAL_FACTORY_H
+#define COUNDUITPROGRAMMINGTUTORIAL_MAL_FACTORY_H
 
 #include <klibloader.h>
 
@@ -51,4 +52,4 @@ extern "C" {
   void *init_libmalconduit();
 } ;
 
-#endif
+#endif // COUNDUITPROGRAMMINGTUTORIAL_MAL_FACTORY_H

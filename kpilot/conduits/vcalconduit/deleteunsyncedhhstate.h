@@ -1,5 +1,3 @@
-#ifndef _KPILOT_DUSHHSTATE_H
-#define _KPILOT_DUSHHSTATE_H
 /* deleteunsyncedhhstate.h                       KPilot
 **
 ** Copyright (C) 2006 Bertjan Broeksema
@@ -28,8 +26,10 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
-#include "conduitstate.h"
+#ifndef VCALCONDUIT_DELETEUNSYNCEDHHSTATE_H
+#define VCALCONDUIT_DELETEUNSYNCEDHHSTATE_H
 
+#include "conduitstate.h"
 
 /**
  * State to handle delete unsynced pc records. @see vcal-conduitstate.h
@@ -49,4 +49,4 @@ public:
 	virtual void finishSync( ConduitAction* );
 };
 
-#endif
+#endif // VCALCONDUIT_DELETEUNSYNCEDHHSTATE_H
