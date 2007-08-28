@@ -97,7 +97,7 @@ public:
 	} ;
 
 	/** @see findCategory(const QString &name, bool unknownIsUnfiled, struct CategoryAppInfo *info). */
-	inline int findCategory(const QString &name, bool unknownIsUnfiled = false)
+	inline int findCategory(const QString &name, bool unknownIsUnfiled = false) const
 	{
 		return Pilot::findCategory(fC,name,unknownIsUnfiled);
 	} ;
