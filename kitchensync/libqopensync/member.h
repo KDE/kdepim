@@ -25,7 +25,6 @@
 #include <libqopensync/qopensync_export.h>
 #include <libqopensync/plugin.h>
 #include <libqopensync/result.h>
-#include <libqopensync/plugin.h>
 
 class OSyncMember;
 

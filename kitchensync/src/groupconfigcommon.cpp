@@ -95,7 +95,7 @@ void ObjectTypeSelector::load( const QSync::Group &group )
 
   const QStringList objectTypes = config.activeObjectTypes();
 
-  // Enable everything on the inital load
+  // Enable everything on the initial load
   bool initialLoad = false;
   if ( objectTypes.isEmpty() )
     initialLoad = true;

@@ -324,7 +324,7 @@ void GroupItem::member( const QSync::SyncMemberUpdate &update )
           item->setStatusMessage( i18n( "Disconnected" ) );
           break;
         case QSync::SyncMemberUpdate::SyncDone:
-          item->setStatusMessage( i18n( "Synchronisation done" ) );
+          item->setStatusMessage( i18n( "Synchronization done" ) );
           break;
         case QSync::SyncMemberUpdate::Discovered:
           item->setStatusMessage( i18n( "Discovered" ) );
