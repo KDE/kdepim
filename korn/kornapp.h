@@ -41,7 +41,7 @@ public:
 	 *
 	 * @param shell the new KornShell
 	 */
-	void setShell( KornShell *shell ){ _shell = shell; };
+	void setShell( KornShell *shell ){ _shell = shell; }
 	
 private:
 	KornShell *_shell;

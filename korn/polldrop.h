@@ -55,7 +55,7 @@ public:
 	 *
 	 * @return true if the monitor is running; false otherwise
 	 */
-	virtual bool running() { return _timerRunning; };
+	virtual bool running() { return _timerRunning; }
 
 	/**
 	 * This function reads the configuration cfg.

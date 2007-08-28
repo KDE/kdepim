@@ -61,7 +61,7 @@ class KMailDrop : public QObject
      * Number of messages in the mailbox at the last count.
      * @return The number of messages in the mailbox since last count.
      */
-    int count() {return _lastCount;};
+    int count() {return _lastCount;}
 
     QString realName() const;
 

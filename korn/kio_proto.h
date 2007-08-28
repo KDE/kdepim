@@ -209,7 +209,7 @@ public:
 	 * @param url the kurl to manipulate
 	 * @param metadata the metadata to manipulate
 	 */
-	virtual void recheckKUrl     ( KUrl &, KIO::MetaData & ) const { };
+	virtual void recheckKUrl     ( KUrl &, KIO::MetaData & ) const { }
 	/**
 	 * This function can manipulate a KUrl which is used after it for connecting.
 	 * After connecting, the connection is used to check for new emails.
