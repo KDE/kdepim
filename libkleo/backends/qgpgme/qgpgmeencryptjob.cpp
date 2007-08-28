@@ -54,26 +54,26 @@ Kleo::QGpgMEEncryptJob::QGpgMEEncryptJob( GpgME::Context * context )
 Kleo::QGpgMEEncryptJob::~QGpgMEEncryptJob() {
 }
 
-void Kleo::QGpgMEEncryptJob::setup( const QByteArray & plainText ) {
+GpgME::Error Kleo::QGpgMEEncryptJob::setup( const std::vector<GpgME::Key> & recipients, const QByteArray & plainText, bool alwaysTrust ) {
   assert( !mInData );
   assert( !mOutData );
 
   createInData( plainText );
   createOutData();
-}
-
-GpgME::Error Kleo::QGpgMEEncryptJob::start( const std::vector<GpgME::Key> & recipients,
-					    const QByteArray & plainText, bool alwaysTrust ) {
-  setup( plainText );
 
   hookupContextToEventLoopInteractor();
 
   const GpgME::Context::EncryptionFlags flags =
     alwaysTrust ? GpgME::Context::AlwaysTrust : GpgME::Context::None;
-  const GpgME::Error err = mCtx->startEncryption( recipients, *mInData, *mOutData, flags );
+  return mCtx->startEncryption( recipients, *mInData, *mOutData, flags );
+}
 
+GpgME::Error Kleo::QGpgMEEncryptJob::start( const std::vector<GpgME::Key> & recipients,
+					    const QByteArray & plainText, bool alwaysTrust ) {
+  const GpgME::Error err = setup( recipients, plainText, alwaysTrust );
   if ( err )
     deleteLater();
+  mResult = GpgME::EncryptionResult( err );
   return err;
 }
 
@@ -81,16 +81,15 @@ GpgME::EncryptionResult Kleo::QGpgMEEncryptJob::exec( const std::vector<GpgME::K
 						      const QByteArray & plainText,
 						      bool alwaysTrust,
 						      QByteArray & ciphertext ) {
-  setup( plainText );
-  const GpgME::Context::EncryptionFlags flags =
-    alwaysTrust ? GpgME::Context::AlwaysTrust : GpgME::Context::None;
-  mResult = mCtx->encrypt( recipients, *mInData, *mOutData, flags );
+  if ( const GpgME::Error err = setup( recipients, plainText, alwaysTrust ) )
+    return GpgME::EncryptionResult( err );
+  waitForFinished();
   ciphertext = mOutDataDataProvider->data();
-  return mResult;
+  return mResult = mCtx->encryptionResult();
 }
 
 void Kleo::QGpgMEEncryptJob::doOperationDoneEvent( const GpgME::Error & ) {
-  emit result( mResult, mOutDataDataProvider->data() );
+  emit result( mResult = mCtx->encryptionResult(), mOutDataDataProvider->data() );
 }
 
 void Kleo::QGpgMEEncryptJob::showErrorDialog( QWidget * parent, const QString & caption ) const {

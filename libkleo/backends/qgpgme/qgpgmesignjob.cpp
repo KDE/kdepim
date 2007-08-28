@@ -56,30 +56,28 @@ Kleo::QGpgMESignJob::~QGpgMESignJob() {
 }
 
 GpgME::Error Kleo::QGpgMESignJob::setup( const std::vector<GpgME::Key> & signers,
-					 const QByteArray & plainText ) {
+					 const QByteArray & plainText, GpgME::SignatureMode mode ) {
   assert( !mInData );
   assert( !mOutData );
 
   createInData( plainText );
   createOutData();
 
-  return setSigningKeys( signers );
+  if ( const GpgME::Error err = setSigningKeys( signers ) )
+    return err;
+
+  hookupContextToEventLoopInteractor();
+
+  return mCtx->startSigning( *mInData, *mOutData, mode );
 }
 
 GpgME::Error Kleo::QGpgMESignJob::start( const std::vector<GpgME::Key> & signers,
 					 const QByteArray & plainText,
 					 GpgME::SignatureMode mode ) {
-  if ( const GpgME::Error error = setup( signers, plainText ) ) {
-    deleteLater();
-    return error;
-  }
-
-  hookupContextToEventLoopInteractor();
-
-  const GpgME::Error err = mCtx->startSigning( *mInData, *mOutData, mode );
-
+  const GpgME::Error err = setup( signers, plainText, mode );
   if ( err )
     deleteLater();
+  mResult = GpgME::SigningResult( err );
   return err;
 }
 
@@ -87,15 +85,17 @@ GpgME::SigningResult Kleo::QGpgMESignJob::exec( const std::vector<GpgME::Key> & 
 						const QByteArray & plainText,
 						GpgME::SignatureMode mode,
 						QByteArray & signature ) {
-  if ( const GpgME::Error err = setup( signers, plainText ) )
-    return mResult = GpgME::SigningResult( 0, err );
-  mResult = mCtx->sign( *mInData, *mOutData, mode );
+  if ( const GpgME::Error err = setup( signers, plainText, mode ) )
+    return mResult = GpgME::SigningResult( err );
+
+  waitForFinished();
+
   signature = mOutDataDataProvider->data();
-  return mResult;
+  return mResult = mCtx->signingResult();
 }
 
 void Kleo::QGpgMESignJob::doOperationDoneEvent( const GpgME::Error & ) {
-  emit result( mResult, mOutDataDataProvider->data() );
+  emit result( mResult = mCtx->signingResult(), mOutDataDataProvider->data() );
 }
 
 void Kleo::QGpgMESignJob::showErrorDialog( QWidget * parent, const QString & caption ) const {

@@ -71,7 +71,7 @@ namespace Kleo {
     /*! \reimp from Job */
     void showErrorDialog( QWidget * parent, const QString & caption ) const;
 
-  private slots:
+  private Q_SLOTS:
     void slotOperationDoneEvent( GpgME::Context * context, const GpgME::Error & e ) {
       QGpgMEJob::doSlotOperationDoneEvent( context, e );
     }
@@ -79,7 +79,8 @@ namespace Kleo {
   private:
     void doOperationDoneEvent( const GpgME::Error & e );
     GpgME::Error setup( const std::vector<GpgME::Key> &,
-			const QByteArray & );
+                        const std::vector<GpgME::Key> &,
+			const QByteArray &, bool );
   private:
     std::pair<GpgME::SigningResult,GpgME::EncryptionResult> mResult;
   };

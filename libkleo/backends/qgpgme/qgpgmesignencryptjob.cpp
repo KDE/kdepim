@@ -55,32 +55,32 @@ Kleo::QGpgMESignEncryptJob::~QGpgMESignEncryptJob() {
 }
 
 GpgME::Error Kleo::QGpgMESignEncryptJob::setup( const std::vector<GpgME::Key> & signers,
-						const QByteArray & plainText ) {
+                                                const std::vector<GpgME::Key> & recipients,
+						const QByteArray & plainText, bool alwaysTrust ) {
   assert( !mInData );
   assert( !mOutData );
 
   createInData( plainText );
   createOutData();
 
-  return setSigningKeys( signers );
-}
-
-GpgME::Error Kleo::QGpgMESignEncryptJob::start( const std::vector<GpgME::Key> & signers,
-						const std::vector<GpgME::Key> & recipients,
-						const QByteArray & plainText, bool alwaysTrust ) {
-  if ( const GpgME::Error error = setup( signers, plainText ) ) {
-    deleteLater();
-    return error;
-  }
+  if ( const GpgME::Error err = setSigningKeys( signers ) )
+    return err;
 
   hookupContextToEventLoopInteractor();
 
   const GpgME::Context::EncryptionFlags flags =
     alwaysTrust ? GpgME::Context::AlwaysTrust : GpgME::Context::None ;
-  const GpgME::Error err = mCtx->startCombinedSigningAndEncryption( recipients, *mInData, *mOutData, flags );
+  return mCtx->startCombinedSigningAndEncryption( recipients, *mInData, *mOutData, flags );
+}
 
+GpgME::Error Kleo::QGpgMESignEncryptJob::start( const std::vector<GpgME::Key> & signers,
+						const std::vector<GpgME::Key> & recipients,
+						const QByteArray & plainText, bool alwaysTrust ) {
+  const GpgME::Error err = setup( signers, recipients, plainText, alwaysTrust );
   if ( err )
     deleteLater();
+  mResult.first = GpgME::SigningResult( err );
+  mResult.second = GpgME::EncryptionResult();
   return err;
 }
 
@@ -89,20 +89,21 @@ Kleo::QGpgMESignEncryptJob::exec( const std::vector<GpgME::Key> & signers,
 				  const std::vector<GpgME::Key> & recipients,
 				  const QByteArray & plainText, bool alwaysTrust,
 				  QByteArray & cipherText ) {
-  if ( GpgME::Error err = setup( signers, plainText ) )
-    return std::make_pair( GpgME::SigningResult( 0, err ), GpgME::EncryptionResult() );
-  const GpgME::Context::EncryptionFlags flags =
-    alwaysTrust ? GpgME::Context::AlwaysTrust : GpgME::Context::None ;
-  const std::pair<GpgME::SigningResult,GpgME::EncryptionResult> result =
-    mCtx->signAndEncrypt( recipients, *mInData, *mOutData, flags );
+  if ( GpgME::Error err = setup( signers, recipients, plainText, alwaysTrust ) )
+    return mResult = std::make_pair( GpgME::SigningResult( err ), GpgME::EncryptionResult() );
+
+  waitForFinished();
+
   cipherText = mOutDataDataProvider->data();
-  return result;
+  mResult.first = mCtx->signingResult();
+  mResult.second = mCtx->encryptionResult();
+  return mResult;
 }
 
 void Kleo::QGpgMESignEncryptJob::doOperationDoneEvent( const GpgME::Error & ) {
-  emit result( mCtx->signingResult(),
-	       mCtx->encryptionResult(),
-	       mOutDataDataProvider->data() );
+  mResult.first = mCtx->signingResult();
+  mResult.second = mCtx->encryptionResult();
+  emit result( mResult.first, mResult.second, mOutDataDataProvider->data() );
 }
 
 void Kleo::QGpgMESignEncryptJob::showErrorDialog( QWidget * parent, const QString & caption ) const {
