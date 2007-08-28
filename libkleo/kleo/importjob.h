@@ -71,7 +71,7 @@ namespace Kleo {
     */
     virtual GpgME::Error start( const QByteArray & keyData ) = 0;
 
-    virtual GpgME::ImportResult exec( const QByteArray & keyData ) = 0;
+    virtual KDE_DEPRECATED GpgME::ImportResult exec( const QByteArray & keyData ) = 0;
 
   Q_SIGNALS:
     void result( const GpgME::ImportResult & result );

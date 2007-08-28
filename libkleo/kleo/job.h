@@ -36,6 +36,8 @@
 #include <QtCore/QObject>
 #include <QtCore/QString>
 
+#include <kdemacros.h>
+
 class QWidget;
 
 namespace Kleo {
