@@ -30,11 +30,10 @@
     your version.
 */
 
-#ifndef __KSIEVE_PARSING_H__
-#define __KSIEVE_PARSING_H__
+#ifndef LIBKSIEVE_KSIEVE_PARSER_H
+#define LIBKSIEVE_KSIEVE_PARSER_H
 
 #include "libksieve_export.h"
-
 
 namespace KSieve {
 
@@ -68,4 +67,4 @@ namespace KSieve {
 
 } // namespace KSieve
 
-#endif // __KSIEVE_PARSING_H__
+#endif // LIBKSIEVE_KSIEVE_PARSER_H
