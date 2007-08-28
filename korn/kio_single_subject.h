@@ -16,8 +16,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef MK_KIO_SINGEL_SUBJECT_H
-#define MK_KIO_SINGEL_SUBJECT_H
+#ifndef KORN_KIO_SINGLE_SUBJECT_H
+#define KORN_KIO_SINGLE_SUBJECT_H
 
 /**
  * @file
@@ -102,4 +102,4 @@ signals:
 	void finished( KIO_Single_Subject* self );
 };
 
-#endif //MK_KIO_SINGEL_SUBJECT_H
+#endif // KORN_KIO_SINGLE_SUBJECT_H

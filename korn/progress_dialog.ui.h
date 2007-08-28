@@ -28,6 +28,8 @@
 ** destructor.
 *****************************************************************************/
 
+#ifndef KORN_PROGRESS_DIALOG_UI_H
+#define KORN_PROGRESS_DIALOG_UI_H
 
 void DoubleProgressDialog::setText( const QString & str )
 {
@@ -65,3 +67,5 @@ void DoubleProgressDialog::cancelbutton()
 {
     emit cancelPressed();
 }
+
+#endif // KORN_PROGRESS_DIALOG_UI_H
