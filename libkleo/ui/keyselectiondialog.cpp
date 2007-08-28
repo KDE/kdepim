@@ -344,18 +344,6 @@ void Kleo::KeySelectionDialog::init( bool rememberChoice, bool extendedSelection
   if ( mKeyUsage & SMIMEKeys )
     mSMIMEBackend = Kleo::CryptoBackendFactory::instance()->smime();
 
-  QSize dialogSize( 580, 400 );
-  if ( qApp ) {
-    int iconSize = IconSize(K3Icon::Desktop);
-    int miniSize = IconSize(K3Icon::Small);
-    KWindowSystem::setIcons( winId(), qApp->windowIcon().pixmap(iconSize, iconSize),
-                             qApp->windowIcon().pixmap(miniSize, miniSize) );
-
-    KConfigGroup dialogConfig( KGlobal::config(), "Key Selection Dialog" );
-    dialogSize = dialogConfig.readEntry( "Dialog size", dialogSize );
-  }
-  resize( dialogSize );
-
   mCheckSelectionTimer = new QTimer( this );
   mStartSearchTimer = new QTimer( this );
 
@@ -365,8 +353,11 @@ void Kleo::KeySelectionDialog::init( bool rememberChoice, bool extendedSelection
   mTopLayout->setMargin( 0 );
   mTopLayout->setSpacing( spacingHint() );
 
-  if ( !text.isEmpty() )
-    mTopLayout->addWidget( new QLabel( text, page ) );
+  if ( !text.isEmpty() ) {
+    textLabel = new QLabel( text, page );
+    textLabel->setWordWrap( true );
+    mTopLayout->addWidget( textLabel );
+  }
 
   QHBoxLayout * hlay = new QHBoxLayout();
   mTopLayout->addLayout( hlay );
@@ -424,6 +415,19 @@ void Kleo::KeySelectionDialog::init( bool rememberChoice, bool extendedSelection
   connect( this, SIGNAL(okClicked()), this, SLOT(slotOk()));
   connect( this, SIGNAL(cancelClicked()),this,SLOT(slotCancel()));
   slotRereadKeys();
+  topLayout->activate();
+
+  if ( qApp ) {
+    QSize dialogSize( sizeHint() );
+    int iconSize = IconSize(K3Icon::Desktop);
+    int miniSize = IconSize(K3Icon::Small);
+    KWindowSystem::setIcons( winId(), qApp->windowIcon().pixmap(iconSize, iconSize),
+                             qApp->windowIcon().pixmap(miniSize, miniSize) );
+
+    KConfigGroup dialogConfig( KGlobal::config(), "Key Selection Dialog" );
+    dialogSize = dialogConfig.readEntry( "Dialog size", dialogSize );
+    resize( dialogSize );
+  }
 }
 
 Kleo::KeySelectionDialog::~KeySelectionDialog() {
