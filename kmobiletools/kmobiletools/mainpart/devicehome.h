@@ -114,7 +114,7 @@ class ContactsSearchLineWidget : public K3ListViewSearchLineWidget
     Q_OBJECT
     public:
         explicit ContactsSearchLineWidget(K3ListView *listView=0, QWidget *parent=0)
-    : K3ListViewSearchLineWidget(listView, parent), p_searchline(NULL) {};
+    : K3ListViewSearchLineWidget(listView, parent), p_searchline(NULL) {}
         K3ListViewSearchLine *   searchLine () const { return p_searchline; }
         virtual K3ListViewSearchLine * createSearchLine (K3ListView *listView);
     private:

@@ -27,7 +27,7 @@ class ThreadWeaverPrivate {
     public:
         ThreadWeaverPrivate(KMobileTools::Weaver *_parent)
     : parent(_parent)
-        {};
+        {}
         KMobileTools::Weaver *parent;
 };
 

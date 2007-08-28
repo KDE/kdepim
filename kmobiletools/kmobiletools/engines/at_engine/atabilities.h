@@ -39,63 +39,63 @@ class ATAbilities
         ATAbilities();
         /** Returns the available phonebook slots. See sl_pbSlots for more information.
         */
-        QStringList getPBSlots() const { return sl_pbSlots; };
+        QStringList getPBSlots() const { return sl_pbSlots; }
         int filesystem() { return i_filesystem; }
         /** Returns true if the phone can select phonebooks and there are slots available.
         */
-        bool canSelectPBSlots() { return sl_pbSlots.count()!=0; };
+        bool canSelectPBSlots() { return sl_pbSlots.count()!=0; }
         /** Returns all available characters sets.
         */
-        QStringList getCharacterSets() const { return sl_CharacterSets; };
+        QStringList getCharacterSets() const { return sl_CharacterSets; }
         /** Returns true if the phone can change the character set.
         */
-        bool canSelectCharacterSets() { return sl_CharacterSets.count()!=0; };
+        bool canSelectCharacterSets() { return sl_CharacterSets.count()!=0; }
         /** Returns all available slots for short messages.
         */
-        QStringList getSMSSlots() const { return sl_SMSSlots; };
+        QStringList getSMSSlots() const { return sl_SMSSlots; }
         /** Returns true if the phone can change slots for short message readout.
         */
-        bool canSelectSMSSlots() { return sl_SMSSlots.count()!=0; };
+        bool canSelectSMSSlots() { return sl_SMSSlots.count()!=0; }
         /** Returns true if the phone is set to process sms in pdu mode.
         */
-        bool isPDU() { return smsPDUMode; };
+        bool isPDU() { return smsPDUMode; }
         /** Return true if the mobile phone is a Siemens phone.
          */
-        bool isSiemens() { return manufacturer.contains( "Siemens", Qt::CaseInsensitive ); };
+        bool isSiemens() { return manufacturer.contains( "Siemens", Qt::CaseInsensitive ); }
          /** Return true if the mobile phone is a Motorola  phone.
           */
-        bool isMotorola() { return manufacturer.contains( "Motorola", Qt::CaseInsensitive ); };
+        bool isMotorola() { return manufacturer.contains( "Motorola", Qt::CaseInsensitive ); }
           /** Return true if the mobile phone is a Sony Ericsson phone.
            */
-        bool isSonyEricsson() { return manufacturer.contains( "Ericsson", Qt::CaseInsensitive ); };
+        bool isSonyEricsson() { return manufacturer.contains( "Ericsson", Qt::CaseInsensitive ); }
         /** This is Siemens specific. Returns true if the mobile understands the
         * ^SMGL command for listing sms. This command behaves exactly like CMGL
         * but does not change the status from unread to read
         */
-        bool canSMGL() { return b_canSMGL; };
+        bool canSMGL() { return b_canSMGL; }
         /** This is Siemens specific. Returns true if the mobilecan use the
         * ^SBNR command to read the internal phonebook. This command returns
         * the addressbook in hexadecimal compacted VCF.
          */
-        bool canSiemensVCF() { return b_canSiemensVCF; };
+        bool canSiemensVCF() { return b_canSiemensVCF; }
         /** This is Siemens specific. Returns true if the mobilecan use the
          * ^SDBR command to read the internal phonebook. This command returns
          * the addressbook (only phonenumbers). If available the VCF should be
          * preferred.
          */
-        bool canSDBR() { return b_canSDBR; };
+        bool canSDBR() { return b_canSDBR; }
         /** Returns true if short messages can be stored in the mobile phone.
          * See StoreSMS on how to store messages.
          */
-        bool canStoreSMS() { return b_canStoreSMS; };
+        bool canStoreSMS() { return b_canStoreSMS; }
         /** Returns true if short messages can be deleted from the mobile phone.
          * See RemoveSMS on how to remove messages.
          */
-        bool canDeleteSMS() { return b_canDeleteSMS; };
+        bool canDeleteSMS() { return b_canDeleteSMS; }
         /** Returns true if short messages can be send via the mobile phone.
          * See SendSMS on how to remove messages.
          */
-        bool canSendSMS() { return b_canSendSMS; };
+        bool canSendSMS() { return b_canSendSMS; }
 
         QString printCapabilities() {
                 QString out="Phonebook Slots: %1";
@@ -128,9 +128,9 @@ class ATAbilities
                 return out.append("\n");
         }
     protected:
-        void setPBSlots( const QStringList &pbslots ) { sl_pbSlots = pbslots; };
-        void setSMSSlots( const QStringList &smsslots ) { sl_SMSSlots = smsslots; };
-        void setCharacterSets( const QStringList &characterSets ) { sl_CharacterSets = characterSets; };
+        void setPBSlots( const QStringList &pbslots ) { sl_pbSlots = pbslots; }
+        void setSMSSlots( const QStringList &smsslots ) { sl_SMSSlots = smsslots; }
+        void setCharacterSets( const QStringList &characterSets ) { sl_CharacterSets = characterSets; }
         void setManufacturer( const QString &manufacturer );
         void setFileSystem( int fs ) { i_filesystem=fs; }
         int i_filesystem;

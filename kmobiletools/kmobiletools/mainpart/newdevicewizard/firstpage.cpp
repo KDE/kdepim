@@ -32,7 +32,7 @@ using namespace KMobileTools;
 class FirstPagePrivate {
 public:
     FirstPagePrivate() : hasEngines(false)
-    {};
+    {}
     QString enginelibname;
     bool hasEngines;
     QList<QWizardPage*> enginePages;

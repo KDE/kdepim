@@ -29,7 +29,7 @@
 
 class LastPagePrivate {
     public:
-        LastPagePrivate() {};
+        LastPagePrivate() {}
 };
 
 LastPage::LastPage(QWidget *parent)

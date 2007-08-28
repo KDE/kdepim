@@ -47,7 +47,7 @@ class QSerialPrivate {
         QSerialPrivate() : m_baudrate(QSerial::BAUD_DEFAULT), m_parity(QSerial::PARITY_DEFAULT),
         m_stopbits(QSerial::STOP_BITS_DEFAULT), m_flowcontrol(QSerial::FLOW_CONTROL_DEFAULT), m_databits(QSerial::DATABITS_DEFAULT),
         i_modem(-1), b_lock(false), notifier(0), b_opened(false)
-        {};
+        {}
         QString m_device;
         QSerial::Baud m_baudrate;
         QSerial::Parity m_parity;

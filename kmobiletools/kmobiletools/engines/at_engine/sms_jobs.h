@@ -36,12 +36,12 @@ class ATSMS : public KMobileTools::SMS
         ATSMS(const QStringList & numbers, const QString & text, const KDateTime & datetime );
         virtual ~ATSMS();
         //! Return true if the this object is part of a multipart message.
-        bool isMultiPart() { return concatenated; };
+        bool isMultiPart() { return concatenated; }
         //! Returns the reference number of this message.
         /** The reference number is extracted from the pdu parsed from the mobile phone
          * and should be the same for all parts of the message.
          */
-        uint getReferenceNumber() { return referenceNumber; };
+        uint getReferenceNumber() { return referenceNumber; }
         /** Merges one part of a multipart message into this object. Once the part
          * has been merged into this object, getText() will return the concatenated message.
          * After merging no reference to the passed argument should be kept, since this object will
@@ -56,11 +56,11 @@ class ATSMS : public KMobileTools::SMS
         /** Only works for multipart messages. This method returns true if the part num is present in the
          * list. Warning: This is zero-indiced, i.e. the first part of message is part number 0.
          */
-        bool hasPart( uint num ) { return multiPart && multiPart->at(num); };
+        bool hasPart( uint num ) { return multiPart && multiPart->at(num); }
         /** Only works for multipart messages.This method returns the position of this part in the multipart
          * message. Warning: This is zero-indiced, i.e. the first part of message is part number 0.
         */
-        uint getSequenceNumber() { return sequenceNumber-1; };
+        uint getSequenceNumber() { return sequenceNumber-1; }
         static ATSMS *fromSMS(KMobileTools::SMS *);
     protected:
         void setMultiPart( uint refNumber, uint seqNumber, uint mesCount);
@@ -83,12 +83,12 @@ class SMSDecoder
 {
     public:
         //! Default constructor.
-        SMSDecoder() {};
+        SMSDecoder() {}
         ATSMS *decodeSMS( const QString &abuffer, bool incoming );
         ATSMS *decodeSMS( const QString &abuffer, uint index, uint stat );
     protected:
-        inline bool hasMR() { return HAS_MR(SMTL); };
-        inline bool hasTimeStamp() { return HAS_TIMESTAMP(SMTL); };
+        inline bool hasMR() { return HAS_MR(SMTL); }
+        inline bool hasTimeStamp() { return HAS_TIMESTAMP(SMTL); }
         KDateTime datetime;
         QString message;
         int timezone;
@@ -98,7 +98,7 @@ class SMSDecoder
         uint bitsLeft, userDataLen;
         uint bitBuffer;
         uint getByte();
-        inline void skipBytes( uint cnt ) { buffer.remove( 0, 2*cnt ); };
+        inline void skipBytes( uint cnt ) { buffer.remove( 0, 2*cnt ); }
         QString buffer;
         void parseUserDataHeader();
         uint getDecimal();
@@ -117,9 +117,9 @@ class SMSDecoder
 class SMSEncoder
 {
     public:
-        SMSEncoder( const QStringList &, const QString & ) {};
+        SMSEncoder( const QStringList &, const QString & ) {}
         SMSEncoder( const QString &, const QString & );
-        int getMessageCount() { return 0; };
+        int getMessageCount() { return 0; }
         enum encodingType
         { SevenBit=0x1, EightBit=0x2, UCS2=0x4 };
         static QString encodeText(const QString &o_text, int encodingType);
@@ -186,7 +186,7 @@ class SendSMS : public kmobiletoolsATJob
       SendSMS( KMobileTools::Job *pjob, KMobileTools::SMS *sms, KMobileTools::SerialManager *device, AT_Engine* parent = 0  );
       SendSMS( KMobileTools::Job *pjob, const QString& number, const QString& text, KMobileTools::SerialManager *device, AT_Engine* parent = 0  );
         JobType type()            { return KMobileTools::Job::sendSMS; }
-        bool succeeded() { return true; };
+        bool succeeded() { return true; }
     protected:
         void run();
         bool pdu;
@@ -203,7 +203,7 @@ class StoreSMS : public kmobiletoolsATJob
       StoreSMS( KMobileTools::Job *pjob, KMobileTools::SMS *sms, KMobileTools::SerialManager *device, AT_Engine* parent = 0  );
       StoreSMS( KMobileTools::Job *pjob, const QString &number, const QString &text, KMobileTools::SerialManager *device, AT_Engine* parent = 0  );
         JobType type()            { return KMobileTools::Job::storeSMS; }
-        bool succeeded() { return true; };
+        bool succeeded() { return true; }
         int savedIndex() { return i_savedIndex;}
     protected:
         void run();
@@ -222,7 +222,7 @@ class DeleteSMS : public kmobiletoolsATJob
     public:
         DeleteSMS( KMobileTools::Job *pjob, KMobileTools::SMS *sms, KMobileTools::SerialManager *device, AT_Engine* parent = 0  );
         JobType type()            { return KMobileTools::Job::delSMS; }
-        bool succeeded() { return true; };
+        bool succeeded() { return true; }
         KMobileTools::SMS *sms() { return p_sms;}
     protected:
         KMobileTools::SMS *p_sms;
