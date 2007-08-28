@@ -54,10 +54,7 @@ namespace Kleo {
     /*! \reimp from ImportJob */
     GpgME::Error start( const QByteArray & keyData );
 
-    /*! \reimp from ImportJob */
-    GpgME::ImportResult exec( const QByteArray & keyData );
-
-  private slots:
+  private Q_SLOTS:
     void slotOperationDoneEvent( GpgME::Context * context, const GpgME::Error & e ) {
       QGpgMEJob::doSlotOperationDoneEvent( context, e );
     }
