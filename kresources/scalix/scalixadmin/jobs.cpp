@@ -160,6 +160,34 @@ GetOtherUsersJob* Scalix::getOtherUsers( KIO::Slave* slave, const KURL& url )
   return job;
 }
 
+SetOutOfOfficeJob* Scalix::setOutOfOffice( KIO::Slave* slave, const KURL& url, bool enabled, const QString& msg )
+{
+  const QString argument = msg;
+  const QString command = QString( "X-SET-OUT-OF-OFFICE %1 %2 {%3}" ).arg( enabled ? "ENABLED" : "DISABLED" )
+                                                .arg( "UTF-8" )
+                                                .arg( msg.utf8().length() );
+
+  QByteArray packedArgs;
+  QDataStream stream( packedArgs, IO_WriteOnly );
+  stream << (int) 'X' << (int)'E' << command << argument;
+
+  SetOutOfOfficeJob* job = new SetOutOfOfficeJob( url, packedArgs, false );
+  KIO::Scheduler::assignJobToSlave( slave, job );
+  return job;
+}
+
+GetOutOfOfficeJob* Scalix::getOutOfOffice( KIO::Slave* slave, const KURL& url )
+{
+  QByteArray packedArgs;
+  QDataStream stream( packedArgs, IO_WriteOnly );
+  stream << (int)'X' << (int)'N'
+         << QString( "X-GET-OUT-OF-OFFICE" ) << QString();
+
+  GetOutOfOfficeJob* job = new GetOutOfOfficeJob( url, packedArgs, false );
+  KIO::Scheduler::assignJobToSlave( slave, job );
+  return job;
+}
+
 SetPasswordJob::SetPasswordJob( const KURL& url, const QByteArray &packedArgs, bool showProgressInfo )
   : KIO::SimpleJob( url, KIO::CMD_SPECIAL, packedArgs, showProgressInfo )
 {
@@ -242,6 +270,36 @@ QStringList GetOtherUsersJob::otherUsers() const
 void GetOtherUsersJob::slotInfoMessage( KIO::Job*, const QString &data )
 {
   mOtherUsers = QStringList::split( ' ', data );
+}
+
+SetOutOfOfficeJob::SetOutOfOfficeJob( const KURL& url, const QByteArray &packedArgs, bool showProgressInfo )
+  : KIO::SimpleJob( url, KIO::CMD_SPECIAL, packedArgs, showProgressInfo )
+{
+}
+
+GetOutOfOfficeJob::GetOutOfOfficeJob( const KURL& url, const QByteArray &packedArgs, bool showProgressInfo )
+  : KIO::SimpleJob( url, KIO::CMD_SPECIAL, packedArgs, showProgressInfo )
+{
+  connect( this, SIGNAL( infoMessage( KIO::Job*, const QString& ) ),
+           this, SLOT( slotInfoMessage( KIO::Job*, const QString& ) ) );
+}
+
+bool GetOutOfOfficeJob::enabled() const
+{
+  return mEnabled;
+}
+
+QString GetOutOfOfficeJob::message() const
+{
+  return mMessage;
+}
+
+void GetOutOfOfficeJob::slotInfoMessage( KIO::Job*, const QString &data )
+{
+  const QStringList fields = QStringList::split( '^', data );
+
+  mEnabled = ( fields[ 0 ] == "ENABLED" );
+  mMessage = fields[ 1 ];
 }
 
 #include "jobs.moc"

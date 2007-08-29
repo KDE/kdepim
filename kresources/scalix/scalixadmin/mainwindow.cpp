@@ -25,9 +25,10 @@
 #include <kjanuswidget.h>
 #include <klocale.h>
 
-#include "passwordpage.h"
-#include "otheruserpage.h"
 #include "delegatepage.h"
+#include "otheruserpage.h"
+#include "outofofficepage.h"
+#include "passwordpage.h"
 
 #include "mainwindow.h"
 
@@ -44,9 +45,15 @@ MainWindow::MainWindow()
   page = wdg->addVBoxPage( i18n( "Delegates" ), i18n( "Setup delegates for my account" ), icon );
   new DelegatePage( page );
 
+  icon = KGlobal::iconLoader()->loadIcon( "kontact_summary_green", KIcon::Desktop );
+  page = wdg->addVBoxPage( i18n( "Out of Office..." ), i18n( "Setup Out of Office Message" ), icon );
+  new OutOfOfficePage( page );
+
   icon = KGlobal::iconLoader()->loadIcon( "password", KIcon::Desktop );
   page = wdg->addVBoxPage( i18n( "Password" ), i18n( "Change the password" ), icon );
   new PasswordPage( page );
 
   setCentralWidget( wdg );
+
+  resize( 540, 450 );
 }

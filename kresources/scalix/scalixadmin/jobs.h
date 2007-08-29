@@ -40,6 +40,8 @@ namespace Scalix {
   class AddOtherUserJob;
   class DeleteOtherUserJob;
   class GetOtherUsersJob;
+  class SetOutOfOfficeJob;
+  class GetOutOfOfficeJob;
 
   class Delegate
   {
@@ -95,6 +97,20 @@ namespace Scalix {
    * Retrieves the list of all other users.
    */
   GetOtherUsersJob* getOtherUsers( KIO::Slave* slave, const KURL& url );
+
+  /**
+   * Sets the out-of-office data.
+   *
+   * @param enabled Whether the out-of-office functionality is enabled.
+   * @param msg The out-of-office message.
+   */
+  SetOutOfOfficeJob* setOutOfOffice( KIO::Slave* slave, const KURL& url, bool enabled, const QString& msg );
+
+  /**
+   * Retrieves the out-of-office data.
+   */
+  GetOutOfOfficeJob* getOutOfOffice( KIO::Slave* slave, const KURL& url );
+
 
   class SetPasswordJob : public KIO::SimpleJob
   {
@@ -158,6 +174,29 @@ namespace Scalix {
       QStringList mOtherUsers;
   };
 
+  class SetOutOfOfficeJob : public KIO::SimpleJob
+  {
+    public:
+      SetOutOfOfficeJob( const KURL& url, const QByteArray &packedArgs, bool showProgressInfo );
+  };
+
+  class GetOutOfOfficeJob : public KIO::SimpleJob
+  {
+    Q_OBJECT
+
+    public:
+      GetOutOfOfficeJob( const KURL& url, const QByteArray &packedArgs, bool showProgressInfo );
+
+      bool enabled() const;
+      QString message() const;
+
+    private slots:
+      void slotInfoMessage( KIO::Job*, const QString& );
+
+    private:
+      bool mEnabled;
+      QString mMessage;
+  };
 }
 
 #endif

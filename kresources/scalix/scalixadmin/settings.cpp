@@ -74,6 +74,20 @@ KIO::Slave* Settings::globalSlave() const
   return mSlave;
 }
 
+QString Settings::rulesWizardUrl() const
+{
+  KConfigGroup group( KGlobal::config(), "Misc" );
+
+  QString url = group.readEntry( "rulesWizardUrl" );
+  if ( url.isEmpty() ) {
+    KConfigGroup group( KGlobal::config(), "Account" );
+    url = QString( "http://%1/Scalix/rw/?username=%2" ).arg( group.readEntry( "host" ) )
+                                                       .arg( group.readEntry( "user" ) );
+  }
+
+  return url;
+}
+
 QString Settings::ldapHost() const
 {
   KConfigGroup group( KGlobal::config(), "LDAP" );

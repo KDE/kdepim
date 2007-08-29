@@ -131,7 +131,8 @@ imapParser::sendCommand (imapCommand * aCmd)
            || command == "GETQUOTAROOT"
            || command == "GETQUOTA"
            || command == "X-GET-OTHER-USERS"
-           || command == "X-GET-DELEGATES")
+           || command == "X-GET-DELEGATES"
+           || command == "X-GET-OUT-OF-OFFICE")
   {
     lastResults.clear ();
   }
@@ -381,6 +382,8 @@ imapParser::parseUntagged (parseString & result)
       parseResult (what, result);
     } else if (qstrncmp(what, "OTHER-USER", 10) == 0) { // X-GET-OTHER-USER
       parseOtherUser (result);
+    } else if (qstrncmp(what, "OUT-OF-OFFICE", 13) == 0) { // X-GET-OUT-OF-OFFICE
+      parseOutOfOffice (result);
     }
     break;
   case 'D':
@@ -812,6 +815,17 @@ void imapParser::parseDelegate (parseString & result)
   }
 
   lastResults.append( email + ":" + rights.join( "," ) );
+}
+
+void imapParser::parseOutOfOffice (parseString & result)
+{
+  const QString state = parseOneWordC (result);
+  parseOneWordC (result); // skip encoding
+
+  int outlen = 1;
+  QCString msg = parseLiteralC (result, false, false, &outlen);
+
+  lastResults.append( state + "^" + QString::fromUtf8( msg ) );
 }
 
 void imapParser::parseMyRights (parseString & result)

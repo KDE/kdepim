@@ -18,38 +18,40 @@
  *   Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
 
-#ifndef SETTINGS_H
-#define SETTINGS_H
+#ifndef OUTOFOFFICEPAGE_H
+#define OUTOFOFFICEPAGE_H
 
-#include <kurl.h>
-#include <kio/global.h>
-#include <kio/slave.h>
+#include <qwidget.h>
 
-class Settings
+class QLabel;
+class QPushButton;
+class QRadioButton;
+class QTextEdit;
+
+class OutOfOfficePage : public QWidget
 {
+  Q_OBJECT
+
   public:
-    ~Settings();
+    OutOfOfficePage( QWidget *parent = 0 );
+    ~OutOfOfficePage();
 
-    static Settings* self();
-
-    KIO::MetaData accountData() const;
-    KURL accountUrl() const;
-
-    KIO::Slave *globalSlave() const;
-
-    QString rulesWizardUrl() const;
-
-    QString ldapHost() const;
-    QString ldapPort() const;
-    QString ldapBase() const;
-    QString ldapBindDn() const;
-    QString ldapPassword() const;
+  private slots:
+    void load();
+    void loaded( KIO::Job* );
+    void store();
+    void stored( KIO::Job* );
+    void statusChanged();
+    void changed();
 
   private:
-    Settings();
-    KIO::Slave *mSlave;
+    QRadioButton *mEnabled;
+    QRadioButton *mDisabled;
+    QLabel *mLabel;
+    QTextEdit *mMessage;
+    QPushButton *mSaveButton;
 
-    static Settings* mSelf;
+    bool mChanged;
 };
 
 #endif

@@ -300,6 +300,8 @@ public:
   void parseOtherUser (parseString & result);
   /** @brief parse a DELEGATE line */
   void parseDelegate (parseString & result);
+  /** @brief parse a OUT-OF-OFFICE line */
+  void parseOutOfOffice (parseString & result);
 
   /**
    * parses the results of a fetch command
