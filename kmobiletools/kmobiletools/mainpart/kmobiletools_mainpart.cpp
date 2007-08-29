@@ -49,6 +49,7 @@
 #include <QModelIndex>
 #include <QProgressDialog>
 #include <QMutex>
+#include <QMenu>
 
 // KMobileTools library includes
 #include <libkmobiletools/enginexp.h>
@@ -86,8 +87,7 @@ KAboutData *kmobiletoolsMainPart::createAboutData()
 
 kmobiletoolsMainPart::kmobiletoolsMainPart( QWidget *parentWidget, QObject *parent, const QStringList &args )
     : /*DCOPObject("KMobileTools"),*/ ///@TODO port to dbus
-    KParts::ReadOnlyPart( parent ),
-    l_devicesList()
+    KParts::ReadOnlyPart( parent )
 {
     Q_UNUSED(args)
 
@@ -102,18 +102,6 @@ kmobiletoolsMainPart::kmobiletoolsMainPart( QWidget *parentWidget, QObject *pare
 
     // setup additional dialogs
     setupDialogs();
-
-    // setup homepage part
-    /*
-    p_homepage=new KMobileTools::homepagePart( m_widget );
-    m_widget->addWidget( p_homepage->view() );
-    connect( p_homepage, SIGNAL(switchDevice(const QString& )), SLOT(switchPart(const QString& ) ) );
-    connect( p_homepage, SIGNAL(loadDevice(const QString& )), SLOT(loadDevicePart(const QString&) ) );
-    connect( p_homepage, SIGNAL(unloadDevice(const QString& )), SLOT(deleteDevicePart(const QString&) ) );
-    connect( p_homepage, SIGNAL(configCmd(const QString& ) ), SLOT(configSlot(const QString& ) ) );
-    connect( this, SIGNAL(devicesUpdated()), p_homepage, SLOT(printIndexPage() ));
-    connect( this, SIGNAL(devicesUpdated() ), this, SLOT(checkShowDeviceList()) );
-    */
 
     // Placing KMobileTools in systray
     p_sysTray = new KSystemTrayIcon( "kmobiletools", parentWidget );
@@ -253,7 +241,7 @@ void kmobiletoolsMainPart::deleteDevicePart( const QString& deviceName )
     */
 
     /*
-    QTreeWidgetItemIterator it( p_listview );
+    QTreeWidgetItemIterator it( m_treeView );
     while ( *it ) {
         kDebug() << KMobileTools::DevicesConfig::deviceGroup((*it)->text(0)) <<"==" << deviceName;
         if ( KMobileTools::DevicesConfig::deviceGroup((*it)->text(0))==deviceName )
@@ -389,24 +377,20 @@ void kmobiletoolsMainPart::treeItemClicked( const QModelIndex& index ) {
 
     // service item clicked?
     ServiceItem* serviceItem = qobject_cast<ServiceItem*>( item );
-    kDebug() << serviceItem << endl;
     if( serviceItem )
         handleServiceItem( serviceItem );
-    else {
+    else
         // unload any previous installed actions
         emit showServiceToolBar(false);
-    }
 
     // device item clicked?
     DeviceItem* deviceItem = qobject_cast<DeviceItem*>( item );
-    kDebug() << deviceItem << endl;
     if( deviceItem ) {
         handleDeviceItem( deviceItem );
         emit showDeviceToolBar( true );
     }
-    else {
+    else
         emit showDeviceToolBar( false );
-    }
 }
 
 void kmobiletoolsMainPart::handleDeviceItem( DeviceItem* deviceItem ) {
@@ -492,14 +476,36 @@ void kmobiletoolsMainPart::removeServiceWidget( const QString& deviceName, KMobi
     }
 }
 
+void kmobiletoolsMainPart::treeViewContextMenu( const QPoint& position ) {
+    QMenu menu;
+
+    // look if there's a device item at the clicked position
+    TreeItem* item = static_cast<TreeItem*>( m_treeView->indexAt( position ).internalPointer() );
+    if( item ) {
+        DeviceItem* device = dynamic_cast<DeviceItem*>( item );
+        if( device ) {
+            QList<QAction*> actionList = device->actionList();
+            for( int i=0; i<actionList.size(); i++ )
+                menu.addAction( actionList.at( i ) );
+
+            if( actionList.size() )
+                menu.exec( m_treeView->mapToGlobal( position ) );
+        }
+    }
+}
+
 void kmobiletoolsMainPart::setupGUI( QWidget* parent ) {
     QSplitter *splitter = new QSplitter( parent );
 
     // create devices/services list-view
-    p_listview = new QTreeView( splitter );
-    p_listview->setMinimumWidth( 200 );
-    p_listview->setRootIsDecorated( true );
-    p_listview->setAnimated( true );
+    m_treeView = new QTreeView( splitter );
+    m_treeView->setMinimumWidth( 200 );
+    m_treeView->setRootIsDecorated( true );
+    m_treeView->setAnimated( true );
+
+    m_treeView->setContextMenuPolicy( Qt::CustomContextMenu );
+    connect( m_treeView, SIGNAL(customContextMenuRequested(const QPoint&)),
+             this, SLOT(treeViewContextMenu(const QPoint&)) );
 
     // set data model for list-view
     m_serviceModel = new ServiceModel( this );
@@ -514,15 +520,17 @@ void kmobiletoolsMainPart::setupGUI( QWidget* parent ) {
              this,
              SLOT( removeServiceWidget(const QString&, KMobileTools::CoreService*) ) );
 
-    p_listview->setModel( m_serviceModel );
+    m_treeView->setModel( m_serviceModel );
 
-    connect( p_listview, SIGNAL( clicked(const QModelIndex&) ),
+    connect( m_treeView, SIGNAL( activated(const QModelIndex&) ),
              this, SLOT( treeItemClicked(const QModelIndex&) ) );
 
+    connect( m_treeView, SIGNAL( clicked(const QModelIndex&) ),
+             this, SLOT( treeItemClicked(const QModelIndex&) ) );
 
     m_widget = new QStackedWidget( splitter );
 
-    splitter->setStretchFactor( splitter->indexOf( p_listview ), 0 );
+    splitter->setStretchFactor( splitter->indexOf( m_treeView ), 0 );
     splitter->setStretchFactor( splitter->indexOf( m_widget ), 1 );
 
     // notify the part that this is our internal widget

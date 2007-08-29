@@ -23,7 +23,6 @@
 
 #include <KLocale>
 #include <KIcon>
-#include <KIconEffect>
 
 #include <libkmobiletools/deviceloader.h>
 
@@ -47,9 +46,11 @@ DeviceItem::DeviceItem( const QString& name, TreeItem* parent )
     m_actionList.append( m_connectDeviceAction );
     m_actionList.append( m_disconnectDeviceAction );
 
-    // set icon for deviceItem
-    KPluginInfo deviceInformation = KMobileTools::DeviceLoader::instance()->engineInformation( name );
-    setIcon( KIcon( deviceInformation.icon() ) );
+    // set icon for device item
+    if( m_engine->connected() )
+        deviceConnected();
+    else
+        deviceDisconnected();
 }
 
 
@@ -58,12 +59,10 @@ DeviceItem::~DeviceItem()
 }
 
 QList<QAction*> DeviceItem::actionList() const {
-    kDebug() << "action list requested" << endl;
     return m_actionList;
 }
 
 void DeviceItem::connectDevice() {
-    /// @todo add a timer or something if connecting fails...
     m_connectDeviceAction->setEnabled( false );
     m_engine->connectDevice();
 }
@@ -76,11 +75,13 @@ void DeviceItem::disconnectDevice() {
 void DeviceItem::deviceConnected() {
     m_connectDeviceAction->setEnabled( false );
     m_disconnectDeviceAction->setEnabled( true );
+    setIcon( KIcon( "connection-established" ) );
 }
 
 void DeviceItem::deviceDisconnected() {
     m_connectDeviceAction->setEnabled( true );
     m_disconnectDeviceAction->setEnabled( false );
+    setIcon( KIcon( "connect-no" ) );
 }
 
 #include "deviceitem.moc"

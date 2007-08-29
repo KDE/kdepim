@@ -46,6 +46,7 @@ void TreeItem::removeChild( TreeItem *item )
 
 void TreeItem::setIcon( QIcon icon ) {
     m_icon = icon;
+    emit dataChanged( this );
 }
 
 void TreeItem::setVisible( bool visible ) {
@@ -89,7 +90,7 @@ QIcon TreeItem::icon() const
     return m_icon;
 }
 
-TreeItem *TreeItem::parent()
+TreeItem *TreeItem::parent() const
 {
     return m_parentItem;
 }

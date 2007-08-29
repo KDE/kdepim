@@ -54,6 +54,7 @@ public:
 
     QModelIndex index( int row, int column, const QModelIndex& parent = QModelIndex() ) const;
     QModelIndex parent( const QModelIndex& index ) const;
+    QModelIndex indexFromItem( const TreeItem* item ) const;
 
     Qt::ItemFlags flags( const QModelIndex& index ) const;
     QVariant data( const QModelIndex& index, int role = Qt::DisplayRole ) const;
@@ -94,6 +95,9 @@ public Q_SLOTS:
      * @param service the service that was removed
      */
     void serviceUnloaded( const QString& deviceName, KMobileTools::CoreService* service );
+
+private Q_SLOTS:
+    void itemDataChanged( TreeItem* item );
 
 private:
     TreeItem* m_rootItem;

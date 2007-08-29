@@ -116,7 +116,15 @@ public:
      *
      * @return the parent
      */
-    TreeItem* parent();
+    TreeItem* parent() const;
+
+Q_SIGNALS:
+    /**
+     * This signal is emitted when the data (text, icon...) of this item has changed
+     *
+     * @param item the current item
+     */
+    void dataChanged( TreeItem* item );
 
 private:
     TreeItem* m_parentItem;

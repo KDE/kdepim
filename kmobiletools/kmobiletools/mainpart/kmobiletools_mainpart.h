@@ -90,11 +90,9 @@ class kmobiletoolsMainPart : public KParts::ReadOnlyPart/*, virtual public MainI
          */
         bool openFile() { return false; }
 
-        QTreeView *listview() { return p_listview; }
+        QTreeView *listview() { return m_treeView; }
         KSystemTrayIcon * sysTray() { return p_sysTray; }
         KParts::StatusBarExtension *statusBarExtension() { return p_statusBarExtension;}
-
-//        DCOPClient * dcopClient() { return p_dcopClient; }
 
     public Q_SLOTS:
         void loadDevicePart(const QString &deviceName, bool setActive=false);
@@ -116,6 +114,7 @@ class kmobiletoolsMainPart : public KParts::ReadOnlyPart/*, virtual public MainI
         void slotAutoLoadDevices();
 
         void treeItemClicked( const QModelIndex& index );
+        void treeViewContextMenu( const QPoint& position );
 
     private:
         void setupGUI( QWidget* parent );
@@ -144,12 +143,10 @@ class kmobiletoolsMainPart : public KParts::ReadOnlyPart/*, virtual public MainI
         QMultiHash<QString,QWidget*> m_loadedWidgets;
 
         QStackedWidget *m_widget;
-        QTreeView *p_listview;
+        QTreeView *m_treeView;
         KSystemTrayIcon * p_sysTray;
 
         KParts::StatusBarExtension *p_statusBarExtension;
-        KMobileTools::homepagePart* p_homepage;
-        DevicesList l_devicesList;
 
         ErrorLogDialog* m_errorLogDialog;
         DeviceManager* m_deviceManager;
@@ -162,9 +159,6 @@ class kmobiletoolsMainPart : public KParts::ReadOnlyPart/*, virtual public MainI
 
         void devicesUpdated();
         void deviceChanged(const QString &);
-protected:
-//    DCOPClient * p_dcopClient;
-
 };
 
 #endif // _KMOBILETOOLSPART_H_
