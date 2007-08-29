@@ -3,12 +3,15 @@
 
 #include <libkdepim/addresseelineedit.h>
 #include <libkdepim/distributionlist.h>
+#include <libemailfunctions/email.h>
 
 #include <kabc/addressbook.h>
 
+#include <kapplication.h>
 #include <kdialogbase.h> 
 #include <klineedit.h>
 #include <klocale.h>
+#include <kmessagebox.h>
 
 #include <qlabel.h>
 #include <qlayout.h>
@@ -17,13 +20,14 @@ class KPIM::DistributionListEditor::EditorWidgetPrivate
 {
 public:
     KABC::AddressBook* addressBook;
+    QString distListUid;
     QLabel* nameLabel;
     QLabel* memberListLabel;
     KLineEdit* nameLineEdit;
     QWidget* memberListWidget;
     QVBoxLayout* addresseeLayout;
     QValueList<KPIM::DistributionListEditor::Line*> addressees;
-
+    KPIM::DistributionList distributionList;
     KPIM::DistributionListEditor::Line* addLineForEntry( const KPIM::DistributionList::Entry& entry );
 };
 
@@ -37,14 +41,59 @@ KPIM::DistributionListEditor::Line::Line( KABC::AddressBook* book, QWidget* pare
     layout->addWidget( m_lineEdit );
 }
 
-void KPIM::DistributionListEditor::Line::setAddressee( const KABC::Addressee& addressee )
+void KPIM::DistributionListEditor::Line::setEntry( const KPIM::DistributionList::Entry& entry )
 {
+    m_uid = entry.addressee.uid();
+    m_initialText = entry.addressee.fullEmail( entry.email );
+    m_lineEdit->setText( m_initialText ); 
 }
 
-KABC::Addressee KPIM::DistributionListEditor::Line::addressee() const
+KABC::Addressee KPIM::DistributionListEditor::Line::findAddressee( const QString& name, const QString& email ) const
 {
-    return KABC::Addressee();
+    if ( name.isEmpty() && email.isEmpty() )
+        return KABC::Addressee();
+
+    typedef KABC::Addressee::List List;
+    const List byEmail = m_addressBook->findByEmail( email );
+    if ( !byEmail.isEmpty() )
+    {        
+        const List::ConstIterator end = byEmail.end();
+        for ( List::ConstIterator it = byEmail.begin(); it != end; ++it )
+        {
+            if ( (*it).formattedName() == name )
+                return *it;
+        }
+        return byEmail.first();
+    }
+    // no entry found, create new addressee:
+    KABC::Addressee addressee;
+    addressee.setUid( KApplication::randomString( 10 ) );
+    addressee.setFormattedName( name );
+    addressee.setEmails( email );
+    m_addressBook->insertAddressee( addressee );
+    return addressee;
 }
+
+KPIM::DistributionList::Entry KPIM::DistributionListEditor::Line::entry() const
+{
+    const QString text = m_lineEdit->text();
+    QString name;
+    QString email;
+    KPIM::getNameAndMail(m_lineEdit->text(), name, email );
+
+    KPIM::DistributionList::Entry res;
+    if ( !m_uid.isNull() )
+    {
+        const KABC::Addressee addr = m_addressBook->findByUid( m_uid );
+        if ( m_initialText == text || addr.formattedName() == name )
+            res.addressee = addr;
+    }
+    if ( res.addressee.isEmpty() )
+        res.addressee = findAddressee( name, email ); 
+    res.email = res.addressee.preferredEmail() != email ? email : QString();
+    return res;
+}
+
 
 KPIM::DistributionListEditor::LineEdit::LineEdit( QWidget* parent ) : KPIM::AddresseeLineEdit( parent )
 {
@@ -54,6 +103,7 @@ KPIM::DistributionListEditor::LineEdit::LineEdit( QWidget* parent ) : KPIM::Addr
 KPIM::DistributionListEditor::EditorWidget::EditorWidget( KABC::AddressBook* book,  QWidget* parent ) 
     : KDialogBase( parent, /*name=*/0, /*modal=*/ true, /*caption=*/QString(), KDialogBase::Ok|KDialogBase::Cancel ), d( new DistributionListEditor::EditorWidgetPrivate )
 {
+    setCaption( i18n( "Edit Distribution List" ) );
     d->addressBook = book;
     Q_ASSERT( d->addressBook );
     QWidget* main = new QWidget( this );
@@ -80,17 +130,20 @@ KPIM::DistributionListEditor::EditorWidget::EditorWidget( KABC::AddressBook* boo
     QScrollView* scrollView = new QScrollView( main );
     scrollView->setFrameShape( QFrame::NoFrame );
     mainLayout->addWidget( scrollView, 2, 0 );
-
-    d->addresseeLayout = new QVBoxLayout( scrollView->viewport() );
-    d->memberListWidget = scrollView->viewport();
+//    QGridLayout* viewLayout = new QGridLayout( scrollView->viewport() );
+    d->memberListWidget = new QWidget( scrollView->viewport() );
+    d->memberListWidget->setSizePolicy( QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding );
+    d->addresseeLayout = new QVBoxLayout( d->memberListWidget );
     d->addresseeLayout->setSpacing( KDialog::spacingHint() );
+ 
+//    viewLayout->addWidget( d->memberListWidget, 0, 0 );
+    scrollView->addChild( d->memberListWidget );
+    scrollView->setResizePolicy( QScrollView::AutoOneFit );
     
     setMainWidget( main );
 
-    typedef KPIM::DistributionList::Entry Entry;
-    d->addLineForEntry( Entry() );
-    d->addLineForEntry( Entry() );
-    d->addLineForEntry( Entry() );
+    d->addLineForEntry( KPIM::DistributionList::Entry() );
+    d->addLineForEntry( KPIM::DistributionList::Entry() );
 }
 
 KPIM::DistributionListEditor::EditorWidget::~EditorWidget()
@@ -101,6 +154,7 @@ KPIM::DistributionListEditor::EditorWidget::~EditorWidget()
 
 void KPIM::DistributionListEditor::EditorWidget::setDistributionList( const KPIM::DistributionList& list )
 {
+    d->distListUid = list.uid();
     d->nameLineEdit->setText( list.name() );
 
     using KPIM::DistributionListEditor::Line;
@@ -120,28 +174,45 @@ void KPIM::DistributionListEditor::EditorWidget::setDistributionList( const KPIM
     }
     d->addLineForEntry( Entry() );
     d->addLineForEntry( Entry() );
-    d->addLineForEntry( Entry() );
 }
 
 KPIM::DistributionListEditor::Line* KPIM::DistributionListEditor::EditorWidgetPrivate::addLineForEntry( const KPIM::DistributionList::Entry& entry )
 {  
-   KPIM::DistributionListEditor::Line* line = new KPIM::DistributionListEditor::Line( addressBook, memberListWidget );
+  KPIM::DistributionListEditor::Line* line = new KPIM::DistributionListEditor::Line( addressBook, memberListWidget );
+   line->setEntry( entry );
    addresseeLayout->addWidget( line );
    addressees.append( line );
    return line;
 }
 
-KPIM::DistributionList KPIM::DistributionListEditor::EditorWidget::distributionList() const
+void KPIM::DistributionListEditor::EditorWidget::slotOk()
 {
-    KPIM::DistributionList list;
-    list.setName( d->nameLineEdit->text() );
+    const QString name = d->nameLineEdit->text();
+    const KPIM::DistributionList existing = KPIM::DistributionList::findByName( d->addressBook, name );
+    if ( !existing.isEmpty() && existing.uid() != d->distListUid )
+    {
+        KMessageBox::error( this, i18n( "A distribution list with the name %1 already exists. Please choose another name." ).arg( name ), i18n( "Name in Use" ) ); 
+        return;
+    }
 
+    KPIM::DistributionList list;
+    list.setUid( d->distListUid.isNull() ? KApplication::randomString( 10 ) :d->distListUid );
+    list.setName( name );
     typedef QValueList<KPIM::DistributionListEditor::Line*>::ConstIterator ListIterator;
     for ( ListIterator it = d->addressees.begin(), end = d->addressees.end(); it != end; ++it )
-    {
-        list.insertEntry( (*it)->addressee(), QString() );
+    { 
+        const KPIM::DistributionList::Entry entry = (*it)->entry();
+        if ( entry.addressee.isEmpty() )
+            continue;
+        list.insertEntry( entry.addressee, entry.email );
     }
-    return list;
+    d->distributionList = list;
+    accept();
+}
+
+KPIM::DistributionList KPIM::DistributionListEditor::EditorWidget::distributionList() const
+{
+    return d->distributionList;
 }
 
 #include "distributionlisteditor.moc"

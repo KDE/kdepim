@@ -24,6 +24,11 @@ public:
     void setDistributionList( const KPIM::DistributionList& list );
     KPIM::DistributionList distributionList() const;
 
+private slots:
+
+    //override
+    void slotOk();
+
 private:
     EditorWidgetPrivate* const d;
 };
