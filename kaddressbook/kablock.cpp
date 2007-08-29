@@ -35,7 +35,7 @@ class KABLockHelper {
     KABLock *q;
 };
 
-K_GLOBAL_STATIC( KABLockHelper, s_globalKABLock );
+K_GLOBAL_STATIC( KABLockHelper, s_globalKABLock )
 
 class AddressBookWrapper : public KABC::AddressBook
 {
