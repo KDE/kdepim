@@ -40,7 +40,7 @@ class LocationMapHelper {
     LocationMap *q;
 };
 
-K_GLOBAL_STATIC( LocationMapHelper, s_globalLocationMap );
+K_GLOBAL_STATIC( LocationMapHelper, s_globalLocationMap )
 
 LocationMap::LocationMap()
 {
