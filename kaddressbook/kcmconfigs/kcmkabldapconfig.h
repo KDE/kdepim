@@ -24,9 +24,7 @@
 #ifndef KCMKABLDAPCONFIG_H
 #define KCMKABLDAPCONFIG_H
 
-#define KDE3_SUPPORT
 #include <kcmodule.h>
-#undef KDE3_SUPPORT
 #include <kcomponentdata.h>
 #include <QWidget>
 
@@ -37,7 +35,7 @@ class KCMKabLdapConfig : public KCModule
   Q_OBJECT
 
   public:
-    KCMKabLdapConfig( QWidget *parent, const QStringList &args );
+    KCMKabLdapConfig( QWidget *parent, const QVariantList &args );
 
     virtual void load();
     virtual void save();

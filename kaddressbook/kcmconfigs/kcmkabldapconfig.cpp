@@ -36,10 +36,11 @@
 #include <kdemacros.h>
 #include <kgenericfactory.h>
 
-typedef KGenericFactory<KCMKabLdapConfig> KCMKabLdapConfigFactory;
-K_EXPORT_COMPONENT_FACTORY( kabldapconfig, KCMKabLdapConfigFactory( "kcmkabldapconfig" ) )
+K_PLUGIN_FACTORY(KCMKabLdapConfigFactory, registerPlugin<KCMKabLdapConfig>();)
+K_EXPORT_PLUGIN(KCMKabLdapConfigFactory( "kcmkabldapconfig" ))
 
-KCMKabLdapConfig::KCMKabLdapConfig( QWidget *parent, const QStringList & )
+
+KCMKabLdapConfig::KCMKabLdapConfig( QWidget *parent, const QVariantList & )
   : KCModule( KCMKabLdapConfigFactory::componentData(), parent )
 {
   QVBoxLayout *layout = new QVBoxLayout( this );
