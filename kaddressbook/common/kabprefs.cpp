@@ -33,7 +33,7 @@ class KABPrefsHelper {
     KABPrefs *q;
 };
 
-K_GLOBAL_STATIC( KABPrefsHelper, s_globalKABPrefs );
+K_GLOBAL_STATIC( KABPrefsHelper, s_globalKABPrefs )
 
 KABPrefs::KABPrefs()
   : KABPrefsBase()
