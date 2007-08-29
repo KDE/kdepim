@@ -74,6 +74,7 @@ class KABCOMMON_EXPORT KABPrefs : public KABPrefsBase
 
   private:
     KABPrefs();
+    friend class KABPrefsHelper;
 
     static KABPrefs *mInstance;
 

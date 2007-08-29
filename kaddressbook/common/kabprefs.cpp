@@ -23,16 +23,24 @@
 
 #include <kconfig.h>
 #include <klocale.h>
-#include <k3staticdeleter.h>
 
 #include "kabprefs.h"
 
-KABPrefs *KABPrefs::mInstance = 0;
-static K3StaticDeleter<KABPrefs> staticDeleter;
+class KABPrefsHelper {
+  public:
+    KABPrefsHelper() : q( 0 ) {}
+    ~KABPrefsHelper() { delete q; }
+    KABPrefs *q;
+};
+
+K_GLOBAL_STATIC( KABPrefsHelper, s_globalKABPrefs );
 
 KABPrefs::KABPrefs()
   : KABPrefsBase()
 {
+  Q_ASSERT(!s_globalKABPrefs->q);
+  s_globalKABPrefs->q = this;
+
   KConfigSkeleton::setCurrentGroup( "General" );
 
   QStringList defaultMap;
@@ -49,12 +57,12 @@ KABPrefs::~KABPrefs()
 
 KABPrefs *KABPrefs::instance()
 {
-  if ( !mInstance ) {
-    staticDeleter.setObject( mInstance, new KABPrefs() );
-    mInstance->readConfig();
+  if (!s_globalKABPrefs->q) {
+    new KABPrefs;
+    s_globalKABPrefs->q->readConfig();
   }
 
-  return mInstance;
+  return s_globalKABPrefs->q;
 }
 
 void KABPrefs::setCategoryDefaults()

@@ -27,18 +27,25 @@
 #include <kglobal.h>
 #include <klocale.h>
 #include <kmessagebox.h>
-#include <k3staticdeleter.h>
 #include <kurl.h>
 #include <ktoolinvocation.h>
 
 #include "kabprefs.h"
 #include "locationmap.h"
 
-LocationMap *LocationMap::mSelf = 0;
-static K3StaticDeleter<LocationMap> locationMapDeleter;
+class LocationMapHelper {
+  public:
+    LocationMapHelper() : q( 0 ) {}
+    ~LocationMapHelper() { delete q; }
+    LocationMap *q;
+};
+
+K_GLOBAL_STATIC( LocationMapHelper, s_globalLocationMap );
 
 LocationMap::LocationMap()
 {
+  Q_ASSERT( !s_globalLocationMap->q );
+  s_globalLocationMap->q = this;
 }
 
 LocationMap::~LocationMap()
@@ -47,10 +54,11 @@ LocationMap::~LocationMap()
 
 LocationMap *LocationMap::instance()
 {
-  if ( !mSelf )
-    locationMapDeleter.setObject( mSelf, new LocationMap );
+  if (!s_globalLocationMap->q) {
+    new LocationMap;
+  }
 
-  return mSelf;
+  return s_globalLocationMap->q;
 }
 
 void LocationMap::showAddress( const KABC::Address &addr )

@@ -25,9 +25,17 @@
 #include <kabc/resource.h>
 #include <klocale.h>
 #include <kmessagebox.h>
-#include <k3staticdeleter.h>
 
 #include "kablock.h"
+
+class KABLockHelper {
+  public:
+    KABLockHelper() : q( 0 ) {}
+    ~KABLockHelper() { delete q; }
+    KABLock *q;
+};
+
+K_GLOBAL_STATIC( KABLockHelper, s_globalKABLock );
 
 class AddressBookWrapper : public KABC::AddressBook
 {
@@ -40,13 +48,11 @@ class AddressBookWrapper : public KABC::AddressBook
     }
 };
 
-KABLock *KABLock::mSelf = 0;
-
-static K3StaticDeleter<KABLock> kabLockDeleter;
-
 KABLock::KABLock( KABC::AddressBook *ab )
   : mAddressBook( ab )
 {
+  Q_ASSERT( !( s_globalKABLock->q ) );
+  s_globalKABLock->q = this;
 }
 
 KABLock::~KABLock()
@@ -55,12 +61,12 @@ KABLock::~KABLock()
 
 KABLock *KABLock::self( KABC::AddressBook *ab )
 {
-  if ( !mSelf )
-    kabLockDeleter.setObject( mSelf, new KABLock( ab ) );
+  if ( !s_globalKABLock->q )
+    new KABLock( ab );
   else
-    mSelf->mAddressBook = ab;
+    s_globalKABLock->q->mAddressBook = ab;
 
-  return mSelf;
+  return s_globalKABLock->q;
 }
 
 bool KABLock::lock( KABC::Resource *resource )
