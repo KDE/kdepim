@@ -19,7 +19,7 @@ if(Q_WS_X11)
    macro_log_feature(X11_Xscreensaver_LIB "libXss" "X Window Screen Saver Development Library" "http://xorg.freedesktop.org" FALSE "" "Required to build the KTimeTracker Program")
 endif(Q_WS_X11)
 
-find_package(QGpgme REQUIRED)
+find_package(QGpgme)
 
 macro_optional_find_package(Sasl2)
 macro_log_feature(SASL2_FOUND "cyrus-sasl" "Cyrus SASL API" "http://asg.web.cmu.edu/sasl/sasl-library.html" FALSE "" "Needed to support authentication of logins")
