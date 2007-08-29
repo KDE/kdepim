@@ -3,6 +3,9 @@ Friday, August 31st 2007
 Bugfixes
 ---------
 * kolab/issue1868: Crash after reply on a mail using search function (705173, merge issue 38)
+* Merged more branches/3.5/kdepim stuff into enterprise.
+* BUG: 93436 - Always encrypt to self function was always on.
+
 
 
 Friday, 24th August 2007
