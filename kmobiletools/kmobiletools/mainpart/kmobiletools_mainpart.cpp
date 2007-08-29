@@ -395,6 +395,8 @@ void kmobiletoolsMainPart::treeItemClicked( const QModelIndex& index ) {
 
 void kmobiletoolsMainPart::handleDeviceItem( DeviceItem* deviceItem ) {
     /// @TODO implement me, open homepage part here
+    kDebug() << "handling device item " << deviceItem->data().toString();
+    unplugActionList( "deviceactions" );
     plugActionList( "deviceactions", deviceItem->actionList() );
 }
 

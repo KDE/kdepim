@@ -118,6 +118,8 @@ QVariant ServiceModel::data( const QModelIndex& index, int role ) const {
         return item->data();
     else if( role == Qt::DecorationRole )
         return item->icon();
+    else if( role == Qt::FontRole && item->font() != QFont() )
+        return item->font();
     else
         return QVariant();
 }

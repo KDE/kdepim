@@ -24,6 +24,7 @@
 #include <QtCore/QVariant>
 #include <QtCore/QList>
 #include <QtGui/QIcon>
+#include <QtGui/QFont>
 
 /**
  * This class represents a generic tree item (inspired from a Qt example)
@@ -61,6 +62,13 @@ public:
     void setIcon( QIcon icon );
 
     /**
+     * Sets the item's font
+     *
+     * @param font the font
+     */
+    void setFont( QFont font );
+
+    /**
      * Sets whether the item should be displayed in a view
      *
      * @param visible true if the item
@@ -88,6 +96,13 @@ public:
      * @return the item's icon
      */
     QIcon icon() const;
+
+    /**
+     * Returns the font for the current item
+     *
+     * @return the item's font
+     */
+    QFont font() const;
 
     /**
      * Returns whether the item is visible to a view
@@ -131,6 +146,7 @@ private:
     QList<TreeItem*> m_childItems;
     QString m_itemData;
     QIcon m_icon;
+    QFont m_font;
     bool m_visible;
 };
 
