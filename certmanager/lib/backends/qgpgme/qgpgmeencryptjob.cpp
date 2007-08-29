@@ -78,6 +78,7 @@ GpgME::Error Kleo::QGpgMEEncryptJob::start( const std::vector<GpgME::Key> & reci
 						  
   if ( err )
     deleteLater();
+  mResult = GpgME::EncryptionResult( err );
   return err;
 }
 
@@ -94,7 +95,7 @@ GpgME::EncryptionResult Kleo::QGpgMEEncryptJob::exec( const std::vector<GpgME::K
 }
 
 void Kleo::QGpgMEEncryptJob::doOperationDoneEvent( const GpgME::Error & ) {
-  emit result( mResult, mOutDataDataProvider->data() );
+  emit result( mResult = mCtx->encryptionResult(), mOutDataDataProvider->data() );
 }
 
 void Kleo::QGpgMEEncryptJob::showErrorDialog( QWidget * parent, const QString & caption ) const {

@@ -84,6 +84,7 @@ GpgME::Error Kleo::QGpgMESignJob::start( const std::vector<GpgME::Key> & signers
 						  
   if ( err )
     deleteLater();
+  mResult = GpgME::SigningResult( err );
   return err;
 }
 
