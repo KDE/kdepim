@@ -42,6 +42,7 @@ FakeEngine::FakeEngine( QObject *parent, const QString& deviceName )
     m_statusInformationFetched = false;
     m_informationFetched = false;
     m_addressbookFetched = false;
+    m_initialized = false;
 }
 
 void FakeEngine::status( const QString& statusInformation )

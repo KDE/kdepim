@@ -306,7 +306,6 @@ void kmobiletoolsMainPart::slotQuit()
         m_shutDownDialog->setLabelText( i18n( "Disconnecting devices..." ) );
         m_shutDownDialog->setCancelButtonText( i18n( "Force disconnection" ) );
         m_shutDownDialog->setValue( 0 );
-        m_shutDownDialog->setMaximum( deviceItems.size() );
         m_shutDownDialog->setMinimumDuration( 1000 );
         connect( m_shutDownDialog, SIGNAL(canceled()), this, SLOT(slotFinallyQuit()) );
 
@@ -314,8 +313,11 @@ void kmobiletoolsMainPart::slotQuit()
             KMobileTools::EngineXP* engine = KMobileTools::DeviceLoader::instance()->engine(
                         deviceItems.at( i )->data().toString() );
             if( engine ) {
-                connect( engine, SIGNAL(shutDownSucceeded()), this, SLOT(shutDownSucceeded()) );
-                QTimer::singleShot( 0, engine, SLOT(shutDown()) );
+                if( engine->connected() ) {
+                    m_shutDownDialog->setMaximum( m_shutDownDialog->maximum() + 1 );
+                    connect( engine, SIGNAL(deviceDisconnected()), this, SLOT(shutDownSucceeded()) );
+                    QTimer::singleShot( 0, engine, SLOT(disconnectDevice()) );
+                }
             }
         }
 

@@ -23,6 +23,7 @@
 
 #include <KLocale>
 #include <KIcon>
+#include <KIconEffect>
 
 #include <libkmobiletools/deviceloader.h>
 
@@ -49,8 +50,6 @@ DeviceItem::DeviceItem( const QString& name, TreeItem* parent )
     // set icon for deviceItem
     KPluginInfo deviceInformation = KMobileTools::DeviceLoader::instance()->engineInformation( name );
     setIcon( KIcon( deviceInformation.icon() ) );
-
-    /// @todo use KIconEffect to display the connection state (convert to gray-scale on disconnection)
 }
 
 
