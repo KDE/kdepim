@@ -8,17 +8,22 @@
 #include <kabc/addressbook.h>
 
 #include <kapplication.h>
-#include <kdialogbase.h> 
+#include <kdialogbase.h>
+#include <kglobal.h> 
+#include <kiconloader.h>
 #include <klineedit.h>
 #include <klocale.h>
 #include <kmessagebox.h>
 
 #include <qlabel.h>
 #include <qlayout.h>
+#include <qsignalmapper.h>
+#include <qtoolbutton.h>
 
 class KPIM::DistributionListEditor::EditorWidgetPrivate
 {
 public:
+    QSignalMapper* mapper;
     KABC::AddressBook* addressBook;
     QString distListUid;
     QLabel* nameLabel;
@@ -28,17 +33,33 @@ public:
     QVBoxLayout* addresseeLayout;
     QValueList<KPIM::DistributionListEditor::Line*> addressees;
     KPIM::DistributionList distributionList;
-    KPIM::DistributionListEditor::Line* addLineForEntry( const KPIM::DistributionList::Entry& entry );
+    void addLineForEntry( const KPIM::DistributionList::Entry& entry );
+    int lastLineId;
 };
 
 
 KPIM::DistributionListEditor::Line::Line( KABC::AddressBook* book, QWidget* parent ) : QWidget( parent ), m_addressBook( book )
 {
     Q_ASSERT( m_addressBook );
-    QVBoxLayout* layout = new QVBoxLayout( this );
+    QBoxLayout* layout = new QHBoxLayout( this );
     layout->setSpacing( KDialog::spacingHint() );
     m_lineEdit = new KPIM::DistributionListEditor::LineEdit( this );
+    connect( m_lineEdit, SIGNAL( textChanged( const QString& ) ),
+             this, SLOT( textChanged( const QString& ) ) );
     layout->addWidget( m_lineEdit );
+    QToolButton *button = new QToolButton( this );
+    button->setIconSet( KApplication::reverseLayout() ? SmallIconSet("locationbar_erase") : SmallIconSet( "clear_left" ) );
+ 
+
+    layout->addWidget( button );
+    connect( button, SIGNAL( clicked() ), m_lineEdit, SLOT( clear() ) );
+}
+
+void KPIM::DistributionListEditor::Line::textChanged( const QString& text )
+{
+    if ( text.isEmpty() )
+        emit cleared();
+    emit textChanged();
 }
 
 void KPIM::DistributionListEditor::Line::setEntry( const KPIM::DistributionList::Entry& entry )
@@ -103,9 +124,13 @@ KPIM::DistributionListEditor::LineEdit::LineEdit( QWidget* parent ) : KPIM::Addr
 KPIM::DistributionListEditor::EditorWidget::EditorWidget( KABC::AddressBook* book,  QWidget* parent ) 
     : KDialogBase( parent, /*name=*/0, /*modal=*/ true, /*caption=*/QString(), KDialogBase::Ok|KDialogBase::Cancel ), d( new DistributionListEditor::EditorWidgetPrivate )
 {
-    setCaption( i18n( "Edit Distribution List" ) );
     d->addressBook = book;
     Q_ASSERT( d->addressBook );
+    d->lastLineId = 0;
+    d->mapper = new QSignalMapper( this );
+    connect( d->mapper, SIGNAL( mapped( int ) ), 
+             this, SLOT( lineTextChanged( int ) ) ); 
+    setCaption( i18n( "Edit Distribution List" ) );
     QWidget* main = new QWidget( this );
     QGridLayout* mainLayout = new QGridLayout( main );
     mainLayout->setMargin( KDialog::marginHint() );
@@ -130,19 +155,18 @@ KPIM::DistributionListEditor::EditorWidget::EditorWidget( KABC::AddressBook* boo
     QScrollView* scrollView = new QScrollView( main );
     scrollView->setFrameShape( QFrame::NoFrame );
     mainLayout->addWidget( scrollView, 2, 0 );
-//    QGridLayout* viewLayout = new QGridLayout( scrollView->viewport() );
     d->memberListWidget = new QWidget( scrollView->viewport() );
     d->memberListWidget->setSizePolicy( QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding );
-    d->addresseeLayout = new QVBoxLayout( d->memberListWidget );
+    QVBoxLayout* memberLayout = new QVBoxLayout( d->memberListWidget );
+    d->addresseeLayout = new QVBoxLayout;
     d->addresseeLayout->setSpacing( KDialog::spacingHint() );
- 
-//    viewLayout->addWidget( d->memberListWidget, 0, 0 );
+    memberLayout->addItem( d->addresseeLayout );
+    memberLayout->addStretch();
     scrollView->addChild( d->memberListWidget );
     scrollView->setResizePolicy( QScrollView::AutoOneFit );
     
     setMainWidget( main );
 
-    d->addLineForEntry( KPIM::DistributionList::Entry() );
     d->addLineForEntry( KPIM::DistributionList::Entry() );
 }
 
@@ -151,6 +175,13 @@ KPIM::DistributionListEditor::EditorWidget::~EditorWidget()
     delete d;
 }
 
+void KPIM::DistributionListEditor::EditorWidget::lineTextChanged( int id )
+{
+    if ( id != d->lastLineId )
+        return;
+    d->addLineForEntry( KPIM::DistributionList::Entry() );
+    d->addresseeLayout->invalidate();
+}
 
 void KPIM::DistributionListEditor::EditorWidget::setDistributionList( const KPIM::DistributionList& list )
 {
@@ -173,16 +204,17 @@ void KPIM::DistributionListEditor::EditorWidget::setDistributionList( const KPIM
         d->addLineForEntry( *it );
     }
     d->addLineForEntry( Entry() );
-    d->addLineForEntry( Entry() );
 }
 
-KPIM::DistributionListEditor::Line* KPIM::DistributionListEditor::EditorWidgetPrivate::addLineForEntry( const KPIM::DistributionList::Entry& entry )
+void KPIM::DistributionListEditor::EditorWidgetPrivate::addLineForEntry( const KPIM::DistributionList::Entry& entry )
 {  
-  KPIM::DistributionListEditor::Line* line = new KPIM::DistributionListEditor::Line( addressBook, memberListWidget );
-   line->setEntry( entry );
-   addresseeLayout->addWidget( line );
-   addressees.append( line );
-   return line;
+    KPIM::DistributionListEditor::Line* line = new KPIM::DistributionListEditor::Line( addressBook, memberListWidget );
+    line->setEntry( entry );
+    addresseeLayout->addWidget( line );
+    addressees.append( line );
+    QObject::connect( line, SIGNAL( textChanged() ), 
+                      mapper, SLOT( map() ) );
+    mapper->setMapping( line, ++lastLineId );
 }
 
 void KPIM::DistributionListEditor::EditorWidget::slotOk()

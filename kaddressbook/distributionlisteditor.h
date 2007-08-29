@@ -28,6 +28,7 @@ private slots:
 
     //override
     void slotOk();
+    void lineTextChanged( int id );
 
 private:
     EditorWidgetPrivate* const d;
