@@ -30,6 +30,9 @@ macro_log_feature(GNOKII_FOUND "gnokii" "Gnokii Development Libraries" "http://w
 macro_optional_find_package(MySQL)
 macro_log_feature(MYSQL_EMBEDDED_FOUND "mysql-embedded" "MySQL/Embedded Library" "http://www.mysql.org" FALSE "" "Needed for the MySQL/Embedded Akonadi backend. Sqlite will be used instead.")
 
+macro_optional_find_package(Nepomuk)
+macro_log_feature(Nepomuk_FOUND "Nepomuk" "Nepomuk" "http://www.kde.org" FALSE "" "For adding desktop-wide tagging support to kmail")
+
 macro_optional_find_package(LibXslt)
 macro_log_feature(XSLTPROC_EXECUTABLE "xsltproc" "xsltproc" "http://xmlsoft.org/XSLT/" FALSE "" "Needed to generate Akonadi database code")
 
