@@ -307,6 +307,7 @@ void kmobiletoolsMainPart::slotQuit()
         m_shutDownDialog->setCancelButtonText( i18n( "Force disconnection" ) );
         m_shutDownDialog->setValue( 0 );
         m_shutDownDialog->setMinimumDuration( 1000 );
+        m_shutDownDialog->setMaximum( 0 );
         connect( m_shutDownDialog, SIGNAL(canceled()), this, SLOT(slotFinallyQuit()) );
 
         for( int i=0; i<deviceItems.size(); i++ ) {
@@ -321,8 +322,11 @@ void kmobiletoolsMainPart::slotQuit()
             }
         }
 
-        // force shut down after 10 seconds
-        QTimer::singleShot( 10*1000, this, SLOT(slotFinallyQuit()) );
+        if( m_shutDownDialog->maximum() )
+            // force shut down after 10 seconds
+            QTimer::singleShot( 10*1000, this, SLOT(slotFinallyQuit()) );
+        else
+            QTimer::singleShot( 0, this, SLOT(slotFinallyQuit()) );
 
     } else
         slotFinallyQuit();
