@@ -3,7 +3,7 @@ Friday, August 31st 2007
 Bugfixes
 ---------
 * kolab/issue1868: Crash after reply on a mail using search function (705173, merge issue 38)
-* Merged more branches/3.5/kdepim changes into enterprise.
+* Merged more from branches/3.5/kdepim changes into enterprise.
 * BUG: 93436 - Always encrypt to self function was always on.
 * kolab/issue1923 Crash after pressing copy and paste in the composer. (706484)
 * kolab/issue1713 @ (at) sign in realname confuses kontact when creating appointments (704180)
