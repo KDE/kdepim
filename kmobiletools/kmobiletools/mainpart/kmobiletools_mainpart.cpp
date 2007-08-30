@@ -140,6 +140,10 @@ kmobiletoolsMainPart::~kmobiletoolsMainPart()
     kDebug() <<"kmobiletoolsMainPart::~kmobiletoolsMainPart()";
 }
 
+bool kmobiletoolsMainPart::openFile() {
+    return false;
+}
+
 
 void kmobiletoolsMainPart::slotAutoLoadDevices()
 {
@@ -149,7 +153,7 @@ void kmobiletoolsMainPart::slotAutoLoadDevices()
             /// @todo add proper loading of engines here (basically it should
             /// be enough to replace "Fake engine" by DEVCFG(*it)->engine() if we let
             /// the engine field takes the engine name as returned by the engine's .desktop file
-            KMobileTools::DeviceLoader::instance()->loadDevice( DEVCFG(*it)->devicename(), "Fake engine" );
+            KMobileTools::DeviceLoader::instance()->loadDevice( DEVCFG(*it)->devicename(), DEVCFG(*it)->engine() );
             KMobileTools::ServiceLoader::instance()->loadServices( DEVCFG(*it)->devicename() );
         }
     }
@@ -370,6 +374,12 @@ void kmobiletoolsMainPart::slotConfigNotify()
 
 
 void kmobiletoolsMainPart::treeItemClicked( const QModelIndex& index ) {
+    // avoid flickering
+    if( m_lastIndex == index )
+        return;
+
+    m_lastIndex = index;
+
     unplugActionList( "serviceactions" );
     unplugActionList( "deviceactions" );
 
@@ -394,14 +404,12 @@ void kmobiletoolsMainPart::treeItemClicked( const QModelIndex& index ) {
 }
 
 void kmobiletoolsMainPart::handleDeviceItem( DeviceItem* deviceItem ) {
-    /// @TODO implement me, open homepage part here
-    kDebug() << "handling device item " << deviceItem->data().toString();
+    /// @TODO open homepage part here
     unplugActionList( "deviceactions" );
     plugActionList( "deviceactions", deviceItem->actionList() );
 }
 
 void kmobiletoolsMainPart::handleServiceItem( ServiceItem* serviceItem ) {
-    kDebug() << "service item clicked" << endl;
     QString deviceName = serviceItem->parent()->data().toString();
 
     //
@@ -411,6 +419,7 @@ void kmobiletoolsMainPart::handleServiceItem( ServiceItem* serviceItem ) {
             qobject_cast<KMobileTools::CoreService*>( serviceItem->service() );
 
     if( !coreService ) {
+        /// @TODO add call to error handler here
         KMessageBox::information( widget(), QString( "service is not a core service.. wrong iface impl ;-)" ) );
         return;
     }
@@ -446,18 +455,6 @@ void kmobiletoolsMainPart::handleServiceItem( ServiceItem* serviceItem ) {
     }
 }
 
-void kmobiletoolsMainPart::deviceUnloaded( const QString& deviceName ) {
-    // delete and remove any widgets associated with the device
-    QWidgetList widgetList = m_loadedWidgets.values( deviceName );
-    if( !widgetList.isEmpty() ) {
-        for( int i=0; i<widgetList.size(); i++ ) {
-            m_widget->removeWidget( widgetList.at( i ) );
-            delete widgetList.at( i );
-        }
-    }
-
-    m_loadedWidgets.remove( deviceName );
-}
 
 void kmobiletoolsMainPart::removeServiceWidget( const QString& deviceName, KMobileTools::CoreService* service ) {
     KMobileTools::Ifaces::GuiService* gui =
@@ -511,11 +508,6 @@ void kmobiletoolsMainPart::setupGUI( QWidget* parent ) {
 
     // set data model for list-view
     m_serviceModel = new ServiceModel( this );
-
-    /*
-    connect( KMobileTools::DeviceLoader::instance(), SIGNAL( deviceUnloaded(const QString&) ),
-             this, SLOT( deviceUnloaded(const QString&) ) );
-    */
 
     connect( KMobileTools::ServiceLoader::instance(),
              SIGNAL( aboutToUnloadService(const QString&, KMobileTools::CoreService*) ),

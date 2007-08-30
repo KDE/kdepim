@@ -27,9 +27,10 @@
 #include <QtCore/QPoint>
 #include <QtGui/QMenu>
 
-#include <KLocale>
-#include <KIcon>
-#include <KMessageBox>
+#include <KDE/KLocale>
+#include <KDE/KIcon>
+#include <KDE/KMessageBox>
+#include <KDE/KIconLoader>
 
 #include <libkmobiletools/ifaces/addressbook.h>
 #include <libkmobiletools/ifaces/status.h>
@@ -84,6 +85,10 @@ void Addressbook::setupWidget() {
     m_addresseeList->setContextMenuPolicy( Qt::CustomContextMenu );
     connect( m_addresseeList, SIGNAL(customContextMenuRequested(const QPoint&)),
              this, SLOT(addresseeListContextMenu(const QPoint&)) );
+    connect( m_addresseeList, SIGNAL(itemActivated(QListWidgetItem*)),
+             this, SLOT(addresseeActivated(QListWidgetItem*)) );
+    connect( m_addresseeList, SIGNAL(itemClicked(QListWidgetItem*)),
+             this, SLOT(addresseeActivated(QListWidgetItem*)) );
 
     m_addresseeSearch = new KListWidgetSearchLine( m_widget, m_addresseeList );
     m_addresseeDetails = new KTextBrowser( m_widget );
@@ -92,6 +97,7 @@ void Addressbook::setupWidget() {
     layout->addWidget( m_addresseeSearch, 0, 0 );
     layout->addWidget( m_addresseeList, 1, 0 );
     layout->addWidget( m_addresseeDetails, 0, 1, 2, 1 );
+    layout->setColumnStretch( 1, 1 );
 }
 
 void Addressbook::setupActions() {
@@ -154,6 +160,34 @@ void Addressbook::setupActions() {
 
 QList<QAction*> Addressbook::actionList() const {
     return m_actionList;
+}
+
+void Addressbook::addresseeActivated( QListWidgetItem* item ) {
+    AddressbookEntryItem* entry = dynamic_cast<AddressbookEntryItem*>( item );
+    if( entry ) {
+        KMobileTools::AddressbookEntry addressee = entry->addressee();
+
+        /// @TODO port this to css
+
+        // prepare html file for the browser widget
+        QString html;
+        html += "<html><body>";
+
+        // prepare the header (ugly table style)
+        html += "<table border=\"0\"><tr><td><img src=\"";
+        html += KIconLoader::global()->iconPath( "user", -K3Icon::SizeHuge, false );
+        html += "\"></td><td valign=\"middle\"><h2>";
+        html += addressee.name();
+        html += "</h2></td></tr></table>";
+
+        // add the phone numbers
+        KABC::PhoneNumber::List phoneNumbers = addressee.phoneNumbers();
+        for( int i=0; i<phoneNumbers.size(); i++ )
+            html += phoneNumbers.at( i ).number() + "<br/>";
+
+        html += "</body></html>";
+        m_addresseeDetails->setHtml( html );
+    }
 }
 
 void Addressbook::addresseeListContextMenu( const QPoint& position ) {
