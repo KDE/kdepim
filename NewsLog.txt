@@ -103,13 +103,6 @@ Bugfixes
    133395,144347,91252,143237,131029,144779,79685,85539,125920,146585,143869,140549,147602,143230,140881
 
 
-    ==== FIXME =====
-
-    the changes between kdepim_3.5.6.enterprise.0.20070814.700060-kk1 and snapshot 6 will be filled
-    in for the next iteration
-
-    ==== FIXME =====
-
 Current release is "Enterprise - Snapshot-06"
 
 Features:
