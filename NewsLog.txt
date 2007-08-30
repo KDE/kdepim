@@ -3,7 +3,6 @@ Friday, August 31st 2007
 Bugfixes
 ---------
 * kolab/issue1868: Crash after reply on a mail using search function (705173, merge issue 38)
-* Merged more from branches/3.5/kdepim changes into enterprise.
 * BUG: 93436 - Always encrypt to self function was always on.
 * kolab/issue1923 Crash after pressing copy and paste in the composer. (706484)
 * kolab/issue1713 @ (at) sign in realname confuses kontact when creating appointments (704180)
@@ -11,6 +10,10 @@ Bugfixes
 * b.k.o 93436
 * Scalix support for Kontact.
 * kolab/issue1918 favorite folder view migration default size could be better (706063)
+
+Merges
+------
+* Merged kpilot, karm and kalarm changes from 3.5 branch into enterprise.
 
 Friday, 24th August 2007
 
