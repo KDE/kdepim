@@ -6,7 +6,11 @@ Bugfixes
 * Merged more branches/3.5/kdepim changes into enterprise.
 * BUG: 93436 - Always encrypt to self function was always on.
 * kolab/issue1923 Crash after pressing copy and paste in the composer. (706484)
-
+* kolab/issue1713 @ (at) sign in realname confuses kontact when creating appointments (704180)
+* kolab/issue/1894 Default width of the folder name column at first contact start is too small
+* b.k.o 93436
+* Scalix support for Kontact.
+* kolab/issue1918 favorite folder view migration default size could be better (706063)
 
 Friday, 24th August 2007
 
