@@ -37,7 +37,8 @@ overrides the usual font for display and printing for that particular mail.
    shared by KNotes and the Notes plugin ( 670739)
  - prokde35 W1-32: add profile support for kontact, with global/user-specific profiles, and profile
    import/export (671800)
- - prokde35 w1-15 Show the delegator and delegate in the even preview.(670673)
+ - prokde35 w1-15 Show the delegator and delegate in the even preview.
+    ( related to kolab/issue1773 kolab/issue1774 kolab/issue1776) (670673).
  - prokde35 w1-10 Show plugins which failed to load their part as disabled,
 and make them not selectable.(670822)
  - prokde35 W1-19 (sync buttons): Add submenu with "All" and the single accounts, similar as in
@@ -95,6 +96,11 @@ Bugfixes
  - kolab/issue1303 (Inform user when a folder gets unshared and move new items (prevent data loss))
  - kolab/issue1846 (Kontact crashes by moving many folders)
  - Make sure the crypto state is not restored from headers if there are no headers. (703234)
+ - b.k.o 118060 - Ensure that there is a KMMainWidget before showing the config dialog, as parts of the config
+    (identitydialog) depend on its existence. (668075)
+ - b.k.o 121863 - Prevent crash if folder can't be found.(668092)
+ - Fixes from 3.5 merges - b.k.o 131176, 102001, 143511, 143866, 144166, 48461, 93199, 128435,50462,
+   133395,144347,91252,143237,131029,144779,79685,85539,125920,146585,143869,140549,147602,143230,140881
 
 
     ==== FIXME =====
