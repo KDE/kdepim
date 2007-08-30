@@ -296,6 +296,11 @@ class KDE_EXPORT KABCore : public KAB::Core
      */
     virtual void newContact();
 
+    /** 
+     Opens distribution list editor to create a new distribution list
+    */
+    virtual void newDistributionList();
+
     /**
       DCOP METHOD: Returns the name of the contact, that matches the given
                    phone number.
@@ -354,6 +359,10 @@ class KDE_EXPORT KABCore : public KAB::Core
       Is called whenever the xmlgui has to be rebuild after a part switch.
      */
     void reinitXMLGUI();
+
+  private:
+
+    void editDistributionList( const KPIM::DistributionList &list );
 
   private slots:
     void setJumpButtonBarVisible( bool visible );
@@ -443,7 +452,6 @@ class KDE_EXPORT KABCore : public KAB::Core
     KAction *mActionCategories;
     KToggleAction *mActionJumpBar;
     KToggleAction *mActionDetails;
-
     KCommandHistory *mCommandHistory;
 
     KAddressBookService *mAddressBookService;

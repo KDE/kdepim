@@ -575,6 +575,27 @@ void KABCore::contactModified( const KABC::Addressee &addr )
   setModified( true );
 }
 
+void KABCore::newDistributionList()
+{
+
+  QString name = i18n( "New Distribution List" );
+  const KPIM::DistributionList distList = KPIM::DistributionList::findByName( addressBook(), name );
+  if ( !distList.isEmpty() ) {
+    bool foundUnused = false;
+    int i = 1;
+    while ( !foundUnused ) {
+      name = i18n( "New Distribution List (%1)" ).arg( i++ );  
+      foundUnused = KPIM::DistributionList::findByName( addressBook(), name ).isEmpty();
+    }
+  }
+  KPIM::DistributionList list;
+  list.setUid( KApplication::randomString( 10 ) );
+  list.setName( name );
+  addressBook()->insertAddressee( list );
+  setModified();
+  editDistributionList( list );
+}
+
 void KABCore::newContact()
 {
   AddresseeEditorDialog *dialog = 0;
@@ -1140,6 +1161,10 @@ void KABCore::initActions()
                SLOT( newContact() ), actionCollection(), "file_new_contact" );
   action->setWhatsThis( i18n( "Create a new contact<p>You will be presented with a dialog where you can add all data about a person, including addresses and phone numbers." ) );
 
+  action = new KAction( i18n( "&New Distribution List..." ), "kontact_contacts", 0, this,
+               SLOT( newDistributionList() ), actionCollection(), "file_new_distributionlist" );
+  action->setWhatsThis( i18n( "Create a new distribution list<p>You will be presented with a dialog where you can create a new distribution list." ) );
+
   mActionMailVCard = new KAction( i18n("Send &Contact..."), "mail_post_to", 0,
                                   this, SLOT( mailVCard() ),
                                   actionCollection(), "file_mail_vcard" );
@@ -1412,9 +1437,8 @@ void KABCore::removeSelectedContactsFromDistList()
   setModified();
 }
 
-void KABCore::editSelectedDistributionList()
+void KABCore::editDistributionList( const KPIM::DistributionList &dist )
 {
-  const KPIM::DistributionList dist = KPIM::DistributionList::findByName( addressBook(), mSelectedDistributionList );
   if ( dist.isEmpty() )
     return;
   QGuardedPtr<KPIM::DistributionListEditor::EditorWidget> dlg = new KPIM::DistributionListEditor::EditorWidget( addressBook(), widget() );
@@ -1427,6 +1451,11 @@ void KABCore::editSelectedDistributionList()
     }
   }
   delete dlg;
+}
+
+void KABCore::editSelectedDistributionList()
+{
+  editDistributionList( KPIM::DistributionList::findByName( addressBook(), mSelectedDistributionList ) );
 }
 
 KPIM::DistributionList::List KABCore::distributionLists() const

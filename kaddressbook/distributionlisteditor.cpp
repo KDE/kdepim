@@ -23,6 +23,7 @@
 class KPIM::DistributionListEditor::EditorWidgetPrivate
 {
 public:
+    QScrollView* scrollView;
     QSignalMapper* mapper;
     KABC::AddressBook* addressBook;
     QString distListUid;
@@ -152,18 +153,18 @@ KPIM::DistributionListEditor::EditorWidget::EditorWidget( KABC::AddressBook* boo
     d->memberListLabel->setText( i18n( "Distribution list members:" ) );
     mainLayout->addWidget( d->memberListLabel, 1, 0 );
 
-    QScrollView* scrollView = new QScrollView( main );
-    scrollView->setFrameShape( QFrame::NoFrame );
-    mainLayout->addWidget( scrollView, 2, 0 );
-    d->memberListWidget = new QWidget( scrollView->viewport() );
+    d->scrollView = new QScrollView( main );
+    d->scrollView->setFrameShape( QFrame::NoFrame );
+    mainLayout->addWidget( d->scrollView, 2, 0 );
+    d->memberListWidget = new QWidget( d->scrollView->viewport() );
     d->memberListWidget->setSizePolicy( QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding );
     QVBoxLayout* memberLayout = new QVBoxLayout( d->memberListWidget );
     d->addresseeLayout = new QVBoxLayout;
     d->addresseeLayout->setSpacing( KDialog::spacingHint() );
     memberLayout->addItem( d->addresseeLayout );
     memberLayout->addStretch();
-    scrollView->addChild( d->memberListWidget );
-    scrollView->setResizePolicy( QScrollView::AutoOneFit );
+    d->scrollView->addChild( d->memberListWidget );
+    d->scrollView->setResizePolicy( QScrollView::AutoOneFit );
     
     setMainWidget( main );
 
@@ -180,7 +181,7 @@ void KPIM::DistributionListEditor::EditorWidget::lineTextChanged( int id )
     if ( id != d->lastLineId )
         return;
     d->addLineForEntry( KPIM::DistributionList::Entry() );
-    d->addresseeLayout->invalidate();
+    d->scrollView->updateContents();
 }
 
 void KPIM::DistributionListEditor::EditorWidget::setDistributionList( const KPIM::DistributionList& list )
