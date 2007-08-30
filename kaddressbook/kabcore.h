@@ -68,6 +68,10 @@ class LDAPSearchDialog;
 class ViewManager;
 class XXPortManager;
 
+namespace KAB {
+    class DistributionListEntryView;
+}
+
 typedef struct {
   KABC::Ticket *ticket;
   int counter;
@@ -419,6 +423,7 @@ class KDE_EXPORT KABCore : public KAB::Core
     JumpButtonBar *mJumpButtonBar;
     FilterSelectionWidget *mFilterSelectionWidget;
     IncSearchWidget *mIncSearchWidget;
+    KAB::DistributionListEntryView* mDistListEntryView;
     KPIM::AddresseeView *mDetailsViewer;
     KPIM::CategorySelectDialog *mCategorySelectDialog;
     KPIM::CategoryEditDialog *mCategoryEditDialog;

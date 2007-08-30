@@ -69,6 +69,7 @@
 
 #include "addresseeutil.h"
 #include "addresseeeditordialog.h"
+#include "distributionlistentryview.h"
 #include "extensionmanager.h"
 #include "filterselectionwidget.h"
 #include "incsearchwidget.h"
@@ -323,7 +324,20 @@ void KABCore::setContactSelected( const QString &uid )
   KABC::Addressee addr = mAddressBook->findByUid( uid );
   if ( !mDetailsViewer->isHidden() )
     mDetailsViewer->setAddressee( addr );
-
+  if ( !mSelectedDistributionList.isNull() && mDistListEntryView->isShown() ) {
+    KPIM::DistributionList dist = KPIM::DistributionList::findByName( addressBook(), mSelectedDistributionList );
+    if ( !dist.isEmpty() ) {
+      typedef KPIM::DistributionList::Entry::List EntryList;   
+      const EntryList entries = dist.entries( addressBook() ); 
+      for (EntryList::ConstIterator it = entries.begin(); it != entries.end(); ++it )
+      {
+        if ( (*it).addressee.uid() == uid ) {
+          mDistListEntryView->setEntry( dist, *it );
+          break;
+        }
+      }
+    }
+  }
   mExtensionManager->setSelectionChanged();
 
   // update the actions
@@ -1112,6 +1126,8 @@ void KABCore::initGUI()
   mDetailsViewer->setVScrollBarMode( QScrollView::Auto );
   detailsPageLayout->addWidget( mDetailsViewer );
 
+  mDistListEntryView = new KAB::DistributionListEntryView( this, mWidget );
+  mDetailsStack->addWidget( mDistListEntryView );
   mDetailsStack->addWidget( mDetailsWidget );
   mDetailsStack->raiseWidget( mDetailsWidget );
   mDetailsSplitter->moveToLast( mDetailsStack );
@@ -1464,11 +1480,12 @@ KPIM::DistributionList::List KABCore::distributionLists() const
 
 void KABCore::setSelectedDistributionList( const QString &name )
 {
-    mSelectedDistributionList = name;
-    mSearchManager->setSelectedDistributionList( name );
-    mViewHeaderLabel->setText( name.isNull() ? i18n( "Contacts" ) : i18n( "Distribution List: %1" ).arg( name ) );
-    mDistListButtonWidget->setShown( !mSelectedDistributionList.isNull() );
-    
+  mSelectedDistributionList = name;
+  mSearchManager->setSelectedDistributionList( name );
+  mViewHeaderLabel->setText( name.isNull() ? i18n( "Contacts" ) : i18n( "Distribution List: %1" ).arg( name ) );
+  mDistListButtonWidget->setShown( !mSelectedDistributionList.isNull() );
+  if ( !name.isNull() )
+    mDetailsStack->raiseWidget( mDistListEntryView );
 }
 
 QStringList KABCore::distributionListNames() const
