@@ -577,7 +577,7 @@ void KABCore::contactModified( const KABC::Addressee &addr )
 
 void KABCore::newDistributionList()
 {
-
+#ifdef KDEPIM_NEW_DISTRLISTS
   QString name = i18n( "New Distribution List" );
   const KPIM::DistributionList distList = KPIM::DistributionList::findByName( addressBook(), name );
   if ( !distList.isEmpty() ) {
@@ -591,9 +591,8 @@ void KABCore::newDistributionList()
   KPIM::DistributionList list;
   list.setUid( KApplication::randomString( 10 ) );
   list.setName( name );
-  addressBook()->insertAddressee( list );
-  setModified();
   editDistributionList( list );
+#endif
 }
 
 void KABCore::newContact()

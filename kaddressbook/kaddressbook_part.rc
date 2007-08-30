@@ -1,5 +1,5 @@
 <!DOCTYPE kpartgui>
-<kpartgui name="kaddressbook" version="18">
+<kpartgui name="kaddressbook" version="19">
 
   <MenuBar>
     <Menu name="file" noMerge="1"><text>&amp;File</text>
@@ -68,14 +68,18 @@
       <Separator/>
       <Action name="kaddressbook_configure" group="settings_configure"/>
     </Menu>
-
   </MenuBar>
 
   <Menu name="RMBPopup">
     <Action name="file_properties"/>
     <Action name="file_new_contact"/>
-    <Action name="edit_delete"/>
+    <Separator/>
+    <Action name="edit_cut"/>
+    <Action name="edit_copy"/>
+    <Action name="edit_paste"/>
     <Action name="edit_store_in"/>
+    <Separator/>
+    <Action name="edit_delete"/>
     <Separator/>
     <Action name="file_mail"/>
     <Action name="file_mail_vcard"/>

@@ -297,7 +297,7 @@ class KDE_EXPORT KABCore : public KAB::Core
     virtual void newContact();
 
     /** 
-     Opens distribution list editor to create a new distribution list
+     DCOP METHOD: Opens distribution list editor to create a new distribution list
     */
     virtual void newDistributionList();
 

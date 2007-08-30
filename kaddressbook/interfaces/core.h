@@ -115,6 +115,7 @@ class KDE_EXPORT Core : public QObject
      */
     virtual KPIM::DistributionList::List distributionLists() const = 0;
 
+
     /**
       Returns the name of all the distribution lists.
      */
@@ -164,6 +165,11 @@ class KDE_EXPORT Core : public QObject
       DCOP METHOD: Opens contact editor to input a new contact.
      */
     virtual void newContact() = 0;
+
+    /**
+      DCOP METHOD: Opens distribution list editor to input a new distribution list.
+     */
+    virtual void newDistributionList() = 0;
 
     /**
       DCOP METHOD: Returns the name of the contact, that matches the given
