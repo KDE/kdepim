@@ -33,27 +33,171 @@
 #ifndef __KLEOPATRA_UISERVER_ASSUANCOMMAND_H__
 #define __KLEOPATRA_UISERVER_ASSUANCOMMAND_H__
 
+#include <utils/pimpl_ptr.h>
+
 #include <string>
 #include <map>
 #include <typeinfo>
 
 class QVariant;
+class QIODevice;
+class QObject;
 
 struct assuan_context_s;
 
 namespace Kleo {
 
+    /*!
+      \brief Base class for GnuPG UI Server commands
+
+      <h3>Implementing a new AssuanCommand</h3>
+
+      You do not directly inherit AssuanCommand, unless you want to
+      deal with the ugle C callback handling. Assuming you don't, then
+      you inherit your command class from AssuanHandlerMixin, passing
+      your class as the template argument to AssuanHandlerMixin, like
+      this:
+
+      \code
+      class MyFooCommand : public AssuanHandlerMixin<MyFooCommand> {
+      \endcode
+      (http://en.wikipedia.org/wiki/Curiously_recurring_template_pattern)
+
+      You then choose a command name():
+
+      \code
+          const char * name() const { return "MYFOO"; }
+      \endcode
+
+      The string should be all-uppercase by convention, but the
+      UiServer implementation doesn't enforce this.
+
+      The next step is to implement start(), the starting point of
+      command execution:
+
+      <h3>Executing the command</h3>
+
+      \code
+          int start( const std::string & line, const std::map<std::string,QVariant> & options ) {
+      \endcode
+
+      This should set everything up and check the parameters in \a
+      line and \a options. If there's an error, choose one the the
+      gpg-error codes and create a gpg_error_t from it using the
+      protected makeError() function:
+
+      \code
+              return makeError( GPG_ERR_NOT_IMPLEMENTED );
+      \endcode
+      
+      But usually, you will want to create a dialog, or call some
+      GpgME function from here. In case of errors from GpgME, you
+      shouldn't pipe them through makeError(), but return them
+      as-is. This will preserve the error source. Error created using
+      makeError() will have Kleopatra as their error source, so watch
+      out what you're doing :)
+
+      In addition to options and the command line, your command might
+      require \em{bulk data} input or output. That's what the bulk
+      input and output channels are for. You can check whether the
+      client handed you an input channel by checking that
+      bulkInputDevice() isn't NULL, likewise for bulkOutputDevice().
+
+      If everything is ok, you return 0. This indicates to the client
+      that the command has been accepted and is now in progress.
+
+      In this mode (start() returned 0), there are a bunch of options
+      for your command to do. Some commands may require additional
+      information from the client. The options passed to start() are
+      designed to be persistent across commands, and rather limited in
+      length (there's a strict line length limit in the assuan
+      protocol with no line continuation mechanism). The same is true
+      for command line arguments, which, in addition, you have to
+      parse yourself. Those usually apply only to this command, and
+      not to following ones.
+
+      If you need data that might be larger than the line length
+      limit, you can either expect it on the bulkInputDevice(), or, if
+      you have the need for more than one such data channel, or the
+      data is optional or conditional on some condition that can only
+      be determined during command execution, you can \em inquire the
+      missing information from the client.
+
+      As an example, a VERIFY command would expect the signed data on
+      the bulkInputDevice(). But if the input stream doesn't contain
+      an embedded (opaque) signature, indicating a \em detached
+      signature, it would go and inquire that data from the
+      client. Here's how it works:
+
+      \code
+      const int err = inquire( "DETACHED_SIGNATURE",
+                               this, SLOT(slotDetachedSignature(int,QByteArray,QByteArray)) );
+      if ( err )
+          done( err );
+      \endcode
+
+      This should be self-explanatory: You give a slot to call when
+      the data has arrived. The slot's first argument is an error
+      code. The second the data (if any), and the third is just
+      repeating what you gave as inquire()'s first argument. As usual,
+      you can leave argument off of the end, if you are not interested
+      in them.
+
+      You can do as many inquiries as you want, but only one at a
+      time.
+
+      You should peridocally send status updates to the client. You do
+      that by calling sendStatus().
+
+      Once your command has finished executing, call done(). If it's
+      with an error code, call done(err) like above. \bold{Do not
+      forget to call done() when done!}. It will close
+      bulkInputDevice(), bulkOutputDevice(), and send an OK or ERR
+      message back to the client.
+
+      At that point, your command has finished executing, and a new
+      one can be accepted, or the connection closed.
+
+      Apropos connection closed. The only way for the client to cancel
+      an operation is to shut down the connection. In this case, the
+      canceled() function will be called. At that point, the
+      connection to the client will have been broken already, and all
+      you can do is pack your things and go down gracefully.
+
+      If _you_ detect that the user has canceled (your dialog contains
+      a cancel button, doesn't it?), then you should instead call
+      done( GPG_ERR_CANCELED ), like for normal operation.
+
+      <h3>Registering the command with UiServer</h3>
+
+      TBD...
+
+    */
     class AssuanCommand {
     public:
-        virtual ~AssuanCommand() {}
+        AssuanCommand();
+        virtual ~AssuanCommand();
 
-        virtual int start( const std::string & line, const std::map<std::string,QVariant> & options ) = 0;
+        virtual int start( const std::string & line ) = 0;
 
         virtual const char * name() const = 0;
 
     protected:
-        int input() const;
-        int output() const;
+        bool hasOption( const char * opt ) const;
+        QVariant option( const char * opt ) const;
+        std::map<std::string,QVariant> options() const;
+
+        QIODevice * bulkInputDevice( int idx=0 );
+        QIODevice * bulkOutputDevice( int idx=0 );
+
+        int sendStatus( ... ); // TBD
+
+        int inquire( const char * keyword, QObject * receiver, const char * signal );
+
+        void done( int err=0 );
+
+    private:
+        virtual void canceled() = 0;
 
         // forget the rest, it's internal!
     public:
@@ -62,6 +206,10 @@ namespace Kleo {
     protected:
         // defined in assuanserverconnection.cpp!
         static int _handle( assuan_context_s*, char *, const std::type_info & );
+    public:
+        class Private;
+    private:
+        kdtools::pimpl_ptr<Private> d;
     };
 
     template <typename Derived>
@@ -75,12 +223,14 @@ namespace Kleo {
     // ### these are only temporary:
     class VerifyEmailCommand : public AssuanHandlerMixin<VerifyEmailCommand> {
         const char * name() const { return "VERIFYEMAIL"; }
-        int start( const std::string &, const std::map<std::string,QVariant> & );
+        int start( const std::string & );
+        void canceled() {}
     };
 
     class DecryptEmailCommand : public AssuanHandlerMixin<DecryptEmailCommand> {
         const char * name() const { return "DECRYPTEMAIL"; }
-        int start( const std::string &, const std::map<std::string,QVariant> & );
+        int start( const std::string & );
+        void canceled() {}
     };
 }
 

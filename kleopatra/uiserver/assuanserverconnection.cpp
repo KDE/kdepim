@@ -80,8 +80,17 @@ public:
 
 public Q_SLOTS:
     void slotReadActivity( int ) {
-        if ( ctx )
-            assuan_process_next( ctx.get() );
+        assert( ctx );
+        if ( const int err = assuan_process_next( ctx.get() ) ) {
+            if ( err == -1 || gpg_err_code(err) == GPG_ERR_EOF ) {
+                if ( currentCommand )
+                    ;//currentCommand->canceled(); // ### error: is private
+            } else {
+                // ### what?
+            }
+            //###emit q->closed( );
+            cleanup();
+        }
     }
 
 private:
@@ -94,7 +103,13 @@ private:
         assert( it != conn.commands.end() );
         assert( typeid(*it->get()) == ti_ );
 
-        if ( const int err = (*it)->start( line_, conn.options ) )
+        const shared_ptr<AssuanCommand> cmd = *it;
+
+        //### cmd->d->options = conn.options;
+        //### cmd->d->input device = new KDPipeIODevice
+        //### cmd->d->putput device = new KDPipeIODevice
+        //### cmd->d->ctx = ctx;
+        if ( const int err = (*it)->start( line_ ) )
             return err;
 
         conn.currentCommand = *it;

@@ -36,11 +36,20 @@
 
 using namespace Kleo;
 
-int VerifyEmailCommand::start( const std::string &, const std::map<std::string,QVariant> & ) {
+class AssuanCommand::Private {};
+
+AssuanCommand::AssuanCommand()
+{
+
+}
+
+AssuanCommand::~AssuanCommand() {}
+
+int VerifyEmailCommand::start( const std::string & ) {
     return gpg_error( GPG_ERR_NOT_IMPLEMENTED );
 }
 
-int DecryptEmailCommand::start( const std::string &, const std::map<std::string,QVariant> & ) {
+int DecryptEmailCommand::start( const std::string & ) {
     return gpg_error( GPG_ERR_NOT_IMPLEMENTED );
 }
 
