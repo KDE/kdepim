@@ -366,7 +366,9 @@ class KDE_EXPORT KABCore : public KAB::Core
 
   private:
 
+#ifdef KDEPIM_NEW_DISTRLISTS
     void editDistributionList( const KPIM::DistributionList &list );
+#endif
 
   private slots:
     void setJumpButtonBarVisible( bool visible );
@@ -392,6 +394,8 @@ class KDE_EXPORT KABCore : public KAB::Core
 #ifdef KDEPIM_NEW_DISTRLISTS
     void removeSelectedContactsFromDistList();
     void editSelectedDistributionList();
+    void sendMailToDistributionList( const QString &id ); 
+
 #endif
 
   private:

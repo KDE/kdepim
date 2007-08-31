@@ -1453,6 +1453,14 @@ void KABCore::removeSelectedContactsFromDistList()
   setModified();
 }
 
+void KABCore::sendMailToDistributionList( const QString &id )
+{
+  KPIM::DistributionList dist = KPIM::DistributionList::findByName( addressBook(), id );
+  if ( dist.isEmpty() )
+    return;
+  const QStringList emails = dist.emails( addressBook() );
+}
+
 void KABCore::editDistributionList( const KPIM::DistributionList &dist )
 {
   if ( dist.isEmpty() )

@@ -1,0 +1,90 @@
+====== KDE PIM Enterprise release howto =====
+
+David Faure <faure@kde.org>, 02-Aug-2005, last update 12-Mar-2007.
+
+# First ensure that translations are uptodate, running "translate".
+# Packing kdepim doesn't pack the translations themselves, but still,
+# at release time we have to ensure they are ok.
+
+#
+
+cd kde-common/release
+mkdir clean cache dirty sources sources-old
+
+echo kdepim > modules
+
+# Now save the patch below to a file, and apply it.
+
+Index: common
+===================================================================
+--- common      (revision 615014)
++++ common      (working copy)
+@@ -23,6 +23,9 @@ case $package in
+   koffice-l10n)
+     version=1.3.98
+     ;;
++  kdepim)
++    version=3.5.6.enterprise.0.20070227.637543
++    ;;
+   *)
+     version=3.5.5
+     ;;
+
+Index: versions
+===================================================================
+--- versions    (revision 615014)
++++ versions    (working copy)
+@@ -20,6 +20,12 @@
+     DESTURL=tags/koffice/1.4.0/$1
+     subname=$1
+     ;;
++  kdepim)
++    HEADURL=branches/kdepim/enterprise/$1
++    DESTURL=tags/kdepim/enterprise.0.20070227.637543/$1
++    subname=$1
++    export UNSERMAKE=
++    ;;
+   *)
+     HEADURL=branches/KDE/3.5/$1
+     DESTURL=tags/KDE/3.5.5/$1
+
+
+### --- end of patch ---
+
+
+# Update the version number in "common" and the tagname in "versions"
+# The version number is: 0.YYYYMMDD.svnrevision
+
+
+#
+# Also update the version number in those files:
+# ./kmail/kmversion.h:#define KMAIL_VERSION "1.9.6 (enterprise 0.20070227.637543)"
+# ./kontact/src/main.cpp:static const char version[] = "1.2.4 (enterprise 0.20070227.637543)";
+# ./korganizer/version.h:static const char korgVersion[] = "3.5.6 (enterprise 0.20070227.637543)";
+
+
+./tag_all
+# tag_all checks out the enterprise branch of kdepim into a temporary tagging directory
+# and then allows to commit - to create the tag.
+# The script needs the variables SVNUSER and SVNPROTOCOL to be set.
+
+
+# If you used the "cache" feature with an older release, remove it first
+rm -rf cache/kdepim
+
+# Ready? OK, let's pack it:
+./pack kdepim
+
+# On failure it's always possible to restart from where it stopped, e.g. with
+# cd dirty ; ../dist kdepim  
+# if the "dist" step failed
+# (and then ../taritup kdepim  for the last step)
+# But if all goes well, "pack" will have done it all.
+
+# You can find the resulting tar.bz2 in sources/, scp it somewhere.
+
+# To make sure that snapshots display a useful version number,
+# change them after release to reflect development status in the branch.
+# ./kmail/kmversion.h:#define KMAIL_VERSION "1.9.6 (enterprise branch after 0.20070227.637543)"
+# ./kontact/src/main.cpp:static const char version[] = "1.2.4 (enterprise branch after 0.20070227.637543)";
+# ./korganizer/version.h:static const char korgVersion[] = "3.5.6 (enterprise branch after 0.20070227.637543)";
