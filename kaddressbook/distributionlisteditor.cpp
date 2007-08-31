@@ -216,6 +216,7 @@ void KPIM::DistributionListEditor::EditorWidgetPrivate::addLineForEntry( const K
     QObject::connect( line, SIGNAL( textChanged() ), 
                       mapper, SLOT( map() ) );
     mapper->setMapping( line, ++lastLineId );
+    line->setShown( true );
 }
 
 void KPIM::DistributionListEditor::EditorWidget::slotOk()
