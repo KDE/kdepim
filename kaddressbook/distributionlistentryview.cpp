@@ -17,7 +17,6 @@
 
 KAB::DistributionListEntryView::DistributionListEntryView( KAB::Core* core, QWidget* parent ) : QWidget( parent ), m_core( core ), m_emailGroup( 0 )
 {
-
     m_mainLayout = new QVBoxLayout( this );
     m_mainLayout->setSpacing( KDialog::spacingHint() );
     m_mainLayout->setMargin( KDialog::marginHint() );
@@ -37,7 +36,6 @@ KAB::DistributionListEntryView::DistributionListEntryView( KAB::Core* core, QWid
     headerLayout->setColStretch( 2, 1 );
     m_mainLayout->addItem( headerLayout );
 
-
     QBoxLayout* distLayout = new QHBoxLayout;
     distLayout->setSpacing( KDialog::spacingHint() );
 
@@ -47,6 +45,8 @@ KAB::DistributionListEntryView::DistributionListEntryView( KAB::Core* core, QWid
     distLayout->addWidget( distLabel );
 
     m_distListLabel = new KURLLabel( this );
+    connect( m_distListLabel, SIGNAL( leftClickedURL( const QString& ) ), 
+             this, SIGNAL( distributionListClicked( const QString& ) ) );
     distLayout->addWidget( m_distListLabel );
     distLayout->addStretch();
     m_mainLayout->addItem( distLayout );
@@ -96,7 +96,7 @@ void KAB::DistributionListEntryView::setEntry( const KPIM::DistributionList& lis
     pixmap.convertFromImage( m_entry.addressee.photo().data() );
     m_imageLabel->setPixmap( pixmap );
     m_addresseeLabel->setText( i18n( "Formatted name, role, organization", "<qt><h1>%1</h1><p>%2<br/>%3</p></qt>" ).arg( m_entry.addressee.formattedName(), m_entry.addressee.role(), m_entry.addressee.organization() ) );
-    m_distListLabel->setURL( m_list.uid() );
+    m_distListLabel->setURL( m_list.name() );
     m_distListLabel->setText( m_list.name() );
 
     m_emailGroup = new QVButtonGroup( this );

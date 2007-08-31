@@ -32,7 +32,7 @@ public slots:
     void clear();
 
 signals:
-    void distributionListSelected( const QString& distributionList );
+    void distributionListClicked( const QString& );
 
 private slots:
     void emailButtonClicked( int id );

@@ -1128,6 +1128,8 @@ void KABCore::initGUI()
   detailsPageLayout->addWidget( mDetailsViewer );
 
   mDistListEntryView = new KAB::DistributionListEntryView( this, mWidget );
+  connect( mDistListEntryView, SIGNAL( distributionListClicked( const QString& ) ),
+           this, SLOT( sendMailToDistributionList( const QString& ) ) );
   mDetailsStack->addWidget( mDistListEntryView );
   mDetailsStack->addWidget( mDetailsWidget );
   mDetailsStack->raiseWidget( mDetailsWidget );
@@ -1458,7 +1460,12 @@ void KABCore::sendMailToDistributionList( const QString &id )
   KPIM::DistributionList dist = KPIM::DistributionList::findByName( addressBook(), id );
   if ( dist.isEmpty() )
     return;
-  const QStringList emails = dist.emails( addressBook() );
+  typedef KPIM::DistributionList::Entry::List EntryList; 
+  QStringList mails;
+  const EntryList entries = dist.entries( addressBook() );
+  for ( EntryList::ConstIterator it = entries.begin(); it != entries.end(); ++it )
+    mails += (*it).addressee.fullEmail( (*it).email );
+  sendMail( mails.join( ", " ) ); 
 }
 
 void KABCore::editDistributionList( const KPIM::DistributionList &dist )
