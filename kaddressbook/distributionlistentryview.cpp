@@ -79,10 +79,19 @@ void KAB::DistributionListEntryView::emailButtonClicked( int id )
     m_core->addressBook()->insertAddressee( m_list ); 
 }
 
-void KAB::DistributionListEntryView::setEntry( const KPIM::DistributionList& list, const KPIM::DistributionList::Entry& entry )
+void KAB::DistributionListEntryView::clear()
 {
+    setEntry( KPIM::DistributionList(), KPIM::DistributionList::Entry() );
+}
+
+void KAB::DistributionListEntryView::setEntry( const KPIM::DistributionList& list, const KPIM::DistributionList::Entry& entry )
+{    
     m_list = list;
     m_entry = entry;
+
+    if ( m_emailGroup )
+        delete m_emailGroup;
+
     QPixmap pixmap;
     pixmap.convertFromImage( m_entry.addressee.photo().data() );
     m_imageLabel->setPixmap( pixmap );
@@ -90,8 +99,6 @@ void KAB::DistributionListEntryView::setEntry( const KPIM::DistributionList& lis
     m_distListLabel->setURL( m_list.uid() );
     m_distListLabel->setText( m_list.name() );
 
-    if ( m_emailGroup )
-        delete m_emailGroup;
     m_emailGroup = new QVButtonGroup( this );
     m_emailGroup->setFlat( true );
     m_emailGroup->setExclusive( true );

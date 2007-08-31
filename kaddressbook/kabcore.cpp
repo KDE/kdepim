@@ -327,6 +327,7 @@ void KABCore::setContactSelected( const QString &uid )
   if ( !mSelectedDistributionList.isNull() && mDistListEntryView->isShown() ) {
     KPIM::DistributionList dist = KPIM::DistributionList::findByName( addressBook(), mSelectedDistributionList );
     if ( !dist.isEmpty() ) {
+      mDistListEntryView->clear();
       typedef KPIM::DistributionList::Entry::List EntryList;   
       const EntryList entries = dist.entries( addressBook() ); 
       for (EntryList::ConstIterator it = entries.begin(); it != entries.end(); ++it )
@@ -1487,7 +1488,7 @@ void KABCore::setSelectedDistributionList( const QString &name )
   if ( !name.isNull() )
     mDetailsStack->raiseWidget( mDistListEntryView );
   else
-      mDetailsStack->raiseWidget( mExtensionManager->activeDetailsWidget() ? mExtensionManager->activeDetailsWidget() : mDetailsWidget );
+    mDetailsStack->raiseWidget( mExtensionManager->activeDetailsWidget() ? mExtensionManager->activeDetailsWidget() : mDetailsWidget );
 }
 
 QStringList KABCore::distributionListNames() const

@@ -28,6 +28,8 @@ public:
     explicit DistributionListEntryView( KAB::Core* core, QWidget* parent = 0 );
     void setEntry( const KPIM::DistributionList& list, const KPIM::DistributionList::Entry& entry );
 
+public slots:
+    void clear();
 
 signals:
     void distributionListSelected( const QString& distributionList );
