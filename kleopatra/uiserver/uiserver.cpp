@@ -1,0 +1,253 @@
+/* -*- mode: c++; c-basic-offset:4 -*-
+    uiserver/uiserver.cpp
+
+    This file is part of Kleopatra, the KDE keymanager
+    Copyright (c) 2007 Klarälvdalens Datakonsult AB
+
+    Kleopatra is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+
+    Kleopatra is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+    General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program; if not, write to the Free Software
+    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+
+    In addition, as a special exception, the copyright holders give
+    permission to link the code of this program with any edition of
+    the Qt library by Trolltech AS, Norway (or with modified versions
+    of Qt that use the same license as Qt), and distribute linked
+    combinations including the two.  You must obey the GNU General
+    Public License in all respects for all of the code used other than
+    Qt.  If you modify this file, you may extend this exception to
+    your version of the file, but you are not obligated to do so.  If
+    you do not wish to do so, delete this exception statement from
+    your version.
+*/
+
+#include "uiserver.h"
+
+#include "assuanserverconnection.h"
+#include "assuancommand.h"
+
+#include "kleo-assuan.h"
+
+#include "detail_p.h"
+
+#include <ktempdir.h>
+
+#include <QTcpServer>
+#include <QTcpSocket>
+#include <QFile>
+#include <QDir>
+#include <QTextStream>
+#include <QEventLoop>
+#include <QTimer>
+
+#include <boost/range/empty.hpp>
+
+#include <stdexcept>
+#include <cassert>
+
+#ifdef Q_OS_WIN32
+# include <windows.h>
+# include <io.h>
+#else
+# include <sys/types.h>
+# include <sys/socket.h>
+# include <sys/un.h>
+# include <cstdio>
+# include <cerrno>
+# include <cstring>
+#endif
+
+using namespace Kleo;
+using namespace boost;
+
+namespace {
+    template <typename Ex>
+    void throw_( const QString & message ) {
+        throw Ex( message.toUtf8().constData() );
+    }
+
+    static QString tmpDirPrefix() {
+        return QDir::temp().absoluteFilePath( "gpg-" );
+    }
+}
+
+class UiServer::Private : public QTcpServer {
+    Q_OBJECT
+    friend class ::Kleo::UiServer;
+public:
+    explicit Private( UiServer * qq );
+
+private:
+    void makeListeningSocket();
+    QString makeFileName() const;
+
+protected:
+    /* reimp */ void incomingConnection( int fd );
+
+private:
+    KTempDir tmpDir;
+    QFile file;
+    std::vector< shared_ptr<AssuanCommand> > commands;
+    std::vector< shared_ptr<AssuanServerConnection> > connections;
+};
+
+UiServer::Private::Private( UiServer * qq )
+    : QTcpServer(),
+      tmpDir( tmpDirPrefix() ),
+      file(),
+      commands(),
+      connections()
+{
+    makeListeningSocket();
+}
+
+
+UiServer::UiServer( QObject * p )
+    : QObject( p ), d( new Private( this ) )
+{
+
+}
+
+UiServer::~UiServer() {}
+
+bool UiServer::registerCommand( const shared_ptr<AssuanCommand> & cmd ) {
+    if ( cmd && empty( std::equal_range( d->commands.begin(), d->commands.end(), cmd, _detail::ByTypeId() ) ) ) {
+        d->commands.push_back( cmd );
+        std::inplace_merge( d->commands.begin(), d->commands.end() - 1, d->commands.end() );
+        return true;
+    } else {
+        qWarning( "UiServer::registerCommand( %p ): command NULL or already registered", cmd ? cmd.get() : 0 );
+        return false;
+    }
+}
+
+void UiServer::start() {
+
+    d->makeListeningSocket();
+
+}
+
+void UiServer::stop() {
+
+    d->close();
+
+    if ( d->file.exists() )
+        d->file.remove();
+
+}
+
+bool UiServer::waitForStopped( unsigned int ms ) {
+    QEventLoop loop;
+    QTimer timer;
+    timer.setInterval( ms );
+    timer.setSingleShot( true );
+    connect( &timer, SIGNAL(timeout()), &loop, SLOT(quit()) );
+    connect( this,   SIGNAL(stopped()), &loop, SLOT(quit()) );
+    loop.exec();
+    return !timer.isActive();
+}
+
+QString UiServer::Private::makeFileName() const {
+    if ( tmpDir.status() != 0 )
+        throw_<std::runtime_error>( tr( "Couldn't create directory %1: %2" ).arg( tmpDirPrefix() + "XXXXXXXX", QString::fromLocal8Bit( strerror(errno) ) ) );
+    const QDir dir( tmpDir.name() );
+    assert( dir.exists() );
+    return dir.absoluteFilePath( "S.uiserver" );
+}
+
+#ifndef Q_OS_WIN32
+
+static inline QString system_error_string() {
+    return QString::fromLocal8Bit( strerror(errno) );
+}
+
+void UiServer::Private::makeListeningSocket() {
+
+    // First, create a file (we do this only for the name, gmpfh)
+    file.setFileName( makeFileName() );
+    if ( file.exists() )
+        throw_<std::runtime_error>( tr( "Detected another running gnupg UI server listening at %1." ).arg( file.fileName() ) );
+    const QByteArray encodedFileName = QFile::encodeName( file.fileName() );
+
+    // Create a Unix Domain Socket:
+    const int sock = ::socket( AF_UNIX, SOCK_STREAM, 0 );
+    if ( sock < 0 )
+        throw_<std::runtime_error>( tr( "Couldn't create socket: %1" ).arg( system_error_string() ) );
+
+    try {
+        // Bind
+        struct sockaddr_un sa;
+        std::memset( &sa, 0, sizeof(sa) );
+        sa.sun_family = AF_UNIX;
+        std::strncpy( sa.sun_path, encodedFileName.constData(), sizeof( sa.sun_path ) );
+        if ( ::bind( sock, (struct sockaddr*)&sa, sizeof( sa ) ) )
+            throw_<std::runtime_error>( tr( "Couldn't bind to socket: %1" ).arg( system_error_string() ) );
+
+        // TODO: permissions?
+    
+        // Listen
+        if ( ::listen( sock, SOMAXCONN ) )
+            throw_<std::runtime_error>( tr( "Couldn't listen to socket: %1" ).arg( system_error_string() ) );
+
+        if ( !setSocketDescriptor( sock ) )
+            throw_<std::runtime_error>( tr( "Couldn't pass socket to Qt: %1. This should not happen, please report this bug." ).arg( errorString() ) );
+
+    } catch ( ... ) {
+        ::close( sock );
+        throw;
+    }
+}
+
+#else
+
+// The Windows case is simpler, because we use a TCP socket here, so
+// we use vanilla QTcpServer:
+void UiServer::Private::makeListeningSocket() {
+
+    // First, create a tempfile that will contain the port we're
+    // listening on:
+    file.setFileName( makeFileName() );
+    if ( !file.open( QIODevice::WriteOnly ) )
+        throw_<std::runtime_error>( tr( "Couldn't create temporary file: %1" ).arg( file.errorString() ) );
+
+    // now, start listening to the host:
+    if ( !listen( QHostAddress::LocalHost ) )
+        throw_<std::runtime_error>( tr( "UiServer: listen failed: %1" ).arg( errorString() ) );
+
+    QTextStream( &file ) << serverPort() << endl;
+    file.close();
+}
+
+#endif
+
+void UiServer::Private::incomingConnection( int fd ) {
+    try {
+        const shared_ptr<AssuanServerConnection> c( new AssuanServerConnection( fd, commands ) );
+        connections.push_back( c );
+    } catch ( const assuan_exception & e ) {
+        QTcpSocket s;
+        s.setSocketDescriptor( fd );
+        QTextStream( &s ) << "ERR " << e.error_code() << " " << e.what() << "\r\n";
+        s.waitForBytesWritten();
+        s.close();
+    } catch ( ... ) {
+        // this should never happen...
+        QTcpSocket s;
+        s.setSocketDescriptor( fd );
+        QTextStream( &s ) << "ERR 63 unknown exception caught\r\n";
+        s.waitForBytesWritten();
+        s.close();
+    }
+}
+
+#include "uiserver.moc"
+#include "moc_uiserver.cpp"

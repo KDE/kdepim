@@ -1,7 +1,7 @@
 project(kleopatra)
 
-include_directories( ${CMAKE_SOURCE_DIR}/libkleo ${Boost_INCLUDE_DIR} )
-add_definitions (-DQT3_SUPPORT -DQT3_SUPPORT_WARNINGS ${KDE4_ENABLE_EXCEPTIONS} )
+include_directories( ${CMAKE_SOURCE_DIR}/libkleo ${Boost_INCLUDE_DIR} ${GPGME_INCLUDES} ) # should be assuan-includes!
+add_definitions (-DQT3_SUPPORT -DQT3_SUPPORT_WARNINGS ${KDE4_ENABLE_EXCEPTIONS} -D_ASSUAN_ONLY_GPG_ERRORS )
 
 set(libconf_SRCS  ${CMAKE_SOURCE_DIR}/kleopatra/conf/configuredialog.cpp )
 add_subdirectory( conf ) 
@@ -12,6 +12,10 @@ add_subdirectory( tests )
 
 set(kleopatra_bin_SRCS ${libconf_SRCS}
    utils/formatting.cpp
+   uiserver/kleo-assuan.cpp
+   uiserver/uiserver.cpp
+   uiserver/assuanserverconnection.cpp
+   uiserver/assuancommand.cpp
    models/keylistmodel.cpp
    models/keylistsortfilterproxymodel.cpp
    models/subkeylistmodel.cpp
@@ -35,7 +39,7 @@ kde4_add_ui_files(kleopatra_bin_SRCS certificateinfowidget.ui certificatewizard.
 kde4_add_executable(kleopatra_bin ${kleopatra_bin_SRCS})
 set_target_properties(kleopatra_bin  PROPERTIES OUTPUT_NAME kleopatra)
 
-target_link_libraries(kleopatra_bin ${KDE4_KUTILS_LIBS} ${KDE4_KDE3SUPPORT_LIBS} ${KDE4_KABC_LIBS} kleo ${QGPGME_LIBRARIES})
+target_link_libraries(kleopatra_bin ${KDE4_KUTILS_LIBS} ${KDE4_KDE3SUPPORT_LIBS} ${KDE4_KABC_LIBS} kleo ${QGPGME_LIBRARIES} -lassuan )
 
 install(TARGETS kleopatra_bin  DESTINATION ${BIN_INSTALL_DIR} )
 

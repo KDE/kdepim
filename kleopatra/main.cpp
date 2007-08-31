@@ -35,12 +35,22 @@
 
 #include "libkleo/kleo/cryptobackendfactory.h"
 
+#include <uiserver/uiserver.h>
+#include <uiserver/assuancommand.h>
+
 #include <kapplication.h>
 #include <kcmdlineargs.h>
 #include <kmessagebox.h>
 #include <klocale.h>
 #include <kglobal.h>
 #include <kiconloader.h>
+
+namespace {
+    template <typename T>
+    boost::shared_ptr<T> make_shared_ptr( T * t ) {
+        return t ? boost::shared_ptr<T>( t ) : boost::shared_ptr<T>() ;
+    }
+}
 
 int main( int argc, char** argv )
 {
@@ -75,5 +85,16 @@ int main( int argc, char** argv )
   args->clear();
   manager->show();
 
-  return app.exec();
+  Kleo::UiServer server;
+  server.registerCommand( make_shared_ptr( new Kleo::VerifyEmailCommand ) );
+  server.registerCommand( make_shared_ptr( new Kleo::DecryptEmailCommand ) );
+
+  server.start();
+
+  const int rc = app.exec();
+
+  server.stop();
+  server.waitForStopped();
+
+  return rc;
 }
