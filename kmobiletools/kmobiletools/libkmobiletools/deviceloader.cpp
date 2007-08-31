@@ -20,6 +20,7 @@
 #include "deviceloader.h"
 
 #include <libkmobiletools/enginexp.h>
+#include <libkmobiletools/serviceloader.h>
 
 #include <KService>
 #include <KServiceTypeTrader>
@@ -64,13 +65,13 @@ DeviceLoader::~DeviceLoader()
     QHashIterator<QString,KMobileTools::EngineXP*> i( d->m_loadedDevices );
     while (i.hasNext()) {
         i.next();
-        unloadDevice( i.key() );
+        unloadDevice( i.key(), false ); // services shut down themselves
     }
 
     delete d;
 }
 
-bool DeviceLoader::loadDevice( const QString& deviceName, const QString& engineName ) {
+bool DeviceLoader::loadDevice( const QString& deviceName, const QString& engineName, bool loadServices ) {
     // device already loaded?
     if( d->m_loadedDevices.contains( deviceName ) )
         return false;
@@ -110,16 +111,23 @@ bool DeviceLoader::loadDevice( const QString& deviceName, const QString& engineN
     d->m_loadedDevices.insert( deviceName, engine );
     emit deviceLoaded( deviceName );
 
+    if( loadServices )
+        KMobileTools::ServiceLoader::instance()->loadServices( deviceName );
+
     return true;
 }
 
-bool DeviceLoader::unloadDevice( const QString& deviceName ) {
+bool DeviceLoader::unloadDevice( const QString& deviceName, bool unloadServices ) {
     if( d->m_loadedDevices.contains( deviceName ) ) {
         delete d->m_loadedDevices.value( deviceName );
         d->m_loadedDevices.remove( deviceName );
         d->m_engineInformation.remove( deviceName );
 
         emit deviceUnloaded( deviceName );
+
+        if( unloadServices )
+            KMobileTools::ServiceLoader::instance()->unloadServices( deviceName );
+
         return true;
     }
     return false;
@@ -137,6 +145,10 @@ KPluginInfo DeviceLoader::engineInformation( const QString& deviceName ) const {
         return d->m_engineInformation.value( deviceName );
 
     return KPluginInfo();
+}
+
+QStringList DeviceLoader::loadedDevices() const {
+    return d->m_loadedDevices.keys();
 }
 
 }

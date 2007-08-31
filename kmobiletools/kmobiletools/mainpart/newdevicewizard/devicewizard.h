@@ -17,16 +17,17 @@
    Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
    Boston, MA 02110-1301, USA.
  ***************************************************************************/
-#ifndef NEWDEVICEWIZARD_H
-#define NEWDEVICEWIZARD_H
+#ifndef DEVICEWIZARD_H
+#define DEVICEWIZARD_H
 
 #include <QWizard>
 
-class newDeviceWizard : public QWizard
+class DeviceWizard : public QWizard
 {
-Q_OBJECT
+    Q_OBJECT
+
 public:
-    explicit newDeviceWizard(const QString &configName, QWidget * parent = 0);
+    explicit DeviceWizard( const QString &configName, QWidget * parent = 0 );
 };
 
 #endif

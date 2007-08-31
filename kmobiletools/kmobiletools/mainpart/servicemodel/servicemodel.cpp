@@ -219,7 +219,7 @@ void ServiceModel::serviceLoaded( const QString& deviceName, KMobileTools::CoreS
 
         deviceItem->appendChild( serviceItem );
 
-        connect( deviceItem, SIGNAL(dataChanged(TreeItem*)), this, SLOT(dataChanged(TreeItem*)) );
+        connect( serviceItem, SIGNAL(dataChanged(TreeItem*)), this, SLOT(itemDataChanged(TreeItem*)) );
     }
 }
 

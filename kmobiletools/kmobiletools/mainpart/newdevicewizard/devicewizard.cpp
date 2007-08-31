@@ -18,7 +18,8 @@
    Boston, MA 02110-1301, USA.
  ***************************************************************************/
 
-#include "newdevicewizard.h"
+#include "devicewizard.h"
+
 #include "firstpage.h"
 #include "lastpage.h"
 
@@ -27,8 +28,8 @@
 #include <klocalizedstring.h>
 #include <kiconloader.h>
 
-newDeviceWizard::newDeviceWizard(const QString &configName, QWidget * parent)
-    : QWizard(parent)
+DeviceWizard::DeviceWizard( const QString &configName, QWidget * parent )
+    : QWizard( parent )
 {
     setObjectName(configName);
     QPixmap wizardLogoPixmap;
@@ -42,4 +43,4 @@ newDeviceWizard::newDeviceWizard(const QString &configName, QWidget * parent)
     setPage( 0xFFFF, curpage);
 }
 
-#include "newdevicewizard.moc"
+#include "devicewizard.moc"

@@ -27,15 +27,15 @@
 FakeEngine::FakeEngine( QObject *parent, const QString& deviceName )
  : EngineXP( parent, deviceName )
 {
-    QWidget* widget = new QWidget( 0 );
-    QVBoxLayout* layout = new QVBoxLayout( widget );
+    m_widget = new QWidget( 0 );
+    QVBoxLayout* layout = new QVBoxLayout( m_widget );
     m_status = new QTextEdit();
     m_status->setReadOnly( true );
     layout->addWidget( m_status );
 
-    widget->resize( 300, 300 );
-    widget->setWindowTitle( "Fake engine output" );
-    widget->show();
+    m_widget->resize( 300, 300 );
+    m_widget->setWindowTitle( "Fake engine output" );
+    m_widget->show();
 
     status( "FakeEngine loaded." );
 
@@ -53,6 +53,7 @@ void FakeEngine::status( const QString& statusInformation )
 
 FakeEngine::~FakeEngine()
 {
+    delete m_widget;
 }
 
 void FakeEngine::connectDevice()

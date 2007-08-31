@@ -113,9 +113,12 @@ void ServiceLoader::loadServices( const QString& deviceName ) {
 }
 
 void ServiceLoader::unloadServices( const QString& deviceName ) {
+    kDebug() << "unloading service for " << deviceName;
+    kDebug() << d->m_loadedServices;
     if( d->m_loadedServices.contains( deviceName ) ) {
         QList<KMobileTools::CoreService*> services = d->m_loadedServices.values( deviceName );
         for( int i=0; i<services.size(); i++ ) {
+            kDebug() << "about to unload service for " << deviceName;
             emit aboutToUnloadService( deviceName, services.value( i ) );
             /// @warning deleting the service here could cause a problem
             /// since a slot that is connected to the aboutToUnloadService signal
@@ -126,6 +129,7 @@ void ServiceLoader::unloadServices( const QString& deviceName ) {
 
         d->m_loadedServices.remove( deviceName );
     }
+    kDebug() << "done.";
 }
 
 QList<KMobileTools::CoreService*> ServiceLoader::service( const QString& deviceName, const QStringList& interfaces ) const {

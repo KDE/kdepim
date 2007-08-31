@@ -95,16 +95,12 @@ public:
     KSystemTrayIcon * sysTray() { return p_sysTray; }
     KParts::StatusBarExtension *statusBarExtension() { return p_statusBarExtension;}
 
-public Q_SLOTS:
-    void loadDevicePart(const QString &deviceName, bool setActive=false);
-    void configSlot( const QString& command );
-    void deleteDevicePart(const QString &deviceName);
-    void slotConfigNotify();
-
 private Q_SLOTS:
     void goHome();
     void nextPart();
     void prevPart();
+
+    void slotConfigNotify();
 
     /**
      * This slot is called when a service is about to be removed.

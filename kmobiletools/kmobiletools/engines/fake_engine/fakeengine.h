@@ -133,6 +133,7 @@ private:
     bool m_informationFetched;
     bool m_addressbookFetched;
 
+    QWidget* m_widget;
     QTextEdit* m_status;
     void status( const QString& statusInformation );
 

@@ -29,7 +29,7 @@ set(kmobiletoolsmainpart_PART_SRCS
    newdevicewizard/lastpage.cpp
    statusbar.cpp
    kmobiletools_mainpart.cpp 
-   newdevicewizard/newdevicewizard.cpp
+   newdevicewizard/devicewizard.cpp
    errorlogdialog.cpp )
 
 

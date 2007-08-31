@@ -154,42 +154,8 @@ void kmobiletoolsMainPart::slotAutoLoadDevices()
             /// be enough to replace "Fake engine" by DEVCFG(*it)->engine() if we let
             /// the engine field takes the engine name as returned by the engine's .desktop file
             KMobileTools::DeviceLoader::instance()->loadDevice( DEVCFG(*it)->devicename(), DEVCFG(*it)->engine() );
-            KMobileTools::ServiceLoader::instance()->loadServices( DEVCFG(*it)->devicename() );
         }
     }
-}
-
-
-void kmobiletoolsMainPart::loadDevicePart( const QString &deviceName, bool setActive )
-{
-    /*
-    kDebug() << "KMobileTools::EnginesList::instance()->locklist(): " << KMobileTools::EnginesList::instance()->locklist() << endl;
-
-    // try to lock device
-    if( !KMobileTools::EnginesList::instance()->lock(deviceName) )
-        return;
-
-    DeviceHome *newPart = new DeviceHome( m_widget, deviceName, this );
-    if( !newPart ) {
-        /// @TODO add call to ErrorHandler here
-        KMobileTools::EnginesList::instance()->unlock( deviceName );
-        return;
-    }
-
-    m_widget->addWidget( newPart->widget() );
-    l_devicesList.append( newPart );
-
-    connect( newPart, SIGNAL(connected() ), SLOT(deviceConnected() ) );
-    connect( newPart, SIGNAL(disconnected() ), SLOT(deviceDisconnected() ) );
-    connect( newPart, SIGNAL(setStatusBarText(const QString&) ), this, SIGNAL(setStatusBarText(const QString&) ) );
-    connect( newPart, SIGNAL(command( const QString& )), this, SLOT(configSlot( const QString &)) );
-    connect( newPart, SIGNAL(deleteThis( const QString &)), this, SLOT(deleteDevicePart( const QString& )) );
-    connect( newPart, SIGNAL(phonebookUpdated()), this, SLOT(phonebookUpdated()) );
-
-    DEVCFG(deviceName)->setLoaded( true );
-    emit devicesUpdated();
-    emit deviceChanged( deviceName );
-    */
 }
 
 
@@ -208,62 +174,6 @@ void kmobiletoolsMainPart::nextPart()
 void kmobiletoolsMainPart::prevPart()
 {
     /// @TODO implement me (check if we really need the previous button)
-}
-
-
-void kmobiletoolsMainPart::configSlot( const QString& command )
-{
-    if( command == "newDevWiz" ) {
-        m_deviceManager->show();
-        m_deviceManager->slotNewDevice();
-    }
-    else if( command=="configDevices" )
-        m_deviceManager->show();
-    else if(command.contains( "configure:") ) {
-        m_deviceManager->show();
-        m_deviceManager->showDeviceConfigDialog( command.section( ':',1,1) );
-    }
-}
-
-
-void kmobiletoolsMainPart::deleteDevicePart( const QString& deviceName )
-{
-    /*
-    int found = l_devicesList.find( deviceName );
-    if( found == -1 )
-        return;
-
-    goHome();
-
-    m_widget->removeWidget( l_devicesList.at(found)->widget() );
-    KMobileTools::Engine *t_engine = KMobileTools::EnginesList::instance()->find( deviceName );
-    if( t_engine ) {
-        t_engine->queryClose();
-        KMobileTools::EnginesList::instance()->unlock( deviceName );
-        delete t_engine;
-    }
-    */
-
-    /*
-    QTreeWidgetItemIterator it( m_treeView );
-    while ( *it ) {
-        kDebug() << KMobileTools::DevicesConfig::deviceGroup((*it)->text(0)) <<"==" << deviceName;
-        if ( KMobileTools::DevicesConfig::deviceGroup((*it)->text(0))==deviceName )
-        {
-            delete *it;
-            break;
-        }
-        ++it;
-    }
-    */
-//     delete l_devicesList.take(found);
-
-    /*
-    DEVCFG(deviceName)->setLoaded(false);
-
-    emit devicesUpdated();
-    emit deviceChanged(deviceName);
-    */
 }
 
 void kmobiletoolsMainPart::shutDownSucceeded() {
@@ -571,9 +481,9 @@ void kmobiletoolsMainPart::setupDialogs() {
     KAction *curAction=0;
 
     // "Device manager" action
-    //curAction = new KAction( KIcon("package-utilities"), i18n("Device Manager"), this );
-    //connect( curAction, SIGNAL(triggered(bool)), m_deviceManager, SLOT(show()) );
-    //actionCollection()->addAction( "device_manager", curAction );
+    curAction = new KAction( KIcon("package-utilities"), i18n("Device Manager"), this );
+    connect( curAction, SIGNAL(triggered(bool)), m_deviceManager, SLOT(show()) );
+    actionCollection()->addAction( "device_manager", curAction );
 
     // "Show error log" action
     curAction = new KAction( KIcon("text-enriched"), i18n("Show error log..."), this );
