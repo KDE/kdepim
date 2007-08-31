@@ -82,6 +82,8 @@ class ExtensionManager : public QObject
      */
     bool isQuickEditVisible() const;
 
+    QWidget *activeDetailsWidget() const;
+ 
   public slots:
     void setSelectionChanged();
     void createActions();
@@ -110,6 +112,7 @@ class ExtensionManager : public QObject
     KActionCollection *mActionCollection;
     QSplitter *mSplitter;
     QWidgetStack *mDetailsStack; 
+    QWidget *mActiveDetailsWidget;
 };
 
 #endif

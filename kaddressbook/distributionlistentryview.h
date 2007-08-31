@@ -3,8 +3,11 @@
 
 #include <libkdepim/distributionlist.h>
 
+#include <qmap.h>
+#include <qstring.h>
 #include <qwidget.h>
 
+class QBoxLayout;
 class QButtonGroup;
 class QGridLayout;
 class QLabel;
@@ -25,14 +28,20 @@ public:
     explicit DistributionListEntryView( KAB::Core* core, QWidget* parent = 0 );
     void setEntry( const KPIM::DistributionList& list, const KPIM::DistributionList::Entry& entry );
 
-private:
-    void writeBackChanges();
+
+signals:
+    void distributionListSelected( const QString& distributionList );
+
+private slots:
+    void emailButtonClicked( int id );
 
 private:
+    QMap<int, QString> m_idToEmail;
     KAB::Core* m_core;
     KPIM::DistributionList m_list;
     KPIM::DistributionList::Entry m_entry;
     QGridLayout* m_radioLayout;
+    QBoxLayout* m_mainLayout;
     QButtonGroup* m_emailGroup;
     QLabel* m_addresseeLabel;
     KURLLabel* m_distListLabel;

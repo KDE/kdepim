@@ -13,43 +13,48 @@
 #include <qlayout.h>
 #include <qradiobutton.h>
 #include <qstringlist.h>
+#include <qvbuttongroup.h>
 
 KAB::DistributionListEntryView::DistributionListEntryView( KAB::Core* core, QWidget* parent ) : QWidget( parent ), m_core( core ), m_emailGroup( 0 )
 {
 
-    QBoxLayout* mainLayout = new QVBoxLayout( this );
-    mainLayout->setSpacing( KDialog::spacingHint() );
+    m_mainLayout = new QVBoxLayout( this );
+    m_mainLayout->setSpacing( KDialog::spacingHint() );
+    m_mainLayout->setMargin( KDialog::marginHint() );
 
-    QBoxLayout* headerLayout = new QHBoxLayout;
+    QGridLayout* headerLayout = new QGridLayout;
     headerLayout->setSpacing( KDialog::spacingHint() );
 
     m_imageLabel = new QLabel( this );
     m_imageLabel->setAutoResize( true );
-    headerLayout->addWidget( m_imageLabel );
+    headerLayout->addWidget( m_imageLabel, 0, 0 );
 
+    QBoxLayout* addresseeLayout = new QVBoxLayout;
     m_addresseeLabel = new QLabel( this );
-    headerLayout->addWidget( m_addresseeLabel );
-
-    headerLayout->addStretch();
-    mainLayout->addItem( headerLayout );
+    addresseeLayout->addWidget( m_addresseeLabel );
+    addresseeLayout->addStretch();
+    headerLayout->addItem( addresseeLayout, 0, 1 );
+    headerLayout->setColStretch( 2, 1 );
+    m_mainLayout->addItem( headerLayout );
 
 
     QBoxLayout* distLayout = new QHBoxLayout;
     distLayout->setSpacing( KDialog::spacingHint() );
 
     QLabel* distLabel = new QLabel( this );
-    distLabel->setText( i18n( "Distribution list:" ) );
+    distLabel->setText( i18n( "<b>Distribution list:</b>" ) );
+    distLabel->setAlignment( Qt::SingleLine );
     distLayout->addWidget( distLabel );
 
     m_distListLabel = new KURLLabel( this );
     distLayout->addWidget( m_distListLabel );
     distLayout->addStretch();
-    mainLayout->addItem( distLayout );
+    m_mainLayout->addItem( distLayout );
 
     QLabel* emailLabel = new QLabel( this );
-    emailLabel->setText( i18n( "Email address to use in this list:" ) );
-
-    mainLayout->addWidget( emailLabel );
+    emailLabel->setText( i18n( "<b>Email address to use in this list:</b>" ) );
+    emailLabel->setAlignment( Qt::SingleLine );
+    m_mainLayout->addWidget( emailLabel );
 
     QBoxLayout* emailLayout = new QHBoxLayout;
     emailLayout->setSpacing( KDialog::spacingHint() );
@@ -58,9 +63,20 @@ KAB::DistributionListEntryView::DistributionListEntryView( KAB::Core* core, QWid
     m_radioLayout = new QGridLayout;
     emailLayout->addItem( m_radioLayout );
     emailLayout->addStretch();
-    mainLayout->addItem( emailLayout );
+    m_mainLayout->addItem( emailLayout );
 
-    mainLayout->addStretch();
+    m_mainLayout->addStretch();
+}
+
+void KAB::DistributionListEntryView::emailButtonClicked( int id )
+{
+    const QString email = m_idToEmail[ id ];
+    if ( m_entry.email == email )
+        return;
+    m_list.removeEntry( m_entry.addressee, m_entry.email );
+    m_entry.email = email;
+    m_list.insertEntry( m_entry.addressee, m_entry.email );
+    m_core->addressBook()->insertAddressee( m_list ); 
 }
 
 void KAB::DistributionListEntryView::setEntry( const KPIM::DistributionList& list, const KPIM::DistributionList::Entry& entry )
@@ -76,28 +92,28 @@ void KAB::DistributionListEntryView::setEntry( const KPIM::DistributionList& lis
 
     if ( m_emailGroup )
         delete m_emailGroup;
-    m_emailGroup = new QButtonGroup( this );
+    m_emailGroup = new QVButtonGroup( this );
     m_emailGroup->setFlat( true );
     m_emailGroup->setExclusive( true );
-    m_radioLayout->addWidget( m_emailGroup, 0, 0 );
 
     const QString preferred = m_entry.email.isNull() ? m_entry.addressee.preferredEmail() : m_entry.email;
     const QStringList mails = m_entry.addressee.emails();
+    m_idToEmail.clear();
     for ( QStringList::ConstIterator it = mails.begin(); it != mails.end(); ++it )
     {
         QRadioButton* button = new QRadioButton( m_emailGroup );
         button->setText( *it );
+        m_idToEmail.insert( m_emailGroup->insert( button ), *it );
         if ( *it == preferred )
             button->setChecked( true );
+        button->setShown( true );
     }
+    connect( m_emailGroup, SIGNAL( clicked( int ) ), 
+             this, SLOT( emailButtonClicked( int ) ) ); 
+    m_radioLayout->addWidget( m_emailGroup, 0, 0 );
+    m_emailGroup->setShown( true );
+    m_mainLayout->invalidate();
 }
 
-void KAB::DistributionListEntryView::writeBackChanges()
-{
-    m_list.removeEntry( m_entry.addressee, m_entry.email );
-    //read changes
-    m_list.insertEntry( m_entry.addressee, m_entry.email );
-    m_core->addressBook()->insertAddressee( m_list ); 
-}
 
 #include "distributionlistentryview.moc"

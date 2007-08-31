@@ -1486,6 +1486,8 @@ void KABCore::setSelectedDistributionList( const QString &name )
   mDistListButtonWidget->setShown( !mSelectedDistributionList.isNull() );
   if ( !name.isNull() )
     mDetailsStack->raiseWidget( mDistListEntryView );
+  else
+      mDetailsStack->raiseWidget( mExtensionManager->activeDetailsWidget() ? mExtensionManager->activeDetailsWidget() : mDetailsWidget );
 }
 
 QStringList KABCore::distributionListNames() const

@@ -47,7 +47,7 @@ ExtensionData::ExtensionData() : action( 0 ), widget( 0 ), weight( 0 ), isDetail
 ExtensionManager::ExtensionManager( QWidget* extensionBar, QWidgetStack* detailsStack, KAB::Core *core, QObject *parent,
                                     const char *name )
     : QObject( parent, name ), mExtensionBar( extensionBar ), mCore( core ), 
-      mMapper( 0 ), mDetailsStack( detailsStack )
+      mMapper( 0 ), mDetailsStack( detailsStack ), mActiveDetailsWidget( 0 )
 {
   Q_ASSERT( mExtensionBar ); 
   QVBoxLayout* layout = new QVBoxLayout( mExtensionBar );
@@ -133,8 +133,8 @@ void ExtensionManager::setExtensionActive( const QString& extid, bool active )
     mActiveExtensions.append( extid );
     if ( data.widget ) {
       if ( data.isDetailsExtension ) {
+        mActiveDetailsWidget = data.widget;
         emit detailsWidgetActivated( data.widget );
-        mDetailsStack->raiseWidget( data.widget );
       } else {
           data.widget->show();
       }
@@ -145,8 +145,10 @@ void ExtensionManager::setExtensionActive( const QString& extid, bool active )
     if ( data.widget && !data.isDetailsExtension ) {
       data.widget->hide();
     }
-    if ( data.isDetailsExtension )
+    if ( data.isDetailsExtension ) {
+      mActiveDetailsWidget = 0;
       emit detailsWidgetDeactivated( data.widget );
+    }
   }
   mExtensionBar->setShown( !mActiveExtensions.isEmpty() );
 }
@@ -177,6 +179,11 @@ void ExtensionManager::createActions()
   }
 
   mCore->guiClient()->plugActionList( "extensions_list", mActionList );
+}
+
+QWidget* ExtensionManager::activeDetailsWidget() const
+{
+    return mActiveDetailsWidget;
 }
 
 void ExtensionManager::createExtensionWidgets()
