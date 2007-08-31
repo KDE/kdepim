@@ -1455,9 +1455,9 @@ void KABCore::removeSelectedContactsFromDistList()
   setModified();
 }
 
-void KABCore::sendMailToDistributionList( const QString &id )
+void KABCore::sendMailToDistributionList( const QString &name )
 {
-  KPIM::DistributionList dist = KPIM::DistributionList::findByName( addressBook(), id );
+  KPIM::DistributionList dist = KPIM::DistributionList::findByName( addressBook(), name );
   if ( dist.isEmpty() )
     return;
   typedef KPIM::DistributionList::Entry::List EntryList; 
@@ -1466,6 +1466,11 @@ void KABCore::sendMailToDistributionList( const QString &id )
   for ( EntryList::ConstIterator it = entries.begin(); it != entries.end(); ++it )
     mails += (*it).addressee.fullEmail( (*it).email );
   sendMail( mails.join( ", " ) ); 
+}
+
+void KABCore::editDistributionList( const QString &name )
+{
+  editDistributionList( KPIM::DistributionList::findByName( addressBook(), name ) );
 }
 
 void KABCore::editDistributionList( const KPIM::DistributionList &dist )

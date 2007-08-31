@@ -391,6 +391,8 @@ class KDE_EXPORT KABCore : public KAB::Core
     void activateDetailsWidget( QWidget *widget );
     void deactivateDetailsWidget( QWidget *widget );
 
+    void editDistributionList( const QString &name );
+
 #ifdef KDEPIM_NEW_DISTRLISTS
     void removeSelectedContactsFromDistList();
     void editSelectedDistributionList();

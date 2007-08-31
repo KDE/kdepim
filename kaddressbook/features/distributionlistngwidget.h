@@ -75,8 +75,13 @@ public:
     //impl
     QString identifier() const;
 
+
+
 private slots:
-    
+
+    void deleteSelectedDistributionList();    
+    void editSelectedDistributionList();    
+
     void contextMenuRequested( QListBoxItem *item, const QPoint &point );
     void updateEntries();
     void itemSelected( int index );

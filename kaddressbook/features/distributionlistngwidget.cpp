@@ -122,6 +122,8 @@ KAB::DistributionListNg::MainWidget::MainWidget( KAB::Core *core, QWidget *paren
     layout->addWidget( label );
 
     mListBox = new ListBox( this );
+    connect( mListBox, SIGNAL( contextMenuRequested( QListBoxItem*, const QPoint& ) ), 
+             this, SLOT( contextMenuRequested( QListBoxItem*, const QPoint& ) ) );
     connect( mListBox, SIGNAL( dropped( const QString &, const KABC::Addressee::List & ) ), 
              this, SLOT( contactsDropped( const QString &, const KABC::Addressee::List & ) ) );
     connect( mListBox, SIGNAL( highlighted( int ) ), 
@@ -143,8 +145,37 @@ KAB::DistributionListNg::MainWidget::MainWidget( KAB::Core *core, QWidget *paren
  
 void KAB::DistributionListNg::MainWidget::contextMenuRequested( QListBoxItem *item, const QPoint &point )
 {
-} 
+    QGuardedPtr<KPopupMenu> menu = new KPopupMenu( this );
+    menu->insertItem( i18n( "New Distribution List..." ), core(), SLOT( newDistributionList() ) ); 
+    if ( item )
+    {
+        menu->insertItem( i18n( "Edit..." ), this, SLOT( editSelectedDistributionList() ) ); 
+        menu->insertItem( i18n( "Delete" ), this, SLOT( deleteSelectedDistributionList() ) ); 
+    }
+    menu->exec( point );
+    delete menu;
+}
 
+void KAB::DistributionListNg::MainWidget::editSelectedDistributionList()
+{
+    const QListBoxItem* const item = mListBox->selectedItem();
+    if ( !item )
+        return;
+    core()->editDistributionList( item->text() );
+}
+
+void KAB::DistributionListNg::MainWidget::deleteSelectedDistributionList()
+{
+    const QListBoxItem* const item = mListBox->selectedItem();
+    const QString name = item ? item->text() : QString();
+    if ( name.isNull() )
+        return;
+    KPIM::DistributionList list = KPIM::DistributionList::findByName(
+    core()->addressBook(), name );
+    if ( list.isEmpty() )
+        return;
+    core()->addressBook()->removeAddressee( list );    
+}
 
 void KAB::DistributionListNg::MainWidget::contactsDropped( const QString &listName, const KABC::Addressee::List &addressees )
 {

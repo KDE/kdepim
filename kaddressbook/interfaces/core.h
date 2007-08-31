@@ -182,6 +182,11 @@ class KDE_EXPORT Core : public QObject
      */
     virtual void editContact( const QString &uid = QString::null ) = 0;
 
+    /**
+      Shows an edit dialog for the given distribution list 
+    */
+    virtual void editDistributionList( const QString &name ) = 0;
+
   private:
     KXMLGUIClient *mGUIClient;
 };
