@@ -321,7 +321,7 @@ void kmobiletoolsMainPart::slotQuit()
             QTimer::singleShot( 0, this, SLOT(slotFinallyQuit()) );
 
     } else
-        slotFinallyQuit();
+        QTimer::singleShot( 0, this, SLOT(slotFinallyQuit()) );
 }
 
 

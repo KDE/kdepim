@@ -38,7 +38,7 @@ ErrorLogDialog::ErrorLogDialog( QWidget* parent )
     m_errorDetailsTextEdit = new KTextEdit( this );
     m_errorDetailsTextEdit->setReadOnly( true );
 
-    QVBoxLayout* layout = new QVBoxLayout( this );
+    QVBoxLayout* layout = new QVBoxLayout();
     layout->addWidget( m_errorLogListWidget );
     layout->addWidget( m_errorDetailsTextEdit );
 
