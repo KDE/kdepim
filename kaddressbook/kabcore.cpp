@@ -410,6 +410,29 @@ void KABCore::deleteContacts()
   deleteContacts( uidList );
 }
 
+void KABCore::deleteDistributionLists( const QStringList & uids )
+{
+  if ( uids.count() > 0 ) {
+    QStringList names;
+    QStringList::ConstIterator it = uids.begin();
+    const QStringList::ConstIterator endIt( uids.end() );
+    while ( it != endIt ) {
+      KABC::Addressee addr = mAddressBook->findByUid( *it );
+      names.append( addr.name() );
+      ++it;
+    }
+
+    if ( KMessageBox::warningContinueCancelList( mWidget, i18n( "Do you really want to delete this distribution list?",
+                                                 "Do you really want to delete these %n distribution lists?", uids.count() ),
+                                                 names, QString::null, KStdGuiItem::del() ) == KMessageBox::Cancel )
+      return;
+
+    DeleteCommand *command = new DeleteCommand( mAddressBook, uids );
+    mCommandHistory->addCommand( command );  
+    setModified( true );
+  }
+}
+
 void KABCore::deleteContacts( const QStringList &uids )
 {
   if ( uids.count() > 0 ) {

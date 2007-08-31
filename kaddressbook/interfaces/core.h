@@ -109,6 +109,13 @@ class KDE_EXPORT Core : public QObject
      */
     virtual void deleteContacts( const QStringList &uids ) = 0;
 
+    /**
+      Deletes given contacts from the address book.
+
+      @param uids The uids of the contacts, which shall be deleted.
+     */
+    virtual void deleteDistributionLists( const QStringList &uids ) = 0;
+
 #ifdef KDEPIM_NEW_DISTRLISTS
     /**
       Returns all the distribution lists.

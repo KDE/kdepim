@@ -170,11 +170,11 @@ void KAB::DistributionListNg::MainWidget::deleteSelectedDistributionList()
     const QString name = item ? item->text() : QString();
     if ( name.isNull() )
         return;
-    KPIM::DistributionList list = KPIM::DistributionList::findByName(
+    const KPIM::DistributionList list = KPIM::DistributionList::findByName(
     core()->addressBook(), name );
     if ( list.isEmpty() )
         return;
-    core()->addressBook()->removeAddressee( list );    
+    core()->deleteDistributionLists( list.uid() );
 }
 
 void KAB::DistributionListNg::MainWidget::contactsDropped( const QString &listName, const KABC::Addressee::List &addressees )
@@ -192,8 +192,13 @@ void KAB::DistributionListNg::MainWidget::contactsDropped( const QString &listNa
     }
 
     core()->addressBook()->insertAddressee( list );
-//    changed( list ); // TODO
+    changed( list );
 } 
+
+void KAB::DistributionListNg::MainWidget::changed( const KABC::Addressee& dist )
+{
+    emit modified( KABC::Addressee::List() << dist );
+}
 
 void KAB::DistributionListNg::MainWidget::updateEntries()
 {

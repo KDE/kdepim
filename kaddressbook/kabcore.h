@@ -212,6 +212,14 @@ class KDE_EXPORT KABCore : public KAB::Core
     void deleteContacts( const QStringList &uids );
 
     /**
+      Deletes given distribution lists from the address book.
+
+      @param uids The uids of the distribution lists, which shall be deleted.
+     */
+    void deleteDistributionLists( const QStringList &uids );
+
+
+    /**
       Copys the selected contacts into clipboard for later pasting.
      */
     void copyContacts();

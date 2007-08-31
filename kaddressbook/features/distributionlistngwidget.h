@@ -76,6 +76,8 @@ public:
     QString identifier() const;
 
 
+private:
+    void changed( const KABC::Addressee& );
 
 private slots:
 
