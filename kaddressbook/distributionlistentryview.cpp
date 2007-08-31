@@ -5,6 +5,7 @@
 #include <kabc/addressbook.h>
 
 #include <kdialog.h>
+#include <kiconloader.h>
 #include <klocale.h>
 #include <kurllabel.h>
 
@@ -21,19 +22,17 @@ KAB::DistributionListEntryView::DistributionListEntryView( KAB::Core* core, QWid
     m_mainLayout->setSpacing( KDialog::spacingHint() );
     m_mainLayout->setMargin( KDialog::marginHint() );
 
-    QGridLayout* headerLayout = new QGridLayout;
-    headerLayout->setSpacing( KDialog::spacingHint() );
+    QBoxLayout* headerLayout = new QHBoxLayout;
+    headerLayout->setSpacing( KDialog::spacingHint() * 3 );
 
     m_imageLabel = new QLabel( this );
     m_imageLabel->setAutoResize( true );
-    headerLayout->addWidget( m_imageLabel, 0, 0 );
+    headerLayout->addWidget( m_imageLabel, 0, Qt::AlignTop );
 
-    QBoxLayout* addresseeLayout = new QVBoxLayout;
     m_addresseeLabel = new QLabel( this );
-    addresseeLayout->addWidget( m_addresseeLabel );
-    addresseeLayout->addStretch();
-    headerLayout->addItem( addresseeLayout, 0, 1 );
-    headerLayout->setColStretch( 2, 1 );
+    headerLayout->addWidget( m_addresseeLabel, 0, Qt::AlignTop );
+    headerLayout->addStretch();
+
     m_mainLayout->addItem( headerLayout );
 
     QBoxLayout* distLayout = new QHBoxLayout;
@@ -91,17 +90,17 @@ void KAB::DistributionListEntryView::setEntry( const KPIM::DistributionList& lis
 
     if ( m_emailGroup )
         delete m_emailGroup;
-
     QPixmap pixmap;
     pixmap.convertFromImage( m_entry.addressee.photo().data() );
-    m_imageLabel->setPixmap( pixmap );
-    m_addresseeLabel->setText( i18n( "Formatted name, role, organization", "<qt><h1>%1</h1><p>%2<br/>%3</p></qt>" ).arg( m_entry.addressee.formattedName(), m_entry.addressee.role(), m_entry.addressee.organization() ) );
+    m_imageLabel->setPixmap( pixmap.isNull() ? KGlobal::iconLoader()->loadIcon( "personal", KIcon::Desktop ) : pixmap );
+    m_addresseeLabel->setText( i18n( "Formatted name, role, organization", "<qt><h2>%1</h2><p>%2<br/>%3</p></qt>" ).arg( m_entry.addressee.formattedName(), m_entry.addressee.role(), m_entry.addressee.organization() ) );
     m_distListLabel->setURL( m_list.name() );
     m_distListLabel->setText( m_list.name() );
 
     m_emailGroup = new QVButtonGroup( this );
     m_emailGroup->setFlat( true );
     m_emailGroup->setExclusive( true );
+    m_emailGroup->setFrameShape( QFrame::NoFrame );
 
     const QString preferred = m_entry.email.isNull() ? m_entry.addressee.preferredEmail() : m_entry.email;
     const QStringList mails = m_entry.addressee.emails();
