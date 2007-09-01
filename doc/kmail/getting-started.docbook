@@ -50,7 +50,7 @@ messages.</para>
 
 <para>The Configure window consists of six sections:
 <guilabel>Identities</guilabel>, <guilabel>Network</guilabel>,
-<guilabel>Appearance</guilabel>, <guilabel>Composer</guilabel>, 
+<guilabel>Appearance</guilabel>, <guilabel>Composer</guilabel>,
 <guilabel>Security</guilabel>, and
 <guilabel>Misc</guilabel>.</para>
 
@@ -115,10 +115,10 @@ means a local software installation -- this has a
 reputation of being difficult to set up, so if you do not already have a
 working &Sendmail; configuration, choose
 <guilabel>SMTP</guilabel> and fill in the <guilabel>Name</guilabel>
-field with a descriptive name 
+field with a descriptive name
 (&eg; <userinput>My Mail Account</userinput>)
 and the <guilabel>Host</guilabel>
-field with the name and domain of your mail server 
+field with the name and domain of your mail server
 (&eg; <userinput>smtp.provider.com</userinput>). You will probably
 not need to change the <guilabel>Port</guilabel> setting (the default is
 <userinput>25</userinput>).</para>
@@ -144,7 +144,7 @@ chapter.</para>
 <sect3 id="sending-mail-kolab">
 <title>Options relevant to <acronym>Kolab</acronym> server</title>
 
-<para>When configuring a <guilabel>SMTP</guilabel> account with a <guilabel>Kolab</guilabel> server Host, you need to check the <guilabel>Server requires authentification</guilabel> option and to fill in your <guilabel>Kolab</guilabel> user's email address and password in the <guilabel>Login</guilabel> and <guilabel>Password</guilabel> fields. Select then the <guilabel>Security</guilabel> tab and click on the <guibutton>Check What the Server Supports</guibutton> for automated setup of your <guilabel>Security</guilabel> configuration. The default should be <guilabel>TLS/PLAIN</guilabel>. The <guilabel>Kolab</guilabel> server supports  <guilabel>SSL/PLAIN</guilabel> as well. Those settings may of course be configured manually.</para>
+<para>When configuring a <guilabel>SMTP</guilabel> account with a <guilabel>Kolab</guilabel> server Host, you need to check the <guilabel>Server requires authentication</guilabel> option and to fill in your <guilabel>Kolab</guilabel> user's email address and password in the <guilabel>Login</guilabel> and <guilabel>Password</guilabel> fields. Select then the <guilabel>Security</guilabel> tab and click on the <guibutton>Check What the Server Supports</guibutton> for automated setup of your <guilabel>Security</guilabel> configuration. The default should be <guilabel>TLS/PLAIN</guilabel>. The <guilabel>Kolab</guilabel> server supports  <guilabel>SSL/PLAIN</guilabel> as well. Those settings may of course be configured manually.</para>
 </sect3>
 </sect2>
 
@@ -157,7 +157,7 @@ tab. You will then be prompted for the type of your email account.  Most users s
 select <guilabel>POP3</guilabel> or <guilabel>IMAP</guilabel>. If
 you want to use a local mailbox file, please see the <link linkend="faq-file-locking">FAQ
 about file locking</link>.</para>
-        
+
 <para>You will then be presented with
 the <guilabel>Add account</guilabel> window. First, fill in the
 <guilabel>Name</guilabel> field to name your account. You can choose any name
@@ -173,22 +173,22 @@ need to change the <guilabel>Port</guilabel> setting (the default for POP3 is
 <para>
 select <guilabel>Disconnected IMAP</guilabel> when choosing your <guilabel>Account Type</guilabel>. Fill in the <guilabel>Login</guilabel> and <guilabel>Password</guilabel> fields with respectively your user email address and password on the <guilabel>Kolab</guilabel> server. In the <guilabel>Security</guilabel> section click on the <guilabel>Check What the Server Support</guilabel> button for automated set-up of your <guilabel>Security</guilabel> configuration. The default should be <guilabel>TLS/PLAIN</guilabel>. The <guilabel>Kolab</guilabel> server supports <guilabel>SSL/PLAIN</guilabel> as well. Those settings may of course be configured manually.</para>
 <para>
-If you want to use the <guilabel>"Out of Office" Replies</guilabel> functionality of the <guilabel>Kolab</guilabel> server, set-up the <guilabel>Filtering</guilabel> section of you <guilabel>DIMAP</guilabel> account by checking the <guilabel>Server supports Sieve</guilabel> option as well as <guilabel>Reuse host and login configuration</guilabel>, <guilabel>Managesieve port</guilabel> should be set to 2000 as default. 
+If you want to use the <guilabel>"Out of Office" Replies</guilabel> functionality of the <guilabel>Kolab</guilabel> server, set-up the <guilabel>Filtering</guilabel> section of you <guilabel>DIMAP</guilabel> account by checking the <guilabel>Server supports Sieve</guilabel> option as well as <guilabel>Reuse host and login configuration</guilabel>, <guilabel>Managesieve port</guilabel> should be set to 2000 as default.
 </para>
 </sect3>
 
 <sect3 id="receiving-mail-dimap-misc">
 <title>Options only relevant to DIMAP (<acronym>Kolab</acronym> server)</title>
 <para>
-After having configured your <guilabel>Disconnect IMAP</guilabel> account, you 
-need to activate the <guilabel>Groupware</guilabel> functionalities and set-up 
+After having configured your <guilabel>Disconnect IMAP</guilabel> account, you
+need to activate the <guilabel>Groupware</guilabel> functionalities and set-up
 the <guilabel>Misc</guilabel> page for <guilabel>KMail</guilabel>.
 </para>
 <para>
-In the <guilabel>Misc</guilabel> page, of the <guilabel>Configure</guilabel> dialog, choose the <guilabel>Groupware</guilabel> tab. Check the <guilabel>Enable IMAP resource functionality</guilabel> option and select <guilabel>Kolab (XML)</guilabel> as <guilabel>Format used for the groupware folders</guilabel>. The <guilabel>Resource folders are in account</guilabel> combo-box should be set on the <guilabel>Receiving</guilabel> (kolab user) account of your choice (if you happen to have several accounts).You may if you wish hide the groupware folder by checking this option. It is recommended to check both <guilabel>Groupware Compatibility and Legacy Options</guilabel> for compatibility with an eventual <guilabel>Kolab</guilabel> Microsoft Outlook client for sending invitations and replies from a <guilabel>Kolab</guilabel> KDE client.  
+In the <guilabel>Misc</guilabel> page, of the <guilabel>Configure</guilabel> dialog, choose the <guilabel>Groupware</guilabel> tab. Check the <guilabel>Enable IMAP resource functionality</guilabel> option and select <guilabel>Kolab (XML)</guilabel> as <guilabel>Format used for the groupware folders</guilabel>. The <guilabel>Resource folders are in account</guilabel> combo-box should be set on the <guilabel>Receiving</guilabel> (kolab user) account of your choice (if you happen to have several accounts).You may if you wish hide the groupware folder by checking this option. It is recommended to check both <guilabel>Groupware Compatibility and Legacy Options</guilabel> for compatibility with an eventual <guilabel>Kolab</guilabel> Microsoft Outlook client for sending invitations and replies from a <guilabel>Kolab</guilabel> KDE client.
 </para>
 </sect3>
-        
+
 <sect3 id="receiving-mail-imap">
 <title>Options only relevant to <acronym>IMAP</acronym></title>
 <para>If you are using <acronym>IMAP</acronym>, you can optionally
@@ -198,10 +198,10 @@ have a shell account on the server and the messages are stored in your home
 folder it might be useful to store the messages in a subfolder
 <filename class="directory">Mail</filename>. Use this as a value in
 the <guilabel>Prefix to folders</guilabel> field so that &kmail; does
-not mix up mailbox files and other files. If you are not interested in 
+not mix up mailbox files and other files. If you are not interested in
 this feature, simple leave the field blank.</para>
 
-<para>If you check <guilabel>Automatically compact folders</guilabel> 
+<para>If you check <guilabel>Automatically compact folders</guilabel>
 &kmail; removes the messages you deleted from the
 server as soon as you leave a folder. Otherwise the messages are
 only marked as deleted and it is up to you to compact the folders
@@ -235,8 +235,8 @@ messages. If you want to change that for some reason, you can do so with
 option.</para>
 
 <para>With <guilabel>Precommand</guilabel> you can specify any program that &kmail;
-will execute just before fetching mail. Please specify the full path 
-(do not use <quote>~</quote>) and note that &kmail; will not continue 
+will execute just before fetching mail. Please specify the full path
+(do not use <quote>~</quote>) and note that &kmail; will not continue
 until the program returns.</para>
 
 <para>On the <guilabel>Extras</guilabel> tab you can select <guilabel>Use
@@ -268,7 +268,7 @@ if it is available).</para>
 <listitem><para><guilabel>Clear text</guilabel>, </para></listitem>
 <listitem><para><guilabel>PLAIN</guilabel>, </para></listitem>
 <listitem><para><guilabel>LOGIN</guilabel>, </para></listitem>
-<listitem><para><guilabel>CRAM-MD5</guilabel> (recommended 
+<listitem><para><guilabel>CRAM-MD5</guilabel> (recommended
 if <guilabel>DIGEST-MD5</guilabel> is not available),</para></listitem>
 <listitem><para><guilabel>DIGEST-MD5</guilabel> (recommended) and</para></listitem>
 <listitem><para><guilabel>APOP</guilabel> authentication.</para></listitem>
@@ -312,7 +312,7 @@ Message...</guimenuitem></menuchoice> menu item.  The
 something in the <guilabel>Subject</guilabel> field. Send the message by
 selecting <menuchoice><guimenu>Message</guimenu> <guimenuitem>Send</guimenuitem>
 </menuchoice>.</para>
-      
+
 <para>To check your email, select
 <menuchoice><guimenu>File</guimenu><guimenuitem>Check
 Mail</guimenuitem></menuchoice>. In the lower right corner of the main
