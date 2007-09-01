@@ -78,13 +78,13 @@ namespace Kleo {
       <h3>Executing the command</h3>
 
       \code
-          int start( const std::string & line, const std::map<std::string,QVariant> & options ) {
+          int start( const std::string & line ) {
       \endcode
 
       This should set everything up and check the parameters in \a
-      line and \a options. If there's an error, choose one the the
-      gpg-error codes and create a gpg_error_t from it using the
-      protected makeError() function:
+      line and any options this command understands. If there's an
+      error, choose one the the gpg-error codes and create a
+      gpg_error_t from it using the protected makeError() function:
 
       \code
               return makeError( GPG_ERR_NOT_IMPLEMENTED );
@@ -170,7 +170,7 @@ namespace Kleo {
 
       <h3>Registering the command with UiServer</h3>
 
-      TBD...
+      TBD... (either via prototype command + clone(), or a factory).
 
     */
     class AssuanCommand {
