@@ -1,7 +1,5 @@
 /***************************************************************************
-   Copyright (C) 2007
-   by Marco Gulino <marco@kmobiletools.org>
-   by Matthias Lechner <matthias@lmme.de>
+   Copyright (C) 2007 by Matthias Lechner <matthias@lmme.de>
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -18,31 +16,42 @@
    Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
    Boston, MA 02110-1301, USA.
  ***************************************************************************/
-#ifndef FIRSTPAGE_IMPL_H
-#define FIRSTPAGE_IMPL_H
 
-#include "ui_firstpage.h"
-#include <QWizardPage>
+#ifndef KMOBILETOOLS_IFACESWIZARDPROVIDER_H
+#define KMOBILETOOLS_IFACESWIZARDPROVIDER_H
 
-class FirstPagePrivate;
+#include <libkmobiletools/kmobiletools_export.h>
 
-class FirstPage : public QWizardPage, public Ui::FirstPage
-{
-    Q_OBJECT
+#include <QtGui/QWizardPage>
 
+namespace KMobileTools {
+
+namespace Ifaces {
+
+/**
+ * This interface provides a collection of wizard pages to be used
+ * for the device wizard.
+ *
+ * @author Matthias Lechner <matthias@lmme.de>
+ */
+class KMOBILETOOLS_EXPORT WizardProvider {
 public:
-    FirstPage( QWidget* parent=0 );
+    /**
+     * Returns a list of wizard pages that will be dynamically loaded
+     * at runtime by the device wizard
+     *
+     * @return a list of wizard pages
+     */
+    virtual QList<QWizardPage*> pageList() const = 0;
 
-    bool isFinalPage() const;
-    void initializePage();
-    void cleanupPage();
-    bool validatePage();
+    virtual ~WizardProvider();
 
-public Q_SLOTS:
-    void engineSelected( int index );
-
-private:
-    FirstPagePrivate *d;
 };
+
+}
+
+}
+
+Q_DECLARE_INTERFACE(KMobileTools::Ifaces::WizardProvider, "org.kde.KMobileTools.Ifaces.WizardProvider/0.1")
 
 #endif

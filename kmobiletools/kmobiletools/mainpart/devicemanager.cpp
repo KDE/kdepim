@@ -135,6 +135,9 @@ void DeviceManager::removeDeviceItem( const QString& deviceName ) {
 
 
 void DeviceManager::addDevice() {
+    DeviceWizard* wizard = new DeviceWizard( this );
+    wizard->setModal( true );
+    wizard->show();
 }
 
 
@@ -148,19 +151,19 @@ void DeviceManager::removeDevice() {
         QStringList devices = KMobileTools::MainConfig::devicelist();
         QString internalDeviceName = KMobileTools::DevicesConfig::deviceGroup( deviceName );
 
-        if( !devices.contains( internalDeviceName ) ) {
+        if( devices.contains( internalDeviceName ) ) {
+            // take the device from the list
+            devices.removeAll( internalDeviceName );
+
+            // FIXME: deletePrefs does not work correctly
+            KMobileTools::DevicesConfig::deletePrefs( internalDeviceName );
+
+            KMobileTools::MainConfig::setDevicelist( devices );
+            KMobileTools::MainConfig::self()->writeConfig();
+        } else {
             /// @TODO add call to error handler here
-            return;
+            kDebug() << "device not present in configuration";
         }
-
-        // take the device from the list
-        devices.removeAll( internalDeviceName );
-
-        // FIXME: deletePrefs does not work correctly
-        KMobileTools::DevicesConfig::deletePrefs( internalDeviceName );
-
-        KMobileTools::MainConfig::setDevicelist( devices );
-        KMobileTools::MainConfig::self()->writeConfig();
 
         // unload the device
         KMobileTools::DeviceLoader::instance()->unloadDevice( deviceName );
@@ -172,35 +175,6 @@ void DeviceManager::deviceProperties() {
 }
 
 
-void DeviceManager::slotRemoveDevice() /// Remove device
-{
-/*
-    if (ui.deviceListView->selectedItem() == NULL ) return;
-    QStringList sl_devices = KMobileTools::MainConfig::devicelist();
-    QString deviceName = KMobileTools::DevicesConfig::deviceGroup( ui.deviceListView->selectedItem()->text(0) );
-
-    // If the device is not in the list, well, just skip it
-    if ( ! sl_devices.contains(deviceName) ) {
-      kDebug() <<"Asked to remove the non-present device" << deviceName;
-      return;
-    }
-
-    // Remove the entry from the list of devices
-    int index;
-    QStringList::iterator end = sl_devices.end();
-    while ( (index = sl_devices.indexOf(deviceName)) != -1 )
-      sl_devices.removeAt(index);
-
-    KMobileTools::DevicesConfig::deletePrefs( deviceName );
-
-    KMobileTools::MainConfig::setDevicelist( sl_devices );
-    KMobileTools::MainConfig::self()->writeConfig();
-
-    emit deviceRemoved(deviceName);
-
-    updateView();
-*/
-}
 
 void DeviceManager::slotDeviceProperties() /// Modify device
 {

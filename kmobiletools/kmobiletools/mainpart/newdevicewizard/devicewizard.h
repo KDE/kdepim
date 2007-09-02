@@ -27,7 +27,8 @@ class DeviceWizard : public QWizard
     Q_OBJECT
 
 public:
-    explicit DeviceWizard( const QString &configName, QWidget * parent = 0 );
+    DeviceWizard( QWidget* parent = 0 );
+    ~DeviceWizard();
 };
 
 #endif

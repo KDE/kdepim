@@ -96,11 +96,13 @@ public:
     KParts::StatusBarExtension *statusBarExtension() { return p_statusBarExtension;}
 
 private Q_SLOTS:
-    void goHome();
-    void nextPart();
-    void prevPart();
-
     void slotConfigNotify();
+
+    /**
+     * This slot is called when a device is about to be unloaded.
+     * It unplugs any loaded action list by the device.
+     */
+    void unloadDeviceActions( const QString& );
 
     /**
      * This slot is called when a service is about to be removed.

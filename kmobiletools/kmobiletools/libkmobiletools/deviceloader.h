@@ -104,6 +104,8 @@ Q_SIGNALS:
      */
     void deviceUnloaded( const QString& );
 
+    void aboutToUnloadDevice( const QString& deviceName );
+
 private:
     DeviceLoader();
     DeviceLoaderPrivate* d;

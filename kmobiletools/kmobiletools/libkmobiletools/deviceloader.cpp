@@ -119,6 +119,7 @@ bool DeviceLoader::loadDevice( const QString& deviceName, const QString& engineN
 
 bool DeviceLoader::unloadDevice( const QString& deviceName, bool unloadServices ) {
     if( d->m_loadedDevices.contains( deviceName ) ) {
+        emit aboutToUnloadDevice( deviceName );
         delete d->m_loadedDevices.value( deviceName );
         d->m_loadedDevices.remove( deviceName );
         d->m_engineInformation.remove( deviceName );

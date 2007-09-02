@@ -1,7 +1,5 @@
 /***************************************************************************
-   Copyright (C) 2007
-   by Marco Gulino <marco@kmobiletools.org>
-   by Matthias Lechner <matthias@lmme.de>
+   Copyright (C) 2007 by Matthias Lechner <matthias@lmme.de>
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -18,31 +16,18 @@
    Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
    Boston, MA 02110-1301, USA.
  ***************************************************************************/
-#ifndef FIRSTPAGE_IMPL_H
-#define FIRSTPAGE_IMPL_H
 
-#include "ui_firstpage.h"
-#include <QWizardPage>
+#include "wizardprovider.h"
 
-class FirstPagePrivate;
+namespace KMobileTools {
 
-class FirstPage : public QWizardPage, public Ui::FirstPage
+namespace Ifaces {
+
+WizardProvider::~WizardProvider()
 {
-    Q_OBJECT
+}
 
-public:
-    FirstPage( QWidget* parent=0 );
 
-    bool isFinalPage() const;
-    void initializePage();
-    void cleanupPage();
-    bool validatePage();
+}
 
-public Q_SLOTS:
-    void engineSelected( int index );
-
-private:
-    FirstPagePrivate *d;
-};
-
-#endif
+}

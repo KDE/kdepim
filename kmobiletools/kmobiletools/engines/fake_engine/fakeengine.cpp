@@ -20,6 +20,7 @@
 #include "fakeengine.h"
 
 #include <QtGui/QVBoxLayout>
+#include <QtGui/QLabel>
 #include <QtCore/QMutexLocker>
 #include <QtCore/QTimer>
 #include <KDebug>
@@ -54,6 +55,21 @@ void FakeEngine::status( const QString& statusInformation )
 FakeEngine::~FakeEngine()
 {
     delete m_widget;
+}
+
+QList<QWizardPage*> FakeEngine::pageList() const {
+    /// @TODO implement me
+    QList<QWizardPage*> wizardPages;
+
+    QWizardPage* newPage = new QWizardPage;
+    newPage->setTitle( QString( "Fake page ;-)" ) );
+    newPage->setSubTitle( QString( "This is all fake" ) );
+    QLabel *goOn = new QLabel( newPage );
+    goOn->setText( "Nothing to see here, go on!" );
+
+    wizardPages.append( newPage );
+
+    return wizardPages;
 }
 
 void FakeEngine::connectDevice()

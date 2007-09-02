@@ -48,7 +48,6 @@ private Q_SLOTS:
     void removeDeviceItem( const QString& deviceName );
 
 public slots:
-    void slotRemoveDevice();
     void slotDeviceProperties();
     void slotNewDevice();
     //void doubleClickedItem(Q3ListViewItem *item);

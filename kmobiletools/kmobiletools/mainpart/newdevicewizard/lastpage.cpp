@@ -23,6 +23,7 @@
 #include <libkmobiletools/engineslist.h>
 #include <libkmobiletools/engine.h>
 #include <libkmobiletools/devicesconfig.h>
+#include <libkmobiletools/serviceloader.h>
 
 #include <kiconloader.h>
 #include <kdebug.h>
@@ -41,17 +42,18 @@ LastPage::LastPage(QWidget *parent)
 
 void LastPage::initializePage()
 {
-    summaryTXT->setHtml(getHTMLTemplate() );
+    //summaryTXT->setHtml(getHTMLTemplate() );
 }
 
 bool LastPage::validatePage()
 {
-    KMobileTools::EnginesList::instance()->setWizardEngine();
-    return QWizardPage::validatePage();
+    KMobileTools::ServiceLoader::instance()->loadServices( field( "phoneName" ).toString() );
+    return true;
 }
 
 QString LastPage::getHTMLTemplate() const
 {
+    /*
     QString ret="<div style=\"padding-left : 2em;\"><h2><img src=\"%1\" style=\"vertical-align : middle;\"> %5</h2></div><br> \
             <p><b>%2</b><br>%6<br>%7</p> \
             <p><b>%3</b><br>%8</p> \
@@ -66,6 +68,7 @@ QString LastPage::getHTMLTemplate() const
                 i18n("Engine: %1", KMobileTools::EnginesList::instance()->wizardEngine()->pluginInfo().name() )
                );
     return KMobileTools::EnginesList::instance()->wizardEngine()->parseWizardSummary(ret, wizard()->objectName() );
+    */
 }
 
 #include "lastpage.moc"

@@ -32,6 +32,7 @@
 #include <libkmobiletools/ifaces/status.h>
 #include <libkmobiletools/ifaces/information.h>
 #include <libkmobiletools/ifaces/addressbook.h>
+#include <libkmobiletools/ifaces/wizardprovider.h>
 
 /**
     @author Matthias Lechner <matthias@lmme.de>
@@ -39,11 +40,12 @@
 class FakeEngine : public KMobileTools::EngineXP, // base class
                    public KMobileTools::Ifaces::Status,         // interfaces
                    public KMobileTools::Ifaces::Information,
-                   public KMobileTools::Ifaces::Addressbook
+                   public KMobileTools::Ifaces::Addressbook,
+                   public KMobileTools::Ifaces::WizardProvider
 {
     Q_OBJECT
     Q_INTERFACES(KMobileTools::Ifaces::Status KMobileTools::Ifaces::Information)
-    Q_INTERFACES(KMobileTools::Ifaces::Addressbook)
+    Q_INTERFACES(KMobileTools::Ifaces::Addressbook KMobileTools::Ifaces::WizardProvider)
 
 public:
     FakeEngine( QObject *parent, const QString& deviceName );
@@ -72,6 +74,11 @@ public:
     //
     KMobileTools::AddressbookEntry::MemorySlots availableMemorySlots() const;
     KMobileTools::Addressbook addressbook() const;
+
+    //
+    // WizardProvider interface implementation
+    //
+    QList<QWizardPage*> pageList() const;
 
 public Q_SLOTS:
     void connectDevice();

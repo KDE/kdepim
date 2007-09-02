@@ -149,32 +149,11 @@ void kmobiletoolsMainPart::slotAutoLoadDevices()
 {
     QStringList sl_parts = KMobileTools::MainConfig::devicelist();
     for ( QStringList::Iterator it = sl_parts.begin(); it != sl_parts.end(); ++it ) {
-        if( DEVCFG( *it )->autoload() ) {
-            /// @todo add proper loading of engines here (basically it should
-            /// be enough to replace "Fake engine" by DEVCFG(*it)->engine() if we let
-            /// the engine field takes the engine name as returned by the engine's .desktop file
+        if( DEVCFG( *it )->autoload() )
             KMobileTools::DeviceLoader::instance()->loadDevice( DEVCFG(*it)->devicename(), DEVCFG(*it)->engine() );
-        }
     }
 }
 
-
-void kmobiletoolsMainPart::goHome()
-{
-    /// @TODO implement me (check if we really need the home button)
-}
-
-
-void kmobiletoolsMainPart::nextPart()
-{
-    /// @TODO implement me (check if we really need the next button)
-}
-
-
-void kmobiletoolsMainPart::prevPart()
-{
-    /// @TODO implement me (check if we really need the previous button)
-}
 
 void kmobiletoolsMainPart::shutDownSucceeded() {
     if( m_shutDownDialog ) {
@@ -290,8 +269,8 @@ void kmobiletoolsMainPart::treeItemClicked( const QModelIndex& index ) {
 
     m_lastIndex = index;
 
-    unplugActionList( "serviceactions" );
-    unplugActionList( "deviceactions" );
+    //unplugActionList( "serviceactions" );
+    //unplugActionList( "deviceactions" );
 
     TreeItem* item = static_cast<TreeItem*>( index.internalPointer() );
 
@@ -300,7 +279,6 @@ void kmobiletoolsMainPart::treeItemClicked( const QModelIndex& index ) {
     if( serviceItem )
         handleServiceItem( serviceItem );
     else
-        // unload any previous installed actions
         emit showServiceToolBar(false);
 
     // device item clicked?
@@ -359,12 +337,18 @@ void kmobiletoolsMainPart::handleServiceItem( ServiceItem* serviceItem ) {
 
     if( actionProvider ) {
         // append service actions
+        unplugActionList( "serviceactions" );
+        plugActionList( "serviceactions", actionProvider->actionList() );
         if( actionProvider->actionList().size() )
             emit showServiceToolBar(true);
-        plugActionList( "serviceactions", actionProvider->actionList() );
-    }
+    } else
+        emit showServiceToolBar(false);
 }
 
+void kmobiletoolsMainPart::unloadDeviceActions( const QString& deviceName ) {
+    /// @TODO unplug the action list only if the currently loaded action list if from deviceName
+    unplugActionList( "deviceactions" );
+}
 
 void kmobiletoolsMainPart::removeServiceWidget( const QString& deviceName, KMobileTools::CoreService* service ) {
     KMobileTools::Ifaces::GuiService* gui =
@@ -424,6 +408,11 @@ void kmobiletoolsMainPart::setupGUI( QWidget* parent ) {
              this,
              SLOT( removeServiceWidget(const QString&, KMobileTools::CoreService*) ) );
 
+    connect( KMobileTools::DeviceLoader::instance(),
+             SIGNAL( aboutToUnloadDevice(const QString&) ),
+             this,
+             SLOT( deviceUnloaded(const QString&) ) );
+
     m_treeView->setModel( m_serviceModel );
 
     connect( m_treeView, SIGNAL( activated(const QModelIndex&) ),
@@ -443,19 +432,6 @@ void kmobiletoolsMainPart::setupGUI( QWidget* parent ) {
 
 
 void kmobiletoolsMainPart::setupActions() {
-    KAction *curAction=0;
-
-    // "Go home" action
-    curAction = new KAction( KIcon("go-home") ,i18n("Homepage"), this );
-    connect( curAction, SIGNAL(triggered(bool)), this, SLOT(goHome()) );
-    actionCollection()->addAction( "home", curAction );
-
-    // "Next" action
-    actionCollection()->addAction( KStandardAction::Next, "next", this, SLOT(nextPart()) );
-
-    // "Previous" action
-    actionCollection()->addAction( KStandardAction::Prior, "prev", this, SLOT(prevPart()) );
-
     // "Quit" action
     actionCollection()->addAction( KStandardAction::Quit, "file_quit", this, SLOT(slotQuit()) );
 
@@ -467,11 +443,6 @@ void kmobiletoolsMainPart::setupActions() {
 void kmobiletoolsMainPart::setupDialogs() {
     // create device manager
     m_deviceManager=new DeviceManager( m_widget );
-    //connect( m_deviceManager, SIGNAL(deviceAdded(const QString& ) ), this, SLOT(addDevice(const QString& )) );
-    //connect( m_deviceManager, SIGNAL(deviceRemoved(const QString& )), this, SLOT(delDevice(const QString& )) );
-    //connect( m_deviceManager, SIGNAL(loadDevice(const QString& )), this, SLOT(loadDevicePart(const QString&) ) );
-    //connect( m_deviceManager, SIGNAL(unloadDevice(const QString& )), this, SLOT(deleteDevicePart(const QString&) ) );
-    //connect( this, SIGNAL(deviceChanged(const QString& ) ), m_deviceManager, SLOT(deviceChanged(const QString& ) ) );
 
     // create error log dialog
     m_errorLogDialog = new ErrorLogDialog( m_widget );
