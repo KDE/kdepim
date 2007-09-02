@@ -82,7 +82,9 @@ void PluginPicker::updatePluginList()
 
   for ( int i = 0; i < env->pluginCount(); ++i ) {
     QSync::Plugin plugin = env->pluginAt( i );
-    mPluginList->appendItem( new PluginItem( mPluginList, plugin ) );
+
+    if ( plugin.isValid() )
+      mPluginList->appendItem( new PluginItem( mPluginList, plugin ) );
   }
 }
 

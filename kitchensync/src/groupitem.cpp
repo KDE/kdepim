@@ -410,7 +410,9 @@ MemberItem::MemberItem( QWidget *parent, SyncProcess *process,
   boxLayout->addWidget( mStatus );
 
   mMemberName->setText( member.name() );
-  mDescription->setText( plugin.longName() );
+
+  if ( plugin.isValid() )
+    mDescription->setText( plugin.longName() );
 }
 
 void MemberItem::setStatusMessage( const QString &msg )
