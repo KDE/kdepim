@@ -89,31 +89,3 @@ void Engine::abort()
 // TODO
 //   osengine_abort( mEngine );
 }
-
-void Engine::setUseMerger( bool use )
-{
-  Q_ASSERT( mEngine );
-
-  osync_engine_set_use_merger( mEngine, use );
-}
-
-bool Engine::useMerger() const
-{
-  Q_ASSERT( mEngine );
-
-  return osync_engine_get_use_merger( mEngine );
-}
-
-void Engine::setUseConverter( bool use )
-{
-  Q_ASSERT( mEngine );
-
-  osync_engine_set_use_converter( mEngine, use );
-}
-
-bool Engine::useConverter() const
-{
-  Q_ASSERT( mEngine );
-
-  return osync_engine_get_use_converter( mEngine );
-}
