@@ -49,6 +49,8 @@
 #include <kglobal.h>
 #include <kiconloader.h>
 
+#include <QTextDocument> // for Qt::escape
+
 namespace {
     template <typename T>
     boost::shared_ptr<T> make_shared_ptr( T * t ) {
@@ -89,19 +91,30 @@ int main( int argc, char** argv )
   args->clear();
   manager->show();
 
+  int rc;
 #ifdef HAVE_USABLE_ASSUAN
-  Kleo::UiServer server;
-  server.registerCommandFactory( make_shared_ptr( new Kleo::GenericAssuanCommandFactory<Kleo::VerifyEmailCommand> ) );
-  server.registerCommandFactory( make_shared_ptr( new Kleo::GenericAssuanCommandFactory<Kleo::DecryptEmailCommand> ) );
+  try {
+      Kleo::UiServer server;
+      server.registerCommandFactory( make_shared_ptr( new Kleo::GenericAssuanCommandFactory<Kleo::VerifyEmailCommand> ) );
+      server.registerCommandFactory( make_shared_ptr( new Kleo::GenericAssuanCommandFactory<Kleo::DecryptEmailCommand> ) );
 
-  server.start();
+      server.start();
 #endif
 
-  const int rc = app.exec();
+      rc = app.exec();
 
 #ifdef HAVE_USABLE_ASSUAN
-  server.stop();
-  server.waitForStopped();
+      server.stop();
+      server.waitForStopped();
+  } catch ( const std::exception & e ) {
+      QMessageBox::information( 0, i18n("GPG UI Server Error"),
+                                i18n("<qt>The Kleopatra GPG UI Server Module couldn't be initialized.<br/>"
+                                     "The error given was: <b>%1</b><br/>"
+                                     "You can use Kleopatra as a certificate manager, but cryptographic plugins that "
+                                     "rely on a GPG UI Server being present might not work correctly, or at all.</qt>",
+                                     Qt::escape( QString::fromUtf8( e.what() ) ) ));
+      rc = app.exec();
+  }
 #endif
 
   return rc;
