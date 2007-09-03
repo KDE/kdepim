@@ -173,10 +173,10 @@ static inline QString system_error_string() {
 void UiServer::Private::makeListeningSocket() {
 
     // First, create a file (we do this only for the name, gmpfh)
-    file.setFileName( makeFileName() );
-    if ( file.exists() )
-        throw_<std::runtime_error>( tr( "Detected another running gnupg UI server listening at %1." ).arg( file.fileName() ) );
-    const QByteArray encodedFileName = QFile::encodeName( file.fileName() );
+    const QString fileName = makeFileName();
+    if ( QFile::exists( fileName ) )
+        throw_<std::runtime_error>( tr( "Detected another running gnupg UI server listening at %1." ).arg( fileName ) );
+    const QByteArray encodedFileName = QFile::encodeName( fileName );
 
     // Create a Unix Domain Socket:
     const int sock = ::socket( AF_UNIX, SOCK_STREAM, 0 );
