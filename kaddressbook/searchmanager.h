@@ -68,6 +68,11 @@ class SearchManager : public QObject
 
 #ifdef KDEPIM_NEW_DISTRLISTS
     /**
+      sets the distribution list to be shown 
+     */
+    void setSelectedDistributionList( const QString &name );
+
+    /**
       Returns all the distribution lists.
      */
     KPIM::DistributionList::List distributionLists() const;
@@ -90,6 +95,7 @@ class SearchManager : public QObject
   private:
     KABC::Addressee::List mContacts;
 #ifdef KDEPIM_NEW_DISTRLISTS
+    QString mSelectedDistributionList;
     KPIM::DistributionList::List mDistributionLists;
 #endif
     KABC::AddressBook *mAddressBook;

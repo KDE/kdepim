@@ -27,6 +27,7 @@
 #include <kabc/address.h>
 #include <kabc/addressee.h>
 #include <kabc/phonenumber.h>
+#include <kabc/resource.h>
 #include <kactionclasses.h>
 #include <kapplication.h>
 #include <kconfig.h>
@@ -484,7 +485,9 @@ QString AddresseeView::vCardAsHTML( const KABC::Addressee& addr, ::KIMProxy *pro
   strAddr.append( notes );
   strAddr.append( customData );
   strAddr.append( QString::fromLatin1( "</table></div>\n" ) );
-
+  
+  if ( addr.resource() )
+      strAddr.append( i18n( "<p><b>Address book</b>: %1</p>" ).arg( addr.resource()->resourceName() ) );
   return strAddr;
 }
 

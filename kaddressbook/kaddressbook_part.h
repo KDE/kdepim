@@ -52,6 +52,7 @@ class KAddressbookPart: public KParts::ReadOnlyPart, virtual public KAddressBook
     virtual void importVCard( const QString& vCardURL );
     virtual ASYNC showContactEditor( QString uid );
     virtual void newContact();
+    virtual void newDistributionList();
     virtual QString getNameByPhone( QString phone );
     virtual void save();
     virtual void exit();

@@ -39,10 +39,16 @@ class KDE_EXPORT KAddressBookIface : virtual public DCOPObject
     virtual ASYNC showContactEditor( QString uid ) = 0;
 
     /**
-      Show's dialog for creation of a new contact.  Returns once a contact
+      Shows dialog for creation of a new contact.  Returns once a contact
       is created (or canceled).
      */
     virtual void newContact() = 0;
+
+    /**
+      Shows dialog for creation of a new distribution list.  Returns once a distribution list
+      is created (or canceled).
+     */
+    virtual void newDistributionList() = 0;
 
     /**
       Save changes to the address book files.

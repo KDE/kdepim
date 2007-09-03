@@ -24,34 +24,41 @@
 #ifndef EXTENSIONMANAGER_H
 #define EXTENSIONMANAGER_H
 
-#include <qhbox.h>
-#include <qptrlist.h>
-
 #include "extensionwidget.h"
+
+#include <qwidget.h>
+#include <qmap.h>
+#include <qptrlist.h>
+#include <qstringlist.h>
+
+class QSignalMapper;
+class QWidgetStack;
+class KActionCollection;
 
 namespace KAB {
 class Core;
 }
 
-class QSignalMapper;
-class KActionCollection;
-
 class ExtensionData
 {
   public:
+    ExtensionData();
     typedef QValueList<ExtensionData> List;
 
+    KToggleAction* action;
     KAB::ExtensionWidget *widget;
     QString identifier;
     QString title;
+    int weight;
+    bool isDetailsExtension;
 };
 
-class ExtensionManager : public QHBox
+class ExtensionManager : public QObject
 {
   Q_OBJECT
 
   public:
-    ExtensionManager( KAB::Core *core, QWidget *parent, const char *name = 0 );
+    ExtensionManager( QWidget *extensionBar, QWidgetStack *detailsStack, KAB::Core *core, QObject *parent, const char *name = 0 );
     ~ExtensionManager();
 
     /**
@@ -75,27 +82,37 @@ class ExtensionManager : public QHBox
      */
     bool isQuickEditVisible() const;
 
+    QWidget *activeDetailsWidget() const;
+ 
   public slots:
     void setSelectionChanged();
     void createActions();
 
   signals:
+
+    void detailsWidgetActivated( QWidget* widget );
+    void detailsWidgetDeactivated( QWidget* widget );
     void modified( const KABC::Addressee::List& );
     void deleted( const QStringList& );
 
   private slots:
-    void setActiveExtension( int id );
+    void activationToggled( const QString &extid );
 
   private:
     void createExtensionWidgets();
+    void setExtensionActive( const QString &extid, bool active ); 
 
+  private:
+    QWidget *mExtensionBar;
     KAB::Core *mCore;
-
-    KAB::ExtensionWidget *mCurrentExtensionWidget;
-    ExtensionData::List mExtensionList;
+    QMap<QString, ExtensionData> mExtensionMap;
+    QStringList mActiveExtensions;
     QSignalMapper *mMapper;
     QPtrList<KAction> mActionList;
     KActionCollection *mActionCollection;
+    QSplitter *mSplitter;
+    QWidgetStack *mDetailsStack; 
+    QWidget *mActiveDetailsWidget;
 };
 
 #endif
