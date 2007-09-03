@@ -208,7 +208,7 @@ void KAB::DistributionListNg::MainWidget::updateEntries()
         return;
     mCurrentEntries = newEntries;
     mListBox->clear();
-    mListBox->insertItem( i18n("All Contacts"), 0 );
+    mListBox->insertItem( i18n( "All Contacts" ), 0 );
     mListBox->insertStringList( mCurrentEntries );
     if ( !hadSelection )
         mListBox->setSelected( 0, true );

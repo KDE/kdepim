@@ -9,6 +9,7 @@
 
 class QBoxLayout;
 class QButtonGroup;
+class QComboBox;
 class QGridLayout;
 class QLabel;
 
@@ -48,6 +49,8 @@ private:
     QLabel* m_addresseeLabel;
     KURLLabel* m_distListLabel;
     QLabel* m_imageLabel;
+    QLabel* m_resourceLabel;
+    QMap<int, QString> m_indexToIdentifier; 
 };
 
 }
