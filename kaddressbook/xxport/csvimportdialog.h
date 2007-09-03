@@ -30,7 +30,7 @@
 
 class KUrlRequester;
 
-class Q3ButtonGroup;
+class QButtonGroup;
 class QComboBox;
 class QCheckBox;
 class QLineEdit;
@@ -78,7 +78,7 @@ class CSVImportDialog : public KDialog
          };
 
     QTableWidget* mTable;
-    Q3ButtonGroup* mDelimiterBox;
+    QButtonGroup* mDelimiterGroup;
     QRadioButton* mRadioComma;
     QRadioButton* mRadioSemicolon;
     QRadioButton* mRadioTab;

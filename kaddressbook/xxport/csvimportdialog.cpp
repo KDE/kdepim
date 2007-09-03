@@ -20,9 +20,10 @@
 */
 #include "csvimportdialog.h"
 
-#include <q3buttongroup.h>
+#include <QButtonGroup>
 #include <QCheckBox>
 #include <QComboBox>
+#include <QGroupBox>
 #include <QLabel>
 #include <QLayout>
 #include <QLineEdit>
@@ -32,7 +33,6 @@
 #include <QTextCodec>
 
 #include <QProgressBar>
-//Added by qt3to4:
 #include <QTextStream>
 #include <QGridLayout>
 #include <QHBoxLayout>
@@ -129,7 +129,7 @@ CSVImportDialog::CSVImportDialog( KABC::AddressBook *ab, QWidget *parent )
 
   reloadCodecs();
 
-  connect( mDelimiterBox, SIGNAL( clicked( int ) ),
+  connect( mDelimiterGroup, SIGNAL( buttonClicked( int ) ),
            this, SLOT( delimiterClicked( int ) ) );
   connect( mDelimiterEdit, SIGNAL( returnPressed() ),
            this, SLOT( returnPressed() ) );
@@ -390,32 +390,39 @@ void CSVImportDialog::initGUI()
   layout->addLayout( hbox, 0, 0, 1, 5 );
 
   // Delimiter: comma, semicolon, tab, space, other
-  mDelimiterBox = new Q3ButtonGroup( i18n( "Delimiter" ), mPage );
-  mDelimiterBox->setColumnLayout( 0, Qt::Vertical );
-  mDelimiterBox->layout()->setSpacing( spacingHint() );
-  mDelimiterBox->layout()->setMargin( marginHint() );
-  QGridLayout *delimiterLayout = new QGridLayout();
-  mDelimiterBox->layout()->addItem( delimiterLayout );
+  QGroupBox *group = new QGroupBox( i18n( "Delimiter" ), mPage );
+  QGridLayout *delimiterLayout = new QGridLayout;
+  delimiterLayout->setMargin( marginHint() );
+  delimiterLayout->setSpacing( spacingHint() );
+  group->setLayout( delimiterLayout );
   delimiterLayout->setAlignment( Qt::AlignTop );
-  layout->addWidget( mDelimiterBox, 1, 0, 4, 1);
+  layout->addWidget( group, 1, 0, 4, 1);
 
-  mRadioComma = new QRadioButton( i18n( "Comma" ), mDelimiterBox );
+  mDelimiterGroup = new QButtonGroup( this );
+  mDelimiterGroup->setExclusive( true );
+
+  mRadioComma = new QRadioButton( i18n( "Comma" ), group );
   mRadioComma->setChecked( true );
+  mDelimiterGroup->addButton( mRadioComma, 0 );
   delimiterLayout->addWidget( mRadioComma, 0, 0 );
 
-  mRadioSemicolon = new QRadioButton( i18n( "Semicolon" ), mDelimiterBox );
+  mRadioSemicolon = new QRadioButton( i18n( "Semicolon" ), group );
+  mDelimiterGroup->addButton( mRadioSemicolon, 1 );
   delimiterLayout->addWidget( mRadioSemicolon, 0, 1 );
 
-  mRadioTab = new QRadioButton( i18n( "Tabulator" ), mDelimiterBox );
+  mRadioTab = new QRadioButton( i18n( "Tabulator" ), group );
+  mDelimiterGroup->addButton( mRadioTab, 2 );
   delimiterLayout->addWidget( mRadioTab, 1, 0 );
 
-  mRadioSpace = new QRadioButton( i18n( "Space" ), mDelimiterBox );
+  mRadioSpace = new QRadioButton( i18n( "Space" ), group );
+  mDelimiterGroup->addButton( mRadioSpace, 3 );
   delimiterLayout->addWidget( mRadioSpace, 1, 1 );
 
-  mRadioOther = new QRadioButton( i18n( "Other" ), mDelimiterBox );
+  mRadioOther = new QRadioButton( i18n( "Other" ), group );
+  mDelimiterGroup->addButton( mRadioOther, 4 );
   delimiterLayout->addWidget( mRadioOther, 0, 2 );
 
-  mDelimiterEdit = new QLineEdit( mDelimiterBox );
+  mDelimiterEdit = new QLineEdit( group );
   delimiterLayout->addWidget( mDelimiterEdit, 1, 2 );
 
   mComboLine = new QComboBox( mPage );
@@ -735,7 +742,7 @@ void CSVImportDialog::resizeColumns()
 
 void CSVImportDialog::returnPressed()
 {
-  if ( mDelimiterBox->id( mDelimiterBox->selected() ) != 4 )
+  if ( mDelimiterGroup->checkedId() != 4 )
     return;
 
   mDelimiter = mDelimiterEdit->text();
@@ -841,7 +848,7 @@ void CSVImportDialog::applyTemplate()
   mDatePatternEdit->setText( config.readEntry( "DatePattern", "Y-M-D" ) );
   uint numColumns = config.readEntry( "Columns", 0 );
   mDelimiterEdit->setText( config.readEntry( "DelimiterOther" ) );
-  mDelimiterBox->setButton( config.readEntry( "DelimiterType", 0) );
+  mDelimiterGroup->button( config.readEntry( "DelimiterType", 0) )->setChecked( true );
   delimiterClicked( config.readEntry( "DelimiterType",0 ) );
   int quoteType = config.readEntry( "QuoteType", 0 );
   mComboQuote->setCurrentIndex( quoteType );
@@ -886,7 +893,7 @@ void CSVImportDialog::saveTemplate()
   KConfigGroup config(&_config, "General" );
   config.writeEntry( "DatePattern", mDatePatternEdit->text() );
   config.writeEntry( "Columns", mTable->columnCount() );
-  config.writeEntry( "DelimiterType", mDelimiterBox->id( mDelimiterBox->selected() ) );
+  config.writeEntry( "DelimiterType", mDelimiterGroup->checkedId() );
   config.writeEntry( "DelimiterOther", mDelimiterEdit->text() );
   config.writeEntry( "QuoteType", mComboQuote->currentIndex() );
 
