@@ -1,5 +1,7 @@
 project(kleopatra)
 
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/config-kleopatra.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-kleopatra.h )
+
 include_directories( ${CMAKE_SOURCE_DIR}/libkleo ${Boost_INCLUDE_DIR} ${GPGME_INCLUDES} ) # should be assuan-includes!
 add_definitions (-DQT3_SUPPORT -DQT3_SUPPORT_WARNINGS ${KDE4_ENABLE_EXCEPTIONS} -D_ASSUAN_ONLY_GPG_ERRORS )
 
@@ -10,12 +12,20 @@ add_subdirectory( tests )
 
 ########### next target ###############
 
+if ( USABLE_ASSUAN_FOUND )
+  set(_kleopatra_uiserver_files
+    utils/kdpipeiodevice.cpp
+    uiserver/kleo-assuan.cpp
+    uiserver/uiserver.cpp
+    uiserver/assuanserverconnection.cpp
+  )
+else ( USABLE_ASSUAN_FOUND )
+  set(_kleopatra_uiserver_files)
+endif ( USABLE_ASSUAN_FOUND )
+
 set(kleopatra_bin_SRCS ${libconf_SRCS}
    utils/formatting.cpp
-   utils/kdpipeiodevice.cpp
-   uiserver/kleo-assuan.cpp
-   uiserver/uiserver.cpp
-   uiserver/assuanserverconnection.cpp
+   ${_kleopatra_uiserver_files}
    models/keylistmodel.cpp
    models/keylistsortfilterproxymodel.cpp
    models/subkeylistmodel.cpp

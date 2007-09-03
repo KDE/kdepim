@@ -30,6 +30,8 @@
     your version.
 */
 
+#include <config-kleopatra.h>
+
 #include "assuanserverconnection.h"
 #include "assuancommand.h"
 
@@ -219,23 +221,52 @@ AssuanServerConnection::~AssuanServerConnection() {}
 class InquiryHandler : public QObject {
     Q_OBJECT
 public:
-    explicit InquiryHandler( const char * keyword_, QObject * p=0 )
-        : QObject( p ), keyword( keyword_ ) {}
 
-    static int handler( void * cb_data, int rc, char * buffer, size_t buflen ) {
+#ifdef HAVE_ASSUAN_INQUIRE_EXT
+    explicit InquiryHandler( const char * keyword_, QObject * p=0 )
+        : QObject( p ),
+# ifndef HAVE_NEW_STYLE_ASSUAN_INQUIRE_EXT
+          buffer( 0 ),
+          buflen( 0 ),
+# endif
+          keyword( keyword_ )
+    {
+
+    }
+
+# ifdef HAVE_NEW_STYLE_ASSUAN_INQUIRE_EXT
+    static int handler( void * cb_data, int rc, unsigned char * buffer, size_t buflen )
+    {
         assert( cb_data );
         InquiryHandler * this_ = static_cast<InquiryHandler*>(cb_data);
-        emit this_->signal( rc, QByteArray::fromRawData( buffer, buflen ), this_->keyword );
+        emit this_->signal( rc, QByteArray::fromRawData( reinterpret_cast<const char*>(buffer), buflen ), this_->keyword );
         std::free( buffer );
         delete this_;
         return 0;
     }
+# else
+    static int handler( void * cb_data, int rc )
+    {
+        assert( cb_data );
+        InquiryHandler * this_ = static_cast<InquiryHandler*>(cb_data);
+        emit this_->signal( rc, QByteArray::fromRawData( reinterpret_cast<const char*>(this_->buffer), this_->buflen ), this_->keyword );
+        std::free( this_->buffer );
+        delete this_;
+        return 0;
+    }
+# endif
+
+private:
+# ifndef HAVE_NEW_STYLE_ASSUAN_INQUIRE_EXT
+    friend class ::Kleo::AssuanCommand;
+    unsigned char * buffer;
+    size_t buflen;
+# endif
+    const char * keyword;
+#endif // HAVE_ASSUAN_INQUIRE_EXT
 
 Q_SIGNALS:
     void signal( int rc, const QByteArray & data, const QByteArray & keyword );
-
-private:
-    const char * keyword;
 };
 
 class AssuanCommand::Private {
@@ -297,17 +328,20 @@ int AssuanCommand::inquire( const char * keyword, QObject * receiver, const char
     assert( receiver );
     assert( slot );
 
+#ifdef HAVE_ASSUAN_INQUIRE_EXT
     std::auto_ptr<InquiryHandler> ih( new InquiryHandler( keyword, receiver ) );
     receiver->connect( ih.get(), SIGNAL(signal(int,QByteArray,QByteArray)), slot );
-#ifdef HAVE_NEW_STYLE_ASSUAN_INQUIRE_EXT
-    if ( const gpg_error_t err = assuan_inquire_ext( d->ctx.get(), keyword, maxSize, InquiryHandler::handler, ih.get() ) )
+    if ( const gpg_error_t err = assuan_inquire_ext( d->ctx.get(), keyword,
+# ifndef HAVE_NEW_STYLE_ASSUAN_INQUIRE_EXT
+                                                     &ih->buffer, &ih->buflen,
+# endif
+                                                     maxSize, InquiryHandler::handler, ih.get() ) )
          return err;
     ih.release();
     return 0;
 #else
-    (void)keyword; (void)receiver; (void)slot; (void)maxSize;
-    return makeError( GPG_ERR_NOT_IMPLEMENTED );
-#endif
+    return makeError( GPG_ERR_NOT_SUPPORTED ); // libassuan too old
+#endif // HAVE_ASSUAN_INQUIRE_EXT
 }
 
 void AssuanCommand::done( int err ) {

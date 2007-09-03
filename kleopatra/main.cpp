@@ -30,13 +30,17 @@
     your version.
 */
 
+#include <config-kleopatra.h>
+
 #include "aboutdata.h"
 #include "certmanager.h"
 
 #include "libkleo/kleo/cryptobackendfactory.h"
 
-#include <uiserver/uiserver.h>
-#include <uiserver/assuancommand.h>
+#ifdef HAVE_USABLE_ASSUAN
+# include <uiserver/uiserver.h>
+# include <uiserver/assuancommand.h>
+#endif
 
 #include <kapplication.h>
 #include <kcmdlineargs.h>
@@ -85,16 +89,20 @@ int main( int argc, char** argv )
   args->clear();
   manager->show();
 
+#ifdef HAVE_USABLE_ASSUAN
   Kleo::UiServer server;
   server.registerCommandFactory( make_shared_ptr( new Kleo::GenericAssuanCommandFactory<Kleo::VerifyEmailCommand> ) );
   server.registerCommandFactory( make_shared_ptr( new Kleo::GenericAssuanCommandFactory<Kleo::DecryptEmailCommand> ) );
 
   server.start();
+#endif
 
   const int rc = app.exec();
 
+#ifdef HAVE_USABLE_ASSUAN
   server.stop();
   server.waitForStopped();
+#endif
 
   return rc;
 }
