@@ -18,7 +18,7 @@
    the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
    Boston, MA 02110-1301, USA.
 */
-
+#include "csvimportdialog.h"
 
 #include <q3buttongroup.h>
 #include <QCheckBox>
@@ -28,7 +28,7 @@
 #include <QLineEdit>
 #include <QPushButton>
 #include <QRadioButton>
-#include <q3table.h>
+#include <QTableWidget>
 #include <QTextCodec>
 
 #include <QProgressBar>
@@ -50,8 +50,7 @@
 #include <kurlrequester.h>
 
 #include "dateparser.h"
-
-#include "csvimportdialog.h"
+#include "comboboxheaderview.h"
 
 enum { Local = 0, Guess = 1, Latin1 = 2, Uni = 3, MSBug = 4, Codec = 5 };
 
@@ -68,7 +67,6 @@ CSVImportDialog::CSVImportDialog( KABC::AddressBook *ab, QWidget *parent )
   setDefaultButton( Ok );
   setModal( true );
   showButtonSeparator( true );
-  initGUI();
 
   mTypeMap.insert( i18n( "Undefined" ), Undefined );
   mTypeMap.insert( KABC::Addressee::formattedNameLabel(), FormattedName );
@@ -118,6 +116,8 @@ CSVImportDialog::CSVImportDialog( KABC::AddressBook *ab, QWidget *parent )
   mTypeMap.insert( KABC::Addressee::organizationLabel(), Organization );
   mTypeMap.insert( KABC::Addressee::noteLabel(), Note );
   mTypeMap.insert( KABC::Addressee::urlLabel(), URL );
+
+  initGUI();
 
   mCustomCounter = mTypeMap.count();
   int count = mCustomCounter;
@@ -172,34 +172,30 @@ KABC::AddresseeList CSVImportDialog::contacts() const
 
   KProgressDialog progressDialog( mPage );
   progressDialog.setAutoClose( true );
-  progressDialog.progressBar()->setMaximum( mTable->numRows() );
+  progressDialog.progressBar()->setMaximum( mTable->rowCount() );
   progressDialog.setLabelText( i18n( "Importing contacts" ) );
   progressDialog.show();
 
   kapp->processEvents();
 
-  for ( int row = 1; row < mTable->numRows(); ++row ) {
+  ComboBoxHeaderView *headerView = static_cast< ComboBoxHeaderView * >
+                                     ( mTable->horizontalHeader() );
+
+  for ( int row = 0; row < mTable->rowCount(); ++row ) {
     KABC::Addressee a;
     bool emptyRow = true;
     KABC::Address addrHome( KABC::Address::Home );
     KABC::Address addrWork( KABC::Address::Work );
-    for ( int col = 0; col < mTable->numCols(); ++col ) {
-      Q3ComboTableItem *item = static_cast<Q3ComboTableItem*>( mTable->item( 0,
-                                                             col ) );
-      if ( !item ) {
-        kError() <<"ERROR: item cast failed";
-        continue;
+    for ( int col = 0; col < mTable->columnCount(); ++col ) {
+      QString value;
+      if ( mTable->item( row, col ) ) {
+        value = mTable->item( row, col )->text();
       }
-
-      QString value = mTable->text( row, col );
-      if ( 1 == row && static_cast<Q3TableItem *>(item)->text() == value )
-        // we are looking at a header row, stop now
-        break;
 
       if ( !value.isEmpty() )
         emptyRow = false;
 
-      switch ( posToType( item->currentItem() ) ) {
+      switch ( mTypeMap.value( mTable->model()->headerData( col, Qt::Horizontal ).toString() ) ) {
         case Undefined:
           continue;
           break;
@@ -344,7 +340,7 @@ KABC::AddresseeList CSVImportDialog::contacts() const
 
           int counter = 0;
           for ( it = fields.begin(); it != fields.end(); ++it ) {
-            if ( counter == (int)( posToType( item->currentItem() ) - mCustomCounter ) ) {
+            if ( counter == (int)( mTypeMap.value( mTable->model()->headerData( col, Qt::Horizontal ).toString() ) - mCustomCounter ) ) {
               (*it)->setValue( a, value );
               break;
             }
@@ -460,9 +456,9 @@ void CSVImportDialog::initGUI()
   mCodecCombo = new QComboBox( mPage );
   layout->addWidget( mCodecCombo, 4, 2, 1, 3 );
 
-  mTable = new Q3Table( 0, 0, mPage );
-  mTable->setSelectionMode( Q3Table::NoSelection );
-  mTable->horizontalHeader()->hide();
+  mTable = new QTableWidget( 0, 0, mPage );
+  mTable->setSelectionMode( QAbstractItemView::NoSelection );
+  mTable->setHorizontalHeader( new ComboBoxHeaderView( mTypeMap.keys(), mTable, false ) );
   layout->addWidget( mTable, 5, 0, 1, 5 );
 
   setButtonText( User1, i18n( "Apply Template..." ) );
@@ -487,19 +483,21 @@ void CSVImportDialog::fillTable()
   QString field;
 
   // store previous assignment
-  mTypeStore.clear();
-  for ( column = 0; column < mTable->numCols(); ++column ) {
-    Q3ComboTableItem *item = static_cast<Q3ComboTableItem*>( mTable->item( 0,
-                                                           column ) );
-    if ( !item || mClearTypeStore )
-      mTypeStore.append( typeToPos( Undefined ) );
-    else if ( item )
-      mTypeStore.append( item->currentItem() );
+  QStringList typeStore;
+  for ( column = 0; column < mTable->columnCount(); ++column ) {
+    if ( mClearTypeStore )
+      typeStore << mTypeMap.key( Undefined );
+    else {
+      ComboBoxHeaderView *view = static_cast< ComboBoxHeaderView* >
+          ( mTable->horizontalHeader() );
+      int index = view->indexOfHeaderLabel( column );
+      typeStore << view->items()[ index ];
+    }
   }
 
   clearTable();
 
-  row = column = 1;
+  row = column = 0;
 
   QTextStream inputStream( mFileArray, QIODevice::ReadOnly );
 
@@ -539,7 +537,7 @@ void CSVImportDialog::fillTable()
         lastCharDelimiter = true;
       } else if ( x == '\n' ) {
         ++row;
-        column = 1;
+        column = 0;
       } else {
         field += x;
         state = S_MAYBE_NORMAL_FIELD;
@@ -549,11 +547,11 @@ void CSVImportDialog::fillTable()
       if ( x == mTextQuote ) {
         state = S_MAYBE_END_OF_QUOTED_FIELD;
       } else if ( x == '\n' &&  mTextQuote.isNull() ) {
-        setText( row - mStartLine + 1, column, field );
+        setText( row - mStartLine, column, field );
         field = "";
         if ( x == '\n' ) {
           ++row;
-          column = 1;
+          column = 0;
         } else {
           if ( ( ignoreDups == false ) || ( lastCharDelimiter == false ) )
             ++column;
@@ -569,11 +567,11 @@ void CSVImportDialog::fillTable()
         field += x;
         state = S_QUOTED_FIELD;
       } else if ( QString( x ) == mDelimiter || x == '\n' ) {
-        setText( row - mStartLine + 1, column, field );
+        setText( row - mStartLine, column, field );
         field = "";
         if ( x == '\n' ) {
           ++row;
-          column = 1;
+          column = 0;
         } else {
           if ( ( ignoreDups == false ) || ( lastCharDelimiter == false ) )
             ++column;
@@ -586,11 +584,11 @@ void CSVImportDialog::fillTable()
       break;
      case S_END_OF_QUOTED_FIELD :
       if ( QString( x ) == mDelimiter || x == '\n' ) {
-        setText( row - mStartLine + 1, column, field );
+        setText( row - mStartLine, column, field );
         field = "";
         if ( x == '\n' ) {
           ++row;
-          column = 1;
+          column = 0;
         } else {
           if ( ( ignoreDups == false ) || ( lastCharDelimiter == false ) )
             ++column;
@@ -609,11 +607,11 @@ void CSVImportDialog::fillTable()
       }
      case S_NORMAL_FIELD :
       if ( QString( x ) == mDelimiter || x == '\n' ) {
-        setText( row - mStartLine + 1, column, field );
+        setText( row - mStartLine, column, field );
         field = "";
         if ( x == '\n' ) {
           ++row;
-          column = 1;
+          column = 0;
         } else {
           if ( ( ignoreDups == false ) || ( lastCharDelimiter == false ) )
             ++column;
@@ -633,39 +631,36 @@ void CSVImportDialog::fillTable()
 
   // file with only one line without '\n'
   if ( field.length() > 0 ) {
-    setText( row - mStartLine + 1, column, field );
+    setText( row - mStartLine, column, field );
     ++row;
     field = "";
   }
 
   adjustRows( row - mStartLine );
-  mTable->setNumCols( maxColumn );
+  mTable->setColumnCount( maxColumn + 1 );
 
-  for ( column = 0; column < mTable->numCols(); ++column ) {
-    Q3ComboTableItem *item = new Q3ComboTableItem( mTable, mTypeMap.keys() );
-    mTable->setItem( 0, column, item );
-    if ( column < (int)mTypeStore.count() )
-      item->setCurrentItem( mTypeStore[ column ] );
-    else
-      item->setCurrentItem( typeToPos( Undefined ) );
-    mTable->adjustColumn( column );
+  QStringList headerLabels( typeStore );
+
+  for ( column = typeStore.count(); column < mTable->columnCount(); 
+        ++column ) {
+    headerLabels << mTypeMap.key( Undefined );
   }
+
+  mTable->setHorizontalHeaderLabels( headerLabels );
 
   resizeColumns();
 }
 
 void CSVImportDialog::clearTable()
 {
-  for ( int row = 0; row < mTable->numRows(); ++row )
-    for ( int column = 0; column < mTable->numCols(); ++column )
-      mTable->clearCell( row, column );
+  mTable->clear();
 }
 
 void CSVImportDialog::fillComboBox()
 {
   mComboLine->clear();
-  for ( int row = 1; row < mTable->numRows() + 1; ++row )
-    mComboLine->addItem( QString::number( row ), row - 1 );
+  for ( int row = 0; row < mTable->rowCount(); ++row )
+    mComboLine->addItem( QString::number( row ) );
 }
 
 void CSVImportDialog::reloadCodecs()
@@ -691,18 +686,23 @@ void CSVImportDialog::reloadCodecs()
 
 void CSVImportDialog::setText( int row, int col, const QString& text )
 {
-  if ( row < 1 ) // skipped by the user
-    return;
+  kDebug() << "setText" << row << "," << col << "," << text;
 
-  if ( mTable->numRows() < row ) {
-    mTable->setNumRows( row + 5000 ); // We add 5000 at a time to limit recalculations
+  if ( mTable->rowCount() <= row ) {
+    mTable->setRowCount( row + 5000 ); // We add 5000 at a time to limit recalculations
     mAdjustRows = true;
   }
 
-  if ( mTable->numCols() < col )
-    mTable->setNumCols( col + 50 ); // We add 50 at a time to limit recalculation
+  if ( mTable->columnCount() <= col )
+    mTable->setColumnCount( col + 50 ); // We add 50 at a time to limit recalculation
 
-  mTable->setText( row - 1, col - 1, text );
+  /*QTableWidgetItem *item = mTable->item( row, col );
+  if ( !item ) {
+    item = new QTableWidgetItem;
+    mTable->setItem( row, col, item );
+  }
+  item->setText( text );*/
+  mTable->setItem( row, col, new QTableWidgetItem( text ) );
 }
 
 /*
@@ -711,14 +711,17 @@ void CSVImportDialog::setText( int row, int col, const QString& text )
 void CSVImportDialog::adjustRows( int rows )
 {
   if ( mAdjustRows ) {
-    mTable->setNumRows( rows );
+    mTable->setRowCount( rows );
     mAdjustRows = false;
   }
 }
 
 void CSVImportDialog::resizeColumns()
 {
-  QFontMetrics fm = fontMetrics();
+#ifdef __GNUC__
+#warning port me!
+#endif
+  /*QFontMetrics fm = fontMetrics();
   int width = 0;
 
   QMap<QString, uint>::ConstIterator it;
@@ -726,8 +729,8 @@ void CSVImportDialog::resizeColumns()
     width = qMax( width, fm.width( it.key() ) );
   }
 
-  for ( int i = 0; i < mTable->numCols(); ++i )
-    mTable->setColumnWidth( i, qMax( width + 15, mTable->columnWidth( i ) ) );
+  for ( int i = 0; i < mTable->columnCount(); ++i )
+    mTable->horizontalHeader->setDefaultSectionSize( i, qMax( width + 15, mTable->columnWidth( i ) ) );*/
 }
 
 void CSVImportDialog::returnPressed()
@@ -781,7 +784,8 @@ void CSVImportDialog::textquoteSelected( const QString& mark )
 
 void CSVImportDialog::lineSelected( const QString& line )
 {
-  mStartLine = line.toInt() - 1;
+  mStartLine = line.toInt();
+  mAdjustRows = true;
   fillTable();
 }
 
@@ -789,11 +793,11 @@ void CSVImportDialog::slotOk()
 {
   bool assigned = false;
 
-  for ( int column = 0; column < mTable->numCols(); ++column ) {
-    Q3ComboTableItem *item = static_cast<Q3ComboTableItem*>( mTable->item( 0,
-                                                           column ) );
-    if ( item && posToType( item->currentItem() ) != Undefined )
+  for ( int column = 0; column < mTable->columnCount(); ++column ) {
+    if ( mTypeMap.value( mTable->model()->headerData( column, Qt::Horizontal ).toString() ) != Undefined ) {
       assigned = true;
+      break;
+    }
   }
 
   if ( !assigned )
@@ -851,13 +855,14 @@ void CSVImportDialog::applyTemplate()
   }
 
   // apply the column map
+  QStringList headerLabels;
+
   for ( int column = 0; column < columnMap.count(); ++column ) {
     int type = columnMap[ column ];
-    Q3ComboTableItem *item = static_cast<Q3ComboTableItem*>( mTable->item( 0,
-                                                           column ) );
-    if ( item )
-      item->setCurrentItem( typeToPos( type ) );
+    headerLabels << mTypeMap.key( type );
   }
+
+  mTable->setHorizontalHeaderLabels( headerLabels );
 }
 
 void CSVImportDialog::saveTemplate()
@@ -880,7 +885,7 @@ void CSVImportDialog::saveTemplate()
   KConfig _config( fileName  );
   KConfigGroup config(&_config, "General" );
   config.writeEntry( "DatePattern", mDatePatternEdit->text() );
-  config.writeEntry( "Columns", mTable->numCols() );
+  config.writeEntry( "Columns", mTable->columnCount() );
   config.writeEntry( "DelimiterType", mDelimiterBox->id( mDelimiterBox->selected() ) );
   config.writeEntry( "DelimiterOther", mDelimiterEdit->text() );
   config.writeEntry( "QuoteType", mComboQuote->currentIndex() );
@@ -890,14 +895,10 @@ void CSVImportDialog::saveTemplate()
 
   config.changeGroup( "csv column map" );
 
-  for ( int column = 0; column < mTable->numCols(); ++column ) {
-    Q3ComboTableItem *item = static_cast<Q3ComboTableItem*>( mTable->item( 0,
-                                                           column ) );
-    if ( item )
-      config.writeEntry( QString::number( column ), posToType(
-                         item->currentItem() ) );
-    else
-      config.writeEntry( QString::number( column ), 0 );
+  ComboBoxHeaderView *headerView = static_cast< ComboBoxHeaderView* >
+      ( mTable->horizontalHeader() );
+  for ( int column = 0; column < mTable->columnCount(); ++column ) {
+    config.writeEntry( QString::number( column ), mTypeMap.value( mTable->model()->headerData( column, Qt::Horizontal ).toString() ) );
   }
 
   config.sync();
@@ -905,7 +906,12 @@ void CSVImportDialog::saveTemplate()
 
 QString CSVImportDialog::getText( int row, int col )
 {
-  return mTable->text( row, col );
+  QTableWidgetItem *item = mTable->item( row, col );
+  if ( item ) {
+    return item->text();
+  } else {
+    return QString();
+  }
 }
 
 uint CSVImportDialog::posToType( int pos ) const
@@ -957,8 +963,8 @@ void CSVImportDialog::setFile( const QString &fileName )
 
   mClearTypeStore = true;
   clearTable();
-  mTable->setNumCols( 0 );
-  mTable->setNumRows( 0 );
+  mTable->setColumnCount( 0 );
+  mTable->setRowCount( 0 );
   fillTable();
   mClearTypeStore = false;
 
