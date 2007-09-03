@@ -107,7 +107,8 @@ UiServer::Private::Private( UiServer * qq )
       factories(),
       connections()
 {
-    makeListeningSocket();
+// PENDIGN(marc) review: done in start now? - till
+//   makeListeningSocket();
 }
 
 
