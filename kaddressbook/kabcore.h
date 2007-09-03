@@ -376,6 +376,7 @@ class KDE_EXPORT KABCore : public KAB::Core
 
 #ifdef KDEPIM_NEW_DISTRLISTS
     void editDistributionList( const KPIM::DistributionList &list );
+    void showDistributionListEntry( const QString &uid );
 #endif
 
   private slots:

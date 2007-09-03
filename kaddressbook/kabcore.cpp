@@ -325,19 +325,7 @@ void KABCore::setContactSelected( const QString &uid )
   if ( !mDetailsViewer->isHidden() )
     mDetailsViewer->setAddressee( addr );
   if ( !mSelectedDistributionList.isNull() && mDistListEntryView->isShown() ) {
-    KPIM::DistributionList dist = KPIM::DistributionList::findByName( addressBook(), mSelectedDistributionList );
-    if ( !dist.isEmpty() ) {
-      mDistListEntryView->clear();
-      typedef KPIM::DistributionList::Entry::List EntryList;   
-      const EntryList entries = dist.entries( addressBook() ); 
-      for (EntryList::ConstIterator it = entries.begin(); it != entries.end(); ++it )
-      {
-        if ( (*it).addressee.uid() == uid ) {
-          mDistListEntryView->setEntry( dist, *it );
-          break;
-        }
-      }
-    }
+      showDistributionListEntry( uid );
   }
   mExtensionManager->setSelectionChanged();
 
@@ -1491,6 +1479,22 @@ void KABCore::editDistributionList( const QString &name )
   editDistributionList( KPIM::DistributionList::findByName( addressBook(), name ) );
 }
 
+void KABCore::showDistributionListEntry( const QString& uid )
+{
+  KPIM::DistributionList dist = KPIM::DistributionList::findByName( addressBook(), mSelectedDistributionList );
+  if ( !dist.isEmpty() ) {
+    mDistListEntryView->clear();
+    typedef KPIM::DistributionList::Entry::List EntryList;   
+    const EntryList entries = dist.entries( addressBook() ); 
+    for (EntryList::ConstIterator it = entries.begin(); it != entries.end(); ++it ) {
+      if ( (*it).addressee.uid() == uid ) {
+        mDistListEntryView->setEntry( dist, *it );
+        break;
+      }
+    }
+  }
+}
+
 void KABCore::editDistributionList( const KPIM::DistributionList &dist )
 {
   if ( dist.isEmpty() )
@@ -1523,8 +1527,11 @@ void KABCore::setSelectedDistributionList( const QString &name )
   mSearchManager->setSelectedDistributionList( name );
   mViewHeaderLabel->setText( name.isNull() ? i18n( "Contacts" ) : i18n( "Distribution List: %1" ).arg( name ) );
   mDistListButtonWidget->setShown( !mSelectedDistributionList.isNull() );
-  if ( !name.isNull() )
+  if ( !name.isNull() ) {
     mDetailsStack->raiseWidget( mDistListEntryView );
+    const QStringList selectedUids = selectedUIDs();
+    showDistributionListEntry( selectedUids.isEmpty() ? QString() : selectedUids.first() );
+  }
   else
     mDetailsStack->raiseWidget( mExtensionManager->activeDetailsWidget() ? mExtensionManager->activeDetailsWidget() : mDetailsWidget );
 }
