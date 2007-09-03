@@ -32,8 +32,6 @@
 #include <kdebug.h>
 #include <klibloader.h>
 
-#include "options.h"
-
 /** @file Defines a template class for factories for KPilot's conduits. */
 
 class KPilotLink;
