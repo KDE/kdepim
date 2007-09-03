@@ -1,5 +1,4 @@
 [Desktop Entry]
-Encoding=UTF-8
 Name=KonsoleKalendar
 Name[af]=Konsole Kalender
 Name[cs]=Konzolový kalendář
@@ -22,7 +21,7 @@ Name[x-test]=xxKonsoleKalendarxx
 Exec=kdialog --sorry "konsolekalendar is a command-line only program.  Please read the handbook at help:/konsolekalendar for more info."
 Icon=konsolekalendar
 Type=Application
-DocPath=konsolekalendar/index.html
+X-KDE-DocPath=konsolekalendar/index.html
 Terminal=false
 NoDisplay=true
 Categories=Qt;KDE;Utility;X-KDE-More;
