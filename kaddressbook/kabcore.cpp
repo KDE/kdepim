@@ -324,9 +324,11 @@ void KABCore::setContactSelected( const QString &uid )
   KABC::Addressee addr = mAddressBook->findByUid( uid );
   if ( !mDetailsViewer->isHidden() )
     mDetailsViewer->setAddressee( addr );
+#ifdef KDEPIM_NEW_DISTRLISTS 
   if ( !mSelectedDistributionList.isNull() && mDistListEntryView->isShown() ) {
       showDistributionListEntry( uid );
   }
+#endif
   mExtensionManager->setSelectionChanged();
 
   // update the actions
@@ -1445,9 +1447,10 @@ bool KABCore::handleCommandLine( KAddressBookIface* iface )
   return doneSomething;
 }
 
-#ifdef KDEPIM_NEW_DISTRLISTS
 void KABCore::removeSelectedContactsFromDistList()
 {
+#ifdef KDEPIM_NEW_DISTRLISTS
+
   KPIM::DistributionList dist = KPIM::DistributionList::findByName( addressBook(), mSelectedDistributionList );
   if ( dist.isEmpty() )
     return;
@@ -1459,10 +1462,12 @@ void KABCore::removeSelectedContactsFromDistList()
   }
   addressBook()->insertAddressee( dist );
   setModified();
+#endif
 }
 
 void KABCore::sendMailToDistributionList( const QString &name )
 {
+#ifdef KDEPIM_NEW_DISTRLISTS
   KPIM::DistributionList dist = KPIM::DistributionList::findByName( addressBook(), name );
   if ( dist.isEmpty() )
     return;
@@ -1472,12 +1477,25 @@ void KABCore::sendMailToDistributionList( const QString &name )
   for ( EntryList::ConstIterator it = entries.begin(); it != entries.end(); ++it )
     mails += (*it).addressee.fullEmail( (*it).email );
   sendMail( mails.join( ", " ) ); 
+#endif
 }
+
+void KABCore::editSelectedDistributionList()
+{
+#ifdef KDEPIM_NEW_DISTRLISTS
+  editDistributionList( KPIM::DistributionList::findByName( addressBook(), mSelectedDistributionList ) );
+#endif
+}
+
 
 void KABCore::editDistributionList( const QString &name )
 {
+#ifdef KDEPIM_NEW_DISTRLISTS
   editDistributionList( KPIM::DistributionList::findByName( addressBook(), name ) );
+#endif
 }
+
+#ifdef KDEPIM_NEW_DISTRLISTS
 
 void KABCore::showDistributionListEntry( const QString& uid )
 {
@@ -1511,10 +1529,6 @@ void KABCore::editDistributionList( const KPIM::DistributionList &dist )
   delete dlg;
 }
 
-void KABCore::editSelectedDistributionList()
-{
-  editDistributionList( KPIM::DistributionList::findByName( addressBook(), mSelectedDistributionList ) );
-}
 
 KPIM::DistributionList::List KABCore::distributionLists() const
 {

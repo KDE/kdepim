@@ -402,12 +402,9 @@ class KDE_EXPORT KABCore : public KAB::Core
 
     void editDistributionList( const QString &name );
 
-#ifdef KDEPIM_NEW_DISTRLISTS
     void removeSelectedContactsFromDistList();
     void editSelectedDistributionList();
     void sendMailToDistributionList( const QString &id ); 
-
-#endif
 
   private:
     void initGUI();

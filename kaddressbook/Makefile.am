@@ -1,4 +1,4 @@
-SUBDIRS = interfaces common printing editors . views features kcmconfigs pics csv-templates \
+SUBDIRS = interfaces common printing editors . views features xxport kcmconfigs pics csv-templates \
           thumbnailcreator
 SRCDOC_DEST = $(kde_htmldir)/en/kaddressbook
 
