@@ -86,8 +86,8 @@ int main( int argc, char** argv )
   manager->show();
 
   Kleo::UiServer server;
-  server.registerCommand( make_shared_ptr( new Kleo::VerifyEmailCommand ) );
-  server.registerCommand( make_shared_ptr( new Kleo::DecryptEmailCommand ) );
+  server.registerCommandFactory( make_shared_ptr( new Kleo::GenericAssuanCommandFactory<Kleo::VerifyEmailCommand> ) );
+  server.registerCommandFactory( make_shared_ptr( new Kleo::GenericAssuanCommandFactory<Kleo::DecryptEmailCommand> ) );
 
   server.start();
 

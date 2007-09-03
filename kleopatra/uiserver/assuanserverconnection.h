@@ -42,12 +42,12 @@
 
 namespace Kleo {
 
-    class AssuanCommand;
+    class AssuanCommandFactory;
 
     class AssuanServerConnection {
         KDAB_DISABLE_COPY( AssuanServerConnection );
     public:
-        AssuanServerConnection( int fd, const std::vector< boost::shared_ptr<AssuanCommand> > & commands );
+        AssuanServerConnection( int fd, const std::vector< boost::shared_ptr<AssuanCommandFactory> > & factories );
         ~AssuanServerConnection();
 
         class Private;

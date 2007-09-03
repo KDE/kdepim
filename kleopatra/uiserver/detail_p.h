@@ -37,69 +37,29 @@
 
 #include <boost/shared_ptr.hpp>
 
-#include <typeinfo>
+#include <QByteArray>
 
 namespace Kleo {
 namespace _detail {
 
-    // Predicate for sorting by typeid (works for containers of
-    // pointers and shared_ptr's)
-    struct ByTypeId {
+    template <template <typename U> class Op>
+    struct ByName {
         typedef bool result_type;
-        bool operator()( const std::type_info & lhs, const std::type_info & rhs ) const {
-            return lhs.before( rhs );
+
+        template <typename T>
+        bool operator()( const T & lhs, const T & rhs ) const {
+            return Op<int>()( qstricmp( lhs->name(), rhs->name() ), 0 );
         }
         template <typename T>
-        bool operator()( const T * lhs, const T * rhs ) const {
-            return operator()( typeid(*lhs), typeid(*rhs) );
+        bool operator()( const T & lhs, const char * rhs ) const {
+            return Op<int>()( qstricmp( lhs->name(), rhs ), 0 );
         }
         template <typename T>
-        bool operator()( const std::type_info & lhs, const T * rhs ) const {
-            return operator()( lhs, typeid(*rhs) );
+        bool operator()( const char * lhs, const T & rhs ) const {
+            return Op<int>()( qstricmp( lhs, rhs->name() ), 0 );
         }
-        template <typename T>
-        bool operator()( const T * lhs, const std::type_info & rhs ) const {
-            return operator()( typeid(*lhs), rhs );
-        }
-        template <typename T>
-        bool operator()( const boost::shared_ptr<T> & lhs, const boost::shared_ptr<T> & rhs ) const {
-            return operator()( lhs.get(), rhs.get() );
-        }
-        template <typename T>
-        bool operator()( const std::type_info & lhs, const boost::shared_ptr<T> & rhs ) const {
-            return operator()( lhs, rhs.get() );
-        }
-        template <typename T>
-        bool operator()( const T * lhs, const boost::shared_ptr<T> & rhs ) const {
-            return operator()( lhs, rhs.get() );
-        }
-        template <typename T>
-        bool operator()( const boost::shared_ptr<T> & lhs, const std::type_info & rhs ) const {
-            return operator()( lhs.get(), rhs );
-        }
-        template <typename T>
-        bool operator()( const boost::shared_ptr<T> & lhs, const T * rhs ) const {
-            return operator()( lhs.get(), rhs );
-        }
-        template <typename T>
-        bool operator()( const boost::shared_ptr<const T> & lhs, const boost::shared_ptr<const T> & rhs ) const {
-            return operator()( lhs.get(), rhs.get() );
-        }
-        template <typename T>
-        bool operator()( const std::type_info & lhs, const boost::shared_ptr<const T> & rhs ) const {
-            return operator()( lhs, rhs.get() );
-        }
-        template <typename T>
-        bool operator()( const boost::shared_ptr<const T> & lhs, const std::type_info & rhs ) const {
-            return operator()( lhs.get(), rhs );
-        }
-        template <typename T>
-        bool operator()( const T * lhs, const boost::shared_ptr<const T> & rhs ) const {
-            return operator()( lhs, rhs.get() );
-        }
-        template <typename T>
-        bool operator()( const boost::shared_ptr<const T> & lhs, const T * rhs ) const {
-            return operator()( lhs.get(), rhs );
+        bool operator()( const char * lhs, const char * rhs ) const {
+            return Op<int>()( qstricmp( lhs, rhs ), 0 );
         }
     };
 

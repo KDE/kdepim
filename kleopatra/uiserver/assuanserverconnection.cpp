@@ -42,12 +42,14 @@
 #include <QVariant>
 
 #include <boost/type_traits/remove_pointer.hpp>
-#include <boost/ref.hpp>
 
-#include <typeinfo>
 #include <vector>
 #include <map>
 #include <string>
+
+#ifdef __GNUC__
+# include <ext/algorithm> // for is_sorted
+#endif
 
 #ifdef Q_OS_WIN32
 # include <io.h>
@@ -73,9 +75,9 @@ struct AssuanContext : AssuanContextBase {
 class AssuanServerConnection::Private : public QObject {
     Q_OBJECT
     friend class ::Kleo::AssuanServerConnection;
-    friend class ::Kleo::AssuanCommand;
+    friend class ::Kleo::AssuanCommandFactory;
 public:
-    Private( int fd_, const std::vector< shared_ptr<AssuanCommand> > & commands_ );
+    Private( int fd_, const std::vector< shared_ptr<AssuanCommandFactory> > & factories_ );
     ~Private();
 
 public Q_SLOTS:
@@ -94,25 +96,28 @@ public Q_SLOTS:
     }
 
 private:
-    static int handler( assuan_context_t ctx_, char * line_, const std::type_info & ti_ ) {
+    static int handler( assuan_context_t ctx_, char * line_, const char * commandName ) {
         assert( assuan_get_pointer( ctx_ ) );
 
         AssuanServerConnection::Private & conn = *static_cast<AssuanServerConnection::Private*>( assuan_get_pointer( ctx_ ) );
 
-        const std::vector< shared_ptr<AssuanCommand> >::const_iterator it = std::lower_bound( conn.commands.begin(), conn.commands.end(), ti_, _detail::ByTypeId() );
-        assert( it != conn.commands.end() );
-        assert( typeid(*it->get()) == ti_ );
+        const std::vector< shared_ptr<AssuanCommandFactory> >::const_iterator it
+            = std::lower_bound( conn.factories.begin(), conn.factories.end(), commandName, _detail::ByName<std::less>() );
+        assert( it != conn.factories.end() );
+        assert( *it );
+        assert( qstricmp( (*it)->name(), commandName ) == 0 );
 
-        const shared_ptr<AssuanCommand> cmd = *it;
+        const shared_ptr<AssuanCommand> cmd = (*it)->create();
+        assert( cmd );
 
         //### cmd->d->options = conn.options;
         //### cmd->d->input device = new KDPipeIODevice
         //### cmd->d->putput device = new KDPipeIODevice
         //### cmd->d->ctx = ctx;
-        if ( const int err = (*it)->start( line_ ) )
+        if ( const int err = cmd->start( line_ ) )
             return err;
 
-        conn.currentCommand = *it;
+        conn.currentCommand = cmd;
         return 0;
     };
 
@@ -121,27 +126,27 @@ private:
         
         AssuanServerConnection::Private & conn = *static_cast<AssuanServerConnection::Private*>( assuan_get_pointer( ctx_ ) );
 
-        conn.options.insert( std::make_pair( key, QString::fromUtf8( value ) ) );
+        conn.options[key] = QString::fromUtf8( value );
 
         return 0;
         //return gpg_error( GPG_ERR_UNKNOWN_OPTION );
     }
 
     void cleanup();
-    void setCommands( const std::vector< shared_ptr<AssuanCommand> > & commands );
+    void setCommandFactories( const std::vector< shared_ptr<AssuanCommandFactory> > & factories );
     void setSocketDescriptor( int fd );    
 
 
     int fd;
     AssuanContext ctx;
     std::vector< shared_ptr<QSocketNotifier> > notifiers;
-    std::vector< shared_ptr<AssuanCommand> > commands; // sorted: _detail::ByTypeId
+    std::vector< shared_ptr<AssuanCommandFactory> > factories; // sorted: _detail::ByName<std::less>
     shared_ptr<AssuanCommand> currentCommand;
     std::map<std::string,QVariant> options;
 };
 
-int AssuanCommand::_handle( assuan_context_t ctx, char * line, const std::type_info & ti ) {
-    return AssuanServerConnection::Private::handler( ctx, line, ti );
+int AssuanCommandFactory::_handle( assuan_context_t ctx, char * line, const char * commandName ) {
+    return AssuanServerConnection::Private::handler( ctx, line, commandName );
 }
 
 void AssuanServerConnection::Private::cleanup() {
@@ -152,10 +157,12 @@ void AssuanServerConnection::Private::cleanup() {
     fd = -1;
 }
 
-AssuanServerConnection::Private::Private( int fd_, const std::vector< shared_ptr<AssuanCommand> > & commands_ )
-    : fd( fd_ ), commands( commands_ )
+AssuanServerConnection::Private::Private( int fd_, const std::vector< shared_ptr<AssuanCommandFactory> > & factories_ )
+    : fd( fd_ ), factories( factories_ )
 {
-    std::sort( commands.begin(), commands.end(), _detail::ByTypeId() );
+#ifdef __GNUC__
+    assert( __gnu_cxx::is_sorted( factories_.begin(), factories_.end(), _detail::ByName<std::less>() ) );
+#endif
 
     if ( fd < 0 )
         throw assuan_exception( gpg_error( GPG_ERR_INV_ARG ), "pre-assuan_init_socket_server_ext" );
@@ -190,9 +197,9 @@ AssuanServerConnection::Private::Private( int fd_, const std::vector< shared_ptr
         throw assuan_exception( err, "activate \"OUTPUT\" default handler" );
 
     // register user-defined commands:
-    Q_FOREACH( shared_ptr<AssuanCommand> cmd, commands )
-        if ( const gpg_error_t err = assuan_register_command( ctx.get(), cmd->name(), cmd->_handler() ) )
-            throw assuan_exception( err, std::string( "register \"" ) + cmd->name() + "\" handler" );
+    Q_FOREACH( shared_ptr<AssuanCommandFactory> fac, factories )
+        if ( const gpg_error_t err = assuan_register_command( ctx.get(), fac->name(), fac->_handler() ) )
+            throw assuan_exception( err, std::string( "register \"" ) + fac->name() + "\" handler" );
 
     //assuan_set_hello_line( ctx.get(), GPG UI server (qApp->applicationName() + " v" + kapp->applicationVersion() + "ready to serve" )
 
@@ -205,8 +212,8 @@ AssuanServerConnection::Private::~Private() {
     cleanup();
 }
 
-AssuanServerConnection::AssuanServerConnection( int fd, const std::vector< shared_ptr<AssuanCommand> > & cmds )
-    : d( new Private( fd, cmds ) )
+AssuanServerConnection::AssuanServerConnection( int fd, const std::vector< shared_ptr<AssuanCommandFactory> > & factories )
+    : d( new Private( fd, factories ) )
 {
 
 }

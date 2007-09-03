@@ -35,9 +35,10 @@
 
 #include <utils/pimpl_ptr.h>
 
+#include <boost/shared_ptr.hpp>
+
 #include <string>
 #include <map>
-#include <typeinfo>
 
 class QVariant;
 class QIODevice;
@@ -53,20 +54,22 @@ namespace Kleo {
       <h3>Implementing a new AssuanCommand</h3>
 
       You do not directly inherit AssuanCommand, unless you want to
-      deal with the ugle C callback handling. Assuming you don't, then
-      you inherit your command class from AssuanHandlerMixin, passing
-      your class as the template argument to AssuanHandlerMixin, like
-      this:
+      deal with implementing low-level, repetetive things like name()
+      in terms of staticName(). Assuming you don't, then you inherit
+      your command class from AssuanCommandMixin, passing your class
+      as the template argument to AssuanCommandMixin, like this:
 
       \code
-      class MyFooCommand : public AssuanHandlerMixin<MyFooCommand> {
+      class MyFooCommand : public AssuanCommandMixin<MyFooCommand> {
       \endcode
       (http://en.wikipedia.org/wiki/Curiously_recurring_template_pattern)
 
-      You then choose a command name():
+      You then choose a command name, and return that from the static
+      method staticName(), which is by convention queried by both
+      AssuanCommandMixin<> and GenericAssuanCommandFactory<>:
 
       \code
-          const char * name() const { return "MYFOO"; }
+          static const char * staticName() { return "MYFOO"; }
       \endcode
 
       The string should be all-uppercase by convention, but the
@@ -170,7 +173,17 @@ namespace Kleo {
 
       <h3>Registering the command with UiServer</h3>
 
-      TBD... (either via prototype command + clone(), or a factory).
+      To register a command, you implement a AssuanCommandFactory for
+      your AssuanCommand subclass, and register it with the
+      UiServer. This can be made considerably easier using
+      GenericAssuanCommandFactory:
+
+      \code
+      UiServer server;
+      server.registerCommandFactory( shared_ptr<AssuanCommandFactory>( new GenericAssuanCommandFactory<MyFooCommand> ) );
+      // more registerCommandFactory calls...
+      server.start();
+      \endcode
 
     */
     class AssuanCommand {
@@ -198,39 +211,60 @@ namespace Kleo {
 
     private:
         virtual void canceled() = 0;
+        virtual void reset() = 0;
 
-        // forget the rest, it's internal!
-    public:
-        typedef int(*_Handler)( assuan_context_s*, char *);
-        virtual _Handler _handler() const = 0;
-    protected:
-        // defined in assuanserverconnection.cpp!
-        static int _handle( assuan_context_s*, char *, const std::type_info & );
     public:
         class Private;
     private:
         kdtools::pimpl_ptr<Private> d;
     };
 
-    template <typename Derived>
-    class AssuanHandlerMixin : public AssuanCommand {
-        /* reimp */ _Handler _handler() const { return &AssuanHandlerMixin::_handle; }
+    class AssuanCommandFactory {
+    public:
+        virtual ~AssuanCommandFactory() {}
+
+        virtual boost::shared_ptr<AssuanCommand> create() const = 0;
+        virtual const char * name() const = 0;
+
+        typedef int(*_Handler)( assuan_context_s*, char *);
+        virtual _Handler _handler() const = 0;
+    protected:
+        // defined in assuanserverconnection.cpp!
+        static int _handle( assuan_context_s*, char *, const char * );
+    };
+
+    template <typename Command>
+    class GenericAssuanCommandFactory : public AssuanCommandFactory {
+        /* reimp */ AssuanCommandFactory::_Handler _handler() const { return &GenericAssuanCommandFactory::_handle; }
         static int _handle( assuan_context_s* _ctx, char * _line ) {
-            return AssuanCommand::_handle( _ctx, _line, typeid(Derived) );
+            return AssuanCommandFactory::_handle( _ctx, _line, Command::staticName() );
         }
+        /* reimp */ boost::shared_ptr<AssuanCommand> create() const { return make(); }
+        /* reimp */ const char * name() const { return Command::staticName(); }
+    public:
+        static boost::shared_ptr<Command> make() { return boost::shared_ptr<Command>( new Command ); }
+    };
+
+    template <typename Derived>
+    class AssuanCommandMixin : public AssuanCommand {
+        /* reimp */ const char * name() const { return Derived::staticName(); }
     };
 
     // ### these are only temporary:
-    class VerifyEmailCommand : public AssuanHandlerMixin<VerifyEmailCommand> {
-        const char * name() const { return "VERIFYEMAIL"; }
+    class VerifyEmailCommand : public AssuanCommandMixin<VerifyEmailCommand> {
         int start( const std::string & );
         void canceled() {}
+        void reset() {}
+    public:
+        static const char * staticName() { return "VERIFYEMAIL"; }
     };
 
-    class DecryptEmailCommand : public AssuanHandlerMixin<DecryptEmailCommand> {
-        const char * name() const { return "DECRYPTEMAIL"; }
+    class DecryptEmailCommand : public AssuanCommandMixin<DecryptEmailCommand> {
         int start( const std::string & );
         void canceled() {}
+        void reset() {}
+    public:
+        static const char * staticName() { return "DECRYPTEMAIL"; }
     };
 }
 

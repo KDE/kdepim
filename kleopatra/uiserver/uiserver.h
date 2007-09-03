@@ -41,7 +41,7 @@
 
 namespace Kleo {
 
-    class AssuanCommand;
+    class AssuanCommandFactory;
 
     class UiServer : public QObject {
         Q_OBJECT
@@ -49,7 +49,7 @@ namespace Kleo {
         explicit UiServer( QObject * parent=0 );
         ~UiServer();
 
-        bool registerCommand( const boost::shared_ptr<AssuanCommand> & cmd );
+        bool registerCommandFactory( const boost::shared_ptr<AssuanCommandFactory> & cmdFactory );
 
         bool waitForStopped( unsigned int ms=0xFFFFFFFF );
 

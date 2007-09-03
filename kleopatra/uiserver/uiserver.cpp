@@ -96,7 +96,7 @@ protected:
 private:
     KTempDir tmpDir;
     QFile file;
-    std::vector< shared_ptr<AssuanCommand> > commands;
+    std::vector< shared_ptr<AssuanCommandFactory> > factories;
     std::vector< shared_ptr<AssuanServerConnection> > connections;
 };
 
@@ -104,7 +104,7 @@ UiServer::Private::Private( UiServer * qq )
     : QTcpServer(),
       tmpDir( tmpDirPrefix() ),
       file(),
-      commands(),
+      factories(),
       connections()
 {
     makeListeningSocket();
@@ -119,13 +119,13 @@ UiServer::UiServer( QObject * p )
 
 UiServer::~UiServer() {}
 
-bool UiServer::registerCommand( const shared_ptr<AssuanCommand> & cmd ) {
-    if ( cmd && empty( std::equal_range( d->commands.begin(), d->commands.end(), cmd, _detail::ByTypeId() ) ) ) {
-        d->commands.push_back( cmd );
-        std::inplace_merge( d->commands.begin(), d->commands.end() - 1, d->commands.end() );
+bool UiServer::registerCommandFactory( const shared_ptr<AssuanCommandFactory> & cf ) {
+    if ( cf && empty( std::equal_range( d->factories.begin(), d->factories.end(), cf, _detail::ByName<std::less>() ) ) ) {
+        d->factories.push_back( cf );
+        std::inplace_merge( d->factories.begin(), d->factories.end() - 1, d->factories.end() );
         return true;
     } else {
-        qWarning( "UiServer::registerCommand( %p ): command NULL or already registered", cmd ? cmd.get() : 0 );
+        qWarning( "UiServer::registerCommandFactory( %p ): factory NULL or already registered", cf ? cf.get() : 0 );
         return false;
     }
 }
@@ -231,7 +231,7 @@ void UiServer::Private::makeListeningSocket() {
 
 void UiServer::Private::incomingConnection( int fd ) {
     try {
-        const shared_ptr<AssuanServerConnection> c( new AssuanServerConnection( fd, commands ) );
+        const shared_ptr<AssuanServerConnection> c( new AssuanServerConnection( fd, factories ) );
         connections.push_back( c );
     } catch ( const assuan_exception & e ) {
         QTcpSocket s;
