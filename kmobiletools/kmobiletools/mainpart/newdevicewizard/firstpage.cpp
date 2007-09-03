@@ -54,8 +54,6 @@ FirstPage::FirstPage( QWidget* parent )
     setTitle( i18nc( "First new device wizard page title", "Mobile Phone Information" ) );
     setSubTitle( i18n( "Please enter a name to identify your phone later (e.g. Nokia 3650)\n"
                        "and choose your preferred engine." ) );
-
-    //setCommitPage( true );
 }
 
 void FirstPage::engineSelected( int index ) {
@@ -143,7 +141,7 @@ bool FirstPage::validatePage() {
     QStringList devices = KMobileTools::MainConfig::devicelist();
     for( int i=0; i<devices.size(); i++ ) {
         KMobileTools::DevicesConfig* deviceConfig = KMobileTools::DevicesConfig::prefs( devices.at( i ) );
-        if( deviceConfig->devicename() == enteredDeviceName ) {
+        if( deviceConfig->devicename() == QString( enteredDeviceName ).simplified() ) {
             deviceExists = true;
             break;
         }
