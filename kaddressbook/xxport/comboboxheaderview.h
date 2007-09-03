@@ -35,8 +35,8 @@ class QTableWidget;
 class ComboBoxHeaderView : public QHeaderView {
   Q_OBJECT
 
-  Q_PROPERTY( QStringList items READ items );
-  Q_PROPERTY( int margin READ margin WRITE setMargin );
+  Q_PROPERTY( QStringList items READ items )
+  Q_PROPERTY( int margin READ margin WRITE setMargin )
 
   public:
     ComboBoxHeaderView( QStringList items,
