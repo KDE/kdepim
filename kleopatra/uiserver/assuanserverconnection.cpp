@@ -216,6 +216,28 @@ AssuanServerConnection::~AssuanServerConnection() {}
 //
 //
 
+class InquiryHandler : public QObject {
+    Q_OBJECT
+public:
+    explicit InquiryHandler( const char * keyword_, QObject * p=0 )
+        : QObject( p ), keyword( keyword_ ) {}
+
+    static int handler( void * cb_data, int rc, char * buffer, size_t buflen ) {
+        assert( cb_data );
+        InquiryHandler * this_ = static_cast<InquiryHandler*>(cb_data);
+        emit this_->signal( rc, QByteArray::fromRawData( buffer, buflen ), this_->keyword );
+        std::free( buffer );
+        delete this_;
+        return 0;
+    }
+
+Q_SIGNALS:
+    void signal( int rc, const QByteArray & data, const QByteArray & keyword );
+
+private:
+    const char * keyword;
+};
+
 class AssuanCommand::Private {
 public:
 
@@ -223,6 +245,8 @@ public:
     QIODevice * output;
     std::map<std::string,QVariant> options;
     AssuanContext ctx;
+
+public:
 };
 
 AssuanCommand::AssuanCommand()
@@ -264,14 +288,22 @@ QIODevice * AssuanCommand::bulkOutputDevice( int idx ) const {
     return idx == 0 ? d->output : 0 ;
 }
 
-int AssuanCommand::sendStatus( ... ) {
-    // ### decide on a signature and implement
-    return makeError( GPG_ERR_NOT_IMPLEMENTED );
+int AssuanCommand::sendStatus( const char * keyword, const QString & text ) {
+    return assuan_write_status( d->ctx.get(), keyword, text.toUtf8().constData() );
 }
 
 int AssuanCommand::inquire( const char * keyword, QObject * receiver, const char * slot, unsigned int maxSize ) {
+    assert( keyword );
+    assert( receiver );
+    assert( slot );
+
+    std::auto_ptr<InquiryHandler> ih( new InquiryHandler( keyword, receiver ) );
+    receiver->connect( ih.get(), SIGNAL(signal(int,QByteArray,QByteArray)), slot );
 #ifdef HAVE_NEW_STYLE_ASSUAN_INQUIRE_EXT
-    return assuan_inquire_ext( d->ctx.get(), keyword, maxSize, inquire_handler, d.get() );
+    if ( const gpg_error_t err = assuan_inquire_ext( d->ctx.get(), keyword, maxSize, InquiryHandler::handler, ih.get() ) )
+         return err;
+    ih.release();
+    return 0;
 #else
     (void)keyword; (void)receiver; (void)slot; (void)maxSize;
     return makeError( GPG_ERR_NOT_IMPLEMENTED );
@@ -291,8 +323,6 @@ void AssuanCommand::done( int err ) {
     if ( rc )
         qFatal( "AssuanCommand::done: assuan_process_done returned error %d (%s)",
                 static_cast<int>(rc), gpg_strerror(rc) );
-
-    // ### ... what else? ...
     d->ctx.reset();
 }
 

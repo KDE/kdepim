@@ -206,7 +206,7 @@ namespace Kleo {
         QIODevice * bulkInputDevice( int idx=0 ) const;
         QIODevice * bulkOutputDevice( int idx=0 ) const;
 
-        int sendStatus( ... ); // TBD
+        int sendStatus( const char * keyword, const QString & text );
 
         int inquire( const char * keyword, QObject * receiver, const char * slot, unsigned int maxSize=0 );
 
