@@ -4,6 +4,7 @@
       xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0
       http://www.kde.org/standards/kcfg/1.0/kcfg.xsd" >
   <include>kglobalsettings.h</include>
+  <include>kcolorscheme.h</include>
   <kcfgfile name="knoderc"/>
   <!-- News reading options -->
   <group name="READNEWS">
@@ -278,7 +279,7 @@
     </entry>
     <entry name="backgroundColor" type="Color">
       <label>Background</label>
-      <default code="true">KGlobalSettings::baseColor()</default>
+      <default code="true">KColorScheme(QPalette::Active, KColorScheme::View).background().color()</default>
     </entry>
     <entry name="alternateBackgroundColor" type="Color">
       <label>Alternate Background</label>
@@ -286,7 +287,7 @@
     </entry>
     <entry name="textColor" type="Color">
       <label>Normal Text</label>
-      <default code="true">KGlobalSettings::textColor()</default>
+      <default code="true">KColorScheme(QPalette::Active, KColorScheme::View).foreground().color()</default>
     </entry>
     <entry name="quote$(ColorIndex)Color" key="quote$(ColorIndex)Color" type="Color">
       <parameter name="ColorIndex" type="Int" max="2"/>
@@ -304,7 +305,7 @@
     </entry>
     <entry name="unreadThreadColor" type="Color">
       <label>Unread Thread</label>
-      <default code="true">KGlobalSettings::textColor()</default>
+      <default code="true">KColorScheme(QPalette::Active, KColorScheme::View).foreground().color()</default>
     </entry>
     <entry name="readArticleColor" key="readArtColor" type="Color">
       <label>Read Article</label>
