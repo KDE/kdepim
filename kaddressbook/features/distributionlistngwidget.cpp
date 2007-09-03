@@ -174,7 +174,7 @@ void KAB::DistributionListNg::MainWidget::deleteSelectedDistributionList()
     core()->addressBook(), name );
     if ( list.isEmpty() )
         return;
-    core()->deleteDistributionLists( list.uid() );
+    core()->deleteDistributionLists( name );
 }
 
 void KAB::DistributionListNg::MainWidget::contactsDropped( const QString &listName, const KABC::Addressee::List &addressees )

@@ -214,9 +214,9 @@ class KDE_EXPORT KABCore : public KAB::Core
     /**
       Deletes given distribution lists from the address book.
 
-      @param uids The uids of the distribution lists, which shall be deleted.
+      @param uids The names of the distribution lists which shall be deleted.
      */
-    void deleteDistributionLists( const QStringList &uids );
+    void deleteDistributionLists( const QStringList &names );
 
 
     /**

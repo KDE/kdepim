@@ -410,27 +410,22 @@ void KABCore::deleteContacts()
   deleteContacts( uidList );
 }
 
-void KABCore::deleteDistributionLists( const QStringList & uids )
+void KABCore::deleteDistributionLists( const QStringList & names )
 {
-  if ( uids.count() > 0 ) {
-    QStringList names;
-    QStringList::ConstIterator it = uids.begin();
-    const QStringList::ConstIterator endIt( uids.end() );
-    while ( it != endIt ) {
-      KABC::Addressee addr = mAddressBook->findByUid( *it );
-      names.append( addr.name() );
-      ++it;
-    }
-
-    if ( KMessageBox::warningContinueCancelList( mWidget, i18n( "Do you really want to delete this distribution list?",
-                                                 "Do you really want to delete these %n distribution lists?", uids.count() ),
-                                                 names, QString::null, KStdGuiItem::del() ) == KMessageBox::Cancel )
+  if ( names.isEmpty() )
       return;
+  if ( KMessageBox::warningContinueCancelList( mWidget, i18n( "Do you really want to delete this distribution list?",
+                                                 "Do you really want to delete these %n distribution lists?", names.count() ),
+                                                 names, QString::null, KStdGuiItem::del() ) == KMessageBox::Cancel )
+   return;
 
-    DeleteCommand *command = new DeleteCommand( mAddressBook, uids );
-    mCommandHistory->addCommand( command );  
-    setModified( true );
+  QStringList uids;
+  for ( QStringList::ConstIterator it = names.begin(); it != names.end(); ++it ) {
+      uids.append( KPIM::DistributionList::findByName( mAddressBook, *it ).uid() ); 
   }
+  DeleteCommand *command = new DeleteCommand( mAddressBook, uids );
+  mCommandHistory->addCommand( command );  
+  setModified( true );
 }
 
 void KABCore::deleteContacts( const QStringList &uids )
