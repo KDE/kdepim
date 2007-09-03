@@ -48,6 +48,8 @@ struct assuan_context_s;
 
 namespace Kleo {
 
+    class AssuanCommandFactory;
+
     /*!
       \brief Base class for GnuPG UI Server commands
 
@@ -195,27 +197,26 @@ namespace Kleo {
 
         virtual const char * name() const = 0;
 
+        virtual void canceled() = 0;
     protected:
         bool hasOption( const char * opt ) const;
         QVariant option( const char * opt ) const;
-        std::map<std::string,QVariant> options() const;
+        const std::map<std::string,QVariant> & options() const;
 
-        QIODevice * bulkInputDevice( int idx=0 );
-        QIODevice * bulkOutputDevice( int idx=0 );
+        QIODevice * bulkInputDevice( int idx=0 ) const;
+        QIODevice * bulkOutputDevice( int idx=0 ) const;
 
         int sendStatus( ... ); // TBD
 
-        int inquire( const char * keyword, QObject * receiver, const char * signal );
+        int inquire( const char * keyword, QObject * receiver, const char * slot, unsigned int maxSize=0 );
 
         void done( int err=0 );
 
-    private:
-        virtual void canceled() = 0;
-        virtual void reset() = 0;
+        static int makeError( int code );
 
-    public:
-        class Private;
     private:
+        friend class ::Kleo::AssuanCommandFactory;
+        class Private;
         kdtools::pimpl_ptr<Private> d;
     };
 
@@ -252,7 +253,7 @@ namespace Kleo {
 
     // ### these are only temporary:
     class VerifyEmailCommand : public AssuanCommandMixin<VerifyEmailCommand> {
-        int start( const std::string & );
+        int start( const std::string & ) { return 0; }
         void canceled() {}
         void reset() {}
     public:
@@ -260,7 +261,7 @@ namespace Kleo {
     };
 
     class DecryptEmailCommand : public AssuanCommandMixin<DecryptEmailCommand> {
-        int start( const std::string & );
+        int start( const std::string & ) { return 0; }
         void canceled() {}
         void reset() {}
     public:

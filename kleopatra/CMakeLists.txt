@@ -12,10 +12,10 @@ add_subdirectory( tests )
 
 set(kleopatra_bin_SRCS ${libconf_SRCS}
    utils/formatting.cpp
+   utils/kdpipeiodevice.cpp
    uiserver/kleo-assuan.cpp
    uiserver/uiserver.cpp
    uiserver/assuanserverconnection.cpp
-   uiserver/assuancommand.cpp
    models/keylistmodel.cpp
    models/keylistsortfilterproxymodel.cpp
    models/subkeylistmodel.cpp

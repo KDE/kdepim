@@ -30,13 +30,13 @@
     your version.
 */
 
-#include "detail_p.h"
-
 #include "assuanserverconnection.h"
-
 #include "assuancommand.h"
 
+#include "detail_p.h"
 #include "kleo-assuan.h"
+
+#include <utils/kdpipeiodevice.h>
 
 #include <QSocketNotifier>
 #include <QVariant>
@@ -72,6 +72,12 @@ struct AssuanContext : AssuanContextBase {
     void reset( assuan_context_t ctx=0 ) { AssuanContextBase::reset( ctx, &assuan_deinit_server ); }
 };
 
+//
+//
+// AssuanServerConnection:
+//
+//
+
 class AssuanServerConnection::Private : public QObject {
     Q_OBJECT
     friend class ::Kleo::AssuanServerConnection;
@@ -86,7 +92,7 @@ public Q_SLOTS:
         if ( const int err = assuan_process_next( ctx.get() ) ) {
             if ( err == -1 || gpg_err_code(err) == GPG_ERR_EOF ) {
                 if ( currentCommand )
-                    ;//currentCommand->canceled(); // ### error: is private
+                    currentCommand->canceled();
             } else {
                 // ### what?
             }
@@ -96,30 +102,13 @@ public Q_SLOTS:
     }
 
 private:
-    static int handler( assuan_context_t ctx_, char * line_, const char * commandName ) {
+    static void reset_handler( assuan_context_t ctx_ ) {
         assert( assuan_get_pointer( ctx_ ) );
 
         AssuanServerConnection::Private & conn = *static_cast<AssuanServerConnection::Private*>( assuan_get_pointer( ctx_ ) );
 
-        const std::vector< shared_ptr<AssuanCommandFactory> >::const_iterator it
-            = std::lower_bound( conn.factories.begin(), conn.factories.end(), commandName, _detail::ByName<std::less>() );
-        assert( it != conn.factories.end() );
-        assert( *it );
-        assert( qstricmp( (*it)->name(), commandName ) == 0 );
-
-        const shared_ptr<AssuanCommand> cmd = (*it)->create();
-        assert( cmd );
-
-        //### cmd->d->options = conn.options;
-        //### cmd->d->input device = new KDPipeIODevice
-        //### cmd->d->putput device = new KDPipeIODevice
-        //### cmd->d->ctx = ctx;
-        if ( const int err = cmd->start( line_ ) )
-            return err;
-
-        conn.currentCommand = cmd;
-        return 0;
-    };
+        conn.options.clear();
+    }
 
     static int option_handler( assuan_context_t ctx_, const char * key, const char * value ) {
         assert( assuan_get_pointer( ctx_ ) );
@@ -144,10 +133,6 @@ private:
     shared_ptr<AssuanCommand> currentCommand;
     std::map<std::string,QVariant> options;
 };
-
-int AssuanCommandFactory::_handle( assuan_context_t ctx, char * line, const char * commandName ) {
-    return AssuanServerConnection::Private::handler( ctx, line, commandName );
-}
 
 void AssuanServerConnection::Private::cleanup() {
     options.clear();
@@ -196,6 +181,7 @@ AssuanServerConnection::Private::Private( int fd_, const std::vector< shared_ptr
     if ( const gpg_error_t err = assuan_register_command( ctx.get(), "OUTPUT", USE_DEFAULT_HANDLER ) )
         throw assuan_exception( err, "activate \"OUTPUT\" default handler" );
 
+
     // register user-defined commands:
     Q_FOREACH( shared_ptr<AssuanCommandFactory> fac, factories )
         if ( const gpg_error_t err = assuan_register_command( ctx.get(), fac->name(), fac->_handler() ) )
@@ -203,7 +189,10 @@ AssuanServerConnection::Private::Private( int fd_, const std::vector< shared_ptr
 
     //assuan_set_hello_line( ctx.get(), GPG UI server (qApp->applicationName() + " v" + kapp->applicationVersion() + "ready to serve" )
 
-    // register options:
+
+    // some notifiers we're interested in:
+    if ( const gpg_error_t err = assuan_register_reset_notify( ctx.get(), reset_handler ) )
+        throw assuan_exception( err, "register reset notify" );
     if ( const gpg_error_t err = assuan_register_option_handler( ctx.get(), option_handler ) )
         throw assuan_exception( err, "register option handler" );
 }
@@ -219,5 +208,130 @@ AssuanServerConnection::AssuanServerConnection( int fd, const std::vector< share
 }
 
 AssuanServerConnection::~AssuanServerConnection() {}
+
+
+//
+//
+// AssuanCommand:
+//
+//
+
+class AssuanCommand::Private {
+public:
+
+    QIODevice * input;
+    QIODevice * output;
+    std::map<std::string,QVariant> options;
+    AssuanContext ctx;
+};
+
+AssuanCommand::AssuanCommand()
+    : d( new Private )
+{
+
+}
+
+AssuanCommand::~AssuanCommand() {
+
+}
+
+// static
+int AssuanCommand::makeError( int code ) {
+    return gpg_error( static_cast<gpg_err_code_t>( code ) );
+}
+
+bool AssuanCommand::hasOption( const char * opt ) const {
+    return d->options.count( opt );
+}
+
+QVariant AssuanCommand::option( const char * opt ) const {
+    const std::map<std::string,QVariant>::const_iterator it = d->options.find( opt );
+    if ( it == d->options.end() )
+        return QVariant();
+    else
+        return it->second;
+}
+
+const std::map<std::string,QVariant> & AssuanCommand::options() const {
+    return d->options;
+}
+
+QIODevice * AssuanCommand::bulkInputDevice( int idx ) const {
+    return idx == 0 ? d->input : 0 ;
+}
+
+QIODevice * AssuanCommand::bulkOutputDevice( int idx ) const {
+    return idx == 0 ? d->output : 0 ;
+}
+
+int AssuanCommand::sendStatus( ... ) {
+    // ### decide on a signature and implement
+    return makeError( GPG_ERR_NOT_IMPLEMENTED );
+}
+
+int AssuanCommand::inquire( const char * keyword, QObject * receiver, const char * slot, unsigned int maxSize ) {
+#ifdef HAVE_NEW_STYLE_ASSUAN_INQUIRE_EXT
+    return assuan_inquire_ext( d->ctx.get(), keyword, maxSize, inquire_handler, d.get() );
+#else
+    (void)keyword; (void)receiver; (void)slot; (void)maxSize;
+    return makeError( GPG_ERR_NOT_IMPLEMENTED );
+#endif
+}
+
+void AssuanCommand::done( int err ) {
+    // close bulk I/O channels:
+    if ( d->input && d->input->isOpen() )
+        d->input->close();
+    delete d->input; d->input = 0;
+    if ( d->output && d->output->isOpen() )
+        d->output->close();
+    delete d->output; d->output = 0;
+
+    const gpg_error_t rc = assuan_process_done( d->ctx.get(), err );
+    if ( rc )
+        qFatal( "AssuanCommand::done: assuan_process_done returned error %d (%s)",
+                static_cast<int>(rc), gpg_strerror(rc) );
+
+    // ### ... what else? ...
+    d->ctx.reset();
+}
+
+
+int AssuanCommandFactory::_handle( assuan_context_t ctx, char * line, const char * commandName ) {
+    assert( assuan_get_pointer( ctx ) );
+
+    AssuanServerConnection::Private & conn = *static_cast<AssuanServerConnection::Private*>( assuan_get_pointer( ctx ) );
+
+    const std::vector< shared_ptr<AssuanCommandFactory> >::const_iterator it
+        = std::lower_bound( conn.factories.begin(), conn.factories.end(), commandName, _detail::ByName<std::less>() );
+    assert( it != conn.factories.end() );
+    assert( *it );
+    assert( qstricmp( (*it)->name(), commandName ) == 0 );
+
+    const shared_ptr<AssuanCommand> cmd = (*it)->create();
+    assert( cmd );
+
+    cmd->d->ctx     = conn.ctx;
+    cmd->d->options = conn.options;
+
+    const assuan_fd_t inFD = assuan_get_input_fd( ctx );
+    if ( inFD != ASSUAN_INVALID_FD )
+        cmd->d->input = new KDPipeIODevice( inFD, QIODevice::ReadOnly );
+    else
+        cmd->d->input = 0;
+
+    const assuan_fd_t outFD = assuan_get_output_fd( ctx );
+    if ( outFD != ASSUAN_INVALID_FD )
+        cmd->d->output = new KDPipeIODevice( outFD, QIODevice::WriteOnly );
+    else
+        cmd->d->output = 0;
+
+    if ( const int err = cmd->start( line ) )
+        return err;
+
+    conn.currentCommand = cmd;
+    return 0;
+}
+
 
 #include "assuanserverconnection.moc"
