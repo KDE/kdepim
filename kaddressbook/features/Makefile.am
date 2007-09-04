@@ -14,9 +14,11 @@ libkaddrbk_distributionlist_la_SOURCES = distributionlistwidget.cpp
 libkaddrbk_distributionlist_la_LDFLAGS = -module $(KDE_PLUGIN) $(KDE_RPATH) $(all_libraries) -no-undefined
 libkaddrbk_distributionlist_la_LIBADD = $(XXLIBS)
 
+if enable_new_distrlists
 libkaddrbk_distributionlistng_la_SOURCES = distributionlistngwidget.cpp
 libkaddrbk_distributionlistng_la_LDFLAGS = -module $(KDE_PLUGIN) $(KDE_RPATH) $(all_libraries) -no-undefined
 libkaddrbk_distributionlistng_la_LIBADD = $(XXLIBS)
+endif
 
 libkaddrbk_resourceselection_la_SOURCES = resourceselection.cpp
 libkaddrbk_resourceselection_la_LDFLAGS = -module $(KDE_PLUGIN) $(KDE_RPATH) $(all_libraries) -no-undefined
