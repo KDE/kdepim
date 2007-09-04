@@ -40,6 +40,7 @@
 #ifdef HAVE_USABLE_ASSUAN
 # include <uiserver/uiserver.h>
 # include <uiserver/assuancommand.h>
+# include <uiserver/verifyemailcommand.h>
 #endif
 
 #include <kapplication.h>

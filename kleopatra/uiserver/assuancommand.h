@@ -251,15 +251,6 @@ namespace Kleo {
         /* reimp */ const char * name() const { return Derived::staticName(); }
     };
 
-    // ### these are only temporary:
-    class VerifyEmailCommand : public AssuanCommandMixin<VerifyEmailCommand> {
-        int start( const std::string & ) { return 0; }
-        void canceled() {}
-        void reset() {}
-    public:
-        static const char * staticName() { return "VERIFYEMAIL"; }
-    };
-
     class DecryptEmailCommand : public AssuanCommandMixin<DecryptEmailCommand> {
         int start( const std::string & ) { return 0; }
         void canceled() {}
