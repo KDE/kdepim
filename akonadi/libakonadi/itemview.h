@@ -17,81 +17,60 @@
     02110-1301, USA.
 */
 
-#ifndef AKONADI_ITEMVIEW_H
-#define AKONADI_ITEMVIEW_H
+#ifndef AKONADI_ITEM_VIEW
+#define AKONADI_ITEM_VIEW
 
 #include "libakonadi_export.h"
-
-class QStringList;
+#include <QtGui/QTreeView>
 
 namespace Akonadi {
 
 class DataReference;
-class Item;
 
 /**
- * This class can be used to implement item views.
- *
- * Item views are widgets that show information about one item
- * in the Akonadi storage. The presentation of the information
- * is up to the user of this class.
- *
- * @see ItemBrowser
- */
-class AKONADI_EXPORT ItemView
+  A view to show an item list provided by an ItemModel.
+*/
+class AKONADI_EXPORT ItemView : public QTreeView
 {
+  Q_OBJECT
+
   public:
     /**
-     * Creates a new item view.
-     */
-    ItemView();
+      Create a new item view.
+      @param parent the parent widget.
+    */
+    explicit ItemView( QWidget *parent = 0 );
 
     /**
-     * Destroys the item view.
-     */
+      Destroys this item view.
+    */
     virtual ~ItemView();
 
     /**
-     * Sets the id of the item that shall be watched.
+      Reimplemented from QAbstractItemView.
+    */
+    virtual void setModel( QAbstractItemModel * model );
+
+
+  Q_SIGNALS:
+    /**
+     * This signal is emitted whenever the user has activated
+     * an item in the view.
      */
-    void setUid( const DataReference &id );
+    void activated( const Akonadi::DataReference &item );
 
     /**
-     * Returns the id of the currently watched item.
+     * This signal is emitted whenever the current item
+     * in the view has changed.
      */
-    DataReference uid() const;
-
-  protected:
-    /**
-     * This method is called whenever the watched item has been added.
-     *
-     * @param item The data of the new item.
-     */
-    virtual void itemAdded( const Item &item );
-
-    /**
-     * This method is called whenever the watched item has changed.
-     *
-     * @param item The data of the changed item.
-     */
-    virtual void itemChanged( const Item &item );
-
-    /**
-     * This method is called whenever the watched item has been removed.
-     */
-    virtual void itemRemoved();
-
-    /**
-     * This method returns the identifiers of the parts that shall be fetched
-     * for the item.
-     */
-    virtual QStringList fetchPartIdentifiers() const;
+    void currentChanged( const Akonadi::DataReference &item );
 
   private:
     class Private;
-    Private* const d;
+    Private * const d;
 
-    Q_DISABLE_COPY( ItemView )
+    Q_PRIVATE_SLOT( d, void itemActivated( const QModelIndex& ) )
+    Q_PRIVATE_SLOT( d, void itemCurrentChanged( const QModelIndex& ) )
 };
 
 }

@@ -1939,9 +1939,7 @@ void KMMainWidget::slotSendQueuedVia( QAction* item )
 
   QStringList availTransports= MailTransport::TransportManager::self()->transportNames();
   if (availTransports.contains(item->text()))
-    kmkernel->msgSender()->sendQueued(
-            MailTransport::TransportManager::self()->transportByName(
-                 item->text() )->id() );
+    kmkernel->msgSender()->sendQueued( item->text() );
 }
 
 //-----------------------------------------------------------------------------
@@ -2424,23 +2422,12 @@ void KMMainWidget::slotMsgPopup(KMMessage&, const KUrl &aUrl, const QPoint& aPoi
       menu->addAction( mMsgView->addAddrBookAction() );
       menu->addAction( mMsgView->openAddrBookAction() );
       menu->addAction( mMsgView->copyURLAction() );
-      menu->addAction( mMsgView->startImChatAction() );
-      // only enable if our KIMProxy is functional
-      mMsgView->startImChatAction()->setEnabled( kmkernel->imProxy()->initialize() );
-
     } else {
       // popup on a not-mailto URL
       menu->addAction( mMsgView->urlOpenAction() );
       menu->addAction( mMsgView->addBookmarksAction() );
       menu->addAction( mMsgView->urlSaveAsAction() );
       menu->addAction( mMsgView->copyURLAction() );
-    }
-    if ( aUrl.protocol() == "im" )
-    {
-      // popup on an IM address
-      // no need to check the KIMProxy is initialized, as these protocols will
-      // only be present if it is.
-      menu->addAction( mMsgView->startImChatAction() );
     }
 
     urlMenuAdded=true;

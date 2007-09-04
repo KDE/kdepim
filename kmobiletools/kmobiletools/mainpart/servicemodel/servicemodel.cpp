@@ -68,6 +68,7 @@ ServiceModel::~ServiceModel() {
     delete m_rootItem;
 }
 
+
 QModelIndex ServiceModel::index( int row, int column, const QModelIndex& parent ) const {
     if( !hasIndex( row, column, parent ) )
         return QModelIndex();
@@ -117,6 +118,8 @@ QVariant ServiceModel::data( const QModelIndex& index, int role ) const {
         return item->data();
     else if( role == Qt::DecorationRole )
         return item->icon();
+    else if( role == Qt::FontRole && item->font() != QFont() )
+        return item->font();
     else
         return QVariant();
 }
@@ -158,6 +161,8 @@ void ServiceModel::deviceLoaded( const QString& deviceName ) {
     m_rootItem->appendChild( deviceItem );
 
     endInsertRows();
+
+    connect( deviceItem, SIGNAL(dataChanged(TreeItem*)), this, SLOT(itemDataChanged(TreeItem*)) );
 }
 
 void ServiceModel::deviceUnloaded( const QString& deviceName ) {
@@ -213,6 +218,8 @@ void ServiceModel::serviceLoaded( const QString& deviceName, KMobileTools::CoreS
         serviceItem->setService( service );
 
         deviceItem->appendChild( serviceItem );
+
+        connect( serviceItem, SIGNAL(dataChanged(TreeItem*)), this, SLOT(itemDataChanged(TreeItem*)) );
     }
 }
 
@@ -280,6 +287,23 @@ QList<DeviceItem*> ServiceModel::deviceItems() const {
     }
 
     return deviceItems;
+}
+
+QModelIndex ServiceModel::indexFromItem( const TreeItem* item ) const {
+    TreeItem* parent = item->parent();
+    for( int i=0; i<parent->childCount(); i++ ) {
+        if( parent->child( i ) == item ) {
+            kDebug() << "row == " << i;
+            return createIndex( i, 0, const_cast<TreeItem*>( item ) );
+        }
+    }
+    return QModelIndex();
+}
+
+void ServiceModel::itemDataChanged( TreeItem* item ) {
+    QModelIndex index = indexFromItem( item );
+    if( index != QModelIndex() )
+        emit dataChanged( index, index );
 }
 
 #include "servicemodel.moc"

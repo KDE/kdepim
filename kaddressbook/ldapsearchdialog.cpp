@@ -490,7 +490,7 @@ void LDAPSearchDialog::slotUser1()
       if ( addr.organization().isEmpty() )
          addr.setOrganization( asUtf8( cli->mAttrs[ "Company" ].first() ) );
 
-      addr.insertCustom( "KADDRESSBOOK", "X-Department", asUtf8( cli->mAttrs[ "department" ].first() ) );
+      addr.setDepartment( asUtf8( cli->mAttrs[ "department" ].first() ) );
 
       // Address
       KABC::Address workAddr( KABC::Address::Work );

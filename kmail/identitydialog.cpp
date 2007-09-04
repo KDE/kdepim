@@ -148,7 +148,7 @@ namespace KMail {
     glay->addWidget( label, row, 0 );
     msg = i18n("<qt><h3>Organization</h3>"
                "<p>This field should have the name of your organization "
-               "if you'd like it to be shown in the email header that "
+               "if you would like it to be shown in the email header that "
                "is sent out.</p>"
                "<p>It is safe (and normal) to leave this blank.</p></qt>");
     label->setWhatsThis( msg );
@@ -639,18 +639,19 @@ namespace KMail {
     mSMIMESigningKeyRequester->setFingerprint( ident.smimeSigningKey() );
     mSMIMEEncryptionKeyRequester->setFingerprint( ident.smimeEncryptionKey() );
 
-    mPreferredCryptoMessageFormat->setCurrentIndex( format2cb( 
+    mPreferredCryptoMessageFormat->setCurrentIndex( format2cb(
        Kleo::stringToCryptoMessageFormat( ident.preferredCryptoMessageFormat() ) ) );
 
     // "Advanced" tab:
     mReplyToEdit->setText( ident.replyToAddr() );
     mBccEdit->setText( ident.bcc() );
-    int transport = ident.transport();
-    if ( !TransportManager::self()->transportIds().contains( transport ) )
-      transport = -1;
-    mTransportCheck->setChecked( transport != -1 );
-    mTransportCombo->setCurrentTransport( transport );
-    mTransportCombo->setEnabled( transport != -1 );
+    QString transportName = ident.transport();
+    Transport *transport =
+              TransportManager::self()->transportByName( transportName, false );
+    mTransportCheck->setChecked( transport != 0 );
+    mTransportCombo->setEnabled( transport != 0 );
+    if ( transport )
+      mTransportCombo->setCurrentTransport( transport->id() );
     mDictionaryCombo->setCurrentByDictionary( ident.dictionary() );
 
     if ( ident.fcc().isEmpty() ||
@@ -709,13 +710,13 @@ namespace KMail {
     ident.setPGPEncryptionKey( mPGPEncryptionKeyRequester->fingerprint().toLatin1() );
     ident.setSMIMESigningKey( mSMIMESigningKeyRequester->fingerprint().toLatin1() );
     ident.setSMIMEEncryptionKey( mSMIMEEncryptionKeyRequester->fingerprint().toLatin1() );
-    ident.setPreferredCryptoMessageFormat( 
+    ident.setPreferredCryptoMessageFormat(
        Kleo::cryptoMessageFormatToString(cb2format( mPreferredCryptoMessageFormat->currentIndex() ) ) );
     // "Advanced" tab:
     ident.setReplyToAddr( mReplyToEdit->text() );
     ident.setBcc( mBccEdit->text() );
-    ident.setTransport( mTransportCheck->isChecked() ?
-                        mTransportCombo->currentTransportId() : -1 );
+    ident.setTransport( ( mTransportCheck->isChecked() ) ?
+                          mTransportCombo->currentText() : QString() );
     ident.setDictionary( mDictionaryCombo->currentDictionary() );
     ident.setFcc( mFccCombo->folder() ?
                   mFccCombo->folder()->idString() : QString() );

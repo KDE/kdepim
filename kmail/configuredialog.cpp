@@ -323,8 +323,8 @@ QString IdentityPage::helpAnchor() const
   return QString::fromLatin1( "configure-identity" );
 }
 
-IdentityPage::IdentityPage( const KComponentData &instance, QWidget *parent, const QStringList &args )
-  : ConfigModule( instance, parent, args ),
+IdentityPage::IdentityPage( const KComponentData &instance, QWidget *parent )
+  : ConfigModule( instance, parent ),
     mIdentityDialog( 0 )
 {
   QHBoxLayout *hlay = new QHBoxLayout( this );
@@ -508,7 +508,7 @@ void IdentityPage::slotRemoveIdentity()
   Q_ASSERT( !mIdentityDialog );
 
   KPIMIdentities::IdentityManager *im = kmkernel->identityManager();
-  kFatal( im->shadowIdentities().count() < 2 )
+  kFatal( im->shadowIdentities().count() < 2, 5006 )
     << "Attempted to remove the last identity!";
 
   IdentityListViewItem *item = 0;
@@ -631,8 +631,8 @@ QString AccountsPage::helpAnchor() const {
   return QString::fromLatin1("configure-accounts");
 }
 
-AccountsPage::AccountsPage( const KComponentData &instance, QWidget *parent, const QStringList &args )
-  : ConfigModuleWithTabs( instance, parent, args )
+AccountsPage::AccountsPage( const KComponentData &instance, QWidget *parent )
+  : ConfigModuleWithTabs( instance, parent )
 {
   //
   // "Receiving" tab:
@@ -1236,8 +1236,8 @@ QString AppearancePage::helpAnchor() const {
   return QString::fromLatin1("configure-appearance");
 }
 
-AppearancePage::AppearancePage( const KComponentData &instance, QWidget *parent, const QStringList &args )
-  : ConfigModuleWithTabs( instance, parent, args )
+AppearancePage::AppearancePage( const KComponentData &instance, QWidget *parent )
+  : ConfigModuleWithTabs( instance, parent )
 {
   //
   // "Fonts" tab:
@@ -1563,15 +1563,15 @@ void AppearancePage::ColorsTab::doLoadOther() {
 
   static const QColor defaultColor[ numColorNames ] = {
     qApp->palette().color( QPalette::Base ), // bg
-    KColorScheme( KColorScheme::View ).background(
+    KColorScheme( QPalette::Normal, KColorScheme::View ).background(
                   KColorScheme::AlternateBackground ).color() , // alt bg
     qApp->palette().color( QPalette::Text ), // fg
     QColor( 0x00, 0x80, 0x00 ), // quoted l1
     QColor( 0x00, 0x70, 0x00 ), // quoted l2
     QColor( 0x00, 0x60, 0x00 ), // quoted l3
-    KColorScheme( KColorScheme::View ).foreground(
+    KColorScheme( QPalette::Normal, KColorScheme::View ).foreground(
                   KColorScheme::LinkText ).color(), // link
-    KColorScheme( KColorScheme::View ).foreground(
+    KColorScheme( QPalette::Normal, KColorScheme::View ).foreground(
                   KColorScheme::VisitedText ).color(),// visited link
     Qt::red, // misspelled words
     Qt::red, // new msg
@@ -2768,8 +2768,8 @@ QString ComposerPage::helpAnchor() const {
   return QString::fromLatin1("configure-composer");
 }
 
-ComposerPage::ComposerPage( const KComponentData &instance, QWidget *parent, const QStringList &args )
-  : ConfigModuleWithTabs( instance, parent, args )
+ComposerPage::ComposerPage( const KComponentData &instance, QWidget *parent )
+  : ConfigModuleWithTabs( instance, parent )
 {
   //
   // "General" tab:
@@ -3874,8 +3874,8 @@ QString SecurityPage::helpAnchor() const {
   return QString::fromLatin1("configure-security");
 }
 
-SecurityPage::SecurityPage( const KComponentData &instance, QWidget *parent, const QStringList &args )
-  : ConfigModuleWithTabs( instance, parent, args )
+SecurityPage::SecurityPage( const KComponentData &instance, QWidget *parent )
+  : ConfigModuleWithTabs( instance, parent )
 {
   //
   // "Reading" tab:
@@ -4797,8 +4797,8 @@ QString MiscPage::helpAnchor() const {
   return QString::fromLatin1("configure-misc");
 }
 
-MiscPage::MiscPage( const KComponentData &instance, QWidget *parent, const QStringList &args )
-  : ConfigModuleWithTabs( instance, parent, args )
+MiscPage::MiscPage( const KComponentData &instance, QWidget *parent )
+  : ConfigModuleWithTabs( instance, parent )
 {
   mFolderTab = new FolderTab();
   addTab( mFolderTab, i18n("&Folders") );

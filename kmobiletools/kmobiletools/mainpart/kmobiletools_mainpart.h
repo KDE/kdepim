@@ -29,6 +29,7 @@
 #include <QList>
 #include <QHash>
 #include <QMutex>
+#include <QtCore/QModelIndex>
 
 #include "deviceslist.h"
 
@@ -54,7 +55,7 @@ namespace KMobileTools {
 }
 
 /**
- * This is a "Part".  It that does all the real work in a KPart
+ * This is a "Part". It that does all the real work in a KPart
  * application.
  *
  * @short Main Part
@@ -62,109 +63,138 @@ namespace KMobileTools {
  * @author Matthias Lechner <matthias@lmme.de>
  * @version 0.5.0
  */
-typedef QList<QWidget*> QWidgetList;
 
 class kmobiletoolsMainPart : public KParts::ReadOnlyPart/*, virtual public MainIFace*/
 {
     Q_OBJECT
-    public:
-        /**
-         * Constructs a new part (@see KParts::GenericFactory)
-         */
-        kmobiletoolsMainPart(QWidget *parentWidget, QObject *parent, const QStringList &args=QStringList() );
 
-        /**
-         * Destructs the part
-         */
-        virtual ~kmobiletoolsMainPart();
+public:
+    /**
+    * Constructs a new part (@see KParts::GenericFactory)
+    */
+    kmobiletoolsMainPart( QWidget *parentWidget, QObject *parent,
+                          const QStringList &args=QStringList() );
 
-        /**
-         * This method is needed for @see KParts::GenericFactory
-         *
-         * @return about data of our part
-         */
-        static KAboutData *createAboutData();
+    /**
+     * Destructs the part
+     */
+    virtual ~kmobiletoolsMainPart();
 
-        /**
-         * @see KParts::ReadOnlyPart
-         */
-        bool openFile() { return false; }
+    /**
+     * This method is needed for @see KParts::GenericFactory
+     *
+     * @return about data of our part
+     */
+    static KAboutData *createAboutData();
 
-        QTreeView *listview() { return p_listview; }
-        KSystemTrayIcon * sysTray() { return p_sysTray; }
-        KParts::StatusBarExtension *statusBarExtension() { return p_statusBarExtension;}
+    /**
+     * @see KParts::ReadOnlyPart
+     */
+    bool openFile();
 
-//        DCOPClient * dcopClient() { return p_dcopClient; }
+    KSystemTrayIcon * sysTray() { return p_sysTray; }
+    KParts::StatusBarExtension *statusBarExtension() { return p_statusBarExtension;}
 
-    public Q_SLOTS:
-        void loadDevicePart(const QString &deviceName, bool setActive=false);
-        void configSlot( const QString& command );
-        void deleteDevicePart(const QString &deviceName);
-        void slotConfigNotify();
+private Q_SLOTS:
+    void slotConfigNotify();
 
-    private Q_SLOTS:
-        void goHome();
-        void nextPart();
-        void prevPart();
+    /**
+     * This slot is called when a device is about to be unloaded.
+     * It unplugs any loaded action list by the device.
+     */
+    void unloadDeviceActions( const QString& );
 
-        void deviceUnloaded( const QString& deviceName );
-        void removeServiceWidget( const QString&, KMobileTools::CoreService* );
-        void shutDownSucceeded();
+    /**
+     * This slot is called when a service is about to be removed.
+     * It removes any widget associated with the service.
+     */
+    void removeServiceWidget( const QString&, KMobileTools::CoreService* );
 
-        void slotQuit();
-        void slotFinallyQuit();
-        void slotAutoLoadDevices();
+    /**
+     * This slot is called whenever a device was successfully disconnected
+     * but only when the application is about to shut down.
+     */
+    void shutDownSucceeded();
 
-        void treeItemClicked( const QModelIndex& index );
+    /**
+     * This slot triggers the shut down of the application and triggers the display
+     * of a shut down dialog if necessary.
+     */
+    void slotQuit();
 
-    private:
-        void setupGUI( QWidget* parent );
-        void setupActions();
-        void setupDialogs();
+    /**
+     * This slot is called to finally close the application.
+     */
+    void slotFinallyQuit();
 
-        bool checkConfigVersion();
+    /**
+     * This slot is called to load the devices on start-up
+     */
+    void slotAutoLoadDevices();
 
-        /**
-         * Displays the home page of the given @p deviceItem
-         *
-         * @param deviceItem the device item
-         */
-        void handleDeviceItem( DeviceItem* deviceItem );
+    /**
+     * This slot is called when an item at @p index was activated
+     *
+     * @param index the model index of the clicked item
+     */
+    void treeItemClicked( const QModelIndex& index );
 
-        /**
-         * Activates the service associated with the given @p serviceItem
-         *
-         * @param serviceItem the service item
-         */
-        void handleServiceItem( ServiceItem* serviceItem );
+    /**
+     * This slot creates a context menu at the given @p position
+     * for the device tree view.
+     *
+     * @param position the position at which to show the menu
+     */
+    void treeViewContextMenu( const QPoint& position );
 
-        QProgressDialog* m_shutDownDialog;
+private:
+    void setupGUI( QWidget* parent );
+    void setupActions();
+    void setupDialogs();
 
-        ServiceModel* m_serviceModel;
-        QMultiHash<QString,QWidget*> m_loadedWidgets;
+    bool checkConfigVersion();
 
-        QStackedWidget *m_widget;
-        QTreeView *p_listview;
-        KSystemTrayIcon * p_sysTray;
+    /**
+     * Displays the home page of the given @p deviceItem
+     *
+     * @param deviceItem the device item
+     */
+    void handleDeviceItem( DeviceItem* deviceItem );
 
-        KParts::StatusBarExtension *p_statusBarExtension;
-        KMobileTools::homepagePart* p_homepage;
-        DevicesList l_devicesList;
+    /**
+     * Activates the service associated with the given @p serviceItem
+     *
+     * @param serviceItem the service item
+     */
+    void handleServiceItem( ServiceItem* serviceItem );
 
-        ErrorLogDialog* m_errorLogDialog;
-        DeviceManager* m_deviceManager;
 
-        QMutex m_mutex;
+    /// the last selected model index of the device tree view
+    QModelIndex m_lastIndex;
 
-    signals:
-        void showServiceToolBar( bool );
-        void showDeviceToolBar( bool );
+    /// the shut down dialog
+    QProgressDialog* m_shutDownDialog;
 
-        void devicesUpdated();
-        void deviceChanged(const QString &);
-protected:
-//    DCOPClient * p_dcopClient;
+    /// the model used in the device tree view
+    ServiceModel* m_serviceModel;
 
+    /// a hash that holds a set of loaded widgets for every loaded device
+    QMultiHash<QString,QWidget*> m_loadedWidgets;
+
+    QStackedWidget *m_widget;
+    QTreeView *m_treeView;
+    KSystemTrayIcon * p_sysTray;
+
+    KParts::StatusBarExtension *p_statusBarExtension;
+
+    ErrorLogDialog* m_errorLogDialog;
+    DeviceManager* m_deviceManager;
+
+    QMutex m_mutex;
+
+Q_SIGNALS:
+    void showServiceToolBar( bool );
+    void showDeviceToolBar( bool );
 };
 
-#endif // _KMOBILETOOLSPART_H_
+#endif

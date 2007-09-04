@@ -76,6 +76,7 @@ using KRecentAddress::RecentAddresses;
 #include <mailtransport/transportmanager.h>
 #include <mailtransport/transport.h>
 using MailTransport::TransportManager;
+using MailTransport::Transport;
 
 #include <gpgme++/context.h>
 #include <gpgme++/key.h>
@@ -149,6 +150,7 @@ using MailTransport::TransportManager;
 #include <QRegExp>
 #include <QTextCodec>
 #include <QHeaderView>
+#include <Q3TextDrag>
 
 #include <mimelib/mimepp.h>
 
@@ -383,8 +385,6 @@ KMComposeWin::KMComposeWin( KMMessage *aMsg, uint id )
 
   connect( mEditor, SIGNAL(spellcheck_done(int)),
            this, SLOT(slotSpellcheckDone (int)) );
-  connect( mEditor, SIGNAL( pasteImage() ),
-           this, SLOT(slotPaste() ) );
   connect( mEditor, SIGNAL( attachPNGImageData(const QByteArray &) ),
            this, SLOT( slotAttachPNGImageData(const QByteArray &) ) );
   connect( mEditor, SIGNAL( focusChanged(bool) ),
@@ -616,7 +616,7 @@ void KMComposeWin::readConfig( void )
   }
   mBtnFcc->setChecked( GlobalSettings::self()->stickyFcc() );
   mBtnTransport->setChecked( GlobalSettings::self()->stickyTransport() );
-  int currentTransport = GlobalSettings::self()->currentTransport();
+  QString currentTransport = GlobalSettings::self()->currentTransport();
 
   mEdtFrom->setCompletionMode( (KGlobalSettings::Completion)GlobalSettings::self()->completionMode() );
   mEdtReplyTo->setCompletionMode( (KGlobalSettings::Completion)GlobalSettings::self()->completionMode() );
@@ -665,8 +665,12 @@ void KMComposeWin::readConfig( void )
 
   mDictionaryCombo->setCurrentByDictionary( ident.dictionary() );
 
-  if ( mBtnTransport->isChecked() && currentTransport != -1 )
-    mTransport->setCurrentTransport( currentTransport );
+  if ( mBtnTransport->isChecked() && !currentTransport.isEmpty() ) {
+    Transport *transport =
+        TransportManager::self()->transportByName( currentTransport );
+    if ( transport )
+      mTransport->setCurrentTransport( transport->id() );
+  }
 
   QString fccName = "";
   if ( mBtnFcc->isChecked() ) {
@@ -686,7 +690,7 @@ void KMComposeWin::writeConfig( void )
   GlobalSettings::self()->setStickyIdentity( mBtnIdentity->isChecked() );
   GlobalSettings::self()->setStickyFcc( mBtnFcc->isChecked() );
   GlobalSettings::self()->setPreviousIdentity( mIdentity->currentIdentity() );
-  GlobalSettings::self()->setCurrentTransport( mTransport->currentTransportId() );
+  GlobalSettings::self()->setCurrentTransport( mTransport->currentText() );
   GlobalSettings::self()->setPreviousFcc( mFcc->getFolder()->idString() );
   GlobalSettings::self()->setAutoSpellChecking(
                                                mAutoSpellCheckingAction->isChecked() );
@@ -1866,9 +1870,13 @@ void KMComposeWin::setMsg( KMMessage *newMsg, bool mayAutoSign,
   mAttachMPK->setEnabled( Kleo::CryptoBackendFactory::instance()->openpgp() &&
                           !ident.pgpEncryptionKey().isEmpty() );
 
-  QString transportId = newMsg->headerField("X-KMail-Transport");
-  if ( !mBtnTransport->isChecked() && !transportId.isEmpty() )
-    mTransport->setCurrentTransport( transportId.toInt() );
+  QString transportName = newMsg->headerField("X-KMail-Transport");
+  if ( !mBtnTransport->isChecked() && !transportName.isEmpty() ) {
+    Transport *transport =
+        TransportManager::self()->transportByName( transportName );
+    if ( transport )
+      mTransport->setCurrentTransport( transport->id() );
+  }
 
   if ( !mBtnFcc->isChecked() ) {
     if ( !mMsg->fcc().isEmpty() ) {
@@ -2372,7 +2380,7 @@ QString KMComposeWin::prettyMimeType( const QString &type )
   const KMimeType::Ptr st = KMimeType::mimeType( t );
 
   if ( !st ) {
-    kWarning() <<"unknown mimetype" << t;
+    kWarning(5006) <<"unknown mimetype" << t;
     return QString();
   }
 
@@ -2458,7 +2466,7 @@ void KMComposeWin::addrBookSelInto()
       addrBookSelIntoOld();
     }
   } else {
-    kWarning() <<"To be implemented: call recipients picker.";
+    kWarning(5006) <<"To be implemented: call recipients picker.";
   }
 }
 
@@ -3085,7 +3093,7 @@ void KMComposeWin::compressAttach( KMAtmListViewItem *attachmentItem )
                                      i18n("The compressed file is larger "
                                           "than the original. Do you want to keep the original one?" ),
                                      QString(),
-                                     KGuiItem( i18n("Keep") ),
+                                     KGuiItem( i18nc("don't compress", "Keep") ),
                                      KGuiItem( i18n("Compress") ) ) == KMessageBox::Yes ) {
       attachmentItem->setCompress( false );
       return;
@@ -3638,9 +3646,9 @@ void KMComposeWin::slotPaste()
         }
         break;
     }
-  } else {
-    QKeyEvent k( QEvent::KeyPress, Qt::Key_V, Qt::ControlModifier );
-    qApp->notify( fw, &k );
+  } else if ( mimeData->hasText() ) {
+      QString s = mimeData->text();
+      mEditor->insert( s );
   }
 }
 
@@ -4514,15 +4522,17 @@ void KMComposeWin::slotIdentityChanged( uint uoid )
   }
 
   if ( !mBtnTransport->isChecked() ) {
-    int transportId = ident.transport();
-    if ( transportId == -1 ) {
+    QString transportName = ident.transport();
+    Transport *transport =
+        TransportManager::self()->transportByName( transportName, false );
+    if ( !transport ) {
       mMsg->removeHeaderField( "X-KMail-Transport" );
       mTransport->setCurrentTransport(
                                TransportManager::self()->defaultTransportId() );
     }
     else {
-      mMsg->setHeaderField( "X-KMail-Transport", QString::number( transportId ) );
-      mTransport->setCurrentTransport( transportId );
+      mMsg->setHeaderField( "X-KMail-Transport", transportName );
+      mTransport->setCurrentTransport( transport->id() );
     }
   }
 

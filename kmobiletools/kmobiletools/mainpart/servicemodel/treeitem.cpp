@@ -46,6 +46,12 @@ void TreeItem::removeChild( TreeItem *item )
 
 void TreeItem::setIcon( QIcon icon ) {
     m_icon = icon;
+    emit dataChanged( this );
+}
+
+void TreeItem::setFont( QFont font ) {
+    m_font = font;
+    emit dataChanged( this );
 }
 
 void TreeItem::setVisible( bool visible ) {
@@ -89,7 +95,12 @@ QIcon TreeItem::icon() const
     return m_icon;
 }
 
-TreeItem *TreeItem::parent()
+QFont TreeItem::font() const
+{
+    return m_font;
+}
+
+TreeItem *TreeItem::parent() const
 {
     return m_parentItem;
 }

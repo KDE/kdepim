@@ -6,7 +6,6 @@ ServiceTypes=KCModule
 DocPath=kaddressbook/preferences.html
 
 X-KDE-Library=kcm_kabcustomfields
-X-KDE-FactoryName=kabcustomfields
 X-KDE-ParentApp=kaddressbook
 X-KDE-ParentComponents=kaddressbook,kontact_kaddressbookplugin
 X-KDE-CfgDlgHierarchy=KAB

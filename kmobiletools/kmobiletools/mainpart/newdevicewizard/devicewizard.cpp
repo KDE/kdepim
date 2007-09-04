@@ -18,8 +18,10 @@
    Boston, MA 02110-1301, USA.
  ***************************************************************************/
 
-#include "newdevicewizard.h"
+#include "devicewizard.h"
+
 #include "firstpage.h"
+#include "welcomepage.h"
 #include "lastpage.h"
 
 #include <kglobal.h>
@@ -27,19 +29,29 @@
 #include <klocalizedstring.h>
 #include <kiconloader.h>
 
-newDeviceWizard::newDeviceWizard(const QString &configName, QWidget * parent)
-    : QWizard(parent)
+DeviceWizard::DeviceWizard( QWidget* parent )
+    : QWizard( parent )
 {
-    setObjectName(configName);
+    setWindowTitle( i18nc( "new device wizard window title", "KMobileTools New Device Wizard" ) );
+
+    // setting wizard pictures
     QPixmap wizardLogoPixmap;
-    wizardLogoPixmap.load( KGlobal::dirs ()->findResource("data", "kmobiletools/kmobilewizard.png") );
-    setPixmap(WatermarkPixmap, wizardLogoPixmap);
-    setPixmap(LogoPixmap, KIconLoader::global()->loadIcon("kmobiletools", K3Icon::FirstGroup, K3Icon::SizeHuge ) );
-    setWindowTitle(i18nc("new device wizard window title", "KMobileTools New Device Wizard"));
-    QWizardPage *curpage=new FirstPage(this);
-    addPage( curpage );
-    curpage=new LastPage(this);
-    setPage( 0xFFFF, curpage);
+    wizardLogoPixmap.load( KGlobal::dirs ()->findResource( "data", "kmobiletools/kmobilewizard.png" ) );
+    setPixmap( QWizard::WatermarkPixmap, wizardLogoPixmap );
+
+    // prepare pages
+    QWizardPage* welcomePage = new WelcomePage( this );
+    setPage( 0, welcomePage );
+
+    QWizardPage* firstPage = new FirstPage(this);
+    setPage( 1, firstPage );
+
+    QWizardPage* lastPage = new LastPage( this );
+    setPage( 0xFFFF, lastPage );
 }
 
-#include "newdevicewizard.moc"
+DeviceWizard::~DeviceWizard() {
+
+}
+
+#include "devicewizard.moc"

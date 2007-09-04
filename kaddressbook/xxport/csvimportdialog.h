@@ -30,12 +30,12 @@
 
 class KUrlRequester;
 
-class Q3ButtonGroup;
+class QButtonGroup;
 class QComboBox;
 class QCheckBox;
 class QLineEdit;
 class QRadioButton;
-class Q3Table;
+class QTableWidget;
 
 class CSVImportDialog : public KDialog
 {
@@ -77,8 +77,8 @@ class CSVImportDialog : public KDialog
            Isdn, Pager, Email, Mailer, Title, Role, Organization, Note, URL
          };
 
-    Q3Table* mTable;
-    Q3ButtonGroup* mDelimiterBox;
+    QTableWidget* mTable;
+    QButtonGroup* mDelimiterGroup;
     QRadioButton* mRadioComma;
     QRadioButton* mRadioSemicolon;
     QRadioButton* mRadioTab;
@@ -117,7 +117,6 @@ class CSVImportDialog : public KDialog
     KABC::AddressBook *mAddressBook;
     int mCustomCounter;
     bool mClearTypeStore;
-    QList<int> mTypeStore;
 };
 
 #endif // KADDRESSBOOK_CVSIMPORTDIALOG_H

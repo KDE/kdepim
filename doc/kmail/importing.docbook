@@ -91,8 +91,7 @@ selected mailbox or on selected messages.  Once the messages have been exported,
 the &Mac; line breaks to &UNIX; line breaks using your favorite editor, or using the following 
 command under &Linux;:</para>
 
-<para><userinput><command>cat</command> <option>mail-mac.txt</option> 
-| perl -e 'while (&lt;STDIN&gt;) { s/\r/\n/gi; print $_ ;}'  &gt; mail-unix.txt</userinput></para>
+<para><userinput><command>perl</command> <option>-pe 's/\r/\n/g'</option> mail-mac.txt > mail-unix.txt</userinput></para>
 
 <para>&kmail; will only recognize mboxes placed directly in the <filename class="directory">~/Mail/</filename>
 folder. This means that  a folder hierarchy cannot be preserved by simply moving files into the 

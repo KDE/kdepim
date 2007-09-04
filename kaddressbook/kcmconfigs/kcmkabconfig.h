@@ -24,9 +24,7 @@
 #ifndef KCMKABCONFIG_H
 #define KCMKABCONFIG_H
 
-#define KDE3_SUPPORT
 #include <kcmodule.h>
-#undef KDE3_SUPPORT
 
 class KABConfigWidget;
 
@@ -35,7 +33,7 @@ class KCMKabConfig : public KCModule
   Q_OBJECT
 
   public:
-    KCMKabConfig( QWidget *parent, const QStringList &args );
+    KCMKabConfig( QWidget *parent, const QVariantList &args );
 
     virtual void load();
     virtual void save();

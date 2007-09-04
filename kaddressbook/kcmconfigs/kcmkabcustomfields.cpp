@@ -32,10 +32,12 @@
 #include <kdemacros.h>
 #include <kgenericfactory.h>
 
-typedef KGenericFactory<KCMKabCustomFields> KCMKabCustomFieldsFactory;
-K_EXPORT_COMPONENT_FACTORY( kabcustomfields, KCMKabCustomFieldsFactory( "kcmkabcustomfields" ) )
 
-KCMKabCustomFields::KCMKabCustomFields( QWidget *parent, const QStringList & )
+K_PLUGIN_FACTORY(KCMKabCustomFieldsFactory, registerPlugin<KCMKabCustomFields>();)
+K_EXPORT_PLUGIN(KCMKabCustomFieldsFactory( "kcmkabcustomfields" ))
+
+
+KCMKabCustomFields::KCMKabCustomFields( QWidget *parent, const QVariantList & )
   : KCMDesignerFields( KCMKabCustomFieldsFactory::componentData(), parent )
 {
 }

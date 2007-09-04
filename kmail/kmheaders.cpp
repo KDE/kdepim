@@ -2,6 +2,7 @@
 // kmheaders.cpp
 
 
+#include <config-kmail.h>
 #include "kmheaders.h"
 #include "headeritem.h"
 using KMail::HeaderItem;
@@ -43,6 +44,9 @@ using namespace KPIM;
 #include <kdebug.h>
 #include <ktoggleaction.h>
 #include <kconfiggroup.h>
+#ifdef Nepomuk_FOUND
+#include <nepomuk/tag.h>
+#endif
 
 #include <mimelib/enum.h>
 #include <mimelib/field.h>
@@ -1194,16 +1198,39 @@ void KMHeaders::msgHeaderChanged(KMFolder*, int msgId)
 // TODO: Use KMCommand class
 void KMHeaders::setMessageTagList( const QString &taglabel )
 {
+  #ifdef Nepomuk_FOUND
+  //Set the visible name for the tag
+  const KMMessageTagDescription *tmp_desc = kmkernel->msgTagMgr()->find( taglabel );
+  Nepomuk::Tag n_tag( taglabel );
+  if ( tmp_desc )
+    n_tag.setLabel( tmp_desc->name() );
+  #endif
   for ( Q3ListViewItemIterator it(this); it.current(); ++it )
     if ( it.current()->isSelected() && it.current()->isVisible() ) {
       HeaderItem *item = static_cast<HeaderItem*>( it.current() );
       KMMsgBase *msgBase = mFolder->getMsgBase( item->msgId() );
+      #ifdef Nepomuk_FOUND
+      Nepomuk::Resource n_resource( QString("kmail-email-%1").arg( msgBase->getMsgSerNum() ) );
+      #endif
       if ( msgBase->tagList() ) {
         KMMessageTagList tmp_list = *msgBase->tagList();
         KMMessageTagList::iterator lit = tmp_list.find( taglabel );
         if ( lit == tmp_list.end() ) {
           tmp_list.append( taglabel );
+          #ifdef Nepomuk_FOUND
+          n_resource.addTag( n_tag );
+          #endif
         } else {
+          #ifdef Nepomuk_FOUND
+          QList< Nepomuk::Tag > n_tag_list = n_resource.tags();
+          for (int i = 0; i < n_tag_list.count(); ++i ) {
+            if ( n_tag_list[i].identifiers()[0] == taglabel ) {
+              n_tag_list.removeAt(i);
+              break;
+            }
+          }
+          n_resource.setTags( n_tag_list );
+          #endif
           tmp_list.remove( lit );
         }
         msgBase->setTagList( tmp_list );
@@ -1462,7 +1489,7 @@ void KMHeaders::applyFiltersOnMsg()
         }
       } else {
         kDebug (5006) << "####### KMHeaders::applyFiltersOnMsg -"
-                          " A message went missing during filtering " << endl;
+                         " A message went missing during filtering " << endl;
       }
     progressItem->incCompletedItems();
     }
@@ -1581,8 +1608,9 @@ void KMHeaders::moveMsgToFolder ( KMFolder* destFolder, bool askForConfirmation 
               "Once deleted, it cannot be restored.</qt>",
               "<qt>Do you really want to delete the %1 selected messages?<br />"
               "Once deleted, they cannot be restored.</qt>", msgList.count() ),
-	 msgList.count()>1 ? i18n("Delete Messages") : i18n("Delete Message"), KStandardGuiItem::del(), KStandardGuiItem::cancel(),
-	 "NoConfirmDelete") == KMessageBox::Cancel )
+              msgList.count()>1 ? i18n("Delete Messages") : i18n("Delete Message"), 
+              KStandardGuiItem::del(), KStandardGuiItem::cancel(),
+              "NoConfirmDelete") == KMessageBox::Cancel )
     return;  // user canceled the action
 
   // remember the message to select afterwards
@@ -2300,7 +2328,7 @@ void KMHeaders::contentsMousePressEvent(QMouseEvent* e)
   if ( lvi && !rootDecoClicked ) {
     if ( lvi != currentItem() )
       highlightMessage( lvi );
-    /* Explicitely set selection state. This is necessary because we want to
+    /* Explicitly set selection state. This is necessary because we want to
      * also select all children of closed threads when the parent is selected. */
 
     // unless ctrl mask, set selected if it isn't already
@@ -2747,7 +2775,6 @@ bool KMHeaders::writeSortOrder()
         fclose(sortStream);
         unlink(QFile::encodeName(sortFile));
         kWarning(5006) <<"Error: Failure modifying" << sortFile <<"(No space left on device?)";
-        kWarning(5006) << __FILE__ <<":" << __LINE__;
         kmkernel->emergencyExit( i18n("Failure modifying %1\n(No space left on device?)", sortFile ));
     }
     fclose(sortStream);
@@ -2787,7 +2814,6 @@ void KMHeaders::appendItemToSortFile(HeaderItem *khi)
         fclose(sortStream);
         unlink(QFile::encodeName(sortFile));
         kWarning(5006) <<"Error: Failure modifying" << sortFile <<" (No space left on device?)";
-        kWarning(5006) << __FILE__ <<":" << __LINE__;
         kmkernel->emergencyExit( i18n("Failure modifying %1\n(No space left on device?)", sortFile ));
     }
     fclose(sortStream);
@@ -3062,7 +3088,7 @@ bool KMHeaders::readSortOrder( bool set_selection, bool forceJumpToUnread )
                     break;
                 }
                 if ((len < 0) || (len > KMAIL_MAX_KEY_LEN)) {
-                    kDebug(5006) <<"Whoa.2! len" << len << __FILE__ <<":" << __LINE__;
+                    kDebug(5006) <<"Whoa.2! len" << len;
                     error = true;
                     continue;
                 }
@@ -3092,14 +3118,14 @@ bool KMHeaders::readSortOrder( bool set_selection, bool forceJumpToUnread )
                 }
                 if ((id < 0) || (id >= mFolderCount) ||
                     (parent < -2) || (parent >= mFolderCount)) { // sanity checking
-                    kDebug(5006) <<"Whoa.1!" << __FILE__ <<":" << __LINE__;
+                    kDebug(5006) <<"Whoa.1!";
                     error = true;
                     continue;
                 }
 
                 if ((item=sortCache[id])) {
                     if (item->id() != -1) {
-                        kDebug(5006) <<"Whoa.3!" << __FILE__ <<":" << __LINE__;
+                        kDebug(5006) <<"Whoa.3!";
                         error = true;
                         continue;
                     }
@@ -3399,7 +3425,6 @@ bool KMHeaders::readSortOrder( bool set_selection, bool forceJumpToUnread )
             fclose(sortStream);
         unlink(QFile::encodeName(sortFile));
         kWarning(5006) <<"Error: Failure modifying" << sortFile <<" (No space left on device?)";
-        kWarning(5006) << __FILE__ <<":" << __LINE__;
 
         return true;
     }

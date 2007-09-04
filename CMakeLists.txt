@@ -16,10 +16,10 @@ find_package(Boost REQUIRED )
 macro_log_feature(Boost_FOUND "boost" "Boost C++ Libraries" "http://www.boost.org/" TRUE "" "Required by Akonadi and kleopatra")
 
 if(Q_WS_X11)
-   macro_log_feature(X11_Xscreensaver_LIB "libXss" "X Window Screen Saver Development Library" "http://xorg.freedesktop.org" FALSE "" "Required to build the KTimeTracker Program")
+   macro_log_feature(X11_Xscreensaver_LIB "libXss" "X Window Screen Saver Development Library" "http://xorg.freedesktop.org" FALSE "" "Required for building the KTimeTracker Program")
 endif(Q_WS_X11)
 
-find_package(QGpgme REQUIRED)
+find_package(QGpgme)
 
 macro_optional_find_package(Sasl2)
 macro_log_feature(SASL2_FOUND "cyrus-sasl" "Cyrus SASL API" "http://asg.web.cmu.edu/sasl/sasl-library.html" FALSE "" "Needed to support authentication of logins")
@@ -29,6 +29,9 @@ macro_log_feature(GNOKII_FOUND "gnokii" "Gnokii Development Libraries" "http://w
 
 macro_optional_find_package(MySQL)
 macro_log_feature(MYSQL_EMBEDDED_FOUND "mysql-embedded" "MySQL/Embedded Library" "http://www.mysql.org" FALSE "" "Needed for the MySQL/Embedded Akonadi backend. Sqlite will be used instead.")
+
+macro_optional_find_package(Nepomuk)
+macro_log_feature(Nepomuk_FOUND "Nepomuk" "Nepomuk" "http://www.kde.org" FALSE "" "For adding desktop-wide tagging support to kmail")
 
 macro_optional_find_package(LibXslt)
 macro_log_feature(XSLTPROC_EXECUTABLE "xsltproc" "xsltproc" "http://xmlsoft.org/XSLT/" FALSE "" "Needed to generate Akonadi database code")
@@ -123,14 +126,17 @@ if(QGPGME_FOUND)
    macro_optional_add_subdirectory(korganizer)
 endif(QGPGME_FOUND)
 
-if( NOT WIN32)
- macro_optional_find_package(Opensync)
- macro_optional_add_subdirectory(kmobiletools)
- macro_optional_add_subdirectory(kpilot)
- if(OPENSYNC_FOUND AND GLIB_FOUND)
-   macro_optional_add_subdirectory(kitchensync)
- endif(OPENSYNC_FOUND AND GLIB_FOUND)
-endif( NOT WIN32)
+if(NOT WIN32)
+   macro_optional_find_package(Opensync)
+   #macro_log_feature() not needed because FindOpensync.cmake does so for us
+   macro_optional_find_package(GLIB2)
+   macro_log_feature(GLIB2_FOUND "glib2" "Low-level core library for data structure handling, portability wrappers, etc." "http://www.gtk.org" FALSE "2.x" "Needed to provide synching applications from KDE PIM applications. Necessary to compile kitchensync and other PIM applications.")
+   macro_optional_add_subdirectory(kmobiletools)
+   macro_optional_add_subdirectory(kpilot)
+   if(OPENSYNC_FOUND AND GLIB2_FOUND)
+      macro_optional_add_subdirectory(kitchensync)
+   endif(OPENSYNC_FOUND AND GLIB2_FOUND)
+endif(NOT WIN32)
 
 macro_optional_add_subdirectory(korn)
 add_subdirectory(kresources)

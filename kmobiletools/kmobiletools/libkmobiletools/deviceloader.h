@@ -62,6 +62,13 @@ public:
      */
     KPluginInfo engineInformation( const QString& deviceName ) const;
 
+    /**
+     * Returns a list of loaded devices
+     *
+     * @return a list of loaded devices
+     */
+    QStringList loadedDevices() const;
+
     ~DeviceLoader();
 
 public Q_SLOTS:
@@ -70,19 +77,21 @@ public Q_SLOTS:
      *
      * @param deviceName a unique device name
      * @param engineName the engine to load
+     * @param loadServices if true, all services supported by the given engine will be loaded
      *
      * @returns true if the device was successfully loaded
      */
-    bool loadDevice( const QString& deviceName, const QString& engineName );
+    bool loadDevice( const QString& deviceName, const QString& engineName, bool loadServices = true );
 
     /**
      * Tries to unload the device with the given @p deviceName
      *
      * @param deviceName the device name
+     * @param unloadServices if true, services associated with the device will be unloaded
      *
      * @returns true if the device was successfully unloaded
      */
-    bool unloadDevice( const QString& deviceName );
+    bool unloadDevice( const QString& deviceName, bool unloadServices = true );
 
 Q_SIGNALS:
     /**
@@ -94,6 +103,8 @@ Q_SIGNALS:
      * This signal is emitted when the device was successfully unloaded.
      */
     void deviceUnloaded( const QString& );
+
+    void aboutToUnloadDevice( const QString& deviceName );
 
 private:
     DeviceLoader();

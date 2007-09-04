@@ -210,7 +210,7 @@ namespace Pilot
 	*               are all full.
 	*
 	*/
-	int insertCategory(struct CategoryAppInfo *info, const QString &label, bool unknownIsUnfiled);
+	KPILOT_EXPORT int insertCategory(struct CategoryAppInfo *info, const QString &label, bool unknownIsUnfiled);
 
 	/** The handheld also holds data about each database
 	* in a DBInfo structure; check if the database described

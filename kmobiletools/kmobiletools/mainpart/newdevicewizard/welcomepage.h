@@ -1,6 +1,5 @@
 /***************************************************************************
-   Copyright (C) 2007
-   by Marco Gulino <marco@kmobiletools.org>
+   Copyright (C) 2007 by Matthias Lechner <matthias@lmme.de>
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -17,16 +16,21 @@
    Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
    Boston, MA 02110-1301, USA.
  ***************************************************************************/
-#ifndef NEWDEVICEWIZARD_H
-#define NEWDEVICEWIZARD_H
 
-#include <QWizard>
+#ifndef WELCOMEPAGE_H
+#define WELCOMEPAGE_H
 
-class newDeviceWizard : public QWizard
+#include <QtGui/QWizardPage>
+
+/**
+ * @author Matthias Lechner <matthias@lmme.de>
+ */
+class WelcomePage : public QWizardPage
 {
-Q_OBJECT
 public:
-    explicit newDeviceWizard(const QString &configName, QWidget * parent = 0);
+    WelcomePage( QWidget* parent = 0 );
+
+    ~WelcomePage();
 };
 
 #endif

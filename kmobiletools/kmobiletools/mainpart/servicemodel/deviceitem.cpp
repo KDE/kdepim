@@ -46,11 +46,11 @@ DeviceItem::DeviceItem( const QString& name, TreeItem* parent )
     m_actionList.append( m_connectDeviceAction );
     m_actionList.append( m_disconnectDeviceAction );
 
-    // set icon for deviceItem
-    KPluginInfo deviceInformation = KMobileTools::DeviceLoader::instance()->engineInformation( name );
-    setIcon( KIcon( deviceInformation.icon() ) );
-
-    /// @todo use KIconEffect to display the connection state (convert to gray-scale on disconnection)
+    // set icon for device item
+    if( m_engine->connected() )
+        deviceConnected();
+    else
+        deviceDisconnected();
 }
 
 
@@ -59,29 +59,35 @@ DeviceItem::~DeviceItem()
 }
 
 QList<QAction*> DeviceItem::actionList() const {
-    kDebug() << "action list requested" << endl;
     return m_actionList;
 }
 
 void DeviceItem::connectDevice() {
-    /// @todo add a timer or something if connecting fails...
     m_connectDeviceAction->setEnabled( false );
     m_engine->connectDevice();
 }
 
 void DeviceItem::disconnectDevice() {
+    QFont font;
+    font.setWeight( 35 );
+    setFont( font );
+
     m_disconnectDeviceAction->setEnabled( false );
     m_engine->disconnectDevice();
 }
 
 void DeviceItem::deviceConnected() {
+    setFont( QFont() );
     m_connectDeviceAction->setEnabled( false );
     m_disconnectDeviceAction->setEnabled( true );
+    setIcon( KIcon( "connection-established" ) );
 }
 
 void DeviceItem::deviceDisconnected() {
+    setFont( QFont() );
     m_connectDeviceAction->setEnabled( true );
     m_disconnectDeviceAction->setEnabled( false );
+    setIcon( KIcon( "connect-no" ) );
 }
 
 #include "deviceitem.moc"

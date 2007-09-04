@@ -957,7 +957,6 @@ int KMFolderMbox::addMsg( KMMessage *aMsg, int *aIndex_ret )
   if ( !canAddMsgNow( aMsg, aIndex_ret ) ) {
     return 0;
   }
-  bool opened = false;
   QByteArray msgText;
   char endStr[3];
   int idx = -1, rc;
@@ -965,14 +964,11 @@ int KMFolderMbox::addMsg( KMMessage *aMsg, int *aIndex_ret )
   bool editing = false;
   int growth = 0;
 
-  if ( !mStream ) {
-    opened = true;
-    rc = open( "mboxaddMsg" );
-    kDebug(5006) <<"KMFolderMBox::addMsg-open:" << rc
-                 << "of folder:" << label();
-    if ( rc ) {
-      return rc;
-    }
+  KMFolderOpener openThis( folder(), "mboxaddMsg" );
+  if ( openThis.openResult() )
+  {
+    kdDebug(5006) << "KMFolderMbox::addMsg-open: " << openThis.openResult() << " of folder: " << label() << endl;
+    return openThis.openResult();
   }
 
   // take message out of the folder it is currently in, if any
@@ -1021,9 +1017,6 @@ if( fileD1.open( QIODevice::WriteOnly ) ) {
   if ( len <= 0 ) {
     kDebug(5006) <<"Message added to folder `" << objectName()
                  << "' contains no data. Ignoring it.";
-    if ( opened ) {
-      close( "mboxaddMsg" );
-    }
     return 0;
   }
 
@@ -1046,14 +1039,10 @@ if( fileD1.open( QIODevice::WriteOnly ) ) {
       }
     }
   }
-  fseek( mStream,0,SEEK_END ); // this is needed on solaris and others
+  fseek( mStream, 0, SEEK_END ); // this is needed on solaris and others
   int error = ferror( mStream );
-  if ( error ) {
-    if ( opened ) {
-      close( "mboxaddMsg" );
-    }
+  if ( error )
     return error;
-  }
 
   QByteArray messageSeparator( aMsg->mboxMessageSeparator() );
   fwrite( messageSeparator.data(), messageSeparator.length(), 1, mStream );
@@ -1084,7 +1073,6 @@ if( fileD1.open( QIODevice::WriteOnly ) ) {
                "(No space left on device or insufficient quota?)\n"
                "Free space and sufficient quota are required to continue safely."));
     if (busy) kmkernel->kbp()->busy();
-    if (opened) close();
     kmkernel->kbp()->idle();
     */
     return error;
@@ -1149,7 +1137,7 @@ if( fileD1.open( QIODevice::WriteOnly ) ) {
     mb->setIndexOffset( ftell( mIndexStream ) );
     mb->setIndexLength( len );
     if ( fwrite( buffer, len, 1, mIndexStream ) != 1 ) {
-      kDebug(5006) <<"Whoa!" << __FILE__ <<":" << __LINE__;
+      kDebug(5006) <<"Whoa!";
     }
 
     fflush( mIndexStream );
@@ -1166,7 +1154,7 @@ if( fileD1.open( QIODevice::WriteOnly ) ) {
         truncate( QFile::encodeName( indexLocation() ), revert );
       }
       if ( errno ) {
-        kmkernel->emergencyExit( i18n("Could not add message to folder:") +
+        kmkernel->emergencyExit( i18n("Could not add message to folder: ") +
                                  QString::fromLocal8Bit( strerror( errno ) ) );
       } else {
         kmkernel->emergencyExit( i18n("Could not add message to folder (No space left on device?)") );
@@ -1180,20 +1168,15 @@ if( fileD1.open( QIODevice::WriteOnly ) ) {
              "(No space left on device or insufficient quota?)\n"
              "Free space and sufficient quota are required to continue safely."));
       if (busy) kmkernel->kbp()->busy();
-      if (opened) close();
       */
       return error;
     }
   }
 
-  // some "paper work"
   if ( aIndex_ret ) {
     *aIndex_ret = idx;
   }
   emitMsgAddedSignals(idx);
-  if ( opened ) {
-    close( "mboxaddMsg" );
-  }
 
   // All streams have been flushed without errors if we arrive here
   // Return success!

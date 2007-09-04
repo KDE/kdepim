@@ -1,6 +1,7 @@
 /***************************************************************************
    Copyright (C) 2007
    by Marco Gulino <marco@kmobiletools.org>
+   by Matthias Lechner <matthias@lmme.de>
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -20,43 +21,51 @@
 #ifndef DEVICEMANAGER_H
 #define DEVICEMANAGER_H
 
-#include "ui_deviceList.h"
+#include <KDE/KDialog>
 
-#include <kdialog.h>
-
+class KListWidget;
+class KPushButton;
 /**
-@author Marco Gulino
-*/
-class Q3ListViewItem;
-class deviceList;
-
+ * @author Marco Gulino
+ * @author Matthias Lechner
+ */
 class DeviceManager : public KDialog
 {
 Q_OBJECT
 public:
-    explicit DeviceManager(QWidget *parent = 0, const char *name = 0);
-
+    DeviceManager( QWidget *parent = 0 );
     ~DeviceManager();
-    int showDeviceConfigDialog(const QString &deviceName, bool newdevice=false);
+
+private Q_SLOTS:
+    void populateDeviceList();
+    void checkEnableButtons();
+
+    void addDevice();
+    void removeDevice();
+    void deviceProperties();
+
+    void addDeviceItem( const QString& deviceName );
+    void removeDeviceItem( const QString& deviceName );
 
 public slots:
-    void updateView();
-    void slotRemoveDevice();
     void slotDeviceProperties();
     void slotNewDevice();
-    void doubleClickedItem(Q3ListViewItem *item);
-    void slotItemRenamed ( Q3ListViewItem * item, int col, const QString & text );
-    void selectionChanged ();
-    void deviceToggled(bool);
-    void deviceChanged(const QString &);
+    //void doubleClickedItem(Q3ListViewItem *item);
+    //void slotItemRenamed ( Q3ListViewItem * item, int col, const QString & text );
 
-    private:
-    Ui::deviceList ui; QWidget w_ui;
 signals:
     void deviceAdded(const QString&);
     void deviceRemoved(const QString&);
     void loadDevice(const QString&);
     void unloadDevice(const QString&);
+
+private:
+    KListWidget* m_deviceList;
+    KPushButton* m_addDevice;
+    KPushButton* m_removeDevice;
+    KPushButton* m_deviceProperties;
+
+    void setupGUI();
 };
 
 

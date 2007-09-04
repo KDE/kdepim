@@ -92,7 +92,7 @@ bool KonsoleKalendarChange::changeEvent()
         event->setDtEnd( KDateTime( m_variables->getEndDateTime(), timeSpec ) );
       }
 
-      event->setFloats( m_variables->getFloating() );
+      event->setAllDay( m_variables->getFloating() );
 
       if ( m_variables->isSummary() ) {
         event->setSummary( m_variables->getSummary() );

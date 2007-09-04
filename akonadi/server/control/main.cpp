@@ -22,6 +22,7 @@
 #include <QtDBus/QDBusError>
 
 #include "agentmanager.h"
+#include "controlmanager.h"
 #include "processcontrol.h"
 #include "profilemanager.h"
 #include "searchprovidermanager.h"
@@ -51,6 +52,8 @@ int main( int argc, char **argv )
     qDebug( "Unable to register service: %s", qPrintable( QDBusConnection::sessionBus().lastError().message() ) );
     return 1;
   }
+
+  new ControlManager;
 
   sAgentManager = new AgentManager;
   ProfileManager profileManager;

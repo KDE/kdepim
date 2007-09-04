@@ -17,14 +17,68 @@
     02110-1301, USA.
 */
 
+#include <QtGui/QHeaderView>
+
 #include "itemview.h"
-#include "itemview_p.h"
+
+#include "itemmodel.h"
 
 using namespace Akonadi;
 
-ItemView::ItemView()
-  : d( new Private( this ) )
+class ItemView::Private
 {
+  public:
+    Private( ItemView *parent )
+      : mParent( parent )
+    {
+    }
+
+    void itemActivated( const QModelIndex& );
+    void itemCurrentChanged( const QModelIndex& );
+
+  private:
+    ItemView *mParent;
+};
+
+void ItemView::Private::itemActivated( const QModelIndex &index )
+{
+  if ( !index.isValid() )
+    return;
+
+  const int currentItem = index.sibling(index.row(),ItemModel::Id).data(ItemModel::IdRole).toInt();
+  if ( currentItem <= 0 )
+    return;
+
+  const QString remoteId = index.sibling(index.row(),ItemModel::RemoteId).data(ItemModel::IdRole).toString();
+
+  emit mParent->activated( DataReference( currentItem, remoteId ) );
+}
+
+void ItemView::Private::itemCurrentChanged( const QModelIndex &index )
+{
+  if ( !index.isValid() )
+    return;
+
+  const int currentItem = index.sibling(index.row(),ItemModel::Id).data(ItemModel::IdRole).toInt();
+  if ( currentItem <= 0 )
+    return;
+
+  const QString remoteId = index.sibling(index.row(),ItemModel::RemoteId).data(ItemModel::IdRole).toString();
+
+  emit mParent->currentChanged( DataReference( currentItem, remoteId ) );
+}
+
+ItemView::ItemView( QWidget * parent ) :
+    QTreeView( parent ),
+    d( new Private( this ) )
+{
+  setRootIsDecorated( false );
+
+  header()->setClickable( true );
+  header()->setStretchLastSection( true );
+
+  connect( this, SIGNAL( activated( const QModelIndex& ) ),
+           this, SLOT( itemActivated( const QModelIndex& ) ) );
 }
 
 ItemView::~ItemView()
@@ -32,60 +86,12 @@ ItemView::~ItemView()
   delete d;
 }
 
-void ItemView::setUid( const DataReference &id )
+void ItemView::setModel( QAbstractItemModel * model )
 {
-  if ( id == d->mUid )
-    return;
+  QTreeView::setModel( model );
 
-  d->mUid = id;
-
-  // delete previous monitor
-  delete d->mMonitor;
-
-  // create new monitor
-  d->mMonitor = new Monitor();
-
-  d->connect( d->mMonitor, SIGNAL( itemAdded( const Akonadi::Item&, const Akonadi::Collection& ) ),
-              d, SLOT( slotItemAdded( const Akonadi::Item&, const Akonadi::Collection& ) ) );
-  d->connect( d->mMonitor, SIGNAL( itemChanged( const Akonadi::Item&, const QStringList& ) ),
-              d, SLOT( slotItemChanged( const Akonadi::Item&, const QStringList& ) ) );
-  d->connect( d->mMonitor, SIGNAL( itemRemoved( const Akonadi::DataReference& ) ),
-              d, SLOT( slotItemRemoved( const Akonadi::DataReference& ) ) );
-
-  const QStringList parts = fetchPartIdentifiers();
-  for ( int i = 0; i < parts.count(); ++i )
-    d->mMonitor->addFetchPart( parts[ i ] );
-
-  d->mMonitor->monitorItem( d->mUid );
-
-  // start initial fetch of the new item
-  ItemFetchJob* job = new ItemFetchJob( d->mUid );
-
-  for ( int i = 0; i < parts.count(); ++i )
-    job->addFetchPart(  parts[ i ] );
-  d->connect( job, SIGNAL( result( KJob* ) ), d, SLOT( initialFetchDone( KJob* ) ) );
+  connect( selectionModel(), SIGNAL( currentChanged( const QModelIndex&, const QModelIndex& ) ),
+           this, SLOT( itemCurrentChanged( const QModelIndex& ) ) );
 }
 
-DataReference ItemView::uid() const
-{
-  return d->mUid;
-}
-
-void ItemView::itemAdded( const Item& )
-{
-}
-
-void ItemView::itemChanged( const Item& )
-{
-}
-
-void ItemView::itemRemoved()
-{
-}
-
-QStringList ItemView::fetchPartIdentifiers() const
-{
-  return QStringList( Item::PartBody );
-}
-
-#include "itemview_p.moc"
+#include "itemview.moc"

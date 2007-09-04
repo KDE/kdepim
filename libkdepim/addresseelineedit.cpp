@@ -922,15 +922,13 @@ int KPIM::AddresseeLineEdit::addCompletionSource( const QString &source )
 
 bool KPIM::AddresseeLineEdit::eventFilter(QObject *obj, QEvent *e)
 {
-#ifdef __GNUC__
-#warning Port me!
-#endif
-  // FIXME Temporary avoid the constructor in the IF because of endless loops!
-  //if ( obj == completionBox() ) {
-  if (  0 && obj == completionBox() ) {
-    if ( e->type() == QEvent::MouseButtonPress
-      || e->type() == QEvent::MouseMove
-      || e->type() == QEvent::MouseButtonRelease ) {
+  if ( m_completionInitialized &&
+       ( obj == completionBox() ||
+         completionBox()->findChild<QWidget*>( obj->objectName() ) == obj ) ) {
+    if ( e->type() == QEvent::MouseButtonPress ||
+         e->type() == QEvent::MouseMove ||
+         e->type() == QEvent::MouseButtonRelease ||
+         e->type() == QEvent::MouseButtonDblClick ) {
       QMouseEvent* me = static_cast<QMouseEvent*>( e );
       // find list box item at the event position
       QListWidgetItem *item = completionBox()->itemAt( me->pos() );
@@ -943,9 +941,10 @@ bool KPIM::AddresseeLineEdit::eventFilter(QObject *obj, QEvent *e)
       // avoid selection of headers on button press, or move or release while
       // a button is pressed
       Qt::MouseButtons btns = me->buttons();
-      if ( e->type() == QEvent::MouseButtonPress
-          || btns & Qt::LeftButton || btns & Qt::MidButton
-          || btns & Qt::RightButton ) {
+      if ( e->type() == QEvent::MouseButtonPress ||
+           e->type() == QEvent::MouseButtonDblClick ||
+           btns & Qt::LeftButton || btns & Qt::MidButton ||
+           btns & Qt::RightButton ) {
         if ( itemIsHeader(item) ) {
           return true; // eat the event, we don't want anything to happen
         } else {
@@ -986,15 +985,12 @@ bool KPIM::AddresseeLineEdit::eventFilter(QObject *obj, QEvent *e)
           completionBox()->setCurrentRow( currentIndex -2 );
           completionBox()->item( currentIndex - 2 )->setSelected( true );
         } else if ( currentIndex == 1 ) {
-            // nothing to skip to, let's stay where we are, but make sure the
-            // first header becomes visible, if we are the first real entry
-#ifdef __GNUC__
-#warning Port me!
-#endif
-//            completionBox()->ensureVisible( 0, 0 );
-            QListWidgetItem *i = completionBox()->item( currentIndex );
-            if ( i )
-              i->setSelected( true );
+          // nothing to skip to, let's stay where we are, but make sure the
+          // first header becomes visible, if we are the first real entry
+          completionBox()->scrollToItem( completionBox()->item( 0 ) );
+          QListWidgetItem *i = completionBox()->item( currentIndex );
+          if ( i )
+            i->setSelected( true );
         }
         return true;
       }

@@ -49,7 +49,7 @@ class KABLock
     KABLock( KABC::AddressBook *ab );
 
   private:
-    static KABLock *mSelf;
+    friend class KABLockHelper;
 
     QMap<KABC::Resource*, LockEntry> mLocks;
     KABC::AddressBook *mAddressBook;

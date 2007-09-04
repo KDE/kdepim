@@ -45,9 +45,8 @@ class KABCOMMON_EXPORT LocationMap : public QObject
     LocationMap();
 
   private:
+    friend class LocationMapHelper;
     QString createUrl( const KABC::Address& );
-
-    static LocationMap *mSelf;
 };
 
 #endif

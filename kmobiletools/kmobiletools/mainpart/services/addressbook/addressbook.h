@@ -123,12 +123,13 @@ private Q_SLOTS:
     void findAvailableSlots();
 
     void addresseeListContextMenu( const QPoint& position );
+    void addresseeActivated( QListWidgetItem* item );
 
 private:
     void setupWidget();
     void setupActions();
 
-    /// @TODO add a poll interface for this job
+    /// @TODO add a poll interface for this service
     QTimer* m_fetchTimer;
 
     KMobileTools::EngineXP* m_engine;

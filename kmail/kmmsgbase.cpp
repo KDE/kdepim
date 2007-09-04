@@ -852,8 +852,7 @@ namespace {
   template < typename T > void copy_from_stream( T & x ) {
     if( g_chunk_offset + int(sizeof(T)) > g_chunk_length ) {
       g_chunk_offset = g_chunk_length;
-      kDebug( 5006 ) <<"This should never happen.."
-		      << __FILE__ << ":" << __LINE__;
+      kDebug( 5006 ) <<"This should never happen..";
       x = 0;
     } else {
       // the memcpy is optimized out by the compiler for the values
@@ -875,15 +874,20 @@ retry:
   bool swapByteOrder = storage()->indexSwapByteOrder();
   if (storage()->indexStreamBasePtr()) {
     if (g_chunk)
-	free(g_chunk);
+      free(g_chunk);
     using_mmap = true;
+    if ( mIndexOffset > storage()->indexStreamLength() ) {
+      // This message has not been indexed yet, data would lie
+      // outside the index data structures so do not touch it.
+      return QString();
+    }
     g_chunk = storage()->indexStreamBasePtr() + mIndexOffset;
     g_chunk_length = mIndexLength;
   } else {
     if(!storage()->mIndexStream)
       return ret;
     if (g_chunk_length < mIndexLength)
-	g_chunk = (uchar *)realloc(g_chunk, g_chunk_length = mIndexLength);
+      g_chunk = (uchar *)realloc(g_chunk, g_chunk_length = mIndexLength);
     off_t first_off=ftell(storage()->mIndexStream);
     fseek(storage()->mIndexStream, mIndexOffset, SEEK_SET);
     fread( g_chunk, mIndexLength, 1, storage()->mIndexStream);
@@ -903,7 +907,7 @@ retry:
     }
     type = (MsgPartType) tmp;
     if(g_chunk_offset + l > mIndexLength) {
-	kDebug(5006) <<"This should never happen.." << __FILE__ <<":" << __LINE__;
+	kDebug(5006) <<"This should never happen..";
         if(using_mmap) {
             g_chunk_length = 0;
             g_chunk = 0;
@@ -981,7 +985,7 @@ retry:
     type = (MsgPartType) tmp;
 
     if (g_chunk_offset + l > mIndexLength) {
-      kDebug(5006) <<"This should never happen.." << __FILE__ <<":" << __LINE__;
+      kDebug(5006) <<"This should never happen..";
       if(using_mmap) {
         g_chunk_length = 0;
         g_chunk = 0;

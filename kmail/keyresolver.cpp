@@ -101,13 +101,13 @@ static bool ValidTrustedOpenPGPEncryptionKey( const GpgME::Key & key ) {
   }
 #if 0
   if ( key.isRevoked() )
-    kWarning() <<" is revoked";
+    kWarning(5006) <<" is revoked";
   if ( key.isExpired() )
-    kWarning() <<" is expired";
+    kWarning(5006) <<" is expired";
   if ( key.isDisabled() )
-    kWarning() <<" is disabled";
+    kWarning(5006) <<" is disabled";
   if ( !key.canEncrypt() )
-    kWarning() <<" can't encrypt";
+    kWarning(5006) <<" can't encrypt";
 #endif
   if ( key.isRevoked() || key.isExpired() || key.isDisabled() || !key.canEncrypt() )
     return false;
@@ -118,9 +118,9 @@ static bool ValidTrustedOpenPGPEncryptionKey( const GpgME::Key & key ) {
 #if 0
     else
       if ( it->isRevoked() )
-        kWarning() <<"a userid is revoked";
+        kWarning(5006) <<"a userid is revoked";
       else
-        kWarning() <<"bad validity" << it->validity();
+        kWarning(5006) <<"bad validity" << it->validity();
 #endif
   }
   return false;
@@ -1328,7 +1328,7 @@ std::vector<GpgME::Key> Kleo::KeyResolver::getEncryptionKeys( const QString & pe
       // notified about it as early as possible:
       keys = selectKeys( person,
 			 i18nc("if in your language something like "
-			      "'key(s)' isn't possible please "
+			      "'key(s)' is not possible please "
 			      "use the plural in the translation",
 			      "There is a problem with the "
 			      "encryption key(s) for \"%1\".\n\n"
@@ -1364,14 +1364,14 @@ std::vector<GpgME::Key> Kleo::KeyResolver::getEncryptionKeys( const QString & pe
   return selectKeys( person,
 		     matchingKeys.empty()
 		     ? i18nc("if in your language something like "
-			    "'key(s)' isn't possible please "
+			    "'key(s)' is not possible please "
 			    "use the plural in the translation",
 			    "No valid and trusted encryption key was "
 			    "found for \"%1\".\n\n"
 			    "Select the key(s) which should "
 			    "be used for this recipient.", person)
 		     : i18nc("if in your language something like "
-			    "'key(s)' isn't possible please "
+			    "'key(s)' is not possible please "
 			    "use the plural in the translation",
 			    "More than one key matches \"%1\".\n\n"
 			    "Select the key(s) which should "
@@ -1436,7 +1436,7 @@ void Kleo::KeyResolver::addKeys( const std::vector<Item> & items ) {
       }
     }
     if ( f == AutoFormat )
-      kWarning() <<"Kleo::KeyResolver::addKeys(): Something went wrong. Didn't find a format for \""
+      kWarning(5006) <<"Kleo::KeyResolver::addKeys(): Something went wrong. Didn't find a format for \""
                   << it->address << "\"";
     else
       std::remove_copy_if( it->keys.begin(), it->keys.end(),

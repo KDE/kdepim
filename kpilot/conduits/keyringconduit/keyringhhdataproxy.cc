@@ -206,8 +206,11 @@ bool KeyringHHDataProxy::createDataStore()
 		appInfo.setCategoryName( 1, CSL1( "Banking" ) );
 		appInfo.setCategoryName( 2, CSL1( "Computer" ) );
 		appInfo.setCategoryName( 3, CSL1( "Phone" ) );
-		appInfo.setCategoryName( 4, CSL1( "Web" ) );
-		appInfo.writeTo( fDatabase );
+		// rather than adding the 5th default category, add our first record
+		// below and set it to this new one.  end result is the same, but this also
+		// makes sure that our HHRecord is able to update the appInfo block when
+		// it sets the categoryName to a new one....
+		// appInfo.setCategoryName( 4, CSL1( "Web" ) );
 		
 		QByteArray saltedHash = QCA::hexToArray( fSaltedHash );
 		
@@ -220,10 +223,23 @@ bool KeyringHHDataProxy::createDataStore()
 		
 		fDatabase->writeRecord( fZeroRecord );
 		
+		// create a first record and thank our users (2 birds, one stone)  =:).  Note--
+		// we also add our 5th category by setting the category for this record
+		// to a new one...
 		KeyringHHRecord * fFirstRecord = 
-			new KeyringHHRecord( i18n("KPilot cares"), i18n("KDE"), "",
+			new KeyringHHRecord( &appInfo,  i18n("KPilot cares"), i18n("KDE"), "",
 					i18n("Thanks for using KPilot!"), fDesKey);
+		
+		QStringList cats;
+		cats.append(CSL1("Web"));
+		
+		fFirstRecord->setCategoryNames(cats);
+		
 		fDatabase->writeRecord( fFirstRecord->pilotRecord() );
+		
+		// now write the appInfo block, which includes the 4 explicitly-added categories
+		// and the 5th one set via setCategoryNames()
+		appInfo.writeTo( fDatabase );
 		
 		return true;
 	}

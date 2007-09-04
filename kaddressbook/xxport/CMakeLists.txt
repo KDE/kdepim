@@ -5,7 +5,7 @@ configure_file (config-xxport.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-xxport.
 
 ########### next target ###############
 
-set(kaddrbk_csv_xxport_PART_SRCS csv_xxport.cpp csvimportdialog.cpp dateparser.cpp )
+set(kaddrbk_csv_xxport_PART_SRCS csv_xxport.cpp csvimportdialog.cpp dateparser.cpp comboboxheaderview.cpp )
 
 
 kde4_add_plugin(kaddrbk_csv_xxport WITH_PREFIX ${kaddrbk_csv_xxport_PART_SRCS})

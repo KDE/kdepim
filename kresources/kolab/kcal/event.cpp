@@ -191,8 +191,8 @@ void Event::setFields( const KCal::Event* event )
   Incidence::setFields( event );
 
   if ( event->hasEndDate() ) {
-    if ( event->floats() ) {
-      // This is a floating event. Don't timezone move this one
+    if ( event->allDay() ) {
+      // This is an all-day event. Don't timezone move this one
       mFloatingStatus = AllDay;
       setEndDate( event->dtEnd().date() );
     } else {
@@ -211,7 +211,7 @@ void Event::saveTo( KCal::Event* event )
   event->setHasEndDate( mHasEndDate );
   if ( mHasEndDate ) {
     if ( mFloatingStatus == AllDay )
-      // This is a floating event. Don't timezone move this one
+      // This is an all-day event. Don't timezone move this one
       event->setDtEnd( endDate() );
     else
       event->setDtEnd( utcToLocal( endDate() ) );

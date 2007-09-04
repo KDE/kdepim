@@ -1,6 +1,7 @@
 /***************************************************************************
    Copyright (C) 2007
    by Marco Gulino <marco@kmobiletools.org>
+   by Matthias Lechner <matthias@lmme.de>
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -27,23 +28,21 @@ class FirstPagePrivate;
 
 class FirstPage : public QWizardPage, public Ui::FirstPage
 {
-Q_OBJECT
-Q_PROPERTY( QString engineLibrary READ engineLibrary WRITE setEngineLibrary )
+    Q_OBJECT
+
 public:
-    FirstPage(QWidget *parent=0);
+    FirstPage( QWidget* parent=0 );
+
     bool isFinalPage() const;
     void initializePage();
+    void cleanupPage();
     bool validatePage();
-    QString engineLibrary() const;
-    void setEngineLibrary(const QString &) { /* @TODO implement me */ }
 
-public slots:
-    void engineSelected(int index);
-    virtual void slotCompleteChanged();
+public Q_SLOTS:
+    void engineSelected( int index );
+
 private:
     FirstPagePrivate *d;
-signals:
-    QString engineLibraryChanged(const QString &);
 };
 
 #endif

@@ -18,6 +18,7 @@ set(kmobiletools_LIB_SRCS
    ifaces/information.cpp
    ifaces/guiservice.cpp
    ifaces/actionprovider.cpp
+   ifaces/wizardprovider.cpp
    enginexp.cpp
    coreservice.cpp
    deviceloader.cpp
@@ -81,6 +82,7 @@ install(FILES
    ifaces/information.h
    ifaces/guiservice.h
    ifaces/actionprovider.h
+   ifaces/wizardprovider.h
    DESTINATION ${INCLUDE_INSTALL_DIR}/libkmobiletools/ifaces)
 
 # install error types

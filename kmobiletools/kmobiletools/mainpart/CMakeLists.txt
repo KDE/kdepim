@@ -24,12 +24,13 @@ set(kmobiletoolsmainpart_PART_SRCS
    devicehome.cpp 
    newsmsdlg.cpp 
    smslistviewitem.cpp 
-   smspart.cpp 
+   smspart.cpp
+   newdevicewizard/welcomepage.cpp
    newdevicewizard/firstpage.cpp
    newdevicewizard/lastpage.cpp
    statusbar.cpp
    kmobiletools_mainpart.cpp 
-   newdevicewizard/newdevicewizard.cpp
+   newdevicewizard/devicewizard.cpp
    errorlogdialog.cpp )
 
 
@@ -62,5 +63,5 @@ install(TARGETS kmobiletoolsmainpart DESTINATION ${PLUGIN_INSTALL_DIR} )
 install( FILES  kmobiletools_mainpart.desktop DESTINATION ${SERVICES_INSTALL_DIR} )
 install( FILES  kmobiletools_mainpart.rc DESTINATION ${DATA_INSTALL_DIR}/kmobiletools )
 install( FILES  kmobiletools_devicepart.rc DESTINATION ${DATA_INSTALL_DIR}/kmobiletools )
-install( FILES  newdevicewizard/kmobilewizard.png operatorsdata progress.gif
+install( FILES  newdevicewizard/kmobilewizard.png newdevicewizard/phone_connection.png operatorsdata progress.gif
 kmobiletools.notifyrc bticon.png  		security.png kmobilebtwizard.png DESTINATION ${DATA_INSTALL_DIR}/kmobiletools )

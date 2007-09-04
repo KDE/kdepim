@@ -77,8 +77,8 @@ void KOEditorGeneralEvent::finishSetup()
   QWidget::setTabOrder( mStartDateEdit, mStartTimeEdit );
   QWidget::setTabOrder( mStartTimeEdit, mEndDateEdit );
   QWidget::setTabOrder( mEndDateEdit, mEndTimeEdit );
-  QWidget::setTabOrder( mEndTimeEdit, mTimeAssociateButton );
-  QWidget::setTabOrder( mTimeAssociateButton, mAlarmButton );
+  QWidget::setTabOrder( mEndTimeEdit, mAlldayEventCheckbox );
+  QWidget::setTabOrder( mAlldayEventCheckbox, mAlarmButton );
   QWidget::setTabOrder( mAlarmButton, mAlarmTimeEdit );
   QWidget::setTabOrder( mAlarmTimeEdit, mAlarmIncrCombo );
 //   QWidget::setTabOrder( mAlarmIncrCombo, mAlarmSoundButton );
@@ -147,9 +147,9 @@ void KOEditorGeneralEvent::initTime(QWidget *parent,QBoxLayout *topLayout)
 
   QHBoxLayout *flagsBox = new QHBoxLayout();
 
-  mTimeAssociateButton = new QCheckBox(i18n("T&ime associated"), timeGroupBox );
-  flagsBox->addWidget(mTimeAssociateButton);
-  connect(mTimeAssociateButton, SIGNAL(toggled(bool)),SLOT(associateTime(bool)));
+  mAlldayEventCheckbox = new QCheckBox(i18n("T&ime associated"), timeGroupBox );
+  flagsBox->addWidget(mAlldayEventCheckbox);
+  connect(mAlldayEventCheckbox, SIGNAL(toggled(bool)),SLOT(associateTime(bool)));
 
   mDurationLabel = new QLabel( timeGroupBox );
   if ( KOPrefs::instance()->mCompactDialogs ) {
@@ -223,9 +223,9 @@ void KOEditorGeneralEvent::timeStuffDisable(bool disable)
 
 void KOEditorGeneralEvent::associateTime(bool time)
 {
-  timeStuffDisable(!time);
+  timeStuffDisable(time);
   //if(alarmButton->isChecked()) alarmStuffDisable(noTime);
-  allDayChanged(!time);
+  allDayChanged(time);
 }
 
 void KOEditorGeneralEvent::setDateTimes( const KDateTime &start, const KDateTime &end )
@@ -324,7 +324,7 @@ void KOEditorGeneralEvent::setDefaults( const QDateTime &from,
 {
   KOEditorGeneral::setDefaults(allDay);
 
-  mTimeAssociateButton->setChecked(!allDay);
+  mAlldayEventCheckbox->setChecked(allDay);
   timeStuffDisable(allDay);
 
   mTimeZoneComboStart->selectLocalTimeSpec();
@@ -340,8 +340,8 @@ void KOEditorGeneralEvent::readEvent( Event *event, bool tmpl )
 {
   QString tmpStr;
 
-  mTimeAssociateButton->setChecked(!event->floats());
-  timeStuffDisable(event->floats());
+  mAlldayEventCheckbox->setChecked(event->allDay());
+  timeStuffDisable(event->allDay());
 
   if ( !tmpl ) {
     // the rest is for the events only
@@ -374,8 +374,8 @@ void KOEditorGeneralEvent::writeEvent(Event *event)
   // temp. until something better happens.
   QString tmpStr;
 
-  if (!mTimeAssociateButton->isChecked()) {
-    event->setFloats(true);
+  if (mAlldayEventCheckbox->isChecked()) {
+    event->setAllDay(true);
 
     // need to change this.
     tmpDate = mStartDateEdit->date();
@@ -388,7 +388,7 @@ void KOEditorGeneralEvent::writeEvent(Event *event)
     tmpDT.setDate( mEndDateEdit->date() );
     event->setDtEnd( tmpDT );
   } else {
-    event->setFloats(false);
+    event->setAllDay(false);
 
     // set date/time end
     tmpDate = mEndDateEdit->date();
@@ -402,7 +402,7 @@ void KOEditorGeneralEvent::writeEvent(Event *event)
     tmpDate = mStartDateEdit->date();
     tmpTime = mStartTimeEdit->getTime();
     event->setDtStart( KDateTime( tmpDate, tmpTime, mTimeZoneComboStart->selectedTimeSpec() ) );
-  } // check for float
+  } // check for all-day
 
   event->setTransparency( mFreeTimeCombo->currentIndex() > 0
                          ? KCal::Event::Transparent
@@ -421,7 +421,7 @@ void KOEditorGeneralEvent::setDuration()
   KDateTime endDateTime = KDateTime( mCurrEndDateTime, mTimeZoneComboEnd->selectedTimeSpec() ).toTimeSpec( startDateTime.timeSpec() );
   if( startDateTime < endDateTime) {
 
-    if (!mTimeAssociateButton->isChecked()) {
+    if (mAlldayEventCheckbox->isChecked()) {
       int daydiff = startDateTime.date().daysTo(endDateTime.date()) + 1;
       tmpStr = i18n("Duration: ");
       tmpStr.append(i18np("1 Day","%1 Days",daydiff));
@@ -463,7 +463,7 @@ void KOEditorGeneralEvent::emitDateTimeStr()
   KLocale *l = KGlobal::locale();
 
   QString from,to;
-  if (!mTimeAssociateButton->isChecked()) {
+  if (mAlldayEventCheckbox->isChecked()) {
     from = l->formatDate(mCurrStartDateTime.date());
     to = l->formatDate(mCurrEndDateTime.date());
   } else {
@@ -481,7 +481,7 @@ bool KOEditorGeneralEvent::validateInput()
 {
 //  kDebug(5850) <<"KOEditorGeneralEvent::validateInput()";
 
-  if (mTimeAssociateButton->isChecked()) {
+  if (!mAlldayEventCheckbox->isChecked()) {
     if (!mStartTimeEdit->inputIsValid()) {
       KMessageBox::sorry( 0,
           i18n("Please specify a valid start time, for example '%1'.",
@@ -516,7 +516,7 @@ bool KOEditorGeneralEvent::validateInput()
   endDt.setTimeSpec( mTimeZoneComboEnd->selectedTimeSpec() );
   startDt.setDate(mStartDateEdit->date());
   endDt.setDate(mEndDateEdit->date());
-  if (mTimeAssociateButton->isChecked()) {
+  if (!mAlldayEventCheckbox->isChecked()) {
     startDt.setTime(mStartTimeEdit->getTime());
     endDt.setTime(mEndTimeEdit->getTime());
   }

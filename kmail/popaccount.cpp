@@ -156,7 +156,7 @@ void PopAccount::processNewMail(bool _interactive)
     QString seenUidList = KStandardDirs::locateLocal( "data", "kmail/" + mLogin + ':' + '@' +
                                        mHost + ':' + QString("%1").arg(mPort) );
     KConfig config( seenUidList );
-    KConfigGroup group( &config, "General" );
+    KConfigGroup group( &config, "<default>" );
     QStringList uidsOfSeenMsgs = group.readEntry( "seenUidList" , QStringList() );
     mUidsOfSeenMsgsDict.clear();
     mUidsOfSeenMsgsDict.reserve( KMail::nextPrime( ( uidsOfSeenMsgs.count() * 11 ) / 10 ) );
@@ -340,14 +340,21 @@ void PopAccount::slotAbortRequested()
 void PopAccount::startJob()
 {
   // Run the precommand
-  if (!runPrecommand(precommand()))
-    {
-      KMessageBox::sorry(0,
-                         i18n("Could not execute precommand: %1", precommand()),
-                         i18n("KMail Error Message"));
-      checkDone( false, CheckError );
-      return;
-    }
+  // end precommand code
+  connect( this, SIGNAL(precommandExited(bool)), SLOT(continueJob(bool)) );
+  startPrecommand(precommand());
+}
+
+void PopAccount::continueJob( bool precommandSuccess )
+{
+  if ( !precommandSuccess )
+  {
+    KMessageBox::sorry(0,
+                       i18n("Could not execute precommand: %1").arg(precommand()),
+                       i18n("KMail Error Message"));
+    checkDone( false, CheckError );
+    return;
+  }
   // end precommand code
 
   KUrl url = getUrl();
@@ -814,7 +821,7 @@ void PopAccount::saveUidList()
   QString seenUidList = KStandardDirs::locateLocal( "data", "kmail/" + mLogin + ':' + '@' +
                                       mHost + ':' + QString::number( mPort ) );
   KConfig config( seenUidList );
-  KConfigGroup group( &config, "General" );
+  KConfigGroup group( &config, "<default>" );
   group.writeEntry( "seenUidList", uidsOfNextSeenMsgs );
   group.writeEntry( "seenUidTimeList", seenUidTimeList );
   QByteArray laterList;

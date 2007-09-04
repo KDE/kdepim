@@ -10,6 +10,7 @@ Comment[sv]=Den här kanalen synkroniserar handdatorns nyckelringsdatabas med en
 Comment[zh_TW]=此導管將掌上型裝置的金鑰鍊與 PC 上的資料庫同步。
 Name=Keyring
 Name[ja]=キーリング
+Name[nl]=Sleutelbos
 Name[pt]=Porta-chaves
 Name[pt_BR]=Porta-chaves
 Name[sv]=Nyckelring

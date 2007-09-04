@@ -543,7 +543,7 @@ void KMKernel::setDefaultTransport( const QString & transport )
 {
   MailTransport::Transport *t = MailTransport::TransportManager::self()->transportByName( transport, false );
   if ( !t ) {
-    kWarning() <<"The transport you entered is not available";
+    kWarning(5006) <<"The transport you entered is not available";
     return;
   }
   MailTransport::TransportManager::self()->setDefaultTransport( t->id() );
@@ -1024,7 +1024,7 @@ bool KMKernel::showMail( quint32 serialNumber, const QString& /* messageId */ )
     KMMsgDict::instance()->getLocation(serialNumber, &folder, &idx);
     if (!folder || (idx == -1))
       return false;
-    folder->open( "showmail" );
+    KMFolderOpener openFolder(folder, "showmail");
     KMMsgBase *msgBase = folder->getMsgBase(idx);
     if (!msgBase)
       return false;
@@ -1041,7 +1041,6 @@ bool KMKernel::showMail( quint32 serialNumber, const QString& /* messageId */ )
 
     if (unGet)
       folder->unGetMsg(idx);
-    folder->close( "showmail" );
     return true;
   }
 
@@ -1055,7 +1054,7 @@ QString KMKernel::getFrom( quint32 serialNumber )
   KMMsgDict::instance()->getLocation(serialNumber, &folder, &idx);
   if (!folder || (idx == -1))
     return QString();
-  folder->open( "getFrom" );
+  KMFolderOpener openFolder(folder, "getFrom");
   KMMsgBase *msgBase = folder->getMsgBase(idx);
   if (!msgBase)
     return QString();
@@ -1064,7 +1063,6 @@ QString KMKernel::getFrom( quint32 serialNumber )
   QString result = msg->from();
   if (unGet)
     folder->unGetMsg(idx);
-  folder->close( "getFrom" );
   return result;
 }
 
@@ -1086,17 +1084,16 @@ QString KMKernel::debugSernum( quint32 serialNumber )
     // different folder
     if (folder && (idx != -1)) {
       // everything is ok
-      folder->open( "debugser" );
+      KMFolderOpener openFolder( folder, "debugser" );
       msg = folder->getMsgBase( idx );
       if (msg) {
-	res.append( QString( " subject %s,\n sender %s,\n date %s.\n" )
-		    .arg( msg->subject() )
-		    .arg( msg->fromStrip() )
-		    .arg( msg->dateStr() ) );
+        res.append( QString( " subject %s,\n sender %s,\n date %s.\n" )
+                             .arg( msg->subject() )
+                             .arg( msg->fromStrip() )
+                             .arg( msg->dateStr() ) );
       } else {
-	res.append( QString( "Invalid serial number." ) );
+        res.append( QString( "Invalid serial number." ) );
       }
-      folder->close( "debugser" );
     } else {
       res.append( QString( "Invalid serial number." ) );
     }
@@ -1263,8 +1260,8 @@ void KMKernel::recoverDeadLetters()
     return;
 
   KMFolder folder( 0, pathName + "autosave", KMFolderTypeMaildir, false /* no index */ );
-  const int rc = folder.open( "recover" );
-  if ( rc ) {
+  KMFolderOpener openFolder( &folder, "recover" );
+  if ( !folder.isOpened() ) {
     perror( "cannot open autosave folder" );
     return;
   }
@@ -1279,7 +1276,6 @@ void KMKernel::recoverDeadLetters()
       win->show();
     }
   }
-  folder.close( "recover" );
 }
 
 //-----------------------------------------------------------------------------
@@ -1418,7 +1414,6 @@ void KMKernel::init()
 
   the_msgSender = new KMSender;
   the_server_is_ready = true;
-  imProxy()->initialize();
   { // area for config group "Composer"
     KConfigGroup group(cfg, "Composer");
     if (group.readEntry("pref-charsets", QStringList() ).isEmpty())
@@ -1907,7 +1902,7 @@ void KMKernel::emergencyExit( const QString& reason )
                       "terminate now.\nThe error was:\n%1", reason );
   }
 
-  kWarning() << mesg;
+  kWarning(5006) << mesg;
   KNotification::event(KNotification::Catastrophe, mesg);
 
   ::exit(1);
@@ -2157,11 +2152,6 @@ KMFolder* KMKernel::findFolderById( const QString& idString )
   return folder;
 }
 
-::KIMProxy* KMKernel::imProxy()
-{
-  return KIMProxy::instance();
-}
-
 void KMKernel::enableMailCheck()
 {
   mMailCheckAborted = false;
@@ -2263,22 +2253,22 @@ KMail::MessageSender * KMKernel::msgSender() { return the_msgSender; }
 
 void KMKernel::transportRemoved(int id, const QString & name)
 {
-  Q_UNUSED( name );
+  Q_UNUSED( id );
 
   // reset all identities using the deleted transport
   QStringList changedIdents;
   KPIMIdentities::IdentityManager * im = identityManager();
   for ( KPIMIdentities::IdentityManager::Iterator it = im->modifyBegin(); it != im->modifyEnd(); ++it ) {
-    if ( id == (*it).transport() ) {
-      (*it).setTransport( -1 );
+    if ( name == (*it).transport() ) {
+      (*it).setTransport( QString() );
       changedIdents += (*it).identityName();
     }
   }
 
   // if the deleted transport is the currently used transport reset it to default
-  int currentTransport = GlobalSettings::self()->currentTransport();
-  if ( id == currentTransport )
-    GlobalSettings::self()->setCurrentTransport( -1 );
+  const QString& currentTransport = GlobalSettings::self()->currentTransport();
+  if ( name == currentTransport )
+    GlobalSettings::self()->setCurrentTransport( QString() );
 
   if ( !changedIdents.isEmpty() ) {
     QString information = i18np( "This identity has been changed to use the default transport:",
@@ -2291,14 +2281,16 @@ void KMKernel::transportRemoved(int id, const QString & name)
 
 void KMKernel::transportRenamed(int id, const QString & oldName, const QString & newName)
 {
-  Q_UNUSED( oldName );
-  Q_UNUSED( newName );
+  Q_UNUSED( id );
 
   QStringList changedIdents;
   KPIMIdentities::IdentityManager * im = identityManager();
-  for ( KPIMIdentities::IdentityManager::Iterator it = im->modifyBegin(); it != im->modifyEnd(); ++it )
-    if ( id == (*it).transport() )
+  for ( KPIMIdentities::IdentityManager::Iterator it = im->modifyBegin(); it != im->modifyEnd(); ++it ) {
+    if ( oldName == (*it).transport() ) {
+      (*it).setTransport( newName );
       changedIdents << (*it).identityName();
+    }
+  }
 
   if ( !changedIdents.isEmpty() ) {
     QString information =
