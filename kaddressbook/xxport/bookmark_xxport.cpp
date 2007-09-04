@@ -60,12 +60,15 @@ bool BookmarkXXPort::exportContacts( const KABC::AddresseeList &list, const QStr
   delete builder;
   mgr->save();
 
-  KonqBookmarkMenu::DynMenuInfo menu;
+  // FIXME KonqBookmarMenu is now protected.
+  // I think we have to subclass KonqBookmarkMenu to get access to 
+  // the struct and the method.
+  /*KonqBookmarkMenu::DynMenuInfo menu;
   menu.name = i18n( "Addressbook Bookmarks" );
   menu.location = fileName;
   menu.type = "xbel";
   menu.show = true;
-  KonqBookmarkMenu::setDynamicBookmarks( "kabc", menu );
+  KonqBookmarkMenu::setDynamicBookmarks( "kabc", menu );*/
 
   return true;
 }
