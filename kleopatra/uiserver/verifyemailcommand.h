@@ -35,19 +35,28 @@
 
 #include "assuancommand.h"
 
-namespace Kleo {
+#include <utils/pimpl_ptr.h>
 
+#include <boost/shared_ptr.hpp>
+
+namespace Kleo {
 /*!
       \author Till Adam <till@kdab.net>
       \brief GnuPG UI Server command for handling verification of an email
 */
 class VerifyEmailCommand : public AssuanCommandMixin<VerifyEmailCommand>
 {
-        int start( const std::string & );
-        void canceled();
-        void reset();
-    public:
-        static const char * staticName() { return "VERIFYEMAIL"; }
+public:
+    VerifyEmailCommand();
+    int start( const std::string & );
+    void canceled();
+    void reset();
+public:
+    static const char * staticName() { return "VERIFYEMAIL"; }
+
+    class Private;
+private:
+    kdtools::pimpl_ptr<Private> d;
 };
 
 }
