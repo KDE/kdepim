@@ -48,6 +48,8 @@ class VerifyEmailCommand : public AssuanCommandMixin<VerifyEmailCommand>
 {
 public:
     VerifyEmailCommand();
+    ~VerifyEmailCommand();
+
     int start( const std::string & );
     void canceled();
     void reset();

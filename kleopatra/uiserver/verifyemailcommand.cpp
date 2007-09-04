@@ -64,9 +64,12 @@ public slots:
 };
 
 VerifyEmailCommand::VerifyEmailCommand()
-    : d( new Private(this) )
+    : AssuanCommandMixin<VerifyEmailCommand>(),
+      d( new Private( this ) )
 {
 }
+
+VerifyEmailCommand::~VerifyEmailCommand() {}
 
 void VerifyEmailCommand::Private::findCryptoBackend()
 {
@@ -145,7 +148,7 @@ int VerifyEmailCommand::start( const std::string & line )
     assert(job);
 
     QObject::connect( job,
-                      SIGNAL( result(const GpgME::VerificationResult &, const QByteArray &) ),
+                      SIGNAL( result(GpgME::VerificationResult,QByteArray) ),
                       d.get(),
                       SLOT( slotVerifyOpaqueResult(const GpgME::VerificationResult &, const QByteArray &) ) );
     QObject::connect( job,
