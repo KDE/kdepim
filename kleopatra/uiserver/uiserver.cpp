@@ -133,7 +133,7 @@ UiServer::~UiServer() {}
 bool UiServer::registerCommandFactory( const shared_ptr<AssuanCommandFactory> & cf ) {
     if ( cf && empty( std::equal_range( d->factories.begin(), d->factories.end(), cf, _detail::ByName<std::less>() ) ) ) {
         d->factories.push_back( cf );
-        std::inplace_merge( d->factories.begin(), d->factories.end() - 1, d->factories.end() );
+        std::inplace_merge( d->factories.begin(), d->factories.end() - 1, d->factories.end(), _detail::ByName<std::less>() );
         return true;
     } else {
         qWarning( "UiServer::registerCommandFactory( %p ): factory NULL or already registered", cf ? cf.get() : 0 );
