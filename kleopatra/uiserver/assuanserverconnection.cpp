@@ -42,6 +42,7 @@
 
 #include <QSocketNotifier>
 #include <QVariant>
+#include <QPointer>
 
 #include <boost/type_traits/remove_pointer.hpp>
 
@@ -99,9 +100,11 @@ public Q_SLOTS:
             } else {
                 // ### what?
             }
-            emit q->closed( q );
             cleanup();
-            q->deleteLater();
+            const QPointer<Private> that = this;
+            emit q->closed( q );
+            if ( that ) // still there
+                q->deleteLater();
         }
     }
 
@@ -197,6 +200,7 @@ AssuanServerConnection::Private::Private( int fd_, const std::vector< shared_ptr
         if ( const gpg_error_t err = assuan_register_command( ctx.get(), fac->name(), fac->_handler() ) )
             throw assuan_exception( err, std::string( "register \"" ) + fac->name() + "\" handler" );
 
+    assuan_set_hello_line( ctx.get(), "GPG UI server (Kleopatra/1.9) ready to serve" );
     //assuan_set_hello_line( ctx.get(), GPG UI server (qApp->applicationName() + " v" + kapp->applicationVersion() + "ready to serve" )
 
 

@@ -97,6 +97,7 @@ protected:
 
 private Q_SLOTS:
     void slotConnectionClosed( Kleo::AssuanServerConnection * conn ) {
+        qDebug( "UiServer: connection %p closed", conn );
         connections.erase( std::remove_if( connections.begin(), connections.end(),
                                            bind( &shared_ptr<AssuanServerConnection>::get, _1 ) == conn ),
                            connections.end() );
@@ -119,6 +120,7 @@ UiServer::Private::Private( UiServer * qq )
       factories(),
       connections()
 {
+    assuan_set_assuan_err_source( GPG_ERR_SOURCE_DEFAULT ); // ### use _KLEO once available
 }
 
 
@@ -252,17 +254,21 @@ void UiServer::Private::makeListeningSocket() {
 
 void UiServer::Private::incomingConnection( int fd ) {
     try {
+        qDebug( "UiServer: client connect on fd %d", fd );
         const shared_ptr<AssuanServerConnection> c( new AssuanServerConnection( fd, factories ) );
         connect( c.get(), SIGNAL(closed(Kleo::AssuanServerConnection*)),
                  this, SLOT(slotConnectionClosed(Kleo::AssuanServerConnection*)) );
         connections.push_back( c );
+        qDebug( "UiServer: client connection %p established successfully", c.get() );
     } catch ( const assuan_exception & e ) {
+        qDebug( "UiServer: client connection failed: %s", e.what() );
         QTcpSocket s;
         s.setSocketDescriptor( fd );
         QTextStream( &s ) << "ERR " << e.error_code() << " " << e.what() << "\r\n";
         s.waitForBytesWritten();
         s.close();
     } catch ( ... ) {
+        qDebug( "UiServer: client connection failed: unknown exception caught" );
         // this should never happen...
         QTcpSocket s;
         s.setSocketDescriptor( fd );
