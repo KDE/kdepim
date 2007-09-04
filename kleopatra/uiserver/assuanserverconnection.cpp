@@ -169,9 +169,15 @@ AssuanServerConnection::Private::Private( int fd_, const std::vector< shared_ptr
     // register FDs with the event loop:
     assuan_fd_t fds[MAX_ACTIVE_FDS];
     const int numFDs = assuan_get_active_fds( ctx.get(), FOR_READING, fds, MAX_ACTIVE_FDS );
-    assert( numFDs > 0 ); // == 1
+    assert( numFDs != -1 ); // == 1
 
-    notifiers.reserve( numFDs );
+    if ( !numFDs || _detail::translate_sys2libc_fd( fds[0], false ) != fd ) {
+        const shared_ptr<QSocketNotifier> sn( new QSocketNotifier( fd, QSocketNotifier::Read ) );
+        connect( sn.get(), SIGNAL(activated(int)), this, SLOT(slotReadActivity(int)) );
+        notifiers.push_back( sn );
+    }
+
+    notifiers.reserve( notifiers.size() + numFDs );
     for ( int i = 0 ; i < numFDs ; ++i ) {
         const shared_ptr<QSocketNotifier> sn( new QSocketNotifier( _detail::translate_sys2libc_fd( fds[i], false ), QSocketNotifier::Read ) );
         connect( sn.get(), SIGNAL(activated(int)), this, SLOT(slotReadActivity(int)) );
