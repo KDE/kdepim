@@ -42,21 +42,24 @@
 #include <gpgme++/error.h>
 #include <gpgme++/verificationresult.h>
 
+#include <cassert>
+
 using namespace Kleo;
 
 class VerifyEmailCommand::Private : public QObject
 {
     Q_OBJECT
 public:
-    Private( VerifyEmailCommand* _q)
-    :q(_q), backend(0)
-        {}
+    Private( VerifyEmailCommand * qq )
+        :q( qq ), backend(0)
+    {}
+
     VerifyEmailCommand *q;
     const CryptoBackend::Protocol *backend;
     void findCryptoBackend();
 
-public slots:
-    void slotDetachedSignature( int, QByteArray, QByteArray );
+public Q_SLOTS:
+    void slotDetachedSignature( int, const QByteArray &, const QByteArray & );
     void slotVerifyOpaqueResult(const GpgME::VerificationResult &, const QByteArray &);
     void slotVerifyDetachedResult(const GpgME::VerificationResult &);
     void slotProgress( const QString& what, int current, int total );
@@ -81,24 +84,19 @@ void VerifyEmailCommand::Private::findCryptoBackend()
         backend = Kleo::CryptoBackendFactory::instance()->openpgp();
 }
 
-void VerifyEmailCommand::Private::slotDetachedSignature( int, QByteArray, QByteArray )
+void VerifyEmailCommand::Private::slotDetachedSignature( int, const QByteArray &, const QByteArray & )
 {
     const QByteArray signature; // FIXME
     const QByteArray signedData; // FIXME
     // we now have the detached signature, verify it
-    VerifyDetachedJob *job = backend->verifyDetachedJob();
+    VerifyDetachedJob * const job = backend->verifyDetachedJob();
     assert(job);
 
-    QObject::connect( job,
-                      SIGNAL( result(const GpgME::VerificationResult &) ),
-                      this,
-                      SLOT( slotVerifyDetachedResult(const GpgME::VerificationResult &) ) );
-    QObject::connect( job,
-                      SIGNAL( progress( const QString & , int, int ) ),
-                      this,
-                      SLOT( slotProgress( const QString&, int, int ) ) );
-    GpgME::Error error = job->start( signature, signedData );
-    if (error)
+    connect( job, SIGNAL(result(GpgME::VerificationResult)),
+             this, SLOT(slotVerifyDetachedResult(GpgME::VerificationResult)) );
+    connect( job, SIGNAL(progress(QString,int,int)),
+             this, SLOT(slotProgress(QString,int,int)) );
+    if ( const GpgME::Error error = job->start( signature, signedData ) )
         q->done(error);
 }
 
@@ -144,20 +142,16 @@ int VerifyEmailCommand::start( const std::string & line )
     const QByteArray data = bulkInputDevice()->readAll(); // FIXME safe enough?
 
     //fire off appropriate kleo verification job
-    VerifyOpaqueJob *job = d->backend->verifyOpaqueJob();
+    VerifyOpaqueJob * const job = d->backend->verifyOpaqueJob();
     assert(job);
 
-    QObject::connect( job,
-                      SIGNAL( result(GpgME::VerificationResult,QByteArray) ),
-                      d.get(),
-                      SLOT( slotVerifyOpaqueResult(const GpgME::VerificationResult &, const QByteArray &) ) );
-    QObject::connect( job,
-                      SIGNAL( progress( const QString & , int, int ) ),
-                      d.get(),
-                      SLOT( slotProgress( const QString&, int, int ) ) );
+    QObject::connect( job, SIGNAL(result(GpgME::VerificationResult,QByteArray)),
+                      d.get(), SLOT(slotVerifyOpaqueResult(GpgME::VerificationResult,QByteArray)) );
+    QObject::connect( job, SIGNAL(progress(QString,int,int)),
+                      d.get(), SLOT(slotProgress(QString,int,int)) );
 
     // FIXME handle cancelled, let job show dialog? both done and return error?
-    GpgME::Error error = job->start( data );
+    const GpgME::Error error = job->start( data );
     if ( error )
         done( error );
     return error;
