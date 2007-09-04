@@ -60,7 +60,7 @@ bool BookmarkXXPort::exportContacts( const KABC::AddresseeList &list, const QStr
   delete builder;
   mgr->save();
 
-  // FIXME KonqBookmarMenu is now protected.
+#warning FIXME KonqBookmarMenu is now protected.
   // I think we have to subclass KonqBookmarkMenu to get access to 
   // the struct and the method.
   /*KonqBookmarkMenu::DynMenuInfo menu;
