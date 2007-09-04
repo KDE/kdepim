@@ -46,6 +46,8 @@ void HHRecord::setCategoryNames( const QStringList &cats )
 {
 	FUNCTIONSETUP;
 	
+	int fCatId = -1;
+	
 	if( cats.size() < 1 )
 	{
 		fCategory = i18nc( "No category set for this record", "Unfiled" );
@@ -57,6 +59,10 @@ void HHRecord::setCategoryNames( const QStringList &cats )
 		{
 			QStringList aiCats = Pilot::categoryNames( fAppInfo->categoryInfo() );
 			
+			
+			// order of operations:  first, see if the category already exists in our appInfo.  If 
+			// it does, then set it to that one.  If it does not, try to add the new category string
+			// into our appInfo.  If that doesn't work, then just use Unfiled.
 			if( aiCats.contains( cats.first() ) )
 			{
 				DEBUGKPILOT << "Changing category from " << fCategory << " to "
@@ -67,26 +73,40 @@ void HHRecord::setCategoryNames( const QStringList &cats )
 				
 				// FIXME: For some weird reason fAppInfo->findCategory( fCategory );
 				// Fails. Below i do exactly the same but this works. *magic* :S.
-				int fCatId = -1;
 				
 				for( unsigned int i = 0; i < Pilot::CATEGORY_COUNT; i++ )
 				{
 					if( fAppInfo->categoryName( i ) == fCategory )
 					{
 						fCatId = i;
+						break;
 					}
 				}
 				
 				fRecord->setCategory( fCatId );
 			}
-			else
+			else 
 			{
-				// Category does not exist in appinfo, set it to unfiled.
-				DEBUGKPILOT << "Category " << cats.first() 
-					<< " does not exist, setting to unfiled.";
+				// Category does not exist in appinfo.  First, see if we can add the new category to 
+				// our appInfo.  If we cannot, then set the category to Unfiled.
+				fCatId = Pilot::insertCategory(fAppInfo->categoryInfo(), cats.first(), false);
+				
+				if (fCatId > 0)
+				{
+					DEBUGKPILOT << "Category: [" << cats.first() 
+						<< "] added to database at category id: [" << fCatId << "]";
 					
-				fCategory = i18nc( "No category set for this record", "Unfiled" );
-				fRecord->setCategory( 0 );
+					fCategory = cats.first();
+					fRecord->setCategory( fCatId );
+				}
+				else 
+				{
+					DEBUGKPILOT << "Category: [" << cats.first() 
+						<< "] does not exist and we can't add it. Setting to unfiled.";
+						
+					fCategory = i18nc( "No category set for this record", "Unfiled" );
+					fRecord->setCategory( 0 );
+				}
 			}
 		}
 		else

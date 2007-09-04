@@ -30,16 +30,17 @@
 #include "options.h"
 #include "pilotRecord.h"
 
-KeyringHHRecord::KeyringHHRecord( PilotRecord *rec, PilotAppInfoBase *appInfo
-	, const QString &key )
+KeyringHHRecord::KeyringHHRecord( PilotRecord *rec, PilotAppInfoBase *appInfo, 
+	const QString &key )
 	: HHRecord( rec, appInfo ), fKey( key )
 {
 	fName = QString( fRecord->data() );
 }
 
-KeyringHHRecord::KeyringHHRecord( const QString &name, const QString &account
-	, const QString &password, const QString &notes, const QString &key )
-	: HHRecord( 0L, 0L ), fKey( key ), fName( name )
+KeyringHHRecord::KeyringHHRecord( PilotAppInfoBase *appInfo , 
+	const QString &name, const QString &account, 
+	const QString &password, const QString &notes, const QString &key )
+	: HHRecord( 0L, appInfo ), fKey( key ), fName( name )
 {
 	KeyringHHRecordBase data;
 	data.account = account;
