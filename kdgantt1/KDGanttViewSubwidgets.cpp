@@ -4143,7 +4143,7 @@ void KDGanttCanvasView::contentsMouseReleaseEvent ( QMouseEvent * e )
                         }
                     }
                 }
-                qDebug("toItem=%x",toItem);
+                qDebug("toItem=%p",toItem);
                 if ( toItem && toItem != mTaskLinkFromItem ) {
                     mySignalSender->gvCreateTaskLink( mTaskLinkFromItem, currentConnector, toItem, toItem->getConnector( e->pos(), true ) );
                 }
