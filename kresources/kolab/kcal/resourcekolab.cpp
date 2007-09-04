@@ -558,7 +558,7 @@ bool ResourceKolab::addIncidence( KCal::Incidence* incidence, const QString& _su
       if ( !incidence->location().isEmpty() )
         text += i18n( "<b>Location:</b> %1", incidence->location() );
       text += "<br>";
-      if ( !incidence->recurrence()->floats() )
+      if ( !incidence->recurrence()->allDay() )
         text += i18n( "<b>Start:</b> %1, %2" )
                 .arg( incidence->dtStartDateStr(), incidence->dtStartTimeStr() );
       else
@@ -567,7 +567,7 @@ bool ResourceKolab::addIncidence( KCal::Incidence* incidence, const QString& _su
       if ( incidence->type() == "Event" ) {
         Event* event = static_cast<Event*>( incidence );
         if ( event->hasEndDate() )
-          if ( !event->recurrence()->floats() )
+          if ( !event->recurrence()->allDay() )
             text += i18n( "<b>End:</b> %1, %2" )
                     .arg( event->dtEndDateStr(), event->dtEndTimeStr() );
           else

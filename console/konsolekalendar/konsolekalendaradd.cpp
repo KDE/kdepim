@@ -87,7 +87,7 @@ bool KonsoleKalendarAdd::addEvent()
     event->setDtStart( KDateTime( m_variables->getStartDateTime(), timeSpec ) );
     event->setDtEnd( KDateTime( m_variables->getEndDateTime(), timeSpec ) );
     event->setSummary( m_variables->getSummary() );
-    event->setFloats( m_variables->getFloating() );
+    event->setAllDay( m_variables->getFloating() );
     event->setDescription( m_variables->getDescription() );
     event->setLocation( m_variables->getLocation() );
 

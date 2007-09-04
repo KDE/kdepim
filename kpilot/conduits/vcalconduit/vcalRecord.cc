@@ -48,7 +48,7 @@ static void setStartEndTimes(KCal::Event *e, const PilotDateEntry *de)
 	FUNCTIONSETUP;
 
 	e->setDtStart(KDateTime(readTm(de->getEventStart()), KDateTime::Spec::LocalZone()));
-	e->setFloats(de->isEvent());
+	e->setAllDay(de->isEvent());
 
 	if (de->isMultiDay())
 	{
@@ -212,7 +212,7 @@ static void setStartEndTimes(PilotDateEntry*de, const KCal::Event *e)
 	struct tm ttm=writeTm(e->dtStart().dateTime());
 	de->setEventStart(ttm);
 #if BADLY_PORTED
-	de->setFloats( e->doesFloat() );
+	de->setAllDay( e->allDay() );
 #endif
 	if (e->hasEndDate() && e->dtEnd().isValid())
 	{

@@ -166,7 +166,7 @@ bool ResourceKABC::doLoad()
       ev->setDtStart( KDateTime( birthdate, KDateTime::ClockTime ) );
       ev->setDtEnd( KDateTime( birthdate, KDateTime::ClockTime ) );
       ev->setHasEndDate( true );
-      ev->setFloats( true );
+      ev->setAllDay( true );
       ev->setTransparency( Event::Transparent );
 
       ev->setCustomProperty( "KABC", "BIRTHDAY", "YES" );
@@ -279,7 +279,7 @@ bool ResourceKABC::doLoad()
     ev->setDtStart( anniversary );
     ev->setDtEnd( anniversary );
     ev->setHasEndDate( true );
-    ev->setFloats( true );
+    ev->setAllDay( true );
 
     ev->setSummary( summary );
 

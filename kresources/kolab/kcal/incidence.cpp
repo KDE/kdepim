@@ -589,8 +589,8 @@ void Incidence::setFields( const KCal::Incidence* incidence )
 {
   KolabBase::setFields( incidence );
 
-  if ( incidence->floats() ) {
-    // This is a floating event. Don't timezone move this one
+  if ( incidence->allDay() ) {
+    // This is a all-day event. Don't timezone move this one
     mFloatingStatus = AllDay;
     setStartDate( incidence->dtStart().date() );
   } else {
@@ -694,12 +694,12 @@ void Incidence::saveTo( KCal::Incidence* incidence )
   KolabBase::saveTo( incidence );
 
   if ( mFloatingStatus == AllDay ) {
-    // This is a floating event. Don't timezone move this one
+    // This is an all-day event. Don't timezone move this one
     incidence->setDtStart( startDate() );
-    incidence->setFloats( true );
+    incidence->setAllDay( true );
   } else {
     incidence->setDtStart( utcToLocal( startDate() ) );
-    incidence->setFloats( false );
+    incidence->setAllDay( false );
   }
 
   incidence->setSummary( summary() );

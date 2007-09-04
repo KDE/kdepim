@@ -458,7 +458,7 @@ void KCalResourceSlox::createEventAttributes( QDomDocument &doc,
 
   WebdavHandler::addSloxElement( this, doc, parent, fieldName( Location ), event->location() );
 
-  if ( event->floats() ) {
+  if ( event->allDay() ) {
     WebdavHandler::addSloxElement( this, doc, parent, fieldName( FullTime ), boolToStr( true ) );
   } else {
     WebdavHandler::addSloxElement( this, doc, parent, fieldName( FullTime ), boolToStr( false ) );
@@ -705,7 +705,7 @@ void KCalResourceSlox::parseEventAttribute( const QDomElement &e,
 
   if ( tag == fieldName( EventBegin ) ) {
     KDateTime dt;
-    if ( event->floats() ) {
+    if ( event->allDay() ) {
       if ( type() == "ox" )
         dt = WebdavHandler::sloxToKDateTime( text, timeSpec() );
       else
@@ -716,7 +716,7 @@ void KCalResourceSlox::parseEventAttribute( const QDomElement &e,
     event->setDtStart( dt );
   } else if ( tag == fieldName( EventEnd ) ) {
     KDateTime dt;
-    if ( event->floats() ) {
+    if ( event->allDay() ) {
       dt = WebdavHandler::sloxToKDateTime( text );
       dt = dt.addSecs( -1 );
     }
@@ -1026,7 +1026,7 @@ void KCalResourceSlox::slotLoadEventsResult( KJob *job )
         event->setCustomProperty( "SLOX", "ID", item.sloxId );
 
         QDomNode n = item.domNode.namedItem( fieldName( FullTime ) );
-        event->setFloats( n.toElement().text() == boolToStr( true ) );
+        event->setAllDay( n.toElement().text() == boolToStr( true ) );
 
         bool doesRecur = false;
 

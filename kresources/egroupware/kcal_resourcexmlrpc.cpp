@@ -561,7 +561,7 @@ void ResourceXMLRPC::listEventsFinished( const QList<QVariant>& list,
     QMap<QString, QVariant> map = (*eventIt).toMap();
 
     Event *event = new Event;
-    event->setFloats( false );
+    event->setAllDay( false );
 
     QString uid;
     readEvent( map, event, uid );
@@ -795,7 +795,7 @@ void ResourceXMLRPC::readEvent( const QMap<QString, QVariant> &args, Event *even
            start.time().hour() == 0 && start.time().minute() == 0 &&
            start.time().second() == 0 ) {
         event->setDtEnd( end.addDays( -1 ) );
-        event->setFloats( true );
+        event->setAllDay( true );
       } else {
         event->setDtEnd( end );
         event->setHasEndDate( true );
@@ -937,7 +937,7 @@ void ResourceXMLRPC::writeEvent( Event *event, QMap<QString, QVariant> &args )
   args.insert( "start", event->dtStart().toTimeSpec( timeSpec() ).dateTime() );
 
   // handle all day events
-  if ( event->floats() )
+  if ( event->allDay() )
     args.insert( "end", event->dtEnd().addDays( 1 ).dateTime() );
   else
     args.insert( "end", event->dtEnd().toTimeSpec( timeSpec() ).dateTime() );
@@ -1146,13 +1146,13 @@ void ResourceXMLRPC::readTodo( const QMap<QString, QVariant>& args, Todo *todo, 
 
   todo->setLastModified( KDateTime( args[ "datemodified" ].toDateTime(), timeSpec() ) );
 
-  todo->setFloats( true );
+  todo->setAllDay( true );
   KDateTime dateTime( args[ "startdate" ].toDateTime(), timeSpec() );
   if ( dateTime.isValid() ) {
     todo->setDtStart( dateTime );
     todo->setHasStartDate( true );
     if ( !dateTime.time().isNull() )
-      todo->setFloats( false );
+      todo->setAllDay( false );
   }
 
   dateTime = KDateTime( args[ "enddate" ].toDateTime(), timeSpec() );
@@ -1160,7 +1160,7 @@ void ResourceXMLRPC::readTodo( const QMap<QString, QVariant>& args, Todo *todo, 
     todo->setDtDue( dateTime );
     todo->setHasDueDate( true );
     if ( !dateTime.time().isNull() )
-      todo->setFloats( false );
+      todo->setAllDay( false );
   }
 
   // SUBTODO

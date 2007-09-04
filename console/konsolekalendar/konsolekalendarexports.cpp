@@ -82,8 +82,8 @@ bool KonsoleKalendarExports::exportAsTxt( QTextStream *ts,
       << KGlobal::locale()->formatDate( date )
       << endl;
 
-  // Print Event Starttime - Endtime, for Non-Floating Events Only
-  if ( !event->floats() ) {
+  // Print Event Starttime - Endtime, for Non-All-Day Events Only
+  if ( !event->allDay() ) {
     *ts << "\t"
         << KGlobal::locale()->formatTime( event->dtStart().time() )
         << " - "
@@ -164,7 +164,7 @@ bool KonsoleKalendarExports::exportAsTxtShort( QTextStream *ts,
   }
 
   // Print Event Starttime - Endtime
-  if ( !event->floats() ) {
+  if ( !event->allDay() ) {
     *ts << KGlobal::locale()->formatTime( event->dtStart().time() )
         << " - "
         << KGlobal::locale()->formatTime( event->dtEnd().time() );
@@ -225,7 +225,7 @@ bool KonsoleKalendarExports::exportAsCSV( QTextStream *ts,
   QString delim = i18n( "," );   // character to use as CSV field delimiter
   QString dquote = i18n( "\"" ); // character to use to quote CSV fields
 
-  if ( !event->floats() ) {
+  if ( !event->allDay() ) {
     *ts <<          pF( KGlobal::locale()->formatDate( date ) )
         << delim << pF( KGlobal::locale()->formatTime( event->dtStart().time() ) )
         << delim << pF( KGlobal::locale()->formatDate( date ) )
