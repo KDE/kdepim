@@ -2,7 +2,7 @@ INCLUDES = -I$(top_srcdir)/kaddressbook/interfaces -I$(top_srcdir)/kaddressbook 
            -I$(top_srcdir)  $(all_includes)
 
 if compile_newdistrlists
-TARGET_DISTRIBUTIONLISTNG=libkaddrbk_distributionlistng
+TARGET_DISTRIBUTIONLISTNG=libkaddrbk_distributionlistng.la
 DISTRIBUTIONLISTNG_DESKTOPFILE=distributionlistng.desktop
 endif
 
