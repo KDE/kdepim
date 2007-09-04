@@ -33,6 +33,8 @@
 #ifndef __KLEOPATRA_UISERVER_ASSUANSERVERCONNECTION_H__
 #define __KLEOPATRA_UISERVER_ASSUANSERVERCONNECTION_H__
 
+#include <QObject>
+
 #include <utils/pimpl_ptr.h>
 
 #include <boost/shared_ptr.hpp>
@@ -44,12 +46,16 @@ namespace Kleo {
 
     class AssuanCommandFactory;
 
-    class AssuanServerConnection {
-        KDAB_DISABLE_COPY( AssuanServerConnection );
+    class AssuanServerConnection : public QObject {
+        Q_OBJECT
     public:
-        AssuanServerConnection( int fd, const std::vector< boost::shared_ptr<AssuanCommandFactory> > & factories );
+        AssuanServerConnection( int fd, const std::vector< boost::shared_ptr<AssuanCommandFactory> > & factories, QObject * parent=0 );
         ~AssuanServerConnection();
 
+    Q_SIGNALS:
+        void closed( Kleo::AssuanServerConnection * which );
+
+    public:
         class Private;
     private:
         kdtools::pimpl_ptr<Private> d;

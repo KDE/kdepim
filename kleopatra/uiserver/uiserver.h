@@ -53,6 +53,9 @@ namespace Kleo {
 
         bool waitForStopped( unsigned int ms=0xFFFFFFFF );
 
+        bool isStopped() const;
+        bool isStopping() const;
+
     public Q_SLOTS:
         void start();
         void stop();

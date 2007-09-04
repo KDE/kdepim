@@ -84,8 +84,9 @@ class AssuanServerConnection::Private : public QObject {
     Q_OBJECT
     friend class ::Kleo::AssuanServerConnection;
     friend class ::Kleo::AssuanCommandFactory;
+    AssuanServerConnection * const q;
 public:
-    Private( int fd_, const std::vector< shared_ptr<AssuanCommandFactory> > & factories_ );
+    Private( int fd_, const std::vector< shared_ptr<AssuanCommandFactory> > & factories_, AssuanServerConnection * qq );
     ~Private();
 
 public Q_SLOTS:
@@ -98,8 +99,9 @@ public Q_SLOTS:
             } else {
                 // ### what?
             }
-            //###emit q->closed( );
+            emit q->closed( q );
             cleanup();
+            q->deleteLater();
         }
     }
 
@@ -144,8 +146,8 @@ void AssuanServerConnection::Private::cleanup() {
     fd = -1;
 }
 
-AssuanServerConnection::Private::Private( int fd_, const std::vector< shared_ptr<AssuanCommandFactory> > & factories_ )
-    : fd( fd_ ), factories( factories_ )
+AssuanServerConnection::Private::Private( int fd_, const std::vector< shared_ptr<AssuanCommandFactory> > & factories_, AssuanServerConnection * qq )
+    : QObject(), q( qq ), fd( fd_ ), factories( factories_ )
 {
 #ifdef __GNUC__
     assert( __gnu_cxx::is_sorted( factories_.begin(), factories_.end(), _detail::ByName<std::less>() ) );
@@ -203,8 +205,8 @@ AssuanServerConnection::Private::~Private() {
     cleanup();
 }
 
-AssuanServerConnection::AssuanServerConnection( int fd, const std::vector< shared_ptr<AssuanCommandFactory> > & factories )
-    : d( new Private( fd, factories ) )
+AssuanServerConnection::AssuanServerConnection( int fd, const std::vector< shared_ptr<AssuanCommandFactory> > & factories, QObject * p )
+    : QObject( p ), d( new Private( fd, factories, this ) )
 {
 
 }
@@ -399,3 +401,4 @@ int AssuanCommandFactory::_handle( assuan_context_t ctx, char * line, const char
 
 
 #include "assuanserverconnection.moc"
+#include "moc_assuanserverconnection.cpp"

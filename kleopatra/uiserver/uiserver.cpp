@@ -50,6 +50,7 @@
 #include <QTimer>
 
 #include <boost/range/empty.hpp>
+#include <boost/bind.hpp>
 
 #include <stdexcept>
 #include <cassert>
@@ -83,6 +84,7 @@ namespace {
 class UiServer::Private : public QTcpServer {
     Q_OBJECT
     friend class ::Kleo::UiServer;
+    UiServer * const q;
 public:
     explicit Private( UiServer * qq );
 
@@ -93,6 +95,15 @@ private:
 protected:
     /* reimp */ void incomingConnection( int fd );
 
+private Q_SLOTS:
+    void slotConnectionClosed( Kleo::AssuanServerConnection * conn ) {
+        connections.erase( std::remove_if( connections.begin(), connections.end(),
+                                           bind( &shared_ptr<AssuanServerConnection>::get, _1 ) == conn ),
+                           connections.end() );
+        if ( q->isStopped() )
+            emit q->stopped();
+    }
+
 private:
     KTempDir tmpDir;
     QFile file;
@@ -102,6 +113,7 @@ private:
 
 UiServer::Private::Private( UiServer * qq )
     : QTcpServer(),
+      q( qq ),
       tmpDir( tmpDirPrefix() ),
       file(),
       factories(),
@@ -145,6 +157,8 @@ void UiServer::stop() {
 }
 
 bool UiServer::waitForStopped( unsigned int ms ) {
+    if ( isStopped() )
+        return true;
     QEventLoop loop;
     QTimer timer;
     timer.setInterval( ms );
@@ -153,6 +167,14 @@ bool UiServer::waitForStopped( unsigned int ms ) {
     connect( this,   SIGNAL(stopped()), &loop, SLOT(quit()) );
     loop.exec();
     return !timer.isActive();
+}
+
+bool UiServer::isStopped() const {
+    return d->connections.empty() && !d->isListening() ;
+}
+
+bool UiServer::isStopping() const {
+    return !d->connections.empty() && !d->isListening() ;
 }
 
 QString UiServer::Private::makeFileName() const {
@@ -231,6 +253,8 @@ void UiServer::Private::makeListeningSocket() {
 void UiServer::Private::incomingConnection( int fd ) {
     try {
         const shared_ptr<AssuanServerConnection> c( new AssuanServerConnection( fd, factories ) );
+        connect( c.get(), SIGNAL(closed(Kleo::AssuanServerConnection*)),
+                 this, SLOT(slotConnectionClosed(Kleo::AssuanServerConnection*)) );
         connections.push_back( c );
     } catch ( const assuan_exception & e ) {
         QTcpSocket s;
