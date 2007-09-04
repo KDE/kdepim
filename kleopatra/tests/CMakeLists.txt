@@ -6,5 +6,5 @@ set(test_keylistmodels_SRCS test_keylistmodels.cpp ../models/keylistmodel.cpp ..
 
 kde4_add_test_executable(test_keylistmodels ${test_keylistmodels_SRCS})
 
-target_link_libraries(test_keylistmodels kleo gpgme++ ${KDE4_KDECORE_LIBS} )
+target_link_libraries(test_keylistmodels kleo ${KDE4_KDECORE_LIBS} )
 
