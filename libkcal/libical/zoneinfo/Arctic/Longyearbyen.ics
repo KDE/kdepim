@@ -2,7 +2,7 @@ BEGIN:VCALENDAR
 PRODID:-//KDE//NONSGML KCal Olson-VTIMEZONE Converter//EN
 VERSION:2.0
 BEGIN:VTIMEZONE
-TZID:/kde.org/Olson_20070327_1/Arctic/Longyearbyen
+TZID:/kde.org/Olson_20070903_1/Arctic/Longyearbyen
 X-LIC-LOCATION:Arctic/Longyearbyen
 BEGIN:DAYLIGHT
 TZOFFSETFROM:+0100

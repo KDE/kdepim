@@ -2,7 +2,7 @@ BEGIN:VCALENDAR
 PRODID:-//KDE//NONSGML KCal Olson-VTIMEZONE Converter//EN
 VERSION:2.0
 BEGIN:VTIMEZONE
-TZID:/kde.org/Olson_20070327_1/America/Argentina/Rio_Gallegos
+TZID:/kde.org/Olson_20070903_1/America/Argentina/Rio_Gallegos
 X-LIC-LOCATION:America/Argentina/Rio_Gallegos
 BEGIN:STANDARD
 TZOFFSETFROM:-043652

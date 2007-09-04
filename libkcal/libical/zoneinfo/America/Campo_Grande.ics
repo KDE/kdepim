@@ -2,7 +2,7 @@ BEGIN:VCALENDAR
 PRODID:-//KDE//NONSGML KCal Olson-VTIMEZONE Converter//EN
 VERSION:2.0
 BEGIN:VTIMEZONE
-TZID:/kde.org/Olson_20070327_1/America/Campo_Grande
+TZID:/kde.org/Olson_20070903_1/America/Campo_Grande
 X-LIC-LOCATION:America/Campo_Grande
 BEGIN:DAYLIGHT
 TZOFFSETFROM:-0400

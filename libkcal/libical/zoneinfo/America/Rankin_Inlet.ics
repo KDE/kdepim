@@ -2,7 +2,7 @@ BEGIN:VCALENDAR
 PRODID:-//KDE//NONSGML KCal Olson-VTIMEZONE Converter//EN
 VERSION:2.0
 BEGIN:VTIMEZONE
-TZID:/kde.org/Olson_20070327_1/America/Rankin_Inlet
+TZID:/kde.org/Olson_20070903_1/America/Rankin_Inlet
 X-LIC-LOCATION:America/Rankin_Inlet
 BEGIN:DAYLIGHT
 TZOFFSETFROM:-0600

@@ -64,7 +64,7 @@
 -0313200 -0683100 America/Argentina/San_Juan
 -0264900 -0651300 America/Argentina/Tucuman
 -0544800 -0681800 America/Argentina/Ushuaia
-+0123000 -0685800 America/Aruba
++0123000 -0695800 America/Aruba
 -0251600 -0574000 America/Asuncion
 +0484531 -0913718 America/Atikokan
 -0125900 -0383100 America/Bahia
@@ -75,7 +75,7 @@
 +0024900 -0604000 America/Boa_Vista
 +0043600 -0740500 America/Bogota
 +0433649 -1161209 America/Boise
-+0690300 -1050500 America/Cambridge_Bay
++0690650 -1050310 America/Cambridge_Bay
 -0202700 -0543700 America/Campo_Grande
 +0210500 -0864600 America/Cancun
 +0103000 -0665600 America/Caracas
@@ -112,6 +112,7 @@
 +0411745 -0863730 America/Indiana/Knox
 +0382232 -0862041 America/Indiana/Marengo
 +0382931 -0871643 America/Indiana/Petersburg
++0375711 -0864541 America/Indiana/Tell_City
 +0384452 -0850402 America/Indiana/Vevay
 +0384038 -0873143 America/Indiana/Vincennes
 +0410305 -0863611 America/Indiana/Winamac
@@ -313,7 +314,7 @@
 +0502600 +0303100 Europe/Kiev
 +0384300 -0090800 Europe/Lisbon
 +0460300 +0143100 Europe/Ljubljana
-+0512830 +0001845 Europe/London
++0513030 +0000731 Europe/London
 +0493600 +0060900 Europe/Luxembourg
 +0402400 -0034100 Europe/Madrid
 +0355400 +0143100 Europe/Malta
@@ -372,7 +373,7 @@
 -0093200 +1601200 Pacific/Guadalcanal
 +0132800 +1444500 Pacific/Guam
 +0211825 -1575130 Pacific/Honolulu
-+0170000 -1683000 Pacific/Johnston
++0164500 -1693100 Pacific/Johnston
 +0015200 -1572000 Pacific/Kiritimati
 +0051900 +1625900 Pacific/Kosrae
 +0090500 +1672000 Pacific/Kwajalein
