@@ -36,7 +36,7 @@
 #ifndef _ASSUAN_ONLY_GPG_ERRORS
 #define _ASSUAN_ONLY_GPG_ERRORS
 #endif
-#include <assuan.h>
+#include "../uiserver/kleo-assuan.h"
 #include <gpg-error.h>
 
 #include <QtCore>
@@ -47,6 +47,8 @@
 #include <fcntl.h>
 #include <errno.h>
 #include <assert.h>
+
+using namespace Kleo;
 
 static int dataFD, sigFD;
 
@@ -112,7 +114,7 @@ int main( int argc, char * argv[] ) {
     assuan_context_t ctx = 0;
 
     if ( const gpg_error_t err = assuan_socket_connect_ext( &ctx, argv[1], -1, 1 ) ) {
-        qDebug( "assuan_socket_connect_ext: %s", gpg_strerror( err ) );
+        qDebug( "%s", assuan_exception( err, "assuan_socket_connect_ext" ).what() );
         return 1;
     }
 
@@ -127,17 +129,17 @@ int main( int argc, char * argv[] ) {
     }
 
     if ( const gpg_error_t err = assuan_sendfd( ctx, dataFD ) ) {
-        qDebug( "assuan_sendfd: %s", gpg_strerror( err ) );
+        qDebug( "%s", assuan_exception( err, "assuan_sendfd" ).what() );
         return 1;
     }
 
     if ( const gpg_error_t err = assuan_write_line( ctx, "INPUT FD" ) ) {
-        qDebug( "assuan_write_line(\"INPUT FD\"): %s", gpg_strerror( err ) );
+        qDebug( "%s", assuan_exception( err, "assuan_write_line(\"INPUT FD\")" ).what() );
         return 1;
     }
 
     if ( const gpg_error_t err = assuan_transact( ctx, "VERIFYDETACHED", data, ctx, inquire, ctx, status, ctx ) ) {
-        qDebug( "assuan_transact(\"VERIFYDETACHED\"): %s", gpg_strerror( err ) );
+        qDebug( "%s", assuan_exception( err, "assuan_transact(\"VERIFYDETACHED\")" ).what() );
         return 1;
     }
 
