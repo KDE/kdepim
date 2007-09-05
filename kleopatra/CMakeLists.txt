@@ -2,7 +2,7 @@ project(kleopatra)
 
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/config-kleopatra.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-kleopatra.h )
 
-include_directories( ${CMAKE_SOURCE_DIR}/libkleo ${Boost_INCLUDE_DIR} ${GPGME_INCLUDES} ) # should be assuan-includes!
+include_directories( ${CMAKE_SOURCE_DIR}/libkleo ${Boost_INCLUDE_DIR} ${QGPGME_INCLUDES} ${ASSUAN_INCLUDES} )
 add_definitions (-DQT3_SUPPORT -DQT3_SUPPORT_WARNINGS ${KDE4_ENABLE_EXCEPTIONS} -D_ASSUAN_ONLY_GPG_ERRORS )
 
 set(libconf_SRCS  ${CMAKE_SOURCE_DIR}/kleopatra/conf/configuredialog.cpp )
@@ -19,8 +19,13 @@ if ( USABLE_ASSUAN_FOUND )
     uiserver/uiserver.cpp
     uiserver/assuanserverconnection.cpp
     uiserver/verifyemailcommand.cpp
-	uiserver/decryptemailcommand.cpp
-  )
+    uiserver/decryptemailcommand.cpp
+    )
+  if ( WIN32 )
+    set( _kleopatra_uiserver_extra_libs ${ASSUAN_VANILLA_LIBRARIES} )
+  else ( WIN32 )
+    set( _kleopatra_uiserver_extra_libs ${ASSUAN_PTHREAD_LIBRARIES} )
+  endif( WIN32 )
 else ( USABLE_ASSUAN_FOUND )
   set(_kleopatra_uiserver_files)
 endif ( USABLE_ASSUAN_FOUND )
@@ -51,7 +56,7 @@ kde4_add_ui_files(kleopatra_bin_SRCS certificateinfowidget.ui certificatewizard.
 kde4_add_executable(kleopatra_bin ${kleopatra_bin_SRCS})
 set_target_properties(kleopatra_bin  PROPERTIES OUTPUT_NAME kleopatra)
 
-target_link_libraries(kleopatra_bin ${KDE4_KUTILS_LIBS} ${KDE4_KDE3SUPPORT_LIBS} ${KDE4_KABC_LIBS} kleo ${QGPGME_LIBRARIES} -lassuan )
+target_link_libraries(kleopatra_bin ${KDE4_KUTILS_LIBS} ${KDE4_KDE3SUPPORT_LIBS} ${KDE4_KABC_LIBS} kleo ${QGPGME_LIBRARIES} ${_kleopatra_uiserver_extra_libs} )
 
 install(TARGETS kleopatra_bin  DESTINATION ${BIN_INSTALL_DIR} )
 

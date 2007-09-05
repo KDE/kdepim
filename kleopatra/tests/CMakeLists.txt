@@ -10,13 +10,15 @@ target_link_libraries(test_keylistmodels kleo ${KDE4_KDECORE_LIBS} )
 
 ########### next target ###############
 
-if ( USABLE_ASSUAN_FOUND )
+if ( USABLE_ASSUAN_FOUND AND NOT WIN32 )
+
+  # this doesn't yet work on Windows
 
   set(test_uiserver_SRCS test_uiserver.cpp ../uiserver/kleo-assuan.cpp )
 
   kde4_add_test_executable(test_uiserver ${test_uiserver_SRCS})
 
-  target_link_libraries(test_uiserver -lassuan ${GPGME_LIBRARIES} ${KDE4_KDECORE_LIBS} )
+  target_link_libraries(test_uiserver ${KDE4_KDECORE_LIBS} ${ASSUAN_PTHREAD_LIBRARIES} )
 
-endif( USABLE_ASSUAN_FOUND )
+endif( USABLE_ASSUAN_FOUND AND NOT WIN32 )
 
