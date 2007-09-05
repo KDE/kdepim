@@ -120,7 +120,7 @@ UiServer::Private::Private( UiServer * qq )
       factories(),
       connections()
 {
-    assuan_set_assuan_err_source( GPG_ERR_SOURCE_DEFAULT ); // ### use _KLEO once available
+    assuan_set_assuan_err_source( GPG_ERR_SOURCE_DEFAULT );
 }
 
 
