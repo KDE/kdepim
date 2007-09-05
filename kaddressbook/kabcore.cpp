@@ -647,9 +647,9 @@ void KABCore::importVCard( const KURL &url )
   mXXPortManager->importVCard( url );
 }
 
-void KABCore::importVCard( const QString &vCardURL )
+void KABCore::importVCardFromData( const QString &vCard )
 {
-  mXXPortManager->importVCard( vCardURL );
+  mXXPortManager->importVCardFromData( vCard );
 }
 
 void KABCore::editContact( const QString &uid )

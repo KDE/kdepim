@@ -30,9 +30,9 @@ KAddressBookService::KAddressBookService( KAB::Core *core )
 {
 }
 
-void KAddressBookService::importVCard( const QString& vCard )
+void KAddressBookService::importVCardFromData( const QString& vCard )
 {
-  mCore->importVCard( vCard );
+  mCore->importVCardFromData( vCard );
 }
 
 void KAddressBookService::importVCard( const KURL& url )

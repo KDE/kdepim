@@ -40,7 +40,7 @@ class KAddressBookService : virtual public KPIM::AddressBookServiceIface
 
       @param vCard The vCard in string representation.
      */
-    void importVCard( const QString& vCard );
+    void importVCardFromData( const QString& vCard );
 
     /**
       This method will add a vcard to the address book.

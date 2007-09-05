@@ -281,7 +281,7 @@ class KDE_EXPORT KABCore : public KAB::Core
     /**
       DCOP METHOD: Imports the given vCard.
      */
-    virtual void importVCard( const QString& vCardURL );
+    virtual void importVCardFromData( const QString& vCard );
 
     /**
       DCOP METHOD: Opens contact editor to input a new contact.

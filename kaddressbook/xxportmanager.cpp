@@ -66,7 +66,7 @@ void XXPortManager::importVCard( const KURL &url )
   importURL = KURL();
 }
 
-void XXPortManager::importVCard( const QString &vCard )
+void XXPortManager::importVCardFromData( const QString &vCard )
 {
   importData = vCard;
   slotImport( "vcard", "<empty>" );

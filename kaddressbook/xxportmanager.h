@@ -53,7 +53,7 @@ class KDE_EXPORT XXPortManager : public QObject
 
   public slots:
     void importVCard( const KURL &url );
-    void importVCard( const QString &vCard );
+    void importVCardFromData( const QString &vCard );
 
   signals:
     void modified();
