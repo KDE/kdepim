@@ -26,6 +26,13 @@ if ( USABLE_ASSUAN_FOUND )
   else ( WIN32 )
     set( _kleopatra_uiserver_extra_libs ${ASSUAN_PTHREAD_LIBRARIES} )
   endif( WIN32 )
+  
+  if ( HAVE_GPG_ERR_SOURCE_KLEO )
+    add_definitions( -DGPG_ERR_SOURCE_DEFAULT=GPG_ERR_SOURCE_KLEO )
+  else( HAVE_GPG_ERR_SOURCE_KLEO )
+    add_definitions( -DGPG_ERR_SOURCE_DEFAULT=GPG_ERR_SOURCE_USER_1 )
+  endif( HAVE_GPG_ERR_SOURCE_KLEO )
+
 else ( USABLE_ASSUAN_FOUND )
   set(_kleopatra_uiserver_files)
 endif ( USABLE_ASSUAN_FOUND )

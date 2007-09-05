@@ -61,6 +61,14 @@ if ( USABLE_ASSUAN_FOUND )
         "
     HAVE_NEW_STYLE_ASSUAN_INQUIRE_EXT )
 
+  # check if gpg-error already has GPG_ERR_SOURCE_KLEO
+  check_cxx_source_compiles("
+        #include <gpg-error.h>
+        static gpg_err_source_t src = GPG_ERR_SOURCE_KLEO;
+        int main() { return 0; }
+        "
+    HAVE_GPG_ERR_SOURCE_KLEO )
+
 endif ( USABLE_ASSUAN_FOUND )
 
 macro_bool_to_01( USABLE_ASSUAN_FOUND  HAVE_USABLE_ASSUAN )

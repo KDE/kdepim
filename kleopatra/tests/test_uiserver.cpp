@@ -88,6 +88,8 @@ static int inquire( void * void_ctx, const char * keyword ) {
 }
 
 int main( int argc, char * argv[] ) {
+
+    assuan_set_assuan_err_source( GPG_ERR_SOURCE_DEFAULT );
     
     if ( argc != 5 || qstrcmp( argv[2], "--verify-detached" ) != 0 )
         return 1;
