@@ -19,6 +19,7 @@ if ( USABLE_ASSUAN_FOUND )
     uiserver/uiserver.cpp
     uiserver/assuanserverconnection.cpp
     uiserver/verifyemailcommand.cpp
+	uiserver/decryptemailcommand.cpp
   )
 else ( USABLE_ASSUAN_FOUND )
   set(_kleopatra_uiserver_files)

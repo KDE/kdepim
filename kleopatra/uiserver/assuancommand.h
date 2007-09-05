@@ -251,13 +251,6 @@ namespace Kleo {
         /* reimp */ const char * name() const { return Derived::staticName(); }
     };
 
-    class DecryptEmailCommand : public AssuanCommandMixin<DecryptEmailCommand> {
-        int start( const std::string & ) { return 0; }
-        void canceled() {}
-        void reset() {}
-    public:
-        static const char * staticName() { return "DECRYPTEMAIL"; }
-    };
 }
 
 #endif /* __KLEOPATRA_UISERVER_ASSUANCOMMAND_H__ */
