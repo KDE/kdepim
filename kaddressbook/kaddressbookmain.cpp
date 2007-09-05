@@ -84,9 +84,14 @@ void KAddressBookMain::addEmail( QString addr )
   mCore->addEmail( addr );
 }
 
-void KAddressBookMain::importVCard( const QString& file )
+void KAddressBookMain::importVCard( const KURL& url )
 {
-  mCore->importVCard( KURL( file ) );
+  mCore->importVCard( url );
+}
+
+void KAddressBookMain::importVCardFromData( const QString& vCard )
+{
+  mCore->importVCardFromData( vCard );
 }
 
 ASYNC KAddressBookMain::showContactEditor( QString uid )

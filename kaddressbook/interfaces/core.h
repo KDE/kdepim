@@ -166,7 +166,7 @@ class KDE_EXPORT Core : public QObject
     /**
       DCOP METHOD: Imports the given vCard.
      */
-    virtual void importVCard( const QString& vCard ) = 0;
+    virtual void importVCardFromData( const QString& vCard ) = 0;
 
     /**
       DCOP METHOD: Opens contact editor to input a new contact.

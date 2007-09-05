@@ -25,6 +25,7 @@
 #define KADDRESSBOOKIFACE_H
 
 #include <dcopobject.h>
+#include <kurl.h>
 #include <qstringlist.h>
 #include <kdepimmacros.h>
 
@@ -34,7 +35,8 @@ class KDE_EXPORT KAddressBookIface : virtual public DCOPObject
 
   k_dcop:
     virtual void addEmail( QString addr ) = 0;
-    virtual void importVCard( const QString& vCardURL ) = 0;
+    virtual void importVCard( const KURL& url ) = 0;
+    virtual void importVCardFromData( const QString& vCard ) = 0;
 
     virtual ASYNC showContactEditor( QString uid ) = 0;
 
