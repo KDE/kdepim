@@ -52,7 +52,6 @@ public:
 
     int start( const std::string & );
     void canceled();
-    void reset();
 public:
     static const char * staticName() { return "VERIFYEMAIL"; }
 

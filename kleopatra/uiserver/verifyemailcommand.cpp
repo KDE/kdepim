@@ -161,8 +161,4 @@ void VerifyEmailCommand::canceled()
 {
 }
 
-void VerifyEmailCommand::reset()
-{
-}
-
 #include "verifyemailcommand.moc"

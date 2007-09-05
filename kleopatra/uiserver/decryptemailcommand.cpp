@@ -124,8 +124,5 @@ void Kleo::DecryptEmailCommand::canceled()
 {
 }
 
-void Kleo::DecryptEmailCommand::reset()
-{
-}
-
 #include "decryptemailcommand.moc"
+
