@@ -2,9 +2,9 @@ Current Release is Proko2 2.1.10
 
 Features
 ========
-* Retain the state of the signing and encryption buttons when saving messages 
+* Retain the state of the signing and encryption buttons when saving messages
   as drafts, even if the message itself is configured to not be signed or
-  encrypted while in the drafts folder. 
+  encrypted while in the drafts folder.
 
 Bugfixes
 ========
@@ -15,7 +15,7 @@ Bugfixes
 * Kolab/issue1481 Fix KMail problems with displaying non-ascii characters
   in CC headers.
 
-* Kolab/issue1492 Fix crash when applying changes to an event or todo
+* Kolab/issue1494 Fix crash when applying changes to an event or todo
   while a mailcheck is going on, or if a mailcheck has happened during
   editing. Apply button removed as a stop gap measure.
 
