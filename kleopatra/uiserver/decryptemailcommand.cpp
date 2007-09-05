@@ -35,11 +35,12 @@
 #include <QObject>
 #include <QIODevice>
 
-#include <kleo/decryptjob.h>
+#include <kleo/decryptverifyjob.h>
 #include <kleo/cryptobackendfactory.h>
 
 #include <gpgme++/error.h>
 #include <gpgme++/decryptionresult.h>
+#include <gpgme++/verificationresult.h>
 
 #include <cassert>
 
@@ -56,7 +57,7 @@ public:
     void findCryptoBackend();
 
 public Q_SLOTS:
-    void slotDecryptionResult( const GpgME::DecryptionResult &, const QByteArray & plainText );
+    void slotDecryptionResult( const GpgME::DecryptionResult &, const GpgME::VerificationResult &,  const QByteArray & plainText );
     void slotProgress( const QString& what, int current, int total );
 
 };
@@ -85,10 +86,19 @@ void Kleo::DecryptEmailCommand::Private::slotProgress( const QString& what, int 
     // FIXME report progress, via sendStatus()
 }
 
-void Kleo::DecryptEmailCommand::Private::slotDecryptionResult( const GpgME::DecryptionResult & result, const QByteArray & plainText )
+void Kleo::DecryptEmailCommand::Private::slotDecryptionResult( const GpgME::DecryptionResult & decryptionResult, const GpgME::VerificationResult & verificationResult, const QByteArray & plainText )
 {
-    //handle result, send status?
-    q->bulkOutputDevice()->write( plainText );
+    const GpgME::Error decryptionError = decryptionResult.error();
+    if ( decryptionError )
+    {
+        //handle and report error
+    }
+    
+    //handle result, send status
+    if ( q->bulkOutputDevice() )
+        q->bulkOutputDevice()->write( plainText );
+
+    //handle verification result
 }
 
 int Kleo::DecryptEmailCommand::start( const std::string & line )
@@ -104,12 +114,12 @@ int Kleo::DecryptEmailCommand::start( const std::string & line )
     // get encrypted data
     const QByteArray encrypted = bulkInputDevice()->readAll(); // FIXME safe enough?
 
-    //fire off appropriate kleo decrypt job
-    Kleo::DecryptJob * const job = d->backend->decryptJob();
+    //fire off appropriate kleo decrypt verify job
+    Kleo::DecryptVerifyJob * const job = d->backend->decryptVerifyJob();
     assert(job);
 
-    QObject::connect( job, SIGNAL(result(GpgME::DecryptionResult,QByteArray)),
-                      d.get(), SLOT(slotDecryptionResult(GpgME::DecryptionResult,QByteArray)) );
+    QObject::connect( job, SIGNAL(result(GpgME::DecryptionResult, GpgME::VerificationResult, QByteArray)),
+                      d.get(), SLOT(slotDecryptionResult(GpgME::DecryptionResult, GpgME::VerificationResult, QByteArray)) );
     QObject::connect( job, SIGNAL(progress(QString,int,int)),
                       d.get(), SLOT(slotProgress(QString,int,int)) );
 
