@@ -61,7 +61,7 @@
 using namespace Kleo;
 using namespace boost;
 
-static const unsigned int INIT_SOCKET_FLAGS = 2; // says info assuan...
+static const unsigned int INIT_SOCKET_FLAGS = 3; // says info assuan...
 static int(*USE_DEFAULT_HANDLER)(assuan_context_t,char*) = 0;
 static const int FOR_READING = 0;
 static const unsigned int MAX_ACTIVE_FDS = 32;
@@ -168,6 +168,7 @@ AssuanServerConnection::Private::Private( int fd_, const std::vector< shared_ptr
     // for callbacks, associate the context with this connection:
     assuan_set_pointer( ctx.get(), this );
 
+    assuan_set_log_stream( ctx.get(), stderr );
 
     // register FDs with the event loop:
     assuan_fd_t fds[MAX_ACTIVE_FDS];
