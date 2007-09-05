@@ -1,7 +1,8 @@
 /*
- *   kmail: KDE mail client
- *   This file: Copyright (C) 2000 Espen Sand, espen@kde.org
- *                            2007 Mathias Soeken, msoeken@tzi.de
+ *   This file is part of libkdepim.
+ *
+ *   Copyright (C) 2000 Espen Sand, espen@kde.org
+ *   Copyright (C) 2007 Mathias Soeken, msoeken@tzi.de
  *
  *   This program is free software; you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -32,13 +33,15 @@
 
 #include "colorlistbox.h"
 
+namespace KPIM {
+
 ColorListBox::ColorListBox( QWidget *parent )
   : QTreeWidget( parent ), mCurrentOnDragEnter( 0L )
 {
   setColumnCount( 1 );
   setRootIsDecorated( false );
   header()->hide();
-  
+
   connect( this, SIGNAL(doubleClicked(const QModelIndex&)), this, SLOT(newColor(const QModelIndex&)) );
   setAcceptDrops( true );
 }
@@ -73,7 +76,7 @@ void ColorListBox::newColor( const QModelIndex& index )
   {
     return;
   }
-  
+
   if (index.isValid()) {
     QColor c = color( index.row() );
     if (KColorDialog::getColor(c, this) != QDialog::Rejected) {
@@ -126,6 +129,8 @@ void ColorListBox::dropEvent( QDropEvent *e )
     }
     mCurrentOnDragEnter = 0L;
   }
+}
+
 }
 
 #include "colorlistbox.moc"
