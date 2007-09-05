@@ -20,10 +20,14 @@
     without including the source code for Qt in the source distribution.
 */
 
-#ifndef KPIM_DISTRIBUTIONLISTEDITOR_H
-#define KPIM_DISTRIBUTIONLISTEDITOR_H
+#ifndef KPIM_DISTRIBUTIONLISTPICKER_H
+#define KPIM_DISTRIBUTIONLISTPICKER_H
 
 #include <kdialogbase.h>
+
+#include <qstring.h>
+
+class KListBox;
 
 namespace KABC {
     class AddressBook;
@@ -31,32 +35,32 @@ namespace KABC {
 
 namespace KPIM {
 
-class DistributionList;
-
-namespace DistributionListEditor {
-
-class EditorWidgetPrivate;
-class EditorWidget : public KDialogBase
+class DistributionListPickerDialog : public KDialogBase
 {
     Q_OBJECT
 public:
-    explicit EditorWidget( KABC::AddressBook* book, QWidget* parent = 0 );
-    ~EditorWidget();
-
-    void setDistributionList( const KPIM::DistributionList& list );
-    KPIM::DistributionList distributionList() const;
+    explicit DistributionListPickerDialog( KABC::AddressBook* book, QWidget* parent = 0 );
+    QString selectedDistributionList() const;
 
 private slots:
 
     //override
     void slotOk();
-    void lineTextChanged( int id );
+
+    //override
+    void slotCancel();
+
+    //override
+    void slotUser1();
+
+    void entrySelected( const QString& name );
 
 private:
-    EditorWidgetPrivate* const d;
+    KABC::AddressBook* m_book;
+    KListBox* m_listBox;
+    QString m_selectedDistributionList;
 };
+    
+} //namespace KPIM
 
-} // namespace DisributionListEditor
-} // namespace KPIM
-
-#endif // KPIM_DISTRIBUTIONLISTEDITOR_H
+#endif // KPIM_DISTRIBUTIONLISTPICKER_H 
