@@ -209,6 +209,12 @@ AssuanServerConnection::Private::Private( int fd_, const std::vector< shared_ptr
         throw assuan_exception( err, "register reset notify" );
     if ( const gpg_error_t err = assuan_register_option_handler( ctx.get(), option_handler ) )
         throw assuan_exception( err, "register option handler" );
+
+    // and last, we need to call assuan_accept, which doesn't block
+    // (d/t INIT_SOCKET_FLAGS), but performs vital connection
+    // establishing handling:
+    if ( const gpg_error_t err = assuan_accept( ctx.get() ) )
+        throw assuan_exception( err, "assuan_accept" );
 }
 
 AssuanServerConnection::Private::~Private() {
