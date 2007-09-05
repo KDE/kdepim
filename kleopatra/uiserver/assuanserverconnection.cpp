@@ -96,15 +96,16 @@ public Q_SLOTS:
         if ( const int err = assuan_process_next( ctx.get() ) ) {
             if ( err == -1 || gpg_err_code(err) == GPG_ERR_EOF ) {
                 if ( currentCommand )
-                    currentCommand->canceled();
+                    currentCommand->canceled(); // ### respect --nohup
+                cleanup();
+                const QPointer<Private> that = this;
+                emit q->closed( q );
+                if ( that ) // still there
+                    q->deleteLater();
             } else {
-                // ### what?
+                assuan_process_done( ctx.get(), err );
+                return;
             }
-            cleanup();
-            const QPointer<Private> that = this;
-            emit q->closed( q );
-            if ( that ) // still there
-                q->deleteLater();
         }
     }
 
