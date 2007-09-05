@@ -53,6 +53,8 @@
 
 #include <QTextDocument> // for Qt::escape
 
+#include <boost/shared_ptr.hpp>
+
 namespace {
     template <typename T>
     boost::shared_ptr<T> make_shared_ptr( T * t ) {
