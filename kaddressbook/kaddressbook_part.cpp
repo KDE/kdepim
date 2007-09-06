@@ -91,9 +91,14 @@ void KAddressbookPart::addEmail( QString addr )
   mCore->addEmail( addr );
 }
 
-void KAddressbookPart::importVCard( const QString& vCardURL )
+void KAddressbookPart::importVCard( const KUrl& url )
 {
-  mCore->importVCard( vCardURL );
+  mCore->importVCard( url );
+}
+
+void KAddressbookPart::importVCardFromData( const QString& vCard )
+{
+  mCore->importVCardFromData( vCard );
 }
 
 void KAddressbookPart::showContactEditor( QString uid )

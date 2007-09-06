@@ -153,7 +153,7 @@ class KABINTERFACES_EXPORT Core : public QObject
     /**
       D-Bus METHOD: Imports the given vCard.
      */
-    virtual void importVCard( const QString& vCard ) = 0;
+    virtual void importVCardFromData( const QString& vCard ) = 0;
 
     /**
       D-Bus METHOD: Opens contact editor to input a new contact.

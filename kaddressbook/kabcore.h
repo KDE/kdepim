@@ -280,7 +280,7 @@ class KADDRESSBOOK_EXPORT KABCore : public KAB::Core
     /**
       D-Bus METHOD: Imports the given vCard.
      */
-    virtual void importVCard( const QString& vCardURL );
+    virtual void importVCardFromData( const QString& vCard );
 
     /**
       D-Bus METHOD: Opens contact editor to input a new contact.

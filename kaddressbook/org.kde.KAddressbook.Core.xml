@@ -7,6 +7,9 @@
     <method name="importVCard">
       <arg name="vCardURL" type="s" direction="in"/>
     </method>
+    <method name="importVCardFromData">
+      <arg name="vCard" type="s" direction="in"/>
+    </method>
     <method name="showContactEditor">
       <arg name="uid" type="s" direction="in"/>
     </method>

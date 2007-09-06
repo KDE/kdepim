@@ -49,7 +49,7 @@ class KADDRESSBOOK_EXPORT XXPortManager : public QObject
 
   public slots:
     void importVCard( const KUrl &url );
-    void importVCard( const QString &vCard );
+    void importVCardFromData( const QString &vCard );
 
   signals:
     void modified();

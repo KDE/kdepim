@@ -43,7 +43,8 @@ class KAddressbookPart: public KParts::ReadOnlyPart
 
   public slots:
     virtual void addEmail( QString addr );
-    virtual void importVCard( const QString& vCardURL );
+    virtual void importVCard( const KUrl& url );
+    virtual void importVCardFromData( const QString& vCard );
     // FIXME the below used to be ASYNC, but moc seems to not like that, at present
     virtual void showContactEditor( QString uid );
     virtual void newContact();
