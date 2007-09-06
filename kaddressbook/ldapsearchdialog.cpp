@@ -522,7 +522,10 @@ KPIM::DistributionList LDAPSearchDialog::selectDistributionList()
   picker->setLabelText( i18n( "Select a distribution list to add the selected contacts to." ) );
   picker->setCaption( i18n( "Select Distribution List" ) );
   picker->exec();
-  return KPIM::DistributionList::findByName( mCore->addressBook(), picker->selectedDistributionList() );
+  const KPIM::DistributionList list = KPIM::DistributionList::findByName( mCore->addressBook(), picker
+? picker->selectedDistributionList() : QString() );
+  delete picker;
+  return list;
 }
 #endif
 
@@ -533,19 +536,39 @@ void LDAPSearchDialog::slotUser2()
   if ( dist.isEmpty() )
     return;
 
-  KABC::Addressee::List ldapAddrs;
+  KABC::Addressee::List localAddrs;
+
+  QStringList importedAddrs;
+
+  const QDateTime now = QDateTime::currentDateTime();
 
   ContactListItem* cli = static_cast<ContactListItem*>( mResultListView->firstChild() );
   while ( cli ) {
-    if ( cli->isSelected() ) {
-        ldapAddrs.append( convertLdapAttributesToAddressee( cli->mAttrs ) );
+    if ( !cli->isSelected() )
+      continue;
+
+    KABC::Addressee addr = convertLdapAttributesToAddressee( cli->mAttrs );
+    const KABC::Addressee::List existing = mCore->addressBook()->findByEmail( addr.preferredEmail() );
+
+    if ( existing.isEmpty() ) {
+      addr.setUid( KApplication::randomString( 10 ) );
+      addr.setNote( i18n( "argument is datetime", "Imported from LDAP on %1" ).arg( KGlobal::locale()->formatDateTime( now ) ) );
+      mCore->addressBook()->insertAddressee( addr );
+      importedAddrs.append( addr.fullEmail() );
+      localAddrs.append( addr );
+    } else {
+      localAddrs.append( existing.first() );
     }
+    
     cli = static_cast<ContactListItem*>( cli->nextSibling() );
   }
 
-  // TODO match to addressbook, import addressees if necessary
-  KABC::Addressee::List localAddrs = ldapAddrs;  
-  
+  if ( !importedAddrs.isEmpty() ) {
+    KMessageBox::informationList( this, i18n( "The following contact was imported into your address book:",
+                                  "The following %n contacts were imported into your address book:", importedAddrs.count() ),
+                                  importedAddrs );
+  }
+
   if ( localAddrs.isEmpty() )
     return;
 

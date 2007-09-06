@@ -68,7 +68,6 @@ KPIM::DistributionListPickerDialog::DistributionListPickerDialog( KABC::AddressB
 void KPIM::DistributionListPickerDialog::entrySelected( const QString& name )
 {
     actionButton( Ok )->setEnabled( !name.isNull() );
-    m_selectedDistributionList = name;
 }
 
 void KPIM::DistributionListPickerDialog::setLabelText( const QString& text )
@@ -117,6 +116,8 @@ void KPIM::DistributionListPickerDialog::slotUser1()
 
 void KPIM::DistributionListPickerDialog::slotOk()
 {
+    QListBoxItem* item = m_listBox->selectedItem();
+    m_selectedDistributionList = item ? item->text() : QString();
     KDialogBase::slotOk();
 }
 
