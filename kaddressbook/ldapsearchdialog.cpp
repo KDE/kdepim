@@ -122,8 +122,21 @@ class ContactListItem : public QListViewItem
 class LDAPSearchDialog::Private
 {
   public:
-    QMap<ContactListItem*, QString> itemToServer;
+    static QValueList<ContactListItem*> selectedItems( QListView* );
+    QMap<const ContactListItem*, QString> itemToServer;
 };
+
+QValueList<ContactListItem*> LDAPSearchDialog::Private::selectedItems( QListView* view )
+{
+  QValueList<ContactListItem*> selected;
+  ContactListItem* cli = static_cast<ContactListItem*>( view->firstChild() );
+  while ( cli ) {
+    if ( cli->isSelected() )
+      selected.append( cli );
+    cli = static_cast<ContactListItem*>( cli->nextSibling() );
+  }
+  return selected;
+}
 
 LDAPSearchDialog::LDAPSearchDialog( KABC::AddressBook *ab, KABCore *core,
                                     QWidget* parent, const char* name )
@@ -543,6 +556,11 @@ KPIM::DistributionList LDAPSearchDialog::selectDistributionList()
 void LDAPSearchDialog::slotUser2()
 {
 #ifdef KDEPIM_NEW_DISTRLISTS
+  const QValueList<ContactListItem*> selectedItems = d->selectedItems( mResultListView );
+  if ( selectedItems.isEmpty() ) {
+    KMessageBox::information( this, i18n( "Please select the contacts you want to add to the distribution list." ), i18n( "No Contacts Selected" ) );
+    return;
+  }
   KPIM::DistributionList dist = selectDistributionList();
   if ( dist.isEmpty() )
     return;
@@ -553,13 +571,8 @@ void LDAPSearchDialog::slotUser2()
 
   const QDateTime now = QDateTime::currentDateTime();
 
-  ContactListItem* cli = static_cast<ContactListItem*>( mResultListView->firstChild() );
-  while ( cli ) {
-      if ( !cli->isSelected() ) {
-        cli = static_cast<ContactListItem*>( cli->nextSibling() );
-        continue;
-      }
-
+  for ( QValueList<ContactListItem*>::ConstIterator it = selectedItems.begin(); it != selectedItems.end(); ++it ) {
+    const ContactListItem * const cli = *it;
     KABC::Addressee addr = convertLdapAttributesToAddressee( cli->mAttrs );
     const KABC::Addressee::List existing = mCore->addressBook()->findByEmail( addr.preferredEmail() );
 
@@ -572,8 +585,6 @@ void LDAPSearchDialog::slotUser2()
     } else {
       localAddrs.append( existing.first() );
     }
-    
-    cli = static_cast<ContactListItem*>( cli->nextSibling() );
   }
 
   if ( !importedAddrs.isEmpty() ) {
