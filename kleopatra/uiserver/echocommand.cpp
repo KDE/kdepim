@@ -19,7 +19,9 @@ static const char option_prefix[] = "prefix";
 
 class EchoCommand::Private {
 public:
+    Private() : operationsInFlight( 0 ), buffer() {}
 
+    int operationsInFlight;
     QByteArray buffer;
 };
 
@@ -83,10 +85,14 @@ int EchoCommand::start( const std::string & line ) {
         if ( const int err = inquire( keyword.c_str(), this,
                                       SLOT(slotInquireData(int,QByteArray)) ) )
             return err;
+        else
+            ++d->operationsInFlight;
 
     // 3. if INPUT was given, start the data pump for input->output
     if ( QIODevice * const in = bulkInputDevice() ) {
         QIODevice * const out = bulkOutputDevice();
+
+        ++d->operationsInFlight;
 
         connect( in, SIGNAL(readyRead()), this, SLOT(slotInputReadyRead()) );
         connect( out, SIGNAL(bytesWritten(qint64)), this, SLOT(slotOutputBytesWritten()) );
@@ -95,6 +101,8 @@ int EchoCommand::start( const std::string & line ) {
             slotInputReadyRead();
     }
 
+    if ( !d->operationsInFlight )
+        done();
     return 0;
 }
 
@@ -104,12 +112,17 @@ void EchoCommand::canceled() {
 
 void EchoCommand::slotInquireData( int rc, const QByteArray & data ) {
 
+    --d->operationsInFlight;
+
     if ( rc )
         done( rc );
 
     //else if ( const int err = sendData( data ) )
     else if ( const int err = sendStatus( "ECHOINQ", data ) )
         done( err );
+
+    else if ( !d->operationsInFlight )
+        done();
 
 }
 
@@ -129,8 +142,11 @@ void EchoCommand::slotOutputBytesWritten() {
     assert( out );
 
     if ( d->buffer.isEmpty() ) {
-        if ( bulkInputDevice()->atEnd() && out->isOpen() )
+        if ( bulkInputDevice()->atEnd() && out->isOpen() ) {
             out->close();
+            if ( !--d->operationsInFlight )
+                done();
+        }
         return;
     }
 
