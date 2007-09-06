@@ -544,8 +544,10 @@ void LDAPSearchDialog::slotUser2()
 
   ContactListItem* cli = static_cast<ContactListItem*>( mResultListView->firstChild() );
   while ( cli ) {
-    if ( !cli->isSelected() )
-      continue;
+      if ( !cli->isSelected() ) {
+        cli = static_cast<ContactListItem*>( cli->nextSibling() );
+        continue;
+      }
 
     KABC::Addressee addr = convertLdapAttributesToAddressee( cli->mAttrs );
     const KABC::Addressee::List existing = mCore->addressBook()->findByEmail( addr.preferredEmail() );
