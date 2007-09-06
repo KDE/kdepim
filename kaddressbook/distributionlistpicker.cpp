@@ -33,31 +33,47 @@
 #include <klocale.h>
 #include <kmessagebox.h>
 
+#include <qlabel.h>
+#include <qlayout.h>
 #include <qpushbutton.h>
 #include <qregexp.h>
 #include <qvalidator.h>
 
-KPIM::DistributionListPickerDialog::DistributionListPickerDialog( KABC::AddressBook* book, QWidget* parent ) : KDialogBase( parent ), m_book( book )
+KPIM::DistributionListPickerDialog::DistributionListPickerDialog( KABC::AddressBook* book, QWidget* parent ) : KDialogBase( parent, 0, true, QString(), Ok | Cancel | User1 ), m_book( book )
 {
     Q_ASSERT( m_book );
     setModal( true );
-    showButton( Ok, true );
-    showButton( Cancel, true );
-    showButton( User1, true );
     enableButton( Ok, false );
     setButtonText( User1, i18n( "Add New Distribution List" ) );
-    m_listBox = new KListBox( this );
+    QWidget* main = new QWidget( this );
+    QGridLayout* layout = new QGridLayout( main );
+    layout->setSpacing( KDialog::spacingHint() );
+    m_label = new QLabel( main );
+    layout->addWidget( m_label, 0, 0 );
+    m_listBox = new KListBox( main );
+    layout->addWidget( m_listBox, 1, 0 );
     connect( m_listBox, SIGNAL( highlighted( const QString& ) ),
              this, SLOT( entrySelected( const QString& ) ) ); 
     connect( m_listBox, SIGNAL( selected( const QString& ) ),
              this, SLOT( entrySelected( const QString& ) ) ); 
-    setMainWidget( m_listBox );
+    setMainWidget( main );
+    typedef QValueList<KPIM::DistributionList> DistListList;
+    const DistListList lists = KPIM::DistributionList::allDistributionLists( m_book );
+    for ( DistListList::ConstIterator it = lists.begin(); it != lists.end(); ++it )
+    {
+        m_listBox->insertItem ( (*it).name() );
+    }
 }
 
 void KPIM::DistributionListPickerDialog::entrySelected( const QString& name )
 {
     actionButton( Ok )->setEnabled( !name.isNull() );
     m_selectedDistributionList = name;
+}
+
+void KPIM::DistributionListPickerDialog::setLabelText( const QString& text )
+{
+    m_label->setText( text );
 }
 
 void KPIM::DistributionListPickerDialog::slotUser1()
@@ -72,7 +88,7 @@ void KPIM::DistributionListPickerDialog::slotUser1()
     bool validName = false;
     do
     {
-        QRegExpValidator validator( QRegExp( ".+" ), 0 );
+        QRegExpValidator validator( QRegExp( "\\S+.*" ), 0 );
         const QString name = KInputDialog::getText( i18n( "Enter Name" ), i18n( "Enter a name for the new distribution list:" ), QString(), 0, this, 0, &validator ).stripWhiteSpace();
         if ( name.isEmpty() )
             return;

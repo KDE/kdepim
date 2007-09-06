@@ -120,7 +120,7 @@ class ContactListItem : public QListViewItem
 
 LDAPSearchDialog::LDAPSearchDialog( KABC::AddressBook *ab, KABCore *core,
                                     QWidget* parent, const char* name )
-  : KDialogBase( Plain, i18n( "Search for Addresses in Directory" ), Help | User1 |
+  : KDialogBase( Plain, i18n( "Search for Addresses in Directory" ), Help | User1 | User2 |
                  Cancel, Default, parent, name, false, true ),
     mAddressBook( ab ), mCore( core )
 {
@@ -191,6 +191,8 @@ LDAPSearchDialog::LDAPSearchDialog( KABC::AddressBook *ab, KABCore *core,
   resize( QSize( 600, 400).expandedTo( minimumSizeHint() ) );
 
   setButtonText( User1, i18n( "Add Selected" ) );
+
+  showButton( User2, false );
 
 #ifdef KDEPIM_NEW_DISTRLISTS
   showButton( User2, true );
@@ -517,6 +519,8 @@ KABC::Addressee LDAPSearchDialog::convertLdapAttributesToAddressee( const KPIM::
 KPIM::DistributionList LDAPSearchDialog::selectDistributionList()
 {
   QGuardedPtr<KPIM::DistributionListPickerDialog> picker = new KPIM::DistributionListPickerDialog( mCore->addressBook(), this );
+  picker->setLabelText( i18n( "Select a distribution list to add the selected contacts to." ) );
+  picker->setCaption( i18n( "Select Distribution List" ) );
   picker->exec();
   return KPIM::DistributionList::findByName( mCore->addressBook(), picker->selectedDistributionList() );
 }

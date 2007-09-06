@@ -42,6 +42,8 @@ public:
     explicit DistributionListPickerDialog( KABC::AddressBook* book, QWidget* parent = 0 );
     QString selectedDistributionList() const;
 
+    void setLabelText( const QString& text );
+
 private slots:
 
     //override
@@ -57,6 +59,7 @@ private slots:
 
 private:
     KABC::AddressBook* m_book;
+    QLabel* m_label;
     KListBox* m_listBox;
     QString m_selectedDistributionList;
 };
