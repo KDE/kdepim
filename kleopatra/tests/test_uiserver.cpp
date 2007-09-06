@@ -182,7 +182,7 @@ int main( int argc, char * argv[] ) {
             return 1;
         }
 
-        if ( const gpg_error_t err = assuan_write_line( ctx, "INPUT FD" ) ) {
+        if ( const gpg_error_t err = assuan_transact( ctx, "INPUT FD", 0, 0, 0, 0, 0, 0 ) ) {
             qDebug( "%s", assuan_exception( err, "assuan_write_line(\"INPUT FD\")" ).what() );
             return 1;
         }
@@ -195,7 +195,7 @@ int main( int argc, char * argv[] ) {
             return 1;
         }
 
-        if ( const gpg_error_t err = assuan_write_line( ctx, "OUTPUT FD" ) ) {
+        if ( const gpg_error_t err = assuan_transact( ctx, "OUTPUT FD", 0, 0, 0, 0, 0, 0 ) ) {
             qDebug( "%s", assuan_exception( err, "assuan_write_line(\"OUTPUT FD\")" ).what() );
             return 1;
         }
@@ -204,7 +204,7 @@ int main( int argc, char * argv[] ) {
     Q_FOREACH( const char * opt, options ) {
         std::string line = "OPTION ";
         line += opt;
-        if ( const gpg_error_t err = assuan_write_line( ctx, line.c_str() ) ) {
+        if ( const gpg_error_t err = assuan_transact( ctx, line.c_str(), 0, 0, 0, 0, 0, 0 ) ) {
             qDebug( "%s", assuan_exception( err, line ).what() );
             return 1;
         }
