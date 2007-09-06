@@ -53,6 +53,7 @@ class KAddressBookMain : public KXmlGuiWindow
     // FIXME the below was ASYNC, but moc seems to not like that, at present
     void showContactEditor( QString uid );
     void newContact();
+    void newDistributionList();
     QString getNameByPhone( QString phone );
     void save();
     void exit();

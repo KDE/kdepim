@@ -1,10 +1,11 @@
 <!DOCTYPE kpartgui>
-<kpartgui name="kaddressbook" version="390">
-
+<kpartgui name="kaddressbook" version="391">
   <MenuBar>
     <Menu name="file" noMerge="1"><text>&amp;File</text>
-      <Action name="file_new_contact"/>
-      <Action name="file_properties"/>
+      <Menu name="file_new_actions_menu"><text>New</text>
+  	    <Action name="file_new_contact"/>
+	    <Action name="file_new_distributionlist"/>	  		      	  
+	  </Menu>        
       <Separator/>
       <Action name="file_sync"/>
       <Menu name="file_import"><text>&amp;Import</text>
@@ -27,10 +28,12 @@
       <Action name="edit_cut"/>
       <Action name="edit_copy"/>
       <Action name="edit_paste"/>
+      <Action name="edit_store_in"/>
       <Separator/>
       <Action name="edit_delete" append="edit_paste_merge"/>
-      <Action name="edit_store_in"/>
+      <Separator/>
       <Action name="edit_select_all"/>
+      <Separator/>
       <Action name="edit_merge"/>
       <Action name="edit_set_categories"/>
       <Action name="edit_set_personal"/>
@@ -51,7 +54,7 @@
 
     <Menu name="settings" noMerge="1"><text>&amp;Settings</text>
       <Merge name="StandardToolBarMenuHandler" />
-      <Menu name="show_extensions_menu"><text>Show Extension Bar</text>
+      <Menu name="show_extensions_menu"><text>Show Extension</text>
         <ActionList name="extensions_list"/>
       </Menu>
       <Action name="options_show_jump_bar"/>
@@ -73,8 +76,13 @@
   <Menu name="RMBPopup">
     <Action name="file_properties"/>
     <Action name="file_new_contact"/>
-    <Action name="edit_delete"/>
+    <Separator/>
+    <Action name="edit_cut"/>
+    <Action name="edit_copy"/>
+    <Action name="edit_paste"/>
     <Action name="edit_store_in"/>
+    <Separator/>
+    <Action name="edit_delete"/>
     <Separator/>
     <Action name="file_mail"/>
     <Action name="file_mail_vcard"/>
@@ -83,6 +91,7 @@
 
   <ToolBar name="mainToolBar" noMerge="1"><text>Main Toolbar</text>
     <Action name="file_new_contact"/>
+    <Action name="file_new_distributionlist"/>
     <Action name="file_properties"/>
     <Separator/>
     <Action name="file_sync" />

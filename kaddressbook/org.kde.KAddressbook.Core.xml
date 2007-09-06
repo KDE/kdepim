@@ -12,6 +12,8 @@
     </method>
     <method name="newContact">
     </method>
+    <method name="newDistributionList">
+    </method>
     <method name="getNameByPhone">
       <arg type="s" direction="out"/>
       <arg name="phone" type="s" direction="in"/>

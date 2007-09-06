@@ -26,8 +26,10 @@
 
 #include "core.h"
 #include <kabc/field.h>
+#include <libkdepim/distributionlist.h>
 
 #include <QHash>
+#include <QLabel>
 #include <QWidget>
 #include <QHBoxLayout>
 
@@ -40,6 +42,7 @@ namespace KPIM {
 class AddresseeView;
 class CategoryEditDialog;
 class CategorySelectDialog;
+class DistributionList;
 }
 
 class KAboutData;
@@ -52,6 +55,7 @@ class KXMLGUIClient;
 
 class QSplitter;
 class QHBoxLayout;
+class QStackedWidget;
 
 class AddresseeEditorDialog;
 class ExtensionManager;
@@ -64,6 +68,10 @@ class LDAPSearchDialog;
 class ViewManager;
 class XXPortManager;
 class KUndoStack;
+
+namespace KAB {
+    class DistributionListEntryView;
+}
 
 typedef struct {
   KABC::Ticket *ticket;
@@ -137,7 +145,6 @@ class KADDRESSBOOK_EXPORT KABCore : public KAB::Core
 
     QUndoStack *commandHistory() const { return ( QUndoStack* )( mCommandHistory ); }
 
-#ifdef KDEPIM_NEW_DISTRLISTS
     /**
       Returns all the distribution lists.
      */
@@ -147,7 +154,12 @@ class KADDRESSBOOK_EXPORT KABCore : public KAB::Core
       Returns the name of all the distribution lists.
      */
     virtual QStringList distributionListNames() const;
-#endif
+
+    /**
+      sets the distribution list to display. If null, the regular
+      address book is to be displayed.  
+     */
+    virtual void setSelectedDistributionList( const QString &name );
 
   public slots:
     /**
@@ -199,7 +211,15 @@ class KADDRESSBOOK_EXPORT KABCore : public KAB::Core
     void deleteContacts( const QStringList &uids );
 
     /**
-      Copies the selected contacts into clipboard for later pasting.
+      Deletes given distribution lists from the address book.
+
+      @param uids The names of the distribution lists which shall be deleted.
+     */
+    void deleteDistributionLists( const QStringList &names );
+
+
+    /**
+      Copys the selected contacts into clipboard for later pasting.
      */
     void copyContacts();
 
@@ -287,6 +307,11 @@ class KADDRESSBOOK_EXPORT KABCore : public KAB::Core
      */
     virtual void newContact();
 
+    /** 
+     DCOP METHOD: Opens distribution list editor to create a new distribution list
+    */
+    virtual void newDistributionList();
+
     /**
       D-Bus METHOD: Returns the name of the contact, that matches the given
                    phone number.
@@ -346,6 +371,11 @@ class KADDRESSBOOK_EXPORT KABCore : public KAB::Core
      */
     void reinitXMLGUI();
 
+  private:
+
+    void editDistributionList( const KPIM::DistributionList &list );
+    void showDistributionListEntry( const QString &uid );
+
   private slots:
     void setJumpButtonBarVisible( bool visible );
     void setDetailsVisible( bool visible );
@@ -364,6 +394,15 @@ class KADDRESSBOOK_EXPORT KABCore : public KAB::Core
     void slotClearSearchBar();
     void slotContactsUpdated();
 
+    void activateDetailsWidget( QWidget *widget );
+    void deactivateDetailsWidget( QWidget *widget );
+
+    void editDistributionList( const QString &name );
+
+    void removeSelectedContactsFromDistList();
+    void editSelectedDistributionList();
+    void sendMailToDistributionList( const QString &id ); 
+
   private:
     void initGUI();
     void createJumpButtonBar();
@@ -380,21 +419,26 @@ class KADDRESSBOOK_EXPORT KABCore : public KAB::Core
     KStatusBar *mStatusBar;
 
     ViewManager *mViewManager;
+    QLabel *mViewHeaderLabel;
+
+    QString mSelectedDistributionList;
+    QWidget *mDistListButtonWidget;
+
     ExtensionManager *mExtensionManager;
     XXPortManager *mXXPortManager;
 
     JumpButtonBar *mJumpButtonBar;
     FilterSelectionWidget *mFilterSelectionWidget;
     IncSearchWidget *mIncSearchWidget;
-    KPIM::AddresseeView *mDetails;
+    KAB::DistributionListEntryView* mDistListEntryView;
+    KPIM::AddresseeView *mDetailsViewer;
     KPIM::CategorySelectDialog *mCategorySelectDialog;
     KPIM::CategoryEditDialog *mCategoryEditDialog;
     QWidget *mDetailsPage;
     QWidget *mDetailsWidget;
     QHBoxLayout *mDetailsLayout;
     QSplitter *mDetailsSplitter;
-    QSplitter *mExtensionBarSplitter;
-
+    QStackedWidget *mDetailsStack;
     LDAPSearchDialog *mLdapSearchDialog;
     QHash<QString, AddresseeEditorDialog *> mEditorDict;
 
@@ -420,7 +464,6 @@ class KADDRESSBOOK_EXPORT KABCore : public KAB::Core
     QAction *mActionCategories;
     KToggleAction *mActionJumpBar;
     KToggleAction *mActionDetails;
-
     KUndoStack *mCommandHistory;
 
     KAddressBookService *mAddressBookService;
@@ -428,7 +471,6 @@ class KADDRESSBOOK_EXPORT KABCore : public KAB::Core
     KAB::SearchManager *mSearchManager;
     // KIMProxy provides access to up to date instant messaging presence data
     ::KIMProxy *mKIMProxy;
-
     class KABCorePrivate;
     KABCorePrivate *d;
 };

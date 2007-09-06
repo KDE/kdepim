@@ -103,6 +103,11 @@ void KAddressBookMain::showContactEditor( QString uid )
   mCore->editContact( uid );
 }
 
+void KAddressBookMain::newDistributionList()
+{
+  mCore->newDistributionList();
+}
+
 void KAddressBookMain::newContact()
 {
   mCore->newContact();

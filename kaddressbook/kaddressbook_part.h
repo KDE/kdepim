@@ -47,6 +47,7 @@ class KAddressbookPart: public KParts::ReadOnlyPart
     // FIXME the below used to be ASYNC, but moc seems to not like that, at present
     virtual void showContactEditor( QString uid );
     virtual void newContact();
+    virtual void newDistributionList();
     virtual QString getNameByPhone( QString phone );
     virtual void save();
     virtual void exit();

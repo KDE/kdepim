@@ -24,36 +24,42 @@
 #ifndef EXTENSIONMANAGER_H
 #define EXTENSIONMANAGER_H
 
+#include "extensionwidget.h"
+
+#include <QList>
+#include <QStringList>
 
 //Added by qt3to4:
-#include <QList>
 #include <kvbox.h>
 
-#include "extensionwidget.h"
+class QSignalMapper;
+class QStackedWidget;
 
 namespace KAB {
 class Core;
 }
 
-class QSignalMapper;
-class KActionCollection;
-
 class ExtensionData
 {
   public:
+    ExtensionData();
     typedef QList<ExtensionData> List;
 
+    KToggleAction* action;
     KAB::ExtensionWidget *widget;
     QString identifier;
     QString title;
+    int weight;
+    bool isDetailsExtension;
 };
 
-class ExtensionManager : public KHBox
+class ExtensionManager : public QObject
 {
   Q_OBJECT
 
   public:
-    ExtensionManager( KAB::Core *core, QWidget *parent );
+    ExtensionManager( QWidget *extensionBar, QStackedWidget *detailsStack, KAB::Core *core, QObject *parent = 0 );
+
     ~ExtensionManager();
 
     /**
@@ -77,27 +83,37 @@ class ExtensionManager : public KHBox
      */
     bool isQuickEditVisible() const;
 
+    QWidget *activeDetailsWidget() const;
+ 
   public slots:
     void setSelectionChanged();
     void createActions();
 
   signals:
+
+    void detailsWidgetActivated( QWidget* widget );
+    void detailsWidgetDeactivated( QWidget* widget );
     void modified( const KABC::Addressee::List& );
     void deleted( const QStringList& );
 
   private slots:
-    void setActiveExtension( int id );
+    void activationToggled( const QString &extid );
 
   private:
     void createExtensionWidgets();
+    void setExtensionActive( const QString &extid, bool active ); 
 
+  private:
+    QWidget *mExtensionBar;
     KAB::Core *mCore;
-
-    KAB::ExtensionWidget *mCurrentExtensionWidget;
-    ExtensionData::List mExtensionList;
+    QMap<QString, ExtensionData> mExtensionMap;
+    QStringList mActiveExtensions;
     QSignalMapper *mMapper;
     QList<QAction*> mActionList;
     KActionCollection *mActionCollection;
+    QSplitter *mSplitter;
+    QStackedWidget *mDetailsStack; 
+    QWidget *mActiveDetailsWidget;
 };
 
 #endif
