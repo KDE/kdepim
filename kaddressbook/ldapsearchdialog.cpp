@@ -18,6 +18,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA
  */
 
+#include "config.h"
 
 #include <qcheckbox.h>
 #include <qgroupbox.h>
@@ -39,6 +40,10 @@
 #include "kabcore.h"
 #include "ldapsearchdialog.h"
 #include "kablock.h"
+
+#ifdef KDEPIM_NEW_DISTRLISTS
+#include "distributionlistpicker.h"
+#endif
 
 static QString asUtf8( const QByteArray &val )
 {
@@ -511,7 +516,9 @@ KABC::Addressee LDAPSearchDialog::convertLdapAttributesToAddressee( const KPIM::
 #ifdef KDEPIM_NEW_DISTRLISTS
 KPIM::DistributionList LDAPSearchDialog::selectDistributionList()
 {
-  return KPIM::DistributionList();
+  QGuardedPtr<KPIM::DistributionListPickerDialog> picker = new KPIM::DistributionListPickerDialog( mCore->addressBook(), this );
+  picker->exec();
+  return KPIM::DistributionList::findByName( mCore->addressBook(), picker->selectedDistributionList() );
 }
 #endif
 
@@ -522,7 +529,6 @@ void LDAPSearchDialog::slotUser2()
   if ( dist.isEmpty() )
     return;
 
-  
   KABC::Addressee::List ldapAddrs;
 
   ContactListItem* cli = static_cast<ContactListItem*>( mResultListView->firstChild() );
@@ -539,7 +545,7 @@ void LDAPSearchDialog::slotUser2()
   if ( localAddrs.isEmpty() )
     return;
 
-  for ( KABC::Addressee::List it = localAddrs.begin(); it != localAddrs.end(): ++it ) {
+  for ( KABC::Addressee::List::ConstIterator it = localAddrs.begin(); it != localAddrs.end(); ++it ) {
     dist.insertEntry( *it, QString() );
   }
   mCore->addressBook()->insertAddressee( dist );

@@ -21,6 +21,7 @@
 */
 
 #include "distributionlistpicker.h"
+#include "config.h"
 
 #include <libkdepim/distributionlist.h>
 
@@ -50,7 +51,6 @@ KPIM::DistributionListPickerDialog::DistributionListPickerDialog( KABC::AddressB
              this, SLOT( entrySelected( const QString& ) ) ); 
     connect( m_listBox, SIGNAL( selected( const QString& ) ),
              this, SLOT( entrySelected( const QString& ) ) ); 
-
     setMainWidget( m_listBox );
 }
 
@@ -116,4 +116,3 @@ QString KPIM::DistributionListPickerDialog::selectedDistributionList() const
 }
 
 #include "distributionlistpicker.moc"
-
