@@ -291,11 +291,13 @@ Q_SIGNALS:
 
 class AssuanCommand::Private {
 public:
+    Private() : input( 0 ), output( 0 ), done( false ) {}
 
     QIODevice * input;
     QIODevice * output;
     std::map<std::string,QVariant> options;
     AssuanContext ctx;
+    bool done;
 
 public:
 };
@@ -365,6 +367,17 @@ int AssuanCommand::inquire( const char * keyword, QObject * receiver, const char
 }
 
 void AssuanCommand::done( int err ) {
+    if ( !d->ctx ) {
+        qDebug( "AssuanCommand::done( %s ): called with NULL ctx.", gpg_strerror( err ) );
+        return;
+    }
+    if ( d->done ) {
+        qDebug( "AssuanCommand::done( %s ): called twice!", gpg_strerror( err ) );
+        return;
+    }
+
+    d->done = true;
+
     // close bulk I/O channels:
     if ( d->input && d->input->isOpen() )
         d->input->close();
@@ -411,7 +424,7 @@ int AssuanCommandFactory::_handle( assuan_context_t ctx, char * line, const char
         cmd->d->output = 0;
 
     if ( const int err = cmd->start( line ) )
-        return err;
+        return err; // ### call done() here?
 
     conn.currentCommand = cmd;
     return 0;
