@@ -26,6 +26,7 @@
 #include <qlabel.h>
 #include <qlayout.h>
 #include <qlistview.h>
+#include <qmap.h>
 #include <qpushbutton.h>
 
 #include <addresseelineedit.h>
@@ -118,11 +119,17 @@ class ContactListItem : public QListViewItem
     }
 };
 
+class LDAPSearchDialog::Private
+{
+  public:
+    QMap<ContactListItem*, QString> itemToServer;
+};
+
 LDAPSearchDialog::LDAPSearchDialog( KABC::AddressBook *ab, KABCore *core,
                                     QWidget* parent, const char* name )
   : KDialogBase( Plain, i18n( "Search for Addresses in Directory" ), Help | User1 | User2 |
                  Cancel, Default, parent, name, false, true ),
-    mAddressBook( ab ), mCore( core )
+    mAddressBook( ab ), mCore( core ), d( new Private )
 {
   setButtonCancel( KStdGuiItem::close() );
   QFrame *page = plainPage();
@@ -217,6 +224,7 @@ LDAPSearchDialog::LDAPSearchDialog( KABC::AddressBook *ab, KABCore *core,
 LDAPSearchDialog::~LDAPSearchDialog()
 {
   saveSettings();
+  delete d;
 }
 
 void LDAPSearchDialog::restoreSettings()
@@ -289,6 +297,7 @@ void LDAPSearchDialog::restoreSettings()
     mResultListView->addColumn( i18n( "Title" ) );
 
     mResultListView->clear();
+    d->itemToServer.clear();
   }
 }
 
@@ -309,7 +318,8 @@ void LDAPSearchDialog::cancelQuery()
 
 void LDAPSearchDialog::slotAddResult( const KPIM::LdapObject& obj )
 {
-  new ContactListItem( mResultListView, obj.attrs );
+  ContactListItem* item = new ContactListItem( mResultListView, obj.attrs );
+  d->itemToServer[item] = obj.client->server().host();
 }
 
 void LDAPSearchDialog::slotSetScope( bool rec )
@@ -375,6 +385,7 @@ void LDAPSearchDialog::slotStartSearch()
 
    // loop in the list and run the KPIM::LdapClients
   mResultListView->clear();
+  d->itemToServer.clear();
   for ( KPIM::LdapClient* client = mLdapClientList.first(); client; client = mLdapClientList.next() )
     client->startQuery( filter );
 
@@ -554,7 +565,7 @@ void LDAPSearchDialog::slotUser2()
 
     if ( existing.isEmpty() ) {
       addr.setUid( KApplication::randomString( 10 ) );
-      addr.setNote( i18n( "argument is datetime", "Imported from LDAP on %1" ).arg( KGlobal::locale()->formatDateTime( now ) ) );
+      addr.setNote( i18n( "arguments are host name, datetime", "Imported from LDAP directory %1 on %2" ).arg( d->itemToServer[cli], KGlobal::locale()->formatDateTime( now ) ) );
       mCore->addressBook()->insertAddressee( addr );
       importedAddrs.append( addr.fullEmail() );
       localAddrs.append( addr );

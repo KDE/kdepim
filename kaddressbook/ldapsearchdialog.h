@@ -99,6 +99,8 @@ class LDAPSearchDialog : public KDialogBase
     QCheckBox* mRecursiveCheckbox;
     QListView* mResultListView;
     QPushButton* mSearchButton;
+    class Private;
+    Private* const d;
 };
 
 #endif
