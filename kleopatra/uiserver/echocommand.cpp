@@ -75,11 +75,6 @@ int EchoCommand::start( const std::string & line ) {
                                   bind( &QByteArray::isEmpty, _1 ) ),
                   tokens.end() );
 
-    if ( tokens.empty() || tokens.front() != "ECHO" )
-        return makeError( GPG_ERR_INTERNAL );
-
-    tokens.pop_front();
-
     std::string keyword;
     if ( !tokens.empty() && tokens.front() == "--inquire" ) {
         tokens.pop_front();
