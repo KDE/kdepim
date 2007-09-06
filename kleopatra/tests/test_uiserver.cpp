@@ -48,23 +48,54 @@
 #include <errno.h>
 #include <assert.h>
 
+#include <iostream>
+#include <map>
+#include <string>
+#include <vector>
+
 using namespace Kleo;
 
-static int dataFD, sigFD;
+static int inFD = -1, outFD = -1;
+static std::map<std::string,std::string> inquireData;
+
+static void usage( const std::string & msg=std::string() ) {
+    std::cerr << msg << std::endl <<
+        "\n"
+        "Usage: test_uiserver <socket> [<io>] [<inquire>] command [<args>]\n"
+        "where:\n"
+        "      <io>: [--input <file>] [--output <file>] *[--option name=value]\n"
+        " <inquire>: [--inquire keyword=<file>]\n";
+    exit( 1 );
+}
 
 static int data( void * void_ctx, const void * buffer, size_t len ) {
     (void)void_ctx; (void)buffer; (void)len;
-    return gpg_error( GPG_ERR_NOT_IMPLEMENTED );
+    return 0; // ### implement me
 }
 
 static int status( void * void_ctx, const char * line ) {
-    qDebug( "status[%p]:%s", void_ctx, line );
+    (void)void_ctx; (void)line;
     return 0;
 }
 
 static int inquire( void * void_ctx, const char * keyword ) {
     assuan_context_t ctx = (assuan_context_t)void_ctx;
     assert( ctx );
+    const std::map<std::string,std::string>::const_iterator it = inquireData.find( keyword );
+    if ( it == inquireData.end() )
+        return gpg_error( GPG_ERR_UNKNOWN_COMMAND );
+
+    if ( !it->second.empty() && it->second[0] == '@' )
+        return gpg_error( GPG_ERR_NOT_IMPLEMENTED );
+
+    if ( const gpg_error_t err = assuan_send_data( ctx, it->second.c_str(), it->second.size() ) ) {
+        qDebug( "assuan_write_data: %s", gpg_strerror( err ) );
+        return err;
+    }
+
+    return 0;
+
+#if 0
     if ( qstrcmp( keyword, "DETACHEDSIGNATURE" ) == 0 ) {
         // copy data from sigFD into assuan
         for ( ;; ) {
@@ -87,64 +118,102 @@ static int inquire( void * void_ctx, const char * keyword ) {
     } else {
         return gpg_error( GPG_ERR_UNKNOWN_COMMAND );
     }
+#endif
 }
 
 int main( int argc, char * argv[] ) {
 
     assuan_set_assuan_err_source( GPG_ERR_SOURCE_DEFAULT );
-    
-    if ( argc != 5 || qstrcmp( argv[2], "--verify-detached" ) != 0 )
-        return 1;
 
-    const QFileInfo fi[3] = {
-        QFileInfo( QFile::decodeName( argv[1] ) ),
-        QFileInfo( QFile::decodeName( argv[3] ) ),
-        QFileInfo( QFile::decodeName( argv[4] ) ),
-    };
+    if ( argc < 3 )
+        usage(); // need socket and command, at least
 
-    if ( !fi[0].exists() )
-        return 2;
+    const char * socket = argv[1];
 
-    if ( !fi[1].isReadable() )
-        return 4;
-    
-    if ( !fi[2].isReadable() )
-        return 5;
+    std::vector<const char*> options;
+
+    std::string command;
+    for ( int optind = 2 ; optind < argc ; ++optind ) {
+        const char * const arg = argv[optind];
+        if ( qstrcmp( arg, "--input" ) == 0 ) {
+            if ( inFD != -1 )
+                usage( "more than one --input given" );
+            if ( (inFD = open( argv[++optind], O_RDONLY )) == -1 ) {
+                perror( "--input open()" );
+                return 1;
+            }
+        } else if ( qstrcmp( arg, "--output" ) == 0 ) {
+            if ( outFD != -1 )
+                usage( "more than one --output given" );
+            if ( (outFD = open( argv[++optind], O_WRONLY|O_CREAT )) ==  -1 ) {
+                perror( "--output open()" );
+                return 1;
+            }
+        } else if ( qstrcmp( arg, "--option" ) == 0 ) {
+            options.push_back( argv[++optind] );
+        } else if ( qstrcmp( arg, "--inquire" ) == 0 ) {
+            const std::string inqval = argv[++optind];
+            const size_t pos = inqval.find( '=' );
+            // ### implement indirection with "@file"...
+            inquireData[inqval.substr( 0, pos )] = inqval.substr( pos+1 );
+        } else {
+            while ( optind < argc ) {
+                if ( !command.empty() )
+                    command += ' ';
+                command += argv[optind++];
+            }
+        }
+    }
+    if ( command.empty() )
+        usage( "Command expected, but only options found" );
 
     assuan_context_t ctx = 0;
 
-    if ( const gpg_error_t err = assuan_socket_connect_ext( &ctx, argv[1], -1, 1 ) ) {
+    if ( const gpg_error_t err = assuan_socket_connect_ext( &ctx, socket, -1, 1 ) ) {
         qDebug( "%s", assuan_exception( err, "assuan_socket_connect_ext" ).what() );
         return 1;
     }
 
-    if ( (dataFD = open( argv[3], O_RDONLY )) == -1 ) {
-        perror( "signed data open()" );
-        return 1;
+    assuan_set_log_stream( ctx, stderr );
+
+    if ( inFD != -1 ) {
+        if ( const gpg_error_t err = assuan_sendfd( ctx, inFD ) ) {
+            qDebug( "%s", assuan_exception( err, "assuan_sendfd( inFD )" ).what() );
+            return 1;
+        }
+
+        if ( const gpg_error_t err = assuan_write_line( ctx, "INPUT FD" ) ) {
+            qDebug( "%s", assuan_exception( err, "assuan_write_line(\"INPUT FD\")" ).what() );
+            return 1;
+        }
     }
 
-    if ( (sigFD = open( argv[4], O_RDONLY )) ==  -1 ) {
-        perror( "signature open()" );
-        return 1;
+    
+    if ( outFD != -1 ) {
+        if ( const gpg_error_t err = assuan_sendfd( ctx, outFD ) ) {
+            qDebug( "%s", assuan_exception( err, "assuan_sendfd( outFD )" ).what() );
+            return 1;
+        }
+
+        if ( const gpg_error_t err = assuan_write_line( ctx, "OUTPUT FD" ) ) {
+            qDebug( "%s", assuan_exception( err, "assuan_write_line(\"OUTPUT FD\")" ).what() );
+            return 1;
+        }
     }
 
-    if ( const gpg_error_t err = assuan_sendfd( ctx, dataFD ) ) {
-        qDebug( "%s", assuan_exception( err, "assuan_sendfd" ).what() );
-        return 1;
+    Q_FOREACH( const char * opt, options ) {
+        std::string line = "OPTION ";
+        line += opt;
+        if ( const gpg_error_t err = assuan_write_line( ctx, line.c_str() ) ) {
+            qDebug( "%s", assuan_exception( err, line ).what() );
+            return 1;
+        }
     }
 
-    if ( const gpg_error_t err = assuan_write_line( ctx, "INPUT FD" ) ) {
-        qDebug( "%s", assuan_exception( err, "assuan_write_line(\"INPUT FD\")" ).what() );
+    if ( const gpg_error_t err = assuan_transact( ctx, command.c_str(), data, ctx, inquire, ctx, status, ctx ) ) {
+        qDebug( "%s", assuan_exception( err, command ).what() );
         return 1;
     }
-
-    if ( const gpg_error_t err = assuan_transact( ctx, "VERIFYDETACHED", data, ctx, inquire, ctx, status, ctx ) ) {
-        qDebug( "%s", assuan_exception( err, "assuan_transact(\"VERIFYDETACHED\")" ).what() );
-        return 1;
-    }
-
-    close( sigFD );
-    close( dataFD );
 
     assuan_disconnect( ctx );
     
