@@ -18,6 +18,7 @@ if ( USABLE_ASSUAN_FOUND )
     uiserver/kleo-assuan.cpp
     uiserver/uiserver.cpp
     uiserver/assuanserverconnection.cpp
+    uiserver/echocommand.cpp
     uiserver/verifyemailcommand.cpp
     uiserver/decryptemailcommand.cpp
     )
