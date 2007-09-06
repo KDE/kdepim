@@ -40,6 +40,7 @@
 #ifdef HAVE_USABLE_ASSUAN
 # include <uiserver/uiserver.h>
 # include <uiserver/assuancommand.h>
+# include <uiserver/echocommand.h>
 # include <uiserver/decryptemailcommand.h>
 # include <uiserver/verifyemailcommand.h>
 #endif
@@ -99,8 +100,12 @@ int main( int argc, char** argv )
 #ifdef HAVE_USABLE_ASSUAN
   try {
       Kleo::UiServer server;
-      server.registerCommandFactory( make_shared_ptr( new Kleo::GenericAssuanCommandFactory<Kleo::VerifyEmailCommand> ) );
-      server.registerCommandFactory( make_shared_ptr( new Kleo::GenericAssuanCommandFactory<Kleo::DecryptEmailCommand> ) );
+
+#define REGISTER( Command ) server.registerCommandFactory( boost::shared_ptr<Kleo::AssuanCommandFactory>( new Kleo::GenericAssuanCommandFactory<Kleo::Command> ) )
+      REGISTER( DecryptEmailCommand );
+      REGISTER( EchoCommand );
+      REGISTER( VerifyEmailCommand );
+#undef REGISTER
 
       server.start();
 #endif
