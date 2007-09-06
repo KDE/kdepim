@@ -134,7 +134,7 @@ int EchoCommand::start( const std::string & line ) {
 }
 
 void EchoCommand::canceled() {
-    done( makeError( GPG_ERR_CANCELED ) );
+
 }
 
 void EchoCommand::slotInquireData( int rc, const QByteArray & data ) {
