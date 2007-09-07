@@ -24,7 +24,6 @@
 #include <QLayout>
 #include <QPushButton>
 #include <QTimer>
-//Added by qt3to4:
 #include <QGridLayout>
 
 #include <kabc/resource.h>
@@ -52,46 +51,42 @@ class AddressBookWrapper : public KABC::AddressBook
     }
 };
 
-class ResourceItem : public Q3CheckListItem
+class ResourceItem : public QTreeWidgetItem
 {
   public:
-    ResourceItem( K3ListView *parent, KABC::Resource *resource )
-      : Q3CheckListItem( parent, resource->resourceName(), CheckBox ),
-        mResource( resource ), mChecked( false ),
+    ResourceItem( QTreeWidget *parent, KABC::Resource *resource )
+      : QTreeWidgetItem( parent, QStringList( resource->resourceName() ) ),
+        mResource( resource ),
         mIsSubresource( false ), mSubItemsCreated( false ),
         mResourceIdentifier()
     {
-      setOn( resource->isActive() );
-      setPixmap( 0, KIconLoader::global()->loadIcon( "help-contents", K3Icon::Small ) );
-      mChecked = isOn();
+      setFlags( flags() | Qt::ItemIsUserCheckable );
+      setCheckState( 0, resource->isActive() ? Qt::Checked : Qt::Unchecked );
+      setIcon( 0, KIcon( "help-contents" ) );
     }
 
     ResourceItem( KPIM::ResourceABC *resourceABC, ResourceItem* parent,
                   const QString& resourceIdent )
-      : Q3CheckListItem( parent, resourceABC->subresourceLabel( resourceIdent ), CheckBox ),
-        mResource( resourceABC ), mChecked( false ),
+      : QTreeWidgetItem( parent, QStringList( resourceABC->subresourceLabel( resourceIdent ) ) ),
+        mResource( resourceABC ),
         mIsSubresource( true ), mSubItemsCreated( false ),
         mResourceIdentifier( resourceIdent )
     {
+      setFlags( flags() | Qt::ItemIsUserCheckable );
       KPIM::ResourceABC* res = static_cast<KPIM::ResourceABC *>( mResource );
-      setOn( res->subresourceActive( mResourceIdentifier ) );
-      setPixmap( 0, KIconLoader::global()->loadIcon( "help-contents", K3Icon::Small ) );
-      mChecked = isOn();
+      setCheckState( 0, res->subresourceActive( mResourceIdentifier ) ? Qt::Checked : Qt::Unchecked );
+      setIcon( 0, KIcon( "help-contents" ) );
+
+      treeWidget()->setRootIsDecorated( true );
     }
 
     void createSubresourceItems();
-
-    void setChecked( bool state ) { mChecked = state; }
-    bool checked() const { return mChecked; }
     KABC::Resource *resource() const { return mResource; }
     QString resourceIdentifier() const { return mResourceIdentifier; }
     bool isSubResource() const { return mIsSubresource; }
 
-    virtual void stateChange( bool active );
-
   private:
     KABC::Resource * const mResource;
-    bool mChecked;
     const bool mIsSubresource;
     bool mSubItemsCreated;
     const QString mResourceIdentifier;
@@ -100,20 +95,24 @@ class ResourceItem : public Q3CheckListItem
 // Comes from korganizer/resourceview.cpp
 void ResourceItem::createSubresourceItems()
 {
-  KPIM::ResourceABC* res = dynamic_cast<KPIM::ResourceABC *>( mResource );
-  QStringList subresources;
-  if ( res )
-    subresources = res->subresources();
-  if ( !subresources.isEmpty() ) {
-    setOpen( true );
-    setExpandable( true );
-    // This resource has subresources
-    QStringList::ConstIterator it;
-    for ( it = subresources.begin(); it != subresources.end(); ++it ) {
-      (void)new ResourceItem( res, this, *it );
+  if ( !mIsSubresource && !mSubItemsCreated ) {
+    KPIM::ResourceABC* res = dynamic_cast<KPIM::ResourceABC *>( mResource );
+    QStringList subresources;
+    if ( res )
+      subresources = res->subresources();
+    if ( !subresources.isEmpty() ) {
+      setExpanded( true );
+
+      // This resource has subresources
+      QStringList::ConstIterator it;
+      for ( it = subresources.begin(); it != subresources.end(); ++it ) {
+        (void)new ResourceItem( res, this, *it );
+      }
     }
+    mSubItemsCreated = true;
+
+    setExpanded( childCount() > 0 );
   }
-  mSubItemsCreated = true;
 }
 
 // TODO: connect this to some signalResourceModified
@@ -124,17 +123,6 @@ void ResourceItem::createSubresourceItems()
 //   else
 //     setOn( mResource->isActive() );
 // }
-
-void ResourceItem::stateChange( bool active )
-{
-  //kDebug(5720) << this << text( 0 ) <<" active=" << active;
-  if ( active && !mIsSubresource ) {
-    if ( !mSubItemsCreated )
-      createSubresourceItems();
-  }
-
-  setOpen( active && childCount() > 0 );
-}
 
 ////
 
@@ -150,8 +138,8 @@ ResourceSelection::ResourceSelection( KAB::Core *core, QWidget *parent )
   connect( mEditButton, SIGNAL( clicked() ), SLOT( edit() ) );
   connect( mRemoveButton, SIGNAL( clicked() ), SLOT( remove() ) );
 
-  connect( mListView, SIGNAL( clicked( Q3ListViewItem* ) ),
-           SLOT( currentChanged( Q3ListViewItem* ) ) );
+  connect( mListView, SIGNAL( itemClicked( QTreeWidgetItem *, int ) ),
+           SLOT( currentChanged( QTreeWidgetItem * ) ) );
 
   QTimer::singleShot( 0, this, SLOT( updateView() ) );
 }
@@ -247,7 +235,7 @@ void ResourceSelection::remove()
   updateView();
 }
 
-void ResourceSelection::currentChanged( Q3ListViewItem *item )
+void ResourceSelection::currentChanged( QTreeWidgetItem *item )
 {
   ResourceItem *resItem = static_cast<ResourceItem*>( item );
   bool state = (resItem && !resItem->isSubResource() );
@@ -260,33 +248,32 @@ void ResourceSelection::currentChanged( Q3ListViewItem *item )
 
   KABC::Resource *resource = resItem->resource();
 
-  if ( resItem->checked() != resItem->isOn() ) {
-    resItem->setChecked( resItem->isOn() );
-    if ( resItem->isSubResource() ) {
-      KPIM::ResourceABC *res = static_cast<KPIM::ResourceABC *>( resource );
-      res->setSubresourceActive( resItem->resourceIdentifier(), resItem->isOn() );
-      mManager->change( resource );
+  resItem->createSubresourceItems();
+
+  if ( resItem->isSubResource() ) {
+    KPIM::ResourceABC *res = static_cast<KPIM::ResourceABC *>( resource );
+    res->setSubresourceActive( resItem->resourceIdentifier(), resItem->checkState( 0 ) == Qt::Checked );
+    mManager->change( resource );
+  } else {
+    resource->setActive( resItem->checkState( 0 ) == Qt::Checked );
+    mManager->change( resource );
+
+    if ( resItem->checkState( 0 ) == Qt::Checked ) {
+      if ( !resource->addressBook() )
+        resource->setAddressBook( core()->addressBook() );
+
+      if ( !resource->isOpen() )
+        resource->open();
+
+      resource->asyncLoad();
     } else {
-      resource->setActive( resItem->isOn() );
-      mManager->change( resource );
-
-      if ( resItem->checked() ) {
-        if ( !resource->addressBook() )
-          resource->setAddressBook( core()->addressBook() );
-
-        if ( !resource->isOpen() )
-          resource->open();
-
-        resource->asyncLoad();
-      } else {
-        resource->close();
-      }
+      resource->close();
     }
-
-    mLastResource = resource->identifier();
-    core()->addressBook()->emitAddressBookChanged();
-    //updateView();
   }
+
+  mLastResource = resource->identifier();
+  core()->addressBook()->emitAddressBookChanged();
+  //updateView();
 }
 
 void ResourceSelection::updateView()
@@ -317,15 +304,14 @@ void ResourceSelection::updateView()
     }
   }
 
-  Q3ListViewItemIterator itemIt( mListView );
-  while ( itemIt.current() ) {
-    ResourceItem *item = static_cast<ResourceItem*>( itemIt.current() );
+  QTreeWidgetItemIterator iterator( mListView );
+  while ( *iterator ) {
+    ResourceItem *item = static_cast< ResourceItem * >( *iterator );
     if ( item->resource()->identifier() == mLastResource ) {
-      mListView->setSelected( item, true );
-      mListView->ensureItemVisible( item );
+      item->setSelected( true );
       break;
     }
-    ++itemIt;
+    ++iterator;
   }
 
   core()->addressBook()->emitAddressBookChanged();
@@ -338,12 +324,15 @@ void ResourceSelection::slotSubresourceAdded( KPIM::ResourceABC *resource,
                                               const QString& subResource )
 {
   kDebug(5720) << resource->resourceName() << subResource;
-  Q3ListViewItem *i = mListView->findItem( resource->resourceName(), 0 );
-  if ( !i )
+
+  QList< QTreeWidgetItem * > foundItems = 
+      mListView->findItems( resource->resourceName(), Qt::MatchExactly );
+
+  if ( foundItems.size() == 0 )
     // Not found
     return;
 
-  ResourceItem *item = static_cast<ResourceItem *>( i );
+  ResourceItem *item = static_cast<ResourceItem *>( foundItems[0] );
   (void)new ResourceItem( resource, item, subResource );
 }
 
@@ -360,7 +349,7 @@ void ResourceSelection::slotSubresourceRemoved( KPIM::ResourceABC* resource,
 
 ResourceItem* ResourceSelection::selectedItem() const
 {
-  return static_cast<ResourceItem*>( mListView->selectedItem() );
+  return static_cast<ResourceItem*>( mListView->currentItem() );
 }
 
 void ResourceSelection::initGUI()
@@ -369,9 +358,9 @@ void ResourceSelection::initGUI()
   layout->setSpacing( 5 );
   layout->setMargin( 2 );
 
-  mListView = new K3ListView( this );
-  mListView->addColumn( i18n( "Address Books" ) );
-  mListView->setFullWidth( true );
+  mListView = new QTreeWidget( this );
+  mListView->setRootIsDecorated( false );
+  mListView->setHeaderLabel( i18n( "Address Books" ) );
   layout->addWidget( mListView, 0, 0, 1, 3 );
 
   mAddButton = new QPushButton( i18n( "Add..." ), this );
