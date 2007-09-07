@@ -19,7 +19,7 @@
     Boston, MA 02110-1301, USA.
 */
 
-#include <kglobalsettings.h>
+#include <kcolorscheme.h>
 
 #include "htmldiffalgodisplay.h"
 
@@ -39,8 +39,8 @@ void HTMLDiffAlgoDisplay::begin()
 
   mText.append( "<html>" );
   mText.append( QString( "<body text=\"%1\" bgcolor=\"%2\">" )
-               .arg( KGlobalSettings::textColor().name() )
-               .arg( KGlobalSettings::baseColor().name() ) );
+               .arg( KColorScheme(QPalette::Active, KColorScheme::View).foreground().color().name() )
+               .arg( KColorScheme(QPalette::Active, KColorScheme::View).background().color().name() ) );
 
   mText.append( "<center><table>" );
   mText.append( QString( "<tr><th></th><th align=\"center\">%1</th><td>         </td><th align=\"center\">%2</th></tr>" )
