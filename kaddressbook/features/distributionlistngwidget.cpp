@@ -204,7 +204,7 @@ void KAB::DistributionListNg::MainWidget::updateEntries()
 {
     const bool hadSelection = mListBox->selectedItem() != 0;
     const QStringList newEntries = core()->distributionListNames();
-    if ( newEntries == mCurrentEntries )
+    if ( !mCurrentEntries.isEmpty() && newEntries == mCurrentEntries )
         return;
     mCurrentEntries = newEntries;
     mListBox->clear();
