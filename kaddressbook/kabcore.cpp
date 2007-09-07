@@ -99,7 +99,7 @@ KABCore::KABCore( KXMLGUIClient *client, bool readWrite, QWidget *parent,
 {
   mWidget = new QWidget( parent );
   mWidget->setObjectName( name );
-//
+
   mIsPart = (strcmp(parent->metaObject()->className(), "KAddressBookMain") );
 
   mAddressBookChangedTimer = new QTimer( this );
@@ -222,7 +222,7 @@ void KABCore::restoreSettings()
   mIncSearchWidget->setCurrentItem( KABPrefs::instance()->currentIncSearchField() );
 
   QList<int> splitterSize = KABPrefs::instance()->extensionsSplitter();
-  if ( splitterSize.count() == 0 ) {
+  if ( splitterSize.isEmpty() ) {
     splitterSize.append( 360 );
     splitterSize.append( 260 );
   }
@@ -1042,9 +1042,6 @@ void KABCore::initGUI()
   connect( mIncSearchWidget, SIGNAL( doSearch( const QString& ) ),
            SLOT( incrementalTextSearch( const QString& ) ) );
 
-  mFilterSelectionWidget = new FilterSelectionWidget( searchTB , "kde toolbar widget" );
-  searchTB->addWidget( mFilterSelectionWidget );
-
   mDetailsSplitter = new QSplitter( mWidget );
   topLayout->addWidget( searchTB );
   topLayout->addWidget( mDetailsSplitter );
@@ -1053,15 +1050,14 @@ void KABCore::initGUI()
   mDetailsSplitter->addWidget( mDetailsStack );
 
   QWidget* extensionWidget = new QWidget;
-
+  mDetailsSplitter->addWidget( extensionWidget );
+  
   mExtensionManager = new ExtensionManager( extensionWidget, mDetailsStack, this, this );
   connect( mExtensionManager, SIGNAL( detailsWidgetDeactivated( QWidget* ) ), 
            this, SLOT( deactivateDetailsWidget( QWidget* ) ) );
   connect( mExtensionManager, SIGNAL( detailsWidgetActivated( QWidget* ) ), 
            this, SLOT( activateDetailsWidget( QWidget* ) ) );
 
-  mDetailsSplitter->addWidget( extensionWidget );
-  
   QWidget *viewWidget = new QWidget;
   mDetailsSplitter->addWidget( viewWidget );
   QVBoxLayout *viewLayout = new QVBoxLayout( viewWidget );
@@ -1095,6 +1091,8 @@ void KABCore::initGUI()
   buttonLayout->addWidget( removeDistListButton );
 
   mFilterSelectionWidget = new FilterSelectionWidget( searchTB , "kde toolbar widget" );
+  searchTB->addWidget( mFilterSelectionWidget );
+
   mViewManager->setFilterSelectionWidget( mFilterSelectionWidget );
 
   connect( mFilterSelectionWidget, SIGNAL( filterActivated( int ) ),
@@ -1121,7 +1119,7 @@ void KABCore::initGUI()
   connect( mDistListEntryView, SIGNAL( distributionListClicked( const QString& ) ),
            this, SLOT( sendMailToDistributionList( const QString& ) ) );
   mDetailsStack->addWidget( mDistListEntryView );
-  mDetailsSplitter->moveToLast( mDetailsStack );
+  mDetailsSplitter->addWidget( mDetailsStack );
 
   connect( mDetailsViewer, SIGNAL( addressClicked( const QString&) ),
            this, SLOT( showContactsAddress( const QString& ) ) );
@@ -1517,7 +1515,7 @@ void KABCore::editDistributionList( const KPIM::DistributionList &dist )
   dlg->setDistributionList( dist );
   if ( dlg->exec() == QDialog::Accepted ) {
     const KPIM::DistributionList newDist = dlg->distributionList();
-    if ( newDist != dist ) {
+    if ( !newDist.isEmpty() ) {
       addressBook()->insertAddressee( newDist );
       setModified();
     }

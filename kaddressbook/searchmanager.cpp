@@ -57,7 +57,7 @@ void SearchManager::search( const QString &pattern, const KABC::Field::List &fie
   while ( rmIt != rmEndIt ) {
     if ( KPIM::DistributionList::isDistributionList( *rmIt ) ) {
       mDistributionLists.append( static_cast<KPIM::DistributionList>( *rmIt ) );
-      rmIt = allContacts.remove( rmIt );
+      rmIt = allContacts.erase( rmIt );
     } else
       ++rmIt;
   }

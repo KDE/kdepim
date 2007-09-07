@@ -24,9 +24,11 @@ public:
     void setDistributionList( const KPIM::DistributionList& list );
     KPIM::DistributionList distributionList() const;
 
-private slots:
-
     void saveList();
+
+private slots:
+    //override
+    void slotButtonClicked( int button );
     void lineTextChanged( int id );
 
 private:

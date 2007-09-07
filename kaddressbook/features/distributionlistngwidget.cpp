@@ -117,18 +117,20 @@ KAB::DistributionListNg::MainWidget::MainWidget( KAB::Core *core, QWidget *paren
     QVBoxLayout *layout = new QVBoxLayout( this );
     layout->setSpacing( KDialog::spacingHint() );
 
-    QLabel *label = new QLabel( this );
+    QLabel *label = new QLabel;
     label->setText( i18n( "Distribution Lists" ) );
     layout->addWidget( label );
 
-    mListBox = new ListBox( this );
+    mListBox = new ListBox;
+    layout->addWidget( mListBox );
+
     connect( mListBox, SIGNAL( contextMenuRequested( QListBoxItem*, const QPoint& ) ), 
              this, SLOT( contextMenuRequested( QListBoxItem*, const QPoint& ) ) );
     connect( mListBox, SIGNAL( dropped( const QString &, const KABC::Addressee::List & ) ), 
              this, SLOT( contactsDropped( const QString &, const KABC::Addressee::List & ) ) );
     connect( mListBox, SIGNAL( highlighted( int ) ), 
              this, SLOT( itemSelected( int ) ) );
-    layout->addWidget( mListBox );
+
 
     connect( core, SIGNAL( contactsUpdated() ),
              this, SLOT( updateEntries() ) );
@@ -138,7 +140,6 @@ KAB::DistributionListNg::MainWidget::MainWidget( KAB::Core *core, QWidget *paren
     // When contacts are changed, update both distr list combo and contents of displayed distr list
     connect( core, SIGNAL( contactsUpdated() ),
              this, SLOT( updateEntries() ) );
-
 
     updateEntries();
 }
@@ -209,7 +210,7 @@ void KAB::DistributionListNg::MainWidget::updateEntries()
 {
     const bool hadSelection = !mListBox->selectedItems().isEmpty();
     const QStringList newEntries = core()->distributionListNames();
-    if ( newEntries == mCurrentEntries )
+    if ( !newEntries.isEmpty() && newEntries == mCurrentEntries )
         return;
     mCurrentEntries = newEntries;
     mListBox->clear();

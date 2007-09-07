@@ -98,7 +98,6 @@ KPIM::DistributionList::Entry KPIM::DistributionListEditor::Line::entry() const
     QString name;
     QString email;
     KPIMUtils::extractEmailAddressAndName(m_lineEdit->text(), email, name );
-
     KPIM::DistributionList::Entry res;
     if ( !m_uid.isNull() )
     {
@@ -117,12 +116,17 @@ KPIM::DistributionListEditor::LineEdit::LineEdit( QWidget* parent ) : KPIM::Addr
 {
 }
 
+void KPIM::DistributionListEditor::EditorWidget::slotButtonClicked( int button )
+{
+    if ( button == Ok )
+        saveList();
+
+    KDialog::slotButtonClicked( button );
+}
 
 KPIM::DistributionListEditor::EditorWidget::EditorWidget( KABC::AddressBook* book,  QWidget* parent ) 
     : KDialog( parent ), d( new DistributionListEditor::EditorWidgetPrivate )
 {
-    connect( this, SIGNAL( okClicked() ), SLOT( saveList() ) );
-
     d->addressBook = book;
     Q_ASSERT( d->addressBook );
     d->lastLineId = 0;

@@ -29,7 +29,7 @@
 #include <ktoggleaction.h>
 #include <kvbox.h>
 
-#include <QGridLayout>
+#include <QHBoxLayout>
 #include <QSignalMapper>
 #include <QSplitter>
 #include <QStackedWidget>
@@ -51,19 +51,18 @@ ExtensionManager::ExtensionManager( QWidget* extensionBar, QStackedWidget* detai
 {
   Q_ASSERT( mCore );
   Q_ASSERT( mExtensionBar );
-  QGridLayout *layout = new QGridLayout( mExtensionBar );
+  Q_ASSERT( mDetailsStack );
+  QBoxLayout *layout = new QHBoxLayout( mExtensionBar );
   layout->setMargin( 0 );
   layout->setSpacing( 0 );
-  mSplitter = new QSplitter;
+  mSplitter = new QSplitter( mExtensionBar );
   mSplitter->setOrientation( Qt::Vertical );
-  layout->addWidget( mSplitter, 0, 0 );
+  layout->addWidget( mSplitter );
 
   createExtensionWidgets();
 
-  mActionCollection = new KActionCollection( this);
+  mActionCollection = new KActionCollection( this );
   mActionCollection->setObjectName( "ActionCollection" );
-
-  extensionBar->setVisible( false );
   QTimer::singleShot( 0, this, SLOT( createActions() ) );
 }
 
@@ -83,8 +82,8 @@ void ExtensionManager::restoreSettings()
       setExtensionActive( data.identifier, true );
     }
   }
-  const QList<int> sizes = KABPrefs::instance()->extensionsSplitterSizes();
-  mSplitter->setSizes( sizes );
+  //const QList<int> sizes = KABPrefs::instance()->extensionsSplitterSizes();
+  //mSplitter->setSizes( sizes );
 }
 
 void ExtensionManager::saveSettings()
@@ -99,7 +98,6 @@ void ExtensionManager::reconfigure()
   createExtensionWidgets();
   createActions();
   restoreSettings();
-  bool atLeastOneVisible = false;
   updateExtensionBarVisibility();
 }
 
@@ -120,16 +118,14 @@ void ExtensionManager::activationToggled( const QString &extid )
 {
   if ( !mExtensionMap.contains( extid ) )
     return;
-  const ExtensionData data = mExtensionMap[ extid ];
-  const bool activated = data.action->isChecked();
-  setExtensionActive( extid, activated );
+  setExtensionActive( extid, mExtensionMap[ extid ].action->isChecked() );
 }
 
 void ExtensionManager::updateExtensionBarVisibility()
 {
   foreach ( const QString i, mActiveExtensions ) {
     if ( mExtensionMap[i].widget && !mExtensionMap[i].isDetailsExtension ) {
-        mExtensionBar->setVisible( true );
+      mExtensionBar->setVisible( true );
       return;
     }
   }
@@ -191,6 +187,7 @@ void ExtensionManager::createActions()
   }
 
   mCore->guiClient()->plugActionList( "extensions_list", mActionList );
+  updateExtensionBarVisibility();
 }
 
 QWidget* ExtensionManager::activeDetailsWidget() const
