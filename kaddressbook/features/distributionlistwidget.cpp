@@ -323,6 +323,7 @@ void DistributionListWidget::editList()
 #else
   KABC::DistributionList *list = mManager->list( oldName );
   list->setName( newName );
+  mManager->save();
   updateNameCombo();
 #endif
 
