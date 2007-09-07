@@ -102,6 +102,7 @@ class ExtensionManager : public QObject
   private:
     void createExtensionWidgets();
     void setExtensionActive( const QString &extid, bool active ); 
+    void updateExtensionBarVisibility();
 
   private:
     QWidget *mExtensionBar;

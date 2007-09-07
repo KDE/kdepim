@@ -29,11 +29,11 @@
 #include <ktoggleaction.h>
 #include <kvbox.h>
 
+#include <QGridLayout>
 #include <QSignalMapper>
 #include <QSplitter>
 #include <QStackedWidget>
 #include <QTimer>
-#include <QVBoxLayout>
 
 #include "addresseeeditorextension.h"
 #include "core.h"
@@ -46,14 +46,17 @@ ExtensionData::ExtensionData() : action( 0 ), widget( 0 ), weight( 0 ), isDetail
 }
 
 ExtensionManager::ExtensionManager( QWidget* extensionBar, QStackedWidget* detailsStack, KAB::Core *core, QObject *parent )
-    : QObject( parent ), mExtensionBar( extensionBar), mCore( core ),
+    : QObject( parent ), mExtensionBar( extensionBar ), mCore( core ),
     mMapper( 0 ), mDetailsStack( detailsStack ), mActiveDetailsWidget( 0 )
 {
-  Q_ASSERT( mExtensionBar ); 
-  QVBoxLayout* layout = new QVBoxLayout( mExtensionBar );
-  mSplitter = new QSplitter( mExtensionBar );
+  Q_ASSERT( mCore );
+  Q_ASSERT( mExtensionBar );
+  QGridLayout *layout = new QGridLayout( mExtensionBar );
+  layout->setMargin( 0 );
+  layout->setSpacing( 0 );
+  mSplitter = new QSplitter;
   mSplitter->setOrientation( Qt::Vertical );
-  layout->addWidget( mSplitter );
+  layout->addWidget( mSplitter, 0, 0 );
 
   createExtensionWidgets();
 
@@ -72,8 +75,7 @@ ExtensionManager::~ExtensionManager()
 void ExtensionManager::restoreSettings() 
 {
   const QStringList activeExtensions = KABPrefs::instance()->activeExtensions();
-  Q_FOREACH ( const ExtensionData data, mExtensionMap )
-  {
+  Q_FOREACH ( const ExtensionData data, mExtensionMap ) {
       if ( activeExtensions.contains( data.identifier ) ) {
       KToggleAction *action = static_cast<KToggleAction*>( data.action );
       if ( action )
@@ -97,7 +99,8 @@ void ExtensionManager::reconfigure()
   createExtensionWidgets();
   createActions();
   restoreSettings();
-  mExtensionBar->setVisible( !mActiveExtensions.isEmpty() );
+  bool atLeastOneVisible = false;
+  updateExtensionBarVisibility();
 }
 
 bool ExtensionManager::isQuickEditVisible() const
@@ -107,9 +110,9 @@ bool ExtensionManager::isQuickEditVisible() const
 
 void ExtensionManager::setSelectionChanged()
 {
-  for ( QStringList::ConstIterator it = mActiveExtensions.begin(), end = mActiveExtensions.end(); it != end; ++it ) {
-    if ( mExtensionMap.contains( *it ) && mExtensionMap[*it].widget )
-      mExtensionMap[*it].widget->contactsSelectionChanged();
+  foreach ( const QString i, mActiveExtensions ) {
+    if ( mExtensionMap.contains( i ) && mExtensionMap[i].widget )
+      mExtensionMap[i].widget->contactsSelectionChanged();
   } 
 }
 
@@ -120,6 +123,18 @@ void ExtensionManager::activationToggled( const QString &extid )
   const ExtensionData data = mExtensionMap[ extid ];
   const bool activated = data.action->isChecked();
   setExtensionActive( extid, activated );
+}
+
+void ExtensionManager::updateExtensionBarVisibility()
+{
+  foreach ( const QString i, mActiveExtensions ) {
+    if ( mExtensionMap[i].widget && !mExtensionMap[i].isDetailsExtension ) {
+        mExtensionBar->setVisible( true );
+      return;
+    }
+  }
+
+  mExtensionBar->setVisible( false );
 }
 
 void ExtensionManager::setExtensionActive( const QString& extid, bool active )
@@ -136,21 +151,20 @@ void ExtensionManager::setExtensionActive( const QString& extid, bool active )
         mActiveDetailsWidget = data.widget;
         emit detailsWidgetActivated( data.widget );
       } else {
-          data.widget->show();
+          data.widget->setVisible( true );
       }
       data.widget->contactsSelectionChanged();
     }
   } else {
-    mActiveExtensions.remove( extid );
-    if ( data.widget && !data.isDetailsExtension ) {
-      data.widget->hide();
-    }
+    mActiveExtensions.removeAll( extid );
     if ( data.isDetailsExtension ) {
       mActiveDetailsWidget = 0;
       emit detailsWidgetDeactivated( data.widget );
+    } else {
+        data.widget->setVisible( false );
     }
   }
-  mExtensionBar->setVisible( !mActiveExtensions.isEmpty() );
+  updateExtensionBarVisibility();
 }
  
 void ExtensionManager::createActions()
@@ -165,16 +179,13 @@ void ExtensionManager::createActions()
   connect( mMapper, SIGNAL( mapped( const QString& ) ),
            this, SLOT( activationToggled( const QString& ) ) );
 
-  ExtensionData::List::ConstIterator it;
-
-  QActionGroup* extensionGroup = new QActionGroup(this);
-  foreach ( const ExtensionData data, mExtensionMap ) {
-    KToggleAction *action = mActionCollection->add<KToggleAction>( QString( data.identifier + "_extension" ) );
-    action->setText( data.title );
-    connect(action, SIGNAL(triggered(bool) ), mMapper, SLOT( map() ));
-    action->setActionGroup( extensionGroup );
-    mMapper->setMapping( action, data.identifier );
-    mActionList.append( action );
+  foreach ( const QString i, mExtensionMap.keys() ) {
+    ExtensionData& data = mExtensionMap[i];
+    data.action = mActionCollection->add<KToggleAction>( QString( data.identifier + "_extension" ) );
+    data.action->setText( data.title );
+    connect( data.action, SIGNAL(triggered(bool) ), mMapper, SLOT( map() ));
+    mMapper->setMapping( data.action, data.identifier );
+    mActionList.append( data.action );
     if ( mActiveExtensions.contains( data.identifier ) )
       data.action->setChecked( true );
   }
@@ -190,17 +201,15 @@ QWidget* ExtensionManager::activeDetailsWidget() const
 void ExtensionManager::createExtensionWidgets()
 {
   // clean up
-  for ( QMap<QString, ExtensionData>::ConstIterator it = mExtensionMap.begin(), end = mExtensionMap.end(); it != end; ++it ) {
-    delete it.data().widget;
-  }
+  foreach ( const ExtensionData i, mExtensionMap ) 
+    delete i.widget;
   mExtensionMap.clear();
-
-  KAB::ExtensionWidget *wdg = 0;
 
   {
     // add addressee editor as default
-    wdg = new AddresseeEditorExtension( mCore, mDetailsStack );
-    wdg->hide();
+    KAB::ExtensionWidget *wdg = new AddresseeEditorExtension( mCore, 0 );
+    mDetailsStack->addWidget( wdg );
+    wdg->setVisible( false );
 
     connect( wdg, SIGNAL( modified( const KABC::Addressee::List& ) ),
              SIGNAL( modified( const KABC::Addressee::List& ) ) );
@@ -234,9 +243,10 @@ void ExtensionManager::createExtensionWidgets()
       continue;
     }
 
-    wdg = extensionFactory->extension( mCore, mSplitter );
+    KAB::ExtensionWidget *wdg = extensionFactory->extension( mCore, 0 );
     if ( wdg ) {
-      wdg->hide();
+      mSplitter->addWidget( wdg );
+      wdg->setVisible( false );
       connect( wdg, SIGNAL( modified( const KABC::Addressee::List& ) ),
                SIGNAL( modified( const KABC::Addressee::List& ) ) );
       connect( wdg, SIGNAL( deleted( const QStringList& ) ),

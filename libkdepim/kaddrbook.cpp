@@ -3,15 +3,9 @@
 // Author: Stefan Taferner <taferner@kde.org>
 // This code is under GPL
 
-#include <config.h> // KDEPIM_NEW_DISTRLISTS
-
 #include "kaddrbook.h"
 
-#ifdef KDEPIM_NEW_DISTRLISTS
 #include "distributionlist.h"
-#else
-#include <kabc/distributionlist.h>
-#endif
 
 #include <kdebug.h>
 #include <klocale.h>
@@ -194,23 +188,9 @@ QString KAddrBookExternal::expandDistributionList( const QString& listName )
 
   const QString lowerListName = listName.toLower();
   KABC::AddressBook *addressBook = KABC::StdAddressBook::self( true );
-#ifdef KDEPIM_NEW_DISTRLISTS
   KPIM::DistributionList distrList = KPIM::DistributionList::findByName( addressBook, lowerListName, false );
   if ( !distrList.isEmpty() ) {
     return distrList.emails( addressBook ).join( ", " );
   }
-#else
-  KABC::DistributionListManager manager( addressBook );
-  manager.load();
-  const QStringList listNames = manager.listNames();
-
-  for ( QStringList::ConstIterator it = listNames.begin();
-        it != listNames.end(); ++it) {
-    if ( (*it).toLower() == lowerListName ) {
-      const QStringList addressList = manager.list( *it )->emails();
-      return addressList.join( ", " );
-    }
-  }
-#endif
   return QString();
 }

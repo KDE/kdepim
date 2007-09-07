@@ -29,13 +29,7 @@
 #include "completionordereditor.h"
 #include "ldapclient.h"
 
-#include <config.h> // KDEPIM_NEW_DISTRLISTS
-
-#ifdef KDEPIM_NEW_DISTRLISTS
 #include "distributionlist.h"
-#else
-#include <kabc/distributionlist.h>
-#endif
 
 #include <kabc/stdaddressbook.h>
 #include <kabc/resource.h>
@@ -542,25 +536,6 @@ void AddresseeLineEdit::loadContacts()
     }
   }
 
-#ifndef KDEPIM_NEW_DISTRLISTS // new distr lists are normal contact, already done above
-  int weight = config.readEntry( "DistributionLists", 60 );
-  KABC::DistributionListManager manager( addressBook );
-  manager.load();
-  const QStringList distLists = manager.listNames();
-  QStringList::const_iterator listIt;
-  int idx = addCompletionSource( i18n( "Distribution Lists" ) );
-  for ( listIt = distLists.begin(); listIt != distLists.end(); ++listIt ) {
-
-    //for KGlobalSettings::CompletionAuto
-    addCompletionItem( (*listIt).trimmed(), weight, idx );
-
-    //for CompletionShell, CompletionPopup
-    QStringList sl( (*listIt).trimmed() );
-    addCompletionItem( (*listIt).trimmed(), weight, idx, &sl );
-
-  }
-#endif
-
   QApplication::restoreOverrideCursor();
 
   if ( !m_addressBookConnected ) {
@@ -571,7 +546,6 @@ void AddresseeLineEdit::loadContacts()
 
 void AddresseeLineEdit::addContact( const KABC::Addressee& addr, int weight, int source )
 {
-#ifdef KDEPIM_NEW_DISTRLISTS
   if ( KPIM::DistributionList::isDistributionList( addr ) ) {
     //kDebug(5300) <<"AddresseeLineEdit::addContact() distribution list \"" << addr.formattedName() <<"\" weight=" << weight;
 
@@ -584,7 +558,6 @@ void AddresseeLineEdit::addContact( const KABC::Addressee& addr, int weight, int
 
     return;
   }
-#endif
   //m_contactMap.insert( addr.realName(), addr );
   const QStringList emails = addr.emails();
   QStringList::ConstIterator it;

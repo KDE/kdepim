@@ -30,7 +30,8 @@ KAB::DistributionListEntryView::DistributionListEntryView( KAB::Core* core, QWid
     m_mainLayout->setSpacing( KDialog::spacingHint() );
     m_mainLayout->setMargin( KDialog::marginHint() );
 
-    QBoxLayout* headerLayout = new QHBoxLayout;
+    QWidget* headerWidget = new QWidget;
+    QBoxLayout* headerLayout = new QHBoxLayout( headerWidget );
     headerLayout->setSpacing( KDialog::spacingHint() * 3 );
 
     m_imageLabel = new QLabel( this );
@@ -40,9 +41,10 @@ KAB::DistributionListEntryView::DistributionListEntryView( KAB::Core* core, QWid
     headerLayout->addWidget( m_addresseeLabel, 0, Qt::AlignTop );
     headerLayout->addStretch();
 
-    m_mainLayout->addItem( headerLayout );
+    m_mainLayout->addWidget( headerWidget );
 
-    QBoxLayout* distLayout = new QHBoxLayout;
+    QWidget* distWidget = new QWidget;
+    QBoxLayout* distLayout = new QHBoxLayout( distWidget );
     distLayout->setSpacing( KDialog::spacingHint() );
 
     QLabel* distLabel = new QLabel( this );
@@ -52,33 +54,36 @@ KAB::DistributionListEntryView::DistributionListEntryView( KAB::Core* core, QWid
 
     m_distListLabel = new KUrlLabel( this );
     distLabel->setBuddy( m_distListLabel );
-    connect( m_distListLabel, SIGNAL( leftClickedURL( const QString& ) ), 
+    connect( m_distListLabel, SIGNAL( leftClickedUrl( const QString& ) ), 
              this, SIGNAL( distributionListClicked( const QString& ) ) );
     distLayout->addWidget( m_distListLabel );
     distLayout->addStretch();
-    m_mainLayout->addItem( distLayout );
+    m_mainLayout->addWidget( distWidget );
 
     QLabel* emailLabel = new QLabel( this );
     emailLabel->setText( i18n( "<b>Email address to use in this list:</b>" ) );
     emailLabel->setWordWrap( false );
     m_mainLayout->addWidget( emailLabel );
 
-    QBoxLayout* emailLayout = new QHBoxLayout;
+    QWidget* emailWidget = new QWidget;
+    QBoxLayout* emailLayout = new QHBoxLayout( emailWidget );
     emailLayout->setSpacing( KDialog::spacingHint() );
     emailLayout->addSpacing( 30 );
 
-    m_radioLayout = new QGridLayout;
-    emailLayout->addItem( m_radioLayout );
+    QWidget* radioWidget = new QWidget;
+    m_radioLayout = new QGridLayout( radioWidget );
+    emailLayout->addWidget( radioWidget );
     emailLayout->addStretch();
-    m_mainLayout->addItem( emailLayout );
+    m_mainLayout->addWidget( emailWidget );
 
-    QBoxLayout* resourceLayout = new QHBoxLayout;
+    QWidget* resourceWidget = new QWidget;
+    QBoxLayout* resourceLayout = new QHBoxLayout( resourceWidget );
     resourceLayout->setSpacing( KDialog::spacingHint() );
     m_resourceLabel = new QLabel( this );
     resourceLayout->addWidget( m_resourceLabel );
     resourceLayout->addStretch();
 
-    m_mainLayout->addItem( resourceLayout );
+    m_mainLayout->addWidget( resourceWidget );
     m_mainLayout->addStretch();
 }
 

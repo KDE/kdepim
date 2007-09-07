@@ -50,7 +50,6 @@ void SearchManager::search( const QString &pattern, const KABC::Field::List &fie
 
   allContacts = list;
 
-#ifdef KDEPIM_NEW_DISTRLISTS
   // Extract distribution lists from allContacts
   mDistributionLists.clear();
   KABC::Addressee::List::Iterator rmIt( allContacts.begin() );
@@ -75,8 +74,6 @@ void SearchManager::search( const QString &pattern, const KABC::Field::List &fie
       }
     }
   }
-
-#endif
 
   if ( mPattern.isEmpty() ) { // no pattern, return all
     mContacts = allContacts;

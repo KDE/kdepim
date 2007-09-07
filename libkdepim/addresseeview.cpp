@@ -454,7 +454,7 @@ QString AddresseeView::vCardAsHTML( const KABC::Addressee& addr, ::KIMProxy*, Li
   strAddr.append( QString::fromLatin1( "</table></div>\n" ) );
   
   if ( addr.resource() )
-      strAddr.append( i18n( "<p><b>Address book</b>: %1</p>" ).arg( addr.resource()->resourceName() ) );
+      strAddr.append( i18n( "<p><b>Address book</b>: %1</p>", addr.resource()->resourceName() ) );
   return strAddr;
 }
 

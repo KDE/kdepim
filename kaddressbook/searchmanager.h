@@ -24,7 +24,6 @@
 #ifndef SEARCHMANAGER_H
 #define SEARCHMANAGER_H
 
-#include <config.h> // for KDEPIM_NEW_DISTRLISTS
 #include <QObject>
 
 #include <kabc/stdaddressbook.h>

@@ -24,7 +24,6 @@
 #include <QClipboard>
 #include <QDir>
 #include <QFile>
-#include <QLayout>
 #include <QPointer>
 #include <QRegExp>
 #include <QSplitter>
@@ -619,7 +618,7 @@ void KABCore::newDistributionList()
     bool foundUnused = false;
     int i = 1;
     while ( !foundUnused ) {
-      name = i18n( "New Distribution List (%1)" ).arg( i++ );  
+      name = i18n( "New Distribution List (%1)", i++ );  
       foundUnused = KPIM::DistributionList::findByName( addressBook(), name ).isEmpty();
     }
   }
@@ -797,10 +796,7 @@ void KABCore::setJumpButtonBarVisible( bool visible )
 
 void KABCore::setDetailsVisible( bool visible )
 {
-  if ( visible )
-    mDetailsPage->show();
-  else
-    mDetailsPage->hide();
+  mDetailsPage->setVisible( visible );
 }
 
 void KABCore::extensionModified( const KABC::Addressee::List &list )
@@ -1036,7 +1032,7 @@ void KABCore::slotEditorDestroyed( const QString &uid )
 
 void KABCore::initGUI()
 {
-  QVBoxLayout *topLayout = new QVBoxLayout( mWidget );
+  QVBoxLayout *topLayout = new QVBoxLayout( mWidget ); 
   topLayout->setSpacing( 0 );
   topLayout->setMargin( 0 );
   KToolBar* searchTB = new KToolBar( mWidget, "search toolbar" );
@@ -1053,17 +1049,24 @@ void KABCore::initGUI()
   topLayout->addWidget( searchTB );
   topLayout->addWidget( mDetailsSplitter );
 
-  mDetailsStack = new QStackedWidget( mDetailsSplitter );
-  mExtensionManager = new ExtensionManager( new QWidget( mDetailsSplitter ), mDetailsStack, this, this );
+  mDetailsStack = new QStackedWidget;
+  mDetailsSplitter->addWidget( mDetailsStack );
+
+  QWidget* extensionWidget = new QWidget;
+
+  mExtensionManager = new ExtensionManager( extensionWidget, mDetailsStack, this, this );
   connect( mExtensionManager, SIGNAL( detailsWidgetDeactivated( QWidget* ) ), 
            this, SLOT( deactivateDetailsWidget( QWidget* ) ) );
   connect( mExtensionManager, SIGNAL( detailsWidgetActivated( QWidget* ) ), 
            this, SLOT( activateDetailsWidget( QWidget* ) ) );
 
+  mDetailsSplitter->addWidget( extensionWidget );
   
-  QWidget *viewWidget = new QWidget( mDetailsSplitter );
+  QWidget *viewWidget = new QWidget;
+  mDetailsSplitter->addWidget( viewWidget );
   QVBoxLayout *viewLayout = new QVBoxLayout( viewWidget );
   viewLayout->setSpacing( KDialog::spacingHint() );
+
 
   mViewHeaderLabel = new QLabel( viewWidget );
 //  mViewHeaderLabel->setSizePolicy( QSizePolicy::Minimum, QSizePolicy::Fixed );
@@ -1077,7 +1080,7 @@ void KABCore::initGUI()
   buttonLayout->setSpacing( KDialog::spacingHint() );
   buttonLayout->addStretch( 1 );
 
-  KPushButton *addDistListButton = new KPushButton( mDistListButtonWidget );
+  KPushButton *addDistListButton = new KPushButton;
   addDistListButton->setText( i18n( "Add" ) );
   connect( addDistListButton, SIGNAL( clicked() ), 
            this, SLOT( editSelectedDistributionList() ) );
@@ -1085,7 +1088,7 @@ void KABCore::initGUI()
   mDistListButtonWidget->setVisible( false );
   viewLayout->addWidget( mDistListButtonWidget );
 
-  KPushButton *removeDistListButton = new KPushButton( mDistListButtonWidget );
+  KPushButton *removeDistListButton = new KPushButton;
   removeDistListButton->setText( i18n( "Remove" ) );
   connect( removeDistListButton, SIGNAL( clicked() ), 
            this, SLOT( removeSelectedContactsFromDistList() ) );
@@ -1097,27 +1100,27 @@ void KABCore::initGUI()
   connect( mFilterSelectionWidget, SIGNAL( filterActivated( int ) ),
            mViewManager, SLOT( setActiveFilter( int ) ) );
 
-  mDetailsWidget = new QWidget( mDetailsSplitter );
+  mDetailsWidget = new QWidget;
   mDetailsLayout = new QHBoxLayout( mDetailsWidget );
   mDetailsLayout->setSpacing( 0 );
   mDetailsLayout->setMargin( 0 );
 
-  mDetailsPage = new QWidget( mDetailsWidget );
+  mDetailsPage = new QWidget;
   mDetailsLayout->addWidget( mDetailsPage );
 
   QHBoxLayout *detailsPageLayout = new QHBoxLayout( mDetailsPage );
   detailsPageLayout->setSpacing( 0 );
   detailsPageLayout->setMargin( 0 );
-  mDetailsViewer = new KPIM::AddresseeView( mDetailsPage );
+  mDetailsViewer = new KPIM::AddresseeView;
   mDetailsViewer->setVerticalScrollBarPolicy ( Qt::ScrollBarAsNeeded );
   detailsPageLayout->addWidget( mDetailsViewer );
 
-  mDistListEntryView = new KAB::DistributionListEntryView( this, mWidget );
+  mDetailsStack->addWidget( mDetailsWidget );
+
+  mDistListEntryView = new KAB::DistributionListEntryView( this );
   connect( mDistListEntryView, SIGNAL( distributionListClicked( const QString& ) ),
            this, SLOT( sendMailToDistributionList( const QString& ) ) );
   mDetailsStack->addWidget( mDistListEntryView );
-  mDetailsStack->addWidget( mDetailsWidget );
-  mDetailsStack->setCurrentWidget( mDetailsWidget );
   mDetailsSplitter->moveToLast( mDetailsStack );
 
   connect( mDetailsViewer, SIGNAL( addressClicked( const QString&) ),
@@ -1126,6 +1129,8 @@ void KABCore::initGUI()
   topLayout->setStretchFactor( mDetailsSplitter, 1 );
 
   mXXPortManager = new XXPortManager( this, mWidget );
+
+  mDetailsStack->setCurrentWidget( mDetailsWidget );
 
   initActions();
 }

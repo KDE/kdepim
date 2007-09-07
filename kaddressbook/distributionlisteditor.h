@@ -26,8 +26,7 @@ public:
 
 private slots:
 
-    //override
-    void slotOk();
+    void saveList();
     void lineTextChanged( int id );
 
 private:

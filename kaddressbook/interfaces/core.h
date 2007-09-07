@@ -24,8 +24,6 @@
 #ifndef KAB_CORE_H
 #define KAB_CORE_H
 
-#include <config.h> // for KDEPIM_NEW_DISTRLISTS
-
 #include <libkdepim/distributionlist.h>
 
 #include <QObject>
