@@ -285,10 +285,10 @@ bool KWidgetList::eventFilter( QObject *object, QEvent *event )
 KWidgetListItem::KWidgetListItem( KWidgetList *parent )
   : QWidget( parent )
 {
-  mForegroundColor = KColorScheme( KColorScheme::View ).foreground().color();
-  mBackgroundColor = KColorScheme( KColorScheme::View ).background().color();
-  mSelectionForegroundColor = KColorScheme( KColorScheme::Selection ).foreground().color();
-  mSelectionBackgroundColor = KColorScheme( KColorScheme::Selection ).background().color();
+  mForegroundColor = KColorScheme( QPalette::Active, KColorScheme::View ).foreground().color();
+  mBackgroundColor = KColorScheme( QPalette::Active, KColorScheme::View ).background().color();
+  mSelectionForegroundColor = KColorScheme( QPalette::Active, KColorScheme::Selection ).foreground().color();
+  mSelectionBackgroundColor = KColorScheme( QPalette::Active, KColorScheme::Selection ).background().color();
 
   setFocusPolicy( Qt::StrongFocus );
 

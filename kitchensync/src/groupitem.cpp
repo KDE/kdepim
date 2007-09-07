@@ -153,8 +153,8 @@ GroupItem::GroupItem( KWidgetList *parent, SyncProcess *process )
 
   mCallbackHandler->setEngine( mSyncProcess->engine() );
 
-  setSelectionForegroundColor( KColorScheme( KColorScheme::View ).foreground().color() );
-  setSelectionBackgroundColor( KColorScheme( KColorScheme::View ).background( KColorScheme::AlternateBackground ).color() );
+  setSelectionForegroundColor( KColorScheme( QPalette::Active, KColorScheme::View ).foreground().color() );
+  setSelectionBackgroundColor( KColorScheme( QPalette::Active, KColorScheme::View ).background( KColorScheme::AlternateBackground ).color() );
 
   update();
 }
