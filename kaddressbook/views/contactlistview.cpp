@@ -33,7 +33,7 @@
 #include <QMouseEvent>
 
 #include <klocale.h>
-#include <kglobalsettings.h>
+#include <kcolorscheme.h>
 #include <kdebug.h>
 #include <kconfig.h>
 #include <kapplication.h>
@@ -276,7 +276,7 @@ ContactListView::ContactListView(KAddressBookTableView *view,
   mSingleLine = false;
   mToolTips = true;
   mShowIM = true;
-  mAlternateColor = KGlobalSettings::alternateBackgroundColor();
+  mAlternateColor = KColorScheme( QPalette::Active, KColorScheme::View ).background( KColorScheme::AlternateBackground ).color();
 
   setAlternateBackgroundEnabled(mABackground);
   setAcceptDrops( true );
