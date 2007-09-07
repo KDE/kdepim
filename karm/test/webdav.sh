@@ -6,13 +6,6 @@ exec >>check.log 2>&1
 
 source __lib.sh
 
-# check for required perl stuff
-perl -e "use Net::DAV::Server;" > /dev/null 2>&1
-if ! [ $? = 0 ]; then
-	echo "PASS"
-	exit 0
-fi
-
 # Start webdav server
 perl __webdav.pl &
 sleep 2
