@@ -36,12 +36,15 @@ class QRadioButton;
 class QTextEdit;
 class QListWidget;
 
-class KScoringEditorWidget;
 class KLineEdit;
 class KComboBox;
 class KIntSpinBox;
 class K3SpellConfig;
 class KUrlCompletion;
+
+namespace KPIM {
+  class KScoringEditorWidget;
+}
 
 namespace Kpgp {
   class Config;
@@ -414,7 +417,7 @@ class KNODE_EXPORT ScoringWidget : public KCModule
     ScoringWidget( const KComponentData &inst, QWidget *parent = 0 );
 
   private:
-    KScoringEditorWidget *mKsc;
+    KPIM::KScoringEditorWidget *mKsc;
     KIntSpinBox *mIgnored, *mWatched;
 };
 

@@ -18,7 +18,7 @@
 #include <kscoring.h>
 
 class KNRemoteArticle;
-
+using namespace KPIM;
 
 /** Article interface for the scoring system. */
 class KNScorableArticle : public ScorableArticle
