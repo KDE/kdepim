@@ -22,15 +22,13 @@
 
 #include "distributionlistwidget.h"
 
-#include <q3buttongroup.h>
-#include <q3button.h>
+#include <QButtonGroup>
 #include <QComboBox>
+#include <QGroupBox>
 #include <QLabel>
 #include <QLayout>
-#include <q3listview.h>
 #include <QPushButton>
 #include <QRadioButton>
-//Added by qt3to4:
 #include <QGridLayout>
 #include <QKeyEvent>
 #include <QEvent>
@@ -117,12 +115,12 @@ class DeletePressedCatcher : public QObject
     DistributionListWidget *mWidget;
 };
 
-class ContactItem : public Q3ListViewItem
+class ContactItem : public QTreeWidgetItem
 {
   public:
     ContactItem( DistributionListView *parent, const KABC::Addressee &addressee,
                const QString &email = QString() ) :
-      Q3ListViewItem( parent ),
+      QTreeWidgetItem( parent ),
       mAddressee( addressee ),
       mEmail( email )
     {
@@ -146,12 +144,6 @@ class ContactItem : public Q3ListViewItem
       return mEmail;
     }
 
-  protected:
-    bool acceptDrop( const QMimeSource* ) const
-    {
-      return true;
-    }
-
   private:
     KABC::Addressee mAddressee;
     QString mEmail;
@@ -165,7 +157,7 @@ DistributionListWidget::DistributionListWidget( KAB::Core *core, QWidget *parent
 {
   QGridLayout *topLayout = new QGridLayout( this );
   topLayout->setSpacing( KDialog::spacingHint() );
-  topLayout->setMargin( KDialog::marginHint() );
+  topLayout->setMargin( 0 );
 
   mNameCombo = new QComboBox( this );
   topLayout->addWidget( mNameCombo, 0, 0 );
@@ -184,17 +176,15 @@ DistributionListWidget::DistributionListWidget( KAB::Core *core, QWidget *parent
   connect( mRemoveListButton, SIGNAL( clicked() ), SLOT( removeList() ) );
 
   mContactView = new DistributionListView( this );
-  mContactView->addColumn( i18n( "Name" ) );
-  mContactView->addColumn( i18n( "Email" ) );
-  mContactView->addColumn( i18n( "Use Preferred" ) );
+  mContactView->setHeaderLabels( QStringList() << i18n( "Name" ) 
+      << i18n( "Email" ) << i18n( "Use Preferred" ) );
   mContactView->setEnabled( false );
   mContactView->setAllColumnsShowFocus( true );
-  mContactView->setFullWidth( true );
   topLayout->addWidget( mContactView, 1, 0, 1, 4 );
-  connect( mContactView, SIGNAL( selectionChanged() ),
+  connect( mContactView, SIGNAL( itemSelectionChanged() ),
            SLOT( selectionContactViewChanged() ) );
-  connect( mContactView, SIGNAL( dropped( QDropEvent*, Q3ListViewItem* ) ),
-           SLOT( dropped( QDropEvent*, Q3ListViewItem* ) ) );
+  connect( mContactView, SIGNAL( dropped( QDropEvent* ) ),
+           SLOT( dropped( QDropEvent* ) ) );
 
   mAddContactButton = new QPushButton( i18n( "Add Contact" ), this );
   mAddContactButton->setEnabled( false );
@@ -232,8 +222,6 @@ DistributionListWidget::DistributionListWidget( KAB::Core *core, QWidget *parent
   installEventFilter( catcher );
   mContactView->installEventFilter( catcher );
 
-  mContactView->restoreLayout( KGlobal::config().data(), "DistributionListViewColumns" );
-
   KAcceleratorManager::manage( this );
 }
 
@@ -242,8 +230,6 @@ DistributionListWidget::~DistributionListWidget()
 #ifndef KDEPIM_NEW_DISTRLISTS
   delete mManager;
 #endif
-
-  mContactView->saveLayout( KGlobal::config().data(), "DistributionListViewColumns" );
 }
 
 void DistributionListWidget::save()
@@ -256,7 +242,7 @@ void DistributionListWidget::save()
 void DistributionListWidget::selectionContactViewChanged()
 {
   ContactItem *contactItem =
-                  static_cast<ContactItem *>( mContactView->selectedItem() );
+                  static_cast<ContactItem *>( mContactView->currentItem() );
   bool state = contactItem;
 
   mChangeEmailButton->setEnabled( state );
@@ -418,7 +404,7 @@ void DistributionListWidget::removeContact()
 #endif
 
   ContactItem *contactItem =
-                    static_cast<ContactItem *>( mContactView->selectedItem() );
+                    static_cast<ContactItem *>( mContactView->currentItem() );
   if ( !contactItem )
     return;
 
@@ -448,7 +434,7 @@ void DistributionListWidget::changeEmail()
 #endif
 
   ContactItem *contactItem =
-                    static_cast<ContactItem *>( mContactView->selectedItem() );
+                    static_cast<ContactItem *>( mContactView->currentItem() );
   if ( !contactItem )
     return;
 
@@ -507,7 +493,7 @@ void DistributionListWidget::updateContactView()
   for ( it = entries.begin(); it != entries.end(); ++it, ++entryCount )
     new ContactItem( mContactView, (*it).addressee(), (*it).email() );
 
-  bool state = mContactView->selectedItem() != 0;
+  bool state = mContactView->currentItem() != 0;
   mChangeEmailButton->setEnabled( state );
   mRemoveContactButton->setEnabled( state );
 
@@ -579,7 +565,7 @@ QString DistributionListWidget::identifier() const
   return "distribution_list_editor";
 }
 
-void DistributionListWidget::dropped( QDropEvent *e, Q3ListViewItem* )
+void DistributionListWidget::dropped( QDropEvent *e )
 {
   dropEvent( e );
 }
@@ -597,11 +583,11 @@ void DistributionListWidget::changed()
 #endif
 
 DistributionListView::DistributionListView( QWidget *parent )
-  : K3ListView( parent )
+  : QTreeWidget( parent )
 {
-  setDragEnabled( true );
-  setAcceptDrops( true );
+  setDragDropMode( DragDrop );
   setAllColumnsShowFocus( true );
+  setRootIsDecorated( false );
 }
 
 void DistributionListView::dragEnterEvent( QDragEnterEvent* e )
@@ -609,21 +595,15 @@ void DistributionListView::dragEnterEvent( QDragEnterEvent* e )
   e->setAccepted( e->mimeData()->hasText() );
 }
 
-void DistributionListView::viewportDragMoveEvent( QDragMoveEvent *e )
+void DistributionListView::dragMoveEvent( QDragMoveEvent *e )
 {
   e->setAccepted( e->mimeData()->hasText() );
 }
 
-void DistributionListView::viewportDropEvent( QDropEvent *e )
-{
-  emit dropped( e, 0 );
-}
-
 void DistributionListView::dropEvent( QDropEvent *e )
 {
-  emit dropped( e, 0 );
+  emit dropped( e );
 }
-
 
 EmailSelector::EmailSelector( const QStringList &emails,
                               const QString &current, QWidget *parent )
@@ -637,29 +617,38 @@ EmailSelector::EmailSelector( const QStringList &emails,
   setMainWidget( topFrame );
   QBoxLayout *topLayout = new QVBoxLayout( topFrame );
 
-  mButtonGroup = new Q3ButtonGroup( 1, Qt::Horizontal, i18n("Email Addresses"),
-                                   topFrame );
-  mButtonGroup->setRadioButtonExclusive( true );
-  topLayout->addWidget( mButtonGroup );
+  QGroupBox *group = new QGroupBox( i18n( "Email Addresses" ), topFrame );
+  topLayout->addWidget( group );
+  group->setLayout( new QVBoxLayout() );
+  group->layout()->setMargin( KDialog::marginHint() );
+  group->layout()->setSpacing( KDialog::spacingHint() );
 
-  QRadioButton *button = new QRadioButton( i18n("Preferred address"), mButtonGroup );
-  button->setDown( true );
+  mButtonGroup = new QButtonGroup( this );
+  mButtonGroup->setExclusive( true );
+
+  QRadioButton *button = new QRadioButton( i18n("Preferred address"), group );
+  mButtonGroup->addButton( button, 0 );
+  group->layout()->addWidget( button );
+  button->setChecked( true );
   mEmailMap.insert( mButtonGroup->id( button ), "" );
 
+  int id = 0;
   QStringList::ConstIterator it;
   for ( it = emails.begin(); it != emails.end(); ++it ) {
-    button = new QRadioButton( *it, mButtonGroup );
+    button = new QRadioButton( *it, group );
+    mButtonGroup->addButton( button, ++id );
+    group->layout()->addWidget( button );
     mEmailMap.insert( mButtonGroup->id( button ), *it );
     if ( (*it) == current )
-      button->setDown( true );
+      button->setChecked( true );
   }
 }
 
 QString EmailSelector::selected() const
 {
-  QAbstractButton *button = mButtonGroup->selected();
-  if ( button )
-    return mEmailMap[ mButtonGroup->id( button ) ];
+  int id = mButtonGroup->checkedId();
+  if ( id >= 0 )
+    return mEmailMap[ id ];
 
   return QString();
 }
