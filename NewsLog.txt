@@ -3,7 +3,7 @@ Friday, September 7th 2007
 Features
 --------
 * prokde35-z item 58:  Rename "time associated" to "add-day event" and invert logic (706869)
-*Limit attachment size to a sensible value (upstreaming old SUSE patches, this one originally by Waldo Bastian). (706920)
+* Limit attachment size to a sensible value (upstreaming old SUSE patches, this one originally by Waldo Bastian). (706920)
 * prokde35-z feature 46:  Rework distribution list integration in KAddressBook, add support for multiple active extensions (708034)
 * prokde35-z item 41: Decrypt messages only if requested (some prettification still pending) (708741)
 * prokde35-z item 9: third part: allow to disable local flags in read-only folders (708749)
