@@ -76,11 +76,12 @@ void ExtensionManager::saveSettings()
 {
   QAction *action;
   int index = 0;
-  for (int i = 0; i < mActionList.size(); ++i)
-  {
-	action = mActionList.at(i);
-    if ( static_cast<KToggleAction*>( action )->isChecked() )
+  for (int i = 0; i < mActionList.size(); ++i) {
+    action = mActionList.at(i);
+    if ( static_cast<KToggleAction*>( action )->isChecked() ) {
+      index = i;
       break;
+    }
   }
   Q_ASSERT( index < mExtensionList.size() );
 
