@@ -1253,7 +1253,8 @@ void KNMainWidget::slotCollectionSelected(Q3ListViewItem *i)
     a_ctAccGetNewHdrs->setEnabled(enabled);
     a_ctAccGetNewHdrsAll->setEnabled(enabled);
     a_ctAccDelete->setEnabled(enabled);
-    a_ctAccPostNewArticle->setEnabled(enabled);
+    //Laurent fix me
+    //a_ctAccPostNewArticle->setEnabled(enabled);
   }
 
   enabled=( selectedGroup!=0 );

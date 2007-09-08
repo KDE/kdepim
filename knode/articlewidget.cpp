@@ -77,6 +77,7 @@
 #include "knsourceviewwindow.h"
 #include "nntpjobs.h"
 #include "settings.h"
+#include "kmutils.h"
 
 using namespace KNode;
 
@@ -931,7 +932,7 @@ QString ArticleWidget::toHtmlString( const QString &line, int flags )
   QString text = line;
   if ( flags & ArticleWidget::AllowROT13 ) {
     if ( mRot13 )
-      text = KNHelper::rot13( line );
+      text = KMUtils::rot13( line );
   }
   return KPIMUtils::LinkLocator::convertToHtml( text, llflags );
 }

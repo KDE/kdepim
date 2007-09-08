@@ -59,8 +59,7 @@ set(knodecommon_LIB_SRCS
    knglobals.cpp
    kncollectionview.cpp
    articlewidget.cpp
-   csshelper.cpp
-   keditcl1.cpp keditcl2.cpp )
+   csshelper.cpp)
 
 qt4_add_dbus_adaptor( knodecommon_LIB_SRCS org.kde.knode.xml knmainwidget.h KNMainWidget)
 
