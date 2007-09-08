@@ -199,7 +199,6 @@ class KNComposer : public KXmlGuiWindow {
     void slotPaste();
     void slotSelectAll();
     void addRecentAddress();
-    void slotFind();
 
   protected:
 

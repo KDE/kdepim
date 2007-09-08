@@ -212,7 +212,7 @@ KNComposer::KNComposer(KNLocalArticle *a, const QString &text, const QString &si
   sb->setItemAlignment(4, Qt::AlignCenter | Qt::AlignVCenter );
   sb->insertItem( QString(), 5, 0 );                 // line
   sb->setItemAlignment( 5, Qt::AlignCenter | Qt::AlignVCenter );
-  connect(v_iew->e_dit, SIGNAL(CursorPositionChanged()), SLOT(slotUpdateCursorPos()));
+  connect(v_iew->e_dit, SIGNAL(cursorPositionChanged()), SLOT(slotUpdateCursorPos()));
   connect(v_iew->e_dit, SIGNAL(toggle_overwrite_signal()), SLOT(slotUpdateStatusBar()));
 
   QDBusConnection::sessionBus().registerObject( "/Composer", this, QDBusConnection::ExportScriptableSlots );
@@ -259,10 +259,10 @@ KNComposer::KNComposer(KNLocalArticle *a, const QString &text, const QString &si
 
   KStandardAction::selectAll(this, SLOT(slotSelectAll()), actionCollection());
 
-  KStandardAction::find(v_iew->e_dit, SLOT(slotFindNext()), actionCollection());
+  KStandardAction::find(v_iew->e_dit, SLOT(slotFindText()), actionCollection());
   KStandardAction::findNext(v_iew->e_dit, SLOT(slotSearchAgain()), actionCollection());
 
-  KStandardAction::replace(v_iew->e_dit, SLOT(slotReplace()), actionCollection());
+  KStandardAction::replace(v_iew->e_dit, SLOT(slotReplaceText()), actionCollection());
 
   //attach menu
   action = actionCollection()->addAction("append_signature");
@@ -476,11 +476,6 @@ int KNComposer::listOfResultOfCheckWord( const QStringList & lst , const QString
     if ( m_listAction.count()>0 )
         plugActionList("spell_result", m_listAction );
     return m_listAction.count();
-}
-
-void KNComposer::slotFind()
-{
-   v_iew->e_dit->slotFindNext();
 }
 
 void KNComposer::slotUndo()
