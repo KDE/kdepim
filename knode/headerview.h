@@ -15,8 +15,6 @@
 #ifndef KNHEADERVIEW_H
 #define KNHEADERVIEW_H
 
-
-//Added by qt3to4:
 #include <QMouseEvent>
 #include <QFocusEvent>
 #include <QKeyEvent>
@@ -28,6 +26,8 @@
 
 class KMenu;
 class KNHdrViewItem;
+
+using namespace KPIM;
 
 /** Header view, displays the article listing of the currently selected
  *  news group or folder.

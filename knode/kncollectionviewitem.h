@@ -16,7 +16,6 @@
 #define KNCOLLECTIONVIEWITEM_H
 
 #include <kfoldertree.h>
-//Added by qt3to4:
 #include <QDropEvent>
 
 class QPainter;
@@ -24,6 +23,7 @@ class QColorGroup;
 
 class KNCollection;
 
+using namespace KPIM;
 
 /** Folder tree item. */
 class KNCollectionViewItem : public KFolderTreeItem  {
