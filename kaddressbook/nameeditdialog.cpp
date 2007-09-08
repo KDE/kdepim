@@ -55,6 +55,7 @@ NameEditDialog::NameEditDialog( const KABC::Addressee &addr, int type,
   QWidget *page = new QWidget(this);
   setMainWidget( page );
   QGridLayout *layout = new QGridLayout( page );
+  layout->setMargin( 0 );
   layout->setSpacing( spacingHint() );
   layout->addItem( new QSpacerItem( 100, 0 ), 0, 2 );
   QLabel *label;

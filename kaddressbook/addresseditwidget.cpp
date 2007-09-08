@@ -254,6 +254,7 @@ AddressEditDialog::AddressEditDialog( const KABC::Address::List &list,
 
   QGridLayout *topLayout = new QGridLayout( page );
   topLayout->setSpacing( spacingHint() );
+  topLayout->setMargin( 0 );
 
   mTypeCombo = new AddressTypeCombo( mAddressList, page );
   topLayout->addWidget( mTypeCombo, 0, 0, 1, 2 );
@@ -593,6 +594,8 @@ AddressTypeDialog::AddressTypeDialog( KABC::Address::Type type, QWidget *parent 
   QWidget *page = new QWidget(this);
   setMainWidget( page );
   QVBoxLayout *layout = new QVBoxLayout( page );
+  layout->setSpacing( KDialog::spacingHint() );
+  layout->setMargin( 0 );
 
   QGroupBox *box  = new QGroupBox( i18nc( "street/postal", "Address Types" ), page );
   layout->addWidget( box );

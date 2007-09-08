@@ -308,6 +308,7 @@ PhoneTypeDialog::PhoneTypeDialog( KABC::PhoneNumber::Type type, QWidget *parent 
 
   QVBoxLayout *layout = new QVBoxLayout( page );
   layout->setSpacing( spacingHint() );
+  layout->setMargin( 0 );
 
   mPreferredBox = new QCheckBox( i18n( "This is the preferred phone number" ), page );
   layout->addWidget( mPreferredBox );
