@@ -68,29 +68,32 @@ RingBinderStyleAppearanceForm::RingBinderStyleAppearanceForm( QWidget *parent )
 
 void RingBinderStyleAppearanceForm::groupLetter()
 {
-  if ( letterListBox->currentItem() > 0 ) {
-      int id = letterListBox->currentItem();
-      letterListBox->changeItem(
-                letterListBox->text(id-1) + letterListBox->text(id).at(0)
-              , id - 1);
-      if ( letterListBox->text(id).length() > 1 ) {
-          letterListBox->changeItem(
-                    letterListBox->text(id).right(letterListBox->text(id).length()-1)
-                  , id
-                  );
-          letterListBox->setCurrentItem(id);
-      } else {
-          letterListBox->removeItem(id);
-      }
+  if ( letterListBox->currentRow() > 0 ) {
+    int id = letterListBox->currentRow();
+
+    QListWidgetItem *item = letterListBox->item( id );
+    QListWidgetItem *itemBefore = letterListBox->item( id - 1 );
+
+    itemBefore->setText( itemBefore->text() + item->text().at( 0 ) );
+
+    if ( item->text().length() > 1 ) {
+      item->setText( item->text().right( item->text().length() - 1 ) );
+      letterListBox->setCurrentItem( item );
+    } else {
+      letterListBox->takeItem( id );
+    }
   }
 }
 
 void RingBinderStyleAppearanceForm::ungroupLetter()
 {
-  if ( letterListBox->text(letterListBox->currentItem()).length() > 1 ) {
-      int id = letterListBox->currentItem();
-      letterListBox->insertItem( QString(letterListBox->text(id).at(letterListBox->text(id).length()-1)), id+1 );
-      letterListBox->changeItem( letterListBox->text(id).left(letterListBox->text(id).length()-1), id );
+  if ( letterListBox->currentItem()->text().length() > 1 ) {
+      int id = letterListBox->currentRow();
+
+      QListWidgetItem *item = letterListBox->item( id );
+
+      letterListBox->insertItem( id + 1, QString( item->text().at( item->text().length() - 1 ) ) );
+      item->setText( item->text().left( item->text().length() - 1 ) );
   }
 }
 
@@ -119,7 +122,7 @@ RingBinderPrintStyle::RingBinderPrintStyle( PrintingWizard* parent, const char* 
     tabNames = QString( "AB,CD,EF,GH,IJK,LM,NO,PQR,S,TU,VW,XYZ" ).split( ',',
 QString::SkipEmptyParts );
 
-  mPageAppearance->letterListBox->insertStringList( tabNames );
+  mPageAppearance->letterListBox->addItems( tabNames );
 }
 
 RingBinderPrintStyle::~RingBinderPrintStyle()
@@ -142,9 +145,9 @@ void RingBinderPrintStyle::print( const KABC::Addressee::List &contacts, PrintPr
   config.writeEntry( FillWithEmptyFields, mPageAppearance->cbFillEmpty->isChecked() );
   config.writeEntry( MinNumberOfEmptyFields, mPageAppearance->sbMinNumFill->value() );
   QStringList tmpstrl;
-  for ( uint i = 0; i < mPageAppearance->letterListBox->count(); i++ ) {
-    if ( !mPageAppearance->letterListBox->text( i ).isEmpty() ) {
-      tmpstrl.append( mPageAppearance->letterListBox->text( i ) );
+  for ( int i = 0; i < mPageAppearance->letterListBox->count(); i++ ) {
+    if ( !mPageAppearance->letterListBox->item( i )->text().isEmpty() ) {
+      tmpstrl.append( mPageAppearance->letterListBox->item( i )->text() );
     }
   }
   config.writeEntry( LetterGroups, tmpstrl );
@@ -194,11 +197,11 @@ bool RingBinderPrintStyle::printEntries( const KABC::Addressee::List &contacts,
   // reverse the sorting of the groups:
   QStringList ltgroups;
   if ( !tmpl->reverseSorting() ) {
-    for ( unsigned int i = 0; i < mPageAppearance->letterListBox->count(); i++ )
-      ltgroups.append( mPageAppearance->letterListBox->text( i ) );
+    for ( int i = 0; i < mPageAppearance->letterListBox->count(); ++i )
+      ltgroups.append( mPageAppearance->letterListBox->item( i )->text() );
   } else {
-    for ( unsigned int i = mPageAppearance->letterListBox->count() - 1; i > 0; i-- )
-      ltgroups.append( mPageAppearance->letterListBox->text( i ) );
+    for ( int i = mPageAppearance->letterListBox->count() - 1; i > 0; --i )
+      ltgroups.append( mPageAppearance->letterListBox->item( i )->text() );
   }
 
   // the yposition of the current entry
@@ -265,7 +268,8 @@ bool RingBinderPrintStyle::printEntries( const KABC::Addressee::List &contacts,
       if ( entryheight > ( window.height() - ypos ) && !( entryheight > window.height() ) ) {
         // it does not fit on the page beginning at ypos:
         printer->newPage();
-        printPageHeader( mPageAppearance->letterListBox->text( grpnum ), window, painter );
+        printPageHeader( mPageAppearance->letterListBox->item( grpnum )->text(), 
+                         window, painter );
         ypos = pageHeaderMetrics( window, painter ).height();
       }
 
@@ -304,8 +308,8 @@ void RingBinderPrintStyle::fillEmpty( const QRect& window, KPrinter *printer,
       }
       if ( fieldscounter < mPageAppearance->sbMinNumFill->value() ) {
         printer->newPage();
-        printPageHeader( mPageAppearance->letterListBox->text( grpnum )
-                       , window, painter );
+        printPageHeader( mPageAppearance->letterListBox->item( grpnum )->text(),
+                         window, painter );
         ypos = pageHeaderMetrics( window, painter ).height();
       }
     } while ( fieldscounter < mPageAppearance->sbMinNumFill->value() );
