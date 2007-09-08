@@ -48,19 +48,14 @@ IncSearchWidget::IncSearchWidget( QWidget *parent, const char *name )
   layout->setSpacing( KDialog::spacingHint() );
   layout->setMargin( 2 );
 
-  QLabel *label = new QLabel( i18n( "Search:" ), this );
-  label->setObjectName( "kde toolbar widget" );
-  label->setAlignment( Qt::AlignVCenter | Qt::AlignRight );
-  layout->addWidget( label );
-
   mSearchText = new KLineEdit( this );
   mSearchText->setClearButtonShown(true);
+  mSearchText->setClickMessage( i18n( "Search" ) );
   mSearchText->setSizePolicy( QSizePolicy::MinimumExpanding, QSizePolicy::Preferred );
   mSearchText->setWhatsThis( i18n( "The incremental search<p>Enter some text here will start the search for the contact, which matches the search pattern best. The part of the contact, which will be used for matching, depends on the field selection.</p>" ) );
-  label->setBuddy( mSearchText );
   layout->addWidget( mSearchText );
 
-  label = new QLabel( i18nc( "as in 'Search in:'", "&in:" ), this );
+  QLabel *label = new QLabel( i18nc( "as in 'Search in:'", "&in:" ), this );
   label->setObjectName( "kde toolbar widget" );
   label->setAlignment( Qt::AlignVCenter | Qt::AlignRight );
   layout->addWidget( label );
