@@ -239,39 +239,35 @@ void AddresseeEditorWidget::setupTab1()
   bar = new KSeparator( Qt::Horizontal, tab1 );
   layout->addWidget( bar, 7, 3, 1, 4 );
 
-  QHBoxLayout *homePageLayout = new QHBoxLayout();
-  homePageLayout->setSpacing( 7 );
-  homePageLayout->setMargin( 11 );
-
   label = new QLabel( tab1 );
   label->setPixmap( KIconLoader::global()->loadIcon( "homepage", K3Icon::Desktop,
                                                      K3Icon::SizeMedium ) );
-  homePageLayout->addWidget( label );
+  layout->addWidget( label, 9, 3, 1, 2, Qt::AlignTop );
+
+  QGridLayout *gridLayout = new QGridLayout;
+  gridLayout->setSpacing( 7 );
+  gridLayout->setMargin( 11 );
 
   label = new QLabel( i18nc( "<urlLabel>:", "%1:", KABC::Addressee::urlLabel() ), tab1 );
+
   mURLEdit = new KLineEdit( tab1 );
   connect( mURLEdit, SIGNAL( textChanged( const QString& ) ),
            SLOT( textChanged( const QString& ) ) );
   label->setBuddy( mURLEdit );
-  homePageLayout->addWidget( label );
-  homePageLayout->addWidget( mURLEdit );
-  layout->addLayout( homePageLayout, 8, 3, 1, 4 );
+  gridLayout->addWidget( label, 0, 0 );
+  gridLayout->addWidget( mURLEdit, 0, 1 );
 
-  QHBoxLayout *blogLayout = new QHBoxLayout();
-  blogLayout->setSpacing( 7 );
-  blogLayout->setMargin( 11 );
   label = new QLabel( i18n( "Blog feed:" ), tab1 );
-  blogLayout->addWidget( label );
   mBlogEdit = new KLineEdit( tab1 );
-  blogLayout->addWidget( mBlogEdit );
+  gridLayout->addWidget( label, 1, 0 );
+  gridLayout->addWidget( mBlogEdit, 1, 1 );
   connect( mBlogEdit, SIGNAL( textChanged( const QString & ) ),
            SLOT( textChanged( const QString & ) ) );
   label->setBuddy( mBlogEdit );
-  layout->addLayout( blogLayout, 9, 4, 1, 3 );
 
-  mIMWidget = new IMEditWidget( tab1, mAddressee );
+  mIMWidget = new IMEditWidget( tab1, mAddressee, gridLayout );
   connect( mIMWidget, SIGNAL( modified() ), SLOT( emitModified() ) );
-  layout->addWidget( mIMWidget, 10, 4, 1, 3 );
+  layout->addLayout( gridLayout, 8, 4, 3, 3 );
 
   layout->addItem( new QSpacerItem( 50, 0 ), 0, 6 );
 

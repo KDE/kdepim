@@ -46,33 +46,54 @@
 #include "imeditorwidget.h"
 
 IMEditWidget::IMEditWidget( QWidget *parent, KABC::Addressee &addr, const char *name )
-  : QWidget( parent ), mAddressee(addr)
+  : QWidget( parent ), mAddressee(addr), mParentLayout( 0 )
 {
   setObjectName( name );
-  QGridLayout *topLayout = new QGridLayout( this );
-  topLayout->setSpacing( KDialog::spacingHint() );
-  topLayout->setMargin( KDialog::marginHint() );
+  initGui();
+}
 
-  QLabel *label = new QLabel( i18n( "IM address:" ), this );
-  topLayout->addWidget( label, 0, 0 );
-
-  mIMEdit = new KLineEdit( this );
-  connect( mIMEdit, SIGNAL( textChanged( const QString& ) ),
-           SLOT( textChanged( const QString& ) ) );
-  connect( mIMEdit, SIGNAL( textChanged( const QString& ) ),
-           SIGNAL( modified() ) );
-  label->setBuddy( mIMEdit );
-  topLayout->addWidget( mIMEdit, 0, 1 );
-
-  mEditButton = new QPushButton( i18n( "Edit IM Addresses..." ), this);
-  connect( mEditButton, SIGNAL( clicked() ), SLOT( edit() ) );
-  topLayout->addWidget( mEditButton, 1, 0, 1, 2 );
-
-  topLayout->activate();
+IMEditWidget::IMEditWidget( QWidget *parent, KABC::Addressee &addr, 
+                            QGridLayout *parentLayout, const char *name )
+  : QWidget( parent ), mAddressee(addr), mParentLayout( parentLayout )
+{
+  setObjectName( name );
+  initGui();
 }
 
 IMEditWidget::~IMEditWidget()
 {
+}
+
+void IMEditWidget::initGui()
+{
+  QGridLayout *topLayout = mParentLayout ? mParentLayout : new QGridLayout;
+  QWidget *parent = mParentLayout ? parentWidget() : this;
+
+  if ( !mParentLayout ) {
+    topLayout->setSpacing( KDialog::spacingHint() );
+    topLayout->setMargin( KDialog::marginHint() );
+  }
+
+  QLabel *label = new QLabel( i18n( "IM address:" ), parent );
+  mIMEdit = new KLineEdit( parent );
+  label->setBuddy( mIMEdit );
+  mEditButton = new QPushButton( i18n( "Edit IM Addresses..." ), parent );
+
+  connect( mIMEdit, SIGNAL( textChanged( const QString& ) ),
+           SLOT( textChanged( const QString& ) ) );
+  connect( mIMEdit, SIGNAL( textChanged( const QString& ) ),
+           SIGNAL( modified() ) );
+  connect( mEditButton, SIGNAL( clicked() ), SLOT( edit() ) );
+
+  int row = mParentLayout ? 2 : 0;
+
+  topLayout->addWidget( label, row, 0 );
+  topLayout->addWidget( mIMEdit, row, 1 );
+  topLayout->addWidget( mEditButton, row + 1, 0, 1, 2 );
+
+  if ( !mParentLayout ) {
+    setLayout( topLayout );
+  }
 }
 
 void IMEditWidget::setReadOnly( bool readOnly )

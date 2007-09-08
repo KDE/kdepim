@@ -27,7 +27,7 @@
 #include <kabc/addressee.h>
 #include <kdialog.h>
 
-
+class QGridLayout;
 class KLineEdit;
 
 /**
@@ -40,6 +40,13 @@ class IMEditWidget : public QWidget
 
   public:
     IMEditWidget(QWidget *parent, KABC::Addressee &addr, const char *name = 0 );
+
+    /*
+     * This is a little bit ugly to get the cooperate design conform. But
+     * this constructor should only be called in AddresseeEditorWidget.
+     * I am not sure, whether this widget is used in another place.
+     */
+    IMEditWidget( QWidget *parent, KABC::Addressee &addr, QGridLayout *layout, const char *name = 0 );
     ~IMEditWidget();
 
     void setIMs( const QStringList &list );
@@ -48,6 +55,9 @@ class IMEditWidget : public QWidget
     void setPreferredIM( const QString &addr );
     QString preferredIM();
     void setReadOnly( bool readOnly );
+
+  private:
+    void initGui();
 
   signals:
     void modified();
@@ -62,6 +72,7 @@ class IMEditWidget : public QWidget
     QStringList mIMList;
     bool mReadOnly;
     KABC::Addressee &mAddressee;
+    QGridLayout *mParentLayout;
 };
 
 
