@@ -216,7 +216,7 @@ void AddresseeEditorWidget::setupTab1()
   //////////////////////////////////////
   // Addresses (lower left)
   label = new QLabel( tab1 );
-  label->setPixmap( KIconLoader::global()->loadIcon( "kfm_home", K3Icon::Desktop,
+  label->setPixmap( KIconLoader::global()->loadIcon( "go-home", K3Icon::Desktop,
                                                      K3Icon::SizeMedium ) );
   layout->addWidget( label, 5, 0, 2, 1);
 
