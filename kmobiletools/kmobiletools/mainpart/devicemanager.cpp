@@ -31,8 +31,7 @@
 #include <QtCore/QTimer>
 
 #include <libkmobiletools/deviceloader.h>
-#include <libkmobiletools/kmobiletools_cfg.h>
-#include <libkmobiletools/devicesconfig.h>
+#include <libkmobiletools/config.h>
 
 #include "deviceconfigdialog.h"
 #include "newdevicewizard/devicewizard.h"
@@ -148,22 +147,7 @@ void DeviceManager::removeDevice() {
                                                   deviceName ),
                                             i18n( "Removing device" ) );
     if( result == KMessageBox::Yes ) {
-        QStringList devices = KMobileTools::MainConfig::devicelist();
-        QString internalDeviceName = KMobileTools::DevicesConfig::deviceGroup( deviceName );
-
-        if( devices.contains( internalDeviceName ) ) {
-            // take the device from the list
-            devices.removeAll( internalDeviceName );
-
-            // FIXME: deletePrefs does not work correctly
-            KMobileTools::DevicesConfig::deletePrefs( internalDeviceName );
-
-            KMobileTools::MainConfig::setDevicelist( devices );
-            KMobileTools::MainConfig::self()->writeConfig();
-        } else {
-            /// @TODO add call to error handler here
-            kDebug() << "device not present in configuration";
-        }
+        KMobileTools::Config::instance()->removeDevice( deviceName );
 
         // unload the device
         KMobileTools::DeviceLoader::instance()->unloadDevice( deviceName );

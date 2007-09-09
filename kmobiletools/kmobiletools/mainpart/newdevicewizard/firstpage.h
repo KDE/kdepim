@@ -29,20 +29,28 @@ class FirstPagePrivate;
 class FirstPage : public QWizardPage, public Ui::FirstPage
 {
     Q_OBJECT
+    Q_PROPERTY( QString engineName READ engineName WRITE setEngineName )
 
-public:
-    FirstPage( QWidget* parent=0 );
+    public:
+        FirstPage( QWidget* parent=0 );
 
-    bool isFinalPage() const;
-    void initializePage();
-    void cleanupPage();
-    bool validatePage();
+        bool isFinalPage() const;
+        void initializePage();
+        void cleanupPage();
+        bool validatePage();
 
-public Q_SLOTS:
-    void engineSelected( int index );
+    public Q_SLOTS:
+        void engineSelected( int index );
 
-private:
-    FirstPagePrivate *d;
+    protected:
+        QString engineName() const;
+        void setEngineName( const QString& engineName );
+
+    Q_SIGNALS:
+        void engineNameChanged( const QString& engineName );
+
+    private:
+        FirstPagePrivate *d;
 };
 
 #endif

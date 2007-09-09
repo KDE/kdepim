@@ -19,10 +19,6 @@
             <Merge/>
         </Menu>
     </MenuBar>
-    <ToolBar newline="true" name="mainpart_toolbar"><text>Main Toolbar</text>
-        <Action name="device_manager" />
-        <Action name="help" />
-    </ToolBar>
     <ToolBar hidden="true" name="serviceToolBar"><text>Service Toolbar</text>
         <ActionList name="serviceactions" />
     </ToolBar>

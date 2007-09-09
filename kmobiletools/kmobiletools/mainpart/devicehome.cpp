@@ -373,6 +373,8 @@ void DeviceHome::loadEngine()
     engine->slotSearchPhone();
 
     // setup status poll trigger
+    /// @todo this config entry has been removed, port or remove...
+    /*
     if( DEVCFG(objectName() )->status_poll() && DEVCFG(objectName() )->status_pollTimeout() > 0 )
     {
         statusPollTimer=new QTimer(this);
@@ -380,8 +382,11 @@ void DeviceHome::loadEngine()
         connect(statusPollTimer, SIGNAL(timeout() ), engine, SLOT(slotPollStatus()) );
         statusPollTimer->start( (int) DEVCFG(objectName() )->status_pollTimeout() * 1000 );
     }
+    */
 
     // setup sms poll trigger
+    /// @todo this config entry has been removed, port or remove...
+    /*
     if( DEVCFG(objectName() )->smsPoll() && DEVCFG(objectName() )->sms_pollTimeout() > 0 )
     {
         smsPollTimer=new QTimer(this);
@@ -393,6 +398,7 @@ void DeviceHome::loadEngine()
             // if we've a long timer for sms just retrieve them earlier the first time.
             QTimer::singleShot(15*1000, engine, SLOT(slotFetchSMS()));
     }
+    */
     updateSMSCount();
 }
 
@@ -595,7 +601,8 @@ void DeviceHome::devConnected()
 //     kDebug() <<"DeviceHome::devConnected()";
     devIsConnected=true;
     emit connected();
-    DEVCFG(objectName() )->setLastpath(engine->currentDeviceName());
+    /// @todo this config entry has been removed, port or remove...
+    //DEVCFG(objectName() )->setLastpath(engine->currentDeviceName());
     home->printInfoPage(0, this->engine);
 }
 
@@ -1053,7 +1060,9 @@ void DeviceHome::slotExportSMSList()
     KMobileTools::KMobiletoolsHelper::createMailDir( objectName() );
     engine->constEngineData()->smsList()->saveToMailBox();
     kDebug() <<"STARTING SMS EXPORT";
-    KMessageBox::information( m_widget, i18n("<qt><p>SMS List for the mobile phone <b>%1</b> was exported to KMail default directory (%2).</p><p>To view exported messages, close and reopen KMail.</p></qt>", DEVCFG(objectName() )->devicename(), DEVCFG(objectName() )->maildir_path() ), i18n("SMS List Exported."), "smslistexported_infobox" );
+
+    /// @todo this config entry has been removed, port or remove...
+    //KMessageBox::information( m_widget, i18n("<qt><p>SMS List for the mobile phone <b>%1</b> was exported to KMail default directory (%2).</p><p>To view exported messages, close and reopen KMail.</p></qt>", DEVCFG(objectName() )->devicename(), DEVCFG(objectName() )->maildir_path() ), i18n("SMS List Exported."), "smslistexported_infobox" );
 }
 
 /*!

@@ -115,9 +115,11 @@ SerialManager::SerialManager(QObject * parent, const QString &objname, const QSt
     : QObject(parent), d(new SerialManagerPrivate)
 {
     setObjectName(objname);
-    if(objectName() !="nodevice")
-        d->log=DEVCFG(objectName() )->verbose();
-    else d->log=DEFAULT_VERBOSE;
+    /// @todo this config entry has been removed, port or remove...
+    //if(objectName() !="nodevice")
+    //    d->log=DEVCFG(objectName() )->verbose();
+    //else
+        d->log=DEFAULT_VERBOSE;
     if(devicePath.length() && (QFile::exists( devicePath ) || devicePath.contains( "bluetooth://")) ) d->s_devicePath=devicePath;
     if(initStrings.count() ) d->deviceInitStrings=initStrings;
 }
@@ -276,7 +278,9 @@ QString SerialManager::sendATCommand(KMobileTools::Job *job, const QString &cmd,
     QRegExp exitExp("(OK|ERROR)(\\n|\\r)");
     timer.start();
 //     uint i_try=0;
-    while ( d->serial && !KMobileTools::EnginesList::instance()->closing() )
+
+    /// @todo KMobileTools::EnginesList::instance()->closing() is obsolete
+    while ( d->serial ) // && !KMobileTools::EnginesList::instance()->closing() )
     {
         if( d->serial->size() ) gotData(); /// @TODO remove the size() check, if possible, since it slows down serial access.
         if( d->gotData )

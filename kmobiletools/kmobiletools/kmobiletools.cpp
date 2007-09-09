@@ -129,10 +129,6 @@ void kmobiletools::applyNewToolbarConfig()
 
 bool kmobiletools::queryClose()
 {
-    if( KMobileTools::EnginesList::instance()->closing() )
-    {
-        return true;
-    }
     hide();
     // Message modified from kopete...
     KMessageBox::information( this,

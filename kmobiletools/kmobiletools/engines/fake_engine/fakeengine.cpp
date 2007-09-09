@@ -58,7 +58,6 @@ FakeEngine::~FakeEngine()
 }
 
 QList<QWizardPage*> FakeEngine::pageList() const {
-    /// @TODO implement me
     QList<QWizardPage*> wizardPages;
 
     QWizardPage* newPage = new QWizardPage;

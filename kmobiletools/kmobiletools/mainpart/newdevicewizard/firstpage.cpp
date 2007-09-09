@@ -21,11 +21,10 @@
 
 #include "firstpage.h"
 
-#include <libkmobiletools/devicesconfig.h>
-#include <libkmobiletools/kmobiletools_cfg.h>
 #include <libkmobiletools/deviceloader.h>
 #include <libkmobiletools/enginexp.h>
 #include <libkmobiletools/ifaces/wizardprovider.h>
+#include <libkmobiletools/config.h>
 
 #include <KDE/KMessageBox>
 #include <KDE/KServiceTypeTrader>
@@ -41,6 +40,7 @@ using namespace KMobileTools;
 
 class FirstPagePrivate {
 public:
+    QString engine;
     QString deviceName;
     QList<QWizardPage*> wizardPages;
 };
@@ -56,12 +56,23 @@ FirstPage::FirstPage( QWidget* parent )
                        "and choose your preferred engine." ) );
 }
 
-void FirstPage::engineSelected( int index ) {
-    if( index == -1 )
-        return;
+QString FirstPage::engineName() const {
+    return d->engine;
+}
 
+void FirstPage::setEngineName( const QString& engine ) {
+    d->engine = engine;
+}
+
+void FirstPage::engineSelected( int index ) {
     // retrieve information about the engine from the user data of the selected combo box item
     QVariantMap engineInformation = engineSelection->itemData( index ).toMap();
+
+    setEngineName( engineInformation.value( "internalName" ).toString() );
+    emit engineNameChanged( engineName() );
+
+    if( index == -1 )
+        return;
 
     // prepare engine description
     QString descriptionLabel;
@@ -87,7 +98,6 @@ void FirstPage::engineSelected( int index ) {
         delete d->wizardPages.at( i );
 }
 
-
 void FirstPage::initializePage()
 {
     // setting up signal-slot connections
@@ -95,7 +105,7 @@ void FirstPage::initializePage()
 
     // registering fields for QWizard
     registerField( "phoneName*", phoneName );
-    registerField( "engine*", engineSelection );
+    registerField( "engine*", this, "engineName", SIGNAL(engineNameChanged(const QString&)) );
 
     // detecting engines
     KService::List availableEngines = KServiceTypeTrader::self()->query( "KMobileTools/EngineXP" );
@@ -116,14 +126,14 @@ void FirstPage::initializePage()
         engineSelected( engineSelection->currentIndex() );
     }
     else
-        KMessageBox::error( this, i18n( "No engines could be found. Please re-install KMobileTools!" ),
+        KMessageBox::error( this, i18n( "No engine could be found. Please re-install KMobileTools!" ),
                             i18n( "No engines found" ) );
 }
 
 void FirstPage::cleanupPage() {
     // unloading any previous loaded device
     if( !d->deviceName.isEmpty() )
-        KMobileTools::DeviceLoader::instance()->unloadDevice( d->deviceName, false );
+        KMobileTools::DeviceLoader::instance()->unloadDevice( d->deviceName );
 }
 
 bool FirstPage::isFinalPage() const {
@@ -137,17 +147,9 @@ bool FirstPage::validatePage() {
     d->deviceName = enteredDeviceName;
 
     // look if the entered device name already exists
-    bool deviceExists = false;
-    QStringList devices = KMobileTools::MainConfig::devicelist();
-    for( int i=0; i<devices.size(); i++ ) {
-        KMobileTools::DevicesConfig* deviceConfig = KMobileTools::DevicesConfig::prefs( devices.at( i ) );
-        if( deviceConfig->devicename() == QString( enteredDeviceName ).simplified() ) {
-            deviceExists = true;
-            break;
-        }
-    }
+    QStringList devices = KMobileTools::Config::instance()->deviceList();
 
-    if( deviceExists ) {
+    if( devices.contains( enteredDeviceName ) ) {
         KMessageBox::error( this, i18n( "The device \"%1\" already exists.\nPlease choose another name!",
                                         phoneName->text() ),
                             i18n( "Device already exists" ) );
@@ -174,8 +176,9 @@ bool FirstPage::validatePage() {
                 for( int i=0; i<wizardPages.size(); i++ )
                     wizard()->setPage( 2 + i, wizardPages.at( i ) );
             } else {
-                // add a call to error handler here, since implements() doesn't work then
-                kDebug() << "implements() doesn't work";
+                /// @todo add a call to error handler here, since implements() doesn't work then
+                kDebug() << "Obviously you forgot to register the wizard interface by "
+                            "adding the Q_INTERFACES macro to your engine class...";
             }
         } else {
             // engine does not provide a wizard
@@ -189,17 +192,10 @@ bool FirstPage::validatePage() {
         KMessageBox::error( this, i18n( "The selected engine could not be loaded. Please try to select "
                                         "a different engine." ),
                             i18n( "Engine could not be loaded" ) );
+        return false;
     }
 
     return true;
-    /*
-    kDebug() <<"Creating config entry named" << wizard()->objectName() <<";";
-    KMobileTools::DevicesConfig *cfg=EnginesList::instance()->wizardEngine()->config(true, wizard()->objectName() );
-    cfg->setDevicename(field("phoneName").toString() );
-    cfg->setEngine(field("engine").toString() );
-    cfg->writeConfig();
-    delete cfg;
-    */
 }
 
 

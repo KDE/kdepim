@@ -653,6 +653,8 @@ void SendSMS::run()
 bool SendSMS::sendSingleSMS(const QString &number, const QString &text)
 {
     QString buffer;
+    /// @todo this config entry has been removed, port or remove...
+    /*
     if(engine->config()->smscenter().length() )
     {
         /// @TODO move this to a more generic sms job..
@@ -672,6 +674,7 @@ bool SendSMS::sendSingleSMS(const QString &number, const QString &text)
             kDebug() <<"SendSMS::run() ********** WARNING ******* Could not set SMS Center";
         }
     }
+    */
     if(pdu)
     {
         QString pduSMS=SMSEncoder::encodeSMS( number, text );
@@ -738,6 +741,8 @@ void StoreSMS::run()
 int StoreSMS::storeSingleSMS(const QString &number, const QString &text)
 {
     QString buffer;
+    /// @todo this config entry has been removed, port or remove...
+    /*
     if(engine->config()->smscenter().length() )
     {
         buffer=p_device->sendATCommand(this, "AT+CSCA?\r" );
@@ -756,6 +761,7 @@ int StoreSMS::storeSingleSMS(const QString &number, const QString &text)
                 kDebug() <<"StoreSMS::run() ********** WARNING ******* Could not set SMS Center";
         }
     }
+    */
     if ( pdu )
     {
         QString pduSMS=SMSEncoder::encodeSMS( number, text );

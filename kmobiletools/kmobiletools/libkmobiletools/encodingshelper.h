@@ -33,6 +33,8 @@ namespace KMobileTools {
 
 /**
 	@author Marco Gulino <marco@kmobiletools.org>
+
+    @todo move the class out of this namespace and lib since it's engine specific
 */
 class KMOBILETOOLS_EXPORT EncodingsHelper{
 public:

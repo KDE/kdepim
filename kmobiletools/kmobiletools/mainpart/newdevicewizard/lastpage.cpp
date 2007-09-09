@@ -22,8 +22,8 @@
 
 #include <libkmobiletools/engineslist.h>
 #include <libkmobiletools/engine.h>
-#include <libkmobiletools/devicesconfig.h>
 #include <libkmobiletools/serviceloader.h>
+#include <libkmobiletools/config.h>
 
 #include <kiconloader.h>
 #include <kdebug.h>
@@ -47,7 +47,12 @@ void LastPage::initializePage()
 
 bool LastPage::validatePage()
 {
+    // load the services associated with the current device
     KMobileTools::ServiceLoader::instance()->loadServices( field( "phoneName" ).toString() );
+
+    // finally add the device to the configuration file
+    KMobileTools::Config::instance()->addDevice( field( "phoneName" ).toString(), field( "engine" ).toString() );
+
     return true;
 }
 

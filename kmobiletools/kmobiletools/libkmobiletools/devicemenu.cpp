@@ -39,7 +39,7 @@ deviceMenu::deviceMenu(bool loaded, KMobileTools::Engine *engine, QWidget *paren
  : KMenu(parent), p_engine(engine)
 {
     setObjectName(name);
-    addTitle( DEVCFG(name)->devicename() );
+    addTitle( DEVCFG(name)->deviceName() );
     if(loaded)
         addAction( KIcon( "connect_no" ), i18n("Unload"), this, SLOT(slotUnloadDevice()) );
     else addAction( KIcon( "connect_creating" ), i18n("Load"), this, SLOT(slotLoadDevice()) );

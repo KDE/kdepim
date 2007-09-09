@@ -112,6 +112,7 @@ QString KMobiletoolsHelper::removeIntPrefix( const QString &number )
     return number;
 }
 
+/*
 QString KMobiletoolsHelper::translateNumber( const QString &s_number )
 {
     if(! s_number.length() ) return QString();
@@ -129,6 +130,7 @@ QString KMobiletoolsHelper::translateNumber( const QString &s_number )
     if(retval!=s_number) return retval;
     return s_number;
 }
+*/
 
 QString KMobiletoolsHelper::translateNumber( const QString &s_number, ContactsList *phoneBook )
 {
@@ -213,11 +215,12 @@ QString  KMobiletoolsHelper::getFooterLink(const QString &text, const QString &i
  */
 void KMobileTools::KMobiletoolsHelper::createMailDir(const QString &dirname)
 {
-    QString dirpath=KMobileTools::DevicesConfig::prefs(dirname)->maildir_path();
+    /// @todo this config entry has been removed, port or remove...
+    QString dirpath;//=KMobileTools::DevicesConfig::prefs(dirname)->maildir_path();
     QDir().mkdir( dirpath );
     QDir mailbox(dirpath);
     dirpath=mkMailDir(dirpath, true);
-    dirpath=mkMailDir(dirpath+QDir::separator()+ KMobileTools::DevicesConfig::prefs(dirname)->devicename() , true );
+    dirpath=mkMailDir(dirpath+QDir::separator()+ KMobileTools::DevicesConfig::prefs(dirname)->deviceName() , true );
     QString simPath=mkMailDir(dirpath+QDir::separator()+i18nc("SIM MailDir", "SIM"), true);
     QString phonePath=mkMailDir(dirpath+QDir::separator()+i18nc("Phone MailDir", "Phone"), true);
     mkMailDir(simPath+QDir::separator()+i18nc("Incoming MailDir", "Incoming"));

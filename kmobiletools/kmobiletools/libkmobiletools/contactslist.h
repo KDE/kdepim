@@ -27,6 +27,8 @@
 /**
 @author Marco Gulino
 
+@deprecated use Addressbook class instead
+
 @TODO look if we need findAddressee methods with current parameters and port to Addressbook class
 finally remove this class
 */

@@ -37,6 +37,8 @@ namespace KMobileTools {
     /**
     * @author Matthias Lechner
     * @author Marco Gulino
+    *
+    * @deprecated use EngineXP instead of this class
     */
     class KMOBILETOOLS_EXPORT EngineData : public QObject
     {

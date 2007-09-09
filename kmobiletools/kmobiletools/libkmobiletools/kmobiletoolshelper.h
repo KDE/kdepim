@@ -35,7 +35,6 @@ class KMobiletoolsHelperPrivate;
 namespace KMobileTools
 {
 class ContactsList;
-
 class KMOBILETOOLS_EXPORT Thread : public QThread //krazy:exclude=dpointer
 // We don't need d-pointer since it's just a wrapper class, and it contains static-only members.
 {
@@ -45,6 +44,12 @@ class KMOBILETOOLS_EXPORT Thread : public QThread //krazy:exclude=dpointer
         static void sleep(ulong);
 };
 
+/**
+ * @todo get rid of this class ;-) it's a collection of methods which should be everywhere
+ * else but here
+ * 
+ * @deprecated do not use this class
+ */
     class KMOBILETOOLS_EXPORT KMobiletoolsHelper : public QObject
     {
     Q_OBJECT
@@ -72,7 +77,7 @@ class KMOBILETOOLS_EXPORT Thread : public QThread //krazy:exclude=dpointer
             /** Checks if the number is stored in the addressbook and returns the
         * owner if found.
             */
-        static QString translateNumber( const QString &s_number );
+        //static QString translateNumber( const QString &s_number );
         static QString translateNumber( const QString &s_number, ContactsList *phoneBook );
         /** This method removes the international call prefix and normalizes.
         * This is used to compare two numbers with different prefix

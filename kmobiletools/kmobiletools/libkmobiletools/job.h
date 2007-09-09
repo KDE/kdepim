@@ -25,6 +25,9 @@
 
 namespace KMobileTools {
 class JobPrivate;
+/**
+ * @todo adjust this class to the interface-driven mechanism (what to do about the job types?)
+ */
 class KMOBILETOOLS_EXPORT Job : public ThreadWeaver::Job {
     Q_OBJECT
     public:

@@ -91,12 +91,6 @@ DevicesConfig *DevicesConfig::prefs(const QString &groupName)
     return devicesPrefs;
 }
 
-bool DevicesConfig::hasPrefs(const QString &groupName)
-{
-    KConfig &config = *KGlobal::config();
-    return config.hasGroup(groupName);
-}
-
 void DevicesConfig::deletePrefs(const QString &groupName)
 {
     KConfig &config = *KGlobal::config();
@@ -132,34 +126,8 @@ const QString DevicesConfig::firstFreeGroup()
     {
         cgroup="device-%1";
         cgroup=cgroup.arg(i);
-        if( ! DEVCFG(cgroup) || ! (DEVCFG( cgroup )->devicename().length() ) )
+        if( ! DEVCFG(cgroup) || ! (DEVCFG( cgroup )->deviceName().length() ) )
             return cgroup;
     }
     return NULL;
-}
-
-const QPixmap DevicesConfig::deviceTypeIcon(const QString &groupName, K3Icon::Group group, int size)
-{
-    kDebug() <<"deviceTypeIcon(); groupName=" << groupName <<", engine=" << DevicesConfig::prefs(groupName)->engine();
-
-    KPluginInfo info = EnginesList::instance()->engineInfo(DevicesConfig::prefs(groupName)->engine() );
-    if( !info.isValid() )
-        return QPixmap();
-
-    kDebug() <<"icon:" << info.icon();
-    return KIconLoader::global()->loadIcon(info.icon(), group, size);
-}
-
-const QString DevicesConfig::engineTypeName(const QString &libName)
-{
-    KPluginInfo info=EnginesList::instance()->engineInfo(libName);
-    if(!info.isValid()) return QString();
-    return info.name();
-}
-
-const QString DevicesConfig::deviceTypeIconPath(const QString &groupName, int groupOrSize)
-{
-    KPluginInfo info=EnginesList::instance()->engineInfo(DevicesConfig::prefs(groupName)->engine() );
-    if(!info.isValid()) return QString();
-    return KIconLoader::global()->iconPath(info.icon(), groupOrSize);
 }

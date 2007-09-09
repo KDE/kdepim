@@ -23,15 +23,16 @@ set(kmobiletools_LIB_SRCS
    coreservice.cpp
    deviceloader.cpp
    serviceloader.cpp
+   config.cpp
    addressbook.cpp
    addressbookentry.cpp
    aboutdata.cpp 
    ${crashhandler_SRCS}
-   contactslist.cpp  
+   #contactslist.cpp  
    devicemenu.cpp 
    encodingshelper.cpp 
-   engineslist.cpp 
-   homepage.cpp 
+   #engineslist.cpp 
+   #homepage.cpp 
    devicesconfig.cpp
    errorlog.cpp
    errorhandler.cpp
@@ -41,11 +42,11 @@ set(kmobiletools_LIB_SRCS
    overlaywidget.cpp 
    job.cpp 
    weaver.cpp 
-   enginedata.cpp
-   qserial.cpp 
-   picksmscenter.cpp
-   serialdevice.cpp 
-   engine.cpp 
+   #enginedata.cpp
+   #qserial.cpp 
+   #picksmscenter.cpp
+   #serialdevice.cpp 
+   #engine.cpp 
    sms.cpp 
    smslist.cpp )
 
@@ -95,6 +96,7 @@ install(FILES
    information.h
    enginexp.h
    coreservice.h
+   config.h
    addressbook.h
    addressbookentry.h
    kmobiletools_export.h

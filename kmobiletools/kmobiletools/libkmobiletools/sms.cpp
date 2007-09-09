@@ -302,14 +302,16 @@ bool SMS::writeToSlot(const QString &dir)
     {
         filename+=i18nc("Outgoing MailDir", "Outgoing");
         text="To: \"";
-        for(QStringList::Iterator it=d->sl_numbers.begin(); it!=d->sl_numbers.end(); ++it)
-            text+=KMobileTools::KMobiletoolsHelper::translateNumber(*it) + "\" <" + *it + ">\n";
+        /// @todo translateNumber(const QString&) is obsolete
+//         for(QStringList::Iterator it=d->sl_numbers.begin(); it!=d->sl_numbers.end(); ++it)
+//             text+=KMobileTools::KMobiletoolsHelper::translateNumber(*it) + "\" <" + *it + ">\n";
         text+="X-Status: RS\n";
     }
     else
     {
         filename+=i18nc("Incoming MailDir", "Incoming");
-        text="From: \"" + KMobileTools::KMobiletoolsHelper::translateNumber( getFrom() ) + "\" <" + getFrom() + ">\n";
+        /// @todo translateNumber(const QString&) is obsolete
+//         text="From: \"" + KMobileTools::KMobiletoolsHelper::translateNumber( getFrom() ) + "\" <" + getFrom() + ">\n";
         text+="X-Status: RC\n";
     }
     QString subject=i18nc("SMS/Mail Subject", "[KMobileTools Imported Message]") + ' ';
@@ -362,14 +364,16 @@ bool SMS::writeToSlotCSV(const QString &filename)
     if((type() & Unsent) || (type() & Sent) )
     {
         text="\"OUTGOING\",";
-        for(QStringList::Iterator it=d->sl_numbers.begin(); it!=d->sl_numbers.end(); ++it)
-            text+="\"" + KMobileTools::KMobiletoolsHelper::translateNumber(*it) + "\",\"" + *it + "\",";
+        /// @todo translateNumber(const QString&) is obsolete
+//         for(QStringList::Iterator it=d->sl_numbers.begin(); it!=d->sl_numbers.end(); ++it)
+//             text+="\"" + KMobileTools::KMobiletoolsHelper::translateNumber(*it) + "\",\"" + *it + "\",";
     }
     else
     {
         QString transNumber;
         //transNumber = KMobileTools::KMobiletoolsHelper::translateNumber( getFrom() ).utf8();
-        transNumber = KMobileTools::KMobiletoolsHelper::translateNumber( getFrom() );
+        /// @todo translateNumber(const QString&) is obsolete
+//         transNumber = KMobileTools::KMobiletoolsHelper::translateNumber( getFrom() );
 
         //text="\"INCOMING\",\"" + KMobileTools::KMobiletoolsHelper::translateNumber( getFrom() ) + "\",\"" + getFrom() + "\",";
         text="\"INCOMING\",\"" + transNumber  + "\",\"" + getFrom() + "\",";
