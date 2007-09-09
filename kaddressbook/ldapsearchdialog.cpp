@@ -258,8 +258,8 @@ void LDAPSearchDialog::restoreSettings()
 
       ldapClient->setAttrs( attrs );
 
-      connect( ldapClient, SIGNAL( result( const LdapClient&, const KLDAP::LdapObject& ) ),
-               this, SLOT( slotAddResult( const LdapClient&, const KLDAP::LdapObject& ) ) );
+      connect( ldapClient, SIGNAL( result( const KPIM::LdapClient&, const KLDAP::LdapObject& ) ),
+               this, SLOT( slotAddResult( const KPIM::LdapClient&, const KLDAP::LdapObject& ) ) );
       connect( ldapClient, SIGNAL( done() ),
                this, SLOT( slotSearchDone() ) );
       connect( ldapClient, SIGNAL( error( const QString& ) ),
@@ -311,7 +311,7 @@ void LDAPSearchDialog::cancelQuery()
   }
 }
 
-void LDAPSearchDialog::slotAddResult( const LdapClient&, const KLDAP::LdapObject& obj )
+void LDAPSearchDialog::slotAddResult( const KPIM::LdapClient&, const KLDAP::LdapObject& obj )
 {
   new ContactListItem( mResultListView, obj.attributes() );
 }
