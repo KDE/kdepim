@@ -292,6 +292,8 @@ void ResourceBlog::slotError( const KBlog::Blog::ErrorType &type,
                               const QString &errorMessage )
 {
   kError( 5650 ) << "ResourceBlog::slotError " << type << ": " << errorMessage;
+  mProgress->setComplete();
+  mProgress = 0;
   //Q_ASSERT(false);
 }
 
@@ -301,6 +303,8 @@ void ResourceBlog::slotErrorPosting( const KBlog::Blog::ErrorType &type,
 {
   kError( 5650 ) << "ResourceBlog::slotErrorPosting " << type << ": "
       << errorMessage;
+  mProgress->setComplete();
+  mProgress = 0;
   if ( posting ) {
     delete posting;
   }
@@ -313,6 +317,8 @@ void ResourceBlog::slotErrorMedia( const KBlog::Blog::ErrorType &type,
 {
   kError( 5650 ) << "ResourceBlog::slotErrorMedia " << type << ": "
       << errorMessage;
+  mProgress->setComplete();
+  mProgress = 0;
   if ( media ) {
     delete media;
   }
