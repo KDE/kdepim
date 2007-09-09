@@ -139,6 +139,7 @@ set(kaddressbook_LIB_SRCS ${libkabim_SRCS} ${libprinter_SRCS}
    kabtools.cpp 
    distributionlistentryview.cpp
    distributionlisteditor.cpp
+   distributionlistpicker.cpp
 )
 
 qt4_add_dbus_adaptor(kaddressbook_LIB_SRCS

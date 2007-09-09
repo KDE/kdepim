@@ -20,59 +20,51 @@
     without including the source code for Qt in the source distribution.
 */
 
-#ifndef KPIM_DISTRIBUTIONLISTEDITOR_P_H
-#define KPIM_DISTRIBUTIONLISTEDITOR_P_H
+#ifndef KPIM_DISTRIBUTIONLISTPICKER_H
+#define KPIM_DISTRIBUTIONLISTPICKER_H
 
-#include <libkdepim/addresseelineedit.h>
-#include <libkdepim/distributionlist.h>
+#include <kdialog.h>
 
-#include <qstring.h>
+#include <QString>
+
+class QLabel;
+class QListWidget;
 
 namespace KABC {
-    class Addressee;
     class AddressBook;
 }
 
 namespace KPIM {
-namespace DistributionListEditor {
 
-class LineEdit : public KPIM::AddresseeLineEdit
+class DistributionListPickerDialog : public KDialog
 {
     Q_OBJECT
 public:
-    explicit LineEdit( QWidget* parent = 0 );
-};
+    explicit DistributionListPickerDialog( KABC::AddressBook* book, QWidget* parent = 0 );
+    QString selectedDistributionList() const;
 
-
-class Line : public QWidget
-{
-    Q_OBJECT
-public:
-    explicit Line( KABC::AddressBook* book, QWidget* parent = 0 );
-
-    void setEntry( const KPIM::DistributionList::Entry& entry );
-    KPIM::DistributionList::Entry entry() const; 
-
-signals:
-    void cleared();
-    void textChanged();
-
-private:
-    KABC::Addressee findAddressee( const QString& name, const QString& email ) const; 
+    void setLabelText( const QString& text );
 
 private slots:
-    void textChanged( const QString& );
+
+    //override
+    void slotOk();
+
+    //override
+    void slotCancel();
+
+    //override
+    void slotUser1();
+
+    void entrySelected( const QString& name );
 
 private:
-    QString m_uid;
-    QString m_initialText;
-    LineEdit* m_lineEdit;
-    KABC::AddressBook* m_addressBook;
+    KABC::AddressBook* m_book;
+    QLabel* m_label;
+    QListWidget* m_listWidget;
+    QString m_selectedDistributionList;
 };
+    
+} //namespace KPIM
 
-} // namespace DisributionListEditor
-} // namespace KPIM
-
-#endif // KPIM_DISTRIBUTIONLISTEDITOR_P_H
-
-
+#endif // KPIM_DISTRIBUTIONLISTPICKER_H 

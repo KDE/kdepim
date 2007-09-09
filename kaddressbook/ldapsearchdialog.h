@@ -21,11 +21,14 @@
 #ifndef LDAPSEARCHDIALOG_H
 #define LDAPSEARCHDIALOG_H
 
-#include <QCloseEvent>
-
-#include <kabc/addressbook.h>
 #include <ldapclient.h>
+
+#include <libkdepim/distributionlist.h>
+#include <kabc/addressbook.h>
+
 #include <kdialog.h>
+
+#include <QCloseEvent>
 
 class KComboBox;
 class KLineEdit;
@@ -34,7 +37,6 @@ class QCheckBox;
 class Q3ListView;
 class QPushButton;
 class KABCore;
-using namespace KPIM;
 
 class LDAPSearchDialog : public KDialog
 {
@@ -52,7 +54,7 @@ class LDAPSearchDialog : public KDialog
     void addresseesAdded();
 
   protected slots:
-    void slotAddResult( const LdapClient &client, const KLDAP::LdapObject& obj );
+    void slotAddResult( const KPIM::LdapClient &client, const KLDAP::LdapObject& obj );
     void slotSetScope( bool rec );
     void slotStartSearch();
     void slotStopSearch();
@@ -60,6 +62,7 @@ class LDAPSearchDialog : public KDialog
     void slotError( const QString& );
     virtual void slotHelp();
     virtual void slotUser1();
+    virtual void slotUser2();
     void slotSelectAll();
     void slotUnselectAll();
 
@@ -70,6 +73,9 @@ class LDAPSearchDialog : public KDialog
 
   private:
     void saveSettings();
+    static KABC::Addressee convertLdapAttributesToAddressee( const KLDAP::LdapAttrMap& attrs );
+
+    KPIM::DistributionList selectDistributionList();
 
     QString makeFilter( const QString& query, const QString& attr, bool startsWith );
 
@@ -88,6 +94,8 @@ class LDAPSearchDialog : public KDialog
     QCheckBox* mRecursiveCheckbox;
     Q3ListView* mResultListView;
     QPushButton* mSearchButton;
+    class Private;
+    Private* const d;
 };
 
 #endif
