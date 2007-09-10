@@ -29,7 +29,6 @@
 #include <QCloseEvent>
 #include <QLabel>
 #include <q3groupbox.h>
-#include <k3spelldlg.h>
 #include <kdeversion.h>
 #include "addressesdialog.h"
 using KPIM::AddressesDialog;
@@ -48,11 +47,9 @@ using KRecentAddress::RecentAddresses;
 #include <kdebug.h>
 #include <klineedit.h>
 #include <kcombobox.h>
-#include <k3spell.h>
 #include <ktemporaryfile.h>
 #include <libkpgp/kpgp.h>
 #include <libkpgp/kpgpblock.h>
-#include <k3syntaxhighlighter.h>
 #include <QCursor>
 #include <kpimutils/spellingfilter.h>
 #include <kcompletionbox.h>
