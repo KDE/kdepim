@@ -448,7 +448,7 @@ bool ResourceKolab::sendKMailUpdate( KCal::IncidenceBase* incidencebase, const Q
     } else {
       mimetype = incidenceInlineMimeType;
       data = mFormat.createScheduleMessage( static_cast<KCal::Event *>(incidencebase),
-          Scheduler::Request );
+          iTIPRequest );
     }
   } else if ( type == "Todo" ) {
     if( isXMLStorageFormat ) {
@@ -458,7 +458,7 @@ bool ResourceKolab::sendKMailUpdate( KCal::IncidenceBase* incidencebase, const Q
     } else {
       mimetype = incidenceInlineMimeType;
       data = mFormat.createScheduleMessage( static_cast<KCal::Todo *>(incidencebase),
-          Scheduler::Request );
+          iTIPRequest );
     }
   } else if ( type == "Journal" ) {
     if( isXMLStorageFormat ) {
@@ -468,7 +468,7 @@ bool ResourceKolab::sendKMailUpdate( KCal::IncidenceBase* incidencebase, const Q
     } else {
       mimetype = incidenceInlineMimeType;
       data = mFormat.createScheduleMessage( static_cast<KCal::Journal *>(incidencebase),
-          Scheduler::Request );
+          iTIPRequest );
     }
   } else {
     kWarning(5006) <<"Can't happen: unhandled type=" << type;
@@ -1003,8 +1003,7 @@ QStringList ResourceKolab::subresources() const
          + mJournalSubResources.keys() );
 }
 
-const QString
-ResourceKolab::labelForSubresource( const QString& subresource ) const
+QString ResourceKolab::labelForSubresource( const QString& subresource ) const
 {
   if ( mEventSubResources.contains( subresource ) )
     return mEventSubResources[ subresource ].label();

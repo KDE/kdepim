@@ -226,7 +226,7 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
     };
 
     bool mail( Incidence* incidence, KMail::Callback& callback, const QString &status,
-               Scheduler::Method method = Scheduler::Reply, const QString &to = QString(),
+               iTIPMethod method = iTIPReply, const QString &to = QString(),
                MailType type = Answer ) const
     {
       //status is accepted/tentative/declined
@@ -368,7 +368,7 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
         // check if we need to inform our delegator about this as well
         if ( newMyself && (status == Attendee::Accepted || status == Attendee::Declined) && !delegator.isEmpty() ) {
           if ( delegatorRSVP || status == Attendee::Declined )
-            ok = mail( incidence, callback, dir, Scheduler::Reply, delegator );
+            ok = mail( incidence, callback, dir, iTIPReply, delegator );
         }
 
       } else if ( !myself && (status != Attendee::Declined) ) {
@@ -386,7 +386,7 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
                                     QString() );
           incidence->clearAttendees();
           incidence->addAttendee( newMyself );
-          ok = mail( incidence, callback, dir, Scheduler::Reply );
+          ok = mail( incidence, callback, dir, iTIPReply );
         }
       } else {
         ( new KMDeleteMsgCommand( callback.getMsg()->getMsgSerNum() ) )->start();
@@ -409,10 +409,10 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
 
         ICalFormat format;
         format.setTimeSpec( KPimPrefs::timeSpec() );
-        QString iCal = format.createScheduleMessage( incidence, Scheduler::Request );
+        QString iCal = format.createScheduleMessage( incidence, iTIPRequest );
         saveFile( receiver, iCal, dir );
 
-        ok = mail( incidence, callback, dir, Scheduler::Request, delegateString, Delegation );
+        ok = mail( incidence, callback, dir, iTIPRequest, delegateString, Delegation );
       }
       return ok;
     }
@@ -447,7 +447,7 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
         QString fwdTo = dlg.attendees().join( ", " );
         if ( fwdTo.isEmpty() )
           return true;
-        result = mail( incidence, c, "forward", Scheduler::Request, fwdTo, Forward );
+        result = mail( incidence, c, "forward", iTIPRequest, fwdTo, Forward );
       }
       if ( path == "reply" || path == "cancel" ) {
         // These should just be saved with their type as the dir

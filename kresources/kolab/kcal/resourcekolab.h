@@ -133,7 +133,7 @@ public:
   virtual void setSubresourceActive( const QString &, bool );
 
   /** What is the label for this subresource? */
-  virtual const QString labelForSubresource( const QString& resource ) const;
+  virtual QString labelForSubresource( const QString& resource ) const;
 
   virtual QString subresourceIdentifier( KCal::Incidence *incidence );
 
@@ -156,7 +156,7 @@ signals:
 protected slots:
   void slotEmitResourceChanged();
 protected:
-  /** 
+  /**
    * Return list of alarms which are relevant for the current user. These
    * are the ones coming from folders which the user has "Administer" rights
    * for, as per ACL */
