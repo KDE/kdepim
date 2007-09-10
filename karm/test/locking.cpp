@@ -140,7 +140,7 @@ int main( int argc, char *argv[] )
 
   KCmdLineArgs::init(argc,argv,"testresourcelocking", 0, 0, 0, 0);
 
-  KApplication app;
+  KApplication app( false, false );
 
   // basic libkcal locking stuff
   if ( !rval ) rval = test1();
