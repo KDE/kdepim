@@ -1970,6 +1970,21 @@ To enable the feature, add a line reading (under [Composer] section):
 </varlistentry>
 
 <varlistentry>
+<term><guilabel>MaximumAttachmentSize</guilabel></term>
+<listitem>
+<para>
+This allows the maximum file size allowed for attachments in the mail
+composer to be limited.
+
+To limit attachments to 20 MB ins size, for example, add a line reading (under [Composer] section):
+</para>
+<programlisting>MaximumAttachmentSize=20
+</programlisting>
+</listitem>
+</varlistentry>
+
+
+<varlistentry>
 <term><guilabel>disregardUmask</guilabel></term>
 <listitem>
 <para>
