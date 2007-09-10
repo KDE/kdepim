@@ -29,6 +29,8 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
+#include <sys/types.h>
+
 #include <pi-appinfo.h>
 #include <pi-buffer.h>
 #include <pi-dlp.h>
