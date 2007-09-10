@@ -27,6 +27,7 @@
 #include <QGridLayout>
 
 #include <kabc/resource.h>
+#include <kabc/resourceabc.h>
 #include <kdialog.h>
 #include <kglobal.h>
 #include <kiconloader.h>
@@ -36,9 +37,7 @@
 #include <kresources/configdialog.h>
 
 #include "core.h"
-
 #include "resourceselection.h"
-#include <libkdepim/resourceabc.h>
 
 class AddressBookWrapper : public KABC::AddressBook
 {
@@ -65,7 +64,7 @@ class ResourceItem : public QTreeWidgetItem
       setIcon( 0, KIcon( "help-contents" ) );
     }
 
-    ResourceItem( KPIM::ResourceABC *resourceABC, ResourceItem* parent,
+    ResourceItem( KABC::ResourceABC *resourceABC, ResourceItem* parent,
                   const QString& resourceIdent )
       : QTreeWidgetItem( parent, QStringList( resourceABC->subresourceLabel( resourceIdent ) ) ),
         mResource( resourceABC ),
@@ -73,7 +72,7 @@ class ResourceItem : public QTreeWidgetItem
         mResourceIdentifier( resourceIdent )
     {
       setFlags( flags() | Qt::ItemIsUserCheckable );
-      KPIM::ResourceABC* res = static_cast<KPIM::ResourceABC *>( mResource );
+      KABC::ResourceABC* res = static_cast<KABC::ResourceABC *>( mResource );
       setCheckState( 0, res->subresourceActive( mResourceIdentifier ) ? Qt::Checked : Qt::Unchecked );
       setIcon( 0, KIcon( "help-contents" ) );
 
@@ -96,7 +95,7 @@ class ResourceItem : public QTreeWidgetItem
 void ResourceItem::createSubresourceItems()
 {
   if ( !mIsSubresource && !mSubItemsCreated ) {
-    KPIM::ResourceABC* res = dynamic_cast<KPIM::ResourceABC *>( mResource );
+    KABC::ResourceABC* res = dynamic_cast<KABC::ResourceABC *>( mResource );
     QStringList subresources;
     if ( res )
       subresources = res->subresources();
@@ -251,7 +250,7 @@ void ResourceSelection::currentChanged( QTreeWidgetItem *item )
   resItem->createSubresourceItems();
 
   if ( resItem->isSubResource() ) {
-    KPIM::ResourceABC *res = static_cast<KPIM::ResourceABC *>( resource );
+    KABC::ResourceABC *res = static_cast<KABC::ResourceABC *>( resource );
     res->setSubresourceActive( resItem->resourceIdentifier(), resItem->checkState( 0 ) == Qt::Checked );
     mManager->change( resource );
   } else {
@@ -287,20 +286,20 @@ void ResourceSelection::updateView()
   for ( it = mManager->begin(); it != mManager->end(); ++it ) {
 
     new ResourceItem( mListView, *it );
-    KPIM::ResourceABC* resource = dynamic_cast<KPIM::ResourceABC *>( *it );
+    KABC::ResourceABC* resource = dynamic_cast<KABC::ResourceABC *>( *it );
     if ( resource ) {
       disconnect( resource, 0, this, 0 );
-      connect( resource, SIGNAL( signalSubresourceAdded( KPIM::ResourceABC *,
+      connect( resource, SIGNAL( signalSubresourceAdded( KABC::ResourceABC *,
                                                          const QString &, const QString & ) ),
-               SLOT( slotSubresourceAdded( KPIM::ResourceABC *,
+               SLOT( slotSubresourceAdded( KABC::ResourceABC *,
                                            const QString &, const QString & ) ) );
 
-      connect( resource, SIGNAL( signalSubresourceRemoved( KPIM::ResourceABC *,
+      connect( resource, SIGNAL( signalSubresourceRemoved( KABC::ResourceABC *,
                                                            const QString &, const QString & ) ),
-               SLOT( slotSubresourceRemoved( KPIM::ResourceABC *,
+               SLOT( slotSubresourceRemoved( KABC::ResourceABC *,
                                              const QString &, const QString & ) ) );
-      //connect( resource, SIGNAL( resourceSaved( KPIM::ResourceABC * ) ),
-      //         SLOT( closeResource( KPIM::ResourceABC * ) ) );
+      //connect( resource, SIGNAL( resourceSaved( KABC::ResourceABC * ) ),
+      //         SLOT( closeResource( KABC::ResourceABC * ) ) );
     }
   }
 
@@ -319,13 +318,13 @@ void ResourceSelection::updateView()
 
 
 // Add a new entry
-void ResourceSelection::slotSubresourceAdded( KPIM::ResourceABC *resource,
+void ResourceSelection::slotSubresourceAdded( KABC::ResourceABC *resource,
                                               const QString& /*type*/,
                                               const QString& subResource )
 {
   kDebug(5720) << resource->resourceName() << subResource;
 
-  QList< QTreeWidgetItem * > foundItems = 
+  QList< QTreeWidgetItem * > foundItems =
       mListView->findItems( resource->resourceName(), Qt::MatchExactly );
 
   if ( foundItems.size() == 0 )
@@ -337,7 +336,7 @@ void ResourceSelection::slotSubresourceAdded( KPIM::ResourceABC *resource,
 }
 
 // Remove an entry
-void ResourceSelection::slotSubresourceRemoved( KPIM::ResourceABC* resource,
+void ResourceSelection::slotSubresourceRemoved( KABC::ResourceABC* resource,
                                                 const QString& /*type*/,
                                                 const QString& subResource )
 {

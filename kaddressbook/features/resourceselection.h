@@ -30,7 +30,7 @@
 
 class QPushButton;
 
-namespace KPIM { class ResourceABC; }
+namespace KABC { class ResourceABC; }
 
 class ResourceItem;
 
@@ -55,10 +55,10 @@ class ResourceSelection : public KAB::ExtensionWidget
 
     void updateView();
 
-    void slotSubresourceAdded( KPIM::ResourceABC *resource,
+    void slotSubresourceAdded( KABC::ResourceABC *resource,
                                const QString& /*type*/,
                                const QString& subResource );
-    void slotSubresourceRemoved( KPIM::ResourceABC* /*resource*/,
+    void slotSubresourceRemoved( KABC::ResourceABC* /*resource*/,
                                  const QString& /*type*/,
                                  const QString& subResource );
 
