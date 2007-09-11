@@ -69,7 +69,7 @@ namespace _detail {
         if ( fd == ASSUAN_INVALID_FD )
             return -1;
 #ifdef Q_OS_WIN32
-        return _open_osfhandle( fd, for_write );
+        return _open_osfhandle( (intptr_t)fd, for_write );
 #else
         (void)for_write;
         return fd;
