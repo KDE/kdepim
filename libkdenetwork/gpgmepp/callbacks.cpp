@@ -31,6 +31,7 @@
 #include <cassert>
 #include <cerrno>
 #include <unistd.h>
+#include <cstdlib>
 #include <string.h>
 
 static inline gpg_error_t makeErrorFromErrno() {

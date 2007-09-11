@@ -38,6 +38,7 @@
 #include <fcntl.h>
 #include <sys/stat.h>
 #include <unistd.h>
+#include <string.h>
 #include "format.h"
 
 using indexlib::detail::errno_error;
