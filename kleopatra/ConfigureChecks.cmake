@@ -20,18 +20,16 @@ if ( ASSUAN_FOUND )
 endif( ASSUAN_FOUND )
 
 if ( USABLE_ASSUAN_FOUND )
-  # check if we don't have old assuan file which contains HAVE_W32_SYSTEM
-  # which is not define in .h file (old assuan.h)
+  # check if assuan.h can be compiled standalone (it couldn't, on
+  # Windows, until recently, because of a HAVE_W32_SYSTEM #ifdef in
+  # there)
   check_cxx_source_compiles( "
        #include <assuan.h>
        int main() {
            return 1;
        }
        "
-       HAVE_NEW_ASSUAN_FILE )
-   if( NOT HAVE_NEW_ASSUAN_FILE )
-     set(USABLE_ASSUAN_FOUND false)
-   endif( NOT HAVE_NEW_ASSUAN_FILE)
+       USABLE_ASSUAN_FOUND )
 endif( USABLE_ASSUAN_FOUND )
 
 if ( USABLE_ASSUAN_FOUND )
@@ -42,9 +40,7 @@ if ( USABLE_ASSUAN_FOUND )
 endif( USABLE_ASSUAN_FOUND )
 
 if ( USABLE_ASSUAN_FOUND )
-  if(WIN32)
-    set( CMAKE_REQUIRED_DEFINITIONS "-DHAVE_W32_SYSTEM")
-  endif(WIN32)
+
   # check if assuan has assuan_fd_t
   check_cxx_source_compiles("
         #include <assuan.h>
