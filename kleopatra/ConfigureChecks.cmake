@@ -20,6 +20,21 @@ if ( ASSUAN_FOUND )
 endif( ASSUAN_FOUND )
 
 if ( USABLE_ASSUAN_FOUND )
+  # check if we don't have old assuan file which contains HAVE_W32_SYSTEM
+  # which is not define in .h file (old assuan.h)
+  check_cxx_source_compiles( "
+       #include <assuan.h>
+       int main() {
+           return 1;
+       }
+       "
+       HAVE_NEW_ASSUAN_FILE )
+   if( NOT HAVE_NEW_ASSUAN_FILE )
+     set(USABLE_ASSUAN_FOUND false)
+   endif( NOT HAVE_NEW_ASSUAN_FILE)
+endif( USABLE_ASSUAN_FOUND )
+
+if ( USABLE_ASSUAN_FOUND )
 
   # check whether assuan and gpgme may be linked to simultaneously
   check_function_exists( "assuan_get_pointer" USABLE_ASSUAN_FOUND )
