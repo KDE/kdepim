@@ -39,6 +39,7 @@
 
 #include <string>
 #include <map>
+#include <vector>
 
 class QVariant;
 class QIODevice;
@@ -203,14 +204,28 @@ namespace Kleo {
         QVariant option( const char * opt ) const;
         const std::map<std::string,QVariant> & options() const;
 
-        QIODevice * bulkInputDevice( int idx=0 ) const;
-        QIODevice * bulkOutputDevice( int idx=0 ) const;
+        QString bulkInputDeviceFileName(  const char * tag, unsigned int idx=0 ) const;
+        QString bulkOutputDeviceFileName( const char * tag, unsigned int idx=0 ) const;
+
+        QIODevice * bulkInputDevice(  const char * tag, unsigned int idx=0 ) const;
+        QIODevice * bulkOutputDevice( const char * tag, unsigned int idx=0 ) const;
+
+        unsigned int bulkInputDataEncoding( const char * tag, unsigned int idx=0 ) const;
+        unsigned int bulkOutputDataEncoding( const char * tag, unsigned int idx=0 ) const;
+
+        unsigned int numBulkInputDevices( const char * tag ) const;
+        unsigned int numBulkOutputDevices( const char * tag ) const;
+
+        std::vector<std::string> bulkInputDeviceTags() const;
+        std::vector<std::string> bulkOutputDeviceTags() const;
 
         int sendStatus( const char * keyword, const QString & text );
+        int sendData( const QByteArray & data, bool moreToCome=false );
 
         int inquire( const char * keyword, QObject * receiver, const char * slot, unsigned int maxSize=0 );
 
         void done( int err=0 );
+        void done( int err, const QString & details );
 
         static int makeError( int code );
 

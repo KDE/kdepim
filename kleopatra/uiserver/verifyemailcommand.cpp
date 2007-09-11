@@ -139,7 +139,7 @@ int VerifyEmailCommand::start( const std::string & line )
     }
 
     // this is an opaque signature, get the data for it
-    const QByteArray data = bulkInputDevice()->readAll(); // FIXME safe enough?
+    const QByteArray data = bulkInputDevice( "MESSAGE" )->readAll(); // FIXME safe enough?
 
     //fire off appropriate kleo verification job
     VerifyOpaqueJob * const job = d->backend->verifyOpaqueJob();

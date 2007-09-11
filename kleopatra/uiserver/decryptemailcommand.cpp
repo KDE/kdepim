@@ -95,8 +95,8 @@ void Kleo::DecryptEmailCommand::Private::slotDecryptionResult( const GpgME::Decr
     }
     
     //handle result, send status
-    if ( q->bulkOutputDevice() )
-        q->bulkOutputDevice()->write( plainText );
+    if ( QIODevice * const o = q->bulkOutputDevice( "PLAINTEXT" ) )
+        o->write( plainText );
 
     //handle verification result
 }
@@ -112,7 +112,7 @@ int Kleo::DecryptEmailCommand::start( const std::string & line )
     assert(d->backend);
 
     // get encrypted data
-    const QByteArray encrypted = bulkInputDevice()->readAll(); // FIXME safe enough?
+    const QByteArray encrypted = bulkInputDevice( "MESSAGE" )->readAll(); // FIXME safe enough?
 
     //fire off appropriate kleo decrypt verify job
     Kleo::DecryptVerifyJob * const job = d->backend->decryptVerifyJob();

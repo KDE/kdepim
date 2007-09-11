@@ -76,6 +76,16 @@ namespace _detail {
 #endif
     }
 
+    static inline assuan_fd_t translate_libc2sys_fd( int fd ) {
+        if ( fd == -1 )
+            return ASSUAN_INVALID_FD;
+#ifdef Q_OS_WIN32
+        return _get_osfhandle( fd );
+#else
+        return fd;
+#endif
+    }
+
 }
 }
 

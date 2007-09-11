@@ -64,7 +64,7 @@ EchoCommand::~EchoCommand() {}
 
 int EchoCommand::start( const std::string & line ) {
 
-    if ( bulkInputDevice() && !bulkOutputDevice() )
+    if ( bulkInputDevice( "IN" ) && !bulkOutputDevice( "OUT" ) )
         return makeError( GPG_ERR_NOT_SUPPORTED );
 
     if ( hasOption( option_prefix ) && !option( option_prefix ).toByteArray().isEmpty() )
@@ -116,8 +116,8 @@ int EchoCommand::start( const std::string & line ) {
             ++d->operationsInFlight;
 
     // 3. if INPUT was given, start the data pump for input->output
-    if ( QIODevice * const in = bulkInputDevice() ) {
-        QIODevice * const out = bulkOutputDevice();
+    if ( QIODevice * const in = bulkInputDevice( "IN" ) ) {
+        QIODevice * const out = bulkOutputDevice( "OUT" );
 
         ++d->operationsInFlight;
 
@@ -154,7 +154,7 @@ void EchoCommand::slotInquireData( int rc, const QByteArray & data ) {
 }
 
 void EchoCommand::slotInputReadyRead() {
-    QIODevice * const in = bulkInputDevice();
+    QIODevice * const in = bulkInputDevice( "IN" );
     assert( in );
 
     if ( !in->atEnd() )
@@ -165,11 +165,11 @@ void EchoCommand::slotInputReadyRead() {
 
 
 void EchoCommand::slotOutputBytesWritten() {
-    QIODevice * const out = bulkOutputDevice();
+    QIODevice * const out = bulkOutputDevice( "OUT" );
     assert( out );
 
     if ( d->buffer.isEmpty() ) {
-        if ( bulkInputDevice()->atEnd() && out->isOpen() ) {
+        if ( bulkInputDevice( "IN" )->atEnd() && out->isOpen() ) {
             out->close();
             if ( !--d->operationsInFlight )
                 done();

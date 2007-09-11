@@ -40,15 +40,22 @@
 
 #include <utils/kdpipeiodevice.h>
 
+#include <gpgme++/data.h>
+
 #include <QSocketNotifier>
 #include <QVariant>
 #include <QPointer>
+#include <QFile>
+#include <QFileInfo>
+#include <QDebug>
 
 #include <boost/type_traits/remove_pointer.hpp>
+#include <boost/lexical_cast.hpp>
 
 #include <vector>
 #include <map>
 #include <string>
+#include <memory>
 
 #ifdef __GNUC__
 # include <ext/algorithm> // for is_sorted
@@ -61,8 +68,16 @@
 using namespace Kleo;
 using namespace boost;
 
+namespace {
+    struct IO {
+        QString file;
+        QIODevice * iodev;
+        GpgME::Data::Encoding encoding;
+    };
+}
+
 static const unsigned int INIT_SOCKET_FLAGS = 3; // says info assuan...
-static int(*USE_DEFAULT_HANDLER)(assuan_context_t,char*) = 0;
+//static int(*USE_DEFAULT_HANDLER)(assuan_context_t,char*) = 0;
 static const int FOR_READING = 0;
 static const unsigned int MAX_ACTIVE_FDS = 32;
 
@@ -74,6 +89,56 @@ struct AssuanContext : AssuanContextBase {
 
     void reset( assuan_context_t ctx=0 ) { AssuanContextBase::reset( ctx, &assuan_deinit_server ); }
 };
+
+static unsigned char unhex( char ch ) {
+    if ( ch >= '0' && ch <= '9' )
+        return ch - '0';
+    if ( ch >= 'A' && ch <= 'F' )
+        return ch - 'A';
+    if ( ch >= 'a' && ch <= 'f' )
+        return ch - 'a';
+    throw gpg_error( GPG_ERR_ASS_SYNTAX );
+}
+
+static std::string hexdecode( const std::string & in ) {
+    std::string result;
+    result.reserve( in.size() );
+    for ( std::string::const_iterator it = in.begin(), end = in.end() ; it != end ; ++it )
+        if ( *it == '%' ) {
+            ++it;
+            char ch = '\0';
+            if ( it == end )
+                throw gpg_error( GPG_ERR_ASS_SYNTAX );
+            ch |= unhex( *it ) << 4;
+            ++it;
+            if ( it == end )
+                throw gpg_error( GPG_ERR_ASS_SYNTAX );
+            ch |= unhex( *it );
+            result.push_back( ch );
+        } else {
+            result.push_back( *it );
+        }
+    return result;
+}
+
+static std::vector<std::string> parse_commandline( const char * line ) {
+    std::vector<std::string> result;
+    if ( line ) {
+        const char * begin = line;
+        while ( *line ) {
+            if ( *line == ' ' || *line == '\t' ) {
+                if ( begin != line )
+                    result.push_back( hexdecode( std::string( begin, line - begin ) ) );
+                begin = line + 1;
+            }
+            ++line;
+        }
+        if ( begin != line )
+            result.push_back( hexdecode( begin ) );
+    }
+
+    return result;
+}
 
 //
 //
@@ -103,7 +168,7 @@ public Q_SLOTS:
                 if ( that ) // still there
                     q->deleteLater();
             } else {
-                assuan_process_done( ctx.get(), err );
+                //assuan_process_done( ctx.get(), err );
                 return;
             }
         }
@@ -129,9 +194,84 @@ private:
         //return gpg_error( GPG_ERR_UNKNOWN_OPTION );
     }
 
+    // format: INPUT TAG([N])? (FD|FD=\d+|FILE=...)
+    static int IO_handler( assuan_context_t ctx_, char * line_, bool in ) {
+        assert( assuan_get_pointer( ctx_ ) );
+        AssuanServerConnection::Private & conn = *static_cast<AssuanServerConnection::Private*>( assuan_get_pointer( ctx_ ) );
+
+        try {
+
+            const std::vector<std::string> parsed = parse_commandline( line_ );
+            if ( parsed.size() < 2 || parsed.size() > 3 )
+                return gpg_error( GPG_ERR_ASS_SYNTAX );
+
+            const std::string tag = parsed[0];
+
+            IO io;
+            const std::string source = parsed[1];
+            if ( source == "FD" ) {
+                assuan_fd_t fd = -1;
+                if ( const gpg_error_t err = assuan_receivefd( conn.ctx.get(), &fd ) )
+                    return err;
+                io.iodev = new KDPipeIODevice( fd, in ? QIODevice::ReadOnly : QIODevice::WriteOnly );
+            } else if ( source.substr( 0, 3 ) == "FD=" ) {
+#ifdef Q_OS_WIN32
+                const assuan_fd_t fd = lexical_cast<intptr_t>( source.substr( 3 ) );
+#else
+                const assuan_fd_t fd = lexical_cast<assuan_fd_t>( source.substr( 3 ) );
+#endif
+                io.iodev = new KDPipeIODevice( fd, in ? QIODevice::ReadOnly : QIODevice::WriteOnly );
+            } else if ( source.substr( 0, 5 ) == "FILE=" ) {
+                const QString fileName = QFile::decodeName( hexdecode( source.substr( 5 ) ).c_str() );
+                if ( in && !QFile::exists( fileName ) )
+                    return gpg_error( GPG_ERR_NOT_FOUND );
+                if ( in && !QFileInfo( fileName ).isReadable() )
+                    return gpg_error( GPG_ERR_EPERM );
+                io.file = fileName;
+                std::auto_ptr<QFile> f( new QFile( fileName ) );
+                if ( !f->open( in ? QIODevice::ReadOnly : QIODevice::ReadWrite ) )
+                    return gpg_error( GPG_ERR_EPERM );
+                io.iodev = f.release();
+            } else
+                return gpg_error( GPG_ERR_ASS_PARAMETER );
+
+            if ( parsed.size() < 3 )
+                io.encoding = GpgME::Data::AutoEncoding;
+            else if ( parsed[2] == "--binary" )
+                io.encoding = GpgME::Data::BinaryEncoding;
+            else if ( parsed[2] == "--armor" )
+                io.encoding = GpgME::Data::ArmorEncoding;
+            else if ( parsed[2] == "--base64" )
+                io.encoding = GpgME::Data::Base64Encoding;
+            else
+                return gpg_error( GPG_ERR_ASS_PARAMETER );
+
+            ( in ? conn.inputs : conn.outputs )[tag].push_back( io );
+
+            qDebug() << "AssuanServerConnection: added" << (in ? "input" : "output") << '('
+                     << io.file << io.iodev << io.encoding << ')';
+
+            return 0;
+
+        } catch ( const std::exception & e ) {
+            return gpg_error( GPG_ERR_ASS_SYNTAX );
+        } catch ( const gpg_error_t e ) {
+            return e;
+        } catch ( ... ) {
+            return gpg_error( GPG_ERR_UNEXPECTED );
+        }
+
+    }
+
+    static int input_handler( assuan_context_t ctx, char * line ) {
+        return IO_handler( ctx, line, true );
+    }
+
+    static int output_handler( assuan_context_t ctx, char * line ) {
+        return IO_handler( ctx, line, false );
+    }
+
     void cleanup();
-    void setCommandFactories( const std::vector< shared_ptr<AssuanCommandFactory> > & factories );
-    void setSocketDescriptor( int fd );    
 
 
     int fd;
@@ -140,6 +280,7 @@ private:
     std::vector< shared_ptr<AssuanCommandFactory> > factories; // sorted: _detail::ByName<std::less>
     shared_ptr<AssuanCommand> currentCommand;
     std::map<std::string,QVariant> options;
+    std::map< std::string, std::vector<IO> > inputs, outputs;
 };
 
 void AssuanServerConnection::Private::cleanup() {
@@ -161,14 +302,7 @@ AssuanServerConnection::Private::Private( int fd_, const std::vector< shared_ptr
         throw assuan_exception( gpg_error( GPG_ERR_INV_ARG ), "pre-assuan_init_socket_server_ext" );
 
     assuan_context_t naked_ctx = 0;
-    if ( const gpg_error_t err = assuan_init_socket_server_ext( 
-			    &naked_ctx, 
-#ifdef Q_OS_WIN32
-			    (HANDLE)fd, 
-#else
-			    fd,
-#endif
-			    INIT_SOCKET_FLAGS ) )
+    if ( const gpg_error_t err = assuan_init_socket_server_ext( &naked_ctx, _detail::translate_libc2sys_fd( fd ), INIT_SOCKET_FLAGS ) )
         throw assuan_exception( err, "assuan_init_socket_server_ext" );
     
     ctx.reset( naked_ctx ); naked_ctx = 0;
@@ -197,11 +331,11 @@ AssuanServerConnection::Private::Private( int fd_, const std::vector< shared_ptr
     }
 
 
-    // enable INPUT/OUTPUT default handlers:
-    if ( const gpg_error_t err = assuan_register_command( ctx.get(), "INPUT",  USE_DEFAULT_HANDLER ) )
-        throw assuan_exception( err, "activate \"INPUT\" default handler" );
-    if ( const gpg_error_t err = assuan_register_command( ctx.get(), "OUTPUT", USE_DEFAULT_HANDLER ) )
-        throw assuan_exception( err, "activate \"OUTPUT\" default handler" );
+    // register our INPUT/OUTPUT handlers:
+    if ( const gpg_error_t err = assuan_register_command( ctx.get(), "INPUT",  input_handler ) )
+        throw assuan_exception( err, "register \"INPUT\" handler" );
+    if ( const gpg_error_t err = assuan_register_command( ctx.get(), "OUTPUT", output_handler ) )
+        throw assuan_exception( err, "register \"OUTPUT\" handler" );
 
 
     // register user-defined commands:
@@ -298,11 +432,11 @@ Q_SIGNALS:
 
 class AssuanCommand::Private {
 public:
-    Private() : input( 0 ), output( 0 ), done( false ) {}
+    Private() : done( false ) {}
 
-    QIODevice * input;
-    QIODevice * output;
     std::map<std::string,QVariant> options;
+    std::map< std::string, std::vector<IO> > inputs, outputs;
+    QByteArray utf8ErrorKeepAlive;
     AssuanContext ctx;
     bool done;
 
@@ -340,16 +474,104 @@ const std::map<std::string,QVariant> & AssuanCommand::options() const {
     return d->options;
 }
 
-QIODevice * AssuanCommand::bulkInputDevice( int idx ) const {
-    return idx == 0 ? d->input : 0 ;
+namespace {
+    template <typename Container>
+    QString get_device_file_name( const Container & c, const char * tag, unsigned int idx ) {
+        const typename Container::const_iterator it = c.find( tag );
+        if ( it == c.end() || idx >= it->second.size() )
+            return QString();
+        else
+            return it->second[idx].file;
+    }
+
+    template <typename Container>
+    QIODevice * get_device( const Container & c, const char * tag, unsigned int idx ) {
+        const typename Container::const_iterator it = c.find( tag );
+        if ( it == c.end() || idx >= it->second.size() )
+            return 0;
+        else
+            return it->second[idx].iodev;
+    }
+
+    template <typename Container>
+    unsigned int get_device_encoding( const Container & c, const char * tag, unsigned int idx ) {
+        const typename Container::const_iterator it = c.find( tag );
+        if ( it == c.end() || idx >= it->second.size() )
+            return 0;
+        else
+            return it->second[idx].encoding;
+    }
+
+    template <typename Container>
+    unsigned int get_num_devices( const Container & c, const char * tag ) {
+        const typename Container::const_iterator it = c.find( tag );
+        if ( it == c.end() )
+            return 0;
+        else
+            return it->second.size();
+    }
+
+    template <typename U, typename V>
+    std::vector<U> keys( const std::map<U,V> & map ) {
+        std::vector<U> result;
+        result.resize( map.size() );
+        for ( typename std::map<U,V>::const_iterator it = map.begin(), end = map.end() ; it != end ; ++it )
+            result.push_back( it->first );
+        return result;
+    }
 }
 
-QIODevice * AssuanCommand::bulkOutputDevice( int idx ) const {
-    return idx == 0 ? d->output : 0 ;
+QString AssuanCommand::bulkInputDeviceFileName( const char * tag, unsigned int idx ) const {
+    return get_device_file_name( d->inputs, tag, idx );
+}
+
+QIODevice * AssuanCommand::bulkInputDevice( const char * tag, unsigned int idx ) const {
+    return get_device( d->inputs, tag, idx );
+}
+
+unsigned int AssuanCommand::bulkInputDataEncoding( const char * tag, unsigned int idx ) const {
+    return get_device_encoding( d->inputs, tag, idx );
+}
+
+unsigned int AssuanCommand::numBulkInputDevices( const char * tag ) const {
+    return get_num_devices( d->inputs, tag );
+}
+
+std::vector<std::string> AssuanCommand::bulkInputDeviceTags() const {
+    return keys( d->inputs );
+}
+
+QString AssuanCommand::bulkOutputDeviceFileName( const char * tag, unsigned int idx ) const {
+    return get_device_file_name( d->outputs, tag, idx );
+}
+
+QIODevice * AssuanCommand::bulkOutputDevice( const char * tag, unsigned int idx ) const {
+    return get_device( d->outputs, tag, idx );
+}
+
+unsigned int AssuanCommand::bulkOutputDataEncoding( const char * tag, unsigned int idx ) const {
+    return get_device_encoding( d->outputs, tag, idx );
+}
+
+unsigned int AssuanCommand::numBulkOutputDevices( const char * tag ) const {
+    return get_num_devices( d->outputs, tag );
+}
+
+std::vector<std::string> AssuanCommand::bulkOutputDeviceTags() const {
+    return keys( d->outputs );
 }
 
 int AssuanCommand::sendStatus( const char * keyword, const QString & text ) {
     return assuan_write_status( d->ctx.get(), keyword, text.toUtf8().constData() );
+}
+
+int AssuanCommand::sendData( const QByteArray & data, bool moreToCome ) {
+    if ( const gpg_error_t err = assuan_send_data( d->ctx.get(), data.constData(), data.size() ) )
+        return err;
+    if ( moreToCome )
+        return 0;
+    else
+        return assuan_send_data( d->ctx.get(), 0, 0 ); // flush
 }
 
 int AssuanCommand::inquire( const char * keyword, QObject * receiver, const char * slot, unsigned int maxSize ) {
@@ -373,6 +595,14 @@ int AssuanCommand::inquire( const char * keyword, QObject * receiver, const char
 #endif // HAVE_ASSUAN_INQUIRE_EXT
 }
 
+void AssuanCommand::done( int err, const QString & details ) {
+    if ( d->ctx && !d->done && !details.isEmpty() ) {
+        d->utf8ErrorKeepAlive = details.toUtf8();
+        assuan_set_error( d->ctx.get(), err, d->utf8ErrorKeepAlive.constData() );
+    }
+    done( err );
+}
+
 void AssuanCommand::done( int err ) {
     if ( !d->ctx ) {
         qDebug( "AssuanCommand::done( %s ): called with NULL ctx.", gpg_strerror( err ) );
@@ -385,18 +615,25 @@ void AssuanCommand::done( int err ) {
 
     d->done = true;
 
-    // close bulk I/O channels:
-    if ( d->input && d->input->isOpen() )
-        d->input->close();
-    delete d->input; d->input = 0;
-    if ( d->output && d->output->isOpen() )
-        d->output->close();
-    delete d->output; d->output = 0;
+    for ( std::map< std::string, std::vector<IO> >::const_iterator it = d->inputs.begin(), end = d->inputs.end() ; it != end ; ++it )
+        Q_FOREACH( const IO & io, it->second ) {
+            if ( io.iodev )
+                io.iodev->close();
+            delete io.iodev;
+        }
+
+    for ( std::map< std::string, std::vector<IO> >::const_iterator it = d->outputs.begin(), end = d->outputs.end() ; it != end ; ++it )
+        Q_FOREACH( const IO & io, it->second ) {
+            if ( io.iodev )
+                io.iodev->close();
+            delete io.iodev;
+        }
 
     const gpg_error_t rc = assuan_process_done( d->ctx.get(), err );
     if ( rc )
         qFatal( "AssuanCommand::done: assuan_process_done returned error %d (%s)",
                 static_cast<int>(rc), gpg_strerror(rc) );
+    d->utf8ErrorKeepAlive.clear();
     d->ctx.reset();
 }
 
@@ -417,19 +654,9 @@ int AssuanCommandFactory::_handle( assuan_context_t ctx, char * line, const char
 
     cmd->d->ctx     = conn.ctx;
     cmd->d->options = conn.options;
-
-    const assuan_fd_t inFD = assuan_get_input_fd( ctx );
-    if ( inFD != ASSUAN_INVALID_FD )
-        cmd->d->input = new KDPipeIODevice( inFD, QIODevice::ReadOnly );
-    else
-        cmd->d->input = 0;
-
-    const assuan_fd_t outFD = assuan_get_output_fd( ctx );
-    if ( outFD != ASSUAN_INVALID_FD )
-        cmd->d->output = new KDPipeIODevice( outFD, QIODevice::WriteOnly );
-    else
-        cmd->d->output = 0;
-
+    cmd->d->inputs.swap( conn.inputs );   assert( conn.inputs.empty() );
+    cmd->d->outputs.swap( conn.outputs ); assert( conn.outputs.empty() );
+    
     if ( const int err = cmd->start( line ) )
         return err; // ### call done() here?
 
