@@ -80,7 +80,7 @@ namespace _detail {
         if ( fd == -1 )
             return ASSUAN_INVALID_FD;
 #ifdef Q_OS_WIN32
-        return _get_osfhandle( fd );
+        return (assuan_fd_t)_get_osfhandle( fd );
 #else
         return fd;
 #endif

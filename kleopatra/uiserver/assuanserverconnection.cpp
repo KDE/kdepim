@@ -210,13 +210,13 @@ private:
             IO io;
             const std::string source = parsed[1];
             if ( source == "FD" ) {
-                assuan_fd_t fd = -1;
+                assuan_fd_t fd = (assuan_fd_t)-1;
                 if ( const gpg_error_t err = assuan_receivefd( conn.ctx.get(), &fd ) )
                     return err;
                 io.iodev = new KDPipeIODevice( fd, in ? QIODevice::ReadOnly : QIODevice::WriteOnly );
             } else if ( source.substr( 0, 3 ) == "FD=" ) {
 #ifdef Q_OS_WIN32
-                const assuan_fd_t fd = lexical_cast<intptr_t>( source.substr( 3 ) );
+                const assuan_fd_t fd = (assuan_fd_t)lexical_cast<intptr_t>( source.substr( 3 ) );
 #else
                 const assuan_fd_t fd = lexical_cast<assuan_fd_t>( source.substr( 3 ) );
 #endif
