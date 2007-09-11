@@ -161,7 +161,14 @@ AssuanServerConnection::Private::Private( int fd_, const std::vector< shared_ptr
         throw assuan_exception( gpg_error( GPG_ERR_INV_ARG ), "pre-assuan_init_socket_server_ext" );
 
     assuan_context_t naked_ctx = 0;
-    if ( const gpg_error_t err = assuan_init_socket_server_ext( &naked_ctx, fd, INIT_SOCKET_FLAGS ) )
+    if ( const gpg_error_t err = assuan_init_socket_server_ext( 
+			    &naked_ctx, 
+#ifdef Q_OS_WIN32
+			    (HANDLE)fd, 
+#else
+			    fd,
+#endif
+			    INIT_SOCKET_FLAGS ) )
         throw assuan_exception( err, "assuan_init_socket_server_ext" );
     
     ctx.reset( naked_ctx ); naked_ctx = 0;
