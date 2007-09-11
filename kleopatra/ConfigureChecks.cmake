@@ -27,6 +27,9 @@ if ( USABLE_ASSUAN_FOUND )
 endif( USABLE_ASSUAN_FOUND )
 
 if ( USABLE_ASSUAN_FOUND )
+  if(WIN32)
+    set( CMAKE_REQUIRED_DEFINITIONS "-DHAVE_W32_SYSTEM")
+  endif(WIN32)
   # check if assuan has assuan_fd_t
   check_cxx_source_compiles("
         #include <assuan.h>
@@ -75,3 +78,4 @@ macro_bool_to_01( USABLE_ASSUAN_FOUND  HAVE_USABLE_ASSUAN )
 
 set(CMAKE_REQUIRED_INCLUDES)
 set(CMAKE_REQUIRED_LIBRARIES)
+set(CMAKE_REQUIRED_DEFINITIONS)
