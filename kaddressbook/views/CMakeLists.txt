@@ -13,7 +13,6 @@ include_directories(
 
 set(kaddrbk_cardview_PART_SRCS 
    cardview.cpp 
-   colorlistbox.cpp 
    configurecardviewdialog.cpp 
    kaddressbookcardview.cpp )
 

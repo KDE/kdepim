@@ -316,8 +316,8 @@ bool DataStore::removeItemFlags( const PimItem &item, const QList<Flag> &flags )
 bool DataStore::appendLocation( Location &location )
 {
   SelectQueryBuilder<Location> qb;
-  qb.addValueCondition( Location::parentIdColumn(), "=", location.parentId() );
-  qb.addValueCondition( Location::nameColumn(), "=", location.name() );
+  qb.addValueCondition( Location::parentIdColumn(), Query::Equals, location.parentId() );
+  qb.addValueCondition( Location::nameColumn(), Query::Equals, location.name() );
   if ( !qb.exec() ) {
     qDebug() << "Unable to check location existence";
     return false;
@@ -439,8 +439,8 @@ bool Akonadi::DataStore::renameLocation(const Location & location, int newParent
   const bool move = location.parentId() != newParent;
 
   SelectQueryBuilder<Location> qb;
-  qb.addValueCondition( Location::parentIdColumn(), "=", newParent );
-  qb.addValueCondition( Location::nameColumn(), "=", newName );
+  qb.addValueCondition( Location::parentIdColumn(), Query::Equals, newParent );
+  qb.addValueCondition( Location::nameColumn(), Query::Equals, newName );
   if ( !qb.exec() || qb.result().count() > 0 )
     return false;
 
@@ -527,14 +527,13 @@ bool DataStore::appendMimeType( const QString & mimetype, int *insertId )
 
 
 /* --- PimItem ------------------------------------------------------- */
-bool DataStore::appendPimItem( const QByteArray & data,
+bool DataStore::appendPimItem( const QList<Part> & parts,
                                const MimeType & mimetype,
                                const Location & location,
                                const QDateTime & dateTime,
                                const QByteArray & remote_id,
                                PimItem &pimItem )
 {
-  pimItem.setData( data );
   pimItem.setMimeTypeId( mimetype.id() );
   pimItem.setLocationId( location.id() );
   if ( dateTime.isValid() )
@@ -552,13 +551,21 @@ bool DataStore::appendPimItem( const QByteArray & data,
   if ( !pimItem.insert() )
     return false;
 
+  // insert every part
+  foreach( Part part, parts ) {
+    part.setPimItemId( pimItem.id() );
+    part.setDatasize( part.data().size() );
+
+    if( !part.insert() )
+      return false;
+  }
+
   mNotificationCollector->itemAdded( pimItem, location, mimetype.name() );
   return true;
 }
 
-bool Akonadi::DataStore::updatePimItem(PimItem & pimItem, const QByteArray & data)
+bool Akonadi::DataStore::updatePimItem(PimItem & pimItem)
 {
-  pimItem.setData( data );
   pimItem.setAtime( QDateTime::currentDateTime() );
   if ( mSessionId != pimItem.location().resource().name().toLatin1() )
     pimItem.setDirty( true );
@@ -641,9 +648,9 @@ bool DataStore::cleanupPimItems( const Location &location )
   qb.addTable( PimItemFlagRelation::tableName() );
   qb.addTable( PimItem::tableName() );
   qb.addColumn( PimItemFlagRelation::leftFullColumnName() );
-  qb.addValueCondition( Flag::nameFullColumnName(), "=", QLatin1String("\\Deleted") );
-  qb.addValueCondition( PimItem::locationIdFullColumnName(), "=", location.id() );
-  qb.addColumnCondition( PimItemFlagRelation::rightFullColumnName(), "=", Flag::idFullColumnName() );
+  qb.addValueCondition( Flag::nameFullColumnName(), Query::Equals, QLatin1String("\\Deleted") );
+  qb.addValueCondition( PimItem::locationIdFullColumnName(), Query::Equals, location.id() );
+  qb.addColumnCondition( PimItemFlagRelation::rightFullColumnName(), Query::Equals, Flag::idFullColumnName() );
 
   if ( !qb.exec() )
     return false;
@@ -663,18 +670,11 @@ bool DataStore::cleanupPimItems( const Location &location )
   return ok;
 }
 
-QString fieldNameForDataType( FetchQuery::Type type )
-{
-  return QLatin1String("data");
-}
-
-QByteArray Akonadi::DataStore::retrieveDataFromResource( int uid, const QByteArray& remote_id,
-                                                         int locationid, FetchQuery::Type type )
+void Akonadi::DataStore::retrieveDataFromResource( int uid, const QByteArray& remote_id,
+                                                   const QString &resource, const QStringList &parts )
 {
   // TODO: error handling
   qDebug() << "retrieveDataFromResource()" << uid;
-  Location l = Location::retrieveById( locationid );
-  Resource r = l.resource();
 
   // check if that item is already been fetched by someone else
   mPendingItemDeliveriesMutex.lock();
@@ -696,11 +696,9 @@ QByteArray Akonadi::DataStore::retrieveDataFromResource( int uid, const QByteArr
       mPendingItemDeliveriesMutex.unlock();
 
       // call the resource
-      org::kde::Akonadi::Resource *interface = resourceInterface( r );
-      if ( interface ) {
-        // FIXME: add correct item part list
-        interface->requestItemDelivery( uid, QString::fromUtf8(remote_id), QStringList() );
-      }
+      org::kde::Akonadi::Resource *interface = resourceInterface( resource );
+      if ( interface )
+        interface->requestItemDelivery( uid, QString::fromUtf8(remote_id), parts );
 
       mPendingItemDeliveriesMutex.lock();
       qDebug() << "requestItemDelivery(): freeing uid" << uid;
@@ -708,59 +706,8 @@ QByteArray Akonadi::DataStore::retrieveDataFromResource( int uid, const QByteArr
       mPendingItemDeliveriesCondition.wakeAll();
       mPendingItemDeliveriesMutex.unlock();
   }
-
-  // get the delivered item
-  QSqlQuery query( m_database );
-  query.prepare( QString::fromLatin1("SELECT data FROM %1 WHERE %2 = :id")
-      .arg( PimItem::tableName(), PimItem::idColumn() ) );
-  query.bindValue( QLatin1String(":id"), uid );
-  if ( query.exec() && query.next() )
-    return query.value( 0 ).toByteArray();
-
-  return QByteArray();
 }
 
-
-PimItem Akonadi::DataStore::pimItemById( int id, FetchQuery::Type type )
-{
-  if ( !m_dbOpened )
-    return PimItem();
-
-  const QString field = fieldNameForDataType( type );
-  QStringList cols;
-  cols << PimItem::idColumn() << PimItem::locationIdColumn() << PimItem::mimeTypeIdColumn()
-       << PimItem::datetimeColumn() << PimItem::remoteIdColumn() << PimItem::atimeColumn() << PimItem::dirtyColumn();
-  QString statement = QString::fromLatin1( "SELECT %1, %2 FROM %3 WHERE %4 = :id" )
-      .arg( cols.join( QLatin1String(",") ), field, PimItem::tableName(), PimItem::idColumn() );
-
-  QSqlQuery query( m_database );
-  query.prepare( statement );
-  query.bindValue( QLatin1String(":id"), id );
-
-  if ( !query.exec() || !query.next() ) {
-    debugLastQueryError( query, "Error during selection of single PimItem." );
-    return PimItem();
-  }
-
-  int pimItemId = query.value( 0 ).toInt();
-  int location = query.value( 1 ).toInt();
-  int mimetype = query.value( 2 ).toInt();
-  QByteArray remote_id = query.value( 4 ).toByteArray();
-  QDateTime dateTime = dateTimeToQDateTime( query.value( 3 ).toByteArray() );
-  QDateTime atime = dateTimeToQDateTime( query.value( 5 ).toByteArray() );
-  bool dirty = query.value( 6 ).toBool();
-  QByteArray data = query.value( 7 ).toByteArray();
-  if ( data.isEmpty() && type != FetchQuery::FastType )
-      data = retrieveDataFromResource( id, remote_id, location, type );
-
-  // update access time
-  PimItem item = PimItem( pimItemId, remote_id, data, location, mimetype, dateTime, atime, dirty );
-  item.setAtime( QDateTime::currentDateTime() );
-  if ( !item.update() )
-    qDebug() << "Failed to update access time for item" << item.id();
-
-  return item;
-}
 
 QList<PimItem> DataStore::listPimItems( const Location & location, const Flag &flag )
 {
@@ -769,11 +716,11 @@ QList<PimItem> DataStore::listPimItems( const Location & location, const Flag &f
 
   SelectQueryBuilder<PimItem> qb;
   qb.addTable( PimItemFlagRelation::tableName() );
-  qb.addColumnCondition( PimItem::idFullColumnName(), "=", PimItemFlagRelation::leftFullColumnName() );
-  qb.addValueCondition( PimItemFlagRelation::rightFullColumnName(), "=", flag.id() );
+  qb.addColumnCondition( PimItem::idFullColumnName(), Query::Equals, PimItemFlagRelation::leftFullColumnName() );
+  qb.addValueCondition( PimItemFlagRelation::rightFullColumnName(), Query::Equals, flag.id() );
 
   if ( location.isValid() )
-    qb.addValueCondition( PimItem::locationIdFullColumnName(), "=", location.id() );
+    qb.addValueCondition( PimItem::locationIdFullColumnName(), Query::Equals, location.id() );
 
    if ( !qb.exec() )
     return QList<PimItem>();
@@ -802,218 +749,12 @@ int DataStore::highestPimItemId() const
   return query.value( 0 ).toInt();
 }
 
-int DataStore::highestPimItemCountByLocation( const Location &location )
-{
-  if ( !location.isValid() )
-    return -1;
-
-  if ( location.resource().name() == QLatin1String("akonadi_search_resource") ) {
-    CountQueryBuilder builder;
-    builder.addTable( LocationPimItemRelation::tableName() );
-    builder.addValueCondition( LocationPimItemRelation::leftColumn(), "=", location.id() );
-    if ( !builder.exec() )
-      return -1;
-    return builder.result();
-  } else {
-    int cnt = PimItem::count( PimItem::locationIdColumn(), location.id() );
-    if ( cnt < 0 )
-      return -1;
-
-    return cnt + 1;
-  }
-}
-
-
-QList<PimItem> Akonadi::DataStore::fetchMatchingPimItemsByUID( const FetchQuery &query, const Location& l )
-{
-    return matchingPimItemsByUID( query.sequences(), l, query.type() );
-}
-
-QList<PimItem> DataStore::matchingPimItemsByUID( const QList<QByteArray> &sequences,
-                                                 const Location& location,
-                                                 FetchQuery::Type type )
-{
-  if ( !m_dbOpened )
-    return QList<PimItem>();
-
-  int highestEntry = highestPimItemId();
-  if ( highestEntry == -1 ) {
-    qDebug( "DataStore::matchingPimItems: Invalid highest entry number '%d' ", highestEntry );
-    return QList<PimItem>();
-  }
-
-  QStringList statementParts;
-  for ( int i = 0; i < sequences.count(); ++i ) {
-    if ( sequences[ i ].contains( ':' ) ) {
-      QList<QByteArray> pair = sequences[ i ].split( ':' );
-      const QString left( QString::fromLatin1( pair[ 0 ] ) );
-      const QString right( QString::fromLatin1( pair[ 1 ] ) );
-
-      if ( left == QLatin1String("*") && right == QLatin1String("*") ) {
-        statementParts.append( QString::fromLatin1( "id = %1" ).arg( QString::number( highestEntry ) ) );
-      } else if ( left == QLatin1String("*") ) {
-        statementParts.append( QString::fromLatin1( "(id >=1 AND id <= %1)" ).arg( right ) );
-      } else if ( right == QLatin1String("*") ) {
-        statementParts.append( QString::fromLatin1( "(id >=%1 AND id <= %2)" ).arg( left ).arg( highestEntry ) );
-      } else {
-        statementParts.append( QString::fromLatin1( "(id >=%1 AND id <= %2)" ).arg( left, right ) );
-      }
-    } else {
-      statementParts.append( QString::fromLatin1( "id = %1" ).arg( QString::fromLatin1( sequences[ i ] ) ) );
-    }
-  }
-
-  QString statement = QString::fromLatin1( "SELECT id FROM %1 WHERE (%2)" )
-      .arg( PimItem::tableName(), statementParts.join( QLatin1String(" OR ") ) );
-  if ( location.isValid() )
-     statement += QString::fromLatin1( " AND %1 = :location_id" ).arg( PimItem::locationIdColumn() );
-
-  QSqlQuery query( m_database );
-  query.prepare( statement );
-  if ( location.isValid() )
-    query.bindValue( QLatin1String(":location_id"), location.id() );
-
-  if ( !query.exec() ) {
-    debugLastQueryError( query, "DataStore::matchingPimItemsBySequenceNumbers" );
-    return QList<PimItem>();
-  }
-
-  QList<PimItem> pimItems;
-  while ( query.next() ) {
-    PimItem item = pimItemById( query.value( 0 ).toInt(), type );
-    if ( !item.isValid() ) {
-      qDebug( "DataStore::matchingPimItems: Invalid uid '%d' returned by search ", query.value( 0 ).toInt() );
-      return QList<PimItem>();
-    }
-
-    pimItems.append( item );
-  }
-
-  return pimItems;
-
-}
-
-QList<PimItem> Akonadi::DataStore::fetchMatchingPimItemsBySequenceNumbers( const FetchQuery & query,
-                                                                           const Location & location )
-{
-  return matchingPimItemsBySequenceNumbers( query.sequences(), location, FetchQuery::FastType );
-}
-
-QList<PimItem> DataStore::matchingPimItemsBySequenceNumbers( const QList<QByteArray> &sequences,
-                                                             const Location &location,
-                                                             FetchQuery::Type type )
-{
-  if ( !m_dbOpened || !location.isValid() )
-    return QList<PimItem>();
-
-  QueryBuilder builder( QueryBuilder::Select );
-  if ( location.resource().name() != QLatin1String( "akonadi_search_resource" ) ) {
-    builder.addTable( PimItem::tableName() );
-    builder.addValueCondition( PimItem::locationIdColumn(), "=", location.id() );
-    builder.addColumn( PimItem::idColumn() );
-  } else {
-    builder.addTable( LocationPimItemRelation::tableName() );
-    builder.addValueCondition( LocationPimItemRelation::leftColumn(), "=", location.id() );
-    builder.addColumn( LocationPimItemRelation::rightColumn() );
-  }
-
-  if ( !builder.exec() )
-    return PimItem::List();
-
-  int highestEntry = highestPimItemCountByLocation( location );
-  if ( highestEntry == -1 ) {
-    qDebug( "DataStore::matchingPimItemsBySequenceNumbers: Invalid highest entry number '%d' ", highestEntry );
-    return QList<PimItem>();
-  }
-
-  // iterate over the whole query to make seek possible.
-  QSqlQuery query = builder.query();
-  while ( query.next() ) {}
-
-  QList<PimItem> pimItems;
-  for ( int i = 0; i < sequences.count(); ++i ) {
-    if ( sequences[ i ].contains( ':' ) ) {
-      int min = 0;
-      int max = 0;
-
-      QList<QByteArray> pair = sequences[ i ].split( ':' );
-      if ( pair[ 0 ] == "*" && pair[ 1 ] == "*" ) {
-        min = max = highestEntry - 1;
-      } else if ( pair[ 0 ] == "*" ) {
-        min = 0;
-        max = pair[ 1 ].toInt();
-      } else if ( pair[ 1 ] == "*" ) {
-        min = pair[ 0 ].toInt();
-        max = highestEntry - 1;
-      } else {
-        min = pair[ 0 ].toInt();
-        max = pair[ 1 ].toInt();
-      }
-
-      if ( min < 1 )
-        min = 1;
-
-      if ( max < 1 )
-        max = 1;
-
-      if ( max < min )
-        qSwap( max, min );
-
-      // transform from imap index to query index
-      min--; max--;
-
-      for ( int i = min; i <= max; ++i ) {
-        if ( !query.seek( i ) ) {
-          qDebug( "DataStore::matchingPimItemsBySequenceNumbers: Unable to seek at position '%d' ", i );
-          return QList<PimItem>();
-        }
-
-        PimItem item = pimItemById( query.value( 0 ).toInt(), type );
-        if ( !item.isValid() ) {
-          qDebug( "DataStore::matchingPimItemsBySequenceNumbers: Invalid uid '%d' returned by search ", query.value( 0 ).toInt() );
-          return QList<PimItem>();
-        }
-
-        pimItems.append( item );
-      }
-    } else {
-
-      int pos = 0;
-      if ( sequences[ i ] == "*" )
-        pos = query.size() - 1;
-      else
-        pos = sequences[ i ].toInt();
-
-      if ( pos < 1 )
-        pos = 1;
-
-      // transform from imap index to query index
-      pos--;
-
-      if ( !query.seek( pos ) ) {
-        qDebug( "DataStore::matchingPimItemsBySequenceNumbers: Unable to seek at position '%d' ", pos );
-        return QList<PimItem>();
-      }
-
-      PimItem item = pimItemById( query.value( 0 ).toInt(), type );
-      if ( !item.isValid() ) {
-        qDebug( "DataStore::matchingPimItemsBySequenceNumbers: Invalid uid '%d' returned by search ", query.value( 0 ).toInt() );
-        return QList<PimItem>();
-      }
-
-      pimItems.append( item );
-    }
-  }
-
-  return pimItems;
-}
-
 
 bool DataStore::addCollectionAttribute(const Location & loc, const QByteArray & key, const QByteArray & value)
 {
   SelectQueryBuilder<LocationAttribute> qb;
-  qb.addValueCondition( LocationAttribute::locationIdColumn(), "=", loc.id() );
-  qb.addValueCondition( LocationAttribute::typeColumn(), "=", key );
+  qb.addValueCondition( LocationAttribute::locationIdColumn(), Query::Equals, loc.id() );
+  qb.addValueCondition( LocationAttribute::typeColumn(), Query::Equals, key );
   if ( !qb.exec() )
     return false;
 
@@ -1037,8 +778,8 @@ bool DataStore::addCollectionAttribute(const Location & loc, const QByteArray & 
 bool Akonadi::DataStore::removeCollectionAttribute(const Location & loc, const QByteArray & key)
 {
   SelectQueryBuilder<LocationAttribute> qb;
-  qb.addValueCondition( LocationAttribute::locationIdColumn(), "=", loc.id() );
-  qb.addValueCondition( LocationAttribute::typeColumn(), "=", key );
+  qb.addValueCondition( LocationAttribute::locationIdColumn(), Query::Equals, loc.id() );
+  qb.addValueCondition( LocationAttribute::typeColumn(), Query::Equals, key );
   if ( !qb.exec() )
     return false;
 
@@ -1177,24 +918,24 @@ bool Akonadi::DataStore::inTransaction() const
   return m_inTransaction;
 }
 
-org::kde::Akonadi::Resource * Akonadi::DataStore::resourceInterface( const Resource &res )
+org::kde::Akonadi::Resource * Akonadi::DataStore::resourceInterface( const QString &res )
 {
   org::kde::Akonadi::Resource* iface = 0;
-  if ( mResourceInterfaceCache.contains( res.id() ) )
-    iface = mResourceInterfaceCache.value( res.id() );
+  if ( mResourceInterfaceCache.contains( res ) )
+    iface = mResourceInterfaceCache.value( res );
   if ( iface && iface->isValid() )
     return iface;
 
   delete iface;
-  iface = new org::kde::Akonadi::Resource( QLatin1String("org.kde.Akonadi.Resource.") + res.name(),
+  iface = new org::kde::Akonadi::Resource( QLatin1String("org.kde.Akonadi.Resource.") + res,
                                            QLatin1String("/"), QDBusConnection::sessionBus(), this );
   if ( !iface || !iface->isValid() ) {
     qDebug() << QString::fromLatin1( "Cannot connect to agent instance with identifier '%1', error message: '%2'" )
-                                    .arg( res.name(), iface ? iface->lastError().message() : QString() );
+                                    .arg( res, iface ? iface->lastError().message() : QString() );
     delete iface;
     return 0;
   }
-  mResourceInterfaceCache.insert( res.id(), iface );
+  mResourceInterfaceCache.insert( res, iface );
   return iface;
 }
 

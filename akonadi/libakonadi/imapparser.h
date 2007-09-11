@@ -22,6 +22,8 @@
 
 #include "akonadiprotocol_export.h"
 
+#include <libakonadi/imapset.h>
+
 #include <QtCore/QByteArray>
 #include <QtCore/QList>
 
@@ -109,6 +111,24 @@ class AKONADIPROTOCOL_EXPORT ImapParser
       @param data Source data.
     */
     static QByteArray quote( const QByteArray &data );
+
+    /**
+      Parse an IMAP sequence set.
+      @param data source data.
+      @param result The parse sequence set.
+      @param start start parsing at this index.
+      @return end position of parsing.
+    */
+    static int parseSequenceSet( const QByteArray &data, ImapSet &result, int start = 0 );
+
+    /**
+      Parse an IMAP date/time value.
+      @param data source data.
+      @param dateTime The result date/time.
+      @param start Start parsing at this index.
+      @return end position of parsing.
+    */
+    static int parseDateTime( const QByteArray &data, QDateTime &dateTime, int start = 0 );
 
 
     /**

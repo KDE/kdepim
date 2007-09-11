@@ -54,7 +54,6 @@
 // KMobileTools library includes
 #include <libkmobiletools/enginexp.h>
 #include <libkmobiletools/kmobiletools_cfg.h>
-#include <libkmobiletools/devicesconfig.h>
 #include <libkmobiletools/homepage.h>
 #include <libkmobiletools/aboutdata.h>
 #include <libkmobiletools/contactslist.h>
@@ -66,6 +65,7 @@
 #include <libkmobiletools/coreservice.h>
 #include <libkmobiletools/ifaces/guiservice.h>
 #include <libkmobiletools/ifaces/actionprovider.h>
+#include <libkmobiletools/config.h>
 
 #include "devicemanager.h"
 #include "devicehome.h"
@@ -73,8 +73,6 @@
 #include "servicemodel/servicemodel.h"
 #include "servicemodel/deviceitem.h"
 #include "servicemodel/serviceitem.h"
-
-#define CURCFGVER 20070329
 
 typedef KParts::GenericFactory<kmobiletoolsMainPart> kmobiletoolsMainPartFactory;
 K_EXPORT_COMPONENT_FACTORY( libkmobiletoolsmainpart, kmobiletoolsMainPartFactory )
@@ -147,10 +145,10 @@ bool kmobiletoolsMainPart::openFile() {
 
 void kmobiletoolsMainPart::slotAutoLoadDevices()
 {
-    QStringList sl_parts = KMobileTools::MainConfig::devicelist();
-    for ( QStringList::Iterator it = sl_parts.begin(); it != sl_parts.end(); ++it ) {
-        if( DEVCFG( *it )->autoload() )
-            KMobileTools::DeviceLoader::instance()->loadDevice( DEVCFG(*it)->devicename(), DEVCFG(*it)->engine() );
+    QStringList deviceList = KMobileTools::Config::instance()->deviceList();
+    for( int i=0; i<deviceList.size(); i++ ) {
+        QString engine = KMobileTools::Config::instance()->engine( deviceList.at( i ) );
+        KMobileTools::DeviceLoader::instance()->loadDevice( deviceList.at( i ), engine );
     }
 }
 
@@ -221,6 +219,7 @@ bool kmobiletoolsMainPart::checkConfigVersion()
 {
     return true; // it doesn't seem to work perfectly in the kde4 port, and we've other stuff to fix first
     /// @TODO fix this
+    /*
     uint cfgver=KMobileTools::MainConfig::self()->configversion();
     if(cfgver>=CURCFGVER) return true;
     kDebug() <<"Checking config version::" << cfgver;
@@ -253,6 +252,7 @@ bool kmobiletoolsMainPart::checkConfigVersion()
     KMobileTools::MainConfig::self()->writeConfig();
     QTimer::singleShot(300, this, SLOT(slotQuit()) );
     return false;
+    */
 }
 
 

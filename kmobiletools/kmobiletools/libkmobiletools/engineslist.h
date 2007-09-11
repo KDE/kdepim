@@ -35,6 +35,9 @@ class EnginesListPrivate;
 class KConfigSkeleton;
 namespace KMobileTools {
 class Engine;
+/**
+ * @deprecated use DeviceLoader instead of this class
+ */
 class KMOBILETOOLS_EXPORT EnginesList : public QObject, public QList<KMobileTools::Engine*>
 {
     Q_OBJECT

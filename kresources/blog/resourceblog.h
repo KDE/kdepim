@@ -260,11 +260,31 @@ class KCAL_RESOURCEBLOG_EXPORT ResourceBlog : public ResourceCached
 
       @param type The type of the error.
       @param errorMessage The specific cause of the error.
-      @param posting The relevant posting, if any.
     */
     void slotError( const KBlog::Blog::ErrorType &type,
-                    const QString &errorMessage,
-                    KBlog::BlogPosting *posting = 0 );
+                    const QString &errorMessage );
+
+    /**
+    Prints an error on a XML-RPC failure involving a posting.
+
+    @param type The type of the error.
+    @param errorMessage The specific cause of the error.
+    @param posting The relevant posting.
+    */
+    void slotErrorPosting( const KBlog::Blog::ErrorType &type,
+                           const QString &errorMessage,
+                           KBlog::BlogPosting *posting );
+
+    /**
+    Prints an error on a XML-RPC failure involving media.
+
+    @param type The type of the error.
+    @param errorMessage The specific cause of the error.
+    @param media The relevant posting media.
+    */
+    void slotErrorMedia( const KBlog::Blog::ErrorType &type,
+                         const QString &errorMessage,
+                         KBlog::BlogMedia *media );
 
     /**
       Updates the latest stored post ID to the ID returned from the blog post

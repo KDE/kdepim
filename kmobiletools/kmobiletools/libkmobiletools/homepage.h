@@ -30,6 +30,9 @@ class Engine;
 
 /**
 @author Marco Gulino
+
+@todo make this class useful in post-kmt0.5-beta
+@deprecated please avoid using this class for now since the api will change soon
 */
 class KUrl;
 class homepagePartPrivate;

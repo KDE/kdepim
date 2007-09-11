@@ -187,7 +187,7 @@ GeoDialog::GeoDialog( QWidget *parent, const char *name )
 
   QGridLayout *topLayout = new QGridLayout( page );
   topLayout->setSpacing( spacingHint() );
-  topLayout->setMargin( marginHint() );
+  topLayout->setMargin( 0 );
   topLayout->setRowStretch( 1, 1 );
 
   mMapWidget = new GeoMapWidget( page );

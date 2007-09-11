@@ -75,7 +75,7 @@
         </widget>
       </item>
       <item rowspan="5" row="0" column="0" colspan="1" >
-        <widget class="K3ListView" name="lvAddresses" >
+        <widget class="QTreeWidget" name="lvAddresses" >
           <property name="sizePolicy" >
             <sizepolicy>
               <hsizetype>7</hsizetype>
@@ -90,13 +90,13 @@
               <height>28</height>
             </size>
           </property>
+          <property name="rootIsDecorated" >
+            <bool>false</bool>
+          </property>
           <property name="selectionMode" stdset="0" >
-            <enum>Extended</enum>
+            <enum>ExtendedSelection</enum>
           </property>
           <property name="allColumnsShowFocus" >
-            <bool>true</bool>
-          </property>
-          <property name="fullWidth" >
             <bool>true</bool>
           </property>
           <column>

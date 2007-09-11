@@ -271,7 +271,7 @@ char * Kleo::QGpgMEJob::getPassphrase( const char * useridHint, const char * /*d
                 i18n( "You need a passphrase to unlock the secret key for user:<br/> %1",
                       QString::fromUtf8( useridHint ) );
   msg += "<br/><br/>";
-  msg.prepend( "<qt>" );
+  //msg.prepend( "<qt>" );
   msg += i18n( "This dialog will reappear every time the passphrase is needed. For a more secure solution that also allows caching the passphrase, use gpg-agent." ) + "<br/>";
   const QString gpgAgent = KStandardDirs::findExe( "gpg-agent" );
   if ( !gpgAgent.isEmpty() ) {
@@ -280,11 +280,11 @@ char * Kleo::QGpgMEJob::getPassphrase( const char * useridHint, const char * /*d
   } else {
     msg += i18n( "gpg-agent is part of gnupg-%1, which you can download from %2" ,
              QString("1.9") ,
-             QString("http://www.gnupg.org/download") );  // add #gnupg2 if you can make this a real link
+             QString("<a href=\"http://www.gnupg.org/download#gnupg2\">gnupg.org</a>") );
   }
   msg += "<br/>";
   msg += i18n( "For information on how to set up gpg-agent, see %1" ,
-           QString("http://kmail.kde.org/kmail-pgpmime-howto.html") );
+    QString("<a href=\"http://kmail.kde.org/kmail-pgpmime-howto.html\">http://kmail.kde.org/kmail-pgpmime-howto.html</a>") );
   msg += "<br/><br/>";
   msg += i18n( "Enter passphrase:" );
   KPasswordDialog dlg;

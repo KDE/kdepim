@@ -30,7 +30,6 @@ class QSqlQuery;
 
 #include "akonadi_export.h"
 #include "entities.h"
-#include "fetchquery.h"
 #include "notificationcollector.h"
 
 class OrgKdeAkonadiResourceInterface;
@@ -111,7 +110,7 @@ class AKONADI_SERVER_EXPORT DataStore : public QObject
     bool init();
 
     /**
-      Per thread signleton.
+      Per thread singleton.
     */
     static DataStore* self();
 
@@ -149,16 +148,15 @@ class AKONADI_SERVER_EXPORT DataStore : public QObject
     bool appendMimeType( const QString & mimetype, int *insertId = 0 );
 
     /* --- PimItem ------------------------------------------------------- */
-    bool appendPimItem( const QByteArray & data,
+    bool appendPimItem( const QList<Part> & parts,
                         const MimeType & mimetype,
                         const Location & location,
                         const QDateTime & dateTime,
                         const QByteArray & remote_id,
                         PimItem &pimItem );
-    bool updatePimItem( PimItem &pimItem, const QByteArray &data );
+    bool updatePimItem( PimItem &pimItem );
     bool updatePimItem( PimItem &pimItem, const Location &destination );
     bool updatePimItem( PimItem &pimItem, const QString &remoteId );
-    PimItem pimItemById( int id, FetchQuery::Type type = FetchQuery::FastType );
 
     QList<PimItem> listPimItems( const Location & location, const Flag &flag );
 
@@ -173,20 +171,8 @@ class AKONADI_SERVER_EXPORT DataStore : public QObject
     bool cleanupPimItems( const Location &location );
 
     int highestPimItemId() const;
-    int highestPimItemCountByLocation( const Location &location );
 
-    QList<PimItem> matchingPimItemsByUID( const QList<QByteArray> &sequences,
-                                          const Location & l = Location(),
-                                          FetchQuery::Type type = FetchQuery::FastType );
-    QList<PimItem> matchingPimItemsBySequenceNumbers( const QList<QByteArray> &sequences,
-                                                      const Location &location,
-                                                      FetchQuery::Type type = FetchQuery::FastType );
-
-    QList<PimItem> fetchMatchingPimItemsByUID( const FetchQuery &query, const Location& l = Location() );
-    QList<PimItem> fetchMatchingPimItemsBySequenceNumbers( const FetchQuery &query,
-                                                           const Location &location );
-
-    /* --- Collection attribues ------------------------------------------ */
+    /* --- Collection attributes ------------------------------------------ */
     bool addCollectionAttribute( const Location &loc, const QByteArray &key, const QByteArray &value );
     bool removeCollectionAttribute( const Location &loc, const QByteArray &key );
 
@@ -261,10 +247,10 @@ protected:
 
     void debugLastDbError( const char* actionDescription ) const;
     void debugLastQueryError( const QSqlQuery &query, const char* actionDescription ) const;
-    QByteArray retrieveDataFromResource( int uid, const QByteArray& remote_id,
-                                         int locationid, FetchQuery::Type type );
-
   public:
+    void retrieveDataFromResource( int uid, const QByteArray& remote_id,
+                                         const QString &resource, const QStringList &parts );
+
     /** Returns the id of the most recent inserted row, or -1 if there's no such
         id.
         @param query the query we want to get the last insert id for
@@ -291,7 +277,7 @@ protected:
     /**
       Returns the D-Bus interface of the given resource.
     */
-    OrgKdeAkonadiResourceInterface* resourceInterface( const Resource &res );
+    OrgKdeAkonadiResourceInterface* resourceInterface( const QString &res );
 
 private:
     QString m_connectionName;
@@ -314,7 +300,7 @@ private:
     static QString mDbConnectionOptions;
 
     // resource dbus interface cache
-    QHash<int, OrgKdeAkonadiResourceInterface*> mResourceInterfaceCache;
+    QHash<QString, OrgKdeAkonadiResourceInterface*> mResourceInterfaceCache;
 };
 
 }

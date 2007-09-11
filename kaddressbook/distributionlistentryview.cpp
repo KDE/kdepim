@@ -2,7 +2,7 @@
 #include "imagewidget.h"
 #include <interfaces/core.h>
 
-#include <libkdepim/resourceabc.h>
+#include <kabc/resourceabc.h>
 
 #include <kabc/addressbook.h>
 #include <kabc/resource.h>

@@ -208,7 +208,7 @@
        </widget>
       </item>
       <item rowspan="3" row="1" column="0" >
-       <widget class="K3ListBox" name="letterListBox" />
+       <widget class="KListWidget" name="letterListBox" />
       </item>
       <item row="1" column="1" >
        <widget class="QPushButton" name="groupButton" >
@@ -249,9 +249,9 @@
  <pixmapfunction>qPixmapFromMimeSource</pixmapfunction>
  <customwidgets>
   <customwidget>
-   <class>K3ListBox</class>
-   <extends></extends>
-   <header>k3listbox.h</header>
+   <class>KListWidget</class>
+   <extends>QListWidget</extends>
+   <header>KListWidget</header>
    <container>0</container>
    <pixmap></pixmap>
   </customwidget>

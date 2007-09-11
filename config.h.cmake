@@ -1,6 +1,3 @@
-/* Define if you have cyrus-sasl2 libraries */
-#cmakedefine HAVE_LIBSASL2 1
-
 /* Define to 1 if you want to use the new distribution lists */
 #cmakedefine KDEPIM_NEW_DISTRLISTS 1
 

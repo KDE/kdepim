@@ -154,7 +154,6 @@ KABConfigWidget::KABConfigWidget( QWidget *parent, const char *name )
                                  "<li>%l: Location</li>"
                                  "<li>%z: Zip Code</li>"
                                  "<li>%c: Country ISO Code</li> </ul>" ) );
-  mLocationMapURL->addItems( KABPrefs::instance()->locationMapURLs() );
   boxLayout->addWidget( mLocationMapURL );
   layout->addWidget( groupBox );
 
@@ -174,6 +173,8 @@ KABConfigWidget::KABConfigWidget( QWidget *parent, const char *name )
   mAddresseeWidget = new AddresseeWidget( this );
   tabWidget->addTab( mAddresseeWidget, i18n( "Contact" ) );
   connect( mAddresseeWidget, SIGNAL( modified() ), SLOT( modified() ) );
+
+  mLocationMapURL->addItems( KABPrefs::instance()->locationMapURLs() );
 }
 
 void KABConfigWidget::restoreSettings()

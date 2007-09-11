@@ -76,6 +76,7 @@ void ViewManager::restoreSettings()
   QString activeViewName = KABPrefs::instance()->currentView();
 
   mActionSelectView->setItems( mViewNameList );
+  mActionSelectView->setCurrentItem( mViewNameList.indexOf( activeViewName ) );
 
   // Filter
   mFilterList = Filter::restore( mCore->config(), "Filter" );

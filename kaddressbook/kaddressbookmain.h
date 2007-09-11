@@ -49,7 +49,8 @@ class KAddressBookMain : public KXmlGuiWindow
 
   public slots:
     void addEmail( QString addr );
-    void importVCard( const QString& vCardURL );
+    void importVCard( const KUrl& url );
+    void importVCardFromData( const QString& vCard );
     // FIXME the below was ASYNC, but moc seems to not like that, at present
     void showContactEditor( QString uid );
     void newContact();

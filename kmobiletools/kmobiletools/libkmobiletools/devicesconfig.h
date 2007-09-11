@@ -50,13 +50,9 @@ class KMOBILETOOLS_EXPORT DevicesConfig : public DevicesConfigBase
     DevicesConfig(const QString &);
     ~DevicesConfig();
     static KMobileTools::DevicesConfig *prefs(const QString &groupName);
-    static bool hasPrefs(const QString &groupName);
     static void deletePrefs(const QString &groupName);
     static const QString deviceGroup( const QString &devicename);
     static const QString firstFreeGroup();
-    static const QString engineTypeName(const QString &libName);
-    static const QPixmap deviceTypeIcon(const QString &groupName, K3Icon::Group group, int size=0);
-    static const QString deviceTypeIconPath(const QString &groupName, int groupOrSize);
     private:
         DevicesConfigPrivate *const d;
 };

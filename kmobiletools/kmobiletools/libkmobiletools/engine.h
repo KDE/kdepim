@@ -49,6 +49,8 @@ class EngineData;
 /**
  * @author Marco Gulino
  * @author Matthias Lechner
+ * 
+ * @deprecated use EngineXP instead of this class
  */
 class KMOBILETOOLS_EXPORT Engine : public QObject
 {

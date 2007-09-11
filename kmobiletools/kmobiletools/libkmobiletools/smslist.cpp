@@ -214,11 +214,12 @@ void SMSList::saveToMailBox(const QString &engineName)
  */
 void SMSList::saveToMailBox() const
 {
-    QDir savedir=(KMobileTools::DevicesConfig::prefs(engineName() ))->maildir_path();
+    /// @todo this config entry has been removed, port or remove...
+    QDir savedir;//=(KMobileTools::DevicesConfig::prefs(engineName() ))->maildir_path();
     QString dir=savedir.dirName();
     savedir.cdUp();
     dir=savedir.absolutePath() + QDir::separator() + '.' + dir + ".directory"
-            + QDir::separator() + '.' + KMobileTools::DevicesConfig::prefs(d->s_enginename)->devicename() + ".directory";
+            + QDir::separator() + '.' + KMobileTools::DevicesConfig::prefs(d->s_enginename)->deviceName() + ".directory";
     QListIterator<SMS*> it(*this);
     while( it.hasNext() )
     {

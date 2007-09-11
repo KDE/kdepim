@@ -40,6 +40,7 @@ class KConfig;
 
 namespace KABC { class AddressBook; }
 
+namespace KPIM { class ColorListBox; }
 
 /**
   Configure dialog for the card view. This dialog inherits from the
@@ -103,7 +104,7 @@ class CardViewLookNFeelPage : public KVBox {
               *cbEnableCustomColors,
               *cbDrawSeps, *cbDrawBorders,
               *cbShowFieldLabels, *cbShowEmptyFields;
-    class ColorListBox *lbColors;
+    KPIM::ColorListBox *lbColors;
     QLabel *lTextFont, *lHeaderFont;
     class KPushButton *btnFont, *btnHeaderFont;
     class QSpinBox *sbMargin, *sbSpacing, *sbSepWidth;

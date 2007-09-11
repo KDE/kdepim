@@ -19,7 +19,6 @@
 
 #include <kxmlguiwindow.h>
 #include <kdialog.h>
-#include <keditcl.h>
 #include <QLineEdit>
 #include <QRegExp>
 #include <QByteArray>
@@ -36,20 +35,19 @@
 #include <QSplitter>
 
 #include <kdeversion.h>
-#include <keditcl.h>
 #include <kprocess.h>
 #include <kabc/addresslineedit.h>
 
 class Q3GroupBox;
 
-class K3Spell;
-class K3DictSpellingHighlighter;
 class KSelectAction;
 class KToggleAction;
 class KNLocalArticle;
 class KNAttachment;
 class KComboBox;
 class QComboBox;
+class KMeditor;
+
 namespace KPIMUtils { class SpellingFilter; }
 using KPIMUtils::SpellingFilter;
 
@@ -124,7 +122,6 @@ class KNComposer : public KXmlGuiWindow {
     bool e_xternalEdited;
     KProcess *e_xternalEditor;
     KTemporaryFile *e_ditorTempfile;
-    K3Spell *s_pellChecker;
     SpellingFilter* mSpellingFilter;
 
     //Attachments
@@ -161,7 +158,6 @@ class KNComposer : public KXmlGuiWindow {
     void slotToggleWordWrap();
     void slotUndoRewrap();
     void slotExternalEditor();
-    void slotSpellcheck();
 
     void slotUpdateStatusBar();
     void slotUpdateCursorPos();
@@ -188,9 +184,9 @@ class KNComposer : public KXmlGuiWindow {
     void slotAttachmentRemove(Q3ListViewItem *it);
 
     // spellcheck operation
-    void slotSpellStarted(K3Spell *);
-    void slotSpellDone(const QString&);
-    void slotSpellFinished();
+    //void slotSpellStarted(K3Spell *);
+    //void slotSpellDone(const QString&);
+    //void slotSpellFinished();
 
     // DND handling
     virtual void slotDragEnterEvent(QDragEnterEvent *);
@@ -202,8 +198,6 @@ class KNComposer : public KXmlGuiWindow {
     void slotCopy();
     void slotPaste();
     void slotSelectAll();
-    void slotMisspelling(const QString &text, const QStringList &lst, unsigned int pos);
-    void slotCorrected (const QString &oldWord, const QString &newWord, unsigned int pos);
     void addRecentAddress();
 
   protected:
@@ -237,7 +231,6 @@ class KNComposer::ComposerView  : public QSplitter {
     void hideAttachmentView();
     void showExternalNotification();
     void hideExternalNotification();
-    void restartBackgroundSpellCheck();
     QList<QWidget*> mEdtList;
 
     QLabel      *l_to,
@@ -252,7 +245,7 @@ class KNComposer::ComposerView  : public QSplitter {
     QPushButton *g_roupsBtn,
                 *t_oBtn;
 
-    Editor      *e_dit;
+    KMeditor      *e_dit;
     Q3GroupBox   *n_otification;
     QPushButton *c_ancelEditorBtn;
 
@@ -261,12 +254,10 @@ class KNComposer::ComposerView  : public QSplitter {
     QPushButton     *a_ttAddBtn,
                     *a_ttRemoveBtn,
                     *a_ttEditBtn;
-    K3DictSpellingHighlighter *mSpellChecker;
-
     bool v_iewOpen;
 };
 
-
+#if 0
 /** Message Compser editor, handles tabs (expanding them in textLine(), etc.) */
 class KNComposer::Editor : public KEdit {
 
@@ -293,11 +284,9 @@ protected slots:
     void slotSpellStarted( K3Spell *);
     void slotSpellDone(const QString &);
     void slotSpellFinished();
-    void slotMisspelling (const QString &, const QStringList &lst, unsigned int);
     virtual void cut();
     virtual void clear();
     virtual void del();
-    void slotAddSuggestion( const QString &, const QStringList &lst, unsigned int );
   signals:
     void sigDragEnterEvent(QDragEnterEvent *);
     void sigDropEvent(QDropEvent *);
@@ -318,7 +307,7 @@ private:
     QMap<QString,QStringList> m_replacements;
     QRegExp m_bound;
 };
-
+#endif
 
 /** Attachment view of the message composer. */
 class KNComposer::AttachmentView : public K3ListView {

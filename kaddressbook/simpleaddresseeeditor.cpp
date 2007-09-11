@@ -68,7 +68,7 @@ void SimpleAddresseeEditor::initGui()
 {
   QGridLayout *topLayout = new QGridLayout( this );
   topLayout->setSpacing( KDialog::spacingHint() );
-  topLayout->setMargin( KDialog::marginHint() );
+  topLayout->setMargin( 0 );
 
   QLabel *label = new QLabel( i18n( "Name:" ), this );
   topLayout->addWidget( label, 0, 0 );

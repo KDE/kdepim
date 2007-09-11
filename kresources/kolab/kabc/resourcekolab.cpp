@@ -78,7 +78,7 @@ static const char* s_attachmentMimeTypeDistList = "application/x-vnd.kolab.conta
 static const char* s_inlineMimeType = "text/x-vcard"; // the new mimetype name is text/directory, but keep this for compat
 
 KABC::ResourceKolab::ResourceKolab()
-  : KPIM::ResourceABC(),
+  : KABC::ResourceABC(),
     Kolab::ResourceKolabBase( "ResourceKolab_KABC" ),
     mCachedSubresource( QString() ), mLocked( false )
 {
@@ -86,7 +86,7 @@ KABC::ResourceKolab::ResourceKolab()
 }
 
 KABC::ResourceKolab::ResourceKolab( const KConfigGroup& config )
-  : KPIM::ResourceABC( config ),
+  : KABC::ResourceABC( config ),
     Kolab::ResourceKolabBase( "ResourceKolab_KABC" ),
     mCachedSubresource( QString() ), mLocked( false )
 {
@@ -136,7 +136,7 @@ void KABC::ResourceKolab::doClose()
   KConfig config( configFile() );
 
   Kolab::ResourceMap::ConstIterator it;
-  for ( it = mSubResources.begin(); it != mSubResources.end(); ++it ) { 
+  for ( it = mSubResources.begin(); it != mSubResources.end(); ++it ) {
     KConfigGroup group = config.group( it.key() );
     group.writeEntry( "Active", it.value().active() );
     group.writeEntry( "CompletionWeight", it.value().completionWeight() );

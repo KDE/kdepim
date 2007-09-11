@@ -43,7 +43,7 @@
 #include <kfontdialog.h>
 #include <kpushbutton.h>
 
-#include "colorlistbox.h"
+#include <libkdepim/colorlistbox.h>
 
 #include "configurecardviewdialog.h"
 
@@ -94,23 +94,23 @@ void CardViewLookNFeelPage::restoreSettings( const KConfigGroup &config )
   cbEnableCustomColors->setChecked( config.readEntry( "EnableCustomColors", false ) );
   QColor c;
   c = KGlobalSettings::baseColor();
-  lbColors->insertItem( new ColorListItem( i18n("Background Color"),
-        config.readEntry( "BackgroundColor", c ) ) );
+  lbColors->addColor( i18n("Background Color"), 
+                      config.readEntry( "BackgroundColor", c ) );
   c = palette().color( QPalette::Foreground );
-  lbColors->insertItem( new ColorListItem( i18n("Text Color"),
-        config.readEntry( "TextColor", c ) ) );
+  lbColors->addColor( i18n("Text Color"),
+                      config.readEntry( "TextColor", c ) );
   c = palette().color( QPalette::Button );
-  lbColors->insertItem( new ColorListItem( i18n("Header, Border & Separator Color"),
-        config.readEntry( "HeaderColor", c ) ) );
+  lbColors->addColor( i18n("Header, Border & Separator Color"),
+                      config.readEntry( "HeaderColor", c ) );
   c = palette().color( QPalette::ButtonText );
-  lbColors->insertItem( new ColorListItem( i18n("Header Text Color"),
-        config.readEntry( "HeaderTextColor", c ) ) );
+  lbColors->addColor( i18n("Header Text Color"),
+                      config.readEntry( "HeaderTextColor", c ) );
   c = palette().color( QPalette::Highlight );
-  lbColors->insertItem( new ColorListItem( i18n("Highlight Color"),
-        config.readEntry( "HighlightColor", c ) ) );
+  lbColors->addColor( i18n("Highlight Color"),
+                      config.readEntry( "HighlightColor", c ) );
   c = palette().color( QPalette::HighlightedText );
-  lbColors->insertItem( new ColorListItem( i18n("Highlighted Text Color"),
-        config.readEntry( "HighlightedTextColor", c ) ) );
+  lbColors->addColor( i18n("Highlighted Text Color"),
+                      config.readEntry( "HighlightedTextColor", c ) );
 
   enableColors();
 
@@ -254,7 +254,7 @@ void CardViewLookNFeelPage::initGUI()
   colorTab->setMargin( spacing );
   cbEnableCustomColors = new QCheckBox( i18n("&Enable custom colors"), colorTab );
   connect( cbEnableCustomColors, SIGNAL(clicked()), this, SLOT(enableColors()) );
-  lbColors = new ColorListBox( colorTab );
+  lbColors = new KPIM::ColorListBox( colorTab );
   tabs->addTab( colorTab, i18n("&Colors") );
 
   cbEnableCustomColors->setWhatsThis( i18n(

@@ -22,6 +22,7 @@
 #include <kiconloader.h>
 #include <klocale.h>
 #include <kglobalsettings.h>
+#include <kcolorscheme.h>
 #include "engine.h"
 #include "engineslist.h"
 #include <stdlib.h>
@@ -111,6 +112,7 @@ QString KMobiletoolsHelper::removeIntPrefix( const QString &number )
     return number;
 }
 
+/*
 QString KMobiletoolsHelper::translateNumber( const QString &s_number )
 {
     if(! s_number.length() ) return QString();
@@ -128,6 +130,7 @@ QString KMobiletoolsHelper::translateNumber( const QString &s_number )
     if(retval!=s_number) return retval;
     return s_number;
 }
+*/
 
 QString KMobiletoolsHelper::translateNumber( const QString &s_number, ContactsList *phoneBook )
 {
@@ -170,13 +173,13 @@ QString KMobiletoolsHelper::getTemplate()
             </head><body onResize=\"resize();\" onLoad=\"resize();\">\n";
     QString body_css=head_css;
     head_css=head_css.arg( KGlobalSettings::activeTextColor().name() )
-            .arg( KGlobalSettings::highlightColor().name() )
-            .arg( KGlobalSettings::highlightColor().name() )
-            .arg( KGlobalSettings::visitedLinkColor().name() );
-    body_css=body_css.arg( KGlobalSettings::linkColor().name() )
-            .arg( KGlobalSettings::visitedLinkColor().name() )
-            .arg( KGlobalSettings::visitedLinkColor().name() )
-            .arg( KGlobalSettings::visitedLinkColor().name() );
+            .arg( KColorScheme(QPalette::Active, KColorScheme::Selection).background().color().name() )
+            .arg( KColorScheme(QPalette::Active, KColorScheme::Selection).background().color().name() )
+            .arg( KColorScheme(QPalette::Active, KColorScheme::Window).foreground(KColorScheme::VisitedText).color().name() );
+    body_css=body_css.arg( KColorScheme(QPalette::Active, KColorScheme::Window).foreground(KColorScheme::LinkText).color().name() )
+            .arg( KColorScheme(QPalette::Active, KColorScheme::Window).foreground(KColorScheme::VisitedText).color().name() )
+            .arg( KColorScheme(QPalette::Active, KColorScheme::Window).foreground(KColorScheme::VisitedText).color().name() )
+            .arg( KColorScheme(QPalette::Active, KColorScheme::Window).foreground(KColorScheme::VisitedText).color().name() );
     QString s_template=body_css+
             "<div id=\"header\" style=\"border-bottom-style : hidden; border-bottom-width : 10; border-left-style : hidden;\n\
             border-left-width : 5; border-right-style : hidden; border-right-width : 5; border-spacing : 5; border-top-style :\n\
@@ -185,7 +188,7 @@ QString KMobiletoolsHelper::getTemplate()
     s_template=s_template
             .arg( KGlobalSettings::activeTitleColor().name() )
             .arg( KGlobalSettings::activeTextColor().name() )
-            .arg( KGlobalSettings::textColor().name() );
+            .arg( KColorScheme(QPalette::Active, KColorScheme::View).foreground().color().name() );
     s_template+= QString("<div id=\"footer\" style=\"border-bottom-style : hidden; border-bottom-width : 10; border-left-style : hidden;\n\
             border-left-width : 5; border-right-style : hidden; border-right-width : 5; border-spacing : 5; border-top-style :\n\
             hidden; border-top-width : 10; position: absolute; bottom: 10px; left: 10px; right: 10px; background-color: %1; color: %2\" align=\"right\">\n")
@@ -212,11 +215,12 @@ QString  KMobiletoolsHelper::getFooterLink(const QString &text, const QString &i
  */
 void KMobileTools::KMobiletoolsHelper::createMailDir(const QString &dirname)
 {
-    QString dirpath=KMobileTools::DevicesConfig::prefs(dirname)->maildir_path();
+    /// @todo this config entry has been removed, port or remove...
+    QString dirpath;//=KMobileTools::DevicesConfig::prefs(dirname)->maildir_path();
     QDir().mkdir( dirpath );
     QDir mailbox(dirpath);
     dirpath=mkMailDir(dirpath, true);
-    dirpath=mkMailDir(dirpath+QDir::separator()+ KMobileTools::DevicesConfig::prefs(dirname)->devicename() , true );
+    dirpath=mkMailDir(dirpath+QDir::separator()+ KMobileTools::DevicesConfig::prefs(dirname)->deviceName() , true );
     QString simPath=mkMailDir(dirpath+QDir::separator()+i18nc("SIM MailDir", "SIM"), true);
     QString phonePath=mkMailDir(dirpath+QDir::separator()+i18nc("Phone MailDir", "Phone"), true);
     mkMailDir(simPath+QDir::separator()+i18nc("Incoming MailDir", "Incoming"));

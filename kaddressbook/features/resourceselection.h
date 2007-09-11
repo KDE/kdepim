@@ -24,14 +24,13 @@
 #ifndef RESOURCESELECTION_H
 #define RESOURCESELECTION_H
 
-#include <k3listview.h>
+#include <QTreeWidget>
 
 #include "extensionwidget.h"
 
-class Q3ListViewItem;
 class QPushButton;
 
-namespace KPIM { class ResourceABC; }
+namespace KABC { class ResourceABC; }
 
 class ResourceItem;
 
@@ -52,14 +51,14 @@ class ResourceSelection : public KAB::ExtensionWidget
     void add();
     void edit();
     void remove();
-    void currentChanged( Q3ListViewItem* );
+    void currentChanged( QTreeWidgetItem * );
 
     void updateView();
 
-    void slotSubresourceAdded( KPIM::ResourceABC *resource,
+    void slotSubresourceAdded( KABC::ResourceABC *resource,
                                const QString& /*type*/,
                                const QString& subResource );
-    void slotSubresourceRemoved( KPIM::ResourceABC* /*resource*/,
+    void slotSubresourceRemoved( KABC::ResourceABC* /*resource*/,
                                  const QString& /*type*/,
                                  const QString& subResource );
 
@@ -68,7 +67,7 @@ class ResourceSelection : public KAB::ExtensionWidget
 
     ResourceItem* selectedItem() const;
 
-    K3ListView *mListView;
+    QTreeWidget *mListView;
     QPushButton *mAddButton;
     QPushButton *mEditButton;
     QPushButton *mRemoveButton;

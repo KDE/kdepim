@@ -24,8 +24,6 @@
 */
 
 #include "addresseelineedit.h"
-
-#include "resourceabc.h"
 #include "completionordereditor.h"
 #include "ldapclient.h"
 
@@ -33,6 +31,7 @@
 
 #include <kabc/stdaddressbook.h>
 #include <kabc/resource.h>
+#include <kabc/resourceabc.h>
 
 #include <kcompletionbox.h>
 #include <kdebug.h>
@@ -509,7 +508,7 @@ void AddresseeLineEdit::loadContacts()
   QListIterator<KABC::Resource*> resit( resources );
   while ( resit.hasNext() ) {
     KABC::Resource* resource = resit.next();
-    KPIM::ResourceABC* resabc = dynamic_cast<ResourceABC *>( resource );
+    KABC::ResourceABC* resabc = dynamic_cast<KABC::ResourceABC *>( resource );
     if ( resabc ) { // IMAP KABC resource; need to associate each contact with the subresource
       const QMap<QString, QString> uidToResourceMap = resabc->uidToResourceMap();
       KABC::Resource::Iterator it;
@@ -1007,7 +1006,7 @@ bool KPIM::AddresseeLineEdit::eventFilter(QObject *obj, QEvent *e)
       // find the next header (searching backwards, for Key_Backtab
       QListWidgetItem *nextHeader = 0;
       const int iterationstep = ke->key() == Qt::Key_Tab ?  1 : -1;
-      // when iterating forward, start at the currentindex, when backwards, 
+      // when iterating forward, start at the currentindex, when backwards,
       // one up from our header, or at the end
       uint j = ke->key() == Qt::Key_Tab ? currentIndex : i==0 ? completionBox()->count()-1 : (i-1) % completionBox()->count();
       while ( ( nextHeader = completionBox()->item( j ) ) && nextHeader != myHeader ) {

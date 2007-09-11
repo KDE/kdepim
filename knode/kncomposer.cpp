@@ -29,7 +29,6 @@
 #include <QCloseEvent>
 #include <QLabel>
 #include <q3groupbox.h>
-#include <k3spelldlg.h>
 #include <kdeversion.h>
 #include "addressesdialog.h"
 using KPIM::AddressesDialog;
@@ -48,11 +47,9 @@ using KRecentAddress::RecentAddresses;
 #include <kdebug.h>
 #include <klineedit.h>
 #include <kcombobox.h>
-#include <k3spell.h>
 #include <ktemporaryfile.h>
 #include <libkpgp/kpgp.h>
 #include <libkpgp/kpgpblock.h>
-#include <k3syntaxhighlighter.h>
 #include <QCursor>
 #include <kpimutils/spellingfilter.h>
 #include <kcompletionbox.h>
@@ -74,6 +71,8 @@ using KRecentAddress::RecentAddresses;
 #include "knnntpaccount.h"
 #include "knarticlefactory.h"
 #include "settings.h"
+
+#include <kmeditor.h>
 
 #include <QtDBus>
 
@@ -177,7 +176,7 @@ void KNLineEditSpell::spellCheckerCorrected( const QString &old, const QString &
 KNComposer::KNComposer(KNLocalArticle *a, const QString &text, const QString &sig, const QString &unwraped, bool firstEdit, bool dislikesCopies, bool createCopy)
     : KXmlGuiWindow(0), r_esult(CRsave), a_rticle(a), s_ignature(sig), u_nwraped(unwraped),
       n_eeds8Bit(true), v_alidated(false), a_uthorDislikesMailCopies(dislikesCopies), e_xternalEdited(false), e_xternalEditor(0),
-      e_ditorTempfile(0), s_pellChecker(0), a_ttChanged(false),
+      e_ditorTempfile(0), a_ttChanged(false),
       mFirstEdit( firstEdit )
 {
   setObjectName( "composerWindow" );
@@ -210,7 +209,7 @@ KNComposer::KNComposer(KNLocalArticle *a, const QString &text, const QString &si
   sb->setItemAlignment(4, Qt::AlignCenter | Qt::AlignVCenter );
   sb->insertItem( QString(), 5, 0 );                 // line
   sb->setItemAlignment( 5, Qt::AlignCenter | Qt::AlignVCenter );
-  connect(v_iew->e_dit, SIGNAL(CursorPositionChanged()), SLOT(slotUpdateCursorPos()));
+  connect(v_iew->e_dit, SIGNAL(cursorPositionChanged()), SLOT(slotUpdateCursorPos()));
   connect(v_iew->e_dit, SIGNAL(toggle_overwrite_signal()), SLOT(slotUpdateStatusBar()));
 
   QDBusConnection::sessionBus().registerObject( "/Composer", this, QDBusConnection::ExportScriptableSlots );
@@ -257,10 +256,10 @@ KNComposer::KNComposer(KNLocalArticle *a, const QString &text, const QString &si
 
   KStandardAction::selectAll(this, SLOT(slotSelectAll()), actionCollection());
 
-  KStandardAction::find(v_iew->e_dit, SLOT(slotFind()), actionCollection());
+  KStandardAction::find(v_iew->e_dit, SLOT(slotFindText()), actionCollection());
   KStandardAction::findNext(v_iew->e_dit, SLOT(slotSearchAgain()), actionCollection());
 
-  KStandardAction::replace(v_iew->e_dit, SLOT(slotReplace()), actionCollection());
+  KStandardAction::replace(v_iew->e_dit, SLOT(slotReplaceText()), actionCollection());
 
   //attach menu
   action = actionCollection()->addAction("append_signature");
@@ -388,13 +387,19 @@ KNComposer::KNComposer(KNLocalArticle *a, const QString &text, const QString &si
   if (firstEdit) {   // now we place the cursor at the end of the quoted text / below the attribution line
     if ( knGlobals.settings()->cursorOnTop() ) {
       int numLines = knGlobals.settings()->intro().count( "%L" );
-      v_iew->e_dit->setCursorPosition(numLines+1,0);
+      //Laurent fix me
+      //v_iew->e_dit->setCursorPosition(numLines+1,0);
     }
     else
-      v_iew->e_dit->setCursorPosition(v_iew->e_dit->numLines()-1,0);
+    {
+     //Laurent fixme
+     //v_iew->e_dit->setCursorPosition(v_iew->e_dit->numLines()-1,0);
+     }
   } else
-    v_iew->e_dit->setCursorPosition(0,0);
-
+  {
+    //Laurent fixme
+     //v_iew->e_dit->setCursorPosition(0,0);
+  }
   v_iew->e_dit->setFocus();
 
   if (v_iew->s_ubject->text().length() == 0) {
@@ -431,7 +436,6 @@ KNComposer::KNComposer(KNLocalArticle *a, const QString &text, const QString &si
 
 KNComposer::~KNComposer()
 {
-  delete s_pellChecker;
   delete mSpellingFilter;
   delete e_xternalEditor;  // this also kills the editor process if it's still running
 
@@ -476,8 +480,8 @@ void KNComposer::slotUndo()
     QWidget* fw = focusWidget();
     if (!fw) return;
 
-    if (fw->inherits("KEdit"))
-        ((Q3MultiLineEdit*)fw)->undo();
+    if (fw->inherits("KTextEdit"))
+        ((KTextEdit*)fw)->undo();
     else if (fw->inherits("QLineEdit"))
         ((QLineEdit*)fw)->undo();
 }
@@ -487,8 +491,8 @@ void KNComposer::slotRedo()
     QWidget* fw = focusWidget();
     if (!fw) return;
 
-    if (fw->inherits("KEdit"))
-        ((Q3MultiLineEdit*)fw)->redo();
+    if (fw->inherits("KTextEdit"))
+        ((KTextEdit*)fw)->redo();
     else if (fw->inherits("QLineEdit"))
         ((QLineEdit*)fw)->redo();
 }
@@ -499,7 +503,7 @@ void KNComposer::slotCut()
   if (!fw) return;
 
   if (fw->inherits("KEdit"))
-    ((Q3MultiLineEdit*)fw)->cut();
+    ((KTextEdit*)fw)->cut();
   else if (fw->inherits("QLineEdit"))
     ((QLineEdit*)fw)->cut();
   else kDebug(5003) <<"wrong focus widget";
@@ -510,8 +514,8 @@ void KNComposer::slotCopy()
   QWidget* fw = focusWidget();
   if (!fw) return;
 
-  if (fw->inherits("KEdit"))
-    ((Q3MultiLineEdit*)fw)->copy();
+  if (fw->inherits("KTextEdit"))
+    ((KTextEdit*)fw)->copy();
   else if (fw->inherits("QLineEdit"))
     ((QLineEdit*)fw)->copy();
   else kDebug(5003) <<"wrong focus widget";
@@ -524,8 +528,8 @@ void KNComposer::slotPaste()
   QWidget* fw = focusWidget();
   if (!fw) return;
 
-  if (fw->inherits("KEdit"))
-    ((Q3MultiLineEdit*)fw)->paste();
+  if (fw->inherits("KTextEdit"))
+    ((KTextEdit*)fw)->paste();
   else if (fw->inherits("QLineEdit"))
     ((QLineEdit*)fw)->paste();
   else kDebug(5003) <<"wrong focus widget";
@@ -538,16 +542,15 @@ void KNComposer::slotSelectAll()
 
   if (fw->inherits("QLineEdit"))
       ((QLineEdit*)fw)->selectAll();
-  else if (fw->inherits("QMultiLineEdit"))
-    ((Q3MultiLineEdit*)fw)->selectAll();
+  else if (fw->inherits("KTextEdit"))
+    ((KTextEdit*)fw)->selectAll();
 }
 
 
 void KNComposer::setConfig(bool onlyFonts)
 {
   if (!onlyFonts) {
-    v_iew->e_dit->setWordWrap( knGlobals.settings()->wordWrap() ?
-                              Q3MultiLineEdit::FixedColumnWidth : Q3MultiLineEdit::NoWrap);
+    v_iew->e_dit->wordWrapToggled( knGlobals.settings()->wordWrap());
     v_iew->e_dit->setWrapColumnOrWidth( knGlobals.settings()->maxLineLength() );
     a_ctWordWrap->setChecked( knGlobals.settings()->wordWrap() );
 
@@ -572,19 +575,24 @@ void KNComposer::setMessageMode(MessageMode mode)
   a_ctDoPost->setChecked(m_ode!=mail);
   a_ctDoMail->setChecked(m_ode!=news);
   v_iew->setMessageMode(m_ode);
-
+  //Laurent fixme
+#if 0
+  QString s = v_iew->e_dit->document ()->begin()->text ();
   if (m_ode == news_mail) {
-    QString s = v_iew->e_dit->textLine(0);
-    if (!s.contains(i18n("<posted & mailed>")))
-      v_iew->e_dit->insertAt(i18n("<posted & mailed>\n\n"),0,0);
+    if (!s.contains(i18n("<posted & mailed>"))) {
+      QTextCursor cursor(v_iew->e_dit->document ()->begin());
+      cursor.setPosition(0);
+      cursor.insertText(i18n("<posted & mailed>\n\n"));
+      v_iew->e_dit->setTextCursor(cursor);
+      }
   } else {
-    if (v_iew->e_dit->textLine(0)==i18n("<posted & mailed>")) {
+    if (s == i18n("<posted & mailed>")) {
       v_iew->e_dit->removeLine(0);
       if (v_iew->e_dit->textLine(0).isEmpty())
         v_iew->e_dit->removeLine(0);
     }
   }
-
+#endif
   slotUpdateStatusBar();
 }
 
@@ -662,7 +670,8 @@ bool KNComposer::hasValidData()
   int sigLength = 0;
   int notQuoted = 0;
   int textLines = 0;
-  QStringList text = v_iew->e_dit->processedText();
+  //Laurent fixme
+  QStringList text;// = v_iew->e_dit->processedText();
 
   for (QStringList::Iterator it = text.begin(); it != text.end(); ++it) {
 
@@ -861,7 +870,8 @@ bool KNComposer::applyChanges()
 
   //assemble the text line by line
   QString tmp;
-  QStringList textLines = v_iew->e_dit->processedText();
+  //Laurent : fixme
+  QStringList textLines; //= v_iew->e_dit->processedText();
   for (QStringList::Iterator it = textLines.begin(); it != textLines.end(); ++it)
     tmp += *it + '\n';
 
@@ -1012,7 +1022,8 @@ void KNComposer::insertFile( QFile *file, bool clear, bool box, const QString &b
 
   if (box)
     temp = QString::fromLatin1(",----[ %1 ]\n").arg(boxTitle);
-
+  //Laurent fixme
+#if 0
   if (box && (v_iew->e_dit->wordWrap()!=Q3MultiLineEdit::NoWrap)) {
     int wrapAt = v_iew->e_dit->wrapColumnOrWidth();
     QStringList lst;
@@ -1041,6 +1052,7 @@ void KNComposer::insertFile( QFile *file, bool clear, bool box, const QString &b
     v_iew->e_dit->setText(temp);
   else
     v_iew->e_dit->insert(temp);
+#endif
 }
 
 
@@ -1107,10 +1119,7 @@ void KNComposer::slotArtDelete()
 
 void KNComposer::slotAppendSig()
 {
-  if(!s_ignature.isEmpty()) {
-    v_iew->e_dit->append('\n'+s_ignature);
-    v_iew->e_dit->setModified(true);
-  }
+  v_iew->e_dit->appendSignature(s_ignature);
 }
 
 
@@ -1124,7 +1133,6 @@ void KNComposer::slotInsertFileBoxed()
 {
   insertFile(false,true);
 }
-
 
 void KNComposer::slotAttachFile()
 {
@@ -1212,7 +1220,8 @@ void KNComposer::slotToggleDoMail()
         return;
       }
     }
-
+//Laurent fix me
+#if 0
     if ( knGlobals.settings()->useExternalMailer() ) {
       QString s = v_iew->e_dit->textLine(0);
       if (!s.contains(i18n("<posted & mailed>")))
@@ -1240,6 +1249,7 @@ void KNComposer::slotToggleDoMail()
       a_ctDoMail->setChecked(true); //revert
       return;
     }
+#endif
   }
   setMessageMode(m_ode);
 }
@@ -1267,7 +1277,7 @@ void KNComposer::slotSetCharsetKeyboard()
 
 void KNComposer::slotToggleWordWrap()
 {
-  v_iew->e_dit->setWordWrap(a_ctWordWrap->isChecked()? Q3MultiLineEdit::FixedColumnWidth : Q3MultiLineEdit::NoWrap);
+  v_iew->e_dit->wordWrapToggled(a_ctWordWrap->isChecked());
 }
 
 
@@ -1307,7 +1317,9 @@ void KNComposer::slotExternalEditor()
   QTextCodec *codec=KGlobal::charsets()->codecForName(c_harset, ok);
 
   QString tmp;
-  QStringList textLines = v_iew->e_dit->processedText();
+// Laurent fixme
+
+  QStringList textLines;// = v_iew->e_dit->processedText();
   for (QStringList::Iterator it = textLines.begin(); it != textLines.end();) {
     tmp += *it;
     ++it;
@@ -1357,46 +1369,6 @@ void KNComposer::slotExternalEditor()
   v_iew->showExternalNotification();
 }
 
-
-void KNComposer::slotSpellcheck()
-{
-  if(s_pellChecker)    // in progress...
-    return;
-  spellLineEdit = !spellLineEdit;
-  a_ctExternalEditor->setEnabled(false);
-  a_ctSpellCheck->setEnabled(false);
-
-  s_pellChecker = new K3Spell(this, i18n("Spellcheck"), this, SLOT(slotSpellStarted(KSpell *)));
-  QStringList l = K3SpellingHighlighter::personalWords();
-  for ( QStringList::Iterator it = l.begin(); it != l.end(); ++it ) {
-      s_pellChecker->addPersonal( *it );
-  }
-  connect(s_pellChecker, SIGNAL(death()), this, SLOT(slotSpellFinished()));
-  connect(s_pellChecker, SIGNAL(done(const QString&)), this, SLOT(slotSpellDone(const QString&)));
-  connect(s_pellChecker, SIGNAL(misspelling (const QString &, const QStringList &, unsigned int)),
-          this, SLOT(slotMisspelling (const QString &, const QStringList &, unsigned int)));
-  connect(s_pellChecker, SIGNAL(corrected (const QString &, const QString &, unsigned int)),
-          this, SLOT(slotCorrected (const QString &, const QString &, unsigned int)));
-}
-
-
-void KNComposer::slotMisspelling(const QString &text, const QStringList &lst, unsigned int pos)
-{
-     if( spellLineEdit )
-         v_iew->s_ubject->spellCheckerMisspelling( text, lst, pos);
-     else
-         v_iew->e_dit->misspelling(text, lst, pos);
-
-}
-
-void KNComposer::slotCorrected (const QString &oldWord, const QString &newWord, unsigned int pos)
-{
-    if( spellLineEdit )
-        v_iew->s_ubject->spellCheckerCorrected( oldWord, newWord, pos);
-    else
-        v_iew->e_dit->corrected(oldWord, newWord, pos);
-}
-
 void KNComposer::slotUpdateStatusBar()
 {
   QString typeDesc;
@@ -1408,7 +1380,7 @@ void KNComposer::slotUpdateStatusBar()
     default  :  typeDesc = i18n("News Article & Email");
   }
   QString overwriteDesc;
-  if (v_iew->e_dit->isOverwriteMode())
+  if (v_iew->e_dit->overwriteMode ())
     overwriteDesc = i18n(" OVR ");
   else
     overwriteDesc = i18n(" INS ");
@@ -1416,15 +1388,15 @@ void KNComposer::slotUpdateStatusBar()
   statusBar()->changeItem(i18n(" Type: %1 ", typeDesc), 1);
   statusBar()->changeItem(i18n(" Charset: %1 ", QString( c_harset ) ), 2);
   statusBar()->changeItem(overwriteDesc, 3);
-  statusBar()->changeItem(i18n(" Column: %1 ", v_iew->e_dit->currentColumn() + 1), 4);
-  statusBar()->changeItem(i18n(" Line: %1 ", v_iew->e_dit->currentLine() + 1), 5);
+  statusBar()->changeItem(i18n(" Column: %1 ", v_iew->e_dit->columnNumber () + 1), 4);
+  statusBar()->changeItem(i18n(" Line: %1 ", v_iew->e_dit->linePosition() + 1), 5);
 }
 
 
 void KNComposer::slotUpdateCursorPos()
 {
-  statusBar()->changeItem(i18n(" Column: %1 ", v_iew->e_dit->currentColumn() + 1), 4);
-  statusBar()->changeItem(i18n(" Line: %1 ", v_iew->e_dit->currentLine() + 1), 5);
+  statusBar()->changeItem(i18n(" Column: %1 ", v_iew->e_dit->columnNumber () + 1), 4);
+  statusBar()->changeItem(i18n(" Line: %1 ", v_iew->e_dit->linePosition() + 1), 5);
 }
 
 
@@ -1608,7 +1580,7 @@ void KNComposer::slotAttachmentRemove(Q3ListViewItem *)
 //==============================================================================
 // spellchecking code copied form kedit (Bernd Johannes Wuebben)
 //==============================================================================
-
+#if 0
 
 void KNComposer::slotSpellStarted( K3Spell *)
 {
@@ -1696,7 +1668,7 @@ void KNComposer::slotSpellFinished()
           KMessageBox::information( this, i18n("No misspellings encountered."));
   }
 }
-
+#endif
 
 void KNComposer::slotDragEnterEvent(QDragEnterEvent *ev)
 {
@@ -1811,7 +1783,7 @@ KNComposer::ComposerView::ComposerView( KNComposer *composer )
           parent(), SLOT(slotSubjectChanged(const QString&)));
 
   //Editor
-  e_dit=new Editor(this, composer, main);
+  e_dit=new KMeditor(this);
   e_dit->setMinimumHeight(50);
 
   KConfigGroup config( knGlobals.config(), "VISUAL_APPEARANCE" );
@@ -1824,12 +1796,12 @@ KNComposer::ComposerView::ComposerView( KNComposer *composer )
   QColor col3 = config.readEntry( "quote2Color", defaultColor2 );
   QColor col4 = config.readEntry( "quote1Color", defaultColor1 );
   QColor c = QColor("red");
+  //Laurent fixme
+#if 0
   mSpellChecker = new K3DictSpellingHighlighter(e_dit, /*active*/ true, /*autoEnabled*/ true,
                                        /*spellColor*/ config.readEntry("NewMessage", c),
                                        /*colorQuoting*/ true, col1, col2, col3, col4);
-  connect( mSpellChecker, SIGNAL(newSuggestions(const QString&, const QStringList&, unsigned int)), e_dit,
-           SLOT(slotAddSuggestion(const QString&, const QStringList&, unsigned int)) );
-
+#endif
   QVBoxLayout *notL=new QVBoxLayout(e_dit);
   notL->addStretch(1);
   n_otification=new Q3GroupBox(2, Qt::Horizontal, e_dit);
@@ -1866,7 +1838,6 @@ KNComposer::ComposerView::~ComposerView()
       lst << h->sectionSize(i);
     conf.writeEntry("Att_Headers",lst);
   }
-  delete mSpellChecker;
 }
 
 
@@ -1929,10 +1900,6 @@ void KNComposer::ComposerView::setMessageMode(KNComposer::MessageMode mode)
   }
 }
 
-void KNComposer::ComposerView::restartBackgroundSpellCheck()
-{
-    mSpellChecker->restartBackgroundSpellCheck();
-}
 
 void KNComposer::ComposerView::showAttachmentView()
 {
@@ -2028,7 +1995,7 @@ void KNComposer::ComposerView::hideExternalNotification()
 
 
 //=====================================================================================
-
+#if 0
 #include <kcursor.h>
 KNComposer::Editor::Editor( KNComposer::ComposerView *_composerView, KNComposer *_composer, QWidget *parent )
     : KEdit( parent ), m_composer( _composer ), m_composerView( _composerView )
@@ -2139,11 +2106,6 @@ bool KNComposer::Editor::eventFilter(QObject*o, QEvent* e)
   return KEdit::eventFilter(o, e);
 }
 
-void KNComposer::Editor::slotAddSuggestion( const QString &text, const QStringList &lst, unsigned int )
-{
-  m_replacements[text] = lst;
-}
-
 // expand tabs to avoid the "tab-damage",
 // auto-wraped paragraphs have to split (code taken from KEdit::saveText)
 QStringList KNComposer::Editor::processedText()
@@ -2192,37 +2154,6 @@ QStringList KNComposer::Editor::processedText()
 }
 
 
-void KNComposer::Editor::slotPasteAsQuotation()
-{
-  QString s = QApplication::clipboard()->text();
-  if (!s.isEmpty()) {
-    for (int i=0; i<s.length(); i++) {
-      if ( s[i] < ' ' && s[i] != '\n' && s[i] != '\t' )
-        s[i] = ' ';
-    }
-    s.prepend("> ");
-    s.replace(QRegExp("\n"),"\n> ");
-    insert(s);
-  }
-}
-
-
-void KNComposer::Editor::slotFind()
-{
-  search();
-}
-
-void KNComposer::Editor::slotSearchAgain()
-{
-    repeatSearch();
-}
-
-void KNComposer::Editor::slotReplace()
-{
-  replace();
-}
-
-
 void KNComposer::Editor::slotAddQuotes()
 {
   if (hasMarkedText()) {
@@ -2240,48 +2171,6 @@ void KNComposer::Editor::slotAddQuotes()
     setCursorPosition(l,c+2);
   }
 }
-
-
-void KNComposer::Editor::slotRemoveQuotes()
-{
-  if (hasMarkedText()) {
-    QString s = markedText();
-    if (s.left(2) == "> ")
-      s.remove(0,2);
-    s.replace(QRegExp("\n> "),"\n");
-    insert(s);
-  } else {
-    int l = currentLine();
-    int c = currentColumn();
-    QString s = textLine(l);
-    if (s.left(2) == "> ") {
-      s.remove(0,2);
-      insertLine(s,l);
-      removeLine(l+1);
-      setCursorPosition(l,c-2);
-    }
-  }
-}
-
-
-void KNComposer::Editor::slotAddBox()
-{
-    if (hasMarkedText()) {
-    QString s = markedText();
-    s.prepend(",----[  ]\n");
-    s.replace(QRegExp("\n"),"\n| ");
-    s.append("\n`----");
-    insert(s);
-  } else {
-    int l = currentLine();
-    int c = currentColumn();
-    QString s = QString::fromLatin1(",----[  ]\n| %1\n`----").arg(textLine(l));
-    insertLine(s,l);
-    removeLine(l+3);
-    setCursorPosition(l+1,c+2);
-  }
-}
-
 
 void KNComposer::Editor::slotRemoveBox()
 {
@@ -2344,29 +2233,6 @@ void KNComposer::Editor::slotRemoveBox()
 }
 
 
-void KNComposer::Editor::slotRot13()
-{
-  if (hasMarkedText())
-    insert(KNHelper::rot13(markedText()));
-}
-
-
-void KNComposer::Editor::contentsDragEnterEvent(QDragEnterEvent *ev)
-{
-  if ( KUrl::List::canDecode( ev->mimeData() ) )
-    emit(sigDragEnterEvent(ev));
-  else
-    KEdit::dragEnterEvent(ev);
-}
-
-
-void KNComposer::Editor::contentsDropEvent(QDropEvent *ev)
-{
-  if ( KUrl::List::canDecode( ev->mimeData() ) )
-    emit(sigDropEvent(ev));
-  else
-    KEdit::dropEvent(ev);
-}
 
 void KNComposer::Editor::keyPressEvent ( QKeyEvent *e)
 {
@@ -2428,108 +2294,8 @@ void KNComposer::Editor::keyPressEvent ( QKeyEvent *e)
 }
 
 
-void KNComposer::Editor::contentsContextMenuEvent( QContextMenuEvent */*e*/ )
-{
-    QString selectWord = selectWordUnderCursor();
-    QMenu* popup = 0L;
-    if ( selectWord.isEmpty())
-    {
-        popup = m_composer ? m_composer->popupMenu( "edit" ): 0;
-        if ( popup )
-            popup->popup(QCursor::pos());
-    }
-    else
-    {
-        spell = new K3Spell(this, i18n("Spellcheck"), this, SLOT(slotSpellStarted(K3Spell *)));
-        QStringList l = K3SpellingHighlighter::personalWords();
-        for ( QStringList::Iterator it = l.begin(); it != l.end(); ++it ) {
-            spell->addPersonal( *it );
-        }
-        connect(spell, SIGNAL(death()), this, SLOT(slotSpellFinished()));
-        connect(spell, SIGNAL(done(const QString&)), this, SLOT(slotSpellDone(const QString&)));
-        connect(spell, SIGNAL(misspelling (const QString &, const QStringList &, unsigned int)),
-                this, SLOT(slotMisspelling (const QString &, const QStringList &, unsigned int)));
-    }
-}
 
-void KNComposer::Editor::slotSpellStarted( K3Spell *)
-{
-    spell->check( selectWordUnderCursor(),false );
-}
-
-
-void KNComposer::Editor::slotSpellDone(const QString &/*newtext*/)
-{
-    spell->cleanUp();
-}
-
-void KNComposer::Editor::slotSpellFinished()
-{
-  K3Spell::spellStatus status=spell->status();
-  delete spell;
-  spell=0;
-
-  if(status==K3Spell::Error) {
-    KMessageBox::error(this, i18n("ISpell could not be started.\n"
-    "Please make sure you have ISpell properly configured and in your PATH."));
-  }
-  else if(status==K3Spell::Crashed) {
-
-    KMessageBox::error(this, i18n("ISpell seems to have crashed."));
-  }
-}
-
-void KNComposer::Editor::cut()
-{
-    KEdit::cut();
-    m_composer->v_iew->restartBackgroundSpellCheck();
-}
-
-void KNComposer::Editor::clear()
-{
-    KEdit::clear();
-    m_composer->v_iew->restartBackgroundSpellCheck();
-}
-
-void KNComposer::Editor::del()
-{
-    KEdit::del();
-    m_composer->v_iew->restartBackgroundSpellCheck();
-}
-
-
-void KNComposer::Editor::slotMisspelling (const QString &, const QStringList &lst, unsigned int)
-{
-    if (!m_composer) return;
-
-    int countAction = m_composer->listOfResultOfCheckWord( lst , selectWordUnderCursor());
-    if ( countAction>0 )
-    {
-        QMenu* popup = m_composer->popupMenu( "edit_with_spell" );
-        if ( popup )
-            popup->popup(QCursor::pos());
-    }
-    else
-    {
-        QMenu* popup = m_composer->popupMenu( "edit" );
-        if ( popup )
-            popup->popup(QCursor::pos());
-    }
-}
-
-void KNComposer::Editor::slotCorrectWord()
-{
-    removeSelectedText();
-    KAction * act = (KAction *)(sender());
-    int line, col;
-    getCursorPosition(&line,&col);
-
-
-
-    insertAt( act->text(), line, col );
-
-    //insert( act->text() );
-}
+#endif
 
 //=====================================================================================
 

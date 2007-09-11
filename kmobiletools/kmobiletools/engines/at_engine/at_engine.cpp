@@ -168,8 +168,9 @@ void AT_Engine::processSlot(KMobileTools::Job* job)
             if ( engineData()->manufacturer().contains( "Siemens", Qt::CaseInsensitive ) ) engineData()->setManufacturerID( Siemens);
             if ( engineData()->manufacturer().contains( "Motorola", Qt::CaseInsensitive ) ) engineData()->setManufacturerID ( Motorola);
             if ( engineData()->manufacturer().contains( "Ericsson", Qt::CaseInsensitive ) ) engineData()->setManufacturerID ( SonyEricsson);
-            wconfig->setRawdevicename( engineData()->model() );
-            wconfig->setRawdevicevendor( engineData()->manufacturer() );
+            /// @todo this config entry has been removed, port or remove...
+            //wconfig->setRawdevicename( engineData()->model() );
+            //wconfig->setRawdevicevendor( engineData()->manufacturer() );
             wconfig->writeConfig();
             break;
         case KMobileTools::Job::fetchAddressBook:
@@ -188,8 +189,9 @@ void AT_Engine::processSlot(KMobileTools::Job* job)
 //          emit smsListUpdated();
             break;
         case KMobileTools::Job::testPhoneFeatures:
-            wconfig->setFstype( ((TestPhoneFeatures *) job)->getAbilities().filesystem() );
-        wconfig->writeConfig();
+            /// @todo this config entry has been removed, port or remove...
+            //wconfig->setFstype( ((TestPhoneFeatures *) job)->getAbilities().filesystem() );
+            wconfig->writeConfig();
         break;
         case KMobileTools::Job::addAddressee:
             slotFetchPhonebook();
@@ -233,6 +235,8 @@ void AT_Engine::processSlot(KMobileTools::Job* job)
             break;
         case TestPhoneDevice:
             l_testphonejobs.removeAll((TestPhoneDeviceJob*)job);
+            /// @todo this config entry has been removed, port or remove...
+            /*
             if( ((TestPhoneDeviceJob*)job)->found() &&
                 ((TestPhoneDeviceJob*)job)->data()->imei() == config()->mobileimei() ) {
                 kDebug() <<"Probe finished: phone found in" << ((TestPhoneDeviceJob*)job)->path();
@@ -241,6 +245,7 @@ void AT_Engine::processSlot(KMobileTools::Job* job)
                 engineData()->setProperty("devicePath", ((TestPhoneDeviceJob*)job)->path());
                 slotInitPhone();
             }
+            */
             kDebug() <<"jobs remaining:" << l_testphonejobs.count();
             break;
         case FindDeviceData:
@@ -264,11 +269,14 @@ void AT_Engine::slotFetchInfos()
     if(!device) return;
     enqueueJob ( new FetchPhoneInfos(device, this ) );
     enqueueJob ( new TestPhoneFeatures(device, this ) );
+    /// @todo this config entry has been removed, port or remove...
+    /*
     if( config()->sync_clock() )
     {
       p_lastJob=new SyncDateTime(p_lastJob, device, this );
       enqueueJob ( p_lastJob );
     }
+    */
     p_lastJob=new SelectCharacterSet( p_lastJob, config()->at_encoding(), device, this );
     enqueueJob( p_lastJob );
     p_lastJob=new SelectSMSSlot( p_lastJob, "ME", device, this );
@@ -630,6 +638,8 @@ QString AT_Engine::engineLibName() const
  */
 void AT_Engine::slotSwitchToFSMode()
 {
+    /// @todo this config entry has been removed, port or remove...
+    /*
     switch( config()->fstype() ){
         case 1:
             device->sendATCommand(0, "AT+MODE=8\r");
@@ -639,6 +649,7 @@ void AT_Engine::slotSwitchToFSMode()
             KMobileTools::Engine::slotSwitchToFSMode();
             break;
     }
+    */
 }
 
 QList<QWizardPage*> AT_Engine::wizardPages(QWidget *parentWidget)
@@ -678,9 +689,11 @@ QString AT_Engine::parseWizardSummary(const QString &strtemplate, const QString 
     QString tempstr=i18ncp("AT Wizard summary - using <connection types>", "Using connection: %2", "Using connections: %2",
         tmpstrlist.count(), tmpstrlist.join(", ") );
     retstr=retstr.arg(tempstr);
-    tempstr=i18nc("AT Wizard summary - Basic parameters", "Manufacturer: %1<br/>Model: %2", cfg->rawdevicevendor(), cfg->rawdevicename() );
+    /// @todo this config entry has been removed, port or remove...
+    //tempstr=i18nc("AT Wizard summary - Basic parameters", "Manufacturer: %1<br/>Model: %2", cfg->rawdevicevendor(), cfg->rawdevicename() );
     retstr=retstr.arg(tempstr);
-    tempstr=i18nc("AT Wizard summary - Advanced parameters", "IMEI: %1", cfg->mobileimei() );
+    /// @todo this config entry has been removed, port or remove...
+    //tempstr=i18nc("AT Wizard summary - Advanced parameters", "IMEI: %1", cfg->mobileimei() );
     retstr=retstr.arg(tempstr);
 
     return retstr;

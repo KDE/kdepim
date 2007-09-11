@@ -5,9 +5,8 @@ NameSpace=KMobileTools
 Singleton=false
 Mutators=true
 Visibility=KMOBILETOOLS_EXPORT
-MemberVariables=dpointer
+#MemberVariables=dpointer
 GlobalEnums=true
 ItemAccessors=false
 IncludeFiles=libkmobiletools/kmobiletools_export.h
-#Inherits=DevicesConfigBase
 

@@ -25,7 +25,7 @@
 #ifndef IMEDITORWIDGET_H
 #define IMEDITORWIDGET_H
 
-#include <k3listview.h>
+#include <QTreeWidget>
 #include <kdialog.h>
 #include <KPluginInfo>
 
@@ -97,16 +97,15 @@ class IMEditorWidget : public KDialog
  */
 
 // VCard has been disabled as there is no standard VCard location to store IM addresses yet.
-class IMAddressLVI : public K3ListViewItem
+class IMAddressLVI : public QTreeWidgetItem
 {
   public:
-    IMAddressLVI( K3ListView *parent, const KPluginInfo & protocol,
+    IMAddressLVI( QTreeWidget *parent, const KPluginInfo & protocol,
                   const QString &address, const IMContext &context = Any );
 
     void setAddress( const QString &address );
     void setProtocol( const KPluginInfo & protocol );
     void setContext( const IMContext &context );
-    void activate();
 
     KPluginInfo protocol() const;
     QString address() const;
@@ -114,10 +113,6 @@ class IMAddressLVI : public K3ListViewItem
 
     void setPreferred( bool preferred );
     bool preferred() const;
-
-  protected:
-    virtual void paintCell( QPainter *p, const QColorGroup &cg, int column,
-                            int width, int alignment );
 
   private:
     KPluginInfo mProtocol;

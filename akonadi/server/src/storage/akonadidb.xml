@@ -31,6 +31,7 @@
 
   Table attributes (can contain column, reference and data elements)
   - name: The entity class name, the table will be named FooTable.
+  - properties: additional SQL properties such as foreign keys
 
   Column attributes:
   - name: The column name, will be also used as accessor name in the entity class.
@@ -120,7 +121,6 @@
   <table name="PimItem">
     <column name="id" type="int" properties="NOT NULL PRIMARY KEY AUTOINCREMENT"/>
     <column name="remoteId" type="QByteArray"/>
-    <column name="data" type="QByteArray"/>
     <column name="locationId" type="int" refTable="Location" refColumn="id" properties="REFERENCES Location(id)"/>
     <index name="locationIndex" columns="locationId" unique="false"/>
     <column name="mimeTypeId" type="int" refTable="MimeType" refColumn="id" properties="REFERENCES MimeType(id)"/>
@@ -151,13 +151,12 @@
 
   <relation table1="PimItem" column1="id" table2="Flag" column2="id"/>
 
-  <table name="Part">
+  <table name="Part" properties="FOREIGN KEY (pimItemId) REFERENCES PimItemTable(id) ON DELETE CASCADE ON UPDATE CASCADE">
     <column name="id" type="int" properties="NOT NULL PRIMARY KEY AUTOINCREMENT"/>
     <column name="name" type="QString" sqltype="VARCHAR(255)" properties="NOT NULL"/>
     <column name="data" type="QByteArray"/>
     <column name="datasize" type="int" properties="NOT NULL"/>
-    <column name="pimItemId" type="int" refTable="PimItem" refColumn="id" properties="REFERENCES PimItem(id)"/>
-    <column name="mimeTypeId" type="int" refTable="MimeType" refColumn="id" properties="REFERENCES MimeType(id)"/>
+    <column name="pimItemId" type="int" refTable="PimItem" refColumn="id" properties="NOT NULL REFERENCES PimItemTable(id)"/>
     <index name="pimItemIdNameIndex" columns="pimItemId,name" unique="true"/>
   </table>
 
@@ -176,6 +175,6 @@
   </table>
 
   <relation table1="Location" column1="id" table2="PimItem" column2="id">
-    <comment>Used to associacte items with search folders.</comment>
+    <comment>Used to associate items with search folders.</comment>
   </relation>
 </database>

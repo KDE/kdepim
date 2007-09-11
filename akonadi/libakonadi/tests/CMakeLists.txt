@@ -21,7 +21,7 @@ endmacro(add_akonadi_demo)
 macro(add_akonadi_test _source)
   set(_test ${_source})
   get_filename_component(_name ${_source} NAME_WE)
-  kde4_add_unit_test(${_name} TESTNAME libakonati-${_name} ${_test})
+  kde4_add_unit_test(${_name} TESTNAME libakonadi-${_name} ${_test})
   target_link_libraries(${_name} akonadi ${QT_QTTEST_LIBRARY})
 endmacro(add_akonadi_test)
 
@@ -31,6 +31,7 @@ add_akonadi_demo(collectioncreator.cpp)
 
 # qtestlib unit tests
 add_akonadi_test(imapparsertest.cpp)
+add_akonadi_test(imapsettest.cpp)
 add_akonadi_test(datareferencetest.cpp)
 add_akonadi_test(collectionjobtest.cpp)
 add_akonadi_test(collectionpathresolvertest.cpp)

@@ -110,12 +110,14 @@ w_fsConfig=new QWidget();
 #endif
     genOptions->kcfg_verbose->setText(i18nc("debug option in device configuration dialog",
         "&Verbose output in %1 (for debug)", KGlobal::dirs()->saveLocation("tmp", "kmobiletools", true)) );
-    slotEngineChanged( DEVCFG(name)->engine() );
-    slotPollEnabled( DEVCFG(name)->status_poll() );
+    /// @todo this config entry has been removed, port or remove...
+    //slotEngineChanged( DEVCFG(name)->engine() );
+    //slotPollEnabled( DEVCFG(name)->status_poll() );
 
     QStringList sl_slots;
 
-    fs_selected(DEVCFG(name)->fstype());
+    /// @todo this config entry has been removed, port or remove...
+    //fs_selected(DEVCFG(name)->fstype());
     updateWidgets();
 }
 

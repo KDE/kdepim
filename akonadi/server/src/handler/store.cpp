@@ -55,28 +55,19 @@ bool Store::handleLine( const QByteArray& line )
   Response response;
   response.setUntagged();
 
-  QList<QByteArray> sequences;
-  pos = ImapParser::parseString( line, buffer, pos );
-  sequences = buffer.split( ',' );
-  if ( sequences.isEmpty() )
+  ImapSet set;
+  pos = ImapParser::parseSequenceSet( line, set, pos );
+  if ( set.isEmpty() )
     return failureResponse( "No item specified" );
 
   DataStore *store = connection()->storageBackend();
   Transaction transaction( store );
 
-  // ### Akonadi vs. IMAP conflict
-  QList<PimItem> pimItems;
-  if ( connection()->selectedLocation().id() == -1 || uidStore ) {
-    pimItems = store->matchingPimItemsByUID( sequences );
-  } else {
-//     if ( mStoreQuery.isUidStore() ) {
-//       pimItems = store->matchingPimItemsByUID( mStoreQuery.sequences(), connection()->selectedLocation() );
-//     } else {
-      pimItems = store->matchingPimItemsBySequenceNumbers( sequences, connection()->selectedLocation() );
-//     }
-  }
-
-  qDebug() << "Store::commit()" << pimItems.count() << "items selected.";
+  SelectQueryBuilder<PimItem> qb;
+  imapSetToQuery( set, uidStore, qb );
+  if ( !qb.exec() )
+    return failureResponse( "Unable to retrieve items" );
+  QList<PimItem> pimItems = qb.result();
 
   // parse command
   QByteArray command;
@@ -110,10 +101,6 @@ bool Store::handleLine( const QByteArray& line )
         if ( !deleteFlags( pimItems[ i ], flags ) )
           return failureResponse( "Unable to remove item flags." );
       }
-    } else if ( command == "RFC822" ) {
-      pos = ImapParser::parseString( line, buffer, pos );
-      if ( !store->updatePimItem( pimItems[ i ], buffer ) )
-        return failureResponse( "Unable to change item data." );
     } else if ( command == "COLLECTION" ) {
       pos = ImapParser::parseString( line, buffer, pos );
       if ( !store->updatePimItem( pimItems[ i ], HandlerHelper::collectionFromIdOrName( buffer ) ) )
@@ -129,11 +116,10 @@ bool Store::handleLine( const QByteArray& line )
           return failureResponse( "Unable to update item" );
     } else {
       pos = ImapParser::parseString( line, buffer, pos );
-      qDebug() << "Multipart store: IMPLEMENT ME!" << command;
       Part part;
       SelectQueryBuilder<Part> qb;
-      qb.addValueCondition( Part::pimItemIdColumn(), "=", pimItems[ i ].id() );
-      qb.addValueCondition( Part::nameColumn(), "=", QString::fromUtf8( command ) );
+      qb.addValueCondition( Part::pimItemIdColumn(), Query::Equals, pimItems[ i ].id() );
+      qb.addValueCondition( Part::nameColumn(), Query::Equals, QString::fromUtf8( command ) );
       if ( !qb.exec() )
         return failureResponse( "Unable to check item part existence" );
       Part::List result = qb.result();
@@ -150,6 +136,7 @@ bool Store::handleLine( const QByteArray& line )
         if ( !part.insert() )
           return failureResponse( "Unable to add item part" );
       }
+      store->updatePimItem( pimItems[ i ] );
     }
 
     if ( !silent ) {

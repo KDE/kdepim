@@ -8,40 +8,40 @@ set(kmobiletoolsmainpart_PART_SRCS
    servicemodel/deviceitem.cpp
    servicemodel/serviceitem.cpp
    servicemodel/treeitem.cpp
-   deviceconfigdialog.cpp 
+   #deviceconfigdialog.cpp 
    devicemanager.cpp 
-   addressdetails.cpp 
-   calldialogimpl.cpp 
-   calldialogimpl.h 
-   deviceslist.cpp 
-   popupaddressee.cpp
-      popupnumber.cpp
-         popupsms.cpp
-   pickphonenumberdialog.cpp
-   editaddressee.cpp 
-   exportphonebookdlg.cpp 
-   importphonebookdlg.cpp 
-   devicehome.cpp 
-   newsmsdlg.cpp 
-   smslistviewitem.cpp 
-   smspart.cpp
+   #addressdetails.cpp 
+   #calldialogimpl.cpp 
+   #calldialogimpl.h 
+   #deviceslist.cpp 
+   #popupaddressee.cpp
+      #popupnumber.cpp
+         #popupsms.cpp
+   #pickphonenumberdialog.cpp
+   #editaddressee.cpp 
+   #exportphonebookdlg.cpp 
+   #importphonebookdlg.cpp 
+   #devicehome.cpp 
+   #newsmsdlg.cpp 
+   #smslistviewitem.cpp 
+   #smspart.cpp
    newdevicewizard/welcomepage.cpp
    newdevicewizard/firstpage.cpp
    newdevicewizard/lastpage.cpp
-   statusbar.cpp
+   #statusbar.cpp
    kmobiletools_mainpart.cpp 
    newdevicewizard/devicewizard.cpp
    errorlogdialog.cpp )
 
 
 kde4_add_ui_files(kmobiletoolsmainpart_PART_SRCS 
-   calldialog.ui 
-   editaddressee_ui.ui 
-   exportphonebook.ui 
-   importphonebook.ui 
+   #calldialog.ui 
+   #editaddressee_ui.ui 
+   #exportphonebook.ui 
+   #importphonebook.ui 
    mainWidget.ui 
-   ui_newsms.ui
-   pickphonenumber.ui
+   #ui_newsms.ui
+   #pickphonenumber.ui
    cfg_filesystem.ui 
    cfg_gammu-engine.ui 
    deviceList.ui 

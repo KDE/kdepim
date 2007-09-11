@@ -33,7 +33,6 @@ class LastPage : public QWizardPage, public Ui::LastPage
         void initializePage();
         bool validatePage();
 
-
     private:
         LastPagePrivate *d;
 };

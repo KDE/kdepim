@@ -15,7 +15,6 @@
 #define KNODE_KNCOLLECTIONVIEW_H
 
 #include <kfoldertree.h>
-//Added by qt3to4:
 #include <QFocusEvent>
 #include <QEvent>
 #include <QDropEvent>
@@ -25,6 +24,8 @@ class KNNntpAccount;
 class KNGroup;
 class KNFolder;
 class KNCollectionViewItem;
+
+using namespace KPIM;
 
 /** The group/folder tree. */
 class KNCollectionView : public KFolderTree {

@@ -23,9 +23,11 @@
 #include <handler.h>
 
 #include "storage/datastore.h"
-#include "fetchquery.h"
 
 namespace Akonadi {
+
+class ImapSet;
+class QueryBuilder;
 
 /**
   @ingroup akonadi_server_handler
@@ -42,7 +44,8 @@ class Fetch : public Handler
     bool handleLine(const QByteArray& line);
 
   private:
-    QByteArray buildResponse( const PimItem&, const FetchQuery& );
+    void updateItemAccessTime( const ImapSet &set, bool isUidFetch );
+
 };
 
 }

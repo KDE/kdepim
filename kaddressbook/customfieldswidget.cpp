@@ -61,7 +61,7 @@ AddFieldDialog::AddFieldDialog( QWidget *parent )
 
   QGridLayout *layout = new QGridLayout( page );
   layout->setSpacing( spacingHint() );
-  layout->setMargin( marginHint() );
+  layout->setMargin( 0 );
 
   QLabel *label = new QLabel( i18n( "Title:" ), page );
   layout->addWidget( label, 0, 0 );

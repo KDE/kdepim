@@ -118,7 +118,7 @@ class ResourceBase::Private
 
     Session *session;
     Monitor *monitor;
-    QHash<Akonadi::Job*, QDBusMessage> pendingReplys;
+    QHash<Akonadi::Job*, QDBusMessage> pendingReplies;
 
     bool online;
 
@@ -258,7 +258,7 @@ ResourceBase::ResourceBase( const QString & id )
   d->monitor = new Monitor( this );
   d->monitor->fetchCollection( d->online );
   if ( d->online )
-    d->monitor->addFetchPart( Item::PartAll );
+    d->monitor->fetchAllParts();
 
   connect( d->monitor, SIGNAL( itemAdded( const Akonadi::Item&, const Akonadi::Collection& ) ),
            this, SLOT( slotItemAdded( const Akonadi::Item&, const Akonadi::Collection& ) ) );
@@ -505,7 +505,7 @@ Session* ResourceBase::session()
 bool ResourceBase::deliverItem(Akonadi::Job * job, const QDBusMessage & msg)
 {
   msg.setDelayedReply( true );
-  d->pendingReplys.insert( job, msg.createReply() );
+  d->pendingReplies.insert( job, msg.createReply() );
   connect( job, SIGNAL(result(KJob*)), SLOT(slotDeliveryDone(KJob*)) );
   return false;
 }
@@ -546,8 +546,8 @@ void ResourceBase::collectionRemoved( int id, const QString &remoteId )
 
 void ResourceBase::Private::slotDeliveryDone(KJob * job)
 {
-  Q_ASSERT( pendingReplys.contains( static_cast<Akonadi::Job*>( job ) ) );
-  QDBusMessage reply = pendingReplys.take( static_cast<Akonadi::Job*>( job ) );
+  Q_ASSERT( pendingReplies.contains( static_cast<Akonadi::Job*>( job ) ) );
+  QDBusMessage reply = pendingReplies.take( static_cast<Akonadi::Job*>( job ) );
   if ( job->error() ) {
     mParent->error( QLatin1String( "Error while creating item: " ) + job->errorString() );
     reply << false;

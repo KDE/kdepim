@@ -21,9 +21,6 @@ endif(Q_WS_X11)
 
 find_package(QGpgme)
 
-macro_optional_find_package(Sasl2)
-macro_log_feature(SASL2_FOUND "cyrus-sasl" "Cyrus SASL API" "http://asg.web.cmu.edu/sasl/sasl-library.html" FALSE "" "Needed to support authentication of logins")
-
 macro_optional_find_package(GNOKII)
 macro_log_feature(GNOKII_FOUND "gnokii" "Gnokii Development Libraries" "http://www.gnokii.org" FALSE "" "Needed to provide the ability to import and export KDE addressbook entries to/from mobile phones that are accessible via gnokii")
 
@@ -115,7 +112,6 @@ endif (Q_WS_X11)
 
 add_subdirectory(kdgantt1)
 macro_optional_add_subdirectory(strigi-analyzer)
-add_subdirectory(kioslave)
 
 macro_optional_add_subdirectory(kmailcvt)
 macro_optional_add_subdirectory(knotes)

@@ -74,7 +74,8 @@
       </item>
     </layout>
   </widget>
-  <layoutdefault spacing="6" margin="11" />
+  <layoutdefault spacing="6" margin="0" />
+  <layoutfunction spacing="KDialog::spacingHint" />
   <pixmapfunction>qPixmapFromMimeSource</pixmapfunction>
   <tabstops>
     <tabstop>cmbProtocol</tabstop>

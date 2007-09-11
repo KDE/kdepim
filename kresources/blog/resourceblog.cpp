@@ -35,6 +35,7 @@
 #include <libkdepim/progressmanager.h>
 
 #include <kblog/blogposting.h>
+#include <kblog/blogmedia.h>
 #include <kblog/movabletype.h>
 #include <kblog/livejournal.h>
 #include <kblog/gdata.h>
@@ -232,10 +233,10 @@ bool ResourceBlog::doLoad( bool )
                 const QList<KBlog::BlogPosting> & ) ),
                 this, SLOT( slotListedPostings(
                 const QList<KBlog::BlogPosting> & ) ) );
-      connect ( mBlog, SIGNAL( error( const KBlog::Blog::ErrorType &,
-                const QString & ) ),
-                this, SLOT( slotError( const KBlog::Blog::ErrorType &,
-                            const QString &, KBlog::BlogPosting * ) ) );
+      connect ( mBlog, SIGNAL( errorPosting( const KBlog::Blog::ErrorType &,
+                const QString &, KBlog::BlogPosting * ) ),
+                this, SLOT( slotErrorPosting( const KBlog::Blog::ErrorType &,
+                const QString &, KBlog::BlogPosting * ) ) );
 
       if ( mUseProgressManager ) {
         mProgress = KPIM::ProgressManager::createProgressItem(
@@ -288,12 +289,38 @@ void ResourceBlog::slotListedPostings(
 }
 
 void ResourceBlog::slotError( const KBlog::Blog::ErrorType &type,
+                              const QString &errorMessage )
+{
+  kError( 5650 ) << "ResourceBlog::slotError " << type << ": " << errorMessage;
+  mProgress->setComplete();
+  mProgress = 0;
+  //Q_ASSERT(false);
+}
+
+void ResourceBlog::slotErrorPosting( const KBlog::Blog::ErrorType &type,
                               const QString &errorMessage,
                               KBlog::BlogPosting *posting )
 {
-  kError( 5650 ) << "ResourceBlog::slotError " << type << ": " << errorMessage;
+  kError( 5650 ) << "ResourceBlog::slotErrorPosting " << type << ": "
+      << errorMessage;
+  mProgress->setComplete();
+  mProgress = 0;
   if ( posting ) {
     delete posting;
+  }
+  //Q_ASSERT(false);
+}
+
+void ResourceBlog::slotErrorMedia( const KBlog::Blog::ErrorType &type,
+                                     const QString &errorMessage,
+                                     KBlog::BlogMedia *media )
+{
+  kError( 5650 ) << "ResourceBlog::slotErrorMedia " << type << ": "
+      << errorMessage;
+  mProgress->setComplete();
+  mProgress = 0;
+  if ( media ) {
+    delete media;
   }
   //Q_ASSERT(false);
 }
@@ -364,9 +391,9 @@ bool ResourceBlog::doSave( bool )
       if ( posting ) {
         connect ( mBlog, SIGNAL( createdPosting( KBlog::BlogPosting * ) ),
                   this, SLOT( slotSavedPosting( KBlog::BlogPosting * ) ) );
-        connect ( mBlog, SIGNAL( error( const KBlog::Blog::ErrorType &,
-                  const QString & ) ),
-                  this, SLOT( slotError( const KBlog::Blog::ErrorType &,
+        connect ( mBlog, SIGNAL( errorPosting( const KBlog::Blog::ErrorType &,
+                  const QString &, KBlog::BlogPosting * ) ),
+                  this, SLOT( slotErrorPosting( const KBlog::Blog::ErrorType &,
                               const QString &, KBlog::BlogPosting * ) ) );
         mBlog->createPosting( posting );
         kDebug( 5650 ) << "ResourceBlog::doSave(): adding " << journal->uid();
@@ -382,9 +409,9 @@ bool ResourceBlog::doSave( bool )
       if ( posting ) {
         connect ( mBlog, SIGNAL( modifiedPosting( KBlog::BlogPosting * ) ),
                   this, SLOT( slotSavedPosting( KBlog::BlogPosting * ) ) );
-        connect ( mBlog, SIGNAL( error( const KBlog::Blog::ErrorType &,
+        connect ( mBlog, SIGNAL( errorPosting( const KBlog::Blog::ErrorType &,
                   const QString &, KBlog::BlogPosting * ) ),
-                  this, SLOT( slotError( const KBlog::Blog::ErrorType &,
+                  this, SLOT( slotErrorPosting( const KBlog::Blog::ErrorType &,
                               const QString &, KBlog::BlogPosting * ) ) );
         mBlog->modifyPosting( posting );
         kDebug( 5650 ) << "ResourceBlog::doSave(): changing " << journal->uid();
@@ -400,9 +427,9 @@ bool ResourceBlog::doSave( bool )
       if ( posting ) {
         connect ( mBlog, SIGNAL( removedPosting( KBlog::BlogPosting * ) ),
                   this, SLOT( slotSavedPosting( KBlog::BlogPosting * ) ) );
-        connect ( mBlog, SIGNAL( error( const KBlog::Blog::ErrorType &,
-                  const QString & ) ),
-                  this, SLOT( slotError( const KBlog::Blog::ErrorType &,
+        connect ( mBlog, SIGNAL( errorPosting( const KBlog::Blog::ErrorType &,
+                  const QString &, KBlog::BlogPosting * ) ),
+                  this, SLOT( slotErrorPosting( const KBlog::Blog::ErrorType &,
                               const QString &, KBlog::BlogPosting * ) ) );
         mBlog->removePosting( posting );
         kDebug( 5650 ) << "ResourceBlog::doSave(): removing " << journal->uid();
@@ -466,6 +493,7 @@ bool ResourceBlog::listBlogs() {
               SIGNAL( listedBlogs( const QList<QMap<QString,QString> > & ) ),
               this, SLOT( slotBlogInfoRetrieved(
                           const QList<QMap<QString,QString> > & ) ) );
+    //TODO: Error handling
     blogger->listBlogs();
     return true;
   }
@@ -475,6 +503,7 @@ bool ResourceBlog::listBlogs() {
               SIGNAL( listedBlogs( const QList<QMap<QString,QString> > & ) ),
               this, SLOT( slotBlogInfoRetrieved(
                           const QList<QMap<QString,QString> > & ) ) );
+    //TODO: Error handling
     gdata->listBlogs();
     return true;
   }

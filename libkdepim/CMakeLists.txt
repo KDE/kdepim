@@ -42,7 +42,6 @@ set(kdepim_LIB_SRCS
    statusbarprogresswidget.cpp 
    ssllabel.cpp 
    completionordereditor.cpp 
-   resourceabc.cpp 
    diffalgo.cpp 
    addresseediffalgo.cpp 
    calendardiffalgo.cpp 
@@ -57,7 +56,6 @@ set(kdepim_LIB_SRCS
    kscoringeditor.cpp 
    ksubscription.cpp 
    kwidgetlister.cpp 
-   qutf7codec.cpp 
    recentaddresses.cpp 
    addresseeselector.cpp 
    addresseeemailselection.cpp 
@@ -79,6 +77,8 @@ set(kdepim_LIB_SRCS
    kmeditor.cpp
    kmstylelistselectaction.cpp
    autochecktreewidget.cpp
+   kmutils.cpp
+   colorlistbox.cpp
 )
 
 

@@ -120,9 +120,10 @@ bool AT_DevicesFoundPage::validatePage()
 {
     if(!enginedata) return false;
     ATDevicesConfig *cfg=(ATDevicesConfig*) DEVCFG(wizard()->objectName() );
-    cfg->setMobileimei(enginedata->imei());
-    cfg->setRawdevicevendor(enginedata->manufacturer());
-    cfg->setRawdevicename(enginedata->model());
+    /// @todo these config entries have been removed, port or remove...
+    //cfg->setMobileimei(enginedata->imei());
+    //cfg->setRawdevicevendor(enginedata->manufacturer());
+    //cfg->setRawdevicename(enginedata->model());
     cfg->writeConfig();
     /// @TODO set slots
     return true;

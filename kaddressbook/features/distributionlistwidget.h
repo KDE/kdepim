@@ -25,8 +25,8 @@
 #define DISTRIBUTIONLISTWIDGET_H
 
 #include <config.h> // for KDEPIM_NEW_DISTRLISTS
-#include <kdialog.h>
-#include <k3listview.h>
+#include <KDialog>
+#include <QTreeWidget>
 
 #include "extensionwidget.h"
 //Added by qt3to4:
@@ -35,9 +35,8 @@
 #include <QDragMoveEvent>
 #include <QDropEvent>
 
-class Q3ButtonGroup;
+class QButtonGroup;
 class QComboBox;
-class Q3ListView;
 
 class DistributionListView;
 
@@ -65,7 +64,7 @@ class DistributionListWidget : public KAB::ExtensionWidget
 
   public slots:
     void save();
-    void dropped( QDropEvent*, Q3ListViewItem* );
+    void dropped( QDropEvent* );
 
     void removeContact();
 
@@ -109,7 +108,7 @@ class DistributionListWidget : public KAB::ExtensionWidget
 /**
   @short Helper class
 */
-class DistributionListView : public K3ListView
+class DistributionListView : public QTreeWidget
 {
   Q_OBJECT
 
@@ -119,8 +118,10 @@ class DistributionListView : public K3ListView
   protected:
     void dragEnterEvent( QDragEnterEvent *e );
     void dropEvent( QDropEvent *e );
-    void viewportDragMoveEvent( QDragMoveEvent *e );
-    void viewportDropEvent( QDropEvent *e );
+    void dragMoveEvent( QDragMoveEvent *e );
+
+  Q_SIGNALS:
+    void dropped( QDropEvent *e );
 };
 
 /**
@@ -138,7 +139,7 @@ class EmailSelector : public KDialog
                              QWidget *parent, bool & canceled );
 
   private:
-    Q3ButtonGroup *mButtonGroup;
+    QButtonGroup *mButtonGroup;
     QMap<int, QString> mEmailMap;
 };
 

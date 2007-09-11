@@ -43,8 +43,8 @@ void FilterOutlook::import(FilterInfo *info)
     info->alert(i18n("No directory selected."));
     info->addLog(i18n("Counting files..."));
     info->addLog(i18n("Counting mail..."));
-    info->addLog(i18n("Counting directories..."));
-    info->addLog(i18n("Counting folders..."));
+    info->addLog(i18nc("'directories' means directories on hard disc, not email-folders.", "Counting directories..."));
+    info->addLog(i18nc("'folders' means email-folders, not folders on disc.", "Counting folders..."));
     info->addLog(i18n("Importing new mail files..."));
     info->addLog(i18n("No files found for import."));
 
