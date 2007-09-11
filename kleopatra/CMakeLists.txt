@@ -4,7 +4,7 @@ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/config-kleopatra.h.cmake ${CMAKE_CURR
 
 include_directories( ${CMAKE_SOURCE_DIR}/libkleo ${Boost_INCLUDE_DIR} ${QGPGME_INCLUDES}  )
 if (USABLE_ASSUAN_FOUND)
-   include_directories(${ASSUAN_INCLUDES})
+   include_directories(${ASSUAN_INCLUDES} ${GPGME_INCLUDES})
 endif(USABLE_ASSUAN_FOUND)
 add_definitions (-DQT3_SUPPORT -DQT3_SUPPORT_WARNINGS ${KDE4_ENABLE_EXCEPTIONS} -D_ASSUAN_ONLY_GPG_ERRORS )
 
