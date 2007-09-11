@@ -222,7 +222,7 @@ else() # not WIN32
           endif()
         endforeach()
 
-        if ( _assuan_config_libs OR _assuan_config_pthread_libs OR _assuan_config_pth_libs )
+        if ( _assuan_config_vanilla_libs OR _assuan_config_pthread_libs OR _assuan_config_pth_libs )
 
           exec_program( ${_ASSUANCONFIG_EXECUTABLE} ARGS --cflags OUTPUT_VARIABLE _ASSUAN_CFLAGS )
 
