@@ -63,8 +63,8 @@ ResourceBlog::~ResourceBlog()
   if ( mLock ) {
     delete mLock;
   }
-  if ( mPostingMap ) {
-    delete mPostingMap;
+  if ( mPostMap ) {
+    delete mPostMap;
   }
 }
 
@@ -79,7 +79,7 @@ void ResourceBlog::init()
   setType( "blog" );
 
   mLock = new KABC::Lock( cacheFile() );
-  mPostingMap = new QMap<QString,KBlog::BlogPost*>();
+  mPostMap = new QMap<QString,KBlog::BlogPost*>();
 
   enableChangeNotification();
 }
@@ -229,13 +229,13 @@ bool ResourceBlog::doLoad( bool )
 
   if ( mBlog ) {
     if ( mLock->lock() ) {
-      connect ( mBlog, SIGNAL( listedRecentPostings(
+      connect ( mBlog, SIGNAL( listedRecentPosts(
                 const QList<KBlog::BlogPost> & ) ),
-                this, SLOT( slotListedPostings(
+                this, SLOT( slotListedPosts(
                 const QList<KBlog::BlogPost> & ) ) );
-      connect ( mBlog, SIGNAL( errorPosting( const KBlog::Blog::ErrorType &,
+      connect ( mBlog, SIGNAL( errorPost( const KBlog::Blog::ErrorType &,
                 const QString &, KBlog::BlogPost * ) ),
-                this, SLOT( slotErrorPosting( const KBlog::Blog::ErrorType &,
+                this, SLOT( slotErrorPost( const KBlog::Blog::ErrorType &,
                 const QString &, KBlog::BlogPost * ) ) );
 
       if ( mUseProgressManager ) {
@@ -244,7 +244,7 @@ bool ResourceBlog::doLoad( bool )
             i18n("Downloading blog posts") );
         mProgress->setProgress( 0 );
       }
-      mBlog->listRecentPostings( downloadCount() );
+      mBlog->listRecentPosts( downloadCount() );
       mLock->unlock();
       return true;
     } else {
@@ -256,10 +256,10 @@ bool ResourceBlog::doLoad( bool )
   return false;
 }
 
-void ResourceBlog::slotListedPostings(
+void ResourceBlog::slotListedPosts(
     const QList<KBlog::BlogPost> &posts )
 {
-  kDebug( 5650 ) << "ResourceBlog::slotListedPostings()";
+  kDebug( 5650 ) << "ResourceBlog::slotListedPosts()";
   QList<KBlog::BlogPost>::const_iterator i;
   for (i = posts.constBegin(); i != posts.constEnd(); ++i) {
     Journal* newJournal = (*i).journal( *mBlog );
@@ -297,11 +297,11 @@ void ResourceBlog::slotError( const KBlog::Blog::ErrorType &type,
   //Q_ASSERT(false);
 }
 
-void ResourceBlog::slotErrorPosting( const KBlog::Blog::ErrorType &type,
+void ResourceBlog::slotErrorPost( const KBlog::Blog::ErrorType &type,
                               const QString &errorMessage,
                               KBlog::BlogPost *post )
 {
-  kError( 5650 ) << "ResourceBlog::slotErrorPosting " << type << ": "
+  kError( 5650 ) << "ResourceBlog::slotErrorPost " << type << ": "
       << errorMessage;
   mProgress->setComplete();
   mProgress = 0;
@@ -325,13 +325,13 @@ void ResourceBlog::slotErrorMedia( const KBlog::Blog::ErrorType &type,
   //Q_ASSERT(false);
 }
 
-void ResourceBlog::slotSavedPosting( KBlog::BlogPost *post )
+void ResourceBlog::slotSavedPost( KBlog::BlogPost *post )
 {
   if ( post ) {
-    kDebug( 5650 ) << "ResourceBlog::slotSavedPosting: Posting saved with ID"
-        << post->postingId();
+    kDebug( 5650 ) << "ResourceBlog::slotSavedPost: Post saved with ID"
+        << post->postId();
     if ( post->status() == KBlog::BlogPost::Created ) {
-      mLastKnownPostID = post->postingId().toInt();
+      mLastKnownPostID = post->postId().toInt();
       // Instead of modifying the existing we journal we create a new one and
       // use that instead to make use of the metadata provided in KBlog.
       Journal* existingJournal = journal( post->journalId() );
@@ -358,7 +358,7 @@ void ResourceBlog::slotSavedPosting( KBlog::BlogPost *post )
     }
     }
   else {
-    kDebug( 5650 ) << "ResourceBlog::slotSavedPosting: Posting saved was null";
+    kDebug( 5650 ) << "ResourceBlog::slotSavedPost: Post saved was null";
   }
 }
 
@@ -389,13 +389,13 @@ bool ResourceBlog::doSave( bool )
     if ( journal ) {
       KBlog::BlogPost *post = new KBlog::BlogPost( *journal );
       if ( post ) {
-        connect ( mBlog, SIGNAL( createdPosting( KBlog::BlogPost * ) ),
-                  this, SLOT( slotSavedPosting( KBlog::BlogPost * ) ) );
-        connect ( mBlog, SIGNAL( errorPosting( const KBlog::Blog::ErrorType &,
+        connect ( mBlog, SIGNAL( createdPost( KBlog::BlogPost * ) ),
+                  this, SLOT( slotSavedPost( KBlog::BlogPost * ) ) );
+        connect ( mBlog, SIGNAL( errorPost( const KBlog::Blog::ErrorType &,
                   const QString &, KBlog::BlogPost * ) ),
-                  this, SLOT( slotErrorPosting( const KBlog::Blog::ErrorType &,
+                  this, SLOT( slotErrorPost( const KBlog::Blog::ErrorType &,
                               const QString &, KBlog::BlogPost * ) ) );
-        mBlog->createPosting( post );
+        mBlog->createPost( post );
         kDebug( 5650 ) << "ResourceBlog::doSave(): adding " << journal->uid();
       }
     }
@@ -407,13 +407,13 @@ bool ResourceBlog::doSave( bool )
     if ( journal ) {
       KBlog::BlogPost *post = new KBlog::BlogPost( *journal );
       if ( post ) {
-        connect ( mBlog, SIGNAL( modifiedPosting( KBlog::BlogPost * ) ),
-                  this, SLOT( slotSavedPosting( KBlog::BlogPost * ) ) );
-        connect ( mBlog, SIGNAL( errorPosting( const KBlog::Blog::ErrorType &,
+        connect ( mBlog, SIGNAL( modifiedPost( KBlog::BlogPost * ) ),
+                  this, SLOT( slotSavedPost( KBlog::BlogPost * ) ) );
+        connect ( mBlog, SIGNAL( errorPost( const KBlog::Blog::ErrorType &,
                   const QString &, KBlog::BlogPost * ) ),
-                  this, SLOT( slotErrorPosting( const KBlog::Blog::ErrorType &,
+                  this, SLOT( slotErrorPost( const KBlog::Blog::ErrorType &,
                               const QString &, KBlog::BlogPost * ) ) );
-        mBlog->modifyPosting( post );
+        mBlog->modifyPost( post );
         kDebug( 5650 ) << "ResourceBlog::doSave(): changing " << journal->uid();
       }
     }
@@ -425,13 +425,13 @@ bool ResourceBlog::doSave( bool )
     if ( journal ) {
       KBlog::BlogPost *post = new KBlog::BlogPost( *journal );
       if ( post ) {
-        connect ( mBlog, SIGNAL( removedPosting( KBlog::BlogPost * ) ),
-                  this, SLOT( slotSavedPosting( KBlog::BlogPost * ) ) );
-        connect ( mBlog, SIGNAL( errorPosting( const KBlog::Blog::ErrorType &,
+        connect ( mBlog, SIGNAL( removedPost( KBlog::BlogPost * ) ),
+                  this, SLOT( slotSavedPost( KBlog::BlogPost * ) ) );
+        connect ( mBlog, SIGNAL( errorPost( const KBlog::Blog::ErrorType &,
                   const QString &, KBlog::BlogPost * ) ),
-                  this, SLOT( slotErrorPosting( const KBlog::Blog::ErrorType &,
+                  this, SLOT( slotErrorPost( const KBlog::Blog::ErrorType &,
                               const QString &, KBlog::BlogPost * ) ) );
-        mBlog->removePosting( post );
+        mBlog->removePost( post );
         kDebug( 5650 ) << "ResourceBlog::doSave(): removing " << journal->uid();
       }
     }

@@ -253,7 +253,7 @@ class KCAL_RESOURCEBLOG_EXPORT ResourceBlog : public ResourceCached
 
       @param posts A list of the posts from the blog.
     */
-    void slotListedPostings( const QList<KBlog::BlogPost> &posts );
+    void slotListedPosts( const QList<KBlog::BlogPost> &posts );
 
     /**
       Prints an error on a XML-RPC failure.
@@ -271,7 +271,7 @@ class KCAL_RESOURCEBLOG_EXPORT ResourceBlog : public ResourceCached
     @param errorMessage The specific cause of the error.
     @param post The relevant post.
     */
-    void slotErrorPosting( const KBlog::Blog::ErrorType &type,
+    void slotErrorPost( const KBlog::Blog::ErrorType &type,
                            const QString &errorMessage,
                            KBlog::BlogPost *post );
 
@@ -292,7 +292,7 @@ class KCAL_RESOURCEBLOG_EXPORT ResourceBlog : public ResourceCached
 
     @param post The last blog post modified on the server.
     */
-    void slotSavedPosting( KBlog::BlogPost *post );
+    void slotSavedPost( KBlog::BlogPost *post );
 
     /**
       Updates the local list of available blogs to post to.
@@ -390,7 +390,7 @@ class KCAL_RESOURCEBLOG_EXPORT ResourceBlog : public ResourceCached
     /**
       A map of all the blog posts awaiting server responses.
     */
-    QMap<QString,KBlog::BlogPost*> *mPostingMap;
+    QMap<QString,KBlog::BlogPost*> *mPostMap;
 };
 
 }
