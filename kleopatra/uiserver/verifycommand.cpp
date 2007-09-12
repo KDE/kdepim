@@ -32,6 +32,7 @@
 
 #include "verifycommand.h"
 
+#include <QFile>
 #include <QObject>
 #include <QIODevice>
 #include <QMessageBox>
@@ -94,7 +95,6 @@ public:
     QList<Input> setupInput( GpgME::Error& error, QString& errorDetails ) const;
 
 public Q_SLOTS:
-    void slotDetachedSignature( int, const QByteArray &, const QByteArray & );
     void slotVerifyOpaqueResult(const GpgME::VerificationResult &, const QByteArray &);
     void slotVerifyDetachedResult(const GpgME::VerificationResult &);
     void slotProgress( const QString& what, int current, int total );
@@ -129,7 +129,6 @@ QList<VerifyCommand::Private::Input> VerifyCommand::Private::setupInput( GpgME::
     const int numSignatures = q->numBulkInputDevices( "SIGNATURE" );
     const int numMessages = q->numBulkInputDevices( "MESSAGE" );
 
-    
     if ( numSignatures == 0 )
     {
         error = GpgME::Error( GPG_ERR_ASS_NO_INPUT );
@@ -186,24 +185,6 @@ QList<VerifyCommand::Private::Input> VerifyCommand::Private::setupInput( GpgME::
     return inputs;
 }
 
-
-void VerifyCommand::Private::slotDetachedSignature( int, const QByteArray &, const QByteArray & )
-{
-    const QByteArray signature; // FIXME
-    const QByteArray signedData; // FIXME
-    // we now have the detached signature, verify it
-    VerifyDetachedJob * const job = backend->verifyDetachedJob();
-    assert(job);
-
-    connect( job, SIGNAL(result(GpgME::VerificationResult)),
-             this, SLOT(slotVerifyDetachedResult(GpgME::VerificationResult)) );
-    connect( job, SIGNAL(progress(QString,int,int)),
-             this, SLOT(slotProgress(QString,int,int)) );
-    if ( const GpgME::Error error = job->start( signature, signedData ) )
-        q->done(error);
-}
-
-
 void VerifyCommand::Private::sendBriefResult( const GpgME::VerificationResult & result ) const
 {
     // handle errors
@@ -256,7 +237,10 @@ int VerifyCommand::start( const std::string & line )
         QString details;
         d->inputList = d->setupInput( error, details );
         if ( error )
+        {
             done( error, details );
+            return error;
+        }
     }
 
     // FIXME check options
@@ -264,35 +248,63 @@ int VerifyCommand::start( const std::string & line )
     d->findCryptoBackend(); // decide on smime or openpgp
     assert(d->backend);
 
-    // FIXME figure out if it's an opaque or a detached signature
-    const bool detached = true;
+    assert( !d->inputList.isEmpty() );
 
-    if ( detached ) {
-        // we need to inquire for the signature data
-        const int err = inquire( "DETACHED_SIGNATURE",
-                                 d.get(), SLOT(slotDetachedSignature(int,QByteArray,QByteArray)) );
-        if ( err )
-            done( err );
-        return err; // 0 is all is ok, err otherwise 
+    const Private::Input input = d->inputList.first();
+
+    if ( input.type == Private::Input::Opaque )
+    {
+        //fire off appropriate kleo verification job
+        VerifyOpaqueJob * const job = d->backend->verifyOpaqueJob();
+        assert(job);
+        QObject::connect( job, SIGNAL(result(GpgME::VerificationResult,QByteArray)),
+                        d.get(),  SLOT(slotVerifyOpaqueResult(GpgME::VerificationResult,QByteArray)) );
+        QObject::connect( job, SIGNAL(progress(QString,int,int)),
+                        d.get(), SLOT(slotProgress(QString,int,int)) );
+
+        //FIXME: readAll() save enough?
+        const GpgME::Error error = job->start( input.signature->readAll() );
+        if ( error ) 
+            done( error );
+        return error;
+    }
+    else
+    {
+        //fire off appropriate kleo verification job
+        VerifyDetachedJob * const job = d->backend->verifyDetachedJob();
+        assert(job);
+        QObject::connect( job, SIGNAL(result(GpgME::VerificationResult)),
+                        d.get(),  SLOT(slotVerifyDetachedResult(GpgME::VerificationResult)) );
+        QObject::connect( job, SIGNAL(progress(QString,int,int)),
+                        d.get(), SLOT(slotProgress(QString,int,int)) );
+
+
+        //FIXME: readAll save enough
+        const QByteArray signature = input.signature->readAll();
+        QByteArray message;
+        if ( input.message )
+        {
+            message = input.message->readAll();
+        }
+        else
+        {
+            QFile file( input.messageFileName );
+            if ( !file.open( QIODevice::ReadOnly ) )
+            {
+                done( GPG_ERR_ASS_NO_INPUT, QString( "Couldn't read file %1" ).arg( input.messageFileName ) ); // FIXME: use better error code 
+                return GPG_ERR_ASS_NO_INPUT;
+            }
+            message = file.readAll();
+            file.close();
+        }
+        const GpgME::Error error = job->start( signature, message );
+        if ( error )
+            done( error );
+        return error;
     }
 
-    // this is an opaque signature, get the data for it
-    const QByteArray data = bulkInputDevice( "MESSAGE" )->readAll(); // FIXME safe enough?
-
-    //fire off appropriate kleo verification job
-    VerifyOpaqueJob * const job = d->backend->verifyOpaqueJob();
-    assert(job);
-
-    QObject::connect( job, SIGNAL(result(GpgME::VerificationResult,QByteArray)),
-                      d.get(), SLOT(slotVerifyOpaqueResult(GpgME::VerificationResult,QByteArray)) );
-    QObject::connect( job, SIGNAL(progress(QString,int,int)),
-                      d.get(), SLOT(slotProgress(QString,int,int)) );
-
-    // FIXME handle cancelled, let job show dialog? both done and return error?
-    const GpgME::Error error = job->start( data );
-    if ( error )
-        done( error );
-    return error;
+    assert( false );
+    return 0; // never reached
 }
 
 void VerifyCommand::canceled()
