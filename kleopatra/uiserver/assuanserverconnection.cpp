@@ -123,20 +123,38 @@ static std::string hexdecode( const std::string & in ) {
     return result;
 }
 
-static std::vector<std::string> parse_commandline( const char * line ) {
-    std::vector<std::string> result;
+static std::map<std::string,std::string> parse_commandline( const char * line ) {
+    std::map<std::string,std::string> result;
     if ( line ) {
         const char * begin = line;
+        const char * lastEQ = 0;
         while ( *line ) {
             if ( *line == ' ' || *line == '\t' ) {
-                if ( begin != line )
-                    result.push_back( hexdecode( std::string( begin, line - begin ) ) );
+                if ( begin != line ) {
+                    if ( begin[0] == '-' && begin[1] == '-' )
+                        begin += 2; // skip initial "--"
+                    if ( lastEQ && lastEQ > begin )
+                        result[ std::string( begin, lastEQ - begin ) ] = hexdecode( std::string( lastEQ+1, line - (lastEQ+1) ) );
+                    else
+                        result[ std::string( begin,  line  - begin ) ] = std::string();
+                }
                 begin = line + 1;
+            } else if ( *line == '=' ) {
+                if ( line == begin )
+                    throw gpg_error( GPG_ERR_ASS_SYNTAX );
+                else
+                    lastEQ = line;
             }
             ++line;
         }
-        if ( begin != line )
-            result.push_back( hexdecode( begin ) );
+        if ( begin != line ) {
+            if ( begin[0] == '-' && begin[1] == '-' )
+                begin += 2; // skip initial "--"
+            if ( lastEQ && lastEQ > begin )
+                result[ std::string( begin, lastEQ - begin ) ] = hexdecode( std::string( lastEQ+1, line - (lastEQ+1 ) ) );
+            else
+                result[ begin ] = std::string();
+        }
     }
 
     return result;
@@ -192,6 +210,8 @@ private:
         
         AssuanServerConnection::Private & conn = *static_cast<AssuanServerConnection::Private*>( assuan_get_pointer( ctx_ ) );
 
+        if ( key && key[0] == '-' && key[1] == '-' )
+            key += 2; // skip "--"
         conn.options[key] = QString::fromUtf8( value );
 
         return 0;
@@ -205,50 +225,72 @@ private:
 
         try {
 
-            const std::vector<std::string> parsed = parse_commandline( line_ );
-            if ( parsed.size() < 1 || parsed.size() > 2 )
+            /*const*/ std::map<std::string,std::string> options = parse_commandline( line_ );
+            if ( options.size() < 1 || options.size() > 2 )
                 throw gpg_error( GPG_ERR_ASS_SYNTAX );
+
+            // ### TODO barf on unknown options
 
             IO io;
             std::auto_ptr<QIODevice> iodev;
 
-            const std::string source = parsed[0];
-            if ( source == "FD" ) {
+            if ( options.count( "FD" ) ) {
+
+                if ( options.count( "FILE" ) )
+                    throw gpg_error( GPG_ERR_CONFLICT );
+
                 assuan_fd_t fd = ASSUAN_INVALID_FD;
-                if ( const gpg_error_t err = assuan_receivefd( conn.ctx.get(), &fd ) )
-                    throw err;
-                io.iodev = new KDPipeIODevice( fd, in ? QIODevice::ReadOnly : QIODevice::WriteOnly );
-            } else if ( source.substr( 0, 3 ) == "FD=" ) {
+
+                const std::string fdstr = options["FD"];
+
+                if ( fdstr.empty() ) {
+                    if ( const gpg_error_t err = assuan_receivefd( conn.ctx.get(), &fd ) )
+                        throw err;
+                } else {
 #ifdef Q_OS_WIN32
-                const assuan_fd_t fd = (assuan_fd_t)lexical_cast<intptr_t>( source.substr( 3 ) );
+                    fd = (assuan_fd_t)lexical_cast<intptr_t>( fdstr );
 #else
-                const assuan_fd_t fd = lexical_cast<assuan_fd_t>( source.substr( 3 ) );
+                    fd = lexical_cast<assuan_fd_t>( fdstr );
 #endif
-                iodev.reset( new KDPipeIODevice( fd, in ? QIODevice::ReadOnly : QIODevice::WriteOnly ) );
-            } else if ( source.substr( 0, 5 ) == "FILE=" ) {
-                const QString fileName = QFile::decodeName( hexdecode( source.substr( 5 ) ).c_str() );
+                }
+
+                io.iodev = new KDPipeIODevice( fd, in ? QIODevice::ReadOnly : QIODevice::WriteOnly );
+
+            } else if ( options.count( "FILE" ) ) {
+                
+                if ( options.count( "FD" ) )
+                    throw gpg_error( GPG_ERR_CONFLICT );
+
+                const QString fileName = QFile::decodeName( hexdecode( options["FILE"] ).c_str() );
+
                 if ( in && !QFile::exists( fileName ) )
                     throw gpg_error( GPG_ERR_NOT_FOUND );
                 if ( in && !QFileInfo( fileName ).isReadable() )
                     throw gpg_error( GPG_ERR_EPERM );
+
                 io.file = fileName;
+
                 std::auto_ptr<QFile> f( new QFile( fileName ) );
+
                 if ( !f->open( in ? QIODevice::ReadOnly : QIODevice::ReadWrite ) )
                     throw gpg_error( GPG_ERR_EPERM );
+
                 iodev = f;
-            } else
+
+            } else {
+
                 throw gpg_error( GPG_ERR_ASS_PARAMETER );
 
-            if ( parsed.size() < 2 )
-                io.encoding = GpgME::Data::AutoEncoding;
-            else if ( parsed[1] == "--binary" )
+            }
+
+            if ( options.count( "binary" ) )
                 io.encoding = GpgME::Data::BinaryEncoding;
-            else if ( parsed[1] == "--armor" )
+            else if ( options.count( "armor" ) )
                 io.encoding = GpgME::Data::ArmorEncoding;
-            else if ( parsed[1] == "--base64" )
+            else if ( options.count( "base64" ) )
                 io.encoding = GpgME::Data::Base64Encoding;
             else
-                throw gpg_error( GPG_ERR_ASS_PARAMETER );
+                io.encoding = GpgME::Data::AutoEncoding;
 
             io.iodev = iodev.release();
 
@@ -700,8 +742,12 @@ int AssuanCommandFactory::_handle( assuan_context_t ctx, char * line, const char
     cmd->d->options = conn.options;
     cmd->d->inputs.swap( conn.inputs );   assert( conn.inputs.empty() );
     cmd->d->outputs.swap( conn.outputs ); assert( conn.outputs.empty() );
+
+    const std::map<std::string,std::string> cmdline_options = parse_commandline( line );
+    for ( std::map<std::string,std::string>::const_iterator it = cmdline_options.begin(), end = cmdline_options.end() ; it != end ; ++it )
+        cmd->d->options[it->first] = QString::fromUtf8( it->second.c_str() );
     
-    if ( const int err = cmd->start( line ) ) {
+    if ( const int err = cmd->start( "" ) ) { // ### remove line parameter
         if ( !cmd->d->done )
             cmd->done( err );
         return err;

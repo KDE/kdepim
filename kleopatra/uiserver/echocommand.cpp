@@ -79,35 +79,18 @@ int EchoCommand::start( const std::string & line ) {
                   tokens.end() );
 
     std::string keyword;
-    if ( !tokens.empty() && tokens.front() == "--inquire" ) {
-        tokens.pop_front();
-        if ( tokens.empty() )
-            return makeError( GPG_ERR_MISSING_VALUE );
-        keyword = tokens.front().constData();
-        tokens.pop_front();
+    if ( hasOption( "inquire" ) ) {
+        keyword = option("inquire").toString().toStdString();
+        if ( keyword.empty() )
+            return makeError( GPG_ERR_INV_ARG );
     }
 
-    bool optionsExpected = true;
-    QByteArray output;
-    Q_FOREACH( QByteArray token, tokens ) {
-        if ( token == "--" )
-            optionsExpected = false;
-        else if ( optionsExpected && token.startsWith( "--" ) )
-            if ( token == "--inquire" )
-                return makeError( GPG_ERR_DUP_VALUE ); // duplicate
-            else
-                return makeError( GPG_ERR_UNKNOWN_OPTION );
-        else
-            if ( output.isEmpty() )
-                output = token;
-            else
-                output += ' ' + token;
-    }
+    const std::string output = option("text").toString().toStdString();
 
     // aaand ACTION:
 
     // 1. echo the command line though the status channel
-    if ( const int err = sendStatus( "ECHO", output.constData() ) )
+    if ( const int err = sendStatus( "ECHO", output.empty() ? "" : output.c_str() ) )
         return err;
 
     // 2. if --inquire was given, inquire more data from the client:
