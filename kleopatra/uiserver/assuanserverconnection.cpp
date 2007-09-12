@@ -203,7 +203,7 @@ private:
 
             const std::vector<std::string> parsed = parse_commandline( line_ );
             if ( parsed.size() < 2 || parsed.size() > 3 )
-                return gpg_error( GPG_ERR_ASS_SYNTAX );
+                throw gpg_error( GPG_ERR_ASS_SYNTAX );
 
             const std::string tag = parsed[0];
 
@@ -212,7 +212,7 @@ private:
             if ( source == "FD" ) {
                 assuan_fd_t fd = ASSUAN_INVALID_FD;
                 if ( const gpg_error_t err = assuan_receivefd( conn.ctx.get(), &fd ) )
-                    return err;
+                    throw err;
                 io.iodev = new KDPipeIODevice( fd, in ? QIODevice::ReadOnly : QIODevice::WriteOnly );
             } else if ( source.substr( 0, 3 ) == "FD=" ) {
 #ifdef Q_OS_WIN32
@@ -224,16 +224,16 @@ private:
             } else if ( source.substr( 0, 5 ) == "FILE=" ) {
                 const QString fileName = QFile::decodeName( hexdecode( source.substr( 5 ) ).c_str() );
                 if ( in && !QFile::exists( fileName ) )
-                    return gpg_error( GPG_ERR_NOT_FOUND );
+                    throw gpg_error( GPG_ERR_NOT_FOUND );
                 if ( in && !QFileInfo( fileName ).isReadable() )
-                    return gpg_error( GPG_ERR_EPERM );
+                    throw gpg_error( GPG_ERR_EPERM );
                 io.file = fileName;
                 std::auto_ptr<QFile> f( new QFile( fileName ) );
                 if ( !f->open( in ? QIODevice::ReadOnly : QIODevice::ReadWrite ) )
-                    return gpg_error( GPG_ERR_EPERM );
+                    throw gpg_error( GPG_ERR_EPERM );
                 io.iodev = f.release();
             } else
-                return gpg_error( GPG_ERR_ASS_PARAMETER );
+                throw gpg_error( GPG_ERR_ASS_PARAMETER );
 
             if ( parsed.size() < 3 )
                 io.encoding = GpgME::Data::AutoEncoding;
@@ -244,21 +244,21 @@ private:
             else if ( parsed[2] == "--base64" )
                 io.encoding = GpgME::Data::Base64Encoding;
             else
-                return gpg_error( GPG_ERR_ASS_PARAMETER );
+                throw gpg_error( GPG_ERR_ASS_PARAMETER );
 
             ( in ? conn.inputs : conn.outputs )[tag].push_back( io );
 
             qDebug() << "AssuanServerConnection: added" << (in ? "input" : "output") << '('
                      << io.file << io.iodev << io.encoding << ')';
 
-            return 0;
+            return assuan_process_done( conn.ctx.get(), 0 );
 
         } catch ( const std::exception & e ) {
-            return gpg_error( GPG_ERR_ASS_SYNTAX );
+            return assuan_process_done( conn.ctx.get(), gpg_error( GPG_ERR_ASS_SYNTAX ) );
         } catch ( const gpg_error_t e ) {
-            return e;
+            return assuan_process_done( conn.ctx.get(), e );
         } catch ( ... ) {
-            return gpg_error( GPG_ERR_UNEXPECTED );
+            return assuan_process_done( conn.ctx.get(), gpg_error( GPG_ERR_UNEXPECTED ) );
         }
 
     }
