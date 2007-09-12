@@ -126,7 +126,7 @@ QList<VerifyCommand::Private::Input> VerifyCommand::Private::setupInput( GpgME::
     error = GpgME::Error();
     errorDetails = QString();
 
-    const int numSignatures = q->numBulkInputDevices( "SIGNATURE" );
+    const int numSignatures = q->numBulkInputDevices( "INPUT" );
     const int numMessages = q->numBulkInputDevices( "MESSAGE" );
 
     if ( numSignatures == 0 )
@@ -151,7 +151,7 @@ QList<VerifyCommand::Private::Input> VerifyCommand::Private::setupInput( GpgME::
         {
             Input input;
             input.type = Input::Detached;
-            input.signature = q->bulkInputDevice( "SIGNATURE", i );
+            input.signature = q->bulkInputDevice( "INPUT", i );
             input.message = q->bulkInputDevice( "MESSAGE", i );
             assert( input.signature );
             assert( input.message );
@@ -165,9 +165,9 @@ QList<VerifyCommand::Private::Input> VerifyCommand::Private::setupInput( GpgME::
     for ( int i = 0; i < numSignatures; ++i )
     {
         Input input;
-        input.signature = q->bulkInputDevice( "SIGNATURE", i );
+        input.signature = q->bulkInputDevice( "INPUT", i );
         assert( input.signature );
-        const QString fname = q->bulkInputDeviceFileName( "SIGNATURE", i );
+        const QString fname = q->bulkInputDeviceFileName( "INPUT", i );
         if ( !fname.isEmpty() && fname.endsWith( ".sig", Qt::CaseInsensitive )
                 || fname.endsWith( ".asc", Qt::CaseInsensitive ) )
         { //detached signature file
