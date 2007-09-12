@@ -115,7 +115,7 @@ VerifyCommand::~VerifyCommand() {}
 void VerifyCommand::Private::findCryptoBackend()
 {
     // FIXME this could be either SMIME or OpenPGP, find out from headers
-    const bool isSMIME = true;
+    const bool isSMIME = false;
     if ( isSMIME )
         backend = Kleo::CryptoBackendFactory::instance()->smime();
     else
@@ -190,7 +190,6 @@ QList<VerifyCommand::Private::Input> VerifyCommand::Private::setupInput( GpgME::
 void VerifyCommand::Private::processSignature( const GpgME::Signature& sig ) const
 {
     if ( sig.isNull() ) {
-        q->sendStatus("null sig", "");
         q->done( makeError(GPG_ERR_GENERAL) );
         return;
     }
@@ -203,13 +202,16 @@ void VerifyCommand::Private::processSignature( const GpgME::Signature& sig ) con
 void VerifyCommand::Private::sendBriefResult( const GpgME::VerificationResult & result ) const
 {
     if ( result.isNull() ) {
-        q->sendStatus("no result", "");
         q->done( makeError(GPG_ERR_GENERAL) );
         return;
     }
+    if ( result.error() ) {
+        q->done( result.error() );
+        return;
+    }
+
     std::vector<GpgME::Signature> sigs = result.signatures();
     if ( sigs.size() == 0 ) {
-        q->sendStatus("no sigs", "");
         q->done( makeError(GPG_ERR_GENERAL) );
         return;
     }
