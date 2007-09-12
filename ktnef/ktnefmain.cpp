@@ -161,7 +161,7 @@ void KTNEFMain::setupTNEF()
 	connect(view_, SIGNAL(selectionChanged()), SLOT(viewSelectionChanged()));
 	connect(view_, SIGNAL(rightButtonPressed(Q3ListViewItem*,const QPoint&,int)), SLOT(viewRightButtonPressed(Q3ListViewItem*,const QPoint&,int)));
 	connect(view_, SIGNAL(doubleClicked(Q3ListViewItem*)), SLOT(viewDoubleClicked(Q3ListViewItem*)));
-	connect(view_, SIGNAL(dragRequested(const QList<KTNEFAttach*>&)), SLOT(viewDragRequested(const QList<KTNEFAttach*>&)));
+	connect(view_, SIGNAL(dragRequested(const QList<KTnef::KTNEFAttach*>&)), SLOT(viewDragRequested(const QList<KTnef::KTNEFAttach*>&)));
 }
 
 void KTNEFMain::loadFile(const QString& filename)
@@ -370,10 +370,10 @@ void KTNEFMain::viewDoubleClicked(Q3ListViewItem *item)
 		viewFile();
 }
 
-void KTNEFMain::viewDragRequested( const QList<KTNEFAttach*>& list )
+void KTNEFMain::viewDragRequested( const QList<KTnef::KTNEFAttach*>& list )
 {
 	KUrl::List urlList;
-	for ( QList<KTNEFAttach*>::ConstIterator it=list.constBegin(); it!=list.constEnd(); ++it )
+	for ( QList<KTnef::KTNEFAttach*>::ConstIterator it=list.constBegin(); it!=list.constEnd(); ++it )
 		urlList << KUrl( extractTemp( *it ) );
 	if ( !list.isEmpty() )
 	{
