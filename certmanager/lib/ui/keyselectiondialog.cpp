@@ -344,9 +344,6 @@ void Kleo::KeySelectionDialog::init( bool rememberChoice, bool extendedSelection
     mTopLayout->addWidget( textLabel );
   }
 
-  if ( !text.isEmpty() )
-    mTopLayout->addWidget( new QLabel( text, page ) );
-
   QHBoxLayout * hlay = new QHBoxLayout( mTopLayout ); // inherits spacing
   QLineEdit * le = new QLineEdit( page );
   le->setText( initialQuery );
