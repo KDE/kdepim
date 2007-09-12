@@ -1,5 +1,5 @@
 /* -*- mode: c++; c-basic-offset:4 -*-
-    uiserver/verifyemailcommand.cpp
+    uiserver/verifycommand.cpp
 
     This file is part of Kleopatra, the KDE keymanager
     Copyright (c) 2007 Klarälvdalens Datakonsult AB
@@ -30,7 +30,7 @@
     your version.
 */
 
-#include "verifyemailcommand.h"
+#include "verifycommand.h"
 
 #include <QObject>
 #include <QIODevice>
@@ -46,15 +46,15 @@
 
 using namespace Kleo;
 
-class VerifyEmailCommand::Private : public QObject
+class VerifyCommand::Private : public QObject
 {
     Q_OBJECT
 public:
-    Private( VerifyEmailCommand * qq )
+    Private( VerifyCommand * qq )
         :q( qq ), backend(0)
     {}
 
-    VerifyEmailCommand *q;
+    VerifyCommand *q;
     const CryptoBackend::Protocol *backend;
     void findCryptoBackend();
 
@@ -66,15 +66,15 @@ public Q_SLOTS:
 
 };
 
-VerifyEmailCommand::VerifyEmailCommand()
-    : AssuanCommandMixin<VerifyEmailCommand>(),
+VerifyCommand::VerifyCommand()
+    : AssuanCommandMixin<VerifyCommand>(),
       d( new Private( this ) )
 {
 }
 
-VerifyEmailCommand::~VerifyEmailCommand() {}
+VerifyCommand::~VerifyCommand() {}
 
-void VerifyEmailCommand::Private::findCryptoBackend()
+void VerifyCommand::Private::findCryptoBackend()
 {
     // FIXME this could be either SMIME or OpenPGP, find out from headers
     const bool isSMIME = true;
@@ -84,7 +84,7 @@ void VerifyEmailCommand::Private::findCryptoBackend()
         backend = Kleo::CryptoBackendFactory::instance()->openpgp();
 }
 
-void VerifyEmailCommand::Private::slotDetachedSignature( int, const QByteArray &, const QByteArray & )
+void VerifyCommand::Private::slotDetachedSignature( int, const QByteArray &, const QByteArray & )
 {
     const QByteArray signature; // FIXME
     const QByteArray signedData; // FIXME
@@ -100,23 +100,23 @@ void VerifyEmailCommand::Private::slotDetachedSignature( int, const QByteArray &
         q->done(error);
 }
 
-void VerifyEmailCommand::Private::slotVerifyOpaqueResult( const GpgME::VerificationResult &,
+void VerifyCommand::Private::slotVerifyOpaqueResult( const GpgME::VerificationResult &,
                                                           const QByteArray &)
 {
     // present result
 }
 
-void VerifyEmailCommand::Private::slotVerifyDetachedResult( const GpgME::VerificationResult & )
+void VerifyCommand::Private::slotVerifyDetachedResult( const GpgME::VerificationResult & )
 {
    // present result
 }
 
-void VerifyEmailCommand::Private::slotProgress( const QString& what, int current, int total )
+void VerifyCommand::Private::slotProgress( const QString& what, int current, int total )
 {
     // FIXME report progress, via sendStatus()
 }
 
-int VerifyEmailCommand::start( const std::string & line )
+int VerifyCommand::start( const std::string & line )
 {
     // FIXME parse line
     Q_UNUSED(line)
@@ -157,8 +157,8 @@ int VerifyEmailCommand::start( const std::string & line )
     return error;
 }
 
-void VerifyEmailCommand::canceled()
+void VerifyCommand::canceled()
 {
 }
 
-#include "verifyemailcommand.moc"
+#include "verifycommand.moc"

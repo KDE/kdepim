@@ -22,7 +22,7 @@ if ( USABLE_ASSUAN_FOUND )
     uiserver/uiserver.cpp
     uiserver/assuanserverconnection.cpp
     uiserver/echocommand.cpp
-    uiserver/verifyemailcommand.cpp
+    uiserver/verifycommand.cpp
     uiserver/decryptemailcommand.cpp
     )
   if ( WIN32 )

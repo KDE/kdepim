@@ -1,5 +1,5 @@
 /* -*- mode: c++; c-basic-offset:4 -*-
-    uiserver/verifyemailcommand.h
+    uiserver/verifycommand.h
 
     This file is part of Kleopatra, the KDE keymanager
     Copyright (c) 2007 Klarälvdalens Datakonsult AB
@@ -30,8 +30,8 @@
     your version.
 */
 
-#ifndef __KLEOPATRA_UISERVER_VERIFYEMAILCOMMAND_H__
-#define __KLEOPATRA_UISERVER_VERIFYEMAILCOMMAND_H__
+#ifndef __KLEOPATRA_UISERVER_VERIFYCOMMAND_H__
+#define __KLEOPATRA_UISERVER_VERIFYCOMMAND_H__
 
 #include "assuancommand.h"
 
@@ -43,17 +43,18 @@ namespace Kleo {
 /*!
       \author Till Adam <till@kdab.net>
       \brief GnuPG UI Server command for handling verification of an email
+      or file.
 */
-class VerifyEmailCommand : public AssuanCommandMixin<VerifyEmailCommand>
+class VerifyCommand : public AssuanCommandMixin<VerifyCommand>
 {
 public:
-    VerifyEmailCommand();
-    ~VerifyEmailCommand();
+    VerifyCommand();
+    ~VerifyCommand();
 
     int start( const std::string & );
     void canceled();
 public:
-    static const char * staticName() { return "VERIFYEMAIL"; }
+    static const char * staticName() { return "VERIFY"; }
 
     class Private;
 private:
@@ -62,4 +63,4 @@ private:
 
 }
 
-#endif // __KLEOPATRA_UISERVER_VERIFYEMAILCOMMAND_H__
+#endif // __KLEOPATRA_UISERVER_VERIFYCOMMAND_H__
