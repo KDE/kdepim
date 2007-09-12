@@ -34,6 +34,7 @@
 
 #include <QObject>
 #include <QIODevice>
+#include <QMessageBox>
 
 #include <kleo/verifyopaquejob.h>
 #include <kleo/verifydetachedjob.h>
@@ -46,6 +47,8 @@
 
 #include <cassert>
 
+#include <boost/bind.hpp>
+
 using namespace Kleo;
 namespace {
 
@@ -57,6 +60,14 @@ namespace {
         const GpgME::VerificationResult result;
         QByteArray stuff;
     };
+
+    struct VerifyException : public std::exception {
+        VerifyException( const char* _text )
+        :text(_text)
+        {}
+        virtual ~VerifyException() throw() {}
+        const QByteArray text;
+    };
 }
 
 
@@ -67,12 +78,16 @@ class VerifyCommand::Private : public QObject
     Q_OBJECT
 public:
     Private( VerifyCommand * qq )
-        :q( qq ), backend(0)
+        :q( qq ), backend(0), isShowDetails(false)
     {}
 
     VerifyCommand *q;
     const CryptoBackend::Protocol *backend;
+    bool isShowDetails;
+    MementoPtr memento;
+
     void findCryptoBackend();
+    int handleShowDetails();
 
     struct Input
     {
@@ -96,9 +111,9 @@ public Q_SLOTS:
     void slotVerifyOpaqueResult(const GpgME::VerificationResult &, const QByteArray &);
     void slotVerifyDetachedResult(const GpgME::VerificationResult &);
     void slotProgress( const QString& what, int current, int total );
+    void parseCommandLine( const std::string & line );
 private:
     void sendBriefResult( const GpgME::VerificationResult & result ) const;
-
 };
 
 VerifyCommand::VerifyCommand()
@@ -238,10 +253,43 @@ void VerifyCommand::Private::slotProgress( const QString& what, int current, int
     // FIXME report progress, via sendStatus()
 }
 
+void VerifyCommand::Private::parseCommandLine( const std::string & line )
+{
+    // FIXME robustify, extract
+    QList<QByteArray> tokens = QByteArray( line.c_str() ).split( ' ' );
+    tokens.erase( std::remove_if( tokens.begin(), tokens.end(),
+                                  bind( &QByteArray::isEmpty, _1 ) ),
+                  tokens.end() );
+
+    const int i = tokens.indexOf( "--showdetails" );
+    isShowDetails = i != -1;
+    if ( isShowDetails ) {
+        try {
+            if ( tokens.size() <= i+1 ) {
+                throw VerifyException("--showdetails specified, but no tag given");
+            }
+            QByteArray tag = tokens[i+1];
+            memento = MementoPtr( dynamic_cast<VerifyMemento*>( q->memento( tag ).get( ) ) );
+            if (!memento) {
+                throw VerifyException("--showdetails specified, but no tag given");
+            }
+        } catch( VerifyException & e ) {
+            // error: showdetails specified, but no tag or no memento, bail out
+            // FIXME done(), error
+            isShowDetails = false;
+            QMessageBox::warning( 0, "", e.text );
+            return; // FIXME keep processing?
+        }
+    }
+}
+
 int VerifyCommand::start( const std::string & line )
 {
-    // FIXME parse line
-    Q_UNUSED(line)
+    d->parseCommandLine(line);
+
+    if ( d->isShowDetails ) {
+        return d->handleShowDetails();
+    }
 
     {
         GpgME::Error error;
@@ -289,6 +337,15 @@ int VerifyCommand::start( const std::string & line )
 
 void VerifyCommand::canceled()
 {
+}
+
+
+int VerifyCommand::Private::handleShowDetails()
+{
+    assert( isShowDetails );
+    assert( memento );
+
+    QMessageBox::information( 0, "", "SHOW DETAILS" );
 }
 
 #include "verifycommand.moc"
