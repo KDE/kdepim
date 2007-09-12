@@ -55,8 +55,8 @@
 
 using namespace Kleo;
 
-static std::vector< std::pair<std::string,int> > inFDs, outFDs;
-static std::vector< std::pair<std::string,std::string> > inFiles, outFiles;
+static std::vector<int> inFDs, outFDs, msgFDs;
+static std::vector<std::string> inFiles, outFiles, msgFiles;
 static std::map<std::string,std::string> inquireData;
 
 static std::string hexencode( const std::string & in ) {
@@ -74,6 +74,8 @@ static std::string hexencode( const std::string & in ) {
             }
             // else fall through
         case ' ':
+            result += '+';
+            break;
         case '"':
         case '#':
         case '$':
@@ -84,6 +86,7 @@ static std::string hexencode( const std::string & in ) {
             result += '%';
             result += hex[ (ch & 0xF0) >> 4 ];
             result += hex[ (ch & 0x0F)      ];
+            break;
         }
     
     return result;
@@ -94,7 +97,7 @@ static void usage( const std::string & msg=std::string() ) {
         "\n"
         "Usage: test_uiserver <socket> [<io>] [<options>] [<inquire>] command [<args>]\n"
         "where:\n"
-        "      <io>: [--input[-fd] <tag> <file>] [--output[-fd] <tag> <file>]\n"
+        "      <io>: [--input[-fd] <file>] [--output[-fd] <file>] [--message[-fd] <file>]\n"
         " <options>: *[--option name=value]\n"
         " <inquire>: [--inquire keyword=<file>]\n";
     exit( 1 );
@@ -144,28 +147,34 @@ int main( int argc, char * argv[] ) {
         const char * const arg = argv[optind];
         if ( qstrcmp( arg, "--input-fd" ) == 0 ) {
             int inFD;
-            const std::string tag = argv[++optind];
             if ( (inFD = open( argv[++optind], O_RDONLY )) == -1 ) {
-                perror( "--input open()" );
+                perror( "--input-fd open()" );
                 return 1;
             }
-            inFDs.push_back( std::make_pair( tag, inFD ) );
+            inFDs.push_back( inFD );
         } else if ( qstrcmp( arg, "--output-fd" ) == 0 ) {
             int outFD;
-            const std::string tag = argv[++optind];
             if ( (outFD = open( argv[++optind], O_WRONLY|O_CREAT )) ==  -1 ) {
-                perror( "--output open()" );
+                perror( "--output-fd open()" );
                 return 1;
             }
-            outFDs.push_back( std::make_pair( tag, outFD ) );
+            outFDs.push_back( outFD );
+        } else if ( qstrcmp( arg, "--message-fd" ) == 0 ) {
+            int msgFD;
+            if ( (msgFD = open( argv[++optind], O_RDONLY )) ==  -1 ) {
+                perror( "--message-fd open()" );
+                return 1;
+            }
+            msgFDs.push_back( msgFD );
         } else if ( qstrcmp( arg, "--input" ) == 0 ) {
-            const std::string tag = argv[++optind];
             const std::string file = argv[++optind];
-            inFiles.push_back( std::make_pair( tag, file ) );
+            inFiles.push_back( file );
         } else if ( qstrcmp( arg, "--output" ) == 0 ) {
-            const std::string tag = argv[++optind];
             const std::string file = argv[++optind];
-            outFiles.push_back( std::make_pair( tag, file ) );
+            outFiles.push_back( file );
+        } else if ( qstrcmp( arg, "--message" ) == 0 ) {
+            const std::string file = argv[++optind];
+            msgFiles.push_back( file );
         } else if ( qstrcmp( arg, "--option" ) == 0 ) {
             options.push_back( argv[++optind] );
         } else if ( qstrcmp( arg, "--inquire" ) == 0 ) {
@@ -193,14 +202,22 @@ int main( int argc, char * argv[] ) {
 
     assuan_set_log_stream( ctx, stderr );
 
-    for ( std::vector< std::pair<std::string,int> >::const_iterator it = inFDs.begin(), end = inFDs.end() ; it != end ; ++it ) {
-        if ( const gpg_error_t err = assuan_sendfd( ctx, it->second ) ) {
+    for ( std::vector<int>::const_iterator it = inFDs.begin(), end = inFDs.end() ; it != end ; ++it ) {
+        if ( const gpg_error_t err = assuan_sendfd( ctx, *it ) ) {
             qDebug( "%s", assuan_exception( err, "assuan_sendfd( inFD )" ).what() );
             return 1;
         }
 
+        if ( const gpg_error_t err = assuan_transact( ctx, "INPUT FD", 0, 0, 0, 0, 0, 0 ) ) {
+            qDebug( "%s", assuan_exception( err, "INPUT FD" ).what() );
+            return 1;
+        }
+    }
+
+    
+    for ( std::vector<std::string>::const_iterator it = inFiles.begin(), end = inFiles.end() ; it != end ; ++it ) {
         char buffer[1024];
-        sprintf( buffer, "INPUT %s FD", it->first.c_str() );
+        sprintf( buffer, "INPUT FILE=%s", hexencode( *it ).c_str() );
 
         if ( const gpg_error_t err = assuan_transact( ctx, buffer, 0, 0, 0, 0, 0, 0 ) ) {
             qDebug( "%s", assuan_exception( err, buffer ).what() );
@@ -209,9 +226,22 @@ int main( int argc, char * argv[] ) {
     }
 
     
-    for ( std::vector< std::pair<std::string,std::string> >::const_iterator it = inFiles.begin(), end = inFiles.end() ; it != end ; ++it ) {
+    for ( std::vector<int>::const_iterator it = msgFDs.begin(), end = msgFDs.end() ; it != end ; ++it ) {
+        if ( const gpg_error_t err = assuan_sendfd( ctx, *it ) ) {
+            qDebug( "%s", assuan_exception( err, "assuan_sendfd( msgFD )" ).what() );
+            return 1;
+        }
+
+        if ( const gpg_error_t err = assuan_transact( ctx, "MESSAGE FD", 0, 0, 0, 0, 0, 0 ) ) {
+            qDebug( "%s", assuan_exception( err, "MESSAGE FD" ).what() );
+            return 1;
+        }
+    }
+
+    
+    for ( std::vector<std::string>::const_iterator it = msgFiles.begin(), end = msgFiles.end() ; it != end ; ++it ) {
         char buffer[1024];
-        sprintf( buffer, "INPUT %s FILE=%s", it->first.c_str(), hexencode( it->second ).c_str() );
+        sprintf( buffer, "MESSAGE FILE=%s", hexencode( *it ).c_str() );
 
         if ( const gpg_error_t err = assuan_transact( ctx, buffer, 0, 0, 0, 0, 0, 0 ) ) {
             qDebug( "%s", assuan_exception( err, buffer ).what() );
@@ -220,25 +250,22 @@ int main( int argc, char * argv[] ) {
     }
 
     
-    for ( std::vector< std::pair<std::string,int> >::const_iterator it = outFDs.begin(), end = outFDs.end() ; it != end ; ++it ) {
-        if ( const gpg_error_t err = assuan_sendfd( ctx, it->second ) ) {
+    for ( std::vector<int>::const_iterator it = outFDs.begin(), end = outFDs.end() ; it != end ; ++it ) {
+        if ( const gpg_error_t err = assuan_sendfd( ctx, *it ) ) {
             qDebug( "%s", assuan_exception( err, "assuan_sendfd( outFD )" ).what() );
             return 1;
         }
 
-        char buffer[1024];
-        sprintf( buffer, "OUTPUT %s FD", it->first.c_str() );
-
-        if ( const gpg_error_t err = assuan_transact( ctx, buffer, 0, 0, 0, 0, 0, 0 ) ) {
-            qDebug( "%s", assuan_exception( err, buffer ).what() );
+        if ( const gpg_error_t err = assuan_transact( ctx, "OUTPUT FD", 0, 0, 0, 0, 0, 0 ) ) {
+            qDebug( "%s", assuan_exception( err, "OUTPUT FD" ).what() );
             return 1;
         }
     }
 
 
-    for ( std::vector< std::pair<std::string,std::string> >::const_iterator it = outFiles.begin(), end = outFiles.end() ; it != end ; ++it ) {
+    for ( std::vector<std::string>::const_iterator it = outFiles.begin(), end = outFiles.end() ; it != end ; ++it ) {
         char buffer[1024];
-        sprintf( buffer, "OUTPUT %s FILE=%s", it->first.c_str(), hexencode( it->second ).c_str() );
+        sprintf( buffer, "OUTPUT FILE=%s", hexencode( *it ).c_str() );
 
         if ( const gpg_error_t err = assuan_transact( ctx, buffer, 0, 0, 0, 0, 0, 0 ) ) {
             qDebug( "%s", assuan_exception( err, buffer ).what() );
