@@ -199,7 +199,22 @@ namespace Kleo {
         virtual const char * name() const = 0;
 
         virtual void canceled() = 0;
+
+        class Memento {
+        public:
+            virtual ~Memento() {}
+        };
     protected:
+
+        bool hasMemento( const QByteArray & tag ) const;
+        boost::shared_ptr<Memento> memento( const QByteArray & tag ) const;
+        template <typename T>
+        boost::shared_ptr<T> mementoAs( const QByteArray & tag ) const {
+            return boost::dynamic_pointer_cast<T>( this->memento( tag ) );
+        }
+        const std::map< QByteArray, boost::shared_ptr<Memento> > & mementos() const;
+        QByteArray registerMemento( const boost::shared_ptr<Memento> & mem );
+
         bool hasOption( const char * opt ) const;
         QVariant option( const char * opt ) const;
         const std::map<std::string,QVariant> & options() const;

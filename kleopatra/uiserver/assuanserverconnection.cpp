@@ -150,6 +150,7 @@ class AssuanServerConnection::Private : public QObject {
     Q_OBJECT
     friend class ::Kleo::AssuanServerConnection;
     friend class ::Kleo::AssuanCommandFactory;
+    friend class ::Kleo::AssuanCommand;
     AssuanServerConnection * const q;
 public:
     Private( int fd_, const std::vector< shared_ptr<AssuanCommandFactory> > & factories_, AssuanServerConnection * qq );
@@ -181,6 +182,7 @@ private:
         AssuanServerConnection::Private & conn = *static_cast<AssuanServerConnection::Private*>( assuan_get_pointer( ctx_ ) );
 
         conn.options.clear();
+        conn.mementos.clear();
     }
 
     static int option_handler( assuan_context_t ctx_, const char * key, const char * value ) {
@@ -281,11 +283,14 @@ private:
     shared_ptr<AssuanCommand> currentCommand;
     std::map<std::string,QVariant> options;
     std::map< std::string, std::vector<IO> > inputs, outputs;
+    std::map< QByteArray, shared_ptr<AssuanCommand::Memento> > mementos;
 };
 
 void AssuanServerConnection::Private::cleanup() {
     options.clear();
     currentCommand.reset();
+    options.clear();
+    mementos.clear();
     notifiers.clear();
     ctx.reset();
     fd = -1;
@@ -519,6 +524,35 @@ namespace {
             result.push_back( it->first );
         return result;
     }
+}
+
+const std::map< QByteArray, shared_ptr<AssuanCommand::Memento> > & AssuanCommand::mementos() const {
+    // oh, hack :(
+    assert( assuan_get_pointer( d->ctx.get() ) );
+    const AssuanServerConnection::Private & conn = *static_cast<AssuanServerConnection::Private*>( assuan_get_pointer( d->ctx.get() ) );
+    return conn.mementos;
+}
+
+bool AssuanCommand::hasMemento( const QByteArray & tag ) const {
+    return mementos().count( tag );
+}
+
+shared_ptr<AssuanCommand::Memento> AssuanCommand::memento( const QByteArray & tag ) const {
+    const std::map< QByteArray, shared_ptr<Memento> >::const_iterator it = mementos().find( tag );
+    if ( it == mementos().end() )
+        return shared_ptr<Memento>();
+    else
+        return it->second;
+}
+
+QByteArray AssuanCommand::registerMemento( const shared_ptr<Memento> & mem ) {
+    const QByteArray tag = QByteArray::number( reinterpret_cast<qulonglong>( mem.get() ), 36 );
+    // oh, hack :(
+    assert( assuan_get_pointer( d->ctx.get() ) );
+    AssuanServerConnection::Private & conn = *static_cast<AssuanServerConnection::Private*>( assuan_get_pointer( d->ctx.get() ) );
+    
+    conn.mementos[tag] = mem;
+    return tag;
 }
 
 QString AssuanCommand::bulkInputDeviceFileName( const char * tag, unsigned int idx ) const {
