@@ -115,7 +115,7 @@ private Q_SLOTS:
     void slotDialogClosed();
 private:
     void sendBriefResult( const GpgME::VerificationResult & result ) const;
-    void processSignature( const GpgME::Signature& sig ) const;
+    QString processSignature( const GpgME::Signature& sig ) const;
     void showVerificationResultDialog( const GpgME::VerificationResult& result );
 
 };
@@ -202,17 +202,22 @@ QList<VerifyCommand::Private::Input> VerifyCommand::Private::setupInput( GpgME::
     return inputs;
 }
 
-
-void VerifyCommand::Private::processSignature( const GpgME::Signature& sig ) const
+static QString summaryToString( const GpgME::Signature::Summary summary )
 {
+    QString result;
+    if ( summary & GpgME::Signature::Green )
+        result = "GREEN ";
+    return result;
+}
+
+QString VerifyCommand::Private::processSignature( const GpgME::Signature& sig ) const
+{
+    // FIXME review, should we continue, here?
     if ( sig.isNull() ) {
         q->done( makeError(GPG_ERR_GENERAL) );
-        return;
+        return QString();
     }
-
-    QString data = QString::number( sig.summary() );
-    if ( const int err = q->sendStatus( "VERIFY", data ) )
-        q->done( err );
+    return summaryToString( sig.summary() ) + sig.fingerprint();
 }
 
 void VerifyCommand::Private::sendBriefResult( const GpgME::VerificationResult & result ) const
@@ -232,8 +237,12 @@ void VerifyCommand::Private::sendBriefResult( const GpgME::VerificationResult & 
         return;
     }
 
+    QStringList resultStrings;
     Q_FOREACH( GpgME::Signature sig, sigs )
-        processSignature( sig );
+        resultStrings.append( processSignature( sig ) );
+
+    if ( const int err = q->sendStatus( "VERIFY", resultStrings.join("\n") ) )
+        q->done( err );
 }
 
 void VerifyCommand::Private::slotDialogClosed()
