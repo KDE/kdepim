@@ -52,15 +52,6 @@
 using namespace Kleo;
 namespace {
 
-    struct VerifyMemento : public AssuanCommand::Memento {
-        VerifyMemento( const GpgME::VerificationResult& _result, const QByteArray& _stuff = QByteArray() )
-        :result( _result ), stuff( _stuff )
-        { }
-        virtual ~VerifyMemento() {}
-        const GpgME::VerificationResult result;
-        QByteArray stuff;
-    };
-
     struct VerifyException : public std::exception {
         VerifyException( const char* _text )
         :text(_text)
@@ -71,23 +62,19 @@ namespace {
 }
 
 
-typedef boost::shared_ptr<VerifyMemento> MementoPtr;
-
 class VerifyCommand::Private : public QObject
 {
     Q_OBJECT
 public:
     Private( VerifyCommand * qq )
-        :q( qq ), backend(0), isShowDetails(false)
+        :q( qq ), backend(0), showDetails(false)
     {}
 
     VerifyCommand *q;
     const CryptoBackend::Protocol *backend;
-    bool isShowDetails;
-    MementoPtr memento;
+    bool showDetails;
 
     void findCryptoBackend();
-    int handleShowDetails();
 
     struct Input
     {
@@ -225,27 +212,23 @@ void VerifyCommand::Private::sendBriefResult( const GpgME::VerificationResult & 
 void VerifyCommand::Private::slotVerifyOpaqueResult( const GpgME::VerificationResult & result ,
                                                      const QByteArray & stuff )
 {
-    // 1. return brief verification result summary
     sendBriefResult( result );
+    if (!showDetails) {
+        q->done();
+        return;
+    }
 
-    // 2. store the result as a memento, for later re-use when we're asked for details
-    q->registerMemento( MementoPtr( new VerifyMemento( result, stuff ) ) );
-
-    // 3. close out this command
     q->done();
 }
 
 void VerifyCommand::Private::slotVerifyDetachedResult( const GpgME::VerificationResult & result )
 {
-    // 1. return brief verification result summary
     sendBriefResult( result );
-
-    // 2. store the result as a memento, for later re-use when we're asked for details
-    q->registerMemento( MementoPtr( new VerifyMemento( result ) ) );
-
-    // 3. close out this command
+    if (!showDetails) {
+        q->done();
+        return;
+    }
     q->done();
-
 }
 
 void VerifyCommand::Private::slotProgress( const QString& what, int current, int total )
@@ -260,36 +243,13 @@ void VerifyCommand::Private::parseCommandLine( const std::string & line )
     tokens.erase( std::remove_if( tokens.begin(), tokens.end(),
                                   bind( &QByteArray::isEmpty, _1 ) ),
                   tokens.end() );
+    showDetails = !tokens.contains( "--silent" );
 
-    const int i = tokens.indexOf( "--showdetails" );
-    isShowDetails = i != -1;
-    if ( isShowDetails ) {
-        try {
-            if ( tokens.size() <= i+1 ) {
-                throw VerifyException("--showdetails specified, but no tag given");
-            }
-            QByteArray tag = tokens[i+1];
-            memento = MementoPtr( dynamic_cast<VerifyMemento*>( q->memento( tag ).get( ) ) );
-            if (!memento) {
-                throw VerifyException("--showdetails specified, but no tag given");
-            }
-        } catch( VerifyException & e ) {
-            // error: showdetails specified, but no tag or no memento, bail out
-            // FIXME done(), error
-            isShowDetails = false;
-            QMessageBox::warning( 0, "", e.text );
-            return; // FIXME keep processing?
-        }
-    }
 }
 
 int VerifyCommand::start( const std::string & line )
 {
     d->parseCommandLine(line);
-
-    if ( d->isShowDetails ) {
-        return d->handleShowDetails();
-    }
 
     {
         GpgME::Error error;
@@ -339,13 +299,5 @@ void VerifyCommand::canceled()
 {
 }
 
-
-int VerifyCommand::Private::handleShowDetails()
-{
-    assert( isShowDetails );
-    assert( memento );
-
-    QMessageBox::information( 0, "", "SHOW DETAILS" );
-}
 
 #include "verifycommand.moc"
