@@ -157,8 +157,18 @@ void EchoCommand::slotInputReadyRead() {
     QIODevice * const in = bulkInputDevice( "IN" );
     assert( in );
 
-    if ( !in->atEnd() )
-        d->buffer += in->readAll();
+    QByteArray buffer;
+    buffer.resize( in->bytesAvailable() );
+    const qint64 read = in->read( buffer.data(), buffer.size() );
+    if ( read == - 1 ) {
+        done( makeError( GPG_ERR_EIO ) );
+        return;
+    }
+    if ( read == 0 || !in->isSequential() && read == in->size() )
+        in->close();
+
+    buffer.resize( read );
+    d->buffer += buffer;
 
     slotOutputBytesWritten();
 }
@@ -168,25 +178,25 @@ void EchoCommand::slotOutputBytesWritten() {
     QIODevice * const out = bulkOutputDevice( "OUT" );
     assert( out );
 
-    if ( d->buffer.isEmpty() ) {
-        if ( bulkInputDevice( "IN" )->atEnd() && out->isOpen() ) {
-            out->close();
-            if ( !--d->operationsInFlight )
-                done();
+    if ( !d->buffer.isEmpty() ) {
+
+        if ( out->bytesToWrite() )
+            return;
+
+        const qint64 written = out->write( d->buffer );
+        if ( written == -1 ) {
+            done( makeError( GPG_ERR_EIO ) );
+            return;
         }
-        return;
+        d->buffer.remove( 0, written );
+
     }
 
-    if ( out->bytesToWrite() )
-        return;
-
-    const qint64 written = out->write( d->buffer );
-    if ( written == -1 ) {
-        done( makeError( GPG_ERR_EIO ) );
-        return;
+    if ( out->isOpen() && d->buffer.isEmpty() && !bulkInputDevice( "IN" )->isOpen() ) {
+        out->close();
+        if ( !--d->operationsInFlight )
+            done();
     }
-    d->buffer.remove( 0, written );
-
 }
 
 #include "moc_echocommand.cpp"
