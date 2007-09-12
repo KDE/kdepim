@@ -701,8 +701,11 @@ int AssuanCommandFactory::_handle( assuan_context_t ctx, char * line, const char
     cmd->d->inputs.swap( conn.inputs );   assert( conn.inputs.empty() );
     cmd->d->outputs.swap( conn.outputs ); assert( conn.outputs.empty() );
     
-    if ( const int err = cmd->start( line ) )
-        return err; // ### call done() here?
+    if ( const int err = cmd->start( line ) ) {
+        if ( !cmd->d->done )
+            cmd->done( err );
+        return err;
+    }
 
     conn.currentCommand = cmd;
     return 0;
