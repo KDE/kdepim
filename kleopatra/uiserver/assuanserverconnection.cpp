@@ -197,20 +197,18 @@ private:
     }
 
     // format: INPUT TAG([N])? (FD|FD=\d+|FILE=...)
-    static int IO_handler( assuan_context_t ctx_, char * line_, bool in ) {
+    static int IO_handler( assuan_context_t ctx_, char * line_, bool in, const char * tag ) {
         assert( assuan_get_pointer( ctx_ ) );
         AssuanServerConnection::Private & conn = *static_cast<AssuanServerConnection::Private*>( assuan_get_pointer( ctx_ ) );
 
         try {
 
             const std::vector<std::string> parsed = parse_commandline( line_ );
-            if ( parsed.size() < 2 || parsed.size() > 3 )
+            if ( parsed.size() < 1 || parsed.size() > 2 )
                 throw gpg_error( GPG_ERR_ASS_SYNTAX );
 
-            const std::string tag = parsed[0];
-
             IO io;
-            const std::string source = parsed[1];
+            const std::string source = parsed[0];
             if ( source == "FD" ) {
                 assuan_fd_t fd = ASSUAN_INVALID_FD;
                 if ( const gpg_error_t err = assuan_receivefd( conn.ctx.get(), &fd ) )
@@ -237,13 +235,13 @@ private:
             } else
                 throw gpg_error( GPG_ERR_ASS_PARAMETER );
 
-            if ( parsed.size() < 3 )
+            if ( parsed.size() < 2 )
                 io.encoding = GpgME::Data::AutoEncoding;
-            else if ( parsed[2] == "--binary" )
+            else if ( parsed[1] == "--binary" )
                 io.encoding = GpgME::Data::BinaryEncoding;
-            else if ( parsed[2] == "--armor" )
+            else if ( parsed[1] == "--armor" )
                 io.encoding = GpgME::Data::ArmorEncoding;
-            else if ( parsed[2] == "--base64" )
+            else if ( parsed[1] == "--base64" )
                 io.encoding = GpgME::Data::Base64Encoding;
             else
                 throw gpg_error( GPG_ERR_ASS_PARAMETER );
@@ -266,11 +264,15 @@ private:
     }
 
     static int input_handler( assuan_context_t ctx, char * line ) {
-        return IO_handler( ctx, line, true );
+        return IO_handler( ctx, line, true, "INPUT" );
     }
 
     static int output_handler( assuan_context_t ctx, char * line ) {
-        return IO_handler( ctx, line, false );
+        return IO_handler( ctx, line, false, "OUTPUT" );
+    }
+
+    static int message_handler( assuan_context_t ctx, char * line ) {
+        return IO_handler( ctx, line, true, "MESSAGE" );
     }
 
     void cleanup();
