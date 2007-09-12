@@ -259,6 +259,8 @@ void VerifyCommand::Private::slotVerifyOpaqueResult( const GpgME::VerificationRe
     sendBriefResult( result );
     if ( showDetails )
         showVerificationResultDialog( result );
+    else
+        q->done();
 }
 
 void VerifyCommand::Private::slotVerifyDetachedResult( const GpgME::VerificationResult & result )
@@ -266,6 +268,8 @@ void VerifyCommand::Private::slotVerifyDetachedResult( const GpgME::Verification
     sendBriefResult( result );
     if ( showDetails )
         showVerificationResultDialog( result );
+    else
+        q->done();
 }
 
 void VerifyCommand::Private::slotProgress( const QString& what, int current, int total )
@@ -275,18 +279,13 @@ void VerifyCommand::Private::slotProgress( const QString& what, int current, int
 
 void VerifyCommand::Private::parseCommandLine( const std::string & line )
 {
-    // FIXME robustify, extract
-    QList<QByteArray> tokens = QByteArray( line.c_str() ).split( ' ' );
-    tokens.erase( std::remove_if( tokens.begin(), tokens.end(),
-                                  bind( &QByteArray::isEmpty, _1 ) ),
-                  tokens.end() );
-    showDetails = !tokens.contains( "--silent" );
 
 }
 
 int VerifyCommand::start( const std::string & line )
 {
     d->parseCommandLine(line);
+    d->showDetails = !hasOption("silent");
 
     {
         GpgME::Error error;
