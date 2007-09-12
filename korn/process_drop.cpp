@@ -58,10 +58,7 @@ void ProcessDrop::recheck()
 	{
 		_process = new KProcess;
 		_process->setShellCommand(*_program);
-		connect(_process, SIGNAL(finished(int, QProcess::ExitStatus)),
-				SLOT(slotFinished(int, QProcess::ExitStatus)));
-
-		connect( _process, SIGNAL( processExited( K3Process* ) ), this, SLOT( slotExited( K3Process* ) ) );
+		connect( _process, SIGNAL(finished ( int, QProcess::ExitStatus )), this, SLOT( slotExited( int, QProcess::ExitStatus ) ) );
 		connect( _process, SIGNAL(readyReadStandardOutput ()), this, SLOT( slotDataReceived() ) );
 	}
 
