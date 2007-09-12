@@ -115,7 +115,9 @@ static std::string hexdecode( const std::string & in ) {
                 throw gpg_error( GPG_ERR_ASS_SYNTAX );
             ch |= unhex( *it );
             result.push_back( ch );
-        } else {
+        } else if ( *it == '+' ) {
+            result += ' ';
+        } else  {
             result.push_back( *it );
         }
     return result;
