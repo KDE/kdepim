@@ -194,7 +194,7 @@ namespace Kleo {
         AssuanCommand();
         virtual ~AssuanCommand();
 
-        virtual int start( const std::string & line ) = 0;
+        virtual int start( const std::string & line=std::string() ) = 0;
 
         virtual const char * name() const = 0;
 

@@ -747,7 +747,7 @@ int AssuanCommandFactory::_handle( assuan_context_t ctx, char * line, const char
     for ( std::map<std::string,std::string>::const_iterator it = cmdline_options.begin(), end = cmdline_options.end() ; it != end ; ++it )
         cmd->d->options[it->first] = QString::fromUtf8( it->second.c_str() );
     
-    if ( const int err = cmd->start( "" ) ) { // ### remove line parameter
+    if ( const int err = cmd->start() ) {
         if ( !cmd->d->done )
             cmd->done( err );
         return err;
