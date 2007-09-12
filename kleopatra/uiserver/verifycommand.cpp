@@ -48,8 +48,12 @@ using namespace Kleo;
 namespace {
 
     struct VerifyMemento : public AssuanCommand::Memento {
-        VerifyMemento() { }
-        virtual ~VerifyMemento() { }
+        VerifyMemento( const GpgME::VerificationResult& _result, const QByteArray& _stuff = QByteArray() )
+        :result( _result ), stuff( _stuff )
+        { }
+        virtual ~VerifyMemento() {}
+        const GpgME::VerificationResult result;
+        QByteArray stuff;
     };
 }
 
@@ -119,13 +123,13 @@ void VerifyCommand::Private::sendBriefResult( const GpgME::VerificationResult & 
 }
 
 void VerifyCommand::Private::slotVerifyOpaqueResult( const GpgME::VerificationResult & result ,
-                                                     const QByteArray &)
+                                                     const QByteArray & stuff )
 {
     // 1. return brief verification result summary
     sendBriefResult( result );
 
     // 2. store the result as a memento, for later re-use when we're asked for details
-    q->registerMemento( MementoPtr( new VerifyMemento() ) );
+    q->registerMemento( MementoPtr( new VerifyMemento( result, stuff ) ) );
 
     // 3. close out this command
     q->done();
@@ -137,7 +141,7 @@ void VerifyCommand::Private::slotVerifyDetachedResult( const GpgME::Verification
     sendBriefResult( result );
 
     // 2. store the result as a memento, for later re-use when we're asked for details
-    q->registerMemento( MementoPtr( new VerifyMemento() ) );
+    q->registerMemento( MementoPtr( new VerifyMemento( result ) ) );
 
     // 3. close out this command
     q->done();
