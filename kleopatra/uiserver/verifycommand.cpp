@@ -42,6 +42,8 @@
 #include <gpgme++/error.h>
 #include <gpgme++/verificationresult.h>
 
+#include <gpg-error.h>
+
 #include <cassert>
 
 using namespace Kleo;
@@ -72,6 +74,23 @@ public:
     const CryptoBackend::Protocol *backend;
     void findCryptoBackend();
 
+    struct Input
+    {
+        Input() : type( Detached ), message( 0 ), signature( 0 ) {}
+        enum SignatureType {
+            Detached=0,
+            Opaque
+        };
+
+        SignatureType type;
+        QIODevice* message;
+        QString messageFileName;
+        QIODevice* signature;
+    };
+
+    QList<Input> inputList;
+    QList<Input> setupInput( GpgME::Error& error, QString& errorDetails ) const;
+
 public Q_SLOTS:
     void slotDetachedSignature( int, const QByteArray &, const QByteArray & );
     void slotVerifyOpaqueResult(const GpgME::VerificationResult &, const QByteArray &);
@@ -99,6 +118,72 @@ void VerifyCommand::Private::findCryptoBackend()
     else
         backend = Kleo::CryptoBackendFactory::instance()->openpgp();
 }
+
+QList<VerifyCommand::Private::Input> VerifyCommand::Private::setupInput( GpgME::Error& error, QString& errorDetails ) const
+{
+    error = GpgME::Error();
+    errorDetails = QString();
+
+    const int numSignatures = q->numBulkInputDevices( "SIGNATURE" );
+    const int numMessages = q->numBulkInputDevices( "MESSAGE" );
+
+    
+    if ( numSignatures == 0 )
+    {
+        error = GpgME::Error( GPG_ERR_ASS_NO_INPUT );
+        errorDetails = "At least one signature must be provided";
+        return QList<Input>();
+    }
+
+    if ( numMessages > 0 && numMessages != numSignatures )
+    {
+        error = GpgME::Error( GPG_ERR_ASS_NO_INPUT ); //TODO use better error code if possible
+        errorDetails = "The number of MESSAGE inputs must be either equal to the number of signatures or zero";
+        return QList<Input>();
+    }
+
+    QList<Input> inputs;
+
+    if ( numMessages == numSignatures )
+    {
+        for ( int i = 0; i < numSignatures; ++i )
+        {
+            Input input;
+            input.type = Input::Detached;
+            input.signature = q->bulkInputDevice( "SIGNATURE", i );
+            input.message = q->bulkInputDevice( "MESSAGE", i );
+            assert( input.signature );
+            assert( input.message );
+            inputs.append( input );
+        }
+        return inputs;
+    }
+
+    assert( numMessages == 0 );
+    
+    for ( int i = 0; i < numSignatures; ++i )
+    {
+        Input input;
+        input.signature = q->bulkInputDevice( "SIGNATURE", i );
+        assert( input.signature );
+        const QString fname = q->bulkInputDeviceFileName( "SIGNATURE", i );
+        if ( !fname.isEmpty() && fname.endsWith( ".sig", Qt::CaseInsensitive )
+                || fname.endsWith( ".asc", Qt::CaseInsensitive ) )
+        { //detached signature file
+            const QString msgFileName = fname.left( fname.length() - 4 );
+            // TODO: handle error if msg file does not exist
+            input.type = Input::Detached;
+            input.messageFileName = msgFileName;
+        }
+        else // opaque
+        {
+            input.type = Input::Opaque;
+        }
+        inputs.append( input );
+    }
+    return inputs;
+}
+
 
 void VerifyCommand::Private::slotDetachedSignature( int, const QByteArray &, const QByteArray & )
 {
@@ -157,6 +242,14 @@ int VerifyCommand::start( const std::string & line )
 {
     // FIXME parse line
     Q_UNUSED(line)
+
+    {
+        GpgME::Error error;
+        QString details;
+        d->inputList = d->setupInput( error, details );
+        if ( error )
+            done( error, details );
+    }
 
     // FIXME check options
 
