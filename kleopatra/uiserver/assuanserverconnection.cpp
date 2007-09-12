@@ -210,7 +210,7 @@ private:
             IO io;
             const std::string source = parsed[1];
             if ( source == "FD" ) {
-                assuan_fd_t fd = (assuan_fd_t)-1;
+                assuan_fd_t fd = ASSUAN_INVALID_FD;
                 if ( const gpg_error_t err = assuan_receivefd( conn.ctx.get(), &fd ) )
                     return err;
                 io.iodev = new KDPipeIODevice( fd, in ? QIODevice::ReadOnly : QIODevice::WriteOnly );
