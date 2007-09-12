@@ -42,6 +42,8 @@ int main( int argc, char **argv )
 
   KApplication app;
 
+  KGlobal::locale()->insertCatalogue( "scalixadmin" );
+
   MainWindow *window = new MainWindow;
   window->show();
 
