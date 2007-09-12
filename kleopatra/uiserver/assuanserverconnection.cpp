@@ -340,9 +340,11 @@ AssuanServerConnection::Private::Private( int fd_, const std::vector< shared_ptr
     }
 
 
-    // register our INPUT/OUTPUT handlers:
+    // register our INPUT/OUTPUT/MESSGAE handlers:
     if ( const gpg_error_t err = assuan_register_command( ctx.get(), "INPUT",  input_handler ) )
         throw assuan_exception( err, "register \"INPUT\" handler" );
+    if ( const gpg_error_t err = assuan_register_command( ctx.get(), "MESSAGE",  message_handler ) )
+        throw assuan_exception( err, "register \"MESSAGE\" handler" );
     if ( const gpg_error_t err = assuan_register_command( ctx.get(), "OUTPUT", output_handler ) )
         throw assuan_exception( err, "register \"OUTPUT\" handler" );
 
