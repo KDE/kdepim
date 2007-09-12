@@ -45,6 +45,16 @@
 #include <cassert>
 
 using namespace Kleo;
+namespace {
+
+    struct VerifyMemento : public AssuanCommand::Memento {
+        VerifyMemento() { }
+        virtual ~VerifyMemento() { }
+    };
+}
+
+
+typedef boost::shared_ptr<VerifyMemento> MementoPtr;
 
 class VerifyCommand::Private : public QObject
 {
@@ -63,6 +73,8 @@ public Q_SLOTS:
     void slotVerifyOpaqueResult(const GpgME::VerificationResult &, const QByteArray &);
     void slotVerifyDetachedResult(const GpgME::VerificationResult &);
     void slotProgress( const QString& what, int current, int total );
+private:
+    void sendBriefResult( const GpgME::VerificationResult & result ) const;
 
 };
 
@@ -100,15 +112,36 @@ void VerifyCommand::Private::slotDetachedSignature( int, const QByteArray &, con
         q->done(error);
 }
 
-void VerifyCommand::Private::slotVerifyOpaqueResult( const GpgME::VerificationResult &,
-                                                          const QByteArray &)
+
+void VerifyCommand::Private::sendBriefResult( const GpgME::VerificationResult & result ) const
 {
-    // present result
+    // handle errors
 }
 
-void VerifyCommand::Private::slotVerifyDetachedResult( const GpgME::VerificationResult & )
+void VerifyCommand::Private::slotVerifyOpaqueResult( const GpgME::VerificationResult & result ,
+                                                     const QByteArray &)
 {
-   // present result
+    // 1. return brief verification result summary
+    sendBriefResult( result );
+
+    // 2. store the result as a memento, for later re-use when we're asked for details
+    q->registerMemento( MementoPtr( new VerifyMemento() ) );
+
+    // 3. close out this command
+    q->done();
+}
+
+void VerifyCommand::Private::slotVerifyDetachedResult( const GpgME::VerificationResult & result )
+{
+    // 1. return brief verification result summary
+    sendBriefResult( result );
+
+    // 2. store the result as a memento, for later re-use when we're asked for details
+    q->registerMemento( MementoPtr( new VerifyMemento() ) );
+
+    // 3. close out this command
+    q->done();
+
 }
 
 void VerifyCommand::Private::slotProgress( const QString& what, int current, int total )
