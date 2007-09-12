@@ -210,6 +210,8 @@ private:
                 throw gpg_error( GPG_ERR_ASS_SYNTAX );
 
             IO io;
+            std::auto_ptr<QIODevice> iodev;
+
             const std::string source = parsed[0];
             if ( source == "FD" ) {
                 assuan_fd_t fd = ASSUAN_INVALID_FD;
@@ -222,7 +224,7 @@ private:
 #else
                 const assuan_fd_t fd = lexical_cast<assuan_fd_t>( source.substr( 3 ) );
 #endif
-                io.iodev = new KDPipeIODevice( fd, in ? QIODevice::ReadOnly : QIODevice::WriteOnly );
+                iodev.reset( new KDPipeIODevice( fd, in ? QIODevice::ReadOnly : QIODevice::WriteOnly ) );
             } else if ( source.substr( 0, 5 ) == "FILE=" ) {
                 const QString fileName = QFile::decodeName( hexdecode( source.substr( 5 ) ).c_str() );
                 if ( in && !QFile::exists( fileName ) )
@@ -233,7 +235,7 @@ private:
                 std::auto_ptr<QFile> f( new QFile( fileName ) );
                 if ( !f->open( in ? QIODevice::ReadOnly : QIODevice::ReadWrite ) )
                     throw gpg_error( GPG_ERR_EPERM );
-                io.iodev = f.release();
+                iodev = f;
             } else
                 throw gpg_error( GPG_ERR_ASS_PARAMETER );
 
@@ -247,6 +249,8 @@ private:
                 io.encoding = GpgME::Data::Base64Encoding;
             else
                 throw gpg_error( GPG_ERR_ASS_PARAMETER );
+
+            io.iodev = iodev.release();
 
             ( in ? conn.inputs : conn.outputs )[tag].push_back( io );
 
