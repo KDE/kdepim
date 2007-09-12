@@ -35,12 +35,14 @@
 #include <QObject>
 #include <QIODevice>
 
-#include <kleo/decryptverifyjob.h>
+#include <kleo/decryptjob.h>
 #include <kleo/cryptobackendfactory.h>
 
 #include <gpgme++/error.h>
 #include <gpgme++/decryptionresult.h>
 #include <gpgme++/verificationresult.h>
+
+#include <gpg-error.h>
 
 #include <cassert>
 
@@ -57,7 +59,7 @@ public:
     void findCryptoBackend();
 
 public Q_SLOTS:
-    void slotDecryptionResult( const GpgME::DecryptionResult &, const GpgME::VerificationResult &,  const QByteArray & plainText );
+    void slotDecryptionResult( const GpgME::DecryptionResult &, const QByteArray & plainText );
     void slotProgress( const QString& what, int current, int total );
 
 };
@@ -73,7 +75,7 @@ Kleo::DecryptCommand::~DecryptCommand() {}
 void Kleo::DecryptCommand::Private::findCryptoBackend()
 {
     // FIXME this could be either SMIME or OpenPGP, find out from headers
-    const bool isSMIME = true;
+    const bool isSMIME = false;
     if ( isSMIME )
         backend = Kleo::CryptoBackendFactory::instance()->smime();
     else
@@ -86,19 +88,18 @@ void Kleo::DecryptCommand::Private::slotProgress( const QString& what, int curre
     // FIXME report progress, via sendStatus()
 }
 
-void Kleo::DecryptCommand::Private::slotDecryptionResult( const GpgME::DecryptionResult & decryptionResult, const GpgME::VerificationResult & verificationResult, const QByteArray & plainText )
+void Kleo::DecryptCommand::Private::slotDecryptionResult( const GpgME::DecryptionResult & decryptionResult, const QByteArray & plainText )
 {
     const GpgME::Error decryptionError = decryptionResult.error();
     if ( decryptionError )
     {
-        //handle and report error
+        q->done( decryptionError );
+        return;
     }
     
     //handle result, send status
-    if ( QIODevice * const o = q->bulkOutputDevice( "PLAINTEXT" ) )
-        o->write( plainText );
-
-    //handle verification result
+    q->bulkOutputDevice( "OUT" )->write( plainText );
+    q->done();
 }
 
 int Kleo::DecryptCommand::start( const std::string & line )
@@ -108,20 +109,25 @@ int Kleo::DecryptCommand::start( const std::string & line )
 
     // FIXME check options
 
+    if ( !bulkInputDevice( "IN" ) )
+        done( GPG_ERR_ASS_NO_INPUT );
+
+    if ( !bulkOutputDevice( "OUT" ) )
+        done( GPG_ERR_ASS_NO_OUTPUT );
+
     d->findCryptoBackend(); // decide on smime or openpgp
     assert(d->backend);
 
-    // get encrypted data
-    const QByteArray encrypted = bulkInputDevice( "MESSAGE" )->readAll(); // FIXME safe enough?
-
     //fire off appropriate kleo decrypt verify job
-    Kleo::DecryptVerifyJob * const job = d->backend->decryptVerifyJob();
+    Kleo::DecryptJob * const job = d->backend->decryptJob();
     assert(job);
 
-    QObject::connect( job, SIGNAL(result(GpgME::DecryptionResult, GpgME::VerificationResult, QByteArray)),
-                      d.get(), SLOT(slotDecryptionResult(GpgME::DecryptionResult, GpgME::VerificationResult, QByteArray)) );
-    QObject::connect( job, SIGNAL(progress(QString,int,int)),
-                      d.get(), SLOT(slotProgress(QString,int,int)) );
+    QObject::connect( job, SIGNAL( result( GpgME::DecryptionResult, QByteArray ) ),
+                      d.get(), SLOT( slotDecryptionResult( GpgME::DecryptionResult, QByteArray ) ) );
+    QObject::connect( job, SIGNAL( progress( QString, int, int ) ),
+                      d.get(), SLOT( slotProgress( QString, int, int ) ) );
+
+    const QByteArray encrypted = bulkInputDevice( "IN" )->readAll(); // FIXME safe enough?
 
     // FIXME handle cancelled, let job show dialog? both done and return error?
     const GpgME::Error error = job->start( encrypted );
