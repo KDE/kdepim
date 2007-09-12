@@ -41,7 +41,7 @@
 # include <uiserver/uiserver.h>
 # include <uiserver/assuancommand.h>
 # include <uiserver/echocommand.h>
-# include <uiserver/decryptemailcommand.h>
+# include <uiserver/decryptcommand.h>
 # include <uiserver/verifycommand.h>
 #endif
 
@@ -102,7 +102,7 @@ int main( int argc, char** argv )
       Kleo::UiServer server;
 
 #define REGISTER( Command ) server.registerCommandFactory( boost::shared_ptr<Kleo::AssuanCommandFactory>( new Kleo::GenericAssuanCommandFactory<Kleo::Command> ) )
-      REGISTER( DecryptEmailCommand );
+      REGISTER( DecryptCommand );
       REGISTER( EchoCommand );
       REGISTER( VerifyCommand );
 #undef REGISTER

@@ -30,8 +30,8 @@
     your version.
 */
 
-#ifndef __KLEOPATRA_UISERVER_DECRYPTEMAILCOMMAND_H__
-#define __KLEOPATRA_UISERVER_DECRYPTEMAILCOMMAND_H__
+#ifndef __KLEOPATRA_UISERVER_DECRYPTCOMMAND_H__
+#define __KLEOPATRA_UISERVER_DECRYPTCOMMAND_H__
 
 #include "assuancommand.h"
 
@@ -44,16 +44,16 @@ namespace Kleo {
       \author Frank Osterfeld <frank@kdab.net>
       \brief GnuPG UI Server command for handling email decryption
 */
-class DecryptEmailCommand : public AssuanCommandMixin<DecryptEmailCommand>
+class DecryptCommand : public AssuanCommandMixin<DecryptCommand>
 {
 public:
-    DecryptEmailCommand();
-    ~DecryptEmailCommand();
+    DecryptCommand();
+    ~DecryptCommand();
 
     int start( const std::string & );
     void canceled();
 public:
-    static const char * staticName() { return "DECRYPTEMAIL"; }
+    static const char * staticName() { return "DECRYPT"; }
 
     class Private;
 private:
@@ -62,4 +62,4 @@ private:
 
 }
 
-#endif // __KLEOPATRA_UISERVER_DECRYPTEMAILCOMMAND_H__
+#endif // __KLEOPATRA_UISERVER_DECRYPTCOMMAND_H__

@@ -23,7 +23,7 @@ if ( USABLE_ASSUAN_FOUND )
     uiserver/assuanserverconnection.cpp
     uiserver/echocommand.cpp
     uiserver/verifycommand.cpp
-    uiserver/decryptemailcommand.cpp
+    uiserver/decryptcommand.cpp
     )
   if ( WIN32 )
     set( _kleopatra_uiserver_extra_libs ${ASSUAN_VANILLA_LIBRARIES} )

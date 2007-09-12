@@ -30,7 +30,7 @@
     your version.
 */
 
-#include "decryptemailcommand.h"
+#include "decryptcommand.h"
 
 #include <QObject>
 #include <QIODevice>
@@ -44,15 +44,15 @@
 
 #include <cassert>
 
-class Kleo::DecryptEmailCommand::Private : public QObject
+class Kleo::DecryptCommand::Private : public QObject
 {
     Q_OBJECT
 public:
-    Private( DecryptEmailCommand * qq )
+    Private( DecryptCommand * qq )
         :q( qq ), backend(0)
     {}
 
-    DecryptEmailCommand *q;
+    DecryptCommand *q;
     const CryptoBackend::Protocol *backend;
     void findCryptoBackend();
 
@@ -62,15 +62,15 @@ public Q_SLOTS:
 
 };
 
-Kleo::DecryptEmailCommand::DecryptEmailCommand()
-    : AssuanCommandMixin<DecryptEmailCommand>(),
+Kleo::DecryptCommand::DecryptCommand()
+    : AssuanCommandMixin<DecryptCommand>(),
       d( new Private( this ) )
 {
 }
 
-Kleo::DecryptEmailCommand::~DecryptEmailCommand() {}
+Kleo::DecryptCommand::~DecryptCommand() {}
 
-void Kleo::DecryptEmailCommand::Private::findCryptoBackend()
+void Kleo::DecryptCommand::Private::findCryptoBackend()
 {
     // FIXME this could be either SMIME or OpenPGP, find out from headers
     const bool isSMIME = true;
@@ -81,12 +81,12 @@ void Kleo::DecryptEmailCommand::Private::findCryptoBackend()
 }
 
 
-void Kleo::DecryptEmailCommand::Private::slotProgress( const QString& what, int current, int total )
+void Kleo::DecryptCommand::Private::slotProgress( const QString& what, int current, int total )
 {
     // FIXME report progress, via sendStatus()
 }
 
-void Kleo::DecryptEmailCommand::Private::slotDecryptionResult( const GpgME::DecryptionResult & decryptionResult, const GpgME::VerificationResult & verificationResult, const QByteArray & plainText )
+void Kleo::DecryptCommand::Private::slotDecryptionResult( const GpgME::DecryptionResult & decryptionResult, const GpgME::VerificationResult & verificationResult, const QByteArray & plainText )
 {
     const GpgME::Error decryptionError = decryptionResult.error();
     if ( decryptionError )
@@ -101,7 +101,7 @@ void Kleo::DecryptEmailCommand::Private::slotDecryptionResult( const GpgME::Decr
     //handle verification result
 }
 
-int Kleo::DecryptEmailCommand::start( const std::string & line )
+int Kleo::DecryptCommand::start( const std::string & line )
 {
     // FIXME parse line
     Q_UNUSED(line)
@@ -130,9 +130,9 @@ int Kleo::DecryptEmailCommand::start( const std::string & line )
     return error;
 }
 
-void Kleo::DecryptEmailCommand::canceled()
+void Kleo::DecryptCommand::canceled()
 {
 }
 
-#include "decryptemailcommand.moc"
+#include "decryptcommand.moc"
 
