@@ -62,18 +62,30 @@ namespace {
     };
 }
 
+class VerificationResultDialog : public QDialog
+{
+    Q_OBJECT
+public:
+    VerificationResultDialog( const GpgME::VerificationResult& result )
+    {
+
+    }
+    virtual ~VerificationResultDialog() {}
+};
+
 
 class VerifyCommand::Private : public QObject
 {
     Q_OBJECT
 public:
     Private( VerifyCommand * qq )
-        :q( qq ), backend(0), showDetails(false)
+        :q( qq ), backend(0), showDetails(false), dialog(0)
     {}
 
     VerifyCommand *q;
     const CryptoBackend::Protocol *backend;
     bool showDetails;
+    VerificationResultDialog * dialog;
 
     void findCryptoBackend();
 
@@ -99,9 +111,13 @@ public Q_SLOTS:
     void slotVerifyDetachedResult(const GpgME::VerificationResult &);
     void slotProgress( const QString& what, int current, int total );
     void parseCommandLine( const std::string & line );
+private Q_SLOTS:
+    void slotDialogClosed();
 private:
     void sendBriefResult( const GpgME::VerificationResult & result ) const;
     void processSignature( const GpgME::Signature& sig ) const;
+    void showVerificationResultDialog( const GpgME::VerificationResult& result );
+
 };
 
 VerifyCommand::VerifyCommand()
@@ -220,26 +236,36 @@ void VerifyCommand::Private::sendBriefResult( const GpgME::VerificationResult & 
         processSignature( sig );
 }
 
+void VerifyCommand::Private::slotDialogClosed()
+{
+    assert(dialog);
+    delete dialog;
+    dialog = 0;
+    q->done();
+}
+
+void VerifyCommand::Private::showVerificationResultDialog( const GpgME::VerificationResult& result )
+{
+    dialog = new VerificationResultDialog( result );
+    connect( dialog, SIGNAL( accepted() ), this, SLOT( slotDialogClosed() ) );
+    connect( dialog, SIGNAL( rejected() ), this, SLOT( slotDialogClosed() ) );
+    dialog->show();
+}
+
 void VerifyCommand::Private::slotVerifyOpaqueResult( const GpgME::VerificationResult & result ,
                                                      const QByteArray & stuff )
 {
+    Q_UNUSED( stuff )
     sendBriefResult( result );
-    if (!showDetails) {
-        q->done();
-        return;
-    }
-
-    q->done();
+    if ( showDetails )
+        showVerificationResultDialog( result );
 }
 
 void VerifyCommand::Private::slotVerifyDetachedResult( const GpgME::VerificationResult & result )
 {
     sendBriefResult( result );
-    if (!showDetails) {
-        q->done();
-        return;
-    }
-    q->done();
+    if ( showDetails )
+        showVerificationResultDialog( result );
 }
 
 void VerifyCommand::Private::slotProgress( const QString& what, int current, int total )
