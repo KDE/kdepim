@@ -101,6 +101,7 @@ public Q_SLOTS:
     void parseCommandLine( const std::string & line );
 private:
     void sendBriefResult( const GpgME::VerificationResult & result ) const;
+    void processSignature( const GpgME::Signature& sig ) const;
 };
 
 VerifyCommand::VerifyCommand()
@@ -185,9 +186,36 @@ QList<VerifyCommand::Private::Input> VerifyCommand::Private::setupInput( GpgME::
     return inputs;
 }
 
+
+void VerifyCommand::Private::processSignature( const GpgME::Signature& sig ) const
+{
+    if ( sig.isNull() ) {
+        q->sendStatus("null sig", "");
+        q->done( makeError(GPG_ERR_GENERAL) );
+        return;
+    }
+
+    QString data = QString::number( sig.summary() );
+    if ( const int err = q->sendStatus( "VERIFY", data ) )
+        q->done( err );
+}
+
 void VerifyCommand::Private::sendBriefResult( const GpgME::VerificationResult & result ) const
 {
-    // handle errors
+    if ( result.isNull() ) {
+        q->sendStatus("no result", "");
+        q->done( makeError(GPG_ERR_GENERAL) );
+        return;
+    }
+    std::vector<GpgME::Signature> sigs = result.signatures();
+    if ( sigs.size() == 0 ) {
+        q->sendStatus("no sigs", "");
+        q->done( makeError(GPG_ERR_GENERAL) );
+        return;
+    }
+
+    Q_FOREACH( GpgME::Signature sig, sigs )
+        processSignature( sig );
 }
 
 void VerifyCommand::Private::slotVerifyOpaqueResult( const GpgME::VerificationResult & result ,
