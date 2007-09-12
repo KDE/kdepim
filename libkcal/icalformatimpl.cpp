@@ -1479,6 +1479,7 @@ void ICalFormatImpl::readIncidenceBase(icalcomponent *parent,IncidenceBase *inci
 void ICalFormatImpl::readCustomProperties(icalcomponent *parent,CustomProperties *properties)
 {
   QMap<QCString, QString> customProperties;
+  QString lastProperty;
 
   icalproperty *p = icalcomponent_get_first_property(parent,ICAL_X_PROPERTY);
 
@@ -1486,9 +1487,14 @@ void ICalFormatImpl::readCustomProperties(icalcomponent *parent,CustomProperties
 
     QString value = QString::fromUtf8(icalproperty_get_x(p));
     const char *name = icalproperty_get_x_name(p);
-    customProperties[name] = value;
+    if ( lastProperty != name ) {
+      customProperties[name] = value;
+    } else {
+      customProperties[name] = customProperties[name].append( "," ).append( value );
+    }
     // kdDebug(5800) << "Set custom property [" << name << '=' << value << ']' << endl;
     p = icalcomponent_get_next_property(parent,ICAL_X_PROPERTY);
+    lastProperty = name;
   }
 
   properties->setCustomProperties(customProperties);
