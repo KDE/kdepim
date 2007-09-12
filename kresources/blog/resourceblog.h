@@ -248,12 +248,12 @@ class KCAL_RESOURCEBLOG_EXPORT ResourceBlog : public ResourceCached
 
   protected Q_SLOTS:
     /**
-      Converts listed postings to journal entries and adds them to the cached
+      Converts listed posts to journal entries and adds them to the cached
       resource.
 
-      @param postings A list of the postings from the blog.
+      @param posts A list of the posts from the blog.
     */
-    void slotListedPostings( const QList<KBlog::BlogPosting> &postings );
+    void slotListedPostings( const QList<KBlog::BlogPost> &posts );
 
     /**
       Prints an error on a XML-RPC failure.
@@ -265,22 +265,22 @@ class KCAL_RESOURCEBLOG_EXPORT ResourceBlog : public ResourceCached
                     const QString &errorMessage );
 
     /**
-    Prints an error on a XML-RPC failure involving a posting.
+    Prints an error on a XML-RPC failure involving a post.
 
     @param type The type of the error.
     @param errorMessage The specific cause of the error.
-    @param posting The relevant posting.
+    @param post The relevant post.
     */
     void slotErrorPosting( const KBlog::Blog::ErrorType &type,
                            const QString &errorMessage,
-                           KBlog::BlogPosting *posting );
+                           KBlog::BlogPost *post );
 
     /**
     Prints an error on a XML-RPC failure involving media.
 
     @param type The type of the error.
     @param errorMessage The specific cause of the error.
-    @param media The relevant posting media.
+    @param media The relevant post media.
     */
     void slotErrorMedia( const KBlog::Blog::ErrorType &type,
                          const QString &errorMessage,
@@ -290,9 +290,9 @@ class KCAL_RESOURCEBLOG_EXPORT ResourceBlog : public ResourceCached
       Updates the latest stored post ID to the ID returned from the blog post
       creation/update/deletion operation.
 
-    @param posting The last blog post modified on the server.
+    @param post The last blog post modified on the server.
     */
-    void slotSavedPosting( KBlog::BlogPosting *posting );
+    void slotSavedPosting( KBlog::BlogPost *post );
 
     /**
       Updates the local list of available blogs to post to.
@@ -388,9 +388,9 @@ class KCAL_RESOURCEBLOG_EXPORT ResourceBlog : public ResourceCached
     KABC::Lock *mLock;
 
     /**
-      A map of all the blog postings awaiting server responses.
+      A map of all the blog posts awaiting server responses.
     */
-    QMap<QString,KBlog::BlogPosting*> *mPostingMap;
+    QMap<QString,KBlog::BlogPost*> *mPostingMap;
 };
 
 }
