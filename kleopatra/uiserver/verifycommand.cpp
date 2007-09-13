@@ -44,6 +44,7 @@
 
 #include <gpgme++/data.h>
 #include <gpgme++/error.h>
+#include <gpgme++/key.h>
 #include <gpgme++/verificationresult.h>
 
 #include <gpg-error.h>
@@ -93,6 +94,8 @@ public:
     const CryptoBackend::Protocol *backend;
     bool showDetails;
     VerificationResultDialog * dialog;
+    std::vector<GpgME::Key> keys;
+    GpgME::VerificationResult result;
 
     void findCryptoBackend();
 
@@ -116,15 +119,15 @@ public:
 
 public Q_SLOTS:
     void slotVerifyOpaqueResult(const GpgME::VerificationResult &, const QByteArray &);
-    void slotVerifyDetachedResult(const GpgME::VerificationResult &);
+    void slotVerifyDetachedResult(const GpgME::VerificationResult &, const std::vector<GpgME::Key> & );
     void slotProgress( const QString& what, int current, int total );
     void parseCommandLine( const std::string & line );
 private Q_SLOTS:
     void slotDialogClosed();
 private:
-    int sendBriefResult( const GpgME::VerificationResult & result ) const;
-    QString processSignature( const GpgME::Signature& sig ) const;
-    void showVerificationResultDialog( const GpgME::VerificationResult& result );
+    int sendBriefResult() const;
+    QString processSignature( const GpgME::Signature& sig, const GpgME::Key & key ) const;
+    void showVerificationResultDialog();
 };
 
 VerifyCommand::VerifyCommand()
@@ -223,17 +226,18 @@ static QString summaryToString( const GpgME::Signature::Summary summary )
     return result;
 }
 
-QString VerifyCommand::Private::processSignature( const GpgME::Signature& sig ) const
+QString VerifyCommand::Private::processSignature( const GpgME::Signature& sig, const GpgME::Key & key ) const
 {
     // FIXME review, should we continue, here?
     if ( sig.isNull() ) {
         q->done( makeError(GPG_ERR_GENERAL) );
         return QString();
     }
-    return summaryToString( sig.summary() ) + sig.fingerprint();
+    QString userID = key.userID( 0 ).email();
+    return summaryToString( sig.summary() ) + userID;
 }
 
-int VerifyCommand::Private::sendBriefResult( const GpgME::VerificationResult & result ) const
+int VerifyCommand::Private::sendBriefResult() const
 {
     if ( result.isNull() )
         return makeError(GPG_ERR_GENERAL);
@@ -244,10 +248,12 @@ int VerifyCommand::Private::sendBriefResult( const GpgME::VerificationResult & r
     std::vector<GpgME::Signature> sigs = result.signatures();
     if ( sigs.size() == 0 )
         return makeError(GPG_ERR_GENERAL);
+    assert( sigs.size() == keys.size() );
 
     QStringList resultStrings;
+    int i = 0;
     Q_FOREACH( GpgME::Signature sig, sigs )
-        resultStrings.append( processSignature( sig ) );
+        resultStrings.append( processSignature( sig, keys[i++] ) );
 
     if ( const int err = q->sendStatus( "VERIFY", resultStrings.join("\n") ) )
         return err;
@@ -262,7 +268,7 @@ void VerifyCommand::Private::slotDialogClosed()
     q->done();
 }
 
-void VerifyCommand::Private::showVerificationResultDialog( const GpgME::VerificationResult& result )
+void VerifyCommand::Private::showVerificationResultDialog()
 {
     dialog = new VerificationResultDialog( result );
     connect( dialog, SIGNAL( accepted() ), this, SLOT( slotDialogClosed() ) );
@@ -270,27 +276,36 @@ void VerifyCommand::Private::showVerificationResultDialog( const GpgME::Verifica
     dialog->show();
 }
 
-void VerifyCommand::Private::slotVerifyOpaqueResult( const GpgME::VerificationResult & result ,
+void VerifyCommand::Private::slotVerifyOpaqueResult( const GpgME::VerificationResult & _result ,
                                                      const QByteArray & stuff )
 {
     Q_UNUSED( stuff )
+    result = _result;
 
-    if ( const int err = sendBriefResult( result ) ) {
+    if ( const int err = sendBriefResult() ) {
         q->done( err );
         return;
     }
 
     if ( showDetails )
-        showVerificationResultDialog( result );
+        showVerificationResultDialog();
 
     q->done();
 }
 
-void VerifyCommand::Private::slotVerifyDetachedResult( const GpgME::VerificationResult & result )
+void VerifyCommand::Private::slotVerifyDetachedResult( const GpgME::VerificationResult & _result,
+                                                       const std::vector<GpgME::Key>& _keys )
 {
-    sendBriefResult( result );
+    keys = _keys;
+    result = _result;
+
+    if ( const int err = sendBriefResult() ) {
+        q->done( err );
+        return;
+    }
+
     if ( showDetails )
-        showVerificationResultDialog( result );
+        showVerificationResultDialog();
     else
         q->done();
 }
@@ -351,8 +366,8 @@ int VerifyCommand::doStart()
         //fire off appropriate kleo verification job
         VerifyDetachedJob * const job = d->backend->verifyDetachedJob();
         assert(job);
-        QObject::connect( job, SIGNAL(result(GpgME::VerificationResult)),
-                        d.get(),  SLOT(slotVerifyDetachedResult(GpgME::VerificationResult)) );
+        QObject::connect( job, SIGNAL(result(GpgME::VerificationResult, std::vector<GpgME::Key>)),
+                        d.get(),  SLOT(slotVerifyDetachedResult(GpgME::VerificationResult, std::vector<GpgME::Key>)) );
         QObject::connect( job, SIGNAL(progress(QString,int,int)),
                         d.get(), SLOT(slotProgress(QString,int,int)) );
 
