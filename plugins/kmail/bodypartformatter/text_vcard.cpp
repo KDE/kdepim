@@ -120,7 +120,7 @@ namespace {
        if ( index == -1 ) return true;
        KABC::Addressee a = al[index];
        if ( a.isEmpty() ) return true;
-       KAddrBookExternal::addVCard( a, 0 );
+       KPIM::KAddrBookExternal::addVCard( a, 0 );
        return true;
      }
 

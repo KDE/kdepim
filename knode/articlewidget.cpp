@@ -1459,12 +1459,12 @@ void ArticleWidget::slotAddBookmark()
 
 void ArticleWidget::slotAddToAddressBook()
 {
-  KAddrBookExternal::addEmail( mCurrentURL.path(), this );
+  KPIM::KAddrBookExternal::addEmail( mCurrentURL.path(), this );
 }
 
 void ArticleWidget::slotOpenInAddressBook()
 {
-  KAddrBookExternal::openEmail( mCurrentURL.path(), mCurrentURL.path(), this );
+  KPIM::KAddrBookExternal::openEmail( mCurrentURL.path(), mCurrentURL.path(), this );
 }
 
 void ArticleWidget::slotOpenAttachment()
