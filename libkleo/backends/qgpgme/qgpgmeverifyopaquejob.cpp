@@ -31,6 +31,7 @@
 */
 
 #include "qgpgmeverifyopaquejob.h"
+#include "qgpgmekeylistjob.h"
 
 #include <qgpgme/eventloopinteractor.h>
 #include <qgpgme/dataprovider.h>
@@ -39,16 +40,29 @@
 #include <gpgme++/verificationresult.h>
 #include <gpgme++/data.h>
 
+#include <QStringList>
+
 #include <assert.h>
+
+struct Kleo::QGpgMEVerifyOpaqueJob::Private {
+    Private(){}
+
+    GpgME::VerificationResult verificationResult;
+    std::vector<GpgME::Key> keys;
+};
+
+
 
 Kleo::QGpgMEVerifyOpaqueJob::QGpgMEVerifyOpaqueJob( GpgME::Context * context )
   : VerifyOpaqueJob( QGpgME::EventLoopInteractor::instance() ),
-    QGpgMEJob( this, context )
+    QGpgMEJob( this, context ), d( new Private )
 {
   assert( context );
+  setAutoDelete( false );
 }
 
 Kleo::QGpgMEVerifyOpaqueJob::~QGpgMEVerifyOpaqueJob() {
+  delete d;
 }
 
 void Kleo::QGpgMEVerifyOpaqueJob::setup( const QByteArray & signedData ) {
@@ -92,7 +106,45 @@ GpgME::Error Kleo::QGpgMEVerifyOpaqueJob::start( const GpgME::Data & signedData 
 }
 
 void Kleo::QGpgMEVerifyOpaqueJob::doOperationDoneEvent( const GpgME::Error & ) {
-  emit result( mCtx->verificationResult(), mOutDataDataProvider->data() );
+   // FIXME handle error?
+
+   // We no longer want this job to get signals, so unhook
+   QObject::disconnect( QGpgME::EventLoopInteractor::instance(),
+                       SIGNAL(operationDoneEventSignal(GpgME::Context*,const GpgME::Error&)),
+                       mThis, SLOT(slotOperationDoneEvent(GpgME::Context*,const GpgME::Error&)) );
+
+   d->verificationResult = mCtx->verificationResult();
+   QStringList keys;
+   Q_FOREACH( GpgME::Signature sig, d->verificationResult.signatures() ) {
+     keys.append( sig.fingerprint() );
+   }
+   Kleo::QGpgMEKeyListJob *keylisting = new Kleo::QGpgMEKeyListJob( mCtx );
+   connect( keylisting, SIGNAL( result( GpgME::KeyListResult ) ),
+            this, SLOT( slotKeyListingDone( GpgME::KeyListResult ) ) );
+   connect( keylisting, SIGNAL( nextKey( GpgME::Key ) ),
+            this, SLOT( slotNextKey( GpgME::Key ) ) );
+   GpgME::Error err = keylisting->start( keys, false /*secretOnly*/ );
+   if ( !err ) {
+     mCtx = 0; // will be deleted by the list job
+     return;
+   }
+
+   emit result( d->verificationResult, mOutDataDataProvider->data() );
+   emit result( d->verificationResult, mOutDataDataProvider->data(), d->keys );
+   deleteLater();
+}
+
+void Kleo::QGpgMEVerifyOpaqueJob::slotNextKey( const GpgME::Key & key )
+{
+    d->keys.push_back( key );
+}
+
+void Kleo::QGpgMEVerifyOpaqueJob::slotKeyListingDone( const GpgME::KeyListResult & errors )
+{
+    // FIXME handle error?
+   emit result( d->verificationResult, mOutDataDataProvider->data() );
+   emit result( d->verificationResult, mOutDataDataProvider->data(), d->keys );
+   deleteLater();
 }
 
 

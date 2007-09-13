@@ -143,6 +143,7 @@ void Kleo::QGpgMEVerifyDetachedJob::doOperationDoneEvent( const GpgME::Error & )
    }
 
    emit result( d->verificationResult );
+   emit result( d->verificationResult, d->keys );
    deleteLater();
 }
 

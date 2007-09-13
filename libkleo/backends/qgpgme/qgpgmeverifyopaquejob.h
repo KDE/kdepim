@@ -42,6 +42,7 @@ namespace GpgME {
   class Data;
   class Error;
   class Context;
+  class KeyListResult;
 }
 
 namespace Kleo {
@@ -62,11 +63,15 @@ namespace Kleo {
     void slotOperationDoneEvent( GpgME::Context * context, const GpgME::Error & e ) {
       QGpgMEJob::doSlotOperationDoneEvent( context, e );
     }
+    void slotKeyListingDone( const GpgME::KeyListResult & );
+    void slotNextKey( const GpgME::Key & );
 
   private:
     void doOperationDoneEvent( const GpgME::Error & e );
     void setup( const QByteArray & );
     void setup( const GpgME::Data & );
+    class Private;
+    Private * const d;
   };
 
 }

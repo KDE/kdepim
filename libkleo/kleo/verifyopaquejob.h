@@ -34,13 +34,14 @@
 #define __KLEO_VERIFYOPAQUEJOB_H__
 
 #include "job.h"
-
+#include <vector>
 #include <QtCore/QByteArray>
 
 namespace GpgME {
   class Data;
   class Error;
   class VerificationResult;
+  class Key;
 }
 
 
@@ -77,7 +78,11 @@ namespace Kleo {
     virtual GpgME::Error start( const GpgME::Data & signedData ) = 0;
 
   Q_SIGNALS:
-    void result( const GpgME::VerificationResult & result, const QByteArray & plainText );
+    void result( const GpgME::VerificationResult & result,
+                 const QByteArray & plainText );
+    void result( const GpgME::VerificationResult & result,
+                 const QByteArray & plainText,
+                 const std::vector<GpgME::Key> & keys );
   };
 
 }
