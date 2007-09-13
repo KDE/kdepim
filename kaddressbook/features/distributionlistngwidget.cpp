@@ -39,6 +39,7 @@
 #include <qlabel.h>
 #include <qlayout.h>
 #include <qpoint.h>
+#include <qtimer.h>
 
 KAB::DistributionListNg::ListBox::ListBox( QWidget* parent ) : KListBox( parent )
 {
@@ -139,8 +140,7 @@ KAB::DistributionListNg::MainWidget::MainWidget( KAB::Core *core, QWidget *paren
     connect( core, SIGNAL( contactsUpdated() ),
              this, SLOT( updateEntries() ) );
 
-
-    updateEntries();
+    QTimer::singleShot( 0, this, SLOT( updateEntries() ) );
 }
  
 void KAB::DistributionListNg::MainWidget::contextMenuRequested( QListBoxItem *item, const QPoint &point )
