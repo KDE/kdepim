@@ -22,8 +22,9 @@
 
 #include "kolabwizard.h"
 #include "kolabconfig.h"
-
 #include "kolabkmailchanges.h"
+
+#include "libkdepim/kconfigpropagator.h"
 
 #include "kresources/kolab/kcal/resourcekolab.h"
 #include "kresources/kolab/knotes/resourcekolab.h"

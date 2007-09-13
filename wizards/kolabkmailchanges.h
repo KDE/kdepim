@@ -23,6 +23,8 @@
 
 #include <kconfigpropagator.h>
 
+using namespace KPIM;
+
 void createKMailChanges( KConfigPropagator::Change::List& );
 
 #endif

@@ -26,6 +26,8 @@
 class KLineEdit;
 class QCheckBox;
 
+using namespace KPIM;
+
 class EGroupwareWizard : public KConfigWizard
 {
   public:

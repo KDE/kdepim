@@ -25,6 +25,8 @@
 #include <kconfigpropagator.h>
 #include <kconfig.h>
 
+using namespace KPIM;
+
 namespace KWallet {
   class Wallet;
 }
