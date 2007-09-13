@@ -39,6 +39,7 @@
 
 
 namespace GpgME {
+  class Data;
   class Error;
   class Context;
 }
@@ -54,6 +55,9 @@ namespace Kleo {
     /*! \reimp from VerifyOpaqueJob */
     GpgME::Error start( const QByteArray & signedData );
 
+    /*! \reimp from VerifyOpaqueJob */
+    GpgME::Error start( const GpgME::Data & signedData );
+
   private Q_SLOTS:
     void slotOperationDoneEvent( GpgME::Context * context, const GpgME::Error & e ) {
       QGpgMEJob::doSlotOperationDoneEvent( context, e );
@@ -62,6 +66,7 @@ namespace Kleo {
   private:
     void doOperationDoneEvent( const GpgME::Error & e );
     void setup( const QByteArray & );
+    void setup( const GpgME::Data & );
   };
 
 }

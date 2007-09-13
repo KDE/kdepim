@@ -56,6 +56,10 @@ namespace Kleo {
     GpgME::Error start( const QByteArray & signature,
 			const QByteArray & signedData );
 
+    /*! \reimp from VerifyDetachedJob */
+    GpgME::Error start( const QByteArray & signature,
+                        const GpgME::Data & signedData );
+
   private Q_SLOTS:
     void slotOperationDoneEvent( GpgME::Context * context, const GpgME::Error & e ) {
       QGpgMEJob::doSlotOperationDoneEvent( context, e );
@@ -65,7 +69,10 @@ namespace Kleo {
 
   private:
     void doOperationDoneEvent( const GpgME::Error & e );
-    void setup( const QByteArray &, const QByteArray & );
+    void setupSignature( const QByteArray & );
+    void setupData( const QByteArray & );
+    void setupData( const GpgME::Data & );
+
     class Private;
     Private * const d;
   };

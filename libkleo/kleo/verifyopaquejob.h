@@ -38,6 +38,7 @@
 #include <QtCore/QByteArray>
 
 namespace GpgME {
+  class Data;
   class Error;
   class VerificationResult;
 }
@@ -66,11 +67,14 @@ namespace Kleo {
     ~VerifyOpaqueJob();
 
     /**
-       Starts the verification operation. \a signature contains the
-       signature data, while \a signedData contains the data over
-       which the signature was made.
+       Starts the verification operation. \a signedData contains the signed data, with its signature
     */
     virtual GpgME::Error start( const QByteArray & signedData ) = 0;
+
+    /**
+       Starts the verification operation. \a signedData contains the signed data, with its signature
+    */
+    virtual GpgME::Error start( const GpgME::Data & signedData ) = 0;
 
   Q_SIGNALS:
     void result( const GpgME::VerificationResult & result, const QByteArray & plainText );

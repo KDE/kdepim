@@ -59,7 +59,27 @@ void Kleo::QGpgMEVerifyOpaqueJob::setup( const QByteArray & signedData ) {
   createOutData();
 }
 
+void Kleo::QGpgMEVerifyOpaqueJob::setup( const GpgME::Data & data ) {
+  assert( !mInData );
+  assert( !mOutData );
+  mInData = new GpgME::Data( data );
+  createOutData();
+}
+
 GpgME::Error Kleo::QGpgMEVerifyOpaqueJob::start( const QByteArray & signedData ) {
+  setup( signedData );
+
+  hookupContextToEventLoopInteractor();
+
+  const GpgME::Error err = mCtx->startOpaqueSignatureVerification( *mInData, *mOutData );
+
+  if ( err )
+    deleteLater();
+  return err;
+}
+
+
+GpgME::Error Kleo::QGpgMEVerifyOpaqueJob::start( const GpgME::Data & signedData ) {
   setup( signedData );
 
   hookupContextToEventLoopInteractor();

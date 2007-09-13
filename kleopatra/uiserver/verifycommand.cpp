@@ -32,7 +32,6 @@
 
 #include "verifycommand.h"
 
-#include <QFile>
 #include <QObject>
 #include <QIODevice>
 #include <QMessageBox>
@@ -41,6 +40,9 @@
 #include <kleo/verifydetachedjob.h>
 #include <kleo/cryptobackendfactory.h>
 
+#include <KDebug>
+
+#include <gpgme++/data.h>
 #include <gpgme++/error.h>
 #include <gpgme++/verificationresult.h>
 
@@ -96,16 +98,17 @@ public:
 
     struct Input
     {
-        Input() : type( Detached ), message( 0 ), signature( 0 ) {}
+        Input() : type( Detached ), message( 0 ), signature( 0 ), backend( 0 ) {}
         enum SignatureType {
             Detached=0,
             Opaque
         };
-
+        void setupMessage( QIODevice* message, const QString& fileName );
         SignatureType type;
         QIODevice* message;
         QString messageFileName;
         QIODevice* signature;
+        CryptoBackend::Protocol* backend;
     };
 
     QList<Input> inputList;
@@ -119,7 +122,7 @@ public Q_SLOTS:
 private Q_SLOTS:
     void slotDialogClosed();
 private:
-    void sendBriefResult( const GpgME::VerificationResult & result ) const;
+    int sendBriefResult( const GpgME::VerificationResult & result ) const;
     QString processSignature( const GpgME::Signature& sig ) const;
     void showVerificationResultDialog( const GpgME::VerificationResult& result );
 };
@@ -140,6 +143,12 @@ void VerifyCommand::Private::findCryptoBackend()
         backend = Kleo::CryptoBackendFactory::instance()->smime();
     else
         backend = Kleo::CryptoBackendFactory::instance()->openpgp();
+}
+
+void VerifyCommand::Private::Input::setupMessage( QIODevice* message, const QString& fileName )
+{
+    message = fileName.isEmpty() ? message : 0;
+    messageFileName = fileName;
 }
 
 QList<VerifyCommand::Private::Input> VerifyCommand::Private::setupInput( GpgME::Error& error, QString& errorDetails ) const
@@ -173,9 +182,9 @@ QList<VerifyCommand::Private::Input> VerifyCommand::Private::setupInput( GpgME::
             Input input;
             input.type = Input::Detached;
             input.signature = q->bulkInputDevice( "INPUT", i );
-            input.message = q->bulkInputDevice( "MESSAGE", i );
+            input.setupMessage( q->bulkInputDevice( "MESSAGE", i ), q->bulkInputDeviceFileName( "MESSAGE", i ) );
+            assert( input.message || !input.messageFileName.isEmpty() );
             assert( input.signature );
-            assert( input.message );
             inputs.append( input );
         }
         return inputs;
@@ -224,29 +233,25 @@ QString VerifyCommand::Private::processSignature( const GpgME::Signature& sig ) 
     return summaryToString( sig.summary() ) + sig.fingerprint();
 }
 
-void VerifyCommand::Private::sendBriefResult( const GpgME::VerificationResult & result ) const
+int VerifyCommand::Private::sendBriefResult( const GpgME::VerificationResult & result ) const
 {
-    if ( result.isNull() ) {
-        q->done( makeError(GPG_ERR_GENERAL) );
-        return;
-    }
-    if ( result.error() ) {
-        q->done( result.error() );
-        return;
-    }
+    if ( result.isNull() )
+        return makeError(GPG_ERR_GENERAL);
+
+    if ( result.error() )
+        return result.error();
 
     std::vector<GpgME::Signature> sigs = result.signatures();
-    if ( sigs.size() == 0 ) {
-        q->done( makeError(GPG_ERR_GENERAL) );
-        return;
-    }
+    if ( sigs.size() == 0 )
+        return makeError(GPG_ERR_GENERAL);
 
     QStringList resultStrings;
     Q_FOREACH( GpgME::Signature sig, sigs )
         resultStrings.append( processSignature( sig ) );
 
     if ( const int err = q->sendStatus( "VERIFY", resultStrings.join("\n") ) )
-        q->done( err );
+        return err;
+    return 0;
 }
 
 void VerifyCommand::Private::slotDialogClosed()
@@ -269,11 +274,16 @@ void VerifyCommand::Private::slotVerifyOpaqueResult( const GpgME::VerificationRe
                                                      const QByteArray & stuff )
 {
     Q_UNUSED( stuff )
-    sendBriefResult( result );
+
+    if ( const int err = sendBriefResult( result ) ) {
+        q->done( err );
+        return;
+    }
+
     if ( showDetails )
         showVerificationResultDialog( result );
-    else
-        q->done();
+
+    q->done();
 }
 
 void VerifyCommand::Private::slotVerifyDetachedResult( const GpgME::VerificationResult & result )
@@ -347,25 +357,15 @@ int VerifyCommand::doStart()
                         d.get(), SLOT(slotProgress(QString,int,int)) );
 
 
-        //FIXME: readAll save enough
+        //FIXME: readAll save enough?
         const QByteArray signature = input.signature->readAll();
-        QByteArray message;
-        if ( input.message )
-        {
-            message = input.message->readAll();
-        }
-        else
-        {
-            QFile file( input.messageFileName );
-            if ( !file.open( QIODevice::ReadOnly ) )
-            {
-                done( GPG_ERR_ASS_NO_INPUT, QString( "Couldn't read file %1" ).arg( input.messageFileName ) ); // FIXME: use better error code 
-                return GPG_ERR_ASS_NO_INPUT;
-            }
-            message = file.readAll();
-            file.close();
-        }
-        const GpgME::Error error = job->start( signature, message );
+        assert( input.message || !input.messageFileName.isEmpty() );
+        const bool useFileName = !input.messageFileName.isEmpty();
+        GpgME::Data fileData;
+        fileData.setFileName( input.messageFileName.toLatin1().data() );
+        assert( !useFileName || !fileData.isNull() );
+        const GpgME::Error error = useFileName ? job->start( signature, fileData ) : job->start( signature, input.message->readAll() );
+        //FIXME: handle file name encoding correctly 
         if ( error )
             done( error );
         return error;

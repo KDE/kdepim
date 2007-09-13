@@ -39,7 +39,7 @@
 
 #include <QtCore/QByteArray>
 
-namespace GpgME {
+  class Data;
   class Error;
   class VerificationResult;
   class Key;
@@ -74,7 +74,15 @@ namespace Kleo {
        which the signature was made.
     */
     virtual GpgME::Error start( const QByteArray & signature,
-				const QByteArray & signedData ) = 0;
+                                const QByteArray & signedData ) = 0;
+
+    /**
+       Starts the verification operation. \a signature contains the
+       signature data, while \a signedData represents the data over
+       which the signature was made.
+    */
+    virtual GpgME::Error start( const QByteArray & signature,
+                                const GpgME::Data & signedData ) = 0;
 
   Q_SIGNALS:
     void result( const GpgME::VerificationResult & result );
