@@ -91,7 +91,8 @@ Kleo::QGpgMEJob::QGpgMEJob( Kleo::Job * _this, GpgME::Context * context )
     mNumPatterns( 0 ),
     mChunkSize( 1024 ),
     mPatternStartIndex( 0 ), mPatternEndIndex( 0 ),
-    mEventLoop( 0 )
+    mEventLoop( 0 ),
+    mDeleteOurselves(true)
 {
   InvarianceChecker check( this );
   assert( context );
@@ -249,7 +250,8 @@ void Kleo::QGpgMEJob::doSlotOperationDoneEvent( GpgME::Context * context, const 
     if ( mEventLoop )
       mEventLoop->quit();
     else
-    mThis->deleteLater();
+      if ( mDeleteOurselves )
+        mThis->deleteLater();
   }
 }
 
@@ -298,4 +300,10 @@ char * Kleo::QGpgMEJob::getPassphrase( const char * useridHint, const char * /*d
   canceled = false;
   // gpgme++ free()s it, and we need to copy as long as dlg isn't deleted :o
   return strdup( dlg.password().toLocal8Bit() );
+}
+
+
+void Kleo::QGpgMEJob::setAutoDelete( bool v )
+{
+    mDeleteOurselves = v;
 }

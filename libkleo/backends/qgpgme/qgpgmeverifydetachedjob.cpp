@@ -31,6 +31,11 @@
 */
 
 #include "qgpgmeverifydetachedjob.h"
+#include "qgpgmekeylistjob.h"
+
+#include <vector>
+
+#include <QStringList>
 
 #include <qgpgme/eventloopinteractor.h>
 #include <qgpgme/dataprovider.h>
@@ -41,14 +46,24 @@
 
 #include <assert.h>
 
+struct Kleo::QGpgMEVerifyDetachedJob::Private {
+    Private(){}
+
+    GpgME::VerificationResult verificationResult;
+    std::vector<GpgME::Key> keys;
+};
+
 Kleo::QGpgMEVerifyDetachedJob::QGpgMEVerifyDetachedJob( GpgME::Context * context )
   : VerifyDetachedJob( QGpgME::EventLoopInteractor::instance() ),
-    QGpgMEJob( this, context )
+    QGpgMEJob( this, context ), d( new Private )
 {
   assert( context );
+  setAutoDelete( false );
 }
 
-Kleo::QGpgMEVerifyDetachedJob::~QGpgMEVerifyDetachedJob() {
+Kleo::QGpgMEVerifyDetachedJob::~QGpgMEVerifyDetachedJob()
+{
+  delete d;
 }
 
 void Kleo::QGpgMEVerifyDetachedJob::setup( const QByteArray & signature, const QByteArray & signedData ) {
@@ -77,8 +92,44 @@ GpgME::Error Kleo::QGpgMEVerifyDetachedJob::start( const QByteArray & signature,
 }
 
 void Kleo::QGpgMEVerifyDetachedJob::doOperationDoneEvent( const GpgME::Error & ) {
-  emit result( mCtx->verificationResult() );
+
+   // FIXME handle error?
+
+   // We no longer want this job to get signals, so unhook
+   QObject::disconnect( QGpgME::EventLoopInteractor::instance(),
+                       SIGNAL(operationDoneEventSignal(GpgME::Context*,const GpgME::Error&)),
+                       mThis, SLOT(slotOperationDoneEvent(GpgME::Context*,const GpgME::Error&)) );
+
+   d->verificationResult = mCtx->verificationResult();
+   QStringList keys;
+   Q_FOREACH( GpgME::Signature sig, d->verificationResult.signatures() ) {
+     keys.append( sig.fingerprint() );
+   }
+   Kleo::QGpgMEKeyListJob *keylisting = new Kleo::QGpgMEKeyListJob( mCtx );
+   connect( keylisting, SIGNAL( result( GpgME::KeyListResult ) ),
+            this, SLOT( slotKeyListingDone( GpgME::KeyListResult ) ) );
+   connect( keylisting, SIGNAL( nextKey( GpgME::Key ) ),
+            this, SLOT( slotNextKey( GpgME::Key ) ) );
+   GpgME::Error err = keylisting->start( keys, false /*secretOnly*/ );
+   if ( !err ) {
+     mCtx = 0; // will be deleted by the list job
+     return;
+   }
+
+   emit result( d->verificationResult );
+   deleteLater();
 }
 
+
+void Kleo::QGpgMEVerifyDetachedJob::slotNextKey( const GpgME::Key & key )
+{
+    d->keys.push_back( key );
+}
+
+void Kleo::QGpgMEVerifyDetachedJob::slotKeyListingDone( const GpgME::KeyListResult & keys )
+{
+   emit result( d->verificationResult );
+   deleteLater();
+}
 
 #include "qgpgmeverifydetachedjob.moc"

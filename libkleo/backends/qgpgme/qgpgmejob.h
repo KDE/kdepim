@@ -117,6 +117,9 @@ namespace Kleo {
     virtual void doEmitDoneSignal() = 0;
     void doSlotCancel();
     void waitForFinished();
+    /*! Used by subclasses to prevent automatic deletion of the command 
+     * in doSlotOperationDoneEvent. Defaults to true. */
+    void setAutoDelete( bool v );
 
   private:
     /*! \reimp from GpgME::ProgressProvider */
@@ -144,6 +147,7 @@ namespace Kleo {
     unsigned int mChunkSize;
     unsigned int mPatternStartIndex, mPatternEndIndex;
     QEventLoop * mEventLoop;
+    bool mDeleteOurselves;
   };
 
 }
