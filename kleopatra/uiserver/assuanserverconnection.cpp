@@ -730,9 +730,9 @@ void AssuanCommand::done( int err ) {
         }
 
     const gpg_error_t rc = assuan_process_done( d->ctx.get(), err );
-//    if ( rc )
-//        qFatal( "AssuanCommand::done: assuan_process_done returned error %d (%s)",
-//                static_cast<int>(rc), gpg_strerror(rc) );
+    if ( rc )
+        qFatal( "AssuanCommand::done: assuan_process_done returned error %d (%s)",
+                static_cast<int>(rc), gpg_strerror(rc) );
     d->utf8ErrorKeepAlive.clear();
     d->ctx.reset();
 }
