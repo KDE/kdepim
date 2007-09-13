@@ -41,11 +41,13 @@
 
 #include <QtCore>
 
-#include <unistd.h>
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <fcntl.h>
-#include <errno.h>
+#ifndef Q_OS_WIN32
+# include <unistd.h>
+# include <sys/types.h>
+# include <sys/stat.h>
+# include <fcntl.h>
+# include <errno.h>
+#endif
 #include <assert.h>
 
 #include <iostream>
@@ -54,6 +56,14 @@
 #include <vector>
 
 using namespace Kleo;
+
+#ifdef Q_OS_WIN32
+static const bool HAVE_FD_PASSING = false;
+#else
+static const bool HAVE_FD_PASSING = true;
+#endif
+
+static const unsigned int ASSUAN_CONNECT_FLAGS = HAVE_FD_PASSING ? 1 : 0 ;
 
 static std::vector<int> inFDs, outFDs, msgFDs;
 static std::vector<std::string> inFiles, outFiles, msgFiles;
@@ -97,7 +107,11 @@ static void usage( const std::string & msg=std::string() ) {
         "\n"
         "Usage: test_uiserver <socket> [<io>] [<options>] [<inquire>] command [<args>]\n"
         "where:\n"
+#ifdef Q_OS_WIN32
         "      <io>: [--input[-fd] <file>] [--output[-fd] <file>] [--message[-fd] <file>]\n"
+#else
+        "      <io>: [--input <file>] [--output <file>] [--message <file>]\n"
+#endif
         " <options>: *[--option name=value]\n"
         " <inquire>: [--inquire keyword=<file>]\n";
     exit( 1 );
@@ -145,7 +159,17 @@ int main( int argc, char * argv[] ) {
     std::string command;
     for ( int optind = 2 ; optind < argc ; ++optind ) {
         const char * const arg = argv[optind];
-        if ( qstrcmp( arg, "--input-fd" ) == 0 ) {
+        if ( qstrcmp( arg, "--input" ) == 0 ) {
+            const std::string file = argv[++optind];
+            inFiles.push_back( file );
+        } else if ( qstrcmp( arg, "--output" ) == 0 ) {
+            const std::string file = argv[++optind];
+            outFiles.push_back( file );
+        } else if ( qstrcmp( arg, "--message" ) == 0 ) {
+            const std::string file = argv[++optind];
+            msgFiles.push_back( file );
+#ifndef Q_OS_WIN32
+        } else if ( qstrcmp( arg, "--input-fd" ) == 0 ) {
             int inFD;
             if ( (inFD = open( argv[++optind], O_RDONLY )) == -1 ) {
                 perror( "--input-fd open()" );
@@ -166,15 +190,7 @@ int main( int argc, char * argv[] ) {
                 return 1;
             }
             msgFDs.push_back( msgFD );
-        } else if ( qstrcmp( arg, "--input" ) == 0 ) {
-            const std::string file = argv[++optind];
-            inFiles.push_back( file );
-        } else if ( qstrcmp( arg, "--output" ) == 0 ) {
-            const std::string file = argv[++optind];
-            outFiles.push_back( file );
-        } else if ( qstrcmp( arg, "--message" ) == 0 ) {
-            const std::string file = argv[++optind];
-            msgFiles.push_back( file );
+#endif
         } else if ( qstrcmp( arg, "--option" ) == 0 ) {
             options.push_back( argv[++optind] );
         } else if ( qstrcmp( arg, "--inquire" ) == 0 ) {
@@ -195,7 +211,7 @@ int main( int argc, char * argv[] ) {
 
     assuan_context_t ctx = 0;
 
-    if ( const gpg_error_t err = assuan_socket_connect_ext( &ctx, socket, -1, 1 ) ) {
+    if ( const gpg_error_t err = assuan_socket_connect_ext( &ctx, socket, -1, ASSUAN_CONNECT_FLAGS ) ) {
         qDebug( "%s", assuan_exception( err, "assuan_socket_connect_ext" ).what() );
         return 1;
     }
