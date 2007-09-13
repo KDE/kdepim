@@ -30,7 +30,7 @@
 #include <kaction.h>
 #include <kactioncollection.h>
 #include <kactionmenu.h>
-#include <kaddrbook.h>
+#include <kaddrbookexternal.h>
 #include <kascii.h>
 #include <kbookmarkmanager.h>
 #include <kcharsets.h>

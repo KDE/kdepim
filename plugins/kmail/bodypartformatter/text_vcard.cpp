@@ -39,7 +39,7 @@
 #include <kglobalsettings.h>
 #include <kiconloader.h>
 
-#include <kaddrbook.h>
+#include <kaddrbookexternal.h>
 
 #include "interfaces/bodypartformatter.h"
 #include "interfaces/bodypart.h"
