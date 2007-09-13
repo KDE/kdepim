@@ -219,7 +219,13 @@ int main( int argc, char * argv[] ) {
     assuan_set_log_stream( ctx, stderr );
 
     for ( std::vector<int>::const_iterator it = inFDs.begin(), end = inFDs.end() ; it != end ; ++it ) {
-        if ( const gpg_error_t err = assuan_sendfd( ctx, *it ) ) {
+        if ( const gpg_error_t err = assuan_sendfd( ctx,
+#if _WIN32
+				(HANDLE)*it
+#else
+			       	*it
+#endif
+				) ) {
             qDebug( "%s", assuan_exception( err, "assuan_sendfd( inFD )" ).what() );
             return 1;
         }
@@ -243,7 +249,13 @@ int main( int argc, char * argv[] ) {
 
     
     for ( std::vector<int>::const_iterator it = msgFDs.begin(), end = msgFDs.end() ; it != end ; ++it ) {
-        if ( const gpg_error_t err = assuan_sendfd( ctx, *it ) ) {
+        if ( const gpg_error_t err = assuan_sendfd( ctx, 
+#if _WIN32                                               
+                                (HANDLE)*it
+#else                                                    
+                                *it                      
+#endif                                                   
+                                ) ) {                    	
             qDebug( "%s", assuan_exception( err, "assuan_sendfd( msgFD )" ).what() );
             return 1;
         }
@@ -267,7 +279,13 @@ int main( int argc, char * argv[] ) {
 
     
     for ( std::vector<int>::const_iterator it = outFDs.begin(), end = outFDs.end() ; it != end ; ++it ) {
-        if ( const gpg_error_t err = assuan_sendfd( ctx, *it ) ) {
+        if ( const gpg_error_t err = assuan_sendfd( ctx,
+#if _WIN32 
+                                     (HANDLE)*it
+#else
+                                     *it
+#endif 
+                                     ) ) {
             qDebug( "%s", assuan_exception( err, "assuan_sendfd( outFD )" ).what() );
             return 1;
         }

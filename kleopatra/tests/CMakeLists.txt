@@ -10,7 +10,7 @@ target_link_libraries(test_keylistmodels kleo ${KDE4_KDECORE_LIBS} )
 
 ########### next target ###############
 
-if ( USABLE_ASSUAN_FOUND AND NOT WIN32 )
+if ( USABLE_ASSUAN_FOUND  )
 
   # this doesn't yet work on Windows
 
@@ -20,7 +20,11 @@ if ( USABLE_ASSUAN_FOUND AND NOT WIN32 )
 
   kde4_add_test_executable(test_uiserver ${test_uiserver_SRCS})
 
-  target_link_libraries(test_uiserver ${KDE4_KDECORE_LIBS} ${ASSUAN_PTHREAD_LIBRARIES} )
-
-endif( USABLE_ASSUAN_FOUND AND NOT WIN32 )
+  target_link_libraries(test_uiserver ${KDE4_KDECORE_LIBS} )
+  if(WIN32)
+	 target_link_libraries(test_uiserver ${ASSUAN_VANILLA_LIBRARIES} Ws2_32)
+  else(WIN32)
+	 target_link_libraries(test_uiserver ${ASSUAN_PTHREAD_LIBRARIES} ) 
+  endif(WIN32)
+endif( USABLE_ASSUAN_FOUND  )
 
