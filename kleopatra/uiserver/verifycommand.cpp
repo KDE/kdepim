@@ -271,9 +271,13 @@ int VerifyCommand::Private::prepareVerification( QString& reason )
     return 0;
 }
 
-void VerifyCommand::Private::Input::setupMessage( QIODevice* message, const QString& fileName )
+void VerifyCommand::Private::Input::setupMessage( QIODevice* _message, const QString& fileName )
 {
-    message = fileName.isEmpty() ? message : 0;
+#if 0 // MARC_REFACTOR_ME
+    message = fileName.isEmpty() ? _message : 0;
+#else
+    message = _message;
+#endif
     messageFileName = fileName;
 }
 
@@ -520,7 +524,8 @@ int VerifyCommand::Private::startVerification()
             //FIXME: readAll save enough?
             const QByteArray signature = input.signature->readAll();
             assert( input.message || !input.messageFileName.isEmpty() );
-            const bool useFileName = !input.messageFileName.isEmpty();
+            //const bool useFileName = !input.messageFileName.isEmpty();
+            const bool useFileName = false; // FIXME MARC_REFACTOR_ME
             GpgME::Data fileData;
             fileData.setFileName( input.messageFileName.toLatin1().data() );         //FIXME: handle file name encoding correctly 
             assert( !useFileName || !fileData.isNull() );
