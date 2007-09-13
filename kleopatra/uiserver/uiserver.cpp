@@ -110,6 +110,7 @@ private:
     QFile file;
     std::vector< shared_ptr<AssuanCommandFactory> > factories;
     std::vector< shared_ptr<AssuanServerConnection> > connections;
+    QString socketname;
 };
 
 UiServer::Private::Private( UiServer * qq )
@@ -124,10 +125,10 @@ UiServer::Private::Private( UiServer * qq )
 }
 
 
-UiServer::UiServer( QObject * p )
+UiServer::UiServer( const QString & socket, QObject * p )
     : QObject( p ), d( new Private( this ) )
 {
-
+    d->socketname = socket;
 }
 
 UiServer::~UiServer() {}
@@ -180,6 +181,7 @@ bool UiServer::isStopping() const {
 }
 
 QString UiServer::Private::makeFileName() const {
+    if ( !socketname.isEmpty() ) return socketname;
     if ( tmpDir.status() != 0 )
         throw_<std::runtime_error>( tr( "Couldn't create directory %1: %2" ).arg( tmpDirPrefix() + "XXXXXXXX", QString::fromLocal8Bit( strerror(errno) ) ) );
     const QDir dir( tmpDir.name() );

@@ -73,6 +73,7 @@ int main( int argc, char** argv )
   options.add("external", ki18n("Search for external certificates initially"));
   options.add("query ", ki18n("Initial query string"));
   options.add("import-certificate ", ki18n("Name of certificate file to import"));
+  options.add("uiserver-socket <argument>", ki18n("Location of the socket the ui server is listening on" ) );
   KCmdLineArgs::addCmdLineOptions( options );
 
   KApplication app;
@@ -93,13 +94,14 @@ int main( int argc, char** argv )
 					  args->getOption("query"),
 					  args->getOption("import-certificate") );
 
+  const QString socketname = args->getOption("uiserver-socket");
   args->clear();
   manager->show();
 
   int rc;
 #ifdef HAVE_USABLE_ASSUAN
-  try {
-      Kleo::UiServer server;
+try {
+      Kleo::UiServer server( socketname );
 
 #define REGISTER( Command ) server.registerCommandFactory( boost::shared_ptr<Kleo::AssuanCommandFactory>( new Kleo::GenericAssuanCommandFactory<Kleo::Command> ) )
       REGISTER( DecryptCommand );
