@@ -39,6 +39,7 @@
 #include <QListWidgetItem>
 #include <qpoint.h>
 #include <QPointer>
+#include <QTimer>
 
 KAB::DistributionListNg::ListBox::ListBox( QWidget* parent ) : QListWidget( parent )
 {
@@ -141,7 +142,7 @@ KAB::DistributionListNg::MainWidget::MainWidget( KAB::Core *core, QWidget *paren
     connect( core, SIGNAL( contactsUpdated() ),
              this, SLOT( updateEntries() ) );
 
-    updateEntries();
+    QTimer::singleShot( 0, this, SLOT( updateEntries() ) );
 }
 
 #warning port! PENDING(KDAB)
