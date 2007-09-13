@@ -39,8 +39,6 @@
 #include <QIODevice>
 #include <QList>
 
-#include <boost/bind.hpp>
-
 #include <string>
 #include <algorithm>
 
@@ -62,7 +60,7 @@ EchoCommand::EchoCommand()
 
 EchoCommand::~EchoCommand() {}
 
-int EchoCommand::start( const std::string & line ) {
+int EchoCommand::doStart() {
 
     if ( bulkInputDevice( "INPUT" ) && !bulkOutputDevice( "OUTPUT" ) )
         return makeError( GPG_ERR_NOT_SUPPORTED );
@@ -72,11 +70,6 @@ int EchoCommand::start( const std::string & line ) {
 
     if ( hasOption( option_prefix ) && !option( option_prefix ).toByteArray().isEmpty() )
         return makeError( GPG_ERR_NOT_IMPLEMENTED );
-
-    QList<QByteArray> tokens = QByteArray( line.c_str() ).split( ' ' );
-    tokens.erase( std::remove_if( tokens.begin(), tokens.end(),
-                                  bind( &QByteArray::isEmpty, _1 ) ),
-                  tokens.end() );
 
     std::string keyword;
     if ( hasOption( "inquire" ) ) {
@@ -119,7 +112,7 @@ int EchoCommand::start( const std::string & line ) {
     return 0;
 }
 
-void EchoCommand::canceled() {
+void EchoCommand::doCanceled() {
 
 }
 

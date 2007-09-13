@@ -37,8 +37,6 @@
 
 #include <utils/pimpl_ptr.h>
 
-#include <boost/shared_ptr.hpp>
-
 namespace Kleo {
 /*!
       \author Frank Osterfeld <frank@kdab.net>
@@ -50,8 +48,9 @@ public:
     DecryptCommand();
     ~DecryptCommand();
 
-    int start( const std::string & );
-    void canceled();
+private:
+    int doStart();
+    void doCanceled();
 public:
     static const char * staticName() { return "DECRYPT"; }
 

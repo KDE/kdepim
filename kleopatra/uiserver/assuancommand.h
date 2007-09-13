@@ -194,16 +194,19 @@ namespace Kleo {
         AssuanCommand();
         virtual ~AssuanCommand();
 
-        virtual int start( const std::string & line=std::string() ) = 0;
+        int start();
+        void canceled();
 
         virtual const char * name() const = 0;
-
-        virtual void canceled() = 0;
 
         class Memento {
         public:
             virtual ~Memento() {}
         };
+    private:
+        virtual void doCanceled() = 0;
+        virtual int doStart() = 0;
+
     protected:
 
         bool hasMemento( const QByteArray & tag ) const;

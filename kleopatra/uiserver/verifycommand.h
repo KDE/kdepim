@@ -37,8 +37,6 @@
 
 #include <utils/pimpl_ptr.h>
 
-#include <boost/shared_ptr.hpp>
-
 namespace Kleo {
 /*!
       \author Till Adam <till@kdab.net>
@@ -51,8 +49,9 @@ public:
     VerifyCommand();
     ~VerifyCommand();
 
-    int start( const std::string & );
-    void canceled();
+private:
+    int doStart();
+    void doCanceled();
 public:
     static const char * staticName() { return "VERIFY"; }
 

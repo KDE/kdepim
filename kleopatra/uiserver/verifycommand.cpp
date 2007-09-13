@@ -49,6 +49,7 @@
 #include <cassert>
 
 #include <boost/bind.hpp>
+#include <boost/shared_ptr.hpp>
 
 using namespace Kleo;
 namespace {
@@ -294,9 +295,9 @@ void VerifyCommand::Private::parseCommandLine( const std::string & line )
 
 }
 
-int VerifyCommand::start( const std::string & line )
+int VerifyCommand::doStart()
 {
-    d->parseCommandLine(line);
+    d->parseCommandLine("");
     d->showDetails = !hasOption("silent");
 
     {
@@ -374,7 +375,7 @@ int VerifyCommand::start( const std::string & line )
     return 0; // never reached
 }
 
-void VerifyCommand::canceled()
+void VerifyCommand::doCanceled()
 {
     if ( d->dialog ) {
         delete d->dialog;

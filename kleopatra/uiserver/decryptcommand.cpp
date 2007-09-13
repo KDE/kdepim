@@ -102,11 +102,8 @@ void Kleo::DecryptCommand::Private::slotDecryptionResult( const GpgME::Decryptio
     q->done();
 }
 
-int Kleo::DecryptCommand::start( const std::string & line )
+int Kleo::DecryptCommand::doStart()
 {
-    // FIXME parse line
-    Q_UNUSED(line)
-
     // FIXME check options
 
     if ( !bulkInputDevice( "IN" ) )
@@ -136,7 +133,7 @@ int Kleo::DecryptCommand::start( const std::string & line )
     return error;
 }
 
-void Kleo::DecryptCommand::canceled()
+void Kleo::DecryptCommand::doCanceled()
 {
 }
 

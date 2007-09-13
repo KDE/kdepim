@@ -510,6 +510,20 @@ AssuanCommand::~AssuanCommand() {
 
 }
 
+int AssuanCommand::start() {
+    if ( const int err = doStart() ) {
+        if ( !d->done )
+            done( err );
+        return err;
+    }
+    return 0;
+}
+
+void AssuanCommand::canceled() {
+    d->done = true;
+    doCanceled();
+}
+
 // static
 int AssuanCommand::makeError( int code ) {
     return gpg_error( static_cast<gpg_err_code_t>( code ) );
@@ -747,11 +761,8 @@ int AssuanCommandFactory::_handle( assuan_context_t ctx, char * line, const char
     for ( std::map<std::string,std::string>::const_iterator it = cmdline_options.begin(), end = cmdline_options.end() ; it != end ; ++it )
         cmd->d->options[it->first] = QString::fromUtf8( it->second.c_str() );
     
-    if ( const int err = cmd->start() ) {
-        if ( !cmd->d->done )
-            cmd->done( err );
+    if ( const int err = cmd->start() )
         return err;
-    }
 
     conn.currentCommand = cmd;
     return 0;

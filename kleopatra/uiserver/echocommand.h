@@ -69,8 +69,8 @@ namespace Kleo {
         static const char * staticName() { return "ECHO"; }
 
     private:
-        int start( const std::string & line );
-        void canceled();
+        int doStart();
+        void doCanceled();
 
     private Q_SLOTS:
         void slotInquireData( int, const QByteArray & );
