@@ -39,6 +39,8 @@
 
 #include <QtCore/QByteArray>
 
+namespace GpgME {
+
   class Data;
   class Error;
   class VerificationResult;
