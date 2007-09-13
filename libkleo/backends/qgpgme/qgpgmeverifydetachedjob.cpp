@@ -126,8 +126,10 @@ void Kleo::QGpgMEVerifyDetachedJob::slotNextKey( const GpgME::Key & key )
     d->keys.push_back( key );
 }
 
-void Kleo::QGpgMEVerifyDetachedJob::slotKeyListingDone( const GpgME::KeyListResult & keys )
+void Kleo::QGpgMEVerifyDetachedJob::slotKeyListingDone( const GpgME::KeyListResult & errors )
 {
+    // FIXME handle error?
+   d->verificationResult.setKeys( d->keys );
    emit result( d->verificationResult );
    deleteLater();
 }
