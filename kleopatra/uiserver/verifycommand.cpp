@@ -78,6 +78,96 @@ public:
     virtual ~VerificationResultDialog() {}
 };
 
+class VerificationResultCollector : public QObject
+{
+    Q_OBJECT
+public:
+    explicit VerificationResultCollector( QObject* parent = 0 );
+
+    struct Result {
+        bool isOpaque;
+        QString id;
+        GpgME::VerificationResult result;
+        QByteArray stuff;
+        std::vector<GpgME::Key> keys;
+    };
+
+    void registerJob( const QString& id, VerifyDetachedJob* job );
+    void registerJob( const QString& id, VerifyOpaqueJob* job );
+
+Q_SIGNALS:
+    void finished( const QHash<QString, VerificationResultCollector::Result> & );
+
+private Q_SLOTS:
+    void slotVerifyOpaqueResult(const GpgME::VerificationResult &, const QByteArray &);
+    void slotVerifyDetachedResult(const GpgME::VerificationResult &, const std::vector<GpgME::Key> & );
+
+private:
+    QHash<QString, Result> m_results;
+    QHash<QObject*, QString> m_senderToId;
+    int m_unfinished;
+};
+
+VerificationResultCollector::VerificationResultCollector( QObject* parent ) : QObject( parent ), m_unfinished( 0 )
+{
+}
+
+void VerificationResultCollector::registerJob( const QString& id, VerifyDetachedJob* job )
+{
+    connect( job, SIGNAL(result(GpgME::VerificationResult, std::vector<GpgME::Key>)),
+             this, SLOT(slotVerifyDetachedResult(GpgME::VerificationResult, std::vector<GpgME::Key>)) );
+    m_senderToId[job] = id;
+    ++m_unfinished;
+}
+
+void VerificationResultCollector::registerJob( const QString& id, VerifyOpaqueJob* job )
+{
+    connect( job, SIGNAL(result(GpgME::VerificationResult,QByteArray)),
+             this, SLOT(slotVerifyOpaqueResult(GpgME::VerificationResult,QByteArray)) );
+    m_senderToId[job] = id;
+    ++m_unfinished;
+}
+
+void VerificationResultCollector::slotVerifyOpaqueResult(const GpgME::VerificationResult & result, const QByteArray & stuff)
+{
+    const QString id = m_senderToId[sender()];
+
+    Result res;
+    res.id = id;
+    res.isOpaque = true;
+    res.stuff = stuff;
+    res.result = result;
+    m_results[id] = res;
+
+    --m_unfinished;
+    assert( m_unfinished >= 0 );
+    if ( m_unfinished == 0 )
+    {
+        emit finished( m_results );
+        deleteLater();
+    }
+}
+
+void VerificationResultCollector::slotVerifyDetachedResult(const GpgME::VerificationResult & result, const std::vector<GpgME::Key> & keys )
+{
+    const QString id = m_senderToId[sender()];
+
+    Result res;
+    res.id = id;
+    res.isOpaque = false;
+    res.keys = keys;
+    res.result = result;
+    m_results[id] = res;
+
+    --m_unfinished;
+    assert( m_unfinished >= 0 );
+    if ( m_unfinished == 0 )
+    {
+        emit finished( m_results );
+        deleteLater();
+    }
+}
+
 
 class VerifyCommand::Private : public QObject
 {
@@ -127,6 +217,7 @@ public:
 public Q_SLOTS:
     void slotVerifyOpaqueResult(const GpgME::VerificationResult &, const QByteArray &);
     void slotVerifyDetachedResult(const GpgME::VerificationResult &, const std::vector<GpgME::Key> & );
+    void verificationFinished( const QHash<QString, VerificationResultCollector::Result> & results ); 
     void slotProgress( const QString& what, int current, int total );
     void parseCommandLine( const std::string & line );
 private Q_SLOTS:
@@ -333,6 +424,17 @@ void VerifyCommand::Private::slotVerifyOpaqueResult( const GpgME::VerificationRe
     q->done();
 }
 
+void VerifyCommand::Private::verificationFinished( const QHash<QString, VerificationResultCollector::Result> & results )
+{
+    //TODO: handle all results, not only the first
+    assert( !results.isEmpty() );
+    const VerificationResultCollector::Result result = results.values().first();
+    if ( result.isOpaque )
+        slotVerifyOpaqueResult( result.result, result.stuff );
+    else
+        slotVerifyDetachedResult( result.result, result.keys );
+}
+
 void VerifyCommand::Private::slotVerifyDetachedResult( const GpgME::VerificationResult & _result,
                                                        const std::vector<GpgME::Key>& _keys )
 {
@@ -363,51 +465,55 @@ void VerifyCommand::Private::parseCommandLine( const std::string & line )
 int VerifyCommand::Private::startVerification()
 {
     assert( !inputList.isEmpty() );
-    const Private::Input input = inputList.first();
-    assert( input.backend );
-    if ( input.type == Private::Input::Opaque )
+    VerificationResultCollector* collector = new VerificationResultCollector;
+    connect( collector, SIGNAL( finished( QHash<QString, VerificationResultCollector::Result> ) ),
+             SLOT( verificationFinished( QHash<QString, VerificationResultCollector::Result> ) ) );
+
+    int i = 0;
+    Q_FOREACH ( const Private::Input input, inputList )
     {
-        //fire off appropriate kleo verification job
-        VerifyOpaqueJob * const job = input.backend->verifyOpaqueJob();
-        assert(job);
-        QObject::connect( job, SIGNAL(result(GpgME::VerificationResult,QByteArray)),
-                        this,  SLOT(slotVerifyOpaqueResult(GpgME::VerificationResult,QByteArray)) );
-        QObject::connect( job, SIGNAL(progress(QString,int,int)),
-                        this, SLOT(slotProgress(QString,int,int)) );
+        ++i;
+        assert( input.backend );
+        if ( input.type == Private::Input::Opaque )
+        {
+            //fire off appropriate kleo verification job
+            VerifyOpaqueJob * const job = input.backend->verifyOpaqueJob();
+            assert(job);
+            collector->registerJob( QString::number( i ), job );
+            //FIXME: readAll() save enough?
+            const GpgME::Error error = job->start( input.signature->readAll() );
+            if ( error )
+            {
+                delete collector;
+                q->done( error );
+                return error;
+            }
+        }
+        else
+        {
+            //fire off appropriate kleo verification job
+            VerifyDetachedJob * const job = input.backend->verifyDetachedJob();
+            assert(job);
+            collector->registerJob( QString::number( i ), job );
 
-        //FIXME: readAll() save enough?
-        const GpgME::Error error = job->start( input.signature->readAll() );
-        if ( error ) 
-            q->done( error );
-        return error;
+            //FIXME: readAll save enough?
+            const QByteArray signature = input.signature->readAll();
+            assert( input.message || !input.messageFileName.isEmpty() );
+            const bool useFileName = !input.messageFileName.isEmpty();
+            GpgME::Data fileData;
+            fileData.setFileName( input.messageFileName.toLatin1().data() );         //FIXME: handle file name encoding correctly 
+            assert( !useFileName || !fileData.isNull() );
+            const GpgME::Error error = useFileName ? job->start( signature, fileData ) : job->start( signature, input.message->readAll() );
+            if ( error )
+            {
+                delete collector;
+                q->done( error );
+                return error;
+            }
+        }
     }
-    else
-    {
-        //fire off appropriate kleo verification job
-        VerifyDetachedJob * const job = input.backend->verifyDetachedJob();
-        assert(job);
-        QObject::connect( job, SIGNAL(result(GpgME::VerificationResult, std::vector<GpgME::Key>)),
-                        this,  SLOT(slotVerifyDetachedResult(GpgME::VerificationResult, std::vector<GpgME::Key>)) );
-        QObject::connect( job, SIGNAL(progress(QString,int,int)),
-                        this, SLOT(slotProgress(QString,int,int)) );
 
-
-        //FIXME: readAll save enough?
-        const QByteArray signature = input.signature->readAll();
-        assert( input.message || !input.messageFileName.isEmpty() );
-        const bool useFileName = !input.messageFileName.isEmpty();
-        GpgME::Data fileData;
-        fileData.setFileName( input.messageFileName.toLatin1().data() );         //FIXME: handle file name encoding correctly 
-        assert( !useFileName || !fileData.isNull() );
-        const GpgME::Error error = useFileName ? job->start( signature, fileData ) : job->start( signature, input.message->readAll() );
-        if ( error )
-            q->done( error );
-        return error;
-    }
-
-    assert( false );
-    return 0; // never reached
-
+    return 0;
 }
 
 int VerifyCommand::doStart()
