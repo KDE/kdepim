@@ -35,11 +35,14 @@
 
 #include "job.h"
 
+#include <vector>
+
 #include <QtCore/QByteArray>
 
 namespace GpgME {
   class Error;
-    class VerificationResult;
+  class VerificationResult;
+  class Key;
 }
 
 
@@ -75,6 +78,7 @@ namespace Kleo {
 
   Q_SIGNALS:
     void result( const GpgME::VerificationResult & result );
+    void result( const GpgME::VerificationResult & result, const std::vector<GpgME::Key> & keys );
   };
 
 }
