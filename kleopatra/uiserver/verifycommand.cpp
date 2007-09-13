@@ -81,6 +81,10 @@ public:
     Private( VerifyCommand * qq )
         :q( qq ), backend(0), showDetails(false), dialog(0)
     {}
+    ~Private()
+    {
+        delete dialog;
+    }
 
     VerifyCommand *q;
     const CryptoBackend::Protocol *backend;
@@ -117,7 +121,6 @@ private:
     void sendBriefResult( const GpgME::VerificationResult & result ) const;
     QString processSignature( const GpgME::Signature& sig ) const;
     void showVerificationResultDialog( const GpgME::VerificationResult& result );
-
 };
 
 VerifyCommand::VerifyCommand()
@@ -373,6 +376,10 @@ int VerifyCommand::start( const std::string & line )
 
 void VerifyCommand::canceled()
 {
+    if ( d->dialog ) {
+        delete d->dialog;
+        d->dialog = 0;
+    }
 }
 
 
