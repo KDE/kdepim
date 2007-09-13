@@ -35,6 +35,7 @@
 #include <QObject>
 #include <QIODevice>
 #include <QMessageBox>
+#include <QVariant>
 
 #include <kleo/verifyopaquejob.h>
 #include <kleo/verifydetachedjob.h>
@@ -83,7 +84,7 @@ class VerifyCommand::Private : public QObject
     Q_OBJECT
 public:
     Private( VerifyCommand * qq )
-        :q( qq ), backend(0), showDetails(false), dialog(0)
+        :q( qq ), showDetails(false), dialog(0)
     {}
     ~Private()
     {
@@ -91,13 +92,13 @@ public:
     }
 
     VerifyCommand *q;
-    const CryptoBackend::Protocol *backend;
     bool showDetails;
     VerificationResultDialog * dialog;
     std::vector<GpgME::Key> keys;
     GpgME::VerificationResult result;
 
-    void findCryptoBackend();
+    int prepareVerification( QString& reason );
+    int startVerification();
 
     struct Input
     {
@@ -106,16 +107,22 @@ public:
             Detached=0,
             Opaque
         };
+        bool isFileInputOnly() const
+        {
+            return !signatureFileName.isEmpty() && ( type == Opaque || !messageFileName.isEmpty() );
+        }
+
         void setupMessage( QIODevice* message, const QString& fileName );
         SignatureType type;
         QIODevice* message;
         QString messageFileName;
+        QString signatureFileName;
         QIODevice* signature;
-        CryptoBackend::Protocol* backend;
+        const CryptoBackend::Protocol* backend;
     };
 
     QList<Input> inputList;
-    QList<Input> setupInput( GpgME::Error& error, QString& errorDetails ) const;
+    QList<Input> analyzeInput( GpgME::Error& error, QString& errorDetails ) const;
 
 public Q_SLOTS:
     void slotVerifyOpaqueResult(const GpgME::VerificationResult &, const QByteArray &);
@@ -138,14 +145,45 @@ VerifyCommand::VerifyCommand()
 
 VerifyCommand::~VerifyCommand() {}
 
-void VerifyCommand::Private::findCryptoBackend()
+int VerifyCommand::Private::prepareVerification( QString& reason )
 {
-    // FIXME this could be either SMIME or OpenPGP, find out from headers
-    const bool isSMIME = false;
-    if ( isSMIME )
-        backend = Kleo::CryptoBackendFactory::instance()->smime();
-    else
-        backend = Kleo::CryptoBackendFactory::instance()->openpgp();
+    reason = QString();
+
+    const QString protocol = q->option( "protocol" ).toString();
+
+    if ( protocol.isEmpty() )
+    {
+        Q_FOREACH ( const Input input, inputList )
+        {
+            if ( !input.isFileInputOnly() )
+            {
+                reason = "--protocol option is required when passing file descriptors";
+                return GPG_ERR_GENERAL;
+            }
+        }
+    }
+
+    if ( !protocol.isEmpty() )
+    {
+        const Kleo::CryptoBackend::Protocol* backend = Kleo::CryptoBackendFactory::instance()->protocol( protocol.toAscii().data() );
+        if ( !backend )
+        {
+            reason = QString( "Unknown protocol: %1" ).arg( protocol );
+            return GPG_ERR_GENERAL;
+        }
+
+        for ( int i = 0; i < inputList.size(); ++i )
+            inputList[i].backend = backend;
+        return startVerification();
+    }
+    else // no protocol given
+    {
+        //TODO: kick off protocol detection for all files
+        for ( int i = 0; i < inputList.size(); ++i )
+            inputList[i].backend = Kleo::CryptoBackendFactory::instance()->protocol( "openpgp" );
+        return startVerification();
+    }
+    return 0;
 }
 
 void VerifyCommand::Private::Input::setupMessage( QIODevice* message, const QString& fileName )
@@ -154,7 +192,7 @@ void VerifyCommand::Private::Input::setupMessage( QIODevice* message, const QStr
     messageFileName = fileName;
 }
 
-QList<VerifyCommand::Private::Input> VerifyCommand::Private::setupInput( GpgME::Error& error, QString& errorDetails ) const
+QList<VerifyCommand::Private::Input> VerifyCommand::Private::analyzeInput( GpgME::Error& error, QString& errorDetails ) const
 {
     error = GpgME::Error();
     errorDetails = QString();
@@ -185,6 +223,7 @@ QList<VerifyCommand::Private::Input> VerifyCommand::Private::setupInput( GpgME::
             Input input;
             input.type = Input::Detached;
             input.signature = q->bulkInputDevice( "INPUT", i );
+            input.signatureFileName = q->bulkInputDeviceFileName( "INPUT", i );
             input.setupMessage( q->bulkInputDevice( "MESSAGE", i ), q->bulkInputDeviceFileName( "MESSAGE", i ) );
             assert( input.message || !input.messageFileName.isEmpty() );
             assert( input.signature );
@@ -194,11 +233,12 @@ QList<VerifyCommand::Private::Input> VerifyCommand::Private::setupInput( GpgME::
     }
 
     assert( numMessages == 0 );
-    
+
     for ( int i = 0; i < numSignatures; ++i )
     {
         Input input;
         input.signature = q->bulkInputDevice( "INPUT", i );
+        input.signatureFileName = q->bulkInputDeviceFileName( "INPUT", i );
         assert( input.signature );
         const QString fname = q->bulkInputDeviceFileName( "INPUT", i );
         if ( !fname.isEmpty() && fname.endsWith( ".sig", Qt::CaseInsensitive )
@@ -252,7 +292,7 @@ int VerifyCommand::Private::sendBriefResult() const
 
     QStringList resultStrings;
     int i = 0;
-    Q_FOREACH( GpgME::Signature sig, sigs )
+    Q_FOREACH ( const GpgME::Signature sig, sigs )
         resultStrings.append( processSignature( sig, keys[i++] ) );
 
     if ( const int err = q->sendStatus( "VERIFY", resultStrings.join("\n") ) )
@@ -320,6 +360,56 @@ void VerifyCommand::Private::parseCommandLine( const std::string & line )
 
 }
 
+int VerifyCommand::Private::startVerification()
+{
+    assert( !inputList.isEmpty() );
+    const Private::Input input = inputList.first();
+    assert( input.backend );
+    if ( input.type == Private::Input::Opaque )
+    {
+        //fire off appropriate kleo verification job
+        VerifyOpaqueJob * const job = input.backend->verifyOpaqueJob();
+        assert(job);
+        QObject::connect( job, SIGNAL(result(GpgME::VerificationResult,QByteArray)),
+                        this,  SLOT(slotVerifyOpaqueResult(GpgME::VerificationResult,QByteArray)) );
+        QObject::connect( job, SIGNAL(progress(QString,int,int)),
+                        this, SLOT(slotProgress(QString,int,int)) );
+
+        //FIXME: readAll() save enough?
+        const GpgME::Error error = job->start( input.signature->readAll() );
+        if ( error ) 
+            q->done( error );
+        return error;
+    }
+    else
+    {
+        //fire off appropriate kleo verification job
+        VerifyDetachedJob * const job = input.backend->verifyDetachedJob();
+        assert(job);
+        QObject::connect( job, SIGNAL(result(GpgME::VerificationResult, std::vector<GpgME::Key>)),
+                        this,  SLOT(slotVerifyDetachedResult(GpgME::VerificationResult, std::vector<GpgME::Key>)) );
+        QObject::connect( job, SIGNAL(progress(QString,int,int)),
+                        this, SLOT(slotProgress(QString,int,int)) );
+
+
+        //FIXME: readAll save enough?
+        const QByteArray signature = input.signature->readAll();
+        assert( input.message || !input.messageFileName.isEmpty() );
+        const bool useFileName = !input.messageFileName.isEmpty();
+        GpgME::Data fileData;
+        fileData.setFileName( input.messageFileName.toLatin1().data() );         //FIXME: handle file name encoding correctly 
+        assert( !useFileName || !fileData.isNull() );
+        const GpgME::Error error = useFileName ? job->start( signature, fileData ) : job->start( signature, input.message->readAll() );
+        if ( error )
+            q->done( error );
+        return error;
+    }
+
+    assert( false );
+    return 0; // never reached
+
+}
+
 int VerifyCommand::doStart()
 {
     d->parseCommandLine("");
@@ -328,7 +418,7 @@ int VerifyCommand::doStart()
     {
         GpgME::Error error;
         QString details;
-        d->inputList = d->setupInput( error, details );
+        d->inputList = d->analyzeInput( error, details );
         if ( error )
         {
             done( error, details );
@@ -336,58 +426,11 @@ int VerifyCommand::doStart()
         }
     }
 
-    // FIXME check options
-
-    d->findCryptoBackend(); // decide on smime or openpgp
-    assert(d->backend);
-
-    assert( !d->inputList.isEmpty() );
-
-    const Private::Input input = d->inputList.first();
-
-    if ( input.type == Private::Input::Opaque )
-    {
-        //fire off appropriate kleo verification job
-        VerifyOpaqueJob * const job = d->backend->verifyOpaqueJob();
-        assert(job);
-        QObject::connect( job, SIGNAL(result(GpgME::VerificationResult,QByteArray)),
-                        d.get(),  SLOT(slotVerifyOpaqueResult(GpgME::VerificationResult,QByteArray)) );
-        QObject::connect( job, SIGNAL(progress(QString,int,int)),
-                        d.get(), SLOT(slotProgress(QString,int,int)) );
-
-        //FIXME: readAll() save enough?
-        const GpgME::Error error = job->start( input.signature->readAll() );
-        if ( error ) 
-            done( error );
-        return error;
-    }
-    else
-    {
-        //fire off appropriate kleo verification job
-        VerifyDetachedJob * const job = d->backend->verifyDetachedJob();
-        assert(job);
-        QObject::connect( job, SIGNAL(result(GpgME::VerificationResult, std::vector<GpgME::Key>)),
-                        d.get(),  SLOT(slotVerifyDetachedResult(GpgME::VerificationResult, std::vector<GpgME::Key>)) );
-        QObject::connect( job, SIGNAL(progress(QString,int,int)),
-                        d.get(), SLOT(slotProgress(QString,int,int)) );
-
-
-        //FIXME: readAll save enough?
-        const QByteArray signature = input.signature->readAll();
-        assert( input.message || !input.messageFileName.isEmpty() );
-        const bool useFileName = !input.messageFileName.isEmpty();
-        GpgME::Data fileData;
-        fileData.setFileName( input.messageFileName.toLatin1().data() );
-        assert( !useFileName || !fileData.isNull() );
-        const GpgME::Error error = useFileName ? job->start( signature, fileData ) : job->start( signature, input.message->readAll() );
-        //FIXME: handle file name encoding correctly 
-        if ( error )
-            done( error );
-        return error;
-    }
-
-    assert( false );
-    return 0; // never reached
+    QString details;
+    const int err = d->prepareVerification( details );
+    if ( err )
+        done( err, details );
+    return 0;
 }
 
 void VerifyCommand::doCanceled()
