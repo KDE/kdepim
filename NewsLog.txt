@@ -1,3 +1,39 @@
+Friday, September 14th 2007
+
+Features
+--------
+
+* Make the maximum attachment size configurable by a non-gui (kioskable) option
+  and change the wording of the warning dialog to refer folks to their admin,
+  rather than blaming KMail for the limitation.
+
+Bugfixes
+--------
+
+* prokde35 W1-32 fixes for global profiling handling
+
+* kolab/issue896 Change the summary view title to "To-Do" from "To-do List" for consistency with the side bar.
+
+* Bump the kontact plugin version to reflect the profile loading changes and
+  update the version in those plugins we ship. Fixed crashes from basket on
+  startup in kubuntu, for example.
+
+* Make favourite folder area work with multiple main windows
+
+* kolab/issue1955 Fix crash when closing KMail.
+
+* kolab/issue1963, 1964 Make the create task action available in separate reader windows and the toolbar.
+
+* kolab/issue1984 fill distribution list listview delayed to avoid crash
+
+* kolab/issue1983 Make on-demand decrytion also work with SMIME.
+
+Merges
+------
+
+* Merge kalarm from 3.5 r708803-709812
+
+
 Friday, September 7th 2007
 
 Features
