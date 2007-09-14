@@ -43,8 +43,10 @@
 #include <gpgme++/keygenerationresult.h>
 
 // KDE
-#include <kabc/stdaddressbook.h>
-#include <kabc/addressee.h>
+#ifdef KLEO_HAVE_KDEPIMLIBS
+# include <kabc/stdaddressbook.h>
+# include <kabc/addressee.h>
+#endif
 
 #include <kmessagebox.h>
 #include <klocale.h>
@@ -302,6 +304,7 @@ void CertificateWizardImpl::slotHelpClicked()
 
 void CertificateWizardImpl::slotSetValuesFromWhoAmI()
 {
+#ifdef KLEO_HAVE_KDEPIMLIBS
   const KABC::Addressee a = KABC::StdAddressBook::self( true )->whoAmI();
   if ( a.isEmpty() )
     return;
@@ -337,6 +340,7 @@ void CertificateWizardImpl::slotSetValuesFromWhoAmI()
     else if ( attr == "BC" )
       le->setText( a.role() ); // correct mapping?
   }
+#endif
 }
 
 void CertificateWizardImpl::createPersonalDataPage()
@@ -378,9 +382,11 @@ void CertificateWizardImpl::createPersonalDataPage()
 	     SLOT(slotEnablePersonalDataPageExit()) );
   }
 
+#ifdef KLEO_HAVE_KDEPIMLIBS
   // enable button only if administrator wants to allow it
   if (KABC::StdAddressBook::self( true )->whoAmI().isEmpty() ||
       !config.readEntry("ShowSetWhoAmI", true))
+#endif
     insertAddressButton->setEnabled( false );
 
   slotEnablePersonalDataPageExit();

@@ -37,7 +37,9 @@
 #include "dn.h"
 
 #include "oidmap.h"
-#include "libkleo/ui/dnattributeorderconfigwidget.h"
+#ifndef KLEO_ONLY_UISERVER
+# include "libkleo/ui/dnattributeorderconfigwidget.h"
+#endif
 
 #include <kconfig.h>
 #include <klocale.h>
@@ -509,5 +511,11 @@ void Kleo::DNAttributeMapper::setAttributeOrder( const QStringList & order ) {
 }
 
 Kleo::DNAttributeOrderConfigWidget * Kleo::DNAttributeMapper::configWidget( QWidget * parent, const char * name ) const {
+#ifndef KLEO_ONLY_UISERVER
   return new DNAttributeOrderConfigWidget( mSelf, parent, name );
+#else
+  Q_UNUSED( parent );
+  Q_UNUSED( name );
+  return 0;
+#endif
 }

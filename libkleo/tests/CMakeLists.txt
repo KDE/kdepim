@@ -1,6 +1,6 @@
 include_directories( ${CMAKE_SOURCE_DIR}/libkleo  )
 
-
+if ( NOT KLEO_ONLY_UISERVER )
 ########### next target ###############
 
 set(test_keylister_SRCS test_keylister.cpp )
@@ -40,6 +40,8 @@ set(test_cryptoconfig_SRCS test_cryptoconfig.cpp )
 kde4_add_test_executable(test_cryptoconfig ${test_cryptoconfig_SRCS})
 
 target_link_libraries(test_cryptoconfig  kleo ${KDE4_KDECORE_LIBS} )
+
+endif ( NOT KLEO_ONLY_UISERVER )
 
 ########### next target ###############
 

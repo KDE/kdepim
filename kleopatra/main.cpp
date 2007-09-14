@@ -33,7 +33,9 @@
 #include <config-kleopatra.h>
 
 #include "aboutdata.h"
-#include "certmanager.h"
+#ifndef KLEO_ONLY_UISERVER
+# include "certmanager.h"
+#endif
 
 #include "libkleo/kleo/cryptobackendfactory.h"
 
@@ -70,10 +72,14 @@ int main( int argc, char** argv )
   KCmdLineArgs::init(argc, argv, &aboutData);
 
   KCmdLineOptions options;
+#ifndef KLEO_ONLY_UISERVER
   options.add("external", ki18n("Search for external certificates initially"));
   options.add("query ", ki18n("Initial query string"));
+#endif
   options.add("import-certificate ", ki18n("Name of certificate file to import"));
+#ifdef HAVE_USABLE_ASSUAN
   options.add("uiserver-socket <argument>", ki18n("Location of the socket the ui server is listening on" ) );
+#endif
   KCmdLineArgs::addCmdLineOptions( options );
 
   KApplication app;
@@ -90,18 +96,18 @@ int main( int argc, char** argv )
     return -2;
   }
 
+#ifndef KLEO_ONLY_UISERVER
   CertManager* manager = new CertManager( args->isSet("external"),
 					  args->getOption("query"),
 					  args->getOption("import-certificate") );
-
-  const QString socketname = args->getOption("uiserver-socket");
-  args->clear();
   manager->show();
+#endif
+  args->clear();
 
   int rc;
 #ifdef HAVE_USABLE_ASSUAN
-try {
-      Kleo::UiServer server( socketname );
+  try {
+      Kleo::UiServer server( args->getOption("uiserver-socket") );
 
 #define REGISTER( Command ) server.registerCommandFactory( boost::shared_ptr<Kleo::AssuanCommandFactory>( new Kleo::GenericAssuanCommandFactory<Kleo::Command> ) )
       REGISTER( DecryptCommand );

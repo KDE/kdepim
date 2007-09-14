@@ -8,6 +8,24 @@ include(KDE4Defaults)
 include(MacroLibrary)
 include(MacroOptionalAddSubdirectory)
 
+if ( ONLY_KLEO )
+  find_package(KdepimLibs)
+  find_package(Boost REQUIRED )
+  macro_log_feature(Boost_FOUND "boost" "Boost C++ Libraries" "http://www.boost.org/" TRUE "" "Required by Akonadi and kleopatra")
+  find_package(QGpgme REQUIRED)
+  add_definitions (-D_FILE_OFFSET_BITS=64 -D_LARGE_FILES) # for off_t
+  add_definitions (${QT_DEFINITIONS} ${KDE4_DEFINITIONS} -DHAVE_CONFIG_H=1)
+  include_directories (${CMAKE_SOURCE_DIR} ${CMAKE_BINARY_DIR} ${KDE4_INCLUDES} ${QT_QTDBUS_INCLUDE_DIR} )
+  include (kleopatra/ConfigureChecks.cmake)
+  add_subdirectory(libkleo)
+  FIND_PATH(TOPOLOGICAL_SORT_DIR NAMES boost/graph/topological_sort.hpp PATHS ${Boost_INCLUDE_DIRS})
+  if(TOPOLOGICAL_SORT_DIR)
+    macro_optional_add_subdirectory(kleopatra)
+  else(TOPOLOGICAL_SORT_DIR)
+    MESSAGE(STATUS "topological_sort.hpp is necessary to compile kleopatra. Please install package which contains it.")
+  endif(TOPOLOGICAL_SORT_DIR)
+else ( ONLY_KLEO )
+
 find_package(KdepimLibs REQUIRED)
 find_package(Kode REQUIRED)
 find_package(ZLIB REQUIRED)
@@ -148,5 +166,7 @@ add_subdirectory(cmake)
 
 # maildir access library
 add_subdirectory(maildir)
+
+endif( ONLY_KLEO )
 
 macro_display_feature_log()

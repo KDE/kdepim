@@ -36,8 +36,6 @@
 
 #include "kleo/cryptobackend.h"
 
-class CryptPlugWrapper;
-
 namespace Kleo {
   class CryptoConfig;
 }
@@ -72,8 +70,8 @@ namespace Kleo {
 
   private:
     mutable QGpgMECryptoConfig * mCryptoConfig;
-    mutable CryptPlugWrapper * mOpenPGPProtocol;
-    mutable CryptPlugWrapper * mSMIMEProtocol;
+    mutable Protocol * mOpenPGPProtocol;
+    mutable Protocol * mSMIMEProtocol;
   };
 
 }

@@ -39,8 +39,10 @@
 #include "libkleo/backends/kpgp/pgp6backend.h"
 #include "libkleo/backends/kpgp/gpg1backend.h"
 #endif
-#include "libkleo/backends/chiasmus/chiasmusbackend.h"
-#include "libkleo/ui/backendconfigwidget.h"
+#ifndef KLEO_ONLY_UISERVER
+# include "libkleo/backends/chiasmus/chiasmusbackend.h"
+# include "libkleo/ui/backendconfigwidget.h"
+#endif
 
 #include <kconfig.h>
 #include <klocale.h>
@@ -57,7 +59,9 @@
 Kleo::CryptoBackendFactory * Kleo::CryptoBackendFactory::mSelf = 0;
 
 static const char * availableProtocols[] = {
+#ifndef KLEO_ONLY_UISERVER
   "Chiasmus",
+#endif
   "OpenPGP", "SMIME",
 };
 static const unsigned int numAvailableProtocols = sizeof availableProtocols / sizeof *availableProtocols;
@@ -75,7 +79,9 @@ Kleo::CryptoBackendFactory::CryptoBackendFactory()
   mBackendList.push_back( new PGP6Backend() );
   mBackendList.push_back( new GPG1Backend() );
 #endif
+#ifndef KLEO_ONLY_UISERVER
   mBackendList.push_back( new ChiasmusBackend() );
+#endif
   scanForBackends();
   readConfig();
 
@@ -173,7 +179,11 @@ const Kleo::CryptoBackend * Kleo::CryptoBackendFactory::backendByName( const QSt
 }
 
 Kleo::BackendConfigWidget * Kleo::CryptoBackendFactory::configWidget( QWidget * parent, const char * name ) const {
+#ifndef KLEO_ONLY_UISERVER
   return new Kleo::BackendConfigWidget( mSelf, parent, name );
+#else
+  return 0;
+#endif
 }
 
 KConfig* Kleo::CryptoBackendFactory::configObject() const {
@@ -206,7 +216,9 @@ static const char * defaultBackend( const char * proto ) {
   } defaults[] = {
     { "OpenPGP", "gpgme" },
     { "SMIME", "gpgme" },
+#ifndef KLEO_ONLY_UISERVER
     { "Chiasmus", "chiasmus" },
+#endif
   };
   for ( unsigned int i = 0 ; i < sizeof defaults / sizeof *defaults ; ++i )
     if ( qstricmp( proto, defaults[i].proto ) == 0 )
