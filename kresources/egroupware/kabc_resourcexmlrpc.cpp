@@ -19,7 +19,6 @@
 */
 
 #include <QApplication>
-//Added by qt3to4:
 #include <QList>
 
 #include <kabc/addressee.h>
@@ -30,7 +29,6 @@
 #include <kstandarddirs.h>
 #include <kstringhandler.h>
 #include <kcal/freebusyurlstore.h>
-#include <libkdepim/kpimprefs.h>
 
 #include "kabc_egroupwareprefs.h"
 #include "kabc_resourcexmlrpc.h"
