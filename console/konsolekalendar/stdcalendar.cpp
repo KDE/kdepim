@@ -40,7 +40,7 @@
 using namespace KCal;
 
 StdCalendar::StdCalendar( const QString &fileName, const QString &resName )
-  : CalendarResources( KPimPrefs::timeSpec() )
+  : CalendarResources( KPIM::KPimPrefs::timeSpec() )
 {
   mManager = resourceManager();
   if ( mManager->isEmpty() ) {
@@ -54,7 +54,7 @@ StdCalendar::StdCalendar( const QString &fileName, const QString &resName )
 }
 
 StdCalendar::StdCalendar()
-  : CalendarResources( KPimPrefs::timeSpec() )
+  : CalendarResources( KPIM::KPimPrefs::timeSpec() )
 {
   readConfig();
 
@@ -97,7 +97,7 @@ void StdCalendar::addFileResource( const QString &fileName,
     }
 
     if ( resource ) {
-      resource->setTimeSpec( KPimPrefs::timeSpec() );
+      resource->setTimeSpec( KPIM::KPimPrefs::timeSpec() );
       resource->setResourceName( resName );
       mManager->add( resource );
       mManager->setStandardResource( resource );

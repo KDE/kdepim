@@ -93,7 +93,7 @@ class Formatter : public KMail::Interface::BodyPartFormatter
       if ( !writer )
         // Guard against crashes in createReply()
         return Ok;
-      CalendarLocal cl( KPimPrefs::timeSpec() );
+      CalendarLocal cl( KPIM::KPimPrefs::timeSpec() );
       KMInvitationFormatterHelper helper( bodyPart );
       QString source;
       /* If the bodypart does not have a charset specified, we need to fall
@@ -124,7 +124,7 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
 
     Incidence* icalToString( const QString& iCal ) const
     {
-      CalendarLocal calendar( KPimPrefs::timeSpec() ) ;
+      CalendarLocal calendar( KPIM::KPimPrefs::timeSpec() ) ;
       ICalFormat format;
       ScheduleMessage *message =
         format.parseScheduleMessage( &calendar, iCal );
@@ -231,7 +231,7 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
     {
       //status is accepted/tentative/declined
       ICalFormat format;
-      format.setTimeSpec( KPimPrefs::timeSpec() );
+      format.setTimeSpec( KPIM::KPimPrefs::timeSpec() );
       QString msg = format.createScheduleMessage( incidence, method );
       QString summary = incidence->summary();
       if ( summary.isEmpty() )
@@ -408,7 +408,7 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
         incidence->addAttendee( delegate );
 
         ICalFormat format;
-        format.setTimeSpec( KPimPrefs::timeSpec() );
+        format.setTimeSpec( KPIM::KPimPrefs::timeSpec() );
         QString iCal = format.createScheduleMessage( incidence, iTIPRequest );
         saveFile( receiver, iCal, dir );
 

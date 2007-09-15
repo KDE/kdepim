@@ -643,7 +643,7 @@ void ResourceXMLRPC::loadEventCategoriesFinished( const QList<QVariant> &mapList
   const QMap<QString, QVariant> map = mapList[ 0 ].toMap();
   QMap<QString, QVariant>::ConstIterator it;
 
-  KPimPrefs prefs( "korganizerrc" );
+  KPIM::KPimPrefs prefs( "korganizerrc" );
   for ( it = map.begin(); it != map.end(); ++it ) {
     mEventCategoryMap.insert( it.value().toString(), it.key().toInt() );
 
@@ -748,7 +748,7 @@ void ResourceXMLRPC::loadTodoCategoriesFinished( const QList<QVariant> &mapList,
   const QMap<QString, QVariant> map = mapList[ 0 ].toMap();
   QMap<QString, QVariant>::ConstIterator it;
 
-  KPimPrefs prefs( "korganizerrc" );
+  KPIM::KPimPrefs prefs( "korganizerrc" );
   for ( it = map.begin(); it != map.end(); ++it ) {
     mTodoCategoryMap.insert( it.value().toString(), it.key().toInt() );
 
