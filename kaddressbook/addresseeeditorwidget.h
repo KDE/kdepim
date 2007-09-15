@@ -36,7 +36,6 @@
 class QTabWidget;
 class QTextEdit;
 
-class KDateEdit;
 class KLineEdit;
 class KSqueezedTextLabel;
 
@@ -51,6 +50,7 @@ namespace KPIM {
 class AddresseeLineEdit;
 class CategorySelectDialog;
 class CategoryEditDialog;
+class KDateEdit;
 }
 
 namespace KABC { class AddressBook; }
@@ -150,8 +150,8 @@ class AddresseeEditorWidget : public AddresseeEditorBase
     KPIM::AddresseeLineEdit *mAssistantEdit;
     KLineEdit *mNicknameEdit;
     KPIM::AddresseeLineEdit *mSpouseEdit;
-    KDateEdit *mBirthdayPicker;
-    KDateEdit *mAnniversaryPicker;
+    KPIM::KDateEdit *mBirthdayPicker;
+    KPIM::KDateEdit *mAnniversaryPicker;
     QTextEdit *mNoteEdit;
 
     QHash<QString, ContactEditorTabPage*> mTabPages;

@@ -396,7 +396,7 @@ void AddresseeEditorWidget::setupTab2()
 
   label = new QLabel( i18n( "Birthdate:" ), tab2 );
   layout->addWidget( label, 4, 3 );
-  mBirthdayPicker = new KDateEdit( tab2 );
+  mBirthdayPicker = new KPIM::KDateEdit( tab2 );
   connect( mBirthdayPicker, SIGNAL( dateChanged( const QDate& ) ),
            SLOT( dateChanged( const QDate& ) ) );
   connect( mBirthdayPicker, SIGNAL( textChanged( const QString& ) ),
@@ -406,7 +406,7 @@ void AddresseeEditorWidget::setupTab2()
 
   label = new QLabel( i18n( "Anniversary:" ), tab2 );
   layout->addWidget( label, 5, 3 );
-  mAnniversaryPicker = new KDateEdit( tab2 );
+  mAnniversaryPicker = new KPIM::KDateEdit( tab2 );
   connect( mAnniversaryPicker, SIGNAL( dateChanged( const QDate& ) ),
            SLOT( dateChanged( const QDate& ) ) );
   connect( mAnniversaryPicker, SIGNAL( textChanged( const QString& ) ),
