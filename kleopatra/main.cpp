@@ -102,7 +102,6 @@ int main( int argc, char** argv )
 					  args->getOption("import-certificate") );
   manager->show();
 #endif
-  args->clear();
 
   int rc;
 #ifdef HAVE_USABLE_ASSUAN
@@ -118,6 +117,7 @@ int main( int argc, char** argv )
       server.start();
 #endif
 
+      args->clear();
       rc = app.exec();
 
 #ifdef HAVE_USABLE_ASSUAN
