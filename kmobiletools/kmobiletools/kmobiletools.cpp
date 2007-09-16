@@ -82,6 +82,11 @@ kmobiletools::kmobiletools()
     createGUI(m_part);
     resize(740,700);
     setAutoSaveSettings();
+
+    // set toolbars to locked
+    QList<KToolBar*> toolbars( toolBars() );
+    for( int i=0; i<toolbars.size(); i++ )
+        toolbars.at( i )->setToolBarsLocked( true );
 }
 
 kmobiletools::~kmobiletools()
