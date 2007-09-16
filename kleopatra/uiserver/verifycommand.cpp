@@ -361,19 +361,29 @@ static QString summaryToString( const GpgME::Signature::Summary summary )
 
 static QString keyToString( const GpgME::Key key )
 {
-    QString result;
-    if ( !key.isNull() ) {
-        result = key.userID(0).email();
-    }
+   QString result;
+   if ( !key.isNull() ) {
+      if ( key.numUserIDs() ) {
+         GpgME::UserID id = key.userID(0);
+         result = QString::fromUtf8( id.name() ) + " <" + QString::fromUtf8( id.email() ) + ">";
+      }
+   }
+   return result;
+}
 
-    return result;
+bool keyMatchesFingerprint( const GpgME::Key & key, const char* fingerprint )
+{
+      return  qstricmp ( key.keyID(), fingerprint ) == 0 ||
+              qstricmp ( key.shortKeyID(), fingerprint ) == 0 ||
+              qstricmp ( key.primaryFingerprint(), fingerprint ) == 0;
+
 }
 
 GpgME::Key VerifyCommand::Private::keyForSignature( const GpgME::Signature& sig ) const
 {
     std::vector<GpgME::Key>::const_iterator it =
         std::find_if( keys.begin(), keys.end(),
-                      boost::bind( qstricmp, boost::bind( &GpgME::Key::keyID, _1 ), sig.fingerprint() ) == 0 );
+                      boost::bind( keyMatchesFingerprint, _1, sig.fingerprint() ) );
     return it == keys.end() ? GpgME::Key() : *it;
 }
 
@@ -386,11 +396,14 @@ QString VerifyCommand::Private::processSignature( const GpgME::Signature& sig, c
     }
     QString sigString = summaryToString( sig.summary() );
     if ( sig.summary() & GpgME::Signature::Red ) {
-        sigString += i18n(" The signature of %1 is invalid. Reason given: %2.", keyToString( key ), sig.status().asString() );
+        sigString += i18n(" The signature by %1 is invalid. Reason given: %2.", keyToString( key ), sig.status().asString() );
     } else if ( !( sig.summary() & GpgME::Signature::Green )  && !( sig.summary() & GpgME::Signature::Red )) {
-        sigString += i18n(" The signature of %1 could not be verified. Reason given: %2.", keyToString( key ), sig.status().asString() );
+       if ( key.isNull() )
+          sigString += i18n(" The signature could not be verified. Reason given: %1.", sig.status().asString() );
+       else
+          sigString += i18n(" The signature by %1 could not be verified. Reason given: %2.", keyToString( key ), sig.status().asString() );
     } else {
-        sigString += i18n(" The signature of %1 is valid.", keyToString( key ) );
+        sigString += i18n(" The signature by %1 is valid.", keyToString( key ) );
     }
     return sigString;
 }
