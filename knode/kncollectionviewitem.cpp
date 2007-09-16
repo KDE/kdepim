@@ -109,42 +109,6 @@ bool KNCollectionViewItem::acceptDrag(QDropEvent* event) const
   return false;
 }
 
-
-void KNCollectionViewItem::paintCell( QPainter * p, const QColorGroup & cg,int column, int width, int align )
-{
-  KFolderTree *ft = static_cast<KFolderTree*>( listView() );
-
-  // we only need to deal with the case where we paint the folder/group name
-  // and the unread count is displayed in a separate column
-  if ( !ft->isUnreadActive() || column != 0 ) {
-    KFolderTreeItem::paintCell( p, cg, column, width, align );
-    return;
-  }
-
-  // find out if we will use bold font, necessary for the text squeezing
-  if ( (column == 0 || column == ft->unreadIndex()) && ( mUnread > 0 ) ) {
-    QFont f = p->font();
-    f.setWeight(QFont::Bold);
-    p->setFont(f);
-  }
-
-  // consider pixmap size for squeezing
-  int pxWidth = 8;
-  const QPixmap *px = pixmap(column);
-  if (px)
-    pxWidth += px->width();
-
-  // temporary set the squeezed text and use the parent class to paint it
-  QString curText = text( column );
-  if ( p->fontMetrics().width( curText ) > width - pxWidth ) {
-    setText( column, squeezeFolderName( curText, p->fontMetrics(), width - pxWidth ) );
-    KFolderTreeItem::paintCell( p, cg, column, width, align );
-    setText( column, curText );
-  } else
-    KFolderTreeItem::paintCell( p, cg, column, width, align );
-}
-
-
 QString KNCollectionViewItem::squeezeFolderName( const QString &text,
                                                  const QFontMetrics &fm,
                                                  uint width ) const
