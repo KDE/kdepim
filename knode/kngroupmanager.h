@@ -16,7 +16,7 @@
 #define KNGROUPMANAGER_H
 
 #include <QObject>
-#include <q3sortedlist.h>
+#include <qlist.h>
 
 #include "knjobdata.h"
 #include "kngroup.h"
@@ -46,8 +46,8 @@ class KNGroupInfo {
     bool newGroup, subscribed;
     KNGroup::Status status;
 
-    bool operator== (const KNGroupInfo &gi2);
-    bool operator< (const KNGroupInfo &gi2);
+    bool operator== (const KNGroupInfo &gi2) const;
+    bool operator< (const KNGroupInfo &gi2) const;
 };
 
 
@@ -60,13 +60,13 @@ class KNGroupListData : public KNJobItem {
 
     bool readIn(KNProtocolClient *client=0);
     bool writeOut();
-    void merge(Q3SortedList<KNGroupInfo>* newGroups);
+    void merge(QList<KNGroupInfo>* newGroups);
 
-    Q3SortedList<KNGroupInfo>* extractList();
+    QList<KNGroupInfo>* extractList();
 
     QStringList subscribed;
     QString path;
-    Q3SortedList<KNGroupInfo> *groups;
+    QList<KNGroupInfo> *groups;
     QDate fetchSince;
     bool getDescriptions;
     QTextCodec *codecForDescriptions;

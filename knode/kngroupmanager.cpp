@@ -67,13 +67,13 @@ KNGroupInfo::~KNGroupInfo()
 }
 
 
-bool KNGroupInfo::operator== (const KNGroupInfo &gi2)
+bool KNGroupInfo::operator== (const KNGroupInfo &gi2) const
 {
   return (name == gi2.name);
 }
 
 
-bool KNGroupInfo::operator< (const KNGroupInfo &gi2)
+bool KNGroupInfo::operator< (const KNGroupInfo &gi2) const
 {
   return (name < gi2.name);
 }
@@ -85,8 +85,7 @@ bool KNGroupInfo::operator< (const KNGroupInfo &gi2)
 KNGroupListData::KNGroupListData()
   : codecForDescriptions(0)
 {
-  groups = new Q3SortedList<KNGroupInfo>;
-  groups->setAutoDelete(true);
+  groups = new QList<KNGroupInfo>;
 }
 
 
@@ -152,7 +151,7 @@ bool KNGroupListData::readIn(KNProtocolClient *client)
       } else
         sub = false;
 
-      groups->append(new KNGroupInfo(name,description,false,sub,status));
+      groups->append(KNGroupInfo(name,description,false,sub,status));
 
       if (timer.elapsed() > 200) {           // don't flicker
         timer.restart();
@@ -179,9 +178,9 @@ bool KNGroupListData::writeOut()
   QByteArray temp;
 
   if(f.open(QIODevice::WriteOnly)) {
-    for (KNGroupInfo *i=groups->first(); i; i=groups->next()) {
-      temp = i->name.toUtf8();
-      switch (i->status) {
+    Q_FOREACH(const KNGroupInfo& i, *groups) {
+      temp = i.name.toUtf8();
+      switch (i.status) {
         case KNGroup::unknown: temp += " u ";
                                break;
         case KNGroup::readOnly: temp += " n ";
@@ -191,7 +190,7 @@ bool KNGroupListData::writeOut()
         case KNGroup::moderated: temp += " m ";
                                  break;
       }
-      temp += i->description.toUtf8() + '\n';
+      temp += i.description.toUtf8() + '\n';
       f.write(temp.data(),temp.length());
     }
     f.close();
@@ -206,26 +205,25 @@ bool KNGroupListData::writeOut()
 
 // merge in new groups, we want to preserve the "subscribed"-flag
 // of the loaded groups and the "new"-flag of the new groups.
-void KNGroupListData::merge(Q3SortedList<KNGroupInfo>* newGroups)
+void KNGroupListData::merge(QList<KNGroupInfo>* newGroups)
 {
   bool subscribed;
 
-  for (KNGroupInfo *i=newGroups->first(); i; i=newGroups->next()) {
-    if (groups->find(i)>=0) {
-      subscribed = groups->current()->subscribed;
-      groups->remove();   // avoid duplicates
+  Q_FOREACH(const KNGroupInfo& i, *newGroups) {
+  int current;
+    if ( (current=groups->indexOf(i)) != -1) {
+      subscribed = groups->at(current).subscribed;
+      groups->removeAt(current);   // avoid duplicates
     } else
       subscribed = false;
-    groups->append(new KNGroupInfo(i->name,i->description,true,subscribed,i->status));
+      groups->append(KNGroupInfo(i.name,i.description,true,subscribed,i.status));
   }
-
-  groups->sort();
 }
 
 
-Q3SortedList<KNGroupInfo>* KNGroupListData::extractList()
+QList<KNGroupInfo>* KNGroupListData::extractList()
 {
-  Q3SortedList<KNGroupInfo>* temp = groups;
+  QList<KNGroupInfo>* temp = groups;
   groups = 0;
   return temp;
 }
@@ -426,10 +424,10 @@ void KNGroupManager::showGroupDialog(KNNntpAccount *a, QWidget *parent)
       }
     }
 
-    Q3SortedList<KNGroupInfo> lst2;
+    QList<KNGroupInfo> lst2;
     gDialog->toSubscribe(&lst2);
-    for(KNGroupInfo *var=lst2.first(); var; var=lst2.next()) {
-      subscribeGroup(var, a);
+    Q_FOREACH( const KNGroupInfo& var, lst2) {
+      subscribeGroup(&var, a);
     }
   }
 
@@ -599,10 +597,10 @@ void KNGroupManager::processJob(KNJobData *j)
           // update the descriptions of the subscribed groups
           for ( KNGroup::List::Iterator it = mGroupList.begin(); it != mGroupList.end(); ++it ) {
             if ( (*it)->account() == j->account() ) {
-              for ( KNGroupInfo* inf = d->groups->first(); inf; inf = d->groups->next() )
-                if ( inf->name == (*it)->groupname() ) {
-                  (*it)->setDescription( inf->description );
-                  (*it)->setStatus( inf->status );
+	      Q_FOREACH( const KNGroupInfo& inf, *d->groups )
+                if ( inf.name == (*it)->groupname() ) {
+                  (*it)->setDescription( inf.description );
+                  (*it)->setStatus( inf.status );
                   break;
                 }
             }

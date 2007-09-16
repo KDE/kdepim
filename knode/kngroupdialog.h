@@ -27,7 +27,7 @@ class KNGroupDialog : public KNGroupBrowser {
     KNGroupDialog(QWidget *parent, KNNntpAccount *a);
     ~KNGroupDialog();
 
-    void toSubscribe(Q3SortedList<KNGroupInfo> *l);
+    void toSubscribe(QList<KNGroupInfo> *l);
     void toUnsubscribe(QStringList *l);
 
   protected:

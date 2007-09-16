@@ -102,7 +102,7 @@ class KNGroupBrowser : public KDialog {
     bool incrementalFilter;
 
     KNNntpAccount *a_ccount;
-    Q3SortedList<KNGroupInfo> *allList, *matchList;
+    QList<KNGroupInfo> *allList, *matchList;
 
   protected slots:
     void slotLoadList();
