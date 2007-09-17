@@ -33,12 +33,13 @@
 
 #include "signaturedisplaywidget.h"
 
+#include <QTextEdit>
+#include <QHBoxLayout>
+
 #include <gpgme++/verificationresult.h>
 #include <gpgme++/key.h>
 
-#include <QTextEdit>
-
-#include <QHBoxLayout>
+#include "utils/formatting.h"
 
 using namespace Kleo;
 using namespace GpgME;
@@ -78,7 +79,7 @@ struct SignatureDisplayWidget::Private {
         // fill html text from Signature
         const QString color = colorFromSummary( signature.summary() ).name();
         QString html = QString("<div style=\"background-color:%1\">").arg( color );
-        const QString signer = key.isNull() ? "unknown signer" : key.userID(0).email();
+        const QString signer = key.isNull() ? "unknown signer" : Formatting::prettyName( key );
         html += QString("<p>Signature by %1</p>").arg( signer );
         html += "</div>";
         
