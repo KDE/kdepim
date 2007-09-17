@@ -288,14 +288,12 @@ int VerifyCommand::Private::prepareVerification( QString& reason )
 
         for ( int i = 0; i < inputList.size(); ++i )
             inputList[i].backend = backend;
-        return startVerification();
     }
     else // no protocol given
     {
         //TODO: kick off protocol detection for all files
         for ( int i = 0; i < inputList.size(); ++i )
             inputList[i].backend = Kleo::CryptoBackendFactory::instance()->protocol( "openpgp" );
-        return startVerification();
     }
     return 0;
 }
@@ -588,9 +586,10 @@ int VerifyCommand::doStart()
     }
 
     QString details;
-    const int err = d->prepareVerification( details );
+    int err = d->prepareVerification( details );
     if ( err )
         done( err, details );
+    err = d->startVerification();
     return 0;
 }
 
