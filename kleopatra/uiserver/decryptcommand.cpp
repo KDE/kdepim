@@ -31,6 +31,7 @@
 */
 
 #include "decryptcommand.h"
+#include "assuancommandprivatebase_p.h"
 
 #include <QObject>
 #include <QIODevice>
@@ -45,16 +46,19 @@
 
 #include <cassert>
 
-class Kleo::DecryptCommand::Private
-  : public AssuanCommandPrivateBaseMixin<Kleo::DecryptCommand::Private, DecryptCommand>
+using namespace Kleo;
+
+class DecryptCommand::Private
+  : public AssuanCommandPrivateBaseMixin<DecryptCommand::Private, DecryptCommand>
 {
     Q_OBJECT
 public:
     Private( DecryptCommand * qq )
-        :AssuanCommandPrivateBaseMixin<Kleo::DecryptCommand::Private, DecryptCommand>(), q( qq )
+        :AssuanCommandPrivateBaseMixin<DecryptCommand::Private, DecryptCommand>(), q( qq )
     {}
 
     DecryptCommand *q;
+    QList<Input> analyzeInput( GpgME::Error& error, QString& errorDetails ) const;
 
 public Q_SLOTS:
     void slotDecryptionResult( const GpgME::DecryptionResult &, const QByteArray & plainText );
@@ -62,20 +66,88 @@ public Q_SLOTS:
 
 };
 
-Kleo::DecryptCommand::DecryptCommand()
+DecryptCommand::DecryptCommand()
     : AssuanCommandMixin<DecryptCommand>(),
       d( new Private( this ) )
 {
 }
 
-Kleo::DecryptCommand::~DecryptCommand() {}
+DecryptCommand::~DecryptCommand() {}
 
-void Kleo::DecryptCommand::Private::slotProgress( const QString& what, int current, int total )
+QList<AssuanCommandPrivateBase::Input> DecryptCommand::Private::analyzeInput( GpgME::Error& error, QString& errorDetails ) const
+{
+    error = GpgME::Error();
+    errorDetails = QString();
+/*
+    const int numSignatures = q->numBulkInputDevices( "INPUT" );
+    const int numMessages = q->numBulkInputDevices( "MESSAGE" );
+
+    if ( numSignatures == 0 )
+    {
+        error = GpgME::Error( GPG_ERR_ASS_NO_INPUT );
+        errorDetails = "At least one signature must be provided";
+        return QList<Input>();
+    }
+
+    if ( numMessages > 0 && numMessages != numSignatures )
+    {
+        error = GpgME::Error( GPG_ERR_ASS_NO_INPUT ); //TODO use better error code if possible
+        errorDetails = "The number of MESSAGE inputs must be either equal to the number of signatures or zero";
+        return QList<Input>();
+    }
+    */
+
+    QList<Input> inputs;
+/*
+    if ( numMessages == numSignatures )
+    {
+        for ( int i = 0; i < numSignatures; ++i )
+        {
+            Input input;
+            input.type = Input::Detached;
+            input.signature = q->bulkInputDevice( "INPUT", i );
+            input.signatureFileName = q->bulkInputDeviceFileName( "INPUT", i );
+            input.setupMessage( q->bulkInputDevice( "MESSAGE", i ), q->bulkInputDeviceFileName( "MESSAGE", i ) );
+            assert( input.message || !input.messageFileName.isEmpty() );
+            assert( input.signature );
+            inputs.append( input );
+        }
+        return inputs;
+    }
+
+    assert( numMessages == 0 );
+
+    for ( int i = 0; i < numSignatures; ++i )
+    {
+        Input input;
+        input.signature = q->bulkInputDevice( "INPUT", i );
+        input.signatureFileName = q->bulkInputDeviceFileName( "INPUT", i );
+        assert( input.signature );
+        const QString fname = q->bulkInputDeviceFileName( "INPUT", i );
+        if ( !fname.isEmpty() && fname.endsWith( ".sig", Qt::CaseInsensitive )
+                || fname.endsWith( ".asc", Qt::CaseInsensitive ) )
+        { //detached signature file
+            const QString msgFileName = fname.left( fname.length() - 4 );
+            // TODO: handle error if msg file does not exist
+            input.type = Input::Detached;
+            input.messageFileName = msgFileName;
+        }
+        else // opaque
+        {
+            input.type = Input::Opaque;
+        }
+        inputs.append( input );
+    }
+ */
+    return inputs;
+}
+
+void DecryptCommand::Private::slotProgress( const QString& what, int current, int total )
 {
     // FIXME report progress, via sendStatus()
 }
 
-void Kleo::DecryptCommand::Private::slotDecryptionResult( const GpgME::DecryptionResult & decryptionResult, const QByteArray & plainText )
+void DecryptCommand::Private::slotDecryptionResult( const GpgME::DecryptionResult & decryptionResult, const QByteArray & plainText )
 {
     const GpgME::Error decryptionError = decryptionResult.error();
     if ( decryptionError )
@@ -89,7 +161,7 @@ void Kleo::DecryptCommand::Private::slotDecryptionResult( const GpgME::Decryptio
     q->done();
 }
 
-int Kleo::DecryptCommand::doStart()
+int DecryptCommand::doStart()
 {
     /*
     d->parseCommandLine("");
@@ -115,7 +187,7 @@ int Kleo::DecryptCommand::doStart()
             assert( input.backend );
 
             //fire off appropriate kleo decrypt verify job
-            Kleo::DecryptJob * const job = input.backend->decryptJob();
+            DecryptJob * const job = input.backend->decryptJob();
             assert(job);
 
             QObject::connect( job, SIGNAL( result( GpgME::DecryptionResult, QByteArray ) ),
@@ -140,7 +212,7 @@ int Kleo::DecryptCommand::doStart()
     return error;
 }
 
-void Kleo::DecryptCommand::doCanceled()
+void DecryptCommand::doCanceled()
 {
 }
 

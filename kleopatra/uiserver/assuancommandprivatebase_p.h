@@ -79,7 +79,6 @@ public:
 
     virtual AssuanCommand *get_q() const = 0;
     QList<Input> inputList;
-    QList<Input> analyzeInput( GpgME::Error& error, QString& errorDetails ) const;
     int determineInputsAndProtocols( QString& reason );
 };
 
