@@ -118,7 +118,7 @@ Q_SIGNALS:
     void finished( const QHash<QString, VerificationResultCollector::Result> & );
 
 private Q_SLOTS:
-    void slotVerifyOpaqueResult(const GpgME::VerificationResult &, const std::vector<GpgME::Key> &,  const QByteArray &);
+    void slotVerifyOpaqueResult(const GpgME::VerificationResult &, const QByteArray &, const std::vector<GpgME::Key> & );
     void slotVerifyDetachedResult(const GpgME::VerificationResult &, const std::vector<GpgME::Key> & );
 
 private:
@@ -141,15 +141,15 @@ void VerificationResultCollector::registerJob( const QString& id, VerifyDetached
 
 void VerificationResultCollector::registerJob( const QString& id, VerifyOpaqueJob* job )
 {
-    connect( job, SIGNAL(result(GpgME::VerificationResult,QByteArray)),
-             this, SLOT(slotVerifyOpaqueResult(GpgME::VerificationResult,std::vector<GpgME::Key>,QByteArray)) );
+    connect( job, SIGNAL(result(GpgME::VerificationResult,QByteArray,std::vector<GpgME::Key>)),
+             this, SLOT(slotVerifyOpaqueResult(GpgME::VerificationResult,QByteArray,std::vector<GpgME::Key>)) );
     m_senderToId[job] = id;
     ++m_unfinished;
 }
 
 void VerificationResultCollector::slotVerifyOpaqueResult(const GpgME::VerificationResult & result,
-                                                         const std::vector<GpgME::Key> &keys,
-                                                         const QByteArray & stuff)
+                                                         const QByteArray & stuff,
+                                                         const std::vector<GpgME::Key> &keys)
 {
     const QString id = m_senderToId[sender()];
 
