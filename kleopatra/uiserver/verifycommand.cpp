@@ -41,7 +41,6 @@
 
 #include <kleo/verifyopaquejob.h>
 #include <kleo/verifydetachedjob.h>
-#include <kleo/cryptobackendfactory.h>
 
 #include <KDebug>
 #include <KLocale>
@@ -192,12 +191,13 @@ void VerificationResultCollector::slotVerifyDetachedResult(const GpgME::Verifica
 }
 
 
-class VerifyCommand::Private : public AssuanCommandPrivateBase
+class VerifyCommand::Private
+  : public AssuanCommandPrivateBaseMixin<VerifyCommand::Private, VerifyCommand>
 {
     Q_OBJECT
 public:
     Private( VerifyCommand * qq )
-        :AssuanCommandPrivateBase(), showDetails(false), dialog(0), q( qq )
+    :AssuanCommandPrivateBaseMixin<VerifyCommand::Private, VerifyCommand>(), showDetails(false), dialog(0), q( qq )
     {}
     ~Private()
     {
@@ -209,8 +209,6 @@ public:
     std::vector<GpgME::Key> keys;
     GpgME::VerificationResult result;
     VerifyCommand * q;
-
-    virtual VerifyCommand* get_q() const { return q; }
 
     int startVerification();
 
@@ -389,7 +387,6 @@ void VerifyCommand::Private::slotProgress( const QString& what, int current, int
 
 void VerifyCommand::Private::parseCommandLine( const std::string & line )
 {
-
 }
 
 int VerifyCommand::Private::startVerification()
@@ -398,7 +395,7 @@ int VerifyCommand::Private::startVerification()
     VerificationResultCollector* collector = new VerificationResultCollector;
     connect( collector, SIGNAL( finished( QHash<QString, VerificationResultCollector::Result> ) ),
              SLOT( verificationFinished( QHash<QString, VerificationResultCollector::Result> ) ) );
-    
+
     try {
 
         int i = 0;
@@ -422,7 +419,7 @@ int VerifyCommand::Private::startVerification()
                 VerifyDetachedJob * const job = input.backend->verifyDetachedJob();
                 assert(job);
                 collector->registerJob( QString::number( i ), job );
-    
+
                 //FIXME: readAll save enough?
                 const QByteArray signature = input.signature->readAll();
                 assert( input.message || !input.messageFileName.isEmpty() );
@@ -449,18 +446,14 @@ int VerifyCommand::doStart()
     d->parseCommandLine("");
     d->showDetails = !hasOption("silent");
 
-    {
-        GpgME::Error error;
-        QString details;
-        d->inputList = d->analyzeInput( error, details );
-        if ( error )
-        {
-            done( error, details );
-            return error;
-        }
+    GpgME::Error error;
+    QString details;
+    d->inputList = d->analyzeInput( error, details );
+    if ( error ) {
+        done( error, details );
+        return error;
     }
 
-    QString details;
     int err = d->determineInputsAndProtocols( details );
     if ( err )
         done( err, details );

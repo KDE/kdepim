@@ -36,7 +36,6 @@
 #include <QIODevice>
 
 #include <kleo/decryptjob.h>
-#include <kleo/cryptobackendfactory.h>
 
 #include <gpgme++/error.h>
 #include <gpgme++/decryptionresult.h>
@@ -46,17 +45,16 @@
 
 #include <cassert>
 
-class Kleo::DecryptCommand::Private : public QObject
+class Kleo::DecryptCommand::Private
+  : public AssuanCommandPrivateBaseMixin<Kleo::DecryptCommand::Private, DecryptCommand>
 {
     Q_OBJECT
 public:
     Private( DecryptCommand * qq )
-        :q( qq ), backend(0)
+        :AssuanCommandPrivateBaseMixin<Kleo::DecryptCommand::Private, DecryptCommand>(), q( qq )
     {}
 
     DecryptCommand *q;
-    const CryptoBackend::Protocol *backend;
-    void findCryptoBackend();
 
 public Q_SLOTS:
     void slotDecryptionResult( const GpgME::DecryptionResult &, const QByteArray & plainText );
@@ -72,17 +70,6 @@ Kleo::DecryptCommand::DecryptCommand()
 
 Kleo::DecryptCommand::~DecryptCommand() {}
 
-void Kleo::DecryptCommand::Private::findCryptoBackend()
-{
-    // FIXME this could be either SMIME or OpenPGP, find out from headers
-    const bool isSMIME = false;
-    if ( isSMIME )
-        backend = Kleo::CryptoBackendFactory::instance()->smime();
-    else
-        backend = Kleo::CryptoBackendFactory::instance()->openpgp();
-}
-
-
 void Kleo::DecryptCommand::Private::slotProgress( const QString& what, int current, int total )
 {
     // FIXME report progress, via sendStatus()
@@ -96,40 +83,60 @@ void Kleo::DecryptCommand::Private::slotDecryptionResult( const GpgME::Decryptio
         q->done( decryptionError );
         return;
     }
-    
+
     //handle result, send status
-    q->bulkOutputDevice( "OUT" )->write( plainText );
+    q->bulkOutputDevice( "OUTPUT" )->write( plainText );
     q->done();
 }
 
 int Kleo::DecryptCommand::doStart()
 {
-    // FIXME check options
+    /*
+    d->parseCommandLine("");
+    d->showDetails = !hasOption("silent");
+    */
 
-    if ( !bulkInputDevice( "IN" ) )
-        done( GPG_ERR_ASS_NO_INPUT );
+    GpgME::Error error;
+    QString details;
+    d->inputList = d->analyzeInput( error, details );
+    if ( error ) {
+        done( error, details );
+        return error;
+    }
 
-    if ( !bulkOutputDevice( "OUT" ) )
-        done( GPG_ERR_ASS_NO_OUTPUT );
+    int err = d->determineInputsAndProtocols( details );
+    if ( err )
+        done( err, details );
 
-    d->findCryptoBackend(); // decide on smime or openpgp
-    assert(d->backend);
+    try {
 
-    //fire off appropriate kleo decrypt verify job
-    Kleo::DecryptJob * const job = d->backend->decryptJob();
-    assert(job);
+        Q_FOREACH ( const Private::Input input, d->inputList )
+        {
+            assert( input.backend );
 
-    QObject::connect( job, SIGNAL( result( GpgME::DecryptionResult, QByteArray ) ),
-                      d.get(), SLOT( slotDecryptionResult( GpgME::DecryptionResult, QByteArray ) ) );
-    QObject::connect( job, SIGNAL( progress( QString, int, int ) ),
-                      d.get(), SLOT( slotProgress( QString, int, int ) ) );
+            //fire off appropriate kleo decrypt verify job
+            Kleo::DecryptJob * const job = input.backend->decryptJob();
+            assert(job);
 
-    const QByteArray encrypted = bulkInputDevice( "IN" )->readAll(); // FIXME safe enough?
+            QObject::connect( job, SIGNAL( result( GpgME::DecryptionResult, QByteArray ) ),
+                    d.get(), SLOT( slotDecryptionResult( GpgME::DecryptionResult, QByteArray ) ) );
+            QObject::connect( job, SIGNAL( progress( QString, int, int ) ),
+                    d.get(), SLOT( slotProgress( QString, int, int ) ) );
 
-    // FIXME handle cancelled, let job show dialog? both done and return error?
-    const GpgME::Error error = job->start( encrypted );
-    if ( error )
+            const QByteArray encrypted = bulkInputDevice( "INPUT" )->readAll(); // FIXME safe enough?
+
+            // FIXME handle cancelled, let job show dialog? both done and return error?
+            const GpgME::Error error = job->start( encrypted );
+            if ( error )
+                done( error );
+        }
+    } catch ( const GpgME::Error & error ) {
+        //delete collector;
         done( error );
+        return error;
+    }
+
+
     return error;
 }
 

@@ -84,6 +84,14 @@ public:
 };
 
 
+// helper Mixin which implements get_q with a co-variant return type.
+template <typename Derived, typename Command>
+class AssuanCommandPrivateBaseMixin : public AssuanCommandPrivateBase {
+    /* reimpl */
+    Command* get_q() const {
+        return static_cast<const Derived*>( this )->q;
+    }
+};
 
 }
 
