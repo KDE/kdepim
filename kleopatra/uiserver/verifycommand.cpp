@@ -213,9 +213,9 @@ public:
     QList<AssuanCommandPrivateBase::Input> analyzeInput( GpgME::Error& error, QString& errorDetails ) const;
     int startVerification();
 
+    void verifyOpaqueResult(const GpgME::VerificationResult &, const std::vector<GpgME::Key> &, const QByteArray &);
+    void verifyDetachedResult(const GpgME::VerificationResult &, const std::vector<GpgME::Key> & );
 public Q_SLOTS:
-    void slotVerifyOpaqueResult(const GpgME::VerificationResult &, const QByteArray &);
-    void slotVerifyDetachedResult(const GpgME::VerificationResult &, const std::vector<GpgME::Key> & );
     void verificationFinished( const QHash<QString, VerificationResultCollector::Result> & results ); 
     void slotProgress( const QString& what, int current, int total );
     void parseCommandLine( const std::string & line );
@@ -400,11 +400,13 @@ void VerifyCommand::Private::showVerificationResultDialog()
     dialog->show();
 }
 
-void VerifyCommand::Private::slotVerifyOpaqueResult( const GpgME::VerificationResult & _result ,
-                                                     const QByteArray & stuff )
+void VerifyCommand::Private::verifyOpaqueResult( const GpgME::VerificationResult & _result ,
+                                                 const std::vector<GpgME::Key> & _keys,
+                                                 const QByteArray & stuff )
 {
     Q_UNUSED( stuff )
     result = _result;
+    keys = _keys;
 
     if ( const int err = sendBriefResult() ) {
         q->done( err );
@@ -423,12 +425,12 @@ void VerifyCommand::Private::verificationFinished( const QHash<QString, Verifica
     assert( !results.isEmpty() );
     const VerificationResultCollector::Result result = results.values().first();
     if ( result.isOpaque )
-        slotVerifyOpaqueResult( result.result, result.stuff );
+        verifyOpaqueResult( result.result, result.keys, result.stuff );
     else
-        slotVerifyDetachedResult( result.result, result.keys );
+        verifyDetachedResult( result.result, result.keys );
 }
 
-void VerifyCommand::Private::slotVerifyDetachedResult( const GpgME::VerificationResult & _result,
+void VerifyCommand::Private::verifyDetachedResult( const GpgME::VerificationResult & _result,
                                                        const std::vector<GpgME::Key>& _keys )
 {
     keys = _keys;
