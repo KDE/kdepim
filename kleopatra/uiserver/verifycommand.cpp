@@ -412,6 +412,10 @@ void VerifyCommand::Private::verifyOpaqueResult( const GpgME::VerificationResult
         q->done( err );
         return;
     }
+    if ( const int err = q->bulkOutputDevice( "OUTPUT" )->write( stuff ) ) {
+        q->done( err );
+        return;
+    }
 
     if ( showDetails )
         showVerificationResultDialog();
