@@ -78,67 +78,37 @@ QList<AssuanCommandPrivateBase::Input> DecryptCommand::Private::analyzeInput( Gp
 {
     error = GpgME::Error();
     errorDetails = QString();
-/*
-    const int numSignatures = q->numBulkInputDevices( "INPUT" );
+
+    const int numInputs = q->numBulkInputDevices( "INPUT" );
+    const int numOutputs = q->numBulkInputDevices( "OUTPUT" );
     const int numMessages = q->numBulkInputDevices( "MESSAGE" );
 
-    if ( numSignatures == 0 )
-    {
-        error = GpgME::Error( GPG_ERR_ASS_NO_INPUT );
-        errorDetails = "At least one signature must be provided";
-        return QList<Input>();
-    }
-
-    if ( numMessages > 0 && numMessages != numSignatures )
+    if ( numMessages != 0 )
     {
         error = GpgME::Error( GPG_ERR_ASS_NO_INPUT ); //TODO use better error code if possible
-        errorDetails = "The number of MESSAGE inputs must be either equal to the number of signatures or zero";
+        errorDetails = "Only --input can be provided to the decrypt command, no --message";
         return QList<Input>();
     }
-    */
+
+    if ( numInputs != numOutputs )
+    {
+        error = GpgME::Error( GPG_ERR_ASS_NO_INPUT ); //TODO use better error code if possible
+        errorDetails = "For each --input there needs to be an --output";
+        return QList<Input>();
+    }
 
     QList<Input> inputs;
-/*
-    if ( numMessages == numSignatures )
-    {
-        for ( int i = 0; i < numSignatures; ++i )
-        {
-            Input input;
-            input.type = Input::Detached;
-            input.signature = q->bulkInputDevice( "INPUT", i );
-            input.signatureFileName = q->bulkInputDeviceFileName( "INPUT", i );
-            input.setupMessage( q->bulkInputDevice( "MESSAGE", i ), q->bulkInputDeviceFileName( "MESSAGE", i ) );
-            assert( input.message || !input.messageFileName.isEmpty() );
-            assert( input.signature );
-            inputs.append( input );
-        }
-        return inputs;
-    }
 
-    assert( numMessages == 0 );
-
-    for ( int i = 0; i < numSignatures; ++i )
+    for ( int i = 0; i < numInputs; ++i )
     {
         Input input;
-        input.signature = q->bulkInputDevice( "INPUT", i );
-        input.signatureFileName = q->bulkInputDeviceFileName( "INPUT", i );
-        assert( input.signature );
-        const QString fname = q->bulkInputDeviceFileName( "INPUT", i );
-        if ( !fname.isEmpty() && fname.endsWith( ".sig", Qt::CaseInsensitive )
-                || fname.endsWith( ".asc", Qt::CaseInsensitive ) )
-        { //detached signature file
-            const QString msgFileName = fname.left( fname.length() - 4 );
-            // TODO: handle error if msg file does not exist
-            input.type = Input::Detached;
-            input.messageFileName = msgFileName;
-        }
-        else // opaque
-        {
-            input.type = Input::Opaque;
-        }
+        input.message = q->bulkInputDevice( "INPUT", i );
+        input.messageFileName = q->bulkInputDeviceFileName( "INPUT", i );
+        assert( input.message );
+        input.type = Input::Opaque; // by definition
         inputs.append( input );
     }
- */
+
     return inputs;
 }
 
