@@ -525,50 +525,47 @@ int VerifyCommand::Private::startVerification()
     VerificationResultCollector* collector = new VerificationResultCollector;
     connect( collector, SIGNAL( finished( QHash<QString, VerificationResultCollector::Result> ) ),
              SLOT( verificationFinished( QHash<QString, VerificationResultCollector::Result> ) ) );
+    
+    try {
 
-    int i = 0;
-    Q_FOREACH ( const Private::Input input, inputList )
-    {
-        ++i;
-        assert( input.backend );
-        if ( input.type == Private::Input::Opaque )
+        int i = 0;
+        Q_FOREACH ( const Private::Input input, inputList )
         {
-            //fire off appropriate kleo verification job
-            VerifyOpaqueJob * const job = input.backend->verifyOpaqueJob();
-            assert(job);
-            collector->registerJob( QString::number( i ), job );
-            //FIXME: readAll() save enough?
-            const GpgME::Error error = job->start( input.signature->readAll() );
-            if ( error )
+            ++i;
+            assert( input.backend );
+            if ( input.type == Private::Input::Opaque )
             {
-                delete collector;
-                q->done( error );
-                return error;
+                //fire off appropriate kleo verification job
+                VerifyOpaqueJob * const job = input.backend->verifyOpaqueJob();
+                assert(job);
+                collector->registerJob( QString::number( i ), job );
+                //FIXME: readAll() save enough?
+                const GpgME::Error error = job->start( input.signature->readAll() );
+                if ( error ) throw error;
+            }
+            else
+            {
+                //fire off appropriate kleo verification job
+                VerifyDetachedJob * const job = input.backend->verifyDetachedJob();
+                assert(job);
+                collector->registerJob( QString::number( i ), job );
+    
+                //FIXME: readAll save enough?
+                const QByteArray signature = input.signature->readAll();
+                assert( input.message || !input.messageFileName.isEmpty() );
+                //const bool useFileName = !input.messageFileName.isEmpty();
+                const bool useFileName = false; // FIXME MARC_REFACTOR_ME
+                GpgME::Data fileData;
+                fileData.setFileName( input.messageFileName.toLatin1().data() );         //FIXME: handle file name encoding correctly 
+                assert( !useFileName || !fileData.isNull() );
+                const GpgME::Error error = useFileName ? job->start( signature, fileData ) : job->start( signature, input.message->readAll() );
+                if ( error ) throw error;
             }
         }
-        else
-        {
-            //fire off appropriate kleo verification job
-            VerifyDetachedJob * const job = input.backend->verifyDetachedJob();
-            assert(job);
-            collector->registerJob( QString::number( i ), job );
-
-            //FIXME: readAll save enough?
-            const QByteArray signature = input.signature->readAll();
-            assert( input.message || !input.messageFileName.isEmpty() );
-            //const bool useFileName = !input.messageFileName.isEmpty();
-            const bool useFileName = false; // FIXME MARC_REFACTOR_ME
-            GpgME::Data fileData;
-            fileData.setFileName( input.messageFileName.toLatin1().data() );         //FIXME: handle file name encoding correctly 
-            assert( !useFileName || !fileData.isNull() );
-            const GpgME::Error error = useFileName ? job->start( signature, fileData ) : job->start( signature, input.message->readAll() );
-            if ( error )
-            {
-                delete collector;
-                q->done( error );
-                return error;
-            }
-        }
+    } catch ( const GpgME::Error & error ) {
+        delete collector;
+        q->done( error );
+        return error;
     }
 
     return 0;
