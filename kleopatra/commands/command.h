@@ -57,11 +57,11 @@ namespace Kleo {
 
     public Q_SLOTS:
         void start();
-	void cancel();
+        void cancel();
 
     Q_SIGNALS:
         void finished();
-	void canceled();
+        void canceled();
 
     private:
         virtual void doStart() = 0;
