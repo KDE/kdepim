@@ -36,6 +36,7 @@
 #include <QIODevice>
 #include <QVariant>
 #include <QDialog>
+#include <QVBoxLayout>
 
 #include <kleo/verifyopaquejob.h>
 #include <kleo/verifydetachedjob.h>
@@ -56,14 +57,42 @@
 #include <boost/bind.hpp>
 #include <boost/shared_ptr.hpp>
 
+#include "signaturedisplaywidget.h"
+
 using namespace Kleo;
+
+// -- helpers ---
+static
+bool keyMatchesFingerprint( const GpgME::Key & key, const char* fingerprint )
+{
+      return  qstricmp ( key.keyID(), fingerprint ) == 0 ||
+              qstricmp ( key.shortKeyID(), fingerprint ) == 0 ||
+              qstricmp ( key.primaryFingerprint(), fingerprint ) == 0;
+
+}
+
+static
+GpgME::Key findKeyForSignature( const GpgME::Signature& sig, const std::vector<GpgME::Key>& keys )
+{
+    std::vector<GpgME::Key>::const_iterator it =
+        std::find_if( keys.begin(), keys.end(),
+                      boost::bind( keyMatchesFingerprint, _1, sig.fingerprint() ) );
+    return it == keys.end() ? GpgME::Key() : *it;
+}
+
 
 class VerificationResultDialog : public QDialog
 {
     Q_OBJECT
 public:
-    VerificationResultDialog( const GpgME::VerificationResult& result )
+    VerificationResultDialog( const GpgME::VerificationResult& result, const std::vector<GpgME::Key>& keys )
     {
+        QVBoxLayout *box = new QVBoxLayout( this );
+        Q_FOREACH( GpgME::Signature sig, result.signatures() ) {
+            SignatureDisplayWidget *w = new SignatureDisplayWidget( this );
+            w->setSignature( sig, findKeyForSignature( sig, keys ) );
+            box->addWidget( w );
+        }
     }
     virtual ~VerificationResultDialog() {}
 };
@@ -371,20 +400,10 @@ static QString keyToString( const GpgME::Key key )
    return result;
 }
 
-bool keyMatchesFingerprint( const GpgME::Key & key, const char* fingerprint )
-{
-      return  qstricmp ( key.keyID(), fingerprint ) == 0 ||
-              qstricmp ( key.shortKeyID(), fingerprint ) == 0 ||
-              qstricmp ( key.primaryFingerprint(), fingerprint ) == 0;
-
-}
 
 GpgME::Key VerifyCommand::Private::keyForSignature( const GpgME::Signature& sig ) const
 {
-    std::vector<GpgME::Key>::const_iterator it =
-        std::find_if( keys.begin(), keys.end(),
-                      boost::bind( keyMatchesFingerprint, _1, sig.fingerprint() ) );
-    return it == keys.end() ? GpgME::Key() : *it;
+    return findKeyForSignature( sig, keys );
 }
 
 QString VerifyCommand::Private::processSignature( const GpgME::Signature& sig, const GpgME::Key & key ) const
@@ -439,7 +458,7 @@ void VerifyCommand::Private::slotDialogClosed()
 
 void VerifyCommand::Private::showVerificationResultDialog()
 {
-    dialog = new VerificationResultDialog( result );
+    dialog = new VerificationResultDialog( result, keys );
     connect( dialog, SIGNAL( accepted() ), this, SLOT( slotDialogClosed() ) );
     connect( dialog, SIGNAL( rejected() ), this, SLOT( slotDialogClosed() ) );
     dialog->show();
