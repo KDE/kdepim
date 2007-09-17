@@ -31,6 +31,7 @@
 */
 
 #include "verifycommand.h"
+#include "assuancommandprivatebase_p.h"
 
 #include <QObject>
 #include <QIODevice>
@@ -191,50 +192,27 @@ void VerificationResultCollector::slotVerifyDetachedResult(const GpgME::Verifica
 }
 
 
-class VerifyCommand::Private : public QObject
+class VerifyCommand::Private : public AssuanCommandPrivateBase
 {
     Q_OBJECT
 public:
     Private( VerifyCommand * qq )
-        :q( qq ), showDetails(false), dialog(0)
+        :AssuanCommandPrivateBase(), showDetails(false), dialog(0), q( qq )
     {}
     ~Private()
     {
         delete dialog;
     }
 
-    VerifyCommand *q;
     bool showDetails;
     VerificationResultDialog * dialog;
     std::vector<GpgME::Key> keys;
     GpgME::VerificationResult result;
+    VerifyCommand * q;
 
-    int prepareVerification( QString& reason );
+    virtual VerifyCommand* get_q() const { return q; }
+
     int startVerification();
-
-    struct Input
-    {
-        Input() : type( Detached ), message( 0 ), signature( 0 ), backend( 0 ) {}
-        enum SignatureType {
-            Detached=0,
-            Opaque
-        };
-        bool isFileInputOnly() const
-        {
-            return !signatureFileName.isEmpty() && ( type == Opaque || !messageFileName.isEmpty() );
-        }
-
-        void setupMessage( QIODevice* message, const QString& fileName );
-        SignatureType type;
-        QIODevice* message;
-        QString messageFileName;
-        QString signatureFileName;
-        QIODevice* signature;
-        const CryptoBackend::Protocol* backend;
-    };
-
-    QList<Input> inputList;
-    QList<Input> analyzeInput( GpgME::Error& error, QString& errorDetails ) const;
 
 public Q_SLOTS:
     void slotVerifyOpaqueResult(const GpgME::VerificationResult &, const QByteArray &);
@@ -259,44 +237,7 @@ VerifyCommand::VerifyCommand()
 
 VerifyCommand::~VerifyCommand() {}
 
-int VerifyCommand::Private::prepareVerification( QString& reason )
-{
-    reason = QString();
 
-    const QString protocol = q->option( "protocol" ).toString();
-
-    if ( protocol.isEmpty() )
-    {
-        Q_FOREACH ( const Input input, inputList )
-        {
-            if ( !input.isFileInputOnly() )
-            {
-                reason = "--protocol option is required when passing file descriptors";
-                return GPG_ERR_GENERAL;
-            }
-        }
-    }
-
-    if ( !protocol.isEmpty() )
-    {
-        const Kleo::CryptoBackend::Protocol* backend = Kleo::CryptoBackendFactory::instance()->protocol( protocol.toAscii().data() );
-        if ( !backend )
-        {
-            reason = QString( "Unknown protocol: %1" ).arg( protocol );
-            return GPG_ERR_GENERAL;
-        }
-
-        for ( int i = 0; i < inputList.size(); ++i )
-            inputList[i].backend = backend;
-    }
-    else // no protocol given
-    {
-        //TODO: kick off protocol detection for all files
-        for ( int i = 0; i < inputList.size(); ++i )
-            inputList[i].backend = Kleo::CryptoBackendFactory::instance()->protocol( "openpgp" );
-    }
-    return 0;
-}
 
 void VerifyCommand::Private::Input::setupMessage( QIODevice* _message, const QString& fileName )
 {
@@ -306,72 +247,6 @@ void VerifyCommand::Private::Input::setupMessage( QIODevice* _message, const QSt
     message = _message;
 #endif
     messageFileName = fileName;
-}
-
-QList<VerifyCommand::Private::Input> VerifyCommand::Private::analyzeInput( GpgME::Error& error, QString& errorDetails ) const
-{
-    error = GpgME::Error();
-    errorDetails = QString();
-
-    const int numSignatures = q->numBulkInputDevices( "INPUT" );
-    const int numMessages = q->numBulkInputDevices( "MESSAGE" );
-
-    if ( numSignatures == 0 )
-    {
-        error = GpgME::Error( GPG_ERR_ASS_NO_INPUT );
-        errorDetails = "At least one signature must be provided";
-        return QList<Input>();
-    }
-
-    if ( numMessages > 0 && numMessages != numSignatures )
-    {
-        error = GpgME::Error( GPG_ERR_ASS_NO_INPUT ); //TODO use better error code if possible
-        errorDetails = "The number of MESSAGE inputs must be either equal to the number of signatures or zero";
-        return QList<Input>();
-    }
-
-    QList<Input> inputs;
-
-    if ( numMessages == numSignatures )
-    {
-        for ( int i = 0; i < numSignatures; ++i )
-        {
-            Input input;
-            input.type = Input::Detached;
-            input.signature = q->bulkInputDevice( "INPUT", i );
-            input.signatureFileName = q->bulkInputDeviceFileName( "INPUT", i );
-            input.setupMessage( q->bulkInputDevice( "MESSAGE", i ), q->bulkInputDeviceFileName( "MESSAGE", i ) );
-            assert( input.message || !input.messageFileName.isEmpty() );
-            assert( input.signature );
-            inputs.append( input );
-        }
-        return inputs;
-    }
-
-    assert( numMessages == 0 );
-
-    for ( int i = 0; i < numSignatures; ++i )
-    {
-        Input input;
-        input.signature = q->bulkInputDevice( "INPUT", i );
-        input.signatureFileName = q->bulkInputDeviceFileName( "INPUT", i );
-        assert( input.signature );
-        const QString fname = q->bulkInputDeviceFileName( "INPUT", i );
-        if ( !fname.isEmpty() && fname.endsWith( ".sig", Qt::CaseInsensitive )
-                || fname.endsWith( ".asc", Qt::CaseInsensitive ) )
-        { //detached signature file
-            const QString msgFileName = fname.left( fname.length() - 4 );
-            // TODO: handle error if msg file does not exist
-            input.type = Input::Detached;
-            input.messageFileName = msgFileName;
-        }
-        else // opaque
-        {
-            input.type = Input::Opaque;
-        }
-        inputs.append( input );
-    }
-    return inputs;
 }
 
 static QString summaryToString( const GpgME::Signature::Summary summary )
@@ -586,7 +461,7 @@ int VerifyCommand::doStart()
     }
 
     QString details;
-    int err = d->prepareVerification( details );
+    int err = d->determineInputsAndProtocols( details );
     if ( err )
         done( err, details );
     err = d->startVerification();

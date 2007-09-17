@@ -41,6 +41,8 @@
 #include <map>
 #include <vector>
 
+#include "assuancommandprivatebase_p.h"
+
 class QVariant;
 class QIODevice;
 class QObject;
@@ -249,6 +251,7 @@ namespace Kleo {
 
     private:
         friend class ::Kleo::AssuanCommandFactory;
+        friend class ::Kleo::AssuanCommandPrivateBase;
         class Private;
         kdtools::pimpl_ptr<Private> d;
     };
