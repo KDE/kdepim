@@ -2014,6 +2014,7 @@ bool ICalFormatImpl::populate( Calendar *cal, icalcomponent *calendar)
         cal->addTodo(todo);
       } else {
         delete todo;
+        mTodosRelate.remove( todo );
       }
     }
     c = icalcomponent_get_next_component(calendar,ICAL_VTODO_COMPONENT);
@@ -2029,6 +2030,7 @@ bool ICalFormatImpl::populate( Calendar *cal, icalcomponent *calendar)
         cal->addEvent(event);
       } else {
         delete event;
+        mEventsRelate.remove( event );
       }
     }
     c = icalcomponent_get_next_component(calendar,ICAL_VEVENT_COMPONENT);
