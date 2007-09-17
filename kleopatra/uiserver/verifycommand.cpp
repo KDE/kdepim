@@ -404,7 +404,6 @@ void VerifyCommand::Private::verifyOpaqueResult( const GpgME::VerificationResult
                                                  const std::vector<GpgME::Key> & _keys,
                                                  const QByteArray & stuff )
 {
-    Q_UNUSED( stuff )
     result = _result;
     keys = _keys;
 
@@ -412,9 +411,12 @@ void VerifyCommand::Private::verifyOpaqueResult( const GpgME::VerificationResult
         q->done( err );
         return;
     }
-    if ( const int err = q->bulkOutputDevice( "OUTPUT" )->write( stuff ) ) {
-        q->done( err );
-        return;
+    QIODevice * const outdevice = q->bulkOutputDevice( "OUTPUT" );
+    if ( outdevice ) {
+        if ( const int err = outdevice->write( stuff ) ) {
+            q->done( err );
+            return;
+        }
     }
 
     if ( showDetails )
