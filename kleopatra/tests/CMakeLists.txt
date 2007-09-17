@@ -10,6 +10,14 @@ target_link_libraries(test_keylistmodels kleo ${KDE4_KDECORE_LIBS} )
 
 ########### next target ###############
 
+set(test_verificationresultdialog_SRCS test_verificationresultdialog.cpp ../uiserver/signaturedisplaywidget.cpp )
+
+kde4_add_test_executable(test_verificationresultdialog ${test_verificationresultdialog_SRCS})
+
+target_link_libraries(test_verificationresultdialog kleo ${KDE4_KDECORE_LIBS} )
+
+########### next target ###############
+
 if ( USABLE_ASSUAN_FOUND  )
 
   # this doesn't yet work on Windows

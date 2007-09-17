@@ -30,6 +30,7 @@ if ( USABLE_ASSUAN_FOUND )
     uiserver/echocommand.cpp
     uiserver/verifycommand.cpp
     uiserver/decryptcommand.cpp
+    uiserver/signaturedisplaywidget.cpp
     )
   if ( WIN32 )
     set( _kleopatra_uiserver_extra_libs ${ASSUAN_VANILLA_LIBRARIES} )
