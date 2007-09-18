@@ -129,9 +129,9 @@ void CalendarDiffAlgo::diffIncidenceBase( KCal::IncidenceBase *left,
     conflictField( i18n( "UID" ), left->uid(), right->uid() );
   }
 
-  if ( left->floats() != right->floats() ) {
+  if ( left->allDay() != right->allDay() ) {
     conflictField( i18n( "Is floating" ),
-                   toString( left->floats() ), toString( right->floats() ) );
+                   toString( left->allDay() ), toString( right->allDay() ) );
   }
 
   if ( left->hasDuration() != right->hasDuration() ) {
