@@ -90,7 +90,7 @@ public:
 
 private:
     void makeListeningSocket();
-    QString makeFileName() const;
+    QString makeFileName( const QString & hint=QString() ) const;
 
 protected:
     /* reimp */ void incomingConnection( int fd );
@@ -119,7 +119,8 @@ UiServer::Private::Private( UiServer * qq )
       tmpDir( tmpDirPrefix() ),
       file(),
       factories(),
-      connections()
+      connections(),
+      socketname()
 {
     assuan_set_assuan_err_source( GPG_ERR_SOURCE_DEFAULT );
 }
@@ -128,7 +129,7 @@ UiServer::Private::Private( UiServer * qq )
 UiServer::UiServer( const QString & socket, QObject * p )
     : QObject( p ), d( new Private( this ) )
 {
-    d->socketname = socket;
+    d->socketname = d->makeFileName( socket );
 }
 
 UiServer::~UiServer() {}
@@ -159,6 +160,10 @@ void UiServer::stop() {
 
 }
 
+QString UiServer::socketName() const {
+    return d->socketname;
+}
+
 bool UiServer::waitForStopped( unsigned int ms ) {
     if ( isStopped() )
         return true;
@@ -180,8 +185,9 @@ bool UiServer::isStopping() const {
     return !d->connections.empty() && !d->isListening() ;
 }
 
-QString UiServer::Private::makeFileName() const {
-    if ( !socketname.isEmpty() ) return socketname;
+QString UiServer::Private::makeFileName( const QString & socket ) const {
+    if ( !socket.isEmpty() )
+        return socket;
     if ( tmpDir.status() != 0 )
         throw_<std::runtime_error>( tr( "Couldn't create directory %1: %2" ).arg( tmpDirPrefix() + "XXXXXXXX", QString::fromLocal8Bit( strerror(errno) ) ) );
     const QDir dir( tmpDir.name() );
@@ -198,7 +204,7 @@ static inline QString system_error_string() {
 void UiServer::Private::makeListeningSocket() {
 
     // First, create a file (we do this only for the name, gmpfh)
-    const QString fileName = makeFileName();
+    const QString fileName = socketname;
     if ( QFile::exists( fileName ) )
         throw_<std::runtime_error>( tr( "Detected another running gnupg UI server listening at %1." ).arg( fileName ) );
     const QByteArray encodedFileName = QFile::encodeName( fileName );
@@ -240,9 +246,9 @@ void UiServer::Private::makeListeningSocket() {
 
     // First, create a tempfile that will contain the port we're
     // listening on:
-    file.setFileName( makeFileName() );
+    file.setFileName( socketname );
     if ( !file.open( QIODevice::WriteOnly ) )
-        throw_<std::runtime_error>( tr( "Couldn't create temporary file: %1" ).arg( file.errorString() ) );
+        throw_<std::runtime_error>( tr( "Couldn't create temporary file %1: %2" ).arg( file.fileName(), file.errorString() ) );
 
     // now, start listening to the host:
     if ( !listen( QHostAddress::LocalHost ) )

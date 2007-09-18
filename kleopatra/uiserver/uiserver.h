@@ -39,6 +39,8 @@
 
 #include <boost/shared_ptr.hpp>
 
+class QString;
+
 namespace Kleo {
 
     class AssuanCommandFactory;
@@ -46,7 +48,7 @@ namespace Kleo {
     class UiServer : public QObject {
         Q_OBJECT
     public:
-        explicit UiServer( const QString& socket, QObject * parent=0 );
+        explicit UiServer( const QString & socket, QObject * parent=0 );
         ~UiServer();
 
         bool registerCommandFactory( const boost::shared_ptr<AssuanCommandFactory> & cmdFactory );
@@ -55,6 +57,8 @@ namespace Kleo {
 
         bool isStopped() const;
         bool isStopping() const;
+
+        QString socketName() const;
 
     public Q_SLOTS:
         void start();
