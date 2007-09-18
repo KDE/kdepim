@@ -55,6 +55,9 @@
 #include <kiconloader.h>
 
 #include <QTextDocument> // for Qt::escape
+#include <QSystemTrayIcon>
+#include <QMenu>
+#include <QAction>
 
 #include <boost/shared_ptr.hpp>
 
@@ -103,10 +106,20 @@ int main( int argc, char** argv )
   manager->show();
 #endif
 
+  QSystemTrayIcon sysTray( KIcon( "gpg" ) );
+  QMenu sysTrayMenu;
+  QAction sysTrayQuitAction( i18n("&Quit"), &sysTray );
+  app.connect( &sysTrayQuitAction, SIGNAL(triggered()), SLOT(quit()) );
+  sysTrayMenu.addAction( &sysTrayQuitAction );
+  sysTray.setContextMenu( &sysTrayMenu );
+  sysTray.show();
+
   int rc;
 #ifdef HAVE_USABLE_ASSUAN
   try {
       Kleo::UiServer server( args->getOption("uiserver-socket") );
+
+      sysTray.setToolTip( i18n( "Kleopatra UI Server listening on %1", server.socketName() ) );
 
 #define REGISTER( Command ) server.registerCommandFactory( boost::shared_ptr<Kleo::AssuanCommandFactory>( new Kleo::GenericAssuanCommandFactory<Kleo::Command> ) )
       REGISTER( DecryptCommand );
