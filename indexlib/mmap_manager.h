@@ -34,6 +34,7 @@
 
 #include "manager.h"
 #include <string>
+#include <cstring>
 #include <unistd.h>
 #include <assert.h>
 

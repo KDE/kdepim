@@ -43,6 +43,7 @@
 #include <iostream>
 #include <iterator>
 #include <string>
+#include <cstring>
 #include <assert.h>
 
 template <typename> class memory_iterator;
