@@ -24,7 +24,6 @@
 #include <QFile>
 #include <QLayout>
 #include <QStackedWidget>
-//Added by qt3to4:
 #include <QHBoxLayout>
 #include <QDropEvent>
 #include <kselectaction.h>
@@ -448,10 +447,10 @@ void ViewManager::dropped( QDropEvent *e )
       }
     } else if ( c == 1 )
       emit urlDropped( *it );
-  } else if ( KVCardDrag::canDecode( md ) ) {
+  } else if ( KPIM::KVCardDrag::canDecode( md ) ) {
     KABC::Addressee::List list;
 
-    KVCardDrag::fromMimeData( md, list );
+    KPIM::KVCardDrag::fromMimeData( md, list );
 
     KABC::Addressee::List::ConstIterator it;
     for ( it = list.begin(); it != list.end(); ++it ) {
@@ -486,7 +485,7 @@ void ViewManager::startDrag()
 
   // Text should be first as the default format. If an application explicitly requests vcard, it will still get it.
   mimeData->setText( AddresseeUtil::addresseesToEmails( addrList ) );
-  KVCardDrag::populateMimeData( mimeData, addrList );
+  KPIM::KVCardDrag::populateMimeData( mimeData, addrList );
 
 
   KTempDir tempDir;

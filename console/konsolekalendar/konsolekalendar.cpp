@@ -80,7 +80,7 @@ bool KonsoleKalendar::importCalendar()
 bool KonsoleKalendar::createCalendar()
 {
   bool status = false;
-  CalendarLocal newCalendar( KPimPrefs::timeSpec() );
+  CalendarLocal newCalendar( KPIM::KPimPrefs::timeSpec() );
 
   if ( m_variables->isDryRun() ) {
     cout << i18n( "Create Calendar &lt;Dry Run&gt;: %1" ,

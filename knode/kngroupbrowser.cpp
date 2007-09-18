@@ -48,10 +48,8 @@ KNGroupBrowser::KNGroupBrowser(QWidget *parent, const QString &caption, KNNntpAc
   refilterTimer = new QTimer();
   refilterTimer->setSingleShot( true );
 
-  allList=new Q3SortedList<KNGroupInfo>;
-  allList->setAutoDelete(true);
-  matchList=new Q3SortedList<KNGroupInfo>;
-  matchList->setAutoDelete(false);
+  allList=new QList<KNGroupInfo>;
+  matchList=new QList<KNGroupInfo>;
 
   //create Widgets
   page=new QWidget(this);
@@ -218,15 +216,16 @@ void KNGroupBrowser::createListItems(Q3ListViewItem *parent)
     }
   }
 
-  for(KNGroupInfo *gn=matchList->first(); gn; gn=matchList->next()) {
+  qSort(*matchList);
+  Q_FOREACH(const KNGroupInfo& gn, *matchList) {
 
-    if(!prefix.isEmpty() && !gn->name.startsWith(prefix))
+    if(!prefix.isEmpty() && !gn.name.startsWith(prefix))
       if(!compare.isNull())
         break;
       else
         continue;
 
-    compare=gn->name.mid(prefix.length());
+    compare=gn.name.mid(prefix.length());
 
     if(!expandit || !compare.startsWith(tlgn)) {
      if( ( colon = compare.indexOf('.') ) != -1 ) {
@@ -244,15 +243,14 @@ void KNGroupBrowser::createListItems(Q3ListViewItem *parent)
           it=new Q3ListViewItem(parent, tlgn);
         else
           it=new Q3ListViewItem(groupView, tlgn);
-
         it->setSelectable(false);
         it->setExpandable(true);
       }
       else {
         if(parent)
-          cit=new CheckItem(parent, *gn, this);
+          cit=new CheckItem(parent, gn, this);
         else
-          cit=new CheckItem(groupView, *gn, this);
+          cit=new CheckItem(groupView, gn, this);
         updateItemState(cit);
       }
     }
@@ -332,14 +330,14 @@ void KNGroupBrowser::slotFilter(const QString &txt)
 
   bool doIncrementalUpdate = (!isRegexp && incrementalFilter && (filtertxt.left(lastFilter.length())==lastFilter));
 
+    kDebug() << "Populating view, incremental is " << doIncrementalUpdate;
   if (doIncrementalUpdate) {
-    Q3SortedList<KNGroupInfo> *tempList = new Q3SortedList<KNGroupInfo>();
-    tempList->setAutoDelete(false);
-
-    for(KNGroupInfo *g=matchList->first(); g; g=matchList->next()) {
-      if ((notCheckSub||g->subscribed)&&
-          (notCheckNew||g->newGroup)&&
-          ( notCheckStr || ( g->name.indexOf(filtertxt) != -1 ) ) )
+    QList<KNGroupInfo> *tempList = new QList<KNGroupInfo>();
+    
+    Q_FOREACH(const KNGroupInfo& g, *matchList) {
+      if ((notCheckSub||g.subscribed)&&
+          (notCheckNew||g.newGroup)&&
+          ( notCheckStr || ( g.name.indexOf(filtertxt) != -1 ) ) )
       tempList->append(g);
     }
 
@@ -348,10 +346,10 @@ void KNGroupBrowser::slotFilter(const QString &txt)
   } else {
     matchList->clear();
 
-    for(KNGroupInfo *g=allList->first(); g; g=allList->next()) {
-      if ((notCheckSub||g->subscribed)&&
-          (notCheckNew||g->newGroup)&&
-          (notCheckStr||(isRegexp? (reg.indexIn(g->name,0) != -1) : ( g->name.indexOf( filtertxt ) != -1 ) )))
+    Q_FOREACH(const KNGroupInfo& g, *allList) {
+      if ((notCheckSub||g.subscribed)&&
+          (notCheckNew||g.newGroup)&&
+          (notCheckStr||(isRegexp? (reg.indexIn(g.name,0) != -1) : ( g.name.indexOf( filtertxt ) != -1 ) )))
         matchList->append(g);
     }
   }
@@ -359,8 +357,8 @@ void KNGroupBrowser::slotFilter(const QString &txt)
   groupView->clear();
 
   if((matchList->count() < MIN_FOR_TREE) || noTreeCB->isChecked()) {
-    for(KNGroupInfo *g=matchList->first(); g; g=matchList->next()) {
-      cit=new CheckItem(groupView, *g, this);
+    Q_FOREACH(const KNGroupInfo& g, *matchList) {
+      cit=new CheckItem(groupView, g, this);
       updateItemState(cit);
     }
   } else {

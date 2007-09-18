@@ -16,7 +16,6 @@
 #include <QTextCodec>
 #include <QClipboard>
 #include <QApplication>
-//Added by qt3to4:
 #include <QGridLayout>
 #include <QKeyEvent>
 #include <QEvent>
@@ -33,7 +32,7 @@
 #include "addressesdialog.h"
 using KPIM::AddressesDialog;
 #include "recentaddresses.h"
-using KRecentAddress::RecentAddresses;
+using KPIM::RecentAddresses;
 #include <kcharsets.h>
 #include <kmessagebox.h>
 #include <kabc/addresseedialog.h>
@@ -95,7 +94,7 @@ void KNLineEdit::contextMenuEvent( QContextMenuEvent*e )
 
 void KNLineEdit::editRecentAddresses()
 {
-  KRecentAddress::RecentAddressDialog dlg( this );
+  KPIM::RecentAddressDialog dlg( this );
   dlg.setAddresses( RecentAddresses::self( knGlobals.config() )->addresses() );
   if ( dlg.exec() ) {
     RecentAddresses::self( knGlobals.config() )->clear();

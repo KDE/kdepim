@@ -30,7 +30,7 @@
 #include <kaction.h>
 #include <kactioncollection.h>
 #include <kactionmenu.h>
-#include <kaddrbook.h>
+#include <kaddrbookexternal.h>
 #include <kascii.h>
 #include <kbookmarkmanager.h>
 #include <kcharsets.h>
@@ -932,7 +932,7 @@ QString ArticleWidget::toHtmlString( const QString &line, int flags )
   QString text = line;
   if ( flags & ArticleWidget::AllowROT13 ) {
     if ( mRot13 )
-      text = KMUtils::rot13( line );
+      text = KPIM::KMUtils::rot13( line );
   }
   return KPIMUtils::LinkLocator::convertToHtml( text, llflags );
 }
@@ -1459,12 +1459,12 @@ void ArticleWidget::slotAddBookmark()
 
 void ArticleWidget::slotAddToAddressBook()
 {
-  KAddrBookExternal::addEmail( mCurrentURL.path(), this );
+  KPIM::KAddrBookExternal::addEmail( mCurrentURL.path(), this );
 }
 
 void ArticleWidget::slotOpenInAddressBook()
 {
-  KAddrBookExternal::openEmail( mCurrentURL.path(), mCurrentURL.path(), this );
+  KPIM::KAddrBookExternal::openEmail( mCurrentURL.path(), mCurrentURL.path(), this );
 }
 
 void ArticleWidget::slotOpenAttachment()

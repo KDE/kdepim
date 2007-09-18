@@ -18,7 +18,7 @@
 
 #include <kio/job.h>
 
-#include <Q3SortedList>
+#include <QList>
 
 class KJob;
 
@@ -38,7 +38,7 @@ class GroupListJob : public KNJobData
     void slotResult( KJob *job );
 
   private:
-    Q3SortedList<KNGroupInfo> mGroupList;
+    QList<KNGroupInfo> mGroupList;
     bool mIncremental;
 };
 

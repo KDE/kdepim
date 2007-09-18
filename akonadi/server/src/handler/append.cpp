@@ -1,5 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2006 by Till Adam <adam@kde.org>                        *
+ *   Copyright (C) 2007 by Robert Zwerus <arzie@dds.nl>                    *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU Library General Public License as       *
@@ -14,7 +15,7 @@
  *   You should have received a copy of the GNU Library General Public     *
  *   License along with this program; if not, write to the                 *
  *   Free Software Foundation, Inc.,                                       *
- *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.             *
+ *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.         *
  ***************************************************************************/
 
 #include "append.h"
@@ -24,6 +25,7 @@
 
 #include "akonadi.h"
 #include "akonadiconnection.h"
+#include "protocol.h"
 #include "storage/datastore.h"
 #include "storage/entity.h"
 #include "storage/transaction.h"
@@ -41,7 +43,6 @@ Append::Append()
 Append::~Append()
 {
 }
-
 
 bool Akonadi::Append::handleLine(const QByteArray& line )
 {
@@ -122,8 +123,9 @@ bool Akonadi::Append::commit()
 
     // wrap data into a part
     Part part;
-    part.setName( QLatin1String("RFC822") );
+    part.setName( QLatin1String( AKONADI_PART_BODY ) );
     part.setData( m_data );
+    part.setPimItemId( item.id() );
     QList<Part> parts;
     parts.append( part );
 
@@ -164,5 +166,6 @@ bool Akonadi::Append::commit()
     response.setString( "Append completed" );
     emit responseAvailable( response );
     deleteLater();
+
     return true;
 }

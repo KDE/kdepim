@@ -25,6 +25,8 @@
 class KLineEdit;
 class QCheckBox;
 
+using namespace KPIM;
+
 class SloxWizard : public KConfigWizard
 {
   public:

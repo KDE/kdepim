@@ -1,5 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2006 by Andreas Gungl <a.gungl@gmx.de>                  *
+ *   Copyright (C) 2007 by Robert Zwerus <arzie@dds.nl>                    *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU Library General Public License as       *
@@ -315,24 +316,12 @@ bool DataStore::removeItemFlags( const PimItem &item, const QList<Flag> &flags )
 /* --- Location ------------------------------------------------------ */
 bool DataStore::appendLocation( Location &location )
 {
-  SelectQueryBuilder<Location> qb;
-  qb.addValueCondition( Location::parentIdColumn(), Query::Equals, location.parentId() );
-  qb.addValueCondition( Location::nameColumn(), Query::Equals, location.name() );
-  if ( !qb.exec() ) {
-    qDebug() << "Unable to check location existence";
-    return false;
-  }
-  if ( !qb.result().isEmpty() ) {
-    qDebug() << "Cannot insert location " << location.name()
-             << " because it already exists.";
-    return false;
-  }
-
+  // no need to check for already exising collection with the same name,
+  // a unique index on parent + name prevents that in the database
   location.setExistCount( 0 );
   location.setRecentCount( 0 );
   location.setUnseenCount( 0 );
   location.setFirstUnseen( 0 );
-  location.setUidValidity( 0 );
   if ( !location.insert() )
     return false;
 
@@ -457,33 +446,35 @@ bool Akonadi::DataStore::renameLocation(const Location & location, int newParent
 }
 
 
-bool DataStore::appendMimeTypeForLocation( int locationId, const QString & mimeType )
+bool DataStore::appendMimeTypeForLocation( int locationId, const QStringList & mimeTypes )
 {
-  //qDebug() << "DataStore::appendMimeTypeForLocation( " << locationId << ", '" << mimeType << "' )";
-  int mimeTypeId;
-  MimeType m = MimeType::retrieveByName( mimeType );
-  if ( !m.isValid() ) {
-    // the MIME type doesn't exist, so we have to add it to the db
-    if ( !appendMimeType( mimeType, &mimeTypeId ) )
-      return false;
-  } else {
-    mimeTypeId = m.id();
-  }
-
-  return appendMimeTypeForLocation( locationId, mimeTypeId );
-}
-
-bool DataStore::appendMimeTypeForLocation( int locationId, int mimeTypeId )
-{
-  if ( Location::relatesToMimeType( locationId, mimeTypeId ) ) {
-    qDebug() << "Cannot insert location-mime type ( " << locationId
-             << ", " << mimeTypeId << " ) because it already exists.";
+  if ( mimeTypes.isEmpty() )
+    return true;
+  SelectQueryBuilder<MimeType> qb;
+  qb.addValueCondition( MimeType::nameColumn(), Query::In, mimeTypes );
+  if ( !qb.exec() )
     return false;
+  QStringList missingMimeTypes = mimeTypes;
+
+  foreach ( const MimeType mt, qb.result() ) {
+    // unique index on n:m relation prevents duplicates, ie. this will fail
+    // if this mimetype is already set
+    if ( !Location::addMimeType( locationId, mt.id() ) )
+      return false;
+    missingMimeTypes.removeAll( mt.name() );
   }
 
-  return Location::addMimeType( locationId, mimeTypeId );
-}
+  // the MIME type doesn't exist, so we have to add it to the db
+  foreach ( const QString mtName, missingMimeTypes ) {
+    int mimeTypeId;
+    if ( !appendMimeType( mtName, &mimeTypeId ) )
+      return false;
+    if ( !Location::addMimeType( locationId, mimeTypeId ) )
+      return false;
+  }
 
+  return true;
+}
 
 bool Akonadi::DataStore::removeMimeTypesForLocation(int locationId)
 {
@@ -552,12 +543,14 @@ bool DataStore::appendPimItem( const QList<Part> & parts,
     return false;
 
   // insert every part
-  foreach( Part part, parts ) {
-    part.setPimItemId( pimItem.id() );
-    part.setDatasize( part.data().size() );
+  if ( !parts.isEmpty() ) {
+    foreach( Part part, parts ) {
+      part.setPimItemId( pimItem.id() );
+      part.setDatasize( part.data().size() );
 
-    if( !part.insert() )
-      return false;
+      if( !part.insert() )
+        return false;
+    }
   }
 
   mNotificationCollector->itemAdded( pimItem, location, mimetype.name() );

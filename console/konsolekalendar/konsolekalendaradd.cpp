@@ -123,7 +123,7 @@ bool KonsoleKalendarAdd::addImportedCalendar()
     fileName = m_variables->getCalendarFile();
   }
 
-  CalendarLocal *cal = new CalendarLocal( KPimPrefs::timeSpec() );
+  CalendarLocal *cal = new CalendarLocal( KPIM::KPimPrefs::timeSpec() );
   if ( !cal->load( fileName ) ||
        !cal->load( m_variables->getImportFile() ) ||
        !cal->save( fileName ) ) {

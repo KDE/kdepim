@@ -70,7 +70,7 @@ void KAB::DistributionListNg::ListBox::dropEvent( QDropEvent *event )
         return;
 
     KABC::Addressee::List addrs;
-    if ( !KVCardDrag::fromMimeData( event->mimeData(), addrs ) ) 
+    if ( !KPIM::KVCardDrag::fromMimeData( event->mimeData(), addrs ) ) 
         return;
 
     emit dropped( item->text(), addrs );

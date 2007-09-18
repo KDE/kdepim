@@ -126,19 +126,17 @@ void KNGroupDialog::updateItemState(CheckItem *it)
 
 
 
-void KNGroupDialog::toSubscribe(Q3SortedList<KNGroupInfo> *l)
+void KNGroupDialog::toSubscribe(QList<KNGroupInfo> *l)
 {
   KNGroupInfo *info;
   l->clear();
-  l->setAutoDelete(true);
 
   bool moderated=false;
   Q3ListViewItemIterator it(subView);
   for(; it.current(); ++it) {
-    info = new KNGroupInfo();
-    *info = ((static_cast<GroupItem*>(it.current()))->info);
+    const KNGroupInfo& info = ((static_cast<GroupItem*>(it.current()))->info);
     l->append(info);
-    if (info->status==KNGroup::moderated)
+    if (info.status==KNGroup::moderated)
       moderated=true;
   }
   if (moderated)   // warn the user

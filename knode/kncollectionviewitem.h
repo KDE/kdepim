@@ -34,9 +34,6 @@ class KNCollectionViewItem : public KFolderTreeItem  {
                           Type type = Other, int unread = 0, int total = 0 );
     ~KNCollectionViewItem();
 
-    void paintCell( QPainter * p, const QColorGroup & cg,
-                    int column, int width, int align );
-
     int compare(Q3ListViewItem *i, int col, bool ascending) const;
 
     // DND

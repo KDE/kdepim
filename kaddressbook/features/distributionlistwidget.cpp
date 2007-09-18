@@ -176,7 +176,7 @@ DistributionListWidget::DistributionListWidget( KAB::Core *core, QWidget *parent
   connect( mRemoveListButton, SIGNAL( clicked() ), SLOT( removeList() ) );
 
   mContactView = new DistributionListView( this );
-  mContactView->setHeaderLabels( QStringList() << i18n( "Name" ) 
+  mContactView->setHeaderLabels( QStringList() << i18n( "Name" )
       << i18n( "Email" ) << i18n( "Use Preferred" ) );
   mContactView->setEnabled( false );
   mContactView->setAllColumnsShowFocus( true );
@@ -536,7 +536,7 @@ void DistributionListWidget::dropEvent( QDropEvent *e )
 
   const QMimeData *md = e->mimeData();
   KABC::Addressee::List lst;
-  if ( KVCardDrag::fromMimeData( md, lst ) ) {
+  if ( KPIM::KVCardDrag::fromMimeData( md, lst ) ) {
 
     for ( KABC::Addressee::List::ConstIterator it = lst.begin(); it != lst.end(); ++it )
       dist.insertEntry( *it );
@@ -659,7 +659,7 @@ QString EmailSelector::getEmail( const QStringList &emails,
 {
   EmailSelector dlg( emails, current, parent );
   if(dlg.exec())
-  { 
+  {
      canceled = false;
      return dlg.selected();
   }

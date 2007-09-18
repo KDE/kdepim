@@ -3,8 +3,10 @@
 
 [Misc]
 Name=Letter business/work address
+Name[de]=Postanschrift (geschäftlich)
 Name[el]=Διευθύνσεις επιχείρησης/εργασίας αλληλογραφίας
 Name[es]=Dirección postal de negocios/del trabajo
+Name[it]=Indirizzo postale di lavoro/affari
 Name[ja]=手紙の勤務先/ビジネス住所
 Name[ne]=चिठ्ठी व्यवसायिक/कार्य ठेगाना
 Name[pt]=Endereço de trabalho/emprego da carta

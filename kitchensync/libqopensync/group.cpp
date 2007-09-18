@@ -270,25 +270,27 @@ Result Group::save()
 void Group::setUseMerger( bool use )
 {
   Q_ASSERT( mGroup );
-  osync_group_set_merger_enabled( mGroup, use );
+//  osync_group_set_merger_enabled( mGroup, use );
 }
 
 bool Group::useMerger() const
 {
   Q_ASSERT( mGroup );
-  return osync_group_get_merger_enabled( mGroup );
+//  return osync_group_get_merger_enabled( mGroup );
+  return true;
 }
 
 void Group::setUseConverter( bool use )
 {
   Q_ASSERT( mGroup );
-  osync_group_set_converter_enabled( mGroup, use );
+//  osync_group_set_converter_enabled( mGroup, use );
 }
 
 bool Group::useConverter() const
 {
   Q_ASSERT( mGroup );
-  return osync_group_get_converter_enabled( mGroup );
+//  return osync_group_get_converter_enabled( mGroup );
+  return true;
 }
 
 void Group::setObjectTypeEnabled( const QString &objectType, bool enabled )

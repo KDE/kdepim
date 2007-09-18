@@ -46,7 +46,10 @@ class KNLocalArticle;
 class KNAttachment;
 class KComboBox;
 class QComboBox;
+namespace KPIM {
 class KMeditor;
+}
+using KPIM::KMeditor;
 
 namespace KPIMUtils { class SpellingFilter; }
 using KPIMUtils::SpellingFilter;
@@ -238,15 +241,15 @@ class KNComposer::ComposerView  : public QSplitter {
                 *l_fup2;
     KNLineEditSpell *s_ubject;
 
-    KNLineEdit   *g_roups;
+    KNLineEdit  *g_roups;
     KNLineEdit  *t_o;
 
     KComboBox   *f_up2;
     QPushButton *g_roupsBtn,
                 *t_oBtn;
 
-    KMeditor      *e_dit;
-    Q3GroupBox   *n_otification;
+    KMeditor    *e_dit;
+    Q3GroupBox  *n_otification;
     QPushButton *c_ancelEditorBtn;
 
     QWidget         *a_ttWidget;

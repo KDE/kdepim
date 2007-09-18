@@ -79,10 +79,11 @@ void KNode::GroupListJob::slotEntries( KIO::Job * job, const KIO::UDSEntryList &
     } else {
       subscribed = false;
     }
+    kDebug() << "Found group " << name;
     if ( mIncremental )
-      mGroupList.append( new KNGroupInfo( name, desc, true, subscribed, access ) );
+      mGroupList.append(KNGroupInfo( name, desc, true, subscribed, access ) );
     else
-      target->groups->append( new KNGroupInfo( name, desc, false, subscribed, access ) );
+      target->groups->append(KNGroupInfo( name, desc, false, subscribed, access ) );
   }
 }
 

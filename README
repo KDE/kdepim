@@ -28,7 +28,7 @@ What it is
 * kalarm: gui for setting up personal alarm messages, emails and commands
 * kalarmd: alarm monitoring daemon, shared by korganizer and kalarm.
 * kontact: Integrated PIM application
-* karm: Time tracker.
+* ktimetracker: Time tracker.
 * kfile-plugins: vCard KFIleItem plugin.
 * knotes: yellow notes application
 * konsolecalendar: Command line tool for accessing calendar files.
@@ -37,22 +37,15 @@ What it is
 
 There is also quite an amount of infrastructure in this package:
 
-* calendarsystem: library for handling of non-gregorian calendar systems
 * libkdepim: Common code for different kdepim apps
-* libkdenetwork: Common code for apps previously being in the kdenetwork CVS
-                 module (KMail, KNode). This will be merged with libkdepim.
 * mimelib: MIME messages library
 * kpgp: A library for pgp
 * libkpimexchange: connecting to Exchange2000 servers
 * kdgantt: alternative lib for Gantt diagrams, used by the free/busy view of
            KOrganizer (yes, we should decide for one of the Gantt libs)
-* kioslaves/sieve: Sieve kioslave
 
 The following subdirectories have been moved to kdenonbeta/kdepim:
 
-* empath: a modular e-mail client, designed for reuse, needs a Qt
-          with threading support
-* twister: another personal information manager, needs empath
 * kab2: another design for the KDE addressbook
 
 * ldif: a parser for LDIF, the LDAP Information Interchange Format

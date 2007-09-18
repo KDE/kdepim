@@ -49,8 +49,14 @@ K_GLOBAL_STATIC(ConfigInstance, configInstance)
 
 Config::Config()
     : d( new ConfigPrivate ) {
+    // check if this is the first program start-up
+    if( !MainConfig::configversion() ) {
+        KMobileTools::MainConfig::self()->readConfig();
+        KMobileTools::MainConfig::self()->setConfigversion( d->currentVersion );
+        KMobileTools::MainConfig::self()->writeConfig();
+    }
     // check if the user's configuration is outdated
-    if( d->currentVersion != MainConfig::configversion() ) {
+    else if( d->currentVersion != MainConfig::configversion() ) {
         QDir configDir( KGlobal::dirs()->saveLocation("config") );
         QStringList entries = configDir.entryList( QStringList() << "*kmobiletools*", QDir::Files );
         if( !entries.isEmpty() ) {

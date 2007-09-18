@@ -433,7 +433,7 @@ void kmobiletoolsMainPart::setupGUI( QWidget* parent ) {
 
 void kmobiletoolsMainPart::setupActions() {
     // "Quit" action
-    actionCollection()->addAction( KStandardAction::Quit, "file_quit", this, SLOT(slotQuit()) );
+    actionCollection()->addAction( KStandardAction::Quit, "quit", this, SLOT(slotQuit()) );
 
     // "Configure notifications" action
     actionCollection()->addAction( KStandardAction::ConfigureNotifications, "options_configure_notifications",

@@ -63,7 +63,7 @@ void ItemFetchJob::Private::startFetchJob()
     }
     command += ")\n";
   } else {
-    command += "AKALL\n";
+    command += " AKALL\n";
   }
   mParent->writeData( command );
 }
@@ -153,7 +153,7 @@ Item::List ItemFetchJob::items() const
 
 Item ItemFetchJob::createItem(const QList< QByteArray > & fetchResponse)
 {
-  int uid;
+  int uid = -1;
   QString rid;
   QString mimeType;
 

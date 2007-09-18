@@ -21,6 +21,8 @@
 #include "egroupwarewizard.h"
 #include "egroupwareconfig.h"
 
+#include "libkdepim/kconfigpropagator.h"
+
 #include "kresources/egroupware/kabc_egroupwareprefs.h"
 #include "kresources/egroupware/kabc_resourcexmlrpc.h"
 #include "kresources/egroupware/kcal_egroupwareprefs.h"

@@ -41,8 +41,8 @@
 
 <!-- Don't change format of date and version of the documentation -->
 
-<date>2007-04-16</date>
-<releaseinfo>1.09.05</releaseinfo>
+<date>2007-09-10</date>
+<releaseinfo>1.09.07</releaseinfo>
 
 <abstract>
 <para>&kalarm; is a personal alarm message, command and email scheduler for &kde;.</para>
@@ -185,6 +185,10 @@ always shown. You can use the
 <link linkend="preferences-view">Preferences dialog</link> to change
 the default columns to display.</para>
 
+<para>If you use multiple alarm resources, you can color code alarms
+according to which resource they belong to, by selecting a different
+background color for each resource.</para>
+
 <sect2 id="expired">
 <title>Archived Alarms</title>
 
@@ -193,7 +197,7 @@ they have expired or been deleted. (But note that alarms which you
 delete are stored only if they have already triggered at least once.)
 You can control whether &kalarm; archives expired alarms, and for how
 long, in the
-<link linkend="preferences-general">Preferences dialog</link>.</para>
+<link linkend="preferences-storage">Preferences dialog</link>.</para>
 
 <para>Archived alarms may be shown in the alarm list by selecting
 <menuchoice><guimenu>View</guimenu><guimenuitem>Show Archived
@@ -222,11 +226,11 @@ or <menuchoice>
 
 <itemizedlist>
 <listitem>
-<para>Text alarms: the message text is searched.</para>
+<para>Text message alarms: the message text is searched.</para>
 </listitem>
 
 <listitem>
-<para>File alarms: the file path/&URL; is searched.</para>
+<para>File display alarms: the file path/&URL; is searched.</para>
 </listitem>
 
 <listitem>
@@ -253,7 +257,7 @@ must first display them as described in the section above.</para></note>
 <title>Creating a New Alarm</title>
 
 <para>To create a new alarm, do one of the following. This displays
-the <link linkend="alarm-edit-dlg">alarm edit dialog</link> through
+the <link linkend="alarm-edit-dlg">Alarm Edit dialog</link> through
 which you configure the alarm.</para>
 
 <itemizedlist>
@@ -300,14 +304,14 @@ section.</para>
 <para>To base your new alarm on an existing one, highlight the existing
 alarm in the list and select <menuchoice>
 <guimenu>Actions</guimenu><guimenuitem>Copy</guimenuitem></menuchoice>.
-This opens the <link linkend="alarm-edit-dlg">alarm edit dialog</link>
+This opens the <link linkend="alarm-edit-dlg">Alarm Edit dialog</link>
 already filled in with a copy of the selected alarm's details.</para>
 </listitem>
 
 <listitem>
 <para>To create a new alarm which displays an existing email message,
 drag the email from &kmail; onto &kalarm;'s main window or system tray
-icon. This opens the <link linkend="alarm-edit-dlg">alarm edit
+icon. This opens the <link linkend="alarm-edit-dlg">Alarm Edit
 dialog</link> with the entire email message (including sender,
 recipient, &etc;) as the alarm text.</para>
 </listitem>
@@ -316,20 +320,20 @@ recipient, &etc;) as the alarm text.</para>
 <para>To create a new email alarm to send a copy of an existing email
 message, drag the email from &kmail; onto &kalarm;'s main window or
 system tray icon. Then select the <guilabel>Email</guilabel> option.
-The <link linkend="alarm-edit-dlg">alarm edit dialog</link> is preset
+The <link linkend="alarm-edit-dlg">Alarm Edit dialog</link> is preset
 with the entire email message except sender.</para>
 </listitem>
 
 <listitem>
 <para>Dragging any piece of text onto &kalarm;'s main window or system
-tray icon opens the <link linkend="alarm-edit-dlg">alarm edit
+tray icon opens the <link linkend="alarm-edit-dlg">Alarm Edit
 dialog</link> and sets the alarm text.</para>
 </listitem>
 
 <listitem>
 <para>To create a file display alarm, drag a file &URL; onto &kalarm;'s
 main window or system tray icon. This opens the
-<link linkend="alarm-edit-dlg">alarm edit dialog</link> and sets the
+<link linkend="alarm-edit-dlg">Alarm Edit dialog</link> and sets the
 file name.</para>
 </listitem>
 
@@ -368,7 +372,7 @@ context menu.</para>
 </listitem>
 </itemizedlist>
 
-<para>This displays the <link linkend="alarm-edit-dlg">alarm edit
+<para>This displays the <link linkend="alarm-edit-dlg">Alarm Edit
 dialog</link>.</para>
 
 </sect2>
@@ -396,7 +400,7 @@ from the context menu.</para>
 <para>When you delete an active alarm, it is archived, provided that
 it has triggered at least once before being deleted, and provided that
 expired alarms are archived at all. (Use the
-<link linkend="preferences-general">Preferences dialog</link> to
+<link linkend="preferences-storage">Preferences dialog</link> to
 control whether and for how long archived alarms are stored.) When you
 delete an archived alarm, or an active alarm which has not yet
 triggered, it is removed permanently.</para>
@@ -404,7 +408,7 @@ triggered, it is removed permanently.</para>
 <para>You can reactivate a deleted alarm from the archived alarms list,
 provided that it has not yet expired. To do this, first display
 archived alarms, as described in
-<link linkend="expired">Expired Alarms</link>. Then:</para>
+<link linkend="expired">Archived Alarms</link>. Then:</para>
 
 <itemizedlist>
 <listitem>
@@ -452,7 +456,7 @@ from the context menu.</para>
 </listitem>
 </itemizedlist>
 
-<para>This displays the <link linkend="alarm-edit-dlg">alarm edit
+<para>This displays the <link linkend="alarm-edit-dlg">Alarm Edit
 dialog</link> in read-only mode.</para>
 
 </sect2>
@@ -477,12 +481,12 @@ alarm can contain, apart from the start date.</para>
 alarm to remind you about a television program whose time varies
 from week to week. The template would contain all the alarm details
 (message text, whether to play a sound, &etc;) except for the time and
-date. Now, to create the alarm, all you need to do is open the alarm
-edit dialog with that template and then enter the time and
-date.</para>
+date. Now, to create the alarm, all you need to do is open the
+<link linkend="alarm-edit-dlg">Alarm Edit dialog</link> with that
+template and then enter the time and date.</para>
 
 <para>To create an alarm based on a template, open the
-<link linkend="alarm-edit-dlg">alarm edit dialog</link> preset with
+<link linkend="alarm-edit-dlg">Alarm Edit dialog</link> preset with
 the template details:</para>
 
 <itemizedlist>
@@ -500,7 +504,7 @@ from the context menu. Then select the desired template.</para>
 </listitem>
 
 <listitem>
-<para>Open the <link linkend="alarm-edit-dlg">alarm edit dialog</link>
+<para>Open the <link linkend="alarm-edit-dlg">Alarm Edit dialog</link>
 in the usual way, and click the
 <guibutton>Load Template...</guibutton> button to select a template to
 preset the dialog with.</para>
@@ -521,14 +525,14 @@ existing alarm.</para>
 <para>Display the Alarm Templates dialog by selecting the <menuchoice>
 <guimenu>File</guimenu><guimenuitem>Templates...</guimenuitem>
 </menuchoice> menu item, and click <guibutton>New</guibutton>. This
-displays a blank template edit dialog.</para>
+displays a blank Template Edit dialog.</para>
 </listitem>
 
 <listitem>
 <para>Display the Alarm Templates dialog by selecting the <menuchoice>
 <guimenu>File</guimenu><guimenuitem>Templates...</guimenuitem>
 </menuchoice> menu item, select an existing template from the list and
-click <guibutton>Copy</guibutton>. This opens the template edit dialog
+click <guibutton>Copy</guibutton>. This opens the Template Edit dialog
 already filled in with a copy of the existing template's
 details.</para>
 </listitem>
@@ -536,7 +540,7 @@ details.</para>
 <listitem>
 <para>Highlight an alarm in the alarm list and select <menuchoice>
 <guimenu>Actions</guimenu><guimenuitem>Create template</guimenuitem>
-</menuchoice>. This opens the template edit dialog already filled in
+</menuchoice>. This opens the Template Edit dialog already filled in
 with a copy of the selected alarm's details.</para>
 </listitem>
 </itemizedlist>
@@ -545,7 +549,7 @@ with a copy of the selected alarm's details.</para>
 dialog by selecting the <menuchoice>
 <guimenu>File</guimenu><guimenuitem>Templates...</guimenuitem>
 </menuchoice> menu item and click <guibutton>Edit</guibutton>. This
-displays the template edit dialog which is described below.</para>
+displays the Template Edit dialog which is described below.</para>
 
 <para>To delete existing templates, display the Alarm Templates
 dialog by selecting the <menuchoice>
@@ -559,8 +563,8 @@ prevent accidental deletions.</para>
 <sect3>
 <title>Template Edit Dialog</title>
 
-<para>The template edit dialog is similar to the
-<link linkend="alarm-edit-dlg">alarm edit dialog</link>. The
+<para>The Template Edit dialog is similar to the
+<link linkend="alarm-edit-dlg">Alarm Edit dialog</link>. The
 following controls are different:</para>
 
 <itemizedlist>
@@ -879,6 +883,23 @@ resource type. This option is not available for disabled or read-only
 resources.</para>
 </listitem>
 </varlistentry>
+
+<varlistentry>
+<term><menuchoice><guimenuitem>Set Color</guimenuitem></menuchoice></term>
+<listitem>
+<para>Select a background color for highlighting this resource's alarms
+in the alarm list. This enables you to see at a glance which alarms
+belong to a particular resource.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><menuchoice><guimenuitem>Clear Color</guimenuitem></menuchoice></term>
+<listitem>
+<para>Clear color highlighting for this resource's alarms in the alarm
+list.</para>
+</listitem>
+</varlistentry>
 </variablelist>
 
 </sect3>
@@ -965,7 +986,7 @@ defined in the <guilabel>Alarm Text</guilabel> group box.</para>
 <listitem>
 <para>The remaining controls are the same as for
 <guilabel>Text</guilabel> alarms in the
-<link linkend="alarm-edit-dlg">alarm edit dialog</link>.</para>
+<link linkend="alarm-edit-dlg">Alarm Edit dialog</link>.</para>
 </listitem>
 </itemizedlist>
 
@@ -1006,17 +1027,17 @@ button.</para>
 <sect1 id="alarm-edit-dlg">
 <title>The Alarm Edit Dialog</title>
 
-<para>The alarm edit dialog enables you to view and edit an
+<para>The Alarm Edit dialog enables you to view and edit an
 alarm.</para>
 
 <screenshot>
-<screeninfo>Screenshot of the alarm edit dialog</screeninfo>
+<screeninfo>Screenshot of the Alarm Edit dialog</screeninfo>
 <mediaobject>
 <imageobject>
 <imagedata fileref="editwindow.png" format="PNG"/>
 </imageobject>
 <textobject>
-<phrase>Alarm edit dialog</phrase>
+<phrase>Alarm Edit dialog</phrase>
 </textobject>
 </mediaobject>
 </screenshot>
@@ -1076,7 +1097,8 @@ dialog.</para></note>
 <para>Enter the sound file path or &URL;, or use the button beside the
 edit box to display a file selection dialog. You can listen to the
 selected file by clicking the play button to the left of the edit
-field.</para>
+field. That button then changes function to allow you to stop playing
+when you have heard enough.</para>
 </listitem>
 
 <listitem>
@@ -1118,21 +1140,19 @@ the selected sound levels.</para></tip>
 </listitem>
 
 <listitem>
-<para>Select the background color for the alarm message window.
-(The color selection list can be configured in the
-<link linkend="preferences-fontcolour">Preferences dialog</link>.)</para>
-</listitem>
-
-<listitem>
 <para>Use the <guibutton>Font &amp; Color...</guibutton> button to
-select a font, or foreground or background color, for the alarm
+select a font, and foreground and background colors, for the alarm
 message. In the <guilabel>Choose Alarm Font &amp; Color</guilabel>
 dialog, check <guilabel>Use default font</guilabel> to display the
 message in whatever font is configured as the default at the time
-the message is displayed. (The default font can be set in the
-<link linkend="preferences-fontcolour">Preferences dialog</link>.)
-To choose a specific font for the message, uncheck
-<guilabel>Use default font</guilabel>.</para>
+the message is displayed. To choose a specific font for the message,
+uncheck <guilabel>Use default font</guilabel>. (The default font, and
+the colors shown in the color selection lists, can be set in the
+<link linkend="preferences-fontcolour">Preferences dialog</link>.)</para>
+
+<para>The selected font and colors are shown in a sample text
+alongside the button. You can edit this text to show special
+characters.</para>
 </listitem>
 
 <listitem>
@@ -1328,7 +1348,7 @@ when the alarm is to be triggered.</para>
 for the alarm: in this case the alarm will be displayed at the first
 opportunity on or after the configured start-of-day time, on the
 specified date.
-(<link linkend="preferences-general">Configuring &kalarm;</link>
+(<link linkend="preferences-time">Configuring &kalarm;</link>
 describes how to set the start-of-day time.)</para>
 </listitem>
 
@@ -1349,17 +1369,19 @@ change them.</para>
 <para>In the combo box, choose the time zone which this alarm is to
 use. When creating a new alarm, this is initially set to the time zone
 selected in the
-<link linkend="preferences-general">Preferences dialog</link>, which
+<link linkend="preferences-time">Preferences dialog</link>, which
 will be your computer's time zone unless you have changed it.</para>
 </listitem>
 
 <listitem>
 <para>Check <guilabel>Ignore time zone</guilabel> if you want to use
 the local computer time (on whichever computer &kalarm; happens to be
-running on at the time), ignoring time zones. You are recommended not
-to use this option if the alarm has a recurrence specified in hours
-and minutes; if you do, the alarm may occur at unexpected times after
-daylight saving time shifts.</para>
+running on at the time), ignoring time zones.</para>
+
+<warning><para>You are recommended not to select this option if the
+alarm has a recurrence specified in hours and minutes; if you do, the
+alarm may occur at unexpected times after daylight saving time
+shifts.</para></warning>
 </listitem>
 </itemizedlist>
 
@@ -1373,12 +1395,9 @@ want to display a reminder in advance of the main alarm and of each of
 its recurrences (if any). Enter how long in advance using the edit
 controls beside the check box.</para>
 
-<note><para>You can only display a reminder before each repetition of
-an alarm if the repetitions are set up using the
-<guilabel>Recurrence</guilabel> tab. If the
-<guibutton>Simple Repetition</guibutton> button is used instead, a
-reminder will be displayed before the first occurrence
-only.</para></note>
+<note><para>Reminders are not displayed for sub-repetitions within a
+recurrence. Reminders are only shown before each main
+recurrence of the alarm.</para></note>
 
 <para>If the alarm recurs, check <guilabel>Reminder for first
 recurrence only</guilabel> if you only want a reminder before the
@@ -1432,89 +1451,12 @@ showing at the expiry of the late-cancelation time.</para>
 <title>Recurrence</title>
 
 <para>Specify whether or how the alarm should be repeated using the
-<guibutton>Simple Repetition</guibutton> button and the
-<guilabel>Recurrence</guilabel> tab. The
-<guilabel>Recurrence</guilabel> tab allows the greatest flexibility
-in setting up a recurrence, but for simple repetitions which can be
-described in terms of a number of occurrences with a fixed interval
-between, the <guibutton>Simple Repetition</guibutton> button
-provides a simpler dialog.</para>
+<guilabel>Recurrence</guilabel> tab.</para>
 
-<note><para>Reminders are handled differently depending on which
-method is used to set up a repeating alarm. If you use the
-<guibutton>Simple Repetition</guibutton> button a reminder will only
-be displayed before the alarm's first occurrence, whereas if you use
-the <guilabel>Recurrence</guilabel> tab a reminder will be displayed
-before each recurrence.</para></note>
-
-<para>You can also use the <guibutton>Simple Repetition</guibutton>
-button in conjunction with the <guilabel>Recurrence</guilabel> tab to
-set up a repetition within a repetition. In this case, each time the
-alarm is due as specified in the <guilabel>Recurrence</guilabel> tab,
-instead of being triggered just once it is triggered repeatedly in
-accordance with your simple repetition specification. For example,
-to set up an alarm which repeats every hour from noon to 6 pm each
-Thursday, you would use the <guilabel>Recurrence</guilabel> tab to set
-up a weekly recurrence on Thursday at 12:00, and the Simple Repetition
-dialog to specify an interval of 1 hour and either a count of 7 or a
-duration of 6 hours.</para>
-
-<para>The alarm's basic repetition characteristics are displayed for
-convenience in the <guilabel>Alarm</guilabel> tab, beside the
-<guibutton>Simple Repetition</guibutton> button. The recurrence
-interval as set up in the <guilabel>Recurrence</guilabel> tab is shown
-first, followed by the repetition interval set up using the
-<guibutton>Simple Repetition</guibutton> button.</para>
-
-<sect3>
-<title>Simple Repetition Dialog</title>
-
-<para>Check <guilabel>Repeat every</guilabel> to set up a repetition,
-or uncheck it to remove the repetition. If
-<guilabel>Repeat every</guilabel> is checked, set up the repetition as
-follows:</para>
-
-<itemizedlist>
-<listitem><para>Enter the time interval between repetitions in the
-controls beside <guilabel>Repeat every</guilabel>. Select the desired
-time units (&eg; <guilabel>days</guilabel>) and then enter the number
-of units.</para>
-</listitem>
-
-<listitem><para>Specify either the repetition count or its
-duration:</para>
-
-<itemizedlist>
-<listitem><para>Select <guilabel>Number of times</guilabel> to enter
-how many times the alarm should be triggered, including the initial
-occurrence. So, for example, to make the alarm occur an additional 3
-times after it first triggers, you should enter 4 here.</para>
-</listitem>
-
-<listitem><para>Select <guilabel>Duration</guilabel> to enter the
-total time period during which the alarm should be repeated. This need
-not be an exact multiple of the repetition interval; it will
-automatically be rounded down when you click
-<guibutton>OK</guibutton>.</para>
-</listitem>
-</itemizedlist>
-</listitem>
-</itemizedlist>
-
-<note><para>A simple repetition's duration is restricted if it is
-used in conjunction with a recurrence set up using the
-<guilabel>Recurrence</guilabel> tab. In this case, each time the alarm
-recurs as specified in the <guilabel>Recurrence</guilabel> tab, any
-still active simple repetition which started at the previous
-recurrence is automatically canceled. This prevents overlapping simple
-repetitions for the same alarm. The simple repetition's duration is
-therefore restricted to be less than the longest interval between
-recurrences.</para></note>
-
-</sect3>
-
-<sect3>
-<title>Recurrence Tab</title>
+<note><para>The alarm's basic repetition characteristics are displayed
+for convenience in the <guilabel>Alarm</guilabel> tab. The recurrence
+interval is shown first, followed by any sub-repetition interval set up
+using the <guibutton>Sub-Repetition</guibutton> button.</para></note>
 
 <para>In the <guilabel>Recurrence Rule</guilabel> group box, set the
 recurrence type or time period as follows:</para>
@@ -1576,7 +1518,14 @@ repetitions indefinitely.</para></listitem>
 total number of occurrences of the alarm.</para></listitem>
 
 <listitem><para>Select <guilabel>End by</guilabel> to specify the
-date/time until which the alarm will be repeated.</para></listitem>
+date/time until which the alarm will be repeated. Note that this uses
+the same time zone as the alarm's start time.</para>
+
+<note><para>The end date/time determines when the last main recurrence
+will be, but does not limit sub-repetitions. If sub-repetitions are
+configured, they will trigger as normal after the last main recurrence,
+regardless of the end date/time.</para></note>
+</listitem>
 </itemizedlist>
 
 <para>If you wish to exclude certain date/times from the recurrence
@@ -1588,6 +1537,67 @@ exception, enter a date on the right and press
 the list, enter the new date on the right and press
 <guibutton>Change</guibutton>. To delete an exception, highlight it
 in the list and press <guibutton>Delete</guibutton>.</para>
+
+<para>You can restrict an alarm to occur only during working time by
+checking <guilabel>Only during working hours</guilabel>. This does not
+change the way the alarm is scheduled; it simply suppresses the alarm
+whenever it happens to trigger outside working hours. Work days and
+working hours are set in the
+<link linkend="preferences-time">Preferences dialog</link>.</para>
+
+<sect3>
+<title>Sub-Repetition</title>
+
+<para>You can use the <guibutton>Sub-Repetition</guibutton> button to
+set up a repetition within a repetition. In this case, each time the
+alarm is due as specified in the main recurrence, instead of being
+triggered just once it is triggered repeatedly in accordance with your
+sub-repetition specification. For example, to set up an alarm which
+repeats every hour from noon to 6 pm each Thursday, you would set up a
+weekly recurrence on Thursday at 12:00, and use the Sub-Repetition
+dialog to specify an interval of 1 hour and either a count of 6 or a
+duration of 6 hours.</para>
+
+<para>In the Sub-Repetition dialog which is displayed when you click
+the <guibutton>Sub-Repetition</guibutton> button, check
+<guilabel>Repeat every</guilabel> to set up a repetition, or uncheck
+it to remove the repetition. If <guilabel>Repeat every</guilabel> is
+checked, set up the repetition as follows:</para>
+
+<itemizedlist>
+<listitem><para>Enter the time interval between repetitions in the
+controls beside <guilabel>Repeat every</guilabel>. Select the desired
+time units (&eg; <guilabel>days</guilabel>) and then enter the number
+of units.</para>
+</listitem>
+
+<listitem><para>Specify either the repetition count or its
+duration:</para>
+
+<itemizedlist>
+<listitem><para>Select <guilabel>Number of times</guilabel> to enter
+how many times the alarm should be triggered after the main
+recurrence. So, for example, to make the alarm occur 4 times at each
+main recurrence, &ie; 3 additional times, you should enter 3
+here.</para>
+</listitem>
+
+<listitem><para>Select <guilabel>Duration</guilabel> to enter the
+total time period during which the alarm should be repeated. This need
+not be an exact multiple of the repetition interval; it will
+automatically be rounded down when you click
+<guibutton>OK</guibutton>.</para>
+</listitem>
+</itemizedlist>
+</listitem>
+</itemizedlist>
+
+<note><para>To prevent overlapping sub-repetitions for the same alarm,
+a sub-repetition's duration is restricted to be less than the longest
+interval between main recurrences. Each time the alarm recurs as
+specified in the main recurrence, any still active sub-repetition
+which started at the previous recurrence is automatically
+cancelled.</para></note>
 
 </sect3>
 </sect2>
@@ -1633,10 +1643,11 @@ list.</para>
 desktop and cannot be covered by ordinary windows, to ensure that
 you see it. The message window shows the time for which the alarm was
 scheduled, so that you can see when it popped up if you were away from
-the computer at the time. (For reminder messages, however, the
-date/time shown is that for the main alarm or its recurrence, not the
-reminder message time, and the window title is
-<quote>Reminder</quote>).</para>
+the computer at the time. If the alarm's scheduled time is in a
+different time zone from your local computer's setting, its time zone
+will also be displayed. (For reminder messages, the date/time shown is
+that for the main alarm or its recurrence, not the reminder message
+time, and the window title is <quote>Reminder</quote>).</para>
 
 <para>Alarm message windows remain visible until you acknowledge them,
 unless <guilabel>Auto-close window after late-cancelation
@@ -1662,7 +1673,7 @@ prompt for confirmation, if you selected
 <listitem>
 <para>Edit the alarm by clicking the <guibutton>Edit...</guibutton>
 button. This displays the
-<link linkend="alarm-edit-dlg">alarm edit dialog</link>.</para>
+<link linkend="alarm-edit-dlg">Alarm Edit dialog</link>.</para>
 </listitem>
 
 <listitem>
@@ -1678,7 +1689,7 @@ window.</para>
 <note><para>The time the alarm is deferred to must be earlier than its
 next scheduled occurrence or next reminder. For this reason, the
 <guibutton>Defer...</guibutton> button in the alarm message window and
-the <guibutton>OK</guibutton> button in the deferral dialog are
+the <guibutton>OK</guibutton> button in the Deferral dialog are
 disabled one minute before the next occurrence or
 reminder.</para></note>
 
@@ -1775,7 +1786,7 @@ for details.</para>
 
 <varlistentry>
 <term><menuchoice><guimenuitem>New Alarm...</guimenuitem></menuchoice></term>
-<listitem><para><action>Opens the alarm edit dialog to create a new
+<listitem><para><action>Opens the Alarm Edit dialog to create a new
 alarm.</action></para>
 </listitem>
 </varlistentry>
@@ -1783,15 +1794,15 @@ alarm.</action></para>
 <varlistentry>
 <term><menuchoice><guimenuitem>New Alarm From Template</guimenuitem></menuchoice></term>
 <listitem><para><action>Displays the list of alarm templates in a
-menu. When you select one, the alarm edit dialog is opened, preset
+menu. When you select one, the Alarm Edit dialog is opened, preset
 with that template's details.</action></para>
 </listitem>
 </varlistentry>
 
 <varlistentry>
 <term><menuchoice><guimenuitem>Configure &kalarm;...</guimenuitem></menuchoice></term>
-<listitem><para><action>Displays the &kalarm; preferences dialog.</action></para>
-<para>The preferences dialog is described in
+<listitem><para><action>Displays the &kalarm; Preferences dialog.</action></para>
+<para>The Preferences dialog is described in
 <link linkend="preferences">Configuring &kalarm;</link>. It
 includes options relating to the &kalarm; system tray icon.</para>
 </listitem>
@@ -2059,7 +2070,7 @@ their display when they become due.</para></tip>
 <para>To configure &kalarm;'s operation to suit your system and your
 personal preferences, select <menuchoice><guimenu>Settings</guimenu>
 <guimenuitem>Configure &kalarm;...</guimenuitem></menuchoice>.
-This displays the configuration dialog.</para>
+This displays the Preferences dialog.</para>
 
 <sect1 id="preferences-general">
 <title>General</title>
@@ -2148,46 +2159,6 @@ login, you need to uncheck this option again each time you run
 </itemizedlist>
 </listitem>
 
-<listitem><para><guilabel>Time zone</guilabel>: Select your time zone.
-&kalarm; uses this time zone throughout, although you can override
-it for individual alarms.</para>
-</listitem>
-
-<listitem><para><guilabel>Start of day for date-only
-alarms</guilabel>: Set the start-of-day time for the purposes of
-triggering date-only alarms, &ie; ones for which the <guilabel>Any
-time</guilabel> option was selected. On the date when they are due,
-such alarms will be output at the earliest opportunity during the
-24 hours starting from the start-of-day time.</para>
-</listitem>
-
-<listitem><para>If you set up yearly recurrences for February 29th,
-specify how these are to be handled in non-leap years by selecting one
-of the following options:</para>
-
-<itemizedlist>
-<listitem><para><guilabel>February 28th</guilabel>: the alarm will
-occur on February 29th in leap years, and on February 28th in
-non-leap years.</para>
-</listitem>
-
-<listitem><para><guilabel>March 1st</guilabel>: the alarm will
-occur on February 29th in leap years, and on March 1st in
-non-leap years.</para>
-</listitem>
-
-<listitem><para><guilabel>Do not repeat</guilabel>: the alarm will
-occur on February 29th in leap years, but will be suppressed in
-non-leap years.</para>
-</listitem>
-</itemizedlist>
-
-<note><para>Changing this option will not cause the next scheduled
-recurrence of any existing alarms to be re-evaluated. It will only
-affect new alarms, or existing alarms after they are next
-triggered.</para></note>
-</listitem>
-
 <listitem><para><guilabel>Confirm alarm deletions</guilabel>: Specify
 whether you should be prompted for confirmation each time you delete
 an alarm.</para>
@@ -2239,6 +2210,76 @@ codes:</para>
 
 <para>When the command alarm is triggered, its command string will be
 quoted before being inserted into the terminal window command.</para>
+</listitem>
+
+</itemizedlist>
+</sect1>
+
+<sect1 id="preferences-time">
+<title>Time and Date</title>
+
+<para>The <guilabel>Time and Date</guilabel> section lets you set
+options relating to time and date:</para>
+
+<itemizedlist>
+<listitem><para><guilabel>Time zone</guilabel>: Select your time zone.
+&kalarm; uses this time zone throughout, except when you override it
+for individual alarms.</para>
+</listitem>
+
+<listitem><para><guilabel>Start of day for date-only
+alarms</guilabel>: Set the start-of-day time for the purposes of
+triggering date-only alarms, &ie; ones for which the <guilabel>Any
+time</guilabel> option was selected. On the date when they are due,
+such alarms will be output at the earliest opportunity during the
+24 hours starting from the start-of-day time.</para>
+</listitem>
+
+<listitem><para>If you set up yearly recurrences for February 29th,
+specify how these are to be handled in non-leap years by selecting one
+of the following options:</para>
+
+<itemizedlist>
+<listitem><para><guilabel>February 28th</guilabel>: the alarm will
+occur on February 29th in leap years, and on February 28th in
+non-leap years.</para>
+</listitem>
+
+<listitem><para><guilabel>March 1st</guilabel>: the alarm will
+occur on February 29th in leap years, and on March 1st in
+non-leap years.</para>
+</listitem>
+
+<listitem><para><guilabel>Do not repeat</guilabel>: the alarm will
+occur on February 29th in leap years, but will be suppressed in
+non-leap years.</para>
+</listitem>
+</itemizedlist>
+
+<note><para>Changing this option will not cause the next scheduled
+recurrence of any existing alarms to be re-evaluated. It will only
+affect new alarms, or existing alarms after they are next
+triggered.</para></note>
+</listitem>
+
+<listitem><para><guilabel>Working Hours</guilabel> group box: These
+options let you define your working hours, needed when the
+<guilabel>Only during working hours</guilabel> option is selected for
+a recurrence in the
+<link linkend="alarm-edit-dlg">Alarm Edit dialog</link>.</para>
+
+<itemizedlist>
+<listitem><para>Check each day which is a working day.</para>
+</listitem>
+
+<listitem><para><guilabel>Daily start time</guilabel>: enter the time
+at which you start work each day.</para>
+</listitem>
+
+<listitem><para><guilabel>Daily end time</guilabel>: enter the time
+at which you finish work each day.</para>
+</listitem>
+</itemizedlist>
 </listitem>
 
 </itemizedlist>
@@ -2440,6 +2481,14 @@ show the length of time remaining before each alarm's next scheduled
 occurrence. The length of time is shown in days (if applicable), hours
 and minutes.</para>
 </listitem>
+
+<listitem><para><guilabel>Show archived alarms</guilabel>: Select this
+option to initially show archived alarms in the alarm list, when
+&kalarm; starts up. (Once &kalarm; has started, use the
+<menuchoice><guimenu>View</guimenu><guimenuitem>Show Archived
+Alarms</guimenuitem></menuchoice> menu option to change what is
+displayed.)</para>
+</listitem>
 </itemizedlist>
 </listitem>
 
@@ -2487,14 +2536,6 @@ option controls whether alarm message windows are modal or not, &ie;
 whether they grab the keyboard focus when they appear. See the
 <link linkend="message-window">Alarm Message Window</link> section for
 details.</para>
-</listitem>
-
-<listitem><para><guilabel>Show archived alarms</guilabel>: Select this
-option to initially show archived alarms in the alarm list, when
-&kalarm; starts up. (Once &kalarm; has started, use the
-<menuchoice><guimenu>View</guimenu><guimenuitem>Show Archived
-Alarms</guimenuitem></menuchoice> menu option to change what is
-displayed.)</para>
 </listitem>
 
 <listitem><para><guilabel>System tray icon update interval</guilabel>: Set
@@ -2552,15 +2593,14 @@ archived alarms.</para>
 
 <para>The <guilabel>Edit</guilabel> section lets you choose
 default values for the options in the
-<link linkend="alarm-edit-dlg">alarm edit dialog</link>:</para>
+<link linkend="alarm-edit-dlg">Alarm Edit dialog</link>:</para>
 
 <para>For display alarms:</para>
 
 <itemizedlist>
-<listitem><para>Set the default states for the <guilabel>Cancel if
-late</guilabel>, <guilabel>Auto-close window after this
-time</guilabel> and <guilabel>Confirm acknowledgment</guilabel>
-check boxes.</para>
+<listitem><para>Set the default states for the
+<guilabel>Auto-close window after this time</guilabel> and
+<guilabel>Confirm acknowledgment</guilabel> check boxes.</para>
 </listitem>
 
 <listitem><para>Set the default reminder period units.</para>
@@ -2595,7 +2635,16 @@ self</guilabel> check box.</para>
 <para>For all alarm types:</para>
 
 <itemizedlist>
+<listitem><para>Set the default states for the <guilabel>Show in
+KOrganizer</guilabel> and <guilabel>Cancel if late</guilabel> check
+boxes.</para>
+</listitem>
+
 <listitem><para>Set the default recurrence type.</para>
+</listitem>
+
+<listitem><para>Select the default handling in non-leap years of
+yearly recurrences scheduled for February 29th.</para>
 </listitem>
 </itemizedlist>
 </sect1>
@@ -2906,7 +2955,7 @@ a red background at 10 p.m. on the 27th of this month are:</para>
 
 <para>The following options are used to reset or halt the
 <application>alarm daemon</application>, to display the
-<link linkend="alarm-edit-dlg">alarm edit dialog</link>, or to control
+<link linkend="alarm-edit-dlg">Alarm Edit dialog</link>, or to control
 &kalarm;'s display mode.</para>
 
 <para>See the <link linkend="daemon-reset">Alarm Daemon</link> section
@@ -2924,17 +2973,17 @@ daemon</application>.</para>
 <tbody>
 <row>
   <entry><option>--edit <replaceable>eventID</replaceable></option></entry>
-  <entry>Display the alarm edit dialog to edit the alarm with the
+  <entry>Display the Alarm Edit dialog to edit the alarm with the
   specified event ID.</entry>
 </row>
 <row>
   <entry><option>-n</option>, <option>--edit-new</option></entry>
-  <entry>Display the alarm edit dialog, in order to edit a new
+  <entry>Display the Alarm Edit dialog, in order to edit a new
   alarm.</entry>
 </row>
 <row>
   <entry><option>--edit-new-preset <replaceable>templateName</replaceable></option></entry>
-  <entry>Display the alarm edit dialog, preset with the alarm template
+  <entry>Display the Alarm Edit dialog, preset with the alarm template
   of the specified name, in order to edit a new alarm.</entry>
 </row>
 <row>
@@ -3114,7 +3163,7 @@ request the following functions:</para>
 alarm</para></listitem>
 <listitem><para>cancel an already scheduled alarm</para></listitem>
 <listitem><para>trigger an already scheduled alarm</para></listitem>
-<listitem><para>display the alarm edit dialog</para></listitem>
+<listitem><para>display the Alarm Edit dialog</para></listitem>
 </itemizedlist>
 
 <para>Each of the above functions is implemented both by a &DCOP; call
@@ -3283,8 +3332,8 @@ bool scheduleMessage(const QString&amp; <replaceable>message</replaceable>,
                      const KURL&amp; <replaceable>audioURL</replaceable>, 
                      int <replaceable>reminder</replaceable>, 
                      const QString&amp; <replaceable>recurrence</replaceable>,
-                     int <replaceable>simpleRepeatInterval</replaceable>, 
-                     int <replaceable>simpleRepeatCount</replaceable>)
+                     int <replaceable>subRepeatInterval</replaceable>, 
+                     int <replaceable>subRepeatCount</replaceable>)
 </synopsis>
 <synopsis>
 bool scheduleMessage(const QString&amp; <replaceable>message</replaceable>, 
@@ -3479,17 +3528,18 @@ parameter's value.</para>
 </varlistentry>
 
 <varlistentry>
-<term><parameter>simpleRepeatInterval</parameter></term>
+<term><parameter>subRepeatInterval</parameter></term>
 <listitem>
-<para>Specifies the number of minutes between simple repetitions of
-the alarm. Specify 0 for no simple repetition.</para>
+<para>Specifies the number of minutes between sub-repetitions of
+the alarm. Specify 0 for no sub-repetition. Ignored if no recurrence
+is specified.</para>
 </listitem>
 </varlistentry>
 
 <varlistentry>
-<term><parameter>simpleRepeatCount</parameter></term>
+<term><parameter>subRepeatCount</parameter></term>
 <listitem>
-<para>Specifies the number of simple repetitions of the alarm,
+<para>Specifies the number of sub-repetitions of the alarm,
 including the initial occurrence.</para>
 </listitem>
 </varlistentry>
@@ -3536,8 +3586,8 @@ bool scheduleFile(const KURL&amp; <replaceable>URL</replaceable>,
                   const KURL&amp; <replaceable>audioURL</replaceable>,
                   int <replaceable>reminder</replaceable>,
                   const QString&amp; <replaceable>recurrence</replaceable>,
-                  int <replaceable>simpleRepeatInterval</replaceable>, 
-                  int <replaceable>simpleRepeatCount</replaceable>)
+                  int <replaceable>subRepeatInterval</replaceable>, 
+                  int <replaceable>subRepeatCount</replaceable>)
 </synopsis>
 <synopsis>
 bool scheduleFile(const KURL&amp; <replaceable>URL</replaceable>,
@@ -3710,17 +3760,18 @@ parameter's value.</para>
 </varlistentry>
 
 <varlistentry>
-<term><parameter>simpleRepeatInterval</parameter></term>
+<term><parameter>subRepeatInterval</parameter></term>
 <listitem>
-<para>Specifies the number of minutes between simple repetitions of
-the alarm. Specify 0 for no simple repetition.</para>
+<para>Specifies the number of minutes between sub-repetitions of
+the alarm. Specify 0 for no sub-repetition. Ignored if no recurrence
+is specified.</para>
 </listitem>
 </varlistentry>
 
 <varlistentry>
-<term><parameter>simpleRepeatCount</parameter></term>
+<term><parameter>subRepeatCount</parameter></term>
 <listitem>
-<para>Specifies the number of simple repetitions of the alarm,
+<para>Specifies the number of sub-repetitions of the alarm,
 including the initial occurrence.</para>
 </listitem>
 </varlistentry>
@@ -3756,8 +3807,8 @@ bool scheduleCommand(const QString&amp; <replaceable>commandLine</replaceable>,
                      int <replaceable>lateCancel</replaceable>,
                      int <replaceable>flags</replaceable>,
                      const QString&amp; <replaceable>recurrence</replaceable>,
-                     int <replaceable>simpleRepeatInterval</replaceable>, 
-                     int <replaceable>simpleRepeatCount</replaceable>)
+                     int <replaceable>subRepeatInterval</replaceable>, 
+                     int <replaceable>subRepeatCount</replaceable>)
 </synopsis>
 <synopsis>
 bool scheduleCommand(const QString&amp; <replaceable>commandLine</replaceable>,
@@ -3892,17 +3943,18 @@ parameter's value.</para>
 </varlistentry>
 
 <varlistentry>
-<term><parameter>simpleRepeatInterval</parameter></term>
+<term><parameter>subRepeatInterval</parameter></term>
 <listitem>
-<para>Specifies the number of minutes between simple repetitions of
-the alarm. Specify 0 for no simple repetition.</para>
+<para>Specifies the number of minutes between sub-repetitions of
+the alarm. Specify 0 for no sub-repetition. Ignored if no recurrence
+is specified.</para>
 </listitem>
 </varlistentry>
 
 <varlistentry>
-<term><parameter>simpleRepeatCount</parameter></term>
+<term><parameter>subRepeatCount</parameter></term>
 <listitem>
-<para>Specifies the number of simple repetitions of the alarm,
+<para>Specifies the number of sub-repetitions of the alarm,
 including the initial occurrence.</para>
 </listitem>
 </varlistentry>
@@ -3942,8 +3994,8 @@ bool scheduleEmail(const QString&amp; <replaceable>fromID</replaceable>,
                    int <replaceable>lateCancel</replaceable>,
                    int <replaceable>flags</replaceable>,
                    const QString&amp; <replaceable>recurrence</replaceable>,
-                   int <replaceable>simpleRepeatInterval</replaceable>, 
-                   int <replaceable>simpleRepeatCount</replaceable>)
+                   int <replaceable>subRepeatInterval</replaceable>, 
+                   int <replaceable>subRepeatCount</replaceable>)
 </synopsis>
 <synopsis>
 bool scheduleEmail(const QString&amp; <replaceable>fromID</replaceable>,
@@ -4116,17 +4168,18 @@ parameter's value.</para>
 </varlistentry>
 
 <varlistentry>
-<term><parameter>simpleRepeatInterval</parameter></term>
+<term><parameter>subRepeatInterval</parameter></term>
 <listitem>
-<para>Specifies the number of minutes between simple repetitions of
-the alarm. Specify 0 for no simple repetition.</para>
+<para>Specifies the number of minutes between sub-repetitions of
+the alarm. Specify 0 for no sub-repetition. Ignored if no recurrence
+is specified.</para>
 </listitem>
 </varlistentry>
 
 <varlistentry>
-<term><parameter>simpleRepeatCount</parameter></term>
+<term><parameter>subRepeatCount</parameter></term>
 <listitem>
-<para>Specifies the number of simple repetitions of the alarm,
+<para>Specifies the number of sub-repetitions of the alarm,
 including the initial occurrence.</para>
 </listitem>
 </varlistentry>
@@ -4152,7 +4205,7 @@ identical to
 </refmeta>
 <refnamediv>
 <refname>edit</refname>
-<refpurpose>Display the <link linkend="alarm-edit-dlg">alarm edit
+<refpurpose>Display the <link linkend="alarm-edit-dlg">Alarm Edit
 dialog</link> to edit an alarm.</refpurpose>
 </refnamediv>
 <refsynopsisdiv>
@@ -4184,7 +4237,7 @@ alarm could not be found or is read-only,
 <title>Description</title>
 
 <para><function>edit()</function> is a &DCOP; call to display the
-<link linkend="alarm-edit-dlg">alarm edit dialog</link> to edit the
+<link linkend="alarm-edit-dlg">Alarm Edit dialog</link> to edit the
 specified alarm.</para>
 
 </refsect1>
@@ -4196,7 +4249,7 @@ specified alarm.</para>
 </refmeta>
 <refnamediv>
 <refname>editNew</refname>
-<refpurpose>Display the <link linkend="alarm-edit-dlg">alarm edit
+<refpurpose>Display the <link linkend="alarm-edit-dlg">Alarm Edit
 dialog</link> to edit a new alarm.</refpurpose>
 </refnamediv>
 <refsynopsisdiv>
@@ -4230,11 +4283,11 @@ otherwise.</para>
 <title>Description</title>
 
 <para><function>editNew()</function> is a &DCOP; call to display the
-<link linkend="alarm-edit-dlg">alarm edit dialog</link> to edit a new
+<link linkend="alarm-edit-dlg">Alarm Edit dialog</link> to edit a new
 alarm. If an alarm template name is specified as a parameter, the
 dialog is preset with details from the template. If the specified
 template cannot be found, the
-<link linkend="alarm-edit-dlg">alarm edit dialog</link> is still
+<link linkend="alarm-edit-dlg">Alarm Edit dialog</link> is still
 displayed but is (obviously) not preset with the template.</para>
 
 </refsect1>
@@ -4397,12 +4450,15 @@ files whose format is defined by the document
 <ulink url="http://www.w3.org/2002/12/cal/rfc2445.html">RFC2445 -
 Internet Calendaring and Scheduling Core Object Specification
 (iCalendar)</ulink>. This is the standard format used by all kdepim
-applications. &kalarm; uses certain non-standard properties in the
-Alarm component, in conformance with RFC2445:
-<literal>X-KDE-KALARM-TYPE</literal>,
+applications. &kalarm; uses certain non-standard properties, in
+conformance with RFC2445. In the VEVENT component:
 <literal>X-KDE-KALARM-FLAGS</literal>,
+<literal>X-KDE-KALARM-NEXTRECUR</literal>,
+<literal>X-KDE-KALARM-REPEAT</literal>,
 <literal>X-KDE-KALARM-ARCHIVE</literal>,
-<literal>X-KDE-KALARM-LOG</literal>,
+<literal>X-KDE-KALARM-LOG</literal>, and in the VALARM component:
+<literal>X-KDE-KALARM-TYPE</literal>,
+<literal>X-KDE-KALARM-NEXTREPEAT</literal>,
 <literal>X-KDE-KALARM-FONTCOLOR</literal>,
 <literal>X-KDE-KALARM-VOLUME</literal>,
 <literal>X-KDE-KALARM-SPEAK</literal>,
@@ -4434,7 +4490,7 @@ and the <application>alarm daemon</application>'s application name is
 &kalarm;
 </para>
 <para>
-Program copyright 2001, 2002, 2003, 2004, 2005, 2006 &David.Jarvie; &David.Jarvie.mail;
+Program copyright 2001, 2002, 2003, 2004, 2005, 2006, 2007 &David.Jarvie; &David.Jarvie.mail;
 </para>
 <para>
 Alarm daemon authors:
@@ -4449,7 +4505,7 @@ Alarm daemon authors:
 </para>
 
 <para>
-Documentation copyright 2001, 2002, 2003, 2004, 2005, 2006 &David.Jarvie; &David.Jarvie.mail;
+Documentation copyright 2001, 2002, 2003, 2004, 2005, 2006, 2007 &David.Jarvie; &David.Jarvie.mail;
 </para>
 
 <!-- TRANS:CREDIT_FOR_TRANSLATORS -->

@@ -14,7 +14,6 @@
 #include "knmainwidget.h"
 
 #include <QLayout>
-//Added by qt3to4:
 #include <Q3Accel>
 #include <QEvent>
 #include <QDropEvent>
@@ -49,7 +48,7 @@
 #include "broadcaststatus.h"
 #include "recentaddresses.h"
 using KPIM::BroadcastStatus;
-using KRecentAddress::RecentAddresses;
+using KPIM::RecentAddresses;
 
 #include <mailtransport/transportmanager.h>
 using MailTransport::TransportManager;

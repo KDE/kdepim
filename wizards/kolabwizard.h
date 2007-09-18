@@ -28,6 +28,8 @@ class KLineEdit;
 class QCheckBox;
 class QRadioButton;
 
+using namespace KPIM;
+
 class KolabWizard : public KConfigWizard
 {
   public:

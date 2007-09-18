@@ -167,12 +167,12 @@ void AddAddresseeDialog::setupGui() {
     m_widget = new QWidget( this );
 
     // name
-    QLabel* nameLabel = new QLabel( i18n( "Name:" ), m_widget );
+    QLabel* nameLabel = new QLabel( i18n( "Name" ), m_widget );
     m_name = new KLineEdit( m_widget );
     nameLabel->setBuddy( m_name );
 
     // e-mail
-    QLabel* emailLabel = new QLabel( i18n( "E-mail:" ), m_widget );
+    QLabel* emailLabel = new QLabel( i18n( "E-mail" ), m_widget );
     m_email = new KLineEdit( m_widget );
 
     QRegExp emailRegExp( "^[a-zA-Z][\\w\\.-]*[a-zA-Z0-9]@[a-zA-Z0-9]"
@@ -183,7 +183,7 @@ void AddAddresseeDialog::setupGui() {
     emailLabel->setBuddy( m_email );
 
     // phone numbers
-    QLabel* phoneLabel = new QLabel( i18n( "Phone numbers:" ), m_widget );
+    QLabel* phoneLabel = new QLabel( i18n( "Phone numbers" ), m_widget );
 
     m_phoneNumber = new KLineEdit( m_widget );
     /// @TODO install a good reg exp here
@@ -212,7 +212,7 @@ void AddAddresseeDialog::setupGui() {
     connect( m_removePhoneNumber, SIGNAL(clicked()), this, SLOT(removePhoneNumber()) );
 
     // storage location (memory slot)
-    QLabel* storageLocationLabel = new QLabel( i18n( "Storage location:" ), m_widget );
+    QLabel* storageLocationLabel = new QLabel( i18n( "Storage location" ), m_widget );
     m_storageLocation = new QComboBox( m_widget );
 
     QLabel* information = new QLabel( m_widget );

@@ -53,6 +53,7 @@
 #include <assert.h>
 
 using namespace KCal;
+using namespace KPIM;
 using namespace Kolab;
 
 static const char* kmailCalendarContentsType = "Calendar";
