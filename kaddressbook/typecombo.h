@@ -82,11 +82,14 @@ template <class T, typename U>
 void TypeCombo<T, U>::updateTypes()
 {
   if(mTypeList.isEmpty())
-	  return;
+    return;
   // Remember current item
   QString currentId;
   int current = currentIndex();
-  if ( current >= 0 ) currentId = mTypeList[ current ].id();
+
+  if ( current >= 0 && current < mTypeList.count() ) {
+    currentId = mTypeList[ current ].id();
+  }
 
   clear();
 
@@ -133,7 +136,7 @@ void TypeCombo<T, U>::selectType( U type )
 template <class T, typename U>
 U TypeCombo<T, U>::selectedType()
 {
-  return mTypeList[ currentIndex() ].type();
+  return mTypeList.value( currentIndex() ).type();
 }
 
 template <class T, typename U>
