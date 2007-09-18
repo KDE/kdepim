@@ -582,11 +582,12 @@ QString findArgument(const QStringList &a, const QString &arg)
 {
 	FUNCTIONSETUP;
 	QString symbol = CSL1("version_");
-	symbol.append(lib->name());
+#warning Port KLibrary::name() usage!
+//	symbol.append(lib->name());
 
 	DEBUGKPILOT << "Symbol <" << symbol << '>';
 
-	unsigned long *p = (unsigned long *)(lib->resolveSymbol(symbol.toLatin1()));
+	unsigned long *p = (unsigned long *)const_cast<KLibrary*>(lib)->resolveSymbol(symbol.toLatin1());
         if ( !p )
 		return 0;
 

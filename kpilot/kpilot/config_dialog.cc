@@ -365,11 +365,12 @@ static void dumpConduitInfo(const KLibrary *lib)
 
 	QString symbol_value;
 	QString symbol= CSL1("id_");
+#warning Port KLibrary::name() usage!
 	symbol.append(lib->name());
 
-	if (lib->resolveSymbol(symbol.toLatin1()))
+	if (const_cast<KLibrary*>(lib)->resolveSymbol(symbol.toLatin1()))
 	{
-		symbol_value = QString::fromLatin1(*((const char **)(lib->resolveSymbol(symbol.toLatin1()))));
+		symbol_value = QString::fromLatin1(*((const char **)(const_cast<KLibrary*>(lib)->resolveSymbol(symbol.toLatin1()))));
 		DEBUGKPILOT << "Plugin id      =" << symbol_value;
 	}
 }
