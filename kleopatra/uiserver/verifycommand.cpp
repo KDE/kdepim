@@ -122,6 +122,7 @@ private Q_SLOTS:
     void slotVerifyDetachedResult(const GpgME::VerificationResult &, const std::vector<GpgME::Key> & );
 
 private:
+    void addResult( const VerificationResultCollector::Result &res );
     QHash<QString, Result> m_results;
     QHash<QObject*, QString> m_senderToId;
     int m_unfinished;
@@ -147,6 +148,21 @@ void VerificationResultCollector::registerJob( const QString& id, VerifyOpaqueJo
     ++m_unfinished;
 }
 
+void VerificationResultCollector::addResult( const VerificationResultCollector::Result &res )
+{
+    m_results[res.id] = res;
+
+    --m_unfinished;
+    assert( m_unfinished >= 0 );
+    if ( m_unfinished == 0 )
+    {
+        emit finished( m_results );
+        deleteLater();
+    }
+}
+
+
+
 void VerificationResultCollector::slotVerifyOpaqueResult(const GpgME::VerificationResult & result,
                                                          const QByteArray & stuff,
                                                          const std::vector<GpgME::Key> &keys)
@@ -158,15 +174,7 @@ void VerificationResultCollector::slotVerifyOpaqueResult(const GpgME::Verificati
     res.isOpaque = true;
     res.stuff = stuff;
     res.result = result;
-    m_results[id] = res;
-
-    --m_unfinished;
-    assert( m_unfinished >= 0 );
-    if ( m_unfinished == 0 )
-    {
-        emit finished( m_results );
-        deleteLater();
-    }
+    addResult( res );
 }
 
 void VerificationResultCollector::slotVerifyDetachedResult(const GpgME::VerificationResult & result,
@@ -179,15 +187,7 @@ void VerificationResultCollector::slotVerifyDetachedResult(const GpgME::Verifica
     res.isOpaque = false;
     res.keys = keys;
     res.result = result;
-    m_results[id] = res;
-
-    --m_unfinished;
-    assert( m_unfinished >= 0 );
-    if ( m_unfinished == 0 )
-    {
-        emit finished( m_results );
-        deleteLater();
-    }
+    addResult( res );
 }
 
 

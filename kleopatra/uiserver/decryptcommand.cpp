@@ -219,10 +219,9 @@ void DecryptCommand::Private::slotDecryptionCollectionResult( const QHash<QStrin
                     // FIXME write out to given file name
                 }
             }
-            resultStrings.append( resultToString( result.result ) );
+            if ( const int err = q->sendStatus( "DECRYPT", resultToString( result.result ) ) )
+                throw( err );
         }
-        if ( const int err = q->sendStatus( "DECRYPT", resultStrings.join("\n") ) )
-            throw( err );
 
         q->done();
     } catch ( int err ) {
