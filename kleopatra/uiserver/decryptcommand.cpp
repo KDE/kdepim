@@ -36,6 +36,7 @@
 #include <QObject>
 #include <QIODevice>
 #include <QHash>
+#include <QStringList>
 
 #include <kleo/decryptjob.h>
 
@@ -183,31 +184,50 @@ void DecryptCommand::Private::slotProgress( const QString& what, int current, in
     // FIXME report progress, via sendStatus()
 }
 
+static QString resultToString( const GpgME::DecryptionResult & result )
+{
+    QString resStr( "GREY ");
+    for ( int i = 0; i<result.numRecipients(); i++ ) {
+        const GpgME::DecryptionResult::Recipient r = result.recipient( i );
+        resStr += QString( r.keyID() );
+    }
+    return resStr;
+}
 
 void DecryptCommand::Private::slotDecryptionCollectionResult( const QHash<QString, DecryptionResultCollector::Result>& results )
 {
     assert( !results.isEmpty() );
-    QList<DecryptionResultCollector::Result>::const_iterator it = results.values().begin();
-    QList<DecryptionResultCollector::Result>::const_iterator end = results.values().end();
-    for ( int i = 0; it != end; ++it, ++i ) {
-        const DecryptionResultCollector::Result result = *it;
+    QStringList resultStrings;
+    try {
+        QList<DecryptionResultCollector::Result>::const_iterator it = results.values().begin();
+        QList<DecryptionResultCollector::Result>::const_iterator end = results.values().end();
+        for ( int i = 0; it != end; ++it, ++i ) {
+            const DecryptionResultCollector::Result result = *it;
 
-        const GpgME::Error decryptionError = result.result.error();
-        if ( decryptionError ) {
-            q->done( decryptionError );
-            return;
-        }
+            const GpgME::Error decryptionError = result.result.error();
+            if ( decryptionError )
+                throw( decryptionError );
 
-        //handle result, send status
-        QIODevice * const outdevice = q->bulkOutputDevice( "OUTPUT", result.id.toInt() );
-        if ( outdevice ) {
-            if ( const int err = outdevice->write( result.stuff ) ) {
-                q->done( err );
-                return;
+            //handle result, send status
+            QIODevice * const outdevice = q->bulkOutputDevice( "OUTPUT", result.id.toInt() );
+            if ( outdevice ) {
+                if ( const int err = outdevice->write( result.stuff ) )
+                    throw( err );
+            } else {
+                if ( const char * filename = result.result.fileName() ) {
+                    // FIXME sanitize, percent-encode, etc
+                    // FIXME write out to given file name
+                }
             }
+            resultStrings.append( resultToString( result.result ) );
         }
+        if ( const int err = q->sendStatus( "DECRYPT", resultStrings.join("\n") ) )
+            throw( err );
+
+        q->done();
+    } catch ( int err ) {
+        q->done( err );
     }
-    q->done();
 }
 
 int DecryptCommand::Private::startDecryption()
@@ -218,7 +238,6 @@ int DecryptCommand::Private::startDecryption()
              SLOT( slotDecryptionCollectionResult( QHash<QString, DecryptionResultCollector::Result> ) ) );
 
     try {
-
         int i = 0;
         Q_FOREACH ( const Private::Input input, inputList )
         {
