@@ -117,7 +117,6 @@ public:
     DecryptCommand *q;
     QList<Input> analyzeInput( GpgME::Error& error, QString& errorDetails ) const;
     int startDecryption();
-    void decryptionResult( const GpgME::DecryptionResult &, const QByteArray & plainText );
 
 public Q_SLOTS:
     void slotDecryptionCollectionResult( const QHash<QString, DecryptionResultCollector::Result>& );
@@ -187,26 +186,25 @@ void DecryptCommand::Private::slotProgress( const QString& what, int current, in
 
 void DecryptCommand::Private::slotDecryptionCollectionResult( const QHash<QString, DecryptionResultCollector::Result>& results )
 {
-    //TODO: handle all results, not only the first
     assert( !results.isEmpty() );
-    const DecryptionResultCollector::Result result = results.values().first();
-    decryptionResult( result.result, result.stuff );
-}
+    QList<DecryptionResultCollector::Result>::const_iterator it = results.values().begin();
+    QList<DecryptionResultCollector::Result>::const_iterator end = results.values().end();
+    for ( int i = 0; it != end; ++it, ++i ) {
+        const DecryptionResultCollector::Result result = *it;
 
-void DecryptCommand::Private::decryptionResult( const GpgME::DecryptionResult & decryptionResult, const QByteArray & plainText )
-{
-    const GpgME::Error decryptionError = decryptionResult.error();
-    if ( decryptionError ) {
-        q->done( decryptionError );
-        return;
-    }
-
-    //handle result, send status
-    QIODevice * const outdevice = q->bulkOutputDevice( "OUTPUT" );
-    if ( outdevice ) {
-        if ( const int err = outdevice->write( plainText) ) {
-            q->done( err );
+        const GpgME::Error decryptionError = result.result.error();
+        if ( decryptionError ) {
+            q->done( decryptionError );
             return;
+        }
+
+        //handle result, send status
+        QIODevice * const outdevice = q->bulkOutputDevice( "OUTPUT", result.id.toInt() );
+        if ( outdevice ) {
+            if ( const int err = outdevice->write( result.stuff ) ) {
+                q->done( err );
+                return;
+            }
         }
     }
     q->done();
