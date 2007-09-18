@@ -90,7 +90,7 @@ void Kleo::QGpgMEVerifyDetachedJob::setupData( const GpgME::Data & signedData ) 
 
 
 GpgME::Error Kleo::QGpgMEVerifyDetachedJob::start( const QByteArray & signature,
-                           const QByteArray & signedData ) {
+                                                   const QByteArray & signedData ) {
   setupSignature( signature );
   setupData( signedData );
 
@@ -127,6 +127,7 @@ void Kleo::QGpgMEVerifyDetachedJob::doOperationDoneEvent( const GpgME::Error & )
                        mThis, SLOT(slotOperationDoneEvent(GpgME::Context*,const GpgME::Error&)) );
 
    d->verificationResult = mCtx->verificationResult();
+
    QStringList keys;
    Q_FOREACH( GpgME::Signature sig, d->verificationResult.signatures() ) {
      keys.append( sig.fingerprint() );
