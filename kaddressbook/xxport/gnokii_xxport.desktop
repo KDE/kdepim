@@ -25,6 +25,7 @@ Name[ja]=KAB 携帯電話インポート/エクスポートプラグイン
 Name[ka]=KAB მობილურ ტელეფონთან ექსპორტის მოდული
 Name[kk]=Қалта телефонға экспорт/импорт ету
 Name[km]=កម្មវិធី​ជំនួយ KAB Mobile Phone XXPort
+Name[ko]=KAB 휴대폰 주고받기 플러그인
 Name[lt]=KAB mobilaus telefono XXPort priedas
 Name[ms]=Plug masuk KAB Fon Mudah Alih XXPort
 Name[nb]=KAB-programtillegg for mobiltelefon
@@ -69,12 +70,13 @@ Comment[ja]=アドレス帳のエントリをインポート/エクスポート�
 Comment[ka]=მობილური ტელეფონის მოდული წიგნაკის ელემენტების იმპორტ/ექსპორტისათვის
 Comment[kk]=Қалта телефонға адр. кітапша жазуын экспорт/импорт ету модулі
 Comment[km]=កម្មវិធី​ជំនួយ​ទូរស័ព្ទ​ចល័ត​ដើម្បី​នាំចូល និង នាំចេញ​ធាតុ​សៀវភៅ​អាសយដ្ឋាន
+Comment[ko]=주소록 항목을 휴대폰과 주고받는 플러그인
 Comment[lt]=Priedas skirtas importuoti ir eksportuoti adresų knygelės įrašus į mobiliuosius telefonus
 Comment[mk]=Приклучок за мобилни телефони за внесување и изнесување контакти од адресарот
 Comment[ms]=Plug masuk Fon Mudah Alih untuk Import dan Eksport Input Buku Alamat
 Comment[nb]=Programtillegg for import/eksport av adressebok fra/til mobiltelefon
 Comment[nds]=Mobiltelefoon-Moduul för't Im- un Exporteren vun KAdressbook-Indrääg
-Comment[ne]=ठेगाना पुस्तिका प्रविष्टि आयात र निर्यात गर्न मोबाइल फोन प्लगइन
+Comment[ne]=ठेगाना पुस्तिका प्रविष्टि आयात र निर्यात गर्ने मोबाइल फोन प्लगइन
 Comment[nl]=Mobiele-telefoon-plugin voor het importeren en exporteren van adresboekitems
 Comment[pl]=Wtyczka do importowania i eksportowania wizytówek z/do telefonu komórkowego
 Comment[pt]=Um 'plugin' para importar e exportar contactos da agenda do telemóvel

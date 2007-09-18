@@ -23,11 +23,12 @@ Name[ja]=KAB MS Exchange パーソナルアドレス帳インポート/エクス
 Name[ka]= MS Exchange-ის პერსონალური წიგნაკის ექსპორტის მოდული
 Name[kk]=MS Exchange адрестік кітапшасына экспорт/импорт ету
 Name[km]=កម្មវិធី​ជំនួយ KAB MS Exchange Personal Addressbook XXPort
+Name[ko]=KAB MS Exchange 개인 주소록 주고받기 플러그인
 Name[lt]=KAB MS Exchange asmeninės adresų knygelės XXPort priedas
 Name[ms]=Plugin Buku Alamat Peribadi KAB MS Exchange  XXPort Plugin
 Name[nb]=KAB-programtillegg for import fra MS Exchange
 Name[nds]=MSExchange-Importmoduul för KAdressbook
-Name[ne]=KAB MS बिनिमय व्यक्तिगत ठेगाना पुस्तिका XXPort प्लगइन
+Name[ne]=KAB MS विनिमय व्यक्तिगत ठेगाना पुस्तिका XXPort प्लगइन
 Name[nl]=KAB MS Exchange Personal Addressbook XXPort-plugin
 Name[pl]=Wtyczka KAB do importu Osobistej książki adresowej MS Exchange
 Name[pt]='Plugin' XXPort do Livro de Endereços Pessoal do MS Exchange para o KAB
@@ -67,12 +68,13 @@ Comment[ja]=MS Exchange パーソナルアドレス帳をインポートする�
 Comment[ka]=MS Exchange-ის პერსონალური წიგნაკის იმპორტის მოდული
 Comment[kk]=MS Exchange адрестік кітапшасына экспорт/импорт ету модулі
 Comment[km]=កម្មវិធី​ជំនួយ​ដើម្បី​នាំចូល​សៀវភៅ​អាសយដ្ឋាន​ផ្ទាល់​ខ្លួន​របស់ MS Exchange
+Comment[ko]=MS Exchange 개인 주소록을 가져오는 플러그인
 Comment[lt]=Priedas leidžiantis importuoti MS Exchange asmenines adresų knygeles
 Comment[mk]=Приклучок за внесување лични адресари од MS Exchange
 Comment[ms]=Plugin untuk mengimpot Buku Alamat Peribadi MS Exchange 
 Comment[nb]=Programtillegg for import av personlige adressebøker fra MS Exchange
 Comment[nds]=Moduul för't Importeren vun persöönliche Adressböker ut MS Exchange
-Comment[ne]=MS विनिमय व्यक्तिगत ठेगाना पुस्तिका आयात गर्न प्लगइन
+Comment[ne]=MS विनिमय व्यक्तिगत ठेगाना पुस्तिका आयात गर्ने प्लगइन
 Comment[nl]=Plugin voor het importeren van MS Exchange-adresboeken
 Comment[pl]=Wtyczka do importu Osobistej książki adresowej z MS Exchange
 Comment[pt]=Um 'plugin' para importar os livros de endereços pessoais do MS Exchange

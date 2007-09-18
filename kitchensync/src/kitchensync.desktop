@@ -1,7 +1,6 @@
 [Desktop Entry]
 Encoding=UTF-8
 Name=KitchenSync
-Name[ne]=किचन समक्रमण
 Name[sv]=Kitchensync
 Name[x-test]=xxKitchenSyncxx
 GenericName=Synchronization
@@ -30,6 +29,7 @@ GenericName[it]=Sincronizzazione
 GenericName[ja]=同期
 GenericName[ka]=სინქრონიზაცია
 GenericName[kk]=Қадамдастыру
+GenericName[ko]=동기화
 GenericName[lt]=Sinchronizacija
 GenericName[ms]=Segerakan
 GenericName[nb]=Synkronisering

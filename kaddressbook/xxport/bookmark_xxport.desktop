@@ -24,6 +24,7 @@ Name[ja]=KAB ブックマーク インポート/エクスポートプラグイ�
 Name[ka]=KAB სანიშნეების ექსპორტის მოდული
 Name[kk]=Бетбелгіні экспорт ету
 Name[km]=កម្មវិធី​ជំនួយ KAB Bookmark XXPort
+Name[ko]=KAB 책갈피 주고받기 플러그인
 Name[lt]=KAB žymelių XXPort priedas
 Name[ms]=Plug masuk KAB Tanda Laman XXPort
 Name[nb]=KAB-programtillegg for bokmerkeeksport
@@ -68,12 +69,13 @@ Comment[ja]=連絡先のウェブアドレスをブックマークとしてエ�
 Comment[ka]= კონტაქტების ვებ-მისამართების სანიშნეებად ექსპორტის მოდული
 Comment[kk]=Контакттың веб адрестерін бетбелгіге экспорттау модулі
 Comment[km]=កម្មវិធី​ជំនួយ​ដើម្បី​នាំចេញ​អាសយដ្ឋាន​បណ្ដាញ​របស់​ទំនាក់ទំនង ជា​ចំណាំ
+Comment[ko]=연락처의 웹 주소를 책갈피로 내보내는 플러그인
 Comment[lt]=Priedas skirtas žiniatinklio adresų kontaktuose eksportavimui į žymeles
 Comment[mk]=Приклучок за изнесување на веб-адресите на контактите како обележувачи
 Comment[ms]= Plug masuk untuk eksport alamat web untuk perhubungan sebagai tanda laman
 Comment[nb]=Programtillegg som eksporterer kontaktenes nett-addresser som bokmerker
 Comment[nds]=Moduul för't Exporteren vun Kontakt-Nettadressen as Leestekens
-Comment[ne]=पुस्तकचिनो अनुरुपका सम्पर्कका वेब ठेगानाको निर्यात गर्न प्लगइन
+Comment[ne]=पुस्तकचिनो अनुरूपका सम्पर्कका वेब ठेगानाको निर्यात गर्ने प्लगइन
 Comment[nl]=Plugin voor het exporteren van de webadressen van de contactpersonen als bladwijzers
 Comment[pl]=Wtyczka eksportująca adresy WWW z wizytówek jako zakładki
 Comment[pt]=Um 'plugin' para exportar os endereços Web dos contactos como favoritos
