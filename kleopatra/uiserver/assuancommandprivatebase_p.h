@@ -65,7 +65,13 @@ public:
         };
         bool isFileInputOnly() const
         {
-            return !signatureFileName.isEmpty() && ( type == Opaque || !messageFileName.isEmpty() );
+            if ( signature ) {
+                return !signatureFileName.isEmpty() && ( type == Opaque || !messageFileName.isEmpty() );
+            } else {
+                // only message is being used
+                return !messageFileName.isEmpty();
+            }
+
         }
 
         void setupMessage( QIODevice* message, const QString& fileName );

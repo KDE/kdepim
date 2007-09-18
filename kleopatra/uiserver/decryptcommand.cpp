@@ -87,7 +87,7 @@ void DecryptionResultCollector::registerJob( const QString& id, DecryptJob* job 
 }
 
 void DecryptionResultCollector::slotDecryptResult(const GpgME::DecryptionResult & result,
-                                                       const QByteArray & stuff )
+                                                  const QByteArray & stuff )
 {
     const QString id = m_senderToId[sender()];
 
@@ -241,6 +241,7 @@ int DecryptCommand::Private::startDecryption()
     } catch ( const GpgME::Error & error ) {
         delete collector;
         q->done( error );
+        return error;
     }
 
     return 0;
@@ -264,8 +265,10 @@ int DecryptCommand::doStart()
     }
 
     int err = d->determineInputsAndProtocols( details );
-    if ( err )
+    if ( err ) {
         done( err, details );
+        return err;
+    }
     err = d->startDecryption();
     return 0;
 
