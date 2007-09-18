@@ -35,18 +35,75 @@
 
 #include <QObject>
 #include <QIODevice>
+#include <QHash>
 
 #include <kleo/decryptjob.h>
 
 #include <gpgme++/error.h>
 #include <gpgme++/decryptionresult.h>
-#include <gpgme++/verificationresult.h>
 
 #include <gpg-error.h>
 
 #include <cassert>
 
 using namespace Kleo;
+
+class DecryptionResultCollector : public QObject
+{
+    Q_OBJECT
+public:
+    explicit DecryptionResultCollector( QObject* parent = 0 );
+
+    struct Result {
+        QString id;
+        GpgME::DecryptionResult result;
+        QByteArray stuff;
+    };
+
+    void registerJob( const QString& id, DecryptJob* job );
+Q_SIGNALS:
+    void finished( const QHash<QString, DecryptionResultCollector::Result> & );
+
+private Q_SLOTS:
+    void slotDecryptResult(const GpgME::DecryptionResult &, const QByteArray &);
+
+private:
+    QHash<QString, Result> m_results;
+    QHash<QObject*, QString> m_senderToId;
+    int m_unfinished;
+};
+
+DecryptionResultCollector::DecryptionResultCollector( QObject* parent )
+: QObject( parent ), m_unfinished( 0 )
+{
+}
+
+void DecryptionResultCollector::registerJob( const QString& id, DecryptJob* job )
+{
+    connect( job, SIGNAL( result( GpgME::DecryptionResult,QByteArray ) ),
+             this, SLOT( slotDecryptResult( GpgME::DecryptionResult, QByteArray ) ) );
+    m_senderToId[job] = id;
+    ++m_unfinished;
+}
+
+void DecryptionResultCollector::slotDecryptResult(const GpgME::DecryptionResult & result,
+                                                       const QByteArray & stuff )
+{
+    const QString id = m_senderToId[sender()];
+
+    Result res;
+    res.id = id;
+    res.stuff = stuff;
+    res.result = result;
+    m_results[id] = res;
+
+    --m_unfinished;
+    assert( m_unfinished >= 0 );
+    if ( m_unfinished == 0 ) {
+        emit finished( m_results );
+        deleteLater();
+    }
+}
 
 class DecryptCommand::Private
   : public AssuanCommandPrivateBaseMixin<DecryptCommand::Private, DecryptCommand>
@@ -59,9 +116,11 @@ public:
 
     DecryptCommand *q;
     QList<Input> analyzeInput( GpgME::Error& error, QString& errorDetails ) const;
+    int startDecryption();
+    void decryptionResult( const GpgME::DecryptionResult &, const QByteArray & plainText );
 
 public Q_SLOTS:
-    void slotDecryptionResult( const GpgME::DecryptionResult &, const QByteArray & plainText );
+    void slotDecryptionCollectionResult( const QHash<QString, DecryptionResultCollector::Result>& );
     void slotProgress( const QString& what, int current, int total );
 
 };
@@ -90,10 +149,18 @@ QList<AssuanCommandPrivateBase::Input> DecryptCommand::Private::analyzeInput( Gp
         return QList<Input>();
     }
 
-    if ( numInputs != numOutputs )
+    // either the output is discarded, or there ar as many as inputs
+    if ( numOutputs > 0 && numInputs != numOutputs )
     {
         error = GpgME::Error( GPG_ERR_ASS_NO_INPUT ); //TODO use better error code if possible
         errorDetails = "For each --input there needs to be an --output";
+        return QList<Input>();
+    }
+
+    // FIXME TEMPORARY
+    if ( numInputs > 1 ) {
+         error = GpgME::Error( GPG_ERR_ASS_NO_INPUT ); //TODO use better error code if possible
+        errorDetails = "The decrypt command currently only accepts one input at at time.";
         return QList<Input>();
     }
 
@@ -117,19 +184,69 @@ void DecryptCommand::Private::slotProgress( const QString& what, int current, in
     // FIXME report progress, via sendStatus()
 }
 
-void DecryptCommand::Private::slotDecryptionResult( const GpgME::DecryptionResult & decryptionResult, const QByteArray & plainText )
+
+void DecryptCommand::Private::slotDecryptionCollectionResult( const QHash<QString, DecryptionResultCollector::Result>& results )
+{
+    //TODO: handle all results, not only the first
+    assert( !results.isEmpty() );
+    const DecryptionResultCollector::Result result = results.values().first();
+    decryptionResult( result.result, result.stuff );
+}
+
+void DecryptCommand::Private::decryptionResult( const GpgME::DecryptionResult & decryptionResult, const QByteArray & plainText )
 {
     const GpgME::Error decryptionError = decryptionResult.error();
-    if ( decryptionError )
-    {
+    if ( decryptionError ) {
         q->done( decryptionError );
         return;
     }
 
     //handle result, send status
-    q->bulkOutputDevice( "OUTPUT" )->write( plainText );
+    QIODevice * const outdevice = q->bulkOutputDevice( "OUTPUT" );
+    if ( outdevice ) {
+        if ( const int err = outdevice->write( plainText) ) {
+            q->done( err );
+            return;
+        }
+    }
     q->done();
 }
+
+int DecryptCommand::Private::startDecryption()
+{
+    assert( !inputList.isEmpty() );
+    DecryptionResultCollector* collector = new DecryptionResultCollector;
+    connect( collector, SIGNAL( finished( QHash<QString, DecryptionResultCollector::Result> ) ),
+             SLOT( slotDecryptionCollectionResult( QHash<QString, DecryptionResultCollector::Result> ) ) );
+
+    try {
+
+        int i = 0;
+        Q_FOREACH ( const Private::Input input, inputList )
+        {
+            ++i;
+            assert( input.backend );
+
+            //fire off appropriate kleo decrypt verify job
+            DecryptJob * const job = input.backend->decryptJob();
+            assert(job);
+            collector->registerJob( QString::number(i), job );
+
+            // FIXME handle file names
+            const QByteArray encrypted = input.message->readAll(); // FIXME safe enough?
+            const GpgME::Error error = job->start( encrypted );
+            if ( error ) throw error;
+
+        }
+    } catch ( const GpgME::Error & error ) {
+        delete collector;
+        q->done( error );
+    }
+
+    return 0;
+}
+
+
 
 int DecryptCommand::doStart()
 {
@@ -149,37 +266,9 @@ int DecryptCommand::doStart()
     int err = d->determineInputsAndProtocols( details );
     if ( err )
         done( err, details );
+    err = d->startDecryption();
+    return 0;
 
-    try {
-
-        Q_FOREACH ( const Private::Input input, d->inputList )
-        {
-            assert( input.backend );
-
-            //fire off appropriate kleo decrypt verify job
-            DecryptJob * const job = input.backend->decryptJob();
-            assert(job);
-
-            QObject::connect( job, SIGNAL( result( GpgME::DecryptionResult, QByteArray ) ),
-                    d.get(), SLOT( slotDecryptionResult( GpgME::DecryptionResult, QByteArray ) ) );
-            QObject::connect( job, SIGNAL( progress( QString, int, int ) ),
-                    d.get(), SLOT( slotProgress( QString, int, int ) ) );
-
-            const QByteArray encrypted = bulkInputDevice( "INPUT" )->readAll(); // FIXME safe enough?
-
-            // FIXME handle cancelled, let job show dialog? both done and return error?
-            const GpgME::Error error = job->start( encrypted );
-            if ( error )
-                done( error );
-        }
-    } catch ( const GpgME::Error & error ) {
-        //delete collector;
-        done( error );
-        return error;
-    }
-
-
-    return error;
 }
 
 void DecryptCommand::doCanceled()
