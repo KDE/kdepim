@@ -59,6 +59,7 @@ EncryptCommand::~EncryptCommand()
 
 int EncryptCommand::doStart()
 {
+    done();
 }
 
 void EncryptCommand::doCanceled()
@@ -66,3 +67,4 @@ void EncryptCommand::doCanceled()
 }
 
 #include "encryptcommand.moc"
+

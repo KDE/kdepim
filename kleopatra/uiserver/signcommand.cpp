@@ -59,10 +59,13 @@ SignCommand::~SignCommand()
 
 int SignCommand::doStart()
 {
+    done();
 }
+
 
 void SignCommand::doCanceled()
 {
 }
 
 #include "signcommand.moc"
+
