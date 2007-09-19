@@ -29,6 +29,7 @@ if ( USABLE_ASSUAN_FOUND )
     uiserver/assuanserverconnection.cpp
     uiserver/echocommand.cpp
     uiserver/verifycommand.cpp
+    uiserver/signcommand.cpp
     uiserver/decryptcommand.cpp
     uiserver/encryptcommand.cpp
     uiserver/assuancommandprivatebase_p.cpp
