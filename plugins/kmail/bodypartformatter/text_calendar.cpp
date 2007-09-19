@@ -74,6 +74,8 @@
 #include <dcopclient.h>
 #include <dcopref.h>
 
+#include "kcalendariface_stub.h"
+
 using namespace KCal;
 
 namespace {
@@ -256,22 +258,8 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
       return callback.mailICal( recv, msg, subject, type != Forward );
     }
 
-    bool saveFile( const QString& receiver, const QString& iCal,
-                   const QString& type ) const
+    void ensureKorganizerRunning() const
     {
-      KTempFile file( locateLocal( "data", "korganizer/income." + type + '/',
-                                   true ) );
-      QTextStream* ts = file.textStream();
-      if ( !ts ) {
-        KMessageBox::error( 0, i18n("Could not save file to KOrganizer") );
-        return false;
-      }
-      ts->setEncoding( QTextStream::UnicodeUTF8 );
-      (*ts) << receiver << '\n' << iCal;
-      file.close();
-
-      // Now ensure that korganizer is running; otherwise start it, to prevent surprises
-      // (https://intevation.de/roundup/kolab/issue758)
       QString error;
       QCString dcopService;
       int result = KDCOPServiceStarter::self()->findServiceFor( "DCOP/Organizer", QString::null, QString::null, &error, &dcopService );
@@ -295,6 +283,25 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
       }
       else
         kdWarning() << "Couldn't start DCOP/Organizer: " << dcopService << " " << error << endl;
+    }
+
+    bool saveFile( const QString& receiver, const QString& iCal,
+                   const QString& type ) const
+    {
+      KTempFile file( locateLocal( "data", "korganizer/income." + type + '/',
+                                   true ) );
+      QTextStream* ts = file.textStream();
+      if ( !ts ) {
+        KMessageBox::error( 0, i18n("Could not save file to KOrganizer") );
+        return false;
+      }
+      ts->setEncoding( QTextStream::UnicodeUTF8 );
+      (*ts) << receiver << '\n' << iCal;
+      file.close();
+
+      // Now ensure that korganizer is running; otherwise start it, to prevent surprises
+      // (https://intevation.de/roundup/kolab/issue758)
+      ensureKorganizerRunning();
 
       return true;
     }
@@ -414,6 +421,22 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
       return ok;
     }
 
+    void showCalendar( const QDate &date ) const
+    {
+      ensureKorganizerRunning();
+      // raise korganizer part in kontact or the korganizer app
+      kapp->dcopClient()->send( "korganizer", "korganizer", "newInstance()", QByteArray() );
+      QByteArray arg;
+      QDataStream s( arg, IO_WriteOnly );
+      s << QString( "kontact_korganizerplugin" );
+      kapp->dcopClient()->send( "kontact", "KontactIface", "selectPlugin(QString)", arg );
+
+      KCalendarIface_stub *iface = new KCalendarIface_stub( kapp->dcopClient(), "korganizer", "CalendarIface" );
+      iface->showEventView();
+      iface->showDate( date );
+      delete iface;
+    }
+
     bool handleIgnore( const QString&, KMail::Callback& c ) const
     {
       // simply move the message to trash
@@ -445,6 +468,10 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
         if ( fwdTo.isEmpty() )
           return true;
         result = mail( incidence, c, Scheduler::Request, fwdTo, Forward );
+      }
+      if ( path == "check_calendar" ) {
+        Incidence* incidence = icalToString( iCal );
+        showCalendar( incidence->dtStart().date() );
       }
       if ( path == "reply" || path == "cancel" ) {
         // These should just be saved with their type as the dir
