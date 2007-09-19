@@ -45,6 +45,8 @@
 # include <uiserver/echocommand.h>
 # include <uiserver/decryptcommand.h>
 # include <uiserver/verifycommand.h>
+# include <uiserver/encryptcommand.h>
+# include <uiserver/signcommand.h>
 #endif
 
 #include <kapplication.h>
@@ -125,6 +127,8 @@ int main( int argc, char** argv )
       REGISTER( DecryptCommand );
       REGISTER( EchoCommand );
       REGISTER( VerifyCommand );
+      REGISTER( EncryptCommand );
+      REGISTER( SignCommand );
 #undef REGISTER
 
       server.start();
