@@ -60,17 +60,6 @@ using namespace Kleo;
 
 class DecryptCommand::Private;
 
-struct DecryptCommandException : public std::exception
-{
-    DecryptCommandException( int i, const QString& s = QString() )
-        :err(i), errorString(s)
-    {}
-    virtual ~DecryptCommandException() throw()
-    {}
-    int err;
-    QString errorString;
-};
-
 class DecryptionResultCollector : public QObject
 {
     Q_OBJECT
@@ -163,15 +152,18 @@ void DecryptionResultCollector::slotDecryptResult(const GpgME::DecryptionResult 
     m_results[id] = res;
 
     // send status for all results received so far, but in order of id
+    // report status on the command line immediately, and write out results, but
+     // only show dialog once all operations are completed, so it can be aggregated
     while ( m_results.contains( m_statusSent ) ) {
-        const Result result = m_results[m_statusSent];
+        Result result = m_results[m_statusSent];
         QString resultString;
         try {
             m_command->tryDecryptResult( result.result, result.stuff, m_statusSent );
             resultString = resultToString( result.result );
-        } catch ( const DecryptCommandException& e ) {
-            res.error = e.err;
-            res.errorString = e.errorString;
+        } catch ( const AssuanCommandException& e ) {
+            result.error = e.err;
+            result.errorString = e.errorString;
+            m_results[m_statusSent] = result;
             resultString = "ERR " + res.errorString;
             // FIXME ask to continue or cancel
         }
@@ -253,17 +245,16 @@ void DecryptCommand::Private::tryDecryptResult(const GpgME::DecryptionResult & r
 {
     assert( id!= -1 );
 
-    // report status on the comman line immediately, and write out results, but
-    // only show dialog once all operations are completed, so it can be aggregated
+ 
     const GpgME::Error decryptionError = result.error();
     if ( decryptionError )
-        throw DecryptCommandException( static_cast<int>(decryptionError), decryptionError.asString() );
+        throw AssuanCommandException( static_cast<int>(decryptionError), decryptionError.asString() );
 
     //handle result, send status
     QIODevice * const outdevice = q->bulkOutputDevice( "OUTPUT", id );
     if ( outdevice ) {
         if ( const int bytesWritten = outdevice->write( stuff ) != stuff.size() ) {
-            throw DecryptCommandException( makeError( GPG_ERR_ASS_WRITE_ERROR ), outdevice->errorString()) ;
+            throw AssuanCommandException( makeError( GPG_ERR_ASS_WRITE_ERROR ), outdevice->errorString()) ;
         }
     } else {
         if ( const char * filename = result.fileName() ) {
@@ -290,10 +281,11 @@ void DecryptCommand::Private::slotDecryptionCollectionResult( const QMap<int, De
                       std::back_inserter( theGood ),
                       !boost::bind( &DecryptionResultCollector::Result::isError, _1 ) );
 
-    // FIXME find all errors and all successes and display result dialog, unless --silent
-    QMessageBox::information( 0, i18n( "Decryption Result" ), QString("%1 files processed. %2 were ok, %3 failed")
-            .arg( results.size() ).arg( theGood.size() ).arg( theBad.size() ) );
-
+    if ( !q->hasOption("silent") ) {
+        // FIXME find all errors and all successes and display result dialog, unless --silent
+        QMessageBox::information( 0, i18n( "Decryption Result" ), QString("%1 files processed. %2 were ok, %3 failed")
+                                 .arg( results.size() ).arg( theGood.size() ).arg( theBad.size() ) );
+    }
     if ( !theBad.empty() )
         q->done( makeError( GPG_ERR_DECRYPT_FAILED ) );
     else

@@ -286,6 +286,17 @@ namespace Kleo {
     class AssuanCommandMixin : public AssuanCommand {
         /* reimp */ const char * name() const { return Derived::staticName(); }
     };
+    
+    struct AssuanCommandException : public std::exception
+    {
+        AssuanCommandException( int i, const QString& s = QString() )
+            :err(i), errorString(s)
+        {}
+        virtual ~AssuanCommandException() throw()
+        {}
+        int err;
+        QString errorString;
+    };
 
 }
 
