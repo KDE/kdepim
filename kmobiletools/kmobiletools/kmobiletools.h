@@ -17,13 +17,9 @@
    Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
    Boston, MA 02110-1301, USA.
  ***************************************************************************/
- 
+
 #ifndef _KMOBILETOOLS_H_
 #define _KMOBILETOOLS_H_
-
-#ifdef HAVE_CONFIG_H
-#include <config.h>
-#endif
 
 #include <KParts/MainWindow>
 

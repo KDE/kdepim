@@ -22,10 +22,6 @@
 
 #define DW_IMPLEMENTATION
 
-#ifdef HAVE_CONFIG_H
-#include "../config.h"
-#endif
-
 #include <mimelib/config.h>
 #include <mimelib/debug.h>
 #include <ctype.h>

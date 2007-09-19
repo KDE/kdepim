@@ -24,10 +24,6 @@
 #ifndef KTESTNETWORKSTATUS_H
 #define KTESTNETWORKSTATUS_H
 
-#ifdef HAVE_CONFIG_H
-#include <config.h>
-#endif
-
 #include <dcopclient.h>
 #include <kapplication.h>
 #include <kmainwindow.h>
