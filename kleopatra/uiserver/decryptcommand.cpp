@@ -90,6 +90,7 @@ void DecryptionResultCollector::registerJob( const QString& id, DecryptJob* job 
 void DecryptionResultCollector::slotDecryptResult(const GpgME::DecryptionResult & result,
                                                   const QByteArray & stuff )
 {
+    assert( m_senderToId.contains( sender( ) ) );
     const QString id = m_senderToId[sender()];
 
     Result res;
@@ -157,13 +158,6 @@ QList<AssuanCommandPrivateBase::Input> DecryptCommand::Private::analyzeInput( Gp
         return QList<Input>();
     }
 
-    // FIXME TEMPORARY
-    if ( numInputs > 1 ) {
-         error = GpgME::Error( GPG_ERR_ASS_NO_INPUT ); //TODO use better error code if possible
-        errorDetails = "The decrypt command currently only accepts one input at at time.";
-        return QList<Input>();
-    }
-
     QList<Input> inputs;
 
     for ( int i = 0; i < numInputs; ++i )
@@ -194,14 +188,16 @@ static QString resultToString( const GpgME::DecryptionResult & result )
     return resStr;
 }
 
+
 void DecryptCommand::Private::slotDecryptionCollectionResult( const QHash<QString, DecryptionResultCollector::Result>& results )
 {
     assert( !results.isEmpty() );
     QStringList resultStrings;
     try {
-        QList<DecryptionResultCollector::Result>::const_iterator it = results.values().begin();
-        QList<DecryptionResultCollector::Result>::const_iterator end = results.values().end();
-        for ( int i = 0; it != end; ++it, ++i ) {
+        QList<DecryptionResultCollector::Result> values = results.values();
+        QList<DecryptionResultCollector::Result>::const_iterator it = values.begin();
+        QList<DecryptionResultCollector::Result>::const_iterator end = values.end();
+        for ( ; it != end; ++it ) {
             const DecryptionResultCollector::Result result = *it;
 
             const GpgME::Error decryptionError = result.result.error();
@@ -240,7 +236,6 @@ int DecryptCommand::Private::startDecryption()
         int i = 0;
         Q_FOREACH ( const Private::Input input, inputList )
         {
-            ++i;
             assert( input.backend );
 
             //fire off appropriate kleo decrypt verify job
@@ -253,6 +248,7 @@ int DecryptCommand::Private::startDecryption()
             const GpgME::Error error = job->start( encrypted );
             if ( error ) throw error;
 
+            ++i;
         }
     } catch ( const GpgME::Error & error ) {
         delete collector;

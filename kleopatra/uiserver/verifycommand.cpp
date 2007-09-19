@@ -474,7 +474,6 @@ int VerifyCommand::Private::startVerification()
         int i = 0;
         Q_FOREACH ( const Private::Input input, inputList )
         {
-            ++i;
             assert( input.backend );
             if ( input.type == Private::Input::Opaque )
             {
@@ -504,6 +503,7 @@ int VerifyCommand::Private::startVerification()
                 const GpgME::Error error = useFileName ? job->start( signature, fileData ) : job->start( signature, input.message->readAll() );
                 if ( error ) throw error;
             }
+            ++i;
         }
     } catch ( const GpgME::Error & error ) {
         delete collector;
