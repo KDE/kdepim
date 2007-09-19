@@ -26,7 +26,7 @@
 <author>
 <firstname>Allen</firstname>
 <surname>Winter</surname>
-<affiliation><address><email>awinterz@users.sourceforge.net</email></address></affiliation>
+<affiliation><address><email>winterz@kde.org</email></address></affiliation>
 </author>
 
 <othercredit role="reviewer">
@@ -43,7 +43,7 @@
 </copyright>
 
 <copyright>
-<year>2003</year><year>2005</year><holder>Allen Winter</holder>
+<year>2003</year><year>2007</year><holder>Allen Winter</holder>
 </copyright>
 
 <legalnotice>&FDLNotice;</legalnotice>
@@ -66,7 +66,6 @@
 </keywordset>
 
 </bookinfo>
-
 
 <chapter id="introduction">
 <title>Introduction</title>
@@ -757,7 +756,7 @@ If you do not want to see event <acronym>UIDs</acronym> then use the
 <para>How do I have my question added to this <acronym>FAQ</acronym>?</para>
 </question>
 <answer>
-<para>Send your questions to <email>illuusio@lycos.com</email>.</para>
+<para>Send your questions to <email>winter@kde.org</email>.</para>
 </answer>
 </qandaentry>
 
@@ -769,16 +768,16 @@ If you do not want to see event <acronym>UIDs</acronym> then use the
 
 <title>Credits and License</title>
 
-<para>&konsolekalendar; Program copyright 2002,2003:</para>
+<para>&konsolekalendar; Program copyright 2002-2007:</para>
 
 <itemizedlist>
 <listitem><para>Tuukka Pasanen <email>illuusio@mailcity.com</email></para></listitem>
-<listitem><para>Allen Winter <email>awinterz@users.sourceforge.net</email></para></listitem>
+<listitem><para>Allen Winter <email>winter@kde.org</email></para></listitem>
 </itemizedlist>
 
 <para>Documentation copyright 2003:</para>
 <itemizedlist>
-<listitem><para>Allen Winter <email>awinterz@users.sourceforge.net</email></para></listitem>
+<listitem><para>Allen Winter <email>winter@kde.org</email></para></listitem>
 <listitem><para>Tuukka Pasanen<email>illuusio@mailcity.com</email></para></listitem>
 </itemizedlist>
 
@@ -798,7 +797,7 @@ If you do not want to see event <acronym>UIDs</acronym> then use the
 
 &install.intro.documentation;
 
-<para>&konsolekalendar; comes included with &kde;3 and is not available separately.
+<para>&konsolekalendar; comes included with &kde;4 and is not available separately.
 </para>
 
 </sect1>
@@ -807,41 +806,12 @@ If you do not want to see event <acronym>UIDs</acronym> then use the
 <title>Requirements</title>
 
 <para>&konsolekalendar; requires the standard &kde; libraries to be installed
-(the <filename>kdelibs</filename> package). To compile from source,
-you also need the &Qt; and <filename>kdelibs</filename> development
-packages.</para>
+(the <filename>kdelibs</filename> package and <filename>kdepimlibs</filename>).
+To compile from source, you also need the &Qt;, <filename>kdelibs</filename> and
+<filename>kdepimlibs</filename> development packages.</para>
 
 <para>You can find a list of changes in the
 <filename>ChangeLog</filename> file.</para>
-</sect1>
-
-<sect1 id="compilation">
-<title>Compilation and installation</title>
-
-<para>This section provides a quick overview of the build process.
-Please read <ulink url="http://developer.kde.org/build/compile_kde3_2.html">
-Compiling &kde; 3.2.x</ulink> for complete instructions.</para>
-
-<para>If you cannot obtain a suitable precompiled binary package, you
-need to compile &konsolekalendar; yourself from source files. Get the source
-package file <filename>kdepim-x.x.tar.bz2</filename>.
-Unpack it in a new folder using a command similar to
-<userinput><command>tar</command> <option>xvfj
-<replaceable>package.tar.bz2</replaceable></option></userinput>, and
-change to the folder which has been created.</para>
-
-&install.compile.documentation;
-
-<note><para>If you have more than one version of &kde; installed
-(e.g. &kde;2 and &kde;3), this may possibly install &konsolekalendar; into the
-wrong &kde; folder. If necessary, you can give the &kde; folder
-as a parameter to
-<userinput><command>./configure</command></userinput>. For example,
-if your &kde; is installed in <filename>/opt/kde3</filename>:
-</para>
-
-<para><userinput><command>./configure</command> --prefix=<replaceable>/opt/kde3</replaceable></userinput></para></note>
-
 </sect1>
 
 <sect1 id="configuration">
