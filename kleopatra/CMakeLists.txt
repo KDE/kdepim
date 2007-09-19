@@ -30,6 +30,7 @@ if ( USABLE_ASSUAN_FOUND )
     uiserver/echocommand.cpp
     uiserver/verifycommand.cpp
     uiserver/decryptcommand.cpp
+    uiserver/encryptcommand.cpp
     uiserver/assuancommandprivatebase_p.cpp
     uiserver/signaturedisplaywidget.cpp
     )
