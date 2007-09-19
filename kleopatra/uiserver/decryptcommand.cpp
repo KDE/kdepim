@@ -115,6 +115,7 @@ public:
     QList<Input> analyzeInput( GpgME::Error& error, QString& errorDetails ) const;
     int startDecryption();
     void tryDecryptResult(const GpgME::DecryptionResult &, const QByteArray &, const QString& );
+    void trySendingStatus( const QString & str );
 
 public Q_SLOTS:
     void slotDecryptionCollectionResult( const QHash<QString, DecryptionResultCollector::Result>& );
@@ -124,7 +125,15 @@ private:
 
 };
 
-
+static QString resultToString( const GpgME::DecryptionResult & result )
+{
+    QString resStr( "GREY ");
+    for ( unsigned int i = 0; i<result.numRecipients(); i++ ) {
+        const GpgME::DecryptionResult::Recipient r = result.recipient( i );
+        resStr += i18n( " encrypted to " ) + QString( r.keyID() );
+    }
+    return resStr;
+}
 
 DecryptionResultCollector::DecryptionResultCollector( DecryptCommand::Private * parent )
 : QObject( parent ), m_command( parent ), m_unfinished( 0 )
@@ -151,14 +160,18 @@ void DecryptionResultCollector::slotDecryptResult(const GpgME::DecryptionResult 
     res.result = result;
     m_results[id] = res;
 
+    QString resultString;
+
     try {
         m_command->tryDecryptResult( result, stuff, id );
+        resultString = resultToString( result );
     } catch ( const DecryptCommandException& e ) {
         res.error = e.err;
         res.errorString = e.errorString;
+        resultString = "ERR " + res.errorString;
         // FIXME ask to continue or cancel
     }
-
+    m_command->trySendingStatus( resultString );
     --m_unfinished;
     assert( m_unfinished >= 0 );
     if ( m_unfinished == 0 ) {
@@ -213,19 +226,19 @@ QList<AssuanCommandPrivateBase::Input> DecryptCommand::Private::analyzeInput( Gp
     return inputs;
 }
 
+void DecryptCommand::Private::trySendingStatus( const QString & str )
+{
+    if ( const int err = q->sendStatus( "DECRYPT", str ) ) {
+        QString errorString = i18n("Problem writing out decryption status.");
+        q->done( err, errorString ) ;
+    }
+}
+
+
+
 void DecryptCommand::Private::slotProgress( const QString& what, int current, int total )
 {
     // FIXME report progress, via sendStatus()
-}
-
-static QString resultToString( const GpgME::DecryptionResult & result )
-{
-    QString resStr( "GREY ");
-    for ( unsigned int i = 0; i<result.numRecipients(); i++ ) {
-        const GpgME::DecryptionResult::Recipient r = result.recipient( i );
-        resStr += QString( r.keyID() );
-    }
-    return resStr;
 }
 
 void DecryptCommand::Private::tryDecryptResult(const GpgME::DecryptionResult & result,
@@ -237,7 +250,7 @@ void DecryptCommand::Private::tryDecryptResult(const GpgME::DecryptionResult & r
     // only show dialog once all operations are completed, so it can be aggregated
     const GpgME::Error decryptionError = result.error();
     if ( decryptionError )
-        throw DecryptCommandException( static_cast<int>(decryptionError) );
+        throw DecryptCommandException( static_cast<int>(decryptionError), decryptionError.asString() );
 
     //handle result, send status
     QIODevice * const outdevice = q->bulkOutputDevice( "OUTPUT", id.toInt() );
@@ -253,10 +266,6 @@ void DecryptCommand::Private::tryDecryptResult(const GpgME::DecryptionResult & r
             // no output specified, and no filename given, ask the user
         }
 
-    }
-    if ( const int err = q->sendStatus( "DECRYPT", resultToString( result ) ) ){
-        QString errorString = "Problem writing out decryption status.";
-        throw DecryptCommandException( err, errorString ) ;
     }
 }
 
@@ -296,7 +305,7 @@ int DecryptCommand::Private::startDecryption()
         {
             assert( input.backend );
 
-            //fire off appropriate kleo decrypt verify job
+            //fire off appropriate kleo decrypt job
             DecryptJob * const job = input.backend->decryptJob();
             assert(job);
             collector->registerJob( QString::number(i), job );
