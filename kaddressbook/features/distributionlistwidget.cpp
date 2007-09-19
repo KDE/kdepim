@@ -487,12 +487,14 @@ void DistributionListWidget::updateContactView()
 #ifdef KDEPIM_NEW_DISTRLISTS
   const KPIM::DistributionList::Entry::List entries = dist.entries( core()->addressBook() );
   KPIM::DistributionList::Entry::List::ConstIterator it;
+  for ( it = entries.begin(); it != entries.end(); ++it, ++entryCount )
+    new ContactItem( mContactView, (*it).addressee, (*it).email );
 #else
   const KABC::DistributionList::Entry::List entries = list->entries();
   KABC::DistributionList::Entry::List::ConstIterator it;
-#endif
   for ( it = entries.begin(); it != entries.end(); ++it, ++entryCount )
     new ContactItem( mContactView, (*it).addressee(), (*it).email() );
+#endif
 
   bool state = mContactView->currentItem() != 0;
   mChangeEmailButton->setEnabled( state );
