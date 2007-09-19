@@ -413,8 +413,8 @@ void VerifyCommand::Private::verifyOpaqueResult( const GpgME::VerificationResult
     }
     QIODevice * const outdevice = q->bulkOutputDevice( "OUTPUT" );
     if ( outdevice ) {
-        if ( const int err = outdevice->write( stuff ) ) {
-            q->done( err );
+        if ( const int bytesWritten = outdevice->write( stuff ) != stuff.size() ) {
+            q->done( GPG_ERR_ASS_WRITE_ERROR, outdevice->errorString() );
             return;
         }
     }
