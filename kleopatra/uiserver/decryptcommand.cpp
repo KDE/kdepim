@@ -33,10 +33,12 @@
 #include "decryptcommand.h"
 #include "assuancommandprivatebase_p.h"
 
+
 #include <QObject>
 #include <QIODevice>
 #include <QHash>
 #include <QStringList>
+#include <QDebug>
 
 #include <kleo/decryptjob.h>
 
@@ -193,6 +195,7 @@ void DecryptCommand::Private::slotDecryptionCollectionResult( const QHash<QStrin
 {
     assert( !results.isEmpty() );
     QStringList resultStrings;
+    QString errorString;
     try {
         QList<DecryptionResultCollector::Result> values = results.values();
         QList<DecryptionResultCollector::Result>::const_iterator it = values.begin();
@@ -201,27 +204,37 @@ void DecryptCommand::Private::slotDecryptionCollectionResult( const QHash<QStrin
             const DecryptionResultCollector::Result result = *it;
 
             const GpgME::Error decryptionError = result.result.error();
-            if ( decryptionError )
+            if ( decryptionError ) {
+                errorString = decryptionError.asString();
                 throw( decryptionError );
+            }
 
             //handle result, send status
             QIODevice * const outdevice = q->bulkOutputDevice( "OUTPUT", result.id.toInt() );
             if ( outdevice ) {
-                if ( const int err = outdevice->write( result.stuff ) )
+                if ( const int bytesWritten = outdevice->write( result.stuff ) != result.stuff.size() ) {
+                    const int err = GPG_ERR_ASS_WRITE_ERROR;
+                    errorString = outdevice->errorString();
                     throw( err );
+                }
             } else {
                 if ( const char * filename = result.result.fileName() ) {
                     // FIXME sanitize, percent-encode, etc
                     // FIXME write out to given file name
+                } else {
+                    // no output specified, and no filename given, ask the user
                 }
+
             }
-            if ( const int err = q->sendStatus( "DECRYPT", resultToString( result.result ) ) )
+            if ( const int err = q->sendStatus( "DECRYPT", resultToString( result.result ) ) ){
+                errorString = "Problem writing out decryption status.";
                 throw( err );
+            }
         }
 
         q->done();
     } catch ( int err ) {
-        q->done( err );
+        q->done( err, errorString );
     }
 }
 
