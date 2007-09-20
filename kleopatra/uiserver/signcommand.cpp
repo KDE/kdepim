@@ -31,6 +31,21 @@
 */
 
 #include "signcommand.h"
+#include "kleo-assuan.h"
+
+#include <kleo/keylistjob.h>
+#include <kleo/cryptobackendfactory.h>
+
+#include <gpgme++/data.h>
+#include <gpgme++/error.h>
+#include <gpgme++/key.h>
+#include <gpgme++/keylistresult.h>
+
+#include <QIODevice>
+#include <QString>
+#include <QStringList>
+#include <QObject>
+#include <QDebug>
 
 using namespace Kleo;
 
@@ -41,12 +56,83 @@ class SignCommand::Private
 public:
     Private( SignCommand * qq )
         :AssuanCommandPrivateBaseMixin<SignCommand::Private, SignCommand>()
-        , q( qq )
+        , q( qq ), m_keyListings(0)
     {}
     virtual ~Private() {}
+    
+    void checkInputs();
+    void askUserForKeys();
+    
+    struct Input {
+        QIODevice* data;
+        QString dataFileName;
+    };
 
     SignCommand *q;
+private Q_SLOTS:
+    void slotKeyListingDone( const GpgME::KeyListResult& );
+    void slotNextKey( const GpgME::Key&  );
+private:
+    std::vector<Input> m_inputs;
+    std::vector<GpgME::Key> m_keys;
+    int m_keyListings;
 };
+
+void SignCommand::Private::checkInputs()
+{
+    const int numInputs = q->numBulkInputDevices( "INPUT" );
+    const int numOutputs = q->numBulkInputDevices( "OUTPUT" );
+    const int numMessages = q->numBulkInputDevices( "MESSAGE" );
+
+    //TODO use better error code if possible
+    if ( numMessages != 0 )
+        throw assuan_exception(makeError( GPG_ERR_ASS_NO_INPUT ), "Only --input and --output can be provided to the sign command, no --message"); 
+       
+    // either the output is discarded, or there ar as many as inputs
+    //TODO use better error code if possible
+    if ( numOutputs > 0 && numInputs != numOutputs )
+        throw assuan_exception( makeError( GPG_ERR_ASS_NO_INPUT ),  "For each --input there needs to be an --output");
+
+    for ( int i = 0; i < numInputs; ++i ) {
+        Input input;
+        input.data = q->bulkInputDevice( "INPUT", i );
+        input.dataFileName = q->bulkInputDeviceFileName( "INPUT", i );
+
+        m_inputs.push_back( input );
+    }
+}
+
+void SignCommand::Private::askUserForKeys()
+{
+    // do a key listing of private keys for both backends
+    const QStringList patterns; // FIXME?
+    m_keyListings = 2; // openpgg and cms
+    KeyListJob *keylisting = Kleo::CryptoBackendFactory::instance()->protocol( "openpgp" )->keyListJob();
+    connect( keylisting, SIGNAL( result( GpgME::KeyListResult ) ),
+             this, SLOT( slotKeyListingDone( GpgME::KeyListResult ) ) );
+    connect( keylisting, SIGNAL( nextKey( GpgME::Key ) ),
+             this, SLOT( slotNextKey( GpgME::Key ) ) );
+    keylisting->start( patterns, true /*secret only*/);
+    
+    keylisting = Kleo::CryptoBackendFactory::instance()->protocol( "cms" )->keyListJob();
+    connect( keylisting, SIGNAL( result( GpgME::KeyListResult ) ),
+             this, SLOT( slotKeyListingDone( GpgME::KeyListResult ) ) );
+    connect( keylisting, SIGNAL( nextKey( GpgME::Key ) ),
+             this, SLOT( slotNextKey( GpgME::Key ) ) );
+    keylisting->start( patterns, true /*secret only*/);
+}
+
+void SignCommand::Private::slotKeyListingDone( const GpgME::KeyListResult& result )
+{
+    if ( --m_keyListings == 0 )
+        qWarning() << "Key listings done, got :" << m_keys.size();
+}
+
+void SignCommand::Private::slotNextKey( const GpgME::Key& key )
+{
+    m_keys.push_back( key );
+}
+
 
 SignCommand::SignCommand()
 :d( new Private( this ) )
@@ -59,7 +145,17 @@ SignCommand::~SignCommand()
 
 int SignCommand::doStart()
 {
-    done();
+    try {
+        d->checkInputs();
+
+    } catch ( const assuan_exception& e ) {
+        done( e.error_code(), e.what());
+        return e.error_code();
+    }
+    
+    d->askUserForKeys();
+    
+    return 0;
 }
 
 

@@ -119,7 +119,7 @@ void AssuanCommandPrivateBase::writeToOutputDeviceOrAskForFileName( int id,  con
         }
         if ( filename.isEmpty() )
             return; // user canceled the dialog, let's just move on. FIXME warning?
-                    // FIXME sanitize, percent-encode, etc
+        // FIXME sanitize, percent-encode, etc. Needed with KSaveFile?
         file.setFileName( filename );
         if ( !file.open() )
             throw assuan_exception( q->makeError( GPG_ERR_ASS_WRITE_ERROR ), file.errorString().toStdString() ) ;
