@@ -44,7 +44,7 @@ std::string Kleo::assuan_exception::make_message( gpg_error_t err, const std::st
     buf[sizeof buf - 1] = '\0';
     char result_buf[1024];
     snprintf( result_buf, sizeof result_buf, "%lu %s: %s",
-              gpg_strsource( err ), buf, (unsigned long)err );
+            (unsigned long)err, gpg_strsource( err ), buf  );
     result_buf[sizeof result_buf - 1] = '\0';
     result += result_buf;
     return result;
