@@ -108,14 +108,16 @@ class VerificationResultDialog : public QDialog
 {
     Q_OBJECT
 public:
-    VerificationResultDialog( const GpgME::VerificationResult& result, const std::vector<GpgME::Key>& keys )
-    {
+    VerificationResultDialog( QWidget* parent )
+    :QDialog( parent )
+    {/*
         QVBoxLayout *box = new QVBoxLayout( this );
         Q_FOREACH( GpgME::Signature sig, result.signatures() ) {
             SignatureDisplayWidget *w = new SignatureDisplayWidget( this );
             w->setSignature( sig, keyForSignature( sig, keys ) );
             box->addWidget( w );
         }
+        */
     }
     virtual ~VerificationResultDialog() {}
 };
@@ -171,6 +173,7 @@ public:
     virtual ~Private() {}
     VerificationResultDialog * dialog;
     VerifyCommand * q;
+    VerificationResultCollector * collector;
 
     QList<AssuanCommandPrivateBase::Input> analyzeInput( GpgME::Error& error, QString& errorDetails ) const;
     int startVerification();
@@ -178,16 +181,12 @@ public:
     void writeOpaqueResult(const GpgME::VerificationResult &, const QByteArray &);
     void trySendingStatus( const QString & str );
     QString signatureToString( const GpgME::Signature& sig, const GpgME::Key & key ) const;
+    void showVerificationResultDialog();
 public Q_SLOTS:
     void verificationFinished( const QHash<int, VerificationResultCollector::Result> & results ); 
     void slotProgress( const QString& what, int current, int total );
 private Q_SLOTS:
     void slotDialogClosed();
-
-private:
-    void showVerificationResultDialog();
-
-    VerificationResultCollector * collector;
 };
 
 VerificationResultCollector::VerificationResultCollector( VerifyCommand::Private* parent ) 
@@ -404,12 +403,11 @@ void VerifyCommand::Private::slotDialogClosed()
 
 void VerifyCommand::Private::showVerificationResultDialog()
 {
-    /*
-    dialog = new VerificationResultDialog( result, keys );
+
+    dialog = new VerificationResultDialog( 0 ); // fixme opaque parent handle from command line?
     connect( dialog, SIGNAL( accepted() ), this, SLOT( slotDialogClosed() ) );
     connect( dialog, SIGNAL( rejected() ), this, SLOT( slotDialogClosed() ) );
     dialog->show();
-    */
 }
 
 void VerifyCommand::Private::writeOpaqueResult( const GpgME::VerificationResult & result ,
@@ -425,13 +423,9 @@ void VerifyCommand::Private::writeOpaqueResult( const GpgME::VerificationResult 
 
 void VerifyCommand::Private::verificationFinished( const QHash<int, VerificationResultCollector::Result> & results )
 {
-    //TODO: handle all results, not only the first
     assert( !results.isEmpty() );
-    const VerificationResultCollector::Result result = results.values().first();
 
-    if ( !q->hasOption("silent") )
-        showVerificationResultDialog();
-    else
+    if ( q->hasOption("silent") ) //otherwise we'll be ending when the dialog closes
         q->done();
 }
 
@@ -506,6 +500,8 @@ int VerifyCommand::doStart()
     if ( err )
         done( err, details );
     err = d->startVerification();
+    if( !err && !hasOption("silent") )
+        d->showVerificationResultDialog();
     return err;
 }
 
