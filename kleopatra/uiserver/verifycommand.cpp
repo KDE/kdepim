@@ -351,7 +351,7 @@ QList<AssuanCommandPrivateBase::Input> VerifyCommand::Private::analyzeInput( Gpg
             //detached signature file
             QString msgFileName = fname.left( fname.length() - 4 );
             QFile f( msgFileName );
-            if ( f.exists() ) {
+            if ( !f.exists() ) {
                 // the file we guessed doesn't exist, ask the user to supply one
                 const QString userFileName = 
                     KFileDialog::getOpenFileName( KUrl::fromPath(msgFileName), QString(), 0, i18n("Please select the file corresponding to the signature file: %1").arg(fname) );
