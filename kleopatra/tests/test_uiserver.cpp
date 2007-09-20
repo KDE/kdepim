@@ -55,6 +55,10 @@
 #include <string>
 #include <vector>
 
+#ifdef Q_OS_WIN32
+#include <winsock2.h>
+#endif
+
 using namespace Kleo;
 
 #ifdef Q_OS_WIN32
@@ -146,7 +150,10 @@ static int inquire( void * void_ctx, const char * keyword ) {
 }
 
 int main( int argc, char * argv[] ) {
-
+#ifdef Q_OS_WIN32
+    WSADATA wsadat;
+    WSAStartup(0x202, &wsadat); 
+#endif
     assuan_set_assuan_err_source( GPG_ERR_SOURCE_DEFAULT );
 
     if ( argc < 3 )
