@@ -61,7 +61,8 @@ public:
     virtual ~Private() {}
     
     void checkInputs();
-    void askUserForKeys();
+    void startKeyListings();
+    void showKeySelectionDialog();
     
     struct Input {
         QIODevice* data;
@@ -102,7 +103,7 @@ void SignCommand::Private::checkInputs()
     }
 }
 
-void SignCommand::Private::askUserForKeys()
+void SignCommand::Private::startKeyListings()
 {
     // do a key listing of private keys for both backends
     const QStringList patterns; // FIXME?
@@ -112,20 +113,31 @@ void SignCommand::Private::askUserForKeys()
              this, SLOT( slotKeyListingDone( GpgME::KeyListResult ) ) );
     connect( keylisting, SIGNAL( nextKey( GpgME::Key ) ),
              this, SLOT( slotNextKey( GpgME::Key ) ) );
-    keylisting->start( patterns, true /*secret only*/);
+    if ( const GpgME::Error err = keylisting->start( patterns, true /*secret only*/) )
+        throw assuan_exception( err, "Unable to start keylisting" );
     
     keylisting = Kleo::CryptoBackendFactory::instance()->protocol( "cms" )->keyListJob();
     connect( keylisting, SIGNAL( result( GpgME::KeyListResult ) ),
              this, SLOT( slotKeyListingDone( GpgME::KeyListResult ) ) );
     connect( keylisting, SIGNAL( nextKey( GpgME::Key ) ),
              this, SLOT( slotNextKey( GpgME::Key ) ) );
-    keylisting->start( patterns, true /*secret only*/);
+    if ( const GpgME::Error err = keylisting->start( patterns, true /*secret only*/) )
+        throw assuan_exception( err, "Unable to start keylisting" );
+}
+
+void SignCommand::Private::showKeySelectionDialog()
+{
+    q->done();
 }
 
 void SignCommand::Private::slotKeyListingDone( const GpgME::KeyListResult& result )
 {
-    if ( --m_keyListings == 0 )
-        qWarning() << "Key listings done, got :" << m_keys.size();
+    if ( result.error() )
+        q->done( result.error(), "Error during listing of private keys");
+    
+    if ( --m_keyListings == 0 ) {
+        showKeySelectionDialog();
+    }
 }
 
 void SignCommand::Private::slotNextKey( const GpgME::Key& key )
@@ -147,13 +159,11 @@ int SignCommand::doStart()
 {
     try {
         d->checkInputs();
-
+        d->startKeyListings();
     } catch ( const assuan_exception& e ) {
         done( e.error_code(), e.what());
         return e.error_code();
     }
-    
-    d->askUserForKeys();
     
     return 0;
 }
