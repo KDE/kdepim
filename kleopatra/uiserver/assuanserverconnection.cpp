@@ -173,7 +173,7 @@ class AssuanServerConnection::Private : public QObject {
     friend class ::Kleo::AssuanCommand;
     AssuanServerConnection * const q;
 public:
-    Private( int fd_, const std::vector< shared_ptr<AssuanCommandFactory> > & factories_, AssuanServerConnection * qq );
+    Private( assuan_fd_t fd_, const std::vector< shared_ptr<AssuanCommandFactory> > & factories_, AssuanServerConnection * qq );
     ~Private();
 
 public Q_SLOTS:
@@ -218,7 +218,7 @@ private:
         //return gpg_error( GPG_ERR_UNKNOWN_OPTION );
     }
 
-    // format: INPUT TAG([N])? (FD|FD=\d+|FILE=...)
+    // format: TAG (FD|FD=\d+|FILE=...)
     static int IO_handler( assuan_context_t ctx_, char * line_, bool in, const char * tag ) {
         assert( assuan_get_pointer( ctx_ ) );
         AssuanServerConnection::Private & conn = *static_cast<AssuanServerConnection::Private*>( assuan_get_pointer( ctx_ ) );
@@ -230,6 +230,7 @@ private:
                 throw gpg_error( GPG_ERR_ASS_SYNTAX );
 
             // ### TODO barf on unknown options
+            // ### TODO handle FILE=
 
             IO io;
             std::auto_ptr<QIODevice> iodev;
@@ -326,7 +327,7 @@ private:
     void cleanup();
 
 
-    int fd;
+    assuan_fd_t fd;
     AssuanContext ctx;
     std::vector< shared_ptr<QSocketNotifier> > notifiers;
     std::vector< shared_ptr<AssuanCommandFactory> > factories; // sorted: _detail::ByName<std::less>
@@ -343,21 +344,21 @@ void AssuanServerConnection::Private::cleanup() {
     mementos.clear();
     notifiers.clear();
     ctx.reset();
-    fd = -1;
+    fd = ASSUAN_INVALID_FD;
 }
 
-AssuanServerConnection::Private::Private( int fd_, const std::vector< shared_ptr<AssuanCommandFactory> > & factories_, AssuanServerConnection * qq )
+AssuanServerConnection::Private::Private( assuan_fd_t fd_, const std::vector< shared_ptr<AssuanCommandFactory> > & factories_, AssuanServerConnection * qq )
     : QObject(), q( qq ), fd( fd_ ), factories( factories_ )
 {
 #ifdef __GNUC__
     assert( __gnu_cxx::is_sorted( factories_.begin(), factories_.end(), _detail::ByName<std::less>() ) );
 #endif
 
-    if ( fd < 0 )
+    if ( fd == ASSUAN_INVALID_FD )
         throw assuan_exception( gpg_error( GPG_ERR_INV_ARG ), "pre-assuan_init_socket_server_ext" );
 
     assuan_context_t naked_ctx = 0;
-    if ( const gpg_error_t err = assuan_init_socket_server_ext( &naked_ctx, _detail::translate_libc2sys_fd( fd ), INIT_SOCKET_FLAGS ) )
+    if ( const gpg_error_t err = assuan_init_socket_server_ext( &naked_ctx, fd, INIT_SOCKET_FLAGS ) )
         throw assuan_exception( err, "assuan_init_socket_server_ext" );
     
     ctx.reset( naked_ctx ); naked_ctx = 0;
@@ -372,15 +373,15 @@ AssuanServerConnection::Private::Private( int fd_, const std::vector< shared_ptr
     const int numFDs = assuan_get_active_fds( ctx.get(), FOR_READING, fds, MAX_ACTIVE_FDS );
     assert( numFDs != -1 ); // == 1
 
-    if ( !numFDs || _detail::translate_sys2libc_fd( fds[0], false ) != fd ) {
-        const shared_ptr<QSocketNotifier> sn( new QSocketNotifier( fd, QSocketNotifier::Read ) );
+    if ( !numFDs || fds[0] != fd ) {
+        const shared_ptr<QSocketNotifier> sn( new QSocketNotifier( (int)fd, QSocketNotifier::Read ) );
         connect( sn.get(), SIGNAL(activated(int)), this, SLOT(slotReadActivity(int)) );
         notifiers.push_back( sn );
     }
 
     notifiers.reserve( notifiers.size() + numFDs );
     for ( int i = 0 ; i < numFDs ; ++i ) {
-        const shared_ptr<QSocketNotifier> sn( new QSocketNotifier( _detail::translate_sys2libc_fd( fds[i], false ), QSocketNotifier::Read ) );
+        const shared_ptr<QSocketNotifier> sn( new QSocketNotifier( (int)fds[i], QSocketNotifier::Read ) );
         connect( sn.get(), SIGNAL(activated(int)), this, SLOT(slotReadActivity(int)) );
         notifiers.push_back( sn );
     }
@@ -421,7 +422,7 @@ AssuanServerConnection::Private::~Private() {
     cleanup();
 }
 
-AssuanServerConnection::AssuanServerConnection( int fd, const std::vector< shared_ptr<AssuanCommandFactory> > & factories, QObject * p )
+AssuanServerConnection::AssuanServerConnection( assuan_fd_t fd, const std::vector< shared_ptr<AssuanCommandFactory> > & factories, QObject * p )
     : QObject( p ), d( new Private( fd, factories, this ) )
 {
 

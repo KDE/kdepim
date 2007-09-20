@@ -35,6 +35,8 @@
 
 #include <QObject>
 
+#include "kleo-assuan.h"
+
 #include <utils/pimpl_ptr.h>
 
 #include <boost/shared_ptr.hpp>
@@ -49,7 +51,7 @@ namespace Kleo {
     class AssuanServerConnection : public QObject {
         Q_OBJECT
     public:
-        AssuanServerConnection( int fd, const std::vector< boost::shared_ptr<AssuanCommandFactory> > & factories, QObject * parent=0 );
+        AssuanServerConnection( assuan_fd_t fd, const std::vector< boost::shared_ptr<AssuanCommandFactory> > & factories, QObject * parent=0 );
         ~AssuanServerConnection();
 
     Q_SIGNALS:

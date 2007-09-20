@@ -263,7 +263,7 @@ void UiServer::Private::makeListeningSocket() {
 void UiServer::Private::incomingConnection( int fd ) {
     try {
         qDebug( "UiServer: client connect on fd %d", fd );
-        const shared_ptr<AssuanServerConnection> c( new AssuanServerConnection( fd, factories ) );
+        const shared_ptr<AssuanServerConnection> c( new AssuanServerConnection( (assuan_fd_t)fd, factories ) );
         connect( c.get(), SIGNAL(closed(Kleo::AssuanServerConnection*)),
                  this, SLOT(slotConnectionClosed(Kleo::AssuanServerConnection*)) );
         connections.push_back( c );
