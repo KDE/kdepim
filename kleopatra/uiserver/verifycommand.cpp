@@ -227,7 +227,7 @@ void VerificationResultCollector::addResult( const VerificationResultCollector::
 
            const GpgME::Error verificationError = vResult.error();
            if ( verificationError )
-               throw assuan_exception( verificationError, verificationError.asString() );
+               throw assuan_exception( verificationError, "Verification failed: " );
 
            std::vector<GpgME::Signature> sigs = vResult.signatures();
            assert( !sigs.empty() );

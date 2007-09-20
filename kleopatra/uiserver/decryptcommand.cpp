@@ -248,7 +248,7 @@ void DecryptCommand::Private::tryDecryptResult(const GpgME::DecryptionResult & r
  
     const GpgME::Error decryptionError = result.error();
     if ( decryptionError )
-        throw assuan_exception( decryptionError, decryptionError.asString() );
+        throw assuan_exception( decryptionError, "Decryption failed: " );
 
     //handle result, send status
     QIODevice * const outdevice = q->bulkOutputDevice( "OUTPUT", id );
