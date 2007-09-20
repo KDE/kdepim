@@ -36,8 +36,8 @@
 
 // static
 std::string Kleo::assuan_exception::make_message( gpg_error_t err, const std::string & msg ) {
-    std::string result = msg;
-    result += ": ";
+    
+    
     char buf[1024];
     buf[0] = '\0';
     gpg_strerror_r( err, buf, sizeof buf );
@@ -46,6 +46,8 @@ std::string Kleo::assuan_exception::make_message( gpg_error_t err, const std::st
     snprintf( result_buf, sizeof result_buf, "%lu %s: %s",
             (unsigned long)err, gpg_strsource( err ), buf  );
     result_buf[sizeof result_buf - 1] = '\0';
-    result += result_buf;
+    std::string result = result_buf;
+    result += " - ";
+    result += msg;
     return result;
 }
