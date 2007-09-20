@@ -36,6 +36,7 @@
 #include <vector>
 
 #include <QStringList>
+#include <QFile>
 
 #include <qgpgme/eventloopinteractor.h>
 #include <qgpgme/dataprovider.h>
@@ -84,7 +85,20 @@ void Kleo::QGpgMEVerifyDetachedJob::setupData( const GpgME::Data & signedData ) 
   // two "in" data objects - (mis|re)use the "out" data object for the second...
   assert( !mOutData );
   assert( !mOutDataDataProvider );
-  mOutData = new GpgME::Data( signedData );
+  /* The below is a workaround for the fact that simply using GpgME::Data with 
+   * a fileName results in invalid signatures. Apparently a gpgme problem. Until
+   * that is fixed, we pass an IO device, which seems to work correctly. */
+  const char* fileName = signedData.fileName();
+  if ( fileName ) {
+    QIODevice *io = new QFile( fileName );
+    io->open( QIODevice::ReadOnly );
+    QGpgME::QIODeviceDataProvider * dataProvider = new QGpgME::QIODeviceDataProvider( io );
+    dataProvider->setOwnsDevice( true );
+    mOutData = new GpgME::Data( dataProvider );
+  } else {
+    mOutData = new GpgME::Data( signedData  );
+  }
+
   assert( !mOutData->isNull() );
 }
 
