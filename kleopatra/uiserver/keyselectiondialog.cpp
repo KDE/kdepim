@@ -33,20 +33,46 @@
 #include "keyselectiondialog.h"
 #include "ui_keyselectiondialog.h"
 
+#include "models/keylistmodel.h"
+
 #include <QDialogButtonBox>
 
 using namespace Kleo;
 
+struct KeySelectionDialog::Private {
+  
+    Private( KeySelectionDialog * _q );
+    ~Private() {}
+    KeySelectionDialog * const q;
+    AbstractKeyListModel* m_model;
+};
+
+
+KeySelectionDialog::Private::Private( KeySelectionDialog * _q)
+:q( _q )
+{
+    m_model = AbstractKeyListModel::createFlatKeyListModel( q );
+}
+
 KeySelectionDialog::KeySelectionDialog()
-    :ui( new Ui::KeySelectionWidget() )
+    :ui( new Ui::KeySelectionWidget() ), d( new KeySelectionDialog::Private( this ) )
 {
     ui->setupUi( this );
     connect ( ui->buttonBox, SIGNAL( accepted() ), this, SLOT( accept() ) );
     connect ( ui->buttonBox, SIGNAL( rejected() ), this, SLOT( reject() ) );
+    
+    ui->listView->setModel( d->m_model );
 }
 
 KeySelectionDialog::~KeySelectionDialog()
 {
 }
+
+void KeySelectionDialog::addKeys(const std::vector<GpgME::Key> & keys)
+{
+    d->m_model->addKeys( keys );
+}
+
+
 
 

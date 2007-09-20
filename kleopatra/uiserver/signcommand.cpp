@@ -141,6 +141,7 @@ void SignCommand::Private::showKeySelectionDialog()
     m_keySelector = new KeySelectionDialog();
     connect( m_keySelector, SIGNAL( accepted() ), this, SLOT( slotKeySelectionDialogClosed() ) );
     connect( m_keySelector, SIGNAL( rejected() ), this, SLOT( slotKeySelectionDialogClosed() ) );
+    m_keySelector->addKeys( m_keys );
     m_keySelector->show();
 }
 

@@ -33,11 +33,16 @@
 #ifndef __KLEO_KEYSELECTIONDIALOG_H__
 #define __KLEO_KEYSELECTIONDIALOG_H__
 
-
 #include <QDialog>
+
+#include <utils/pimpl_ptr.h>
 
 namespace Ui {
     class KeySelectionWidget;
+}
+
+namespace GpgME {
+    class Key;
 }
 
 namespace Kleo
@@ -48,7 +53,10 @@ class KeySelectionDialog : public QDialog
 public:
     KeySelectionDialog();
     virtual ~KeySelectionDialog();
+    void addKeys( const std::vector<GpgME::Key> & keys );
 private:
+    class Private;
+    kdtools::pimpl_ptr<Private> d;
     Ui::KeySelectionWidget* ui;
 };
 
