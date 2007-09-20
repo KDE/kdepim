@@ -32,6 +32,7 @@
 
 #include "signcommand.h"
 #include "kleo-assuan.h"
+#include "keyselectiondialog.h"
 
 #include <kleo/keylistjob.h>
 #include <kleo/cryptobackendfactory.h>
@@ -56,7 +57,7 @@ class SignCommand::Private
 public:
     Private( SignCommand * qq )
         :AssuanCommandPrivateBaseMixin<SignCommand::Private, SignCommand>()
-        , q( qq ), m_keyListings(0)
+        , q( qq ), m_keySelector(0), m_keyListings(0)
     {}
     virtual ~Private() {}
     
@@ -70,9 +71,11 @@ public:
     };
 
     SignCommand *q;
+    KeySelectionDialog *m_keySelector;
 private Q_SLOTS:
     void slotKeyListingDone( const GpgME::KeyListResult& );
     void slotNextKey( const GpgME::Key&  );
+    void slotKeySelectionDialogClosed();
 private:
     std::vector<Input> m_inputs;
     std::vector<GpgME::Key> m_keys;
@@ -125,9 +128,20 @@ void SignCommand::Private::startKeyListings()
         throw assuan_exception( err, "Unable to start keylisting" );
 }
 
+void SignCommand::Private::slotKeySelectionDialogClosed()
+{
+    if ( m_keySelector->result() == QDialog::Rejected )
+        q->done( q->makeError(GPG_ERR_CANCELED ) );
+    else
+        q->done();
+}
+
 void SignCommand::Private::showKeySelectionDialog()
 {
-    q->done();
+    m_keySelector = new KeySelectionDialog();
+    connect( m_keySelector, SIGNAL( accepted() ), this, SLOT( slotKeySelectionDialogClosed() ) );
+    connect( m_keySelector, SIGNAL( rejected() ), this, SLOT( slotKeySelectionDialogClosed() ) );
+    m_keySelector->show();
 }
 
 void SignCommand::Private::slotKeyListingDone( const GpgME::KeyListResult& result )
@@ -171,6 +185,8 @@ int SignCommand::doStart()
 
 void SignCommand::doCanceled()
 {
+    delete d->m_keySelector;
+    d->m_keySelector = 0;
 }
 
 #include "signcommand.moc"

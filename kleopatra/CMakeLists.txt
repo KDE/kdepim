@@ -34,6 +34,7 @@ if ( USABLE_ASSUAN_FOUND )
     uiserver/encryptcommand.cpp
     uiserver/assuancommandprivatebase_p.cpp
     uiserver/signaturedisplaywidget.cpp
+    uiserver/keyselectiondialog.cpp
     )
   if ( WIN32 )
     set( _kleopatra_uiserver_extra_libs ${ASSUAN_VANILLA_LIBRARIES} )

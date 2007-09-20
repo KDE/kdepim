@@ -517,10 +517,8 @@ int VerifyCommand::doStart()
 
 void VerifyCommand::doCanceled()
 {
-    if ( d->dialog ) {
-        delete d->dialog;
-        d->dialog = 0;
-    }
+    delete d->dialog;
+    d->dialog = 0;
 }
 
 
