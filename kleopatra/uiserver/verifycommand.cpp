@@ -364,11 +364,7 @@ QList<AssuanCommandPrivateBase::Input> VerifyCommand::Private::analyzeInput( Gpg
 
 void VerifyCommand::Private::Input::setupMessage( QIODevice* _message, const QString& fileName )
 {
-#if 0 // MARC_REFACTOR_ME
     message = fileName.isEmpty() ? _message : 0;
-#else
-    message = _message;
-#endif
     messageFileName = fileName;
 }
 
@@ -478,10 +474,9 @@ int VerifyCommand::Private::startVerification()
                 //FIXME: readAll save enough?
                 const QByteArray signature = input.signature->readAll();
                 assert( input.message || !input.messageFileName.isEmpty() );
-                //const bool useFileName = !input.messageFileName.isEmpty();
-                const bool useFileName = false; // FIXME MARC_REFACTOR_ME
+                const bool useFileName = !input.messageFileName.isEmpty();
                 GpgME::Data fileData;
-                fileData.setFileName( input.messageFileName.toLatin1().data() );         
+                fileData.setFileName( input.messageFileName.toLatin1().data() );
                 //FIXME: handle file name encoding correctly 
                 assert( !useFileName || !fileData.isNull() );
                 const GpgME::Error error = useFileName ? job->start( signature, fileData ) : job->start( signature, input.message->readAll() );
