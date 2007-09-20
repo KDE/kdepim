@@ -41,11 +41,13 @@
 #include <QStringList>
 #include <QDebug>
 #include <QMessageBox>
+#include <QFile>
 
 #include <kleo/decryptjob.h>
 #include <utils/stl_util.h>
 
 #include <klocale.h>
+#include <KFileDialog>
 
 #include <gpgme++/error.h>
 #include <gpgme++/decryptionresult.h>
@@ -249,22 +251,29 @@ void DecryptCommand::Private::tryDecryptResult(const GpgME::DecryptionResult & r
     const GpgME::Error decryptionError = result.error();
     if ( decryptionError )
         throw assuan_exception( decryptionError, "Decryption failed: " );
-
-    //handle result, send status
-    QIODevice * const outdevice = q->bulkOutputDevice( "OUTPUT", id );
-    if ( outdevice ) {
-        if ( const int bytesWritten = outdevice->write( stuff ) != stuff.size() ) {
-            throw assuan_exception( makeError( GPG_ERR_ASS_WRITE_ERROR ), outdevice->errorString().toStdString() ) ;
-        }
-    } else {
-        if ( const char * filename = result.fileName() ) {
-            // FIXME sanitize, percent-encode, etc
-            // FIXME write out to given file name
-        } else {
+    
+    QIODevice * outdevice = q->bulkOutputDevice( "OUTPUT", id );
+    QFile file;
+    if ( !outdevice ) {
+        QString filename = result.fileName();
+        if ( filename.isEmpty() ) {
             // no output specified, and no filename given, ask the user
+            const KUrl url = KUrl::fromPath( q->bulkInputDeviceFileName( "INPUT", id ) );
+            filename = KFileDialog::getSaveFileName( url, QString(), 0, i18n("Please select a name for the decrypted file: %1").arg(url.prettyUrl() ) );
         }
-
+        if ( filename.isEmpty() )
+            return; // user canceled the dialog, let's just move on. FIXME warning?
+        // FIXME sanitize, percent-encode, etc
+        file.setFileName( filename );
+        if ( !file.open( QIODevice::WriteOnly ) )
+            throw assuan_exception( makeError( GPG_ERR_ASS_WRITE_ERROR ), file.errorString().toStdString() ) ;
+            
+        outdevice = &file;
     }
+    assert(outdevice);
+    if ( const int bytesWritten = outdevice->write( stuff ) != stuff.size() )
+        throw assuan_exception( makeError( GPG_ERR_ASS_WRITE_ERROR ), outdevice->errorString().toStdString() ) ;
+
 }
 
 void DecryptCommand::Private::slotDecryptionCollectionResult( const QMap<int, DecryptionResultCollector::Result>& results )
