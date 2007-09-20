@@ -252,7 +252,6 @@ void VerificationResultCollector::addResult( const VerificationResultCollector::
     if ( m_unfinished == 0 )
     {
         emit finished( m_results );
-        deleteLater();
     }
 }
 
