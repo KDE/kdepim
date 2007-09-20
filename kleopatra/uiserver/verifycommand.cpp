@@ -50,6 +50,7 @@
 #include <KFileDialog>
 #include <KUrl>
 
+
 #include <QObject>
 #include <QIODevice>
 #include <QVariant>
@@ -180,10 +181,11 @@ public:
     QList<AssuanCommandPrivateBase::Input> analyzeInput( GpgME::Error& error, QString& errorDetails ) const;
     int startVerification();
 
-    void writeOpaqueResult(const GpgME::VerificationResult &, const QByteArray &);
+    void writeOpaqueResult(const GpgME::VerificationResult &, const QByteArray &, int);
     void trySendingStatus( const QString & str );
     QString signatureToString( const GpgME::Signature& sig, const GpgME::Key & key ) const;
     void showVerificationResultDialog();
+
 public Q_SLOTS:
     void verificationFinished( const QHash<int, VerificationResultCollector::Result> & results ); 
     void slotProgress( const QString& what, int current, int total );
@@ -223,7 +225,7 @@ void VerificationResultCollector::addResult( const VerificationResultCollector::
        QString resultString;
        try {
            if ( result.isOpaque )
-               m_command->writeOpaqueResult( vResult, result.stuff );
+               m_command->writeOpaqueResult( vResult, result.stuff, result.id );
 
            const GpgME::Error verificationError = vResult.error();
            if ( verificationError )
@@ -423,14 +425,10 @@ void VerifyCommand::Private::showVerificationResultDialog()
 }
 
 void VerifyCommand::Private::writeOpaqueResult( const GpgME::VerificationResult & result ,
-                                                const QByteArray & stuff )
-{
-    QIODevice * const outdevice = q->bulkOutputDevice( "OUTPUT" );
-    if ( outdevice ) {
-        if ( const int bytesWritten = outdevice->write( stuff ) != stuff.size() ) {
-            throw assuan_exception( q->makeError(GPG_ERR_ASS_WRITE_ERROR), outdevice->errorString().toStdString() );
-        }
-    }
+                                                const QByteArray & stuff,
+                                                int id )
+{    
+    writeToOutputDeviceOrAskForFileName( id, stuff, result.fileName() );
 }
 
 void VerifyCommand::Private::verificationFinished( const QHash<int, VerificationResultCollector::Result> & results )

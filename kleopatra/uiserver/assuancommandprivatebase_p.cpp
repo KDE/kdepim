@@ -33,6 +33,13 @@
 #include "assuancommandprivatebase_p.h"
 #include "assuancommand.h"
 
+#include "kleo-assuan.h"
+
+#include <KSaveFile>
+#include <KFileDialog>
+#include <KUrl>
+#include <KLocale>
+
 #include <gpg-error.h>
 
 #include <QVariant>
@@ -86,6 +93,33 @@ int AssuanCommandPrivateBase::determineInputsAndProtocols( QString& reason )
             inputList[i].backend = Kleo::CryptoBackendFactory::instance()->protocol( "openpgp" );
     }
     return 0;
+}
+
+void AssuanCommandPrivateBase::writeToOutputDeviceOrAskForFileName( int id,  const QByteArray& stuff, const QString& _filename )
+{
+    QIODevice * outdevice = q->bulkOutputDevice( "OUTPUT", id );
+    KSaveFile file;
+    if ( !outdevice ) {
+        QString filename = _filename;
+        if ( filename.isEmpty() ) {
+            // no output specified, and no filename given, ask the user
+            const KUrl url = KUrl::fromPath( q->bulkInputDeviceFileName( "INPUT", id ) );
+            filename = KFileDialog::getSaveFileName( url, QString(), 0, i18n("Please select a target file: %1").arg(url.prettyUrl() ) );
+        }
+        if ( filename.isEmpty() )
+            return; // user canceled the dialog, let's just move on. FIXME warning?
+                    // FIXME sanitize, percent-encode, etc
+        file.setFileName( filename );
+        if ( !file.open() )
+            throw assuan_exception( q->makeError( GPG_ERR_ASS_WRITE_ERROR ), file.errorString().toStdString() ) ;
+        
+        outdevice = &file;
+    }
+    assert(outdevice);
+    if ( const int bytesWritten = outdevice->write( stuff ) != stuff.size() )
+        throw assuan_exception( q->makeError( GPG_ERR_ASS_WRITE_ERROR ), outdevice->errorString().toStdString() );
+    if ( !file.fileName().isEmpty() && !file.finalize() )
+        throw assuan_exception( q->makeError( GPG_ERR_ASS_WRITE_ERROR ), file.errorString().toStdString() ) ;
 }
 
 

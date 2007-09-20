@@ -82,10 +82,11 @@ public:
         QIODevice* signature;
         const CryptoBackend::Protocol* backend;
     };
-
-    virtual AssuanCommand *get_q() const = 0;
     QList<Input> inputList;
     int determineInputsAndProtocols( QString& reason );
+protected:
+    virtual AssuanCommand *get_q() const = 0;
+    void writeToOutputDeviceOrAskForFileName( int id,  const QByteArray& stuff, const QString& _filename );
 };
 
 
