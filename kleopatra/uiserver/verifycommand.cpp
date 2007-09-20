@@ -164,10 +164,11 @@ class VerifyCommand::Private
     Q_OBJECT
 public:
     Private( VerifyCommand * qq )
-    :AssuanCommandPrivateBaseMixin<VerifyCommand::Private, VerifyCommand>(), dialog(0), q( qq )
+    :AssuanCommandPrivateBaseMixin<VerifyCommand::Private, VerifyCommand>()
+    , dialog(0), q( qq )
+    ,collector( new VerificationResultCollector(this) )
     {}
     virtual ~Private() {}
-
     VerificationResultDialog * dialog;
     VerifyCommand * q;
 
@@ -185,6 +186,8 @@ private Q_SLOTS:
 
 private:
     void showVerificationResultDialog();
+
+    VerificationResultCollector * collector;
 };
 
 VerificationResultCollector::VerificationResultCollector( VerifyCommand::Private* parent ) 
@@ -210,17 +213,22 @@ void VerificationResultCollector::registerJob( int id, VerifyOpaqueJob* job )
 
 void VerificationResultCollector::addResult( const VerificationResultCollector::Result &res )
 {
-    m_results[res.id] = res;    
-    
+    m_results[res.id] = res;
+
     // send status for all results received so far, but in order of id
     while ( m_results.contains( m_statusSent ) ) {
        Result result = m_results[m_statusSent];
+       const GpgME::VerificationResult & vResult = result.result;
        QString resultString;
        try {
            if ( result.isOpaque )
-               m_command->writeOpaqueResult( result.result, result.stuff );
-           
-           std::vector<GpgME::Signature> sigs = result.result.signatures();
+               m_command->writeOpaqueResult( vResult, result.stuff );
+
+           const GpgME::Error verificationError = vResult.error();
+           if ( verificationError )
+               throw AssuanCommandException( verificationError );
+
+           std::vector<GpgME::Signature> sigs = vResult.signatures();
            assert( !sigs.empty() );
            QStringList resultStrings;
            Q_FOREACH ( const GpgME::Signature sig, sigs )
@@ -231,13 +239,13 @@ void VerificationResultCollector::addResult( const VerificationResultCollector::
            result.error = e.err;
            result.errorString = e.errorString;
            m_results[result.id] = result;
-           resultString = "ERR " + res.errorString;
+           resultString = "ERR " + result.errorString;
            // FIXME ask to continue or cancel
        }
        m_command->trySendingStatus( resultString );
        m_statusSent++;
     }
-    
+
     --m_unfinished;
     assert( m_unfinished >= 0 );
     if ( m_unfinished == 0 )
@@ -260,7 +268,7 @@ void VerificationResultCollector::slotVerifyOpaqueResult(const GpgME::Verificati
     res.stuff = stuff;
     res.keys = keys;
     res.result = result;
-    
+
     addResult( res );
 }
 
@@ -424,7 +432,7 @@ void VerifyCommand::Private::verificationFinished( const QHash<int, Verification
     //TODO: handle all results, not only the first
     assert( !results.isEmpty() );
     const VerificationResultCollector::Result result = results.values().first();
-    
+
     if ( !q->hasOption("silent") )
         showVerificationResultDialog();
     else
@@ -441,7 +449,6 @@ void VerifyCommand::Private::slotProgress( const QString& what, int current, int
 int VerifyCommand::Private::startVerification()
 {
     assert( !inputList.isEmpty() );
-    VerificationResultCollector* collector = new VerificationResultCollector;
     connect( collector, SIGNAL( finished( QHash<int, VerificationResultCollector::Result> ) ),
              SLOT( verificationFinished( QHash<int, VerificationResultCollector::Result> ) ) );
 
@@ -483,7 +490,6 @@ int VerifyCommand::Private::startVerification()
             ++i;
         }
     } catch ( const GpgME::Error & error ) {
-        delete collector;
         q->done( error );
         return error;
     }

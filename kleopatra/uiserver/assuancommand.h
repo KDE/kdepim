@@ -292,6 +292,10 @@ namespace Kleo {
         AssuanCommandException( int i, const QString& s = QString() )
             :err(i), errorString(s)
         {}
+        AssuanCommandException( const GpgME::Error & error )
+            :err( static_cast<int>( error ) ), errorString( error.asString() )
+        {}
+
         virtual ~AssuanCommandException() throw()
         {}
         int err;
