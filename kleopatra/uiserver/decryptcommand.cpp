@@ -32,7 +32,7 @@
 
 #include "decryptcommand.h"
 #include "assuancommandprivatebase_p.h"
-
+#include "kleo-assuan.h"
 
 #include <QObject>
 #include <QIODevice>
@@ -160,9 +160,9 @@ void DecryptionResultCollector::slotDecryptResult(const GpgME::DecryptionResult 
         try {
             m_command->tryDecryptResult( result.result, result.stuff, m_statusSent );
             resultString = resultToString( result.result );
-        } catch ( const AssuanCommandException& e ) {
-            result.error = e.err;
-            result.errorString = e.errorString;
+        } catch ( const assuan_exception& e ) {
+            result.error = e.error_code();
+            result.errorString = e.what();
             m_results[m_statusSent] = result;
             resultString = "ERR " + res.errorString;
             // FIXME ask to continue or cancel
@@ -248,13 +248,13 @@ void DecryptCommand::Private::tryDecryptResult(const GpgME::DecryptionResult & r
  
     const GpgME::Error decryptionError = result.error();
     if ( decryptionError )
-        throw AssuanCommandException( static_cast<int>(decryptionError), decryptionError.asString() );
+        throw assuan_exception( decryptionError, decryptionError.asString() );
 
     //handle result, send status
     QIODevice * const outdevice = q->bulkOutputDevice( "OUTPUT", id );
     if ( outdevice ) {
         if ( const int bytesWritten = outdevice->write( stuff ) != stuff.size() ) {
-            throw AssuanCommandException( makeError( GPG_ERR_ASS_WRITE_ERROR ), outdevice->errorString()) ;
+            throw assuan_exception( makeError( GPG_ERR_ASS_WRITE_ERROR ), outdevice->errorString().toStdString() ) ;
         }
     } else {
         if ( const char * filename = result.fileName() ) {

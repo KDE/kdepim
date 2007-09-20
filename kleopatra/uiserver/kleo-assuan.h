@@ -44,6 +44,8 @@ namespace Kleo {
     public:
         explicit assuan_exception( gpg_error_t e, const std::string & msg )
             : std::runtime_error( make_message( e, msg ) ), m_error( e ), m_message( msg ) {}
+        explicit assuan_exception( int e, const std::string & msg )
+            : std::runtime_error( make_message( static_cast<gpg_error_t>(e), msg ) ), m_error( static_cast<gpg_error_t>(e) ), m_message( msg ) {}
         ~assuan_exception() throw () {}
 
         const std::string & message() const { return m_message; }

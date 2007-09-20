@@ -32,18 +32,11 @@
 
 #include "verifycommand.h"
 #include "assuancommandprivatebase_p.h"
-
-#include <QObject>
-#include <QIODevice>
-#include <QVariant>
-#include <QDialog>
-#include <QVBoxLayout>
+#include "kleo-assuan.h"
+#include "signaturedisplaywidget.h"
 
 #include <kleo/verifyopaquejob.h>
 #include <kleo/verifydetachedjob.h>
-
-#include <KDebug>
-#include <KLocale>
 
 #include <gpgme++/data.h>
 #include <gpgme++/error.h>
@@ -52,12 +45,21 @@
 
 #include <gpg-error.h>
 
-#include <cassert>
+#include <KDebug>
+#include <KLocale>
+#include <KFileDialog>
+#include <KUrl>
+
+#include <QObject>
+#include <QIODevice>
+#include <QVariant>
+#include <QDialog>
+#include <QVBoxLayout>
 
 #include <boost/bind.hpp>
 #include <boost/shared_ptr.hpp>
 
-#include "signaturedisplaywidget.h"
+#include <cassert>
 
 using namespace Kleo;
 
@@ -225,7 +227,7 @@ void VerificationResultCollector::addResult( const VerificationResultCollector::
 
            const GpgME::Error verificationError = vResult.error();
            if ( verificationError )
-               throw AssuanCommandException( verificationError );
+               throw assuan_exception( verificationError, verificationError.asString() );
 
            std::vector<GpgME::Signature> sigs = vResult.signatures();
            assert( !sigs.empty() );
@@ -233,10 +235,10 @@ void VerificationResultCollector::addResult( const VerificationResultCollector::
            Q_FOREACH ( const GpgME::Signature sig, sigs )
                resultStrings.append( m_command->signatureToString( sig, keyForSignature( sig, result.keys ) ) );
 
-           resultString = resultStrings.join("\n");
-       } catch ( const AssuanCommandException& e ) {
-           result.error = e.err;
-           result.errorString = e.errorString;
+           resultString = "OK " + resultStrings.join("\n");
+       } catch ( const assuan_exception& e ) {
+           result.error = e.error_code();
+           result.errorString = e.what();
            m_results[result.id] = result;
            resultString = "ERR " + result.errorString;
            // FIXME ask to continue or cancel
@@ -345,10 +347,19 @@ QList<AssuanCommandPrivateBase::Input> VerifyCommand::Private::analyzeInput( Gpg
         assert( input.signature );
         const QString fname = q->bulkInputDeviceFileName( "INPUT", i );
         if ( !fname.isEmpty() && fname.endsWith( ".sig", Qt::CaseInsensitive )
-                || fname.endsWith( ".asc", Qt::CaseInsensitive ) )
-        { //detached signature file
-            const QString msgFileName = fname.left( fname.length() - 4 );
-            // TODO: handle error if msg file does not exist
+                || fname.endsWith( ".asc", Qt::CaseInsensitive ) ) {
+            //detached signature file
+            QString msgFileName = fname.left( fname.length() - 4 );
+            QFile f( msgFileName );
+            if ( f.exists() ) {
+                // the file we guessed doesn't exist, ask the user to supply one
+                const QString userFileName = 
+                    KFileDialog::getOpenFileName( KUrl::fromPath(msgFileName), QString(), 0, i18n("Please select the file corresponding to the signature file: %1").arg(fname) );
+                if ( userFileName.isEmpty())
+                    continue;
+                else
+                    msgFileName = userFileName;
+            }
             input.type = Input::Detached;
             input.messageFileName = msgFileName;
         }
@@ -416,7 +427,7 @@ void VerifyCommand::Private::writeOpaqueResult( const GpgME::VerificationResult 
     QIODevice * const outdevice = q->bulkOutputDevice( "OUTPUT" );
     if ( outdevice ) {
         if ( const int bytesWritten = outdevice->write( stuff ) != stuff.size() ) {
-            throw AssuanCommandException( q->makeError(GPG_ERR_ASS_WRITE_ERROR), outdevice->errorString() );
+            throw assuan_exception( q->makeError(GPG_ERR_ASS_WRITE_ERROR), outdevice->errorString().toStdString() );
         }
     }
 }
