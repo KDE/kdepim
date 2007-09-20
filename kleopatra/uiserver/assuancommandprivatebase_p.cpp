@@ -106,7 +106,7 @@ void AssuanCommandPrivateBase::writeToOutputDeviceOrAskForFileName( int id,  con
             // prepend the path to the input file
             filename.prepend( QFileInfo(q->bulkInputDeviceFileName( "INPUT", id )).absolutePath() + "/" );
             if ( QFileInfo(filename).exists() ) {
-                const QString text = i18n("The target file: <br><b>%1<b><br> seems to already exist. Do you want to overwrite it?", filename );
+                const QString text = i18n("The target file: <br><b>%1</b><br> seems to already exist. Do you want to overwrite it?", filename );
                 const QString caption  = i18n("Overwrite existing file?");
                 if ( KMessageBox::questionYesNo( 0, text, caption ) == KMessageBox::No )
                     filename = QString();
