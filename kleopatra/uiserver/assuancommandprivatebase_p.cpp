@@ -101,10 +101,15 @@ void AssuanCommandPrivateBase::writeToOutputDeviceOrAskForFileName( int id,  con
     KSaveFile file;
     if ( !outdevice ) {
         QString filename = _filename;
+        if ( !filename.isEmpty() && QFileInfo( filename ).isRelative() ) {
+            // prepend the path to the input file
+            filename.prepend( QFileInfo(q->bulkInputDeviceFileName( "INPUT", id )).absolutePath() + "/" );
+            qWarning() << "FILENAME: " << filename;
+        }
         if ( filename.isEmpty() ) {
             // no output specified, and no filename given, ask the user
             const KUrl url = KUrl::fromPath( q->bulkInputDeviceFileName( "INPUT", id ) );
-            filename = KFileDialog::getSaveFileName( url, QString(), 0, i18n("Please select a target file: %1").arg(url.prettyUrl() ) );
+            filename = KFileDialog::getSaveFileName( url, QString(), 0, i18n("Please select a target file: %1", url.prettyUrl() ) );
         }
         if ( filename.isEmpty() )
             return; // user canceled the dialog, let's just move on. FIXME warning?
