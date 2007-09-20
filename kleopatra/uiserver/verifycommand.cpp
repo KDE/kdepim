@@ -354,7 +354,8 @@ QList<AssuanCommandPrivateBase::Input> VerifyCommand::Private::analyzeInput( Gpg
             if ( !f.exists() ) {
                 // the file we guessed doesn't exist, ask the user to supply one
                 const QString userFileName = 
-                    KFileDialog::getOpenFileName( KUrl::fromPath(msgFileName), QString(), 0, i18n("Please select the file corresponding to the signature file: %1").arg(fname) );
+                    KFileDialog::getOpenFileName( KUrl::fromPath(msgFileName), 
+                            QString(), 0, i18n("Please select the file corresponding to the signature file: %1", fname) );
                 if ( userFileName.isEmpty())
                     continue;
                 else
@@ -409,6 +410,7 @@ void VerifyCommand::Private::trySendingStatus( const QString & str )
 
 void VerifyCommand::Private::slotDialogClosed()
 {
+    // FIXME if there was at least one error, and if so declare the whole thing failed.
     q->done();
 }
 
