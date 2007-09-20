@@ -22,7 +22,7 @@ if ( NOT KDEPIMLIBS_FOUND )
 endif ( NOT KDEPIMLIBS_FOUND )
 
 if ( USABLE_ASSUAN_FOUND )
-  set(_kleopatra_uiserver_files
+  set(_kleopatra_uiserver_SRCS
     utils/kdpipeiodevice.cpp
     uiserver/kleo-assuan.cpp
     uiserver/uiserver.cpp
@@ -36,6 +36,7 @@ if ( USABLE_ASSUAN_FOUND )
     uiserver/signaturedisplaywidget.cpp
     uiserver/keyselectiondialog.cpp
     )
+  kde4_add_ui_files( _kleopatra_uiserver_SRCS uiserver/keyselectiondialog.ui)
   if ( WIN32 )
     set( _kleopatra_uiserver_extra_libs ${ASSUAN_VANILLA_LIBRARIES} )
   else ( WIN32 )
@@ -49,7 +50,7 @@ if ( USABLE_ASSUAN_FOUND )
   endif( HAVE_GPG_ERR_SOURCE_KLEO )
 
 else ( USABLE_ASSUAN_FOUND )
-  set(_kleopatra_uiserver_files)
+  set(_kleopatra_uiserver_SRCS)
 endif ( USABLE_ASSUAN_FOUND )
 
 set( _kleopatra_common_SRCS

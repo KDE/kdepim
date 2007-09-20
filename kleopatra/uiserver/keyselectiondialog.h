@@ -33,7 +33,12 @@
 #ifndef __KLEO_KEYSELECTIONDIALOG_H__
 #define __KLEO_KEYSELECTIONDIALOG_H__
 
+
 #include <QDialog>
+
+namespace Ui {
+    class KeySelectionWidget;
+}
 
 namespace Kleo
 {
@@ -41,8 +46,10 @@ namespace Kleo
 class KeySelectionDialog : public QDialog
 {
 public:
-	KeySelectionDialog();
-	virtual ~KeySelectionDialog();
+    KeySelectionDialog();
+    virtual ~KeySelectionDialog();
+private:
+    Ui::KeySelectionWidget* ui;
 };
 
 }

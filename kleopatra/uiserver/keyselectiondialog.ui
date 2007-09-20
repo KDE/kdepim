@@ -1,0 +1,40 @@
+<ui version="4.0" >
+ <class>KeySelectionWidget</class>
+ <widget class="QWidget" name="KeySelectionWidget" >
+  <property name="geometry" >
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>496</width>
+    <height>548</height>
+   </rect>
+  </property>
+  <property name="windowTitle" >
+   <string>Select a key</string>
+  </property>
+  <layout class="QVBoxLayout" >
+   <item>
+    <widget class="QLabel" name="label" >
+     <property name="text" >
+      <string>Please select a key from the list below:</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QListView" name="listView" />
+   </item>
+   <item>
+    <widget class="QDialogButtonBox" name="buttonBox" >
+     <property name="orientation" >
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="standardButtons" >
+      <set>QDialogButtonBox::Cancel|QDialogButtonBox::NoButton|QDialogButtonBox::Ok</set>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

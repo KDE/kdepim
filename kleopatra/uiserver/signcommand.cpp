@@ -118,7 +118,7 @@ void SignCommand::Private::startKeyListings()
              this, SLOT( slotNextKey( GpgME::Key ) ) );
     if ( const GpgME::Error err = keylisting->start( patterns, true /*secret only*/) )
         throw assuan_exception( err, "Unable to start keylisting" );
-    
+
     keylisting = Kleo::CryptoBackendFactory::instance()->protocol( "smime" )->keyListJob();
     connect( keylisting, SIGNAL( result( GpgME::KeyListResult ) ),
              this, SLOT( slotKeyListingDone( GpgME::KeyListResult ) ) );
@@ -137,7 +137,7 @@ void SignCommand::Private::slotKeySelectionDialogClosed()
 }
 
 void SignCommand::Private::showKeySelectionDialog()
-{
+{ 
     m_keySelector = new KeySelectionDialog();
     connect( m_keySelector, SIGNAL( accepted() ), this, SLOT( slotKeySelectionDialogClosed() ) );
     connect( m_keySelector, SIGNAL( rejected() ), this, SLOT( slotKeySelectionDialogClosed() ) );
@@ -148,7 +148,7 @@ void SignCommand::Private::slotKeyListingDone( const GpgME::KeyListResult& resul
 {
     if ( result.error() )
         q->done( result.error(), "Error during listing of private keys");
-    
+
     if ( --m_keyListings == 0 ) {
         showKeySelectionDialog();
     }

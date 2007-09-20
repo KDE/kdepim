@@ -31,11 +31,18 @@
 */
 
 #include "keyselectiondialog.h"
+#include "ui_keyselectiondialog.h"
+
+#include <QDialogButtonBox>
 
 using namespace Kleo;
 
 KeySelectionDialog::KeySelectionDialog()
+    :ui( new Ui::KeySelectionWidget() )
 {
+    ui->setupUi( this );
+    connect ( ui->buttonBox, SIGNAL( accepted() ), this, SLOT( accept() ) );
+    connect ( ui->buttonBox, SIGNAL( rejected() ), this, SLOT( reject() ) );
 }
 
 KeySelectionDialog::~KeySelectionDialog()
