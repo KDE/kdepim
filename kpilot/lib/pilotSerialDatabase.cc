@@ -30,6 +30,7 @@
 #include "pilotSerialDatabase.h"
 
 #include <time.h>
+#include <limits.h>
 
 #include <pi-dlp.h>
 
