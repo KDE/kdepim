@@ -119,7 +119,7 @@ void SignCommand::Private::startKeyListings()
     if ( const GpgME::Error err = keylisting->start( patterns, true /*secret only*/) )
         throw assuan_exception( err, "Unable to start keylisting" );
     
-    keylisting = Kleo::CryptoBackendFactory::instance()->protocol( "cms" )->keyListJob();
+    keylisting = Kleo::CryptoBackendFactory::instance()->protocol( "smime" )->keyListJob();
     connect( keylisting, SIGNAL( result( GpgME::KeyListResult ) ),
              this, SLOT( slotKeyListingDone( GpgME::KeyListResult ) ) );
     connect( keylisting, SIGNAL( nextKey( GpgME::Key ) ),
