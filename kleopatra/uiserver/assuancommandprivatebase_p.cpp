@@ -122,7 +122,7 @@ void AssuanCommandPrivateBase::writeToOutputDeviceOrAskForFileName( int id,  con
 	    const QString inputFilename = q->bulkInputDeviceFileName( "INPUT", id );
             // no output specified, and no filename given, ask the user
 #ifndef ONLY_KLEO
-	    filename = KFileDialog::getSaveFileName( KUrl::fromPath( inputFilename ), QString(), 0, i18n("Please select a target file: %1", url.prettyUrl() ) );
+	    filename = KFileDialog::getSaveFileName( KUrl::fromPath( inputFilename ), QString(), 0, i18n("Please select a target file: %1",inputFilename ) );
 #else
 	    filename = QFileDialog::getSaveFileName( 0, QString(), inputFilename );
 #endif
