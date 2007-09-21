@@ -125,8 +125,10 @@ void RCHotSyncHHTest::initTestCase_1()
 {
 	
 	// NOTE: 2 == eHHOverrides, this is important for the solveConflict() method
-	QStringList args = QStringList() << CSL1( "--hotsync" )
+	QVariantList args = QVariantList() << CSL1( "--hotsync" )
 		<< CSL1( "--conflictResolution 2" );
+	
+	qDebug() << args.size();
 	
 	fConduit = new TestRecordConduit( args, true );
 	fConduit->initDataProxies();
@@ -173,7 +175,7 @@ TestRecord* RCHotSyncHHTest::duplicatePCRecord( const QString &id )
 
 void RCHotSyncHHTest::testCopy()
 {
-	QStringList args = QStringList() << CSL1( "--hotsync" );
+	QVariantList args = QVariantList() << CSL1( "--hotsync" );
 	
 	TestRecordConduit conduit( args );
 	conduit.initDataProxies();
