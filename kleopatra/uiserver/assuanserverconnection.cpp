@@ -57,6 +57,8 @@
 #include <string>
 #include <memory>
 
+#include <errno.h>
+
 #ifdef __GNUC__
 # include <ext/algorithm> // for is_sorted
 #endif
@@ -229,8 +231,6 @@ private:
             if ( options.size() < 1 || options.size() > 2 )
                 throw gpg_error( GPG_ERR_ASS_SYNTAX );
 
-            // ### TODO handle FILE=
-
             IO io;
             std::auto_ptr<QIODevice> iodev;
 
@@ -263,21 +263,21 @@ private:
                 if ( options.count( "FD" ) )
                     throw gpg_error( GPG_ERR_CONFLICT );
 
-                const QString fileName = QFile::decodeName( hexdecode( options["FILE"] ).c_str() );
+                io.file = QFile::decodeName( hexdecode( options["FILE"] ).c_str() );
 
-                if ( in && !QFile::exists( fileName ) )
-                    throw gpg_error( GPG_ERR_NOT_FOUND );
-                if ( in && !QFileInfo( fileName ).isReadable() )
-                    throw gpg_error( GPG_ERR_EPERM );
+                if ( io.file.isEmpty() ) {
+                    if ( in )
+                        throw gpg_error( GPG_ERR_ASS_SYNTAX );
+                } else {
 
-                io.file = fileName;
+                    std::auto_ptr<QFile> f( new QFile( io.file ) );
 
-                std::auto_ptr<QFile> f( new QFile( fileName ) );
+                    if ( !f->open( in ? QIODevice::ReadOnly : QIODevice::ReadWrite ) )
+                        throw gpg_error_from_errno( errno );
 
-                if ( !f->open( in ? QIODevice::ReadOnly : QIODevice::ReadWrite ) )
-                    throw gpg_error( GPG_ERR_EPERM );
+                    iodev = f;
 
-                iodev = f;
+                }
 
                 options.erase( "FILE" );
 
