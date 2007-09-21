@@ -224,7 +224,7 @@ void UiServer::Private::makeListeningSocket() {
         if ( ::bind( sock, (struct sockaddr*)&sa, sizeof( sa ) ) )
             throw_<std::runtime_error>( tr( "Couldn't bind to socket: %1" ).arg( system_error_string() ) );
 
-        // TODO: permissions?
+        // ### TODO: permissions?
     
         // Listen
         if ( ::listen( sock, SOMAXCONN ) )
