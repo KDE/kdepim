@@ -21,6 +21,10 @@ if ( NOT KDEPIMLIBS_FOUND )
    add_definitions( -DKLEO_NO_KDEPIMLIBS )
 endif ( NOT KDEPIMLIBS_FOUND )
 
+if (ONLY_KLEO)
+   add_definitions( -DONLY_KLEO )
+endif(ONLY_KLEO)
+
 if ( USABLE_ASSUAN_FOUND )
   set(_kleopatra_uiserver_SRCS
     utils/kdpipeiodevice.cpp

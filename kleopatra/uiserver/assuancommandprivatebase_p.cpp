@@ -36,13 +36,19 @@
 #include "kleo-assuan.h"
 
 #include <KSaveFile>
+
+#ifndef ONLY_KLEO
 #include <KFileDialog>
+#endif
 #include <KUrl>
 #include <KLocale>
 #include <KMessageBox>
 
 #include <gpg-error.h>
 
+#ifdef ONLY_KLEO
+#include <QFileDialog>
+#endif
 #include <QVariant>
 
 using namespace Kleo;
@@ -113,9 +119,13 @@ void AssuanCommandPrivateBase::writeToOutputDeviceOrAskForFileName( int id,  con
             }
         }
         if ( filename.isEmpty() ) {
+	    const QString inputFilename = q->bulkInputDeviceFileName( "INPUT", id );
             // no output specified, and no filename given, ask the user
-            const KUrl url = KUrl::fromPath( q->bulkInputDeviceFileName( "INPUT", id ) );
-            filename = KFileDialog::getSaveFileName( url, QString(), 0, i18n("Please select a target file: %1", url.prettyUrl() ) );
+#ifndef ONLY_KLEO
+	    filename = KFileDialog::getSaveFileName( KUrl::fromPath( inputFilename ), QString(), 0, i18n("Please select a target file: %1", url.prettyUrl() ) );
+#else
+	    filename = QFileDialog::getSaveFileName( 0, QString(), inputFilename );
+#endif
         }
         if ( filename.isEmpty() )
             return; // user canceled the dialog, let's just move on. FIXME warning?

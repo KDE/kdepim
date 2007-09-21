@@ -47,9 +47,16 @@
 
 #include <KDebug>
 #include <KLocale>
+
+#ifndef ONLY_KLEO
 #include <KFileDialog>
+#endif
 #include <KUrl>
 
+
+#ifdef ONLY_KLEO
+#include <QFileDialog>
+#endif
 
 #include <QObject>
 #include <QIODevice>
@@ -354,9 +361,13 @@ QList<AssuanCommandPrivateBase::Input> VerifyCommand::Private::analyzeInput( Gpg
             QFile f( msgFileName );
             if ( !f.exists() ) {
                 // the file we guessed doesn't exist, ask the user to supply one
+#ifndef ONLY_KLEO
                 const QString userFileName = 
                     KFileDialog::getOpenFileName( KUrl::fromPath(msgFileName), 
                             QString(), 0, i18n("Please select the file corresponding to the signature file: %1", fname) );
+#else // ONLY_KLEO
+		const QString userFileName = QFileDialog::getOpenFileName( 0, i18n("Select Signed File for %1", fname) );
+#endif
                 if ( userFileName.isEmpty())
                     continue;
                 else
