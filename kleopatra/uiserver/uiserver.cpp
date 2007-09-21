@@ -31,88 +31,25 @@
 */
 
 #include "uiserver.h"
-
-#include "assuanserverconnection.h"
-#include "assuancommand.h"
+#include "uiserver_p.h"
 
 #include "kleo-assuan.h"
 
 #include "detail_p.h"
 
-#include <ktempdir.h>
-
-#include <QTcpServer>
 #include <QTcpSocket>
-#include <QFile>
 #include <QDir>
-#include <QTextStream>
 #include <QEventLoop>
 #include <QTimer>
-#include <qendian.h>
 
 #include <boost/range/empty.hpp>
 #include <boost/bind.hpp>
 
-#include <stdexcept>
+#include <algorithm>
 #include <cassert>
-
-#ifdef Q_OS_WIN32
-# include <windows.h>
-# include <io.h>
-#else
-# include <sys/types.h>
-# include <sys/socket.h>
-# include <sys/un.h>
-# include <cstdio>
-# include <cerrno>
-# include <cstring>
-#endif
 
 using namespace Kleo;
 using namespace boost;
-
-namespace {
-    template <typename Ex>
-    void throw_( const QString & message ) {
-        throw Ex( message.toUtf8().constData() );
-    }
-
-    static QString tmpDirPrefix() {
-        return QDir::temp().absoluteFilePath( "gpg-" );
-    }
-}
-
-class UiServer::Private : public QTcpServer {
-    Q_OBJECT
-    friend class ::Kleo::UiServer;
-    UiServer * const q;
-public:
-    explicit Private( UiServer * qq );
-
-private:
-    void makeListeningSocket();
-    QString makeFileName( const QString & hint=QString() ) const;
-
-protected:
-    /* reimp */ void incomingConnection( int fd );
-
-private Q_SLOTS:
-    void slotConnectionClosed( Kleo::AssuanServerConnection * conn ) {
-        qDebug( "UiServer: connection %p closed", conn );
-        connections.erase( std::remove_if( connections.begin(), connections.end(),
-                                           bind( &shared_ptr<AssuanServerConnection>::get, _1 ) == conn ),
-                           connections.end() );
-        if ( q->isStopped() )
-            emit q->stopped();
-    }
-
-private:
-    KTempDir tmpDir;
-    QFile file;
-    std::vector< shared_ptr<AssuanCommandFactory> > factories;
-    std::vector< shared_ptr<AssuanServerConnection> > connections;
-    QString socketname;
-};
 
 UiServer::Private::Private( UiServer * qq )
     : QTcpServer(),
@@ -186,81 +123,15 @@ bool UiServer::isStopping() const {
     return !d->connections.empty() && !d->isListening() ;
 }
 
-QString UiServer::Private::makeFileName( const QString & socket ) const {
-    if ( !socket.isEmpty() )
-        return socket;
-    if ( tmpDir.status() != 0 )
-        throw_<std::runtime_error>( tr( "Couldn't create directory %1: %2" ).arg( tmpDirPrefix() + "XXXXXXXX", QString::fromLocal8Bit( strerror(errno) ) ) );
-    const QDir dir( tmpDir.name() );
-    assert( dir.exists() );
-    return dir.absoluteFilePath( "S.uiserver" );
+void UiServer::Private::slotConnectionClosed( Kleo::AssuanServerConnection * conn ) {
+    qDebug( "UiServer: connection %p closed", conn );
+    connections.erase( std::remove_if( connections.begin(), connections.end(),
+                                       boost::bind( &boost::shared_ptr<AssuanServerConnection>::get, _1 ) == conn ),
+                       connections.end() );
+    if ( q->isStopped() )
+        emit q->stopped();
 }
 
-#ifndef Q_OS_WIN32
-
-static inline QString system_error_string() {
-    return QString::fromLocal8Bit( strerror(errno) );
-}
-
-void UiServer::Private::makeListeningSocket() {
-
-    // First, create a file (we do this only for the name, gmpfh)
-    const QString fileName = socketname;
-    if ( QFile::exists( fileName ) )
-        throw_<std::runtime_error>( tr( "Detected another running gnupg UI server listening at %1." ).arg( fileName ) );
-    const QByteArray encodedFileName = QFile::encodeName( fileName );
-
-    // Create a Unix Domain Socket:
-    const int sock = ::socket( AF_UNIX, SOCK_STREAM, 0 );
-    if ( sock < 0 )
-        throw_<std::runtime_error>( tr( "Couldn't create socket: %1" ).arg( system_error_string() ) );
-
-    try {
-        // Bind
-        struct sockaddr_un sa;
-        std::memset( &sa, 0, sizeof(sa) );
-        sa.sun_family = AF_UNIX;
-        std::strncpy( sa.sun_path, encodedFileName.constData(), sizeof( sa.sun_path ) );
-        if ( ::bind( sock, (struct sockaddr*)&sa, sizeof( sa ) ) )
-            throw_<std::runtime_error>( tr( "Couldn't bind to socket: %1" ).arg( system_error_string() ) );
-
-        // ### TODO: permissions?
-    
-        // Listen
-        if ( ::listen( sock, SOMAXCONN ) )
-            throw_<std::runtime_error>( tr( "Couldn't listen to socket: %1" ).arg( system_error_string() ) );
-
-        if ( !setSocketDescriptor( sock ) )
-            throw_<std::runtime_error>( tr( "Couldn't pass socket to Qt: %1. This should not happen, please report this bug." ).arg( errorString() ) );
-
-    } catch ( ... ) {
-        ::close( sock );
-        throw;
-    }
-}
-
-#else
-
-// The Windows case is simpler, because we use a TCP socket here, so
-// we use vanilla QTcpServer:
-void UiServer::Private::makeListeningSocket() {
-
-    // First, create a tempfile that will contain the port we're
-    // listening on:
-    file.setFileName( socketname );
-    if ( !file.open( QIODevice::WriteOnly ) )
-        throw_<std::runtime_error>( tr( "Couldn't create temporary file %1: %2" ).arg( file.fileName(), file.errorString() ) );
-
-    // now, start listening to the host:
-    if ( !listen( QHostAddress::LocalHost ) )
-        throw_<std::runtime_error>( tr( "UiServer: listen failed: %1" ).arg( errorString() ) );
-
-    const quint16 port = serverPort();
-    QTextStream( &file ) << qToBigEndian( port ) << " # == htons( " << port << " )" << endl;
-    file.close();
-}
-
-#endif
 
 void UiServer::Private::incomingConnection( int fd ) {
     try {
@@ -288,5 +159,5 @@ void UiServer::Private::incomingConnection( int fd ) {
     }
 }
 
-#include "uiserver.moc"
+#include "moc_uiserver_p.cpp"
 #include "moc_uiserver.cpp"

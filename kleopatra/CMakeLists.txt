@@ -25,9 +25,21 @@ if (ONLY_KLEO)
    add_definitions( -DONLY_KLEO )
 endif(ONLY_KLEO)
 
+if ( WIN32 )
+  set( _kleopatra_extra_uiserver_SRCS
+    utils/gnupg-registry.c
+    uiserver/uiserver_win.cpp
+    )
+else ( WIN32 )
+  set( _kleopatra_extra_uiserver_SRCS
+    uiserver/uiserver_unix.cpp
+    )
+endif ( WIN32 )
+
 if ( USABLE_ASSUAN_FOUND )
   set(_kleopatra_uiserver_SRCS
     utils/kdpipeiodevice.cpp
+    ${_kleopatra_extra_uiserver_SRCS}
     uiserver/kleo-assuan.cpp
     uiserver/uiserver.cpp
     uiserver/assuanserverconnection.cpp
