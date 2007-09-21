@@ -44,6 +44,9 @@
 #include <gpgme++/error.h>
 #include <gpgme++/key.h>
 #include <gpgme++/keylistresult.h>
+#include <gpgme++/signingresult.h>
+
+#include <KLocale>
 
 #include <QIODevice>
 #include <QString>
@@ -83,7 +86,7 @@ class SignCommand::Private
 public:
     Private( SignCommand * qq )
         :AssuanCommandPrivateBaseMixin<SignCommand::Private, SignCommand>()
-        , q( qq ), m_keySelector(0), m_keyListings(0)
+        , q( qq ), m_keySelector(0), m_keyListings(0), m_statusSent(0)
     {}
     virtual ~Private() {}
     
@@ -95,6 +98,15 @@ public:
     struct Input {
         QIODevice* data;
         QString dataFileName;
+        unsigned int id;
+    };
+    
+    struct Result {
+        GpgME::SigningResult result;
+        QByteArray data;
+        unsigned int id;
+        unsigned int error;
+        QString errorString;
     };
 
     SignCommand *q;
@@ -105,10 +117,15 @@ private Q_SLOTS:
     void slotKeySelectionDialogClosed();
     void slotSigningResult( const GpgME::SigningResult & result, const QByteArray & signature );
 private:
+    void trySendingStatus( const QString & str );
+    
     std::vector<Input> m_inputs;
     std::vector<GpgME::Key> m_keys;
+    QMap<int, Result> m_results;
+    QMap<const SignJob*, unsigned int> m_jobs;
     int m_keyListings;
     int m_signJobs;
+    int m_statusSent;
 };
 
 void SignCommand::Private::checkInputs()
@@ -128,6 +145,7 @@ void SignCommand::Private::checkInputs()
 
     for ( int i = 0; i < numInputs; ++i ) {
         Input input;
+        input.id = i;
         input.data = q->bulkInputDevice( "INPUT", i );
         input.dataFileName = q->bulkInputDeviceFileName( "INPUT", i );
 
@@ -177,6 +195,7 @@ void SignCommand::Private::startSignJobs( const std::vector<GpgME::Key>& keys )
         if ( const GpgME::Error err = job->start( keys, input.data->readAll(), GpgME::NormalSignatureMode ) ) {
             q->done( err );
         }
+        m_jobs.insert( job, input.id );
         m_signJobs++;
     }
 }
@@ -215,8 +234,53 @@ void SignCommand::Private::slotNextKey( const GpgME::Key& key )
     m_keys.push_back( key );
 }
 
+void SignCommand::Private::trySendingStatus( const QString & str )
+{
+    if ( const int err = q->sendStatus( "SIGN", str ) ) {
+        QString errorString = i18n("Problem writing out the signature.");
+        q->done( err, errorString ) ;
+    }
+}
+
 void SignCommand::Private::slotSigningResult( const GpgME::SigningResult & result, const QByteArray & signature )
 {
+    const SignJob * const job = qobject_cast<SignJob*>( sender() );
+    assert( job );
+    assert( m_jobs.contains( job ) );
+    const unsigned int id = m_jobs[job];
+    
+    {
+        Result res;
+        res.result = result;
+        res.data = signature;
+        res.id = id;
+        m_results.insert( id, res );
+    }
+    // send status for all results received so far, but in order of id
+    while ( m_results.contains( m_statusSent ) ) {
+       SignCommand::Private::Result result = m_results[m_statusSent];
+       QString resultString;
+       try {
+           const GpgME::SigningResult & signres = result.result; 
+           assert( !signres.isNull() );
+               
+           const GpgME::Error signError = signres.error();
+           if ( signError )
+               throw assuan_exception( signError, "Signing failed: " );
+           // FIXME adjust for smime?
+           const QString filename = q->bulkInputDeviceFileName( "INPUT", m_statusSent ) + ".sig";
+           writeToOutputDeviceOrAskForFileName( result.id, result.data, filename );
+           resultString = "OK - Super Duper Weenie\n";
+       } catch ( const assuan_exception& e ) {
+           result.error = e.error_code();
+           result.errorString = e.what();
+           m_results[result.id] = result;
+           resultString = "ERR " + result.errorString;
+           // FIXME ask to continue or cancel
+       }
+       trySendingStatus( resultString );
+       m_statusSent++;
+    }
     if ( --m_signJobs == 0 )
         q->done();
 }
