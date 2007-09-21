@@ -131,7 +131,7 @@ void EncryptCommand::Private::slotKeySelectionError( const GpgME::Error& error, 
 {
     assert( error );
     if ( error == q->makeError( GPG_ERR_CANCELED ) ) 
-        q->done( error, "User canceled Key selection" );
+        q->done( error, "User canceled key selection" );
     else
         q->done( error, "Error while listing and selecting keys" );
 }
@@ -150,7 +150,7 @@ int EncryptCommand::doStart()
 {
     try {
         d->checkInputs();
-//        d->startKeyListings();
+       d->startKeySelection();
     } catch ( const assuan_exception& e ) {
         done( e.error_code(), e.what());
         return e.error_code();

@@ -198,7 +198,7 @@ void SignCommand::Private::slotKeySelectionError( const GpgME::Error& error, con
 {
     assert( error );
     if ( error == q->makeError( GPG_ERR_CANCELED ) ) 
-        q->done( error, "User canceled Key selection" );
+        q->done( error, "User canceled key selection" );
     else
         q->done( error, "Error while listing and selecting private keys" );
 
