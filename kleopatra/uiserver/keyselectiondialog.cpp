@@ -35,7 +35,10 @@
 
 #include "models/keylistmodel.h"
 
+#include <gpgme++/key.h>
+
 #include <QDialogButtonBox>
+#include <QAbstractItemView>
 
 using namespace Kleo;
 
@@ -62,10 +65,17 @@ KeySelectionDialog::KeySelectionDialog()
     connect ( ui->buttonBox, SIGNAL( rejected() ), this, SLOT( reject() ) );
     
     ui->listView->setModel( d->m_model );
+    ui->listView->setSelectionMode( QAbstractItemView::MultiSelection );
 }
 
 KeySelectionDialog::~KeySelectionDialog()
 {
+}
+
+std::vector<GpgME::Key> KeySelectionDialog::selectedKeys() const
+{
+    QItemSelectionModel * sm = ui->listView->selectionModel();
+    return d->m_model->keys( sm->selectedIndexes() );
 }
 
 void KeySelectionDialog::addKeys(const std::vector<GpgME::Key> & keys)

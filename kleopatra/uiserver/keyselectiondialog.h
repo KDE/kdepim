@@ -54,6 +54,7 @@ public:
     KeySelectionDialog();
     virtual ~KeySelectionDialog();
     void addKeys( const std::vector<GpgME::Key> & keys );
+    std::vector<GpgME::Key> selectedKeys() const;
 private:
     class Private;
     kdtools::pimpl_ptr<Private> d;

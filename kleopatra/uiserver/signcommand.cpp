@@ -34,7 +34,10 @@
 #include "kleo-assuan.h"
 #include "keyselectiondialog.h"
 
+#include "utils/stl_util.h"
+
 #include <kleo/keylistjob.h>
+#include <kleo/signjob.h>
 #include <kleo/cryptobackendfactory.h>
 
 #include <gpgme++/data.h>
@@ -48,7 +51,30 @@
 #include <QObject>
 #include <QDebug>
 
+#include <boost/bind.hpp>
+
 using namespace Kleo;
+
+namespace {
+    template <template <typename T> class Op>
+    struct ByProtocol {
+        typedef bool result_type;
+
+        bool operator()( const GpgME::Key & lhs, const GpgME::Key & rhs ) const {
+            return Op<int>()( qstricmp( lhs.protocolAsString(), rhs.protocolAsString() ), 0 );
+        }
+        bool operator()( const GpgME::Key & lhs, const char * rhs ) const {
+            return Op<int>()( qstricmp( lhs.protocolAsString(), rhs ), 0 );
+        }
+        bool operator()( const char * lhs, const GpgME::Key & rhs ) const {
+            return Op<int>()( qstricmp( lhs, rhs.protocolAsString() ), 0 );
+        }
+        bool operator()( const char * lhs, const char * rhs ) const {
+            return Op<int>()( qstricmp( lhs, rhs ), 0 );
+        }
+    };
+
+}
 
 class SignCommand::Private
   : public AssuanCommandPrivateBaseMixin<SignCommand::Private, SignCommand>
@@ -63,6 +89,7 @@ public:
     
     void checkInputs();
     void startKeyListings();
+    void startSignJobs( const std::vector<GpgME::Key>& keys );
     void showKeySelectionDialog();
     
     struct Input {
@@ -76,10 +103,12 @@ private Q_SLOTS:
     void slotKeyListingDone( const GpgME::KeyListResult& );
     void slotNextKey( const GpgME::Key&  );
     void slotKeySelectionDialogClosed();
+    void slotSigningResult( const GpgME::SigningResult & result, const QByteArray & signature );
 private:
     std::vector<Input> m_inputs;
     std::vector<GpgME::Key> m_keys;
     int m_keyListings;
+    int m_signJobs;
 };
 
 void SignCommand::Private::checkInputs()
@@ -111,7 +140,7 @@ void SignCommand::Private::startKeyListings()
     // do a key listing of private keys for both backends
     const QStringList patterns; // FIXME?
     m_keyListings = 2; // openpgg and cms
-    KeyListJob *keylisting = Kleo::CryptoBackendFactory::instance()->protocol( "openpgp" )->keyListJob();
+    KeyListJob *keylisting = CryptoBackendFactory::instance()->protocol( "openpgp" )->keyListJob();
     connect( keylisting, SIGNAL( result( GpgME::KeyListResult ) ),
              this, SLOT( slotKeyListingDone( GpgME::KeyListResult ) ) );
     connect( keylisting, SIGNAL( nextKey( GpgME::Key ) ),
@@ -128,12 +157,38 @@ void SignCommand::Private::startKeyListings()
         throw assuan_exception( err, "Unable to start keylisting" );
 }
 
+void SignCommand::Private::startSignJobs( const std::vector<GpgME::Key>& keys )
+{
+    // make sure the keys are all of the same type
+    // FIXME reasonable assumption?
+    if ( keys.empty() || !kdtools::all( keys.begin(), keys.end(), boost::bind( ByProtocol<std::equal_to>(), _1, keys.front() )  ) ) {
+        q->done();
+    }
+    const CryptoBackend::Protocol* backend = CryptoBackendFactory::instance()->protocol( keys.front().protocolAsString() );
+    
+    assert( backend );
+    
+    Q_FOREACH( const Input input, m_inputs ) {
+        SignJob *job = backend->signJob();
+        connect( job, SIGNAL( result( GpgME::SigningResult, QByteArray ) ),
+                 this, SLOT( slotSigningResult( GpgME::SigningResult, QByteArray ) ) );
+        // FIXME port to iodevice
+        // FIXME mode?
+        if ( const GpgME::Error err = job->start( keys, input.data->readAll(), GpgME::NormalSignatureMode ) ) {
+            q->done( err );
+        }
+        m_signJobs++;
+    }
+}
+
 void SignCommand::Private::slotKeySelectionDialogClosed()
 {
-    if ( m_keySelector->result() == QDialog::Rejected )
+    if ( m_keySelector->result() == QDialog::Rejected ) {
         q->done( q->makeError(GPG_ERR_CANCELED ) );
-    else
-        q->done();
+        return;
+    }
+    // fire off the sign jobs
+    startSignJobs( m_keySelector->selectedKeys() );
 }
 
 void SignCommand::Private::showKeySelectionDialog()
@@ -160,6 +215,11 @@ void SignCommand::Private::slotNextKey( const GpgME::Key& key )
     m_keys.push_back( key );
 }
 
+void SignCommand::Private::slotSigningResult( const GpgME::SigningResult & result, const QByteArray & signature )
+{
+    if ( --m_signJobs == 0 )
+        q->done();
+}
 
 SignCommand::SignCommand()
 :d( new Private( this ) )

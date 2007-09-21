@@ -21,7 +21,7 @@
     </widget>
    </item>
    <item>
-    <widget class="QListView" name="listView" />
+    <widget class="QTreeView" name="listView" />
    </item>
    <item>
     <widget class="QDialogButtonBox" name="buttonBox" >
