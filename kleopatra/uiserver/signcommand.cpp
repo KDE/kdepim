@@ -32,7 +32,7 @@
 
 #include "signcommand.h"
 #include "kleo-assuan.h"
-#include "keyselectiondialog.h"
+#include "keyselectionjob.h"
 
 #include "utils/stl_util.h"
 
@@ -86,12 +86,12 @@ class SignCommand::Private
 public:
     Private( SignCommand * qq )
         :AssuanCommandPrivateBaseMixin<SignCommand::Private, SignCommand>()
-        , q( qq ), m_keySelector(0), m_keyListings(0), m_statusSent(0)
+        , q( qq ), m_statusSent(0)
     {}
     virtual ~Private() {}
     
     void checkInputs();
-    void startKeyListings();
+    void startKeySelection();
     void startSignJobs( const std::vector<GpgME::Key>& keys );
     void showKeySelectionDialog();
     
@@ -110,20 +110,17 @@ public:
     };
 
     SignCommand *q;
-    KeySelectionDialog *m_keySelector;
+
 private Q_SLOTS:
-    void slotKeyListingDone( const GpgME::KeyListResult& );
-    void slotNextKey( const GpgME::Key&  );
-    void slotKeySelectionDialogClosed();
+    void slotKeySelectionResult( const std::vector<GpgME::Key>& );
+    void slotKeySelectionError( const GpgME::Error& error, const GpgME::KeyListResult& );
     void slotSigningResult( const GpgME::SigningResult & result, const QByteArray & signature );
 private:
     void trySendingStatus( const QString & str );
     
     std::vector<Input> m_inputs;
-    std::vector<GpgME::Key> m_keys;
     QMap<int, Result> m_results;
     QMap<const SignJob*, unsigned int> m_jobs;
-    int m_keyListings;
     int m_signJobs;
     int m_statusSent;
 };
@@ -153,26 +150,16 @@ void SignCommand::Private::checkInputs()
     }
 }
 
-void SignCommand::Private::startKeyListings()
+void SignCommand::Private::startKeySelection()
 {
-    // do a key listing of private keys for both backends
-    const QStringList patterns; // FIXME?
-    m_keyListings = 2; // openpgg and cms
-    KeyListJob *keylisting = CryptoBackendFactory::instance()->protocol( "openpgp" )->keyListJob();
-    connect( keylisting, SIGNAL( result( GpgME::KeyListResult ) ),
-             this, SLOT( slotKeyListingDone( GpgME::KeyListResult ) ) );
-    connect( keylisting, SIGNAL( nextKey( GpgME::Key ) ),
-             this, SLOT( slotNextKey( GpgME::Key ) ) );
-    if ( const GpgME::Error err = keylisting->start( patterns, true /*secret only*/) )
-        throw assuan_exception( err, "Unable to start keylisting" );
-
-    keylisting = Kleo::CryptoBackendFactory::instance()->protocol( "smime" )->keyListJob();
-    connect( keylisting, SIGNAL( result( GpgME::KeyListResult ) ),
-             this, SLOT( slotKeyListingDone( GpgME::KeyListResult ) ) );
-    connect( keylisting, SIGNAL( nextKey( GpgME::Key ) ),
-             this, SLOT( slotNextKey( GpgME::Key ) ) );
-    if ( const GpgME::Error err = keylisting->start( patterns, true /*secret only*/) )
-        throw assuan_exception( err, "Unable to start keylisting" );
+    KeySelectionJob* job = new KeySelectionJob( this );
+    job->setSecretKeysOnly( true );
+    job->setPatterns( QStringList() ); // FIXME
+    connect( job, SIGNAL( error( GpgME::Error, GpgME::KeyListResult ) ),
+             this, SLOT( slotKeySelectionError( GpgME::Error, GpgME::KeyListResult ) ) );
+    connect( job, SIGNAL( result( std::vector<GpgME::Key> ) ),
+             this, SLOT( slotKeySelectionResult( std::vector<GpgME::Key> ) ) );
+    job->start();
 }
 
 void SignCommand::Private::startSignJobs( const std::vector<GpgME::Key>& keys )
@@ -200,38 +187,21 @@ void SignCommand::Private::startSignJobs( const std::vector<GpgME::Key>& keys )
     }
 }
 
-void SignCommand::Private::slotKeySelectionDialogClosed()
+void SignCommand::Private::slotKeySelectionResult( const std::vector<GpgME::Key>& keys )
 {
-    if ( m_keySelector->result() == QDialog::Rejected ) {
-        q->done( q->makeError(GPG_ERR_CANCELED ) );
-        return;
-    }
     // fire off the sign jobs
-    startSignJobs( m_keySelector->selectedKeys() );
+    startSignJobs( keys );
 }
 
-void SignCommand::Private::showKeySelectionDialog()
-{ 
-    m_keySelector = new KeySelectionDialog();
-    connect( m_keySelector, SIGNAL( accepted() ), this, SLOT( slotKeySelectionDialogClosed() ) );
-    connect( m_keySelector, SIGNAL( rejected() ), this, SLOT( slotKeySelectionDialogClosed() ) );
-    m_keySelector->addKeys( m_keys );
-    m_keySelector->show();
-}
 
-void SignCommand::Private::slotKeyListingDone( const GpgME::KeyListResult& result )
+void SignCommand::Private::slotKeySelectionError( const GpgME::Error& error, const GpgME::KeyListResult& )
 {
-    if ( result.error() )
-        q->done( result.error(), "Error during listing of private keys");
+    assert( error );
+    if ( error == q->makeError( GPG_ERR_CANCELED ) ) 
+        q->done( error, "User canceled Key selection" );
+    else
+        q->done( error, "Error while listing and selecting private keys" );
 
-    if ( --m_keyListings == 0 ) {
-        showKeySelectionDialog();
-    }
-}
-
-void SignCommand::Private::slotNextKey( const GpgME::Key& key )
-{
-    m_keys.push_back( key );
 }
 
 void SignCommand::Private::trySendingStatus( const QString & str )
@@ -298,7 +268,7 @@ int SignCommand::doStart()
 {
     try {
         d->checkInputs();
-        d->startKeyListings();
+        d->startKeySelection();
     } catch ( const assuan_exception& e ) {
         done( e.error_code(), e.what());
         return e.error_code();
@@ -310,9 +280,6 @@ int SignCommand::doStart()
 
 void SignCommand::doCanceled()
 {
-    delete d->m_keySelector;
-    d->m_keySelector = 0;
 }
 
 #include "signcommand.moc"
-

@@ -51,6 +51,7 @@ if ( USABLE_ASSUAN_FOUND )
     uiserver/assuancommandprivatebase_p.cpp
     uiserver/signaturedisplaywidget.cpp
     uiserver/keyselectiondialog.cpp
+    uiserver/keyselectionjob.cpp
     )
   kde4_add_ui_files( _kleopatra_uiserver_SRCS uiserver/keyselectiondialog.ui)
   if ( WIN32 )
