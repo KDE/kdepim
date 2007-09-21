@@ -56,7 +56,6 @@ set_target_properties(
 install(
 	TARGETS kpilot_conduit_vcal kpilot_conduit_todo
 	LIBRARY DESTINATION ${PLUGIN_INSTALL_DIR}
-	LIBRARY DESTINATION ${PLUGIN_INSTALL_DIR}
 )
 
 install(
