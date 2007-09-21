@@ -229,7 +229,6 @@ private:
             if ( options.size() < 1 || options.size() > 2 )
                 throw gpg_error( GPG_ERR_ASS_SYNTAX );
 
-            // ### TODO barf on unknown options
             // ### TODO handle FILE=
 
             IO io;
@@ -257,6 +256,8 @@ private:
 
                 io.iodev = new KDPipeIODevice( fd, in ? QIODevice::ReadOnly : QIODevice::WriteOnly );
 
+                options.erase( "FD" );
+
             } else if ( options.count( "FILE" ) ) {
                 
                 if ( options.count( "FD" ) )
@@ -278,20 +279,40 @@ private:
 
                 iodev = f;
 
+                options.erase( "FILE" );
+
             } else {
 
                 throw gpg_error( GPG_ERR_ASS_PARAMETER );
 
             }
 
-            if ( options.count( "binary" ) )
+            if ( options.count( "binary" ) ) {
+                if ( !options["binary"].empty() )
+                    throw gpg_error( GPG_ERR_ASS_SYNTAX );
                 io.encoding = GpgME::Data::BinaryEncoding;
-            else if ( options.count( "armor" ) )
+                options.erase( "binary" );
+            }
+            if ( options.count( "armor" ) ) {
+                if ( !options["armor"].empty() )
+                    throw gpg_error( GPG_ERR_ASS_SYNTAX );
+                if ( io.encoding )
+                    throw gpg_error( GPG_ERR_CONFLICT ); // conflicting parameters
                 io.encoding = GpgME::Data::ArmorEncoding;
-            else if ( options.count( "base64" ) )
+                options.erase( "armor" );
+            }
+            if ( options.count( "base64" ) ) {
+                if ( !options["base64"].empty() )
+                    throw gpg_error( GPG_ERR_ASS_SYNTAX );
+                if ( io.encoding )
+                    throw gpg_error( GPG_ERR_CONFLICT ); // conflicting parameters
                 io.encoding = GpgME::Data::Base64Encoding;
-            else
+            }
+            if ( !io.encoding )
                 io.encoding = GpgME::Data::AutoEncoding;
+
+            if ( options.size() )
+                throw gpg_error( GPG_ERR_UNKNOWN_OPTION );
 
             io.iodev = iodev.release();
 
