@@ -1,3 +1,22 @@
+Friday, September 21st 2007
+
+Bugfixes
+--------
+
+* kolab/issue1983 Fix encoding issue in SMIME encryption message.
+
+* kolab/issue1924 Retain state of the crypto state indicators across drafts.
+
+* KDE bug 132938 Avoid asking the user to go online spuriously/
+
+Features
+--------
+
+* prokde35-z item 70: Check calendar link in invitations (714358)
+
+* prokde35-z item 30: Text snippet support in the kmail composer window (715206)
+
+
 Friday, September 14th 2007
 
 Features
