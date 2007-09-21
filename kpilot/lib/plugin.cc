@@ -269,7 +269,6 @@ ConduitAction::ConduitAction(KPilotLink *p,
 	SyncAction(p, name),
 	fDatabase(0L),
 	fLocalDatabase(0L),
-    fSyncDirection(args.first().value<SyncAction::SyncMode>()),
 	fConflictResolution(SyncAction::eAskUser),
 	fFirstSync(false)
 {
@@ -280,6 +279,8 @@ ConduitAction::ConduitAction(KPilotLink *p,
 	{
 		sArgs << args.at( i ).toString();
 	}
+	
+	fSyncDirection = SyncAction::SyncMode( sArgs );
 
 	QStringList cResolutions = sArgs.filter(QRegExp(CSL1("--conflictResolution \\d*")));
 	if(!cResolutions.isEmpty())
