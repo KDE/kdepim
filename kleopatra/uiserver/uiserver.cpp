@@ -48,6 +48,7 @@
 #include <QTextStream>
 #include <QEventLoop>
 #include <QTimer>
+#include <qendian.h>
 
 #include <boost/range/empty.hpp>
 #include <boost/bind.hpp>
@@ -254,7 +255,8 @@ void UiServer::Private::makeListeningSocket() {
     if ( !listen( QHostAddress::LocalHost ) )
         throw_<std::runtime_error>( tr( "UiServer: listen failed: %1" ).arg( errorString() ) );
 
-    QTextStream( &file ) << serverPort() << endl;
+    const quint16 port = serverPort();
+    QTextStream( &file ) << qToBigEndian( port ) << " # == htons( " << port << " )" << endl;
     file.close();
 }
 
