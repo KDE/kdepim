@@ -38,7 +38,7 @@
 #define CSIDL_FLAG_CREATE 0x8000
 #endif
 
-#include "registry.h"
+#include "gnupg-registry.h"
 
 
 /* This is a helper function to load a Windows function from either of
