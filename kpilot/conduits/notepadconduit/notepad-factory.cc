@@ -57,18 +57,21 @@ public:
 
 class NotepadConduitConfig : public ConduitConfigBase
 {
+Q_OBJECT
 public:
-	NotepadConduitConfig(QWidget *parent=0L, const char *n=0L);
+	NotepadConduitConfig(QWidget *parent=0L, const QVariantList &  = QVariantList());
 	virtual void commit();
 	virtual void load();
 	static ConduitConfigBase *create(QWidget *p, const char *n)
 	{
-		return new NotepadConduitConfig(p, n);
+		return new NotepadConduitConfig(p, QVariantList() << n);
 	};
 
 protected:
 	NotepadWidget *fConfigWidget;
 } ;
+
+#include "notepad-factory.moc"
 
 static KAboutData *createAbout()
 {
@@ -91,8 +94,8 @@ static KAboutData *createAbout()
 }
 
 
-NotepadConduitConfig::NotepadConduitConfig(QWidget *p, const char *n) :
-	ConduitConfigBase(p, n),
+NotepadConduitConfig::NotepadConduitConfig(QWidget *p, const QVariantList &) :
+	ConduitConfigBase(p),
 	fConfigWidget(new NotepadWidget(p))
 {
 	FUNCTIONSETUP;

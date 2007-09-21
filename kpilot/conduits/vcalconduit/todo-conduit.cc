@@ -172,7 +172,7 @@ KCal::Incidence *TodoConduitPrivate::getNextModifiedIncidence()
  ****************************************************************************/
 
 TodoConduit::TodoConduit(KPilotLink *d,
-	const QStringList &a) : VCalConduitBase(d,a),
+	const QVariantList &a) : VCalConduitBase(d,a),
 	fTodoAppInfo( 0L )
 {
 	FUNCTIONSETUP;

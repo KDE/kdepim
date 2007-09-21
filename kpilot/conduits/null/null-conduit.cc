@@ -52,7 +52,7 @@
 //
 //
 NullConduit::NullConduit(KPilotLink *d,
-	const QStringList &l) :
+	const QVariantList &l) :
 	ConduitAction(d, "Null", l),
 	fDatabase(0L),
 	fFailImmediately( l.contains( CSL1("--fail") ))

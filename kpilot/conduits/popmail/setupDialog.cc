@@ -56,7 +56,7 @@
 
 
 
-PopMailWidgetConfig::PopMailWidgetConfig(QWidget *p) :
+PopMailWidgetConfig::PopMailWidgetConfig(QWidget *p, const QVariantList &) :
 	ConduitConfigBase(p),
 	fConfigWidget(new PopMailWidget(p))
 {

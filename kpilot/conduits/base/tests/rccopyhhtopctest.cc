@@ -27,7 +27,7 @@
 
 // Qt includes
 #include <QtTest>
-#include <QtCore>
+#include <QtCore/QVariantList>
 
 // KDE includes
 #include <qtest_kde.h>
@@ -67,7 +67,7 @@ private slots:
 
 void RCCopyHHToPCTest::testMappingForHHRecord()
 {
-	QStringList args = QStringList() << CSL1( "--copyHHToPC" )
+	QVariantList args = QVariantList() << CSL1( "--copyHHToPC" )
 		<< CSL1( "--conflictResolution 2" );
 	
 	// Create conduit
@@ -104,7 +104,7 @@ void RCCopyHHToPCTest::testMappingForHHRecord()
 
 void RCCopyHHToPCTest::testNoMappingForHHRecord()
 {
-	QStringList args = QStringList() << CSL1( "--copyHHToPC" )
+	QVariantList args = QVariantList() << CSL1( "--copyHHToPC" )
 		<< CSL1( "--conflictResolution 2" );
 	
 	// Create conduit
@@ -136,7 +136,7 @@ void RCCopyHHToPCTest::testNoMappingForHHRecord()
 
 void RCCopyHHToPCTest::testMappingForPCRecord()
 {
-	QStringList args = QStringList() << CSL1( "--copyHHToPC" )
+	QVariantList args = QVariantList() << CSL1( "--copyHHToPC" )
 		<< CSL1( "--conflictResolution 2" );
 	
 	// Create conduit
@@ -167,7 +167,7 @@ void RCCopyHHToPCTest::testMappingForPCRecord()
 
 void RCCopyHHToPCTest::testNoMappingForPCRecord()
 {
-	QStringList args = QStringList() << CSL1( "--copyHHToPC" )
+	QVariantList args = QVariantList() << CSL1( "--copyHHToPC" )
 		<< CSL1( "--conflictResolution 2" );
 	
 	// Create conduit

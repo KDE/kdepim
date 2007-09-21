@@ -32,6 +32,7 @@
 
 #include <QtCore/QFile>
 #include <QtCore/QTimer>
+#include <QtCore/QVariantList>
 #include <QtGui/QLabel>
 #include <QtGui/QLayout>
 #include <QtGui/QPushButton>
@@ -44,10 +45,10 @@
 
 #include <kconfigskeleton.h>
 #include <kdialog.h>
-#include <kgenericfactory.h>
 #include <kglobal.h>
 #include <khbox.h>
-#include <klibloader.h>
+#include <kpluginloader.h>
+#include <kpluginfactory.h>
 #include <kmessagebox.h>
 #include <kseparator.h>
 #include <kservice.h>
@@ -68,18 +69,9 @@
 #define CONDUIT_ORDER	(4)
 
 
-extern "C"
-{
-	KDE_EXPORT KCModule *create_kpilotconfig( QWidget *parent, const char * )
-	{
-		FUNCTIONSETUP;
-		return new ConduitConfigWidget( parent, QStringList() );
-	}
-}
 
-typedef KGenericFactory<ConduitConfigWidget, QWidget> ConduitConfigFactory;
-K_EXPORT_COMPONENT_FACTORY( kpilotconfig, ConduitConfigFactory("kcmkpilotconfig"))
-
+K_PLUGIN_FACTORY(ConduitConfigFactory, registerPlugin<ConduitConfigWidget>();)
+K_EXPORT_PLUGIN(ConduitConfigFactory("kcmkpilotconfig"))
 
 // Page numbers in the widget stack
 #define BROKEN_CONDUIT   (0)
@@ -129,8 +121,8 @@ static void addDescriptionPage(QStackedWidget  *parent,
 }
 
 
-ConduitConfigWidgetBase::ConduitConfigWidgetBase(QWidget *parent, const QStringList &) :
-	KCModule(ConduitConfigFactory::componentData(),parent),
+ConduitConfigWidgetBase::ConduitConfigWidgetBase(QWidget *parent, const QVariantList &args) :
+	KCModule(ConduitConfigFactory::componentData(),parent, args),
 	fConduitList(0L),
 	fStack(0L),
 	fActionDescription(0L)
@@ -204,7 +196,7 @@ ConduitConfigWidgetBase::ConduitConfigWidgetBase(QWidget *parent, const QStringL
 	fStack->insertWidget(GENERAL_ABOUT,ConduitConfigBase::aboutPage(fStack,0L));
 }
 
-ConduitConfigWidget::ConduitConfigWidget(QWidget *parent, const QStringList &args) :
+ConduitConfigWidget::ConduitConfigWidget(QWidget *parent, const QVariantList &args) :
 	ConduitConfigWidgetBase(parent,args),
 	fCurrentConduit(0L),
 	fGeneralPage(0L),
@@ -358,22 +350,6 @@ void ConduitConfigWidget::fillLists()
 	}
 }
 
-static void dumpConduitInfo(const KLibrary *lib)
-{
-	FUNCTIONSETUP;
-	DEBUGKPILOT << "Plugin version =" << PluginUtility::pluginVersion(lib);
-
-	QString symbol_value;
-	QString symbol= CSL1("id_");
-#warning Port KLibrary::name() usage!
-	symbol.append(lib->name());
-
-	if (const_cast<KLibrary*>(lib)->resolveSymbol(symbol.toLatin1()))
-	{
-		symbol_value = QString::fromLatin1(*((const char **)(const_cast<KLibrary*>(lib)->resolveSymbol(symbol.toLatin1()))));
-		DEBUGKPILOT << "Plugin id      =" << symbol_value;
-	}
-}
 
 static ConduitConfigBase *handleGeneralPages(QWidget *w, QTreeWidgetItem *p)
 {
@@ -384,23 +360,23 @@ static ConduitConfigBase *handleGeneralPages(QWidget *w, QTreeWidgetItem *p)
 
 	if (s.startsWith(CSL1("general_setup")))
 	{
-		o = new DeviceConfigPage( w, "generalSetup" );
+		o = new DeviceConfigPage( w, QVariantList() << CSL1( "generalSetup" ) );
 	}
 	else if (s.startsWith(CSL1("general_sync")))
 	{
-		o = new SyncConfigPage( w, "syncSetup" );
+		o = new SyncConfigPage( w, QVariantList() << CSL1( "syncSetup" ) );
 	}
 	else if (s.startsWith(CSL1("general_view")))
 	{
-		o = new ViewersConfigPage( w, "viewSetup" );
+		o = new ViewersConfigPage( w, QVariantList() << CSL1( "viewSetup" ) );
 	}
 	else if (s.startsWith(CSL1("general_startexit")))
 	{
-		o = new StartExitConfigPage(w,"startSetup");
+		o = new StartExitConfigPage(w, QVariantList() << CSL1( "startSetup" ) );
 	}
 	else if (s.startsWith(CSL1("general_backup")))
 	{
-		o = new BackupConfigPage(w,"backupSetup");
+		o = new BackupConfigPage(w, QVariantList() << CSL1( "backupSetup" ) );
 	}
 
 	if (!o)
@@ -462,17 +438,16 @@ void ConduitConfigWidget::loadAndConfigure(QTreeWidgetItem *p)
 		return;
 	}
 
-	QObject *o = 0L;
+	ConduitConfigBase *d = 0L;
 
 	if (libraryName.startsWith(CSL1("general_")))
 	{
-		o = handleGeneralPages(fStack,p);
+        d = qobject_cast<ConduitConfigBase *>(handleGeneralPages(fStack,p));
 	}
 	else
 	{
-		QByteArray library = QFile::encodeName(libraryName);
-
-		KLibFactory *f = KLibLoader::self()->factory(library);
+		KPluginLoader loader(libraryName);
+        KPluginFactory *f = loader.factory();
 		if (!f)
 		{
 			WARNINGKPILOT << "No conduit library ["
@@ -483,9 +458,8 @@ void ConduitConfigWidget::loadAndConfigure(QTreeWidgetItem *p)
 			return;
 		}
 
-		KLibrary *lib = KLibLoader::self()->library(library);
-		dumpConduitInfo(lib);
-		if ( Pilot::PLUGIN_API > PluginUtility::pluginVersion(lib) )
+        WARNINGKPILOT << "library: " << libraryName << " version: " << loader.pluginVersion();
+		if (Pilot::PLUGIN_API > loader.pluginVersion())
 		{
 			WARNINGKPILOT << "Old conduit library found.";
 			fStack->setCurrentIndex(BROKEN_CONDUIT);
@@ -493,23 +467,11 @@ void ConduitConfigWidget::loadAndConfigure(QTreeWidgetItem *p)
 			return;
 		}
 
-		QStringList a;
-		a.append(CSL1("modal"));
+		QVariantList a;
+		a.append(QVariant(CSL1("modal")));
 
-		o = f->create(fStack, "ConduitConfigBase", a);
-
-		if (!o)
-		{
-			DEBUGKPILOT << "Can't create ConduitConfigBase.";
-			KLibLoader::self()->unloadLibrary(
-				library);
-			fStack->setCurrentIndex(BROKEN_CONDUIT);
-			warnNoLibrary(p);
-			return;
-		}
+		d = f->create<ConduitConfigBase>(fStack, a);
 	}
-
-	ConduitConfigBase *d = dynamic_cast<ConduitConfigBase *>(o);
 
 	if (!d)
 	{

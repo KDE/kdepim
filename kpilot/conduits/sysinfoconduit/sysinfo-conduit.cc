@@ -144,7 +144,7 @@ const QString SysInfoConduit::defaultpage = CSL1("KPilot System Information Page
 
 
 SysInfoConduit::SysInfoConduit(KPilotLink * o,
-	const QStringList & a) :
+	const QVariantList & a) :
 	ConduitAction(o, a)
 {
 	FUNCTIONSETUP;

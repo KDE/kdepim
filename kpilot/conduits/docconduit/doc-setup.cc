@@ -39,10 +39,11 @@
 #include <kurlrequester.h>
 
 #include "doc-setup.h"
+#include "doc-setup.moc"
 #include "docconduitSettings.h"
 
 DOCWidgetConfig::DOCWidgetConfig(QWidget * w):
-	ConduitConfigBase(w),
+	ConduitConfigBase(w, const QVariantList &),
 	fConfigWidget(new DOCWidget(w))
 {
 	FUNCTIONSETUP;

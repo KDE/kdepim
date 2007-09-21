@@ -35,9 +35,10 @@
 #include "ui_setup_base.h"
 #include "vcal-conduit.h"
 #include "vcal-setup.h"
+#include "vcal-setup.moc"
 
 
-VCalWidgetSetup::VCalWidgetSetup(QWidget *w) :
+VCalWidgetSetup::VCalWidgetSetup(QWidget *w, const QVariantList &) :
 	VCalWidgetSetupBase(w)
 {
 	KAboutData *fAbout = new KAboutData("vcalConduit", 0,

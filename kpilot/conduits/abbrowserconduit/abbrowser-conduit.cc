@@ -107,7 +107,7 @@ AddressBook *AbbrowserConduit::aBook=0L;
 
 
 
-AbbrowserConduit::AbbrowserConduit(KPilotLink * o, const QStringList & a):
+AbbrowserConduit::AbbrowserConduit(KPilotLink * o, const QVariantList & a):
 		ConduitAction(o, a),
 		fAddressAppInfo(0L),
 		addresseeMap(),

@@ -64,7 +64,7 @@ class TodoConduit : public VCalConduitBase
 Q_OBJECT
 public:
 	TodoConduit(KPilotLink *,
-		const QStringList &args = QStringList());
+		const QVariantList &args = QVariantList());
 	virtual ~TodoConduit();
 
 protected:

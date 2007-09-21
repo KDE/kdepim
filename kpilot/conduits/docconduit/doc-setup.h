@@ -46,8 +46,9 @@ public:
 
 class DOCWidgetConfig : public ConduitConfigBase
 {
+Q_OBJECT
 public:
-	DOCWidgetConfig(QWidget *);
+	DOCWidgetConfig(QWidget *, const QVariantList &);
 	virtual void commit();
 	virtual void load();
 protected:

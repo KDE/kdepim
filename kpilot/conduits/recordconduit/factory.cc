@@ -47,8 +47,9 @@
 
 class ConduitConfig : public ConduitConfigBase
 {
+Q_OBJECT
 public:
-	ConduitConfig(QWidget *parent=0L, const char *n=0L);
+	ConduitConfig(QWidget *parent=0L, const QVariantList &);
 	virtual void commit();
 	virtual void load();
 protected:
@@ -56,8 +57,10 @@ protected:
 	KAboutData *fAbout;
 } ;
 
-ConduitConfig::ConduitConfig(QWidget *p, const char *n) :
-	ConduitConfigBase(p,n),
+#include "factory.moc"
+
+ConduitConfig::ConduitConfig(QWidget *p, const QVariantList &args) :
+	ConduitConfigBase(p,args),
 	fConfigWidget(new RecordWidget(p))
 {
 	FUNCTIONSETUP;

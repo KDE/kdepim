@@ -108,7 +108,7 @@ static int32 cbItem (void */*out*/,
 
  
 MALConduit::MALConduit(KPilotLink *link,
-	const QStringList &args) :
+	const QVariantList &args) :
 	ConduitAction(link, args)
 {
 	FUNCTIONSETUP;

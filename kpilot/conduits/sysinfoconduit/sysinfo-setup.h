@@ -35,8 +35,9 @@ class SysInfoWidget;
 
 class SysInfoWidgetConfig : public ConduitConfigBase
 {
+Q_OBJECT
 public:
-	SysInfoWidgetConfig(QWidget *parent);
+	SysInfoWidgetConfig(QWidget *parent, const QVariantList &);
 	virtual void commit();
 	virtual void load();
 	virtual bool isModified() const;

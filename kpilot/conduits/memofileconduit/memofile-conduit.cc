@@ -54,7 +54,7 @@
  * Our workhorse.  This is the main driver for the conduit.
  */
 MemofileConduit::MemofileConduit(KPilotLink *d,
-                                 const QStringList &l) :
+                                 const QVariantList &l) :
 		ConduitAction(d, "Memofile", l),
 		_DEFAULT_MEMODIR(QDir::homePath() + CSL1("/MyMemos")),
 		fMemoAppInfo(0L),

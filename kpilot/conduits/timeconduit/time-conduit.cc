@@ -44,7 +44,7 @@
 
 
 TimeConduit::TimeConduit(KPilotLink * o,
-	const QStringList & a) :
+	const QVariantList & a) :
 	ConduitAction(o, "Time", a)
 {
 	FUNCTIONSETUP;

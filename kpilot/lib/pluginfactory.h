@@ -28,77 +28,9 @@
 */
 #include "options.h"
 
-#include <QtGui/QWidget>
-
-#include <kcomponentdata.h>
-#include <klibloader.h>
-
-
-/** @file Defines a template class for factories for KPilot's conduits. */
-
-class KPilotLink;
-
-
-
-/**
- * Template class that defines a conduit's factory. Instantiate it with a
- * configuration widget class and a SyncAction derived conduit action,
- * but preferably use DECLARE_KPILOT_PLUGIN below.
- */
-
-template <class Widget, class Action> class ConduitFactory : public KLibFactory
-{
-public:
-	ConduitFactory(QObject *parent = 0, const char * = 0) :
-		KLibFactory(parent)
-		{ /*fInstance(name);*/ } ;
-	virtual ~ConduitFactory()
-		{ /*delete fInstance;*/ } ;
-
-protected:
-	virtual QObject *createObject(
-		QObject *parent = 0,
-		const char *classname = "QObject",
-		const QStringList &args = QStringList() )
-	{
-		if (qstrcmp(classname,"ConduitConfigBase")==0)
-		{
-			QWidget *w = dynamic_cast<QWidget *>(parent);
-			if (w)
-			{
-				return new Widget(w);
-			}
-			else
-			{
-				WARNINGKPILOT <<"Could not cast parent to widget.";
-				return 0L;
-			}
-		}
-
-		if (qstrcmp(classname,"SyncAction")==0)
-		{
-			KPilotLink *d = 0L;
-			if (parent) d = dynamic_cast<KPilotLink *>(parent);
-
-			if (d || !parent)
-			{
-				if (!parent)
-				{
-					kDebug() <<": Using NULL device.";
-				}
-				return new Action(d,args);
-			}
-			else
-			{
-				WARNINGKPILOT <<"Could not cast parent to KPilotLink";
-				return 0L;
-			}
-		}
-		return 0L;
-	}
-
-	//KComponentData fInstance;
-} ;
+#include <kpluginfactory.h>
+#include <kpluginloader.h>
+#include "kpilotlink.h"
 
 /**
  * A conduit has a name -- which must match the name of the library
@@ -116,10 +48,26 @@ protected:
  * @example DECLARE_KPILOT_PLUGIN(null, NullConfigWidget, ConduitNull)
  */
 #define DECLARE_KPILOT_PLUGIN(a,b,c) \
-	extern "C" { \
-	KPILOT_EXPORT unsigned long version_##a = Pilot::PLUGIN_API; \
-	KPILOT_EXPORT void *init_##a() \
-	{ return new ConduitFactory<b,c>(0, #a); } }
+K_PLUGIN_FACTORY(a##factory, registerPlugin<b>(QString(), &createConduitConfigInstance<b>); registerPlugin<c>(QString(), &createConduitActionInstance<c>);) \
+K_EXPORT_PLUGIN(a##factory(#a)) \
+K_EXPORT_PLUGIN_VERSION(Pilot::PLUGIN_API)
+
+template<class impl>
+QObject *createConduitActionInstance(QWidget *parentWidget, QObject *parent, const QVariantList &args)
+{
+    Q_UNUSED(parentWidget);
+    KPilotLink *link = qobject_cast<KPilotLink *>(parent);
+    Q_ASSERT(link || !parent);
+
+    return new impl(link, args);
+}
+
+template<class impl>
+QObject *createConduitConfigInstance(QWidget *parentWidget, QObject *parent, const QVariantList &args)
+{
+    Q_UNUSED(parent);
+    return new impl(parentWidget, args);
+}
 
 #endif
 

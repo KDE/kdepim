@@ -53,7 +53,7 @@
 #include "malconduitSettings.h"
 
 
-MALWidgetSetup::MALWidgetSetup(QWidget *w) :
+MALWidgetSetup::MALWidgetSetup(QWidget *w, const QVariantList &) :
 	ConduitConfigBase(w),
 	fConfigWidget(new MALWidget(w))
 {

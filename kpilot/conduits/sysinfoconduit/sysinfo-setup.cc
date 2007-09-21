@@ -40,6 +40,7 @@
 #include "sysinfo-setup_dialog.h"
 
 #include "sysinfo-setup.h"
+#include "sysinfo-setup.moc"
 #include "sysinfoSettings.h"
 
 
@@ -83,7 +84,7 @@ const sysinfoEntry_t sysinfoEntries[] =
 	ubbu->setText(PART_SETTING,(ubbu->isOn() ? CSL1("1") : QString())); }
 
 
-SysInfoWidgetConfig::SysInfoWidgetConfig(QWidget *w) :
+SysInfoWidgetConfig::SysInfoWidgetConfig(QWidget *w, const QVariantList &) :
 	ConduitConfigBase(w),
 	fConfigWidget(new SysInfoWidget(w))
 {

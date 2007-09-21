@@ -46,7 +46,7 @@ class BackupConfigWidget;
 class ConfigPage : public ConduitConfigBase
 {
 public:
-	ConfigPage( QWidget *w, const char *n ) : ConduitConfigBase(w,n) { } ;
+	ConfigPage( QWidget *w, QVariantList &args ) : ConduitConfigBase( w, args ) { } ;
 protected:
 	// Override base class virtual function.
 	virtual QString maybeSaveText() const;
@@ -56,7 +56,7 @@ class DeviceConfigPage : public ConfigPage
 {
 Q_OBJECT
 public:
-	DeviceConfigPage( QWidget *, const char * );
+	DeviceConfigPage( QWidget *, QVariantList &args );
 
 protected:
 	virtual void load();
@@ -86,7 +86,7 @@ public:
 class KDE_EXPORT SyncConfigPage : public ConfigPage
 {
 public:
-	SyncConfigPage( QWidget *, const char * );
+	SyncConfigPage( QWidget *, QVariantList &args );
 
 protected:
 	virtual void load();
@@ -100,7 +100,7 @@ class BackupConfigPage : public ConfigPage
 {
 Q_OBJECT
 public:
-	BackupConfigPage( QWidget *, const char * );
+	BackupConfigPage( QWidget *, QVariantList &args );
 
 protected:
 	virtual void load();
@@ -117,7 +117,7 @@ private:
 class StartExitConfigPage : public ConfigPage
 {
 public:
-	StartExitConfigPage( QWidget *, const char * );
+	StartExitConfigPage( QWidget *, QVariantList &args );
 
 protected:
 	virtual void load();
@@ -130,7 +130,7 @@ private:
 class ViewersConfigPage : public ConfigPage
 {
 public:
-	ViewersConfigPage( QWidget *, const char * );
+	ViewersConfigPage( QWidget *, QVariantList &args );
 
 protected:
 	virtual void load();

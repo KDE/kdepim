@@ -2,8 +2,8 @@ include_directories(${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_CURRENT_SOURCE_DIR})
 
 set(lib_SRCS
 	options.cc
-	plugin.cc
 	syncAction.cc
+	plugin.cc
 	actions.cc
 	actionQueue.cc
 	kpilotlink.cc

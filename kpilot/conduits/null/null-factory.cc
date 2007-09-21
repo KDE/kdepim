@@ -46,8 +46,9 @@
 
 class NullConduitConfig : public ConduitConfigBase
 {
+Q_OBJECT
 public:
-	NullConduitConfig(QWidget *parent=0L, const char *n=0L);
+	NullConduitConfig(QWidget *parent, const QVariantList &);
 	virtual void commit();
 	virtual void load();
 protected:
@@ -55,7 +56,9 @@ protected:
 	KAboutData *fAbout;
 } ;
 
-NullConduitConfig::NullConduitConfig(QWidget *p, const char *n) :
+#include "null-factory.moc"
+
+NullConduitConfig::NullConduitConfig(QWidget *p, const QVariantList &n) :
 	ConduitConfigBase(p,n)
 {
 	FUNCTIONSETUP;

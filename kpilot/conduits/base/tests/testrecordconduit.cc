@@ -35,7 +35,7 @@
 #include "testrecord.h"
 #include "testhhrecord.h"
 
-TestRecordConduit::TestRecordConduit( const QStringList &args, bool createRecs )
+TestRecordConduit::TestRecordConduit( const QVariantList &args, bool createRecs )
 	: RecordConduit( 0L, args, CSL1( "test-db" ), CSL1( "test-conduit" ) )
 		,fCreateRecords( createRecs )
 {

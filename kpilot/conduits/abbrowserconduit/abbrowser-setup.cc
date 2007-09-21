@@ -38,6 +38,7 @@
 
 #include "kaddressbookConduit.h"
 #include "abbrowser-setup.h"
+#include "abbrowser-setup.moc"
 #include "abbrowserSettings.h"
 
 
@@ -62,7 +63,7 @@ static KAboutData *createAbout()
 	return fAbout;
 }
 
-AbbrowserWidgetSetup::AbbrowserWidgetSetup(QWidget *w) :
+AbbrowserWidgetSetup::AbbrowserWidgetSetup(QWidget *w, const QVariantList &) :
 	ConduitConfigBase(w),
 	fConfigWidget(new AbbrowserWidget(w))
 {

@@ -31,6 +31,7 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
+#include "plugin.h"
 #include "options.h"
 
 #include <stdlib.h>
@@ -38,7 +39,7 @@
 #include <QtCore/QDir>
 #include <QtCore/QFileInfo>
 #include <QtCore/QRegExp>
-#include <QtCore/QStringList>
+#include <QtCore/QVariantList>
 #include <QtCore/QTimer>
 #include <QtGui/QLabel>
 #include <QtGui/QLayout>
@@ -51,7 +52,8 @@
 #include <kiconloader.h>
 #include <kcomponentdata.h>
 #include <kaboutdata.h>
-#include <klibloader.h>
+#include <kpluginloader.h>
+#include <kpluginfactory.h>
 #include <kmessagebox.h>
 #include <kservice.h>
 #include <kservicetype.h>
@@ -62,17 +64,17 @@
 
 #include "plugin.moc"
 
-ConduitConfigBase::ConduitConfigBase(QWidget *parent,
-	const char *name) :
+ConduitConfigBase::ConduitConfigBase(QWidget *parent, const QVariantList &args) :
 	QObject(parent),
 	fModified(false),
 	fWidget(0L),
 	fConduitName(i18n("Unnamed"))
 {
 	FUNCTIONSETUP;
-	if (name)
+	
+	if( !args.isEmpty() )
 	{
-		setObjectName(name);
+		setObjectName( args[0].toString() );
 	}
 }
 
@@ -263,34 +265,22 @@ QWidget *ConduitConfigBase::aboutPage(QWidget *parent, KAboutData *ad)
 
 ConduitAction::ConduitAction(KPilotLink *p,
 	const char *name,
-	const QStringList &args) :
+	const QVariantList &args) :
 	SyncAction(p, name),
 	fDatabase(0L),
 	fLocalDatabase(0L),
-	fSyncDirection(args),
+    fSyncDirection(args.first().value<SyncAction::SyncMode>()),
 	fConflictResolution(SyncAction::eAskUser),
 	fFirstSync(false)
 {
 	FUNCTIONSETUP;
 
-	QStringList cResolutions = args.filter(QRegExp(CSL1("--conflictResolution \\d*")));
-	if(!cResolutions.isEmpty())
-	{
-		QString cResolution = cResolutions.first();
-		{
-			fConflictResolution=(SyncAction::ConflictResolution)
-				cResolution.replace(QRegExp(CSL1("--conflictResolution (\\d*)"))
-					, CSL1("\\1")).toInt();
-		}
-	}
-	else
-	{
+    if (args.count() > 1 && args[1].canConvert<SyncAction::ConflictResolution>()) 
+        fConflictResolution = args[1].value<SyncAction::ConflictResolution>();
+    else
 		DEBUGKPILOT << "No conflict resolution given, defaulting to:"
 			<< " SyncAction::eAskUser";
-		fConflictResolution = SyncAction::eAskUser;
-	}
 
-	DEBUGKPILOT << args.join(",");
 	DEBUGKPILOT << "Direction=" << fSyncDirection.name();
 }
 
@@ -428,7 +418,7 @@ bool ConduitAction::changeSync(SyncMode::Mode m)
 ConduitProxy::ConduitProxy(KPilotLink *p,
 	const QString &name,
 	const SyncAction::SyncMode &m) :
-	ConduitAction(p,name.toLatin1(),m.list()),
+	ConduitAction(p,name.toLatin1(), QVariantList() << QVariant::fromValue(m) ),
 	fDesktopName(name)
 {
 	FUNCTIONSETUP;
@@ -439,8 +429,8 @@ ConduitProxy::ConduitProxy(KPilotLink *p,
 	FUNCTIONSETUP;
 
 	// query that service
-	KSharedPtr < KService > o = KService::serviceByDesktopName(fDesktopName);
-	if (!o)
+    KService::Ptr service = KService::serviceByDesktopName(fDesktopName);
+	if (!service)
 	{
 		WARNINGKPILOT << "Can't find desktop file for conduit ["
 			<< fDesktopName << ']';
@@ -448,39 +438,29 @@ ConduitProxy::ConduitProxy(KPilotLink *p,
 		return false;
 	}
 
+    KPluginLoader loader(*service.constData());
 
-	// load the lib
-	fLibraryName = o->library();
-	DEBUGKPILOT << "Loading desktop [" << fDesktopName
-		<< "] with lib ["
-		<< fLibraryName << ']';
-
-	KLibrary *library = KLibLoader::self()->library(
-		QFile::encodeName(fLibraryName));
-	if (!library)
-	{
+    if (!loader.isLoaded()) {
 		WARNINGKPILOT << "Can't load library ["
-			<< fLibraryName
+            << service->library()
 			<< "] - "
-			<< KLibLoader::self()->lastErrorMessage();
+            << loader.errorString();
 		addSyncLogEntry(i18n("Could not load conduit %1.",fDesktopName));
 		return false;
-	}
-
-	unsigned long version = PluginUtility::pluginVersion(library);
-	if ( Pilot::PLUGIN_API != version )
-	{
-		WARNINGKPILOT << "Library [" << fLibraryName
-			<< "] has version " << version;
-		addSyncLogEntry(i18n("Conduit %1 has wrong version (%2).",fDesktopName,version));
+    }
+    
+    if (loader.pluginVersion() != Pilot::PLUGIN_API) {
+		WARNINGKPILOT << "Library [" << service->library()
+			<< "] has version " << loader.pluginVersion();
+		addSyncLogEntry(i18n("Conduit %1 has wrong version (%2).",fDesktopName,loader.pluginVersion()));
 		return false;
-	}
+    }
 
-	KLibFactory *factory = library->factory();
+	KPluginFactory *factory = loader.factory();
 	if (!factory)
 	{
 		WARNINGKPILOT << "Can't find factory in library ["
-			<< fLibraryName << ']';
+			<< service->library() << ']';
 		addSyncLogEntry(i18n("Could not initialize conduit %1.",fDesktopName));
 		return false;
 	}
@@ -488,21 +468,16 @@ ConduitProxy::ConduitProxy(KPilotLink *p,
 	QStringList l = syncMode().list();
 
 	DEBUGKPILOT << "Flags:" << syncMode().name();
-
-	QObject *object = factory->create(fHandle,"SyncAction",l);
+	
+	QVariant v;
+	v.setValue( syncMode() );
+	
+	QObject *object = factory->create<ConduitAction>( fHandle
+		, QVariantList() << v );
 
 	if (!object)
 	{
 		WARNINGKPILOT << "Can't create SyncAction.";
-		addSyncLogEntry(i18n("Could not create conduit %1.",fDesktopName));
-		return false;
-	}
-
-	fConduit = dynamic_cast<ConduitAction *>(object);
-
-	if (!fConduit)
-	{
-		WARNINGKPILOT << "Can't cast to ConduitAction.";
 		addSyncLogEntry(i18n("Could not create conduit %1.",fDesktopName));
 		return false;
 	}
@@ -543,56 +518,3 @@ void ConduitProxy::execDone(SyncAction *p)
 
 	delayDone();
 }
-
-
-namespace PluginUtility
-{
-
-QString findArgument(const QStringList &a, const QString &arg)
-{
-	FUNCTIONSETUP;
-
-	QString search;
-
-	if (arg.startsWith( CSL1("--") ))
-	{
-		search = arg;
-	}
-	else
-	{
-		search = CSL1("--") + arg;
-	}
-	search.append( CSL1("=") );
-
-
-	QStringList::ConstIterator end = a.end();
-	for (QStringList::ConstIterator i = a.begin(); i != end; ++i)
-	{
-		if ((*i).startsWith( search ))
-		{
-			QString s = (*i).mid(search.length());
-			return s;
-		}
-	}
-
-	return QString();
-}
-
-/* static */ unsigned long pluginVersion(const KLibrary *lib)
-{
-	FUNCTIONSETUP;
-	QString symbol = CSL1("version_");
-#warning Port KLibrary::name() usage!
-//	symbol.append(lib->name());
-
-	DEBUGKPILOT << "Symbol <" << symbol << '>';
-
-	unsigned long *p = (unsigned long *)const_cast<KLibrary*>(lib)->resolveSymbol(symbol.toLatin1());
-        if ( !p )
-		return 0;
-
-	return *p;
-}
-
-}
-

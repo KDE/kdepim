@@ -195,6 +195,33 @@ QStringList SyncAction::SyncMode::list() const
 	return l;
 }
 
+QVariantList SyncAction::SyncMode::variantList() const
+{
+	FUNCTIONSETUPL(3);
+
+	QVariantList l;
+	int i=0;
+
+	while(maps[i].name)
+	{
+		if ( fMode == maps[i].mode )
+		{
+			l.append(QString::fromLatin1(maps[i].name));
+			break;
+		}
+		i++;
+	}
+	if ( !maps[i].name )
+	{
+		WARNINGKPILOT << "Mode" << fMode << " does not have a name.";
+		l.append(QString::fromLatin1(maps[0].name));
+	}
+
+	if (isTest()) l.append(CSL1("--test"));
+	if (isLocal()) l.append(CSL1("--local"));
+	return l;
+}
+
 /* static */ QString SyncAction::SyncMode::name(SyncAction::SyncMode::Mode e)
 {
 	switch(e)

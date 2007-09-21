@@ -35,7 +35,7 @@ class TimeConduit : public ConduitAction
 public:
 	TimeConduit(
 		KPilotLink *o,
-		const QStringList &a = QStringList() );
+		const QVariantList &a = QVariantList() );
 	virtual ~TimeConduit();
 	virtual bool exec();
 

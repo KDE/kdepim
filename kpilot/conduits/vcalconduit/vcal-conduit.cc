@@ -173,7 +173,7 @@ KCal::Incidence *VCalConduitPrivate::getNextModifiedIncidence()
  ****************************************************************************/
 
 VCalConduit::VCalConduit(KPilotLink *d,
-	const QStringList &a) :
+	const QVariantList &a) :
 	VCalConduitBase(d,a),
 	fAppointmentAppInfo( 0L )
 {

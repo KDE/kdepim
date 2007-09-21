@@ -34,7 +34,6 @@ class PCDataProxy;
 class DataProxy;
 class HHRecord;
 class Record;
-class QStringList;
 
 /**
  * This is the base class for all record based conduits. Each of them should 
@@ -54,7 +53,7 @@ protected:
 
 // Methods
 public:
-	explicit RecordConduit( KPilotLink *o, const QStringList &a = QStringList()
+	explicit RecordConduit( KPilotLink *o, const QVariantList &a = QVariantList()
 		, const QString &conduitName = QString( "Conduit name not set." )
 		, const QString &databaseName = QString() );
 	

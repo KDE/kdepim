@@ -37,8 +37,9 @@ class KAboutData;
 
 class AbbrowserWidgetSetup : public ConduitConfigBase
 {
+Q_OBJECT
 public:
-	AbbrowserWidgetSetup(QWidget *);
+	AbbrowserWidgetSetup(QWidget *, const QVariantList &);
 	virtual ~AbbrowserWidgetSetup();
 	virtual void load();
 	virtual void commit();

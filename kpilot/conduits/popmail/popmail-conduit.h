@@ -43,7 +43,7 @@ class PopMailConduit : public ConduitAction
 {
 public:
 	PopMailConduit(KPilotLink *d,
-		const QStringList &l=QStringList());
+		const QVariantList &l=QVariantList());
 	virtual ~PopMailConduit();
 
 protected:
