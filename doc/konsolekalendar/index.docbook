@@ -333,7 +333,7 @@ described in the this section.</para>
 <title>&konsolekalendar; Text Format</title>
 
 <para>&konsolekalendar; Text Format is &konsolekalendar;'s native format
-and is designed to be comfortable to read and to be parseable by follow-on
+and is designed to be comfortable to read and to be parsed by follow-on
 scripts.</para>
 
 <para>The &konsolekalendar; Text Format is:
@@ -464,10 +464,10 @@ very nice for publishing calendars for easy public viewing.</para>
 <sect1 id="importing">
 <title>Importing Calendars</title>
 
-<para>&konsolekalendar; can import an <acronym>ICS</acronym> calendar file
-into a &kde; calendar.  All events from the calendar being imported from will 
-be inserted, including identical events.  In the next &konsolekalendar; release 
-identical events will not be inserted.</para>
+<para>&konsolekalendar; can import an iCal or vCal calendar file into a &kde;
+calendar.  All events from the calendar being imported from will be inserted,
+including identical events.  In the next &konsolekalendar; release identical
+events will not be inserted.</para>
 
 <para>
 <informalexample><para> To import calendar file
