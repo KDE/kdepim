@@ -34,5 +34,8 @@ if ( USABLE_ASSUAN_FOUND  )
   else(WIN32)
 	 target_link_libraries(test_uiserver ${ASSUAN_PTHREAD_LIBRARIES} ) 
   endif(WIN32)
+  if (ONLY_KLEO)
+     install( TARGETS test_uiserver DESTINATION ${BIN_INSTALL_DIR})
+  endif(ONLY_KLEO)
 endif( USABLE_ASSUAN_FOUND  )
 
