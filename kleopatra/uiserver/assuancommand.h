@@ -34,7 +34,6 @@
 #define __KLEOPATRA_UISERVER_ASSUANCOMMAND_H__
 
 #include <utils/pimpl_ptr.h>
-
 #include <boost/shared_ptr.hpp>
 
 #include <string>
@@ -205,6 +204,10 @@ namespace Kleo {
         public:
             virtual ~Memento() {}
         };
+
+
+        static int makeError( int code );
+
     private:
         virtual void doCanceled() = 0;
         virtual int doStart() = 0;
@@ -246,8 +249,6 @@ namespace Kleo {
 
         void done( int err=0 );
         void done( int err, const QString & details );
-
-        static int makeError( int code );
 
     private:
         friend class ::Kleo::AssuanCommandFactory;

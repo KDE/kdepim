@@ -31,6 +31,12 @@
 */
 
 #include "encryptcommand.h"
+#include "keyselectionjob.h"
+#include "kleo-assuan.h"
+
+#include <gpgme++/error.h>
+
+#include <QStringList>
 
 using namespace Kleo;
 
@@ -41,12 +47,95 @@ class EncryptCommand::Private
 public:
     Private( EncryptCommand * qq )
         :AssuanCommandPrivateBaseMixin<EncryptCommand::Private, EncryptCommand>()
-        , q( qq )
+        , m_deleteInputFiles( false ), q( qq )
     {}
     virtual ~Private() {}
 
+    void checkInputs();
+    void startKeySelection();
+    void startEncryptJobs( const std::vector<GpgME::Key>& keys );
+
+    struct Input {
+        QIODevice* input;
+        QString inputFileName;
+        QIODevice* output;
+        QString outputFileName;
+    };
+
+    bool m_deleteInputFiles;
+    std::vector<Input> m_inputs;
+
+public Q_SLOTS:
+    void slotKeySelectionError( const GpgME::Error&, const GpgME::KeyListResult& );
+    void slotKeySelectionResult( const std::vector<GpgME::Key>& ); 
+
+public:
+
     EncryptCommand *q;
 };
+
+void EncryptCommand::Private::checkInputs()
+{
+    const int numInputs = q->numBulkInputDevices( "INPUT" );
+    const int numOutputs = q->numBulkInputDevices( "OUTPUT" );
+    const int numMessages = q->numBulkInputDevices( "MESSAGE" );
+
+    //TODO use better error code if possible
+    if ( numMessages != 0 )
+        throw assuan_exception(makeError( GPG_ERR_ASS_NO_INPUT ), "Only --input and --output can be provided to the encrypt command, no --message"); 
+       
+    // for each input, we need an output
+    //TODO use better error code if possible
+    if ( numInputs != numOutputs )
+        throw assuan_exception( makeError( GPG_ERR_ASS_NO_INPUT ),  "For each --input there needs to be an --output");
+
+    for ( int i = 0; i < numInputs; ++i ) {
+        Input input;
+        input.input = q->bulkInputDevice( "INPUT", i );
+        assert( input.input );
+        input.inputFileName = q->bulkInputDeviceFileName( "INPUT", i );
+        input.output = q->bulkInputDevice( "OUTPUT", i );
+        assert( input.output );
+        input.outputFileName = q->bulkInputDeviceFileName( "OUTPUT", i );
+        m_inputs.push_back( input );
+    }
+
+    m_deleteInputFiles = q->hasOption( "--delete-input-files" );
+}
+
+void EncryptCommand::Private::startKeySelection()
+{
+    KeySelectionJob* job = new KeySelectionJob( this );
+    job->setSecretKeysOnly( false );
+    job->setPatterns( QStringList() ); // FIXME
+    connect( job, SIGNAL( error( GpgME::Error, GpgME::KeyListResult ) ),
+             this, SLOT( slotKeySelectionError( GpgME::Error, GpgME::KeyListResult ) ) );
+    connect( job, SIGNAL( result( std::vector<GpgME::Key> ) ),
+             this, SLOT( slotKeySelectionResult( std::vector<GpgME::Key> ) ) );
+    job->start();
+}
+
+void EncryptCommand::Private::startEncryptJobs( const std::vector<GpgME::Key>& )
+{
+    q->done( q->makeError( GPG_ERR_NOT_IMPLEMENTED ), "Not implemented" );
+}
+
+void EncryptCommand::Private::slotKeySelectionResult( const std::vector<GpgME::Key>& keys )
+{
+    // fire off the encrypt jobs
+    startEncryptJobs( keys );
+}
+
+
+void EncryptCommand::Private::slotKeySelectionError( const GpgME::Error& error, const GpgME::KeyListResult& )
+{
+    assert( error );
+    if ( error == q->makeError( GPG_ERR_CANCELED ) ) 
+        q->done( error, "User canceled Key selection" );
+    else
+        q->done( error, "Error while listing and selecting keys" );
+}
+
 
 EncryptCommand::EncryptCommand()
 :d( new Private( this ) )
@@ -59,7 +148,15 @@ EncryptCommand::~EncryptCommand()
 
 int EncryptCommand::doStart()
 {
-    done();
+    try {
+        d->checkInputs();
+//        d->startKeyListings();
+    } catch ( const assuan_exception& e ) {
+        done( e.error_code(), e.what());
+        return e.error_code();
+    }
+    
+    return 0;
 }
 
 void EncryptCommand::doCanceled()
