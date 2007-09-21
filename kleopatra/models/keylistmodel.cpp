@@ -107,6 +107,7 @@ std::vector<Key> AbstractKeyListModel::keys( const QList<QModelIndex> & indexes 
     std::transform( indexes.begin(), indexes.end(),
                     std::back_inserter( result ),
                     bind( &AbstractKeyListModel::key, this, _1 ) );
+    result.erase( std::unique( result.begin(), result.end(), ByFingerprint<std::equal_to>() ), result.end() );
     return result;
 }
 
