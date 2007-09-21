@@ -53,6 +53,7 @@ GenericName[uk]=Нагадування пошти
 GenericName[uz]=Янги хат ҳақида хабар берувчи
 GenericName[x-test]=xxMail Alertxx
 GenericName[xh]=Umposi Wokulumkisa
+GenericName[zh_CN]=邮件通知
 GenericName[zh_TW]=信件警告
 Exec=korn -caption "%c" %f
 Icon=korn

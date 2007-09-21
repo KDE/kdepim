@@ -12,6 +12,7 @@ Name[ne]=ब्लगमा जर्नल
 Name[pt]=Diário num 'blog'
 Name[pt_BR]=Diário num 'blog'
 Name[sv]=Webbjournal
+Name[zh_CN]=博客日记
 Name[zh_TW]=部落格日誌
 X-KDE-Library=kcal_blog
 Type=Service

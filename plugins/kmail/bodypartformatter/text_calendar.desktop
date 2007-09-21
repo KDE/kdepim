@@ -33,6 +33,7 @@ Name[ta]=பயன்பாட்டு எண்மம்
 Name[tg]=Миқдори зиёди бинарии барномот
 Name[tr]=Uygulama Sekizli Akışı
 Name[x-test]=xxApplication Octetstreamxx
+Name[zh_CN]=应用程序 Octetstream
 Comment=A bodypart formatter plugin for text/calendar
 Comment[af]='n Data (boodskap lyf) formateer inprop module vir 'text/calendar'
 Comment[bg]=Редактор с поддръжка на форматиране за текст/календар
@@ -75,6 +76,7 @@ Comment[tg]=Модули ба андозадарории text/calendar
 Comment[tr]=text/calendar için bir gövde biçimleyici eklentisi
 Comment[uk]=Втулок форматування для text/calendar
 Comment[x-test]=xxA bodypart formatter plugin for text/calendarxx
+Comment[zh_CN]=text/calendar 的正文格式化插件
 Comment[zh_TW]=text/calendar 格式化外掛程式
 
 [Plugin]
