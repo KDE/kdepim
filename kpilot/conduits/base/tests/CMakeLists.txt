@@ -35,7 +35,7 @@ set(testlib_SRCS
 kde4_add_library(testlib SHARED ${testlib_SRCS})
 target_link_libraries(testlib kpilot_conduit_base)
 
-RECORD_CONDUIT_EXECUTABLE_TESTS(
+RECORD_CONDUIT_UNIT_TESTS(
 	idmappingxmlsourcetest
 	idmappingtest
 	dataproxytest
@@ -44,15 +44,4 @@ RECORD_CONDUIT_EXECUTABLE_TESTS(
 	rcfirstsynctest
 	rccopyhhtopctest
 	rccopypctohhtest
-)
-
-RECORD_CONDUIT_UNIT_TESTS (
-	idmappingxmlsourcetest
-	idmappingtest
-	dataproxytest
-	rchotsynchhtest
-	rcfirstsynctest
-	rccopyhhtopctest
-	rccopypctohhtest
-	rcfullsynchhtest
 )
