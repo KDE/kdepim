@@ -53,6 +53,7 @@
 #include <libkdepim/categoryeditdialog.h>
 #include <libkdepim/categoryselectdialog.h>
 #include <libkdepim/kdateedit.h>
+#include <libkdepim/resourceabc.h>
 
 #include "addresseditwidget.h"
 #include "advancedcustomfields.h"
@@ -90,11 +91,22 @@ AddresseeEditorWidget::~AddresseeEditorWidget()
 void AddresseeEditorWidget::setAddressee( const KABC::Addressee &addr )
 {
   if ( mAddressee.uid() == addr.uid() )
-	  return;
-
+    return;
   mAddressee = addr;
 
-  bool readOnly = ( !addr.resource() ? false : addr.resource()->readOnly() );
+  bool readOnly = false;
+  if ( KABC::Resource *res = addr.resource() ) {
+    if ( res->readOnly() ) {
+      readOnly = true;
+
+    //Kolab resources have finer access control than planned in the overall design.
+    } else if ( res->inherits( "KPIM::ResourceABC" ) ) {
+      KPIM::ResourceABC *resAbc = static_cast<KPIM::ResourceABC *>( res );
+
+      QString subresource = resAbc->uidToResourceMap()[ addr.uid() ];
+      readOnly |= !resAbc->subresourceWritable( subresource );
+    }
+  }
   setReadOnly( readOnly );
 
   load();

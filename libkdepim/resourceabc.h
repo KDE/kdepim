@@ -70,6 +70,11 @@ public:
   virtual bool subresourceActive( const QString& ) const { return true; }
 
   /**
+   * Is the given subresource writable?
+   */
+  virtual bool subresourceWritable( const QString& ) const = 0;
+
+  /**
    * Completion weight for a given subresource
    */
   virtual int subresourceCompletionWeight( const QString& ) const = 0;
