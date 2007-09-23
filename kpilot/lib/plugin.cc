@@ -299,7 +299,7 @@ ConduitAction::ConduitAction(KPilotLink *p,
 		fConflictResolution = SyncAction::eAskUser;
 	}
  
-	DEBUGKPILOT << sArgs.join(",");
+	DEBUGKPILOT << "args passed in: [" << sArgs.join(",") << "]";
 	DEBUGKPILOT << "Direction=" << fSyncDirection.name();
 }
 
@@ -491,8 +491,7 @@ ConduitProxy::ConduitProxy(KPilotLink *p,
 	QVariant v;
 	v.setValue( syncMode() );
 	
-	QObject *object = factory->create<ConduitAction>( fHandle
-		, QVariantList() << v );
+	QObject *object = factory->create<ConduitAction>( fHandle, QVariantList() << v );
 
 	if (!object)
 	{
@@ -501,7 +500,17 @@ ConduitProxy::ConduitProxy(KPilotLink *p,
 		return false;
 	}
 
+	fConduit = dynamic_cast<ConduitAction *>(object);
+
+	if (!fConduit)
+	{
+		WARNINGKPILOT << "Can't cast to ConduitAction." << endl;
+		addSyncLogEntry(i18n("Could not create conduit %1.", fDesktopName));
+		return false;
+	}
+	
 	addSyncLogEntry(i18n("[Conduit %1]\n",fDesktopName));
+	DEBUGKPILOT << "Conduit: [" << fDesktopName << "]";
 
 	// Handle the syncDone signal properly & unload the conduit.
 	QObject::connect(fConduit,SIGNAL(syncDone(SyncAction *)),

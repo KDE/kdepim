@@ -137,6 +137,9 @@ SyncAction::SyncMode::SyncMode(const QStringList &args) :
 	fTest(args.contains("--test")),
 	fLocal(args.contains("--local"))
 {
+	FUNCTIONSETUP;
+	DEBUGKPILOT << "args passed in: [" << args.join(",") << "]";
+	
 	int i = 0;
 	while(maps[i].name)
 	{
@@ -148,6 +151,8 @@ SyncAction::SyncMode::SyncMode(const QStringList &args) :
 		i++;
 	}
 
+	DEBUGKPILOT << "using 'i' of: [" << i << "]";
+	
 	if (!maps[i].name)
 	{
 		WARNINGKPILOT << "No mode set by arguments ("
