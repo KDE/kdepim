@@ -17,44 +17,17 @@
    Boston, MA 02110-1301, USA.
  ***************************************************************************/
 
-#ifndef KMOBILETOOLSIFACESDIALACTION_H
-#define KMOBILETOOLSIFACESDIALACTION_H
-
-#include <QtCore/QObject>
-
-#include <libkmobiletools/kmobiletools_export.h>
-
+#include "jobprovider.h"
 
 namespace KMobileTools {
 
 namespace Ifaces {
 
-/**
- * This interface provides methods to trigger dialing on the phone
- *
- * @author Matthias Lechner <matthias@lmme.de>
- */
-class KMOBILETOOLS_EXPORT DialAction {
-public:
-    /**
-     * Triggers dialing of the given @p number
-     *
-     * @param number the number to dial
-     */
-    virtual void dial( const QString& number ) = 0;
-
-    /**
-     * Triggers hanging up of the current phone call
-     */
-    virtual void hangup() = 0;
-
-    virtual ~DialAction();
-};
-
-}
+JobProvider::~JobProvider()
+{
 }
 
-Q_DECLARE_INTERFACE(KMobileTools::Ifaces::DialAction, "org.kde.KMobileTools.Ifaces.DialAction/0.1")
 
+}
 
-#endif
+}

@@ -19,10 +19,13 @@ set(kmobiletools_LIB_SRCS
    ifaces/guiservice.cpp
    ifaces/actionprovider.cpp
    ifaces/wizardprovider.cpp
+   ifaces/jobprovider.cpp
    enginexp.cpp
    coreservice.cpp
    deviceloader.cpp
    serviceloader.cpp
+   jobxp.cpp
+   jobmanager.cpp
    config.cpp
    addressbook.cpp
    addressbookentry.cpp
@@ -84,6 +87,7 @@ install(FILES
    ifaces/guiservice.h
    ifaces/actionprovider.h
    ifaces/wizardprovider.h
+   ifaces/jobprovider.h
    DESTINATION ${INCLUDE_INSTALL_DIR}/libkmobiletools/ifaces)
 
 # install error types
@@ -118,6 +122,8 @@ install(FILES
    serialdevice.h
    enginedata.h
    weaver.h
+   jobxp.h
+   jobmanager.h
    ${CMAKE_CURRENT_BINARY_DIR}/kmobiletools_devices.h
    devicesconfig.h
    DESTINATION ${INCLUDE_INSTALL_DIR}/libkmobiletools)

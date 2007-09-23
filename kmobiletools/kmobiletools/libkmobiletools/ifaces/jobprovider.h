@@ -17,44 +17,35 @@
    Boston, MA 02110-1301, USA.
  ***************************************************************************/
 
-#ifndef KMOBILETOOLSIFACESDIALACTION_H
-#define KMOBILETOOLSIFACESDIALACTION_H
-
-#include <QtCore/QObject>
+#ifndef KMOBILETOOLS_IFACESJOBPROVIDER_H
+#define KMOBILETOOLS_IFACESJOBPROVIDER_H
 
 #include <libkmobiletools/kmobiletools_export.h>
-
+#include <libkmobiletools/jobxp.h>
 
 namespace KMobileTools {
 
 namespace Ifaces {
 
 /**
- * This interface provides methods to trigger dialing on the phone
+ * This interface is intended to be used by engines to allow
+ * the gui to control the engine's jobs and display their status
  *
  * @author Matthias Lechner <matthias@lmme.de>
  */
-class KMOBILETOOLS_EXPORT DialAction {
+class KMOBILETOOLS_EXPORT JobProvider{
 public:
-    /**
-     * Triggers dialing of the given @p number
-     *
-     * @param number the number to dial
-     */
-    virtual void dial( const QString& number ) = 0;
+    virtual ~JobProvider();
 
-    /**
-     * Triggers hanging up of the current phone call
-     */
-    virtual void hangup() = 0;
-
-    virtual ~DialAction();
+protected:
+// Q_SIGNALS:
+    virtual void jobCreated( KMobileTools::JobXP* job ) = 0;
 };
 
 }
+
 }
 
-Q_DECLARE_INTERFACE(KMobileTools::Ifaces::DialAction, "org.kde.KMobileTools.Ifaces.DialAction/0.1")
-
+Q_DECLARE_INTERFACE(KMobileTools::Ifaces::JobProvider, "org.kde.KMobileTools.Ifaces.JobProvider/0.1")
 
 #endif

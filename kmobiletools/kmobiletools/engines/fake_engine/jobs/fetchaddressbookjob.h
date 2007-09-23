@@ -17,44 +17,32 @@
    Boston, MA 02110-1301, USA.
  ***************************************************************************/
 
-#ifndef KMOBILETOOLSIFACESDIALACTION_H
-#define KMOBILETOOLSIFACESDIALACTION_H
+#ifndef FETCHADDRESSBOOKJOB_H
+#define FETCHADDRESSBOOKJOB_H
 
-#include <QtCore/QObject>
+#include <libkmobiletools/jobxp.h>
 
-#include <libkmobiletools/kmobiletools_export.h>
-
-
-namespace KMobileTools {
-
-namespace Ifaces {
+using namespace KMobileTools;
 
 /**
- * This interface provides methods to trigger dialing on the phone
+ * The job that fetches the phone's address book
  *
  * @author Matthias Lechner <matthias@lmme.de>
  */
-class KMOBILETOOLS_EXPORT DialAction {
+class FetchAddressbookJob : public JobXP
+{
+    Q_OBJECT
 public:
-    /**
-     * Triggers dialing of the given @p number
-     *
-     * @param number the number to dial
-     */
-    virtual void dial( const QString& number ) = 0;
+    FetchAddressbookJob( QObject* parent = 0 );
+    ~FetchAddressbookJob();
 
-    /**
-     * Triggers hanging up of the current phone call
-     */
-    virtual void hangup() = 0;
+    void run();
 
-    virtual ~DialAction();
+public Q_SLOTS:
+    void requestAbort();
+
+private Q_SLOTS:
+    void simulateFinished();
 };
-
-}
-}
-
-Q_DECLARE_INTERFACE(KMobileTools::Ifaces::DialAction, "org.kde.KMobileTools.Ifaces.DialAction/0.1")
-
 
 #endif

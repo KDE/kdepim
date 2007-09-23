@@ -9,7 +9,8 @@ set(kmobiletoolsmainpart_PART_SRCS
    servicemodel/serviceitem.cpp
    servicemodel/treeitem.cpp
    #deviceconfigdialog.cpp 
-   devicemanager.cpp 
+   devicemanager.cpp
+   jobsignalmapper.cpp
    #addressdetails.cpp 
    #calldialogimpl.cpp 
    #calldialogimpl.h 

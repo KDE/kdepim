@@ -28,11 +28,13 @@
 
 #include <libkmobiletools/enginexp.h>
 #include <libkmobiletools/contactslist.h>
+#include <libkmobiletools/jobxp.h>
 
 #include <libkmobiletools/ifaces/status.h>
 #include <libkmobiletools/ifaces/information.h>
 #include <libkmobiletools/ifaces/addressbook.h>
 #include <libkmobiletools/ifaces/wizardprovider.h>
+#include <libkmobiletools/ifaces/jobprovider.h>
 
 /**
     @author Matthias Lechner <matthias@lmme.de>
@@ -41,11 +43,13 @@ class FakeEngine : public KMobileTools::EngineXP, // base class
                    public KMobileTools::Ifaces::Status,         // interfaces
                    public KMobileTools::Ifaces::Information,
                    public KMobileTools::Ifaces::Addressbook,
-                   public KMobileTools::Ifaces::WizardProvider
+                   public KMobileTools::Ifaces::WizardProvider,
+                   public KMobileTools::Ifaces::JobProvider
 {
     Q_OBJECT
     Q_INTERFACES(KMobileTools::Ifaces::Status KMobileTools::Ifaces::Information)
     Q_INTERFACES(KMobileTools::Ifaces::Addressbook KMobileTools::Ifaces::WizardProvider)
+    Q_INTERFACES(KMobileTools::Ifaces::JobProvider)
 
 public:
     FakeEngine( QObject *parent, const QString& deviceName );
@@ -130,6 +134,11 @@ Q_SIGNALS:
                           const KMobileTools::AddressbookEntry& newAddressee );
 
     void addresseeRemoved( const KMobileTools::AddressbookEntry& addressee );
+
+    //
+    // JobProvider interface implementation
+    //
+    void jobCreated( KMobileTools::JobXP* job );
 
 private:
     void populateAddressbook();

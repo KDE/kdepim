@@ -17,44 +17,56 @@
    Boston, MA 02110-1301, USA.
  ***************************************************************************/
 
-#ifndef KMOBILETOOLSIFACESDIALACTION_H
-#define KMOBILETOOLSIFACESDIALACTION_H
+#ifndef KMOBILETOOLSJOBMANAGER_H
+#define KMOBILETOOLSJOBMANAGER_H
 
 #include <QtCore/QObject>
 
-#include <libkmobiletools/kmobiletools_export.h>
-
+#include "kmobiletools_export.h"
+#include <libkmobiletools/jobxp.h>
 
 namespace KMobileTools {
 
-namespace Ifaces {
-
+class JobManagerPrivate;
 /**
- * This interface provides methods to trigger dialing on the phone
- *
  * @author Matthias Lechner <matthias@lmme.de>
  */
-class KMOBILETOOLS_EXPORT DialAction {
+class KMOBILETOOLS_EXPORT JobManager : public QObject {
+    Q_OBJECT
+friend class JobManagerInstance;
 public:
     /**
-     * Triggers dialing of the given @p number
+     * Returns a JobManager instance
      *
-     * @param number the number to dial
+     * @return a job manager instance
      */
-    virtual void dial( const QString& number ) = 0;
+    static JobManager* instance();
 
-    /**
-     * Triggers hanging up of the current phone call
-     */
-    virtual void hangup() = 0;
+    void enqueueJob( const QString& deviceName, JobXP* job );
+    void dequeueJob( JobXP* job );
 
-    virtual ~DialAction();
+    ~JobManager();
+
+private Q_SLOTS:
+    void emitJobStarted( ThreadWeaver::Job* job );
+    void emitJobDone( ThreadWeaver::Job* job );
+    void emitJobFailed( ThreadWeaver::Job* job );
+
+Q_SIGNALS:
+    void jobEnqueued( const QString& deviceName, JobXP* job );
+    void jobDequeued( const QString& deviceName, JobXP* job );
+    void jobStarted( const QString& deviceName, JobXP* job );
+
+    void jobDone( const QString& deviceName, JobXP* job );
+    void jobFailed( const QString& deviceName, JobXP* job );
+
+private:
+    JobManager();
+    JobManagerPrivate* const d;
+
+
 };
 
 }
-}
-
-Q_DECLARE_INTERFACE(KMobileTools::Ifaces::DialAction, "org.kde.KMobileTools.Ifaces.DialAction/0.1")
-
 
 #endif

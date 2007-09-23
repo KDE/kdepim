@@ -31,10 +31,10 @@ namespace KMobileTools {
 namespace Ifaces {
 
 /**
-    This interface provides methods to gather basic information about the phone
-
-    @author Matthias Lechner <matthias@lmme.de>
-*/
+ * This interface provides methods to gather basic information about the phone
+ *
+ * @author Matthias Lechner <matthias@lmme.de>
+ */
 class KMOBILETOOLS_EXPORT Information {
 public:
 //public Q_SLOTS:

@@ -3,6 +3,7 @@
 
 set(kmobiletools_fake_LIB_SRCS 
    fakeengine.cpp
+   jobs/fetchaddressbookjob.cpp
 )
 
 kde4_add_library(kmobiletools_fake SHARED ${kmobiletools_fake_LIB_SRCS})

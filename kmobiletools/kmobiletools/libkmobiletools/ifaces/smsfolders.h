@@ -40,9 +40,9 @@ namespace Ifaces {
 class SMSFolder;
 
 /**
-    This interface provides methods to access the phone's sms folder structure
-
-    @author Matthias Lechner <matthias@lmme.de>
+ * This interface provides methods to access the phone's sms folder structure
+ *
+ * @author Matthias Lechner <matthias@lmme.de>
 */
 class KMOBILETOOLS_EXPORT SMSFolders {
 public:

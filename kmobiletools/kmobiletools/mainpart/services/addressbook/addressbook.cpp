@@ -175,7 +175,7 @@ void Addressbook::addresseeActivated( QListWidgetItem* item ) {
 
         // prepare the header (ugly table style)
         html += "<table border=\"0\"><tr><td><img src=\"";
-        html += KIconLoader::global()->iconPath( "user", -K3Icon::SizeHuge, false );
+        html += KIconLoader::global()->iconPath( "user", -K3Icon::SizeMedium, false );
         html += "\"></td><td valign=\"middle\"><h2>";
         html += addressee.name();
         html += "</h2></td></tr></table>";
