@@ -128,7 +128,6 @@ protected:
 
 	void setDBPath(const QString &path) { fDBPath = path; } ;
 	const QString& dbPath() const { return fDBPath; } ;
-	void markDBDirty(const QString &db);
 
 public slots:
 	void slotShowComponent();

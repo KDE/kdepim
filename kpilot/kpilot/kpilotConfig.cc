@@ -122,42 +122,6 @@ static QFont *thefont = 0L;
 	return *thefont;
 }
 
-
-void KPilotConfig::addDirtyDatabase(const QString &db)
-{
-	FUNCTIONSETUP;
-	QStringList l(KPilotSettings::dirtyDatabases());
-	if (!l.contains(db))
-	{
-		l.append(db);
-		KPilotSettings::setDirtyDatabases(l);
-	}
-}
-
-
-void KPilotConfig::addAppBlockChangedDatabase(const QString &db)
-{
-	QStringList l(KPilotSettings::appBlockChangedDatabases());
-	if (!l.contains(db))
-	{
-		l.append(db);
-		KPilotSettings::setAppBlockChangedDatabases(l);
-	}
-}
-
-void KPilotConfig::addFlagsChangedDatabase(const QString &db)
-{
-	QStringList l(KPilotSettings::flagsChangedDatabases());
-	if (!l.contains(db))
-	{
-		l.append(db);
-		KPilotSettings::setFlagsChangedDatabases(l);
-	}
-}
-
-
-
-
 /* static */ QString KPilotConfig::versionDetails(int fileversion, bool run)
 {
 	FUNCTIONSETUP;

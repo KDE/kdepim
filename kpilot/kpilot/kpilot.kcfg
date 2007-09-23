@@ -96,11 +96,6 @@
 
 
 
-    <entry name="InternalEditors" key="InternalEditorsWritable"  type="Bool">
-        <label>
-        </label>
-        <default>true</default>
-    </entry>
     <entry name="ShowSecrets" type="Bool">
         <label>
         </label>
@@ -152,22 +147,6 @@
         <default>abbrowser_conduit,internal_fileinstall,knotes-conduit,vcal-conduit,todo-conduit,mal_conduit,sysinfo_conduit</default>
     </entry>
   </group>
-
-  <group name="Internal Editors">
-    <entry name="AppBlockChangedDatabases" key="AppBlock Changed" type="StringList">
-        <label>
-        </label>
-    </entry>
-    <entry name="DirtyDatabases" key="Changed Databases" type="StringList">
-        <label>
-        </label>
-    </entry>
-    <entry name="FlagsChangedDatabases" key="Flags Changed" type="StringList">
-        <label>
-        </label>
-    </entry>
-  </group>
-
 
   <group name="Address Widget">
     <entry name="AddressDisplayMode" key="AddressDisplay" type="UInt">
