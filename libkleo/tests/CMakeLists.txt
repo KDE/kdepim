@@ -1,3 +1,4 @@
+set( EXECUTABLE_OUTPUT_PATH ${CMAKE_CURRENT_BINARY_DIR} )
 include_directories( ${CMAKE_SOURCE_DIR}/libkleo  )
 
 
@@ -7,7 +8,7 @@ set(test_keylister_SRCS test_keylister.cpp )
 
 
 
-kde4_add_test_executable(test_keylister ${test_keylister_SRCS})
+kde4_add_executable(test_keylister TEST ${test_keylister_SRCS})
 
 target_link_libraries(test_keylister  kleo ${KDE4_KDECORE_LIBS} )
 
@@ -18,7 +19,7 @@ set(test_keygen_SRCS test_keygen.cpp )
 
 
 
-kde4_add_test_executable(test_keygen ${test_keygen_SRCS})
+kde4_add_executable(test_keygen TEST ${test_keygen_SRCS})
 
 target_link_libraries(test_keygen  kleo ${KDE4_KDECORE_LIBS} )
 
@@ -28,7 +29,7 @@ target_link_libraries(test_keygen  kleo ${KDE4_KDECORE_LIBS} )
 set(test_keyselectiondialog_SRCS test_keyselectiondialog.cpp )
 
 
-kde4_add_test_executable(test_keyselectiondialog ${test_keyselectiondialog_SRCS})
+kde4_add_executable(test_keyselectiondialog TEST ${test_keyselectiondialog_SRCS})
 
 target_link_libraries(test_keyselectiondialog kleo ${KDE4_KDECORE_LIBS} )
 
@@ -37,7 +38,7 @@ target_link_libraries(test_keyselectiondialog kleo ${KDE4_KDECORE_LIBS} )
 set(test_cryptoconfig_SRCS test_cryptoconfig.cpp )
 
 
-kde4_add_test_executable(test_cryptoconfig ${test_cryptoconfig_SRCS})
+kde4_add_executable(test_cryptoconfig TEST ${test_cryptoconfig_SRCS})
 
 target_link_libraries(test_cryptoconfig  kleo ${KDE4_KDECORE_LIBS} )
 
@@ -46,7 +47,7 @@ target_link_libraries(test_cryptoconfig  kleo ${KDE4_KDECORE_LIBS} )
 set(test_gnupgprocessbase_SRCS test_gnupgprocessbase.cpp )
 
 
-kde4_add_test_executable(test_gnupgprocessbase ${test_gnupgprocessbase_SRCS})
+kde4_add_executable(test_gnupgprocessbase TEST ${test_gnupgprocessbase_SRCS})
 
 target_link_libraries(test_gnupgprocessbase  kleo ${KDE4_KDECORE_LIBS} )
 
@@ -55,7 +56,7 @@ target_link_libraries(test_gnupgprocessbase  kleo ${KDE4_KDECORE_LIBS} )
 set(test_jobs_SRCS test_jobs.cpp )
 
 
-kde4_add_test_executable(test_jobs ${test_jobs_SRCS})
+kde4_add_executable(test_jobs TEST ${test_jobs_SRCS})
 
 target_link_libraries(test_jobs  kleo ${KDE4_KDECORE_LIBS} )
 

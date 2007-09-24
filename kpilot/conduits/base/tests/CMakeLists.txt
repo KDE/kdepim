@@ -1,3 +1,4 @@
+set( EXECUTABLE_OUTPUT_PATH ${CMAKE_CURRENT_BINARY_DIR} )
 include_directories(
 	${CMAKE_CURRENT_SOURCE_DIR}/..
 )
@@ -15,7 +16,7 @@ ENDMACRO( RECORD_CONDUIT_UNIT_TESTS )
 
 MACRO( RECORD_CONDUIT_EXECUTABLE_TESTS )
 	FOREACH( _testname ${ARGN} )
-		kde4_add_test_executable( ${_testname} ${_testname}.cc )
+		kde4_add_executable( TEST ${_testname} ${_testname}.cc )
 		target_link_libraries( ${_testname} 
 			kpilot_conduit_base
 			testlib
