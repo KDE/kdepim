@@ -67,7 +67,7 @@ IDMappingXmlSource::IDMappingXmlSource( const QString &userName
 				// Make a backup of the existing file.
 				QFile file( dir.absolutePath() + CSL1( "/" ) + conduit 
 					+ CSL1( "-mapping.xml" ) );
-				file.copy( file.fileName() + CSL1( "~" ) );
+				file.copy( file.fileName() + CSL1( "-backup" ) );
 			}
 		}
 		else

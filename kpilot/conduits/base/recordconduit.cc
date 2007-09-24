@@ -348,6 +348,8 @@ void RecordConduit::updateBackupDatabase()
 		
 		rec = fLocalDatabase->readRecordByIndex( ++index );
 	}
+	fLocalDatabase->cleanup();
+	fLocalDatabase->resetSyncFlags();
 }
 
 // 4.1 || 5.2
