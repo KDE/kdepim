@@ -193,6 +193,7 @@ void HHDataProxy::loadAllRecords()
 			// Read the next one.
 			pRec = fDatabase->readRecordByIndex( ++index );
 		}
+		fCounter.setStartCount(fRecords.count());
 	}
 }
 

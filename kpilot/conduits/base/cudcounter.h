@@ -29,6 +29,8 @@
 
 #include <QString>
 
+#include "kpilot_export.h"
+
 /**
 * Create-Update-Delete tracking of the plugin,
 * used for reporting purposes (in a consistent manner).  The intent
@@ -42,7 +44,7 @@
 * by the conduit and offer rollback functionality if we think the
 * conduit has behaved improperly.
 */
-class CUDCounter {
+class KPILOT_EXPORT CUDCounter {
 public:
 	CUDCounter();
 
