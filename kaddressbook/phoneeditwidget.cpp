@@ -200,11 +200,11 @@ PhoneEditWidget::~PhoneEditWidget()
 void PhoneEditWidget::setReadOnly( bool readOnly )
 {
   mReadOnly = readOnly;
-
-  QListIterator<PhoneNumberWidget*> it( mWidgets );
-  while (it.hasNext()){
-    it.next()->setReadOnly( readOnly );
-  }
+  mAddButton->setEnabled( !readOnly );
+  mRemoveButton->setEnabled( !readOnly && mPhoneNumberList.count() > 3 );
+  
+  foreach ( PhoneNumberWidget *const w, mWidgets )
+    w->setReadOnly( readOnly );
 }
 
 void PhoneEditWidget::setPhoneNumbers( const KABC::PhoneNumber::List &list )
@@ -221,8 +221,7 @@ void PhoneEditWidget::setPhoneNumbers( const KABC::PhoneNumber::List &list )
     for ( int i = mPhoneNumberList.count(); i < 3; ++i )
       mPhoneNumberList.append( KABC::PhoneNumber( "", types[ i ] ) );
 
-  updateWidgets();
-  updateButtons();
+  recreateNumberWidgets();
 }
 
 KABC::PhoneNumber::List PhoneEditWidget::phoneNumbers() const
@@ -247,8 +246,7 @@ void PhoneEditWidget::add()
 {
   mPhoneNumberList.append( KABC::PhoneNumber() );
 
-  updateWidgets();
-  updateButtons();
+  recreateNumberWidgets();
 }
 
 void PhoneEditWidget::remove()
@@ -256,13 +254,15 @@ void PhoneEditWidget::remove()
   mPhoneNumberList.removeLast();
   changed();
 
-  updateWidgets();
-  updateButtons();
+  recreateNumberWidgets();
 }
 
-void PhoneEditWidget::updateWidgets()
+void PhoneEditWidget::recreateNumberWidgets()
 {
-  qDeleteAll(mWidgets);
+  foreach ( QWidget *const w, mWidgets ) {
+    mWidgetLayout->remove( w );
+    w->deleteLater();
+  }
   mWidgets.clear();
 
   KABC::PhoneNumber::List::ConstIterator it;
@@ -280,11 +280,7 @@ void PhoneEditWidget::updateWidgets()
 
     ++counter;
   }
-}
-
-void PhoneEditWidget::updateButtons()
-{
-  mRemoveButton->setEnabled( mPhoneNumberList.count() > 3 );
+  setReadOnly(mReadOnly);
 }
 
 void PhoneEditWidget::changed( int pos )
