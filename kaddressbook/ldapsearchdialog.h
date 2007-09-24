@@ -37,6 +37,11 @@ class QCheckBox;
 class Q3ListView;
 class QPushButton;
 class KABCore;
+class ContactListItem;
+
+namespace KABC {
+    class Resource;
+}
 
 class LDAPSearchDialog : public KDialog
 {
@@ -65,6 +70,12 @@ class LDAPSearchDialog : public KDialog
     virtual void slotUser2();
     void slotSelectAll();
     void slotUnselectAll();
+    /**
+     * Traverses the given items and adds them to the given resource,
+     * unless they already exist. Returns the list of both the added
+     * and the existing contacts.
+     */
+    KABC::Addressee::List importContactsUnlessTheyExist( const QList<ContactListItem*>& items, KABC::Resource * const resource );
 
   protected:
     QString selectedEMails() const;
