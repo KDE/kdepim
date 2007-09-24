@@ -1,3 +1,4 @@
+set( EXECUTABLE_OUTPUT_PATH ${CMAKE_CURRENT_BINARY_DIR} )
 
 include_directories( ${CMAKE_SOURCE_DIR}/kresources/groupwise  )
 
@@ -7,7 +8,7 @@ set(soapdebug_SRCS soapdebug.cpp )
 
 
 
-kde4_add_test_executable(soapdebug ${soapdebug_SRCS})
+kde4_add_executable(soapdebug TEST ${soapdebug_SRCS})
 
 target_link_libraries(soapdebug  ${KDE4_KDECORE_LIBS} gwsoap ${KDE4_KCAL_LIBS} kdepim )
 
