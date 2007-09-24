@@ -155,7 +155,7 @@ void KeySelectionJob::Private::showKeySelectionDialog()
     assert( !m_keySelector );
     m_keySelector = new KeySelectionDialog();
     QObject::connect( m_keySelector, SIGNAL( accepted() ), q, SLOT( keySelectionDialogClosed() ) );
-    QObject::connect( m_keySelector, SIGNAL( rejected() ), q, SLOT( slotKeySelectionDialogClosed() ) );
+    QObject::connect( m_keySelector, SIGNAL( rejected() ), q, SLOT( keySelectionDialogClosed() ) );
     m_keySelector->addKeys( m_keys );
     m_keySelector->show();
 
