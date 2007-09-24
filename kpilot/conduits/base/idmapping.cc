@@ -80,6 +80,22 @@ void IDMapping::map( const QString &hhRecordId, const QString &pcId )
 {
 	FUNCTIONSETUP;
 	
+	// check to see if we already have a key with this value
+	QString existingHhRecordId = fSource.constMappings()->key(pcId);
+	
+	// if we already have a key for this one and it isn't the hhRecordId
+	// that is being passed in, it's an error
+	if ( ! existingHhRecordId.isEmpty() || 
+			existingHhRecordId != hhRecordId ) 
+	{ 
+		WARNINGKPILOT << "Error.  pcId:[" << pcId 
+			<< "] already mapped to hhRecordId: [" << existingHhRecordId
+			<< "].  Shouldn't have same pcId mapped also to incoming: ["
+			<< hhRecordId << "].  Removing it.";
+		
+		fSource.mappings()->remove( existingHhRecordId );
+	}
+	
 	fSource.mappings()->insert( hhRecordId, pcId );
 }
 
