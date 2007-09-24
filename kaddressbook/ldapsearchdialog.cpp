@@ -615,6 +615,7 @@ void LDAPSearchDialog::slotUser2()
     KABLock::self( mCore->addressBook() )->lock( resource );
     mCore->addressBook()->insertAddressee( dist );
     KABLock::self( mCore->addressBook() )->unlock( resource );
+    emit addresseesAdded();
 #endif
 }
 
