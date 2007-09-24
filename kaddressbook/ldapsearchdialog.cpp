@@ -604,7 +604,7 @@ void LDAPSearchDialog::slotUser2()
       return;
 
     
-    KABC::Addressee::List localAddrs = importContactsUnlessTheyExist( selectdItems, resource );
+    KABC::Addressee::List localAddrs = importContactsUnlessTheyExist( selectedItems, resource );
 
     if ( localAddrs.isEmpty() )
       return;
