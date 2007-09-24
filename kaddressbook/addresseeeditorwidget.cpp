@@ -35,6 +35,7 @@
 #include <QGridLayout>
 
 #include <kabc/resource.h>
+#include <kabc/resourceabc.h>
 #include <kabc/stdaddressbook.h>
 #include <kacceleratormanager.h>
 #include <kconfig.h>
@@ -100,8 +101,8 @@ void AddresseeEditorWidget::setAddressee( const KABC::Addressee &addr )
       readOnly = true;
 
     //HACK: some resources have finer access control than "generic" resources
-    } else if ( res->inherits( "KPIM::ResourceABC" ) ) {
-      KPIM::ResourceABC *resAbc = static_cast<KPIM::ResourceABC *>( res );
+    } else if ( res->inherits( "KPIM::ResourceAbc" ) ) {
+      KABC::ResourceABC *resAbc = static_cast<KABC::ResourceABC *>( res );
 
       QString subresource = resAbc->uidToResourceMap()[ addr.uid() ];
       readOnly = !resAbc->subresourceWritable( subresource );
