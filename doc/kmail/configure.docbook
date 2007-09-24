@@ -1983,6 +1983,21 @@ To limit attachments to 20 MB ins size, for example, add a line reading (under [
 </listitem>
 </varlistentry>
 
+<varlistentry>
+<term><guilabel>CloseDespiteSystemTray</guilabel></term>
+<listitem>
+<para>
+This option allows you to configure the application to close fully, even if there
+is a system tray icon configured, which would normally keep the application running.
+
+To enable the feature, add a line reading (under [General] section):
+</para>
+<programlisting>CloseDespiteSystemTray=true
+</programlisting>
+</listitem>
+</varlistentry>
+
+
 
 <varlistentry>
 <term><guilabel>disregardUmask</guilabel></term>
