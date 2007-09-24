@@ -104,12 +104,12 @@ void EncryptCommand::Private::checkInputs()
 
     //TODO use better error code if possible
     if ( numMessages != 0 )
-        throw assuan_exception(makeError( GPG_ERR_ASS_NO_INPUT ), "Only --input and --output can be provided to the encrypt command, no --message"); 
+        throw assuan_exception(makeError( GPG_ERR_ASS_NO_INPUT ), i18n( "Only --input and --output can be provided to the encrypt command, no --message") ); 
        
     // for each input, we need an output
     //TODO use better error code if possible
     if ( numInputs != numOutputs )
-        throw assuan_exception( makeError( GPG_ERR_ASS_NO_INPUT ),  "For each --input there needs to be an --output");
+        throw assuan_exception( makeError( GPG_ERR_ASS_NO_INPUT ),  i18n( "For each --input there needs to be an --output" ) );
 
     for ( int i = 0; i < numInputs; ++i ) {
         Input input;
@@ -187,7 +187,7 @@ void EncryptCommand::Private::slotEncryptionResult( const GpgME::EncryptionResul
                
            const GpgME::Error encryptError = encres.error();
            if ( encryptError )
-               throw assuan_exception( encryptError, "Encryption failed: " );
+               throw assuan_exception( encryptError, i18n( "Encryption failed: " ) );
            // FIXME adjust for smime?
            writeToOutputDeviceOrAskForFileName( result.id, result.data, QString() );
            resultString = "OK - Super Duper Weenie\n";
@@ -228,9 +228,9 @@ void EncryptCommand::Private::slotKeySelectionError( const GpgME::Error& error, 
 {
     assert( error );
     if ( error == q->makeError( GPG_ERR_CANCELED ) ) 
-        q->done( error, "User canceled key selection" );
+        q->done( error, i18n( "User canceled key selection" ) );
     else
-        q->done( error, "Error while listing and selecting keys" );
+        q->done( error, i18n( "Error while listing and selecting keys" ) );
 }
 
 

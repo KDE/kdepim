@@ -38,12 +38,17 @@
 
 #include <stdexcept>
 
+class QString;
+
 namespace Kleo {
 
     class assuan_exception : public std::runtime_error {
     public:
-        explicit assuan_exception( gpg_error_t e, const std::string & msg )
+        assuan_exception( gpg_error_t e, const std::string & msg )
             : std::runtime_error( make_message( e, msg ) ), m_error( e ), m_message( msg ) {}
+        assuan_exception( gpg_error_t e, const char* msg );
+        assuan_exception( gpg_error_t e, const QString & msg );
+
         ~assuan_exception() throw () {}
 
         const std::string & message() const { return m_message; }

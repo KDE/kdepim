@@ -32,12 +32,21 @@
 
 #include "kleo-assuan.h"
 
+#include <QString>
+
 #include <gpg-error.h>
 
+Kleo::assuan_exception::assuan_exception( gpg_error_t e, const QString & msg )
+            : std::runtime_error( make_message( e, msg.toLocal8Bit().data() ) ), m_error( e ), m_message( msg.toLocal8Bit() ) 
+{}
+
+Kleo::assuan_exception::assuan_exception( gpg_error_t e, const char* msg )
+            : std::runtime_error( make_message( e, msg ) ), m_error( e ), m_message( msg ) 
+{}
+
+
 // static
-std::string Kleo::assuan_exception::make_message( gpg_error_t err, const std::string & msg ) {
-    
-    
+std::string Kleo::assuan_exception::make_message( gpg_error_t err, const std::string & msg ) {    
     char buf[1024];
     buf[0] = '\0';
     gpg_strerror_r( err, buf, sizeof buf );

@@ -133,12 +133,12 @@ void SignCommand::Private::checkInputs()
 
     //TODO use better error code if possible
     if ( numMessages != 0 )
-        throw assuan_exception(makeError( GPG_ERR_ASS_NO_INPUT ), "Only --input and --output can be provided to the sign command, no --message"); 
+        throw assuan_exception(makeError( GPG_ERR_ASS_NO_INPUT ), i18n( "Only --input and --output can be provided to the sign command, no --message") ); 
        
     // either the output is discarded, or there ar as many as inputs
     //TODO use better error code if possible
     if ( numOutputs > 0 && numInputs != numOutputs )
-        throw assuan_exception( makeError( GPG_ERR_ASS_NO_INPUT ),  "For each --input there needs to be an --output");
+        throw assuan_exception( makeError( GPG_ERR_ASS_NO_INPUT ),  i18n( "For each --input there needs to be an --output") );
 
     for ( int i = 0; i < numInputs; ++i ) {
         Input input;
@@ -200,9 +200,9 @@ void SignCommand::Private::slotKeySelectionError( const GpgME::Error& error, con
 {
     assert( error );
     if ( error == q->makeError( GPG_ERR_CANCELED ) ) 
-        q->done( error, "User canceled key selection" );
+        q->done( error, i18n( "User canceled key selection" ) );
     else
-        q->done( error, "Error while listing and selecting private keys" );
+        q->done( error, i18n( "Error while listing and selecting private keys" ) );
 
 }
 
@@ -240,7 +240,7 @@ void SignCommand::Private::slotSigningResult( const GpgME::SigningResult & resul
                
            const GpgME::Error signError = signres.error();
            if ( signError )
-               throw assuan_exception( signError, "Signing failed: " );
+               throw assuan_exception( signError, i18n( "Signing failed: " ) );
            // FIXME adjust for smime?
            const QString filename = q->bulkInputDeviceFileName( "INPUT", m_statusSent ) + ".sig";
            writeToOutputDeviceOrAskForFileName( result.id, result.data, filename );
