@@ -34,8 +34,14 @@
 #include "keyselectionjob.h"
 #include "kleo-assuan.h"
 
+#include <kleo/encryptjob.h>
+
+#include <gpgme++/encryptionresult.h>
 #include <gpgme++/error.h>
 
+#include <KLocale>
+
+#include <QMap>
 #include <QStringList>
 
 using namespace Kleo;
@@ -47,7 +53,7 @@ class EncryptCommand::Private
 public:
     Private( EncryptCommand * qq )
         :AssuanCommandPrivateBaseMixin<EncryptCommand::Private, EncryptCommand>()
-        , m_deleteInputFiles( false ), q( qq )
+        , m_deleteInputFiles( false ), m_activeEncryptJobs( 0 ), m_statusSent( 0 ), q( qq )
     {}
     virtual ~Private() {}
 
@@ -55,19 +61,35 @@ public:
     void startKeySelection();
     void startEncryptJobs( const std::vector<GpgME::Key>& keys );
 
+
     struct Input {
         QIODevice* input;
         QString inputFileName;
-        QIODevice* output;
-        QString outputFileName;
+        int id;
+    };
+    
+    struct Result {
+        GpgME::EncryptionResult result;
+        QByteArray data;
+        unsigned int id;
+        unsigned int error;
+        QString errorString;
     };
 
     bool m_deleteInputFiles;
     std::vector<Input> m_inputs;
+    int m_activeEncryptJobs;
+    QMap<const EncryptJob*, uint> m_jobs;
+    QMap<uint, Result> m_results;
+    int m_statusSent;
 
 public Q_SLOTS:
     void slotKeySelectionError( const GpgME::Error&, const GpgME::KeyListResult& );
     void slotKeySelectionResult( const std::vector<GpgME::Key>& ); 
+    void slotEncryptionResult( const GpgME::EncryptionResult& result, const QByteArray& cipherText );
+
+private:
+    bool trySendingStatus( const QString & str );
 
 public:
 
@@ -77,7 +99,7 @@ public:
 void EncryptCommand::Private::checkInputs()
 {
     const int numInputs = q->numBulkInputDevices( "INPUT" );
-    const int numOutputs = q->numBulkInputDevices( "OUTPUT" );
+    const int numOutputs = q->numBulkOutputDevices( "OUTPUT" );
     const int numMessages = q->numBulkInputDevices( "MESSAGE" );
 
     //TODO use better error code if possible
@@ -94,9 +116,7 @@ void EncryptCommand::Private::checkInputs()
         input.input = q->bulkInputDevice( "INPUT", i );
         assert( input.input );
         input.inputFileName = q->bulkInputDeviceFileName( "INPUT", i );
-        input.output = q->bulkInputDevice( "OUTPUT", i );
-        assert( input.output );
-        input.outputFileName = q->bulkInputDeviceFileName( "OUTPUT", i );
+        input.id = i;
         m_inputs.push_back( input );
     }
 
@@ -115,14 +135,91 @@ void EncryptCommand::Private::startKeySelection()
     job->start();
 }
 
-void EncryptCommand::Private::startEncryptJobs( const std::vector<GpgME::Key>& )
+void EncryptCommand::Private::startEncryptJobs( const std::vector<GpgME::Key>& keys )
 {
-    q->done( q->makeError( GPG_ERR_NOT_IMPLEMENTED ), "Not implemented" );
+    assert( m_activeEncryptJobs == 0 );
+
+    if ( keys.empty() ) {
+        q->done();
+        return;
+    }
+
+    const CryptoBackend::Protocol* const backend = CryptoBackendFactory::instance()->protocol( keys.front().protocolAsString() );
+
+    assert( backend );
+
+    Q_FOREACH( const Input i, m_inputs ) {
+        EncryptJob* job = backend->encryptJob();
+        connect( job, SIGNAL( result( GpgME::EncryptionResult, QByteArray ) ), 
+                 this, SLOT( slotEncryptionResult( GpgME::EncryptionResult, QByteArray ) ) ); 
+
+        if ( const GpgME::Error error = job->start( keys, i.input->readAll(), /*always trust*/true ) ) { //TODO how to handle trust arg? Add an option?
+            q->done( error );
+            return;
+        }
+        m_jobs.insert( job, i.id );
+        ++m_activeEncryptJobs;
+    }
+}
+
+void EncryptCommand::Private::slotEncryptionResult( const GpgME::EncryptionResult& result, const QByteArray& cipherText )
+{
+    assert( m_activeEncryptJobs > 0 );
+    const EncryptJob * const job = qobject_cast<EncryptJob*>( sender() );
+    assert( job );
+    assert( m_jobs.contains( job ) );
+    const unsigned int id = m_jobs[job];
+    
+    {
+        Result res;
+        res.result = result;
+        res.data = cipherText;
+        res.id = id;
+        m_results.insert( id, res );
+    }
+    // send status for all results received so far, but in order of id
+    while ( m_results.contains( m_statusSent ) ) {
+       EncryptCommand::Private::Result result = m_results[m_statusSent];
+       QString resultString;
+       try {
+           const GpgME::EncryptionResult encres = result.result; 
+           assert( !encres.isNull() );
+               
+           const GpgME::Error encryptError = encres.error();
+           if ( encryptError )
+               throw assuan_exception( encryptError, "Encryption failed: " );
+           // FIXME adjust for smime?
+           writeToOutputDeviceOrAskForFileName( result.id, result.data, QString() );
+           resultString = "OK - Super Duper Weenie\n";
+       } catch ( const assuan_exception& e ) {
+           result.error = e.error_code();
+           result.errorString = e.what();
+           m_results[result.id] = result;
+           resultString = "ERR " + result.errorString;
+           // FIXME ask to continue or cancel
+       }
+       if ( !trySendingStatus( resultString ) )
+           return; // trySendingStatus calls done() if it fails
+       ++m_statusSent;
+    }
+    --m_activeEncryptJobs;
+    if ( m_activeEncryptJobs == 0 )
+        q->done();
+}
+
+
+bool EncryptCommand::Private::trySendingStatus( const QString & str )
+{
+    if ( const int err = q->sendStatus( "ENCRYPT", str ) ) {
+        const QString errorString = i18n("Problem writing out the cipher text.");
+        q->done( err, errorString );
+        return false;
+    }
+    return true;
 }
 
 void EncryptCommand::Private::slotKeySelectionResult( const std::vector<GpgME::Key>& keys )
 {
-    // fire off the encrypt jobs
     startEncryptJobs( keys );
 }
 

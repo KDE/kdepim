@@ -40,7 +40,7 @@
 namespace Kleo
 {
 /*!
-      \author Till Adam <till@kdab.net>
+      \author Frank Osterfeld <frank@kdab.net>
       \brief GnuPG UI Server command for handling encryption of an email
       or file.
 */
