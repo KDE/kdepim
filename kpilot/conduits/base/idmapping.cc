@@ -83,15 +83,10 @@ bool IDMapping::isValid( const QList<QString> &ids ) const
 		// we also have only unique values in our mapping...
 		if (idsInMapping)
 		{
-			// build a reverse map and check the count at the end...
-			QMap<QString, int> revMap;
-			
-			QMapIterator<QString, QString> it( *mappings );
-			while (it.hasNext()) {
-				it.next();
-				revMap.insert(it.value(), 1);
-			}
-			idsInMapping = (revMap.uniqueKeys().size() == idsSize);
+			// build a unique list (set) of values and make sure we
+			// have a 1..1 mapping
+			QSet<QString> values = mappings->values().toSet();
+			idsInMapping = (values.size() == idsSize);
 			DEBUGKPILOT << "Reverse map integrity: ["
 				<< idsInMapping << "]";
 		}
