@@ -222,14 +222,14 @@ ulong imapInfo::_flags (const QCString & inFlags)
       flags ^= User;
 
     // non standard kmail falgs
-    else if ( 0 != entry.contains( "KMAILFORWARDED" ) )
-      flags ^= Forwarded;
-    else if ( 0 != entry.contains( "KMAILTODO" ) )
-      flags ^= Todo;
-    else if ( 0 != entry.contains( "KMAILWATCHED" ) )
-      flags ^= Watched;
-    else if ( 0 != entry.contains( "KMAILIGNORED" ) )
-      flags ^= Ignored;
+    else if ( entry.contains( "KMAILFORWARDED" ) || entry.contains( "$FORWARDED" ) )
+      flags = flags | Forwarded;
+    else if ( entry.contains( "KMAILTODO" ) || entry.contains( "$TODO" ) )
+      flags = flags | Todo;
+    else if ( entry.contains( "KMAILWATCHED" ) || entry.contains( "$WATCHED" ) )
+      flags = flags | Watched;
+    else if ( entry.contains( "KMAILIGNORED" ) || entry.contains( "$IGNORED" ) )
+      flags = flags | Ignored;
   }
 
   return flags;
