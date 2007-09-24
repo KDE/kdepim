@@ -553,77 +553,77 @@ KPIM::DistributionList LDAPSearchDialog::selectDistributionList()
 }
 #endif
 
+KABC::Addressee::List LDAPSearchDialog::importContactsUnlessTheyExist( const QValueList<ContactListItem*>& selectedItems,
+                                                                       KABC::Resource * const resource )
+{
+    const QDateTime now = QDateTime::currentDateTime();
+    QStringList importedAddrs;
+    KABC::Addressee::List localAddrs;
+    
+    KABLock::self( mCore->addressBook() )->lock( resource );
+    
+    for ( QValueList<ContactListItem*>::ConstIterator it = selectedItems.begin(); it != selectedItems.end(); ++it ) {
+      const ContactListItem * const cli = *it;
+      KABC::Addressee addr = convertLdapAttributesToAddressee( cli->mAttrs );
+      const KABC::Addressee::List existing = mCore->addressBook()->findByEmail( addr.preferredEmail() );
+    
+      if ( existing.isEmpty() ) {
+        addr.setUid( KApplication::randomString( 10 ) );
+        addr.setNote( i18n( "arguments are host name, datetime", "Imported from LDAP directory %1 on %2" ).arg( d->itemToServer[cli], KGlobal::locale()->formatDateTime( now ) ) );
+        addr.setResource( resource );
+        mCore->addressBook()->insertAddressee( addr );
+        importedAddrs.append( addr.fullEmail() );
+        localAddrs.append( addr );
+      } else {
+        localAddrs.append( existing.first() );
+      }
+    }
+    KABLock::self( mCore->addressBook() )->unlock( resource );
+    if ( !importedAddrs.isEmpty() ) {
+      KMessageBox::informationList( this, i18n( "The following contact was imported into your address book:",
+                                    "The following %n contacts were imported into your address book:", importedAddrs.count() ),
+                                    importedAddrs );
+      emit addresseesAdded();
+    }
+    return localAddrs;
+}
+
 void LDAPSearchDialog::slotUser2()
 {
 #ifdef KDEPIM_NEW_DISTRLISTS
-  const QValueList<ContactListItem*> selectedItems = d->selectedItems( mResultListView );
-  if ( selectedItems.isEmpty() ) {
-    KMessageBox::information( this, i18n( "Please select the contacts you want to add to the distribution list." ), i18n( "No Contacts Selected" ) );
-    return;
-  }
-  KPIM::DistributionList dist = selectDistributionList();
-  if ( dist.isEmpty() )
-    return;
-
-  KABC::Addressee::List localAddrs;
-
-  QStringList importedAddrs;
-
-  const QDateTime now = QDateTime::currentDateTime();
-
-  for ( QValueList<ContactListItem*>::ConstIterator it = selectedItems.begin(); it != selectedItems.end(); ++it ) {
-    const ContactListItem * const cli = *it;
-    KABC::Addressee addr = convertLdapAttributesToAddressee( cli->mAttrs );
-    const KABC::Addressee::List existing = mCore->addressBook()->findByEmail( addr.preferredEmail() );
-
-    if ( existing.isEmpty() ) {
-      addr.setUid( KApplication::randomString( 10 ) );
-      addr.setNote( i18n( "arguments are host name, datetime", "Imported from LDAP directory %1 on %2" ).arg( d->itemToServer[cli], KGlobal::locale()->formatDateTime( now ) ) );
-      mCore->addressBook()->insertAddressee( addr );
-      importedAddrs.append( addr.fullEmail() );
-      localAddrs.append( addr );
-    } else {
-      localAddrs.append( existing.first() );
+    KABC::Resource *resource = mCore->requestResource( this );
+    if ( !resource ) return;
+    
+    const QValueList<ContactListItem*> selectedItems = d->selectedItems( mResultListView );
+    if ( selectedItems.isEmpty() ) {
+      KMessageBox::information( this, i18n( "Please select the contacts you want to add to the distribution list." ), i18n( "No Contacts Selected" ) );
+      return;
     }
-  }
+    KPIM::DistributionList dist = selectDistributionList();
+    if ( dist.isEmpty() )
+      return;
 
-  if ( !importedAddrs.isEmpty() ) {
-    KMessageBox::informationList( this, i18n( "The following contact was imported into your address book:",
-                                  "The following %n contacts were imported into your address book:", importedAddrs.count() ),
-                                  importedAddrs );
-  }
+    
+    KABC::Addressee::List localAddrs = importContactsUnlessTheyExist( selectdItems, resource );
 
-  if ( localAddrs.isEmpty() )
-    return;
+    if ( localAddrs.isEmpty() )
+      return;
 
-  for ( KABC::Addressee::List::ConstIterator it = localAddrs.begin(); it != localAddrs.end(); ++it ) {
-    dist.insertEntry( *it, QString() );
-  }
-  mCore->addressBook()->insertAddressee( dist );
-  emit addresseesAdded();
+    for ( KABC::Addressee::List::ConstIterator it = localAddrs.begin(); it != localAddrs.end(); ++it ) {
+      dist.insertEntry( *it, QString() );
+    }
+    KABLock::self( mCore->addressBook() )->lock( resource );
+    mCore->addressBook()->insertAddressee( dist );
+    KABLock::self( mCore->addressBook() )->unlock( resource );
 #endif
 }
 
 void LDAPSearchDialog::slotUser1()
 {
-  KABC::Resource *resource = mCore->requestResource( this );
-  if ( !resource ) return;
-  KABLock::self( mAddressBook )->lock( resource );
-
-  ContactListItem* cli = static_cast<ContactListItem*>( mResultListView->firstChild() );
-  while ( cli ) {
-    if ( cli->isSelected() ) {
-      KABC::Addressee addr = convertLdapAttributesToAddressee( cli->mAttrs );
-      if ( mAddressBook ) {
-        addr.setResource( resource );
-        mAddressBook->insertAddressee( addr );
-      }
-    }
-    cli = static_cast<ContactListItem*>( cli->nextSibling() );
-  }
-
-  KABLock::self( mAddressBook )->unlock( resource );
-  emit addresseesAdded();
+    KABC::Resource *resource = mCore->requestResource( this );
+    if ( !resource ) return;
+    const QValueList<ContactListItem*> selectedItems = d->selectedItems( mResultListView );
+    importContactsUnlessTheyExist( selectedItems, resource );
 }
 
 #include "ldapsearchdialog.moc"

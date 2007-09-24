@@ -1,5 +1,5 @@
 /* ldapsearchdialogimpl.h - LDAP access
- *      Copyright (C) 2002 Klarälvdalens Datakonsult AB
+ *      Copyright (C) 2002 Klarï¿½lvdalens Datakonsult AB
  *
  *      Author: Steffen Hansen <hansen@kde.org>
  *
@@ -41,6 +41,11 @@ class QCheckBox;
 class QListView;
 class QPushButton;
 class KABCore;
+class ContactListItem;
+
+namespace KABC {
+    class Resource;
+}
 
 class LDAPSearchDialog : public KDialogBase
 {
@@ -69,6 +74,12 @@ class LDAPSearchDialog : public KDialogBase
     virtual void slotUser2();
     void slotSelectAll();
     void slotUnselectAll();
+    /**
+     * Traverses the given items and adds them to the given resource,
+     * unless they already exist. Returns the list of both the added
+     * and the existing contacts.
+     */
+    KABC::Addressee::List importContactsUnlessTheyExist( const QValueList<ContactListItem*>& items, KABC::Resource * const resource );
 
   protected:
     QString selectedEMails() const;
