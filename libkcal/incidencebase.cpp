@@ -57,6 +57,7 @@ IncidenceBase::IncidenceBase(const IncidenceBase &i) :
   mLastModified = i.mLastModified;
   mPilotId = i.mPilotId;
   mSyncStatus = i.mSyncStatus;
+  mComments = i.mComments;
 
   // The copied object is a new one, so it isn't observed by the observer
   // of the original object.
@@ -69,6 +70,32 @@ IncidenceBase::~IncidenceBase()
 {
 }
 
+IncidenceBase& IncidenceBase::operator=( const IncidenceBase& i )
+{
+  CustomProperties::operator=( i );
+  mReadOnly = i.mReadOnly;
+  mDtStart = i.mDtStart;
+  mDuration = i.mDuration;
+  mHasDuration = i.mHasDuration;
+  mOrganizer = i.mOrganizer;
+  mUid = i.mUid;
+  mAttendees.clear();
+  Attendee::List attendees = i.attendees();
+  Attendee::List::ConstIterator it;
+  for( it = attendees.begin(); it != attendees.end(); ++it ) {
+    mAttendees.append( new Attendee( *(*it) ) );
+  }
+  mFloats = i.mFloats;
+  mLastModified = i.mLastModified;
+  mPilotId = i.mPilotId;
+  mSyncStatus = i.mSyncStatus;
+  mComments = i.mComments;
+
+  // The copied object is a new one, so it isn't observed by the observer
+  // of the original object.
+  mObservers.clear();
+  return *this;
+}
 
 bool IncidenceBase::operator==( const IncidenceBase& i2 ) const
 {

@@ -94,6 +94,7 @@ class LIBKCAL_EXPORT IncidenceBase : public CustomProperties
     IncidenceBase( const IncidenceBase & );
     virtual ~IncidenceBase();
 
+    IncidenceBase& operator=( const IncidenceBase &i );
     bool operator==( const IncidenceBase & ) const;
 
     /**

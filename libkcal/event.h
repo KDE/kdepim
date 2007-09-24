@@ -45,6 +45,7 @@ class LIBKCAL_EXPORT Event : public Incidence
     Event();
     Event( const Event & );
     ~Event();
+    Event& operator=( const Event &e );
     bool operator==( const Event & ) const;
 
     QCString type() const { return "Event"; }

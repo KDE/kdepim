@@ -57,6 +57,19 @@ Todo *Todo::clone()
 }
 
 
+Todo& Todo::operator=( const Todo &t )
+{
+  Incidence::operator=( t );
+  mDtDue = t.mDtDue;
+  mHasDueDate = t.mHasDueDate;
+  mHasStartDate = t.mHasStartDate;
+  mCompleted = t.mCompleted;
+  mHasCompletedDate = t.mHasCompletedDate;
+  mPercentComplete = t.mPercentComplete;
+  mDtRecurrence = t.mDtRecurrence;
+  return *this;
+}
+
 bool Todo::operator==( const Todo& t2 ) const
 {
     return

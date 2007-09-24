@@ -96,6 +96,7 @@ class LIBKCAL_EXPORT Incidence : public IncidenceBase, public Recurrence::Observ
     Incidence( const Incidence & );
     ~Incidence();
 
+    Incidence& operator=( const Incidence &i );
     bool operator==( const Incidence & ) const;
 
     /**
@@ -113,7 +114,7 @@ class LIBKCAL_EXPORT Incidence : public IncidenceBase, public Recurrence::Observ
 
     /** Set whether the incidence floats, i.e. has a date but no time attached to it. */
     void setFloats( bool f );
-    
+
     /**
       Recreate event. The event is made a new unique event, but already stored
       event information is preserved. Sets uniquie id, creation date, last

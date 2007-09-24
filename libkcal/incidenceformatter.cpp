@@ -1137,7 +1137,7 @@ QString IncidenceFormatter::formatICalInvitation( QString invitation, Calendar *
                 html += "<td colspan=\"9\">";
                 html += helper->makeLink( "reply", i18n( "[Enter this into my task list]" ) );
             } else {
-                html += "<td colspan=\"11\">";
+                html += "<td colspan=\"13\">";
                 html += helper->makeLink( "reply", i18n( "[Enter this into my calendar]" ) );
             }
             html += "</td></tr><tr>";
@@ -1149,6 +1149,9 @@ QString IncidenceFormatter::formatICalInvitation( QString invitation, Calendar *
         html += "</td><td> &nbsp; </td><td>";
         html += helper->makeLink( "accept_conditionally",
                           i18n( "Accept conditionally", "[Accept cond.]" ) );
+        html += "</td><td> &nbsp; </td><td>";
+        // counter proposal
+        html += helper->makeLink( "counter", i18n( "[Counter proposal]" ) );
         html += "</td><td> &nbsp; </td><td>";
         // Decline
         html += helper->makeLink( "decline", i18n( "[Decline]" ) );
@@ -1199,8 +1202,7 @@ QString IncidenceFormatter::formatICalInvitation( QString invitation, Calendar *
       html += string2HTML(sDescr) + "</td></tr></table>";
     }
     QStringList comments = incidence->comments();
-    if ( ( msg->method() == Scheduler::Request || msg->method() == Scheduler::Cancel ) &&
-         !comments.isEmpty() ) {
+    if ( !comments.isEmpty() ) {
       html += "<br><u>" + i18n("Comments:")
            + "</u><br><table border=\"0\"><tr><td>&nbsp;</td><td><ul>";
       for ( uint i = 0; i < comments.count(); ++i )
