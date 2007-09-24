@@ -62,7 +62,6 @@
 #include "actions.h"
 
 #include "hotSync.h"
-#include "internalEditorAction.h"
 #include "logFile.h"
 
 #include "kpilotConfig.h"
@@ -936,14 +935,6 @@ static void queueInstaller(ActionQueue *fSyncStack,
 	}
 }
 
-static void queueEditors(ActionQueue *fSyncStack, KPilotLink *pilotLink)
-{
-	if (KPilotSettings::internalEditors())
-	{
-		fSyncStack->addAction(new InternalEditorAction(pilotLink));
-	}
-}
-
 static void queueConduits(ActionQueue *fSyncStack,
 	const QStringList &conduits,
 	SyncAction::SyncMode e)
@@ -1073,7 +1064,6 @@ bool PilotDaemon::shouldBackup()
 			// first install the files, and only then do the conduits
 			// (conduits might want to sync a database that will be installed
 			queueInstaller(fSyncStack,pilotLink,fInstaller,conduits);
-			queueEditors(fSyncStack,pilotLink);
 			queueConduits(fSyncStack,conduits,fNextSyncType);
 			// And sync the remaining databases if needed.
 			if (shouldBackup())

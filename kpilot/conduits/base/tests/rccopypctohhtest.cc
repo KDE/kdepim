@@ -67,7 +67,7 @@ private slots:
 
 void RCCopyPCToHHTest::testMappingForPCRecord()
 {
-	QStringList args = QStringList() << CSL1( "--copyHHToPC" )
+	QVariantList args = QVariantList() << CSL1( "--copyHHToPC" )
 		<< CSL1( "--conflictResolution 2" );
 	
 	// Create conduit
@@ -104,7 +104,7 @@ void RCCopyPCToHHTest::testMappingForPCRecord()
 
 void RCCopyPCToHHTest::testNoMappingForPCRecord()
 {
-	QStringList args = QStringList() << CSL1( "--copyHHToPC" )
+	QVariantList args = QVariantList() << CSL1( "--copyHHToPC" )
 		<< CSL1( "--conflictResolution 2" );
 	
 	// Create conduit
@@ -136,7 +136,7 @@ void RCCopyPCToHHTest::testNoMappingForPCRecord()
 
 void RCCopyPCToHHTest::testMappingForHHRecord()
 {
-	QStringList args = QStringList() << CSL1( "--copyHHToPC" )
+	QVariantList args = QVariantList() << CSL1( "--copyHHToPC" )
 		<< CSL1( "--conflictResolution 2" );
 	
 	// Create conduit
@@ -167,7 +167,7 @@ void RCCopyPCToHHTest::testMappingForHHRecord()
 
 void RCCopyPCToHHTest::testNoMappingForHHRecord()
 {
-	QStringList args = QStringList() << CSL1( "--copyHHToPC" )
+	QVariantList args = QVariantList() << CSL1( "--copyHHToPC" )
 		<< CSL1( "--conflictResolution 2" );
 	
 	// Create conduit

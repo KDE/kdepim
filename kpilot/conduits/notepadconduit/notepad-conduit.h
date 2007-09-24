@@ -45,7 +45,7 @@ class NotepadConduit : public ConduitAction
 {
 public:
 	NotepadConduit(KPilotLink *,
-		const QStringList &args = QStringList());
+		const QVariantList &args = QVariantList());
 	virtual ~NotepadConduit();
 	virtual bool event(QEvent *e);
 

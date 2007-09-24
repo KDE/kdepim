@@ -34,10 +34,10 @@ class SMS;
 class SMSList;
 
 /**
-    This interface provides methods to access the phone's short message services
-
-    @author Matthias Lechner <matthias@lmme.de>
-*/
+ * This interface provides methods to access the phone's short message services
+ *
+ * @author Matthias Lechner <matthias@lmme.de>
+ */
 class KMOBILETOOLS_EXPORT ShortMessages {
 public:
 //public Q_SLOTS:

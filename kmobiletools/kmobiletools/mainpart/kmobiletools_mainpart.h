@@ -48,10 +48,12 @@ class ErrorLogDialog;
 class DeviceHome;
 class ServiceModel;
 class QProgressDialog;
+class JobSignalMapper;
 
 namespace KMobileTools {
     class CoreService;
     class homepagePart;
+    class JobXP;
 }
 
 /**
@@ -93,7 +95,6 @@ public:
     bool openFile();
 
     KSystemTrayIcon * sysTray() { return p_sysTray; }
-    KParts::StatusBarExtension *statusBarExtension() { return p_statusBarExtension;}
 
 private Q_SLOTS:
     void slotConfigNotify();
@@ -147,12 +148,25 @@ private Q_SLOTS:
      */
     void treeViewContextMenu( const QPoint& position );
 
+    /**
+     * This slot is called when a new @p job is created by the device with
+     * given name @p deviceName
+     *
+     * @param deviceName the name of the device for which the job was created
+     * @param job the job
+     */
+    void jobCreated( const QString& deviceName, KMobileTools::JobXP* job );
+
+    /**
+     * This slot is called when a new device was added. It sets up the job
+     * trackers if the engine provides this feature.
+     */
+    void deviceLoaded( const QString& deviceName );
+
 private:
     void setupGUI( QWidget* parent );
     void setupActions();
     void setupDialogs();
-
-    bool checkConfigVersion();
 
     /**
      * Displays the home page of the given @p deviceItem
@@ -168,7 +182,6 @@ private:
      */
     void handleServiceItem( ServiceItem* serviceItem );
 
-
     /// the last selected model index of the device tree view
     QModelIndex m_lastIndex;
 
@@ -181,11 +194,12 @@ private:
     /// a hash that holds a set of loaded widgets for every loaded device
     QMultiHash<QString,QWidget*> m_loadedWidgets;
 
+    JobSignalMapper* m_jobSignalMapper;
+    KStatusBar* m_statusBar;
+
     QStackedWidget *m_widget;
     QTreeView *m_treeView;
     KSystemTrayIcon * p_sysTray;
-
-    KParts::StatusBarExtension *p_statusBarExtension;
 
     ErrorLogDialog* m_errorLogDialog;
     DeviceManager* m_deviceManager;

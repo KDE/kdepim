@@ -47,7 +47,7 @@ class TimeWidgetConfig : public ConduitConfigBase
 {
 Q_OBJECT
 public:
-	TimeWidgetConfig(QWidget *parent);
+	TimeWidgetConfig(QWidget *parent, const QVariantList &);
 	virtual void commit();
 	virtual void load();
 	static ConduitConfigBase *create(QWidget *,const char *);

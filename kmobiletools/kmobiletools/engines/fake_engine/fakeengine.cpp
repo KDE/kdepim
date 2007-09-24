@@ -25,6 +25,8 @@
 #include <QtCore/QTimer>
 #include <KDebug>
 
+#include <jobs/fetchaddressbookjob.h>
+
 FakeEngine::FakeEngine( QObject *parent, const QString& deviceName )
  : EngineXP( parent, deviceName )
 {
@@ -252,6 +254,8 @@ void FakeEngine::fetchAddressbook()
         }
     }
     m_removedAddressees.clear();
+
+    emit jobCreated( new FetchAddressbookJob( this ) );
 
     m_addressbookFetched = true;
     status( "Address book fetched." );

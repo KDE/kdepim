@@ -42,7 +42,7 @@
 
 #include <KMessageBox>
 
-RecordConduit::RecordConduit( KPilotLink *o, const QStringList &a
+RecordConduit::RecordConduit( KPilotLink *o, const QVariantList &a
 	, const QString &databaseName, const QString &conduitName ) :
 	ConduitAction( o, conduitName.toLatin1(), a ),
 	fDatabaseName( databaseName ),
@@ -348,6 +348,8 @@ void RecordConduit::updateBackupDatabase()
 		
 		rec = fLocalDatabase->readRecordByIndex( ++index );
 	}
+	fLocalDatabase->cleanup();
+	fLocalDatabase->resetSyncFlags();
 }
 
 // 4.1 || 5.2

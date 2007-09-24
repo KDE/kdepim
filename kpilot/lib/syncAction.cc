@@ -137,6 +137,9 @@ SyncAction::SyncMode::SyncMode(const QStringList &args) :
 	fTest(args.contains("--test")),
 	fLocal(args.contains("--local"))
 {
+	FUNCTIONSETUP;
+	DEBUGKPILOT << "args passed in: [" << args.join(",") << "]";
+	
 	int i = 0;
 	while(maps[i].name)
 	{
@@ -148,6 +151,8 @@ SyncAction::SyncMode::SyncMode(const QStringList &args) :
 		i++;
 	}
 
+	DEBUGKPILOT << "using 'i' of: [" << i << "]";
+	
 	if (!maps[i].name)
 	{
 		WARNINGKPILOT << "No mode set by arguments ("
@@ -173,6 +178,33 @@ QStringList SyncAction::SyncMode::list() const
 	FUNCTIONSETUPL(3);
 
 	QStringList l;
+	int i=0;
+
+	while(maps[i].name)
+	{
+		if ( fMode == maps[i].mode )
+		{
+			l.append(QString::fromLatin1(maps[i].name));
+			break;
+		}
+		i++;
+	}
+	if ( !maps[i].name )
+	{
+		WARNINGKPILOT << "Mode" << fMode << " does not have a name.";
+		l.append(QString::fromLatin1(maps[0].name));
+	}
+
+	if (isTest()) l.append(CSL1("--test"));
+	if (isLocal()) l.append(CSL1("--local"));
+	return l;
+}
+
+QVariantList SyncAction::SyncMode::variantList() const
+{
+	FUNCTIONSETUPL(3);
+
+	QVariantList l;
 	int i=0;
 
 	while(maps[i].name)

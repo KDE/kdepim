@@ -47,6 +47,7 @@ Name[tg]=Тақвимот дар файли хурӯҷӣ
 Name[tr]=Uzak Dosyadaki Takvim
 Name[uk]=Календар у віддаленому файлі
 Name[x-test]=xxCalendar in Remote Filexx
+Name[zh_CN]=远程文件中的日历
 Name[zh_TW]=遠端檔案的行事曆
 X-KDE-Library=kcal_remote
 Type=Service

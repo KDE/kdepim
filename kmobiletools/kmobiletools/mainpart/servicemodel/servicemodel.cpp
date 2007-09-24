@@ -292,10 +292,8 @@ QList<DeviceItem*> ServiceModel::deviceItems() const {
 QModelIndex ServiceModel::indexFromItem( const TreeItem* item ) const {
     TreeItem* parent = item->parent();
     for( int i=0; i<parent->childCount(); i++ ) {
-        if( parent->child( i ) == item ) {
-            kDebug() << "row == " << i;
+        if( parent->child( i ) == item )
             return createIndex( i, 0, const_cast<TreeItem*>( item ) );
-        }
     }
     return QModelIndex();
 }

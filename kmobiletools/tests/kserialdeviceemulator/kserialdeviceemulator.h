@@ -22,9 +22,6 @@
 #ifndef _KSERIALDEVICEEMULATOR_H_
 #define _KSERIALDEVICEEMULATOR_H_
 
-#ifdef HAVE_CONFIG_H
-#include <config.h>
-#endif
 #include <threadweaver/ThreadWeaver.h>
 #include <threadweaver/Job.h>
 #include "commandslist.h"

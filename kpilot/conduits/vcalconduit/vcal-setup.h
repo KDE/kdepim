@@ -36,8 +36,9 @@ class VCalConduitSettings;
 
 class VCalWidgetSetup : public VCalWidgetSetupBase
 {
+Q_OBJECT
 public:
-	VCalWidgetSetup(QWidget *);
+	VCalWidgetSetup(QWidget *, const QVariantList & = QVariantList() );
 	static ConduitConfigBase *create(QWidget *, const char *);
 protected:
 	virtual VCalConduitSettings*config();

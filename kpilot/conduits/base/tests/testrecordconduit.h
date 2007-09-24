@@ -33,7 +33,7 @@
 
 class KPILOT_EXPORT TestRecordConduit : public RecordConduit {
 public:
-	TestRecordConduit( const QStringList &args, bool createRecords = false );
+	TestRecordConduit( const QVariantList &args, bool createRecords = false );
 	
 	~TestRecordConduit();
 	

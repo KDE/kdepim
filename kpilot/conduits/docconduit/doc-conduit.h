@@ -62,7 +62,7 @@ public:
 
 public:
 	DOCConduit(KPilotLink * o,
-		const QStringList & a = QStringList());
+		const QVariantList & a = QVariantList());
 	 virtual ~ DOCConduit();
 
 	bool encode(QStringList fileName, PilotDatabase * db);

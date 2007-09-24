@@ -26,6 +26,7 @@
 */
 
 #include "keyringsetup.h"
+#include "keyringsetup.moc"
 
 #include <QApplication>
 
@@ -57,7 +58,7 @@ static KAboutData *createAbout()
 	return fAbout;
 }
 
-KeyringWidgetSetup::KeyringWidgetSetup( QWidget *w ) :
+KeyringWidgetSetup::KeyringWidgetSetup( QWidget *w, const QVariantList & ) :
 	ConduitConfigBase( w ), 
 	fWallet(0L)
 {

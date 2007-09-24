@@ -31,10 +31,10 @@ class AddressbookEntry;
 
 namespace Ifaces {
 /**
-    This interface provides methods to access the mobile phone's address book
-
-    @author Matthias Lechner <matthias@lmme.de>
-*/
+ * This interface provides methods to access the mobile phone's address book
+ *
+ * @author Matthias Lechner <matthias@lmme.de>
+ */
 class KMOBILETOOLS_EXPORT Addressbook {
 public:
 //public Q_SLOTS:

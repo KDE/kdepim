@@ -46,6 +46,7 @@ Name[tg]=Файлҳои визиткаи электронӣ
 Name[tr]=Elektronik İş Kartı Dosyaları
 Name[uk]=файли електронних візитних карток
 Name[x-test]=xxElectronic Business Card Filesxx
+Name[zh_CN]=电子商务名片文件
 Name[zh_TW]=電子名片檔
 ServiceTypes=ThumbCreator
 MimeTypes=text/directory;text/directory,text/x-ldif

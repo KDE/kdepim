@@ -42,7 +42,7 @@
 
 using namespace KWallet;
 
-KeyringConduit::KeyringConduit( KPilotLink *o, const QStringList &a )
+KeyringConduit::KeyringConduit( KPilotLink *o, const QVariantList &a )
  : RecordConduit( o, a, CSL1( "Keys-Gtkr" ), CSL1( "Keyring Conduit" ) )
 {
 }

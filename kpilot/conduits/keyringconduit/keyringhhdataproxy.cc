@@ -25,8 +25,6 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
-#include "keyringhhdataproxy.h"
-
 #include <pi-util.h>
 
 #include <QtCrypto>
@@ -40,6 +38,8 @@
 
 #include "keyringhhrecord.h"
 #include "pi-keyring.h"
+
+#include "keyringhhdataproxy.h"
 
 KeyringHHDataProxy::KeyringHHDataProxy( PilotDatabase *db )
 	: HHDataProxy( db ), fZeroRecord( 0l ), fOwner( false )
@@ -119,6 +119,8 @@ bool KeyringHHDataProxy::openDatabase( const QString &pass )
 			
 			// For now remove the zero record from the record list.
 			fRecords.remove( QString::number( fZeroRecord->id() ) );
+			
+			fCounter.setStartCount(fRecords.count());
 			
 			return true;
 		}

@@ -59,7 +59,7 @@ public:
 	typedef QMap< quint32, QString > AddresseeMapType;
 
 	AbbrowserConduit(KPilotLink *o,
-		const QStringList &a = QStringList() );
+		const QVariantList &a = QVariantList() );
 	virtual ~AbbrowserConduit();
 
 /*********************************************************************

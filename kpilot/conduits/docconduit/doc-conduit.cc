@@ -70,7 +70,7 @@ QString dirToString(eSyncDirectionEnum dir) {
 
 
 DOCConduit::DOCConduit(KPilotLink * o,
-	const QStringList & a):ConduitAction(o, a)
+	const QVariantList & a):ConduitAction(o, a)
 {
 	FUNCTIONSETUP;
 	fConduitName=i18n("DOC");

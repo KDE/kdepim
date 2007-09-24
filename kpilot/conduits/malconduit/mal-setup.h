@@ -42,7 +42,7 @@ class MALWidgetSetup : public ConduitConfigBase
 {
 Q_OBJECT
 public:
-	MALWidgetSetup(QWidget *);
+	MALWidgetSetup(QWidget *, const QVariantList &);
 	virtual ~MALWidgetSetup();
 	virtual void load();
 	virtual void commit();

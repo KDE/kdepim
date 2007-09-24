@@ -45,16 +45,19 @@
 
 class MemofileConduitConfig : public ConduitConfigBase
 {
+Q_OBJECT
 public:
-	MemofileConduitConfig(QWidget *parent=0L, const char *n=0L);
+	MemofileConduitConfig(QWidget *parent=0L, const QVariantList &  = QVariantList());
 	virtual void commit();
 	virtual void load();
 protected:
 	Ui::MemofileWidget fConfigWidget;
 } ;
 
-MemofileConduitConfig::MemofileConduitConfig(QWidget *p, const char *n) :
-	ConduitConfigBase(p,n)
+#include "memofile-factory.moc"
+
+MemofileConduitConfig::MemofileConduitConfig(QWidget *p, const QVariantList &) :
+	ConduitConfigBase(p)
 {
 	FUNCTIONSETUP;
 
@@ -115,5 +118,4 @@ MemofileConduitConfig::MemofileConduitConfig(QWidget *p, const char *n) :
 }
 
 DECLARE_KPILOT_PLUGIN(kpilot_conduit_memofile,MemofileConduitConfig,MemofileConduit)
-
 

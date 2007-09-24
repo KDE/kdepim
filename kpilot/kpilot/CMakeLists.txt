@@ -77,7 +77,6 @@ set(kpilotDaemon_SRCS
 	${settings_SRC}
 	hotSync.cc
 	fileInstaller.cc
-	internalEditorAction.cc
 	logFile.cc
 	pilotDaemon.cc
 )

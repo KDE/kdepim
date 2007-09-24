@@ -39,6 +39,7 @@ Name[sr@latin]=Openexchange server
 Name[sv]=Openxchange-server
 Name[uk]=Сервер OpenXchange
 Name[x-test]=xxOpenXchange Serverxx
+Name[zh_CN]=OpenXchange 服务器
 Name[zh_TW]=OpenXchange 伺服器
 X-KDE-Library=kcal_slox
 Type=Service

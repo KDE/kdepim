@@ -38,10 +38,6 @@
 #  endif // defined(__SUNPRO_CC)
 #endif // defined (DW_UNIX)
 
-#ifdef HAVE_CONFIG_H
-#include "../config.h"
-#endif
-
 // WIN32 specific includes
 
 #if defined(DW_WIN32)

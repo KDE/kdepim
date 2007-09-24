@@ -56,6 +56,7 @@ Comment[ta]=இந்த காப்புக் குழாய் ஒன்�
 Comment[tg]=Канале, ки дар ҳолати шурӯъ нест.
 Comment[tr]=Bu kanal herhangi bir işlem yapmaz.
 Comment[uk]=Цей акведук нічого не робить.
+Comment[zh_CN]=此管道不做任何事。
 Comment[zh_TW]=此導管不做任何事情。
 Implemented=file
 ServiceTypes=KPilotConduit

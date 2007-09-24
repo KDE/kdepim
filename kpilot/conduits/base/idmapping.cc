@@ -40,8 +40,10 @@ bool IDMapping::isValid( const QList<QString> &ids ) const
 	FUNCTIONSETUP;
 	
 	const QMap<QString, QString>* mappings = fSource.constMappings();
+	int idsSize = ids.size();
 	
-	bool equalSize = (mappings->size() == ids.size());
+	// should be a 1..1 mapping between keys and values
+	bool equalSize = (mappings->uniqueKeys().size() == idsSize);
 	
 	if(equalSize)
 	{
@@ -49,6 +51,9 @@ bool IDMapping::isValid( const QList<QString> &ids ) const
 		
 		QList<QString>::const_iterator i;
 		QList<QString> mIds;
+		
+		// now, check for validity of mappings.  *note* we can stop
+		// looking if we find at least one problem.
 		if( fSource.constMappings()->contains( *ids.constBegin() ) )
 		{
 			// The ids are hanhdeld ids.
@@ -57,6 +62,8 @@ bool IDMapping::isValid( const QList<QString> &ids ) const
 			{
 				QString id = *i;
 				idsInMapping = idsInMapping && ids.contains( id );
+				
+				if (!idsInMapping) break;
 			}
 		}
 		else
@@ -67,9 +74,30 @@ bool IDMapping::isValid( const QList<QString> &ids ) const
 			{
 				QString id = *i;
 				idsInMapping = idsInMapping && ids.contains( id );
+				
+				if (!idsInMapping) break;
 			}
 		}
 		
+		// if we're otherwise valid, double-check and make sure that 
+		// we also have only unique values in our mapping...
+		if (idsInMapping)
+		{
+			// build a reverse map and check the count at the end...
+			QMap<QString, int> revMap;
+			
+			QMapIterator<QString, QString> it( *mappings );
+			while (it.hasNext()) {
+				it.next();
+				revMap.insert(it.value(), 1);
+			}
+			idsInMapping = (revMap.uniqueKeys().size() == idsSize);
+			DEBUGKPILOT << "Reverse map integrity: ["
+				<< idsInMapping << "]";
+		}
+
+		DEBUGKPILOT << "Returning: [" << idsInMapping << "]";
+
 		return idsInMapping;
 	}
 	
@@ -79,6 +107,21 @@ bool IDMapping::isValid( const QList<QString> &ids ) const
 void IDMapping::map( const QString &hhRecordId, const QString &pcId )
 {
 	FUNCTIONSETUP;
+	
+	// check to see if we already have a key with this value
+	QString existingHhRecordId = fSource.constMappings()->key(pcId);
+	
+	// if we already have a key for this one and it isn't the hhRecordId
+	// that is being passed in, it's an error
+	if ( ! existingHhRecordId.isEmpty() ) 
+	{ 
+		WARNINGKPILOT << "Error.  pcId:[" << pcId 
+			<< "] already mapped to hhRecordId: [" << existingHhRecordId
+			<< "].  Shouldn't have same pcId mapped also to incoming: ["
+			<< hhRecordId << "].  Removing it.";
+		
+		fSource.mappings()->remove( existingHhRecordId );
+	}
 	
 	fSource.mappings()->insert( hhRecordId, pcId );
 }

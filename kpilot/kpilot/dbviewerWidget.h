@@ -59,7 +59,6 @@ public:
 protected:
 	void setupWidget();
 	
-	void markDBDirty(const QString &db);
 
 protected slots:
 	void slotSelected(const QString &dbname);

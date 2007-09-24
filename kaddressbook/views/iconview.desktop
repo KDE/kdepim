@@ -59,6 +59,7 @@ Name[uz]=Нишонча кўринишида
 Name[vi]=Xem icon 
 Name[x-test]=xxIcon Viewxx
 Name[xh]=Imboniselo ye Icon
+Name[zh_CN]=图标视图
 Name[zh_TW]=圖示檢視
 Type=Service
 ServiceTypes=KAddressBook/View

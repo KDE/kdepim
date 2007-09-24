@@ -44,6 +44,7 @@ Name[ta]=IMAP சேவையக வழியாக கேஅஞ்சலில�
 Name[tr]=KMail Aracılığı ile IMAP Sunucusunda Takvim
 Name[uk]=Календар на сервері IMAP через KMail
 Name[x-test]=xxCalendar on IMAP Server via KMailxx
+Name[zh_CN]=通过 KMail 访问 IMAP 服务器上的日历
 Name[zh_TW]=透過 KMail 取得 IMAP 伺服器上的行事曆
 X-KDE-Library=kcal_kolab
 Type=Service

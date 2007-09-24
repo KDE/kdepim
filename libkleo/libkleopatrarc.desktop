@@ -41,6 +41,7 @@ Name[ta]=செல்லுபடியாகாத விசை
 Name[tr]=Geçerli Olmayan Anahtar
 Name[uk]=Неперевірений ключ
 Name[x-test]=xxNot Validated Keyxx
+Name[zh_CN]=未校验的密钥
 Name[zh_TW]=未確認的金鑰
 
 [Key Filter #1]
@@ -92,6 +93,7 @@ Name[ta]=காலாவதியான விசை
 Name[tr]=Süresi Dolmuş Anahtar
 Name[uk]=Застарілий ключ
 Name[x-test]=xxExpired Keyxx
+Name[zh_CN]=过期密钥
 Name[zh_TW]=已過期的金鑰
 
 [Key Filter #2]
@@ -139,6 +141,7 @@ Name[ta]=நீக்கிய விசை
 Name[tr]=Geri Alınmış Anahtar
 Name[uk]=Анульований ключ
 Name[x-test]=xxRevoked Keyxx
+Name[zh_CN]=吊销的密钥
 Name[zh_TW]=已廢棄的金鑰
 
 [Key Filter #3]
@@ -186,6 +189,7 @@ Name[ta]=நம்பகமான மூல சான்றிதழ்
 Name[tr]=Güvenilir Kök Sertifikası
 Name[uk]=Кореневий сертифікат з довірою
 Name[x-test]=xxTrusted Root Certificatexx
+Name[zh_CN]=可信任的根证书
 Name[zh_TW]=可信任的根憑證
 background-color=0,0,255
 font-bold=true
@@ -236,6 +240,7 @@ Name[ta]=நம்பமுடியாத மூல சான்றிதழ்
 Name[tr]=Güvenilmeyen Kök Sertifikası
 Name[uk]=Кореневий сертифікат без довіри
 Name[x-test]=xxNot Trusted Root Certificatexx
+Name[zh_CN]=未信任的根证书
 Name[zh_TW]=不可信任的根憑證
 
 [Key Filter #5]
@@ -252,6 +257,7 @@ Name[pt]=Chaves das assinaturas qualificadas
 Name[pt_BR]=Chaves das assinaturas qualificadas
 Name[sv]=Nycklar för kvalificerade signaturer
 Name[x-test]=xxKeys for qualified signaturesxx
+Name[zh_CN]=要合格签名的密钥
 Name[zh_TW]=合格簽章的金鑰
 
 [Key Filter #6]
@@ -270,6 +276,7 @@ Name[pt]=Outras chaves
 Name[pt_BR]=Outras chaves
 Name[sv]=Andra nycklar
 Name[x-test]=xxOther keysxx
+Name[zh_CN]=其它密钥
 Name[zh_TW]=其他金鑰
 
 

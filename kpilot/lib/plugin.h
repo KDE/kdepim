@@ -29,9 +29,9 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
-#include <QtCore/QStringList>
-
 #include "syncAction.h"
+
+#include <QtCore/QVariantList>
 
 /** @file
 * This file defines the base class of all KPilot conduit plugins configuration
@@ -44,7 +44,6 @@
 
 class QTabWidget;
 class KAboutData;
-class KLibrary;
 
 class PilotDatabase;
 
@@ -83,7 +82,8 @@ public:
 	* Constructor. Creates a conduit configuration support object
 	* with the given parent @p parent and name (optional) @p n.
 	*/
-	explicit ConduitConfigBase(QWidget *parent=0L, const char *n=0L);
+	explicit ConduitConfigBase( QWidget *parent = 0L
+		, const QVariantList &args = QVariantList() );
 
 	/** Destructor. */
 	virtual ~ConduitConfigBase();
@@ -194,7 +194,7 @@ Q_OBJECT
 public:
 	ConduitAction(KPilotLink *,
 		const char *name,
-		const QStringList &args = QStringList());
+		const QVariantList &args = QVariantList());
 	virtual ~ConduitAction();
 
 	QString conduitName() const { return fConduitName; } ;
@@ -304,21 +304,5 @@ protected:
 	ConduitAction *fConduit;
 } ;
 
-/** A namespace containing only static helper methods. */
-namespace PluginUtility
-{
-	/** 
-	 * Searches the argument list for --foo=bar and returns bar, 
-	 * QString() if not found.
-	 * Don't include the -- in the argname.
-	 */
-	KPILOT_EXPORT QString findArgument(const QStringList &a, const QString argname);
-
-	/**
-	* Check a given library for its version, returning 0 if no
-	* version symbol is found.
-	*/
-	KPILOT_EXPORT unsigned long pluginVersion(const KLibrary *);
-}
 
 #endif

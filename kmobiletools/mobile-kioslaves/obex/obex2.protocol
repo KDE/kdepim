@@ -28,4 +28,5 @@ Description[nl]=Een KIO-slave voor OBEX
 Description[pt]=Um 'kioslave' para o 'obex'
 Description[pt_BR]=Um 'kioslave' para o 'obex'
 Description[sv]=En I/O-slav för OBEX
+Description[zh_CN]=obex 协议的 kioslave
 Description[zh_TW]=obex 的 kioslave

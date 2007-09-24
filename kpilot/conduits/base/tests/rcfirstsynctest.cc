@@ -63,7 +63,7 @@ private slots:
 
 void RCFirstSyncTest::testEqual()
 {
-	QStringList args = QStringList() << CSL1( "--copyHHToPC" );
+	QVariantList args = QVariantList() << CSL1( "--copyHHToPC" );
 	
 	TestRecordConduit conduit( args );
 	conduit.initDataProxies();
@@ -88,7 +88,7 @@ void RCFirstSyncTest::testEqual()
 
 void RCFirstSyncTest::testNewRecords()
 {
-	QStringList args = QStringList() << CSL1( "--copyHHToPC" );
+	QVariantList args = QVariantList() << CSL1( "--copyHHToPC" );
 	
 	TestRecordConduit conduit( args );
 	conduit.initDataProxies();
@@ -117,7 +117,7 @@ void RCFirstSyncTest::testNewRecords()
 
 void RCFirstSyncTest::testMatch()
 {
-	QStringList args = QStringList() << CSL1( "--copyHHToPC" );
+	QVariantList args = QVariantList() << CSL1( "--copyHHToPC" );
 	
 	TestRecordConduit conduit( args );
 	conduit.initDataProxies();
@@ -151,7 +151,7 @@ void RCFirstSyncTest::testMatch()
 
 void RCFirstSyncTest::testNoMatch()
 {
-	QStringList args = QStringList() << CSL1( "--copyHHToPC" );
+	QVariantList args = QVariantList() << CSL1( "--copyHHToPC" );
 	
 	TestRecordConduit conduit( args );
 	conduit.initDataProxies();

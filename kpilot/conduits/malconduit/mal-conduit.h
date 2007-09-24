@@ -41,7 +41,7 @@ Q_OBJECT
 public:
 	MALConduit(
 		KPilotLink *link,
-		const QStringList &args = QStringList() );
+		const QVariantList &args = QVariantList() );
 	virtual ~MALConduit();
 	void printLogMessage(QString msg);
 	virtual bool exec();

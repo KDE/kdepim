@@ -43,6 +43,7 @@ Name[ta]=SUSE LINUX திறந்த பரிமாற்ற சேவகன�
 Name[tr]=SUSE LINUX Openexchange Sunucusu
 Name[uk]=Сервер SUSE LINUX Openexchange
 Name[x-test]=xxSUSE LINUX Openexchange Serverxx
+Name[zh_CN]=SUSE LINUX Openexchange 服务器
 Name[zh_TW]=SUSE LINUX Openexchange 伺服器
 X-KDE-Library=kcal_slox
 Type=Service

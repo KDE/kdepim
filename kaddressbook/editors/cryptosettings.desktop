@@ -47,6 +47,7 @@ Name[tg]=Танзимоти рамзгузорӣ
 Name[tr]=Şifreleme Özellikleri
 Name[uk]=Параметри шифрування
 Name[x-test]=xxCrypto Preferencesxx
+Name[zh_CN]=加密首选项
 Name[zh_TW]=加密設定
 Type=Service
 ServiceTypes=KAddressBook/ContactEditorWidget

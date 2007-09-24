@@ -34,7 +34,7 @@ private:
 	QString fDesKey;
 	
 public:
-	KeyringConduit( KPilotLink *o, const QStringList &a = QStringList() );
+	KeyringConduit( KPilotLink *o, const QVariantList &a = QVariantList() );
 
 	virtual void loadSettings();
 	

@@ -127,7 +127,7 @@ class GeoMapWidget : public QWidget
   Q_OBJECT
 
   public:
-    GeoMapWidget( QWidget *parent, const char *name = 0 );
+    GeoMapWidget( QWidget *parent );
     ~GeoMapWidget();
 
     void setLatitude( double latitude );

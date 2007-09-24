@@ -52,6 +52,7 @@ Name[tg]=Иттилоот дар бораи почтаи электронӣ
 Name[tr]=E-Posta Bilgisi
 Name[uk]=Інформація про повідомлення ел. пошти
 Name[x-test]=xxEmail Infoxx
+Name[zh_CN]=电子邮件信息
 Name[zh_TW]=電子郵件資訊
 ServiceTypes=KFilePlugin
 X-KDE-Library=kfile_rfc822

@@ -31,8 +31,10 @@
 
 #include <time.h>
 
+#include <QtCore/QMetaType>
 #include <QtCore/QObject>
 #include <QtCore/QStringList>
+#include <QtCore/QVariantList>
 
 #include "kpilotlink.h"
 #include "kpilot_export.h"
@@ -47,11 +49,9 @@ class KPILOT_EXPORT SyncAction : public QObject
 Q_OBJECT
 
 public:
-        SyncAction(KPilotLink *p,
-                const char *name);
-        SyncAction(KPilotLink *p,
-                QWidget *visibleparent,
-                const char *name);  
+	SyncAction( KPilotLink *p, const char *name );
+	SyncAction( KPilotLink *p, QWidget *visibleparent, const char *name );
+	
 	virtual ~SyncAction();
 
 	typedef enum { Error=-1 } Status;
@@ -205,7 +205,7 @@ public:
 		* anything at all (test mode) and whether the HH is
 		* to be simulated by local databases.
 		*/
-		explicit SyncMode(Mode m, bool test=false, bool local=false);
+		explicit SyncMode(Mode m=eHotSync, bool test=false, bool local=false);
 
 		/** Create a mode by parsing the string list. This
 		* is used mostly by the conduit proxies, which use
@@ -321,6 +321,13 @@ public:
 		*/
 		QStringList list() const;
 
+		/**
+		* Returns a QVariantList that, when passed to the constructor
+		* of SyncMode, will re-create it. Used to pass modes into
+		* shared library factories.
+		*/
+		QVariantList variantList() const;
+		
 	private:
 		Mode fMode;
 		bool fTest;
@@ -401,5 +408,7 @@ protected:
 		const QString &no = QString() ) ;
 };
 
+Q_DECLARE_METATYPE( SyncAction::SyncMode )
+Q_DECLARE_METATYPE( SyncAction::ConflictResolution )
 
 #endif

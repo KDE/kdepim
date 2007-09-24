@@ -44,7 +44,7 @@ class ConduitConfigWidgetBase : public KCModule
 {
 Q_OBJECT
 public:
-	ConduitConfigWidgetBase(QWidget *parent, const QStringList &);
+	ConduitConfigWidgetBase(QWidget *parent, const QVariantList &);
 
 	QTreeWidget *fConduitList;
 	QStackedWidget *fStack;
@@ -57,7 +57,7 @@ class ConduitConfigWidget : public ConduitConfigWidgetBase
 {
 Q_OBJECT
 public:
-	ConduitConfigWidget(QWidget *, const QStringList &);
+	ConduitConfigWidget(QWidget *, const QVariantList &);
 	virtual ~ConduitConfigWidget();
 
 protected:

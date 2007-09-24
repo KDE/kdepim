@@ -67,7 +67,7 @@
  ****************************************************************************/
 
 VCalConduitBase::VCalConduitBase(KPilotLink *d,
-	const QStringList &a) :
+	const QVariantList &a) :
 	ConduitAction(d,"VCalConduitBase",a),
 	fCalendar(0L),
 	fP(0L)

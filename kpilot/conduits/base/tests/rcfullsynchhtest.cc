@@ -124,7 +124,7 @@ void RCFullSyncHHTest::initTestCase_1()
 {
 	
 	// NOTE: 2 == eHHOverrides, this is important for the solveConflict() method
-	QStringList args = QStringList() << CSL1( "--fullsync" )
+	QVariantList args = QVariantList() << CSL1( "--fullsync" )
 		<< CSL1( "--conflictResolution 2" );
 	
 	fConduit = new TestRecordConduit( args, true );

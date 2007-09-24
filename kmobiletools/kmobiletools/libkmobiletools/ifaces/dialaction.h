@@ -30,10 +30,10 @@ namespace KMobileTools {
 namespace Ifaces {
 
 /**
-    This interface provides methods to trigger dialing on the phone
-
-    @author Matthias Lechner <matthias@lmme.de>
-*/
+ * This interface provides methods to trigger dialing on the phone
+ *
+ * @author Matthias Lechner <matthias@lmme.de>
+ */
 class KMOBILETOOLS_EXPORT DialAction {
 public:
     /**

@@ -33,6 +33,7 @@ Name[ta]=பயன்பாட்டு எண்மம்
 Name[tg]=Миқдори зиёди бинарии барномот
 Name[tr]=Uygulama Sekizli Akışı
 Name[x-test]=xxApplication Octetstreamxx
+Name[zh_CN]=应用程序 Octetstream
 Comment=A bodypart formatter plugin for text/vcard
 Comment[af]='n Data (boodskap lyf) formateer inprop module vir 'text/vcard'
 Comment[bg]=Редактор с поддръжка на форматиране за текст/vcard
@@ -76,6 +77,7 @@ Comment[tg]=Модули ба андозадарории text/vcard
 Comment[tr]=text/vcard için bir gövde biçimleyici eklentisi
 Comment[uk]=Втулок форматування для text/vcard
 Comment[x-test]=xxA bodypart formatter plugin for text/vcardxx
+Comment[zh_CN]=text/vcard 的正文格式化插件
 Comment[zh_TW]=text/vCard 格式化外掛程式
 
 [Plugin]

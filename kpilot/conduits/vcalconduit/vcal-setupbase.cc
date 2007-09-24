@@ -28,6 +28,7 @@
 */
 
 #include "vcal-setupbase.h"
+#include "vcal-setupbase.moc"
 
 #include "options.h"
 
@@ -41,7 +42,7 @@
 #include "vcalconduitSettings.h"
 //#include "ui_korganizerConduit.h"
 
-VCalWidgetSetupBase::VCalWidgetSetupBase(QWidget *w) :
+VCalWidgetSetupBase::VCalWidgetSetupBase(QWidget *w, const QVariantList &) :
 	ConduitConfigBase(w)
 {
 	FUNCTIONSETUP;

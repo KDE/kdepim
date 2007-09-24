@@ -48,6 +48,7 @@ GenericName[ta]=பாம்DOC மாற்றி
 GenericName[tg]=Конвертёри PalmDOC
 GenericName[tr]=PalmDOC Çevirici
 GenericName[uk]=Перетворювач PalmDOC
+GenericName[zh_CN]=PalmDOC 转换器
 GenericName[zh_TW]=PalmDOC 轉換器
 Exec=kpalmdoc
 Icon=kpalmdoc

@@ -54,7 +54,7 @@ static KAboutData *createAbout()
 
 
 
-TimeWidgetConfig::TimeWidgetConfig(QWidget *w) :
+TimeWidgetConfig::TimeWidgetConfig(QWidget *w, const QVariantList &) :
 	ConduitConfigBase(w),
 	fConfigWidget(new TimeWidget(w))
 {

@@ -50,6 +50,7 @@ Comment[tr]=KAdresDefteri Al/Gönder Eklentisi
 Comment[uk]=Втулок імпорту/експорту адресної книги KAddressBook
 Comment[uz]=Манзиллар дафтари учун импорт/экспорт плагини
 Comment[x-test]=xxKAddressBook Import/Export Pluginxx
+Comment[zh_CN]=KAddressBook 导入/导出插件
 Comment[zh_TW]=KAddressBook 匯入/匯出外掛程式
 
 [PropertyDef::X-KDE-KAddressBook-XXPortPluginVersion]

@@ -49,7 +49,6 @@ DeviceManager::DeviceManager( QWidget *parent )
     setModal( false );
 
     QTimer::singleShot( 0, this, SLOT(populateDeviceList()) );
-    QTimer::singleShot( 0, this, SLOT(setupDialogs()) );
 
     connect( KMobileTools::DeviceLoader::instance(), SIGNAL(deviceLoaded(const QString&)),
              this, SLOT(addDeviceItem(const QString&)) );

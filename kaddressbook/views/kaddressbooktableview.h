@@ -24,10 +24,6 @@
 #ifndef KADDRESSBOOKTABLEVIEW_H
 #define KADDRESSBOOKTABLEVIEW_H
 
-#ifdef HAVE_CONFIG_H
-#include <config.h>
-#endif
-
 #include <QWidget>
 #include <q3listview.h>
 #include <QString>
@@ -35,7 +31,6 @@
 #include <q3tabdialog.h>
 #include <QStringList>
 
-//Added by qt3to4:
 #include <QVBoxLayout>
 
 #include "kaddressbookview.h"

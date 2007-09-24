@@ -141,13 +141,6 @@ void GenericDBWidget::setupWidget()
 
 }
 
-void GenericDBWidget::markDBDirty(const QString &db)
-{
-	FUNCTIONSETUP;
-	KPilotConfig::addDirtyDatabase(db);
-	KPilotConfig::sync();
-}
-
 void GenericDBWidget::showPage()
 {
 	FUNCTIONSETUP;
@@ -379,12 +372,15 @@ void GenericDBWidget::slotShowAppInfo()
 	char*appBlock=new char[0xFFFF];
 	int len=fDB->readAppBlock((unsigned char*)appBlock, 0xFFFF);
 	DBAppInfoEditor*dlg=new DBAppInfoEditor(appBlock, len, this);
+	/**
+	 * TODO: Um.  We really don't know how to handle this right now...
+	 */
 	if (dlg->exec())
 	{
 		fDB->writeAppBlock( (unsigned char*)(dlg->appInfo), dlg->len );
-
-		KPilotConfig::addAppBlockChangedDatabase(getCurrentDB());
-		KPilotSettings::self()->writeConfig();
+//		TODO: ???  We don't support editing databases inline.  This really needs to get looked at.
+//		KPilotConfig::addAppBlockChangedDatabase(getCurrentDB());
+//		KPilotSettings::self()->writeConfig();
 	}
 	KPILOT_DELETE(dlg);
 	delete[] appBlock;
@@ -402,8 +398,8 @@ void GenericDBWidget::slotShowDBInfo()
 			<< db.flags << ",  miscFlag=" << db.miscFlags;
 		fDB->setDBInfo(db);
 
-		KPilotConfig::addFlagsChangedDatabase(getCurrentDB());
-		KPilotSettings::self()->writeConfig();
+//		KPilotConfig::addFlagsChangedDatabase(getCurrentDB());
+//		KPilotSettings::self()->writeConfig();
 
 		slotSelected(fDBList->currentText());
 	}
@@ -427,7 +423,6 @@ void GenericDBWidget::writeRecord(PilotRecord*r)
 	if (fDB && r)
 	{
 		fDB->writeRecord(r);
-		markDBDirty(getCurrentDB());
 	}
 }
 

@@ -49,7 +49,7 @@ public:
 	 *  the conduit will fail instead of trivially succeeding.
 	 */
 	NullConduit(KPilotLink *,
-		const QStringList &args = QStringList());
+		const QVariantList &args = QVariantList());
 	virtual ~NullConduit();
 
 protected:

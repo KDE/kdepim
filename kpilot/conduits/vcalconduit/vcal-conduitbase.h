@@ -75,7 +75,7 @@ class VCalConduitBase : public ConduitAction
         Q_OBJECT
 public:
 	VCalConduitBase(KPilotLink *,
-		const QStringList &args = QStringList());
+		const QVariantList &args = QVariantList());
 	virtual ~VCalConduitBase();
 
 /*********************************************************************

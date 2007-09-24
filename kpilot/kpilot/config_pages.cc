@@ -49,7 +49,8 @@
 		"want to save the changes before continuing?</qt>", this->conduitName());
 }
 
-DeviceConfigPage::DeviceConfigPage(QWidget * w, const char *n ) : ConfigPage( w, n )
+DeviceConfigPage::DeviceConfigPage(QWidget * w, QVariantList &args ) 
+	: ConfigPage( w, args )
 {
 	FUNCTIONSETUP;
 
@@ -197,7 +198,8 @@ void DeviceConfigPage::autoDetectDevice()
 }
 
 
-SyncConfigPage::SyncConfigPage(QWidget * w, const char *n ) : ConfigPage( w, n )
+SyncConfigPage::SyncConfigPage(QWidget * w, QVariantList &args)
+	: ConfigPage( w, args )
 {
 	FUNCTIONSETUP;
 
@@ -279,7 +281,8 @@ void SyncConfigPage::load()
 }
 
 
-BackupConfigPage::BackupConfigPage(QWidget * w, const char *n ) : ConfigPage( w, n )
+BackupConfigPage::BackupConfigPage(QWidget * w, QVariantList &args )
+	: ConfigPage( w, args )
 {
 	FUNCTIONSETUP;
 
@@ -376,9 +379,8 @@ void BackupConfigPage::slotSelectNoRestoreDBs()
 	KPILOT_DELETE(dlg);
 }
 
-
-
-ViewersConfigPage::ViewersConfigPage(QWidget * w, const char *n ) : ConfigPage( w, n )
+ViewersConfigPage::ViewersConfigPage(QWidget * w, QVariantList &args )
+	: ConfigPage( w, args )
 {
 	FUNCTIONSETUP;
 
@@ -426,7 +428,8 @@ void ViewersConfigPage::load()
 
 
 
-StartExitConfigPage::StartExitConfigPage(QWidget * w, const char *n ) : ConfigPage( w, n )
+StartExitConfigPage::StartExitConfigPage(QWidget * w, QVariantList &args )
+	: ConfigPage( w, args )
 {
 	FUNCTIONSETUP;
 

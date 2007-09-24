@@ -35,10 +35,11 @@
 #include "ui_setup_base.h"
 #include "todo-conduit.h"
 #include "todo-setup.h"
+#include "todo-setup.moc"
 
 
 
-ToDoWidgetSetup::ToDoWidgetSetup(QWidget *w) :
+ToDoWidgetSetup::ToDoWidgetSetup(QWidget *w, const QVariantList &) :
 	VCalWidgetSetupBase(w)
 {
 	FUNCTIONSETUP;

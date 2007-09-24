@@ -37,8 +37,9 @@ class KAboutData;
 
 class KeyringWidgetSetup : public ConduitConfigBase
 {
+Q_OBJECT
 public:
-	KeyringWidgetSetup( QWidget * );
+	KeyringWidgetSetup( QWidget * , const QVariantList & = QVariantList() );
 	virtual ~KeyringWidgetSetup();
 	virtual void load();
 	virtual void commit();

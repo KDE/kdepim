@@ -39,17 +39,18 @@
 #include <KPluginInfo>
 #include <KNotifyConfigWidget>
 #include <KLocale>
+#include <KDE/KStatusBar>
 
 // Qt includes
-#include <QSplitter>
-#include <QTimer>
-#include <QStackedWidget>
-#include <QTreeWidget>
-#include <QTreeView>
-#include <QModelIndex>
-#include <QProgressDialog>
-#include <QMutex>
-#include <QMenu>
+#include <QtGui/QSplitter>
+#include <QtGui/QStackedWidget>
+#include <QtGui/QTreeWidget>
+#include <QtGui/QProgressDialog>
+#include <QtGui/QMenu>
+#include <QtGui/QTreeView>
+#include <QtCore/QTimer>
+#include <QtCore/QModelIndex>
+#include <QtCore/QMutex>
 
 // KMobileTools library includes
 #include <libkmobiletools/enginexp.h>
@@ -65,7 +66,10 @@
 #include <libkmobiletools/coreservice.h>
 #include <libkmobiletools/ifaces/guiservice.h>
 #include <libkmobiletools/ifaces/actionprovider.h>
+#include <libkmobiletools/ifaces/jobprovider.h>
 #include <libkmobiletools/config.h>
+#include <libkmobiletools/jobxp.h>
+#include <libkmobiletools/jobmanager.h>
 
 #include "devicemanager.h"
 #include "devicehome.h"
@@ -73,6 +77,7 @@
 #include "servicemodel/servicemodel.h"
 #include "servicemodel/deviceitem.h"
 #include "servicemodel/serviceitem.h"
+#include "jobsignalmapper.h"
 
 typedef KParts::GenericFactory<kmobiletoolsMainPart> kmobiletoolsMainPartFactory;
 K_EXPORT_COMPONENT_FACTORY( libkmobiletoolsmainpart, kmobiletoolsMainPartFactory )
@@ -107,11 +112,14 @@ kmobiletoolsMainPart::kmobiletoolsMainPart( QWidget *parentWidget, QObject *pare
     KMobileTools::KMobiletoolsHelper::instance()->setSystray( p_sysTray );
     connect( p_sysTray, SIGNAL(quitSelected()), SLOT(slotQuit()) );
 
-    // create extended status bar
-    p_statusBarExtension = new KParts::StatusBarExtension( this );
+    // get status bar
+    KParts::MainWindow* mainWindow = static_cast<KParts::MainWindow*>( parent );
+    m_statusBar = mainWindow->statusBar();
 
-    if( !checkConfigVersion() )
-        return;
+    // set up signal mapper
+    m_jobSignalMapper = new JobSignalMapper( this );
+    connect( m_jobSignalMapper, SIGNAL(mapped(const QString&,KMobileTools::JobXP*)),
+             this, SLOT(jobCreated(const QString&,KMobileTools::JobXP*)) );
 
     QTimer::singleShot( 1000, this, SLOT(slotAutoLoadDevices() ) );
 
@@ -152,6 +160,20 @@ void kmobiletoolsMainPart::slotAutoLoadDevices()
     }
 }
 
+void kmobiletoolsMainPart::deviceLoaded( const QString& deviceName ) {
+    // set-up the job trackers
+    KMobileTools::EngineXP* engine =
+            KMobileTools::DeviceLoader::instance()->engine( deviceName );
+
+    KMobileTools::Ifaces::JobProvider* jobProvider =
+            qobject_cast<KMobileTools::Ifaces::JobProvider*>( engine );
+
+    if( jobProvider ) {
+        connect( engine, SIGNAL(jobCreated(KMobileTools::JobXP*)),
+                 m_jobSignalMapper, SLOT(map(KMobileTools::JobXP*)) );
+        m_jobSignalMapper->setMapping( engine, deviceName );
+    }
+}
 
 void kmobiletoolsMainPart::shutDownSucceeded() {
     if( m_shutDownDialog ) {
@@ -213,48 +235,6 @@ void kmobiletoolsMainPart::slotQuit()
 
 
 #include "kmobiletools_mainpart.moc"
-
-
-bool kmobiletoolsMainPart::checkConfigVersion()
-{
-    return true; // it doesn't seem to work perfectly in the kde4 port, and we've other stuff to fix first
-    /// @TODO fix this
-    /*
-    uint cfgver=KMobileTools::MainConfig::self()->configversion();
-    if(cfgver>=CURCFGVER) return true;
-    kDebug() <<"Checking config version::" << cfgver;
-    QDir cfgdir(KGlobal::dirs()->saveLocation("config") );
-    QStringList entries=cfgdir.entryList( QStringList() << "*kmobiletools*", QDir::Files );
-    if(entries.isEmpty())
-    {
-        kDebug() <<"No config files found, skipping checkConfigVersion;";
-        return true;
-    }
-    QString archiveName=KGlobal::dirs()->saveLocation("tmp") + "kmobiletools-" +
-            QDate::currentDate().toString(Qt::ISODate) + ".tar.gz";
-    KMessageBox::information( widget(), i18n("<qt><p>KMobileTools has found an old or invalid configuration file.</p><p>To work correctly, it needs to delete your configuration files. Your old files will be saved in <b>%1</b></p></qt>", archiveName ) );
-    KTar arch(archiveName);
-    if(!arch.open( QIODevice::WriteOnly))
-    {
-        KMessageBox::error( widget(), i18n("<qt><p>KMobileTools could not archive your config files.</p><p>Please remove them manually.</p></qt>") );
-        return true;
-    }
-    for(QStringList::Iterator it=entries.begin(); it!=entries.end(); ++it)
-    {
-        arch.addLocalFile( cfgdir.path() + QDir::separator() + (*it), (*it));
-        QFile::remove( cfgdir.path() + QDir::separator() + (*it) );
-        kDebug() <<"Entry ::" << cfgdir.path() + QDir::separator() + (*it) <<" archived and removed.";
-    }
-    arch.close();
-    KMessageBox::information(widget(), i18n("<qt><p>Your old configuration files were saved in <b>%1</b>.</p><p>KMobileTools will now close. You can restart it.</p></qt>", archiveName));
-    KMobileTools::MainConfig::self()->readConfig();
-    KMobileTools::MainConfig::self()->setConfigversion(CURCFGVER);
-    KMobileTools::MainConfig::self()->writeConfig();
-    QTimer::singleShot(300, this, SLOT(slotQuit()) );
-    return false;
-    */
-}
-
 
 void kmobiletoolsMainPart::slotConfigNotify()
 {
@@ -387,6 +367,11 @@ void kmobiletoolsMainPart::treeViewContextMenu( const QPoint& position ) {
     }
 }
 
+void kmobiletoolsMainPart::jobCreated( const QString& deviceName, KMobileTools::JobXP* job ) {
+    // enqueue the job
+    KMobileTools::JobManager::instance()->enqueueJob( deviceName, job );
+}
+
 void kmobiletoolsMainPart::setupGUI( QWidget* parent ) {
     QSplitter *splitter = new QSplitter( parent );
 
@@ -411,7 +396,10 @@ void kmobiletoolsMainPart::setupGUI( QWidget* parent ) {
     connect( KMobileTools::DeviceLoader::instance(),
              SIGNAL( aboutToUnloadDevice(const QString&) ),
              this,
-             SLOT( deviceUnloaded(const QString&) ) );
+             SLOT( unloadDeviceActions(const QString&) ) );
+
+    connect( KMobileTools::DeviceLoader::instance(), SIGNAL(deviceLoaded(const QString&)),
+             this, SLOT(deviceLoaded(const QString&)) );
 
     m_treeView->setModel( m_serviceModel );
 
@@ -447,7 +435,7 @@ void kmobiletoolsMainPart::setupDialogs() {
     // create error log dialog
     m_errorLogDialog = new ErrorLogDialog( m_widget );
 
-    m_shutDownDialog = 0; // created on exit
+    m_shutDownDialog = 0; // the dialog is created on exit
 
     KAction *curAction=0;
 

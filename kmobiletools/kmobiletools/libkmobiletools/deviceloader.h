@@ -108,7 +108,7 @@ Q_SIGNALS:
 
 private:
     DeviceLoader();
-    DeviceLoaderPrivate* d;
+    DeviceLoaderPrivate* const d;
 
 };
 

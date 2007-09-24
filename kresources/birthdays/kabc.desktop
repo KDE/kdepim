@@ -49,6 +49,7 @@ Name[tg]=Рӯзҳои таваллуд аз китоби адресии KDE
 Name[tr]=KDE Adres Defterinden Doğum Günleri
 Name[uk]=Дні народження з KAddressBook
 Name[x-test]=xxBirthdays From KAddressBookxx
+Name[zh_CN]=KAddressBook 中的生日
 Name[zh_TW]=自 KDE 通訊錄匯入生日
 X-KDE-Library=kcal_kabc
 Type=Service

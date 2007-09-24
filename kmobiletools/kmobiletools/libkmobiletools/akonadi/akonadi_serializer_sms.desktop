@@ -10,6 +10,7 @@ Name[ne]=एसएमएस मिलानकर्ता
 Name[pt]=Serializador de SMS
 Name[pt_BR]=Serializador de SMS
 Name[sv]=SMS-serialisering
+Name[zh_CN]=短消息序列转换器
 Name[zh_TW]=簡訊序列器
 Comment=An Akonadi serializer plugin for sms objects
 Comment[el]=Ένα πρόσθετο διαχείρισης SMS αντικειμένων για το Akonadi
@@ -20,6 +21,7 @@ Comment[ne]=एसएमएस सामाग्रीका लागि ए�
 Comment[pt]=Um 'plugin' de serialização do Akonadi para os objectos de SMS
 Comment[pt_BR]=Um 'plugin' de serialização do Akonadi para os objectos de SMS
 Comment[sv]=Ett insticksprogram till Akonadi för serialisering av SMS-objekt
+Comment[zh_CN]=对短消息对象进行序列转换的 Akonadi 插件
 Comment[zh_TW]=簡訊物件的 Akonadi 序列器外掛程式
 
 [Plugin]

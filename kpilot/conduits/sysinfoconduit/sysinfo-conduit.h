@@ -36,7 +36,7 @@ class SysInfoConduit : public ConduitAction
 public:
 	SysInfoConduit(
 		KPilotLink *o,
-		const QStringList &a = QStringList() );
+		const QVariantList &a = QVariantList() );
 	virtual ~SysInfoConduit();
 	virtual bool exec();
 
