@@ -168,6 +168,7 @@ void SignCommand::Private::startSignJobs( const std::vector<GpgME::Key>& keys )
     // FIXME reasonable assumption?
     if ( keys.empty() || !kdtools::all( keys.begin(), keys.end(), boost::bind( ByProtocol<std::equal_to>(), _1, keys.front() )  ) ) {
         q->done();
+        return;
     }
     const CryptoBackend::Protocol* backend = CryptoBackendFactory::instance()->protocol( keys.front().protocolAsString() );
     
@@ -181,6 +182,7 @@ void SignCommand::Private::startSignJobs( const std::vector<GpgME::Key>& keys )
         // FIXME mode?
         if ( const GpgME::Error err = job->start( keys, input.data->readAll(), GpgME::NormalSignatureMode ) ) {
             q->done( err );
+            return;
         }
         m_jobs.insert( job, input.id );
         m_signJobs++;
