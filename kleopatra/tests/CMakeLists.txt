@@ -27,7 +27,13 @@ if ( USABLE_ASSUAN_FOUND  )
 
   set(test_uiserver_SRCS test_uiserver.cpp ../uiserver/kleo-assuan.cpp )
 
-  kde4_add_executable(test_uiserver TEST ${test_uiserver_SRCS})
+#FIXME: omitting TEST makes test_uiserver print output again on a Win32 console; 
+# find a better fix for this issue
+  if(WIN32) 
+    kde4_add_executable(test_uiserver ${test_uiserver_SRCS})
+  else(WIN32)
+    kde4_add_executable(test_uiserver TEST ${test_uiserver_SRCS})
+  endif(WIN32)
 
   target_link_libraries(test_uiserver ${KDE4_KDECORE_LIBS} )
   if(WIN32)
