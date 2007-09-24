@@ -116,7 +116,7 @@ private Q_SLOTS:
     void slotKeySelectionError( const GpgME::Error& error, const GpgME::KeyListResult& );
     void slotSigningResult( const GpgME::SigningResult & result, const QByteArray & signature );
 private:
-    void trySendingStatus( const QString & str );
+    bool trySendingStatus( const QString & str );
     
     std::vector<Input> m_inputs;
     QMap<int, Result> m_results;
@@ -128,7 +128,7 @@ private:
 void SignCommand::Private::checkInputs()
 {
     const int numInputs = q->numBulkInputDevices( "INPUT" );
-    const int numOutputs = q->numBulkInputDevices( "OUTPUT" );
+    const int numOutputs = q->numBulkOutputDevices( "OUTPUT" );
     const int numMessages = q->numBulkInputDevices( "MESSAGE" );
 
     //TODO use better error code if possible
@@ -206,12 +206,14 @@ void SignCommand::Private::slotKeySelectionError( const GpgME::Error& error, con
 
 }
 
-void SignCommand::Private::trySendingStatus( const QString & str )
+bool SignCommand::Private::trySendingStatus( const QString & str )
 {
     if ( const int err = q->sendStatus( "SIGN", str ) ) {
         QString errorString = i18n("Problem writing out the signature.");
-        q->done( err, errorString ) ;
+        q->done( err, errorString );
+        return false;
     }
+    return true;
 }
 
 void SignCommand::Private::slotSigningResult( const GpgME::SigningResult & result, const QByteArray & signature )
@@ -250,7 +252,8 @@ void SignCommand::Private::slotSigningResult( const GpgME::SigningResult & resul
            resultString = "ERR " + result.errorString;
            // FIXME ask to continue or cancel
        }
-       trySendingStatus( resultString );
+       if ( !trySendingStatus( resultString ) )
+           return;
        m_statusSent++;
     }
     if ( --m_signJobs == 0 )
