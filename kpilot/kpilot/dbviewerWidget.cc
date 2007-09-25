@@ -3,6 +3,7 @@
 ** Copyright (C) 2003 by Dan Pilone <dan@kpilot.org>
 ** Copyright (C) 2003 by Reinhold Kainhofer <reinhold@kainhofer.com>
 ** Copyright (C) 2003,2007 by Adriaan de Groot <groot@kde.org>
+** Copyright (C) 2007 by Bertjan Broeksema <b.broeksema@kdemail.net>
 **
 ** This is the generic DB viewer widget.
 */
@@ -32,401 +33,360 @@
 
 #include "options.h"
 
-#include <pi-file.h>
 #include <pi-dlp.h>
+#include <pi-file.h>
 
-#include <q3listview.h>
-#include <qdir.h>
-#include <QGridLayout>
-#include <qlayout.h>
-#include <qregexp.h>
+#include <QtCore/QFile>
+#include <QtCore/QDir>
+#include <QtGui/QHeaderView>
 
-#include <k3listbox.h>
-#include <k3listview.h>
-#include <kcombobox.h>
 #include <kmessagebox.h>
-#include <kpushbutton.h>
-#include <ktextedit.h>
 
-#include "listItems.h"
-#include "pilotLocalDatabase.h"
 #include "pilotDatabase.h"
+#include "pilotLocalDatabase.h"
 #include "pilotRecord.h"
-#include "dbFlagsEditor.h"
-#include "dbRecordEditor.h"
-#include "dbAppInfoEditor.h"
 #include "kpilotConfig.h"
+#include "dbFlagsEditor.h"
+#include "dbAppInfoEditor.h"
+#include "dbRecordEditor.h"
 
+#include "ui_viewer_genericdb.h"
 
-#include "dbviewerWidget.moc"
+class GenericDBWidget::Private
+{
+public:
+	Private() : fWidgetsInitialized( false ) {}
 
+	bool fWidgetsInitialized;
+	Ui::GenericDBViewer fWidgetUi;
+	QString fCurrentDB;
+	eDBType fCurrentDBtype;
+};
 
 GenericDBWidget::GenericDBWidget( QWidget *parent, const QString &dbpath )
 	: ViewerPageBase( parent, dbpath, QString(), i18n( "Generic DB Viewer" ) )
-		, fDB( 0L )
+		, fP( new Private )
 {
 	FUNCTIONSETUP;
-	setupWidget();
-	fRecList.setAutoDelete(true);
 }
 
 GenericDBWidget::~GenericDBWidget()
 {
 	FUNCTIONSETUP;
-	if (fDB) KPILOT_DELETE(fDB);
-}
-
-void GenericDBWidget::setupWidget()
-{
-	QGridLayout *g = new QGridLayout( this );
-	g->setMargin(SPACING);
-
-	fDBList = new K3ListBox( this );
-	g->addWidget( fDBList, 0, 0 );
-	fDBType = new KComboBox( false, this );
-	g->addWidget( fDBType, 1, 0 );
-	fDBType->addItem( i18n( "All Databases" ) );
-	fDBType->addItem( i18n( "Only Applications (*.prc)" ) );
-	fDBType->addItem( i18n( "Only Databases (*.pdb)" ) );
-
-	QGridLayout *g1 = new QGridLayout( this );
-	fDBInfo = new KTextEdit( this );
-	fDBInfo->setReadOnly( true );
-	g1->addWidget( fDBInfo, 0, 0 );
-	fDBInfoButton = new KPushButton( i18n( "General Database &Information" ), this );
-	g1->addWidget( fDBInfoButton, 1, 0 );
-	fAppInfoButton = new KPushButton( i18n( "&Application Info Block (Categories etc.)" ), this );
-	g1->addWidget( fAppInfoButton, 2, 0 );
-
-	QGridLayout *g2 = new QGridLayout( this );
-	fRecordList = new K3ListView( this );
-	g2->addWidget( fRecordList, 0, 0, 1, 2 );
-	fRecordList->addColumn(i18n("Rec. Nr."));
-	fRecordList->addColumn(i18n("Length"));
-	fRecordList->addColumn(i18n("Record ID"));
-	fRecordList->setAllColumnsShowFocus(true);
-	fRecordList->setResizeMode( K3ListView::LastColumn );
-	fRecordList->setFullWidth( true );
-	fRecordList->setItemsMovable( false );
-
-	fAddRecord = new KPushButton( i18n("&Add..."), this );
-	g2->addWidget( fAddRecord, 1, 0 );
-	fEditRecord = new KPushButton( i18n("&Edit..."), this );
-	g2->addWidget( fEditRecord, 1, 1 );
-	fDeleteRecord = new KPushButton( i18n("&Delete"), this );
-	g2->addWidget( fDeleteRecord, 1, 2 );
-
-	g1->addLayout( g2, 3, 0 );
-
-
-	g->addLayout( g1, 0, 1, 2, 1 );
-	resize( QSize(682, 661).expandedTo(minimumSizeHint()) );
-
-	connect(fDBList, SIGNAL(highlighted(const QString &)),
-		this, SLOT(slotSelected(const QString &)));
-	connect(fDBType, SIGNAL(activated(int)),
-		this, SLOT(slotDBType(int)));
-	connect(fDBInfoButton,  SIGNAL(clicked()),
-		this, SLOT(slotShowDBInfo()));
-	connect(fAppInfoButton,  SIGNAL(clicked()),
-		this, SLOT(slotShowAppInfo()));
-	connect(fAddRecord,  SIGNAL(clicked()),
-		this, SLOT(slotAddRecord()));
-	connect(fEditRecord,  SIGNAL(clicked()),
-		this, SLOT(slotEditRecord()));
-	connect(fDeleteRecord,  SIGNAL(clicked()),
-		this, SLOT(slotDeleteRecord()));
-	connect(fRecordList, SIGNAL(executed(Q3ListViewItem*)),
-		this, SLOT(slotEditRecord(Q3ListViewItem*)));
-
+	KPILOT_DELETE( fP );
 }
 
 void GenericDBWidget::showPage()
 {
 	FUNCTIONSETUP;
-	fDBInfo->setText(QString());
-	slotDBType(0);
-
-	fDBList->show();
-	fDBInfo->show();
+	
+	if( !fP->fWidgetsInitialized )
+	{
+		fP->fWidgetUi.setupUi( this );
+		
+		// COnfigure the tablewidget.
+		fP->fWidgetUi.fRecordList->verticalHeader()->hide();
+		fP->fWidgetUi.fRecordList->horizontalHeader()->setStretchLastSection( true );
+		fP->fWidgetUi.fRecordList->horizontalHeader()->setSortIndicator ( 0
+			, Qt::AscendingOrder );
+		
+		QVariant data = fP->fWidgetUi.fRecordList->model()->headerData( 0, Qt::Horizontal);
+		qDebug() << data;
+		
+		fP->fWidgetsInitialized = true;
+		
+		connect( fP->fWidgetUi.fDBList, SIGNAL( itemSelectionChanged() )
+			, this, SLOT( slotSelectionChanged() ) );
+		connect( fP->fWidgetUi.fDBType, SIGNAL( activated( int ) )
+			, this, SLOT( slotDBType( int ) ) );
+		connect( fP->fWidgetUi.fDBInfoButton,  SIGNAL( clicked() )
+			, this, SLOT( slotShowDBInfo() ) );
+		connect( fP->fWidgetUi.fAppInfoButton, SIGNAL( clicked() )
+			, this, SLOT( slotShowAppInfo() ) );
+		connect( fP->fWidgetUi.fRecordList, SIGNAL( itemSelectionChanged() )
+			, this, SLOT( slotShowRecord() ) );
+	}
+	
+	slotDBType( 0 );
 }
 
 void GenericDBWidget::hidePage()
 {
-	reset();
+	FUNCTIONSETUP;
+	
+	// Clear the ui
+	fP->fWidgetUi.fDBList->clear();
+	fP->fWidgetUi.fRecordList->clearContents();
+	
 }
 
-void GenericDBWidget::slotSelected(const QString &dbname)
+void GenericDBWidget::slotSelectionChanged()
 {
 	FUNCTIONSETUP;
+	
+	if( fP->fWidgetUi.fDBList->selectedItems().size() == 0 )
+	{
+		return;
+	}
+	
+	QListWidgetItem *item = fP->fWidgetUi.fDBList->selectedItems().first();
+	QString dbname = item->text();
+	
 	DEBUGKPILOT << "Selected DB [" << dbname << ']';
 
-	struct DBInfo dbinfo;
+	fP->fWidgetUi.fRecordList->clearContents();	
+	fP->fCurrentDB = dbname;
+
+	if( !isVisible() )
+	{
+		return;
+	}
+
 	QString display;
-	fRecList.clear();
-	fRecordList->clear();
+	struct DBInfo dbinfo;
 
-	if (fDB) KPILOT_DELETE(fDB);
-	currentDB=dbname;
-
-	if (!isVisible()) return;
-
-	if (dbname.endsWith(CSL1(".pdb")) || dbname.endsWith(CSL1(".PDB")))
+	if( fP->fCurrentDB.endsWith( CSL1( ".pdb" ) )
+		|| fP->fCurrentDB.endsWith( CSL1( ".PDB" ) ) )
 	{
 		// We are dealing with a database
-		currentDBtype=eDatabase;
+		fP->fCurrentDBtype = eDatabase;
+		fP->fCurrentDB.remove( QRegExp( CSL1( ".(pdb|PDB)$" ) ) );
 
-		currentDB.remove( QRegExp(CSL1(".(pdb|PDB)$")) );
-
-		fDB=new PilotLocalDatabase(dbPath(), currentDB, false);
-		if (!fDB || !fDB->isOpen())
+		PilotDatabase *db = new PilotLocalDatabase( dbPath(), fP->fCurrentDB, false );
+		if( !db || !db->isOpen() )
 		{
-			fDBInfo->setText(i18n("<B>Warning:</B> Cannot read "
-				"database file %1.",currentDB));
+			fP->fWidgetUi.fDBInfo->setText( i18n( "<b>Warning:</b> Cannot read "
+				"database file %1.", fP->fCurrentDB ) );
 			return;
 		}
-		dbinfo=fDB->getDBInfo();
-		display.append(i18n("<B>Database:</B> %1, %2 records<BR/>"
-			,QString::fromLatin1(dbinfo.name),fDB->recordCount()));
+		
+		// Deletes the previous loaded db (if one is loaded) and sets db as current.
+		setDatabase( db );
+		
+		dbinfo = db->getDBInfo();
+		
 		char buff[5];
-		set_long(buff, dbinfo.type);
+		set_long( buff, dbinfo.type );
 		buff[4]='\0';
-		QString tp = QString::fromLatin1(buff);
-		set_long(buff, dbinfo.creator);
+		QString tp = QString::fromLatin1( buff );
+		
+		set_long( buff, dbinfo.creator );
 		buff[4]='\0';
-		QString cr = QString::fromLatin1(buff);
-		display.append(i18n("<B>Type:</B> %1, <B>Creator:</B> %2<br/><br/>",tp,cr));
+		QString cr = QString::fromLatin1( buff );
+		
+		display.append( i18n( "<p><b>Database:</b> %1, %2 records<br/>"
+			, QString::fromLatin1( dbinfo.name ), db->recordCount() ) );
+		display.append( i18n( "<b>Type:</b> %1<br/><b>Creator:</b> %2</p>", tp
+			, cr ) );
 
 		int currentRecord = 0;
 		PilotRecord *pilotRec;
+		QTableWidgetItem *recordNr;
+		QTableWidgetItem *recordLength;
+		QTableWidgetItem *id;
 
-		while ((pilotRec = fDB->readRecordByIndex(currentRecord)) != 0L)
+		fP->fWidgetUi.fRecordList->setRowCount( db->recordCount() );
+
+		while( ( pilotRec = db->readRecordByIndex( currentRecord ) ) != 0L )
 		{
-//			if (!(pilotRec->isDeleted()) )
+			if( !( pilotRec->isDeleted() ) )
 			{
-				PilotListViewItem*item=new PilotListViewItem(fRecordList,
-					QString::number(currentRecord), QString::number(pilotRec->size()),
-					QString::number(pilotRec->id()),
-					QString(),
-					pilotRec->id(), pilotRec);
-				item->setNumericCol(0, true);
-				item->setNumericCol(1, true);
-				item->setNumericCol(2, true);
+				recordNr = new QTableWidgetItem();
+				recordNr->setText( QString::number( currentRecord ) );
+				recordNr->setData( Qt::UserRole, (qulonglong) pilotRec->id() );
+				recordLength = new QTableWidgetItem( QString::number( pilotRec->size() ) );
+				recordLength->setData( Qt::UserRole, (qulonglong) pilotRec->id() );
+				id = new QTableWidgetItem( QString::number( pilotRec->id() ) );
+				id->setData( Qt::UserRole, (qulonglong) pilotRec->id() );
+				
+				fP->fWidgetUi.fRecordList->setItem( currentRecord, 0, recordNr );
+				fP->fWidgetUi.fRecordList->setItem( currentRecord, 1, recordLength );
+				fP->fWidgetUi.fRecordList->setItem( currentRecord, 2, id );
 			}
-			fRecList.append(pilotRec);
-
 			currentRecord++;
 		}
 
 		DEBUGKPILOT << "Total " << currentRecord << " records.";
-
 	}
 	else
 	{
 		// we are dealing with an application
-		currentDBtype=eApplication;
+		fP->fCurrentDBtype = eApplication;
 
-		QByteArray filename = QFile::encodeName(dbPath() + CSL1("/") + dbname);
+		QByteArray filename = QFile::encodeName( dbPath() + '/' + dbname );
 		const char *s = filename;
-		struct pi_file *pf = pi_file_open(const_cast<char *>(s));
-		if (!pf)
+		struct pi_file *pf = pi_file_open( const_cast<char *>( s ) );
+		
+		if( !pf )
 		{
-			fDBInfo->setText(i18n("<B>Warning:</B> Cannot read "
-				"application file %1.",dbname));
+			fP->fWidgetUi.fDBInfo->setText( i18n( "<b>Warning:</b> Cannot read "
+				"application file %1.", dbname ) );
 			return;
 		}
+		
 #if PILOT_LINK_NUMBER < PILOT_LINK_0_12_0
-		if (pi_file_get_info(pf,&dbinfo))
+		if( pi_file_get_info (pf, &dbinfo ) )
 		{
-			fDBInfo->setText(i18n("<B>Warning:</B> Cannot read "
-				"application file %1.",dbname));
+			fP->fWidgetUi.fDBInfo->setText( i18n("<b>Warning:</b> Cannot read "
+				"application file %1.", dbname ) );
 			return;
 		}
 #else
-		pi_file_get_info(pf,&dbinfo);
+		pi_file_get_info( pf, &dbinfo );
 #endif
-		display.append(i18n("<B>Application:</B> %1<BR/><BR/>",dbname));
+
+		display.append( i18n("<p><b>Application:</b> %1</p>", dbname ) );
 	}
-	enableWidgets(currentDBtype==eDatabase);
+	
+	enableWidgets( fP->fCurrentDBtype == eDatabase );
 
 	QDateTime ttime;
 
-	ttime.setTime_t(dbinfo.createDate);
-	display.append(i18n("Created: %1<BR/>",ttime.toString()));
+	ttime.setTime_t( dbinfo.createDate );
+	display.append( i18n( "<p><b>Created:</b> %1<br/>", ttime.toString() ) );
 
-	ttime.setTime_t(dbinfo.modifyDate);
-	display.append(i18n("Modified: %1<BR/>",ttime.toString()));
+	ttime.setTime_t( dbinfo.modifyDate );
+	display.append( i18n( "<b>Modified:</b> %1", ttime.toString() ) );
 
-	ttime.setTime_t(dbinfo.backupDate);
-	display.append(i18n("Backed up: %1<BR/>",ttime.toString()));
+	ttime.setTime_t( dbinfo.backupDate );
+	display.append( i18n( "<br/><b>Backed up:</b> %1</p>", ttime.toString() ) );
 
-	fDBInfo->setText(display);
+	fP->fWidgetUi.fDBInfo->setText( display );
 }
 
-void GenericDBWidget::slotDBType(int mode)
+void GenericDBWidget::enableWidgets( bool enable )
+{
+	fP->fWidgetUi.fDBInfoButton->setEnabled( enable );
+	fP->fWidgetUi.fAppInfoButton->setEnabled( enable );
+	fP->fWidgetUi.fRecordList->setEnabled( enable );
+}
+
+void GenericDBWidget::slotDBType( int mode )
 {
 	FUNCTIONSETUP;
-	if (!isVisible()) return;
+	
+	if( !isVisible() )
+	{
+		return;
+	}
 
 	reset();
 
-	QDir dir(dbPath());
-	switch (mode)
+	QDir dir( dbPath() );
+	switch( mode )
 	{
 		case 1:
-			dir.setNameFilters(QStringList() << CSL1("*.prc")); break;
+			dir.setNameFilters( QStringList() << CSL1( "*.prc" ) );
+			break;
 		case 2:
-			dir.setNameFilters(QStringList() << CSL1("*.pdb")); break;
+			dir.setNameFilters( QStringList() << CSL1( "*.pdb" ) );
+			break;
 		case 0:
 		default:
-			dir.setNameFilters(QStringList() << CSL1("*.pdb;*.prc")); break;
+			dir.setNameFilters( QStringList() << CSL1( "*.pdb" ) << CSL1( "*.prc" ) );
+			break;
 	}
+	
 	QStringList l = dir.entryList();
-	fDBList->insertStringList(l);
+	fP->fWidgetUi.fDBList->addItems( l );
 }
 
 void GenericDBWidget::reset()
 {
 	FUNCTIONSETUP;
-	fDBList->clear();
-	fDBInfo->clear();
-	fRecordList->clear();
-	if (fDB)  KPILOT_DELETE(fDB);
-	currentDB=QString();
-}
+	fP->fWidgetUi.fDBList->clear();
+	fP->fWidgetUi.fDBInfo->clear();
+	fP->fWidgetUi.fRecordList->clearContents();
 
-void GenericDBWidget::slotAddRecord()
-{
-	FUNCTIONSETUP;
-	pi_buffer_t *b = pi_buffer_new(0);
-	PilotRecord *rec=new PilotRecord(b, 0, 0, 0);
-	PilotListViewItem*item=new PilotListViewItem(fRecordList,
-		QString::number(-1), QString::number(rec->size()),
-		QString::number(rec->id()), QString(),
-		rec->id(), rec);
-	if (slotEditRecord(item))
-	{
-		fRecList.append(rec);
-	}
-	else
-	{
-		KPILOT_DELETE(item);
-		KPILOT_DELETE(rec);
-	}
-}
-
-bool GenericDBWidget::slotEditRecord(Q3ListViewItem*item)
-{
-	FUNCTIONSETUP;
-	PilotListViewItem*currRecItem=dynamic_cast<PilotListViewItem*>(item);
-	if (currRecItem)
-	{
-		PilotRecord*rec=(PilotRecord*)currRecItem->rec();
-		int nr=currRecItem->text(0).toInt();
-		DBRecordEditor*dlg=new DBRecordEditor(rec, nr, this);
-		if (dlg->exec())
-		{
-			currRecItem->setText(1, QString::number(rec->size()));
-			currRecItem->setText(2, QString::number(rec->id()));
-			fRecordList->triggerUpdate();
-			writeRecord(rec);
-			KPILOT_DELETE(dlg);
-			return true;
-		}
-		KPILOT_DELETE(dlg);
-	}
-	else
-	{
-		// Either nothing selected, or some error occurred...
-		KMessageBox::information(this, i18n("You must select a record for editing."), i18n("No Record Selected"), CSL1("norecordselected"));
-	}
-	return false;
-}
-void GenericDBWidget::slotEditRecord()
-{
-	slotEditRecord(fRecordList->selectedItem());
-}
-
-void GenericDBWidget::slotDeleteRecord()
-{
-	FUNCTIONSETUP;
-	PilotListViewItem*currRecItem=dynamic_cast<PilotListViewItem*>(fRecordList->selectedItem());
-	if (currRecItem && (KMessageBox::questionYesNo(this
-		, i18n("<qt><p>Do you really want to delete the selected record?"
-			" This cannot be undone.</p><p>Delete record?</p></qt>")
-			, i18n("Deleting Record"), KStandardGuiItem::del()
-			, KStandardGuiItem::cancel())==KMessageBox::Yes) )
-	{
-		PilotRecord*rec=(PilotRecord*)currRecItem->rec();
-		rec->setDeleted();
-		writeRecord(rec);
-		// fRecordList->triggerUpdate();
-		KPILOT_DELETE(currRecItem);
-	}
-}
-
-void GenericDBWidget::slotShowAppInfo()
-{
-	FUNCTIONSETUP;
-	if (!fDB) return;
-	char*appBlock=new char[0xFFFF];
-	int len=fDB->readAppBlock((unsigned char*)appBlock, 0xFFFF);
-	DBAppInfoEditor*dlg=new DBAppInfoEditor(appBlock, len, this);
-	/**
-	 * TODO: Um.  We really don't know how to handle this right now...
-	 */
-	if (dlg->exec())
-	{
-		fDB->writeAppBlock( (unsigned char*)(dlg->appInfo), dlg->len );
-//		TODO: ???  We don't support editing databases inline.  This really needs to get looked at.
-//		KPilotConfig::addAppBlockChangedDatabase(getCurrentDB());
-//		KPilotSettings::self()->writeConfig();
-	}
-	KPILOT_DELETE(dlg);
-	delete[] appBlock;
+	fP->fCurrentDB = QString();
 }
 
 void GenericDBWidget::slotShowDBInfo()
 {
 	FUNCTIONSETUP;
-	if ( !fDB || !isVisible() ) return;
-	DBInfo db=fDB->getDBInfo();
-	DBFlagsEditor*dlg=new DBFlagsEditor(&db, this);
-	if (dlg->exec())
+	
+	PilotLocalDatabase *db = static_cast<PilotLocalDatabase*>( database() );
+	
+	if( !db || !isVisible() )
+	{
+		 return;
+	}
+	
+	DBInfo info = db->getDBInfo();
+	DBFlagsEditor *dlg = new DBFlagsEditor( &info, this );
+	
+	if( dlg->exec() )
 	{
 		DEBUGKPILOT<< "OK pressed, assiging DBInfo, flags="
-			<< db.flags << ",  miscFlag=" << db.miscFlags;
-		fDB->setDBInfo(db);
+			<< info.flags << ",  miscFlag=" << info.miscFlags;
+		db->setDBInfo( info );
 
-//		KPilotConfig::addFlagsChangedDatabase(getCurrentDB());
-//		KPilotSettings::self()->writeConfig();
+//		KPilotConfig::addFlagsChangedDatabase( dbPath() );
+		KPilotSettings::self()->writeConfig();
 
-		slotSelected(fDBList->currentText());
+		slotSelectionChanged();
 	}
-	KPILOT_DELETE(dlg);
+	
+	KPILOT_DELETE( dlg );
 }
 
-void GenericDBWidget::enableWidgets(bool enable)
+void GenericDBWidget::slotShowAppInfo()
 {
-	//FUNCTIONSETUP;
-	fDBInfoButton->setEnabled(enable);
-	fAppInfoButton->setEnabled(enable);
-	fRecordList->setEnabled(enable);
-	fAddRecord->setEnabled(enable);
-	fEditRecord->setEnabled(enable);
-	fDeleteRecord->setEnabled(enable);
-}
-
-void GenericDBWidget::writeRecord(PilotRecord*r)
-{
-	// FUNCTIONSETUP;
-	if (fDB && r)
+	FUNCTIONSETUP;
+	
+	PilotLocalDatabase *db = static_cast<PilotLocalDatabase*>( database() );
+	
+	if( !db || !isVisible() )
 	{
-		fDB->writeRecord(r);
+		 return;
 	}
+	
+	char *appBlock = new char[0xFFFF];
+	int len = db->readAppBlock( ( unsigned char* ) appBlock, 0xFFFF );
+	DBAppInfoEditor *dlg = new DBAppInfoEditor( appBlock, len, this );
+	
+	if( dlg->exec() )
+	{
+		db->writeAppBlock( (unsigned char*)(dlg->appInfo), dlg->len );
+
+//		KPilotConfig::addAppBlockChangedDatabase( dbPath() );
+//		KPilotSettings::self()->writeConfig();
+	}
+	
+	KPILOT_DELETE( dlg );
+	
+	delete[] appBlock;
 }
 
-
-
-
-
+void GenericDBWidget::slotShowRecord()
+{
+	FUNCTIONSETUP;
+	
+	QList<QTableWidgetItem*> rowItems = fP->fWidgetUi.fRecordList->selectedItems();
+	
+	if( !rowItems.isEmpty() )
+	{
+		recordid_t id = rowItems.first()->data( Qt::UserRole ).value<id_t>();
+		PilotRecord *rec = database()->readRecordById( id );
+		
+		DBRecordEditor *dlg = new DBRecordEditor( rec, rowItems.first()->row(), this );
+		
+		if( dlg->exec() )
+		{
+			rowItems.at( 1 )->setText( QString::number( rec->size() ) );
+			rowItems.at( 2 )->setText( QString::number(rec->id() )  );
+			
+			database()->writeRecord( rec );
+			
+			KPILOT_DELETE( dlg );
+		}
+		KPILOT_DELETE( dlg );
+	}
+	else
+	{
+		// Either nothing selected, or some error occurred...
+		KMessageBox::information( this
+			, i18n( "You must select a record for editing." )
+			, i18n( "No Record Selected" ), CSL1( "norecordselected" ) );
+	}
+}

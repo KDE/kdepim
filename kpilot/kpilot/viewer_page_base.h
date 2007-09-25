@@ -54,6 +54,8 @@ public:
 protected:
 
 	PilotDatabase* database() const;
+	
+	void setDatabase( PilotDatabase *db );
 
 	/**
 	 * Loads the appInfo block.
