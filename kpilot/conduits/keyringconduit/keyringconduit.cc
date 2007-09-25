@@ -159,6 +159,9 @@ bool KeyringConduit::initDataProxies()
 	// Do not keep the password any longer in memory then necessary.
 	pass.clear();
 	
+	// We added a record to the newly created database so load it.
+	fPCDataProxy->loadAllRecords();
+	
 	return true;
 }
 

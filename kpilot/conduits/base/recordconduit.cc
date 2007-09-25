@@ -504,7 +504,8 @@ void RecordConduit::copyHHToPC()
 	fHHDataProxy->setIterateMode( DataProxy::All );
 	fPCDataProxy->setIterateMode( DataProxy::All );
 	
-	DEBUGKPILOT << "Walking over all hh records.";
+	DEBUGKPILOT << "Walking over all (" << fHHDataProxy->recordCount()
+		<< ") hh records.";
 	
 	// 5.3.4
 	fHHDataProxy->resetIterator();
@@ -533,7 +534,8 @@ void RecordConduit::copyHHToPC()
 		}
 	}
 	
-	DEBUGKPILOT << "Walking over all pc records.";
+	DEBUGKPILOT << "Walking over all (" << fPCDataProxy->recordCount() 
+		<< ") pc records.";
 	
 	fPCDataProxy->resetIterator();
 	// 5.3.5

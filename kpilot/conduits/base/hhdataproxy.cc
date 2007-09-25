@@ -66,7 +66,7 @@ QString HHDataProxy::generateUniqueId()
 		}
 	}
 	
-	return QString::number( id + fCreated.size() + 1 );
+	return QString::number( id + 1 );
 }
 
 void HHDataProxy::commitCreate( Record *rec )
@@ -193,7 +193,9 @@ void HHDataProxy::loadAllRecords()
 			// Read the next one.
 			pRec = fDatabase->readRecordByIndex( ++index );
 		}
-		fCounter.setStartCount(fRecords.count());
+		fCounter.setStartCount( fRecords.count() );
+		
+		DEBUGKPILOT << "Loaded " << fRecords.count() << " records.";
 	}
 }
 

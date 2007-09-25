@@ -120,7 +120,9 @@ bool KeyringHHDataProxy::openDatabase( const QString &pass )
 			// For now remove the zero record from the record list.
 			fRecords.remove( QString::number( fZeroRecord->id() ) );
 			
-			fCounter.setStartCount(fRecords.count());
+			// Startcount is set by loadAllRecords, but because the zero record doesn't
+			// count we reset the start count here.
+			fCounter.setStartCount( fRecords.count() );
 			
 			return true;
 		}
@@ -242,6 +244,15 @@ bool KeyringHHDataProxy::createDataStore()
 		// now write the appInfo block, which includes the 4 explicitly-added categories
 		// and the 5th one set via setCategoryNames()
 		appInfo.writeTo( fDatabase );
+		
+		loadAllRecords();
+		
+		// For now remove the zero record from the record list.
+		fRecords.remove( QString::number( fZeroRecord->id() ) );
+		
+		// Startcount is set by loadAllRecords, but because the zero record doesn't
+		// count we reset the start count here.
+		fCounter.setStartCount( fRecords.count() );
 		
 		return true;
 	}

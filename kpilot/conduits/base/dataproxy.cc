@@ -47,10 +47,11 @@ QString DataProxy::create( Record *record )
 	// Temporary id.
 	QString uniqueId = generateUniqueId();
 	
-	DEBUGKPILOT << "Creating record: " << uniqueId;
-	
 	// Make sure that the new record has the right id and add the record.
 	record->setId( uniqueId );
+	
+	DEBUGKPILOT << "Inserted into fRecords: " << uniqueId;
+	
 	fRecords.insert( uniqueId, record );
 	
 	// Update rollback/volatility information.
@@ -199,6 +200,8 @@ bool DataProxy::commit()
 	// Commit created records.
 	QStringListIterator it( fCreated.keys() );
 	
+	DEBUGKPILOT << "Committing " << fCreated.size() << " records.";
+	
 	// Reset the map
 	fCreated.clear();
 	
@@ -206,8 +209,10 @@ bool DataProxy::commit()
 	{
 		QString id = it.next();
 		
+		DEBUGKPILOT << "Committing: " << id;
+		
 		Record *rec = find( id );
-		if( rec && !fCreated.value( id ) )
+		if( rec )
 		{
 			commitCreate( rec );
 			
@@ -216,7 +221,7 @@ bool DataProxy::commit()
 			{
 				fCreated.remove( id );
 				fCreated.insert( rec->id(), true );
-			
+				
 				fRecords.remove( id );
 				fRecords.insert( rec->id(), rec );
 			
@@ -226,6 +231,10 @@ bool DataProxy::commit()
 			{
 				fCreated.insert( rec->id(), true );
 			}
+		}
+		else
+		{
+			DEBUGKPILOT << "Record with id: " << id << " not found!";
 		}
 	}
 	
