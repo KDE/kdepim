@@ -1998,7 +1998,7 @@ To enable the feature, add a line reading (under [General] section):
 </varlistentry>
 
 <varlistentry>
-<term><guilabel>CheckOutOfOfficeOnStartup"</guilabel></term>
+<term><guilabel>CheckOutOfOfficeOnStartup</guilabel></term>
 <listitem>
 <para>
 With this option enabled, KMail will check on every startup if there is an
