@@ -1997,6 +1997,19 @@ To enable the feature, add a line reading (under [General] section):
 </listitem>
 </varlistentry>
 
+<varlistentry>
+<term><guilabel>CheckOutOfOfficeOnStartup"</guilabel></term>
+<listitem>
+<para>
+With this option enabled, KMail will check on every startup if there is an
+active out-of-office configured and show a warning if this is the case.
+
+To disable the feature, add a line reading (under [OutOfOffice] section):
+</para>
+<programlisting>CheckOutOfOfficeOnStartup=false
+</programlisting>
+</listitem>
+</varlistentry>
 
 
 <varlistentry>
