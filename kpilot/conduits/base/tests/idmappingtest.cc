@@ -50,6 +50,8 @@ private slots:
 	void testRecordId();
 	void testCommitRollBack();
 	void testWeirdCase();
+	void testSamePCIdForMoreHHids();
+	void testSameHHIdForMorePCids();
 	void cleanupTestCase();
 	
 
@@ -197,6 +199,28 @@ void IDMappingTest::testWeirdCase()
 	// The other two should be gone.
 	QVERIFY( !mapping.containsHHId( CSL1( "weird-1" ) ) );
 	QVERIFY( !mapping.containsPCId( CSL1( "weird-2" ) ) );
+}
+
+void IDMappingTest::testSamePCIdForMoreHHids()
+{
+	IDMapping mapping( fUser, fConduit );
+	mapping.map( CSL1( "hh-1" ), CSL1( "pc-1" ) );
+	mapping.map( CSL1( "hh-2" ), CSL1( "pc-1" ) );
+	
+	QVERIFY( mapping.hhRecordId( CSL1( "pc-1" ) ) == CSL1( "hh-2" ) );
+	QVERIFY( mapping.pcRecordId( CSL1( "hh-2" ) ) == CSL1( "pc-1" ) );
+	QVERIFY( !mapping.containsHHId( CSL1( "hh-1" ) ) );
+}
+
+void IDMappingTest::testSameHHIdForMorePCids()
+{
+	IDMapping mapping( fUser, fConduit );
+	mapping.map( CSL1( "hh-1" ), CSL1( "pc-1" ) );
+	mapping.map( CSL1( "hh-1" ), CSL1( "pc-2" ) );
+	
+	QVERIFY( mapping.pcRecordId( CSL1( "hh-1" ) ) == CSL1( "pc-2" ) );
+	QVERIFY( mapping.hhRecordId( CSL1( "pc-2" ) ) == CSL1( "hh-1" ) );
+	QVERIFY( !mapping.containsPCId( CSL1( "pc-1" ) ) );
 }
 
 void IDMappingTest::cleanDir()
