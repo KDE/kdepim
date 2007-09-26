@@ -53,13 +53,13 @@ extern "C"
 }
 
 VCard_LDIFCreator::VCard_LDIFCreator()
-  : mSplitter( 0 )
+  : mFont( 0 )
 {
 }
 
 VCard_LDIFCreator::~VCard_LDIFCreator()
 {
-  delete mSplitter;
+  delete mFont;
 }
 
 
@@ -149,25 +149,26 @@ bool VCard_LDIFCreator::readContents( const QString &path )
   return true;
 }
 
+QRect glyphCoords(int index, int fontWidth)
+{
+    int itemsPerRow = fontWidth / 4;
+    return QRect( (index % itemsPerRow) * 4, (index / itemsPerRow) * 7, 4, 7 );
+}
 
 bool VCard_LDIFCreator::createImageSmall()
 {
   text = name + '\n' + text;
 
-  if ( !mSplitter ) {
-    mSplitter = new KPixmapSplitter;
+  if ( !mFont ) {
     QString pixmap = KStandardDirs::locate( "data", "konqueror/pics/thumbnailfont_7x4.png" );
     if ( pixmap.isEmpty() ) {
-      delete mSplitter;
-      mSplitter = 0;
       kWarning() <<"VCard_LDIFCreator: Font image \"thumbnailfont_7x4.png\" not found!";
       return false;
     }
-    mSplitter->setPixmap( QPixmap( pixmap ) );
-    mSplitter->setItemSize( QSize( 4, 7 ) );
+    mFont = new QPixmap( pixmap );
   }
 
-  QSize chSize = mSplitter->itemSize(); // the size of one char
+  QSize chSize(4, 7); // the size of one char
   int xOffset = chSize.width();
   int yOffset = chSize.height();
 
@@ -222,7 +223,7 @@ bool VCard_LDIFCreator::createImageSmall()
       continue;
     }
 
-    rect = mSplitter->coordinates( ch );
+    rect = glyphCoords( (unsigned char)ch.toLatin1(), mFont->width() );
     /* FIXME porting
     if ( !rect.isEmpty() )
       bitBlt( &mPixmap, QPoint(x,y), fontPixmap, rect, Qt::CopyROP );
