@@ -49,6 +49,7 @@ void HHDataProxy::syncFinished()
 	{
 		fDatabase->cleanup();
 		fDatabase->resetSyncFlags();
+		saveCategories();
 	}
 }
 
@@ -208,10 +209,10 @@ QStringList HHDataProxy::categoryNames() const
 		for( unsigned int i = 0; i < Pilot::CATEGORY_COUNT; i++ )
 		{
 			QString catName = fAppInfo->categoryName( i );
-			if( !catName.isEmpty() )
-			{
-				names.append( catName );
-			}
+			// in the case of handheld categories, return all category names,
+			// even if they're empty (QString(), as the above method
+			// will return)
+			names.append( catName );
 		}
 		
 		return names;

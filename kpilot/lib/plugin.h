@@ -29,6 +29,7 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
+#include "pilotLocalDatabase.h"
 #include "syncAction.h"
 
 #include <QtCore/QVariantList>
@@ -249,7 +250,7 @@ protected:
 	void setFirstSync(bool first) { fFirstSync=first; } ;
 
 	PilotDatabase *fDatabase;
-	PilotDatabase *fLocalDatabase; // Guaranteed to be a PilotLocalDatabase
+	PilotLocalDatabase *fLocalDatabase; // Guaranteed to be a PilotLocalDatabase
 
 	/**
 	* Open both the local copy of database @p dbName

@@ -172,6 +172,22 @@ void KeyringHHDataProxy::loadCategories()
 	}
 }
 
+void KeyringHHDataProxy::saveCategories()
+{
+	FUNCTIONSETUP;
+	
+	PilotKeyringInfo * appInfo = dynamic_cast<PilotKeyringInfo*>(fAppInfo);
+	
+	if( fDatabase && fDatabase->isOpen() && appInfo)
+	{
+		QStringList categories = categoryNames();
+		for (unsigned int i = 0; i < Pilot::CATEGORY_COUNT; i++) {
+			appInfo->setCategoryName(i, categories.at(i));
+		}
+		appInfo->writeTo(fDatabase);
+	}
+}
+
 HHRecord* KeyringHHDataProxy::createHHRecord( PilotRecord *rec )
 {
 	FUNCTIONSETUP;
@@ -234,10 +250,7 @@ bool KeyringHHDataProxy::createDataStore()
 			new KeyringHHRecord( &appInfo,  i18n("KPilot cares"), i18n("KDE"), "",
 					i18n("Thanks for using KPilot!"), fDesKey);
 		
-		QStringList cats;
-		cats.append(CSL1("Web"));
-		
-		fFirstRecord->setCategoryNames(cats);
+		fFirstRecord->setCategoryNames(QStringList() << CSL1("Web"));
 		
 		fDatabase->writeRecord( fFirstRecord->pilotRecord() );
 		

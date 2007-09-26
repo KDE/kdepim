@@ -50,7 +50,7 @@ QString DataProxy::create( Record *record )
 	// Make sure that the new record has the right id and add the record.
 	record->setId( uniqueId );
 	
-	DEBUGKPILOT << "Inserted into fRecords: " << uniqueId;
+	DEBUGKPILOT << "Record created with id: [" << uniqueId << "]";
 	
 	fRecords.insert( uniqueId, record );
 	
@@ -72,7 +72,7 @@ void DataProxy::remove( const QString &id )
 		return;
 	}
 	
-	DEBUGKPILOT << "Removing record: " << id;
+	DEBUGKPILOT << "Removing record id: [" << id << "]";
 	// Remove record.
 	fRecords.remove( id );
 	
@@ -90,11 +90,11 @@ void DataProxy::update( const QString &id, Record *newRecord )
 	if( oldRecord == 0L )
 	{
 		// No record, should not happen.
-		DEBUGKPILOT << "There is no record with id " << id
-			<< ". Record not updated and not added.";
+		DEBUGKPILOT << "There is no record with id: [" << id
+			<< "]. Record not updated and not added.";
 		return;
 	}
-	DEBUGKPILOT << "Updating record: " << id;
+	DEBUGKPILOT << "Updating record id: [" << id << "]";
 	// Make sure that the new record has the right id and update the old record.
 	newRecord->setId( id );
 	fRecords.insert( id, newRecord );
@@ -200,7 +200,7 @@ bool DataProxy::commit()
 	// Commit created records.
 	QStringListIterator it( fCreated.keys() );
 	
-	DEBUGKPILOT << "Committing " << fCreated.size() << " records.";
+	DEBUGKPILOT << "Committing: [" << fCreated.size() << "] records.";
 	
 	// Reset the map
 	fCreated.clear();
@@ -209,7 +209,7 @@ bool DataProxy::commit()
 	{
 		QString id = it.next();
 		
-		DEBUGKPILOT << "Committing: " << id;
+		DEBUGKPILOT << "Committing id: [" << id << "]";
 		
 		Record *rec = find( id );
 		if( rec )
@@ -234,7 +234,7 @@ bool DataProxy::commit()
 		}
 		else
 		{
-			DEBUGKPILOT << "Record with id: " << id << " not found!";
+			DEBUGKPILOT << "Record with id: [" << id << "] not found!";
 		}
 	}
 	
@@ -272,7 +272,7 @@ bool DataProxy::commit()
 		
 		if( !fDeleted.value( oldRec->id() ) )
 		{
-			DEBUGKPILOT << "deleting record " << oldRec->id();
+			DEBUGKPILOT << "Deleting record: [" << oldRec->id() << "].";
 			commitDelete( oldRec );
 			fDeleted.insert( oldRec->id(), true );
 		}
@@ -296,7 +296,7 @@ bool DataProxy::rollback()
 		Record *rec = find( id );
 		if( rec && fCreated.value( id ) )
 		{
-			DEBUGKPILOT << "deleting created record " << rec->id();
+			DEBUGKPILOT << "Deleting created record: [" << rec->id() << "].";
 			
 			commitDelete( rec );
 			fCreated.insert( rec->id(), false );
@@ -313,7 +313,7 @@ bool DataProxy::rollback()
 		Record *oldRec = i.next();
 		if( fUpdated.value( oldRec->id() ) )
 		{
-			DEBUGKPILOT << "restoring changed record " << oldRec->id();
+			DEBUGKPILOT << "Restoring changed record: [" << oldRec->id() << "].";
 			
 			QString oldId = oldRec->id();
 			commitUpdate( oldRec );
@@ -338,7 +338,7 @@ bool DataProxy::rollback()
 		
 		if( fDeleted.value( oldRec->id() ) )
 		{
-			DEBUGKPILOT << "Restoring deleted record " << oldRec->id();
+			DEBUGKPILOT << "Restoring deleted record: [" << oldRec->id() << "].";
 		
 			QString oldId = oldRec->id();
 			commitCreate( oldRec );
