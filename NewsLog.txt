@@ -1,3 +1,31 @@
+Wednesday, September 26st 2007
+
+Bugfixes
+--------
+
+* kolab/issue1983 Fix encoding issue in SMIME encryption message. 
+* kolab/issue1924 Retain state of the crypto state indicators across drafts. 
+* KDE bug 132938 Avoid asking the user to go online spuriously/ 
+* kolab/issue1743 Fix upload of out-of-office scripts (716765) 
+* kolab/issue2023 Missing accelarators in text snippet context menu (716933) 
+* kolab/issue2009 Fix new/unread flag handling during DIMAP sync (717162) 
+* kolab/issue2029 Allow to hide signature details again (717191) 
+
+Features
+--------
+
+* prokde35-z item 70: Check calendar link in invitations (714358)
+* prokde35-z item 30: Text snippet support in the kmail composer window (715206)
+* prokde35-z item 47: Support for read only contacts folders (715588)
+* prokde35-z item 67: Support for invitation counter proposals (716376)
+* prokde35-z item 21: D'n'D out of the folder view, removal of the "save encoded" menu entry (716393)
+* prokde35-z item 7: Close application despite presence of a system tray icon, configurably (716415)
+* prokde35-z item 40: Details on demand for pgp/smime signature status (716476)
+* prokde35-z item 79: Warn about active out-of-office scripts on startup (716765)
+* prokde35-z item 17: Better error reporting for quota errors (716771)
+* prokde35-z item 24: New attachment view in mail viewer (717292)
+
+
 Friday, September 21st 2007
 
 Bugfixes
