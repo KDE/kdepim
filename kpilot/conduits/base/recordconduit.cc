@@ -329,31 +329,35 @@ void RecordConduit::updateBackupDatabase()
 {
 	FUNCTIONSETUP;
 	
-	KPILOT_DELETE(fDatabase);
-
-	struct DBInfo dbinfo = fLocalDatabase->getDBInfo();
-
-	QString name(dbinfo.name);
-	QString dbpath(fLocalDatabase->dbPathName());
+	int index = 0;
+	PilotRecord *rec = fDatabase->readRecordByIndex( index );
+	QList<recordid_t> addedIds;
 	
-
-	DEBUGKPILOT << "Retrieving database name: [" << name 
-		<< "] from Palm to: [" << dbpath << "]";
+	// Copy all records from the pilot database to the local copy of it.
+	while( rec )
+	{
+		fLocalDatabase->writeRecord( rec );
+		addedIds.append( rec->id() );
+		rec = fDatabase->readRecordByIndex( ++index );
+	}
 	
-	KPILOT_DELETE(fLocalDatabase);
-
-	if (!deviceLink()->retrieveDatabase(dbpath, &dbinfo) )
+	index = 0;
+	rec = fLocalDatabase->readRecordByIndex( index );
+	
+	// Remove all records that are not explicitly added in the previous loop.
+	while( rec )
 	{
-		WARNINGKPILOT << "Could not retrieve database [" << name << "] from the handheld.";
+		if( !addedIds.contains( rec->id() ) )
+		{
+			fLocalDatabase->deleteRecord( rec->id() );
+		}
+		
+		rec = fLocalDatabase->readRecordByIndex( ++index );
 	}
-	PilotLocalDatabase * localDB = new PilotLocalDatabase( dbpath );
-	if (!localDB || !localDB->isOpen())
-	{
-		WARNINGKPILOT << "local backup of database" << name << " could not be initialized.";
-	}
-
-	fLocalDatabase = localDB;
+	fLocalDatabase->cleanup();
+	fLocalDatabase->resetSyncFlags();
 }
+
 
 // 4.1 || 5.2
 void RecordConduit::hotOrFullSync()
