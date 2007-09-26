@@ -38,7 +38,6 @@
 #include <klocale.h>
 #include <kabc/ldifconverter.h>
 #include <kabc/vcardconverter.h>
-#include <kpixmapsplitter.h>
 #include <kstandarddirs.h>
 
 #include "ldifvcardcreator.h"
