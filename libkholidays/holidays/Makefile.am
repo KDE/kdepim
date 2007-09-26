@@ -1,7 +1,8 @@
 
 holidaysdir = $(kde_datadir)/libkholidays
 
-holidays_DATA = holiday_at holiday_au holiday_bavarian holiday_be holiday_br \
+holidays_DATA = holiday_ar holiday_at holiday_au \
+                holiday_bavarian holiday_be holiday_br \
                 holiday_ca holiday_catalan holiday_co \
                 holiday_ch holiday_cz holiday_de holiday_dk holiday_ee \
                 holiday_es holiday_fi holiday_fr holiday_frswiss holiday_gb \
