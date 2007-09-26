@@ -36,7 +36,7 @@
 
 #include <kdebug.h>
 #include <kglobal.h>
-#include <kglobalsettings.h>
+#include <KColorScheme>
 #include <klocale.h>
 #include <kiconloader.h>
 #include <kconfig.h>
@@ -92,8 +92,7 @@ void CardViewLookNFeelPage::restoreSettings( const KConfigGroup &config )
 {
   // colors
   cbEnableCustomColors->setChecked( config.readEntry( "EnableCustomColors", false ) );
-  QColor c;
-  c = KGlobalSettings::baseColor();
+  QColor c = KColorScheme(QPalette::Active).background().color();
   lbColors->addColor( i18n("Background Color"), 
                       config.readEntry( "BackgroundColor", c ) );
   c = palette().color( QPalette::Foreground );
