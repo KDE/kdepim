@@ -37,6 +37,7 @@
 #include <klineedit.h>
 #include <klocale.h>
 #include <kmessagebox.h>
+#include <kstringhandler.h>
 
 #include <qapplication.h>
 #include <qcheckbox.h>
@@ -99,7 +100,7 @@ class SetupScalixAdmin : public KConfigPropagator::Change
       c.setGroup( "Account" );
 
       c.writeEntry( "user", ScalixConfig::self()->user() );
-      c.writeEntry( "pass", ScalixConfig::self()->password() );
+      c.writeEntry( "pass", KStringHandler::obscure( ScalixConfig::self()->password() ) );
       c.writeEntry( "host", ScalixConfig::self()->server() );
       if ( ScalixConfig::self()->security() == ScalixConfig::None )
         c.writeEntry( "port", 143 );

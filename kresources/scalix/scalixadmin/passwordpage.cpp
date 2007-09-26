@@ -18,13 +18,17 @@
  *   Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
 
+#include <qapplication.h>
 #include <qlabel.h>
 #include <qlayout.h>
 #include <qlineedit.h>
 #include <qpushbutton.h>
 
+#include <kconfig.h>
 #include <klocale.h>
 #include <kmessagebox.h>
+#include <kstringhandler.h>
+#include <kwallet.h>
 
 #include "jobs.h"
 #include "settings.h"
@@ -71,7 +75,8 @@ void PasswordPage::buttonClicked()
       return;
     }
 
-    mJob = Scalix::setPassword( Settings::self()->globalSlave(), Settings::self()->accountUrl(), mPassword->text() );
+    mJob = Scalix::setPassword( Settings::self()->globalSlave(), Settings::self()->accountUrl(),
+                                Settings::self()->accountPassword(), mPassword->text() );
     connect( mJob, SIGNAL( result( KIO::Job* ) ), this, SLOT( finished( KIO::Job* ) ) );
 
     updateState( true );
@@ -104,11 +109,79 @@ void PasswordPage::textChanged()
 
 void PasswordPage::finished( KIO::Job* job )
 {
+  mJob = 0;
+
   updateState( false );
 
   if ( job->error() ) {
     KMessageBox::error( this, i18n( "Unable to change the password" ) + "\n" + job->errorString() );
     return;
+  }
+
+  // Update configuration files to the new password as well
+
+  const QString newPassword = mPassword->text();
+
+  { // ScalixAdmin config
+    KConfig config( "scalixadminrc" );
+    KConfigGroup group( &config, "Account" );
+    group.writeEntry( "pass", KStringHandler::obscure( newPassword ) );
+  }
+
+  { // ScalixWizard config
+    KConfig config( "scalixrc" );
+    KConfigGroup group( &config, "General" );
+    group.writeEntry( "Password", KStringHandler::obscure( newPassword ) );
+  }
+
+  { // KMail config
+    KConfig config( "kmailrc" );
+
+    // Try to find account group for Scalix
+    QString scalixAccount;
+    const QStringList groupList = config.groupList();
+    for ( uint i = 0; i < groupList.count(); ++i ) {
+      if ( groupList[ i ].startsWith( "Account " ) ) {
+        KConfigGroup group( &config, groupList[ i ] );
+        if ( group.hasKey( "groupwareType" ) && group.readNumEntry( "groupwareType" ) == 2 ) {
+          scalixAccount = groupList[ i ];
+          break;
+        }
+      }
+    }
+
+    if ( scalixAccount.isEmpty() ) {
+      qWarning( "No Scalix Groupware Account found in kmailrc!" );
+      return;
+    }
+
+    const int accountId = scalixAccount.mid( 8 ).toInt();
+
+    KConfigGroup group( &config, scalixAccount );
+
+    // Save only if the user choose it before
+    bool storePassword = group.readBoolEntry( "store-passwd", false );
+    if ( storePassword ) {
+      // First try to store in KWallet
+      if ( KWallet::Wallet::isEnabled() ) {
+        WId window = 0;
+        if ( qApp->activeWindow() )
+          window = qApp->activeWindow()->winId();
+
+        KWallet::Wallet *wallet = KWallet::Wallet::openWallet( KWallet::Wallet::NetworkWallet(), window );
+        if ( wallet ) {
+          if ( !wallet->hasFolder( "kmail" ) )
+            wallet->createFolder( "kmail" );
+          wallet->setFolder( "kmail" );
+          wallet->writePassword( "account-" + QString::number( accountId ), newPassword );
+        }
+      } else {
+        group.writeEntry( "pass", KStringHandler::obscure( newPassword ) );
+      }
+
+      KConfigGroup fileGroup( &config, QString( "Folder-%1" ).arg( group.readNumEntry( "Folder" ) ) );
+      fileGroup.writeEntry( "pass", KStringHandler::obscure( newPassword ) );
+    }
   }
 
   KMessageBox::information( this, i18n( "Password was changed successfully" ) );

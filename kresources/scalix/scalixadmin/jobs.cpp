@@ -67,12 +67,13 @@ QString Delegate::rightsAsString( int rights )
 }
 
 
-SetPasswordJob* Scalix::setPassword( KIO::Slave* slave, const KURL& url, const QString& password )
+SetPasswordJob* Scalix::setPassword( KIO::Slave* slave, const KURL& url,
+                                     const QString &oldPassword, const QString& newPassword )
 {
   QByteArray packedArgs;
   QDataStream stream( packedArgs, IO_WriteOnly );
   stream << (int)'X' << (int)'N'
-         << QString( "X-SCALIX-PASSWORD" ) << QString( "%1 %2" ).arg( url.pass() ).arg( password );
+         << QString( "X-SCALIX-PASSWORD" ) << QString( "%1 %2" ).arg( oldPassword ).arg( newPassword );
 
   SetPasswordJob* job = new SetPasswordJob( url, packedArgs, false );
   KIO::Scheduler::assignJobToSlave( slave, job );

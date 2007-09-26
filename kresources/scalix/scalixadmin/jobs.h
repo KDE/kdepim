@@ -66,7 +66,7 @@ namespace Scalix {
   /**
    * Sets/Changes the password of the user encoded in @p url.
    */
-  SetPasswordJob* setPassword( KIO::Slave* slave, const KURL& url, const QString& password );
+  SetPasswordJob* setPassword( KIO::Slave* slave, const KURL& url, const QString& oldPassword, const QString& newPassword );
 
   /**
    * Adds a delegate represented by @p email with the given @p params for the user encoded in @p url.

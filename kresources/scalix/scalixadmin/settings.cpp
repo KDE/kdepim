@@ -19,8 +19,8 @@
  */
 
 #include <kconfig.h>
-#include <kglobal.h>
 #include <kio/scheduler.h>
+#include <kstringhandler.h>
 
 #include "settings.h"
 
@@ -46,7 +46,8 @@ Settings* Settings::self()
 
 KIO::MetaData Settings::accountData() const
 {
-  KConfigGroup group( KGlobal::config(), "Account" );
+  KConfig config( "scalixadminrc" );
+  KConfigGroup group( &config, "Account" );
 
   KIO::MetaData data;
   data.insert( "auth", group.readEntry( "auth" ) );
@@ -57,16 +58,25 @@ KIO::MetaData Settings::accountData() const
 
 KURL Settings::accountUrl() const
 {
-  KConfigGroup group( KGlobal::config(), "Account" );
+  KConfig config( "scalixadminrc" );
+  KConfigGroup group( &config, "Account" );
 
   KURL url;
   url.setProtocol( group.readBoolEntry( "use-ssl" ) ? "imaps" : "imap" );
   url.setUser( group.readEntry( "user" ) );
-  url.setPass( group.readEntry( "password" ) );
+  url.setPass( KStringHandler::obscure( group.readEntry( "pass" ) ) );
   url.setHost( group.readEntry( "host" ) );
   url.setPort( group.readNumEntry( "port" ) );
 
   return url;
+}
+
+QString Settings::accountPassword() const
+{
+  KConfig config( "scalixadminrc" );
+  KConfigGroup group( &config, "Account" );
+
+  return KStringHandler::obscure( group.readEntry( "pass" ) );
 }
 
 KIO::Slave* Settings::globalSlave() const
@@ -76,11 +86,12 @@ KIO::Slave* Settings::globalSlave() const
 
 QString Settings::rulesWizardUrl() const
 {
-  KConfigGroup group( KGlobal::config(), "Misc" );
+  KConfig config( "scalixadminrc" );
+  KConfigGroup group( &config, "Misc" );
 
   QString url = group.readEntry( "rulesWizardUrl" );
   if ( url.isEmpty() ) {
-    KConfigGroup group( KGlobal::config(), "Account" );
+    KConfigGroup group( &config, "Account" );
     url = QString( "http://%1/Scalix/rw/?username=%2" ).arg( group.readEntry( "host" ) )
                                                        .arg( group.readEntry( "user" ) );
   }
@@ -90,31 +101,36 @@ QString Settings::rulesWizardUrl() const
 
 QString Settings::ldapHost() const
 {
-  KConfigGroup group( KGlobal::config(), "LDAP" );
+  KConfig config( "scalixadminrc" );
+  KConfigGroup group( &config, "LDAP" );
   return group.readEntry( "host" );
 }
 
 QString Settings::ldapPort() const
 {
-  KConfigGroup group( KGlobal::config(), "LDAP" );
+  KConfig config( "scalixadminrc" );
+  KConfigGroup group( &config, "LDAP" );
   return group.readEntry( "port" );
 }
 
 QString Settings::ldapBase() const
 {
-  KConfigGroup group( KGlobal::config(), "LDAP" );
+  KConfig config( "scalixadminrc" );
+  KConfigGroup group( &config, "LDAP" );
   return group.readEntry( "base" );
 }
 
 QString Settings::ldapBindDn() const
 {
-  KConfigGroup group( KGlobal::config(), "LDAP" );
+  KConfig config( "scalixadminrc" );
+  KConfigGroup group( &config, "LDAP" );
   return group.readEntry( "bindDn" );
 }
 
 QString Settings::ldapPassword() const
 {
-  KConfigGroup group( KGlobal::config(), "LDAP" );
+  KConfig config( "scalixadminrc" );
+  KConfigGroup group( &config, "LDAP" );
   return group.readEntry( "password" );
 }
 

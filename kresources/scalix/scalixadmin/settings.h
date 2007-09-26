@@ -34,6 +34,7 @@ class Settings
 
     KIO::MetaData accountData() const;
     KURL accountUrl() const;
+    QString accountPassword() const;
 
     KIO::Slave *globalSlave() const;
 
