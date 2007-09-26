@@ -282,6 +282,10 @@ namespace KPIM {
                "div.senderstatus{\n"
                "  text-align:center ! important;\n"
                "}\n\n"
+
+               "div.noprint {\n"
+               "  display:none ! important;\n"
+               "}\n\n"
             )
       .arg( headerFont,
             cg.background().name(),
@@ -620,7 +624,7 @@ namespace KPIM {
   {
     mBodyFont = font;
   }
- 
+
   void CSSHelper::setPrintFont( const QFont& font )
   {
     mPrintFont = font;
