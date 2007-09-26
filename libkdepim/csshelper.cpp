@@ -359,6 +359,10 @@ namespace KPIM {
                "  text-decoration: none ! important;\n"
                "}\n\n"
 
+               "a.white {\n"
+               "  color: white ! important;\n"
+               "}\n\n"
+
                "table.textAtm { background-color: %2 ! important; }\n\n"
 
                "tr.textAtmH {\n"
