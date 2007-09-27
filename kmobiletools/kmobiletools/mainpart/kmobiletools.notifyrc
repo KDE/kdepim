@@ -4,9 +4,7 @@ Comment=KMobileTools
 
 [Event/kmobiletools_ring]
 Name=Incoming Call
-Name[zh_TW]=來電
 Comment=There is an incoming call
-Comment[zh_TW]=有來電
 default_sound=KDE_Beep_Phone_1.ogg
 Action=Sound|PassivePopup|Taskbar
 
