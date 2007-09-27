@@ -107,6 +107,7 @@ class AddresseeLineEdit : public ClickLineEdit, public DCOPObject
 
   private slots:
     void slotCompletion();
+    void slotReturnPressed();
     void slotPopupCompletion( const QString& );
     void slotStartLDAPLookup();
     void slotLDAPSearchData( const KPIM::LdapResultList& );

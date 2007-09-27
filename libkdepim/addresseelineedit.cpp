@@ -140,6 +140,8 @@ void AddresseeLineEdit::init()
       setCompletionObject( s_completion, false );
       connect( this, SIGNAL( completion( const QString& ) ),
           this, SLOT( slotCompletion() ) );
+      connect( this, SIGNAL( returnPressed( const QString& ) ),
+          this, SLOT( slotReturnPressed() ) );
 
       KCompletionBox *box = completionBox();
       connect( box, SIGNAL( highlighted( const QString& ) ),
@@ -481,6 +483,13 @@ void AddresseeLineEdit::slotPopupCompletion( const QString& completion )
   setText( m_previousAddresses + completion.stripWhiteSpace() );
   cursorAtEnd();
 //  slotMatched( m_previousAddresses + completion );
+}
+
+void AddresseeLineEdit::slotReturnPressed()
+{
+  QListBoxItem* i = completionBox()->selectedItem();
+  if ( i != 0 )
+    slotPopupCompletion( i->text() );
 }
 
 void AddresseeLineEdit::loadContacts()
