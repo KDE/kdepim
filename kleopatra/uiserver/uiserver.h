@@ -72,6 +72,6 @@ namespace Kleo {
         kdtools::pimpl_ptr<Private> d;
     };
 
-};
+}
 
 #endif /* __KLEOPATRA_UISERVER_UISERVER_H__ */

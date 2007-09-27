@@ -66,9 +66,9 @@ Q_SIGNALS:
     void result( const std::vector<GpgME::Key>& keys );
 
 private:
-    Q_PRIVATE_SLOT( d, void nextKey( const GpgME::Key& key ) );
-    Q_PRIVATE_SLOT( d, void keyListingDone( const GpgME::KeyListResult& result ) );
-    Q_PRIVATE_SLOT( d, void keySelectionDialogClosed() );
+    Q_PRIVATE_SLOT( d, void nextKey( const GpgME::Key& key ) )
+    Q_PRIVATE_SLOT( d, void keyListingDone( const GpgME::KeyListResult& result ) )
+    Q_PRIVATE_SLOT( d, void keySelectionDialogClosed() )
 
     class Private;
     kdtools::pimpl_ptr<Private> d;
