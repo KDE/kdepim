@@ -1,27 +1,33 @@
-Current Release is Proko2 2.1.10
+Current Release is Proko2 2.1.11
 
-Features
-========
-* Retain the state of the signing and encryption buttons when saving messages
-  as drafts, even if the message itself is configured to not be signed or
-  encrypted while in the drafts folder.
+Changes since Proko2 2.1.10 (released 03.09.2007)
 
 Bugfixes
 ========
-* Kolab/issue1882 Fix crash when replying to a mail that was opened in a
-  separate reader window, and then its folder was deleted (for example
-  by a loss of access rights).
 
-* Kolab/issue1481 Fix KMail problems with displaying non-ascii characters
-  in CC headers.
+* Kolab/issue1894 Initialize the name column of the folder tree to a more 
+  reasonable value.
 
-* Kolab/issue1494 Fix crash when applying changes to an event or todo
-  while a mailcheck is going on, or if a mailcheck has happened during
-  editing. Apply button removed as a stop gap measure.
+* Kolab/issue1713 Fix parsing of @ in name parts of email addresses,
+  when in quotes.
 
-* Kolab/issue1640 Enforce miminum interval between syncs.
+* Kolab/issue1982 Don't lose the composed mail when the composer tells the
+  KeyResolver to look for one format and the address book entry specifies a
+  different format for encryption. Allow signing with the format specified in
+  the address book even if it differs from the one set it in the composer.
 
-* Kolab/issue1568 Keep trash folder from being renamed.
+* Kolab/issue1942 Allow not fully trusted keys to be used for encryption
+  but ask the user to confirm their use.
+
+* Kolab/issue1995 composer text-completion: select only one address with
+  Return doesn't work.
+
+* Kolab/issue1570 Pre-select the default identity, when asking the user
+  who she is.
+
+* Kolab/issue1821 Don't set disabled colors to the same values as the active
+  colors. This eg. breaks the "automatic" completion mode which uses the
+  disabled text color for marking the autocompleted text.
 
 
 Changes since Proko2 2.1.8 up to Proko2 2.1.9 (released 14.08.2007)
