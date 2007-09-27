@@ -468,7 +468,6 @@ void KMComposeWin::readColorConfig(void)
   QColorGroup cgrp  = mPalette.active();
   cgrp.setColor( QColorGroup::Base, mBackColor);
   cgrp.setColor( QColorGroup::Text, mForeColor);
-  mPalette.setDisabled(cgrp);
   mPalette.setActive(cgrp);
   mPalette.setInactive(cgrp);
 
