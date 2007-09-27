@@ -60,6 +60,7 @@ public:
 
 public Q_SLOTS:
     void slotNextKeyEvent( GpgME::Context *, const GpgME::Key & key ) {
+        qDebug( "next key" );
         mKeys.push_back( key );
         // push out keys in chunks of 1..16 keys
         if ( mKeys.size() > qrand() % 16U ) {
@@ -68,6 +69,10 @@ public Q_SLOTS:
         }
     }
 
+    void slotOperationDoneEvent( GpgME::Context* , const GpgME::Error& error ) {
+        qDebug( "listing done error: %d", static_cast<int>( error ) );
+    }
+ 
 Q_SIGNALS:
     void nextKeys( const std::vector<GpgME::Key> & keys );
 
@@ -83,6 +88,8 @@ int main( int argc, char * argv[] ) {
     KCmdLineOptions options;
     options.add( "flat",         ki18n("Perform flat key listing") );
     options.add( "hierarchical", ki18n("Perform hierarchical key listing") );
+    options.add( "disable-smime", ki18n("Do not list SMIME keys") );
+
 
     KCmdLineArgs::addCmdLineOptions( options );
 
@@ -92,6 +99,7 @@ int main( int argc, char * argv[] ) {
 
     const bool showFlat = args->isSet( "flat" ) || !args->isSet( "hierarchical" );
     const bool showHier = args->isSet( "hierarchical" ) || !args->isSet( "flat" );
+    const bool disablesmime = args->isSet( "disable-smime" );
 
     qsrand( QDateTime::currentDateTime().toTime_t() );
 
@@ -122,6 +130,9 @@ int main( int argc, char * argv[] ) {
     Relay relay;
     QObject::connect( QGpgME::EventLoopInteractor::instance(), SIGNAL(nextKeyEventSignal(GpgME::Context*,GpgME::Key)),
                       &relay, SLOT(slotNextKeyEvent(GpgME::Context*,GpgME::Key)) );
+    QObject::connect( QGpgME::EventLoopInteractor::instance(), SIGNAL(operationDoneEventSignal(GpgME::Context*,GpgME::Error)),
+                      &relay, SLOT(slotOperationDoneEvent(GpgME::Context*,GpgME::Error)) );
+
 
     if ( showFlat )
         if ( Kleo::AbstractKeyListModel * const model = Kleo::AbstractKeyListModel::createFlatKeyListModel( &flat ) ) {
@@ -149,23 +160,26 @@ int main( int argc, char * argv[] ) {
         qDebug() << "pgp->startKeyListing() ->" << e.asString();
 
 
-    const std::auto_ptr<GpgME::Context> cms( GpgME::Context::createForProtocol( GpgME::CMS ) );
-    cms->setManagedByEventLoopInteractor( true );
-    cms->setKeyListMode( GpgME::Local );
+    if ( !disablesmime ) {
+        const std::auto_ptr<GpgME::Context> cms( GpgME::Context::createForProtocol( GpgME::CMS ) );
+        cms->setManagedByEventLoopInteractor( true );
+        cms->setKeyListMode( GpgME::Local );
 
-    if ( const GpgME::Error e = cms->startKeyListing() )
-        qDebug() << "cms" << e.asString();
+        if ( const GpgME::Error e = cms->startKeyListing() )
+            qDebug() << "cms" << e.asString();
 
-    QEventLoop loop;
-    QTimer::singleShot( 2000, &loop, SLOT(quit()) );
-    loop.exec();
 
-    const std::auto_ptr<GpgME::Context> cms2( GpgME::Context::createForProtocol( GpgME::CMS ) );
-    cms2->setManagedByEventLoopInteractor( true );
-    cms2->setKeyListMode( GpgME::Local );
+       QEventLoop loop;
+       QTimer::singleShot( 2000, &loop, SLOT(quit()) );
+       loop.exec();
 
-    if ( const GpgME::Error e = cms2->startKeyListing() )
-        qDebug() << "cms2" << e.asString();
+       const std::auto_ptr<GpgME::Context> cms2( GpgME::Context::createForProtocol( GpgME::CMS ) );
+       cms2->setManagedByEventLoopInteractor( true );
+       cms2->setKeyListMode( GpgME::Local );
+
+       if ( const GpgME::Error e = cms2->startKeyListing() )
+          qDebug() << "cms2" << e.asString();
+    }
 
 
     return app.exec();
