@@ -104,7 +104,8 @@ void AddresseeEditorWidget::setAddressee( const KABC::Addressee &addr )
       KPIM::ResourceABC *resAbc = static_cast<KPIM::ResourceABC *>( res );
 
       QString subresource = resAbc->uidToResourceMap()[ addr.uid() ];
-      readOnly |= !resAbc->subresourceWritable( subresource );
+      if ( !subresource.isEmpty() )
+        readOnly |= !resAbc->subresourceWritable( subresource );
     }
   }
   setReadOnly( readOnly );
