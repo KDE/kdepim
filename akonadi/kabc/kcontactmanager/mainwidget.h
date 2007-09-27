@@ -24,31 +24,47 @@
 #include <QtGui/QWidget>
 
 namespace Akonadi {
+class CollectionFilterProxyModel;
 class CollectionModel;
 class CollectionView;
+class DataReference;
 class ItemView;
 }
 
 class KABCModel;
 class KABCItemBrowser;
+class KXMLGUIClient;
 
 class MainWidget : public QWidget
 {
   Q_OBJECT
 
   public:
-    MainWidget( QWidget *parent = 0 );
+    MainWidget( KXMLGUIClient *guiClient, QWidget *parent = 0 );
     ~MainWidget();
+
+  private Q_SLOTS:
+    void newContact();
+    void newGroup();
+
+    void editItem( const Akonadi::DataReference &item );
 
   private:
     void setupGui();
+    void setupActions();
+
+    void editContact( const Akonadi::DataReference &contact );
+    void editGroup( const Akonadi::DataReference &group );
 
     Akonadi::CollectionModel *mCollectionModel;
+    Akonadi::CollectionFilterProxyModel *mCollectionFilterModel;
     Akonadi::ItemView *mContactView;
     KABCItemBrowser *mContactDetails;
 
     Akonadi::CollectionView *mCollectionView;
     KABCModel *mContactModel;
+
+    KXMLGUIClient *mGuiClient;
 };
 
 #endif

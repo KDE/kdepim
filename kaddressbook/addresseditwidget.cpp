@@ -602,17 +602,21 @@ AddressTypeDialog::AddressTypeDialog( KABC::Address::Type type, QWidget *parent 
   mGroup = new QButtonGroup( box );
   mGroup->setExclusive ( false );
 
-  QHBoxLayout *buttonLayout = new QHBoxLayout( box );
+  QGridLayout *buttonLayout = new QGridLayout( box );
 
   mTypeList = KABC::Address::typeList();
   mTypeList.removeAll( KABC::Address::Pref );
 
   KABC::Address::TypeList::ConstIterator it;
   int i = 0;
+  int row = 0;
   for ( it = mTypeList.begin(); it != mTypeList.end(); ++it, ++i ) {
     QCheckBox *cb = new QCheckBox( KABC::Address::typeLabel( *it ), box );
     cb->setChecked( type & mTypeList[ i ] );
-    buttonLayout->addWidget( cb );
+    buttonLayout->addWidget( cb, row, i%3 );
+   
+    if( i%3 == 2 )
+        ++row;
     mGroup->addButton( cb );
   }
 }

@@ -28,8 +28,8 @@
 
 class QCheckBox;
 class QLabel;
+class KLineEdit;
 
-class KRestrictedLine;
 namespace KPIM {
 class CategorySelectWidget;
 }
@@ -57,7 +57,7 @@ class ResourceKABCConfig : public KRES::ConfigWidget
 
   private:
     QCheckBox *mAlarm;
-    KRestrictedLine *mAlarmTimeEdit;
+    KLineEdit *mAlarmTimeEdit;
     QLabel *mALabel;
     QCheckBox *mUseCategories;
     KPIM::CategorySelectWidget *mCategoryView;

@@ -47,6 +47,8 @@ public:
 	
 	virtual void loadCategories() {}
 	
+	virtual void saveCategories() {}
+	
 	virtual void loadAllRecords();
 	
 	virtual QString commitCreate( const Record *rec );

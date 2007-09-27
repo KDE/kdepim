@@ -297,7 +297,7 @@
     </entry>
     <entry name="linkColor" key="URLColor" type="Color">
       <label>Link</label>
-      <default code="true">KGlobalSettings::linkColor()</default>
+      <default code="true">KColorScheme(QPalette::Active, KColorScheme::View).foreground(KColorScheme::LinkText)</default>
     </entry>
     <entry name="readThreadColor" type="Color">
       <label>Read Thread</label>

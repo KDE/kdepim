@@ -80,7 +80,8 @@ RecordConduit::~RecordConduit()
 	// the opened databases, maybe we should pass them for clarity to this method.
 	if( !initDataProxies() )
 	{
-		DEBUGKPILOT << "One of the dataproxies was not initialized";
+		DEBUGKPILOT << "One of the data proxies could not be initialized.";
+		emit logError(i18n("One of the data proxies could not be initialized."));
 		return false;
 	}
 	
@@ -92,6 +93,7 @@ RecordConduit::~RecordConduit()
 	fMapping = new IDMapping( KPilotSettings::userName(), fConduitName );
 	if( !fMapping->isValid( fBackupDataProxy->ids() ) )
 	{
+		DEBUGKPILOT << "Invalid record mapping. Doing first sync.";
 		setFirstSync( true );
 	}
 	
@@ -149,6 +151,7 @@ RecordConduit::~RecordConduit()
 		else
 		{
 			DEBUGKPILOT << "Could not open or create pc data store.";
+			emit logError(i18n("Could not open or create PC data store."));
 			return false;
 		}
 	}
@@ -164,30 +167,41 @@ RecordConduit::~RecordConduit()
 		else
 		{
 			DEBUGKPILOT << "Could not open or create hand held data store.";
+			emit logError(i18n("Could not open or create Palm data store."));
 			return false;
 		}
 	}
 	else
 	{
+		DEBUGKPILOT <<  "Failed to open the pc database and the handheld "
+		"database, no data to sync.";
 		emit logError( i18n( "Failed to open the pc database and the handheld "
-			"datbase, no data to sync." ) );
+			"database, no data to sync." ) );
 		return false; // 6.3.7 and 6.3.8
 	}
 	
 	// Sync finished, set the endcount of the CUD counters
 	fHHDataProxy->setEndcount();
 	fPCDataProxy->setEndcount();
+
+	addSyncLogEntry(fHHDataProxy->counter()->moo() +'\n');
+	DEBUGKPILOT << fHHDataProxy->counter();
+	addSyncLogEntry(fPCDataProxy->counter()->moo() +'\n');
+	DEBUGKPILOT << fPCDataProxy->counter();
 	
 	fMapping->setLastSyncedDate( QDateTime::currentDateTime() );
 	if( !fMapping->isValid( fHHDataProxy->ids() ) )
 	{
-		// TODO: Warn the user.
+		DEBUGKPILOT <<  "Data mapping invalid after sync. Sync failed.";
+		emit logError( i18n( "Data mapping invalid after sync. Sync failed." ) );
 		return false;
 	}
 	
 	if( !checkVolatility() )
 	{
 		// volatility bounds are exceeded or the user did not want to proceed.
+		DEBUGKPILOT <<  "Changes are too volatile. Sync failed.";
+		emit logError( i18n( "Changes are too volatile. Sync failed." ) );
 		return false;
 	}
 	
@@ -198,19 +212,19 @@ RecordConduit::~RecordConduit()
 	 */
 	if( !fHHDataProxy->commit() )
 	{
-		DEBUGKPILOT << "Commit of hh dataproxy failed.";
+		DEBUGKPILOT << "Couldn't save Palm changes. Sync failed";
+		emit logError( i18n( "Couldn't save Palm changes Sync failed." ) );
 		fHHDataProxy->rollback();
-		// TODO: notify user.
 		return false;
 	}
 	
 	if( !fPCDataProxy->commit() )
 	{
-		DEBUGKPILOT << "Commit of pc dataproxy failed.";
+		DEBUGKPILOT << "Couldn't save PC changes. Sync failed";
+		emit logError( i18n( "Couldn't save PC changes Sync failed." ) );
 		
 		fPCDataProxy->rollback();
 		fHHDataProxy->rollback();
-		// TODO: notify user.
 		return false;
 	}
 	
@@ -229,22 +243,19 @@ RecordConduit::~RecordConduit()
 		fMapping->changePCId( it.key(), it.value() );
 	}
 	
-	// Now we can commit the mapping.
+	// Now we can commit the mapping.  If this fails but everything else worked,
+	// don't fail everything else.  We'll recreate the id mapping at next sync.
 	if( !fMapping->commit() )
 	{
-		DEBUGKPILOT << "Commit of mapping failed.";
-		fMapping->rollback();
-		fPCDataProxy->rollback();
-		fHHDataProxy->rollback();
-		return false;
+		DEBUGKPILOT << "Commit of ID mapping failed.";
 	}
-	
-	// Make sure the backup database is an exact copy of the pilot database.
-	updateBackupDatabase();
 	
 	// Clean up things like modified flags.
 	fHHDataProxy->syncFinished();
 	fPCDataProxy->syncFinished();
+
+	// Make sure the backup database is an exact copy of the pilot database.
+	updateBackupDatabase();
 	
 	return delayDone();
 }
@@ -255,11 +266,6 @@ bool RecordConduit::checkVolatility()
 	
 	const CUDCounter *fCtrHH = fHHDataProxy->counter();
 	const CUDCounter *fCtrPC = fPCDataProxy->counter();
-
-	addSyncLogEntry(fCtrHH->moo() +'\n',false);
-	DEBUGKPILOT <<":" << fCtrHH->moo();
-	addSyncLogEntry(fCtrPC->moo() +'\n',false);
-	DEBUGKPILOT <<":" << fCtrPC->moo();
 
 	// STEP2 of making sure we don't delete our little user's
 	// precious data...
@@ -351,6 +357,7 @@ void RecordConduit::updateBackupDatabase()
 	fLocalDatabase->cleanup();
 	fLocalDatabase->resetSyncFlags();
 }
+
 
 // 4.1 || 5.2
 void RecordConduit::hotOrFullSync()
@@ -472,10 +479,21 @@ void RecordConduit::firstSync()
 		}
 		else
 		{
-			DEBUGKPILOT << "No match found for:" << hhRecord->id();
-			Record *pcRecord = createPCRecord( hhRecord );
-			fPCDataProxy->create( pcRecord );
-			fMapping->map( hhRecord->id(), pcRecord->id() );
+			DEBUGKPILOT << "No match found for id: [" << hhRecord->id() << "]";
+			// TODO: need a way to allow the user to configure us to archive deleted
+			if ( hhRecord->isDeleted() )
+			{
+				DEBUGKPILOT << "hhRecord deleted.  Removing.";
+				fHHDataProxy->remove( hhRecord->id() );
+			}
+			else
+			{
+				DEBUGKPILOT << "hhRecord not deleted.  Adding to PC";
+				Record *pcRecord = createPCRecord( hhRecord );
+				fPCDataProxy->create( pcRecord );
+				fMapping->map( hhRecord->id(), pcRecord->id() );
+				
+			}
 		}
 	}
 	
@@ -504,7 +522,8 @@ void RecordConduit::copyHHToPC()
 	fHHDataProxy->setIterateMode( DataProxy::All );
 	fPCDataProxy->setIterateMode( DataProxy::All );
 	
-	DEBUGKPILOT << "Walking over all hh records.";
+	DEBUGKPILOT << "Walking over all (" << fHHDataProxy->recordCount()
+		<< ") hh records.";
 	
 	// 5.3.4
 	fHHDataProxy->resetIterator();
@@ -525,15 +544,26 @@ void RecordConduit::copyHHToPC()
 		}
 		else
 		{
-			DEBUGKPILOT << "Mapping does not exists, copy hh to pc.";
-			
-			Record *pcRecord = createPCRecord( hhRecord );
-			fPCDataProxy->create( pcRecord );
-			fMapping->map( hhRecord->id(), pcRecord->id() );
+			DEBUGKPILOT << "No match found for id: [" << hhRecord->id() << "]";
+			// TODO: need a way to allow the user to configure us to archive deleted
+			if ( hhRecord->isDeleted() )
+			{
+				DEBUGKPILOT << "hhRecord deleted.  Removing.";
+				fHHDataProxy->remove( hhRecord->id() );
+			}
+			else
+			{
+				DEBUGKPILOT << "hhRecord not deleted.  Adding to PC";
+				Record *pcRecord = createPCRecord( hhRecord );
+				fPCDataProxy->create( pcRecord );
+				fMapping->map( hhRecord->id(), pcRecord->id() );
+				
+			}
 		}
 	}
 	
-	DEBUGKPILOT << "Walking over all pc records.";
+	DEBUGKPILOT << "Walking over all (" << fPCDataProxy->recordCount() 
+		<< ") pc records.";
 	
 	fPCDataProxy->resetIterator();
 	// 5.3.5
@@ -593,11 +623,20 @@ void RecordConduit::copyPCToHH()
 		}
 		else
 		{
-			DEBUGKPILOT << "Mapping does not exists, copy pc to hh.";
-			
-			HHRecord *hhRecord = createHHRecord( pcRecord );
-			fHHDataProxy->create( hhRecord );
-			fMapping->map( hhRecord->id(), pcRecord->id() );
+			DEBUGKPILOT << "No match found for:" << pcRecord->id();
+			// TODO: need a way to allow the user to configure us to archive deleted
+			if ( pcRecord->isDeleted() )
+			{
+				DEBUGKPILOT << "pcRecord deleted.  Removing.";
+				fPCDataProxy->remove( pcRecord->id() );
+			}
+			else
+			{
+				DEBUGKPILOT << "pcRecord not deleted.  Adding to HH";
+				HHRecord *hhRecord = createHHRecord( pcRecord );
+				fHHDataProxy->create( hhRecord );
+				fMapping->map( hhRecord->id(), pcRecord->id() );
+			}
 		}
 	}
 	

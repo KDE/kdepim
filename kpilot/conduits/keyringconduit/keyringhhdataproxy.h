@@ -61,6 +61,11 @@ public:
 	virtual void loadCategories();
 	
 	/**
+	 * Saves the categories after we've synced back to the database.
+	 */
+	virtual void saveCategories();
+	
+	/**
 	 * This function creates a (subclass of) HHRecord for @p rec.
 	 */
 	virtual HHRecord* createHHRecord( PilotRecord *rec );

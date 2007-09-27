@@ -63,6 +63,7 @@ private slots:
 	void testNoMappingForHHRecord();
 	void testMappingForPCRecord();
 	void testNoMappingForPCRecord();
+	void testDeletedRecordOnHandheld();
 };
 
 void RCCopyHHToPCTest::testMappingForHHRecord()
@@ -197,6 +198,44 @@ void RCCopyHHToPCTest::testNoMappingForPCRecord()
 	
 	// PC record should be removed from database.
 	QVERIFY( !conduit.pcDataProxy()->find( pcRec->id() ) );
+}
+
+void RCCopyHHToPCTest::testDeletedRecordOnHandheld()
+{
+	/*
+	 * If a record on the handheld is marked as deleted, it should be removed from
+	 * handheld and no mapping should be created for it.
+	 */
+	QVariantList args = QVariantList() << CSL1( "--copyHHToPC" )
+		<< CSL1( "--conflictResolution 2" );
+	
+	// Create conduit
+	TestRecordConduit conduit( args );
+	conduit.initDataProxies();
+	conduit.pcDataProxy()->setIterateMode( DataProxy::All );
+	conduit.hhDataProxy()->setIterateMode( DataProxy::All );
+	
+	// Create record
+	QStringList fields = QStringList() << CSL1( "f1" ) << CSL1( "f2" );
+	
+	TestHHRecord *hhRec = new TestHHRecord( fields, CSL1( "hh-1" ) );
+	hhRec->setValue( CSL1( "f1" ), CSL1( "A test value" ) );
+	hhRec->setValue( CSL1( "f2" ), CSL1( "Another test value" ) );
+	hhRec->setDeleted();
+	
+	conduit.hhDataProxy()->records()->insert( hhRec->id(), hhRec );
+	
+	// Verify starting values.
+	QVERIFY( !conduit.mapping()->containsHHId( hhRec->id() ) );
+	QVERIFY( conduit.hhDataProxy()->find( hhRec->id() ) );
+	QVERIFY( conduit.hhDataProxy()->find( hhRec->id() )->isDeleted() );
+	
+	// Eexecute the conduit.
+	conduit.copyHHToPCTest();
+	
+	// Verify ending values.
+	QVERIFY( !conduit.mapping()->containsHHId( hhRec->id() ) );
+	QVERIFY( !conduit.hhDataProxy()->find( hhRec->id() ) );
 }
 
 QTEST_KDEMAIN(RCCopyHHToPCTest, NoGUI)

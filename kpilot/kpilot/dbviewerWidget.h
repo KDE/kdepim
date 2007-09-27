@@ -30,17 +30,12 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
+#include <QtCore/QList>
+
 #include "viewer_page_base.h"
-//Added by qt3to4:
-#include <Q3PtrList>
-#include <Q3ListViewItem>
-class K3ListBox;
-class KTextEdit;
-class KPushButton;
-class KComboBox;
+
 class PilotLocalDatabase;
 class PilotRecord;
-class K3ListView;
 
 class GenericDBWidget : public ViewerPageBase
 {
@@ -55,40 +50,26 @@ public:
 	virtual void hidePage();
 	virtual PilotAppInfoBase* loadAppInfo() { return 0L; }
 	
-	QString getCurrentDB() const {  return currentDB; }
 protected:
-	void setupWidget();
-	
+	//void markDBDirty(const QString &db);
 
 protected slots:
-	void slotSelected(const QString &dbname);
-	void slotDBType(int mode);
+	void slotSelectionChanged();
+	void enableWidgets( bool enable );
+	void slotDBType( int mode );
 	void reset();
-	void slotAddRecord();
-	void slotEditRecord();
-	bool slotEditRecord(Q3ListViewItem*);
-	void slotDeleteRecord();
-	void slotShowAppInfo();
 	void slotShowDBInfo();
-	void enableWidgets(bool enable);
-	void writeRecord(PilotRecord*r);
+	void slotShowAppInfo();
+	void slotShowRecord();
 
 private:
-	K3ListBox*fDBList;
-	KComboBox*fDBType;
-	KTextEdit*fDBInfo;
-	KPushButton*fDBInfoButton, *fAppInfoButton;
-	K3ListView*fRecordList;
-	KPushButton*fAddRecord, *fEditRecord, *fDeleteRecord;
-
 	enum eDBType {
 		eDatabase,
 		eApplication
 	} currentDBtype;
 
-	PilotLocalDatabase*fDB;
-	QString currentDB;
-	Q3PtrList<PilotRecord> fRecList;
+	class Private;
+	Private *fP;
 };
 
 

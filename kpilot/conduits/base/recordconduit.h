@@ -26,6 +26,7 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
+#include "pilotAppInfo.h"
 #include "plugin.h"
 
 class IDMapping;
@@ -67,7 +68,7 @@ protected:
 	/**
 	 * Initialize the data proxies data are needed during sync. The following 
 	 * members should be initialized after the call:
-	 * - fLocalDatase
+	 * - fLocalDatabase
 	 * - fDatastore
 	 * - fBackupdb
 	 *

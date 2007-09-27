@@ -130,9 +130,7 @@ bool IDMappingXmlSource::saveMapping()
 {
 	FUNCTIONSETUP;
 	
-	DEBUGKPILOT << "Saving" << fMappings.count();
-	DEBUGKPILOT <<" mappings...";
-	DEBUGKPILOT <<":";
+	DEBUGKPILOT << "Saving " << fMappings.count() << " mappings...";
 	
 	QDomDocument doc;
 	QDomElement root = doc.createElement( CSL1("mappings") );
@@ -155,8 +153,6 @@ bool IDMappingXmlSource::saveMapping()
 	QMap<QString, QString>::const_iterator it;
 	for( it = fMappings.begin(); it != fMappings.end(); ++it )
 	{
-		DEBUGKPILOT <<".";
-		
 		QDomElement mappingElement = doc.createElement( CSL1("mapping") );
 		mappingElement.setAttribute( CSL1("hh"), it.key() );
 		mappingElement.setAttribute( CSL1("pc"), it.value() );
@@ -185,7 +181,7 @@ bool IDMappingXmlSource::rollback()
 {
 	FUNCTIONSETUP;
 	
-	QFile backup( fPath + '~' );
+	QFile backup( fPath + "-backup" );
 	
 	if( !backup.exists() )
 	{

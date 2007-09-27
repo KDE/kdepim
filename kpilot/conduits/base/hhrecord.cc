@@ -35,6 +35,8 @@
 HHRecord::HHRecord( PilotRecord *record, PilotAppInfoBase *appInfo )
 	: fRecord( record ), fAppInfo( appInfo )
 {
+	if (fAppInfo && fRecord)
+		fCategory = fAppInfo->categoryName(fRecord->category());
 }
 
 HHRecord::~HHRecord()

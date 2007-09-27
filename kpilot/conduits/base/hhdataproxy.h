@@ -27,6 +27,7 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
+#include "pilotAppInfo.h"
 #include "dataproxy.h"
 
 #include <pi-macros.h> // For recordid_t
@@ -62,19 +63,25 @@ public:
 	 */
 	int categoryId( const QString &name ) const;
 	
+	
 protected:
 	/**
 	 * Reads all records from the database.
 	 */
 	void loadAllRecords();
 	
-	/** THese functions must be implemented by the subclassing conduit **/
+	/** These functions must be implemented by the subclassing conduit **/
 	
 	/**
 	 * Reads the categories from the database into fAppInfo.
 	 */
 	virtual void loadCategories() = 0;
 	
+	/**
+	 * Saves the categories from fAppInfo back into the database.
+	 */
+	virtual void saveCategories() = 0;
+
 	/**
 	 * This function creates a (subclass of) HHRecord for @p rec.
 	 */

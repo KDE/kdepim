@@ -18,6 +18,7 @@
     51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 */
 
+#include <QtGui/QAction>
 #include <QtGui/QHBoxLayout>
 #include <QtGui/QListView>
 #include <QtGui/QSplitter>
@@ -27,25 +28,33 @@
 #include <libakonadi/collectionview.h>
 #include <libakonadi/itemview.h>
 
+#include <kactioncollection.h>
 #include <kabc/kabcmodel.h>
 #include <kabc/kabcitembrowser.h>
+#include <kicon.h>
+#include <klocale.h>
+#include <kxmlguiclient.h>
+
+#include "contacteditordialog.h"
 
 #include "mainwidget.h"
 
-MainWidget::MainWidget( QWidget *parent )
-  : QWidget( parent )
+MainWidget::MainWidget( KXMLGUIClient *guiClient, QWidget *parent )
+  : QWidget( parent ),
+    mGuiClient( guiClient )
 {
   setupGui();
+  setupActions();
 
   mCollectionModel = new Akonadi::CollectionModel( this );
 
-  Akonadi::CollectionFilterProxyModel *filter = new Akonadi::CollectionFilterProxyModel();
-  filter->addMimeType( "text/x-vcard" );
-  filter->addMimeType( "text/directory" );
-  filter->addMimeType( "text/vcard" );
-  filter->setSourceModel( mCollectionModel );
+  mCollectionFilterModel = new Akonadi::CollectionFilterProxyModel();
+  mCollectionFilterModel->addMimeType( "text/x-vcard" );
+  mCollectionFilterModel->addMimeType( "text/directory" );
+  mCollectionFilterModel->addMimeType( "text/vcard" );
+  mCollectionFilterModel->setSourceModel( mCollectionModel );
 
-  mCollectionView->setModel( filter );
+  mCollectionView->setModel( mCollectionFilterModel );
 
   mContactModel = new KABCModel( this );
   mContactView->setModel( mContactModel );
@@ -54,6 +63,8 @@ MainWidget::MainWidget( QWidget *parent )
            mContactModel, SLOT( setCollection( const Akonadi::Collection& ) ) );
   connect( mContactView, SIGNAL( currentChanged( const Akonadi::DataReference& ) ),
            mContactDetails, SLOT( setUid( const Akonadi::DataReference& ) ) );
+  connect( mContactView, SIGNAL( activated( const Akonadi::DataReference& ) ),
+           this, SLOT( editItem( const Akonadi::DataReference& ) ) );
 }
 
 MainWidget::~MainWidget()
@@ -76,3 +87,58 @@ void MainWidget::setupGui()
   mContactDetails = new KABCItemBrowser;
   splitter->addWidget( mContactDetails );
 }
+
+void MainWidget::setupActions()
+{
+  QAction *action = 0;
+  KActionCollection *collection = mGuiClient->actionCollection();
+
+  action = collection->addAction( "file_new_contact" );
+  action->setIcon( KIcon( "add-user" ) );
+  action->setText( i18n( "&New Contact..." ) );
+  connect( action, SIGNAL( triggered(bool) ), SLOT( newContact() ));
+  action->setShortcut( QKeySequence( Qt::CTRL + Qt::Key_N ) );
+  action->setWhatsThis( i18n( "Create a new contact<p>You will be presented with a dialog where you can add all data about a person, including addresses and phone numbers.</p>" ) );
+
+  action = collection->addAction( "file_new_group" );
+  action->setIcon( KIcon( "add-user" ) ); //TODO: new icon
+  action->setText( i18n( "&New Group..." ) );
+  connect( action, SIGNAL( triggered(bool) ), SLOT( newGroup() ));
+  action->setShortcut( QKeySequence( Qt::CTRL + Qt::Key_G ) );
+  action->setWhatsThis( i18n( "Create a new group<p>You will be presented with a dialog where you can add a new group of contacts.</p>" ) );
+}
+
+void MainWidget::newContact()
+{
+  ContactEditorDialog dlg( ContactEditorDialog::CreateMode, mCollectionFilterModel, this );
+  dlg.exec();
+}
+
+void MainWidget::newGroup()
+{
+}
+
+void MainWidget::editItem( const Akonadi::DataReference &reference )
+{
+  const QModelIndex index = mContactModel->indexForItem( reference, 0 );
+  const Akonadi::Item item = mContactModel->itemForIndex( index );
+
+  if ( item.mimeType() == "text/directory" || item.mimeType() == "text/vcard" ) {
+    editContact( reference );
+  } else if ( item.mimeType() == "text/distributionlist" ) {
+    editGroup( reference );
+  }
+}
+
+void MainWidget::editContact( const Akonadi::DataReference &contact )
+{
+  ContactEditorDialog dlg( ContactEditorDialog::EditMode, mCollectionFilterModel, this );
+  dlg.setContact( contact );
+  dlg.exec();
+}
+
+void MainWidget::editGroup( const Akonadi::DataReference &group )
+{
+}
+
+#include "mainwidget.moc"

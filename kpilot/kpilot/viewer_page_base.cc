@@ -85,6 +85,12 @@ PilotDatabase* ViewerPageBase::database() const
 	return fP->fDatabase;
 }
 
+void ViewerPageBase::setDatabase( PilotDatabase *db )
+{
+	KPILOT_DELETE( fP->fDatabase );
+	fP->fDatabase = db;
+}
+
 void ViewerPageBase::showPage()
 {
 	FUNCTIONSETUP;

@@ -45,7 +45,7 @@ public slots:
 	virtual void showPage() = 0;
 	
 	/**
-	 * Called when the component is hidden in kpilot. It shoul clean up to save
+	 * Called when the component is hidden in kpilot. It should clean up to save
 	 * memory.
 	 */
 	virtual void hidePage() = 0;

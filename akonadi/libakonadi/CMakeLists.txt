@@ -43,6 +43,7 @@ set( akonadi_LIB_SRC
 	collectionfilterproxymodel.cpp
 	collectionmodifyjob.cpp
 	collectionpathresolver.cpp
+	collectionrightsattribute.cpp
 	collectionselectjob.cpp
 	collectionstatus.cpp
 	collectionstatusjob.cpp
@@ -61,6 +62,7 @@ set( akonadi_LIB_SRC
 	itemserializer.cpp
 	itemserializerplugin.cpp
 	itemstorejob.cpp
+  itemsync.cpp
   itemview.cpp
 	job.cpp
 	kcrash.cpp
@@ -124,6 +126,7 @@ install( FILES
 	itemserializerplugin.h
 	itemstorejob.h
 	itemmodel.h
+  itemsync.h
 	itemview.h
 	job.h
 	libakonadi_export.h

@@ -24,8 +24,6 @@
 #include <QPixmap>
 #include <kio/thumbcreator.h>
 
-class KPixmapSplitter;
-
 class VCard_LDIFCreator : public ThumbCreator
 {
   public:
@@ -35,7 +33,7 @@ class VCard_LDIFCreator : public ThumbCreator
     virtual Flags flags() const;
 
   private:
-    KPixmapSplitter *mSplitter;
+    QPixmap *mFont;
     QPixmap mPixmap;
 
     QString name;

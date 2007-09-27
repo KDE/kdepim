@@ -120,7 +120,9 @@ bool KeyringHHDataProxy::openDatabase( const QString &pass )
 			// For now remove the zero record from the record list.
 			fRecords.remove( QString::number( fZeroRecord->id() ) );
 			
-			fCounter.setStartCount(fRecords.count());
+			// Startcount is set by loadAllRecords, but because the zero record doesn't
+			// count we reset the start count here.
+			fCounter.setStartCount( fRecords.count() );
 			
 			return true;
 		}
@@ -167,6 +169,22 @@ void KeyringHHDataProxy::loadCategories()
 	{
 		KPILOT_DELETE(fAppInfo);
 		fAppInfo = new PilotKeyringInfo( fDatabase );
+	}
+}
+
+void KeyringHHDataProxy::saveCategories()
+{
+	FUNCTIONSETUP;
+	
+	PilotKeyringInfo * appInfo = dynamic_cast<PilotKeyringInfo*>(fAppInfo);
+	
+	if( fDatabase && fDatabase->isOpen() && appInfo)
+	{
+		QStringList categories = categoryNames();
+		for (unsigned int i = 0; i < Pilot::CATEGORY_COUNT; i++) {
+			appInfo->setCategoryName(i, categories.at(i));
+		}
+		appInfo->writeTo(fDatabase);
 	}
 }
 
@@ -232,16 +250,22 @@ bool KeyringHHDataProxy::createDataStore()
 			new KeyringHHRecord( &appInfo,  i18n("KPilot cares"), i18n("KDE"), "",
 					i18n("Thanks for using KPilot!"), fDesKey);
 		
-		QStringList cats;
-		cats.append(CSL1("Web"));
-		
-		fFirstRecord->setCategoryNames(cats);
+		fFirstRecord->setCategoryNames(QStringList() << CSL1("Web"));
 		
 		fDatabase->writeRecord( fFirstRecord->pilotRecord() );
 		
 		// now write the appInfo block, which includes the 4 explicitly-added categories
 		// and the 5th one set via setCategoryNames()
 		appInfo.writeTo( fDatabase );
+		
+		loadAllRecords();
+		
+		// For now remove the zero record from the record list.
+		fRecords.remove( QString::number( fZeroRecord->id() ) );
+		
+		// Startcount is set by loadAllRecords, but because the zero record doesn't
+		// count we reset the start count here.
+		fCounter.setStartCount( fRecords.count() );
 		
 		return true;
 	}

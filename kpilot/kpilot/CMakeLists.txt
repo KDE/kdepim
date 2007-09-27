@@ -113,6 +113,7 @@ set(kpilot_bin_SRCS
 
 set(kpilot_UIS
 	viewer_page_base.ui
+	viewer_genericdb.ui
 	dbFlagsEditor_base.ui
 )
 

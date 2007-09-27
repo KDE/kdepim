@@ -141,7 +141,7 @@ void TestIDMappingXmlSource::testSaveLoad()
 	source2.loadMapping();
 	
 	// There should be a backup now.
-	QVERIFY( dir.exists( fConduit + CSL1( "-mapping.xml~" ) ) );
+	QVERIFY( dir.exists( fConduit + CSL1( "-mapping.xml-backup" ) ) );
 	
 	QVERIFY( pc == source2.lastSyncedPC() );
 	QVERIFY( dt == source2.lastSyncedDate() );
@@ -164,7 +164,7 @@ void TestIDMappingXmlSource::cleanDir()
 	dir.cd( fUser );
 	dir.cd( CSL1( "mapping" ) );
 	dir.remove( fConduit + CSL1( "-mapping.xml" ) );
-	dir.remove(  fConduit + CSL1( "-mapping.xml~" ) );
+	dir.remove(  fConduit + CSL1( "-mapping.xml-backup" ) );
 	dir.remove(  fConduit + CSL1( "-mapping.xml.fail" ) );
 	dir.cd( CSL1( ".." ) );
 	dir.rmdir( CSL1( "mapping" ) );
