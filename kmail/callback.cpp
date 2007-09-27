@@ -146,16 +146,20 @@ QString Callback::receiver() const
     // Add identities to the list
     KPIM::IdentityManager::ConstIterator it =
       kmkernel->identityManager()->begin();
-    for ( ; it != kmkernel->identityManager()->end(); ++it ) {
+    KPIM::IdentityManager::ConstIterator end =
+        kmkernel->identityManager()->end();
+    int defaultIdx = 0;
+    for ( int i = 0; it != end; ++it, ++i ) {
       const QString addr = (*it).fullEmailAddr();
       addrs << addr;
       toShow << i18n( "Identity: %1" ).arg( addr );
+      if ( (*it).isDefault() ) defaultIdx = i;
     }
 
     // Choose
     mReceiver =
       KInputDialog::getItem( i18n( "Select Address" ), message,
-                             toShow, 0, false, &ok, kmkernel->mainWin() );
+                             toShow, defaultIdx, false, &ok, kmkernel->mainWin() );
     if( !ok ) {
       mReceiver = QString::null;
 
