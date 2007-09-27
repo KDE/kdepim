@@ -112,7 +112,7 @@ private:
 	bool _saveAddressBook();
 	void _getAppInfo();
 	void _setAppInfo();
-	void _cleanupAddreessBookPointer();
+	void _cleanupAddressBookPointer();
 
 
 
@@ -194,6 +194,8 @@ private:
 /*   D A T A   M E M B E R S ,   S E T T I N G S        */
 /********************************************************/
 
+	AddressBook* aBook;
+
 	PilotAddressInfo *fAddressAppInfo;
 
 	KABCSync::Settings fSyncSettings;
@@ -203,7 +205,6 @@ private:
 	/** addresseeMap maps record ids to IDs of Addressees. This is used to speed up searching the local addressbook */
 	AddresseeMapType addresseeMap;
 	RecordIDList syncedIds, allIds;
-	static AddressBook* aBook;
 	QString fABookFile;
 	AddressBook::Iterator abiter;
 	/** For a local file resource, we need to obtain a saveTicket

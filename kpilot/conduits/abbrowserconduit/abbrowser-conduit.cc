@@ -96,9 +96,6 @@ inline KABC::PhoneNumber::Type faxTypeOnPC()
 
 using namespace KABC;
 
-AddressBook *AbbrowserConduit::aBook=0L;
-
-
 /*********************************************************************
                         C O N S T R U C T O R
  *********************************************************************/
@@ -109,6 +106,7 @@ AddressBook *AbbrowserConduit::aBook=0L;
 
 AbbrowserConduit::AbbrowserConduit(KPilotLink * o, const QVariantList & a):
 		ConduitAction(o, a),
+		aBook(0L),
 		fAddressAppInfo(0L),
 		addresseeMap(),
 		syncedIds(),
@@ -134,7 +132,7 @@ AbbrowserConduit::~AbbrowserConduit()
 		fTicket=0L;
 	}
 
-	_cleanupAddreessBookPointer();
+	_cleanupAddressBookPointer();
 
 	// unused function warnings.
 	compile_time_check();
@@ -305,7 +303,7 @@ bool AbbrowserConduit::_loadAddressBook()
 		emit logError(i18n("Unable to initialize and load the addressbook for the sync.") );
 		addSyncLogEntry(i18n("Unable to initialize and load the addressbook for the sync.") );
 		WARNINGKPILOT <<"Unable to initialize the addressbook for the sync.";
-		_cleanupAddreessBookPointer();
+		_cleanupAddressBookPointer();
 		stopTickle();
 		return false;
 	}
@@ -317,7 +315,7 @@ bool AbbrowserConduit::_loadAddressBook()
 		WARNINGKPILOT <<"Unable to lock addressbook for writing";
 		emit logError(i18n("Unable to lock addressbook for writing.  Cannot sync!"));
 		addSyncLogEntry(i18n("Unable to lock addressbook for writing.  Cannot sync!"));
-		_cleanupAddreessBookPointer();
+		_cleanupAddressBookPointer();
 		stopTickle();
 		return false;
 	}
@@ -413,7 +411,7 @@ void AbbrowserConduit::_setAppInfo()
 	if (fLocalDatabase) fAddressAppInfo->writeTo(fLocalDatabase);
 }
 
-void AbbrowserConduit::_cleanupAddreessBookPointer()
+void AbbrowserConduit::_cleanupAddressBookPointer()
 {
         if (fCreatedBook)
         {
