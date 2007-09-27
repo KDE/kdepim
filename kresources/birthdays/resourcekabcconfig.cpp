@@ -54,9 +54,8 @@ ResourceKABCConfig::ResourceKABCConfig( QWidget* parent )
 
   mALabel = new QLabel(i18n("Reminder before (in days):"),this);
   topLayout->addWidget(mALabel, 1, 0 );
-  mAlarmTimeEdit = new KRestrictedLine(this);
-  mAlarmTimeEdit->setValidChars("1234567890");
-  mAlarmTimeEdit->setObjectName("alarmTimeEdit");
+  mAlarmTimeEdit = new KLineEdit(this); 
+  mAlarmTimeEdit->setValidator(new QIntValidator(mAlarmTimeEdit));
   mAlarmTimeEdit->setText("0");
   topLayout->addWidget(mAlarmTimeEdit, 1, 1 );
 
