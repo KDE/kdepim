@@ -61,7 +61,7 @@ namespace Kleo {
      After result() is emitted, the EncryptJob will schedule it's own
      destruction by calling QObject::deleteLater().
   */
-  class EncryptJob : public Job {
+  class KLEO_EXPORT EncryptJob : public Job {
     Q_OBJECT
   protected:
     explicit EncryptJob( QObject * parent );

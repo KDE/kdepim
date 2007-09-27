@@ -62,7 +62,7 @@ namespace Kleo {
      After result() is emitted, the SignJob will schedule it's own
      destruction by calling QObject::deleteLater().
   */
-  class SignJob : public Job {
+  class KLEO_EXPORT SignJob : public Job {
     Q_OBJECT
   protected:
     explicit SignJob( QObject * parent );

@@ -33,6 +33,8 @@
 #ifndef __KLEO_JOB_H__
 #define __KLEO_JOB_H__
 
+#include "kleo_export.h"
+
 #include <QtCore/QObject>
 #include <QtCore/QString>
 
@@ -59,7 +61,7 @@ namespace Kleo {
      signal of subclasses will still be emitted, though, and will
      carry the information that the operation was canceled.
   */
-  class Job : public QObject {
+  class KLEO_EXPORT Job : public QObject {
     Q_OBJECT
   protected:
     explicit Job( QObject * parent );
