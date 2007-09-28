@@ -69,43 +69,31 @@ struct SignatureDisplayWidget::Private {
     {
         // FIXME make colors configurable
         QColor c = Qt::yellow;
-        switch ( summary ) {
-        case GpgME::Signature::Green:
+        if ( summary & GpgME::Signature::Green )
             c = Qt::green;
-            break;
-        case GpgME::Signature::Red:
+        else if ( summary & GpgME::Signature::Red )
             c = Qt::red;
-            break;
-        default:
-            break;
-        }
         return c;
     }
 
     static QString labelForSummary( const GpgME::Signature::Summary summary )
     {
-        switch ( summary ) {
-            case GpgME::Signature::Green:
-                return i18n( "Valid signature" );
-            case GpgME::Signature::Red:
-                return i18n( "Signaute invalid" );
-            default:
-                return i18n( "Unknown signature state" );
-        }
-        return QString();
+        QString c = i18n( "Unknown signature state" );
+        if ( summary & GpgME::Signature::Green )
+            c = i18n( "Valid signature" );
+        else if ( summary & GpgME::Signature::Red )
+            c = i18n( "Signaute invalid" );
+        return c;
     }
 
     static QString iconForSummary( const GpgME::Signature::Summary summary )
     {
-        switch ( summary ) {
-            case GpgME::Signature::Green:
-                return KIconLoader::global()->iconPath( "dialog-ok", K3Icon::Small );
-            case GpgME::Signature::Red:
-                return KIconLoader::global()->iconPath( "dialog-error", K3Icon::Small );
-            default:
-                return KIconLoader::global()->iconPath( "dialog-warning", K3Icon::Small );
-        }
-        return QString();
+        QString c = KIconLoader::global()->iconPath( "dialog-warning", K3Icon::Small );
+        if ( summary & GpgME::Signature::Green )
+            c = KIconLoader::global()->iconPath( "dialog-ok", K3Icon::Small );
+        else if ( summary & GpgME::Signature::Red )
+            c = KIconLoader::global()->iconPath( "dialog-error", K3Icon::Small );
+        return c;
     }
 
     void reload()

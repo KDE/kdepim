@@ -50,6 +50,7 @@ public:
     :QDialog( parent ), m_count(count)
     {
         init();
+        
     }
     virtual ~ResultDialog() {}
     
@@ -102,6 +103,8 @@ public:
         QWidget *errorWidget = _errorWidget;
         if ( !errorWidget ) {
             errorWidget = new QLabel( this, errorString );
+            errorWidget->setObjectName( "ErrorWidget" );
+            errorWidget->setStyleSheet( QString::fromLatin1("QLabel#ErrorWidget { border:4px solid red; border-radius:2px; }") );
         }
         stack->addWidget( errorWidget );
         stack->setCurrentWidget( errorWidget );
