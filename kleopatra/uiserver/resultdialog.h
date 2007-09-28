@@ -30,6 +30,7 @@ public:
             QStackedWidget *w = new QStackedWidget( this );
             box->addWidget( w );
             QProgressBar * p = new QProgressBar( this );
+            p->setRange( 0, 0 ); // knight rider mode
             w->addWidget( p );
             T* payload = new T( this );
             w->addWidget( payload );
