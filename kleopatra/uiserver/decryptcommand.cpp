@@ -34,6 +34,8 @@
 #include "assuancommandprivatebase_p.h"
 #include "kleo-assuan.h"
 #include "resultdialog.h"
+#include "utils/formatting.h"
+#include "certificateinfowidgetimpl.h"
 
 #include <QObject>
 #include <QIODevice>
@@ -45,6 +47,7 @@
 #include <QLabel>
 
 #include <kleo/decryptjob.h>
+#include <kleo/keylistjob.h>
 #include <utils/stl_util.h>
 
 #include <kiconloader.h>
@@ -52,6 +55,7 @@
 
 #include <gpgme++/error.h>
 #include <gpgme++/decryptionresult.h>
+#include <gpgme++/keylistresult.h>
 
 #include <gpg-error.h>
 
@@ -98,26 +102,42 @@ private:
 
 class DecryptResultDisplayWidget : public QFrame
 {
+    Q_OBJECT
 public:
     DecryptResultDisplayWidget( QWidget * parent )
-    :QFrame( parent )
+    :QFrame( parent ), m_state( Summary ), m_jobCount( 0 )
     {
         setObjectName( "DecryptResultDisplayWidget" );
         QVBoxLayout *layout = new QVBoxLayout( this );
-        summaryLabel = new QLabel( this );
-        layout->addWidget( summaryLabel );
+        m_summaryLabel = new QLabel( this );
+        layout->addWidget( m_summaryLabel );
+        m_detailsLabel = new QLabel( this );
+        connect( m_detailsLabel, SIGNAL(linkActivated(QString)), SLOT(linkActivated(QString)) );
+        layout->addWidget( m_detailsLabel );
     }
 
     void setResult( const GpgME::DecryptionResult & result )
     {
-        if ( result.error() ) {
+        m_result = result;
+        reload();
+    }
+
+    void setBackends( const QList<const Kleo::CryptoBackend::Protocol*> &backends )
+    {
+        m_backends = backends;
+    }
+
+private:
+    void reload()
+    {
+        if ( m_result.error() ) {
             setStyleSheet( "QFrame#DecryptResultDisplayWidget { border: 4px solid red; border-radius:2px; }" );
             QString l = "<qt><img src=\"";
             l += KIconLoader::global()->iconPath( "dialog-error", K3Icon::Small );
             l += "\"/> <b>";
             l += i18n( "Decryption failed" );
             l += "</b></qt>";
-            summaryLabel->setText( l );
+            m_summaryLabel->setText( l );
         } else {
             setStyleSheet( "QFrame#DecryptResultDisplayWidget { border: 4px solid green; border-radius:2px; }" );
             QString l = "<qt><img src=\"";
@@ -125,12 +145,91 @@ public:
             l += "\"/> <b>";
             l += i18n( "Decryption succeeded" );
             l += "</b></qt>";
-            summaryLabel->setText( l );
+            m_summaryLabel->setText( l );
+        }
+        if ( m_state == Summary )
+            m_detailsLabel->setText( "<qt><i><a href=\"showKeys\">" + i18n( "Details..." ) + "</a></i></qt>" );
+        else if ( m_state == WaitingForKeys )
+            m_detailsLabel->setText( "<qt><i>Retrieving keys...</i></qt>" );
+        else if ( m_state == ListingKeysFailed )
+            m_detailsLabel->setText( "<qt><i>Retrieving keys failed.</i></qt>" );
+        else if ( m_state == Details ) {
+            if ( m_keys.empty() )
+                m_detailsLabel->setText( "<qt><i>No receipients found.</i></qt>" );
+            else {
+                QString l = "<qt>" + i18np( "Receipient:", "Reciepients:", m_result.numRecipients() ) + "<ul>";
+                Q_FOREACH( const GpgME::Key key, m_keys ) {
+                    l += "<li><a href=\"" + QLatin1String(key.keyID()) + QString::fromLatin1( "\">%1</a></li>" )
+                            .arg( Formatting::prettyName( key ) );
+                }
+                if ( m_keys.size() < m_result.numRecipients() ) {
+                    l += "<li>" + i18np( "one unknown receipient", "%n unknown receipients",
+                                         m_result.numRecipients() - m_keys.size() );
+                }
+                l += "</ul></qt>";
+                m_detailsLabel->setText( l );
+            }
+        }
+    }
+
+private Q_SLOTS:
+    void linkActivated( const QString &link )
+    {
+        if ( link == "showKeys" ) {
+            m_state = WaitingForKeys;
+            reload();
+            QStringList keys;
+            Q_FOREACH( const GpgME::DecryptionResult::Recipient r, m_result.recipients() )
+                keys << QLatin1String( r.keyID() );
+            Q_FOREACH( const Kleo::CryptoBackend::Protocol *b, m_backends ) {
+                ++m_jobCount;
+                Kleo::KeyListJob *job = b->keyListJob();
+                connect( job, SIGNAL(nextKey(GpgME::Key)), SLOT(nextKey(GpgME::Key)) );
+                connect( job, SIGNAL(result(GpgME::KeyListResult)), SLOT(keyListResult(GpgME::KeyListResult)) );
+                job->start( keys, false );
+            }
+            return;
+        }
+
+        Q_FOREACH( const GpgME::Key key, m_keys ) {
+            if ( link != QLatin1String( key.keyID() ) )
+                continue;
+            CertificateInfoWidgetImpl *dlg = new CertificateInfoWidgetImpl( key, false, 0 );
+            dlg->setAttribute( Qt::WA_DeleteOnClose );
+            dlg->show();
+        }
+    }
+
+    void nextKey( const GpgME::Key &key )
+    {
+        m_keys.push_back( key );
+    }
+
+    void keyListResult( const GpgME::KeyListResult &result )
+    {
+        --m_jobCount;
+        if ( result.error() ) {
+            m_state = ListingKeysFailed;
+            reload();
+        } else if ( m_jobCount == 0 ) {
+            m_state = Details;
+            reload();
         }
     }
 
 private:
-    QLabel *summaryLabel;
+    QList<const Kleo::CryptoBackend::Protocol*> m_backends;
+    GpgME::DecryptionResult m_result;
+    std::vector<GpgME::Key> m_keys;
+    QLabel *m_summaryLabel;
+    QLabel *m_detailsLabel;
+    enum State {
+        Summary,
+        WaitingForKeys,
+        ListingKeysFailed,
+        Details
+    } m_state;
+    int m_jobCount;
 };
 
 class DecryptCommand::Private
@@ -327,6 +426,10 @@ void DecryptCommand::Private::slotShowResult( int id, const DecryptionResultColl
          dialog->showError( id, result.errorString );
      } else {
          DecryptResultDisplayWidget * w = dialog->widget( id );
+         QList<const Kleo::CryptoBackend::Protocol*> backends;
+         Q_FOREACH( Input i, inputList )
+            backends.push_back( i.backend );
+         w->setBackends( backends );
          w->setResult( result.result );
          dialog->showResultWidget( id );
      }
