@@ -41,12 +41,13 @@
 #include <QMap>
 #include <QStringList>
 #include <QDebug>
-#include <QMessageBox>
 #include <QFile>
+#include <QLabel>
 
 #include <kleo/decryptjob.h>
 #include <utils/stl_util.h>
 
+#include <kiconloader.h>
 #include <klocale.h>
 
 #include <gpgme++/error.h>
@@ -95,19 +96,41 @@ private:
     int m_statusSent;
 };
 
-class DecryptResultDisplayWidget : public QWidget
+class DecryptResultDisplayWidget : public QFrame
 {
 public:
     DecryptResultDisplayWidget( QWidget * parent )
-    :QWidget( parent )
+    :QFrame( parent )
     {
-        
+        setObjectName( "DecryptResultDisplayWidget" );
+        QVBoxLayout *layout = new QVBoxLayout( this );
+        summaryLabel = new QLabel( this );
+        layout->addWidget( summaryLabel );
     }
-    
+
     void setResult( const GpgME::DecryptionResult & result )
     {
-        // FIXME do something with it
+        if ( result.error() ) {
+            setStyleSheet( "QFrame#DecryptResultDisplayWidget { border: 4px solid red; border-radius:2px; }" );
+            QString l = "<qt><img src=\"";
+            l += KIconLoader::global()->iconPath( "dialog-error", K3Icon::Small );
+            l += "\"/> <b>";
+            l += i18n( "Decryption failed" );
+            l += "</b></qt>";
+            summaryLabel->setText( l );
+        } else {
+            setStyleSheet( "QFrame#DecryptResultDisplayWidget { border: 4px solid green; border-radius:2px; }" );
+            QString l = "<qt><img src=\"";
+            l += KIconLoader::global()->iconPath( "dialog-ok", K3Icon::Small );
+            l += "\"/> <b>";
+            l += i18n( "Decryption succeeded" );
+            l += "</b></qt>";
+            summaryLabel->setText( l );
+        }
     }
+
+private:
+    QLabel *summaryLabel;
 };
 
 class DecryptCommand::Private
@@ -268,11 +291,11 @@ void DecryptCommand::Private::tryDecryptResult(const GpgME::DecryptionResult & r
 {
     assert( id!= -1 );
 
- 
+
     const GpgME::Error decryptionError = result.error();
     if ( decryptionError )
         throw assuan_exception( decryptionError, "Decryption failed: " );
-    
+
     writeToOutputDeviceOrAskForFileName( id, stuff, result.fileName() );
 }
 
@@ -280,21 +303,12 @@ void DecryptCommand::Private::slotDecryptionCollectionResult( const QMap<int, De
 {
     assert( !results.isEmpty() );
 
-    std::vector<DecryptionResultCollector::Result> theGood;
     std::vector<DecryptionResultCollector::Result> theBad;
 
     kdtools::copy_if( results.begin(), results.end(),
                       std::back_inserter( theBad ),
                       boost::bind( &DecryptionResultCollector::Result::isError, _1 ) );
-    kdtools::copy_if( results.begin(), results.end(),
-                      std::back_inserter( theGood ),
-                      !boost::bind( &DecryptionResultCollector::Result::isError, _1 ) );
 
-    if ( !q->hasOption("silent") ) {
-        // FIXME find all errors and all successes and display result dialog, unless --silent
-        QMessageBox::information( 0, i18n( "Decryption Result" ), QString("%1 files processed. %2 were ok, %3 failed")
-                                 .arg( results.size() ).arg( theGood.size() ).arg( theBad.size() ) );
-    }
     if ( !theBad.empty() )
         q->done( makeError( GPG_ERR_DECRYPT_FAILED ) );
     else
