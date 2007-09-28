@@ -195,7 +195,6 @@ void SignCommand::Private::slotKeySelectionResult( const std::vector<GpgME::Key>
     startSignJobs( keys );
 }
 
-
 void SignCommand::Private::slotKeySelectionError( const GpgME::Error& error, const GpgME::KeyListResult& )
 {
     assert( error );
@@ -244,7 +243,7 @@ void SignCommand::Private::slotSigningResult( const GpgME::SigningResult & resul
            // FIXME adjust for smime?
            const QString filename = q->bulkInputDeviceFileName( "INPUT", m_statusSent ) + ".sig";
            writeToOutputDeviceOrAskForFileName( result.id, result.data, filename );
-           resultString = "OK - Super Duper Weenie\n";
+           resultString = "OK - Super Duper Weenie";
        } catch ( const assuan_exception& e ) {
            result.error = e.error_code();
            result.errorString = e.what();
@@ -256,6 +255,7 @@ void SignCommand::Private::slotSigningResult( const GpgME::SigningResult & resul
            return;
        m_statusSent++;
     }
+    
     if ( --m_signJobs == 0 )
         q->done();
 }
@@ -281,7 +281,6 @@ int SignCommand::doStart()
     
     return 0;
 }
-
 
 void SignCommand::doCanceled()
 {
