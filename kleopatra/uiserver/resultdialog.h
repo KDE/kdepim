@@ -56,15 +56,18 @@ public:
     void init()
     {
         QVBoxLayout *box = new QVBoxLayout( this );
+        box->setContentsMargins( 0, 0, 0, 0 );
+
         m_stacks.reserve( m_count );
         m_payloads.reserve( m_count );
         for ( int i=0; i< m_count; i++ ) {
             QStackedWidget *w = new QStackedWidget( this );
+            w->setSizePolicy( QSizePolicy::Minimum, QSizePolicy::Minimum );
+            QProgressBar * p = new QProgressBar( w );
             box->addWidget( w );
-            QProgressBar * p = new QProgressBar( this );
             p->setRange( 0, 0 ); // knight rider mode
             w->addWidget( p );
-            T* payload = new T( this );
+            T* payload = new T( w );
             w->addWidget( payload );
             w->setCurrentIndex( 0 );
             m_stacks.push_back( w );
