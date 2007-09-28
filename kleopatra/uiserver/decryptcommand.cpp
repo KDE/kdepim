@@ -181,6 +181,11 @@ private Q_SLOTS:
             QStringList keys;
             Q_FOREACH( const GpgME::DecryptionResult::Recipient r, m_result.recipients() )
                 keys << QLatin1String( r.keyID() );
+            if ( keys.isEmpty() ) {
+                m_state = Details;
+                reload();
+                return;
+            }
             Q_FOREACH( const Kleo::CryptoBackend::Protocol *b, m_backends ) {
                 ++m_jobCount;
                 Kleo::KeyListJob *job = b->keyListJob();
@@ -264,6 +269,8 @@ private:
 
 static QString resultToString( const GpgME::DecryptionResult & result )
 {
+    if ( result.error() )
+        return QString( "ERR decryption failed" );
     QString resStr( "OK ");
     for ( unsigned int i = 0; i<result.numRecipients(); i++ ) {
         const GpgME::DecryptionResult::Recipient r = result.recipient( i );
@@ -395,12 +402,8 @@ void DecryptCommand::Private::tryDecryptResult(const GpgME::DecryptionResult & r
 {
     assert( id!= -1 );
 
-
-    const GpgME::Error decryptionError = result.error();
-    if ( decryptionError )
-        throw assuan_exception( decryptionError, "Decryption failed: " );
-
-    writeToOutputDeviceOrAskForFileName( id, stuff, result.fileName() );
+    if ( result.error() )
+        writeToOutputDeviceOrAskForFileName( id, stuff, result.fileName() );
 }
 
 void DecryptCommand::Private::slotDecryptionCollectionResult( const QMap<int, DecryptionResultCollector::Result>& results )
@@ -432,8 +435,10 @@ void DecryptCommand::Private::slotShowResult( int id, const DecryptionResultColl
      } else {
          DecryptResultDisplayWidget * w = dialog->widget( id );
          QList<const Kleo::CryptoBackend::Protocol*> backends;
-         Q_FOREACH( Input i, inputList )
-            backends.push_back( i.backend );
+         Q_FOREACH( Input i, inputList ) {
+            if ( !backends.contains( i.backend ) )
+                backends.push_back( i.backend );
+         }
          w->setBackends( backends );
          w->setResult( result.result );
          dialog->showResultWidget( id );
