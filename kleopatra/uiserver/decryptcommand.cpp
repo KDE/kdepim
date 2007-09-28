@@ -33,6 +33,7 @@
 #include "decryptcommand.h"
 #include "assuancommandprivatebase_p.h"
 #include "kleo-assuan.h"
+#include "resultdialog.h"
 
 #include <QObject>
 #include <QIODevice>
@@ -78,8 +79,10 @@ public:
     };
 
     void registerJob( int id, DecryptJob* job );
+    int unfinishedJobs() const { return m_unfinished; }
 Q_SIGNALS:
     void finished( const QMap<int, DecryptionResultCollector::Result> & );
+    void showResult( int, const DecryptionResultCollector::Result& );
 
 private Q_SLOTS:
     void slotDecryptResult(const GpgME::DecryptionResult &, const QByteArray &);
@@ -90,6 +93,21 @@ private:
     int m_unfinished;
     DecryptCommand::Private* m_command;
     int m_statusSent;
+};
+
+class DecryptResultDisplayWidget : public QWidget
+{
+public:
+    DecryptResultDisplayWidget( QWidget * parent )
+    :QWidget( parent )
+    {
+        
+    }
+    
+    void setResult( const GpgME::DecryptionResult & result )
+    {
+        // FIXME do something with it
+    }
 };
 
 class DecryptCommand::Private
@@ -108,12 +126,17 @@ public:
     int startDecryption();
     void tryDecryptResult(const GpgME::DecryptionResult &, const QByteArray &, int );
     void trySendingStatus( const QString & str );
+    void showDecryptResultDialog();
 
 public Q_SLOTS:
     void slotDecryptionCollectionResult( const QMap<int, DecryptionResultCollector::Result>& );
     void slotProgress( const QString& what, int current, int total );
+    void slotDialogClosed();
+    void slotShowResult( int, const DecryptionResultCollector::Result& );
+
 private:
     DecryptionResultCollector* collector;
+    ResultDialog<DecryptResultDisplayWidget> *dialog;
 
 };
 
@@ -168,6 +191,7 @@ void DecryptionResultCollector::slotDecryptResult(const GpgME::DecryptionResult 
             resultString = "ERR " + res.errorString;
             // FIXME ask to continue or cancel
         }
+        emit showResult( m_statusSent, result );
         m_command->trySendingStatus( resultString );
         m_statusSent++;
     }
@@ -234,8 +258,6 @@ void DecryptCommand::Private::trySendingStatus( const QString & str )
     }
 }
 
-
-
 void DecryptCommand::Private::slotProgress( const QString& what, int current, int total )
 {
     // FIXME report progress, via sendStatus()
@@ -279,6 +301,33 @@ void DecryptCommand::Private::slotDecryptionCollectionResult( const QMap<int, De
         q->done();
 }
 
+void DecryptCommand::Private::slotDialogClosed()
+{
+    // FIXME if there was at least one error, and if so declare the whole thing failed.
+    q->done();
+}
+
+void DecryptCommand::Private::slotShowResult( int id, const DecryptionResultCollector::Result &result )
+{
+    if ( result.error ) {
+         dialog->showError( id, result.errorString );
+     } else {
+         DecryptResultDisplayWidget * w = dialog->widget( id );
+         w->setResult( result.result );
+         dialog->showResultWidget( id );
+     }
+}
+
+void DecryptCommand::Private::showDecryptResultDialog()
+{
+    dialog = new ResultDialog<DecryptResultDisplayWidget>( 0, collector->unfinishedJobs() ); // fixme opaque parent handle from command line?
+    connect( dialog, SIGNAL( accepted() ), this, SLOT( slotDialogClosed() ) );
+    connect( dialog, SIGNAL( rejected() ), this, SLOT( slotDialogClosed() ) );
+    connect( collector, SIGNAL( showResult( int, DecryptionResultCollector::Result ) ),
+             this, SLOT( slotShowResult( int, DecryptionResultCollector::Result ) ) );
+    dialog->show();
+}
+
 int DecryptCommand::Private::startDecryption()
 {
     assert( !inputList.isEmpty() );
@@ -311,15 +360,8 @@ int DecryptCommand::Private::startDecryption()
     return 0;
 }
 
-
-
 int DecryptCommand::doStart()
 {
-    /*
-    d->parseCommandLine("");
-    d->showDetails = !hasOption("silent");
-    */
-
     GpgME::Error error;
     QString details;
     d->inputList = d->analyzeInput( error, details );
@@ -334,6 +376,8 @@ int DecryptCommand::doStart()
         return err;
     }
     err = d->startDecryption();
+    if ( !err && !hasOption( "silent" ) )
+        d->showDecryptResultDialog();
     return 0;
 
 }
