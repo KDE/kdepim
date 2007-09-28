@@ -135,6 +135,7 @@ int main( int argc, char** argv )
 #endif
 
       args->clear();
+      QApplication::setQuitOnLastWindowClosed( false );
       rc = app.exec();
 
 #ifdef HAVE_USABLE_ASSUAN
