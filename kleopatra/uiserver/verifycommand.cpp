@@ -34,6 +34,7 @@
 #include "assuancommandprivatebase_p.h"
 #include "kleo-assuan.h"
 #include "signaturedisplaywidget.h"
+#include "resultdialog.h"
 
 #include <kleo/verifyopaquejob.h>
 #include <kleo/verifydetachedjob.h>
@@ -63,6 +64,9 @@
 #include <QVariant>
 #include <QDialog>
 #include <QVBoxLayout>
+#include <QProgressBar>
+#include <QLabel>
+#include <QStackedWidget>
 
 #include <boost/bind.hpp>
 #include <boost/shared_ptr.hpp>
@@ -114,24 +118,6 @@ static QString keyToString( const GpgME::Key key )
    return result;
 }
 
-class VerificationResultDialog : public QDialog
-{
-    Q_OBJECT
-public:
-    VerificationResultDialog( QWidget* parent )
-    :QDialog( parent )
-    {/*
-        QVBoxLayout *box = new QVBoxLayout( this );
-        Q_FOREACH( GpgME::Signature sig, result.signatures() ) {
-            SignatureDisplayWidget *w = new SignatureDisplayWidget( this );
-            w->setSignature( sig, keyForSignature( sig, keys ) );
-            box->addWidget( w );
-        }
-        */
-    }
-    virtual ~VerificationResultDialog() {}
-};
-
 class VerifyCommand::Private;
 
 class VerificationResultCollector : public QObject
@@ -153,10 +139,12 @@ public:
 
     void registerJob( int id, VerifyDetachedJob* job );
     void registerJob( int id, VerifyOpaqueJob* job );
+    int unfinishedJobs() const { return m_unfinished; }
 
 Q_SIGNALS:
     void finished( const QHash<int, VerificationResultCollector::Result> & );
-
+    void showResult( int , const VerificationResultCollector::Result & );
+    
 private Q_SLOTS:
     void slotVerifyOpaqueResult(const GpgME::VerificationResult &, const QByteArray &, const std::vector<GpgME::Key> & );
     void slotVerifyDetachedResult(const GpgME::VerificationResult &, const std::vector<GpgME::Key> & );
@@ -170,6 +158,8 @@ private:
     int m_statusSent;
 };
 
+
+
 class VerifyCommand::Private
   : public AssuanCommandPrivateBaseMixin<VerifyCommand::Private, VerifyCommand>
 {
@@ -181,7 +171,7 @@ public:
     ,collector( new VerificationResultCollector(this) )
     {}
     virtual ~Private() {}
-    VerificationResultDialog * dialog;
+    ResultDialog<SignatureDisplayWidget> * dialog;
     VerifyCommand * q;
     VerificationResultCollector * collector;
 
@@ -196,6 +186,7 @@ public:
 public Q_SLOTS:
     void verificationFinished( const QHash<int, VerificationResultCollector::Result> & results ); 
     void slotProgress( const QString& what, int current, int total );
+    void slotShowResult( int, const VerificationResultCollector::Result& );
 private Q_SLOTS:
     void slotDialogClosed();
 };
@@ -252,6 +243,7 @@ void VerificationResultCollector::addResult( const VerificationResultCollector::
            resultString = "ERR " + result.errorString;
            // FIXME ask to continue or cancel
        }
+       emit showResult( m_statusSent, result );
        m_command->trySendingStatus( resultString );
        m_statusSent++;
     }
@@ -429,10 +421,23 @@ void VerifyCommand::Private::slotDialogClosed()
 void VerifyCommand::Private::showVerificationResultDialog()
 {
 
-    dialog = new VerificationResultDialog( 0 ); // fixme opaque parent handle from command line?
+    dialog = new ResultDialog<SignatureDisplayWidget>( 0, collector->unfinishedJobs() ); // fixme opaque parent handle from command line?
     connect( dialog, SIGNAL( accepted() ), this, SLOT( slotDialogClosed() ) );
     connect( dialog, SIGNAL( rejected() ), this, SLOT( slotDialogClosed() ) );
+    
+    connect( collector, SIGNAL( showResult( int, VerificationResultCollector::Result ) ),
+             this, SLOT( slotShowResult( int, VerificationResultCollector::Result ) ) );
+    
     dialog->show();
+}
+
+void VerifyCommand::Private::slotShowResult( int id, const VerificationResultCollector::Result& res )
+{
+    SignatureDisplayWidget * w = dialog->widget( id );
+    GpgME::Signature sig = res.result.signatures()[0];
+    w->setSignature( sig, keyForSignature( sig, res.keys ) );
+    dialog->toggle( id );
+    
 }
 
 void VerifyCommand::Private::writeOpaqueResult( const GpgME::VerificationResult & result ,
