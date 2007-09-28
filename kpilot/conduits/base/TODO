@@ -1,1 +1,5 @@
+CATEGORYSYNCING:
+* The conduit should make shure that the local backup database has exactly the
+  same category information as the handhelds database.
+
 * Convert members of d-pointers in the classes here.
