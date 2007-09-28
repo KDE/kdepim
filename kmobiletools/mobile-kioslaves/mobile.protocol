@@ -25,5 +25,6 @@ Description[nl]=Een KIO-slave voor mobiele telefoons
 Description[pt]=Um kioslave para o 'mobile'
 Description[pt_BR]=Um kioslave para o 'mobile'
 Description[sv]=En I/O-slav för mobiltelefoner
+Description[x-test]=xxA kioslave for mobilexx
 Description[zh_CN]=移动电话的 kioslave
 Description[zh_TW]=行動電話的 kiosolave

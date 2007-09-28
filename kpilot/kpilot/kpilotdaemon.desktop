@@ -27,6 +27,7 @@ Name[sr@latin]=KPilot demon
 Name[sv]=Kpilotdemon
 Name[ta]=கேபைலட் டெமன்
 Name[tg]=Демони KPilot
+Name[x-test]=xxKPilotDaemonxx
 Name[zh_TW]=KPilot 守護程式
 Exec=kpilotDaemon
 NoDisplay=true
