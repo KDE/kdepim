@@ -50,6 +50,7 @@ class ResultDisplayWidget : public QFrame
 
     protected:
         QString renderKey( const GpgME::Key &key );
+        void setColor( const QColor &color );
 
     protected Q_SLOTS:
         void keyLinkActivated( const QString &link );

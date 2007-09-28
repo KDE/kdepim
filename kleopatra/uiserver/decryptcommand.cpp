@@ -131,7 +131,7 @@ private:
     void reload()
     {
         if ( m_result.error() ) {
-            setStyleSheet( "QFrame#DecryptResultDisplayWidget { border: 4px solid red; border-radius:2px; }" );
+            setColor( Qt::red );
             QString l = "<qt><img src=\"";
             l += KIconLoader::global()->iconPath( "dialog-error", K3Icon::Small );
             l += "\"/> <b>";
@@ -139,7 +139,7 @@ private:
             l += "</b></qt>";
             m_summaryLabel->setText( l );
         } else {
-            setStyleSheet( "QFrame#DecryptResultDisplayWidget { border: 4px solid green; border-radius:2px; }" );
+            setColor( Qt::green );
             QString l = "<qt><img src=\"";
             l += KIconLoader::global()->iconPath( "dialog-ok", K3Icon::Small );
             l += "\"/> <b>";

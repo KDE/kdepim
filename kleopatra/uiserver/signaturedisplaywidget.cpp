@@ -98,8 +98,7 @@ struct SignatureDisplayWidget::Private {
 
     void reload()
     {
-        q->setStyleSheet( QString::fromLatin1("QFrame#SignatureDisplayWidget { border:4px solid %1; border-radius:2px; }")
-                .arg( colorFromSummary( signature.summary() ).name() ) );
+        q->setColor( colorFromSummary( signature.summary() ) );
         QString l = QString::fromLatin1( "<qt><b><img src=\"%1\"/> " ).arg( iconForSummary( signature.summary() ) );
         l += labelForSummary( signature.summary() );
         l += QLatin1String( "</b></qt>" );

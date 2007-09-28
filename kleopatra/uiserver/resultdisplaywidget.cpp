@@ -62,6 +62,7 @@ ResultDisplayWidget::ResultDisplayWidget(QWidget * parent) :
 
 ResultDisplayWidget::~ResultDisplayWidget()
 {
+    setObjectName( metaObject()->className() );
 }
 
 QString ResultDisplayWidget::renderKey(const GpgME::Key & key)
@@ -71,6 +72,24 @@ QString ResultDisplayWidget::renderKey(const GpgME::Key & key)
     const QString keyId = QLatin1String( key.keyID() );
     d->keyMap.insert( keyId, key );
     return QString::fromLatin1( "<a href=\"key:%1\">%2</a>" ).arg( keyId ).arg( Formatting::prettyName( key ) );
+}
+
+void Kleo::ResultDisplayWidget::setColor( const QColor &color )
+{
+    QString css = "QFrame#" + objectName();
+    css += " { border:4px solid " + color.name() + "; border-radius:2px; ";
+    css += "background-color: qlineargradient( x1: 0, y1: 0, x2: 0, y2: 1,";
+    QColor c = color;
+    c.setHsv( c.hue(), 16, c.value() );
+    css += "stop: 0.0 " + c.name() + ", ";
+    c.setHsv( c.hue(), 27, c.value() );
+    css += "stop: 0.4 " + c.name() + ", ";
+    c.setHsv( c.hue(), 40, c.value() );
+    css += "stop: 0.5 " + c.name() + ", ";
+    c.setHsv( c.hue(), 16, c.value() );
+    css += "stop: 1.0 " + c.name() + ");";
+    css += "}";
+    setStyleSheet( css );
 }
 
 void ResultDisplayWidget::keyLinkActivated(const QString & link)
