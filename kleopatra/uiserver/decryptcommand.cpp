@@ -288,6 +288,7 @@ void DecryptionResultCollector::registerJob( int id, DecryptJob* job )
 void DecryptionResultCollector::slotDecryptResult(const GpgME::DecryptionResult & result,
                                                   const QByteArray & stuff )
 {
+    static bool mutex = false;
     assert( m_senderToId.contains( sender( ) ) );
     const int id = m_senderToId[sender()];
 
@@ -297,9 +298,14 @@ void DecryptionResultCollector::slotDecryptResult(const GpgME::DecryptionResult 
     res.result = result;
     m_results[id] = res;
 
+    --m_unfinished;
+    assert( m_unfinished >= 0 );
+
+    if ( mutex ) return;
     // send status for all results received so far, but in order of id
     // report status on the command line immediately, and write out results, but
      // only show dialog once all operations are completed, so it can be aggregated
+    mutex = true;
     while ( m_results.contains( m_statusSent ) ) {
         Result result = m_results[m_statusSent];
         QString resultString;
@@ -318,11 +324,10 @@ void DecryptionResultCollector::slotDecryptResult(const GpgME::DecryptionResult 
         m_statusSent++;
     }
 
-    --m_unfinished;
-    assert( m_unfinished >= 0 );
     if ( m_unfinished == 0 ) {
         emit finished( m_results );
     }
+    mutex = false;
 }
 
 DecryptCommand::DecryptCommand()
