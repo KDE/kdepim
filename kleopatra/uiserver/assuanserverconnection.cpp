@@ -287,6 +287,7 @@ private:
 
             }
 
+            io.encoding = GpgME::Data::AutoEncoding;
             if ( options.count( "binary" ) ) {
                 if ( !options["binary"].empty() )
                     throw gpg_error( GPG_ERR_ASS_SYNTAX );
@@ -308,8 +309,6 @@ private:
                     throw gpg_error( GPG_ERR_CONFLICT ); // conflicting parameters
                 io.encoding = GpgME::Data::Base64Encoding;
             }
-            if ( !io.encoding )
-                io.encoding = GpgME::Data::AutoEncoding;
 
             if ( options.size() )
                 throw gpg_error( GPG_ERR_UNKNOWN_OPTION );
