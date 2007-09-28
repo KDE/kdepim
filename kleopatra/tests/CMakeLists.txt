@@ -11,7 +11,7 @@ target_link_libraries(test_keylistmodels kleo ${KDE4_KDECORE_LIBS} )
 
 ########### next target ###############
 
-set(test_verificationresultdialog_SRCS test_verificationresultdialog.cpp ../uiserver/signaturedisplaywidget.cpp ../utils/formatting.cpp ../certificateinfowidgetimpl.cpp)
+set(test_verificationresultdialog_SRCS test_verificationresultdialog.cpp ../uiserver/signaturedisplaywidget.cpp ../utils/formatting.cpp ../certificateinfowidgetimpl.cpp ../uiserver/resultdisplaywidget.cpp)
 kde4_add_ui_files( test_verificationresultdialog_SRCS ../certificateinfowidget.ui)
 kde4_add_executable(test_verificationresultdialog TEST ${test_verificationresultdialog_SRCS})
 

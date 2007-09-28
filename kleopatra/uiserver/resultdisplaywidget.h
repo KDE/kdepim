@@ -1,5 +1,5 @@
 /* -*- mode: c++; c-basic-offset:4 -*-
-    uiserver/signaturedisplaywidget.h
+    ./resultdisplaywidget.h
 
     This file is part of Kleopatra, the KDE keymanager
     Copyright (c) 2007 Klarälvdalens Datakonsult AB
@@ -30,34 +30,35 @@
     your version.
 */
 
-#ifndef __SIGNATUREDISPLAYWIDGET_H__
-#define __SIGNATUREDISPLAYWIDGET_H__
+#ifndef KLEO_RESULTDISPLAYWIDGET_H
+#define KLEO_RESULTDISPLAYWIDGET_H
+
+#include <QFrame>
 
 #include <utils/pimpl_ptr.h>
-#include "uiserver/resultdisplaywidget.h"
 
-namespace GpgME {
-    class Signature;
-    class Key;
-}
+#include <gpgme++/key.h>
 
-namespace Kleo
-{
+namespace Kleo {
 
-class SignatureDisplayWidget : public ResultDisplayWidget
+class ResultDisplayWidget : public QFrame
 {
     Q_OBJECT
-public:
-    SignatureDisplayWidget( QWidget* parent = 0 );
-    virtual ~SignatureDisplayWidget();
+    public:
+        explicit ResultDisplayWidget( QWidget *parent = 0 );
+        ~ResultDisplayWidget();
 
-    void setSignature( const GpgME::Signature &, const GpgME::Key & signingkey );
+    protected:
+        QString renderKey( const GpgME::Key &key );
 
-private:
-    class Private;
-    kdtools::pimpl_ptr<Private> d;
+    protected Q_SLOTS:
+        void keyLinkActivated( const QString &link );
+
+    private:
+        class Private;
+        kdtools::pimpl_ptr<Private> d;
 };
 
 }
 
-#endif /*__SIGNATUREDISPLAYWIDGET_H__*/
+#endif

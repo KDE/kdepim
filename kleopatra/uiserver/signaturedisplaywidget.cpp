@@ -58,7 +58,7 @@ struct SignatureDisplayWidget::Private {
         summaryLabel = new QLabel( w );
         box->addWidget( summaryLabel );
         signerLabel = new QLabel( w );
-        QObject::connect( signerLabel, SIGNAL(linkActivated(QString)), w, SLOT(linkActivated(QString)) );
+        QObject::connect( signerLabel, SIGNAL(linkActivated(QString)), w, SLOT(keyLinkActivated(QString)) );
         box->addWidget( signerLabel );
     }
     ~Private()
@@ -104,22 +104,7 @@ struct SignatureDisplayWidget::Private {
         l += labelForSummary( signature.summary() );
         l += QLatin1String( "</b></qt>" );
         summaryLabel->setText( l );
-
-        QString signer;
-        if ( key.isNull() )
-            signer = i18n( "unknown signer" );
-        else
-            signer = QString::fromLatin1( "<a href=\"showKey\">%1</a>" ).arg( Formatting::prettyName( key ) );
-        signerLabel->setText( i18n("<p>Signature by %1</p>", signer) );
-    }
-
-    void linkActivated( const QString &link )
-    {
-        if ( link == "showKey" ) {
-            CertificateInfoWidgetImpl *dlg = new CertificateInfoWidgetImpl( key, false, 0 );
-            dlg->setAttribute( Qt::WA_DeleteOnClose );
-            dlg->show();
-        }
+        signerLabel->setText( i18n("<p>Signature by %1</p>", q->renderKey( key ) ) );
     }
 
     GpgME::Signature signature;
@@ -130,7 +115,7 @@ struct SignatureDisplayWidget::Private {
 };
 
 SignatureDisplayWidget::SignatureDisplayWidget( QWidget* parent )
-:QFrame( parent ), d( new Private( this ) )
+: ResultDisplayWidget( parent ), d( new Private( this ) )
 {
     setObjectName( "SignatureDisplayWidget" );
 }

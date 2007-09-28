@@ -49,6 +49,7 @@ if ( USABLE_ASSUAN_FOUND )
     uiserver/decryptcommand.cpp
     uiserver/encryptcommand.cpp
     uiserver/assuancommandprivatebase_p.cpp
+    uiserver/resultdisplaywidget.cpp
     uiserver/signaturedisplaywidget.cpp
     uiserver/keyselectiondialog.cpp
     uiserver/keyselectionjob.cpp

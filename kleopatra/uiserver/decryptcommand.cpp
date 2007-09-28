@@ -35,7 +35,7 @@
 #include "kleo-assuan.h"
 #include "resultdialog.h"
 #include "utils/formatting.h"
-#include "certificateinfowidgetimpl.h"
+#include "resultdisplaywidget.h"
 
 #include <QObject>
 #include <QIODevice>
@@ -100,12 +100,12 @@ private:
     int m_statusSent;
 };
 
-class DecryptResultDisplayWidget : public QFrame
+class DecryptResultDisplayWidget : public ResultDisplayWidget
 {
     Q_OBJECT
 public:
     DecryptResultDisplayWidget( QWidget * parent )
-    :QFrame( parent ), m_state( Summary ), m_jobCount( 0 )
+    : ResultDisplayWidget( parent ), m_state( Summary ), m_jobCount( 0 )
     {
         setObjectName( "DecryptResultDisplayWidget" );
         QVBoxLayout *layout = new QVBoxLayout( this );
@@ -159,8 +159,7 @@ private:
             else {
                 QString l = "<qt>" + i18np( "Receipient:", "Reciepients:", m_result.numRecipients() ) + "<ul>";
                 Q_FOREACH( const GpgME::Key key, m_keys ) {
-                    l += "<li><a href=\"" + QLatin1String(key.keyID()) + QString::fromLatin1( "\">%1</a></li>" )
-                            .arg( Formatting::prettyName( key ) );
+                    l += "<li>" + renderKey( key ) + "</li>";
                 }
                 if ( m_keys.size() < m_result.numRecipients() ) {
                     l += "<li>" + i18np( "one unknown receipient", "%n unknown receipients",
@@ -194,14 +193,8 @@ private Q_SLOTS:
                 job->start( keys, false );
             }
             return;
-        }
-
-        Q_FOREACH( const GpgME::Key key, m_keys ) {
-            if ( link != QLatin1String( key.keyID() ) )
-                continue;
-            CertificateInfoWidgetImpl *dlg = new CertificateInfoWidgetImpl( key, false, 0 );
-            dlg->setAttribute( Qt::WA_DeleteOnClose );
-            dlg->show();
+        } else {
+            ResultDisplayWidget::keyLinkActivated( link );
         }
     }
 
