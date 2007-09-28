@@ -166,10 +166,12 @@ public:
         : QWidget( parent )
     {
         m_box = new QVBoxLayout( this );
-        
     }
     void setResult( const GpgME::VerificationResult& result, const std::vector<GpgME::Key> & keys )
     {
+        while ( QLayoutItem * child = m_box->takeAt(0) )
+            delete child;
+        
         std::vector<GpgME::Signature> sigs = result.signatures();
         Q_FOREACH ( const GpgME::Signature sig, sigs ) {
             SignatureDisplayWidget * w = new SignatureDisplayWidget( this );
