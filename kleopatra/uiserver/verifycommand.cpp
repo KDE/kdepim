@@ -458,7 +458,15 @@ void VerifyCommand::Private::showVerificationResultDialog()
 void VerifyCommand::Private::slotShowResult( int id, const VerificationResultCollector::Result& res )
 {
     if ( res.error ) {
-        dialog->showError( id, res.errorString );
+        QString error = i18n("Verification failed. - ") + res.errorString;
+        
+        if ( inputList.size() > id ) {
+            if( !inputList[id].signatureFileName.isEmpty() )
+                error += "\nSignature file: " + inputList[id].signatureFileName;
+            if( !inputList[id].messageFileName.isEmpty() )
+                error += "\nInput file: " + inputList[id].messageFileName;
+        }
+        dialog->showError( id, error );
     } else {
         VerificationResultDisplayWidget * w = dialog->widget( id );
         w->setResult( res.result, res.keys );
