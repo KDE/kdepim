@@ -390,12 +390,8 @@ void DecryptCommand::Private::tryDecryptResult(const GpgME::DecryptionResult & r
 {
     assert( id!= -1 );
 
-
-    const GpgME::Error decryptionError = result.error();
-    if ( decryptionError )
-        throw assuan_exception( decryptionError, "Decryption failed: " );
-
-    writeToOutputDeviceOrAskForFileName( id, stuff, result.fileName() );
+    if ( !result.error() )
+        writeToOutputDeviceOrAskForFileName( id, stuff, result.fileName() );
 }
 
 void DecryptCommand::Private::slotDecryptionCollectionResult( const QMap<int, DecryptionResultCollector::Result>& results )
