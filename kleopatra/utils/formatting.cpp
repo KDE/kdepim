@@ -292,7 +292,11 @@ QDate Formatting::creationDate( const UserID::Signature & sig ) {
 //
 
 QString Formatting::type( const Key & key ) {
-    return QString::fromUtf8( key.protocolAsString() );
+    if ( key.protocol() == CMS )
+        return hack::tr("X.509");
+    if ( key.protocol() == OpenPGP )
+        return hack::tr("OpenPGP");
+    return hack::tr("Unknown");
 }
 
 QString Formatting::type( const Subkey & subkey ) {
