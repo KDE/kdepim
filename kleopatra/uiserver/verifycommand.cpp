@@ -433,10 +433,14 @@ void VerifyCommand::Private::showVerificationResultDialog()
 
 void VerifyCommand::Private::slotShowResult( int id, const VerificationResultCollector::Result& res )
 {
-    SignatureDisplayWidget * w = dialog->widget( id );
-    GpgME::Signature sig = res.result.signatures()[0];
-    w->setSignature( sig, keyForSignature( sig, res.keys ) );
-    dialog->toggle( id );
+    if ( res.error ) {
+        dialog->showError( id, res.errorString );
+    } else {
+        SignatureDisplayWidget * w = dialog->widget( id );
+        GpgME::Signature sig = res.result.signatures()[0];
+        w->setSignature( sig, keyForSignature( sig, res.keys ) );
+        dialog->showResultWidget( id );
+    }
     
 }
 

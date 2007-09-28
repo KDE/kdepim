@@ -5,6 +5,7 @@
 #include <QProgressBar>
 #include <QDialog>
 #include <QBoxLayout>
+#include <QLabel>
 
 #include <vector>
 
@@ -44,12 +45,30 @@ public:
         return m_payloads[ idx ];
     }
     
-    void toggle( int idx )
+    void showResultWidget( int idx )
+    {
+        if ( m_stacks.size() <= idx || m_payloads.size() <= idx ) return;
+        QStackedWidget * stack = m_stacks[idx];
+        assert(stack); assert( m_payloads[idx] );
+        stack->setCurrentWidget( m_payloads[idx] );
+    }
+    
+    void showError( int idx, const QString& errorString )
+    {
+        showErrorWidget( idx, 0, errorString );
+    }
+    
+    void showErrorWidget( int idx, QWidget* _errorWidget, const QString& errorString = QString() )
     {
         if ( m_stacks.size() <= idx ) return;
         QStackedWidget * stack = m_stacks[idx];
         assert(stack);
-        stack->setCurrentIndex( stack->currentIndex() + 1 % stack->count() );
+        QWidget *errorWidget = _errorWidget;
+        if ( !errorWidget ) {
+            errorWidget = new QLabel( this, errorString );
+        }
+        stack->addWidget( errorWidget );
+        stack->setCurrentWidget( errorWidget );
     }
 
 private:
