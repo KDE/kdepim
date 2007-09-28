@@ -33,12 +33,17 @@
 
 #include "signaturedisplaywidget.h"
 
-#include <QTextEdit>
+#include <QLabel>
 #include <QHBoxLayout>
+#include <QPainter>
+
+#include <kiconloader.h>
+#include <klocale.h>
 
 #include <gpgme++/verificationresult.h>
 #include <gpgme++/key.h>
 
+#include "certificateinfowidgetimpl.h"
 #include "utils/formatting.h"
 
 using namespace Kleo;
@@ -49,14 +54,17 @@ struct SignatureDisplayWidget::Private {
     Private( SignatureDisplayWidget * w )
     :q( w )
     {
-        QHBoxLayout *box = new QHBoxLayout( w );
-        textEdit = new QTextEdit(w);
-        box->addWidget( textEdit );
+        QVBoxLayout *box = new QVBoxLayout( w );
+        summaryLabel = new QLabel( w );
+        box->addWidget( summaryLabel );
+        signerLabel = new QLabel( w );
+        QObject::connect( signerLabel, SIGNAL(linkActivated(QString)), w, SLOT(linkActivated(QString)) );
+        box->addWidget( signerLabel );
     }
     ~Private()
     {
     }
-    
+
     static QColor colorFromSummary( const GpgME::Signature::Summary summary )
     {
         // FIXME make colors configurable
@@ -73,22 +81,62 @@ struct SignatureDisplayWidget::Private {
         }
         return c;
     }
-    
+
+    static QString labelForSummary( const GpgME::Signature::Summary summary )
+    {
+        switch ( summary ) {
+            case GpgME::Signature::Green:
+                return i18n( "Valid signature" );
+            case GpgME::Signature::Red:
+                return i18n( "Signaute invalid" );
+            default:
+                return i18n( "Unknown signature state" );
+        }
+        return QString();
+    }
+
+    static QString iconForSummary( const GpgME::Signature::Summary summary )
+    {
+        switch ( summary ) {
+            case GpgME::Signature::Green:
+                return KIconLoader::global()->iconPath( "dialog-ok", K3Icon::Small );
+            case GpgME::Signature::Red:
+                return KIconLoader::global()->iconPath( "dialog-error", K3Icon::Small );
+            default:
+                return KIconLoader::global()->iconPath( "dialog-warning", K3Icon::Small );
+        }
+        return QString();
+    }
+
     void reload()
     {
-        // fill html text from Signature
-        const QString color = colorFromSummary( signature.summary() ).name();
-        QString html = QString("<div style=\"background-color:%1\">").arg( color );
-        const QString signer = key.isNull() ? "unknown signer" : Formatting::prettyName( key );
-        html += QString("<p>Signature by %1</p>").arg( signer );
-        html += "</div>";
-        
-        textEdit->setHtml( html );
+        QString l = QString::fromLatin1( "<qt><b><img src=\"%1\"/> " ).arg( iconForSummary( signature.summary() ) );
+        l += labelForSummary( signature.summary() );
+        l += QLatin1String( "</b></qt>" );
+        summaryLabel->setText( l );
+
+        QString signer;
+        if ( key.isNull() )
+            signer = i18n( "unknown signer" );
+        else
+            signer = QString::fromLatin1( "<a href=\"showKey\">%1</a>" ).arg( Formatting::prettyName( key ) );
+        signerLabel->setText( i18n("<p>Signature by %1</p>", signer) );
     }
+
+    void linkActivated( const QString &link )
+    {
+        if ( link == "showKey" ) {
+            CertificateInfoWidgetImpl *dlg = new CertificateInfoWidgetImpl( key, false, 0 );
+            dlg->setAttribute( Qt::WA_DeleteOnClose );
+            dlg->show();
+        }
+    }
+
     GpgME::Signature signature;
     GpgME::Key key;
     SignatureDisplayWidget *q;
-    QTextEdit * textEdit;
+    QLabel * summaryLabel;
+    QLabel * signerLabel;
 };
 
 SignatureDisplayWidget::SignatureDisplayWidget( QWidget* parent )
@@ -108,4 +156,16 @@ void Kleo::SignatureDisplayWidget::setSignature(const GpgME::Signature & sig, co
     d->reload();
 }
 
+void Kleo::SignatureDisplayWidget::paintEvent(QPaintEvent * e)
+{
+    QWidget::paintEvent( e );
+    QPainter painter( this );
+    painter.setPen( d->colorFromSummary( d->signature.summary() ) );
+    painter.setBrush( QBrush( d->colorFromSummary( d->signature.summary() ) ) );
+    painter.drawRect( 0, 0, width(), 4 );
+    painter.drawRect( 0, 0, 4, height() );
+    painter.drawRect( 0, height() - 4, width(), 4 );
+    painter.drawRect( width() - 4, 0, 4, height() );
+}
 
+#include "signaturedisplaywidget.moc"

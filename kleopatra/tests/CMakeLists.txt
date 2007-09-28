@@ -1,5 +1,5 @@
 set( EXECUTABLE_OUTPUT_PATH ${CMAKE_CURRENT_BINARY_DIR} )
-include_directories( ${CMAKE_SOURCE_DIR}/kleopatra ${CMAKE_SOURCE_DIR}/libkleo ${Boost_INCLUDE_DIR} ${GPGME_INCLUDES} )
+include_directories( ${CMAKE_SOURCE_DIR}/kleopatra ${CMAKE_BINARY_DIR}/kleopatra ${CMAKE_SOURCE_DIR}/libkleo ${Boost_INCLUDE_DIR} ${GPGME_INCLUDES} )
 
 ########### next target ###############
 
@@ -11,11 +11,11 @@ target_link_libraries(test_keylistmodels kleo ${KDE4_KDECORE_LIBS} )
 
 ########### next target ###############
 
-set(test_verificationresultdialog_SRCS test_verificationresultdialog.cpp ../uiserver/signaturedisplaywidget.cpp ../utils/formatting.cpp )
-
+set(test_verificationresultdialog_SRCS test_verificationresultdialog.cpp ../uiserver/signaturedisplaywidget.cpp ../utils/formatting.cpp ../certificateinfowidgetimpl.cpp)
+kde4_add_ui_files( test_verificationresultdialog_SRCS ../certificateinfowidget.ui)
 kde4_add_executable(test_verificationresultdialog TEST ${test_verificationresultdialog_SRCS})
 
-target_link_libraries(test_verificationresultdialog kleo ${KDE4_KDECORE_LIBS} )
+target_link_libraries(test_verificationresultdialog kleo ${KDE4_KDECORE_LIBS} ${QT_QT3SUPPORT_LIBRARY})
 
 ########### next target ###############
 
@@ -27,9 +27,9 @@ if ( USABLE_ASSUAN_FOUND  )
 
   set(test_uiserver_SRCS test_uiserver.cpp ../uiserver/kleo-assuan.cpp )
 
-#FIXME: omitting TEST makes test_uiserver print output again on a Win32 console; 
+#FIXME: omitting TEST makes test_uiserver print output again on a Win32 console;
 # find a better fix for this issue
-  if(WIN32) 
+  if(WIN32)
     kde4_add_executable(test_uiserver ${test_uiserver_SRCS})
   else(WIN32)
     kde4_add_executable(test_uiserver TEST ${test_uiserver_SRCS})
@@ -39,7 +39,7 @@ if ( USABLE_ASSUAN_FOUND  )
   if(WIN32)
 	 target_link_libraries(test_uiserver ${ASSUAN_VANILLA_LIBRARIES} Ws2_32)
   else(WIN32)
-	 target_link_libraries(test_uiserver ${ASSUAN_PTHREAD_LIBRARIES} ) 
+	 target_link_libraries(test_uiserver ${ASSUAN_PTHREAD_LIBRARIES} )
   endif(WIN32)
   if (ONLY_KLEO)
      install( TARGETS test_uiserver DESTINATION ${BIN_INSTALL_DIR})

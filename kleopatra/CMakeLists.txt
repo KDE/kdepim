@@ -12,8 +12,8 @@ add_definitions (-DQT3_SUPPORT -DQT3_SUPPORT_WARNINGS ${KDE4_ENABLE_EXCEPTIONS} 
 
 if ( NOT KLEO_ONLY_UISERVER )
 set(libconf_SRCS  ${CMAKE_SOURCE_DIR}/kleopatra/conf/configuredialog.cpp )
-add_subdirectory( conf ) 
-add_subdirectory( kwatchgnupg ) 
+add_subdirectory( conf )
+add_subdirectory( kwatchgnupg )
 endif ( NOT KLEO_ONLY_UISERVER )
 add_subdirectory( tests )
 
@@ -59,7 +59,7 @@ if ( USABLE_ASSUAN_FOUND )
   else ( WIN32 )
     set( _kleopatra_uiserver_extra_libs ${ASSUAN_PTHREAD_LIBRARIES} )
   endif( WIN32 )
-  
+
   if ( HAVE_GPG_ERR_SOURCE_KLEO )
     add_definitions( -DGPG_ERR_SOURCE_DEFAULT=GPG_ERR_SOURCE_KLEO )
   else( HAVE_GPG_ERR_SOURCE_KLEO )
@@ -77,8 +77,11 @@ set( _kleopatra_common_SRCS
    models/keylistsortfilterproxymodel.cpp
    models/subkeylistmodel.cpp
    models/useridlistmodel.cpp
-   aboutdata.cpp 
+   aboutdata.cpp
+   certificateinfowidgetimpl.cpp
    main.cpp )
+
+kde4_add_ui_files( _kleopatra_common_SRCS certificateinfowidget.ui )
 
 if ( NOT KLEO_ONLY_UISERVER )
   set( _kleopatra_classical_SRCS
@@ -86,15 +89,14 @@ if ( NOT KLEO_ONLY_UISERVER )
     commands/command.cpp
     commands/detailscommand.cpp
     ${libconf_SRCS}
-    customactions.cpp 
-    certmanager.cpp 
-    hierarchyanalyser.cpp 
-    certificatewizardimpl.cpp 
-    certificateinfowidgetimpl.cpp 
-    crlview.cpp 
+    customactions.cpp
+    certmanager.cpp
+    hierarchyanalyser.cpp
+    certificatewizardimpl.cpp
+    crlview.cpp
     certlistview.cpp )
 
-  kde4_add_ui_files( _kleopatra_classical_SRCS certificateinfowidget.ui certificatewizard.ui)
+  kde4_add_ui_files( _kleopatra_classical_SRCS certificatewizard.ui)
 
 else ( NOT KLEO_ONLY_UISERVER )
   set( _kleopatra_classical_SRCS )
@@ -105,7 +107,7 @@ kde4_add_executable(kleopatra_bin ${_kleopatra_common_SRCS} ${_kleopatra_classic
 set_target_properties(kleopatra_bin  PROPERTIES OUTPUT_NAME kleopatra)
 
 if ( KLEO_ONLY_UISERVER )
-  set( _kleopatra_extra_libs )
+  set( _kleopatra_extra_libs ${QT_QT3SUPPORT_LIBRARY} )
 elseif ( NOT KDEPIMLIBS_FOUND )
   set( _kleopatra_extra_libs ${KDE4_KUTILS_LIBS} ${KDE4_KDE3SUPPORT_LIBS} ${KDE4_KABC_LIBS} )
 else( KLEO_ONLY_UISERVER )

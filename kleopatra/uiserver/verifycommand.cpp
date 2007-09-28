@@ -49,13 +49,13 @@
 #include <KDebug>
 #include <KLocale>
 
-#ifndef ONLY_KLEO
+#ifndef KLEO_ONLY_UISERVER
 #include <KFileDialog>
 #endif
 #include <KUrl>
 
 
-#ifdef ONLY_KLEO
+#ifdef KLEO_ONLY_UISERVER
 #include <QFileDialog>
 #endif
 
@@ -208,14 +208,14 @@ public:
     void showVerificationResultDialog();
 
 public Q_SLOTS:
-    void verificationFinished( const QHash<int, VerificationResultCollector::Result> & results ); 
+    void verificationFinished( const QHash<int, VerificationResultCollector::Result> & results );
     void slotProgress( const QString& what, int current, int total );
     void slotShowResult( int, const VerificationResultCollector::Result& );
 private Q_SLOTS:
     void slotDialogClosed();
 };
 
-VerificationResultCollector::VerificationResultCollector( VerifyCommand::Private* parent ) 
+VerificationResultCollector::VerificationResultCollector( VerifyCommand::Private* parent )
 : QObject( parent ), m_command( parent ), m_unfinished( 0 ), m_statusSent( 0 )
 {
 }
@@ -308,7 +308,7 @@ void VerificationResultCollector::slotVerifyDetachedResult(const GpgME::Verifica
     res.isOpaque = false;
     res.keys = keys;
     res.result = result;
-    
+
     addResult( res );
 }
 
@@ -377,11 +377,11 @@ QList<AssuanCommandPrivateBase::Input> VerifyCommand::Private::analyzeInput( Gpg
             QFile f( msgFileName );
             if ( !f.exists() ) {
                 // the file we guessed doesn't exist, ask the user to supply one
-#ifndef ONLY_KLEO
-                const QString userFileName = 
-                    KFileDialog::getOpenFileName( KUrl::fromPath(msgFileName), 
+#ifndef KLEO_ONLY_UISERVER
+                const QString userFileName =
+                    KFileDialog::getOpenFileName( KUrl::fromPath(msgFileName),
                             QString(), 0, i18n("Please select the file corresponding to the signature file: %1", fname) );
-#else // ONLY_KLEO
+#else // KLEO_ONLY_UISERVER
 		const QString userFileName = QFileDialog::getOpenFileName( 0, i18n("Select Signed File for %1", fname) );
 #endif
                 if ( userFileName.isEmpty())
@@ -413,7 +413,7 @@ QString VerifyCommand::Private::signatureToString( const GpgME::Signature& sig, 
 {
     if ( sig.isNull() )
         return QString();
- 
+
     QString sigString = summaryToString( sig.summary() );
     if ( sig.summary() & GpgME::Signature::Red ) {
         sigString += i18n(" The signature by %1 is invalid. Reason given: %2.", keyToString( key ), sig.status().asString() );
@@ -470,7 +470,7 @@ void VerifyCommand::Private::slotShowResult( int id, const VerificationResultCol
 void VerifyCommand::Private::writeOpaqueResult( const GpgME::VerificationResult & result ,
                                                 const QByteArray & stuff,
                                                 int id )
-{    
+{
     writeToOutputDeviceOrAskForFileName( id, stuff, result.fileName() );
 }
 
@@ -524,7 +524,7 @@ int VerifyCommand::Private::startVerification()
                 const bool useFileName = !input.messageFileName.isEmpty();
                 GpgME::Data fileData;
                 fileData.setFileName( input.messageFileName.toLatin1().data() );
-                //FIXME: handle file name encoding correctly 
+                //FIXME: handle file name encoding correctly
                 assert( !useFileName || !fileData.isNull() );
                 const GpgME::Error error = useFileName ? job->start( signature, fileData ) : job->start( signature, input.message->readAll() );
                 if ( error ) throw error;

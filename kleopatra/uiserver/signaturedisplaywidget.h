@@ -51,11 +51,16 @@ class SignatureDisplayWidget : public QWidget
 public:
 	SignatureDisplayWidget( QWidget* parent = 0 );
 	virtual ~SignatureDisplayWidget();
-	
+
 	void setSignature( const GpgME::Signature &, const GpgME::Key & signingkey );
+
+protected:
+    void paintEvent( QPaintEvent *e );
+
 private:
     class Private;
     kdtools::pimpl_ptr<Private> d;
+    Q_PRIVATE_SLOT( d, void linkActivated( const QString & ) )
 };
 
 }

@@ -37,7 +37,7 @@
 
 #include <KSaveFile>
 
-#ifndef ONLY_KLEO
+#ifndef KLEO_ONLY_UISERVER
 #include <KFileDialog>
 #endif
 #include <KUrl>
@@ -46,7 +46,7 @@
 
 #include <gpg-error.h>
 
-#ifdef ONLY_KLEO
+#ifdef KLEO_ONLY_UISERVER
 #include <QFileDialog>
 #endif
 #include <QVariant>
@@ -121,7 +121,7 @@ void AssuanCommandPrivateBase::writeToOutputDeviceOrAskForFileName( int id,  con
         if ( filename.isEmpty() ) {
 	    const QString inputFilename = q->bulkInputDeviceFileName( "INPUT", id );
             // no output specified, and no filename given, ask the user
-#ifndef ONLY_KLEO
+#ifndef KLEO_ONLY_UISERVER
 	    filename = KFileDialog::getSaveFileName( KUrl::fromPath( inputFilename ), QString(), 0, i18n("Please select a target file: %1",inputFilename ) );
 #else
 	    filename = QFileDialog::getSaveFileName( 0, QString(), inputFilename );
@@ -133,7 +133,7 @@ void AssuanCommandPrivateBase::writeToOutputDeviceOrAskForFileName( int id,  con
         file.setFileName( filename );
         if ( !file.open() )
             throw assuan_exception( q->makeError( GPG_ERR_ASS_WRITE_ERROR ), file.errorString().toStdString() ) ;
-        
+
         outdevice = &file;
     }
     assert(outdevice);
