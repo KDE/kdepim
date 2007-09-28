@@ -35,7 +35,7 @@
 
 #include <utils/pimpl_ptr.h>
 
-#include <QWidget>
+#include <QFrame>
 
 namespace GpgME {
     class Signature;
@@ -45,17 +45,14 @@ namespace GpgME {
 namespace Kleo
 {
 
-class SignatureDisplayWidget : public QWidget
+class SignatureDisplayWidget : public QFrame
 {
     Q_OBJECT
 public:
-	SignatureDisplayWidget( QWidget* parent = 0 );
-	virtual ~SignatureDisplayWidget();
+    SignatureDisplayWidget( QWidget* parent = 0 );
+    virtual ~SignatureDisplayWidget();
 
-	void setSignature( const GpgME::Signature &, const GpgME::Key & signingkey );
-
-protected:
-    void paintEvent( QPaintEvent *e );
+    void setSignature( const GpgME::Signature &, const GpgME::Key & signingkey );
 
 private:
     class Private;

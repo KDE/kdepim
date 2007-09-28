@@ -110,6 +110,8 @@ struct SignatureDisplayWidget::Private {
 
     void reload()
     {
+        q->setStyleSheet( QString::fromLatin1("QFrame#SignatureDisplayWidget { border:4px solid %1; border-radius:2px; }")
+                .arg( colorFromSummary( signature.summary() ).name() ) );
         QString l = QString::fromLatin1( "<qt><b><img src=\"%1\"/> " ).arg( iconForSummary( signature.summary() ) );
         l += labelForSummary( signature.summary() );
         l += QLatin1String( "</b></qt>" );
@@ -140,9 +142,9 @@ struct SignatureDisplayWidget::Private {
 };
 
 SignatureDisplayWidget::SignatureDisplayWidget( QWidget* parent )
-:QWidget( parent ), d( new Private( this ) )
+:QFrame( parent ), d( new Private( this ) )
 {
-
+    setObjectName( "SignatureDisplayWidget" );
 }
 
 SignatureDisplayWidget::~SignatureDisplayWidget()
@@ -154,18 +156,6 @@ void Kleo::SignatureDisplayWidget::setSignature(const GpgME::Signature & sig, co
     d->signature = sig;
     d->key = signingkey;
     d->reload();
-}
-
-void Kleo::SignatureDisplayWidget::paintEvent(QPaintEvent * e)
-{
-    QWidget::paintEvent( e );
-    QPainter painter( this );
-    painter.setPen( d->colorFromSummary( d->signature.summary() ) );
-    painter.setBrush( QBrush( d->colorFromSummary( d->signature.summary() ) ) );
-    painter.drawRect( 0, 0, width(), 4 );
-    painter.drawRect( 0, 0, 4, height() );
-    painter.drawRect( 0, height() - 4, width(), 4 );
-    painter.drawRect( width() - 4, 0, 4, height() );
 }
 
 #include "signaturedisplaywidget.moc"
