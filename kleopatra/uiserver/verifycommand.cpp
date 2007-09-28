@@ -159,6 +159,28 @@ private:
 };
 
 
+class VerificationResultDisplayWidget : public QWidget
+{
+public:
+    VerificationResultDisplayWidget( QWidget * parent )
+        : QWidget( parent )
+    {
+        m_box = new QVBoxLayout( this );
+        
+    }
+    void setResult( const GpgME::VerificationResult& result, const std::vector<GpgME::Key> & keys )
+    {
+        std::vector<GpgME::Signature> sigs = result.signatures();
+        Q_FOREACH ( const GpgME::Signature sig, sigs ) {
+            SignatureDisplayWidget * w = new SignatureDisplayWidget( this );
+            w->setSignature( sig, keyForSignature( sig, keys ) );
+            m_box->addWidget( w );
+        }
+    }
+private:
+    QVBoxLayout * m_box;
+};
+
 
 class VerifyCommand::Private
   : public AssuanCommandPrivateBaseMixin<VerifyCommand::Private, VerifyCommand>
@@ -171,7 +193,7 @@ public:
     ,collector( new VerificationResultCollector(this) )
     {}
     virtual ~Private() {}
-    ResultDialog<SignatureDisplayWidget> * dialog;
+    ResultDialog<VerificationResultDisplayWidget> * dialog;
     VerifyCommand * q;
     VerificationResultCollector * collector;
 
@@ -421,7 +443,7 @@ void VerifyCommand::Private::slotDialogClosed()
 void VerifyCommand::Private::showVerificationResultDialog()
 {
 
-    dialog = new ResultDialog<SignatureDisplayWidget>( 0, collector->unfinishedJobs() ); // fixme opaque parent handle from command line?
+    dialog = new ResultDialog<VerificationResultDisplayWidget>( 0, collector->unfinishedJobs() ); // fixme opaque parent handle from command line?
     connect( dialog, SIGNAL( accepted() ), this, SLOT( slotDialogClosed() ) );
     connect( dialog, SIGNAL( rejected() ), this, SLOT( slotDialogClosed() ) );
     
@@ -436,9 +458,8 @@ void VerifyCommand::Private::slotShowResult( int id, const VerificationResultCol
     if ( res.error ) {
         dialog->showError( id, res.errorString );
     } else {
-        SignatureDisplayWidget * w = dialog->widget( id );
-        GpgME::Signature sig = res.result.signatures()[0];
-        w->setSignature( sig, keyForSignature( sig, res.keys ) );
+        VerificationResultDisplayWidget * w = dialog->widget( id );
+        w->setResult( res.result, res.keys );
         dialog->showResultWidget( id );
     }
     
