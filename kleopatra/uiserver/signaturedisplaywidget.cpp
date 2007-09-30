@@ -116,7 +116,6 @@ struct SignatureDisplayWidget::Private {
 SignatureDisplayWidget::SignatureDisplayWidget( QWidget* parent )
 : ResultDisplayWidget( parent ), d( new Private( this ) )
 {
-    setObjectName( "SignatureDisplayWidget" );
 }
 
 SignatureDisplayWidget::~SignatureDisplayWidget()

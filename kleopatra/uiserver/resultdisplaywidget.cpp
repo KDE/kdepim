@@ -58,7 +58,7 @@ ResultDisplayWidget::ResultDisplayWidget(QWidget * parent) :
     QFrame( parent ),
     d( new Private( this ) )
 {
-    setObjectName( metaObject()->className() );
+    setObjectName( "Kleo__ResultDisplayWidget" );
 }
 
 ResultDisplayWidget::~ResultDisplayWidget()
