@@ -244,7 +244,6 @@ public:
     DecryptCommand *q;
     QList<Input> analyzeInput( GpgME::Error& error, QString& errorDetails ) const;
     int startDecryption();
-    void tryDecryptResult(const GpgME::DecryptionResult &, const QByteArray &, int );
     void trySendingStatus( const QString & str );
     void showDecryptResultDialog();
 
@@ -310,7 +309,8 @@ void DecryptionResultCollector::slotDecryptResult(const GpgME::DecryptionResult 
         Result result = m_results[m_statusSent];
         QString resultString;
         try {
-            m_command->tryDecryptResult( result.result, result.stuff, m_statusSent );
+            if ( !result.result.error() )
+                 m_command->writeToOutputDeviceOrAskForFileName( m_statusSent, result.stuff, result.result.fileName() );
             resultString = resultToString( result.result );
         } catch ( const assuan_exception& e ) {
             result.error = e.error_code();
@@ -390,14 +390,6 @@ void DecryptCommand::Private::slotProgress( const QString& what, int current, in
     // FIXME report progress, via sendStatus()
 }
 
-void DecryptCommand::Private::tryDecryptResult(const GpgME::DecryptionResult & result,
-                                               const QByteArray & stuff, int id )
-{
-    assert( id!= -1 );
-
-    if ( result.error() )
-        writeToOutputDeviceOrAskForFileName( id, stuff, result.fileName() );
-}
 
 void DecryptCommand::Private::slotDecryptionCollectionResult( const QMap<int, DecryptionResultCollector::Result>& results )
 {

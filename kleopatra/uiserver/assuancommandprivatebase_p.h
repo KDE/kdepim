@@ -84,9 +84,9 @@ public:
     };
     QList<Input> inputList;
     int determineInputsAndProtocols( QString& reason );
+    void writeToOutputDeviceOrAskForFileName( int id,  const QByteArray& stuff, const QString& _filename );
 protected:
     virtual AssuanCommand *get_q() const = 0;
-    void writeToOutputDeviceOrAskForFileName( int id,  const QByteArray& stuff, const QString& _filename );
 };
 
 

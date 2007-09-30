@@ -128,7 +128,7 @@ void AssuanCommandPrivateBase::writeToOutputDeviceOrAskForFileName( int id,  con
 #endif
         }
         if ( filename.isEmpty() )
-            return; // user canceled the dialog, let's just move on. FIXME warning?
+            throw assuan_exception( q->makeError( GPG_ERR_ASS_WRITE_ERROR ), "Output file selection canceled" ) ;
         // FIXME sanitize, percent-encode, etc. Needed with KSaveFile?
         file.setFileName( filename );
         if ( !file.open() )
