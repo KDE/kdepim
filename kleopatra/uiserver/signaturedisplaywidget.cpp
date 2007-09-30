@@ -55,6 +55,7 @@ struct SignatureDisplayWidget::Private {
     :q( w )
     {
         QVBoxLayout *box = new QVBoxLayout( w );
+        box->setContentsMargins( 0, 0, 0, 0 );
         summaryLabel = new QLabel( w );
         box->addWidget( summaryLabel );
         signerLabel = new QLabel( w );
