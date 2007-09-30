@@ -233,6 +233,7 @@ private:
 class DecryptCommand::Private
   : public AssuanCommandPrivateBaseMixin<DecryptCommand::Private, DecryptCommand>
 {
+      friend class DecryptCommand;
     Q_OBJECT
 public:
     Private( DecryptCommand * qq )
@@ -496,6 +497,8 @@ int DecryptCommand::doStart()
 
 void DecryptCommand::doCanceled()
 {
+    delete d->dialog;
+    d->dialog = 0;
 }
 
 #include "decryptcommand.moc"
