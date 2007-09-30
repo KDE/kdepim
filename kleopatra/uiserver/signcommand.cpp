@@ -243,7 +243,7 @@ void SignCommand::Private::slotSigningResult( const GpgME::SigningResult & resul
            // FIXME adjust for smime?
            const QString filename = q->bulkInputDeviceFileName( "INPUT", m_statusSent ) + ".sig";
            writeToOutputDeviceOrAskForFileName( result.id, result.data, filename );
-           resultString = "OK - Super Duper Weenie";
+           resultString = "OK - Signature written";
        } catch ( const assuan_exception& e ) {
            result.error = e.error_code();
            result.errorString = e.what();
@@ -251,8 +251,9 @@ void SignCommand::Private::slotSigningResult( const GpgME::SigningResult & resul
            resultString = "ERR " + result.errorString;
            // FIXME ask to continue or cancel
        }
-       if ( !trySendingStatus( resultString ) )
+       if ( !trySendingStatus( resultString ) ) // emit done on error
            return;
+       
        m_statusSent++;
     }
     

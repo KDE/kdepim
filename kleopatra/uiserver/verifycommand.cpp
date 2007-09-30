@@ -35,6 +35,7 @@
 #include "kleo-assuan.h"
 #include "signaturedisplaywidget.h"
 #include "resultdialog.h"
+#include "resultdisplaywidget.h"
 
 #include <kleo/verifyopaquejob.h>
 #include <kleo/verifydetachedjob.h>
@@ -48,6 +49,7 @@
 
 #include <KDebug>
 #include <KLocale>
+#include <kiconloader.h>
 
 #ifndef KLEO_ONLY_UISERVER
 #include <KFileDialog>
@@ -139,8 +141,7 @@ public:
 
     void registerJob( int id, VerifyDetachedJob* job );
     void registerJob( int id, VerifyOpaqueJob* job );
-    int unfinishedJobs() const { return m_unfinished; }
-
+    
 Q_SIGNALS:
     void finished( const QHash<int, VerificationResultCollector::Result> & );
     void showResult( int , const VerificationResultCollector::Result & );
@@ -159,16 +160,29 @@ private:
 };
 
 
-class VerificationResultDisplayWidget : public QWidget
+class VerificationResultDisplayWidget : public ResultDisplayWidget
 {
 public:
     VerificationResultDisplayWidget( QWidget * parent )
-        : QWidget( parent )
+        : ResultDisplayWidget( parent )
     {
         m_box = new QVBoxLayout( this );
     }
     void setResult( const GpgME::VerificationResult& result, const std::vector<GpgME::Key> & keys )
-    {
+    {        
+        if ( result.error() ) {
+            QString l = "<qt><img src=\"";
+            l += KIconLoader::global()->iconPath( "dialog-error", K3Icon::Small );
+            l += "\"/> <b>";
+            l += i18n( "Verification failed: " );
+            l += result.error().asString();
+            l += "</b></qt>";
+            QLabel *label = new QLabel(l);
+            m_box->addWidget( label );
+            setColor( Qt::red );
+            return;
+        }
+        
         while ( QLayoutItem * child = m_box->takeAt(0) )
             delete child;
         
@@ -246,25 +260,26 @@ void VerificationResultCollector::addResult( const VerificationResultCollector::
        const GpgME::VerificationResult & vResult = result.result;
        QString resultString;
        try {
-           if ( result.isOpaque )
-               m_command->writeOpaqueResult( vResult, result.stuff, result.id );
-
            const GpgME::Error verificationError = vResult.error();
-           if ( verificationError )
-               throw assuan_exception( verificationError, "Verification failed: " );
+           if ( !verificationError ) {
+               if ( result.isOpaque )
+                   m_command->writeOpaqueResult( vResult, result.stuff, result.id );
 
-           std::vector<GpgME::Signature> sigs = vResult.signatures();
-           assert( !sigs.empty() );
-           QStringList resultStrings;
-           Q_FOREACH ( const GpgME::Signature sig, sigs )
-               resultStrings.append( m_command->signatureToString( sig, keyForSignature( sig, result.keys ) ) );
+               std::vector<GpgME::Signature> sigs = vResult.signatures();
+               assert( !sigs.empty() );
+               QStringList resultStrings;
+               Q_FOREACH ( const GpgME::Signature sig, sigs )
+                   resultStrings.append( m_command->signatureToString( sig, keyForSignature( sig, result.keys ) ) );
 
-           resultString = "OK " + resultStrings.join("\n");
+               resultString = "OK " + resultStrings.join("\n");
+           } else {
+               resultString = QString::fromUtf8( "ERR %1 - ").arg( QString::number( verificationError ) ) + verificationError.asString();
+           }
        } catch ( const assuan_exception& e ) {
            result.error = e.error_code();
-           result.errorString = e.what();
+           result.errorString = QString::fromStdString( e.message() );
            m_results[result.id] = result;
-           resultString = "ERR " + result.errorString;
+           resultString = "ERR " + QString::fromUtf8( e.what() );
            // FIXME ask to continue or cancel
        }
        emit showResult( m_statusSent, result );
@@ -445,7 +460,11 @@ void VerifyCommand::Private::slotDialogClosed()
 void VerifyCommand::Private::showVerificationResultDialog()
 {
 
-    dialog = new ResultDialog<VerificationResultDisplayWidget>( 0, collector->unfinishedJobs() ); // fixme opaque parent handle from command line?
+    QStringList inputLabels;
+    Q_FOREACH( Input i, inputList ) {
+        inputLabels.append( i18n("Verifying signature: %1", i.signatureFileName.isEmpty()? "<unnamed input stream>" : i.signatureFileName ) );
+    }
+    dialog = new ResultDialog<VerificationResultDisplayWidget>( 0, inputLabels ); // fixme opaque parent handle from command line?
     connect( dialog, SIGNAL( accepted() ), this, SLOT( slotDialogClosed() ) );
     connect( dialog, SIGNAL( rejected() ), this, SLOT( slotDialogClosed() ) );
     
@@ -466,6 +485,7 @@ void VerifyCommand::Private::slotShowResult( int id, const VerificationResultCol
             if( !inputList[id].messageFileName.isEmpty() )
                 error += "\nInput file: " + inputList[id].messageFileName;
         }
+        qWarning() << "SBOW WARNING: " << error;
         dialog->showError( id, error );
     } else {
         VerificationResultDisplayWidget * w = dialog->widget( id );

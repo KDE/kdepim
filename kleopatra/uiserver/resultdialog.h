@@ -41,13 +41,28 @@
 
 #include <vector>
 
+class ProgressWidget : public QFrame
+{
+public:
+    ProgressWidget( QWidget * parent, const QString& label )
+    :QFrame( parent )
+    {
+        QVBoxLayout *vbox = new QVBoxLayout( this );
+        QLabel *l = new QLabel( label );
+        vbox->addWidget( l );
+        QProgressBar *p = new QProgressBar( this );
+        vbox->addWidget( p );
+        p->setRange( 0, 0 ); // knight rider mode
+    }
+    virtual ~ProgressWidget() {}
+};
 
 template <typename T>
 class ResultDialog : public QDialog
 {
 public:
-    ResultDialog( QWidget* parent, int count )
-    :QDialog( parent ), m_count(count)
+    ResultDialog( QWidget* parent, const QStringList& inputs )
+    :QDialog( parent ), m_inputs(inputs)
     {
         init();
         
@@ -59,14 +74,13 @@ public:
         QVBoxLayout *box = new QVBoxLayout( this );
         box->setContentsMargins( 0, 0, 0, 0 );
 
-        m_stacks.reserve( m_count );
-        m_payloads.reserve( m_count );
-        for ( int i=0; i< m_count; i++ ) {
+        m_stacks.reserve( m_inputs.size() );
+        m_payloads.reserve( m_inputs.size() );
+        for ( int i=0; i< m_inputs.size(); i++ ) {
             QStackedWidget *stack = new QStackedWidget( this );
             box->addWidget( stack );
             stack->setContentsMargins( 0, 0, 0, 0 );
-            QProgressBar * p = new QProgressBar( stack );
-            p->setRange( 0, 0 ); // knight rider mode
+            ProgressWidget * p = new ProgressWidget( stack, m_inputs[i] );
             stack->addWidget( p );
             T* payload = new T( stack );
             stack->addWidget( payload );
@@ -111,11 +125,10 @@ public:
     }
 
 private:
-    int m_count;
+    QStringList m_inputs;
     std::vector<QStackedWidget*> m_stacks;
     std::vector<T*> m_payloads;
     
 };
-
 
 #endif /*__RESULTDIALOG_H__*/

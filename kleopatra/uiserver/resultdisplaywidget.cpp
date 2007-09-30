@@ -78,6 +78,7 @@ void Kleo::ResultDisplayWidget::setColor( const QColor &color )
 {
     QString css = "QFrame#" + objectName();
     css += " { border:4px solid " + color.name() + "; border-radius:2px; ";
+    /*
     css += "background-color: qlineargradient( x1: 0, y1: 0, x2: 0, y2: 1,";
     QColor c = color;
     c.setHsv( c.hue(), 16, c.value() );
@@ -88,6 +89,7 @@ void Kleo::ResultDisplayWidget::setColor( const QColor &color )
     css += "stop: 0.5 " + c.name() + ", ";
     c.setHsv( c.hue(), 16, c.value() );
     css += "stop: 1.0 " + c.name() + ");";
+    */
     css += "}";
     setStyleSheet( css );
 }

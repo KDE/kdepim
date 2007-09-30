@@ -80,11 +80,10 @@ public:
         QByteArray stuff;
         int error;
         QString errorString;
-        bool isError() const { return error || result.error(); }
     };
 
     void registerJob( int id, DecryptJob* job );
-    int unfinishedJobs() const { return m_unfinished; }
+    bool hasError() const { return m_hasError; }
 Q_SIGNALS:
     void finished( const QMap<int, DecryptionResultCollector::Result> & );
     void showResult( int, const DecryptionResultCollector::Result& );
@@ -98,6 +97,7 @@ private:
     int m_unfinished;
     DecryptCommand::Private* m_command;
     int m_statusSent;
+    bool m_hasError;
 };
 
 class DecryptResultDisplayWidget : public ResultDisplayWidget
@@ -107,7 +107,6 @@ public:
     DecryptResultDisplayWidget( QWidget * parent )
     : ResultDisplayWidget( parent ), m_state( Summary ), m_jobCount( 0 )
     {
-        setObjectName( "DecryptResultDisplayWidget" );
         QVBoxLayout *layout = new QVBoxLayout( this );
         m_summaryLabel = new QLabel( this );
         layout->addWidget( m_summaryLabel );
@@ -154,19 +153,23 @@ private:
         else if ( m_state == ListingKeysFailed )
             m_detailsLabel->setText( "<qt><i>Retrieving keys failed.</i></qt>" );
         else if ( m_state == Details ) {
-            if ( m_keys.empty() )
-                m_detailsLabel->setText( "<qt><i>No receipients found.</i></qt>" );
-            else {
-                QString l = "<qt>" + i18np( "Receipient:", "Reciepients:", m_result.numRecipients() ) + "<ul>";
-                Q_FOREACH( const GpgME::Key key, m_keys ) {
-                    l += "<li>" + renderKey( key ) + "</li>";
+            if ( m_result.error() ) {
+                m_detailsLabel->setText( QString::fromUtf8("<qt><i> %1.</i></qt>").arg( m_result.error().asString() ) );
+            } else {
+                if ( m_keys.empty() )
+                    m_detailsLabel->setText( i18n("<qt><i>No receipients found.</i></qt>") );
+                else {
+                    QString l = "<qt>" + i18np( "Receipient:", "Reciepients:", m_result.numRecipients() ) + "<ul>";
+                    Q_FOREACH( const GpgME::Key key, m_keys ) {
+                        l += "<li>" + renderKey( key ) + "</li>";
+                    }
+                    if ( m_keys.size() < m_result.numRecipients() ) {
+                        l += "<li>" + i18np( "one unknown receipient", "%n unknown receipients",
+                                             m_result.numRecipients() - m_keys.size() );
+                    }
+                    l += "</ul></qt>";
+                    m_detailsLabel->setText( l );
                 }
-                if ( m_keys.size() < m_result.numRecipients() ) {
-                    l += "<li>" + i18np( "one unknown receipient", "%n unknown receipients",
-                                         m_result.numRecipients() - m_keys.size() );
-                }
-                l += "</ul></qt>";
-                m_detailsLabel->setText( l );
             }
         }
     }
@@ -245,7 +248,7 @@ public:
     DecryptCommand *q;
     QList<Input> analyzeInput( GpgME::Error& error, QString& errorDetails ) const;
     int startDecryption();
-    void trySendingStatus( const QString & str );
+    bool trySendingStatus( const QString & str );
     void showDecryptResultDialog();
 
 public Q_SLOTS:
@@ -263,7 +266,7 @@ private:
 static QString resultToString( const GpgME::DecryptionResult & result )
 {
     if ( result.error() )
-        return QString( "ERR decryption failed" );
+        return QString::fromUtf8( "ERR %1 - ").arg( QString::number( result.error() ) ) + result.error().asString();
     QString resStr( "OK ");
     for ( unsigned int i = 0; i<result.numRecipients(); i++ ) {
         const GpgME::DecryptionResult::Recipient r = result.recipient( i );
@@ -291,6 +294,7 @@ void DecryptionResultCollector::slotDecryptResult(const GpgME::DecryptionResult 
     static bool mutex = false;
     assert( m_senderToId.contains( sender( ) ) );
     const int id = m_senderToId[sender()];
+    if ( result.error() ) m_hasError = true;
 
     Result res;
     res.id = id;
@@ -315,13 +319,15 @@ void DecryptionResultCollector::slotDecryptResult(const GpgME::DecryptionResult 
             resultString = resultToString( result.result );
         } catch ( const assuan_exception& e ) {
             result.error = e.error_code();
-            result.errorString = e.what();
+            result.errorString = QString::fromStdString( e.message() );
             m_results[m_statusSent] = result;
-            resultString = "ERR " + res.errorString;
+            resultString = "ERR " + QString::fromUtf8( e.what() );
+            m_hasError = true;
             // FIXME ask to continue or cancel
         }
         emit showResult( m_statusSent, result );
-        m_command->trySendingStatus( resultString );
+        if ( !m_command->trySendingStatus( resultString ) ) // will emit done() on error
+            return;
         m_statusSent++;
     }
 
@@ -378,12 +384,14 @@ QList<AssuanCommandPrivateBase::Input> DecryptCommand::Private::analyzeInput( Gp
     return inputs;
 }
 
-void DecryptCommand::Private::trySendingStatus( const QString & str )
+bool DecryptCommand::Private::trySendingStatus( const QString & str )
 {
     if ( const int err = q->sendStatus( "DECRYPT", str ) ) {
         QString errorString = i18n("Problem writing out decryption status.");
         q->done( err, errorString ) ;
+        return false;
     }
+    return true;
 }
 
 void DecryptCommand::Private::slotProgress( const QString& what, int current, int total )
@@ -395,14 +403,9 @@ void DecryptCommand::Private::slotProgress( const QString& what, int current, in
 void DecryptCommand::Private::slotDecryptionCollectionResult( const QMap<int, DecryptionResultCollector::Result>& results )
 {
     assert( !results.isEmpty() );
+    if ( !q->hasOption( "silent" ) ) return; // we're showing a dialog, it will report when done
 
-    std::vector<DecryptionResultCollector::Result> theBad;
-
-    kdtools::copy_if( results.begin(), results.end(),
-                      std::back_inserter( theBad ),
-                      boost::bind( &DecryptionResultCollector::Result::isError, _1 ) );
-
-    if ( !theBad.empty() )
+    if ( collector->hasError() )
         q->done( makeError( GPG_ERR_DECRYPT_FAILED ) );
     else
         q->done();
@@ -410,8 +413,10 @@ void DecryptCommand::Private::slotDecryptionCollectionResult( const QMap<int, De
 
 void DecryptCommand::Private::slotDialogClosed()
 {
-    // FIXME if there was at least one error, and if so declare the whole thing failed.
-    q->done();
+    if ( collector->hasError() )
+        q->done( makeError( GPG_ERR_DECRYPT_FAILED ) );
+    else
+        q->done();
 }
 
 void DecryptCommand::Private::slotShowResult( int id, const DecryptionResultCollector::Result &result )
@@ -433,7 +438,11 @@ void DecryptCommand::Private::slotShowResult( int id, const DecryptionResultColl
 
 void DecryptCommand::Private::showDecryptResultDialog()
 {
-    dialog = new ResultDialog<DecryptResultDisplayWidget>( 0, collector->unfinishedJobs() ); // fixme opaque parent handle from command line?
+    QStringList inputLabels;
+    Q_FOREACH( Input i, inputList ) {
+        inputLabels.append( i18n("Decrypting: %1", i.messageFileName.isEmpty()? "<unnamed input stream>" : i.messageFileName ) );
+    }
+    dialog = new ResultDialog<DecryptResultDisplayWidget>( 0, inputLabels ); // fixme opaque parent handle from command line?
     connect( dialog, SIGNAL( accepted() ), this, SLOT( slotDialogClosed() ) );
     connect( dialog, SIGNAL( rejected() ), this, SLOT( slotDialogClosed() ) );
     connect( collector, SIGNAL( showResult( int, DecryptionResultCollector::Result ) ),
