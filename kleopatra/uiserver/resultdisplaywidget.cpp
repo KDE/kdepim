@@ -58,11 +58,11 @@ ResultDisplayWidget::ResultDisplayWidget(QWidget * parent) :
     QFrame( parent ),
     d( new Private( this ) )
 {
+    setObjectName( metaObject()->className() );
 }
 
 ResultDisplayWidget::~ResultDisplayWidget()
 {
-    setObjectName( metaObject()->className() );
 }
 
 QString ResultDisplayWidget::renderKey(const GpgME::Key & key)
