@@ -314,9 +314,22 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
     {
       bool ok = true;
       const QString receiver = callback.receiver();
+
       if ( receiver.isEmpty() )
         // Must be some error. Still return true though, since we did handle it
         return true;
+
+      // get comment for tentative acceptance
+      Incidence* incidence = icalToString( iCal );
+      if ( status == Attendee::Tentative ) {
+        bool ok = false;
+        QString comment = KInputDialog::getMultiLineText( i18n("Tentative Acceptance"),
+            i18n("Comment:"), QString(), &ok );
+        if ( !ok )
+          return true;
+        if ( !comment.isEmpty() )
+          incidence->addComment( comment );
+      }
 
       // First, save it for KOrganizer to handle
       QString dir;
@@ -328,9 +341,6 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
 
       if ( status != Attendee::Delegated ) // we do that below for delegated incidences
         saveFile( receiver, iCal, dir );
-
-      // Now produce the return message
-      Incidence* incidence = icalToString( iCal );
 
       QString delegateString;
       bool delegatorRSVP = false;
@@ -445,6 +455,16 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
       return true;
     }
 
+    bool counterProposal( const QString &iCal, KMail::Callback &callback ) const
+    {
+      const QString receiver = callback.receiver();
+      if ( receiver.isEmpty() )
+        return true;
+      saveFile( receiver, iCal, "counter" );
+      ( new KMDeleteMsgCommand( callback.getMsg()->getMsgSerNum() ) )->start();
+      return true;
+    }
+
     bool handleClick( KMail::Interface::BodyPart *part,
                       const QString &path, KMail::Callback& c ) const
     {
@@ -454,6 +474,8 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
         result = handleInvitation( iCal, Attendee::Accepted, c );
       if ( path == "accept_conditionally" )
         result = handleInvitation( iCal, Attendee::Tentative, c );
+      if ( path == "counter" )
+        result = counterProposal( iCal, c );
       if ( path == "ignore" )
         result = handleIgnore( iCal, c );
       if ( path == "decline" )
@@ -501,6 +523,8 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
           return i18n("Accept incidence");
         if ( path == "accept_conditionally" )
           return i18n( "Accept incidence conditionally" );
+        if ( path == "counter" )
+          return i18n( "Create a counter proposal..." );
         if ( path == "ignore" )
           return i18n( "Throw mail away" );
         if ( path == "decline" )
