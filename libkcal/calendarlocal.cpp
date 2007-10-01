@@ -401,62 +401,75 @@ Event::List CalendarLocal::rawEvents( const QDate &start, const QDate &end,
                                           bool inclusive )
 {
   Event::List eventList;
+  QDate yesterStart = start.addDays(-1);
 
   // Get non-recurring events
   EventDictIterator it( mEvents );
   for( ; it.current(); ++it ) {
     Event *event = *it;
-    if ( event->doesRecur() ) {
-      QDate rStart = event->dtStart().date();
-      bool found = false;
-      if ( inclusive ) {
-        if ( rStart >= start && rStart <= end ) {
-          // Start date of event is in range. Now check for end date.
-          // if duration is negative, event recurs forever, so do not include it.
-          if ( event->recurrence()->duration() == 0 ) {  // End date set
-            QDate rEnd = event->recurrence()->endDate();
-            if ( rEnd >= start && rEnd <= end ) {  // End date within range
-              found = true;
-            }
-          } else if ( event->recurrence()->duration() > 0 ) {  // Duration set
-            // TODO: Calculate end date from duration. Should be done in Event
-            // For now exclude all events with a duration.
-          }
-        }
-      } else {
-        if ( rStart <= end ) {  // Start date not after range
-          if ( rStart >= start ) {  // Start date within range
-            found = true;
-          } else if ( event->recurrence()->duration() == -1 ) {  // Recurs forever
-            found = true;
-          } else if ( event->recurrence()->duration() == 0 ) {  // End date set
-            QDate rEnd = event->recurrence()->endDate();
-            if ( rEnd >= start && rEnd <= end ) {  // End date within range
-              found = true;
-            }
-          } else {  // Duration set
-            // TODO: Calculate end date from duration. Should be done in Event
-            // For now include all events with a duration.
-            found = true;
-          }
-        }
-      }
 
-      if ( found ) eventList.append( event );
-    } else {
-      QDate s = event->dtStart().date();
-      QDate e = event->dtEnd().date();
-
-      if ( inclusive ) {
-        if ( s >= start && e <= end ) {
-          eventList.append( event );
-        }
-      } else {
-        if ( s <= end && e >= start ) {
-          eventList.append( event );
-        }
-      }
+    QDate rStart = event->dtStart().date();
+    if (end < rStart) {
+      kdDebug(5800) << "Skipping event starting after TOI" << endl;
+      continue;
     }
+    if ( inclusive && rStart < start) {
+      kdDebug(5800) << "Skipping event starting before TOI while inclusive" << endl;
+      continue;
+    }
+
+    if ( ! event->doesRecur() ) { // non-recurring events
+      QDate rEnd = event->dtEnd().date();
+      if (rEnd < start) {
+        kdDebug(5800) << "Skipping event ending before TOI" << endl;
+        continue;
+      }
+      if ( inclusive && end < rEnd ) {
+        kdDebug(5800) << "Skipping event ending after TOI while inclusive" << endl;
+        continue;
+      }
+    } else { // recurring events
+      switch ( event->recurrence()->duration() ) {
+        case -1: // infinite
+          if ( inclusive ) {
+            kdDebug(5800) << "Skipping infinite event because inclusive" << endl;
+            continue;
+          }
+          break;
+        case 0: // end date given
+        default: // count given
+          QDate rEnd = event->recurrence()->endDate();
+          if ( ! rEnd.isValid() ) {
+            kdDebug(5800) << "Skipping recurring event without occurences" << endl;
+            continue;
+          }
+          if ( rEnd < start ) {
+            kdDebug(5800) << "Skipping recurring event ending before TOI" << endl;
+            continue;
+          }
+          if ( inclusive && end < rEnd ) {
+            kdDebug(5800) << "Skipping recurring event ending after TOI while inclusive" << endl;
+            continue;
+          }
+          /* FIXME: too much conversion between QDate and QDateTime makes this useless:
+           *   freebusy(end=QDateTime(day, "00:00:00")) ->
+           *   rawEvents(end=QDate(day)) ->
+           *   durationTo(QDateTime(day, "23:59:59"))
+           * so events repeating at the end day match and are included.
+           */
+#if 0
+          int durationBeforeStart = event->recurrence()->durationTo(yesterStart);
+          int durationUntilEnd = event->recurrence()->durationTo(end);
+          if (durationBeforeStart == durationUntilEnd) {
+            kdDebug(5800) << "Skipping recurring event without occurences in TOI" << endl;
+            continue;
+          }
+#endif
+          break;
+      } // switch(duration)
+    } // if(doesRecur)
+
+    eventList.append( event );
   }
 
   return eventList;
