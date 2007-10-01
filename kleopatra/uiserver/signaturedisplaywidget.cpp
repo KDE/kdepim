@@ -83,7 +83,7 @@ struct SignatureDisplayWidget::Private {
         if ( summary & GpgME::Signature::Green )
             c = i18n( "Valid signature" );
         else if ( summary & GpgME::Signature::Red )
-            c = i18n( "Signaute invalid" );
+            c = i18n( "Signature invalid" );
         return c;
     }
 
