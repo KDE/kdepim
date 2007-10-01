@@ -37,6 +37,10 @@
 
 #include <kleo/keylistjob.h>
 
+#include <KLocale>
+
+#include <QDebug>
+#include <QList>
 #include <QPointer>
 #include <QStringList>
 
@@ -53,6 +57,7 @@ public:
     ~Private();
 
     void startKeyListing();
+    bool startKeyListingForProtocol( const char* protocol );
     void showKeySelectionDialog();
 
     std::vector<GpgME::Key> m_keys;
@@ -127,26 +132,42 @@ void KeySelectionJob::Private::keySelectionDialogClosed()
     }
 }
 
-void KeySelectionJob::Private::startKeyListing()
+bool KeySelectionJob::Private::startKeyListingForProtocol( const char* protocol )
 {
-    m_keyListings = 2; // openpgp and cms
-    KeyListJob *keylisting = CryptoBackendFactory::instance()->protocol( "openpgp" )->keyListJob();
+    if ( !CryptoBackendFactory::instance()->protocol( protocol ) )
+        return false;
+
+    KeyListJob *keylisting = CryptoBackendFactory::instance()->protocol( protocol )->keyListJob();
     QObject::connect( keylisting, SIGNAL( result( GpgME::KeyListResult ) ),
              q, SLOT( keyListingDone( GpgME::KeyListResult ) ) );
     QObject::connect( keylisting, SIGNAL( nextKey( GpgME::Key ) ),
              q, SLOT( nextKey( GpgME::Key ) ) );
     if ( const GpgME::Error err = keylisting->start( m_patterns, m_secretKeysOnly ) ) {
         q->deleteLater();
-        throw assuan_exception( err, "Unable to start keylisting" );
+        throw assuan_exception( err, i18n( "Unable to start keylisting for protocol %1", protocol ) );
     }
-    keylisting = Kleo::CryptoBackendFactory::instance()->protocol( "smime" )->keyListJob();
-    QObject::connect( keylisting, SIGNAL( result( GpgME::KeyListResult ) ),
-                      q, SLOT( keyListingDone( GpgME::KeyListResult ) ) );
-    QObject::connect( keylisting, SIGNAL( nextKey( GpgME::Key ) ),
-                      q, SLOT( nextKey( GpgME::Key ) ) );
-    if ( const GpgME::Error err = keylisting->start( m_patterns, m_secretKeysOnly ) ) {
-        q->deleteLater();
-        throw assuan_exception( err, "Unable to start keylisting" );
+
+    return true;
+}
+
+void KeySelectionJob::Private::startKeyListing()
+{
+    m_keyListings = 0;
+
+    QStringList protocols;
+    protocols << "openpgp" << "smime";
+
+    Q_FOREACH ( const QString i, protocols ) { 
+        try {
+            if ( startKeyListingForProtocol( i.toAscii().constData() ) )
+                ++m_keyListings;
+        } catch ( const assuan_exception& exp ) {
+            qDebug() << QString::fromStdString( exp.message() );
+        }
+    }
+ 
+    if ( m_keyListings == 0 ) {
+        throw assuan_exception( AssuanCommand::makeError( GPG_ERR_GENERAL ), i18n( "Unable to start keylisting for any backend/no backends available" ) );
     }
 }
 

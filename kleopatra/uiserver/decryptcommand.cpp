@@ -276,7 +276,7 @@ static QString resultToString( const GpgME::DecryptionResult & result )
 }
 
 DecryptionResultCollector::DecryptionResultCollector( DecryptCommand::Private * parent )
-: QObject( parent ), m_command( parent ), m_unfinished( 0 ), m_statusSent( 0 )
+: QObject( parent ), m_command( parent ), m_unfinished( 0 ), m_statusSent( 0 ), m_hasError( false )
 {
 }
 
@@ -294,7 +294,8 @@ void DecryptionResultCollector::slotDecryptResult(const GpgME::DecryptionResult 
     static bool mutex = false;
     assert( m_senderToId.contains( sender( ) ) );
     const int id = m_senderToId[sender()];
-    if ( result.error() ) m_hasError = true;
+    if ( result.error() ) 
+        m_hasError = true;
 
     Result res;
     res.id = id;
