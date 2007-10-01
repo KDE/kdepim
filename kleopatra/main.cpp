@@ -94,6 +94,7 @@ int main( int argc, char** argv )
   KGlobal::locale()->insertCatalog( "libkleopatra" );
   KIconLoader::global()->addAppDir( "libkleopatra" );
 
+#ifndef KLEO_ONLY_UISERVER
   if( !Kleo::CryptoBackendFactory::instance()->smime() ) {
     KMessageBox::error(0,
 			i18n( "<qt>The crypto plugin could not be initialized.<br />"
@@ -101,7 +102,6 @@ int main( int argc, char** argv )
     return -2;
   }
 
-#ifndef KLEO_ONLY_UISERVER
   CertManager* manager = new CertManager( args->isSet("external"),
 					  args->getOption("query"),
 					  args->getOption("import-certificate") );
