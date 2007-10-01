@@ -51,7 +51,7 @@ SoundWidget::SoundWidget( KABC::AddressBook *ab, QWidget *parent )
 
   QLabel *label = new QLabel( this );
   label->setPixmap( KIconLoader::global()->loadIcon( "multimedia",
-                    K3Icon::Desktop, K3Icon::SizeMedium ) );
+                    KIconLoader::Desktop, KIconLoader::SizeMedium ) );
   label->setAlignment( Qt::AlignTop );
   topLayout->addWidget( label, 0, 0, 2, 1);
 

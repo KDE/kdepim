@@ -243,7 +243,7 @@ void BoxContainerItem::drawLabel( QLabel *label, const int count, const bool new
 	}
 	
 	if( hasIcon )
-		pixmap = KIconLoader::global()->loadIcon( _settings->icon( messageState ), K3Icon::Desktop, K3Icon::SizeSmallMedium );
+		pixmap = KIconLoader::global()->loadIcon( _settings->icon( messageState ), KIconLoader::Desktop, KIconLoader::SizeSmallMedium );
 	
 	if( hasIcon && hasFg )
 	{
@@ -326,7 +326,7 @@ bool BoxContainerItem::makePixmap( QPixmap& pixmap, const int count, const bool 
 	//Draw pixmap
 	if( _settings->hasIcon( messageState ) && !_settings->icon( messageState ).isEmpty() )
 	{
-		otherPixmap = KIconLoader::global()->loadIcon( _settings->icon( messageState ), K3Icon::Desktop, K3Icon::SizeSmallMedium );
+		otherPixmap = KIconLoader::global()->loadIcon( _settings->icon( messageState ), KIconLoader::Desktop, KIconLoader::SizeSmallMedium );
 		if( !otherPixmap.isNull() )
 		{
 			p.drawPixmap( pixmap.rect(), otherPixmap, otherPixmap.rect() );

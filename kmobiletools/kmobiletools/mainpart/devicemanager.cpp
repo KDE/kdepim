@@ -64,7 +64,7 @@ DeviceManager::~DeviceManager()
 void DeviceManager::setupGUI() {
     // setup widgets
     m_deviceList = new KListWidget( this );
-    m_deviceList->setIconSize( QSize( K3Icon::SizeLarge, K3Icon::SizeLarge ) );
+    m_deviceList->setIconSize( QSize( KIconLoader::SizeLarge, KIconLoader::SizeLarge ) );
 
     m_addDevice = new KPushButton( this );
     m_addDevice->setGuiItem( KStandardGuiItem::Add );

@@ -95,7 +95,7 @@ void smsPart::show( SMS *sms)
 {
     setSMS( sms );
     QString text=getTemplate()
-            .arg( KIconLoader::global()->iconPath("smslist", -K3Icon::SizeHuge, false) );
+            .arg( KIconLoader::global()->iconPath("smslist", -KIconLoader::SizeHuge, false) );
     if ( sms->type() & SMS::Unread || sms->type() & SMS::Read )
     {
         text=text
@@ -144,7 +144,7 @@ void smsPart::show( SMS *sms)
 void smsPart::writeHome()
 {
     begin();
-    write( getTemplate().arg(KIconLoader::global()->iconPath("smslist", -K3Icon::SizeHuge, false) )
+    write( getTemplate().arg(KIconLoader::global()->iconPath("smslist", -KIconLoader::SizeHuge, false) )
             .arg( i18n("%1 SMS List", objectName() ) )
             .arg("")            .arg("")
             .arg( i18n("<p><i>Click a SMS on the list to view it, or \"Reload\" to update the SMS list.</i></p>") )

@@ -74,7 +74,7 @@ void addressDetails::showAddressee(const KABC::Addressee &addressee, bool readOn
         border-left-width : 5; border-right-style : hidden; border-right-width : 5; border-spacing : 5; border-top-style :\
         hidden; border-top-width : 10;background-color: %1; color: %2\">\
     <img src=\"%3\" align=\"middle\"> <b><i>%4</b></i></div>\n\n";*/
-    QString renderData=getTemplate().arg( KIconLoader::global()->iconPath("personal", -K3Icon::SizeHuge, false) )
+    QString renderData=getTemplate().arg( KIconLoader::global()->iconPath("personal", -KIconLoader::SizeHuge, false) )
             .arg( addressee.formattedName() );
     if(readOnly) renderData=renderData.arg(QString() ).arg(QString() );
     else renderData=renderData
@@ -84,7 +84,7 @@ void addressDetails::showAddressee(const KABC::Addressee &addressee, bool readOn
     htmlData = htmlData
                 .arg( KGlobalSettings::activeTitleColor().name() )
                 .arg( KGlobalSettings::activeTextColor().name() )
-                .arg( KIconLoader::global()->iconPath("personal", K3Icon::Desktop, false) ).arg( addressee.formattedName() );
+                .arg( KIconLoader::global()->iconPath("personal", KIconLoader::Desktop, false) ).arg( addressee.formattedName() );
     */
     KABC::PhoneNumber::List numberList = addressee.phoneNumbers();
     for ( KABC::PhoneNumber::List::Iterator it = numberList.begin(); it != numberList.end(); it++ )
@@ -163,7 +163,7 @@ void addressDetails::openUrlRequest(const KUrl &url)
 void addressDetails::showHP()
 {
     begin();
-    write( getTemplate().arg(KIconLoader::global()->iconPath("kontact_contacts", -K3Icon::SizeHuge, false) )
+    write( getTemplate().arg(KIconLoader::global()->iconPath("kontact_contacts", -KIconLoader::SizeHuge, false) )
             .arg( i18n("%1 AddressBook", DEVCFG(objectName() )->devicename() ) )
             .arg("")            .arg("")
             .arg( i18n("<p><i>Click a contact on the left list to see details, or \"Reload\" to update the contacts list.</i></p>") )

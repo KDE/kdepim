@@ -55,7 +55,7 @@ Attachment::Attachment(Q3ListView *parent, KTNEFAttach *attach)
 	if ( !pix.isNull() )
 		setPixmap( 0, pix );
 	else
-		setPixmap(0, KIconLoader::global()->loadMimeTypeIcon( mimeType->iconName(), K3Icon::Small));
+		setPixmap(0, KIconLoader::global()->loadMimeTypeIcon( mimeType->iconName(), KIconLoader::Small));
 	setDragEnabled( true );
 }
 

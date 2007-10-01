@@ -221,7 +221,7 @@ void DeviceHome::setupWidgets()
     /*
     p_listViewItem=new DeviceListViewItem(DEVCFG(objectName() )->devicename(), p_mainPart->listview() );
     p_listViewItem->setDeviceName( objectName() );
-    p_listViewItem->setIcon( 0, DEVCFG(objectName() )->deviceTypeIcon(DEVCFG(objectName() )->currentGroup(), K3Icon::NoGroup, K3Icon::SizeSmall ) );
+    p_listViewItem->setIcon( 0, DEVCFG(objectName() )->deviceTypeIcon(DEVCFG(objectName() )->currentGroup(), KIconLoader::NoGroup, KIconLoader::SizeSmall ) );
 
     (new QTreeWidgetItem( p_listViewItem, QStringList("Calls") ) )
     ->setIcon( 0, KIcon( "kaddressbook" ) );
@@ -235,13 +235,13 @@ void DeviceHome::setupWidgets()
     */
 
     //p_listViewItem->setOpen(true);
-    //p_listViewItem->setPixmap(0,DEVCFG(objectName() )->deviceTypeIcon(DEVCFG(objectName() )->currentGroup(), K3Icon::NoGroup, K3Icon::SizeSmall ));
+    //p_listViewItem->setPixmap(0,DEVCFG(objectName() )->deviceTypeIcon(DEVCFG(objectName() )->currentGroup(), KIconLoader::NoGroup, KIconLoader::SizeSmall ));
 //     (new K3ListViewItem(p_listViewItem, "Calls") )
-//             ->setPixmap(0,KIconLoader::global()->loadIcon("kaddressbook", K3Icon::NoGroup, K3Icon::SizeSmall) );
+//             ->setPixmap(0,KIconLoader::global()->loadIcon("kaddressbook", KIconLoader::NoGroup, KIconLoader::SizeSmall) );
     //(new K3ListViewItem(p_listViewItem, i18n("PhoneBook") ) )
-    //        ->setPixmap(0,KIconLoader::global()->loadIcon("kontact_contacts", K3Icon::NoGroup, K3Icon::SizeSmall) );
+    //        ->setPixmap(0,KIconLoader::global()->loadIcon("kontact_contacts", KIconLoader::NoGroup, KIconLoader::SizeSmall) );
     //p_smsItem = new K3ListViewItem(p_listViewItem, i18n("SMS") );
-    //p_smsItem->setPixmap(0,KIconLoader::global()->loadIcon("mail_generic", K3Icon::NoGroup, K3Icon::SizeSmall) );
+    //p_smsItem->setPixmap(0,KIconLoader::global()->loadIcon("mail_generic", KIconLoader::NoGroup, KIconLoader::SizeSmall) );
 
     // SMS Tree ListView
     SMSFolderListViewItem *sms_inbox= new SMSFolderListViewItem(ui.SMSFolderView, SMS::Sim | SMS::Phone, SMS::Unread | SMS::Read, i18n("Inbox") );
@@ -250,12 +250,12 @@ void DeviceHome::setupWidgets()
     SMSFolderListViewItem *sms_outbox= new SMSFolderListViewItem(ui.SMSFolderView, SMS::Sim | SMS::Phone, SMS::Sent | SMS::Unsent, i18n("Outgoing") );
     SMSFolderListViewItem *sms_outbox_phone= new SMSFolderListViewItem(sms_outbox, SMS::Phone, SMS::Sent | SMS::Unsent, i18n("Phone") );
     SMSFolderListViewItem *sms_outbox_sim= new SMSFolderListViewItem(sms_outbox, SMS::Sim, SMS::Sent | SMS::Unsent, i18n("Sim") );
-    sms_inbox->setPixmap(0,KIconLoader::global()->loadIcon("mail_get", K3Icon::NoGroup, K3Icon::SizeSmall) );
-    sms_outbox->setPixmap(0,KIconLoader::global()->loadIcon("mail_send", K3Icon::NoGroup, K3Icon::SizeSmall) );
-    sms_inbox_phone->setPixmap(0,KIconLoader::global()->loadIcon("kmobiletools", K3Icon::NoGroup, K3Icon::SizeSmall) );
-    sms_outbox_phone->setPixmap(0,KIconLoader::global()->loadIcon("kmobiletools", K3Icon::NoGroup, K3Icon::SizeSmall) );
-    sms_inbox_sim->setPixmap(0,KIconLoader::global()->loadIcon("simcard", K3Icon::NoGroup, K3Icon::SizeSmall) );
-    sms_outbox_sim->setPixmap(0,KIconLoader::global()->loadIcon("simcard", K3Icon::NoGroup, K3Icon::SizeSmall) );
+    sms_inbox->setPixmap(0,KIconLoader::global()->loadIcon("mail_get", KIconLoader::NoGroup, KIconLoader::SizeSmall) );
+    sms_outbox->setPixmap(0,KIconLoader::global()->loadIcon("mail_send", KIconLoader::NoGroup, KIconLoader::SizeSmall) );
+    sms_inbox_phone->setPixmap(0,KIconLoader::global()->loadIcon("kmobiletools", KIconLoader::NoGroup, KIconLoader::SizeSmall) );
+    sms_outbox_phone->setPixmap(0,KIconLoader::global()->loadIcon("kmobiletools", KIconLoader::NoGroup, KIconLoader::SizeSmall) );
+    sms_inbox_sim->setPixmap(0,KIconLoader::global()->loadIcon("simcard", KIconLoader::NoGroup, KIconLoader::SizeSmall) );
+    sms_outbox_sim->setPixmap(0,KIconLoader::global()->loadIcon("simcard", KIconLoader::NoGroup, KIconLoader::SizeSmall) );
 
     sms_inbox->setOpen(true);
     sms_outbox->setOpen(true);
@@ -293,7 +293,7 @@ void DeviceHome::setupWidgets()
     if(DEVCFG(objectName() )->calendar() )
     {
         (new K3ListViewItem(p_listViewItem, i18n("Calendar") ) )
-                ->setPixmap(0,KIconLoader::global()->loadIcon("date", K3Icon::NoGroup, K3Icon::SizeSmall) );
+                ->setPixmap(0,KIconLoader::global()->loadIcon("date", KIconLoader::NoGroup, KIconLoader::SizeSmall) );
         KParts::Factory *pfactory=(KParts::Factory *) (KLibLoader::self()->factory("libkorganizerpart") );
         QVBoxLayout *l1=new QVBoxLayout(ui.korg_frame);
         l1->setMargin(0);

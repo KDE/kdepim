@@ -64,7 +64,7 @@ QString LastPage::getHTMLTemplate() const
             <p><b>%3</b><br>%8</p> \
             <p><b>%4</b><br>%9</p> \
             ";
-    ret=ret.arg( KIconLoader::global()->iconPath("kmobiletools", -K3Icon::SizeHuge),
+    ret=ret.arg( KIconLoader::global()->iconPath("kmobiletools", -KIconLoader::SizeHuge),
                 i18nc("Wizard summary - Technical Information", "Technical Information"),
                 i18nc("Wizard summary - Basic Phone Information", "Basic Phone Information"),
                 i18nc("Wizard summary - Advanced Phone Information", "Advanced Phone Information")

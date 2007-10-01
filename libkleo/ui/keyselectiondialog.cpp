@@ -419,8 +419,8 @@ void Kleo::KeySelectionDialog::init( bool rememberChoice, bool extendedSelection
 
   if ( qApp ) {
     QSize dialogSize( sizeHint() );
-    int iconSize = IconSize(K3Icon::Desktop);
-    int miniSize = IconSize(K3Icon::Small);
+    int iconSize = IconSize(KIconLoader::Desktop);
+    int miniSize = IconSize(KIconLoader::Small);
     KWindowSystem::setIcons( winId(), qApp->windowIcon().pixmap(iconSize, iconSize),
                              qApp->windowIcon().pixmap(miniSize, miniSize) );
 

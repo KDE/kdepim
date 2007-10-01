@@ -203,7 +203,7 @@ QString  KMobiletoolsHelper::getFooterLink(const QString &text, const QString &i
 {
     QString retval="<a href=\"%1\"><img src=\"%2\" align=\"absmiddle\"> <font size=-1 color=\"%3\">%4</font></a>";
     retval=retval.arg(url)
-            .arg( KIconLoader::global()->iconPath( iconName, K3Icon::Toolbar, false) )
+            .arg( KIconLoader::global()->iconPath( iconName, KIconLoader::Toolbar, false) )
             .arg( KGlobalSettings::activeTextColor().name() )
             .arg( text );
     return retval;

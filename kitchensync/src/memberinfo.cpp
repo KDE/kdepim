@@ -31,12 +31,12 @@ MemberInfo::MemberInfo( const QSync::Member &member )
 
 QPixmap MemberInfo::smallIcon() const
 {
-  return KIconLoader::global()->loadIcon( iconName(), K3Icon::Small );
+  return KIconLoader::global()->loadIcon( iconName(), KIconLoader::Small );
 }
 
 QPixmap MemberInfo::desktopIcon() const
 {
-  return KIconLoader::global()->loadIcon( iconName(), K3Icon::Desktop );
+  return KIconLoader::global()->loadIcon( iconName(), KIconLoader::Desktop );
 }
 
 QString MemberInfo::iconName() const

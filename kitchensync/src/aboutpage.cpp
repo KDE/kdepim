@@ -106,11 +106,11 @@ void AboutPage::handleUrl( const KUrl &url )
 QString AboutPage::htmlText() const
 {
   KIconLoader *iconloader = KIconLoader::global();
-  int iconSize = iconloader->currentSize( K3Icon::Desktop );
+  int iconSize = iconloader->currentSize( KIconLoader::Desktop );
 
-  QString handbook_icon_path = iconloader->iconPath( "contents2", K3Icon::Desktop );
-  QString html_icon_path = iconloader->iconPath( "html", K3Icon::Desktop );
-  QString wizard_icon_path = iconloader->iconPath( "wizard", K3Icon::Desktop );
+  QString handbook_icon_path = iconloader->iconPath( "contents2", KIconLoader::Desktop );
+  QString html_icon_path = iconloader->iconPath( "html", KIconLoader::Desktop );
+  QString wizard_icon_path = iconloader->iconPath( "wizard", KIconLoader::Desktop );
 
   QString info = QString( "<h2 style='text-align:center; margin-top: 0px;'>%1 %2</h2>" )
                  .arg( i18n( "Welcome to KitchenSync" ),
