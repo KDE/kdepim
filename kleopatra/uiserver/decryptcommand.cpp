@@ -45,6 +45,7 @@
 #include <QDebug>
 #include <QFile>
 #include <QLabel>
+#include <QPointer>
 
 #include <kleo/decryptjob.h>
 #include <kleo/keylistjob.h>
@@ -259,7 +260,7 @@ public Q_SLOTS:
 
 private:
     DecryptionResultCollector* collector;
-    ResultDialog<DecryptResultDisplayWidget> *dialog;
+    QPointer< ResultDialog<DecryptResultDisplayWidget> > dialog;
 
 };
 
