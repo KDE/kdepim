@@ -33,6 +33,7 @@
 #include <config-kleopatra.h>
 
 #include "aboutdata.h"
+#include "systemtrayicon.h"
 #ifndef KLEO_ONLY_UISERVER
 # include "certmanager.h"
 #endif
@@ -108,12 +109,7 @@ int main( int argc, char** argv )
   manager->show();
 #endif
 
-  QSystemTrayIcon sysTray( KIcon( "gpg" ) );
-  QMenu sysTrayMenu;
-  QAction sysTrayQuitAction( i18n("&Quit"), &sysTray );
-  app.connect( &sysTrayQuitAction, SIGNAL(triggered()), SLOT(quit()) );
-  sysTrayMenu.addAction( &sysTrayQuitAction );
-  sysTray.setContextMenu( &sysTrayMenu );
+  SystemTrayIcon sysTray;
   sysTray.show();
 
   int rc;

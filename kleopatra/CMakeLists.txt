@@ -79,6 +79,7 @@ set( _kleopatra_common_SRCS
    models/subkeylistmodel.cpp
    models/useridlistmodel.cpp
    aboutdata.cpp
+   systemtrayicon.cpp
    certificateinfowidgetimpl.cpp
    main.cpp )
 
