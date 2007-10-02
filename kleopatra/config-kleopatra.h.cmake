@@ -14,3 +14,5 @@ typedef int assuan_fd_t; // this doesn't work on Windows, but then HAVE_USABLE_A
 /* Define to 1 if your assuan_inquire_ext puts the buffer arguments into the callback signature */
 #cmakedefine HAVE_NEW_STYLE_ASSUAN_INQUIRE_EXT 1
 
+/* Define to 1 if your libassuan has the assuan_sock_get_nonce function */
+#cmakedefine HAVE_ASSUAN_SOCK_GET_NONCE 1

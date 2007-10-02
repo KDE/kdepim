@@ -30,6 +30,8 @@
     your version.
 */
 
+#include <config-kleopatra.h>
+
 #include "uiserver_p.h"
 
 #include <QFile>
@@ -58,6 +60,8 @@ QString UiServer::Private::makeFileName( const QString & socket ) const {
     return dir.absoluteFilePath( "S.uiserver" );
 }
 
+// ### MERGE THE FOLLOWING WITH uiserver_win.cpp
+
 static inline QString system_error_string() {
     return QString::fromLocal8Bit( strerror(errno) );
 }
@@ -71,8 +75,12 @@ void UiServer::Private::makeListeningSocket() {
     const QByteArray encodedFileName = QFile::encodeName( fileName );
 
     // Create a Unix Domain Socket:
-    const int sock = ::socket( AF_UNIX, SOCK_STREAM, 0 );
-    if ( sock < 0 )
+#ifdef HAVE_ASSUAN_SOCK_GET_NONCE
+    const assuan_fd_t sock = assuan_sock_new( AF_UNIX, SOCK_STREAM, 0 );
+#else
+    const assuan_fd_t sock = ::socket( AF_UNIX, SOCK_STREAM, 0 );
+#endif
+    if ( sock == ASSUAN_INVALID_FD )
         throw_<std::runtime_error>( tr( "Couldn't create socket: %1" ).arg( system_error_string() ) );
 
     try {
@@ -80,12 +88,21 @@ void UiServer::Private::makeListeningSocket() {
         struct sockaddr_un sa;
         std::memset( &sa, 0, sizeof(sa) );
         sa.sun_family = AF_UNIX;
-        std::strncpy( sa.sun_path, encodedFileName.constData(), sizeof( sa.sun_path ) );
+        std::strncpy( sa.sun_path, encodedFileName.constData(), sizeof( sa.sun_path ) - 1 );
+#ifdef HAVE_ASSUAN_SOCK_GET_NONCE
+        if ( assuan_sock_bind( sock, (struct sockaddr*)&sa, sizeof( sa ) ) )
+#else
         if ( ::bind( sock, (struct sockaddr*)&sa, sizeof( sa ) ) )
+#endif
             throw_<std::runtime_error>( tr( "Couldn't bind to socket: %1" ).arg( system_error_string() ) );
 
         // ### TODO: permissions?
-    
+
+#ifdef HAVE_ASSUAN_SOCK_GET_NONCE
+        if ( assuan_sock_get_nonce( (struct sockaddr*)&sa, sizeof( sa ), &nonce ) )
+            throw_<std::runtime_error>( tr("Couldn't get socket nonce: %1" ).arg( system_error_string() ) );
+#endif
+
         // Listen
         if ( ::listen( sock, SOMAXCONN ) )
             throw_<std::runtime_error>( tr( "Couldn't listen to socket: %1" ).arg( system_error_string() ) );

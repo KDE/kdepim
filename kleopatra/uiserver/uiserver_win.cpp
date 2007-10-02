@@ -30,6 +30,8 @@
     your version.
 */
 
+#include <config-kleopatra.h>
+
 #include "uiserver_p.h"
 
 #include "utils/gnupg-registry.h"
@@ -44,6 +46,8 @@
 
 #include <windows.h>
 #include <io.h>
+#include <cstring>
+#include <cstdlib>
 
 using namespace Kleo;
 using namespace boost;
@@ -59,22 +63,47 @@ QString UiServer::Private::makeFileName( const QString & socket ) const {
     return dir.absoluteFilePath( "S.uiserver" );
 }
 
-// The Windows case is simpler, because we use a TCP socket here, so
-// we use vanilla QTcpServer:
-void UiServer::Private::makeListeningSocket() {
+// ### MERGE THE FOLLOWING WITH uiserver_unix.cpp
 
-    // First, create a tempfile that will contain the port we're
-    // listening on:
-    file.setFileName( socketname );
-    if ( !file.open( QIODevice::WriteOnly ) )
-        throw_<std::runtime_error>( tr( "Couldn't create temporary file %1: %2" ).arg( file.fileName(), file.errorString() ) );
-
-    // now, start listening to the host:
-    if ( !listen( QHostAddress::LocalHost ) )
-        throw_<std::runtime_error>( tr( "UiServer: listen failed: %1" ).arg( errorString() ) );
-
-    const quint16 port = serverPort();
-    QTextStream( &file ) << qToBigEndian( port ) << " # == htons( " << port << " )" << endl;
-    file.close();
+static inline QString system_error_string() {
+    return QString::fromLocal8Bit( strerror(errno) );
 }
 
+void UiServer::Private::makeListeningSocket() {
+
+    // First, create a file (we do this only for the name, gmpfh)
+    const QString fileName = socketname;
+    if ( QFile::exists( fileName ) )
+        throw_<std::runtime_error>( tr( "Detected another running gnupg UI server listening at %1." ).arg( fileName ) );
+    const QByteArray encodedFileName = QFile::encodeName( fileName );
+
+    // Create a Unix Domain Socket:
+    const assuan_fd_t sock = assuan_sock_new( AF_UNIX, SOCK_STREAM, 0 );
+    if ( sock == ASSUAN_INVALID_FD )
+        throw_<std::runtime_error>( tr( "Couldn't create socket: %1" ).arg( system_error_string() ) );
+
+    try {
+        // Bind
+        struct sockaddr_un sa;
+        std::memset( &sa, 0, sizeof(sa) );
+        sa.sun_family = AF_UNIX;
+        std::strncpy( sa.sun_path, encodedFileName.constData(), sizeof( sa.sun_path ) - 1 );
+        if ( assuan_sock_bind( sock, (struct sockaddr*)&sa, sizeof( sa ) ) )
+            throw_<std::runtime_error>( tr( "Couldn't bind to socket: %1" ).arg( system_error_string() ) );
+
+        if ( assuan_sock_get_nonce( (struct sockaddr*)&sa, sizeof( sa ), &nonce ) )
+            throw_<std::runtime_error>( tr("Couldn't get socket nonce: %1" ).arg( system_error_string() ) );
+
+        // Listen
+        if ( ::listen( sock, SOMAXCONN ) )
+            throw_<std::runtime_error>( tr( "Couldn't listen to socket: %1" ).arg( system_error_string() ) );
+
+        if ( !setSocketDescriptor( sock ) )
+            throw_<std::runtime_error>( tr( "Couldn't pass socket to Qt: %1. This should not happen, please report this bug." ).arg( errorString() ) );
+
+    } catch ( ... ) {
+        assuan_sock_close( sock );
+        throw;
+    }
+
+}

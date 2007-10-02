@@ -83,6 +83,19 @@ if ( USABLE_ASSUAN_FOUND )
         "
     HAVE_GPG_ERR_SOURCE_KLEO )
 
+  # check if assuan has assuan_sock_get_nonce
+  check_function_exists( "assuan_sock_get_nonce" HAVE_ASSUAN_SOCK_GET_NONCE )
+
+  if ( WIN32 AND NOT HAVE_ASSUAN_SOCK_GET_NONCE )
+    set( USABLE_ASSUAN_FOUND false )
+  endif ( WIN32 AND NOT HAVE_ASSUAN_SOCK_GET_NONCE )  
+
+endif ( USABLE_ASSUAN_FOUND )
+
+if ( USABLE_ASSUAN_FOUND )
+  message( STATUS "Usable assuan found" )
+else ( USABLE_ASSUAN_FOUND )
+  message( STATUS "NO usable assuan found" )
 endif ( USABLE_ASSUAN_FOUND )
 
 macro_bool_to_01( USABLE_ASSUAN_FOUND  HAVE_USABLE_ASSUAN )

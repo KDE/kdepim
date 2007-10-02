@@ -30,6 +30,8 @@
     your version.
 */
 
+#include <config-kleopatra.h>
+
 #include "uiserver.h"
 #include "uiserver_p.h"
 
@@ -136,6 +138,13 @@ void UiServer::Private::slotConnectionClosed( Kleo::AssuanServerConnection * con
 void UiServer::Private::incomingConnection( int fd ) {
     try {
         qDebug( "UiServer: client connect on fd %d", fd );
+#ifdef HAVE_ASSUAN_SOCK_GET_NONCE
+        if ( assuan_sock_check_nonce( (assuan_fd_t)fd, &nonce ) ) {
+            qDebug( "UiServer: nonce check failed" );
+            assuan_sock_close( (assuan_fd_t)fd );
+            return;
+        }
+#endif
         const shared_ptr<AssuanServerConnection> c( new AssuanServerConnection( (assuan_fd_t)fd, factories ) );
         connect( c.get(), SIGNAL(closed(Kleo::AssuanServerConnection*)),
                  this, SLOT(slotConnectionClosed(Kleo::AssuanServerConnection*)) );
@@ -158,6 +167,7 @@ void UiServer::Private::incomingConnection( int fd ) {
         s.close();
     }
 }
+
 
 #include "moc_uiserver_p.cpp"
 #include "moc_uiserver.cpp"

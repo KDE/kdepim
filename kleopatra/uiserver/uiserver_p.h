@@ -37,6 +37,8 @@
 #include "assuanserverconnection.h"
 #include "assuancommand.h"
 
+#include "kleo-assuan.h"
+
 #include <ktempdir.h>
 
 #include <QTcpServer>
@@ -82,6 +84,7 @@ private:
     std::vector< boost::shared_ptr<AssuanCommandFactory> > factories;
     std::vector< boost::shared_ptr<AssuanServerConnection> > connections;
     QString socketname;
+    assuan_sock_nonce_t nonce;
 };
 
 #endif /* __KLEOPATRA_UISERVER_UISERVER_P_H__ */
