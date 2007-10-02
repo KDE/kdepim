@@ -2,6 +2,8 @@ project(kleopatra)
 
 if ( NOT KLEO_ONLY_UISERVER OR USABLE_ASSUAN_FOUND )
 
+set( kleopatra_version 1.9.0 )
+
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/config-kleopatra.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-kleopatra.h )
 
 include_directories( ${CMAKE_SOURCE_DIR}/libkleo ${Boost_INCLUDE_DIR} ${QGPGME_INCLUDES}  )

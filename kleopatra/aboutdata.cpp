@@ -30,11 +30,13 @@
     your version.
 */
 
+#include <config-kleopatra.h>
+
 #include "aboutdata.h"
 
 #include <klocale.h>
 
-static const char kleopatra_version[] = "0.40";
+static const char kleopatra_version[] = KLEOPATRA_VERSION_STRING;
 static const char description[] = I18N_NOOP("KDE Key Manager");
 
 struct about_data {
@@ -53,18 +55,27 @@ static const about_data authors[] = {
 
 
 static const about_data credits[] = {
+  { I18N_NOOP("Till Adam"),
+    I18N_NOOP("UI Server commands and dialogs"),
+    "adam@kde.org", 0 },
   { I18N_NOOP("David Faure"),
     I18N_NOOP("Backend configuration framework, KIO integration"),
     "faure@kde.org", 0 },
   { I18N_NOOP("Michel Boyer de la Giroday"),
     I18N_NOOP("Key-state dependant colors and fonts in the key list"),
     "michel@klaralvdalens-datakonsult.se", 0 },
+  { I18N_NOOP("Volker Krause"),
+    I18N_NOOP("UI Server dialogs"),
+    "vkrause@kde.org", 0 },
   { I18N_NOOP("Daniel Molkentin"),
     I18N_NOOP("Certificate Wizard KIOSK integration, infrastructure"),
     "molkentin@kde.org", 0 },
   { I18N_NOOP("Ralf Nolden"),
     I18N_NOOP("Support for obsolete EMAIL RDN in Certificate Wizard"),
     "nolden@kde.org", 0 },
+  { I18N_NOOP("Frank Osterfeld"),
+    I18N_NOOP("Resident gpgme/win wrangler, UI Server commands and dialogs"),
+    "osterfeld@kde.org", 0 },
   { I18N_NOOP("Karl-Heinz Zimmer"),
     I18N_NOOP("DN display ordering support, infrastructure"),
     "khz@kde.org", 0 },
@@ -76,7 +87,7 @@ AboutData::AboutData()
 		kleopatra_version, ki18n(description), License_GPL,
 		ki18n("(c) 2002 Steffen Hansen, Jesper Pedersen,\n"
 		      "Kalle Dalheimer, Klar\xC3\xA4lvdalens Datakonsult AB\n\n"
-		      "(c) 2004 Marc Mutz, Klar\xC3\xA4lvdalens Datakonsult AB") )
+		      "(c) 2004, 2007 Marc Mutz, Klar\xC3\xA4lvdalens Datakonsult AB") )
 {
   using ::authors;
   using ::credits;
