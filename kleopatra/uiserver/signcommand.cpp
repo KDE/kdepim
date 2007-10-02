@@ -86,7 +86,7 @@ class SignCommand::Private
 public:
     Private( SignCommand * qq )
         :AssuanCommandPrivateBaseMixin<SignCommand::Private, SignCommand>()
-        , q( qq ), m_statusSent(0)
+        , q( qq ), m_signJobs( 0 ), m_statusSent( 0 )
     {}
     virtual ~Private() {}
     
