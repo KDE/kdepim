@@ -389,7 +389,8 @@ ViewersConfigPage::ViewersConfigPage(QWidget * w, QVariantList &args )
 
 #define CM(a,b) connect(fConfigWidget.a,b,this,SLOT(modified()));
 	CM(fUseSecret, SIGNAL(toggled(bool)));
-	CM(fAddressGroup, SIGNAL(clicked(int)));
+	CM(fNormalDisplay, SIGNAL(toggled(bool)));
+	CM(fCompanyDisplay, SIGNAL(toggled(bool)));
 	CM(fUseKeyField, SIGNAL(toggled(bool)));
 #undef CM
 
@@ -403,7 +404,7 @@ void ViewersConfigPage::load()
 
 	fConfigWidget.fUseSecret->setChecked(KPilotSettings::showSecrets());
 	
-	if( KPilotSettings::addressDisplayMode() )
+	if( KPilotSettings::addressDisplayMode() == 0 )
 	{
 		fConfigWidget.fNormalDisplay->setChecked( true );
 	}
