@@ -402,7 +402,16 @@ void ViewersConfigPage::load()
 	KPilotSettings::self()->readConfig();
 
 	fConfigWidget.fUseSecret->setChecked(KPilotSettings::showSecrets());
-	fConfigWidget.fAddressGroup->setButton(KPilotSettings::addressDisplayMode());
+	
+	if( KPilotSettings::addressDisplayMode() )
+	{
+		fConfigWidget.fNormalDisplay->setChecked( true );
+	}
+	else
+	{
+		fConfigWidget.fCompanyDisplay->setChecked( true );
+	}
+
 	fConfigWidget.fUseKeyField->setChecked(KPilotSettings::useKeyField());
 	unmodified();
 }
@@ -412,8 +421,16 @@ void ViewersConfigPage::load()
 	FUNCTIONSETUP;
 
 	KPilotSettings::setShowSecrets(fConfigWidget.fUseSecret->isChecked());
-	KPilotSettings::setAddressDisplayMode(fConfigWidget.fAddressGroup->id(
-		fConfigWidget.fAddressGroup->selected()));
+	
+	if( fConfigWidget.fNormalDisplay->isChecked() )
+	{
+		KPilotSettings::setAddressDisplayMode( 0 );
+	}
+	else
+	{
+		KPilotSettings::setAddressDisplayMode( 1 );
+	}
+	
 	KPilotSettings::setUseKeyField(fConfigWidget.fUseKeyField->isChecked());
 	KPilotConfig::updateConfigVersion();
 	KPilotSettings::self()->writeConfig();

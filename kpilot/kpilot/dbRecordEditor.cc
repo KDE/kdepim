@@ -41,7 +41,6 @@
 
 #include "options.h"
 #include "pilotRecord.h"
-//#include "dbRecordEditor_base.h"
 
 #include <khexedit/byteseditinterface.h>
 #include <khexedit/valuecolumninterface.h>
@@ -148,8 +147,8 @@ void DBRecordEditor::initWidgets()
 	DBRecordEditorBaseLayout->addWidget( fRecordID, 0, 3 );
 
 	fFlagsGroup = new QGroupBox( fWidget );
-	fFlagsGroup->setSizePolicy( QSizePolicy( (QSizePolicy::SizeType)5
-		, (QSizePolicy::SizeType)4 ) );
+	//fFlagsGroup->setSizePolicy( QSizePolicy( (QSizePolicy::SizeType)5
+	//	, (QSizePolicy::SizeType)4 ) );
 	
 	fFlagsGroupLayout = new QGridLayout( fFlagsGroup );
 	fFlagsGroupLayout->setSpacing( 6 );
