@@ -83,8 +83,16 @@ if ( USABLE_ASSUAN_FOUND )
         "
     HAVE_GPG_ERR_SOURCE_KLEO )
 
-  # check if assuan has assuan_sock_get_nonce
-  check_function_exists( "assuan_sock_get_nonce" HAVE_ASSUAN_SOCK_GET_NONCE )
+  # check if assuan has assuan_sock_get_nonce (via assuan_sock_nonce_t)
+  # function_exists runs into linking errors - libassuan is static,
+  # and assuan_sock_get_nonce drags in stuff that needs linking
+  # against winsock2.
+  check_cxx_source_compiles("
+        #include <assuan.h>
+        static assuan_sock_nonce_t nonce;
+        int main() { return 0; }
+        "
+    HAVE_ASSUAN_SOCK_GET_NONCE )
 
   if ( WIN32 AND NOT HAVE_ASSUAN_SOCK_GET_NONCE )
     set( USABLE_ASSUAN_FOUND false )
