@@ -65,6 +65,10 @@
 
 #ifdef Q_OS_WIN32
 # include <io.h>
+# include <process.h>
+#else
+# include <sys/types.h>
+# include <unistd.h>
 #endif
 
 using namespace Kleo;
@@ -76,6 +80,14 @@ namespace {
         QIODevice * iodev;
         GpgME::Data::Encoding encoding;
     };
+
+    static inline qint64 mygetpid() {
+#ifdef Q_OS_WIN32
+        return (qint64)_getpid();
+#else
+        return (qint64)getpid();
+#endif
+    }
 }
 
 static const unsigned int INIT_SOCKET_FLAGS = 3; // says info assuan...
@@ -218,6 +230,19 @@ private:
 
         return 0;
         //return gpg_error( GPG_ERR_UNKNOWN_OPTION );
+    }
+
+    static int getinfo_handler( assuan_context_t ctx_, char * line ) {
+        if ( qstrcmp( line, "version" ) == 0 ) {
+            static const char version[] = "Kleopatra " KLEOPATRA_VERSION_STRING ;
+            return assuan_process_done( ctx_, assuan_send_data( ctx_, version, sizeof version - 1 ) );
+        }
+        if ( qstrcmp( line, "pid" ) == 0 ) {
+            static const QByteArray pid = QByteArray::number( mygetpid() );
+            return assuan_process_done( ctx_, assuan_send_data( ctx_, pid.constData(), pid.size() ) );
+        }
+        static const QByteArray errorString = tr("Unknown value for WHAT").toUtf8();
+        return assuan_process_done( ctx_, assuan_set_error( ctx_, gpg_error( GPG_ERR_ASS_PARAMETER ), errorString.constData() ) );
     }
 
     // format: TAG (FD|FD=\d+|FILE=...)
@@ -420,6 +445,9 @@ AssuanServerConnection::Private::Private( assuan_fd_t fd_, const std::vector< sh
     Q_FOREACH( shared_ptr<AssuanCommandFactory> fac, factories )
         if ( const gpg_error_t err = assuan_register_command( ctx.get(), fac->name(), fac->_handler() ) )
             throw assuan_exception( err, std::string( "register \"" ) + fac->name() + "\" handler" );
+
+    if ( const gpg_error_t err = assuan_register_command( ctx.get(), "GETINFO", getinfo_handler ) )
+        throw assuan_exception( err, "register \"GETINFO\" handler" );
 
     assuan_set_hello_line( ctx.get(), "GPG UI server (Kleopatra/1.9) ready to serve" );
     //assuan_set_hello_line( ctx.get(), GPG UI server (qApp->applicationName() + " v" + kapp->applicationVersion() + "ready to serve" )
