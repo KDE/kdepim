@@ -18,6 +18,7 @@ set(conduit_base_SRCS
 	idmappingxmlsource.cc
 	idmapping.cc
 	cudcounter.cc
+	category.cc
 	hhrecord.cc
 	dataproxy.cc
 	hhdataproxy.cc
