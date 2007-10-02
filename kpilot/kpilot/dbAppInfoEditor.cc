@@ -26,10 +26,8 @@
 */
 #include "dbAppInfoEditor.h"
 
-#include <q3textedit.h>
-#include <qlabel.h>
-//Added by qt3to4:
-#include <Q3Frame>
+#include <QtGui/QTextEdit>
+#include <QtGui/QLabel>
 
 #include <kdialog.h>
 #include <kmessagebox.h>
@@ -70,8 +68,8 @@ DBAppInfoEditor::DBAppInfoEditor(char*appInfoData, int l, QWidget *parent) :
 		QLabel*tmpW = new QLabel( i18n("To view the Application info block data, please install a hex editor (e.g. khexedit from kdeutils)."), this );
 		tmpW->setAlignment( Qt::AlignHCenter | Qt::AlignVCenter );
 		tmpW->setWordWrap( true );
-		tmpW->setFrameShape( Q3Frame::Panel );
-		tmpW->setFrameShadow( Q3Frame::Sunken );
+		tmpW->setFrameShape( QFrame::Panel );
+		tmpW->setFrameShadow( QFrame::Sunken );
 		fAppInfoEdit = tmpW;
 	}
 	setMainWidget( fAppInfoEdit );

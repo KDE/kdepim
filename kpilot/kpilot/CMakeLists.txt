@@ -115,6 +115,7 @@ set(kpilot_UIS
 	viewer_page_base.ui
 	viewer_genericdb.ui
 	dbFlagsEditor_base.ui
+	file_install_widget.ui
 )
 
 kde4_add_ui_files(kpilot_bin_SRCS ${kpilot_UIS})

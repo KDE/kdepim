@@ -270,7 +270,7 @@ QWidget *KPilotInstaller::initPages( QWidget *parent, QList<ComponentPageBase*> 
 	v = new GenericDBWidget( pageWidget, defaultDBPath );
 	ADDICONPAGE( v, i18n("Generic DB Viewer"), CSL1( "kpilot_db" ) )
 	
-	fP->fFileInstallWidget = new FileInstallWidget( pageWidget, defaultDBPath );
+	fP->fFileInstallWidget = new FileInstallWidget( pageWidget );
 	ADDICONPAGE( fP->fFileInstallWidget, i18n("File Installer")
 		, CSL1( "kpilot_fileinstaller" ) )
 
