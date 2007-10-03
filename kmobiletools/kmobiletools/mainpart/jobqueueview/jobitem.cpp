@@ -61,7 +61,7 @@ void JobItem::paint( QPainter* painter, const QStyleOptionGraphicsItem* option, 
                                       KColorScheme::LightShade );
 
     // draw pixmap
-    QPixmap actionPixmap = KIconLoader::global()->loadIcon( "book2", K3Icon::NoGroup, K3Icon::SizeMedium );
+    QPixmap actionPixmap = KIconLoader::global()->loadIcon( "book2", KIconLoader::NoGroup, KIconLoader::SizeMedium );
 
     painter->drawPixmap( textRect.width() / 2 - actionPixmap.width() / 2, 0, actionPixmap );
     textRect.moveTop( actionPixmap.height() + 5 );
