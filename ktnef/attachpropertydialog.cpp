@@ -68,7 +68,7 @@ void AttachPropertyDialog::setAttachment(KTNEFAttach *attach)
 	if ( !pix.isNull() )
 		icon_->setPixmap( pix );
 	else
-		icon_->setPixmap(KIconLoader::global()->loadMimeTypeIcon(mimetype->iconName(), K3Icon::Small));
+		icon_->setPixmap(KIconLoader::global()->loadMimeTypeIcon(mimetype->iconName(), KIconLoader::Small));
 	description_->setText(mimetype->comment());
 	s.setNum(attach->index());
 	index_->setText(s);
