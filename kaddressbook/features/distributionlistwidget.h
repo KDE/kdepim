@@ -46,7 +46,6 @@ class Core;
 
 namespace KABC {
 class AddressBook;
-class DistributionListManager;
 }
 
 class DistributionListWidget : public KAB::ExtensionWidget
@@ -94,9 +93,6 @@ class DistributionListWidget : public KAB::ExtensionWidget
     QLabel *mEntryCountLabel;
     DistributionListView *mContactView;
 
-#ifndef KDEPIM_NEW_DISTRLISTS
-    KABC::DistributionListManager *mManager;
-#endif
     QPushButton *mCreateListButton;
     QPushButton *mEditListButton;
     QPushButton *mRemoveListButton;

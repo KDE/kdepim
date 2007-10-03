@@ -151,9 +151,6 @@ class ContactItem : public QTreeWidgetItem
 
 DistributionListWidget::DistributionListWidget( KAB::Core *core, QWidget *parent )
   : KAB::ExtensionWidget( core, parent )
-#ifndef KDEPIM_NEW_DISTRLISTS
-  , mManager( 0 )
-#endif
 {
   QGridLayout *topLayout = new QGridLayout( this );
   topLayout->setSpacing( KDialog::spacingHint() );
@@ -202,16 +199,9 @@ DistributionListWidget::DistributionListWidget( KAB::Core *core, QWidget *parent
   topLayout->addWidget( mRemoveContactButton, 2, 3 );
   connect( mRemoveContactButton, SIGNAL( clicked() ), SLOT( removeContact() ) );
 
-#ifdef KDEPIM_NEW_DISTRLISTS
   // When contacts are changed, update both distr list combo and contents of displayed distr list
   connect( core, SIGNAL( contactsUpdated() ),
            this, SLOT( updateNameCombo() ) );
-#else
-  mManager = new KABC::DistributionListManager( core->addressBook() );
-
-  connect( KABC::DistributionListWatcher::self(), SIGNAL( changed() ),
-           this, SLOT( updateNameCombo() ) );
-#endif
 
   connect( core->addressBook(), SIGNAL( addressBookChanged( AddressBook* ) ),
            this, SLOT( updateNameCombo() ) );
@@ -227,15 +217,14 @@ DistributionListWidget::DistributionListWidget( KAB::Core *core, QWidget *parent
 
 DistributionListWidget::~DistributionListWidget()
 {
-#ifndef KDEPIM_NEW_DISTRLISTS
-  delete mManager;
-#endif
 }
 
 void DistributionListWidget::save()
 {
 #ifndef KDEPIM_NEW_DISTRLISTS
-  mManager->save();
+  // FIXME new distribution list handling
+  // explicit save necessary?
+  //mManager->save();
 #endif
 }
 
@@ -254,7 +243,7 @@ bool DistributionListWidget::alreadyExists( const QString& distrListName ) const
 #ifdef KDEPIM_NEW_DISTRLISTS
   return core()->distributionListNames().contains( distrListName );
 #else
-  return mManager->listNames().contains( distrListName );
+  return core()->addressBook()->findDistributionListByName( distrListName ) != 0;
 #endif
 }
 
@@ -284,7 +273,11 @@ void DistributionListWidget::createList()
   core()->addressBook()->insertAddressee( dist );
 
 #else
-  new KABC::DistributionList( mManager, newName );
+  KABC::Resource* resource = core()->requestResource( this );
+  if ( !resource )
+    return;
+
+  core()->addressBook()->createDistributionList( newName, resource );
   changed();
 
   updateNameCombo();
@@ -321,10 +314,11 @@ void DistributionListWidget::editList()
 
   changed( dist );
 #else
-  KABC::DistributionList *list = mManager->list( oldName );
-  list->setName( newName );
-  mManager->save();
-  updateNameCombo();
+  KABC::DistributionList *list = core()->addressBook()->findDistributionListByName( oldName );
+  if ( list ) {
+    list->setName( newName );
+    updateNameCombo();
+  }
 #endif
 
   // Select the new name in the list (updateNameCombo couldn't know we wanted that one)
@@ -351,12 +345,15 @@ void DistributionListWidget::removeList()
   emit deleted( QStringList( dist.uid() ) );
   core()->addressBook()->removeAddressee( dist );
 #else
-  mManager->remove( mManager->list( mNameCombo->currentText() ) );
-  mNameCombo->removeItem( mNameCombo->currentIndex() );
+  KABC::DistributionList* list = core()->addressBook()->findDistributionListByName( mNameCombo->currentText() );
+  if ( list ) {
+    core()->addressBook()->removeDistributionList( list );
+    mNameCombo->removeItem( mNameCombo->currentIndex() );
 
-  updateContactView();
+    updateContactView();
 
-  changed();
+    changed();
+  }
 #endif
 }
 
@@ -370,7 +367,7 @@ void DistributionListWidget::addContact()
     return;
   }
 #else
-  KABC::DistributionList *list = mManager->list( mNameCombo->currentText() );
+  KABC::DistributionList *list = core()->addressBook()->findDistributionListByName( mNameCombo->currentText() );
   if ( !list )
     return;
   KABC::DistributionList& dist = *list;
@@ -398,7 +395,7 @@ void DistributionListWidget::removeContact()
   if ( dist.isEmpty() ) // not found
     return;
 #else
-  KABC::DistributionList *list = mManager->list( mNameCombo->currentText() );
+  KABC::DistributionList *list = core()->addressBook()->findDistributionListByName( mNameCombo->currentText() );
   if ( !list )
     return;
   KABC::DistributionList& dist = *list;
@@ -428,7 +425,7 @@ void DistributionListWidget::changeEmail()
   if ( dist.isEmpty() ) // not found
     return;
 #else
-  KABC::DistributionList *list = mManager->list( mNameCombo->currentText() );
+  KABC::DistributionList *list = core()->addressBook()->findDistributionListByName( mNameCombo->currentText() );
   if ( !list )
     return;
   KABC::DistributionList& dist = *list;
@@ -468,7 +465,7 @@ void DistributionListWidget::updateContactView()
       core()->addressBook(), mNameCombo->currentText() );
   isListSelected = !dist.isEmpty();
 #else
-  KABC::DistributionList *list = mManager->list( mNameCombo->currentText() );
+  KABC::DistributionList *list = core()->addressBook()->findDistributionListByName( mNameCombo->currentText() );
   isListSelected = list != 0;
 #endif
   if ( !isListSelected ) {
@@ -510,8 +507,7 @@ void DistributionListWidget::updateNameCombo()
 #ifdef KDEPIM_NEW_DISTRLISTS
   const QStringList names = core()->distributionListNames();
 #else
-  mManager->load();
-  const QStringList names = mManager->listNames();
+  const QStringList names = core()->addressBook()->allDistributionListNames();
 #endif
   mNameCombo->addItems( names );
   mNameCombo->setCurrentIndex( qMin( pos, (int)names.count() - 1 ) );
@@ -530,7 +526,7 @@ void DistributionListWidget::dropEvent( QDropEvent *e )
   if ( dist.isEmpty() )
     return;
 #else
-  KABC::DistributionList *list = mManager->list( mNameCombo->currentText() );
+  KABC::DistributionList *list = core()->addressBook()->findDistributionListByName( mNameCombo->currentText() );
   if ( !list )
     return;
   KABC::DistributionList& dist = *list;
