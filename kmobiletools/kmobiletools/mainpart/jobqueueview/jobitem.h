@@ -1,5 +1,6 @@
 /***************************************************************************
-   Copyright (C) 2007 by Matthias Lechner <matthias@lmme.de>
+   Copyright (C) 2007
+   by Matthias Lechner <matthias@lmme.de>
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -17,28 +18,41 @@
    Boston, MA 02110-1301, USA.
  ***************************************************************************/
 
-#include "fetchaddressbookjob.h"
+#ifndef JOBITEM_H
+#define JOBITEM_H
 
-#include <KDE/KDebug>
-#include <QtCore/QTimer>
-#include <KDE/ThreadWeaver/Thread>
+#include <QtCore/QObject>
+#include <QtGui/QGraphicsItem>
+#include <KDE/ThreadWeaver/Job>
 
-FetchAddressbookJob::FetchAddressbookJob( QObject* parent )
- : KMobileTools::JobXP( JobXP::fetchAddressbook, parent )
+namespace KMobileTools {
+    class JobXP;
+}
+/**
+ * @author Matthias Lechner <matthias@lmme.de>
+ */
+class JobItem : public QObject, public QGraphicsItem
 {
-}
+    Q_OBJECT
+public:
+    JobItem( KMobileTools::JobXP* job, QGraphicsItem* parent = 0 );
+    ~JobItem();
 
+    QRectF boundingRect() const;
 
-FetchAddressbookJob::~FetchAddressbookJob()
-{
-}
+protected:
+    void paint( QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget = 0 );
 
-void FetchAddressbookJob::run() {
-    kDebug() << "running...";
-    thread()->msleep( 5000 );
-}
+Q_SIGNALS:
+    void removeItem( JobItem* item );
 
-void FetchAddressbookJob::requestAbort() {
-}
+private Q_SLOTS:
+    void jobSuccessful( ThreadWeaver::Job* );
 
-#include "fetchaddressbookjob.moc"
+private:
+    bool m_firstPaint;
+    QRectF m_boundingRect;
+
+};
+
+#endif

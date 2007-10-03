@@ -1,5 +1,6 @@
 /***************************************************************************
-   Copyright (C) 2007 by Matthias Lechner <matthias@lmme.de>
+   Copyright (C) 2007
+   by Matthias Lechner <matthias@lmme.de>
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -17,28 +18,36 @@
    Boston, MA 02110-1301, USA.
  ***************************************************************************/
 
-#include "fetchaddressbookjob.h"
+#ifndef JOBQUEUEVIEW_H
+#define JOBQUEUEVIEW_H
 
-#include <KDE/KDebug>
-#include <QtCore/QTimer>
-#include <KDE/ThreadWeaver/Thread>
+#include <QtGui/QGraphicsScene>
 
-FetchAddressbookJob::FetchAddressbookJob( QObject* parent )
- : KMobileTools::JobXP( JobXP::fetchAddressbook, parent )
+#include "jobitem.h"
+
+class QGraphicsTextItem;
+/**
+ * @author Matthias Lechner <matthias@lmme.de>
+ */
+class JobQueueView : public QGraphicsScene
 {
-}
+    Q_OBJECT
+public:
+    JobQueueView( QObject* parent = 0 );
+    ~JobQueueView();
 
+    void addJob( JobItem* jobItem );
 
-FetchAddressbookJob::~FetchAddressbookJob()
-{
-}
+protected:
+    void drawBackground( QPainter* painter, const QRectF& rect );
 
-void FetchAddressbookJob::run() {
-    kDebug() << "running...";
-    thread()->msleep( 5000 );
-}
+private Q_SLOTS:
+    void removeJob( JobItem* jobItem );
 
-void FetchAddressbookJob::requestAbort() {
-}
+private:
+    QList<JobItem*> m_jobItems;
+    QGraphicsTextItem* m_noJobsItem;
+    QGraphicsItemGroup* m_jobItemGroup;
+};
 
-#include "fetchaddressbookjob.moc"
+#endif

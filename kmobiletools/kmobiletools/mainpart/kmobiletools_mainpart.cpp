@@ -42,8 +42,8 @@
 #include <KDE/KStatusBar>
 
 // Qt includes
-#include <QtGui/QSplitter>
 #include <QtGui/QStackedWidget>
+#include <QtGui/QGraphicsView>
 #include <QtGui/QTreeWidget>
 #include <QtGui/QProgressDialog>
 #include <QtGui/QMenu>
@@ -78,6 +78,8 @@
 #include "servicemodel/deviceitem.h"
 #include "servicemodel/serviceitem.h"
 #include "jobsignalmapper.h"
+#include "jobqueueview/jobqueueview.h"
+#include "jobqueueview/jobitem.h"
 
 typedef KParts::GenericFactory<kmobiletoolsMainPart> kmobiletoolsMainPartFactory;
 K_EXPORT_COMPONENT_FACTORY( libkmobiletoolsmainpart, kmobiletoolsMainPartFactory )
@@ -119,7 +121,10 @@ kmobiletoolsMainPart::kmobiletoolsMainPart( QWidget *parentWidget, QObject *pare
     // set up signal mapper
     m_jobSignalMapper = new JobSignalMapper( this );
     connect( m_jobSignalMapper, SIGNAL(mapped(const QString&,KMobileTools::JobXP*)),
-             this, SLOT(jobCreated(const QString&,KMobileTools::JobXP*)) );
+             KMobileTools::JobManager::instance(), SLOT(enqueueJob(const QString&,KMobileTools::JobXP*)) );
+
+    connect( KMobileTools::JobManager::instance(), SIGNAL(jobEnqueued(const QString&,KMobileTools::JobXP*)),
+             this, SLOT(jobEnqueued(const QString&,KMobileTools::JobXP*)) );
 
     QTimer::singleShot( 1000, this, SLOT(slotAutoLoadDevices() ) );
 
@@ -367,16 +372,16 @@ void kmobiletoolsMainPart::treeViewContextMenu( const QPoint& position ) {
     }
 }
 
-void kmobiletoolsMainPart::jobCreated( const QString& deviceName, KMobileTools::JobXP* job ) {
-    // enqueue the job
-    KMobileTools::JobManager::instance()->enqueueJob( deviceName, job );
+void kmobiletoolsMainPart::jobEnqueued( const QString& deviceName, KMobileTools::JobXP* job ) {
+    JobItem* jobItem = new JobItem( job );
+    m_jobQueueView->addJob( jobItem );
 }
 
 void kmobiletoolsMainPart::setupGUI( QWidget* parent ) {
-    QSplitter *splitter = new QSplitter( parent );
+    QWidget* dummyWidget = new QWidget( parent );
 
     // create devices/services list-view
-    m_treeView = new QTreeView( splitter );
+    m_treeView = new QTreeView( dummyWidget );
     m_treeView->setMinimumWidth( 200 );
     m_treeView->setRootIsDecorated( true );
     m_treeView->setAnimated( true );
@@ -409,13 +414,29 @@ void kmobiletoolsMainPart::setupGUI( QWidget* parent ) {
     connect( m_treeView, SIGNAL( clicked(const QModelIndex&) ),
              this, SLOT( treeItemClicked(const QModelIndex&) ) );
 
-    m_widget = new QStackedWidget( splitter );
+    // set-up stacked widget
+    m_widget = new QStackedWidget( dummyWidget );
 
-    splitter->setStretchFactor( splitter->indexOf( m_treeView ), 0 );
-    splitter->setStretchFactor( splitter->indexOf( m_widget ), 1 );
+    // set-up job queue viewer and graphics view
+    m_jobQueueView = new JobQueueView( parent );
+    QGraphicsView* graphicsView = new QGraphicsView( m_jobQueueView );
+    graphicsView->show();
+    graphicsView->setFixedHeight( 100 );
+    graphicsView->setCacheMode( QGraphicsView::CacheBackground );
+    graphicsView->setRenderHint( QPainter::Antialiasing );
+
+    QGridLayout* layout = new QGridLayout( parent );
+    layout->addWidget( m_treeView, 0, 0 );
+    layout->addWidget( m_widget, 0, 1 );
+    layout->addWidget( graphicsView, 1, 0, 1, 2 );
+    layout->setColumnStretch( 1, 10 );
+    layout->setSpacing( 10 );
+    layout->setMargin( 0 );
+
+    dummyWidget->setLayout( layout );
 
     // notify the part that this is our internal widget
-    setWidget( splitter );
+    setWidget( dummyWidget );
 }
 
 
