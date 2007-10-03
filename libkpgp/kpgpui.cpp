@@ -291,10 +291,10 @@ KeySelectionDialog::KeySelectionDialog( const KeyList& keyList,
   setButtons( Default|Ok|Cancel );
   if ( qApp ) {
     KWindowSystem::setIcons( winId(),
-                             qApp->windowIcon().pixmap( IconSize( K3Icon::Desktop ),
-                                                        IconSize( K3Icon::Desktop ) ),
-                             qApp->windowIcon().pixmap( IconSize( K3Icon::Small ),
-                                                        IconSize( K3Icon::Small ) ) );
+                             qApp->windowIcon().pixmap( IconSize( KIconLoader::Desktop ),
+                                                        IconSize( KIconLoader::Desktop ) ),
+                             qApp->windowIcon().pixmap( IconSize( KIconLoader::Small ),
+                                                        IconSize( KIconLoader::Small ) ) );
   }
   Kpgp::Module *pgp = Kpgp::Module::getKpgp();
   KConfig *config = pgp->getConfig();

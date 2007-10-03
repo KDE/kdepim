@@ -89,11 +89,11 @@ struct SignatureDisplayWidget::Private {
 
     static QString iconForSummary( const GpgME::Signature::Summary summary )
     {
-        QString c = KIconLoader::global()->iconPath( "dialog-warning", K3Icon::Small );
+        QString c = KIconLoader::global()->iconPath( "dialog-warning", KIconLoader::Small );
         if ( summary & GpgME::Signature::Green )
-            c = KIconLoader::global()->iconPath( "dialog-ok", K3Icon::Small );
+            c = KIconLoader::global()->iconPath( "dialog-ok", KIconLoader::Small );
         else if ( summary & GpgME::Signature::Red )
-            c = KIconLoader::global()->iconPath( "dialog-error", K3Icon::Small );
+            c = KIconLoader::global()->iconPath( "dialog-error", KIconLoader::Small );
         return c;
     }
 

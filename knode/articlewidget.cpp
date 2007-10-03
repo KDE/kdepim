@@ -912,7 +912,7 @@ void ArticleWidget::displayAttachment( KMime::Content *att, int partNum )
       mimetypePtr = KMimeType::mimeType( "text/plain" );
     }
     QString iconName = mimetypePtr->iconName( QString() );
-    QString iconFile = KIconLoader::global()->iconPath( iconName, K3Icon::Desktop );
+    QString iconFile = KIconLoader::global()->iconPath( iconName, KIconLoader::Desktop );
     html += "<div><a href=\"" + href + "\"><img src=\"" +
             iconFile + "\" border=\"0\">" + label +
             "</a></div><div>" + comment + "</div><br>";

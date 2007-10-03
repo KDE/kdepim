@@ -249,7 +249,7 @@ Kleo::CryptoConfigGroupGUI::CryptoConfigGroupGUI(
     return;
 
   QLabel * l = new QLabel( widget );
-  l->setPixmap( loadIcon( iconName ).pixmap( K3Icon::SizeMedium, K3Icon::SizeMedium ) );
+  l->setPixmap( loadIcon( iconName ).pixmap( KIconLoader::SizeMedium, KIconLoader::SizeMedium ) );
   glay->addWidget( l, startRow, 0, endRow-startRow+1, 1, Qt::AlignTop );
 }
 

@@ -26,30 +26,27 @@
 */
 #include "dbRecordEditor.h"
 
-#include <qcheckbox.h>
-#include <qtooltip.h>
-#include <q3whatsthis.h>
-#include <q3buttongroup.h>
-#include <qlabel.h>
-#include <qpushbutton.h>
-#include <qlayout.h>
-//Added by qt3to4:
-#include <QGridLayout>
-#include <Q3Frame>
+#include <QtGui/QCheckBox>
+#include <QtGui/QFrame>
+#include <QtGui/QGridLayout>
+#include <QtGui/QGroupBox>
+#include <QtGui/QLabel>
+#include <QtGui/QLayout>
+#include <QtGui/QPushButton>
+#include <QtGui/QToolTip>
+#include <QtGui/QWhatsThis>
 
 #include <kmessagebox.h>
-#include <KLineEdit>
+#include <klineedit.h>
 
 #include "options.h"
 #include "pilotRecord.h"
-//#include "dbRecordEditor_base.h"
 
 #include <khexedit/byteseditinterface.h>
 #include <khexedit/valuecolumninterface.h>
 #include <khexedit/charcolumninterface.h>
+
 using namespace KHE;
-
-
 
 DBRecordEditor::DBRecordEditor(PilotRecord*r, int n, QWidget *parent)
 	: KDialog(parent),
@@ -150,8 +147,8 @@ void DBRecordEditor::initWidgets()
 	DBRecordEditorBaseLayout->addWidget( fRecordID, 0, 3 );
 
 	fFlagsGroup = new QGroupBox( fWidget );
-	fFlagsGroup->setSizePolicy( QSizePolicy( (QSizePolicy::SizeType)5
-		, (QSizePolicy::SizeType)4 ) );
+	//fFlagsGroup->setSizePolicy( QSizePolicy( (QSizePolicy::SizeType)5
+	//	, (QSizePolicy::SizeType)4 ) );
 	
 	fFlagsGroupLayout = new QGridLayout( fFlagsGroup );
 	fFlagsGroupLayout->setSpacing( 6 );
@@ -209,8 +206,8 @@ void DBRecordEditor::initWidgets()
 		QLabel*tmpW = new QLabel( i18n("To view and edit the record data, please install a hex editor (e.g. kbytesedit from kdeutils)."), fWidget );
 		tmpW->setAlignment( Qt::AlignHCenter | Qt::AlignVCenter );
 		tmpW->setWordWrap( true );
-		tmpW->setFrameShape( Q3Frame::Panel );
-		tmpW->setFrameShadow( Q3Frame::Sunken );
+		tmpW->setFrameShape( QFrame::Panel );
+		tmpW->setFrameShadow( QFrame::Sunken );
 		fRecordData = tmpW;
 		fRecordDataIf = 0;
 	}

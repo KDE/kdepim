@@ -76,7 +76,7 @@ GroupItem::GroupItem( KWidgetList *parent, SyncProcess *process )
   static QPixmap icon;
   if ( icon.isNull() ) {
     icon = KIconLoader::global()->loadIcon( "kontact_summary",
-                                            K3Icon::Desktop );
+                                            KIconLoader::Desktop );
   }
 
   mIcon = new QLabel( hbox );

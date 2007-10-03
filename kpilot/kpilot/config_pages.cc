@@ -389,7 +389,8 @@ ViewersConfigPage::ViewersConfigPage(QWidget * w, QVariantList &args )
 
 #define CM(a,b) connect(fConfigWidget.a,b,this,SLOT(modified()));
 	CM(fUseSecret, SIGNAL(toggled(bool)));
-	CM(fAddressGroup, SIGNAL(clicked(int)));
+	CM(fNormalDisplay, SIGNAL(toggled(bool)));
+	CM(fCompanyDisplay, SIGNAL(toggled(bool)));
 	CM(fUseKeyField, SIGNAL(toggled(bool)));
 #undef CM
 
@@ -402,7 +403,16 @@ void ViewersConfigPage::load()
 	KPilotSettings::self()->readConfig();
 
 	fConfigWidget.fUseSecret->setChecked(KPilotSettings::showSecrets());
-	fConfigWidget.fAddressGroup->setButton(KPilotSettings::addressDisplayMode());
+	
+	if( KPilotSettings::addressDisplayMode() == 0 )
+	{
+		fConfigWidget.fNormalDisplay->setChecked( true );
+	}
+	else
+	{
+		fConfigWidget.fCompanyDisplay->setChecked( true );
+	}
+
 	fConfigWidget.fUseKeyField->setChecked(KPilotSettings::useKeyField());
 	unmodified();
 }
@@ -412,8 +422,16 @@ void ViewersConfigPage::load()
 	FUNCTIONSETUP;
 
 	KPilotSettings::setShowSecrets(fConfigWidget.fUseSecret->isChecked());
-	KPilotSettings::setAddressDisplayMode(fConfigWidget.fAddressGroup->id(
-		fConfigWidget.fAddressGroup->selected()));
+	
+	if( fConfigWidget.fNormalDisplay->isChecked() )
+	{
+		KPilotSettings::setAddressDisplayMode( 0 );
+	}
+	else
+	{
+		KPilotSettings::setAddressDisplayMode( 1 );
+	}
+	
 	KPilotSettings::setUseKeyField(fConfigWidget.fUseKeyField->isChecked());
 	KPilotConfig::updateConfigVersion();
 	KPilotSettings::self()->writeConfig();

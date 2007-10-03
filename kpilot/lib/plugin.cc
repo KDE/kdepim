@@ -132,15 +132,15 @@ QWidget *ConduitConfigBase::aboutPage(QWidget *parent, KAboutData *ad)
 
 	QPixmap applicationIcon =
 		l->loadIcon(p->appName(),
-		K3Icon::Desktop,
-		64, K3Icon::DefaultState,
+		KIconLoader::Desktop,
+		64, KIconLoader::DefaultState,
 		QStringList(),
 		0L, true);
 
 	if (applicationIcon.isNull())
 	{
 		applicationIcon = l->loadIcon(QString::fromLatin1("kpilot"),
-			K3Icon::Desktop);
+			KIconLoader::Desktop);
 	}
 
 	text = new QLabel(w);

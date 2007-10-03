@@ -6,7 +6,7 @@
     <x>0</x>
     <y>0</y>
     <width>465</width>
-    <height>353</height>
+    <height>476</height>
    </rect>
   </property>
   <layout class="QGridLayout" >
@@ -29,22 +29,10 @@
      </property>
     </widget>
    </item>
-   <item row="1" column="3" >
-    <widget class="QLabel" name="fCreatorLabel" >
-     <property name="sizePolicy" >
-      <sizepolicy vsizetype="Preferred" hsizetype="Maximum" >
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-     <property name="text" >
-      <string>&amp;Creator:</string>
-     </property>
-     <property name="wordWrap" >
-      <bool>false</bool>
-     </property>
-     <property name="buddy" >
-      <cstring>fCreator</cstring>
+   <item row="0" column="2" colspan="5" >
+    <widget class="QLineEdit" name="fDBName" >
+     <property name="maxLength" >
+      <number>34</number>
      </property>
     </widget>
    </item>
@@ -74,6 +62,25 @@
      </property>
     </widget>
    </item>
+   <item row="1" column="3" >
+    <widget class="QLabel" name="fCreatorLabel" >
+     <property name="sizePolicy" >
+      <sizepolicy vsizetype="Preferred" hsizetype="Maximum" >
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="text" >
+      <string>&amp;Creator:</string>
+     </property>
+     <property name="wordWrap" >
+      <bool>false</bool>
+     </property>
+     <property name="buddy" >
+      <cstring>fCreator</cstring>
+     </property>
+    </widget>
+   </item>
    <item row="1" column="4" colspan="2" >
     <widget class="QLineEdit" name="fCreator" >
      <property name="maxLength" >
@@ -81,8 +88,24 @@
      </property>
     </widget>
    </item>
+   <item row="1" column="6" >
+    <spacer>
+     <property name="orientation" >
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="sizeType" >
+      <enum>QSizePolicy::Expanding</enum>
+     </property>
+     <property name="sizeHint" >
+      <size>
+       <width>180</width>
+       <height>21</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
    <item row="2" column="0" colspan="5" >
-    <widget class="Q3ButtonGroup" name="fDBFlagsGroup" >
+    <widget class="QGroupBox" name="fDBFlagsGroup" >
      <property name="title" >
       <string>Database Flags</string>
      </property>
@@ -135,27 +158,11 @@
     </widget>
    </item>
    <item row="2" column="5" colspan="2" >
-    <widget class="Q3ButtonGroup" name="fMiscFlagsGroup" >
+    <widget class="QGroupBox" name="flags" >
      <property name="title" >
       <string>Misc Flags</string>
      </property>
      <layout class="QGridLayout" >
-      <item row="2" column="0" >
-       <spacer>
-        <property name="orientation" >
-         <enum>Qt::Vertical</enum>
-        </property>
-        <property name="sizeType" >
-         <enum>QSizePolicy::Expanding</enum>
-        </property>
-        <property name="sizeHint" >
-         <size>
-          <width>21</width>
-          <height>60</height>
-         </size>
-        </property>
-       </spacer>
-      </item>
       <item row="0" column="0" >
        <widget class="QCheckBox" name="fReset" >
         <property name="text" >
@@ -170,11 +177,27 @@
         </property>
        </widget>
       </item>
+      <item row="2" column="0" >
+       <spacer>
+        <property name="orientation" >
+         <enum>Qt::Vertical</enum>
+        </property>
+        <property name="sizeType" >
+         <enum>QSizePolicy::Expanding</enum>
+        </property>
+        <property name="sizeHint" >
+         <size>
+          <width>19</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
      </layout>
     </widget>
    </item>
    <item row="3" column="0" colspan="7" >
-    <widget class="Q3GroupBox" name="fTimeStampGroup" >
+    <widget class="QGroupBox" name="fTimeStampGroup" >
      <property name="title" >
       <string>Time Stamps</string>
      </property>
@@ -198,6 +221,20 @@
         </property>
        </widget>
       </item>
+      <item row="0" column="1" >
+       <widget class="KDateWidget" name="fCreationDate" >
+        <property name="focusPolicy" >
+         <enum>Qt::StrongFocus</enum>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="2" >
+       <widget class="QTimeEdit" name="fCreationTime" >
+        <property name="displayFormat" >
+         <string>hh:mm:ss</string>
+        </property>
+       </widget>
+      </item>
       <item row="1" column="0" >
        <widget class="QLabel" name="fModificationlabel" >
         <property name="text" >
@@ -208,6 +245,20 @@
         </property>
         <property name="buddy" >
          <cstring>fModificationDate</cstring>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1" >
+       <widget class="KDateWidget" name="fModificationDate" >
+        <property name="focusPolicy" >
+         <enum>Qt::StrongFocus</enum>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="2" >
+       <widget class="QTimeEdit" name="fModificationTime" >
+        <property name="displayFormat" >
+         <string>hh:mm:ss</string>
         </property>
        </widget>
       </item>
@@ -224,33 +275,6 @@
         </property>
        </widget>
       </item>
-      <item row="0" column="2" >
-       <widget class="Q3TimeEdit" name="fCreationTime" >
-        <property name="sizePolicy" >
-         <sizepolicy vsizetype="Preferred" hsizetype="Maximum" >
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="focusPolicy" >
-         <enum>Qt::StrongFocus</enum>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="2" >
-       <widget class="Q3TimeEdit" name="fModificationTime" >
-        <property name="focusPolicy" >
-         <enum>Qt::StrongFocus</enum>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="2" >
-       <widget class="Q3TimeEdit" name="fBackupTime" >
-        <property name="focusPolicy" >
-         <enum>Qt::StrongFocus</enum>
-        </property>
-       </widget>
-      </item>
       <item row="2" column="1" >
        <widget class="KDateWidget" name="fBackupDate" >
         <property name="focusPolicy" >
@@ -258,44 +282,14 @@
         </property>
        </widget>
       </item>
-      <item row="1" column="1" >
-       <widget class="KDateWidget" name="fModificationDate" >
-        <property name="focusPolicy" >
-         <enum>Qt::StrongFocus</enum>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="1" >
-       <widget class="KDateWidget" name="fCreationDate" >
-        <property name="focusPolicy" >
-         <enum>Qt::StrongFocus</enum>
+      <item row="2" column="2" >
+       <widget class="QTimeEdit" name="fBackupTime" >
+        <property name="displayFormat" >
+         <string>hh:mm:ss</string>
         </property>
        </widget>
       </item>
      </layout>
-    </widget>
-   </item>
-   <item row="1" column="6" >
-    <spacer>
-     <property name="orientation" >
-      <enum>Qt::Horizontal</enum>
-     </property>
-     <property name="sizeType" >
-      <enum>QSizePolicy::Expanding</enum>
-     </property>
-     <property name="sizeHint" >
-      <size>
-       <width>180</width>
-       <height>21</height>
-      </size>
-     </property>
-    </spacer>
-   </item>
-   <item row="0" column="2" colspan="5" >
-    <widget class="QLineEdit" name="fDBName" >
-     <property name="maxLength" >
-      <number>34</number>
-     </property>
     </widget>
    </item>
    <item row="4" column="5" >
@@ -320,23 +314,6 @@
  <pixmapfunction>qPixmapFromMimeSource</pixmapfunction>
  <customwidgets>
   <customwidget>
-   <class>Q3GroupBox</class>
-   <extends>QGroupBox</extends>
-   <header>Qt3Support/Q3GroupBox</header>
-   <container>1</container>
-  </customwidget>
-  <customwidget>
-   <class>Q3ButtonGroup</class>
-   <extends>Q3GroupBox</extends>
-   <header>Qt3Support/Q3ButtonGroup</header>
-   <container>1</container>
-  </customwidget>
-  <customwidget>
-   <class>Q3TimeEdit</class>
-   <extends>QWidget</extends>
-   <header>Qt3Support/Q3TimeEdit</header>
-  </customwidget>
-  <customwidget>
    <class>KDateWidget</class>
    <extends>QWidget</extends>
    <header>kdatewidget.h</header>
@@ -353,11 +330,8 @@
   <tabstop>fReset</tabstop>
   <tabstop>fExcludeDB</tabstop>
   <tabstop>fCreationDate</tabstop>
-  <tabstop>fCreationTime</tabstop>
   <tabstop>fModificationDate</tabstop>
-  <tabstop>fModificationTime</tabstop>
   <tabstop>fBackupDate</tabstop>
-  <tabstop>fBackupTime</tabstop>
  </tabstops>
  <resources/>
  <connections/>

@@ -28,8 +28,8 @@
 
 #include <pi-dlp.h>
 
-#include <qlineedit.h>
-#include <qcheckbox.h>
+#include <QtGui/QLineEdit>
+#include <QtGui/QCheckBox>
 
 #include <kdatewidget.h>
 #include <kmessagebox.h>

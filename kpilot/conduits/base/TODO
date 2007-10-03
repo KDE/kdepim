@@ -1,1 +1,26 @@
-* Convert members of d-pointers in the classes here.
+* = todo
+F = finished <-- (Let's make all '*' a 'F')
+
+
+CATEGORYSYNCING:
+* The conduit should make shure that the local backup database has exactly the
+  same category information as the handhelds database.
+
+	F We should introduce a Category object with: QString name, int index, char ID
+		hhdataproxy should have a QList<Category>.
+
+	* hhDataProxy::saveCategories() needs to pull all of the category info from 
+		all of the records and write the PilotAppInfo out to fDatabase.
+
+	* RecordConduit::updateBackupDatabase() needs to copy the categories from
+		fDatabase into fLocalDatabase
+		
+	* HHDataProxy::loadCategories() needs to keep (at least) 2 lists of a new
+		object that doesn't exist (CategoryInfo or something which has int index,
+		QString name, and unsigned char ID)... one which gets saved off from
+		loadCategories()
+		
+	* also, I think we need a hook in HHDataProxy whenever a HHRecord is added to
+		it that does something with keeping the category on the HHRecord and the
+		categories list in sync, keeping track of renamed categories, added
+		categories, etc.

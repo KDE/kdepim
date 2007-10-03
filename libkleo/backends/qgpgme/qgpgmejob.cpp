@@ -291,7 +291,7 @@ char * Kleo::QGpgMEJob::getPassphrase( const char * useridHint, const char * /*d
   msg += i18n( "Enter passphrase:" );
   KPasswordDialog dlg;
   dlg.setPrompt(msg);
-  dlg.setPixmap( DesktopIcon( "pgp-keys", K3Icon::SizeMedium ) );
+  dlg.setPixmap( DesktopIcon( "pgp-keys", KIconLoader::SizeMedium ) );
   dlg.setCaption( i18n("Passphrase Dialog") );
   if ( dlg.exec() != QDialog::Accepted ) {
     canceled = true;

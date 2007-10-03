@@ -110,11 +110,11 @@ Kleo::DirectoryServicesWidget::DirectoryServicesWidget(
 
     // taken from kmail's configuredialog.cpp
     d->ui.upButton->setIcon( KIcon( "go-up" ) );
-    d->ui.upButton->setIconSize( QSize( K3Icon::SizeSmall, K3Icon::SizeSmall ) );
+    d->ui.upButton->setIconSize( QSize( KIconLoader::SizeSmall, KIconLoader::SizeSmall ) );
     d->ui.upButton->setEnabled( false ); // b/c no item is selected yet
 
     d->ui.downButton->setIcon( KIcon( "go-down" ) );
-    d->ui.downButton->setIconSize( QSize( K3Icon::SizeSmall, K3Icon::SizeSmall ) );
+    d->ui.downButton->setIconSize( QSize( KIconLoader::SizeSmall, KIconLoader::SizeSmall ) );
     d->ui.downButton->setEnabled( false ); // b/c no item is selected yet
 
     connect( d->ui.addServicePB,SIGNAL( clicked () ),SLOT(slotAddService() ) );

@@ -133,7 +133,7 @@ private:
         if ( m_result.error() ) {
             setColor( Qt::red );
             QString l = "<qt><img src=\"";
-            l += KIconLoader::global()->iconPath( "dialog-error", K3Icon::Small );
+            l += KIconLoader::global()->iconPath( "dialog-error", KIconLoader::Small );
             l += "\"/> <b>";
             l += i18n( "Decryption failed" );
             l += "</b></qt>";
@@ -141,7 +141,7 @@ private:
         } else {
             setColor( Qt::green );
             QString l = "<qt><img src=\"";
-            l += KIconLoader::global()->iconPath( "dialog-ok", K3Icon::Small );
+            l += KIconLoader::global()->iconPath( "dialog-ok", KIconLoader::Small );
             l += "\"/> <b>";
             l += i18n( "Decryption succeeded" );
             l += "</b></qt>";

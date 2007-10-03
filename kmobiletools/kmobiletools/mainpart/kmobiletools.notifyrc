@@ -1,16 +1,50 @@
 [Global]
 IconName=kmobiletools
 Comment=KMobileTools
+Comment[sv]=Kmobiletools
+Comment[x-test]=xxKMobileToolsxx
 
 [Event/kmobiletools_ring]
 Name=Incoming Call
+Name[el]=Εισερχόμενη κλήση
+Name[ga]=Glao Isteach
+Name[ja]=着信電話
+Name[pt]=Chamada Recebida
+Name[pt_BR]=Chamada Recebida
+Name[sv]=Inkommande samtal
+Name[x-test]=xxIncoming Callxx
+Name[zh_TW]=來電
 Comment=There is an incoming call
+Comment[el]=Υπάρχει μία εισερχόμενη κλήση
+Comment[ga]=Tá glao isteach ann
+Comment[ja]=電話が着信しました
+Comment[pt]=Foi recebida uma chamada
+Comment[pt_BR]=Foi recebida uma chamada
+Comment[sv]=Det finns ett inkommande samtal
+Comment[x-test]=xxThere is an incoming callxx
+Comment[zh_TW]=有來電
 default_sound=KDE_Beep_Phone_1.ogg
 Action=Sound|PassivePopup|Taskbar
 
 
 [Event/kmobiletools_sms]
 Name=New SMS Messages
+Name[el]=Νέα SMS μηνύματα
+Name[ga]=Teachtaireachtaí Nua SMS
+Name[ja]=新着 SMS メッセージ
+Name[pt]=Mensagens SMS Novas
+Name[pt_BR]=Mensagens SMS Novas
+Name[sv]=Nytt SMS
+Name[x-test]=xxNew SMS Messagesxx
+Name[zh_TW]=新簡訊
 Comment=New incoming SMS were found
+Comment[el]=Βρέθηκαν νέα εισερχόμενα SMS μηνύματα
+Comment[ga]=Aimsíodh teachtaireachtaí nua SMS
+Comment[ja]=新しい着信 SMS が見つかりました
+Comment[pt]=Foram recebidos SMS novos
+Comment[pt_BR]=Foram recebidos SMS novos
+Comment[sv]=Nytt inkommande SMS hittades
+Comment[x-test]=xxNew incoming SMS were foundxx
+Comment[zh_TW]=收到新簡訊
 default_sound=KDE_Beep_Double.ogg
 Action=Sound|PassivePopup|Taskbar

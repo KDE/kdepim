@@ -543,13 +543,13 @@ void KNMainWidget::initActions()
   a_ctNavNextArt->setIcon(KIcon("find-next"));
   a_ctNavNextArt->setText(i18n("&Next Article"));
   a_ctNavNextArt->setToolTip(i18n("Go to next article"));
-  a_ctNavNextArt->setShortcuts(KShortcut("N;Right"));
+  a_ctNavNextArt->setShortcuts(KShortcut("N; Right"));
   connect(a_ctNavNextArt, SIGNAL(triggered(bool)), h_drView, SLOT(nextArticle()));
 
   a_ctNavPrevArt = actionCollection()->addAction("go_prevArticle" );
   a_ctNavPrevArt->setIcon(KIcon("find-previous"));
   a_ctNavPrevArt->setText(i18n("&Previous Article"));
-  a_ctNavPrevArt->setShortcuts(KShortcut("P;Left"));
+  a_ctNavPrevArt->setShortcuts(KShortcut("P; Left"));
   a_ctNavPrevArt->setToolTip(i18n("Go to previous article"));
   connect(a_ctNavPrevArt, SIGNAL(triggered(bool)), h_drView, SLOT(prevArticle()));
 

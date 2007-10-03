@@ -238,7 +238,7 @@ SingleJobProgressBox::SingleJobProgressBox( int jobType, const QString &descript
         default:
             s_itemLabelName="kmobiletools"; break;
     }
-    iconLabel->setPixmap( KIconLoader::global()->loadIcon(s_itemLabelName, K3Icon::NoGroup, K3Icon::SizeMedium) );
+    iconLabel->setPixmap( KIconLoader::global()->loadIcon(s_itemLabelName, KIconLoader::NoGroup, KIconLoader::SizeMedium) );
     Q3VBox *vlayout=new Q3VBox(this);
     itemNameLabel=new QLabel(description, vlayout);
     itemProgress=new QProgressBar(vlayout);
@@ -265,7 +265,7 @@ StatusBarJob::StatusBarJob(const QString &description, KMobileTools::Job *job,St
     box=new SingleJobProgressBox(job->type(), description, parent->statusItemsBox(), name);
     q_iconLabel=new QLabel(parent);
     q_iconLabel->setObjectName(QLatin1String("icon"));
-    q_iconLabel->setPixmap( KIconLoader::global()->loadIcon(box->iconLabelName(), K3Icon::NoGroup, K3Icon::SizeSmall) );
+    q_iconLabel->setPixmap( KIconLoader::global()->loadIcon(box->iconLabelName(), KIconLoader::NoGroup, KIconLoader::SizeSmall) );
     q_iconLabel->setToolTip(job->typeString());
     q_iconLabel->show();
     parentBox=parent;

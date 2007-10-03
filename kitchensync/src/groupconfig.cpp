@@ -62,7 +62,7 @@ GroupConfig::GroupConfig( QWidget *parent )
   QBoxLayout *nameLayout = new QHBoxLayout( titleFrame );
   nameLayout->setMargin( 0 );
 
-  QPixmap icon = KIconLoader::global()->loadIcon( "kontact_summary", K3Icon::Desktop );
+  QPixmap icon = KIconLoader::global()->loadIcon( "kontact_summary", KIconLoader::Desktop );
 
   QLabel *iconLabel = new QLabel( titleFrame );
   iconLabel->setPixmap( icon );

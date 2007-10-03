@@ -8,57 +8,16 @@ KPilot's settings.</comment>
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>389</width>
-    <height>323</height>
+    <width>473</width>
+    <height>379</height>
    </rect>
   </property>
   <property name="windowTitle" >
    <string>KPilot Options</string>
   </property>
   <layout class="QGridLayout" >
-   <property name="leftMargin" >
-    <number>0</number>
-   </property>
-   <property name="topMargin" >
-    <number>0</number>
-   </property>
-   <property name="rightMargin" >
-    <number>0</number>
-   </property>
-   <property name="bottomMargin" >
-    <number>0</number>
-   </property>
-   <item row="1" column="0" >
-    <widget class="Q3GroupBox" name="groupBox4" >
-     <property name="title" >
-      <string>Exit Options</string>
-     </property>
-     <layout class="QGridLayout" >
-      <item row="1" column="0" >
-       <widget class="QCheckBox" name="fKillDaemonOnExit" >
-        <property name="whatsThis" >
-         <string>&lt;qt>Check this box to stop the KPilot daemon when you quit KPilot (only if KPilot started the daemon itself).&lt;/qt></string>
-        </property>
-        <property name="text" >
-         <string>S&amp;top KPilot's system tray application on exit</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="0" >
-       <widget class="QCheckBox" name="fQuitAfterSync" >
-        <property name="whatsThis" >
-         <string>&lt;qt>Check this box to stop both KPilot and the KPilot daemon after the HotSync finishes. This may be useful for systems where KPilot is started by the USB daemon.&lt;/qt></string>
-        </property>
-        <property name="text" >
-         <string>Quit &amp;after HotSync</string>
-        </property>
-       </widget>
-      </item>
-     </layout>
-    </widget>
-   </item>
    <item row="0" column="0" >
-    <widget class="Q3GroupBox" name="GroupBox1_2" >
+    <widget class="QGroupBox" name="groupBox" >
      <property name="title" >
       <string>Startup Options</string>
      </property>
@@ -86,6 +45,35 @@ KPilot's settings.</comment>
      </layout>
     </widget>
    </item>
+   <item row="1" column="0" >
+    <widget class="QGroupBox" name="groupBox_2" >
+     <property name="title" >
+      <string>Exit Options</string>
+     </property>
+     <layout class="QGridLayout" >
+      <item row="0" column="0" >
+       <widget class="QCheckBox" name="fQuitAfterSync" >
+        <property name="whatsThis" >
+         <string>&lt;qt>Check this box to stop both KPilot and the KPilot daemon after the HotSync finishes. This may be useful for systems where KPilot is started by the USB daemon.&lt;/qt></string>
+        </property>
+        <property name="text" >
+         <string>Quit &amp;after HotSync</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0" >
+       <widget class="QCheckBox" name="fKillDaemonOnExit" >
+        <property name="whatsThis" >
+         <string>&lt;qt>Check this box to stop the KPilot daemon when you quit KPilot (only if KPilot started the daemon itself).&lt;/qt></string>
+        </property>
+        <property name="text" >
+         <string>S&amp;top KPilot's system tray application on exit</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
    <item row="2" column="0" >
     <spacer>
      <property name="orientation" >
@@ -96,8 +84,8 @@ KPilot's settings.</comment>
      </property>
      <property name="sizeHint" >
       <size>
-       <width>20</width>
-       <height>31</height>
+       <width>495</width>
+       <height>80</height>
       </size>
      </property>
     </spacer>
@@ -106,14 +94,6 @@ KPilot's settings.</comment>
  </widget>
  <layoutdefault spacing="6" margin="11" />
  <pixmapfunction>qPixmapFromMimeSource</pixmapfunction>
- <customwidgets>
-  <customwidget>
-   <class>Q3GroupBox</class>
-   <extends>QGroupBox</extends>
-   <header>Qt3Support/Q3GroupBox</header>
-   <container>1</container>
-  </customwidget>
- </customwidgets>
  <resources/>
  <connections/>
 </ui>

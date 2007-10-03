@@ -87,7 +87,7 @@ int callDialogImpl::call(const QString &number, const QString &showName)
     this->number=number;
     if(showName.isNull())
     {
-        setWindowTitle(windowTitle().arg(number) );
+        setWindowTitle(i18n("KMobileTools - Calling %1",number) );
         ui.lInfo->setText(i18n("<qt>Calling phone number: <b>%1</b><br/><br/></qt>",
                 number));
     }

@@ -4,25 +4,23 @@
 KPilot's settings.</comment>
  <class>ViewersConfigWidget</class>
  <widget class="QWidget" name="ViewersConfigWidget" >
-  <property name="geometry" >
-   <rect>
-    <x>0</x>
-    <y>0</y>
-    <width>628</width>
-    <height>325</height>
-   </rect>
-  </property>
   <property name="windowTitle" >
    <string>KPilot Options</string>
   </property>
   <layout class="QGridLayout" >
    <item row="0" column="0" >
-    <widget class="Q3GroupBox" name="groupBox2" >
+    <widget class="QGroupBox" name="groupBox" >
+     <property name="sizePolicy" >
+      <sizepolicy vsizetype="Preferred" hsizetype="MinimumExpanding" >
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
      <property name="title" >
       <string>Viewers</string>
      </property>
-     <layout class="QVBoxLayout" >
-      <item>
+     <layout class="QGridLayout" >
+      <item row="0" column="0" >
        <widget class="QCheckBox" name="fUseSecret" >
         <property name="whatsThis" >
          <string>&lt;qt>Check this box to display in the internal viewers records that are marked &amp;quot;Private&amp;quot; in the Pilot.&lt;/qt></string>
@@ -36,7 +34,7 @@ KPilot's settings.</comment>
     </widget>
    </item>
    <item row="1" column="0" >
-    <widget class="Q3ButtonGroup" name="fAddressGroup" >
+    <widget class="QGroupBox" name="fAddressGroup" >
      <property name="title" >
       <string>Address Viewer</string>
      </property>
@@ -94,8 +92,8 @@ KPilot's settings.</comment>
      </property>
      <property name="sizeHint" >
       <size>
-       <width>610</width>
-       <height>71</height>
+       <width>400</width>
+       <height>65</height>
       </size>
      </property>
     </spacer>
@@ -104,21 +102,6 @@ KPilot's settings.</comment>
  </widget>
  <layoutdefault spacing="6" margin="11" />
  <pixmapfunction>qPixmapFromMimeSource</pixmapfunction>
- <customwidgets>
-  <customwidget>
-   <class>Q3GroupBox</class>
-   <extends>QGroupBox</extends>
-   <header>Qt3Support/Q3GroupBox</header>
-   <container>1</container>
-  </customwidget>
-  <customwidget>
-   <class>Q3ButtonGroup</class>
-   <extends>Q3GroupBox</extends>
-   <header>Qt3Support/Q3ButtonGroup</header>
-   <container>1</container>
-  </customwidget>
- </customwidgets>
- <includes/>
  <resources/>
  <connections/>
 </ui>

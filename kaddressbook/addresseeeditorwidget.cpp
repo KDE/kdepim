@@ -160,8 +160,8 @@ void AddresseeEditorWidget::setupTab1()
 
   // Person icon
   label = new QLabel( tab1 );
-  label->setPixmap( KIconLoader::global()->loadIcon( "personal", K3Icon::Desktop,
-                                                      K3Icon::SizeMedium ) );
+  label->setPixmap( KIconLoader::global()->loadIcon( "personal", KIconLoader::Desktop,
+                                                      KIconLoader::SizeMedium ) );
   layout->addWidget( label, 0, 0, 2, 1);
 
   // First name
@@ -216,7 +216,7 @@ void AddresseeEditorWidget::setupTab1()
   // Phone numbers (upper right)
   label = new QLabel( tab1 );
   label->setPixmap( KIconLoader::global()->loadIcon( "kaddressbook",
-                    K3Icon::Desktop, K3Icon::SizeMedium ) );
+                    KIconLoader::Desktop, KIconLoader::SizeMedium ) );
   layout->addWidget( label, 0, 3, 2, 1 );
 
   mPhoneEditWidget = new PhoneEditWidget( tab1 );
@@ -229,8 +229,8 @@ void AddresseeEditorWidget::setupTab1()
   //////////////////////////////////////
   // Addresses (lower left)
   label = new QLabel( tab1 );
-  label->setPixmap( KIconLoader::global()->loadIcon( "go-home", K3Icon::Desktop,
-                                                     K3Icon::SizeMedium ) );
+  label->setPixmap( KIconLoader::global()->loadIcon( "go-home", KIconLoader::Desktop,
+                                                     KIconLoader::SizeMedium ) );
   layout->addWidget( label, 5, 0, 2, 1);
 
   mAddressEditWidget = new AddressEditWidget( tab1 );
@@ -240,8 +240,8 @@ void AddresseeEditorWidget::setupTab1()
   //////////////////////////////////////
   // Email / Web (lower right)
   label = new QLabel( tab1 );
-  label->setPixmap( KIconLoader::global()->loadIcon( "email", K3Icon::Desktop,
-                                                     K3Icon::SizeMedium ) );
+  label->setPixmap( KIconLoader::global()->loadIcon( "email", KIconLoader::Desktop,
+                                                     KIconLoader::SizeMedium ) );
   layout->addWidget( label, 5, 3, 2, 1);
 
   mEmailWidget = new EmailEditWidget( tab1 );
@@ -253,8 +253,8 @@ void AddresseeEditorWidget::setupTab1()
   layout->addWidget( bar, 7, 3, 1, 4 );
 
   label = new QLabel( tab1 );
-  label->setPixmap( KIconLoader::global()->loadIcon( "homepage", K3Icon::Desktop,
-                                                     K3Icon::SizeMedium ) );
+  label->setPixmap( KIconLoader::global()->loadIcon( "homepage", KIconLoader::Desktop,
+                                                     KIconLoader::SizeMedium ) );
   layout->addWidget( label, 9, 3, 1, 2, Qt::AlignTop );
 
   QGridLayout *gridLayout = new QGridLayout;
@@ -328,8 +328,8 @@ void AddresseeEditorWidget::setupTab2()
 
   // Department
   label = new QLabel( tab2 );
-  label->setPixmap( KIconLoader::global()->loadIcon( "folder", K3Icon::Desktop,
-                                                     K3Icon::SizeMedium ) );
+  label->setPixmap( KIconLoader::global()->loadIcon( "folder", KIconLoader::Desktop,
+                                                     KIconLoader::SizeMedium ) );
   layout->addWidget( label, 0, 0, 2, 1 );
 
   label = new QLabel( i18n( "Department:" ), tab2 );
@@ -387,8 +387,8 @@ void AddresseeEditorWidget::setupTab2()
   // Personal info
 
   label = new QLabel( tab2 );
-  label->setPixmap( KIconLoader::global()->loadIcon( "personal", K3Icon::Desktop,
-                                                     K3Icon::SizeMedium ) );
+  label->setPixmap( KIconLoader::global()->loadIcon( "personal", KIconLoader::Desktop,
+                                                     KIconLoader::SizeMedium ) );
   layout->addWidget( label, 4, 0, 2, 1);
 
   label = new QLabel( i18n( "Nickname:" ), tab2 );

@@ -20,9 +20,6 @@
         <verstretch>0</verstretch>
       </sizepolicy>
     </property>
-    <property name="windowTitle" >
-      <string>KMobileTools - Calling %1</string>
-    </property>
     <layout class="QHBoxLayout" >
       <item>
         <layout class="QVBoxLayout" >

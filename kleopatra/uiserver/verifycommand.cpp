@@ -173,7 +173,7 @@ public:
     {        
         if ( result.error() ) {
             QString l = "<qt><img src=\"";
-            l += KIconLoader::global()->iconPath( "dialog-error", K3Icon::Small );
+            l += KIconLoader::global()->iconPath( "dialog-error", KIconLoader::Small );
             l += "\"/> <b>";
             l += i18n( "Verification failed: " );
             l += result.error().asString();

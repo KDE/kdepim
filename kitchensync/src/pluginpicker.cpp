@@ -43,7 +43,7 @@ PluginItem::PluginItem( KWidgetList *list, const QSync::Plugin &plugin )
   layout->setSpacing( KDialog::spacingHint() );
 
   QLabel *icon = new QLabel( this );
-  icon->setPixmap( KIconLoader::global()->loadIcon( iconName, K3Icon::Desktop ) );
+  icon->setPixmap( KIconLoader::global()->loadIcon( iconName, KIconLoader::Desktop ) );
   icon->setFixedSize( icon->sizeHint() );
 
   QLabel *name = new QLabel( plugin.longName(), this );

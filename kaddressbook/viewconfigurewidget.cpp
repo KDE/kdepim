@@ -55,7 +55,7 @@ ViewConfigureWidget::ViewConfigureWidget( KABC::AddressBook *ab, QWidget *parent
   // Add the first page, the attributes
   KVBox *page = addPage( i18n( "Fields" ), QString(),
                          KIconLoader::global()->loadIcon( "fileview-detailed",
-                         K3Icon::Panel ) );
+                         KIconLoader::Panel ) );
 
   // Add the select fields page
   mFieldsPage = new ViewConfigureFieldsPage( addressBook(), page );
@@ -63,7 +63,7 @@ ViewConfigureWidget::ViewConfigureWidget( KABC::AddressBook *ab, QWidget *parent
   // Add the second page, the filter selection
   page = addPage( i18n( "Default Filter" ), QString(),
                   KIconLoader::global()->loadIcon( "search-filter",
-                  K3Icon::Panel ) );
+                  KIconLoader::Panel ) );
 
   mFilterPage = new ViewConfigureFilterPage( page );
 }

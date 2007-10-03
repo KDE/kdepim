@@ -32,8 +32,8 @@
 #include "options.h"
 #include "ui_dbFlagsEditor_base.h"
 
-class DBFlagsEditorWidget;
 struct DBInfo;
+
 /**
 @author Reinhold Kainhofer
 */

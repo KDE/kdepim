@@ -33,17 +33,7 @@
 */
 
 #include "component_page_base.h"
-//Added by qt3to4:
-#include <QMouseEvent>
-#include <QEvent>
-#include <Q3ValueList>
-#include <QDropEvent>
-#include <QDragEnterEvent>
 
-class QPushButton;
-class Q3IconDragItem;
-
-class K3IconView;
 class KPilotInstaller;
 class FileInstaller;
 
@@ -52,47 +42,38 @@ class FileInstallWidget : public ComponentPageBase
 Q_OBJECT
 
 public:
-	FileInstallWidget(QWidget* parent, const QString& dbPath);
+	FileInstallWidget( QWidget* parent );
 	virtual ~FileInstallWidget();
 
 	// ComponentPageBase Methods:
 	void showPage();
 	void hidePage() {}
-	bool preHotSync(QString &);
-	void postHotSync();
 
+private:
+	class Private;
+	Private *fP;
+	
+	bool fSaveFileList;
+	KPilotInstaller *fKPilotInstaller;
+	FileInstaller *fInstaller;
 
 signals:
 	void fileInstallWidgetDone();
 
-protected:
-	void setSaveFileList(bool saveIt) { fSaveFileList = saveIt; }
-	bool getSaveFileList() { return fSaveFileList; }
-
-	/* virtual */ void dragEnterEvent(QDragEnterEvent* event);
-	/* virtual */ void dropEvent(QDropEvent* drop);
-	/* virtual */ bool eventFilter (QObject *watched, QEvent *event );
-
-    void contextMenu(QMouseEvent *event);
-
-	KPilotInstaller* getPilotInstallerApp() { return fKPilotInstaller; }
-
-private:
-	K3IconView  *fIconView;
-	bool        fSaveFileList;
-
-	KPilotInstaller* fKPilotInstaller;
-	FileInstaller *fInstaller;
-	QPushButton *clearButton,*addButton;
-
 protected slots:
-	void slotClearButton();
 	void slotAddFile();
-
-	void slotDropEvent(QDropEvent * drop, const Q3ValueList<Q3IconDragItem> & lst);
-
-public slots:
+	void slotClearButton();
+	void slotDropEvent( QDropEvent *drop );
 	void refreshFileInstallList();
+
+protected:
+	bool eventFilter( QObject *watched, QEvent *event );
+	void contextMenu( QContextMenuEvent *event );
+	void dragEnterEvent( QDragEnterEvent* event );
+	void dropEvent( QDropEvent* drop );
+	void setSaveFileList( bool saveIt ) { fSaveFileList = saveIt; }
+	bool getSaveFileList() { return fSaveFileList; }
+	KPilotInstaller* getPilotInstallerApp() { return fKPilotInstaller; }
 };
 
 #endif
