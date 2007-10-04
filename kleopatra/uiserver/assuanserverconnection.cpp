@@ -104,13 +104,13 @@ struct AssuanContext : AssuanContextBase {
     void reset( assuan_context_t ctx=0 ) { AssuanContextBase::reset( ctx, &assuan_deinit_server ); }
 };
 
-static unsigned char unhex( char ch ) {
+static unsigned char unhex( unsigned char ch ) {
     if ( ch >= '0' && ch <= '9' )
         return ch - '0';
     if ( ch >= 'A' && ch <= 'F' )
-        return ch - 'A';
+        return ch - 'A' + 10;
     if ( ch >= 'a' && ch <= 'f' )
-        return ch - 'a';
+        return ch - 'a' + 10;
     throw gpg_error( GPG_ERR_ASS_SYNTAX );
 }
 
@@ -120,7 +120,7 @@ static std::string hexdecode( const std::string & in ) {
     for ( std::string::const_iterator it = in.begin(), end = in.end() ; it != end ; ++it )
         if ( *it == '%' ) {
             ++it;
-            char ch = '\0';
+            unsigned char ch = '\0';
             if ( it == end )
                 throw gpg_error( GPG_ERR_ASS_SYNTAX );
             ch |= unhex( *it ) << 4;
