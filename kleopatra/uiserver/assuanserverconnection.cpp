@@ -288,7 +288,7 @@ private:
                 if ( options.count( "FD" ) )
                     throw gpg_error( GPG_ERR_CONFLICT );
 
-                io.file = QFile::decodeName( hexdecode( options["FILE"] ).c_str() );
+                io.file = QFile::decodeName( options["FILE"].c_str() );
 
                 if ( io.file.isEmpty() ) {
                     if ( in )
