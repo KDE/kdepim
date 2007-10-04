@@ -538,14 +538,14 @@ Q_SIGNALS:
 
 class AssuanCommand::Private {
 public:
-    Private() : done( false ) {}
+    Private() : done( false ), nohup( false ) {}
 
     std::map<std::string,QVariant> options;
     std::map< std::string, std::vector<IO> > inputs, outputs;
     QByteArray utf8ErrorKeepAlive;
     AssuanContext ctx;
     bool done;
-
+    bool nohup;
 public:
 };
 
@@ -711,10 +711,14 @@ std::vector<std::string> AssuanCommand::bulkOutputDeviceTags() const {
 }
 
 int AssuanCommand::sendStatus( const char * keyword, const QString & text ) {
+    if ( d->nohup )
+        return 0;
     return assuan_write_status( d->ctx.get(), keyword, text.toUtf8().constData() );
 }
 
 int AssuanCommand::sendData( const QByteArray & data, bool moreToCome ) {
+    if ( d->nohup )
+        return 0;
     if ( const gpg_error_t err = assuan_send_data( d->ctx.get(), data.constData(), data.size() ) )
         return err;
     if ( moreToCome )
@@ -727,6 +731,9 @@ int AssuanCommand::inquire( const char * keyword, QObject * receiver, const char
     assert( keyword );
     assert( receiver );
     assert( slot );
+
+    if ( d->nohup )
+        return makeError( GPG_ERR_INV_OP );
 
 #ifdef HAVE_ASSUAN_INQUIRE_EXT
     std::auto_ptr<InquiryHandler> ih( new InquiryHandler( keyword, receiver ) );
@@ -747,7 +754,8 @@ int AssuanCommand::inquire( const char * keyword, QObject * receiver, const char
 void AssuanCommand::done( int err, const QString & details ) {
     if ( d->ctx && !d->done && !details.isEmpty() ) {
         d->utf8ErrorKeepAlive = details.toUtf8();
-        assuan_set_error( d->ctx.get(), err, d->utf8ErrorKeepAlive.constData() );
+        if ( !d->nohup )
+            assuan_set_error( d->ctx.get(), err, d->utf8ErrorKeepAlive.constData() );
     }
     done( err );
 }
@@ -778,14 +786,33 @@ void AssuanCommand::done( int err ) {
             delete io.iodev;
         }
 
-    const gpg_error_t rc = assuan_process_done( d->ctx.get(), err );
-    if ( rc )
-        qFatal( "AssuanCommand::done: assuan_process_done returned error %d (%s)",
-                static_cast<int>(rc), gpg_strerror(rc) );
+    if ( d->nohup ) {
+
+        // oh, hack :(
+        assert( assuan_get_pointer( d->ctx.get() ) );
+        AssuanServerConnection::Private & conn = *static_cast<AssuanServerConnection::Private*>( assuan_get_pointer( d->ctx.get() ) );
+
+        // enable reception of client disconnect again:
+        Q_FOREACH( shared_ptr<QSocketNotifier> sn, conn.notifiers )
+            if ( sn )
+                sn->setEnabled( true );
+    } else {
+
+        const gpg_error_t rc = assuan_process_done( d->ctx.get(), err );
+        if ( rc )
+            qFatal( "AssuanCommand::done: assuan_process_done returned error %d (%s)",
+                    static_cast<int>(rc), gpg_strerror(rc) );
+
+    }
+
     d->utf8ErrorKeepAlive.clear();
     d->ctx.reset();
 }
 
+
+bool AssuanCommand::isNohup() const {
+    return d->nohup;
+}
 
 int AssuanCommandFactory::_handle( assuan_context_t ctx, char * line, const char * commandName ) {
     assert( assuan_get_pointer( ctx ) );
@@ -809,12 +836,33 @@ int AssuanCommandFactory::_handle( assuan_context_t ctx, char * line, const char
     const std::map<std::string,std::string> cmdline_options = parse_commandline( line );
     for ( std::map<std::string,std::string>::const_iterator it = cmdline_options.begin(), end = cmdline_options.end() ; it != end ; ++it )
         cmd->d->options[it->first] = QString::fromUtf8( it->second.c_str() );
-    
-    if ( const int err = cmd->start() )
+
+    bool nohup = false;
+    if ( cmd->d->options.count( "nohup" ) ) {
+        if ( !cmd->d->options["nohup"].toString().isEmpty() )
+            return assuan_process_done( conn.ctx.get(), 0 );
+        else
+            nohup = true;
+        cmd->d->options.erase( "nohup" );
+    }
+
+    if ( const int err = cmd->start() ) {
+        assert( cmd->d->done );
         return err;
+    }
 
     conn.currentCommand = cmd;
-    return 0;
+
+    if ( nohup ) {
+        // play deaf until command finishes
+        Q_FOREACH( shared_ptr<QSocketNotifier> sn, conn.notifiers )
+            if ( sn )
+                sn->setEnabled( false );
+        cmd->d->nohup = true;
+        return assuan_process_done( conn.ctx.get(), 0 );
+    } else {
+        return 0;
+    }
 }
 
 

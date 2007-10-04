@@ -214,6 +214,8 @@ namespace Kleo {
 
     protected:
 
+        bool isNohup() const;
+
         bool hasMemento( const QByteArray & tag ) const;
         boost::shared_ptr<Memento> memento( const QByteArray & tag ) const;
         template <typename T>
