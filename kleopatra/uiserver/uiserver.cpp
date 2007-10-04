@@ -43,6 +43,7 @@
 #include <QDir>
 #include <QEventLoop>
 #include <QTimer>
+#include <QFile>
 
 #include <boost/range/empty.hpp>
 #include <boost/bind.hpp>
@@ -72,7 +73,10 @@ UiServer::UiServer( const QString & socket, QObject * p )
     d->socketname = d->makeFileName( socket );
 }
 
-UiServer::~UiServer() {}
+UiServer::~UiServer() {
+    if ( QFile::exists( d->socketname ) )
+        QFile::remove( d->socketname );
+}
 
 bool UiServer::registerCommandFactory( const shared_ptr<AssuanCommandFactory> & cf ) {
     if ( cf && empty( std::equal_range( d->factories.begin(), d->factories.end(), cf, _detail::ByName<std::less>() ) ) ) {
