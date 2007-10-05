@@ -45,12 +45,12 @@ class FolderListView : public K3ListView
     enum Property { FolderName, Event, Todo, Journal, Contact, All, Unknown, PROP_MAX };
     
     FolderListView( QWidget *parent, const QList<Property> &types = QList<Property>() );
-    ~FolderListView() {};
+    ~FolderListView() {}
 
     /* Display a popupmenu for item i at the specified global position, eventually with a title,
        promoting the context name of that item */
     void showPopupMenu( FolderListItem *i, const QPoint &globalPos );
-    void emitChanged() { emit changed(); };
+    void emitChanged() { emit changed(); }
     void setEnabledTypes( const QList<Property> &types );
 
     int columnForType( Property prop ) const { if ( mColumnMap.contains(prop) ) return mColumnMap[prop]; else return -1;}

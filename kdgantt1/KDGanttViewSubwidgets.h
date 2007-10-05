@@ -468,7 +468,7 @@ public:
     QSize minimumSizeHint () const;
    void drawToPainter( QPainter *p );
    void setCalendarMode( bool mode );
-  bool calendarMode() { return _calendarMode; };
+  bool calendarMode() { return _calendarMode; }
   QString getWhatsThisText(QPoint p);
   void setOpen ( QListViewItem * item, bool open );
   void dragEnterEvent ( QDragEnterEvent * );
@@ -477,7 +477,7 @@ public:
   void dropEvent ( QDropEvent * );
   QDragObject * dragObject ();
   void startDrag ();
-  void paintemptyarea ( QPainter * p, const QRect & rect ){ QListView::paintEmptyArea( p, rect );};
+  void paintemptyarea ( QPainter * p, const QRect & rect ){ QListView::paintEmptyArea( p, rect );}
 private slots:
   void dragItem( QListViewItem * );
  private:
@@ -705,7 +705,7 @@ class KDTimeHeaderToolTip :public QObject
 public:
   KDTimeHeaderToolTip( QWidget *wid, KDTimeHeaderWidget* header ) : QObject( wid ), _wid(wid),_header (header) {
 
-};
+}
 
 protected:
 
@@ -720,7 +720,7 @@ class KDCanvasToolTip :public QObject
 public:
   KDCanvasToolTip( QWidget *wid, KDGanttCanvasView* canview ) :  QObject( wid ), _wid(wid),_canview (canview) {
 
-};
+}
 
 protected:
 
@@ -731,7 +731,7 @@ private:
 class KDCanvasWhatsThis :public  QObject
 {
 public:
-  KDCanvasWhatsThis( QWidget *wid, KDGanttCanvasView* canview ) :  QObject( wid ), _wid(wid),_canview (canview) { };
+  KDCanvasWhatsThis( QWidget *wid, KDGanttCanvasView* canview ) :  QObject( wid ), _wid(wid),_canview (canview) { }
 
 protected:
   virtual QString text( const QPoint& p)
@@ -746,7 +746,7 @@ private:
 class KDListViewWhatsThis :public  QObject
 {
 public:
-  KDListViewWhatsThis( QWidget *wid, KDListView* view ) :  QObject( wid ), _wid(wid),_view (view) { };
+  KDListViewWhatsThis( QWidget *wid, KDListView* view ) :  QObject( wid ), _wid(wid),_view (view) { }
 
 protected:
   virtual QString text( const QPoint& p)

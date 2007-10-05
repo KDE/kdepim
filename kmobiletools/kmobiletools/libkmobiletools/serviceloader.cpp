@@ -132,9 +132,12 @@ void ServiceLoader::unloadServices( const QString& deviceName ) {
     kDebug() << "done.";
 }
 
-QList<KMobileTools::CoreService*> ServiceLoader::service( const QString& deviceName, const QStringList& interfaces ) const {
+QList<KMobileTools::CoreService*> ServiceLoader::service( const QString& deviceName, const QStringList& interfaces ) const 
+{
     /// @todo implement me
+    return QList<KMobileTools::CoreService*>();
 }
+
 
 }
 
