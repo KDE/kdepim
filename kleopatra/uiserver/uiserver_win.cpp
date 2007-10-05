@@ -73,11 +73,6 @@ static inline QString system_error_string() {
 
 void UiServer::Private::makeListeningSocket() {
 
-    { // init winsock2 - sigh...
-        WSADATA wsadat;
-        WSAStartup(0x202, &wsadat);
-    }
-
     // First, create a file (we do this only for the name, gmpfh)
     const QString fileName = socketname;
     if ( QFile::exists( fileName ) )

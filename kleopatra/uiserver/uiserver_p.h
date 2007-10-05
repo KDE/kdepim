@@ -39,6 +39,8 @@
 
 #include "kleo-assuan.h"
 
+#include "utils/wsastarter.h"
+
 #include <ktempdir.h>
 
 #include <QTcpServer>
@@ -85,6 +87,7 @@ private:
     std::vector< boost::shared_ptr<AssuanServerConnection> > connections;
     QString socketname;
     assuan_sock_nonce_t nonce;
+    const Kleo::WSAStarter _wsastarter;
 };
 
 #endif /* __KLEOPATRA_UISERVER_UISERVER_P_H__ */

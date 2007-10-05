@@ -75,6 +75,7 @@ endif ( USABLE_ASSUAN_FOUND )
 
 set( _kleopatra_common_SRCS
    utils/formatting.cpp
+   utils/wsastarter.cpp
    ${_kleopatra_uiserver_files}
    models/keylistmodel.cpp
    models/keylistsortfilterproxymodel.cpp
