@@ -25,7 +25,7 @@ if ( USABLE_ASSUAN_FOUND  )
 
   add_definitions( -DGPG_ERR_SOURCE_DEFAULT=GPG_ERR_SOURCE_USER_2 )
 
-  set(test_uiserver_SRCS test_uiserver.cpp ../uiserver/kleo-assuan.cpp )
+  set(test_uiserver_SRCS test_uiserver.cpp ../uiserver/kleo-assuan.cpp ../utils/wsastarter.cpp )
 
 #FIXME: omitting TEST makes test_uiserver print output again on a Win32 console;
 # find a better fix for this issue

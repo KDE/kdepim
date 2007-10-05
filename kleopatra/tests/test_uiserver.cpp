@@ -39,6 +39,8 @@
 #include "../uiserver/kleo-assuan.h"
 #include <gpg-error.h>
 
+#include "../utils/wsastarter.h"
+
 #include <QtCore>
 
 #ifndef Q_OS_WIN32
@@ -54,10 +56,6 @@
 #include <map>
 #include <string>
 #include <vector>
-
-#ifdef Q_OS_WIN32
-#include <winsock2.h>
-#endif
 
 using namespace Kleo;
 
@@ -150,10 +148,9 @@ static int inquire( void * void_ctx, const char * keyword ) {
 }
 
 int main( int argc, char * argv[] ) {
-#ifdef Q_OS_WIN32
-    WSADATA wsadat;
-    WSAStartup(0x202, &wsadat); 
-#endif
+
+    const Kleo::WSAStarter _wsastarter;
+
     assuan_set_assuan_err_source( GPG_ERR_SOURCE_DEFAULT );
 
     if ( argc < 3 )
