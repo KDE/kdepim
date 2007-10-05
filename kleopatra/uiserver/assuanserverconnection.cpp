@@ -137,6 +137,23 @@ static std::string hexdecode( const std::string & in ) {
     return result;
 }
 
+static std::map<std::string,std::string> upcase_option( const char * option, std::map<std::string,std::string> options ) {
+    std::string value;
+    bool value_found = false;
+    std::map<std::string,std::string>::iterator it = options.begin();
+    while ( it != options.end() )
+        if ( qstricmp( it->second.c_str(), option ) == 0 ) {
+            value = it->second;
+            options.erase( it++ );
+            value_found = true;
+        } else {
+            ++it;
+        }
+    if ( value_found )
+        options[option] = value;
+    return options;
+}
+
 static std::map<std::string,std::string> parse_commandline( const char * line ) {
     std::map<std::string,std::string> result;
     if ( line ) {
@@ -252,7 +269,7 @@ private:
 
         try {
 
-            /*const*/ std::map<std::string,std::string> options = parse_commandline( line_ );
+            /*const*/ std::map<std::string,std::string> options = upcase_option( "FD", upcase_option( "FILE", parse_commandline( line_ ) ) );
             if ( options.size() < 1 || options.size() > 2 )
                 throw gpg_error( GPG_ERR_ASS_SYNTAX );
 
