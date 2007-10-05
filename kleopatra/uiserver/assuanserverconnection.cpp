@@ -279,7 +279,11 @@ private:
 #endif
                 }
 
-                io.iodev = new KDPipeIODevice( fd, in ? QIODevice::ReadOnly : QIODevice::WriteOnly );
+                std::auto_ptr<KDPipeIODevice> pio( new KDPipeIODevice );
+                if ( !pio->open( fd, in ? QIODevice::ReadOnly : QIODevice::WriteOnly ) )
+                    throw gpg_error_from_errno( errno );
+
+                iodev = pio;
 
                 options.erase( "FD" );
 
