@@ -133,7 +133,7 @@ void KIO_Delete::deleteItem( const QVariant item, KUrl kurl, KIO::MetaData metad
 		
 	if( protocol->deleteFunction() == KIO_Protocol::get )
 	{
-		job = KIO::get( kurl, true, false );
+		job = KIO::get( kurl, KIO::Reload, KIO::HideProgressInfo );
 		
 		if( protocol->connectionBased() )
 			KIO::Scheduler::assignJobToSlave( _slave, dynamic_cast< KIO::SimpleJob* >( job ) );
@@ -142,7 +142,7 @@ void KIO_Delete::deleteItem( const QVariant item, KUrl kurl, KIO::MetaData metad
 	}
 	else if( protocol->deleteFunction() == KIO_Protocol::del )
 	{
-		job = KIO::del( kurl, false, false );
+		job = KIO::del( kurl, KIO::HideProgressInfo );
 	}
 	else
 		return; //Unknown deleteFunction
@@ -164,7 +164,7 @@ void KIO_Delete::commitDelete( KUrl kurl, KIO::MetaData metadata, const KIO_Prot
 	if( kurl.port() == 0 )
 		kurl.setPort( protocol->defaultPort( _kio->_ssl ) );
 	
-	KIO::TransferJob *job = KIO::get( kurl, true, false );
+	KIO::TransferJob *job = KIO::get( kurl, KIO::Reload, KIO::HideProgressInfo );
 	job->addMetaData( metadata );
 	connect( job, SIGNAL( result( KJob* ) ), this, SLOT( slotResult( KJob* ) ) );
 	

@@ -195,8 +195,7 @@ bool ResourceRemote::doLoad( bool )
   if ( mLock->lock() ) {
     kDebug() <<"Download from:" << mDownloadUrl;
 
-    mDownloadJob = KIO::file_copy( mDownloadUrl, KUrl( cacheFile() ), -1, true,
-                                   false, !mUseProgressManager );
+    mDownloadJob = KIO::file_copy( mDownloadUrl, KUrl( cacheFile() ), -1, KIO::Overwrite | (mUseProgressManager ? KIO::HideProgressInfo : KIO::DefaultFlags) );
     connect( mDownloadJob, SIGNAL( result( KJob * ) ),
              SLOT( slotLoadJobResult( KJob * ) ) );
     if ( mUseProgressManager ) {
@@ -267,7 +266,7 @@ bool ResourceRemote::doSave( bool )
 
   saveToCache();
 
-  mUploadJob = KIO::file_copy( KUrl( cacheFile() ), mUploadUrl, -1, true );
+  mUploadJob = KIO::file_copy( KUrl( cacheFile() ), mUploadUrl, -1, KIO::Overwrite );
   connect( mUploadJob, SIGNAL( result( KJob * ) ),
            SLOT( slotSaveJobResult( KJob * ) ) );
 

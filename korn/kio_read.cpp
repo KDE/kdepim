@@ -60,7 +60,7 @@ void KIO_Read::readMail( const QVariant mailid, KKioDrop* drop )
 	
 	_kio->_protocol->readMailKUrl( kurl, metadata );
 	
-	_job = KIO::get( kurl, false, false );
+	_job = KIO::get( kurl, KIO::NoReload, KIO::HideProgressInfo );
 	_job->addMetaData( metadata );
 	
 	connect( _job, SIGNAL( result( KJob* ) ), this, SLOT( slotResult( KJob* ) ) );

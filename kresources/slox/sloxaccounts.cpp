@@ -122,7 +122,7 @@ void SloxAccounts::requestAccounts()
 
     kDebug() <<"SloxAccounts::requestAccounts() URL:" << url;
 
-    mDownloadJob = KIO::file_copy( url, cacheFile(), -1, true, false, false );
+    mDownloadJob = KIO::file_copy( url, cacheFile(), -1, KIO::Overwrite | KIO::HideProgressInfo );
   } else if ( mRes->resType() == "ox" ) {
     KUrl url = mBaseUrl;
     url.setPath( "/servlet/webdav.groupuser/" );
@@ -137,7 +137,7 @@ void SloxAccounts::requestAccounts()
 
     kDebug() << doc.toString( 2 );
 
-    mDownloadJob = KIO::davPropFind( url, doc, "0", false );
+    mDownloadJob = KIO::davPropFind( url, doc, "0", KIO::HideProgressInfo );
   }
 
   connect( mDownloadJob, SIGNAL( result( KJob * ) ),

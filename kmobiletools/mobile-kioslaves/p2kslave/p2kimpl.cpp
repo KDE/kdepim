@@ -211,7 +211,7 @@ void P2KImpl::createEntry(KIO::UDSEntry &entry, const KUrl &url, p2k_fileInfo &f
 
         m_lastListingEmpty = true;
 
-        KIO::ListJob *job = KIO::listDir(url, false, false);
+        KIO::ListJob *job = KIO::listDir(url, KIO::HideProgressInfo, false);
         connect( job, SIGNAL( entries(KIO::Job *,
                  const KIO::UDSEntryList &) ),
                  this, SLOT( slotEntries(KIO::Job *,
@@ -256,7 +256,7 @@ void P2KImpl::createEntry(KIO::UDSEntry &entry,
 
         m_lastListingEmpty = true;
 
-        KIO::ListJob *job = KIO::listDir(url, false, false);
+        KIO::ListJob *job = KIO::listDir(url, KIO::HideProgressInfo, false);
         connect( job, SIGNAL( entries(KIO::Job *,
                  const KIO::UDSEntryList &) ),
                  this, SLOT( slotEntries(KIO::Job *,
@@ -302,7 +302,7 @@ void P2KImpl::createEntry(KIO::UDSEntry &entry,
 
         m_lastListingEmpty = true;
 
-        KIO::ListJob *job = KIO::listDir(url, false, false);
+        KIO::ListJob *job = KIO::listDir(url, KIO::HideProgressInfo, false);
         connect( job, SIGNAL( entries(KIO::Job *,
                  const KIO::UDSEntryList &) ),
                  this, SLOT( slotEntries(KIO::Job *,

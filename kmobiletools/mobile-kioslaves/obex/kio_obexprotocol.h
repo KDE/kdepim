@@ -48,7 +48,7 @@ public:
 
     private:
         void listRoot(const KUrl &url);
-        void put(const KUrl &url, int permissions, bool overwrite, bool resume);
+        void put(const KUrl &url, int permissions, KIO::JobFlags flags);
         void disconnectTimeout();
         void setHost(const QString &host, int port, const QString &user, const QString &pass );
         OBEXImpl m_impl;

@@ -510,7 +510,7 @@ void CertificateWizardImpl::accept()
       overwrite = true;
     }
 
-    KIO::Job* uploadJob = KIO::storedPut( _keyData, url, -1, overwrite, false /*resume*/ );
+    KIO::Job* uploadJob = KIO::storedPut( _keyData, url, -1, overwrite ? KIO::Overwrite : KIO::DefaultFlags );
     uploadJob->ui()->setWindow( this );
     connect( uploadJob, SIGNAL( result( KJob* ) ),
              this, SLOT( slotUploadResult( KJob* ) ) );

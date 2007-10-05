@@ -157,7 +157,7 @@ bool ResourceGroupwise::doLoad( bool )
 
   mJobData.clear();
 
-  mDownloadJob = KIO::get( url, false, false );
+  mDownloadJob = KIO::get( url, KIO::NoReload, KIO::HideProgressInfo );
   connect( mDownloadJob, SIGNAL( result( KJob * ) ),
            SLOT( slotJobResult( KJob * ) ) );
   connect( mDownloadJob, SIGNAL( data( KIO::Job *, const QByteArray & ) ),

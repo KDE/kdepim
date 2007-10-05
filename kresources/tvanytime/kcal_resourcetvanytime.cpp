@@ -181,7 +181,7 @@ bool ResourceTVAnytime::doLoad( bool )
   kDebug(5850) <<"  DESTINATION:" << destination.url();
 
   // TODO: find out if the file to download is fresh.  if not, just work with the cache.
-  mDownloadJob = KIO::file_copy( url, destination, -1, true );
+  mDownloadJob = KIO::file_copy( url, destination, -1, KIO::Overwrite );
   connect( mDownloadJob, SIGNAL( result( KJob * ) ),
            SLOT( slotJobResult( KJob * ) ) );
 

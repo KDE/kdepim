@@ -79,7 +79,7 @@ void SloxFolderManager::requestFolders()
 
   kDebug() << doc.toString( 2 );
 
-  mDownloadJob = KIO::davPropFind( url, doc, "0", false );
+  mDownloadJob = KIO::davPropFind( url, doc, "0", KIO::HideProgressInfo );
 
   connect( mDownloadJob, SIGNAL( result( KJob * ) ),
            SLOT( slotResult( KJob * ) ) );

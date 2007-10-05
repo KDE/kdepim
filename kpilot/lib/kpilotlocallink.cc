@@ -280,7 +280,7 @@ KPilotLocalLink::~KPilotLocalLink()
 	KUrl src( canonicalSrcPath );
 	KUrl dst( canonicalDstPath );
 
-	KIO::Job *my_job = KIO::file_copy(src,dst,-1,true);
+	KIO::Job *my_job = KIO::file_copy(src,dst, -1, KIO::Overwrite);
 	KIO::NetAccess::synchronousRun(my_job, 0L);
 
 	if (deletefile)

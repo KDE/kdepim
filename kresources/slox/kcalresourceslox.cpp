@@ -222,7 +222,7 @@ void KCalResourceSlox::requestEvents()
 
   kDebug() <<"REQUEST CALENDAR:" << doc.toString( 2 );
 
-  mLoadEventsJob = KIO::davPropFind( url, doc, "0", false );
+  mLoadEventsJob = KIO::davPropFind( url, doc, "0", KIO::HideProgressInfo );
   connect( mLoadEventsJob, SIGNAL( result( KJob * ) ),
            SLOT( slotLoadEventsResult( KJob * ) ) );
   connect( mLoadEventsJob, SIGNAL( percent( KJob *, unsigned long ) ),
@@ -267,7 +267,7 @@ void KCalResourceSlox::requestTodos()
 
   kDebug() <<"REQUEST TASKS:" << doc.toString( 2 );
 
-  mLoadTodosJob = KIO::davPropFind( url, doc, "0", false );
+  mLoadTodosJob = KIO::davPropFind( url, doc, "0", KIO::HideProgressInfo );
   connect( mLoadTodosJob, SIGNAL( result( KJob * ) ),
            SLOT( slotLoadTodosResult( KJob * ) ) );
   connect( mLoadTodosJob, SIGNAL( percent( KJob *, unsigned long ) ),
@@ -376,7 +376,7 @@ void KCalResourceSlox::uploadIncidences()
 
   kDebug() <<"UPLOAD:" << doc.toString( 2 );
 
-  mUploadJob = KIO::davPropPatch( url, doc, false );
+  mUploadJob = KIO::davPropPatch( url, doc, KIO::HideProgressInfo );
   connect( mUploadJob, SIGNAL( result( KJob * ) ),
            SLOT( slotUploadResult( KJob * ) ) );
   connect( mUploadJob, SIGNAL( percent( KJob *, unsigned long ) ),

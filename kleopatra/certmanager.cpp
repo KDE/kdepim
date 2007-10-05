@@ -928,7 +928,7 @@ void CertManager::importCRLFromFile() {
       tempFile.open();
       KUrl destURL;
       destURL.setPath( tempFile.fileName() );
-      KIO::Job* copyJob = KIO::file_copy( url, destURL, 0600, true, false );
+      KIO::Job* copyJob = KIO::file_copy( url, destURL, 0600, KIO::Overwrite );
       copyJob->ui()->setWindow( this );
       connect( copyJob, SIGNAL( result( KJob * ) ),
                SLOT( slotImportCRLJobFinished( KJob * ) ) );
@@ -1305,7 +1305,7 @@ void CertManager::slotCertificateExportResult( const GpgME::Error & err, const Q
   if ( !checkOverwrite( url, overwrite, this ) )
     return;
 
-  KIO::Job* uploadJob = KIO::storedPut( data, url, -1, overwrite, false /*resume*/ );
+  KIO::Job* uploadJob = KIO::storedPut( data, url, -1, overwrite ? KIO::Overwrite : KIO::DefaultFlags );
   uploadJob->ui()->setWindow( this );
   connect( uploadJob, SIGNAL( result( KJob* ) ),
            this, SLOT( slotUploadResult( KJob* ) ) );
@@ -1422,7 +1422,7 @@ void CertManager::slotSecretKeyExportResult( const GpgME::Error & err, const QBy
   if ( !checkOverwrite( url, overwrite, this ) )
     return;
 
-  KIO::Job* uploadJob = KIO::storedPut( data, url, -1, overwrite, false /*resume*/ );
+  KIO::Job* uploadJob = KIO::storedPut( data, url, -1, overwrite ? KIO::Overwrite : KIO::DefaultFlags );
   uploadJob->ui()->setWindow( this );
   connect( uploadJob, SIGNAL( result( KJob* ) ),
            this, SLOT( slotUploadResult( KJob* ) ) );

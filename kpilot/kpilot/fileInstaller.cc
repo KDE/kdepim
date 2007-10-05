@@ -120,7 +120,7 @@ void FileInstaller::deleteFiles(const QStringList &files)
 	dest.setPath(fDirName + CSL1("/") + src.fileName());
 
 	// Permissions -1, overwrite, no resume
-	KIO::Job *my_job = KIO::file_copy(src,dest,-1,true);
+	KIO::Job *my_job = KIO::file_copy(src,dest, -1, KIO::Overwrite);
 	return KIO::NetAccess::synchronousRun(my_job, w);
 }
 

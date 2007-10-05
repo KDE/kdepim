@@ -41,7 +41,7 @@ void KNode::GroupListJob::execute()
         .arg( target->fetchSince.month(), 2, 10, QChar( '0' ) )
         .arg( target->fetchSince.day(), 2, 10, QChar( '0' ) );
   destination.setQuery( query.join( "&" ) );
-  KIO::Job* job = KIO::listDir( destination, false, true );
+  KIO::Job* job = KIO::listDir( destination, KIO::HideProgressInfo, true );
   connect( job, SIGNAL(entries(KIO::Job*, const KIO::UDSEntryList&)),
            SLOT(slotEntries(KIO::Job*, const KIO::UDSEntryList&)) );
   connect( job, SIGNAL( result(KJob*) ), SLOT( slotResult(KJob*) ) );
@@ -153,7 +153,7 @@ void KNode::ArticleListJob::execute()
   if ( target->lastNr() <= 0 ) // first fetch
     query << "max=" + QString::number( target->maxFetch() );
   destination.setQuery( query.join( "&" ) );
-  KIO::Job* job = KIO::listDir( destination, false, true );
+  KIO::Job* job = KIO::listDir( destination, KIO::HideProgressInfo, true );
   connect( job, SIGNAL(entries(KIO::Job*, const KIO::UDSEntryList&)),
            SLOT(slotEntries(KIO::Job*, const KIO::UDSEntryList&)) );
   connect( job, SIGNAL( result(KJob*) ), SLOT( slotResult(KJob*) ) );
@@ -212,7 +212,7 @@ void KNode::ArticleFetchJob::execute()
   path += target->messageID()->as7BitString( false );
   url.setPath( path );
 
-  KIO::Job* job = KIO::storedGet( url, false, false );
+  KIO::Job* job = KIO::storedGet( url, KIO::NoReload, KIO::HideProgressInfo );
   connect( job, SIGNAL( result(KJob*) ), SLOT( slotResult(KJob*) ) );
   setupKIOJob( job );
 }
@@ -247,7 +247,7 @@ void KNode::ArticlePostJob::execute( )
 
   KUrl url = baseUrl();
 
-  KIO::Job* job = KIO::storedPut( target->encodedContent( true ), url, -1, true, false, false );
+  KIO::Job* job = KIO::storedPut( target->encodedContent( true ), url, -1, KIO::Overwrite | KIO::HideProgressInfo );
   connect( job, SIGNAL( result(KJob*) ), SLOT( slotResult(KJob*) ) );
   setupKIOJob( job );
 }
