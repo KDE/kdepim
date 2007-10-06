@@ -109,9 +109,10 @@ void KNFilterManager::loadFilters()
 
   if (!fname.isNull()) {
     KConfig conf( fname, KConfig::OnlyLocal);
+    KConfigGroup grp( &conf, "<default>" );
 
-    QList<int> activeFilters = conf.readEntry("Active",QList<int>());
-    menuOrder = conf.readEntry("Menu",QList<int>());
+    QList<int> activeFilters = grp.readEntry("Active",QList<int>());
+    menuOrder = grp.readEntry("Menu",QList<int>());
 
     for ( QList<int>::Iterator it = activeFilters.begin(); it != activeFilters.end(); ++it ) {
       KNArticleFilter *f = new KNArticleFilter( (*it) );
@@ -135,12 +136,13 @@ void KNFilterManager::saveFilterLists()
     return;
   }
   KConfig conf(dir+"filters.rc", KConfig::OnlyLocal);
+  KConfigGroup grp( &conf, "<default>" );
   QList<int> activeFilters;
   for ( QList<KNArticleFilter*>::Iterator it = mFilterList.begin(); it != mFilterList.end(); ++it )
     activeFilters << (*it)->id();
 
-  conf.writeEntry("Active",activeFilters);
-  conf.writeEntry("Menu",menuOrder);
+  grp.writeEntry("Active",activeFilters);
+  grp.writeEntry("Menu",menuOrder);
 }
 
 
