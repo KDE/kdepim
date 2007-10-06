@@ -38,7 +38,7 @@
 #include <kblog/blogpost.h>
 #include <kblog/blogmedia.h>
 #include <kblog/movabletype.h>
-#include <kblog/livejournal.h>
+// #include <kblog/livejournal.h>
 #include <kblog/gdata.h>
 
 using namespace KCal;
