@@ -41,6 +41,8 @@
 #include <QLayout>
 #include <QTimer>
 #include <QEventLoop>
+#include <QDateTime>
+#include <QDebug>
 
 #include <qgpgme/eventloopinteractor.h>
 
