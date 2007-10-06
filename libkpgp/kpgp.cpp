@@ -24,6 +24,7 @@
 #include <klocale.h>
 #include <kmessagebox.h>
 #include <kconfigbase.h>
+#include <kconfiggroup.h>
 #include <kconfig.h>
 #include <k3staticdeleter.h>
 #include <kconfiggroup.h>
@@ -113,24 +114,26 @@ Module::init()
 void
 Module::readConfig()
 {
-  storePass = config->readEntry("storePass", false);
-  showEncryptionResult = config->readEntry("showEncryptionResult", true);
-  mShowKeyApprovalDlg = config->readEntry( "showKeysForApproval", true );
+  KConfigGroup grp(config, config->group());
+  storePass = grp.readEntry("storePass", false);
+  showEncryptionResult = grp.readEntry("showEncryptionResult", true);
+  mShowKeyApprovalDlg = grp.readEntry( "showKeysForApproval", true );
   // We have no config GUI for this key anymore, and the KPGP backend isn't ported,
   // so let's just use Auto all the time.  See #92619.
   ///pgpType = (Module::PGPType) config->readEntry("pgpType", tAuto);
   pgpType = tAuto;
-  flagEncryptToSelf = config->readEntry("encryptToSelf", true);
+  flagEncryptToSelf = grp.readEntry("encryptToSelf", true);
 }
 
 void
 Module::writeConfig(bool sync)
 {
-  config->writeEntry("storePass", storePass);
-  config->writeEntry("showEncryptionResult", showEncryptionResult);
-  config->writeEntry( "showKeysForApproval", mShowKeyApprovalDlg );
+  KConfigGroup grp(config, config->group());
+  grp.writeEntry("storePass", storePass);
+  grp.writeEntry("showEncryptionResult", showEncryptionResult);
+  grp.writeEntry( "showKeysForApproval", mShowKeyApprovalDlg );
   //config->writeEntry("pgpType", (int) pgpType);
-  config->writeEntry("encryptToSelf", flagEncryptToSelf);
+  grp.writeEntry("encryptToSelf", flagEncryptToSelf);
 
   if(sync)
     config->sync();
