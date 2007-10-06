@@ -35,7 +35,7 @@
 
 #include <kconfigbase.h>
 #include <klocale.h>
-
+#include <kconfiggroup.h>
 static const struct {
   const char * name;
   GpgME::Key::OwnerTrust trust;

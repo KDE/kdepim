@@ -43,7 +43,7 @@
 #include <QStringList>
 
 #include <algorithm>
-
+#include <QVector>
 
 class Kleo::KeyFilterManager::Private {
 public:
