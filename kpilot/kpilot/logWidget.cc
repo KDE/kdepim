@@ -29,6 +29,7 @@
 
 #include "options.h"
 
+#include <QtCore/QTextStream>
 #include <QtGui/QGridLayout>
 #include <QtGui/QPushButton>
 #include <QtGui/QLabel>
