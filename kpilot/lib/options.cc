@@ -36,6 +36,8 @@
 
 #include <config-kpilot.h>
 
+#include <QtCore/QDateTime>
+
 #ifndef NDEBUG
 int debug_level = 1;
 #else

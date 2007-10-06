@@ -32,9 +32,9 @@ class KolabCustomWriter : public CreateDisconnectedImapAccount::CustomWriter
 {
   void writeFolder( KConfig &c, int id )
   {
-    c.setGroup( "IMAP Resource" );
-    c.writeEntry( "TheIMAPResourceAccount", id );
-    c.writeEntry( "TheIMAPResourceFolderParent", QString(".%1.directory/INBOX").arg( id ) );
+    KConfigGroup grp = c.group( "IMAP Resource" );
+    grp.writeEntry( "TheIMAPResourceAccount", id );
+    grp.writeEntry( "TheIMAPResourceFolderParent", QString(".%1.directory/INBOX").arg( id ) );
   }
   void writeIds( int, int ) {}
 };

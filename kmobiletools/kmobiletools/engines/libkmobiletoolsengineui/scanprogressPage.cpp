@@ -24,6 +24,8 @@
 #include "ui_scanprogressPage.h"
 #include <QProgressBar>
 
+#include <kdebug.h>
+
 class ScanProgressPagePrivate {
 public:
     ScanProgressPagePrivate() {}

@@ -110,7 +110,6 @@ Module::init()
   pgp=0;
 }
 
-
 void
 Module::readConfig()
 {
@@ -143,7 +142,6 @@ Module::writeConfig(bool sync)
   delete pgp;
   pgp = 0;
 }
-
 
 void
 Module::setUser(const KeyID& keyID)

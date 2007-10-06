@@ -27,9 +27,10 @@
 
 // KDE includes
 #include <kconfig.h>
+#include <kconfiggroup.h>
 #include <kcomponentdata.h>
 #include <kstandarddirs.h>
-#include <kconfiggroup.h>
+
 ///////////////////////////////////////////////////////////////////////////////
 
 CSVTemplateFactory::CSVTemplateFactory()
@@ -180,7 +181,7 @@ void CSVTemplateFactory::addTemplateNames(const QString& directory)
         KConfigBase* templateConfig = loadTemplateConfig(fileInfo.absoluteFilePath());
         if (templateConfig == 0) continue;
 
-        KConfigGroup group( templateConfig, "Misc" );
+        KConfigGroup group = templateConfig->group( "Misc" );
         QString templateName = group.readEntry("Name");
         if (!templateName.isEmpty()) m_templateNames[name] = templateName;
 

@@ -112,13 +112,13 @@ bool KNFolder::readInfo(const QString &infoPath)
   i_nfoPath=infoPath;
 
   KConfig info(i_nfoPath, KConfig::OnlyLocal);
-  KConfigGroup grp( &info, "<default>" );
+  KConfigGroup grp(&info, info.group());
   if (!isRootFolder() && !isStandardFolder()) {
-    n_ame = grp.readEntry("name");
-    i_d = grp.readEntry("id", -1);
-    p_arentId = grp.readEntry("parentId", -1);
+    n_ame=grp.readEntry("name");
+    i_d=grp.readEntry("id", -1);
+    p_arentId=grp.readEntry("parentId", -1);
   }
-  w_asOpen = grp.readEntry("wasOpen", true);
+  w_asOpen=grp.readEntry("wasOpen", true);
 
   if(i_d>-1) {
     QFileInfo fi(infoPath);
@@ -145,7 +145,7 @@ void KNFolder::saveInfo()
 {
   if(!i_nfoPath.isEmpty()) {
     KConfig info(i_nfoPath, KConfig::OnlyLocal);
-    KConfigGroup grp( &info, "<default>" );
+    KConfigGroup grp(&info, info.group());
     if (!isRootFolder() && !isStandardFolder()) {
       grp.writeEntry("name", n_ame);
       grp.writeEntry("id", i_d);

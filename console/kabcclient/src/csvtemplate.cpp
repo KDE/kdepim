@@ -42,7 +42,7 @@ CSVTemplate::CSVTemplate(KConfigBase* config) : m_columns(0)
 {
     if (config == 0) return;
 
-    QMap<QString, QString> columnMap = config->entryMap("csv column map");
+    QMap<QString, QString> columnMap = config->group("csv column map").entryMap();
 
     QMap<QString, QString>::const_iterator it    = columnMap.begin();
     QMap<QString, QString>::const_iterator endIt = columnMap.end();
@@ -60,7 +60,7 @@ CSVTemplate::CSVTemplate(KConfigBase* config) : m_columns(0)
         m_columnToField.insert(column, field);
     }
 
-    KConfigGroup general(config, "General");
+    KConfigGroup general = config->group("General");
 
     m_datePattern = general.readEntry("DatePattern");
     if (m_datePattern.isEmpty()) m_datePattern = "Y-M-D";

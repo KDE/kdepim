@@ -128,7 +128,7 @@ class KABCOMMON_EXPORT Filter
 
       @return The list of filters.
      */
-    static Filter::List restore( KConfigBase *config, const QString &baseGroup );
+    static Filter::List restore( const KConfigBase *config, const QString &baseGroup );
 
     /**
       Sets the filter rule. If the rule is Filter::Matching (default),

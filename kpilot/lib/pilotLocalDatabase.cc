@@ -37,6 +37,7 @@
 #include <QtCore/QDateTime>
 #include <QtCore/QFile>
 #include <QtCore/QRegExp>
+#include <QtCore/QVector>
 
 #include <kglobal.h>
 #include <ksavefile.h>

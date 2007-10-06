@@ -2,6 +2,7 @@
 
 #include <QCoreApplication>
 #include <QDir>
+#include <QDebug>
 
 #include <kaboutdata.h>
 #include <kcmdlineargs.h>

@@ -28,6 +28,7 @@
 #include <klocale.h>
 #include <kdebug.h>
 #include <kurl.h>
+#include <kconfiggroup.h>
 #include <kio/job.h>
 
 #include <kabc/stdaddressbook.h>

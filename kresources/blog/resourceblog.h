@@ -23,6 +23,8 @@
 
 #include "blog_export.h"
 
+#include <KUrl>
+
 #include <kcal/resourcecached.h>
 
 #include <kblog/blog.h>

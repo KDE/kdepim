@@ -35,6 +35,8 @@
 #include "testrecord.h"
 #include "testhhrecord.h"
 
+#include <QtCore/QDebug>
+
 TestRecordConduit::TestRecordConduit( const QVariantList &args, bool createRecs )
 	: RecordConduit( 0L, args, CSL1( "test-db" ), CSL1( "test-conduit" ) )
 		,fCreateRecords( createRecs )

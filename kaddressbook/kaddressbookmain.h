@@ -28,6 +28,7 @@
 #include <kaction.h>
 #include <kapplication.h>
 #include <kxmlguiwindow.h>
+#include <kurl.h>
 
 class KABCore;
 

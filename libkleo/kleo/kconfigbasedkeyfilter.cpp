@@ -34,8 +34,8 @@
 #include "kconfigbasedkeyfilter.h"
 
 #include <kconfigbase.h>
-#include <klocale.h>
 #include <kconfiggroup.h>
+#include <klocale.h>
 static const struct {
   const char * name;
   GpgME::Key::OwnerTrust trust;

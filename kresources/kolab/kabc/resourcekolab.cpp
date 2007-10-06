@@ -41,6 +41,7 @@
 #include <kabc/vcardconverter.h>
 #include <kmainwindow.h>
 #include <kconfiggroup.h>
+
 #include <QObject>
 #include <QTimer>
 #include <QString>

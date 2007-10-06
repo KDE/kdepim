@@ -29,6 +29,7 @@
 #include <KMessageBox>
 #include <KApplication>
 #include <KToolBar>
+#include <KDebug>
 
 #include <libkmobiletools/engineslist.h>
 

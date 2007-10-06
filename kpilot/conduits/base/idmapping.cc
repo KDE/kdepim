@@ -23,6 +23,9 @@
 /*
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
+
+#include <QtCore/QSet>
+
 #include "idmapping.h"
 
 #include "options.h"

@@ -31,6 +31,7 @@
 #include "memofile.h"
 //Added by qt3to4:
 #include <Q3PtrList>
+#include <QtCore/QTextStream>
 
 QString Memofiles::FIELD_SEP = CSL1("\t");
 

@@ -29,6 +29,8 @@
 #include <libkmobiletools/deviceloader.h>
 #include <libkmobiletools/enginexp.h>
 
+#include <kdebug.h>
+
 namespace KMobileTools {
 
 class ServiceLoaderInstance {

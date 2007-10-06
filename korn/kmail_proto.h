@@ -113,7 +113,7 @@ public:
 
 private:
 	QString readPassword( bool store, const KConfigBase &config, int id ) const;
-	QString getTypeAndConfig( const QString& kmailname, KConfig &config, int &nummer ) const;
+	QString getTypeAndConfig( const QString& kmailname, KConfig &config, int &nummer, QString& groupname ) const;
 
 	static const char* kmailGroupName;
 	static const char* kmailKeyName;

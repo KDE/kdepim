@@ -58,10 +58,11 @@ const Protocol* KMail_Protocol::getProtocol( AccountSettings* settings ) const
 	int id;
 	QString type;
 
+	QString grpname;
 	if( settings->readEntries().contains( "kmailname" ) )
-		type = getTypeAndConfig( settings->readEntries()[ "kmailname" ], kmailconfig, id );
+		type = getTypeAndConfig( settings->readEntries()[ "kmailname" ], kmailconfig, id, grpname );
 	else
-		type = getTypeAndConfig( "", kmailconfig, id );
+		type = getTypeAndConfig( "", kmailconfig, id,grpname );
 
 	if( type == "imap" )
 		return Protocols::getProto( "imap" );
@@ -85,10 +86,11 @@ KMailDrop* KMail_Protocol::createMaildrop( AccountSettings *settings ) const
 	QString type;
 	
 	KConfig kmailconfig( "kmailrc", KConfig::NoGlobals );
+	QString grpname;
 	if( settings->readEntries().contains( "kmailname" ) )
-		type = getTypeAndConfig( settings->readEntries()[ "kmailname" ], kmailconfig, id );
+		type = getTypeAndConfig( settings->readEntries()[ "kmailname" ], kmailconfig, id, grpname );
 	else
-		type = getTypeAndConfig( "", kmailconfig, id );
+		type = getTypeAndConfig( "", kmailconfig, id, grpname );
 
 	if( type == "imap" || type == "cachedimap" || type == "pop" || type == "local" || type == "maildir" )
 		return new KKioDrop();
@@ -104,61 +106,63 @@ QMap< QString, QString > * KMail_Protocol::createConfig( AccountSettings* settin
 	QString type;
 	
 	KConfig kmailconfig( "kmailrc", KConfig::NoGlobals );
+	QString grpname;
 	//First: find the account in the configuration and get the type and id out of it.
 	if( settings->readEntries().contains( "kmailname" ) )
-		type = getTypeAndConfig( settings->readEntries()[ "kmailname" ], kmailconfig, id );
+		type = getTypeAndConfig( settings->readEntries()[ "kmailname" ], kmailconfig, id, grpname );
 	else
-		type = getTypeAndConfig( "", kmailconfig, id );
+		type = getTypeAndConfig( "", kmailconfig, id, grpname );
 	QString metadata;
 
+	KConfigGroup grp(&kmailconfig, grpname);
 	if( type == "imap" || type == "cachedimap" )
 	{
 		//Construct metadata
-		if( kmailconfig.hasKey( "auth" ) )
-			metadata += QString( "auth=%1," ).arg( kmailconfig.readEntry( "auth" ) );
-		if( !kmailconfig.hasKey( "use-tls" ) )
+		if( grp.hasKey( "auth" ) )
+			metadata += QString( "auth=%1," ).arg( grp.readEntry( "auth" ) );
+		if( !grp.hasKey( "use-tls" ) )
 			metadata += "tls=auto";
 		else
 		{
-			if( kmailconfig.readEntry( "use-tls", false ) )
+			if( grp.readEntry( "use-tls", false ) )
 				metadata += "tls=on";
 			else
 				metadata += "tls=off";
 		}
 		//Add the fields into the mapping.
 		result->insert( "name", settings->accountName() );
-		result->insert( "server", kmailconfig.readEntry( "host", "localhost" ) );
-		result->insert( "port", kmailconfig.readEntry( "port", "143" ) );
-		result->insert( "ssl", kmailconfig.readEntry( "use-ssl", "false" ) );
+		result->insert( "server", grp.readEntry( "host", "localhost" ) );
+		result->insert( "port", grp.readEntry( "port", "143" ) );
+		result->insert( "ssl", grp.readEntry( "use-ssl", "false" ) );
 		result->insert( "metadata", metadata );
-		result->insert( "username", kmailconfig.readEntry( "login", "" ) );
+		result->insert( "username", grp.readEntry( "login", "" ) );
 		result->insert( "mailbox", "INBOX" ); //Didn't find a good way to get this out of the configuration yet.
-		result->insert( "password", readPassword( kmailconfig.readEntry( "store-passwd", false ), kmailconfig, id ) );
-		result->insert( "savepassword", kmailconfig.readEntry( "store-passwd", "false" ) );
+		result->insert( "password", readPassword( grp.readEntry( "store-passwd", false ), kmailconfig, id ) );
+		result->insert( "savepassword", grp.readEntry( "store-passwd", "false" ) );
 	}
 	if( type == "pop" )
 	{
 		//Constructing metadata
-		if( kmailconfig.hasKey( "auth" ) )
-			metadata += QString( "auth=%1," ).arg( kmailconfig.readEntry( "auth" ) );
-		if( !kmailconfig.hasKey( "use-tls" ) )
+		if( grp.hasKey( "auth" ) )
+			metadata += QString( "auth=%1," ).arg( grp.readEntry( "auth" ) );
+		if( !grp.hasKey( "use-tls" ) )
 			metadata += "tls=auto";
 		else
 		{
-			if( kmailconfig.readEntry( "use-tls", false ) )
+			if( grp.readEntry( "use-tls", false ) )
 				metadata += "tls=on";
 			else
 				metadata += "tls=off";
 		}
 		result->insert( "name", settings->accountName() );
-		result->insert( "server", kmailconfig.readEntry( "host", "localhost" ) );
-		result->insert( "port", kmailconfig.readEntry( "port", "110" ) );
-		result->insert( "ssl", kmailconfig.readEntry( "use-ssl", "false" ) );
+		result->insert( "server", grp.readEntry( "host", "localhost" ) );
+		result->insert( "port", grp.readEntry( "port", "110" ) );
+		result->insert( "ssl", grp.readEntry( "use-ssl", "false" ) );
 		result->insert( "metadata", metadata );
-		result->insert( "username", kmailconfig.readEntry( "login", "" ) );
+		result->insert( "username", grp.readEntry( "login", "" ) );
 		result->insert( "mailbox", "" );
-		result->insert( "password", readPassword( kmailconfig.readEntry( "store-passwd", false ), kmailconfig, id ) );
-		result->insert( "savepassword", kmailconfig.readEntry( "store-password", "false" ) );
+		result->insert( "password", readPassword( grp.readEntry( "store-passwd", false ), kmailconfig, id ) );
+		result->insert( "savepassword", grp.readEntry( "store-password", "false" ) );
 	}
 	if( type == "local" ) //mbox
 	{
@@ -168,7 +172,7 @@ QMap< QString, QString > * KMail_Protocol::createConfig( AccountSettings* settin
 		result->insert( "ssl", "false" );
 		result->insert( "metadata", "" );
 		result->insert( "username", "" );
-		result->insert( "mailbox", kmailconfig.readPathEntry( kmailKeyMBox, "" ) );
+		result->insert( "mailbox", grp.readPathEntry( kmailKeyMBox, "" ) );
 		result->insert( "password", "" );
 		result->insert( "savepassword", "false" );
 	}
@@ -180,7 +184,7 @@ QMap< QString, QString > * KMail_Protocol::createConfig( AccountSettings* settin
 		result->insert( "ssl", "false" );
 		result->insert( "metadata", "" );
 		result->insert( "username", "" );
-		result->insert( "mailbox", kmailconfig.readPathEntry( kmailKeyQMail, "" ) );
+		result->insert( "mailbox", grp.readPathEntry( kmailKeyQMail, "" ) );
 		result->insert( "password", "" );
 		result->insert( "savepassword", "false" );
 	}
@@ -234,7 +238,7 @@ QString KMail_Protocol::readPassword( bool store, const KConfigBase& config, int
 	return KOrnPassword::readKMailPassword( id, config );
 }
 
-QString KMail_Protocol::getTypeAndConfig( const QString& kmailname, KConfig &kmailconfig, int &id ) const
+QString KMail_Protocol::getTypeAndConfig( const QString& kmailname, KConfig &kmailconfig, int &id, QString& groupname ) const
 {
 	int nummer = kmailFirstGroup - 1;
 	bool found = false;
@@ -246,7 +250,8 @@ QString KMail_Protocol::getTypeAndConfig( const QString& kmailname, KConfig &kma
 		KConfigGroup group = kmailconfig.group( QString( kmailGroupName ).arg( nummer ) );
 		if( group.readEntry( kmailKeyName, QString() ) == kmailname )
 		{
-			id = kmailconfig.readEntry( kmailKeyId, 0 );	
+			id = group.readEntry( kmailKeyId, 0 );
+			groupname = group.name();
 			found = true;
 			break;
 		}
@@ -258,6 +263,6 @@ QString KMail_Protocol::getTypeAndConfig( const QString& kmailname, KConfig &kma
 	}
 
 	//The correct group is found, and kmailconfig.setGroup() is already called for the right group.
-	return kmailconfig.readEntry( kmailKeyType, QString() );
+	return kmailconfig.group(groupname).readEntry( kmailKeyType, QString() );
 }
 
