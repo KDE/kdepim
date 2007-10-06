@@ -29,7 +29,7 @@
 #include <kconfig.h>
 #include <kcomponentdata.h>
 #include <kstandarddirs.h>
-
+#include <kconfiggroup.h>
 ///////////////////////////////////////////////////////////////////////////////
 
 CSVTemplateFactory::CSVTemplateFactory()
