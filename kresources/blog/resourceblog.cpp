@@ -26,7 +26,7 @@
 
 #include <KUrl>
 #include <KLocale>
-
+#include <KConfigGroup>
 #include <kcal/journal.h>
 #include <kcal/calendarlocal.h>
 
