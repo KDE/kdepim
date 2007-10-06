@@ -18,6 +18,7 @@
 #include <klocale.h>
 #include <kdebug.h>
 #include <kwallet.h>
+#include <kconfiggroup.h>
 using namespace KWallet;
 
 #include "knglobals.h"
