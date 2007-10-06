@@ -410,29 +410,29 @@ Event::List CalendarLocal::rawEvents( const QDate &start, const QDate &end,
 
     QDate rStart = event->dtStart().date();
     if (end < rStart) {
-      kdDebug(5800) << "Skipping event starting after TOI" << endl;
+//      kdDebug(5800) << "Skipping event starting after TOI" << endl;
       continue;
     }
     if ( inclusive && rStart < start) {
-      kdDebug(5800) << "Skipping event starting before TOI while inclusive" << endl;
+//      kdDebug(5800) << "Skipping event starting before TOI while inclusive" << endl;
       continue;
     }
 
     if ( ! event->doesRecur() ) { // non-recurring events
       QDate rEnd = event->dtEnd().date();
       if (rEnd < start) {
-        kdDebug(5800) << "Skipping event ending before TOI" << endl;
+//        kdDebug(5800) << "Skipping event ending before TOI" << endl;
         continue;
       }
       if ( inclusive && end < rEnd ) {
-        kdDebug(5800) << "Skipping event ending after TOI while inclusive" << endl;
+//        kdDebug(5800) << "Skipping event ending after TOI while inclusive" << endl;
         continue;
       }
     } else { // recurring events
       switch ( event->recurrence()->duration() ) {
         case -1: // infinite
           if ( inclusive ) {
-            kdDebug(5800) << "Skipping infinite event because inclusive" << endl;
+//            kdDebug(5800) << "Skipping infinite event because inclusive" << endl;
             continue;
           }
           break;
@@ -440,15 +440,15 @@ Event::List CalendarLocal::rawEvents( const QDate &start, const QDate &end,
         default: // count given
           QDate rEnd = event->recurrence()->endDate();
           if ( ! rEnd.isValid() ) {
-            kdDebug(5800) << "Skipping recurring event without occurences" << endl;
+//            kdDebug(5800) << "Skipping recurring event without occurences" << endl;
             continue;
           }
           if ( rEnd < start ) {
-            kdDebug(5800) << "Skipping recurring event ending before TOI" << endl;
+//            kdDebug(5800) << "Skipping recurring event ending before TOI" << endl;
             continue;
           }
           if ( inclusive && end < rEnd ) {
-            kdDebug(5800) << "Skipping recurring event ending after TOI while inclusive" << endl;
+//            kdDebug(5800) << "Skipping recurring event ending after TOI while inclusive" << endl;
             continue;
           }
           /* FIXME: too much conversion between QDate and QDateTime makes this useless:
