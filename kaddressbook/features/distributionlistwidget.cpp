@@ -505,7 +505,8 @@ void DistributionListWidget::updateNameCombo()
   const QStringList names = core()->addressBook()->allDistributionListNames();
 #endif
   mNameCombo->addItems( names );
-  mNameCombo->setCurrentIndex( qMin( pos, (int)names.count() - 1 ) );
+  if ( pos != -1  && mNameCombo->count() > 0 )
+    mNameCombo->setCurrentIndex( qMin( pos, (int)names.count() - 1 ) );
 
   updateContactView();
 }
