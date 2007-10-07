@@ -67,7 +67,7 @@ void ExtensionManager::restoreSettings()
     }
   }
 
-  if ( mActionList.first() )
+  if ( !mActionList.isEmpty() && mActionList.first() )
     static_cast<KToggleAction*>( mActionList.first() )->setChecked( true );
   setActiveExtension( 0 );
 }
@@ -161,7 +161,7 @@ void ExtensionManager::createActions()
 
   mCore->guiClient()->plugActionList( "extensions_list", mActionList );
 
-  if ( mCurrentExtensionWidget == 0 && mActionList.first() )
+  if ( mCurrentExtensionWidget == 0 && !mActionList.isEmpty() && mActionList.first() )
     static_cast<KToggleAction*>( mActionList.first() )->setChecked( true );
 }
 
