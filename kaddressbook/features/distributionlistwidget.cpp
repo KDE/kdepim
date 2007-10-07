@@ -206,6 +206,10 @@ DistributionListWidget::DistributionListWidget( KAB::Core *core, QWidget *parent
   connect( core->addressBook(), SIGNAL( addressBookChanged( AddressBook* ) ),
            this, SLOT( updateNameCombo() ) );
 
+#ifndef KDEPIM_NEW_DISTRLISTS
+  connect( this, SIGNAL( modified() ), core, SLOT( setModified() ) );
+#endif
+
   updateNameCombo();
 
   QObject *catcher = new DeletePressedCatcher( this );
@@ -217,15 +221,6 @@ DistributionListWidget::DistributionListWidget( KAB::Core *core, QWidget *parent
 
 DistributionListWidget::~DistributionListWidget()
 {
-}
-
-void DistributionListWidget::save()
-{
-#ifndef KDEPIM_NEW_DISTRLISTS
-  // FIXME new distribution list handling
-  // explicit save necessary?
-  //mManager->save();
-#endif
 }
 
 void DistributionListWidget::selectionContactViewChanged()
@@ -577,7 +572,7 @@ void DistributionListWidget::changed( const KABC::Addressee& dist )
 #else
 void DistributionListWidget::changed()
 {
-  save();
+  emit modified();
 }
 #endif
 

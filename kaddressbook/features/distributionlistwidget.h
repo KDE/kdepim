@@ -61,8 +61,10 @@ class DistributionListWidget : public KAB::ExtensionWidget
     QString title() const;
     QString identifier() const;
 
+  Q_SIGNALS:
+    void modified();
+
   public slots:
-    void save();
     void dropped( QDropEvent* );
 
     void removeContact();
