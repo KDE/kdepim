@@ -279,7 +279,10 @@ void DistributionListWidget::createList()
 #endif
 
   // Select the new one in the list
-  mNameCombo->setItemText( mNameCombo->currentIndex(), newName );
+  int index = mNameCombo->findText( newName );
+  if ( index != -1 )
+    mNameCombo->setCurrentIndex( index );
+
   // Display the contents of the list we just selected (well, it's empty)
   updateContactView();
 }
@@ -317,7 +320,9 @@ void DistributionListWidget::editList()
 #endif
 
   // Select the new name in the list (updateNameCombo couldn't know we wanted that one)
-  mNameCombo->setItemText( mNameCombo->currentIndex(), newName );
+  int index = mNameCombo->findText( newName );
+  if ( index != -1 )
+    mNameCombo->setCurrentIndex( index );
   // Display the contents of the list we just selected
   updateContactView();
 }
