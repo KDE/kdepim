@@ -217,9 +217,7 @@ public Q_SLOTS:
         assert( ctx );
         if ( const int err = assuan_process_next( ctx.get() ) ) {
             //if ( err == -1 || gpg_err_code(err) == GPG_ERR_EOF ) {
-                if ( currentCommand )
-                    currentCommand->canceled();
-                closed = true;
+                topHalfDeletion();
                 if ( nohupedCommands.empty() )
                     bottomHalfDeletion();
             //} else {
@@ -229,6 +227,8 @@ public Q_SLOTS:
         }
     }
 
+private:
+
     void nohupDone( AssuanCommand * cmd ) {
         const std::vector< shared_ptr<AssuanCommand> >::iterator it
             = std::find_if( nohupedCommands.begin(), nohupedCommands.end(),
@@ -237,6 +237,13 @@ public Q_SLOTS:
         nohupedCommands.erase( it );
         if ( nohupedCommands.empty() && closed )
             bottomHalfDeletion();
+    }
+
+    void topHalfDeletion() {
+        if ( currentCommand )
+            currentCommand->canceled();
+        notifiers.clear();
+        closed = true;
     }
 
     void bottomHalfDeletion() {
