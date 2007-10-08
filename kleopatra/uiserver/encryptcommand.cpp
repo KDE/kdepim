@@ -104,12 +104,12 @@ void EncryptCommand::Private::checkInputs()
 
     //TODO use better error code if possible
     if ( numMessages != 0 )
-        throw assuan_exception(makeError( GPG_ERR_ASS_NO_INPUT ), i18n( "Only --input and --output can be provided to the encrypt command, no --message") ); 
+        throw assuan_exception( makeError( GPG_ERR_ASS_NO_INPUT ), i18n( "Only INPUT and OUTPUT can be provided to the ENCRYPT command, no MESSAGE") ); 
        
     // for each input, we need an output
     //TODO use better error code if possible
     if ( numInputs != numOutputs )
-        throw assuan_exception( makeError( GPG_ERR_ASS_NO_INPUT ),  i18n( "For each --input there needs to be an --output" ) );
+        throw assuan_exception( makeError( GPG_ERR_ASS_NO_INPUT ),  i18n( "For each INPUT there needs to be an OUTPUT" ) );
 
     for ( int i = 0; i < numInputs; ++i ) {
         Input input;
@@ -127,7 +127,8 @@ void EncryptCommand::Private::startKeySelection()
 {
     KeySelectionJob* job = new KeySelectionJob( this );
     job->setSecretKeysOnly( false );
-    job->setPatterns( QStringList() ); // FIXME
+    job->setPatterns( q->recipients() );
+    job->setSilent( q->hasOption( "silent" ) );
     connect( job, SIGNAL( error( GpgME::Error, GpgME::KeyListResult ) ),
              this, SLOT( slotKeySelectionError( GpgME::Error, GpgME::KeyListResult ) ) );
     connect( job, SIGNAL( result( std::vector<GpgME::Key> ) ),
@@ -149,7 +150,7 @@ void EncryptCommand::Private::startEncryptJobs( const std::vector<GpgME::Key>& k
     assert( backend );
 
     Q_FOREACH( const Input i, m_inputs ) {
-        EncryptJob* job = backend->encryptJob();
+        EncryptJob* job = backend->encryptJob( true, true );
         connect( job, SIGNAL( result( GpgME::EncryptionResult, QByteArray ) ), 
                  this, SLOT( slotEncryptionResult( GpgME::EncryptionResult, QByteArray ) ) ); 
 
@@ -226,8 +227,8 @@ void EncryptCommand::Private::slotKeySelectionResult( const std::vector<GpgME::K
 
 void EncryptCommand::Private::slotKeySelectionError( const GpgME::Error& error, const GpgME::KeyListResult& )
 {
-    assert( error );
-    if ( error == q->makeError( GPG_ERR_CANCELED ) ) 
+    assert( error || error.isCanceled() );
+    if ( error.isCanceled() )
         q->done( error, i18n( "User canceled key selection" ) );
     else
         q->done( error, i18n( "Error while listing and selecting keys" ) );
