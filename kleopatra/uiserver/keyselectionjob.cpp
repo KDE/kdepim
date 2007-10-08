@@ -58,6 +58,7 @@ public:
     std::vector<GpgME::Key> m_keys;
     QStringList m_patterns;
     bool m_secretKeysOnly;
+    bool m_silent;
     QPointer<KeySelectionDialog> m_keySelector;
     int m_keyListings;
     GpgME::KeyListResult m_listResult;
@@ -153,12 +154,15 @@ void KeySelectionJob::Private::startKeyListing()
 void KeySelectionJob::Private::showKeySelectionDialog()
 {
     assert( !m_keySelector );
+    if ( m_silent ) {
+        emitResult( m_keys );
+        return;
+    }
     m_keySelector = new KeySelectionDialog();
     QObject::connect( m_keySelector, SIGNAL( accepted() ), q, SLOT( keySelectionDialogClosed() ) );
     QObject::connect( m_keySelector, SIGNAL( rejected() ), q, SLOT( keySelectionDialogClosed() ) );
     m_keySelector->addKeys( m_keys );
     m_keySelector->show();
-
 }
 
 void KeySelectionJob::start()
@@ -188,6 +192,16 @@ void KeySelectionJob::setSecretKeysOnly( bool secretOnly )
 bool KeySelectionJob::secretKeysOnly() const
 {
     return d->m_secretKeysOnly;
+}
+
+void KeySelectionJob::setSilent( bool silent )
+{
+    d->m_silent = silent;
+}
+
+bool KeySelectionJob::silent() const
+{
+    return d->m_silent;
 }
 
 #include "keyselectionjob.moc"

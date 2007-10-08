@@ -59,6 +59,9 @@ public:
     void setSecretKeysOnly( bool secretOnly );
     bool secretKeysOnly() const;
 
+    void setSilent( bool silent );
+    bool silent() const;
+
     void start();
 
 Q_SIGNALS:
