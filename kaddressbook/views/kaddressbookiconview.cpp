@@ -59,12 +59,7 @@ class IconViewFactory : public ViewFactory
     QString description() const { return i18n( "Icons represent contacts. Very simple view." ); }
 };
 
-extern "C" {
-  KDE_EXPORT void *init_libkaddrbk_iconview()
-  {
-    return ( new IconViewFactory );
-  }
-}
+K_EXPORT_PLUGIN(IconViewFactory)
 
 AddresseeIconView::AddresseeIconView( QWidget *parent, const char *name )
   : K3IconView( parent, name )

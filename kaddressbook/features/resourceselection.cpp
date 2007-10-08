@@ -387,11 +387,6 @@ class ResourceSelectionFactory : public KAB::ExtensionFactory
     }
 };
 
-extern "C" {
-  KDE_EXPORT void *init_libkaddrbk_resourceselection()
-  {
-    return ( new ResourceSelectionFactory );
-  }
-}
+K_EXPORT_PLUGIN(ResourceSelectionFactory)
 
 #include "resourceselection.moc"

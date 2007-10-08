@@ -74,12 +74,7 @@ class DistributionListFactory : public KAB::ExtensionFactory
     }
 };
 
-extern "C" {
-  KDE_EXPORT void *init_libkaddrbk_distributionlist()
-  {
-    return ( new DistributionListFactory );
-  }
-}
+K_EXPORT_PLUGIN(DistributionListFactory)
 
 /**
   We have to catch when the 'Del' key is pressed, otherwise
