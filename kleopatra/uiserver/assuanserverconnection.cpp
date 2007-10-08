@@ -51,6 +51,7 @@
 
 #include <boost/type_traits/remove_pointer.hpp>
 #include <boost/lexical_cast.hpp>
+#include <boost/bind.hpp>
 
 #include <vector>
 #include <map>
@@ -103,6 +104,10 @@ struct AssuanContext : AssuanContextBase {
 
     void reset( assuan_context_t ctx=0 ) { AssuanContextBase::reset( ctx, &assuan_deinit_server ); }
 };
+
+static inline gpg_error_t assuan_process_done_msg( assuan_context_t ctx, gpg_error_t err, const char * err_msg ) {
+    return assuan_process_done( ctx, assuan_set_error( ctx, err, err_msg ) );
+}
 
 static unsigned char unhex( unsigned char ch ) {
     if ( ch >= '0' && ch <= '9' )
@@ -211,19 +216,35 @@ public Q_SLOTS:
     void slotReadActivity( int ) {
         assert( ctx );
         if ( const int err = assuan_process_next( ctx.get() ) ) {
-            if ( err == -1 || gpg_err_code(err) == GPG_ERR_EOF ) {
+            //if ( err == -1 || gpg_err_code(err) == GPG_ERR_EOF ) {
                 if ( currentCommand )
-                    currentCommand->canceled(); // ### respect --nohup
-                cleanup();
-                const QPointer<Private> that = this;
-                emit q->closed( q );
-                if ( that ) // still there
-                    q->deleteLater();
-            } else {
+                    currentCommand->canceled();
+                closed = true;
+                if ( nohupedCommands.empty() )
+                    bottomHalfDeletion();
+            //} else {
                 //assuan_process_done( ctx.get(), err );
-                return;
-            }
+                //return;
+            //}
         }
+    }
+
+    void nohupDone( AssuanCommand * cmd ) {
+        const std::vector< shared_ptr<AssuanCommand> >::iterator it
+            = std::find_if( nohupedCommands.begin(), nohupedCommands.end(),
+                            bind( &shared_ptr<AssuanCommand>::get, _1 ) == cmd );
+        assert( it != nohupedCommands.end() );
+        nohupedCommands.erase( it );
+        if ( nohupedCommands.empty() && closed )
+            bottomHalfDeletion();
+    }
+
+    void bottomHalfDeletion() {
+        cleanup();
+        const QPointer<Private> that = this;
+        emit q->closed( q );
+        if ( that ) // still there
+            q->deleteLater();
     }
 
 private:
@@ -259,7 +280,7 @@ private:
             return assuan_process_done( ctx_, assuan_send_data( ctx_, pid.constData(), pid.size() ) );
         }
         static const QByteArray errorString = tr("Unknown value for WHAT").toUtf8();
-        return assuan_process_done( ctx_, assuan_set_error( ctx_, gpg_error( GPG_ERR_ASS_PARAMETER ), errorString.constData() ) );
+        return assuan_process_done_msg( ctx_, gpg_error( GPG_ERR_ASS_PARAMETER ), errorString.constData() );
     }
 
     // format: TAG (FD|FD=\d+|FILE=...)
@@ -395,15 +416,18 @@ private:
 
     assuan_fd_t fd;
     AssuanContext ctx;
+    bool closed;
     std::vector< shared_ptr<QSocketNotifier> > notifiers;
     std::vector< shared_ptr<AssuanCommandFactory> > factories; // sorted: _detail::ByName<std::less>
     shared_ptr<AssuanCommand> currentCommand;
+    std::vector< shared_ptr<AssuanCommand> > nohupedCommands;
     std::map<std::string,QVariant> options;
     std::map< std::string, std::vector<IO> > inputs, outputs;
     std::map< QByteArray, shared_ptr<AssuanCommand::Memento> > mementos;
 };
 
 void AssuanServerConnection::Private::cleanup() {
+    assert( nohupedCommands.empty() );
     options.clear();
     currentCommand.reset();
     options.clear();
@@ -414,7 +438,7 @@ void AssuanServerConnection::Private::cleanup() {
 }
 
 AssuanServerConnection::Private::Private( assuan_fd_t fd_, const std::vector< shared_ptr<AssuanCommandFactory> > & factories_, AssuanServerConnection * qq )
-    : QObject(), q( qq ), fd( fd_ ), factories( factories_ )
+    : QObject(), q( qq ), fd( fd_ ), closed( false ), factories( factories_ )
 {
 #ifdef __GNUC__
     assert( __gnu_cxx::is_sorted( factories_.begin(), factories_.end(), _detail::ByName<std::less>() ) );
@@ -813,14 +837,14 @@ void AssuanCommand::done( int err ) {
         assert( assuan_get_pointer( d->ctx.get() ) );
         AssuanServerConnection::Private & conn = *static_cast<AssuanServerConnection::Private*>( assuan_get_pointer( d->ctx.get() ) );
 
-        // enable reception of client disconnect again:
-        Q_FOREACH( shared_ptr<QSocketNotifier> sn, conn.notifiers )
-            if ( sn )
-                sn->setEnabled( true );
+        conn.nohupDone( this );
+
+        return;
+
     } else {
 
         const gpg_error_t rc = assuan_process_done( d->ctx.get(), err );
-        if ( rc )
+        if ( gpg_err_code( rc ) != GPG_ERR_NO_ERROR )
             qFatal( "AssuanCommand::done: assuan_process_done returned error %d (%s)",
                     static_cast<int>(rc), gpg_strerror(rc) );
 
@@ -861,27 +885,26 @@ int AssuanCommandFactory::_handle( assuan_context_t ctx, char * line, const char
     bool nohup = false;
     if ( cmd->d->options.count( "nohup" ) ) {
         if ( !cmd->d->options["nohup"].toString().isEmpty() )
-            return assuan_process_done( conn.ctx.get(), 0 );
-        else
-            nohup = true;
+            return assuan_process_done_msg( conn.ctx.get(), gpg_error( GPG_ERR_ASS_PARAMETER ), "--nohup takes no argument" );
+        nohup = true;
         cmd->d->options.erase( "nohup" );
     }
 
-    if ( const int err = cmd->start() ) {
-        assert( cmd->d->done );
-        return err;
-    }
+    if ( const int err = cmd->start() )
+        if ( cmd->d->done )
+            return err;
+        else
+            return assuan_process_done( conn.ctx.get(), err );
 
-    conn.currentCommand = cmd;
+    if ( cmd->d->done )
+        return 0;
 
     if ( nohup ) {
-        // play deaf until command finishes
-        Q_FOREACH( shared_ptr<QSocketNotifier> sn, conn.notifiers )
-            if ( sn )
-                sn->setEnabled( false );
         cmd->d->nohup = true;
-        return assuan_process_done( conn.ctx.get(), 0 );
+        conn.nohupedCommands.push_back( cmd );
+        return assuan_process_done_msg( conn.ctx.get(), 0, "Command put in the background to continue executing after connection end." );
     } else {
+        conn.currentCommand = cmd;
         return 0;
     }
 }
