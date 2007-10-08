@@ -48,6 +48,7 @@
 #include <QFile>
 #include <QFileInfo>
 #include <QDebug>
+#include <QStringList>
 
 #include <boost/type_traits/remove_pointer.hpp>
 #include <boost/lexical_cast.hpp>
@@ -57,6 +58,7 @@
 #include <map>
 #include <string>
 #include <memory>
+#include <algorithm>
 
 #include <errno.h>
 
@@ -418,6 +420,23 @@ private:
         return IO_handler( ctx, line, true, "MESSAGE" );
     }
 
+    template <typename T_memptr>
+    static int recipient_sender_handler( T_memptr mp, assuan_context_t ctx, char * line ) {
+        assert( assuan_get_pointer( ctx ) );
+        AssuanServerConnection::Private & conn = *static_cast<AssuanServerConnection::Private*>( assuan_get_pointer( ctx ) );
+
+        (conn.*mp).push_back( QString::fromUtf8( hexdecode( line ).c_str() ) );
+        return assuan_process_done( ctx, 0 );
+    }
+
+    static int recipient_handler( assuan_context_t ctx, char * line ) {
+        return recipient_sender_handler( &Private::recipients, ctx, line );
+    }
+
+    static int sender_handler( assuan_context_t ctx, char * line ) {
+        return recipient_sender_handler( &Private::senders, ctx, line );
+    }
+
     void cleanup();
 
 
@@ -429,6 +448,7 @@ private:
     shared_ptr<AssuanCommand> currentCommand;
     std::vector< shared_ptr<AssuanCommand> > nohupedCommands;
     std::map<std::string,QVariant> options;
+    std::vector<QString> senders, recipients;
     std::map< std::string, std::vector<IO> > inputs, outputs;
     std::map< QByteArray, shared_ptr<AssuanCommand::Memento> > mementos;
 };
@@ -500,6 +520,10 @@ AssuanServerConnection::Private::Private( assuan_fd_t fd_, const std::vector< sh
 
     if ( const gpg_error_t err = assuan_register_command( ctx.get(), "GETINFO", getinfo_handler ) )
         throw assuan_exception( err, "register \"GETINFO\" handler" );
+    if ( const gpg_error_t err = assuan_register_command( ctx.get(), "RECIPIENT", recipient_handler ) )
+        throw assuan_exception( err, "register \"RECIPIENT\" handler" );
+    if ( const gpg_error_t err = assuan_register_command( ctx.get(), "SENDER", sender_handler ) )
+        throw assuan_exception( err, "register \"SENDER\" handler" );
 
     assuan_set_hello_line( ctx.get(), "GPG UI server (Kleopatra/" KLEOPATRA_VERSION_STRING ") ready to serve" );
     //assuan_set_hello_line( ctx.get(), GPG UI server (qApp->applicationName() + " v" + kapp->applicationVersion() + "ready to serve" )
@@ -594,6 +618,7 @@ public:
 
     std::map<std::string,QVariant> options;
     std::map< std::string, std::vector<IO> > inputs, outputs;
+    std::vector<QString> recipients, senders;
     QByteArray utf8ErrorKeepAlive;
     AssuanContext ctx;
     bool done;
@@ -866,6 +891,18 @@ bool AssuanCommand::isNohup() const {
     return d->nohup;
 }
 
+QStringList AssuanCommand::recipients() const {
+    QStringList result;
+    std::copy( d->recipients.begin(), d->recipients.end(), std::back_inserter( result ) );
+    return result;
+}
+
+QStringList AssuanCommand::senders() const {
+    QStringList result;
+    std::copy( d->senders.begin(), d->senders.end(), std::back_inserter( result ) );
+    return result;
+}
+
 int AssuanCommandFactory::_handle( assuan_context_t ctx, char * line, const char * commandName ) {
     assert( assuan_get_pointer( ctx ) );
 
@@ -884,6 +921,8 @@ int AssuanCommandFactory::_handle( assuan_context_t ctx, char * line, const char
     cmd->d->options = conn.options;
     cmd->d->inputs.swap( conn.inputs );   assert( conn.inputs.empty() );
     cmd->d->outputs.swap( conn.outputs ); assert( conn.outputs.empty() );
+    cmd->d->senders.swap( conn.senders ); assert( conn.senders.empty() );
+    cmd->d->recipients.swap( conn.recipients ); assert( conn.recipients.empty() );
 
     const std::map<std::string,std::string> cmdline_options = parse_commandline( line );
     for ( std::map<std::string,std::string>::const_iterator it = cmdline_options.begin(), end = cmdline_options.end() ; it != end ; ++it )

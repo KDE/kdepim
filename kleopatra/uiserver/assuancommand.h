@@ -45,6 +45,7 @@
 class QVariant;
 class QIODevice;
 class QObject;
+class QStringList;
 
 struct assuan_context_s;
 
@@ -215,6 +216,9 @@ namespace Kleo {
     protected:
 
         bool isNohup() const;
+
+        QStringList recipients() const;
+        QStringList senders() const;
 
         bool hasMemento( const QByteArray & tag ) const;
         boost::shared_ptr<Memento> memento( const QByteArray & tag ) const;
