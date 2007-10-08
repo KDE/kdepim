@@ -489,6 +489,7 @@ void AddresseeLineEdit::slotPopupCompletion( const QString& completion )
   setText( m_previousAddresses + completion.stripWhiteSpace() );
   cursorAtEnd();
 //  slotMatched( m_previousAddresses + completion );
+  updateSearchString();
 }
 
 void AddresseeLineEdit::slotReturnPressed( const QString& item )
@@ -792,7 +793,7 @@ void AddresseeLineEdit::setCompletedItems( const QStringList& items, bool autoSu
          !(items.count() == 1 && m_searchString == items.first()) )
     {
         QString oldCurrentText = completionBox->currentText();
-        QListBoxItem *itemUnderMouse = completionBox->itemAt( 
+        QListBoxItem *itemUnderMouse = completionBox->itemAt(
             completionBox->viewport()->mapFromGlobal(QCursor::pos()) );
         QString oldTextUnderMouse;
         QPoint oldPosOfItemUnderMouse;
@@ -1060,7 +1061,7 @@ bool KPIM::AddresseeLineEdit::eventFilter(QObject *obj, QEvent *e)
       // find the next header (searching backwards, for Key_Backtab
       QListBoxItem *nextHeader = 0;
       const int iterationstep = ke->key() == Key_Tab ?  1 : -1;
-      // when iterating forward, start at the currentindex, when backwards, 
+      // when iterating forward, start at the currentindex, when backwards,
       // one up from our header, or at the end
       uint j = ke->key() == Key_Tab ? currentIndex : i==0 ? completionBox()->count()-1 : (i-1) % completionBox()->count();
       while ( ( nextHeader = completionBox()->item( j ) ) && nextHeader != myHeader ) {
