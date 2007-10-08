@@ -470,7 +470,7 @@ AssuanServerConnection::Private::Private( assuan_fd_t fd_, const std::vector< sh
     if ( const gpg_error_t err = assuan_register_command( ctx.get(), "GETINFO", getinfo_handler ) )
         throw assuan_exception( err, "register \"GETINFO\" handler" );
 
-    assuan_set_hello_line( ctx.get(), "GPG UI server (Kleopatra/1.9) ready to serve" );
+    assuan_set_hello_line( ctx.get(), "GPG UI server (Kleopatra/" KLEOPATRA_VERSION_STRING ") ready to serve" );
     //assuan_set_hello_line( ctx.get(), GPG UI server (qApp->applicationName() + " v" + kapp->applicationVersion() + "ready to serve" )
 
 
