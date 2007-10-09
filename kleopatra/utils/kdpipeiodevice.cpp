@@ -651,7 +651,7 @@ void KDPipeIODevice::close() { KDAB_CHECK_THIS;
     qDebug( "KPipeIODevice::close(%p): wait and closing writer %p", this, d->writer );
     waitAndDelete( d->writer );
     qDebug( "KPipeIODevice::close(%p): wait and closing reader %p", this, d->reader );
-    {
+    if ( d->reader ) {
         LOCKED( d->reader );
         d->reader->readyReadSentCondition.wakeAll();
     }
