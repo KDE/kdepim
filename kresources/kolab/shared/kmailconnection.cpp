@@ -35,6 +35,7 @@
 #include "resourcekolabbase.h"
 
 #include <kdebug.h>
+#include <kurl.h>
 #include <kdbusservicestarter.h>
 #include <kmail_groupwareinterface.h>
 #include <kmail_util.h>

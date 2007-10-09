@@ -14,6 +14,7 @@
 
 #include <kstandarddirs.h>
 #include <kconfig.h>
+#include <kconfiggroup.h>
 #include <klocale.h>
 #include <kdebug.h>
 
@@ -84,7 +85,7 @@ bool KNArticleFilter::loadInfo()
     n_ame=group.readEntry("name");
     translateName = group.readEntry("Translate_Name",true);
     e_nabled=group.readEntry("enabled", true);
-    apon=(ApOn) conf.readEntry("applyOn", 0);
+    apon=(ApOn) group.readEntry("applyOn", 0);
     return true;
   }
   return false;

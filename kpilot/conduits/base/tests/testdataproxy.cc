@@ -32,6 +32,8 @@
 
 #include "options.h"
 
+#include <QtCore/QDebug>
+
 TestDataProxy::TestDataProxy() : fCreateCount(0), fUpdateCount(0)
 	, fDeleteCount(0), fId(0)
 {

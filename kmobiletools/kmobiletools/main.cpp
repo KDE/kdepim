@@ -21,6 +21,7 @@
 #include <kapplication.h>
 #include <kcmdlineargs.h>
 #include <klocale.h>
+#include <kdebug.h>
 //#include <dcopclient.h>
 #include <libkmobiletools/crashhandler.h>
 #include <libkmobiletools/aboutdata.h>

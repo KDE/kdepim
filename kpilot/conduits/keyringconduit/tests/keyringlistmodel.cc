@@ -31,6 +31,8 @@
 #include "keyringhhrecord.h"
 #include "keyringhhdataproxy.h"
 
+#include <QtCore/QDebug>
+
 KeyringListModel::KeyringListModel( KeyringHHDataProxy *proxy, QObject *parent )
 	: QAbstractListModel( parent ), fProxy ( proxy )
 {

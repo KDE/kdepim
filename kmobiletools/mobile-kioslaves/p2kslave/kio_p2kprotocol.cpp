@@ -279,9 +279,9 @@ void kio_p2kProtocol::get(const KUrl &url)
 /*!
     \fn kio_p2kProtocol::put(const KUrl &url, int permissions, bool overwrite, bool resume)
  */
-void kio_p2kProtocol::put(const KUrl &url, int permissions, bool overwrite, bool resume)
+void kio_p2kProtocol::put(const KUrl &url, int permissions, KIO::JobFlags flags)
 {
-    kDebug() <<"URL:" << url <<"; permissions:" << permissions <<"; overwrite:" << overwrite <<"; resume:" << resume;
+    kDebug() <<"URL:" << url <<"; permissions:" << permissions <<"; overwrite:" << (flags & KIO::Overwrite) <<"; resume:" << (flags & KIO::Resume);
     QByteArray buffer;
     dataReq();
     int result= readData( buffer );

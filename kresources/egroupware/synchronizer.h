@@ -36,7 +36,7 @@
 
     ...
 
-    job = KIO::file_copy( url, file, -1, true );
+    job = KIO::file_copy( url, file, -1, KIO::Overwrite );
     connect( job, SIGNAL( result( KJob * ) ),
              SLOT( slotResult( KJob * ) ) );
 

@@ -20,6 +20,7 @@
 #include "password.h"
 
 #include <kconfig.h>
+#include <kconfiggroup.h>
 #include <kdebug.h>
 #include <kwallet.h>
 
@@ -32,12 +33,16 @@ bool KOrnPassword::m_useWallet = false; //Not default true until moving works
 
 QString KOrnPassword::readKOrnPassword( int box, int account, const KConfigBase &fallbackConfig )
 {
+
+#if defined(__GNUC__)
+#warning "FIXME:This is not really correct, this function should be passed the group from which the config is to be read"
+#endif
 	QString result;
 
 	if( readKOrnPassword( box, account, result ) )
 		return result;
 	else
-		return fallbackConfig.readEntry( "password" );
+		return fallbackConfig.group("<default>").readEntry( "password" );
 }
 
 QString KOrnPassword::readKMailPassword( int accountnr, const KConfigBase& fallbackConfig )
@@ -45,35 +50,46 @@ QString KOrnPassword::readKMailPassword( int accountnr, const KConfigBase& fallb
 	QString password;
 	open();
 
+#if defined(__GNUC__)
+#warning "FIXME:This is not really correct, this function should be passed the group from which the config is to be read"
+#endif
 	if( !m_wallet || !m_wallet->isOpen() || m_openFailed )
-		return KMailDecrypt( fallbackConfig.readEntry( "pass" ) );
+		return KMailDecrypt( fallbackConfig.group("<default>").readEntry( "pass" ) );
 
 	if( !m_wallet->hasFolder( "kmail" ) )
-		return KMailDecrypt( fallbackConfig.readEntry( "pass" ));
+		return KMailDecrypt( fallbackConfig.group("<default>").readEntry( "pass" ));
 	m_wallet->setFolder( "kmail" );
 
 	if( m_wallet->readPassword( QString( "account-%1" ).arg( accountnr ), password ) != 0 )
-		return fallbackConfig.readEntry( "password" );
+		return fallbackConfig.group("<default>").readEntry( "password" );
 
 	return password;
 }
 
 void KOrnPassword::writeKOrnPassword( int box, int account, KConfigBase& fallbackConfig, const QString& password )
 {
+
+#if defined(__GNUC__)
+#warning "FIXME:This is not really correct, this function should be passed the group from which the config is to be read"
+#endif
 	if( writeKOrnPassword( box, account, password ) )
 	{
-		if( fallbackConfig.hasKey( "password" ) )
-			fallbackConfig.deleteEntry( "password" );
+		if( fallbackConfig.group("<default>").hasKey( "password" ) )
+			fallbackConfig.group("<default>").deleteEntry( "password" );
 	}
 	else
-		fallbackConfig.writeEntry( "password", password );
+		fallbackConfig.group("<default>").writeEntry( "password", password );
 }
 
 void KOrnPassword::deleteKOrnPassword( int box, int account, KConfigBase& fallbackConfig )
 {
+
+#if defined(__GNUC__)
+#warning "FIXME:This is not really correct, this function should be passed the group from which the config is to be read"
+#endif
 	deleteKOrnPassword( box, account );
-	if( fallbackConfig.hasKey( "password" ) )
-		fallbackConfig.deleteEntry( "password" );
+	if( fallbackConfig.group("<default>").hasKey( "password" ) )
+		fallbackConfig.group("<default>").deleteEntry( "password" );
 }
 
 bool KOrnPassword::deleteKOrnPassword( int box, int account )

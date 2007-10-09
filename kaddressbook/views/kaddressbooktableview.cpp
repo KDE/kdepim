@@ -80,12 +80,7 @@ class TableViewFactory : public ViewFactory
     }
 };
 
-extern "C" {
-  KDE_EXPORT void *init_libkaddrbk_tableview()
-  {
-    return ( new TableViewFactory );
-  }
-}
+K_EXPORT_PLUGIN(TableViewFactory)
 
 KAddressBookTableView::KAddressBookTableView( KAB::Core *core,
                                               QWidget *parent )

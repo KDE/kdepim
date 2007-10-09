@@ -103,7 +103,7 @@ KIO::Job *GroupDavGlobals::createListFoldersJob( const KUrl &url )
 //  WebdavHandler::addElement( doc, prop, "d:hassubs" );
 
   kDebug(7000) <<"props:" << doc.toString();
-  return KIO::davPropFind( url, doc, "1", false );
+  return KIO::davPropFind( url, doc, "1", KIO::HideProgressInfo );
 }
 
 
@@ -115,7 +115,7 @@ KIO::TransferJob *GroupDavGlobals::createListItemsJob( const KUrl &url )
   WebdavHandler::addDavElement( doc, prop, "getetag" );
 //  WebdavHandler::addDavElement( doc, prop, "getcontenttype" );
   kDebug(5800) <<"props ="<< doc.toString();
-  KIO::TransferJob *job = KIO::davPropFind( url, doc, "1", false );
+  KIO::TransferJob *job = KIO::davPropFind( url, doc, "1", KIO::HideProgressInfo );
   if ( job ) {
     job->addMetaData( "accept", "application/xml" );
     job->addMetaData( "customHTTPHeader", "accept-encoding: " );
@@ -128,7 +128,7 @@ KIO::TransferJob *GroupDavGlobals::createDownloadJob( KPIM::GroupwareDataAdaptor
                     const KUrl &url, KPIM::FolderLister::ContentType /*ctype*/ )
 {
 kDebug()<<"GroupDavGlobals::createDownloadJob, url="<<url.url();
-  KIO::TransferJob *job = KIO::get( url, false, false );
+  KIO::TransferJob *job = KIO::get( url, KIO::NoReload, KIO::HideProgressInfo );
   if ( adaptor ) {
     QString mt = adaptor->mimeType();
     job->addMetaData( "accept", mt );
@@ -150,7 +150,7 @@ KIO::Job *GroupDavGlobals::createRemoveJob( KPIM::GroupwareDataAdaptor *adaptor,
   KIO::Job *delJob = 0;
   if ( !url.isEmpty() ) {
     kDebug(5700) <<"Delete:" <<   url.url();
-    delJob = KIO::file_delete( url, false );
+    delJob = KIO::file_delete( url, KIO::HideProgressInfo );
   }
   if ( delJob && adaptor && adaptor->idMapper() ) {
     kDebug(5800 ) <<"Adding If-Match metadata:" << adaptor->idMapper()->fingerprint( deletedItem->uid() );
@@ -176,7 +176,7 @@ kDebug() <<"Deleting item at"<< url.url();
     }
     kDebug(5700) <<"Delete (Mod) :" <<   url.url();
   }
-  return KIO::file_del( urls, false, false );*/
+  return KIO::file_del( urls, KIO::HideProgressInfo, false );*/
 }
 
 

@@ -41,11 +41,11 @@ public:
      * @return a job manager instance
      */
     static JobManager* instance();
-
-    void enqueueJob( const QString& deviceName, JobXP* job );
-    void dequeueJob( JobXP* job );
-
     ~JobManager();
+
+public Q_SLOTS:
+    void enqueueJob( const QString& deviceName, KMobileTools::JobXP* job );
+    void dequeueJob( KMobileTools::JobXP* job );
 
 private Q_SLOTS:
     void emitJobStarted( ThreadWeaver::Job* job );
@@ -53,12 +53,12 @@ private Q_SLOTS:
     void emitJobFailed( ThreadWeaver::Job* job );
 
 Q_SIGNALS:
-    void jobEnqueued( const QString& deviceName, JobXP* job );
-    void jobDequeued( const QString& deviceName, JobXP* job );
-    void jobStarted( const QString& deviceName, JobXP* job );
+    void jobEnqueued( const QString& deviceName, KMobileTools::JobXP* job );
+    void jobDequeued( const QString& deviceName, KMobileTools::JobXP* job );
+    void jobStarted( const QString& deviceName, KMobileTools::JobXP* job );
 
-    void jobDone( const QString& deviceName, JobXP* job );
-    void jobFailed( const QString& deviceName, JobXP* job );
+    void jobDone( const QString& deviceName, KMobileTools::JobXP* job );
+    void jobFailed( const QString& deviceName, KMobileTools::JobXP* job );
 
 private:
     JobManager();

@@ -19,6 +19,7 @@
 #include "process_drop.h"
 
 #include <kconfigbase.h>
+#include <kconfiggroup.h>
 #include <kdebug.h>
 #include <klocale.h>
 #include <kprocess.h>
@@ -85,7 +86,7 @@ QString ProcessDrop::type() const
 
 bool ProcessDrop::readConfigGroup ( const KConfigBase& cfg )
 {
-	*_program = cfg.readEntry( "program", "" );
+	*_program = cfg.group("<default>").readEntry( "program", "" );
 
 	//Delete process to make sure nothing of the process actually runs.
 	//It is recreated at first recheck.

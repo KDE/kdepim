@@ -47,7 +47,7 @@ public:
     private:
         void setHost(const QString &host, int port, const QString &user, const QString &pass);
         void listRoot(const KUrl &url);
-        void put(const KUrl &url, int permissions, bool overwrite, bool resume);
+        void put(const KUrl &url, int permissions, KIO::JobFlags flags);
         P2KImpl m_impl;
         QString s_host;
         DeviceIFace_stub *kmt_stub;

@@ -19,7 +19,9 @@
 
 #include "fetchaddressbookjob.h"
 
+#include <KDE/KDebug>
 #include <QtCore/QTimer>
+#include <KDE/ThreadWeaver/Thread>
 
 FetchAddressbookJob::FetchAddressbookJob( QObject* parent )
  : KMobileTools::JobXP( JobXP::fetchAddressbook, parent )
@@ -32,11 +34,8 @@ FetchAddressbookJob::~FetchAddressbookJob()
 }
 
 void FetchAddressbookJob::run() {
-    QTimer::singleShot( 5 * 1000, this, SLOT(simulateFinished()) );
-}
-
-void FetchAddressbookJob::simulateFinished() {
-    setFinished( true );
+    kDebug() << "running...";
+    thread()->msleep( 5000 );
 }
 
 void FetchAddressbookJob::requestAbort() {

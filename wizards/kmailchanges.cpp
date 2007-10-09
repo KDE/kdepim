@@ -24,6 +24,7 @@
 
 #include <kapplication.h>
 #include <klocale.h>
+#include <kconfiggroup.h>
 #include <kstandarddirs.h>
 #include <kemailsettings.h>
 #include <kpimidentities/identitymanager.h>

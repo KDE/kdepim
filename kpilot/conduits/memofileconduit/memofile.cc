@@ -27,6 +27,9 @@
 
 #include "memofile.h"
 
+#include <QtCore/QTextStream>
+#include <QtCore/QDateTime>
+
 Memofile::Memofile(PilotMemo * memo, QString categoryName, QString fileName, QString baseDirectory) :
 		PilotMemo(memo,memo->text()), _categoryName(categoryName), _filename(fileName),  _baseDirectory(baseDirectory)
 {

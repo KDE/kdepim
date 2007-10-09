@@ -141,7 +141,7 @@ void MobileImpl::createEntry(KIO::UDSEntry &entry,
 
 		m_lastListingEmpty = true;
 
-		KIO::ListJob *job = KIO::listDir(url, false, false);
+		KIO::ListJob *job = KIO::listDir(url, KIO::HideProgressInfo, false);
 		connect( job, SIGNAL( entries(KIO::Job *,
 		                      const KIO::UDSEntryList &) ),
 		         this, SLOT( slotEntries(KIO::Job *,

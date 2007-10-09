@@ -209,7 +209,7 @@ bool ResourceSlox::asyncLoad()
 
   kDebug() <<"REQUEST CONTACTS:" << doc.toString( 2 );
 
-  mDownloadJob = KIO::davPropFind( url, doc, "0", false );
+  mDownloadJob = KIO::davPropFind( url, doc, "0", KIO::HideProgressInfo );
   connect( mDownloadJob, SIGNAL( result( KJob * ) ),
            SLOT( slotResult( KJob * ) ) );
   connect( mDownloadJob, SIGNAL( percent( KJob *, unsigned long ) ),
@@ -518,7 +518,7 @@ void ResourceSlox::uploadContacts()
   url.setUser( mPrefs->user() );
   url.setPass( mPrefs->password() );
 
-  mUploadJob = KIO::davPropPatch( url, doc, false );
+  mUploadJob = KIO::davPropPatch( url, doc, KIO::HideProgressInfo );
   connect( mUploadJob, SIGNAL( result( KJob * ) ),
            SLOT( slotUploadResult( KJob * ) ) );
   connect( mUploadJob, SIGNAL( percent( KJob *, unsigned long ) ),

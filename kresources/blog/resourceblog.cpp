@@ -25,6 +25,7 @@
 #include <QString>
 
 #include <KUrl>
+#include <KConfigGroup>
 #include <KLocale>
 
 #include <kcal/journal.h>
@@ -37,7 +38,7 @@
 #include <kblog/blogpost.h>
 #include <kblog/blogmedia.h>
 #include <kblog/movabletype.h>
-#include <kblog/livejournal.h>
+// #include <kblog/livejournal.h>
 #include <kblog/gdata.h>
 
 using namespace KCal;
@@ -147,8 +148,8 @@ void ResourceBlog::setAPI( const QString &API )
 {
   if ( API == "Google Blogger Data" ) {
     mBlog = new KBlog::GData( mUrl, this );
-  } else if ( API == "LiveJournal" ) {
-    mBlog = new KBlog::LiveJournal( mUrl, this );
+//  } else if ( API == "LiveJournal" ) {
+//    mBlog = new KBlog::LiveJournal( mUrl, this );
   } else if ( API == "Movable Type" ) {
     mBlog = new KBlog::MovableType( mUrl, this );
   } else if ( API == "MetaWeblog" ) {
@@ -169,9 +170,9 @@ QString ResourceBlog::API() const
     if ( qobject_cast<KBlog::GData*>( mBlog ) ) {
       return "Google Blogger Data";
     }
-    else if ( qobject_cast<KBlog::LiveJournal*>( mBlog ) ) {
-      return "LiveJournal";
-    }
+//    else if ( qobject_cast<KBlog::LiveJournal*>( mBlog ) ) {
+//      return "LiveJournal";
+//    }
     else if ( qobject_cast<KBlog::MovableType*>( mBlog ) ) {
       return "Movable Type";
     }

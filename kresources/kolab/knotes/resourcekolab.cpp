@@ -40,6 +40,7 @@
 #include <kcal/icalformat.h>
 
 #include <kdebug.h>
+#include <kconfiggroup.h>
 #include <kglobal.h>
 #include <QList>
 

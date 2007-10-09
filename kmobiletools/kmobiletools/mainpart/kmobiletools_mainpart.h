@@ -49,6 +49,7 @@ class DeviceHome;
 class ServiceModel;
 class QProgressDialog;
 class JobSignalMapper;
+class JobQueueView;
 
 namespace KMobileTools {
     class CoreService;
@@ -149,13 +150,13 @@ private Q_SLOTS:
     void treeViewContextMenu( const QPoint& position );
 
     /**
-     * This slot is called when a new @p job is created by the device with
+     * This slot is called when a new @p job is enqueued by the device with
      * given name @p deviceName
      *
-     * @param deviceName the name of the device for which the job was created
+     * @param deviceName the name of the device for which the job was enqueued
      * @param job the job
      */
-    void jobCreated( const QString& deviceName, KMobileTools::JobXP* job );
+    void jobEnqueued( const QString& deviceName, KMobileTools::JobXP* job );
 
     /**
      * This slot is called when a new device was added. It sets up the job
@@ -196,6 +197,7 @@ private:
 
     JobSignalMapper* m_jobSignalMapper;
     KStatusBar* m_statusBar;
+    JobQueueView* m_jobQueueView;
 
     QStackedWidget *m_widget;
     QTreeView *m_treeView;

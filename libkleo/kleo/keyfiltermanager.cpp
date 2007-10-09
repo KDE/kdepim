@@ -41,9 +41,9 @@
 #include <QCoreApplication>
 #include <QRegExp>
 #include <QStringList>
+#include <QVector>
 
 #include <algorithm>
-
 
 class Kleo::KeyFilterManager::Private {
 public:

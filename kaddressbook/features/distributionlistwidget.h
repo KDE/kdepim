@@ -46,7 +46,6 @@ class Core;
 
 namespace KABC {
 class AddressBook;
-class DistributionListManager;
 }
 
 class DistributionListWidget : public KAB::ExtensionWidget
@@ -62,8 +61,10 @@ class DistributionListWidget : public KAB::ExtensionWidget
     QString title() const;
     QString identifier() const;
 
+  Q_SIGNALS:
+    void modified();
+
   public slots:
-    void save();
     void dropped( QDropEvent* );
 
     void removeContact();
@@ -94,9 +95,6 @@ class DistributionListWidget : public KAB::ExtensionWidget
     QLabel *mEntryCountLabel;
     DistributionListView *mContactView;
 
-#ifndef KDEPIM_NEW_DISTRLISTS
-    KABC::DistributionListManager *mManager;
-#endif
     QPushButton *mCreateListButton;
     QPushButton *mEditListButton;
     QPushButton *mRemoveListButton;

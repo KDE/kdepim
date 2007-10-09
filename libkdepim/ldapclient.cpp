@@ -31,6 +31,7 @@
 #include <kldap/ldapurl.h>
 #include <kldap/ldif.h>
 #include <kconfig.h>
+#include <kconfiggroup.h>
 #include <kdebug.h>
 #include <kdirwatch.h>
 #include <kcodecs.h>
@@ -78,7 +79,7 @@ void LdapClient::startQuery( const QString& filter )
 
   startParseLDIF();
   mActive = true;
-  mJob = KIO::get( url, false, false );
+  mJob = KIO::get( url, KIO::NoReload, KIO::HideProgressInfo );
   connect( mJob, SIGNAL( data( KIO::Job*, const QByteArray& ) ),
            this, SLOT( slotData( KIO::Job*, const QByteArray& ) ) );
   connect( mJob, SIGNAL( infoMessage( KJob*, const QString&, const QString& ) ),

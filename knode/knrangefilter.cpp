@@ -19,6 +19,7 @@
 
 #include <knuminput.h>
 #include <kconfig.h>
+#include <kconfiggroup.h>
 
 #include "knrangefilter.h"
 

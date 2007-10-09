@@ -11,6 +11,8 @@ set(kmobiletoolsmainpart_PART_SRCS
    #deviceconfigdialog.cpp 
    devicemanager.cpp
    jobsignalmapper.cpp
+   jobqueueview/jobqueueview.cpp
+   jobqueueview/jobitem.cpp
    #addressdetails.cpp 
    #calldialogimpl.cpp 
    #calldialogimpl.h 

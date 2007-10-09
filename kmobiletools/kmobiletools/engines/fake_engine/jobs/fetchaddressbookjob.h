@@ -40,9 +40,6 @@ public:
 
 public Q_SLOTS:
     void requestAbort();
-
-private Q_SLOTS:
-    void simulateFinished();
 };
 
 #endif

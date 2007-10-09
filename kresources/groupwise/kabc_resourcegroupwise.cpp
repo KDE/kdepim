@@ -298,7 +298,7 @@ bool ResourceGroupwise::asyncLoad()
 
   mJobData.clear();
 
-  mDownloadJob = KIO::get( url, false, false );
+  mDownloadJob = KIO::get( url, KIO::NoReload, KIO::HideProgressInfo );
   connect( mDownloadJob, SIGNAL( result( KJob * ) ),
            SLOT( slotFetchJobResult( KJob * ) ) );
   connect( mDownloadJob, SIGNAL( data( KIO::Job *, const QByteArray & ) ),
@@ -457,7 +457,7 @@ bool ResourceGroupwise::updateAddressBooks()
 
   mJobData.clear();
 
-  mDownloadJob = KIO::get( url, false, false );
+  mDownloadJob = KIO::get( url, KIO::NoReload, KIO::HideProgressInfo );
   connect( mDownloadJob, SIGNAL( result( KJob * ) ),
            SLOT( slotUpdateJobResult( KJob * ) ) );
   connect( mDownloadJob, SIGNAL( data( KIO::Job *, const QByteArray & ) ),

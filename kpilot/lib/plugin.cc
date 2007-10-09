@@ -47,6 +47,7 @@
 #include <QtGui/QPushButton>
 #include <QtGui/QTabWidget>
 
+#include <kdebug.h>
 #include <kglobal.h>
 #include <ktextedit.h>
 #include <kiconloader.h>

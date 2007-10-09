@@ -61,8 +61,8 @@ KIO::TransferJob *GroupwareUploadItem::createRawUploadJob(
   if ( adaptor )
     adaptor->adaptUploadUrl( upUrl );
   kDebug(7000) <<"Uploading to:" << upUrl.prettyUrl();
-  KIO::TransferJob *job = KIO::storedPut( dta.toUtf8(), upUrl, -1, true,
-                                          false, false );
+  KIO::TransferJob *job = KIO::storedPut( dta.toUtf8(), upUrl, -1, KIO::Overwrite | 
+                                          KIO::HideProgressInfo );
   job->addMetaData( "PropagateHttpHeader", "true" );
   if ( adaptor ) {
     job->addMetaData( "customHTTPHeader", "Content-Type: " + adaptor->mimeType() );

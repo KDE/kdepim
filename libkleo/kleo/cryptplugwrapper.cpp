@@ -59,7 +59,7 @@
 #include <klocale.h>
 #include <kglobal.h>
 #include <kconfig.h>
-
+#include <kconfiggroup.h>
 // Qt
 #include <QByteArray>
 #include <QList>

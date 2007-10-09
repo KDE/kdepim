@@ -203,9 +203,9 @@ void kio_obexProtocol::get(const KUrl &url)
 /*!
     \fn kio_obexProtocol::put(const KUrl &url, int permissions, bool overwrite, bool resume)
 */
-void kio_obexProtocol::put(const KUrl &url, int permissions, bool overwrite, bool resume)
+void kio_obexProtocol::put(const KUrl &url, int permissions, KIO::JobFlags flags)
 {
-    kDebug() <<"kio_obexProtocol::put()  URL:" << url <<"; permissions:" << permissions <<"; overwrite:" << overwrite <<"; resume:" << resume;
+    kDebug() <<"kio_obexProtocol::put()  URL:" << url <<"; permissions:" << permissions <<"; overwrite:" << (flags & KIO::Overwrite) <<"; resume:" << (flags & KIO::Resume);
 
     QByteArray buffer;
     dataReq();

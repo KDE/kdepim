@@ -32,6 +32,7 @@
 #include <KDE/KPluginInfo>
 #include <KDE/KComboBox>
 #include <KDE/KLineEdit>
+#include <KDE/KDebug>
 
 #include <QtGui/QAbstractButton>
 #include <QtGui/QLabel>

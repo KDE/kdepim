@@ -61,12 +61,7 @@ class CardViewFactory : public ViewFactory
     }
 };
 
-extern "C" {
-  KDE_EXPORT void *init_libkaddrbk_cardview()
-  {
-    return ( new CardViewFactory );
-  }
-}
+K_EXPORT_PLUGIN(CardViewFactory)
 
 class AddresseeCardViewItem : public CardViewItem
 {

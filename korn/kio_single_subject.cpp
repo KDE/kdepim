@@ -63,7 +63,7 @@ KIO_Single_Subject::~KIO_Single_Subject( )
 
 void KIO_Single_Subject::init( KIO::Slave *& slave)
 {
-	_job = KIO::get( *_kurl, false, false );
+	_job = KIO::get( *_kurl, KIO::NoReload, KIO::HideProgressInfo );
 	_job->addMetaData( *_metadata );
 
 	connect( _job, SIGNAL( result( KJob* ) ), this, SLOT( slotResult( KJob* ) ) );

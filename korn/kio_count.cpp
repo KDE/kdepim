@@ -123,7 +123,7 @@ void KIO_Count::count( KKioDrop *drop, AccountSettings *settings )
 
 	//Making job to fetch file-list
 
-	_job = KIO::listDir( kurl, false );
+	_job = KIO::listDir( kurl, KIO::HideProgressInfo );
 	_job->addMetaData( metadata );
 
 	connect( _job, SIGNAL( result( KJob* ) ), this, SLOT( result( KJob* ) ) );

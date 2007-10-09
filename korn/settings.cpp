@@ -137,16 +137,20 @@ void AccountSettings::usrWriteConfig()
 	}
 
 	it = entries.constBegin();
+#if defined(__GNUC__)
+#warning "FIXME:This function should get the groupname to read from the proper group"
+#endif
+
 	while( it != entries.constEnd() )
 	{
-		config()->deleteEntry( it.key() );
+		config()->group("<default>").deleteEntry( it.key() );
 		++it;
 	}
 	
 	it = m_settings->constBegin();
 	while( it != m_settings->constEnd() )
 	{
-		config()->writeEntry( it.key(), it.value() );
+		config()->group("<default>").writeEntry( it.key(), it.value() );
 		++it;
 	}
 }

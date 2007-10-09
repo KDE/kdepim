@@ -248,10 +248,11 @@ static inline bool isLocalTime(KCal::Calendar *p)
 	FUNCTIONSETUP;
 
 	KConfig korgcfg( KStandardDirs::locate( "config", CSL1("korganizerrc") ) );
+        KConfigGroup grp( &korgcfg, korgcfg.group() );
 
 	// this part taken from adcalendarbase.cpp:
 	korgcfg.setGroup( "Time & Date" );
-	QString tz(korgcfg.readEntry( "TimeZoneId" ) );
+	QString tz(grp.readEntry( "TimeZoneId" ) );
 
 	DEBUGKPILOT << "KOrganizer's time zone =" << tz;
 

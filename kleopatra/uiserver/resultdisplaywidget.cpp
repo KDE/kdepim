@@ -35,6 +35,7 @@
 #include "certificateinfowidgetimpl.h"
 #include "utils/formatting.h"
 
+#include <QHash>
 #include <QPointer>
 
 using namespace Kleo;
