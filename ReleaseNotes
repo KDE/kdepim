@@ -5,6 +5,9 @@ Changes since Proko2 2.1.10 (released 03.09.2007)
 Bugfixes
 ========
 
+* Kolab/issue1941 Delayed LDAP search results no longer overwrite the user
+  selection during address completion.
+
 * Kolab/issue1894 Initialize the name column of the folder tree to a more 
   reasonable value.
 
