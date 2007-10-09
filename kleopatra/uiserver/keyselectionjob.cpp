@@ -49,7 +49,7 @@ using namespace Kleo;
 class KeySelectionJob::Private
 {
 public:
-    Private( KeySelectionJob* qq ) : q( qq ), m_secretKeysOnly( false ), m_keyListings( 0 ), m_started( false ) {}
+    Private( KeySelectionJob* qq ) : q( qq ), m_secretKeysOnly( false ), m_silent( false ), m_keyListings( 0 ), m_started( false ) {}
     ~Private();
 
     void startKeyListing();
