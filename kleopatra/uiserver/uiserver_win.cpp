@@ -97,10 +97,10 @@ void UiServer::Private::makeListeningSocket() {
             throw_<std::runtime_error>( tr("Couldn't get socket nonce: %1" ).arg( system_error_string() ) );
 
         // Listen
-        if ( ::listen( sock, SOMAXCONN ) )
+        if ( ::listen( (SOCKET)sock, SOMAXCONN ) )
             throw_<std::runtime_error>( tr( "Couldn't listen to socket: %1" ).arg( system_error_string() ) );
 
-        if ( !setSocketDescriptor( sock ) )
+        if ( !setSocketDescriptor( (int)sock  ) )
             throw_<std::runtime_error>( tr( "Couldn't pass socket to Qt: %1. This should not happen, please report this bug." ).arg( errorString() ) );
 
     } catch ( ... ) {
