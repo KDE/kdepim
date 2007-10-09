@@ -32,11 +32,30 @@
 
 #include "mainwindow.h"
 
+#include "models/keylistmodel.h"
+#include "models/keylistsortfilterproxymodel.h"
+#include "controllers/keylistcontroller.h"
+
+#include <kleo/ui/progressbar.h>
+
+#include <KTabWidget>
+#include <KStatusBar>
+
+#include <QToolBar>
+#include <QLabel>
+#include <QLineEdit>
+#include <QComboBox>
+
 #include <boost/shared_ptr.hpp>
 
+#include <vector>
+
+using namespace Kleo;
+using namespace boost;
+using namespace GpgME;
 
 class MainWindow::Private {
-    firend class ::MainWindow;
+    friend class ::MainWindow;
     MainWindow * const q;
 private:
     explicit Private( MainWindow * qq );
@@ -45,11 +64,10 @@ private:
 private:
 
     Kleo::AbstractKeyListModel * model;
-    QSortFilterProxyModel filter;
     Kleo::KeyListController controller;
 
     struct Page {
-	boost::shared_ptr<QSortFilterProxyModel> proxy;
+	boost::shared_ptr<KeyListSortFilterProxyModel> proxy;
 	
     };
 
@@ -67,11 +85,11 @@ private:
 
 	explicit UI( MainWindow * q )
 	    : searchToolBar( q ),
-	      searchLabel( &searchToolBar ),
+	      searchLabel( tr("Find:"), &searchToolBar ),
 	      searchLineEdit( &searchToolBar ),
 	      searchComboBox( &searchToolBar ),
 	      actionToolBar( q ),
-	      treeView( q ),
+	      //treeView( q ),
 	      progressBar( q->statusBar() ),
 	      statusLabel( q->statusBar() )
 	{
@@ -80,13 +98,13 @@ private:
 	    KDAB_SET_OBJECT_NAME( searchLineEdit );
 	    KDAB_SET_OBJECT_NAME( searchComboBox );
 	    KDAB_SET_OBJECT_NAME( actionToolBar );
-	    KDAB_SET_OBJECT_NAME( treeView );
+	    //KDAB_SET_OBJECT_NAME( treeView );
 	    KDAB_SET_OBJECT_NAME( progressBar );
 	    KDAB_SET_OBJECT_NAME( statusLabel );
 
-	    searchToolBar.insertWidget( &searchLabel );
-	    searchToolBar.insertWidget( &searchLineEdit );
-	    searchToolBar.insertWidget( &searchComboBox );
+	    searchToolBar.addWidget( &searchLabel );
+	    searchToolBar.addWidget( &searchLineEdit );
+	    searchToolBar.addWidget( &searchComboBox );
 	    searchComboBox.hide(); // ### not yet implemented
 
 	    searchToolBar.setAllowed( Qt::TopToolBarArea|Qt::BottomToolBarArea );
@@ -97,5 +115,5 @@ private:
 
 
 #include "moc_mainwindow.cpp"
-#include "mainwindow.cpp"
+#include "mainwindow.moc"
 
