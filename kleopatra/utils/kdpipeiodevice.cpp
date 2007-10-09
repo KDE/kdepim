@@ -93,6 +93,7 @@ private:
     Qt::HANDLE handle;
 public:
     QMutex mutex;
+    QWaitCondition waitForCancelCondition;
     QWaitCondition bufferNotFullCondition;
     QWaitCondition bufferNotEmptyCondition;
     QWaitCondition hasStarted;
@@ -624,6 +625,7 @@ void KDPipeIODevice::Private::stopThreads()
 	    // tell thread to cancel:
 	    r->cancel = true;
 	    // and wake it, so it can terminate:
+            r->waitForCancelCondition.wakeAll();
 	    r->bufferNotFullCondition.wakeAll();
             r->readyReadSentCondition.wakeAll();
       	}
@@ -680,15 +682,17 @@ void Reader::run() {
 
     while ( true ) {
         if ( !cancel && ( eof || error ) ) {
+            const bool wasEmpty = bufferEmpty();
 	    qDebug( "%p: Reader::run: received eof(%d) or error(%d), waking everyone", this, eof, error );
             notifyReadyRead();
-            cancel = true;
+            if ( !cancel && wasEmpty ) 
+                waitForCancelCondition.wait( &mutex );
         } else if ( !cancel && !bufferFull() && !bufferEmpty() ) {
 	    qDebug( "%p: Reader::run: buffer no longer empty, waking everyone", this );
             notifyReadyRead();
         } 
  
-        while ( !error && !cancel && bufferFull() ) {
+        while ( !cancel && !error && bufferFull() ) {
             notifyReadyRead();
             if ( bufferFull() ) {
                 qDebug( "%p: Reader::run: buffer is full, going to sleep", this );
