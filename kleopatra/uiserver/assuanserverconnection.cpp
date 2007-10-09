@@ -81,7 +81,6 @@ namespace {
     struct IO {
         QString file;
         QIODevice * iodev;
-        GpgME::Data::Encoding encoding;
     };
 
     static inline qint64 mygetpid() {
@@ -363,29 +362,6 @@ private:
 
             }
 
-            io.encoding = GpgME::Data::AutoEncoding;
-            if ( options.count( "binary" ) ) {
-                if ( !options["binary"].empty() )
-                    throw gpg_error( GPG_ERR_ASS_SYNTAX );
-                io.encoding = GpgME::Data::BinaryEncoding;
-                options.erase( "binary" );
-            }
-            if ( options.count( "armor" ) ) {
-                if ( !options["armor"].empty() )
-                    throw gpg_error( GPG_ERR_ASS_SYNTAX );
-                if ( io.encoding )
-                    throw gpg_error( GPG_ERR_CONFLICT ); // conflicting parameters
-                io.encoding = GpgME::Data::ArmorEncoding;
-                options.erase( "armor" );
-            }
-            if ( options.count( "base64" ) ) {
-                if ( !options["base64"].empty() )
-                    throw gpg_error( GPG_ERR_ASS_SYNTAX );
-                if ( io.encoding )
-                    throw gpg_error( GPG_ERR_CONFLICT ); // conflicting parameters
-                io.encoding = GpgME::Data::Base64Encoding;
-            }
-
             if ( options.size() )
                 throw gpg_error( GPG_ERR_UNKNOWN_OPTION );
 
@@ -394,7 +370,7 @@ private:
             ( in ? conn.inputs : conn.outputs )[tag].push_back( io );
 
             qDebug() << "AssuanServerConnection: added" << (in ? "input" : "output") << '('
-                     << io.file << io.iodev << io.encoding << ')';
+                     << io.file << io.iodev << ')';
 
             return assuan_process_done( conn.ctx.get(), 0 );
 
@@ -691,15 +667,6 @@ namespace {
     }
 
     template <typename Container>
-    unsigned int get_device_encoding( const Container & c, const char * tag, unsigned int idx ) {
-        const typename Container::const_iterator it = c.find( tag );
-        if ( it == c.end() || idx >= it->second.size() )
-            return 0;
-        else
-            return it->second[idx].encoding;
-    }
-
-    template <typename Container>
     unsigned int get_num_devices( const Container & c, const char * tag ) {
         const typename Container::const_iterator it = c.find( tag );
         if ( it == c.end() )
@@ -755,10 +722,6 @@ QIODevice * AssuanCommand::bulkInputDevice( const char * tag, unsigned int idx )
     return get_device( d->inputs, tag, idx );
 }
 
-unsigned int AssuanCommand::bulkInputDataEncoding( const char * tag, unsigned int idx ) const {
-    return get_device_encoding( d->inputs, tag, idx );
-}
-
 unsigned int AssuanCommand::numBulkInputDevices( const char * tag ) const {
     return get_num_devices( d->inputs, tag );
 }
@@ -773,10 +736,6 @@ QString AssuanCommand::bulkOutputDeviceFileName( const char * tag, unsigned int 
 
 QIODevice * AssuanCommand::bulkOutputDevice( const char * tag, unsigned int idx ) const {
     return get_device( d->outputs, tag, idx );
-}
-
-unsigned int AssuanCommand::bulkOutputDataEncoding( const char * tag, unsigned int idx ) const {
-    return get_device_encoding( d->outputs, tag, idx );
 }
 
 unsigned int AssuanCommand::numBulkOutputDevices( const char * tag ) const {

@@ -239,9 +239,6 @@ namespace Kleo {
         QIODevice * bulkInputDevice(  const char * tag, unsigned int idx=0 ) const;
         QIODevice * bulkOutputDevice( const char * tag, unsigned int idx=0 ) const;
 
-        unsigned int bulkInputDataEncoding( const char * tag, unsigned int idx=0 ) const;
-        unsigned int bulkOutputDataEncoding( const char * tag, unsigned int idx=0 ) const;
-
         unsigned int numBulkInputDevices( const char * tag ) const;
         unsigned int numBulkOutputDevices( const char * tag ) const;
 
