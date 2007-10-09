@@ -149,7 +149,7 @@ static std::map<std::string,std::string> upcase_option( const char * option, std
     bool value_found = false;
     std::map<std::string,std::string>::iterator it = options.begin();
     while ( it != options.end() )
-        if ( qstricmp( it->second.c_str(), option ) == 0 ) {
+        if ( qstricmp( it->first.c_str(), option ) == 0 ) {
             value = it->second;
             options.erase( it++ );
             value_found = true;
