@@ -1,24 +1,21 @@
-/****************************************************************************
-** Copyright (C) 2001-2007 Klar√§lvdalens Datakonsult AB.  All rights reserved.
-**
-** This file is part of the KD Tools library.
-**
-** This file may be distributed and/or modified under the terms of the
-** GNU General Public License version 2 as published by the Free Software
-** Foundation and appearing in the file LICENSE.GPL included in the
-** packaging of this file.
-**
-** Licensees holding valid commercial KD Tools licenses may use this file in
-** accordance with the KD Tools Commercial License Agreement provided with
-** the Software.
-**
-** This file is provided AS IS with NO WARRANTY OF ANY KIND, INCLUDING THE
-** WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
-**
-** Contact info@klaralvdalens-datakonsult.se if any conditions of this
-** licensing are not clear to you.
-**
-**********************************************************************/
+/*
+  Copyright (C) 2007 Klar‰lvdalens Datakonsult AB
+
+  KDPipeIODevice is free software; you can redistribute it and/or
+  modify it under the terms of the GNU Library General Public
+  License as published by the Free Software Foundation; either
+  version 2 of the License, or (at your option) any later version.
+
+  KDPipeIODevice is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU Library General Public License for more details.
+
+  You should have received a copy of the GNU Library General Public License
+  along with KDPipeIODevice; see the file COPYING.LIB.  If not, write to the
+  Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+  Boston, MA 02110-1301, USA.
+*/
 
 #ifndef __KDTOOLSCORE_KDPIPEIODEVICE_H__
 #define __KDTOOLSCORE_KDPIPEIODEVICE_H__
@@ -27,11 +24,11 @@
 
 #include <utility>
 
-#include "checker.h"
+//#include "checker.h"
 
 class KDPipeIODevice : public QIODevice {
     Q_OBJECT
-    KDAB_MAKE_CHECKABLE( KDPipeIODevice )
+    //KDAB_MAKE_CHECKABLE( KDPipeIODevice )
 public:
     explicit KDPipeIODevice( QObject * parent=0 );
     explicit KDPipeIODevice( int fd, OpenMode=ReadOnly, QObject * parent=0 );
@@ -45,6 +42,9 @@ public:
 
     Qt::HANDLE handle() const;
     int descriptor() const;
+
+    bool readWouldBlock() const;
+    bool writeWouldBlock() const;
 
     /* reimp */ qint64 bytesAvailable() const;
     /* reimp */ qint64 bytesToWrite() const;
