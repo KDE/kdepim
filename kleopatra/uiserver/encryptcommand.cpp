@@ -108,7 +108,7 @@ void EncryptCommand::Private::checkInputs()
        
     // for each input, we need an output
     //TODO use better error code if possible
-    if ( numInputs != numOutputs )
+    if ( numOutputs && numInputs != numOutputs )
         throw assuan_exception( makeError( GPG_ERR_ASS_NO_INPUT ),  i18n( "For each INPUT there needs to be an OUTPUT" ) );
 
     for ( int i = 0; i < numInputs; ++i ) {
