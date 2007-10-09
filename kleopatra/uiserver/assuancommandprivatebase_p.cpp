@@ -105,7 +105,10 @@ int AssuanCommandPrivateBase::determineInputsAndProtocols( QString& reason )
 void AssuanCommandPrivateBase::writeToOutputDeviceOrAskForFileName( int id,  const QByteArray& stuff, const QString& _filename )
 {
     QIODevice * outdevice = q->bulkOutputDevice( "OUTPUT", id );
+#if 0 // KSaveFile seems broken on Windows, revert this when it's fixed (errors when writing to temp file), TODO, KDAB_PENDING
     KSaveFile file;
+#endif
+    QFile file;
     if ( !outdevice ) {
         QString filename = _filename;
         if ( !filename.isEmpty() && QFileInfo( filename ).isRelative() ) {
@@ -131,7 +134,10 @@ void AssuanCommandPrivateBase::writeToOutputDeviceOrAskForFileName( int id,  con
             throw assuan_exception( q->makeError( GPG_ERR_ASS_WRITE_ERROR ), "Output file selection canceled" ) ;
         // FIXME sanitize, percent-encode, etc. Needed with KSaveFile?
         file.setFileName( filename );
-        if ( !file.open() )
+#if 0
+	if ( !file.open() )
+#endif
+	if ( !file.open( QIODevice::WriteOnly ) )
             throw assuan_exception( q->makeError( GPG_ERR_ASS_WRITE_ERROR ), file.errorString().toStdString() ) ;
 
         outdevice = &file;
@@ -139,8 +145,11 @@ void AssuanCommandPrivateBase::writeToOutputDeviceOrAskForFileName( int id,  con
     assert(outdevice);
     if ( const int bytesWritten = outdevice->write( stuff ) != stuff.size() )
         throw assuan_exception( q->makeError( GPG_ERR_ASS_WRITE_ERROR ), outdevice->errorString().toStdString() );
+#if 0
     if ( !file.fileName().isEmpty() && !file.finalize() )
         throw assuan_exception( q->makeError( GPG_ERR_ASS_WRITE_ERROR ), file.errorString().toStdString() ) ;
+#endif
+    file.close();
 }
 
 
