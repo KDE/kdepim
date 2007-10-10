@@ -833,7 +833,7 @@ void Writer::run() {
 	    if ( numWritten < 0 ) {
 	        mutex.lock();
 		errorCode = errno;
-		qDebug( "%p: Writer::run: got error code: %d", this, errorCode );
+		qDebug( "%p: Writer::run: got error code: %s (%d)", this, strerror( errorCode ), errorCode );
 		error = true;
                 goto leave;
 	    }
