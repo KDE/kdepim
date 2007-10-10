@@ -70,31 +70,22 @@ int AssuanCommandPrivateBase::determineInputsAndProtocols( QString& reason )
     const QString protocol = q->option( "protocol" ).toString();
 
     if ( protocol.isEmpty() )
-    {
         Q_FOREACH ( const Input input, inputList )
-        {
-            if ( !input.isFileInputOnly() )
-            {
+            if ( !input.isFileInputOnly() ) {
                 reason = "--protocol option is required when passing file descriptors";
-                return GPG_ERR_GENERAL;
+                return q->makeError( GPG_ERR_MISSING_VALUE );
             }
-        }
-    }
 
-    if ( !protocol.isEmpty() )
-    {
+    if ( !protocol.isEmpty() ) {
         const Kleo::CryptoBackend::Protocol* backend = Kleo::CryptoBackendFactory::instance()->protocol( protocol.toAscii().data() );
-        if ( !backend )
-        {
+        if ( !backend ) {
             reason = QString( "Unknown protocol: %1" ).arg( protocol );
-            return GPG_ERR_GENERAL;
+            return q->makeError( GPG_ERR_INV_ARG );
         }
 
         for ( int i = 0; i < inputList.size(); ++i )
             inputList[i].backend = backend;
-    }
-    else // no protocol given
-    {
+    } else { // no protocol given
         //TODO: kick off protocol detection for all files
         for ( int i = 0; i < inputList.size(); ++i )
             inputList[i].backend = Kleo::CryptoBackendFactory::instance()->protocol( "openpgp" );
