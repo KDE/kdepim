@@ -240,6 +240,11 @@ void SignCommand::Private::slotSigningResult( const GpgME::SigningResult & resul
            const GpgME::Error signError = signres.error();
            if ( signError )
                throw assuan_exception( signError, i18n( "Signing failed: " ) );
+
+           // send MICALG status message:
+           if ( const int err = q->sendStatus( "MICALG", signres.createdSignature(0).hashAlgorithmAsString() ) )
+               throw assuan_exception( err, i18n( "Couldn't send status string: " ) );
+
            // FIXME adjust for smime?
            const QString filename = q->bulkInputDeviceFileName( "INPUT", m_statusSent ) + ".sig";
            writeToOutputDeviceOrAskForFileName( result.id, result.data, filename );
