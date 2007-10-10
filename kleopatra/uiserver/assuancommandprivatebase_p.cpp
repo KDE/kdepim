@@ -143,8 +143,13 @@ void AssuanCommandPrivateBase::writeToOutputDeviceOrAskForFileName( int id,  con
         outdevice = &file;
     }
     assert(outdevice);
-    if ( const int bytesWritten = outdevice->write( stuff ) != stuff.size() )
-        throw assuan_exception( q->makeError( GPG_ERR_ASS_WRITE_ERROR ), outdevice->errorString().toStdString() );
+    qint64 totalBytesWritten = 0;
+    do {
+        const qint64 bytesWritten = outdevice->write( stuff.constData() + totalBytesWritten, stuff.size() - totalBytesWritten );
+        if ( bytesWritten < 0 )
+            throw assuan_exception( q->makeError( GPG_ERR_ASS_WRITE_ERROR ), outdevice->errorString().toStdString() );
+        totalBytesWritten += bytesWritten;
+    } while ( totalBytesWritten < stuff.size() );
 #if 0
     if ( !file.fileName().isEmpty() && !file.finalize() )
         throw assuan_exception( q->makeError( GPG_ERR_ASS_WRITE_ERROR ), file.errorString().toStdString() ) ;
