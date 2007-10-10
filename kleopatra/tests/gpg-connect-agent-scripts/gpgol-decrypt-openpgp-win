@@ -1,0 +1,10 @@
+# OPTION mode=email
+/subst
+/serverpid
+RECIPIENT <foo@bar.com>
+/open in test.data.gpg r
+INPUT FD=$in
+/open out test.data.gpgol-decrypt-openpgp.out w
+OUTPUT FD=$out
+DECRYPT --protocol=OpenPGP --silent
+BYE
