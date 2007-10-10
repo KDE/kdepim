@@ -682,6 +682,9 @@ void Reader::run() {
 
     while ( true ) {
         if ( !cancel && ( eof || error ) ) {
+            //notify the client until the buffer is empty and then once 
+            //again so he receives eof/error. After that, wait for him 
+            //to cancel 
             const bool wasEmpty = bufferEmpty();
 	    qDebug( "%p: Reader::run: received eof(%d) or error(%d), waking everyone", this, eof, error );
             notifyReadyRead();
@@ -723,7 +726,12 @@ void Reader::run() {
             DWORD numRead;
 	    const bool ok = ReadFile( handle, buffer + wptr, numBytes, &numRead, 0 );
 	    mutex.lock();
-	    if ( !ok ) {
+	    if ( ok ) {
+                if ( numRead == 0 ) {
+                    qDebug( "%p: Reader::run: got eof (numRead==0)", this );
+                    eof = true;
+                } 
+            } else { // !ok
 	        errorCode = static_cast<int>( GetLastError() );
 	        if ( errorCode == ERROR_BROKEN_PIPE ) {
                     assert( numRead == 0 );
@@ -752,8 +760,8 @@ void Reader::run() {
                 eof = true;
             }
 #endif
-	    qDebug( "%p: Reader::run: read %ld bytes", this, static_cast<long>(numRead) );
-	    qDebug( "%p (fd=%d): KDPipeIODevice::readData: %s", this, fd, buffer );
+	    qDebug( "%p (fd=%d): Reader::run: read %ld bytes", this, fd, static_cast<long>(numRead) );
+	    qDebug( "%p (fd=%d): Reader::run: %s", this, fd, buffer );
 
 	    if ( numRead > 0 ) {
 	        qDebug( "%p: Reader::run: buffer before: rptr=%4d, wptr=%4d", this, rptr, wptr );
