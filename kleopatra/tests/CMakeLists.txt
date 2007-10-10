@@ -19,6 +19,14 @@ target_link_libraries(test_verificationresultdialog kleo ${KDE4_KDECORE_LIBS} ${
 
 ########### next target ###############
 
+set(test_verify_SRCS test_verify.cpp)
+add_definitions( -DKLEO_TEST_GNUPGHOME=\\"${CMAKE_CURRENT_SOURCE_DIR}/gnupg_home\\" )
+add_definitions( -DKLEO_TEST_DATADIR=\\"${CMAKE_CURRENT_SOURCE_DIR}\\" )
+kde4_add_unit_test(test_verify TESTNAME kleo-verifytest ${test_verify_SRCS})
+target_link_libraries(test_verify kleo ${QT_QTTEST_LIBRARY})
+
+########### next target ###############
+
 if ( USABLE_ASSUAN_FOUND  )
 
   # this doesn't yet work on Windows
