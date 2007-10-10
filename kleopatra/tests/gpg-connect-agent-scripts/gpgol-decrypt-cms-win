@@ -2,7 +2,7 @@
 /subst
 /serverpid
 RECIPIENT <foo@bar.com>
-/open in test.data.gpg r
+/open in test.data.p7m r
 INPUT FD=$in
 /open out test.data.gpgol-decrypt-cms.out w
 OUTPUT FD=$out

@@ -1,6 +1,6 @@
 # OPTION mode=email
 RECIPIENT <foo@bar.com>
-/sendfd test.data.gpg r
+/sendfd test.data.p7m r
 INPUT FD
 /sendfd test.data.gpgol-decrypt-cms.out w
 OUTPUT FD
