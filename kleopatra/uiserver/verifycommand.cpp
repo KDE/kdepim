@@ -218,7 +218,7 @@ public:
     int startVerification();
 
     void writeOpaqueResult(const GpgME::VerificationResult &, const QByteArray &, int);
-    void trySendingStatus( const QString & str );
+    void trySendingStatus( const char * tag, const QString & str );
     QString signatureToString( const GpgME::Signature& sig, const GpgME::Key & key ) const;
     void showVerificationResultDialog();
 
@@ -266,11 +266,14 @@ void VerificationResultCollector::addResult( const VerificationResultCollector::
                if ( result.isOpaque )
                    m_command->writeOpaqueResult( vResult, result.stuff, result.id );
 
-               std::vector<GpgME::Signature> sigs = vResult.signatures();
+               const std::vector<GpgME::Signature> sigs = vResult.signatures();
                assert( !sigs.empty() );
                QStringList resultStrings;
-               Q_FOREACH ( const GpgME::Signature sig, sigs )
-                   resultStrings.append( m_command->signatureToString( sig, keyForSignature( sig, result.keys ) ) );
+               Q_FOREACH ( const GpgME::Signature & sig, sigs ) {
+                   const QString s = m_command->signatureToString( sig, keyForSignature( sig, result.keys ) );
+                   resultStrings.append( s );
+                   m_command->trySendingStatus( "SIGSTATUS", s );
+               }
 
                resultString = "OK " + resultStrings.join("\n");
            } else {
@@ -284,7 +287,7 @@ void VerificationResultCollector::addResult( const VerificationResultCollector::
            // FIXME ask to continue or cancel
        }
        emit showResult( m_statusSent, result );
-       m_command->trySendingStatus( resultString );
+       m_command->trySendingStatus( "VERIFY", resultString );
        m_statusSent++;
     }
 
@@ -444,12 +447,11 @@ QString VerifyCommand::Private::signatureToString( const GpgME::Signature& sig, 
     return sigString;
 }
 
-void VerifyCommand::Private::trySendingStatus( const QString & str )
+void VerifyCommand::Private::trySendingStatus( const char * tag, const QString & str )
 {
-    if ( const int err = q->sendStatus( "VERIFY", str ) ) {
-        QString errorString = i18n("Problem writing out verification status.");
-        q->done( err, errorString ) ;
-    }
+    if ( const int err = q->sendStatus( tag, str ) )
+        q->done( err, i18n("Problem writing out verification status.") );
+    // ### FIXME: how is the caller supposed to learn about this error?
 }
 
 void VerifyCommand::Private::slotDialogClosed()
