@@ -1,0 +1,4 @@
+These scripts are to be executed like this:
+  gpg-connect-agent -v --no-ext-connect -S /path/to/S.uiserver < script
+You need a very recent gpg-connect-agent for most scripts, probably
+from current gnupg-SVN.
