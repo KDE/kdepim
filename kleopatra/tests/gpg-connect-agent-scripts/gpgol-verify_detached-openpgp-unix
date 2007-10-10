@@ -1,0 +1,7 @@
+# OPTION mode=email
+/sendfd test.data r
+MESSAGE FD
+/sendfd test.data.sig r
+INPUT FD
+VERIFY --silent --protocol=OpenPGP
+BYE
