@@ -90,13 +90,13 @@ public:
         }
     }
     
-    T* widget( int idx )
+    T* widget( unsigned int idx )
     {
         if ( m_payloads.size() <= idx ) return 0;
         return m_payloads[ idx ];
     }
     
-    void showResultWidget( int idx )
+    void showResultWidget( unsigned int idx )
     {
         if ( m_stacks.size() <= idx || m_payloads.size() <= idx ) return;
         QStackedWidget * stack = m_stacks[idx];
@@ -109,14 +109,14 @@ public:
         showErrorWidget( idx, 0, errorString );
     }
     
-    void showErrorWidget( int idx, QWidget* _errorWidget, const QString& errorString = QString() )
+    void showErrorWidget( unsigned int idx, QWidget* _errorWidget, const QString& errorString = QString() )
     {
         if ( m_stacks.size() <= idx ) return;
         QStackedWidget * stack = m_stacks[idx];
         assert(stack);
         QWidget *errorWidget = _errorWidget;
         if ( !errorWidget ) {
-            errorWidget = new QLabel( this, errorString );
+            errorWidget = new QLabel( errorString, this );
             errorWidget->setObjectName( "ErrorWidget" );
             errorWidget->setStyleSheet( QString::fromLatin1("QLabel#ErrorWidget { border:4px solid red; border-radius:2px; }") );
         }
