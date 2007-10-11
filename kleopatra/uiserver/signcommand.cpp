@@ -56,6 +56,10 @@
 
 #include <boost/bind.hpp>
 
+#include <algorithm>
+#include <iterator>
+#include <vector>
+
 using namespace Kleo;
 
 namespace {
@@ -99,6 +103,7 @@ public:
         QIODevice* data;
         QString dataFileName;
         unsigned int id;
+        GpgME::Protocol protocol;
     };
     
     struct Result {
@@ -140,11 +145,14 @@ void SignCommand::Private::checkInputs()
     if ( numOutputs > 0 && numInputs != numOutputs )
         throw assuan_exception( makeError( GPG_ERR_ASS_NO_INPUT ),  i18n( "For each INPUT there needs to be an OUTPUT") );
 
+    const GpgME::Protocol protocol = q->checkProtocol();
+
     for ( int i = 0; i < numInputs; ++i ) {
         Input input;
         input.id = i;
         input.data = q->bulkInputDevice( "INPUT", i );
         input.dataFileName = q->bulkInputDeviceFileName( "INPUT", i );
+        input.protocol = protocol;
 
         m_inputs.push_back( input );
     }
@@ -154,7 +162,7 @@ void SignCommand::Private::startKeySelection()
 {
     KeySelectionJob* job = new KeySelectionJob( this );
     job->setSecretKeysOnly( true );
-    job->setPatterns( q->senders() ); // FIXME
+    job->setPatterns( q->senders() );
     job->setSilent( q->hasOption( "silent" ) );
     connect( job, SIGNAL( error( GpgME::Error, GpgME::KeyListResult ) ),
              this, SLOT( slotKeySelectionError( GpgME::Error, GpgME::KeyListResult ) ) );
@@ -171,11 +179,11 @@ void SignCommand::Private::startSignJobs( const std::vector<GpgME::Key>& keys )
         q->done();
         return;
     }
-    const CryptoBackend::Protocol* backend = CryptoBackendFactory::instance()->protocol( keys.front().protocolAsString() );
-    
-    assert( backend );
-    
     Q_FOREACH( const Input input, m_inputs ) {
+
+        const CryptoBackend::Protocol* backend = CryptoBackendFactory::instance()->protocol( input.protocol == GpgME::OpenPGP ? "openpgp" : "smime" );
+        assert( backend ); // FIXME - this should be checked somewhere before
+    
         SignJob *job = backend->signJob( true, true );
         connect( job, SIGNAL( result( GpgME::SigningResult, QByteArray ) ),
                  this, SLOT( slotSigningResult( GpgME::SigningResult, QByteArray ) ) );
@@ -215,6 +223,20 @@ bool SignCommand::Private::trySendingStatus( const QString & str )
     return true;
 }
 
+static QString collect_micalgs( const GpgME::SigningResult & result, GpgME::Protocol proto ) {
+    const std::vector<GpgME::CreatedSignature> css = result.createdSignatures();
+    QStringList micalgs;
+    std::transform( css.begin(), css.end(),
+                    std::back_inserter( micalgs ),
+                    bind( &QString::toLower, bind( &QString::fromLatin1, bind( &GpgME::CreatedSignature::hashAlgorithmAsString, _1 ), -1 ) ) );
+    if ( proto == GpgME::OpenPGP )
+        for ( QStringList::iterator it = micalgs.begin(), end = micalgs.end() ; it != end ; ++it )
+            it->prepend( "pgp-" );
+    micalgs.sort();
+    micalgs.erase( std::unique( micalgs.begin(), micalgs.end() ), micalgs.end() );
+    return micalgs.join( QLatin1String(",") );
+}
+
 void SignCommand::Private::slotSigningResult( const GpgME::SigningResult & result, const QByteArray & signature )
 {
     const SignJob * const job = qobject_cast<SignJob*>( sender() );
@@ -242,8 +264,10 @@ void SignCommand::Private::slotSigningResult( const GpgME::SigningResult & resul
                throw assuan_exception( signError, i18n( "Signing failed: " ) );
 
            // send MICALG status message:
-           if ( const int err = q->sendStatus( "MICALG", signres.createdSignature(0).hashAlgorithmAsString() ) )
-               throw assuan_exception( err, i18n( "Couldn't send status string: " ) );
+           const QString micalg = collect_micalgs( signres, m_inputs[m_statusSent].protocol );
+           if ( !micalg.isEmpty() )
+               if ( const int err = q->sendStatus( "MICALG", micalg ) )
+                   throw assuan_exception( err, i18n( "Couldn't send MICALG status string: " ) );
 
            // FIXME adjust for smime?
            const QString filename = q->bulkInputDeviceFileName( "INPUT", m_statusSent ) + ".sig";

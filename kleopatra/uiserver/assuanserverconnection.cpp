@@ -42,6 +42,8 @@
 
 #include <gpgme++/data.h>
 
+#include <KLocale>
+
 #include <QSocketNotifier>
 #include <QVariant>
 #include <QPointer>
@@ -287,7 +289,7 @@ private:
             static const QByteArray pid = QByteArray::number( mygetpid() );
             return assuan_process_done( ctx_, assuan_send_data( ctx_, pid.constData(), pid.size() ) );
         }
-        static const QByteArray errorString = tr("Unknown value for WHAT").toUtf8();
+        static const QByteArray errorString = i18n("Unknown value for WHAT").toUtf8();
         return assuan_process_done_msg( ctx_, gpg_error( GPG_ERR_ASS_PARAMETER ), errorString.constData() );
     }
 
@@ -913,6 +915,61 @@ int AssuanCommandFactory::_handle( assuan_context_t ctx, char * line, const char
         return 0;
     }
 }
+
+//
+//
+// AssuanCommand convenience methods
+//
+//
+
+/*!
+  Checks the \c --mode parameter.
+
+  \returns The parameter as an AssuanCommand::Mode enum value.
+
+  If no \c --mode was given, or it's value wasn't recognized, throws
+  an assuan_exception.
+*/
+AssuanCommand::Mode AssuanCommand::checkMode() const {
+    if ( !hasOption( "mode" ) )
+        throw assuan_exception( makeError( GPG_ERR_MISSING_VALUE ), i18n( "Required --mode option missing" ) );
+
+    const QString modeString = option("mode").toString().toLower();
+    if ( modeString == "filemanager" )
+        return FileManager;
+    if ( modeString == "email" )
+        return EMail;
+    throw assuan_exception( makeError( GPG_ERR_INV_ARG ), i18n( "invalid mode: \"%1\"", modeString ) );
+}
+
+/*!
+  Checks the \c --protocol parameter.
+
+  \returns The parameter as a GpgME::Protocol enum value.
+
+  If \c --protocol was given, but has an invalid value, throws an
+  assuan_exception.
+
+  If no \c --protocol was given, in FileManager mode, returns
+  GpgME::UnknownProtocol, but in EMail mode, throws an
+  assuan_exception instead.
+*/
+GpgME::Protocol AssuanCommand::checkProtocol() const {
+    if ( !hasOption("protocol") )
+#if 0 // ### enable this when OPTION mode is decided upon
+        if ( checkMode() == AssuanCommand::EMail )
+            throw assuan_exception( makeError( GPG_ERR_MISSING_VALUE ), i18n( "Required --protocol option missing" ) );
+        else
+#endif
+            return GpgME::UnknownProtocol;
+
+    const QString protocolString = option("protocol").toString().toLower();
+    if ( protocolString == "openpgp" )
+        return GpgME::OpenPGP;
+    if ( protocolString == "cms" )
+        return GpgME::CMS;
+    throw assuan_exception( makeError( GPG_ERR_INV_ARG ), i18n( "invalid protocol \"%1\"", protocolString ) );
+}        
 
 
 #include "assuanserverconnection.moc"

@@ -214,6 +214,13 @@ namespace Kleo {
         virtual int doStart() = 0;
 
     protected:
+        // convenience methods:
+        GpgME::Protocol checkProtocol() const;
+
+        enum Mode { EMail, FileManager };
+        Mode checkMode() const;
+
+    protected:
 
         bool isNohup() const;
 
