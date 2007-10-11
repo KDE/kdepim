@@ -159,9 +159,12 @@ void SignCommand::Private::startSignJobs( const std::vector<GpgME::Key>& keys )
         q->done();
         return;
     }
-    Q_FOREACH( const Input input, m_inputs ) {
 
-        const CryptoBackend::Protocol* backend = CryptoBackendFactory::instance()->protocol( input.protocol == GpgME::OpenPGP ? "openpgp" : "smime" );
+    const GpgME::Protocol defaultProtocol = key.front().protocol();
+
+    Q_FOREACH( const Input input, m_inputs ) {
+        const GpgME::Protocol proto = input.protocol == GpgME::UnknownProtocol ? defaultProtocol : input.protocol ;
+        const CryptoBackend::Protocol* backend = CryptoBackendFactory::instance()->protocol( proto == GpgME::OpenPGP ? "openpgp" : "smime" );
         assert( backend ); // FIXME - this should be checked somewhere before
     
         SignJob *job = backend->signJob( true, true );
