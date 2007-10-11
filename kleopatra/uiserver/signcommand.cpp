@@ -33,6 +33,7 @@
 #include "signcommand.h"
 #include "kleo-assuan.h"
 #include "keyselectionjob.h"
+#include "detail_p.h"
 
 #include "utils/stl_util.h"
 
@@ -61,27 +62,6 @@
 #include <vector>
 
 using namespace Kleo;
-
-namespace {
-    template <template <typename T> class Op>
-    struct ByProtocol {
-        typedef bool result_type;
-
-        bool operator()( const GpgME::Key & lhs, const GpgME::Key & rhs ) const {
-            return Op<int>()( qstricmp( lhs.protocolAsString(), rhs.protocolAsString() ), 0 );
-        }
-        bool operator()( const GpgME::Key & lhs, const char * rhs ) const {
-            return Op<int>()( qstricmp( lhs.protocolAsString(), rhs ), 0 );
-        }
-        bool operator()( const char * lhs, const GpgME::Key & rhs ) const {
-            return Op<int>()( qstricmp( lhs, rhs.protocolAsString() ), 0 );
-        }
-        bool operator()( const char * lhs, const char * rhs ) const {
-            return Op<int>()( qstricmp( lhs, rhs ), 0 );
-        }
-    };
-
-}
 
 class SignCommand::Private
   : public AssuanCommandPrivateBaseMixin<SignCommand::Private, SignCommand>
@@ -175,7 +155,7 @@ void SignCommand::Private::startSignJobs( const std::vector<GpgME::Key>& keys )
 {
     // make sure the keys are all of the same type
     // FIXME reasonable assumption?
-    if ( keys.empty() || !kdtools::all( keys.begin(), keys.end(), boost::bind( ByProtocol<std::equal_to>(), _1, keys.front() )  ) ) {
+    if ( keys.empty() || !kdtools::all( keys.begin(), keys.end(), boost::bind( _detail::ByProtocol<std::equal_to>(), _1, keys.front() )  ) ) {
         q->done();
         return;
     }

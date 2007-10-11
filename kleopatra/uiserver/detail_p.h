@@ -63,6 +63,24 @@ namespace _detail {
         }
     };
 
+    template <template <typename T> class Op>
+    struct ByProtocol {
+        typedef bool result_type;
+
+        bool operator()( const GpgME::Key & lhs, const GpgME::Key & rhs ) const {
+            return Op<int>()( qstricmp( lhs.protocolAsString(), rhs.protocolAsString() ), 0 );
+        }
+        bool operator()( const GpgME::Key & lhs, const char * rhs ) const {
+            return Op<int>()( qstricmp( lhs.protocolAsString(), rhs ), 0 );
+        }
+        bool operator()( const char * lhs, const GpgME::Key & rhs ) const {
+            return Op<int>()( qstricmp( lhs, rhs.protocolAsString() ), 0 );
+        }
+        bool operator()( const char * lhs, const char * rhs ) const {
+            return Op<int>()( qstricmp( lhs, rhs ), 0 );
+        }
+    };
+
     // inspired by GnuPG's translate_sys2libc_fd, this converts a HANDLE
     // to int fd on Windows, and is a NO-OP on POSIX:
     static inline int translate_sys2libc_fd( assuan_fd_t fd, bool for_write ) {
