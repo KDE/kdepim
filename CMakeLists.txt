@@ -136,8 +136,6 @@ endif(NOT WIN32)
 macro_optional_add_subdirectory(korn)
 add_subdirectory(kresources)
 macro_optional_add_subdirectory(ktnef)
-MESSAGE(STATUS "disabled networkstatus")
-#add_subdirectory(networkstatus)
 
 if(QGPGME_FOUND)
    add_subdirectory(wizards)
