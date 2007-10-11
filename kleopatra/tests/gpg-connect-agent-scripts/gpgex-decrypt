@@ -1,0 +1,5 @@
+# OPTION mode=filemanager
+INPUT FILE=$cwd$/test.data.gpg
+INPUT FILE=$cwd$/test.data.pem
+DECRYPT --nohup
+BYE

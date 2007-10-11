@@ -1,0 +1,4 @@
+# OPTION mode=filemanager
+INPUT FILE=$cwd$/test.data
+ENCRYPT --nohup
+BYE

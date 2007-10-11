@@ -1,0 +1,5 @@
+# OPTION mode=filemanager
+INPUT FILE=$cwd$/test.data-detached-signature.pem
+INPUT FILE=$cwd$/test.data.sig
+VERIFY --nohup
+BYE
