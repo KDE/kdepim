@@ -67,30 +67,28 @@ int AssuanCommandPrivateBase::determineInputsAndProtocols( QString& reason )
 {
     reason = QString();
 
-    const QString protocol = q->option( "protocol" ).toString();
+    try {
 
-    if ( protocol.isEmpty() )
-        Q_FOREACH ( const Input input, inputList )
-            if ( !input.isFileInputOnly() ) {
-                reason = "--protocol option is required when passing file descriptors";
-                return q->makeError( GPG_ERR_MISSING_VALUE );
-            }
+        const GpgME::Protocol protocol = q->checkProtocol();
 
-    if ( !protocol.isEmpty() ) {
-        const Kleo::CryptoBackend::Protocol* backend = Kleo::CryptoBackendFactory::instance()->protocol( protocol.toAscii().data() );
-        if ( !backend ) {
-            reason = QString( "Unknown protocol: %1" ).arg( protocol );
-            return q->makeError( GPG_ERR_INV_ARG );
+        if ( protocol != GpgME::UnknownProtocol ) {
+            const Kleo::CryptoBackend::Protocol* backend = Kleo::CryptoBackendFactory::instance()->protocol( protocol == GpgME::OpenPGP ? "openpgp" : "smime" );
+            if ( !backend )
+                throw assuan_exception( q->makeError( GPG_ERR_INV_ARG ), i18n( "unsupported protocol" ) );
+
+            for ( int i = 0; i < inputList.size(); ++i )
+                inputList[i].backend = backend;
+        } else { // no protocol given
+            //TODO: kick off protocol detection for all files
+            for ( int i = 0; i < inputList.size(); ++i )
+                inputList[i].backend = Kleo::CryptoBackendFactory::instance()->protocol( "openpgp" );
         }
+        return 0;
 
-        for ( int i = 0; i < inputList.size(); ++i )
-            inputList[i].backend = backend;
-    } else { // no protocol given
-        //TODO: kick off protocol detection for all files
-        for ( int i = 0; i < inputList.size(); ++i )
-            inputList[i].backend = Kleo::CryptoBackendFactory::instance()->protocol( "openpgp" );
+    } catch ( const assuan_exception & e ) {
+        reason = QString::fromLocal8Bit( e.message().c_str() );
+        return e.error_code();
     }
-    return 0;
 }
 
 void AssuanCommandPrivateBase::writeToOutputDeviceOrAskForFileName( int id,  const QByteArray& stuff, const QString& _filename )
