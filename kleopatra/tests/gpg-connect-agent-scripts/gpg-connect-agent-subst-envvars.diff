@@ -1,0 +1,15 @@
+Index: tools/gpg-connect-agent.c
+===================================================================
+--- tools/gpg-connect-agent.c	(revision 4589)
++++ tools/gpg-connect-agent.c	(working copy)
+@@ -206,8 +206,8 @@
+   for (var = variable_table; var; var = var->next)
+     if (!strcmp (var->name, name))
+       break;
+-  if (!var || !var->value)
+-    return NULL;
++  if (!var)
++    return getenv (name);
+   return var->value;
+ }
+ 
