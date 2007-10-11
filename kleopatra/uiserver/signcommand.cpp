@@ -160,7 +160,7 @@ void SignCommand::Private::startSignJobs( const std::vector<GpgME::Key>& keys )
         return;
     }
 
-    const GpgME::Protocol defaultProtocol = key.front().protocol();
+    const GpgME::Protocol defaultProtocol = keys.front().protocol();
 
     Q_FOREACH( const Input input, m_inputs ) {
         const GpgME::Protocol proto = input.protocol == GpgME::UnknownProtocol ? defaultProtocol : input.protocol ;
