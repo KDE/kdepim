@@ -66,6 +66,7 @@ public:
         QIODevice* input;
         QString inputFileName;
         int id;
+        GpgME::Protocol protocol;
     };
     
     struct Result {
@@ -111,16 +112,19 @@ void EncryptCommand::Private::checkInputs()
     if ( numOutputs && numInputs != numOutputs )
         throw assuan_exception( makeError( GPG_ERR_ASS_NO_INPUT ),  i18n( "For each INPUT there needs to be an OUTPUT" ) );
 
+    const GpgME::Protocol protocol = q->checkProtocol();
+
     for ( int i = 0; i < numInputs; ++i ) {
         Input input;
         input.input = q->bulkInputDevice( "INPUT", i );
         assert( input.input );
         input.inputFileName = q->bulkInputDeviceFileName( "INPUT", i );
         input.id = i;
+        input.protocol = protocol;
         m_inputs.push_back( input );
     }
 
-    m_deleteInputFiles = q->hasOption( "--delete-input-files" );
+    m_deleteInputFiles = q->hasOption( "delete-input-files" );
 }
 
 void EncryptCommand::Private::startKeySelection()
@@ -145,11 +149,13 @@ void EncryptCommand::Private::startEncryptJobs( const std::vector<GpgME::Key>& k
         return;
     }
 
-    const CryptoBackend::Protocol* const backend = CryptoBackendFactory::instance()->protocol( keys.front().protocolAsString() );
-
-    assert( backend );
+    const GpgME::Protocol defaultProtocol = keys.front().protocol();
 
     Q_FOREACH( const Input i, m_inputs ) {
+        const GpgME::Protocol proto = i.protocol == GpgME::UnknownProtocol ? defaultProtocol : i.protocol ;
+        const CryptoBackend::Protocol* const backend = CryptoBackendFactory::instance()->protocol( proto == GpgME::OpenPGP ? "openpgp" : "smime" );
+        assert( backend ); // FIXME: this should be checked upstream
+
         EncryptJob* job = backend->encryptJob( true, true );
         connect( job, SIGNAL( result( GpgME::EncryptionResult, QByteArray ) ), 
                  this, SLOT( slotEncryptionResult( GpgME::EncryptionResult, QByteArray ) ) ); 
