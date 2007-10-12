@@ -80,14 +80,15 @@ namespace Kleo {
    C9x has a similar variable called __func__, but prefer the GCC one since
    it demangles C++ function names.  */
 
-#if (defined __GNUC_PREREQ)
-#define KLEO_GNUC_PREREQ __GNUC_PREREQ
-#elif (defined __MINGW_GNUC_PREREQ)
-#define KLEO_GNUC_PREREQ __MINGW_GNUC_PREREQ
-
+#if defined (__GNUC_PREREQ)
+# define KLEO_GNUC_PREREQ __GNUC_PREREQ
+#elif defined (__MINGW_GNUC_PREREQ)
+# define KLEO_GNUC_PREREQ __MINGW_GNUC_PREREQ
+#else
+# define KLEO_GNUC_PREREQ(maj, min) 0
 #endif
 
-#if (defined KLEO_GNUC_PREREQ) && KLEO_GNUC_PREREQ(2, 6)
+#if defined(KLEO_GNUC_PREREQ) && KLEO_GNUC_PREREQ(2, 6)
 # define assuan_assert( cond ) assuan_assert_impl_func( cond, __FILE__, __LINE__, __PRETTY_FUNCTION__ )
 #elif defined __STDC_VERSION__ && __STDC_VERSION__ >= 199901L
 # define assuan_assert( cond ) assuan_assert_impl_func( cond, __FILE__, __LINE__, __func__ )
