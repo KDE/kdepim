@@ -1,4 +1,6 @@
 # OPTION mode=filemanager
+/subst
+/slet cwd cwd
 INPUT FILE=$cwd$/test.data
 ENCRYPT --nohup
 BYE
