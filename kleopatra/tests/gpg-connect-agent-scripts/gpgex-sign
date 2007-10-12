@@ -1,6 +1,6 @@
 # OPTION mode=filemanager
 /subst
 /slet cwd cwd
-INPUT FILE=$cwd$/test.data
+INPUT FILE=${cwd}/test.data
 SIGN --nohup
 BYE

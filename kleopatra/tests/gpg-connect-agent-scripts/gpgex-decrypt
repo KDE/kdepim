@@ -1,7 +1,7 @@
 # OPTION mode=filemanager
 /subst
 /slet cwd cwd
-INPUT FILE=$cwd$/test.data.gpg
-INPUT FILE=$cwd$/test.data.pem
+INPUT FILE=${cwd}/test.data.gpg
+INPUT FILE=${cwd}/test.data.pem
 DECRYPT --nohup
 BYE
