@@ -63,31 +63,21 @@ AssuanCommandPrivateBase::~AssuanCommandPrivateBase()
 {
 }
 
-int AssuanCommandPrivateBase::determineInputsAndProtocols( QString& reason )
+void AssuanCommandPrivateBase::determineInputsAndProtocols()
 {
-    reason = QString();
+    const GpgME::Protocol protocol = q->checkProtocol();
 
-    try {
+    if ( protocol != GpgME::UnknownProtocol ) {
+        const Kleo::CryptoBackend::Protocol* backend = Kleo::CryptoBackendFactory::instance()->protocol( protocol == GpgME::OpenPGP ? "openpgp" : "smime" );
+        if ( !backend )
+            throw assuan_exception( q->makeError( GPG_ERR_INV_ARG ), i18n( "unsupported protocol" ) );
 
-        const GpgME::Protocol protocol = q->checkProtocol();
-
-        if ( protocol != GpgME::UnknownProtocol ) {
-            const Kleo::CryptoBackend::Protocol* backend = Kleo::CryptoBackendFactory::instance()->protocol( protocol == GpgME::OpenPGP ? "openpgp" : "smime" );
-            if ( !backend )
-                throw assuan_exception( q->makeError( GPG_ERR_INV_ARG ), i18n( "unsupported protocol" ) );
-
-            for ( int i = 0; i < inputList.size(); ++i )
-                inputList[i].backend = backend;
-        } else { // no protocol given
-            //TODO: kick off protocol detection for all files
-            for ( int i = 0; i < inputList.size(); ++i )
-                inputList[i].backend = Kleo::CryptoBackendFactory::instance()->protocol( "openpgp" );
-        }
-        return 0;
-
-    } catch ( const assuan_exception & e ) {
-        reason = QString::fromLocal8Bit( e.message().c_str() );
-        return e.error_code();
+        for ( int i = 0; i < inputList.size(); ++i )
+            inputList[i].backend = backend;
+    } else { // no protocol given
+        //TODO: kick off protocol detection for all files
+        for ( int i = 0; i < inputList.size(); ++i )
+            inputList[i].backend = Kleo::CryptoBackendFactory::instance()->protocol( "openpgp" );
     }
 }
 

@@ -62,8 +62,6 @@
 
 #include <boost/bind.hpp>
 
-#include <cassert>
-
 using namespace Kleo;
 
 class DecryptCommand::Private;
@@ -247,8 +245,8 @@ public:
     {}
 
     DecryptCommand *q;
-    QList<Input> analyzeInput( GpgME::Error& error, QString& errorDetails ) const;
-    int startDecryption();
+    QList<Input> analyzeInput() const;
+    void startDecryption();
     bool trySendingStatus( const QString & str );
     void showDecryptResultDialog();
 
@@ -347,39 +345,30 @@ DecryptCommand::DecryptCommand()
 
 DecryptCommand::~DecryptCommand() {}
 
-QList<AssuanCommandPrivateBase::Input> DecryptCommand::Private::analyzeInput( GpgME::Error& error, QString& errorDetails ) const
+QList<AssuanCommandPrivateBase::Input> DecryptCommand::Private::analyzeInput() const
 {
-    error = GpgME::Error();
-    errorDetails = QString();
+    const unsigned int numInputs = q->numBulkInputDevices( "INPUT" );
+    const unsigned int numOutputs = q->numBulkInputDevices( "OUTPUT" );
+    const unsigned int numMessages = q->numBulkInputDevices( "MESSAGE" );
 
-    const int numInputs = q->numBulkInputDevices( "INPUT" );
-    const int numOutputs = q->numBulkInputDevices( "OUTPUT" );
-    const int numMessages = q->numBulkInputDevices( "MESSAGE" );
+    if ( numMessages )
+        throw assuan_exception( q->makeError( GPG_ERR_ASS_NO_INPUT ), // TODO use better error code if possible
+                                i18n("Unexpected MESSAGE given") );
 
-    if ( numMessages != 0 )
-    {
-        error = GpgME::Error( GPG_ERR_ASS_NO_INPUT ); //TODO use better error code if possible
-        errorDetails = "Only --input can be provided to the decrypt command, no --message";
-        return QList<Input>();
-    }
-
-    // either the output is discarded, or there ar as many as inputs
-    if ( numOutputs > 0 && numInputs != numOutputs )
-    {
-        error = GpgME::Error( GPG_ERR_ASS_NO_INPUT ); //TODO use better error code if possible
-        errorDetails = "For each --input there needs to be an --output";
-        return QList<Input>();
-    }
-
+    // either the output is discarded, or there are as many as inputs
+    if ( numOutputs && numInputs != numOutputs )
+        throw assuan_exception( q->makeError( GPG_ERR_ASS_NO_INPUT ), // TODO use better error code if possible
+                                i18n("INPUT/OUTPUT count mismatch" ) );
     QList<Input> inputs;
 
-    for ( int i = 0; i < numInputs; ++i )
+    for ( unsigned int i = 0; i < numInputs; ++i )
     {
         Input input;
         input.message = q->bulkInputDevice( "INPUT", i );
         input.messageFileName = q->bulkInputDeviceFileName( "INPUT", i );
-        assert( input.message );
+        assuan_assert( input.message );
         input.type = Input::Opaque; // by definition
+
         inputs.append( input );
     }
 
@@ -452,57 +441,44 @@ void DecryptCommand::Private::showDecryptResultDialog()
     dialog->show();
 }
 
-int DecryptCommand::Private::startDecryption()
+void DecryptCommand::Private::startDecryption()
 {
-    assert( !inputList.isEmpty() );
+    assuan_assert( !inputList.isEmpty() );
     connect( collector, SIGNAL( finished( QMap<int, DecryptionResultCollector::Result> ) ),
              SLOT( slotDecryptionCollectionResult( QMap<int, DecryptionResultCollector::Result> ) ) );
 
-    try {
-        int i = 0;
-        Q_FOREACH ( const Private::Input input, inputList )
-        {
-            assert( input.backend );
+    int i = 0;
+    Q_FOREACH ( const Private::Input input, inputList ) {
+        assuan_assert( input.backend );
 
-            //fire off appropriate kleo decrypt job
-            DecryptJob * const job = input.backend->decryptJob();
-            assert(job);
-            collector->registerJob( i, job );
+        //fire off appropriate kleo decrypt job
+        DecryptJob * const job = input.backend->decryptJob();
+        assuan_assert(job);
+        collector->registerJob( i, job );
 
-            // FIXME handle file names
-            const QByteArray encrypted = input.message->readAll(); // FIXME safe enough?
-            const GpgME::Error error = job->start( encrypted );
-            if ( error ) throw error;
+        // FIXME handle file names
+        const QByteArray encrypted = input.message->readAll(); // FIXME safe enough?
+        if ( const GpgME::Error error = job->start( encrypted ) )
+            throw assuan_exception( error, i18n("Failed to start decryption" ) );
 
-            ++i;
-        }
-    } catch ( const GpgME::Error & error ) {
-        q->done( error );
-        return error;
+        ++i;
     }
-
-    return 0;
 }
 
 int DecryptCommand::doStart()
 {
-    GpgME::Error error;
-    QString details;
-    d->inputList = d->analyzeInput( error, details );
-    if ( error ) {
-        done( error, details );
-        return error;
-    }
+    d->inputList = d->analyzeInput();
+    d->determineInputsAndProtocols();
 
-    int err = d->determineInputsAndProtocols( details );
-    if ( err ) {
-        done( err, details );
-        return err;
-    }
-    err = d->startDecryption();
-    if ( !err && !hasOption( "silent" ) )
+    try {
+        d->startDecryption();
+        if ( !hasOption( "silent" ) )
+            d->showDecryptResultDialog();
+        return 0;
+    } catch ( const assuan_exception & e ) {
         d->showDecryptResultDialog();
-    return 0;
+        throw;
+    }
 
 }
 

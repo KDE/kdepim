@@ -83,7 +83,7 @@ public:
         const CryptoBackend::Protocol* backend;
     };
     QList<Input> inputList;
-    int determineInputsAndProtocols( QString& reason );
+    void determineInputsAndProtocols();
     void writeToOutputDeviceOrAskForFileName( int id,  const QByteArray& stuff, const QString& _filename );
 protected:
     virtual AssuanCommand *get_q() const = 0;

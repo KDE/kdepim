@@ -36,6 +36,7 @@
 #include "signaturedisplaywidget.h"
 #include "resultdialog.h"
 #include "resultdisplaywidget.h"
+#include "classify.h"
 
 #include <kleo/verifyopaquejob.h>
 #include <kleo/verifydetachedjob.h>
@@ -51,16 +52,7 @@
 #include <KLocale>
 #include <kiconloader.h>
 
-#ifndef KLEO_ONLY_UISERVER
-#include <KFileDialog>
-#endif
-#include <KUrl>
-
-
-#ifdef KLEO_ONLY_UISERVER
 #include <QFileDialog>
-#endif
-
 #include <QObject>
 #include <QIODevice>
 #include <QVariant>
@@ -214,8 +206,8 @@ public:
     VerifyCommand * q;
     VerificationResultCollector * collector;
 
-    QList<AssuanCommandPrivateBase::Input> analyzeInput( GpgME::Error& error, QString& errorDetails ) const;
-    int startVerification();
+    QList<AssuanCommandPrivateBase::Input> analyzeInput() const;
+    void startVerification();
 
     void writeOpaqueResult(const GpgME::VerificationResult &, const QByteArray &, int);
     void trySendingStatus( const char * tag, const QString & str );
@@ -340,83 +332,102 @@ VerifyCommand::VerifyCommand()
 
 VerifyCommand::~VerifyCommand() {}
 
-QList<AssuanCommandPrivateBase::Input> VerifyCommand::Private::analyzeInput( GpgME::Error& error, QString& errorDetails ) const
+QList<AssuanCommandPrivateBase::Input> VerifyCommand::Private::analyzeInput() const
 {
-    error = GpgME::Error();
-    errorDetails = QString();
+    const unsigned int numSignatures = q->numBulkInputDevices( "INPUT" );
+    const unsigned int numMessages = q->numBulkInputDevices( "MESSAGE" );
+    const unsigned int numOutputs  = q->numBulkOutputDevices( "OUTPUT" );
 
-    const int numSignatures = q->numBulkInputDevices( "INPUT" );
-    const int numMessages = q->numBulkInputDevices( "MESSAGE" );
+    if ( !numSignatures )
+        throw assuan_exception( q->makeError( GPG_ERR_ASS_NO_INPUT ),
+                                i18n("At least one INPUT needs to be provided") );
 
-    if ( numSignatures == 0 )
-    {
-        error = GpgME::Error( GPG_ERR_ASS_NO_INPUT );
-        errorDetails = "At least one signature must be provided";
-        return QList<Input>();
-    }
+    if ( numMessages && numMessages != numSignatures )
+        throw assuan_exception( q->makeError( GPG_ERR_ASS_NO_INPUT ),  //TODO use better error code if possible
+                                i18n("INPUT/MESSAGE count mismatch") );
 
-    if ( numMessages > 0 && numMessages != numSignatures )
-    {
-        error = GpgME::Error( GPG_ERR_ASS_NO_INPUT ); //TODO use better error code if possible
-        errorDetails = "The number of MESSAGE inputs must be either equal to the number of signatures or zero";
-        return QList<Input>();
-    }
+    if ( numOutputs && numOutputs != numSignatures )
+        throw assuan_exception( q->makeError( GPG_ERR_ASS_NO_OUTPUT ), //TODO use better error code if possible
+                                i18n("INPUT/OUTPUT count mismatch") );
+
+    if ( numOutputs && numMessages )
+        throw assuan_exception( q->makeError( GPG_ERR_CONFLICT ),
+                                i18n("Can't use OUTPUT and MESSAGE simultaneously") );
+
+    if ( !q->senders().empty() )
+        throw assuan_exception( q->makeError( GPG_ERR_CONFLICT ),
+                                i18n("Can't use SENDER") );
+
+    if ( !q->recipients().empty() )
+        throw assuan_exception( q->makeError( GPG_ERR_CONFLICT ),
+                                i18n("Can't use RECIPIENT") );
 
     QList<Input> inputs;
 
-    if ( numMessages == numSignatures )
-    {
-        for ( int i = 0; i < numSignatures; ++i )
-        {
+    if ( numMessages )
+        // detached signatures:
+        for ( unsigned int i = 0; i < numSignatures; ++i ) {
+
             Input input;
             input.type = Input::Detached;
             input.signature = q->bulkInputDevice( "INPUT", i );
             input.signatureFileName = q->bulkInputDeviceFileName( "INPUT", i );
             input.setupMessage( q->bulkInputDevice( "MESSAGE", i ), q->bulkInputDeviceFileName( "MESSAGE", i ) );
-            assert( input.message || !input.messageFileName.isEmpty() );
-            assert( input.signature );
+            assuan_assert( input.message || !input.messageFileName.isEmpty() );
+            assuan_assert( input.signature );
+
             inputs.append( input );
         }
         return inputs;
-    }
 
-    assert( numMessages == 0 );
+    assuan_assert( numMessages == 0 );
 
-    for ( int i = 0; i < numSignatures; ++i )
+    for ( unsigned int i = 0; i < numSignatures; ++i )
     {
         Input input;
         input.signature = q->bulkInputDevice( "INPUT", i );
-        input.signatureFileName = q->bulkInputDeviceFileName( "INPUT", i );
-        assert( input.signature );
+        assuan_assert( input.signature );
         const QString fname = q->bulkInputDeviceFileName( "INPUT", i );
-        if ( !fname.isEmpty() && fname.endsWith( ".sig", Qt::CaseInsensitive )
-                || fname.endsWith( ".asc", Qt::CaseInsensitive ) ) {
-            //detached signature file
-            QString msgFileName = fname.left( fname.length() - 4 );
-            QFile f( msgFileName );
-            if ( !f.exists() ) {
-                // the file we guessed doesn't exist, ask the user to supply one
-#ifndef KLEO_ONLY_UISERVER
-                const QString userFileName =
-                    KFileDialog::getOpenFileName( KUrl::fromPath(msgFileName),
-                            QString(), 0, i18n("Please select the file corresponding to the signature file: %1", fname) );
-#else // KLEO_ONLY_UISERVER
-		const QString userFileName = QFileDialog::getOpenFileName( 0, i18n("Select Signed File for %1", fname) );
-#endif
-                if ( userFileName.isEmpty())
-                    continue;
-                else
-                    msgFileName = userFileName;
-            }
-            input.type = Input::Detached;
-            input.messageFileName = msgFileName;
-        }
-        else // opaque
-        {
+
+        if ( fname.isEmpty() || isOpaqueSignature( fname ) ) {
+            // 1. FD and no MESSAGE - can only be opaque
+            // 2. heuristics say it's opaque
             input.type = Input::Opaque;
+            input.signatureFileName = fname;
+            inputs.push_back( input );
+        } else if ( isDetachedSignature( fname ) ) {
+            // heuristics say it's a detached signature
+
+            QString signedData = findSignedData( fname );
+            if ( signedData.isEmpty() )
+                // guessing failed, ask the user to supply one
+                signedData = QFileDialog::getOpenFileName( 0, i18n("Select Signed File for %1", fname) );
+            if ( signedData.isEmpty() )
+                continue;
+
+            input.type = Input::Detached;
+            input.messageFileName = signedData;
+            input.signatureFileName = fname;
+
+            inputs.push_back( input );
+        } else {
+            // probably the signed data file was selected:
+            QStringList signatures = findSignatures( fname );
+            const QFileInfo fi( fname );
+            if ( signatures.empty() )
+                // guesing failed, ask the user to supply the signature
+                signatures = QFileDialog::getOpenFileNames( 0, i18n("Please select the signature files corresponding to the data file %1", fi.fileName() ), fi.path() );
+
+            Q_FOREACH( const QString s, signatures ) {
+                Input i = input;
+                i.type = Input::Detached;
+                i.signatureFileName = s;
+                i.messageFileName = fname;
+                inputs.push_back( i );
+            }
         }
-        inputs.append( input );
     }
+
     return inputs;
 }
 
@@ -520,73 +531,65 @@ void VerifyCommand::Private::slotProgress( const QString& what, int current, int
     // FIXME report progress, via sendStatus()
 }
 
-int VerifyCommand::Private::startVerification()
+void VerifyCommand::Private::startVerification()
 {
-    assert( !inputList.isEmpty() );
+    assuan_assert( !inputList.isEmpty() );
     connect( collector, SIGNAL( finished( QHash<int, VerificationResultCollector::Result> ) ),
              SLOT( verificationFinished( QHash<int, VerificationResultCollector::Result> ) ) );
 
-    try {
+    int i = 0;
+    Q_FOREACH ( const Private::Input input, inputList ) {
 
-        int i = 0;
-        Q_FOREACH ( const Private::Input input, inputList )
-        {
-            assert( input.backend );
-            if ( input.type == Private::Input::Opaque )
-            {
-                //fire off appropriate kleo verification job
-                VerifyOpaqueJob * const job = input.backend->verifyOpaqueJob();
-                assert(job);
-                collector->registerJob( i, job );
-                //FIXME: readAll() save enough?
-                const GpgME::Error error = job->start( input.signature->readAll() );
-                if ( error ) throw error;
-            }
-            else
-            {
-                //fire off appropriate kleo verification job
-                VerifyDetachedJob * const job = input.backend->verifyDetachedJob();
-                assert(job);
-                collector->registerJob( i, job );
+        assuan_assert( input.backend );
 
-                //FIXME: readAll save enough?
-                const QByteArray signature = input.signature->readAll();
-                assert( input.message || !input.messageFileName.isEmpty() );
-                const bool useFileName = !input.messageFileName.isEmpty();
-                GpgME::Data fileData;
-                fileData.setFileName( input.messageFileName.toLatin1().data() );
-                //FIXME: handle file name encoding correctly
-                assert( !useFileName || !fileData.isNull() );
-                const GpgME::Error error = useFileName ? job->start( signature, fileData ) : job->start( signature, input.message->readAll() );
-                if ( error ) throw error;
-            }
-            ++i;
+        if ( input.type == Private::Input::Opaque ) {
+
+            //fire off appropriate kleo verification job
+            VerifyOpaqueJob * const job = input.backend->verifyOpaqueJob();
+            assuan_assert(job);
+            collector->registerJob( i, job );
+            //FIXME: readAll() save enough?
+            if ( const GpgME::Error error = job->start( input.signature->readAll() ) )
+                throw assuan_exception( error, i18n("Failed to start verification") );
+
+        } else {
+
+            //fire off appropriate kleo verification job
+            VerifyDetachedJob * const job = input.backend->verifyDetachedJob();
+            assuan_assert(job);
+            collector->registerJob( i, job );
+
+            //FIXME: readAll save enough?
+            const QByteArray signature = input.signature->readAll();
+            assuan_assert( input.message );
+            const QByteArray message = input.message->readAll();
+            if ( const GpgME::Error error = job->start( signature, message ) )
+                throw assuan_exception( error, i18n("Failed to start verification") );
+
         }
-    } catch ( const GpgME::Error & error ) {
-        q->done( error );
-        return error;
+        ++i;
     }
 
-    return 0;
 }
 
 int VerifyCommand::doStart()
 {
-    GpgME::Error error;
-    QString details;
-    d->inputList = d->analyzeInput( error, details );
-    if ( error ) {
-        done( error, details );
-        return error;
-    }
+    d->inputList = d->analyzeInput();
+    if ( d->inputList.empty() )
+        throw assuan_exception( makeError( GPG_ERR_ASS_NO_INPUT ),
+                                i18n("No useable inputs found") );
 
-    int err = d->determineInputsAndProtocols( details );
-    if ( err )
-        done( err, details );
-    err = d->startVerification();
-    if( !err && !hasOption("silent") )
+    d->determineInputsAndProtocols();
+
+    try {
+        d->startVerification();
+        if( !hasOption("silent") )
+            d->showVerificationResultDialog();
+        return 0;
+    } catch ( ... ) {
         d->showVerificationResultDialog();
-    return err;
+        throw;
+    }
 }
 
 void VerifyCommand::doCanceled()
