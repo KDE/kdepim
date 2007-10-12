@@ -1,3 +1,15 @@
+Friday, October 12th 2007
+
+Bugfixes
+--------
+
+Features
+--------
+
+* Prokde35-Z Item 55d: Immediately sync groupware changes (revision 723653)
+* Prokde35-z Item 27: Softbreaking in the kmail editor when no hardbreak limit is set (724153)
+
+
 Wednesday, September 26st 2007
 
 Bugfixes
