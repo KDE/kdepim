@@ -33,6 +33,8 @@
 #include "classify.h"
 
 #include <QString>
+#include <QStringList>
+#include <QFile>
 #include <QFileInfo>
 #include <QtAlgorithms>
 
@@ -107,4 +109,37 @@ unsigned int Kleo::classify( const QString & filename ) {
         return defaultClassification;
     else
         return it->classification;
+}
+
+static QString chopped( QString s, unsigned int n ) {
+    s.chop( n );
+    return s;
+}
+
+/*!
+  \return the data file that corresponds to the signature file \a
+  signatureFileName, or QString(), if no such file can be found.
+*/
+QString Kleo::findSignedData( const QString & signatureFileName ) {
+    if ( !isDetachedSignature( signatureFileName ) )
+        return QString();
+    const QString baseName = chopped( signatureFileName, 4 );
+    return QFile::exists( baseName ) ? baseName : QString() ;
+}
+
+/*!
+  \return all (existing) candiate signature files for \a signedDataFileName
+
+  Note that there can very well be more than one such file, e.g. if
+  the same data file was signed by both CMS and OpenPGP certificates.
+*/
+QStringList Kleo::findSignatures( const QString & signedDataFileName ) {
+    QStringList result;
+    for ( unsigned int i = 0, end = size( classifications ) ; i < end ; ++i )
+        if ( classifications[i].classification & DetachedSignature ) {
+            const QString candiate = signedDataFileName + '.' + classifications[i].extension;
+            if ( QFile::exists( candiate ) )
+                result.push_back( candiate );
+        }
+    return result;
 }

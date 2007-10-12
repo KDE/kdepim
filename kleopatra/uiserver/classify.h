@@ -34,6 +34,7 @@
 #define __KLEOPATRA_UISERVER_CLASSIFY_H__
 
 class QString;
+class QStringList;
 
 namespace Kleo {
 
@@ -78,6 +79,8 @@ namespace Kleo {
     };
 
     unsigned int classify( const QString & filename );
+    QString findSignedData( const QString & signatureFileName );
+    QStringList findSignatures( const QString & signedDataFileName );
 
 #define make_convenience( What, Mask )                                  \
     inline bool is##What( const QString & filename ) {                  \
