@@ -43,6 +43,7 @@ if ( USABLE_ASSUAN_FOUND )
     utils/kdpipeiodevice.cpp
     ${_kleopatra_extra_uiserver_SRCS}
     uiserver/kleo-assuan.cpp
+    uiserver/classify.cpp
     uiserver/uiserver.cpp
     uiserver/assuanserverconnection.cpp
     uiserver/echocommand.cpp
