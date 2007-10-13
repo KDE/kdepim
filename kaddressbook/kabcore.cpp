@@ -30,6 +30,8 @@
 #include <QVBoxLayout>
 #include <QList>
 #include <QHBoxLayout>
+#include <QtGui/QPrinter>
+#include <QtGui/QPrintDialog>
 
 #include <kabc/addresseelist.h>
 #include <kabc/errorhandler.h>
@@ -47,7 +49,6 @@
 #include <kimproxy.h>
 #include <klocale.h>
 #include <kmessagebox.h>
-#include <kprinter.h>
 #include <kprotocolinfo.h>
 #include <kresources/selectdialog.h>
 #include <kstandarddirs.h>
@@ -877,11 +878,14 @@ void KABCore::configure()
 
 void KABCore::print()
 {
-  KPrinter printer;
+  QPrinter printer;
   printer.setDocName( i18n( "Address Book" ) );
-  printer.setDocFileName( "addressbook" );
+  printer.setOutputFileName( "addressbook.pdf" );
+  printer.setOutputToFile(false);
 
-  if ( !printer.setup( mWidget, i18n( "Print Addresses" ) ) )
+  QPrintDialog printDialog(&printer, mWidget);
+  printDialog.setWindowTitle(i18n("Print Addresses"));
+  if ( !printDialog.exec() )
     return;
 
   KABPrinting::PrintingWizard wizard( &printer, mAddressBook,

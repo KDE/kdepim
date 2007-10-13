@@ -29,6 +29,7 @@
 #include "printstyle.h"
 #include "kabentrypainter.h"
 
+class QPrinter;
 
 namespace KABPrinting {
 
@@ -45,7 +46,7 @@ class DetailledPrintStyle : public PrintStyle
     void print( const KABC::Addressee::List &contacts, PrintProgress* );
 
   protected:
-    bool printEntries( const KABC::Addressee::List &contacts, KPrinter *printer,
+    bool printEntries( const KABC::Addressee::List &contacts, QPrinter *printer,
                        QPainter *painter, const QRect &window );
     bool printEntry( const KABC::Addressee &contact, const QRect &window,
                      QPainter *painter, int top, bool fake, QRect *brect );

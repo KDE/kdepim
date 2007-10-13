@@ -29,7 +29,7 @@
 #include "ui_rbs_appearance.h"
 
 
-class KPrinter;
+class QPrinter;
 
 namespace KABPrinting
 {
@@ -58,9 +58,9 @@ class RingBinderPrintStyle : public PrintStyle
     void print( const KABC::Addressee::List &contacts, PrintProgress* );
 
   protected:
-    bool printEntries( const KABC::Addressee::List &contacts, KPrinter *printer,
+    bool printEntries( const KABC::Addressee::List &contacts, QPrinter *printer,
                        QPainter *painter, const QRect& window );
-    void fillEmpty( const QRect& window, KPrinter *printer, QPainter* painter,
+    void fillEmpty( const QRect& window, QPrinter *printer, QPainter* painter,
                     int top, int grpnum );
     bool printEntry( const KABC::Addressee& contact, const QRect& window,
                      QPainter *painter, int top, bool fake = false,

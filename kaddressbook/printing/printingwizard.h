@@ -37,7 +37,7 @@
 #include "stylepage.h"
 
 
-class KPrinter;
+class QPrinter;
 class QVBoxLayout;
 
 namespace KABPrinting {
@@ -54,7 +54,7 @@ class PrintingWizard : public KAssistantDialog
     /**
       Construct a printing wizard. Give the addressbook instance to print.
      */
-    PrintingWizard( KPrinter *printer,
+    PrintingWizard( QPrinter *printer,
                     KABC::AddressBook* ab,
                     const QStringList& selection,
                     QWidget *parent = 0 );
@@ -78,7 +78,7 @@ class PrintingWizard : public KAssistantDialog
     /**
       Retrieve the printer to be used.
      */
-    KPrinter* printer();
+    QPrinter* printer();
 
   protected slots:
     /**
@@ -91,7 +91,7 @@ class PrintingWizard : public KAssistantDialog
     QList<PrintStyleFactory*> mStyleFactories;
     QList<PrintStyle*> mStyleList;
     Filter::List mFilters;
-    KPrinter *mPrinter;
+    QPrinter *mPrinter;
     KABC::AddressBook *mAddressBook;
     QStringList mSelection;
     PrintStyle *mStyle;
