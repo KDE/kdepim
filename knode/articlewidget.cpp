@@ -14,7 +14,6 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <sys/stat.h>
-#include <Q3CString>
 #include <QBuffer>
 #include <QClipboard>
 #include <QDir>
@@ -405,7 +404,7 @@ void ArticleWidget::clear()
   mViewer->begin();
   mViewer->setUserStyleSheet( mCSSHelper->cssDefinitions( mFixedFontToggle->isChecked() ) );
   mViewer->write( mCSSHelper->htmlHead( mFixedFontToggle->isChecked() ) );
-  mViewer->write( "</body></html>" );
+  mViewer->write( QString("</body></html>") );
   mViewer->end();
 }
 
@@ -552,7 +551,7 @@ void ArticleWidget::displayArticle()
     }
   }
 
-  mViewer->write("</body></html>");
+  mViewer->write( QString("</body></html>") );
   mViewer->end();
 
   enableActions();
@@ -567,11 +566,11 @@ void ArticleWidget::displayErrorMessage( const QString &msg )
   mViewer->setUserStyleSheet( mCSSHelper->cssDefinitions( mFixedFontToggle->isChecked() ) );
   mViewer->write( mCSSHelper->htmlHead( mFixedFontToggle->isChecked() ) );
   QString errMsg = msg;
-  mViewer->write( "<b><font size=\"+1\" color=\"red\">" );
+  mViewer->write( QString("<b><font size=\"+1\" color=\"red\">") );
   mViewer->write( i18n("An error occurred.") );
-  mViewer->write( "</font></b><hr/><br/>" );
+  mViewer->write( QString("</font></b><hr/><br/>") );
   mViewer->write( errMsg.replace( "\n", "<br/>" ) );
-  mViewer->write( "</body></html>");
+  mViewer->write( QString("</body></html>") );
   mViewer->end();
 
   disableActions();
@@ -585,24 +584,23 @@ void ArticleWidget::displayHeader()
 
   // full header style
   if ( mHeaderStyle == "all" ) {
-    Q3CString head = mArticle->head();
+    QByteArray head = mArticle->head();
     KMime::Headers::Generic *header = 0;
 
+    headerHtml += "<div class=\"header\">"
+                  "<table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\"> ";
     while ( !head.isEmpty() ) {
       header = mArticle->getNextHeader( head );
       if ( header ) {
-        headerHtml += "<tr>";
-        headerHtml+=QString( "<td align=\"right\" valign=\"top\"><b>%1</b></td><td width=\"100%\">%2</td></tr>" )
+        headerHtml+=QString( "<tr><td align=\"right\" valign=\"top\"><b>%1</b></td><td width=\"100%\">%2</td></tr>" )
           .arg( toHtmlString( header->type(), None ) + ": " )
           .arg( toHtmlString( header->asUnicodeString() , ParseURL ) );
         delete header;
       }
     }
+    headerHtml += "</table></div>";
 
-    mViewer->write( "<div class=\"header\">" );
-    mViewer->write( "<table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\"> " );
     mViewer->write( headerHtml );
-    mViewer->write( "</table></div>" );
     return;
   }
 
@@ -652,10 +650,10 @@ void ArticleWidget::displayHeader()
 
   // standard header style
   if ( mHeaderStyle == "standard" ) {
-    mViewer->write( "<b style=\"font-size:130%\">" + toHtmlString( mArticle->subject()->asUnicodeString() ) + "</b>" );
-    mViewer->write( "<div class=\"header\"" );
-    mViewer->write( "<table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\"><tr>" + headerHtml );
-    mViewer->write( "</tr></table></div>" );
+    mViewer->write( QString("<b style=\"font-size:130%\">" + toHtmlString( mArticle->subject()->asUnicodeString() ) + "</b>") );
+    mViewer->write( QString("<div class=\"header\">") );
+    mViewer->write( QString("<table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\">") + headerHtml );
+    mViewer->write( QString("</table></div>") );
     return;
   }
 
@@ -672,15 +670,14 @@ void ArticleWidget::displayHeader()
   }
 
   // fancy header style
-  mViewer->write( "<div class=\"fancy header\"" );
-  mViewer->write( QString("<div>") );
-  mViewer->write( toHtmlString( mArticle->subject()->asUnicodeString(), ParseURL | FancyFormatting ) );
-  mViewer->write( QString("</div>") );
+  QString html = "<div class=\"fancy header\">";
+  html += "<div>";
+  html += toHtmlString( mArticle->subject()->asUnicodeString(), ParseURL | FancyFormatting );
+  html += "</div>";
 
-  QString html = QString("<table class=\"outer\"><tr><td width=\"100%\"><table>");
-
+  html += "<table class=\"outer\"><tr><td width=\"100%\"><table>";
   html += headerHtml;
-  html+="</td></tr></table></td>";
+  html += "</table></td>";
   html += "<td align=\"center\">" + xface + "</td>";
   html += "</tr></table>";
 
@@ -698,9 +695,8 @@ void ArticleWidget::displayHeader()
     }
     html += "</div>";
   }
-
+  html += "</div>";
   mViewer->write( html );
-  mViewer->write( "</div>" );
 }
 
 
