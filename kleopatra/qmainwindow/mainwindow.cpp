@@ -51,6 +51,7 @@
 #include <QLineEdit>
 #include <QMenuBar>
 #include <QModelIndex>
+#include <QStatusBar>
 #include <QStringList>
 #include <QTimer>
 #include <QTreeView>
@@ -73,6 +74,7 @@ private:
     Kleo::AbstractKeyListModel * model;
     Kleo::KeyListController controller;
     ::Relay* relay;
+    ::StatusBarUpdater* statusBarUpdater;
 };
 
 void MainWindow::Private::setupMenu()
@@ -114,8 +116,8 @@ void MainWindow::Private::startKeyListing( const char* backend )
              relay, SLOT( keyListingDone( GpgME::KeyListResult ) ) );
     QObject::connect( keylisting, SIGNAL( nextKey( GpgME::Key ) ),
              relay, SLOT( nextKey( GpgME::Key ) ) );
+    statusBarUpdater->registerJob( keylisting );
     keylisting->start( QStringList() ); 
-
 }
 
 MainWindow::MainWindow( QWidget* parent, Qt::WindowFlags flags ) : QMainWindow( parent, flags ), d( new MainWindow::Private( this ) ) {
@@ -139,6 +141,7 @@ MainWindow::MainWindow( QWidget* parent, Qt::WindowFlags flags ) : QMainWindow( 
     setCentralWidget( flatWidget );
 
     d->relay = new ::Relay( this );
+    d->statusBarUpdater = new ::StatusBarUpdater( statusBar(), this );
 
     if ( d->model = Kleo::AbstractKeyListModel::createFlatKeyListModel( flatListView ) ) {
         connect( d->relay, SIGNAL( nextKeys( std::vector<GpgME::Key> ) ), d->model, SLOT( addKeys( std::vector<GpgME::Key> ) ) );
@@ -181,6 +184,26 @@ void TrayIconListener::activated( QSystemTrayIcon::ActivationReason reason )
         m_prevGeometry = m_mainWindow->geometry();
         m_mainWindow->setVisible( false );
     }
+}
+
+StatusBarUpdater::StatusBarUpdater( QStatusBar* bar, QObject* parent ) : QObject( parent ), m_bar( bar ), m_pendingJobs( 0 ) {
+    assert( m_bar );
+}
+
+void StatusBarUpdater::registerJob( Kleo::KeyListJob* job ) {
+    //TODO: handle errors
+    connect( job, SIGNAL( result( GpgME::KeyListResult ) ),
+             SLOT( keyListResult( GpgME::KeyListResult ) ) );
+    ++m_pendingJobs;
+    m_bar->showMessage( i18n("Fetching keys...") );
+}
+                                             
+void StatusBarUpdater::keyListResult( const GpgME::KeyListResult& result ) {
+    Q_UNUSED( result );
+    --m_pendingJobs;
+    assert( m_pendingJobs >= 0 );
+    if ( m_pendingJobs == 0 )
+        m_bar->clearMessage();
 }
 
 #include "mainwindow_p.moc"

@@ -42,6 +42,12 @@
 #include <gpgme++/error.h>
 #include <gpgme++/key.h>
 
+class QStatusBar;
+
+namespace Kleo {
+    class KeyListJob;
+}
+
 namespace {
 class Relay : public QObject {
     Q_OBJECT
@@ -74,6 +80,21 @@ private:
 
 private:
     std::vector<GpgME::Key> mKeys;
+};
+
+class StatusBarUpdater : public QObject {
+    Q_OBJECT
+public:
+    explicit StatusBarUpdater( QStatusBar* bar, QObject* parent = 0 );
+
+    void registerJob( Kleo::KeyListJob* job );
+                                             
+private Q_SLOTS:
+    void keyListResult( const GpgME::KeyListResult& result );
+
+private:
+    int m_pendingJobs;
+    QStatusBar* m_bar;
 };
 
 }
