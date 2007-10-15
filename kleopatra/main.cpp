@@ -36,6 +36,8 @@
 #include "systemtrayicon.h"
 #ifndef KLEO_ONLY_UISERVER
 # include "certmanager.h"
+#else
+# include "qmainwindow/mainwindow.h"
 #endif
 
 #include "libkleo/kleo/cryptobackendfactory.h"
@@ -95,6 +97,9 @@ int main( int argc, char** argv )
   KGlobal::locale()->insertCatalog( "libkleopatra" );
   KIconLoader::global()->addAppDir( "libkleopatra" );
 
+  SystemTrayIcon sysTray;
+  sysTray.show();
+
 #ifndef KLEO_ONLY_UISERVER
   if( !Kleo::CryptoBackendFactory::instance()->smime() ) {
     KMessageBox::error(0,
@@ -107,10 +112,14 @@ int main( int argc, char** argv )
 					  args->getOption("query"),
 					  args->getOption("import-certificate") );
   manager->show();
+#else
+  MainWindow* mainWindow = new MainWindow;
+  mainWindow->show();
+  TrayIconListener* trayListener = new TrayIconListener( mainWindow );
+  QObject::connect( &sysTray, SIGNAL( activated( QSystemTrayIcon::ActivationReason ) ),
+                    trayListener, SLOT( activated( QSystemTrayIcon::ActivationReason ) ) );
+  //TODO show()/hide() on sysTray::activated()
 #endif
-
-  SystemTrayIcon sysTray;
-  sysTray.show();
 
   int rc;
 #ifdef HAVE_USABLE_ASSUAN

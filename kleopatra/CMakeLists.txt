@@ -78,6 +78,9 @@ set( _kleopatra_common_SRCS
    utils/formatting.cpp
    utils/wsastarter.cpp
    ${_kleopatra_uiserver_files}
+   commands/command.cpp
+   commands/detailscommand.cpp
+   controllers/keylistcontroller.cpp
    models/keylistmodel.cpp
    models/keylistsortfilterproxymodel.cpp
    models/subkeylistmodel.cpp
@@ -89,11 +92,15 @@ set( _kleopatra_common_SRCS
 
 kde4_add_ui_files( _kleopatra_common_SRCS certificateinfowidget.ui )
 
+if ( KLEO_ONLY_UISERVER )
+   set( _kleopatra_qtonly_ui_SRCS
+        qmainwindow/mainwindow.cpp )
+else ( KLEO_ONLY_UISERVER ) 
+   set( _kleopatra_qtonly_ui_SRCS )
+endif ( KLEO_ONLY_UISERVER )
+
 if ( NOT KLEO_ONLY_UISERVER )
   set( _kleopatra_classical_SRCS
-    controllers/keylistcontroller.cpp
-    commands/command.cpp
-    commands/detailscommand.cpp
     ${libconf_SRCS}
     customactions.cpp
     certmanager.cpp
@@ -109,7 +116,7 @@ else ( NOT KLEO_ONLY_UISERVER )
   add_definitions( -DKLEO_ONLY_UISERVER )
 endif ( NOT KLEO_ONLY_UISERVER )
 
-kde4_add_executable(kleopatra_bin ${_kleopatra_common_SRCS} ${_kleopatra_classical_SRCS} ${_kleopatra_uiserver_SRCS} )
+kde4_add_executable(kleopatra_bin ${_kleopatra_common_SRCS} ${_kleopatra_qtonly_ui_SRCS} ${_kleopatra_classical_SRCS} ${_kleopatra_uiserver_SRCS} )
 set_target_properties(kleopatra_bin  PROPERTIES OUTPUT_NAME kleopatra)
 
 if ( KLEO_ONLY_UISERVER )

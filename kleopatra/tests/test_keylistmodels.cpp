@@ -92,7 +92,6 @@ int main( int argc, char * argv[] ) {
     options.add( "hierarchical", ki18n("Perform hierarchical key listing") );
     options.add( "disable-smime", ki18n("Do not list SMIME keys") );
 
-
     KCmdLineArgs::addCmdLineOptions( options );
 
     KApplication app;
@@ -100,7 +99,7 @@ int main( int argc, char * argv[] ) {
     KCmdLineArgs * args = KCmdLineArgs::parsedArgs();
 
     const bool showFlat = args->isSet( "flat" ) || !args->isSet( "hierarchical" );
-    const bool showHier = args->isSet( "hierarchical" ) || !args->isSet( "flat" );
+   const bool showHier = args->isSet( "hierarchical" ) || !args->isSet( "flat" );
     const bool disablesmime = args->isSet( "disable-smime" );
 
     qsrand( QDateTime::currentDateTime().toTime_t() );
