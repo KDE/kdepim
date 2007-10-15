@@ -118,7 +118,6 @@ int main( int argc, char** argv )
   TrayIconListener* trayListener = new TrayIconListener( mainWindow );
   QObject::connect( &sysTray, SIGNAL( activated( QSystemTrayIcon::ActivationReason ) ),
                     trayListener, SLOT( activated( QSystemTrayIcon::ActivationReason ) ) );
-  //TODO show()/hide() on sysTray::activated()
 #endif
 
   int rc;

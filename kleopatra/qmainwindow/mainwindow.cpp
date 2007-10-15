@@ -37,7 +37,6 @@
 #include "models/keylistsortfilterproxymodel.h"
 #include "controllers/keylistcontroller.h"
 
-
 #include <kleo/cryptobackendfactory.h>
 #include <kleo/keylistjob.h>
 
@@ -69,6 +68,8 @@ private:
 
 void MainWindow::Private::setupMenu()
 {
+    QMenu* viewMenu = q->menuBar()->addMenu( i18n("View") );
+    viewMenu->addAction( i18n("Refresh Key List"), q, SLOT( listKeys() ) );
 }
 
 void MainWindow::Private::startKeyListing( const char* backend )
