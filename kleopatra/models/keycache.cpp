@@ -35,6 +35,8 @@
 #include <kleo/dn.h>
 
 #include <gpgme++/key.h>
+#include <gpgme++/decryptionresult.h>
+#include <gpgme++/verificationresult.h>
 
 #include <boost/bind.hpp>
 #include <boost/range.hpp>
@@ -204,6 +206,14 @@ const Key & KeyCache::findByEMailAddress( const char * email ) const {
     }
 }
 
+const Key & KeyCache::findByShortKeyID( const char * id ) const {
+    const std::vector<Key>::const_iterator it = d->find_shortkeyid( id );
+    if ( it != d->by.shortkeyid.end() )
+        return *it;
+    static const Key null;
+    return null;
+}
+
 const Key & KeyCache::findByKeyIDOrFingerprint( const char * id ) const {
     {
         // try by.fpr first:
@@ -215,14 +225,57 @@ const Key & KeyCache::findByKeyIDOrFingerprint( const char * id ) const {
         const std::vector<Key>::const_iterator it = d->find_keyid( id );
         if ( it != d->by.keyid.end() )
             return *it;
-    }{
-        // try by.shortkeyid last:
-        const std::vector<Key>::const_iterator it = d->find_shortkeyid( id );
-        if ( it != d->by.shortkeyid.end() )
-            return *it;
     }
-    static Key null;
+    static const Key null;
     return null;
+}
+
+std::vector<Key> KeyCache::findByKeyIDOrFingerprint( const std::vector<std::string> & ids ) const {
+
+    std::vector<std::string> keyids;
+    std::remove_copy_if( ids.begin(), ids.end(), std::back_inserter( keyids ),
+                         bind( is_empty(), bind( &std::string::c_str, _1 ) ) );
+
+    // this is just case-insensitive string search:
+    std::sort( keyids.begin(), keyids.end(), ByFingerprint<std::less>() );
+
+    std::vector<Key> result;
+    result.reserve( keyids.size() ); // dups shouldn't happen
+
+    std::set_intersection( d->by.fpr.begin(), d->by.fpr.end(),
+                           keyids.begin(), keyids.end(),
+                           std::back_inserter( result ),
+                           ByFingerprint<std::less>() );
+    if ( result.size() < keyids.size() )
+        // note that By{Fingerprint,KeyID,ShortKeyID} define the same
+        // order for _strings_
+        std::set_intersection( d->by.keyid.begin(), d->by.keyid.end(),
+                               keyids.begin(), keyids.end(),
+                               std::back_inserter( result ),
+                               ByKeyID<std::less>() );
+
+    // duplicates shouldn't happen, but make sure nonetheless:
+    std::sort( result.begin(), result.end(), ByFingerprint<std::less>() );
+    result.erase( std::unique( result.begin(), result.end(), ByFingerprint<std::equal_to>() ), result.end() );
+
+    // we skip looking into short key ids here, as it's highly
+    // unlikely they're used for this purpose. We might need to revise
+    // this decision, but only after testing.
+    return result;
+}
+
+std::vector<Key> KeyCache::findRecipients( const DecryptionResult & res ) const {
+    std::vector<std::string> keyids;
+    Q_FOREACH( const DecryptionResult::Recipient & r, res.recipients() )
+        keyids.push_back( r.keyID() );
+    return findByKeyIDOrFingerprint( keyids );
+}
+
+std::vector<Key> KeyCache::findSigners( const VerificationResult & res ) const {
+    std::vector<std::string> fprs;
+    Q_FOREACH( const Signature & s, res.signatures() )
+        fprs.push_back( s.fingerprint() );
+    return findByFingerprint( fprs );
 }
 
 static std::string email( const UserID & uid ) {

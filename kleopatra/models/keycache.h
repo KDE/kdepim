@@ -44,6 +44,8 @@
 
 namespace GpgME {
     class Key;
+    class DecryptionResult;
+    class VerificationResult;
 }
 
 namespace Kleo {
@@ -76,10 +78,19 @@ namespace Kleo {
             return findByEMailAddress( email.c_str() );
         }
 
+        const GpgME::Key & findByShortKeyID( const char * id ) const;
+        const GpgME::Key & findByShortKeyID( const std::string & id ) const {
+            return findByShortKeyID( id.c_str() );
+        }
+
         const GpgME::Key & findByKeyIDOrFingerprint( const char * id ) const;
         const GpgME::Key & findByKeyIDOrFingerprint( const std::string & id ) const {
             return findByKeyIDOrFingerprint( id.c_str() );
         }
+        std::vector<GpgME::Key> findByKeyIDOrFingerprint( const std::vector<std::string> & ids ) const;
+
+        std::vector<GpgME::Key> findRecipients( const GpgME::DecryptionResult & result ) const;
+        std::vector<GpgME::Key> findSigners( const GpgME::VerificationResult & result ) const;
 
     public Q_SLOTS:
         void clear();
