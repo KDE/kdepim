@@ -48,10 +48,13 @@ Q_SIGNALS:
 
 private Q_SLOTS:
     void jobSuccessful( ThreadWeaver::Job* );
+    void jobProgressChanged( int );
 
 private:
     QString m_caption;
     QPixmap m_pixmap;
+
+    int m_progress;
 
     bool m_firstPaint;
     QRectF m_boundingRect;

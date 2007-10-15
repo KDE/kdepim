@@ -27,6 +27,7 @@
 #include <KDE/KIconLoader>
 #include <KDE/KColorScheme>
 #include <KDE/KLocale>
+#include <KDE/KDebug>
 
 JobItem::JobItem( KMobileTools::JobXP* job, QGraphicsItem* parent )
  : QGraphicsItem( parent )
@@ -34,7 +35,11 @@ JobItem::JobItem( KMobileTools::JobXP* job, QGraphicsItem* parent )
     connect( job, SIGNAL(done(ThreadWeaver::Job*)),
              this, SLOT(jobSuccessful(ThreadWeaver::Job*)) );
 
+    connect( job, SIGNAL(progressChanged(int)),
+             this, SLOT(jobProgressChanged(int)) );
+
     m_firstPaint = true;
+    m_progress = job->progress();
 
     switch( job->jobType() ) {
         case KMobileTools::JobXP::fetchAddressbook:
@@ -74,7 +79,7 @@ QRectF JobItem::boundingRect() const
 void JobItem::paint( QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget )
 {
     //
-    // draw caption
+    // prepare caption
     //
     QRectF textRect = painter->boundingRect( QRectF(), Qt::TextSingleLine, m_caption );
     // determine text color
@@ -83,10 +88,18 @@ void JobItem::paint( QPainter* painter, const QStyleOptionGraphicsItem* option, 
                                       KColorScheme::LightShade );
 
     // draw pixmap
-    painter->drawPixmap( textRect.width() / 2 - m_pixmap.width() / 2, 0, m_pixmap );
+    QRectF pixmapRect = QRectF( textRect.width() / 2 - m_pixmap.width() / 2, 0,
+                                m_pixmap.width(), m_pixmap.height() );
+    painter->drawPixmap( pixmapRect.x(), pixmapRect.y(), m_pixmap );
     textRect.moveTop( m_pixmap.height() + 5 );
+
+    // draw caption
     painter->setPen( color );
     painter->drawText( textRect, m_caption );
+
+    // draw progress
+    if( m_progress > 0 )
+        painter->drawArc( pixmapRect, 90 * 16, -16 * 3.6 * m_progress );
 
     m_boundingRect.setTop( 0 );
     m_boundingRect.setBottom( textRect.height() + m_pixmap.height() + 5 );
@@ -101,6 +114,11 @@ void JobItem::paint( QPainter* painter, const QStyleOptionGraphicsItem* option, 
 
 void JobItem::jobSuccessful( ThreadWeaver::Job* ) {
     emit removeItem( this );
+}
+
+void JobItem::jobProgressChanged( int progress ) {
+    m_progress = progress;
+    update();
 }
 
 #include "jobitem.moc"

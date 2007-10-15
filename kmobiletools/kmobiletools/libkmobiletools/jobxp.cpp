@@ -30,6 +30,8 @@ public:
 
     bool m_canBeAborted;
     bool m_canBeAbortedIsCached;
+
+    int m_progress;
 };
 
 JobXP::JobXP( JobXP::Type jobType, QObject* parent )
@@ -38,6 +40,7 @@ JobXP::JobXP( JobXP::Type jobType, QObject* parent )
     d->m_jobType = jobType;
     d->m_canBeAborted = false;
     d->m_canBeAbortedIsCached = false;
+    d->m_progress = 0;
 }
 
 
@@ -70,4 +73,18 @@ bool JobXP::canBeAborted() const {
     return d->m_canBeAborted;
 }
 
+void JobXP::setProgress( int percent ) {
+    if( percent > d->m_progress && percent <= 100 ) {
+        d->m_progress = percent;
+        emit progressChanged( percent );
+    }
 }
+
+int JobXP::progress() const
+{
+    return d->m_progress;
+}
+
+}
+
+#include "jobxp.moc"

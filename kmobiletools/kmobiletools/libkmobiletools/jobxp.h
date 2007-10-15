@@ -39,6 +39,7 @@ class JobXPPrivate;
  */
 class KMOBILETOOLS_EXPORT JobXP : public ThreadWeaver::Job
 {
+    Q_OBJECT
 public:
     enum Type { // fetch jobs
                 fetchAddressbook = 0,
@@ -78,7 +79,34 @@ public:
      */
     JobXP::Type jobType() const;
 
+    /**
+     * Returns whether the job can be aborted by the user
+     *
+     * To make a job abortable you will have to implement a
+     * requestAbort() method in your subclass
+     */
     bool canBeAborted() const;
+
+    /**
+     * Returns the job's progress in percent
+     *
+     * @return the progress in percent
+     */
+    int progress() const;
+
+protected:
+    /**
+     * Sets the job's progress in percent
+     *
+     * @param percent the progress in percent
+     */
+    void setProgress( int percent );
+
+Q_SIGNALS:
+    /**
+     * This signal is emitted when the job's progress has changed
+     */
+    void progressChanged( int percent );
 
 private:
     JobXPPrivate* const d;
