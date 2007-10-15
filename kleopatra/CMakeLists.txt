@@ -119,13 +119,7 @@ endif ( NOT KLEO_ONLY_UISERVER )
 kde4_add_executable(kleopatra_bin ${_kleopatra_common_SRCS} ${_kleopatra_qtonly_ui_SRCS} ${_kleopatra_classical_SRCS} ${_kleopatra_uiserver_SRCS} )
 set_target_properties(kleopatra_bin  PROPERTIES OUTPUT_NAME kleopatra)
 
-if ( KLEO_ONLY_UISERVER )
-  set( _kleopatra_extra_libs ${QT_QT3SUPPORT_LIBRARY} )
-elseif ( NOT KDEPIMLIBS_FOUND )
-  set( _kleopatra_extra_libs ${KDE4_KUTILS_LIBS} ${KDE4_KDE3SUPPORT_LIBS} ${KDE4_KABC_LIBS} )
-else( KLEO_ONLY_UISERVER )
-  set( _kleopatra_extra_libs ${KDE4_KUTILS_LIBS} ${KDE4_KDE3SUPPORT_LIBS} )
-endif ( KLEO_ONLY_UISERVER )
+set( _kleopatra_extra_libs ${QT_QT3SUPPORT_LIBRARY} )
 
 target_link_libraries(kleopatra_bin ${_kleopatra_extra_libs} kleo ${QGPGME_LIBRARIES} ${_kleopatra_uiserver_extra_libs} )
 
