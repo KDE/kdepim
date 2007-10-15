@@ -37,6 +37,8 @@
 
 #include <utils/pimpl_ptr.h>
 
+#include <boost/shared_ptr.hpp>
+
 #include <string>
 #include <vector>
 
@@ -48,9 +50,15 @@ namespace Kleo {
 
     class KeyCache : public QObject {
         Q_OBJECT
-    public:
+    private:
         explicit KeyCache( QObject * parent=0 );
+    public:
         ~KeyCache();
+
+        static boost::shared_ptr<KeyCache> make();
+
+        static boost::shared_ptr<const KeyCache> instance();
+        static boost::shared_ptr<KeyCache> mutableInstance();
 
         void insert( const GpgME::Key & key );
         void insert( const std::vector<GpgME::Key> & key );

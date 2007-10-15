@@ -52,6 +52,8 @@
 # include <uiserver/signcommand.h>
 #endif
 
+#include <models/keycache.h>
+
 #include <kapplication.h>
 #include <kcmdlineargs.h>
 #include <kmessagebox.h>
@@ -89,6 +91,9 @@ int main( int argc, char** argv )
   options.add("uiserver-socket <argument>", ki18n("Location of the socket the ui server is listening on" ) );
 #endif
   KCmdLineArgs::addCmdLineOptions( options );
+
+  // pin KeyCache to a shared_ptr to define it's minimum lifetime:
+  const boost::shared_ptr<Kleo::KeyCache> keyCache = Kleo::KeyCache::mutableInstance();
 
   KApplication app;
 

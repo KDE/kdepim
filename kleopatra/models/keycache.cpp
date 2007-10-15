@@ -38,6 +38,7 @@
 
 #include <boost/bind.hpp>
 #include <boost/range.hpp>
+#include <boost/weak_ptr.hpp>
 
 #include <utility>
 #include <algorithm>
@@ -46,6 +47,15 @@
 using namespace Kleo;
 using namespace GpgME;
 using namespace boost;
+
+shared_ptr<const KeyCache> KeyCache::instance() {
+    return mutableInstance();
+}
+
+shared_ptr<KeyCache> KeyCache::mutableInstance() {
+    static weak_ptr<KeyCache> self = shared_ptr<KeyCache>( new KeyCache );
+    return shared_ptr<KeyCache>( self );
+}
 
 namespace {
 
