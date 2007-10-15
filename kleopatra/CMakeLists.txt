@@ -48,8 +48,8 @@ if ( USABLE_ASSUAN_FOUND )
     uiserver/assuanserverconnection.cpp
     uiserver/echocommand.cpp
     uiserver/verifycommand.cpp
-    uiserver/signcommand.cpp
     uiserver/decryptcommand.cpp
+    uiserver/signcommand.cpp
     uiserver/encryptcommand.cpp
     uiserver/assuancommandprivatebase_p.cpp
     uiserver/resultdisplaywidget.cpp
@@ -81,6 +81,7 @@ set( _kleopatra_common_SRCS
    commands/command.cpp
    commands/detailscommand.cpp
    controllers/keylistcontroller.cpp
+   models/keycache.cpp
    models/keylistmodel.cpp
    models/keylistsortfilterproxymodel.cpp
    models/subkeylistmodel.cpp
