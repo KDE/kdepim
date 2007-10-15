@@ -43,6 +43,7 @@
 #include <utility>
 #include <algorithm>
 #include <functional>
+#include <iterator>
 
 using namespace Kleo;
 using namespace GpgME;
@@ -104,6 +105,10 @@ namespace {
     make_comparator_str( ByFingerprint, .primaryFingerprint() );
     make_comparator_str( ByKeyID, .keyID() );
     make_comparator_str( ByShortKeyID, .shortKeyID() );
+
+    struct is_empty : std::unary_function<const char*,bool> {
+        bool operator()( const char * s ) const { return !s || !*s; }
+    };
 
 }
 
@@ -171,6 +176,22 @@ const Key & KeyCache::findByFingerprint( const char * fpr ) const {
     } else {
         return *it;
     }
+}
+
+std::vector<Key> KeyCache::findByFingerprint( const std::vector<std::string> & fprs ) const {
+    std::vector<std::string> sorted;
+    sorted.reserve( fprs.size() );
+    std::remove_copy_if( fprs.begin(), fprs.end(), std::back_inserter( sorted ),
+                         bind( is_empty(), bind( &std::string::c_str, _1 ) ) );
+
+    std::sort( sorted.begin(), sorted.end(), ByFingerprint<std::less>() );
+
+    std::vector<Key> result;
+    std::set_intersection( d->by.fpr.begin(), d->by.fpr.end(),
+                           fprs.begin(), fprs.end(),
+                           std::back_inserter( result ),
+                           ByFingerprint<std::less>() );
+    return result;
 }
 
 const Key & KeyCache::findByEMailAddress( const char * email ) const {
@@ -271,12 +292,6 @@ void KeyCache::remove( const Key & key ) {
 
 void KeyCache::insert( const Key & key ) {
     insert( std::vector<Key>( 1, key ) );
-}
-
-namespace {
-    struct is_empty : std::unary_function<const char*,bool> {
-        bool operator()( const char * s ) const { return !s || !*s; }
-    };
 }
 
 void KeyCache::insert( const std::vector<Key> & keys ) {
