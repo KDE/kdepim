@@ -88,16 +88,15 @@ kde4_add_ui_files(libkleo_ui_SRCS
 	ui/directoryserviceswidgetbase.ui
 )
 
-set(kleo_LIB_SRCS ${libkleo_core_SRCS} ${libkleo_ui_common_SRCS})
+set(kleo_LIB_SRCS ${libkleo_core_SRCS} ${libkleo_ui_common_SRCS} ${libkleo_backend_qgpgme_SRCS})
 set(kleo_LIB_LIBS ${KDE4_KDEUI_LIBS} ${QGPGME_LIBRARIES})
 if ( NOT KLEO_ONLY_UISERVER )
    set( kleo_LIB_SRCS ${kleo_LIB_SRCS} ${libkleo_ui_SRCS} ${libkleo_backend_chiasmus_SRCS} )
-   set( kleo_LIB_LIBS ${KDE4_KDEUI_LIBS} ${KDE4_KDE3SUPPORT_LIBS} ${QGPGME_LIBRARIES} ${QT_QT3SUPPORT_LIBRARY} )
+   set( kleo_LIB_LIBS ${kleo_LIB_LIBS} ${KDE4_KDE3SUPPORT_LIBS} ${QT_QT3SUPPORT_LIBRARY} )
    if ( NOT KLEO_NO_COMPAT )
      set( kleo_LIB_SRCS ${kleo_LIB_SRCS} ${libkleo_compat_SRCS} )
    endif ( NOT KLEO_NO_COMPAT )
 endif ( NOT KLEO_ONLY_UISERVER )
-set(kleo_LIB_SRCS ${kleo_LIB_SRCS} ${libkleo_backend_qgpgme_SRCS})
 
 kde4_add_library(kleo SHARED ${kleo_LIB_SRCS})
 
