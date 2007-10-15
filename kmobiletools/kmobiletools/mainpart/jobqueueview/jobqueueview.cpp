@@ -66,10 +66,13 @@ void JobQueueView::addJob( JobItem* jobItem )
     animation->setItem( jobItem );
     animation->setTimeLine( timer );
 
+    // distance between elements
+    const int distance = 20;
+
     // append job item to the left and add a small margin if necessary
     if( m_jobItems.size() )
         jobItem->setPos( QPointF( m_jobItems.last()->pos().x() +
-                                  m_jobItems.last()->boundingRect().width() + 10, 0 ) );
+                                  m_jobItems.last()->boundingRect().width() + distance, 0 ) );
     else
         jobItem->setPos( QPointF( 10, 0 ) );
 

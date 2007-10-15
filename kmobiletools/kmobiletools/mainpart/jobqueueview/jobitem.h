@@ -50,6 +50,9 @@ private Q_SLOTS:
     void jobSuccessful( ThreadWeaver::Job* );
 
 private:
+    QString m_caption;
+    QPixmap m_pixmap;
+
     bool m_firstPaint;
     QRectF m_boundingRect;
 

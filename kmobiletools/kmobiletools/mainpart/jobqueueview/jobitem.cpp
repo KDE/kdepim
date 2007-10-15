@@ -24,9 +24,9 @@
 
 #include <libkmobiletools/jobxp.h>
 
-#include <KDE/KDebug>
 #include <KDE/KIconLoader>
 #include <KDE/KColorScheme>
+#include <KDE/KLocale>
 
 JobItem::JobItem( KMobileTools::JobXP* job, QGraphicsItem* parent )
  : QGraphicsItem( parent )
@@ -34,9 +34,31 @@ JobItem::JobItem( KMobileTools::JobXP* job, QGraphicsItem* parent )
     connect( job, SIGNAL(done(ThreadWeaver::Job*)),
              this, SLOT(jobSuccessful(ThreadWeaver::Job*)) );
 
-    /// @todo calculate bouding rectangle size before painting
-    m_boundingRect.setWidth( 155 );
     m_firstPaint = true;
+
+    switch( job->jobType() ) {
+        case KMobileTools::JobXP::fetchAddressbook:
+            m_caption = i18n( "Fetching address book" );
+            m_pixmap = KIconLoader::global()->loadIcon( "book2",
+                                                        KIconLoader::NoGroup,
+                                                        KIconLoader::SizeMedium );
+            break;
+
+        case KMobileTools::JobXP::fetchInformation:
+            m_caption = i18n( "Fetching phone information" );
+            m_pixmap = KIconLoader::global()->loadIcon( "phone",
+                                                        KIconLoader::NoGroup,
+                                                        KIconLoader::SizeMedium );
+
+        /// @todo add the left job type possibilities
+
+        default:
+            m_caption = i18n( "Unknown job" );
+            m_pixmap = KIconLoader::global()->loadIcon( "system-run",
+                                                        KIconLoader::NoGroup,
+                                                        KIconLoader::SizeMedium );
+            break;
+    }
 }
 
 
@@ -54,22 +76,20 @@ void JobItem::paint( QPainter* painter, const QStyleOptionGraphicsItem* option, 
     //
     // draw caption
     //
-    QRectF textRect = painter->boundingRect( QRectF(), Qt::TextSingleLine, "Fetching address book..." );
+    QRectF textRect = painter->boundingRect( QRectF(), Qt::TextSingleLine, m_caption );
     // determine text color
     KColorScheme colorScheme( QPalette::Normal );
     QColor color = colorScheme.shade( colorScheme.foreground( KColorScheme::NormalText ),
                                       KColorScheme::LightShade );
 
     // draw pixmap
-    QPixmap actionPixmap = KIconLoader::global()->loadIcon( "book2", KIconLoader::NoGroup, KIconLoader::SizeMedium );
-
-    painter->drawPixmap( textRect.width() / 2 - actionPixmap.width() / 2, 0, actionPixmap );
-    textRect.moveTop( actionPixmap.height() + 5 );
+    painter->drawPixmap( textRect.width() / 2 - m_pixmap.width() / 2, 0, m_pixmap );
+    textRect.moveTop( m_pixmap.height() + 5 );
     painter->setPen( color );
-    painter->drawText( textRect, "Fetching address book..." );
+    painter->drawText( textRect, m_caption );
 
     m_boundingRect.setTop( 0 );
-    m_boundingRect.setBottom( textRect.height() + actionPixmap.height() + 5 );
+    m_boundingRect.setBottom( textRect.height() + m_pixmap.height() + 5 );
     m_boundingRect.setLeft( 0 );
     m_boundingRect.setRight( textRect.width() );
 
