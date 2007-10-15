@@ -376,5 +376,5 @@ void KeyCache::clear() {
     d->by = Private::By();
 }
 
-//#include "moc_keycache.cpp"
+#include "moc_keycache.cpp"
 
