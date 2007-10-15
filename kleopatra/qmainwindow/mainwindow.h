@@ -60,6 +60,7 @@ public Q_SLOTS:
 
 private:
     QWidget* m_mainWindow;
+    QRect m_prevGeometry;
 };
 
 #endif // __KLEOPATRA_MAINWINDOW_H__

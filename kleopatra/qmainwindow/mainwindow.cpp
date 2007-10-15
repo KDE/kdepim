@@ -145,8 +145,16 @@ TrayIconListener::TrayIconListener( QWidget* mainWindow, QObject* parent ) : QOb
 
 void TrayIconListener::activated( QSystemTrayIcon::ActivationReason reason )
 {
-    if ( reason == QSystemTrayIcon::Trigger ) {
-        m_mainWindow->setVisible( !m_mainWindow->isVisible() );
+    if ( reason != QSystemTrayIcon::Trigger )
+        return;
+    const bool visible = !m_mainWindow->isVisible();
+    if ( visible ) {
+        if ( m_prevGeometry.isValid() )
+            m_mainWindow->setGeometry( m_prevGeometry );
+        m_mainWindow->setVisible( true );
+    } else {
+        m_prevGeometry = m_mainWindow->geometry();
+        m_mainWindow->setVisible( false );
     }
 }
 
