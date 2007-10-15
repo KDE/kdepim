@@ -36,18 +36,21 @@
 #include "models/keylistmodel.h"
 #include "models/keylistsortfilterproxymodel.h"
 #include "controllers/keylistcontroller.h"
+#include "certificateinfowidgetimpl.h"
 
 #include <kleo/cryptobackendfactory.h>
 #include <kleo/keylistjob.h>
 
 #include <qgpgme/eventloopinteractor.h>
 
+#include <KDialog>
 #include <KLocale>
 
 #include <QApplication>
 #include <QDebug>
 #include <QLineEdit>
 #include <QMenuBar>
+#include <QModelIndex>
 #include <QStringList>
 #include <QTimer>
 #include <QTreeView>
@@ -57,10 +60,15 @@ class MainWindow::Private {
     friend class ::MainWindow;
     MainWindow * const q;
 private:
-    explicit Private( MainWindow * qq ) : q( qq ) {}
+    explicit Private( MainWindow * qq ) : q( qq ), model( 0 ), relay( 0 ) {}
     ~Private() {}
+
     void setupMenu();
-    void startKeyListing( const char* backend ); 
+    void listKeys();
+    void startKeyListing( const char* backend );
+    void viewDetails( const GpgME::Key& key );
+    void viewDetails( const QModelIndex& idx );
+
 private:
     Kleo::AbstractKeyListModel * model;
     Kleo::KeyListController controller;
@@ -73,6 +81,30 @@ void MainWindow::Private::setupMenu()
     fileMenu->addAction( i18n("Quit"), qApp, SLOT( quit() ) );
     QMenu* viewMenu = q->menuBar()->addMenu( i18n("&View") );
     viewMenu->addAction( i18n("Refresh Key List"), q, SLOT( listKeys() ) );
+}
+
+void MainWindow::Private::viewDetails( const QModelIndex& idx ) {
+    viewDetails( model->key( idx ) );
+}
+
+void MainWindow::Private::viewDetails( const GpgME::Key& key ) {
+    if ( key.isNull() )
+        return;
+
+    KDialog* dialog = new KDialog( q );
+    dialog->setObjectName( "dialog" );
+    dialog->setModal( false );
+    dialog->setWindowTitle( i18n("Additional Information for Certificate") );
+    dialog->setButtons( KDialog::Close );
+    dialog->setDefaultButton( KDialog::Close );
+    dialog->setAttribute( Qt::WA_DeleteOnClose );
+    CertificateInfoWidgetImpl* top = new CertificateInfoWidgetImpl( key, /*isRemote=*/false, dialog );
+    dialog->setMainWidget( top );
+#if 0
+    q->connect( top, SIGNAL( requestCertificateDownload( QString, QString ) ),
+                SLOT( slotStartCertificateDownload( QString, QString ) ) );
+#endif
+    dialog->show();
 }
 
 void MainWindow::Private::startKeyListing( const char* backend )
@@ -93,8 +125,11 @@ MainWindow::MainWindow( QWidget* parent, Qt::WindowFlags flags ) : QMainWindow( 
     QVBoxLayout* flatLayout = new QVBoxLayout( flatWidget );
     QLineEdit* flatLE = new QLineEdit;
     QTreeView* flatListView = new QTreeView;
+    flatListView->setRootIsDecorated( false );
     flatListView->setSortingEnabled( true );
     flatListView->sortByColumn( Kleo::AbstractKeyListModel::Fingerprint, Qt::AscendingOrder );
+    connect( flatListView, SIGNAL( doubleClicked( QModelIndex ) ), 
+             SLOT( viewDetails( QModelIndex ) ) );
     flatLayout->addWidget( flatLE );
     flatLayout->addWidget( flatListView );
     
@@ -105,22 +140,12 @@ MainWindow::MainWindow( QWidget* parent, Qt::WindowFlags flags ) : QMainWindow( 
 
     d->relay = new ::Relay( this );
 
-    if ( Kleo::AbstractKeyListModel * const model = Kleo::AbstractKeyListModel::createFlatKeyListModel( flatListView ) ) {
-        connect( d->relay, SIGNAL( nextKeys( std::vector<GpgME::Key> ) ), model, SLOT( addKeys( std::vector<GpgME::Key> ) ) );
-        flatProxy->setSourceModel( model );
+    if ( d->model = Kleo::AbstractKeyListModel::createFlatKeyListModel( flatListView ) ) {
+        connect( d->relay, SIGNAL( nextKeys( std::vector<GpgME::Key> ) ), d->model, SLOT( addKeys( std::vector<GpgME::Key> ) ) );
+        flatProxy->setSourceModel( d->model );
         flatListView->setModel( flatProxy );
     }
-/*
-    QWidget* hierarchicalWidget = new QWidget( parent );
-    QVBoxLayout* hierarchicalLayout = new QVBoxLayout( hierarchicalWidget );
-    QLineEdit* hierarchicalLE = new QLineEdit;
-    QTreeView* hierarchicalListView = new QTreeView;
-    hierarchicalListView->setSortingEnabled( true );
-    hierarchicalListView->sortByColumn( Kleo::AbstractKeyListModel::Fingerprint, Qt::AscendingOrder );
 
-    hierarchicalLayout->addWidget( hierarchicalLE );
-    hierarchicalLayout->addWidget( hierarchicalListView );
-*/
     d->setupMenu();
     QTimer* keyListTimer = new QTimer( this );
     connect( keyListTimer, SIGNAL( timeout() ), SLOT( listKeys() ) ); 
@@ -133,9 +158,9 @@ MainWindow::~MainWindow() {
     delete d;
 }
 
-void MainWindow::listKeys() {
-    d->startKeyListing( "openpgp" );
-    d->startKeyListing( "smime" );
+void MainWindow::Private::listKeys() {
+    startKeyListing( "openpgp" );
+    startKeyListing( "smime" );
 }
 
 TrayIconListener::TrayIconListener( QWidget* mainWindow, QObject* parent ) : QObject( parent ), m_mainWindow( mainWindow )
