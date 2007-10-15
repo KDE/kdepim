@@ -88,7 +88,7 @@ namespace Kleo {
 # define KLEO_GNUC_PREREQ(maj, min) 0
 #endif
 
-#if defined(KLEO_GNUC_PREREQ) && KLEO_GNUC_PREREQ(2, 6)
+#if KLEO_GNUC_PREREQ(2, 6)
 # define assuan_assert( cond ) assuan_assert_impl_func( cond, __FILE__, __LINE__, __PRETTY_FUNCTION__ )
 #elif defined __STDC_VERSION__ && __STDC_VERSION__ >= 199901L
 # define assuan_assert( cond ) assuan_assert_impl_func( cond, __FILE__, __LINE__, __func__ )
