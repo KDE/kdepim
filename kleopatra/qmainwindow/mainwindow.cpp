@@ -82,7 +82,7 @@ void MainWindow::Private::setupMenu()
     QMenu* fileMenu = q->menuBar()->addMenu( i18n("&File") );
     fileMenu->addAction( i18n("Quit"), qApp, SLOT( quit() ) );
     QMenu* viewMenu = q->menuBar()->addMenu( i18n("&View") );
-    viewMenu->addAction( i18n("Refresh Key List"), q, SLOT( listKeys() ) );
+    viewMenu->addAction( i18n("Refresh Certificate List"), q, SLOT( listKeys() ) );
 }
 
 void MainWindow::Private::viewDetails( const QModelIndex& idx ) {
