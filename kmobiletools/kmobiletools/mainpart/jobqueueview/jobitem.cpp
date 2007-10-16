@@ -21,6 +21,8 @@
 #include "jobitem.h"
 
 #include <QtGui/QPainter>
+#include <QtGui/QGraphicsSceneHoverEvent>
+#include <QtGui/QGraphicsSceneEvent>
 
 #include <libkmobiletools/jobxp.h>
 
@@ -28,6 +30,7 @@
 #include <KDE/KColorScheme>
 #include <KDE/KLocale>
 #include <KDE/KDebug>
+#include <KDE/KIconEffect>
 
 JobItem::JobItem( KMobileTools::JobXP* job, QGraphicsItem* parent )
  : QGraphicsItem( parent )
@@ -40,6 +43,10 @@ JobItem::JobItem( KMobileTools::JobXP* job, QGraphicsItem* parent )
 
     m_firstPaint = true;
     m_progress = job->progress();
+    m_hoverCancel = false;
+
+    setAcceptsHoverEvents( true );
+    setHandlesChildEvents( true );
 
     switch( job->jobType() ) {
         case KMobileTools::JobXP::fetchAddressbook:
@@ -54,6 +61,7 @@ JobItem::JobItem( KMobileTools::JobXP* job, QGraphicsItem* parent )
             m_pixmap = KIconLoader::global()->loadIcon( "phone",
                                                         KIconLoader::NoGroup,
                                                         KIconLoader::SizeMedium );
+            break;
 
         /// @todo add the left job type possibilities
 
@@ -101,6 +109,23 @@ void JobItem::paint( QPainter* painter, const QStyleOptionGraphicsItem* option, 
     if( m_progress > 0 )
         painter->drawArc( pixmapRect, 90 * 16, -16 * 3.6 * m_progress );
 
+    // draw cancel button
+    QPixmap cancelPixmap = KIconLoader::global()->loadIcon( "dialog-cancel",
+                                                            KIconLoader::NoGroup,
+                                                            KIconLoader::SizeSmall );
+
+    m_cancelRect = QRectF( pixmapRect.x() + pixmapRect.width() - cancelPixmap.width(),
+                           pixmapRect.y() + pixmapRect.height() - cancelPixmap.height(),
+                           cancelPixmap.width(),
+                           cancelPixmap.height() );
+
+    if( !m_hoverCancel )
+        KIconEffect::semiTransparent( cancelPixmap );
+
+    painter->drawPixmap( pixmapRect.x() + pixmapRect.width() - cancelPixmap.width(),
+                         pixmapRect.y() + pixmapRect.height() - cancelPixmap.height(),
+                         cancelPixmap );
+
     m_boundingRect.setTop( 0 );
     m_boundingRect.setBottom( textRect.height() + m_pixmap.height() + 5 );
     m_boundingRect.setLeft( 0 );
@@ -119,6 +144,24 @@ void JobItem::jobSuccessful( ThreadWeaver::Job* ) {
 void JobItem::jobProgressChanged( int progress ) {
     m_progress = progress;
     update();
+}
+
+bool JobItem::sceneEvent( QEvent* event ) {
+    if( event->type() == QEvent::GraphicsSceneHoverMove ) {
+        QGraphicsSceneHoverEvent* sceneEvent = dynamic_cast<QGraphicsSceneHoverEvent*>( event );
+        QPointF pos = sceneEvent->pos();
+        m_hoverCancel = m_cancelRect.contains( pos );
+
+        update();
+    }
+    else if( event->type() == QEvent::GraphicsSceneMouseRelease ) {
+        QGraphicsSceneMouseEvent* sceneEvent = dynamic_cast<QGraphicsSceneMouseEvent*>( event );
+        if( sceneEvent->button() == Qt::LeftButton ) {
+            QPointF pos = sceneEvent->pos();
+            if( m_cancelRect.contains( pos ) )
+                kDebug() << "triggering job cancellation...";
+        }
+    }
 }
 
 #include "jobitem.moc"
