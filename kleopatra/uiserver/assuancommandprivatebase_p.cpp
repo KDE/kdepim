@@ -110,18 +110,18 @@ void AssuanCommandPrivateBase::writeToOutputDeviceOrAskForFileName( int id,  con
 #endif
         }
         if ( filename.isEmpty() )
-            throw assuan_exception( q->makeError( GPG_ERR_ASS_WRITE_ERROR ), "Output file selection canceled" ) ;
+            throw assuan_exception( q->makeError( GPG_ERR_CANCELED ), i18n("Output file selection canceled") );
         // FIXME sanitize, percent-encode, etc. Needed with KSaveFile?
         file.setFileName( filename );
 #if 0
 	if ( !file.open() )
 #endif
 	if ( !file.open( QIODevice::WriteOnly ) )
-            throw assuan_exception( q->makeError( GPG_ERR_ASS_WRITE_ERROR ), file.errorString().toStdString() ) ;
+            throw assuan_exception( q->makeError( GPG_ERR_ASS_WRITE_ERROR ), file.errorString() ) ;
 
         outdevice = &file;
     }
-    assert(outdevice);
+    assuan_assert(outdevice);
     qint64 totalBytesWritten = 0;
     do {
         const qint64 bytesWritten = outdevice->write( stuff.constData() + totalBytesWritten, stuff.size() - totalBytesWritten );
