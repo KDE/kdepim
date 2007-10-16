@@ -31,6 +31,7 @@
 */
 
 #include "keycache.h"
+#include "predicates.h"
 
 #include <kleo/dn.h>
 
@@ -68,51 +69,7 @@ shared_ptr<KeyCache> KeyCache::mutableInstance() {
 
 namespace {
 
-#define make_comparator_str( Name, expr )                               \
-    template <template <typename U> class Op>                           \
-    struct Name {                                                       \
-        typedef bool result_type;                                       \
-                                                                        \
-        bool operator()( const char * lhs, const char * rhs ) const {   \
-            return Op<int>()( qstricmp( lhs, rhs ), 0 );                \
-        }                                                               \
-                                                                        \
-        bool operator()( const std::string & lhs, const std::string & rhs ) const { \
-            return operator()( lhs.c_str(), rhs.c_str() );              \
-        }                                                               \
-        bool operator()( const char * lhs, const std::string & rhs ) const { \
-            return operator()( lhs, rhs.c_str() );                      \
-        }                                                               \
-        bool operator()( const std::string & lhs, const char * rhs ) const { \
-            return operator()( lhs.c_str(), rhs );                      \
-        }                                                               \
-                                                                        \
-        template <typename T>                                           \
-        bool operator()( const T & lhs, const T & rhs ) const {         \
-            return operator()( (lhs expr), (rhs expr) );                \
-        }                                                               \
-        template <typename T>                                           \
-        bool operator()( const T & lhs, const char * rhs ) const {      \
-            return operator()( (lhs expr), rhs );                       \
-        }                                                               \
-        template <typename T>                                           \
-        bool operator()( const char * lhs, const T & rhs ) const {      \
-            return operator()( lhs, (rhs expr) );                       \
-        }                                                               \
-        template <typename T>                                           \
-        bool operator()( const T & lhs, const std::string & rhs ) const { \
-            return operator()( (lhs expr), rhs );                       \
-        }                                                               \
-        template <typename T>                                           \
-        bool operator()( const std::string & lhs, const T & rhs ) const {    \
-            return operator()( lhs, (rhs expr) );                       \
-        }                                                               \
-    }
-
     make_comparator_str( ByEMail, .first.c_str() );
-    make_comparator_str( ByFingerprint, .primaryFingerprint() );
-    make_comparator_str( ByKeyID, .keyID() );
-    make_comparator_str( ByShortKeyID, .shortKeyID() );
 
     struct is_empty : std::unary_function<const char*,bool> {
         bool operator()( const char * s ) const { return !s || !*s; }
@@ -137,7 +94,7 @@ public:
     }
 
     std::vector<Key>::const_iterator find_fpr( const char * fpr ) const {
-        return find<ByFingerprint>( by.fpr, fpr );
+        return find<_detail::ByFingerprint>( by.fpr, fpr );
     }
 
     std::vector< std::pair<std::string,Key> >::const_iterator find_email( const char * email ) const {
@@ -151,11 +108,11 @@ public:
     }
 
     std::vector<Key>::const_iterator find_keyid( const char * keyid ) const {
-        return find<ByKeyID>( by.keyid, keyid );
+        return find<_detail::ByKeyID>( by.keyid, keyid );
     }
 
     std::vector<Key>::const_iterator find_shortkeyid( const char * shortkeyid ) const {
-        return find<ByShortKeyID>( by.shortkeyid, shortkeyid );
+        return find<_detail::ByShortKeyID>( by.shortkeyid, shortkeyid );
     }
 
 private:
@@ -192,13 +149,13 @@ std::vector<Key> KeyCache::findByFingerprint( const std::vector<std::string> & f
     std::remove_copy_if( fprs.begin(), fprs.end(), std::back_inserter( sorted ),
                          bind( is_empty(), bind( &std::string::c_str, _1 ) ) );
 
-    std::sort( sorted.begin(), sorted.end(), ByFingerprint<std::less>() );
+    std::sort( sorted.begin(), sorted.end(), _detail::ByFingerprint<std::less>() );
 
     std::vector<Key> result;
     std::set_intersection( d->by.fpr.begin(), d->by.fpr.end(),
                            fprs.begin(), fprs.end(),
                            std::back_inserter( result ),
-                           ByFingerprint<std::less>() );
+                           _detail::ByFingerprint<std::less>() );
     return result;
 }
 
@@ -243,7 +200,7 @@ std::vector<Key> KeyCache::findByKeyIDOrFingerprint( const std::vector<std::stri
                          bind( is_empty(), bind( &std::string::c_str, _1 ) ) );
 
     // this is just case-insensitive string search:
-    std::sort( keyids.begin(), keyids.end(), ByFingerprint<std::less>() );
+    std::sort( keyids.begin(), keyids.end(), _detail::ByFingerprint<std::less>() );
 
     std::vector<Key> result;
     result.reserve( keyids.size() ); // dups shouldn't happen
@@ -251,18 +208,18 @@ std::vector<Key> KeyCache::findByKeyIDOrFingerprint( const std::vector<std::stri
     std::set_intersection( d->by.fpr.begin(), d->by.fpr.end(),
                            keyids.begin(), keyids.end(),
                            std::back_inserter( result ),
-                           ByFingerprint<std::less>() );
+                           _detail::ByFingerprint<std::less>() );
     if ( result.size() < keyids.size() )
         // note that By{Fingerprint,KeyID,ShortKeyID} define the same
         // order for _strings_
         std::set_intersection( d->by.keyid.begin(), d->by.keyid.end(),
                                keyids.begin(), keyids.end(),
                                std::back_inserter( result ),
-                               ByKeyID<std::less>() );
+                               _detail::ByKeyID<std::less>() );
 
     // duplicates shouldn't happen, but make sure nonetheless:
-    std::sort( result.begin(), result.end(), ByFingerprint<std::less>() );
-    result.erase( std::unique( result.begin(), result.end(), ByFingerprint<std::equal_to>() ), result.end() );
+    std::sort( result.begin(), result.end(), _detail::ByFingerprint<std::less>() );
+    result.erase( std::unique( result.begin(), result.end(), _detail::ByFingerprint<std::equal_to>() ), result.end() );
 
     // we skip looking into short key ids here, as it's highly
     // unlikely they're used for this purpose. We might need to revise
@@ -317,25 +274,25 @@ void KeyCache::remove( const Key & key ) {
     {
         const std::pair<std::vector<Key>::iterator,std::vector<Key>::iterator> range
             = std::equal_range( d->by.fpr.begin(), d->by.fpr.end(), fpr,
-                                ByFingerprint<std::less>() );
+                                _detail::ByFingerprint<std::less>() );
         d->by.fpr.erase( range.first, range.second );
     }
 
     if ( const char * keyid = key.keyID() ) {
         const std::pair<std::vector<Key>::iterator,std::vector<Key>::iterator> range
             = std::equal_range( d->by.keyid.begin(), d->by.keyid.end(), keyid,
-                                ByKeyID<std::less>() );
+                                _detail::ByKeyID<std::less>() );
         const std::vector<Key>::iterator it
-            = std::remove_if( begin( range ), end( range ), bind( ByFingerprint<std::equal_to>(), fpr, _1 ) );
+            = std::remove_if( begin( range ), end( range ), bind( _detail::ByFingerprint<std::equal_to>(), fpr, _1 ) );
         d->by.keyid.erase( it, end( range ) );
     }
                 
     if ( const char * shortkeyid = key.shortKeyID() ) {
         const std::pair<std::vector<Key>::iterator,std::vector<Key>::iterator> range
             = std::equal_range( d->by.shortkeyid.begin(), d->by.shortkeyid.end(), shortkeyid,
-                                ByShortKeyID<std::less>() );
+                                _detail::ByShortKeyID<std::less>() );
         const std::vector<Key>::iterator it
-            = std::remove_if( begin( range ), end( range ), bind( ByFingerprint<std::equal_to>(), fpr, _1 ) );
+            = std::remove_if( begin( range ), end( range ), bind( _detail::ByFingerprint<std::equal_to>(), fpr, _1 ) );
         d->by.shortkeyid.erase( it, end( range ) );
     }
 
@@ -366,7 +323,7 @@ void KeyCache::insert( const std::vector<Key> & keys ) {
         remove( key ); // this is sub-optimal, but makes implementation from here on much easier 
 
     // 2. sort by fingerprint:
-    std::sort( sorted.begin(), sorted.end(), ByFingerprint<std::less>() );
+    std::sort( sorted.begin(), sorted.end(), _detail::ByFingerprint<std::less>() );
 
     // 2a. insert into fpr index:
     std::vector<Key> by_fpr;
@@ -374,7 +331,7 @@ void KeyCache::insert( const std::vector<Key> & keys ) {
     std::merge( sorted.begin(), sorted.end(),
                 d->by.fpr.begin(), d->by.fpr.end(),
                 std::back_inserter( by_fpr ),
-                ByFingerprint<std::less>() );
+                _detail::ByFingerprint<std::less>() );
 
     // 3. build email index:
     std::vector< std::pair<std::string,Key> > pairs;
@@ -403,7 +360,7 @@ void KeyCache::insert( const std::vector<Key> & keys ) {
 
 
     // 4. sort by key id:
-    std::sort( sorted.begin(), sorted.end(), ByKeyID<std::less>() );
+    std::sort( sorted.begin(), sorted.end(), _detail::ByKeyID<std::less>() );
 
     // 4a. insert into keyid index:
     std::vector<Key> by_keyid;
@@ -411,10 +368,10 @@ void KeyCache::insert( const std::vector<Key> & keys ) {
     std::merge( sorted.begin(), sorted.end(),
                 d->by.keyid.begin(), d->by.keyid.end(),
                 std::back_inserter( by_keyid ),
-                ByKeyID<std::less>() );
+                _detail::ByKeyID<std::less>() );
 
     // 5. sort by short key id:
-    std::sort( sorted.begin(), sorted.end(), ByShortKeyID<std::less>() );
+    std::sort( sorted.begin(), sorted.end(), _detail::ByShortKeyID<std::less>() );
 
     // 5a. insert into short keyid index:
     std::vector<Key> by_shortkeyid;
@@ -422,7 +379,7 @@ void KeyCache::insert( const std::vector<Key> & keys ) {
     std::merge( sorted.begin(), sorted.end(),
                 d->by.shortkeyid.begin(), d->by.shortkeyid.end(),
                 std::back_inserter( by_shortkeyid ),
-                ByShortKeyID<std::less>() );
+                _detail::ByShortKeyID<std::less>() );
 
     // now commit (well, we already removed keys...)
     by_fpr.swap( d->by.fpr );
