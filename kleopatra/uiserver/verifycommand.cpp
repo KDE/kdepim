@@ -577,7 +577,7 @@ int VerifyCommand::doStart()
     d->inputList = d->analyzeInput();
     if ( d->inputList.empty() )
         throw assuan_exception( makeError( GPG_ERR_ASS_NO_INPUT ),
-                                i18n("No useable inputs found") );
+                                i18n("No usable inputs found") );
 
     d->determineInputsAndProtocols();
 
