@@ -46,6 +46,7 @@
 #include <KDialog>
 #include <KLocale>
 
+#include <QAction>
 #include <QApplication>
 #include <QDebug>
 #include <QLineEdit>
@@ -79,10 +80,12 @@ private:
 
 void MainWindow::Private::setupMenu()
 {
-    QMenu* fileMenu = q->menuBar()->addMenu( i18n("&File") );
-    fileMenu->addAction( i18n("Quit"), qApp, SLOT( quit() ) );
-    QMenu* viewMenu = q->menuBar()->addMenu( i18n("&View") );
-    viewMenu->addAction( i18n("Refresh Certificate List"), q, SLOT( listKeys() ) );
+    QMenu* const fileMenu = q->menuBar()->addMenu( i18n("&File") );
+    QAction* const quitAction = fileMenu->addAction( i18n("Quit"), qApp, SLOT( quit() ) );
+    quitAction->setShortcut( Qt::CTRL + Qt::Key_Q );	
+    QMenu* const viewMenu = q->menuBar()->addMenu( i18n("&View") );
+    QAction* const refreshAction = viewMenu->addAction( i18n("Refresh Key List"), q, SLOT( listKeys() ) );
+    refreshAction->setShortcut( Qt::Key_F5 );
 }
 
 void MainWindow::Private::viewDetails( const QModelIndex& idx ) {
