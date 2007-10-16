@@ -56,8 +56,14 @@ shared_ptr<const KeyCache> KeyCache::instance() {
 }
 
 shared_ptr<KeyCache> KeyCache::mutableInstance() {
-    static weak_ptr<KeyCache> self = shared_ptr<KeyCache>( new KeyCache );
-    return shared_ptr<KeyCache>( self );
+    static weak_ptr<KeyCache> self;
+    try {
+        return shared_ptr<KeyCache>( self );
+    } catch ( const bad_weak_ptr & ) {
+        const shared_ptr<KeyCache> s( new KeyCache );
+        self = s;
+        return s;
+    }
 }
 
 namespace {
