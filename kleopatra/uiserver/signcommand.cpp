@@ -155,7 +155,7 @@ void SignCommand::Private::startSignJobs( const std::vector<GpgME::Key>& keys )
 {
     // make sure the keys are all of the same type
     // FIXME reasonable assumption?
-    if ( keys.empty() || !kdtools::all( keys.begin(), keys.end(), boost::bind( _detail::ByProtocol<std::equal_to>(), _1, keys.front() )  ) ) {
+    if ( keys.empty() || !kdtools::all( keys.begin(), keys.end(), boost::bind( &GpgME::Key::protocol, _1) == keys.front().protocol() ) ) {
         q->done();
         return;
     }
