@@ -624,7 +624,7 @@ int AssuanCommand::start() {
         return 0;
     } catch ( const assuan_exception & e ) {
         if ( !d->done )
-            done( e.error_code(), QString::fromLocal8Bit( e.message().c_str() ) );
+            done( e.error_code(), e.message() );
         return e.error_code();
     } catch ( const std::exception & e ) {
         if ( !d->done )

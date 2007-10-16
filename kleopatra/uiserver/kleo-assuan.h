@@ -36,12 +36,14 @@
 #include <gpg-error.h>
 #include <assuan.h>
 
+#include <gpgme++/error.h>
+
+#include <QString>
+
 #include <boost/preprocessor/stringize.hpp>
 
 #include <stdexcept>
 #include <assert.h>
-
-class QString;
 
 namespace Kleo {
 
@@ -54,8 +56,11 @@ namespace Kleo {
 
         ~assuan_exception() throw () {}
 
-        const std::string & message() const { return m_message; }
+        const std::string & messageLocal8Bit() const { return m_message; }
         gpg_error_t error_code() const { return m_error; }
+
+        QString message() const { return QString::fromLocal8Bit( m_message.c_str() ); }
+        GpgME::Error error() const { return GpgME::Error( m_error ); }
     private:
         static std::string make_message( gpg_error_t, const std::string & );
     private:

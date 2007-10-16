@@ -269,13 +269,13 @@ void VerificationResultCollector::addResult( const VerificationResultCollector::
 
                resultString = "OK " + resultStrings.join("\n");
            } else {
-               resultString = QString::fromUtf8( "ERR %1 - ").arg( QString::number( verificationError ) ) + verificationError.asString();
+               resultString = QString::fromLatin1( "ERR %1 - ").arg( QString::number( verificationError ) ) + QString::fromLocal8Bit( verificationError.asString() );
            }
        } catch ( const assuan_exception& e ) {
            result.error = e.error_code();
-           result.errorString = QString::fromStdString( e.message() );
+           result.errorString = e.message();
            m_results[result.id] = result;
-           resultString = "ERR " + QString::fromUtf8( e.what() );
+           resultString = "ERR " + QString::fromLocal8Bit( e.what() );
            // FIXME ask to continue or cancel
        }
        emit showResult( m_statusSent, result );

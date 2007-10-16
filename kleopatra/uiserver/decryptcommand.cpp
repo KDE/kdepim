@@ -158,7 +158,7 @@ private:
                 if ( m_keys.empty() )
                     m_detailsLabel->setText( i18n("<qt><i>No receipients found.</i></qt>") );
                 else {
-                    QString l = "<qt>" + i18np( "Receipient:", "Reciepients:", m_result.numRecipients() ) + "<ul>";
+                    QString l = "<qt>" + i18np( "Receipient:", "Recipients:", m_result.numRecipients() ) + "<ul>";
                     Q_FOREACH( const GpgME::Key key, m_keys ) {
                         l += "<li>" + renderKey( key ) + "</li>";
                     }
@@ -319,9 +319,9 @@ void DecryptionResultCollector::slotDecryptResult(const GpgME::DecryptionResult 
             resultString = resultToString( result.result );
         } catch ( const assuan_exception& e ) {
             result.error = e.error_code();
-            result.errorString = QString::fromStdString( e.message() );
+            result.errorString = e.message();
             m_results[m_statusSent] = result;
-            resultString = "ERR " + QString::fromUtf8( e.what() );
+            resultString = "ERR " + QString::fromLocal8Bit( e.what() );
             m_hasError = true;
             // FIXME ask to continue or cancel
         }
