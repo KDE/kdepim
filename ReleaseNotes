@@ -19,9 +19,6 @@ Bugfixes
   different format for encryption. Allow signing with the format specified in
   the address book even if it differs from the one set it in the composer.
 
-* Kolab/issue1942 Allow not fully trusted keys to be used for encryption
-  but ask the user to confirm their use.
-
 * Kolab/issue1995 composer text-completion: select only one address with
   Return doesn't work.
 
