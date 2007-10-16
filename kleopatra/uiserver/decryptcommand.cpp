@@ -264,8 +264,8 @@ private:
 
 static QString resultToString( const GpgME::DecryptionResult & result )
 {
-    if ( result.error() )
-        return QString::fromUtf8( "ERR %1 - ").arg( QString::number( result.error() ) ) + result.error().asString();
+    if ( result.error().code() )
+        return QString::fromLatin1( "ERR %1 - ").arg( QString::number( result.error() ) ) + QString::fromLocal8Bit( result.error().asString() );
     QString resStr( "OK ");
     for ( unsigned int i = 0; i<result.numRecipients(); i++ ) {
         const GpgME::DecryptionResult::Recipient r = result.recipient( i );
@@ -308,7 +308,7 @@ void DecryptionResultCollector::slotDecryptResult(const GpgME::DecryptionResult 
     if ( mutex ) return;
     // send status for all results received so far, but in order of id
     // report status on the command line immediately, and write out results, but
-     // only show dialog once all operations are completed, so it can be aggregated
+    // only show dialog once all operations are completed, so it can be aggregated
     mutex = true;
     while ( m_results.contains( m_statusSent ) ) {
         Result result = m_results[m_statusSent];
