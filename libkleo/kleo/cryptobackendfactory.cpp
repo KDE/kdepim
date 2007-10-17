@@ -141,6 +141,15 @@ const Kleo::CryptoBackend::Protocol * Kleo::CryptoBackendFactory::protocol( cons
   return it->second->protocol( name );
 }
 
+const Kleo::CryptoBackend::Protocol * Kleo::CryptoBackendFactory::protocol( GpgME::Protocol proto ) const {
+    if ( proto == GpgME::OpenPGP )
+        return openpgp();
+    else if ( proto == GpgME::CMS )
+        return smime();
+    else
+        return 0;
+}
+
 Kleo::CryptoConfig * Kleo::CryptoBackendFactory::config() const {
   // ## should we use mSMIMEBackend? mOpenPGPBackend? backend(0) i.e. always qgpgme?
   return backend( 0 ) ? backend( 0 )->config() : 0;
