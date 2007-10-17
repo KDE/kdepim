@@ -202,14 +202,10 @@ void AddresseeWidget::saveSettings()
   KConfigGroup cfg(&_cfg, "General" );
   cfg.writeEntry( "FormattedNameType", mFormattedNameCombo->currentIndex() );
 
-#ifdef __GNUC__
-#warning Is this necessary? I could not find this dbus namespace
-#endif
-  /* This causes a crash */
-  /*QDBusMessage message = 
-      QDBusMessage::createSignal( QString(), "org.kde.kabc.AddressBookConfig", 
+  QDBusMessage message = 
+      QDBusMessage::createSignal( "/KABC", "org.kde.kabc.AddressBookConfig", 
                                   "changed" );
-   QDBusConnection::sessionBus().send( message );*/
+  QDBusConnection::sessionBus().send( message );
 }
 
 #include "addresseewidget.moc"
