@@ -1164,7 +1164,7 @@ void KABCore::initActions()
   // misc
   action = coll->addAction( "ldap_lookup" );
   action->setIcon( KIcon( "edit-find" ) );
-  action->setText( i18n( "&Lookup Addresses in LDAP Directory..." ) );
+  action->setText( i18n( "LDAP &Lookup" ) );
   connect(action, SIGNAL(triggered(bool)), SLOT( openLDAPDialog() ));
   action->setWhatsThis( i18n( "Search for contacts on a LDAP server<p>You will be presented with a dialog, where you can search for contacts and select the ones you want to add to your local address book.</p>" ) );
 

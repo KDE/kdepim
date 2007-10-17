@@ -86,21 +86,11 @@
     <Action name="file_properties"/>
     <Separator/>
     <Action name="file_sync" />
-    <Action name="file_print" />
     <Separator/>
-    <Action name="ldap_lookup"/>
-  </ToolBar>
-
-  <ToolBar name="addresseeToolBar" noMerge="1"><text>Contact Toolbar</text>
     <Action name="edit_undo"/>
     <Action name="edit_redo"/>
     <Separator/>
-    <Action name="edit_cut"/>
-    <Action name="edit_copy"/>
-    <Action name="edit_paste"/>
-    <Separator/>
-    <Action name="edit_delete"/>
-    <Action name="edit_store_in"/>
+    <Action name="ldap_lookup"/>
   </ToolBar>
 
 </kpartgui>
