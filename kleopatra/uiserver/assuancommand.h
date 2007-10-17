@@ -293,8 +293,8 @@ namespace Kleo {
         static boost::shared_ptr<Command> make() { return boost::shared_ptr<Command>( new Command ); }
     };
 
-    template <typename Derived>
-    class AssuanCommandMixin : public AssuanCommand {
+    template <typename Derived, typename Base=AssuanCommand>
+    class AssuanCommandMixin : public Base {
         /* reimp */ const char * name() const { return Derived::staticName(); }
     };
     
