@@ -998,15 +998,17 @@ void KABCore::initGUI()
   QVBoxLayout *topLayout = new QVBoxLayout( mWidget );
   topLayout->setSpacing( 0 );
   topLayout->setMargin( 0 );
-  KToolBar* searchTB = new KToolBar( mWidget, "search toolbar" );
+  QWidget* searchTB = new QWidget( mWidget, "search toolbar" );
+  searchTB->setLayout(new QHBoxLayout);
+  searchTB->layout()->setMargin( 0 );
   searchTB->layout()->setSpacing( KDialog::spacingHint() );
   mIncSearchWidget = new IncSearchWidget( searchTB, "kde toolbar widget" );
-  searchTB->addWidget( mIncSearchWidget );
+  searchTB->layout()->addWidget( mIncSearchWidget );
   connect( mIncSearchWidget, SIGNAL( doSearch( const QString& ) ),
            SLOT( incrementalTextSearch( const QString& ) ) );
 
   mFilterSelectionWidget = new FilterSelectionWidget( searchTB , "kde toolbar widget" );
-  searchTB->addWidget( mFilterSelectionWidget );
+  searchTB->layout()->addWidget( mFilterSelectionWidget );
 
   mDetailsSplitter = new QSplitter( mWidget );
   topLayout->addWidget( searchTB );
