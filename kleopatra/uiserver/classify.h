@@ -30,6 +30,8 @@
     your version.
 */
 
+#include <gpgme++/global.h>
+
 #ifndef __KLEOPATRA_UISERVER_CLASSIFY_H__
 #define __KLEOPATRA_UISERVER_CLASSIFY_H__
 
@@ -86,8 +88,14 @@ namespace Kleo {
     inline bool is##What( const QString & filename ) {                  \
         return ( classify( filename ) & Class::Mask ) == Class::What ;  \
     }                                                                   \
+    inline bool is##What( const unsigned int classifcation ) {          \
+        return ( classifcation & Class::Mask ) == Class::What ;         \
+    }                                                                   \
     inline bool mayBe##What( const QString & filename ) {               \
         return classify( filename ) & Class::What ;                     \
+    }                                                                   \
+    inline bool mayBe##What( const unsigned int classifcation ) {       \
+        return classifcation & Class::What ;                            \
     }
 
     make_convenience( CMS,     ProtocolMask )
@@ -100,6 +108,18 @@ namespace Kleo {
     make_convenience( OpaqueSignature,   TypeMask )
     make_convenience( CipherText,        TypeMask )
 #undef make_convenience
+
+    inline GpgME::Protocol findProtocol( const unsigned int classifcation ) {
+        if ( isOpenPGP( classifcation ) )
+            return GpgME::OpenPGP;
+        else if ( isCMS( classifcation ) )
+            return GpgME::CMS;
+        else
+            return GpgME::UnknownProtocol;
+    }
+    inline GpgME::Protocol findProtocol( const QString & filename ) {
+        return findProtocol( classify( filename ) );
+    }
 
 }
 
