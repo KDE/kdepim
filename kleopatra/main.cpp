@@ -85,6 +85,8 @@ int main( int argc, char** argv )
 #ifndef KLEO_ONLY_UISERVER
   options.add("external", ki18n("Search for external certificates initially"));
   options.add("query ", ki18n("Initial query string"));
+#else
+  options.add("daemon", ki18n("Run UI server only, hide main window"));
 #endif
   options.add("import-certificate ", ki18n("Name of certificate file to import"));
 #ifdef HAVE_USABLE_ASSUAN
@@ -118,11 +120,13 @@ int main( int argc, char** argv )
 					  args->getOption("import-certificate") );
   manager->show();
 #else
-  MainWindow* mainWindow = new MainWindow;
-  mainWindow->show();
-  TrayIconListener* trayListener = new TrayIconListener( mainWindow );
-  QObject::connect( &sysTray, SIGNAL( activated( QSystemTrayIcon::ActivationReason ) ),
-                    trayListener, SLOT( activated( QSystemTrayIcon::ActivationReason ) ) );
+  if ( !args->isSet("daemon") ) {
+    MainWindow* mainWindow = new MainWindow;
+    mainWindow->show();
+    TrayIconListener* trayListener = new TrayIconListener( mainWindow );
+    QObject::connect( &sysTray, SIGNAL( activated( QSystemTrayIcon::ActivationReason ) ),
+                      trayListener, SLOT( activated( QSystemTrayIcon::ActivationReason ) ) );
+  }
 #endif
 
   int rc;
