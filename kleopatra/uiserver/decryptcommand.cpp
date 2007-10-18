@@ -433,7 +433,7 @@ void DecryptCommand::Private::showDecryptResultDialog()
     Q_FOREACH( Input i, inputList ) {
         inputLabels.append( i18n("Decrypting: %1", i.messageFileName.isEmpty()? "<unnamed input stream>" : i.messageFileName ) );
     }
-    dialog = new ResultDialog<DecryptResultDisplayWidget>( 0, inputLabels ); // fixme opaque parent handle from command line?
+    dialog = new ResultDialog<DecryptResultDisplayWidget>( inputLabels ); // fixme opaque parent handle from command line?
     connect( dialog, SIGNAL( accepted() ), this, SLOT( slotDialogClosed() ) );
     connect( dialog, SIGNAL( rejected() ), this, SLOT( slotDialogClosed() ) );
     connect( collector, SIGNAL( showResult( int, DecryptionResultCollector::Result ) ),

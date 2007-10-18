@@ -61,7 +61,7 @@ template <typename T>
 class ResultDialog : public QDialog
 {
 public:
-    ResultDialog( QWidget* parent, const QStringList& inputs )
+    explicit ResultDialog( const QStringList& inputs, QWidget* parent=0 )
     :QDialog( parent ), m_inputs(inputs)
     {
         init();
