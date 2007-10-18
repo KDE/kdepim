@@ -11,10 +11,8 @@ Bugfixes
 * Kolab/issue1713 Fix parsing of @ in name parts of email addresses,
   when in quotes.
 
-* Kolab/issue1928 Don't lose the composed mail when the composer tells the
-  KeyResolver to look for one format and the address book entry specifies a
-  different format for encryption. Allow signing with the format specified in
-  the address book even if it differs from the one set it in the composer.
+* Kolab/issue1928 Unencrypted email send, when s/mime encryption is activated
+  and OpenPGP key is selected. This just happens, when encrypt-to-self is off.
 
 * Kolab/issue1995 composer text-completion: select only one address with
   Return doesn't work.
