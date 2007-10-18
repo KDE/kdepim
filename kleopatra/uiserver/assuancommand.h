@@ -215,11 +215,10 @@ namespace Kleo {
 
     protected:
         // convenience methods:
-        GpgME::Protocol checkProtocol() const;
-
         enum Mode { EMail, FileManager };
         Mode checkMode() const;
 
+        GpgME::Protocol checkProtocol( Mode mode ) const;
     protected:
 
         bool isNohup() const;

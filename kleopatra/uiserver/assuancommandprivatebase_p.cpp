@@ -65,7 +65,9 @@ AssuanCommandPrivateBase::~AssuanCommandPrivateBase()
 
 void AssuanCommandPrivateBase::determineInputsAndProtocols()
 {
-    const GpgME::Protocol protocol = q->checkProtocol();
+    GpgME::Protocol protocol;
+    try { protocol = q->checkProtocol( AssuanCommand::EMail ); }
+    catch ( ... ) { protocol = GpgME::UnknownProtocol; }
 
     if ( protocol != GpgME::UnknownProtocol ) {
         const Kleo::CryptoBackend::Protocol* backend = Kleo::CryptoBackendFactory::instance()->protocol( protocol == GpgME::OpenPGP ? "openpgp" : "smime" );

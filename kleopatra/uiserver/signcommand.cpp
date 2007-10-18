@@ -125,7 +125,9 @@ void SignCommand::Private::checkInputs()
     if ( numOutputs > 0 && numInputs != numOutputs )
         throw assuan_exception( makeError( GPG_ERR_ASS_NO_INPUT ),  i18n( "For each INPUT there needs to be an OUTPUT") );
 
-    const GpgME::Protocol protocol = q->checkProtocol();
+    GpgME::Protocol protocol;
+    try { protocol = q->checkProtocol( EMail ); }
+    catch ( ... ) { protocol = GpgME::UnknownProtocol; }
 
     for ( int i = 0; i < numInputs; ++i ) {
         Input input;

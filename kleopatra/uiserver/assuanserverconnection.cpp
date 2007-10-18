@@ -965,17 +965,18 @@ AssuanCommand::Mode AssuanCommand::checkMode() const {
   assuan_exception.
 
   If no \c --protocol was given, in FileManager mode, returns
-  GpgME::UnknownProtocol, but in EMail mode, throws an
+  GpgME::UnknownProtocol, but if \a mode == \c EMail, throws an
   assuan_exception instead.
 */
-GpgME::Protocol AssuanCommand::checkProtocol() const {
+GpgME::Protocol AssuanCommand::checkProtocol( Mode mode ) const {
     if ( !hasOption("protocol") )
-#if 0 // ### enable this when OPTION mode is decided upon
-        if ( checkMode() == AssuanCommand::EMail )
+        if ( mode == AssuanCommand::EMail )
             throw assuan_exception( makeError( GPG_ERR_MISSING_VALUE ), i18n( "Required --protocol option missing" ) );
         else
-#endif
             return GpgME::UnknownProtocol;
+    else
+        if ( mode == AssuanCommand::FileManager )
+            throw assuan_exception( makeError( GPG_ERR_INV_FLAG ), i18n("--protocol is not allowed here") );
 
     const QString protocolString = option("protocol").toString().toLower();
     if ( protocolString == "openpgp" )
