@@ -8,22 +8,16 @@ Bugfixes
 * Kolab/issue1941 Delayed LDAP search results no longer overwrite the user
   selection during address completion.
 
-* Kolab/issue1894 Initialize the name column of the folder tree to a more 
-  reasonable value.
-
 * Kolab/issue1713 Fix parsing of @ in name parts of email addresses,
   when in quotes.
 
-* Kolab/issue1982 Don't lose the composed mail when the composer tells the
+* Kolab/issue1928 Don't lose the composed mail when the composer tells the
   KeyResolver to look for one format and the address book entry specifies a
   different format for encryption. Allow signing with the format specified in
   the address book even if it differs from the one set it in the composer.
 
 * Kolab/issue1995 composer text-completion: select only one address with
   Return doesn't work.
-
-* Kolab/issue1570 Pre-select the default identity, when asking the user
-  who she is.
 
 * Kolab/issue1821 Don't set disabled colors to the same values as the active
   colors. This eg. breaks the "automatic" completion mode which uses the
