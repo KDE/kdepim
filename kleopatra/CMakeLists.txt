@@ -75,6 +75,7 @@ else ( USABLE_ASSUAN_FOUND )
 endif ( USABLE_ASSUAN_FOUND )
 
 set( _kleopatra_common_SRCS
+   utils/filenamerequester.cpp
    utils/formatting.cpp
    utils/wsastarter.cpp
    ${_kleopatra_uiserver_files}

@@ -19,6 +19,13 @@ target_link_libraries(test_verificationresultdialog kleo ${KDE4_KDECORE_LIBS} ${
 
 ########### next target ###############
 
+kde4_add_executable( test_filenamerequester TEST
+  test_filenamerequester.cpp
+  ../utils/filenamerequester.cpp )
+target_link_libraries( test_filenamerequester ${KDE4_KDEUI_LIBS} )
+
+########### next target ###############
+
 set(test_verify_SRCS test_verify.cpp)
 add_definitions( -DKLEO_TEST_GNUPGHOME=\\"${CMAKE_CURRENT_SOURCE_DIR}/gnupg_home\\" )
 add_definitions( -DKLEO_TEST_DATADIR=\\"${CMAKE_CURRENT_SOURCE_DIR}\\" )
