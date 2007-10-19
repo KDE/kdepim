@@ -633,7 +633,7 @@ void KNMainWidget::initActions()
   connect(a_ctAccExpireAll, SIGNAL(triggered(bool) ), SLOT(slotAccExpireAll()));
 
   a_ctAccGetNewHdrs = actionCollection()->addAction("account_dnlHeaders");
-  a_ctAccGetNewHdrs->setIcon(KIcon("mail-get"));
+  a_ctAccGetNewHdrs->setIcon(KIcon("mail-receive"));
   a_ctAccGetNewHdrs->setText(i18n("&Get New Articles in All Groups"));
   connect(a_ctAccGetNewHdrs, SIGNAL(triggered(bool)), SLOT(slotAccGetNewHdrs()));
 
@@ -665,7 +665,7 @@ void KNMainWidget::initActions()
   connect(a_ctGrpRename, SIGNAL(triggered(bool)), SLOT(slotGrpRename()));
 
   a_ctGrpGetNewHdrs = actionCollection()->addAction("group_dnlHeaders");
-  a_ctGrpGetNewHdrs->setIcon(KIcon("mail-get"));
+  a_ctGrpGetNewHdrs->setIcon(KIcon("mail-receive"));
   a_ctGrpGetNewHdrs->setText(i18n("&Get New Articles"));
   connect(a_ctGrpGetNewHdrs, SIGNAL(triggered(bool)), SLOT(slotGrpGetNewHdrs()));
 
