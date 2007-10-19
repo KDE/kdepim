@@ -64,7 +64,7 @@ private:
     QLineEdit    lineedit;
     QToolButton  button;
 
-    bool onlyExistingFiles;
+    bool existingOnly;
 };
 
 FileNameRequester::Private::Private( FileNameRequester * qq )
@@ -74,7 +74,7 @@ FileNameRequester::Private::Private( FileNameRequester * qq )
       hlay( q ),
       lineedit( q ),
       button( q ),
-      onlyExistingFiles( true )
+      existingOnly( true )
 {
     KDAB_SET_OBJECT_NAME( dirmodel );
     KDAB_SET_OBJECT_NAME( completer );
@@ -100,10 +100,10 @@ FileNameRequester::FileNameRequester( QWidget * p )
 
 }
 
-FileNameRequester::FileNameRequester( const QString & file, QWidget * p )
+FileNameRequester::FileNameRequester( QDir::Filters f, QWidget * p )
     : QWidget( p ), d( new Private( this ) )
 {
-    setFileName( file );
+    d->dirmodel.setFilter( f );
 }
 
 FileNameRequester::~FileNameRequester() {}
@@ -116,12 +116,20 @@ QString FileNameRequester::fileName() const {
     return d->lineedit.text();
 }
 
-void FileNameRequester::setOnlyExistingFiles( bool on ) {
-    d->onlyExistingFiles = on;
+void FileNameRequester::setExistingOnly( bool on ) {
+    d->existingOnly = on;
 }
 
-bool FileNameRequester::onlyExistingFiles() const {
-    return d->onlyExistingFiles;
+bool FileNameRequester::existingOnly() const {
+    return d->existingOnly;
+}
+
+void FileNameRequester::setFilter( QDir::Filters f ) {
+    d->dirmodel.setFilter( f );
+}
+
+QDir::Filters FileNameRequester::filter() const {
+    return d->dirmodel.filter();
 }
 
 void FileNameRequester::Private::slotButtonClicked() {
@@ -131,7 +139,10 @@ void FileNameRequester::Private::slotButtonClicked() {
 }
 
 QString FileNameRequester::requestFileName() {
-    if ( d->onlyExistingFiles )
+    const QDir::Filters filters = filter();
+    if ( (filters & QDir::Dirs) && !(filters & QDir::Files) )
+        return QFileDialog::getExistingDirectory( this );
+    else if ( d->existingOnly )
         return QFileDialog::getOpenFileName( this );
     else
         return QFileDialog::getSaveFileName( this );

@@ -35,6 +35,8 @@
 
 #include <QWidget>
 
+#include <QDir>
+
 #include <utils/pimpl_ptr.h>
 
 namespace Kleo {
@@ -42,17 +44,20 @@ namespace Kleo {
     class FileNameRequester : public QWidget {
         Q_OBJECT
         Q_PROPERTY( QString fileName READ fileName WRITE setFileName )
-        Q_PROPERTY( bool onlyExistingFiles READ onlyExistingFiles WRITE setOnlyExistingFiles )
+        Q_PROPERTY( bool existingOnly READ existingOnly WRITE setExistingOnly )
     public:
         explicit FileNameRequester( QWidget * parent=0 );
-        explicit FileNameRequester( const QString & fileName, QWidget * parent=0 );
+        explicit FileNameRequester( QDir::Filters filter, QWidget * parent=0 );
         ~FileNameRequester();
 
         void setFileName( const QString & name );
         QString fileName() const;
 
-        void setOnlyExistingFiles( bool on );
-        bool onlyExistingFiles() const;
+        void setExistingOnly( bool on );
+        bool existingOnly() const;
+
+        void setFilter( QDir::Filters f );
+        QDir::Filters filter() const;
 
     private:
         virtual QString requestFileName();
