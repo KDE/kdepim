@@ -50,6 +50,8 @@ if ( USABLE_ASSUAN_FOUND )
     uiserver/verifycommand.cpp
     uiserver/decryptcommand.cpp
     uiserver/decryptverifyoperationwidget.cpp
+    uiserver/decryptverifyresultwidget.cpp
+    uiserver/decryptverifywizard.cpp
     uiserver/signcommand.cpp
     uiserver/encryptcommand.cpp
     uiserver/assuancommandprivatebase_p.cpp
