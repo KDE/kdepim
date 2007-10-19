@@ -29,7 +29,7 @@
 SearchLine::SearchLine(QWidget *parent) : QWidget(parent)
 {
   m_clearButton = new QToolButton(this);
-  QIcon icon = KIcon(KApplication::isRightToLeft() ? "clear-left" : "locationbar-erase" );
+  QIcon icon = KIcon(KApplication::isRightToLeft() ? "edit-clear-locationbar-rtl" : "edit-clear-locationbar" );
   m_clearButton->setIcon(icon);
 
   m_search = new QLabel(i18n("S&earch:"), this);

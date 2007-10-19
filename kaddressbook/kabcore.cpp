@@ -1182,7 +1182,7 @@ void KABCore::initActions()
   mActionCategories->setWhatsThis( i18n( "Set the categories for all selected contacts." ) );
 
   QAction *clearLocation = coll->addAction( "clear_search" );
-  clearLocation->setIcon( KIcon(QApplication::isRightToLeft() ? "clear-left" : "locationbar-erase") );
+  clearLocation->setIcon( KIcon(QApplication::isRightToLeft() ? "edit-clear-locationbar-rtl" : "edit-clear-locationbar") );
   clearLocation->setText( i18n( "Clear Search Bar" ) );
   connect(clearLocation, SIGNAL(triggered(bool) ), SLOT( slotClearSearchBar() ));
   clearLocation->setShortcut(QKeySequence(Qt::CTRL+Qt::Key_L));
