@@ -91,6 +91,7 @@ DecryptVerifyOperationWidget::Private::UI::UI( DecryptVerifyOperationWidget * q 
     swapTB.setEnabled( false );
     signedDataLB.setEnabled( false );
     signedDataFNR.setEnabled( false );
+    signedDataLB.setBuddy( &signedDataFNR );
 
     glay.addWidget( &inputLB, 0, 0 );
     glay.addWidget( &inputFileNameLB, 0, 1 );
