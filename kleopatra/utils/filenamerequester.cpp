@@ -82,8 +82,6 @@ FileNameRequester::Private::Private( FileNameRequester * qq )
     KDAB_SET_OBJECT_NAME( lineedit );
     KDAB_SET_OBJECT_NAME( button );
 
-    //completer.setCompletionMode( QCompleter::PopupCompletion );
-
     button.setIcon( KIcon("document-open") );
     lineedit.setCompleter( &completer );
 
