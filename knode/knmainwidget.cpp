@@ -770,7 +770,7 @@ void KNMainWidget::initActions()
   a_ctArtFilterKeyb->setShortcut(QKeySequence(Qt::Key_F6));
 
   a_ctArtSearch = actionCollection()->addAction("article_search");
-  a_ctArtSearch->setIcon(KIcon("mail-find"));
+  a_ctArtSearch->setIcon(KIcon("edit-find-mail"));
   a_ctArtSearch->setText(i18n("&Search Articles..."));
   connect(a_ctArtSearch, SIGNAL(triggered(bool)), SLOT(slotArtSearch()));
   a_ctArtSearch->setShortcut(QKeySequence(Qt::Key_F4));
