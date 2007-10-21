@@ -648,7 +648,7 @@ void KNMainWidget::initActions()
   connect(a_ctAccDelete, SIGNAL(triggered(bool)), SLOT(slotAccDelete()));
 
   a_ctAccPostNewArticle = actionCollection()->addAction("article_postNew");
-  a_ctAccPostNewArticle->setIcon(KIcon("mail-new"));
+  a_ctAccPostNewArticle->setIcon(KIcon("mail-message-new"));
   a_ctAccPostNewArticle->setText(i18n("&Post to Newsgroup..."));
   connect(a_ctAccPostNewArticle, SIGNAL(triggered(bool)), SLOT(slotAccPostNewArticle()));
   a_ctAccPostNewArticle->setShortcut(QKeySequence(Qt::CTRL+Qt::Key_N));
