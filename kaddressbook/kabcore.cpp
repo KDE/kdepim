@@ -1140,7 +1140,7 @@ void KABCore::initActions()
   // settings menu
   mActionJumpBar = coll->add<KToggleAction>( "options_show_jump_bar" );
   mActionJumpBar->setText( i18n( "Show Jump Bar" ) );
-  mActionJumpBar->setIcon( KIcon( "find-next" ) );
+  mActionJumpBar->setIcon( KIcon( "edit-find-next" ) );
   mActionJumpBar->setWhatsThis( i18n( "Toggle whether the jump button bar shall be visible." ) );
   mActionJumpBar->setCheckedState( KGuiItem(i18n( "Hide Jump Bar" )) );
   connect( mActionJumpBar, SIGNAL( toggled( bool ) ), SLOT( setJumpButtonBarVisible( bool ) ) );
