@@ -339,11 +339,14 @@ void KDPipeIODevice::Private::emitReadyRead()
 
 bool KDPipeIODevice::Private::doOpen( int fd_, Qt::HANDLE handle_, OpenMode mode_ ) {
 
-    if ( q->isOpen() || fd_ < 0 )
+    if ( q->isOpen() )
 	return false;
 
 #ifdef Q_OS_WIN32
     if ( !handle_ )
+	return false;
+#else
+    if ( fd_ < 0 )
 	return false;
 #endif
 
