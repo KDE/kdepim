@@ -660,8 +660,7 @@ void KDPipeIODevice::close() { KDAB_CHECK_THIS;
     waitAndDelete( d->reader );
 #undef waitAndDelete
 #ifdef Q_OS_WIN32
-    qDebug( "Closing handle" );
-    CloseHandle( d->handle );
+    _close( d->fd );
 #else
     ::close( d->fd );
 #endif
