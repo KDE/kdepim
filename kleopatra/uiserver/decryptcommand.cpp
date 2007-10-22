@@ -46,6 +46,8 @@
 #include <QFile>
 #include <QLabel>
 #include <QPointer>
+#include <QLayout>
+#include <QLabel>
 
 #include <kleo/decryptjob.h>
 #include <kleo/keylistjob.h>
@@ -258,7 +260,7 @@ public Q_SLOTS:
 
 private:
     DecryptionResultCollector* collector;
-    QPointer< ResultDialog<DecryptResultDisplayWidget> > dialog;
+    QPointer< ResultDialogImpl<DecryptResultDisplayWidget> > dialog;
 
 };
 
@@ -433,7 +435,7 @@ void DecryptCommand::Private::showDecryptResultDialog()
     Q_FOREACH( Input i, inputList ) {
         inputLabels.append( i18n("Decrypting: %1", i.messageFileName.isEmpty()? "<unnamed input stream>" : i.messageFileName ) );
     }
-    dialog = new ResultDialog<DecryptResultDisplayWidget>( inputLabels ); // fixme opaque parent handle from command line?
+    dialog = new ResultDialogImpl<DecryptResultDisplayWidget>( inputLabels ); // fixme opaque parent handle from command line?
     connect( dialog, SIGNAL( accepted() ), this, SLOT( slotDialogClosed() ) );
     connect( dialog, SIGNAL( rejected() ), this, SLOT( slotDialogClosed() ) );
     connect( collector, SIGNAL( showResult( int, DecryptionResultCollector::Result ) ),

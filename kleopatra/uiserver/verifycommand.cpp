@@ -202,7 +202,7 @@ public:
     ,collector( new VerificationResultCollector(this) )
     {}
     virtual ~Private() {}
-    ResultDialog<VerificationResultDisplayWidget> * dialog;
+    ResultDialogImpl<VerificationResultDisplayWidget> * dialog;
     VerifyCommand * q;
     VerificationResultCollector * collector;
 
@@ -478,7 +478,7 @@ void VerifyCommand::Private::showVerificationResultDialog()
     Q_FOREACH( Input i, inputList ) {
         inputLabels.append( i18n("Verifying signature: %1", i.signatureFileName.isEmpty()? "<unnamed input stream>" : i.signatureFileName ) );
     }
-    dialog = new ResultDialog<VerificationResultDisplayWidget>( inputLabels ); // fixme opaque parent handle from command line?
+    dialog = new ResultDialogImpl<VerificationResultDisplayWidget>( inputLabels ); // fixme opaque parent handle from command line?
     connect( dialog, SIGNAL( accepted() ), this, SLOT( slotDialogClosed() ) );
     connect( dialog, SIGNAL( rejected() ), this, SLOT( slotDialogClosed() ) );
     

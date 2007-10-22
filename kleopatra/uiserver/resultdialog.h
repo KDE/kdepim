@@ -33,102 +33,53 @@
 #ifndef __RESULTDIALOG_H__
 #define __RESULTDIALOG_H__
 
-#include <QStackedWidget>
-#include <QProgressBar>
 #include <QDialog>
-#include <QBoxLayout>
-#include <QLabel>
+
+#include <QStringList>
 
 #include <vector>
 
-class ProgressWidget : public QFrame
-{
-public:
-    ProgressWidget( QWidget * parent, const QString& label )
-    :QFrame( parent )
-    {
-        QVBoxLayout *vbox = new QVBoxLayout( this );
-        QLabel *l = new QLabel( label );
-        vbox->addWidget( l );
-        QProgressBar *p = new QProgressBar( this );
-        vbox->addWidget( p );
-        p->setRange( 0, 0 ); // knight rider mode
-    }
-    virtual ~ProgressWidget() {}
-};
+class QStackedWidget;
 
-template <typename T>
-class ResultDialog : public QDialog
-{
+class ResultDialog : public QDialog {
+    Q_OBJECT
 public:
-    explicit ResultDialog( const QStringList& inputs, QWidget* parent=0 )
-    :QDialog( parent ), m_inputs(inputs)
-    {
-        init();
-        
-    }
-    virtual ~ResultDialog() {}
-    
-    void init()
-    {
-        QVBoxLayout *box = new QVBoxLayout( this );
-        box->setContentsMargins( 0, 0, 0, 0 );
+    explicit ResultDialog( const QStringList & inputs, QWidget * parent=0 );
+    ~ResultDialog();
 
-        m_stacks.reserve( m_inputs.size() );
-        m_payloads.reserve( m_inputs.size() );
-        for ( int i=0; i< m_inputs.size(); i++ ) {
-            QStackedWidget *stack = new QStackedWidget( this );
-            box->addWidget( stack );
-            stack->setContentsMargins( 0, 0, 0, 0 );
-            ProgressWidget * p = new ProgressWidget( stack, m_inputs[i] );
-            stack->addWidget( p );
-            T* payload = new T( stack );
-            stack->addWidget( payload );
-            stack->setCurrentIndex( 0 );
-            m_stacks.push_back( stack );
-            m_payloads.push_back( payload );
-        }
-    }
-    
-    T* widget( unsigned int idx )
-    {
-        if ( m_payloads.size() <= idx ) return 0;
-        return m_payloads[ idx ];
-    }
-    
-    void showResultWidget( unsigned int idx )
-    {
-        if ( m_stacks.size() <= idx || m_payloads.size() <= idx ) return;
-        QStackedWidget * stack = m_stacks[idx];
-        assert(stack); assert( m_payloads[idx] );
-        stack->setCurrentWidget( m_payloads[idx] );
-    }
-    
-    void showError( int idx, const QString& errorString )
-    {
+    virtual QWidget * widget( unsigned int idx ) { return m_payloads.at( idx ); }
+
+    void showResultWidget( unsigned int idx );
+    void showErrorWidget( unsigned int idx, QWidget * _errorWidget, const QString & errorString = QString() );
+    void showError( unsigned int idx, const QString & errorString ) {
         showErrorWidget( idx, 0, errorString );
     }
-    
-    void showErrorWidget( unsigned int idx, QWidget* _errorWidget, const QString& errorString = QString() )
-    {
-        if ( m_stacks.size() <= idx ) return;
-        QStackedWidget * stack = m_stacks[idx];
-        assert(stack);
-        QWidget *errorWidget = _errorWidget;
-        if ( !errorWidget ) {
-            errorWidget = new QLabel( errorString, this );
-            errorWidget->setObjectName( "ErrorWidget" );
-            errorWidget->setStyleSheet( QString::fromLatin1("QLabel#ErrorWidget { border:4px solid red; border-radius:2px; }") );
-        }
-        stack->addWidget( errorWidget );
-        stack->setCurrentWidget( errorWidget );
-    }
+
+protected:
+    void init();
+
+private:
+    virtual QWidget * doCreatePayload( QWidget * parent ) const = 0;
 
 private:
     QStringList m_inputs;
     std::vector<QStackedWidget*> m_stacks;
-    std::vector<T*> m_payloads;
-    
+    std::vector<QWidget*> m_payloads;
+};
+
+template <typename T>
+class ResultDialogImpl : public ResultDialog {
+public:
+    explicit ResultDialogImpl( const QStringList & inputs, QWidget * p=0 )
+        : ResultDialog( inputs, p )
+    {
+        ResultDialog::init();
+    }
+
+    /* reimp */ T * widget( unsigned int idx ) { return static_cast<T*>( ResultDialog::widget( idx ) ); }
+
+private:
+    /* reimp */ T * doCreatePayload( QWidget * p ) const { return new T( p ); }
 };
 
 #endif /*__RESULTDIALOG_H__*/
