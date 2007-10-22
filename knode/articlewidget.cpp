@@ -183,7 +183,7 @@ void ArticleWidget::initActions()
   connect(mFancyToggle, SIGNAL(triggered(bool) ), SLOT(slotToggleFancyFormating()));
   mFancyToggle->setShortcut(QKeySequence(Qt::Key_Y));
   mRot13Toggle = mActionCollection->add<KToggleAction>("view_rot13");
-  mRot13Toggle->setIcon(KIcon("decrypted"));
+  mRot13Toggle->setIcon(KIcon("document-decrypt"));
   mRot13Toggle->setText(i18n("&Unscramble (Rot 13)"));
   connect(mRot13Toggle, SIGNAL(triggered(bool) ), SLOT(slotToggleRot13()));
   mRot13Toggle->setChecked( false );
