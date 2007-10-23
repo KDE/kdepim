@@ -108,11 +108,11 @@ public:
     DecryptResultDisplayWidget( QWidget * parent )
     : ResultDisplayWidget( parent ), m_state( Summary ), m_jobCount( 0 )
     {
-        QVBoxLayout *layout = new QVBoxLayout( this );
-        m_summaryLabel = new QLabel( this );
+        QVBoxLayout *layout = new QVBoxLayout( resultWidget() );
+        m_summaryLabel = new QLabel( resultWidget() );
         layout->addWidget( m_summaryLabel );
-        m_detailsLabel = new QLabel( this );
-        connect( m_detailsLabel, SIGNAL(linkActivated(QString)), SLOT(linkActivated(QString)) );
+        m_detailsLabel = new QLabel( resultWidget() );
+        connect( m_detailsLabel, SIGNAL(linkActivated(QString)), this, SLOT(linkActivated(QString)) );
         layout->addWidget( m_detailsLabel );
     }
 
@@ -120,6 +120,7 @@ public:
     {
         m_result = result;
         reload();
+        showResultWidget();
     }
 
     void setBackends( const QList<const Kleo::CryptoBackend::Protocol*> &backends )

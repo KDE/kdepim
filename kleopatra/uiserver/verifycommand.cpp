@@ -158,11 +158,12 @@ public:
     VerificationResultDisplayWidget( QWidget * parent )
         : ResultDisplayWidget( parent )
     {
-        m_box = new QVBoxLayout( this );
+        m_box = new QVBoxLayout( resultWidget() );
         m_box->setContentsMargins( 0, 0, 0, 0 );
     }
     void setResult( const GpgME::VerificationResult& result, const std::vector<GpgME::Key> & keys )
-    {        
+    {
+        showResultWidget();
         if ( result.error() ) {
             QString l = "<qt><img src=\"";
             l += KIconLoader::global()->iconPath( "dialog-error", KIconLoader::Small );
