@@ -46,6 +46,7 @@ class QVariant;
 class QIODevice;
 class QObject;
 class QStringList;
+class QDialog;
 
 struct assuan_context_s;
 
@@ -219,6 +220,13 @@ namespace Kleo {
         Mode checkMode() const;
 
         GpgME::Protocol checkProtocol( Mode mode ) const;
+
+        template <typename T_Widget>
+        T_Widget * applyWindowID( T_Widget * w ) const {
+            doApplyWindowID( w );
+            return w;
+        }
+
     protected:
 
         bool isNohup() const;
@@ -258,6 +266,9 @@ namespace Kleo {
 
         void done( int err=0 );
         void done( int err, const QString & details );
+
+    private:
+        void doApplyWindowID( QDialog * w ) const;
 
     private:
         friend class ::Kleo::AssuanCommandFactory;

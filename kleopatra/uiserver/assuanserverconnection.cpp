@@ -986,6 +986,11 @@ GpgME::Protocol AssuanCommand::checkProtocol( Mode mode ) const {
     throw assuan_exception( makeError( GPG_ERR_INV_ARG ), i18n( "invalid protocol \"%1\"", protocolString ) );
 }        
 
+void AssuanCommand::doApplyWindowID( QDialog * dlg ) const {
+    if ( !dlg || !hasOption( "window-id" ) )
+        return;
+    // ### TODO: parse window-id, and apply it to dlg...
+}
 
 #include "assuanserverconnection.moc"
 #include "moc_assuanserverconnection.cpp"
