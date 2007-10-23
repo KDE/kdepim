@@ -182,7 +182,7 @@ public:
         
         std::vector<GpgME::Signature> sigs = result.signatures();
         Q_FOREACH ( const GpgME::Signature sig, sigs ) {
-            SignatureDisplayWidget * w = new SignatureDisplayWidget( this );
+            SignatureDisplayWidget * w = new SignatureDisplayWidget( resultWidget() );
             w->setSignature( sig, keyForSignature( sig, keys ) );
             m_box->addWidget( w );
         }

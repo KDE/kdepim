@@ -83,9 +83,9 @@ static QColor color( const DecryptionResult & dr, const VerificationResult & vr 
 
 DecryptVerifyResultWidget::DecryptVerifyResultWidget( QWidget * parent )
     : ResultDisplayWidget( parent ),
-      m_box( new QVBoxLayout( this ) )
+      m_box( new QVBoxLayout( resultWidget() ) )
 {
-    m_box->setContentsMargins( 0, 0, 0, 0 );
+    m_box->setMargin( 0 );
 }
 
 DecryptVerifyResultWidget::~DecryptVerifyResultWidget() {}
@@ -99,17 +99,19 @@ void DecryptVerifyResultWidget::setResult( const DecryptionResult & decryptionRe
 
     m_box->addWidget( new QLabel( decryptionResult.error() || decryptionResult.error().isCanceled()
                                   ? "<qt>" + decryptionResultString + "</qt>"
-                                  : "<qt>" + decryptionResultString + "<br/>" + formatVerificationResult( verificationResult ) + "</qt>", this ) );
+                                  : "<qt>" + decryptionResultString + "<br/>" + formatVerificationResult( verificationResult ) + "</qt>", resultWidget() ) );
     setColor( color( decryptionResult, verificationResult ) );
         
     const std::vector<Signature> sigs = verificationResult.signatures();
     const std::vector<Key> signers = KeyCache::instance()->findSigners( verificationResult );
     Q_FOREACH ( const Signature & sig, sigs ) {
-        SignatureDisplayWidget * w = new SignatureDisplayWidget( this );
+        SignatureDisplayWidget * w = new SignatureDisplayWidget( resultWidget() );
         w->setSignature( sig, keyForSignature( sig, signers ) );
         m_box->addWidget( w );
     }
     m_box->addStretch( 1 );
+
+    showResultWidget();
 }
 
 QString DecryptVerifyResultWidget::formatDecryptionResult( const DecryptionResult & res, const std::vector<Key> & recipients ) {
