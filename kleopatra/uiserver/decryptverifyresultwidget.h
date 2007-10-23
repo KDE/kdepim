@@ -53,10 +53,12 @@ namespace Kleo {
         explicit DecryptVerifyResultWidget( QWidget * parent );
         ~DecryptVerifyResultWidget();
 
+        void setResult( const GpgME::DecryptionResult & decryptionResult, const GpgME::VerificationResult & verificationResult );
+
+    private:
         QString formatDecryptionResult( const GpgME::DecryptionResult & res, const std::vector<GpgME::Key> & recipients );
         QString formatVerificationResult( const GpgME::VerificationResult & res ) const;
 
-        void setResult( const GpgME::DecryptionResult & decryptionResult, const GpgME::VerificationResult & verificationResult );
     private:
         QVBoxLayout * m_box;
     };
