@@ -41,23 +41,30 @@
 
 namespace Kleo {
 
-class ResultDisplayWidget : public QFrame
-{
+class ResultDisplayWidget : public QWidget {
     Q_OBJECT
-    public:
-        explicit ResultDisplayWidget( QWidget *parent = 0 );
-        ~ResultDisplayWidget();
+public:
+    explicit ResultDisplayWidget( QWidget * parent = 0 );
+    ~ResultDisplayWidget();
 
-    protected:
-        QString renderKey( const GpgME::Key &key );
-        void setColor( const QColor &color );
+    void setLabel( const QString & str );
+    void showResultWidget();
+    void setError( const QString & err );
 
-    protected Q_SLOTS:
-        void keyLinkActivated( const QString &link );
+public Q_SLOTS:
+    void setProgress( const QString & what, int current, int total );
 
-    private:
-        class Private;
-        kdtools::pimpl_ptr<Private> d;
+protected:
+    QString renderKey( const GpgME::Key &key );
+    void setColor( const QColor &color );
+    QWidget * resultWidget();
+
+protected Q_SLOTS:
+    void keyLinkActivated( const QString &link );
+
+private:
+    class Private;
+    kdtools::pimpl_ptr<Private> d;
 };
 
 }

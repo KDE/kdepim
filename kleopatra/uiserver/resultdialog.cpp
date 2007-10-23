@@ -32,78 +32,49 @@
 
 #include "resultdialog.h"
 
-#include <QStackedWidget>
-#include <QProgressBar>
-#include <QDialog>
-#include <QBoxLayout>
-#include <QLabel>
-#include <QFrame>
+#include "resultdisplaywidget.h"
 
-#include <vector>
+#include <QLayout>
+
 #include <cassert>
 
-class ProgressWidget : public QFrame {
-    Q_OBJECT
-public:
-    explicit ProgressWidget( const QString& label, QWidget * p=0 )
-        : QFrame( p )
-    {
-        QVBoxLayout *vbox = new QVBoxLayout( this );
-        vbox->addWidget( new QLabel( label ) );
-        QProgressBar *pb = new QProgressBar( this );
-        vbox->addWidget( pb );
-        pb->setRange( 0, 0 ); // knight rider mode
-    }
-};
+using namespace Kleo;
 
-
-ResultDialog::ResultDialog( const QStringList & inputs, QWidget * p )
-    : QDialog( p ), m_inputs( inputs )
+ResultDialog::ResultDialog( QWidget * p )
+    : QDialog( p )
 {
-
+    QVBoxLayout * box = new QVBoxLayout( this );
+    box->setMargin( 0 );
 }
 
 ResultDialog::~ResultDialog() {}
     
-void ResultDialog::init() {
-    QVBoxLayout *box = new QVBoxLayout( this );
-    box->setMargin( 0 );
+void ResultDialog::setLabels( const QStringList & inputs ) {
 
-    m_stacks.reserve( m_inputs.size() );
-    m_payloads.reserve( m_inputs.size() );
-    Q_FOREACH( QString i, m_inputs ) {
-        QStackedWidget *stack = new QStackedWidget( this );
-        box->addWidget( stack );
-        stack->setContentsMargins( 0, 0, 0, 0 );
-        ProgressWidget * p = new ProgressWidget( i, stack );
-        stack->addWidget( p );
-        QWidget * payload = doCreatePayload( stack );
-        stack->addWidget( payload );
-        stack->setCurrentIndex( 0 );
-        m_stacks.push_back( stack );
-        m_payloads.push_back( payload );
-    }
+    qDeleteAll( m_payloads );
+    m_payloads.clear();
+    m_payloads.reserve( inputs.size() );
+
+    assert( qobject_cast<QVBoxLayout*>( layout() ) );
+    QVBoxLayout & vlay = *static_cast<QVBoxLayout*>( layout() );
+
+    Q_FOREACH( QString i, inputs )
+        if ( ResultDisplayWidget * pl = doCreatePayload( this ) ) {
+            vlay.addWidget( pl );
+            m_payloads.push_back( pl );
+        }
+
+    if ( isVisible() )
+        Q_FOREACH( QWidget * w, m_payloads )
+            w->show();
 }
     
 void ResultDialog::showResultWidget( unsigned int idx ) {
-    if ( m_stacks.size() <= idx || m_payloads.size() <= idx ) return;
-    QStackedWidget * stack = m_stacks[idx];
-    assert(stack); assert( m_payloads[idx] );
-    stack->setCurrentWidget( m_payloads[idx] );
+    m_payloads.at( idx )->showResultWidget();
 }
     
-void ResultDialog::showErrorWidget( unsigned int idx, QWidget * errorWidget, const QString& errorString ) {
-    if ( m_stacks.size() <= idx ) return;
-    QStackedWidget * stack = m_stacks[idx];
-    assert(stack);
-    if ( !errorWidget ) {
-        errorWidget = new QLabel( errorString, this );
-        errorWidget->setObjectName( "ErrorWidget" );
-        errorWidget->setStyleSheet( QString::fromLatin1("QLabel#ErrorWidget { border:4px solid red; border-radius:2px; }") );
-    }
-    stack->addWidget( errorWidget );
-    stack->setCurrentWidget( errorWidget );
+void ResultDialog::showError( unsigned int idx, const QString & errorString ) {
+    m_payloads.at( idx )->setError( errorString );
 }
 
 #include "moc_resultdialog.cpp"
-#include "resultdialog.moc"

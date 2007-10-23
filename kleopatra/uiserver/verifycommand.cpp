@@ -478,7 +478,8 @@ void VerifyCommand::Private::showVerificationResultDialog()
     Q_FOREACH( Input i, inputList ) {
         inputLabels.append( i18n("Verifying signature: %1", i.signatureFileName.isEmpty()? "<unnamed input stream>" : i.signatureFileName ) );
     }
-    dialog = new ResultDialogImpl<VerificationResultDisplayWidget>( inputLabels ); // fixme opaque parent handle from command line?
+    dialog = new ResultDialogImpl<VerificationResultDisplayWidget>; // fixme opaque parent handle from command line?
+    dialog->setLabels( inputLabels );
     connect( dialog, SIGNAL( accepted() ), this, SLOT( slotDialogClosed() ) );
     connect( dialog, SIGNAL( rejected() ), this, SLOT( slotDialogClosed() ) );
     

@@ -39,49 +39,42 @@
 
 #include <vector>
 
-class QStackedWidget;
+namespace Kleo {
+
+class ResultDisplayWidget;
 
 class ResultDialog : public QDialog {
     Q_OBJECT
 public:
-    explicit ResultDialog( const QStringList & inputs, QWidget * parent=0 );
+    explicit ResultDialog( QWidget * parent=0 );
     ~ResultDialog();
 
-    virtual QWidget * widget( unsigned int idx ) { return m_payloads.at( idx ); }
+    void setLabels( const QStringList & inputs );
+
+    virtual ResultDisplayWidget * widget( unsigned int idx ) { return m_payloads.at( idx ); }
 
     void showResultWidget( unsigned int idx );
-    void showError( unsigned int idx, const QString & errorString ) {
-        showErrorWidget( idx, 0, errorString );
-    }
+    void showError( unsigned int idx, const QString & errorString );
 
 private:
-    void showErrorWidget( unsigned int idx, QWidget * _errorWidget, const QString & errorString );
-
-protected:
-    void init();
+    virtual ResultDisplayWidget * doCreatePayload( QWidget * parent ) const = 0;
 
 private:
-    virtual QWidget * doCreatePayload( QWidget * parent ) const = 0;
-
-private:
-    QStringList m_inputs;
-    std::vector<QStackedWidget*> m_stacks;
-    std::vector<QWidget*> m_payloads;
+    std::vector<ResultDisplayWidget*> m_payloads;
 };
 
 template <typename T>
 class ResultDialogImpl : public ResultDialog {
 public:
-    explicit ResultDialogImpl( const QStringList & inputs, QWidget * p=0 )
-        : ResultDialog( inputs, p )
-    {
-        ResultDialog::init();
-    }
+    explicit ResultDialogImpl( QWidget * p=0 )
+        : ResultDialog( p ) {}
 
     /* reimp */ T * widget( unsigned int idx ) { return static_cast<T*>( ResultDialog::widget( idx ) ); }
 
 private:
     /* reimp */ T * doCreatePayload( QWidget * p ) const { return new T( p ); }
 };
+
+}
 
 #endif /*__RESULTDIALOG_H__*/

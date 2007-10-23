@@ -38,35 +38,112 @@
 #include <QHash>
 #include <QPointer>
 
-using namespace Kleo;
+#include <QLayout>
+#include <QLabel>
+#include <QProgressBar>
+#include <QStackedLayout>
+#include <QFrame>
 
-struct ResultDisplayWidget::Private
-{
-    Private( ResultDisplayWidget *w ) : q( w )
+using namespace Kleo;
+using namespace GpgME;
+
+static const char ERROR_STYLE_SHEET[] =
+    "border:4px solid red; "
+    "border-radius:2px;";
+
+class ProgressWidget : public QWidget {
+    Q_OBJECT
+public:
+    explicit ProgressWidget( QWidget * p=0 )
+        : QWidget( p ), ui( this ) {}
+
+public Q_SLOTS:
+    void setText( const QString & text ) {
+        ui.label.setText( text );
+    }
+    void setProgress( int current, int total ) {
+        ui.progress.setRange( 0, total );
+        ui.progress.setValue( current );
+    }
+
+private:
+    struct UI {
+        QVBoxLayout vlay;
+        QLabel       label;
+        QProgressBar progress;
+
+        explicit UI( ProgressWidget * q )
+            : vlay( q ),
+              label( q ),
+              progress( q )
+        {
+            KDAB_SET_OBJECT_NAME( vlay );
+            KDAB_SET_OBJECT_NAME( label );
+            KDAB_SET_OBJECT_NAME( progress );
+
+            progress.setRange( 0, 0 ); // knight rider mode
+
+            vlay.addWidget( &label );
+            vlay.addWidget( &progress );
+        }
+    } ui;
+};
+
+
+class ResultDisplayWidget::Private {
+    friend class ::Kleo::ResultDisplayWidget;
+    ResultDisplayWidget * const q;
+public:
+    explicit Private( ResultDisplayWidget * qq )
+        : q( qq ),
+          ui( q )
     {
     }
 
-    ~Private() {}
-
-    ResultDisplayWidget *q;
-    QHash<QString, GpgME::Key> keyMap;
+    QHash<QString, Key> keyMap;
     static QHash<QString, QPointer<CertificateInfoWidgetImpl> > dialogMap;
+
+    struct UI {
+        QStackedLayout stack;
+        ProgressWidget  progress;
+        QFrame          result;
+        QLabel          error;
+
+        explicit UI( ResultDisplayWidget * q )
+            : stack( q ),
+              progress( q ),
+              result( q ),
+              error( q )
+        {
+            KDAB_SET_OBJECT_NAME( stack );
+            KDAB_SET_OBJECT_NAME( progress );
+            KDAB_SET_OBJECT_NAME( result );
+            KDAB_SET_OBJECT_NAME( error );
+
+            stack.setMargin( 0 );
+
+            error.setStyleSheet( ERROR_STYLE_SHEET );
+
+            stack.addWidget( &progress );
+            stack.addWidget( &result );
+            stack.addWidget( &error );
+
+            stack.setCurrentIndex( 0 );
+        }
+    } ui;
 };
 
 QHash<QString, QPointer<CertificateInfoWidgetImpl> > ResultDisplayWidget::Private::dialogMap;
 
-ResultDisplayWidget::ResultDisplayWidget(QWidget * parent) :
-    QFrame( parent ),
-    d( new Private( this ) )
+ResultDisplayWidget::ResultDisplayWidget( QWidget * p )
+    : QWidget( p ), d( new Private( this ) )
 {
     setObjectName( "Kleo__ResultDisplayWidget" );
 }
 
-ResultDisplayWidget::~ResultDisplayWidget()
-{
-}
+ResultDisplayWidget::~ResultDisplayWidget() {}
 
-QString ResultDisplayWidget::renderKey(const GpgME::Key & key)
+QString ResultDisplayWidget::renderKey(const Key & key)
 {
     if ( key.isNull() )
         return i18n( "Unknown key" );
@@ -113,4 +190,28 @@ void ResultDisplayWidget::keyLinkActivated(const QString & link)
     }
 }
 
+void ResultDisplayWidget::setLabel( const QString & label ) {
+    d->ui.progress.setText( label );
+    d->ui.stack.setCurrentIndex( 0 );
+}
+
+void ResultDisplayWidget::setProgress( const QString & what, int current, int total ) {
+    d->ui.progress.setText( what );
+    d->ui.progress.setProgress( current, total );
+}
+
+void ResultDisplayWidget::showResultWidget() {
+    d->ui.stack.setCurrentIndex( 1 );
+}
+
+void ResultDisplayWidget::setError( const QString & err ) {
+    d->ui.error.setText( err );
+    d->ui.stack.setCurrentIndex( 2 );
+}
+
+QWidget * ResultDisplayWidget::resultWidget() {
+    return &d->ui.result;
+}
+
 #include "resultdisplaywidget.moc"
+#include "moc_resultdisplaywidget.cpp"
