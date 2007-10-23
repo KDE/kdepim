@@ -35,6 +35,8 @@
 #include "certificateinfowidgetimpl.h"
 #include "utils/formatting.h"
 
+#include "models/predicates.h"
+
 #include <QHash>
 #include <QPointer>
 
@@ -43,6 +45,9 @@
 #include <QProgressBar>
 #include <QStackedLayout>
 #include <QFrame>
+
+#include <algorithm>
+#include <cassert>
 
 using namespace Kleo;
 using namespace GpgME;
@@ -100,7 +105,7 @@ public:
     {
     }
 
-    QHash<QString, Key> keyMap;
+    std::vector<Key> keys;
     static QHash<QString, QPointer<CertificateInfoWidgetImpl> > dialogMap;
 
     struct UI {
@@ -147,9 +152,9 @@ QString ResultDisplayWidget::renderKey(const Key & key)
 {
     if ( key.isNull() )
         return i18n( "Unknown key" );
-    const QString keyId = QLatin1String( key.keyID() );
-    d->keyMap.insert( keyId, key );
-    return QString::fromLatin1( "<a href=\"key:%1\">%2</a>" ).arg( keyId ).arg( Formatting::prettyName( key ) );
+    d->keys.push_back( key );
+    std::inplace_merge( d->keys.begin(), d->keys.end() - 1, d->keys.end(), _detail::ByFingerprint<std::less>() );
+    return QString::fromLatin1( "<a href=\"key:%1\">%2</a>" ).arg( key.primaryFingerprint(), Formatting::prettyName( key ) );
 }
 
 void Kleo::ResultDisplayWidget::setColor( const QColor &color )
@@ -174,20 +179,24 @@ void ResultDisplayWidget::keyLinkActivated(const QString & link)
 {
     if ( !link.startsWith( "key:" ) )
         return;
-    const QString keyId = link.mid( 4 );
-    if ( d->keyMap.contains( keyId ) ) {
-        QPointer<CertificateInfoWidgetImpl> dlg;
-        if ( d->dialogMap.contains( keyId ) && d->dialogMap.value( keyId ) ) {
-            dlg = d->dialogMap.value( keyId );
-            dlg->show();
-            dlg->raise();
-        } else {
-            dlg = new CertificateInfoWidgetImpl( d->keyMap.value( keyId ), false, 0 );
-            dlg->setAttribute( Qt::WA_DeleteOnClose );
-            dlg->show();
-            d->dialogMap.insert( keyId, dlg );
-        }
+    const QString fpr = link.mid( 4 );
+    const std::vector<Key>::const_iterator kit
+        = qBinaryFind( d->keys.begin(), d->keys.end(), fpr.toStdString(), _detail::ByFingerprint<std::less>() );
+    if ( kit == d->keys.end() )
+        return;
+
+    QHash<QString, QPointer<CertificateInfoWidgetImpl> >::const_iterator dit = d->dialogMap.find( fpr );
+    if ( dit == d->dialogMap.end() || !*dit ) {
+        CertificateInfoWidgetImpl * const dlg = new CertificateInfoWidgetImpl( *kit, false, 0 );
+        dlg->setAttribute( Qt::WA_DeleteOnClose );
+        dit = d->dialogMap.insert( fpr, dlg );
     }
+    assert( dit != d->dialogMap.end() );
+
+    if ( (*dit)->isVisible() )
+        (*dit)->raise();
+    else
+        (*dit)->show();
 }
 
 void ResultDisplayWidget::setLabel( const QString & label ) {
