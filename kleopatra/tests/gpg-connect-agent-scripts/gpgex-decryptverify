@@ -2,5 +2,7 @@
 /subst
 INPUT FILE=${get cwd}/test.data-detached-signature.pem
 INPUT FILE=${get cwd}/test.data.sig
-VERIFY --nohup
+INPUT FILE=${get cwd}/test.data.gpg
+INPUT FILE=${get cwd}/test.data.pem
+DECRYPT_VERIFY_FILES --nohup
 BYE

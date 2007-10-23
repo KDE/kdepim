@@ -1,5 +1,5 @@
 # OPTION mode=filemanager
 /subst
 INPUT FILE=${get cwd}/test.data
-ENCRYPT --nohup
+SIGN_ENCRYPT_FILES --nohup
 BYE
