@@ -50,10 +50,12 @@ public:
     virtual QWidget * widget( unsigned int idx ) { return m_payloads.at( idx ); }
 
     void showResultWidget( unsigned int idx );
-    void showErrorWidget( unsigned int idx, QWidget * _errorWidget, const QString & errorString = QString() );
     void showError( unsigned int idx, const QString & errorString ) {
         showErrorWidget( idx, 0, errorString );
     }
+
+private:
+    void showErrorWidget( unsigned int idx, QWidget * _errorWidget, const QString & errorString );
 
 protected:
     void init();
