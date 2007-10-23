@@ -51,7 +51,6 @@ configure_file(config-kpilot.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-kpilot.h
 include_directories(
 	${CMAKE_CURRENT_SOURCE_DIR}
 	${CMAKE_CURRENT_BINARY_DIR}
-	${PILOTLINK_INCLUDE_DIR}
 	${QT_INCLUDE_DIR}
 	${QT_QTDBUS_INCLUDE_DIR}
 	${KDE4_INCLUDE_DIR}
@@ -63,6 +62,7 @@ if (PILOTLINK_FOUND)
 	add_subdirectory(lib)
 	add_subdirectory(kpilot)
 	add_subdirectory(conduits)
+	include_directories(${PILOTLINK_INCLUDE_DIR})
 
 	STRING(COMPARE EQUAL ${KDE4_BUILD_TESTS} "ON" buildtests)
 	if (buildtests)

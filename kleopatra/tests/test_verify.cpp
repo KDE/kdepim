@@ -71,8 +71,12 @@ class VerifyTest : public QObject
 
       QCOMPARE( spy.count(), 1 );
       GpgME::VerificationResult result = spy.takeFirst().at(0).value<GpgME::VerificationResult>();
-      QCOMPARE( result.numSignatures(), (uint)1 );
-      QCOMPARE( result.signature(0).summary() & GpgME::Signature::KeyMissing, 0 );
+      QCOMPARE( result.numSignatures(), 1U );
+
+      GpgME::Signature sig = result.signature( 0 );
+      QCOMPARE( sig.summary() & GpgME::Signature::KeyMissing, 0 );
+      QCOMPARE( sig.creationTime(), 1189650248L );
+      QCOMPARE( sig.validity(), GpgME::Signature::Full );
     }
 };
 

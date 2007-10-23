@@ -26,7 +26,8 @@
 using namespace Akonadi;
 
 ResourceScheduler::ResourceScheduler( QObject *parent ) :
-    QObject( parent )
+    QObject( parent ),
+    mOnline( false )
 {
 }
 
@@ -38,22 +39,33 @@ void ResourceScheduler::scheduleFullSync()
   scheduleNext();
 }
 
-void ResourceScheduler::scheduleSync(const Collection & col)
+void ResourceScheduler::scheduleSync(const Collection & col, const QStringList &parts)
 {
   Task t;
   t.type = SyncCollection;
   t.collection = col;
+  t.itemParts = parts;
   mTaskList << t;
   scheduleNext();
 }
 
-void ResourceScheduler::scheduleItemFetch(const DataReference & ref, const QStringList &parts, const QDBusMessage & msg)
+void ResourceScheduler::scheduleItemFetch(const Item & item, const QStringList &parts, const QDBusMessage & msg)
 {
   Task t;
   t.type = FetchItem;
-  t.itemRef = ref;
+  t.item = item;
   t.itemParts = parts;
   t.dbusMsg = msg;
+  mTaskList << t;
+  scheduleNext();
+}
+
+void ResourceScheduler::scheduleChangeReplay()
+{
+  Task t;
+  t.type = ChangeReplay;
+  if ( mTaskList.contains( t ) )
+    return;
   mTaskList << t;
   scheduleNext();
 }
@@ -66,7 +78,7 @@ void ResourceScheduler::taskDone()
 
 void ResourceScheduler::scheduleNext()
 {
-  if ( mCurrentTask.type != Invalid || mTaskList.isEmpty() )
+  if ( mCurrentTask.type != Invalid || mTaskList.isEmpty() || !mOnline )
     return;
   QTimer::singleShot( 0, this, SLOT(executeNext()) );
 }
@@ -79,10 +91,13 @@ void ResourceScheduler::executeNext()
       emit executeFullSync();
       break;
     case SyncCollection:
-      emit executeCollectionSync( mCurrentTask.collection );
+      emit executeCollectionSync( mCurrentTask.collection, mCurrentTask.itemParts );
       break;
     case FetchItem:
-      emit executeItemFetch( mCurrentTask.itemRef, mCurrentTask.itemParts, mCurrentTask.dbusMsg );
+      emit executeItemFetch( mCurrentTask.item, mCurrentTask.itemParts );
+      break;
+    case ChangeReplay:
+      emit executeChangeReplay();
       break;
     default:
       Q_ASSERT( false );
@@ -92,6 +107,20 @@ void ResourceScheduler::executeNext()
 ResourceScheduler::Task ResourceScheduler::currentTask() const
 {
   return mCurrentTask;
+}
+
+void ResourceScheduler::setOnline(bool state)
+{
+  if ( mOnline == state )
+    return;
+  mOnline = state;
+  if ( mOnline ) {
+    scheduleNext();
+  } else if ( mCurrentTask.type != Invalid ) {
+    // abort running task
+    mTaskList.prepend( mCurrentTask );
+    mCurrentTask = Task();
+  }
 }
 
 #include "resourcescheduler.moc"

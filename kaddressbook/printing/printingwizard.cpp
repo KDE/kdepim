@@ -28,13 +28,13 @@
 #include <QPixmap>
 #include <QPushButton>
 #include <QRadioButton>
+#include <QtGui/QPrinter>
 
 #include <kabc/addresseelist.h>
 #include <kapplication.h>
 #include <kdebug.h>
 #include <kdialog.h>
 #include <klocale.h>
-#include <kprinter.h>
 #include <kglobal.h>
 
 // including the styles
@@ -51,7 +51,7 @@
 
 using namespace KABPrinting;
 
-PrintingWizard::PrintingWizard( KPrinter *printer, KABC::AddressBook* ab,
+PrintingWizard::PrintingWizard( QPrinter *printer, KABC::AddressBook* ab,
                                 const QStringList& selection, QWidget *parent )
   : KAssistantDialog( parent ), mPrinter( printer ), mAddressBook( ab ),
     mSelection( selection ), mStyle( 0 )
@@ -141,7 +141,7 @@ KABC::AddressBook* PrintingWizard::addressBook()
   return mAddressBook;
 }
 
-KPrinter* PrintingWizard::printer()
+QPrinter* PrintingWizard::printer()
 {
   return mPrinter;
 }

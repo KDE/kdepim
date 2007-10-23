@@ -62,6 +62,7 @@ KAddressbookPart::KAddressbookPart( QWidget *parentWidget, QObject *parent,
   mCore = new KABCore( this, true, canvas );
   mCore->restoreSettings();
   topLayout->addWidget( mCore->widget() );
+  topLayout->setMargin(0);
 
   KParts::StatusBarExtension *statusBar = new KParts::StatusBarExtension( this );
   mCore->setStatusBar( statusBar->statusBar() );

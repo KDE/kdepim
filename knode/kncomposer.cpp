@@ -343,7 +343,7 @@ KNComposer::KNComposer(KNLocalArticle *a, const QString &text, const QString &si
   undoRewrap->setEnabled(!u_nwraped.isNull());
 
   QAction *rot13 = actionCollection()->addAction("tools_rot13");
-  rot13->setIcon(KIcon("encrypted"));
+  rot13->setIcon(KIcon("document-encrypt"));
   rot13->setText(i18n("S&cramble (Rot 13)"));
   connect(rot13, SIGNAL(triggered(bool)), v_iew->e_dit, SLOT(slotRot13()));
   rot13->setEnabled(false);

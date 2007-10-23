@@ -24,18 +24,13 @@
 #define AKONADI_RESOURCEBASE_H
 
 #include "libakonadi_export.h"
-#include "resource.h"
+#include <libakonadi/agentbase.h>
 
 #include <libakonadi/collection.h>
 #include <libakonadi/item.h>
 #include <libakonadi/job.h>
 
 #include <kapplication.h>
-
-#include <QtCore/QObject>
-#include <QtCore/QSettings>
-#include <QtCore/QString>
-#include <QtDBus/QDBusContext>
 
 class KJob;
 class ResourceAdaptor;
@@ -45,6 +40,7 @@ namespace Akonadi {
 class Item;
 class Job;
 class Session;
+class ResourceBasePrivate;
 
 /**
  * This class should be used as a base class by all resource agents,
@@ -79,31 +75,30 @@ class Session;
  * Icon=my-icon
  *
  * X-Akonadi-MimeTypes=<supported-mimetypes>
- * X-Akonadi-Capabilities=<supported-mimetype>
+ * X-Akonadi-Capabilities=Resource
  * X-Akonadi-Identifier=akonadi_my_resource
  *   \endcode
- * @todo what is capabilities used for?
  *
  * <h5>Handling PIM Items</h5>
  *
  * To follow item changes in the backend, the following steps are necessary:
- * - Implement synchronizeCollection() to synchronize all items in the given
- *   collection. If the backend supports incremental collections updates,
+ * - Implement retrieveItems() to synchronize all items in the given
+ *   collection. If the backend supports incremental retrieval,
  *   implementing support for that is recommended to improve performance.
  * - Convert the items provided by the backend to Akonadi items.
- *   This typically happens either in synchronizeItems() if you retrieved
+ *   This typically happens either in retrieveItems() if you retrieved
  *   the collection synchronously (not recommended for network backends) or
  *   in the result slot of the asynchronous retrieval job.
- *   Converting means to create Akonadi::Items objects for every retrieved
- *   items. It's very important that every object has its remote identifier set.
+ *   Converting means to create Akonadi::Item objects for every retrieved
+ *   item. It's very important that every object has its remote identifier set.
  * - Call itemsRetrieved() or itemsRetrievedIncremental() respectively
  *   with the item objects created above. The Akonadi storage will then be
  *   updated automatically. Note that it is usually not necessary to manipulate
  *   any item in the Akonadi storage manually.
  *
- * To fetch item data on demand, the method requestItemDelivery() needs to be
- * reimplemented. Fetch the requested data there, create an ItemStoreJob to store
- * the data and call deliverItem().
+ * To fetch item data on demand, the method retrieveItem() needs to be
+ * reimplemented. Fetch the requested data there and call itemRetrieved()
+ * with the result item.
  *
  * To write local changes back to the backend, you need to re-implement
  * the following three methods:
@@ -144,7 +139,7 @@ class Session;
  *
  * @todo Convenience base class for collection-less resources
  */
-class AKONADI_EXPORT ResourceBase : public Resource, protected QDBusContext
+class AKONADI_EXPORT ResourceBase : public AgentBase
 {
   Q_OBJECT
 
@@ -216,13 +211,6 @@ class AKONADI_EXPORT ResourceBase : public Resource, protected QDBusContext
     virtual QString progressMessage() const;
 
     /**
-     * This method is called whenever the resource shall show its configuration dialog
-     * to the user. It will be automatically called when the resource is started for
-     * the first time.
-     */
-    virtual void configure();
-
-    /**
      * This method is called whenever the resource should start synchronization.
      */
     virtual void synchronize();
@@ -238,17 +226,6 @@ class AKONADI_EXPORT ResourceBase : public Resource, protected QDBusContext
     virtual QString name() const;
 
     /**
-     * Returns the instance identifier of this resource.
-     */
-    QString identifier() const;
-
-    /**
-     * This method is called when the resource is removed from
-     * the system, so it can do some cleanup stuff.
-     */
-    virtual void cleanup() const;
-
-    /**
      * This method is called from the crash handler, don't call
      * it manually.
      */
@@ -259,45 +236,71 @@ class AKONADI_EXPORT ResourceBase : public Resource, protected QDBusContext
 
   public Q_SLOTS:
     /**
-     * This method is called to quit the resource.
-     *
-     * Before the application is terminated @see aboutToQuit() is called,
-     * which can be reimplemented to do some session cleanup (e.g. disconnecting
-     * from groupware server).
+     * This method is called whenever the resource shall show its configuration dialog
+     * to the user. It will be automatically called when the resource is started for
+     * the first time.
      */
-    void quit();
+    virtual void configure();
+
+  Q_SIGNALS:
+    /**
+     * This signal is emitted whenever the status of the resource has changed.
+     *
+     * @param status The status id of the resource (@see Status).
+     * @param message An i18n'ed message which describes the status in detail.
+     */
+    void statusChanged( int status, const QString &message );
 
     /**
-      Enables change recording. When change recording is enabled all changes are
-      stored internally and replayed as soon as change recording is disabled.
-      @param enable True to enable change recording, false to disable change recording.
-    */
-    void enableChangeRecording( bool enable );
+     * This signal is emitted whenever the progress information of the resource
+     * has changed.
+     *
+     * @param progress The progress in percent (0 - 100).
+     * @param message An i18n'ed message which describes the progress in detail.
+     */
+    void progressChanged( uint progress, const QString &message );
+
+    /**
+     * This signal is emitted whenever the name of the resource has changed.
+     *
+     * @param name The new name of the resource.
+     */
+    void nameChanged( const QString &name );
 
   protected Q_SLOTS:
     /**
       Retrieve the collection tree from the remote server and supply it via
-      collectionsRetrieved().
+      collectionsRetrieved() or collectionsRetrievedIncremental().
+      @see collectionsRetrieved(), collectionsRetrievedIncremental()
     */
     virtual void retrieveCollections() = 0;
 
     /**
-      Synchronize the given collection with the backend.
-      Call collectionSynchronized() once you are finished.
+      Retrieve all (new/changed) items in collection @p collection.
+      It is recommended to use incremental retrieval if the backend supports that
+      and provide the result by calling itemsRetrievedIncremental().
+      If incremental retrieval is not possible, provide the full listing by calling
+      itemsRetrieved( const Item::List& ).
+      In any case, ensure that all items have a correctly set remote identifier
+      to allow synchronizing with already locally existing items.
+      In case you don't want to use the built-in item syncing code, store the retrived
+      items manually and call itemsRetrieved() once you are done.
       @param collection The collection to sync.
-      @see collectionSynchronized(), currentCollection()
+      @param parts The items parts that should be retrieved.
+      @see itemsRetrieved( const Item::List &), itemsRetrievedIncremental(), itemsRetrieved(), currentCollection()
     */
-    virtual void synchronizeCollection( const Collection &collection ) = 0;
+    virtual void retrieveItems( const Akonadi::Collection &collection, const QStringList &parts ) = 0;
 
     /**
-     * This method is called whenever an external query for putting data in the
-     * storage is received. Must be reimplemented in any resource.
-     *
-     * @param ref The DataReference of this item.
-     * @param parts The item parts that should be fetched.
-     * @param msg QDBusMessage to pass along for delayed reply.
-     */
-    virtual bool requestItemDelivery( const DataReference &ref, const QStringList &parts, const QDBusMessage &msg ) = 0;
+      Retrieve a single item from the backend. The item to retrieve is provided as @p item.
+      Add the requested payload parts and call itemRetrieved() when done.
+      @param item The empty item which payload should be retrieved. Use this object when delivering
+      the result instead of creating a new item to ensure conflict detection to work.
+      @param parts The item parts that should be retrieved.
+      @return false if there is an immediate error when retrieving the item.
+      @see itemRetrieved()
+    */
+    virtual bool retrieveItem( const Akonadi::Item &item, const QStringList &parts ) = 0;
 
   protected:
     /**
@@ -311,16 +314,6 @@ class AKONADI_EXPORT ResourceBase : public Resource, protected QDBusContext
      * Destroys the base resource.
      */
     ~ResourceBase();
-
-    /**
-     * This method shall be used to report warnings.
-     */
-    void warning( const QString& message );
-
-    /**
-     * This method shall be used to report errors.
-     */
-    void error( const QString& message );
 
     /**
      * This method shall be used to signal a state change.
@@ -340,75 +333,11 @@ class AKONADI_EXPORT ResourceBase : public Resource, protected QDBusContext
     void changeProgress( uint progress, const QString &message = QString() );
 
     /**
-     * This method is called whenever the application is about to
-     * quit.
-     *
-     * Reimplement this method to do session cleanup (e.g. disconnecting
-     * from groupware server).
-     */
-    virtual void aboutToQuit();
-
-    /**
-     * This method returns the settings object which has to be used by the
-     * resource to store its configuration data.
-     *
-     * Don't delete this object!
-     */
-    QSettings* settings();
-
-    /**
-     * Returns a session for communicating with the storage backend. It should
-     * be used for all jobs.
-     */
-    Session* session();
-
-    /**
-      Call this method from in requestItemDelivery(). It will generate an appropriate
-      D-Bus reply as soon as the given job has finished.
+      Call this method from retrieveItem() once the result is available.
       @param job The job which actually delivers the item.
       @param msg The D-Bus message requesting the delivery.
     */
-    bool deliverItem( Akonadi::Job* job, const QDBusMessage &msg );
-
-    /**
-      Reimplement to handle adding of new items.
-      @param item The newly added item.
-      @param collection The collection @p item got added to.
-    */
-    virtual void itemAdded( const Item &item, const Collection &collection );
-
-    /**
-      Reimplement to handle changes to existing items.
-      @param item The changed item.
-      @param partIdentifiers The identifiers of the item parts that has been changed.
-    */
-    virtual void itemChanged( const Item &item, const QStringList &partIdentifiers  );
-
-    /**
-      Reimplement to handle deletion of items.
-      @param ref DataReference to the deleted item.
-    */
-    virtual void itemRemoved( const DataReference &ref );
-
-    /**
-      Reimplement to handle adding of new collections.
-      @param collection The newly added collection.
-      @param parent The parent collection.
-    */
-    virtual void collectionAdded( const Collection &collection, const Collection &parent );
-
-    /**
-      Reimplement to handle changes to existing collections.
-      @param collection The changed collection.
-    */
-    virtual void collectionChanged( const Collection &collection );
-
-    /**
-      Reimplement to handle deletion of collections.
-      @param id The id of the deleted collection.
-      @param remoteId The remote id of the deleted collection.
-    */
-    virtual void collectionRemoved( int id, const QString &remoteId );
+    void itemRetrieved( const Item &item );
 
     /**
       Resets the dirty flag of the given item and updates the remote id.
@@ -456,14 +385,19 @@ class AKONADI_EXPORT ResourceBase : public Resource, protected QDBusContext
       Call this method to indicate you finished synchronizing the current
       collection. This is not needed if you use the built in syncing
       and call itemsRetrieved() or itemsRetrievedIncremental() instead.
-      @see synchronizeCollection()
+      @see retrieveItems()
     */
-    void collectionSynchronized();
+    void itemsRetrieved();
 
     /**
       Returns the collection that is currently synchronized.
     */
     Collection currentCollection() const;
+
+    /**
+      Returns the item that is currently retrieved.
+    */
+    Item currentItem() const;
 
   private:
     static QString parseArguments( int, char** );
@@ -475,27 +409,15 @@ class AKONADI_EXPORT ResourceBase : public Resource, protected QDBusContext
     bool requestItemDelivery( int uid, const QString &remoteId, const QStringList &parts );
 
   private:
-    class Private;
-    Private* const d;
+    Q_DECLARE_PRIVATE( ResourceBase )
 
-    Q_PRIVATE_SLOT( d, void slotDeliveryDone( KJob* ) )
-    Q_PRIVATE_SLOT( d, void slotItemAdded( const Akonadi::Item&, const Akonadi::Collection& ) )
-    Q_PRIVATE_SLOT( d, void slotItemChanged( const Akonadi::Item&, const QStringList& ) )
-    Q_PRIVATE_SLOT( d, void slotItemRemoved( const Akonadi::DataReference& ) )
-    Q_PRIVATE_SLOT( d, void slotCollectionAdded( const Akonadi::Collection&, const Akonadi::Collection& ) )
-    Q_PRIVATE_SLOT( d, void slotCollectionChanged( const Akonadi::Collection& ) )
-    Q_PRIVATE_SLOT( d, void slotCollectionRemoved( int, const QString& ) )
-    Q_PRIVATE_SLOT( d, void slotReplayNextItem() )
-    Q_PRIVATE_SLOT( d, void slotReplayItemAdded( KJob* ) )
-    Q_PRIVATE_SLOT( d, void slotReplayItemChanged( KJob* ) )
-    Q_PRIVATE_SLOT( d, void slotReplayCollectionAdded( KJob* ) )
-    Q_PRIVATE_SLOT( d, void slotReplayCollectionChanged( KJob* ) )
-    Q_PRIVATE_SLOT( d, void slotCollectionSyncDone( KJob* ) )
-    Q_PRIVATE_SLOT( d, void slotLocalListDone( KJob* ) )
-    Q_PRIVATE_SLOT( d, void slotSynchronizeCollection(const Collection &col) )
-    Q_PRIVATE_SLOT( d, void slotCollectionListDone( KJob* ) )
-    Q_PRIVATE_SLOT( d, void slotItemSyncDone( KJob* ) )
-    Q_PRIVATE_SLOT( d, void slotPercent( KJob*, unsigned long ) )
+    Q_PRIVATE_SLOT( d_func(), void slotDeliveryDone( KJob* ) )
+    Q_PRIVATE_SLOT( d_func(), void slotCollectionSyncDone( KJob* ) )
+    Q_PRIVATE_SLOT( d_func(), void slotLocalListDone( KJob* ) )
+    Q_PRIVATE_SLOT( d_func(), void slotSynchronizeCollection(const Akonadi::Collection &col, const QStringList &parts) )
+    Q_PRIVATE_SLOT( d_func(), void slotCollectionListDone( KJob* ) )
+    Q_PRIVATE_SLOT( d_func(), void slotItemSyncDone( KJob* ) )
+    Q_PRIVATE_SLOT( d_func(), void slotPercent( KJob*, unsigned long ) )
 };
 
 }

@@ -23,13 +23,13 @@
 */
 
 #include <QPainter>
+#include <QPrinter>
 
 #include <kabc/addressee.h>
 #include <kapplication.h>
 #include <kdebug.h>
 #include <kglobal.h>
 #include <klocale.h>
-#include <kprinter.h>
 
 #include "printingwizard.h"
 #include "printprogress.h"

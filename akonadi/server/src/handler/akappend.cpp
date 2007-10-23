@@ -154,6 +154,7 @@ bool Akonadi::AkAppend::commit()
     }
 
     PimItem item;
+    item.setRev( 0 );
 
     bool ok = db->appendPimItem( m_parts, mimeType, l, m_dateTime, remote_id, item );
 
@@ -163,7 +164,7 @@ bool Akonadi::AkAppend::commit()
     }
 
     // set message flags
-    if ( !db->appendItemFlags( item, flags ) )
+    if ( !db->appendItemFlags( item, flags, false, l ) )
       return failureResponse( "Unable to append item flags." );
 
     // the message was appended; now we have to update the counts

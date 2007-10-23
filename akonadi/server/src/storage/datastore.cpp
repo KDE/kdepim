@@ -276,24 +276,27 @@ bool DataStore::setItemFlags( const PimItem &item, const QList<Flag> &flags )
   return true;
 }
 
-bool DataStore::appendItemFlags( const PimItem &item, const QList<Flag> &flags )
+bool DataStore::appendItemFlags( const PimItem &item, const QList<Flag> &flags,
+                                 bool checkIfExists, const Location &loc )
 {
   if ( !item.isValid() )
     return false;
   if ( flags.isEmpty() )
     return true;
+
   for ( int i = 0; i < flags.count(); ++i ) {
-    if ( !item.relatesToFlag( flags[ i ] ) ) {
+    if ( !checkIfExists || !item.relatesToFlag( flags[ i ] ) ) {
       if ( !item.addFlag( flags[i] ) )
         return false;
     }
   }
 
-  mNotificationCollector->itemChanged( item );
+  mNotificationCollector->itemChanged( item, loc );
   return true;
 }
 
-bool DataStore::appendItemFlags( const PimItem &item, const QList<QByteArray> &flags )
+bool DataStore::appendItemFlags( const PimItem &item, const QList<QByteArray> &flags,
+                                 bool checkIfExists, const Location &loc )
 {
   Flag::List list;
   foreach ( const QByteArray f, flags ) {
@@ -305,7 +308,7 @@ bool DataStore::appendItemFlags( const PimItem &item, const QList<QByteArray> &f
     }
     list << flag;
   }
-  return appendItemFlags( item, list );
+  return appendItemFlags( item, list, checkIfExists, loc );
 }
 
 bool DataStore::removeItemFlags( const PimItem &item, const QList<Flag> &flags )
@@ -319,6 +322,18 @@ bool DataStore::removeItemFlags( const PimItem &item, const QList<Flag> &flags )
   return true;
 }
 
+/* --- ItemParts ----------------------------------------------------- */
+
+bool DataStore::removeItemParts( const PimItem &item, const QList<QByteArray> &parts )
+{
+  Part::List existingParts = item.parts();
+  foreach ( Part part, existingParts )
+    if( parts.contains( part.name().toLatin1() ) )
+      part.remove();
+
+  mNotificationCollector->itemChanged( item );
+  return true;
+}
 
 /* --- Location ------------------------------------------------------ */
 bool DataStore::appendLocation( Location &location )
@@ -875,7 +890,7 @@ bool Akonadi::DataStore::rollbackTransaction()
     return false;
 
   if ( !m_inTransaction ) {
-    qWarning() << "DataStore::rollbackTransaction(): No Transaction in progress!";
+    qWarning() << "DataStore::rollbackTransaction(): No transaction in progress!";
     return false;
   }
 
@@ -896,7 +911,7 @@ bool Akonadi::DataStore::commitTransaction()
     return false;
 
   if ( !m_inTransaction ) {
-    qWarning() << "DataStore::commitTransaction(): No Transaction in progress!";
+    qWarning() << "DataStore::commitTransaction(): No transaction in progress!";
     return false;
   }
 

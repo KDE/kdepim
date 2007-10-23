@@ -45,4 +45,5 @@ add_akonadi_test(monitortest.cpp)
 add_akonadi_test(searchjobtest.cpp)
 add_akonadi_test(notificationmessagetest.cpp)
 add_akonadi_test(itemtest.cpp)
-
+add_akonadi_test(changerecordertest.cpp)
+add_akonadi_test(resourcetest.cpp)

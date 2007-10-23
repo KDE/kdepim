@@ -24,17 +24,17 @@
 #include <QApplication>
 #include <QButtonGroup>
 #include <QEvent>
+#include <QFrame>
 #include <QGroupBox>
 #include <QLayout>
+#include <QList>
 #include <QPushButton>
+#include <QResizeEvent>
 #include <QString>
 #include <QStyle>
 #include <QStyleOption>
-//Added by qt3to4:
+#include <QTimer>
 #include <QVBoxLayout>
-#include <QFrame>
-#include <QList>
-#include <QResizeEvent>
 
 #include <kabc/addressbook.h>
 #include <kabc/field.h>
@@ -69,24 +69,24 @@ JumpButton::JumpButton( const QString &firstChar, const QString &lastChar,
     setText( firstChar.toUpper() );
 }
 
+
 JumpButtonBar::JumpButtonBar( KAB::Core *core, QWidget *parent, const char *name )
-  : QWidget( parent ), mCore( core )
+  : QWidget( parent ), mCore( core ), mButtonsUpdated( true )
 {
   setObjectName( name );
   setMinimumSize( 1, 1 );
 
   QVBoxLayout *layout = new QVBoxLayout( this );
-  layout->setSpacing( 0 );
   layout->setMargin( 0 );
-  layout->setAlignment( Qt::AlignTop );
-  layout->setAutoAdd( true );
-  layout->setResizeMode( QLayout::FreeResize );
+  layout->setSpacing( 0 );
 
   mGroupBox = new QGroupBox( this );
   mGroupBox->setLayout( new QVBoxLayout );
   mGroupBox->layout()->setSpacing( 0 );
   mGroupBox->layout()->setMargin( 0 );
   mGroupBox->setFlat( true );
+
+  layout->addWidget( mGroupBox );
 
   mButtonGroup = new QButtonGroup;
   mButtonGroup->setExclusive( true );
@@ -100,6 +100,8 @@ JumpButtonBar::~JumpButtonBar()
 
 void JumpButtonBar::updateButtons()
 {
+  mButtonsUpdated = true;
+
   int currentButton = mButtonGroup->checkedId();
 
   // the easiest way to remove all buttons ;)
@@ -205,7 +207,10 @@ void JumpButtonBar::letterClicked()
 
 void JumpButtonBar::resizeEvent( QResizeEvent* )
 {
-  updateButtons();
+  if ( mButtonsUpdated ) {
+    mButtonsUpdated = false;
+    QTimer::singleShot( 0, this, SLOT( updateButtons() ) );
+  }
 }
 
 class SortContainer

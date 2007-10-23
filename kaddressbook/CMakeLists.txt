@@ -88,7 +88,7 @@ kde4_add_plugin(kaddressbookpart WITH_PREFIX ${kaddressbookpart_PART_SRCS})
 
 
 
-target_link_libraries(kaddressbookpart  ${KDE4_KDECORE_LIBS} kaddressbook )
+target_link_libraries(kaddressbookpart  ${KDE4_KIO_LIBS} kaddressbook )
 
 install(TARGETS kaddressbookpart  DESTINATION ${PLUGIN_INSTALL_DIR})
 
@@ -149,7 +149,7 @@ QT4_ADD_DBUS_INTERFACE(kaddressbook_LIB_SRCS org.kde.KAddressbook.Core.xml kaddr
 
 kde4_add_library(kaddressbook SHARED ${kaddressbook_LIB_SRCS})
 
-target_link_libraries(kaddressbook  ${KDE4_SYNDICATION_LIBS} kdepim ${KDE4_KCAL_LIBS} kabc_file_core ${KDE4_KDEPRINT_LIBS} ${KDE4_KUTILS_LIBS} ${KDE4_PHONON_LIBS} kabinterfaces kabcommon )
+target_link_libraries(kaddressbook  ${KDE4_SYNDICATION_LIBS} kdepim ${KDE4_KCAL_LIBS} kabc_file_core ${KDE4_KIO_LIBS} ${KDE4_KUTILS_LIBS} ${KDE4_PHONON_LIBS} kabinterfaces kabcommon )
 
 set_target_properties(kaddressbook PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
 install(TARGETS kaddressbook  DESTINATION ${LIB_INSTALL_DIR})

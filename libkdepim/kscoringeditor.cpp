@@ -176,8 +176,8 @@ QWidget *ConditionEditWidget::createWidget( QWidget *parent )
 
 void ConditionEditWidget::clearWidget( QWidget *w )
 {
-  Q_ASSERT( QString( w->metaObject()->className() ) == "SingleConditionWidget" );
-  SingleConditionWidget *sw = dynamic_cast<SingleConditionWidget*>( w );
+  SingleActionWidget *sw =  qobject_cast<SingleActionWidget *>(w);
+  Q_ASSERT( w );
   if ( sw ) {
     sw->clear();
   }
@@ -411,8 +411,8 @@ void ActionEditWidget::updateRule( KScoringRule *rule )
 
 void ActionEditWidget::clearWidget( QWidget *w )
 {
-  Q_ASSERT( QString( w->metaObject()->className() ) == "SingleActionWidget" );
-  SingleActionWidget *sw = dynamic_cast<SingleActionWidget*>( w );
+  SingleActionWidget *sw =  qobject_cast<SingleActionWidget *>(w);
+  Q_ASSERT( w );
   if ( sw ) {
     sw->clear();
   }
@@ -475,6 +475,7 @@ RuleEditWidget::RuleEditWidget( KScoringManager *m, QWidget *p, const char *n )
   expireEdit = new KIntSpinBox( groupB );
   expireEdit->setRange( 1, 9999 );
   expireEdit->setValue( 30 );
+  slotExpireEditChanged(30 );
   connect( expireEdit, SIGNAL(valueChanged(int)), SLOT(slotExpireEditChanged(int)) );
   groupL->addWidget( expireEdit, 5, 1 );
   expireLabel = new QLabel( i18n( "&Rule is valid for:" ), groupB );

@@ -120,6 +120,7 @@ bool Akonadi::Append::commit()
       return failureResponse( QString::fromLatin1( "Unknown mime type '%1'.").arg( QString::fromLatin1( mt ) ) );
     }
     PimItem item;
+    item.setRev( 0 );
 
     // wrap data into a part
     Part part;
@@ -136,7 +137,7 @@ bool Akonadi::Append::commit()
     }
 
     // set message flags
-    if ( !db->appendItemFlags( item, flags ) )
+    if ( !db->appendItemFlags( item, flags, false, l ) )
       return failureResponse( "Unable to append item flags." );
 
     // the message was appended; now we have to update the counts

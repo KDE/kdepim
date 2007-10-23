@@ -21,19 +21,22 @@
     without including the source code for Qt in the source distribution.
 */
 
-#include <kapplication.h>
+#include "detailledstyle.h"
+
 #include <QCheckBox>
+#include <qfontcombobox.h>
+#include <QLayout>
+#include <QPainter>
+#include <QtGui/QPrinter>
+
+#include <kapplication.h>
 #include <kcolorbutton.h>
 #include <kconfig.h>
 #include <kdebug.h>
 #include <kdialog.h>
-#include <qfontcombobox.h>
 #include <kglobalsettings.h>
-#include <QLayout>
 #include <klocale.h>
 #include <knuminput.h>
-#include <QPainter>
-#include <kprinter.h>
 #include <kstandarddirs.h>
 #include <kglobal.h>
 
@@ -41,8 +44,6 @@
 #include "printingwizard.h"
 #include "printprogress.h"
 #include "printstyle.h"
-
-#include "detailledstyle.h"
 
 using namespace KABPrinting;
 
@@ -214,7 +215,7 @@ void DetailledPrintStyle::print( const KABC::Addressee::List &contacts, PrintPro
   mPainter->setFixedFont( fixed );
   mPainter->setCommentFont( comment );
 
-  KPrinter *printer = wizard()->printer();
+  QPrinter *printer = wizard()->printer();
 
   QPainter painter;
   progress->addMessage( i18n( "Setting up margins and spacing" ) );
@@ -247,7 +248,7 @@ void DetailledPrintStyle::print( const KABC::Addressee::List &contacts, PrintPro
 }
 
 bool DetailledPrintStyle::printEntries( const KABC::Addressee::List &contacts,
-                                        KPrinter *printer,
+                                        QPrinter *printer,
                                         QPainter *painter,
                                         const QRect &window)
 {

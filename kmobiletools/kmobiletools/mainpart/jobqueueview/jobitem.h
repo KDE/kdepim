@@ -42,14 +42,23 @@ public:
 
 protected:
     void paint( QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget = 0 );
+    bool sceneEvent( QEvent * event );
 
 Q_SIGNALS:
     void removeItem( JobItem* item );
 
 private Q_SLOTS:
     void jobSuccessful( ThreadWeaver::Job* );
+    void jobProgressChanged( int );
 
 private:
+    QString m_caption;
+    QPixmap m_pixmap;
+    QRectF m_cancelRect;
+
+    int m_progress;
+
+    bool m_hoverCancel;
     bool m_firstPaint;
     QRectF m_boundingRect;
 

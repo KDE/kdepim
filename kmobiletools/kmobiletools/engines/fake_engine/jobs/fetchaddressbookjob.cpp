@@ -19,8 +19,6 @@
 
 #include "fetchaddressbookjob.h"
 
-#include <KDE/KDebug>
-#include <QtCore/QTimer>
 #include <KDE/ThreadWeaver/Thread>
 
 FetchAddressbookJob::FetchAddressbookJob( QObject* parent )
@@ -34,8 +32,10 @@ FetchAddressbookJob::~FetchAddressbookJob()
 }
 
 void FetchAddressbookJob::run() {
-    kDebug() << "running...";
-    thread()->msleep( 5000 );
+    for( int i=1; i<=100; i++ ) {
+        thread()->msleep( 50 );
+        setProgress( i );
+    }
 }
 
 void FetchAddressbookJob::requestAbort() {

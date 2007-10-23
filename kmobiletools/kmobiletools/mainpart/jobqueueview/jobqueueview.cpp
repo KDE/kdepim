@@ -66,15 +66,21 @@ void JobQueueView::addJob( JobItem* jobItem )
     animation->setItem( jobItem );
     animation->setTimeLine( timer );
 
+    // distance between elements
+    const int distance = 20;
+
+    // append job item to the left and add a small margin if necessary
     if( m_jobItems.size() )
         jobItem->setPos( QPointF( m_jobItems.last()->pos().x() +
-                                  m_jobItems.last()->boundingRect().width() + 10, 0 ) );
+                                  m_jobItems.last()->boundingRect().width() + distance, 0 ) );
     else
         jobItem->setPos( QPointF( 10, 0 ) );
 
+    // zoom in
     animation->setScaleAt( 0, 0, 0 );
     animation->setScaleAt( 1, 1, 1 );
 
+    // left-align all connected views 
     for( int i=0; i<views().size(); i++ )
         views().at( i )->setAlignment( Qt::AlignLeft );
 

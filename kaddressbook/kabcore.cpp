@@ -31,6 +31,8 @@
 #include <QList>
 #include <QHBoxLayout>
 #include <QStackedWidget>
+#include <QtGui/QPrinter>
+#include <QtGui/QPrintDialog>
 
 #include <kabc/addresseelist.h>
 #include <kabc/errorhandler.h>
@@ -51,7 +53,6 @@
 #include <kimproxy.h>
 #include <klocale.h>
 #include <kmessagebox.h>
-#include <kprinter.h>
 #include <kprotocolinfo.h>
 #include <kpushbutton.h>
 #include <kresources/selectdialog.h>
@@ -904,11 +905,14 @@ void KABCore::configure()
 
 void KABCore::print()
 {
-  KPrinter printer;
+  QPrinter printer;
   printer.setDocName( i18n( "Address Book" ) );
-  printer.setDocFileName( "addressbook" );
+  printer.setOutputFileName( "addressbook.pdf" );
+  printer.setOutputToFile(false);
 
-  if ( !printer.setup( mWidget, i18n( "Print Addresses" ) ) )
+  QPrintDialog printDialog(&printer, mWidget);
+  printDialog.setWindowTitle(i18n("Print Addresses"));
+  if ( !printDialog.exec() )
     return;
 
   KABPrinting::PrintingWizard wizard( &printer, mAddressBook,
@@ -1035,12 +1039,17 @@ void KABCore::initGUI()
   QVBoxLayout *topLayout = new QVBoxLayout( mWidget ); 
   topLayout->setSpacing( 0 );
   topLayout->setMargin( 0 );
-  KToolBar* searchTB = new KToolBar( mWidget, "search toolbar" );
+  QWidget* searchTB = new QWidget( mWidget, "search toolbar" );
+  searchTB->setLayout(new QHBoxLayout);
+  searchTB->layout()->setMargin( 0 );
   searchTB->layout()->setSpacing( KDialog::spacingHint() );
   mIncSearchWidget = new IncSearchWidget( searchTB, "kde toolbar widget" );
-  searchTB->addWidget( mIncSearchWidget );
+  searchTB->layout()->addWidget( mIncSearchWidget );
   connect( mIncSearchWidget, SIGNAL( doSearch( const QString& ) ),
            SLOT( incrementalTextSearch( const QString& ) ) );
+
+  mFilterSelectionWidget = new FilterSelectionWidget( searchTB , "kde toolbar widget" );
+  searchTB->layout()->addWidget( mFilterSelectionWidget );
 
   mDetailsSplitter = new QSplitter( mWidget );
   topLayout->addWidget( searchTB );
@@ -1089,9 +1098,6 @@ void KABCore::initGUI()
   connect( removeDistListButton, SIGNAL( clicked() ), 
            this, SLOT( removeSelectedContactsFromDistList() ) );
   buttonLayout->addWidget( removeDistListButton );
-
-  mFilterSelectionWidget = new FilterSelectionWidget( searchTB , "kde toolbar widget" );
-  searchTB->addWidget( mFilterSelectionWidget );
 
   mViewManager->setFilterSelectionWidget( mFilterSelectionWidget );
 
@@ -1230,7 +1236,7 @@ void KABCore::initActions()
   // settings menu
   mActionJumpBar = coll->add<KToggleAction>( "options_show_jump_bar" );
   mActionJumpBar->setText( i18n( "Show Jump Bar" ) );
-  mActionJumpBar->setIcon( KIcon( "find-next" ) );
+  mActionJumpBar->setIcon( KIcon( "edit-find-next" ) );
   mActionJumpBar->setWhatsThis( i18n( "Toggle whether the jump button bar shall be visible." ) );
   mActionJumpBar->setCheckedState( KGuiItem(i18n( "Hide Jump Bar" )) );
   connect( mActionJumpBar, SIGNAL( toggled( bool ) ), SLOT( setJumpButtonBarVisible( bool ) ) );
@@ -1256,7 +1262,7 @@ void KABCore::initActions()
   // misc
   action = coll->addAction( "ldap_lookup" );
   action->setIcon( KIcon( "edit-find" ) );
-  action->setText( i18n( "&Lookup Addresses in LDAP Directory..." ) );
+  action->setText( i18n( "LDAP &Lookup" ) );
   connect(action, SIGNAL(triggered(bool)), SLOT( openLDAPDialog() ));
   action->setWhatsThis( i18n( "Search for contacts on a LDAP server<p>You will be presented with a dialog, where you can search for contacts and select the ones you want to add to your local address book.</p>" ) );
 
@@ -1272,7 +1278,7 @@ void KABCore::initActions()
   mActionCategories->setWhatsThis( i18n( "Set the categories for all selected contacts." ) );
 
   QAction *clearLocation = coll->addAction( "clear_search" );
-  clearLocation->setIcon( KIcon(QApplication::isRightToLeft() ? "clear-left" : "locationbar-erase") );
+  clearLocation->setIcon( KIcon(QApplication::isRightToLeft() ? "edit-clear-locationbar-rtl" : "edit-clear-locationbar") );
   clearLocation->setText( i18n( "Clear Search Bar" ) );
   connect(clearLocation, SIGNAL(triggered(bool) ), SLOT( slotClearSearchBar() ));
   clearLocation->setShortcut(QKeySequence(Qt::CTRL+Qt::Key_L));

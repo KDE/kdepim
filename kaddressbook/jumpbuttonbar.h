@@ -34,6 +34,7 @@ class QButtonGroup;
 class QGroupBox;
 class QResizeEvent;
 class QPushButton;
+class JumpButton;
 
 namespace KAB {
 class Core;
@@ -73,7 +74,8 @@ class JumpButtonBar : public QWidget
 
     QButtonGroup *mButtonGroup;
     QGroupBox *mGroupBox;
-    QList<QPushButton*> mButtons;
+    QList<JumpButton*> mButtons;
+    bool mButtonsUpdated;
 };
 
 #endif

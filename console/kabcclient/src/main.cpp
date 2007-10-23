@@ -26,6 +26,7 @@
 // standard includes
 #include <iostream>
 #include <sstream>
+#include <stdlib.h>
 
 // Qt includes
 #include <QtCore/QFileInfo>

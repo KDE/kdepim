@@ -119,9 +119,14 @@ class AKONADI_SERVER_EXPORT DataStore : public QObject
 
     /* --- ItemFlags ----------------------------------------------------- */
     bool setItemFlags( const PimItem &item, const QList<Flag> &flags );
-    bool appendItemFlags( const PimItem &item, const QList<Flag> &flags );
-    bool appendItemFlags( const PimItem &item, const QList<QByteArray> &flags );
+    bool appendItemFlags( const PimItem &item, const QList<Flag> &flags,
+                          bool checkIfExists = true, const Location &loc = Location() );
+    bool appendItemFlags( const PimItem &item, const QList<QByteArray> &flags,
+                          bool checkIfExists = true, const Location &loc = Location() );
     bool removeItemFlags( const PimItem &item, const QList<Flag> &flags );
+
+    /* --- ItemParts ----------------------------------------------------- */
+    bool removeItemParts( const PimItem &item, const QList<QByteArray> &parts );
 
     /* --- Location ------------------------------------------------------ */
     bool appendLocation( Location &location );

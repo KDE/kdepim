@@ -28,6 +28,7 @@
 #include <QPainter>
 #include <QSpinBox>
 #include <QStringList>
+#include <QtGui/QPrinter>
 
 #include <kabc/addresseelist.h>
 #include <kapplication.h>
@@ -35,7 +36,6 @@
 #include <kconfig.h>
 #include <kdebug.h>
 #include <klocale.h>
-#include <kprinter.h>
 #include <kstandarddirs.h>
 #include <kglobal.h>
 
@@ -152,7 +152,7 @@ void RingBinderPrintStyle::print( const KABC::Addressee::List &contacts, PrintPr
   }
   config.writeEntry( LetterGroups, tmpstrl );
 
-  KPrinter *printer = wizard() ->printer();
+  QPrinter *printer = wizard() ->printer();
   QPainter painter;
 
   // margins like in detailledprintstyle. FIXME: See how we can make this configurable.
@@ -182,7 +182,7 @@ void RingBinderPrintStyle::print( const KABC::Addressee::List &contacts, PrintPr
 }
 
 bool RingBinderPrintStyle::printEntries( const KABC::Addressee::List &contacts,
-                                         KPrinter *printer, QPainter *painter,
+                                         QPrinter *printer, QPainter *painter,
                                          const QRect& window )
 {
   // FIXME: handle following situations
@@ -292,7 +292,7 @@ bool RingBinderPrintStyle::printEntries( const KABC::Addressee::List &contacts,
   return true;
 }
 
-void RingBinderPrintStyle::fillEmpty( const QRect& window, KPrinter *printer,
+void RingBinderPrintStyle::fillEmpty( const QRect& window, QPrinter *printer,
                                       QPainter* painter, int top, int grpnum )
 {
   if ( mPageAppearance->cbFillEmpty->isChecked() ) {

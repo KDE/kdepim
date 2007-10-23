@@ -540,14 +540,14 @@ void KNMainWidget::initActions()
 
   //navigation
   a_ctNavNextArt = actionCollection()->addAction("go_nextArticle" );
-  a_ctNavNextArt->setIcon(KIcon("find-next"));
+  a_ctNavNextArt->setIcon(KIcon("edit-find-next"));
   a_ctNavNextArt->setText(i18n("&Next Article"));
   a_ctNavNextArt->setToolTip(i18n("Go to next article"));
   a_ctNavNextArt->setShortcuts(KShortcut("N; Right"));
   connect(a_ctNavNextArt, SIGNAL(triggered(bool)), h_drView, SLOT(nextArticle()));
 
   a_ctNavPrevArt = actionCollection()->addAction("go_prevArticle" );
-  a_ctNavPrevArt->setIcon(KIcon("find-previous"));
+  a_ctNavPrevArt->setIcon(KIcon("edit-find-previous"));
   a_ctNavPrevArt->setText(i18n("&Previous Article"));
   a_ctNavPrevArt->setShortcuts(KShortcut("P; Left"));
   a_ctNavPrevArt->setToolTip(i18n("Go to previous article"));
@@ -633,7 +633,7 @@ void KNMainWidget::initActions()
   connect(a_ctAccExpireAll, SIGNAL(triggered(bool) ), SLOT(slotAccExpireAll()));
 
   a_ctAccGetNewHdrs = actionCollection()->addAction("account_dnlHeaders");
-  a_ctAccGetNewHdrs->setIcon(KIcon("mail-get"));
+  a_ctAccGetNewHdrs->setIcon(KIcon("mail-receive"));
   a_ctAccGetNewHdrs->setText(i18n("&Get New Articles in All Groups"));
   connect(a_ctAccGetNewHdrs, SIGNAL(triggered(bool)), SLOT(slotAccGetNewHdrs()));
 
@@ -648,7 +648,7 @@ void KNMainWidget::initActions()
   connect(a_ctAccDelete, SIGNAL(triggered(bool)), SLOT(slotAccDelete()));
 
   a_ctAccPostNewArticle = actionCollection()->addAction("article_postNew");
-  a_ctAccPostNewArticle->setIcon(KIcon("mail-new"));
+  a_ctAccPostNewArticle->setIcon(KIcon("mail-message-new"));
   a_ctAccPostNewArticle->setText(i18n("&Post to Newsgroup..."));
   connect(a_ctAccPostNewArticle, SIGNAL(triggered(bool)), SLOT(slotAccPostNewArticle()));
   a_ctAccPostNewArticle->setShortcut(QKeySequence(Qt::CTRL+Qt::Key_N));
@@ -665,7 +665,7 @@ void KNMainWidget::initActions()
   connect(a_ctGrpRename, SIGNAL(triggered(bool)), SLOT(slotGrpRename()));
 
   a_ctGrpGetNewHdrs = actionCollection()->addAction("group_dnlHeaders");
-  a_ctGrpGetNewHdrs->setIcon(KIcon("mail-get"));
+  a_ctGrpGetNewHdrs->setIcon(KIcon("mail-receive"));
   a_ctGrpGetNewHdrs->setText(i18n("&Get New Articles"));
   connect(a_ctGrpGetNewHdrs, SIGNAL(triggered(bool)), SLOT(slotGrpGetNewHdrs()));
 
@@ -770,7 +770,7 @@ void KNMainWidget::initActions()
   a_ctArtFilterKeyb->setShortcut(QKeySequence(Qt::Key_F6));
 
   a_ctArtSearch = actionCollection()->addAction("article_search");
-  a_ctArtSearch->setIcon(KIcon("mail-find"));
+  a_ctArtSearch->setIcon(KIcon("edit-find-mail"));
   a_ctArtSearch->setText(i18n("&Search Articles..."));
   connect(a_ctArtSearch, SIGNAL(triggered(bool)), SLOT(slotArtSearch()));
   a_ctArtSearch->setShortcut(QKeySequence(Qt::Key_F4));

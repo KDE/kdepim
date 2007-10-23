@@ -41,8 +41,8 @@
 
 <!-- Don't change format of date and version of the documentation -->
 
-<date>2007-09-10</date>
-<releaseinfo>1.09.07</releaseinfo>
+<date>2007-10-22</date>
+<releaseinfo>1.09.09</releaseinfo>
 
 <abstract>
 <para>&kalarm; is a personal alarm message, command and email scheduler for &kde;.</para>
@@ -73,12 +73,13 @@ pending alarms, showing their times and details.  You can create new
 alarms, or you can select existing alarms for modification or
 deletion. You can also optionally view expired alarms.</para>
 
-<para>When configuring an alarm, you may either type in the alarm
-message text, specify a text or image file to display, specify a
-command to execute, or enter an email to send. You can also choose
-the color of the alarm message, whether to play a sound or speak the
-message, whether it should repeat, and whether the alarm should be
-canceled if it cannot be triggered at its scheduled time.</para>
+<para>When configuring an alarm, you can choose whether it should
+repeat, and whether the alarm should be canceled if it cannot be
+triggered at its scheduled time. For display alarms, you can type in
+a message text, specify a text or image file to display, or specify a
+command whose output should be displayed. You can also choose the
+color of the alarm message, and whether to play a sound or speak the
+message.</para>
 
 <para>Alarms may also be scheduled from the command line, or via &DCOP;
 calls from programs.</para>
@@ -181,9 +182,7 @@ Times</guimenuitem></menuchoice>.
 To show or hide the time-to-alarm column, select
 <menuchoice><guimenu>View</guimenu><guimenuitem>Show Time To
 Alarms</guimenuitem></menuchoice>. At least one of these columns is
-always shown. You can use the
-<link linkend="preferences-view">Preferences dialog</link> to change
-the default columns to display.</para>
+always shown.</para>
 
 <para>If you use multiple alarm resources, you can color code alarms
 according to which resource they belong to, by selecting a different
@@ -203,9 +202,7 @@ long, in the
 <menuchoice><guimenu>View</guimenu><guimenuitem>Show Archived
 Alarms</guimenuitem></menuchoice>. To hide them again, select
 <menuchoice><guimenu>View</guimenu><guimenuitem>Hide Archived
-Alarms</guimenuitem></menuchoice>. You can use the
-<link linkend="preferences-view">Preferences dialog</link> to show
-archived alarms by default.</para>
+Alarms</guimenuitem></menuchoice>.</para>
 
 </sect2>
 
@@ -256,9 +253,10 @@ must first display them as described in the section above.</para></note>
 <sect2>
 <title>Creating a New Alarm</title>
 
-<para>To create a new alarm, do one of the following. This displays
-the <link linkend="alarm-edit-dlg">Alarm Edit dialog</link> through
-which you configure the alarm.</para>
+<para>To create a new alarm, do one of the following, and then select
+the type of alarm from the list which appears. This displays the
+<link linkend="alarm-edit-dlg">Alarm Edit dialog</link> through which
+you configure the alarm.</para>
 
 <itemizedlist>
 <listitem>
@@ -524,8 +522,9 @@ existing alarm.</para>
 <listitem>
 <para>Display the Alarm Templates dialog by selecting the <menuchoice>
 <guimenu>File</guimenu><guimenuitem>Templates...</guimenuitem>
-</menuchoice> menu item, and click <guibutton>New</guibutton>. This
-displays a blank Template Edit dialog.</para>
+</menuchoice> menu item, clicking <guibutton>New</guibutton>, and
+choosing the alarm type from the list which appears. This displays a
+blank Template Edit dialog.</para>
 </listitem>
 
 <listitem>
@@ -783,10 +782,7 @@ you have selected the prompt option for new alarms and templates in the
 <para>You can view and manipulate resources via the resource list,
 which can be displayed or hidden by <menuchoice>
 <guimenu>View</guimenu><guimenuitem>Show Resources</guimenuitem>
-</menuchoice>. You can use the
-<link linkend="preferences-view">Preferences dialog</link> to
-choose whether the resource list should be visible when &kalarm;
-starts up. When using the resource list, first select the alarm
+</menuchoice>. When using the resource list, first select the alarm
 type using the combo box above the list. Then either click on one of
 the buttons below the list, or <mousebutton>Right</mousebutton> click
 on the appropriate resource in the list and choose an item from the
@@ -925,10 +921,10 @@ templates) from the calendar.</para>
 
 <para>If you have configured 
 <link linkend="resources">alarm resources</link>, alarms of each type
-will be added to the appropriate default resource, or you will be
-prompted for the resource if you have selected the prompt option for
-new alarms and templates in the
-<link linkend="preferences-storage">Preferences dialog</link>.</para>
+will be added to the appropriate default resource, or if you have
+selected the prompt option for new alarms and templates in the
+<link linkend="preferences-storage">Preferences dialog</link>, you will
+be prompted for the resource to use.</para>
 </listitem>
 
 <listitem>
@@ -990,6 +986,13 @@ defined in the <guilabel>Alarm Text</guilabel> group box.</para>
 </listitem>
 </itemizedlist>
 
+<para>If you have configured 
+<link linkend="resources">alarm resources</link>, the alarms will be
+added to the default active alarm resource, or if you have selected the
+prompt option for new alarms and templates in the
+<link linkend="preferences-storage">Preferences dialog</link>, you will
+be prompted for the resource to use.</para>
+
 </sect2>
 
 <sect2 id="undo">
@@ -1037,7 +1040,7 @@ alarm.</para>
 <imagedata fileref="editwindow.png" format="PNG"/>
 </imageobject>
 <textobject>
-<phrase>Alarm Edit dialog</phrase>
+<phrase>Alarm Edit dialog for a display alarm</phrase>
 </textobject>
 </mediaobject>
 </screenshot>
@@ -1328,28 +1331,23 @@ change the deferred time or to cancel the deferral.</para>
 <sect2>
 <title>Time</title>
 
-<para>In the <guilabel>Time</guilabel> group box, set the time you
-want the alarm to trigger. For a non-recurring alarm, the date/time
-which you enter must be in the future, or if you enter only a date it
-must be today or later. For a recurring alarm, there are no such
-restrictions since the start date/time will be automatically adjusted
-to the first recurrence due after the current time.</para>
-
-<para>Choose how you will enter the time:</para>
+<para>In the <guilabel>Time</guilabel> group box, select either</para>
 
 <itemizedlist>
 <listitem>
-<para><guilabel>Date/time</guilabel> to enter the date and time
-when the alarm is to be triggered.</para>
-</listitem>
-
-<listitem>
-<para><guilabel>Date</guilabel> if you want to specify only a date
-for the alarm: in this case the alarm will be displayed at the first
-opportunity on or after the configured start-of-day time, on the
-specified date.
+<para><guilabel>At date/time</guilabel> to enter the date and time
+when the alarm is to be triggered. Check <guilabel>Any time</guilabel>
+if you want to specify only a date for the alarm: in this case the
+alarm will be displayed at the first opportunity on or after the
+configured start-of-day time, on the specified date.
 (<link linkend="preferences-time">Configuring &kalarm;</link>
 describes how to set the start-of-day time.)</para>
+
+<para>For a non-recurring alarm, the date/time which you enter must be
+in the future, or if you enter only a date it must be today or later.
+For a recurring alarm, there are no such restrictions since the start
+date/time will be automatically adjusted to the first recurrence due
+after the current time.</para>
 </listitem>
 
 <listitem>
@@ -1454,9 +1452,10 @@ showing at the expiry of the late-cancelation time.</para>
 <guilabel>Recurrence</guilabel> tab.</para>
 
 <note><para>The alarm's basic repetition characteristics are displayed
-for convenience in the <guilabel>Alarm</guilabel> tab. The recurrence
-interval is shown first, followed by any sub-repetition interval set up
-using the <guibutton>Sub-Repetition</guibutton> button.</para></note>
+for convenience in the title of the <guilabel>Recurrence</guilabel>
+tab. The recurrence interval is shown first, followed by any
+sub-repetition interval set up using the
+<guibutton>Sub-Repetition</guibutton> button.</para></note>
 
 <para>In the <guilabel>Recurrence Rule</guilabel> group box, set the
 recurrence type or time period as follows:</para>
@@ -1785,8 +1784,9 @@ for details.</para>
 </varlistentry>
 
 <varlistentry>
-<term><menuchoice><guimenuitem>New Alarm...</guimenuitem></menuchoice></term>
-<listitem><para><action>Opens the Alarm Edit dialog to create a new
+<term><menuchoice><guimenuitem>New Alarm</guimenuitem></menuchoice></term>
+<listitem><para><action>After you select the alarm type from the list
+which appears, opens the Alarm Edit dialog to create a new
 alarm.</action></para>
 </listitem>
 </varlistentry>
@@ -2457,42 +2457,6 @@ aspects of &kalarm;'s appearance:</para>
 <itemizedlist>
 
 <listitem>
-<para><guilabel>Show resources</guilabel>: This option determines
-whether the list of alarm resources is shown when &kalarm; starts up.
-(Once &kalarm; has started, use the <guimenu>View</guimenu> menu to
-show or hide the resource list.)</para>
-</listitem>
-
-<listitem>
-<para><guilabel>Alarm List</guilabel> group box: These options control
-what information is initially shown in the alarm list, when &kalarm;
-starts up. (Once &kalarm; has started, use the <guimenu>View</guimenu>
-menu to change what is displayed.)</para>
-
-<itemizedlist>
-<listitem>
-<para><guilabel>Show alarm time</guilabel>: Select this option to show
-the date and time at which each alarm is next scheduled.</para>
-</listitem>
-
-<listitem>
-<para><guilabel>Show time until alarm</guilabel>: Select this option to
-show the length of time remaining before each alarm's next scheduled
-occurrence. The length of time is shown in days (if applicable), hours
-and minutes.</para>
-</listitem>
-
-<listitem><para><guilabel>Show archived alarms</guilabel>: Select this
-option to initially show archived alarms in the alarm list, when
-&kalarm; starts up. (Once &kalarm; has started, use the
-<menuchoice><guimenu>View</guimenu><guimenuitem>Show Archived
-Alarms</guimenuitem></menuchoice> menu option to change what is
-displayed.)</para>
-</listitem>
-</itemizedlist>
-</listitem>
-
-<listitem>
 <para><guilabel>System Tray Tooltip</guilabel> group box: These options
 control what information is shown in the tooltip which appears when the
 mouse cursor hovers over &kalarm;'s system tray icon.</para>
@@ -2748,6 +2712,19 @@ time.</para>
   must be the last &kalarm; option in &kalarm;'s command line. All
   subsequent command parameters and options  are interpreted as
   forming the command line to execute. <option>--file</option> and
+  <option>--exec-display</option> and <option>--mail</option> cannot
+  be specified with this option.
+  <option>--ack-confirm</option>, <option>--beep</option>,
+  <option>--color</option> and <option>--colorfg</option> are ignored
+  with this option.</entry>
+</row>
+<row>
+  <entry><option>-E</option>, <option>--exec-display <replaceable>commandline</replaceable></option></entry>
+  <entry>Specify a shell command to execute to generate the alarm
+  message text. If specified, this option must be the last &kalarm;
+  option in &kalarm;'s command line. All subsequent command parameters
+  and options  are interpreted as forming the command line to execute.
+  <option>--exec</option>, <option>--file</option> and
   <option>--mail</option> cannot be specified with this option.
   <option>--ack-confirm</option>, <option>--beep</option>,
   <option>--color</option> and <option>--colorfg</option> are ignored
@@ -2756,10 +2733,10 @@ time.</para>
 <row>
   <entry><option>-f</option>, <option>--file <replaceable>URL</replaceable></option></entry>
   <entry>Specify the path or &URL; of a text or image file whose
-  contents are to form the alarm message. <option>--exec</option> and
-  <option>--mail</option> cannot be specified, and
-  <replaceable>message</replaceable> must not be present with this
-  option.</entry>
+  contents are to form the alarm message. <option>--exec</option>,
+  <option>--exec-display</option> and <option>--mail</option> cannot
+  be specified, and <replaceable>message</replaceable> must not be
+  present with this option.</entry>
 </row>
 <row>
   <entry><option>-F</option>, <option>--from-id
@@ -2810,8 +2787,9 @@ time.</para>
   <entry><option>-m</option>, <option>--mail
   <replaceable>address</replaceable></option></entry>
   <entry>Send an email to the specified address. This option may be
-  repeated as necessary.  <option>--exec</option> and
-  <option>--file</option> cannot be specified with this option.
+  repeated as necessary.  <option>--exec</option>,
+  <option>--exec-display</option> and <option>--file</option> cannot
+  be specified with this option.
   <option>--ack-confirm</option>, <option>--beep</option>,
   <option>--color</option> and <option>--colorfg</option> are ignored
   with this option.</entry>
@@ -2935,9 +2913,9 @@ time.</para>
 </tgroup>
 </informaltable>
 
-<para>Either a message text, <option>--file</option> or
-<option>--exec</option> must be specified; except as noted above, all
-the options are optional.</para>
+<para>Either a message text, <option>--file</option>,
+<option>--exec</option> or <option>--exec-display</option> must be
+specified; except as noted above, all the options are optional.</para>
 
 <para>Two alternative examples which display a multi-line message with
 a red background at 10 p.m. on the 27th of this month are:</para>
@@ -2977,8 +2955,18 @@ daemon</application>.</para>
   specified event ID.</entry>
 </row>
 <row>
-  <entry><option>-n</option>, <option>--edit-new</option></entry>
-  <entry>Display the Alarm Edit dialog, in order to edit a new
+  <entry><option>--edit-new-command</option></entry>
+  <entry>Display the Alarm Edit dialog, in order to edit a new command
+  alarm.</entry>
+</row>
+<row>
+  <entry><option>--edit-new-display</option></entry>
+  <entry>Display the Alarm Edit dialog, in order to edit a new display
+  alarm.</entry>
+</row>
+<row>
+  <entry><option>--edit-new-email</option></entry>
+  <entry>Display the Alarm Edit dialog, in order to edit a new email
   alarm.</entry>
 </row>
 <row>
@@ -3369,7 +3357,10 @@ bool scheduleMessage(const QString&amp; <replaceable>message</replaceable>,
 <varlistentry>
 <term><parameter>message</parameter></term>
 <listitem>
-<para>Specifies the text of the message to be scheduled.</para>
+<para>Specifies the text of the message to be scheduled, or if
+<parameter>flags</parameter> has the
+<userinput>DISPLAY_COMMAND</userinput> bit set, specifies the command
+line to execute to generate the message text.</para>
 </listitem>
 </varlistentry>
 
@@ -4254,6 +4245,9 @@ dialog</link> to edit a new alarm.</refpurpose>
 </refnamediv>
 <refsynopsisdiv>
 <synopsis>
+bool editNew(int <replaceable>type</replaceable>)
+</synopsis>
+<synopsis>
 bool editNew(const QString&amp; <replaceable>templateName</replaceable>)
 </synopsis>
 
@@ -4261,10 +4255,20 @@ bool editNew(const QString&amp; <replaceable>templateName</replaceable>)
 <title>Parameters</title>
 <variablelist>
 <varlistentry>
+<term><parameter>type</parameter></term>
+<listitem>
+<para>Specifies the alarm type. The permissible values are DISPLAY,
+COMMAND, EMAIL. These are defined in class
+<classname>KAlarmIface</classname> in
+<filename>kalarmiface.h</filename>.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
 <term><parameter>templateName</parameter></term>
 <listitem>
 <para>Specifies the name of an alarm template to base the new alarm
-on, or empty if no template should be used.</para>
+on.</para>
 </listitem>
 </varlistentry>
 </variablelist>
@@ -4272,10 +4276,10 @@ on, or empty if no template should be used.</para>
 
 <refsect2>
 <title>Return value</title>
-<para><returnvalue>false</returnvalue> if
-<parameter>templateName</parameter> is non-empty but a template of
-that name cannot be found, <returnvalue>true</returnvalue>
-otherwise.</para>
+<para><returnvalue>false</returnvalue> if <parameter>type</parameter>
+has an invalid value, or if no template with the name
+<parameter>templateName</parameter> can be found;
+<returnvalue>true</returnvalue> otherwise.</para>
 </refsect2>
 </refsynopsisdiv>
 
@@ -4284,11 +4288,9 @@ otherwise.</para>
 
 <para><function>editNew()</function> is a &DCOP; call to display the
 <link linkend="alarm-edit-dlg">Alarm Edit dialog</link> to edit a new
-alarm. If an alarm template name is specified as a parameter, the
-dialog is preset with details from the template. If the specified
-template cannot be found, the
-<link linkend="alarm-edit-dlg">Alarm Edit dialog</link> is still
-displayed but is (obviously) not preset with the template.</para>
+alarm. If an alarm type is specified as a parameter, a blank dialog is
+displayed. Alternatively, if an alarm template name is specified as a
+parameter, the dialog is preset with details from the template.</para>
 
 </refsect1>
 </refentry>
