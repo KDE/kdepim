@@ -70,12 +70,16 @@ private:
 
 private Q_SLOTS:
     void treeWidgetItemSelectionChanged();
+    void readOnlyStateChanged( int state );
+    void optionValueChanged();
 
 private:
     Ui::MainWidget m_ui;
     QGpgMECryptoConfig* m_config;
     QHash<QTreeWidgetItem*, Kleo::CryptoConfigEntry*> m_itemToEntry;
+    QHash<Kleo::CryptoConfigEntry*, QTreeWidgetItem*> m_entryToItem;
     QHash<Kleo::CryptoConfigEntry*, Kleo::CryptoConfigComponent*> m_componentForEntry;
+    Kleo::CryptoConfigEntry* m_selectedEntry;
 };
 
 

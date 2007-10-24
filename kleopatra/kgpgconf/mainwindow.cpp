@@ -39,13 +39,15 @@
 
 #include <cassert>
 
-MainWindow::MainWindow( QWidget* parent, Qt::WindowFlags flags ) : QMainWindow( parent, flags ), m_config( new QGpgMECryptoConfig )
+MainWindow::MainWindow( QWidget* parent, Qt::WindowFlags flags ) : QMainWindow( parent, flags ), m_config( new QGpgMECryptoConfig ), m_selectedEntry( 0 )
 {
     QWidget* mainWidget = new QWidget( this );
     m_ui.setupUi( mainWidget );
     setCentralWidget( mainWidget );
     connect( m_ui.treeWidget, SIGNAL( itemSelectionChanged() ), 
              SLOT( treeWidgetItemSelectionChanged() ) );
+    connect( m_ui.readOnlyBox, SIGNAL( stateChanged( int ) ), SLOT( readOnlyStateChanged( int ) ) );
+    connect( m_ui.valueLE, SIGNAL( textChanged( QString ) ), SLOT( optionValueChanged() ) );
     readConfiguration();
 }
 
@@ -56,14 +58,32 @@ MainWindow::~MainWindow()
 
 void MainWindow::treeWidgetItemSelectionChanged()
 {
+    m_selectedEntry = 0;
     const QList<QTreeWidgetItem*> selected = m_ui.treeWidget->selectedItems();
     assert( selected.count() <= 1 );
     Kleo::CryptoConfigEntry* const entry = selected.isEmpty() ? 0 : m_itemToEntry[selected.first()];
-    m_ui.componentLabel->setText( i18n( "Component: %1", entry ? m_componentForEntry[entry]->name() : QString() ) );
-    m_ui.optionLabel->setText( i18n( "Option: %1", entry ? entry->name() : QString() ) );
-    m_ui.descriptionLabel->setText( i18n( "Description: %1", entry ? entry->description() : QString() ) );
-    m_ui.valueLE->setText( entry ? entry->stringValue() : QString() );
+    m_ui.componentLabel->setText( entry ? m_componentForEntry[entry]->name() : QString() );
+    m_ui.optionLabel->setText( entry ? entry->name() : QString() );
+    m_ui.descriptionLabel->setText( entry ? entry->description() : QString() );
+    m_ui.valueLE->setText( ( entry && entry->isSet() ) ? entry->stringValue() : QString() );
     m_ui.readOnlyBox->setCheckState( ( entry && entry->isReadOnly() ) ? Qt::Checked : Qt::Unchecked );
+    m_selectedEntry = entry;
+}
+
+void MainWindow::readOnlyStateChanged( int state )
+{
+    if ( !m_selectedEntry )
+        return;
+    assert( state != Qt::PartiallyChecked );
+    QTreeWidgetItem* const item = m_entryToItem[m_selectedEntry];
+    assert( item );
+    item->setCheckState( ReadOnlyColumn, static_cast<Qt::CheckState>( state ) );
+}
+
+void MainWindow::optionValueChanged()
+{
+    if ( !m_selectedEntry )
+        return;
 }
 
 void MainWindow::readConfiguration()
@@ -91,11 +111,13 @@ void MainWindow::readConfiguration()
                 QTreeWidgetItem* const entryItem = new QTreeWidgetItem;
                 entryItem->setData( NameColumn, IsOptionRole, true );
                 entryItem->setText( NameColumn, entry->name() );
-                entryItem->setText( ValueColumn, entry->stringValue() );
+                entryItem->setText( ValueColumn, entry->isSet() ? entry->stringValue() : QString() );
                 entryItem->setCheckState( ReadOnlyColumn, entry->isReadOnly() ? Qt::Checked : Qt::Unchecked ); 
+                entryItem->setFlags( entryItem->flags() ^ Qt::ItemIsUserCheckable );
                 groupItem->addChild( entryItem );
                 m_componentForEntry[entry] = component;
                 m_itemToEntry[entryItem] = entry;
+                m_entryToItem[entry] = entryItem;
             }
         }
     }

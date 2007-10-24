@@ -33,35 +33,118 @@
     </widget>
    </item>
    <item row="0" column="1" colspan="2" >
-    <widget class="QLabel" name="componentLabel" >
-     <property name="text" >
-      <string>Component:</string>
-     </property>
-    </widget>
+    <layout class="QHBoxLayout" >
+     <item>
+      <widget class="QLabel" name="label_3" >
+       <property name="sizePolicy" >
+        <sizepolicy vsizetype="Preferred" hsizetype="Preferred" >
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="text" >
+        <string>Component:</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="componentLabel" >
+       <property name="sizePolicy" >
+        <sizepolicy vsizetype="Preferred" hsizetype="Preferred" >
+         <horstretch>1</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="text" >
+        <string/>
+       </property>
+      </widget>
+     </item>
+    </layout>
    </item>
-   <item row="1" column="1" >
-    <widget class="QLabel" name="optionLabel" >
-     <property name="text" >
-      <string>Option:</string>
-     </property>
-     <property name="textFormat" >
-      <enum>Qt::PlainText</enum>
-     </property>
-    </widget>
+   <item row="1" column="1" colspan="2" >
+    <layout class="QHBoxLayout" >
+     <item>
+      <widget class="QLabel" name="label_2" >
+       <property name="text" >
+        <string>Option:</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="optionLabel" >
+       <property name="sizePolicy" >
+        <sizepolicy vsizetype="Preferred" hsizetype="Preferred" >
+         <horstretch>1</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="text" >
+        <string/>
+       </property>
+       <property name="textFormat" >
+        <enum>Qt::PlainText</enum>
+       </property>
+      </widget>
+     </item>
+    </layout>
    </item>
    <item row="2" column="1" colspan="2" >
-    <widget class="QLabel" name="descriptionLabel" >
-     <property name="text" >
-      <string>Description:</string>
-     </property>
-    </widget>
+    <layout class="QHBoxLayout" >
+     <item>
+      <widget class="QLabel" name="label" >
+       <property name="text" >
+        <string>Description:</string>
+       </property>
+       <property name="alignment" >
+        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="descriptionLabel" >
+       <property name="sizePolicy" >
+        <sizepolicy vsizetype="Preferred" hsizetype="Preferred" >
+         <horstretch>1</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="text" >
+        <string/>
+       </property>
+       <property name="alignment" >
+        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+       </property>
+       <property name="wordWrap" >
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+    </layout>
    </item>
-   <item row="3" column="1" >
-    <widget class="QLabel" name="label_5" >
-     <property name="text" >
-      <string>Default:</string>
-     </property>
-    </widget>
+   <item row="3" column="1" colspan="2" >
+    <layout class="QHBoxLayout" >
+     <item>
+      <widget class="QLabel" name="label_6" >
+       <property name="text" >
+        <string>Default:</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="label_5" >
+       <property name="sizePolicy" >
+        <sizepolicy vsizetype="Preferred" hsizetype="Preferred" >
+         <horstretch>1</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="text" >
+        <string/>
+       </property>
+      </widget>
+     </item>
+    </layout>
    </item>
    <item row="4" column="1" colspan="2" >
     <layout class="QHBoxLayout" >
