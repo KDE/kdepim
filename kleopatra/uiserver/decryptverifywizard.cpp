@@ -43,6 +43,9 @@
 #include <QWizardPage>
 #include <QLayout>
 #include <QLabel>
+#include <QEventLoop>
+#include <QPointer>
+#include <QAbstractButton>
 
 #include <vector>
 #include <cassert>
@@ -167,7 +170,22 @@ DecryptVerifyResultWidget * DecryptVerifyWizard::resultWidget( unsigned int idx 
     return d->resultPage.widget( idx );
 }
 
+bool DecryptVerifyWizard::waitForOperationSelection() {
+    if ( !isVisible() )
+        return true;
 
+    assert( button( NextButton ) );
+    assert( button( CancelButton ) );
+
+    QEventLoop loop;
+    QPointer<QObject> that = this;
+    connect( button( NextButton ), SIGNAL(clicked()), &loop, SLOT(quit()) );
+    connect( button( CancelButton ), SIGNAL(clicked()), &loop, SLOT(quit()) );
+    connect( this, SIGNAL(finished(int)), &loop, SLOT(quit()) );
+    loop.exec();
+
+    return that && currentId() != startId();
+}
 
 
 

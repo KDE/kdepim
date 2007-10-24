@@ -54,6 +54,8 @@ namespace Kleo {
         DecryptVerifyOperationWidget * operationWidget( unsigned int idx );
         DecryptVerifyResultWidget * resultWidget( unsigned int idx );
 
+        bool waitForOperationSelection();
+
     private:
         class Private;
         kdtools::pimpl_ptr<Private> d;
