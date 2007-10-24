@@ -16,7 +16,7 @@ if ( NOT KLEO_ONLY_UISERVER )
 set(libconf_SRCS  ${CMAKE_SOURCE_DIR}/kleopatra/conf/configuredialog.cpp )
 add_subdirectory( conf )
 add_subdirectory( kwatchgnupg )
-add_subdirectory( kleoadmin)
+add_subdirectory( kgpgconf )
 
 endif ( NOT KLEO_ONLY_UISERVER )
 add_subdirectory( tests )
