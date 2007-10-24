@@ -2,7 +2,7 @@
     verifyopaquejob.h
 
     This file is part of libkleopatra, the KDE keymanagement library
-    Copyright (c) 2004 Klarälvdalens Datakonsult AB
+    Copyright (c) 2004, 2007 Klarälvdalens Datakonsult AB
 
     Libkleopatra is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License as
@@ -34,14 +34,13 @@
 #define __KLEO_VERIFYOPAQUEJOB_H__
 
 #include "job.h"
-#include <vector>
-#include <QtCore/QByteArray>
+
+class QByteArray;
+class QIODevice;
 
 namespace GpgME {
-  class Data;
   class Error;
   class VerificationResult;
-  class Key;
 }
 
 
@@ -60,7 +59,7 @@ namespace Kleo {
      After result() is emitted, the VerifyOpaqueJob will schedule
      it's own destruction by calling QObject::deleteLater().
   */
-  class VerifyOpaqueJob : public Job {
+  class KLEO_EXPORT VerifyOpaqueJob : public Job {
     Q_OBJECT
   protected:
     explicit VerifyOpaqueJob( QObject * parent );
@@ -68,21 +67,25 @@ namespace Kleo {
     ~VerifyOpaqueJob();
 
     /**
-       Starts the verification operation. \a signedData contains the signed data, with its signature
+       Starts the verification operation. \a signature contains the
+       signature data, while \a signedData contains the data over
+       which the signature was made.
     */
-    virtual GpgME::Error start( const QByteArray & signedData ) = 0;
+    virtual KDE_DEPRECATED GpgME::Error start( const QByteArray & signedData ) = 0;
 
-    /**
-       Starts the verification operation. \a signedData contains the signed data, with its signature
+    /*!
+      \overload
+
+      If \a plainText is non-null, the plaintext is written
+      there. Otherwise, it will be delivered in the second argument
+      of result().
+
+      \throws GpgME::Exception if starting fails
     */
-    virtual GpgME::Error start( const GpgME::Data & signedData ) = 0;
+    virtual void start( QIODevice * signedData, QIODevice * plainText=0 ) = 0;
 
   Q_SIGNALS:
-    void result( const GpgME::VerificationResult & result,
-                 const QByteArray & plainText );
-    void result( const GpgME::VerificationResult & result,
-                 const QByteArray & plainText,
-                 const std::vector<GpgME::Key> & keys );
+    void result( const GpgME::VerificationResult & result, const QByteArray & plainText );
   };
 
 }

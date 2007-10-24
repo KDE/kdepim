@@ -90,12 +90,12 @@ GpgME::SigningResult Kleo::QGpgMESignJob::exec( const std::vector<GpgME::Key> & 
 
   waitForFinished();
 
-  signature = mOutDataDataProvider->data();
+  signature = outData();
   return mResult = mCtx->signingResult();
 }
 
 void Kleo::QGpgMESignJob::doOperationDoneEvent( const GpgME::Error & ) {
-  emit result( mResult = mCtx->signingResult(), mOutDataDataProvider->data() );
+  emit result( mResult = mCtx->signingResult(), outData() );
 }
 
 void Kleo::QGpgMESignJob::showErrorDialog( QWidget * parent, const QString & caption ) const {

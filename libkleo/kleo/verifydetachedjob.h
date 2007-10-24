@@ -2,7 +2,7 @@
     verifydetachedjob.h
 
     This file is part of libkleopatra, the KDE keymanagement library
-    Copyright (c) 2004 Klarälvdalens Datakonsult AB
+    Copyright (c) 2004, 2007 Klarälvdalens Datakonsult AB
 
     Libkleopatra is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License as
@@ -35,16 +35,12 @@
 
 #include "job.h"
 
-#include <vector>
-
-#include <QtCore/QByteArray>
+class QByteArray;
+class QIODevice;
 
 namespace GpgME {
-
-  class Data;
-  class Error;
-  class VerificationResult;
-  class Key;
+    class Error;
+    class VerificationResult;
 }
 
 
@@ -75,20 +71,18 @@ namespace Kleo {
        signature data, while \a signedData contains the data over
        which the signature was made.
     */
-    virtual GpgME::Error start( const QByteArray & signature,
-                                const QByteArray & signedData ) = 0;
+    virtual KDE_DEPRECATED GpgME::Error start( const QByteArray & signature,
+                                               const QByteArray & signedData ) = 0;
 
-    /**
-       Starts the verification operation. \a signature contains the
-       signature data, while \a signedData represents the data over
-       which the signature was made.
+    /*!
+      \overload
+
+      \throws GpgME::Exception if starting fails.
     */
-    virtual GpgME::Error start( const QByteArray & signature,
-                                const GpgME::Data & signedData ) = 0;
+    virtual void start( QIODevice * signature, QIODevice * signedData ) = 0;
 
   Q_SIGNALS:
     void result( const GpgME::VerificationResult & result );
-    void result( const GpgME::VerificationResult & result, const std::vector<GpgME::Key> & keys );
   };
 
 }

@@ -40,6 +40,8 @@
 #include <gpgme++/verificationresult.h>
 #include <gpgme++/data.h>
 
+#include <KLocale>
+
 #include <assert.h>
 
 Kleo::QGpgMEDecryptVerifyJob::QGpgMEDecryptVerifyJob( GpgME::Context * context )
@@ -72,10 +74,29 @@ GpgME::Error Kleo::QGpgMEDecryptVerifyJob::start( const QByteArray & cipherText 
   return err;
 }
 
+void Kleo::QGpgMEDecryptVerifyJob::setup( QIODevice * cipherText, QIODevice * plainText ) {
+    assert( cipherText );
+    assert( !mInData );
+    assert( !mOutData );
+
+    createInData( cipherText );
+    if ( plainText )
+        createOutData( plainText );
+    else
+        createOutData();
+}
+
+void Kleo::QGpgMEDecryptVerifyJob::start( QIODevice * cipherText, QIODevice * plainText ) {
+    setup( cipherText, plainText );
+
+    hookupContextToEventLoopInteractor();
+
+    if ( const GpgME::Error err = mCtx->startCombinedDecryptionAndVerification( *mInData, *mOutData ) )
+        doThrow( err, i18n("Can't start combined decrypt/verify operation") );
+}
+
 void Kleo::QGpgMEDecryptVerifyJob::doOperationDoneEvent( const GpgME::Error & ) {
-  emit result( mCtx->decryptionResult(),
-	       mCtx->verificationResult(),
-	       mOutDataDataProvider->data() );
+    emit result( mCtx->decryptionResult(), mCtx->verificationResult(), outData() );
 }
 
 #include "qgpgmedecryptverifyjob.moc"

@@ -2,7 +2,7 @@
     decryptjob.h
 
     This file is part of libkleopatra, the KDE keymanagement library
-    Copyright (c) 2004 Klarälvdalens Datakonsult AB
+    Copyright (c) 2004, 2007 Klarälvdalens Datakonsult AB
 
     Libkleopatra is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License as
@@ -35,7 +35,8 @@
 
 #include "job.h"
 
-#include <QtCore/QByteArray>
+class QByteArray;
+class QIODevice;
 
 namespace GpgME {
   class Error;
@@ -58,7 +59,7 @@ namespace Kleo {
      After result() is emitted, the DecryptJob will schedule it's own
      destruction by calling QObject::deleteLater().
   */
-  class DecryptJob : public Job {
+  class KLEO_EXPORT DecryptJob : public Job {
     Q_OBJECT
   protected:
     explicit DecryptJob( QObject * parent );
@@ -69,7 +70,18 @@ namespace Kleo {
        Starts the decryption operation. \a cipherText is the data to
        decrypt.
     */
-    virtual GpgME::Error start( const QByteArray & cipherText ) = 0;
+    virtual KDE_DEPRECATED GpgME::Error start( const QByteArray & cipherText ) = 0;
+
+    /*!
+      \overload
+
+      If \a plainText is non-null, the plaintext is written
+      there. Otherwise, it will be delivered in the second argument
+      of result().
+
+      \throws GpgME::Exception if starting fails
+    */
+    virtual void start( QIODevice * cipherText, QIODevice * plainText=0 ) = 0;
 
   Q_SIGNALS:
     void result( const GpgME::DecryptionResult & result, const QByteArray & plainText );

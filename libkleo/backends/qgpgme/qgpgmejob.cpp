@@ -41,6 +41,7 @@
 
 #include <gpgme++/context.h>
 #include <gpgme++/data.h>
+#include <gpgme++/exception.h>
 
 #include <klocale.h>
 #include <kstandarddirs.h>
@@ -91,8 +92,7 @@ Kleo::QGpgMEJob::QGpgMEJob( Kleo::Job * _this, GpgME::Context * context )
     mNumPatterns( 0 ),
     mChunkSize( 1024 ),
     mPatternStartIndex( 0 ), mPatternEndIndex( 0 ),
-    mEventLoop( 0 ),
-    mDeleteOurselves(true)
+    mEventLoop( 0 )
 {
   InvarianceChecker check( this );
   assert( context );
@@ -231,16 +231,40 @@ GpgME::Error Kleo::QGpgMEJob::setSigningKeys( const std::vector<GpgME::Key> & si
   return GpgME::Error();
 }
 
+void Kleo::QGpgMEJob::createInData( QIODevice * in ) {
+  mInDataDataProvider = new QGpgME::QIODeviceDataProvider( in );
+  mInData = new GpgME::Data( mInDataDataProvider );
+  assert( !mInData->isNull() );
+}
+
 void Kleo::QGpgMEJob::createInData( const QByteArray & in ) {
   mInDataDataProvider = new QGpgME::QByteArrayDataProvider( in );
   mInData = new GpgME::Data( mInDataDataProvider );
   assert( !mInData->isNull() );
 }
 
+void Kleo::QGpgMEJob::createOutData( QIODevice * out ) {
+  mOutDataDataProvider = new QGpgME::QIODeviceDataProvider( out );
+  mOutData = new GpgME::Data( mOutDataDataProvider );
+  assert( !mOutData->isNull() );
+}
+
 void Kleo::QGpgMEJob::createOutData() {
   mOutDataDataProvider = new QGpgME::QByteArrayDataProvider();
   mOutData = new GpgME::Data( mOutDataDataProvider );
   assert( !mOutData->isNull() );
+}
+
+QByteArray Kleo::QGpgMEJob::outData() const {
+    if ( const QGpgME::QByteArrayDataProvider * const dp = dynamic_cast<QGpgME::QByteArrayDataProvider*>( mOutDataDataProvider ) )
+        return dp->data();
+    else
+        return QByteArray();
+}
+
+void Kleo::QGpgMEJob::doThrow( const GpgME::Error & err, const QString & msg ) {
+    mThis->deleteLater();
+    throw GpgME::Exception( err, msg.toLocal8Bit().constData() );
 }
 
 void Kleo::QGpgMEJob::doSlotOperationDoneEvent( GpgME::Context * context, const GpgME::Error & e ) {
@@ -250,8 +274,7 @@ void Kleo::QGpgMEJob::doSlotOperationDoneEvent( GpgME::Context * context, const 
     if ( mEventLoop )
       mEventLoop->quit();
     else
-      if ( mDeleteOurselves )
-        mThis->deleteLater();
+    mThis->deleteLater();
   }
 }
 
@@ -300,10 +323,4 @@ char * Kleo::QGpgMEJob::getPassphrase( const char * useridHint, const char * /*d
   canceled = false;
   // gpgme++ free()s it, and we need to copy as long as dlg isn't deleted :o
   return strdup( dlg.password().toLocal8Bit() );
-}
-
-
-void Kleo::QGpgMEJob::setAutoDelete( bool v )
-{
-    mDeleteOurselves = v;
 }

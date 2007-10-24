@@ -54,6 +54,9 @@ namespace Kleo {
     /*! \reimp from DecryptJob */
     GpgME::Error start( const QByteArray & cipherText );
 
+    /*! \reimp from DecryptJob */
+    void start( QIODevice * cipherText, QIODevice * plainText );
+
   private Q_SLOTS:
     void slotOperationDoneEvent( GpgME::Context * context, const GpgME::Error & e ) {
       QGpgMEJob::doSlotOperationDoneEvent( context, e );
@@ -62,6 +65,7 @@ namespace Kleo {
   private:
     void doOperationDoneEvent( const GpgME::Error & e );
     void setup( const QByteArray & cipherText );
+    void setup( QIODevice *, QIODevice * );
   };
 
 }

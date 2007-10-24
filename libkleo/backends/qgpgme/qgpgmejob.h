@@ -46,19 +46,17 @@ namespace GpgME {
   class Error;
   class Context;
   class Data;
+  class DataProvider;
 }
 
 namespace Kleo {
   class Job;
 }
 
-namespace QGpgME {
-  class QByteArrayDataProvider;
-}
-
 class QString;
 class QStringList;
 class QEventLoop;
+class QIODevice;
 
 namespace Kleo {
 
@@ -100,9 +98,18 @@ namespace Kleo {
     unsigned int chunkSize() const { return mChunkSize; }
     /*! Creates an empty GpgME::Data/QGpgME::QByteArrayDataProvider pair */
     void createOutData();
+    /*! Creates a GpgME::Data/QGpgME::QByteArrayDataProvider pair associated with \a out */
+    void createOutData( QIODevice * out );
+    /*! Creates a GpgME::Data/QGpgME::QIODeviceDataProvider pair,
+      associated with \a in */
+    void createInData( QIODevice * in );
     /*! Creates a GpgME::Data/QGpgME::QByteArrayDataProvider pair,
       filled with the contents of \a in */
     void createInData( const QByteArray & in );
+    /*! \return the result, but only if mOutDataDataProvider isn't a QIODeviceDataProvider */
+    QByteArray outData() const;
+    /*! Convenience function that throw a GpgME::Exception after calling deleteLater() */
+    void doThrow( const GpgME::Error & err, const QString & msg );
     /*! Sets the list of signing keys */
     GpgME::Error setSigningKeys( const std::vector<GpgME::Key> & signers );
     /*! Call this to implement a slotOperationDoneEvent() */
@@ -117,9 +124,6 @@ namespace Kleo {
     virtual void doEmitDoneSignal() = 0;
     void doSlotCancel();
     void waitForFinished();
-    /*! Used by subclasses to prevent automatic deletion of the command 
-     * in doSlotOperationDoneEvent. Defaults to true. */
-    void setAutoDelete( bool v );
 
   private:
     /*! \reimp from GpgME::ProgressProvider */
@@ -135,9 +139,9 @@ namespace Kleo {
     Kleo::Job * mThis;
     GpgME::Context * mCtx;
     GpgME::Data * mInData;
-    QGpgME::QByteArrayDataProvider * mInDataDataProvider;
+    GpgME::DataProvider * mInDataDataProvider;
     GpgME::Data * mOutData;
-    QGpgME::QByteArrayDataProvider * mOutDataDataProvider;
+    GpgME::DataProvider * mOutDataDataProvider;
   private:
     const char* * mPatterns;
     // holds the entry - if any - in mPattern that was replaced with
@@ -147,7 +151,6 @@ namespace Kleo {
     unsigned int mChunkSize;
     unsigned int mPatternStartIndex, mPatternEndIndex;
     QEventLoop * mEventLoop;
-    bool mDeleteOurselves;
   };
 
 }

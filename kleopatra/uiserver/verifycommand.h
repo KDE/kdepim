@@ -38,27 +38,19 @@
 #include <utils/pimpl_ptr.h>
 
 namespace Kleo {
-/*!
-      \author Till Adam <till@kdab.net>
-      \brief GnuPG UI Server command for handling verification of an email
-      or file.
-*/
-class VerifyCommand : public AssuanCommandMixin<VerifyCommand>
-{
-public:
-    VerifyCommand();
-    ~VerifyCommand();
+    class VerifyCommand : public AssuanCommandMixin<VerifyCommand,DecryptVerifyCommand> {
+    public:
+        //VerifyCommand();
+        //~VerifyCommand();
 
-private:
-    int doStart();
-    void doCanceled();
-public:
-    static const char * staticName() { return "VERIFY"; }
-
-    class Private;
-private:
-    kdtools::pimpl_ptr<Private> d;
-};
+    private:
+        /* reimp */ unsigned int operation() const {
+            return DecryptOff|VerifyImplied;
+        }
+        /* reimp */ Mode mode() const { return EMail; }
+    public:
+        static const char * staticName() { return "VERIFY"; }
+    };
 
 }
 

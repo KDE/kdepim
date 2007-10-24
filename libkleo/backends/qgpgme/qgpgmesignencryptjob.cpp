@@ -94,7 +94,7 @@ Kleo::QGpgMESignEncryptJob::exec( const std::vector<GpgME::Key> & signers,
 
   waitForFinished();
 
-  cipherText = mOutDataDataProvider->data();
+  cipherText = outData();
   mResult.first = mCtx->signingResult();
   mResult.second = mCtx->encryptionResult();
   return mResult;
@@ -103,7 +103,7 @@ Kleo::QGpgMESignEncryptJob::exec( const std::vector<GpgME::Key> & signers,
 void Kleo::QGpgMESignEncryptJob::doOperationDoneEvent( const GpgME::Error & ) {
   mResult.first = mCtx->signingResult();
   mResult.second = mCtx->encryptionResult();
-  emit result( mResult.first, mResult.second, mOutDataDataProvider->data() );
+  emit result( mResult.first, mResult.second, outData() );
 }
 
 void Kleo::QGpgMESignEncryptJob::showErrorDialog( QWidget * parent, const QString & caption ) const {

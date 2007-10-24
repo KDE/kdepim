@@ -39,10 +39,8 @@
 
 
 namespace GpgME {
-  class Data;
   class Error;
   class Context;
-  class KeyListResult;
 }
 
 namespace Kleo {
@@ -57,21 +55,17 @@ namespace Kleo {
     GpgME::Error start( const QByteArray & signedData );
 
     /*! \reimp from VerifyOpaqueJob */
-    GpgME::Error start( const GpgME::Data & signedData );
+    void start( QIODevice * signedData, QIODevice * plainText );
 
   private Q_SLOTS:
     void slotOperationDoneEvent( GpgME::Context * context, const GpgME::Error & e ) {
       QGpgMEJob::doSlotOperationDoneEvent( context, e );
     }
-    void slotKeyListingDone( const GpgME::KeyListResult & );
-    void slotNextKey( const GpgME::Key & );
 
   private:
     void doOperationDoneEvent( const GpgME::Error & e );
     void setup( const QByteArray & );
-    void setup( const GpgME::Data & );
-    class Private;
-    Private * const d;
+    void setup( QIODevice *, QIODevice * );
   };
 
 }

@@ -31,12 +31,6 @@
 */
 
 #include "qgpgmeverifydetachedjob.h"
-#include "qgpgmekeylistjob.h"
-
-#include <vector>
-
-#include <QStringList>
-#include <QFile>
 
 #include <qgpgme/eventloopinteractor.h>
 #include <qgpgme/dataprovider.h>
@@ -45,68 +39,35 @@
 #include <gpgme++/verificationresult.h>
 #include <gpgme++/data.h>
 
+#include <KLocale>
+
 #include <assert.h>
-
-struct Kleo::QGpgMEVerifyDetachedJob::Private {
-    Private(){}
-
-    GpgME::VerificationResult verificationResult;
-    std::vector<GpgME::Key> keys;
-};
 
 Kleo::QGpgMEVerifyDetachedJob::QGpgMEVerifyDetachedJob( GpgME::Context * context )
   : VerifyDetachedJob( QGpgME::EventLoopInteractor::instance() ),
-    QGpgMEJob( this, context ), d( new Private )
+    QGpgMEJob( this, context )
 {
   assert( context );
-  setAutoDelete( false );
 }
 
-Kleo::QGpgMEVerifyDetachedJob::~QGpgMEVerifyDetachedJob()
-{
-  delete d;
+Kleo::QGpgMEVerifyDetachedJob::~QGpgMEVerifyDetachedJob() {
 }
 
-void Kleo::QGpgMEVerifyDetachedJob::setupSignature( const QByteArray & signature ) {
+void Kleo::QGpgMEVerifyDetachedJob::setup( const QByteArray & signature, const QByteArray & signedData ) {
   assert( !mInData );
-  createInData( signature );
-}
-
-
-void Kleo::QGpgMEVerifyDetachedJob::setupData( const QByteArray & signedData ) {
-  // two "in" data objects - (mis|re)use the "out" data object for the second...
   assert( !mOutData );
+
+  createInData( signature );
+
+  // two "in" data objects - (mis|re)use the "out" data object for the second...
   mOutDataDataProvider = new QGpgME::QByteArrayDataProvider( signedData );
   mOutData = new GpgME::Data( mOutDataDataProvider );
   assert( !mOutData->isNull() );
 }
 
-void Kleo::QGpgMEVerifyDetachedJob::setupData( const GpgME::Data & signedData ) {
-  // two "in" data objects - (mis|re)use the "out" data object for the second...
-  assert( !mOutData );
-  assert( !mOutDataDataProvider );
-  /* The below is a workaround for the fact that simply using GpgME::Data with 
-   * a fileName results in invalid signatures. Apparently a gpgme problem. Until
-   * that is fixed, we pass an IO device, which seems to work correctly. */
-  const char* fileName = signedData.fileName();
-  if ( fileName ) {
-    QIODevice *io = new QFile( fileName );
-    io->open( QIODevice::ReadOnly );
-    QGpgME::QIODeviceDataProvider * dataProvider = new QGpgME::QIODeviceDataProvider( io );
-    dataProvider->setOwnsDevice( true );
-    mOutData = new GpgME::Data( dataProvider );
-  } else {
-    mOutData = new GpgME::Data( signedData  );
-  }
-
-  assert( !mOutData->isNull() );
-}
-
-
 GpgME::Error Kleo::QGpgMEVerifyDetachedJob::start( const QByteArray & signature,
-                                                   const QByteArray & signedData ) {
-  setupSignature( signature );
-  setupData( signedData );
+						   const QByteArray & signedData ) {
+  setup( signature, signedData );
 
   hookupContextToEventLoopInteractor();
 
@@ -117,63 +78,29 @@ GpgME::Error Kleo::QGpgMEVerifyDetachedJob::start( const QByteArray & signature,
   return err;
 }
 
-GpgME::Error Kleo::QGpgMEVerifyDetachedJob::start( const QByteArray & signature, const GpgME::Data & signedData )
-{
-  setupSignature( signature );
-  setupData( signedData );
+void Kleo::QGpgMEVerifyDetachedJob::setup( QIODevice * signature, QIODevice * signedData ) {
+    assert( signature );
+    assert( signedData );
+    assert( !mInData );
+    assert( !mOutData );
+
+    createInData( signature );
+    // two "in" data objects - (mis|re)use the "out" data object for the second...
+    createOutData( signedData );
+}
+
+void Kleo::QGpgMEVerifyDetachedJob::start( QIODevice * signature, QIODevice * signedData ) {
+  setup( signature, signedData );
 
   hookupContextToEventLoopInteractor();
 
-  const GpgME::Error err = mCtx->startDetachedSignatureVerification( *mInData, *mOutData );
-
-  if ( err )
-    deleteLater();
-  return err;
+  if ( const GpgME::Error err = mCtx->startDetachedSignatureVerification( *mInData, *mOutData ) )
+      doThrow( err, i18n("Can't start detached signature verification") );
 }
 
 void Kleo::QGpgMEVerifyDetachedJob::doOperationDoneEvent( const GpgME::Error & ) {
-
-   // FIXME handle error?
-
-   // We no longer want this job to get signals, so unhook
-   QObject::disconnect( QGpgME::EventLoopInteractor::instance(),
-                       SIGNAL(operationDoneEventSignal(GpgME::Context*,const GpgME::Error&)),
-                       mThis, SLOT(slotOperationDoneEvent(GpgME::Context*,const GpgME::Error&)) );
-
-   d->verificationResult = mCtx->verificationResult();
-
-   QStringList keys;
-   Q_FOREACH( GpgME::Signature sig, d->verificationResult.signatures() ) {
-     keys.append( sig.fingerprint() );
-   }
-   Kleo::QGpgMEKeyListJob *keylisting = new Kleo::QGpgMEKeyListJob( mCtx );
-   connect( keylisting, SIGNAL( result( GpgME::KeyListResult ) ),
-            this, SLOT( slotKeyListingDone( GpgME::KeyListResult ) ) );
-   connect( keylisting, SIGNAL( nextKey( GpgME::Key ) ),
-            this, SLOT( slotNextKey( GpgME::Key ) ) );
-   GpgME::Error err = keylisting->start( keys, false /*secretOnly*/ );
-   if ( !err ) {
-     mCtx = 0; // will be deleted by the list job
-     return;
-   }
-
-   emit result( d->verificationResult );
-   emit result( d->verificationResult, d->keys );
-   deleteLater();
+    emit result( mCtx->verificationResult() );
 }
 
-
-void Kleo::QGpgMEVerifyDetachedJob::slotNextKey( const GpgME::Key & key )
-{
-    d->keys.push_back( key );
-}
-
-void Kleo::QGpgMEVerifyDetachedJob::slotKeyListingDone( const GpgME::KeyListResult & errors )
-{
-    // FIXME handle error?
-   emit result( d->verificationResult );
-   emit result( d->verificationResult, d->keys );
-   deleteLater();
-}
 
 #include "qgpgmeverifydetachedjob.moc"

@@ -84,12 +84,12 @@ GpgME::EncryptionResult Kleo::QGpgMEEncryptJob::exec( const std::vector<GpgME::K
   if ( const GpgME::Error err = setup( recipients, plainText, alwaysTrust ) )
     return GpgME::EncryptionResult( err );
   waitForFinished();
-  ciphertext = mOutDataDataProvider->data();
+  ciphertext = outData();
   return mResult = mCtx->encryptionResult();
 }
 
 void Kleo::QGpgMEEncryptJob::doOperationDoneEvent( const GpgME::Error & ) {
-  emit result( mResult = mCtx->encryptionResult(), mOutDataDataProvider->data() );
+  emit result( mResult = mCtx->encryptionResult(), outData() );
 }
 
 void Kleo::QGpgMEEncryptJob::showErrorDialog( QWidget * parent, const QString & caption ) const {

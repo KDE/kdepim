@@ -225,30 +225,38 @@ public:
     explicit Private( DecryptVerifyCommand * qq )
         : QObject(),
           q( qq ),
-          wizard( 0 ),
+          wizard(),
           inputList(),
           m_unfinished( 0 ),
           m_statusSent( 0 ),
           m_error( 0U )
     {
-
+        
     }
 
-    std::vector<Input> buildInputList() const;
+    std::vector<Input> buildInputList();
     void startJobs();
 
     void trySendingStatus( const char * tag, const QString & str );
     QString signatureToString( const Signature& sig, const Key & key ) const;
-    void waitForOperationSelection();
 
+    void createWizard() {
+        if ( wizard )
+            return;
+        wizard = q->applyWindowID( new DecryptVerifyWizard );
+    }
+
+    void showWizard() {
+        if ( wizard )
+            if ( wizard->isVisible() )
+                wizard->raise();
+            else
+                wizard->show();
+    }
 
 public Q_SLOTS:
     void finished( const QMap<int,DVResult> & results );
     void slotProgress( const QString & what, int current, int total );
-
-public:
-    QPointer<DecryptVerifyWizard> wizard; // ### public
-    std::vector<Input> inputList;         // ### public
 
 public:
     void registerJob( int id, VerifyDetachedJob * job );
@@ -288,6 +296,8 @@ private Q_SLOTS:
     }
 
 private:
+    QPointer<DecryptVerifyWizard> wizard;
+    std::vector<Input> inputList;
     QMap<int, DVResult> m_results;
     QHash<QObject*, int> m_senderToId;
     int m_unfinished;
@@ -429,7 +439,7 @@ DecryptVerifyCommand::DecryptVerifyCommand()
 
 DecryptVerifyCommand::~DecryptVerifyCommand() {}
 
-std::vector<Input> DecryptVerifyCommand::Private::buildInputList() const
+std::vector<Input> DecryptVerifyCommand::Private::buildInputList()
 {
     if ( !q->senders().empty() )
         throw assuan_exception( q->makeError( GPG_ERR_CONFLICT ),
@@ -522,6 +532,9 @@ std::vector<Input> DecryptVerifyCommand::Private::buildInputList() const
         assuan_assert( numMessages == 0 );
         assuan_assert( numOutputs == 0 );
 
+        createWizard();
+
+        int counter = 0;
         for ( unsigned int i = 0 ; i < numInputs ; ++i ) {
 
             QIODevice * iodev = q->bulkInputDevice( "INPUT", i );
@@ -532,10 +545,14 @@ std::vector<Input> DecryptVerifyCommand::Private::buildInputList() const
 
             const unsigned int classification = classify( fname );
 
-            Input input;
-
             if ( isOpaqueSignature( classification ) || isCipherText( classification ) ) {
 
+                DecryptVerifyOperationWidget * op = wizard->operationWidget( counter++ );
+                assuan_assert( op != 0 );
+
+                op->setVerifyDetached( false );
+                op->setInputFileName( fname );
+#if 0
                 input.type = DecryptVerify;
 
                 input.input.io = iodev;
@@ -544,10 +561,17 @@ std::vector<Input> DecryptVerifyCommand::Private::buildInputList() const
                 input.output = Input::makeTemporaryOutput( fname );
 
                 inputs.push_back( input );
-
+#endif
             } else if ( isDetachedSignature( classification ) ) {
                 // heuristics say it's a detached signature
 
+                DecryptVerifyOperationWidget * op = wizard->operationWidget( counter++ );
+                assuan_assert( op != 0 );
+
+                op->setVerifyDetached( true );
+                op->setInputFileName( fname );
+                op->setSignedDataFileName( findSignedData( fname ) );
+#if 0
                 input.type = VerifyDetached;
 
                 input.input.io = iodev;
@@ -569,17 +593,26 @@ std::vector<Input> DecryptVerifyCommand::Private::buildInputList() const
                                             i18n("Can't open file \"%1\" for reading: %2", signedData, input.signedData.file->errorString() ) );
 
                 inputs.push_back( input );
-
+#endif
             } else {
 
                 // probably the signed data file was selected:
                 QStringList signatures = findSignatures( fname );
                 const QFileInfo fi( fname );
+#if 0
                 if ( signatures.empty() )
                     // guessing failed, ask the user to supply the signature
                     signatures = QFileDialog::getOpenFileNames( 0, i18n("Please select the signature files corresponding to the data file %1", fi.fileName() ), fi.path() );
+#endif
 
                 Q_FOREACH( const QString s, signatures ) {
+                    DecryptVerifyOperationWidget * op = wizard->operationWidget( counter++ );
+                    assuan_assert( op != 0 );
+
+                    op->setVerifyDetached( true );
+                    op->setInputFileName( s );
+                    op->setSignedDataFileName( fname );
+#if 0
                     Input inp;
 
                     inp.type = VerifyDetached;
@@ -596,8 +629,14 @@ std::vector<Input> DecryptVerifyCommand::Private::buildInputList() const
                                                 i18n("Can't open file \"%1\" for reading: %2", s, inp.input.file->errorString() ) );
 
                     inputs.push_back( inp );
+#endif
                 }
             }
+        }
+
+        if ( counter ) {
+            showWizard();
+            wizard->waitForOperationSelection();
         }
     }
 
@@ -732,39 +771,43 @@ void DecryptVerifyCommand::Private::startJobs()
 
         switch ( input.type ) {
         case Decrypt:
-            {
+            try {
                 DecryptJob * const job = input.backend->decryptJob();
                 assuan_assert( job );
                 registerJob( i, job );
-                if ( const Error err = job->start( input.input.io, input.output.io ) )
-                    addResult( DVResult::fromDecryptResult( i, err ) );
+                job->start( input.input.io, input.output.io );
+            } catch ( const GpgME::Exception & e ) {
+                addResult( DVResult::fromDecryptResult( i, e.error() ) );
             }
             break;
         case DecryptVerify:
-            {
+            try {
                 DecryptVerifyJob * const job = input.backend->decryptVerifyJob();
                 assuan_assert( job );
                 registerJob( i, job );
-                if ( const Error err = job->start( input.input.io, input.output.io ) )
-                    addResult( DVResult::fromDecryptVerifyResult( i, err ) );
+                job->start( input.input.io, input.output.io );
+            } catch ( const GpgME::Exception & e ) {
+                addResult( DVResult::fromDecryptVerifyResult( i, e.error() ) );
             }
             break;
         case VerifyOpaque:
-            {
+            try {
                 VerifyOpaqueJob * const job = input.backend->verifyOpaqueJob();
                 assuan_assert( job );
                 registerJob( i, job );
-                if ( const Error err = job->start( input.input.io, input.output.io ) )
-                    addResult( DVResult::fromVerifyOpaqueResult( i, err ) );
+                job->start( input.input.io, input.output.io );
+            } catch ( const GpgME::Exception & e ) {
+                addResult( DVResult::fromVerifyOpaqueResult( i, e.error() ) );
             }
             break;
         case VerifyDetached:
-            {
+            try {
                 VerifyDetachedJob * const job = input.backend->verifyDetachedJob();
                 assuan_assert( job );
                 registerJob( i, job );
-                if ( const Error err = job->start( input.input.io, input.signedData.io ) )
-                    addResult( DVResult::fromVerifyDetachedResult( i, err ) );
+                job->start( input.input.io, input.signedData.io );
+            } catch ( const GpgME::Exception & e ) {
+                addResult( DVResult::fromVerifyDetachedResult( i, e.error() ) );
             }
             break;
         }

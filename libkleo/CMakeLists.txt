@@ -4,6 +4,8 @@ if ( NOT KLEO_ONLY_UISERVER )
   add_definitions (-DQT3_SUPPORT -DQT3_SUPPORT_WARNINGS)
 endif ( NOT KLEO_ONLY_UISERVER )
 
+add_definitions( ${KDE4_ENABLE_EXCEPTIONS} )
+
 add_subdirectory( pics )
 add_subdirectory( backends )
 add_subdirectory( tests )

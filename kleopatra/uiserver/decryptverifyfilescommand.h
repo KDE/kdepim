@@ -30,30 +30,24 @@
     your version.
 */
 
-#ifndef __KLEOPATRA_UISERVER_DECRYPTCOMMAND_H__
-#define __KLEOPATRA_UISERVER_DECRYPTCOMMAND_H__
+#ifndef __KLEOPATRA_UISERVER_DECRYPTVERIFYFILESCOMMAND_H__
+#define __KLEOPATRA_UISERVER_DECRYPTVERIFYFILESCOMMAND_H__
 
 #include <uiserver/decryptverifycommand.h>
 
 namespace Kleo {
 
-    class DecryptCommand : public AssuanCommandMixin<DecryptCommand,DecryptVerifyCommand> {
+    class DecryptVerifyFilesCommand : public AssuanCommandMixin<DecryptVerifyFilesCommand,DecryptVerifyCommand> {
     public:
-        //DecryptCommand();
-        //~DecryptCommand();
+        //DecryptVerifyFilesCommand();
+        //~DecryptVerifyFilesCommand();
 
     private:
-        /* reimp */ unsigned int operation() const {
-            if ( hasOption( "no-verify" ) )
-                return DecryptOn|VerifyOff;
-            else
-                return DecryptOn|VerifyImplied;
-        }
-        /* reimp */ Mode mode() const { return EMail; }
+        /* reimp */ Mode mode() const { return FileManager; }
     public:
-        static const char * staticName() { return "DECRYPT"; }
+        static const char * staticName() { return "DECRYPT_VERIFY_FILES"; }
     };
 
 }
 
-#endif // __KLEOPATRA_UISERVER_DECRYPTCOMMAND_H__
+#endif // __KLEOPATRA_UISERVER_DECRYPTVERIFYFILESCOMMAND_H__

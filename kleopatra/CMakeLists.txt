@@ -49,13 +49,10 @@ if ( USABLE_ASSUAN_FOUND )
     uiserver/uiserver.cpp
     uiserver/assuanserverconnection.cpp
     uiserver/echocommand.cpp
-    uiserver/resultdialog.cpp
-    uiserver/verifycommand.cpp
-    uiserver/decryptcommand.cpp
     uiserver/decryptverifyoperationwidget.cpp
     uiserver/decryptverifyresultwidget.cpp
     uiserver/decryptverifywizard.cpp
-#    uiserver/decryptverifycommand.cpp
+    uiserver/decryptverifycommand.cpp
     uiserver/signcommand.cpp
     uiserver/encryptcommand.cpp
     uiserver/assuancommandprivatebase_p.cpp
