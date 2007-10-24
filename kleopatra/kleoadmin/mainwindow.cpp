@@ -32,12 +32,72 @@
 
 #include "mainwindow.h"
 
-#include "ui_mainwidget.h"
+#include <qgpgmecryptoconfig.h>
 
-MainWindow::MainWindow( QWidget* parent, Qt::WindowFlags flags ) : QMainWindow( parent, flags )
+#include <QStringList>
+#include <QTreeWidgetItem>
+
+#include <cassert>
+
+MainWindow::MainWindow( QWidget* parent, Qt::WindowFlags flags ) : QMainWindow( parent, flags ), m_config( new QGpgMECryptoConfig )
 {
     QWidget* mainWidget = new QWidget( this );
-    Ui::MainWidget ui;
-    ui.setupUi( mainWidget );
+    m_ui.setupUi( mainWidget );
     setCentralWidget( mainWidget );
+    connect( m_ui.treeWidget, SIGNAL( itemSelectionChanged() ), 
+             SLOT( treeWidgetItemSelectionChanged() ) );
+    readConfiguration();
 }
+
+MainWindow::~MainWindow()
+{
+    delete m_config;
+}
+
+void MainWindow::treeWidgetItemSelectionChanged()
+{
+    const QList<QTreeWidgetItem*> selected = m_ui.treeWidget->selectedItems();
+    assert( selected.count() <= 1 );
+    Kleo::CryptoConfigEntry* const entry = selected.isEmpty() ? 0 : m_itemToEntry[selected.first()];
+    m_ui.componentLabel->setText( i18n( "Component: %1", entry ? m_componentForEntry[entry]->name() : QString() ) );
+    m_ui.optionLabel->setText( i18n( "Option: %1", entry ? entry->name() : QString() ) );
+    m_ui.descriptionLabel->setText( i18n( "Description: %1", entry ? entry->description() : QString() ) );
+    m_ui.valueLE->setText( entry ? entry->stringValue() : QString() );
+    m_ui.readOnlyBox->setCheckState( ( entry && entry->isReadOnly() ) ? Qt::Checked : Qt::Unchecked );
+}
+
+void MainWindow::readConfiguration()
+{
+    QStringList components = m_config->componentList();
+    qSort( components );
+    Q_FOREACH ( const QString i, components )
+    {
+        Kleo::CryptoConfigComponent* const component = m_config->component( i );
+        assert( component );
+        QTreeWidgetItem* const componentItem = new QTreeWidgetItem;
+        componentItem->setText( NameColumn, component->name() );
+        m_ui.treeWidget->addTopLevelItem( componentItem );
+        Q_FOREACH ( const QString j, component->groupList() )
+        {
+            Kleo::CryptoConfigGroup* const group = component->group( j );
+            assert( group );
+            QTreeWidgetItem* const groupItem = new QTreeWidgetItem;
+            groupItem->setText( NameColumn, group->name() );
+            componentItem->addChild( groupItem );
+            Q_FOREACH( const QString k, group->entryList() )
+            {
+                Kleo::CryptoConfigEntry* const entry = group->entry( k );
+                assert( entry );
+                QTreeWidgetItem* const entryItem = new QTreeWidgetItem;
+                entryItem->setData( NameColumn, IsOptionRole, true );
+                entryItem->setText( NameColumn, entry->name() );
+                entryItem->setText( ValueColumn, entry->stringValue() );
+                entryItem->setCheckState( ReadOnlyColumn, entry->isReadOnly() ? Qt::Checked : Qt::Unchecked ); 
+                groupItem->addChild( entryItem );
+                m_componentForEntry[entry] = component;
+                m_itemToEntry[entryItem] = entry;
+            }
+        }
+    }
+}
+

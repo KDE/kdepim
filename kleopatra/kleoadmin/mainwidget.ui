@@ -33,16 +33,16 @@
     </widget>
    </item>
    <item row="0" column="1" colspan="2" >
-    <widget class="QLabel" name="label_2" >
+    <widget class="QLabel" name="componentLabel" >
      <property name="text" >
-      <string>Component: gpg</string>
+      <string>Component:</string>
      </property>
     </widget>
    </item>
    <item row="1" column="1" >
-    <widget class="QLabel" name="label_3" >
+    <widget class="QLabel" name="optionLabel" >
      <property name="text" >
-      <string>Option: encrypt-to</string>
+      <string>Option:</string>
      </property>
      <property name="textFormat" >
       <enum>Qt::PlainText</enum>
@@ -50,9 +50,9 @@
     </widget>
    </item>
    <item row="2" column="1" colspan="2" >
-    <widget class="QLabel" name="label_6" >
+    <widget class="QLabel" name="descriptionLabel" >
      <property name="text" >
-      <string>Description: encrypt to user ID name as well</string>
+      <string>Description:</string>
      </property>
     </widget>
    </item>
@@ -73,14 +73,14 @@
       </widget>
      </item>
      <item>
-      <widget class="QLineEdit" name="lineEdit" >
+      <widget class="QLineEdit" name="valueLE" >
        <property name="text" >
         <string/>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="pushButton" >
+      <widget class="QPushButton" name="resetButton" >
        <property name="text" >
         <string>Reset to Default</string>
        </property>
@@ -89,12 +89,12 @@
     </layout>
    </item>
    <item row="5" column="1" >
-    <widget class="QCheckBox" name="checkBox" >
+    <widget class="QCheckBox" name="readOnlyBox" >
      <property name="text" >
       <string>Read-Only</string>
      </property>
      <property name="checked" >
-      <bool>true</bool>
+      <bool>false</bool>
      </property>
     </widget>
    </item>

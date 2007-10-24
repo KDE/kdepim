@@ -33,13 +33,49 @@
 #ifndef KLEOADMIN_MAINWINDOW_H
 #define KLEOADMIN_MAINWINDOW_H
 
+#include <QHash>
 #include <QMainWindow>
+
+#include "ui_mainwidget.h"
+
+class QTreeWidgetItem;
+
+class QGpgMECryptoConfig;
+
+namespace Kleo {
+    class CryptoConfigComponent;
+    class CryptoConfigEntry;
+}
 
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
+
 public:
     explicit MainWindow( QWidget* parent = 0, Qt::WindowFlags flags = 0 );
+    ~MainWindow();
+
+private:
+    enum Column {
+        NameColumn=0,
+        ValueColumn=1,
+        ReadOnlyColumn=2
+    };
+
+    enum Role {
+        IsOptionRole=Qt::UserRole
+    };
+
+    void readConfiguration();
+
+private Q_SLOTS:
+    void treeWidgetItemSelectionChanged();
+
+private:
+    Ui::MainWidget m_ui;
+    QGpgMECryptoConfig* m_config;
+    QHash<QTreeWidgetItem*, Kleo::CryptoConfigEntry*> m_itemToEntry;
+    QHash<Kleo::CryptoConfigEntry*, Kleo::CryptoConfigComponent*> m_componentForEntry;
 };
 
 
