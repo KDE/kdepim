@@ -91,7 +91,7 @@ void LookAndFeelPage::restoreSettings( const KConfigGroup &config )
     mNoneButton->setChecked(true);
 
   mBackgroundBox->setChecked(config.readEntry("Background", false));
-  mBackgroundName->lineEdit()->setText(config.readPathEntry("BackgroundName"));
+  mBackgroundName->lineEdit()->setText(config.readPathEntry("BackgroundName", QString()));
   mIMPresenceBox->setChecked( config.readEntry( "InstantMessagingPresence", false ) );
 }
 

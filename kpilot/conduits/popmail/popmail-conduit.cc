@@ -151,7 +151,7 @@ QString PopMailConduit::getKMailOutbox() const
 	FUNCTIONSETUP;
 
 	// Default to "outbox" with newer KMails.
-	KConfig c(CSL1("kmailrc"), KConfig::OnlyLocal);
+	KConfig c(CSL1("kmailrc"), KConfig::SimpleConfig);
 	KConfigGroup group = c.group("General");
 
 	QString outbox = group.readEntry("outboxFolder");

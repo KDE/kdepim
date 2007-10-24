@@ -79,7 +79,7 @@ bool KNArticleFilter::loadInfo()
 
     if (fname.isNull())
       return false;
-    KConfig conf( fname, KConfig::OnlyLocal);
+    KConfig conf( fname, KConfig::SimpleConfig);
 
     KConfigGroup group = conf.group("GENERAL");
     n_ame=group.readEntry("name");
@@ -99,7 +99,7 @@ void KNArticleFilter::load()
 
   if (fname.isNull())
     return;
-  KConfig conf( fname, KConfig::OnlyLocal);
+  KConfig conf( fname, KConfig::SimpleConfig);
 
   KConfigGroup group = conf.group("STATUS");
   status.load(group);
@@ -142,7 +142,7 @@ void KNArticleFilter::save()
     KNHelper::displayInternalFileError();
     return;
   }
-  KConfig conf(dir+QString("%1.fltr").arg(i_d), KConfig::OnlyLocal);
+  KConfig conf(dir+QString("%1.fltr").arg(i_d), KConfig::SimpleConfig);
 
   KConfigGroup group = conf.group("GENERAL");
   group.writeEntry("name", QString(n_ame));

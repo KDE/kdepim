@@ -62,7 +62,7 @@ StdCalendar::StdCalendar()
   if ( mManager->isEmpty() ) {
     KConfig _config( "korganizerrc" );
     KConfigGroup config(&_config, "General" );
-    QString fileName = config.readPathEntry( "Active Calendar" );
+    QString fileName = config.readPathEntry( "Active Calendar", QString() );
 
     if ( !fileName.isEmpty() ) {
       addFileResource( fileName, i18n( "Active Calendar" ) );

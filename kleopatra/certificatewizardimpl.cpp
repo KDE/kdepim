@@ -369,7 +369,7 @@ void CertificateWizardImpl::createPersonalDataPage()
     grid->addWidget( lbl, row, 0 );
 
     le->setText( preset );
-    if ( config.entryIsImmutable( attr ) )
+    if ( config.isEntryImmutable( attr ) )
       le->setEnabled( false );
 
     _attrPairList.append(qMakePair(key, le));

@@ -63,7 +63,7 @@ void KNode::Identity::loadConfig(const KConfigGroup &c)
   s_igningKey = c.readEntry("SigningKey").toLocal8Bit();
   u_seSigFile=c.readEntry("UseSigFile",false);
   u_seSigGenerator=c.readEntry("UseSigGenerator",false);
-  s_igPath=c.readPathEntry("sigFile");
+  s_igPath=c.readPathEntry("sigFile", QString());
   s_igText=c.readEntry("sigText");
 }
 
@@ -223,7 +223,7 @@ KNode::DisplayedHeaders::DisplayedHeaders()
   QString fname( KStandardDirs::locate("data","knode/headers.rc") );
 
   if (!fname.isNull()) {
-    KConfig headerConf( fname, KConfig::OnlyLocal);
+    KConfig headerConf( fname, KConfig::SimpleConfig);
     QStringList headers = headerConf.groupList();
     headers.removeAll("<default>");
     headers.sort();
@@ -272,7 +272,7 @@ void KNode::DisplayedHeaders::save()
     KNHelper::displayInternalFileError();
     return;
   }
-  KConfig headerConf(dir+"headers.rc", KConfig::OnlyLocal);
+  KConfig headerConf(dir+"headers.rc", KConfig::SimpleConfig);
   QStringList oldHeaders = headerConf.groupList();
 
   QStringList::Iterator oldIt=oldHeaders.begin();

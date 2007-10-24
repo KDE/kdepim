@@ -79,7 +79,7 @@ void KNGroup::updateListItem()
 
 bool KNGroup::readInfo(const QString &confPath)
 {
-  KConfigGroup info( KSharedConfig::openConfig(confPath, KConfig::OnlyLocal), QString() );
+  KConfigGroup info( KSharedConfig::openConfig(confPath, KConfig::SimpleConfig), QString() );
 
   g_roupname = info.readEntry("groupname");
   d_escription = info.readEntry("description");
@@ -124,7 +124,7 @@ void KNGroup::saveInfo()
   QString dir(path());
 
   if (!dir.isNull()) {
-    KConfig _info(dir+g_roupname+".grpinfo", KConfig::OnlyLocal);
+    KConfig _info(dir+g_roupname+".grpinfo", KConfig::SimpleConfig);
     KConfigGroup info( &_info, QString() );
 
     info.writeEntry("groupname", g_roupname);

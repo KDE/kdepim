@@ -209,7 +209,7 @@ void KAddressBookTableView::readConfig( KConfigGroup &cfg )
   mListView->setToolTipsEnabled( cfg.readEntry( "ToolTips", true ) );
 
   if ( cfg.readEntry( "Background", false ) )
-    mListView->setBackgroundPixmap( cfg.readPathEntry( "BackgroundName" ) );
+    mListView->setBackgroundPixmap( cfg.readPathEntry( "BackgroundName", QString() ) );
 
   // Restore the layout of the listview
 #ifdef __GNUC__

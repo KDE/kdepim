@@ -92,7 +92,7 @@ KNNntpAccount::~KNNntpAccount()
 // tries to read information, returns false if it fails to do so
 bool KNNntpAccount::readInfo(const QString &confPath)
 {
-  KConfigGroup conf( KSharedConfig::openConfig(confPath, KConfig::OnlyLocal), QString() );
+  KConfigGroup conf( KSharedConfig::openConfig(confPath, KConfig::SimpleConfig), QString() );
 
   n_ame = conf.readEntry("name");
   //u_nsentCount = conf.readEntry("unsentCnt", 0);
@@ -130,7 +130,7 @@ void KNNntpAccount::saveInfo()
   if (dir.isNull())
     return;
 
-  KConfigGroup conf(KSharedConfig::openConfig( dir+"info", KConfig::OnlyLocal), QString() );
+  KConfigGroup conf(KSharedConfig::openConfig( dir+"info", KConfig::SimpleConfig), QString() );
 
   conf.writeEntry("name", n_ame);
   //conf.writeEntry("unsentCnt", u_nsentCount);
