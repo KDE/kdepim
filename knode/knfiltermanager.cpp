@@ -108,8 +108,8 @@ void KNFilterManager::loadFilters()
   QString fname(KStandardDirs::locate("data","knode/filters/filters.rc") );
 
   if (!fname.isNull()) {
-    KConfig conf( fname, KConfig::OnlyLocal);
-    KConfigGroup grp( &conf, conf.group());
+    KConfig conf( fname, KConfig::SimpleConfig);
+    KConfigGroup grp( &conf, QString());
     QList<int> activeFilters = grp.readEntry("Active",QList<int>());
     menuOrder = grp.readEntry("Menu",QList<int>());
 
@@ -134,8 +134,8 @@ void KNFilterManager::saveFilterLists()
     KNHelper::displayInternalFileError();
     return;
   }
-  KConfig conf(dir+"filters.rc", KConfig::OnlyLocal);
-  KConfigGroup grp(&conf, conf.group());
+  KConfig conf(dir+"filters.rc", KConfig::SimpleConfig);
+  KConfigGroup grp(&conf, QString());
   QList<int> activeFilters;
   for ( QList<KNArticleFilter*>::Iterator it = mFilterList.begin(); it != mFilterList.end(); ++it )
     activeFilters << (*it)->id();

@@ -113,7 +113,7 @@ Module::init()
 void
 Module::readConfig()
 {
-  KConfigGroup grp(config, config->group());
+  KConfigGroup grp(config, QString());
   storePass = grp.readEntry("storePass", false);
   showEncryptionResult = grp.readEntry("showEncryptionResult", true);
   mShowKeyApprovalDlg = grp.readEntry( "showKeysForApproval", true );
@@ -127,7 +127,7 @@ Module::readConfig()
 void
 Module::writeConfig(bool sync)
 {
-  KConfigGroup grp(config, config->group());
+  KConfigGroup grp(config, QString());
   grp.writeEntry("storePass", storePass);
   grp.writeEntry("showEncryptionResult", showEncryptionResult);
   grp.writeEntry( "showKeysForApproval", mShowKeyApprovalDlg );

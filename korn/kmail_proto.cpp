@@ -262,7 +262,7 @@ QString KMail_Protocol::getTypeAndConfig( const QString& kmailname, KConfig &kma
 		return QString();
 	}
 
-	//The correct group is found, and kmailconfig.setGroup() is already called for the right group.
+	//The correct group is found
 	return kmailconfig.group(groupname).readEntry( kmailKeyType, QString() );
 }
 
