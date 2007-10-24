@@ -36,36 +36,38 @@
 #include <gpg-error.h>
 #include <assuan.h>
 
-#include <gpgme++/error.h>
+#include <gpgme++/exception.h>
 
 #include <QString>
 
 #include <boost/preprocessor/stringize.hpp>
 
-#include <stdexcept>
 #include <assert.h>
 
 namespace Kleo {
 
-    class assuan_exception : public std::runtime_error {
+    class assuan_exception : public GpgME::Exception {
     public:
         assuan_exception( gpg_error_t e, const std::string & msg )
-            : std::runtime_error( make_message( e, msg ) ), m_error( e ), m_message( msg ) {}
-        assuan_exception( gpg_error_t e, const char* msg );
-        assuan_exception( gpg_error_t e, const QString & msg );
+            : GpgME::Exception( GpgME::Error( e ), msg ) {}
+        assuan_exception( gpg_error_t e, const char* msg )
+            : GpgME::Exception( GpgME::Error( e ), msg ) {}
+        assuan_exception( gpg_error_t e, const QString & msg )
+            : GpgME::Exception( GpgME::Error( e ), msg.toLocal8Bit().constData() ) {}
 
-        ~assuan_exception() throw () {}
+        assuan_exception( const GpgME::Error & e, const std::string & msg )
+            : GpgME::Exception( e, msg ) {}
+        assuan_exception( const GpgME::Error & e, const char* msg )
+            : GpgME::Exception( e, msg ) {}
+        assuan_exception( const GpgME::Error & e, const QString & msg )
+            : GpgME::Exception( e, msg.toLocal8Bit().constData() ) {}
 
-        const std::string & messageLocal8Bit() const { return m_message; }
-        gpg_error_t error_code() const { return m_error; }
+        ~assuan_exception() throw ();
 
-        QString message() const { return QString::fromLocal8Bit( m_message.c_str() ); }
-        GpgME::Error error() const { return GpgME::Error( m_error ); }
-    private:
-        static std::string make_message( gpg_error_t, const std::string & );
-    private:
-        gpg_error_t m_error;
-        std::string m_message;
+        const std::string & messageLocal8Bit() const { return GpgME::Exception::message(); }
+        gpg_error_t error_code() const { return static_cast<unsigned int>( error() ); }
+
+        QString message() const { return QString::fromLocal8Bit( GpgME::Exception::message().c_str() ); }
     };
 
 }

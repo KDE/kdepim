@@ -36,27 +36,8 @@
 
 #include <gpg-error.h>
 
-Kleo::assuan_exception::assuan_exception( gpg_error_t e, const QString & msg )
-            : std::runtime_error( make_message( e, msg.toLocal8Bit().data() ) ), m_error( e ), m_message( msg.toLocal8Bit() ) 
-{}
+using namespace Kleo;
+using namespace GpgME;
 
-Kleo::assuan_exception::assuan_exception( gpg_error_t e, const char* msg )
-            : std::runtime_error( make_message( e, msg ) ), m_error( e ), m_message( msg ) 
-{}
+assuan_exception::~assuan_exception() throw() {}
 
-
-// static
-std::string Kleo::assuan_exception::make_message( gpg_error_t err, const std::string & msg ) {    
-    char buf[1024];
-    buf[0] = '\0';
-    gpg_strerror_r( err, buf, sizeof buf );
-    buf[sizeof buf - 1] = '\0';
-    char result_buf[1024];
-    snprintf( result_buf, sizeof result_buf, "%lu %s: %s",
-            (unsigned long)err, gpg_strsource( err ), buf  );
-    result_buf[sizeof result_buf - 1] = '\0';
-    std::string result = result_buf;
-    result += " - ";
-    result += msg;
-    return result;
-}
