@@ -62,10 +62,10 @@ namespace {
         { "gpg", OpenPGP| Binary  | OpaqueSignature|CipherText|AnyCertStoreType },
         { "p10", CMS    |  Ascii  | CertificateRequest },
         { "p12", CMS    | Binary  | ExportedPSM },
-        { "pem", CMS    |  Ascii  | AnyType },
         { "p7c", CMS    | Binary  | Certificate  },
         { "p7m", CMS    | Binary  | CipherText },
         { "p7s", CMS    | Binary  | AnySignature },
+        { "pem", CMS    |  Ascii  | AnyType },
         { "sig", OpenPGP|AnyFormat| DetachedSignature },
     };
 
