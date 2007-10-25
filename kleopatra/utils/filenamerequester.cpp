@@ -85,6 +85,7 @@ FileNameRequester::Private::Private( FileNameRequester * qq )
     button.setIcon( KIcon("document-open") );
     lineedit.setCompleter( &completer );
 
+    hlay.setMargin( 0 );
     hlay.addWidget( &lineedit );
     hlay.addWidget( &button );
 
