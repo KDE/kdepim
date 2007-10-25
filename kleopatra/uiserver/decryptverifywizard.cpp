@@ -46,6 +46,7 @@
 #include <QEventLoop>
 #include <QPointer>
 #include <QAbstractButton>
+#include <QScrollBar>
 
 #include <vector>
 #include <cassert>
@@ -53,6 +54,14 @@
 using namespace Kleo;
 
 namespace {
+
+    static QSize getMinimumSizeHint( const QWidget * w ) {
+        return w ? w->minimumSizeHint() : QSize( 0, 0 );
+    }
+
+    static QSize getSizeHint( const QWidget * w ) {
+        return w ? w->sizeHint() : QSize( 0, 0 );
+    }
 
     class ScrollArea : public QScrollArea {
         Q_OBJECT
@@ -65,6 +74,16 @@ namespace {
             setWidgetResizable( true );
         }
         ~ScrollArea() {}
+
+        /* reimp */ QSize minimumSizeHint() const {
+            return QSize( getMinimumSizeHint( widget() ).width() + getSizeHint( verticalScrollBar() ).width() + 2*frameWidth(), 0 )
+                .expandedTo( QScrollArea::minimumSizeHint() );
+        }
+        /* reimp */ QSize sizeHint() const {
+            const QSize widgetSizeHint = getSizeHint( widget() );
+            const int fw = frameWidth();
+            return QScrollArea::sizeHint().expandedTo( widgetSizeHint + QSize( 2*fw, 2*fw ) + QSize( getSizeHint( verticalScrollBar() ).width(), 0 ) );
+        }
     };
 
     class OperationsPage : public QWizardPage {
@@ -232,8 +251,9 @@ OperationsPage::UI::UI( OperationsPage * q )
 
     outputDirectoryLB.setBuddy( &outputDirectoryFNR );
 
-    vlay.addWidget( &scrollArea );
-    vlay.addStretch( 1 );
+    hlay.setMargin( 0 );
+
+    vlay.addWidget( &scrollArea, 1 );
     vlay.addLayout( &hlay );
     hlay.addWidget( &outputDirectoryLB );
     hlay.addWidget( &outputDirectoryFNR );
