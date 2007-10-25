@@ -74,6 +74,8 @@ QString LastPage::getHTMLTemplate() const
                );
     return KMobileTools::EnginesList::instance()->wizardEngine()->parseWizardSummary(ret, wizard()->objectName() );
     */
+
+	return QString();
 }
 
 #include "lastpage.moc"

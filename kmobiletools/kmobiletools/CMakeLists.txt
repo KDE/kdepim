@@ -18,7 +18,7 @@ add_subdirectory( tests )
 
 ########### next target ###############
 
-set(kmobiletools_SRCS main.cpp kmobiletools.cpp )
+set(kmobiletools_SRCS main.cpp kmobiletools.cpp kmobiletools.h )
 
 
 kde4_add_executable(kmobiletools_bin ${kmobiletools_SRCS})

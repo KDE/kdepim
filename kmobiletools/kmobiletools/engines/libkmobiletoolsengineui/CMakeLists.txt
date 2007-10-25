@@ -1,8 +1,11 @@
 
 
 set(kmobiletoolsengineui_LIB_SRCS 
+   connectionsPage.h
    connectionsPage.cpp
+   scanprogressPage.h
    scanprogressPage.cpp
+   devicesfoundPage.h
    devicesfoundPage.cpp
    )
 

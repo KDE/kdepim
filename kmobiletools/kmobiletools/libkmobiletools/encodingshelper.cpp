@@ -24,7 +24,6 @@
 #include <Q3MemArray>
 #include <klocale.h>
 #include <stdio.h>
-#include "enginedata.h"
 
 class EncodingsHelperPrivate {
 };

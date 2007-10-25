@@ -24,7 +24,6 @@
 #include <kicon.h>
 #include "devicesconfig.h"
 #include "weaver.h"
-#include "engine.h"
 
 #define ID_LOAD 1
 #define ID_UNLOAD 2
