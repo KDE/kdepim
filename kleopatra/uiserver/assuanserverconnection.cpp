@@ -992,5 +992,34 @@ void AssuanCommand::doApplyWindowID( QDialog * dlg ) const {
     // ### TODO: parse window-id, and apply it to dlg...
 }
 
+static QString commonPrefix( const QString & s1, const QString & s2 ) {
+    return QString( s1.data(), std::mismatch( s1.data(), s1.data() + std::min( s1.size(), s2.size() ), s2.data() ).first - s1.data() );
+}
+
+static QString longestCommonPrefix( const QStringList & sl ) {
+    if ( sl.empty() )
+        return QString();
+    QString result = sl.front();
+    Q_FOREACH( const QString & s, sl )
+        result = commonPrefix( s, result );
+    return result;
+}
+
+QString AssuanCommand::heuristicBaseDirectory() const {
+    QStringList inputs;
+    const unsigned int numInputs = numBulkInputDevices( "INPUT" );
+    for ( unsigned int i = 0 ; i < numInputs ; ++i ) {
+        const QString fname = bulkInputDeviceFileName( "INPUT", i );
+        if ( !fname.isEmpty() )
+            inputs.push_back( fname );
+    }
+    const QString candidate = longestCommonPrefix( inputs );
+    const QFileInfo fi( candidate );
+    if ( fi.isDir() )
+        return candidate;
+    else
+        return fi.absolutePath();
+}
+
 #include "assuanserverconnection.moc"
 #include "moc_assuanserverconnection.cpp"

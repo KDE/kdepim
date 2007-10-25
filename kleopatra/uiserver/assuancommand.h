@@ -227,6 +227,8 @@ namespace Kleo {
             return w;
         }
 
+        QString heuristicBaseDirectory() const;
+
     protected:
 
         bool isNohup() const;
