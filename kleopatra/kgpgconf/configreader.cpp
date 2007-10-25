@@ -41,6 +41,8 @@
 #include <QProcess>
 #include <QStringList>
 
+#include <cassert>
+
 namespace {
     typedef QList<QPair<QString, QString> > StringPairList;
     typedef QPair<QString, QString> StringPair;
