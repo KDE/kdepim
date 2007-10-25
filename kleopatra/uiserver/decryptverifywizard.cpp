@@ -86,6 +86,16 @@ namespace {
         }
     };
 
+    class HLine : public QFrame {
+        Q_OBJECT
+    public:
+        explicit HLine( QWidget * p=0, Qt::WindowFlags f=0 )
+            : QFrame( p, f )
+        {
+            setFrameStyle( QFrame::HLine|QFrame::Sunken );
+        }
+    };
+
     class OperationsPage : public QWizardPage {
         Q_OBJECT
     public:
@@ -249,6 +259,8 @@ OperationsPage::UI::UI( OperationsPage * q )
     KDAB_SET_OBJECT_NAME( outputDirectoryFNR );
     KDAB_SET_OBJECT_NAME( scrollArea );
 
+    assert( qobject_cast<QBoxLayout*>(scrollArea.widget()->layout()) );
+    static_cast<QBoxLayout*>(scrollArea.widget()->layout())->addStretch( 1 );
     outputDirectoryLB.setBuddy( &outputDirectoryFNR );
 
     hlay.setMargin( 0 );
@@ -269,8 +281,10 @@ void OperationsPage::ensureIndexAvailable( unsigned int idx ) {
     QBoxLayout & blay = *static_cast<QBoxLayout*>( m_ui.scrollArea.widget()->layout() );
 
     for ( unsigned int i = m_widgets.size() ; i < idx+1 ; ++i ) {
+        if ( i )
+            blay.insertWidget( blay.count()-1, new HLine( m_ui.scrollArea.widget() ) );
         DecryptVerifyOperationWidget * w = new DecryptVerifyOperationWidget( m_ui.scrollArea.widget() );
-        blay.addWidget( w );
+        blay.insertWidget( blay.count()-1, w );
         w->show();
         m_widgets.push_back( w );
     }
@@ -296,6 +310,9 @@ ResultPage::UI::UI( ResultPage * q )
     KDAB_SET_OBJECT_NAME( vlay );
     KDAB_SET_OBJECT_NAME( scrollArea );
 
+    assert( qobject_cast<QBoxLayout*>(scrollArea.widget()->layout()) );
+    static_cast<QBoxLayout*>(scrollArea.widget()->layout())->addStretch( 1 );
+
     vlay.addWidget( &scrollArea );
 }
 
@@ -309,8 +326,10 @@ void ResultPage::ensureIndexAvailable( unsigned int idx ) {
     QBoxLayout & blay = *static_cast<QBoxLayout*>( m_ui.scrollArea.widget()->layout() );
 
     for ( unsigned int i = m_widgets.size() ; i < idx+1 ; ++i ) {
+        if ( i )
+            blay.insertWidget( blay.count()-1, new HLine( m_ui.scrollArea.widget() ) );
         DecryptVerifyResultWidget * w = new DecryptVerifyResultWidget( m_ui.scrollArea.widget() );
-        blay.addWidget( w );
+        blay.insertWidget( blay.count()-1, w );
         w->show();
         m_widgets.push_back( w );
     }
