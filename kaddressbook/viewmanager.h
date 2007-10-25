@@ -27,7 +27,6 @@
 #include <QWidget>
 #include <QDropEvent>
 #include <QHash>
-#include <KSharedPtr>
 #include <kaddressbookview.h>
 
 class QDropEvent;
