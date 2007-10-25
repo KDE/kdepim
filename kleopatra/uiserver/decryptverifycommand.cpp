@@ -113,7 +113,7 @@ namespace {
         struct _Input {
             QIODevice * io;
             QString fileName;
-            shared_ptr<QFile> file; // only used when != {INPUT,MESSAGE,OUTPUT} (shared_ptr b/c QFile isn't copyable)
+            shared_ptr<QFile> file; // only used when != {INPUT,MESSAGE} (shared_ptr b/c QFile isn't copyable)
         } input, signedData;
 
         struct _Output {
@@ -125,13 +125,24 @@ namespace {
         const CryptoBackend::Protocol* backend;
 
 
+        static _Input openExistingFile( const QString & fname ) {
+            const shared_ptr<QFile> f( new QFile( fname ) );
+            if ( !f->open( QIODevice::ReadOnly ) ) // ### ask again?
+                throw assuan_exception( gpg_error( GPG_ERR_ASS_NO_INPUT ),
+                                        i18n("Can't open file \"%1\" for reading: %2", fname, f->errorString() ) );
+            const _Input input = {
+                f.get(), fname, f
+            };
+            return input;
+        }
+
         static _Output makeTemporaryOutput( const QString & fname ) {
             const shared_ptr<QTemporaryFile> tmp( new QTemporaryFile( fname ) );
             if ( !tmp->open() )
                 throw assuan_exception( gpg_error( GPG_ERR_ASS_NO_OUTPUT ),
                                         i18n("Can't open temporary file \"%1\": %2", tmp->fileName(), tmp->errorString() ) );
             const _Output output = {
-                tmp.get(), QString(), tmp,
+                tmp.get(), fname, tmp,
             };
             return output;
         }
@@ -235,6 +246,8 @@ public:
     }
 
     std::vector<Input> buildInputList();
+    Input inputFromOperationWidget( DecryptVerifyOperationWidget * w );
+
     void startJobs();
 
     void trySendingStatus( const char * tag, const QString & str );
@@ -244,14 +257,18 @@ public:
         if ( wizard )
             return;
         wizard = q->applyWindowID( new DecryptVerifyWizard );
+        //if ( requestedWindowTitle().isEmpty() )
+            wizard->setWindowTitle( i18n("Decrypt/Verify Wizard") );
+        //else
+        //    wizard->setWindowTitle( i18n("Decrypt/Verify Wizard: %1", requestedWindowTitle() ) );
     }
 
     void showWizard() {
-        if ( wizard )
-            if ( wizard->isVisible() )
-                wizard->raise();
-            else
+        if ( wizard ) {
+            if ( !wizard->isVisible() )
                 wizard->show();
+            wizard->raise();
+        }
     }
 
 public Q_SLOTS:
@@ -534,7 +551,7 @@ std::vector<Input> DecryptVerifyCommand::Private::buildInputList()
 
         createWizard();
 
-        int counter = 0;
+        unsigned int counter = 0;
         for ( unsigned int i = 0 ; i < numInputs ; ++i ) {
 
             QIODevice * iodev = q->bulkInputDevice( "INPUT", i );
@@ -545,24 +562,15 @@ std::vector<Input> DecryptVerifyCommand::Private::buildInputList()
 
             const unsigned int classification = classify( fname );
 
-            if ( isOpaqueSignature( classification ) || isCipherText( classification ) ) {
+            if ( mayBeOpaqueSignature( classification ) || mayBeCipherText( classification ) ) {
 
                 DecryptVerifyOperationWidget * op = wizard->operationWidget( counter++ );
                 assuan_assert( op != 0 );
 
                 op->setVerifyDetached( false );
                 op->setInputFileName( fname );
-#if 0
-                input.type = DecryptVerify;
 
-                input.input.io = iodev;
-                input.input.fileName = fname;
-
-                input.output = Input::makeTemporaryOutput( fname );
-
-                inputs.push_back( input );
-#endif
-            } else if ( isDetachedSignature( classification ) ) {
+            } else if ( mayBeDetachedSignature( classification ) ) {
                 // heuristics say it's a detached signature
 
                 DecryptVerifyOperationWidget * op = wizard->operationWidget( counter++ );
@@ -571,29 +579,7 @@ std::vector<Input> DecryptVerifyCommand::Private::buildInputList()
                 op->setVerifyDetached( true );
                 op->setInputFileName( fname );
                 op->setSignedDataFileName( findSignedData( fname ) );
-#if 0
-                input.type = VerifyDetached;
 
-                input.input.io = iodev;
-                input.input.fileName = fname;
-
-                QString signedData = findSignedData( fname );
-                if ( signedData.isEmpty() )
-                    // guessing failed, ask the user to supply one
-                    signedData = QFileDialog::getOpenFileName( 0, i18n("Please select the data file corresponding to the signature file %1", fname) );
-                if ( signedData.isEmpty() )
-                    continue;
-
-                input.signedData.fileName = signedData;
-                QFile * f = new QFile( signedData );
-                input.signedData.file.reset( f );
-                input.signedData.io = f;
-                if ( !f->open( QIODevice::ReadOnly ) ) // ### ask again?
-                    throw assuan_exception( q->makeError( GPG_ERR_ASS_NO_INPUT ),
-                                            i18n("Can't open file \"%1\" for reading: %2", signedData, input.signedData.file->errorString() ) );
-
-                inputs.push_back( input );
-#endif
             } else {
 
                 // probably the signed data file was selected:
@@ -612,35 +598,58 @@ std::vector<Input> DecryptVerifyCommand::Private::buildInputList()
                     op->setVerifyDetached( true );
                     op->setInputFileName( s );
                     op->setSignedDataFileName( fname );
-#if 0
-                    Input inp;
-
-                    inp.type = VerifyDetached;
-
-                    inp.signedData.fileName = fname;
-                    inp.signedData.io = iodev;
-
-                    inp.input.fileName = s;
-                    QFile * f = new QFile( s );
-                    inp.input.file.reset( f );
-                    inp.input.io = f;
-                    if ( !f->open( QIODevice::ReadOnly ) ) // ### ask again?
-                        throw assuan_exception( q->makeError( GPG_ERR_ASS_NO_INPUT ),
-                                                i18n("Can't open file \"%1\" for reading: %2", s, inp.input.file->errorString() ) );
-
-                    inputs.push_back( inp );
-#endif
                 }
             }
         }
 
-        if ( counter ) {
-            showWizard();
-            wizard->waitForOperationSelection();
-        }
+        if ( !counter )
+            throw assuan_exception( q->makeError( GPG_ERR_ASS_NO_INPUT ), i18n("No usable inputs found") );
+
+        wizard->setOutputDirectory( q->heuristicBaseDirectory() );
+        showWizard();
+        if ( !wizard->waitForOperationSelection() )
+            throw assuan_exception( q->makeError( GPG_ERR_CANCELED ), i18n("Confirmation dialog canceled") );
+
+        for ( unsigned int i = 0 ; i < counter ; ++i )
+            try {
+                inputs.push_back( inputFromOperationWidget( wizard->operationWidget( i ) ) );
+            } catch ( const GpgME::Exception & e ) {
+                //wizard->addResult( DVResult::.... )
+            }
+        
     }
 
     return inputs;
+}
+
+Input DecryptVerifyCommand::Private::inputFromOperationWidget( DecryptVerifyOperationWidget * w ) {
+
+    assuan_assert( w );
+
+    const QString inputFileName = w->inputFileName();
+    if ( inputFileName.isEmpty() )
+        throw assuan_exception( q->makeError( GPG_ERR_ASS_NO_INPUT ), i18n("File canceled") );
+
+    Input input;
+
+    if ( w->isVerifyDetached() ) {
+
+        const QString signedDataFileName = w->signedDataFileName();
+        if ( signedDataFileName.isEmpty() )
+            throw assuan_exception( q->makeError( GPG_ERR_ASS_NO_INPUT ), i18n("File canceled") );
+
+        input.type = VerifyDetached;
+        input.input = Input::openExistingFile( inputFileName );
+        input.signedData = Input::openExistingFile( signedDataFileName );
+
+    } else {
+
+        input.type = DecryptVerify;
+        input.input = Input::openExistingFile( inputFileName );
+        input.output = Input::makeTemporaryOutput( inputFileName );
+    }
+
+    return input;
 }
 
 static QString summaryToString( const Signature::Summary summary )
