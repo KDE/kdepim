@@ -33,6 +33,8 @@
 #include "keycache.h"
 #include "predicates.h"
 
+#include <utils/stl_util.h>
+
 #include <kleo/dn.h>
 
 #include <gpgme++/key.h>
@@ -152,10 +154,10 @@ std::vector<Key> KeyCache::findByFingerprint( const std::vector<std::string> & f
     std::sort( sorted.begin(), sorted.end(), _detail::ByFingerprint<std::less>() );
 
     std::vector<Key> result;
-    std::set_intersection( d->by.fpr.begin(), d->by.fpr.end(),
-                           fprs.begin(), fprs.end(),
-                           std::back_inserter( result ),
-                           _detail::ByFingerprint<std::less>() );
+    kdtools::set_intersection( d->by.fpr.begin(), d->by.fpr.end(),
+                               sorted.begin(), sorted.end(),
+                               std::back_inserter( result ),
+                               _detail::ByFingerprint<std::less>() );
     return result;
 }
 
@@ -205,17 +207,17 @@ std::vector<Key> KeyCache::findByKeyIDOrFingerprint( const std::vector<std::stri
     std::vector<Key> result;
     result.reserve( keyids.size() ); // dups shouldn't happen
 
-    std::set_intersection( d->by.fpr.begin(), d->by.fpr.end(),
-                           keyids.begin(), keyids.end(),
-                           std::back_inserter( result ),
-                           _detail::ByFingerprint<std::less>() );
+    kdtools::set_intersection( d->by.fpr.begin(), d->by.fpr.end(),
+                               keyids.begin(), keyids.end(),
+                               std::back_inserter( result ),
+                               _detail::ByFingerprint<std::less>() );
     if ( result.size() < keyids.size() )
         // note that By{Fingerprint,KeyID,ShortKeyID} define the same
         // order for _strings_
-        std::set_intersection( d->by.keyid.begin(), d->by.keyid.end(),
-                               keyids.begin(), keyids.end(),
-                               std::back_inserter( result ),
-                               _detail::ByKeyID<std::less>() );
+        kdtools::set_intersection( d->by.keyid.begin(), d->by.keyid.end(),
+                                   keyids.begin(), keyids.end(),
+                                   std::back_inserter( result ),
+                                   _detail::ByKeyID<std::less>() );
 
     // duplicates shouldn't happen, but make sure nonetheless:
     std::sort( result.begin(), result.end(), _detail::ByFingerprint<std::less>() );
