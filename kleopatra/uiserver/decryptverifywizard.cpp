@@ -297,7 +297,6 @@ ResultPage::UI::UI( ResultPage * q )
     KDAB_SET_OBJECT_NAME( scrollArea );
 
     vlay.addWidget( &scrollArea );
-    vlay.addStretch( 1 );
 }
 
 void ResultPage::ensureIndexAvailable( unsigned int idx ) {
