@@ -22,6 +22,8 @@
 #ifndef __KDTOOLSCORE_STL_UTIL_H__
 #define __KDTOOLSCORE_STL_UTIL_H__
 
+#include <algorithm>
+
 namespace kdtools {
 
     template <typename InputIterator, typename OutputIterator, typename UnaryPredicate>
@@ -76,6 +78,44 @@ namespace kdtools {
 	return true;
     }
 
+    //@{
+    /**
+       Versions of std::set_intersection optimized for ForwardIterator's
+    */
+    template <typename ForwardIterator, typename ForwardIterator2, typename OutputIterator, typename BinaryPredicate>
+    OutputIterator set_intersection( ForwardIterator first1, ForwardIterator last1, ForwardIterator2 first2, ForwardIterator2 last2, OutputIterator result ) {
+        while ( first1 != last1 && first2 != last2 ) {
+            if ( *first1 < *first2 ) {
+                first1 = std::lower_bound( ++first1, last1, *first2 );
+            } else if ( *first2 < *first1 ) {
+                first2 = std::lower_bound( ++first2, last2, *first1 );
+            } else {
+                *result = *first1;
+                ++first1;
+                ++first2;
+                ++result;
+            }
+        }
+        return result;
+    }
+
+    template <typename ForwardIterator, typename ForwardIterator2, typename OutputIterator, typename BinaryPredicate>
+    OutputIterator set_intersection( ForwardIterator first1, ForwardIterator last1, ForwardIterator2 first2, ForwardIterator2 last2, OutputIterator result, BinaryPredicate pred ) {
+        while ( first1 != last1 && first2 != last2 ) {
+            if ( pred( *first1, *first2 ) ) {
+                first1 = std::lower_bound( ++first1, last1, *first2, pred );
+            } else if ( pred( *first2, *first1 ) ) {
+                first2 = std::lower_bound( ++first2, last2, *first1, pred );
+            } else {
+                *result = *first1;
+                ++first1;
+                ++first2;
+                ++result;
+            }
+        }
+        return result;
+    }
+    //@}
 }
 
 #endif /* __KDTOOLSCORE_STL_UTIL_H__ */
