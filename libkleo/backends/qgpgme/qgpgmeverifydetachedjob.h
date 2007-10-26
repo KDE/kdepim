@@ -55,7 +55,7 @@ namespace Kleo {
     GpgME::Error start( const QByteArray & signature, const QByteArray & signedData );
 
     /*! \reimp from VerifyDetachedJob */
-    void start( QIODevice * signature, QIODevice * signedData );
+    void start( const boost::shared_ptr<QIODevice> & signature, const boost::shared_ptr<QIODevice> & signedData );
 
   private Q_SLOTS:
     void slotOperationDoneEvent( GpgME::Context * context, const GpgME::Error & e ) {
@@ -65,7 +65,7 @@ namespace Kleo {
   private:
     void doOperationDoneEvent( const GpgME::Error & e );
     void setup( const QByteArray &, const QByteArray & );
-    void setup( QIODevice *, QIODevice * );
+    void setup( const boost::shared_ptr<QIODevice> &, const boost::shared_ptr<QIODevice> & );
   };
 
 }

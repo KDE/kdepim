@@ -73,29 +73,29 @@ GpgME::Error Kleo::QGpgMEDecryptJob::start( const QByteArray & cipherText ) {
   return err;
 }
 
-void Kleo::QGpgMEDecryptJob::setup( QIODevice * cipherText, QIODevice * plainText ) {
-  assert( cipherText );
-  assert( !mInData );
-  assert( !mOutData );
+void Kleo::QGpgMEDecryptJob::setup( const boost::shared_ptr<QIODevice> & cipherText, const boost::shared_ptr<QIODevice> & plainText ) {
+    assert( cipherText );
+    assert( !mInData );
+    assert( !mOutData );
 
-  createInData( cipherText );
-  if ( plainText )
-      createOutData( plainText );
-  else
-      createOutData();
+    createInData( cipherText );
+    if ( plainText )
+        createOutData( plainText );
+    else
+        createOutData();
 }
 
-void Kleo::QGpgMEDecryptJob::start( QIODevice * cipherText, QIODevice * plainText ) {
+void Kleo::QGpgMEDecryptJob::start( const boost::shared_ptr<QIODevice> & cipherText, const boost::shared_ptr<QIODevice> & plainText ) {
     setup( cipherText, plainText );
 
-  hookupContextToEventLoopInteractor();
+    hookupContextToEventLoopInteractor();
 
-  if ( const GpgME::Error err = mCtx->startDecryption( *mInData, *mOutData ) )
-      doThrow( err, i18n("Can't start decrypt job").toLocal8Bit().constData() );
+    if ( const GpgME::Error err = mCtx->startDecryption( *mInData, *mOutData ) )
+        doThrow( err, i18n("Can't start decrypt job").toLocal8Bit().constData() );
 }
 
 void Kleo::QGpgMEDecryptJob::doOperationDoneEvent( const GpgME::Error & ) {
-  emit result( mCtx->decryptionResult(), outData() );
+    emit result( mCtx->decryptionResult(), outData() );
 }
 
 #include "qgpgmedecryptjob.moc"

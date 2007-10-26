@@ -35,6 +35,8 @@
 
 #include "job.h"
 
+#include <boost/shared_ptr.hpp>
+
 class QByteArray;
 class QIODevice;
 
@@ -82,7 +84,7 @@ namespace Kleo {
 
       \throws GpgME::Exception if starting fails
     */
-    virtual void start( QIODevice * cipherText, QIODevice * plainText=0 ) = 0;
+    virtual void start( const boost::shared_ptr<QIODevice> & cipherText, const boost::shared_ptr<QIODevice> & plainText=boost::shared_ptr<QIODevice>() ) = 0;
 
   Q_SIGNALS:
     void result( const GpgME::DecryptionResult & decryptionresult,

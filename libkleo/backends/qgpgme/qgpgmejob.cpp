@@ -231,7 +231,7 @@ GpgME::Error Kleo::QGpgMEJob::setSigningKeys( const std::vector<GpgME::Key> & si
   return GpgME::Error();
 }
 
-void Kleo::QGpgMEJob::createInData( QIODevice * in ) {
+void Kleo::QGpgMEJob::createInData( const boost::shared_ptr<QIODevice> & in ) {
   mInDataDataProvider = new QGpgME::QIODeviceDataProvider( in );
   mInData = new GpgME::Data( mInDataDataProvider );
   assert( !mInData->isNull() );
@@ -243,7 +243,7 @@ void Kleo::QGpgMEJob::createInData( const QByteArray & in ) {
   assert( !mInData->isNull() );
 }
 
-void Kleo::QGpgMEJob::createOutData( QIODevice * out ) {
+void Kleo::QGpgMEJob::createOutData( const boost::shared_ptr<QIODevice> & out ) {
   mOutDataDataProvider = new QGpgME::QIODeviceDataProvider( out );
   mOutData = new GpgME::Data( mOutDataDataProvider );
   assert( !mOutData->isNull() );

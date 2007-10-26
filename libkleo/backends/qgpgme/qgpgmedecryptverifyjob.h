@@ -56,7 +56,7 @@ namespace Kleo {
     GpgME::Error start( const QByteArray & cipherText );
 
     /*! \reimp from DecryptVerifyJob */
-    void start( QIODevice * cipherText, QIODevice * plainText );
+    void start( const boost::shared_ptr<QIODevice> & cipherText, const boost::shared_ptr<QIODevice> & plainText );
 
   private Q_SLOTS:
     void slotOperationDoneEvent( GpgME::Context * context, const GpgME::Error & e ) {
@@ -66,7 +66,7 @@ namespace Kleo {
   private:
     void doOperationDoneEvent( const GpgME::Error & e );
     void setup( const QByteArray & );
-    void setup( QIODevice *, QIODevice * );
+    void setup( const boost::shared_ptr<QIODevice> &, const boost::shared_ptr<QIODevice> & );
   };
 
 }

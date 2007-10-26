@@ -39,6 +39,7 @@
 #include <gpgme++/interfaces/passphraseprovider.h>
 #include <gpgme++/key.h>
 
+#include <boost/shared_ptr.hpp>
 
 #include <vector>
 
@@ -99,10 +100,10 @@ namespace Kleo {
     /*! Creates an empty GpgME::Data/QGpgME::QByteArrayDataProvider pair */
     void createOutData();
     /*! Creates a GpgME::Data/QGpgME::QByteArrayDataProvider pair associated with \a out */
-    void createOutData( QIODevice * out );
+    void createOutData( const boost::shared_ptr<QIODevice> & out );
     /*! Creates a GpgME::Data/QGpgME::QIODeviceDataProvider pair,
       associated with \a in */
-    void createInData( QIODevice * in );
+    void createInData( const boost::shared_ptr<QIODevice> & in );
     /*! Creates a GpgME::Data/QGpgME::QByteArrayDataProvider pair,
       filled with the contents of \a in */
     void createInData( const QByteArray & in );

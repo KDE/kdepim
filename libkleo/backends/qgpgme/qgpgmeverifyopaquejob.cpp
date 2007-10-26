@@ -73,7 +73,7 @@ GpgME::Error Kleo::QGpgMEVerifyOpaqueJob::start( const QByteArray & signedData )
   return err;
 }
 
-void Kleo::QGpgMEVerifyOpaqueJob::setup( QIODevice * signedData, QIODevice * plainText ) {
+void Kleo::QGpgMEVerifyOpaqueJob::setup( const boost::shared_ptr<QIODevice> & signedData, const boost::shared_ptr<QIODevice> & plainText ) {
     assert( signedData );
     assert( !mInData );
     assert( !mOutData );
@@ -85,7 +85,7 @@ void Kleo::QGpgMEVerifyOpaqueJob::setup( QIODevice * signedData, QIODevice * pla
         createOutData();
 }
 
-void Kleo::QGpgMEVerifyOpaqueJob::start( QIODevice * signedData, QIODevice * plainText ) {
+void Kleo::QGpgMEVerifyOpaqueJob::start( const boost::shared_ptr<QIODevice> & signedData, const boost::shared_ptr<QIODevice> & plainText ) {
     setup( signedData, plainText );
 
     hookupContextToEventLoopInteractor();

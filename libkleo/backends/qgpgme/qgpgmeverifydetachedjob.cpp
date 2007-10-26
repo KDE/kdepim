@@ -78,7 +78,7 @@ GpgME::Error Kleo::QGpgMEVerifyDetachedJob::start( const QByteArray & signature,
   return err;
 }
 
-void Kleo::QGpgMEVerifyDetachedJob::setup( QIODevice * signature, QIODevice * signedData ) {
+void Kleo::QGpgMEVerifyDetachedJob::setup( const boost::shared_ptr<QIODevice> & signature, const boost::shared_ptr<QIODevice> & signedData ) {
     assert( signature );
     assert( signedData );
     assert( !mInData );
@@ -89,7 +89,7 @@ void Kleo::QGpgMEVerifyDetachedJob::setup( QIODevice * signature, QIODevice * si
     createOutData( signedData );
 }
 
-void Kleo::QGpgMEVerifyDetachedJob::start( QIODevice * signature, QIODevice * signedData ) {
+void Kleo::QGpgMEVerifyDetachedJob::start( const boost::shared_ptr<QIODevice> & signature, const boost::shared_ptr<QIODevice> & signedData ) {
   setup( signature, signedData );
 
   hookupContextToEventLoopInteractor();

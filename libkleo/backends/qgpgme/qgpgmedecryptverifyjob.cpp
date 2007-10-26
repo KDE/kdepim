@@ -74,7 +74,7 @@ GpgME::Error Kleo::QGpgMEDecryptVerifyJob::start( const QByteArray & cipherText 
   return err;
 }
 
-void Kleo::QGpgMEDecryptVerifyJob::setup( QIODevice * cipherText, QIODevice * plainText ) {
+void Kleo::QGpgMEDecryptVerifyJob::setup( const boost::shared_ptr<QIODevice> & cipherText, const boost::shared_ptr<QIODevice> & plainText ) {
     assert( cipherText );
     assert( !mInData );
     assert( !mOutData );
@@ -86,7 +86,7 @@ void Kleo::QGpgMEDecryptVerifyJob::setup( QIODevice * cipherText, QIODevice * pl
         createOutData();
 }
 
-void Kleo::QGpgMEDecryptVerifyJob::start( QIODevice * cipherText, QIODevice * plainText ) {
+void Kleo::QGpgMEDecryptVerifyJob::start( const boost::shared_ptr<QIODevice> & cipherText, const boost::shared_ptr<QIODevice> & plainText ) {
     setup( cipherText, plainText );
 
     hookupContextToEventLoopInteractor();
