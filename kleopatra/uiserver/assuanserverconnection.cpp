@@ -432,18 +432,18 @@ private:
             const QFileInfo fi( QFile::decodeName( line ) );
             if ( !fi.isAbsolute() )
                 throw assuan_exception( gpg_error( GPG_ERR_INV_ARG ), i18n("Only absolute file paths are allowed") );
-            if ( !fi.isFile() )
+            if ( fi.exists() && fi.isDir() )
                 throw assuan_exception( gpg_error( GPG_ERR_NOT_IMPLEMENTED ), i18n("Directory traversal is not yet implemented") );
             const QString filePath = fi.absoluteFilePath();
             const shared_ptr<QFile> file( new QFile( filePath ) );
-            if ( file->open( QIODevice::ReadOnly ) )
+            if ( !file->open( QIODevice::ReadOnly ) )
                 throw assuan_exception( gpg_error_from_errno( errno ), i18n("Could not open file \"%1\" for reading", filePath) );
             const IOF io = {
                 filePath, file
             };
             conn.files.push_back( io );
 
-            return 0;
+            return assuan_process_done( conn.ctx.get(), 0 );
         } catch ( const assuan_exception & e ) {
             return assuan_process_done_msg( conn.ctx.get(), e.error(), e.message().toUtf8().constData() );
         } catch ( ... ) {
@@ -959,6 +959,7 @@ int AssuanCommandFactory::_handle( assuan_context_t ctx, char * line, const char
         cmd->d->inputs.swap( conn.inputs );     assuan_assert( conn.inputs.empty() );
         cmd->d->messages.swap( conn.messages ); assuan_assert( conn.messages.empty() );
         cmd->d->outputs.swap( conn.outputs );   assuan_assert( conn.outputs.empty() );
+        cmd->d->files.swap( conn.files );       assuan_assert( conn.files.empty() );
         cmd->d->senders.swap( conn.senders );   assuan_assert( conn.senders.empty() );
         cmd->d->recipients.swap( conn.recipients ); assuan_assert( conn.recipients.empty() );
 
