@@ -1,5 +1,5 @@
 /* -*- mode: c++; c-basic-offset:4 -*-
-    mainwindow.h
+    configwriter.h
 
     This file is part of Kleopatra, the KDE keymanager
     Copyright (c) 2007 Klarälvdalens Datakonsult AB
@@ -30,56 +30,24 @@
     your version.
 */
 
-#ifndef KGPGCONF_MAINWINDOW_H
-#define KGPGCONF_MAINWINDOW_H
+#ifndef KGPGCONF_CONFIGWRITER_H
+#define KGPGCONF_CONFIGWRITER_H 
 
-#include <QHash>
-#include <QMainWindow>
-
-#include "ui_mainwidget.h"
-
-class QTreeWidgetItem;
+class QIODevice;
 
 class Config;
-class ConfigComponent;
-class ConfigEntry;
 
-class MainWindow : public QMainWindow
+class ConfigWriter
 {
-    Q_OBJECT
-
 public:
-    explicit MainWindow( QWidget* parent = 0, Qt::WindowFlags flags = 0 );
-    ~MainWindow();
+    explicit ConfigWriter( QIODevice* device );
+    ~ConfigWriter();
+
+    bool writeConfig( Config* config ) const;
 
 private:
-    enum Column {
-        NameColumn=0,
-        ValueColumn=1,
-        ReadOnlyColumn=2
-    };
-
-    enum Role {
-        IsOptionRole=Qt::UserRole
-    };
-
-    void readConfiguration();
-
-private Q_SLOTS:
-    void treeWidgetItemSelectionChanged();
-    void readOnlyStateChanged( int state );
-    void optionValueChanged();
-    void saveAs();
-
-private:
-    Ui::MainWidget m_ui;
-    Config* m_config;
-    QHash<QTreeWidgetItem*, ConfigEntry*> m_itemToEntry;
-    QHash<ConfigEntry*, QTreeWidgetItem*> m_entryToItem;
-    QHash<ConfigEntry*, ConfigComponent*> m_componentForEntry;
-    ConfigEntry* m_selectedEntry;
+    class Private;
+    Private* const d;
 };
 
-
-#endif // KGPGCONF_MAINWINDOW_H
-
+#endif // KGPGCONF_CONFIGWRITER_H

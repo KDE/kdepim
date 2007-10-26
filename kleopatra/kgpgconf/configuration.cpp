@@ -36,6 +36,10 @@
 
 #include <cassert>
 
+Config::Config()
+{
+}
+
 Config::~Config()
 {
     qDeleteAll( m_components );
@@ -150,8 +154,18 @@ void ConfigGroup::addEntry( ConfigEntry* entry )
     m_entries[entry->name()] = entry;
 }
 
-ConfigEntry::ConfigEntry( const QString& name ) : m_name( name ), m_readOnly( false )
+ConfigEntry::ConfigEntry( const QString& name ) : m_dirty( false ), m_name( name ), m_readOnly( false )
 {
+}
+
+bool ConfigEntry::isDirty() const
+{
+    return m_dirty;
+}
+
+void ConfigEntry::unsetDirty()
+{
+    m_dirty = false;
 }
 
 QString ConfigEntry::name() const
@@ -161,7 +175,10 @@ QString ConfigEntry::name() const
 
 void ConfigEntry::setName( const QString& name )
 {
+    if ( m_name == name )
+        return;
     m_name = name;
+    m_dirty = true;
 }
 
 QString ConfigEntry::description() const
@@ -171,16 +188,21 @@ QString ConfigEntry::description() const
 
 void ConfigEntry::setDescription( const QString& desc )
 {
+    if ( m_description == desc )
+        return;
     m_description = desc;
+    m_dirty = true;
 }
 
 void ConfigEntry::setReadOnly( bool ro )
 {
+    if ( m_readOnly == ro )
+        return;
     m_readOnly = ro;
+    m_dirty = true;
 }
 
 bool ConfigEntry::isReadOnly() const
 {
     return m_readOnly;
 }
-

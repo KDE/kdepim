@@ -5,6 +5,7 @@ add_definitions ( ${KDE4_ENABLE_EXCEPTIONS} -D_ASSUAN_ONLY_GPG_ERRORS -UQT_NO_ST
 
 set(_kgpgconf_SRCS
     configreader.cpp
+    configwriter.cpp
     configuration.cpp
     main.cpp
     mainwindow.cpp

@@ -32,15 +32,24 @@
 
 #include "mainwindow.h"
 
-#include <qgpgmecryptoconfig.h>
+#include "configreader.h"
+#include "configuration.h"
+#include "configwriter.h"
 
+#include <QFile>
+#include <QFileDialog>
+#include <QMessageBox>
+#include <QMenu>
+#include <QMenuBar>
 #include <QStringList>
 #include <QTreeWidgetItem>
 
 #include <cassert>
 
-MainWindow::MainWindow( QWidget* parent, Qt::WindowFlags flags ) : QMainWindow( parent, flags ), m_config( new QGpgMECryptoConfig ), m_selectedEntry( 0 )
+MainWindow::MainWindow( QWidget* parent, Qt::WindowFlags flags ) : QMainWindow( parent, flags ), m_config( 0 ), m_selectedEntry( 0 )
 {
+    ConfigReader reader;
+    m_config = reader.readConfig();
     QWidget* mainWidget = new QWidget( this );
     m_ui.setupUi( mainWidget );
     setCentralWidget( mainWidget );
@@ -49,6 +58,12 @@ MainWindow::MainWindow( QWidget* parent, Qt::WindowFlags flags ) : QMainWindow( 
     connect( m_ui.readOnlyBox, SIGNAL( stateChanged( int ) ), SLOT( readOnlyStateChanged( int ) ) );
     connect( m_ui.valueLE, SIGNAL( textChanged( QString ) ), SLOT( optionValueChanged() ) );
     readConfiguration();
+
+    QMenu* const fileMenu = menuBar()->addMenu( i18n( "&File" ) );
+    fileMenu->addAction( i18n( "Save As..." ), this, SLOT( saveAs() ) );
+    fileMenu->addSeparator();
+    QAction* const quit = fileMenu->addAction( i18n( "Quit" ), qApp, SLOT( quit() ) );
+    quit->setShortcut( Qt::CTRL + Qt::Key_Q );
 }
 
 MainWindow::~MainWindow()
@@ -61,11 +76,11 @@ void MainWindow::treeWidgetItemSelectionChanged()
     m_selectedEntry = 0;
     const QList<QTreeWidgetItem*> selected = m_ui.treeWidget->selectedItems();
     assert( selected.count() <= 1 );
-    Kleo::CryptoConfigEntry* const entry = selected.isEmpty() ? 0 : m_itemToEntry[selected.first()];
+    ConfigEntry* const entry = selected.isEmpty() ? 0 : m_itemToEntry[selected.first()];
     m_ui.componentLabel->setText( entry ? m_componentForEntry[entry]->name() : QString() );
     m_ui.optionLabel->setText( entry ? entry->name() : QString() );
     m_ui.descriptionLabel->setText( entry ? entry->description() : QString() );
-    m_ui.valueLE->setText( ( entry && entry->isSet() ) ? entry->stringValue() : QString() );
+    m_ui.valueLE->setText( QString() );
     m_ui.readOnlyBox->setCheckState( ( entry && entry->isReadOnly() ) ? Qt::Checked : Qt::Unchecked );
     m_selectedEntry = entry;
 }
@@ -75,6 +90,7 @@ void MainWindow::readOnlyStateChanged( int state )
     if ( !m_selectedEntry )
         return;
     assert( state != Qt::PartiallyChecked );
+    m_selectedEntry->setReadOnly( state == Qt::Checked );
     QTreeWidgetItem* const item = m_entryToItem[m_selectedEntry];
     assert( item );
     item->setCheckState( ReadOnlyColumn, static_cast<Qt::CheckState>( state ) );
@@ -92,26 +108,26 @@ void MainWindow::readConfiguration()
     qSort( components );
     Q_FOREACH ( const QString i, components )
     {
-        Kleo::CryptoConfigComponent* const component = m_config->component( i );
+        ConfigComponent* const component = m_config->component( i );
         assert( component );
         QTreeWidgetItem* const componentItem = new QTreeWidgetItem;
         componentItem->setText( NameColumn, component->name() );
         m_ui.treeWidget->addTopLevelItem( componentItem );
         Q_FOREACH ( const QString j, component->groupList() )
         {
-            Kleo::CryptoConfigGroup* const group = component->group( j );
+            ConfigGroup* const group = component->group( j );
             assert( group );
             QTreeWidgetItem* const groupItem = new QTreeWidgetItem;
             groupItem->setText( NameColumn, group->name() );
             componentItem->addChild( groupItem );
             Q_FOREACH( const QString k, group->entryList() )
             {
-                Kleo::CryptoConfigEntry* const entry = group->entry( k );
+                ConfigEntry* const entry = group->entry( k );
                 assert( entry );
                 QTreeWidgetItem* const entryItem = new QTreeWidgetItem;
                 entryItem->setData( NameColumn, IsOptionRole, true );
                 entryItem->setText( NameColumn, entry->name() );
-                entryItem->setText( ValueColumn, entry->isSet() ? entry->stringValue() : QString() );
+                entryItem->setText( ValueColumn, QString() );
                 entryItem->setCheckState( ReadOnlyColumn, entry->isReadOnly() ? Qt::Checked : Qt::Unchecked ); 
                 entryItem->setFlags( entryItem->flags() ^ Qt::ItemIsUserCheckable );
                 groupItem->addChild( entryItem );
@@ -121,5 +137,26 @@ void MainWindow::readConfiguration()
             }
         }
     }
+}
+
+void MainWindow::saveAs()
+{
+    const QString fileName = QFileDialog::getSaveFileName( this, i18n( "Save As"), QString(), "*.conf" );
+    if ( fileName.isNull() )
+        return;
+    QFile out( fileName );
+    if ( !out.open( QIODevice::WriteOnly ) )
+    {
+        QMessageBox::warning( this, i18n( "Write Error" ), i18n( "Could not open file %1 for writing. You might not have the permission to write to that file.", fileName ) );
+        return;
+    }
+    ConfigWriter writer( &out );
+    if ( !writer.writeConfig( m_config ) )
+    {
+        QMessageBox::critical( this, i18n( "Write Error" ), i18n( "Error while writing to file %1.", fileName ) ); 
+        return;
+
+    }
+    out.close();
 }
 

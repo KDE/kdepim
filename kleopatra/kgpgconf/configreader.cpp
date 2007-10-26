@@ -38,15 +38,14 @@
 #include <QBuffer>
 #include <QByteArray>
 #include <QDebug>
+#include <QMap>
 #include <QProcess>
 #include <QStringList>
 
 #include <cassert>
 
 namespace {
-    typedef QList<QPair<QString, QString> > StringPairList;
-    typedef QPair<QString, QString> StringPair;
-
+ 
 struct GpgConfResult {
     GpgConfResult() : rc( 0 ) {}
     QByteArray stdOut;
@@ -66,6 +65,30 @@ static const int GPGCONF_FLAG_NOARG_DESC = 64; // option with optional arg; spec
 static const int GPGCONF_FLAG_NO_CHANGE = 128; // readonly
 // Change size of mFlags bitfield if adding new values here
 
+
+// gpgconf arg type number -> CryptoConfigEntry arg type enum mapping
+static ConfigEntry::ArgType knownArgType( int argType, bool& ok ) {
+    ok = true;
+    switch( argType )
+    {
+    case 0: // none
+        return ConfigEntry::None;
+    case 1: // string
+        return ConfigEntry::String;
+    case 2: // int32
+        return ConfigEntry::Int;
+    case 3: // uint32
+        return ConfigEntry::UInt;
+    case 32: // pathname
+        return ConfigEntry::Path;
+    case 33: // ldap server
+        return ConfigEntry::LdapUrl;
+    default:
+        ok = false;
+        return ConfigEntry::None;
+  }
+}
+
 }
 
 class ConfigReader::Private
@@ -74,7 +97,7 @@ public:
     ::GpgConfResult runGpgConf( const QStringList& args ) const;
     ::GpgConfResult runGpgConf( const QString& arg ) const;
 
-    ::StringPairList readComponentInfo() const;
+    QMap<QString,QString> readComponentInfo() const;
     void readEntriesForComponent( ConfigComponent* component ) const;
     ConfigEntry* createEntryFromParsedLine( const QStringList& lst ) const;
 };
@@ -92,12 +115,12 @@ ConfigReader::~ConfigReader()
 Config* ConfigReader::readConfig() const
 {
     Config* cfg = new Config;
-    const ::StringPairList componentInfo = d->readComponentInfo();
+    const QMap<QString,QString> componentInfo = d->readComponentInfo();
 
-    Q_FOREACH ( const ::StringPair i, componentInfo )
+    Q_FOREACH ( const QString i, componentInfo.keys() )
     {
-        ConfigComponent* component = new ConfigComponent( i.first );
-        component->setDescription( i.second );
+        ConfigComponent* component = new ConfigComponent( i );
+        component->setDescription( componentInfo[i] );
         cfg->addComponent( component );
         d->readEntriesForComponent( component );
     }
@@ -106,8 +129,6 @@ Config* ConfigReader::readConfig() const
 
 ConfigEntry* ConfigReader::Private::createEntryFromParsedLine( const QStringList& parsedLine ) const
 {
-    return 0;
-/*
     // Format: NAME:FLAGS:LEVEL:DESCRIPTION:TYPE:ALT-TYPE:ARGNAME:DEFAULT:ARGDEF:VALUE
     assert( parsedLine.count() >= 10 ); // called checked for it already
     QStringList::const_iterator it = parsedLine.begin();
@@ -116,42 +137,36 @@ ConfigEntry* ConfigReader::Private::createEntryFromParsedLine( const QStringList
     const int flags = (*it++).toInt();
     const int level = (*it++).toInt();
     entry->setDescription( *it++ );
+    entry->setReadOnly( ( flags & GPGCONF_FLAG_NO_CHANGE ) != 0 );
     bool ok;
     // we keep the real (int) arg type, since it influences the parsing (e.g. for ldap urls)
-    const int realArgType = (*it++).toInt();
-    mArgType = knownArgType( realArgType, ok );
+    uint realArgType = (*it++).toInt();
+    uint argType = ::knownArgType( realArgType, ok );
     if ( !ok && !(*it).isEmpty() ) {
     // use ALT-TYPE
-        mRealArgType = (*it).toInt();
-        mArgType = knownArgType( mRealArgType, ok );
+        realArgType = (*it).toInt();
+        argType = ::knownArgType( realArgType, ok );
     }
     if ( !ok )
         qWarning() <<"Unsupported datatype:" << parsedLine[4] <<" :" << *it <<" for" << parsedLine[0];
     ++it; // done with alt-type
     ++it; // skip argname (not useful in GUIs)
-
-    mSet = false;
+#if 0
     QString value;
     if ( mFlags & GPGCONF_FLAG_DEFAULT ) {
         value = *it; // get default value
         mDefaultValue = stringToValue( value, true );
     }
+#endif
     ++it; // done with DEFAULT
     ++it; // ### skip ARGDEF for now. It's only for options with an "optional arg"
     //kDebug(5150) <<"Entry" << parsedLine[0] <<" val=" << *it;
-
-    if ( !(*it).isEmpty() ) {  // a real value was set
-        mSet = true;
-        value = *it;
-        mValue = stringToValue( value, true );
-    }
-    else {
-        mValue = mDefaultValue;
-    }
-
-    mDirty = false;
+#if 0    
+    if ( !(*it).isEmpty() ) 
+        entry->setValue( stringToValue( *it, true ) );
+#endif
+    entry->unsetDirty();
     return entry;
-*/
 }
 
 void ConfigReader::Private::readEntriesForComponent( ConfigComponent* component ) const
@@ -164,6 +179,7 @@ void ConfigReader::Private::readEntriesForComponent( ConfigComponent* component 
     ConfigGroup* currentGroup = 0;
 
     QBuffer buf( &res.stdOut );
+    buf.open( QIODevice::ReadOnly );
     while( buf.canReadLine() ) {
         QString line = QString::fromUtf8( buf.readLine() );
         if ( line.endsWith( '\n' ) )
@@ -205,11 +221,12 @@ void ConfigReader::Private::readEntriesForComponent( ConfigComponent* component 
     }
 }
 
-::StringPairList ConfigReader::Private::readComponentInfo() const
+QMap<QString, QString> ConfigReader::Private::readComponentInfo() const
 {
-    ::GpgConfResult res = runGpgConf( "--list-options" );
+    ::GpgConfResult res = runGpgConf( "--list-components" );
     QBuffer buf( &(res.stdOut) );
-    StringPairList components;
+    buf.open( QIODevice::ReadOnly );
+    QMap<QString, QString> components;
     while( buf.canReadLine() ) {
         QString line = QString::fromUtf8( buf.readLine() );
         if ( line.endsWith( '\n' ) )
@@ -220,7 +237,7 @@ void ConfigReader::Private::readEntriesForComponent( ConfigComponent* component 
         // Format: NAME:DESCRIPTION
         const QStringList lst = line.split( ':' );
         if ( lst.count() >= 2 ) {
-            components.append( StringPair( lst[0], lst[1] ) );
+            components[lst[0]] = lst[1];
         } else {
             qWarning() <<"Parse error on gpgconf --list-components output:" << line;
         }
@@ -255,3 +272,4 @@ void ConfigReader::Private::readEntriesForComponent( ConfigComponent* component 
     }
     return res;
 }
+

@@ -44,6 +44,7 @@ class ConfigEntry;
 class Config
 {
 public:
+    Config();
     ~Config();
 
     QStringList componentList() const;
@@ -51,7 +52,10 @@ public:
     void addComponent( ConfigComponent* component );
 
 private:
+    Config( const Config& );
+    Config& operator=( const Config& );
 
+private:
     QHash<QString,ConfigComponent*> m_components;
 };
 
@@ -74,6 +78,8 @@ public:
 
 private:
     ConfigComponent();
+    ConfigComponent( const ConfigComponent& );
+    ConfigComponent& operator=( const ConfigComponent& );
 
 private:
     QString m_name;
@@ -99,6 +105,8 @@ public:
 
 private:
     ConfigGroup();
+    ConfigGroup( const ConfigGroup& );
+    ConfigGroup& operator=( const ConfigGroup& );
 
 private:
     QString m_name;
@@ -120,14 +128,30 @@ public:
     void setReadOnly( bool readOnly );
     bool isReadOnly() const;
 
-private:
-    ConfigEntry();
+    bool isDirty() const;
+    void unsetDirty();
+
+    enum ArgType {
+        None=0,
+        String=1,
+        Int=2,
+        UInt=3,
+        Path=32,
+        LdapUrl=33
+    };
 
 private:
+    ConfigEntry();
+    ConfigEntry( const ConfigEntry& );
+    ConfigEntry& operator=( const ConfigEntry& );
+
+private:
+    bool m_dirty;
     QString m_name;
     QString m_description;
     QVariant m_value;
     bool m_readOnly;
+    ArgType argType;
 };
 
 #endif // KGPGCONF_CONFIGURATION_H
