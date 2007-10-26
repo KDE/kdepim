@@ -55,7 +55,7 @@ void AddAddresseeDialog::show() {
         m_email->clear();
         m_name->clear();
         m_phoneNumber->clear();
-        m_phoneNumberTable->clear();
+        m_phoneNumberTable->clearContents();
 
         // the table header must be set here since clear() also clears the header?!
         QStringList header;
@@ -122,14 +122,17 @@ void AddAddresseeDialog::accept() {
 
         // process the phone number item
         item = m_phoneNumberTable->item( i, 0 );
-        QString number = item->text();
+		Q_ASSERT(item);
+		if( item ) {
+			QString number = item->text();
 
-        // process the phone number type item
-        item = m_phoneNumberTable->item( i, 1 );
-        QVariant typeVariant = item->data( Qt::UserRole );
-        KABC::PhoneNumber::TypeFlag type = static_cast<KABC::PhoneNumber::TypeFlag>( typeVariant.toInt() );
+			// process the phone number type item
+			item = m_phoneNumberTable->item( i, 1 );
+			QVariant typeVariant = item->data( Qt::UserRole );
+			KABC::PhoneNumber::TypeFlag type = static_cast<KABC::PhoneNumber::TypeFlag>( typeVariant.toInt() );
 
-        entry.insertPhoneNumber( KABC::PhoneNumber( number, type ) );
+			entry.insertPhoneNumber( KABC::PhoneNumber( number, type ) );
+		}
     }
 
     // set the memory slot

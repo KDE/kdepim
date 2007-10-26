@@ -24,7 +24,7 @@
 #include <kdemacros.h>
 
 #ifndef KMOBILETOOLS_EXPORT
-# if defined(MAKE_KMOBILETOOLS_LIB)
+# if defined(MAKE_KMOBILETOOLSLIB_LIB)
    /* We are building this library */
 #  define KMOBILETOOLS_EXPORT KDE_EXPORT
 # else
