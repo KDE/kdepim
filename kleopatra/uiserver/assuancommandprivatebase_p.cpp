@@ -52,6 +52,7 @@
 #include <QVariant>
 
 using namespace Kleo;
+using namespace boost;
 
 #define q get_q()
 
@@ -85,7 +86,8 @@ void AssuanCommandPrivateBase::determineInputsAndProtocols()
 
 void AssuanCommandPrivateBase::writeToOutputDeviceOrAskForFileName( int id,  const QByteArray& stuff, const QString& _filename )
 {
-    QIODevice * outdevice = q->bulkOutputDevice( "OUTPUT", id );
+    const shared_ptr<QIODevice> out = q->bulkOutputDevice( id );
+    QIODevice * outdevice = out.get();
 #if 0 // KSaveFile seems broken on Windows, revert this when it's fixed (errors when writing to temp file), TODO, KDAB_PENDING
     KSaveFile file;
 #endif
@@ -94,7 +96,7 @@ void AssuanCommandPrivateBase::writeToOutputDeviceOrAskForFileName( int id,  con
         QString filename = _filename;
         if ( !filename.isEmpty() && QFileInfo( filename ).isRelative() ) {
             // prepend the path to the input file
-            filename.prepend( QFileInfo(q->bulkInputDeviceFileName( "INPUT", id )).absolutePath() + "/" );
+            filename.prepend( QFileInfo(q->bulkInputDeviceFileName( id )).absolutePath() + "/" );
             if ( QFileInfo(filename).exists() ) {
                 const QString text = i18n("The target file: <br><b>%1</b><br> seems to already exist. Do you want to overwrite it?", filename );
                 const QString caption  = i18n("Overwrite existing file?");
@@ -103,7 +105,7 @@ void AssuanCommandPrivateBase::writeToOutputDeviceOrAskForFileName( int id,  con
             }
         }
         if ( filename.isEmpty() ) {
-	    const QString inputFilename = q->bulkInputDeviceFileName( "INPUT", id );
+	    const QString inputFilename = q->bulkInputDeviceFileName( id );
             // no output specified, and no filename given, ask the user
 #ifndef KLEO_ONLY_UISERVER
 	    filename = KFileDialog::getSaveFileName( KUrl::fromPath( inputFilename ), QString(), 0, i18n("Please select a target file: %1",inputFilename ) );

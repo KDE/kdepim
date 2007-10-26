@@ -45,6 +45,7 @@
 #include <QStringList>
 
 using namespace Kleo;
+using namespace boost;
 
 class EncryptCommand::Private
   : public AssuanCommandPrivateBaseMixin<EncryptCommand::Private, EncryptCommand>
@@ -63,7 +64,7 @@ public:
 
 
     struct Input {
-        QIODevice* input;
+        shared_ptr<QIODevice> input;
         QString inputFileName;
         int id;
         GpgME::Protocol protocol;
@@ -99,9 +100,9 @@ public:
 
 void EncryptCommand::Private::checkInputs()
 {
-    const int numInputs = q->numBulkInputDevices( "INPUT" );
-    const int numOutputs = q->numBulkOutputDevices( "OUTPUT" );
-    const int numMessages = q->numBulkInputDevices( "MESSAGE" );
+    const int numInputs = q->numBulkInputDevices();
+    const int numOutputs = q->numBulkOutputDevices();
+    const int numMessages = q->numBulkMessageDevices();
 
     //TODO use better error code if possible
     if ( numMessages != 0 )
@@ -118,9 +119,9 @@ void EncryptCommand::Private::checkInputs()
 
     for ( int i = 0; i < numInputs; ++i ) {
         Input input;
-        input.input = q->bulkInputDevice( "INPUT", i );
+        input.input = q->bulkInputDevice( i );
         assert( input.input );
-        input.inputFileName = q->bulkInputDeviceFileName( "INPUT", i );
+        input.inputFileName = q->bulkInputDeviceFileName( i );
         input.id = i;
         input.protocol = protocol;
         m_inputs.push_back( input );

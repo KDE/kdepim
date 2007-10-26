@@ -62,10 +62,10 @@ EchoCommand::~EchoCommand() {}
 
 int EchoCommand::doStart() {
 
-    if ( bulkInputDevice( "INPUT" ) && !bulkOutputDevice( "OUTPUT" ) )
+    if ( bulkInputDevice() && !bulkOutputDevice() )
         return makeError( GPG_ERR_NOT_SUPPORTED );
 
-    if ( bulkInputDevice( "MESSAGE" ) )
+    if ( bulkMessageDevice() )
         return makeError( GPG_ERR_NOT_SUPPORTED );
 
     if ( hasOption( option_prefix ) && !option( option_prefix ).toByteArray().isEmpty() )
@@ -95,13 +95,13 @@ int EchoCommand::doStart() {
             ++d->operationsInFlight;
 
     // 3. if INPUT was given, start the data pump for input->output
-    if ( QIODevice * const in = bulkInputDevice( "INPUT" ) ) {
-        QIODevice * const out = bulkOutputDevice( "OUTPUT" );
+    if ( const shared_ptr<QIODevice> in = bulkInputDevice() ) {
+        const shared_ptr<QIODevice> out = bulkOutputDevice();
 
         ++d->operationsInFlight;
 
-        connect( in, SIGNAL(readyRead()), this, SLOT(slotInputReadyRead()) );
-        connect( out, SIGNAL(bytesWritten(qint64)), this, SLOT(slotOutputBytesWritten()) );
+        connect( in.get(), SIGNAL(readyRead()), this, SLOT(slotInputReadyRead()) );
+        connect( out.get(), SIGNAL(bytesWritten(qint64)), this, SLOT(slotOutputBytesWritten()) );
 
         if ( in->bytesAvailable() )
             slotInputReadyRead();
@@ -133,7 +133,7 @@ void EchoCommand::slotInquireData( int rc, const QByteArray & data ) {
 }
 
 void EchoCommand::slotInputReadyRead() {
-    QIODevice * const in = bulkInputDevice( "INPUT" );
+    const shared_ptr<QIODevice> in = bulkInputDevice();
     assert( in );
 
     QByteArray buffer;
@@ -154,7 +154,7 @@ void EchoCommand::slotInputReadyRead() {
 
 
 void EchoCommand::slotOutputBytesWritten() {
-    QIODevice * const out = bulkOutputDevice( "OUTPUT" );
+    const shared_ptr<QIODevice> out = bulkOutputDevice();
     assert( out );
 
     if ( !d->buffer.isEmpty() ) {
@@ -171,7 +171,7 @@ void EchoCommand::slotOutputBytesWritten() {
 
     }
 
-    if ( out->isOpen() && d->buffer.isEmpty() && !bulkInputDevice( "INPUT" )->isOpen() ) {
+    if ( out->isOpen() && d->buffer.isEmpty() && !bulkInputDevice()->isOpen() ) {
         out->close();
         if ( !--d->operationsInFlight )
             done();

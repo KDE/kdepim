@@ -34,6 +34,9 @@
 #define __KLEOPATRA_UISERVER_ASSUANCOMMAND_H__
 
 #include <utils/pimpl_ptr.h>
+
+#include <gpgme++/global.h>
+
 #include <boost/shared_ptr.hpp>
 
 #include <string>
@@ -47,6 +50,7 @@ class QIODevice;
 class QObject;
 class QStringList;
 class QDialog;
+class QFile;
 
 struct assuan_context_s;
 
@@ -193,6 +197,7 @@ namespace Kleo {
 
     */
     class AssuanCommand {
+        // defined in assuanserverconnection.cpp!
     public:
         AssuanCommand();
         virtual ~AssuanCommand();
@@ -207,7 +212,6 @@ namespace Kleo {
             virtual ~Memento() {}
         };
 
-
         static int makeError( int code );
 
     private:
@@ -216,7 +220,7 @@ namespace Kleo {
 
     protected:
         // convenience methods:
-        enum Mode { EMail, FileManager };
+        enum Mode { NoMode, EMail, FileManager };
         Mode checkMode() const;
 
         GpgME::Protocol checkProtocol( Mode mode ) const;
@@ -249,17 +253,21 @@ namespace Kleo {
         QVariant option( const char * opt ) const;
         const std::map<std::string,QVariant> & options() const;
 
-        QString bulkInputDeviceFileName(  const char * tag, unsigned int idx=0 ) const;
-        QString bulkOutputDeviceFileName( const char * tag, unsigned int idx=0 ) const;
+        QStringList fileNames() const;
+        std::vector< boost::shared_ptr<QFile> > files() const;
+        unsigned int numFiles() const;
 
-        QIODevice * bulkInputDevice(  const char * tag, unsigned int idx=0 ) const;
-        QIODevice * bulkOutputDevice( const char * tag, unsigned int idx=0 ) const;
+        QString bulkInputDeviceFileName( unsigned int idx=0 ) const;
+        QString bulkMessageDeviceFileName( unsigned int idx=0 ) const;
+        QString bulkOutputDeviceFileName( unsigned int idx=0 ) const;
 
-        unsigned int numBulkInputDevices( const char * tag ) const;
-        unsigned int numBulkOutputDevices( const char * tag ) const;
+        boost::shared_ptr<QIODevice> bulkInputDevice( unsigned int idx=0 ) const;
+        boost::shared_ptr<QIODevice> bulkMessageDevice( unsigned int idx=0 ) const;
+        boost::shared_ptr<QIODevice> bulkOutputDevice( unsigned int idx=0 ) const;
 
-        std::vector<std::string> bulkInputDeviceTags() const;
-        std::vector<std::string> bulkOutputDeviceTags() const;
+        unsigned int numBulkInputDevices() const;
+        unsigned int numBulkMessageDevices() const;
+        unsigned int numBulkOutputDevices() const;
 
         int sendStatus( const char * keyword, const QString & text );
         int sendData( const QByteArray & data, bool moreToCome=false );
@@ -289,7 +297,6 @@ namespace Kleo {
         typedef int(*_Handler)( assuan_context_s*, char *);
         virtual _Handler _handler() const = 0;
     protected:
-        // defined in assuanserverconnection.cpp!
         static int _handle( assuan_context_s*, char *, const char * );
     };
 

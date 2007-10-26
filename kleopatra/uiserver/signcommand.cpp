@@ -62,6 +62,7 @@
 #include <vector>
 
 using namespace Kleo;
+using namespace boost;
 
 class SignCommand::Private
   : public AssuanCommandPrivateBaseMixin<SignCommand::Private, SignCommand>
@@ -80,7 +81,7 @@ public:
     void showKeySelectionDialog();
     
     struct Input {
-        QIODevice* data;
+        shared_ptr<QIODevice> data;
         QString dataFileName;
         unsigned int id;
         GpgME::Protocol protocol;
@@ -112,9 +113,9 @@ private:
 
 void SignCommand::Private::checkInputs()
 {
-    const int numInputs = q->numBulkInputDevices( "INPUT" );
-    const int numOutputs = q->numBulkOutputDevices( "OUTPUT" );
-    const int numMessages = q->numBulkInputDevices( "MESSAGE" );
+    const int numInputs = q->numBulkInputDevices();
+    const int numOutputs = q->numBulkOutputDevices();
+    const int numMessages = q->numBulkMessageDevices();
 
     //TODO use better error code if possible
     if ( numMessages != 0 )
@@ -132,8 +133,8 @@ void SignCommand::Private::checkInputs()
     for ( int i = 0; i < numInputs; ++i ) {
         Input input;
         input.id = i;
-        input.data = q->bulkInputDevice( "INPUT", i );
-        input.dataFileName = q->bulkInputDeviceFileName( "INPUT", i );
+        input.data = q->bulkInputDevice( i );
+        input.dataFileName = q->bulkInputDeviceFileName( i );
         input.protocol = protocol;
 
         m_inputs.push_back( input );
@@ -255,7 +256,7 @@ void SignCommand::Private::slotSigningResult( const GpgME::SigningResult & resul
                    throw assuan_exception( err, i18n( "Couldn't send MICALG status string: " ) );
 
            // FIXME adjust for smime?
-           const QString filename = q->bulkInputDeviceFileName( "INPUT", m_statusSent ) + ".sig";
+           const QString filename = q->bulkInputDeviceFileName( m_statusSent ) + ".sig";
            writeToOutputDeviceOrAskForFileName( result.id, result.data, filename );
            resultString = "OK - Signature written";
        } catch ( const assuan_exception& e ) {

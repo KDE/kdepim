@@ -29,6 +29,12 @@
     you do not wish to do so, delete this exception statement from
     your version.
 */
+#ifndef QT_NO_CAST_TO_ASCII
+# define QT_NO_CAST_TO_ASCII
+#endif
+#ifndef QT_NO_CAST_FROM_ASCII
+# define QT_NO_CAST_FROM_ASCII
+#endif
 
 #include <config-kleopatra.h>
 
@@ -48,6 +54,7 @@
 #include <QVariant>
 #include <QPointer>
 #include <QFile>
+#include <QTemporaryFile>
 #include <QFileInfo>
 #include <QDebug>
 #include <QStringList>
@@ -81,8 +88,13 @@ using namespace boost;
 
 namespace {
     struct IO {
-        QString file;
-        QIODevice * iodev;
+        QString fileName;
+        shared_ptr<QIODevice> iodev;
+    };
+
+    struct IOF {
+        QString fileName;
+        shared_ptr<QFile> file;
     };
 
     static inline qint64 mygetpid() {
@@ -110,6 +122,14 @@ struct AssuanContext : AssuanContextBase {
 
 static inline gpg_error_t assuan_process_done_msg( assuan_context_t ctx, gpg_error_t err, const char * err_msg ) {
     return assuan_process_done( ctx, assuan_set_error( ctx, err, err_msg ) );
+}
+
+static inline gpg_error_t assuan_process_done_msg( assuan_context_t ctx, gpg_error_t err, const std::string & err_msg ) {
+    return assuan_process_done_msg( ctx, err, err_msg.c_str() );
+}
+
+static inline gpg_error_t assuan_process_done_msg( assuan_context_t ctx, gpg_error_t err, const QString & err_msg ) {
+    return assuan_process_done_msg( ctx, err, err_msg.toUtf8().constData() );
 }
 
 static unsigned char unhex( unsigned char ch ) {
@@ -289,12 +309,13 @@ private:
             static const QByteArray pid = QByteArray::number( mygetpid() );
             return assuan_process_done( ctx_, assuan_send_data( ctx_, pid.constData(), pid.size() ) );
         }
-        static const QByteArray errorString = i18n("Unknown value for WHAT").toUtf8();
-        return assuan_process_done_msg( ctx_, gpg_error( GPG_ERR_ASS_PARAMETER ), errorString.constData() );
+        static const QString errorString = i18n("Unknown value for WHAT");
+        return assuan_process_done_msg( ctx_, gpg_error( GPG_ERR_ASS_PARAMETER ), errorString );
     }
 
     // format: TAG (FD|FD=\d+|FILE=...)
-    static int IO_handler( assuan_context_t ctx_, char * line_, bool in, const char * tag ) {
+    template <typename T_memptr>
+    static int IO_handler( assuan_context_t ctx_, char * line_, bool in, T_memptr which ) {
         assert( assuan_get_pointer( ctx_ ) );
         AssuanServerConnection::Private & conn = *static_cast<AssuanServerConnection::Private*>( assuan_get_pointer( ctx_ ) );
 
@@ -305,7 +326,6 @@ private:
                 throw gpg_error( GPG_ERR_ASS_SYNTAX );
 
             IO io;
-            std::auto_ptr<QIODevice> iodev;
 
             if ( options.count( "FD" ) ) {
 
@@ -331,7 +351,7 @@ private:
                 if ( !pio->open( fd, in ? QIODevice::ReadOnly : QIODevice::WriteOnly ) )
                     throw gpg_error_from_errno( errno );
 
-                iodev = pio;
+                io.iodev = pio;
 
                 options.erase( "FD" );
 
@@ -340,20 +360,27 @@ private:
                 if ( options.count( "FD" ) )
                     throw gpg_error( GPG_ERR_CONFLICT );
 
-                io.file = QFile::decodeName( options["FILE"].c_str() );
+                const QString filePath = QFile::decodeName( options["FILE"].c_str() );
+                if ( filePath.isEmpty() )
+                    throw assuan_exception( gpg_error( GPG_ERR_ASS_SYNTAX ), i18n("Empty file path") );
+                const QFileInfo fi( filePath );
+                if ( !fi.isAbsolute() )
+                    throw assuan_exception( gpg_error( GPG_ERR_INV_ARG ), i18n("Only absolute file paths are allowed") );
 
-                if ( io.file.isEmpty() ) {
-                    if ( in )
-                        throw gpg_error( GPG_ERR_ASS_SYNTAX );
+                io.fileName = fi.absoluteFilePath();
+
+                if ( in ) {
+                    std::auto_ptr<QFile> f( new QFile( io.fileName ) );
+                    if ( !f->open( QIODevice::ReadOnly ) )
+                        throw assuan_exception( gpg_error_from_errno( errno ),
+                                                i18n( "Couldn't open file \"%1\" for reading", io.fileName ) );
+                    io.iodev = f;
                 } else {
-
-                    std::auto_ptr<QFile> f( new QFile( io.file ) );
-
-                    if ( !f->open( in ? QIODevice::ReadOnly : QIODevice::ReadWrite ) )
-                        throw gpg_error_from_errno( errno );
-
-                    iodev = f;
-
+                    std::auto_ptr<QTemporaryFile> f( new QTemporaryFile( io.fileName ) );
+                    if ( !f->open() )
+                        throw assuan_exception( gpg_error_from_errno( errno ),
+                                                i18n( "Couldn't create temporary file \"%1\"", f->fileName() ) );
+                    io.iodev = f;
                 }
 
                 options.erase( "FILE" );
@@ -367,35 +394,61 @@ private:
             if ( options.size() )
                 throw gpg_error( GPG_ERR_UNKNOWN_OPTION );
 
-            io.iodev = iodev.release();
-
-            ( in ? conn.inputs : conn.outputs )[tag].push_back( io );
+            (conn.*which).push_back( io );
 
             qDebug() << "AssuanServerConnection: added" << (in ? "input" : "output") << '('
-                     << io.file << io.iodev << ')';
+                     << io.fileName << io.iodev << ')';
 
             return assuan_process_done( conn.ctx.get(), 0 );
-
+        } catch ( const GpgME::Exception & e ) {
+            return assuan_process_done_msg( conn.ctx.get(), e.error(), e.message().c_str() );
         } catch ( const std::exception & e ) {
             return assuan_process_done( conn.ctx.get(), gpg_error( GPG_ERR_ASS_SYNTAX ) );
         } catch ( const gpg_error_t e ) {
             return assuan_process_done( conn.ctx.get(), e );
         } catch ( ... ) {
-            return assuan_process_done( conn.ctx.get(), gpg_error( GPG_ERR_UNEXPECTED ) );
+            return assuan_process_done_msg( conn.ctx.get(), gpg_error( GPG_ERR_UNEXPECTED ), "unknown exception caught" );
         }
 
     }
 
     static int input_handler( assuan_context_t ctx, char * line ) {
-        return IO_handler( ctx, line, true, "INPUT" );
+        return IO_handler( ctx, line, true, &Private::inputs );
     }
 
     static int output_handler( assuan_context_t ctx, char * line ) {
-        return IO_handler( ctx, line, false, "OUTPUT" );
+        return IO_handler( ctx, line, false, &Private::outputs );
     }
 
     static int message_handler( assuan_context_t ctx, char * line ) {
-        return IO_handler( ctx, line, true, "MESSAGE" );
+        return IO_handler( ctx, line, true, &Private::messages );
+    }
+
+    static int file_handler( assuan_context_t ctx_, char * line ) {
+        assert( assuan_get_pointer( ctx_ ) );
+        AssuanServerConnection::Private & conn = *static_cast<AssuanServerConnection::Private*>( assuan_get_pointer( ctx_ ) );
+
+        try {
+            const QFileInfo fi( QFile::decodeName( line ) );
+            if ( !fi.isAbsolute() )
+                throw assuan_exception( gpg_error( GPG_ERR_INV_ARG ), i18n("Only absolute file paths are allowed") );
+            if ( !fi.isFile() )
+                throw assuan_exception( gpg_error( GPG_ERR_NOT_IMPLEMENTED ), i18n("Directory traversal is not yet implemented") );
+            const QString filePath = fi.absoluteFilePath();
+            const shared_ptr<QFile> file( new QFile( filePath ) );
+            if ( file->open( QIODevice::ReadOnly ) )
+                throw assuan_exception( gpg_error_from_errno( errno ), i18n("Could not open file \"%1\" for reading", filePath) );
+            const IOF io = {
+                filePath, file
+            };
+            conn.files.push_back( io );
+
+            return 0;
+        } catch ( const assuan_exception & e ) {
+            return assuan_process_done_msg( conn.ctx.get(), e.error(), e.message().toUtf8().constData() );
+        } catch ( ... ) {
+            return assuan_process_done_msg( conn.ctx.get(), gpg_error( GPG_ERR_UNEXPECTED ), i18n("unknown exception caught").toUtf8().constData() );
+        }
     }
 
     template <typename T_memptr>
@@ -427,7 +480,8 @@ private:
     std::vector< shared_ptr<AssuanCommand> > nohupedCommands;
     std::map<std::string,QVariant> options;
     std::vector<QString> senders, recipients;
-    std::map< std::string, std::vector<IO> > inputs, outputs;
+    std::vector<IO> inputs, outputs, messages;
+    std::vector<IOF> files;
     std::map< QByteArray, shared_ptr<AssuanCommand::Memento> > mementos;
 };
 
@@ -482,13 +536,15 @@ AssuanServerConnection::Private::Private( assuan_fd_t fd_, const std::vector< sh
     }
 
 
-    // register our INPUT/OUTPUT/MESSGAE handlers:
+    // register our INPUT/OUTPUT/MESSGAE/FILE handlers:
     if ( const gpg_error_t err = assuan_register_command( ctx.get(), "INPUT",  input_handler ) )
         throw assuan_exception( err, "register \"INPUT\" handler" );
     if ( const gpg_error_t err = assuan_register_command( ctx.get(), "MESSAGE",  message_handler ) )
         throw assuan_exception( err, "register \"MESSAGE\" handler" );
     if ( const gpg_error_t err = assuan_register_command( ctx.get(), "OUTPUT", output_handler ) )
         throw assuan_exception( err, "register \"OUTPUT\" handler" );
+    if ( const gpg_error_t err = assuan_register_command( ctx.get(), "FILE", file_handler ) )
+        throw assuan_exception( err, "register \"FILE\" handler" );
 
 
     // register user-defined commands:
@@ -595,7 +651,8 @@ public:
     Private() : done( false ), nohup( false ) {}
 
     std::map<std::string,QVariant> options;
-    std::map< std::string, std::vector<IO> > inputs, outputs;
+    std::vector<IO> inputs, messages, outputs;
+    std::vector<IOF> files;
     std::vector<QString> recipients, senders;
     QByteArray utf8ErrorKeepAlive;
     AssuanContext ctx;
@@ -626,6 +683,10 @@ int AssuanCommand::start() {
         if ( !d->done )
             done( e.error_code(), e.message() );
         return e.error_code();
+    } catch ( const GpgME::Exception & e ) {
+        if ( !d->done )
+            done( e.error(), QString::fromLocal8Bit( e.message().c_str() ) );
+        return e.error();
     } catch ( const std::exception & e ) {
         if ( !d->done )
             done( makeError( GPG_ERR_INTERNAL ), i18n("Caught unexpected exception: %1", QString::fromLocal8Bit( e.what() ) ) );
@@ -664,33 +725,6 @@ const std::map<std::string,QVariant> & AssuanCommand::options() const {
 }
 
 namespace {
-    template <typename Container>
-    QString get_device_file_name( const Container & c, const char * tag, unsigned int idx ) {
-        const typename Container::const_iterator it = c.find( tag );
-        if ( it == c.end() || idx >= it->second.size() )
-            return QString();
-        else
-            return it->second[idx].file;
-    }
-
-    template <typename Container>
-    QIODevice * get_device( const Container & c, const char * tag, unsigned int idx ) {
-        const typename Container::const_iterator it = c.find( tag );
-        if ( it == c.end() || idx >= it->second.size() )
-            return 0;
-        else
-            return it->second[idx].iodev;
-    }
-
-    template <typename Container>
-    unsigned int get_num_devices( const Container & c, const char * tag ) {
-        const typename Container::const_iterator it = c.find( tag );
-        if ( it == c.end() )
-            return 0;
-        else
-            return it->second.size();
-    }
-
     template <typename U, typename V>
     std::vector<U> keys( const std::map<U,V> & map ) {
         std::vector<U> result;
@@ -730,36 +764,60 @@ QByteArray AssuanCommand::registerMemento( const shared_ptr<Memento> & mem ) {
     return tag;
 }
 
-QString AssuanCommand::bulkInputDeviceFileName( const char * tag, unsigned int idx ) const {
-    return get_device_file_name( d->inputs, tag, idx );
+QStringList AssuanCommand::fileNames() const {
+    QStringList result;
+    Q_FOREACH( const IOF & io, d->files )
+        result.push_back( io.fileName );
+    return result;
 }
 
-QIODevice * AssuanCommand::bulkInputDevice( const char * tag, unsigned int idx ) const {
-    return get_device( d->inputs, tag, idx );
+std::vector< shared_ptr<QFile> > AssuanCommand::files() const {
+    std::vector< shared_ptr<QFile> > result;
+    Q_FOREACH( const IOF & io, d->files )
+        result.push_back( io.file );
+    return result;
 }
 
-unsigned int AssuanCommand::numBulkInputDevices( const char * tag ) const {
-    return get_num_devices( d->inputs, tag );
+unsigned int AssuanCommand::numFiles() const {
+    return d->files.size();
 }
 
-std::vector<std::string> AssuanCommand::bulkInputDeviceTags() const {
-    return keys( d->inputs );
+QString AssuanCommand::bulkInputDeviceFileName( unsigned int idx ) const {
+    return d->inputs.at( idx ).fileName;
 }
 
-QString AssuanCommand::bulkOutputDeviceFileName( const char * tag, unsigned int idx ) const {
-    return get_device_file_name( d->outputs, tag, idx );
+shared_ptr<QIODevice> AssuanCommand::bulkInputDevice( unsigned int idx ) const {
+    return d->inputs.at( idx ).iodev;
 }
 
-QIODevice * AssuanCommand::bulkOutputDevice( const char * tag, unsigned int idx ) const {
-    return get_device( d->outputs, tag, idx );
+unsigned int AssuanCommand::numBulkInputDevices() const {
+    return d->inputs.size();
 }
 
-unsigned int AssuanCommand::numBulkOutputDevices( const char * tag ) const {
-    return get_num_devices( d->outputs, tag );
+
+QString AssuanCommand::bulkMessageDeviceFileName( unsigned int idx ) const {
+    return d->messages.at( idx ).fileName;
 }
 
-std::vector<std::string> AssuanCommand::bulkOutputDeviceTags() const {
-    return keys( d->outputs );
+shared_ptr<QIODevice> AssuanCommand::bulkMessageDevice( unsigned int idx ) const {
+    return d->messages.at( idx ).iodev;
+}
+
+unsigned int AssuanCommand::numBulkMessageDevices() const {
+    return d->messages.size();
+}
+
+
+QString AssuanCommand::bulkOutputDeviceFileName( unsigned int idx ) const {
+    return d->outputs.at( idx ).fileName;
+}
+
+shared_ptr<QIODevice> AssuanCommand::bulkOutputDevice( unsigned int idx ) const {
+    return d->outputs.at( idx ).iodev;
+}
+
+unsigned int AssuanCommand::numBulkOutputDevices() const {
+    return d->outputs.size();
 }
 
 int AssuanCommand::sendStatus( const char * keyword, const QString & text ) {
@@ -812,6 +870,18 @@ void AssuanCommand::done( int err, const QString & details ) {
     done( err );
 }
 
+static void close_all( const std::vector<IO> & ios ) {
+    Q_FOREACH( const IO & io, ios )
+        if ( io.iodev && io.iodev->isOpen() )
+            io.iodev->close();
+}
+
+static void close_all( const std::vector<IOF> & ios ) {
+    Q_FOREACH( const IOF & io, ios )
+        if ( io.file && io.file->isOpen() )
+            io.file->close();
+}
+
 void AssuanCommand::done( int err ) {
     if ( !d->ctx ) {
         qDebug( "AssuanCommand::done( %s ): called with NULL ctx.", gpg_strerror( err ) );
@@ -824,19 +894,10 @@ void AssuanCommand::done( int err ) {
 
     d->done = true;
 
-    for ( std::map< std::string, std::vector<IO> >::const_iterator it = d->inputs.begin(), end = d->inputs.end() ; it != end ; ++it )
-        Q_FOREACH( const IO & io, it->second ) {
-            if ( io.iodev )
-                io.iodev->close();
-            delete io.iodev;
-        }
-
-    for ( std::map< std::string, std::vector<IO> >::const_iterator it = d->outputs.begin(), end = d->outputs.end() ; it != end ; ++it )
-        Q_FOREACH( const IO & io, it->second ) {
-            if ( io.iodev )
-                io.iodev->close();
-            delete io.iodev;
-        }
+    close_all( d->inputs );
+    close_all( d->messages );
+    close_all( d->outputs );
+    close_all( d->files ); // ### ???
 
     if ( d->nohup ) {
 
@@ -880,54 +941,65 @@ QStringList AssuanCommand::senders() const {
 
 int AssuanCommandFactory::_handle( assuan_context_t ctx, char * line, const char * commandName ) {
     assert( assuan_get_pointer( ctx ) );
-
     AssuanServerConnection::Private & conn = *static_cast<AssuanServerConnection::Private*>( assuan_get_pointer( ctx ) );
 
-    const std::vector< shared_ptr<AssuanCommandFactory> >::const_iterator it
-        = std::lower_bound( conn.factories.begin(), conn.factories.end(), commandName, _detail::ByName<std::less>() );
-    assert( it != conn.factories.end() );
-    assert( *it );
-    assert( qstricmp( (*it)->name(), commandName ) == 0 );
+    try {
 
-    const shared_ptr<AssuanCommand> cmd = (*it)->create();
-    assert( cmd );
+        const std::vector< shared_ptr<AssuanCommandFactory> >::const_iterator it
+            = std::lower_bound( conn.factories.begin(), conn.factories.end(), commandName, _detail::ByName<std::less>() );
+        assuan_assert( it != conn.factories.end() );
+        assuan_assert( *it );
+        assuan_assert( qstricmp( (*it)->name(), commandName ) == 0 );
 
-    cmd->d->ctx     = conn.ctx;
-    cmd->d->options = conn.options;
-    cmd->d->inputs.swap( conn.inputs );   assert( conn.inputs.empty() );
-    cmd->d->outputs.swap( conn.outputs ); assert( conn.outputs.empty() );
-    cmd->d->senders.swap( conn.senders ); assert( conn.senders.empty() );
-    cmd->d->recipients.swap( conn.recipients ); assert( conn.recipients.empty() );
+        const shared_ptr<AssuanCommand> cmd = (*it)->create();
+        assuan_assert( cmd );
 
-    const std::map<std::string,std::string> cmdline_options = parse_commandline( line );
-    for ( std::map<std::string,std::string>::const_iterator it = cmdline_options.begin(), end = cmdline_options.end() ; it != end ; ++it )
-        cmd->d->options[it->first] = QString::fromUtf8( it->second.c_str() );
+        cmd->d->ctx     = conn.ctx;
+        cmd->d->options = conn.options;
+        cmd->d->inputs.swap( conn.inputs );     assuan_assert( conn.inputs.empty() );
+        cmd->d->messages.swap( conn.messages ); assuan_assert( conn.messages.empty() );
+        cmd->d->outputs.swap( conn.outputs );   assuan_assert( conn.outputs.empty() );
+        cmd->d->senders.swap( conn.senders );   assuan_assert( conn.senders.empty() );
+        cmd->d->recipients.swap( conn.recipients ); assuan_assert( conn.recipients.empty() );
 
-    bool nohup = false;
-    if ( cmd->d->options.count( "nohup" ) ) {
-        if ( !cmd->d->options["nohup"].toString().isEmpty() )
-            return assuan_process_done_msg( conn.ctx.get(), gpg_error( GPG_ERR_ASS_PARAMETER ), "--nohup takes no argument" );
-        nohup = true;
-        cmd->d->options.erase( "nohup" );
-    }
+        const std::map<std::string,std::string> cmdline_options = parse_commandline( line );
+        for ( std::map<std::string,std::string>::const_iterator it = cmdline_options.begin(), end = cmdline_options.end() ; it != end ; ++it )
+            cmd->d->options[it->first] = QString::fromUtf8( it->second.c_str() );
 
-    if ( const int err = cmd->start() )
+        bool nohup = false;
+        if ( cmd->d->options.count( "nohup" ) ) {
+            if ( !cmd->d->options["nohup"].toString().isEmpty() )
+                return assuan_process_done_msg( conn.ctx.get(), gpg_error( GPG_ERR_ASS_PARAMETER ), "--nohup takes no argument" );
+            nohup = true;
+            cmd->d->options.erase( "nohup" );
+        }
+
+        if ( const int err = cmd->start() )
+            if ( cmd->d->done )
+                return err;
+            else
+                return assuan_process_done( conn.ctx.get(), err );
+
         if ( cmd->d->done )
-            return err;
-        else
-            return assuan_process_done( conn.ctx.get(), err );
+            return 0;
 
-    if ( cmd->d->done )
-        return 0;
+        if ( nohup ) {
+            cmd->d->nohup = true;
+            conn.nohupedCommands.push_back( cmd );
+            return assuan_process_done_msg( conn.ctx.get(), 0, "Command put in the background to continue executing after connection end." );
+        } else {
+            conn.currentCommand = cmd;
+            return 0;
+        }
 
-    if ( nohup ) {
-        cmd->d->nohup = true;
-        conn.nohupedCommands.push_back( cmd );
-        return assuan_process_done_msg( conn.ctx.get(), 0, "Command put in the background to continue executing after connection end." );
-    } else {
-        conn.currentCommand = cmd;
-        return 0;
+    } catch ( const assuan_exception & e ) {
+        return assuan_process_done_msg( conn.ctx.get(), e.error_code(), e.message() );
+    } catch ( const std::exception & e ) {
+        return assuan_process_done_msg( conn.ctx.get(), gpg_error( GPG_ERR_UNEXPECTED ), e.what() );
+    } catch ( ... ) {
+        return assuan_process_done_msg( conn.ctx.get(), gpg_error( GPG_ERR_UNEXPECTED ), i18n("Caught unknown exception") );
     }
+
 }
 
 //
@@ -949,9 +1021,9 @@ AssuanCommand::Mode AssuanCommand::checkMode() const {
         throw assuan_exception( makeError( GPG_ERR_MISSING_VALUE ), i18n( "Required --mode option missing" ) );
 
     const QString modeString = option("mode").toString().toLower();
-    if ( modeString == "filemanager" )
+    if ( modeString == QLatin1String( "filemanager" ) )
         return FileManager;
-    if ( modeString == "email" )
+    if ( modeString == QLatin1String( "email" ) )
         return EMail;
     throw assuan_exception( makeError( GPG_ERR_INV_ARG ), i18n( "invalid mode: \"%1\"", modeString ) );
 }
@@ -979,9 +1051,9 @@ GpgME::Protocol AssuanCommand::checkProtocol( Mode mode ) const {
             throw assuan_exception( makeError( GPG_ERR_INV_FLAG ), i18n("--protocol is not allowed here") );
 
     const QString protocolString = option("protocol").toString().toLower();
-    if ( protocolString == "openpgp" )
+    if ( protocolString == QLatin1String( "openpgp" ) )
         return GpgME::OpenPGP;
-    if ( protocolString == "cms" )
+    if ( protocolString == QLatin1String( "cms" ) )
         return GpgME::CMS;
     throw assuan_exception( makeError( GPG_ERR_INV_ARG ), i18n( "invalid protocol \"%1\"", protocolString ) );
 }        
@@ -1007,9 +1079,9 @@ static QString longestCommonPrefix( const QStringList & sl ) {
 
 QString AssuanCommand::heuristicBaseDirectory() const {
     QStringList inputs;
-    const unsigned int numInputs = numBulkInputDevices( "INPUT" );
+    const unsigned int numInputs = numBulkInputDevices();
     for ( unsigned int i = 0 ; i < numInputs ; ++i ) {
-        const QString fname = bulkInputDeviceFileName( "INPUT", i );
+        const QString fname = bulkInputDeviceFileName( i );
         if ( !fname.isEmpty() )
             inputs.push_back( fname );
     }

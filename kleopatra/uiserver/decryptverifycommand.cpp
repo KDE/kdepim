@@ -102,36 +102,41 @@ namespace {
 
     struct Input {
 
-        Input()
-            : type( VerifyDetached ), backend( 0 )
-        {
-            input.io = signedData.io = output.io = 0;
-        }
+        Input() : type( VerifyDetached ), backend( 0 ) {}
 
         Type type;
 
         struct _Input {
-            QIODevice * io;
+            shared_ptr<QIODevice> io;
             QString fileName;
             shared_ptr<QFile> file; // only used when != {INPUT,MESSAGE} (shared_ptr b/c QFile isn't copyable)
         } input, signedData;
 
         struct _Output {
-            QIODevice * io;
+            shared_ptr<QIODevice> io;
             QString fileName;
             shared_ptr<QTemporaryFile> tmp;
         } output;
 
         const CryptoBackend::Protocol* backend;
 
+        static _Input fromOpenFile( const shared_ptr<QFile> & file ) {
+            assuan_assert( file->isOpen() );
+            const _Input input = {
+                file, file->fileName(), file
+            };
+            return input;
+        }
 
         static _Input openExistingFile( const QString & fname ) {
+            if ( fname.isEmpty() )
+                throw assuan_exception( gpg_error( GPG_ERR_ASS_NO_INPUT ), i18n("Empty filename provided") );
             const shared_ptr<QFile> f( new QFile( fname ) );
             if ( !f->open( QIODevice::ReadOnly ) ) // ### ask again?
                 throw assuan_exception( gpg_error( GPG_ERR_ASS_NO_INPUT ),
                                         i18n("Can't open file \"%1\" for reading: %2", fname, f->errorString() ) );
             const _Input input = {
-                f.get(), fname, f
+                f, fname, f
             };
             return input;
         }
@@ -142,7 +147,7 @@ namespace {
                 throw assuan_exception( gpg_error( GPG_ERR_ASS_NO_OUTPUT ),
                                         i18n("Can't open temporary file \"%1\": %2", tmp->fileName(), tmp->errorString() ) );
             const _Output output = {
-                tmp.get(), fname, tmp,
+                tmp, fname, tmp,
             };
             return output;
         }
@@ -246,7 +251,7 @@ public:
     }
 
     std::vector<Input> buildInputList();
-    Input inputFromOperationWidget( DecryptVerifyOperationWidget * w );
+    static Input inputFromOperationWidget( const DecryptVerifyOperationWidget * w, const shared_ptr<QFile> & file, const QDir & outDir );
 
     void startJobs();
 
@@ -466,23 +471,28 @@ std::vector<Input> DecryptVerifyCommand::Private::buildInputList()
         throw assuan_exception( q->makeError( GPG_ERR_CONFLICT ),
                                 i18n("Can't use RECIPIENT") );
 
-    const unsigned int numInputs = q->numBulkInputDevices( "INPUT" );
-    const unsigned int numMessages = q->numBulkInputDevices( "MESSAGE" );
-    const unsigned int numOutputs  = q->numBulkOutputDevices( "OUTPUT" );
+    const unsigned int numInputs = q->numBulkInputDevices();
+    const unsigned int numMessages = q->numBulkMessageDevices();
+    const unsigned int numOutputs  = q->numBulkOutputDevices();
 
     const unsigned int op = q->operation();
     const Mode mode = q->mode();
     const GpgME::Protocol proto = q->checkProtocol( mode );
 
-    assuan_assert( op != 0 );
+    const unsigned int numFiles = q->numFiles();
 
-    if ( !numInputs )
-        throw assuan_exception( q->makeError( GPG_ERR_ASS_NO_INPUT ),
-                                i18n("At least one INPUT needs to be provided") );
+    assuan_assert( op != 0 );
 
     std::vector<Input> inputs;
 
     if ( mode == EMail ) {
+
+        if ( numFiles )
+            throw assuan_exception( q->makeError( GPG_ERR_CONFLICT ), i18n("FILES present") );
+
+        if ( !numInputs )
+            throw assuan_exception( q->makeError( GPG_ERR_ASS_NO_INPUT ),
+                                    i18n("At least one INPUT needs to be provided") );
 
         if ( numMessages )
             if ( numMessages != numInputs )
@@ -523,19 +533,19 @@ std::vector<Input> DecryptVerifyCommand::Private::buildInputList()
             Input input;
             input.type = type;
 
-            input.input.io = q->bulkInputDevice( "INPUT", i );
-            input.input.fileName = q->bulkInputDeviceFileName( "INPUT", i );
+            input.input.io = q->bulkInputDevice( i );
+            input.input.fileName = q->bulkInputDeviceFileName( i );
             assuan_assert( input.input.io );
 
             if ( type == VerifyDetached ) {
-                input.signedData.io = q->bulkInputDevice( "MESSAGE", i );
-                input.signedData.fileName = q->bulkInputDeviceFileName( "MESSAGE", i );
+                input.signedData.io = q->bulkInputDevice( i );
+                input.signedData.fileName = q->bulkInputDeviceFileName( i );
                 assuan_assert( input.signedData.io );
             }
 
             if ( numOutputs ) {
-                input.output.io = q->bulkOutputDevice( "OUTPUT", i );
-                input.output.fileName = q->bulkOutputDeviceFileName( "OUTPUT", i );
+                input.output.io = q->bulkOutputDevice( i );
+                input.output.fileName = q->bulkOutputDeviceFileName( i );
                 assuan_assert( input.output.io );
             }
 
@@ -546,17 +556,22 @@ std::vector<Input> DecryptVerifyCommand::Private::buildInputList()
 
     } else {
 
-        assuan_assert( numMessages == 0 );
-        assuan_assert( numOutputs == 0 );
+        if ( numInputs )
+            throw assuan_exception( q->makeError( GPG_ERR_CONFLICT ), i18n("INPUT present") );
+        if ( numMessages )
+            throw assuan_exception( q->makeError( GPG_ERR_CONFLICT ), i18n("MESSAGE present") );
+        if ( numOutputs )
+            throw assuan_exception( q->makeError( GPG_ERR_CONFLICT ), i18n("OUTPUT present") );
 
         createWizard();
 
+        std::vector< shared_ptr<QFile> > files;
         unsigned int counter = 0;
-        for ( unsigned int i = 0 ; i < numInputs ; ++i ) {
+        Q_FOREACH( const shared_ptr<QFile> & file, q->files() ) {
 
-            QIODevice * iodev = q->bulkInputDevice( "INPUT", i );
-            const QString fname = q->bulkInputDeviceFileName( "INPUT", i );
-            assuan_assert( iodev );
+            assuan_assert( file );
+
+            const QString fname = file->fileName();
 
             assuan_assert( !fname.isEmpty() );
 
@@ -564,43 +579,49 @@ std::vector<Input> DecryptVerifyCommand::Private::buildInputList()
 
             if ( mayBeOpaqueSignature( classification ) || mayBeCipherText( classification ) ) {
 
-                DecryptVerifyOperationWidget * op = wizard->operationWidget( counter++ );
+                DecryptVerifyOperationWidget * const op = wizard->operationWidget( counter++ );
                 assuan_assert( op != 0 );
 
-                op->setVerifyDetached( false );
+                op->setMode( DecryptVerifyOperationWidget::DecryptVerifyOpaque );
                 op->setInputFileName( fname );
+                op->setSignedDataFileName( QString() );
+
+                files.push_back( file );
 
             } else if ( mayBeDetachedSignature( classification ) ) {
                 // heuristics say it's a detached signature
 
-                DecryptVerifyOperationWidget * op = wizard->operationWidget( counter++ );
+                DecryptVerifyOperationWidget * const op = wizard->operationWidget( counter++ );
                 assuan_assert( op != 0 );
 
-                op->setVerifyDetached( true );
+                op->setMode( DecryptVerifyOperationWidget::VerifyDetachedWithSignature );
                 op->setInputFileName( fname );
                 op->setSignedDataFileName( findSignedData( fname ) );
+
+                files.push_back( file );
 
             } else {
 
                 // probably the signed data file was selected:
                 QStringList signatures = findSignatures( fname );
-                const QFileInfo fi( fname );
-#if 0
                 if ( signatures.empty() )
-                    // guessing failed, ask the user to supply the signature
-                    signatures = QFileDialog::getOpenFileNames( 0, i18n("Please select the signature files corresponding to the data file %1", fi.fileName() ), fi.path() );
-#endif
+                    signatures.push_back( QString() );
 
                 Q_FOREACH( const QString s, signatures ) {
                     DecryptVerifyOperationWidget * op = wizard->operationWidget( counter++ );
                     assuan_assert( op != 0 );
 
-                    op->setVerifyDetached( true );
+                    op->setMode( DecryptVerifyOperationWidget::VerifyDetachedWithSignedData );
                     op->setInputFileName( s );
                     op->setSignedDataFileName( fname );
+
+                    files.push_back( file );
+
                 }
             }
         }
+
+        assuan_assert( counter == files.size() );
 
         if ( !counter )
             throw assuan_exception( q->makeError( GPG_ERR_ASS_NO_INPUT ), i18n("No usable inputs found") );
@@ -610,9 +631,15 @@ std::vector<Input> DecryptVerifyCommand::Private::buildInputList()
         if ( !wizard->waitForOperationSelection() )
             throw assuan_exception( q->makeError( GPG_ERR_CANCELED ), i18n("Confirmation dialog canceled") );
 
+        const QFileInfo outDirInfo( wizard->outputDirectory() );
+        assuan_assert( outDirInfo.isDir() );
+
+        const QDir outDir( outDirInfo.absoluteFilePath() );
+        assuan_assert( outDir.exists() );
+
         for ( unsigned int i = 0 ; i < counter ; ++i )
             try {
-                inputs.push_back( inputFromOperationWidget( wizard->operationWidget( i ) ) );
+                inputs.push_back( inputFromOperationWidget( wizard->operationWidget( i ), files[i], outDir ) );
             } catch ( const GpgME::Exception & e ) {
                 //wizard->addResult( DVResult::.... )
             }
@@ -622,31 +649,43 @@ std::vector<Input> DecryptVerifyCommand::Private::buildInputList()
     return inputs;
 }
 
-Input DecryptVerifyCommand::Private::inputFromOperationWidget( DecryptVerifyOperationWidget * w ) {
+// static
+Input DecryptVerifyCommand::Private::inputFromOperationWidget( const DecryptVerifyOperationWidget * w, const shared_ptr<QFile> & file, const QDir & outDir) {
 
     assuan_assert( w );
 
-    const QString inputFileName = w->inputFileName();
-    if ( inputFileName.isEmpty() )
-        throw assuan_exception( q->makeError( GPG_ERR_ASS_NO_INPUT ), i18n("File canceled") );
-
     Input input;
 
-    if ( w->isVerifyDetached() ) {
-
-        const QString signedDataFileName = w->signedDataFileName();
-        if ( signedDataFileName.isEmpty() )
-            throw assuan_exception( q->makeError( GPG_ERR_ASS_NO_INPUT ), i18n("File canceled") );
+    switch ( w->mode() ) {
+    case DecryptVerifyOperationWidget::VerifyDetachedWithSignature:
 
         input.type = VerifyDetached;
-        input.input = Input::openExistingFile( inputFileName );
-        input.signedData = Input::openExistingFile( signedDataFileName );
+        input.input = Input::fromOpenFile( file );
+        input.signedData = Input::openExistingFile( w->signedDataFileName() );
 
-    } else {
+        assuan_assert( file->fileName() == w->inputFileName() );
+
+        break;
+
+    case DecryptVerifyOperationWidget::VerifyDetachedWithSignedData:
+
+        input.type = VerifyDetached;
+        input.input = Input::openExistingFile( w->inputFileName() );
+        input.signedData = Input::fromOpenFile( file );
+
+        assuan_assert( file->fileName() == w->signedDataFileName() );
+
+        break;
+
+    case DecryptVerifyOperationWidget::DecryptVerifyOpaque:
 
         input.type = DecryptVerify;
-        input.input = Input::openExistingFile( inputFileName );
-        input.output = Input::makeTemporaryOutput( inputFileName );
+        input.input = Input::fromOpenFile( file );
+        input.output = Input::makeTemporaryOutput( outDir.absoluteFilePath( QFileInfo( file->fileName() ).fileName() ) );
+
+        assuan_assert( file->fileName() == w->inputFileName() );
+
+        break;
     }
 
     return input;
