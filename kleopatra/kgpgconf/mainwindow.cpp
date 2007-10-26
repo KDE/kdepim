@@ -55,6 +55,8 @@ MainWindow::MainWindow( QWidget* parent, Qt::WindowFlags flags ) : QMainWindow( 
     setCentralWidget( mainWidget );
     connect( m_ui.treeWidget, SIGNAL( itemSelectionChanged() ), 
              SLOT( treeWidgetItemSelectionChanged() ) );
+    connect( m_ui.treeWidget, SIGNAL( itemChanged( QTreeWidgetItem*, int ) ),
+             SLOT( treeWidgetItemChanged( QTreeWidgetItem*, int ) ) );
     connect( m_ui.readOnlyBox, SIGNAL( stateChanged( int ) ), SLOT( readOnlyStateChanged( int ) ) );
     connect( m_ui.valueLE, SIGNAL( textChanged( QString ) ), SLOT( optionValueChanged() ) );
     readConfiguration();
@@ -83,6 +85,19 @@ void MainWindow::treeWidgetItemSelectionChanged()
     m_ui.valueLE->setText( QString() );
     m_ui.readOnlyBox->setCheckState( ( entry && entry->isReadOnly() ) ? Qt::Checked : Qt::Unchecked );
     m_selectedEntry = entry;
+}
+
+void MainWindow::treeWidgetItemChanged( QTreeWidgetItem* item, int column )
+{
+    if ( column != ReadOnlyColumn )
+        return;
+    ConfigEntry* entry = m_itemToEntry[item];
+    assert( entry );
+    entry->setReadOnly( item->checkState( ReadOnlyColumn ) == Qt::Checked );
+    if ( entry == m_selectedEntry )
+    {
+        m_ui.readOnlyBox->setCheckState( entry->isReadOnly() ? Qt::Checked : Qt::Unchecked );
+    }
 }
 
 void MainWindow::readOnlyStateChanged( int state )
@@ -129,7 +144,6 @@ void MainWindow::readConfiguration()
                 entryItem->setText( NameColumn, entry->name() );
 //                entryItem->setText( ValueColumn, QString() );
                 entryItem->setCheckState( ReadOnlyColumn, entry->isReadOnly() ? Qt::Checked : Qt::Unchecked ); 
-                entryItem->setFlags( entryItem->flags() ^ Qt::ItemIsUserCheckable );
                 groupItem->addChild( entryItem );
                 m_componentForEntry[entry] = component;
                 m_itemToEntry[entryItem] = entry;
