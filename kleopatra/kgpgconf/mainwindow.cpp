@@ -127,7 +127,7 @@ void MainWindow::readConfiguration()
                 QTreeWidgetItem* const entryItem = new QTreeWidgetItem;
                 entryItem->setData( NameColumn, IsOptionRole, true );
                 entryItem->setText( NameColumn, entry->name() );
-                entryItem->setText( ValueColumn, QString() );
+//                entryItem->setText( ValueColumn, QString() );
                 entryItem->setCheckState( ReadOnlyColumn, entry->isReadOnly() ? Qt::Checked : Qt::Unchecked ); 
                 entryItem->setFlags( entryItem->flags() ^ Qt::ItemIsUserCheckable );
                 groupItem->addChild( entryItem );

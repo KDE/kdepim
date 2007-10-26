@@ -197,12 +197,14 @@ void ConfigReader::Private::readEntriesForComponent( ConfigComponent* component 
             if ( flags & GPGCONF_FLAG_GROUP ) {
                 if ( currentGroup && !currentGroup->entryList().isEmpty() ) // only add non-empty groups
                     component->addGroup( currentGroup );
-                else
+                else {
                     delete currentGroup;
+                    currentGroup = 0;
+                }
             //else
             //  kDebug(5150) <<"Discarding empty group" << mCurrentGroupName;
                 currentGroup = new ConfigGroup( lst[0] );
-                //currentGroup->setDescription( lst[3] );
+                currentGroup->setDescription( lst[3] );
                 //currentGroup->setLevel( level );
             } else {
                 // normal entry

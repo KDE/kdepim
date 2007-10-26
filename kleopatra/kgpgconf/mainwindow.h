@@ -55,8 +55,7 @@ public:
 private:
     enum Column {
         NameColumn=0,
-        ValueColumn=1,
-        ReadOnlyColumn=2
+        ReadOnlyColumn=1
     };
 
     enum Role {

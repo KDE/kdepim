@@ -22,17 +22,12 @@
      </column>
      <column>
       <property name="text" >
-       <string>Value</string>
-      </property>
-     </column>
-     <column>
-      <property name="text" >
-       <string>Read-only</string>
+       <string>Impose</string>
       </property>
      </column>
     </widget>
    </item>
-   <item row="0" column="1" colspan="2" >
+   <item row="0" column="1" >
     <layout class="QHBoxLayout" >
      <item>
       <widget class="QLabel" name="label_3" >
@@ -62,7 +57,7 @@
      </item>
     </layout>
    </item>
-   <item row="1" column="1" colspan="2" >
+   <item row="1" column="1" >
     <layout class="QHBoxLayout" >
      <item>
       <widget class="QLabel" name="label_2" >
@@ -89,7 +84,7 @@
      </item>
     </layout>
    </item>
-   <item row="2" column="1" colspan="2" >
+   <item row="2" column="1" >
     <layout class="QHBoxLayout" >
      <item>
       <widget class="QLabel" name="label" >
@@ -122,10 +117,13 @@
      </item>
     </layout>
    </item>
-   <item row="3" column="1" colspan="2" >
+   <item row="3" column="1" >
     <layout class="QHBoxLayout" >
      <item>
       <widget class="QLabel" name="label_6" >
+       <property name="enabled" >
+        <bool>false</bool>
+       </property>
        <property name="text" >
         <string>Default:</string>
        </property>
@@ -133,6 +131,9 @@
      </item>
      <item>
       <widget class="QLabel" name="label_5" >
+       <property name="enabled" >
+        <bool>false</bool>
+       </property>
        <property name="sizePolicy" >
         <sizepolicy vsizetype="Preferred" hsizetype="Preferred" >
          <horstretch>1</horstretch>
@@ -146,10 +147,13 @@
      </item>
     </layout>
    </item>
-   <item row="4" column="1" colspan="2" >
+   <item row="4" column="1" >
     <layout class="QHBoxLayout" >
      <item>
       <widget class="QLabel" name="label_4" >
+       <property name="enabled" >
+        <bool>false</bool>
+       </property>
        <property name="text" >
         <string>Value:</string>
        </property>
@@ -157,6 +161,9 @@
      </item>
      <item>
       <widget class="QLineEdit" name="valueLE" >
+       <property name="enabled" >
+        <bool>false</bool>
+       </property>
        <property name="text" >
         <string/>
        </property>
@@ -164,6 +171,9 @@
      </item>
      <item>
       <widget class="QPushButton" name="resetButton" >
+       <property name="enabled" >
+        <bool>false</bool>
+       </property>
        <property name="text" >
         <string>Reset to Default</string>
        </property>
@@ -174,14 +184,14 @@
    <item row="5" column="1" >
     <widget class="QCheckBox" name="readOnlyBox" >
      <property name="text" >
-      <string>Read-Only</string>
+      <string>Impose value on all users</string>
      </property>
      <property name="checked" >
       <bool>false</bool>
      </property>
     </widget>
    </item>
-   <item row="6" column="2" >
+   <item row="6" column="1" >
     <spacer>
      <property name="orientation" >
       <enum>Qt::Vertical</enum>
