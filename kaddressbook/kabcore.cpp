@@ -349,7 +349,8 @@ void KABCore::setContactSelected( const QString &uid )
   mActionCopy->setEnabled( selected );
   mActionDelete->setEnabled( selected );
   mActionEditAddressee->setEnabled( selected );
-  mActionStoreAddresseeIn->setEnabled( selected );
+  mActionCopyAddresseeTo->setEnabled( selected );
+  mActionMoveAddresseeTo->setEnabled( selected );
   mActionMail->setEnabled( selected );
   mActionMailVCard->setEnabled( selected );
   mActionChat->setEnabled( selected && mKIMProxy && mKIMProxy->initialize() );
@@ -728,7 +729,18 @@ void KABCore::editContact( const QString &uid )
   }
 }
 
-void KABCore::storeContactIn( const QString &uid )
+
+void KABCore::copySelectedContactToResource()
+{
+    storeContactIn( QString(), true /*copy*/);
+}
+
+void KABCore::moveSelectedContactToResource()
+{
+    storeContactIn( QString(), false /*copy*/);
+}
+
+void KABCore::storeContactIn( const QString &uid, bool copy /*false*/ )
 {
   // First, locate the contact entry
   QStringList uidList;
@@ -753,12 +765,17 @@ void KABCore::storeContactIn( const QString &uid )
       newAddr.setUid( KRandom::randomString( 10 ) );
       newAddr.setResource( resource );
       addressBook()->insertAddressee( newAddr );
-      KABLock::self( mAddressBook )->lock( addr.resource() );
-      addressBook()->removeAddressee( addr );
-      KABLock::self( mAddressBook )->unlock( addr.resource() );
+      if ( !copy ) {
+          KABLock::self( mAddressBook )->lock( addr.resource() );
+          addressBook()->removeAddressee( addr );
+          KABLock::self( mAddressBook )->unlock( addr.resource() );
+      }
     }
   }
   KABLock::self( mAddressBook )->unlock( resource );
+
+  addressBookChanged();
+  setModified( true );
 }
 
 void KABCore::save()
@@ -1226,12 +1243,18 @@ void KABCore::initActions()
   mActionDelete->setShortcut(QKeySequence(Qt::Key_Delete));
   mActionDelete->setWhatsThis( i18n( "Delete all selected contacts." ) );
 
+  const QString copyMoveWhatsThis = i18n( "Store a contact in a different Addressbook<p>You will be presented with a dialog where you can select a new storage place for this contact." );
+  mActionCopyAddresseeTo = coll->addAction( "copy_contact_to" );
+  mActionCopyAddresseeTo->setIcon( KIcon("kaddressbook") );
+  mActionCopyAddresseeTo->setText( i18n( "C&opy Contact To..." ) );
+  connect(mActionCopyAddresseeTo, SIGNAL(triggered(bool) ), SLOT( copySelectedContactToResource() ));
+  mActionCopyAddresseeTo->setWhatsThis( copyMoveWhatsThis );
 
-  mActionStoreAddresseeIn = coll->addAction( "edit_store_in" );
-  mActionStoreAddresseeIn->setIcon( KIcon("kaddressbook") );
-  mActionStoreAddresseeIn->setText( i18n( "St&ore Contact In..." ) );
-  connect(mActionStoreAddresseeIn, SIGNAL(triggered(bool) ), SLOT( storeContactIn() ));
-  mActionStoreAddresseeIn->setWhatsThis( i18n( "Store a contact in a different Addressbook<p>You will be presented with a dialog where you can select a new storage place for this contact.</p>" ) );
+  mActionMoveAddresseeTo = coll->addAction( "move_contact_to" );
+  mActionMoveAddresseeTo->setIcon( KIcon("kaddressbook") );
+  mActionMoveAddresseeTo->setText( i18n( "&Move Contact To..." ) );
+  connect(mActionMoveAddresseeTo, SIGNAL(triggered(bool) ), SLOT( moveSelectedContactToResource() ));
+  mActionMoveAddresseeTo->setWhatsThis( copyMoveWhatsThis );
 
   // settings menu
   mActionJumpBar = coll->add<KToggleAction>( "options_show_jump_bar" );

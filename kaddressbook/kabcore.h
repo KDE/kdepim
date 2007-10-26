@@ -339,8 +339,20 @@ class KADDRESSBOOK_EXPORT KABCore : public KAB::Core
     /**
      * Let the user chose a different resource for the selected contacts.
      * If the adding to the new resource is successful, the contact is
-     * removed from the old one. */
-    void storeContactIn( const QString &uid = QString() );
+     * removed from the old one, unless the Copy flag is given. */
+    void storeContactIn( const QString &uid = QString(), bool copy = false );
+
+    /**
+     * Lets the user chose a different resource for the selected contacts and
+     * copies it there.
+     */
+    void copySelectedContactToResource();
+
+    /**
+     * Lets the user chose a different resource for the selected contacts and
+     * moves it there.
+     */
+    void moveSelectedContactToResource();
 
     /**
       Launches the ldap search dialog.
@@ -453,7 +465,8 @@ class KADDRESSBOOK_EXPORT KABCore : public KAB::Core
     QAction *mActionDelete;
     QAction *mActionCopy;
     QAction *mActionEditAddressee;
-    QAction *mActionStoreAddresseeIn;
+    QAction *mActionMoveAddresseeTo;
+    QAction *mActionCopyAddresseeTo;
     QAction *mActionMerge;
     QAction *mActionMail;
     QAction *mActionMailVCard;

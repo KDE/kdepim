@@ -1,5 +1,5 @@
 <!DOCTYPE kpartgui>
-<kpartgui name="kaddressbook" version="391">
+<kpartgui name="kaddressbook" version="392">
   <MenuBar>
     <Menu name="file" noMerge="1"><text>&amp;File</text>
       <Menu name="file_new_actions_menu"><text>New</text>
@@ -28,7 +28,8 @@
       <Action name="edit_cut"/>
       <Action name="edit_copy"/>
       <Action name="edit_paste"/>
-      <Action name="edit_store_in"/>
+      <Action name="copy_contact_to"/>
+      <Action name="move_contact_to"/>
       <Separator/>
       <Action name="edit_delete" append="edit_paste_merge"/>
       <Separator/>
@@ -76,7 +77,8 @@
     <Action name="edit_cut"/>
     <Action name="edit_copy"/>
     <Action name="edit_paste"/>
-    <Action name="edit_store_in"/>
+    <Action name="copy_contact_to"/>
+    <Action name="move_contact_to"/>
     <Separator/>
     <Action name="edit_delete"/>
     <Separator/>
