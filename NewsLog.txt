@@ -1,3 +1,15 @@
+Friday, October 26th 2007
+
+Bugfixes
+---------
+* ensure that tooltips also work on the main folder tree and show quota info properly (729284)
+* kolab/issue2108 Explicitely disable word wrapping, instead of toggeling, where appropriate.
+
+features
+* Prokde35-z Item 16: Filter import/export (728541)
+* Prokde35-z Item 37: Open search results in standalone reader, when preview pane is hidden (729306)
+
+
 Friday, October 12th 2007
 
 Bugfixes
@@ -16,7 +28,7 @@ Features
 * Prokde35-Z Item 55d: Immediately sync groupware changes (revision 723653)
 * Prokde35-z Item 27: Softbreaking in the kmail editor when no hardbreak limit is set (724153)
 * Prokde35-z Item 19: Raise hardbreak limit from 78 to 255 (724155)
-* Change the default for what to select on entering a folder to "last selected" from "jump to new". 
+* Change the default for what to select on entering a folder to "last selected" from "jump to new".
 
 Merges
 ------
@@ -30,13 +42,13 @@ Wednesday, September 26st 2007
 Bugfixes
 --------
 
-* kolab/issue1983 Fix encoding issue in SMIME encryption message. 
-* kolab/issue1924 Retain state of the crypto state indicators across drafts. 
-* KDE bug 132938 Avoid asking the user to go online spuriously/ 
-* kolab/issue1743 Fix upload of out-of-office scripts (716765) 
-* kolab/issue2023 Missing accelarators in text snippet context menu (716933) 
-* kolab/issue2009 Fix new/unread flag handling during DIMAP sync (717162) 
-* kolab/issue2029 Allow to hide signature details again (717191) 
+* kolab/issue1983 Fix encoding issue in SMIME encryption message.
+* kolab/issue1924 Retain state of the crypto state indicators across drafts.
+* KDE bug 132938 Avoid asking the user to go online spuriously/
+* kolab/issue1743 Fix upload of out-of-office scripts (716765)
+* kolab/issue2023 Missing accelarators in text snippet context menu (716933)
+* kolab/issue2009 Fix new/unread flag handling during DIMAP sync (717162)
+* kolab/issue2029 Allow to hide signature details again (717191)
 
 Features
 --------
