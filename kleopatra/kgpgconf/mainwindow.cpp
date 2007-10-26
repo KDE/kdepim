@@ -160,7 +160,7 @@ void MainWindow::saveAs()
     if ( fileName.isNull() )
         return;
     QFile out( fileName );
-    if ( !out.open( QIODevice::WriteOnly ) )
+    if ( !out.open( QIODevice::WriteOnly | QIODevice::Text ) )
     {
         QMessageBox::warning( this, i18n( "Write Error" ), i18n( "Could not open file %1 for writing. You might not have the permission to write to that file.", fileName ) );
         return;
