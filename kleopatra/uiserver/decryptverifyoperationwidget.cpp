@@ -120,8 +120,6 @@ DecryptVerifyOperationWidget::Private::UI::UI( DecryptVerifyOperationWidget * q 
              &signedDataFileNameLB, SLOT(setEnabled(bool)) );
     connect( &verifyDetachedCB, SIGNAL(toggled(bool)),
              &signedDataFileNameRQ, SLOT(setEnabled(bool)) );
-
-    q->setMode( DecryptVerifyOpaque );
 }
 
 
@@ -137,7 +135,7 @@ DecryptVerifyOperationWidget::Private::~Private() {}
 DecryptVerifyOperationWidget::DecryptVerifyOperationWidget( QWidget * p )
     : QWidget( p ), d( new Private( this ) )
 {
-
+    setMode( DecryptVerifyOpaque );
 }
 
 DecryptVerifyOperationWidget::~DecryptVerifyOperationWidget() {}
