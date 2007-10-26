@@ -41,15 +41,21 @@ namespace Kleo {
 
     class DecryptVerifyOperationWidget : public QWidget {
         Q_OBJECT
-        Q_PROPERTY( bool verifyDetached READ isVerifyDetached WRITE setVerifyDetached )
+        Q_ENUMS( Mode )
+        Q_PROPERTY( Mode mode READ mode WRITE setMode )
         Q_PROPERTY( QString inputFileName READ inputFileName WRITE setInputFileName )
         Q_PROPERTY( QString signedDataFileName READ signedDataFileName WRITE setSignedDataFileName )
     public:
         explicit DecryptVerifyOperationWidget( QWidget * parent=0 );
         ~DecryptVerifyOperationWidget();
 
-        void setVerifyDetached( bool on );
-        bool isVerifyDetached() const;
+        enum Mode {
+            VerifyDetachedWithSignature,
+            VerifyDetachedWithSignedData,
+            DecryptVerifyOpaque
+        };
+        void setMode( Mode mode );
+        Mode mode() const;
 
         void setInputFileName( const QString & name );
         QString inputFileName() const;
@@ -60,7 +66,6 @@ namespace Kleo {
     private:
         class Private;
         kdtools::pimpl_ptr<Private> d;
-        Q_PRIVATE_SLOT( d, void slotSwap() )
     };
 
 

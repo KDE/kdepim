@@ -41,6 +41,7 @@
 #include <QLabel>
 #include <QCheckBox>
 #include <QToolButton>
+#include <QStackedLayout>
 
 using namespace Kleo;
 
@@ -52,17 +53,19 @@ public:
     ~Private();
 
 private:
-    void slotSwap();
-
-private:
     struct UI {
-        QGridLayout glay;
-        QLabel       inputLB, inputFileNameLB;
-        QHBoxLayout  hlay;
-        QCheckBox     verifyDetachedCB;
-        QToolButton   swapTB;
-        QLabel       signedDataLB;
-        FileNameRequester signedDataFNR;
+        QGridLayout   glay;
+        QLabel         inputLB;
+        QStackedLayout inputStack;
+        QLabel            inputFileNameLB;
+        FileNameRequester inputFileNameRQ;
+        //------
+        QCheckBox      verifyDetachedCB;
+        //------
+        QLabel         signedDataLB;
+        QStackedLayout signedDataStack;
+        QLabel            signedDataFileNameLB;
+        FileNameRequester signedDataFileNameRQ;
 
         explicit UI( DecryptVerifyOperationWidget * q );
     } ui;
@@ -71,45 +74,54 @@ private:
 DecryptVerifyOperationWidget::Private::UI::UI( DecryptVerifyOperationWidget * q )
     : glay( q ),
       inputLB( i18n("Input file:"), q ),
+      inputStack(),
       inputFileNameLB( q ),
-      hlay(),
+      inputFileNameRQ( q ),
       verifyDetachedCB( i18n("&Input file is a detached signature"), q ),
-      swapTB( q ),
       signedDataLB( i18n("&Signed data:"), q ),
-      signedDataFNR( q )
+      signedDataStack(),
+      signedDataFileNameLB( q ),
+      signedDataFileNameRQ( q )
 {
     KDAB_SET_OBJECT_NAME( glay );
     KDAB_SET_OBJECT_NAME( inputLB );
+    KDAB_SET_OBJECT_NAME( inputStack );
     KDAB_SET_OBJECT_NAME( inputFileNameLB );
-    KDAB_SET_OBJECT_NAME( hlay );
+    KDAB_SET_OBJECT_NAME( inputFileNameRQ );
     KDAB_SET_OBJECT_NAME( verifyDetachedCB );
-    KDAB_SET_OBJECT_NAME( swapTB );
     KDAB_SET_OBJECT_NAME( signedDataLB );
-    KDAB_SET_OBJECT_NAME( signedDataFNR );
+    KDAB_SET_OBJECT_NAME( signedDataStack );
+    KDAB_SET_OBJECT_NAME( signedDataFileNameLB );
+    KDAB_SET_OBJECT_NAME( signedDataFileNameRQ );
 
-    swapTB.setIcon( KIcon("swap") );
-    swapTB.setEnabled( false );
+    inputStack.setMargin( 0 );
+    signedDataStack.setMargin( 0 );
+
     signedDataLB.setEnabled( false );
-    signedDataFNR.setEnabled( false );
-    signedDataLB.setBuddy( &signedDataFNR );
+    signedDataFileNameLB.setEnabled( false );
+    signedDataFileNameRQ.setEnabled( false );
 
     glay.setMargin( 0 );
     glay.addWidget( &inputLB, 0, 0 );
-    glay.addWidget( &inputFileNameLB, 0, 1 );
+    glay.addLayout( &inputStack, 0, 1 );
+    inputStack.addWidget( &inputFileNameLB );
+    inputStack.addWidget( &inputFileNameRQ );
 
-    glay.addLayout( &hlay, 1, 0, 1, 2 );
-    hlay.addWidget( &verifyDetachedCB );
-    hlay.addWidget( &swapTB );
+    glay.addWidget( &verifyDetachedCB, 1, 0, 1, 2 );
 
     glay.addWidget( &signedDataLB, 2, 0 );
-    glay.addWidget( &signedDataFNR, 2, 1 );
+    glay.addLayout( &signedDataStack, 2, 1 );
+    signedDataStack.addWidget( &signedDataFileNameLB );
+    signedDataStack.addWidget( &signedDataFileNameRQ );
 
-    connect( &verifyDetachedCB, SIGNAL(toggled(bool)),
-             &swapTB, SLOT(setEnabled(bool)) );
     connect( &verifyDetachedCB, SIGNAL(toggled(bool)),
              &signedDataLB, SLOT(setEnabled(bool)) );
     connect( &verifyDetachedCB, SIGNAL(toggled(bool)),
-             &signedDataFNR, SLOT(setEnabled(bool)) );
+             &signedDataFileNameLB, SLOT(setEnabled(bool)) );
+    connect( &verifyDetachedCB, SIGNAL(toggled(bool)),
+             &signedDataFileNameRQ, SLOT(setEnabled(bool)) );
+
+    q->setMode( DecryptVerifyOpaque );
 }
 
 
@@ -117,7 +129,7 @@ DecryptVerifyOperationWidget::Private::Private( DecryptVerifyOperationWidget * q
     : q( qq ),
       ui( q )
 {
-    connect( &ui.swapTB, SIGNAL(clicked()), q, SLOT(slotSwap()) );
+
 }
 
 DecryptVerifyOperationWidget::Private::~Private() {}
@@ -130,34 +142,62 @@ DecryptVerifyOperationWidget::DecryptVerifyOperationWidget( QWidget * p )
 
 DecryptVerifyOperationWidget::~DecryptVerifyOperationWidget() {}
 
-void DecryptVerifyOperationWidget::setVerifyDetached( bool on ) {
-    d->ui.verifyDetachedCB.setChecked( on );
+static const int Mutable = 1;
+static const int Const   = 0;
+
+void DecryptVerifyOperationWidget::setMode( Mode mode ) {
+    d->ui.verifyDetachedCB.setChecked(     mode != DecryptVerifyOpaque );
+
+    QWidget * inputWidget;
+    if ( mode == VerifyDetachedWithSignedData )
+        inputWidget = &d->ui.inputFileNameRQ;
+    else
+        inputWidget = &d->ui.inputFileNameLB;
+    QWidget * signedDataWidget;
+    if ( mode == VerifyDetachedWithSignature )
+        signedDataWidget = &d->ui.signedDataFileNameRQ;
+    else
+        signedDataWidget = &d->ui.signedDataFileNameLB;
+
+    d->ui.inputStack.setCurrentWidget( inputWidget );
+    d->ui.signedDataStack.setCurrentWidget( signedDataWidget );
+
+    d->ui.inputLB.setBuddy( inputWidget );
+    d->ui.signedDataLB.setBuddy( signedDataWidget );
 }
 
-bool DecryptVerifyOperationWidget::isVerifyDetached() const {
-    return d->ui.verifyDetachedCB.isChecked();
+DecryptVerifyOperationWidget::Mode DecryptVerifyOperationWidget::mode() const {
+    if ( d->ui.verifyDetachedCB.isChecked() )
+        if ( d->ui.inputStack.currentIndex() == Const )
+            return VerifyDetachedWithSignature;
+        else
+            return VerifyDetachedWithSignedData;
+    else
+        return DecryptVerifyOpaque;
 }
 
 void DecryptVerifyOperationWidget::setInputFileName( const QString & name ) {
     d->ui.inputFileNameLB.setText( name );
+    d->ui.inputFileNameRQ.setFileName( name );
 }
 
 QString DecryptVerifyOperationWidget::inputFileName() const {
-    return d->ui.inputFileNameLB.text();
+    if ( d->ui.inputStack.currentIndex() == Const )
+        return d->ui.inputFileNameLB.text();
+    else
+        return d->ui.inputFileNameRQ.fileName();
 }
 
 void DecryptVerifyOperationWidget::setSignedDataFileName( const QString & name ) {
-    d->ui.signedDataFNR.setFileName( name );
+    d->ui.signedDataFileNameLB.setText( name );
+    d->ui.signedDataFileNameRQ.setFileName( name );
 }
 
 QString DecryptVerifyOperationWidget::signedDataFileName() const {
-    return d->ui.signedDataFNR.fileName();
-}
-
-void DecryptVerifyOperationWidget::Private::slotSwap() {
-    const QString tmp = ui.signedDataFNR.fileName();
-    ui.signedDataFNR.setFileName( ui.inputFileNameLB.text() );
-    ui.inputFileNameLB.setText( tmp );
+    if ( d->ui.signedDataStack.currentIndex() == Const )
+        return d->ui.signedDataFileNameLB.text();
+    else
+        return d->ui.signedDataFileNameRQ.fileName();
 }
 
 #include "moc_decryptverifyoperationwidget.cpp"
