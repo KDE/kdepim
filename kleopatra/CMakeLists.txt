@@ -12,11 +12,12 @@ if (USABLE_ASSUAN_FOUND)
 endif(USABLE_ASSUAN_FOUND)
 add_definitions (-DQT3_SUPPORT -DQT3_SUPPORT_WARNINGS ${KDE4_ENABLE_EXCEPTIONS} -D_ASSUAN_ONLY_GPG_ERRORS -UQT_NO_STL )
 
+add_subdirectory( kgpgconf )
+
 if ( NOT KLEO_ONLY_UISERVER )
 set(libconf_SRCS  ${CMAKE_SOURCE_DIR}/kleopatra/conf/configuredialog.cpp )
 add_subdirectory( conf )
 add_subdirectory( kwatchgnupg )
-add_subdirectory( kgpgconf )
 
 endif ( NOT KLEO_ONLY_UISERVER )
 add_subdirectory( tests )
