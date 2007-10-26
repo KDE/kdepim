@@ -340,8 +340,20 @@ class KDE_EXPORT KABCore : public KAB::Core
     /**
      * Let the user chose a different resource for the selected contacts.
      * If the adding to the new resource is successfull, the contact is
-     * removed from the old one. */
-    void storeContactIn( const QString &uid = QString::null );
+     * removed from the old one, unless the Copy flag is given. */
+    void storeContactIn( const QString &uid = QString::null, bool copy = false );
+    
+    /**
+     * Lets the user chose a different resource for the selected contacts and
+     * copies it there.
+     */
+    void copySelectedContactToResource();
+
+    /**
+     * Lets the user chose a different resource for the selected contacts and
+     * moves it there.
+     */
+    void moveSelectedContactToResource();
 
     /**
       Launches the ldap search dialog.
@@ -458,7 +470,8 @@ class KDE_EXPORT KABCore : public KAB::Core
     KAction *mActionDelete;
     KAction *mActionCopy;
     KAction *mActionEditAddressee;
-    KAction *mActionStoreAddresseeIn;
+    KAction *mActionMoveAddresseeTo;
+    KAction *mActionCopyAddresseeTo;
     KAction *mActionMerge;
     KAction *mActionMail;
     KAction *mActionMailVCard;

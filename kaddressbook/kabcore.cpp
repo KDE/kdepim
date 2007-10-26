@@ -345,7 +345,8 @@ void KABCore::setContactSelected( const QString &uid )
   mActionCopy->setEnabled( selected );
   mActionDelete->setEnabled( selected );
   mActionEditAddressee->setEnabled( selected );
-  mActionStoreAddresseeIn->setEnabled( selected );
+  mActionCopyAddresseeTo->setEnabled( selected );
+  mActionMoveAddresseeTo->setEnabled( selected );
   mActionMail->setEnabled( selected );
   mActionMailVCard->setEnabled( selected );
   mActionChat->setEnabled( selected && mKIMProxy && mKIMProxy->initialize() );
@@ -737,7 +738,18 @@ void KABCore::editContact( const QString &uid )
   }
 }
 
-void KABCore::storeContactIn( const QString &uid )
+
+void KABCore::copySelectedContactToResource()
+{
+    storeContactIn( QString(), true /*copy*/);
+}
+
+void KABCore::moveSelectedContactToResource()
+{
+    storeContactIn( QString(), false /*copy*/);
+}
+
+void KABCore::storeContactIn( const QString &uid, bool copy /*false*/ )
 {
   // First, locate the contact entry
   QStringList uidList;
@@ -762,12 +774,17 @@ void KABCore::storeContactIn( const QString &uid )
       newAddr.setUid( KApplication::randomString( 10 ) );
       newAddr.setResource( resource );
       addressBook()->insertAddressee( newAddr );
-      KABLock::self( mAddressBook )->lock( addr.resource() );
-      addressBook()->removeAddressee( addr );
-      KABLock::self( mAddressBook )->unlock( addr.resource() );
+      if ( !copy ) {
+          KABLock::self( mAddressBook )->lock( addr.resource() );
+          addressBook()->removeAddressee( addr );
+          KABLock::self( mAddressBook )->unlock( addr.resource() );
+      }
     }
   }
   KABLock::self( mAddressBook )->unlock( resource );
+
+  addressBookChanged();
+  setModified( true );
 }
 
 void KABCore::save()
@@ -1228,10 +1245,16 @@ void KABCore::initActions()
   mActionDelete->setWhatsThis( i18n( "Delete all selected contacts." ) );
 
 
-  mActionStoreAddresseeIn = new KAction( i18n( "St&ore Contact In..." ), "kaddressbook", 0,
-                                      this, SLOT( storeContactIn() ),
-                                      actionCollection(), "edit_store_in" );
-  mActionStoreAddresseeIn->setWhatsThis( i18n( "Store a contact in a different Addressbook<p>You will be presented with a dialog where you can select a new storage place for this contact." ) );
+  mActionCopyAddresseeTo = new KAction( i18n( "&Copy Contact To..." ), "kaddressbook", 0,
+                                      this, SLOT( copySelectedContactToResource() ),
+                                      actionCollection(), "copy_contact_to" );
+  const QString copyMoveWhatsThis = i18n( "Store a contact in a different Addressbook<p>You will be presented with a dialog where you can select a new storage place for this contact." );
+  mActionCopyAddresseeTo->setWhatsThis( copyMoveWhatsThis );
+
+  mActionMoveAddresseeTo = new KAction( i18n( "M&ove Contact To..." ), "kaddressbook", 0,
+                                      this, SLOT( moveSelectedContactToResource() ),
+                                      actionCollection(), "move_contact_to" );
+  mActionMoveAddresseeTo->setWhatsThis( copyMoveWhatsThis );
 
   // settings menu
   mActionJumpBar = new KToggleAction( i18n( "Show Jump Bar" ), "next", 0,
