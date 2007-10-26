@@ -213,7 +213,7 @@ bool DecryptVerifyWizard::waitForOperationSelection() {
     connect( this, SIGNAL(finished(int)), &loop, SLOT(quit()) );
     loop.exec();
 
-    return that && currentId() != startId();
+    return that && currentPage() == &d->resultPage ;
 }
 
 
