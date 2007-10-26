@@ -66,6 +66,7 @@ MainWindow::MainWindow( QWidget* parent, Qt::WindowFlags flags ) : QMainWindow( 
     fileMenu->addSeparator();
     QAction* const quit = fileMenu->addAction( i18n( "Quit" ), qApp, SLOT( quit() ) );
     quit->setShortcut( Qt::CTRL + Qt::Key_Q );
+    resize( 640, 480 );
 }
 
 MainWindow::~MainWindow()
