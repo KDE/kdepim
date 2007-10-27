@@ -142,7 +142,7 @@ bool kmobiletools::queryClose()
     KMessageBox::information( this,
       i18n( "<qt>Closing the main window will keep KMobileTools running in the "
       "system tray. Use 'Quit' from the system tray menu to quit the application.</qt>" ),
-      i18n( "Docking in System Tray" ), "hideOnCloseInfo");
+      i18nc( "@title KMessageBox", "Docking in System Tray" ), "hideOnCloseInfo");
 
     return false;
 }
