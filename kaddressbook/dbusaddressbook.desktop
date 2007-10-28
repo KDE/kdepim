@@ -5,6 +5,7 @@ X-KDE-ServiceType=DBUS/AddressBook
 Comment=Address Book with a D-Bus interface
 Comment[be]=Адрасная кніга з D-Bus інтэрфейсам
 Comment[bg]=Адресник с интерфейс DCOP
+Comment[ca]=Llibreta d'adreces amb una interfície D-Bus
 Comment[de]=Adressbuch mit D-Bus-Schnittstelle
 Comment[el]=Βιβλίο διευθύνσεων με ένα περιβάλλον χρήσης D-Bus
 Comment[es]=Libreta de direcciones con interfaz D-Bus

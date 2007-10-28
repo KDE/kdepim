@@ -3,6 +3,7 @@
 
 [Misc]
 Name=Letter home/private address
+Name[ca]=Adreça postal particular/privada
 Name[de]=Postanschrift (privat)
 Name[el]=Διευθύνσεις οικιακής/προσωπικής αλληλογραφίας
 Name[es]=Dirección postal personal/privada
