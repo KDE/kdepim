@@ -144,18 +144,17 @@ static const int Mutable = 1;
 static const int Const   = 0;
 
 void DecryptVerifyOperationWidget::setMode( Mode mode ) {
-    d->ui.verifyDetachedCB.setChecked(     mode != DecryptVerifyOpaque );
+    d->ui.verifyDetachedCB.setChecked( mode != DecryptVerifyOpaque );
 
     QWidget * inputWidget;
-    if ( mode == VerifyDetachedWithSignedData )
-        inputWidget = &d->ui.inputFileNameRQ;
-    else
-        inputWidget = &d->ui.inputFileNameLB;
     QWidget * signedDataWidget;
-    if ( mode == VerifyDetachedWithSignature )
-        signedDataWidget = &d->ui.signedDataFileNameRQ;
-    else
+    if ( mode == VerifyDetachedWithSignedData ) {
+        inputWidget      = &d->ui.inputFileNameRQ;
         signedDataWidget = &d->ui.signedDataFileNameLB;
+    } else {
+        inputWidget      = &d->ui.inputFileNameLB;
+        signedDataWidget = &d->ui.signedDataFileNameRQ;
+    }
 
     d->ui.inputStack.setCurrentWidget( inputWidget );
     d->ui.signedDataStack.setCurrentWidget( signedDataWidget );
