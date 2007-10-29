@@ -101,7 +101,6 @@ KNMainWidget::KNMainWidget( KXMLGUIClient* client, QWidget* parent ) :
   //-------------------------------- <GUI> ------------------------------------
   // this will enable keyboard-only actions like that don't appear in any menu
   //actionCollection()->setDefaultShortcutContext( Qt::WindowShortcut );
-  actionCollection()->setAssociatedWidget( this );
 
   Q3Accel *accel = new Q3Accel( this );
   initStatusBar();
@@ -237,6 +236,8 @@ KNMainWidget::KNMainWidget( KXMLGUIClient* client, QWidget* parent ) :
     show();              // the settings dialog must appear in front of the main window!
     slotSettings();
   }
+
+  actionCollection()->associateWidget( this );
 }
 
 KNMainWidget::~KNMainWidget()
