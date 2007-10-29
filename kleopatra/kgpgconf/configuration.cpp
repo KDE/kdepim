@@ -32,9 +32,87 @@
 
 #include "configuration.h"
 
+#include <QDebug>
 #include <QStringList>
 
 #include <cassert>
+
+namespace {
+
+
+static QString gpgconf_unescape( const QString& str )
+{
+  // Looks like it's the same rules as KUrl.
+  return KUrl::fromPercentEncoding( str.toLatin1() );
+}
+
+static QString gpgconf_escape( const QString& str )
+{
+  // Escape special chars (including ':' and '%')
+  QString enc = KUrl::toPercentEncoding( str ); // and convert to utf8 first (to get %12%34 for one special char)
+  // Also encode commas, for lists.
+  enc.replace( ',', "%2c" );
+  return enc;
+}
+
+static QString urlpart_encode( const QString& str )
+{
+  QString enc( str );
+  enc.replace( '%', "%25" ); // first!
+  enc.replace( ':', "%3a" );
+  //kDebug() <<"  urlpart_encode:" << str <<" ->" << enc;
+  return enc;
+}
+
+static QString urlpart_decode( const QString& str )
+{
+  return KUrl::fromPercentEncoding( str.toLatin1() );
+}
+
+static KUrl parseUrl( ConfigEntry::ArgType argType, const QString& str )
+{
+    if ( argType == ConfigEntry::LdapUrl ) { 
+        // The format is HOSTNAME:PORT:USERNAME:PASSWORD:BASE_DN
+        QStringList items = str.split( ':' );
+        if ( items.count() == 5 )
+        {
+            QStringList::const_iterator it = items.begin();
+            KUrl url;
+            url.setProtocol( "ldap" );
+            url.setHost( urlpart_decode( *it++ ) );
+            url.setPort( (*it++).toInt() );
+            url.setPath( "/" ); // workaround KUrl parsing bug
+            url.setUser( urlpart_decode( *it++ ) );
+            url.setPass( urlpart_decode( *it++ ) );
+            url.setQuery( urlpart_decode( *it ) );
+            return url;
+        }
+        else
+            qWarning() << "parseURL: malformed LDAP server:" << str;
+  }
+  // other URLs : assume wellformed URL syntax.
+  return KUrl( str );
+}
+
+
+// The opposite of parseURL
+static QString splitUrl( ConfigEntry::ArgType argType, const KUrl& url )
+{
+    if ( argType == ConfigEntry::LdapUrl ) { // LDAP server
+        // The format is HOSTNAME:PORT:USERNAME:PASSWORD:BASE_DN
+        assert( url.protocol() == "ldap" );
+        return urlpart_encode( url.host() ) + ':' +
+            QString::number( url.port() ) + ':' +
+            urlpart_encode( url.user() ) + ':' +
+            urlpart_encode( url.pass() ) + ':' +
+            // KUrl automatically encoded the query (e.g. for spaces inside it),
+            // so decode it before writing it out to gpgconf (issue119)
+            urlpart_encode( KUrl::fromPercentEncoding( url.query().mid(1).toLatin1() ) );
+  }
+  return url.path();
+}
+
+}
 
 Config::Config()
 {
@@ -117,7 +195,7 @@ ConfigEntry* ConfigComponent::entry( const QString& name ) const
         return m_entries[name];
     Q_FOREACH ( ConfigGroup* const i, m_groups )
     {
-        if ( ConfigEntry* entry = i->entry( name ) )
+        if ( ConfigEntry* const entry = i->entry( name ) )
         {
             m_entries[name] = entry;
             return entry;
@@ -128,6 +206,11 @@ ConfigEntry* ConfigComponent::entry( const QString& name ) const
 
 ConfigGroup::ConfigGroup( const QString& name ) : m_name( name )
 {
+}
+
+bool ConfigGroup::isEmpty() const
+{
+    return m_entries.isEmpty();
 }
 
 ConfigGroup::~ConfigGroup()
@@ -173,7 +256,7 @@ void ConfigGroup::addEntry( ConfigEntry* entry )
     m_entries[entry->name()] = entry;
 }
 
-ConfigEntry::ConfigEntry( const QString& name ) : m_dirty( false ), m_name( name ), m_readOnly( false )
+ConfigEntry::ConfigEntry( const QString& name ) : m_dirty( false ), m_name( name ), m_mutability( ConfigEntry::UnspecifiedMutability ), m_useDefault( false ), m_argType( None ), m_isList( false )
 {
 }
 
@@ -213,15 +296,330 @@ void ConfigEntry::setDescription( const QString& desc )
     m_dirty = true;
 }
 
-void ConfigEntry::setReadOnly( bool ro )
+void ConfigEntry::setMutability( Mutability mutability )
 {
-    if ( m_readOnly == ro )
+    if ( m_mutability == mutability )
         return;
-    m_readOnly = ro;
+    m_mutability = mutability;
     m_dirty = true;
 }
 
 bool ConfigEntry::isReadOnly() const
 {
-    return m_readOnly;
+    return m_mutability == NoChange;
 }
+
+bool ConfigEntry::useBuiltInDefault() const
+{
+    return m_useDefault;
+}
+
+void ConfigEntry::setUseBuiltInDefault( bool useDefault )
+{
+    if ( useDefault == m_useDefault )
+        return;
+    m_useDefault = useDefault;
+    m_dirty = true;
+}
+
+void ConfigEntry::setArgType( ArgType type, ListType listType )
+{
+    m_argType = type;
+    m_isList = listType == List;
+}
+
+ConfigEntry::ArgType ConfigEntry::argType() const
+{
+    return m_argType;
+}
+
+bool ConfigEntry::isList() const
+{
+    return m_isList;
+}
+
+bool ConfigEntry::boolValue() const
+{
+    assert( m_argType == None );
+    assert( !isList() );
+    return m_value.toBool();
+}
+
+QString ConfigEntry::stringValue() const
+{
+    return QString(); //toString( false );
+}
+
+int ConfigEntry::intValue() const
+{
+    assert( m_argType == Int );
+    assert( !isList() );
+    return m_value.toInt();
+}
+
+unsigned int ConfigEntry::uintValue() const
+{
+    assert( m_argType == UInt );
+    assert( !isList() );
+    return m_value.toUInt();
+}
+
+KUrl ConfigEntry::urlValue() const
+{
+  assert( m_argType == Path || m_argType == Url || m_argType == LdapUrl );
+  assert( !isList() );
+  QString str = m_value.toString();
+  if ( m_argType == Path )
+  {
+    KUrl url;
+    url.setPath( str );
+    return url;
+  }
+  return parseUrl( m_argType, str );
+}
+
+bool ConfigEntry::isStringType() const
+{
+    return ( m_argType == String
+             || m_argType == Path
+             || m_argType == Url
+             || m_argType == LdapUrl );
+}
+
+QStringList ConfigEntry::stringValueList() const
+{
+  assert( isStringType() );
+  assert( isList() );
+  return m_value.toStringList();
+}
+
+QList<int> ConfigEntry::intValueList() const
+{
+  assert( m_argType == Int );
+  assert( isList() );
+  QList<int> ret;
+  QList<QVariant> lst = m_value.toList();
+  for( QList<QVariant>::const_iterator it = lst.begin(); it != lst.end(); ++it ) {
+    ret.append( (*it).toInt() );
+  }
+  return ret;
+}
+
+QList<unsigned int> ConfigEntry::uintValueList() const
+{
+  assert( m_argType == UInt );
+  assert( isList() );
+  QList<unsigned int> ret;
+  QList<QVariant> lst = m_value.toList();
+  for( QList<QVariant>::const_iterator it = lst.begin(); it != lst.end(); ++it ) {
+    ret.append( (*it).toUInt() );
+  }
+  return ret;
+}
+
+KUrl::List ConfigEntry::urlValueList() const
+{
+  assert( m_argType == Path || m_argType == Url || m_argType == LdapUrl );
+  assert( isList() );
+  QStringList lst = m_value.toStringList();
+
+  KUrl::List ret;
+  Q_FOREACH( const QString i, lst )
+  {
+    if ( m_argType == Path ) {
+      KUrl url;
+      url.setPath( i );
+      ret << url;
+    } else {
+      ret << parseUrl( m_argType, i );
+    }
+  }
+  return ret;
+}
+
+void ConfigEntry::setValueFromRawString( const QString& raw )
+{
+    m_value = stringToValue( raw, true );
+}
+
+void ConfigEntry::setBoolValue( bool b )
+{
+  assert( m_argType == None );
+  assert( !isList() );
+  // A "no arg" option is either set or not set.
+  // Being set means mSet==true + m_value==true, being unset means resetToDefault(), i.e. both false
+  m_value = b;
+  m_dirty = true;
+}
+
+void ConfigEntry::setStringValue( const QString& str )
+{
+  m_value = stringToValue( str, false );
+  // When setting a string to empty (and there's no default), we need to act like resetToDefault
+  // Otherwise we try e.g. "ocsp-responder:0:" and gpgconf answers:
+  // "gpgconf: argument required for option ocsp-responder"
+  m_dirty = true;
+}
+
+void ConfigEntry::setIntValue( int i )
+{
+  assert( m_argType == Int );
+  assert( !isList() );
+  m_value = i;
+  m_dirty = true;
+}
+
+void ConfigEntry::setUIntValue( unsigned int i )
+{
+  m_value = i;
+  m_dirty = true;
+}
+
+void ConfigEntry::setURLValue( const KUrl& url )
+{
+  QString str = splitUrl( m_argType, url );
+  m_value = str;
+  m_dirty = true;
+}
+
+void ConfigEntry::setNumberOfTimesSet( uint i )
+{
+    assert( m_argType == None );
+    assert( isList() );
+    setUIntValue( i );
+}
+
+
+unsigned int ConfigEntry::numberOfTimesSet() const
+{
+  assert( m_argType == None );
+  assert( isList() );
+  return m_value.toUInt();
+}
+
+void ConfigEntry::setStringValueList( const QStringList& lst )
+{
+  m_value = lst;
+  m_dirty = true;
+}
+
+void ConfigEntry::setIntValueList( const QList<int>& lst )
+{
+  QList<QVariant> ret;
+  for( QList<int>::const_iterator it = lst.begin(); it != lst.end(); ++it ) {
+    ret << QVariant( *it );
+  }
+  m_value = ret;
+  m_dirty = true;
+}
+
+void ConfigEntry::setUIntValueList( const QList<unsigned int>& lst )
+{
+    QList<QVariant> ret;
+    for( QList<unsigned int>::const_iterator it = lst.begin(); it != lst.end(); ++it ) {
+        ret << QVariant( *it );
+    }
+    m_value = ret;
+    m_dirty = true;
+}
+
+void ConfigEntry::setURLValueList( const KUrl::List& urls )
+{
+    QStringList lst;
+    Q_FOREACH( const KUrl i, urls ) {
+        lst << splitUrl( m_argType, i );
+    }
+    m_value = lst;
+    m_dirty = true;
+}
+
+
+QVariant ConfigEntry::stringToValue( const QString& str, bool unescape ) const
+{
+  bool isString = isStringType();
+
+  if ( isList() ) {
+    QList<QVariant> lst;
+    QStringList items = str.split( ',', QString::SkipEmptyParts );
+    for( QStringList::const_iterator valit = items.begin(); valit != items.end(); ++valit ) {
+      QString val = *valit;
+      if ( isString ) {
+        if ( val.isEmpty() ) {
+          lst << QVariant( QString() );
+          continue;
+        }
+        else if ( unescape ) {
+          if( val[0] != '"' ) // see README.gpgconf
+            qWarning() <<"String value should start with '\"' :" << val;
+          val = val.mid( 1 );
+        }
+      }
+      lst << QVariant( unescape ? gpgconf_unescape( val ) : val );
+    }
+    return lst;
+  } else { // not a list
+    QString val( str );
+    if ( isString ) {
+      if ( val.isEmpty() )
+        return QVariant( QString() ); // not set  [ok with lists too?]
+      else if ( unescape ) {
+        assert( val[0] == '"' ); // see README.gpgconf
+        val = val.mid( 1 );
+      }
+    }
+    return QVariant( unescape ? gpgconf_unescape( val ) : val );
+  }
+}
+
+QString ConfigEntry::outputString() const
+{
+    return toString( true );
+}
+
+
+QString ConfigEntry::toString( bool escape ) const
+{
+  // Basically the opposite of stringToValue
+  if ( isStringType() ) {
+    if ( m_value.isNull() )
+      return QString();
+    else if ( isList() ) { // string list
+      QStringList lst = m_value.toStringList();
+      if ( escape ) {
+          for( QStringList::iterator it = lst.begin(); it != lst.end(); ++it ) {
+          if ( !(*it).isNull() )
+            *it = gpgconf_escape( *it ).prepend( "\"" );
+        }
+      }
+      QString res = lst.join( "," );
+      //kDebug(5150) <<"toString:" << res;
+      return res;
+    } else { // normal string
+      QString res = m_value.toString();
+      if ( escape )
+        res = gpgconf_escape( res ).prepend( "\"" );
+      return res;
+    }
+  }
+  if ( !isList() ) // non-list non-string
+  {
+    if ( m_argType == None ) {
+      return m_value.toBool() ? QString::fromLatin1( "1" ) : QString();
+    } else { // some int
+      assert( m_argType == Int || m_argType == UInt );
+      return m_value.toString(); // int to string conversion
+    }
+  }
+
+  // Lists (of other types than strings)
+  if ( m_argType == None )
+      return QString::number( numberOfTimesSet() );
+  QStringList ret;
+  QList<QVariant> lst = m_value.toList();
+  for( QList<QVariant>::const_iterator it = lst.begin(); it != lst.end(); ++it ) {
+      ret << (*it).toString(); // QVariant does the conversion
+  }
+  return ret.join( "," );
+}
+
+

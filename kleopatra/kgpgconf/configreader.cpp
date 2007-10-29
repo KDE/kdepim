@@ -86,7 +86,7 @@ static ConfigEntry::ArgType knownArgType( int argType, bool& ok ) {
     default:
         ok = false;
         return ConfigEntry::None;
-  }
+    }
 }
 
 }
@@ -139,16 +139,16 @@ ConfigEntry* ConfigReader::Private::createEntryFromParsedLine( const QStringList
     const int flags = (*it++).toInt();
     const int level = (*it++).toInt();
     entry->setDescription( *it++ );
-    entry->setReadOnly( ( flags & GPGCONF_FLAG_NO_CHANGE ) != 0 );
     bool ok;
     // we keep the real (int) arg type, since it influences the parsing (e.g. for ldap urls)
     uint realArgType = (*it++).toInt();
-    uint argType = ::knownArgType( realArgType, ok );
+    ConfigEntry::ArgType argType = ::knownArgType( realArgType, ok );
     if ( !ok && !(*it).isEmpty() ) {
     // use ALT-TYPE
         realArgType = (*it).toInt();
         argType = ::knownArgType( realArgType, ok );
     }
+    entry->setArgType( argType, flags & GPGCONF_FLAG_LIST ? ConfigEntry::List : ConfigEntry::NoList );
     if ( !ok )
         qWarning() <<"Unsupported datatype:" << parsedLine[4] <<" :" << *it <<" for" << parsedLine[0];
     ++it; // done with alt-type
@@ -197,7 +197,7 @@ void ConfigReader::Private::readEntriesForComponent( ConfigComponent* component 
             if ( level > 2 ) // invisible or internal -> skip it;
                 continue;
             if ( flags & GPGCONF_FLAG_GROUP ) {
-                if ( currentGroup && !currentGroup->entryList().isEmpty() ) // only add non-empty groups
+                if ( currentGroup && !currentGroup->isEmpty() ) // only add non-empty groups
                     component->addGroup( currentGroup );
                 else {
                     delete currentGroup;
@@ -223,6 +223,10 @@ void ConfigReader::Private::readEntriesForComponent( ConfigComponent* component 
             //kWarning(5150) <<"Parse error on gpgconf --list-options output:" << line;
         }
     }
+    if ( currentGroup && !currentGroup->isEmpty() )
+        component->addGroup( currentGroup );
+    else
+        delete currentGroup;
 }
 
 void ConfigReader::Private::readConfConf( Config* cfg ) const
@@ -250,12 +254,20 @@ void ConfigReader::Private::readConfConf( Config* cfg ) const
             continue;
         }
         ConfigEntry* const entry = component->entry( lst[4] );
-        if ( !component )
+        if ( !entry )
         {
             qWarning() << "gpgconf --list-config: Unknown entry: " << lst[3] << ":" << lst[4];
             continue;
         }
-        // TODO: read default/change/no-change flags and values
+        const QString flag = lst[5];
+        if ( flag == QString::fromLatin1( "no-change" ) )
+            entry->setMutability( ConfigEntry::NoChange );
+        else if ( flag == QString::fromLatin1( "change" ) )
+            entry->setMutability( ConfigEntry::Change );
+        else if ( flag == QString::fromLatin1( "default" ) )
+            entry->setUseBuiltInDefault( true );
+        if ( !lst[6].isEmpty() )
+            entry->setValueFromRawString( lst[6] );
     }
     buf.close();
 }

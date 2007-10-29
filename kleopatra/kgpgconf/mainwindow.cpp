@@ -61,6 +61,8 @@ MainWindow::MainWindow( QWidget* parent, Qt::WindowFlags flags ) : QMainWindow( 
              SLOT( treeWidgetItemChanged( QTreeWidgetItem*, int ) ) );
     connect( m_ui.readOnlyBox, SIGNAL( stateChanged( int ) ), SLOT( readOnlyStateChanged( int ) ) );
     connect( m_ui.valueLE, SIGNAL( textChanged( QString ) ), SLOT( optionValueChanged() ) );
+    connect( m_ui.useCustomRB, SIGNAL( toggled( bool ) ), m_ui.valueLE, SLOT( setEnabled( bool ) ) );
+    connect( m_ui.useDefaultRB, SIGNAL( toggled( bool ) ), SLOT( useDefaultToggled( bool ) ) );
     readConfiguration();
 
     QMenu* const fileMenu = menuBar()->addMenu( i18n( "&File" ) );
@@ -85,8 +87,17 @@ void MainWindow::treeWidgetItemSelectionChanged()
     m_ui.componentLabel->setText( entry ? m_componentForEntry[entry]->name() : QString() );
     m_ui.optionLabel->setText( entry ? entry->name() : QString() );
     m_ui.descriptionLabel->setText( entry ? entry->description() : QString() );
-    m_ui.valueLE->setText( QString() );
+    m_ui.valueLE->setText( entry ? entry->outputString() : QString() );
+    m_ui.useDefaultRB->setChecked( entry && entry->useBuiltInDefault() );
+    m_ui.useCustomRB->setChecked( entry && !entry->useBuiltInDefault() );
     m_ui.readOnlyBox->setCheckState( ( entry && entry->isReadOnly() ) ? Qt::Checked : Qt::Unchecked );
+    m_ui.readOnlyBox->setEnabled( entry );
+    m_ui.useCustomRB->setEnabled( entry );
+    m_ui.useDefaultRB->setEnabled( entry );
+    m_ui.valueLE->setEnabled( entry );
+    m_ui.optionLabelLabel->setEnabled( entry );
+    m_ui.componentLabelLabel->setEnabled( entry );
+    m_ui.descriptionLabelLabel->setEnabled( entry );
     m_selectedEntry = entry;
 }
 
@@ -96,11 +107,18 @@ void MainWindow::treeWidgetItemChanged( QTreeWidgetItem* item, int column )
         return;
     ConfigEntry* entry = m_itemToEntry[item];
     assert( entry );
-    entry->setReadOnly( item->checkState( ReadOnlyColumn ) == Qt::Checked );
+    entry->setMutability( item->checkState( ReadOnlyColumn ) == Qt::Checked ? ConfigEntry::NoChange : ConfigEntry::UnspecifiedMutability );
     if ( entry == m_selectedEntry )
     {
         m_ui.readOnlyBox->setCheckState( entry->isReadOnly() ? Qt::Checked : Qt::Unchecked );
     }
+}
+
+void MainWindow::useDefaultToggled( bool useDefault )
+{
+    if ( !m_selectedEntry )
+        return;    
+    m_selectedEntry->setUseBuiltInDefault( useDefault );
 }
 
 void MainWindow::readOnlyStateChanged( int state )
@@ -108,7 +126,7 @@ void MainWindow::readOnlyStateChanged( int state )
     if ( !m_selectedEntry )
         return;
     assert( state != Qt::PartiallyChecked );
-    m_selectedEntry->setReadOnly( state == Qt::Checked );
+    m_selectedEntry->setMutability( state == Qt::Checked ? ConfigEntry::NoChange: ConfigEntry::UnspecifiedMutability );
     QTreeWidgetItem* const item = m_entryToItem[m_selectedEntry];
     assert( item );
     item->setCheckState( ReadOnlyColumn, static_cast<Qt::CheckState>( state ) );

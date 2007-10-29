@@ -33,6 +33,8 @@
 #ifndef KGPGCONF_CONFIGURATION_H
 #define KGPGCONF_CONFIGURATION_H
 
+#include <KUrl>
+
 #include <QHash>
 #include <QString>
 #include <QVariant>
@@ -101,6 +103,8 @@ public:
     QString description() const;
     void setDescription( const QString& description );
 
+    bool isEmpty() const;
+
     QStringList entryList() const;
     ConfigEntry* entry( const QString& name ) const;
     void addEntry( ConfigEntry* entry );
@@ -119,6 +123,29 @@ private:
 class ConfigEntry
 {
 public:
+
+    enum Mutability {
+        UnspecifiedMutability=0,
+        NoChange,
+        Change
+    };
+
+    enum ArgType {
+        None=0,
+        String,
+        Int,
+        UInt,
+        Path,
+        Url,
+        LdapUrl,
+        DirPath
+    };
+
+    enum ListType {
+        NoList=0,
+        List
+    };
+
     explicit ConfigEntry( const QString& name );
 
     QString name() const;
@@ -127,33 +154,64 @@ public:
     QString description() const;
     void setDescription( const QString& description );
 
-    void setReadOnly( bool readOnly );
+    void setMutability( Mutability mutability );
+    Mutability mutability() const;
+
     bool isReadOnly() const;
 
     bool isDirty() const;
     void unsetDirty();
 
-    enum ArgType {
-        None=0,
-        String=1,
-        Int=2,
-        UInt=3,
-        Path=32,
-        LdapUrl=33
-    };
+    void setUseBuiltInDefault( bool useDefault );
+    bool useBuiltInDefault() const;
+
+    void setValueFromRawString( const QString& str );
+
+    void setArgType( ArgType type, ListType listType );
+    ArgType argType() const;
+    bool boolValue() const;
+    QString stringValue() const;
+    int intValue() const;
+    unsigned int uintValue() const;
+    KUrl urlValue() const;
+    QStringList stringValueList() const;
+    QList<int> intValueList() const;
+    QList<unsigned int> uintValueList() const;
+    KUrl::List urlValueList() const;
+    unsigned int numberOfTimesSet() const;
+
+    QString outputString() const;
+
+    void setBoolValue( bool );
+    void setStringValue( const QString& );
+    void setIntValue( int );
+    void setUIntValue( unsigned int );
+    void setURLValue( const KUrl& );
+    void setNumberOfTimesSet( unsigned int );
+    void setStringValueList( const QStringList& );
+    void setIntValueList( const QList<int>& );
+    void setUIntValueList( const QList<unsigned int>& );
+    void setURLValueList( const KUrl::List& );
 
 private:
+    bool isStringType() const;
+    bool isList() const;
+    QString toString( bool escape ) const;
+
     ConfigEntry();
     ConfigEntry( const ConfigEntry& );
     ConfigEntry& operator=( const ConfigEntry& );
+    QVariant stringToValue( const QString& str, bool unescape ) const;
 
 private:
     bool m_dirty;
     QString m_name;
     QString m_description;
     QVariant m_value;
-    bool m_readOnly;
-    ArgType argType;
+    Mutability m_mutability;
+    bool m_useDefault;
+    ArgType m_argType;
+    bool m_isList;
 };
 
 #endif // KGPGCONF_CONFIGURATION_H

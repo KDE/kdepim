@@ -69,6 +69,7 @@ private Q_SLOTS:
     void treeWidgetItemChanged( QTreeWidgetItem* item, int column );
     void readOnlyStateChanged( int state );
     void optionValueChanged();
+    void useDefaultToggled( bool useDefault ); 
     void saveAs();
 
 private:

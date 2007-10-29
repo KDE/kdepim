@@ -81,6 +81,7 @@ class ConfigWriter::Private
 public:
     QIODevice* device;
     bool write( const QString& line );
+    
 };
 
 ConfigWriter::ConfigWriter( QIODevice* device ) : d( new Private )
