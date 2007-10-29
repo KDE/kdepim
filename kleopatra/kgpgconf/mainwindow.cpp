@@ -87,10 +87,10 @@ void MainWindow::treeWidgetItemSelectionChanged()
     m_ui.componentLabel->setText( entry ? m_componentForEntry[entry]->name() : QString() );
     m_ui.optionLabel->setText( entry ? entry->name() : QString() );
     m_ui.descriptionLabel->setText( entry ? entry->description() : QString() );
-    m_ui.valueLE->setText( entry ? entry->outputString() : QString() );
+    m_ui.valueLE->setText( entry ? entry->stringValue() : QString() );
     m_ui.useDefaultRB->setChecked( entry && entry->useBuiltInDefault() );
     m_ui.useCustomRB->setChecked( entry && !entry->useBuiltInDefault() );
-    m_ui.readOnlyBox->setCheckState( ( entry && entry->isReadOnly() ) ? Qt::Checked : Qt::Unchecked );
+    m_ui.readOnlyBox->setCheckState( ( entry && entry->mutability() == ConfigEntry::NoChange ) ? Qt::Checked : Qt::Unchecked );
     m_ui.readOnlyBox->setEnabled( entry );
     m_ui.useCustomRB->setEnabled( entry );
     m_ui.useDefaultRB->setEnabled( entry );
@@ -110,7 +110,7 @@ void MainWindow::treeWidgetItemChanged( QTreeWidgetItem* item, int column )
     entry->setMutability( item->checkState( ReadOnlyColumn ) == Qt::Checked ? ConfigEntry::NoChange : ConfigEntry::UnspecifiedMutability );
     if ( entry == m_selectedEntry )
     {
-        m_ui.readOnlyBox->setCheckState( entry->isReadOnly() ? Qt::Checked : Qt::Unchecked );
+        m_ui.readOnlyBox->setCheckState( entry->mutability() == ConfigEntry::NoChange ? Qt::Checked : Qt::Unchecked );
     }
 }
 
@@ -164,7 +164,7 @@ void MainWindow::readConfiguration()
                 entryItem->setData( NameColumn, IsOptionRole, true );
                 entryItem->setText( NameColumn, entry->name() );
 //                entryItem->setText( ValueColumn, QString() );
-                entryItem->setCheckState( ReadOnlyColumn, entry->isReadOnly() ? Qt::Checked : Qt::Unchecked ); 
+                entryItem->setCheckState( ReadOnlyColumn, entry->mutability() == ConfigEntry::NoChange ? Qt::Checked : Qt::Unchecked ); 
                 groupItem->addChild( entryItem );
                 m_componentForEntry[entry] = component;
                 m_itemToEntry[entryItem] = entry;

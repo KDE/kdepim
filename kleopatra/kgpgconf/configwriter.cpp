@@ -46,31 +46,24 @@
 
 namespace {
     struct GpgConfConfEntry {
-        GpgConfConfEntry() : changeFlag( None ) {}
-
-        enum ChangeFlag {
-            None=0,
-            Change,
-            NoChange
-        };
+        GpgConfConfEntry() : changeFlag( ConfigEntry::UnspecifiedMutability ), useDefault( false ) {}
 
         QString component;
         QString option;
-        ChangeFlag changeFlag;
-        QVariant value;
+        ConfigEntry::Mutability changeFlag;
+        bool useDefault;
+        QString value;
         QString toString() const {
             QString changeStr;
-            if ( changeFlag == Change )
+            if ( changeFlag == ConfigEntry::Change )
                 changeStr = "[change]";
-            else if ( changeFlag == NoChange )
+            else if ( changeFlag == ConfigEntry::NoChange )
                 changeStr = "[no-change]";
-            const bool setDefault = value.isNull() && changeFlag == NoChange;
 
             QString str;
-            if ( setDefault )
+            if ( useDefault )
                 str += QString( "   %1 %2 [default]\n" ).arg( component, option );
-            str
- += QString( "   %1 %2 %3 %4\n" ).arg( component, option, changeStr, value.toString() );
+            str += QString( "   %1 %2 %3 %4\n" ).arg( component, option, changeStr, value  );
             return str;
         }
     };
@@ -114,12 +107,14 @@ bool ConfigWriter::writeConfig( Config* config ) const
             {
                 ConfigEntry* const entry = group->entry( k );
                 assert( entry );
-                if ( entry->isReadOnly() )
+                if ( entry->mutability() != ConfigEntry::UnspecifiedMutability || entry->useBuiltInDefault() || !entry->stringValue().isEmpty() )
                 {
                     GpgConfConfEntry cfgentry;
+                    cfgentry.useDefault = entry->useBuiltInDefault();
+                    cfgentry.value = entry->useBuiltInDefault() ? QString() : entry->stringValue();
                     cfgentry.component = component->name();
                     cfgentry.option = entry->name();
-                    cfgentry.changeFlag = GpgConfConfEntry::NoChange;
+                    cfgentry.changeFlag = entry->mutability();
                     lines.append( cfgentry );
                 }
             }

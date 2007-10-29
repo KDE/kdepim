@@ -43,7 +43,7 @@ namespace {
 static QString gpgconf_unescape( const QString& str )
 {
   // Looks like it's the same rules as KUrl.
-  return KUrl::fromPercentEncoding( str.toLatin1() );
+  return KUrl::fromPercentEncoding( str.toUtf8() );
 }
 
 static QString gpgconf_escape( const QString& str )
@@ -256,6 +256,14 @@ void ConfigGroup::addEntry( ConfigEntry* entry )
     m_entries[entry->name()] = entry;
 }
 
+QString ConfigEntry::unescapeGpgConfConfValue( const QString& str )
+{
+    if ( str.isEmpty() )
+        return str;
+    assert( str.startsWith( '"' ) );
+    return str.right( str.count() - 1 );
+}
+
 ConfigEntry::ConfigEntry( const QString& name ) : m_dirty( false ), m_name( name ), m_mutability( ConfigEntry::UnspecifiedMutability ), m_useDefault( false ), m_argType( None ), m_isList( false )
 {
 }
@@ -304,9 +312,9 @@ void ConfigEntry::setMutability( Mutability mutability )
     m_dirty = true;
 }
 
-bool ConfigEntry::isReadOnly() const
+ConfigEntry::Mutability ConfigEntry::mutability() const
 {
-    return m_mutability == NoChange;
+    return m_mutability;
 }
 
 bool ConfigEntry::useBuiltInDefault() const
@@ -347,7 +355,7 @@ bool ConfigEntry::boolValue() const
 
 QString ConfigEntry::stringValue() const
 {
-    return QString(); //toString( false );
+    return toString( false );
 }
 
 int ConfigEntry::intValue() const

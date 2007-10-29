@@ -267,7 +267,7 @@ void ConfigReader::Private::readConfConf( Config* cfg ) const
         else if ( flag == QString::fromLatin1( "default" ) )
             entry->setUseBuiltInDefault( true );
         if ( !lst[6].isEmpty() )
-            entry->setValueFromRawString( lst[6] );
+            entry->setValueFromRawString( ConfigEntry::unescapeGpgConfConfValue( lst[6] ) );
     }
     buf.close();
 }

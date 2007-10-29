@@ -124,6 +124,8 @@ class ConfigEntry
 {
 public:
 
+    static QString unescapeGpgConfConfValue( const QString& str );
+
     enum Mutability {
         UnspecifiedMutability=0,
         NoChange,
@@ -156,8 +158,6 @@ public:
 
     void setMutability( Mutability mutability );
     Mutability mutability() const;
-
-    bool isReadOnly() const;
 
     bool isDirty() const;
     void unsetDirty();
