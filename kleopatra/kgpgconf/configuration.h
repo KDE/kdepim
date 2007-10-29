@@ -75,6 +75,7 @@ public:
     ConfigGroup* group( const QString& name ) const;
 
     void addGroup( ConfigGroup* group );
+    ConfigEntry* entry( const QString& name ) const;
 
 private:
     ConfigComponent();
@@ -84,7 +85,8 @@ private:
 private:
     QString m_name;
     QString m_description;
-    QHash<QString, ConfigGroup*> m_groups; 
+    QHash<QString, ConfigGroup*> m_groups;
+    mutable QHash<QString, ConfigEntry*> m_entries;
 };
 
 class ConfigGroup

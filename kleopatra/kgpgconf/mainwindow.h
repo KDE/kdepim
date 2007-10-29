@@ -72,6 +72,9 @@ private Q_SLOTS:
     void saveAs();
 
 private:
+    void saveToFile( const QString& filename );
+
+private:
     Ui::MainWidget m_ui;
     Config* m_config;
     QHash<QTreeWidgetItem*, ConfigEntry*> m_itemToEntry;

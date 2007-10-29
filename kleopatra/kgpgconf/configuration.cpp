@@ -58,7 +58,8 @@ ConfigComponent* Config::component( const QString& name ) const
 void Config::addComponent( ConfigComponent* component )
 {
     assert( component );
-    delete m_components[component->name()];
+    if ( m_components.contains( component->name() ) )
+        return;
     m_components[component->name()] = component;
 }
 
@@ -104,8 +105,25 @@ ConfigGroup* ConfigComponent::group( const QString& name ) const
 void ConfigComponent::addGroup( ConfigGroup* group )
 {
     assert( group );
-    delete m_groups[group->name()];
+    if ( m_groups.contains( group->name() ) )
+        return;
     m_groups[group->name()] = group;
+}
+
+
+ConfigEntry* ConfigComponent::entry( const QString& name ) const
+{
+    if ( m_entries.contains( name ) )
+        return m_entries[name];
+    Q_FOREACH ( ConfigGroup* const i, m_groups )
+    {
+        if ( ConfigEntry* entry = i->entry( name ) )
+        {
+            m_entries[name] = entry;
+            return entry;
+        }
+    }
+    return 0;
 }
 
 ConfigGroup::ConfigGroup( const QString& name ) : m_name( name )
@@ -150,7 +168,8 @@ ConfigEntry* ConfigGroup::entry( const QString& name ) const
 void ConfigGroup::addEntry( ConfigEntry* entry )
 {
     assert( entry );
-    delete m_entries[entry->name()];
+    if ( m_entries.contains( entry->name() ) )
+        return;
     m_entries[entry->name()] = entry;
 }
 

@@ -94,12 +94,13 @@ static ConfigEntry::ArgType knownArgType( int argType, bool& ok ) {
 class ConfigReader::Private
 {
 public:
-    ::GpgConfResult runGpgConf( const QStringList& args ) const;
-    ::GpgConfResult runGpgConf( const QString& arg ) const;
+    GpgConfResult runGpgConf( const QStringList& args ) const;
+    GpgConfResult runGpgConf( const QString& arg ) const;
 
     QMap<QString,QString> readComponentInfo() const;
     void readEntriesForComponent( ConfigComponent* component ) const;
     ConfigEntry* createEntryFromParsedLine( const QStringList& lst ) const;
+    void readConfConf( Config* cfg ) const;
 };
  
 ConfigReader::ConfigReader() : d( new Private )
@@ -124,6 +125,7 @@ Config* ConfigReader::readConfig() const
         cfg->addComponent( component );
         d->readEntriesForComponent( component );
     }
+    d->readConfConf( cfg );
     return cfg;
 }
 
@@ -174,7 +176,7 @@ void ConfigReader::Private::readEntriesForComponent( ConfigComponent* component 
     assert( component );
     QStringList args;
     args << "--list-options" << component->name();
-    ::GpgConfResult res = runGpgConf( args );
+    GpgConfResult res = runGpgConf( args );
 
     ConfigGroup* currentGroup = 0;
 
@@ -223,9 +225,44 @@ void ConfigReader::Private::readEntriesForComponent( ConfigComponent* component 
     }
 }
 
+void ConfigReader::Private::readConfConf( Config* cfg ) const
+{
+    GpgConfResult res = runGpgConf( "--list-config" );
+    QBuffer buf( &(res.stdOut) );
+    buf.open( QIODevice::ReadOnly | QIODevice::Text );
+    while ( buf.canReadLine() )
+    {
+        QString line = buf.readLine();
+        if ( line.endsWith( '\n' ) )
+            line.chop( 1 );
+        if ( line.endsWith( '\r' ) )
+            line.chop( 1 );
+        const QStringList lst = line.split( ':' );
+        if ( lst.count() < 8 )
+        {
+            qWarning() << "Parse error on gpgconf --list-config output:" << line;
+            continue;
+        }
+        ConfigComponent* const component = cfg->component( lst[3] );
+        if ( !component )
+        {
+            qWarning() << "gpgconf --list-config: Unknown component: " << lst[3];
+            continue;
+        }
+        ConfigEntry* const entry = component->entry( lst[4] );
+        if ( !component )
+        {
+            qWarning() << "gpgconf --list-config: Unknown entry: " << lst[3] << ":" << lst[4];
+            continue;
+        }
+        // TODO: read default/change/no-change flags and values
+    }
+    buf.close();
+}
+
 QMap<QString, QString> ConfigReader::Private::readComponentInfo() const
 {
-    ::GpgConfResult res = runGpgConf( "--list-components" );
+    GpgConfResult res = runGpgConf( "--list-components" );
     QBuffer buf( &(res.stdOut) );
     buf.open( QIODevice::ReadOnly );
     QMap<QString, QString> components;
@@ -247,12 +284,12 @@ QMap<QString, QString> ConfigReader::Private::readComponentInfo() const
     return components;
 }
 
-::GpgConfResult ConfigReader::Private::runGpgConf( const QString& arg ) const
+GpgConfResult ConfigReader::Private::runGpgConf( const QString& arg ) const
 {
     return runGpgConf( QStringList( arg ) );
 }
 
-::GpgConfResult ConfigReader::Private::runGpgConf( const QStringList& args ) const
+GpgConfResult ConfigReader::Private::runGpgConf( const QStringList& args ) const
 {
     GpgConfResult res;
     QProcess process;
