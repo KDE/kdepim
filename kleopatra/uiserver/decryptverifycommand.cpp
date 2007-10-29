@@ -649,6 +649,10 @@ std::vector<Input> DecryptVerifyCommand::Private::buildInputList()
     return inputs;
 }
 
+static const CryptoBackend::Protocol * backendFor( const QString & str ) {
+    return CryptoBackendFactory::instance()->protocol( findProtocol( str ) );
+}
+
 // static
 Input DecryptVerifyCommand::Private::inputFromOperationWidget( const DecryptVerifyOperationWidget * w, const shared_ptr<QFile> & file, const QDir & outDir) {
 
@@ -687,6 +691,8 @@ Input DecryptVerifyCommand::Private::inputFromOperationWidget( const DecryptVeri
 
         break;
     }
+
+    input.backend = backendFor( input.input.fileName );
 
     return input;
 }
