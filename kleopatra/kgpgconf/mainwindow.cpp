@@ -36,12 +36,14 @@
 #include "configuration.h"
 #include "configwriter.h"
 
+#include <QDebug>
 #include <QFile>
 #include <QFileDialog>
 #include <QMessageBox>
 #include <QMenu>
 #include <QMenuBar>
 #include <QStringList>
+#include <QTemporaryFile>
 #include <QTreeWidgetItem>
 
 #include <cassert>
@@ -154,24 +156,39 @@ void MainWindow::readConfiguration()
     }
 }
 
-void MainWindow::saveAs()
+void MainWindow::saveToFile( const QString& fileName )
 {
-    const QString fileName = QFileDialog::getSaveFileName( this, i18n( "Save As"), QString(), "*.conf" );
     if ( fileName.isNull() )
         return;
-    QFile out( fileName );
-    if ( !out.open( QIODevice::WriteOnly | QIODevice::Text ) )
+
+    QTemporaryFile tmp( fileName );
+    if ( !tmp.open() )
     {
         QMessageBox::warning( this, i18n( "Write Error" ), i18n( "Could not open file %1 for writing. You might not have the permission to write to that file.", fileName ) );
         return;
     }
-    ConfigWriter writer( &out );
-    if ( !writer.writeConfig( m_config ) )
+    tmp.setTextModeEnabled( true ); 
+    ConfigWriter writer( &tmp );
+    if ( writer.writeConfig( m_config ) )
     {
-        QMessageBox::critical( this, i18n( "Write Error" ), i18n( "Error while writing to file %1.", fileName ) ); 
-        return;
-
+        const QString tmpFileName = tmp.fileName(); // close() clears fileName()
+        tmp.close();
+        tmp.setAutoRemove( false );
+        for ( int i = 0; i < 10; ++i )
+        {
+            if ( QFile::rename( tmpFileName, fileName ) )
+                return;
+            else
+                QFile::remove( fileName );
+        }
+        tmp.setAutoRemove( true );
     }
-    out.close();
+    QMessageBox::critical( this, i18n( "Write Error" ), i18n( "Error while writing to file %1.", fileName ) ); 
+
+}
+
+void MainWindow::saveAs()
+{
+    saveToFile( QFileDialog::getSaveFileName( this, i18n( "Save As"), QString(), "*.conf" ) );
 }
 
