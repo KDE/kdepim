@@ -1079,14 +1079,7 @@ static QString longestCommonPrefix( const QStringList & sl ) {
 }
 
 QString AssuanCommand::heuristicBaseDirectory() const {
-    QStringList inputs;
-    const unsigned int numInputs = numBulkInputDevices();
-    for ( unsigned int i = 0 ; i < numInputs ; ++i ) {
-        const QString fname = bulkInputDeviceFileName( i );
-        if ( !fname.isEmpty() )
-            inputs.push_back( fname );
-    }
-    const QString candidate = longestCommonPrefix( inputs );
+    const QString candidate = longestCommonPrefix( fileNames() );
     const QFileInfo fi( candidate );
     if ( fi.isDir() )
         return candidate;
