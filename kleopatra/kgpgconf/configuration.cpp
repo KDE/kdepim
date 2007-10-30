@@ -442,6 +442,11 @@ void ConfigEntry::setValueFromRawString( const QString& raw )
     m_value = stringToValue( raw, Unescape );
 }
 
+void ConfigEntry::setValueFromUiString( const QString& raw )
+{
+    m_value = stringToValue( raw, DoNotUnescape );
+}
+
 void ConfigEntry::setBoolValue( bool b )
 {
   assert( m_argType == None );

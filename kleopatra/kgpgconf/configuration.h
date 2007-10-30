@@ -164,7 +164,7 @@ public:
     bool useBuiltInDefault() const;
 
     void setValueFromRawString( const QString& str );
-
+    void setValueFromUiString( const QString& str );
     void setArgType( ArgType type, ListType listType );
     ArgType argType() const;
     bool boolValue() const;

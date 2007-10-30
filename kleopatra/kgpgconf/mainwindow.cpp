@@ -136,6 +136,7 @@ void MainWindow::optionValueChanged()
 {
     if ( !m_selectedEntry )
         return;
+    m_selectedEntry->setValueFromUiString( m_ui.valueLE->text() );
 }
 
 void MainWindow::readConfiguration()
