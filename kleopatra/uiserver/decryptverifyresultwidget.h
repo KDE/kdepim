@@ -40,10 +40,12 @@
 namespace GpgME {
     class DecryptionResult;
     class VerificationResult;
+    class Signature;
     class Key;
 }
 
 class QVBoxLayout;
+class QLabel;
 
 namespace Kleo {
 
@@ -56,8 +58,10 @@ namespace Kleo {
         void setResult( const GpgME::DecryptionResult & decryptionResult, const GpgME::VerificationResult & verificationResult );
 
     private:
-        QString formatDecryptionResult( const GpgME::DecryptionResult & res, const std::vector<GpgME::Key> & recipients );
-        QString formatVerificationResult( const GpgME::VerificationResult & res ) const;
+        QString formatDecryptionResult( const GpgME::DecryptionResult &, const std::vector<GpgME::Key> & );
+        QString formatVerificationResult( const GpgME::VerificationResult & ) const;
+        QString formatSignature( const GpgME::Signature &, const GpgME::Key & );
+        QLabel * formatSignatureWidget( QLabel *, const GpgME::Signature &, const GpgME::Key & );
 
     private:
         QVBoxLayout * m_box;

@@ -32,8 +32,6 @@
 
 #include "decryptverifyresultwidget.h"
 
-#include "signaturedisplaywidget.h"
-
 #include <models/keycache.h>
 #include <models/predicates.h>
 
@@ -81,6 +79,14 @@ static QColor color( const DecryptionResult & dr, const VerificationResult & vr 
     return Qt::gray;
 }
 
+static QColor color( const Signature & sig ) {
+    if ( sig.summary() & GpgME::Signature::Red )
+        return Qt::red;
+    if ( sig.summary() & GpgME::Signature::Green )
+        return Qt::green;
+    return Qt::yellow;
+}
+
 DecryptVerifyResultWidget::DecryptVerifyResultWidget( QWidget * parent )
     : ResultDisplayWidget( parent ),
       m_box( new QVBoxLayout( resultWidget() ) )
@@ -104,11 +110,8 @@ void DecryptVerifyResultWidget::setResult( const DecryptionResult & decryptionRe
         
     const std::vector<Signature> sigs = verificationResult.signatures();
     const std::vector<Key> signers = KeyCache::instance()->findSigners( verificationResult );
-    Q_FOREACH ( const Signature & sig, sigs ) {
-        SignatureDisplayWidget * w = new SignatureDisplayWidget( resultWidget() );
-        w->setSignature( sig, keyForSignature( sig, signers ) );
-        m_box->addWidget( w );
-    }
+    Q_FOREACH ( const Signature & sig, sigs )
+        m_box->addWidget( formatSignatureWidget( new QLabel( resultWidget() ), sig, keyForSignature( sig, signers ) ) );
     m_box->addStretch( 1 );
 
     showResultWidget();
@@ -183,6 +186,59 @@ QString DecryptVerifyResultWidget::formatVerificationResult( const VerificationR
     return html;
 }
 
+QString DecryptVerifyResultWidget::formatSignature( const Signature & sig, const Key & key ) {
+    if ( sig.isNull() )
+        return QString();
 
+    const bool red   = (sig.summary() & Signature::Red);
+    //const bool green = (sig.summary() & Signature::Green);
+    const bool valid = (sig.summary() & Signature::Valid);
+
+    if ( red )
+        if ( key.isNull() )
+            if ( const char * fpr = sig.fingerprint() )
+                return i18n("Bad signature by unknown key %1: %2", QString::fromLatin1( fpr ), QString::fromLocal8Bit( sig.status().asString() ) );
+            else
+                return i18n("Bad signature by an unknown key: %1", QString::fromLocal8Bit( sig.status().asString() ) );
+        else
+            return i18n("Bad signature by %1: %2", renderKey( key ), QString::fromLocal8Bit( sig.status().asString() ) );
+
+    else if ( valid )
+        if ( key.isNull() )
+            if ( const char * fpr = sig.fingerprint() )
+                return i18n("Good signature by unknown key %1.", QString::fromLatin1( fpr ) );
+            else
+                return i18n("Good signature by an unknown key.");
+        else
+            return i18n("Good signature by %1.", renderKey( key ) );
+
+    else
+        if ( key.isNull() )
+            if ( const char * fpr = sig.fingerprint() )
+                return i18n("Invalid signature by unknown key %1: %2", QString::fromLatin1( fpr ), QString::fromLocal8Bit( sig.status().asString() ) );
+            else
+                return i18n("Invalid signature by an unknown key: %1", QString::fromLocal8Bit( sig.status().asString() ) );
+        else
+            return i18n("Invalid signature by %1: %2", renderKey( key ), QString::fromLocal8Bit( sig.status().asString() ) );
+}
+
+static const char * icon( const Signature & sig ) {
+    if ( sig.summary() & GpgME::Signature::Green )
+        return "dialog-ok";
+    if ( sig.summary() & GpgME::Signature::Red )
+        return "dialog-error";
+    return "dialog-warning";
+}
+
+QLabel * DecryptVerifyResultWidget::formatSignatureWidget( QLabel * label, const Signature & sig, const Key & key ) {
+    if ( !label )
+        return label;
+    connect( label, SIGNAL(linkActivated(QString)), this, SLOT(keyLinkActivated(QString)) );
+
+    label->setStyleSheet( styleSheet( color( sig ) ) );
+    label->setText( image( ::icon( sig ) ) + "<b>" + formatSignature( sig, key ) + "</b>" );
+
+    return label;
+}
 
 #include "moc_decryptverifyresultwidget.cpp"
