@@ -208,8 +208,7 @@ bool DecryptVerifyWizard::waitForOperationSelection() {
 
     QEventLoop loop;
     QPointer<QObject> that = this;
-    connect( button( NextButton ), SIGNAL(clicked()), &loop, SLOT(quit()) );
-    connect( button( CancelButton ), SIGNAL(clicked()), &loop, SLOT(quit()) );
+    connect( this, SIGNAL(currentIdChanged(int)), &loop, SLOT(quit()) );
     connect( this, SIGNAL(finished(int)), &loop, SLOT(quit()) );
     loop.exec();
 
@@ -242,6 +241,7 @@ OperationsPage::OperationsPage( QWidget * p )
     setTitle( i18n("FIXME Choose operations to be performed") );
     setSubTitle( i18n("FIXME Here, you can check and, if needed, override "
                       "the operations Kleopatra detected for the input given.") );
+    setCommitPage( true );
 }
 
 OperationsPage::~OperationsPage() {}
