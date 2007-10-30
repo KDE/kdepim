@@ -8,6 +8,28 @@ include(KDE4Defaults)
 include(MacroLibrary)
 include(MacroOptionalAddSubdirectory)
 
+# this macro exists to work around a stupid Mac OS X linker bug
+# where it can't handle the same library being referenced multiple
+# times on the linker line
+macro (KDEPIM4_LINK_UNIQUE_LIBRARIES)
+        SET(LINK_ARG_LIST)  
+        FOREACH(arg ${ARGN})
+                SET(LINK_ARG_FOUND FALSE)
+                FOREACH(existing ${LINK_ARG_LIST})
+                        IF(${arg} STREQUAL ${existing})
+                                SET(LINK_ARG_FOUND)
+                        ENDIF(${arg} STREQUAL ${existing})
+                ENDFOREACH(existing)
+
+                IF(NOT ${LINK_ARG_FOUND})
+                        LIST(APPEND LINK_ARG_LIST ${arg})
+                ENDIF(NOT ${LINK_ARG_FOUND})
+        ENDFOREACH(arg)
+
+        TARGET_LINK_LIBRARIES(${LINK_ARG_LIST})
+endmacro (KDEPIM4_LINK_UNIQUE_LIBRARIES)
+
+
 find_package(KdepimLibs REQUIRED)
 find_package(Kode REQUIRED)
 find_package(ZLIB REQUIRED)
