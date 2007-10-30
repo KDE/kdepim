@@ -580,11 +580,6 @@ QVariant ConfigEntry::stringToValue( const QString& str, UnescapeMode mode ) con
   }
 }
 
-QString ConfigEntry::outputString() const
-{
-    return toString( Escape );
-}
-
 
 QString ConfigEntry::toString( ConfigEntry::EscapeMode mode ) const
 {
@@ -631,8 +626,10 @@ QString ConfigEntry::toString( ConfigEntry::EscapeMode mode ) const
   }
 
   // Lists (of other types than strings)
-  if ( m_argType == None )
-      return QString::number( numberOfTimesSet() );
+  if ( m_argType == None ) {
+      const int numTimesSet = numberOfTimesSet();
+      return numTimesSet > 0 ? QString::number( numTimesSet ) : QString();
+  }
   QStringList ret;
   QList<QVariant> lst = m_value.toList();
   for( QList<QVariant>::const_iterator it = lst.begin(); it != lst.end(); ++it ) {
@@ -640,5 +637,4 @@ QString ConfigEntry::toString( ConfigEntry::EscapeMode mode ) const
   }
   return ret.join( "," );
 }
-
 

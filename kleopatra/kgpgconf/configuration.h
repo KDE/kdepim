@@ -183,8 +183,6 @@ public:
     KUrl::List urlValueList() const;
     unsigned int numberOfTimesSet() const;
 
-    QString outputString() const;
-
     void setBoolValue( bool );
     void setStringValue( const QString& );
     void setIntValue( int );
