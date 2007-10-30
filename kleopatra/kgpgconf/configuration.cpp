@@ -585,9 +585,10 @@ QVariant ConfigEntry::stringToValue( const QString& str, UnescapeMode mode ) con
           continue;
         }
         else if ( unescape ) {
-            if( !val.startsWith( '"' ) ) // see README.gpgconf
+          if( val.startsWith( '"' ) )
+            val = val.mid( 1 );
+          else  // see README.gpgconf
             qWarning() <<"String value should start with '\"' :" << val;
-          val = val.mid( 1 );
         }
       }
       lst << QVariant( unescape ? gpgconf_unescape( val ) : val );
@@ -599,8 +600,10 @@ QVariant ConfigEntry::stringToValue( const QString& str, UnescapeMode mode ) con
       if ( val.isEmpty() )
         return QVariant( QString() ); // not set  [ok with lists too?]
       else if ( unescape ) {
-          assert( val.startsWith( '"' ) ); // see README.gpgconf
+        if( val.startsWith( '"' ) )
           val = val.mid( 1 );
+        else // see README.gpgconf
+          qWarning() <<"String value should start with '\"' :" << val;
       }
     }
     return QVariant( unescape ? gpgconf_unescape( val ) : val );
