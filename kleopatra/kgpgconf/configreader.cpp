@@ -151,22 +151,6 @@ ConfigEntry* ConfigReader::Private::createEntryFromParsedLine( const QStringList
     entry->setArgType( argType, flags & GPGCONF_FLAG_LIST ? ConfigEntry::List : ConfigEntry::NoList );
     if ( !ok )
         qWarning() <<"Unsupported datatype:" << parsedLine[4] <<" :" << *it <<" for" << parsedLine[0];
-    ++it; // done with alt-type
-    ++it; // skip argname (not useful in GUIs)
-#if 0
-    QString value;
-    if ( mFlags & GPGCONF_FLAG_DEFAULT ) {
-        value = *it; // get default value
-        mDefaultValue = stringToValue( value, true );
-    }
-#endif
-    ++it; // done with DEFAULT
-    ++it; // ### skip ARGDEF for now. It's only for options with an "optional arg"
-    //kDebug(5150) <<"Entry" << parsedLine[0] <<" val=" << *it;
-#if 0    
-    if ( !(*it).isEmpty() ) 
-        entry->setValue( stringToValue( *it, true ) );
-#endif
     entry->unsetDirty();
     return entry;
 }
@@ -267,7 +251,7 @@ void ConfigReader::Private::readConfConf( Config* cfg ) const
         else if ( flag == QString::fromLatin1( "default" ) )
             entry->setUseBuiltInDefault( true );
         if ( !lst[6].isEmpty() )
-            entry->setValueFromRawString( ConfigEntry::unescapeGpgConfConfValue( lst[6] ) );
+            entry->setValueFromRawString( lst[6], ConfigEntry::AllTypesQuoted );
     }
     buf.close();
 }

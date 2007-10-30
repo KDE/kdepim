@@ -124,8 +124,6 @@ class ConfigEntry
 {
 public:
 
-    static QString unescapeGpgConfConfValue( const QString& str );
-
     enum Mutability {
         UnspecifiedMutability=0,
         NoChange,
@@ -148,6 +146,11 @@ public:
         List
     };
 
+    enum QuotationMode {
+        OnlyStringsQuoted=0,
+        AllTypesQuoted
+    };
+
     explicit ConfigEntry( const QString& name );
 
     QString name() const;
@@ -165,7 +168,7 @@ public:
     void setUseBuiltInDefault( bool useDefault );
     bool useBuiltInDefault() const;
 
-    void setValueFromRawString( const QString& str );
+    void setValueFromRawString( const QString& str, QuotationMode mode );
 
     void setArgType( ArgType type, ListType listType );
     ArgType argType() const;
@@ -196,12 +199,25 @@ public:
 private:
     bool isStringType() const;
     bool isList() const;
-    QString toString( bool escape ) const;
+
+    enum EscapeMode {
+        NoEscape=0,
+        Escape=1
+    };
+
+    QString toString( EscapeMode mode ) const;
 
     ConfigEntry();
     ConfigEntry( const ConfigEntry& );
     ConfigEntry& operator=( const ConfigEntry& );
-    QVariant stringToValue( const QString& str, bool unescape ) const;
+    
+    enum UnescapeMode {
+        DoNotUnescape=0,
+        Unescape=1,
+        UnescapeAndUnquoteNonStrings=3
+    };
+
+    QVariant stringToValue( const QString& str, UnescapeMode mode ) const;
 
 private:
     bool m_dirty;

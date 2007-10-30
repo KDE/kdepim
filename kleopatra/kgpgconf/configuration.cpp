@@ -256,14 +256,6 @@ void ConfigGroup::addEntry( ConfigEntry* entry )
     m_entries[entry->name()] = entry;
 }
 
-QString ConfigEntry::unescapeGpgConfConfValue( const QString& str )
-{
-    if ( str.isEmpty() )
-        return str;
-    assert( str.startsWith( '"' ) );
-    return str.right( str.count() - 1 );
-}
-
 ConfigEntry::ConfigEntry( const QString& name ) : m_dirty( false ), m_name( name ), m_mutability( ConfigEntry::UnspecifiedMutability ), m_useDefault( false ), m_argType( None ), m_isList( false )
 {
 }
@@ -355,7 +347,7 @@ bool ConfigEntry::boolValue() const
 
 QString ConfigEntry::stringValue() const
 {
-    return toString( false );
+    return toString( NoEscape );
 }
 
 int ConfigEntry::intValue() const
@@ -445,9 +437,9 @@ KUrl::List ConfigEntry::urlValueList() const
   return ret;
 }
 
-void ConfigEntry::setValueFromRawString( const QString& raw )
+void ConfigEntry::setValueFromRawString( const QString& raw, QuotationMode mode )
 {
-    m_value = stringToValue( raw, true );
+    m_value = stringToValue( raw, mode == OnlyStringsQuoted ? Unescape : UnescapeAndUnquoteNonStrings );
 }
 
 void ConfigEntry::setBoolValue( bool b )
@@ -462,7 +454,7 @@ void ConfigEntry::setBoolValue( bool b )
 
 void ConfigEntry::setStringValue( const QString& str )
 {
-  m_value = stringToValue( str, false );
+  m_value = stringToValue( str, DoNotUnescape );
   // When setting a string to empty (and there's no default), we need to act like resetToDefault
   // Otherwise we try e.g. "ocsp-responder:0:" and gpgconf answers:
   // "gpgconf: argument required for option ocsp-responder"
@@ -542,10 +534,11 @@ void ConfigEntry::setURLValueList( const KUrl::List& urls )
 }
 
 
-QVariant ConfigEntry::stringToValue( const QString& str, bool unescape ) const
+QVariant ConfigEntry::stringToValue( const QString& str, UnescapeMode mode ) const
 {
-  bool isString = isStringType();
-
+  const bool isString = isStringType();
+  const bool unescape = mode & Unescape;
+  const bool quotedNonStrings = mode == UnescapeAndUnquoteNonStrings;
   if ( isList() ) {
     QList<QVariant> lst;
     QStringList items = str.split( ',', QString::SkipEmptyParts );
@@ -557,10 +550,13 @@ QVariant ConfigEntry::stringToValue( const QString& str, bool unescape ) const
           continue;
         }
         else if ( unescape ) {
-          if( val[0] != '"' ) // see README.gpgconf
+            if( !val.startsWith( '"' ) ) // see README.gpgconf
             qWarning() <<"String value should start with '\"' :" << val;
           val = val.mid( 1 );
         }
+      } else if ( quotedNonStrings ) {
+          assert( val.startsWith( '\"' ) );
+          val = val.mid( 1 );
       }
       lst << QVariant( unescape ? gpgconf_unescape( val ) : val );
     }
@@ -571,9 +567,14 @@ QVariant ConfigEntry::stringToValue( const QString& str, bool unescape ) const
       if ( val.isEmpty() )
         return QVariant( QString() ); // not set  [ok with lists too?]
       else if ( unescape ) {
-        assert( val[0] == '"' ); // see README.gpgconf
-        val = val.mid( 1 );
+          assert( val.startsWith( '"' ) ); // see README.gpgconf
+          val = val.mid( 1 );
       }
+    } else { // not a string
+        if ( quotedNonStrings ) {
+            assert( val.startsWith( '"' ) );
+            val = val.mid( 1 ); 
+        }
     }
     return QVariant( unescape ? gpgconf_unescape( val ) : val );
   }
@@ -581,22 +582,30 @@ QVariant ConfigEntry::stringToValue( const QString& str, bool unescape ) const
 
 QString ConfigEntry::outputString() const
 {
-    return toString( true );
+    return toString( Escape );
 }
 
 
-QString ConfigEntry::toString( bool escape ) const
+QString ConfigEntry::toString( ConfigEntry::EscapeMode mode ) const
 {
+    const bool escape = mode == Escape;
+    const bool quote = escape;
+
   // Basically the opposite of stringToValue
   if ( isStringType() ) {
     if ( m_value.isNull() )
       return QString();
     else if ( isList() ) { // string list
       QStringList lst = m_value.toStringList();
-      if ( escape ) {
+      if ( escape || quote ) {
           for( QStringList::iterator it = lst.begin(); it != lst.end(); ++it ) {
-          if ( !(*it).isNull() )
-            *it = gpgconf_escape( *it ).prepend( "\"" );
+              if ( !(*it).isNull() )
+              {
+                  if ( escape )
+                      *it = gpgconf_escape( *it );
+                  if ( quote )
+                      *it = (*it).prepend( '\"' );
+              }
         }
       }
       QString res = lst.join( "," );
@@ -605,7 +614,9 @@ QString ConfigEntry::toString( bool escape ) const
     } else { // normal string
       QString res = m_value.toString();
       if ( escape )
-        res = gpgconf_escape( res ).prepend( "\"" );
+          res = gpgconf_escape( res );
+      if ( quote )
+          res = res.prepend( '\"' );
       return res;
     }
   }
