@@ -251,6 +251,7 @@ public:
           wizard(),
           inputList(),
           m_statusSent( 0U ),
+          m_errorString(),
           m_error( 0U )
     {
         
@@ -285,11 +286,13 @@ public:
     }
 
     void showWizard() {
-        if ( wizard ) {
-            if ( !wizard->isVisible() )
-                wizard->show();
-            wizard->raise();
+        if ( !wizard ) {
+            createWizard();
+            wizard->next();
         }
+        if ( !wizard->isVisible() )
+            wizard->show();
+        wizard->raise();
     }
 
 public Q_SLOTS:
@@ -320,13 +323,14 @@ public:
 
     bool hasError() const { return m_error; }
     unsigned int error() const { return m_error; }
+    const QString & errorString() const { return m_errorString; }
     
     void addResult( unsigned int id, const DVResult & res );
 
 private Q_SLOTS:
     void slotDialogClosed() {
         if ( hasError() )
-            q->done( error() );
+            q->done( error(), errorString() );
         else
             q->done();
     }
@@ -359,6 +363,7 @@ private:
     std::vector< shared_ptr<Input> > inputList;
     QHash<QObject*, unsigned int> m_senderToId;
     unsigned int m_statusSent;
+    QString m_errorString;
     unsigned int m_error;
 };
 
@@ -372,6 +377,7 @@ DecryptVerifyCommand::DecryptVerifyCommand()
 DecryptVerifyCommand::~DecryptVerifyCommand() {}
 
 int DecryptVerifyCommand::doStart() {
+
     d->inputList = d->buildInputList();
 
     if ( d->inputList.empty() )
@@ -809,7 +815,7 @@ void DecryptVerifyCommand::Private::addResult( unsigned int id, const DVResult &
 
                 if ( !vResult.isNull() ) {
                     const std::vector<Signature> sigs = vResult.signatures();
-                    assuan_assert( !sigs.empty() );
+                    //assuan_assert( !sigs.empty() );
                     const std::vector<Key> signers = KeyCache::instance()->findSigners( vResult );
                     Q_FOREACH ( const Signature & sig, sigs ) {
                         const QString s = signatureToString( sig, keyForSignature( sig, signers ) );
@@ -822,11 +828,15 @@ void DecryptVerifyCommand::Private::addResult( unsigned int id, const DVResult &
                // FIXME ask to continue or cancel
             }
 
-        wizard->resultWidget( m_statusSent )->setResult( result->decryptionResult, result->verificationResult );
+        // ### this shouldn't be in the loop!
+        if ( wizard )
+            wizard->resultWidget( m_statusSent )->setResult( result->decryptionResult, result->verificationResult );
         m_statusSent++;
 
-        if ( result->error && !m_error )
+        if ( result->error && !m_error ) {
             m_error = result->error;
+            m_errorString = result->errorString;
+        }
     }
 
     if ( kdtools::all( inputList.begin(), inputList.end(), bind( &Input::result, _1 ) ) )
