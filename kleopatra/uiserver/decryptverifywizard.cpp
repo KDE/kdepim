@@ -36,6 +36,7 @@
 #include "decryptverifyresultwidget.h"
 
 #include <utils/filenamerequester.h>
+#include <utils/stl_util.h>
 
 #include <KLocale>
 
@@ -48,10 +49,13 @@
 #include <QAbstractButton>
 #include <QScrollBar>
 
+#include <boost/bind.hpp>
+
 #include <vector>
 #include <cassert>
 
 using namespace Kleo;
+using namespace boost;
 
 namespace {
 
@@ -141,6 +145,13 @@ namespace {
 
         DecryptVerifyResultWidget * widget( unsigned int idx ) {
             return m_widgets.at( idx );
+        }
+
+    private Q_SLOTS:
+        void slotMaybeNoMoreProgress() {
+            wizard()->button( QWizard::CancelButton )
+                ->setEnabled( kdtools::any( m_widgets.begin(), m_widgets.end(),
+                                            bind( &DecryptVerifyResultWidget::operationInProgress, _1 ) ) );
         }
 
     private:
@@ -300,6 +311,7 @@ ResultPage::ResultPage( QWidget * p )
 {
     setTitle( i18n("Results") );
     setSubTitle( i18n("FIXME") );
+    setButtonText( QWizard::FinishButton, i18n("&OK") );
 }
 
 ResultPage::~ResultPage() {}
@@ -330,6 +342,7 @@ void ResultPage::ensureIndexAvailable( unsigned int idx ) {
         if ( i )
             blay.insertWidget( blay.count()-1, new HLine( m_ui.scrollArea.widget() ) );
         DecryptVerifyResultWidget * w = new DecryptVerifyResultWidget( m_ui.scrollArea.widget() );
+        connect( w, SIGNAL(operationStateChanged()), this, SLOT(slotMaybeNoMoreProgress()) );
         blay.insertWidget( blay.count()-1, w );
         w->show();
         m_widgets.push_back( w );
