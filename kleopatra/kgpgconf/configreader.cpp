@@ -226,6 +226,9 @@ void ConfigReader::Private::readConfConf( Config* cfg ) const
         if ( line.endsWith( '\r' ) )
             line.chop( 1 );
         const QStringList lst = line.split( ':' );
+        if ( lst.isEmpty() || lst[0] != "r" ) // only parse 'r'-type value entries
+            continue;
+
         if ( lst.count() < 8 )
         {
             qWarning() << "Parse error on gpgconf --list-config output:" << line;
@@ -244,17 +247,21 @@ void ConfigReader::Private::readConfConf( Config* cfg ) const
             continue;
         }
         const QString flag = lst[5];
+        const QString value = lst[6];
+        if ( !value.isEmpty() && !value.startsWith( '\"' ) )
+        {
+            qWarning() << "gpgconf --list-config: Invalid entry: value must start with '\"': " << value;
+            continue;
+        }
+        if ( !lst[6].isEmpty() )
+            entry->setValueFromRawString( lst[6].mid( 1 ) );
+        
         if ( flag == QString::fromLatin1( "no-change" ) )
             entry->setMutability( ConfigEntry::NoChange );
         else if ( flag == QString::fromLatin1( "change" ) )
             entry->setMutability( ConfigEntry::Change );
         else if ( flag == QString::fromLatin1( "default" ) )
             entry->setUseBuiltInDefault( true );
-        if ( !lst[6].isEmpty() )
-        {
-            assert( lst[6].startsWith( '\"') );
-            entry->setValueFromRawString( lst[6].mid( 1 ) );
-        }
     }
     buf.close();
 }
