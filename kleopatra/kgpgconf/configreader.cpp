@@ -43,6 +43,7 @@
 #include <QStringList>
 
 #include <cassert>
+#include <memory>
 
 namespace {
  
@@ -115,18 +116,18 @@ ConfigReader::~ConfigReader()
 
 Config* ConfigReader::readConfig() const
 {
-    Config* cfg = new Config;
+    std::auto_ptr<Config> cfg( new Config );
     const QMap<QString,QString> componentInfo = d->readComponentInfo();
 
     Q_FOREACH ( const QString i, componentInfo.keys() )
     {
-        ConfigComponent* component = new ConfigComponent( i );
+        std::auto_ptr<ConfigComponent> component( new ConfigComponent( i ) );
         component->setDescription( componentInfo[i] );
-        cfg->addComponent( component );
-        d->readEntriesForComponent( component );
+        d->readEntriesForComponent( component.get() );
+        cfg->addComponent( component.release() );
     }
-    d->readConfConf( cfg );
-    return cfg;
+    d->readConfConf( cfg.get() );
+    return cfg.release();
 }
 
 ConfigEntry* ConfigReader::Private::createEntryFromParsedLine( const QStringList& parsedLine ) const
@@ -135,7 +136,7 @@ ConfigEntry* ConfigReader::Private::createEntryFromParsedLine( const QStringList
     assert( parsedLine.count() >= 10 ); // called checked for it already
     QStringList::const_iterator it = parsedLine.begin();
     const QString name = *it++;
-    ConfigEntry* entry = new ConfigEntry( name );
+    std::auto_ptr<ConfigEntry> entry( new ConfigEntry( name ) );
     const int flags = (*it++).toInt();
     const int level = (*it++).toInt();
     entry->setDescription( *it++ );
@@ -152,7 +153,7 @@ ConfigEntry* ConfigReader::Private::createEntryFromParsedLine( const QStringList
     if ( !ok )
         qWarning() <<"Unsupported datatype:" << parsedLine[4] <<" :" << *it <<" for" << parsedLine[0];
     entry->unsetDirty();
-    return entry;
+    return entry.release();
 }
 
 void ConfigReader::Private::readEntriesForComponent( ConfigComponent* component ) const
@@ -162,7 +163,7 @@ void ConfigReader::Private::readEntriesForComponent( ConfigComponent* component 
     args << "--list-options" << component->name();
     GpgConfResult res = runGpgConf( args );
 
-    ConfigGroup* currentGroup = 0;
+    std::auto_ptr<ConfigGroup> currentGroup;
 
     QBuffer buf( &res.stdOut );
     buf.open( QIODevice::ReadOnly );
@@ -181,24 +182,22 @@ void ConfigReader::Private::readEntriesForComponent( ConfigComponent* component 
             if ( level > 2 ) // invisible or internal -> skip it;
                 continue;
             if ( flags & GPGCONF_FLAG_GROUP ) {
-                if ( currentGroup && !currentGroup->isEmpty() ) // only add non-empty groups
-                    component->addGroup( currentGroup );
+                if ( currentGroup.get() && !currentGroup->isEmpty() ) // only add non-empty groups
+                    component->addGroup( currentGroup.release() );
                 else {
-                    delete currentGroup;
-                    currentGroup = 0;
+                    currentGroup.reset( 0 );
                 }
             //else
             //  kDebug(5150) <<"Discarding empty group" << mCurrentGroupName;
-                currentGroup = new ConfigGroup( lst[0] );
+                currentGroup.reset( new ConfigGroup( lst[0] ) );
                 currentGroup->setDescription( lst[3] );
                 //currentGroup->setLevel( level );
             } else {
                 // normal entry
-                if ( !currentGroup ) {  // first toplevel entry -> create toplevel group
-                    currentGroup = new ConfigGroup( "<nogroup>" );
+                if ( !currentGroup.get() ) {  // first toplevel entry -> create toplevel group
+                    currentGroup.reset( new ConfigGroup( "<nogroup>" ) );
                 }
-                ConfigEntry* const entry = createEntryFromParsedLine( lst );
-                currentGroup->addEntry( entry );
+                currentGroup->addEntry( createEntryFromParsedLine( lst ) );
             }
         } else {
             // This happens on lines like
@@ -207,10 +206,8 @@ void ConfigReader::Private::readEntriesForComponent( ConfigComponent* component 
             //kWarning(5150) <<"Parse error on gpgconf --list-options output:" << line;
         }
     }
-    if ( currentGroup && !currentGroup->isEmpty() )
-        component->addGroup( currentGroup );
-    else
-        delete currentGroup;
+    if ( currentGroup.get() && !currentGroup->isEmpty() )
+        component->addGroup( currentGroup.release() );
 }
 
 void ConfigReader::Private::readConfConf( Config* cfg ) const
