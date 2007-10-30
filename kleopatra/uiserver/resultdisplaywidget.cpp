@@ -157,22 +157,27 @@ QString ResultDisplayWidget::renderKey(const Key & key)
     return QString::fromLatin1( "<a href=\"key:%1\">%2</a>" ).arg( key.primaryFingerprint(), Formatting::prettyName( key ) );
 }
 
+static QColor resaturate( const QColor & c, int sat ) {
+    int h, s, v;
+    c.getHsv( &h, &s, &v );
+    return QColor( h, sat, v, QColor::Hsv );
+}
+
+// static
+QString Kleo::ResultDisplayWidget::styleSheet( const QColor & c ) {
+    return
+        "border:4px solid " + c.name() + "; border-radius:2px; "
+        "background-color: qlineargradient( x1: 0, y1: 0, x2: 0, y2: 1, "
+        "stop: 0.0 " + resaturate( c, 16 ).name() + ", "
+        "stop: 0.4 " + resaturate( c, 27 ).name() + ", "
+        "stop: 0.5 " + resaturate( c, 40 ).name() + ", "
+        "stop: 1.0 " + resaturate( c, 16 ).name() + ");"
+        ;
+}
+
 void Kleo::ResultDisplayWidget::setColor( const QColor &color )
 {
-    QString css = "QFrame#" + objectName();
-    css += " { border:4px solid " + color.name() + "; border-radius:2px; ";
-    css += "background-color: qlineargradient( x1: 0, y1: 0, x2: 0, y2: 1,";
-    QColor c = color;
-    c.setHsv( c.hue(), 16, c.value() );
-    css += "stop: 0.0 " + c.name() + ", ";
-    c.setHsv( c.hue(), 27, c.value() );
-    css += "stop: 0.4 " + c.name() + ", ";
-    c.setHsv( c.hue(), 40, c.value() );
-    css += "stop: 0.5 " + c.name() + ", ";
-    c.setHsv( c.hue(), 16, c.value() );
-    css += "stop: 1.0 " + c.name() + ");";
-    css += "}";
-    setStyleSheet( css );
+    setStyleSheet( '#' + objectName() + '{' + styleSheet( color ) + '}' );
 }
 
 void ResultDisplayWidget::keyLinkActivated(const QString & link)

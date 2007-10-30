@@ -33,11 +33,15 @@
 #ifndef KLEO_RESULTDISPLAYWIDGET_H
 #define KLEO_RESULTDISPLAYWIDGET_H
 
-#include <QFrame>
+#include <QWidget>
 
 #include <utils/pimpl_ptr.h>
 
-#include <gpgme++/key.h>
+class QColor;
+
+namespace GpgME {
+    class Key;
+}
 
 namespace Kleo {
 
@@ -53,6 +57,9 @@ public:
 
 public Q_SLOTS:
     void setProgress( const QString & what, int current, int total );
+
+protected:
+    static QString styleSheet( const QColor & color );
 
 protected:
     QString renderKey( const GpgME::Key &key );
