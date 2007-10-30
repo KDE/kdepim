@@ -1,4 +1,4 @@
-include_directories( ${CMAKE_BINARY_DIR}/kleo/backends/chiasmus/ ${GPGME_INCLUDES} ${BOOST_INCLUDES} )
+include_directories( ${CMAKE_BINARY_DIR}/kleo/backends/chiasmus/ ${GPGME_INCLUDES} ${Boost_INCLUDE_DIR} )
 
 if ( NOT KLEO_ONLY_UISERVER )
   add_definitions (-DQT3_SUPPORT -DQT3_SUPPORT_WARNINGS)
