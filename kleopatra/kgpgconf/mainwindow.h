@@ -71,6 +71,7 @@ private Q_SLOTS:
     void optionValueChanged();
     void useDefaultToggled( bool useDefault ); 
     void saveAs();
+    void delayedInit();
 
 private:
     void saveToFile( const QString& filename );

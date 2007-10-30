@@ -35,6 +35,7 @@
 #include "configreader.h"
 #include "configuration.h"
 #include "configwriter.h"
+#include "exception.h"
 
 #include <QDebug>
 #include <QFile>
@@ -44,14 +45,13 @@
 #include <QMenuBar>
 #include <QStringList>
 #include <QTemporaryFile>
+#include <QTimer>
 #include <QTreeWidgetItem>
 
 #include <cassert>
 
 MainWindow::MainWindow( QWidget* parent, Qt::WindowFlags flags ) : QMainWindow( parent, flags ), m_config( 0 ), m_selectedEntry( 0 )
 {
-    ConfigReader reader;
-    m_config = reader.readConfig();
     QWidget* mainWidget = new QWidget( this );
     m_ui.setupUi( mainWidget );
     setCentralWidget( mainWidget );
@@ -63,7 +63,6 @@ MainWindow::MainWindow( QWidget* parent, Qt::WindowFlags flags ) : QMainWindow( 
     connect( m_ui.valueLE, SIGNAL( textChanged( QString ) ), SLOT( optionValueChanged() ) );
     connect( m_ui.useCustomRB, SIGNAL( toggled( bool ) ), m_ui.valueLE, SLOT( setEnabled( bool ) ) );
     connect( m_ui.useDefaultRB, SIGNAL( toggled( bool ) ), SLOT( useDefaultToggled( bool ) ) );
-    readConfiguration();
 
     QMenu* const fileMenu = menuBar()->addMenu( i18n( "&File" ) );
     fileMenu->addAction( i18n( "Save As..." ), this, SLOT( saveAs() ) );
@@ -71,6 +70,32 @@ MainWindow::MainWindow( QWidget* parent, Qt::WindowFlags flags ) : QMainWindow( 
     QAction* const quit = fileMenu->addAction( i18n( "Quit" ), qApp, SLOT( quit() ) );
     quit->setShortcut( Qt::CTRL + Qt::Key_Q );
     resize( 640, 480 );
+    QTimer::singleShot( 0, this, SLOT( delayedInit() ) );
+}
+
+void MainWindow::delayedInit()
+{
+    ConfigReader reader;
+    try
+    {
+        m_config = reader.readConfig();
+        readConfiguration();
+    }
+    catch ( const GpgConfRunException& e )
+    {
+        QMessageBox::critical( this, i18n( "Setup Error" ), i18n( "KGpgConf could not execute gpgconf.exe.\n\nError: %1\nError Code: %2", e.message(), e.errorCode() ) );
+        qApp->quit();
+    }
+    catch( const MalformedGpgConfOutputException& e )
+    {
+        QMessageBox::critical( this, i18n( "Parsing Error" ), i18n( "An error occurred while reading the current configuration.\n\nError: %1", e.message() ) ); 
+        qApp->quit();
+    }
+    catch( const KGpgConfException& e )
+    {
+        QMessageBox::critical( this, i18n( "Error" ), i18n( "An error occurred while reading the current configuration.\n\nError: %1", e.message() ) );
+        qApp->quit();
+    }
 }
 
 MainWindow::~MainWindow()

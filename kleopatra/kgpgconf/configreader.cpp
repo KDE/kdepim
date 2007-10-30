@@ -32,6 +32,7 @@
 
 #include "configreader.h"
 #include "configuration.h"
+#include "exception.h"
 
 #include <KLocale>
 
@@ -48,12 +49,8 @@
 namespace {
  
 struct GpgConfResult {
-    GpgConfResult() : rc( 0 ) {}
     QByteArray stdOut;
     QByteArray stdErr;
-    int rc;
-    QString errorReason;
-    bool error() const { return rc != 0; }
 };
 
 static const int GPGCONF_FLAG_GROUP = 1;
@@ -227,28 +224,24 @@ void ConfigReader::Private::readConfConf( Config* cfg ) const
             continue;
 
         if ( lst.count() < 8 )
-        {
-            qWarning() << "Parse error on gpgconf --list-config output:" << line;
-            continue;
+        { 
+            throw MalformedGpgConfOutputException( i18n( "Parse error on gpgconf --list-config output:", line ) );
         }
         ConfigComponent* const component = cfg->component( lst[3] );
         if ( !component )
         {
-            qWarning() << "gpgconf --list-config: Unknown component: " << lst[3];
-            continue;
+            throw MalformedGpgConfOutputException( i18n( "gpgconf --list-config: Unknown component: %1", lst[3] ) );
         }
         ConfigEntry* const entry = component->entry( lst[4] );
         if ( !entry )
         {
-            qWarning() << "gpgconf --list-config: Unknown entry: " << lst[3] << ":" << lst[4];
-            continue;
+            throw MalformedGpgConfOutputException( i18n( "gpgconf --list-config: Unknown entry: %1:%2", lst[3], lst[4] ) );
         }
         const QString flag = lst[5];
         const QString value = lst[6];
         if ( !value.isEmpty() && !value.startsWith( '\"' ) )
         {
-            qWarning() << "gpgconf --list-config: Invalid entry: value must start with '\"': " << value;
-            continue;
+            throw MalformedGpgConfOutputException( i18n( "gpgconf --list-config: Invalid entry: value must start with '\"': %1", lst[6] ) );
         }
         if ( !lst[6].isEmpty() )
             entry->setValueFromRawString( lst[6].mid( 1 ) );
@@ -281,7 +274,7 @@ QMap<QString, QString> ConfigReader::Private::readComponentInfo() const
         if ( lst.count() >= 2 ) {
             components[lst[0]] = lst[1];
         } else {
-            qWarning() <<"Parse error on gpgconf --list-components output:" << line;
+            throw MalformedGpgConfOutputException( i18n( "Parse error on gpgconf --list-components. output:", line ) );
         }
     }
     return components;
@@ -294,24 +287,34 @@ GpgConfResult ConfigReader::Private::runGpgConf( const QString& arg ) const
 
 GpgConfResult ConfigReader::Private::runGpgConf( const QStringList& args ) const
 {
-    GpgConfResult res;
     QProcess process;
-
     process.start( "gpgconf", args );
 
-    if ( !process.waitForStarted() || !process.waitForFinished() ) {
-        res.errorReason = i18n( "program not found or cannot be started" );
-        res.rc = -2;
+    process.waitForStarted();
+    process.waitForFinished();
+    
+    if ( process.exitStatus() != QProcess::NormalExit ) {
+        switch ( process.error() )
+        {
+        case QProcess::FailedToStart:
+            throw GpgConfRunException( -2, i18n( "gpgconf not found or cannot be started" ) );
+        case QProcess::Crashed:
+            throw GpgConfRunException( -1, i18n( "gpgconf terminated unexpectedly" ) );
+        case QProcess::Timedout:
+            throw GpgConfRunException( -3, i18n( "timeout while executing gpgconf" ) );
+        case QProcess::WriteError:
+            throw GpgConfRunException( -4, i18n( "error while writing to gpgconf" ) );
+        case QProcess::ReadError:
+            throw GpgConfRunException( -5, i18n( "error while reading from gpgconf" ) );
+        case QProcess::UnknownError:
+        default:
+            throw GpgConfRunException( -6, i18n( "Unknown error while executing gpgconf" ) );
+        }
     }
-    else if ( process.exitStatus() == QProcess::NormalExit ) {
-        res.rc = process.exitCode();
-        res.stdOut = process.readAllStandardOutput();
-        res.stdErr = process.readAllStandardError();
-    }
-    else {
-        res.rc = -1;
-        res.errorReason = i18n( "program terminated unexpectedly" );
-    }
+
+    GpgConfResult res;
+    res.stdOut = process.readAllStandardOutput();
+    res.stdErr = process.readAllStandardError();
     return res;
 }
 

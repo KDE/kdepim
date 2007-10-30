@@ -7,6 +7,7 @@ set(_kgpgconf_SRCS
     configreader.cpp
     configwriter.cpp
     configuration.cpp
+    exception.cpp
     main.cpp
     mainwindow.cpp
 )
