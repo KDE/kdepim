@@ -182,7 +182,7 @@ void ConfigReader::Private::readEntriesForComponent( ConfigComponent* component 
                 if ( currentGroup.get() && !currentGroup->isEmpty() ) // only add non-empty groups
                     component->addGroup( currentGroup.release() );
                 else {
-                    currentGroup.reset( 0 );
+                    currentGroup.reset();
                 }
             //else
             //  kDebug(5150) <<"Discarding empty group" << mCurrentGroupName;
