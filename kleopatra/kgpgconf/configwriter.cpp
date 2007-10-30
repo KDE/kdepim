@@ -63,7 +63,8 @@ namespace {
             QString str;
             if ( useDefault )
                 str += QString( "   %1 %2 [default]\n" ).arg( component, option );
-            str += QString( "   %1 %2 %3 %4\n" ).arg( component, option, changeStr, value  );
+            if ( !( useDefault && changeStr.isEmpty() ) )
+                str += QString( "   %1 %2 %3 %4\n" ).arg( component, option, changeStr, value  );
             return str;
         }
     };
@@ -107,11 +108,11 @@ bool ConfigWriter::writeConfig( Config* config ) const
             {
                 ConfigEntry* const entry = group->entry( k );
                 assert( entry );
-                if ( entry->mutability() != ConfigEntry::UnspecifiedMutability || entry->useBuiltInDefault() || !entry->stringValue().isEmpty() )
+                if ( entry->mutability() != ConfigEntry::UnspecifiedMutability || entry->useBuiltInDefault() || !entry->outputString().isEmpty() )
                 {
                     GpgConfConfEntry cfgentry;
                     cfgentry.useDefault = entry->useBuiltInDefault();
-                    cfgentry.value = entry->useBuiltInDefault() ? QString() : entry->stringValue();
+                    cfgentry.value = entry->useBuiltInDefault() ? QString() : entry->outputString();
                     cfgentry.component = component->name();
                     cfgentry.option = entry->name();
                     cfgentry.changeFlag = entry->mutability();

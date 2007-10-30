@@ -146,11 +146,6 @@ public:
         List
     };
 
-    enum QuotationMode {
-        OnlyStringsQuoted=0,
-        AllTypesQuoted
-    };
-
     explicit ConfigEntry( const QString& name );
 
     QString name() const;
@@ -168,7 +163,7 @@ public:
     void setUseBuiltInDefault( bool useDefault );
     bool useBuiltInDefault() const;
 
-    void setValueFromRawString( const QString& str, QuotationMode mode );
+    void setValueFromRawString( const QString& str );
 
     void setArgType( ArgType type, ListType listType );
     ArgType argType() const;
@@ -182,6 +177,8 @@ public:
     QList<unsigned int> uintValueList() const;
     KUrl::List urlValueList() const;
     unsigned int numberOfTimesSet() const;
+
+    QString outputString() const;
 
     void setBoolValue( bool );
     void setStringValue( const QString& );
@@ -200,7 +197,9 @@ private:
 
     enum EscapeMode {
         NoEscape=0,
-        Escape=1
+        Escape=1,
+        Quote=2,
+        EscapeAndQuote=3
     };
 
     QString toString( EscapeMode mode ) const;
@@ -211,8 +210,7 @@ private:
     
     enum UnescapeMode {
         DoNotUnescape=0,
-        Unescape=1,
-        UnescapeAndUnquoteNonStrings=3
+        Unescape=1
     };
 
     QVariant stringToValue( const QString& str, UnescapeMode mode ) const;

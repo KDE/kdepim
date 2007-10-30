@@ -251,7 +251,10 @@ void ConfigReader::Private::readConfConf( Config* cfg ) const
         else if ( flag == QString::fromLatin1( "default" ) )
             entry->setUseBuiltInDefault( true );
         if ( !lst[6].isEmpty() )
-            entry->setValueFromRawString( lst[6], ConfigEntry::AllTypesQuoted );
+        {
+            assert( lst[6].startsWith( '\"') );
+            entry->setValueFromRawString( lst[6].mid( 1 ) );
+        }
     }
     buf.close();
 }

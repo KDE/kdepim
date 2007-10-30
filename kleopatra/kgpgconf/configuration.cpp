@@ -437,9 +437,9 @@ KUrl::List ConfigEntry::urlValueList() const
   return ret;
 }
 
-void ConfigEntry::setValueFromRawString( const QString& raw, QuotationMode mode )
+void ConfigEntry::setValueFromRawString( const QString& raw )
 {
-    m_value = stringToValue( raw, mode == OnlyStringsQuoted ? Unescape : UnescapeAndUnquoteNonStrings );
+    m_value = stringToValue( raw, Unescape );
 }
 
 void ConfigEntry::setBoolValue( bool b )
@@ -533,12 +533,15 @@ void ConfigEntry::setURLValueList( const KUrl::List& urls )
     m_dirty = true;
 }
 
+QString ConfigEntry::outputString() const
+{
+    return toString( Quote );
+}
 
 QVariant ConfigEntry::stringToValue( const QString& str, UnescapeMode mode ) const
 {
   const bool isString = isStringType();
   const bool unescape = mode & Unescape;
-  const bool quotedNonStrings = mode == UnescapeAndUnquoteNonStrings;
   if ( isList() ) {
     QList<QVariant> lst;
     QStringList items = str.split( ',', QString::SkipEmptyParts );
@@ -554,9 +557,6 @@ QVariant ConfigEntry::stringToValue( const QString& str, UnescapeMode mode ) con
             qWarning() <<"String value should start with '\"' :" << val;
           val = val.mid( 1 );
         }
-      } else if ( quotedNonStrings ) {
-          assert( val.startsWith( '\"' ) );
-          val = val.mid( 1 );
       }
       lst << QVariant( unescape ? gpgconf_unescape( val ) : val );
     }
@@ -570,11 +570,6 @@ QVariant ConfigEntry::stringToValue( const QString& str, UnescapeMode mode ) con
           assert( val.startsWith( '"' ) ); // see README.gpgconf
           val = val.mid( 1 );
       }
-    } else { // not a string
-        if ( quotedNonStrings ) {
-            assert( val.startsWith( '"' ) );
-            val = val.mid( 1 ); 
-        }
     }
     return QVariant( unescape ? gpgconf_unescape( val ) : val );
   }
@@ -583,8 +578,8 @@ QVariant ConfigEntry::stringToValue( const QString& str, UnescapeMode mode ) con
 
 QString ConfigEntry::toString( ConfigEntry::EscapeMode mode ) const
 {
-    const bool escape = mode == Escape;
-    const bool quote = escape;
+    const bool escape = mode & Escape;
+    const bool quote = mode & Quote;
 
   // Basically the opposite of stringToValue
   if ( isStringType() ) {
