@@ -103,27 +103,29 @@ public:
         : q( qq ),
           ui( q )
     {
+        connect( &ui.stack, SIGNAL(currentChanged(int)),
+                 q, SIGNAL(operationStateChanged()) );
     }
 
     std::vector<Key> keys;
     static QHash<QString, QPointer<CertificateInfoWidgetImpl> > dialogMap;
 
     struct UI {
-        QStackedLayout stack;
         ProgressWidget  progress;
         QFrame          result;
         QLabel          error;
+        QStackedLayout stack;
 
         explicit UI( ResultDisplayWidget * q )
-            : stack( q ),
-              progress( q ),
+            : progress( q ),
               result( q ),
-              error( q )
+              error( q ),
+              stack( q )
         {
-            KDAB_SET_OBJECT_NAME( stack );
             KDAB_SET_OBJECT_NAME( progress );
             KDAB_SET_OBJECT_NAME( result );
             KDAB_SET_OBJECT_NAME( error );
+            KDAB_SET_OBJECT_NAME( stack );
 
             stack.setMargin( 0 );
 
@@ -148,6 +150,10 @@ ResultDisplayWidget::ResultDisplayWidget( QWidget * p )
 
 ResultDisplayWidget::~ResultDisplayWidget() {}
 
+bool ResultDisplayWidget::operationInProgress() const {
+    return d->ui.stack.currentWidget() == &d->ui.progress ;
+}
+
 QString ResultDisplayWidget::renderKey(const Key & key)
 {
     if ( key.isNull() )
@@ -160,7 +166,7 @@ QString ResultDisplayWidget::renderKey(const Key & key)
 static QColor resaturate( const QColor & c, int sat ) {
     int h, s, v;
     c.getHsv( &h, &s, &v );
-    return QColor( h, sat, v, QColor::Hsv );
+    return QColor::fromHsv( h, sat, v );
 }
 
 // static

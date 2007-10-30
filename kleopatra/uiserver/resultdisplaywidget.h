@@ -51,9 +51,15 @@ public:
     explicit ResultDisplayWidget( QWidget * parent = 0 );
     ~ResultDisplayWidget();
 
+    bool operationInProgress() const;
+    bool operationFinished() const { return !operationInProgress(); }
+
     void setLabel( const QString & str );
     void showResultWidget();
     void setError( const QString & err );
+
+Q_SIGNALS:
+    void operationStateChanged();
 
 public Q_SLOTS:
     void setProgress( const QString & what, int current, int total );
