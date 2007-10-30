@@ -299,6 +299,7 @@ ResultPage::ResultPage( QWidget * p )
     : QWizardPage( p ), m_widgets(), m_ui( this )
 {
     setTitle( i18n("Results") );
+    setSubTitle( i18n("FIXME") );
 }
 
 ResultPage::~ResultPage() {}
