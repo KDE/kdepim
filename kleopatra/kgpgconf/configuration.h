@@ -165,8 +165,13 @@ public:
 
     void setValueFromRawString( const QString& str );
     void setValueFromUiString( const QString& str );
+
     void setArgType( ArgType type, ListType listType );
     ArgType argType() const;
+
+    /** Human-readable (i.e. translated) description of the entry's type */
+    QString typeDescription() const;
+
     bool boolValue() const;
     QString stringValue() const;
     int intValue() const;

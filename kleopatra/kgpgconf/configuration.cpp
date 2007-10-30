@@ -32,6 +32,8 @@
 
 #include "configuration.h"
 
+#include <KLocale>
+
 #include <QDebug>
 #include <QStringList>
 
@@ -331,6 +333,31 @@ void ConfigEntry::setArgType( ArgType type, ListType listType )
 ConfigEntry::ArgType ConfigEntry::argType() const
 {
     return m_argType;
+}
+
+QString ConfigEntry::typeDescription() const
+{
+    const bool list = isList();
+
+    switch ( m_argType )
+    {
+    case None:
+        return list ? i18n( "Multiple Settable" ) : i18n( "Set/Unset" );
+    case String:
+        return list ? i18n( "String List" ) : i18n( "String" );
+    case Int:
+        return list ? i18n( "List of Integers" ) : i18n( "Integer" );
+    case UInt:
+        return list ? i18n( "List of Unsigned Integers" ) : i18n( "Unsigned Integer " );
+    case Path:
+        return list ? i18n( "Path List" ) : i18n( "Path" );
+    case Url:
+        return list ? i18n( "List of URLs" ) : i18n( "URL" );
+    case LdapUrl:
+        return list ? i18n( "List of LDAP URLs" ) : i18n( "LDAP URL" );
+    case DirPath:
+        return list ? i18n( "Directory Path List" ) : i18n( "Directory Path" );
+    }
 }
 
 bool ConfigEntry::isList() const

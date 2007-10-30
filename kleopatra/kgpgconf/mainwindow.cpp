@@ -87,6 +87,7 @@ void MainWindow::treeWidgetItemSelectionChanged()
     m_ui.componentLabel->setText( entry ? m_componentForEntry[entry]->name() : QString() );
     m_ui.optionLabel->setText( entry ? entry->name() : QString() );
     m_ui.descriptionLabel->setText( entry ? entry->description() : QString() );
+    m_ui.typeLabel->setText( entry ? entry->typeDescription() : QString() );
     m_ui.valueLE->setText( entry ? entry->stringValue() : QString() );
     m_ui.useDefaultRB->setChecked( entry && entry->useBuiltInDefault() );
     m_ui.useCustomRB->setChecked( entry && !entry->useBuiltInDefault() );
@@ -96,6 +97,7 @@ void MainWindow::treeWidgetItemSelectionChanged()
     m_ui.useDefaultRB->setEnabled( entry );
     m_ui.valueLE->setEnabled( entry );
     m_ui.optionLabelLabel->setEnabled( entry );
+    m_ui.typeLabelLabel->setEnabled( entry );
     m_ui.componentLabelLabel->setEnabled( entry );
     m_ui.descriptionLabelLabel->setEnabled( entry );
     m_selectedEntry = entry;

@@ -13,7 +13,7 @@
    <string>Form</string>
   </property>
   <layout class="QGridLayout" >
-   <item rowspan="7" row="0" column="0" >
+   <item rowspan="8" row="0" column="0" >
     <widget class="QTreeWidget" name="treeWidget" >
      <column>
       <property name="text" >
@@ -118,6 +118,33 @@
     </layout>
    </item>
    <item row="3" column="1" colspan="2" >
+    <layout class="QHBoxLayout" >
+     <item>
+      <widget class="QLabel" name="typeLabelLabel" >
+       <property name="text" >
+        <string>Type:</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="typeLabel" >
+       <property name="sizePolicy" >
+        <sizepolicy vsizetype="Preferred" hsizetype="Preferred" >
+         <horstretch>1</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="text" >
+        <string/>
+       </property>
+       <property name="textFormat" >
+        <enum>Qt::PlainText</enum>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item row="4" column="1" colspan="2" >
     <widget class="QRadioButton" name="useDefaultRB" >
      <property name="text" >
       <string>Reset user settings to built-in default</string>
@@ -127,7 +154,7 @@
      </property>
     </widget>
    </item>
-   <item row="4" column="1" >
+   <item row="5" column="1" >
     <widget class="QRadioButton" name="useCustomRB" >
      <property name="text" >
       <string>Custom value:</string>
@@ -137,7 +164,7 @@
      </property>
     </widget>
    </item>
-   <item row="4" column="2" >
+   <item row="5" column="2" >
     <widget class="QLineEdit" name="valueLE" >
      <property name="enabled" >
       <bool>true</bool>
@@ -147,7 +174,7 @@
      </property>
     </widget>
    </item>
-   <item row="5" column="1" colspan="2" >
+   <item row="6" column="1" colspan="2" >
     <widget class="QCheckBox" name="readOnlyBox" >
      <property name="text" >
       <string>Impose setting on all users</string>
@@ -157,15 +184,15 @@
      </property>
     </widget>
    </item>
-   <item row="6" column="2" >
+   <item row="7" column="2" >
     <spacer>
      <property name="orientation" >
       <enum>Qt::Vertical</enum>
      </property>
      <property name="sizeHint" >
       <size>
-       <width>20</width>
-       <height>40</height>
+       <width>316</width>
+       <height>261</height>
       </size>
      </property>
     </spacer>
