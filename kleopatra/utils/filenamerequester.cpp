@@ -60,9 +60,9 @@ private:
     QDirModel  dirmodel;
     QCompleter completer;
 
-    QHBoxLayout hlay;
     QLineEdit    lineedit;
     QToolButton  button;
+    QHBoxLayout hlay;
 
     bool existingOnly;
 };
@@ -71,16 +71,16 @@ FileNameRequester::Private::Private( FileNameRequester * qq )
     : q( qq ),
       dirmodel(),
       completer( &dirmodel ),
-      hlay( q ),
       lineedit( q ),
       button( q ),
+      hlay( q ),
       existingOnly( true )
 {
     KDAB_SET_OBJECT_NAME( dirmodel );
     KDAB_SET_OBJECT_NAME( completer );
-    KDAB_SET_OBJECT_NAME( hlay );
     KDAB_SET_OBJECT_NAME( lineedit );
     KDAB_SET_OBJECT_NAME( button );
+    KDAB_SET_OBJECT_NAME( hlay );
 
     button.setIcon( KIcon("document-open") );
     lineedit.setCompleter( &completer );

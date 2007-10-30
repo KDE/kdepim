@@ -124,11 +124,11 @@ namespace {
         std::vector<DecryptVerifyOperationWidget*> m_widgets;
 
         struct UI {
-            QVBoxLayout     vlay;
-            QHBoxLayout      hlay;
             QLabel            outputDirectoryLB;
             FileNameRequester outputDirectoryFNR;
             ScrollArea       scrollArea; // ### replace with KDScrollArea when done
+            QVBoxLayout     vlay;
+            QHBoxLayout      hlay;
 
             explicit UI( OperationsPage * q );
         } m_ui;
@@ -158,8 +158,8 @@ namespace {
         std::vector<DecryptVerifyResultWidget*> m_widgets;
 
         struct UI {
-            QVBoxLayout vlay;
             ScrollArea   scrollArea; // ### replace with KDScrollArea when done
+            QVBoxLayout vlay;
             
             explicit UI( ResultPage * q );
         } m_ui;
@@ -258,17 +258,18 @@ OperationsPage::OperationsPage( QWidget * p )
 OperationsPage::~OperationsPage() {}
 
 OperationsPage::UI::UI( OperationsPage * q )
-    : vlay( q ),
-      hlay(),
-      outputDirectoryLB( i18n("&Output directory:"), q ),
+    : outputDirectoryLB( i18n("&Output directory:"), q ),
       outputDirectoryFNR( q ),
-      scrollArea( q )
+      scrollArea( q ),
+      vlay( q ),
+      hlay()
 {
-    KDAB_SET_OBJECT_NAME( vlay );
-    KDAB_SET_OBJECT_NAME( hlay );
     KDAB_SET_OBJECT_NAME( outputDirectoryLB );
     KDAB_SET_OBJECT_NAME( outputDirectoryFNR );
     KDAB_SET_OBJECT_NAME( scrollArea );
+
+    KDAB_SET_OBJECT_NAME( vlay );
+    KDAB_SET_OBJECT_NAME( hlay );
 
     assert( qobject_cast<QBoxLayout*>(scrollArea.widget()->layout()) );
     static_cast<QBoxLayout*>(scrollArea.widget()->layout())->addStretch( 1 );
@@ -317,11 +318,11 @@ ResultPage::ResultPage( QWidget * p )
 ResultPage::~ResultPage() {}
 
 ResultPage::UI::UI( ResultPage * q )
-    : vlay( q ),
-      scrollArea( q )
+    : scrollArea( q ),
+      vlay( q )
 {
-    KDAB_SET_OBJECT_NAME( vlay );
     KDAB_SET_OBJECT_NAME( scrollArea );
+    KDAB_SET_OBJECT_NAME( vlay );
 
     assert( qobject_cast<QBoxLayout*>(scrollArea.widget()->layout()) );
     static_cast<QBoxLayout*>(scrollArea.widget()->layout())->addStretch( 1 );
