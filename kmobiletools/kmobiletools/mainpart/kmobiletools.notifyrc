@@ -28,10 +28,8 @@ Comment[pt]=Foi recebida uma chamada
 Comment[pt_BR]=Foi recebida uma chamada
 Comment[sv]=Det finns ett inkommande samtal
 Comment[x-test]=xxThere is an incoming callxx
-Comment[zh_CN]=有来电
-Comment[zh_TW]=有來電
-default_sound=KDE_Beep_Phone_1.ogg
-Action=Sound|PassivePopup|Taskbar
+Sound=KDE_Beep_Phone_1.ogg
+Action=Sound|Popup|Taskbar
 
 
 [Event/kmobiletools_sms]
@@ -58,5 +56,5 @@ Comment[sv]=Nytt inkommande SMS hittades
 Comment[x-test]=xxNew incoming SMS were foundxx
 Comment[zh_CN]=发现新的短消息
 Comment[zh_TW]=收到新簡訊
-default_sound=KDE_Beep_Double.ogg
-Action=Sound|PassivePopup|Taskbar
+Sound=KDE_Beep_Double.ogg
+Action=Sound|Popup|Taskbar
