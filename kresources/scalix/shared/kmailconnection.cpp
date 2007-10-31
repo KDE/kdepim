@@ -1,6 +1,5 @@
 /*
-    This file is part of the kolab resource - the implementation of the
-    Kolab storage format. See www.kolab.org for documentation on this.
+    This file is part of the scalix resource - based on the kolab resource.
 
     Copyright (c) 2004 Bo Thorsen <bo@sonofthor.dk>
 
@@ -32,7 +31,7 @@
 */
 
 #include "kmailconnection.h"
-#include "resourcekolabbase.h"
+#include "resourcescalixbase.h"
 
 #include <kdebug.h>
 #include <kurl.h>
@@ -44,7 +43,7 @@
 #include <QDBusError>
 #include <QMap>
 
-using namespace Kolab;
+using namespace Scalix;
 typedef QList<KMail::SubResource> QListKmailSubResource;
 typedef QMap<quint32, QString> Quint32StringMap;
 typedef QMap<QByteArray, QString> ByteArrayStringMap;
@@ -102,7 +101,7 @@ static void registerTypes()
     }
 }
 
-KMailConnection::KMailConnection( ResourceKolabBase* resource )
+KMailConnection::KMailConnection( ResourceScalixBase* resource )
   : mResource( resource )
   , mKmailGroupwareInterface( 0 )
 {
@@ -147,28 +146,6 @@ bool KMailConnection::connectToKMail()
     dbus.connect( DBUS_KMAIL, "/Groupware", "org.kde.kmail.groupware", "subresourceDeleted", this, SLOT(fromKMailDelSubresource(QString,QString) ) );
     dbus.connect( DBUS_KMAIL, "/Groupware", "org.kde.kmail.groupware", "asyncLoadResult", this, SLOT( fromKMailAsyncLoadResult(QMap<quint32, QString>, QString, QString) ) );
 
-/*
-
-    // Attach to the KMail signals
-    if ( !connectKMailSignal( "incidenceAdded(QString,QString,quint32,int,QString)",
-                              "fromKMailAddIncidence(QString,QString,quint32,int,QString)" ) )
-      kError(5650) <<"DCOP connection to incidenceAdded failed";
-    if ( !connectKMailSignal( "incidenceDeleted(QString,QString,QString)",
-                              "fromKMailDelIncidence(QString,QString,QString)" ) )
-      kError(5650) <<"DCOP connection to incidenceDeleted failed";
-    if ( !connectKMailSignal( "signalRefresh(QString,QString)",
-                              "fromKMailRefresh(QString,QString)" ) )
-      kError(5650) <<"DCOP connection to signalRefresh failed";
-    if ( !connectKMailSignal( "subresourceAdded( QString, QString, QString, bool, bool )",
-                              "fromKMailAddSubresource( QString, QString, QString, bool, bool )" ) )
-      kError(5650) <<"DCOP connection to subresourceAdded failed";
-    if ( !connectKMailSignal( "subresourceDeleted(QString,QString)",
-                              "fromKMailDelSubresource(QString,QString)" ) )
-      kError(5650) <<"DCOP connection to subresourceDeleted failed";
-    if ( !connectKMailSignal( "asyncLoadResult(QMap<quint32, QString>, QString, QString)",
-                              "fromKMailAsyncLoadResult(QMap<quint32, QString>, QString, QString)" ) )
-      kError(5650) <<"DCOP connection to asyncLoadResult failed";
-*/
   }
   return ( mKmailGroupwareInterface != 0 );
 }

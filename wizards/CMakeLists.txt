@@ -11,7 +11,7 @@ add_definitions (-DQT3_SUPPORT -DQT3_SUPPORT_WARNINGS)
 set(groupwarewizard_SRCS ${libknotesresources_SRCS} groupwarewizard.cpp groupwaremain.cpp overviewpage.cpp 
     egroupwarewizard.cpp
     sloxwizard.cpp
-    kolabwizard.cpp kmailchanges.cpp kolabkmailchanges.cpp 
+    kolabwizard.cpp kmailchanges.cpp kolabkmailchanges.cpp
 )
 
 kde4_add_kcfg_files(groupwarewizard_SRCS egroupwareconfig.kcfgc kolabconfig.kcfgc sloxconfig.kcfgc)
@@ -74,8 +74,25 @@ target_link_libraries(kolabwizard  ${KDE4_KCAL_LIBS} ${KDE4_KPIMIDENTITIES_LIBS}
 
 install(TARGETS kolabwizard  DESTINATION ${BIN_INSTALL_DIR})
 
+########### next target ###############
+
+set(scalixwizard_SRCS ${libknotesresources_SRCS} 
+   scalixwizard.cpp 
+   kmailchanges.cpp 
+   scalixkmailchanges.cpp 
+   scalixmain.cpp)
+
+
+kde4_add_kcfg_files(scalixwizard_SRCS scalixconfig.kcfgc)
+
+kde4_add_executable(scalixwizard ${scalixwizard_SRCS})
+
+target_link_libraries(scalixwizard  ${KDE4_KCAL_LIBS} ${KDE4_KPIMIDENTITIES_LIBS} kabcscalix knotesscalix kcalscalix kdepim)
+
+install(TARGETS scalixwizard  DESTINATION ${BIN_INSTALL_DIR})
+
 ########### install files ###############
 
 install( FILES groupwarewizard.desktop  DESTINATION ${XDG_APPS_INSTALL_DIR})
-install( FILES egroupware.kcfg slox.kcfg kolab.kcfg groupwise.kcfg  DESTINATION ${KCFG_INSTALL_DIR})
+install( FILES egroupware.kcfg slox.kcfg kolab.kcfg groupwise.kcfg scalix.kcfg  DESTINATION ${KCFG_INSTALL_DIR})
 

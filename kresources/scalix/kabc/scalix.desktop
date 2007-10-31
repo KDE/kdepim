@@ -1,0 +1,10 @@
+[Desktop Entry]
+Encoding=UTF-8
+Name=Addressbook on Scalix Server via KMail
+Name[de]=Adressbuch auf einem Scalix-Server via KMail
+Name[sv]=Adressbok på IMAP-server via Kmail
+X-KDE-Library=kabc_scalix
+Type=Service
+ServiceTypes=KResources/Plugin
+X-KDE-ResourceFamily=contact
+X-KDE-ResourceType=scalix
