@@ -28,6 +28,8 @@ Comment[pt]=Foi recebida uma chamada
 Comment[pt_BR]=Foi recebida uma chamada
 Comment[sv]=Det finns ett inkommande samtal
 Comment[x-test]=xxThere is an incoming callxx
+Comment[zh_CN]=有来电
+Comment[zh_TW]=有來電
 Sound=KDE_Beep_Phone_1.ogg
 Action=Sound|Popup|Taskbar
 
