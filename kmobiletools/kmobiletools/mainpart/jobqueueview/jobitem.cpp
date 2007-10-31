@@ -162,6 +162,7 @@ bool JobItem::sceneEvent( QEvent* event ) {
                 kDebug() << "triggering job cancellation...";
         }
     }
-}
 
+    return true;
+}
 #include "jobitem.moc"

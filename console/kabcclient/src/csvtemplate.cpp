@@ -42,20 +42,21 @@ CSVTemplate::CSVTemplate(KConfigBase* config) : m_columns(0)
 {
     if (config == 0) return;
 
-    QMap<QString, QString> columnMap = config->group("csv column map").entryMap();
+    KConfigGroup columnMap = config->group("csv column map");
+    const QStringList keyList = columnMap.keyList();
 
-    QMap<QString, QString>::const_iterator it    = columnMap.begin();
-    QMap<QString, QString>::const_iterator endIt = columnMap.end();
+    QStringList::const_iterator it    = keyList.begin();
+    QStringList::const_iterator endIt = keyList.end();
     for (; it != endIt; ++it)
     {
-        if (it.key().isEmpty() || it.value().isEmpty()) continue;
+        if ((*it).isEmpty()) continue;
 
         bool ok = false;
-        int column = it.key().toInt(&ok);
+        int column = (*it).toInt(&ok);
         if (!ok) continue;
 
-        int field = it.value().toInt(&ok);
-        if (!ok) continue;
+        int field = columnMap.readEntry(*it, -1);
+        if (field < 0) continue;
 
         m_columnToField.insert(column, field);
     }

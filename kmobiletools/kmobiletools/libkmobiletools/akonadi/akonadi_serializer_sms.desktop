@@ -1,6 +1,7 @@
 [Misc]
 Encoding=UTF-8
 Name=SMS Serializer
+Name[ca]=Serialitzador de SMS
 Name[el]=Διαχειριστής SMS
 Name[es]=Serializador de SMS
 Name[ga]=Srathóir SMS
@@ -14,6 +15,7 @@ Name[x-test]=xxSMS Serializerxx
 Name[zh_CN]=短消息序列转换器
 Name[zh_TW]=簡訊序列器
 Comment=An Akonadi serializer plugin for sms objects
+Comment[ca]=Un connector de serialització de l'Akonadi pels objectes SMS
 Comment[el]=Ένα πρόσθετο διαχείρισης SMS αντικειμένων για το Akonadi
 Comment[es]=Un plugin serializador de Akonadi para objetos sms
 Comment[it]=Un plugin serilizzatore di SMS per Akonadi

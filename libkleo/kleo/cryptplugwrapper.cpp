@@ -142,7 +142,7 @@ public:
     _unknownAttrsHandling = unknownAttrsInfix;
     _unknownAttrsHandlingChar = "INFIX";
     if( config ){
-        KConfigGroup groupCfgGroup = config->group( cfgGroup );
+      KConfigGroup groupCfgGroup( config, cfgGroup );
       _attrOrder =
         groupCfgGroup.readEntry( cfgAttributeOrderEntry , QStringList() );        // e.g. "DNAttributeOrder"
       _unknownAttrsHandlingChar =

@@ -214,6 +214,7 @@ void SMSList::saveToMailBox(const QString &engineName)
  */
 void SMSList::saveToMailBox() const
 {
+	/*
     /// @todo this config entry has been removed, port or remove...
     QDir savedir;//=(KMobileTools::DevicesConfig::prefs(engineName() ))->maildir_path();
     QString dir=savedir.dirName();
@@ -225,6 +226,7 @@ void SMSList::saveToMailBox() const
     {
         it.next()->exportMD(dir);
     }
+	*/
 }
 
 /*!

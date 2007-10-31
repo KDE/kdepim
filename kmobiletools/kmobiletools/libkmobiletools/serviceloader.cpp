@@ -87,10 +87,14 @@ void ServiceLoader::loadServices( const QString& deviceName ) {
 
     // iterate over the services and look which one we can use
     KMobileTools::CoreService* service;
-    QStringList deviceNameList; // needed KService::createInstance
+    QStringList deviceNameList;
     deviceNameList << deviceName;
     for( int i=0; i<serviceOffers.size(); i++ ) {
-        QObject* serviceObject = KService::createInstance<QObject>( serviceOffers.at( i ), (QObject*) 0, deviceNameList );
+		// get a reference to the service
+		const KService& coreService = *serviceOffers.at( i ).constData();
+		KPluginLoader pluginLoader( coreService );
+
+		QObject* serviceObject = pluginLoader.factory()->create<KMobileTools::CoreService>((QObject*)0, deviceNameList );
         if( !serviceObject )
             continue;
 

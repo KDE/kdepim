@@ -23,16 +23,16 @@
 #include <klocale.h>
 #include <kglobalsettings.h>
 #include <kcolorscheme.h>
-#include "engine.h"
-#include "engineslist.h"
+//#include "engine.h"
+//#include "engineslist.h"
 #include <stdlib.h>
 #include <kabc/stdaddressbook.h>
 #include <qfile.h>
 
 #include "kmobiletools_cfg.h"
-#include "devicesconfig.h"
+//#include "devicesconfig.h"
 #include "contactslist.h"
-#include "enginedata.h"
+//#include "enginedata.h"
 
 
 using namespace KMobileTools;
@@ -151,7 +151,6 @@ QString KMobiletoolsHelper::translateNumber( const QString &s_number, ContactsLi
     return s_number;
 }
 
-#include "kmobiletoolshelper.moc"
 QString KMobiletoolsHelper::getTemplate()
 {
     QString head_css="<HTML><HEAD><script>\n\
@@ -220,7 +219,7 @@ void KMobileTools::KMobiletoolsHelper::createMailDir(const QString &dirname)
     QDir().mkdir( dirpath );
     QDir mailbox(dirpath);
     dirpath=mkMailDir(dirpath, true);
-    dirpath=mkMailDir(dirpath+QDir::separator()+ KMobileTools::DevicesConfig::prefs(dirname)->deviceName() , true );
+//    dirpath=mkMailDir(dirpath+QDir::separator()+ KMobileTools::DevicesConfig::prefs(dirname)->deviceName() , true );
     QString simPath=mkMailDir(dirpath+QDir::separator()+i18nc("SIM MailDir", "SIM"), true);
     QString phonePath=mkMailDir(dirpath+QDir::separator()+i18nc("Phone MailDir", "Phone"), true);
     mkMailDir(simPath+QDir::separator()+i18nc("Incoming MailDir", "Incoming"));
@@ -375,3 +374,5 @@ QString KMobileTools::KMobiletoolsHelper::memorySlotsDescriptions(const QString 
     }
     return QString() ;
 }
+
+#include "kmobiletoolshelper.moc"

@@ -222,7 +222,7 @@ KNComposer::KNComposer(KNLocalArticle *a, const QString &text, const QString &si
   action->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_Return));
 
   action = actionCollection()->addAction("send_later");
-  action->setIcon(KIcon("queue"));
+  action->setIcon(KIcon("mail-queue"));
   action->setText(i18n("Send &Later"));
   connect(action, SIGNAL(triggered(bool)), SLOT(slotSendLater()));
 
@@ -274,7 +274,7 @@ KNComposer::KNComposer(KNLocalArticle *a, const QString &text, const QString &si
   connect(action, SIGNAL(triggered(bool) ), SLOT(slotInsertFileBoxed()));
 
   action = actionCollection()->addAction("attach_file");
-  action->setIcon(KIcon("attach"));
+  action->setIcon(KIcon("mail-attachment"));
   action->setText(i18n("Attach &File..."));
   connect(action, SIGNAL(triggered(bool)), SLOT(slotAttachFile()));
 

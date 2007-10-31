@@ -9,63 +9,93 @@ ENDIF (USE_CRASHHANDLER)
 
 ########### next target ###############
 
-set(kmobiletools_LIB_SRCS
+set(kmobiletoolslib_LIB_SRCS
+   ifaces/addressbook.h
    ifaces/addressbook.cpp
+   ifaces/dialaction.h
    ifaces/dialaction.cpp
+   ifaces/shortmessages.h
    ifaces/shortmessages.cpp
+   ifaces/smsfolders.h
    ifaces/smsfolders.cpp
+   ifaces/status.h
    ifaces/status.cpp
+   ifaces/information.h
    ifaces/information.cpp
+   ifaces/guiservice.h
    ifaces/guiservice.cpp
+   ifaces/actionprovider.h
    ifaces/actionprovider.cpp
+   ifaces/wizardprovider.h
    ifaces/wizardprovider.cpp
+   ifaces/jobprovider.h
    ifaces/jobprovider.cpp
+   enginexp.h
    enginexp.cpp
+   coreservice.h
    coreservice.cpp
+   deviceloader.h
    deviceloader.cpp
+   serviceloader.h
    serviceloader.cpp
+   jobxp.h
    jobxp.cpp
+   jobmanager.h
    jobmanager.cpp
+   config.h
    config.cpp
+   addressbook.h
    addressbook.cpp
+   addressbookentry.h
    addressbookentry.cpp
-   aboutdata.cpp 
+   aboutdata.h
+   aboutdata.cpp
    ${crashhandler_SRCS}
    #contactslist.cpp  
-   devicemenu.cpp 
-   encodingshelper.cpp 
+   #devicemenu.cpp 
+   encodingshelper.h
+   encodingshelper.cpp
    #engineslist.cpp 
    #homepage.cpp 
-   devicesconfig.cpp
+   #devicesconfig.cpp
+   errorlog.h
    errorlog.cpp
+   errorhandler.h
    errorhandler.cpp
+   errortypes/baseerror.h
    errortypes/baseerror.cpp
 #   kmobiletools_devices_addons.cpp 
+   kmobiletoolshelper.h
    kmobiletoolshelper.cpp 
+   overlaywidget.h
    overlaywidget.cpp 
+   job.h
    job.cpp 
+   weaver.h
    weaver.cpp 
    #enginedata.cpp
    #qserial.cpp 
    #picksmscenter.cpp
    #serialdevice.cpp 
    #engine.cpp 
+   sms.h
    sms.cpp 
+   smslist.h
    smslist.cpp )
 
-QT4_ADD_DBUS_INTERFACE(kmobiletools_LIB_SRCS org.kde.kmobiletools.device.xml kmobiletools_device_interface )
-QT4_ADD_DBUS_INTERFACE(kmobiletools_LIB_SRCS org.kde.kmobiletools.main.xml kmobiletools_main_interface )
+QT4_ADD_DBUS_INTERFACE(kmobiletoolslib_LIB_SRCS org.kde.kmobiletools.device.xml kmobiletools_device_interface )
+QT4_ADD_DBUS_INTERFACE(kmobiletoolslib_LIB_SRCS org.kde.kmobiletools.main.xml kmobiletools_main_interface )
 
 
 
-kde4_add_kcfg_files(kmobiletools_LIB_SRCS kmobiletools_cfg.kcfgc kmobiletools_devices.kcfgc )
+kde4_add_kcfg_files(kmobiletoolslib_LIB_SRCS kmobiletools_cfg.kcfgc kmobiletools_devices.kcfgc )
 
-kde4_add_library(kmobiletools SHARED ${kmobiletools_LIB_SRCS})
+kde4_add_library(kmobiletoolslib SHARED ${kmobiletoolslib_LIB_SRCS})
 
-target_link_libraries(kmobiletools ${KDE4_KDECORE_LIBS} ${KDE4_KHTML_LIBRARY} ${KDE4_THREADWEAVER_LIBRARY} ${KDE4_KABC_LIBRARY} ${KDE4_KCAL_LIBRARY} ${KDE4_KMIME_LIBS} akonadi)
+target_link_libraries(kmobiletoolslib ${KDE4_KDECORE_LIBS} ${KDE4_KHTML_LIBRARY} ${KDE4_THREADWEAVER_LIBRARY} ${KDE4_KABC_LIBRARY} ${KDE4_KCAL_LIBRARY} ${KDE4_KMIME_LIBS} akonadi)
 
-set_target_properties(kmobiletools PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
-install(TARGETS kmobiletools DESTINATION ${LIB_INSTALL_DIR} )
+set_target_properties(kmobiletoolslib PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
+install(TARGETS kmobiletoolslib DESTINATION ${LIB_INSTALL_DIR} )
 
 
 ########### install files ###############

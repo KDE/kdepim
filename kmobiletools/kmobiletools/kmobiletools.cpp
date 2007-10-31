@@ -47,12 +47,13 @@ kmobiletools::kmobiletools()
     // this routine will find and load our Part.  it finds the Part by
     // name which is a bad idea usually.. but it's alright in this
     // case since our Part is made for this Shell
-    KLibFactory *factory = KLibLoader::self()->factory("libkmobiletoolsmainpart");
-    if (factory)
+	KService::Ptr service = KService::serviceByDesktopName( "kmobiletools_mainpart" );
+	if( service ) {
+		
+	}
+    if ( service )
     {
-        // now that the Part is loaded, we cast it to a Part to get
-        // our hands on it
-        m_part = static_cast<KParts::Part *>(factory->create(this, "KParts::Part"));
+		m_part = service->createInstance<KParts::Part>( this );
 
         if (m_part)
         {
@@ -141,7 +142,7 @@ bool kmobiletools::queryClose()
     KMessageBox::information( this,
       i18n( "<qt>Closing the main window will keep KMobileTools running in the "
       "system tray. Use 'Quit' from the system tray menu to quit the application.</qt>" ),
-      i18n( "Docking in System Tray" ), "hideOnCloseInfo");
+      i18nc( "@title KMessageBox", "Docking in System Tray" ), "hideOnCloseInfo");
 
     return false;
 }

@@ -17,6 +17,8 @@ defaultMimetype=application/octet-stream
 determineMimetypeFromExtension=true
 
 Description=A kioslave for p2k Motorola Phones
+Description[ca]=Un 'kioslave' per als telèfons Motorola p2k
+Description[de]=Ein-/Ausgabemodul für p2k-Mobiltelefone von Motorola
 Description[el]=Ένα kioslave για τηλέφωνα Motorola p2k
 Description[es]=Un kioslave para teléfonos p2k de Motorola
 Description[ga]=kioslave le haghaidh Fóin p2k Motorola

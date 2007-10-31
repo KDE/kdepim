@@ -770,7 +770,7 @@ static void fillConduitNameMap()
 		if (!conduitNameMap->value(*i))
 		{
 			QString readableName = CSL1("<unknown>");
-			KSharedPtr < KService > o = KService::serviceByDesktopName(*i);
+			KService::Ptr o = KService::serviceByDesktopName(*i);
 			if (!o)
 			{
 				WARNINGKPILOT << "No service for" << *i;

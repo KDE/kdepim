@@ -100,8 +100,13 @@ bool DeviceLoader::loadDevice( const QString& deviceName, const QString& engineN
 
     // try to load the engine
     QStringList argDeviceName( deviceName );
-    KMobileTools::EngineXP* engine = KService::createInstance<KMobileTools::EngineXP>
-                                     ( d->m_engineOffers.at( serviceNumber ), (QObject*) 0, argDeviceName );
+
+	// get a reference to the service
+	const KService& engineService = *d->m_engineOffers.at( serviceNumber ).constData();
+	KPluginLoader pluginLoader( engineService );
+
+	// create the engine instance
+	KMobileTools::EngineXP* engine = pluginLoader.factory()->create<KMobileTools::EngineXP>((QObject*)0, argDeviceName );
     if( !engine )
         return false;
 

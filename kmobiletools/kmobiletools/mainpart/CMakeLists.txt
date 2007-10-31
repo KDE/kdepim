@@ -4,22 +4,30 @@ add_subdirectory(services/addressbook)
 ########### next target ###############
 
 set(kmobiletoolsmainpart_PART_SRCS
+   servicemodel/servicemodel.h
    servicemodel/servicemodel.cpp
+   servicemodel/deviceitem.h
    servicemodel/deviceitem.cpp
+   servicemodel/serviceitem.h
    servicemodel/serviceitem.cpp
+   servicemodel/treeitem.h
    servicemodel/treeitem.cpp
    #deviceconfigdialog.cpp 
+   devicemanager.h
    devicemanager.cpp
+   jobsignalmapper.h
    jobsignalmapper.cpp
+   jobqueueview/jobqueueview.h
    jobqueueview/jobqueueview.cpp
+   jobqueueview/jobitem.h
    jobqueueview/jobitem.cpp
    #addressdetails.cpp 
    #calldialogimpl.cpp 
    #calldialogimpl.h 
    #deviceslist.cpp 
    #popupaddressee.cpp
-      #popupnumber.cpp
-         #popupsms.cpp
+   #popupnumber.cpp
+   #popupsms.cpp
    #pickphonenumberdialog.cpp
    #editaddressee.cpp 
    #exportphonebookdlg.cpp 
@@ -28,11 +36,16 @@ set(kmobiletoolsmainpart_PART_SRCS
    #newsmsdlg.cpp 
    #smslistviewitem.cpp 
    #smspart.cpp
+   newdevicewizard/welcomepage.h
    newdevicewizard/welcomepage.cpp
+   newdevicewizard/firstpage.h
    newdevicewizard/firstpage.cpp
+   newdevicewizard/lastpage.h
    newdevicewizard/lastpage.cpp
    #statusbar.cpp
+   kmobiletools_mainpart.h
    kmobiletools_mainpart.cpp 
+   newdevicewizard/devicewizard.h
    newdevicewizard/devicewizard.cpp
    errorlogdialog.cpp )
 
@@ -56,7 +69,7 @@ kde4_add_ui_files(kmobiletoolsmainpart_PART_SRCS
 
 kde4_add_plugin(kmobiletoolsmainpart WITH_PREFIX ${kmobiletoolsmainpart_PART_SRCS})
 
-target_link_libraries(kmobiletoolsmainpart  kmobiletools kabc_file_core ${KDE4_KHTML_LIBRARY} ${KDE4_KDEUI_LIBS} ${KDE4_KPARTS_LIBRARY} ${KDE4_KRESOURCES_LIBS} ${KDE4_KABC_LIBRARY} ${KDE4_KNOTIFYCONFIG_LIBS} )
+target_link_libraries(kmobiletoolsmainpart  kmobiletoolslib kabc_file_core ${KDE4_KHTML_LIBRARY} ${KDE4_KDEUI_LIBS} ${KDE4_KPARTS_LIBRARY} ${KDE4_KRESOURCES_LIBS} ${KDE4_KABC_LIBRARY} ${KDE4_KNOTIFYCONFIG_LIBS} )
 
 install(TARGETS kmobiletoolsmainpart DESTINATION ${PLUGIN_INSTALL_DIR} )
 

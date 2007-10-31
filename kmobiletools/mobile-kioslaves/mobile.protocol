@@ -14,6 +14,8 @@ Icon=kmobiletools
 Class=:internet
 
 Description=A kioslave for mobile
+Description[ca]=Un 'kioslave' per als mòbils
+Description[de]=Ein-/ausgabemodul für Mobiltelefone
 Description[el]=Ένα kioslave για κινητά τηλέφωνα
 Description[es]=Un kioslave para móviles
 Description[ga]=kioslave le haghaidh mobile
