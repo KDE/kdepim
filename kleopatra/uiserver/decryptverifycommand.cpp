@@ -258,7 +258,6 @@ public:
     }
 
     ~Private() {
-        delete wizard;
     }
 
     std::vector< shared_ptr<Input> > buildInputList();
@@ -278,6 +277,7 @@ public:
         if ( wizard )
             return;
         wizard = q->applyWindowID( new DecryptVerifyWizard );
+        wizard->setAttribute( Qt::WA_DeleteOnClose );
         connect( wizard, SIGNAL(finished(int)), this, SLOT(slotDialogClosed()) );
         //if ( requestedWindowTitle().isEmpty() )
             wizard->setWindowTitle( i18n("Decrypt/Verify Wizard") );
