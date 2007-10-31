@@ -56,7 +56,6 @@ public:
 
 public Q_SLOTS:
     void nextKey( const GpgME::Key & key ) {
-        qDebug( "next key" );
         mKeys.push_back( key );
         // push out keys in chunks of 1..16 keys
         if ( mKeys.size() > qrand() % 16U )
