@@ -46,8 +46,8 @@ Wallet* CreateImapAccount::mWallet = 0;
 
 CreateImapAccount::CreateImapAccount( const QString &accountName, const QString &title )
   : KConfigPropagator::Change( title ),
-    mAccountName( accountName ), mEnableSieve( false ), mEnableSavePassword( true ),
-    mEncryption( None ), mAuthenticationSend( PLAIN ), mSmtpPort( 25 ),
+    mAccountName( accountName ), mPort( 993 ), mEnableSieve( false ), mEnableSavePassword( true ),
+    mEncryption( None ), mAuthentication( NONE ), mAuthenticationSend( PLAIN ), mSmtpPort( 25 ),
     mExistingAccountId( -1 ), mExistingTransportId( -1 ),
     mCustomWriter( 0 )
 {
@@ -78,6 +78,11 @@ void CreateImapAccount::setRealName( const QString &s )
   mRealName = s;
 }
 
+void CreateImapAccount::setPort( int port )
+{
+  mPort = port;
+}
+
 void CreateImapAccount::setEmail( const QString &s )
 {
   mEmail = s;
@@ -102,6 +107,12 @@ void CreateImapAccount::setEncryption(
   CreateImapAccount::Encryption e )
 {
   mEncryption = e;
+}
+
+void CreateImapAccount::setAuthentication(
+  CreateImapAccount::Authentication a )
+{
+  mAuthentication = a;
 }
 
 void CreateImapAccount::setDefaultDomain(const QString &d)
@@ -139,7 +150,7 @@ void CreateImapAccount::setCustomWriter(
 
 CreateDisconnectedImapAccount::CreateDisconnectedImapAccount(const QString & accountName) :
     CreateImapAccount( accountName, i18n("Create Disconnected IMAP Account for KMail") ),
-    mLocalSubscription( false )
+    mLocalSubscription( false ), mGroupwareType( GroupwareKolab )
 {
 }
 
@@ -177,10 +188,34 @@ void CreateDisconnectedImapAccount::apply()
   }
   group.writeEntry( "Id", uid );
   group.writeEntry( "Type", "cachedimap");
-  group.writeEntry( "auth", "*");
+  switch ( mAuthentication ) {
+    case NONE:
+      group.writeEntry( "auth", "*" );
+      break;
+    case PLAIN:
+      group.writeEntry( "auth", "PLAIN" );
+      break;
+    case LOGIN:
+      group.writeEntry( "auth", "LOGIN" );
+      break;
+    case NTLM_SPA:
+      group.writeEntry( "auth", "NTLM" );
+      break;
+    case GSSAPI:
+      group.writeEntry( "auth", "GSSAPI" );
+      break;
+    case DIGEST_MD5:
+      group.writeEntry( "auth", "DIGEST-MD5" );
+      break;
+    case CRAM_MD5:
+      group.writeEntry( "auth", "CRAM-MD5" );
+      break;
+  }
   group.writeEntry( "Name", mAccountName );
   group.writeEntry( "host", mServer );
-  group.writeEntry( "port", "993" );
+  group.writeEntry( "port", mPort );
+
+  group.writeEntry( "groupwareType", (int)mGroupwareType );
 
   // in case the user wants to get rid of some groupware folders
   group.writeEntry( "locally-subscribed-folders", mLocalSubscription );

@@ -24,6 +24,7 @@
 #include <QtCore/QMutexLocker>
 #include <QtCore/QTimer>
 #include <KDebug>
+#include <kgenericfactory.h>
 
 #include <jobs/fetchaddressbookjob.h>
 

@@ -49,6 +49,7 @@ class CreateImapAccount : public KConfigPropagator::Change
     void setUser( const QString & );
     void setPassword( const QString & );
     void setRealName( const QString & );
+    void setPort( int );
     /**
       Set email. Default is "user@server".
     */
@@ -61,10 +62,10 @@ class CreateImapAccount : public KConfigPropagator::Change
     void enableSavePassword( bool );
 
     enum Encryption { None, SSL, TLS };
+    enum Authentication { NONE, PLAIN, LOGIN, NTLM_SPA, GSSAPI, DIGEST_MD5, CRAM_MD5 };
 
     void setEncryption( Encryption );
-
-    enum Authentication { PLAIN, LOGIN };
+    void setAuthentication( Authentication );
 
     void setAuthenticationSend( Authentication );
 
@@ -89,6 +90,7 @@ class CreateImapAccount : public KConfigPropagator::Change
     QString mUser;
     QString mPassword;
     QString mRealName;
+    int mPort;
     QString mEmail;
     QString mDefaultDomain;
 
@@ -97,6 +99,7 @@ class CreateImapAccount : public KConfigPropagator::Change
     bool mEnableSavePassword;
 
     Encryption mEncryption;
+    Authentication mAuthentication;
     Authentication mAuthenticationSend;
 
     int mSmtpPort;
@@ -113,13 +116,22 @@ class CreateImapAccount : public KConfigPropagator::Change
 class CreateDisconnectedImapAccount : public CreateImapAccount
 {
   public:
+    enum GroupwareType
+    {
+      GroupwareNone,
+      GroupwareKolab,
+      GroupwareScalix
+    };
+
     CreateDisconnectedImapAccount( const QString &accountName );
     virtual void apply();
 
     void enableLocalSubscription( bool b ) { mLocalSubscription = b; }
+    void setGroupwareType( GroupwareType type ) { mGroupwareType = type; }
 
   private:
     bool mLocalSubscription;
+    GroupwareType mGroupwareType;
 };
 
 class CreateOnlineImapAccount : public CreateImapAccount

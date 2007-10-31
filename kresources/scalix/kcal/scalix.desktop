@@ -1,0 +1,9 @@
+[Desktop Entry]
+Encoding=UTF-8
+Name=Calendar on Scalix Server via KMail
+Name[de]=Kalender auf einem Scalix-Server via KMail
+X-KDE-Library=kcal_scalix
+Type=Service
+ServiceTypes=KResources/Plugin
+X-KDE-ResourceFamily=calendar
+X-KDE-ResourceType=scalix

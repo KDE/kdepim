@@ -100,10 +100,6 @@ ArticleWindow::ArticleWindow( KNArticle *art )
   if ( art )
     setCaption( art->subject()->asUnicodeString() );
 
-  // this will enable keyboard-only actions like that don't appear in any menu
-  //actionCollection()->setDefaultShortcutContext( Qt::WindowShortcut );
-  actionCollection()->setAssociatedWidget( this );
-
   mArticleWidget = new ArticleWidget( this, this, actionCollection() );
   mArticleWidget->setArticle( art );
   setCentralWidget( mArticleWidget );
@@ -120,6 +116,9 @@ ArticleWindow::ArticleWindow( KNArticle *art )
 
   resize(500,400);    // default optimized for 800x600
   applyMainWindowSettings(KConfigGroup( knGlobals.config(), "articleWindow_options") );
+
+  // this will enable keyboard-only actions like that don't appear in any menu
+  actionCollection()->associateWidget( this );
 }
 
 

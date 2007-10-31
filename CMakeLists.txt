@@ -8,6 +8,27 @@ include(KDE4Defaults)
 include(MacroLibrary)
 include(MacroOptionalAddSubdirectory)
 
+# this macro exists to work around a stupid Mac OS X linker bug
+# where it can't handle the same library being referenced multiple
+# times on the linker line
+macro (KDEPIM4_LINK_UNIQUE_LIBRARIES)
+        SET(LINK_ARG_LIST)  
+        FOREACH(arg ${ARGN})
+                SET(LINK_ARG_FOUND FALSE)
+                FOREACH(existing ${LINK_ARG_LIST})
+                        IF(${arg} STREQUAL ${existing})
+                                SET(LINK_ARG_FOUND)
+                        ENDIF(${arg} STREQUAL ${existing})
+                ENDFOREACH(existing)
+
+                IF(NOT ${LINK_ARG_FOUND})
+                        LIST(APPEND LINK_ARG_LIST ${arg})
+                ENDIF(NOT ${LINK_ARG_FOUND})
+        ENDFOREACH(arg)
+
+        TARGET_LINK_LIBRARIES(${LINK_ARG_LIST})
+endmacro (KDEPIM4_LINK_UNIQUE_LIBRARIES)
+
 if ( ONLY_KLEO )
   find_package(KdepimLibs)
   find_package(Boost REQUIRED )
@@ -25,6 +46,7 @@ if ( ONLY_KLEO )
     MESSAGE(STATUS "topological_sort.hpp is necessary to compile kleopatra. Please install package which contains it.")
   endif(TOPOLOGICAL_SORT_DIR)
 else ( ONLY_KLEO )
+
 
 find_package(KdepimLibs REQUIRED)
 find_package(Kode REQUIRED)
