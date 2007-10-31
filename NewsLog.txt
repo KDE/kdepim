@@ -1,29 +1,39 @@
 Friday, October 26th 2007
 
-Bugfixes
----------
-* ensure that tooltips also work on the main folder tree and show quota info properly (729284)
-* kolab/issue2108 Explicitely disable word wrapping, instead of toggeling, where appropriate.
+Problems addressed
+------------------
+* ensure that tooltips also work on the main folder tree 
+  and show quota info properly (729284)
+* kolab/issue2108 (Kontact sends broken invitation email.) Explicitely disable 
+  word wrapping, instead of toggeling, where appropriate.
 
-features
+New functions
+-------------
 * Prokde35-z Item 16: Filter import/export (728541)
-* Prokde35-z Item 37: Open search results in standalone reader, when preview pane is hidden (729306)
+* Prokde35-z Item 37: Open search results in standalone reader, 
+  when preview pane is hidden (729306)
 
 
 Friday, October 12th 2007
 
-Bugfixes
---------
-* kolab/issue1941 Don't overwrite the user selection if LDAP search results come in delayed.
-* kolab/issue2035 Allow activation of sieve scripts when none are currently active
-* kolab/issue2042 Fix creation of new contacts in kolab resources
-* kolab/issue2045 Fix problems with ecnryption to untrusted keys
-* kolab/issue2046 Fix crash on drag
-* kolab/issue2067 Make sure to persist the list of deleted uids
+Problems addressed
+------------------
+* kolab/issue1941 (slow LDAP server lookup clears the To: field)
+  Don't overwrite the user selection if LDAP search results come in delayed.
+* kolab/issue2035 (Manage Sieve Script: Couldn't activate a script.) Allow 
+  activation of sieve scripts when none are currently active
+* kolab/issue2042 (Not possible to create a new contact) Fix creation of 
+  new contacts in kolab resources
+* kolab/issue2045 (Sending unencrypted, unsigned mail to myself throws warning)
+  Fix problems with ecnryption to untrusted keys
+* kolab/issue2046 (Crash: Try to copy an attachment to the konqueror)
+  Fix crash on drag
+* kolab/issue2067 (Kontact doubles mails when filter is used.) Make sure 
+  to persist the list of deleted uids
 
 
-Features
---------
+New functions
+-------------
 
 * Prokde35-Z Item 55d: Immediately sync groupware changes (revision 723653)
 * Prokde35-z Item 27: Softbreaking in the kmail editor when no hardbreak limit is set (724153)
