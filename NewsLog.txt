@@ -1,11 +1,11 @@
 Friday, November 2nd 2007
 
 Problems addressed
--------------------
+------------------
 * kolab/issue2151 Creating a subfolder doesn't work correctly
 
-New functions
--------------------
+New functionality
+------------------
 * Prokde35-z Item 49: "Store Contact In" -> "Copy Contact To" and "Move Contact To" (729611)
 * Prokde35-z Item 201: Allow dragging of attachments from composer windows (729661)
 
@@ -19,8 +19,8 @@ Problems addressed
 * kolab/issue2108 (Kontact sends broken invitation email.) Explicitely disable
   word wrapping, instead of toggeling, where appropriate.
 
-New functions
--------------
+New functionality
+------------------
 * Prokde35-z Item 16: Filter import/export (728541)
 * Prokde35-z Item 37: Open search results in standalone reader,
   when preview pane is hidden (729306)
@@ -44,8 +44,8 @@ Problems addressed
   to persist the list of deleted uids
 
 
-New functions
--------------
+New functionality
+------------------
 
 * Prokde35-Z Item 55d: Immediately sync groupware changes (revision 723653)
 * Prokde35-z Item 27: Softbreaking in the kmail editor when no hardbreak limit is set (724153)
