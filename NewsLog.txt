@@ -1,16 +1,28 @@
+Friday, November 2nd 2007
+
+Problems addressed
+-------------------
+* kolab/issue2151 Creating a subfolder doesn't work correctly
+
+New functions
+-------------------
+* Prokde35-z Item 49: "Store Contact In" -> "Copy Contact To" and "Move Contact To" (729611)
+* Prokde35-z Item 201: Allow dragging of attachments from composer windows (729661)
+
+
 Friday, October 26th 2007
 
 Problems addressed
 ------------------
-* ensure that tooltips also work on the main folder tree 
+* ensure that tooltips also work on the main folder tree
   and show quota info properly (729284)
-* kolab/issue2108 (Kontact sends broken invitation email.) Explicitely disable 
+* kolab/issue2108 (Kontact sends broken invitation email.) Explicitely disable
   word wrapping, instead of toggeling, where appropriate.
 
 New functions
 -------------
 * Prokde35-z Item 16: Filter import/export (728541)
-* Prokde35-z Item 37: Open search results in standalone reader, 
+* Prokde35-z Item 37: Open search results in standalone reader,
   when preview pane is hidden (729306)
 
 
@@ -20,15 +32,15 @@ Problems addressed
 ------------------
 * kolab/issue1941 (slow LDAP server lookup clears the To: field)
   Don't overwrite the user selection if LDAP search results come in delayed.
-* kolab/issue2035 (Manage Sieve Script: Couldn't activate a script.) Allow 
+* kolab/issue2035 (Manage Sieve Script: Couldn't activate a script.) Allow
   activation of sieve scripts when none are currently active
-* kolab/issue2042 (Not possible to create a new contact) Fix creation of 
+* kolab/issue2042 (Not possible to create a new contact) Fix creation of
   new contacts in kolab resources
 * kolab/issue2045 (Sending unencrypted, unsigned mail to myself throws warning)
   Fix problems with ecnryption to untrusted keys
 * kolab/issue2046 (Crash: Try to copy an attachment to the konqueror)
   Fix crash on drag
-* kolab/issue2067 (Kontact doubles mails when filter is used.) Make sure 
+* kolab/issue2067 (Kontact doubles mails when filter is used.) Make sure
   to persist the list of deleted uids
 
 
