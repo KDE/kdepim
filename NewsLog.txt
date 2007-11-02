@@ -10,6 +10,7 @@ New functionality
 * Prokde35-z Item 201: Allow dragging of attachments from composer windows (729661)
 * Prokde35-z Item 203 (part 1): Port KMail from cryptplug to kleo (731701)
 * Add the ability to associate keyboard shortcuts with snippets. (731716)
+* Add a GUI option for syncing groupware changes immediately (731653)
 
 Friday, October 26th 2007
 
