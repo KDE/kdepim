@@ -1,6 +1,10 @@
 [Desktop Entry]
 Encoding=UTF-8
 Name=Addressbook on Scalix Server via KMail
+Name[ga]=Leabhar Seoltaí ar Fhreastalaí Scalix via KMail
+Name[pt]=Livro de Endereços em Servidor Scalix via KMail
+Name[pt_BR]=Livro de Endereços em Servidor Scalix via KMail
+Name[sv]=Adressbok på Scalix-server via Kmail
 X-KDE-Library=kabc_scalix
 Type=Service
 ServiceTypes=KResources/Plugin

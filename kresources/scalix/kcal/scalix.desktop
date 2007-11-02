@@ -1,6 +1,10 @@
 [Desktop Entry]
 Encoding=UTF-8
 Name=Calendar on Scalix Server via KMail
+Name[ga]=Féilire ar Fhreastalaí Scalix via KMail
+Name[pt]=Calendário em Servidor Scalix via KMail
+Name[pt_BR]=Calendário em Servidor Scalix via KMail
+Name[sv]=Kalender på Scalix-server via Kmail
 X-KDE-Library=kcal_scalix
 Type=Service
 ServiceTypes=KResources/Plugin
