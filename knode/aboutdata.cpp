@@ -48,7 +48,7 @@ namespace KNode
                   KAboutData::License_GPL,
                   ki18n("Copyright (c) 1999-2005 the KNode authors"),
                   KLocalizedString(),
-                  "http://knode.sourceforge.net/" )
+                  "http://kontact.kde.org/knode/" )
   {
     setOrganizationDomain( "kde.org" );
     using KNode::authors;

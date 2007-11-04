@@ -338,9 +338,8 @@ bool DataStore::removeItemParts( const PimItem &item, const QList<QByteArray> &p
 /* --- Location ------------------------------------------------------ */
 bool DataStore::appendLocation( Location &location )
 {
-  // no need to check for already exising collection with the same name,
+  // no need to check for already existing collection with the same name,
   // a unique index on parent + name prevents that in the database
-  location.setFirstUnseen( 0 );
   if ( !location.insert() )
     return false;
 
@@ -375,24 +374,6 @@ bool DataStore::changeLocationPolicy( Location & location,
   location.setCachePolicyId( policy.id() );
   mNotificationCollector->collectionChanged( location );
   return location.update();
-}
-
-bool DataStore::resetLocationPolicy( const Location & location )
-{
-  if ( !m_dbOpened )
-    return false;
-
-  QSqlQuery query( m_database );
-
-  query.prepare( QString::fromLatin1("UPDATE %1 SET %2 = NULL WHERE %3 = :id")
-      .arg( Location::tableName(), Location::cachePolicyIdColumn(), Location::idColumn() ) );
-  query.bindValue( QLatin1String(":id"), location.id() );
-  if ( !query.exec() ) {
-    debugLastQueryError( query, "Error during reset of the cache policy of a single Location." );
-    return false;
-  }
-
-  return true;
 }
 
 bool Akonadi::DataStore::renameLocation(const Location & location, int newParent, const QString & newName)
@@ -653,7 +634,7 @@ void Akonadi::DataStore::retrieveDataFromResource( int uid, const QByteArray& re
   // TODO: error handling
   qDebug() << "retrieveDataFromResource()" << uid;
 
-  // check if that item is already been fetched by someone else
+  // check if that item is already being fetched by someone else
   mPendingItemDeliveriesMutex.lock();
   if ( mPendingItemDeliveries.contains( uid ) ) {
       qDebug() << "requestItemDelivery(): item already requested by other thread - waiting" << uid;
@@ -671,6 +652,8 @@ void Akonadi::DataStore::retrieveDataFromResource( int uid, const QByteArray& re
       qDebug() << "requestItemDelivery(): blocking uid" << uid;
       mPendingItemDeliveries << uid;
       mPendingItemDeliveriesMutex.unlock();
+
+      qDebug() << "requestItemDelivery(): requested parts:" << parts;
 
       // call the resource
       org::kde::Akonadi::Resource *interface = resourceInterface( resource );
