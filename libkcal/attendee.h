@@ -23,6 +23,7 @@
 #define KCAL_ATTENDEE_H
 
 #include <qstring.h>
+#include <qstringlist.h>
 
 #include "listbase.h"
 #include "person.h"
