@@ -318,9 +318,10 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
 
       // get comment for tentative acceptance
       Incidence* incidence = icalToString( iCal );
-      if ( status == Attendee::Tentative ) {
+      
+      if ( callback.askForComment( status ) ) {
         bool ok = false;
-        QString comment = KInputDialog::getMultiLineText( i18n("Tentative Acceptance"),
+        QString comment = KInputDialog::getMultiLineText( i18n("Reaction to Invitation"),
             i18n("Comment:"), QString(), &ok );
         if ( !ok )
           return true;
