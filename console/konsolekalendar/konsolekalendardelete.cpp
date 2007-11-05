@@ -69,14 +69,13 @@ bool KonsoleKalendarDelete::deleteEvent()
                    << m_variables->getUID().data();
 
       if ( m_variables->isVerbose() ) {
-	cout << i18n( "Delete Event &lt;Verbose&gt;:" ).data()
+        cout << i18n( "Delete Event &lt;Verbose&gt;:" ).data()
              << endl;
-	printSpecs( event );
+        printSpecs( event );
       }
 
       m_variables->getCalendar()->deleteEvent( event );
-      cout << i18n( "Success: \"%1\" deleted" ,
-          event->summary() ).data()
+      cout << i18n( "Success: \"%1\" deleted", event->summary() ).data()
            << endl;
 
       m_variables->getCalendar()->save();
@@ -90,12 +89,10 @@ bool KonsoleKalendarDelete::deleteEvent()
 
 void KonsoleKalendarDelete::printSpecs( Event *event )
 {
-  cout << i18n( "  UID:   %1" ,
-     m_variables->getUID() ).data()
+  cout << i18n( "  UID:   %1",  m_variables->getUID() ).data()
        << endl;
 
-  cout << i18n( "  What:  %1",
-     event->summary() ).data()
+  cout << i18n( "  What:  %1", event->summary() ).data()
        << endl;
 
   KDateTime::Spec timeSpec = m_variables->getCalendar()->timeSpec();

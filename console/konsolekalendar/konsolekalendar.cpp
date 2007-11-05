@@ -74,7 +74,7 @@ bool KonsoleKalendar::importCalendar()
   KonsoleKalendarAdd add( m_variables );
 
   kDebug(5860) << "konsolecalendar.cpp::importCalendar() | importing now!";
-  return( add.addImportedCalendar() );
+  return add.addImportedCalendar();
 }
 
 bool KonsoleKalendar::createCalendar()
@@ -83,8 +83,8 @@ bool KonsoleKalendar::createCalendar()
   CalendarLocal newCalendar( KPIM::KPimPrefs::timeSpec() );
 
   if ( m_variables->isDryRun() ) {
-    cout << i18n( "Create Calendar &lt;Dry Run&gt;: %1" ,
-       m_variables->getCalendarFile() ).toLocal8Bit().data()
+    cout << i18n( "Create Calendar &lt;Dry Run&gt;: %1",
+                  m_variables->getCalendarFile() ).toLocal8Bit().data()
          << endl;
   } else {
     kDebug(5860) << "konsolekalendar.cpp::createCalendar() |"
@@ -92,8 +92,8 @@ bool KonsoleKalendar::createCalendar()
                  << m_variables->getCalendarFile().toLocal8Bit().data();
 
     if ( m_variables->isVerbose() ) {
-      cout << i18n( "Create Calendar &lt;Verbose&gt;: %1" ,
-         m_variables->getCalendarFile() ).toLocal8Bit().data()
+      cout << i18n( "Create Calendar &lt;Verbose&gt;: %1",
+                    m_variables->getCalendarFile() ).toLocal8Bit().data()
            << endl;
     }
 
@@ -236,9 +236,9 @@ bool KonsoleKalendar::showInstance()
           // TODO
           kDebug(5860) << "konsolekalendar.cpp::showInstance() |"
                        << "HTML view events by uid list";
-          cout << i18n("Sorry, export to HTML by UID is not supported yet")
-            .toLocal8Bit().data() << endl;
-          return( false );
+          cout << i18n( "Sorry, export to HTML by UID is not supported yet" ).
+            toLocal8Bit().data() << endl;
+          return false;
         } else {
           kDebug(5860) << "konsolekalendar.cpp::showInstance() |"
                        << "HTML view raw events within date range list";
@@ -263,12 +263,12 @@ bool KonsoleKalendar::showInstance()
           htmlSettings.setMonthView( true );
         } else {
           if ( firstdate == lastdate ) {
-            title = i18n( "Events: %1" ,
-                       firstdate.toString( Qt::TextDate ) );
+            title = i18n( "Events: %1",
+                          firstdate.toString( Qt::TextDate ) );
           } else {
-            title = i18n( "Events: %1 - %2" ,
-                      firstdate.toString( Qt::TextDate ) ,
-                      lastdate.toString( Qt::TextDate ) );
+            title = i18n( "Events: %1 - %2",
+                          firstdate.toString( Qt::TextDate ),
+                          lastdate.toString( Qt::TextDate ) );
           }
           htmlSettings.setEventView( true );
         }
@@ -317,7 +317,7 @@ bool KonsoleKalendar::printEventList( QTextStream *ts,
     }
   }
 
-  return( status );
+  return status;
 }
 
 bool KonsoleKalendar::printEvent( QTextStream *ts, Event *event, QDate dt )
@@ -356,7 +356,7 @@ bool KonsoleKalendar::printEvent( QTextStream *ts, Event *event, QDate dt )
       break;
     }
   }
-  return( status );
+  return status;
 }
 
 bool KonsoleKalendar::addEvent()
@@ -366,7 +366,7 @@ bool KonsoleKalendar::addEvent()
   KonsoleKalendarAdd add( m_variables );
   kDebug(5860) << "konsolecalendar.cpp::addEvent() |"
                << "Adding Event now!";
-  return( add.addEvent() );
+  return add.addEvent();
 }
 
 bool KonsoleKalendar::changeEvent()
@@ -377,7 +377,7 @@ bool KonsoleKalendar::changeEvent()
   KonsoleKalendarChange change( m_variables );
   kDebug(5860) << "konsolecalendar.cpp::changeEvent() |"
                << "Changing Event now!";
-  return( change.changeEvent() );
+  return change.changeEvent();
 }
 
 bool KonsoleKalendar::deleteEvent()
@@ -387,7 +387,7 @@ bool KonsoleKalendar::deleteEvent()
   KonsoleKalendarDelete del( m_variables );
   kDebug(5860) << "konsolecalendar.cpp::deleteEvent() |"
                << "Deleting Event now!";
-  return( del.deleteEvent() );
+  return del.deleteEvent();
 }
 
 bool KonsoleKalendar::isEvent( QDateTime startdate,
@@ -407,7 +407,8 @@ bool KonsoleKalendar::isEvent( QDateTime startdate,
                                            SortDirectionAscending ) );
   for ( it = eventList.begin(); it != eventList.end(); ++it ) {
     event = *it;
-    if ( event->dtEnd().toTimeSpec( timeSpec ).dateTime() == enddate && event->summary() == summary ) {
+    if ( event->dtEnd().toTimeSpec( timeSpec ).dateTime() == enddate &&
+         event->summary() == summary ) {
       found = true;
       break;
     }
@@ -417,16 +418,16 @@ bool KonsoleKalendar::isEvent( QDateTime startdate,
 
 void KonsoleKalendar::printSpecs()
 {
-  cout << i18n( "  What:  %1" ,
-     m_variables->getSummary() ).toLocal8Bit().data()
+  cout << i18n( "  What:  %1",
+                m_variables->getSummary() ).toLocal8Bit().data()
        << endl;
 
-  cout << i18n( "  Begin: %1" ,
-     m_variables->getStartDateTime().toString( Qt::TextDate ) ).toLocal8Bit().data()
+  cout << i18n( "  Begin: %1",
+                m_variables->getStartDateTime().toString( Qt::TextDate ) ).toLocal8Bit().data()
        << endl;
 
-  cout << i18n( "  End:   %1" ,
-     m_variables->getEndDateTime().toString( Qt::TextDate ) ).toLocal8Bit().data()
+  cout << i18n( "  End:   %1",
+                m_variables->getEndDateTime().toString( Qt::TextDate ) ).toLocal8Bit().data()
        << endl;
 
   if ( m_variables->getFloating() == true ) {
@@ -434,11 +435,11 @@ void KonsoleKalendar::printSpecs()
          << endl;
   }
 
-  cout << i18n( "  Desc:  %1" ,
-     m_variables->getDescription() ).toLocal8Bit().data()
+  cout << i18n( "  Desc:  %1",
+                m_variables->getDescription() ).toLocal8Bit().data()
        << endl;
 
-  cout << i18n( "  Location:  %1" ,
-     m_variables->getLocation() ).toLocal8Bit().data()
+  cout << i18n( "  Location:  %1",
+                m_variables->getLocation() ).toLocal8Bit().data()
        << endl;
 }

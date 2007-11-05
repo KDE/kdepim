@@ -70,74 +70,108 @@ static const char progURL[] = "pim.kde.org/components/konsolekalendar.php";
 int main( int argc, char *argv[] )
 {
   KAboutData aboutData(
-    progName, 0,                        // internal program name
+    progName, 0,                 // internal program name
     ki18n( progDisplay ),        // displayable program name.
-    progVersion,                     // version string
+    progVersion,                 // version string
     ki18n( progDesc ),           // short porgram description
-    KAboutData::License_GPL,         ki18n(// license type
-    "(c) 2002-2005, Tuukka Pasanen and Allen Winter"), ki18n(// copyright statement
-    0),                               // any free form text
-    progURL,                         // program home page address
-    "bugs.kde.org"                   // bug report email address
+    KAboutData::License_GPL,     // license type
+    ki18n( "(c) 2002-2007, Tuukka Pasanen and Allen Winter" ),
+    ki18n( 0 ),                  // any free form text
+    progURL,                     // program home page address
+    "bugs.kde.org"               // bug report email address
     );
 
   aboutData.addAuthor(
-    ki18n("Tuukka Pasanen"),                // developer's name
-    ki18n( "Primary Author" ),   // task or role
-    "illuusio@mailcity.com",         // email address
-    0                                // home page or relevant link
+    ki18n( "Allen Winter" ),     // developer's name
+    ki18n( "Maintainer" ),       // task or role
+    "winter@kde.org",            // email address
+    0                            // home page or relevant link
     );
   aboutData.addAuthor(
-    ki18n("Allen Winter"),                  // developer's name
+    ki18n( "Tuukka Pasanen" ),   // developer's name
     ki18n( "Author" ),           // task or role
-    "winter@kde.org",                // email address
-    0                                // home page or relevant link
+    "illuusio@mailcity.com",     // email address
+    0                            // home page or relevant link
     );
 
   KCmdLineArgs::init( argc, argv, &aboutData, KCmdLineArgs::CmdLineArgNone );
 
   KCmdLineOptions options;
-  options.add("verbose", ki18n( "Print helpful runtime messages" ));
-  options.add("dry-run", ki18n( "Print what would have been done, but do not execute" ));
-  options.add("file <calendar-file>", ki18n( "Specify which calendar you want to use" ));
-  options.add(":", ki18n( "Incidence types (these options can be combined):" ));
-  options.add("event", ki18n( "  Operate for Events only (Default)" ));
-  options.add("todo", ki18n( "  Operate for To-dos only [NOT WORKING YET]" ));
-  options.add("journal", ki18n( "  Operate for Journals only [NOT WORKING YET]" ));
-  options.add(":", ki18n( "Major operation modes:" ));
-  options.add("view", ki18n( "  Print incidences in specified export format" ));
-  options.add("add", ki18n( "  Insert an incidence into the calendar" ));
-  options.add("change", ki18n( "  Modify an existing incidence" ));
-  options.add("delete", ki18n( "  Remove an existing incidence" ));
-  options.add("create", ki18n( "  Create new calendar file if one does not exist" ));
-  options.add("import <import-file>", ki18n( "  Import this calendar to main calendar" ));
-  options.add(":", ki18n( "Operation modifiers:" ));
-  options.add("all", ki18n( "  View all calendar entries, ignoring date/time options" ));
-  options.add("next", ki18n( "  View next activity in calendar" ));
-  options.add("show-next <days>", ki18n( "  From start date show next # days' activities" ));
-  options.add("uid <uid>", ki18n( "  Incidence Unique-string identifier" ));
-  options.add("date <start-date>", ki18n( "  Start from this day [YYYY-MM-DD]" ));
-  options.add("time <start-time>", ki18n( "  Start from this time [HH:MM:SS]" ));
-  options.add("end-date <end-date>", ki18n( "  End at this day [YYYY-MM-DD]" ));
-  options.add("end-time <end-time>", ki18n( "  End at this time [HH:MM:SS]" ));
-  options.add("epoch-start <epoch-time>", ki18n( " Start from this time [secs since epoch]" ));
-  options.add("epoch-end <epoch-time>", ki18n( "  End at this time [secs since epoch]" ));
-  options.add("summary <summary>", ki18n( "  Add summary to incidence (for add/change modes)" ));
-  options.add("description <description>", ki18n( "Add description to incidence (for add/change modes)" ));
-  options.add("location <location>", ki18n( "  Add location to incidence (for add/change modes)" ));
-  options.add(":", ki18n( "Export options:" ));
-  options.add("export-type <export-type>", ki18n( "Export file type (Default: text)" ));
-  options.add("export-file <export-file>", ki18n( "Export to file (Default: stdout)" ));
-  options.add("export-list", ki18n( "  Print list of export types supported and exit" ));
-  options.add("", ki18n( "Examples:\n"
-               "  konsolekalendar --view\n"
-               "  konsolekalendar --add --date 2003-06-04 "
-               "--time 10:00 --end-time 12:00 \\\n"
-               "                  --summary \"Doctor Visit\" "
-               "--description \"Get My Head Examined\"\n"
-               "  konsolekalendar --delete --uid KOrganizer-1740326.803" ));
-  options.add("", ki18n( "For more information visit the program home page at:\n"
-               "  http://pim.kde.org/components/konsolekalendar.php" ));
+  options.add( "verbose",
+               ki18n( "Print helpful runtime messages" ) );
+  options.add( "dry-run",
+               ki18n( "Print what would have been done, but do not execute" ) );
+  options.add( "file <calendar-file>",
+               ki18n( "Specify which calendar you want to use" ) );
+  options.add( ":",
+               ki18n( "Incidence types (these options can be combined):" ) );
+  options.add( "event",
+               ki18n( "  Operate for Events only (Default)" ) );
+  options.add( "todo",
+               ki18n( "  Operate for To-dos only [NOT WORKING YET]" ) );
+  options.add( "journal",
+               ki18n( "  Operate for Journals only [NOT WORKING YET]" ) );
+  options.add( ":",
+               ki18n( "Major operation modes:" ) );
+  options.add( "view",
+               ki18n( "  Print incidences in specified export format" ) );
+  options.add( "add",
+               ki18n( "  Insert an incidence into the calendar" ) );
+  options.add( "change",
+               ki18n( "  Modify an existing incidence" ) );
+  options.add( "delete",
+               ki18n( "  Remove an existing incidence" ) );
+  options.add( "create",
+               ki18n( "  Create new calendar file if one does not exist" ) );
+  options.add( "import <import-file>",
+               ki18n( "  Import this calendar to main calendar" ) );
+  options.add( ":",
+               ki18n( "Operation modifiers:" ) );
+  options.add( "all",
+               ki18n( "  View all calendar entries, ignoring date/time options" ) );
+  options.add( "next",
+               ki18n( "  View next activity in calendar" ) );
+  options.add( "show-next <days>",
+               ki18n( "  From start date show next # days' activities" ) );
+  options.add( "uid <uid>",
+               ki18n( "  Incidence Unique-string identifier" ) );
+  options.add( "date <start-date>",
+               ki18n( "  Start from this day [YYYY-MM-DD]" ) );
+  options.add( "time <start-time>",
+               ki18n( "  Start from this time [HH:MM:SS]" ) );
+  options.add( "end-date <end-date>",
+               ki18n( "  End at this day [YYYY-MM-DD]" ) );
+  options.add( "end-time <end-time>",
+               ki18n( "  End at this time [HH:MM:SS]" ) );
+  options.add( "epoch-start <epoch-time>",
+               ki18n( " Start from this time [secs since epoch]" ) );
+  options.add( "epoch-end <epoch-time>",
+               ki18n( "  End at this time [secs since epoch]" ) );
+  options.add( "summary <summary>",
+               ki18n( "  Add summary to incidence (for add/change modes)" ) );
+  options.add( "description <description>",
+               ki18n( "Add description to incidence (for add/change modes)" ) );
+  options.add( "location <location>",
+               ki18n( "  Add location to incidence (for add/change modes)" ) );
+  options.add( ":",
+               ki18n( "Export options:" ) );
+  options.add( "export-type <export-type>",
+               ki18n( "Export file type (Default: text)" ) );
+  options.add( "export-file <export-file>",
+               ki18n( "Export to file (Default: stdout)" ) );
+  options.add( "export-list",
+               ki18n( "  Print list of export types supported and exit" ) );
+  options.add( "",
+               ki18n( "Examples:\n"
+                      "  konsolekalendar --view\n"
+                      "  konsolekalendar --add --date 2003-06-04 "
+                      "--time 10:00 --end-time 12:00 \\\n"
+                      "                  --summary \"Doctor Visit\" "
+                      "--description \"Get My Head Examined\"\n"
+                      "  konsolekalendar --delete --uid KOrganizer-1740326.803" ) );
+  options.add( "",
+               ki18n( "For more information visit the program home page at:\n"
+                      "  http://pim.kde.org/components/konsolekalendar.php" ) );
   KCmdLineArgs::addCmdLineOptions( options ); // Add our own options.
 
   KApplication app(
@@ -183,20 +217,20 @@ int main( int argc, char *argv[] )
    */
   if ( args->isSet( "export-list" ) ) {
     cout << endl;
-    cout << i18n( "%1 supports these export formats:" ,
-       QString(progDisplay) ).toLocal8Bit().data()
+    cout << i18n( "%1 supports these export formats:",
+                  QString(progDisplay) ).toLocal8Bit().data()
          << endl;
-    cout << i18n( "  %1 [Default]" , QString( "Text" ) ).toLocal8Bit().data()
+    cout << i18n( "  %1 [Default]", QString( "Text" ) ).toLocal8Bit().data()
          << endl;
     cout << i18n( "  %1 (like %2, but more compact)",
                   QString( "Short" ), QString( "Text" ) ).toLocal8Bit().data()
          << endl;
-    cout << i18n( "  %1" , QString( "HTML" ) ).toLocal8Bit().data()
+    cout << i18n( "  %1", QString( "HTML" ) ).toLocal8Bit().data()
          << endl;
     cout << i18n( "  %1 (like %2, but in a month view)",
                   QString( "HTMLmonth" ), QString( "HTML" ) ).toLocal8Bit().data()
          << endl;
-    cout << i18n( "  %1 (Comma-Separated Values)" ,
+    cout << i18n( "  %1 (Comma-Separated Values)",
                   QString( "CSV" ) ).toLocal8Bit().data()
          << endl;
     cout << endl;
@@ -426,8 +460,7 @@ int main( int argc, char *argv[] )
     if ( option.toUpper() != "FLOAT" ) {
       starttime = QTime::fromString( option, Qt::ISODate );
       if ( !starttime.isValid() ) {
-        cout << i18n( "Invalid Start Time Specified: %1" ,
-           option ).toLocal8Bit().data()
+        cout << i18n( "Invalid Start Time Specified: %1", option ).toLocal8Bit().data()
              << endl;
         return 1;
       }
@@ -475,8 +508,7 @@ int main( int argc, char *argv[] )
     variables.setDaysCount( option.toInt( &ok, 10 ) );
 
     if ( !ok ) {
-      cout << i18n( "Invalid Date Count Specified: %1" ,
-         option ).toLocal8Bit().data()
+      cout << i18n( "Invalid Date Count Specified: %1", option ).toLocal8Bit().data()
            << endl;
       return 1;
     }
@@ -501,8 +533,7 @@ int main( int argc, char *argv[] )
     if ( option.toUpper() != "FLOAT" ) {
       endtime = QTime::fromString( option, Qt::ISODate );
       if ( !endtime.isValid() ) {
-        cout << i18n( "Invalid End Time Specified: %1" ,
-           option ).toLocal8Bit().data()
+        cout << i18n( "Invalid End Time Specified: %1", option ).toLocal8Bit().data()
              << endl;
         return 1;
       }
@@ -595,13 +626,13 @@ int main( int argc, char *argv[] )
                    << "check if calendar file already exists";
 
       if ( remote ) {
-        cout << i18n( "Attempting to create a remote file %1" ,
-           variables.getCalendarFile() ).toLocal8Bit().data()
+        cout << i18n( "Attempting to create a remote file %1",
+                      variables.getCalendarFile() ).toLocal8Bit().data()
              << endl;
         return 1;
       } else {
         if ( exists ) {
-          cout << i18n( "Calendar %1 already exists" ,
+          cout << i18n( "Calendar %1 already exists",
                         variables.getCalendarFile() ).toLocal8Bit().data()
                << endl;
           return 1;
@@ -610,12 +641,12 @@ int main( int argc, char *argv[] )
 
       if ( konsolekalendar->createCalendar() ) {
         cout << i18n( "Calendar %1 successfully created",
-           variables.getCalendarFile() ).toLocal8Bit().data()
+                      variables.getCalendarFile() ).toLocal8Bit().data()
              << endl;
         return 0;
       } else {
         cout << i18n( "Unable to create calendar: %1",
-           variables.getCalendarFile() ).toLocal8Bit().data()
+                      variables.getCalendarFile() ).toLocal8Bit().data()
              << endl;
         return 1;
       }
@@ -623,7 +654,7 @@ int main( int argc, char *argv[] )
 
     if ( !exists ) {
       cout << i18n( "Calendar file not found %1",
-         variables.getCalendarFile() ).toLocal8Bit().data()
+                    variables.getCalendarFile() ).toLocal8Bit().data()
            << endl;
       cout << i18n( "Try --create to create new calendar file" ).toLocal8Bit().data()
            << endl;
@@ -643,9 +674,8 @@ int main( int argc, char *argv[] )
     // an X server, or dcopserver, then put back the following line which
     // supports all resources, not just the standard resource.
     // calendarResource = new StdCalendar();
-    calendarResource = new StdCalendar( KStandardDirs::locateLocal( "data",
-                                                     "korganizer/std.ics" ),
-                                        i18n( "Default Calendar" ) );
+    calendarResource = new StdCalendar(
+      KStandardDirs::locateLocal( "data", "korganizer/std.ics" ), i18n( "Default Calendar" ) );
   }
   if ( !args->isSet( "import" ) ) {
     variables.setCalendar( calendarResource );
@@ -776,9 +806,8 @@ int main( int argc, char *argv[] )
 
   // Cannot have a ending before starting
   if ( startdatetime > enddatetime ) {
-    cout << i18n(
-      "Ending Date/Time occurs before the Starting Date/Time"
-      ).toLocal8Bit().data() << endl;
+    cout << i18n( "Ending Date/Time occurs before the Starting Date/Time" ).toLocal8Bit().data()
+         << endl;
     return 1;
   }
 
@@ -798,13 +827,13 @@ int main( int argc, char *argv[] )
 
   if ( importFile ) {
     if ( konsolekalendar->importCalendar() ) {
-      cout << i18n( "Calendar %1 successfully imported" ,
-         variables.getImportFile() ).toLocal8Bit().data()
+      cout << i18n( "Calendar %1 successfully imported",
+                    variables.getImportFile() ).toLocal8Bit().data()
            << endl;
       return 0;
     } else {
-      cout << i18n( "Unable to import calendar: %1" ,
-         variables.getImportFile() ).toLocal8Bit().data()
+      cout << i18n( "Unable to import calendar: %1",
+                    variables.getImportFile() ).toLocal8Bit().data()
            << endl;
       return 1;
     }
@@ -812,12 +841,13 @@ int main( int argc, char *argv[] )
 
   if ( add ) {
     if ( !konsolekalendar->isEvent( startdatetime, enddatetime,
-                                     variables.getSummary() ) ) {
+                                    variables.getSummary() ) ) {
       kDebug(5860) << "main | modework |"
                    << "calling addEvent()";
       konsolekalendar->addEvent();
     } else {
-      cout << i18n( "Attempting to insert an event that already exists" ).toLocal8Bit().data() << endl;
+      cout << i18n( "Attempting to insert an event that already exists" ).toLocal8Bit().data()
+           << endl;
       return 1;
     }
   }
@@ -850,7 +880,7 @@ int main( int argc, char *argv[] )
       return 1;
     }
     if ( konsolekalendar->deleteEvent() != true ) {
-      cout << i18n( "No such event UID: delete event failed").toLocal8Bit().data()
+      cout << i18n( "No such event UID: delete event failed" ).toLocal8Bit().data()
            << endl;
       return 1;
     }
@@ -862,7 +892,7 @@ int main( int argc, char *argv[] )
     kDebug(5860) << "main | modework |"
                  << "calling showInstance() to view events";
     if ( !konsolekalendar->showInstance() ) {
-      cout << i18n( "Cannot open specified export file: %1" ,
+      cout << i18n( "Cannot open specified export file: %1",
                     variables.getExportFile() ).toLocal8Bit().data()
            << endl;
       return 1;

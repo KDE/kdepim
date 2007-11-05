@@ -53,7 +53,6 @@ KonsoleKalendarExports::KonsoleKalendarExports( KonsoleKalendarVariables *vars )
   m_firstEntry = true;
 }
 
-
 KonsoleKalendarExports::~KonsoleKalendarExports()
 {
 }
@@ -109,7 +108,7 @@ bool KonsoleKalendarExports::exportAsTxt( QTextStream *ts,
       << endl;
   if ( !event->location().isEmpty() ) {
     *ts << "\t"
-        <<event->location()
+        << event->location()
         << endl;
   } else {
     *ts << "\t"
@@ -237,9 +236,9 @@ bool KonsoleKalendarExports::exportAsCSV( QTextStream *ts,
         << delim << pF( "" );
   }
 
-  *ts << delim << pF( event->summary().replace( QChar('\n'), QChar(' ') ) )
-      << delim << pF( event->location().replace( QChar('\n'), QChar(' ') ) )
-      << delim << pF( event->description().replace( QChar('\n'), QChar(' ') ) )
+  *ts << delim << pF( event->summary().replace( QChar( '\n' ), QChar( ' ' ) ) )
+      << delim << pF( event->location().replace( QChar( '\n' ), QChar( ' ' ) ) )
+      << delim << pF( event->description().replace( QChar( '\n' ), QChar( ' ' ) ) )
       << delim << pF( event->uid() )
       << endl;
 

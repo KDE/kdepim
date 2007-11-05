@@ -164,7 +164,7 @@ void KonsoleKalendarVariables::setUseEvents( bool useEvents )
 
 bool KonsoleKalendarVariables::getUseEvents()
 {
-  return( m_bUseEvents );
+  return m_bUseEvents;
 }
 
 void KonsoleKalendarVariables::setUseTodos( bool useTodos )
@@ -174,7 +174,7 @@ void KonsoleKalendarVariables::setUseTodos( bool useTodos )
 
 bool KonsoleKalendarVariables::getUseTodos()
 {
-  return( m_bUseTodos );
+  return m_bUseTodos;
 }
 
 void KonsoleKalendarVariables::setUseJournals( bool useJournals )
@@ -184,7 +184,7 @@ void KonsoleKalendarVariables::setUseJournals( bool useJournals )
 
 bool KonsoleKalendarVariables::getUseJournals()
 {
-  return( m_bUseJournals );
+  return m_bUseJournals;
 }
 
 void KonsoleKalendarVariables::setCalendarFile( const QString &calendar )
