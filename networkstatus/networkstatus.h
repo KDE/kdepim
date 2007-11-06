@@ -71,7 +71,7 @@ protected slots:
 
 protected:
 	// QStringList networkUsers( const QString & networkName );
-	Network * networkForHost( const QString & host );
+	Network * networkForHost( const QString & host ) const;
 
 private:
 	class Private;

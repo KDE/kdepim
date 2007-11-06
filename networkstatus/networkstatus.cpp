@@ -92,7 +92,7 @@ int NetworkStatusModule::status( const QString & host )
 	Network * p = networkForHost( host );
 	if ( !p )
 	{
-		kdDebug() << k_funcinfo << " no networks have status for host '" << host << "'" << endl;
+		//kdDebug() << k_funcinfo << " no networks have status for host '" << host << "'" << endl;
 		return (int)NetworkStatus::NoNetworks;
 	}
 	else
@@ -196,15 +196,15 @@ bool NetworkStatusModule::reportFailure( const QString & host )
 /*
  * Determine the network to use for the supplied host
  */
-Network * NetworkStatusModule::networkForHost( const QString & host )
+Network * NetworkStatusModule::networkForHost( const QString & host ) const
 {
 	// return a null pointer if no networks are registered
 	if ( d->networks.isEmpty() )
 		return 0;
 	
-	NetworkList::iterator it = d->networks.begin();
+	NetworkList::const_iterator it = d->networks.begin();
 	Network * bestNetwork = *(it++);
-	NetworkList::iterator end = d->networks.end();
+	NetworkList::const_iterator end = d->networks.end();
  	for ( ; it != end; ++it )
 	{
 		if ( (*it)->reachabilityFor( host ) > bestNetwork->reachabilityFor( host ) )
