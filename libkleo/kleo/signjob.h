@@ -2,7 +2,7 @@
     signjob.h
 
     This file is part of libkleopatra, the KDE keymanagement library
-    Copyright (c) 2004 Klarälvdalens Datakonsult AB
+    Copyright (c) 2004, 2007 Klarälvdalens Datakonsult AB
 
     Libkleopatra is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License as
@@ -34,11 +34,15 @@
 #define __KLEO_SIGNJOB_H__
 
 #include "job.h"
-#include <QtCore/QByteArray>
 
 #include <gpgme++/global.h>
 
+#include <boost/shared_ptr.hpp>
+
 #include <vector>
+
+class QByteArray;
+class QIODevice;
 
 namespace GpgME {
   class Error;
@@ -73,9 +77,24 @@ namespace Kleo {
        Starts the signing operation. \a signers is the list of keys to
        sign \a plainText with. Empty (null) keys are ignored.
     */
-    virtual GpgME::Error start( const std::vector<GpgME::Key> & signers,
-				const QByteArray & plainText,
-				GpgME::SignatureMode mode ) = 0;
+    virtual KDE_DEPRECATED GpgME::Error start( const std::vector<GpgME::Key> & signers,
+                                               const QByteArray & plainText,
+                                               GpgME::SignatureMode mode ) = 0;
+
+    /*!
+      \overload
+
+      If \a signature is non-null the signature is written
+      there. Otherwise, it will be delivered in the second argument of
+      result().
+
+      \throws GpgME::Exception if starting fails
+    */
+    virtual void start( const std::vector<GpgME::Key> & signers,
+                        const boost::shared_ptr<QIODevice> & plainText,
+                        const boost::shared_ptr<QIODevice> & signature,
+                        GpgME::SignatureMode mode ) = 0;
+
     virtual KDE_DEPRECATED GpgME::SigningResult exec( const std::vector<GpgME::Key> & signers,
 				       const QByteArray & plainText,
 				       GpgME::SignatureMode mode,

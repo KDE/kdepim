@@ -2,7 +2,7 @@
     signencryptjob.h
 
     This file is part of libkleopatra, the KDE keymanagement library
-    Copyright (c) 2004 Klarälvdalens Datakonsult AB
+    Copyright (c) 2004, 2007 Klarälvdalens Datakonsult AB
 
     Libkleopatra is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License as
@@ -33,13 +33,17 @@
 #ifndef __KLEO_SIGNENCRYPTJOB_H__
 #define __KLEO_SIGNENCRYPTJOB_H__
 
-#include <gpgme++/context.h> // for Context::SignatureMode (or should
-			     // we roll our own enum here?)
 #include "job.h"
-#include <QtCore/QByteArray>
+
+#include <gpgme++/global.h>
+
+#include <boost/shared_ptr.hpp>
 
 #include <vector>
 #include <utility>
+
+class QByteArray;
+class QIODevice;
 
 namespace GpgME {
   class Error;
@@ -81,10 +85,25 @@ namespace Kleo {
        \em recipient keys will not be performed, but full validity
        assumed for all \em recipient keys without further checks.
     */
-    virtual GpgME::Error start( const std::vector<GpgME::Key> & signers,
-				const std::vector<GpgME::Key> & recipients,
-				const QByteArray & plainText,
-				bool alwaysTrust=false ) = 0;
+    virtual KDE_DEPRECATED GpgME::Error start( const std::vector<GpgME::Key> & signers,
+                                               const std::vector<GpgME::Key> & recipients,
+                                               const QByteArray & plainText,
+                                               bool alwaysTrust=false ) = 0;
+
+    /*!
+      \overload
+
+      If \a cipherText is non-null, the ciphertext is written
+      there. Otherwise, it will be delivered in the third argument of
+      result().
+
+      \throws GpgME::Exception if starting fails
+    */
+    virtual void start( const std::vector<GpgME::Key> & signers,
+                        const std::vector<GpgME::Key> & recipients,
+                        const boost::shared_ptr<QIODevice> & plainText,
+                        const boost::shared_ptr<QIODevice> & cipherText=boost::shared_ptr<QIODevice>(),
+                        bool alwaysTrust=false ) = 0;
 
     virtual KDE_DEPRECATED std::pair<GpgME::SigningResult,GpgME::EncryptionResult>
       exec( const std::vector<GpgME::Key> & signers,
