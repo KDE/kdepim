@@ -3,5 +3,5 @@
 MESSAGE FD
 /sendfd test.data.sig r
 INPUT FD
-VERIFY --silent --protocol=OpenPGP
+VERIFY --protocol=OpenPGP
 BYE

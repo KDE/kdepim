@@ -3,5 +3,5 @@
 MESSAGE FD
 /sendfd test.data-detached-signature.pem r
 INPUT FD
-VERIFY --silent --protocol=CMS
+VERIFY --protocol=CMS
 BYE

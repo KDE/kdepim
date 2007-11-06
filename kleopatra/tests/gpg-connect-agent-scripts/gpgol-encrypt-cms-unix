@@ -4,5 +4,5 @@ RECIPIENT <cms@kleo.example.org>
 INPUT FD
 /sendfd test.data.gpgol-encrypt-cms.pem w
 OUTPUT FD
-ENCRYPT --protocol=CMS --silent
+ENCRYPT --protocol=CMS
 BYE

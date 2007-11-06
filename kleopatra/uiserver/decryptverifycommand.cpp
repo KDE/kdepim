@@ -234,7 +234,7 @@ namespace {
             return output;
         }
 
-        void finalizeOutput( bool silent );
+        void finalizeOutput();
 
     };
 
@@ -806,7 +806,7 @@ void DecryptVerifyCommand::Private::addResult( unsigned int id, const DVResult &
             try {
 
                 try {
-                    inputList[id]->finalizeOutput( q->hasOption( "silent" ) );
+                    inputList[id]->finalizeOutput();
                 } catch ( const assuan_exception & e ) {
                     // record these errors, but ignore them:
                     result->error = e.error_code();
@@ -845,8 +845,7 @@ void DecryptVerifyCommand::Private::addResult( unsigned int id, const DVResult &
 
 void DecryptVerifyCommand::Private::finished()
 {
-    if ( q->hasOption("silent") ) //otherwise we'll be ending when the dialog closes
-        slotDialogClosed();
+    slotDialogClosed();
 }
 
 static bool obtainOverwritePermission( const QString & fileName ) {
@@ -855,7 +854,7 @@ static bool obtainOverwritePermission( const QString & fileName ) {
                                        i18n("Overwrite Existing File?") ) == KMessageBox::Yes ;
 }
 
-void Input::finalizeOutput( bool silent ) {
+void Input::finalizeOutput() {
     if ( !output.tmp )
         return;
     assuan_assert( output.tmp->isOpen() );
@@ -873,7 +872,7 @@ void Input::finalizeOutput( bool silent ) {
             return;
         }
         const int savedErrno = errno;
-        if ( overwrite || !silent && ( overwrite = obtainOverwritePermission( output.fileName ) ) )
+        if ( overwrite || ( overwrite = obtainOverwritePermission( output.fileName ) ) )
             QFile::remove( output.fileName );
         else
             throw assuan_exception( gpg_error_from_errno( savedErrno ),

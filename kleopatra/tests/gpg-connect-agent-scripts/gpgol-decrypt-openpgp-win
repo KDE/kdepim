@@ -5,5 +5,5 @@
 INPUT FD=$in
 /open out test.data.gpgol-decrypt-openpgp.out w
 OUTPUT FD=$out
-DECRYPT --protocol=OpenPGP --silent
+DECRYPT --protocol=OpenPGP
 BYE

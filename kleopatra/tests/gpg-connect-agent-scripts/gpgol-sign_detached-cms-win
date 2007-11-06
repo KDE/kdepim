@@ -6,5 +6,5 @@ SENDER <cms@kleo.example.org>
 INPUT FD=$in
 /open out test.data.gpgol-sign_detached-cms.pem w
 OUTPUT FD=$out
-SIGN --detached --protocol=CMS --silent
+SIGN --detached --protocol=CMS
 BYE

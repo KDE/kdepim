@@ -3,5 +3,5 @@
 INPUT FD
 /sendfd test.data.gpgol-decrypt-cms.out w
 OUTPUT FD
-DECRYPT --protocol=CMS --silent
+DECRYPT --protocol=CMS
 BYE

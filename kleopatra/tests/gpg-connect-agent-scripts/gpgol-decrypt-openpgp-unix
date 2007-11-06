@@ -3,5 +3,5 @@
 INPUT FD
 /sendfd test.data.gpgol-decrypt-openpgp.out w
 OUTPUT FD
-DECRYPT --protocol=OpenPGP --silent
+DECRYPT --protocol=OpenPGP
 BYE

@@ -6,5 +6,5 @@ RECIPIENT <foo@bar.com>
 INPUT FD=$in
 /open out test.data.gpgol-encrypt-openpgp.asc w
 OUTPUT FD=$out
-ENCRYPT --protocol=OpenPGP --silent
+ENCRYPT --protocol=OpenPGP
 BYE

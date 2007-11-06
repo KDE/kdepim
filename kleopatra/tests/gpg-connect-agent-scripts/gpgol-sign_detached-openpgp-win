@@ -6,5 +6,5 @@ SENDER <foo@bar.com>
 INPUT FD=$in
 /open out test.data.gpgol-sign_detached-openpgp.asc w
 OUTPUT FD=$out
-SIGN --detached --protocol=OpenPGP --silent
+SIGN --detached --protocol=OpenPGP
 BYE

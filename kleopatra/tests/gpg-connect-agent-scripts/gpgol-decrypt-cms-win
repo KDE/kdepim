@@ -5,5 +5,5 @@
 INPUT FD=$in
 /open out test.data.gpgol-decrypt-cms.out w
 OUTPUT FD=$out
-DECRYPT --protocol=CMS --silent
+DECRYPT --protocol=CMS
 BYE
