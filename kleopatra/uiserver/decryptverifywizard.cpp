@@ -234,6 +234,7 @@ DecryptVerifyWizard::Private::Private( DecryptVerifyWizard * qq )
       operationsPage( q ),
       resultPage( q )
 {
+    q->setOptions( q->options() | NoBackButtonOnStartPage | NoBackButtonOnLastPage );
     q->addPage( &operationsPage );
     q->addPage( &resultPage );
 }
@@ -253,6 +254,7 @@ OperationsPage::OperationsPage( QWidget * p )
     setSubTitle( i18n("FIXME Here, you can check and, if needed, override "
                       "the operations Kleopatra detected for the input given.") );
     setCommitPage( true );
+    setButtonText( QWizard::CommitButton, i18n("&Decrypt/Verify") );
 }
 
 OperationsPage::~OperationsPage() {}
