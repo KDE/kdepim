@@ -49,7 +49,7 @@ const unsigned int BUFFER_SIZE = 4096;
 const bool ALLOW_QIODEVICE_BUFFERING = true;
 
 // comment to get trace output:
-//#define qDebug if(1){}else qDebug
+#define qDebug if(1){}else qDebug
 
 namespace {
 class Reader : public QThread {
