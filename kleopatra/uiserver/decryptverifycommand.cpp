@@ -296,7 +296,6 @@ public:
     }
 
 public Q_SLOTS:
-    void finished();
     void slotProgress( const QString & what, int current, int total );
 
 public:
@@ -840,12 +839,7 @@ void DecryptVerifyCommand::Private::addResult( unsigned int id, const DVResult &
     }
 
     if ( kdtools::all( inputList.begin(), inputList.end(), bind( &Input::result, _1 ) ) )
-        finished();
-}
-
-void DecryptVerifyCommand::Private::finished()
-{
-    slotDialogClosed();
+        slotDialogClosed();
 }
 
 static bool obtainOverwritePermission( const QString & fileName ) {
