@@ -91,7 +91,7 @@ void Kleo::QGpgMEDecryptJob::start( const boost::shared_ptr<QIODevice> & cipherT
     hookupContextToEventLoopInteractor();
 
     if ( const GpgME::Error err = mCtx->startDecryption( *mInData, *mOutData ) )
-        doThrow( err, i18n("Can't start decrypt job").toLocal8Bit().constData() );
+        doThrow( err, i18n("Can't start decrypt job") );
 }
 
 void Kleo::QGpgMEDecryptJob::doOperationDoneEvent( const GpgME::Error & ) {
