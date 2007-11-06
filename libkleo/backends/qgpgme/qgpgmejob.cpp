@@ -2,7 +2,7 @@
     qgpgmejob.cpp
 
     This file is part of libkleopatra, the KDE keymanagement library
-    Copyright (c) 2004 Klarälvdalens Datakonsult AB
+    Copyright (c) 2004, 2007 Klarälvdalens Datakonsult AB
 
     Libkleopatra is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License as
@@ -220,15 +220,14 @@ const char* * Kleo::QGpgMEJob::patterns() const {
   return 0;
 }
 
-GpgME::Error Kleo::QGpgMEJob::setSigningKeys( const std::vector<GpgME::Key> & signers ) {
+void Kleo::QGpgMEJob::setSigningKeys( const std::vector<GpgME::Key> & signers ) {
   mCtx->clearSigningKeys();
-  for ( std::vector<GpgME::Key>::const_iterator it = signers.begin() ; it != signers.end() ; ++it ) {
-    if ( (*it).isNull() )
+  for ( std::vector<GpgME::Key>::const_iterator it = signers.begin(), end = signers.end() ; it != end ; ++it ) {
+    if ( it->isNull() )
       continue;
     if ( const GpgME::Error err = mCtx->addSigningKey( *it ) )
-      return err;
+        return doThrow( err, i18n("Error adding signer %1.", QString::fromLatin1( it->primaryFingerprint() ) ) );
   }
-  return GpgME::Error();
 }
 
 void Kleo::QGpgMEJob::createInData( const boost::shared_ptr<QIODevice> & in ) {

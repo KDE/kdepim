@@ -2,7 +2,7 @@
     qgpgmesignencryptjob.cpp
 
     This file is part of libkleopatra, the KDE keymanagement library
-    Copyright (c) 2004 Klarälvdalens Datakonsult AB
+    Copyright (c) 2004, 2007 Klarälvdalens Datakonsult AB
 
     Libkleopatra is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License as
@@ -36,11 +36,11 @@
 #include <kmessagebox.h>
 
 #include <qgpgme/eventloopinteractor.h>
-#include <qgpgme/dataprovider.h>
 
 #include <gpgme++/context.h>
 #include <gpgme++/data.h>
 #include <gpgme++/key.h>
+#include <gpgme++/exception.h>
 
 #include <assert.h>
 
@@ -63,8 +63,11 @@ GpgME::Error Kleo::QGpgMESignEncryptJob::setup( const std::vector<GpgME::Key> & 
   createInData( plainText );
   createOutData();
 
-  if ( const GpgME::Error err = setSigningKeys( signers ) )
-    return err;
+  try {
+      setSigningKeys( signers );
+  } catch ( const GpgME::Exception & e ) {
+      return e.error();
+  }
 
   hookupContextToEventLoopInteractor();
 
@@ -82,6 +85,43 @@ GpgME::Error Kleo::QGpgMESignEncryptJob::start( const std::vector<GpgME::Key> & 
   mResult.first = GpgME::SigningResult( err );
   mResult.second = GpgME::EncryptionResult();
   return err;
+}
+
+void Kleo::QGpgMESignEncryptJob::setup( const std::vector<GpgME::Key> & signers,
+                                        const std::vector<GpgME::Key> & recipients,
+                                        const boost::shared_ptr<QIODevice> & plainText,
+                                        const boost::shared_ptr<QIODevice> & cipherText, bool alwaysTrust )
+{
+  assert( !mInData );
+  assert( !mOutData );
+
+  createInData( plainText );
+  if ( cipherText )
+      createOutData( cipherText );
+  else
+      createOutData();
+
+  setSigningKeys( signers );
+  hookupContextToEventLoopInteractor();
+
+  const GpgME::Context::EncryptionFlags flags =
+    alwaysTrust ? GpgME::Context::AlwaysTrust : GpgME::Context::None ;
+  if ( const GpgME::Error err = mCtx->startCombinedSigningAndEncryption( recipients, *mInData, *mOutData, flags ) )
+      doThrow( err, i18n("Can't start combined sign-encrypt job") );
+}
+
+void Kleo::QGpgMESignEncryptJob::start( const std::vector<GpgME::Key> & signers,
+                                        const std::vector<GpgME::Key> & recipients,
+                                        const boost::shared_ptr<QIODevice> & plainText,
+                                        const boost::shared_ptr<QIODevice> & cipherText, bool alwaysTrust )
+{
+    try {
+        setup( signers, recipients, plainText, cipherText, alwaysTrust );
+    } catch ( const GpgME::Exception & e ) {
+        mResult.first = GpgME::SigningResult( e.error() );
+        mResult.second = GpgME::EncryptionResult();
+        throw;
+    }
 }
 
 std::pair<GpgME::SigningResult,GpgME::EncryptionResult>

@@ -2,7 +2,7 @@
     qgpgmeencryptjob.cpp
 
     This file is part of libkleopatra, the KDE keymanagement library
-    Copyright (c) 2004 Klarälvdalens Datakonsult AB
+    Copyright (c) 2004, 2007 Klarälvdalens Datakonsult AB
 
     Libkleopatra is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License as
@@ -36,11 +36,11 @@
 #include <kmessagebox.h>
 
 #include <qgpgme/eventloopinteractor.h>
-#include <qgpgme/dataprovider.h>
 
 #include <gpgme++/context.h>
 #include <gpgme++/encryptionresult.h>
 #include <gpgme++/data.h>
+#include <gpgme++/exception.h>
 
 #include <assert.h>
 
@@ -75,6 +75,40 @@ GpgME::Error Kleo::QGpgMEEncryptJob::start( const std::vector<GpgME::Key> & reci
     deleteLater();
   mResult = GpgME::EncryptionResult( err );
   return err;
+}
+
+void Kleo::QGpgMEEncryptJob::setup( const std::vector<GpgME::Key> & recipients,
+                                    const boost::shared_ptr<QIODevice> & plainText,
+                                    const boost::shared_ptr<QIODevice> & cipherText, bool alwaysTrust )
+{
+  assert( !mInData );
+  assert( !mOutData );
+
+  createInData( plainText );
+  if ( cipherText )
+      createOutData( cipherText );
+  else
+      createOutData();
+
+  hookupContextToEventLoopInteractor();
+
+  const GpgME::Context::EncryptionFlags flags =
+    alwaysTrust ? GpgME::Context::AlwaysTrust : GpgME::Context::None;
+  if ( const GpgME::Error err = mCtx->startEncryption( recipients, *mInData, *mOutData, flags ) )
+      doThrow( err, i18n("Can't start encrypt job") );
+}
+
+void Kleo::QGpgMEEncryptJob::start( const std::vector<GpgME::Key> & recipients,
+                                    const boost::shared_ptr<QIODevice> & plainText,
+                                    const boost::shared_ptr<QIODevice> & cipherText,
+                                    bool alwaysTrust )
+{
+    try {
+        setup( recipients, plainText, cipherText, alwaysTrust );
+    } catch ( const GpgME::Exception & e ) {
+        mResult = GpgME::EncryptionResult( e.error() );
+        throw;
+    }
 }
 
 GpgME::EncryptionResult Kleo::QGpgMEEncryptJob::exec( const std::vector<GpgME::Key> & recipients,

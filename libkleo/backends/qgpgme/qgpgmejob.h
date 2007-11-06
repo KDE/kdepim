@@ -2,7 +2,7 @@
     qgpgmejob.h
 
     This file is part of libkleopatra, the KDE keymanagement library
-    Copyright (c) 2004 Klarälvdalens Datakonsult AB
+    Copyright (c) 2004, 2007 Klarälvdalens Datakonsult AB
 
     Libkleopatra is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License as
@@ -111,8 +111,8 @@ namespace Kleo {
     QByteArray outData() const;
     /*! Convenience function that throw a GpgME::Exception after calling deleteLater() */
     void doThrow( const GpgME::Error & err, const QString & msg );
-    /*! Sets the list of signing keys */
-    GpgME::Error setSigningKeys( const std::vector<GpgME::Key> & signers );
+    /*! Sets the list of signing keys. Throws GpgME::Exception on error. */
+    void setSigningKeys( const std::vector<GpgME::Key> & signers );
     /*! Call this to implement a slotOperationDoneEvent() */
     void doSlotOperationDoneEvent( GpgME::Context * context, const GpgME::Error & e );
 

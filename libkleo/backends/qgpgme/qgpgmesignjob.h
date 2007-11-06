@@ -2,7 +2,7 @@
     qgpgmesignjob.h
 
     This file is part of libkleopatra, the KDE keymanagement library
-    Copyright (c) 2004 Klarälvdalens Datakonsult AB
+    Copyright (c) 2004, 2007 Klarälvdalens Datakonsult AB
 
     Libkleopatra is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License as
@@ -51,13 +51,19 @@ namespace Kleo {
   class QGpgMESignJob : public SignJob, private QGpgMEJob {
     Q_OBJECT QGPGME_JOB
   public:
-    QGpgMESignJob( GpgME::Context * context );
+    explicit QGpgMESignJob( GpgME::Context * context );
     ~QGpgMESignJob();
 
     /*! \reimp from SignJob */
     GpgME::Error start( const std::vector<GpgME::Key> & signers,
 			const QByteArray & plainText,
 			GpgME::SignatureMode mode );
+
+    /*! \reimp from SignJob */
+    void start( const std::vector<GpgME::Key> & signers,
+                const boost::shared_ptr<QIODevice> & plainText,
+                const boost::shared_ptr<QIODevice> & signature,
+                GpgME::SignatureMode mode );
 
     /*! \reimp from SignJob */
     GpgME::SigningResult exec( const std::vector<GpgME::Key> & signers,
@@ -76,6 +82,7 @@ namespace Kleo {
   private:
     void doOperationDoneEvent( const GpgME::Error & e );
     GpgME::Error setup( const std::vector<GpgME::Key> &, const QByteArray &, GpgME::SignatureMode );
+    void setup( const std::vector<GpgME::Key> &, const boost::shared_ptr<QIODevice> &, const boost::shared_ptr<QIODevice> &, GpgME::SignatureMode );
 
   private:
     GpgME::SigningResult mResult;

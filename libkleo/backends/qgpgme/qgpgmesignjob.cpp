@@ -2,7 +2,7 @@
     qgpgmesignjob.cpp
 
     This file is part of libkleopatra, the KDE keymanagement library
-    Copyright (c) 2004 Klarälvdalens Datakonsult AB
+    Copyright (c) 2004, 2007 Klarälvdalens Datakonsult AB
 
     Libkleopatra is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License as
@@ -39,6 +39,7 @@
 #include <gpgme++/signingresult.h>
 #include <gpgme++/data.h>
 #include <gpgme++/key.h>
+#include <gpgme++/exception.h>
 
 #include <kmessagebox.h>
 #include <klocale.h>
@@ -63,8 +64,11 @@ GpgME::Error Kleo::QGpgMESignJob::setup( const std::vector<GpgME::Key> & signers
   createInData( plainText );
   createOutData();
 
-  if ( const GpgME::Error err = setSigningKeys( signers ) )
-    return err;
+  try {
+      setSigningKeys( signers );
+  } catch ( const GpgME::Exception & e ) {
+      return e.error();
+  }
 
   hookupContextToEventLoopInteractor();
 
@@ -79,6 +83,40 @@ GpgME::Error Kleo::QGpgMESignJob::start( const std::vector<GpgME::Key> & signers
     deleteLater();
   mResult = GpgME::SigningResult( err );
   return err;
+}
+
+void Kleo::QGpgMESignJob::setup( const std::vector<GpgME::Key> & signers,
+                                 const boost::shared_ptr<QIODevice> & plainText,
+                                 const boost::shared_ptr<QIODevice> & signature,
+                                 GpgME::SignatureMode mode )
+{
+    assert( !mInData );
+    assert( !mOutData );
+
+    createInData( plainText );
+    if ( signature )
+        createOutData( signature );
+    else
+        createOutData();
+
+    setSigningKeys( signers );
+    hookupContextToEventLoopInteractor();
+
+    if ( const GpgME::Error err = mCtx->startSigning( *mInData, *mOutData, mode ) )
+        doThrow( err, i18n("Can't start sign job") );
+}
+
+void Kleo::QGpgMESignJob::start( const std::vector<GpgME::Key> & signers,
+                                 const boost::shared_ptr<QIODevice> & plainText,
+                                 const boost::shared_ptr<QIODevice> & signature,
+                                 GpgME::SignatureMode mode )
+{
+    try {
+        setup( signers, plainText, signature, mode );
+    } catch ( const GpgME::Exception & e ) {
+        mResult = GpgME::SigningResult( e.error() );
+        throw;
+    }
 }
 
 GpgME::SigningResult Kleo::QGpgMESignJob::exec( const std::vector<GpgME::Key> & signers,
