@@ -2,6 +2,7 @@
     This file is part of libkdepim.
 
     Copyright (c) 2002 Cornelius Schumacher <schumacher@kde.org>
+    Copyright (c) 2002 David Jarvie <software@astrojar.org.uk>
     Copyright (c) 2003-2004 Reinhold Kainhofer <reinhold@kainhofer.com>
     Copyright (c) 2004 Tobias Koenig <tokoe@kde.org>
 
@@ -180,18 +181,11 @@ void KDateEdit::dateSelected( QDate date )
   if (assignDate( date ) ) {
     updateView();
     emit dateChanged( date );
+    emit dateEntered( date );
 
     if ( date.isValid() ) {
       mPopup->hide();
     }
-  }
-}
-
-void KDateEdit::dateEntered( QDate date )
-{
-  if (assignDate( date ) ) {
-    updateView();
-    emit dateChanged( date );
   }
 }
 
@@ -206,6 +200,7 @@ void KDateEdit::lineEnterPressed()
       updateView();
 
     emit dateChanged( date );
+    emit dateEntered( date );
   }
 }
 
@@ -279,6 +274,7 @@ bool KDateEdit::eventFilter( QObject *object, QEvent *event )
           if ( assignDate( date ) ) {
             updateView();
             emit dateChanged( date );
+            emit dateEntered( date );
             return true;
           }
         }

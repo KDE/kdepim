@@ -2,6 +2,7 @@
     This file is part of libkdepim.
 
     Copyright (c) 2002 Cornelius Schumacher <schumacher@kde.org>
+    Copyright (c) 2002 David Jarvie <software@astrojar.org.uk>
     Copyright (c) 2004 Tobias Koenig <tokoe@kde.org>
 
     This library is free software; you can redistribute it and/or
@@ -81,6 +82,14 @@ class KDE_EXPORT KDateEdit : public QComboBox
 
   signals:
     /**
+      This signal is emitted whenever the user has entered a new date.
+      When the user changes the date by editing the line edit field,
+      the signal is not emitted until focus leaves the line edit field.
+      The passed date can be invalid.
+     */
+    void dateEntered( const QDate &date );
+
+    /**
       This signal is emitted whenever the user modifies the date.
       The passed date can be invalid.
      */
@@ -98,7 +107,6 @@ class KDE_EXPORT KDateEdit : public QComboBox
   protected slots:
     void lineEnterPressed();
     void slotTextChanged( const QString& );
-    void dateEntered( QDate );
     void dateSelected( QDate );
 
   protected:
