@@ -688,6 +688,8 @@ void KMComposeWin::autoSaveMessage()
     return;
   }
   KMMessage *msg = mComposedMessages.first();
+  if ( !msg ) // a bit of extra defensiveness
+    return;
 
   kdDebug(5006) << k_funcinfo << "opening autoSaveFile " << mAutoSaveFilename
                 << endl;
