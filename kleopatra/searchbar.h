@@ -1,5 +1,5 @@
 /* -*- mode: c++; c-basic-offset:4 -*-
-    certlistview.cpp
+    searchbar.h
 
     This file is part of Kleopatra, the KDE keymanager
     Copyright (c) 2007 Klarälvdalens Datakonsult AB
@@ -30,50 +30,32 @@
     your version.
 */
 
-#include "certlistview.h"
-#include <kurl.h>
-#include <kdebug.h>
-#include <QDragEnterEvent>
-#include <QDragLeaveEvent>
-#include <QDragMoveEvent>
-#include <QDropEvent>
+#ifndef __KLEOPATRA_SEARCHBAR_H__
+#define __KLEOPATRA_SEARCHBAR_H__
 
-CertKeyListView::CertKeyListView( const ColumnStrategy * strategy,
-                                  const DisplayStrategy * display,
-                                  QWidget * parent, Qt::WFlags f )
-  : Kleo::KeyListView( strategy, display, parent, f )
-{
-  viewport()->setAcceptDrops( true );
-}
+#include <QWidget>
 
-void CertKeyListView::contentsDragEnterEvent( QDragEnterEvent * event )
-{
-  //const char* fmt;
-  //for (int i=0; (fmt = event->format(i)); i++)
-  //  kDebug() << fmt;
+#include <utils/pimpl_ptr.h>
 
-  // We only accept URL drops. We'll check the mimetype later on.
-  event->setAccepted( KUrl::List::canDecode( event->mimeData() ) );
-}
+class SearchBar : public QWidget {
+    Q_OBJECT
+public:
+    explicit SearchBar( QWidget * parent=0, Qt::WindowFlags f=0 );
+    ~SearchBar();
 
-void CertKeyListView::contentsDragMoveEvent( QDragMoveEvent * event )
-{
-  event->setAccepted( KUrl::List::canDecode( event->mimeData() ) );
-}
+    QString text() const;
 
+public Q_SLOTS:
 
-void CertKeyListView::contentsDragLeaveEvent( QDragLeaveEvent * )
-{
-    // Don't let QListView do its stuff
-}
+    void setText( const QString& text );
 
-void CertKeyListView::contentsDropEvent( QDropEvent * event )
-{
-  KUrl::List lst = KUrl::List::fromMimeData( event->mimeData() );
-  if ( !lst.isEmpty() ) {
-    event->accept();
-    emit dropped( lst );
-  }
-}
+Q_SIGNALS:
 
-#include "certlistview.moc"
+    void textChanged( const QString& );
+
+private:
+    class Private;
+    kdtools::pimpl_ptr<Private> d;
+};
+
+#endif // __KLEOPATRA_SEARCHBAR_H__ 

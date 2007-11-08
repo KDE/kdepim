@@ -31,40 +31,8 @@
 */
 
 #include "tabwidget.h"
+#include "tabwidget_p.h"
 
-class Page : public QWidget {
-    Q_OBJECT
-    Q_PROPERTY( QString filter READ filter WRITE setFilter NOTIFY filterChanged )
-public:
-    explicit Page( QWidget * parent=0 );
-    ~Page();
-
-    QString filter() const { return m_filter; }
-
-public Q_SLOTS:
-    void setFilter( const QString & str ) {
-	if ( str == m_filter )
-	    return;
-	m_filter = str;
-	emit filterChanged( str );
-    }
-
-Q_SIGNALS:
-    void filterChanged( const QString & );
-
-protected:
-    void resizeEvent( QResizeEvent * e ) {
-	QWidget::resizeEvent( e );
-	m_view.resize( e->size() );
-    }
-
-private:
-    QString m_filter;
-
-    QTreeView m_view;
-    QSortFilterProxyModel m_proxy;
-    
-};
 
 Page::Page( QWidget * p )
     : QWidget( p ),
@@ -77,29 +45,25 @@ Page::Page( QWidget * p )
 
 Page::~Page() {}
 
-
-
-
-
-
-
-
-
-
-
-
-
 class TabWidget::Private {
-    firend class ::TabWidget;
+    friend class ::TabWidget;
     TabWidget * const q;
-private:
-    explicit Private( TabWidget * qq );
-    ~Private();
 
-private:
+public:
+    explicit Private( TabWidget * qq ) : q( qq ) {};
+    ~Private() {};
+
 };
 
+void TabWidget::setFilter( const QString & str )
+{
+    emit filterChanged( str );
+}
 
+TabWidget::TabWidget( QWidget * parent, Qt::WindowFlags flags ) : KTabWidget( parent, flags ), d( new Private( this ) )
+{
+}
 
-#include "moc_tabwidget.cpp"
-#include "tabwidget.cpp"
+TabWidget::~TabWidget()
+{
+}

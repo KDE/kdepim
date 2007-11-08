@@ -32,6 +32,9 @@
 
 #include "mainwindow.h"
 
+#include "searchbar.h"
+#include "tabwidget.h"
+
 #include "models/keylistmodel.h"
 #include "models/keylistsortfilterproxymodel.h"
 #include "controllers/keylistcontroller.h"
@@ -73,42 +76,28 @@ private:
     };
 
     struct UI {
-	QToolBar searchToolBar;
-	QLabel    searchLabel;
-	QLineEdit searchLineEdit;
-	QComboBox searchComboBox;
 
-	QToolBar  actionToolBar;
-	KTabWidget tabWidget;
+    TabWidget * tabWidget;
+
+	QToolBar actionToolBar;
 	std::vector<Page*> pages;
 	Kleo::ProgressBar progressBar;
-	QLabel    statusLabel;
+	QLabel statusLabel;
 
 	explicit UI( MainWindow * q )
-	    : searchToolBar( q ),
-	      searchLabel( tr("Find:"), &searchToolBar ),
-	      searchLineEdit( &searchToolBar ),
-	      searchComboBox( &searchToolBar ),
+	    : 
 	      actionToolBar( q ),
 	      //treeView( q ),
 	      progressBar( q->statusBar() ),
 	      statusLabel( q->statusBar() )
 	{
-	    KDAB_SET_OBJECT_NAME( searchToolBar );
-	    KDAB_SET_OBJECT_NAME( searchLabel );
-	    KDAB_SET_OBJECT_NAME( searchLineEdit );
-	    KDAB_SET_OBJECT_NAME( searchComboBox );
+        tabWidget = new TabWidget;
+        q->setCentralWidget( tabWidget );
+	    KDAB_SET_OBJECT_NAME( tabWidget );
 	    KDAB_SET_OBJECT_NAME( actionToolBar );
 	    //KDAB_SET_OBJECT_NAME( treeView );
 	    KDAB_SET_OBJECT_NAME( progressBar );
 	    KDAB_SET_OBJECT_NAME( statusLabel );
-
-	    searchToolBar.addWidget( &searchLabel );
-	    searchToolBar.addWidget( &searchLineEdit );
-	    searchToolBar.addWidget( &searchComboBox );
-	    searchComboBox.hide(); // ### not yet implemented
-
-	    searchToolBar.setAllowedAreas( Qt::TopToolBarArea|Qt::BottomToolBarArea );
 	}
     } ui;
 };
@@ -123,6 +112,7 @@ MainWindow::Private::~Private()
 
 MainWindow::MainWindow( QWidget* parent, Qt::WindowFlags flags ) : KXmlGuiWindow( parent, flags ), d( new Private( this ) )
 {
+    createGUI( "kleopatraui.rc" );
 }
 
 MainWindow::~MainWindow()

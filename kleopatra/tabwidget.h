@@ -40,8 +40,8 @@
 class TabWidget : public KTabWidget {
     Q_OBJECT
 public:
-    explicit KTabWidget( QWidget * parent=0, Qt::WindowFlags f=0 );
-    ~KTabWidget();
+    explicit TabWidget( QWidget * parent=0, Qt::WindowFlags f=0 );
+    ~TabWidget();
 
 public Q_SLOTS:
     void setFilter( const QString & str );
@@ -49,6 +49,9 @@ public Q_SLOTS:
 Q_SIGNALS:
     void filterChanged( const QString & str );
 
+private:
+    class Private;
+    kdtools::pimpl_ptr<Private> d;
 };
 
 

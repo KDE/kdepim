@@ -1,5 +1,5 @@
 /* -*- mode: c++; c-basic-offset:4 -*-
-    certlistview.cpp
+    searchbar.cpp
 
     This file is part of Kleopatra, the KDE keymanager
     Copyright (c) 2007 Klarälvdalens Datakonsult AB
@@ -30,50 +30,58 @@
     your version.
 */
 
-#include "certlistview.h"
-#include <kurl.h>
-#include <kdebug.h>
-#include <QDragEnterEvent>
-#include <QDragLeaveEvent>
-#include <QDragMoveEvent>
-#include <QDropEvent>
+#include "searchbar.h"
 
-CertKeyListView::CertKeyListView( const ColumnStrategy * strategy,
-                                  const DisplayStrategy * display,
-                                  QWidget * parent, Qt::WFlags f )
-  : Kleo::KeyListView( strategy, display, parent, f )
+#include <QLabel>
+
+#include <QComboBox>
+#include <QLineEdit>
+#include <KLocale>
+
+#include <QHBoxLayout>
+
+class SearchBar::Private {
+    friend class ::SearchBar;
+    SearchBar * const q;
+public:
+    explicit Private( SearchBar * qq );
+    ~Private();
+
+    QLineEdit * lineEdit;
+    QComboBox * combo;
+};
+
+
+SearchBar::Private::Private( SearchBar * qq )
+  : q( qq )
 {
-  viewport()->setAcceptDrops( true );
+    QHBoxLayout * layout = new QHBoxLayout( q );
+    QLabel * label = new QLabel;
+    label->setText( i18n( "Find: " ) );
+    layout->addWidget( label );
+    lineEdit = new QLineEdit;
+    connect( lineEdit, SIGNAL( textChanged( QString ) ),
+             q, SIGNAL( textChanged( QString ) ) );
+    label->setBuddy( lineEdit );
+    layout->addWidget( lineEdit, /*stretch=*/1 );
+    combo = new QComboBox;
+    layout->addWidget( combo );
 }
 
-void CertKeyListView::contentsDragEnterEvent( QDragEnterEvent * event )
-{
-  //const char* fmt;
-  //for (int i=0; (fmt = event->format(i)); i++)
-  //  kDebug() << fmt;
+SearchBar::Private::~Private() {}
 
-  // We only accept URL drops. We'll check the mimetype later on.
-  event->setAccepted( KUrl::List::canDecode( event->mimeData() ) );
+
+
+SearchBar::SearchBar( QWidget * parent, Qt::WFlags f )
+  : QWidget( parent, f ), d( new Private( this ) )
+{
+    
 }
 
-void CertKeyListView::contentsDragMoveEvent( QDragMoveEvent * event )
+SearchBar::~SearchBar() {}
+
+void SearchBar::setText( const QString& text )
 {
-  event->setAccepted( KUrl::List::canDecode( event->mimeData() ) );
+    d->lineEdit->setText( text );
 }
-
-
-void CertKeyListView::contentsDragLeaveEvent( QDragLeaveEvent * )
-{
-    // Don't let QListView do its stuff
-}
-
-void CertKeyListView::contentsDropEvent( QDropEvent * event )
-{
-  KUrl::List lst = KUrl::List::fromMimeData( event->mimeData() );
-  if ( !lst.isEmpty() ) {
-    event->accept();
-    emit dropped( lst );
-  }
-}
-
-#include "certlistview.moc"
+ 
