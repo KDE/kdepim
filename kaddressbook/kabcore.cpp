@@ -1072,7 +1072,7 @@ void KABCore::initActions()
 
   // file menu
   mActionMail = coll->addAction( "file_mail" );
-  mActionMail->setIcon( KIcon("mail-send") );
+  mActionMail->setIcon( KIcon("mail-message-new") );
   mActionMail->setText( i18n( "&Send Email to Contact..." ) );
   connect(mActionMail, SIGNAL(triggered(bool)), SLOT( sendMail() ));
   action = KStandardAction::print( this, SLOT( print() ), actionCollection() );
@@ -1084,14 +1084,15 @@ void KABCore::initActions()
   mActionSave->setWhatsThis( i18n( "Save all changes of the address book to the storage backend." ) );
 
   action = coll->addAction( "file_new_contact" );
-  action->setIcon( KIcon("identity") );
+  action->setIcon( KIcon("contact") );
   action->setText( i18n( "&New Contact..." ) );
+  action->setIconText( i18n( "New" ) );
   connect(action, SIGNAL(triggered(bool)), SLOT( newContact() ));
   action->setShortcut(QKeySequence(Qt::CTRL+Qt::Key_N));
   action->setWhatsThis( i18n( "Create a new contact<p>You will be presented with a dialog where you can add all data about a person, including addresses and phone numbers.</p>" ) );
 
   mActionMailVCard = coll->addAction( "file_mail_vcard" );
-  mActionMailVCard->setIcon( KIcon("mail_post_to") );
+  mActionMailVCard->setIcon( KIcon("mail-send") );
   mActionMailVCard->setText( i18n( "Send &Contact..." ) );
   connect(mActionMailVCard, SIGNAL(triggered(bool) ), SLOT( mailVCard() ));
   mActionMailVCard->setWhatsThis( i18n( "Send a mail with the selected contact as attachment." ) );
@@ -1104,6 +1105,7 @@ void KABCore::initActions()
   mActionEditAddressee = coll->addAction( "file_properties" );
   mActionEditAddressee->setIcon( KIcon("edit") );
   mActionEditAddressee->setText( i18n( "&Edit Contact..." ) );
+  mActionEditAddressee->setIconText( i18n( "Edit" ) );
   connect(mActionEditAddressee, SIGNAL(triggered(bool) ), SLOT( editContact() ));
   mActionEditAddressee->setWhatsThis( i18n( "Edit a contact<p>You will be presented with a dialog where you can change all data about a person, including addresses and phone numbers.</p>" ) );
 
