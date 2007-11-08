@@ -1,5 +1,5 @@
 /* -*- mode: c++; c-basic-offset:4 -*-
-    mainwindow.h
+    trayiconlistener.cpp
 
     This file is part of Kleopatra, the KDE keymanager
     Copyright (c) 2007 Klarälvdalens Datakonsult AB
@@ -30,23 +30,30 @@
     your version.
 */
 
-#ifndef __KLEOPATRA_MAINWINDOW_H__
-#define __KLEOPATRA_MAINWINDOW_H__
+#include "trayiconlistener.h"
 
-#include <KXmlGuiWindow>
+#include <KLocale>
 
-#include <utils/pimpl_ptr.h>
+#include <QWidget>
 
-class MainWindow : public KXmlGuiWindow {
-    Q_OBJECT
-public:
-    explicit MainWindow( QWidget * parent=0, Qt::WindowFlags f=KDE_DEFAULT_WINDOWFLAGS );
-    ~MainWindow();
+TrayIconListener::TrayIconListener( QWidget* mainWindow, QObject* parent ) : QObject( parent ), m_mainWindow( mainWindow )
+{
+    assert( m_mainWindow );
+}
 
-private:
-    class Private;
-    kdtools::pimpl_ptr<Private> d;
-};
+void TrayIconListener::activated( QSystemTrayIcon::ActivationReason reason )
+{
+    if ( reason != QSystemTrayIcon::Trigger )
+        return;
+    const bool visible = !m_mainWindow->isVisible();
+    if ( visible ) {
+        if ( m_prevGeometry.isValid() )
+            m_mainWindow->setGeometry( m_prevGeometry );
+        m_mainWindow->setVisible( true );
+    } else {
+        m_prevGeometry = m_mainWindow->geometry();
+        m_mainWindow->setVisible( false );
+    }
+}
 
-
-#endif /* __KLEOPATRA_MAINWINDOW_H__ */
+#include "trayiconlistener.moc"

@@ -36,7 +36,7 @@
 #include "models/keylistsortfilterproxymodel.h"
 #include "controllers/keylistcontroller.h"
 
-#include <kleo/ui/progressbar.h>
+#include "libkleo/ui/progressbar.h"
 
 #include <KTabWidget>
 #include <KStatusBar>
@@ -57,7 +57,8 @@ using namespace GpgME;
 class MainWindow::Private {
     friend class ::MainWindow;
     MainWindow * const q;
-private:
+
+public:
     explicit Private( MainWindow * qq );
     ~Private();
 
@@ -107,13 +108,26 @@ private:
 	    searchToolBar.addWidget( &searchComboBox );
 	    searchComboBox.hide(); // ### not yet implemented
 
-	    searchToolBar.setAllowed( Qt::TopToolBarArea|Qt::BottomToolBarArea );
+	    searchToolBar.setAllowedAreas( Qt::TopToolBarArea|Qt::BottomToolBarArea );
 	}
     } ui;
 };
 
+MainWindow::Private::Private( MainWindow * qq ) : q( qq ), ui( q )
+{
+} 
 
+MainWindow::Private::~Private()
+{
+} 
 
-#include "moc_mainwindow.cpp"
+MainWindow::MainWindow( QWidget* parent, Qt::WindowFlags flags ) : KXmlGuiWindow( parent, flags ), d( new Private( this ) )
+{
+}
+
+MainWindow::~MainWindow()
+{
+}
+
 #include "mainwindow.moc"
 

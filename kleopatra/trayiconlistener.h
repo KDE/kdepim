@@ -30,23 +30,22 @@
     your version.
 */
 
-#ifndef __KLEOPATRA_MAINWINDOW_H__
-#define __KLEOPATRA_MAINWINDOW_H__
+#ifndef __KLEOPATRA_TRAYICONLISTENER_H__
+#define __KLEOPATRA_TRAYICONLISTENER_H__
 
-#include <KXmlGuiWindow>
+#include <QSystemTrayIcon>
 
-#include <utils/pimpl_ptr.h>
-
-class MainWindow : public KXmlGuiWindow {
+class TrayIconListener : public QObject {
     Q_OBJECT
 public:
-    explicit MainWindow( QWidget * parent=0, Qt::WindowFlags f=KDE_DEFAULT_WINDOWFLAGS );
-    ~MainWindow();
+    explicit TrayIconListener( QWidget* mainWindow, QObject* parent = 0 );
+
+public Q_SLOTS:
+    void activated( QSystemTrayIcon::ActivationReason );
 
 private:
-    class Private;
-    kdtools::pimpl_ptr<Private> d;
+    QWidget* m_mainWindow;
+    QRect m_prevGeometry;
 };
 
-
-#endif /* __KLEOPATRA_MAINWINDOW_H__ */
+#endif // __KLEOPATRA_TRAYICONLISTENER_H__

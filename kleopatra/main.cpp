@@ -37,7 +37,8 @@
 #ifndef KLEO_ONLY_UISERVER
 # include "certmanager.h"
 #else
-# include "qmainwindow/mainwindow.h"
+# include "mainwindow.h"
+# include "trayiconlistener.h"
 #endif
 
 #include "libkleo/kleo/cryptobackendfactory.h"
