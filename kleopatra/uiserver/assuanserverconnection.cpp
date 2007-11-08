@@ -429,7 +429,7 @@ private:
         AssuanServerConnection::Private & conn = *static_cast<AssuanServerConnection::Private*>( assuan_get_pointer( ctx_ ) );
 
         try {
-            const QFileInfo fi( QFile::decodeName( line ) );
+            const QFileInfo fi( QFile::decodeName( hexdecode( line ).c_str() ) );
             if ( !fi.isAbsolute() )
                 throw assuan_exception( gpg_error( GPG_ERR_INV_ARG ), i18n("Only absolute file paths are allowed") );
             if ( fi.exists() && fi.isDir() )
