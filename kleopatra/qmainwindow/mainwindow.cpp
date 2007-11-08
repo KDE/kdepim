@@ -155,7 +155,7 @@ MainWindow::MainWindow( QWidget* parent, Qt::WindowFlags flags ) : QMainWindow( 
     d->setupMenu();
     QTimer* keyListTimer = new QTimer( this );
     connect( keyListTimer, SIGNAL( timeout() ), SLOT( listKeys() ) ); 
-    keyListTimer->setInterval( 30 * 1000 );
+    keyListTimer->setInterval( 5 * 60 * 1000 );
     keyListTimer->start();
     QTimer::singleShot( 0, this, SLOT( listKeys() ) );
 }
