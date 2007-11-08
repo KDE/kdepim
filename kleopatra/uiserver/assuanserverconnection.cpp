@@ -104,6 +104,19 @@ namespace {
         return (qint64)getpid();
 #endif
     }
+
+    static void close_all( const std::vector<IO> & ios ) {
+        Q_FOREACH( const IO & io, ios )
+            if ( io.iodev && io.iodev->isOpen() )
+                io.iodev->close();
+    }
+
+    static void close_all( const std::vector<IOF> & ios ) {
+        Q_FOREACH( const IOF & io, ios )
+            if ( io.file && io.file->isOpen() )
+                io.file->close();
+    }
+
 }
 
 static const unsigned int INIT_SOCKET_FLAGS = 3; // says info assuan...
@@ -283,8 +296,7 @@ private:
 
         AssuanServerConnection::Private & conn = *static_cast<AssuanServerConnection::Private*>( assuan_get_pointer( ctx_ ) );
 
-        conn.options.clear();
-        conn.mementos.clear();
+        conn.reset();
     }
 
     static int option_handler( assuan_context_t ctx_, const char * key, const char * value ) {
@@ -469,7 +481,20 @@ private:
     }
 
     void cleanup();
-
+    void reset() {
+        options.clear();
+        senders.clear();
+        recipients.clear();
+        mementos.clear();
+        close_all( files );
+        files.clear();
+        close_all( inputs );
+        inputs.clear();
+        close_all( outputs );
+        outputs.clear();
+        close_all( messages );
+        messages.clear();
+    }
 
     assuan_fd_t fd;
     AssuanContext ctx;
@@ -487,10 +512,8 @@ private:
 
 void AssuanServerConnection::Private::cleanup() {
     assert( nohupedCommands.empty() );
-    options.clear();
+    reset();
     currentCommand.reset();
-    options.clear();
-    mementos.clear();
     notifiers.clear();
     ctx.reset();
     fd = ASSUAN_INVALID_FD;
@@ -868,18 +891,6 @@ void AssuanCommand::done( int err, const QString & details ) {
             assuan_set_error( d->ctx.get(), err, d->utf8ErrorKeepAlive.constData() );
     }
     done( err );
-}
-
-static void close_all( const std::vector<IO> & ios ) {
-    Q_FOREACH( const IO & io, ios )
-        if ( io.iodev && io.iodev->isOpen() )
-            io.iodev->close();
-}
-
-static void close_all( const std::vector<IOF> & ios ) {
-    Q_FOREACH( const IOF & io, ios )
-        if ( io.file && io.file->isOpen() )
-            io.file->close();
 }
 
 void AssuanCommand::done( int err ) {
