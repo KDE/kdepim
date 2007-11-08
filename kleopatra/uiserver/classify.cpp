@@ -143,3 +143,18 @@ QStringList Kleo::findSignatures( const QString & signedDataFileName ) {
         }
     return result;
 }
+
+/*!
+  \return the (likely) output filename for \a inputFileName, or
+  "inputFileName.out" if none can be determined.
+*/
+QString Kleo::outputFileName( const QString & inputFileName ) {
+    const QFileInfo fi( inputFileName );
+
+    if ( qBinaryFind( begin( classifications ), end( classifications ),
+                      fi.suffix().toLatin1().constData(),
+                      ByExtension<std::less>() ) == end( classifications ) )
+        return inputFileName + ".out";
+    else
+        return chopped( inputFileName, 4 );
+}

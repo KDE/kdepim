@@ -618,7 +618,7 @@ shared_ptr<Input> DecryptVerifyCommand::Private::inputFromOperationWidget( const
 
         input->type = DecryptVerify;
         input->input = Input::fromOpenFile( file );
-        input->output = Input::makeTemporaryOutput( outDir.absoluteFilePath( QFileInfo( file->fileName() ).fileName() ) );
+        input->output = Input::makeTemporaryOutput( outDir.absoluteFilePath( outputFileName( QFileInfo( file->fileName() ).fileName() ) ) );
 
         assuan_assert( file->fileName() == w->inputFileName() );
 
