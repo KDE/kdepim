@@ -901,9 +901,18 @@ void AddresseeLineEdit::updateSearchString()
 {
   m_searchString = text();
 
-  int n = m_searchString.findRev(',');
-  if( m_useSemiColonAsSeparator )
-    n = QMAX( n, m_searchString.findRev(';') );
+  int n = -1;
+  bool inQuote = false;
+  for ( uint i = 0; i < m_searchString.length(); ++i ) {
+    if ( m_searchString[ i ] == '"' )
+      inQuote = !inQuote;
+    if ( m_searchString[ i ] == '\\' && (i + 1) < m_searchString.length() && m_searchString[ i + 1 ] == '"' )
+      ++i;
+    if ( inQuote )
+      continue;
+    if ( m_searchString[ i ] == ',' || ( m_useSemiColonAsSeparator && m_searchString[ i ] == ';' ) )
+      n = i;
+  }
 
   if ( n >= 0 ) {
     ++n; // Go past the ","
