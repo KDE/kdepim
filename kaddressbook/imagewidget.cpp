@@ -43,7 +43,7 @@
 #include <QLabel>
 #include <QLayout>
 #include <QPixmap>
-
+#include <QImage>
 #include <QGridLayout>
 #include <QFrame>
 #include <QHBoxLayout>
@@ -213,13 +213,10 @@ void ImageBaseWidget::setImage( const KABC::Picture &photo )
   blockSignals( true );
 
   if ( photo.isIntern() ) {
-    QPixmap px = QPixmap::fromImage( photo.data() );
+    QPixmap px = QPixmap::fromImage( photo.data(), Qt::AutoColor | Qt::ThresholdDither );
 
     if ( px.height() != 140 || px.width() != 100 ) {
-      if ( px.height() > px.width() )
-        px = QPixmap::fromImage( px.toImage().scaledToHeight( 140 ) );
-      else
-        px = QPixmap::fromImage( px.toImage().scaledToWidth( 100 ) );
+      px = QPixmap::fromImage( px.toImage().scaled( 100, 140, Qt::KeepAspectRatio, Qt::SmoothTransformation ) );
     }
 
     mImageLabel->setPixmap( px );
