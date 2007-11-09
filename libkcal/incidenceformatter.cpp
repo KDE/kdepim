@@ -30,6 +30,7 @@
 #include <libkcal/calendarlocal.h>
 #include <libkcal/icalformat.h>
 #include <libkcal/freebusy.h>
+#include <libkcal/calendarresources.h>
 
 #include <libemailfunctions/email.h>
 
@@ -594,9 +595,59 @@ static QString string2HTML( const QString& str )
   return QStyleSheet::convertFromPlainText(str, QStyleSheetItem::WhiteSpaceNormal);
 }
 
+static QString eventStartTimeStr( Event *event )
+{
+  QString tmp;
+  if ( ! event->doesFloat() ) {
+    tmp =  i18n("%1: Start Date, %2: Start Time", "%1 %2")
+             .arg( event->dtStartDateStr(), event->dtStartTimeStr() );
+  } else {
+    tmp = i18n("%1: Start Date", "%1 (time unspecified)")
+            .arg( event->dtStartDateStr() );
+  }
+  return tmp;
+}
+
+static QString eventEndTimeStr( Event *event )
+{
+  QString tmp;
+  if ( event->hasEndDate() ) {
+    if ( ! event->doesFloat() ) {
+      tmp =  i18n("%1: End Date, %2: End Time", "%1 %2")
+               .arg( event->dtEndDateStr(), event->dtEndTimeStr() );
+    } else {
+      tmp = i18n("%1: End Date", "%1 (time unspecified)")
+              .arg( event->dtEndDateStr() );
+    }
+  } else {
+    tmp = i18n( "Unspecified" );
+  }
+  return tmp;
+}
+
 static QString invitationRow( const QString &cell1, const QString &cell2 )
 {
   return "<tr><td>" + cell1 + "</td><td>" + cell2 + "</td></tr>\n";
+}
+
+static QString invitationsDetailsIncidence( Incidence *incidence )
+{
+  QString html;
+  QString descr = incidence->description();
+  if( !descr.isEmpty() ) {
+    html += "<br/><u>" + i18n("Description:")
+      + "</u><table border=\"0\"><tr><td>&nbsp;</td><td>";
+    html += string2HTML(descr) + "</td></tr></table>";
+  }
+  QStringList comments = incidence->comments();
+  if ( !comments.isEmpty() ) {
+    html += "<br><u>" + i18n("Comments:")
+          + "</u><table border=\"0\"><tr><td>&nbsp;</td><td><ul>";
+    for ( uint i = 0; i < comments.count(); ++i )
+      html += "<li>" + string2HTML( comments[i] ) + "</li>";
+    html += "</ul></td></tr></table>";
+  }
+  return html;
 }
 
 static QString invitationDetailsEvent( Event* event )
@@ -628,28 +679,10 @@ static QString invitationDetailsEvent( Event* event )
   html += invitationRow( i18n( "Where:" ), sLocation );
 
   // Meeting Start Time Row
-  if ( ! event->doesFloat() ) {
-    tmp =  i18n("%1: Start Date, %2: Start Time", "%1 %2")
-             .arg( event->dtStartDateStr(), event->dtStartTimeStr() );
-  } else {
-    tmp = i18n("%1: Start Date", "%1 (time unspecified)")
-            .arg( event->dtStartDateStr() );
-  }
-  html += invitationRow( i18n( "Start Time:" ), tmp );
+  html += invitationRow( i18n( "Start Time:" ), eventStartTimeStr( event ) );
 
   // Meeting End Time Row
-  if ( event->hasEndDate() ) {
-    if ( ! event->doesFloat() ) {
-      tmp =  i18n("%1: End Date, %2: End Time", "%1 %2")
-               .arg( event->dtEndDateStr(), event->dtEndTimeStr() );
-    } else {
-      tmp = i18n("%1: End Date", "%1 (time unspecified)")
-              .arg( event->dtEndDateStr() );
-    }
-  } else {
-    tmp = i18n( "Unspecified" );
-  }
-  html += invitationRow( i18n( "End Time:" ), tmp );
+  html += invitationRow( i18n( "End Time:" ), eventEndTimeStr( event ) );
 
   // Meeting Duration Row
   if ( !event->doesFloat() && event->hasEndDate() ) {
@@ -668,6 +701,7 @@ static QString invitationDetailsEvent( Event* event )
   }
 
   html += "</table>\n";
+  html += invitationsDetailsIncidence( event );
   html += "</div>\n";
 
   return html;
@@ -691,6 +725,7 @@ static QString invitationDetailsTodo( Todo *todo )
   html += invitationRow( i18n( "Summary:" ), sSummary );
   html += invitationRow( i18n( "Description:" ), sDescr );
   html += "</table>\n";
+  html += invitationsDetailsIncidence( todo );
 
   return html;
 }
@@ -713,6 +748,7 @@ static QString invitationDetailsJournal( Journal *journal )
   html += invitationRow( i18n( "Date:" ), journal->dtStartDateStr( false ) );
   html += invitationRow( i18n( "Description:" ), sDescr );
   html += "</table>\n";
+  html += invitationsDetailsIncidence( journal );
 
   return html;
 }
@@ -1066,6 +1102,97 @@ class IncidenceFormatter::InvitationBodyVisitor :
     }
 };
 
+class IncidenceFormatter::IncidenceCompareVisitor :
+  public IncidenceBase::Visitor
+{
+  public:
+    IncidenceCompareVisitor() : mExistingIncidence(0) {}
+    bool act( IncidenceBase *incidence, Incidence* existingIncidence )
+    {
+      mExistingIncidence = existingIncidence;
+      return incidence->accept( *this );
+    }
+
+    QString result() const
+    {
+      if ( mChanges.isEmpty() )
+        return QString();
+      QString html = "<div align=\"left\"><ul><li>";
+      html += mChanges.join( "</li><li>" );
+      html += "</li><ul></div>";
+      return html;
+    }
+
+  protected:
+    bool visit( Event *event )
+    {
+      compareEvents( event, dynamic_cast<Event*>( mExistingIncidence ) );
+      compareIncidences( event, mExistingIncidence );
+      return !mChanges.isEmpty();
+    }
+    bool visit( Todo *todo )
+    {
+      compareIncidences( todo, mExistingIncidence );
+      return !mChanges.isEmpty();
+    }
+    bool visit( Journal *journal )
+    {
+      compareIncidences( journal, mExistingIncidence );
+      return !mChanges.isEmpty();
+    }
+    bool visit( FreeBusy *fb )
+    {
+      Q_UNUSED( fb );
+      return !mChanges.isEmpty();
+    }
+
+  private:
+    void compareEvents( Event *newEvent, Event *oldEvent )
+    {
+      if ( !oldEvent || !newEvent )
+        return;
+      if ( oldEvent->dtStart() != newEvent->dtStart() || oldEvent->doesFloat() != newEvent->doesFloat() )
+        mChanges += i18n( "The begin of the meeting has been changed from %1 to %2" )
+            .arg( eventStartTimeStr( oldEvent ) ).arg( eventStartTimeStr( newEvent ) );
+      if ( oldEvent->dtEnd() != newEvent->dtEnd() || oldEvent->doesFloat() != newEvent->doesFloat() )
+        mChanges += i18n( "The end of the meeting has been changed from %1 to %2" )
+            .arg( eventEndTimeStr( oldEvent ) ).arg( eventEndTimeStr( newEvent ) );
+    }
+
+    void compareIncidences( Incidence *newInc, Incidence *oldInc )
+    {
+      if ( !oldInc || !newInc )
+        return;
+      if ( oldInc->summary() != newInc->summary() )
+        mChanges += i18n( "The summary has been changed to: \"%1\"" ).arg( newInc->summary() );
+      if ( oldInc->location() != newInc->location() )
+        mChanges += i18n( "The location has been changed to: \"%1\"" ).arg( newInc->location() );
+      if ( oldInc->description() != newInc->description() )
+        mChanges += i18n( "The description has been changed to: \"%1\"" ).arg( newInc->description() );
+      Attendee::List oldAttendees = oldInc->attendees();
+      Attendee::List newAttendees = newInc->attendees();
+      for ( Attendee::List::ConstIterator it = newAttendees.constBegin(); it != newAttendees.constEnd(); ++it ) {
+        Attendee *oldAtt = oldInc->attendeeByMail( (*it)->email() );
+        if ( !oldAtt ) {
+          mChanges += i18n( "Attendee %1 has been added" ).arg( (*it)->fullName() );
+        } else {
+          if ( oldAtt->status() != (*it)->status() )
+            mChanges += i18n( "The status of attendee %1 has been changed to: %2" ).arg( (*it)->fullName() )
+                .arg( (*it)->statusStr() );
+        }
+      }
+      for ( Attendee::List::ConstIterator it = oldAttendees.constBegin(); it != oldAttendees.constEnd(); ++it ) {
+        Attendee *newAtt = newInc->attendeeByMail( (*it)->email() );
+        if ( !newAtt )
+          mChanges += i18n( "Attendee %1 has been removed" ).arg( (*it)->fullName() );
+      }
+    }
+
+  private:
+    Incidence* mExistingIncidence;
+    QStringList mChanges;
+};
+
 
 QString InvitationFormatterHelper::makeLink( const QString &id, const QString &text )
 {
@@ -1093,6 +1220,10 @@ QString IncidenceFormatter::formatICalInvitation( QString invitation, Calendar *
 
   IncidenceBase *incBase = msg->event();
 
+  Incidence* existingIncidence = 0;
+  if ( helper->calendar() )
+    existingIncidence = helper->calendar()->incidence( incBase->uid() );
+
   // First make the text of the message
   QString html;
 
@@ -1115,7 +1246,15 @@ QString IncidenceFormatter::formatICalInvitation( QString invitation, Calendar *
     return QString::null;
   html += bodyVisitor.result();
 
-  html += "<br>&nbsp;<br>&nbsp;<br>";
+  if ( msg->method() == Scheduler::Request ) { // ### Scheduler::Publish/Refresh/Add as well?
+    IncidenceCompareVisitor compareVisitor;
+    if ( compareVisitor.act( incBase, existingIncidence ) ) {
+      html += i18n("<p align=\"left\">The following changes have been made by the organizer:</p>");
+      html += compareVisitor.result();
+    }
+  }
+
+  html += "<br/>";
   html += "<table border=\"0\" cellspacing=\"0\"><tr><td>&nbsp;</td></tr><tr>";
 
 #if 0
@@ -1132,7 +1271,7 @@ QString IncidenceFormatter::formatICalInvitation( QString invitation, Calendar *
     case Scheduler::Add:
     {
         Incidence *inc = dynamic_cast<Incidence*>( incBase );
-        if ( inc && inc->revision() > 0 ) {
+        if ( inc && inc->revision() > 0 && (existingIncidence || !helper->calendar()) ) {
             if ( incBase->type() == "Todo" ) {
                 html += "<td colspan=\"9\">";
                 html += helper->makeLink( "reply", i18n( "[Enter this into my task list]" ) );
@@ -1144,29 +1283,31 @@ QString IncidenceFormatter::formatICalInvitation( QString invitation, Calendar *
         }
         html += "<td>";
 
-        // Accept
-        html += helper->makeLink( "accept", i18n( "[Accept]" ) );
-        html += "</td><td> &nbsp; </td><td>";
-        html += helper->makeLink( "accept_conditionally",
-                          i18n( "Accept conditionally", "[Accept cond.]" ) );
-        html += "</td><td> &nbsp; </td><td>";
-        // counter proposal
-        html += helper->makeLink( "counter", i18n( "[Counter proposal]" ) );
-        html += "</td><td> &nbsp; </td><td>";
-        // Decline
-        html += helper->makeLink( "decline", i18n( "[Decline]" ) );
-        html += "</td><td> &nbsp; </td><td>";
+        if ( helper->calendar() && !existingIncidence ) {
+          // Accept
+          html += helper->makeLink( "accept", i18n( "[Accept]" ) );
+          html += "</td><td> &nbsp; </td><td>";
+          html += helper->makeLink( "accept_conditionally",
+                            i18n( "Accept conditionally", "[Accept cond.]" ) );
+          html += "</td><td> &nbsp; </td><td>";
+          // counter proposal
+          html += helper->makeLink( "counter", i18n( "[Counter proposal]" ) );
+          html += "</td><td> &nbsp; </td><td>";
+          // Decline
+          html += helper->makeLink( "decline", i18n( "[Decline]" ) );
+          html += "</td><td> &nbsp; </td><td>";
 
-        // Delegate
-        html += helper->makeLink( "delegate", i18n( "[Delegate]" ) );
-        html += "</td><td> &nbsp; </td><td>";
+          // Delegate
+          html += helper->makeLink( "delegate", i18n( "[Delegate]" ) );
+          html += "</td><td> &nbsp; </td><td>";
 
-        // Forward
-        html += helper->makeLink( "forward", i18n( "[Forward]" ) );
+          // Forward
+          html += helper->makeLink( "forward", i18n( "[Forward]" ) );
 
-        if ( incBase->type() == "Event" ) {
-            html += "</b></a></td><td> &nbsp; </td><td>";
-            html += helper->makeLink( "check_calendar", i18n("[Check my calendar]" ) );
+          if ( incBase->type() == "Event" ) {
+              html += "</b></a></td><td> &nbsp; </td><td>";
+              html += helper->makeLink( "check_calendar", i18n("[Check my calendar]" ) );
+          }
         }
         break;
     }
@@ -1192,24 +1333,6 @@ QString IncidenceFormatter::formatICalInvitation( QString invitation, Calendar *
   }
 
   html += "</td></tr></table>";
-
-  Incidence* incidence = dynamic_cast<Incidence*>( incBase );
-  if ( incidence ) {
-    QString sDescr = incidence->description();
-    if( !sDescr.isEmpty() ) {
-      html += "<br>&nbsp;<br>&nbsp;<br><u>" + i18n("Description:")
-        + "</u><br><table border=\"0\"><tr><td>&nbsp;</td><td>";
-      html += string2HTML(sDescr) + "</td></tr></table>";
-    }
-    QStringList comments = incidence->comments();
-    if ( !comments.isEmpty() ) {
-      html += "<br><u>" + i18n("Comments:")
-           + "</u><br><table border=\"0\"><tr><td>&nbsp;</td><td><ul>";
-      for ( uint i = 0; i < comments.count(); ++i )
-        html += "<li>" + string2HTML( comments[i] ) + "</li>";
-      html += "</ul></td></tr></table>";
-    }
-  }
 
   html += "</td></tr></table><br></div>";
 

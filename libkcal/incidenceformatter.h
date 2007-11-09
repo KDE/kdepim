@@ -36,6 +36,7 @@ class LIBKCAL_EXPORT InvitationFormatterHelper
   public:
     virtual QString generateLinkURL( const QString &id ) { return id; }
     virtual QString makeLink( const QString &id, const QString &text );
+    virtual Calendar* calendar() const { return 0; }
 };
 
 /**
@@ -65,6 +66,7 @@ class LIBKCAL_EXPORT IncidenceFormatter
     class ScheduleMessageVisitor;
     class InvitationHeaderVisitor;
     class InvitationBodyVisitor;
+    class IncidenceCompareVisitor;
     class ToolTipVisitor;
     class MailBodyVisitor;
 };
