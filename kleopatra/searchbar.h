@@ -49,8 +49,15 @@ public:
 
 
     class State {
+        friend class ::SearchBar;
     public:
-        virtual ~State();
+        State();
+        ~State();
+
+    private:
+        Q_DISABLE_COPY(State);
+        class Private;
+        kdtools::pimpl_ptr<Private> d;
     };
 
     boost::shared_ptr<State> state() const;
