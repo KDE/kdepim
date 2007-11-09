@@ -3,10 +3,9 @@ Friday, November 9th 2007
 Problems addressed
 --------------------
 * kolab/issue2123 Make sure the re-generated index is actually written out, to avoid crashes on switching out of the folder, and related unpleasantness. (732422)
-* kolab/issue2142 Make sure the file selector is shown on top of the filter dialog. (732794)
+* kolab/issue2142 Make sure the file selector is shown on top of the filter dialog. ((733495))
 * crash when there is no smime backend, and the protocol can't be determined.(733049 )
 * kolab/issue2151 Fix creation of new folders when restarting KMail before the next sync. ( 733149 )
-* kolab/issue2142 Provide a proper parent for the "ask to overwrite" dialog.(733495)
 * kolab/issue 2176 Move transaction code into the filtermanager, from the caller and make sure filter counts are written to and read from the right section. ( 733511 )
 * kolab/issue2175 Show an error message if the to-be-imported filters file can't be read. (733519 )
 * kolab/issue2181 Fix crash when opening a message without a parent, cleanup initialization order.(734247)
