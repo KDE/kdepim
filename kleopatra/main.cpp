@@ -50,6 +50,8 @@
 # include <uiserver/decryptcommand.h>
 # include <uiserver/verifycommand.h>
 # include <uiserver/decryptverifyfilescommand.h>
+# include <uiserver/decryptfilescommand.h>
+# include <uiserver/verifyfilescommand.h>
 # include <uiserver/encryptcommand.h>
 # include <uiserver/signcommand.h>
 #endif
@@ -140,11 +142,13 @@ int main( int argc, char** argv )
 
 #define REGISTER( Command ) server.registerCommandFactory( boost::shared_ptr<Kleo::AssuanCommandFactory>( new Kleo::GenericAssuanCommandFactory<Kleo::Command> ) )
       REGISTER( DecryptCommand );
+      REGISTER( DecryptFilesCommand );
       REGISTER( DecryptVerifyFilesCommand );
       REGISTER( EchoCommand );
       REGISTER( EncryptCommand );
       REGISTER( SignCommand );
       REGISTER( VerifyCommand );
+      REGISTER( VerifyFilesCommand );
 #undef REGISTER
 
       server.start();
