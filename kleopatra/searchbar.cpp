@@ -40,6 +40,8 @@
 
 #include <QHBoxLayout>
 
+#include <cassert>
+
 using boost::shared_ptr;
 
 class SearchBar::State::Private {
@@ -57,7 +59,6 @@ public:
 
     QLineEdit * lineEdit;
     QComboBox * combo;
-    mutable shared_ptr<SearchBar::State> state;
 };
 
 SearchBar::Private::Private( SearchBar * qq )
@@ -91,18 +92,15 @@ SearchBar::SearchBar( QWidget * parent, Qt::WFlags f )
 
 boost::shared_ptr<SearchBar::State> SearchBar::state() const
 {
-    if ( !d->state )
-        d->state.reset( new State );
-    d->state->d->searchString = d->lineEdit->text();
-    return d->state;
+    shared_ptr<SearchBar::State> state( new State );
+    state->d->searchString = d->lineEdit->text();
+    return state;
 }
 
 void SearchBar::setState( shared_ptr<SearchBar::State> state )
 {
-    d->state = state;
-    if ( !d->state )
-        return;
-    d->lineEdit->setText( d->state->d->searchString ); 
+    assert( state );
+    d->lineEdit->setText( state->d->searchString ); 
 }
 
 SearchBar::~SearchBar() {}
