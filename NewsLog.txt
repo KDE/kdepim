@@ -18,7 +18,7 @@ New functionality
 
 Merges
 ---------
-* Merges for KMail and KAlarm.
+* Merges from 3.5 for KMail and KAlarm.
 
 
 
