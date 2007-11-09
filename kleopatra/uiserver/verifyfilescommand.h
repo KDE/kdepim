@@ -33,7 +33,7 @@
 #ifndef __KLEOPATRA_UISERVER_VERIFYFILESCOMMAND_H__
 #define __KLEOPATRA_UISERVER_VERIFYFILESCOMMAND_H__
 
-#include <uiserver/verifycommand.h>
+#include <uiserver/decryptverifycommand.h>
 
 namespace Kleo {
 

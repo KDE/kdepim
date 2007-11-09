@@ -33,7 +33,7 @@
 #ifndef __KLEOPATRA_UISERVER_DECRYPTFILESCOMMAND_H__
 #define __KLEOPATRA_UISERVER_DECRYPTFILESCOMMAND_H__
 
-#include <uiserver/decryptcommand.h>
+#include <uiserver/decryptverifycommand.h>
 
 namespace Kleo {
 
