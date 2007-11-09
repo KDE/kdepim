@@ -392,7 +392,11 @@ int DecryptVerifyCommand::doStart() {
     }
 }
 
-void DecryptVerifyCommand::doCanceled() {}
+void DecryptVerifyCommand::doCanceled() {
+    // ### cancel all jobs?
+    if ( d->wizard )
+        d->wizard->close();
+}
 
 std::vector< shared_ptr<Input> > DecryptVerifyCommand::Private::buildInputList()
 {
@@ -641,6 +645,7 @@ void DecryptVerifyCommand::Private::startJobs()
 
         assuan_assert( input->backend );
 
+        QPointer<QObject> that;
         switch ( input->type ) {
         case Decrypt:
             try {
@@ -683,6 +688,8 @@ void DecryptVerifyCommand::Private::startJobs()
             }
             break;
         }
+        if ( !that )
+            return;
         ++i;
     }
 
@@ -805,7 +812,10 @@ void DecryptVerifyCommand::Private::addResult( unsigned int id, const DVResult &
             try {
 
                 try {
+                    QPointer<QObject> that = this;
                     inputList[id]->finalizeOutput();
+                    if ( !that )
+                        return;
                 } catch ( const assuan_exception & e ) {
                     // record these errors, but ignore them:
                     result->error = e.error_code();
@@ -859,20 +869,25 @@ void Input::finalizeOutput() {
     output.tmp->close();
 
     bool overwrite = false;
+    int savedErrno = 0;
     static const int maxtries = 5;
     for ( int i = 0 ; i < maxtries ; ++i ) {
         if ( QFile::rename( tmpFileName, output.fileName ) ) {
             output.tmp->setAutoRemove( false );
             return;
         }
-        const int savedErrno = errno;
-        if ( overwrite || ( overwrite = obtainOverwritePermission( output.fileName ) ) )
-            QFile::remove( output.fileName );
-        else
-            throw assuan_exception( gpg_error_from_errno( savedErrno ),
-                                    i18n( "Couldn't rename file \"%1\" to \"%2\"",
-                                          tmpFileName, output.fileName ) );
+        savedErrno = errno;
+        if ( !overwrite && !( overwrite = obtainOverwritePermission( output.fileName ) ) )
+            throw assuan_exception( gpg_error( GPG_ERR_CANCELED ),
+                                    i18n( "Overwriting declined" ) );
+        if ( !QFile::remove( output.fileName ) )
+            throw assuan_exception( gpg_error_from_errno( errno ),
+                                    i18n("Couldn't remove file \"%1\" for overwriting.", output.fileName ) );
     }
+    assuan_assert( savedErrno != 0 );
+    throw assuan_exception( gpg_error_from_errno( savedErrno ),
+                            i18n( "Couldn't rename file \"%1\" to \"%2\"",
+                                  tmpFileName, output.fileName ) );
 }
 
 #include "decryptverifycommand.moc"
