@@ -15,10 +15,11 @@ New functionality
 -------------------
 * Prokde35-z Item 69 Allow comments to be given when reacting to invitations (733159)
 * Prokde35-z Item 68 (part 1) Make it configurable whether invitation emails are move to the trash once the reply to them has been sent and add gui for that to the groupware section of the main configuration dialog. (733883)
+* Prokde35-z Item 73: Show changes made by the organizer when showing invitation updates. (734580)
 
 Merges
 ---------
-* Merges from 3.5 for KMail and KAlarm.
+* Merges from 3.5 branch for KMail and KAlarm.
 
 
 
