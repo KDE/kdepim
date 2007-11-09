@@ -149,7 +149,7 @@ install(TARGETS kleopatra_bin  DESTINATION ${BIN_INSTALL_DIR} )
 ########### install files ###############
 
 install( FILES kleopatra_import.desktop  DESTINATION ${XDG_APPS_INSTALL_DIR})
-install( FILES kleopatraui.rc  DESTINATION ${DATA_INSTALL_DIR}/kleopatra)
+install( FILES kleopatraui.rc kleopatra_newui.rc  DESTINATION ${DATA_INSTALL_DIR}/kleopatra)
 
 else ( NOT KLEO_ONLY_UISERVER OR USABLE_ASSUAN_FOUND )
   message( STATUS "Not building requested UiServer-only kleopatra since no usable assuan was found." )

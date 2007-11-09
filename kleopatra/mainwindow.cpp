@@ -41,13 +41,15 @@
 
 #include "libkleo/ui/progressbar.h"
 
+#include <KActionCollection>
 #include <KTabWidget>
 #include <KStatusBar>
 
-#include <QToolBar>
 #include <QLabel>
 #include <QLineEdit>
 #include <QComboBox>
+#include <QToolBar>
+#include <QWidgetAction>
 
 #include <boost/shared_ptr.hpp>
 
@@ -66,6 +68,9 @@ public:
     ~Private();
 
 private:
+    void setupActions();
+
+private:
 
     Kleo::AbstractKeyListModel * model;
     Kleo::KeyListController controller;
@@ -78,8 +83,7 @@ private:
     struct UI {
 
     TabWidget * tabWidget;
-
-	QToolBar actionToolBar;
+    QToolBar actionToolBar;
 	std::vector<Page*> pages;
 	Kleo::ProgressBar progressBar;
 	QLabel statusLabel;
@@ -93,6 +97,8 @@ private:
 	{
         tabWidget = new TabWidget;
         q->setCentralWidget( tabWidget );
+
+        
 	    KDAB_SET_OBJECT_NAME( tabWidget );
 	    KDAB_SET_OBJECT_NAME( actionToolBar );
 	    //KDAB_SET_OBJECT_NAME( treeView );
@@ -104,15 +110,25 @@ private:
 
 MainWindow::Private::Private( MainWindow * qq ) : q( qq ), ui( q )
 {
+    setupActions();
 } 
 
 MainWindow::Private::~Private()
 {
 } 
 
+void MainWindow::Private::setupActions()
+{
+        KActionCollection * const coll = q->actionCollection();
+
+        QWidgetAction* searchBarAction = new QWidgetAction( q );
+        searchBarAction->setDefaultWidget( new SearchBar( q ) );
+        coll->addAction( "key_search_bar", searchBarAction );
+}
+
 MainWindow::MainWindow( QWidget* parent, Qt::WindowFlags flags ) : KXmlGuiWindow( parent, flags ), d( new Private( this ) )
 {
-    createGUI( "kleopatraui.rc" );
+    createGUI( "kleopatra_newui.rc" );
 }
 
 MainWindow::~MainWindow()

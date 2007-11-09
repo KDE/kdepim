@@ -50,3 +50,4 @@ private:
 
 
 #endif /* __KLEOPATRA_MAINWINDOW_H__ */
+

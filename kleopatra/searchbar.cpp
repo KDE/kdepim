@@ -40,6 +40,18 @@
 
 #include <QHBoxLayout>
 
+using boost::shared_ptr;
+
+namespace {
+
+class StateImpl : public SearchBar::State {
+public:
+    QString searchString;
+    //TODO add combo state
+};
+
+}
+
 class SearchBar::Private {
     friend class ::SearchBar;
     SearchBar * const q;
@@ -49,8 +61,8 @@ public:
 
     QLineEdit * lineEdit;
     QComboBox * combo;
+    mutable shared_ptr<StateImpl> state;
 };
-
 
 SearchBar::Private::Private( SearchBar * qq )
   : q( qq )
@@ -70,12 +82,28 @@ SearchBar::Private::Private( SearchBar * qq )
 
 SearchBar::Private::~Private() {}
 
-
+SearchBar::State::~State() {}
 
 SearchBar::SearchBar( QWidget * parent, Qt::WFlags f )
   : QWidget( parent, f ), d( new Private( this ) )
 {
     
+}
+
+boost::shared_ptr<SearchBar::State> SearchBar::state() const
+{
+    if ( !d->state )
+        d->state.reset( new StateImpl );
+    d->state->searchString = d->lineEdit->text();
+    return d->state;
+}
+
+void SearchBar::setState( shared_ptr<SearchBar::State> state )
+{
+    d->state = boost::dynamic_pointer_cast<StateImpl>( state );
+    if ( !d->state )
+        return;
+    d->lineEdit->setText( d->state->searchString ); 
 }
 
 SearchBar::~SearchBar() {}

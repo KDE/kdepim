@@ -37,6 +37,8 @@
 
 #include <utils/pimpl_ptr.h>
 
+#include <boost/shared_ptr.hpp>
+
 class SearchBar : public QWidget {
     Q_OBJECT
 public:
@@ -45,6 +47,15 @@ public:
 
     QString text() const;
 
+
+    class State {
+    public:
+        virtual ~State();
+    };
+
+    boost::shared_ptr<State> state() const;
+    void setState( boost::shared_ptr<State> state );
+
 public Q_SLOTS:
 
     void setText( const QString& text );
@@ -52,6 +63,7 @@ public Q_SLOTS:
 Q_SIGNALS:
 
     void textChanged( const QString& );
+
 
 private:
     class Private;
