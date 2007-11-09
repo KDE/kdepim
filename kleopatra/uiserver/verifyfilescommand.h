@@ -37,7 +37,7 @@
 
 namespace Kleo {
 
-    class VerifyFilesCommand : public AssuanCommandMixin<VerifyFilesCommand,VerifyCommand> {
+    class VerifyFilesCommand : public AssuanCommandMixin<VerifyFilesCommand,DecryptVerifyCommand> {
     public:
         //VerifyFilesCommand();
         //~VerifyFilesCommand();

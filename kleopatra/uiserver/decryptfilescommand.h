@@ -37,7 +37,7 @@
 
 namespace Kleo {
 
-    class DecryptFilesCommand : public AssuanCommandMixin<DecryptFilesCommand,DecryptCommand> {
+    class DecryptFilesCommand : public AssuanCommandMixin<DecryptFilesCommand,DecryptVerifyCommand> {
     public:
         //DecryptFilesCommand();
         //~DecryptFilesCommand();
