@@ -313,16 +313,32 @@ private:
     }
 
     static int getinfo_handler( assuan_context_t ctx_, char * line ) {
+        assert( assuan_get_pointer( ctx_ ) );
+        AssuanServerConnection::Private & conn = *static_cast<AssuanServerConnection::Private*>( assuan_get_pointer( ctx_ ) );
+
         if ( qstrcmp( line, "version" ) == 0 ) {
             static const char version[] = "Kleopatra " KLEOPATRA_VERSION_STRING ;
             return assuan_process_done( ctx_, assuan_send_data( ctx_, version, sizeof version - 1 ) );
         }
-        if ( qstrcmp( line, "pid" ) == 0 ) {
-            static const QByteArray pid = QByteArray::number( mygetpid() );
-            return assuan_process_done( ctx_, assuan_send_data( ctx_, pid.constData(), pid.size() ) );
+
+        QByteArray ba;
+        if ( qstrcmp( line, "pid" ) == 0 )
+            ba = QByteArray::number( mygetpid() );
+        else if ( qstrcmp( line, "options" ) == 0 )
+            ba = conn.dumpOptions();
+        else if ( qstrcmp( line, "x-mementos" ) == 0 )
+            ba = conn.dumpMementos();
+        else if ( qstrcmp( line, "senders" ) == 0 )
+            ba = conn.dumpSenders();
+        else if ( qstrcmp( line, "recipients" ) == 0 )
+            ba = conn.dumpRecipients();
+        else if ( qstrcmp( line, "x-files" ) == 0 )
+            ba = conn.dumpFiles();
+        else {
+            static const QString errorString = i18n("Unknown value for WHAT");
+            return assuan_process_done_msg( ctx_, gpg_error( GPG_ERR_ASS_PARAMETER ), errorString );
         }
-        static const QString errorString = i18n("Unknown value for WHAT");
-        return assuan_process_done_msg( ctx_, gpg_error( GPG_ERR_ASS_PARAMETER ), errorString );
+        return assuan_process_done( ctx_, assuan_send_data( ctx_, ba.constData(), ba.size() ) );
     }
 
     // format: TAG (FD|FD=\d+|FILE=...)
@@ -478,6 +494,50 @@ private:
 
     static int sender_handler( assuan_context_t ctx, char * line ) {
         return recipient_sender_handler( &Private::senders, ctx, line );
+    }
+
+    QByteArray dumpOptions() const {
+        QByteArray result;
+        for ( std::map<std::string,QVariant>::const_iterator it = options.begin(), end = options.end() ; it != end ; ++it )
+            result += it->first.c_str() + it->second.toString().toUtf8() + '\n';
+        return result;
+    }
+
+    static QByteArray dumpStringList( const QStringList & sl ) {
+        return sl.join( QLatin1String( "\n" ) ).toUtf8();
+    }
+
+    template <typename T_container>
+    static QByteArray dumpStringList( const T_container & c ) {
+        QStringList sl;
+        std::copy( c.begin(), c.end(), std::back_inserter( sl ) );
+        return dumpStringList( sl );
+    }
+
+    QByteArray dumpSenders() const {
+        return dumpStringList( senders );
+    }
+
+    QByteArray dumpRecipients() const {
+        return dumpStringList( recipients );
+    }
+
+    QByteArray dumpMementos() const {
+        QByteArray result;
+        for ( std::map< QByteArray, shared_ptr<AssuanCommand::Memento> >::const_iterator it = mementos.begin(), end = mementos.end() ; it != end ; ++it ) {
+            char buf[2 + 2*sizeof(void*) + 2];
+            sprintf( buf, "0x%p\n", it->second.get() );
+            buf[sizeof(buf)-1] = '\0';
+            result += it->first + QByteArray::fromRawData( buf, sizeof buf );
+        }
+        return result;
+    }
+
+    QByteArray dumpFiles() const {
+        QStringList sl;
+        std::transform( files.begin(), files.end(), std::back_inserter( sl ),
+                        bind( &IOF::fileName, _1 ) );
+        return dumpStringList( sl );
     }
 
     void cleanup();
