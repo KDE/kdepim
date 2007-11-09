@@ -98,6 +98,25 @@ const GpgME::Key & keyForSignature( const Signature & sig, const std::vector<Key
 
 namespace {
 
+    class TemporaryFile : public QTemporaryFile {
+    public:
+        explicit TemporaryFile() : QTemporaryFile() {}
+        explicit TemporaryFile( const QString & templateName ) : QTemporaryFile( templateName ) {}
+        explicit TemporaryFile( QObject * parent ) : QTemporaryFile( parent ) {}
+        explicit TemporaryFile( const QString & templateName, QObject * parent ) : QTemporaryFile( templateName, parent ) {}
+
+        /* reimp */ void close() {
+            if ( isOpen() )
+                m_oldFileName = fileName();
+            QTemporaryFile::close();
+        }
+
+        QString oldFileName() const { return m_oldFileName; }
+
+    private:
+        QString m_oldFileName;
+    };
+
     enum Type {
         Decrypt,
         DecryptVerify,
@@ -195,7 +214,7 @@ namespace {
         struct _Output {
             shared_ptr<QIODevice> io;
             QString fileName;
-            shared_ptr<QTemporaryFile> tmp;
+            shared_ptr<TemporaryFile> tmp;
         } output;
 
         const CryptoBackend::Protocol* backend;
@@ -224,7 +243,7 @@ namespace {
         }
 
         static _Output makeTemporaryOutput( const QString & fname ) {
-            const shared_ptr<QTemporaryFile> tmp( new QTemporaryFile( fname ) );
+            const shared_ptr<TemporaryFile> tmp( new TemporaryFile( fname ) );
             if ( !tmp->open() )
                 throw assuan_exception( gpg_error( GPG_ERR_ASS_NO_OUTPUT ),
                                         i18n("Can't open temporary file \"%1\": %2", tmp->fileName(), tmp->errorString() ) );
@@ -861,12 +880,10 @@ static bool obtainOverwritePermission( const QString & fileName ) {
 void Input::finalizeOutput() {
     if ( !output.tmp )
         return;
-    assuan_assert( output.tmp->isOpen() );
+    if ( output.tmp->isOpen() )
+        output.tmp->close();
 
-    output.tmp->flush();
-
-    const QString tmpFileName = output.tmp->fileName();
-    output.tmp->close();
+    const QString tmpFileName = output.tmp->oldFileName();
 
     bool overwrite = false;
     int savedErrno = 0;
