@@ -645,7 +645,7 @@ void DecryptVerifyCommand::Private::startJobs()
 
         assuan_assert( input->backend );
 
-        QPointer<QObject> that;
+        QPointer<QObject> that = this;
         switch ( input->type ) {
         case Decrypt:
             try {
