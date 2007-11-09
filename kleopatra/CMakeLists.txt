@@ -105,12 +105,12 @@ if ( KLEO_ONLY_UISERVER )
 
   if ( KLEO_BUILD_QTONLY_MAINWINDOW )
     set( _kleopatra_mainwindow_SRCS
-         mainwindow.cpp 
-         trayiconlistener.cpp )
+         qmainwindow/mainwindow.cpp )
   else ( KLEO_BUILD_QTONLY_MAINWINDOW )	
     set( _kleopatra_mainwindow_SRCS
          mainwindow.cpp 
          searchbar.cpp
+         searchbarstatehandler.cpp
          tabwidget.cpp
          trayiconlistener.cpp )
   endif ( KLEO_BUILD_QTONLY_MAINWINDOW )
