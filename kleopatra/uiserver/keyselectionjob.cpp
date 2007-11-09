@@ -84,14 +84,14 @@ KeySelectionJob::Private::~Private()
 
 void KeySelectionJob::Private::emitError( int error, const GpgME::KeyListResult& result )
 {
-    emit q->error( GpgME::Error( AssuanCommand::makeError( error ) ), result );
     q->deleteLater();
+    emit q->error( GpgME::Error( AssuanCommand::makeError( error ) ), result );
 }
 
 void KeySelectionJob::Private::emitResult( const std::vector<GpgME::Key>& keys )
 {
-    emit q->result( keys );
     q->deleteLater();
+    emit q->result( keys );
 }
 
 void KeySelectionJob::Private::keyListingDone( const GpgME::KeyListResult& result )
@@ -123,9 +123,9 @@ void KeySelectionJob::Private::keySelectionDialogClosed()
 {
     if ( m_keySelector->result() == QDialog::Rejected ) {
         emitError( GPG_ERR_CANCELED, m_listResult );
-    } else {
-        emitResult( m_keySelector->selectedKeys() );
+        return;
     }
+    emitResult( m_keySelector->selectedKeys() );
 }
 
 void KeySelectionJob::Private::startKeyListing()
