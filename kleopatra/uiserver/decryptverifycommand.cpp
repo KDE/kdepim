@@ -845,7 +845,7 @@ void DecryptVerifyCommand::Private::addResult( unsigned int id, const DVResult &
 static bool obtainOverwritePermission( const QString & fileName ) {
     return KMessageBox::questionYesNo( 0, i18n("The file <b>%1</b> already exists.\n"
                                                "Overwrite?", fileName ),
-                                       i18n("Overwrite Existing File?") ) == KMessageBox::Yes ;
+                                       i18n("Overwrite Existing File?"), KStandardGuiItem::overwrite(), KStandardGuiItem::cancel() ) == KMessageBox::Yes ;
 }
 
 void Input::finalizeOutput() {
