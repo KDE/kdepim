@@ -38,8 +38,8 @@
 #include <kglobal.h>
 #include <kconfig.h>
 #include <kstandarddirs.h>
+#include <kurl.h>
 #include <kdebug.h>
-#include <KUrl.h>
 
 #include <kcal/calformat.h>
 #include <kcal/calendarresources.h>

@@ -599,7 +599,7 @@ void ViewManager::initActions()
   action->setWhatsThis( i18n( "You can add a new view by choosing one from the dialog that appears after pressing the button. You have to give the view a name, so that you can distinguish between the different views." ) );
 
   mActionDeleteView = coll->addAction( "view_delete" );
-  mActionDeleteView->setIcon( KIcon("view-remove") );
+  mActionDeleteView->setIcon( KIcon("view-close") );
   mActionDeleteView->setText( i18n( "Delete View" ) );
   connect(mActionDeleteView, SIGNAL(triggered(bool) ), SLOT( deleteView() ));
   mActionDeleteView->setWhatsThis( i18n( "By pressing this button you can delete the actual view, which you have added before." ) );
