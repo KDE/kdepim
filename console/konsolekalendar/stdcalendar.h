@@ -50,7 +50,7 @@ class StdCalendar : public KCal::CalendarResources
      * @param fileName is a filename containing a calendar.
      * @param resName is the the name of a resource.
      */
-     StdCalendar( const QString &fileName, const QString &resName );
+    StdCalendar( const QString &fileName, const QString &resName );
 
     /**
      * Destructor

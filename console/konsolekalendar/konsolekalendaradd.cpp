@@ -68,7 +68,7 @@ bool KonsoleKalendarAdd::addEvent()
 {
   bool status = true;
 
-  kDebug() <<"konsolekalendaradd.cpp::addEvent()";
+  kDebug(5860) << "konsolekalendaradd.cpp::addEvent()";
 
   if ( m_variables->isDryRun() ) {
     cout << i18n( "Insert Event &lt;Dry Run&gt;:" ).toLocal8Bit().data()
@@ -92,21 +92,21 @@ bool KonsoleKalendarAdd::addEvent()
     event->setLocation( m_variables->getLocation() );
 
     if ( m_variables->getCalendar()->addEvent( event ) ) {
-      cout << i18n( "Success: \"%1\" inserted" ,
-         m_variables->getSummary() ).toLocal8Bit().data()
+      cout << i18n( "Success: \"%1\" inserted",
+                    m_variables->getSummary() ).toLocal8Bit().data()
            << endl;
 
         m_variables->getCalendar()->save();
 
     } else {
-      cout << i18n( "Failure: \"%1\" not inserted" ,
-         m_variables->getSummary() ).toLocal8Bit().data()
+      cout << i18n( "Failure: \"%1\" not inserted",
+                    m_variables->getSummary() ).toLocal8Bit().data()
            << endl;
       status = false;
     }
   }
 
-  kDebug() <<"konsolekalendaradd.cpp::addEvent() | Done";
+  kDebug(5860) << "konsolekalendaradd.cpp::addEvent() | Done";
   return status;
 }
 
@@ -127,31 +127,29 @@ bool KonsoleKalendarAdd::addImportedCalendar()
   if ( !cal->load( fileName ) ||
        !cal->load( m_variables->getImportFile() ) ||
        !cal->save( fileName ) ) {
-    kDebug()
-      << "konsolekalendaradd.cpp::importCalendar() |"
-      << "Can't import file:"
-      << m_variables->getImportFile();
+    kDebug(5860) << "konsolekalendaradd.cpp::importCalendar() |"
+                 << "Can't import file:"
+                 << m_variables->getImportFile();
     return false;
   }
-  kDebug()
-    << "konsolekalendaradd.cpp::importCalendar() |"
-    << "Successfully imported file:"
-    << m_variables->getImportFile();
+  kDebug(5860) << "konsolekalendaradd.cpp::importCalendar() |"
+               << "Successfully imported file:"
+               << m_variables->getImportFile();
   return true;
 }
 
 void KonsoleKalendarAdd::printSpecs()
 {
-  cout << i18n( "  What:  %1" ,
-     m_variables->getSummary() ).toLocal8Bit().data()
+  cout << i18n( "  What:  %1",
+                m_variables->getSummary() ).toLocal8Bit().data()
        << endl;
 
-  cout << i18n( "  Begin: %1" ,
-     m_variables->getStartDateTime().toString( Qt::TextDate ) ).toLocal8Bit().data()
+  cout << i18n( "  Begin: %1",
+                m_variables->getStartDateTime().toString( Qt::TextDate ) ).toLocal8Bit().data()
        << endl;
 
-  cout << i18n( "  End:   %1" ,
-     m_variables->getEndDateTime().toString( Qt::TextDate ) ).toLocal8Bit().data()
+  cout << i18n( "  End:   %1",
+                m_variables->getEndDateTime().toString( Qt::TextDate ) ).toLocal8Bit().data()
        << endl;
 
   if ( m_variables->getFloating() == true ) {
@@ -159,11 +157,11 @@ void KonsoleKalendarAdd::printSpecs()
          << endl;
   }
 
-  cout << i18n( "  Desc:  %1" ,
-     m_variables->getDescription() ).toLocal8Bit().data()
+  cout << i18n( "  Desc:  %1",
+                m_variables->getDescription() ).toLocal8Bit().data()
        << endl;
 
-  cout << i18n( "  Location:  %1" ,
-     m_variables->getLocation() ).toLocal8Bit().data()
+  cout << i18n( "  Location:  %1",
+                m_variables->getLocation() ).toLocal8Bit().data()
        << endl;
 }

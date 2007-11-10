@@ -54,7 +54,7 @@ bool KonsoleKalendarChange::changeEvent()
 {
   bool status = false;
 
-  kDebug() <<"konsolekalendarchange.cpp::changeEvent()";
+  kDebug(5860) << "konsolekalendarchange.cpp::changeEvent()";
 
   /*
    * Retrieve event on the basis of the unique string ID
@@ -70,8 +70,8 @@ bool KonsoleKalendarChange::changeEvent()
            << endl;
       printSpecs();
     } else {
-      kDebug() <<"konsolekalendarchange.cpp:changeEvent() :"
-                << m_variables->getUID().toLocal8Bit().data();
+      kDebug(5860) << "konsolekalendarchange.cpp:changeEvent() :"
+                   << m_variables->getUID().toLocal8Bit().data();
 
       if ( m_variables->isVerbose() ) {
         cout << i18n( "Change Event &lt;Verbose&gt;:" ).toLocal8Bit().data()
@@ -107,21 +107,19 @@ bool KonsoleKalendarChange::changeEvent()
       }
 
       if ( m_variables->getCalendar()->addEvent( event ) ) {
-        cout << i18n( "Success: \"%1\" changed" ,
-            event->summary() ).toLocal8Bit().data()
+        cout << i18n( "Success: \"%1\" changed", event->summary() ).toLocal8Bit().data()
              << endl;
 
         m_variables->getCalendar()->save();
         status = true;
       } else {
-        cout << i18n( "Failure: \"%1\" not changed" ,
-            event->summary() ).toLocal8Bit().data()
+        cout << i18n( "Failure: \"%1\" not changed", event->summary() ).toLocal8Bit().data()
              << endl;
       }
     }
   }
 
-  kDebug() <<"konsolekalendarchange.cpp::changeEvent() | Done";
+  kDebug(5860) << "konsolekalendarchange.cpp::changeEvent() | Done";
   return status;
 }
 
@@ -137,11 +135,13 @@ void KonsoleKalendarChange::printSpecs( Event *event )
 
   KDateTime::Spec timeSpec = m_variables->getCalendar()->timeSpec();
   cout << i18n( "  Begin: %1",
-     event->dtStart().toTimeSpec( timeSpec ).dateTime().toString( Qt::TextDate ) ).toLocal8Bit().data()
+     event->dtStart().toTimeSpec( timeSpec ).
+                dateTime().toString( Qt::TextDate ) ).toLocal8Bit().data()
        << endl;
 
   cout << i18n( "  End:   %1",
-     event->dtEnd().toTimeSpec( timeSpec ).dateTime().toString( Qt::TextDate ) ).toLocal8Bit().data()
+     event->dtEnd().toTimeSpec( timeSpec ).
+                dateTime().toString( Qt::TextDate ) ).toLocal8Bit().data()
        << endl;
 
   cout << i18n( "  Desc:  %1",
@@ -155,27 +155,27 @@ void KonsoleKalendarChange::printSpecs( Event *event )
 
 void KonsoleKalendarChange::printSpecs()
 {
-  cout << i18n( "  UID:   %1" ,
-     m_variables->getUID() ).toLocal8Bit().data()
+  cout << i18n( "  UID:   %1",
+                m_variables->getUID() ).toLocal8Bit().data()
        << endl;
 
-  cout << i18n( "  What:  %1" ,
-     m_variables->getSummary() ).toLocal8Bit().data()
+  cout << i18n( "  What:  %1",
+                m_variables->getSummary() ).toLocal8Bit().data()
        << endl;
 
-  cout << i18n( "  Begin: %1" ,
-     m_variables->getStartDateTime().toString( Qt::TextDate ) ).toLocal8Bit().data()
+  cout << i18n( "  Begin: %1",
+                m_variables->getStartDateTime().toString( Qt::TextDate ) ).toLocal8Bit().data()
        << endl;
 
-  cout << i18n( "  End:   %1" ,
-     m_variables->getEndDateTime().toString( Qt::TextDate ) ).toLocal8Bit().data()
+  cout << i18n( "  End:   %1",
+                m_variables->getEndDateTime().toString( Qt::TextDate ) ).toLocal8Bit().data()
        << endl;
 
-  cout << i18n( "  Desc:  %1" ,
-     m_variables->getDescription() ).toLocal8Bit().data()
+  cout << i18n( "  Desc:  %1",
+                m_variables->getDescription() ).toLocal8Bit().data()
        << endl;
 
-  cout << i18n( "  Location:  %1" ,
-     m_variables->getLocation() ).toLocal8Bit().data()
+  cout << i18n( "  Location:  %1",
+                m_variables->getLocation() ).toLocal8Bit().data()
        << endl;
 }

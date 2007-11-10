@@ -14,7 +14,7 @@ QT4_ADD_DBUS_INTERFACE( knotesscalix_LIB_SRCS ${CMAKE_CURRENT_BINARY_DIR}/org.kd
 
 kde4_add_library(knotesscalix SHARED ${knotesscalix_LIB_SRCS})
 
-target_link_libraries(knotesscalix  ${KDE4_KDEPRINT_LIBS} ${KDE4_KRESOURCES_LIBS} ${KDE4_KCAL_LIBS} kdepim)
+target_link_libraries(knotesscalix  ${KDE4_KRESOURCES_LIBS} ${KDE4_KCAL_LIBS} kdepim)
 
 set_target_properties(knotesscalix PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
 install(TARGETS knotesscalix  DESTINATION ${LIB_INSTALL_DIR})

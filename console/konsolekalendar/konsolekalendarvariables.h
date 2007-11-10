@@ -47,8 +47,7 @@ using namespace KCal;
 /**
  * ExportType is the type of Export output
  */
-enum ExportType
-{
+enum ExportType {
   /** Export none */
   ExportTypeNone,
   /** Export as text (default) */

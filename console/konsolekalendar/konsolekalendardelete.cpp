@@ -53,7 +53,7 @@ bool KonsoleKalendarDelete::deleteEvent()
 {
   bool status = false;
 
-  kDebug() <<"konsolekalendardelete.cpp::deleteEvent()";
+  kDebug(5860) << "konsolekalendardelete.cpp::deleteEvent()";
 
   /*
    * Retrieve event on the basis of the unique string ID
@@ -65,18 +65,17 @@ bool KonsoleKalendarDelete::deleteEvent()
            << endl;
       printSpecs( event );
     } else {
-      kDebug() << "konsolekalendardelete.cpp:deleteEvent() :"
-               << m_variables->getUID().data();
+      kDebug(5860) << "konsolekalendardelete.cpp:deleteEvent() :"
+                   << m_variables->getUID().data();
 
       if ( m_variables->isVerbose() ) {
-	cout << i18n( "Delete Event &lt;Verbose&gt;:" ).data()
+        cout << i18n( "Delete Event &lt;Verbose&gt;:" ).data()
              << endl;
-	printSpecs( event );
+        printSpecs( event );
       }
 
       m_variables->getCalendar()->deleteEvent( event );
-      cout << i18n( "Success: \"%1\" deleted" ,
-          event->summary() ).data()
+      cout << i18n( "Success: \"%1\" deleted", event->summary() ).data()
            << endl;
 
       m_variables->getCalendar()->save();
@@ -84,18 +83,16 @@ bool KonsoleKalendarDelete::deleteEvent()
     }
   }
 
-  kDebug() <<"konsolekalendardelete.cpp::deleteEvent() | Done";
+  kDebug(5860) << "konsolekalendardelete.cpp::deleteEvent() | Done";
   return status;
 }
 
 void KonsoleKalendarDelete::printSpecs( Event *event )
 {
-  cout << i18n( "  UID:   %1" ,
-     m_variables->getUID() ).data()
+  cout << i18n( "  UID:   %1",  m_variables->getUID() ).data()
        << endl;
 
-  cout << i18n( "  What:  %1",
-     event->summary() ).data()
+  cout << i18n( "  What:  %1", event->summary() ).data()
        << endl;
 
   KDateTime::Spec timeSpec = m_variables->getCalendar()->timeSpec();
