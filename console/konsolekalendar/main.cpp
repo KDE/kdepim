@@ -39,6 +39,7 @@
 #include <kconfig.h>
 #include <kstandarddirs.h>
 #include <kdebug.h>
+#include <KUrl.h>
 
 #include <kcal/calformat.h>
 #include <kcal/calendarresources.h>
