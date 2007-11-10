@@ -318,10 +318,7 @@ QPixmap ImageBaseWidget::loadPixmap( const KUrl &url )
   mImageUrl->clear();
 
   if ( pixmap.height() != 140 || pixmap.width() != 100 ) {
-    if ( pixmap.height() > pixmap.width() )
-      pixmap = QPixmap::fromImage( pixmap.toImage().scaledToHeight( 140 ) );
-    else
-      pixmap = QPixmap::fromImage( pixmap.toImage().scaledToWidth( 100 ) );
+    pixmap = QPixmap::fromImage( pixmap.toImage().scaled( 100, 140, Qt::KeepAspectRatio, Qt::SmoothTransformation ) );
   }
 
   return pixmap;
