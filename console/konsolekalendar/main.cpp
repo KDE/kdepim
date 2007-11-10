@@ -38,6 +38,7 @@
 #include <kglobal.h>
 #include <kconfig.h>
 #include <kstandarddirs.h>
+#include <kurl.h>
 #include <kdebug.h>
 
 #include <kcal/calformat.h>
