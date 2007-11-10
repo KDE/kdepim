@@ -8,6 +8,13 @@ include(KDE4Defaults)
 include(MacroLibrary)
 include(MacroOptionalAddSubdirectory)
 
+if(WIN32)
+    set(LIB_INSTALL_DIR ${LIB_INSTALL_DIR}
+                        RUNTIME DESTINATION ${BIN_INSTALL_DIR}
+                        LIBRARY DESTINATION ${LIB_INSTALL_DIR}
+                        ARCHIVE DESTINATION ${LIB_INSTALL_DIR} )
+endif(WIN32)
+
 # this macro exists to work around a stupid Mac OS X linker bug
 # where it can't handle the same library being referenced multiple
 # times on the linker line
