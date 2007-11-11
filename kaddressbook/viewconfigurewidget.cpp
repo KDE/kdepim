@@ -62,7 +62,7 @@ ViewConfigureWidget::ViewConfigureWidget( KABC::AddressBook *ab, QWidget *parent
 
   // Add the second page, the filter selection
   page = addPage( i18n( "Default Filter" ), QString(),
-                  KIconLoader::global()->loadIcon( "search-filter",
+                  KIconLoader::global()->loadIcon( "view-filter",
                   KIconLoader::Panel ) );
 
   mFilterPage = new ViewConfigureFilterPage( page );

@@ -762,7 +762,7 @@ void KNMainWidget::initActions()
   connect(a_ctArtSortHeadersKeyb, SIGNAL(triggered(bool)), SLOT(slotArtSortHeadersKeyb()));
   a_ctArtSortHeadersKeyb->setShortcut(QKeySequence(Qt::Key_F7));
 
-  a_ctArtFilter             = new KNFilterSelectAction(i18n("&Filter"), "search-filter",
+  a_ctArtFilter             = new KNFilterSelectAction(i18n("&Filter"), "view-filter",
                               actionCollection(), "view_Filter");
   a_ctArtFilter->setShortcutConfigurable(false);
 
