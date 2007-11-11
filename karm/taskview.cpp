@@ -131,8 +131,9 @@ void TaskView::contentsMousePressEvent ( QMouseEvent * e )
     int leftborder = treeStepSize() * ( task->depth() + ( rootIsDecorated() ? 1 : 0)) + itemMargin();
     if ((leftborder < e->x()) && (e->x() < 19 + leftborder ))
     {
-      if ( task->isComplete() ) task->setPercentComplete( 0, _storage );
-      else task->setPercentComplete( 100, _storage );
+      if ( e->button() == LeftButton )
+        if ( task->isComplete() ) task->setPercentComplete( 0, _storage );
+        else task->setPercentComplete( 100, _storage );
     }
     emit updateButtons();
   }
