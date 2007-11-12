@@ -541,27 +541,25 @@ void KNMainWidget::initActions()
 
   //navigation
   a_ctNavNextArt = actionCollection()->addAction("go_nextArticle" );
-  a_ctNavNextArt->setIcon(KIcon("edit-find-next"));
   a_ctNavNextArt->setText(i18n("&Next Article"));
   a_ctNavNextArt->setToolTip(i18n("Go to next article"));
   a_ctNavNextArt->setShortcuts(KShortcut("N; Right"));
   connect(a_ctNavNextArt, SIGNAL(triggered(bool)), h_drView, SLOT(nextArticle()));
 
   a_ctNavPrevArt = actionCollection()->addAction("go_prevArticle" );
-  a_ctNavPrevArt->setIcon(KIcon("edit-find-previous"));
   a_ctNavPrevArt->setText(i18n("&Previous Article"));
   a_ctNavPrevArt->setShortcuts(KShortcut("P; Left"));
   a_ctNavPrevArt->setToolTip(i18n("Go to previous article"));
   connect(a_ctNavPrevArt, SIGNAL(triggered(bool)), h_drView, SLOT(prevArticle()));
 
   a_ctNavNextUnreadArt = actionCollection()->addAction("go_nextUnreadArticle");
-  a_ctNavNextUnreadArt->setIcon(KIcon("arrow-right"));
+  a_ctNavNextUnreadArt->setIcon(KIcon("go-next"));
   a_ctNavNextUnreadArt->setText(i18n("Next Unread &Article"));
   connect(a_ctNavNextUnreadArt, SIGNAL(triggered(bool)), SLOT(slotNavNextUnreadArt()));
   a_ctNavNextUnreadArt->setShortcut(QKeySequence(Qt::ALT+Qt::SHIFT+Qt::Key_Space));
 
   a_ctNavNextUnreadThread = actionCollection()->addAction("go_nextUnreadThread");
-  a_ctNavNextUnreadThread->setIcon(KIcon("arrow-right-double"));
+  a_ctNavNextUnreadThread->setIcon(KIcon("go-previous"));
   a_ctNavNextUnreadThread->setText(i18n("Next Unread &Thread"));
   connect(a_ctNavNextUnreadThread, SIGNAL(triggered(bool)), SLOT(slotNavNextUnreadThread()));
   a_ctNavNextUnreadThread->setShortcut(QKeySequence(Qt::SHIFT+Qt::Key_Space));
@@ -620,7 +618,7 @@ void KNMainWidget::initActions()
   connect(a_ctAccProperties, SIGNAL(triggered(bool)), SLOT(slotAccProperties()));
 
   a_ctAccRename = actionCollection()->addAction("account_rename");
-  a_ctAccRename->setIcon(KIcon("text"));
+  a_ctAccRename->setIcon(KIcon("editinput"));
   a_ctAccRename->setText(i18n("&Rename Account"));
   connect(a_ctAccRename, SIGNAL(triggered(bool)), SLOT(slotAccRename()));
 
@@ -661,7 +659,7 @@ void KNMainWidget::initActions()
   connect(a_ctGrpProperties, SIGNAL(triggered(bool)), SLOT(slotGrpProperties()));
 
   a_ctGrpRename = actionCollection()->addAction("group_rename");
-  a_ctGrpRename->setIcon(KIcon("text"));
+  a_ctGrpRename->setIcon(KIcon("editinput"));
   a_ctGrpRename->setText(i18n("Rename &Group"));
   connect(a_ctGrpRename, SIGNAL(triggered(bool)), SLOT(slotGrpRename()));
 
@@ -671,7 +669,6 @@ void KNMainWidget::initActions()
   connect(a_ctGrpGetNewHdrs, SIGNAL(triggered(bool)), SLOT(slotGrpGetNewHdrs()));
 
   a_ctGrpExpire = actionCollection()->addAction("group_expire");
-  a_ctGrpExpire->setIcon(KIcon("wizard"));
   a_ctGrpExpire->setText(i18n("E&xpire Group"));
   connect(a_ctGrpExpire, SIGNAL(triggered(bool)), SLOT(slotGrpExpire()));
 
@@ -685,7 +682,7 @@ void KNMainWidget::initActions()
   connect(a_ctGrpUnsubscribe, SIGNAL(triggered(bool)), SLOT(slotGrpUnsubscribe()));
 
   a_ctGrpSetAllRead = actionCollection()->addAction("group_allRead");
-  a_ctGrpSetAllRead->setIcon(KIcon("goto-page"));
+  a_ctGrpSetAllRead->setIcon(KIcon("go-jump"));
   a_ctGrpSetAllRead->setText(i18n("Mark All as &Read"));
   connect(a_ctGrpSetAllRead, SIGNAL(triggered(bool)), SLOT(slotGrpSetAllRead()));
 
@@ -719,12 +716,11 @@ void KNMainWidget::initActions()
   connect(a_ctFolDelete, SIGNAL(triggered(bool)), SLOT(slotFolDelete()));
 
   a_ctFolRename = actionCollection()->addAction("folder_rename");
-  a_ctFolRename->setIcon(KIcon("text"));
+  a_ctFolRename->setIcon(KIcon("editinput"));
   a_ctFolRename->setText(i18n("&Rename Folder"));
   connect(a_ctFolRename, SIGNAL(triggered(bool)), SLOT(slotFolRename()));
 
   a_ctFolCompact = actionCollection()->addAction("folder_compact");
-  a_ctFolCompact->setIcon(KIcon("wizard"));
   a_ctFolCompact->setText(i18n("C&ompact Folder"));
   connect(a_ctFolCompact, SIGNAL(triggered(bool)), SLOT(slotFolCompact()));
 
@@ -804,11 +800,13 @@ void KNMainWidget::initActions()
 
   //header-view - remote articles
   a_ctArtSetArtRead = actionCollection()->addAction("article_read");
+  a_ctArtOpenNewWindow->setIcon(KIcon("mail-mark-read"));
   a_ctArtSetArtRead->setText(i18n("Mark as &Read"));
   connect(a_ctArtSetArtRead, SIGNAL(triggered(bool) ), SLOT(slotArtSetArtRead()));
   a_ctArtSetArtRead->setShortcut(QKeySequence(Qt::Key_D));
 
   a_ctArtSetArtUnread = actionCollection()->addAction("article_unread");
+  a_ctArtOpenNewWindow->setIcon(KIcon("mail-mark-unread"));
   a_ctArtSetArtUnread->setText(i18n("Mar&k as Unread"));
   connect(a_ctArtSetArtUnread, SIGNAL(triggered(bool) ), SLOT(slotArtSetArtUnread()));
   a_ctArtSetArtUnread->setShortcut(QKeySequence(Qt::Key_U));
