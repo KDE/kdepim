@@ -48,6 +48,7 @@
 #include <KTabWidget>
 #include <KStatusBar>
 
+#include <QAbstractItemView>
 #include <QLabel>
 #include <QLineEdit>
 #include <QComboBox>
@@ -88,7 +89,7 @@ private:
 
     TabWidget * tabWidget;
     QToolBar actionToolBar;
-	std::vector<Page*> pages;
+	std::vector<Page> pages;
 	Kleo::ProgressBar progressBar;
 	QLabel statusLabel;
 
@@ -128,6 +129,11 @@ MainWindow::Private::~Private()
 
 void MainWindow::Private::addView( KeyListWidget* widget, const QString& title )
 {
+    Page page;
+    page.proxy.reset( new KeyListSortFilterProxyModel );
+    page.proxy->setSourceModel( model );
+    ui.pages.push_back( page );
+    widget->view()->setModel( page.proxy.get() );
     controller->addView( widget->view() );
     ui.tabWidget->addTab( widget, title );
 }

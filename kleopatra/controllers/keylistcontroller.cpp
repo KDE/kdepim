@@ -174,9 +174,6 @@ AbstractKeyListModel * KeyListController::model() const {
 void KeyListController::Private::connectView( QAbstractItemView * view ) {
     assert( std::binary_search( views.begin(), views.end(), view ) );
 
-    if ( model )
-        view->setModel( model );
-
     connect( view, SIGNAL(destroyed(QObject*)),
              q, SLOT(slotDestroyed(QObject*)) );
     connect( view, SIGNAL(doubleClicked(QModelIndex)),
