@@ -500,7 +500,8 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
       if ( receiver.isEmpty() )
         return true;
       saveFile( receiver, iCal, "counter" );
-      ( new KMDeleteMsgCommand( callback.getMsg()->getMsgSerNum() ) )->start();
+      if ( callback.deleteInvitationAfterReply() )
+        ( new KMDeleteMsgCommand( callback.getMsg()->getMsgSerNum() ) )->start();
       return true;
     }
 
@@ -538,7 +539,8 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
       if ( path == "reply" || path == "cancel" ) {
         // These should just be saved with their type as the dir
         if ( saveFile( "Receiver Not Searched", iCal, path ) ) {
-          ( new KMDeleteMsgCommand( c.getMsg()->getMsgSerNum() ) )->start();
+          if ( c.deleteInvitationAfterReply() )
+            ( new KMDeleteMsgCommand( c.getMsg()->getMsgSerNum() ) )->start();
           result = true;
         }
       }
