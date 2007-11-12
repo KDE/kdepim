@@ -103,7 +103,7 @@ install(TARGETS kcm_knode  DESTINATION ${PLUGIN_INSTALL_DIR})
 set(knodepart_PART_SRCS knode_part.cpp )
 
 
-kde4_add_plugin(knodepart WITH_PREFIX ${knodepart_PART_SRCS})
+kde4_add_plugin(knodepart ${knodepart_PART_SRCS})
 
 
 
