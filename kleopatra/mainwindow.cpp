@@ -35,6 +35,7 @@
 #include "searchbar.h"
 #include "tabwidget.h"
 
+#include "keylistwidget.h"
 #include "models/keylistmodel.h"
 #include "models/keylistsortfilterproxymodel.h"
 #include "controllers/keylistcontroller.h"
@@ -42,6 +43,7 @@
 #include "libkleo/ui/progressbar.h"
 
 #include <KActionCollection>
+#include <KLocale>
 #include <KTabWidget>
 #include <KStatusBar>
 
@@ -96,8 +98,9 @@ private:
 	      statusLabel( q->statusBar() )
 	{
         tabWidget = new TabWidget;
+        tabWidget->addTab( new KeyListWidget, i18n( "All Keys" ) );
+        tabWidget->addTab( new KeyListWidget, i18n( "My Keys" ) );
         q->setCentralWidget( tabWidget );
-
         
 	    KDAB_SET_OBJECT_NAME( tabWidget );
 	    KDAB_SET_OBJECT_NAME( actionToolBar );
@@ -111,6 +114,7 @@ private:
 MainWindow::Private::Private( MainWindow * qq ) : q( qq ), ui( q )
 {
     setupActions();
+    q->createGUI( "kleopatra_newui.rc" );
 } 
 
 MainWindow::Private::~Private()
@@ -119,16 +123,15 @@ MainWindow::Private::~Private()
 
 void MainWindow::Private::setupActions()
 {
-        KActionCollection * const coll = q->actionCollection();
+    KActionCollection * const coll = q->actionCollection();
 
-        QWidgetAction* searchBarAction = new QWidgetAction( q );
-        searchBarAction->setDefaultWidget( new SearchBar( q ) );
-        coll->addAction( "key_search_bar", searchBarAction );
+    QWidgetAction* searchBarAction = new QWidgetAction( q );
+    searchBarAction->setDefaultWidget( new SearchBar( q ) );
+    coll->addAction( "key_search_bar", searchBarAction );
 }
 
 MainWindow::MainWindow( QWidget* parent, Qt::WindowFlags flags ) : KXmlGuiWindow( parent, flags ), d( new Private( this ) )
 {
-    createGUI( "kleopatra_newui.rc" );
 }
 
 MainWindow::~MainWindow()
