@@ -27,7 +27,7 @@
 #include "part.h"
 
 typedef KParts::GenericFactory< KitchenSyncPart > KitchenSyncFactory;
-K_EXPORT_COMPONENT_FACTORY( libkitchensyncpart, KitchenSyncFactory )
+K_EXPORT_COMPONENT_FACTORY( kitchensyncpart, KitchenSyncFactory )
 
 KitchenSyncPart::KitchenSyncPart( QWidget *parentWidget, QObject *parent,
                                   const QStringList &list )

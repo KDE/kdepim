@@ -62,5 +62,5 @@ X-KDE-StartupNotify=true
 X-DCOP-ServiceType=Unique
 X-DCOP-ServiceName=kitchensync
 ServiceTypes=KParts/ReadOnlyPart
-X-KDE-Library=libkitchensyncpart
+X-KDE-Library=kitchensyncpart
 Categories=Qt;KDE;Utility;X-KDE-Utilities-PIM;
