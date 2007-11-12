@@ -215,6 +215,7 @@ namespace {
             shared_ptr<QIODevice> io;
             QString fileName;
             shared_ptr<TemporaryFile> tmp;
+            bool in_progress;
         } output;
 
         const CryptoBackend::Protocol* backend;
@@ -248,12 +249,12 @@ namespace {
                 throw assuan_exception( gpg_error( GPG_ERR_ASS_NO_OUTPUT ),
                                         i18n("Can't open temporary file \"%1\": %2", tmp->fileName(), tmp->errorString() ) );
             const _Output output = {
-                tmp, fname, tmp,
+                tmp, fname, tmp, false,
             };
             return output;
         }
 
-        void finalizeOutput();
+        void finalizeOutput( QWidget * parent );
 
     };
 
@@ -284,7 +285,7 @@ public:
 
     void startJobs();
 
-    void trySendingStatus( const char * tag, const QString & str ) {
+    void trySendingStatus( const char * tag, const QString & str ) const {
         // ### FIXME: make AssuanCommand::sendStatus() throw the exception
         if ( const int err = q->sendStatus( tag, str ) )
             throw assuan_exception( err, i18n("Problem writing out verification status.") );
@@ -344,13 +345,18 @@ public:
     const QString & errorString() const { return m_errorString; }
     
     void addResult( unsigned int id, const DVResult & res );
+    void sendSigStatii() const;
 
-private Q_SLOTS:
-    void slotDialogClosed() {
+    void finishCommand() const {
         if ( hasError() )
             q->done( error(), errorString() );
         else
             q->done();
+    }
+
+private Q_SLOTS:
+    void slotDialogClosed() {
+        finishCommand();
     }
 
     void slotVerifyOpaqueResult( const GpgME::VerificationResult & result, const QByteArray & plainText ) {
@@ -811,98 +817,114 @@ void DecryptVerifyCommand::Private::slotProgress( const QString& what, int curre
 void DecryptVerifyCommand::Private::addResult( unsigned int id, const DVResult & res )
 {
     assert( !inputList[id]->result );
-    inputList[id]->result.reset( new DVResult( res ) );
 
-    // send status for all results received so far, but in order of id
-    while ( m_statusSent < inputList.size() ) {
-        const shared_ptr<DVResult> result = inputList[m_statusSent]->result;
-        if ( !result )
-            break;
+    const shared_ptr<DVResult> result( new DVResult( res ) );
+    inputList[id]->result = result;
 
-        const VerificationResult & vResult = result->verificationResult;
-        const DecryptionResult   & dResult = result->decryptionResult;
+    qDebug( "addResult: %d (%p)", id, result.get() );
 
-        if ( dResult.error().code() )
-            result->error = dResult.error();
-        else if ( vResult.error().code() )
-            result->error = vResult.error();
+    const VerificationResult & vResult = result->verificationResult;
+    const DecryptionResult   & dResult = result->decryptionResult;
 
-        if ( !result->error )
-            try {
+    if ( dResult.error().code() )
+        result->error = dResult.error();
+    else if ( vResult.error().code() )
+        result->error = vResult.error();
 
-                try {
-                    QPointer<QObject> that = this;
-                    inputList[id]->finalizeOutput();
-                    if ( !that )
-                        return;
-                } catch ( const assuan_exception & e ) {
-                    // record these errors, but ignore them:
-                    result->error = e.error_code();
-                    result->errorString = e.message();
-                }
+    if ( !result->error )
+        try {
 
-                if ( !vResult.isNull() ) {
-                    const std::vector<Signature> sigs = vResult.signatures();
-                    //assuan_assert( !sigs.empty() );
-                    const std::vector<Key> signers = KeyCache::instance()->findSigners( vResult );
-                    Q_FOREACH ( const Signature & sig, sigs ) {
-                        const QString s = signatureToString( sig, keyForSignature( sig, signers ) );
-                        trySendingStatus( "SIGSTATUS", s );
-                    }
-                }
-            } catch ( const assuan_exception& e ) {
-               result->error = e.error_code();
-               result->errorString = e.message();
-               // FIXME ask to continue or cancel
-            }
+            QPointer<QObject> that = this;
+            inputList[id]->finalizeOutput( wizard );
+            if ( !that )
+                return;
 
-        // ### this shouldn't be in the loop!
-        if ( wizard )
-            wizard->resultWidget( m_statusSent )->setResult( result->decryptionResult, result->verificationResult );
-        m_statusSent++;
-
-        if ( result->error && !m_error ) {
-            m_error = result->error;
-            m_errorString = result->errorString;
+        } catch ( const assuan_exception& e ) {
+            result->error = e.error_code();
+            result->errorString = e.message();
+            // FIXME ask to continue or cancel?
         }
+
+    if ( wizard )
+        wizard->resultWidget( id )->setResult( result->decryptionResult, result->verificationResult );
+
+    if ( result->error && !m_error ) {
+        m_error = result->error;
+        m_errorString = result->errorString;
     }
 
-    if ( kdtools::all( inputList.begin(), inputList.end(), bind( &Input::result, _1 ) ) )
-        slotDialogClosed();
+    if ( kdtools::all( inputList.begin(), inputList.end(), bind( &Input::result, _1 ) ) &&
+         !kdtools::any( inputList.begin(), inputList.end(),
+                        bind( &Input::_Output::in_progress, bind( &Input::output, _1 ) ) ) )
+        sendSigStatii();
 }
 
-static bool obtainOverwritePermission( const QString & fileName ) {
-    return KMessageBox::questionYesNo( 0, i18n("The file <b>%1</b> already exists.\n"
-                                               "Overwrite?", fileName ),
+void DecryptVerifyCommand::Private::sendSigStatii() const {
+
+    Q_FOREACH( const shared_ptr<Input> & input, inputList ) {
+
+        const shared_ptr<DVResult> result = input->result;
+        if ( !result )
+            continue;
+
+        const VerificationResult & vResult = result->verificationResult;
+
+        try {
+            const std::vector<Signature> sigs = vResult.signatures();
+            const std::vector<Key> signers = KeyCache::instance()->findSigners( vResult );
+            Q_FOREACH ( const Signature & sig, sigs ) {
+                const QString s = signatureToString( sig, keyForSignature( sig, signers ) );
+                trySendingStatus( "SIGSTATUS", s );
+            }
+        } catch ( ... ) {}
+
+    }
+}
+
+struct OutputGuard {
+    Input::_Output & o;
+    explicit OutputGuard( Input::_Output & o_ ) : o( o_ ) { o.in_progress = true; }
+    ~OutputGuard() { o.in_progress = false; }
+};
+
+static bool obtainOverwritePermission( const QString & fileName, QWidget * parent ) {
+    return KMessageBox::questionYesNo( parent, i18n("The file <b>%1</b> already exists.\n"
+                                                    "Overwrite?", fileName ),
                                        i18n("Overwrite Existing File?"), KStandardGuiItem::overwrite(), KStandardGuiItem::cancel() ) == KMessageBox::Yes ;
 }
 
-void Input::finalizeOutput() {
+void Input::finalizeOutput( QWidget * parent ) {
     if ( !output.tmp )
         return;
+    if ( output.in_progress )
+        return;
+
+    const OutputGuard guard( output );
+
     if ( output.tmp->isOpen() )
         output.tmp->close();
 
     const QString tmpFileName = output.tmp->oldFileName();
 
-    bool overwrite = false;
-    int savedErrno = 0;
-    static const int maxtries = 5;
-    for ( int i = 0 ; i < maxtries ; ++i ) {
-        if ( QFile::rename( tmpFileName, output.fileName ) ) {
-            output.tmp->setAutoRemove( false );
-            return;
-        }
-        savedErrno = errno;
-        if ( !overwrite && !( overwrite = obtainOverwritePermission( output.fileName ) ) )
-            throw assuan_exception( gpg_error( GPG_ERR_CANCELED ),
-                                    i18n( "Overwriting declined" ) );
-        if ( !QFile::remove( output.fileName ) )
-            throw assuan_exception( gpg_error_from_errno( errno ),
-                                    i18n("Couldn't remove file \"%1\" for overwriting.", output.fileName ) );
+    if ( QFile::rename( tmpFileName, output.fileName ) ) {
+        output.tmp->setAutoRemove( false );
+        return;
     }
-    assuan_assert( savedErrno != 0 );
-    throw assuan_exception( gpg_error_from_errno( savedErrno ),
+
+    if ( !obtainOverwritePermission( output.fileName, parent ) )
+        throw assuan_exception( gpg_error( GPG_ERR_CANCELED ),
+                                i18n( "Overwriting declined" ) );
+
+    if ( !QFile::remove( output.fileName ) )
+        throw assuan_exception( errno ? gpg_error_from_errno( errno ) : gpg_error( GPG_ERR_EIO ),
+                                i18n("Couldn't remove file \"%1\" for overwriting.", output.fileName ) );
+
+    if ( QFile::rename( tmpFileName, output.fileName ) ) {
+        output.tmp->setAutoRemove( false );
+        return;
+    }
+
+    throw assuan_exception( errno ? gpg_error_from_errno( errno ) : gpg_error( GPG_ERR_EIO ),
                             i18n( "Couldn't rename file \"%1\" to \"%2\"",
                                   tmpFileName, output.fileName ) );
 }
