@@ -77,5 +77,5 @@ X-KDE-StartupNotify=true
 X-DBUS-StartupType=Unique
 MimeType=text/directory;text/directory;text/x-ldif;
 ServiceTypes=KParts/ReadOnlyPart,Browser/View,DBUS/AddressBook
-X-KDE-Library=libkaddressbookpart
+X-KDE-Library=kaddressbookpart
 Categories=Qt;KDE;Office;

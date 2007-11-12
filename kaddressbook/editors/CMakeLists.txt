@@ -10,7 +10,7 @@ include_directories( ${CMAKE_SOURCE_DIR}/kaddressbook/interfaces ${CMAKE_SOURCE_
 set(kaddrbk_cryptosettings_PART_SRCS cryptowidget.cpp )
 
 
-kde4_add_plugin(kaddrbk_cryptosettings WITH_PREFIX ${kaddrbk_cryptosettings_PART_SRCS})
+kde4_add_plugin(kaddrbk_cryptosettings ${kaddrbk_cryptosettings_PART_SRCS})
 
 
 

@@ -50,7 +50,7 @@
 
 #include "ldif_xxport.h"
 
-K_EXPORT_KADDRESSBOOK_XXFILTER( libkaddrbk_ldif_xxport, LDIFXXPort )
+K_EXPORT_KADDRESSBOOK_XXFILTER( kaddrbk_ldif_xxport, LDIFXXPort )
 
 LDIFXXPort::LDIFXXPort( KABC::AddressBook *ab, QWidget *parent, const char *name )
   : KAB::XXPort( ab, parent, name )

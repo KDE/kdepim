@@ -84,7 +84,7 @@ set(kaddressbookpart_PART_SRCS kaddressbook_part.cpp )
 qt4_add_dbus_adaptor(kaddressbookpart_PART_SRCS org.kde.KAddressbook.Core.xml kaddressbook_part.h KAddressbookPart kaddressbookpartadaptor )
 
 
-kde4_add_plugin(kaddressbookpart WITH_PREFIX ${kaddressbookpart_PART_SRCS})
+kde4_add_plugin(kaddressbookpart ${kaddressbookpart_PART_SRCS})
 
 
 

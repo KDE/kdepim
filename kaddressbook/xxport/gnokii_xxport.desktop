@@ -1,6 +1,6 @@
 [Desktop Entry]
 Encoding=UTF-8
-X-KDE-Library=libkaddrbk_gnokii_xxport
+X-KDE-Library=kaddrbk_gnokii_xxport
 Name=KAB Mobile Phone XXPort Plugin
 Name[af]=KAB selfoon XXPort inprop module
 Name[ca]=Connector d'importació/exportació de telèfon mòbil per a KAB

@@ -37,7 +37,7 @@
 
 #include "kde2_xxport.h"
 
-K_EXPORT_KADDRESSBOOK_XXFILTER( libkaddrbk_kde2_xxport, KDE2XXPort )
+K_EXPORT_KADDRESSBOOK_XXFILTER( kaddrbk_kde2_xxport, KDE2XXPort )
 
 KDE2XXPort::KDE2XXPort( KABC::AddressBook *ab, QWidget *parent, const char *name )
   : KAB::XXPort( ab, parent, name )

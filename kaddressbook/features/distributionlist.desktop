@@ -1,6 +1,6 @@
 [Desktop Entry]
 Encoding=UTF-8
-X-KDE-Library=libkaddrbk_distributionlist
+X-KDE-Library=kaddrbk_distributionlist
 Name=KAB Distribution List Plugin
 Name[af]=KAB verspreiding lys inprop module
 Name[br]=Lugent roll ingaladur evit KAB

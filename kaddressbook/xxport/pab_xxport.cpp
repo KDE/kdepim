@@ -37,7 +37,7 @@
 
 #include "pab_xxport.h"
 
-K_EXPORT_KADDRESSBOOK_XXFILTER( libkaddrbk_pab_xxport, PABXXPort )
+K_EXPORT_KADDRESSBOOK_XXFILTER( kaddrbk_pab_xxport, PABXXPort )
 
 PABXXPort::PABXXPort( KABC::AddressBook *ab, QWidget *parent, const char *name )
   : KAB::XXPort( ab, parent, name )

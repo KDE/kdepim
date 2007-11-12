@@ -1,6 +1,6 @@
 [Desktop Entry]
 Encoding=UTF-8
-X-KDE-Library=libkaddrbk_gmx_xxport
+X-KDE-Library=kaddrbk_gmx_xxport
 Name=KAB GMX XXPort Plugin
 Name[bg]=KAB CSV XXPort Plugin
 Name[ca]=Connector d'importació/exportació GMX per al KAB

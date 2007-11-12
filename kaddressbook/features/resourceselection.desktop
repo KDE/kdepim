@@ -1,6 +1,6 @@
 [Desktop Entry]
 Encoding=UTF-8
-X-KDE-Library=libkaddrbk_resourceselection
+X-KDE-Library=kaddrbk_resourceselection
 Name=Address Book Management Plugin
 Name[af]=Adres boek bestuur inprop module
 Name[be]=Утулка "Кіраванне адраснымі кнігамі"

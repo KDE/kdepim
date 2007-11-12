@@ -1,6 +1,6 @@
 [Desktop Entry]
 Encoding=UTF-8
-X-KDE-Library=libkaddrbk_cryptosettings
+X-KDE-Library=kaddrbk_cryptosettings
 Name=Crypto Preferences
 Name[af]=Kripto Voorkeure
 Name[be]=Настаўленні крыптаграфіі

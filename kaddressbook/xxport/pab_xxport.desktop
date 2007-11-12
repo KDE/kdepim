@@ -1,6 +1,6 @@
 [Desktop Entry]
 Encoding=UTF-8
-X-KDE-Library=libkaddrbk_pab_xxport
+X-KDE-Library=kaddrbk_pab_xxport
 Name=KAB MS Exchange Personal Addressbook XXPort Plugin
 Name[af]=KAB MS Exchange adresboek XXPort inprop module
 Name[ca]=Connector d'importació/exportació de la llibreta d'adreces personal d'MS Exchange per a KAB

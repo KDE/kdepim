@@ -163,7 +163,7 @@ namespace {
 
 extern "C"
 KDE_EXPORT KMail::Interface::BodyPartFormatterPlugin *
-libkmail_bodypartformatter_text_vcard_create_bodypart_formatter_plugin() {
+kmail_bodypartformatter_text_vcard_create_bodypart_formatter_plugin() {
   KGlobal::locale()->insertCatalog( "kmail_text_vcard_plugin" );
   return new Plugin();
 }
