@@ -37,12 +37,16 @@
 
 #include <utils/pimpl_ptr.h>
 
+class QAbstractItemView;
+
 class KeyListWidget : public QWidget {
     Q_OBJECT
 public:
     explicit KeyListWidget( QWidget * parent=0, Qt::WFlags f=0 );
     ~KeyListWidget();
-    
+
+    QAbstractItemView* view() const;
+
 private:
     class Private;
     kdtools::pimpl_ptr<Private> d;

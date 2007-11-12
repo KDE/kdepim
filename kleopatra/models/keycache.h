@@ -95,12 +95,10 @@ namespace Kleo {
     public Q_SLOTS:
         void clear();
 
-#if 0
     Q_SIGNALS:
         void changed( const GpgME::Key & key );
         void aboutToRemove( const GpgME::Key & key );
         void added( const GpgME::Key & key );
-#endif
 
     private:
         class Private;

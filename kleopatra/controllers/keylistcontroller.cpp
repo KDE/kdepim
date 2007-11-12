@@ -33,6 +33,7 @@
 #include "keylistcontroller.h"
 #include "commands/detailscommand.h"
 
+#include <models/keycache.h>
 #include <models/keylistmodel.h>
 
 #include <QAbstractItemView>
@@ -92,6 +93,7 @@ public:
     void slotSelectionChanged( const QItemSelection & old, const QItemSelection & new_ );
     void slotContextMenu( const QPoint & pos );
     void slotCommandFinished();
+    void slotAddKey( const GpgME::Key & key );
 
 private:
     std::vector<QAbstractItemView*> views;
@@ -114,12 +116,20 @@ KeyListController::Private::~Private() {}
 KeyListController::KeyListController( QObject * p )
     : QObject( p ), d( new Private( this ) )
 {
-
+    connect( KeyCache::mutableInstance().get(), SIGNAL( added( GpgME::Key ) ),
+             this, SLOT( slotAddKey( GpgME::Key ) ) );
 }
 
 KeyListController::~KeyListController() {}
 
 
+
+void KeyListController::Private::slotAddKey( const GpgME::Key & key )
+{
+    if ( !model )
+        return;
+    model->addKey( key ); 
+}
 
 void KeyListController::addView( QAbstractItemView * view ) {
     if ( view && std::binary_search( d->views.begin(), d->views.end(), view ) )
@@ -163,6 +173,9 @@ AbstractKeyListModel * KeyListController::model() const {
 
 void KeyListController::Private::connectView( QAbstractItemView * view ) {
     assert( std::binary_search( views.begin(), views.end(), view ) );
+
+    if ( model )
+        view->setModel( model );
 
     connect( view, SIGNAL(destroyed(QObject*)),
              q, SLOT(slotDestroyed(QObject*)) );

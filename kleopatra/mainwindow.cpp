@@ -39,6 +39,7 @@
 #include "models/keylistmodel.h"
 #include "models/keylistsortfilterproxymodel.h"
 #include "controllers/keylistcontroller.h"
+#include "commands/refreshkeyscommand.h"
 
 #include "libkleo/ui/progressbar.h"
 
@@ -71,11 +72,12 @@ public:
 
 private:
     void setupActions();
+    void addView( KeyListWidget* view, const QString& title );
 
 private:
 
     Kleo::AbstractKeyListModel * model;
-    Kleo::KeyListController controller;
+    Kleo::KeyListController * controller;
 
     struct Page {
 	boost::shared_ptr<KeyListSortFilterProxyModel> proxy;
@@ -98,8 +100,6 @@ private:
 	      statusLabel( q->statusBar() )
 	{
         tabWidget = new TabWidget;
-        tabWidget->addTab( new KeyListWidget, i18n( "All Keys" ) );
-        tabWidget->addTab( new KeyListWidget, i18n( "My Keys" ) );
         q->setCentralWidget( tabWidget );
         
 	    KDAB_SET_OBJECT_NAME( tabWidget );
@@ -111,16 +111,27 @@ private:
     } ui;
 };
 
-MainWindow::Private::Private( MainWindow * qq ) : q( qq ), ui( q )
+MainWindow::Private::Private( MainWindow * qq ) : q( qq ), model( AbstractKeyListModel::createFlatKeyListModel( q ) ), controller( new KeyListController( q ) ), ui( q )
 {
+    controller->setModel( model );
     setupActions();
     q->createGUI( "kleopatra_newui.rc" );
+    addView( new KeyListWidget, i18n( "All Certificates" ) );
+    addView( new KeyListWidget, i18n( "My Certificates" ) );
+    RefreshKeysCommand* refresh = new RefreshKeysCommand( controller );
+    refresh->start();
 } 
 
 MainWindow::Private::~Private()
 {
 } 
 
+void MainWindow::Private::addView( KeyListWidget* widget, const QString& title )
+{
+    controller->addView( widget->view() );
+    ui.tabWidget->addTab( widget, title );
+}
+    
 void MainWindow::Private::setupActions()
 {
     KActionCollection * const coll = q->actionCollection();

@@ -37,11 +37,11 @@
 
 using namespace Kleo;
 
-Command::Private::Private( Command * qq )
+Command::Private::Private( Command * qq, KeyListController * controller )
     : q( qq ),
       indexes_(),
       view_(),
-      controller_( qobject_cast<KeyListController*>( qq->parent() ) )
+      controller_( controller )
 {
 
 }
@@ -49,7 +49,7 @@ Command::Private::Private( Command * qq )
 Command::Private::~Private() {}
 
 Command::Command( KeyListController * p )
-    : QObject( p ), d( new Private( this ) )
+    : QObject( p ), d( new Private( this, p ) )
 {
 
 }

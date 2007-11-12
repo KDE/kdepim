@@ -57,8 +57,6 @@ namespace Kleo {
         void setModel( AbstractKeyListModel * model );
         AbstractKeyListModel * model() const;
 
-        
-
     private:
         class Private;
         kdtools::pimpl_ptr<Private> d;
@@ -69,6 +67,7 @@ namespace Kleo {
         Q_PRIVATE_SLOT( d, void slotSelectionChanged(QItemSelection,QItemSelection) )
         Q_PRIVATE_SLOT( d, void slotContextMenu(QPoint) )
         Q_PRIVATE_SLOT( d, void slotCommandFinished() )
+        Q_PRIVATE_SLOT( d, void slotAddKey(GpgME::Key) );
     };
 
 }

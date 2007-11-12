@@ -37,6 +37,7 @@
 #include "controllers/keylistcontroller.h"
 #include "models/keylistmodel.h"
 
+#include <QAbstractItemView>
 #include <QPointer>
 #include <QList>
 #include <QModelIndex>
@@ -47,7 +48,7 @@ class Kleo::Command::Private {
     friend class ::Kleo::Command;
     Command * const q;
 public:
-    explicit Private( Command * qq );
+    explicit Private( Command * qq, KeyListController * controller );
     ~Private();
 
     QAbstractItemView * view() const { return view_; }

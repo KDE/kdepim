@@ -388,6 +388,9 @@ void KeyCache::insert( const std::vector<Key> & keys ) {
     by_keyid.swap( d->by.keyid );
     by_shortkeyid.swap( d->by.shortkeyid );
     by_email.swap( d->by.email );
+
+    Q_FOREACH( const Key & key, sorted )
+        emit added( key ); 
 }
 
 void KeyCache::clear() {

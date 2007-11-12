@@ -1,5 +1,5 @@
 /* -*- mode: c++; c-basic-offset:4 -*-
-    keylistwidget.cpp
+    refreshkeyscommand.h
 
     This file is part of Kleopatra, the KDE keymanager
     Copyright (c) 2007 Klarälvdalens Datakonsult AB
@@ -30,49 +30,32 @@
     your version.
 */
 
-#include "keylistwidget.h"
-#include "models/keylistmodel.h"
 
-#include <QGridLayout>
-#include <QTreeView>
+#ifndef __KLEOPATRA_REFRESHKEYSCOMMAND_H__
+#define __KLEOPATRA_REFRESHKEYSCOMMAND_H__
 
-class KeyListWidget::Private {
-    friend class ::KeyListWidget;
-    KeyListWidget * const q;
-public:
-    explicit Private( KeyListWidget * qq );
-    ~Private();
+#include <commands/command.h>
 
-    QTreeView * m_view;
-};
+namespace  Kleo {
 
+    class RefreshKeysCommand : public Command {
+        Q_OBJECT
+            public:
+        explicit RefreshKeysCommand( KeyListController* parent );
+        ~RefreshKeysCommand();        
 
-KeyListWidget::Private::Private( KeyListWidget * qq )
-  : q( qq )
-{
-    QGridLayout * const layout = new QGridLayout( q );
-    layout->setMargin( 0 );
-    m_view = new QTreeView;
-    m_view->setRootIsDecorated( false );
-    m_view->setSortingEnabled( true );
-    m_view->sortByColumn( Kleo::AbstractKeyListModel::Fingerprint, Qt::AscendingOrder );
-    layout->addWidget( m_view, 0, 0 );
+    private:
+        void doStart();
+        void doCancel();
+
+    private:
+        class Private;
+        inline Private * d_func();
+        inline const Private * d_func() const;
+
+        Q_PRIVATE_SLOT( d_func(), void keyListingDone( GpgME::KeyListResult ) )
+        Q_PRIVATE_SLOT( d_func(), void addKey( GpgME::Key ) )
+    };
 }
 
-KeyListWidget::Private::~Private() {}
-
-
-
-KeyListWidget::KeyListWidget( QWidget * parent, Qt::WFlags f )
-  : QWidget( parent, f ), d( new Private( this ) )
-{
-    
-}
-
-KeyListWidget::~KeyListWidget() {}
-
-QAbstractItemView* KeyListWidget::view() const
-{
-    return d->m_view;
-}
-
+#endif // __KLEOPATRA_REFRESHKEYSCOMMAND_H__
