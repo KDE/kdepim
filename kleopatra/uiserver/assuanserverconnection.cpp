@@ -152,7 +152,10 @@ static unsigned char unhex( unsigned char ch ) {
         return ch - 'A' + 10;
     if ( ch >= 'a' && ch <= 'f' )
         return ch - 'a' + 10;
-    throw gpg_error( GPG_ERR_ASS_SYNTAX );
+    const char cch = ch;
+    throw assuan_exception( gpg_error( GPG_ERR_ASS_SYNTAX ),
+                            i18n("Invalid hex char '%1' in input stream.",
+                                 QString::fromLatin1( &cch, 1 ) ) );
 }
 
 static std::string hexdecode( const std::string & in ) {
@@ -163,11 +166,13 @@ static std::string hexdecode( const std::string & in ) {
             ++it;
             unsigned char ch = '\0';
             if ( it == end )
-                throw gpg_error( GPG_ERR_ASS_SYNTAX );
+                throw assuan_exception( gpg_error( GPG_ERR_ASS_SYNTAX ),
+                                        i18n("Premature end of hex-encoded char in input stream") );
             ch |= unhex( *it ) << 4;
             ++it;
             if ( it == end )
-                throw gpg_error( GPG_ERR_ASS_SYNTAX );
+                throw assuan_exception( gpg_error( GPG_ERR_ASS_SYNTAX ),
+                                        i18n("Premature end of hex-encoded char in input stream") );
             ch |= unhex( *it );
             result.push_back( ch );
         } else if ( *it == '+' ) {
@@ -213,7 +218,8 @@ static std::map<std::string,std::string> parse_commandline( const char * line ) 
                 begin = line + 1;
             } else if ( *line == '=' ) {
                 if ( line == begin )
-                    throw gpg_error( GPG_ERR_ASS_SYNTAX );
+                    throw assuan_exception( gpg_error( GPG_ERR_ASS_SYNTAX ),
+                                            i18n("No option name given") );
                 else
                     lastEQ = line;
             }
