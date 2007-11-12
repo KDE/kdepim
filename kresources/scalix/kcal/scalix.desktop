@@ -8,6 +8,7 @@ Name[pt]=Calendário em Servidor Scalix via KMail
 Name[pt_BR]=Calendário em Servidor Scalix via KMail
 Name[sv]=Kalender på Scalix-server via Kmail
 Name[x-test]=xxCalendar on Scalix Server via KMailxx
+Name[zh_TW]=透過 KMail 取得 Scalix 伺服器上的行事曆
 X-KDE-Library=kcal_scalix
 Type=Service
 ServiceTypes=KResources/Plugin

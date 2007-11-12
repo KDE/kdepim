@@ -8,6 +8,7 @@ Name[pt]=Livro de Endereços em Servidor Scalix via KMail
 Name[pt_BR]=Livro de Endereços em Servidor Scalix via KMail
 Name[sv]=Adressbok på Scalix-server via Kmail
 Name[x-test]=xxAddressbook on Scalix Server via KMailxx
+Name[zh_TW]=透過 KMail 取得 Scalix 伺服器上的通訊錄
 X-KDE-Library=kabc_scalix
 Type=Service
 ServiceTypes=KResources/Plugin
