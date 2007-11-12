@@ -5,5 +5,5 @@ Name[ne]=केडीई मोबाइल उपकरणको मुख्�
 Name[sv]=Kmobiletools-huvuddel
 Name[x-test]=xxkmobiletoolsMainPartxx
 ServiceTypes=KParts/ReadOnlyPart,KParts/ReadWritePart
-X-KDE-Library=libkmobiletoolsmainpart
+X-KDE-Library=kmobiletoolsmainpart
 Type=Service

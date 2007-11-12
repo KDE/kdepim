@@ -57,7 +57,7 @@ QString kmobiletoolsGammu_engine::engineDesktopName() const {
 
 
 QString kmobiletoolsGammu_engine::engineLibName() const {
-    return "libkmobiletools_gammu";
+    return "kmobiletools_gammu";
 }
 
 
@@ -405,7 +405,7 @@ void kmobiletoolsGammu_engine::fetchCalendar() {
 
 extern "C"
 {
-    void* init_libkmobiletools_gammu()
+    void* init_kmobiletools_gammu()
     {
       return new kmobiletoolsGammu_engineFactory;
     }

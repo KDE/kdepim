@@ -307,7 +307,7 @@ void FakeEngine::removeAddressee( const KMobileTools::AddressbookEntry& addresse
     status( QString( "Enqueued addressee \"%1\" to be removed." ).arg( addressee.name() ) );
 }
 
-K_EXPORT_COMPONENT_FACTORY( libkmobiletools_fake, FakeEngineFactory )
+K_EXPORT_COMPONENT_FACTORY( kmobiletools_fake, FakeEngineFactory )
 
 FakeEngineFactory::FakeEngineFactory()
 {
