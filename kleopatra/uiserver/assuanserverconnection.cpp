@@ -857,6 +857,14 @@ QByteArray AssuanCommand::registerMemento( const QByteArray & tag, const shared_
     return tag;
 }
 
+void AssuanCommand::removeMemento( const QByteArray & tag ) {
+    // oh, hack :(
+    assert( assuan_get_pointer( d->ctx.get() ) );
+    AssuanServerConnection::Private & conn = *static_cast<AssuanServerConnection::Private*>( assuan_get_pointer( d->ctx.get() ) );
+    
+    conn.mementos.erase( tag );
+}
+
 QStringList AssuanCommand::fileNames() const {
     QStringList result;
     Q_FOREACH( const IOF & io, d->files )

@@ -250,6 +250,7 @@ namespace Kleo {
         const std::map< QByteArray, boost::shared_ptr<Memento> > & mementos() const;
         QByteArray registerMemento( const boost::shared_ptr<Memento> & mem );
         QByteArray registerMemento( const QByteArray & tag, const boost::shared_ptr<Memento> & mem );
+        void removeMemento( const QByteArray & tag );
 
         bool hasOption( const char * opt ) const;
         QVariant option( const char * opt ) const;
