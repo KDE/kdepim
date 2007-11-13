@@ -845,6 +845,10 @@ shared_ptr<AssuanCommand::Memento> AssuanCommand::memento( const QByteArray & ta
 
 QByteArray AssuanCommand::registerMemento( const shared_ptr<Memento> & mem ) {
     const QByteArray tag = QByteArray::number( reinterpret_cast<qulonglong>( mem.get() ), 36 );
+    return registerMemento( tag, mem );
+}
+
+QByteArray AssuanCommand::registerMemento( const QByteArray & tag, const shared_ptr<Memento> & mem ) {
     // oh, hack :(
     assert( assuan_get_pointer( d->ctx.get() ) );
     AssuanServerConnection::Private & conn = *static_cast<AssuanServerConnection::Private*>( assuan_get_pointer( d->ctx.get() ) );

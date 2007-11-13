@@ -38,6 +38,7 @@
 #include <gpgme++/global.h>
 
 #include <boost/shared_ptr.hpp>
+#include <boost/enable_shared_from_this.hpp>
 
 #include <string>
 #include <map>
@@ -196,7 +197,7 @@ namespace Kleo {
       \endcode
 
     */
-    class AssuanCommand {
+    class AssuanCommand : public boost::enable_shared_from_this<AssuanCommand> {
         // defined in assuanserverconnection.cpp!
     public:
         AssuanCommand();
@@ -248,6 +249,7 @@ namespace Kleo {
         }
         const std::map< QByteArray, boost::shared_ptr<Memento> > & mementos() const;
         QByteArray registerMemento( const boost::shared_ptr<Memento> & mem );
+        QByteArray registerMemento( const QByteArray & tag, const boost::shared_ptr<Memento> & mem );
 
         bool hasOption( const char * opt ) const;
         QVariant option( const char * opt ) const;
