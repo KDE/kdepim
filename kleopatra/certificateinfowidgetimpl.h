@@ -67,6 +67,8 @@ public:
 
   void setKey( const GpgME::Key & key );
 
+  static KDialog * createDialog( const GpgME::Key & key, QWidget * parent );
+
 signals:
   void requestCertificateDownload( const QString & fingerprint, const QString& displayName );
 
@@ -87,6 +89,7 @@ private:
   void startCertificateDump();
   void startKeyExistanceCheck();
   void updateChainView();
+  static KDialog * createDialog( CertificateInfoWidgetImpl * widget, QWidget * parent );
 
 private:
   QByteArray mDumpOutput;

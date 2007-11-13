@@ -375,20 +375,34 @@ void CertificateInfoWidgetImpl::slotShowCertPathDetails( Q3ListViewItem * item )
 
   assert( itemIndex >= 0 );
 
-  KDialog * dialog = new KDialog( this );
+  CertificateInfoWidgetImpl * const top = new CertificateInfoWidgetImpl( mChain[itemIndex], mExternal );
+  // proxy the signal to our receiver:
+  connect( top, SIGNAL(requestCertificateDownload(QString, QString)),
+  SIGNAL(requestCertificateDownload(QString, QString)) );
+  KDialog * const dialog = createDialog( top, this );
+  dialog->setWindowTitle( i18n("Additional Information for Key") );
+  dialog->show();
+}
+
+KDialog * CertificateInfoWidgetImpl::createDialog( const GpgME::Key & key, QWidget * parent )
+{
+  return createDialog( new CertificateInfoWidgetImpl( key, /*external=*/false ), parent );  
+}
+
+KDialog * CertificateInfoWidgetImpl::createDialog( CertificateInfoWidgetImpl * widget, QWidget * parent )
+{
+  KDialog * const dialog = new KDialog( parent );
   dialog->setObjectName( "dialog" );
-  dialog->setCaption( i18n("Additional Information for Key") );
   dialog->setButtons( KDialog::Close );
   dialog->setDefaultButton( KDialog::Close );
   dialog->setModal( false );
-  CertificateInfoWidgetImpl * top =
-    new CertificateInfoWidgetImpl( mChain[itemIndex], mExternal, dialog );
-  dialog->setMainWidget( top );
-  // proxy the signal to our receiver:
-  connect( top, SIGNAL(requestCertificateDownload(const QString&, const QString&)),
-	   SIGNAL(requestCertificateDownload(const QString&, const QString&)) );
-  dialog->show();
+  dialog->setMainWidget( widget );
+  dialog->setWindowTitle( i18n("Additional Information for Key") );
+  dialog->setAttribute( Qt::WA_DeleteOnClose );
+  return dialog;
 }
+
+
 
 
 void CertificateInfoWidgetImpl::slotImportCertificate()
