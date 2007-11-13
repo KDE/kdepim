@@ -86,7 +86,7 @@ void DetailsCommand::doStart() {
 
     if ( !d->dialog ) {
         d->dialog = new KDialog( d->view() );
-        d->dialog->setButtons( KDialog::Ok ); 
+        d->dialog->setButtons( KDialog::Close ); 
         d->dialog->setMainWidget( new CertificateInfoWidgetImpl( d->key(), false, d->dialog ) );
         d->dialog->setAttribute( Qt::WA_DeleteOnClose );
     }
