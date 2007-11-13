@@ -115,7 +115,7 @@ MainWindow::Private::Private( MainWindow * qq ) : q( qq ), model( AbstractKeyLis
     q->createGUI( "kleopatra_newui.rc" );
     addView( i18n( "All Certificates" ) );
     addView( i18n( "My Certificates" ) );
-    RefreshKeysCommand* refresh = new RefreshKeysCommand( controller );
+    RefreshKeysCommand* const refresh = new RefreshKeysCommand( controller );
     refresh->start();
 } 
 
@@ -137,6 +137,8 @@ void MainWindow::Private::setupActions()
     QWidgetAction * const searchBarAction = new QWidgetAction( q );
     SearchBar * const searchBar = new SearchBar( q );
     new SearchBarStateHandler( ui.tabWidget, searchBar, searchBar );
+    connect( searchBar, SIGNAL( textChanged( QString ) ),
+             ui.tabWidget, SLOT( setFilter( QString ) ) );
     searchBarAction->setDefaultWidget( searchBar );
     coll->addAction( "key_search_bar", searchBarAction );
 }

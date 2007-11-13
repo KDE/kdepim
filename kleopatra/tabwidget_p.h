@@ -41,36 +41,24 @@
 
 class Page : public QWidget {
     Q_OBJECT
-    Q_PROPERTY( QString filter READ filter WRITE setFilter NOTIFY filterChanged )
 public:
     explicit Page( QAbstractItemModel * sourceModel, QWidget * parent=0 );
     ~Page();
 
-    QString filter() const { return m_filter; }
-    QAbstractItemView* view();
+    QAbstractItemView* view() const;
 
-public Q_SLOTS:
-    void setFilter( const QString & str ) {
-	if ( str == m_filter )
-	    return;
-	m_filter = str;
-	emit filterChanged( str );
-    }
-
-Q_SIGNALS:
-    void filterChanged( const QString & );
-
-protected:
-    void resizeEvent( QResizeEvent * e ) {
-	QWidget::resizeEvent( e );
-	m_view.resize( e->size() );
-    }
+    void setFilter( const QString& filter ); 
 
 private:
-    QString m_filter;
 
-    QTreeView m_view;
-    Kleo::KeyListSortFilterProxyModel m_proxy;
+    void resizeEvent( QResizeEvent * e ) {
+        QWidget::resizeEvent( e );
+        m_view->resize( e->size() );
+    }
+
+    QString m_filter;
+    QTreeView * m_view;
+    Kleo::KeyListSortFilterProxyModel * m_proxy;
     
 };
 

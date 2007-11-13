@@ -38,31 +38,35 @@
 #include <KTabWidget>
 
 #include <QGridLayout>
-
-#include <map>
+#include <QMap>
 
 #include <cassert>
 
 Page::Page( QAbstractItemModel* model, QWidget * parent )
     : QWidget( parent ),
-      m_filter(),
-      m_view( this ),
-      m_proxy()
+      m_view( new QTreeView( this ) ),
+      m_proxy( new Kleo::KeyListSortFilterProxyModel( this ) )
 {
     assert( model );
-    connect( this, SIGNAL(filterChanged(QString)), &m_proxy, SLOT(setFilterFixedString(QString)) );
-    m_proxy.setSourceModel( model );
-    m_view.setRootIsDecorated( false );
-    m_view.setSortingEnabled( true );
-    m_view.sortByColumn( Kleo::AbstractKeyListModel::Fingerprint, Qt::AscendingOrder );
-    m_view.setModel( &m_proxy );
+    m_proxy->setSourceModel( model );
+    m_view->setRootIsDecorated( false );
+    m_view->setSortingEnabled( true );
+    m_view->sortByColumn( Kleo::AbstractKeyListModel::Fingerprint, Qt::AscendingOrder );
+    m_view->setModel( m_proxy );
 }
 
-QAbstractItemView* Page::view()
+void Page::setFilter( const QString& str )
 {
-    return &m_view;
+    if ( str == m_filter )
+        return;
+    m_filter = str;
+    m_proxy->setFilterFixedString( m_filter ); 
 }
 
+QAbstractItemView* Page::view() const
+{
+    return m_view;
+}
 
 Page::~Page() {}
 
@@ -74,7 +78,7 @@ public:
     explicit Private( TabWidget * qq );
     ~Private() {};
 
-    std::map<QAbstractItemView*, boost::shared_ptr<Page> > pages;
+    QMap<QAbstractItemView*, boost::shared_ptr<Page> > pages;
     KTabWidget * tabWidget;
     void currentIndexChanged( int index );
 };
@@ -101,6 +105,22 @@ TabWidget::TabWidget( QWidget * parent, Qt::WindowFlags flags ) : QWidget( paren
 
 TabWidget::~TabWidget()
 {
+}
+
+void TabWidget::setFilter( const QString& str )
+{
+    QAbstractItemView * const view = currentView();
+    assert( view || d->tabWidget->count() == 0 );
+    if ( !view )
+        return;
+    assert( d->pages.contains( view ) );
+    d->pages[view]->setFilter( str );
+}
+
+QAbstractItemView * TabWidget::currentView() const
+{
+    return qobject_cast<QAbstractItemView*>( d->tabWidget->currentWidget() );
+    
 }
 
 QAbstractItemView * TabWidget::addView( Kleo::AbstractKeyListModel * model, const QString& caption )

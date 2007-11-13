@@ -53,6 +53,10 @@ public:
 
     QAbstractItemView * currentView() const;
 
+public Q_SLOTS:
+
+    void setFilter( const QString& );
+
 Q_SIGNALS:
 
     void currentViewChanged( QAbstractItemView* view );
