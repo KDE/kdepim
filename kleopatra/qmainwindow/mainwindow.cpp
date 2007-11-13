@@ -84,7 +84,7 @@ void MainWindow::Private::setupMenu()
     QAction* const quitAction = fileMenu->addAction( i18n("Quit"), qApp, SLOT( quit() ) );
     quitAction->setShortcut( Qt::CTRL + Qt::Key_Q );	
     QMenu* const viewMenu = q->menuBar()->addMenu( i18n("&View") );
-    QAction* const refreshAction = viewMenu->addAction( i18n("Refresh Key List"), q, SLOT( listKeys() ) );
+    QAction* const refreshAction = viewMenu->addAction( i18n("Refresh Certificate List"), q, SLOT( listKeys() ) );
     refreshAction->setShortcut( Qt::Key_F5 );
 }
 

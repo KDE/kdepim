@@ -396,7 +396,7 @@ KDialog * CertificateInfoWidgetImpl::createDialog( CertificateInfoWidgetImpl * w
   dialog->setDefaultButton( KDialog::Close );
   dialog->setModal( false );
   dialog->setMainWidget( widget );
-  dialog->setWindowTitle( i18n("Additional Information for Key") );
+  dialog->setWindowTitle( i18n("Additional Information for Certificate") );
   dialog->setAttribute( Qt::WA_DeleteOnClose );
   return dialog;
 }
