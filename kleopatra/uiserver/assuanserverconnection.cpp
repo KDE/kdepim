@@ -762,28 +762,26 @@ AssuanCommand::~AssuanCommand() {
 
 int AssuanCommand::start() {
     try {
-        if ( const int err = doStart() ) {
+        if ( const int err = doStart() )
             if ( !d->done )
                 done( err );
-            return err;
-        }
         return 0;
     } catch ( const assuan_exception & e ) {
         if ( !d->done )
             done( e.error_code(), e.message() );
-        return e.error_code();
+        return 0;
     } catch ( const GpgME::Exception & e ) {
         if ( !d->done )
             done( e.error(), QString::fromLocal8Bit( e.message().c_str() ) );
-        return e.error();
+        return 0;
     } catch ( const std::exception & e ) {
         if ( !d->done )
             done( makeError( GPG_ERR_INTERNAL ), i18n("Caught unexpected exception: %1", QString::fromLocal8Bit( e.what() ) ) );
-        return makeError( GPG_ERR_INTERNAL );
+        return 0;
     } catch ( ... ) {
         if ( !d->done )
             done( makeError( GPG_ERR_INTERNAL ), i18n("Caught unknown exception - fix the program!" ) );
-        return makeError( GPG_ERR_INTERNAL );
+        return 0;
     }
 }
 
