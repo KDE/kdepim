@@ -380,7 +380,6 @@ void CertificateInfoWidgetImpl::slotShowCertPathDetails( Q3ListViewItem * item )
   connect( top, SIGNAL(requestCertificateDownload(QString, QString)),
   SIGNAL(requestCertificateDownload(QString, QString)) );
   KDialog * const dialog = createDialog( top, this );
-  dialog->setWindowTitle( i18n("Additional Information for Key") );
   dialog->show();
 }
 
@@ -401,9 +400,6 @@ KDialog * CertificateInfoWidgetImpl::createDialog( CertificateInfoWidgetImpl * w
   dialog->setAttribute( Qt::WA_DeleteOnClose );
   return dialog;
 }
-
-
-
 
 void CertificateInfoWidgetImpl::slotImportCertificate()
 {
