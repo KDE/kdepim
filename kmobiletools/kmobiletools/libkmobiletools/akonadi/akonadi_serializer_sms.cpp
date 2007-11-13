@@ -126,7 +126,7 @@ void SerializerPluginSMS::serialize( const Item& item, const QString& label, QIO
 
 extern "C"
 KDE_EXPORT Akonadi::ItemSerializerPlugin *
-libakonadi_serializer_sms_create_item_serializer_plugin() {
+akonadi_serializer_sms_create_item_serializer_plugin() {
   return new SerializerPluginSMS();
 }
 
