@@ -879,6 +879,8 @@ void DecryptVerifyCommand::Private::sendSigStatii() const {
         } catch ( ... ) {}
 
     }
+
+    finishCommand();
 }
 
 struct OutputGuard {
