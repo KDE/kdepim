@@ -109,7 +109,6 @@ if ( KLEO_ONLY_UISERVER )
          qmainwindow/mainwindow.cpp )
   else ( KLEO_BUILD_QTONLY_MAINWINDOW )	
     set( _kleopatra_mainwindow_SRCS
-         keylistwidget.cpp
          mainwindow.cpp 
          searchbar.cpp
          searchbarstatehandler.cpp

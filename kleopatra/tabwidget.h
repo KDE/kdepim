@@ -33,25 +33,35 @@
 #ifndef __KLEOPATRA_TABWIDGET_H__
 #define __KLEOPATRA_TABWIDGET_H__
 
-#include <KTabWidget>
+#include <QWidget>
 
 #include <utils/pimpl_ptr.h>
 
-class TabWidget : public KTabWidget {
+class QAbstractItemView;
+
+namespace Kleo {
+    class AbstractKeyListModel;
+}
+
+class TabWidget : public QWidget {
     Q_OBJECT
 public:
     explicit TabWidget( QWidget * parent=0, Qt::WindowFlags f=0 );
     ~TabWidget();
 
-public Q_SLOTS:
-    void setFilter( const QString & str );
+    QAbstractItemView * addView( Kleo::AbstractKeyListModel* model, const QString& caption );
+
+    QAbstractItemView * currentView() const;
 
 Q_SIGNALS:
-    void filterChanged( const QString & str );
+
+    void currentViewChanged( QAbstractItemView* view );
 
 private:
     class Private;
     kdtools::pimpl_ptr<Private> d;
+
+    Q_PRIVATE_SLOT( d, void currentIndexChanged( int ) );
 };
 
 

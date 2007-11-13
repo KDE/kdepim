@@ -97,7 +97,12 @@ boost::shared_ptr<SearchBar::State> SearchBar::state() const
     return state;
 }
 
-void SearchBar::setState( shared_ptr<SearchBar::State> state )
+void SearchBar::resetState()
+{
+    setState( shared_ptr<SearchBar::State>( new SearchBar::State ) );
+}
+
+void SearchBar::setState( const shared_ptr<SearchBar::State>& state )
 {
     assert( state );
     d->lineEdit->setText( state->d->searchString ); 

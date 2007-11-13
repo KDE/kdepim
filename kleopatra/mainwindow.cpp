@@ -35,7 +35,7 @@
 #include "searchbar.h"
 #include "tabwidget.h"
 
-#include "keylistwidget.h"
+#include "searchbarstatehandler.h"
 #include "models/keylistmodel.h"
 #include "models/keylistsortfilterproxymodel.h"
 #include "controllers/keylistcontroller.h"
@@ -73,23 +73,18 @@ public:
 
 private:
     void setupActions();
-    void addView( KeyListWidget* view, const QString& title );
+    void addView( const QString& title );
 
 private:
 
     Kleo::AbstractKeyListModel * model;
     Kleo::KeyListController * controller;
 
-    struct Page {
-	boost::shared_ptr<KeyListSortFilterProxyModel> proxy;
-	
-    };
-
     struct UI {
 
     TabWidget * tabWidget;
     QToolBar actionToolBar;
-	std::vector<Page> pages;
+        //std::vector<Page> pages;
 	Kleo::ProgressBar progressBar;
 	QLabel statusLabel;
 
@@ -101,6 +96,7 @@ private:
 	      statusLabel( q->statusBar() )
 	{
         tabWidget = new TabWidget;
+
         q->setCentralWidget( tabWidget );
         
 	    KDAB_SET_OBJECT_NAME( tabWidget );
@@ -117,8 +113,8 @@ MainWindow::Private::Private( MainWindow * qq ) : q( qq ), model( AbstractKeyLis
     controller->setModel( model );
     setupActions();
     q->createGUI( "kleopatra_newui.rc" );
-    addView( new KeyListWidget, i18n( "All Certificates" ) );
-    addView( new KeyListWidget, i18n( "My Certificates" ) );
+    addView( i18n( "All Certificates" ) );
+    addView( i18n( "My Certificates" ) );
     RefreshKeysCommand* refresh = new RefreshKeysCommand( controller );
     refresh->start();
 } 
@@ -127,23 +123,21 @@ MainWindow::Private::~Private()
 {
 } 
 
-void MainWindow::Private::addView( KeyListWidget* widget, const QString& title )
+void MainWindow::Private::addView( const QString& title )
 {
-    Page page;
-    page.proxy.reset( new KeyListSortFilterProxyModel );
-    page.proxy->setSourceModel( model );
-    ui.pages.push_back( page );
-    widget->view()->setModel( page.proxy.get() );
-    controller->addView( widget->view() );
-    ui.tabWidget->addTab( widget, title );
+    QAbstractItemView * const view = ui.tabWidget->addView( model, title );
+    assert( view );
+    controller->addView( view );
 }
     
 void MainWindow::Private::setupActions()
 {
     KActionCollection * const coll = q->actionCollection();
 
-    QWidgetAction* searchBarAction = new QWidgetAction( q );
-    searchBarAction->setDefaultWidget( new SearchBar( q ) );
+    QWidgetAction * const searchBarAction = new QWidgetAction( q );
+    SearchBar * const searchBar = new SearchBar( q );
+    new SearchBarStateHandler( ui.tabWidget, searchBar, searchBar );
+    searchBarAction->setDefaultWidget( searchBar );
     coll->addAction( "key_search_bar", searchBarAction );
 }
 

@@ -33,15 +33,36 @@
 #include "tabwidget.h"
 #include "tabwidget_p.h"
 
+#include "models/keylistmodel.h"
 
-Page::Page( QWidget * p )
-    : QWidget( p ),
+#include <KTabWidget>
+
+#include <QGridLayout>
+
+#include <map>
+
+#include <cassert>
+
+Page::Page( QAbstractItemModel* model, QWidget * parent )
+    : QWidget( parent ),
       m_filter(),
       m_view( this ),
       m_proxy()
 {
+    assert( model );
     connect( this, SIGNAL(filterChanged(QString)), &m_proxy, SLOT(setFilterFixedString(QString)) );
+    m_proxy.setSourceModel( model );
+    m_view.setRootIsDecorated( false );
+    m_view.setSortingEnabled( true );
+    m_view.sortByColumn( Kleo::AbstractKeyListModel::Fingerprint, Qt::AscendingOrder );
+    m_view.setModel( &m_proxy );
 }
+
+QAbstractItemView* Page::view()
+{
+    return &m_view;
+}
+
 
 Page::~Page() {}
 
@@ -50,20 +71,45 @@ class TabWidget::Private {
     TabWidget * const q;
 
 public:
-    explicit Private( TabWidget * qq ) : q( qq ) {};
+    explicit Private( TabWidget * qq );
     ~Private() {};
 
+    std::map<QAbstractItemView*, boost::shared_ptr<Page> > pages;
+    KTabWidget * tabWidget;
+    void currentIndexChanged( int index );
 };
 
-void TabWidget::setFilter( const QString & str )
+TabWidget::Private::Private( TabWidget* qq ) : q( qq )
 {
-    emit filterChanged( str );
+    QGridLayout * const layout = new QGridLayout( q );
+    tabWidget = new KTabWidget;
+    connect( tabWidget, SIGNAL( currentChanged( int ) ),
+             q, SLOT( currentIndexChanged( int ) ) );
+    layout->addWidget( tabWidget, 0, 0 );
 }
 
-TabWidget::TabWidget( QWidget * parent, Qt::WindowFlags flags ) : KTabWidget( parent, flags ), d( new Private( this ) )
+void TabWidget::Private::Private::currentIndexChanged( int index )
+{
+    QAbstractItemView* const view = qobject_cast<QAbstractItemView*>( tabWidget->widget( index ) );
+    assert( view );
+    emit q->currentViewChanged( view );
+}
+
+TabWidget::TabWidget( QWidget * parent, Qt::WindowFlags flags ) : QWidget( parent, flags ), d( new Private( this ) )
 {
 }
 
 TabWidget::~TabWidget()
 {
 }
+
+QAbstractItemView * TabWidget::addView( Kleo::AbstractKeyListModel * model, const QString& caption )
+{
+    const boost::shared_ptr<Page> page( new Page( model ) );
+    d->tabWidget->addTab( page->view(), caption );
+    d->pages[page->view()] = page;
+    return page->view();
+}
+
+#include "moc_tabwidget.cpp"
+#include "moc_tabwidget_p.cpp"

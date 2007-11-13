@@ -32,9 +32,12 @@
 
 #include "keylistwidget.h"
 #include "models/keylistmodel.h"
+#include "models/keylistsortfilterproxymodel.h"
 
 #include <QGridLayout>
 #include <QTreeView>
+
+#include <cassert>
 
 class KeyListWidget::Private {
     friend class ::KeyListWidget;
@@ -44,11 +47,12 @@ public:
     ~Private();
 
     QTreeView * m_view;
+    Kleo::KeyListSortFilterProxyModel * proxy;
 };
 
 
 KeyListWidget::Private::Private( KeyListWidget * qq )
-  : q( qq )
+    : q( qq ), proxy( 0 )
 {
     QGridLayout * const layout = new QGridLayout( q );
     layout->setMargin( 0 );
@@ -74,5 +78,18 @@ KeyListWidget::~KeyListWidget() {}
 QAbstractItemView* KeyListWidget::view() const
 {
     return d->m_view;
+}
+
+void KeyListWidget::setModel( QAbstractItemModel* model )
+{
+    d->proxy = new Kleo::KeyListSortFilterProxyModel( this );
+    d->proxy->setSourceModel( model );
+    d->m_view->setModel( d->proxy );
+}
+
+void KeyListWidget::setKeyFilters( const std::vector< boost::shared_ptr<const KeyFilter> > & kf )
+{
+    assert( d->proxy );
+    d->proxy->setKeyFilters( kf );
 }
 

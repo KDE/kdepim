@@ -33,6 +33,8 @@
 #ifndef __KLEOPATRA_TABWIDGET_P_H__
 #define __KLEOPATRA_TABWIDGET_P_H__
 
+#include "models/keylistsortfilterproxymodel.h"
+
 #include <QResizeEvent>
 #include <QSortFilterProxyModel>
 #include <QTreeView>
@@ -41,10 +43,11 @@ class Page : public QWidget {
     Q_OBJECT
     Q_PROPERTY( QString filter READ filter WRITE setFilter NOTIFY filterChanged )
 public:
-    explicit Page( QWidget * parent=0 );
+    explicit Page( QAbstractItemModel * sourceModel, QWidget * parent=0 );
     ~Page();
 
     QString filter() const { return m_filter; }
+    QAbstractItemView* view();
 
 public Q_SLOTS:
     void setFilter( const QString & str ) {
@@ -67,7 +70,7 @@ private:
     QString m_filter;
 
     QTreeView m_view;
-    QSortFilterProxyModel m_proxy;
+    Kleo::KeyListSortFilterProxyModel m_proxy;
     
 };
 

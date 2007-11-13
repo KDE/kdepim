@@ -37,6 +37,11 @@
 
 #include <utils/pimpl_ptr.h>
 
+#include <boost/shared_ptr.hpp>
+
+#include <vector>
+
+class QAbstractItemModel;
 class QAbstractItemView;
 
 class KeyListWidget : public QWidget {
@@ -45,6 +50,10 @@ public:
     explicit KeyListWidget( QWidget * parent=0, Qt::WFlags f=0 );
     ~KeyListWidget();
 
+    void setKeyFilters( const std::vector< boost::shared_ptr<const KeyFilter> > & kf );
+    std::vector< boost::shared_ptr<const KeyFilter> > keyFilters() const;
+
+    void setModel( QAbstractItemModel* model );
     QAbstractItemView* view() const;
 
 private:

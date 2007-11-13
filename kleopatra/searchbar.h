@@ -61,8 +61,9 @@ public:
     };
 
     boost::shared_ptr<State> state() const;
-    void setState( boost::shared_ptr<State> state );
-
+    void setState( const boost::shared_ptr<State>& state );
+    void resetState();                                                          
+                                                         
 public Q_SLOTS:
 
     void setText( const QString& text );
