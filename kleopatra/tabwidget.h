@@ -69,4 +69,4 @@ private:
 };
 
 
-#endif /* __KLEOPATRA_MAINWINDOW_H__ */
+#endif /* __KLEOPATRA_TABWIDGET_H__ */

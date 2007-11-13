@@ -39,6 +39,7 @@
 
 #include <QGridLayout>
 #include <QMap>
+#include <QTimer>
 
 #include <cassert>
 
@@ -120,14 +121,19 @@ void TabWidget::setFilter( const QString& str )
 QAbstractItemView * TabWidget::currentView() const
 {
     return qobject_cast<QAbstractItemView*>( d->tabWidget->currentWidget() );
-    
 }
+
 
 QAbstractItemView * TabWidget::addView( Kleo::AbstractKeyListModel * model, const QString& caption )
 {
+    QAbstractItemView * const previous = currentView(); 
     const boost::shared_ptr<Page> page( new Page( model ) );
-    d->tabWidget->addTab( page->view(), caption );
     d->pages[page->view()] = page;
+    d->tabWidget->addTab( page->view(), caption );
+    // work around a bug in QTabWidget (tested with 4.3.2) not emitting currentChanged() when the first widget is inserted
+    QAbstractItemView * const current = currentView(); 
+    if ( previous != current )
+        emit currentViewChanged( current ); 
     return page->view();
 }
 
