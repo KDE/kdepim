@@ -230,11 +230,6 @@ namespace Kleo {
 
         static int makeError( int code );
 
-    private:
-        virtual void doCanceled() = 0;
-        virtual int doStart() = 0;
-
-    protected:
         // convenience methods:
         enum Mode { NoMode, EMail, FileManager };
         Mode checkMode() const;
@@ -248,8 +243,6 @@ namespace Kleo {
         }
 
         QString heuristicBaseDirectory() const;
-
-    protected:
 
         bool isNohup() const;
 
@@ -302,6 +295,10 @@ namespace Kleo {
 
         void done( int err=0 );
         void done( int err, const QString & details );
+
+    private:
+        virtual void doCanceled() = 0;
+        virtual int doStart() = 0;
 
     private:
         void doApplyWindowID( QDialog * w ) const;
