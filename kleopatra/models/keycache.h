@@ -63,7 +63,9 @@ namespace Kleo {
         static boost::shared_ptr<KeyCache> mutableInstance();
 
         void insert( const GpgME::Key & key );
-        void insert( const std::vector<GpgME::Key> & key );
+        void insert( const std::vector<GpgME::Key> & keys );
+
+        void refresh( const std::vector<GpgME::Key> & keys );
 
         void remove( const GpgME::Key & key );
 

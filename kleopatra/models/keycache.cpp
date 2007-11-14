@@ -312,6 +312,12 @@ void KeyCache::remove( const Key & key ) {
                 
 }
 
+void KeyCache::refresh( const std::vector<Key> & keys ) {
+    // make this better...
+    clear();
+    insert( keys );
+}
+
 void KeyCache::insert( const Key & key ) {
     insert( std::vector<Key>( 1, key ) );
 }
