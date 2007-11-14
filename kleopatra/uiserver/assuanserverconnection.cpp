@@ -43,6 +43,7 @@
 
 #include "detail_p.h"
 #include "kleo-assuan.h"
+#include "hex.h"
 
 #include <utils/kdpipeiodevice.h>
 
@@ -143,44 +144,6 @@ static inline gpg_error_t assuan_process_done_msg( assuan_context_t ctx, gpg_err
 
 static inline gpg_error_t assuan_process_done_msg( assuan_context_t ctx, gpg_error_t err, const QString & err_msg ) {
     return assuan_process_done_msg( ctx, err, err_msg.toUtf8().constData() );
-}
-
-static unsigned char unhex( unsigned char ch ) {
-    if ( ch >= '0' && ch <= '9' )
-        return ch - '0';
-    if ( ch >= 'A' && ch <= 'F' )
-        return ch - 'A' + 10;
-    if ( ch >= 'a' && ch <= 'f' )
-        return ch - 'a' + 10;
-    const char cch = ch;
-    throw assuan_exception( gpg_error( GPG_ERR_ASS_SYNTAX ),
-                            i18n("Invalid hex char '%1' in input stream.",
-                                 QString::fromLatin1( &cch, 1 ) ) );
-}
-
-static std::string hexdecode( const std::string & in ) {
-    std::string result;
-    result.reserve( in.size() );
-    for ( std::string::const_iterator it = in.begin(), end = in.end() ; it != end ; ++it )
-        if ( *it == '%' ) {
-            ++it;
-            unsigned char ch = '\0';
-            if ( it == end )
-                throw assuan_exception( gpg_error( GPG_ERR_ASS_SYNTAX ),
-                                        i18n("Premature end of hex-encoded char in input stream") );
-            ch |= unhex( *it ) << 4;
-            ++it;
-            if ( it == end )
-                throw assuan_exception( gpg_error( GPG_ERR_ASS_SYNTAX ),
-                                        i18n("Premature end of hex-encoded char in input stream") );
-            ch |= unhex( *it );
-            result.push_back( ch );
-        } else if ( *it == '+' ) {
-            result += ' ';
-        } else  {
-            result.push_back( *it );
-        }
-    return result;
 }
 
 static std::map<std::string,std::string> upcase_option( const char * option, std::map<std::string,std::string> options ) {
@@ -920,9 +883,13 @@ unsigned int AssuanCommand::numBulkOutputDevices() const {
 }
 
 int AssuanCommand::sendStatus( const char * keyword, const QString & text ) {
+    return sendStatusEncoded( keyword, text.toUtf8().constData() );
+}
+
+int AssuanCommand::sendStatusEncoded( const char * keyword, const std::string & text ) {
     if ( d->nohup )
         return 0;
-    return assuan_write_status( d->ctx.get(), keyword, text.toUtf8().constData() );
+    return assuan_write_status( d->ctx.get(), keyword, text.c_str() );
 }
 
 int AssuanCommand::sendData( const QByteArray & data, bool moreToCome ) {

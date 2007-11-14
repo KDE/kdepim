@@ -273,6 +273,7 @@ namespace Kleo {
         unsigned int numBulkOutputDevices() const;
 
         int sendStatus( const char * keyword, const QString & text );
+        int sendStatusEncoded( const char * keyword, const std::string & text );
         int sendData( const QByteArray & data, bool moreToCome=false );
 
         int inquire( const char * keyword, QObject * receiver, const char * slot, unsigned int maxSize=0 );

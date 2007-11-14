@@ -40,6 +40,7 @@
 #include <gpg-error.h>
 
 #include "../utils/wsastarter.h"
+#include "../uiserver/hex.h"
 
 #include <QtCore>
 
@@ -70,39 +71,6 @@ static const unsigned int ASSUAN_CONNECT_FLAGS = HAVE_FD_PASSING ? 1 : 0 ;
 static std::vector<int> inFDs, outFDs, msgFDs;
 static std::vector<std::string> inFiles, outFiles, msgFiles;
 static std::map<std::string,std::string> inquireData;
-
-static std::string hexencode( const std::string & in ) {
-    std::string result;
-    result.reserve( 3 * in.size() );
-
-    static const char hex[] = "0123456789ABCDEF";
-
-    for ( std::string::const_iterator it = in.begin(), end = in.end() ; it != end ; ++it )
-        switch ( const unsigned char ch = *it ) {
-        default:
-            if ( ch >= '!' && ch <= '~' || ch > 0xA0 ) {
-                result += ch;
-                break;
-            }
-            // else fall through
-        case ' ':
-            result += '+';
-            break;
-        case '"':
-        case '#':
-        case '$':
-        case '%':
-        case '\'':
-        case '+':
-        case '=':
-            result += '%';
-            result += hex[ (ch & 0xF0) >> 4 ];
-            result += hex[ (ch & 0x0F)      ];
-            break;
-        }
-    
-    return result;
-}
 
 static void usage( const std::string & msg=std::string() ) {
     std::cerr << msg << std::endl <<
