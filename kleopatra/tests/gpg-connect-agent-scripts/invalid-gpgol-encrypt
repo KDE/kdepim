@@ -20,8 +20,8 @@ MESSAGE FILE=/dev/zero
 PREP_ENCRYPT
 RESET
 #
-# check that SIGNER presence gives an error
-SIGNER foo@bar.com
+# check that SENDER presence gives an error
+SENDER foo@bar.com
 # /expect ^err
 PREP_ENCRYPT
 RESET
