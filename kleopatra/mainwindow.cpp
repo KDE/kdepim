@@ -83,14 +83,12 @@ private:
     struct UI {
 
     TabWidget * tabWidget;
-    QToolBar actionToolBar;
         //std::vector<Page> pages;
 	Kleo::ProgressBar progressBar;
 	QLabel statusLabel;
 
 	explicit UI( MainWindow * q )
 	    : 
-	      actionToolBar( q ),
 	      //treeView( q ),
 	      progressBar( q->statusBar() ),
 	      statusLabel( q->statusBar() )
@@ -100,7 +98,6 @@ private:
         q->setCentralWidget( tabWidget );
         
 	    KDAB_SET_OBJECT_NAME( tabWidget );
-	    KDAB_SET_OBJECT_NAME( actionToolBar );
 	    //KDAB_SET_OBJECT_NAME( treeView );
 	    KDAB_SET_OBJECT_NAME( progressBar );
 	    KDAB_SET_OBJECT_NAME( statusLabel );
