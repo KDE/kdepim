@@ -1,5 +1,5 @@
 /* -*- mode: c++; c-basic-offset:4 -*-
-    uiserver/encryptcommand.h
+    uiserver/recipientresolver.cpp
 
     This file is part of Kleopatra, the KDE keymanager
     Copyright (c) 2007 Klarälvdalens Datakonsult AB
@@ -30,30 +30,37 @@
     your version.
 */
 
-#ifndef __KLEO_UISERVER_ENCRYPTCOMMAND_H__
-#define __KLEO_UISERVER_ENCRYPTCOMMAND_H__
+#include "recipientresolver.h"
 
-#include "assuancommand.h"
+#include "kleo-assuan.h"
 
-#include <utils/pimpl_ptr.h>
+#include <models/keycache.h>
 
-namespace Kleo {
+#include <gpgme++/key.h>
 
-    class EncryptCommand : public Kleo::AssuanCommandMixin<EncryptCommand> {
-    public:
-        EncryptCommand();
-        virtual ~EncryptCommand();
-    private:
-        int doStart();
-        void doCanceled();
-    public:
-        static const char * staticName() { return "ENCRYPT"; }
+#include <QStringList>
 
-        class Private;
-    private:
-        kdtools::pimpl_ptr<Private> d;
-    };
+#include <boost/bind.hpp>
 
+#include <algorithm>
+#include <iterator>
+
+using namespace Kleo;
+using namespace boost;
+using namespace GpgME;
+
+std::vector< std::vector<Key> > RecipientResolver::resolveRecipients( const QStringList & recipients, Protocol proto ) {
+    std::vector< std::vector<Key> > result;
+    std::transform( recipients.begin(), recipients.end(),
+                    std::back_inserter( result ), bind( &resolveRecipient, _1, proto ) );
+    return result;
 }
 
-#endif /*__KLEO_UISERVER_ENCRYPTCOMMAND_H__*/
+std::vector<Key> RecipientResolver::resolveRecipient( const QString & recipient, Protocol proto ) {
+    std::vector<Key> result = KeyCache::instance()->findByEMailAddress( recipient.toUtf8().constData() );
+    if ( proto != UnknownProtocol )
+        result.erase( std::remove_if( result.begin(), result.end(),
+                                      bind( &Key::protocol, _1 ) != proto ),
+                      result.end() );
+    return result;
+}

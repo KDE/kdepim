@@ -1,5 +1,5 @@
 /* -*- mode: c++; c-basic-offset:4 -*-
-    uiserver/encryptcommand.h
+    uiserver/encryptemailcontroller.h
 
     This file is part of Kleopatra, the KDE keymanager
     Copyright (c) 2007 Klarälvdalens Datakonsult AB
@@ -30,30 +30,58 @@
     your version.
 */
 
-#ifndef __KLEO_UISERVER_ENCRYPTCOMMAND_H__
-#define __KLEO_UISERVER_ENCRYPTCOMMAND_H__
+#ifndef __KLEOPATRA_UISERVER_ENCRYPTEMAILCONTROLLER_H__
+#define __KLEOPATRA_UISERVER_ENCRYPTEMAILCONTROLLER_H__
 
-#include "assuancommand.h"
+#include <QObject>
 
 #include <utils/pimpl_ptr.h>
 
+#include <gpgme++/global.h>
+
+#include <boost/shared_ptr.hpp>
+
+class QStringList;
+
 namespace Kleo {
 
-    class EncryptCommand : public Kleo::AssuanCommandMixin<EncryptCommand> {
-    public:
-        EncryptCommand();
-        virtual ~EncryptCommand();
-    private:
-        int doStart();
-        void doCanceled();
-    public:
-        static const char * staticName() { return "ENCRYPT"; }
+    class AssuanCommand;
 
+    class EncryptEMailController : public QObject {
+        Q_OBJECT
+    public:
+        explicit EncryptEMailController( QObject * parent=0 );
+        ~EncryptEMailController();
+
+        static const char * mementoName() { return "EncryptEMailController"; }
+
+        void setProtocol( GpgME::Protocol proto );
+        GpgME::Protocol protocol() const;
+        const char * protocolAsString() const;
+
+        void setCommand( const boost::shared_ptr<AssuanCommand> & cmd );
+
+        void startResolveRecipients( const QStringList & recipients );
+
+        void importIO();
+
+        void start();
+
+    public Q_SLOTS:
+        void cancel();
+
+    Q_SIGNALS:
+        void recipientsResolved();
+        void error( int err, const QString & details );
+        void done();
+
+    private:
         class Private;
-    private:
         kdtools::pimpl_ptr<Private> d;
+        Q_PRIVATE_SLOT( d, void slotWizardRecipientsResolved() )
+        Q_PRIVATE_SLOT( d, void slotWizardCanceled() )
     };
-
 }
 
-#endif /*__KLEO_UISERVER_ENCRYPTCOMMAND_H__*/
+#endif /* __KLEOPATRA_UISERVER_ENCRYPTEMAILCONTROLLER_H__ */
+

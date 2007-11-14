@@ -1,5 +1,5 @@
 /* -*- mode: c++; c-basic-offset:4 -*-
-    uiserver/encryptcommand.h
+    uiserver/recipientresolver.h
 
     This file is part of Kleopatra, the KDE keymanager
     Copyright (c) 2007 Klarälvdalens Datakonsult AB
@@ -30,30 +30,28 @@
     your version.
 */
 
-#ifndef __KLEO_UISERVER_ENCRYPTCOMMAND_H__
-#define __KLEO_UISERVER_ENCRYPTCOMMAND_H__
+#ifndef __KLEOPATRA_UISERVER_RECIPIENTRESOLVER_H__
+#define __KLEOPATRA_UISERVER_RECIPIENTRESOLVER_H__
 
-#include "assuancommand.h"
+#include <gpgme++/key.h>
 
-#include <utils/pimpl_ptr.h>
+#include <vector>
+
+namespace GpgME {
+    class Key;
+}
+
+class QStringList;
+class QString;
 
 namespace Kleo {
 
-    class EncryptCommand : public Kleo::AssuanCommandMixin<EncryptCommand> {
+    class RecipientResolver {
     public:
-        EncryptCommand();
-        virtual ~EncryptCommand();
-    private:
-        int doStart();
-        void doCanceled();
-    public:
-        static const char * staticName() { return "ENCRYPT"; }
-
-        class Private;
-    private:
-        kdtools::pimpl_ptr<Private> d;
+        static std::vector< std::vector<GpgME::Key> > resolveRecipients( const QStringList & recipients, GpgME::Protocol proto );
+        static std::vector<GpgME::Key> resolveRecipient( const QString & recipient, GpgME::Protocol proto );
     };
 
 }
 
-#endif /*__KLEO_UISERVER_ENCRYPTCOMMAND_H__*/
+#endif /* __KLEOPATRA_UISERVER_RECIPIENTRESOLVER_H__ */

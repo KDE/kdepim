@@ -1,5 +1,5 @@
 /* -*- mode: c++; c-basic-offset:4 -*-
-    uiserver/encryptcommand.h
+    uiserver/prepencryptcommand.h
 
     This file is part of Kleopatra, the KDE keymanager
     Copyright (c) 2007 Klarälvdalens Datakonsult AB
@@ -30,8 +30,8 @@
     your version.
 */
 
-#ifndef __KLEO_UISERVER_ENCRYPTCOMMAND_H__
-#define __KLEO_UISERVER_ENCRYPTCOMMAND_H__
+#ifndef __KLEO_UISERVER_PREPENCRYPTCOMMAND_H__
+#define __KLEO_UISERVER_PREPENCRYPTCOMMAND_H__
 
 #include "assuancommand.h"
 
@@ -39,15 +39,15 @@
 
 namespace Kleo {
 
-    class EncryptCommand : public Kleo::AssuanCommandMixin<EncryptCommand> {
+    class PrepEncryptCommand : public Kleo::AssuanCommandMixin<PrepEncryptCommand> {
     public:
-        EncryptCommand();
-        virtual ~EncryptCommand();
+        PrepEncryptCommand();
+        virtual ~PrepEncryptCommand();
     private:
         int doStart();
         void doCanceled();
     public:
-        static const char * staticName() { return "ENCRYPT"; }
+        static const char * staticName() { return "PREP_ENCRYPT"; }
 
         class Private;
     private:
@@ -56,4 +56,4 @@ namespace Kleo {
 
 }
 
-#endif /*__KLEO_UISERVER_ENCRYPTCOMMAND_H__*/
+#endif /*__KLEO_UISERVER_PREPENCRYPTCOMMAND_H__*/

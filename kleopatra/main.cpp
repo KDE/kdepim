@@ -52,6 +52,7 @@
 # include <uiserver/decryptverifyfilescommand.h>
 # include <uiserver/decryptfilescommand.h>
 # include <uiserver/verifyfilescommand.h>
+# include <uiserver/prepencryptcommand.h>
 # include <uiserver/encryptcommand.h>
 # include <uiserver/signcommand.h>
 #endif
@@ -146,6 +147,7 @@ int main( int argc, char** argv )
       REGISTER( DecryptVerifyFilesCommand );
       REGISTER( EchoCommand );
       REGISTER( EncryptCommand );
+      REGISTER( PrepEncryptCommand );
       REGISTER( SignCommand );
       REGISTER( VerifyCommand );
       REGISTER( VerifyFilesCommand );

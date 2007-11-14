@@ -1,5 +1,5 @@
 /* -*- mode: c++; c-basic-offset:4 -*-
-    uiserver/encryptcommand.h
+    uiserver/signencryptwizard.h
 
     This file is part of Kleopatra, the KDE keymanager
     Copyright (c) 2007 Klarälvdalens Datakonsult AB
@@ -30,30 +30,49 @@
     your version.
 */
 
-#ifndef __KLEO_UISERVER_ENCRYPTCOMMAND_H__
-#define __KLEO_UISERVER_ENCRYPTCOMMAND_H__
+#ifndef __KLEOPATRA_UISERVER_SIGNENCRYPTWIZARD_H__
+#define __KLEOPATRA_UISERVER_SIGNENCRYPTWIZARD_H__
 
-#include "assuancommand.h"
+#include <QWizard>
 
 #include <utils/pimpl_ptr.h>
 
+#include <vector>
+
+namespace GpgME {
+    class Key;
+}
+
+class QStringList;
+
 namespace Kleo {
 
-    class EncryptCommand : public Kleo::AssuanCommandMixin<EncryptCommand> {
+    class SignEncryptWizard : public QWizard {
+        Q_OBJECT
     public:
-        EncryptCommand();
-        virtual ~EncryptCommand();
-    private:
-        int doStart();
-        void doCanceled();
-    public:
-        static const char * staticName() { return "ENCRYPT"; }
+        explicit SignEncryptWizard( QWidget * parent=0, Qt::WindowFlags f=0 );
+        ~SignEncryptWizard();
 
-        class Private;
+        enum Mode {
+            EncryptEMail,
+            SignEMail,
+            EncryptOrSignFiles
+        };
+        void setMode( Mode mode );
+
+        void setRecipientsAndCandidates( const QStringList & recipients, const std::vector< std::vector<GpgME::Key> > & keys );
+
+        bool canGoToNextPage() const;
+
+    Q_SIGNALS:
+        void recipientsResolved();
+        void canceled();
+
     private:
+        class Private;
         kdtools::pimpl_ptr<Private> d;
     };
 
 }
 
-#endif /*__KLEO_UISERVER_ENCRYPTCOMMAND_H__*/
+#endif /* __KLEOPATRA_UISERVER_SIGNENCRYPTWIZARD_H__ */

@@ -44,6 +44,11 @@ if ( USABLE_ASSUAN_FOUND )
     uiserver/decryptverifywizard.cpp
     uiserver/decryptverifycommand.cpp
     uiserver/signcommand.cpp
+    uiserver/recipientresolver.cpp
+    uiserver/recipientresolvepage.cpp
+    uiserver/signencryptwizard.cpp
+    uiserver/encryptemailcontroller.cpp
+    uiserver/prepencryptcommand.cpp
     uiserver/encryptcommand.cpp
     uiserver/assuancommandprivatebase_p.cpp
     uiserver/resultdisplaywidget.cpp

@@ -1,5 +1,5 @@
 /* -*- mode: c++; c-basic-offset:4 -*-
-    uiserver/encryptcommand.h
+    uiserver/recipientresolvepage.h
 
     This file is part of Kleopatra, the KDE keymanager
     Copyright (c) 2007 Klarälvdalens Datakonsult AB
@@ -30,30 +30,60 @@
     your version.
 */
 
-#ifndef __KLEO_UISERVER_ENCRYPTCOMMAND_H__
-#define __KLEO_UISERVER_ENCRYPTCOMMAND_H__
+#ifndef __KLEOPATRA_UISERVER_RECIPIENTRESOLVEPAGE_H__
+#define __KLEOPATRA_UISERVER_RECIPIENTRESOLVEPAGE_H__
 
-#include "assuancommand.h"
+#include <QWizardPage>
 
 #include <utils/pimpl_ptr.h>
 
+#include <vector>
+
+namespace GpgME {
+    class Key;
+}
+
 namespace Kleo {
 
-    class EncryptCommand : public Kleo::AssuanCommandMixin<EncryptCommand> {
+    class RecipientResolveWidget : public QWidget {
+        Q_OBJECT
     public:
-        EncryptCommand();
-        virtual ~EncryptCommand();
-    private:
-        int doStart();
-        void doCanceled();
-    public:
-        static const char * staticName() { return "ENCRYPT"; }
+        explicit RecipientResolveWidget( QWidget * parent=0 );
+        ~RecipientResolveWidget();
 
-        class Private;
+        void setIdentifier( const QString & id );
+        void setCertificates( const std::vector<GpgME::Key> & keys );
+
+        GpgME::Key chosenCertificate() const;
+        bool isComplete() const;
+
+    Q_SIGNALS:
+        void changed();
+
     private:
+        class Private;
+        kdtools::pimpl_ptr<Private> d;
+    };
+
+    class RecipientResolvePage : public QWizardPage {
+        Q_OBJECT
+    public:
+        explicit RecipientResolvePage( QWidget * parent=0 );
+        ~RecipientResolvePage();
+
+        /* reimp */ bool isComplete() const;
+
+        void ensureAvailable( unsigned int idx );
+
+        unsigned int numRecipientResolveWidgets() const;
+        RecipientResolveWidget * recipientResolveWidget( unsigned int idx ) const;
+
+
+    private:
+        class Private;
         kdtools::pimpl_ptr<Private> d;
     };
 
 }
 
-#endif /*__KLEO_UISERVER_ENCRYPTCOMMAND_H__*/
+#endif /* __KLEOPATRA_UISERVER_RECIPIENTRESOLVEPAGE_H__ */
