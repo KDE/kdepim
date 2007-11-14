@@ -61,21 +61,30 @@ UiServer::Private::Private( UiServer * qq )
       file(),
       factories(),
       connections(),
-      socketname()
+      suggestedSocketName(),
+      actualSocketName()
 {
     assuan_set_assuan_err_source( GPG_ERR_SOURCE_DEFAULT );
 }
 
+bool UiServer::Private::isStaleAssuanSocket( const QString& fileName )
+{
+    assuan_context_t ctx = 0;
+    const bool error = assuan_socket_connect_ext( &ctx, QFile::encodeName( fileName ).constData(), -1, 0 );
+    if ( !error )
+        assuan_disconnect( ctx );
+    return error;
+}
 
 UiServer::UiServer( const QString & socket, QObject * p )
     : QObject( p ), d( new Private( this ) )
 {
-    d->socketname = d->makeFileName( socket );
+    d->suggestedSocketName = d->makeFileName( socket );
 }
 
 UiServer::~UiServer() {
-    if ( QFile::exists( d->socketname ) )
-        QFile::remove( d->socketname );
+    if ( QFile::exists( d->actualSocketName ) )
+        QFile::remove( d->actualSocketName );
 }
 
 bool UiServer::registerCommandFactory( const shared_ptr<AssuanCommandFactory> & cf ) {
@@ -105,7 +114,7 @@ void UiServer::stop() {
 }
 
 QString UiServer::socketName() const {
-    return d->socketname;
+    return d->actualSocketName;
 }
 
 bool UiServer::waitForStopped( unsigned int ms ) {

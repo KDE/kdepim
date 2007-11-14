@@ -69,6 +69,7 @@ class Kleo::UiServer::Private : public QTcpServer {
     UiServer * const q;
 public:
     explicit Private( UiServer * qq );
+    static bool isStaleAssuanSocket( const QString& socketName );
 
 private:
     void makeListeningSocket();
@@ -85,7 +86,8 @@ private:
     QFile file;
     std::vector< boost::shared_ptr<AssuanCommandFactory> > factories;
     std::vector< boost::shared_ptr<AssuanServerConnection> > connections;
-    QString socketname;
+    QString suggestedSocketName;
+    QString actualSocketName;
     assuan_sock_nonce_t nonce;
     const Kleo::WSAStarter _wsastarter;
 };
