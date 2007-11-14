@@ -19,7 +19,7 @@ public:
 private:
     TabWidget* m_tabWidget;
     SearchBar* m_searchBar;
-    QMap<QAbstractItemView*, boost::shared_ptr<SearchBar::State> > m_viewToState;
+    QMap<QObject*, boost::shared_ptr<SearchBar::State> > m_viewToState;
     QPointer<QAbstractItemView> m_currentView;
 };
 
@@ -60,10 +60,9 @@ void SearchBarStateHandler::Private::currentViewChanged( QAbstractItemView* view
 
 void SearchBarStateHandler::Private::viewDestroyed( QObject* obj )
 {
-    QAbstractItemView * const view = qobject_cast<QAbstractItemView*>( obj );
-    assert( view );
-    m_viewToState.remove( view );
-    if ( m_currentView == view )
+    assert( obj );
+    m_viewToState.remove( obj );
+    if ( m_currentView == obj )
         m_currentView = 0;
 }
 
