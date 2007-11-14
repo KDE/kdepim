@@ -107,4 +107,6 @@ namespace Kleo {
 # define assuan_assert( cond ) assuan_assert_impl( cond, __FILE__, __LINE__ )
 #endif
 
+#define notImplemented() assuan_assert( !"Sorry, not yet implemented" )
+
 #endif /* __KLEOPATRA_UISERVER_KLEO_ASSUAN_H__ */
