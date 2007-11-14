@@ -53,9 +53,6 @@ public:
     ~Private();
 
 private:
-    void ensureAvailable( unsigned int idx ) {
-        ui.recipientResolvePage.ensureAvailable( idx );
-    }
     std::vector<Key> resolvedKeys() const;
 
 private:
@@ -104,7 +101,7 @@ void SignEncryptWizard::setRecipientsAndCandidates( const QStringList & recipien
     assuan_assert( !keys.empty() );
     assuan_assert( (size_t)recipients.size() == keys.size() );
 
-    d->ensureAvailable( keys.size() -1 );
+    d->ui.recipientResolvePage.ensureIndexAvailable( keys.size() - 1 );
 
     for ( unsigned int i = 0, end = keys.size() ; i < end ; ++i ) {
         RecipientResolveWidget * const rr = d->ui.recipientResolvePage.recipientResolveWidget( i );

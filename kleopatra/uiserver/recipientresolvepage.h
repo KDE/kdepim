@@ -73,7 +73,7 @@ namespace Kleo {
 
         /* reimp */ bool isComplete() const;
 
-        void ensureAvailable( unsigned int idx );
+        void ensureIndexAvailable( unsigned int idx );
 
         unsigned int numRecipientResolveWidgets() const;
         RecipientResolveWidget * recipientResolveWidget( unsigned int idx ) const;

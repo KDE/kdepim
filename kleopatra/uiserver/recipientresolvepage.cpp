@@ -131,7 +131,7 @@ bool RecipientResolvePage::isComplete() const {
                          bind( &RecipientResolveWidget::isComplete, _1 ) );
 }
 
-void RecipientResolvePage::ensureAvailable( unsigned int idx ) {
+void RecipientResolvePage::ensureIndexAvailable( unsigned int idx ) {
     // implement this like decryptverifywizard ->
     // {operations,result}page (all these should be factored into a
     // separate class...)
