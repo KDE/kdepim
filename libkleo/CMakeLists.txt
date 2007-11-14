@@ -1,18 +1,15 @@
 include_directories( ${CMAKE_BINARY_DIR}/kleo/backends/chiasmus/ ${GPGME_INCLUDES} ${Boost_INCLUDE_DIR} )
 
-if ( NOT KLEO_ONLY_UISERVER )
+if ( KLEO_BUILD_OLD_MAINWINDOW )
+  add_definitions( -DKLEO_BUILD_OLD_MAINWINDOW )
   add_definitions (-DQT3_SUPPORT -DQT3_SUPPORT_WARNINGS)
-endif ( NOT KLEO_ONLY_UISERVER )
+endif ( KLEO_BUILD_OLD_MAINWINDOW )
 
 add_definitions( ${KDE4_ENABLE_EXCEPTIONS} )
 
 add_subdirectory( pics )
 add_subdirectory( backends )
 add_subdirectory( tests )
-
-if ( KLEO_ONLY_UISERVER )
-  add_definitions( -DKLEO_ONLY_UISERVER )
-endif ( KLEO_ONLY_UISERVER )
 
 ########### next target ###############
 set(libkleo_backend_qgpgme_SRCS
@@ -92,13 +89,13 @@ kde4_add_ui_files(libkleo_ui_SRCS
 
 set(kleo_LIB_SRCS ${libkleo_core_SRCS} ${libkleo_ui_common_SRCS} ${libkleo_backend_qgpgme_SRCS})
 set(kleo_LIB_LIBS ${KDE4_KDEUI_LIBS} ${QGPGME_LIBRARIES})
-if ( NOT KLEO_ONLY_UISERVER )
+if ( KLEO_BUILD_OLD_MAINWINDOW )
    set( kleo_LIB_SRCS ${kleo_LIB_SRCS} ${libkleo_ui_SRCS} ${libkleo_backend_chiasmus_SRCS} )
    set( kleo_LIB_LIBS ${kleo_LIB_LIBS} ${KDE4_KDE3SUPPORT_LIBS} ${QT_QT3SUPPORT_LIBRARY} )
    if ( NOT KLEO_NO_COMPAT )
      set( kleo_LIB_SRCS ${kleo_LIB_SRCS} ${libkleo_compat_SRCS} )
    endif ( NOT KLEO_NO_COMPAT )
-endif ( NOT KLEO_ONLY_UISERVER )
+endif ( KLEO_BUILD_OLD_MAINWINDOW )
 
 kde4_add_library(kleo SHARED ${kleo_LIB_SRCS})
 

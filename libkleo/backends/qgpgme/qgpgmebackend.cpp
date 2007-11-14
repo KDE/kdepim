@@ -50,7 +50,7 @@
 #include "qgpgmeimportjob.h"
 #include "qgpgmeverifyopaquejob.h"
 
-#ifndef KLEO_ONLY_UISERVER // kleo_no_compat
+#ifdef KLEO_BUILD_OLD_MAINWINDOW // kleo_no_compat
 # include "kleo/cryptplugwrapper.h"
 #endif
 
@@ -306,10 +306,10 @@ bool Kleo::QGpgMEBackend::checkForProtocol( const char * name, QString * reason 
 Kleo::CryptoBackend::Protocol * Kleo::QGpgMEBackend::openpgp() const {
   if ( !mOpenPGPProtocol )
     if ( checkForOpenPGP() )
-#ifdef KLEO_ONLY_UISERVER // KLEO_NO_COMPAT
-      mOpenPGPProtocol = new ::Protocol( GpgME::OpenPGP );
-#else
+#ifdef KLEO_BUILD_OLD_MAINWINDOW // KLEO_NO_COMPAT
       mOpenPGPProtocol = new CryptPlugWrapper( "gpg", "openpgp" );
+#else
+      mOpenPGPProtocol = new ::Protocol( GpgME::OpenPGP );
 #endif
   return mOpenPGPProtocol;
 }
@@ -317,10 +317,10 @@ Kleo::CryptoBackend::Protocol * Kleo::QGpgMEBackend::openpgp() const {
 Kleo::CryptoBackend::Protocol * Kleo::QGpgMEBackend::smime() const {
   if ( !mSMIMEProtocol )
     if ( checkForSMIME() )
-#ifdef KLEO_ONLY_UISERVER // KLEO_NO_COMPAT
-      mSMIMEProtocol = new ::Protocol( GpgME::CMS );
-#else
+#ifdef KLEO_BUILD_OLD_MAINWINDOW // KLEO_NO_COMPAT
       mSMIMEProtocol = new CryptPlugWrapper( "gpgsm", "smime" );
+#else
+      mSMIMEProtocol = new ::Protocol( GpgME::CMS );
 #endif
   return mSMIMEProtocol;
 }

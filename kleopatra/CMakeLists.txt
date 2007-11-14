@@ -1,7 +1,5 @@
 project(kleopatra)
 
-if ( NOT KLEO_ONLY_UISERVER OR USABLE_ASSUAN_FOUND )
-
 set( kleopatra_version 1.9.0 )
 
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/config-kleopatra.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-kleopatra.h )
@@ -14,21 +12,11 @@ add_definitions (-DQT3_SUPPORT -DQT3_SUPPORT_WARNINGS ${KDE4_ENABLE_EXCEPTIONS} 
 
 add_subdirectory( kgpgconf )
 
-if ( NOT KLEO_ONLY_UISERVER )
-set(libconf_SRCS  ${CMAKE_SOURCE_DIR}/kleopatra/conf/configuredialog.cpp )
-add_subdirectory( conf )
-add_subdirectory( kwatchgnupg )
-
-endif ( NOT KLEO_ONLY_UISERVER )
 add_subdirectory( tests )
 
 if ( NOT KDEPIMLIBS_FOUND )
    add_definitions( -DKLEO_NO_KDEPIMLIBS )
 endif ( NOT KDEPIMLIBS_FOUND )
-
-if (ONLY_KLEO)
-   add_definitions( -DONLY_KLEO )
-endif(ONLY_KLEO)
 
 if ( WIN32 )
   set( _kleopatra_extra_uiserver_SRCS
@@ -100,24 +88,28 @@ set( _kleopatra_common_SRCS
 
 kde4_add_ui_files( _kleopatra_common_SRCS certificateinfowidget.ui )
 
+if (ONLY_KLEO)
+   add_definitions( -DONLY_KLEO )
+endif(ONLY_KLEO)
 
-if ( KLEO_ONLY_UISERVER )
+set( _kleopatra_mainwindow_SRCS
+     mainwindow.cpp 
+     searchbar.cpp
+     searchbarstatehandler.cpp
+     tabwidget.cpp
+     trayiconlistener.cpp )
 
-  add_definitions( -DKLEO_ONLY_UISERVER )
+if ( KLEO_BUILD_QTONLY_MAINWINDOW )
+  add_definitions( -DKLEO_BUILD_QTONLY_MAINWINDOW )
+  set( _kleopatra_mainwindow_SRCS
+       qmainwindow/mainwindow.cpp )
+ endif ( KLEO_BUILD_QTONLY_MAINWINDOW )
 
-  if ( KLEO_BUILD_QTONLY_MAINWINDOW )
-    set( _kleopatra_mainwindow_SRCS
-         qmainwindow/mainwindow.cpp )
-  else ( KLEO_BUILD_QTONLY_MAINWINDOW )	
-    set( _kleopatra_mainwindow_SRCS
-         mainwindow.cpp 
-         searchbar.cpp
-         searchbarstatehandler.cpp
-         tabwidget.cpp
-         trayiconlistener.cpp )
-  endif ( KLEO_BUILD_QTONLY_MAINWINDOW )
-
-else( KLEO_ONLY_UISERVER )
+if ( KLEO_BUILD_OLD_MAINWINDOW )
+  add_definitions( -DKLEO_BUILD_OLD_MAINWINDOW )
+  set(libconf_SRCS  ${CMAKE_SOURCE_DIR}/kleopatra/conf/configuredialog.cpp )
+  add_subdirectory( conf )
+  add_subdirectory( kwatchgnupg )
 
   set( _kleopatra_mainwindow_SRCS
     ${libconf_SRCS}
@@ -129,19 +121,20 @@ else( KLEO_ONLY_UISERVER )
     certlistview.cpp )
 
   kde4_add_ui_files( _kleopatra_mainwindow_SRCS certificatewizard.ui)
-endif( KLEO_ONLY_UISERVER )
-
+endif ( KLEO_BUILD_OLD_MAINWINDOW )
 
 kde4_add_executable(kleopatra_bin ${_kleopatra_common_SRCS} ${_kleopatra_mainwindow_SRCS} ${_kleopatra_uiserver_SRCS} )
 set_target_properties(kleopatra_bin  PROPERTIES OUTPUT_NAME kleopatra)
 
-if ( KLEO_ONLY_UISERVER )
+if ( KLEO_BUILD_OLD_MAINWINDOW )
+  if ( KDEPIMLIBS_FOUND )
+    set( _kleopatra_extra_libs ${KDE4_KUTILS_LIBS} ${KDE4_KDE3SUPPORT_LIBS} ${KDE4_KABC_LIBS} )
+  else ( KDEPIMLIBS_FOUND )
+    set( _kleopatra_extra_libs ${KDE4_KUTILS_LIBS} ${KDE4_KDE3SUPPORT_LIBS} )
+  endif ( KDEPIMLIBS_FOUND )
+else ( KLEO_BUILD_OLD_MAINWINDOW )
   set( _kleopatra_extra_libs ${QT_QT3SUPPORT_LIBRARY} )
-elseif ( NOT KDEPIMLIBS_FOUND )
-  set( _kleopatra_extra_libs ${KDE4_KUTILS_LIBS} ${KDE4_KDE3SUPPORT_LIBS} ${KDE4_KABC_LIBS} )
-else( KLEO_ONLY_UISERVER )
-  set( _kleopatra_extra_libs ${KDE4_KUTILS_LIBS} ${KDE4_KDE3SUPPORT_LIBS} )
-endif ( KLEO_ONLY_UISERVER )
+endif ( KLEO_BUILD_OLD_MAINWINDOW )
 
 target_link_libraries(kleopatra_bin ${_kleopatra_extra_libs} kleo ${QGPGME_LIBRARIES} ${_kleopatra_uiserver_extra_libs} )
 
@@ -152,7 +145,3 @@ install(TARGETS kleopatra_bin  DESTINATION ${BIN_INSTALL_DIR} )
 
 install( FILES kleopatra_import.desktop  DESTINATION ${XDG_APPS_INSTALL_DIR})
 install( FILES kleopatraui.rc kleopatra_newui.rc  DESTINATION ${DATA_INSTALL_DIR}/kleopatra)
-
-else ( NOT KLEO_ONLY_UISERVER OR USABLE_ASSUAN_FOUND )
-  message( STATUS "Not building requested UiServer-only kleopatra since no usable assuan was found." )
-endif ( NOT KLEO_ONLY_UISERVER OR USABLE_ASSUAN_FOUND )

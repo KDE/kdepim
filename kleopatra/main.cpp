@@ -34,7 +34,7 @@
 
 #include "aboutdata.h"
 #include "systemtrayicon.h"
-#ifndef KLEO_ONLY_UISERVER
+#ifdef KLEO_BUILD_OLD_MAINWINDOW
 # include "certmanager.h"
 #else
 # include "mainwindow.h"
@@ -86,7 +86,7 @@ int main( int argc, char** argv )
   KCmdLineArgs::init(argc, argv, &aboutData);
 
   KCmdLineOptions options;
-#ifndef KLEO_ONLY_UISERVER
+#ifdef KLEO_BUILD_OLD_MAINWINDOW
   options.add("external", ki18n("Search for external certificates initially"));
   options.add("query ", ki18n("Initial query string"));
 #else
@@ -111,7 +111,7 @@ int main( int argc, char** argv )
   SystemTrayIcon sysTray;
   sysTray.show();
 
-#ifndef KLEO_ONLY_UISERVER
+#ifdef KLEO_BUILD_OLD_MAINWINDOW
   if( !Kleo::CryptoBackendFactory::instance()->smime() ) {
     KMessageBox::error(0,
 			i18n( "<qt>The crypto plugin could not be initialized.<br />"
