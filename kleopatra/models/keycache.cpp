@@ -240,7 +240,7 @@ std::vector<Key> KeyCache::findSigners( const VerificationResult & res ) const {
     std::vector<std::string> fprs;
     Q_FOREACH( const Signature & s, res.signatures() )
         fprs.push_back( s.fingerprint() );
-    return findByFingerprint( fprs );
+    return findByKeyIDOrFingerprint( fprs );
 }
 
 static std::string email( const UserID & uid ) {
