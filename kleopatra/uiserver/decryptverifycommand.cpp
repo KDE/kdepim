@@ -39,6 +39,7 @@
 #include "kleo-assuan.h"
 #include "classify.h"
 #include "detail_p.h"
+#include "hex.h"
 
 #include <models/keycache.h>
 #include <models/predicates.h>
@@ -270,7 +271,6 @@ public:
           q( qq ),
           wizard(),
           inputList(),
-          m_statusSent( 0U ),
           m_errorString(),
           m_error( 0U )
     {
@@ -285,13 +285,13 @@ public:
 
     void startJobs();
 
-    void trySendingStatus( const char * tag, const QString & str ) const {
-        // ### FIXME: make AssuanCommand::sendStatus() throw the exception
-        if ( const int err = q->sendStatus( tag, str ) )
+    void trySendingStatusEncoded( const char * tag, const std::string & str ) const {
+        // ### FIXME: make AssuanCommand::sendStatusEncoded() throw the exception
+        if ( const int err = q->sendStatusEncoded( tag, str ) )
             throw assuan_exception( err, i18n("Problem writing out verification status.") );
     }
 
-    QString signatureToString( const Signature& sig, const Key & key ) const;
+    static QString signatureToString( const Signature& sig, const Key & key );
 
     void createWizard() {
         if ( wizard )
@@ -386,7 +386,6 @@ private:
     QPointer<DecryptVerifyWizard> wizard;
     std::vector< shared_ptr<Input> > inputList;
     QHash<QObject*, unsigned int> m_senderToId;
-    unsigned int m_statusSent;
     QString m_errorString;
     unsigned int m_error;
 };
@@ -720,14 +719,13 @@ void DecryptVerifyCommand::Private::startJobs()
 
 }
 
-static QString summaryToString( const Signature::Summary summary )
+static const char * summaryToString( const Signature::Summary summary )
 {
+    if ( summary & Signature::Red )
+        return "RED";
     if ( summary & Signature::Green )
         return "GREEN";
-    else if ( summary & Signature::Red )
-        return "RED";
-    else
-        return "YELLOW";
+    return "YELLOW";
 }
 
 static QString keyToString( const Key & key ) {
@@ -745,41 +743,40 @@ static QString keyToString( const Key & key ) {
         return QString::fromLatin1( "%1 <%2>" ).arg( name, email );
 }
 
-QString DecryptVerifyCommand::Private::signatureToString( const Signature & sig, const Key & key ) const
+QString DecryptVerifyCommand::Private::signatureToString( const Signature & sig, const Key & key )
 {
     if ( sig.isNull() )
         return QString();
 
     const bool red   = (sig.summary() & Signature::Red);
-    const bool green = (sig.summary() & Signature::Green);
     const bool valid = (sig.summary() & Signature::Valid);
 
     if ( red )
         if ( key.isNull() )
             if ( const char * fpr = sig.fingerprint() )
-                return "RED " + i18n("Bad signature by unknown key %1: %2", QString::fromLatin1( fpr ), QString::fromLocal8Bit( sig.status().asString() ) );
+                return i18n("Bad signature by unknown key %1: %2", QString::fromLatin1( fpr ), QString::fromLocal8Bit( sig.status().asString() ) );
             else
-                return "RED " + i18n("Bad signature by an unknown key: %1", QString::fromLocal8Bit( sig.status().asString() ) );
+                return i18n("Bad signature by an unknown key: %1", QString::fromLocal8Bit( sig.status().asString() ) );
         else
-            return "RED " + i18n("Bad signature by %1: %2", keyToString( key ), QString::fromLocal8Bit( sig.status().asString() ) );
+            return i18n("Bad signature by %1: %2", keyToString( key ), QString::fromLocal8Bit( sig.status().asString() ) );
 
     else if ( valid )
         if ( key.isNull() )
             if ( const char * fpr = sig.fingerprint() )
-                return ( green ? "GREEN " : "YELLOW " ) + i18n("Good signature by unknown key %1.", QString::fromLatin1( fpr ) );
+                return i18n("Good signature by unknown key %1.", QString::fromLatin1( fpr ) );
             else
-                return ( green ? "GREEN " : "YELLOW " ) + i18n("Good signature by an unknown key.");
+                return i18n("Good signature by an unknown key.");
         else
-            return ( green ? "GREEN " : "YELLOW " ) + i18n("Good signature by %1.", keyToString( key ) );
+            return i18n("Good signature by %1.", keyToString( key ) );
 
     else
         if ( key.isNull() )
             if ( const char * fpr = sig.fingerprint() )
-                return "YELLOW " + i18n("Invalid signature by unknown key %1: %2", QString::fromLatin1( fpr ), QString::fromLocal8Bit( sig.status().asString() ) );
+                return i18n("Invalid signature by unknown key %1: %2", QString::fromLatin1( fpr ), QString::fromLocal8Bit( sig.status().asString() ) );
             else
-                return "YELLOW " + i18n("Invalid signature by an unknown key: %1", QString::fromLocal8Bit( sig.status().asString() ) );
+                return i18n("Invalid signature by an unknown key: %1", QString::fromLocal8Bit( sig.status().asString() ) );
         else
-            return "YELLOW " + i18n("Invalid signature by %1: %2", keyToString( key ), QString::fromLocal8Bit( sig.status().asString() ) );
+            return i18n("Invalid signature by %1: %2", keyToString( key ), QString::fromLocal8Bit( sig.status().asString() ) );
 }
 
 static QStringList labels( const std::vector< shared_ptr<Input> > & inputList )
@@ -813,6 +810,14 @@ void DecryptVerifyCommand::Private::slotProgress( const QString& what, int curre
 {
     // FIXME report progress, via sendStatus()
 }
+
+struct ResultPresentAndOutputNotInProgress {
+    typedef bool result_type;
+
+    bool operator()( const shared_ptr<Input> & input ) const {
+        return input->result && !input->output.in_progress ;
+    }
+};
 
 void DecryptVerifyCommand::Private::addResult( unsigned int id, const DVResult & res )
 {
@@ -853,9 +858,7 @@ void DecryptVerifyCommand::Private::addResult( unsigned int id, const DVResult &
         m_errorString = result->errorString;
     }
 
-    if ( kdtools::all( inputList.begin(), inputList.end(), bind( &Input::result, _1 ) ) &&
-         !kdtools::any( inputList.begin(), inputList.end(),
-                        bind( &Input::_Output::in_progress, bind( &Input::output, _1 ) ) ) )
+    if ( kdtools::all( inputList.begin(), inputList.end(), ResultPresentAndOutputNotInProgress() ) )
         sendSigStatii();
 }
 
@@ -874,7 +877,9 @@ void DecryptVerifyCommand::Private::sendSigStatii() const {
             const std::vector<Key> signers = KeyCache::instance()->findSigners( vResult );
             Q_FOREACH ( const Signature & sig, sigs ) {
                 const QString s = signatureToString( sig, keyForSignature( sig, signers ) );
-                trySendingStatus( "SIGSTATUS", s );
+                const char * color = summaryToString( sig.summary() );
+                trySendingStatusEncoded( "SIGSTATUS",
+                                         color + ( ' ' + hexencode( s.toUtf8().constData() ) ) );
             }
         } catch ( ... ) {}
 
