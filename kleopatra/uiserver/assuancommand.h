@@ -213,6 +213,21 @@ namespace Kleo {
             virtual ~Memento() {}
         };
 
+        template <typename T>
+        class TypedMemento : public Memento {
+            T m_t;
+        public:
+            explicit TypedMemento( const T & t ) : m_t( t ) {}
+
+            const T & get() const { return m_t; }
+            T & get() { return m_t; }
+        };
+
+        template <typename T>
+        static boost::shared_ptr< TypedMemento<T> > make_typed_memento( const T & t ) {
+            return boost::shared_ptr< TypedMemento<T> >( new TypedMemento<T>( t ) );
+        }
+
         static int makeError( int code );
 
     private:
@@ -251,6 +266,13 @@ namespace Kleo {
         QByteArray registerMemento( const boost::shared_ptr<Memento> & mem );
         QByteArray registerMemento( const QByteArray & tag, const boost::shared_ptr<Memento> & mem );
         void removeMemento( const QByteArray & tag );
+        template <typename T>
+        T mementoContent( const QByteArray & tag ) const {
+            if ( boost::shared_ptr< TypedMemento<T> > m = mementoAs< TypedMemento<T> >( tag ) )
+                return m->get();
+            else
+                return T();
+        }
 
         bool hasOption( const char * opt ) const;
         QVariant option( const char * opt ) const;
