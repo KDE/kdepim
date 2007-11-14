@@ -181,6 +181,23 @@ void UiServer::Private::incomingConnection( int fd ) {
     }
 }
 
+void UiServer::Private::makeListeningSocket() {
+
+    // First, create a file (we do this only for the name, gmpfh)
+    const QString fileName = suggestedSocketName;
+
+    if ( QFile::exists( fileName ) ) {
+        if ( isStaleAssuanSocket( fileName ) ) {
+            QFile::remove( fileName );
+        } else {
+            throw_<std::runtime_error>( tr( "Detected another running gnupg UI server listening at %1." ).arg( fileName ) );
+        }
+    }
+
+    doMakeListeningSocket( QFile::encodeName( fileName ) );
+
+    actualSocketName = suggestedSocketName;
+}
 
 #include "moc_uiserver_p.cpp"
 #include "moc_uiserver.cpp"

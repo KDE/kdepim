@@ -50,37 +50,22 @@
 using namespace Kleo;
 using namespace boost;
 
-QString UiServer::Private::makeFileName( const QString & socket ) const {
-    if ( !socket.isEmpty() )
-        return socket;
-    if ( tmpDir.status() != 0 )
-        throw_<std::runtime_error>( tr( "Couldn't create directory %1: %2" ).arg( tmpDirPrefix() + "XXXXXXXX", QString::fromLocal8Bit( strerror(errno) ) ) );
-    const QDir dir( tmpDir.name() );
-    assert( dir.exists() );
-    return dir.absoluteFilePath( "S.uiserver" );
-}
-
-// ### MERGE THE FOLLOWING WITH uiserver_win.cpp
 
 static inline QString system_error_string() {
     return QString::fromLocal8Bit( strerror(errno) );
 }
 
-void UiServer::Private::makeListeningSocket() {
+QString UiServer::Private::makeFileName( const QString & socket ) const {
+    if ( !socket.isEmpty() )
+        return socket;
+    if ( tmpDir.status() != 0 )
+        throw_<std::runtime_error>( tr( "Couldn't create directory %1: %2" ).arg( tmpDirPrefix() + "XXXXXXXX", system_error_string() ) );
+    const QDir dir( tmpDir.name() );
+    assert( dir.exists() );
+    return dir.absoluteFilePath( "S.uiserver" );
+}
 
-    // First, create a file (we do this only for the name, gmpfh)
-    const QString fileName = suggestedSocketName;
-
-    if ( QFile::exists( fileName ) ) {
-        if ( isStaleAssuanSocket( fileName ) ) {
-            QFile::remove( fileName );
-        } else {
-            throw_<std::runtime_error>( tr( "Detected another running gnupg UI server listening at %1." ).arg( fileName ) );
-        }
-    }
-
-    const QByteArray encodedFileName = QFile::encodeName( fileName );
-
+void UiServer::Private::doMakeListeningSocket( const QByteArray & encodedFileName ) {
     // Create a Unix Domain Socket:
 #ifdef HAVE_ASSUAN_SOCK_GET_NONCE
     const assuan_fd_t sock = assuan_sock_new( AF_UNIX, SOCK_STREAM, 0 );
@@ -121,6 +106,5 @@ void UiServer::Private::makeListeningSocket() {
         ::close( sock );
         throw;
     }
-    actualSocketName = suggestedSocketName;
 }
 

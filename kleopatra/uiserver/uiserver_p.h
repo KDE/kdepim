@@ -73,6 +73,8 @@ public:
 
 private:
     void makeListeningSocket();
+    // platform-specific creation impl for makeListeningSocket():
+    void doMakeListeningSocket( const QByteArray & encodedFileName );
     QString makeFileName( const QString & hint=QString() ) const;
 
 protected:
