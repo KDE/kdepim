@@ -100,6 +100,7 @@ void SignEncryptWizard::setMode( Mode mode ) {
 void SignEncryptWizard::setRecipientsAndCandidates( const QStringList & recipients, const std::vector< std::vector<Key> > & keys ) {
     assuan_assert( !keys.empty() );
     assuan_assert( (size_t)recipients.size() == keys.size() );
+    assuan_assert( d->mode == EncryptEMail );
 
     d->ui.recipientResolvePage.ensureIndexAvailable( keys.size() - 1 );
 
@@ -112,10 +113,8 @@ void SignEncryptWizard::setRecipientsAndCandidates( const QStringList & recipien
 }
 
 bool SignEncryptWizard::canGoToNextPage() const {
-    const std::vector<Key> keys = d->resolvedKeys();
-    assuan_assert( !keys.empty() );
-    return kdtools::all( keys.begin(), keys.end(),
-                         bind( &Key::protocol, _1 ) == keys.front().protocol() );
+    assuan_assert( currentPage() );
+    return currentPage()->isComplete();
 }
 
 std::vector<Key> SignEncryptWizard::Private::resolvedKeys() const {
