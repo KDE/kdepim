@@ -113,8 +113,10 @@ MainWindow::Private::Private( MainWindow * qq ) : q( qq ), model( AbstractKeyLis
     controller->setModel( model );
     setupActions();
     q->createGUI( "kleopatra_newui.rc" );
-    addView( i18n( "All Certificates" ) );
+    addView( i18n( "Trusted Certificates" ) );
     addView( i18n( "My Certificates" ) );
+    addView( i18n( "All Certificates" ) );
+
     RefreshKeysCommand* const refresh = new RefreshKeysCommand( controller );
     refresh->start();
 } 
