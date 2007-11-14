@@ -19,10 +19,10 @@ target_link_libraries(test_keylistmodels kleo ${KDE4_KDECORE_LIBS} )
 
 ########### next target ###############
 
-kde4_add_executable( test_filenamerequester TEST
-  test_filenamerequester.cpp
-  ../utils/filenamerequester.cpp )
-target_link_libraries( test_filenamerequester ${KDE4_KDEUI_LIBS} )
+kde4_add_executable( test_certificatepickerwidget TEST
+  test_certificatepickerwidget.cpp
+  ../uiserver/certificatepickerwidget.cpp )
+target_link_libraries( test_certificatepickerwidget ${KDE4_KDEUI_LIBS} ${QGPGME_LIBRARIES})
 
 ########### next target ###############
 

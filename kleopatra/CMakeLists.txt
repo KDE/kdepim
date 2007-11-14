@@ -54,6 +54,7 @@ if ( USABLE_ASSUAN_FOUND )
     uiserver/resultdisplaywidget.cpp
     uiserver/keyselectiondialog.cpp
     uiserver/keyselectionjob.cpp
+    uiserver/certificatepickerwidget.cpp
     )
   kde4_add_ui_files( _kleopatra_uiserver_SRCS uiserver/keyselectiondialog.ui)
   if ( WIN32 )
