@@ -99,14 +99,11 @@ public:
         return find<_detail::ByFingerprint>( by.fpr, fpr );
     }
 
-    std::vector< std::pair<std::string,Key> >::const_iterator find_email( const char * email ) const {
-        const std::vector< std::pair<std::string,Key> >::const_iterator it =
-            std::lower_bound( by.email.begin(), by.email.end(),
-                              email, ByEMail<std::less>() );
-        if ( it == by.email.end() || ByEMail<std::equal_to>()( *it, email ) )
-            return it;
-        else
-            return by.email.end();
+    std::pair< std::vector< std::pair<std::string,Key> >::const_iterator,
+               std::vector< std::pair<std::string,Key> >::const_iterator >
+    find_email( const char * email ) const {
+        return std::equal_range( by.email.begin(), by.email.end(),
+                                 email, ByEMail<std::less>() );
     }
 
     std::vector<Key>::const_iterator find_keyid( const char * keyid ) const {
@@ -161,14 +158,21 @@ std::vector<Key> KeyCache::findByFingerprint( const std::vector<std::string> & f
     return result;
 }
 
-const Key & KeyCache::findByEMailAddress( const char * email ) const {
-    const std::vector< std::pair<std::string,Key> >::const_iterator it = d->find_email( email );
-    if ( it == d->by.email.end() ) {
-        static const Key null;
-        return null;
-    } else {
-        return it->second;
-    }
+std::vector<Key> KeyCache::findByEMailAddress( const char * email ) const {
+    const std::pair<
+        std::vector< std::pair<std::string,Key> >::const_iterator,
+        std::vector< std::pair<std::string,Key> >::const_iterator
+    > pair = d->find_email( email );
+    std::vector<Key> result;
+    result.reserve( std::distance( pair.first, pair.second ) );
+    std::transform( pair.first, pair.second,
+                    std::back_inserter( result ),
+                    bind( &std::pair<std::string,Key>::second, _1 ) );
+    return result;
+}
+
+std::vector<Key> KeyCache::findByEMailAddress( const std::string & email ) const {
+    return findByEMailAddress( email.c_str() );
 }
 
 const Key & KeyCache::findByShortKeyID( const char * id ) const {

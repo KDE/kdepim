@@ -73,10 +73,8 @@ namespace Kleo {
         }
         std::vector<GpgME::Key> findByFingerprint( const std::vector<std::string> & fprs ) const;
 
-        const GpgME::Key & findByEMailAddress( const char * email ) const;
-        const GpgME::Key & findByEMailAddress( const std::string & email ) const {
-            return findByEMailAddress( email.c_str() );
-        }
+        std::vector<GpgME::Key> findByEMailAddress( const char * email ) const;
+        std::vector<GpgME::Key> findByEMailAddress( const std::string & email ) const;
 
         const GpgME::Key & findByShortKeyID( const char * id ) const;
         const GpgME::Key & findByShortKeyID( const std::string & id ) const {
