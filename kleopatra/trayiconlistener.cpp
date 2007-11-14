@@ -36,6 +36,8 @@
 
 #include <QWidget>
 
+#include <cassert>
+
 TrayIconListener::TrayIconListener( QWidget* mainWindow, QObject* parent ) : QObject( parent ), m_mainWindow( mainWindow )
 {
     assert( m_mainWindow );
