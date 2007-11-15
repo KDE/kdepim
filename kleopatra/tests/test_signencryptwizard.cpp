@@ -1,5 +1,5 @@
 /* -*- mode: c++; c-basic-offset:4 -*-
-    test_certificatepickerwidget.cpp
+    test_signencryptwizard.cpp
 
     This file is part of Kleopatra, the KDE keymanager
     Copyright (c) 2007 Klarälvdalens Datakonsult AB
@@ -30,18 +30,38 @@
     your version.
 */
 
-#include <QApplication>
-
 #include "uiserver/recipientresolvepage.h"
 #include "uiserver/signencryptwizard.h"
+
+#include <gpgme++/key.h>
+
+#include <kmime/kmime_header_parsing.h>
+
+#include <QApplication>
+#include <QByteArray>
+
+using namespace KMime::Types;
 
 int main( int argc, char** argv )
 {
     QApplication app( argc, argv );
     Kleo::SignEncryptWizard wizard;
-    QStringList list;
-    list << "Frank Osterfeld" << "Kleopatra" << "Christian" << "foo@bar.com";
-    //wizard.setIdentifiers( list );
+    std::vector<Mailbox> list;
+
+    Mailbox box;
+
+#undef ADD_EMAIL
+#define ADD_EMAIL( mail )\
+    box.setAddress( mail );\
+    list.push_back( box );
+
+    ADD_EMAIL("bar@foo.com")
+    ADD_EMAIL("frank@kdab.net")
+    ADD_EMAIL("bar@barfoo.org")
+    ADD_EMAIL("foo@bar.com")
+#undef ADD_EMAIL
+    wizard.setMode( Kleo::SignEncryptWizard::EncryptEMail );
+    wizard.setRecipientsAndCandidates( list, std::vector< std::vector<GpgME::Key> >( list.size() ) );
     wizard.show();
     return app.exec();
 }
