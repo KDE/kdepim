@@ -69,6 +69,7 @@ namespace Kleo {
         void setProtocol( GpgME::Protocol proto );
 
         void setRecipientsAndCandidates( const std::vector<KMime::Types::Mailbox> & recipients, const std::vector< std::vector<GpgME::Key> > & keys );
+        void setSignersAndCandidates( const std::vector<KMime::Types::Mailbox> & signers, const std::vector< std::vector<GpgME::Key> > & keys );
 
         bool canGoToNextPage() const;
 

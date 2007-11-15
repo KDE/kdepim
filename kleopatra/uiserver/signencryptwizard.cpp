@@ -95,7 +95,7 @@ void SignEncryptWizard::setMode( Mode mode ) {
     //   2. ObjectsPage
     //   3. RecipientsPage
     //   4. ResultPage
-    assuan_assert( mode == EncryptEMail && "Other cases are not yet implemented" );
+    assuan_assert( mode == EncryptEMail || mode == SignEMail || !"Other cases are not yet implemented" );
 
     d->mode = EncryptEMail;
 }
@@ -119,6 +119,12 @@ void SignEncryptWizard::setRecipientsAndCandidates( const std::vector<Mailbox> &
         rr->setIdentifier( recipients[i].prettyAddress() );
         rr->setCertificates( keys[i] );
     }
+}
+
+void SignEncryptWizard::setSignersAndCandidates( const std::vector<Mailbox> & signers, const std::vector< std::vector<Key> > & keys ) {
+    assuan_assert( !keys.empty() );
+    assuan_assert( d->mode == SignEMail );
+    notImplemented();
 }
 
 bool SignEncryptWizard::canGoToNextPage() const {
