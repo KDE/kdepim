@@ -1,6 +1,6 @@
 [Desktop Entry]
 Encoding=UTF-8
-Icon=find
+Icon=edit-find
 Type=Service
 ServiceTypes=KCModule
 DocPath=kaddressbook/preferences.html#preferences-ldap-lookup
