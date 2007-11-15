@@ -1,5 +1,4 @@
 [Desktop Entry]
-Encoding=UTF-8
 Type=Service
 Name=AT Engine
 Name[ca]=Motor AT
@@ -35,7 +34,7 @@ Comment[x-test]=xxKMobileTools Engine based on the standard GSM AT Command Setxx
 Comment[zh_CN]=基于标准 GSM AT 命令设定的 KMobileTools 引擎
 Comment[zh_TW]=基於標準 GSM AT 命令集的 KMobileTools 引擎
 Icon=kmobiletoolsAT
-ServiceTypes=KMobileTools/Engine
+X-KDE-ServiceTypes=KMobileTools/Engine
 Description=KMobileTools default engine, developed interally by the KMobileTools team.\nGood choice with almost all mobile phones, but on some models it lacks advanced features.\nBest choice with Motorola Phones, works good also with Sony Ericsson and Siemens.
 Description[ca]=Motor per omissió del KMobileTools, desenvolupat internment per l'equip del KMobileTools.\nÉs una bona elecció per gairebé tots els telèfons mòbils, però en alguns models no té funcionalitats avançades.\nÉs la millor elecció amb els telèfons Motorola, també funciona bé amb els Sony Ericsson i els Siemens.
 Description[de]=Das Standard-Modul von KMobileTools, intern vom KMobileTools-Team entwickelt.\nEine Gute Wahl für fast alle Mobiltelefone, allerdings sind bei einigen Modellen nicht alle Funktionen verfügbar.\nDies ist die beste Wahl für Motorola-Geräte, funktioniert aber auch mit Sony Ericsson und Siemens.

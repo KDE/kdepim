@@ -1,5 +1,4 @@
 [Desktop Entry]
-Encoding=UTF-8
 Name=XML Feature Plan
 Name[af]=XML eienskappe plan
 Name[ca]=Pla de característiques XML
@@ -38,6 +37,6 @@ Name[zh_CN]=XML 特性计划
 Name[zh_TW]=XML 功能計畫
 X-KDE-Library=kcal_resourcefeatureplan
 Type=Service
-ServiceTypes=KResources/Plugin
+X-KDE-ServiceTypes=KResources/Plugin
 X-KDE-ResourceFamily=calendar
 X-KDE-ResourceType=featureplan

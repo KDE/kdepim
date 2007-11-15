@@ -1,5 +1,4 @@
 [Desktop Entry]
-Encoding=UTF-8
 Type=Service
 Comment=This conduit syncs the handheld keyring database with a database stored on the pc.
 Comment[ca]=Aquest conducte sincronitza base de dades de l'anell de claus de l'agenda electrònica amb la base de dades emmagatzemada al PC.
@@ -25,5 +24,5 @@ Name[x-test]=xxKeyringxx
 Name[zh_CN]=密钥环
 Name[zh_TW]=金鑰鍊
 Implemented=file
-ServiceTypes=KPilotConduit
+X-KDE-ServiceTypes=KPilotConduit
 X-KDE-Library=kpilot_conduit_keyring

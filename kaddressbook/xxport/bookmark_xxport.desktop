@@ -1,5 +1,4 @@
 [Desktop Entry]
-Encoding=UTF-8
 X-KDE-Library=kaddrbk_bookmark_xxport
 Name=KAB Bookmark XXPort Plugin
 Name[af]=KAB boekmerk XXPort inprop module
@@ -94,5 +93,5 @@ Comment[x-test]=xxPlugin to export the web addresses of the contacts as bookmark
 Comment[zh_CN]=将联系人的网址导出为书签的插件
 Comment[zh_TW]=匯出聯絡人的網頁成書籤的外掛程式
 Type=Service
-ServiceTypes=KAddressBook/XXPort
+X-KDE-ServiceTypes=KAddressBook/XXPort
 X-KDE-KAddressBook-XXPortPluginVersion=1

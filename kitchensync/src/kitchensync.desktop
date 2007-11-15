@@ -1,5 +1,4 @@
 [Desktop Entry]
-Encoding=UTF-8
 Name=KitchenSync
 Name[sv]=Kitchensync
 Name[x-test]=xxKitchenSyncxx
@@ -56,11 +55,11 @@ GenericName[zh_TW]=同步
 Exec=kitchensync
 Icon=kitchensync
 Type=Application
-DocPath=kitchensync/index.html
+X-DocPath=kitchensync/index.html
 Terminal=false
 X-KDE-StartupNotify=true
 X-DCOP-ServiceType=Unique
 X-DCOP-ServiceName=kitchensync
-ServiceTypes=KParts/ReadOnlyPart
+X-KDE-ServiceTypes=KParts/ReadOnlyPart
 X-KDE-Library=kitchensyncpart
 Categories=Qt;KDE;Utility;X-KDE-Utilities-PIM;

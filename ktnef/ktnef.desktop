@@ -1,5 +1,4 @@
 [Desktop Entry]
-Encoding=UTF-8
 Name=KTnef
 Name[sv]=Ktnef
 Name[x-test]=xxKTnefxx
@@ -54,7 +53,7 @@ GenericName[zh_TW]=TNEF 檔案檢視器
 Exec=ktnef -caption "%c"
 Icon=ktnef
 Type=Application
-DocPath=ktnef/index.html
+X-DocPath=ktnef/index.html
 Comment=A viewer/extractor for TNEF files
 Comment[af]='n Leeser en data onttrekker vir TNEF lêers
 Comment[bg]=Програма за преглед и извличане на файлове TNEF

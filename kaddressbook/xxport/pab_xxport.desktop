@@ -1,5 +1,4 @@
 [Desktop Entry]
-Encoding=UTF-8
 X-KDE-Library=kaddrbk_pab_xxport
 Name=KAB MS Exchange Personal Addressbook XXPort Plugin
 Name[af]=KAB MS Exchange adresboek XXPort inprop module
@@ -93,5 +92,5 @@ Comment[x-test]=xxPlugin to import MS Exchange Personal Address Booksxx
 Comment[zh_CN]=导入 MS Exchange 个人地址簿的插件
 Comment[zh_TW]=匯入 MS Exchange Personal 通訊錄的外掛程式
 Type=Service
-ServiceTypes=KAddressBook/XXPort
+X-KDE-ServiceTypes=KAddressBook/XXPort
 X-KDE-KAddressBook-XXPortPluginVersion=1

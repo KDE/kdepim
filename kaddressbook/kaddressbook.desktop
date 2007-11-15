@@ -1,5 +1,4 @@
 [Desktop Entry]
-Encoding=UTF-8
 Name=KAddressBook
 Name[cy]=KAddressBook/LlyfrKyfeiriadau
 Name[de]=Adressbuch
@@ -71,11 +70,11 @@ GenericName[zh_CN]=地址管理器
 Exec=kaddressbook %u
 Icon=kaddressbook
 Type=Application
-DocPath=kaddressbook/index.html
+X-DocPath=kaddressbook/index.html
 Terminal=false
 X-KDE-StartupNotify=true
 X-DBUS-StartupType=Unique
-MimeType=text/directory;text/directory;text/x-ldif;
-ServiceTypes=KParts/ReadOnlyPart,Browser/View,DBUS/AddressBook
+MimeType=text/directory;text/x-ldif;
+X-KDE-ServiceTypes=KParts/ReadOnlyPart,Browser/View,DBUS/AddressBook
 X-KDE-Library=kaddressbookpart
 Categories=Qt;KDE;Office;

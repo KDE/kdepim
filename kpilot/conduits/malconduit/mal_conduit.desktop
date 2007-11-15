@@ -1,5 +1,4 @@
 [Desktop Entry]
-Encoding=UTF-8
 Type=Service
 Name=MAL (AvantGo) Conduit
 Name[af]=MAL (AvantGo) pad
@@ -89,5 +88,5 @@ Comment[x-test]=xxSyncronize AvantGo (or generally a MAL server's content) to th
 Comment[zh_CN]=将 AvantGo(或 MAL 服务器的内容)同步到手持设备中。这允许您在手持设备中脱机查看 Web 页，比如影讯、电视节目时间表或任何其它网页。
 Comment[zh_TW]=將 AvantGo（或一般的 MAL 伺服器內容）與掌上型裝置同步。讓您可以在掌上型裝置離線檢視網頁，如您的影片或電視節目表等等。
 Implemented=file
-ServiceTypes=KPilotConduit
+X-KDE-ServiceTypes=KPilotConduit
 X-KDE-Library=kpilot_conduit_mal

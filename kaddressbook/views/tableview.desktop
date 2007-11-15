@@ -1,5 +1,4 @@
 [Desktop Entry]
-Encoding=UTF-8
 X-KDE-Library=kaddrbk_tableview
 Name=Table View
 Name[af]=Tabel Aansig
@@ -57,5 +56,5 @@ Name[x-test]=xxTable Viewxx
 Name[zh_CN]=表格视图
 Name[zh_TW]=表格檢視
 Type=Service
-ServiceTypes=KAddressBook/View
+X-KDE-ServiceTypes=KAddressBook/View
 X-KDE-KAddressBook-ViewPluginVersion=1

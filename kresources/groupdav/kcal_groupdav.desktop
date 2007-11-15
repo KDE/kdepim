@@ -1,5 +1,4 @@
 [Desktop Entry]
-Encoding=UTF-8
 Name=GroupDAV Server (e.g. OpenGroupware)
 Name[af]=GroupDAV bediener (bv. OpenGroupware)
 Name[bg]=Сървър GroupDAV (e.g. OpenGroupware)
@@ -47,6 +46,6 @@ Name[zh_CN]=GroupDAV 服务器(如 OpenGroupware)
 Name[zh_TW]=GroupDAV 伺服器 (如: OpenGroupware)
 X-KDE-Library=kcal_groupdav
 Type=Service
-ServiceTypes=KResources/Plugin
+X-KDE-ServiceTypes=KResources/Plugin
 X-KDE-ResourceFamily=calendar
 X-KDE-ResourceType=groupdav

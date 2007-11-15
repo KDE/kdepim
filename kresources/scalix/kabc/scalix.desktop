@@ -1,5 +1,4 @@
 [Desktop Entry]
-Encoding=UTF-8
 Name=Addressbook on Scalix Server via KMail
 Name[el]=Ημερολόγιο σε εξυπηρετητή Scalix μέσω του KMail
 Name[ga]=Leabhar Seoltaí ar Fhreastalaí Scalix via KMail
@@ -12,6 +11,6 @@ Name[x-test]=xxAddressbook on Scalix Server via KMailxx
 Name[zh_TW]=透過 KMail 取得 Scalix 伺服器上的通訊錄
 X-KDE-Library=kabc_scalix
 Type=Service
-ServiceTypes=KResources/Plugin
+X-KDE-ServiceTypes=KResources/Plugin
 X-KDE-ResourceFamily=contact
 X-KDE-ResourceType=scalix

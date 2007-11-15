@@ -1,5 +1,4 @@
 [Desktop Entry]
-Encoding=UTF-8
 X-KDE-Library=kaddrbk_iconview
 Name=Icon View
 Name[af]=Ikoon Aansig
@@ -62,5 +61,5 @@ Name[xh]=Imboniselo ye Icon
 Name[zh_CN]=图标视图
 Name[zh_TW]=圖示檢視
 Type=Service
-ServiceTypes=KAddressBook/View
+X-KDE-ServiceTypes=KAddressBook/View
 X-KDE-KAddressBook-ViewPluginVersion=1

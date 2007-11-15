@@ -1,5 +1,4 @@
 [Desktop Entry]
-Encoding=UTF-8
 X-KDE-Library=kaddrbk_ldif_xxport
 Name=KAB LDIF XXPort Plugin
 Name[af]=KAB LDIF XXPort inprop module
@@ -95,5 +94,5 @@ Comment[x-test]=xxPlugin to import and export contacts in Netscape and Mozilla L
 Comment[zh_CN]=导入和导出 Netscape 和 Mozilla LDIF 格式联系人的插件
 Comment[zh_TW]=匯入與匯出 Netscape 與 Mozilla LDIF 格式聯絡人的外掛程式
 Type=Service
-ServiceTypes=KAddressBook/XXPort
+X-KDE-ServiceTypes=KAddressBook/XXPort
 X-KDE-KAddressBook-XXPortPluginVersion=1

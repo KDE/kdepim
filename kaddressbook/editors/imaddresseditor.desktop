@@ -1,5 +1,4 @@
 [Desktop Entry]
-Encoding=UTF-8
 Type=Service
 Name=Instant Messaging
 Name[af]=Kits bootskap
@@ -97,6 +96,6 @@ Comment[uk]=Редактор адрес миттєвого зв'язку
 Comment[x-test]=xxInstant Messaging Address Editorxx
 Comment[zh_CN]=即时通讯地址编辑器
 Comment[zh_TW]=即時通訊位址編輯器
-ServiceTypes=KAddressBook/ContactEditorWidget
+X-KDE-ServiceTypes=KAddressBook/ContactEditorWidget
 X-KDE-Library=kaddrbk_instantmessaging
 X-KDE-KAddressBook-CEWPluginVersion=1

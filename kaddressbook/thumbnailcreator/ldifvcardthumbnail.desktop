@@ -1,5 +1,4 @@
 [Desktop Entry]
-Encoding=UTF-8
 Type=Service
 Name=Electronic Business Card Files
 Name[af]=Elektroniese Besigheid kaartjie lêers
@@ -49,7 +48,7 @@ Name[uk]=файли електронних візитних карток
 Name[x-test]=xxElectronic Business Card Filesxx
 Name[zh_CN]=电子商务名片文件
 Name[zh_TW]=電子名片檔
-ServiceTypes=ThumbCreator
+X-KDE-ServiceTypes=ThumbCreator
 MimeType=text/directory;text/directory;text/x-ldif;
 X-KDE-Library=ldifvcardthumbnail
 CacheThumbnail=false

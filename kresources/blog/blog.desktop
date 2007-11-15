@@ -1,5 +1,4 @@
 [Desktop Entry]
-Encoding=UTF-8
 Name=Journal in a blog
 Name[bg]=Journal Print Style
 Name[ca]=Diari en un bloc
@@ -20,6 +19,6 @@ Name[zh_CN]=博客日记
 Name[zh_TW]=部落格日誌
 X-KDE-Library=kcal_blog
 Type=Service
-ServiceTypes=KResources/Plugin
+X-KDE-ServiceTypes=KResources/Plugin
 X-KDE-ResourceFamily=calendar
 X-KDE-ResourceType=blog

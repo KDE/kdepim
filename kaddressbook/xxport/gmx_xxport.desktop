@@ -1,5 +1,4 @@
 [Desktop Entry]
-Encoding=UTF-8
 X-KDE-Library=kaddrbk_gmx_xxport
 Name=KAB GMX XXPort Plugin
 Name[bg]=KAB CSV XXPort Plugin
@@ -42,6 +41,6 @@ Comment[x-test]=xxPlugin to import and export contacts in GMX's addressbook form
 Comment[zh_CN]=导入和导出 GMX 地址簿格式联系人的插件
 Comment[zh_TW]=匯入與匯出 GMX 通訊錄格式的外掛程式
 Type=Service
-ServiceTypes=KAddressBook/XXPort
+X-KDE-ServiceTypes=KAddressBook/XXPort
 X-KDE-KAddressBook-XXPortPluginVersion=1
 

@@ -1,5 +1,4 @@
 [Desktop Entry]
-Encoding=UTF-8
 Type=Service
 Comment=This conduit sets the time on your handheld from the PC clock.
 Comment[af]=Hierdie pad stel die tyd op jou draagbare toestel vanaf die PC horlosie.
@@ -98,5 +97,5 @@ Name[x-test]=xxTime Synchronizationxx
 Name[zh_CN]=时间同步
 Name[zh_TW]=時間同步
 Implemented=file
-ServiceTypes=KPilotConduit
+X-KDE-ServiceTypes=KPilotConduit
 X-KDE-Library=kpilot_conduit_time

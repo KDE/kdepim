@@ -1,5 +1,4 @@
 [Desktop Entry]
-Encoding=UTF-8
 GenericName=Mail Alert
 GenericName[af]=Pos inkennis stel
 GenericName[bg]=Аларма за е-поща
@@ -58,7 +57,7 @@ GenericName[zh_TW]=信件警告
 Exec=korn -caption "%c" %f
 Icon=korn
 Path=
-DocPath=korn/index.html
+X-DocPath=korn/index.html
 Type=Application
 Terminal=false
 Name=Korn

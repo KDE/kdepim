@@ -1,5 +1,4 @@
 [Desktop Entry]
-Encoding=UTF-8
 X-KDE-Library=kaddrbk_cardview
 Name=Card View
 Name[af]=Kaard Aansig
@@ -56,5 +55,5 @@ Name[x-test]=xxCard Viewxx
 Name[zh_CN]=卡片视图
 Name[zh_TW]=卡片檢視
 Type=Service
-ServiceTypes=KAddressBook/View
+X-KDE-ServiceTypes=KAddressBook/View
 X-KDE-KAddressBook-ViewPluginVersion=1

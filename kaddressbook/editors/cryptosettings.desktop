@@ -1,5 +1,4 @@
 [Desktop Entry]
-Encoding=UTF-8
 X-KDE-Library=kaddrbk_cryptosettings
 Name=Crypto Preferences
 Name[af]=Kripto Voorkeure
@@ -51,5 +50,5 @@ Name[x-test]=xxCrypto Preferencesxx
 Name[zh_CN]=加密首选项
 Name[zh_TW]=加密設定
 Type=Service
-ServiceTypes=KAddressBook/ContactEditorWidget
+X-KDE-ServiceTypes=KAddressBook/ContactEditorWidget
 X-KDE-KAddressBook-CEWPluginVersion=1

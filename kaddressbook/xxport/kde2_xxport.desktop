@@ -1,5 +1,4 @@
 [Desktop Entry]
-Encoding=UTF-8
 X-KDE-Library=kaddrbk_kde2_xxport
 Name=KAB KDE2 XXPort Plugin
 Name[af]=KAB KDE2 XXPort inprop module
@@ -97,5 +96,5 @@ Comment[x-test]=xxPlugin to import the old KDE 2 address bookxx
 Comment[zh_CN]=导入旧的 KDE 2 地址簿的插件
 Comment[zh_TW]=匯入舊的 KDE2 通訊錄的外掛程式
 Type=Service
-ServiceTypes=KAddressBook/XXPort
+X-KDE-ServiceTypes=KAddressBook/XXPort
 X-KDE-KAddressBook-XXPortPluginVersion=1

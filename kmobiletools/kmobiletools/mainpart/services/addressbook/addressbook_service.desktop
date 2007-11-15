@@ -1,5 +1,4 @@
 [Desktop Entry]
-Encoding=UTF-8
 Type=Service
 Name=Addressbook service
 Name[ca]=Servei de llibreta d'adreces
@@ -30,7 +29,7 @@ Comment[sv]=En tjänst för Kmobiletools som tillhandahåller adressboksfunktion
 Comment[x-test]=xxA KMobileTools service that provides address book functionsxx
 Comment[zh_CN]=提供地址簿功能的 KMobileTools 服务
 Comment[zh_TW]=提供通訊錄功能的 KMobileTools 服務
-ServiceTypes=KMobileTools/CoreService
+X-KDE-ServiceTypes=KMobileTools/CoreService
 Description=This service provides KMobileTools with address book functions
 Description[ca]=Aquest servei proporciona funcions de llibreta d'adreces al KMobileTools
 Description[el]=Αυτή η υπηρεσία προσφέρει στο KMobileTools λειτουργίας του βιβλίου διευθύνσεων

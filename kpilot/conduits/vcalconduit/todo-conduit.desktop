@@ -1,5 +1,4 @@
 [Desktop Entry]
-Encoding=UTF-8
 Type=Service
 Comment=This conduit syncs the ToDo list from your handheld to KOrganizer.
 Comment[af]=Hierdie pad sinkroniseer die Te-doen lys vanaf jou draagbare toestel na KOrganizer.
@@ -93,5 +92,5 @@ Name[x-test]=xxToDos (KOrganizer)xx
 Name[zh_CN]=待办事项 (KOrganizer)
 Name[zh_TW]=待辦事項（KOrganizer）
 Implemented=file
-ServiceTypes=KPilotConduit
+X-KDE-ServiceTypes=KPilotConduit
 X-KDE-Library=kpilot_conduit_todo

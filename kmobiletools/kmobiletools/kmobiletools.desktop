@@ -1,5 +1,4 @@
 [Desktop Entry]
-Encoding=UTF-8
 Name=KMobileTools
 Name[ne]=केडीई मोबाइल उपकरण
 Name[pa]=ਕੇ-ਮੋਬਾਇਲ ਫੋਨ
@@ -27,7 +26,7 @@ GenericName[zh_TW]=行動電話管理員
 Exec=kmobiletools %i %m -caption "%c"
 Icon=kmobiletools
 Type=Application
-DocPath=kmobiletools/index.html
+X-DocPath=kmobiletools/index.html
 Comment=KDE Mobile Phones Suite
 Comment[bg]=KAB Mobile Phone XXPort Plugin
 Comment[ca]=Conjunt de programes del KDE per a telèfons mòbils
