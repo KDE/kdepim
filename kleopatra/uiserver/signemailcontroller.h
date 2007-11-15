@@ -1,5 +1,5 @@
 /* -*- mode: c++; c-basic-offset:4 -*-
-    uiserver/signcommand.h
+    uiserver/signemailcontroller.h
 
     This file is part of Kleopatra, the KDE keymanager
     Copyright (c) 2007 Klarälvdalens Datakonsult AB
@@ -30,31 +30,65 @@
     your version.
 */
 
-#ifndef __KLEO_UISERVER_SIGNCOMMAND_H__
-#define __KLEO_UISERVER_SIGNCOMMAND_H__
+#ifndef __KLEOPATRA_UISERVER_SIGNEMAILCONTROLLER_H__
+#define __KLEOPATRA_UISERVER_SIGNEMAILCONTROLLER_H__
 
-#include "assuancommand.h"
+#include <QObject>
 
 #include <utils/pimpl_ptr.h>
 
-namespace Kleo {
+#include <gpgme++/global.h>
 
-    class SignCommand : public Kleo::AssuanCommandMixin<SignCommand> {
-    public:
-	SignCommand();
-	~SignCommand();
+#include <boost/shared_ptr.hpp>
 
-    private:
-        /* reimp */ int doStart();
-        /* reimp */ void doCanceled();
-    public:
-        static const char * staticName() { return "SIGN"; }
+#include <vector>
 
-        class Private;
-    private:
-        kdtools::pimpl_ptr<Private> d;
-    };
-
+namespace KMime {
+namespace Types {
+    class Mailbox;
+}
 }
 
-#endif /*__KLEO_UISERVER_SIGNCOMMAND_H__*/
+namespace Kleo {
+
+    class AssuanCommand;
+
+    class SignEMailController : public QObject {
+        Q_OBJECT
+    public:
+        explicit SignEMailController( QObject * parent=0 );
+        ~SignEMailController();
+
+        void setProtocol( GpgME::Protocol proto );
+        //GpgME::Protocol protocol() const;
+        //const char * protocolAsString() const;
+
+        void setCommand( const boost::shared_ptr<AssuanCommand> & cmd );
+
+        void startResolveSigners( const std::vector<KMime::Types::Mailbox> & signers );
+
+        void setDetachedSignature( bool detached );
+
+        void importIO();
+
+        void start();
+
+    public Q_SLOTS:
+        void cancel();
+
+    Q_SIGNALS:
+        void signersResolved();
+        void reportMigAlg( const QString & details );
+        void error( int err, const QString & details );
+        void done();
+
+    private:
+        class Private;
+        kdtools::pimpl_ptr<Private> d;
+        Q_PRIVATE_SLOT( d, void slotWizardSignersResolved() )
+        Q_PRIVATE_SLOT( d, void slotWizardCanceled() )
+    };
+}
+
+#endif /* __KLEOPATRA_UISERVER_SIGNEMAILCONTROLLER_H__ */
+

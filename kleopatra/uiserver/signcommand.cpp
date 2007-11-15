@@ -31,190 +31,76 @@
 */
 
 #include "signcommand.h"
+#include "signemailcontroller.h"
 #include "kleo-assuan.h"
-#include "keyselectionjob.h"
-#include "detail_p.h"
-
-#include "utils/stl_util.h"
-
-#include <kleo/keylistjob.h>
-#include <kleo/signjob.h>
-#include <kleo/cryptobackendfactory.h>
-
-#include <gpgme++/data.h>
-#include <gpgme++/error.h>
-#include <gpgme++/key.h>
-#include <gpgme++/keylistresult.h>
-#include <gpgme++/signingresult.h>
-
-#include <kmime/kmime_header_parsing.h>
 
 #include <KLocale>
 
-#include <QIODevice>
-#include <QString>
-#include <QStringList>
-#include <QObject>
-#include <QDebug>
-
-#include <boost/bind.hpp>
-
-#include <algorithm>
-#include <iterator>
-#include <vector>
-
 using namespace Kleo;
 using namespace boost;
-using namespace KMime::Types;
 
-class SignCommand::Private
-  : public AssuanCommandPrivateBaseMixin<SignCommand::Private, SignCommand>
-{
+class SignCommand::Private : public QObject {
     Q_OBJECT
+private:
+    friend class ::Kleo::SignCommand;
+    SignCommand * const q;
 public:
-    Private( SignCommand * qq )
-        :AssuanCommandPrivateBaseMixin<SignCommand::Private, SignCommand>()
-        , q( qq ), m_signJobs( 0 ), m_statusSent( 0 )
-    {}
-    virtual ~Private() {}
-    
-    void checkInputs();
-    void startKeySelection();
-    void startSignJobs( const std::vector<GpgME::Key>& keys );
-    void showKeySelectionDialog();
-    
-    struct Input {
-        shared_ptr<QIODevice> data;
-        QString dataFileName;
-        unsigned int id;
-        GpgME::Protocol protocol;
-    };
-    
-    struct Result {
-        GpgME::SigningResult result;
-        QByteArray data;
-        unsigned int id;
-        unsigned int error;
-        QString errorString;
-    };
+    explicit Private( SignCommand * qq )
+        : q( qq ), controller()
+    {
 
-    SignCommand *q;
+    }
+
+private:    
+    void checkForErrors() const;
 
 private Q_SLOTS:
-    void slotKeySelectionResult( const std::vector<GpgME::Key>& );
-    void slotKeySelectionError( const GpgME::Error& error, const GpgME::KeyListResult& );
-    void slotSigningResult( const GpgME::SigningResult & result, const QByteArray & signature );
+    void slotSignersResolved();
+    void slotMicAlgDetermined( const QString & );
+    void slotDone();
+    void slotError( int, const QString & );
+
 private:
-    bool trySendingStatus( const QString & str );
-    
-    std::vector<Input> m_inputs;
-    QMap<int, Result> m_results;
-    QMap<const SignJob*, unsigned int> m_jobs;
-    int m_signJobs;
-    int m_statusSent;
+    shared_ptr<SignEMailController> controller;
 };
 
-void SignCommand::Private::checkInputs()
+SignCommand::SignCommand()
+    : AssuanCommandMixin<SignCommand>(), d( new Private( this ) )
 {
-    const int numInputs = q->numBulkInputDevices();
-    const int numOutputs = q->numBulkOutputDevices();
-    const int numMessages = q->numBulkMessageDevices();
-
-    //TODO use better error code if possible
-    if ( numMessages != 0 )
-        throw assuan_exception(makeError( GPG_ERR_ASS_NO_INPUT ), i18n( "Only INPUT and OUTPUT can be provided to the sign command, MESSAGE") ); 
-       
-    // either the output is discarded, or there ar as many as inputs
-    //TODO use better error code if possible
-    if ( numOutputs > 0 && numInputs != numOutputs )
-        throw assuan_exception( makeError( GPG_ERR_ASS_NO_INPUT ),  i18n( "For each INPUT there needs to be an OUTPUT") );
-
-    GpgME::Protocol protocol;
-    try { protocol = q->checkProtocol( EMail ); }
-    catch ( ... ) { protocol = GpgME::UnknownProtocol; }
-
-    for ( int i = 0; i < numInputs; ++i ) {
-        Input input;
-        input.id = i;
-        input.data = q->bulkInputDevice( i );
-        input.dataFileName = q->bulkInputDeviceFileName( i );
-        input.protocol = protocol;
-
-        m_inputs.push_back( input );
-    }
-}
-
-void SignCommand::Private::startKeySelection()
-{
-    KeySelectionJob* job = new KeySelectionJob( this );
-    job->setSecretKeysOnly( true );
-    QStringList patters;
-    Q_FOREACH( const Mailbox mb, q->senders() )
-        patters.push_back( mb.address() );
-    job->setPatterns( patters );
-    job->setSilent( q->hasOption( "silent" ) );
-    connect( job, SIGNAL( error( GpgME::Error, GpgME::KeyListResult ) ),
-             this, SLOT( slotKeySelectionError( GpgME::Error, GpgME::KeyListResult ) ) );
-    connect( job, SIGNAL( result( std::vector<GpgME::Key> ) ),
-             this, SLOT( slotKeySelectionResult( std::vector<GpgME::Key> ) ) );
-    job->start();
-}
-
-void SignCommand::Private::startSignJobs( const std::vector<GpgME::Key>& keys )
-{
-    // make sure the keys are all of the same type
-    // FIXME reasonable assumption?
-    if ( keys.empty() || !kdtools::all( keys.begin(), keys.end(), boost::bind( &GpgME::Key::protocol, _1) == keys.front().protocol() ) ) {
-        q->done();
-        return;
-    }
-
-    const GpgME::Protocol defaultProtocol = keys.front().protocol();
-
-    Q_FOREACH( const Input input, m_inputs ) {
-        const GpgME::Protocol proto = input.protocol == GpgME::UnknownProtocol ? defaultProtocol : input.protocol ;
-        const CryptoBackend::Protocol* backend = CryptoBackendFactory::instance()->protocol( proto == GpgME::OpenPGP ? "openpgp" : "smime" );
-        assert( backend ); // FIXME - this should be checked somewhere before
-    
-        SignJob *job = backend->signJob( true, true );
-        connect( job, SIGNAL( result( GpgME::SigningResult, QByteArray ) ),
-                 this, SLOT( slotSigningResult( GpgME::SigningResult, QByteArray ) ) );
-        // FIXME port to iodevice
-        if ( const GpgME::Error err = job->start( keys, input.data->readAll(), q->hasOption( "detached" ) ? GpgME::Detached : GpgME::NormalSignatureMode ) ) {
-            q->done( err );
-            return;
-        }
-        m_jobs.insert( job, input.id );
-        m_signJobs++;
-    }
-}
-
-void SignCommand::Private::slotKeySelectionResult( const std::vector<GpgME::Key>& keys )
-{
-    // fire off the sign jobs
-    startSignJobs( keys );
-}
-
-void SignCommand::Private::slotKeySelectionError( const GpgME::Error& error, const GpgME::KeyListResult& )
-{
-    assert( error || error.isCanceled() );
-    if ( error.isCanceled() )
-        q->done( error, i18n( "User canceled key selection" ) );
-    else
-        q->done( error, i18n( "Error while listing and selecting private keys" ) );
 
 }
 
-bool SignCommand::Private::trySendingStatus( const QString & str )
-{
-    if ( const int err = q->sendStatus( "SIGN", str ) ) {
-        QString errorString = i18n("Problem writing out the signature.");
-        q->done( err, errorString );
-        return false;
-    }
-    return true;
+SignCommand::~SignCommand() {}
+
+void SignCommand::Private::checkForErrors() const {
+
+    if ( q->numFiles() )
+        throw assuan_exception( makeError( GPG_ERR_CONFLICT ),
+                                i18n( "SIGN is an email mode command, connection seems to be in filemanager mode" ) );
+
+    if ( q->senders().empty() )
+        throw assuan_exception( makeError( GPG_ERR_NOT_IMPLEMENTED ),
+                                i18n( "SIGN without SENDER" ) );
+
+    if ( !q->recipients().empty() )
+        throw assuan_exception( makeError( GPG_ERR_CONFLICT ),
+                                i18n( "RECIPIENT may not be given prior to SIGN" ) );
+
+    if ( !q->numBulkInputDevices() )
+        throw assuan_exception( makeError( GPG_ERR_ASS_NO_INPUT ),
+                                i18n( "At least one INPUT must be present" ) );
+
+    if ( q->numBulkOutputDevices() != q->numBulkInputDevices() )
+        throw assuan_exception( makeError( GPG_ERR_ASS_NO_INPUT ),
+                                i18n( "INPUT/OUTPUT count mismatch" ) );
+
+    if ( q->numBulkMessageDevices() )
+        throw assuan_exception( makeError( GPG_ERR_INV_VALUE ),
+                                i18n( "MESSAGE command is not allowed before SIGN" ) );
+
 }
 
+#if 0
 static QString collect_micalgs( const GpgME::SigningResult & result, GpgME::Protocol proto ) {
     const std::vector<GpgME::CreatedSignature> css = result.createdSignatures();
     QStringList micalgs;
@@ -228,84 +114,52 @@ static QString collect_micalgs( const GpgME::SigningResult & result, GpgME::Prot
     micalgs.erase( std::unique( micalgs.begin(), micalgs.end() ), micalgs.end() );
     return micalgs.join( QLatin1String(",") );
 }
+#endif
 
-void SignCommand::Private::slotSigningResult( const GpgME::SigningResult & result, const QByteArray & signature )
-{
-    const SignJob * const job = qobject_cast<SignJob*>( sender() );
-    assert( job );
-    assert( m_jobs.contains( job ) );
-    const unsigned int id = m_jobs[job];
-    
-    {
-        Result res;
-        res.result = result;
-        res.data = signature;
-        res.id = id;
-        m_results.insert( id, res );
-    }
-    // send status for all results received so far, but in order of id
-    while ( m_results.contains( m_statusSent ) ) {
-       SignCommand::Private::Result result = m_results[m_statusSent];
-       QString resultString;
-       try {
-           const GpgME::SigningResult & signres = result.result; 
-           assert( !signres.isNull() );
-               
-           const GpgME::Error signError = signres.error();
-           if ( signError )
-               throw assuan_exception( signError, i18n( "Signing failed: " ) );
+int SignCommand::doStart() {
 
-           // send MICALG status message:
-           const QString micalg = collect_micalgs( signres, m_inputs[m_statusSent].protocol );
-           if ( !micalg.isEmpty() )
-               if ( const int err = q->sendStatus( "MICALG", micalg ) )
-                   throw assuan_exception( err, i18n( "Couldn't send MICALG status string: " ) );
+    d->checkForErrors();
 
-           // FIXME adjust for smime?
-           const QString filename = q->bulkInputDeviceFileName( m_statusSent ) + ".sig";
-           writeToOutputDeviceOrAskForFileName( result.id, result.data, filename );
-           resultString = "OK - Signature written";
-       } catch ( const assuan_exception& e ) {
-           result.error = e.error_code();
-           result.errorString = e.what();
-           m_results[result.id] = result;
-           resultString = "ERR " + result.errorString;
-           // FIXME ask to continue or cancel
-       }
-       if ( !trySendingStatus( resultString ) ) // emit done on error
-           return;
-       
-       m_statusSent++;
-    }
-    
-    if ( --m_signJobs == 0 )
-        q->done();
-}
+    d->controller.reset( new SignEMailController );
+    d->controller->setProtocol( checkProtocol( EMail ) );
 
-SignCommand::SignCommand()
-:d( new Private( this ) )
-{
-}
+    d->controller->setCommand( shared_from_this() );
 
-SignCommand::~SignCommand()
-{
-}
+    QObject::connect( d->controller.get(), SIGNAL(signersResolved()), d.get(), SLOT(slotSignersResolved() ) );
+    QObject::connect( d->controller.get(), SIGNAL(migAlgDetermined(QString)), d.get(), SLOT(slotMicAlgDetermined(QString)) );
+    QObject::connect( d->controller.get(), SIGNAL(done()), d.get(), SLOT(slotDone()) );
+    QObject::connect( d->controller.get(), SIGNAL(error(int,QString)), d.get(), SLOT(slotError(int,QString)) );
 
-int SignCommand::doStart()
-{
-    try {
-        d->checkInputs();
-        d->startKeySelection();
-    } catch ( const assuan_exception& e ) {
-        done( e.error_code(), e.what());
-        return e.error_code();
-    }
+    d->controller->startResolveSigners( senders() );
     
     return 0;
 }
 
-void SignCommand::doCanceled()
-{
+void SignCommand::Private::slotSignersResolved() {
+    controller->setDetachedSignature( q->hasOption("detached" ) );
+    controller->importIO();
+    controller->start();
+}
+
+void SignCommand::Private::slotMicAlgDetermined( const QString & micalg ) {
+    if ( const int err = q->sendStatus( "MICALG", micalg ) ) {
+        q->done( err );
+        if ( controller )
+            controller->cancel();
+    }
+}
+
+void SignCommand::Private::slotDone() {
+    q->done();
+}
+
+void SignCommand::Private::slotError( int err, const QString & details ) {
+    q->done( err, details );
+}
+
+void SignCommand::doCanceled() {
+    if ( d->controller )
+        d->controller->cancel();
 }
 
 #include "signcommand.moc"
