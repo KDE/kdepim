@@ -133,6 +133,11 @@ QStringList RecipientResolvePage::identifiers() const
 
 void RecipientResolvePage::ensureIndexAvailable( unsigned int idx )
 {
+    if ( idx < d->widgets.size() )
+        return;
+    for ( int i = 0; idx - d->widgets.size() + 1; ++i )
+        d->addWidgetForIdentifier( QString() );
+    assert( d->widgets.size() == idx + 1 );
 }
 
 unsigned int RecipientResolvePage::numRecipientResolveWidgets() const
