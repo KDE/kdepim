@@ -77,27 +77,27 @@ EncryptCommand::~EncryptCommand() {}
 void EncryptCommand::Private::checkForErrors() const {
 
     if ( q->numFiles() )
-        throw assuan_exception( q->makeError( GPG_ERR_CONFLICT ),
+        throw assuan_exception( makeError( GPG_ERR_CONFLICT ),
                                 i18n( "ENCRYPT is an email mode command, connection seems to be in filmanager mode" ) );
 
     if ( !q->senders().empty() )
-        throw assuan_exception( q->makeError( GPG_ERR_CONFLICT ),
+        throw assuan_exception( makeError( GPG_ERR_CONFLICT ),
                                 i18n( "SENDER may not be given prior to ENCRYPT" ) );
 
     if ( !q->numBulkInputDevices() )
-        throw assuan_exception( q->makeError( GPG_ERR_ASS_NO_INPUT ),
+        throw assuan_exception( makeError( GPG_ERR_ASS_NO_INPUT ),
                                 i18n( "At least one INPUT must be present" ) );
 
     if ( !q->numBulkOutputDevices() )
-        throw assuan_exception( q->makeError( GPG_ERR_ASS_NO_OUTPUT ),
+        throw assuan_exception( makeError( GPG_ERR_ASS_NO_OUTPUT ),
                                 i18n( "At least one OUTPUT must be present" ) );
 
     if ( q->numBulkOutputDevices() != q->numBulkInputDevices() )
-        throw assuan_exception( q->makeError( GPG_ERR_CONFLICT ),
+        throw assuan_exception( makeError( GPG_ERR_CONFLICT ),
                                 i18n( "INPUT/OUTPUT count mismatch" ) );
 
     if ( q->numBulkMessageDevices() )
-        throw assuan_exception( q->makeError( GPG_ERR_INV_VALUE ),
+        throw assuan_exception( makeError( GPG_ERR_INV_VALUE ),
                                 i18n( "MESSAGE command is not allowed before ENCRYPT" ) );
 
     if ( q->hasMemento( EncryptEMailController::mementoName() ) ) {
