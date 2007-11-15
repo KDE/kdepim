@@ -168,24 +168,26 @@ GpgME::Key CertificatePickerWidget::selectedKey( const QString& identifier ) con
     return d->lines.contains( identifier ) ? d->lines[identifier]->selectedKey() : GpgME::Key();
 }
 
-CertificatePickerLine::CertificatePickerLine( const QString& identifier, QWidget* parent ) : QWidget( parent ), m_identifier( identifier )
+CertificatePickerLine::CertificatePickerLine( const QString& identifier, QWidget* parent ) : QWidget( parent )
 {
-    QGridLayout* layout = new QGridLayout( this );
-    layout->setColumnStretch( 0, 1 );
+    QGridLayout* const layout = new QGridLayout( this );
     layout->setColumnStretch( 1, 1 );
-    m_label = new QLabel;
-    m_label->setText( i18nc( "identifier (email address or name) used as hint to find encryption key", "%1:", m_identifier ) );
-    layout->addWidget( m_label, 0, 0 );
+    QLabel* const recipientLabel = new QLabel;
+    recipientLabel->setText( i18nc( "%1: email or name", "Recipient: %1", identifier ) );
+    layout->addWidget( recipientLabel, 0, 0, /*rowSpan=*/1, /*columnSpan=*/-1 );
+    QLabel* const certificateLabel = new QLabel;
+    certificateLabel->setText( i18n( "Certificate:" ) );
+    layout->addWidget( certificateLabel, 1, 0 ); 
     m_combo = new QComboBox;
-    m_label->setBuddy( m_combo );
-    layout->addWidget( m_combo, 0, 1 );
+    certificateLabel->setBuddy( m_combo );
+    layout->addWidget( m_combo, 1, 1 );
     m_selectButton = new QPushButton;
-    m_selectButton->setText( i18n( "Choose..." ) );
+    m_selectButton->setText( i18n( "..." ) );
     connect( m_selectButton, SIGNAL( clicked() ), SLOT( selectAnother() ) );
-    layout->addWidget( m_selectButton, 0, 2 );
+    layout->addWidget( m_selectButton, 1, 2 );
     m_rememberChoiceCO = new QCheckBox;
     m_rememberChoiceCO->setText( i18n( "Remember choice" ) );
-    layout->addWidget( m_rememberChoiceCO, 1, 0, /*rowSpan=*/1, /*columnSpan=*/-1 );
+    layout->addWidget( m_rememberChoiceCO, 2, 0, /*rowSpan=*/1, /*columnSpan=*/-1 );
 }
 
 bool CertificatePickerLine::rememberSelection() const

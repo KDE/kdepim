@@ -69,8 +69,6 @@ private Q_SLOTS:
     void selectAnother();
 
 private:
-    QString m_identifier;
-    QLabel* m_label;
     QComboBox* m_combo;
     QPushButton* m_selectButton;
     QCheckBox* m_rememberChoiceCO;
