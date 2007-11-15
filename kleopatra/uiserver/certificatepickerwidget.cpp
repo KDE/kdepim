@@ -53,31 +53,31 @@
  
 using namespace Kleo;
 
-class Kleo::CertificatePickerPage::Private {
-    friend class ::CertificatePickerPage;
-    CertificatePickerPage * const q;
+class Kleo::RecipientResolvePage::Private {
+    friend class ::RecipientResolvePage;
+    RecipientResolvePage * const q;
 public:
-    explicit Private( CertificatePickerPage * qq );
+    explicit Private( RecipientResolvePage * qq );
     ~Private();
     void addWidgetForIdentifier( const QString& identifier );
 //    void completionStateChanged( const QString& id );
     void clear();
     QVBoxLayout* lineLayout;
     QScrollArea* scrollArea;
-    std::vector<CertificatePickerWidget*> widgets;
+    std::vector<RecipientResolveWidget*> widgets;
     QStringList identifiers;
 };
 
 
-CertificatePickerPage::Private::Private( CertificatePickerPage * qq )
+RecipientResolvePage::Private::Private( RecipientResolvePage * qq )
     : q( qq )
 {
 }
 
-CertificatePickerPage::Private::~Private() {}
+RecipientResolvePage::Private::~Private() {}
 
-CertificatePickerPage::CertificatePickerPage( QWidget * parent, Qt::WFlags f )
-    : QWidget( parent, f ), d( new Private( this ) )
+RecipientResolvePage::RecipientResolvePage( QWidget * parent )
+    : QWizardPage( parent ), d( new Private( this ) )
 {
     QGridLayout* const top = new QGridLayout( this );
     top->setRowStretch( 1, 1 );
@@ -90,11 +90,11 @@ CertificatePickerPage::CertificatePickerPage( QWidget * parent, Qt::WFlags f )
     d->scrollArea->setWidgetResizable( true );
 }
 
-CertificatePickerPage::~CertificatePickerPage() {}
+RecipientResolvePage::~RecipientResolvePage() {}
 
-bool CertificatePickerPage::isComplete() const
+bool RecipientResolvePage::isComplete() const
 {
-    Q_FOREACH ( CertificatePickerWidget* const i, d->widgets )
+    Q_FOREACH ( RecipientResolveWidget* const i, d->widgets )
     {
         if ( !i->isComplete() )
             return false;
@@ -102,22 +102,22 @@ bool CertificatePickerPage::isComplete() const
     return true;
 }
 
-void CertificatePickerPage::setIdentifiers( const QStringList& ids )
+void RecipientResolvePage::setIdentifiers( const QStringList& ids )
 {
     d->clear();
     Q_FOREACH ( const QString& i, ids )
         d->addWidgetForIdentifier( i );
 }
 
-void CertificatePickerPage::Private::clear()
+void RecipientResolvePage::Private::clear()
 {
     qDeleteAll( widgets );
     widgets.clear();
 }
 
-void CertificatePickerPage::Private::addWidgetForIdentifier( const QString& id )
+void RecipientResolvePage::Private::addWidgetForIdentifier( const QString& id )
 {
-    CertificatePickerWidget* const line = new CertificatePickerWidget;
+    RecipientResolveWidget* const line = new RecipientResolveWidget;
     line->setIdentifier( id );
     //line->setCertificates( makeSuggestions( id ) );
     widgets.push_back( line );
@@ -126,30 +126,30 @@ void CertificatePickerPage::Private::addWidgetForIdentifier( const QString& id )
     line->show();
 }
 
-QStringList CertificatePickerPage::identifiers() const
+QStringList RecipientResolvePage::identifiers() const
 {
     return d->identifiers;
 }
 
-void CertificatePickerPage::ensureIndexAvailable( unsigned int idx )
+void RecipientResolvePage::ensureIndexAvailable( unsigned int idx )
 {
 }
 
-unsigned int CertificatePickerPage::numRecipientResolveWidgets() const
+unsigned int RecipientResolvePage::numRecipientResolveWidgets() const
 {
     return d->widgets.size();
 }
 
-CertificatePickerWidget * CertificatePickerPage::recipientResolveWidget( unsigned int idx ) const
+RecipientResolveWidget * RecipientResolvePage::recipientResolveWidget( unsigned int idx ) const
 {
     return d->widgets[idx];
 }
 
-class Kleo::CertificatePickerWidget::Private {
-    friend class Kleo::CertificatePickerWidget;
-    CertificatePickerWidget * const q;
+class Kleo::RecipientResolveWidget::Private {
+    friend class Kleo::RecipientResolveWidget;
+    RecipientResolveWidget * const q;
 public:
-    explicit Private( CertificatePickerWidget * qq );
+    explicit Private( RecipientResolveWidget * qq );
 
     void selectAnotherCertificate();
     void currentIndexChanged( int );
@@ -166,7 +166,7 @@ private:
     QCheckBox* m_rememberChoiceCO;
 };
 
-CertificatePickerWidget::Private::Private( CertificatePickerWidget * qq ) : q( qq ), m_identifier()
+RecipientResolveWidget::Private::Private( RecipientResolveWidget * qq ) : q( qq ), m_identifier()
 {
     QGridLayout* const layout = new QGridLayout( q );
     layout->setColumnStretch( 1, 1 );
@@ -187,21 +187,21 @@ CertificatePickerWidget::Private::Private( CertificatePickerWidget * qq ) : q( q
     layout->addWidget( m_rememberChoiceCO, 2, 0, /*rowSpan=*/1, /*columnSpan=*/-1 );
 }
 
-CertificatePickerWidget::CertificatePickerWidget( QWidget* parent ) : QWidget( parent ), d( new Private( this ) )
+RecipientResolveWidget::RecipientResolveWidget( QWidget* parent ) : QWidget( parent ), d( new Private( this ) )
 {
 }
 
-bool CertificatePickerWidget::rememberSelection() const
+bool RecipientResolveWidget::rememberSelection() const
 {
     return d->m_rememberChoiceCO->checkState() == Qt::Checked;
 }
 
-void CertificatePickerWidget::Private::addCertificate( const GpgME::Key& key )
+void RecipientResolveWidget::Private::addCertificate( const GpgME::Key& key )
 {
     m_combo->addItem( Formatting::formatForComboBox( key ), QByteArray( key.keyID() ) );
 }
 
-void CertificatePickerWidget::setIdentifier( const QString& id )
+void RecipientResolveWidget::setIdentifier( const QString& id )
 {
     
     d->m_identifier = id;
@@ -209,7 +209,7 @@ void CertificatePickerWidget::setIdentifier( const QString& id )
 
 }
 
-void CertificatePickerWidget::setCertificates( const std::vector<GpgME::Key>& keys )
+void RecipientResolveWidget::setCertificates( const std::vector<GpgME::Key>& keys )
 {
     d->m_combo->clear();
     if ( keys.empty() )
@@ -219,13 +219,13 @@ void CertificatePickerWidget::setCertificates( const std::vector<GpgME::Key>& ke
     emit changed();
 }
 
-GpgME::Key CertificatePickerWidget::chosenCertificate() const
+GpgME::Key RecipientResolveWidget::chosenCertificate() const
 {
     const QByteArray id = d->currentData().toByteArray();
     return KeyCache::instance()->findByKeyIDOrFingerprint( id.constData() );
 }
 
-void CertificatePickerWidget::Private::selectAnotherCertificate()
+void RecipientResolveWidget::Private::selectAnotherCertificate()
 {
     //TODO
     //show selection dialog
@@ -233,17 +233,17 @@ void CertificatePickerWidget::Private::selectAnotherCertificate()
     //  insert selected key into combo and select it
 }
 
-void CertificatePickerWidget::Private::currentIndexChanged( int )
+void RecipientResolveWidget::Private::currentIndexChanged( int )
 {
     emit q->changed();
 }
 
-QVariant CertificatePickerWidget::Private::currentData() const
+QVariant RecipientResolveWidget::Private::currentData() const
 {
     return m_combo->itemData( m_combo->currentIndex() ); 
 }
 
-bool CertificatePickerWidget::isComplete() const
+bool RecipientResolveWidget::isComplete() const
 {
     return !d->currentData().isNull();
 }

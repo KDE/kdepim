@@ -33,7 +33,8 @@
 #ifndef __KLEOPATRA_CERTIFICATEPICKERWIDGET_H__
 #define __KLEOPATRA_CERTIFICATEPICKERWIDGET_H__
 
-#include <QWidget>
+
+#include <QWizardPage>
 
 #include <utils/pimpl_ptr.h>
 
@@ -47,10 +48,10 @@ namespace GpgME {
 
 namespace Kleo {
 
-    class CertificatePickerWidget : public QWidget {
+    class RecipientResolveWidget : public QWidget {
         Q_OBJECT
     public:
-        explicit CertificatePickerWidget( QWidget* parent = 0 );
+        explicit RecipientResolveWidget( QWidget* parent = 0 );
 
         void setIdentifier( const QString& identifier );
         void setCertificates( const std::vector<GpgME::Key>& keys );
@@ -70,11 +71,11 @@ namespace Kleo {
 };
 /*
 
-    class CertificatePickerWidget : public QWidget {
+    class RecipientResolveWidget : public QWidget {
         Q_OBJECT
     public:
-        explicit CertificatePickerWidget( QWidget * parent=0 );
-        ~CertificatePickerWidget();
+        explicit RecipientResolveWidget( QWidget * parent=0 );
+        ~RecipientResolveWidget();
 
         void setIdentifier( const QString & id );
         void setCertificates( const std::vector<GpgME::Key> & keys );
@@ -90,12 +91,12 @@ namespace Kleo {
         kdtools::pimpl_ptr<Private> d;
     };
 */
-    class CertificatePickerPage : public QWidget {
+    class RecipientResolvePage : public QWizardPage {
         Q_OBJECT
     public:
  
-        explicit CertificatePickerPage( QWidget * parent=0, Qt::WFlags f=0 );
-        ~CertificatePickerPage();
+        explicit RecipientResolvePage( QWidget * parent=0 );
+        ~RecipientResolvePage();
     
         bool isComplete() const;
 
@@ -103,7 +104,7 @@ namespace Kleo {
         QStringList identifiers() const;
 
         unsigned int numRecipientResolveWidgets() const;
-        CertificatePickerWidget * recipientResolveWidget( unsigned int idx ) const;
+        RecipientResolveWidget * recipientResolveWidget( unsigned int idx ) const;
 
         void ensureIndexAvailable( unsigned int idx );
 

@@ -33,6 +33,9 @@
 #ifndef __KLEOPATRA_UISERVER_RECIPIENTRESOLVEPAGE_H__
 #define __KLEOPATRA_UISERVER_RECIPIENTRESOLVEPAGE_H__
 
+#include "certificatepickerwidget.h"
+
+#if 0
 #include <QWizardPage>
 
 #include <utils/pimpl_ptr.h>
@@ -85,5 +88,7 @@ namespace Kleo {
     };
 
 }
+
+#endif // if 0
 
 #endif /* __KLEOPATRA_UISERVER_RECIPIENTRESOLVEPAGE_H__ */

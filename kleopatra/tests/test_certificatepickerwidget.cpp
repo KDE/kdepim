@@ -32,12 +32,12 @@
 
 #include <QApplication>
 
-#include "uiserver/certificatepickerwidget.h"
+#include "uiserver/recipientresolvepage.h"
 
 int main( int argc, char** argv )
 {
     QApplication app( argc, argv );
-    Kleo::CertificatePickerPage picker;
+    Kleo::RecipientResolvePage picker;
     QStringList list;
     list << "Frank Osterfeld" << "Kleopatra" << "Christian" << "foo@bar.com";
     picker.setIdentifiers( list );
