@@ -62,7 +62,6 @@ public:
     void addWidgetForIdentifier( const QString& identifier );
 //    void completionStateChanged( const QString& id );
     void clear();
-    mutable uint completeCount;
     QVBoxLayout* lineLayout;
     QScrollArea* scrollArea;
     std::vector<CertificatePickerWidget*> widgets;
@@ -71,7 +70,7 @@ public:
 
 
 CertificatePickerPage::Private::Private( CertificatePickerPage * qq )
-    : q( qq ), completeCount( 0 )
+    : q( qq )
 {
 }
 
@@ -95,7 +94,12 @@ CertificatePickerPage::~CertificatePickerPage() {}
 
 bool CertificatePickerPage::isComplete() const
 {
-    return d->completeCount == d->widgets.size();
+    Q_FOREACH ( CertificatePickerWidget* const i, d->widgets )
+    {
+        if ( !i->isComplete() )
+            return false;
+    }
+    return true;
 }
 
 void CertificatePickerPage::setIdentifiers( const QStringList& ids )
@@ -121,26 +125,6 @@ void CertificatePickerPage::Private::addWidgetForIdentifier( const QString& id )
     lineLayout->addWidget( line );
     line->show();
 }
-#if 0
-void CertificatePickerPage::Private::completionStateChanged( const QString& id )
-{
-    const bool wasComplete = completeCount == widgets.size();
-    CertificatePickerWidget* const line = widgets[id];
-    assert( line );
-    if ( line->isComplete() )
-    {
-        ++completeCount;
-        assert( completeCount <= widgets.count() );
-    }
-    else
-    {
-        assert( completeCount > 0 );
-        --completeCount;
-    }
-    if ( wasComplete != ( completeCount == widgets.count() ) )
-        emit q->completionStateChanged();
-} 
-#endif
 
 QStringList CertificatePickerPage::identifiers() const
 {
