@@ -37,6 +37,8 @@
 
 #include <utils/pimpl_ptr.h>
 
+#include <gpgme++/global.h>
+
 #include <vector>
 
 namespace GpgME {
@@ -63,6 +65,8 @@ namespace Kleo {
             EncryptOrSignFiles
         };
         void setMode( Mode mode );
+
+        void setProtocol( GpgME::Protocol proto );
 
         void setRecipientsAndCandidates( const std::vector<KMime::Types::Mailbox> & recipients, const std::vector< std::vector<GpgME::Key> > & keys );
 

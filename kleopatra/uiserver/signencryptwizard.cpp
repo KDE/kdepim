@@ -100,6 +100,12 @@ void SignEncryptWizard::setMode( Mode mode ) {
     d->mode = EncryptEMail;
 }
 
+void SignEncryptWizard::setProtocol( Protocol proto ) {
+    assuan_assert( d->mode == EncryptEMail || d->mode == SignEMail );
+    // ### distribute to where needed....
+    notImplemented();
+}
+
 void SignEncryptWizard::setRecipientsAndCandidates( const std::vector<Mailbox> & recipients, const std::vector< std::vector<Key> > & keys ) {
     assuan_assert( !keys.empty() );
     assuan_assert( (size_t)recipients.size() == keys.size() );

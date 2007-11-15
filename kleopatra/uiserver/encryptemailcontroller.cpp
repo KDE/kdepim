@@ -99,6 +99,8 @@ void EncryptEMailController::setProtocol( Protocol proto ) {
     assuan_assert( d->protocol == UnknownProtocol ||
                    d->protocol == proto );
     d->protocol = proto;
+    if ( d->wizard )
+        d->wizard->setProtocol( proto );
 }
 
 Protocol EncryptEMailController::protocol() const {
@@ -179,6 +181,8 @@ void EncryptEMailController::Private::ensureWizardCreated() {
     w->setAttribute( Qt::WA_DeleteOnClose );
     connect( w, SIGNAL(recipientsResolved()), q, SLOT(slotWizardRecipientsResolved()) );
     connect( w, SIGNAL(canceled()), q, SLOT(slotWizardCanceled()) );
+
+    w->setProtocol( protocol );
 
     wizard = w;
 }
