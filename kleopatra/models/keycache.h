@@ -69,6 +69,8 @@ namespace Kleo {
 
         void remove( const GpgME::Key & key );
 
+        std::vector<GpgME::Key> keys() const;
+
         const GpgME::Key & findByFingerprint( const char * fpr ) const;
         const GpgME::Key & findByFingerprint( const std::string & fpr ) const {
             return findByFingerprint( fpr.c_str() );

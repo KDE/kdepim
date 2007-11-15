@@ -308,8 +308,12 @@ void KeyCache::remove( const Key & key ) {
         const std::vector< std::pair<std::string,Key> >::iterator it
             = std::remove_if( begin( range ), end( range ), bind( qstricmp, fpr, bind( &Key::primaryFingerprint, bind( &std::pair<std::string,Key>::second,_1 ) ) ) == 0 );
         d->by.email.erase( it, end( range ) );
-    }
-                
+    }                
+}
+
+std::vector<GpgME::Key> KeyCache::keys() const
+{
+    return d->by.fpr;
 }
 
 void KeyCache::refresh( const std::vector<Key> & keys ) {
