@@ -122,7 +122,8 @@ void PrepEncryptCommand::Private::slotError( int err, const QString & details ) 
 }
 
 void PrepEncryptCommand::doCanceled() {
-    d->controller->cancel();
+    if ( d->controller )
+        d->controller->cancel();
 }
 
 #include "prepencryptcommand.moc"
