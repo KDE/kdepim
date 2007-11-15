@@ -455,11 +455,10 @@ private:
         assert( assuan_get_pointer( ctx ) );
         AssuanServerConnection::Private & conn = *static_cast<AssuanServerConnection::Private*>( assuan_get_pointer( ctx ) );
 
-        const std::string mailboxString = hexdecode( line );
-        if ( mailboxString.empty() )
+        if ( !line || !*line )
             return assuan_process_done( conn.ctx.get(), gpg_error( GPG_ERR_INV_ARG ) );
-        const char * begin     = mailboxString.c_str();
-        const char * const end = begin + mailboxString.size();
+        const char * begin     = line;
+        const char * const end = begin + qstrlen( line );
         KMime::Types::Mailbox mb;
         if ( !KMime::HeaderParsing::parseMailbox( begin, end, mb ) )
             return assuan_process_done_msg( conn.ctx.get(), gpg_error( GPG_ERR_INV_ARG ),
