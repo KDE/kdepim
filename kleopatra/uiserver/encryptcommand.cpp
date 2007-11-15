@@ -170,7 +170,8 @@ void EncryptCommand::Private::slotError( int err, const QString & details ) {
 }
 
 void EncryptCommand::doCanceled() {
-    d->controller->cancel();
+    if ( d->controller )
+        d->controller->cancel();
 }
 
 #include "encryptcommand.moc"
