@@ -142,7 +142,7 @@ else ( KLEO_BUILD_OLD_MAINWINDOW )
   set( _kleopatra_extra_libs ${QT_QT3SUPPORT_LIBRARY} )
 endif ( KLEO_BUILD_OLD_MAINWINDOW )
 
-target_link_libraries(kleopatra_bin ${_kleopatra_extra_libs} kleo ${QGPGME_LIBRARIES} ${_kleopatra_uiserver_extra_libs} )
+target_link_libraries(kleopatra_bin ${_kleopatra_extra_libs} kleo ${QGPGME_LIBRARIES} ${KDE4_KMIME_LIBRARY} ${_kleopatra_uiserver_extra_libs} )
 
 install(TARGETS kleopatra_bin  DESTINATION ${BIN_INSTALL_DIR} )
 

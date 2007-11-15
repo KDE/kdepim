@@ -41,7 +41,13 @@
 
 #include <boost/shared_ptr.hpp>
 
-class QStringList;
+#include <vector>
+
+namespace KMime {
+namespace Types {
+    class Mailbox;
+}
+}
 
 namespace Kleo {
 
@@ -61,7 +67,7 @@ namespace Kleo {
 
         void setCommand( const boost::shared_ptr<AssuanCommand> & cmd );
 
-        void startResolveRecipients( const QStringList & recipients );
+        void startResolveRecipients( const std::vector<KMime::Types::Mailbox> & recipients );
 
         void importIO();
 

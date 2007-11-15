@@ -47,6 +47,8 @@
 #include <gpgme++/keylistresult.h>
 #include <gpgme++/signingresult.h>
 
+#include <kmime/kmime_header_parsing.h>
+
 #include <KLocale>
 
 #include <QIODevice>
@@ -63,6 +65,7 @@
 
 using namespace Kleo;
 using namespace boost;
+using namespace KMime::Types;
 
 class SignCommand::Private
   : public AssuanCommandPrivateBaseMixin<SignCommand::Private, SignCommand>
@@ -145,7 +148,10 @@ void SignCommand::Private::startKeySelection()
 {
     KeySelectionJob* job = new KeySelectionJob( this );
     job->setSecretKeysOnly( true );
-    job->setPatterns( q->senders() );
+    QStringList patters;
+    Q_FOREACH( const Mailbox mb, q->senders() )
+        patters.push_back( mb.address() );
+    job->setPatterns( patters );
     job->setSilent( q->hasOption( "silent" ) );
     connect( job, SIGNAL( error( GpgME::Error, GpgME::KeyListResult ) ),
              this, SLOT( slotKeySelectionError( GpgME::Error, GpgME::KeyListResult ) ) );

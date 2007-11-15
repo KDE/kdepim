@@ -36,7 +36,6 @@
 
 #include <KLocale>
 
-#include <QStringList>
 #include <QTimer>
 
 using namespace Kleo;

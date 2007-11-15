@@ -37,6 +37,8 @@
 
 #include <utils/stl_util.h>
 
+#include <kmime/kmime_header_parsing.h>
+
 #include <gpgme++/key.h>
 
 #include <boost/bind.hpp>
@@ -44,6 +46,7 @@
 using namespace Kleo;
 using namespace boost;
 using namespace GpgME;
+using namespace KMime::Types;
 
 class SignEncryptWizard::Private {
     friend class ::Kleo::SignEncryptWizard;
@@ -97,7 +100,7 @@ void SignEncryptWizard::setMode( Mode mode ) {
     d->mode = EncryptEMail;
 }
 
-void SignEncryptWizard::setRecipientsAndCandidates( const QStringList & recipients, const std::vector< std::vector<Key> > & keys ) {
+void SignEncryptWizard::setRecipientsAndCandidates( const std::vector<Mailbox> & recipients, const std::vector< std::vector<Key> > & keys ) {
     assuan_assert( !keys.empty() );
     assuan_assert( (size_t)recipients.size() == keys.size() );
     assuan_assert( d->mode == EncryptEMail );
@@ -107,7 +110,7 @@ void SignEncryptWizard::setRecipientsAndCandidates( const QStringList & recipien
     for ( unsigned int i = 0, end = keys.size() ; i < end ; ++i ) {
         RecipientResolveWidget * const rr = d->ui.recipientResolvePage.recipientResolveWidget( i );
         assuan_assert( rr );
-        rr->setIdentifier( recipients[i] );
+        rr->setIdentifier( recipients[i].prettyAddress() );
         rr->setCertificates( keys[i] );
     }
 }

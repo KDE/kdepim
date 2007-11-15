@@ -49,6 +49,8 @@
 
 #include <gpgme++/data.h>
 
+#include <kmime/kmime_header_parsing.h>
+
 #include <KLocale>
 
 #include <QSocketNotifier>
@@ -453,7 +455,19 @@ private:
         assert( assuan_get_pointer( ctx ) );
         AssuanServerConnection::Private & conn = *static_cast<AssuanServerConnection::Private*>( assuan_get_pointer( ctx ) );
 
-        (conn.*mp).push_back( QString::fromUtf8( hexdecode( line ).c_str() ) );
+        const std::string mailboxString = hexdecode( line );
+        if ( mailboxString.empty() )
+            return assuan_process_done( conn.ctx.get(), gpg_error( GPG_ERR_INV_ARG ) );
+        const char * begin     = mailboxString.c_str();
+        const char * const end = begin + mailboxString.size();
+        KMime::Types::Mailbox mb;
+        if ( !KMime::HeaderParsing::parseMailbox( begin, end, mb ) )
+            return assuan_process_done_msg( conn.ctx.get(), gpg_error( GPG_ERR_INV_ARG ),
+                                            i18n("Argument is not a valid RFC-2822 mailbox").toUtf8().constData() );
+        if ( begin != end )
+            return assuan_process_done_msg( conn.ctx.get(), gpg_error( GPG_ERR_INV_ARG ),
+                                            i18n("Garbage after valid RFC-2822 mailbox detected").toUtf8().constData() );
+        (conn.*mp).push_back( mb );
         return assuan_process_done( ctx, 0 );
     }
 
@@ -483,12 +497,21 @@ private:
         return dumpStringList( sl );
     }
 
+    template <typename T_container>
+    static QByteArray dumpMailboxes( const T_container & c ) {
+        QStringList sl;
+        std::transform( c.begin(), c.end(),
+                        std::back_inserter( sl ),
+                        bind( &KMime::Types::Mailbox::prettyAddress, _1 ) );
+        return dumpStringList( sl );
+    }
+
     QByteArray dumpSenders() const {
-        return dumpStringList( senders );
+        return dumpMailboxes( senders );
     }
 
     QByteArray dumpRecipients() const {
-        return dumpStringList( recipients );
+        return dumpMailboxes( recipients );
     }
 
     QByteArray dumpMementos() const {
@@ -533,7 +556,7 @@ private:
     shared_ptr<AssuanCommand> currentCommand;
     std::vector< shared_ptr<AssuanCommand> > nohupedCommands;
     std::map<std::string,QVariant> options;
-    std::vector<QString> senders, recipients;
+    std::vector<KMime::Types::Mailbox> senders, recipients;
     std::vector<IO> inputs, outputs, messages;
     std::vector<IOF> files;
     std::map< QByteArray, shared_ptr<AssuanCommand::Memento> > mementos;
@@ -705,7 +728,7 @@ public:
     std::map<std::string,QVariant> options;
     std::vector<IO> inputs, messages, outputs;
     std::vector<IOF> files;
-    std::vector<QString> recipients, senders;
+    std::vector<KMime::Types::Mailbox> recipients, senders;
     QByteArray utf8ErrorKeepAlive;
     AssuanContext ctx;
     bool done;
@@ -981,16 +1004,12 @@ bool AssuanCommand::isNohup() const {
     return d->nohup;
 }
 
-QStringList AssuanCommand::recipients() const {
-    QStringList result;
-    std::copy( d->recipients.begin(), d->recipients.end(), std::back_inserter( result ) );
-    return result;
+const std::vector<KMime::Types::Mailbox> & AssuanCommand::recipients() const {
+    return d->recipients;
 }
 
-QStringList AssuanCommand::senders() const {
-    QStringList result;
-    std::copy( d->senders.begin(), d->senders.end(), std::back_inserter( result ) );
-    return result;
+const std::vector<KMime::Types::Mailbox> & AssuanCommand::senders() const {
+    return d->senders;
 }
 
 int AssuanCommandFactory::_handle( assuan_context_t ctx, char * line, const char * commandName ) {

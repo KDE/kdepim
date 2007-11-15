@@ -55,6 +55,12 @@ class QFile;
 
 struct assuan_context_s;
 
+namespace KMime {
+namespace Types {
+    class Mailbox;
+}
+}
+
 namespace Kleo {
 
     class AssuanCommandFactory;
@@ -246,8 +252,8 @@ namespace Kleo {
 
         bool isNohup() const;
 
-        QStringList recipients() const;
-        QStringList senders() const;
+        const std::vector<KMime::Types::Mailbox> & recipients() const;
+        const std::vector<KMime::Types::Mailbox> & senders() const;
 
         bool hasMemento( const QByteArray & tag ) const;
         boost::shared_ptr<Memento> memento( const QByteArray & tag ) const;

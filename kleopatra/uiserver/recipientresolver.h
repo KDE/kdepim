@@ -41,15 +41,18 @@ namespace GpgME {
     class Key;
 }
 
-class QStringList;
-class QString;
+namespace KMime {
+namespace Types {
+    class Mailbox;
+}
+}
 
 namespace Kleo {
 
     class RecipientResolver {
     public:
-        static std::vector< std::vector<GpgME::Key> > resolveRecipients( const QStringList & recipients, GpgME::Protocol proto );
-        static std::vector<GpgME::Key> resolveRecipient( const QString & recipient, GpgME::Protocol proto );
+        static std::vector< std::vector<GpgME::Key> > resolveRecipients( const std::vector<KMime::Types::Mailbox> & recipients, GpgME::Protocol proto );
+        static std::vector<GpgME::Key> resolveRecipient( const KMime::Types::Mailbox & recipient, GpgME::Protocol proto );
     };
 
 }

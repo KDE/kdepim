@@ -43,7 +43,11 @@ namespace GpgME {
     class Key;
 }
 
-class QStringList;
+namespace KMime {
+namespace Types {
+    class Mailbox;
+}
+}
 
 namespace Kleo {
 
@@ -60,7 +64,7 @@ namespace Kleo {
         };
         void setMode( Mode mode );
 
-        void setRecipientsAndCandidates( const QStringList & recipients, const std::vector< std::vector<GpgME::Key> > & keys );
+        void setRecipientsAndCandidates( const std::vector<KMime::Types::Mailbox> & recipients, const std::vector< std::vector<GpgME::Key> > & keys );
 
         bool canGoToNextPage() const;
 

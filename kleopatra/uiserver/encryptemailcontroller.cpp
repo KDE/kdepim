@@ -39,17 +39,19 @@
 
 #include <utils/stl_util.h>
 
+#include <kmime/kmime_header_parsing.h>
+
 #include <KLocale>
 
 #include <QPointer>
 #include <QTimer>
-#include <QStringList>
 
 #include <boost/bind.hpp>
 
 using namespace Kleo;
 using namespace boost;
 using namespace GpgME;
+using namespace KMime::Types;
 
 class EncryptEMailController::Private {
     friend class ::Kleo::EncryptEMailController;
@@ -117,7 +119,7 @@ void EncryptEMailController::setCommand( const shared_ptr<AssuanCommand> & cmd )
     d->command = cmd;
 }
 
-void EncryptEMailController::startResolveRecipients( const QStringList & recipients ) {
+void EncryptEMailController::startResolveRecipients( const std::vector<Mailbox> & recipients ) {
     const std::vector< std::vector<Key> > keys = RecipientResolver::resolveRecipients( recipients, d->protocol );
 
     assuan_assert( keys.size() == static_cast<size_t>( recipients.size() ) );

@@ -38,7 +38,7 @@
 
 #include <gpgme++/key.h>
 
-#include <QStringList>
+#include <kmime/kmime_header_parsing.h>
 
 #include <boost/bind.hpp>
 
@@ -48,16 +48,18 @@
 using namespace Kleo;
 using namespace boost;
 using namespace GpgME;
+using namespace KMime::Types;
+using namespace KMime::HeaderParsing;
 
-std::vector< std::vector<Key> > RecipientResolver::resolveRecipients( const QStringList & recipients, Protocol proto ) {
+std::vector< std::vector<Key> > RecipientResolver::resolveRecipients( const std::vector<Mailbox> & recipients, Protocol proto ) {
     std::vector< std::vector<Key> > result;
     std::transform( recipients.begin(), recipients.end(),
                     std::back_inserter( result ), bind( &resolveRecipient, _1, proto ) );
     return result;
 }
 
-std::vector<Key> RecipientResolver::resolveRecipient( const QString & recipient, Protocol proto ) {
-    std::vector<Key> result = KeyCache::instance()->findByEMailAddress( recipient.toUtf8().constData() );
+std::vector<Key> RecipientResolver::resolveRecipient( const Mailbox & recipient, Protocol proto ) {
+    std::vector<Key> result = KeyCache::instance()->findByEMailAddress( recipient.address() );
     if ( proto != UnknownProtocol )
         result.erase( std::remove_if( result.begin(), result.end(),
                                       bind( &Key::protocol, _1 ) != proto ),
