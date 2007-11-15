@@ -66,11 +66,12 @@ public:
     QScrollArea* scrollArea;
     std::vector<RecipientResolveWidget*> widgets;
     QStringList identifiers;
+    GpgME::Protocol protocol;
 };
 
 
 RecipientResolvePage::Private::Private( RecipientResolvePage * qq )
-    : q( qq )
+    : q( qq ), protocol( GpgME::UnknownProtocol )
 {
 }
 
@@ -169,9 +170,10 @@ private:
     QLabel* m_recipientLabel;
     QPushButton* m_selectButton;
     QCheckBox* m_rememberChoiceCO;
+    GpgME::Protocol m_protocol;
 };
 
-RecipientResolveWidget::Private::Private( RecipientResolveWidget * qq ) : q( qq ), m_identifier()
+RecipientResolveWidget::Private::Private( RecipientResolveWidget * qq ) : q( qq ), m_identifier(), m_protocol( GpgME::UnknownProtocol )
 {
     QGridLayout* const layout = new QGridLayout( q );
     layout->setColumnStretch( 1, 1 );
@@ -211,7 +213,6 @@ void RecipientResolveWidget::setIdentifier( const QString& id )
     
     d->m_identifier = id;
     d->m_recipientLabel->setText( i18nc( "%1: email or name", "Recipient: %1", id ) );
-
 }
 
 void RecipientResolveWidget::setCertificates( const std::vector<GpgME::Key>& keys )
@@ -251,6 +252,31 @@ QVariant RecipientResolveWidget::Private::currentData() const
 bool RecipientResolveWidget::isComplete() const
 {
     return !d->currentData().isNull();
+}
+
+void RecipientResolveWidget::setProtocol( GpgME::Protocol prot )
+{
+    d->m_protocol = prot; 
+}
+
+GpgME::Protocol RecipientResolveWidget::protocol() const
+{
+    return d->m_protocol;
+}
+
+
+void RecipientResolvePage::setProtocol( GpgME::Protocol prot )
+{
+    d->protocol = prot;
+    for ( int i = 0; i < d->widgets.size(); ++i )
+    {
+        d->widgets[i]->setProtocol( prot );
+    }        
+}
+
+GpgME::Protocol RecipientResolvePage::protocol() const
+{
+    return d->protocol;
 }
 
 #include "moc_certificatepickerwidget.cpp"

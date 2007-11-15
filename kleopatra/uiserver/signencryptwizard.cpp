@@ -79,7 +79,7 @@ SignEncryptWizard::Private::~Private() {}
 SignEncryptWizard::SignEncryptWizard( QWidget * p, Qt::WindowFlags f )
     : QWizard( p, f ), d( new Private( this ) )
 {
-
+    addPage( &d->ui.recipientResolvePage );
 }
 
 SignEncryptWizard::~SignEncryptWizard() {}
@@ -103,7 +103,7 @@ void SignEncryptWizard::setMode( Mode mode ) {
 void SignEncryptWizard::setProtocol( Protocol proto ) {
     assuan_assert( d->mode == EncryptEMail || d->mode == SignEMail );
     // ### distribute to where needed....
-    notImplemented();
+    d->ui.recipientResolvePage.setProtocol( proto );
 }
 
 void SignEncryptWizard::setRecipientsAndCandidates( const std::vector<Mailbox> & recipients, const std::vector< std::vector<Key> > & keys ) {

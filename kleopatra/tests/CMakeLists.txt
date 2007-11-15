@@ -28,6 +28,17 @@ target_link_libraries( test_certificatepickerwidget kleo ${KDE4_KDEUI_LIBS} ${QG
 
 ########### next target ###############
 
+kde4_add_executable( test_signencryptwizard TEST
+  test_signencryptwizard.cpp
+  ../uiserver/signencryptwizard.cpp 
+  ../uiserver/certificatepickerwidget.cpp
+  ../uiserver/kleo-assuan.cpp
+  ../utils/formatting.cpp
+  ../models/keycache.cpp )
+target_link_libraries( test_signencryptwizard kleo ${KDE4_KMIME_LIBRARY} ${KDE4_KDEUI_LIBS} ${QGPGME_LIBRARIES})
+
+########### next target ###############
+
 set(test_verify_SRCS test_verify.cpp)
 add_definitions( -DKLEO_TEST_GNUPGHOME=\\"${CMAKE_CURRENT_SOURCE_DIR}/gnupg_home\\" )
 add_definitions( -DKLEO_TEST_DATADIR=\\"${CMAKE_CURRENT_SOURCE_DIR}\\" )

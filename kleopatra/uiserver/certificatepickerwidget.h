@@ -33,8 +33,9 @@
 #ifndef __KLEOPATRA_CERTIFICATEPICKERWIDGET_H__
 #define __KLEOPATRA_CERTIFICATEPICKERWIDGET_H__
 
-
 #include <QWizardPage>
+
+#include <gpgme++/global.h>
 
 #include <utils/pimpl_ptr.h>
 
@@ -59,6 +60,9 @@ namespace Kleo {
         bool rememberSelection() const;
         bool isComplete() const;
 
+        void setProtocol( GpgME::Protocol protocol );
+        GpgME::Protocol protocol() const;
+
     Q_SIGNALS:
         void changed();
 
@@ -68,29 +72,8 @@ namespace Kleo {
 
         Q_PRIVATE_SLOT( d, void selectAnotherCertificate() );
         Q_PRIVATE_SLOT( d, void currentIndexChanged( int ) );
-};
-/*
-
-    class RecipientResolveWidget : public QWidget {
-        Q_OBJECT
-    public:
-        explicit RecipientResolveWidget( QWidget * parent=0 );
-        ~RecipientResolveWidget();
-
-        void setIdentifier( const QString & id );
-        void setCertificates( const std::vector<GpgME::Key> & keys );
-
-        GpgME::Key chosenCertificate() const;
-        bool isComplete() const;
-
-    Q_SIGNALS:
-        void changed();
-
-    private:
-        class Private;
-        kdtools::pimpl_ptr<Private> d;
     };
-*/
+
     class RecipientResolvePage : public QWizardPage {
         Q_OBJECT
     public:
@@ -102,6 +85,9 @@ namespace Kleo {
 
         void setIdentifiers( const QStringList& identifiers );
         QStringList identifiers() const;
+
+        void setProtocol( GpgME::Protocol protocol );
+        GpgME::Protocol protocol() const;
 
         unsigned int numRecipientResolveWidgets() const;
         RecipientResolveWidget * recipientResolveWidget( unsigned int idx ) const;
