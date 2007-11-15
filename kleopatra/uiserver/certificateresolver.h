@@ -1,5 +1,5 @@
 /* -*- mode: c++; c-basic-offset:4 -*-
-    uiserver/recipientresolver.h
+    uiserver/certificateresolver.h
 
     This file is part of Kleopatra, the KDE keymanager
     Copyright (c) 2007 Klarälvdalens Datakonsult AB
@@ -30,8 +30,8 @@
     your version.
 */
 
-#ifndef __KLEOPATRA_UISERVER_RECIPIENTRESOLVER_H__
-#define __KLEOPATRA_UISERVER_RECIPIENTRESOLVER_H__
+#ifndef __KLEOPATRA_UISERVER_CERTIFICATERESOLVER_H__
+#define __KLEOPATRA_UISERVER_CERTIFICATERESOLVER_H__
 
 #include <gpgme++/key.h>
 
@@ -49,12 +49,15 @@ namespace Types {
 
 namespace Kleo {
 
-    class RecipientResolver {
+    class CertificateResolver {
     public:
         static std::vector< std::vector<GpgME::Key> > resolveRecipients( const std::vector<KMime::Types::Mailbox> & recipients, GpgME::Protocol proto );
         static std::vector<GpgME::Key> resolveRecipient( const KMime::Types::Mailbox & recipient, GpgME::Protocol proto );
+
+        static std::vector< std::vector<GpgME::Key> > resolveSigners( const std::vector<KMime::Types::Mailbox> & signers, GpgME::Protocol proto );
+        static std::vector<GpgME::Key> resolveSigner( const KMime::Types::Mailbox & signer, GpgME::Protocol proto );
     };
 
 }
 
-#endif /* __KLEOPATRA_UISERVER_RECIPIENTRESOLVER_H__ */
+#endif /* __KLEOPATRA_UISERVER_CERTIFICATERESOLVER_H__ */

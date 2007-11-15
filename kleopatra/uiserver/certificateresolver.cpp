@@ -1,5 +1,5 @@
 /* -*- mode: c++; c-basic-offset:4 -*-
-    uiserver/recipientresolver.cpp
+    uiserver/certificateresolver.cpp
 
     This file is part of Kleopatra, the KDE keymanager
     Copyright (c) 2007 Klarälvdalens Datakonsult AB
@@ -30,7 +30,7 @@
     your version.
 */
 
-#include "recipientresolver.h"
+#include "certificateresolver.h"
 
 #include "kleo-assuan.h"
 
@@ -51,18 +51,37 @@ using namespace GpgME;
 using namespace KMime::Types;
 using namespace KMime::HeaderParsing;
 
-std::vector< std::vector<Key> > RecipientResolver::resolveRecipients( const std::vector<Mailbox> & recipients, Protocol proto ) {
+std::vector< std::vector<Key> > CertificateResolver::resolveRecipients( const std::vector<Mailbox> & recipients, Protocol proto ) {
     std::vector< std::vector<Key> > result;
     std::transform( recipients.begin(), recipients.end(),
                     std::back_inserter( result ), bind( &resolveRecipient, _1, proto ) );
     return result;
 }
 
-std::vector<Key> RecipientResolver::resolveRecipient( const Mailbox & recipient, Protocol proto ) {
+std::vector<Key> CertificateResolver::resolveRecipient( const Mailbox & recipient, Protocol proto ) {
     std::vector<Key> result = KeyCache::instance()->findByEMailAddress( recipient.address() );
     if ( proto != UnknownProtocol )
         result.erase( std::remove_if( result.begin(), result.end(),
                                       bind( &Key::protocol, _1 ) != proto ),
                       result.end() );
+    return result;
+}
+
+std::vector< std::vector<Key> > CertificateResolver::resolveSigners( const std::vector<Mailbox> & signers, Protocol proto ) {
+    std::vector< std::vector<Key> > result;
+    std::transform( signers.begin(), signers.end(),
+                    std::back_inserter( result ), bind( &resolveSigner, _1, proto ) );
+    return result;
+}
+
+std::vector<Key> CertificateResolver::resolveSigner( const Mailbox & signer, Protocol proto ) {
+    std::vector<Key> result = KeyCache::instance()->findByEMailAddress( signer.address() );
+    std::vector<Key>::iterator end
+        = std::remove_if( result.begin(), result.end(),
+                          !bind( &Key::hasSecret, _1 ) );
+    if ( proto != UnknownProtocol )
+        end = std::remove_if( result.begin(), end,
+                              bind( &Key::protocol, _1 ) != proto );
+    result.erase( end, result.end() );
     return result;
 }

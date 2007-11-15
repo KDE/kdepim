@@ -44,7 +44,7 @@ if ( USABLE_ASSUAN_FOUND )
     uiserver/decryptverifywizard.cpp
     uiserver/decryptverifycommand.cpp
     uiserver/signcommand.cpp
-    uiserver/recipientresolver.cpp
+    uiserver/certificateresolver.cpp
     uiserver/signencryptwizard.cpp
     uiserver/encryptemailcontroller.cpp
     uiserver/prepencryptcommand.cpp

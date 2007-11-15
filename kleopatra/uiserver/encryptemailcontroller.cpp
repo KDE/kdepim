@@ -34,7 +34,7 @@
 
 #include "kleo-assuan.h"
 #include "assuancommand.h"
-#include "recipientresolver.h"
+#include "certificateresolver.h"
 #include "signencryptwizard.h"
 
 #include <utils/stl_util.h>
@@ -122,7 +122,7 @@ void EncryptEMailController::setCommand( const shared_ptr<AssuanCommand> & cmd )
 }
 
 void EncryptEMailController::startResolveRecipients( const std::vector<Mailbox> & recipients ) {
-    const std::vector< std::vector<Key> > keys = RecipientResolver::resolveRecipients( recipients, d->protocol );
+    const std::vector< std::vector<Key> > keys = CertificateResolver::resolveRecipients( recipients, d->protocol );
 
     assuan_assert( keys.size() == static_cast<size_t>( recipients.size() ) );
 
