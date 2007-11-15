@@ -1221,8 +1221,18 @@ QString IncidenceFormatter::formatICalInvitation( QString invitation, Calendar *
   IncidenceBase *incBase = msg->event();
 
   Incidence* existingIncidence = 0;
-  if ( helper->calendar() )
+  if ( helper->calendar() ) {
     existingIncidence = helper->calendar()->incidence( incBase->uid() );
+    if ( !existingIncidence ) {
+      Incidence::List list = helper->calendar()->incidences();
+      for ( Incidence::List::ConstIterator it = list.constBegin(); it != list.constEnd(); ++it ) {
+        if ( (*it)->schedulingID() == incBase->uid() ) {
+          existingIncidence = *it;
+          break;
+        }
+      }
+    }
+  }
 
   // First make the text of the message
   QString html;
