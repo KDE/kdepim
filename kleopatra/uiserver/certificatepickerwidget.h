@@ -50,27 +50,62 @@ namespace Kleo {
     class CertificatePickerWidget : public QWidget {
         Q_OBJECT
     public:
- 
-        class SuggestionMaker {
-        public:
-            virtual ~SuggestionMaker();
-            virtual std::vector<GpgME::Key> makeSuggestions( const QString& identifier ) const = 0;
-        };
+        explicit CertificatePickerWidget( QWidget* parent = 0 );
 
-        class DefaultSuggestionMaker : public SuggestionMaker {
-        public:
-            std::vector<GpgME::Key> makeSuggestions( const QString& identifier ) const;
-        };
+        void setIdentifier( const QString& identifier );
+        void setCertificates( const std::vector<GpgME::Key>& keys );
+        GpgME::Key chosenCertificate() const;
+        bool rememberSelection() const;
+        bool isComplete() const;
 
-        explicit CertificatePickerWidget( const boost::shared_ptr<SuggestionMaker>& suggester=boost::shared_ptr<SuggestionMaker>( new DefaultSuggestionMaker ), QWidget * parent=0, Qt::WFlags f=0 );
+    Q_SIGNALS:
+        void changed();
+
+    private:
+        class Private;
+        kdtools::pimpl_ptr<Private> d;
+
+        Q_PRIVATE_SLOT( d, void selectAnotherCertificate() );
+        Q_PRIVATE_SLOT( d, void currentIndexChanged( int ) );
+};
+/*
+
+    class CertificatePickerWidget : public QWidget {
+        Q_OBJECT
+    public:
+        explicit CertificatePickerWidget( QWidget * parent=0 );
         ~CertificatePickerWidget();
+
+        void setIdentifier( const QString & id );
+        void setCertificates( const std::vector<GpgME::Key> & keys );
+
+        GpgME::Key chosenCertificate() const;
+        bool isComplete() const;
+
+    Q_SIGNALS:
+        void changed();
+
+    private:
+        class Private;
+        kdtools::pimpl_ptr<Private> d;
+    };
+*/
+    class CertificatePickerPage : public QWidget {
+        Q_OBJECT
+    public:
+ 
+        explicit CertificatePickerPage( QWidget * parent=0, Qt::WFlags f=0 );
+        ~CertificatePickerPage();
     
         bool isComplete() const;
 
         void setIdentifiers( const QStringList& identifiers );
         QStringList identifiers() const;
 
-        GpgME::Key selectedKey( const QString& identifier ) const;
+        unsigned int numRecipientResolveWidgets() const;
+        CertificatePickerWidget * recipientResolveWidget( unsigned int idx ) const;
+
+        void ensureIndexAvailable( unsigned int idx );
 
     Q_SIGNALS:
         void completionStateChanged();
@@ -78,8 +113,6 @@ namespace Kleo {
     private:
         class Private;
         kdtools::pimpl_ptr<Private> d;
-
-        Q_PRIVATE_SLOT( d, void completionStateChanged( QString ) ); 
     };
 }
 

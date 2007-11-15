@@ -49,11 +49,11 @@ namespace GpgME {
 
 namespace Kleo {
 
-class CertificatePickerLine : public QWidget {
+class CertificatePickerWidget : public QWidget {
     Q_OBJECT
 
 public:
-    explicit CertificatePickerLine( const QString& identifier,
+    explicit CertificatePickerWidget( const QString& identifier,
                                     QWidget* parent = 0 );
 
     void setSuggestions( const std::vector<GpgME::Key>& keys );
@@ -70,7 +70,7 @@ private:
     void addKey( const GpgME::Key& key );
 
 private Q_SLOTS:
-    void selectAnother();
+    void selectAnotherCertificate();
     void currentIndexChanged( int idx );
 
 private:

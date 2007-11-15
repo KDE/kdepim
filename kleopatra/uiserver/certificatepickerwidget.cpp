@@ -31,7 +31,6 @@
 */
 
 #include "certificatepickerwidget.h"
-#include "certificatepickerwidget_p.h"
 
 #include "models/keycache.h"
 #include "utils/formatting.h"
@@ -54,44 +53,32 @@
  
 using namespace Kleo;
 
-class Kleo::CertificatePickerWidget::Private {
-    friend class ::CertificatePickerWidget;
-    CertificatePickerWidget * const q;
+class Kleo::CertificatePickerPage::Private {
+    friend class ::CertificatePickerPage;
+    CertificatePickerPage * const q;
 public:
-    explicit Private( const boost::shared_ptr<SuggestionMaker>& suggester, CertificatePickerWidget * qq );
+    explicit Private( CertificatePickerPage * qq );
     ~Private();
-    void addLineForIdentifier( const QString& identifier );
-    void completionStateChanged( const QString& id );
-    void emitCompletionStateChange();
-    std::vector<GpgME::Key> makeSuggestions( const QString& id ) const;
+    void addWidgetForIdentifier( const QString& identifier );
+//    void completionStateChanged( const QString& id );
     void clear();
-
     mutable uint completeCount;
     QVBoxLayout* lineLayout;
     QScrollArea* scrollArea;
-    QHash<QString, CertificatePickerLine*> lines;
-    boost::shared_ptr<SuggestionMaker> suggester;
+    std::vector<CertificatePickerWidget*> widgets;
+    QStringList identifiers;
 };
 
 
-CertificatePickerWidget::Private::Private( const boost::shared_ptr<SuggestionMaker>& suggester_, CertificatePickerWidget * qq )
-    : q( qq ), completeCount( 0 ), suggester( suggester_ )
+CertificatePickerPage::Private::Private( CertificatePickerPage * qq )
+    : q( qq ), completeCount( 0 )
 {
-    assert( suggester );
 }
 
-CertificatePickerWidget::Private::~Private() {}
+CertificatePickerPage::Private::~Private() {}
 
-CertificatePickerWidget::SuggestionMaker::~SuggestionMaker() {}
-
-std::vector<GpgME::Key> CertificatePickerWidget::DefaultSuggestionMaker::makeSuggestions( const QString& identifier ) const
-{
-    return KeyCache::instance()->findByEMailAddress( identifier.toStdString() );
-}
-
-
-CertificatePickerWidget::CertificatePickerWidget( const boost::shared_ptr<SuggestionMaker>& suggestionMaker, QWidget * parent, Qt::WFlags f )
-    : QWidget( parent, f ), d( new Private( suggestionMaker, this ) )
+CertificatePickerPage::CertificatePickerPage( QWidget * parent, Qt::WFlags f )
+    : QWidget( parent, f ), d( new Private( this ) )
 {
     QGridLayout* const top = new QGridLayout( this );
     top->setRowStretch( 1, 1 );
@@ -104,80 +91,103 @@ CertificatePickerWidget::CertificatePickerWidget( const boost::shared_ptr<Sugges
     d->scrollArea->setWidgetResizable( true );
 }
 
-CertificatePickerWidget::~CertificatePickerWidget() {}
+CertificatePickerPage::~CertificatePickerPage() {}
 
-bool CertificatePickerWidget::isComplete() const
+bool CertificatePickerPage::isComplete() const
 {
-    return d->completeCount == d->lines.count();
+    return d->completeCount == d->widgets.size();
 }
 
-void CertificatePickerWidget::setIdentifiers( const QStringList& ids )
+void CertificatePickerPage::setIdentifiers( const QStringList& ids )
 {
     d->clear();
     Q_FOREACH ( const QString& i, ids )
-        d->addLineForIdentifier( i );
+        d->addWidgetForIdentifier( i );
 }
 
-void CertificatePickerWidget::Private::clear()
+void CertificatePickerPage::Private::clear()
 {
-    qDeleteAll( lines );
-    lines.clear();
-    completeCount = 0;
+    qDeleteAll( widgets );
+    widgets.clear();
 }
 
-void CertificatePickerWidget::Private::addLineForIdentifier( const QString& id )
+void CertificatePickerPage::Private::addWidgetForIdentifier( const QString& id )
 {
-    assert( !lines.contains( id ) );
-    CertificatePickerLine* const line = new CertificatePickerLine( id );
-    line->setSuggestions( makeSuggestions( id ) );
-    lines[id] = line;
-    if ( line->isComplete() )
-        ++completeCount;
+    CertificatePickerWidget* const line = new CertificatePickerWidget;
+    line->setIdentifier( id );
+    //line->setCertificates( makeSuggestions( id ) );
+    widgets.push_back( line );
+    identifiers.push_back( id );
     lineLayout->addWidget( line );
     line->show();
 }
-
-std::vector<GpgME::Key> CertificatePickerWidget::Private::makeSuggestions( const QString& id ) const
+#if 0
+void CertificatePickerPage::Private::completionStateChanged( const QString& id )
 {
-    return suggester->makeSuggestions( id );
-}
-
-void CertificatePickerWidget::Private::completionStateChanged( const QString& id )
-{
-    const bool wasComplete = completeCount == lines.count();
-    CertificatePickerLine* const line = lines[id];
+    const bool wasComplete = completeCount == widgets.size();
+    CertificatePickerWidget* const line = widgets[id];
     assert( line );
     if ( line->isComplete() )
     {
         ++completeCount;
-        assert( completeCount <= lines.count() );
+        assert( completeCount <= widgets.count() );
     }
     else
     {
         assert( completeCount > 0 );
         --completeCount;
     }
-    if ( wasComplete != ( completeCount == lines.count() ) )
+    if ( wasComplete != ( completeCount == widgets.count() ) )
         emit q->completionStateChanged();
 } 
+#endif
 
-QStringList CertificatePickerWidget::identifiers() const
+QStringList CertificatePickerPage::identifiers() const
 {
-    return d->lines.keys();
+    return d->identifiers;
 }
 
-GpgME::Key CertificatePickerWidget::selectedKey( const QString& identifier ) const
+void CertificatePickerPage::ensureIndexAvailable( unsigned int idx )
 {
-    return d->lines.contains( identifier ) ? d->lines[identifier]->selectedKey() : GpgME::Key();
 }
 
-CertificatePickerLine::CertificatePickerLine( const QString& identifier, QWidget* parent ) : QWidget( parent ), m_identifier( identifier ), m_wasComplete( false )
+unsigned int CertificatePickerPage::numRecipientResolveWidgets() const
 {
-    QGridLayout* const layout = new QGridLayout( this );
+    return d->widgets.size();
+}
+
+CertificatePickerWidget * CertificatePickerPage::recipientResolveWidget( unsigned int idx ) const
+{
+    return d->widgets[idx];
+}
+
+class Kleo::CertificatePickerWidget::Private {
+    friend class Kleo::CertificatePickerWidget;
+    CertificatePickerWidget * const q;
+public:
+    explicit Private( CertificatePickerWidget * qq );
+
+    void selectAnotherCertificate();
+    void currentIndexChanged( int );
+
+private:
+
+    QVariant currentData() const;
+    void addCertificate( const GpgME::Key& key );
+ 
+    QString m_identifier;
+    QComboBox* m_combo;
+    QLabel* m_recipientLabel;
+    QPushButton* m_selectButton;
+    QCheckBox* m_rememberChoiceCO;
+};
+
+CertificatePickerWidget::Private::Private( CertificatePickerWidget * qq ) : q( qq ), m_identifier()
+{
+    QGridLayout* const layout = new QGridLayout( q );
     layout->setColumnStretch( 1, 1 );
-    QLabel* const recipientLabel = new QLabel;
-    recipientLabel->setText( i18nc( "%1: email or name", "Recipient: %1", identifier ) );
-    layout->addWidget( recipientLabel, 0, 0, /*rowSpan=*/1, /*columnSpan=*/-1 );
+    m_recipientLabel = new QLabel;
+    layout->addWidget( m_recipientLabel, 0, 0, /*rowSpan=*/1, /*columnSpan=*/-1 );
     QLabel* const certificateLabel = new QLabel;
     certificateLabel->setText( i18n( "Certificate:" ) );
     layout->addWidget( certificateLabel, 1, 0 ); 
@@ -186,37 +196,52 @@ CertificatePickerLine::CertificatePickerLine( const QString& identifier, QWidget
     layout->addWidget( m_combo, 1, 1 );
     m_selectButton = new QPushButton;
     m_selectButton->setText( i18n( "..." ) );
-    connect( m_selectButton, SIGNAL( clicked() ), SLOT( selectAnother() ) );
+    q->connect( m_selectButton, SIGNAL( clicked() ), SLOT( selectAnotherCertificate() ) );
     layout->addWidget( m_selectButton, 1, 2 );
     m_rememberChoiceCO = new QCheckBox;
     m_rememberChoiceCO->setText( i18n( "Remember choice" ) );
     layout->addWidget( m_rememberChoiceCO, 2, 0, /*rowSpan=*/1, /*columnSpan=*/-1 );
 }
 
-bool CertificatePickerLine::rememberSelection() const
+CertificatePickerWidget::CertificatePickerWidget( QWidget* parent ) : QWidget( parent ), d( new Private( this ) )
 {
-    return m_rememberChoiceCO->checkState() == Qt::Checked;
 }
 
-void CertificatePickerLine::addKey( const GpgME::Key& key )
+bool CertificatePickerWidget::rememberSelection() const
+{
+    return d->m_rememberChoiceCO->checkState() == Qt::Checked;
+}
+
+void CertificatePickerWidget::Private::addCertificate( const GpgME::Key& key )
 {
     m_combo->addItem( Formatting::formatForComboBox( key ), QByteArray( key.keyID() ) );
 }
 
-void CertificatePickerLine::setSuggestions( const std::vector<GpgME::Key>& keys )
+void CertificatePickerWidget::setIdentifier( const QString& id )
 {
-    Q_FOREACH ( const GpgME::Key& i, keys )
-        addKey( i );
-    maybeCompletionChanged();
+    
+    d->m_identifier = id;
+    d->m_recipientLabel->setText( i18nc( "%1: email or name", "Recipient: %1", id ) );
+
 }
 
-GpgME::Key CertificatePickerLine::selectedKey() const
+void CertificatePickerWidget::setCertificates( const std::vector<GpgME::Key>& keys )
 {
-    const QByteArray id = currentData().toByteArray();
+    d->m_combo->clear();
+    if ( keys.empty() )
+        return;
+    Q_FOREACH ( const GpgME::Key& i, keys )
+        d->addCertificate( i );
+    emit changed();
+}
+
+GpgME::Key CertificatePickerWidget::chosenCertificate() const
+{
+    const QByteArray id = d->currentData().toByteArray();
     return KeyCache::instance()->findByKeyIDOrFingerprint( id.constData() );
 }
 
-void CertificatePickerLine::selectAnother()
+void CertificatePickerWidget::Private::selectAnotherCertificate()
 {
     //TODO
     //show selection dialog
@@ -224,31 +249,20 @@ void CertificatePickerLine::selectAnother()
     //  insert selected key into combo and select it
 }
 
-void CertificatePickerLine::currentIndexChanged( int )
+void CertificatePickerWidget::Private::currentIndexChanged( int )
 {
-    maybeCompletionChanged();
+    emit q->changed();
 }
 
-QVariant CertificatePickerLine::currentData() const
+QVariant CertificatePickerWidget::Private::currentData() const
 {
     return m_combo->itemData( m_combo->currentIndex() ); 
 }
 
-void CertificatePickerLine::maybeCompletionChanged()
+bool CertificatePickerWidget::isComplete() const
 {
-    const bool complete = isComplete();
-    if ( complete != m_wasComplete )
-    {
-        m_wasComplete = complete;
-        emit completionStateChanged( m_identifier );
-    }
-}
-
-bool CertificatePickerLine::isComplete() const
-{
-    return !currentData().isNull();
+    return !d->currentData().isNull();
 }
 
 #include "moc_certificatepickerwidget.cpp"
-#include "moc_certificatepickerwidget_p.cpp"
 

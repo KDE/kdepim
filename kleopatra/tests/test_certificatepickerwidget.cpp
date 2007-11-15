@@ -37,7 +37,7 @@
 int main( int argc, char** argv )
 {
     QApplication app( argc, argv );
-    Kleo::CertificatePickerWidget picker;
+    Kleo::CertificatePickerPage picker;
     QStringList list;
     list << "Frank Osterfeld" << "Kleopatra" << "Christian" << "foo@bar.com";
     picker.setIdentifiers( list );
