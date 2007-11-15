@@ -59,16 +59,23 @@ public:
     void setSuggestions( const std::vector<GpgME::Key>& keys );
     GpgME::Key selectedKey() const;
     bool rememberSelection() const;
-
     bool isComplete() const;
 
 Q_SIGNALS:
     void completionStateChanged( const QString& id );
 
+private:
+    QVariant currentData() const;
+    void maybeCompletionChanged();
+    void addKey( const GpgME::Key& key );
+
 private Q_SLOTS:
     void selectAnother();
+    void currentIndexChanged( int idx );
 
 private:
+    QString m_identifier;
+    bool m_wasComplete;
     QComboBox* m_combo;
     QPushButton* m_selectButton;
     QCheckBox* m_rememberChoiceCO;

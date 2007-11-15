@@ -33,6 +33,9 @@
 #include "certificatepickerwidget.h"
 #include "certificatepickerwidget_p.h"
 
+#include "models/keycache.h"
+#include "utils/formatting.h"
+
 #include <gpgme++/key.h>
 
 #include <KLocale>
@@ -83,7 +86,7 @@ CertificatePickerWidget::SuggestionMaker::~SuggestionMaker() {}
 
 std::vector<GpgME::Key> CertificatePickerWidget::DefaultSuggestionMaker::makeSuggestions( const QString& identifier ) const
 {
-    return std::vector<GpgME::Key>();
+    return KeyCache::instance()->findByEMailAddress( identifier.toStdString() );
 }
 
 
@@ -168,7 +171,7 @@ GpgME::Key CertificatePickerWidget::selectedKey( const QString& identifier ) con
     return d->lines.contains( identifier ) ? d->lines[identifier]->selectedKey() : GpgME::Key();
 }
 
-CertificatePickerLine::CertificatePickerLine( const QString& identifier, QWidget* parent ) : QWidget( parent )
+CertificatePickerLine::CertificatePickerLine( const QString& identifier, QWidget* parent ) : QWidget( parent ), m_identifier( identifier ), m_wasComplete( false )
 {
     QGridLayout* const layout = new QGridLayout( this );
     layout->setColumnStretch( 1, 1 );
@@ -195,24 +198,55 @@ bool CertificatePickerLine::rememberSelection() const
     return m_rememberChoiceCO->checkState() == Qt::Checked;
 }
 
+void CertificatePickerLine::addKey( const GpgME::Key& key )
+{
+    m_combo->addItem( Formatting::formatForComboBox( key ), QByteArray( key.keyID() ) );
+}
+
 void CertificatePickerLine::setSuggestions( const std::vector<GpgME::Key>& keys )
 {
-    // TODO: fill combobox
+    Q_FOREACH ( const GpgME::Key& i, keys )
+        addKey( i );
+    maybeCompletionChanged();
 }
 
 GpgME::Key CertificatePickerLine::selectedKey() const
 {
-    // TODO
-    return GpgME::Key();
+    const QByteArray id = currentData().toByteArray();
+    return KeyCache::instance()->findByKeyIDOrFingerprint( id.constData() );
 }
 
 void CertificatePickerLine::selectAnother()
 {
+    //TODO
+    //show selection dialog
+    //if selection was made:
+    //  insert selected key into combo and select it
+}
+
+void CertificatePickerLine::currentIndexChanged( int )
+{
+    maybeCompletionChanged();
+}
+
+QVariant CertificatePickerLine::currentData() const
+{
+    return m_combo->itemData( m_combo->currentIndex() ); 
+}
+
+void CertificatePickerLine::maybeCompletionChanged()
+{
+    const bool complete = isComplete();
+    if ( complete != m_wasComplete )
+    {
+        m_wasComplete = complete;
+        emit completionStateChanged( m_identifier );
+    }
 }
 
 bool CertificatePickerLine::isComplete() const
 {
-    return false;
+    return !currentData().isNull();
 }
 
 #include "moc_certificatepickerwidget.cpp"

@@ -353,3 +353,11 @@ QString Formatting::validityShort( const UserID::Signature & sig ) {
     }
     return QString();
 }
+
+QString Formatting::formatForComboBox( const GpgME::Key & key ) {
+    const QString name = prettyName( key );
+    QString mail = prettyEMail( key );
+    if ( !mail.isEmpty() )
+        mail = '<' + mail + '>';
+    return hack::tr( "%1 %2 (%3)", "name, email, key id" ).arg( name, mail, key.shortKeyID() ).simplified();
+}

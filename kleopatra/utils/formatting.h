@@ -79,6 +79,7 @@ namespace Formatting {
     QString validityShort( const GpgME::UserID & uid );
     QString validityShort( const GpgME::UserID::Signature & sig );
 
+    QString formatForComboBox( const GpgME::Key & key );
 }
 }
 
