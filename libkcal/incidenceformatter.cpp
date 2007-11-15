@@ -1224,8 +1224,8 @@ QString IncidenceFormatter::formatICalInvitation( QString invitation, Calendar *
   if ( helper->calendar() ) {
     existingIncidence = helper->calendar()->incidence( incBase->uid() );
     if ( !existingIncidence ) {
-      Incidence::List list = helper->calendar()->incidences();
-      for ( Incidence::List::ConstIterator it = list.constBegin(); it != list.constEnd(); ++it ) {
+      const Incidence::List list = helper->calendar()->incidences();
+      for ( Incidence::List::ConstIterator it = list.begin(), end = list.end(); it != end; ++it ) {
         if ( (*it)->schedulingID() == incBase->uid() ) {
           existingIncidence = *it;
           break;
