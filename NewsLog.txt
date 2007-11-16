@@ -1,3 +1,14 @@
+Friday, November 16th 2007
+
+Problems addressed
+--------------------
+* kolab/issue2200 (After editing the attendee list the old attendes gets update mails without the possibility to enter them into their calender.) (737072)
+
+New functionality
+-------------------
+* prokde35-z Item 75: Aggregated reminders (737035)
+* prokde35-z Item 3: Hide no-content folders only containing groupware folders (737469)
+
 Friday, November 9th 2007
 
 Problems addressed
