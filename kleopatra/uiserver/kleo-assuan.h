@@ -97,8 +97,10 @@ namespace Kleo {
 
 #if KLEO_GNUC_PREREQ(2, 6)
 # define assuan_assert( cond ) assuan_assert_impl_func( cond, __FILE__, __LINE__, __PRETTY_FUNCTION__ )
+# define notImplemented() throw assuan_exception( gpg_error( GPG_ERR_NOT_IMPLEMENTED ), __PRETTY_FUNCTION__ )
 #elif defined __STDC_VERSION__ && __STDC_VERSION__ >= 199901L
 # define assuan_assert( cond ) assuan_assert_impl_func( cond, __FILE__, __LINE__, __func__ )
+# define notImplemented() throw assuan_exception( gpg_error( GPG_ERR_NOT_IMPLEMENTED ), __func__ )
 #endif
 
 #undef KLEO_GNUC_PREREQ
@@ -107,6 +109,8 @@ namespace Kleo {
 # define assuan_assert( cond ) assuan_assert_impl( cond, __FILE__, __LINE__ )
 #endif
 
-#define notImplemented() assuan_assert( !"Sorry, not yet implemented" )
+#ifndef notImplemented
+# define notImplemented() assuan_assert( !"Sorry, not yet implemented" )
+#endif
 
 #endif /* __KLEOPATRA_UISERVER_KLEO_ASSUAN_H__ */
