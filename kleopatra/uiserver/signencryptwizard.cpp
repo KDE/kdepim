@@ -56,9 +56,6 @@ public:
     ~Private();
 
 private:
-    std::vector<Key> resolvedKeys() const;
-
-private:
     Mode mode;
 
     struct Ui {
@@ -132,10 +129,14 @@ bool SignEncryptWizard::canGoToNextPage() const {
     return currentPage()->isComplete();
 }
 
-std::vector<Key> SignEncryptWizard::Private::resolvedKeys() const {
+void SignEncryptWizard::connectTask( const shared_ptr<Task> & task, unsigned int idx ) {
+    notImplemented();
+}
+
+std::vector<Key> SignEncryptWizard::resolvedCertificates() const {
     std::vector<Key> result;
-    for ( unsigned int i = 0, end = ui.recipientResolvePage.numRecipientResolveWidgets() ; i < end ; ++i )
-        result.push_back( ui.recipientResolvePage.recipientResolveWidget( i )->chosenCertificate() );
+    for ( unsigned int i = 0, end = d->ui.recipientResolvePage.numRecipientResolveWidgets() ; i < end ; ++i )
+        result.push_back( d->ui.recipientResolvePage.recipientResolveWidget( i )->chosenCertificate() );
     return result;
 }
 

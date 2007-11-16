@@ -39,6 +39,8 @@
 
 #include <gpgme++/global.h>
 
+#include <boost/shared_ptr.hpp>
+
 #include <vector>
 
 namespace GpgME {
@@ -52,6 +54,8 @@ namespace Types {
 }
 
 namespace Kleo {
+
+    class Task;
 
     class SignEncryptWizard : public QWizard {
         Q_OBJECT
@@ -72,6 +76,10 @@ namespace Kleo {
         void setSignersAndCandidates( const std::vector<KMime::Types::Mailbox> & signers, const std::vector< std::vector<GpgME::Key> > & keys );
 
         bool canGoToNextPage() const;
+
+        void connectTask( const boost::shared_ptr<Task> & task, unsigned int idx );
+
+        std::vector<GpgME::Key> resolvedCertificates() const;
 
     Q_SIGNALS:
         void recipientsResolved();
