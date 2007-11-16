@@ -87,6 +87,10 @@ RecipientResolvePage::RecipientResolvePage( QWidget * parent )
     top->addWidget( d->scrollArea, 0, 0 );
     assert( qobject_cast<QBoxLayout*>( d->scrollArea->widget()->layout() ) );
     static_cast<QBoxLayout*>( d->scrollArea->widget()->layout())->addStretch( 1 );
+    // TODO: these texts are mode-dependent
+    setTitle( i18n( "Select Certificates for Recipients" ) );
+    setSubTitle( i18n( "For every recipient, select a certificate that should be used for encryption. Click Next when done." ) );
+
 }
 
 RecipientResolvePage::~RecipientResolvePage() {}
