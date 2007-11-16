@@ -9,6 +9,11 @@ New functionality
 * prokde35-z Item 75: Aggregated reminders (737035)
 * prokde35-z Item 3: Hide no-content folders only containing groupware folders (737469)
 
+Merges
+---------
+* Merges from 3.5 branch for KMail, KAlarm, aKregator, KArm
+
+
 Friday, November 9th 2007
 
 Problems addressed
