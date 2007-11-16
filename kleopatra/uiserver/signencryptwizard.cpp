@@ -71,7 +71,8 @@ SignEncryptWizard::Private::Private( SignEncryptWizard * qq )
     : q( qq ),
       mode( EncryptOrSignFiles )
 {
-
+    q->setOptions( q->options() | NoBackButtonOnStartPage );
+    q->addPage( &ui.recipientResolvePage );
 }
 
 SignEncryptWizard::Private::~Private() {}
@@ -79,7 +80,6 @@ SignEncryptWizard::Private::~Private() {}
 SignEncryptWizard::SignEncryptWizard( QWidget * p, Qt::WindowFlags f )
     : QWizard( p, f ), d( new Private( this ) )
 {
-    addPage( &d->ui.recipientResolvePage );
 }
 
 SignEncryptWizard::~SignEncryptWizard() {}

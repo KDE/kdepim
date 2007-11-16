@@ -31,6 +31,7 @@
 */
 
 #include "certificatepickerwidget.h"
+#include "scrollarea.h"
 
 #include "models/keycache.h"
 #include "utils/formatting.h"
@@ -46,7 +47,6 @@
 #include <QGridLayout>
 #include <QHash>
 #include <QResizeEvent>
-#include <QScrollArea>
 #include <QVBoxLayout>
 
 #include <cassert>
@@ -62,11 +62,10 @@ public:
     void addWidgetForIdentifier( const QString& identifier );
 //    void completionStateChanged( const QString& id );
     void clear();
-    QVBoxLayout* lineLayout;
-    QScrollArea* scrollArea;
+    ScrollArea* scrollArea;
     std::vector<RecipientResolveWidget*> widgets;
     QStringList identifiers;
-    GpgME::Protocol protocol;
+    GpgME::Protocol protocol; 
 };
 
 
@@ -82,13 +81,11 @@ RecipientResolvePage::RecipientResolvePage( QWidget * parent )
 {
     QGridLayout* const top = new QGridLayout( this );
     top->setRowStretch( 1, 1 );
-    d->scrollArea = new QScrollArea( this );
+    d->scrollArea = new ScrollArea( this );
     d->scrollArea->setFrameShape( QFrame::NoFrame );
     top->addWidget( d->scrollArea, 0, 0 );
-    QWidget* const container = new QWidget;
-    d->lineLayout = new QVBoxLayout( container );
-    d->scrollArea->setWidget( container );
-    d->scrollArea->setWidgetResizable( true );
+    assert( qobject_cast<QBoxLayout*>( d->scrollArea->widget()->layout() ) );
+    static_cast<QBoxLayout*>( d->scrollArea->widget()->layout())->addStretch( 1 );
 }
 
 RecipientResolvePage::~RecipientResolvePage() {}
@@ -123,7 +120,11 @@ void RecipientResolvePage::Private::addWidgetForIdentifier( const QString& id )
     //line->setCertificates( makeSuggestions( id ) );
     widgets.push_back( line );
     identifiers.push_back( id );
-    lineLayout->addWidget( line );
+    assert( scrollArea->widget() );
+    assert( qobject_cast<QBoxLayout*>( scrollArea->widget()->layout() ) );
+    QBoxLayout * const blay = static_cast<QBoxLayout*>( scrollArea->widget()->layout() );
+    blay->addWidget( line );
+    line->setSizePolicy( QSizePolicy::MinimumExpanding, QSizePolicy::Preferred );
     line->show();
 }
 

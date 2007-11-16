@@ -21,7 +21,8 @@ target_link_libraries(test_keylistmodels kleo ${KDE4_KDECORE_LIBS} )
 
 kde4_add_executable( test_certificatepickerwidget TEST
   test_certificatepickerwidget.cpp
-  ../uiserver/certificatepickerwidget.cpp 
+  ../uiserver/certificatepickerwidget.cpp
+  ../uiserver/scrollarea.cpp 
   ../utils/formatting.cpp
   ../models/keycache.cpp )
 target_link_libraries( test_certificatepickerwidget kleo ${KDE4_KDEUI_LIBS} ${QGPGME_LIBRARIES})
@@ -33,6 +34,7 @@ kde4_add_executable( test_signencryptwizard TEST
   ../uiserver/signencryptwizard.cpp 
   ../uiserver/certificatepickerwidget.cpp
   ../uiserver/kleo-assuan.cpp
+  ../uiserver/scrollarea.cpp
   ../utils/formatting.cpp
   ../models/keycache.cpp )
 target_link_libraries( test_signencryptwizard kleo ${KDE4_KMIME_LIBRARY} ${KDE4_KDEUI_LIBS} ${QGPGME_LIBRARIES})

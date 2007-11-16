@@ -34,6 +34,7 @@
 
 #include "decryptverifyoperationwidget.h"
 #include "decryptverifyresultwidget.h"
+#include "scrollarea.h"
 
 #include <utils/filenamerequester.h>
 #include <utils/stl_util.h>
@@ -58,37 +59,6 @@ using namespace Kleo;
 using namespace boost;
 
 namespace {
-
-    static QSize getMinimumSizeHint( const QWidget * w ) {
-        return w ? w->minimumSizeHint() : QSize( 0, 0 );
-    }
-
-    static QSize getSizeHint( const QWidget * w ) {
-        return w ? w->sizeHint() : QSize( 0, 0 );
-    }
-
-    class ScrollArea : public QScrollArea {
-        Q_OBJECT
-    public:
-        explicit ScrollArea( QWidget * p=0 )
-            : QScrollArea( p )
-        {
-            setWidget( new QWidget );
-            new QVBoxLayout( widget() );
-            setWidgetResizable( true );
-        }
-        ~ScrollArea() {}
-
-        /* reimp */ QSize minimumSizeHint() const {
-            return QSize( getMinimumSizeHint( widget() ).width() + getSizeHint( verticalScrollBar() ).width() + 2*frameWidth(), 0 )
-                .expandedTo( QScrollArea::minimumSizeHint() );
-        }
-        /* reimp */ QSize sizeHint() const {
-            const QSize widgetSizeHint = getSizeHint( widget() );
-            const int fw = frameWidth();
-            return QScrollArea::sizeHint().expandedTo( widgetSizeHint + QSize( 2*fw, 2*fw ) + QSize( getSizeHint( verticalScrollBar() ).width(), 0 ) );
-        }
-    };
 
     class HLine : public QFrame {
         Q_OBJECT
