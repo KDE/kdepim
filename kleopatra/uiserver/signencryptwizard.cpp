@@ -55,11 +55,20 @@ public:
     explicit Private( SignEncryptWizard * qq );
     ~Private();
 
+    void onCurrentIdChange( int id );
+
+    enum Pages {
+        Prepare=0,
+        Objects,
+        ResolveRecipients,
+        Results
+    };
 private:
     Mode mode;
 
     struct Ui {
         RecipientResolvePage recipientResolvePage;
+        RecipientResolvePage testPage;
     } ui;
 };
 
@@ -69,7 +78,10 @@ SignEncryptWizard::Private::Private( SignEncryptWizard * qq )
       mode( EncryptOrSignFiles )
 {
     q->setOptions( q->options() | NoBackButtonOnStartPage );
-    q->addPage( &ui.recipientResolvePage );
+    q->setPage( ResolveRecipients, &ui.recipientResolvePage );
+    q->setPage( Results, &ui.testPage );
+    q->setStartId( ResolveRecipients );
+    q->connect( q, SIGNAL( currentIdChanged( int ) ), q, SLOT( onCurrentIdChange( int ) ) );
 }
 
 SignEncryptWizard::Private::~Private() {}
@@ -78,6 +90,13 @@ SignEncryptWizard::SignEncryptWizard( QWidget * p, Qt::WindowFlags f )
     : QWizard( p, f ), d( new Private( this ) )
 {
 }
+
+void SignEncryptWizard::Private::onCurrentIdChange( int id )
+{
+    //ugly, but there are no better hooks provided
+    if ( id == ui.recipientResolvePage.nextId() )
+        emit q->recipientsResolved();
+} 
 
 SignEncryptWizard::~SignEncryptWizard() {}
 

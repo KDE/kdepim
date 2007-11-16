@@ -88,6 +88,7 @@ namespace Kleo {
     private:
         class Private;
         kdtools::pimpl_ptr<Private> d;
+        Q_PRIVATE_SLOT( d, void onCurrentIdChange( int ) )
     };
 
 }

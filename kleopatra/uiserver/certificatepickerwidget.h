@@ -94,9 +94,6 @@ namespace Kleo {
 
         void ensureIndexAvailable( unsigned int idx );
 
-    Q_SIGNALS:
-        void completionStateChanged();
-
     private:
         class Private;
         kdtools::pimpl_ptr<Private> d;

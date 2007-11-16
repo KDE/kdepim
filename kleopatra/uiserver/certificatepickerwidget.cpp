@@ -121,6 +121,7 @@ void RecipientResolvePage::Private::clear()
 void RecipientResolvePage::Private::addWidgetForIdentifier( const QString& id )
 {
     RecipientResolveWidget* const line = new RecipientResolveWidget;
+    q->connect( line, SIGNAL( changed() ), q, SIGNAL( completeChanged() ) );
     line->setIdentifier( id );
     //line->setCertificates( makeSuggestions( id ) );
     widgets.push_back( line );
@@ -267,6 +268,7 @@ QVariant RecipientResolveWidget::Private::currentData() const
 
 bool RecipientResolveWidget::isComplete() const
 {
+    qDebug( "isComplete: %d", !d->currentData().isNull() );
     return !d->currentData().isNull();
 }
 
