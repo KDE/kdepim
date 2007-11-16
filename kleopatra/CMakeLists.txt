@@ -50,7 +50,6 @@ if ( USABLE_ASSUAN_FOUND )
     uiserver/encryptemailcontroller.cpp
     uiserver/prepencryptcommand.cpp
     uiserver/encryptcommand.cpp
-    uiserver/assuancommandprivatebase_p.cpp
     uiserver/resultdisplaywidget.cpp
     uiserver/keyselectiondialog.cpp
     uiserver/keyselectionjob.cpp
