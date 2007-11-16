@@ -62,6 +62,16 @@ public:
     void setSilent( bool silent );
     bool silent() const;
 
+    /**
+     * sets whether the job should use the key cache or list keys independently.
+     * Using the key cache is the default.
+     *
+     * @param useCache if @p true, the key cache will be used
+     */
+    void setUseKeyCache( bool useCache );
+ 
+    bool useKeyCache() const;
+
     void start();
 
 Q_SIGNALS:
@@ -70,6 +80,7 @@ Q_SIGNALS:
 
 private:
     Q_PRIVATE_SLOT( d, void nextKey( const GpgME::Key& key ) )
+    Q_PRIVATE_SLOT( d, void keyListingDone() )
     Q_PRIVATE_SLOT( d, void keyListingDone( const GpgME::KeyListResult& result ) )
     Q_PRIVATE_SLOT( d, void keySelectionDialogClosed() )
 

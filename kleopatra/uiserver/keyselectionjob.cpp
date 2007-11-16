@@ -34,11 +34,13 @@
 #include "keyselectiondialog.h"
 #include "kleo-assuan.h"
 #include "assuancommand.h" // for AssuanCommand::makeError()
+#include "models/keycache.h"
 
 #include <kleo/keylistjob.h>
 
 #include <QPointer>
 #include <QStringList>
+#include <QTimer>
 
 #include <gpgme++/error.h>
 #include <gpgme++/key.h>
@@ -49,7 +51,7 @@ using namespace Kleo;
 class KeySelectionJob::Private
 {
 public:
-    Private( KeySelectionJob* qq ) : q( qq ), m_secretKeysOnly( false ), m_silent( false ), m_keyListings( 0 ), m_started( false ) {}
+    Private( KeySelectionJob* qq ) : q( qq ), m_secretKeysOnly( false ), m_silent( false ), m_keyListings( 0 ), m_started( false ), m_useCache( true ) {}
     ~Private();
 
     void startKeyListing();
@@ -63,8 +65,10 @@ public:
     int m_keyListings;
     GpgME::KeyListResult m_listResult;
     bool m_started;
+    bool m_useCache;
 
     void nextKey( const GpgME::Key& key );
+    void keyListingDone();
     void keyListingDone( const GpgME::KeyListResult& result );
     void keySelectionDialogClosed();
 
@@ -94,6 +98,11 @@ void KeySelectionJob::Private::emitResult( const std::vector<GpgME::Key>& keys )
     emit q->result( keys );
 }
 
+void KeySelectionJob::Private::keyListingDone()
+{
+    keyListingDone( GpgME::KeyListResult() );
+}
+
 void KeySelectionJob::Private::keyListingDone( const GpgME::KeyListResult& result )
 {
     m_listResult = result;
@@ -107,7 +116,6 @@ void KeySelectionJob::Private::keyListingDone( const GpgME::KeyListResult& resul
     if ( m_keyListings == 0 ) {
         showKeySelectionDialog();
     }
-
 }
 
 void KeySelectionJob::Private::nextKey( const GpgME::Key& key )
@@ -130,6 +138,12 @@ void KeySelectionJob::Private::keySelectionDialogClosed()
 
 void KeySelectionJob::Private::startKeyListing()
 {
+    if ( m_useCache )
+    {
+        m_keys = KeyCache::instance()->keys();
+        QTimer::singleShot( 0, q, SLOT( keyListingDone() ) );
+        return;
+    }
     m_keyListings = 2; // openpgp and cms
     KeyListJob *keylisting = CryptoBackendFactory::instance()->protocol( "openpgp" )->keyListJob();
     QObject::connect( keylisting, SIGNAL( result( GpgME::KeyListResult ) ),
@@ -203,6 +217,17 @@ bool KeySelectionJob::silent() const
 {
     return d->m_silent;
 }
+
+void KeySelectionJob::setUseKeyCache( bool useCache )
+{
+    d->m_useCache = useCache;
+}
+
+bool KeySelectionJob::useKeyCache() const
+{
+    return d->m_useCache;
+}
+
 
 #include "keyselectionjob.moc"
 
