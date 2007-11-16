@@ -37,6 +37,7 @@
 #include "models/keycache.h"
 
 #include <kleo/keylistjob.h>
+#include <kleo/cryptobackendfactory.h>
 
 #include <QPointer>
 #include <QStringList>
