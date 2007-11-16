@@ -10,13 +10,13 @@
    </rect>
   </property>
   <property name="windowTitle" >
-   <string>Select a key</string>
+   <string>Select a Certificate</string>
   </property>
   <layout class="QVBoxLayout" >
    <item>
     <widget class="QLabel" name="instructionLabel" >
      <property name="text" >
-      <string>Please select a key from the list below:</string>
+      <string>Please select a certificate from the list below:</string>
      </property>
     </widget>
    </item>

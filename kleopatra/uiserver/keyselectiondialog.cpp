@@ -58,15 +58,14 @@ struct KeySelectionDialog::Private {
 
 
 KeySelectionDialog::Private::Private( KeySelectionDialog * _q)
-    :q( _q ), ui(), m_mode( MultiSelection )
+    :q( _q ), ui(), m_model( AbstractKeyListModel::createFlatKeyListModel( q ) ), m_mode( MultiSelection )
 {
-    m_model = AbstractKeyListModel::createFlatKeyListModel( q );
     ui.setupUi( q );
     connect ( ui.buttonBox, SIGNAL( accepted() ), q, SLOT( accept() ) );
     connect ( ui.buttonBox, SIGNAL( rejected() ), q, SLOT( reject() ) );
     ui.listView->setModel( m_model );
-    q->setSelectionMode( MultiSelection );
-
+    ui.listView->setSelectionMode( QAbstractItemView::MultiSelection );
+    setLabelText();
 }
 
 KeySelectionDialog::KeySelectionDialog( QWidget * parent, Qt::WindowFlags flags ) : QDialog( parent, flags ), d( new KeySelectionDialog::Private( this ) )
@@ -95,8 +94,8 @@ void KeySelectionDialog::Private::setLabelText()
     if ( m_customText.isNull() ) 
     {
         ui.instructionLabel->setText( m_mode == SingleSelection ? 
-                                      i18n( "Please select a key from the list below:" ) : 
-                                      i18n( "Please select one or more keys from the list below:" ) );
+                                      i18n( "Please select a certificate from the list below:" ) : 
+                                      i18n( "Please select one or more certificates from the list below:" ) );
     }
     else
     {

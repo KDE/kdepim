@@ -235,7 +235,7 @@ GpgME::Key RecipientResolveWidget::chosenCertificate() const
 
 void RecipientResolveWidget::Private::selectAnotherCertificate()
 {
-    QPointer<KeySelectionDialog> dlg( new KeySelectionDialog( q ) );
+    QPointer<KeySelectionDialog> dlg = new KeySelectionDialog( q );
     dlg->setSelectionMode( KeySelectionDialog::SingleSelection );
     dlg->addKeys( KeyCache::instance()->keys() );
     if ( dlg->exec() == QDialog::Accepted )
