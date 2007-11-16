@@ -44,8 +44,6 @@
 #include <map>
 #include <vector>
 
-#include "assuancommandprivatebase_p.h"
-
 class QVariant;
 class QIODevice;
 class QObject;
@@ -62,6 +60,9 @@ namespace Types {
 }
 
 namespace Kleo {
+
+    class Input;
+    class Output;
 
     class AssuanCommandFactory;
 
@@ -277,21 +278,27 @@ namespace Kleo {
         QVariant option( const char * opt ) const;
         const std::map<std::string,QVariant> & options() const;
 
+        const std::vector< boost::shared_ptr<Input> > & inputs() const;
+        const std::vector< boost::shared_ptr<Input> > & messages() const;
+        const std::vector< boost::shared_ptr<Output> > & outputs() const;
+
         QStringList fileNames() const;
         std::vector< boost::shared_ptr<QFile> > files() const;
         unsigned int numFiles() const;
 
-        QString bulkInputDeviceFileName( unsigned int idx=0 ) const;
-        QString bulkMessageDeviceFileName( unsigned int idx=0 ) const;
-        QString bulkOutputDeviceFileName( unsigned int idx=0 ) const;
+#if 0
+        KDE_DEPRECATED QString bulkInputDeviceFileName( unsigned int idx=0 ) const;
+        KDE_DEPRECATED QString bulkMessageDeviceFileName( unsigned int idx=0 ) const;
+        KDE_DEPRECATED QString bulkOutputDeviceFileName( unsigned int idx=0 ) const;
 
-        boost::shared_ptr<QIODevice> bulkInputDevice( unsigned int idx=0 ) const;
-        boost::shared_ptr<QIODevice> bulkMessageDevice( unsigned int idx=0 ) const;
-        boost::shared_ptr<QIODevice> bulkOutputDevice( unsigned int idx=0 ) const;
+        KDE_DEPRECATED boost::shared_ptr<QIODevice> bulkInputDevice( unsigned int idx=0 ) const;
+        KDE_DEPRECATED boost::shared_ptr<QIODevice> bulkMessageDevice( unsigned int idx=0 ) const;
+        KDE_DEPRECATED boost::shared_ptr<QIODevice> bulkOutputDevice( unsigned int idx=0 ) const;
 
-        unsigned int numBulkInputDevices() const;
-        unsigned int numBulkMessageDevices() const;
-        unsigned int numBulkOutputDevices() const;
+        KDE_DEPRECATED unsigned int numBulkInputDevices() const;
+        KDE_DEPRECATED unsigned int numBulkMessageDevices() const;
+        KDE_DEPRECATED unsigned int numBulkOutputDevices() const;
+#endif
 
         int sendStatus( const char * keyword, const QString & text );
         int sendStatusEncoded( const char * keyword, const std::string & text );
@@ -311,7 +318,6 @@ namespace Kleo {
 
     private:
         friend class ::Kleo::AssuanCommandFactory;
-        friend class ::Kleo::AssuanCommandPrivateBase;
         class Private;
         kdtools::pimpl_ptr<Private> d;
     };

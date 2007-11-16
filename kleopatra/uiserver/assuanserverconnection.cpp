@@ -45,7 +45,8 @@
 #include "kleo-assuan.h"
 #include "hex.h"
 
-#include <utils/kdpipeiodevice.h>
+#include "input.h"
+#include "output.h"
 
 #include <gpgme++/data.h>
 
@@ -56,8 +57,6 @@
 #include <QSocketNotifier>
 #include <QVariant>
 #include <QPointer>
-#include <QFile>
-#include <QTemporaryFile>
 #include <QFileInfo>
 #include <QDebug>
 #include <QStringList>
@@ -65,6 +64,7 @@
 #include <boost/type_traits/remove_pointer.hpp>
 #include <boost/lexical_cast.hpp>
 #include <boost/bind.hpp>
+#include <boost/mpl/if.hpp>
 
 #include <vector>
 #include <map>
@@ -90,11 +90,6 @@ using namespace Kleo;
 using namespace boost;
 
 namespace {
-    struct IO {
-        QString fileName;
-        shared_ptr<QIODevice> iodev;
-    };
-
     struct IOF {
         QString fileName;
         shared_ptr<QFile> file;
@@ -106,12 +101,6 @@ namespace {
 #else
         return (qint64)getpid();
 #endif
-    }
-
-    static void close_all( const std::vector<IO> & ios ) {
-        Q_FOREACH( const IO & io, ios )
-            if ( io.iodev && io.iodev->isOpen() )
-                io.iodev->close();
     }
 
     static void close_all( const std::vector<IOF> & ios ) {
@@ -312,9 +301,11 @@ private:
         return assuan_process_done( ctx_, assuan_send_data( ctx_, ba.constData(), ba.size() ) );
     }
 
+    template <bool in> struct Input_or_Output : mpl::if_c<in,Input,Output> {};
+
     // format: TAG (FD|FD=\d+|FILE=...)
-    template <typename T_memptr>
-    static int IO_handler( assuan_context_t ctx_, char * line_, bool in, T_memptr which ) {
+    template <bool in, typename T_memptr>
+    static int IO_handler( assuan_context_t ctx_, char * line_, T_memptr which ) {
         assert( assuan_get_pointer( ctx_ ) );
         AssuanServerConnection::Private & conn = *static_cast<AssuanServerConnection::Private*>( assuan_get_pointer( ctx_ ) );
 
@@ -324,7 +315,7 @@ private:
             if ( options.size() < 1 || options.size() > 2 )
                 throw gpg_error( GPG_ERR_ASS_SYNTAX );
 
-            IO io;
+            shared_ptr< typename Input_or_Output<in>::type > io;
 
             if ( options.count( "FD" ) ) {
 
@@ -346,11 +337,7 @@ private:
 #endif
                 }
 
-                std::auto_ptr<KDPipeIODevice> pio( new KDPipeIODevice );
-                if ( !pio->open( fd, in ? QIODevice::ReadOnly : QIODevice::WriteOnly ) )
-                    throw gpg_error_from_errno( errno );
-
-                io.iodev = pio;
+                io = Input_or_Output<in>::type::createFromPipeDevice( fd, i18n( "Message #%1", (conn.*which).size() ) );
 
                 options.erase( "FD" );
 
@@ -366,21 +353,7 @@ private:
                 if ( !fi.isAbsolute() )
                     throw assuan_exception( gpg_error( GPG_ERR_INV_ARG ), i18n("Only absolute file paths are allowed") );
 
-                io.fileName = fi.absoluteFilePath();
-
-                if ( in ) {
-                    std::auto_ptr<QFile> f( new QFile( io.fileName ) );
-                    if ( !f->open( QIODevice::ReadOnly ) )
-                        throw assuan_exception( gpg_error_from_errno( errno ),
-                                                i18n( "Couldn't open file \"%1\" for reading", io.fileName ) );
-                    io.iodev = f;
-                } else {
-                    std::auto_ptr<QTemporaryFile> f( new QTemporaryFile( io.fileName ) );
-                    if ( !f->open() )
-                        throw assuan_exception( gpg_error_from_errno( errno ),
-                                                i18n( "Couldn't create temporary file \"%1\"", f->fileName() ) );
-                    io.iodev = f;
-                }
+                io = Input_or_Output<in>::type::createFromFile( fi.absoluteFilePath(), true );
 
                 options.erase( "FILE" );
 
@@ -395,8 +368,7 @@ private:
 
             (conn.*which).push_back( io );
 
-            qDebug() << "AssuanServerConnection: added" << (in ? "input" : "output") << '('
-                     << io.fileName << io.iodev << ')';
+            qDebug() << "AssuanServerConnection: added" << io->label();
 
             return assuan_process_done( conn.ctx.get(), 0 );
         } catch ( const GpgME::Exception & e ) {
@@ -412,15 +384,15 @@ private:
     }
 
     static int input_handler( assuan_context_t ctx, char * line ) {
-        return IO_handler( ctx, line, true, &Private::inputs );
+        return IO_handler<true>( ctx, line, &Private::inputs );
     }
 
     static int output_handler( assuan_context_t ctx, char * line ) {
-        return IO_handler( ctx, line, false, &Private::outputs );
+        return IO_handler<false>( ctx, line, &Private::outputs );
     }
 
     static int message_handler( assuan_context_t ctx, char * line ) {
-        return IO_handler( ctx, line, true, &Private::messages );
+        return IO_handler<true>( ctx, line, &Private::messages );
     }
 
     static int file_handler( assuan_context_t ctx_, char * line ) {
@@ -539,11 +511,14 @@ private:
         mementos.clear();
         close_all( files );
         files.clear();
-        close_all( inputs );
+        std::for_each( inputs.begin(), inputs.end(),
+                       bind( &Input::finalize, _1 ) );
         inputs.clear();
-        close_all( outputs );
+        std::for_each( outputs.begin(), outputs.end(),
+                       bind( &Output::finalize, _1 ) );
         outputs.clear();
-        close_all( messages );
+        std::for_each( messages.begin(), messages.end(),
+                       bind( &Input::finalize, _1 ) );
         messages.clear();
     }
 
@@ -556,7 +531,8 @@ private:
     std::vector< shared_ptr<AssuanCommand> > nohupedCommands;
     std::map<std::string,QVariant> options;
     std::vector<KMime::Types::Mailbox> senders, recipients;
-    std::vector<IO> inputs, outputs, messages;
+    std::vector< shared_ptr<Input> > inputs, messages;
+    std::vector< shared_ptr<Output> > outputs;
     std::vector<IOF> files;
     std::map< QByteArray, shared_ptr<AssuanCommand::Memento> > mementos;
 };
@@ -725,14 +701,14 @@ public:
     Private() : done( false ), nohup( false ) {}
 
     std::map<std::string,QVariant> options;
-    std::vector<IO> inputs, messages, outputs;
+    std::vector< shared_ptr<Input> > inputs, messages;
+    std::vector< shared_ptr<Output> > outputs;
     std::vector<IOF> files;
     std::vector<KMime::Types::Mailbox> recipients, senders;
     QByteArray utf8ErrorKeepAlive;
     AssuanContext ctx;
     bool done;
     bool nohup;
-public:
 };
 
 AssuanCommand::AssuanCommand()
@@ -848,6 +824,18 @@ void AssuanCommand::removeMemento( const QByteArray & tag ) {
     conn.mementos.erase( tag );
 }
 
+const std::vector< shared_ptr<Input> > & AssuanCommand::inputs() const {
+    return d->inputs;
+}
+
+const std::vector< shared_ptr<Input> > & AssuanCommand::messages() const {
+    return d->messages;
+}
+
+const std::vector< shared_ptr<Output> > & AssuanCommand::outputs() const {
+    return d->outputs;
+}
+
 QStringList AssuanCommand::fileNames() const {
     QStringList result;
     Q_FOREACH( const IOF & io, d->files )
@@ -866,6 +854,7 @@ unsigned int AssuanCommand::numFiles() const {
     return d->files.size();
 }
 
+#if 0
 QString AssuanCommand::bulkInputDeviceFileName( unsigned int idx ) const {
     return d->inputs.at( idx ).fileName;
 }
@@ -903,6 +892,7 @@ shared_ptr<QIODevice> AssuanCommand::bulkOutputDevice( unsigned int idx ) const 
 unsigned int AssuanCommand::numBulkOutputDevices() const {
     return d->outputs.size();
 }
+#endif
 
 int AssuanCommand::sendStatus( const char * keyword, const QString & text ) {
     return sendStatusEncoded( keyword, text.toUtf8().constData() );
@@ -970,9 +960,15 @@ void AssuanCommand::done( int err ) {
 
     d->done = true;
 
-    close_all( d->inputs );
-    close_all( d->messages );
-    close_all( d->outputs );
+    std::for_each( d->messages.begin(), d->messages.end(),
+                   bind( &Input::finalize, _1 ) );
+    std::for_each( d->inputs.begin(), d->inputs.end(),
+                   bind( &Input::finalize, _1 ) );
+    std::for_each( d->outputs.begin(), d->outputs.end(),
+                   bind( &Output::finalize, _1 ) );
+    d->messages.clear();
+    d->inputs.clear();
+    d->outputs.clear();
     close_all( d->files ); // ### ???
 
     if ( d->nohup ) {

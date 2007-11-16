@@ -69,7 +69,7 @@ PrepEncryptCommand::~PrepEncryptCommand() {}
 
 void PrepEncryptCommand::Private::checkForErrors() const {
 
-    if ( q->numBulkInputDevices() || q->numBulkOutputDevices() || q->numBulkMessageDevices() )
+    if ( !q->inputs().empty() || !q->outputs().empty() || !q->messages().empty() )
         throw assuan_exception( makeError( GPG_ERR_CONFLICT ),
                                 i18n( "INPUT/OUTPUT/MESSAGE may only be given after PREP_ENCRYPT" ) );
     

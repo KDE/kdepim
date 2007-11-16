@@ -86,15 +86,15 @@ void SignCommand::Private::checkForErrors() const {
         throw assuan_exception( makeError( GPG_ERR_CONFLICT ),
                                 i18n( "RECIPIENT may not be given prior to SIGN" ) );
 
-    if ( !q->numBulkInputDevices() )
+    if ( q->inputs().empty() )
         throw assuan_exception( makeError( GPG_ERR_ASS_NO_INPUT ),
                                 i18n( "At least one INPUT must be present" ) );
 
-    if ( q->numBulkOutputDevices() != q->numBulkInputDevices() )
+    if ( q->outputs().size() != q->inputs().size() )
         throw assuan_exception( makeError( GPG_ERR_ASS_NO_INPUT ),
                                 i18n( "INPUT/OUTPUT count mismatch" ) );
 
-    if ( q->numBulkMessageDevices() )
+    if ( !q->messages().empty() )
         throw assuan_exception( makeError( GPG_ERR_INV_VALUE ),
                                 i18n( "MESSAGE command is not allowed before SIGN" ) );
 

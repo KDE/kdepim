@@ -40,6 +40,8 @@
 #include "classify.h"
 #include "detail_p.h"
 #include "hex.h"
+#include "input.h"
+#include "output.h"
 
 #include <models/keycache.h>
 #include <models/predicates.h>
@@ -51,6 +53,7 @@
 #include <kleo/verifydetachedjob.h>
 #include <kleo/decryptjob.h>
 #include <kleo/decryptverifyjob.h>
+#include <kleo/cryptobackendfactory.h>
 
 #include <gpgme++/error.h>
 #include <gpgme++/key.h>
@@ -196,66 +199,23 @@ namespace {
         
     };
 
-    struct Input {
+    struct DVTask {
     private:
-        Input( const Input & );
-        Input & operator=( const Input & );
+        DVTask( const DVTask & );
+        DVTask & operator=( const DVTask & );
     public:
 
-        Input() : type( VerifyDetached ), backend( 0 ) {}
+        DVTask() : type( VerifyDetached ), backend( 0 ) {}
 
         Type type;
 
-        struct _Input {
-            shared_ptr<QIODevice> io;
-            QString fileName;
-            shared_ptr<QFile> file; // only used when != {INPUT,MESSAGE} (shared_ptr b/c QFile isn't copyable)
-        } input, signedData;
+        shared_ptr<Input> input, signedData;
 
-        struct _Output {
-            shared_ptr<QIODevice> io;
-            QString fileName;
-            shared_ptr<TemporaryFile> tmp;
-            bool in_progress;
-        } output;
+        shared_ptr<Output> output;
 
         const CryptoBackend::Protocol* backend;
 
         shared_ptr<DVResult> result;
-
-        static _Input fromOpenFile( const shared_ptr<QFile> & file ) {
-            assuan_assert( file->isOpen() );
-            const _Input input = {
-                file, file->fileName(), file
-            };
-            return input;
-        }
-
-        static _Input openExistingFile( const QString & fname ) {
-            if ( fname.isEmpty() )
-                throw assuan_exception( gpg_error( GPG_ERR_ASS_NO_INPUT ), i18n("Empty filename provided") );
-            const shared_ptr<QFile> f( new QFile( fname ) );
-            if ( !f->open( QIODevice::ReadOnly ) ) // ### ask again?
-                throw assuan_exception( gpg_error( GPG_ERR_ASS_NO_INPUT ),
-                                        i18n("Can't open file \"%1\" for reading: %2", fname, f->errorString() ) );
-            const _Input input = {
-                f, fname, f
-            };
-            return input;
-        }
-
-        static _Output makeTemporaryOutput( const QString & fname ) {
-            const shared_ptr<TemporaryFile> tmp( new TemporaryFile( fname ) );
-            if ( !tmp->open() )
-                throw assuan_exception( gpg_error( GPG_ERR_ASS_NO_OUTPUT ),
-                                        i18n("Can't open temporary file \"%1\": %2", tmp->fileName(), tmp->errorString() ) );
-            const _Output output = {
-                tmp, fname, tmp, false,
-            };
-            return output;
-        }
-
-        void finalizeOutput( QWidget * parent );
 
     };
 
@@ -270,7 +230,7 @@ public:
         : QObject(),
           q( qq ),
           wizard(),
-          inputList(),
+          taskList(),
           m_errorString(),
           m_error( 0U )
     {
@@ -280,10 +240,10 @@ public:
     ~Private() {
     }
 
-    std::vector< shared_ptr<Input> > buildInputList();
-    static shared_ptr<Input> inputFromOperationWidget( const DecryptVerifyOperationWidget * w, const shared_ptr<QFile> & file, const QDir & outDir );
+    std::vector< shared_ptr<DVTask> > buildTaskList();
+    static shared_ptr<DVTask> taskFromOperationWidget( const DecryptVerifyOperationWidget * w, const shared_ptr<QFile> & file, const QDir & outDir );
 
-    void startJobs();
+    void startTasks();
 
     void trySendingStatusEncoded( const char * tag, const std::string & str ) const {
         // ### FIXME: make AssuanCommand::sendStatusEncoded() throw the exception
@@ -384,7 +344,7 @@ private Q_SLOTS:
 
 private:
     QPointer<DecryptVerifyWizard> wizard;
-    std::vector< shared_ptr<Input> > inputList;
+    std::vector< shared_ptr<DVTask> > taskList;
     QHash<QObject*, unsigned int> m_senderToId;
     QString m_errorString;
     unsigned int m_error;
@@ -401,14 +361,14 @@ DecryptVerifyCommand::~DecryptVerifyCommand() {}
 
 int DecryptVerifyCommand::doStart() {
 
-    d->inputList = d->buildInputList();
+    d->taskList = d->buildTaskList();
 
-    if ( d->inputList.empty() )
+    if ( d->taskList.empty() )
         throw assuan_exception( makeError( GPG_ERR_ASS_NO_INPUT ),
                                 i18n("No usable inputs found") );
 
     try {
-        d->startJobs();
+        d->startTasks();
         return 0;
     } catch ( ... ) {
         //d->showWizard();
@@ -422,7 +382,7 @@ void DecryptVerifyCommand::doCanceled() {
         d->wizard->close();
 }
 
-std::vector< shared_ptr<Input> > DecryptVerifyCommand::Private::buildInputList()
+std::vector< shared_ptr<DVTask> > DecryptVerifyCommand::Private::buildTaskList()
 {
     if ( !q->senders().empty() )
         throw assuan_exception( q->makeError( GPG_ERR_CONFLICT ),
@@ -432,9 +392,9 @@ std::vector< shared_ptr<Input> > DecryptVerifyCommand::Private::buildInputList()
         throw assuan_exception( q->makeError( GPG_ERR_CONFLICT ),
                                 i18n("Can't use RECIPIENT") );
 
-    const unsigned int numInputs = q->numBulkInputDevices();
-    const unsigned int numMessages = q->numBulkMessageDevices();
-    const unsigned int numOutputs  = q->numBulkOutputDevices();
+    const unsigned int numInputs = q->inputs().size();
+    const unsigned int numMessages = q->messages().size();
+    const unsigned int numOutputs  = q->outputs().size();
 
     const unsigned int op = q->operation();
     const Mode mode = q->mode();
@@ -444,7 +404,7 @@ std::vector< shared_ptr<Input> > DecryptVerifyCommand::Private::buildInputList()
 
     assuan_assert( op != 0 );
 
-    std::vector< shared_ptr<Input> > inputs;
+    std::vector< shared_ptr<DVTask> > tasks;
 
     if ( mode == EMail ) {
 
@@ -491,28 +451,25 @@ std::vector< shared_ptr<Input> > DecryptVerifyCommand::Private::buildInputList()
 
         for ( unsigned int i = 0 ; i < numInputs ; ++i ) {
 
-            shared_ptr<Input> input( new Input );
-            input->type = type;
+            shared_ptr<DVTask> task( new DVTask );
+            task->type = type;
 
-            input->input.io = q->bulkInputDevice( i );
-            input->input.fileName = q->bulkInputDeviceFileName( i );
-            assuan_assert( input->input.io );
+            task->input = q->inputs().at( i );
+            assuan_assert( task->input->ioDevice() );
 
             if ( type == VerifyDetached ) {
-                input->signedData.io = q->bulkInputDevice( i );
-                input->signedData.fileName = q->bulkInputDeviceFileName( i );
-                assuan_assert( input->signedData.io );
+                task->signedData = q->messages().at( i );
+                assuan_assert( task->signedData->ioDevice() );
             }
 
             if ( numOutputs ) {
-                input->output.io = q->bulkOutputDevice( i );
-                input->output.fileName = q->bulkOutputDeviceFileName( i );
-                assuan_assert( input->output.io );
+                task->output = q->outputs().at( i );
+                assuan_assert( task->output->ioDevice() );
             }
 
-            input->backend = backend;
+            task->backend = backend;
 
-            inputs.push_back( input );
+            tasks.push_back( task );
         }
 
     } else {
@@ -600,33 +557,33 @@ std::vector< shared_ptr<Input> > DecryptVerifyCommand::Private::buildInputList()
 
         for ( unsigned int i = 0 ; i < counter ; ++i )
             try {
-                inputs.push_back( inputFromOperationWidget( wizard->operationWidget( i ), files[i], outDir ) );
+                tasks.push_back( taskFromOperationWidget( wizard->operationWidget( i ), files[i], outDir ) );
             } catch ( const GpgME::Exception & e ) {
                 //addResult( DVResult::fromDecryptVerifyResult( e.error(), e.what(), i ) );
             }
         
     }
 
-    return inputs;
+    return tasks;
 }
 
-static const CryptoBackend::Protocol * backendFor( const QString & str ) {
-    return CryptoBackendFactory::instance()->protocol( findProtocol( str ) );
+static const CryptoBackend::Protocol * backendFor( const shared_ptr<Input> & input ) {
+    return CryptoBackendFactory::instance()->protocol( findProtocol( input->classification() ) );
 }
 
 // static
-shared_ptr<Input> DecryptVerifyCommand::Private::inputFromOperationWidget( const DecryptVerifyOperationWidget * w, const shared_ptr<QFile> & file, const QDir & outDir) {
+shared_ptr<DVTask> DecryptVerifyCommand::Private::taskFromOperationWidget( const DecryptVerifyOperationWidget * w, const shared_ptr<QFile> & file, const QDir & outDir) {
 
     assuan_assert( w );
 
-    shared_ptr<Input> input( new Input );
+    shared_ptr<DVTask> task( new DVTask );
 
     switch ( w->mode() ) {
     case DecryptVerifyOperationWidget::VerifyDetachedWithSignature:
 
-        input->type = VerifyDetached;
-        input->input = Input::fromOpenFile( file );
-        input->signedData = Input::openExistingFile( w->signedDataFileName() );
+        task->type = VerifyDetached;
+        task->input = Input::createFromFile( file );
+        task->signedData = Input::createFromFile( w->signedDataFileName() );
 
         assuan_assert( file->fileName() == w->inputFileName() );
 
@@ -634,9 +591,9 @@ shared_ptr<Input> DecryptVerifyCommand::Private::inputFromOperationWidget( const
 
     case DecryptVerifyOperationWidget::VerifyDetachedWithSignedData:
 
-        input->type = VerifyDetached;
-        input->input = Input::openExistingFile( w->inputFileName() );
-        input->signedData = Input::fromOpenFile( file );
+        task->type = VerifyDetached;
+        task->input = Input::createFromFile( w->inputFileName() );
+        task->signedData = Input::createFromFile( file );
 
         assuan_assert( file->fileName() == w->signedDataFileName() );
 
@@ -644,69 +601,69 @@ shared_ptr<Input> DecryptVerifyCommand::Private::inputFromOperationWidget( const
 
     case DecryptVerifyOperationWidget::DecryptVerifyOpaque:
 
-        input->type = DecryptVerify;
-        input->input = Input::fromOpenFile( file );
-        input->output = Input::makeTemporaryOutput( outDir.absoluteFilePath( outputFileName( QFileInfo( file->fileName() ).fileName() ) ) );
+        task->type = DecryptVerify;
+        task->input = Input::createFromFile( file );
+        task->output = Output::createFromFile( outDir.absoluteFilePath( outputFileName( QFileInfo( file->fileName() ).fileName() ) ), false );
 
         assuan_assert( file->fileName() == w->inputFileName() );
 
         break;
     }
 
-    input->backend = backendFor( input->input.fileName );
+    task->backend = backendFor( task->input );
 
-    return input;
+    return task;
 }
 
 
 
-void DecryptVerifyCommand::Private::startJobs()
+void DecryptVerifyCommand::Private::startTasks()
 {
-    assuan_assert( !inputList.empty() );
+    assuan_assert( !taskList.empty() );
 
     unsigned int i = 0;
-    Q_FOREACH ( shared_ptr<Input> input, inputList ) {
+    Q_FOREACH ( shared_ptr<DVTask> task, taskList ) {
 
-        assuan_assert( input->backend );
+        assuan_assert( task->backend );
 
         QPointer<QObject> that = this;
-        switch ( input->type ) {
+        switch ( task->type ) {
         case Decrypt:
             try {
-                DecryptJob * const job = input->backend->decryptJob();
+                DecryptJob * const job = task->backend->decryptJob();
                 assuan_assert( job );
                 registerJob( i, job );
-                job->start( input->input.io, input->output.io );
+                job->start( task->input->ioDevice(), task->output->ioDevice() );
             } catch ( const GpgME::Exception & e ) {
                 addResult( i, DVResult::fromDecryptResult( e.error() ) );
             }
             break;
         case DecryptVerify:
             try {
-                DecryptVerifyJob * const job = input->backend->decryptVerifyJob();
+                DecryptVerifyJob * const job = task->backend->decryptVerifyJob();
                 assuan_assert( job );
                 registerJob( i, job );
-                job->start( input->input.io, input->output.io );
+                job->start( task->input->ioDevice(), task->output->ioDevice() );
             } catch ( const GpgME::Exception & e ) {
                 addResult( i, DVResult::fromDecryptVerifyResult( e.error() ) );
             }
             break;
         case VerifyOpaque:
             try {
-                VerifyOpaqueJob * const job = input->backend->verifyOpaqueJob();
+                VerifyOpaqueJob * const job = task->backend->verifyOpaqueJob();
                 assuan_assert( job );
                 registerJob( i, job );
-                job->start( input->input.io, input->output.io );
+                job->start( task->input->ioDevice(), task->output->ioDevice() );
             } catch ( const GpgME::Exception & e ) {
                 addResult( i, DVResult::fromVerifyOpaqueResult( e.error() ) );
             }
             break;
         case VerifyDetached:
             try {
-                VerifyDetachedJob * const job = input->backend->verifyDetachedJob();
+                VerifyDetachedJob * const job = task->backend->verifyDetachedJob();
                 assuan_assert( job );
                 registerJob( i, job );
-                job->start( input->input.io, input->signedData.io );
+                job->start( task->input->ioDevice(), task->signedData->ioDevice() );
             } catch ( const GpgME::Exception & e ) {
                 addResult( i, DVResult::fromVerifyDetachedResult( e.error() ) );
             }
@@ -779,27 +736,21 @@ QString DecryptVerifyCommand::Private::signatureToString( const Signature & sig,
             return i18n("Invalid signature by %1: %2", keyToString( key ), QString::fromLocal8Bit( sig.status().asString() ) );
 }
 
-static QStringList labels( const std::vector< shared_ptr<Input> > & inputList )
+static QStringList labels( const std::vector< shared_ptr<DVTask> > & taskList )
 {
     QStringList labels;
-    for ( unsigned int i = 0, end = inputList.size() ; i < end ; ++i ) {
-        const shared_ptr<Input> & input = inputList[i];
-        switch ( input->type ) {
+    for ( unsigned int i = 0, end = taskList.size() ; i < end ; ++i ) {
+        const shared_ptr<DVTask> & task = taskList[i];
+        switch ( task->type ) {
         case Decrypt:
         case DecryptVerify:
-            labels.push_back( input->input.fileName.isEmpty()
-                              ? i18n( "Decrypting message #%1...", i )
-                              : i18n( "Decrypting file %1...", input->input.fileName ) );
+            labels.push_back( i18n( "Decrypting: %1...", task->input->label() ) );
             break;
         case VerifyOpaque:
-            labels.push_back( input->input.fileName.isEmpty()
-                              ? i18n( "Verifying message #%1...", i )
-                              : i18n( "Verifying file %1...", input->input.fileName ) );
+            labels.push_back( i18n( "Verifying: %1...", task->input->label() ) );
             break;
         case VerifyDetached:
-            labels.push_back( input->input.fileName.isEmpty()
-                              ? i18n( "Verifying message #%1...", i )
-                              : i18n( "Verifying signature %1...", input->input.fileName ) );
+            labels.push_back( i18n( "Verifying signature: %1...", task->input->label() ) );
             break;
         }
     }
@@ -811,20 +762,20 @@ void DecryptVerifyCommand::Private::slotProgress( const QString& what, int curre
     // FIXME report progress, via sendStatus()
 }
 
-struct ResultPresentAndOutputNotInProgress {
+struct ResultPresentAndOutputFinalized {
     typedef bool result_type;
 
-    bool operator()( const shared_ptr<Input> & input ) const {
-        return input->result && !input->output.in_progress ;
+    bool operator()( const shared_ptr<DVTask> & task ) const {
+        return task->result && task->output->isFinalized() ;
     }
 };
 
 void DecryptVerifyCommand::Private::addResult( unsigned int id, const DVResult & res )
 {
-    assert( !inputList[id]->result );
+    assert( !taskList[id]->result );
 
     const shared_ptr<DVResult> result( new DVResult( res ) );
-    inputList[id]->result = result;
+    taskList[id]->result = result;
 
     qDebug( "addResult: %d (%p)", id, result.get() );
 
@@ -840,7 +791,7 @@ void DecryptVerifyCommand::Private::addResult( unsigned int id, const DVResult &
         try {
 
             QPointer<QObject> that = this;
-            inputList[id]->finalizeOutput( wizard );
+            taskList[id]->output->finalize( /*wizard*/ );
             if ( !that )
                 return;
 
@@ -858,15 +809,15 @@ void DecryptVerifyCommand::Private::addResult( unsigned int id, const DVResult &
         m_errorString = result->errorString;
     }
 
-    if ( kdtools::all( inputList.begin(), inputList.end(), ResultPresentAndOutputNotInProgress() ) )
+    if ( kdtools::all( taskList.begin(), taskList.end(), ResultPresentAndOutputFinalized() ) )
         sendSigStatii();
 }
 
 void DecryptVerifyCommand::Private::sendSigStatii() const {
 
-    Q_FOREACH( const shared_ptr<Input> & input, inputList ) {
+    Q_FOREACH( const shared_ptr<DVTask> & task, taskList ) {
 
-        const shared_ptr<DVResult> result = input->result;
+        const shared_ptr<DVResult> result = task->result;
         if ( !result )
             continue;
 
@@ -888,52 +839,5 @@ void DecryptVerifyCommand::Private::sendSigStatii() const {
     finishCommand();
 }
 
-struct OutputGuard {
-    Input::_Output & o;
-    explicit OutputGuard( Input::_Output & o_ ) : o( o_ ) { o.in_progress = true; }
-    ~OutputGuard() { o.in_progress = false; }
-};
-
-static bool obtainOverwritePermission( const QString & fileName, QWidget * parent ) {
-    return KMessageBox::questionYesNo( parent, i18n("The file <b>%1</b> already exists.\n"
-                                                    "Overwrite?", fileName ),
-                                       i18n("Overwrite Existing File?"), KStandardGuiItem::overwrite(), KStandardGuiItem::cancel() ) == KMessageBox::Yes ;
-}
-
-void Input::finalizeOutput( QWidget * parent ) {
-    if ( !output.tmp )
-        return;
-    if ( output.in_progress )
-        return;
-
-    const OutputGuard guard( output );
-
-    if ( output.tmp->isOpen() )
-        output.tmp->close();
-
-    const QString tmpFileName = output.tmp->oldFileName();
-
-    if ( QFile::rename( tmpFileName, output.fileName ) ) {
-        output.tmp->setAutoRemove( false );
-        return;
-    }
-
-    if ( !obtainOverwritePermission( output.fileName, parent ) )
-        throw assuan_exception( gpg_error( GPG_ERR_CANCELED ),
-                                i18n( "Overwriting declined" ) );
-
-    if ( !QFile::remove( output.fileName ) )
-        throw assuan_exception( errno ? gpg_error_from_errno( errno ) : gpg_error( GPG_ERR_EIO ),
-                                i18n("Couldn't remove file \"%1\" for overwriting.", output.fileName ) );
-
-    if ( QFile::rename( tmpFileName, output.fileName ) ) {
-        output.tmp->setAutoRemove( false );
-        return;
-    }
-
-    throw assuan_exception( errno ? gpg_error_from_errno( errno ) : gpg_error( GPG_ERR_EIO ),
-                            i18n( "Couldn't rename file \"%1\" to \"%2\"",
-                                  tmpFileName, output.fileName ) );
-}
 
 #include "decryptverifycommand.moc"

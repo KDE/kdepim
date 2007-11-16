@@ -36,6 +36,9 @@
 #include "assuancommand.h"
 #include "certificateresolver.h"
 #include "signencryptwizard.h"
+#include "encryptemailtask.h"
+#include "input.h"
+#include "output.h"
 
 #include <utils/stl_util.h>
 
@@ -62,13 +65,20 @@ public:
 private:
     void slotWizardRecipientsResolved();
     void slotWizardCanceled();
+    void slotTaskDone();
 
 private:
     void ensureWizardCreated();
     void ensureWizardVisible();
-    void cancelAllJobs();
+    void cancelAllTasks();
+
+    void schedule();
+    shared_ptr<EncryptEMailTask> takeRunnable( GpgME::Protocol proto );
+    void connectTask( const shared_ptr<Task> & task, unsigned int idx );
 
 private:
+    std::vector< shared_ptr<EncryptEMailTask> > runnable, completed;
+    shared_ptr<EncryptEMailTask> cms, openpgp;
     weak_ptr<AssuanCommand> command;
     QPointer<SignEncryptWizard> wizard;
     Protocol protocol;
@@ -76,6 +86,9 @@ private:
 
 EncryptEMailController::Private::Private( EncryptEMailController * qq )
     : q( qq ),
+      runnable(),
+      cms(),
+      openpgp(),
       command(),
       wizard(),
       protocol( UnknownProtocol )
@@ -148,25 +161,119 @@ void EncryptEMailController::Private::slotWizardCanceled() {
 }
 
 void EncryptEMailController::importIO() {
-    notImplemented();
+
+    const shared_ptr<AssuanCommand> cmd = d->command.lock();
+    assuan_assert( cmd );
+
+    const std::vector< shared_ptr<Input> > & inputs = cmd->inputs();
+    assuan_assert( !inputs.empty() );
+
+    const std::vector< shared_ptr<Output> > & outputs = cmd->outputs();
+    assuan_assert( outputs.size() == inputs.size() );
+
+    std::vector< shared_ptr<EncryptEMailTask> > tasks;
+    tasks.reserve( inputs.size() );
+
+    d->ensureWizardCreated();
+
+    const std::vector<Key> keys = d->wizard->resolvedCertificates();
+    assuan_assert( !keys.empty() );
+
+    for ( unsigned int i = 0, end = inputs.size() ; i < end ; ++i ) {
+
+        const shared_ptr<EncryptEMailTask> task( new EncryptEMailTask );
+        task->setInput( inputs[i] );
+        task->setOutput( outputs[i] );
+        task->setRecipients( keys );
+
+        tasks.push_back( task );
+    }
+
+    d->runnable.swap( tasks );
 }
 
 void EncryptEMailController::start() {
-    notImplemented();
+    d->schedule();
+}
+
+void EncryptEMailController::Private::schedule() {
+
+    if ( !cms )
+        if ( const shared_ptr<EncryptEMailTask> t = takeRunnable( CMS ) ) {
+            t->start();
+            cms = t;
+        }
+
+    if ( !openpgp )
+        if ( const shared_ptr<EncryptEMailTask> t = takeRunnable( OpenPGP ) ) {
+            t->start();
+            openpgp = t;
+        }
+
+    if ( !cms && !openpgp ) {
+        assuan_assert( runnable.empty() );
+        emit q->done();
+    }
+    
+}
+
+shared_ptr<EncryptEMailTask> EncryptEMailController::Private::takeRunnable( GpgME::Protocol proto ) {
+    const std::vector< shared_ptr<EncryptEMailTask> >::iterator it
+        = std::find_if( runnable.begin(), runnable.end(),
+                        bind( &EncryptEMailTask::protocol, _1 ) == proto );
+    if ( it == runnable.end() )
+        return shared_ptr<EncryptEMailTask>();
+
+    shared_ptr<EncryptEMailTask> result = *it;
+    runnable.erase( it );
+    return result;
+}
+
+void EncryptEMailController::Private::connectTask( const shared_ptr<Task> & t, unsigned int idx ) {
+    connect( t.get(), SIGNAL(done()), q, SLOT(slotTaskDone()) );
+    connect( t.get(), SIGNAL(error(int,QString)), q, SLOT(slotTaskDone()) );
+    ensureWizardCreated();
+    wizard->connectTask( t, idx );
+}
+
+void EncryptEMailController::Private::slotTaskDone() {
+    assert( q->sender() );
+    
+    // We could just delete the tasks here, but we can't use
+    // Qt::QueuedConnection here (we need sender()) and other slots
+    // might not yet have executed. Therefore, we push completed tasks
+    // into a burial container
+
+    if ( q->sender() == cms.get() ) {
+        completed.push_back( cms );
+        cms.reset();
+    } else if ( q->sender() == openpgp.get() ) {
+        completed.push_back( openpgp );
+        openpgp.reset();
+    }
 }
 
 void EncryptEMailController::cancel() {
     try {
         if ( d->wizard )
             d->wizard->close();
-        d->cancelAllJobs();
+        d->cancelAllTasks();
     } catch ( const std::exception & e ) {
         qDebug( "Caught exception: %s", e.what() );
     }
 }
 
-void EncryptEMailController::Private::cancelAllJobs() {
-    notImplemented();
+void EncryptEMailController::Private::cancelAllTasks() {
+
+    // we just kill all runnable tasks - this will not result in
+    // signal emissions.
+    runnable.clear();
+
+    // a cancel() will result in a call to 
+    if ( cms )
+        cms->cancel();
+    if ( openpgp )
+        openpgp->cancel();
 }
 
 void EncryptEMailController::Private::ensureWizardCreated() {

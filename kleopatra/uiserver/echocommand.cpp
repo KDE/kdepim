@@ -32,6 +32,9 @@
 
 #include "echocommand.h"
 
+#include "input.h"
+#include "output.h"
+
 #include <gpg-error.h>
 
 #include <QVariant>
@@ -62,10 +65,13 @@ EchoCommand::~EchoCommand() {}
 
 int EchoCommand::doStart() {
 
-    if ( bulkInputDevice() && !bulkOutputDevice() )
+    const std::vector< shared_ptr<Input> > in = inputs(), msg = messages();
+    const std::vector< shared_ptr<Output> > out = outputs();
+
+    if ( !in.empty() && out.empty() )
         return makeError( GPG_ERR_NOT_SUPPORTED );
 
-    if ( bulkMessageDevice() )
+    if ( !msg.empty() )
         return makeError( GPG_ERR_NOT_SUPPORTED );
 
     if ( hasOption( option_prefix ) && !option( option_prefix ).toByteArray().isEmpty() )
@@ -95,15 +101,15 @@ int EchoCommand::doStart() {
             ++d->operationsInFlight;
 
     // 3. if INPUT was given, start the data pump for input->output
-    if ( const shared_ptr<QIODevice> in = bulkInputDevice() ) {
-        const shared_ptr<QIODevice> out = bulkOutputDevice();
+    if ( const shared_ptr<QIODevice> i = in.at(0)->ioDevice() ) {
+        const shared_ptr<QIODevice> o = out.at(0)->ioDevice();
 
         ++d->operationsInFlight;
 
-        connect( in.get(), SIGNAL(readyRead()), this, SLOT(slotInputReadyRead()) );
-        connect( out.get(), SIGNAL(bytesWritten(qint64)), this, SLOT(slotOutputBytesWritten()) );
+        connect( i.get(), SIGNAL(readyRead()), this, SLOT(slotInputReadyRead()) );
+        connect( o.get(), SIGNAL(bytesWritten(qint64)), this, SLOT(slotOutputBytesWritten()) );
 
-        if ( in->bytesAvailable() )
+        if ( i->bytesAvailable() )
             slotInputReadyRead();
     }
 
@@ -133,7 +139,7 @@ void EchoCommand::slotInquireData( int rc, const QByteArray & data ) {
 }
 
 void EchoCommand::slotInputReadyRead() {
-    const shared_ptr<QIODevice> in = bulkInputDevice();
+    const shared_ptr<QIODevice> in = inputs().at(0)->ioDevice();
     assert( in );
 
     QByteArray buffer;
@@ -154,7 +160,7 @@ void EchoCommand::slotInputReadyRead() {
 
 
 void EchoCommand::slotOutputBytesWritten() {
-    const shared_ptr<QIODevice> out = bulkOutputDevice();
+    const shared_ptr<QIODevice> out = outputs().at(0)->ioDevice();
     assert( out );
 
     if ( !d->buffer.isEmpty() ) {
@@ -171,7 +177,7 @@ void EchoCommand::slotOutputBytesWritten() {
 
     }
 
-    if ( out->isOpen() && d->buffer.isEmpty() && !bulkInputDevice()->isOpen() ) {
+    if ( out->isOpen() && d->buffer.isEmpty() && !inputs().at(0)->ioDevice()->isOpen() ) {
         out->close();
         if ( !--d->operationsInFlight )
             done();
