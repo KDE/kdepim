@@ -36,6 +36,8 @@ if ( USABLE_ASSUAN_FOUND )
     uiserver/kleo-assuan.cpp
     uiserver/hex.cpp
     uiserver/classify.cpp
+    uiserver/input.cpp
+    uiserver/output.cpp
     uiserver/uiserver.cpp
     uiserver/assuanserverconnection.cpp
     uiserver/echocommand.cpp
