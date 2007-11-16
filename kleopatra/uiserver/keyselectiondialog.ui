@@ -14,7 +14,7 @@
   </property>
   <layout class="QVBoxLayout" >
    <item>
-    <widget class="QLabel" name="label" >
+    <widget class="QLabel" name="instructionLabel" >
      <property name="text" >
       <string>Please select a key from the list below:</string>
      </property>

@@ -37,10 +37,6 @@
 
 #include <utils/pimpl_ptr.h>
 
-namespace Ui {
-    class KeySelectionWidget;
-}
-
 namespace GpgME {
     class Key;
 }
@@ -51,14 +47,28 @@ namespace Kleo
 class KeySelectionDialog : public QDialog
 {
 public:
-    KeySelectionDialog();
-    virtual ~KeySelectionDialog();
+
+    enum SelectionMode {
+        SingleSelection,
+        MultiSelection
+    };
+
+    KeySelectionDialog( QWidget* parent = 0, Qt::WindowFlags flags = 0 );
+    ~KeySelectionDialog();
+
     void addKeys( const std::vector<GpgME::Key> & keys );
+
+    void setCustomText( const QString& label );
+    QString customText() const;
+
+    void setSelectionMode( SelectionMode mode );  
+    SelectionMode selectionMode() const;
+
     std::vector<GpgME::Key> selectedKeys() const;
+
 private:
     class Private;
     kdtools::pimpl_ptr<Private> d;
-    Ui::KeySelectionWidget* ui;
 };
 
 }

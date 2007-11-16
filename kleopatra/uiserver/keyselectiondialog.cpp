@@ -40,6 +40,8 @@
 #include <QDialogButtonBox>
 #include <QAbstractItemView>
 
+#include <cassert>
+
 using namespace Kleo;
 
 struct KeySelectionDialog::Private {
@@ -47,34 +49,65 @@ struct KeySelectionDialog::Private {
     Private( KeySelectionDialog * _q );
     ~Private() {}
     KeySelectionDialog * const q;
+    Ui::KeySelectionWidget ui;
     AbstractKeyListModel* m_model;
+    QString m_customText;
+    KeySelectionDialog::SelectionMode m_mode;
+    void setLabelText();
 };
 
 
 KeySelectionDialog::Private::Private( KeySelectionDialog * _q)
-:q( _q )
+    :q( _q ), ui(), m_mode( MultiSelection )
 {
     m_model = AbstractKeyListModel::createFlatKeyListModel( q );
+    ui.setupUi( q );
+    connect ( ui.buttonBox, SIGNAL( accepted() ), q, SLOT( accept() ) );
+    connect ( ui.buttonBox, SIGNAL( rejected() ), q, SLOT( reject() ) );
+    ui.listView->setModel( m_model );
+    q->setSelectionMode( MultiSelection );
+
 }
 
-KeySelectionDialog::KeySelectionDialog()
-    :ui( new Ui::KeySelectionWidget() ), d( new KeySelectionDialog::Private( this ) )
+KeySelectionDialog::KeySelectionDialog( QWidget * parent, Qt::WindowFlags flags ) : QDialog( parent, flags ), d( new KeySelectionDialog::Private( this ) )
 {
-    ui->setupUi( this );
-    connect ( ui->buttonBox, SIGNAL( accepted() ), this, SLOT( accept() ) );
-    connect ( ui->buttonBox, SIGNAL( rejected() ), this, SLOT( reject() ) );
-    
-    ui->listView->setModel( d->m_model );
-    ui->listView->setSelectionMode( QAbstractItemView::MultiSelection );
 }
 
 KeySelectionDialog::~KeySelectionDialog()
 {
 }
 
+void KeySelectionDialog::setCustomText( const QString& text )
+{
+    d->m_customText = text;
+    d->setLabelText();
+}
+
+
+QString KeySelectionDialog::customText() const
+{
+    return d->m_customText;
+}
+
+void KeySelectionDialog::Private::setLabelText()
+{
+
+    if ( m_customText.isNull() ) 
+    {
+        ui.instructionLabel->setText( m_mode == SingleSelection ? 
+                                      i18n( "Please select a key from the list below:" ) : 
+                                      i18n( "Please select one or more keys from the list below:" ) );
+    }
+    else
+    {
+        ui.instructionLabel->setText( m_customText );
+    }
+}        
+
 std::vector<GpgME::Key> KeySelectionDialog::selectedKeys() const
 {
-    QItemSelectionModel * sm = ui->listView->selectionModel();
+    QItemSelectionModel * const sm = d->ui.listView->selectionModel();
+    assert( sm );
     return d->m_model->keys( sm->selectedIndexes() );
 }
 
@@ -83,6 +116,15 @@ void KeySelectionDialog::addKeys(const std::vector<GpgME::Key> & keys)
     d->m_model->addKeys( keys );
 }
 
+void KeySelectionDialog::setSelectionMode( KeySelectionDialog::SelectionMode mode )
+{
+    d->m_mode = mode;
+    d->ui.listView->setSelectionMode( mode == MultiSelection ? QAbstractItemView::MultiSelection : QAbstractItemView::SingleSelection );
+    d->setLabelText();
+}
 
-
+KeySelectionDialog::SelectionMode KeySelectionDialog::selectionMode() const
+{
+    return d->m_mode;
+}
 
