@@ -31,8 +31,8 @@
 */
 
 #include "certificatepickerwidget.h"
+#include "keyselectiondialog.h"
 #include "scrollarea.h"
-
 #include "models/keycache.h"
 #include "utils/formatting.h"
 
@@ -43,6 +43,7 @@
 #include <QCheckBox>
 #include <QComboBox>
 #include <QLabel>
+#include <QPointer>
 #include <QPushButton>
 #include <QGridLayout>
 #include <QHash>
@@ -234,10 +235,20 @@ GpgME::Key RecipientResolveWidget::chosenCertificate() const
 
 void RecipientResolveWidget::Private::selectAnotherCertificate()
 {
-    //TODO
-    //show selection dialog
-    //if selection was made:
-    //  insert selected key into combo and select it
+    QPointer<KeySelectionDialog> dlg( new KeySelectionDialog( q ) );
+    dlg->setSelectionMode( KeySelectionDialog::SingleSelection );
+    dlg->addKeys( KeyCache::instance()->keys() );
+    if ( dlg->exec() == QDialog::Accepted )
+    {
+        const std::vector<GpgME::Key> keys = dlg->selectedKeys();
+        if ( !keys.empty() )
+        {
+            addCertificate( keys[0] );
+            //TODO: make sure keys[0] gets selected
+        }
+    }
+
+    delete dlg;
 }
 
 void RecipientResolveWidget::Private::currentIndexChanged( int )
