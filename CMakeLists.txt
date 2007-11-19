@@ -36,10 +36,11 @@ macro (KDEPIM4_LINK_UNIQUE_LIBRARIES)
         TARGET_LINK_LIBRARIES(${LINK_ARG_LIST})
 endmacro (KDEPIM4_LINK_UNIQUE_LIBRARIES)
 
+find_package(KdepimLibs REQUIRED)
+find_package(Boost REQUIRED)
+macro_log_feature(Boost_FOUND "boost" "Boost C++ Libraries" "http://www.boost.org/" TRUE "" "Required by Akonadi and kleopatra")
+
 if ( ONLY_KLEO )
-  find_package(KdepimLibs)
-  find_package(Boost REQUIRED )
-  macro_log_feature(Boost_FOUND "boost" "Boost C++ Libraries" "http://www.boost.org/" TRUE "" "Required by Akonadi and kleopatra")
   find_package(QGpgme REQUIRED)
   add_definitions (-D_FILE_OFFSET_BITS=64 -D_LARGE_FILES) # for off_t
   add_definitions (${QT_DEFINITIONS} ${KDE4_DEFINITIONS} -DHAVE_CONFIG_H=1)
@@ -52,16 +53,11 @@ if ( ONLY_KLEO )
   else(TOPOLOGICAL_SORT_DIR)
     MESSAGE(STATUS "topological_sort.hpp is necessary to compile kleopatra. Please install package which contains it.")
   endif(TOPOLOGICAL_SORT_DIR)
+
 else ( ONLY_KLEO )
-
-
-find_package(KdepimLibs REQUIRED)
 find_package(Kode REQUIRED)
 find_package(ZLIB REQUIRED)
 find_package(Strigi REQUIRED)
-find_package(Boost REQUIRED )
-macro_log_feature(Boost_FOUND "boost" "Boost C++ Libraries" "http://www.boost.org/" TRUE "" "Required by Akonadi and kleopatra")
-
 if(Q_WS_X11)
    macro_log_feature(X11_Xscreensaver_LIB "libXss" "X Window Screen Saver Development Library" "http://xorg.freedesktop.org" FALSE "" "Required for building the KTimeTracker Program")
 endif(Q_WS_X11)
