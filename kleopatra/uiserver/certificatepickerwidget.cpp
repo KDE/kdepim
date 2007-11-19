@@ -134,6 +134,7 @@ void RecipientResolvePage::Private::addWidgetForIdentifier( const QString& id )
     lineLayout->addWidget( line );
     line->setSizePolicy( QSizePolicy::MinimumExpanding, QSizePolicy::Preferred );
     line->show();
+    emit q->completeChanged();
 }
 
 QStringList RecipientResolvePage::identifiers() const
@@ -250,6 +251,7 @@ void RecipientResolveWidget::Private::selectAnotherCertificate()
         if ( !keys.empty() )
         {
             addCertificate( keys[0] );
+            emit q->changed();
             //TODO: make sure keys[0] gets selected
         }
     }
