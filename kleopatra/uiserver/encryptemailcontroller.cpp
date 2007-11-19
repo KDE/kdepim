@@ -220,7 +220,7 @@ void EncryptEMailController::Private::schedule() {
 shared_ptr<EncryptEMailTask> EncryptEMailController::Private::takeRunnable( GpgME::Protocol proto ) {
     const std::vector< shared_ptr<EncryptEMailTask> >::iterator it
         = std::find_if( runnable.begin(), runnable.end(),
-                        bind( &EncryptEMailTask::protocol, _1 ) == proto );
+                        bind( &Task::protocol, _1 ) == proto );
     if ( it == runnable.end() )
         return shared_ptr<EncryptEMailTask>();
 
