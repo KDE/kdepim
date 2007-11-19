@@ -800,13 +800,13 @@ void KNMainWidget::initActions()
 
   //header-view - remote articles
   a_ctArtSetArtRead = actionCollection()->addAction("article_read");
-  a_ctArtOpenNewWindow->setIcon(KIcon("mail-mark-read"));
+  a_ctArtSetArtRead->setIcon(KIcon("mail-mark-read"));
   a_ctArtSetArtRead->setText(i18n("Mark as &Read"));
   connect(a_ctArtSetArtRead, SIGNAL(triggered(bool) ), SLOT(slotArtSetArtRead()));
   a_ctArtSetArtRead->setShortcut(QKeySequence(Qt::Key_D));
 
   a_ctArtSetArtUnread = actionCollection()->addAction("article_unread");
-  a_ctArtOpenNewWindow->setIcon(KIcon("mail-mark-unread"));
+  a_ctArtSetArtUnread->setIcon(KIcon("mail-mark-unread"));
   a_ctArtSetArtUnread->setText(i18n("Mar&k as Unread"));
   connect(a_ctArtSetArtUnread, SIGNAL(triggered(bool) ), SLOT(slotArtSetArtUnread()));
   a_ctArtSetArtUnread->setShortcut(QKeySequence(Qt::Key_U));
