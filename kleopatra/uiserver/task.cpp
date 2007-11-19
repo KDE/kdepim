@@ -36,6 +36,8 @@
 
 #include <KLocale>
 
+#include <QString>
+
 #include <boost/bind.hpp>
 
 using namespace Kleo;
@@ -66,9 +68,19 @@ Task::Task( QObject * p )
 
 Task::~Task() {}
 
-void Task::cancel() {
-    notImplemented();
+
+static QString makeNonce() {
+    // ### make better
+    return QString::number( qrand(), 16 );
 }
+
+Task::Result::Result() : m_nonce( makeNonce() ) {}
+Task::Result::~Result() {}
+
+QString Task::Result::formatKeyLink( const char * fpr, const QString & content ) const {
+    return "<a href=\"key:" + m_nonce + ':' + fpr + "\">" + content + "</a>";
+}
+
 
 #include "moc_task.cpp"
 

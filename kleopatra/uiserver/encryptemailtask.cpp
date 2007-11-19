@@ -39,13 +39,49 @@
 
 #include <utils/stl_util.h>
 
+#include <kleo/cryptobackendfactory.h>
+#include <kleo/cryptobackend.h>
+#include <kleo/encryptjob.h>
+
+#include <gpgme++/encryptionresult.h>
+#include <gpgme++/key.h>
+
 #include <KLocale>
+
+#include <QPointer>
+#include <QTextDocument> // for Qt::escape
 
 #include <boost/bind.hpp>
 
 using namespace Kleo;
 using namespace boost;
 using namespace GpgME;
+
+namespace {
+
+    class EncryptEMailResult : public Task::Result {
+        const EncryptionResult m_result;
+    public:
+        explicit EncryptEMailResult( const EncryptionResult & r )
+            : Task::Result(), m_result( r ) {}
+
+        /* reimp */ QString overview() const;
+        /* reimp */ QString details() const;
+    };
+
+
+    static QString makeErrorString( const EncryptionResult & result ) {
+        const Error err = result.error();
+
+        assuan_assert( err || err.isCanceled() );
+
+        if ( err.isCanceled() )
+            return i18n("Encryption canceled.");
+        else // if ( err )
+            return i18n("Encryption failed: %1.", Qt::escape( QString::fromLocal8Bit( err.asString() ) ) );
+    }
+
+}
 
 class EncryptEMailTask::Private {
     friend class ::Kleo::EncryptEMailTask;
@@ -54,11 +90,24 @@ public:
     explicit Private( EncryptEMailTask * qq );
 
 private:
-    // ### 
+    std::auto_ptr<Kleo::EncryptJob> createJob( GpgME::Protocol proto );
+
+private:
+    void slotResult( const EncryptionResult & );
+
+private:
+    shared_ptr<Input> input;
+    shared_ptr<Output> output;
+    std::vector<Key> recipients;
+
+    QPointer<Kleo::EncryptJob> job;
 };
 
 EncryptEMailTask::Private::Private( EncryptEMailTask * qq )
-    : q( qq )
+    : q( qq ),
+      input(),
+      output(),
+      job( 0 )
 {
 
 }
@@ -72,24 +121,81 @@ EncryptEMailTask::EncryptEMailTask( QObject * p )
 EncryptEMailTask::~EncryptEMailTask() {}
 
 void EncryptEMailTask::setInput( const shared_ptr<Input> & input ) {
-    notImplemented();
+    assuan_assert( !d->job );
+    assuan_assert( input );
+    d->input = input;
 }
 
 void EncryptEMailTask::setOutput( const shared_ptr<Output> & output ) {
-    notImplemented();
+    assuan_assert( !d->job );
+    assuan_assert( output );
+    d->output = output;
 }
 
-void EncryptEMailTask::setRecipients( const std::vector<GpgME::Key> & recipients ) {
-    notImplemented();
+void EncryptEMailTask::setRecipients( const std::vector<Key> & recipients ) {
+    assuan_assert( !d->job );
+    assuan_assert( !recipients.empty() );
+    d->recipients = recipients;
 }
 
 Protocol EncryptEMailTask::protocol() const {
-    // ### d->recipients.front()->protocol() + error handling
-    notImplemented();
+    assuan_assert( !d->recipients.empty() );
+    return d->recipients.front().protocol();
 }
 
 void EncryptEMailTask::start() {
-    notImplemented();
+    assuan_assert( !d->job );
+    assuan_assert( d->input );
+    assuan_assert( d->output );
+    assuan_assert( !d->recipients.empty() );
+
+    std::auto_ptr<Kleo::EncryptJob> job = d->createJob( protocol() );
+    assuan_assert( job.get() );
+
+    job->start( d->recipients,
+                d->input->ioDevice(), d->output->ioDevice(),
+                /*alwaysTrust=*/true );
+
+    d->job = job.release();
+}
+
+void EncryptEMailTask::cancel() {
+    if ( d->job )
+        d->job->slotCancel();
+}
+
+std::auto_ptr<Kleo::EncryptJob> EncryptEMailTask::Private::createJob( GpgME::Protocol proto ) {
+    const CryptoBackend::Protocol * const backend = CryptoBackendFactory::instance()->protocol( proto );
+    assuan_assert( backend );
+    std::auto_ptr<Kleo::EncryptJob> encryptJob( backend->encryptJob( /*armor=*/true, /*textmode=*/false ) );
+    assuan_assert( encryptJob.get() );
+    connect( encryptJob.get(), SIGNAL(progress(QString,int,int)),
+             q, SIGNAL(progress(QString,int,int)) );
+    connect( encryptJob.get(), SIGNAL(result(GpgME::EncryptionResult,QByteArray)),
+             q, SLOT(slotResult(GpgME::EncryptionResult)) );
+    return encryptJob;
+}
+
+void EncryptEMailTask::Private::slotResult( const EncryptionResult & result ) {
+    QPointer<QObject> that = q;
+    if ( result.error().code() ) {
+        output->cancel();
+        emit q->error( result.error(), makeErrorString( result ) );
+    } else {
+        output->finalize();
+        emit q->result( shared_ptr<Result>( new EncryptEMailResult( result ) ) );
+    }
+    if ( !that )
+        return;
+    emit q->done();
+}
+
+QString EncryptEMailResult::overview() const {
+    return i18n("Not yet implemented");
+}
+
+QString EncryptEMailResult::details() const {
+    return i18n("Not yet implemented");
 }
 
 

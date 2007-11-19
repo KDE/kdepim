@@ -65,10 +65,12 @@ namespace Kleo {
         GpgME::Protocol protocol() const;
 
         /* reimp */ void start();
+        /* reimp */ void cancel();
 
     private:
         class Private;
         kdtools::pimpl_ptr<Private> d;
+        Q_PRIVATE_SLOT( d, void slotResult( const GpgME::EncryptionResult & ) )
     };
 }
 

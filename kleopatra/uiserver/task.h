@@ -34,8 +34,11 @@
 #define __KLEOPATRA_UISERVER_TASK_H__
 
 #include <QObject>
+#include <QString>
 
 #include <utils/pimpl_ptr.h>
+
+#include <boost/shared_ptr.hpp>
 
 namespace Kleo {
 
@@ -45,20 +48,39 @@ namespace Kleo {
         explicit Task( QObject * parent=0 );
         ~Task();
 
+        class Result;
+
         virtual void start() = 0;
 
     public Q_SLOTS:
-        void cancel();
+        virtual void cancel() = 0;
 
     Q_SIGNALS:
-        void progress( int, int, const QString & );
+        void progress( const QString & what, int current, int total );
         void error( int err, const QString & details );
+        void result( const boost::shared_ptr<const Kleo::Task::Result> & );
         void done();
 
     private:
         class Private;
         kdtools::pimpl_ptr<Private> d;
     };
+
+    class Task::Result {
+        QString m_nonce;
+    public:
+        Result();
+        virtual ~Result();
+
+        const QString & nonce() const { return m_nonce; }
+
+        virtual QString overview() const = 0;
+        virtual QString details() const = 0;
+
+    protected:
+        QString formatKeyLink( const char * fingerprint, const QString & content ) const;
+    };
+        
 }
 
 #endif /* __KLEOPATRA_UISERVER_TASK_H__ */
