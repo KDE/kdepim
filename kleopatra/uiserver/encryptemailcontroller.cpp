@@ -227,7 +227,7 @@ shared_ptr<EncryptEMailTask> EncryptEMailController::Private::takeRunnable( GpgM
     if ( it == runnable.end() )
         return shared_ptr<EncryptEMailTask>();
 
-    shared_ptr<EncryptEMailTask> result = *it;
+    const shared_ptr<EncryptEMailTask> result = *it;
     runnable.erase( it );
     return result;
 }
