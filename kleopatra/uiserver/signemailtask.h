@@ -1,5 +1,5 @@
 /* -*- mode: c++; c-basic-offset:4 -*-
-    uiserver/signemailcontroller.h
+    uiserver/signemailtask.h
 
     This file is part of Kleopatra, the KDE keymanager
     Copyright (c) 2007 Klarälvdalens Datakonsult AB
@@ -30,10 +30,10 @@
     your version.
 */
 
-#ifndef __KLEOPATRA_UISERVER_SIGNEMAILCONTROLLER_H__
-#define __KLEOPATRA_UISERVER_SIGNEMAILCONTROLLER_H__
+#ifndef __KLEOPATRA_UISERVER_SIGNEMAILTASK_H__
+#define __KLEOPATRA_UISERVER_SIGNEMAILTASK_H__
 
-#include <QObject>
+#include <uiserver/task.h>
 
 #include <utils/pimpl_ptr.h>
 
@@ -43,52 +43,37 @@
 
 #include <vector>
 
-namespace KMime {
-namespace Types {
-    class Mailbox;
-}
+namespace GpgME {
+    class Key;
 }
 
 namespace Kleo {
 
-    class AssuanCommand;
+    class Input;
+    class Output;
 
-    class SignEMailController : public QObject {
+    class SignEMailTask : public Task {
         Q_OBJECT
     public:
-        explicit SignEMailController( QObject * parent=0 );
-        ~SignEMailController();
+        explicit SignEMailTask( QObject * parent=0 );
+        ~SignEMailTask();
 
-        void setProtocol( GpgME::Protocol proto );
-        GpgME::Protocol protocol() const;
-        //const char * protocolAsString() const;
-
-        void setCommand( const boost::shared_ptr<AssuanCommand> & cmd );
-
-        void startResolveSigners( const std::vector<KMime::Types::Mailbox> & signers );
-
+        void setInput( const boost::shared_ptr<Input> & input );
+        void setOutput( const boost::shared_ptr<Output> & output );
+        void setSigners( const std::vector<GpgME::Key> & recipients );
         void setDetachedSignature( bool detached );
 
-        void importIO();
+        GpgME::Protocol protocol() const;
 
-        void start();
-
-    public Q_SLOTS:
-        void cancel();
-
-    Q_SIGNALS:
-        void signersResolved();
-        void reportMigAlg( const QString & details );
-        void error( int err, const QString & details );
-        void done();
+        /* reimp */ void start();
+        /* reimp */ void cancel();
 
     private:
         class Private;
         kdtools::pimpl_ptr<Private> d;
-        Q_PRIVATE_SLOT( d, void slotWizardSignersResolved() )
-        Q_PRIVATE_SLOT( d, void slotWizardCanceled() )
+        Q_PRIVATE_SLOT( d, void slotResult( const GpgME::SigningResult & ) )
     };
 }
 
-#endif /* __KLEOPATRA_UISERVER_SIGNEMAILCONTROLLER_H__ */
+#endif /* __KLEOPATRA_UISERVER_SIGNEMAILTASK_H__ */
 
