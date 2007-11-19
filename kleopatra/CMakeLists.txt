@@ -14,10 +14,6 @@ add_subdirectory( kgpgconf )
 
 add_subdirectory( tests )
 
-if ( NOT KDEPIMLIBS_FOUND )
-   add_definitions( -DKLEO_NO_KDEPIMLIBS )
-endif ( NOT KDEPIMLIBS_FOUND )
-
 if ( WIN32 )
   set( _kleopatra_extra_uiserver_SRCS
     utils/gnupg-registry.c
