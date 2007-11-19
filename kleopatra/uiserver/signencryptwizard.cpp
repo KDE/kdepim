@@ -41,6 +41,11 @@
 
 #include <gpgme++/key.h>
 
+#include <KLocale>
+#include <KPushButton>
+
+#include <QStackedWidget>
+
 #include <boost/bind.hpp>
 
 using namespace Kleo;
@@ -55,52 +60,129 @@ public:
     explicit Private( SignEncryptWizard * qq );
     ~Private();
 
-    void onCurrentIdChange( int id );
+    void setPage( SignEncryptWizard::Page page, QWizardPage* widget ); 
+    void restart();
+    void next(); 
+    void selectPage( SignEncryptWizard::Page id );
+    QWizardPage* wizardPage( SignEncryptWizard::Page id ) const;
+    QWizardPage* currentWizardPage() const;
+    KPushButton* nextButton() const;
+    bool isLastPage( SignEncryptWizard::Page ) const;
+    void updateButtonStates();
 
-    enum Pages {
-        Prepare=0,
-        Objects,
-        ResolveRecipients,
-        Results
-    };
 private:
     Mode mode;
+    std::map<SignEncryptWizard::Page, QWizardPage*> idToPage;
+    std::vector<SignEncryptWizard::Page> pageOrder;
+    Page currentId;
 
-    struct Ui {
-        RecipientResolvePage recipientResolvePage;
-        RecipientResolvePage testPage;
-    } ui;
+    RecipientResolvePage * recipientResolvePage;
+    RecipientResolvePage * testPage;
+    QStackedWidget * stack;
 };
 
 
 SignEncryptWizard::Private::Private( SignEncryptWizard * qq )
     : q( qq ),
-      mode( EncryptOrSignFiles )
+      mode( EncryptOrSignFiles ),
+      recipientResolvePage( new RecipientResolvePage ),
+      testPage( new RecipientResolvePage ),
+      stack( new QStackedWidget )
 {
-    q->setOptions( q->options() | NoBackButtonOnStartPage );
-    q->setPage( ResolveRecipients, &ui.recipientResolvePage );
-    q->setPage( Results, &ui.testPage );
-    q->setStartId( ResolveRecipients );
-    q->connect( q, SIGNAL( currentIdChanged( int ) ), q, SLOT( onCurrentIdChange( int ) ) );
+    q->setMainWidget( stack );
+    q->setButtons( KDialog::Try | KDialog::Cancel );
+    setPage( SignEncryptWizard::ResolveRecipientsPage, recipientResolvePage );
+    setPage( SignEncryptWizard::ResultPage, testPage );
+    q->setButtonGuiItem( KDialog::Try, KGuiItem( i18n( "Next" ) ) );
+    q->connect( q, SIGNAL( tryClicked() ), q, SLOT( next() ) );
+
+}
+
+KPushButton * SignEncryptWizard::Private::nextButton() const
+{
+    return q->button( KDialog::Try );
+}
+
+
+void SignEncryptWizard::Private::updateButtonStates()
+{
+    nextButton()->setEnabled( !isLastPage( currentId ) && q->canGoToNextPage() );
+}
+
+bool SignEncryptWizard::Private::isLastPage( SignEncryptWizard::Page id ) const
+{
+    return !pageOrder.empty() ? pageOrder.back() == id : false;
+}
+
+void SignEncryptWizard::Private::setPage( SignEncryptWizard::Page id, QWizardPage * widget )
+{
+    assuan_assert( id != SignEncryptWizard::NoPage );
+    assuan_assert( idToPage.find( id ) == idToPage.end() );
+    idToPage[id] = widget;
+    stack->addWidget( widget );
+    q->connect( widget, SIGNAL( completeChanged() ), q, SLOT( updateButtonStates() ) );
+}
+
+void SignEncryptWizard::Private::restart()
+{
+}
+
+void SignEncryptWizard::Private::selectPage( SignEncryptWizard::Page id )
+{
+    currentId = id;
+    if ( id == SignEncryptWizard::NoPage )
+        return;
+    QWizardPage * const page = wizardPage( id );
+    assert( page && stack->indexOf( page ) != -1 );
+    stack->setCurrentWidget( page );
+    updateButtonStates();
+}
+
+void SignEncryptWizard::Private::next()
+{
+    assert( currentId != NoPage );
+    if ( currentId == SignEncryptWizard::ResolveRecipientsPage )
+        emit q->recipientsResolved();
+    std::vector<SignEncryptWizard::Page>::const_iterator it = std::find( pageOrder.begin(), pageOrder.end(), currentId );
+    assert( it != pageOrder.end() );
+    ++it;
+    if ( it == pageOrder.end() )
+    {
+        selectPage( SignEncryptWizard::NoPage );
+
+        //TODO emit finished()
+    }
+    else
+    {
+        selectPage( *it );
+    }
 }
 
 SignEncryptWizard::Private::~Private() {}
 
 SignEncryptWizard::SignEncryptWizard( QWidget * p, Qt::WindowFlags f )
-    : QWizard( p, f ), d( new Private( this ) )
+    : KDialog( p, f ), d( new Private( this ) )
 {
 }
 
-void SignEncryptWizard::Private::onCurrentIdChange( int id )
-{
-    //ugly, but there are no better hooks provided
-    if ( id == ui.recipientResolvePage.nextId() )
-        emit q->recipientsResolved();
-} 
 
 SignEncryptWizard::~SignEncryptWizard() {}
 
 void SignEncryptWizard::setMode( Mode mode ) {
+    std::vector<Page> pageOrder;
+    switch ( mode )
+    {
+    case EncryptEMail:
+        pageOrder.push_back( ResolveRecipientsPage );
+        pageOrder.push_back( ResultPage );
+        break;
+    case SignEMail:
+        pageOrder.push_back( ResultPage );
+        break;
+    case EncryptOrSignFiles:
+    default:
+        break;
+    }
     // EncryptEMail:
     //   1. RecipientResolvePage
     //   2. ResultPage
@@ -112,14 +194,15 @@ void SignEncryptWizard::setMode( Mode mode ) {
     //   3. RecipientsPage
     //   4. ResultPage
     assuan_assert( mode == EncryptEMail || mode == SignEMail || !"Other cases are not yet implemented" );
-
+    d->pageOrder = pageOrder;
     d->mode = mode;
+    d->selectPage( pageOrder[0] );
 }
 
 void SignEncryptWizard::setProtocol( Protocol proto ) {
     assuan_assert( d->mode == EncryptEMail || d->mode == SignEMail );
     // ### distribute to where needed....
-    d->ui.recipientResolvePage.setProtocol( proto );
+    d->recipientResolvePage->setProtocol( proto );
 }
 
 void SignEncryptWizard::setRecipientsAndCandidates( const std::vector<Mailbox> & recipients, const std::vector< std::vector<Key> > & keys ) {
@@ -127,10 +210,10 @@ void SignEncryptWizard::setRecipientsAndCandidates( const std::vector<Mailbox> &
     assuan_assert( (size_t)recipients.size() == keys.size() );
     assuan_assert( d->mode == EncryptEMail );
 
-    d->ui.recipientResolvePage.ensureIndexAvailable( keys.size() - 1 );
+    d->recipientResolvePage->ensureIndexAvailable( keys.size() - 1 );
 
     for ( unsigned int i = 0, end = keys.size() ; i < end ; ++i ) {
-        RecipientResolveWidget * const rr = d->ui.recipientResolvePage.recipientResolveWidget( i );
+        RecipientResolveWidget * const rr = d->recipientResolvePage->recipientResolveWidget( i );
         assuan_assert( rr );
         rr->setIdentifier( recipients[i].prettyAddress() );
         rr->setCertificates( keys[i] );
@@ -143,9 +226,24 @@ void SignEncryptWizard::setSignersAndCandidates( const std::vector<Mailbox> & si
     notImplemented();
 }
 
+QWizardPage* SignEncryptWizard::Private::wizardPage( SignEncryptWizard::Page id ) const
+{
+    if ( id == SignEncryptWizard::NoPage )
+        return 0;
+
+    const std::map<SignEncryptWizard::Page, QWizardPage*>::const_iterator it = idToPage.find( id );   
+    assuan_assert( it != idToPage.end() );
+    return (*it).second;
+}
+
+QWizardPage* SignEncryptWizard::Private::currentWizardPage() const
+{
+    return wizardPage( currentId );
+}
+
 bool SignEncryptWizard::canGoToNextPage() const {
-    assuan_assert( currentPage() );
-    return currentPage()->isComplete();
+    const QWizardPage * const current = d->currentWizardPage();
+    return current ? current->isComplete() : false;
 }
 
 void SignEncryptWizard::connectTask( const shared_ptr<Task> & task, unsigned int idx ) {
@@ -154,13 +252,23 @@ void SignEncryptWizard::connectTask( const shared_ptr<Task> & task, unsigned int
 
 std::vector<Key> SignEncryptWizard::resolvedCertificates() const {
     std::vector<Key> result;
-    for ( unsigned int i = 0, end = d->ui.recipientResolvePage.numRecipientResolveWidgets() ; i < end ; ++i )
-        result.push_back( d->ui.recipientResolvePage.recipientResolveWidget( i )->chosenCertificate() );
+    for ( unsigned int i = 0, end = d->recipientResolvePage->numRecipientResolveWidgets() ; i < end ; ++i )
+        result.push_back( d->recipientResolvePage->recipientResolveWidget( i )->chosenCertificate() );
     return result;
 }
 
 std::vector<Key> SignEncryptWizard::resolvedSigners() const {
     notImplemented();
+}
+
+void SignEncryptWizard::next()
+{
+    d->next();
+}
+
+SignEncryptWizard::Page SignEncryptWizard::currentPage() const
+{
+    return d->currentId;
 }
 
 #include "moc_signencryptwizard.cpp"

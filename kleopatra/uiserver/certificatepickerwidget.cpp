@@ -32,7 +32,6 @@
 
 #include "certificatepickerwidget.h"
 #include "keyselectiondialog.h"
-#include "scrollarea.h"
 #include "models/keycache.h"
 #include "utils/formatting.h"
 
@@ -48,6 +47,7 @@
 #include <QGridLayout>
 #include <QHash>
 #include <QResizeEvent>
+#include <QScrollArea>
 #include <QVBoxLayout>
 
 #include <cassert>
@@ -63,7 +63,8 @@ public:
     void addWidgetForIdentifier( const QString& identifier );
 //    void completionStateChanged( const QString& id );
     void clear();
-    ScrollArea* scrollArea;
+    QScrollArea* scrollArea;
+    QVBoxLayout* lineLayout;
     std::vector<RecipientResolveWidget*> widgets;
     QStringList identifiers;
     GpgME::Protocol protocol; 
@@ -81,16 +82,20 @@ RecipientResolvePage::RecipientResolvePage( QWidget * parent )
     : QWizardPage( parent ), d( new Private( this ) )
 {
     QGridLayout* const top = new QGridLayout( this );
-    top->setRowStretch( 1, 1 );
-    d->scrollArea = new ScrollArea( this );
+    d->scrollArea = new QScrollArea( this );
     d->scrollArea->setFrameShape( QFrame::NoFrame );
+    d->scrollArea->setWidgetResizable( true );
+    QWidget* const container = new QWidget;
+    d->lineLayout = new QVBoxLayout( container );
+    QWidget* container2 = new QWidget;
+    QVBoxLayout* const layout = new QVBoxLayout( container2 );
+    layout->addWidget( container );
+    layout->addStretch();
+    d->scrollArea->setWidget( container2 );
     top->addWidget( d->scrollArea, 0, 0 );
-    assert( qobject_cast<QBoxLayout*>( d->scrollArea->widget()->layout() ) );
-    static_cast<QBoxLayout*>( d->scrollArea->widget()->layout())->addStretch( 1 );
     // TODO: these texts are mode-dependent
     setTitle( i18n( "Select Certificates for Recipients" ) );
     setSubTitle( i18n( "For every recipient, select a certificate that should be used for encryption. Click Next when done." ) );
-
 }
 
 RecipientResolvePage::~RecipientResolvePage() {}
@@ -123,13 +128,10 @@ void RecipientResolvePage::Private::addWidgetForIdentifier( const QString& id )
     RecipientResolveWidget* const line = new RecipientResolveWidget;
     q->connect( line, SIGNAL( changed() ), q, SIGNAL( completeChanged() ) );
     line->setIdentifier( id );
-    //line->setCertificates( makeSuggestions( id ) );
     widgets.push_back( line );
     identifiers.push_back( id );
     assert( scrollArea->widget() );
-    assert( qobject_cast<QBoxLayout*>( scrollArea->widget()->layout() ) );
-    QBoxLayout * const blay = static_cast<QBoxLayout*>( scrollArea->widget()->layout() );
-    blay->addWidget( line );
+    lineLayout->addWidget( line );
     line->setSizePolicy( QSizePolicy::MinimumExpanding, QSizePolicy::Preferred );
     line->show();
 }
@@ -183,7 +185,6 @@ private:
 RecipientResolveWidget::Private::Private( RecipientResolveWidget * qq ) : q( qq ), m_identifier(), m_protocol( GpgME::UnknownProtocol )
 {
     QGridLayout* const layout = new QGridLayout( q );
-    layout->setColumnStretch( 1, 1 );
     m_recipientLabel = new QLabel;
     layout->addWidget( m_recipientLabel, 0, 0, /*rowSpan=*/1, /*columnSpan=*/-1 );
     QLabel* const certificateLabel = new QLabel;
@@ -268,7 +269,6 @@ QVariant RecipientResolveWidget::Private::currentData() const
 
 bool RecipientResolveWidget::isComplete() const
 {
-    qDebug( "isComplete: %d", !d->currentData().isNull() );
     return !d->currentData().isNull();
 }
 

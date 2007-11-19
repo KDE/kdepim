@@ -33,7 +33,7 @@
 #ifndef __KLEOPATRA_UISERVER_SIGNENCRYPTWIZARD_H__
 #define __KLEOPATRA_UISERVER_SIGNENCRYPTWIZARD_H__
 
-#include <QWizard>
+#include <KDialog>
 
 #include <utils/pimpl_ptr.h>
 
@@ -57,11 +57,19 @@ namespace Kleo {
 
     class Task;
 
-    class SignEncryptWizard : public QWizard {
+    class SignEncryptWizard : public KDialog {
         Q_OBJECT
     public:
         explicit SignEncryptWizard( QWidget * parent=0, Qt::WindowFlags f=0 );
         ~SignEncryptWizard();
+
+        enum Page {
+            NoPage=0,
+            PreparationPage,
+            ObjectsPage,
+            ResolveRecipientsPage,
+            ResultPage
+        };
 
         enum Mode {
             EncryptEMail,
@@ -82,6 +90,11 @@ namespace Kleo {
         std::vector<GpgME::Key> resolvedCertificates() const;
         std::vector<GpgME::Key> resolvedSigners() const;
 
+        Page currentPage() const;
+
+    public Q_SLOTS:
+        void next();
+
     Q_SIGNALS:
         void recipientsResolved();
         void canceled();
@@ -89,7 +102,7 @@ namespace Kleo {
     private:
         class Private;
         kdtools::pimpl_ptr<Private> d;
-        Q_PRIVATE_SLOT( d, void onCurrentIdChange( int ) )
+        Q_PRIVATE_SLOT( d, void updateButtonStates() )
     };
 
 }
