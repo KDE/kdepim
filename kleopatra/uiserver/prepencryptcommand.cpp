@@ -110,11 +110,27 @@ int PrepEncryptCommand::doStart() {
 }
 
 void PrepEncryptCommand::Private::slotRecipientsResolved() {
-    if ( const int err = q->sendStatus( "PROTOCOL", controller->protocolAsString() ) )
-        q->done( err, i18n( "Failed to send PROTOCOL status" ) );
-    q->registerMemento( EncryptEMailController::mementoName(),
-                        make_typed_memento( controller ) );
-    q->done();
+    try {
+
+        q->sendStatus( "PROTOCOL", controller->protocolAsString() );
+        q->registerMemento( EncryptEMailController::mementoName(),
+                            make_typed_memento( controller ) );
+        q->done();
+        return;
+
+    } catch ( const assuan_exception & e ) {
+        q->done( e.error(), e.message() );
+    } catch ( const std::exception & e ) {
+        q->done( makeError( GPG_ERR_UNEXPECTED ),
+                 i18n("Caught unexpected exception in PrepEncryptCommand::Private::slotRecipientsResolved: %1",
+                      QString::fromLocal8Bit( e.what() ) ) );
+    } catch ( ... ) {
+        q->done( makeError( GPG_ERR_UNEXPECTED ),
+                 i18n("Caught unknown exception in PrepEncryptCommand::Private::slotRecipientsResolved") );
+    }
+    q->removeMemento( EncryptEMailController::mementoName() );
+    if ( controller )
+        controller->cancel();
 }
 
 void PrepEncryptCommand::Private::slotError( int err, const QString & details ) {

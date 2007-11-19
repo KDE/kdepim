@@ -300,9 +300,9 @@ namespace Kleo {
         KDE_DEPRECATED unsigned int numBulkOutputDevices() const;
 #endif
 
-        int sendStatus( const char * keyword, const QString & text );
-        int sendStatusEncoded( const char * keyword, const std::string & text );
-        int sendData( const QByteArray & data, bool moreToCome=false );
+        void sendStatus( const char * keyword, const QString & text );
+        void sendStatusEncoded( const char * keyword, const std::string & text );
+        void sendData( const QByteArray & data, bool moreToCome=false );
 
         int inquire( const char * keyword, QObject * receiver, const char * slot, unsigned int maxSize=0 );
 

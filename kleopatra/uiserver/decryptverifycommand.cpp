@@ -245,12 +245,6 @@ public:
 
     void startTasks();
 
-    void trySendingStatusEncoded( const char * tag, const std::string & str ) const {
-        // ### FIXME: make AssuanCommand::sendStatusEncoded() throw the exception
-        if ( const int err = q->sendStatusEncoded( tag, str ) )
-            throw assuan_exception( err, i18n("Problem writing out verification status.") );
-    }
-
     static QString signatureToString( const Signature& sig, const Key & key );
 
     void createWizard() {
@@ -829,8 +823,8 @@ void DecryptVerifyCommand::Private::sendSigStatii() const {
             Q_FOREACH ( const Signature & sig, sigs ) {
                 const QString s = signatureToString( sig, keyForSignature( sig, signers ) );
                 const char * color = summaryToString( sig.summary() );
-                trySendingStatusEncoded( "SIGSTATUS",
-                                         color + ( ' ' + hexencode( s.toUtf8().constData() ) ) );
+                q->sendStatusEncoded( "SIGSTATUS",
+                                      color + ( ' ' + hexencode( s.toUtf8().constData() ) ) );
             }
         } catch ( ... ) {}
 

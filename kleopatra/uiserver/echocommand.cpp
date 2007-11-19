@@ -37,6 +37,8 @@
 
 #include <gpg-error.h>
 
+#include <KLocale>
+
 #include <QVariant>
 #include <QByteArray>
 #include <QIODevice>
@@ -89,8 +91,7 @@ int EchoCommand::doStart() {
     // aaand ACTION:
 
     // 1. echo the command line though the status channel
-    if ( const int err = sendStatus( "ECHO", output.empty() ? "" : output.c_str() ) )
-        return err;
+    sendStatus( "ECHO", output.empty() ? "" : output.c_str() );
 
     // 2. if --inquire was given, inquire more data from the client:
     if ( !keyword.empty() )
@@ -126,15 +127,25 @@ void EchoCommand::slotInquireData( int rc, const QByteArray & data ) {
 
     --d->operationsInFlight;
 
-    if ( rc )
+    if ( rc ) {
         done( rc );
+        return;
+    }
 
-    //else if ( const int err = sendData( data ) )
-    else if ( const int err = sendStatus( "ECHOINQ", data ) )
-        done( err );
-
-    else if ( !d->operationsInFlight )
-        done();
+    try {
+        sendStatus( "ECHOINQ", data );
+        if ( !d->operationsInFlight )
+            done();
+    } catch ( const assuan_exception & e ) {
+        done( e.error(), e.message() );
+    } catch ( const std::exception & e ) {
+        done( makeError( GPG_ERR_UNEXPECTED ),
+              i18n("Caught unexpected exception in SignCommand::Private::slotMicAlgDetermined: %1",
+                   QString::fromLocal8Bit( e.what() ) ) );
+    } catch ( ... ) {
+        done( makeError( GPG_ERR_UNEXPECTED ),
+              i18n("Caught unknown exception in SignCommand::Private::slotMicAlgDetermined") );
+    }
 
 }
 

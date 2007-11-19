@@ -894,25 +894,25 @@ unsigned int AssuanCommand::numBulkOutputDevices() const {
 }
 #endif
 
-int AssuanCommand::sendStatus( const char * keyword, const QString & text ) {
-    return sendStatusEncoded( keyword, text.toUtf8().constData() );
+void AssuanCommand::sendStatus( const char * keyword, const QString & text ) {
+    sendStatusEncoded( keyword, text.toUtf8().constData() );
 }
 
-int AssuanCommand::sendStatusEncoded( const char * keyword, const std::string & text ) {
+void AssuanCommand::sendStatusEncoded( const char * keyword, const std::string & text ) {
     if ( d->nohup )
-        return 0;
-    return assuan_write_status( d->ctx.get(), keyword, text.c_str() );
+        return;
+    if ( const int err = assuan_write_status( d->ctx.get(), keyword, text.c_str() ) )
+        throw assuan_exception( err, i18n( "Can't send \"%1\" status", QString::fromLatin1( keyword ) ) );
 }
 
-int AssuanCommand::sendData( const QByteArray & data, bool moreToCome ) {
+void  AssuanCommand::sendData( const QByteArray & data, bool moreToCome ) {
     if ( d->nohup )
-        return 0;
+        return;
     if ( const gpg_error_t err = assuan_send_data( d->ctx.get(), data.constData(), data.size() ) )
-        return err;
-    if ( moreToCome )
-        return 0;
-    else
-        return assuan_send_data( d->ctx.get(), 0, 0 ); // flush
+        throw assuan_exception( err, i18n( "Can't send data" ) );
+    if ( !moreToCome )
+        if ( const gpg_error_t err = assuan_send_data( d->ctx.get(), 0, 0 ) ) // flush
+            throw assuan_exception( err, i18n( "Can't flush data" ) );
 }
 
 int AssuanCommand::inquire( const char * keyword, QObject * receiver, const char * slot, unsigned int maxSize ) {
