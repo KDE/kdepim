@@ -50,6 +50,7 @@ namespace Kleo {
         virtual boost::shared_ptr<QIODevice> ioDevice() const = 0;
         virtual bool isFinalized() const = 0;
         virtual void finalize() = 0;
+        virtual void cancel() = 0;
 
         static boost::shared_ptr<Output> createFromFile( const QString & fileName, bool forceOverride );
         static boost::shared_ptr<Output> createFromPipeDevice( assuan_fd_t fd, const QString & label );

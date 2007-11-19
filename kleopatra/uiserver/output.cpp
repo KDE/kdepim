@@ -90,7 +90,9 @@ namespace {
             : Output(),
               m_label(),
               m_isFinalized( false ),
-              m_isFinalizing( false )
+              m_isFinalizing( false ),
+              m_cancelPending( false ),
+              m_canceled( false )
         {
 
         }
@@ -106,13 +108,30 @@ namespace {
             try { doFinalize(); } catch ( ... ) { m_isFinalizing = false; throw; }
             m_isFinalizing = false;
             m_isFinalized = true;
+            if ( m_cancelPending )
+                cancel();
+        }
+
+        /* reimp */ void cancel() {
+            if ( m_isFinalizing ) {
+                m_cancelPending = true;
+            } else if ( !m_canceled ) {
+                m_isFinalizing = true;
+                try { doCancel(); } catch ( ... ) {}
+                m_isFinalizing = false;
+                m_isFinalized = true;
+                m_canceled = true;
+            }
         }
     private:
         virtual void doFinalize() = 0;
+        virtual void doCancel() = 0;
     private:
         QString m_label;
-        bool m_isFinalized  : 1;
-        bool m_isFinalizing : 1;
+        bool m_isFinalized   : 1;
+        bool m_isFinalizing  : 1;
+        bool m_cancelPending : 1;
+        bool m_canceled      : 1;
     };
         
 
@@ -123,6 +142,7 @@ namespace {
 
         /* reimp */ shared_ptr<QIODevice> ioDevice() const { return m_io; }
         /* reimp */ void doFinalize() { m_io->reallyClose(); }
+        /* reimp */ void doCancel() { doFinalize(); }
     private:
         shared_ptr< inhibit_close<KDPipeIODevice> > m_io;
     };
@@ -141,6 +161,7 @@ namespace {
         /* reimp */ QString label() const { return m_fileName; }
         /* reimp */ shared_ptr<QIODevice> ioDevice() const { return m_tmpFile; }
         /* reimp */ void doFinalize();
+        /* reimp */ void doCancel() {}
     private:
         const QString m_fileName;
         shared_ptr< TemporaryFile > m_tmpFile;
@@ -156,6 +177,7 @@ namespace {
         /* reimp */ QString label() const;
         /* reimp */ shared_ptr<QIODevice> ioDevice() const;
         /* reimp */ void doFinalize();
+        /* reimp */ void doCancel() {}
     };
 #endif
 
