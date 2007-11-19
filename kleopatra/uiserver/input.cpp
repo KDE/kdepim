@@ -32,6 +32,7 @@
 
 #include "input.h"
 
+#include "detail_p.h"
 #include "kleo-assuan.h"
 
 #include "classify.h"
@@ -46,6 +47,7 @@
 #include <errno.h>
 
 using namespace Kleo;
+using namespace Kleo::_detail;
 using namespace boost;
 
 namespace {
@@ -113,7 +115,7 @@ PipeInput::PipeInput( assuan_fd_t fd )
     if ( !m_io->open( fd, QIODevice::ReadOnly ) )
         throw assuan_exception( errno ? gpg_error_from_errno( errno ) : gpg_error( GPG_ERR_EIO ),
                                 i18n( "Couldn't open FD %1 for writing",
-                                      static_cast<qulonglong>( fd ) ) );
+                                      assuanFD2int( fd ) ) );
 }
 
 unsigned int PipeInput::classification() const {

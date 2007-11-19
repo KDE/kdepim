@@ -86,6 +86,16 @@ namespace _detail {
 #endif
     }
 
+    //returns an integer representation of the assuan_fd_t,
+    //suitable for debug output
+    static inline int assuanFD2int( assuan_fd_t fd )
+    {
+#ifdef Q_OS_WIN32
+        return reinterpret_cast<qulonglong>( fd );
+#else
+        return static_cast<qulonglong>( fd );
+#endif
+    }
 }
 }
 

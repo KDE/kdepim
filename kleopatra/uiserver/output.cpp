@@ -32,6 +32,7 @@
 
 #include "output.h"
 
+#include "detail_p.h"
 #include "kleo-assuan.h"
 
 #include <utils/kdpipeiodevice.h>
@@ -45,6 +46,7 @@
 #include <errno.h>
 
 using namespace Kleo;
+using namespace Kleo::_detail;
 using namespace boost;
 
 namespace {
@@ -173,7 +175,7 @@ PipeOutput::PipeOutput( assuan_fd_t fd )
     if ( !m_io->open( fd, QIODevice::WriteOnly ) )
         throw assuan_exception( errno ? gpg_error_from_errno( errno ) : gpg_error( GPG_ERR_EIO ),
                                 i18n( "Couldn't open FD %1 for writing",
-                                      static_cast<qulonglong>( fd ) ) );
+                                      assuanFD2int( fd ) ) );
 }
 
 shared_ptr<Output> Output::createFromFile( const QString & fileName, bool allowOverwrite ) {
