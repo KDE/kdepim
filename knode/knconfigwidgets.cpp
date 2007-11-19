@@ -456,6 +456,7 @@ KNode::NntpAccountConfDialog::NntpAccountConfDialog( KNNntpAccount *a, QWidget *
   mName->setText( a->name() );
   mServer->setText( a->server() );
   mPort->setValue( a->port() );
+  mPort->setSliderEnabled( false );
   mFetchDesc->setChecked( a->fetchDescriptions() );
 
   mLogin->setChecked( a->needsLogon() );
