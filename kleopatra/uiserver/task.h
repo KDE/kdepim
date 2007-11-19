@@ -38,6 +38,8 @@
 
 #include <utils/pimpl_ptr.h>
 
+#include <gpgme++/global.h>
+
 #include <boost/shared_ptr.hpp>
 
 namespace Kleo {
@@ -49,6 +51,8 @@ namespace Kleo {
         ~Task();
 
         class Result;
+
+        virtual GpgME::Protocol protocol() const = 0;
 
         virtual void start() = 0;
 
