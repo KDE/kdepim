@@ -177,7 +177,6 @@ std::auto_ptr<Kleo::EncryptJob> EncryptEMailTask::Private::createJob( GpgME::Pro
 }
 
 void EncryptEMailTask::Private::slotResult( const EncryptionResult & result ) {
-    QPointer<QObject> that = q;
     if ( result.error().code() ) {
         output->cancel();
         emit q->error( result.error(), makeErrorString( result ) );
@@ -185,9 +184,6 @@ void EncryptEMailTask::Private::slotResult( const EncryptionResult & result ) {
         output->finalize();
         emit q->result( shared_ptr<Result>( new EncryptEMailResult( result ) ) );
     }
-    if ( !that )
-        return;
-    emit q->done();
 }
 
 QString EncryptEMailResult::overview() const {

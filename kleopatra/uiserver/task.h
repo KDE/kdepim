@@ -63,7 +63,6 @@ namespace Kleo {
         void progress( const QString & what, int current, int total );
         void error( int err, const QString & details );
         void result( const boost::shared_ptr<const Kleo::Task::Result> & );
-        void done();
 
     private:
         class Private;

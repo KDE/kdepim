@@ -193,6 +193,9 @@ void EncryptEMailController::importIO() {
 }
 
 void EncryptEMailController::start() {
+    int i = 0;
+    Q_FOREACH( const shared_ptr<Task> task, d->runnable )
+        d->connectTask( task, i++ );
     d->schedule();
 }
 
@@ -230,7 +233,8 @@ shared_ptr<EncryptEMailTask> EncryptEMailController::Private::takeRunnable( GpgM
 }
 
 void EncryptEMailController::Private::connectTask( const shared_ptr<Task> & t, unsigned int idx ) {
-    connect( t.get(), SIGNAL(done()), q, SLOT(slotTaskDone()) );
+    connect( t.get(), SIGNAL(result(boost::shared_ptr<const Kleo::Task::Result>)),
+             q, SLOT(slotTaskDone()) );
     connect( t.get(), SIGNAL(error(int,QString)), q, SLOT(slotTaskDone()) );
     ensureWizardCreated();
     wizard->connectTask( t, idx );
@@ -251,6 +255,8 @@ void EncryptEMailController::Private::slotTaskDone() {
         completed.push_back( openpgp );
         openpgp.reset();
     }
+
+    QTimer::singleShot( 0, q, SIGNAL(schedule()) );
 }
 
 void EncryptEMailController::cancel() {

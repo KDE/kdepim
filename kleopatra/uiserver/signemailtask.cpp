@@ -185,7 +185,6 @@ std::auto_ptr<Kleo::SignJob> SignEMailTask::Private::createJob( GpgME::Protocol 
 }
 
 void SignEMailTask::Private::slotResult( const SigningResult & result ) {
-    QPointer<QObject> that = q;
     if ( result.error().code() ) {
         output->cancel();
         emit q->error( result.error(), makeErrorString( result ) );
@@ -193,9 +192,6 @@ void SignEMailTask::Private::slotResult( const SigningResult & result ) {
         output->finalize();
         emit q->result( shared_ptr<Result>( new SignEMailResult( result ) ) );
     }
-    if ( !that )
-        return;
-    emit q->done();
 }
 
 QString SignEMailResult::overview() const {
