@@ -136,9 +136,22 @@ int SignCommand::doStart() {
 }
 
 void SignCommand::Private::slotSignersResolved() {
-    controller->setDetachedSignature( q->hasOption("detached" ) );
-    controller->importIO();
-    controller->start();
+    try {
+        controller->setDetachedSignature( q->hasOption("detached" ) );
+        controller->importIO();
+        controller->start();
+    } catch ( const assuan_exception & e ) {
+        q->done( e.error(), e.message() );
+    } catch ( const std::exception & e ) {
+        q->done( makeError( GPG_ERR_UNEXPECTED ),
+                 i18n("Caught unexpected exception in SignCommand::Private::slotRecipientsResolved: %1",
+                      QString::fromLocal8Bit( e.what() ) ) );
+        controller->cancel();
+    } catch ( ... ) {
+        q->done( makeError( GPG_ERR_UNEXPECTED ),
+                 i18n("Caught unknown exception in SignCommand::Private::slotRecipientsResolved") );
+        controller->cancel();
+    }
 }
 
 void SignCommand::Private::slotMicAlgDetermined( const QString & micalg ) {

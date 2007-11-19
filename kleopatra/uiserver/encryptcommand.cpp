@@ -157,8 +157,21 @@ int EncryptCommand::doStart() {
 }
 
 void EncryptCommand::Private::slotRecipientsResolved() {
-    controller->importIO();
-    controller->start();
+    try {
+        controller->importIO();
+        controller->start();
+    } catch ( const assuan_exception & e ) {
+        q->done( e.error(), e.message() );
+    } catch ( const std::exception & e ) {
+        q->done( makeError( GPG_ERR_UNEXPECTED ),
+                 i18n("Caught unexpected exception in EncryptCommand::Private::slotRecipientsResolved: %1",
+                      QString::fromLocal8Bit( e.what() ) ) );
+        controller->cancel();
+    } catch ( ... ) {
+        q->done( makeError( GPG_ERR_UNEXPECTED ),
+                 i18n("Caught unknown exception in EncryptCommand::Private::slotRecipientsResolved") );
+        controller->cancel();
+    }
 }
 
 void EncryptCommand::Private::slotDone() {
