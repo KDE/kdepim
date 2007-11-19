@@ -224,6 +224,12 @@ void SignEMailController::Private::schedule() {
 
     if ( !cms && !openpgp ) {
         assuan_assert( runnable.empty() );
+        QPointer<QObject> Q = q;
+        Q_FOREACH( const shared_ptr<SignEMailTask> t, completed ) {
+            emit q->reportMicAlg( t->micAlg() );
+            if ( !Q )
+                return;
+        }
         emit q->done();
     }
     
@@ -237,7 +243,7 @@ shared_ptr<SignEMailTask> SignEMailController::Private::takeRunnable( GpgME::Pro
     if ( it == runnable.end() )
         return shared_ptr<SignEMailTask>();
 
-    shared_ptr<SignEMailTask> result = *it;
+    const shared_ptr<SignEMailTask> result = *it;
     runnable.erase( it );
     return result;
 }

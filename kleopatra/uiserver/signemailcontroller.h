@@ -78,7 +78,7 @@ namespace Kleo {
 
     Q_SIGNALS:
         void signersResolved();
-        void reportMigAlg( const QString & details );
+        void reportMicAlg( const QString & micalg );
         void error( int err, const QString & details );
         void done();
 

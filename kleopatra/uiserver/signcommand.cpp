@@ -100,22 +100,6 @@ void SignCommand::Private::checkForErrors() const {
 
 }
 
-#if 0
-static QString collect_micalgs( const GpgME::SigningResult & result, GpgME::Protocol proto ) {
-    const std::vector<GpgME::CreatedSignature> css = result.createdSignatures();
-    QStringList micalgs;
-    std::transform( css.begin(), css.end(),
-                    std::back_inserter( micalgs ),
-                    bind( &QString::toLower, bind( &QString::fromLatin1, bind( &GpgME::CreatedSignature::hashAlgorithmAsString, _1 ), -1 ) ) );
-    if ( proto == GpgME::OpenPGP )
-        for ( QStringList::iterator it = micalgs.begin(), end = micalgs.end() ; it != end ; ++it )
-            it->prepend( "pgp-" );
-    micalgs.sort();
-    micalgs.erase( std::unique( micalgs.begin(), micalgs.end() ), micalgs.end() );
-    return micalgs.join( QLatin1String(",") );
-}
-#endif
-
 int SignCommand::doStart() {
 
     d->checkForErrors();
@@ -126,7 +110,7 @@ int SignCommand::doStart() {
     d->controller->setCommand( shared_from_this() );
 
     QObject::connect( d->controller.get(), SIGNAL(signersResolved()), d.get(), SLOT(slotSignersResolved() ) );
-    QObject::connect( d->controller.get(), SIGNAL(migAlgDetermined(QString)), d.get(), SLOT(slotMicAlgDetermined(QString)) );
+    QObject::connect( d->controller.get(), SIGNAL(reportMicAlg(QString)), d.get(), SLOT(slotMicAlgDetermined(QString)) );
     QObject::connect( d->controller.get(), SIGNAL(done()), d.get(), SLOT(slotDone()) );
     QObject::connect( d->controller.get(), SIGNAL(error(int,QString)), d.get(), SLOT(slotError(int,QString)) );
 

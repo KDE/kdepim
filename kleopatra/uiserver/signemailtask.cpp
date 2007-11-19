@@ -101,6 +101,8 @@ private:
     std::vector<Key> signers;
     bool detached;
 
+    QString micAlg;
+
     QPointer<Kleo::SignJob> job;
 };
 
@@ -110,6 +112,7 @@ SignEMailTask::Private::Private( SignEMailTask * qq )
       output(),
       signers(),
       detached( false ),
+      micAlg(),
       job( 0 )
 {
 
@@ -157,6 +160,8 @@ void SignEMailTask::start() {
     assuan_assert( d->output );
     assuan_assert( !d->signers.empty() );
 
+    d->micAlg.clear();
+
     std::auto_ptr<Kleo::SignJob> job = d->createJob( protocol() );
     assuan_assert( job.get() );
 
@@ -184,14 +189,33 @@ std::auto_ptr<Kleo::SignJob> SignEMailTask::Private::createJob( GpgME::Protocol 
     return signJob;
 }
 
+static QString collect_micalgs( const GpgME::SigningResult & result, GpgME::Protocol proto ) {
+    const std::vector<GpgME::CreatedSignature> css = result.createdSignatures();
+    QStringList micalgs;
+    std::transform( css.begin(), css.end(),
+                    std::back_inserter( micalgs ),
+                    bind( &QString::toLower, bind( &QString::fromLatin1, bind( &GpgME::CreatedSignature::hashAlgorithmAsString, _1 ), -1 ) ) );
+    if ( proto == GpgME::OpenPGP )
+        for ( QStringList::iterator it = micalgs.begin(), end = micalgs.end() ; it != end ; ++it )
+            it->prepend( "pgp-" );
+    micalgs.sort();
+    micalgs.erase( std::unique( micalgs.begin(), micalgs.end() ), micalgs.end() );
+    return micalgs.join( QLatin1String(",") );
+}
+
 void SignEMailTask::Private::slotResult( const SigningResult & result ) {
     if ( result.error().code() ) {
         output->cancel();
         emit q->error( result.error(), makeErrorString( result ) );
     } else {
         output->finalize();
+        micAlg = collect_micalgs( result, q->protocol() );
         emit q->result( shared_ptr<Result>( new SignEMailResult( result ) ) );
     }
+}
+
+QString SignEMailTask::micAlg() const {
+    return d->micAlg;
 }
 
 QString SignEMailResult::overview() const {

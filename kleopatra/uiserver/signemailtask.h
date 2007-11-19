@@ -68,6 +68,8 @@ namespace Kleo {
         /* reimp */ void start();
         /* reimp */ void cancel();
 
+        QString micAlg() const;
+
     private:
         class Private;
         kdtools::pimpl_ptr<Private> d;
