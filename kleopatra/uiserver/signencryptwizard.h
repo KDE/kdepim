@@ -80,6 +80,7 @@ namespace Kleo {
         void connectTask( const boost::shared_ptr<Task> & task, unsigned int idx );
 
         std::vector<GpgME::Key> resolvedCertificates() const;
+        std::vector<GpgME::Key> resolvedSigners() const;
 
     Q_SIGNALS:
         void recipientsResolved();

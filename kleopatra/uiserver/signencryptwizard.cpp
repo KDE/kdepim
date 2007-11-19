@@ -113,7 +113,7 @@ void SignEncryptWizard::setMode( Mode mode ) {
     //   4. ResultPage
     assuan_assert( mode == EncryptEMail || mode == SignEMail || !"Other cases are not yet implemented" );
 
-    d->mode = EncryptEMail;
+    d->mode = mode;
 }
 
 void SignEncryptWizard::setProtocol( Protocol proto ) {
@@ -157,6 +157,10 @@ std::vector<Key> SignEncryptWizard::resolvedCertificates() const {
     for ( unsigned int i = 0, end = d->ui.recipientResolvePage.numRecipientResolveWidgets() ; i < end ; ++i )
         result.push_back( d->ui.recipientResolvePage.recipientResolveWidget( i )->chosenCertificate() );
     return result;
+}
+
+std::vector<Key> SignEncryptWizard::resolvedSigners() const {
+    notImplemented();
 }
 
 #include "moc_signencryptwizard.cpp"
