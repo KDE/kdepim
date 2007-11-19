@@ -1,5 +1,4 @@
 [Desktop Entry]
-Encoding=UTF-8
 Type=ServiceType
 X-KDE-ServiceType=KMobileTools/EngineXP
 X-KDE-Derived=KPluginInfo
@@ -8,6 +7,7 @@ Comment[ca]=Motor XP del KMobileTools
 Comment[el]=EngineXP του KMobileTools
 Comment[ga]=InneallXP KMmobileTools
 Comment[it]=Motore XP per KMobileTools
+Comment[nds]=KMobileTools-KarnXP
 Comment[pt]=Motor XP do KMobileTools
 Comment[pt_BR]=Motor XP do KMobileTools
 Comment[sv]=XP-gränssnitt för Kmobiletools

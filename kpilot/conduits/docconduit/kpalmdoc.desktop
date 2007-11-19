@@ -1,6 +1,5 @@
 # KDE Config File
 [Desktop Entry]
-Encoding=UTF-8
 Name=KPalmDOC
 Name[sv]=Kpalm DOC
 Name[ta]=கேகைdoc
@@ -56,7 +55,7 @@ GenericName[zh_TW]=PalmDOC 轉換器
 Exec=kpalmdoc
 Icon=kpalmdoc
 Type=Application
-DocPath=kpalmdoc/index.html
+X-DocPath=kpalmdoc/index.html
 Terminal=false
 X-KDE-StartupNotify=true
 X-DBUS-ServiceType=Unique

@@ -1,15 +1,16 @@
 [Desktop Entry]
-Encoding=UTF-8
 Name=KWSDL Compiler
 Name[ca]=Compilador KWSDL
 Name[de]=KWSDL-Compiler
 Name[el]=Μεταγλωττιστής KWSDL
 Name[es]=Compilador KWSDL
+Name[et]=KWSDL kompilaator
 Name[ga]=Tiomsaitheoir KWSDL
 Name[it]=Compilatore KWSDL
 Name[ja]=KWSDL コンパイラ
 Name[kk]=KWSDL компиляторы
 Name[ko]=KWSDL 컴파일러
+Name[nds]=KWSDL-Kompilerer
 Name[ne]=KWSDL कम्पाइलर
 Name[nl]=KWSDL-compiler
 Name[pt]=Compilador de KWSDL
@@ -21,7 +22,7 @@ Name[zh_TW]=KWSDL 編譯器
 Exec=kdialog --sorry "kwsdl_compiler is a command-line only program.  Please read the handbook at help:/kwsdl_compiler for more info."
 Icon=gear
 Type=Application
-DocPath=kwsdl_compiler/index.html
+X-DocPath=kwsdl_compiler/index.html
 Terminal=false
 NoDisplay=true
 Categories=Qt;KDE;Development;

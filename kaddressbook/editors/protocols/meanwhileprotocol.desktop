@@ -1,8 +1,7 @@
 [Desktop Entry]
-Encoding=UTF-8
 Type=Service
 Icon=meanwhile_protocol
-ServiceTypes=KABC/IMProtocol,KPluginInfo
+X-KDE-ServiceTypes=KABC/IMProtocol,KPluginInfo
 X-KDE-InstantMessagingKABCField=messaging/meanwhile
 Comment=Meanwhile Protocol
 Comment[af]=Meanwhile protokol

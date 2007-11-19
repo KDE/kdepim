@@ -1,5 +1,4 @@
 [Desktop Entry]
-Encoding=UTF-8
 Name=KContactManager
 Name[de]=Kontaktverwaltung
 Name[sv]=Kcontactmanager
@@ -11,8 +10,11 @@ GenericName[ca]=Gestor de contactes
 GenericName[de]=Kontaktverwaltung
 GenericName[el]=Διαχειριστής επαφών
 GenericName[es]=Gestor de contactos
+GenericName[et]=Kontaktihaldur
 GenericName[ga]=Bainisteoir Teagmhálacha
 GenericName[ja]=連絡先マネージャ
+GenericName[nds]=Kontaktenpleger
+GenericName[nl]=Contactpersoonbeheerder
 GenericName[pt]=Gestor de Contactos
 GenericName[pt_BR]=Gestor de Contactos
 GenericName[sv]=Kontakthantering
@@ -22,7 +24,7 @@ GenericName[zh_TW]=聯絡人管理員
 Exec=kcontactmanager %u
 Icon=kaddressbook
 Type=Application
-DocPath=kcontactmanager/index.html
+X-DocPath=kcontactmanager/index.html
 Terminal=false
 X-KDE-StartupNotify=true
 Categories=Qt;KDE;Office;

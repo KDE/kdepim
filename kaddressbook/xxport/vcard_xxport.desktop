@@ -1,6 +1,5 @@
 [Desktop Entry]
-Encoding=UTF-8
-X-KDE-Library=libkaddrbk_vcard_xxport
+X-KDE-Library=kaddrbk_vcard_xxport
 Name=KAB vCard XXPort Plugin
 Name[af]=KAB vCard XXPort inprop module
 Name[br]=Lugent KAB vCard XXPort
@@ -96,5 +95,5 @@ Comment[x-test]=xxPlugin to import and export contacts in vCard formatxx
 Comment[zh_CN]=导入和导出 vCard 格式联系人的插件
 Comment[zh_TW]=匯入與匯出 vCard 格式聯絡人的外掛程式
 Type=Service
-ServiceTypes=KAddressBook/XXPort
+X-KDE-ServiceTypes=KAddressBook/XXPort
 X-KDE-KAddressBook-XXPortPluginVersion=1

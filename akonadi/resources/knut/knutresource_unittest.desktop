@@ -1,11 +1,13 @@
 [Desktop Entry]
-Encoding=UTF-8
 Name=Akonadi Knut Resource (Headless)
 Name[ca]=Recurs Knut de l'Akonadi (Unitari)
 Name[de]=Akonadi-Ressource für Knut (kopflos)
 Name[el]=Πόρος Knut του Akonadi (χωρίς κεφαλή)
 Name[es]=Recurso Knut de Akonadi (sin cabecera)
+Name[et]=Akonadi Knuti ressurss (päiseta)
 Name[ja]=Akonadi Knut リソース (ヘッドなし)
+Name[nds]=Akonadi-Knut-Ressource (ahn Kopp)
+Name[nl]=Akonadi Knut-hulpbron
 Name[pt]=Recurso Knut do Akonadi (Indirecto)
 Name[pt_BR]=Recurso Knut do Akonadi (Indirecto)
 Name[sv]=Akonadi Knut-resurs (utan huvud)
@@ -16,7 +18,10 @@ Comment=An agent for unittest purpose
 Comment[ca]=Un agent amb la finalitat de proves unitàries
 Comment[el]=Ένας πελάτης με σκοπό τον έλεγχο μονάδας
 Comment[es]=Un agente para pruebas unitarias
+Comment[et]=Agent unittestide jaoks
 Comment[ja]=ユニットテストのためのエージェント
+Comment[nds]=Hölper för Eenheitentests
+Comment[nl]=Een agent voor unittest-doeleinden
 Comment[pt]=Um agente para fins de testes unitários
 Comment[pt_BR]=Um agente para fins de testes unitários
 Comment[sv]=En modul för felsökningssyften

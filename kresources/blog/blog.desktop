@@ -1,16 +1,18 @@
 [Desktop Entry]
-Encoding=UTF-8
 Name=Journal in a blog
 Name[bg]=Journal Print Style
 Name[ca]=Diari en un bloc
 Name[de]=Journal in einem Blog
 Name[el]=Χρονικό σε ιστολόγιο
 Name[es]=Diario en un blog
+Name[et]=Veebipäevik
 Name[fa]=نشریه در یک وب‌نوشت
 Name[it]=Diario in un blog
 Name[ja]=ブログのジャーナル
 Name[ko]=블로그의 저널
+Name[nds]=Nett-Daagbook
 Name[ne]=ब्लगमा जर्नल
+Name[nl]=Journaal in een weblog
 Name[pt]=Diário num 'blog'
 Name[pt_BR]=Diário num 'blog'
 Name[sv]=Webbjournal
@@ -19,6 +21,6 @@ Name[zh_CN]=博客日记
 Name[zh_TW]=部落格日誌
 X-KDE-Library=kcal_blog
 Type=Service
-ServiceTypes=KResources/Plugin
+X-KDE-ServiceTypes=KResources/Plugin
 X-KDE-ResourceFamily=calendar
 X-KDE-ResourceType=blog

@@ -1,6 +1,5 @@
 [Desktop Entry]
-Encoding=UTF-8
-X-KDE-Library=libkaddrbk_distributionlist
+X-KDE-Library=kaddrbk_distributionlist
 Name=KAB Distribution List Plugin
 Name[af]=KAB verspreiding lys inprop module
 Name[br]=Lugent roll ingaladur evit KAB
@@ -100,5 +99,5 @@ Comment[x-test]=xxPlugin for managing distribution listsxx
 Comment[zh_CN]=管理分发列表的插件
 Comment[zh_TW]=管理分配清單外掛程式
 Type=Service
-ServiceTypes=KAddressBook/Extension
+X-KDE-ServiceTypes=KAddressBook/Extension
 X-KDE-KAddressBook-ExtensionPluginVersion=1

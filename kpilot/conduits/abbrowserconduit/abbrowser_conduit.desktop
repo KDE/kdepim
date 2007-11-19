@@ -1,5 +1,4 @@
 [Desktop Entry]
-Encoding=UTF-8
 Type=Service
 Comment=This conduit syncs the handheld addressbook with KDE's addressbook.
 Comment[af]=Hierdie pad sinkroniseer die draagbare toestel adresboek met KDE se adresboek.
@@ -101,5 +100,5 @@ Name[x-test]=xxAddressbookxx
 Name[zh_CN]=地址簿
 Name[zh_TW]=通訊錄
 Implemented=file
-ServiceTypes=KPilotConduit
+X-KDE-ServiceTypes=KPilotConduit
 X-KDE-Library=kpilot_conduit_address

@@ -1,5 +1,4 @@
 [Desktop Entry]
-Encoding=UTF-8
 Name=TV Schedules
 Name[af]=TV skedules
 Name[bg]=Разписание TV
@@ -45,6 +44,6 @@ Name[zh_CN]=电视日程安排
 Name[zh_TW]=電視時刻表
 X-KDE-Library=kcal_tvanytime
 Type=Service
-ServiceTypes=KResources/Plugin
+X-KDE-ServiceTypes=KResources/Plugin
 X-KDE-ResourceFamily=calendar
 X-KDE-ResourceType=tvschedule

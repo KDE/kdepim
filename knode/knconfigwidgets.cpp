@@ -1259,8 +1259,8 @@ KNode::FilterListWidget::FilterListWidget( const KComponentData &inst, QWidget *
   topL->setRowStretch(5,1);
   topL->setRowStretch(11,1);
 
-  a_ctive = SmallIcon("search-filter",16);
-  d_isabled = SmallIcon("search-filter",16,KIconLoader::DisabledState);
+  a_ctive = SmallIcon("view-filter",16);
+  d_isabled = SmallIcon("view-filter",16,KIconLoader::DisabledState);
 
   load();
 

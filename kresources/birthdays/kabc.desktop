@@ -1,5 +1,4 @@
 [Desktop Entry]
-Encoding=UTF-8
 Name=Birthdays From KAddressBook
 Name[af]=Verjaarsdae uit KAddressBook
 Name[bg]=Рождени дни от адресника
@@ -54,6 +53,6 @@ Name[zh_CN]=KAddressBook 中的生日
 Name[zh_TW]=自 KDE 通訊錄匯入生日
 X-KDE-Library=kcal_kabc
 Type=Service
-ServiceTypes=KResources/Plugin
+X-KDE-ServiceTypes=KResources/Plugin
 X-KDE-ResourceFamily=calendar
 X-KDE-ResourceType=birthdays

@@ -1,5 +1,4 @@
 [Desktop Entry]
-Encoding=UTF-8
 Type=Service
 Name=Calendar (KOrganizer)
 Name[af]=Kalender (KOrganizer)
@@ -95,5 +94,5 @@ Comment[x-test]=xxThis conduit synchronizes your handheld with the KOrganizer da
 Comment[zh_CN]=此管道会将您的手持设备与 KOrganizer 的日程安排同步。
 Comment[zh_TW]=此導管將您的掌上型裝置與 KOrganizer 行事曆同步。
 Implemented=file
-ServiceTypes=KPilotConduit
+X-KDE-ServiceTypes=KPilotConduit
 X-KDE-Library=kpilot_conduit_vcal

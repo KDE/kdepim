@@ -51,7 +51,7 @@
 
 #include "vcard_xxport.h"
 
-K_EXPORT_KADDRESSBOOK_XXFILTER( libkaddrbk_vcard_xxport, VCardXXPort )
+K_EXPORT_KADDRESSBOOK_XXFILTER( kaddrbk_vcard_xxport, VCardXXPort )
 
 class VCardViewerDialog : public KDialog
 {

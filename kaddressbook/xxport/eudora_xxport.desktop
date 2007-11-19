@@ -1,6 +1,5 @@
 [Desktop Entry]
-Encoding=UTF-8
-X-KDE-Library=libkaddrbk_eudora_xxport
+X-KDE-Library=kaddrbk_eudora_xxport
 Name=KAB Eudora XXPort Plugin
 Name[af]=KAB Eudora XXPort inprop module
 Name[br]=Lugent XXPorzh Eudora KAB
@@ -94,5 +93,5 @@ Comment[x-test]=xxPlugin to import and export Eudora contactsxx
 Comment[zh_CN]=导入和导出 Eudora 联系人的插件
 Comment[zh_TW]=匯入與匯出 Eudora 聯絡人的外掛程式
 Type=Service
-ServiceTypes=KAddressBook/XXPort
+X-KDE-ServiceTypes=KAddressBook/XXPort
 X-KDE-KAddressBook-XXPortPluginVersion=1

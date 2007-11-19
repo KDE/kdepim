@@ -1,5 +1,4 @@
 [Desktop Entry]
-Encoding=UTF-8
 Name=IMAP Server via KMail
 Name[af]=IMAP bediener via KMail
 Name[bg]=Сървър IMAP чрез KMail
@@ -48,6 +47,6 @@ Name[zh_CN]=通过 KMail 访问 IMAP 服务器
 Name[zh_TW]=透過 KMail 取得 IMAP 伺服器
 X-KDE-Library=knotes_kolab
 Type=Service
-ServiceTypes=KResources/Plugin
+X-KDE-ServiceTypes=KResources/Plugin
 X-KDE-ResourceFamily=notes
 X-KDE-ResourceType=imap

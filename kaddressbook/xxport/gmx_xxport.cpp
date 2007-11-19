@@ -46,7 +46,7 @@
 
 #include "gmx_xxport.h"
 
-K_EXPORT_KADDRESSBOOK_XXFILTER_CATALOG( libkaddrbk_gmx_xxport, GMXXXPort, "libkaddrbk_gmx_xxport" )
+K_EXPORT_KADDRESSBOOK_XXFILTER_CATALOG( kaddrbk_gmx_xxport, GMXXXPort, "kaddrbk_gmx_xxport" )
 
 #define GMX_FILESELECTION_STRING "*.gmxa|" + i18n( "GMX addressbook file (*.gmxa)" )
 

@@ -1,8 +1,7 @@
 [Desktop Entry]
-Encoding=UTF-8
 Icon=password
 Type=Service
-ServiceTypes=KCModule
+X-KDE-ServiceTypes=KCModule
 
 X-KDE-ModuleType=Library
 X-KDE-Library=kcm_knode
@@ -21,7 +20,7 @@ Name[da]=Underskriver/Verificerer
 Name[de]=Signieren/Verifizieren
 Name[el]=Υπογραφή/Επαλήθευση
 Name[es]=Firmar/Verificar
-Name[et]=Signeerimine/kontroll
+Name[et]=Allkirjastamine/kontroll
 Name[eu]=Sinadura/Egiaztapena
 Name[fa]=امضا/وارسی
 Name[fi]=Allekirjoittaminen/tarkistaminen
@@ -68,7 +67,7 @@ Comment[da]=Beskyt dine private oplysninger ved at underskrive og verificere ind
 Comment[de]=Schutz der Privatsphäre durch Signieren und Verifizieren von Beiträgen.
 Comment[el]=Προστατεύστε το απόρρητό σας υπογράφοντας και επαληθεύοντας τα μηνύματα
 Comment[es]=Proteja su privacidad firmando y verificando sus envíos
-Comment[et]=Kaitseb sinu privaatsust postitusi signeerides ja konrollides
+Comment[et]=Sinu privaatsuse kaitsmine postitusi allkirjastades ja kontrollides
 Comment[eu]=Babestu zure pribakortasuna argitarapenak sinatu eta egiaztatuz
 Comment[fa]=حفظ محرمانگی خود با امضا و وارسی ارسالهای سریع
 Comment[fi]=Suojele yksityisyyttäsi allekirjoittamalla ja varmentamalla posti

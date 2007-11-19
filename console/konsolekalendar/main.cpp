@@ -611,7 +611,7 @@ int main( int argc, char *argv[] )
       variables.setCalendarFile( url.path() );
       exists = QFile::exists( variables.getCalendarFile() );
       remote = false;
-    } else if ( !variables.getCalendarFile().contains( '/' ) ) {
+    } else if ( url.protocol().isEmpty() ) {
       QFileInfo info( variables.getCalendarFile() );
       variables.setCalendarFile( info.absoluteFilePath() );
       exists = QFile::exists( variables.getCalendarFile() );

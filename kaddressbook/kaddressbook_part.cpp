@@ -42,7 +42,7 @@
 #include "kaddressbook_part.h"
 
 typedef KParts::GenericFactory< KAddressbookPart > KAddressbookFactory;
-K_EXPORT_COMPONENT_FACTORY( libkaddressbookpart, KAddressbookFactory )
+K_EXPORT_COMPONENT_FACTORY( kaddressbookpart, KAddressbookFactory )
 
 KAddressbookPart::KAddressbookPart( QWidget *parentWidget, QObject *parent,
                                     const QStringList & )

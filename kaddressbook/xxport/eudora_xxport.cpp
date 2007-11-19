@@ -38,7 +38,7 @@
 
 #define CTRL_C 3
 
-K_EXPORT_KADDRESSBOOK_XXFILTER( libkaddrbk_eudora_xxport, EudoraXXPort )
+K_EXPORT_KADDRESSBOOK_XXFILTER( kaddrbk_eudora_xxport, EudoraXXPort )
 
 EudoraXXPort::EudoraXXPort( KABC::AddressBook *ab, QWidget *parent, const char *name )
   : KAB::XXPort( ab, parent, name )

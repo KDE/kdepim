@@ -1,5 +1,4 @@
 [Desktop Entry]
-Encoding=UTF-8
 Name=eGroupware Server (via XML-RPC)
 Name[af]=eGroupware Bediener (via XML-RPC)
 Name[bg]=Сървър eGroupware (чрез XML-RPC)
@@ -46,6 +45,6 @@ Name[zh_CN]=eGroupware 服务器(通过 XML-RPC)
 Name[zh_TW]=eGroupware 伺服器(透過 XML-RPC)
 X-KDE-Library=kcal_xmlrpc
 Type=Service
-ServiceTypes=KResources/Plugin
+X-KDE-ServiceTypes=KResources/Plugin
 X-KDE-ResourceFamily=calendar
 X-KDE-ResourceType=xmlrpc

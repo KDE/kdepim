@@ -1,8 +1,7 @@
 [Desktop Entry]
-Encoding=UTF-8
 Type=Service
 Icon=irc_protocol
-ServiceTypes=KABC/IMProtocol,KPluginInfo
+X-KDE-ServiceTypes=KABC/IMProtocol,KPluginInfo
 X-KDE-InstantMessagingKABCField=messaging/irc
 Comment=Internet Relay Chat
 Comment[bg]=Протокол IRC

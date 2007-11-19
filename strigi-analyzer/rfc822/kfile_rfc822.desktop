@@ -1,5 +1,4 @@
 [Desktop Entry]
-Encoding=UTF-8
 Type=Service
 Name=Email Info
 Name[af]=E-pos informasie
@@ -25,7 +24,7 @@ Name[hr]=Email Informacije
 Name[hu]=E-mail-jellemzők
 Name[is]=Tölvupóst upplýsingar
 Name[it]=Informazioni di posta elettronica
-Name[ja]=Eメール情報
+Name[ja]=メール情報
 Name[ka]=ელფოსტის ინფორმაცია
 Name[kk]=Эл.пошта мәліметі
 Name[km]=ព័ត៌មាន​អ៊ីមែល
@@ -55,8 +54,8 @@ Name[uk]=Інформація про повідомлення ел. пошти
 Name[x-test]=xxEmail Infoxx
 Name[zh_CN]=电子邮件信息
 Name[zh_TW]=電子郵件資訊
-ServiceTypes=KFilePlugin
+X-KDE-ServiceTypes=KFilePlugin
 X-KDE-Library=kfile_rfc822
-MimeType=message/rfc822
+MimeType=message/rfc822;
 PreferredGroups=Technical
 PreferredItems=From,To,Subject,Date,Content-Type

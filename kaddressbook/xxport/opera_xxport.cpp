@@ -38,7 +38,7 @@
 
 #include "opera_xxport.h"
 
-K_EXPORT_KADDRESSBOOK_XXFILTER( libkaddrbk_opera_xxport, OperaXXPort )
+K_EXPORT_KADDRESSBOOK_XXFILTER( kaddrbk_opera_xxport, OperaXXPort )
 
 OperaXXPort::OperaXXPort( KABC::AddressBook *ab, QWidget *parent, const char *name )
   : KAB::XXPort( ab, parent, name )

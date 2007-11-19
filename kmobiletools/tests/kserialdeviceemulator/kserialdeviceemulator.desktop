@@ -1,5 +1,4 @@
 [Desktop Entry]
-Encoding=UTF-8
 Name=KSerialDeviceEmulator
 Name[de]=KDE-Emulation für serielle Geräte
 Name[ne]=केडीई क्रमिक यन्त्र इमुलेटर
@@ -14,11 +13,13 @@ Comment[ca]=Una aplicació senzilla del KDE
 Comment[de]=Eine KDE-Anwendung
 Comment[el]=Μια απλή εφαρμογή του KDE
 Comment[es]=Una aplicación sencilla de KDE
+Comment[et]=Lihtne KDE rakendus
 Comment[ga]=Feidhmchlár simplí KDE
 Comment[it]=Una semplice applicazione KDE
 Comment[ja]=シンプルな KDE アプリケーション
 Comment[ko]=간단한 KDE 프로그램
 Comment[lt]=Paprasta KDE programa
+Comment[nds]=En eenfach KDE-Programm
 Comment[ne]=साधारण केडीई अनुप्रयोग
 Comment[nl]=Een eenvoudig KDE-programma
 Comment[pt]=Uma aplicação simples do KDE

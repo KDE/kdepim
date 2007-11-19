@@ -1,5 +1,4 @@
 [Desktop Entry]
-Encoding=UTF-8
 Type=Service
 Name=NULL
 Name[ca]=NUL
@@ -62,5 +61,5 @@ Comment[x-test]=xxThis conduit does nothing.xx
 Comment[zh_CN]=此管道不做任何事。
 Comment[zh_TW]=此導管不做任何事情。
 Implemented=file
-ServiceTypes=KPilotConduit
+X-KDE-ServiceTypes=KPilotConduit
 X-KDE-Library=kpilot_conduit_null

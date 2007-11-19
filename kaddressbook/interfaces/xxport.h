@@ -38,7 +38,7 @@ class KApplication;
 
 /**
   K_EXPORT_KADDRESSBOOK_XXFILTER_CATALOG() creates the stub for a KAddressbook import/export filter.
-  @libname	filename of the shared library, e.g. libkaddrbk_bookmark_xxport
+  @libname	filename of the shared library, e.g. kaddrbk_bookmark_xxport
   @XXPortClass	the import/export class - derived from the XXPort class
   @catalog	catalog file to search for translation lookup (NULL if no catalog needed)
   @see: K_EXPORT_COMPONENT_FACTORY()
@@ -55,7 +55,7 @@ class KApplication;
 
 /**
   K_EXPORT_KADDRESSBOOK_XXFILTER() creates the stub for a KAddressbook import/export filter.
-  @libname	filename of the shared library, e.g. libkaddrbk_bookmark_xxport
+  @libname	filename of the shared library, e.g. kaddrbk_bookmark_xxport
   @XXPortClass	the import/export class - derived from the XXPort class
   @see: K_EXPORT_COMPONENT_FACTORY()
  */

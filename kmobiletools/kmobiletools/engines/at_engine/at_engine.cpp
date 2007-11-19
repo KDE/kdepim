@@ -78,7 +78,7 @@ void AT_Engine::queryClose()
         KMobileTools::Engine::queryClose();
 }
 
-K_EXPORT_COMPONENT_FACTORY( libkmobiletools_at, AT_EngineFactory )
+K_EXPORT_COMPONENT_FACTORY( kmobiletools_at, AT_EngineFactory )
 
 
 AT_EngineFactory::AT_EngineFactory()
@@ -630,7 +630,7 @@ QString AT_Engine::currentDeviceName() const
 
 QString AT_Engine::engineLibName() const
 {
-    return QString("libkmobiletools_at");
+    return QString("kmobiletools_at");
 }
 
 /*!

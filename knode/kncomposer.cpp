@@ -255,10 +255,10 @@ KNComposer::KNComposer(KNLocalArticle *a, const QString &text, const QString &si
 
   KStandardAction::selectAll(this, SLOT(slotSelectAll()), actionCollection());
 
-  KStandardAction::find(v_iew->e_dit, SLOT(slotFindText()), actionCollection());
-  KStandardAction::findNext(v_iew->e_dit, SLOT(slotSearchAgain()), actionCollection());
+  KStandardAction::find(v_iew->e_dit, SLOT(slotFind()), actionCollection());
+  KStandardAction::findNext(v_iew->e_dit, SLOT(slotFindNext()), actionCollection());
 
-  KStandardAction::replace(v_iew->e_dit, SLOT(slotReplaceText()), actionCollection());
+  KStandardAction::replace(v_iew->e_dit, SLOT(slotReplace()), actionCollection());
 
   //attach menu
   action = actionCollection()->addAction("append_signature");

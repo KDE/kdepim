@@ -1,5 +1,4 @@
 [Misc]
-Encoding=UTF-8
 Name=Application Octetstream
 Name[af]=Application/Octet-stream
 Name[ca]=Aplicació Octetstream
@@ -82,4 +81,4 @@ Comment[zh_TW]=text/calendar 格式化外掛程式
 
 [Plugin]
 Type=text/calendar
-X-KDE-Library=libkmail_bodypartformatter_text_calendar
+X-KDE-Library=kmail_bodypartformatter_text_calendar

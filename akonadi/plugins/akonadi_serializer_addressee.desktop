@@ -1,11 +1,12 @@
 [Misc]
-Encoding=UTF-8
 Name=Addressee Serializer
 Name[ca]=Serialitzador de destinataris
 Name[el]=Διαχειριστής διευθύνσεων
 Name[es]=Serializador de destinatarios
+Name[et]=Aadresside jadasti
 Name[it]=Serializzatore degli indirizzi
 Name[ja]=受信者シリアライザ
+Name[nds]=Adressaten-Reegmoduul
 Name[ne]=प्रापक मिलानकर्ता
 Name[pt]=Serializador de Destinatários
 Name[pt_BR]=Serializador de Destinatários
@@ -17,8 +18,10 @@ Comment=An Akonadi serializer plugin for addressee objects
 Comment[ca]=Un connector de serialització de l'Akonadi pels objectes destinataris
 Comment[el]=Ένα πρόσθετο διαχείρισης διευθύνσεων του Akonadi
 Comment[es]=Un complemento serializador de Akonadi para objetos destinatario
+Comment[et]=Akonadi aadressiobjektide jadastamisplugin
 Comment[it]=Un plugin serializzatore degli indirizzi per Akonadi
 Comment[ja]=受信者オブジェクトのための Akonadi シリアライザプラグイン
+Comment[nds]=Akonadi-Inreegmoduul för Adressaten
 Comment[ne]=प्रापक वस्तुका लागि एउटा एकोनाडी मिलानकर्ता प्लगइन
 Comment[pt]=Um 'plugin' de serialização do Akonadi para os objectos endereçados
 Comment[pt_BR]=Um 'plugin' de serialização do Akonadi para os objectos endereçados
@@ -29,4 +32,4 @@ Comment[zh_TW]=地址物件的 Akonadi 序列器外掛程式
 
 [Plugin]
 Type=text/vcard,text/directory
-X-KDE-Library=libakonadi_serializer_addressee
+X-KDE-Library=akonadi_serializer_addressee

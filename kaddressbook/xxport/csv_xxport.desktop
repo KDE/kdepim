@@ -1,6 +1,5 @@
 [Desktop Entry]
-Encoding=UTF-8
-X-KDE-Library=libkaddrbk_csv_xxport
+X-KDE-Library=kaddrbk_csv_xxport
 Name=KAB CSV XXPort Plugin
 Name[af]=KAB CSV XXPort inprop module
 Name[br]=Lugent XXPorzh CSV KAB
@@ -55,7 +54,7 @@ Comment[da]=Plugin til at importere og eksportere kontakter i CSV-format
 Comment[de]=Modul zum Import/Export von Kontakten im CSV-Format
 Comment[el]=Πρόσθετο για εισαγωγή και εξαγωγή των επαφών μορφής CSV
 Comment[es]=Plugin para importar y exportar contactos en formato CSV
-Comment[et]=Plugin kontaktide importimiseks ja eksportimiseks CSV vormingus
+Comment[et]=Plugin kontaktide importimiseks ja eksportimiseks CSV-vormingus
 Comment[eu]=CSV formatuan kontaktuak esportatu eta inportatzeko plugin-a
 Comment[fa]=وصله برای واردات و صادرات تماسها در قالب CSV
 Comment[fi]=Liitännäinen kontaktien vientiin ja tuontiin CSV-muodossa
@@ -93,5 +92,5 @@ Comment[x-test]=xxPlugin to import and export contacts in CSV formatxx
 Comment[zh_CN]=导入和导出 CSV 格式联系人的插件
 Comment[zh_TW]=以 CSV 格式匯入與匯出聯絡人外掛程式
 Type=Service
-ServiceTypes=KAddressBook/XXPort
+X-KDE-ServiceTypes=KAddressBook/XXPort
 X-KDE-KAddressBook-XXPortPluginVersion=1

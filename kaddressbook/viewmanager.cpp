@@ -611,7 +611,7 @@ void ViewManager::initActions()
   action->setWhatsThis( i18n( "The view will be refreshed by pressing this button." ) );
 
   action = coll->addAction( "options_edit_filters" );
-  action->setIcon( KIcon("search-filter") );
+  action->setIcon( KIcon("view-filter") );
   action->setText( i18n( "Edit &Filters..." ) );
   connect(action, SIGNAL(triggered(bool) ), SLOT( configureFilters() ));
   action->setWhatsThis( i18n( "Edit the contact filters<p>You will be presented with a dialog, where you can add, remove and edit filters.</p>" ) );

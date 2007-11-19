@@ -1,5 +1,4 @@
 [Desktop Entry]
-Encoding=UTF-8
 Type=Service
 Comment=Send mail from your handheld through KMail.
 Comment[af]=Stuur pos vanaf jou draagbare toestel deur KMail.
@@ -102,5 +101,5 @@ Name[x-test]=xxMailxx
 Name[zh_CN]=邮件
 Name[zh_TW]=郵件
 Implemented=file
-ServiceTypes=KPilotConduit
+X-KDE-ServiceTypes=KPilotConduit
 X-KDE-Library=kpilot_conduit_popmail

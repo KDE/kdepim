@@ -1,15 +1,18 @@
 [Desktop Entry]
-Encoding=UTF-8
 Name=Notes on Scalix Server via KMail
 Name[el]=Ημερολόγιο σε εξυπηρετητή Scalix μέσω του KMail
+Name[et]=Märkmed Scalix-serveris (KMaili vahendusel)
 Name[ga]=Nótaí ar Fhreastalaí Scalix via KMail
 Name[ja]=KMail 経由 Scalix サーバのメモ
+Name[nds]=Notizen op Scalix-Server över KMail
+Name[nl]=Notities op Scalix-server via KMail
 Name[pt]=Notas em Servidor Scalix via KMail
 Name[pt_BR]=Notas em Servidor Scalix via KMail
 Name[sv]=Kalender på Scalix-server via Kmail
 Name[x-test]=xxNotes on Scalix Server via KMailxx
+Name[zh_TW]=透過 KMail 取得 Scalix 伺服器上的備忘錄
 X-KDE-Library=knotes_scalix
 Type=Service
-ServiceTypes=KResources/Plugin
+X-KDE-ServiceTypes=KResources/Plugin
 X-KDE-ResourceFamily=notes
 X-KDE-ResourceType=scalix

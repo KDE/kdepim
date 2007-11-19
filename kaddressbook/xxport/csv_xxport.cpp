@@ -36,7 +36,7 @@
 
 #include "csv_xxport.h"
 
-K_EXPORT_KADDRESSBOOK_XXFILTER( libkaddrbk_csv_xxport, CSVXXPort )
+K_EXPORT_KADDRESSBOOK_XXFILTER( kaddrbk_csv_xxport, CSVXXPort )
 
 CSVXXPort::CSVXXPort( KABC::AddressBook *ab, QWidget *parent, const char *name )
   : KAB::XXPort( ab, parent, name )

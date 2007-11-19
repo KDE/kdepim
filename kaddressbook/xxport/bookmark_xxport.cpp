@@ -32,7 +32,7 @@
 
 #include "bookmark_xxport.h"
 
-K_EXPORT_KADDRESSBOOK_XXFILTER( libkaddrbk_bookmark_xxport, BookmarkXXPort )
+K_EXPORT_KADDRESSBOOK_XXFILTER( kaddrbk_bookmark_xxport, BookmarkXXPort )
 
 BookmarkXXPort::BookmarkXXPort( KABC::AddressBook *ab, QWidget *parent, const char *name )
   : KAB::XXPort( ab, parent, name )

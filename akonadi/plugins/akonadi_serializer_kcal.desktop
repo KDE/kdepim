@@ -1,11 +1,12 @@
 [Misc]
-Encoding=UTF-8
 Name=Incidence Serializer
 Name[ca]=Serialitzador d'incidències
 Name[el]=Διαχειριστής περιστατικών
 Name[es]=Serializador de incidencias
+Name[et]=Sündmuste jadasti
 Name[it]=Serializzatore eventi e diari
 Name[ja]=イベントシリアライザ
+Name[nds]=Begeefnis-Reegmoduul
 Name[ne]=घटना मिलानकर्ता
 Name[pt]=Serializador de Incidências
 Name[pt_BR]=Serializador de Incidências
@@ -17,8 +18,10 @@ Comment=An Akonadi serializer plugin for events, tasks and journal entries
 Comment[ca]=Un connector de serialització de l'Akonadi pels objectes incidències
 Comment[el]=Ένα πρόσθετο διαχείρισης γεγονότων, εργασιών και καταχωρήσεων χρονικού για το Akonadi
 Comment[es]=Un complemento serializador de Akonadi para eventos, tareas y entradas del diario
+Comment[et]=Akonadi sündmuste, ülesannete ja päevikusissekannate jadastamisplugin
 Comment[it]=Un plugin serializzatore degli eventi, compiti e diari per Akonadi
 Comment[ja]=イベント、タスク、ジャーナルエントリのための Akonadi シリアライザプラグイン
+Comment[nds]=Akonadi-Inreegmoduul för Begeefnissen, Opgaven un Daagbookindrääg
 Comment[ne]=घटना, कार्य र जर्नल भौचरका लागि एउटा एकोनाडी मिलानकर्ता प्लगइन
 Comment[pt]=Um 'plugin' de serialização do Akonadi para os eventos, tarefas e itens do diário
 Comment[pt_BR]=Um 'plugin' de serialização do Akonadi para os eventos, tarefas e itens do diário
@@ -29,4 +32,4 @@ Comment[zh_TW]=事件、工作與日誌項目物件的 Akonadi 序列器外掛�
 
 [Plugin]
 Type=text/calendar
-X-KDE-Library=libakonadi_serializer_kcal
+X-KDE-Library=akonadi_serializer_kcal

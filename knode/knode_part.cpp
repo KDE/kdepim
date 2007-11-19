@@ -41,7 +41,7 @@
 
 
 typedef KParts::GenericFactory< KNodePart > KNodeFactory;
-K_EXPORT_COMPONENT_FACTORY( libknodepart, KNodeFactory )
+K_EXPORT_COMPONENT_FACTORY( knodepart, KNodeFactory )
 
 KNodePart::KNodePart( QWidget *parentWidget, QObject *parent, const QStringList &)
   : KParts::ReadOnlyPart( parent ),

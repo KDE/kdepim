@@ -1,6 +1,5 @@
 # KDE Config File
 [Desktop Entry]
-Encoding=UTF-8
 Name=KPilot
 Name[af]=Kpilot
 Name[eo]=Palm-Piloto
@@ -70,7 +69,7 @@ GenericName[zh_TW]=PalmPilot 工具
 Exec=kpilot
 Icon=kpilot
 Type=Application
-DocPath=kpilot/index.html
+X-DocPath=kpilot/index.html
 Terminal=false
 X-KDE-StartupNotify=true
 X-DBUS-ServiceType=Unique
