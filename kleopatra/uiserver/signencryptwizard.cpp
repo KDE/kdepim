@@ -33,6 +33,9 @@
 #include "signencryptwizard.h"
 
 #include "recipientresolvepage.h"
+#include "wizardresultpage.h"
+#include "task.h"
+#include "taskprogressitem.h"
 #include "kleo-assuan.h"
 
 #include <utils/stl_util.h>
@@ -77,7 +80,7 @@ private:
     Page currentId;
 
     RecipientResolvePage * recipientResolvePage;
-    RecipientResolvePage * testPage;
+    WizardResultPage * resultPage;
     QStackedWidget * stack;
 };
 
@@ -86,13 +89,13 @@ SignEncryptWizard::Private::Private( SignEncryptWizard * qq )
     : q( qq ),
       mode( EncryptOrSignFiles ),
       recipientResolvePage( new RecipientResolvePage ),
-      testPage( new RecipientResolvePage ),
+      resultPage( new WizardResultPage ),
       stack( new QStackedWidget )
 {
     q->setMainWidget( stack );
     q->setButtons( KDialog::Try | KDialog::Cancel );
     setPage( SignEncryptWizard::ResolveRecipientsPage, recipientResolvePage );
-    setPage( SignEncryptWizard::ResultPage, testPage );
+    setPage( SignEncryptWizard::ResultPage, resultPage );
     q->setButtonGuiItem( KDialog::Try, KGuiItem( i18n( "Next" ) ) );
     q->connect( q, SIGNAL( tryClicked() ), q, SLOT( next() ) );
 
@@ -195,6 +198,7 @@ void SignEncryptWizard::setMode( Mode mode ) {
     //   4. ResultPage
     assuan_assert( mode == EncryptEMail || mode == SignEMail || !"Other cases are not yet implemented" );
     d->pageOrder = pageOrder;
+
     d->mode = mode;
     d->selectPage( pageOrder[0] );
 }
@@ -247,7 +251,7 @@ bool SignEncryptWizard::canGoToNextPage() const {
 }
 
 void SignEncryptWizard::connectTask( const shared_ptr<Task> & task, unsigned int idx ) {
-    notImplemented();
+    d->resultPage->addProgressItem( new TaskProgressItem( task ) );
 }
 
 std::vector<Key> SignEncryptWizard::resolvedCertificates() const {
