@@ -1,5 +1,5 @@
 /* -*- mode: c++; c-basic-offset:4 -*-
-    uiserver/recipientresolvepage.h
+    certificatepickerwidget.h
 
     This file is part of Kleopatra, the KDE keymanager
     Copyright (c) 2007 Klarälvdalens Datakonsult AB
@@ -30,17 +30,18 @@
     your version.
 */
 
-#ifndef __KLEOPATRA_UISERVER_RECIPIENTRESOLVEPAGE_H__
-#define __KLEOPATRA_UISERVER_RECIPIENTRESOLVEPAGE_H__
+#ifndef __KLEOPATRA_CERTIFICATEPICKERWIDGET_H__
+#define __KLEOPATRA_CERTIFICATEPICKERWIDGET_H__
 
-#include "certificatepickerwidget.h"
-
-#if 0
 #include <QWizardPage>
+
+#include <gpgme++/global.h>
 
 #include <utils/pimpl_ptr.h>
 
-#include <vector>
+#include <boost/shared_ptr.hpp>
+
+class QStringList;
 
 namespace GpgME {
     class Key;
@@ -51,14 +52,16 @@ namespace Kleo {
     class RecipientResolveWidget : public QWidget {
         Q_OBJECT
     public:
-        explicit RecipientResolveWidget( QWidget * parent=0 );
-        ~RecipientResolveWidget();
+        explicit RecipientResolveWidget( QWidget* parent = 0 );
 
-        void setIdentifier( const QString & id );
-        void setCertificates( const std::vector<GpgME::Key> & keys );
-
+        void setIdentifier( const QString& identifier );
+        void setCertificates( const std::vector<GpgME::Key>& keys );
         GpgME::Key chosenCertificate() const;
+        bool rememberSelection() const;
         bool isComplete() const;
+
+        void setProtocol( GpgME::Protocol protocol );
+        GpgME::Protocol protocol() const;
 
     Q_SIGNALS:
         void changed();
@@ -66,29 +69,36 @@ namespace Kleo {
     private:
         class Private;
         kdtools::pimpl_ptr<Private> d;
+
+        Q_PRIVATE_SLOT( d, void selectAnotherCertificate() );
+        Q_PRIVATE_SLOT( d, void currentIndexChanged( int ) );
     };
 
     class RecipientResolvePage : public QWizardPage {
         Q_OBJECT
     public:
+ 
         explicit RecipientResolvePage( QWidget * parent=0 );
         ~RecipientResolvePage();
+    
+        bool isComplete() const;
 
-        /* reimp */ bool isComplete() const;
+        void setIdentifiers( const QStringList& identifiers );
+        QStringList identifiers() const;
 
-        void ensureIndexAvailable( unsigned int idx );
+        void setProtocol( GpgME::Protocol protocol );
+        GpgME::Protocol protocol() const;
 
         unsigned int numRecipientResolveWidgets() const;
         RecipientResolveWidget * recipientResolveWidget( unsigned int idx ) const;
 
+        void ensureIndexAvailable( unsigned int idx );
 
     private:
         class Private;
         kdtools::pimpl_ptr<Private> d;
     };
-
 }
 
-#endif // if 0
 
-#endif /* __KLEOPATRA_UISERVER_RECIPIENTRESOLVEPAGE_H__ */
+#endif // __KLEOPATRA_CERTIFICATEPICKERWIDGET_H__

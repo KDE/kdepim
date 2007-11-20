@@ -30,7 +30,7 @@
     your version.
 */
 
-#include "certificatepickerwidget.h"
+#include "recipientresolvepage.h"
 #include "keyselectiondialog.h"
 #include "models/keycache.h"
 #include "utils/formatting.h"
@@ -302,5 +302,4 @@ GpgME::Protocol RecipientResolvePage::protocol() const
     return d->protocol;
 }
 
-#include "moc_certificatepickerwidget.cpp"
-
+#include "moc_recipientresolvepage.cpp"
