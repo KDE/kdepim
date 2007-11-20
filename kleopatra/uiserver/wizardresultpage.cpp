@@ -38,6 +38,8 @@
 #include <QBoxLayout>
 #include <QGridLayout>
 
+#include <cassert>
+
 using namespace Kleo;
 
 class WizardResultPage::Private {
