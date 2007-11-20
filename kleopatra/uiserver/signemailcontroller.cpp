@@ -305,20 +305,21 @@ void SignEMailController::Private::ensureWizardCreated() {
     if ( wizard )
         return;
 
-    SignEncryptWizard * w = new SignEncryptWizard;
+    std::auto_ptr<SignEncryptWizard> w( new SignEncryptWizard );
     if ( const shared_ptr<AssuanCommand> cmd = command.lock() )
-        w = cmd->applyWindowID( w );
+        cmd->applyWindowID( w.get() );
     // ### virtual hook here
     w->setWindowTitle( i18n("Sign Mail Message") );
     w->setMode( SignEncryptWizard::SignEMail );
     // ### end virtual hook
     w->setAttribute( Qt::WA_DeleteOnClose );
-    connect( w, SIGNAL(canceled()), q, SLOT(slotWizardCanceled()) );
+    connect( w.get(), SIGNAL(canceled()), q, SLOT(slotWizardCanceled()) );
 
     w->setProtocol( protocol );
     w->show();//temporary hack to initialize and start the wizard
     w->hide();
-    wizard = w;
+
+    wizard = w.release();
 }
 
 // ### extract to base

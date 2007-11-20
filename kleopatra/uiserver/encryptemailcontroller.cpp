@@ -284,17 +284,17 @@ void EncryptEMailController::Private::ensureWizardCreated() {
     if ( wizard )
         return;
 
-    SignEncryptWizard * w = new SignEncryptWizard;
+    std::auto_ptr<SignEncryptWizard> w( new SignEncryptWizard );
     if ( const shared_ptr<AssuanCommand> cmd = command.lock() )
-        w = cmd->applyWindowID( w );
+        cmd->applyWindowID( w.get() );
     w->setWindowTitle( i18n("Encrypt Mail Message") );
     w->setMode( SignEncryptWizard::EncryptEMail );
     w->setAttribute( Qt::WA_DeleteOnClose );
-    connect( w, SIGNAL(recipientsResolved()), q, SLOT(slotWizardRecipientsResolved()) );
-    connect( w, SIGNAL(canceled()), q, SLOT(slotWizardCanceled()) );
+    connect( w.get(), SIGNAL(recipientsResolved()), q, SLOT(slotWizardRecipientsResolved()) );
+    connect( w.get(), SIGNAL(canceled()), q, SLOT(slotWizardCanceled()) );
 
     w->setProtocol( protocol );
-    wizard = w;
+    wizard = w.release();
 }
 
 void EncryptEMailController::Private::ensureWizardVisible() {
