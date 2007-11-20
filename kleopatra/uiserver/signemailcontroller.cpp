@@ -307,7 +307,7 @@ void SignEMailController::Private::ensureWizardCreated() {
 
     std::auto_ptr<SignEncryptWizard> w( new SignEncryptWizard );
     if ( const shared_ptr<AssuanCommand> cmd = command.lock() )
-        cmd->applyWindowID( w.get() );
+        w = cmd->applyWindowID( w );
     // ### virtual hook here
     w->setWindowTitle( i18n("Sign Mail Message") );
     w->setMode( SignEncryptWizard::SignEMail );

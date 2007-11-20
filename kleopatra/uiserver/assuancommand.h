@@ -248,6 +248,11 @@ namespace Kleo {
             doApplyWindowID( w );
             return w;
         }
+        template <typename T_Widget>
+        std::auto_ptr<T_Widget> applyWindowID( std::auto_ptr<T_Widget> w ) const {
+            doApplyWindowID( w.get() );
+            return w;
+        }
 
         QString heuristicBaseDirectory() const;
 

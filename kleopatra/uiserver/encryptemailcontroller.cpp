@@ -286,7 +286,7 @@ void EncryptEMailController::Private::ensureWizardCreated() {
 
     std::auto_ptr<SignEncryptWizard> w( new SignEncryptWizard );
     if ( const shared_ptr<AssuanCommand> cmd = command.lock() )
-        cmd->applyWindowID( w.get() );
+        w = cmd->applyWindowID( w );
     w->setWindowTitle( i18n("Encrypt Mail Message") );
     w->setMode( SignEncryptWizard::EncryptEMail );
     w->setAttribute( Qt::WA_DeleteOnClose );
