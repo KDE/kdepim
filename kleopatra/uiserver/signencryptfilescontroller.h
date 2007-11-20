@@ -65,7 +65,21 @@ namespace Kleo {
 
         void setCommand( const boost::shared_ptr<AssuanCommand> & cmd );
 
+        enum Operation {
+            SignDisallowed = 0,
+            SignAllowed = 1,
+            SignForced  = 2,
+
+            SignMask = SignAllowed|SignForced,
+
+            EncryptDisallowed = 0,
+            EncryptAllowed = 4,
+            EncryptForced = 8,
+
+            EncryptMask = EncryptAllowed|EncryptForced
+        };
         void setOperationMode( unsigned int mode );
+
         void setFiles( const QStringList & files );
 
         void start();
@@ -80,6 +94,8 @@ namespace Kleo {
     private:
         class Private;
         kdtools::pimpl_ptr<Private> d;
+        Q_PRIVATE_SLOT( d, void slotWizardObjectsResolved() )
+        Q_PRIVATE_SLOT( d, void slotWizardRecipientsResolved() )
         Q_PRIVATE_SLOT( d, void slotWizardCanceled() )
         Q_PRIVATE_SLOT( d, void slotTaskDone() )
         Q_PRIVATE_SLOT( d, void schedule() )

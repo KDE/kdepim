@@ -48,6 +48,7 @@
 
 #include <QPointer>
 #include <QTimer>
+#include <QFileInfo>
 
 #include <boost/bind.hpp>
 
@@ -58,6 +59,11 @@ using namespace KMime::Types;
 
 struct SignEncryptFilesTask : Task {};
 
+static QString titleForOperation( unsigned int op ) {
+    notImplemented();
+    return i18n("Encrypt Files");
+}
+
 class SignEncryptFilesController::Private {
     friend class ::Kleo::SignEncryptFilesController;
     SignEncryptFilesController * const q;
@@ -65,6 +71,8 @@ public:
     explicit Private( SignEncryptFilesController * qq );
 
 private:
+    void slotWizardObjectsResolved();
+    void slotWizardRecipientsResolved();
     void slotWizardCanceled();
     void slotTaskDone();
 
@@ -77,21 +85,26 @@ private:
     shared_ptr<SignEncryptFilesTask> takeRunnable( GpgME::Protocol proto );
     void connectTask( const shared_ptr<Task> & task, unsigned int idx );
 
+    static void assertValidOperation( unsigned int );
+
 private:
-    std::vector< shared_ptr<SignEncryptFilesTask> > runnable, completed;
+    std::vector< shared_ptr<SignEncryptFilesTask> > incomplete, runnable, completed;
     shared_ptr<SignEncryptFilesTask> cms, openpgp;
     weak_ptr<AssuanCommand> command;
     QPointer<SignEncryptWizard> wizard;
+    unsigned int operation;
     Protocol protocol;
 };
 
 SignEncryptFilesController::Private::Private( SignEncryptFilesController * qq )
     : q( qq ),
+      incomplete(),
       runnable(),
       cms(),
       openpgp(),
       command(),
       wizard(),
+      operation( SignAllowed|EncryptAllowed ),
       protocol( UnknownProtocol )
 {
 
@@ -125,23 +138,119 @@ void SignEncryptFilesController::setCommand( const shared_ptr<AssuanCommand> & c
     d->command = cmd;
 }
 
+// static
+void SignEncryptFilesController::Private::assertValidOperation( unsigned int op ) {
+    assuan_assert( ( op & SignMask )    == SignDisallowed    ||
+                   ( op & SignMask )    == SignAllowed       ||
+                   ( op & SignMask )    == SignForced );
+    assuan_assert( ( op & EncryptMask ) == EncryptDisallowed ||
+                   ( op & EncryptMask ) == EncryptAllowed    ||
+                   ( op & EncryptMask ) == EncryptForced );
+    assuan_assert( ( op & ~(SignMask|EncryptMask) ) == 0 );
+}
+
 void SignEncryptFilesController::setOperationMode( unsigned int mode ) {
-    notImplemented();
+    Private::assertValidOperation( mode );
+    d->operation = mode;
+    if ( d->wizard )
+        d->wizard->setWindowTitle( titleForOperation( d->operation ) );
 }
 
 void SignEncryptFilesController::setFiles( const QStringList & files ) {
-    notImplemented();
+    assuan_assert( !files.empty() );
+    d->ensureWizardVisible();
+    d->wizard->setFiles( files );
 }
 
 void SignEncryptFilesController::Private::slotWizardCanceled() {
     emit q->error( gpg_error( GPG_ERR_CANCELED ), i18n("User cancel") );
 }
 
+static SignEncryptWizard::TriState signingTriState( unsigned int op ) {
+    notImplemented();
+}
+
+static SignEncryptWizard::TriState encryptionTriState( unsigned int op ) {
+    notImplemented();
+}
+
 void SignEncryptFilesController::start() {
-    int i = 0;
-    Q_FOREACH( const shared_ptr<Task> task, d->runnable )
-        d->connectTask( task, i++ );
-    d->schedule();
+
+    d->ensureWizardCreated();
+
+    d->wizard->setSigningMode( signingTriState( d->operation ) );
+    d->wizard->setEncryptionMode( encryptionTriState( d->operation ) );
+
+    d->ensureWizardVisible();
+
+    if ( d->wizard->canGoToNextPage() )
+        d->wizard->next();
+}
+
+static std::vector< shared_ptr<SignEncryptFilesTask> >
+createSignEncryptTasksForFileInfo( const QFileInfo & fi, bool sign, bool encrypt ) {
+    notImplemented();
+}
+
+void SignEncryptFilesController::Private::slotWizardObjectsResolved() {
+
+    try {
+
+        assuan_assert( wizard );
+
+        const bool sign = wizard->signingSelected();
+        const bool encrypt = wizard->encryptionSelected();
+        const QFileInfoList files = wizard->resolvedFiles();
+
+        assuan_assert( !files.empty() );
+
+        std::vector< shared_ptr<SignEncryptFilesTask> > tasks;
+        tasks.reserve( files.size() );
+
+        Q_FOREACH( const QFileInfo & fi, files ) {
+            const std::vector< shared_ptr<SignEncryptFilesTask> > created = 
+                createSignEncryptTasksForFileInfo( fi, sign, encrypt );
+            tasks.insert( tasks.end(), created.begin(), created.end() );
+        }
+
+        incomplete.swap( tasks );
+
+    } catch ( const assuan_exception & e ) {
+        emit q->error( e.error(), e.message() );
+    } catch ( const std::exception & e ) {
+        emit q->error( gpg_error( GPG_ERR_UNEXPECTED ),
+                       i18n("Caught unexpected exception in SignEncryptFilesController::Private::slotWizardObjectsResolved: %1",
+                            QString::fromLocal8Bit( e.what() ) ) );
+    } catch ( ... ) {
+        emit q->error( gpg_error( GPG_ERR_UNEXPECTED ),
+                       i18n("Caught unknown exception in SignEncryptFilesController::Private::slotWizardObjectsResolved") );
+    }
+}
+
+void SignEncryptFilesController::Private::slotWizardRecipientsResolved() {
+
+    try {
+
+        int i = 0;
+        Q_FOREACH( const shared_ptr<Task> task, incomplete )
+            connectTask( task, i++ );
+
+        assuan_assert( runnable.empty() );
+
+        runnable.swap( incomplete );
+
+        schedule();
+
+    } catch ( const assuan_exception & e ) {
+        emit q->error( e.error(), e.message() );
+    } catch ( const std::exception & e ) {
+        emit q->error( gpg_error( GPG_ERR_UNEXPECTED ),
+                       i18n("Caught unexpected exception in SignEncryptFilesController::Private::slotWizardRecipientsResolved: %1",
+                            QString::fromLocal8Bit( e.what() ) ) );
+    } catch ( ... ) {
+        emit q->error( gpg_error( GPG_ERR_UNEXPECTED ),
+                       i18n("Caught unknown exception in SignEncryptFilesController::Private::slotWizardRecipientsResolved") );
+    }
 }
 
 void SignEncryptFilesController::Private::schedule() {
@@ -231,17 +340,21 @@ void SignEncryptFilesController::Private::ensureWizardCreated() {
     if ( wizard )
         return;
 
-    SignEncryptWizard * w = new SignEncryptWizard;
+    std::auto_ptr<SignEncryptWizard> w( new SignEncryptWizard );
     if ( const shared_ptr<AssuanCommand> cmd = command.lock() )
         w = cmd->applyWindowID( w );
-    w->setWindowTitle( i18n("Encrypt Files") );
-    w->setMode( SignEncryptWizard::EncryptEMail );
+
+    w->setWindowTitle( titleForOperation( operation ) );
+    w->setMode( SignEncryptWizard::SignOrEncryptFiles );
+
     w->setAttribute( Qt::WA_DeleteOnClose );
-    connect( w, SIGNAL(recipientsResolved()), q, SLOT(slotWizardRecipientsResolved()) );
-    connect( w, SIGNAL(canceled()), q, SLOT(slotWizardCanceled()) );
+    connect( w.get(), SIGNAL(objectsResolved()), q, SLOT(slotWizardObjectsResolved()) );
+    connect( w.get(), SIGNAL(recipientsResolved()), q, SLOT(slotWizardRecipientsResolved()) );
+    connect( w.get(), SIGNAL(canceled()), q, SLOT(slotWizardCanceled()) );
 
     w->setProtocol( protocol );
-    wizard = w;
+
+    wizard = w.release();
 }
 
 void SignEncryptFilesController::Private::ensureWizardVisible() {
