@@ -197,9 +197,9 @@ public:
 		return fProgress;
 	}
 
-	inline void setCurrentSocket(int i) { fPilotSocket = i; }
+	void setCurrentSocket(int i) { fPilotSocket = i; }
 
-	inline int currentSocket() { return fPilotSocket; }
+	int currentSocket() { return fPilotSocket; }
 private:
 	QString fMessage;
 	int fProgress;
