@@ -146,10 +146,9 @@ void EncryptEMailController::startResolveRecipients( const std::vector<Mailbox> 
     if ( d->wizard->canGoToNextPage() ) {
         d->wizard->next();
         QTimer::singleShot( 0, this, SIGNAL(recipientsResolved()) );
-    } else {
-        d->ensureWizardVisible();
     }
     
+    d->ensureWizardVisible();
 }
 
 void EncryptEMailController::Private::slotWizardRecipientsResolved() {
