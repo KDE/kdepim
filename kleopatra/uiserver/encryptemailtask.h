@@ -66,6 +66,7 @@ namespace Kleo {
 
         /* reimp */ void start();
         /* reimp */ void cancel();
+        /* reimpl */ QString label() const;
 
     private:
         class Private;

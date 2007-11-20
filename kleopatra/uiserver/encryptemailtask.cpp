@@ -143,6 +143,11 @@ Protocol EncryptEMailTask::protocol() const {
     return d->recipients.front().protocol();
 }
 
+QString EncryptEMailTask::label() const
+{
+    return d->input ? d->input->label() : QString();
+}
+
 void EncryptEMailTask::start() {
     assuan_assert( !d->job );
     assuan_assert( d->input );

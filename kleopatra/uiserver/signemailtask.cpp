@@ -154,6 +154,11 @@ Protocol SignEMailTask::protocol() const {
     return d->signers.front().protocol();
 }
 
+QString SignEMailTask::label() const
+{
+    return d->input ? d->input->label() : QString();
+}
+
 void SignEMailTask::start() {
     assuan_assert( !d->job );
     assuan_assert( d->input );

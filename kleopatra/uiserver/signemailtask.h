@@ -67,6 +67,7 @@ namespace Kleo {
 
         /* reimp */ void start();
         /* reimp */ void cancel();
+        /* reimp */ QString label() const;
 
         QString micAlg() const;
 

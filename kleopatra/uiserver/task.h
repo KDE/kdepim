@@ -56,6 +56,8 @@ namespace Kleo {
 
         virtual void start() = 0;
 
+        virtual QString label() const = 0;
+
     public Q_SLOTS:
         virtual void cancel() = 0;
 
