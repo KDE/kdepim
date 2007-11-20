@@ -43,7 +43,7 @@
 #include <QLayout>
 #include <QLabel>
 #include <QProgressBar>
-#include <QStackedLayout>
+#include <QStackedWidget>
 #include <QFrame>
 
 #include <algorithm>
@@ -88,8 +88,8 @@ private:
 
             progress.setRange( 0, 0 ); // knight rider mode
 
-            vlay.addWidget( &label );
             vlay.addWidget( &progress );
+            vlay.addWidget( &label );
         }
     } ui;
 };
@@ -103,7 +103,7 @@ public:
         : q( qq ),
           ui( q )
     {
-        connect( &ui.stack, SIGNAL(currentChanged(int)),
+        connect( ui.stack, SIGNAL(currentChanged(int)),
                  q, SIGNAL(operationStateChanged()) );
     }
 
@@ -111,31 +111,36 @@ public:
     static QHash<QString, QPointer<CertificateInfoWidgetImpl> > dialogMap;
 
     struct UI {
-        ProgressWidget  progress;
-        QFrame          result;
-        QLabel          error;
-        QStackedLayout stack;
+        QLabel * label;
+        ProgressWidget * progress;
+        QFrame * result;
+        QLabel * error;
+        QStackedWidget * stack;
 
         explicit UI( ResultDisplayWidget * q )
-            : progress( q ),
-              result( q ),
-              error( q ),
-              stack( q )
+            : label( new QLabel( q ) ),
+              progress( new ProgressWidget( q ) ),
+              result( new QFrame( q ) ),
+              error( new QLabel( q ) ),
+              stack( new QStackedWidget( q ) )
         {
+            KDAB_SET_OBJECT_NAME( label );
             KDAB_SET_OBJECT_NAME( progress );
             KDAB_SET_OBJECT_NAME( result );
             KDAB_SET_OBJECT_NAME( error );
             KDAB_SET_OBJECT_NAME( stack );
 
-            stack.setMargin( 0 );
+            QVBoxLayout * layout = new QVBoxLayout( q );
+            layout->addWidget( label );
+            layout->addWidget( stack );
 
-            error.setStyleSheet( ERROR_STYLE_SHEET );
+            error->setStyleSheet( ERROR_STYLE_SHEET );
 
-            stack.addWidget( &progress );
-            stack.addWidget( &result );
-            stack.addWidget( &error );
+            stack->addWidget( progress );
+            stack->addWidget( result );
+            stack->addWidget( error );
 
-            stack.setCurrentWidget( &progress );
+            stack->setCurrentWidget( progress );
         }
     } ui;
 };
@@ -151,7 +156,7 @@ ResultDisplayWidget::ResultDisplayWidget( QWidget * p )
 ResultDisplayWidget::~ResultDisplayWidget() {}
 
 bool ResultDisplayWidget::operationInProgress() const {
-    return d->ui.stack.currentWidget() == &d->ui.progress ;
+    return d->ui.stack->currentWidget() == d->ui.progress;
 }
 
 QString ResultDisplayWidget::renderKey(const Key & key)
@@ -211,13 +216,12 @@ void ResultDisplayWidget::keyLinkActivated(const QString & link)
 }
 
 void ResultDisplayWidget::setLabel( const QString & label ) {
-    d->ui.progress.setText( label );
-    d->ui.stack.setCurrentWidget( &d->ui.progress );
+    d->ui.label->setText( label );
 }
 
 void ResultDisplayWidget::setProgress( const QString & what, int current, int total ) {
-    d->ui.progress.setText( what );
-    d->ui.progress.setProgress( current, total );
+    d->ui.progress->setText( what );
+    d->ui.progress->setProgress( current, total );
 }
 
 void ResultDisplayWidget::setError( int err, const QString & details )
@@ -229,26 +233,26 @@ void ResultDisplayWidget::setError( int err, const QString & details )
 void ResultDisplayWidget::setResult( const boost::shared_ptr<const Kleo::Task::Result> & result )
 {
     assert( result );
-    QVBoxLayout * const layout = new QVBoxLayout( &d->ui.result );
+    QVBoxLayout * const layout = new QVBoxLayout( d->ui.result );
     QLabel * const overview = new QLabel;
     overview->setTextFormat( Qt::RichText );
     overview->setText( result->overview() );
     layout->addWidget( overview );
-    d->ui.stack.setCurrentWidget( &d->ui.result );
+    d->ui.stack->setCurrentWidget( d->ui.result );
 }
 
 
 void ResultDisplayWidget::showResultWidget() {
-    d->ui.stack.setCurrentWidget( &d->ui.result );
+    d->ui.stack->setCurrentWidget( d->ui.result );
 }
 
 void ResultDisplayWidget::setError( const QString & err ) {
-    d->ui.error.setText( err );
-    d->ui.stack.setCurrentWidget( &d->ui.error );
+    d->ui.error->setText( err );
+    d->ui.stack->setCurrentWidget( d->ui.error );
 }
 
 QWidget * ResultDisplayWidget::resultWidget() {
-    return &d->ui.result;
+    return d->ui.result;
 }
 
 #include "resultdisplaywidget.moc"
