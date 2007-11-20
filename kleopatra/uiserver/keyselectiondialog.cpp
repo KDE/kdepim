@@ -40,6 +40,9 @@
 #include <QDialogButtonBox>
 #include <QAbstractItemView>
 
+#include <boost/bind.hpp>
+
+#include <algorithm>
 #include <cassert>
 
 using namespace Kleo;
@@ -54,11 +57,12 @@ struct KeySelectionDialog::Private {
     QString m_customText;
     KeySelectionDialog::SelectionMode m_mode;
     void setLabelText();
+    GpgME::Protocol m_protocol;
 };
 
 
 KeySelectionDialog::Private::Private( KeySelectionDialog * _q)
-    :q( _q ), ui(), m_model( AbstractKeyListModel::createFlatKeyListModel( q ) ), m_mode( MultiSelection )
+    :q( _q ), ui(), m_model( AbstractKeyListModel::createFlatKeyListModel( q ) ), m_mode( MultiSelection ), m_protocol( GpgME::UnknownProtocol )
 {
     ui.setupUi( q );
     connect ( ui.buttonBox, SIGNAL( accepted() ), q, SLOT( accept() ) );
@@ -110,8 +114,18 @@ std::vector<GpgME::Key> KeySelectionDialog::selectedKeys() const
     return d->m_model->keys( sm->selectedIndexes() );
 }
 
-void KeySelectionDialog::addKeys(const std::vector<GpgME::Key> & keys)
+void KeySelectionDialog::addKeys(const std::vector<GpgME::Key> & keys_ )
 {
+    std::vector<GpgME::Key> keys = keys_;
+
+    //TODO: this really should be done via KeyFilters/a proxy model
+    if ( d->m_protocol != GpgME::UnknownProtocol )
+    {
+       keys.erase( std::remove_if( keys.begin(), keys.end(),
+                                     bind( &GpgME::Key::protocol, _1 ) != d->m_protocol ), keys.end() );
+ 
+    }
+
     d->m_model->addKeys( keys );
 }
 
@@ -126,4 +140,15 @@ KeySelectionDialog::SelectionMode KeySelectionDialog::selectionMode() const
 {
     return d->m_mode;
 }
+
+void KeySelectionDialog::setProtocol( GpgME::Protocol protocol )
+{
+    d->m_protocol = protocol;
+}
+
+GpgME::Protocol KeySelectionDialog::protocol() const
+{
+    return d->m_protocol;
+}
+
 

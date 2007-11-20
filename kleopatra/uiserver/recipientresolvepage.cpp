@@ -128,6 +128,7 @@ void RecipientResolvePage::Private::addWidgetForIdentifier( const QString& id )
     RecipientResolveWidget* const line = new RecipientResolveWidget;
     q->connect( line, SIGNAL( changed() ), q, SIGNAL( completeChanged() ) );
     line->setIdentifier( id );
+    line->setProtocol( protocol );
     widgets.push_back( line );
     identifiers.push_back( id );
     assert( scrollArea->widget() );
@@ -247,6 +248,7 @@ void RecipientResolveWidget::Private::selectAnotherCertificate()
 {
     QPointer<KeySelectionDialog> dlg = new KeySelectionDialog( q );
     dlg->setSelectionMode( KeySelectionDialog::SingleSelection );
+    dlg->setProtocol( m_protocol );
     dlg->addKeys( KeyCache::instance()->keys() );
     if ( dlg->exec() == QDialog::Accepted )
     {
@@ -291,7 +293,7 @@ GpgME::Protocol RecipientResolveWidget::protocol() const
 void RecipientResolvePage::setProtocol( GpgME::Protocol prot )
 {
     d->protocol = prot;
-    for ( int i = 0; i < d->widgets.size(); ++i )
+    for ( uint i = 0; i < d->widgets.size(); ++i )
     {
         d->widgets[i]->setProtocol( prot );
     }        

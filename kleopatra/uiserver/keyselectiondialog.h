@@ -37,6 +37,8 @@
 
 #include <utils/pimpl_ptr.h>
 
+#include <gpgme++/key.h>
+
 namespace GpgME {
     class Key;
 }
@@ -60,6 +62,9 @@ public:
 
     void setCustomText( const QString& label );
     QString customText() const;
+
+    void setProtocol( GpgME::Protocol protocol );
+    GpgME::Protocol protocol() const;
 
     void setSelectionMode( SelectionMode mode );  
     SelectionMode selectionMode() const;

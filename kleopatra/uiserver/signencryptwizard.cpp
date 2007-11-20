@@ -213,7 +213,6 @@ void SignEncryptWizard::setMode( Mode mode ) {
 
 void SignEncryptWizard::setProtocol( Protocol proto ) {
     assuan_assert( d->mode == EncryptEMail || d->mode == SignEMail );
-    // ### distribute to where needed....
     d->recipientResolvePage->setProtocol( proto );
 }
 
