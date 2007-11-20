@@ -56,7 +56,7 @@ if ( USABLE_ASSUAN_FOUND )
     uiserver/resultdisplaywidget.cpp
     uiserver/keyselectiondialog.cpp
     uiserver/keyselectionjob.cpp
-    uiserver/certificatepickerwidget.cpp
+    uiserver/recipientresolvepage.cpp
     uiserver/wizardresultpage.cpp
     uiserver/scrollarea.cpp
     )
