@@ -142,10 +142,9 @@ void SignEMailController::startResolveSigners( const std::vector<Mailbox> & sign
     if ( d->wizard->canGoToNextPage() ) {
         d->wizard->next();
         QTimer::singleShot( 0, this, SIGNAL(signersResolved()) );
-    } else {
-        d->ensureWizardVisible();
-    }
+    } 
     
+    d->ensureWizardVisible();
 }
 
 void SignEMailController::setDetachedSignature( bool detached ) {
