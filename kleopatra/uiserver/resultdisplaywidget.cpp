@@ -135,7 +135,7 @@ public:
             stack.addWidget( &result );
             stack.addWidget( &error );
 
-            stack.setCurrentIndex( 0 );
+            stack.setCurrentWidget( &progress );
         }
     } ui;
 };
@@ -212,7 +212,7 @@ void ResultDisplayWidget::keyLinkActivated(const QString & link)
 
 void ResultDisplayWidget::setLabel( const QString & label ) {
     d->ui.progress.setText( label );
-    d->ui.stack.setCurrentIndex( 0 );
+    d->ui.stack.setCurrentWidget( &d->ui.progress );
 }
 
 void ResultDisplayWidget::setProgress( const QString & what, int current, int total ) {
@@ -228,17 +228,23 @@ void ResultDisplayWidget::setError( int err, const QString & details )
 
 void ResultDisplayWidget::setResult( const boost::shared_ptr<const Kleo::Task::Result> & result )
 {
-    showResultWidget();
+    assert( result );
+    QVBoxLayout * const layout = new QVBoxLayout( &d->ui.result );
+    QLabel * const overview = new QLabel;
+    overview->setTextFormat( Qt::RichText );
+    overview->setText( result->overview() );
+    layout->addWidget( overview );
+    d->ui.stack.setCurrentWidget( &d->ui.result );
 }
 
 
 void ResultDisplayWidget::showResultWidget() {
-    d->ui.stack.setCurrentIndex( 1 );
+    d->ui.stack.setCurrentWidget( &d->ui.result );
 }
 
 void ResultDisplayWidget::setError( const QString & err ) {
     d->ui.error.setText( err );
-    d->ui.stack.setCurrentIndex( 2 );
+    d->ui.stack.setCurrentWidget( &d->ui.error );
 }
 
 QWidget * ResultDisplayWidget::resultWidget() {
