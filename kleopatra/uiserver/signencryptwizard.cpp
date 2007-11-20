@@ -104,6 +104,7 @@ SignEncryptWizard::Private::Private( SignEncryptWizard * qq )
     setPage( SignEncryptWizard::ResolveRecipientsPage, recipientResolvePage );
     setPage( SignEncryptWizard::ResultPage, resultPage );
     q->connect( q, SIGNAL( tryClicked() ), q, SLOT( next() ) );
+    q->resize( QSize( 640, 480 ).expandedTo( q->sizeHint() ) );
 }
 
 KPushButton * SignEncryptWizard::Private::nextButton() const
