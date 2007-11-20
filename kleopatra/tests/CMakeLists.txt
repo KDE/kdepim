@@ -38,12 +38,13 @@ kde4_add_executable( test_signencryptwizard TEST
   ../uiserver/keyselectiondialog.cpp
   ../uiserver/kleo-assuan.cpp
   ../uiserver/wizardresultpage.cpp
-  ../uiserver/taskprogressitem.cpp
+  ../uiserver/resultdisplaywidget.cpp
   ../uiserver/scrollarea.cpp
+  ../certificateinfowidgetimpl.cpp
   ../utils/formatting.cpp
   ../models/keycache.cpp 
   ../models/keylistmodel.cpp )
-target_link_libraries( test_signencryptwizard kleo ${KDE4_KMIME_LIBRARY} ${KDE4_KDEUI_LIBS} ${QGPGME_LIBRARIES})
+target_link_libraries( test_signencryptwizard kleo ${KDE4_KMIME_LIBRARY} ${KDE4_KDEUI_LIBS} ${QGPGME_LIBRARIES} ${QT_QT3SUPPORT_LIBRARY} )
 
 ########### next target ###############
 

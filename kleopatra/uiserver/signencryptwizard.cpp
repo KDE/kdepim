@@ -33,9 +33,9 @@
 #include "signencryptwizard.h"
 
 #include "recipientresolvepage.h"
+#include "resultdisplaywidget.h"
 #include "wizardresultpage.h"
 #include "task.h"
-#include "taskprogressitem.h"
 #include "kleo-assuan.h"
 
 #include <utils/stl_util.h>
@@ -88,6 +88,7 @@ private:
 SignEncryptWizard::Private::Private( SignEncryptWizard * qq )
     : q( qq ),
       mode( EncryptOrSignFiles ),
+      currentId( SignEncryptWizard::NoPage ),
       recipientResolvePage( new RecipientResolvePage ),
       resultPage( new WizardResultPage ),
       stack( new QStackedWidget )
@@ -146,7 +147,7 @@ void SignEncryptWizard::Private::next()
     assert( currentId != NoPage );
     if ( currentId == SignEncryptWizard::ResolveRecipientsPage )
         emit q->recipientsResolved();
-    std::vector<SignEncryptWizard::Page>::const_iterator it = std::find( pageOrder.begin(), pageOrder.end(), currentId );
+    std::vector<SignEncryptWizard::Page>::const_iterator it = qBinaryFind( pageOrder.begin(), pageOrder.end(), currentId );
     assert( it != pageOrder.end() );
     ++it;
     if ( it == pageOrder.end() )
@@ -251,7 +252,16 @@ bool SignEncryptWizard::canGoToNextPage() const {
 }
 
 void SignEncryptWizard::connectTask( const shared_ptr<Task> & task, unsigned int idx ) {
-    d->resultPage->addProgressItem( new TaskProgressItem( task ) );
+    assuan_assert( task );
+    ResultDisplayWidget* const item = new ResultDisplayWidget;
+    item->setLabel( task->label() );
+    connect( task.get(), SIGNAL( progress( QString, int, int ) ),
+                item, SLOT( setProgress( QString, int, int ) ) );
+    connect( task.get(), SIGNAL( error( int, QString ) ),
+                item, SLOT( setError( int, QString ) ) );
+    connect( task.get(), SIGNAL(result( boost::shared_ptr<const Kleo::Task::Result> ) ),
+                item, SLOT( setResult( boost::shared_ptr<const Kleo::Task::Result> ) ) );
+    d->resultPage->addResultItem( item );
 }
 
 std::vector<Key> SignEncryptWizard::resolvedCertificates() const {

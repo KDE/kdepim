@@ -35,6 +35,8 @@
 
 #include <QWidget>
 
+#include "task.h"
+
 #include <utils/pimpl_ptr.h>
 
 class QColor;
@@ -63,6 +65,8 @@ Q_SIGNALS:
 
 public Q_SLOTS:
     void setProgress( const QString & what, int current, int total );
+    void setError( int err, const QString & details );
+    void setResult( const boost::shared_ptr<const Kleo::Task::Result> & result );
 
 protected:
     static QString styleSheet( const QColor & color );

@@ -45,7 +45,7 @@ namespace Kleo {
         explicit WizardResultPage( QWidget * parent=0 );
         ~WizardResultPage();
     
-        void addProgressItem( QWidget* widget );
+        void addResultItem( QWidget* widget );
 
         /*reimpl*/ bool isComplete() const;
 

@@ -57,7 +57,6 @@ if ( USABLE_ASSUAN_FOUND )
     uiserver/certificatepickerwidget.cpp
     uiserver/wizardresultpage.cpp
     uiserver/scrollarea.cpp
-    uiserver/taskprogressitem.cpp
     )
   kde4_add_ui_files( _kleopatra_uiserver_SRCS uiserver/keyselectiondialog.ui)
   if ( WIN32 )

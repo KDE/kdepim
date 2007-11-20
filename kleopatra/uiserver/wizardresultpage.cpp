@@ -73,7 +73,7 @@ WizardResultPage::WizardResultPage( QWidget * parent )
 }
 
 
-void WizardResultPage::addProgressItem( QWidget* widget )
+void WizardResultPage::addResultItem( QWidget* widget )
 {
     assert( d->scrollArea->widget() );
     assert( qobject_cast<QBoxLayout*>( d->scrollArea->widget()->layout() ) );

@@ -220,6 +220,18 @@ void ResultDisplayWidget::setProgress( const QString & what, int current, int to
     d->ui.progress.setProgress( current, total );
 }
 
+void ResultDisplayWidget::setError( int err, const QString & details )
+{
+    Q_UNUSED( err );
+    setError( details );
+}
+
+void ResultDisplayWidget::setResult( const boost::shared_ptr<const Kleo::Task::Result> & result )
+{
+    showResultWidget();
+}
+
+
 void ResultDisplayWidget::showResultWidget() {
     d->ui.stack.setCurrentIndex( 1 );
 }
