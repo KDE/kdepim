@@ -192,10 +192,13 @@ RecipientResolveWidget::Private::Private( RecipientResolveWidget * qq ) : q( qq 
     certificateLabel->setText( i18n( "Certificate:" ) );
     layout->addWidget( certificateLabel, 1, 0 ); 
     m_combo = new QComboBox;
+    m_combo->setSizeAdjustPolicy( QComboBox::AdjustToMinimumContentsLengthWithIcon );
+    m_combo->setMinimumContentsLength( 40 );
     certificateLabel->setBuddy( m_combo );
     layout->addWidget( m_combo, 1, 1 );
     m_selectButton = new QPushButton;
     m_selectButton->setText( i18n( "..." ) );
+    m_selectButton->setSizePolicy( QSizePolicy::Fixed, QSizePolicy::Fixed ); 
     q->connect( m_selectButton, SIGNAL( clicked() ), SLOT( selectAnotherCertificate() ) );
     layout->addWidget( m_selectButton, 1, 2 );
     m_rememberChoiceCO = new QCheckBox;
