@@ -176,6 +176,8 @@ class KNODE_EXPORT NntpAccountConfDialog : public KPageDialog, private Ui::NntpA
     ~NntpAccountConfDialog();
 
   protected slots:
+    void slotServerTextEdited();
+    void slotEditingFinished();
     virtual void slotButtonClicked( int button );
 
   private slots:
@@ -185,6 +187,7 @@ class KNODE_EXPORT NntpAccountConfDialog : public KPageDialog, private Ui::NntpA
     KNNntpAccount *mAccount;
     IdentityWidget* mIdentityWidget;
     GroupCleanupWidget *mCleanupWidget;
+    bool mUseServerForName;
 };
 
 

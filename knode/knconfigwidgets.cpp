@@ -438,7 +438,8 @@ void KNode::NntpAccountListWidget::slotSubBtnClicked()
 
 KNode::NntpAccountConfDialog::NntpAccountConfDialog( KNNntpAccount *a, QWidget *parent ) :
     KPageDialog( parent ),
-    mAccount( a )
+    mAccount( a ),
+    mUseServerForName( false )
 {
   if ( a->id() != -1 )
     setCaption( i18n("Properties of %1", a->name()) );
@@ -458,6 +459,11 @@ KNode::NntpAccountConfDialog::NntpAccountConfDialog( KNNntpAccount *a, QWidget *
   mPort->setValue( a->port() );
   mPort->setSliderEnabled( false );
   mFetchDesc->setChecked( a->fetchDescriptions() );
+
+  connect( mServer, SIGNAL( textChanged( const QString& ) ),
+           this, SLOT( slotServerTextEdited() ) );
+  connect( mServer, SIGNAL( editingFinished() ),
+           this, SLOT( slotEditingFinished() ) );
 
   mLogin->setChecked( a->needsLogon() );
   mUser->setText( a->user() );
@@ -504,6 +510,21 @@ KNode::NntpAccountConfDialog::~NntpAccountConfDialog()
   KNHelper::saveWindowSize("accNewsPropDLG", size());
 }
 
+void KNode::NntpAccountConfDialog::slotServerTextEdited()
+{
+  if ( mName->text().trimmed() == "" ) {
+    mUseServerForName = true;
+  }
+
+  if ( mUseServerForName ) {
+    mName->setText( mServer->text() );
+  }
+}
+
+void KNode::NntpAccountConfDialog::slotEditingFinished()
+{
+  mUseServerForName = false;
+}
 
 void KNode::NntpAccountConfDialog::slotButtonClicked( int button )
 {
