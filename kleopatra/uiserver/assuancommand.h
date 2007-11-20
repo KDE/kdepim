@@ -286,20 +286,6 @@ namespace Kleo {
         std::vector< boost::shared_ptr<QFile> > files() const;
         unsigned int numFiles() const;
 
-#if 0
-        KDE_DEPRECATED QString bulkInputDeviceFileName( unsigned int idx=0 ) const;
-        KDE_DEPRECATED QString bulkMessageDeviceFileName( unsigned int idx=0 ) const;
-        KDE_DEPRECATED QString bulkOutputDeviceFileName( unsigned int idx=0 ) const;
-
-        KDE_DEPRECATED boost::shared_ptr<QIODevice> bulkInputDevice( unsigned int idx=0 ) const;
-        KDE_DEPRECATED boost::shared_ptr<QIODevice> bulkMessageDevice( unsigned int idx=0 ) const;
-        KDE_DEPRECATED boost::shared_ptr<QIODevice> bulkOutputDevice( unsigned int idx=0 ) const;
-
-        KDE_DEPRECATED unsigned int numBulkInputDevices() const;
-        KDE_DEPRECATED unsigned int numBulkMessageDevices() const;
-        KDE_DEPRECATED unsigned int numBulkOutputDevices() const;
-#endif
-
         void sendStatus( const char * keyword, const QString & text );
         void sendStatusEncoded( const char * keyword, const std::string & text );
         void sendData( const QByteArray & data, bool moreToCome=false );
@@ -349,6 +335,7 @@ namespace Kleo {
 
     template <typename Derived, typename Base=AssuanCommand>
     class AssuanCommandMixin : public Base {
+    protected:
         /* reimp */ const char * name() const { return Derived::staticName(); }
     };
     
