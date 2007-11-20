@@ -80,34 +80,50 @@ public:
 
 	bool canBind( const QString &device )
 	{
+		FUNCTIONSETUPL(5);
+		DEBUGKPILOT << fname << ": device: ["
+			<< device << "]" << endl;
+
 		showList();
 		return !mBoundDevices.contains( device );
 	}
 
 	void bindDevice( const QString &device )
 	{
+		FUNCTIONSETUPL(5);
+		DEBUGKPILOT << fname << ": device: ["
+			<< device << "]" << endl;
+
 		mBoundDevices.append( device );
 		showList();
 	}
 
 	void unbindDevice( const QString &device )
 	{
+		FUNCTIONSETUPL(5);
+		DEBUGKPILOT << fname << ": device: ["
+			<< device << "]" << endl;
+
 		mBoundDevices.remove( device );
 		showList();
 	}
 
 protected:
-	DeviceMap() {}
+	DeviceMap() {
+		mBoundDevices.clear();
+	}
 	~DeviceMap() {}
 
 	QStringList mBoundDevices;
 	static DeviceMap *mThis;
 
 private:
-	inline void showList() const
+	void showList() const
 	{
+		FUNCTIONSETUPL(5);
+
 		if ( !(mBoundDevices.count() > 0) ) return;
-		FUNCTIONSETUPL(3);
+
 		DEBUGKPILOT << fname << ": Bound devices: ["
 			<< ((mBoundDevices.count() > 0) ?
 			mBoundDevices.join(CSL1(", ")) : CSL1("<none>")) 
