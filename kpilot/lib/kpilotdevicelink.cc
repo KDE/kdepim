@@ -104,7 +104,7 @@ protected:
 	static DeviceMap *mThis;
 
 private:
-	void showList() const
+	inline void showList() const
 	{
 		if ( !(mBoundDevices.count() > 0) ) return;
 		FUNCTIONSETUPL(3);
@@ -180,11 +180,11 @@ protected:
 	KPilotDeviceLink *fDeviceLink;
 } ;
 
-class DeviceCommEvent : public QCustomEvent
+class DeviceCommEvent : public QEvent
 {
 public:
 	DeviceCommEvent ( DeviceCustomEvents type, QString msg = QString::null, int progress = 0)
-		: QCustomEvent( type ),
+		: QEvent( (QEvent::Type)type ),
 		fMessage( msg ),
 		fProgress( progress ),
 		fPilotSocket(-1) {}
@@ -197,9 +197,9 @@ public:
 		return fProgress;
 	}
 
-	void setCurrentSocket(int i) { fPilotSocket = i; }
+	inline void setCurrentSocket(int i) { fPilotSocket = i; }
 
-	int currentSocket() { return fPilotSocket; }
+	inline int currentSocket() { return fPilotSocket; }
 private:
 	QString fMessage;
 	int fProgress;
@@ -242,7 +242,7 @@ private:
 	volatile bool fDone;
 
 	KPilotDeviceLink *fHandle;
-	KPilotDeviceLink *link() 
+	inline KPilotDeviceLink *link() 
 	{
 		if (fHandle) 
 		{
@@ -678,17 +678,20 @@ KPilotDeviceLink::~KPilotDeviceLink()
 	 return fLinkStatus == AcceptedDevice;
 }
 
-void KPilotDeviceLink::customEvent(QCustomEvent *e)
+bool KPilotDeviceLink::event(QEvent *e)
 {
 	FUNCTIONSETUP;
 
+	bool handled = false;
+
 	if ((int)e->type() == EventDeviceReady)
 	{
-		DeviceCommEvent* t = dynamic_cast<DeviceCommEvent*>(e);
+		DeviceCommEvent* t = static_cast<DeviceCommEvent*>(e);
 		if (t)
 		{
 			fPilotSocket = t->currentSocket();
 			emit deviceReady( this );
+			handled = true;
 		}
 		else
 		{
@@ -698,10 +701,11 @@ void KPilotDeviceLink::customEvent(QCustomEvent *e)
 	}
 	else if ((int)e->type() == EventLogMessage)
 	{
-		DeviceCommEvent* t = dynamic_cast<DeviceCommEvent*>(e);
+		DeviceCommEvent* t = static_cast<DeviceCommEvent*>(e);
 		if (t)
 		{
 			emit logMessage(t->message());
+			handled = true;
 		}
 		else
 		{
@@ -711,10 +715,11 @@ void KPilotDeviceLink::customEvent(QCustomEvent *e)
 	}
 	else if ((int)e->type() == EventLogError)
 	{
-		DeviceCommEvent* t = dynamic_cast<DeviceCommEvent*>(e);
+		DeviceCommEvent* t = static_cast<DeviceCommEvent*>(e);
 		if (t)
 		{
 			emit logError(t->message());
+			handled = true;
 		}
 		else
 		{
@@ -724,10 +729,11 @@ void KPilotDeviceLink::customEvent(QCustomEvent *e)
 	}
 	else if ((int)e->type() == EventLogProgress)
 	{
-		DeviceCommEvent* t = dynamic_cast<DeviceCommEvent*>(e);
+		DeviceCommEvent* t = static_cast<DeviceCommEvent*>(e);
 		if (t)
 		{
 			emit logProgress(t->message(), t->progress());
+			handled = true;
 		}
 		else
 		{
@@ -735,10 +741,8 @@ void KPilotDeviceLink::customEvent(QCustomEvent *e)
 				<< ": unable to cast event: [" << e << "]" << endl;
 		}
 	}
-	else
-	{
-		KPilotLink::customEvent(e);
-	}
+
+	return handled;
 }
 
 void KPilotDeviceLink::stopCommThread()

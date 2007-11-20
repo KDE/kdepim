@@ -58,7 +58,7 @@ enum LinkStatus {
 * Custom events we can be handling...
 */
 enum DeviceCustomEvents { 
-	EventLogMessage = 1077,
+	EventLogMessage = QEvent::User + 777,
 	EventLogError,
 	EventLogProgress,
 	EventDeviceReady
@@ -117,7 +117,7 @@ public:
 	virtual void reset( const QString & );
 	virtual void close();
 	virtual void reset();
-		void customEvent(QCustomEvent *e);
+	virtual bool event(QEvent *e);
 	virtual bool tickle();
 	virtual const KPilotCard *getCardInfo(int card);
 	virtual void endSync( EndOfSyncFlags f );
