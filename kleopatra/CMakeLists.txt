@@ -44,6 +44,8 @@ if ( USABLE_ASSUAN_FOUND )
     uiserver/signemailtask.cpp
     uiserver/signemailcontroller.cpp
     uiserver/signcommand.cpp
+    uiserver/signencryptfilescommand.cpp
+    uiserver/signencryptfilescontroller.cpp
     uiserver/certificateresolver.cpp
     uiserver/signencryptwizard.cpp
     uiserver/task.cpp

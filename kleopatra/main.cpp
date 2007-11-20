@@ -55,6 +55,7 @@
 # include <uiserver/prepencryptcommand.h>
 # include <uiserver/encryptcommand.h>
 # include <uiserver/signcommand.h>
+# include <uiserver/signencryptfilescommand.h>
 #endif
 
 #include <models/keycache.h>
@@ -147,8 +148,12 @@ int main( int argc, char** argv )
       REGISTER( DecryptVerifyFilesCommand );
       REGISTER( EchoCommand );
       REGISTER( EncryptCommand );
+      REGISTER( EncryptFilesCommand );
+      REGISTER( EncryptSignFilesCommand );
       REGISTER( PrepEncryptCommand );
       REGISTER( SignCommand );
+      REGISTER( SignEncryptFilesCommand );
+      REGISTER( SignFilesCommand );
       REGISTER( VerifyCommand );
       REGISTER( VerifyFilesCommand );
 #undef REGISTER
