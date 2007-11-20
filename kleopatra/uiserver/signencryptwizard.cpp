@@ -198,7 +198,8 @@ void SignEncryptWizard::setMode( Mode mode ) {
     //   1. RecipientResolvePage
     //   2. ResultPage
     // SignEMail:
-    //   1. ResultPage
+    //   1. SignerResolvePage
+    //   2. ResultPage
     // EncryptOrSignFiles:
     //   1. OperationsPage
     //   2. ObjectsPage
@@ -208,12 +209,36 @@ void SignEncryptWizard::setMode( Mode mode ) {
     d->pageOrder = pageOrder;
 
     d->mode = mode;
-    d->selectPage( pageOrder[0] );
+    d->selectPage( pageOrder.front() );
 }
 
 void SignEncryptWizard::setProtocol( Protocol proto ) {
     assuan_assert( d->mode == EncryptEMail || d->mode == SignEMail );
     d->recipientResolvePage->setProtocol( proto );
+}
+
+void SignEncryptWizard::setSigningMode( TriState mode ) {
+    notImplemented();
+}
+
+void SignEncryptWizard::setEncryptionMode( TriState mode ) {
+    notImplemented();
+}
+
+void SignEncryptWizard::setFiles( const QStringList & files ) {
+    notImplemented();
+}
+
+QFileInfoList SignEncryptWizard::resolvedFiles() const {
+    notImplemented();
+}
+
+bool SignEncryptWizard::signingSelected() const {
+    notImplemented();
+}
+
+bool SignEncryptWizard::encryptionSelected() const {
+    notImplemented();
 }
 
 void SignEncryptWizard::setRecipientsAndCandidates( const std::vector<Mailbox> & recipients, const std::vector< std::vector<Key> > & keys ) {

@@ -53,6 +53,10 @@ namespace Types {
 }
 }
 
+class QFileInfo;
+template <typename T> class QList;
+typedef QList<QFileInfo> QFileInfoList;
+
 namespace Kleo {
 
     class Task;
@@ -74,11 +78,26 @@ namespace Kleo {
         enum Mode {
             EncryptEMail,
             SignEMail,
-            EncryptOrSignFiles
+            EncryptOrSignFiles,
+            SignOrEncryptFiles = EncryptOrSignFiles
         };
         void setMode( Mode mode );
 
         void setProtocol( GpgME::Protocol proto );
+
+        /// SignOrEncryptFiles mode subinterface
+        //@{
+        enum TriState {
+            Ask, On, Off
+        };
+        void setSigningMode( TriState mode );
+        void setEncryptionMode( TriState mode );
+        void setFiles( const QStringList & files );
+
+        bool signingSelected() const;
+        bool encryptionSelected() const;
+        QFileInfoList resolvedFiles() const;
+        //@}
 
         void setRecipientsAndCandidates( const std::vector<KMime::Types::Mailbox> & recipients, const std::vector< std::vector<GpgME::Key> > & keys );
         void setSignersAndCandidates( const std::vector<KMime::Types::Mailbox> & signers, const std::vector< std::vector<GpgME::Key> > & keys );
@@ -96,6 +115,9 @@ namespace Kleo {
         void next();
 
     Q_SIGNALS:
+        //void operationResolved();
+        void signersResolved();
+        void objectsResolved();
         void recipientsResolved();
         void canceled();
 
