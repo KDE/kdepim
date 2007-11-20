@@ -48,6 +48,7 @@
 #include <KPushButton>
 
 #include <QStackedWidget>
+#include <QWizard>
 
 #include <boost/bind.hpp>
 
@@ -78,6 +79,8 @@ private:
     std::map<SignEncryptWizard::Page, QWizardPage*> idToPage;
     std::vector<SignEncryptWizard::Page> pageOrder;
     Page currentId;
+    KGuiItem finishItem;
+    KGuiItem nextItem;
 
     RecipientResolvePage * recipientResolvePage;
     WizardResultPage * resultPage;
@@ -93,13 +96,14 @@ SignEncryptWizard::Private::Private( SignEncryptWizard * qq )
       resultPage( new WizardResultPage ),
       stack( new QStackedWidget )
 {
-    q->setMainWidget( stack );
+    QWizard wiz;
+    nextItem = KGuiItem( wiz.buttonText( QWizard::NextButton ) );
+    finishItem = KGuiItem( wiz.buttonText( QWizard::FinishButton ) );
+    q->setMainWidget( stack );    
     q->setButtons( KDialog::Try | KDialog::Cancel );
     setPage( SignEncryptWizard::ResolveRecipientsPage, recipientResolvePage );
     setPage( SignEncryptWizard::ResultPage, resultPage );
-    q->setButtonGuiItem( KDialog::Try, KGuiItem( i18n( "Next" ) ) );
     q->connect( q, SIGNAL( tryClicked() ), q, SLOT( next() ) );
-
 }
 
 KPushButton * SignEncryptWizard::Private::nextButton() const
@@ -110,7 +114,9 @@ KPushButton * SignEncryptWizard::Private::nextButton() const
 
 void SignEncryptWizard::Private::updateButtonStates()
 {
-    nextButton()->setEnabled( !isLastPage( currentId ) && q->canGoToNextPage() );
+    const bool isLast = isLastPage( currentId );
+    q->setButtonGuiItem( KDialog::Try, isLast ? finishItem : nextItem );
+    nextButton()->setEnabled( q->canGoToNextPage() );
 }
 
 bool SignEncryptWizard::Private::isLastPage( SignEncryptWizard::Page id ) const
@@ -150,13 +156,12 @@ void SignEncryptWizard::Private::next()
     std::vector<SignEncryptWizard::Page>::const_iterator it = qBinaryFind( pageOrder.begin(), pageOrder.end(), currentId );
     assert( it != pageOrder.end() );
     ++it;
-    if ( it == pageOrder.end() )
+    if ( it == pageOrder.end() ) // "Finish"
     {
-        selectPage( SignEncryptWizard::NoPage );
-
-        //TODO emit finished()
+        currentId = NoPage;
+        q->close();
     }
-    else
+    else // "next"
     {
         selectPage( *it );
     }
@@ -256,11 +261,11 @@ void SignEncryptWizard::connectTask( const shared_ptr<Task> & task, unsigned int
     ResultDisplayWidget* const item = new ResultDisplayWidget;
     item->setLabel( task->label() );
     connect( task.get(), SIGNAL( progress( QString, int, int ) ),
-                item, SLOT( setProgress( QString, int, int ) ) );
+             item, SLOT( setProgress( QString, int, int ) ) );
     connect( task.get(), SIGNAL( error( int, QString ) ),
-                item, SLOT( setError( int, QString ) ) );
+             item, SLOT( setError( int, QString ) ) );
     connect( task.get(), SIGNAL(result( boost::shared_ptr<const Kleo::Task::Result> ) ),
-                item, SLOT( setResult( boost::shared_ptr<const Kleo::Task::Result> ) ) );
+             item, SLOT( setResult( boost::shared_ptr<const Kleo::Task::Result> ) ) );
     d->resultPage->addResultItem( item );
 }
 
