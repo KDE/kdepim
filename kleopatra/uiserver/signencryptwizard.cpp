@@ -48,6 +48,7 @@
 #include <KPushButton>
 
 #include <QStackedWidget>
+#include <QTimer>
 #include <QWizard>
 
 #include <boost/bind.hpp>
@@ -153,7 +154,7 @@ void SignEncryptWizard::Private::next()
 {
     assert( currentId != NoPage );
     if ( currentId == SignEncryptWizard::ResolveRecipientsPage )
-        emit q->recipientsResolved();
+        QTimer::singleShot( 0, q, SIGNAL( recipientsResolved() ) );
     std::vector<SignEncryptWizard::Page>::const_iterator it = qBinaryFind( pageOrder.begin(), pageOrder.end(), currentId );
     assert( it != pageOrder.end() );
     ++it;
