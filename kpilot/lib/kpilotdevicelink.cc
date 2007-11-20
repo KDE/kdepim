@@ -104,7 +104,7 @@ protected:
 	static DeviceMap *mThis;
 
 private:
-	inline void showList() const
+	void showList() const
 	{
 		if ( !(mBoundDevices.count() > 0) ) return;
 		FUNCTIONSETUPL(3);
@@ -242,7 +242,7 @@ private:
 	volatile bool fDone;
 
 	KPilotDeviceLink *fHandle;
-	inline KPilotDeviceLink *link() 
+	KPilotDeviceLink *link() 
 	{
 		if (fHandle) 
 		{
