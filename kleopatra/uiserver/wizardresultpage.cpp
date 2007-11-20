@@ -80,7 +80,7 @@ void WizardResultPage::addResultItem( QWidget* widget )
     assert( d->scrollArea->widget() );
     assert( qobject_cast<QBoxLayout*>( d->scrollArea->widget()->layout() ) );
     QBoxLayout & blay = *static_cast<QBoxLayout*>( d->scrollArea->widget()->layout() );
-    blay.addWidget( widget );
+    blay.insertWidget( blay.count() - 1, widget );
 
 }
 
