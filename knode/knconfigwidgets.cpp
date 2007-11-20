@@ -496,8 +496,6 @@ KNode::NntpAccountConfDialog::NntpAccountConfDialog( KNNntpAccount *a, QWidget *
   KNHelper::restoreWindowSize("accNewsPropDLG", this, sizeHint());
 
   setHelp("anc-setting-the-news-account");
-
-  connect( this, SIGNAL(okClicked()), SLOT(slotOk()) );
 }
 
 
@@ -507,38 +505,42 @@ KNode::NntpAccountConfDialog::~NntpAccountConfDialog()
 }
 
 
-void KNode::NntpAccountConfDialog::slotOk()
+void KNode::NntpAccountConfDialog::slotButtonClicked( int button )
 {
-  if ( mName->text().isEmpty() || mServer->text().trimmed().isEmpty() ) {
-    KMessageBox::sorry(this, i18n("Please enter an arbitrary name for the account and the\nhostname of the news server."));
-    return;
+  if ( button == KDialog::Ok ) {
+    if ( mName->text().isEmpty() || mServer->text().trimmed().isEmpty() ) {
+      KMessageBox::sorry(this, i18n("Please enter an arbitrary name for the account and the\nhostname of the news server."));
+      return;
+    }
+
+    mAccount->setName( mName->text() );
+    mAccount->setServer( mServer->text().trimmed() );
+    mAccount->setPort( mPort->value() );
+    mAccount->setFetchDescriptions( mFetchDesc->isChecked() );
+    mAccount->setNeedsLogon( mLogin->isChecked() );
+    mAccount->setUser( mUser->text() );
+    mAccount->setPass( mPassword->text() );
+
+    if ( mEncNone->isChecked() )
+      mAccount->setEncryption( KNServerInfo::None );
+    if ( mEncSSL->isChecked() )
+      mAccount->setEncryption( KNServerInfo::SSL );
+    if ( mEncTLS->isChecked() )
+      mAccount->setEncryption( KNServerInfo::TLS );
+
+    mAccount->setIntervalChecking( mIntervalChecking->isChecked() );
+    mAccount->setCheckInterval( mInterval->value() );
+
+    if ( mAccount->id() != -1 ) // only save if account has a valid id
+      mAccount->saveInfo();
+
+    mIdentityWidget->save();
+    mCleanupWidget->save();
+
+    accept();
+  } else {
+    KDialog::slotButtonClicked( button );
   }
-
-  mAccount->setName( mName->text() );
-  mAccount->setServer( mServer->text().trimmed() );
-  mAccount->setPort( mPort->value() );
-  mAccount->setFetchDescriptions( mFetchDesc->isChecked() );
-  mAccount->setNeedsLogon( mLogin->isChecked() );
-  mAccount->setUser( mUser->text() );
-  mAccount->setPass( mPassword->text() );
-
-  if ( mEncNone->isChecked() )
-    mAccount->setEncryption( KNServerInfo::None );
-  if ( mEncSSL->isChecked() )
-    mAccount->setEncryption( KNServerInfo::SSL );
-  if ( mEncTLS->isChecked() )
-    mAccount->setEncryption( KNServerInfo::TLS );
-
-  mAccount->setIntervalChecking( mIntervalChecking->isChecked() );
-  mAccount->setCheckInterval( mInterval->value() );
-
-  if ( mAccount->id() != -1 ) // only save if account has a valid id
-    mAccount->saveInfo();
-
-  mIdentityWidget->save();
-  mCleanupWidget->save();
-
-  accept();
 }
 
 

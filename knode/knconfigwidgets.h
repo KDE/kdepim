@@ -176,7 +176,7 @@ class KNODE_EXPORT NntpAccountConfDialog : public KPageDialog, private Ui::NntpA
     ~NntpAccountConfDialog();
 
   protected slots:
-    virtual void slotOk();
+    virtual void slotButtonClicked( int button );
 
   private slots:
     void slotPasswordChanged();
