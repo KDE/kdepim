@@ -309,7 +309,7 @@ void SignEMailController::Private::ensureWizardCreated() {
     if ( const shared_ptr<AssuanCommand> cmd = command.lock() )
         w = cmd->applyWindowID( w );
     // ### virtual hook here
-    w->setWindowTitle( i18n("Sign EMail Wizard") );
+    w->setWindowTitle( i18n("Sign Mail Message") );
     w->setMode( SignEncryptWizard::SignEMail );
     // ### end virtual hook
     w->setAttribute( Qt::WA_DeleteOnClose );
