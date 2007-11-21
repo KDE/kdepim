@@ -181,7 +181,7 @@ namespace {
         static DVResult fromVerifyOpaqueResult( const Error & err ) {
             return fromVerifyOpaqueResult( VerificationResult( err ), QByteArray() );
         }
-        
+
         static DVResult fromVerifyDetachedResult( const VerificationResult & vr ) {
             const DVResult res = {
                 VerifyDetached,
@@ -196,7 +196,7 @@ namespace {
         static DVResult fromVerifyDetachedResult( const Error & err ) {
             return fromVerifyDetachedResult( VerificationResult( err ) );
         }
-        
+
     };
 
     struct DVTask {
@@ -219,7 +219,7 @@ namespace {
 
     };
 
-} // anon namespace 
+} // anon namespace
 
 class DecryptVerifyCommand::Private : public QObject {
     Q_OBJECT
@@ -234,7 +234,7 @@ public:
           m_errorString(),
           m_error( 0U )
     {
-        
+
     }
 
     ~Private() {
@@ -297,7 +297,7 @@ public:
     bool hasError() const { return m_error; }
     unsigned int error() const { return m_error; }
     const QString & errorString() const { return m_errorString; }
-    
+
     void addResult( unsigned int id, const DVResult & res );
     void sendSigStatii() const;
 
@@ -555,7 +555,7 @@ std::vector< shared_ptr<DVTask> > DecryptVerifyCommand::Private::buildTaskList()
             } catch ( const GpgME::Exception & e ) {
                 //addResult( DVResult::fromDecryptVerifyResult( e.error(), e.what(), i ) );
             }
-        
+
     }
 
     return tasks;
@@ -760,7 +760,7 @@ struct ResultPresentAndOutputFinalized {
     typedef bool result_type;
 
     bool operator()( const shared_ptr<DVTask> & task ) const {
-        return task->result && task->output->isFinalized() ;
+        return task->result && ( !task->output || task->output->isFinalized() );
     }
 };
 
@@ -781,7 +781,7 @@ void DecryptVerifyCommand::Private::addResult( unsigned int id, const DVResult &
     else if ( vResult.error().code() )
         result->error = vResult.error();
 
-    if ( !result->error )
+    if ( !result->error && taskList[id]->output )
         try {
 
             QPointer<QObject> that = this;
