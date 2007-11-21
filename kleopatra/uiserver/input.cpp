@@ -62,7 +62,7 @@ namespace {
     private:
         QString m_label;
     };
-        
+
 
 
     class PipeInput : public InputImplBase {
@@ -149,7 +149,7 @@ FileInput::FileInput( const shared_ptr<QFile> & file )
     if ( m_file->isOpen() && !m_file->isReadable() )
         throw assuan_exception( gpg_error( GPG_ERR_INV_ARG ),
                                 i18n( "File \"%1\" is already open, but not for reading" ) );
-    if ( !m_file->open( QIODevice::ReadOnly ) )
+    if ( !m_file->isOpen() && !m_file->open( QIODevice::ReadOnly ) )
         throw assuan_exception( errno ? gpg_error_from_errno( errno ) : gpg_error( GPG_ERR_EIO ),
                                 i18n( "Couldn't open file \"%1\" for reading", m_file->fileName() ) );
 }
