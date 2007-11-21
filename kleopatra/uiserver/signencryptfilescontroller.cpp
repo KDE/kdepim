@@ -310,7 +310,7 @@ void SignEncryptFilesController::Private::slotTaskDone() {
         openpgp.reset();
     }
 
-    QTimer::singleShot( 0, q, SIGNAL(schedule()) );
+    QTimer::singleShot( 0, q, SLOT(schedule()) );
 }
 
 void SignEncryptFilesController::cancel() {
