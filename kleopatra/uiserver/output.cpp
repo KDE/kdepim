@@ -76,7 +76,7 @@ namespace {
         explicit inhibit_close() : T_IODevice() {}
         template <typename T1>
         explicit inhibit_close( T1 & t1 ) : T_IODevice( t1 ) {}
-        
+
         /* reimp */ void close() {}
         void reallyClose() { T_IODevice::close(); }
     };
@@ -133,7 +133,7 @@ namespace {
         bool m_cancelPending : 1;
         bool m_canceled      : 1;
     };
-        
+
 
 
     class PipeOutput : public OutputImplBase {
@@ -229,10 +229,10 @@ void FileOutput::doFinalize() {
 
     assuan_assert( m_tmpFile );
 
-    const QString tmpFileName = m_tmpFile->oldFileName();
-
     if ( m_tmpFile->isOpen() )
         m_tmpFile->close();
+
+    const QString tmpFileName = m_tmpFile->oldFileName();
 
     if ( QFile::rename( tmpFileName, m_fileName ) ) {
         m_tmpFile->setAutoRemove( false );
