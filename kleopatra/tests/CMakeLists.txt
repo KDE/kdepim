@@ -24,6 +24,7 @@ kde4_add_executable( test_certificatepickerwidget TEST
   ../uiserver/recipientresolvepage.cpp
   ../uiserver/keyselectiondialog.cpp
   ../uiserver/scrollarea.cpp 
+  ../uiserver/wizardpage.cpp
   ../utils/formatting.cpp
   ../models/keycache.cpp 
   ../models/keylistmodel.cpp)
@@ -40,6 +41,8 @@ kde4_add_executable( test_signencryptwizard TEST
   ../uiserver/wizardresultpage.cpp
   ../uiserver/resultdisplaywidget.cpp
   ../uiserver/scrollarea.cpp
+  ../uiserver/signerresolvepage.cpp
+  ../uiserver/wizardpage.cpp
   ../certificateinfowidgetimpl.cpp
   ../utils/formatting.cpp
   ../models/keycache.cpp 

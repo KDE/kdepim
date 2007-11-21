@@ -33,7 +33,7 @@
 #ifndef __KLEOPATRA_CERTIFICATEPICKERWIDGET_H__
 #define __KLEOPATRA_CERTIFICATEPICKERWIDGET_H__
 
-#include <QWizardPage>
+#include "wizardpage.h"
 
 #include <gpgme++/global.h>
 
@@ -74,7 +74,7 @@ namespace Kleo {
         Q_PRIVATE_SLOT( d, void currentIndexChanged( int ) );
     };
 
-    class RecipientResolvePage : public QWizardPage {
+    class RecipientResolvePage : public WizardPage {
         Q_OBJECT
     public:
  

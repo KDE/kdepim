@@ -1,5 +1,5 @@
 /* -*- mode: c++; c-basic-offset:4 -*-
-    wizardresultpage.cpp
+    signerresolvepage.h
 
     This file is part of Kleopatra, the KDE keymanager
     Copyright (c) 2007 Klarälvdalens Datakonsult AB
@@ -30,65 +30,28 @@
     your version.
 */
 
+#ifndef __KLEOPATRA_SIGNERRESOLVEPAGE_H__
+#define __KLEOPATRA_SIGNERRESOLVEPAGE_H__ 
 
-#include "wizardresultpage.h"
+#include "wizardpage.h"
 
-#include "scrollarea.h"
+#include <utils/pimpl_ptr.h>
 
-#include <QBoxLayout>
-#include <QGridLayout>
+namespace Kleo {
 
-#include <cassert>
+    class SignerResolvePage : public WizardPage {
+        Q_OBJECT
+    public:
+        explicit SignerResolvePage( QWidget * parent=0, Qt::WFlags f=0 );
+        ~SignerResolvePage();
 
-using namespace Kleo;
+        /*reimpl*/ bool isComplete() const;
 
-class WizardResultPage::Private {
-    friend class ::WizardResultPage;
-    WizardResultPage * const q;
-public:
-    explicit Private( WizardResultPage * qq );
-    ~Private();
-    
-private:
-    ScrollArea* scrollArea;
-};
-
-
-WizardResultPage::Private::Private( WizardResultPage * qq )
-  : q( qq )
-{
-    QGridLayout* layout = new QGridLayout( q );
-    scrollArea = new ScrollArea;
-    assert( qobject_cast<QBoxLayout*>( scrollArea->widget()->layout() ) );
-    static_cast<QBoxLayout*>( scrollArea->widget()->layout() )->addStretch( 1 );
-    layout->addWidget( scrollArea, 0, 0 );
+    private:
+        class Private;
+        kdtools::pimpl_ptr<Private> d;
+    };
 }
 
-WizardResultPage::Private::~Private() {}
-
-
-
-WizardResultPage::WizardResultPage( QWidget * parent )
-  : WizardPage( parent ), d( new Private( this ) )
-{
-    
-}
-
-
-void WizardResultPage::addResultItem( QWidget* widget )
-{
-    assert( d->scrollArea->widget() );
-    assert( qobject_cast<QBoxLayout*>( d->scrollArea->widget()->layout() ) );
-    QBoxLayout & blay = *static_cast<QBoxLayout*>( d->scrollArea->widget()->layout() );
-    blay.insertWidget( blay.count() - 1, widget );
-
-}
-
-WizardResultPage::~WizardResultPage() {}
-
-
-bool WizardResultPage::isComplete() const
-{
-    return true;
-}
+#endif // __KLEOPATRA_SIGNERRESOLVEPAGE_H__
 

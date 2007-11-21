@@ -1,5 +1,5 @@
 /* -*- mode: c++; c-basic-offset:4 -*-
-    wizardresultpage.cpp
+    signerresolvepage.cpp
 
     This file is part of Kleopatra, the KDE keymanager
     Copyright (c) 2007 Klarälvdalens Datakonsult AB
@@ -30,64 +30,41 @@
     your version.
 */
 
-
-#include "wizardresultpage.h"
-
-#include "scrollarea.h"
-
-#include <QBoxLayout>
-#include <QGridLayout>
-
-#include <cassert>
+#include "signerresolvepage.h"
 
 using namespace Kleo;
 
-class WizardResultPage::Private {
-    friend class ::WizardResultPage;
-    WizardResultPage * const q;
+class SignerResolvePage::Private {
+    friend class ::SignerResolvePage;
+    SignerResolvePage * const q;
 public:
-    explicit Private( WizardResultPage * qq );
+    explicit Private( SignerResolvePage * qq );
     ~Private();
     
 private:
-    ScrollArea* scrollArea;
+
 };
 
 
-WizardResultPage::Private::Private( WizardResultPage * qq )
+SignerResolvePage::Private::Private( SignerResolvePage * qq )
   : q( qq )
-{
-    QGridLayout* layout = new QGridLayout( q );
-    scrollArea = new ScrollArea;
-    assert( qobject_cast<QBoxLayout*>( scrollArea->widget()->layout() ) );
-    static_cast<QBoxLayout*>( scrollArea->widget()->layout() )->addStretch( 1 );
-    layout->addWidget( scrollArea, 0, 0 );
-}
-
-WizardResultPage::Private::~Private() {}
-
-
-
-WizardResultPage::WizardResultPage( QWidget * parent )
-  : WizardPage( parent ), d( new Private( this ) )
 {
     
 }
 
+SignerResolvePage::Private::~Private() {}
 
-void WizardResultPage::addResultItem( QWidget* widget )
+
+
+SignerResolvePage::SignerResolvePage( QWidget * parent, Qt::WFlags f )
+  : WizardPage( parent, f ), d( new Private( this ) )
 {
-    assert( d->scrollArea->widget() );
-    assert( qobject_cast<QBoxLayout*>( d->scrollArea->widget()->layout() ) );
-    QBoxLayout & blay = *static_cast<QBoxLayout*>( d->scrollArea->widget()->layout() );
-    blay.insertWidget( blay.count() - 1, widget );
-
+    
 }
 
-WizardResultPage::~WizardResultPage() {}
+SignerResolvePage::~SignerResolvePage() {}
 
-
-bool WizardResultPage::isComplete() const
+bool SignerResolvePage::isComplete() const
 {
     return true;
 }

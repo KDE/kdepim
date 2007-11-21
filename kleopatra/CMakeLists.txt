@@ -58,6 +58,8 @@ if ( USABLE_ASSUAN_FOUND )
     uiserver/keyselectionjob.cpp
     uiserver/recipientresolvepage.cpp
     uiserver/wizardresultpage.cpp
+    uiserver/wizardpage.cpp
+    uiserver/signerresolvepage.cpp
     uiserver/scrollarea.cpp
     )
   kde4_add_ui_files( _kleopatra_uiserver_SRCS uiserver/keyselectiondialog.ui)

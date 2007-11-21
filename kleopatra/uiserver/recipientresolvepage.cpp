@@ -79,7 +79,7 @@ RecipientResolvePage::Private::Private( RecipientResolvePage * qq )
 RecipientResolvePage::Private::~Private() {}
 
 RecipientResolvePage::RecipientResolvePage( QWidget * parent )
-    : QWizardPage( parent ), d( new Private( this ) )
+    : WizardPage( parent ), d( new Private( this ) )
 {
     QGridLayout* const top = new QGridLayout( this );
     d->scrollArea = new QScrollArea( this );
@@ -93,9 +93,6 @@ RecipientResolvePage::RecipientResolvePage( QWidget * parent )
     layout->addStretch();
     d->scrollArea->setWidget( container2 );
     top->addWidget( d->scrollArea, 0, 0 );
-    // TODO: these texts are mode-dependent
-    setTitle( i18n( "Select Certificates for Recipients" ) );
-    setSubTitle( i18n( "For every recipient, select a certificate that should be used for encryption. Click Next when done." ) );
 }
 
 RecipientResolvePage::~RecipientResolvePage() {}

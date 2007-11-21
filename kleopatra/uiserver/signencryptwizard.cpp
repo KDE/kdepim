@@ -33,6 +33,7 @@
 #include "signencryptwizard.h"
 
 #include "recipientresolvepage.h"
+#include "signerresolvepage.h"
 #include "resultdisplaywidget.h"
 #include "wizardresultpage.h"
 #include "task.h"
@@ -65,25 +66,26 @@ public:
     explicit Private( SignEncryptWizard * qq );
     ~Private();
 
-    void setPage( SignEncryptWizard::Page page, QWizardPage* widget ); 
+    void setPage( SignEncryptWizard::Page page, WizardPage* widget ); 
     void restart();
     void next(); 
     void selectPage( SignEncryptWizard::Page id );
-    QWizardPage* wizardPage( SignEncryptWizard::Page id ) const;
-    QWizardPage* currentWizardPage() const;
+    WizardPage* wizardPage( SignEncryptWizard::Page id ) const;
+    WizardPage* currentWizardPage() const;
     KPushButton* nextButton() const;
     bool isLastPage( SignEncryptWizard::Page ) const;
     void updateButtonStates();
 
 private:
     Mode mode;
-    std::map<SignEncryptWizard::Page, QWizardPage*> idToPage;
+    std::map<SignEncryptWizard::Page, WizardPage*> idToPage;
     std::vector<SignEncryptWizard::Page> pageOrder;
     Page currentId;
     KGuiItem finishItem;
     KGuiItem nextItem;
 
     RecipientResolvePage * recipientResolvePage;
+    SignerResolvePage * signerResolvePage;
     WizardResultPage * resultPage;
     QStackedWidget * stack;
 };
@@ -94,6 +96,7 @@ SignEncryptWizard::Private::Private( SignEncryptWizard * qq )
       mode( EncryptOrSignFiles ),
       currentId( SignEncryptWizard::NoPage ),
       recipientResolvePage( new RecipientResolvePage ),
+      signerResolvePage( new SignerResolvePage ),
       resultPage( new WizardResultPage ),
       stack( new QStackedWidget )
 {
@@ -102,9 +105,11 @@ SignEncryptWizard::Private::Private( SignEncryptWizard * qq )
     finishItem = KGuiItem( wiz.buttonText( QWizard::FinishButton ) );
     q->setMainWidget( stack );    
     q->setButtons( KDialog::Try | KDialog::Cancel );
+    setPage( SignEncryptWizard::ResolveSignerPage, signerResolvePage );
     setPage( SignEncryptWizard::ResolveRecipientsPage, recipientResolvePage );
     setPage( SignEncryptWizard::ResultPage, resultPage );
     q->connect( q, SIGNAL( tryClicked() ), q, SLOT( next() ) );
+    q->connect( q, SIGNAL( rejected() ), q, SIGNAL( canceled() ) );
     q->resize( QSize( 640, 480 ).expandedTo( q->sizeHint() ) );
 }
 
@@ -126,7 +131,7 @@ bool SignEncryptWizard::Private::isLastPage( SignEncryptWizard::Page id ) const
     return !pageOrder.empty() ? pageOrder.back() == id : false;
 }
 
-void SignEncryptWizard::Private::setPage( SignEncryptWizard::Page id, QWizardPage * widget )
+void SignEncryptWizard::Private::setPage( SignEncryptWizard::Page id, WizardPage * widget )
 {
     assuan_assert( id != SignEncryptWizard::NoPage );
     assuan_assert( idToPage.find( id ) == idToPage.end() );
@@ -144,7 +149,7 @@ void SignEncryptWizard::Private::selectPage( SignEncryptWizard::Page id )
     currentId = id;
     if ( id == SignEncryptWizard::NoPage )
         return;
-    QWizardPage * const page = wizardPage( id );
+    WizardPage * const page = wizardPage( id );
     assert( page && stack->indexOf( page ) != -1 );
     stack->setCurrentWidget( page );
     updateButtonStates();
@@ -188,6 +193,7 @@ void SignEncryptWizard::setMode( Mode mode ) {
         pageOrder.push_back( ResultPage );
         break;
     case SignEMail:
+        pageOrder.push_back( ResolveSignerPage );
         pageOrder.push_back( ResultPage );
         break;
     case EncryptOrSignFiles:
@@ -262,23 +268,23 @@ void SignEncryptWizard::setSignersAndCandidates( const std::vector<Mailbox> & si
     notImplemented();
 }
 
-QWizardPage* SignEncryptWizard::Private::wizardPage( SignEncryptWizard::Page id ) const
+WizardPage* SignEncryptWizard::Private::wizardPage( SignEncryptWizard::Page id ) const
 {
     if ( id == SignEncryptWizard::NoPage )
         return 0;
 
-    const std::map<SignEncryptWizard::Page, QWizardPage*>::const_iterator it = idToPage.find( id );   
+    const std::map<SignEncryptWizard::Page, WizardPage*>::const_iterator it = idToPage.find( id );   
     assuan_assert( it != idToPage.end() );
     return (*it).second;
 }
 
-QWizardPage* SignEncryptWizard::Private::currentWizardPage() const
+WizardPage* SignEncryptWizard::Private::currentWizardPage() const
 {
     return wizardPage( currentId );
 }
 
 bool SignEncryptWizard::canGoToNextPage() const {
-    const QWizardPage * const current = d->currentWizardPage();
+    const WizardPage * const current = d->currentWizardPage();
     return current ? current->isComplete() : false;
 }
 

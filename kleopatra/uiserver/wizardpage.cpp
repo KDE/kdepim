@@ -1,5 +1,5 @@
 /* -*- mode: c++; c-basic-offset:4 -*-
-    wizardresultpage.cpp
+    wizardpage.cpp
 
     This file is part of Kleopatra, the KDE keymanager
     Copyright (c) 2007 Klarälvdalens Datakonsult AB
@@ -31,64 +31,37 @@
 */
 
 
-#include "wizardresultpage.h"
-
-#include "scrollarea.h"
-
-#include <QBoxLayout>
-#include <QGridLayout>
-
-#include <cassert>
+#include "wizardpage.h"
 
 using namespace Kleo;
 
-class WizardResultPage::Private {
-    friend class ::WizardResultPage;
-    WizardResultPage * const q;
+class WizardPage::Private {
+    friend class ::WizardPage;
+    WizardPage * const q;
 public:
-    explicit Private( WizardResultPage * qq );
+    explicit Private( WizardPage * qq );
     ~Private();
     
 private:
-    ScrollArea* scrollArea;
+
 };
 
 
-WizardResultPage::Private::Private( WizardResultPage * qq )
+WizardPage::Private::Private( WizardPage * qq )
   : q( qq )
-{
-    QGridLayout* layout = new QGridLayout( q );
-    scrollArea = new ScrollArea;
-    assert( qobject_cast<QBoxLayout*>( scrollArea->widget()->layout() ) );
-    static_cast<QBoxLayout*>( scrollArea->widget()->layout() )->addStretch( 1 );
-    layout->addWidget( scrollArea, 0, 0 );
-}
-
-WizardResultPage::Private::~Private() {}
-
-
-
-WizardResultPage::WizardResultPage( QWidget * parent )
-  : WizardPage( parent ), d( new Private( this ) )
 {
     
 }
 
+WizardPage::Private::~Private() {}
 
-void WizardResultPage::addResultItem( QWidget* widget )
+
+
+WizardPage::WizardPage( QWidget * parent, Qt::WFlags f )
+  : QWidget( parent, f ), d( new Private( this ) )
 {
-    assert( d->scrollArea->widget() );
-    assert( qobject_cast<QBoxLayout*>( d->scrollArea->widget()->layout() ) );
-    QBoxLayout & blay = *static_cast<QBoxLayout*>( d->scrollArea->widget()->layout() );
-    blay.insertWidget( blay.count() - 1, widget );
-
+    
 }
 
-WizardResultPage::~WizardResultPage() {}
-
-
-bool WizardResultPage::isComplete() const
-{
-    return true;
-}
+WizardPage::~WizardPage() {}
 

@@ -72,6 +72,7 @@ namespace Kleo {
             PreparationPage,
             ObjectsPage,
             ResolveRecipientsPage,
+            ResolveSignerPage,
             ResultPage
         };
 
