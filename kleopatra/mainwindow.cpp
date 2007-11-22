@@ -45,6 +45,8 @@
 #include <KLocale>
 #include <KTabWidget>
 #include <KStatusBar>
+#include <KStandardAction>
+#include <KAction>
 
 #include <QAbstractItemView>
 #include <QLabel>
@@ -53,6 +55,7 @@
 #include <QToolBar>
 #include <QWidgetAction>
 #include <QProgressBar>
+#include <QApplication>
 
 #include <boost/shared_ptr.hpp>
 
@@ -93,6 +96,30 @@ private:
     Kleo::AbstractKeyListModel * model;
     Kleo::KeyListController controller;
 
+    struct Actions {
+        //QAction file_new_certificate;
+        //QAction file_export_certificate;
+        //QAction file_export_secret_keys;
+        //QAction file_import_certificates;
+        //QAction file_import_crls;
+        QAction * file_close;
+        QAction * file_quit;
+
+        //QAction view_stop_operations;
+        //QAction view_certificate_details;
+        //QAction view_hierarchical;
+        //QAction view_expandall;
+        //QAction view_collapseall;
+
+        explicit Actions( MainWindow * q )
+            : file_close( KStandardAction::close( q, SLOT(close()), q->actionCollection() ) ),
+              file_quit( KStandardAction::quit( qApp, SLOT(quit()), q->actionCollection() ) )
+        {
+
+        }
+
+    } actions;
+
     struct UI {
 
         TabWidget tabWidget;
@@ -117,6 +144,7 @@ MainWindow::Private::Private( MainWindow * qq )
     : q( qq ),
       model( AbstractKeyListModel::createFlatKeyListModel( q ) ),
       controller( q ),
+      actions( q ),
       ui( q )
 {
     KDAB_SET_OBJECT_NAME( controller );
@@ -134,6 +162,8 @@ MainWindow::Private::Private( MainWindow * qq )
     addView( i18n( "All Certificates" ) );
 
     ( new RefreshKeysCommand( &controller ) )->start();
+
+    q->resize( 640, 480 );
 } 
 
 MainWindow::Private::~Private() {} 

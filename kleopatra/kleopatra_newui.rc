@@ -1,7 +1,9 @@
-<!DOCTYPE kpartgui ><kpartgui name="kleopatra" version="390" >
+<!DOCTYPE kpartgui >
+<kpartgui name="kleopatra" version="390" >
 <MenuBar>
 	<Menu name="file">
-		<text>File</text>
+		<text>&amp;File</text>
+<!--
 		<Action name="file_new_certificate"/>
 		<Separator/>
 		<Action name="file_export_certificate"/>
@@ -13,7 +15,7 @@
 		<Action name="quit" />
 	</Menu>
 	<Menu name="view">
-		<text>View</text>
+		<text>&amp;View</text>
 		<Action name="view_stop_operations"/>
 		<Action name="view_certificate_details"/>
 		<Separator/>
@@ -43,8 +45,12 @@
 		<Action name="tools_start_kwatchgnupg"/>
 	</Menu>
 	<Menu name="settings">
+                <text>&amp;Settings</text>
 		<Action name="configure_gpgme"/>
 	</Menu>
+        <Menu name="help"/>
+        </Menu>
+-->
 </MenuBar>
 
 <ToolBar position="Top" iconText="IconOnly" noMerge="1" name="searchToolBar" >
