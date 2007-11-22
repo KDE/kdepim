@@ -55,6 +55,12 @@ public:
         MultiSelection
     };
 
+    enum KeyType {
+        Any,
+        SignOnly,
+        EncryptOnly,
+    };
+
     KeySelectionDialog( QWidget* parent = 0, Qt::WindowFlags flags = 0 );
     ~KeySelectionDialog();
 
@@ -68,6 +74,9 @@ public:
 
     void setSelectionMode( SelectionMode mode );  
     SelectionMode selectionMode() const;
+
+    void setAllowedKeys( KeyType type );
+    KeyType allowedKeys() const;
 
     std::vector<GpgME::Key> selectedKeys() const;
 

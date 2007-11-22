@@ -58,11 +58,12 @@ struct KeySelectionDialog::Private {
     KeySelectionDialog::SelectionMode m_mode;
     void setLabelText();
     GpgME::Protocol m_protocol;
+    KeyType m_allowedKeys;
 };
 
 
 KeySelectionDialog::Private::Private( KeySelectionDialog * _q)
-    :q( _q ), ui(), m_model( AbstractKeyListModel::createFlatKeyListModel( q ) ), m_mode( MultiSelection ), m_protocol( GpgME::UnknownProtocol )
+    :q( _q ), ui(), m_model( AbstractKeyListModel::createFlatKeyListModel( q ) ), m_mode( MultiSelection ), m_protocol( GpgME::UnknownProtocol ), m_allowedKeys( Any )
 {
     ui.setupUi( q );
     connect ( ui.buttonBox, SIGNAL( accepted() ), q, SLOT( accept() ) );
@@ -118,13 +119,19 @@ void KeySelectionDialog::addKeys(const std::vector<GpgME::Key> & keys_ )
 {
     std::vector<GpgME::Key> keys = keys_;
 
-    //TODO: this really should be done via KeyFilters/a proxy model
+    std::vector<GpgME::Key>::iterator end = keys.end();
+
     if ( d->m_protocol != GpgME::UnknownProtocol )
     {
-       keys.erase( std::remove_if( keys.begin(), keys.end(),
-                                     bind( &GpgME::Key::protocol, _1 ) != d->m_protocol ), keys.end() );
- 
+        end = std::remove_if( keys.begin(), keys.end(), bind( &GpgME::Key::protocol, _1 ) != d->m_protocol );
     }
+
+    if ( d->m_allowedKeys != Any ) 
+    {
+        end = std::remove_if( end, keys.end(), !bind( d->m_allowedKeys == EncryptOnly ? &GpgME::Key::canEncrypt : &GpgME::Key::canSign, _1 ) );
+    }
+
+    keys.erase( end, keys.end() );
 
     d->m_model->addKeys( keys );
 }
@@ -149,6 +156,16 @@ void KeySelectionDialog::setProtocol( GpgME::Protocol protocol )
 GpgME::Protocol KeySelectionDialog::protocol() const
 {
     return d->m_protocol;
+}
+
+void KeySelectionDialog::setAllowedKeys( KeyType type )
+{
+    d->m_allowedKeys = type;
+}
+
+KeySelectionDialog::KeyType KeySelectionDialog::allowedKeys() const
+{
+    return d->m_allowedKeys;
 }
 
 

@@ -246,6 +246,7 @@ void RecipientResolveWidget::Private::selectAnotherCertificate()
     QPointer<KeySelectionDialog> dlg = new KeySelectionDialog( q );
     dlg->setSelectionMode( KeySelectionDialog::SingleSelection );
     dlg->setProtocol( m_protocol );
+    dlg->setAllowedKeys( KeySelectionDialog::EncryptOnly );
     dlg->addKeys( KeyCache::instance()->keys() );
     if ( dlg->exec() == QDialog::Accepted )
     {
