@@ -33,19 +33,40 @@
 #ifndef __KLEOPATRA_TRAYICONLISTENER_H__
 #define __KLEOPATRA_TRAYICONLISTENER_H__
 
+#include <QObject>
 #include <QSystemTrayIcon>
+
+#include <QPointer>
+
+class QSystemTrayIcon;
 
 class TrayIconListener : public QObject {
     Q_OBJECT
 public:
-    explicit TrayIconListener( QWidget* mainWindow, QObject* parent = 0 );
+    explicit TrayIconListener( QSystemTrayIcon * trayIcon );
 
-public Q_SLOTS:
+    void setMainWindow( QWidget * w );
+
+private Q_SLOTS:
     void activated( QSystemTrayIcon::ActivationReason );
 
 private:
-    QWidget* m_mainWindow;
+    virtual QWidget * doCreateMainWindow() const = 0;
+
+private:
+    QPointer<QWidget> m_mainWindow;
     QRect m_prevGeometry;
 };
+
+template <typename T_Widget>
+class TrayIconListenerFor : public TrayIconListener {
+public:
+    explicit TrayIconListenerFor( QSystemTrayIcon * trayIcon )
+        : TrayIconListener( trayIcon ) {}
+private:
+    /*reimp*/ T_Widget * doCreateMainWindow() const { return new T_Widget; }
+};
+
+
 
 #endif // __KLEOPATRA_TRAYICONLISTENER_H__

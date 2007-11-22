@@ -38,15 +38,28 @@
 
 #include <cassert>
 
-TrayIconListener::TrayIconListener( QWidget* mainWindow, QObject* parent ) : QObject( parent ), m_mainWindow( mainWindow )
+TrayIconListener::TrayIconListener( QSystemTrayIcon * tray )
+    : QObject(),
+      m_mainWindow( 0 )
 {
-    assert( m_mainWindow );
+    assert( tray );
+    connect( tray, SIGNAL(activated(QSystemTrayIcon::ActivationReason)),
+             this, SLOT(activated(QSystemTrayIcon::ActivationReason)) );
+}
+
+void TrayIconListener::setMainWindow( QWidget * w ) {
+    if ( m_mainWindow )
+        return;
+    m_mainWindow = w;
 }
 
 void TrayIconListener::activated( QSystemTrayIcon::ActivationReason reason )
 {
     if ( reason != QSystemTrayIcon::Trigger )
         return;
+    if ( !m_mainWindow )
+        m_mainWindow = doCreateMainWindow();
+    assert( m_mainWindow );
     const bool visible = !m_mainWindow->isVisible();
     if ( visible ) {
         if ( m_prevGeometry.isValid() )

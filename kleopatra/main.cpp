@@ -126,13 +126,15 @@ int main( int argc, char** argv )
 					  args->getOption("import-certificate") );
   manager->show();
 #else
+
+  TrayIconListenerFor<MainWindow> trayIconListener( &sysTray );
+
   if ( !args->isSet("daemon") ) {
     MainWindow* mainWindow = new MainWindow;
     mainWindow->show();
-    TrayIconListener* trayListener = new TrayIconListener( mainWindow );
-    QObject::connect( &sysTray, SIGNAL( activated( QSystemTrayIcon::ActivationReason ) ),
-                      trayListener, SLOT( activated( QSystemTrayIcon::ActivationReason ) ) );
+    trayIconListener.setMainWindow( mainWindow );
   }
+
 #endif
 
   int rc;
