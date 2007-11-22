@@ -316,8 +316,6 @@ void SignEMailController::Private::ensureWizardCreated() {
     connect( w.get(), SIGNAL(canceled()), q, SLOT(slotWizardCanceled()) );
 
     w->setProtocol( protocol );
-    w->show();//temporary hack to initialize and start the wizard
-    w->hide();
 
     wizard = w.release();
 }
