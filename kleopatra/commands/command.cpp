@@ -33,6 +33,8 @@
 #include "command.h"
 #include "command_p.h"
 
+#include <controllers/keylistcontroller.h>
+
 #include <QAbstractItemView>
 
 using namespace Kleo;
@@ -51,13 +53,15 @@ Command::Private::~Private() {}
 Command::Command( KeyListController * p )
     : QObject( p ), d( new Private( this, p ) )
 {
-
+    if ( p )
+        p->registerCommand( this );
 }
 
 Command::Command( KeyListController * p, Private * pp )
     : QObject( p ), d( pp )
 {
-
+    if ( p )
+        p->registerCommand( this );
 }
 
 Command::~Command() {}
