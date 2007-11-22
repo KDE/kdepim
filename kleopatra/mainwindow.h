@@ -43,6 +43,9 @@ public:
     explicit MainWindow( QWidget * parent=0, Qt::WindowFlags f=KDE_DEFAULT_WINDOWFLAGS );
     ~MainWindow();
 
+protected:
+    void closeEvent( QCloseEvent * e );
+
 private:
     class Private;
     kdtools::pimpl_ptr<Private> d;
