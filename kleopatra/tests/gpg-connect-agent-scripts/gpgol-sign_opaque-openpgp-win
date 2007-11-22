@@ -1,0 +1,10 @@
+# OPTION mode=email
+/subst
+/serverpid
+SENDER <foo@bar.com>
+/open in test.data r
+INPUT FD=$in
+/open out test.data.gpgol-sign_opaque-openpgp.asc w
+OUTPUT FD=$out
+SIGN --protocol=OpenPGP
+BYE
