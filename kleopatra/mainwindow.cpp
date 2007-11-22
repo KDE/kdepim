@@ -41,8 +41,6 @@
 #include "controllers/keylistcontroller.h"
 #include "commands/refreshkeyscommand.h"
 
-#include "libkleo/ui/progressbar.h"
-
 #include <KActionCollection>
 #include <KLocale>
 #include <KTabWidget>
@@ -54,6 +52,7 @@
 #include <QComboBox>
 #include <QToolBar>
 #include <QWidgetAction>
+#include <QProgressBar>
 
 #include <boost/shared_ptr.hpp>
 
@@ -62,6 +61,20 @@
 using namespace Kleo;
 using namespace boost;
 using namespace GpgME;
+
+namespace {
+    class ProgressBar : public QProgressBar {
+        Q_OBJECT
+    public:
+        explicit ProgressBar( QWidget * p=0 ) : QProgressBar( p ) {}
+
+    public Q_SLOTS:
+        void setProgress( int current, int total ) {
+            setRange( 0, total );
+            setValue( current );
+        }
+    };
+}
 
 class MainWindow::Private {
     friend class ::MainWindow;
@@ -78,55 +91,67 @@ private:
 private:
 
     Kleo::AbstractKeyListModel * model;
-    Kleo::KeyListController * controller;
+    Kleo::KeyListController controller;
 
     struct UI {
 
-    TabWidget * tabWidget;
-        //std::vector<Page> pages;
-	Kleo::ProgressBar progressBar;
-	QLabel statusLabel;
+        TabWidget tabWidget;
+	ProgressBar progressBar;
 
 	explicit UI( MainWindow * q )
-	    : 
-	      //treeView( q ),
-	      progressBar( q->statusBar() ),
-	      statusLabel( q->statusBar() )
+	    : tabWidget( q ),
+	      progressBar( q->statusBar() )
 	{
-        tabWidget = new TabWidget;
-
-        q->setCentralWidget( tabWidget );
-        
 	    KDAB_SET_OBJECT_NAME( tabWidget );
-	    //KDAB_SET_OBJECT_NAME( treeView );
 	    KDAB_SET_OBJECT_NAME( progressBar );
-	    KDAB_SET_OBJECT_NAME( statusLabel );
+
+            progressBar.setFixedSize( progressBar.sizeHint() );
+
+            q->setCentralWidget( &tabWidget );
+            q->statusBar()->addPermanentWidget( &progressBar );
 	}
     } ui;
 };
 
-MainWindow::Private::Private( MainWindow * qq ) : q( qq ), model( AbstractKeyListModel::createFlatKeyListModel( q ) ), controller( new KeyListController( q ) ), ui( q )
+MainWindow::Private::Private( MainWindow * qq )
+    : q( qq ),
+      model( AbstractKeyListModel::createFlatKeyListModel( q ) ),
+      controller( q ),
+      ui( q )
 {
-    controller->setModel( model );
+    KDAB_SET_OBJECT_NAME( controller );
+
+    controller.setModel( model );
     setupActions();
+
+    connect( &controller, SIGNAL(progress(int,int)), &ui.progressBar, SLOT(setProgress(int,int)) );
+    connect( &controller, SIGNAL(message(QString,int)),  q->statusBar(), SLOT(showMessage(QString,int)) );
+
     q->createGUI( "kleopatra_newui.rc" );
-    addView( i18n( "Trusted Certificates" ) );
+
     addView( i18n( "My Certificates" ) );
+    addView( i18n( "Trusted Certificates" ) );
     addView( i18n( "All Certificates" ) );
 
-    RefreshKeysCommand* const refresh = new RefreshKeysCommand( controller );
-    refresh->start();
+    ( new RefreshKeysCommand( &controller ) )->start();
 } 
 
-MainWindow::Private::~Private()
+MainWindow::Private::~Private() {} 
+
+MainWindow::MainWindow( QWidget* parent, Qt::WindowFlags flags )
+    : KXmlGuiWindow( parent, flags ), d( new Private( this ) )
 {
-} 
+
+}
+
+MainWindow::~MainWindow() {}
+
 
 void MainWindow::Private::addView( const QString& title )
 {
-    QAbstractItemView * const view = ui.tabWidget->addView( model, title );
+    QAbstractItemView * const view = ui.tabWidget.addView( model, title );
     assert( view );
-    controller->addView( view );
+    controller.addView( view );
 }
     
 void MainWindow::Private::setupActions()
@@ -135,20 +160,12 @@ void MainWindow::Private::setupActions()
 
     QWidgetAction * const searchBarAction = new QWidgetAction( q );
     SearchBar * const searchBar = new SearchBar( q );
-    new SearchBarStateHandler( ui.tabWidget, searchBar, searchBar );
+    new SearchBarStateHandler( &ui.tabWidget, searchBar, searchBar );
     connect( searchBar, SIGNAL( textChanged( QString ) ),
-             ui.tabWidget, SLOT( setFilter( QString ) ) );
+             &ui.tabWidget, SLOT( setFilter( QString ) ) );
     searchBarAction->setDefaultWidget( searchBar );
     coll->addAction( "key_search_bar", searchBarAction );
 }
 
-MainWindow::MainWindow( QWidget* parent, Qt::WindowFlags flags ) : KXmlGuiWindow( parent, flags ), d( new Private( this ) )
-{
-}
-
-MainWindow::~MainWindow()
-{
-}
-
 #include "mainwindow.moc"
-
+#include "moc_mainwindow.cpp"
