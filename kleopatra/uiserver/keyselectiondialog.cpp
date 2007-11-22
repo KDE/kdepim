@@ -123,12 +123,12 @@ void KeySelectionDialog::addKeys(const std::vector<GpgME::Key> & keys_ )
 
     if ( d->m_protocol != GpgME::UnknownProtocol )
     {
-        end = std::remove_if( keys.begin(), keys.end(), bind( &GpgME::Key::protocol, _1 ) != d->m_protocol );
+        end = std::remove_if( keys.begin(), end, bind( &GpgME::Key::protocol, _1 ) != d->m_protocol );
     }
 
     if ( d->m_allowedKeys != Any ) 
     {
-        end = std::remove_if( end, keys.end(), !bind( d->m_allowedKeys == EncryptOnly ? &GpgME::Key::canEncrypt : &GpgME::Key::canSign, _1 ) );
+        end = std::remove_if( keys.begin(), end, !bind( d->m_allowedKeys == EncryptOnly ? &GpgME::Key::canEncrypt : &GpgME::Key::canSign, _1 ) );
     }
 
     keys.erase( end, keys.end() );
