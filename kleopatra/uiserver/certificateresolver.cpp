@@ -60,10 +60,14 @@ std::vector< std::vector<Key> > CertificateResolver::resolveRecipients( const st
 
 std::vector<Key> CertificateResolver::resolveRecipient( const Mailbox & recipient, Protocol proto ) {
     std::vector<Key> result = KeyCache::instance()->findByEMailAddress( recipient.address() );
+    std::vector<Key>::iterator end = std::remove_if( result.begin(), result.end(), 
+                                                     !bind( &Key::canEncrypt, _1 ) );
+    
     if ( proto != UnknownProtocol )
-        result.erase( std::remove_if( result.begin(), result.end(),
-                                      bind( &Key::protocol, _1 ) != proto ),
-                      result.end() );
+        end = std::remove_if( result.begin(), end,
+                              bind( &Key::protocol, _1 ) != proto );
+
+    result.erase( end, result.end() );
     return result;
 }
 
@@ -79,6 +83,8 @@ std::vector<Key> CertificateResolver::resolveSigner( const Mailbox & signer, Pro
     std::vector<Key>::iterator end
         = std::remove_if( result.begin(), result.end(),
                           !bind( &Key::hasSecret, _1 ) );
+    end = std::remove_if( result.begin(), end,
+                          !bind( &Key::canSign, _1 ) );
     if ( proto != UnknownProtocol )
         end = std::remove_if( result.begin(), end,
                               bind( &Key::protocol, _1 ) != proto );
