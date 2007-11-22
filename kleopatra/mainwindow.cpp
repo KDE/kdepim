@@ -56,6 +56,7 @@
 #include <QWidgetAction>
 #include <QProgressBar>
 #include <QApplication>
+#include <QCloseEvent>
 
 #include <boost/shared_ptr.hpp>
 
@@ -195,6 +196,12 @@ void MainWindow::Private::setupActions()
              &ui.tabWidget, SLOT( setFilter( QString ) ) );
     searchBarAction->setDefaultWidget( searchBar );
     coll->addAction( "key_search_bar", searchBarAction );
+}
+
+void MainWindow::closeEvent( QCloseEvent * e ) {
+    // KMainWindow::closeEvent() insists on quitting the application,
+    // so do not let it touch the event...
+    e->accept();
 }
 
 #include "mainwindow.moc"
