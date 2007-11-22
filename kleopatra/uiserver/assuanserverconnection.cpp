@@ -238,6 +238,13 @@ private:
     void topHalfDeletion() {
         if ( currentCommand )
             currentCommand->canceled();
+	if ( fd != ASSUAN_INVALID_FD ) {
+#ifdef Q_OS_WIN32
+            CloseHandle( fd );
+#else
+            ::close( fd );
+#endif
+	}
         notifiers.clear();
         closed = true;
     }
@@ -941,6 +948,7 @@ int AssuanCommand::inquire( const char * keyword, QObject * receiver, const char
 
 void AssuanCommand::done( int err, const QString & details ) {
     if ( d->ctx && !d->done && !details.isEmpty() ) {
+	qDebug() << "AssuanCommand::done(): Error: " << details;
         d->utf8ErrorKeepAlive = details.toUtf8();
         if ( !d->nohup )
             assuan_set_error( d->ctx.get(), err, d->utf8ErrorKeepAlive.constData() );
