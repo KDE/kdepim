@@ -91,7 +91,7 @@ private:
 };
 
 SignerResolvePage::Private::Private( SignerResolvePage * qq )
-  : q( qq )
+    : q( qq ), protocol( GpgME::UnknownProtocol )
 {
     QVBoxLayout* layout = new QVBoxLayout( q );
     layout->setSpacing( KDialog::spacingHint() );
