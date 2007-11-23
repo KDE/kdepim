@@ -37,6 +37,18 @@
 
 #include <utils/pimpl_ptr.h>
 
+#include <gpgme++/global.h>
+
+namespace GpgME {
+    class Key;
+}
+
+namespace KMime {
+    namespace Types {
+        class Mailbox;
+    }
+}
+
 namespace Kleo {
 
     class SignerResolvePage : public WizardPage {
@@ -45,11 +57,32 @@ namespace Kleo {
         explicit SignerResolvePage( QWidget * parent=0, Qt::WFlags f=0 );
         ~SignerResolvePage();
 
+        void setSignersAndCandidates( const std::vector<KMime::Types::Mailbox> & signers, 
+                                      const std::vector< std::vector<GpgME::Key> > & keys );
+
+        std::vector<GpgME::Key> resolvedSigners() const;
+
         /*reimpl*/ bool isComplete() const;
 
+        bool encryptionEnabled() const;
+        void setEncryptionEnabled( bool enabled );
+
+        bool signingEnabled() const;
+        void setSigningEnabled( bool enabled );
+
+        void setEncryptionUserMutable( bool ismutable );
+        void setSigningUserMutable( bool ismutable );
+
+        void setProtocol( GpgME::Protocol protocol );
+        GpgME::Protocol protocol() const;
+ 
     private:
         class Private;
         kdtools::pimpl_ptr<Private> d;
+
+        Q_PRIVATE_SLOT( d, void setMode( int ) )
+        Q_PRIVATE_SLOT( d, void selectCertificate() )
+
     };
 }
 

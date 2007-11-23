@@ -146,7 +146,6 @@ void EncryptEMailController::startResolveRecipients( const std::vector<Mailbox> 
     if ( d->wizard->canGoToNextPage() ) {
         d->wizard->next();
     }
-    
     d->ensureWizardVisible();
 }
 

@@ -313,6 +313,7 @@ void SignEMailController::Private::ensureWizardCreated() {
     w->setMode( SignEncryptWizard::SignEMail );
     // ### end virtual hook
     w->setAttribute( Qt::WA_DeleteOnClose );
+    connect( w.get(), SIGNAL(signersResolved()), q, SLOT(slotWizardSignersResolved()) );
     connect( w.get(), SIGNAL(canceled()), q, SLOT(slotWizardCanceled()) );
 
     w->setProtocol( protocol );

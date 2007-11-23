@@ -160,6 +160,8 @@ void SignEncryptWizard::Private::next()
     assert( currentId != NoPage );
     if ( currentId == SignEncryptWizard::ResolveRecipientsPage )
         QTimer::singleShot( 0, q, SIGNAL( recipientsResolved() ) );
+    if ( currentId == SignEncryptWizard::ResolveSignerPage )
+        QTimer::singleShot( 0, q, SIGNAL( signersResolved() ) );
     std::vector<SignEncryptWizard::Page>::const_iterator it = qBinaryFind( pageOrder.begin(), pageOrder.end(), currentId );
     assert( it != pageOrder.end() );
     ++it;
@@ -224,11 +226,13 @@ void SignEncryptWizard::setProtocol( Protocol proto ) {
 }
 
 void SignEncryptWizard::setSigningMode( TriState mode ) {
-    notImplemented();
+    d->signerResolvePage->setSigningEnabled( mode == On );
+    d->signerResolvePage->setSigningUserMutable( mode == Ask );
 }
 
 void SignEncryptWizard::setEncryptionMode( TriState mode ) {
-    notImplemented();
+    d->signerResolvePage->setEncryptionEnabled( mode == On );
+    d->signerResolvePage->setEncryptionUserMutable( mode == Ask );
 }
 
 void SignEncryptWizard::setFiles( const QStringList & files ) {
@@ -240,11 +244,11 @@ QFileInfoList SignEncryptWizard::resolvedFiles() const {
 }
 
 bool SignEncryptWizard::signingSelected() const {
-    notImplemented();
+    return d->signerResolvePage->signingEnabled();
 }
 
 bool SignEncryptWizard::encryptionSelected() const {
-    notImplemented();
+    return d->signerResolvePage->encryptionEnabled();
 }
 
 void SignEncryptWizard::setRecipientsAndCandidates( const std::vector<Mailbox> & recipients, const std::vector< std::vector<Key> > & keys ) {
@@ -264,8 +268,9 @@ void SignEncryptWizard::setRecipientsAndCandidates( const std::vector<Mailbox> &
 
 void SignEncryptWizard::setSignersAndCandidates( const std::vector<Mailbox> & signers, const std::vector< std::vector<Key> > & keys ) {
     assuan_assert( !keys.empty() );
+    assuan_assert( signers.empty() || signers.size() == keys.size() );
     assuan_assert( d->mode == SignEMail );
-    notImplemented();
+    d->signerResolvePage->setSignersAndCandidates( signers, keys );
 }
 
 WizardPage* SignEncryptWizard::Private::wizardPage( SignEncryptWizard::Page id ) const
@@ -309,7 +314,7 @@ std::vector<Key> SignEncryptWizard::resolvedCertificates() const {
 }
 
 std::vector<Key> SignEncryptWizard::resolvedSigners() const {
-    notImplemented();
+    return d->signerResolvePage->resolvedSigners();
 }
 
 void SignEncryptWizard::next()
