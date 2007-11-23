@@ -289,8 +289,8 @@ void EncryptEMailController::Private::ensureWizardCreated() {
     w->setWindowTitle( i18n("Encrypt Mail Message") );
     w->setMode( SignEncryptWizard::EncryptEMail );
     w->setAttribute( Qt::WA_DeleteOnClose );
-    connect( w.get(), SIGNAL(recipientsResolved()), q, SLOT(slotWizardRecipientsResolved()) );
-    connect( w.get(), SIGNAL(canceled()), q, SLOT(slotWizardCanceled()) );
+    connect( w.get(), SIGNAL(recipientsResolved()), q, SLOT(slotWizardRecipientsResolved()), Qt::QueuedConnection );
+    connect( w.get(), SIGNAL(canceled()), q, SLOT(slotWizardCanceled()), Qt::QueuedConnection );
 
     w->setProtocol( protocol );
     wizard = w.release();

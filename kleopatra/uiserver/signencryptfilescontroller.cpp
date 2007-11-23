@@ -348,9 +348,9 @@ void SignEncryptFilesController::Private::ensureWizardCreated() {
     w->setMode( SignEncryptWizard::SignOrEncryptFiles );
 
     w->setAttribute( Qt::WA_DeleteOnClose );
-    connect( w.get(), SIGNAL(objectsResolved()), q, SLOT(slotWizardObjectsResolved()) );
-    connect( w.get(), SIGNAL(recipientsResolved()), q, SLOT(slotWizardRecipientsResolved()) );
-    connect( w.get(), SIGNAL(canceled()), q, SLOT(slotWizardCanceled()) );
+    connect( w.get(), SIGNAL(objectsResolved()), q, SLOT(slotWizardObjectsResolved()), Qt::QueuedConnection );
+    connect( w.get(), SIGNAL(recipientsResolved()), q, SLOT(slotWizardRecipientsResolved()), Qt::QueuedConnection );
+    connect( w.get(), SIGNAL(canceled()), q, SLOT(slotWizardCanceled()), Qt::QueuedConnection );
 
     w->setProtocol( protocol );
 
