@@ -443,6 +443,11 @@ std::vector< shared_ptr<DVTask> > DecryptVerifyCommand::Private::buildTaskList()
         else
             type = DecryptVerify;
 
+        if ( type != Decrypt && !q->hasOption("silent") ) {
+            showWizard();
+            wizard->next();
+        }
+
         for ( unsigned int i = 0 ; i < numInputs ; ++i ) {
 
             shared_ptr<DVTask> task( new DVTask );
