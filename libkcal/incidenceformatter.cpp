@@ -2133,3 +2133,59 @@ QString IncidenceFormatter::mailBodyString( IncidenceBase *incidence )
   }
   return QString::null;
 }
+
+static QString recurEnd( Incidence *incidence )
+{
+  QString endstr;
+  if ( incidence->doesFloat() ) {
+    endstr = KGlobal::locale()->formatDate( incidence->recurrence()->endDate() );
+  } else {
+    endstr = KGlobal::locale()->formatDateTime( incidence->recurrence()->endDateTime() );
+  }
+  return endstr;
+}
+
+QString IncidenceFormatter::recurrenceString(Incidence * incidence)
+{
+  if ( !incidence->doesRecur() )
+    return i18n( "No recurrence" );
+
+  Recurrence *recur = incidence->recurrence();
+  switch ( recur->recurrenceType() ) {
+    case Recurrence::rNone:
+      return i18n( "No recurrence" );
+    case Recurrence::rMinutely:
+      if ( recur->duration() != -1 )
+        return i18n( "Recurs every minute until %1", "Recurs every %n minutes until %1", recur->frequency() )
+            .arg( recurEnd( incidence ) );
+      return i18n( "Recurs every minute", "Recurs every %n minutes", recur->frequency() );
+    case Recurrence::rHourly:
+      if ( recur->duration() != -1 )
+        return i18n( "Recurs hourly until %1", "Recurs every %n hours until %1", recur->frequency() )
+            .arg( recurEnd( incidence ) );
+      return i18n( "Recurs hourly", "Recurs every %n hours", recur->frequency() );
+    case Recurrence::rDaily:
+      if ( recur->duration() != -1 )
+        return i18n( "Recurs daily until %1", "Recurs every %n days until %1", recur->frequency() )
+            .arg( recurEnd( incidence ) );
+      return i18n( "Recurs daily", "Recurs every %n days", recur->frequency() );
+    case Recurrence::rWeekly:
+      if ( recur->duration() != -1 )
+        return i18n( "Recurs weekly until %1", "Recurs every %n weeks until %1", recur->frequency() )
+            .arg( recurEnd( incidence ) );
+      return i18n( "Recurs weekly", "Recurs every %n weeks", recur->frequency() );
+    case Recurrence::rMonthlyPos:
+    case Recurrence::rMonthlyDay:
+      if ( recur->duration() != -1 )
+        return i18n( "Recurs monthly until %1" ).arg( recurEnd( incidence ) );
+      return i18n( "Recurs monthly" );
+    case Recurrence::rYearlyMonth:
+    case Recurrence::rYearlyDay:
+    case Recurrence::rYearlyPos:
+      if ( recur->duration() != -1 )
+        return i18n( "Recurs yearly until %1" ).arg( recurEnd( incidence ) );
+      return i18n( "Recurs yearly" );
+    default:
+      return i18n( "Incidence recurs" );
+  }
+}

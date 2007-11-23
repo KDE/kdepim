@@ -61,6 +61,8 @@ class LIBKCAL_EXPORT IncidenceFormatter
                                          InvitationFormatterHelper *helper );
     // Transform a TNEF attachment to an iCal or vCard
     static QString msTNEFToVPart( const QByteArray& tnef );
+
+    static QString recurrenceString( Incidence *incidence );
   private:
     class EventViewerVisitor;
     class ScheduleMessageVisitor;
