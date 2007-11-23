@@ -235,6 +235,12 @@ private:
             bottomHalfDeletion();
     }
 
+    void commandDone( AssuanCommand * cmd ) {
+        if ( !cmd || cmd != currentCommand.get() )
+            return;
+        currentCommand.reset();
+    }
+
     void topHalfDeletion() {
         if ( currentCommand )
             currentCommand->canceled();
@@ -979,27 +985,23 @@ void AssuanCommand::done( int err ) {
     d->outputs.clear();
     close_all( d->files ); // ### ???
 
+    // oh, hack :(
+    assert( assuan_get_pointer( d->ctx.get() ) );
+    AssuanServerConnection::Private & conn = *static_cast<AssuanServerConnection::Private*>( assuan_get_pointer( d->ctx.get() ) );
+
     if ( d->nohup ) {
-
-        // oh, hack :(
-        assert( assuan_get_pointer( d->ctx.get() ) );
-        AssuanServerConnection::Private & conn = *static_cast<AssuanServerConnection::Private*>( assuan_get_pointer( d->ctx.get() ) );
-
         conn.nohupDone( this );
-
         return;
-
-    } else {
-
-        const gpg_error_t rc = assuan_process_done( d->ctx.get(), err );
-        if ( gpg_err_code( rc ) != GPG_ERR_NO_ERROR )
-            qFatal( "AssuanCommand::done: assuan_process_done returned error %d (%s)",
-                    static_cast<int>(rc), gpg_strerror(rc) );
-
     }
 
+    const gpg_error_t rc = assuan_process_done( d->ctx.get(), err );
+    if ( gpg_err_code( rc ) != GPG_ERR_NO_ERROR )
+        qFatal( "AssuanCommand::done: assuan_process_done returned error %d (%s)",
+                static_cast<int>(rc), gpg_strerror(rc) );
+
     d->utf8ErrorKeepAlive.clear();
-    d->ctx.reset();
+
+    conn.commandDone( this );
 }
 
 
