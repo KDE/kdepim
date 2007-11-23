@@ -8,16 +8,11 @@ Problems addressed
 New functionality
 -------------------
 * prokde35-z Item 36: Clearer descriptions for search/filter criteria (738629)
-  NOTE: We have decided not to prefix the headers entries with "Header: " or the like, as that uses too much space, especially when translated to "Kopfzeile" in German. Better ideas?
 * prokde35-z Item 25: "Edit" for received mails. (739063)
-  NOTE: The menu item is named "Edit", after consultation with Ellen. In sent-mail it continues to be "send again".
 * prokde35-z Item 37: Make the splitters a bit more sensible, by preventing total collapsing, where it makes sense. (739069)
 * prokde35-z Item 26: per-account identities (739135)
 * prokde35-z Item 18: more and better configurable message actions on the main reader window (739157)
 * prokde35-z Item 53: Improved coloring of agenda view items (739603)
-NOTE: We now allow to choose (via gui option) between four coloring modes for the agenda view items:
-- resource frame, category inside - category frame, resource inside - only category - only resource
-Reasoning: category colors are not used at all, at the BSI, according to the usability study
 * prokde35-z Item 50: Default colors for calendar resources (739689)
 * prokde35-z Item 79 (part 2): Statusbar indicator for active vacation scripts (740023)
 * prokde35-z Item 60 Allow files to be dropped onto the attachment view and ask whether they should be attached by link or by value. Implement dragging out of the view.
