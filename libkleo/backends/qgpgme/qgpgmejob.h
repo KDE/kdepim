@@ -39,6 +39,8 @@
 #include <gpgme++/interfaces/passphraseprovider.h>
 #include <gpgme++/key.h>
 
+#include <KPasswordDialog>
+
 #include <boost/shared_ptr.hpp>
 
 #include <vector>
@@ -152,6 +154,7 @@ namespace Kleo {
     unsigned int mChunkSize;
     unsigned int mPatternStartIndex, mPatternEndIndex;
     QEventLoop * mEventLoop;
+    KPasswordDialog mPassphraseDialog;
   };
 
 }

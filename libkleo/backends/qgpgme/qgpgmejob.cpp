@@ -34,7 +34,6 @@
 #include "qgpgmeprogresstokenmapper.h"
 
 #include "libkleo/kleo/job.h"
-#include <kpassworddialog.h>
 
 #include <qgpgme/eventloopinteractor.h>
 #include <qgpgme/dataprovider.h>
@@ -47,7 +46,7 @@
 #include <kstandarddirs.h>
 #include <kiconloader.h>
 
-
+#include <QPointer>
 #include <QString>
 #include <QStringList>
 #include <QEventLoop>
@@ -273,12 +272,19 @@ void Kleo::QGpgMEJob::doSlotOperationDoneEvent( GpgME::Context * context, const 
     if ( mEventLoop )
       mEventLoop->quit();
     else
-    mThis->deleteLater();
+      mThis->deleteLater();
   }
 }
 
 void Kleo::QGpgMEJob::doSlotCancel() {
-  mCtx->cancelPendingOperation();
+    if ( mPassphraseDialog.isVisible() )
+    {
+        mPassphraseDialog.reject();
+    }
+    else
+    {
+        mCtx->cancelPendingOperation();
+    }
 }
 
 void Kleo::QGpgMEJob::showProgress( const char * what, int type, int current, int total ) {
@@ -311,15 +317,20 @@ char * Kleo::QGpgMEJob::getPassphrase( const char * useridHint, const char * /*d
     QString("<a href=\"http://kmail.kde.org/kmail-pgpmime-howto.html\">http://kmail.kde.org/kmail-pgpmime-howto.html</a>") );
   msg += "<br/><br/>";
   msg += i18n( "Enter passphrase:" );
-  KPasswordDialog dlg;
-  dlg.setPrompt(msg);
-  dlg.setPixmap( DesktopIcon( "pgp-keys", KIconLoader::SizeMedium ) );
-  dlg.setCaption( i18n("Passphrase Dialog") );
-  if ( dlg.exec() != QDialog::Accepted ) {
+  mPassphraseDialog.setPrompt(msg);
+  mPassphraseDialog.setPixmap( DesktopIcon( "pgp-keys", KIconLoader::SizeMedium ) );
+  mPassphraseDialog.setCaption( i18n("Passphrase Dialog") );
+
+  QPointer<QObject> that( mThis );
+  const bool accepted = mPassphraseDialog.exec() == QDialog::Accepted; 
+  assert( that );
+
+  if ( !accepted ) {
     canceled = true;
     return 0;
   }
+
   canceled = false;
   // gpgme++ free()s it, and we need to copy as long as dlg isn't deleted :o
-  return strdup( dlg.password().toLocal8Bit() );
+  return strdup( mPassphraseDialog.password().toLocal8Bit() );
 }
