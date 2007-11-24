@@ -118,7 +118,7 @@ ArticleWindow::ArticleWindow( KNArticle *art )
   applyMainWindowSettings(KConfigGroup( knGlobals.config(), "articleWindow_options") );
 
   // this will enable keyboard-only actions like that don't appear in any menu
-  actionCollection()->associateWidget( this );
+  actionCollection()->setAssociatedWidget( this );
 }
 
 

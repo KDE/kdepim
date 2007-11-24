@@ -237,7 +237,7 @@ KNMainWidget::KNMainWidget( KXMLGUIClient* client, QWidget* parent ) :
     slotSettings();
   }
 
-  actionCollection()->associateWidget( this );
+  actionCollection()->setAssociatedWidget( this );
 }
 
 KNMainWidget::~KNMainWidget()
