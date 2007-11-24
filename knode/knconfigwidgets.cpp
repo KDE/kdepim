@@ -457,7 +457,10 @@ KNode::NntpAccountConfDialog::NntpAccountConfDialog( KNNntpAccount *a, QWidget *
   mName->setText( a->name() );
   mServer->setText( a->server() );
   mPort->setValue( a->port() );
+#ifndef Q_WS_WIN
+// don't know how to set this in KDE4, where no related methods exists 
   mPort->setSliderEnabled( false );
+#endif  
   mFetchDesc->setChecked( a->fetchDescriptions() );
 
   connect( mServer, SIGNAL( textChanged( const QString& ) ),
