@@ -198,7 +198,7 @@ KABCore::KABCore( KXMLGUIClient *client, bool readWrite, QWidget *parent,
 KABCore::~KABCore()
 {
   mAddressBook->disconnect();
-
+  mCommandHistory->disconnect();
   mAddressBook = 0;
   // NB For KDE 4 this could probably be tied to KInstance instead
   KABC::StdAddressBook::close();
