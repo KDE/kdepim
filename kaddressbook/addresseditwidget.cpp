@@ -346,9 +346,8 @@ AddressEditDialog::AddressEditDialog( const KABC::Address::List &list,
 
   mChanged = false;
 
-  bool state = (mAddressList.count() > 0);
-  mRemoveButton->setEnabled( state );
-  mChangeTypeButton->setEnabled( state );
+  mRemoveButton->setEnabled( mAddressList.count() > 1 );
+  mChangeTypeButton->setEnabled( mAddressList.count() > 0 );
 }
 
 AddressEditDialog::~AddressEditDialog()
@@ -398,9 +397,8 @@ void AddressEditDialog::removeAddress()
     modified();
   }
 
-  bool state = ( mAddressList.count() > 0 );
-  mRemoveButton->setEnabled( state );
-  mChangeTypeButton->setEnabled( state );
+  mRemoveButton->setEnabled( mAddressList.count() > 1 );
+  mChangeTypeButton->setEnabled( mAddressList.count() > 0 );
 }
 
 void AddressEditDialog::changeType()
