@@ -355,7 +355,7 @@ void KABCore::setContactSelected( const QString &uid )
   mActionCopy->setEnabled( selected );
   mActionDelete->setEnabled( selected );
   mActionEditAddressee->setEnabled( selected );
-  mActionStoreAddresseeIn->setEnabled( selected );
+  mActionStoreAddresseeIn->setEnabled( selected && addressBook()->resources().count() > 1 );
   mActionMail->setEnabled( selected );
   mActionMailVCard->setEnabled( selected );
   mActionChat->setEnabled( selected && mKIMProxy && mKIMProxy->initialize() );
