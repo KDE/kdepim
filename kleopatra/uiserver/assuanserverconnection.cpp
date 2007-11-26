@@ -60,6 +60,7 @@
 #include <QFileInfo>
 #include <QDebug>
 #include <QStringList>
+#include <QDialog>
 
 #include <boost/type_traits/remove_pointer.hpp>
 #include <boost/lexical_cast.hpp>
@@ -1140,7 +1141,21 @@ GpgME::Protocol AssuanCommand::checkProtocol( Mode mode ) const {
 void AssuanCommand::doApplyWindowID( QDialog * dlg ) const {
     if ( !dlg || !hasOption( "window-id" ) )
         return;
-    // ### TODO: parse window-id, and apply it to dlg...
+    const QString winIdStr = option("window-id").toString();
+    bool ok = false;
+#ifdef Q_OS_WIN32
+    const WId wid = reinterpret_cast<WId>( winIdStr.toULongLong( &ok, 16 ) );
+#else
+    const WId wid = static_cast<WId>( winIdStr.toULongLong( &ok, 16 ) );
+#endif
+    if ( !ok ) {
+        qDebug() << "window-id value" << wid << "doesn't look like a number";
+        return;
+    }
+    if ( QWidget * pw = QWidget::find( wid ) )
+        dlg->setParent( pw );
+    else
+        qDebug() << "QWidget::find(" << wid << ") returned NULL - ignoring";
 }
 
 static QString commonPrefix( const QString & s1, const QString & s2 ) {
