@@ -224,7 +224,7 @@ QString SignEMailTask::micAlg() const {
 }
 
 QString SignEMailResult::overview() const {
-    return i18n("Not yet implemented");
+    return m_result.error() ? i18n("Signing failed") : i18n("Signing succeeded");
 }
 
 QString SignEMailResult::details() const {

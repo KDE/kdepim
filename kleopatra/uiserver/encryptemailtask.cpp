@@ -192,7 +192,7 @@ void EncryptEMailTask::Private::slotResult( const EncryptionResult & result ) {
 }
 
 QString EncryptEMailResult::overview() const {
-    return i18n("Not yet implemented");
+    return m_result.error() ? i18n("Encryption failed") : i18n("Encryption succeeded");
 }
 
 QString EncryptEMailResult::details() const {
