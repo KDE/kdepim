@@ -39,6 +39,7 @@
 #include <gpgmepp/key.h>
 
 #include <qcstring.h>
+#include <qstring.h>
 
 #include <vector>
 #include <kdepimmacros.h>
@@ -116,6 +117,7 @@ namespace Kleo {
     virtual void doEmitProgressSignal( const QString & what, int current, int total ) = 0;
     virtual void doEmitDoneSignal() = 0;
     void doSlotCancel();
+    QString auditLogAsHtml() const { return mAuditLogAsHtml; }
 
   private:
     /*! \reimp from GpgME::ProgressProvider */
@@ -142,6 +144,7 @@ namespace Kleo {
     unsigned int mNumPatterns;
     unsigned int mChunkSize;
     unsigned int mPatternStartIndex, mPatternEndIndex;
+    QString mAuditLogAsHtml;
   };
 
 }
@@ -149,6 +152,7 @@ namespace Kleo {
 #define make_slot_cancel private: void slotCancel() { QGpgMEJob::doSlotCancel(); }
 #define make_progress_emitter private: void doEmitProgressSignal( const QString & what, int cur, int tot ) { emit progress( what, cur, tot ); }
 #define make_done_emitter private: void doEmitDoneSignal() { emit done(); }
-#define QGPGME_JOB make_slot_cancel make_progress_emitter make_done_emitter
+#define make_auditLogAsHtml private: QString auditLogAsHtml() const { return QGpgMEJob::auditLogAsHtml(); }
+#define QGPGME_JOB make_slot_cancel make_progress_emitter make_done_emitter make_auditLogAsHtml
 
 #endif // __KLEO_QGPGMEJOB_H__
