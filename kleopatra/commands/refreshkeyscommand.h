@@ -53,7 +53,8 @@ namespace  Kleo {
         inline Private * d_func();
         inline const Private * d_func() const;
 
-        Q_PRIVATE_SLOT( d_func(), void keyListingDone( GpgME::KeyListResult ) )
+        Q_PRIVATE_SLOT( d_func(), void publicKeyListingDone( GpgME::KeyListResult ) )
+        Q_PRIVATE_SLOT( d_func(), void secretKeyListingDone( GpgME::KeyListResult ) )
         Q_PRIVATE_SLOT( d_func(), void addKey( GpgME::Key ) )
     };
 }
