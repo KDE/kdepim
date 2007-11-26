@@ -558,7 +558,7 @@ std::vector< shared_ptr<DVTask> > DecryptVerifyCommand::Private::buildTaskList()
             try {
                 tasks.push_back( taskFromOperationWidget( wizard->operationWidget( i ), files[i], outDir ) );
             } catch ( const GpgME::Exception & e ) {
-                //addResult( DVResult::fromDecryptVerifyResult( e.error(), e.what(), i ) );
+                addResult( i, DVResult::fromDecryptVerifyResult( e.error() ) );
             }
 
     }
@@ -771,10 +771,12 @@ struct ResultPresentAndOutputFinalized {
 
 void DecryptVerifyCommand::Private::addResult( unsigned int id, const DVResult & res )
 {
-    assert( !taskList[id]->result );
+    const bool taskExists = id >= 0 && id < taskList.size();
+    assert( !taskExists || !taskList[id]->result );
 
     const shared_ptr<DVResult> result( new DVResult( res ) );
-    taskList[id]->result = result;
+    if ( taskExists )
+    	taskList[id]->result = result;
 
     qDebug( "addResult: %d (%p)", id, result.get() );
 
@@ -786,7 +788,7 @@ void DecryptVerifyCommand::Private::addResult( unsigned int id, const DVResult &
     else if ( vResult.error().code() )
         result->error = vResult.error();
 
-    if ( !result->error && taskList[id]->output )
+    if ( !result->error && taskExists && taskList[id]->output )
         try {
 
             QPointer<QObject> that = this;
