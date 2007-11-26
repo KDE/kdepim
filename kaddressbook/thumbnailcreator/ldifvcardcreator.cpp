@@ -159,7 +159,7 @@ bool VCard_LDIFCreator::createImageSmall()
   text = name + '\n' + text;
 
   if ( !mFont ) {
-    QString pixmap = KStandardDirs::locate( "data", "konqueror/pics/thumbnailfont_7x4.png" );
+    QString pixmap = KStandardDirs::locate( "data", "kio_thumbnail/pics/thumbnailfont_7x4.png" );
     if ( pixmap.isEmpty() ) {
       kWarning() <<"VCard_LDIFCreator: Font image \"thumbnailfont_7x4.png\" not found!";
       return false;
