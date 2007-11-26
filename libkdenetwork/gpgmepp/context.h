@@ -250,6 +250,18 @@ namespace GpgME {
 
     //
     //
+    // Audit Log
+    //
+    //
+    enum AuditLogFlags {
+        HtmlAuditLog = 1,
+        AuditLogWithHelp = 128,
+    };
+    GpgME::Error startGetAuditLog( Data & output, unsigned int flags=0 );
+    GpgME::Error getAuditLog( Data & output, unsigned int flags=0 );
+
+    //
+    //
     // Run Control
     //
     //

@@ -431,8 +431,39 @@ namespace GpgME {
     return d->lasterr = gpgme_op_decrypt_verify_start( d->ctx, cdp ? cdp->data : 0, pdp ? pdp->data : 0 );
   }
 
+#ifdef HAVE_GPGME_OP_GETAUDITLOG
+  unsigned int to_auditlog_flags( unsigned int flags ) {
+      unsigned int result = 0;
+      if ( flags & Context::HtmlAuditLog )
+          result |= GPGME_AUDITLOG_HTML;
+      if ( flags & Context::AuditLogWithHelp )
+          result |= GPGME_AUDITLOG_WITH_HELP;
+      return result;
+  }
+#endif // HAVE_GPGME_OP_GETAUDITLOG
 
 
+  Error Context::startGetAuditLog( Data & output, unsigned int flags ) {
+    d->lastop = Private::GetAuditLog;
+#ifdef HAVE_GPGME_OP_GETAUDITLOG
+    Data::Private * const odp = output.impl();
+    return Error( d->lasterr = gpgme_op_getauditlog_start( d->ctx, odp ? odp->data : 0, to_auditlog_flags( flags ) ) );
+#else
+    (void)output; (void)flags;
+    return Error( d->lasterr = makeError( GPG_ERR_NOT_IMPLEMENTED ) );
+#endif
+  }
+
+  Error Context::getAuditLog( Data & output, unsigned int flags ) {
+    d->lastop = Private::GetAuditLog;
+#ifdef HAVE_GPGME_OP_GETAUDITLOG
+    Data::Private * const odp = output.impl();
+    return Error( d->lasterr = gpgme_op_getauditlog( d->ctx, odp ? odp->data : 0, to_auditlog_flags( flags ) ) );
+#else
+    (void)output; (void)flags;
+    return Error( d->lasterr = makeError( GPG_ERR_NOT_IMPLEMENTED ) );
+#endif
+  }
 
   void Context::clearSigningKeys() {
     gpgme_signers_clear( d->ctx );

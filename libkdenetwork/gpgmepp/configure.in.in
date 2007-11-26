@@ -152,6 +152,19 @@ KDEPIM_PATH_GPGME(0.4.5,[
 		AC_MSG_RESULT([no])
 	])
 
+	AC_MSG_CHECKING([if gpgme has gpgme_op_getauditlog])
+	AC_TRY_COMPILE([#include <gpgme.h>], [
+                gpgme_ctx_t ctx = 0;
+                gpgme_data_t data = 0;
+                unsigned int flags = 0;
+                gpgme_error_t e = gpgme_op_getauditlog( ctx, data, flags );
+	], [
+		AC_DEFINE(HAVE_GPGME_OP_GETAUDITLOG, 1, [Define to 1 if your gpgme supports gpgme_op_getauditlog])
+		AC_MSG_RESULT([yes])
+	], [
+		AC_MSG_RESULT([no])
+	])
+
 	CFLAGS="$kdepim_gpgmepp_save_cflags"
 	LIBS="$kdepim_gpgmepp_save_libs"
 	AC_LANG_RESTORE
