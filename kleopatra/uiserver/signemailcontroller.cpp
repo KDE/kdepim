@@ -138,11 +138,7 @@ void SignEMailController::startResolveSigners( const std::vector<Mailbox> & sign
     d->ensureWizardCreated();
 
     d->wizard->setSignersAndCandidates( signers, keys );
-
-    if ( d->wizard->canGoToNextPage() ) {
-        d->wizard->next();
-    } 
-    
+  
     d->ensureWizardVisible();
 }
 
