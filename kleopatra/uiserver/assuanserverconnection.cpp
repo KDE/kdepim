@@ -87,6 +87,11 @@
 # include <unistd.h>
 #endif
 
+#ifdef Q_WS_X11
+# include <qx11info_x11.h>
+# include <X11/Xlib.h>
+#endif
+
 using namespace Kleo;
 using namespace boost;
 
@@ -1154,6 +1159,10 @@ void AssuanCommand::doApplyWindowID( QDialog * dlg ) const {
     }
     if ( QWidget * pw = QWidget::find( wid ) )
         dlg->setParent( pw );
+#ifdef Q_WS_X11
+    else if ( wid )
+        XSetTransientForHint( QX11Info::display(), dlg->winId(), wid );
+#endif
     else
         qDebug() << "QWidget::find(" << wid << ") returned NULL - ignoring";
 }
