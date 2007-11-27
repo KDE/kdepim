@@ -91,6 +91,7 @@ GpgME::EncryptionResult Kleo::QGpgMEEncryptJob::exec( const std::vector<GpgME::K
     alwaysTrust ? GpgME::Context::AlwaysTrust : GpgME::Context::None;
   mResult = mCtx->encrypt( recipients, *mInData, *mOutData, flags );
   ciphertext = mOutDataDataProvider->data();
+  getAuditLog();
   return mResult;
 }
 

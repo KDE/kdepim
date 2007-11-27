@@ -250,11 +250,15 @@ static QString audit_log_as_html( GpgME::Context * ctx ) {
 
 void Kleo::QGpgMEJob::doSlotOperationDoneEvent( GpgME::Context * context, const GpgME::Error & e ) {
   if ( context == mCtx ) {
-    mAuditLogAsHtml = audit_log_as_html( mCtx );
+    getAuditLog();
     doEmitDoneSignal();
     doOperationDoneEvent( e );
     mThis->deleteLater();
   }
+}
+
+void Kleo::QGpgMEJob::getAuditLog() {
+    mAuditLogAsHtml = audit_log_as_html( mCtx );
 }
 
 void Kleo::QGpgMEJob::doSlotCancel() {

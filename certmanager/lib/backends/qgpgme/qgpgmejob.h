@@ -108,6 +108,8 @@ namespace Kleo {
     GpgME::Error setSigningKeys( const std::vector<GpgME::Key> & signers );
     /*! Call this to implement a slotOperationDoneEvent() */
     void doSlotOperationDoneEvent( GpgME::Context * context, const GpgME::Error & e );
+    /*! Call this to extract the audit log from mCtx */
+    void getAuditLog();
 
     //
     // only boring stuff below this line...

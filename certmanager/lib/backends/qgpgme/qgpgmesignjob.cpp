@@ -96,6 +96,7 @@ GpgME::SigningResult Kleo::QGpgMESignJob::exec( const std::vector<GpgME::Key> & 
     return mResult = GpgME::SigningResult( 0, err );
   mResult = mCtx->sign( *mInData, *mOutData, mode );
   signature = mOutDataDataProvider->data();
+  getAuditLog();
   return mResult;
 }
 

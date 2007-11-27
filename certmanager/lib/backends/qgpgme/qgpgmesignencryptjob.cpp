@@ -101,6 +101,7 @@ Kleo::QGpgMESignEncryptJob::exec( const std::vector<GpgME::Key> & signers,
     alwaysTrust ? GpgME::Context::AlwaysTrust : GpgME::Context::None ;
   mResult = mCtx->signAndEncrypt( recipients, *mInData, *mOutData, flags );
   cipherText = mOutDataDataProvider->data();
+  getAuditLog();
   return mResult;
 }
 
