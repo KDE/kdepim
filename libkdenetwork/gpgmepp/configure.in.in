@@ -153,7 +153,7 @@ KDEPIM_PATH_GPGME(0.4.5,[
 	])
 
 	AC_MSG_CHECKING([if gpgme has gpgme_op_getauditlog])
-	AC_TRY_COMPILE([#include <gpgme.h>], [
+	AC_TRY_LINK([#include <gpgme.h>], [
                 gpgme_ctx_t ctx = 0;
                 gpgme_data_t data = 0;
                 unsigned int flags = 0;
