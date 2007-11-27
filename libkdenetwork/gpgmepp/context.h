@@ -299,6 +299,17 @@ namespace GpgME {
 
   KDE_EXPORT GpgME::Error checkEngine( Context::Protocol proto );
 
+  enum Feature {
+      ValidatingKeylistModeFeature = 0x00000001,
+      CancelOperationFeature       = 0x00000002,
+      WrongKeyUsageFeature         = 0x00000004,
+
+      AuditLogFeature              = 0x00001000,
+
+      FeatureMaxValue              = 0x80000000
+  };
+  KDE_EXPORT bool hasFeature( unsigned long feature );
+
 } // namespace GpgME
 
 #endif // __GPGMEPP_CONTEXT_H__

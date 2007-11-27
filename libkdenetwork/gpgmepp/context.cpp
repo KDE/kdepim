@@ -650,3 +650,21 @@ GpgME::Error GpgME::checkEngine( Context::Protocol proto ) {
   return gpgme_engine_check_version( p );
 }
 
+static const unsigned long supported_features = 0
+#ifdef HAVE_GPGME_KEYLIST_MODE_VALIDATE
+    | GpgME::ValidatingKeylistModeFeature
+#endif
+#ifdef HAVE_GPGME_CANCEL
+    | GpgME::CancelOperationFeature
+#endif
+#ifdef HAVE_GPGME_WRONG_KEY_USAGE
+    | GpgME::WrongKeyUsageFeature
+#endif
+#ifdef HAVE_GPGME_OP_GETAUDITLOG
+    | GpgME::AuditLogFeature
+#endif
+    ;
+
+bool GpgME::hasFeature( unsigned long features ) {
+    return features == ( features & supported_features );
+}
