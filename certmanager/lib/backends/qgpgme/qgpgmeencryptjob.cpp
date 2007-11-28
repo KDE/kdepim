@@ -36,8 +36,7 @@
 
 #include "qgpgmeencryptjob.h"
 
-#include <klocale.h>
-#include <kmessagebox.h>
+#include "ui/messagebox.h"
 
 #include <qgpgme/eventloopinteractor.h>
 #include <qgpgme/dataprovider.h>
@@ -45,6 +44,8 @@
 #include <gpgmepp/context.h>
 #include <gpgmepp/encryptionresult.h>
 #include <gpgmepp/data.h>
+
+#include <klocale.h>
 
 #include <assert.h>
 
@@ -100,11 +101,8 @@ void Kleo::QGpgMEEncryptJob::doOperationDoneEvent( const GpgME::Error & ) {
 }
 
 void Kleo::QGpgMEEncryptJob::showErrorDialog( QWidget * parent, const QString & caption ) const {
-  if ( !mResult.error() || mResult.error().isCanceled() )
-    return;
-  const QString msg = i18n("Encryption failed: %1")
-    .arg( QString::fromLocal8Bit( mResult.error().asString() ) );
-  KMessageBox::error( parent, msg, caption );
+  if ( mResult.error() && !mResult.error().isCanceled() )
+      Kleo::MessageBox::error( parent, mResult, this, caption );
 }
 
 #include "qgpgmeencryptjob.moc"
