@@ -39,6 +39,7 @@
 #include "util.h"
 
 #include <gpgme.h>
+#include <gpg-error.h>
 
 //#include <string>
 //using std::string;
@@ -450,7 +451,7 @@ namespace GpgME {
     return Error( d->lasterr = gpgme_op_getauditlog_start( d->ctx, odp ? odp->data : 0, to_auditlog_flags( flags ) ) );
 #else
     (void)output; (void)flags;
-    return Error( d->lasterr = makeError( GPG_ERR_NOT_IMPLEMENTED ) );
+    return Error( d->lasterr = gpg_error( GPG_ERR_NOT_IMPLEMENTED ) );
 #endif
   }
 
@@ -461,7 +462,7 @@ namespace GpgME {
     return Error( d->lasterr = gpgme_op_getauditlog( d->ctx, odp ? odp->data : 0, to_auditlog_flags( flags ) ) );
 #else
     (void)output; (void)flags;
-    return Error( d->lasterr = makeError( GPG_ERR_NOT_IMPLEMENTED ) );
+    return Error( d->lasterr = gpg_error( GPG_ERR_NOT_IMPLEMENTED ) );
 #endif
   }
 
