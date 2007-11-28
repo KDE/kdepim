@@ -64,6 +64,10 @@ static KGuiItem KGuiItem_copy() {
     return KGuiItem( i18n("&Copy to Clipboard"), "editcopy", i18n("Copy Audit Log to Clipboard") );
 }
 
+static KGuiItem KGuiItem_showAuditLog() {
+    return KGuiItem( i18n("&Show Audit Log") ); // "view_log"?
+}
+
 class AuditLogViewer : public KDialogBase {
     // Q_OBJECT
 public:
@@ -134,5 +138,118 @@ void MessageBox::auditLog( QWidget * parent, const Job * job, const QString & ca
         return;
     }
 
-    ( new AuditLogViewer( "<qt>" + log + "</qt>", parent, "alv", Qt::WDestructiveClose ) )->show();
+    AuditLogViewer * const alv = new AuditLogViewer( "<qt>" + log + "</qt>", parent, "alv", Qt::WDestructiveClose );
+    alv->setCaption( caption );
+    alv->show();
+}
+
+// static
+void MessageBox::auditLog( QWidget * parent, const Job * job ) {
+    auditLog( parent, job, i18n("GnuPG Audit Log Viewer") );
+}
+
+static QString to_information_string( const SigningResult & result ) {
+    return result.error()
+        ? i18n("Signing failed: %1").arg( QString::fromLocal8Bit( result.error().asString() ) )
+        : i18n("Signing successful") ;
+}
+
+static QString to_error_string( const SigningResult & result ) {
+    return to_information_string( result );
+}
+
+static QString to_information_string( const EncryptionResult & result ) {
+    return result.error()
+        ? i18n("Encryption failed: %1").arg( QString::fromLocal8Bit( result.error().asString() ) )
+        : i18n("Encryption successful") ;
+}
+
+static QString to_error_string( const EncryptionResult & result ) {
+    return to_information_string( result );
+}
+
+static QString to_information_string( const SigningResult & sresult, const EncryptionResult & eresult ) {
+    return to_information_string( sresult ) + '\n' + to_information_string( eresult );
+}
+
+static QString to_error_string( const SigningResult & sresult, const EncryptionResult & eresult ) {
+    return to_information_string( sresult, eresult );
+}
+
+// static
+void MessageBox::information( QWidget * parent, const SigningResult & result, const Job * job, int options ) {
+    information( parent, result, job, i18n("Signing Result"), options );
+}
+
+// static
+void MessageBox::information( QWidget * parent, const SigningResult & result, const Job * job, const QString & caption, int options ) {
+    make( parent, QMessageBox::Information, to_information_string( result ), job, caption, options );
+}
+
+// static
+void MessageBox::error( QWidget * parent, const SigningResult & result, const Job * job, int options ) {
+    error( parent, result, job, i18n("Signing Error"), options );
+}
+
+// static
+void MessageBox::error( QWidget * parent, const SigningResult & result, const Job * job, const QString & caption, int options ) {
+    make( parent, QMessageBox::Critical, to_error_string( result ), job, caption, options );
+}
+
+// static
+void MessageBox::information( QWidget * parent, const EncryptionResult & result, const Job * job, int options ) {
+    information( parent, result, job, i18n("Encryption Result"), options );
+}
+
+// static
+void MessageBox::information( QWidget * parent, const EncryptionResult & result, const Job * job, const QString & caption, int options ) {
+    make( parent, QMessageBox::Information, to_information_string( result ), job, caption, options );
+}
+
+// static
+void MessageBox::error( QWidget * parent, const EncryptionResult & result, const Job * job, int options ) {
+    error( parent, result, job, i18n("Encryption Error"), options );
+}
+
+// static
+void MessageBox::error( QWidget * parent, const EncryptionResult & result, const Job * job, const QString & caption, int options ) {
+    make( parent, QMessageBox::Critical, to_error_string( result ), job, caption, options );
+}
+
+// static
+void MessageBox::information( QWidget * parent, const SigningResult & sresult, const EncryptionResult & eresult, const Job * job, int options ) {
+    information( parent, sresult, eresult, job, i18n("Encryption Result"), options );
+}
+
+// static
+void MessageBox::information( QWidget * parent, const SigningResult & sresult, const EncryptionResult & eresult, const Job * job, const QString & caption, int options ) {
+    make( parent, QMessageBox::Information, to_information_string( sresult, eresult ), job, caption, options );
+}
+
+// static
+void MessageBox::error( QWidget * parent, const SigningResult & sresult, const EncryptionResult & eresult, const Job * job, int options ) {
+    error( parent, sresult, eresult, job, i18n("Encryption Error"), options );
+}
+
+// static
+void MessageBox::error( QWidget * parent, const SigningResult & sresult, const EncryptionResult & eresult, const Job * job, const QString & caption, int options ) {
+    make( parent, QMessageBox::Critical, to_error_string( sresult, eresult ), job, caption, options );
+}
+
+// static
+void MessageBox::make( QWidget * parent, QMessageBox::Icon icon, const QString & text, const Job * job, const QString & caption, int options ) {
+    KDialogBase * dialog = GpgME::hasFeature( GpgME::AuditLogFeature )
+        ? new KDialogBase( caption, KDialogBase::Yes | KDialogBase::No,
+                           KDialogBase::Yes, KDialogBase::Yes,
+                           parent, "error", true, true,
+                           KStdGuiItem::ok(), KGuiItem_showAuditLog() )
+        : new KDialogBase( caption, KDialogBase::Yes,
+                           KDialogBase::Yes, KDialogBase::Yes,
+                           parent, "error", true, true,
+                           KStdGuiItem::ok() ) ;
+    if ( options & KMessageBox::PlainCaption )
+        dialog->setPlainCaption( caption );
+
+    if ( KDialogBase::No == KMessageBox::createKMessageBox( dialog, icon, text, QStringList(), QString::null, 0, options ) )
+        auditLog( 0, job );
 }
