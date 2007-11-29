@@ -70,6 +70,8 @@ namespace Kleo {
 
         static void auditLog( QWidget * parent, const Kleo::Job * job, const QString & caption );
         static void auditLog( QWidget * parent, const Kleo::Job * job );
+        static void auditLog( QWidget * parent, const QString & log, const QString & caption );
+        static void auditLog( QWidget * parent, const QString & log );
 
     private:
         static void make( QWidget * parent, QMessageBox::Icon icon, const QString & text, const Kleo::Job * job, const QString & caption, int options );

@@ -138,6 +138,11 @@ void MessageBox::auditLog( QWidget * parent, const Job * job, const QString & ca
         return;
     }
 
+    auditLog( parent, log, caption );
+}
+
+// static
+void MessageBox::auditLog( QWidget * parent, const QString & log, const QString & caption ) {
     AuditLogViewer * const alv = new AuditLogViewer( "<qt>" + log + "</qt>", parent, "alv", Qt::WDestructiveClose );
     alv->setCaption( caption );
     alv->show();
@@ -146,6 +151,11 @@ void MessageBox::auditLog( QWidget * parent, const Job * job, const QString & ca
 // static
 void MessageBox::auditLog( QWidget * parent, const Job * job ) {
     auditLog( parent, job, i18n("GnuPG Audit Log Viewer") );
+}
+
+// static
+void MessageBox::auditLog( QWidget * parent, const QString & log ) {
+    auditLog( parent, log, i18n("GnuPG Audit Log Viewer") );
 }
 
 static QString to_information_string( const SigningResult & result ) {
