@@ -157,10 +157,13 @@ int EncryptCommand::doStart() {
 }
 
 void EncryptCommand::Private::slotRecipientsResolved() {
+    //hold local shared_ptr to member as q->done() deletes *this
+    const shared_ptr<EncryptEMailController> cont( controller );
+
     try {
 
-        controller->importIO();
-        controller->start();
+        cont->importIO();
+        cont->start();
 
         return;
 
@@ -174,7 +177,7 @@ void EncryptCommand::Private::slotRecipientsResolved() {
         q->done( makeError( GPG_ERR_UNEXPECTED ),
                  i18n("Caught unknown exception in EncryptCommand::Private::slotRecipientsResolved") );
     }
-    controller->cancel();
+    cont->cancel();
 }
 
 void EncryptCommand::Private::slotDone() {
