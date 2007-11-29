@@ -80,6 +80,7 @@ GpgME::DecryptionResult Kleo::QGpgMEDecryptJob::exec( const QByteArray & cipherT
   setup( cipherText );
   const GpgME::DecryptionResult result = mCtx->decrypt( *mInData, *mOutData );
   plainText = mOutDataDataProvider->data();
+  getAuditLog();
   return result;
 }
 

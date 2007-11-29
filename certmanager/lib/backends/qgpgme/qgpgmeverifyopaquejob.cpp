@@ -79,6 +79,7 @@ GpgME::VerificationResult Kleo::QGpgMEVerifyOpaqueJob::exec( const QByteArray & 
   setup( signedData );
   const GpgME::VerificationResult res = mCtx->verifyOpaqueSignature( *mInData, *mOutData );
   plainText = mOutDataDataProvider->data();
+  getAuditLog();
   return res;
 }
 
