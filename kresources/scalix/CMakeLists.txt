@@ -10,4 +10,4 @@ add_subdirectory( knotes )
 add_subdirectory( kcal ) 
 
 add_subdirectory( kioslave ) 
-#add_subdirectory( scalixadmin ) 
+add_subdirectory( scalixadmin ) 
