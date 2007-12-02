@@ -407,7 +407,8 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
           ok = mail( incidence, callback, dir, iTIPReply );
         }
       } else {
-        ( new KMDeleteMsgCommand( callback.getMsg()->getMsgSerNum() ) )->start();
+        if ( callback.deleteInvitationAfterReply() )
+          ( new KMDeleteMsgCommand( callback.getMsg()->getMsgSerNum() ) )->start();
       }
       delete incidence;
 
