@@ -15,6 +15,7 @@ Name[ja]=KAB GMX XXPort プラグイン
 Name[kk]=GMX-қа экспорт/импорт ету
 Name[km]=កម្មវិធីជំនួយ​ KAB GMX XXPort
 Name[ko]=KAB GMX 주고받기 플러그인
+Name[nb]=KAB-programtillegg for GMX-eksport
 Name[nds]=KAB-gmx-Im-/Exportmoduul
 Name[ne]=KAB GMX XXPort प्लगइन
 Name[pa]=KAB GMX XX-ਪੋਰਟ ਪਲੱਗਇਨ
@@ -39,6 +40,7 @@ Comment[ja]=GMX アドレス帳のフォーマットで連絡先をインポー�
 Comment[kk]=GMX контакттарды экспорт/импорт ету модулі
 Comment[km]=កម្មវិធីជំនួយ​ត្រូវ​នាំចូល និង​នាំចេញ​ទំនាក់ទំនង​នៅ​ក្នុង​ទ្រង់ទ្រាយ​សៀវភៅ​អាសយដ្ឋានរបស់ GMX
 Comment[ko]=GMX 주소록 형식으로 연락처를 가져오고 내보내는 플러그인
+Comment[nb]=Programtillegg for import og eksport av kontakter i aressebokformatet til GMX
 Comment[nds]=Moduul för't Im- un Exporteren vun Kontakten vun un na't Gmx-Formaat
 Comment[ne]=GMX को ठेगानापुस्तिका ढाँचामा सम्पर्क आयात गर्ने र निर्यात गर्ने प्लगइन
 Comment[nl]=Plugin voor het importeren en exporteren van contactpersonen in het formaat van GMX
