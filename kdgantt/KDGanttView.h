@@ -414,7 +414,6 @@ private slots:
   void slotMouseButtonPressed (  int button, QListViewItem * item, const QPoint & pos, int c );
     void slotmouseButtonClicked ( int button, QListViewItem * item, const QPoint & pos, int c );
     void slotcontextMenuRequested ( QListViewItem * item, const QPoint & pos, int col );
-    void slotdoubleClicked ( QListViewItem * item );
     void slotHeaderSizeChanged();
     void addTickRight();
     void addTickLeft();

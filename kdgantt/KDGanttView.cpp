@@ -105,7 +105,6 @@ KDGanttView::KDGanttView( QWidget* parent, const char* name  )
 
     connect( myListView, SIGNAL( mouseButtonClicked ( int, QListViewItem * , const QPoint &, int ) ), this, SLOT( slotmouseButtonClicked ( int , QListViewItem * , const QPoint &, int ) ) );
     connect( myListView, SIGNAL( contextMenuRequested ( QListViewItem * , const QPoint &, int  ) ), this, SLOT( slotcontextMenuRequested ( QListViewItem * , const QPoint & , int ) ) );
-    connect( myListView, SIGNAL(doubleClicked ( QListViewItem *  ) ), this, SLOT(slotdoubleClicked ( QListViewItem * ) ) );
 
   connect( myListView, SIGNAL(currentChanged( QListViewItem *  ) ), this, SLOT(slotCurrentChanged ( QListViewItem * ) ) );
   connect( myListView, SIGNAL(itemRenamed ( QListViewItem * , int , const QString &  ) ), this, SLOT(slotItemRenamed ( QListViewItem *, int , const QString &  ) ) );
@@ -483,19 +482,6 @@ void KDGanttView::slotcontextMenuRequested ( QListViewItem * item, const QPoint 
     emit lvContextMenuRequested ( gItem,  pos,  col );
     emit lvItemRightClicked( gItem );
     emit itemRightClicked( gItem );
-}
-
-
-/*
-  Implements a casted pass-through of the doubleClicked() signal.
-*/
-void KDGanttView::slotdoubleClicked ( QListViewItem * item )
-{
-   {
-    KDGanttViewItem* gItem = static_cast<KDGanttViewItem*>( item );
-    emit lvItemDoubleClicked( gItem );
-    emit itemDoubleClicked( gItem );
-  }
 }
 
 
