@@ -48,11 +48,18 @@ class KDE_EXPORT Period
 
     bool hasDuration()const;
 
+    QString summary() const;
+    void setSummary( const QString &summary );
+    QString location() const;
+    void setLocation( const QString &location );
+
   private:
     QDateTime mStart;
     QDateTime mEnd;
 
     bool mHasDuration;
+    QString mSummary;
+    QString mLocation;
 
     class Private;
     Private *d;

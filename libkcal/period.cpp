@@ -70,3 +70,23 @@ bool Period::hasDuration()const
 {
   return mHasDuration;
 }
+
+QString KCal::Period::summary() const
+{
+  return mSummary;
+}
+
+void KCal::Period::setSummary(const QString & summary)
+{
+  mSummary = summary;
+}
+
+QString KCal::Period::location() const
+{
+  return mLocation;
+}
+
+void KCal::Period::setLocation(const QString & location)
+{
+  mLocation = location;
+}

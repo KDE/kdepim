@@ -28,6 +28,7 @@
 
 #include <kdebug.h>
 #include <klocale.h>
+#include <kmdcodec.h>
 
 extern "C" {
   #include <ical.h>
@@ -1078,13 +1079,19 @@ FreeBusy *ICalFormatImpl::readFreeBusy(icalcomponent *vfreebusy)
       case ICAL_FREEBUSY_PROPERTY: { //Any FreeBusy Times
         icalperiodtype icalperiod = icalproperty_get_freebusy(p);
         QDateTime period_start = readICalDateTime(icalperiod.start);
+        Period period;
         if ( !icaltime_is_null_time(icalperiod.end) ) {
           QDateTime period_end = readICalDateTime(icalperiod.end);
-          periods.append( Period(period_start, period_end) );
+          period = Period(period_start, period_end);
         } else {
           Duration duration = readICalDuration( icalperiod.duration );
-          periods.append( Period(period_start, duration) );
+          period = Period(period_start, duration);
         }
+        QCString param = icalproperty_get_parameter_as_string( p, "X-SUMMARY" );
+        period.setSummary( QString::fromUtf8( KCodecs::base64Decode( param ) ) );
+        param = icalproperty_get_parameter_as_string( p, "X-LOCATION" );
+        period.setLocation( QString::fromUtf8( KCodecs::base64Decode( param ) ) );
+        periods.append( period );
         break;}
 
       default:
@@ -1481,7 +1488,7 @@ void ICalFormatImpl::readIncidenceBase(icalcomponent *parent,IncidenceBase *inci
   icalproperty *next =0;
 
   for ( p = icalcomponent_get_first_property(parent,ICAL_X_PROPERTY);
-       p != 0; 
+       p != 0;
        p = next )
   {
 

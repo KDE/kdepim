@@ -16,7 +16,8 @@ check_PROGRAMS = testtostring \
                  testrecurprevious \
                  testrecurson \
                  testrecurrencetype \
-                 testvcalexport
+                 testvcalexport \
+                 testfb
 
 
 METASOURCES = AUTO
@@ -65,6 +66,10 @@ testfields_SOURCES = testfields.cpp
 testfields_LDFLAGS = $(all_libraries) $(KDE_RPATH)
 testfields_LDADD   = ../libkcal.la
 testfields_CXXFLAGS= -DINPUT='"$(srcdir)/data/test_pilot.ics"'
+
+testfb_SOURCES = testfb.cpp
+testfb_LDFLAGS = $(all_libraries) $(KDE_RPATH)
+testfb_LDADD = ../libkcal.la
 
 TESTFILES = test1.ics test2.ics test3.ics test4.ics test5.ics test_Mozilla.ics
 
