@@ -829,7 +829,7 @@ void KNMainWidget::initActions()
 
   // scoring
   a_ctScoresEdit = actionCollection()->addAction("scoreedit");
-  a_ctScoresEdit->setIcon(KIcon("edit"));
+  a_ctScoresEdit->setIcon(KIcon("object-edit"));
   a_ctScoresEdit->setText(i18n("&Edit Scoring Rules..."));
   connect(a_ctScoresEdit, SIGNAL(triggered(bool)), SLOT(slotScoreEdit()));
   a_ctScoresEdit->setShortcut(QKeySequence(Qt::CTRL+Qt::Key_E));
@@ -878,7 +878,7 @@ void KNMainWidget::initActions()
   connect(a_ctArtSendNow, SIGNAL(triggered(bool)), SLOT(slotArtSendNow()));
 
   a_ctArtEdit = actionCollection()->addAction("article_edit");
-  a_ctArtEdit->setIcon(KIcon("edit"));
+  a_ctArtEdit->setIcon(KIcon("object-edit"));
   a_ctArtEdit->setText(i18nc("edit article","&Edit Article..."));
   connect(a_ctArtEdit, SIGNAL(triggered(bool)), SLOT(slotArtEdit()));
   a_ctArtEdit->setShortcut(QKeySequence(Qt::Key_E));
