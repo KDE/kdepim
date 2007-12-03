@@ -31,6 +31,7 @@
 #include <kedittoolbar.h>
 #include <kstandardaction.h>
 #include <kdebug.h>
+#include <kdeversion.h>
 #include <kmenubar.h>
 #include <kiconloader.h>
 #include <kstatusbar.h>
@@ -237,7 +238,13 @@ KNMainWidget::KNMainWidget( KXMLGUIClient* client, QWidget* parent ) :
     slotSettings();
   }
 
-  actionCollection()->associateWidget( this );
+  actionCollection()->addAssociatedWidget( this );
+  foreach (QAction* action, actionCollection()->actions())
+#if QT_VERSION < KDE_MAKE_VERSION(4,4,0)
+    action->setShortcutContext(Qt::WidgetShortcut); // remove after Qt4.4 becomes mandatory
+#else
+    action->setShortcutContext(Qt::WidgetWithChildrenShortcut);
+#endif
 }
 
 KNMainWidget::~KNMainWidget()

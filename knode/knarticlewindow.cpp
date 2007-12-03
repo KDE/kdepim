@@ -19,6 +19,7 @@
 #include <kconfig.h>
 #include <kaction.h>
 #include <kactioncollection.h>
+#include <kdeversion.h>
 
 #include "knarticle.h"
 #include "articlewidget.h"
@@ -118,7 +119,13 @@ ArticleWindow::ArticleWindow( KNArticle *art )
   applyMainWindowSettings(KConfigGroup( knGlobals.config(), "articleWindow_options") );
 
   // this will enable keyboard-only actions like that don't appear in any menu
-  actionCollection()->associateWidget( this );
+  actionCollection()->addAssociatedWidget( this );
+  foreach (QAction* action, actionCollection()->actions())
+#if QT_VERSION < KDE_MAKE_VERSION(4,4,0)
+    action->setShortcutContext(Qt::WidgetShortcut); // remove after Qt4.4 becomes mandatory
+#else
+    action->setShortcutContext(Qt::WidgetWithChildrenShortcut);
+#endif
 }
 
 
