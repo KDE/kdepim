@@ -38,6 +38,7 @@ kde4_add_executable( test_signencryptwizard TEST
   ../uiserver/recipientresolvepage.cpp
   ../uiserver/keyselectiondialog.cpp
   ../uiserver/kleo-assuan.cpp
+  ../uiserver/objectspage.cpp
   ../uiserver/wizardresultpage.cpp
   ../uiserver/resultdisplaywidget.cpp
   ../uiserver/scrollarea.cpp
