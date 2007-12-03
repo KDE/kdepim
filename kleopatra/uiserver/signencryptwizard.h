@@ -93,10 +93,21 @@ namespace Kleo {
         };
         void setSigningMode( TriState mode );
         void setEncryptionMode( TriState mode );
+        
         void setFiles( const QStringList & files );
 
         bool signingSelected() const;
+        void setSigningSelected( bool selected );
+
         bool encryptionSelected() const;
+        void setEncryptionSelected( bool selected );
+
+        bool isSigningUserMutable() const;
+        void setSigningUserMutable( bool isMutable );
+
+        bool isEncryptionUserMutable() const;
+        void setEncryptionUserMutable( bool isMutable );
+        
         QFileInfoList resolvedFiles() const;
         //@}
 

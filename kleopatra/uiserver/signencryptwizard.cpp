@@ -32,6 +32,7 @@
 
 #include "signencryptwizard.h"
 
+#include "objectspage.h"
 #include "recipientresolvepage.h"
 #include "signerresolvepage.h"
 #include "resultdisplaywidget.h"
@@ -86,6 +87,7 @@ private:
 
     RecipientResolvePage * recipientResolvePage;
     SignerResolvePage * signerResolvePage;
+    Kleo::ObjectsPage * objectsPage;
     WizardResultPage * resultPage;
     QStackedWidget * stack;
 };
@@ -97,6 +99,7 @@ SignEncryptWizard::Private::Private( SignEncryptWizard * qq )
       currentId( SignEncryptWizard::NoPage ),
       recipientResolvePage( new RecipientResolvePage ),
       signerResolvePage( new SignerResolvePage ),
+      objectsPage( new Kleo::ObjectsPage ),
       resultPage( new WizardResultPage ),
       stack( new QStackedWidget )
 {
@@ -106,6 +109,7 @@ SignEncryptWizard::Private::Private( SignEncryptWizard * qq )
     q->setMainWidget( stack );    
     q->setButtons( KDialog::Try | KDialog::Cancel );
     setPage( SignEncryptWizard::ResolveSignerPage, signerResolvePage );
+    setPage( SignEncryptWizard::ObjectsPage, objectsPage );
     setPage( SignEncryptWizard::ResolveRecipientsPage, recipientResolvePage );
     setPage( SignEncryptWizard::ResultPage, resultPage );
     q->connect( q, SIGNAL( tryClicked() ), q, SLOT( next() ) );
@@ -227,13 +231,44 @@ void SignEncryptWizard::setProtocol( Protocol proto ) {
 }
 
 void SignEncryptWizard::setSigningMode( TriState mode ) {
-    d->signerResolvePage->setSigningEnabled( mode == On );
-    d->signerResolvePage->setSigningUserMutable( mode == Ask );
+    setSigningSelected( mode == On );
+    setSigningUserMutable( mode == Ask );
 }
 
 void SignEncryptWizard::setEncryptionMode( TriState mode ) {
-    d->signerResolvePage->setEncryptionEnabled( mode == On );
-    d->signerResolvePage->setEncryptionUserMutable( mode == Ask );
+    setEncryptionSelected( mode == On );
+    setEncryptionUserMutable( mode == Ask );
+}
+
+
+void SignEncryptWizard::setEncryptionSelected( bool selected )
+{
+    d->signerResolvePage->setEncryptionSelected( selected );
+}
+
+void SignEncryptWizard::setSigningSelected( bool selected )
+{
+    d->signerResolvePage->setSigningSelected( selected );
+}
+
+bool SignEncryptWizard::isSigningUserMutable() const
+{
+    return d->signerResolvePage->isSigningUserMutable();
+}
+
+void SignEncryptWizard::setSigningUserMutable( bool isMutable )
+{
+    d->signerResolvePage->setSigningUserMutable( isMutable );
+}
+
+bool SignEncryptWizard::isEncryptionUserMutable() const
+{
+    return d->signerResolvePage->isEncryptionUserMutable();
+}
+
+void SignEncryptWizard::setEncryptionUserMutable( bool isMutable )
+{
+    d->signerResolvePage->setEncryptionUserMutable( isMutable );
 }
 
 void SignEncryptWizard::setFiles( const QStringList & files ) {
@@ -245,11 +280,11 @@ QFileInfoList SignEncryptWizard::resolvedFiles() const {
 }
 
 bool SignEncryptWizard::signingSelected() const {
-    return d->signerResolvePage->signingEnabled();
+    return d->signerResolvePage->signingSelected();
 }
 
 bool SignEncryptWizard::encryptionSelected() const {
-    return d->signerResolvePage->encryptionEnabled();
+    return d->signerResolvePage->encryptionSelected();
 }
 
 void SignEncryptWizard::setRecipientsAndCandidates( const std::vector<Mailbox> & recipients, const std::vector< std::vector<Key> > & keys ) {

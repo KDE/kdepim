@@ -64,14 +64,18 @@ namespace Kleo {
 
         /*reimpl*/ bool isComplete() const;
 
-        bool encryptionEnabled() const;
-        void setEncryptionEnabled( bool enabled );
+        bool encryptionSelected() const;
+        void setEncryptionSelected( bool selected );
 
-        bool signingEnabled() const;
-        void setSigningEnabled( bool enabled );
+        bool signingSelected() const;
+        void setSigningSelected( bool selected );
 
+        bool isEncryptionUserMutable() const;
         void setEncryptionUserMutable( bool ismutable );
+
+        bool isSigningUserMutable() const;
         void setSigningUserMutable( bool ismutable );
+
 
         void setProtocol( GpgME::Protocol protocol );
         GpgME::Protocol protocol() const;

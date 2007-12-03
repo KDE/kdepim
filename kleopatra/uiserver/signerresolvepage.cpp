@@ -68,6 +68,7 @@ public:
     void setMode( int mode );
     void selectCertificate();
     void addCertificate( const GpgME::Key& key );
+    void updateModeSelectionWidgets();
 
 private:
     enum SignEncryptMode {
@@ -87,11 +88,17 @@ private:
     QCheckBox * removeUnencryptedCO;
     QPushButton * selectCertificateButton;
     GpgME::Protocol protocol;
-
+    bool signingMutable;
+    bool encryptionMutable;
+    bool signingSelected;
+    bool encryptionSelected;
 };
 
 SignerResolvePage::Private::Private( SignerResolvePage * qq )
-    : q( qq ), protocol( GpgME::UnknownProtocol )
+    : q( qq ), protocol( GpgME::UnknownProtocol ),
+      signingMutable( true ), encryptionMutable( true ), 
+      signingSelected( false ), encryptionSelected( false )
+
 {
     QVBoxLayout* layout = new QVBoxLayout( q );
     layout->setSpacing( KDialog::spacingHint() );
@@ -152,12 +159,7 @@ SignerResolvePage::Private::Private( SignerResolvePage * qq )
     layout->addStretch();
 
     //PENDING
-    signOnlyRB->setChecked( true );
-    signOnlyRB->setEnabled( false );
-    encryptOnlyRB->setEnabled( false );
-    signAndEncryptRB->setEnabled( false );
-    signingBox->setEnabled( true );
-    encryptBox->setVisible( false ); 
+    updateModeSelectionWidgets();
 }
 
 SignerResolvePage::Private::~Private() {}
@@ -166,6 +168,14 @@ void SignerResolvePage::Private::addCertificate( const GpgME::Key& key )
 {
     signerCombo->addItem( Formatting::formatForComboBox( key ), 
                           QByteArray( key.keyID() ) );
+}
+
+void SignerResolvePage::Private::updateModeSelectionWidgets()
+{
+    const bool ismutable = signingMutable || encryptionMutable;
+    signAndEncryptRB->setChecked( signingSelected && encryptionSelected );
+    signOnlyRB->setChecked( signingSelected && !encryptionSelected );
+    encryptOnlyRB->setChecked( encryptionSelected && !signingSelected );
 }
 
 void SignerResolvePage::Private::selectCertificate()
@@ -243,38 +253,49 @@ bool SignerResolvePage::isComplete() const
     return !d->signerCombo->itemData( d->signerCombo->currentIndex() ).isNull();
 }
 
-bool SignerResolvePage::encryptionEnabled() const
+bool SignerResolvePage::encryptionSelected() const
 {
     return !d->signOnlyRB->isChecked();
 }
 
-void SignerResolvePage::setEncryptionEnabled( bool enabled )
+void SignerResolvePage::setEncryptionSelected( bool selected )
 {
-    if ( enabled )
-        notImplemented();
+    d->encryptionSelected = selected;
+    d->updateModeSelectionWidgets();
 }
 
-bool SignerResolvePage::signingEnabled() const
+bool SignerResolvePage::signingSelected() const
 {
     return !d->encryptOnlyRB->isChecked();
 }
 
-void SignerResolvePage::setSigningEnabled( bool enabled )
+void SignerResolvePage::setSigningSelected( bool selected )
 {
-    if ( !enabled )
-        notImplemented();
+    d->signingSelected = selected;
+    d->updateModeSelectionWidgets();
+}
+
+bool SignerResolvePage::isEncryptionUserMutable() const
+{
+    return d->encryptionMutable;
+}
+
+bool SignerResolvePage::isSigningUserMutable() const
+{
+    return d->signingMutable;
 }
 
 void SignerResolvePage::setEncryptionUserMutable( bool ismutable )
 {
-    if ( !ismutable )
-        notImplemented();
+    d->encryptionMutable = ismutable;
+    d->updateModeSelectionWidgets();
 }
         
 void SignerResolvePage::setSigningUserMutable( bool ismutable )
 {
-    if ( !ismutable )
-        notImplemented();
+    d->signingMutable = ismutable;
+    d->updateModeSelectionWidgets();
+
 }
 
 #include "moc_signerresolvepage.cpp"
