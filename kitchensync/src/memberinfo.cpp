@@ -80,7 +80,7 @@ QString MemberInfo::pluginIconName( const QString &pluginName )
     return "folder";
   }
   if ( pluginName == "palm-sync" ) {
-    return "pda_black";
+    return "pda";
   }
   if ( pluginName == "kdepim-sync" ) {
     return "kontact";
@@ -89,37 +89,37 @@ QString MemberInfo::pluginIconName( const QString &pluginName )
     return "network";
   }
   if ( pluginName == "irmc-sync" ) {
-    return "mobile_phone";
+    return "phone";
   }
   if ( pluginName == "evo2-sync" ) {
     return "evolution";
   }
   if ( pluginName == "opie-sync" ) {
-    return "pda_blue";
+    return "pda";
   }
   if ( pluginName == "ldap-sync" ) {
-    return "contents2";
+    return "system-users";
   }
   if ( pluginName == "syncml-obex-client" ) {
-    return "mobile_phone";
+    return "phone";
   }
   if ( pluginName == "syncml-http-server" ) {
-    return "pda_blue";
+    return "pda";
   }
   if ( pluginName == "moto-sync" ) {
-    return "mobile_phone";
+    return "phone";
   }
   if ( pluginName == "gnokii-sync" ) {
-    return "mobile_phone";
+    return "phone";
   }
   if ( pluginName == "google-calendar" ) {
-    return "www";
+    return "network";
   }
   if ( pluginName == "gpe-sync" ) {
-    return "pda_blue";
+    return "pda";
   }
   if ( pluginName == "sunbird-sync" ) {
-    return "www";
+    return "network";
   }
 
   return QString();
