@@ -1,3 +1,24 @@
+Monday, December 4th 2007
+
+Problems addressed
+--------------------
+
+* kolab/issue2260 Use better category and resource colors, make the list of default colors configurable, change the default working time color. (744677)
+
+New functionality
+-------------------
+
+* prokde35-z Item 60: Merge of the attachments and recurrence tabs into the  main one, according to the usability suggestions and additional comments from the usability team. D'n'd and c'n'p support for attachments. (revision 742613)
+
+* prokde35-z Item 65: Merge of the attendee and free-busy tabs into the  main one, according to the usability suggestions and additional comments from the usability team (revision 744005)
+
+* prokde35-z Item 61: Implementation of the xfb concept (revision 744092) 
+
+* prokde35-z Item 203: implementation of the concept for better error messages for crypto operations (audit log) (revision 743026)
+
+* prokde35-z Item 32: Separate the recipients editor with a splitter, so the number of visible recipients can be freely configured (revision 744676)
+
+
 Friday, November 23rd 2007
 
 Problems addressed
