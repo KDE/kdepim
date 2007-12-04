@@ -1084,7 +1084,7 @@ void KABCore::initActions()
   mActionSave->setWhatsThis( i18n( "Save all changes of the address book to the storage backend." ) );
 
   action = coll->addAction( "file_new_contact" );
-  action->setIcon( KIcon("contact") );
+  action->setIcon( KIcon("contact-new") );
   action->setText( i18n( "&New Contact..." ) );
   action->setIconText( i18n( "New" ) );
   connect(action, SIGNAL(triggered(bool)), SLOT( newContact() ));
@@ -1103,7 +1103,7 @@ void KABCore::initActions()
   mActionChat->setWhatsThis( i18n( "Start a chat with the selected contact." ) );
 
   mActionEditAddressee = coll->addAction( "file_properties" );
-  mActionEditAddressee->setIcon( KIcon("edit") );
+  mActionEditAddressee->setIcon( KIcon("document-properties") );
   mActionEditAddressee->setText( i18n( "&Edit Contact..." ) );
   mActionEditAddressee->setIconText( i18n( "Edit" ) );
   connect(mActionEditAddressee, SIGNAL(triggered(bool) ), SLOT( editContact() ));
@@ -1142,7 +1142,7 @@ void KABCore::initActions()
   // settings menu
   mActionJumpBar = coll->add<KToggleAction>( "options_show_jump_bar" );
   mActionJumpBar->setText( i18n( "Show Jump Bar" ) );
-  mActionJumpBar->setIcon( KIcon( "edit-find-next" ) );
+  mActionJumpBar->setIcon( KIcon( "view-sort-descending" ) );
   mActionJumpBar->setWhatsThis( i18n( "Toggle whether the jump button bar shall be visible." ) );
   mActionJumpBar->setCheckedState( KGuiItem(i18n( "Hide Jump Bar" )) );
   connect( mActionJumpBar, SIGNAL( toggled( bool ) ), SLOT( setJumpButtonBarVisible( bool ) ) );
@@ -1173,7 +1173,7 @@ void KABCore::initActions()
   action->setWhatsThis( i18n( "Search for contacts on a LDAP server<p>You will be presented with a dialog, where you can search for contacts and select the ones you want to add to your local address book.</p>" ) );
 
   mActionWhoAmI = coll->addAction( "edit_set_personal" );
-  mActionWhoAmI->setIcon( KIcon("personal") );
+  mActionWhoAmI->setIcon( KIcon("user-identity") );
   mActionWhoAmI->setText( i18n( "Set as Personal Contact Data" ) );
   connect(mActionWhoAmI, SIGNAL(triggered(bool) ), SLOT( setWhoAmI() ));
   mActionWhoAmI->setWhatsThis( i18n( "Set the personal contact<p>The data of this contact will be used in many other KDE applications, so you do not have to input your personal data several times.</p>" ) );
@@ -1184,7 +1184,7 @@ void KABCore::initActions()
   mActionCategories->setWhatsThis( i18n( "Set the categories for all selected contacts." ) );
 
   QAction *clearLocation = coll->addAction( "clear_search" );
-  clearLocation->setIcon( KIcon(QApplication::isRightToLeft() ? "edit-clear-locationbar-rtl" : "edit-clear-locationbar") );
+  clearLocation->setIcon( KIcon(QApplication::isRightToLeft() ? "edit-clear-locationbar-rtl" : "edit-clear-locationbar-ltr") );
   clearLocation->setText( i18n( "Clear Search Bar" ) );
   connect(clearLocation, SIGNAL(triggered(bool) ), SLOT( slotClearSearchBar() ));
   clearLocation->setShortcut(QKeySequence(Qt::CTRL+Qt::Key_L));
