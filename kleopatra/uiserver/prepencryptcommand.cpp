@@ -112,7 +112,10 @@ int PrepEncryptCommand::doStart() {
 }
 
 void PrepEncryptCommand::Private::slotRecipientsResolved() {
+    //hold local shared_ptr to member as q->done() deletes *this
+    const shared_ptr<EncryptEMailController> cont( controller );
     QPointer<Private> that( this );
+
     try {
 
         q->sendStatus( "PROTOCOL", controller->protocolAsString() );
@@ -131,12 +134,9 @@ void PrepEncryptCommand::Private::slotRecipientsResolved() {
         q->done( makeError( GPG_ERR_UNEXPECTED ),
                  i18n("Caught unknown exception in PrepEncryptCommand::Private::slotRecipientsResolved") );
     }
-    if ( !that )
-        return;
-
-    q->removeMemento( EncryptEMailController::mementoName() );
-    if ( controller )
-        controller->cancel();
+    if ( that ) // isn't this always deleted here and thus unnecessary?
+        q->removeMemento( EncryptEMailController::mementoName() );
+    cont->cancel();
 }
 
 void PrepEncryptCommand::Private::slotError( int err, const QString & details ) {
