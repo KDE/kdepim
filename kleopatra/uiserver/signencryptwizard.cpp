@@ -203,21 +203,15 @@ void SignEncryptWizard::setMode( Mode mode ) {
         pageOrder.push_back( ResultPage );
         break;
     case EncryptOrSignFiles:
+        pageOrder.push_back( ResolveSignerPage );
+        pageOrder.push_back( ObjectsPage );
+        pageOrder.push_back( ResolveRecipientsPage );
+        pageOrder.push_back( ResultPage );
+        break;
     default:
         break;
     }
-    // EncryptEMail:
-    //   1. RecipientResolvePage
-    //   2. ResultPage
-    // SignEMail:
-    //   1. SignerResolvePage
-    //   2. ResultPage
-    // EncryptOrSignFiles:
-    //   1. OperationsPage
-    //   2. ObjectsPage
-    //   3. RecipientsPage
-    //   4. ResultPage
-    assuan_assert( mode == EncryptEMail || mode == SignEMail || !"Other cases are not yet implemented" );
+    //assuan_assert( mode == EncryptEMail || mode == SignEMail || !"Other cases are not yet implemented" );
     d->pageOrder = pageOrder;
 
     d->mode = mode;
@@ -229,17 +223,6 @@ void SignEncryptWizard::setProtocol( Protocol proto ) {
     d->signerResolvePage->setProtocol( proto );
     d->recipientResolvePage->setProtocol( proto );
 }
-
-void SignEncryptWizard::setSigningMode( TriState mode ) {
-    setSigningSelected( mode == On );
-    setSigningUserMutable( mode == Ask );
-}
-
-void SignEncryptWizard::setEncryptionMode( TriState mode ) {
-    setEncryptionSelected( mode == On );
-    setEncryptionUserMutable( mode == Ask );
-}
-
 
 void SignEncryptWizard::setEncryptionSelected( bool selected )
 {

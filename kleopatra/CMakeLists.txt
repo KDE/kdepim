@@ -54,11 +54,13 @@ if ( USABLE_ASSUAN_FOUND )
     uiserver/signcommand.cpp
     uiserver/signencryptfilescommand.cpp
     uiserver/signencryptfilescontroller.cpp
+    uiserver/signingcertificateselectiondialog.cpp
     uiserver/certificateresolver.cpp
     uiserver/signencryptwizard.cpp
     uiserver/task.cpp
     uiserver/encryptemailtask.cpp
     uiserver/encryptemailcontroller.cpp
+    uiserver/objectspage.cpp
     uiserver/prepencryptcommand.cpp
     uiserver/encryptcommand.cpp
     uiserver/resultdisplaywidget.cpp
@@ -70,7 +72,7 @@ if ( USABLE_ASSUAN_FOUND )
     uiserver/signerresolvepage.cpp
     uiserver/scrollarea.cpp
     )
-  kde4_add_ui_files( _kleopatra_uiserver_SRCS uiserver/keyselectiondialog.ui)
+  kde4_add_ui_files( _kleopatra_uiserver_SRCS uiserver/keyselectiondialog.ui uiserver/signingcertificateselectionwidget.ui)
   if ( WIN32 )
     set( _kleopatra_uiserver_extra_libs ${ASSUAN_VANILLA_LIBRARIES} )
   else ( WIN32 )

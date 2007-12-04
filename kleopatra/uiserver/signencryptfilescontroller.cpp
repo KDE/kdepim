@@ -166,21 +166,9 @@ void SignEncryptFilesController::Private::slotWizardCanceled() {
     emit q->error( gpg_error( GPG_ERR_CANCELED ), i18n("User cancel") );
 }
 
-static SignEncryptWizard::TriState signingTriState( unsigned int op ) {
-    notImplemented();
-}
-
-static SignEncryptWizard::TriState encryptionTriState( unsigned int op ) {
-    notImplemented();
-}
-
 void SignEncryptFilesController::start() {
 
     d->ensureWizardCreated();
-
-    d->wizard->setSigningMode( signingTriState( d->operation ) );
-    d->wizard->setEncryptionMode( encryptionTriState( d->operation ) );
-
     d->ensureWizardVisible();
 
     if ( d->wizard->canGoToNextPage() )
@@ -336,6 +324,17 @@ void SignEncryptFilesController::Private::cancelAllTasks() {
         openpgp->cancel();
 }
 
+
+#if 0
+static SignEncryptWizard::TriState signingTriState( unsigned int op ) {
+    notImplemented();
+}
+
+static SignEncryptWizard::TriState encryptionTriState( unsigned int op ) {
+    notImplemented();
+}
+#endif
+
 void SignEncryptFilesController::Private::ensureWizardCreated() {
     if ( wizard )
         return;
@@ -351,6 +350,10 @@ void SignEncryptFilesController::Private::ensureWizardCreated() {
     connect( w.get(), SIGNAL(objectsResolved()), q, SLOT(slotWizardObjectsResolved()), Qt::QueuedConnection );
     connect( w.get(), SIGNAL(recipientsResolved()), q, SLOT(slotWizardRecipientsResolved()), Qt::QueuedConnection );
     connect( w.get(), SIGNAL(canceled()), q, SLOT(slotWizardCanceled()), Qt::QueuedConnection );
+#if 0
+    d->wizard->setSigningMode( signingTriState( d->operation ) );
+    d->wizard->setEncryptionMode( encryptionTriState( d->operation ) );
+#endif
 
     w->setProtocol( protocol );
 

@@ -85,7 +85,7 @@ namespace Kleo {
         kdtools::pimpl_ptr<Private> d;
 
         Q_PRIVATE_SLOT( d, void setMode( int ) )
-        Q_PRIVATE_SLOT( d, void selectCertificate() )
+        Q_PRIVATE_SLOT( d, void selectCertificates() )
 
     };
 }

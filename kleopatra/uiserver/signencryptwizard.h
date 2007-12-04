@@ -88,11 +88,6 @@ namespace Kleo {
 
         /// SignOrEncryptFiles mode subinterface
         //@{
-        enum TriState {
-            Ask, On, Off
-        };
-        void setSigningMode( TriState mode );
-        void setEncryptionMode( TriState mode );
         
         void setFiles( const QStringList & files );
 

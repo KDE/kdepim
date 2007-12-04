@@ -311,7 +311,10 @@ void SignEMailController::Private::ensureWizardCreated() {
     w->setAttribute( Qt::WA_DeleteOnClose );
     connect( w.get(), SIGNAL(signersResolved()), q, SLOT(slotWizardSignersResolved()), Qt::QueuedConnection );
     connect( w.get(), SIGNAL(canceled()), q, SLOT(slotWizardCanceled()), Qt::QueuedConnection );
-
+    w->setEncryptionSelected( false );
+    w->setEncryptionUserMutable( false );
+    w->setSigningSelected( true );
+    w->setSigningUserMutable( false );
     w->setProtocol( protocol );
 
     wizard = w.release();

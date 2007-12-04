@@ -44,6 +44,7 @@ kde4_add_executable( test_signencryptwizard TEST
   ../uiserver/scrollarea.cpp
   ../uiserver/signerresolvepage.cpp
   ../uiserver/wizardpage.cpp
+  ../uiserver/signingcertificateselectiondialog.cpp
   ../certificateinfowidgetimpl.cpp
   ../utils/formatting.cpp
   ../models/keycache.cpp 
