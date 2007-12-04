@@ -1118,7 +1118,7 @@ void KNComposer::slotArtDelete()
 
 void KNComposer::slotAppendSig()
 {
-  v_iew->e_dit->appendSignature(s_ignature);
+  v_iew->e_dit->insertSignature(s_ignature);
 }
 
 
