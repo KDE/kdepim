@@ -28,10 +28,10 @@ popupAddressee::popupAddressee(const QString &deviceName, const KABC::Addressee 
 {
     setObjectName(deviceName);
     if(addressee.isEmpty()) return;
-    addTitle( KIcon( "personal" ), addressee.formattedName() );
+    addTitle( KIcon( "contact" ), addressee.formattedName() );
     if(!ro) {
-        addAction( KIcon("edit"), i18n("Edit"), this, SLOT(slotEdit()));
-        addAction( KIcon("editdelete"), i18n("Delete"), this, SLOT(slotDelete()));
+        addAction( KIcon("document-properties"), i18n("Edit"), this, SLOT(slotEdit()));
+        addAction( KIcon("edit-delete"), i18n("Delete"), this, SLOT(slotDelete()));
     }
     KABC::PhoneNumber::List::Iterator it;
     KABC::PhoneNumber::List p_list=addressee.phoneNumbers();
