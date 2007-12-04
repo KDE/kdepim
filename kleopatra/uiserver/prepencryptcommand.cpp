@@ -36,6 +36,8 @@
 
 #include <KLocale>
 
+#include <QPointer>
+
 using namespace Kleo;
 using namespace boost;
 
@@ -110,6 +112,7 @@ int PrepEncryptCommand::doStart() {
 }
 
 void PrepEncryptCommand::Private::slotRecipientsResolved() {
+    QPointer<Private> that( this );
     try {
 
         q->sendStatus( "PROTOCOL", controller->protocolAsString() );
@@ -128,6 +131,9 @@ void PrepEncryptCommand::Private::slotRecipientsResolved() {
         q->done( makeError( GPG_ERR_UNEXPECTED ),
                  i18n("Caught unknown exception in PrepEncryptCommand::Private::slotRecipientsResolved") );
     }
+    if ( !that )
+        return;
+
     q->removeMemento( EncryptEMailController::mementoName() );
     if ( controller )
         controller->cancel();

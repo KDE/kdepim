@@ -34,6 +34,8 @@
 #include "signemailcontroller.h"
 #include "kleo-assuan.h"
 
+#include <QPointer>
+
 #include <KLocale>
 
 using namespace Kleo;
@@ -120,6 +122,7 @@ int SignCommand::doStart() {
 }
 
 void SignCommand::Private::slotSignersResolved() {
+    QPointer<Private> that( this );
     try {
 
         controller->setDetachedSignature( q->hasOption("detached" ) );
@@ -138,6 +141,8 @@ void SignCommand::Private::slotSignersResolved() {
         q->done( makeError( GPG_ERR_UNEXPECTED ),
                  i18n("Caught unknown exception in SignCommand::Private::slotRecipientsResolved") );
     }
+    if ( !that )
+        return;
     if ( controller )
         controller->cancel();
 }
