@@ -389,12 +389,15 @@ void TaskView::startTimerFor(Task* task, QDateTime startTime )
     if (task != 0 && activeTasks.findRef(task) == -1) 
     {
       _idleTimeDetector->startIdleDetection();
-      task->setRunning(true, _storage, startTime);
-      activeTasks.append(task);
-      emit updateButtons();
-      if ( activeTasks.count() == 1 )
-        emit timersActive();
-      emit tasksChanged( activeTasks);
+      if (!task->isComplete())
+      {
+        task->setRunning(true, _storage, startTime);
+        activeTasks.append(task);
+        emit updateButtons();
+        if ( activeTasks.count() == 1 )
+          emit timersActive();
+        emit tasksChanged( activeTasks);
+      }
     }
   }
   else KMessageBox::error(0,i18n("Saving is impossible, so timing is useless. \nSaving problems may result from a full harddisk, a directory name instead of a file name, or stale locks. Check that your harddisk has enough space, that your calendar file exists and is a file and remove stale locks, typically from ~/.kde/share/apps/kabc/lock."));
