@@ -59,11 +59,6 @@ using namespace KMime::Types;
 
 struct SignEncryptFilesTask : Task {};
 
-static QString titleForOperation( unsigned int op ) {
-    notImplemented();
-    return i18n("Encrypt Files");
-}
-
 class SignEncryptFilesController::Private {
     friend class ::Kleo::SignEncryptFilesController;
     SignEncryptFilesController * const q;
@@ -86,7 +81,7 @@ private:
     void connectTask( const shared_ptr<Task> & task, unsigned int idx );
 
     static void assertValidOperation( unsigned int );
-
+    static QString titleForOperation( unsigned int op );
 private:
     std::vector< shared_ptr<SignEncryptFilesTask> > incomplete, runnable, completed;
     shared_ptr<SignEncryptFilesTask> cms, openpgp;
@@ -108,6 +103,22 @@ SignEncryptFilesController::Private::Private( SignEncryptFilesController * qq )
       protocol( UnknownProtocol )
 {
 
+}
+
+
+QString SignEncryptFilesController::Private::titleForOperation( unsigned int op ) {
+    const bool signDisallowed = op & SignMask == SignDisallowed;
+    const bool encryptDisallowed = op & EncryptMask == EncryptDisallowed;
+
+    assuan_assert( !signDisallowed || !encryptDisallowed );
+ 
+    if ( !signDisallowed && encryptDisallowed )
+        return i18n( "Sign Files" );
+
+    if ( signDisallowed && !encryptDisallowed )
+        return i18n( "Encrypt Files" );
+
+    return i18n( "Sign/Encrypt Files" );
 }
 
 SignEncryptFilesController::SignEncryptFilesController( QObject * p )
@@ -153,7 +164,7 @@ void SignEncryptFilesController::setOperationMode( unsigned int mode ) {
     Private::assertValidOperation( mode );
     d->operation = mode;
     if ( d->wizard )
-        d->wizard->setWindowTitle( titleForOperation( d->operation ) );
+        d->wizard->setWindowTitle( d->titleForOperation( d->operation ) );
 }
 
 void SignEncryptFilesController::setFiles( const QStringList & files ) {
