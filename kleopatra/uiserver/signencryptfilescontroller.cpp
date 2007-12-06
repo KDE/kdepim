@@ -178,12 +178,7 @@ void SignEncryptFilesController::Private::slotWizardCanceled() {
 }
 
 void SignEncryptFilesController::start() {
-
-    d->ensureWizardCreated();
     d->ensureWizardVisible();
-
-    if ( d->wizard->canGoToNextPage() )
-        d->wizard->next();
 }
 
 static std::vector< shared_ptr<SignEncryptFilesTask> >
@@ -356,7 +351,6 @@ void SignEncryptFilesController::Private::ensureWizardCreated() {
 
     w->setWindowTitle( titleForOperation( operation ) );
     w->setMode( SignEncryptWizard::SignOrEncryptFiles );
-
     w->setAttribute( Qt::WA_DeleteOnClose );
     connect( w.get(), SIGNAL(objectsResolved()), q, SLOT(slotWizardObjectsResolved()), Qt::QueuedConnection );
     connect( w.get(), SIGNAL(recipientsResolved()), q, SLOT(slotWizardRecipientsResolved()), Qt::QueuedConnection );
