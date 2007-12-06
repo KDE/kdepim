@@ -89,7 +89,7 @@ void KTNEFMain::setupActions()
 {
 	// File menu
 	KStandardAction::open(this, SLOT(openFile()), actionCollection());
-	KStandardAction::quit(kapp, SLOT(quit()), actionCollection());
+	KStandardAction::quit(kapp, SLOT(closeAllWindows()), actionCollection());
 
 	// Action menu
 	KAction *action  = new KAction(KIcon(QString("zoom-original")), i18n("View"), this);
