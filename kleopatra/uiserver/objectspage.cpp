@@ -32,6 +32,15 @@
 
 #include "objectspage.h"
 
+#include <KLocale>
+
+#include <QFileInfo>
+#include <QListWidget>
+#include <QHBoxLayout>
+#include <QPushButton>
+#include <QStringList>
+#include <QVBoxLayout>
+
 using namespace Kleo;
 
 class ObjectsPage::Private {
@@ -40,20 +49,50 @@ class ObjectsPage::Private {
 public:
     explicit Private( ObjectsPage * qq );
     ~Private();
-    
-private:
+    void add();
+    void addFile( const QFileInfo& i );
+    void remove();
+    enum Role {
+        AbsoluteFilePathRole=Qt::UserRole
+    };
 
+private:
+    QListWidget * fileListWidget;
+    QPushButton * addButton;
+    QPushButton * removeButton;
 };
 
 
 ObjectsPage::Private::Private( ObjectsPage * qq )
   : q( qq )
 {
-    
+    QVBoxLayout* const top = new QVBoxLayout( q );
+    fileListWidget = new QListWidget;
+    top->addWidget( fileListWidget );
+    QWidget* const buttonWidget = new QWidget;
+    QHBoxLayout* const buttonLayout = new QHBoxLayout( buttonWidget );
+    addButton = new QPushButton;
+    addButton->setText( i18n( "Add..." ) );
+    connect( addButton, SIGNAL( clicked() ), q, SLOT( add() ) );
+    buttonLayout->addWidget( addButton );
+    removeButton = new QPushButton;
+    removeButton->setText( i18n( "Remove Selected" ) );
+    connect( removeButton, SIGNAL( clicked() ), q, SLOT( remove() ) );
+    buttonLayout->addWidget( removeButton );
+    top->addWidget( buttonWidget );
 }
 
 ObjectsPage::Private::~Private() {}
 
+void ObjectsPage::Private::add()
+{
+    emit q->completeChanged();
+}
+
+void ObjectsPage::Private::remove()
+{
+    emit q->completeChanged();
+}
 
 
 ObjectsPage::ObjectsPage( QWidget * parent, Qt::WFlags f )
@@ -62,12 +101,41 @@ ObjectsPage::ObjectsPage( QWidget * parent, Qt::WFlags f )
     
 }
 
+
 ObjectsPage::~ObjectsPage() {}
 
+void ObjectsPage::setFiles( const QStringList& list )
+{
+    d->fileListWidget->clear();
+    Q_FOREACH ( const QString& i, list ) 
+        d->addFile( QFileInfo( i ) );
+    emit completeChanged();
+}
+
+
+void ObjectsPage::Private::addFile( const QFileInfo& info )
+{
+    QListWidgetItem* const item = new QListWidgetItem;
+    item->setText( info.fileName() );
+    item->setData( AbsoluteFilePathRole, info.absoluteFilePath() ); 
+    fileListWidget->addItem( item );
+}
+
+QStringList ObjectsPage::files() const
+{
+    QStringList list;
+    for ( int i = 0; i < d->fileListWidget->count(); ++i )
+    {
+        const QListWidgetItem* const item = d->fileListWidget->item( i );
+        list.push_back( item->data( Private::AbsoluteFilePathRole ).toString() );
+    }
+    return list;
+}
 
 bool ObjectsPage::isComplete() const
 {
-    return true;
-    // TODO
+    return d->fileListWidget->count() > 0;
 }
+
+#include "moc_objectspage.cpp"
 

@@ -37,6 +37,8 @@
     
 #include <utils/pimpl_ptr.h>
 
+class QStringList;
+
 namespace Kleo {
  
     class ObjectsPage : public WizardPage {
@@ -46,10 +48,14 @@ namespace Kleo {
         ~ObjectsPage();
         
         bool isComplete() const;
+        void setFiles( const QStringList& files );
+        QStringList files() const;
 
     private:
         class Private;
         kdtools::pimpl_ptr<Private> d;
+        Q_PRIVATE_SLOT( d, void add() );
+        Q_PRIVATE_SLOT( d, void remove() );
     };
 }
 

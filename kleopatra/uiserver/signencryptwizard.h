@@ -91,7 +91,8 @@ namespace Kleo {
 
         /// SignOrEncryptFiles mode subinterface
         //@{
-        
+
+        QFileInfoList resolvedFiles() const;        
         void setFiles( const QStringList & files );
 
         bool signingSelected() const;
@@ -109,7 +110,6 @@ namespace Kleo {
         bool isMultipleProtocolsAllowed() const;
         void setMultipleProtocolsAllowed( bool allowed );
 
-        QFileInfoList resolvedFiles() const;
         //@}
 
         void setRecipients( const std::vector<KMime::Types::Mailbox> & recipients );

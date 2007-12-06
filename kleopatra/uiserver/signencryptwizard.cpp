@@ -50,6 +50,7 @@
 #include <KLocale>
 #include <KPushButton>
 
+#include <QFileInfo>
 #include <QStackedWidget>
 #include <QTimer>
 #include <QWizard>
@@ -242,7 +243,7 @@ void SignEncryptWizard::setMode( Mode mode ) {
 }
 
 void SignEncryptWizard::setPresetProtocol( Protocol proto ) {
-    assuan_assert( d->mode == EncryptEMail || d->mode == SignEMail );
+    assuan_assert( d->mode == EncryptEMail || d->mode == SignEMail || d->mode == SignOrEncryptFiles );
     d->signerResolvePage->setProtocol( proto );
     d->recipientResolvePage->setPresetProtocol( proto );
 }
@@ -299,11 +300,15 @@ void SignEncryptWizard::setEncryptionUserMutable( bool isMutable )
 }
 
 void SignEncryptWizard::setFiles( const QStringList & files ) {
-    notImplemented();
+    d->objectsPage->setFiles( files );
 }
 
 QFileInfoList SignEncryptWizard::resolvedFiles() const {
-    notImplemented();
+    const QStringList files = d->objectsPage->files();
+    QFileInfoList infos;
+    foreach ( const QString& i, files )
+        infos.push_back( QFileInfo( i ) );
+    return infos;          
 }
 
 bool SignEncryptWizard::signingSelected() const {
