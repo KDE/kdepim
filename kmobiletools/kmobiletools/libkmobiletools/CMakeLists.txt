@@ -9,7 +9,7 @@ ENDIF (USE_CRASHHANDLER)
 
 ########### next target ###############
 
-set(kmobiletoolslib_LIB_SRCS
+set(kmobiletoolsprivate_LIB_SRCS
    ifaces/addressbook.h
    ifaces/addressbook.cpp
    ifaces/dialaction.h
@@ -83,19 +83,19 @@ set(kmobiletoolslib_LIB_SRCS
    smslist.h
    smslist.cpp )
 
-QT4_ADD_DBUS_INTERFACE(kmobiletoolslib_LIB_SRCS org.kde.kmobiletools.device.xml kmobiletools_device_interface )
-QT4_ADD_DBUS_INTERFACE(kmobiletoolslib_LIB_SRCS org.kde.kmobiletools.main.xml kmobiletools_main_interface )
+QT4_ADD_DBUS_INTERFACE(kmobiletoolsprivate_LIB_SRCS org.kde.kmobiletools.device.xml kmobiletools_device_interface )
+QT4_ADD_DBUS_INTERFACE(kmobiletoolsprivate_LIB_SRCS org.kde.kmobiletools.main.xml kmobiletools_main_interface )
 
 
 
-kde4_add_kcfg_files(kmobiletoolslib_LIB_SRCS kmobiletools_cfg.kcfgc kmobiletools_devices.kcfgc )
+kde4_add_kcfg_files(kmobiletoolsprivate_LIB_SRCS kmobiletools_cfg.kcfgc kmobiletools_devices.kcfgc )
 
-kde4_add_library(kmobiletoolslib SHARED ${kmobiletoolslib_LIB_SRCS})
+kde4_add_library(kmobiletoolsprivate SHARED ${kmobiletoolsprivate_LIB_SRCS})
 
-kdepim4_link_unique_libraries(kmobiletoolslib ${KDE4_KDECORE_LIBS} ${KDE4_KHTML_LIBRARY} ${KDE4_THREADWEAVER_LIBRARY} ${KDE4_KABC_LIBRARY} ${KDE4_KCAL_LIBRARY} ${KDE4_KMIME_LIBS} akonadi)
+kdepim4_link_unique_libraries(kmobiletoolsprivate ${KDE4_KDECORE_LIBS} ${KDE4_KHTML_LIBRARY} ${KDE4_THREADWEAVER_LIBRARY} ${KDE4_KABC_LIBRARY} ${KDE4_KCAL_LIBRARY} ${KDE4_KMIME_LIBS} akonadi)
 
-set_target_properties(kmobiletoolslib PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
-install(TARGETS kmobiletoolslib DESTINATION ${LIB_INSTALL_DIR} )
+set_target_properties(kmobiletoolsprivate PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
+install(TARGETS kmobiletoolsprivate DESTINATION ${LIB_INSTALL_DIR} )
 
 
 ########### install files ###############
