@@ -110,6 +110,7 @@ SignerResolvePage::Private::Private( SignerResolvePage * qq )
 
     signAndEncryptRB = new QRadioButton;
     signAndEncryptRB->setText( i18n( "Sign and encrypt (OpenPGP only)" ) );
+    signAndEncryptRB->setChecked( true );
     signEncryptGroup->addButton( signAndEncryptRB, SignAndEncrypt );
     layout->addWidget( signAndEncryptRB );
 
@@ -280,7 +281,10 @@ bool SignerResolvePage::isComplete() const
     //TODO: factor out mode-specific code
     if ( d->mode != Private::EncryptOnly )
     {
+        return true;
+#if 0 // TODO: implement this correctly, dependent on selected mode and signing certificates
         return d->certificates.contains( d->protocol ) && !d->certificates[d->protocol].isNull();
+#endif
     }
     else
     {
