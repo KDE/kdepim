@@ -413,7 +413,8 @@ void KTNEFMain::slotShowMessageText()
 	tmpFile.setPrefix(KGlobal::dirs()->localkdedir() + "/share/apps/ktnef/tmp/");
 	tmpFile.setSuffix(".rtf");
 	tmpFile.setAutoRemove(false);
-	tmpFile.open();
+	if (!tmpFile.open())
+		return;
 	QTextStream str ( &tmpFile );
 	str << rtf;
 	str.flush();
