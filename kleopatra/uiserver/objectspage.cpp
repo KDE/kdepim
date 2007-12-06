@@ -34,6 +34,7 @@
 
 #include <KLocale>
 
+#include <QFileDialog>
 #include <QFileInfo>
 #include <QListWidget>
 #include <QHBoxLayout>
@@ -52,6 +53,7 @@ public:
     void add();
     void addFile( const QFileInfo& i );
     void remove();
+    void listSelectionChanged();
     enum Role {
         AbsoluteFilePathRole=Qt::UserRole
     };
@@ -68,6 +70,9 @@ ObjectsPage::Private::Private( ObjectsPage * qq )
 {
     QVBoxLayout* const top = new QVBoxLayout( q );
     fileListWidget = new QListWidget;
+    fileListWidget->setSelectionMode( QAbstractItemView::MultiSelection );
+    connect( fileListWidget, SIGNAL( itemSelectionChanged() ), 
+             q, SLOT( listSelectionChanged() ) );
     top->addWidget( fileListWidget );
     QWidget* const buttonWidget = new QWidget;
     QHBoxLayout* const buttonLayout = new QHBoxLayout( buttonWidget );
@@ -79,21 +84,35 @@ ObjectsPage::Private::Private( ObjectsPage * qq )
     removeButton->setText( i18n( "Remove Selected" ) );
     connect( removeButton, SIGNAL( clicked() ), q, SLOT( remove() ) );
     buttonLayout->addWidget( removeButton );
+    buttonLayout->addStretch();
     top->addWidget( buttonWidget );
+    listSelectionChanged();
 }
 
 ObjectsPage::Private::~Private() {}
 
 void ObjectsPage::Private::add()
 {
+    const QString fname = QFileDialog::getOpenFileName( q, i18n( "Select File" ) );
+    if ( fname.isNull() )
+        return;
+    addFile( QFileInfo( fname ) );
     emit q->completeChanged();
 }
 
 void ObjectsPage::Private::remove()
 {
+    const QList<QListWidgetItem*> selected = fileListWidget->selectedItems();
+    assert( !selected.isEmpty() );
+    Q_FOREACH ( QListWidgetItem * const i, selected )
+        delete i;
     emit q->completeChanged();
 }
 
+void ObjectsPage::Private::listSelectionChanged()
+{
+    removeButton->setEnabled( !fileListWidget->selectedItems().isEmpty() );
+}
 
 ObjectsPage::ObjectsPage( QWidget * parent, Qt::WFlags f )
   : WizardPage( parent, f ), d( new Private( this ) )
