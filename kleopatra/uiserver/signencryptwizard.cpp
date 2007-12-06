@@ -183,6 +183,18 @@ void SignEncryptWizard::Private::selectPage( SignEncryptWizard::Page id )
     updateButtonStates();
 }
 
+void SignEncryptWizard::skipPage( Page id )
+{
+    const std::vector<Page>::iterator it = qBinaryFind( d->pageOrder.begin(), d->pageOrder.end(), id );
+    if ( it == d->pageOrder.end() )
+        return;
+    
+    if ( currentPage() == id )
+        next();
+
+    d->pageOrder.erase( it ); 
+}
+ 
 void SignEncryptWizard::Private::next()
 {
     assert( currentId != NoPage );
@@ -190,6 +202,8 @@ void SignEncryptWizard::Private::next()
         QTimer::singleShot( 0, q, SIGNAL( recipientsResolved() ) );
     if ( currentId == SignEncryptWizard::ResolveSignerPage )
         QTimer::singleShot( 0, q, SIGNAL( signersResolved() ) );
+    if ( currentId == SignEncryptWizard::ObjectsPage )
+        QTimer::singleShot( 0, q, SIGNAL( objectsResolved() ) );
     std::vector<SignEncryptWizard::Page>::const_iterator it = qBinaryFind( pageOrder.begin(), pageOrder.end(), currentId );
     assert( it != pageOrder.end() );
     ++it;

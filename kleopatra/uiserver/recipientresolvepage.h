@@ -114,6 +114,8 @@ namespace Kleo {
         class Private;
         kdtools::pimpl_ptr<Private> d;
         Q_PRIVATE_SLOT( d, void protocolSelected( int ) );
+        Q_PRIVATE_SLOT( d, void addRecipient() );
+        Q_PRIVATE_SLOT( d, void removeRecipient() );
     };
 }
 

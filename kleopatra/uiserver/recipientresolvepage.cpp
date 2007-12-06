@@ -42,11 +42,13 @@
 #include <QButtonGroup>
 #include <QCheckBox>
 #include <QComboBox>
+#include <QHBoxLayout>
 #include <QLabel>
 #include <QPointer>
 #include <QPushButton>
 #include <QGridLayout>
 #include <QHash>
+#include <QPushButton>
 #include <QRadioButton>
 #include <QResizeEvent>
 #include <QScrollArea>
@@ -67,17 +69,22 @@ public:
     void setSelectedProtocol( GpgME::Protocol protocol );
 
     void updateRadioButtonVisibility();
+    void addRecipient();
+    void removeRecipient();
 
 //    void completionStateChanged( const QString& id );
     void clear();
     QRadioButton* pgpRB;
     QRadioButton* smimeRB;
+    QPushButton* addRecipientButton;
+    QPushButton* removeRecipientButton;
     QScrollArea* scrollArea;
     QVBoxLayout* lineLayout;
     std::vector<RecipientResolveWidget*> widgets;
     QStringList identifiers;
     GpgME::Protocol presetProtocol;
     GpgME::Protocol selectedProtocol;
+ 
     bool allowMultipleProtocols;
 };
 
@@ -116,7 +123,18 @@ RecipientResolvePage::RecipientResolvePage( QWidget * parent )
     layout->addStretch();
     d->scrollArea->setWidget( container2 );
     top->addWidget( d->scrollArea );
-
+    QWidget* const buttonWidget = new QWidget;
+    QHBoxLayout* const buttonLayout = new QHBoxLayout( buttonWidget );
+    d->addRecipientButton = new QPushButton;
+    d->addRecipientButton->setText( i18n( "Add Recipient..." ) );
+    connect( d->addRecipientButton, SIGNAL( clicked() ), this, SLOT( addRecipient() ) );
+    buttonLayout->addWidget( d->addRecipientButton );
+    d->removeRecipientButton = new QPushButton;
+    d->removeRecipientButton->setText( i18n( "Remove Recipient..." ) );
+    connect( d->removeRecipientButton, SIGNAL( clicked() ), this, SLOT( removeRecipient() ) );
+    buttonLayout->addWidget( d->removeRecipientButton );
+    buttonLayout->addStretch();
+    top->addWidget( buttonWidget );
     d->updateRadioButtonVisibility();
 }
 
@@ -124,6 +142,9 @@ RecipientResolvePage::~RecipientResolvePage() {}
 
 bool RecipientResolvePage::isComplete() const
 {
+    if ( d->widgets.empty() )
+        return false;
+
     Q_FOREACH ( RecipientResolveWidget* const i, d->widgets )
     {
         if ( !i->isComplete() )
@@ -375,5 +396,16 @@ void RecipientResolvePage::Private::updateRadioButtonVisibility()
     if ( rbsVisible )
         setSelectedProtocol( pgpRB->isChecked() ? GpgME::OpenPGP : GpgME::CMS );
 }
+
+void RecipientResolvePage::Private::addRecipient()
+{
+    emit q->completeChanged();
+}
+
+void RecipientResolvePage::Private::removeRecipient()
+{
+    emit q->completeChanged();
+}
+
 
 #include "moc_recipientresolvepage.cpp"
