@@ -233,11 +233,11 @@ void SignEncryptWizard::setMode( Mode mode ) {
         pageOrder.push_back( ResultPage );
         break;
     default:
+        assuan_assert( !"Case not yet implemented" );
         break;
     }
-    assuan_assert( mode == EncryptEMail || mode == SignEMail || mode == SignOrEncryptFiles || !"Other cases are not yet implemented" );
+    
     d->pageOrder = pageOrder;
-
     d->mode = mode;
     d->selectPage( pageOrder.front() );
 }

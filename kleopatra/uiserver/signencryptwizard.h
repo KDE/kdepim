@@ -69,10 +69,9 @@ namespace Kleo {
 
         enum Page {
             NoPage=0,
-            PreparationPage,
+            ResolveSignerPage,
             ObjectsPage,
             ResolveRecipientsPage,
-            ResolveSignerPage,
             ResultPage
         };
 
