@@ -34,7 +34,6 @@
 
 #include "kleo-assuan.h"
 #include "assuancommand.h"
-#include "certificateresolver.h"
 #include "signencryptwizard.h"
 #include "encryptemailtask.h"
 #include "input.h"
@@ -43,6 +42,8 @@
 #include <utils/stl_util.h>
 
 #include <kmime/kmime_header_parsing.h>
+
+#include <gpgme++/key.h>
 
 #include <KLocale>
 
@@ -68,7 +69,7 @@ private:
     void slotTaskDone();
 
 private:
-    void ensureWizardCreated();
+    void ensureWizardCreated() const;
     void ensureWizardVisible();
     void cancelAllTasks();
 
@@ -80,8 +81,7 @@ private:
     std::vector< shared_ptr<EncryptEMailTask> > runnable, completed;
     shared_ptr<EncryptEMailTask> cms, openpgp;
     weak_ptr<AssuanCommand> command;
-    QPointer<SignEncryptWizard> wizard;
-    Protocol protocol;
+    mutable QPointer<SignEncryptWizard> wizard;
 };
 
 EncryptEMailController::Private::Private( EncryptEMailController * qq )
@@ -90,8 +90,7 @@ EncryptEMailController::Private::Private( EncryptEMailController * qq )
       cms(),
       openpgp(),
       command(),
-      wizard(),
-      protocol( UnknownProtocol )
+      wizard()
 {
 
 }
@@ -109,19 +108,23 @@ EncryptEMailController::~EncryptEMailController() {
 }
 
 void EncryptEMailController::setProtocol( Protocol proto ) {
-    assuan_assert( d->protocol == UnknownProtocol ||
-                   d->protocol == proto );
-    d->protocol = proto;
-    if ( d->wizard )
-        d->wizard->setProtocol( proto );
+    d->ensureWizardCreated();
+    const Protocol protocol = d->wizard->presetProtocol();
+    assuan_assert( protocol == UnknownProtocol ||
+                   protocol == proto );
+
+    d->wizard->setPresetProtocol( proto );
 }
+
 
 Protocol EncryptEMailController::protocol() const {
-    return d->protocol;
+    d->ensureWizardCreated();
+    return d->wizard->selectedProtocol();
 }
 
+
 const char * EncryptEMailController::protocolAsString() const {
-    switch ( d->protocol ) {
+    switch ( protocol() ) {
     case OpenPGP: return "OpenPGP";
     case CMS:     return "CMS";
     default:
@@ -135,13 +138,8 @@ void EncryptEMailController::setCommand( const shared_ptr<AssuanCommand> & cmd )
 }
 
 void EncryptEMailController::startResolveRecipients( const std::vector<Mailbox> & recipients ) {
-    const std::vector< std::vector<Key> > keys = CertificateResolver::resolveRecipients( recipients, d->protocol );
-
-    assuan_assert( keys.size() == static_cast<size_t>( recipients.size() ) );
-
     d->ensureWizardCreated();
-
-    d->wizard->setRecipientsAndCandidates( recipients, keys );
+    d->wizard->setRecipients( recipients );
 
     if ( d->wizard->canGoToNextPage() ) {
         d->wizard->next();
@@ -279,7 +277,7 @@ void EncryptEMailController::Private::cancelAllTasks() {
         openpgp->cancel();
 }
 
-void EncryptEMailController::Private::ensureWizardCreated() {
+void EncryptEMailController::Private::ensureWizardCreated() const {
     if ( wizard )
         return;
 
@@ -291,8 +289,6 @@ void EncryptEMailController::Private::ensureWizardCreated() {
     w->setAttribute( Qt::WA_DeleteOnClose );
     connect( w.get(), SIGNAL(recipientsResolved()), q, SLOT(slotWizardRecipientsResolved()), Qt::QueuedConnection );
     connect( w.get(), SIGNAL(canceled()), q, SLOT(slotWizardCanceled()), Qt::QueuedConnection );
-
-    w->setProtocol( protocol );
     wizard = w.release();
 }
 

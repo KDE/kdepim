@@ -32,6 +32,7 @@
 
 #include "signencryptwizard.h"
 
+#include "certificateresolver.h"
 #include "objectspage.h"
 #include "recipientresolvepage.h"
 #include "signerresolvepage.h"
@@ -76,8 +77,10 @@ public:
     KPushButton* nextButton() const;
     bool isLastPage( SignEncryptWizard::Page ) const;
     void updateButtonStates();
+    void selectedProtocolChanged();
 
 private:
+    std::vector<Mailbox> recipients;
     Mode mode;
     std::map<SignEncryptWizard::Page, WizardPage*> idToPage;
     std::vector<SignEncryptWizard::Page> pageOrder;
@@ -108,6 +111,8 @@ SignEncryptWizard::Private::Private( SignEncryptWizard * qq )
     finishItem = KGuiItem( wiz.buttonText( QWizard::FinishButton ) );
     q->setMainWidget( stack );    
     q->setButtons( KDialog::Try | KDialog::Cancel );
+    connect( recipientResolvePage, SIGNAL( selectedProtocolChanged() ),
+             q, SLOT( selectedProtocolChanged() ) );
     setPage( SignEncryptWizard::ResolveSignerPage, signerResolvePage );
     setPage( SignEncryptWizard::ObjectsPage, objectsPage );
     setPage( SignEncryptWizard::ResolveRecipientsPage, recipientResolvePage );
@@ -128,6 +133,24 @@ void SignEncryptWizard::Private::updateButtonStates()
     const bool isLast = isLastPage( currentId );
     q->setButtonGuiItem( KDialog::Try, isLast ? finishItem : nextItem );
     nextButton()->setEnabled( q->canGoToNextPage() );
+}
+
+void SignEncryptWizard::Private::selectedProtocolChanged()
+{
+    //TODO: this slot is a temporary workaround to keep the 
+    // recipient resolving in the wizard for now. should be 
+    // changed when reworking the recipientresolvepage
+    const std::vector< std::vector<Key> > keys = CertificateResolver::resolveRecipients( recipients, q->selectedProtocol() );
+    assuan_assert( !keys.empty() );
+    assuan_assert( keys.size() == static_cast<size_t>( recipients.size() ) );
+
+    for ( unsigned int i = 0, end = keys.size() ; i < end ; ++i ) {
+        RecipientResolveWidget * const rr = recipientResolvePage->recipientResolveWidget( i );
+        assuan_assert( rr );
+        rr->setIdentifier( recipients[i].prettyAddress() );
+        rr->setCertificates( keys[i] );
+    }
+
 }
 
 bool SignEncryptWizard::Private::isLastPage( SignEncryptWizard::Page id ) const
@@ -202,7 +225,7 @@ void SignEncryptWizard::setMode( Mode mode ) {
         pageOrder.push_back( ResolveSignerPage );
         pageOrder.push_back( ResultPage );
         break;
-    case EncryptOrSignFiles:
+    case SignOrEncryptFiles:
         pageOrder.push_back( ResolveSignerPage );
         pageOrder.push_back( ObjectsPage );
         pageOrder.push_back( ResolveRecipientsPage );
@@ -211,19 +234,29 @@ void SignEncryptWizard::setMode( Mode mode ) {
     default:
         break;
     }
-    //assuan_assert( mode == EncryptEMail || mode == SignEMail || !"Other cases are not yet implemented" );
+    assuan_assert( mode == EncryptEMail || mode == SignEMail || mode == SignOrEncryptFiles || !"Other cases are not yet implemented" );
     d->pageOrder = pageOrder;
 
     d->mode = mode;
     d->selectPage( pageOrder.front() );
 }
 
-void SignEncryptWizard::setProtocol( Protocol proto ) {
+void SignEncryptWizard::setPresetProtocol( Protocol proto ) {
     assuan_assert( d->mode == EncryptEMail || d->mode == SignEMail );
     d->signerResolvePage->setProtocol( proto );
-    d->recipientResolvePage->setProtocol( proto );
+    d->recipientResolvePage->setPresetProtocol( proto );
 }
 
+GpgME::Protocol SignEncryptWizard::selectedProtocol() const
+{
+    return d->recipientResolvePage->selectedProtocol();
+}
+
+GpgME::Protocol SignEncryptWizard::presetProtocol() const
+{
+    return d->recipientResolvePage->presetProtocol();
+}
+ 
 void SignEncryptWizard::setEncryptionSelected( bool selected )
 {
     d->signerResolvePage->setEncryptionSelected( selected );
@@ -249,6 +282,17 @@ bool SignEncryptWizard::isEncryptionUserMutable() const
     return d->signerResolvePage->isEncryptionUserMutable();
 }
 
+
+bool SignEncryptWizard::isMultipleProtocolsAllowed() const
+{
+    return d->recipientResolvePage->isMultipleProtocolsAllowed();
+}
+
+void SignEncryptWizard::setMultipleProtocolsAllowed( bool allowed )
+{
+    d->recipientResolvePage->setMultipleProtocolsAllowed( allowed );
+}
+
 void SignEncryptWizard::setEncryptionUserMutable( bool isMutable )
 {
     d->signerResolvePage->setEncryptionUserMutable( isMutable );
@@ -270,19 +314,11 @@ bool SignEncryptWizard::encryptionSelected() const {
     return d->signerResolvePage->encryptionSelected();
 }
 
-void SignEncryptWizard::setRecipientsAndCandidates( const std::vector<Mailbox> & recipients, const std::vector< std::vector<Key> > & keys ) {
-    assuan_assert( !keys.empty() );
-    assuan_assert( (size_t)recipients.size() == keys.size() );
+void SignEncryptWizard::setRecipients( const std::vector<Mailbox> & recipients ) {
     assuan_assert( d->mode == EncryptEMail );
-
-    d->recipientResolvePage->ensureIndexAvailable( keys.size() - 1 );
-
-    for ( unsigned int i = 0, end = keys.size() ; i < end ; ++i ) {
-        RecipientResolveWidget * const rr = d->recipientResolvePage->recipientResolveWidget( i );
-        assuan_assert( rr );
-        rr->setIdentifier( recipients[i].prettyAddress() );
-        rr->setCertificates( keys[i] );
-    }
+    d->recipients = recipients;
+    d->recipientResolvePage->ensureIndexAvailable( recipients.size() - 1 );
+    d->selectedProtocolChanged();
 }
 
 void SignEncryptWizard::setSignersAndCandidates( const std::vector<Mailbox> & signers, const std::vector< std::vector<Key> > & keys ) {

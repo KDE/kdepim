@@ -34,6 +34,7 @@ target_link_libraries( test_certificatepickerwidget kleo ${KDE4_KDEUI_LIBS} ${QG
 
 kde4_add_executable( test_signencryptwizard TEST
   test_signencryptwizard.cpp
+  ../uiserver/certificateresolver.cpp
   ../uiserver/signencryptwizard.cpp 
   ../uiserver/recipientresolvepage.cpp
   ../uiserver/keyselectiondialog.cpp

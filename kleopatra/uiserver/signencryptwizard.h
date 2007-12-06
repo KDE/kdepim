@@ -84,7 +84,10 @@ namespace Kleo {
         };
         void setMode( Mode mode );
 
-        void setProtocol( GpgME::Protocol proto );
+        GpgME::Protocol presetProtocol() const;
+        void setPresetProtocol( GpgME::Protocol proto );
+
+        GpgME::Protocol selectedProtocol() const;
 
         /// SignOrEncryptFiles mode subinterface
         //@{
@@ -102,11 +105,14 @@ namespace Kleo {
 
         bool isEncryptionUserMutable() const;
         void setEncryptionUserMutable( bool isMutable );
-        
+       
+        bool isMultipleProtocolsAllowed() const;
+        void setMultipleProtocolsAllowed( bool allowed );
+
         QFileInfoList resolvedFiles() const;
         //@}
 
-        void setRecipientsAndCandidates( const std::vector<KMime::Types::Mailbox> & recipients, const std::vector< std::vector<GpgME::Key> > & keys );
+        void setRecipients( const std::vector<KMime::Types::Mailbox> & recipients );
         void setSignersAndCandidates( const std::vector<KMime::Types::Mailbox> & signers, const std::vector< std::vector<GpgME::Key> > & keys );
 
         bool canGoToNextPage() const;
@@ -132,6 +138,7 @@ namespace Kleo {
         class Private;
         kdtools::pimpl_ptr<Private> d;
         Q_PRIVATE_SLOT( d, void updateButtonStates() )
+        Q_PRIVATE_SLOT( d, void selectedProtocolChanged() );
     };
 
 }

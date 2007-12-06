@@ -39,6 +39,7 @@
 
 #include <KLocale>
 
+#include <QButtonGroup>
 #include <QCheckBox>
 #include <QComboBox>
 #include <QLabel>
@@ -46,6 +47,7 @@
 #include <QPushButton>
 #include <QGridLayout>
 #include <QHash>
+#include <QRadioButton>
 #include <QResizeEvent>
 #include <QScrollArea>
 #include <QVBoxLayout>
@@ -61,18 +63,27 @@ public:
     explicit Private( RecipientResolvePage * qq );
     ~Private();
     void addWidgetForIdentifier( const QString& identifier );
+    void protocolSelected( int );
+    void setSelectedProtocol( GpgME::Protocol protocol );
+
+    void updateRadioButtonVisibility();
+
 //    void completionStateChanged( const QString& id );
     void clear();
+    QRadioButton* pgpRB;
+    QRadioButton* smimeRB;
     QScrollArea* scrollArea;
     QVBoxLayout* lineLayout;
     std::vector<RecipientResolveWidget*> widgets;
     QStringList identifiers;
-    GpgME::Protocol protocol; 
+    GpgME::Protocol presetProtocol;
+    GpgME::Protocol selectedProtocol;
+    bool allowMultipleProtocols;
 };
 
 
 RecipientResolvePage::Private::Private( RecipientResolvePage * qq )
-    : q( qq ), protocol( GpgME::UnknownProtocol )
+    : q( qq ), presetProtocol( GpgME::UnknownProtocol ), selectedProtocol( presetProtocol ), allowMultipleProtocols( false )
 {
 }
 
@@ -81,7 +92,19 @@ RecipientResolvePage::Private::~Private() {}
 RecipientResolvePage::RecipientResolvePage( QWidget * parent )
     : WizardPage( parent ), d( new Private( this ) )
 {
-    QGridLayout* const top = new QGridLayout( this );
+    QVBoxLayout* const top = new QVBoxLayout( this );
+    QButtonGroup* const buttonGroup = new QButtonGroup( this );
+    d->pgpRB = new QRadioButton;
+    d->pgpRB->setText( i18n( "OpenPGP" ) );
+    d->pgpRB->setChecked( true );
+    top->addWidget( d->pgpRB );
+    buttonGroup->addButton( d->pgpRB, GpgME::OpenPGP );
+    d->smimeRB = new QRadioButton;
+    d->smimeRB->setText( i18n( "S/MIME" ) );
+    top->addWidget( d->smimeRB );
+    buttonGroup->addButton( d->smimeRB, GpgME::CMS );
+    connect( buttonGroup, SIGNAL( buttonClicked( int ) ), 
+             this, SLOT( protocolSelected( int ) ) );
     d->scrollArea = new QScrollArea( this );
     d->scrollArea->setFrameShape( QFrame::NoFrame );
     d->scrollArea->setWidgetResizable( true );
@@ -92,7 +115,9 @@ RecipientResolvePage::RecipientResolvePage( QWidget * parent )
     layout->addWidget( container );
     layout->addStretch();
     d->scrollArea->setWidget( container2 );
-    top->addWidget( d->scrollArea, 0, 0 );
+    top->addWidget( d->scrollArea );
+
+    d->updateRadioButtonVisibility();
 }
 
 RecipientResolvePage::~RecipientResolvePage() {}
@@ -114,6 +139,25 @@ void RecipientResolvePage::setIdentifiers( const QStringList& ids )
         d->addWidgetForIdentifier( i );
 }
 
+void RecipientResolvePage::Private::protocolSelected( int protocol )
+{
+    assert( !allowMultipleProtocols );
+    setSelectedProtocol( static_cast<GpgME::Protocol>( protocol ) );
+    emit q->selectedProtocolChanged();
+}
+
+void RecipientResolvePage::Private::setSelectedProtocol( GpgME::Protocol protocol )
+{
+    assert( protocol != GpgME::UnknownProtocol );
+    selectedProtocol = protocol;
+    for ( uint i = 0; i < widgets.size(); ++i )
+    {
+        widgets[i]->setProtocol( selectedProtocol );
+    }
+
+
+}
+
 void RecipientResolvePage::Private::clear()
 {
     qDeleteAll( widgets );
@@ -125,7 +169,7 @@ void RecipientResolvePage::Private::addWidgetForIdentifier( const QString& id )
     RecipientResolveWidget* const line = new RecipientResolveWidget;
     q->connect( line, SIGNAL( changed() ), q, SIGNAL( completeChanged() ) );
     line->setIdentifier( id );
-    line->setProtocol( protocol );
+    line->setProtocol( selectedProtocol );
     widgets.push_back( line );
     identifiers.push_back( id );
     assert( scrollArea->widget() );
@@ -288,18 +332,48 @@ GpgME::Protocol RecipientResolveWidget::protocol() const
 }
 
 
-void RecipientResolvePage::setProtocol( GpgME::Protocol prot )
+void RecipientResolvePage::setPresetProtocol( GpgME::Protocol prot )
 {
-    d->protocol = prot;
+    d->presetProtocol = prot;
+    if ( d->selectedProtocol == GpgME::UnknownProtocol )
+        d->selectedProtocol = prot;
     for ( uint i = 0; i < d->widgets.size(); ++i )
     {
-        d->widgets[i]->setProtocol( prot );
-    }        
+        d->widgets[i]->setProtocol( d->selectedProtocol );
+    }
+    d->updateRadioButtonVisibility();
 }
 
-GpgME::Protocol RecipientResolvePage::protocol() const
+GpgME::Protocol RecipientResolvePage::presetProtocol() const
 {
-    return d->protocol;
+    return d->presetProtocol;
+}
+
+
+GpgME::Protocol RecipientResolvePage::selectedProtocol() const
+{
+    return d->selectedProtocol;
+}
+
+bool RecipientResolvePage::isMultipleProtocolsAllowed() const
+{
+    return d->allowMultipleProtocols;
+}
+
+void RecipientResolvePage::setMultipleProtocolsAllowed( bool allowed )
+{
+    d->allowMultipleProtocols = allowed;
+    d->updateRadioButtonVisibility();
+}
+
+
+void RecipientResolvePage::Private::updateRadioButtonVisibility()
+{
+    const bool rbsVisible = !allowMultipleProtocols && presetProtocol == GpgME::UnknownProtocol;
+    pgpRB->setVisible( rbsVisible ); 
+    smimeRB->setVisible( rbsVisible );
+    if ( rbsVisible )
+        setSelectedProtocol( pgpRB->isChecked() ? GpgME::OpenPGP : GpgME::CMS );
 }
 
 #include "moc_recipientresolvepage.cpp"

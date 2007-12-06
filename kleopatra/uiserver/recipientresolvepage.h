@@ -86,17 +86,34 @@ namespace Kleo {
         void setIdentifiers( const QStringList& identifiers );
         QStringList identifiers() const;
 
-        void setProtocol( GpgME::Protocol protocol );
-        GpgME::Protocol protocol() const;
+
+        /** 
+         * The protocol selected by the user (which is chosen by 
+         * the user in case none was preset)
+         */
+        GpgME::Protocol selectedProtocol() const;
+
+        /**
+         * the protocol set before the dialog is shown. Defaults to 
+         * GpgME::UnknownProtocol */
+        GpgME::Protocol presetProtocol() const;
+        void setPresetProtocol( GpgME::Protocol protocol );
 
         unsigned int numRecipientResolveWidgets() const;
         RecipientResolveWidget * recipientResolveWidget( unsigned int idx ) const;
 
         void ensureIndexAvailable( unsigned int idx );
 
+        bool isMultipleProtocolsAllowed() const;
+        void setMultipleProtocolsAllowed( bool allowed );
+
+    Q_SIGNALS:
+        void selectedProtocolChanged();
+ 
     private:
         class Private;
         kdtools::pimpl_ptr<Private> d;
+        Q_PRIVATE_SLOT( d, void protocolSelected( int ) );
     };
 }
 

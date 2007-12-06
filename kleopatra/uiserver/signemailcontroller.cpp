@@ -116,8 +116,8 @@ void SignEMailController::setProtocol( Protocol proto ) {
     assuan_assert( d->protocol == UnknownProtocol ||
                    d->protocol == proto );
     d->protocol = proto;
-    if ( d->wizard )
-        d->wizard->setProtocol( proto );
+    d->ensureWizardCreated();
+    d->wizard->setPresetProtocol( proto );
 }
 
 Protocol SignEMailController::protocol() const {
@@ -315,7 +315,7 @@ void SignEMailController::Private::ensureWizardCreated() {
     w->setEncryptionUserMutable( false );
     w->setSigningSelected( true );
     w->setSigningUserMutable( false );
-    w->setProtocol( protocol );
+    w->setPresetProtocol( protocol );
 
     wizard = w.release();
 }

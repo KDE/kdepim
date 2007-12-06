@@ -137,8 +137,8 @@ void SignEncryptFilesController::setProtocol( Protocol proto ) {
     assuan_assert( d->protocol == UnknownProtocol ||
                    d->protocol == proto );
     d->protocol = proto;
-    if ( d->wizard )
-        d->wizard->setProtocol( proto );
+    d->ensureWizardCreated();
+    d->wizard->setPresetProtocol( proto );
 }
 
 Protocol SignEncryptFilesController::protocol() const {
@@ -361,13 +361,7 @@ void SignEncryptFilesController::Private::ensureWizardCreated() {
     connect( w.get(), SIGNAL(objectsResolved()), q, SLOT(slotWizardObjectsResolved()), Qt::QueuedConnection );
     connect( w.get(), SIGNAL(recipientsResolved()), q, SLOT(slotWizardRecipientsResolved()), Qt::QueuedConnection );
     connect( w.get(), SIGNAL(canceled()), q, SLOT(slotWizardCanceled()), Qt::QueuedConnection );
-#if 0
-    d->wizard->setSigningMode( signingTriState( d->operation ) );
-    d->wizard->setEncryptionMode( encryptionTriState( d->operation ) );
-#endif
-
-    w->setProtocol( protocol );
-
+    w->setMultipleProtocolsAllowed( true );
     wizard = w.release();
 }
 

@@ -62,8 +62,8 @@ namespace Kleo {
         static const char * mementoName() { return "EncryptEMailController"; }
 
         void setProtocol( GpgME::Protocol proto );
-        GpgME::Protocol protocol() const;
         const char * protocolAsString() const;
+        GpgME::Protocol protocol() const;
 
         void setCommand( const boost::shared_ptr<AssuanCommand> & cmd );
 
@@ -82,6 +82,7 @@ namespace Kleo {
         void done();
 
     private:
+
         class Private;
         kdtools::pimpl_ptr<Private> d;
         Q_PRIVATE_SLOT( d, void slotWizardRecipientsResolved() )
