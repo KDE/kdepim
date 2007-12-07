@@ -127,10 +127,12 @@ RecipientResolvePage::RecipientResolvePage( QWidget * parent )
     QHBoxLayout* const buttonLayout = new QHBoxLayout( buttonWidget );
     d->addRecipientButton = new QPushButton;
     d->addRecipientButton->setText( i18n( "Add Recipient..." ) );
+    d->addRecipientButton->setVisible( false );
     connect( d->addRecipientButton, SIGNAL( clicked() ), this, SLOT( addRecipient() ) );
     buttonLayout->addWidget( d->addRecipientButton );
     d->removeRecipientButton = new QPushButton;
     d->removeRecipientButton->setText( i18n( "Remove Recipient..." ) );
+    d->removeRecipientButton->setVisible( false );
     connect( d->removeRecipientButton, SIGNAL( clicked() ), this, SLOT( removeRecipient() ) );
     buttonLayout->addWidget( d->removeRecipientButton );
     buttonLayout->addStretch();
