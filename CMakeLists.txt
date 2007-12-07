@@ -3,7 +3,7 @@ project(kdepim)
 set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake/modules)
 
 # search packages used by KDE
-find_package (KDE4 REQUIRED)
+find_package(KDE4 REQUIRED)
 include(KDE4Defaults)
 include(MacroLibrary)
 include(MacroOptionalAddSubdirectory)
@@ -41,14 +41,20 @@ find_package(KdepimLibs REQUIRED)
 find_package(Kode REQUIRED)
 find_package(ZLIB REQUIRED)
 find_package(Strigi REQUIRED)
-find_package(Boost REQUIRED )
+find_package(Boost REQUIRED)
 macro_log_feature(Boost_FOUND "boost" "Boost C++ Libraries" "http://www.boost.org/" TRUE "" "Required by Akonadi and kleopatra")
 
 if(Q_WS_X11)
    macro_log_feature(X11_Xscreensaver_LIB "libXss" "X Window Screen Saver Development Library" "http://xorg.freedesktop.org" FALSE "" "Required for building the KTimeTracker Program")
 endif(Q_WS_X11)
 
-find_package(QGpgme)
+#qgpgme is part of kdepimlibs, but it isn't ported to WIN32 yet.
+#remove the if(WIN32) part of the conditional below once qgpgme is ported.
+if(NOT WIN32)
+  find_package(QGpgme REQUIRED)
+else(NOT WIN32)
+  set(QGPGME_FOUND false)
+endif(NOT WIN32)
 
 macro_optional_find_package(GNOKII)
 macro_log_feature(GNOKII_FOUND "gnokii" "Gnokii Development Libraries" "http://www.gnokii.org" FALSE "" "Needed to provide the ability to import and export KDE addressbook entries to/from mobile phones that are accessible via gnokii")
