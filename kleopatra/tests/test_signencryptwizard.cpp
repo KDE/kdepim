@@ -61,7 +61,7 @@ int main( int argc, char** argv )
     ADD_EMAIL("foo@bar.com")
 #undef ADD_EMAIL
     wizard.setMode( Kleo::SignEncryptWizard::EncryptEMail );
-    wizard.setRecipientsAndCandidates( list, std::vector< std::vector<GpgME::Key> >( list.size() ) );
+    wizard.setRecipients( list );
     wizard.show();
     return app.exec();
 }
