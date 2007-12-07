@@ -24,7 +24,7 @@ set(kmobiletools_SRCS main.cpp kmobiletools.cpp kmobiletools.h )
 kde4_add_executable(kmobiletools_bin ${kmobiletools_SRCS})
 set_target_properties(kmobiletools_bin PROPERTIES OUTPUT_NAME kmobiletools)
 
-target_link_libraries(kmobiletools_bin ${KDE4_KPARTS_LIBS} kmobiletoolsprivate )
+target_link_libraries(kmobiletools_bin ${KDE4_KPARTS_LIBS} kmobiletoolslib )
 
 install(TARGETS kmobiletools_bin DESTINATION ${BIN_INSTALL_DIR})
 
