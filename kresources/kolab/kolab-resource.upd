@@ -1,0 +1,12 @@
+# Update the name of the resource
+Id=kolab-calendar-resource-rename
+File=kresources/calendar/stdrc
+Script=upgrade-resourcetype.pl,perl
+
+Id=kolab-contact-resource-rename
+File=kresources/contact/stdrc
+Script=upgrade-resourcetype.pl,perl
+
+Id=kolab-notes-resource-rename
+File=kresources/notes/stdrc
+Script=upgrade-resourcetype.pl,perl
