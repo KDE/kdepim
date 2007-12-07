@@ -131,7 +131,7 @@ QString FilterKMail_maildir::getMessageFlags( FilterInfo *info, const QString& f
 
             QByteArray input(MAX_LINE);
 
-            while ( ! mailfile.atEnd() ) {
+            while ( !mailfile.atEnd() && status_flag.isEmpty()) {
                 QCString seperate;
 
                 while ( ! mailfile.atEnd() && mailfile.readLine(input.data(),MAX_LINE) ) {
