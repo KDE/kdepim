@@ -340,9 +340,7 @@ void SignEncryptWizard::setRecipients( const std::vector<Mailbox> & recipients )
     d->selectedProtocolChanged();
 }
 
-void SignEncryptWizard::setSignersAndCandidates( const std::vector<Mailbox> & signers, const std::vector< std::vector<Key> > & keys ) {
-    assuan_assert( !keys.empty() );
-    assuan_assert( signers.empty() || signers.size() == keys.size() );
+void SignEncryptWizard::setSignersAndCandidates( const std::vector<Mailbox> & signers, const std::vector< std::vector<Key> > & keys ) {;
     assuan_assert( d->mode == SignEMail );
     d->signerResolvePage->setSignersAndCandidates( signers, keys );
 }

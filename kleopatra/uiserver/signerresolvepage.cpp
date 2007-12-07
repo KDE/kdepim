@@ -234,19 +234,20 @@ SignerResolvePage::~SignerResolvePage() {}
 void SignerResolvePage::setSignersAndCandidates( const std::vector<KMime::Types::Mailbox> & signers, 
                                                  const std::vector< std::vector<GpgME::Key> > & keys )
 {
-#if 0
-    assuan_assert( !keys.empty() );
     assuan_assert( signers.empty() || signers.size() == keys.size() );
-    if ( signers.size() > 1 )
-        assuan_assert( !"Resolving multiple signers not implemented" );
-    d->signerLabel->setText( signers.front().prettyAddress() );
-    d->signerCombo->clear();
-    Q_FOREACH( const GpgME::Key& i, keys.front() )
+
+    switch ( signers.size() )
     {
-        d->addCertificate( i );
+    case 0:
+        d->signerLabel->setText( QString() ); // TODO: use default identity?
+        break;        
+    case 1:
+        d->signerLabel->setText( signers.front().prettyAddress() );
+        break;
+    default: // > 1
+        assuan_assert( !"Resolving multiple signers not implemented" );
     }
     emit completeChanged();
-#endif
 }
 
 

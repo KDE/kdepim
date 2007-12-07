@@ -78,10 +78,6 @@ void SignCommand::Private::checkForErrors() const {
         throw assuan_exception( makeError( GPG_ERR_CONFLICT ),
                                 i18n( "SIGN is an email mode command, connection seems to be in filemanager mode" ) );
 
-    if ( q->senders().empty() )
-        throw assuan_exception( makeError( GPG_ERR_NOT_IMPLEMENTED ),
-                                i18n( "SIGN without SENDER" ) );
-
     if ( !q->recipients().empty() )
         throw assuan_exception( makeError( GPG_ERR_CONFLICT ),
                                 i18n( "RECIPIENT may not be given prior to SIGN" ) );
