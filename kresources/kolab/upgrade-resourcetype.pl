@@ -11,13 +11,13 @@ while ( <> ) {
   chomp; # eat the trailing '\n'
   next if ( /^$/ ); # skip empty lines
   next if ( /^\#/ ); # skip comments
-  if ( /^\[/ ) { # group begin
-    $currentGroup = $_;
+  if ( /^\[(.+)\]$/ ) { # group begin
+    $currentGroup = $1;
     next;
-  } elsif ( $currentGroup /^[Resource_.*]/ and /^ResourceType/ ) {
+  } elsif ( $currentGroup =~ /^Resource/ ) {
     my ($key,$value) = split /=/;
-    if ( $value eq "kolab" ) {
-      print "# DELETE $currentGroup$key\n";
+    if ( $key eq "ResourceType" and $value eq "kolab" ) {
+      print "# DELETE [$currentGroup]$key\n";
       print "[$currentGroup]\nResourceType=imap\n";
     }
   }
