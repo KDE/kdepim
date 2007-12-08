@@ -1,5 +1,5 @@
 /*  -*- c++ -*-
-    keyselectiondialog.h
+    keyapprovaldialog.h
 
     This file is part of libkleopatra, the KDE keymanagement library
     Copyright (c) 2004 Klarälvdalens Datakonsult AB
