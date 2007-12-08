@@ -158,6 +158,7 @@
 
 #include <stdio.h>
 #include <unistd.h>
+#include <malloc.h>
 #include <time.h>
 #include <stdlib.h>
 #include <pwd.h>
