@@ -38,7 +38,7 @@
 #include <QtCore/QObject>
 #include <QtCore/QString>
 
-#include <kdemacros.h>
+#include "kleo/kleo_export.h"
 
 class QWidget;
 
