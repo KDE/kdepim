@@ -36,7 +36,7 @@
 
 using namespace KABC;
 
-void DavAddressBookAdaptor::interpretListFoldersJob( KIO::Job *job, KPIM::FolderLister */*folderLister*/ )
+void DavAddressBookAdaptor::interpretListFoldersJob( KIO::Job *job, KPIM::FolderLister * /*folderLister*/ )
 {
   KIO::DavJob *davjob = dynamic_cast<KIO::DavJob*>( job );
   Q_ASSERT( davjob );
