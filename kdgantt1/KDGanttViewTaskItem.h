@@ -61,10 +61,11 @@ public:
     void setStartTime( const QDateTime& start );
     void setEndTime( const QDateTime& end );
     unsigned int getTimeForTimespan( const QDateTime & start, const QDateTime & end );
+protected:
+    virtual void showItem( bool show = true, int coordY = 0 );
 private:
     virtual KDGanttViewItem::Connector getConnector( QPoint p, bool linkMode );
-    void showItem( bool show = true, int coordY = 0 );
-    void initItem();
+    virtual void initItem();
     void hideMe();
     QBrush myBrush, undefinedBrush;
     bool _showUndefinedBrush;
