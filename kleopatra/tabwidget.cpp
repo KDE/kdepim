@@ -93,7 +93,7 @@ TabWidget::Private::Private( TabWidget* qq ) : q( qq )
     layout->addWidget( tabWidget, 0, 0 );
 }
 
-void TabWidget::Private::Private::currentIndexChanged( int index )
+void TabWidget::Private::currentIndexChanged( int index )
 {
     QAbstractItemView* const view = qobject_cast<QAbstractItemView*>( tabWidget->widget( index ) );
     assert( view );

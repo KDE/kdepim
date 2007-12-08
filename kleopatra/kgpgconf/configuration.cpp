@@ -358,6 +358,7 @@ QString ConfigEntry::typeDescription() const
     case DirPath:
         return list ? i18n( "Directory Path List" ) : i18n( "Directory Path" );
     }
+    return QString();
 }
 
 bool ConfigEntry::isList() const

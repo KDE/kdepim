@@ -217,8 +217,8 @@ QVariant AbstractKeyListModel::data( const QModelIndex & index, int role ) const
             default: ; // silence compiler
             }
         }
-    } else if ( role == Qt::TextAlignmentRole ) // needed?
-        ;
+    } else if ( role == Qt::TextAlignmentRole ) { // needed?
+    }
     return QVariant();
 }
 
