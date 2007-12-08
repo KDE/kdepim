@@ -145,7 +145,9 @@ KAB::DistributionListNg::MainWidget::MainWidget( KAB::Core *core, QWidget *paren
     QTimer::singleShot( 0, this, SLOT( updateEntries() ) );
 }
 
+#ifdef __GNUC__
 #warning port! PENDING(KDAB)
+#endif
 #if 0
 void KAB::DistributionListNg::MainWidget::contextMenuRequested( QListWidgetItem *item, const QPoint &point )
 {

@@ -112,7 +112,9 @@ void KAB::DistributionListEntryView::setEntry( const KPIM::DistributionList& lis
     m_emailGroup = 0;
 
     QPixmap pixmap;
+#ifdef __GNUC__
 #warning Port!
+#endif
 #if 0
     pixmap.convertFromImage( m_entry.addressee.photo().data() );
     m_imageLabel->setPixmap( pixmap.isNull() ? KIcon( "personal" ) : pixmap );
