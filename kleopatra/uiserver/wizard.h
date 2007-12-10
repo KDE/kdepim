@@ -47,7 +47,7 @@ namespace Kleo {
         Q_OBJECT
             public:
         explicit Wizard( QWidget * parent=0, Qt::WFlags f=0 );
-        ~Wizard();
+        virtual ~Wizard();
         
         enum Page {
             InvalidPage=-1
