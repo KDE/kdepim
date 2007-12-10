@@ -68,6 +68,7 @@ if ( USABLE_ASSUAN_FOUND )
     uiserver/keyselectionjob.cpp
     uiserver/recipientresolvepage.cpp
     uiserver/wizardresultpage.cpp
+    uiserver/wizard.cpp
     uiserver/wizardpage.cpp
     uiserver/signerresolvepage.cpp
     uiserver/scrollarea.cpp
