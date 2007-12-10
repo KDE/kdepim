@@ -226,7 +226,8 @@ void SignerResolvePage::Private::setMode( int mode_ )
 SignerResolvePage::SignerResolvePage( QWidget * parent, Qt::WFlags f )
   : WizardPage( parent, f ), d( new Private( this ) )
 {
-    
+    setTitle( i18n( "<b>Choose Operation to be Performed</b>" ) );
+    setSubTitle( i18n( "TODO" ) );
 }
 
 SignerResolvePage::~SignerResolvePage() {}
