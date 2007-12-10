@@ -50,6 +50,12 @@ namespace Kleo {
         bool isCommitPage() const;
         void setCommitPage( bool commitPage );
 
+        QString title() const;
+        void setTitle( const QString& title );
+
+        QString subTitle() const; 
+        void setSubTitle( const QString& subTitle );
+          
     Q_SIGNALS:
         void completeChanged();
 

@@ -38,6 +38,8 @@
 #include <KPushButton>
 
 #include <QDialogButtonBox>
+#include <QFrame>
+#include <QLabel>
 #include <QStackedWidget>
 #include <QVBoxLayout>
 #include <QWizard>
@@ -68,17 +70,35 @@ private:
     QPushButton* backButton;
     QString finishItem;
     QString nextItem;
+    QFrame* titleFrame;
+    QLabel* titleLabel;
+    QLabel* subTitleLabel;
 };
 
 
 Wizard::Private::Private( Wizard * qq )
     : q( qq ), currentId( -1 ), stack( new QStackedWidget )
 {
-    QWizard wiz;
+    const QWizard wiz;
     nextItem = wiz.buttonText( QWizard::NextButton );
     finishItem = wiz.buttonText( QWizard::FinishButton );
-    QVBoxLayout * const grid = new QVBoxLayout( q );
-    grid->addWidget( stack );
+    QVBoxLayout * const top = new QVBoxLayout( q );
+    top->setMargin( 0 );
+    titleFrame = new QFrame;
+    titleFrame->setFrameShape( QFrame::StyledPanel );
+    titleFrame->setAutoFillBackground( true );
+    titleFrame->setBackgroundRole( QPalette::Base );
+    QVBoxLayout* const titleLayout = new QVBoxLayout( titleFrame );
+    titleLabel = new QLabel;
+    titleLayout->addWidget( titleLabel );
+    subTitleLabel = new QLabel;
+    subTitleLabel->setWordWrap( true );
+    titleLayout->addWidget( subTitleLabel );
+    top->addWidget( titleFrame );
+    titleFrame->setVisible( false );
+    QWidget* const contentWidget = new QWidget;
+    QVBoxLayout* const contentLayout = new QVBoxLayout( contentWidget );
+    contentLayout->addWidget( stack );
     QDialogButtonBox * const box = new QDialogButtonBox;
     QAbstractButton* const cancelButton = box->addButton( QDialogButtonBox::Cancel );
     q->connect( cancelButton, SIGNAL( clicked() ), q, SLOT( reject() ) );
@@ -93,8 +113,8 @@ Wizard::Private::Private( Wizard * qq )
     q->connect( nextButton, SIGNAL( clicked() ), q, SLOT( next() ) );
     box->addButton( nextButton, QDialogButtonBox::ActionRole );
 
-    grid->addWidget( box );
-    
+    contentLayout->addWidget( box );
+    top->addWidget( contentWidget );
     //q->setButtons( KDialog::Try | KDialog::Cancel |  KDialog::Reset );
     //q->setButtonGuiItem( KDialog::Reset, KGuiItem( i18n( "Back" ) )  );
 
@@ -150,6 +170,11 @@ void Wizard::setCurrentPage( int id )
     WizardPage * const widget = page( id );
     assert( widget && d->stack->indexOf( widget ) != -1 );
     d->stack->setCurrentWidget( widget );
+    const QString title = widget->title();
+    const QString subTitle = widget->subTitle();
+    d->titleFrame->setVisible( !title.isEmpty() || !subTitle.isEmpty() );
+    d->titleLabel->setText( title );
+    d->subTitleLabel->setText( subTitle );
     d->updateButtonStates();
 }
 

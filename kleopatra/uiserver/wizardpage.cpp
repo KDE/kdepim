@@ -44,6 +44,8 @@ public:
     
 private:
     bool commitPage;
+    QString title;
+    QString subTitle;
 };
 
 
@@ -70,6 +72,26 @@ bool WizardPage::isCommitPage() const
 void WizardPage::setCommitPage( bool commitPage )
 {
     d->commitPage = commitPage;
+}
+
+QString WizardPage::title() const
+{
+    return d->title;
+}
+
+void WizardPage::setTitle( const QString& title )
+{
+    d->title = title;
+}
+
+QString WizardPage::subTitle() const
+{
+    return d->subTitle;
+}
+
+void WizardPage::setSubTitle( const QString& subTitle )
+{
+    d->subTitle = subTitle;
 }
 
 WizardPage::~WizardPage() {}
