@@ -1245,13 +1245,13 @@ void KABCore::initActions()
   mActionDelete->setWhatsThis( i18n( "Delete all selected contacts." ) );
 
 
-  mActionCopyAddresseeTo = new KAction( i18n( "&Copy Contact To..." ), "kaddressbook", 0,
+  mActionCopyAddresseeTo = new KAction( i18n( "&Copy Contact To..." ), "", 0,
                                       this, SLOT( copySelectedContactToResource() ),
                                       actionCollection(), "copy_contact_to" );
   const QString copyMoveWhatsThis = i18n( "Store a contact in a different Addressbook<p>You will be presented with a dialog where you can select a new storage place for this contact." );
   mActionCopyAddresseeTo->setWhatsThis( copyMoveWhatsThis );
 
-  mActionMoveAddresseeTo = new KAction( i18n( "M&ove Contact To..." ), "kaddressbook", 0,
+  mActionMoveAddresseeTo = new KAction( i18n( "M&ove Contact To..." ), "", 0,
                                       this, SLOT( moveSelectedContactToResource() ),
                                       actionCollection(), "move_contact_to" );
   mActionMoveAddresseeTo->setWhatsThis( copyMoveWhatsThis );
