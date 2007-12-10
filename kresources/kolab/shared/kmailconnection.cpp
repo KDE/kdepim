@@ -223,6 +223,17 @@ bool KMailConnection::kmailGetAttachment( KURL& url,
   return mKMailIcalIfaceStub->ok();
 }
 
+bool KMailConnection::kmailAttachmentMimetype( QString & mimeType,
+                                               const QString & resource,
+                                               Q_UINT32 sernum,
+                                               const QString & filename )
+{
+  if ( !connectToKMail() )
+    return false;
+  mimeType = mKMailIcalIfaceStub->attachmentMimetype( resource, sernum, filename );
+  return mKMailIcalIfaceStub->ok();
+}
+
 bool KMailConnection::kmailListAttachments(QStringList &list,
                                             const QString & resource, Q_UINT32 sernum)
 {
