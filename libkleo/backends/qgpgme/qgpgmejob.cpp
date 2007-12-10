@@ -51,6 +51,8 @@
 #include <QStringList>
 #include <QEventLoop>
 
+#include <algorithm>
+
 #include <assert.h>
 #include <string.h>
 
@@ -188,7 +190,7 @@ void Kleo::QGpgMEJob::setChunkSize( unsigned int chunksize ) {
     mPatterns[mPatternEndIndex] = mReplacedPattern;
     mReplacedPattern = 0;
   }
-  mChunkSize = qMin( chunksize, mNumPatterns );
+  mChunkSize = std::min( chunksize, mNumPatterns );
   mPatternStartIndex = 0;
   mPatternEndIndex = mChunkSize;
   mReplacedPattern = mPatterns[mPatternEndIndex];
