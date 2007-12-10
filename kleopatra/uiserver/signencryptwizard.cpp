@@ -48,11 +48,9 @@
 #include <gpgme++/key.h>
 
 #include <KLocale>
-#include <KPushButton>
 
 #include <QFileInfo>
 #include <QTimer>
-#include <QWizard>
 
 #include <boost/bind.hpp>
 
