@@ -1,5 +1,5 @@
 /* -*- mode: c++; c-basic-offset:4 -*-
-    wizardpage.h
+    wizard.h
 
     This file is part of Kleopatra, the KDE keymanager
     Copyright (c) 2007 Klarälvdalens Datakonsult AB
@@ -30,34 +30,59 @@
     your version.
 */
 
-#ifndef __KLEOPATRA_WIZARDPAGE_H__
-#define __KLEOPATRA_WIZARDPAGE_H__
+#ifndef __KLEOPATRA_WIZARD_H__
+#define __KLEOPATRA_WIZARD_H__
 
-#include <QWidget>
+#include <KDialog>
 
 #include <utils/pimpl_ptr.h>
 
+#include <vector>
+
 namespace Kleo {
 
-    class WizardPage : public QWidget {
+    class WizardPage;
+
+    class Wizard : public KDialog {
         Q_OBJECT
-    public:
-        explicit WizardPage( QWidget * parent=0, Qt::WFlags f=0 );
-        virtual ~WizardPage();
+            public:
+        explicit Wizard( QWidget * parent=0, Qt::WFlags f=0 );
+        ~Wizard();
+        
+        enum Page {
+            InvalidPage=-1
+        };
 
-        virtual bool isComplete() const = 0;
+        void setPage( int id, WizardPage* page );
 
-        bool isCommitPage() const;
-        void setCommitPage( bool commitPage );
+        const WizardPage* page( int id ) const;
+        WizardPage* page( int id );
 
-    Q_SIGNALS:
-        void completeChanged();
+        void setPageOrder( const std::vector<int>& pages );
+
+        void skipPage( int id );
+        void setCurrentPage( int id );
+        
+        int currentPage() const;
+
+        const WizardPage* currentPageWidget() const;
+        WizardPage* currentPageWidget();
+
+        bool canGoToNextPage() const;
+
+
+    public Q_SLOTS:
+        void next();
+
+    protected:
+        virtual void onNext( int currentId );
 
     private:
         class Private;
         kdtools::pimpl_ptr<Private> d;
+        Q_PRIVATE_SLOT( d, void updateButtonStates() )
     };
 }
 
-#endif // __KLEOPATRA_WIZARDPAGE_H__
+#endif // __KLEOPATRA_WIZARD_H__ 
 

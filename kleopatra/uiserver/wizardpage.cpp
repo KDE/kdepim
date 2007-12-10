@@ -43,12 +43,12 @@ public:
     ~Private();
     
 private:
-
+    bool commitPage;
 };
 
 
 WizardPage::Private::Private( WizardPage * qq )
-  : q( qq )
+    : q( qq ), commitPage( false )
 {
     
 }
@@ -56,11 +56,20 @@ WizardPage::Private::Private( WizardPage * qq )
 WizardPage::Private::~Private() {}
 
 
-
 WizardPage::WizardPage( QWidget * parent, Qt::WFlags f )
   : QWidget( parent, f ), d( new Private( this ) )
 {
     
+}
+
+bool WizardPage::isCommitPage() const
+{
+    return d->commitPage;
+}
+
+void WizardPage::setCommitPage( bool commitPage )
+{
+    d->commitPage = commitPage;
 }
 
 WizardPage::~WizardPage() {}

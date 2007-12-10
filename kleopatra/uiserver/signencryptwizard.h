@@ -33,7 +33,7 @@
 #ifndef __KLEOPATRA_UISERVER_SIGNENCRYPTWIZARD_H__
 #define __KLEOPATRA_UISERVER_SIGNENCRYPTWIZARD_H__
 
-#include <KDialog>
+#include "wizard.h"
 
 #include <utils/pimpl_ptr.h>
 
@@ -61,7 +61,7 @@ namespace Kleo {
 
     class Task;
 
-    class SignEncryptWizard : public KDialog {
+    class SignEncryptWizard : public Wizard {
         Q_OBJECT
     public:
         explicit SignEncryptWizard( QWidget * parent=0, Qt::WindowFlags f=0 );
@@ -82,8 +82,6 @@ namespace Kleo {
             SignOrEncryptFiles = EncryptOrSignFiles
         };
         void setMode( Mode mode );
-
-        void skipPage( Page page );
 
         GpgME::Protocol presetProtocol() const;
         void setPresetProtocol( GpgME::Protocol proto );
@@ -116,17 +114,12 @@ namespace Kleo {
         void setRecipients( const std::vector<KMime::Types::Mailbox> & recipients );
         void setSignersAndCandidates( const std::vector<KMime::Types::Mailbox> & signers, const std::vector< std::vector<GpgME::Key> > & keys );
 
-        bool canGoToNextPage() const;
-
         void connectTask( const boost::shared_ptr<Task> & task, unsigned int idx );
 
         std::vector<GpgME::Key> resolvedCertificates() const;
         std::vector<GpgME::Key> resolvedSigners() const;
 
-        Page currentPage() const;
-
-    public Q_SLOTS:
-        void next();
+        /*reimp*/ void onNext( int currentId );
 
     Q_SIGNALS:
         //void operationResolved();
@@ -138,7 +131,6 @@ namespace Kleo {
     private:
         class Private;
         kdtools::pimpl_ptr<Private> d;
-        Q_PRIVATE_SLOT( d, void updateButtonStates() )
         Q_PRIVATE_SLOT( d, void selectedProtocolChanged() );
     };
 
