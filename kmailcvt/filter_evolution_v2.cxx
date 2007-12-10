@@ -78,25 +78,14 @@ void FilterEvolution_v2::import(FilterInfo *info)
         QDir dir(mailDir);
         QStringList rootSubDirs = dir.entryList("[^\\.]*", QDir::Dirs, QDir::Name); // Removal of . and ..
         int currentDir = 1, numSubDirs = rootSubDirs.size();
-        for(QStringList::Iterator filename = rootSubDirs.begin() ; filename != rootSubDirs.end() ; ++filename, ++currentDir) {
+        for(QStringList::Iterator dirname = rootSubDirs.begin() ; dirname != rootSubDirs.end() ; ++dirname, ++currentDir) {
             if (info->shouldTerminate()) break;
-            importDirContents(info, dir.filePath(*filename), *filename, *filename);
+            importDirContents(info, false, dir.filePath(*dirname), *dirname, *dirname);
             info->setOverall((int) ((float) currentDir / numSubDirs * 100));
         }
 
         /** import last but not least all archives from the root-dir */
-        QDir importDir (mailDir);
-        QStringList files = importDir.entryList("[^\\.]*", QDir::Files, QDir::Name);
-        for ( QStringList::Iterator mailFile = files.begin(); mailFile != files.end(); ++mailFile) {
-            if (info->shouldTerminate()) break;
-            QString temp_mailfile = *mailFile;
-            if (temp_mailfile.endsWith(".cmeta") || temp_mailfile.endsWith(".ev-summary") ||
-                temp_mailfile.endsWith(".ibex.index") || temp_mailfile.endsWith(".ibex.index.data") ) {}
-            else {
-                info->addLog( i18n("Start import file %1...").arg( temp_mailfile ) );
-                importMBox(info, mailDir + temp_mailfile , temp_mailfile, QString::null);
-            }
-        }
+	importDirContents(info, true, mailDir, QString::null, QString::null);
 
         info->addLog( i18n("Finished importing emails from %1").arg( mailDir ));
         if(count_duplicates > 0) {
@@ -111,11 +100,13 @@ void FilterEvolution_v2::import(FilterInfo *info)
 /**
  * Import of a directory contents.
  * @param info Information storage for the operation.
+ * @param root if this is the rootdir or not
  * @param dirName The name of the directory to import.
  * @param KMailRootDir The directory's root directory in KMail's folder structure.
  * @param KMailSubDir The directory's direct ancestor in KMail's folder structure.
  */
-void FilterEvolution_v2::importDirContents(FilterInfo *info, const QString& dirName, const QString& KMailRootDir, const QString& KMailSubDir)
+void FilterEvolution_v2::importDirContents(FilterInfo *info, bool root, 
+					   const QString& dirName, const QString& KMailRootDir, const QString& KMailSubDir)
 {
     if (info->shouldTerminate()) return;
     
@@ -125,26 +116,32 @@ void FilterEvolution_v2::importDirContents(FilterInfo *info, const QString& dirN
     QDir importDir (dirName);
     QStringList files = importDir.entryList("[^\\.]*", QDir::Files, QDir::Name);
     for ( QStringList::Iterator mailFile = files.begin(); mailFile != files.end(); ++mailFile) {
+        if (info->shouldTerminate()) break;
         QString temp_mailfile = *mailFile;
-        if (temp_mailfile.endsWith(".cmeta") || temp_mailfile.endsWith(".ev-summary") ||
+        if (temp_mailfile.endsWith(".cmeta") || temp_mailfile.endsWith(".ev-summary") || temp_mailfile.endsWith(".ev-summary-meta") ||
             temp_mailfile.endsWith(".ibex.index") || temp_mailfile.endsWith(".ibex.index.data") ) {}
         else {
             info->addLog( i18n("Start import file %1...").arg( temp_mailfile ) );
-            importMBox(info, (dirName + "/" + temp_mailfile) , KMailRootDir, KMailSubDir);
+	    if (!root)
+                 importMBox(info, (dirName + "/" + temp_mailfile) , KMailRootDir, KMailSubDir);
+            else 
+                 importMBox(info, dirName + temp_mailfile , temp_mailfile, QString::null);
         }
     }
 
-    /** If there are subfolders, we import them one by one */
-    QDir subfolders(dirName);
-    QStringList subDirs = subfolders.entryList("[^\\.]*", QDir::Dirs, QDir::Name);
-    for(QStringList::Iterator filename = subDirs.begin() ; filename != subDirs.end() ; ++filename) {
-        QString kSubDir;
-        if(!KMailSubDir.isNull()) {
-            kSubDir = KMailSubDir + "/" + *filename;
-        } else {
-            kSubDir = *filename;
+    if (!root) {
+        /** If there are subfolders, we import them one by one */
+        QDir subfolders(dirName);
+        QStringList subDirs = subfolders.entryList("[^\\.]*", QDir::Dirs, QDir::Name);
+        for(QStringList::Iterator filename = subDirs.begin() ; filename != subDirs.end() ; ++filename) {
+            QString kSubDir;
+            if(!KMailSubDir.isNull()) {
+                kSubDir = KMailSubDir + "/" + *filename;
+            } else {
+                kSubDir = *filename;
+            }
+            importDirContents(info, false, subfolders.filePath(*filename), KMailRootDir, kSubDir);
         }
-        importDirContents(info, subfolders.filePath(*filename), KMailRootDir, kSubDir);
     }
 }
 
