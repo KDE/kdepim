@@ -68,8 +68,7 @@ namespace Kleo {
         ~SignEncryptWizard();
 
         enum Page {
-            NoPage=0,
-            ResolveSignerPage,
+            ResolveSignerPage=0,
             ObjectsPage,
             ResolveRecipientsPage,
             ResultPage

@@ -69,6 +69,7 @@ public:
     ~Private();
 
     void selectedProtocolChanged();
+    void setCommitPage( Page page );
 
 private:
     std::vector<Mailbox> recipients;
@@ -118,7 +119,6 @@ void SignEncryptWizard::Private::selectedProtocolChanged()
 
 void SignEncryptWizard::onNext( int currentId )
 {
-    assert( currentId != NoPage );
     if ( currentId == ResolveRecipientsPage )
         QTimer::singleShot( 0, this, SIGNAL( recipientsResolved() ) );
     if ( currentId == ResolveSignerPage )
@@ -137,23 +137,37 @@ SignEncryptWizard::SignEncryptWizard( QWidget * p, Qt::WindowFlags f )
 
 SignEncryptWizard::~SignEncryptWizard() {}
 
+void SignEncryptWizard::Private::setCommitPage( Page page )
+{
+    q->page( ResolveSignerPage )->setCommitPage( false );
+    q->page( ResolveRecipientsPage )->setCommitPage( false );
+    q->page( ObjectsPage )->setCommitPage( false );
+    q->page( ResultPage )->setCommitPage( false );
+    q->page( page )->setCommitPage( true );
+}
+
+
 void SignEncryptWizard::setMode( Mode mode ) {
+
     std::vector<int> pageOrder;
     switch ( mode )
     {
     case EncryptEMail:
         pageOrder.push_back( ResolveRecipientsPage );
         pageOrder.push_back( ResultPage );
+        d->setCommitPage( ResolveRecipientsPage );
         break;
     case SignEMail:
         pageOrder.push_back( ResolveSignerPage );
         pageOrder.push_back( ResultPage );
+        d->setCommitPage( ResolveSignerPage );
         break;
     case SignOrEncryptFiles:
         pageOrder.push_back( ResolveSignerPage );
         pageOrder.push_back( ObjectsPage );
         pageOrder.push_back( ResolveRecipientsPage );
         pageOrder.push_back( ResultPage );
+        d->setCommitPage( ResolveRecipientsPage );
         break;
     default:
         assuan_assert( !"Case not yet implemented" );
