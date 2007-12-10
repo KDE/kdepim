@@ -126,8 +126,7 @@ namespace Kleo {
         void signersResolved();
         void objectsResolved();
         void recipientsResolved();
-        void canceled();
-
+ 
     private:
         class Private;
         kdtools::pimpl_ptr<Private> d;

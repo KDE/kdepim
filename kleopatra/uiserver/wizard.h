@@ -43,7 +43,7 @@ namespace Kleo {
 
     class WizardPage;
 
-    class Wizard : public KDialog {
+    class Wizard : public QDialog {
         Q_OBJECT
             public:
         explicit Wizard( QWidget * parent=0, Qt::WFlags f=0 );
@@ -68,14 +68,19 @@ namespace Kleo {
         const WizardPage* currentPageWidget() const;
         WizardPage* currentPageWidget();
 
+        bool canGoToPreviousPage() const;
         bool canGoToNextPage() const;
-
 
     public Q_SLOTS:
         void next();
+        void back();
+
+    Q_SIGNALS:
+       void canceled();
 
     protected:
         virtual void onNext( int currentId );
+        virtual void onBack( int currentId );
 
     private:
         class Private;

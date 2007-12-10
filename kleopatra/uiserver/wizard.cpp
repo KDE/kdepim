@@ -34,9 +34,12 @@
 #include "wizardpage.h"
 #include "kleo-assuan.h"
 
+#include <KLocale>
 #include <KPushButton>
 
+#include <QDialogButtonBox>
 #include <QStackedWidget>
+#include <QVBoxLayout>
 #include <QWizard>
 
 #include <map>
@@ -54,15 +57,17 @@ public:
 
     void updateButtonStates();
     bool isLastPage( int id ) const;
-    KPushButton* nextButton() const;
+    int previousPage() const;
 
 private:
     std::vector<int> pageOrder;
     std::map<int, WizardPage*> idToPage;
     int currentId;
-    QStackedWidget * stack;
-    KGuiItem finishItem;
-    KGuiItem nextItem;
+    QStackedWidget* stack;
+    QPushButton* nextButton;
+    QPushButton* backButton;
+    QString finishItem;
+    QString nextItem;
 };
 
 
@@ -70,21 +75,36 @@ Wizard::Private::Private( Wizard * qq )
     : q( qq ), currentId( -1 ), stack( new QStackedWidget )
 {
     QWizard wiz;
-    nextItem = KGuiItem( wiz.buttonText( QWizard::NextButton ) );
-    finishItem = KGuiItem( wiz.buttonText( QWizard::FinishButton ) );
-    q->setButtons( KDialog::Try | KDialog::Cancel );
-    q->setMainWidget( stack );    
+    nextItem = wiz.buttonText( QWizard::NextButton );
+    finishItem = wiz.buttonText( QWizard::FinishButton );
+    QVBoxLayout * const grid = new QVBoxLayout( q );
+    grid->addWidget( stack );
+    QDialogButtonBox * const box = new QDialogButtonBox;
+    QAbstractButton* const cancelButton = box->addButton( QDialogButtonBox::Cancel );
+    q->connect( cancelButton, SIGNAL( clicked() ), q, SLOT( reject() ) );
+
+    backButton = new QPushButton;
+    backButton->setText( i18n( "Back" ) );
+    q->connect( backButton, SIGNAL( clicked() ), q, SLOT( back() ) );
+    box->addButton( backButton, QDialogButtonBox::ActionRole );
+
+    nextButton = new QPushButton;
+    nextButton->setText( nextItem );
+    q->connect( nextButton, SIGNAL( clicked() ), q, SLOT( next() ) );
+    box->addButton( nextButton, QDialogButtonBox::ActionRole );
+
+    grid->addWidget( box );
+    
+    //q->setButtons( KDialog::Try | KDialog::Cancel |  KDialog::Reset );
+    //q->setButtonGuiItem( KDialog::Reset, KGuiItem( i18n( "Back" ) )  );
+
+    q->connect( q, SIGNAL( rejected() ), q, SIGNAL( canceled() ) ); 
     q->resize( QSize( 640, 480 ).expandedTo( q->sizeHint() ) );
 }
 
 Wizard::Private::~Private() {}
 
 
-
-KPushButton * Wizard::Private::nextButton() const
-{
-    return q->button( KDialog::Try );
-}
 
 bool Wizard::Private::isLastPage( int id ) const
 {
@@ -94,13 +114,13 @@ bool Wizard::Private::isLastPage( int id ) const
 void Wizard::Private::updateButtonStates()
 {
     const bool isLast = isLastPage( currentId );
-    q->setButtonGuiItem( KDialog::Try, isLast ? finishItem : nextItem );
-    nextButton()->setEnabled( q->canGoToNextPage() );
-
+    nextButton->setText( isLast ? finishItem : nextItem );
+    nextButton->setEnabled( q->canGoToNextPage() );
+    backButton->setEnabled( q->canGoToPreviousPage() );
 }
 
 Wizard::Wizard( QWidget * parent, Qt::WFlags f )
-  : KDialog( parent, f ), d( new Private( this ) )
+  : QDialog( parent, f ), d( new Private( this ) )
 {
     
 }
@@ -157,6 +177,17 @@ bool Wizard::canGoToNextPage() const
     return current ? current->isComplete() : false;
 }
 
+bool Wizard::canGoToPreviousPage() const
+{
+    const int prev = d->previousPage();
+    if ( prev == InvalidPage ) 
+        return false;
+    const WizardPage * const prevPage = page( prev );
+    assert( prevPage );
+    return !prevPage->isCommitPage();
+}
+
+
 void Wizard::next()
 {
     std::vector<int>::const_iterator it = qBinaryFind( d->pageOrder.begin(), d->pageOrder.end(), d->currentId );
@@ -171,6 +202,27 @@ void Wizard::next()
     {
         setCurrentPage( *it );
     }
+}
+
+int Wizard::Private::previousPage() const
+{
+   if ( pageOrder.empty() )
+        return InvalidPage;
+
+    std::vector<int>::const_iterator it = qBinaryFind( pageOrder.begin(), pageOrder.end(), currentId );
+    if ( it == pageOrder.begin() || it == pageOrder.end() )
+        return InvalidPage;
+
+    --it;
+    return *it; 
+}
+
+void Wizard::back()
+{
+    const int prev = d->previousPage();
+    if ( prev == InvalidPage ) 
+        return;
+    setCurrentPage( prev );
 }
 
 const WizardPage* Wizard::page( int id ) const
@@ -195,6 +247,12 @@ WizardPage* Wizard::currentPageWidget()
 }
 
 void Wizard::onNext( int currentId )
+{
+    Q_UNUSED( currentId )
+}
+
+
+void Wizard::onBack( int currentId )
 {
     Q_UNUSED( currentId )
 }

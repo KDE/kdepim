@@ -68,9 +68,6 @@ public:
     explicit Private( SignEncryptWizard * qq );
     ~Private();
 
-    void restart();
-    WizardPage* currentWizardPage() const;
-    KPushButton* nextButton() const;
     void selectedProtocolChanged();
 
 private:
@@ -98,8 +95,6 @@ SignEncryptWizard::Private::Private( SignEncryptWizard * qq )
     q->setPage( SignEncryptWizard::ObjectsPage, objectsPage );
     q->setPage( SignEncryptWizard::ResolveRecipientsPage, recipientResolvePage );
     q->setPage( SignEncryptWizard::ResultPage, resultPage );
-    q->connect( q, SIGNAL( tryClicked() ), q, SLOT( next() ) );
-    q->connect( q, SIGNAL( rejected() ), q, SIGNAL( canceled() ) );
     q->resize( QSize( 640, 480 ).expandedTo( q->sizeHint() ) );
 }
 
@@ -119,10 +114,6 @@ void SignEncryptWizard::Private::selectedProtocolChanged()
         rr->setCertificates( keys[i] );
     }
 
-}
-
-void SignEncryptWizard::Private::restart()
-{
 }
 
 void SignEncryptWizard::onNext( int currentId )
