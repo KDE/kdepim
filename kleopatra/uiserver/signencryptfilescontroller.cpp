@@ -350,7 +350,6 @@ void SignEncryptFilesController::Private::ensureWizardCreated() {
         w = cmd->applyWindowID( w );
 
     w->setWindowTitle( titleForOperation( operation ) );
-    w->setMode( SignEncryptWizard::SignOrEncryptFiles );
 
     std::vector<int> pageOrder;
     pageOrder.push_back( SignEncryptWizard::ResolveSignerPage );

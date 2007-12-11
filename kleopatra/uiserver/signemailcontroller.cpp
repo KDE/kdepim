@@ -306,7 +306,6 @@ void SignEMailController::Private::ensureWizardCreated() {
         w = cmd->applyWindowID( w );
     // ### virtual hook here
     w->setWindowTitle( i18n("Sign Mail Message") );
-    w->setMode( SignEncryptWizard::SignEMail );
 
     std::vector<int> pageOrder;
     pageOrder.push_back( SignEncryptWizard::ResolveSignerPage );

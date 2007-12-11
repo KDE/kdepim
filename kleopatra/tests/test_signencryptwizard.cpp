@@ -60,7 +60,6 @@ int main( int argc, char** argv )
     ADD_EMAIL("bar@barfoo.org")
     ADD_EMAIL("foo@bar.com")
 #undef ADD_EMAIL
-    wizard.setMode( Kleo::SignEncryptWizard::EncryptEMail );
     wizard.setRecipients( list );
     wizard.show();
     return app.exec();

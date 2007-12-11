@@ -285,7 +285,6 @@ void EncryptEMailController::Private::ensureWizardCreated() const {
     if ( const shared_ptr<AssuanCommand> cmd = command.lock() )
         w = cmd->applyWindowID( w );
     w->setWindowTitle( i18n("Encrypt Mail Message") );
-    w->setMode( SignEncryptWizard::EncryptEMail );
    
     std::vector<int> pageOrder;
     pageOrder.push_back( SignEncryptWizard::ResolveRecipientsPage );

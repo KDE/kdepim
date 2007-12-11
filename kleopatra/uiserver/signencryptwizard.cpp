@@ -65,9 +65,6 @@ public:
 
     void setCommitPage( Page page );
 
-private:
-    Mode mode;
-
     RecipientResolvePage * recipientResolvePage;
     SignerResolvePage * signerResolvePage;
     Kleo::ObjectsPage * objectsPage;
@@ -77,7 +74,6 @@ private:
 
 SignEncryptWizard::Private::Private( SignEncryptWizard * qq )
     : q( qq ),
-      mode( EncryptOrSignFiles ),
       recipientResolvePage( new RecipientResolvePage ),
       signerResolvePage( new SignerResolvePage ),
       objectsPage( new Kleo::ObjectsPage ),
@@ -125,14 +121,7 @@ void SignEncryptWizard::Private::setCommitPage( Page page )
     q->page( page )->setCommitPage( true );
 }
 
-
-void SignEncryptWizard::setMode( Mode mode ) {
-
-    d->mode = mode;
-}
-
 void SignEncryptWizard::setPresetProtocol( Protocol proto ) {
-    assuan_assert( d->mode == EncryptEMail || d->mode == SignEMail || d->mode == SignOrEncryptFiles );
     d->signerResolvePage->setProtocol( proto );
     d->recipientResolvePage->setPresetProtocol( proto );
 }
@@ -209,12 +198,10 @@ bool SignEncryptWizard::encryptionSelected() const {
 }
 
 void SignEncryptWizard::setRecipients( const std::vector<Mailbox> & recipients ) {
-    assuan_assert( d->mode == EncryptEMail );
     d->recipientResolvePage->setRecipients( recipients );
 }
 
-void SignEncryptWizard::setSignersAndCandidates( const std::vector<Mailbox> & signers, const std::vector< std::vector<Key> > & keys ) {;
-    assuan_assert( d->mode == SignEMail );
+void SignEncryptWizard::setSignersAndCandidates( const std::vector<Mailbox> & signers, const std::vector< std::vector<Key> > & keys ) {
     d->signerResolvePage->setSignersAndCandidates( signers, keys );
 }
 

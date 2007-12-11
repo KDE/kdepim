@@ -74,14 +74,6 @@ namespace Kleo {
             ResultPage
         };
 
-        enum Mode {
-            EncryptEMail,
-            SignEMail,
-            EncryptOrSignFiles,
-            SignOrEncryptFiles = EncryptOrSignFiles
-        };
-        void setMode( Mode mode );
-
         void setCommitPage( Page );
 
         GpgME::Protocol presetProtocol() const;
