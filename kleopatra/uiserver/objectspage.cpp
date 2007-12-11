@@ -42,6 +42,8 @@
 #include <QStringList>
 #include <QVBoxLayout>
 
+#include <cassert>
+
 using namespace Kleo;
 
 class ObjectsPage::Private {
