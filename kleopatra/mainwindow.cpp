@@ -39,6 +39,7 @@
 #include "models/keylistmodel.h"
 #include "models/keylistsortfilterproxymodel.h"
 #include "controllers/keylistcontroller.h"
+#include "commands/importcertificatecommand.h"
 #include "commands/refreshkeyscommand.h"
 
 #include <KActionCollection>
@@ -52,6 +53,7 @@
 #include <QLabel>
 #include <QLineEdit>
 #include <QComboBox>
+#include <QFileDialog>
 #include <QToolBar>
 #include <QWidgetAction>
 #include <QProgressBar>
@@ -87,6 +89,8 @@ class MainWindow::Private {
 public:
     explicit Private( MainWindow * qq );
     ~Private();
+
+    void importCertificates();
 
 private:
     void setupActions();
@@ -196,6 +200,19 @@ void MainWindow::Private::setupActions()
              &ui.tabWidget, SLOT( setFilter( QString ) ) );
     searchBarAction->setDefaultWidget( searchBar );
     coll->addAction( "key_search_bar", searchBarAction );
+
+    QAction* action = coll->addAction( "file_import_certificates" );
+    action->setText( i18n( "Import Certificates..." ) );
+    connect( action, SIGNAL( triggered( bool ) ), q, SLOT( importCertificates() ) );
+    action->setShortcuts( KShortcut( "Ctrl+I" ) );
+   
+}
+
+void MainWindow::Private::importCertificates()
+{
+    ImportCertificateCommand* const cmd = new ImportCertificateCommand( &controller );
+    cmd->setParentWidget( q );
+    cmd->start();
 }
 
 void MainWindow::closeEvent( QCloseEvent * e ) {

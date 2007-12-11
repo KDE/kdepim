@@ -97,6 +97,7 @@ set( _kleopatra_common_SRCS
    ${_kleopatra_uiserver_files}
    commands/command.cpp
    commands/detailscommand.cpp
+   commands/importcertificatecommand.cpp
    commands/refreshkeyscommand.cpp
    controllers/keylistcontroller.cpp
    models/keycache.cpp

@@ -1,5 +1,5 @@
 /* -*- mode: c++; c-basic-offset:4 -*-
-    mainwindow.h
+    importcertificatecommand.h
 
     This file is part of Kleopatra, the KDE keymanager
     Copyright (c) 2007 Klarälvdalens Datakonsult AB
@@ -30,27 +30,41 @@
     your version.
 */
 
-#ifndef __KLEOPATRA_MAINWINDOW_H__
-#define __KLEOPATRA_MAINWINDOW_H__
+#ifndef __KLEOPATRA_IMPORTCERTIFICATECOMMAND_H__
+#define __KLEOPATRA_IMPORTCERTIFICATECOMMAND_H__
 
-#include <KXmlGuiWindow>
+#include "command.h"
 
 #include <utils/pimpl_ptr.h>
 
-class MainWindow : public KXmlGuiWindow {
-    Q_OBJECT
-public:
-    explicit MainWindow( QWidget * parent=0, Qt::WindowFlags f=KDE_DEFAULT_WINDOWFLAGS );
-    ~MainWindow();
 
-protected:
-    void closeEvent( QCloseEvent * e );
+namespace GpgME {
+    class ImportResult;
+}
 
-private:
-    class Private;
-    kdtools::pimpl_ptr<Private> d;
-    Q_PRIVATE_SLOT( d, void importCertificates() );
-};
+namespace Kleo {
 
+    class ImportCertificateCommand : public Command {
+        Q_OBJECT
+    public:
+        explicit ImportCertificateCommand( KeyListController * parent );
+        ~ImportCertificateCommand();
+    
+        void setParentWidget( QWidget* widget );
 
-#endif /* __KLEOPATRA_MAINWINDOW_H__ */
+        QString fileName() const;
+        void setFileName( const QString& fileName );
+
+    private:
+        /* reimp */ void doStart();
+        /* reimp */ void doCancel();
+
+    private:
+        class Private;
+        kdtools::pimpl_ptr<Private> d;
+        Q_PRIVATE_SLOT( d, void importResult( GpgME::ImportResult ) );
+    };
+}
+
+#endif // __KLEOPATRA_IMPORTCERTIFICATECOMMAND_H__
+
