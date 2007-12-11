@@ -118,6 +118,12 @@ namespace Kleo {
         std::vector<GpgME::Key> resolvedCertificates() const;
         std::vector<GpgME::Key> resolvedSigners() const;
 
+        bool isAsciiArmorEnabled() const;
+        void setAsciiArmorEnabled( bool enabled );
+
+        bool removeUnencryptedFile() const;
+        void setRemoveUnencryptedFile( bool remove );
+
         /*reimp*/ void onNext( int currentId );
 
     Q_SIGNALS:

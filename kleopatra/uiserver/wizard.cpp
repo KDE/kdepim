@@ -293,4 +293,3 @@ WizardPage* Wizard::page( int id )
 }
 
 #include "moc_wizard.cpp"
-

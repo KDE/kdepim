@@ -291,5 +291,24 @@ std::vector<Key> SignEncryptWizard::resolvedSigners() const {
     return d->signerResolvePage->resolvedSigners();
 }
 
+bool SignEncryptWizard::isAsciiArmorEnabled() const
+{
+    return d->signerResolvePage->isAsciiArmorEnabled();
+}
+
+void SignEncryptWizard::setAsciiArmorEnabled( bool enabled )
+{
+    d->signerResolvePage->setAsciiArmorEnabled( enabled );
+}
+
+bool SignEncryptWizard::removeUnencryptedFile() const
+{
+   return d->signerResolvePage->removeUnencryptedFile();
+}
+
+void SignEncryptWizard::setRemoveUnencryptedFile( bool remove )
+{
+    d->signerResolvePage->setRemoveUnencryptedFile( remove );
+}
 
 #include "moc_signencryptwizard.cpp"

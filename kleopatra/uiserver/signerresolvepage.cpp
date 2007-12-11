@@ -336,7 +336,27 @@ void SignerResolvePage::setSigningUserMutable( bool ismutable )
 {
     d->signingMutable = ismutable;
     d->updateModeSelectionWidgets();
+}
 
+
+bool SignerResolvePage::isAsciiArmorEnabled() const
+{
+    return d->textArmorCO->isChecked();
+}
+
+void SignerResolvePage::setAsciiArmorEnabled( bool enabled )
+{
+    d->textArmorCO->setChecked( enabled );
+}
+
+bool SignerResolvePage::removeUnencryptedFile() const
+{
+    return d->removeUnencryptedCO->isChecked();
+}
+
+void SignerResolvePage::setRemoveUnencryptedFile( bool remove )
+{
+    d->removeUnencryptedCO->setChecked( remove );
 }
 
 #include "moc_signerresolvepage.cpp"

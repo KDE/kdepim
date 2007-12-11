@@ -76,6 +76,11 @@ namespace Kleo {
         bool isSigningUserMutable() const;
         void setSigningUserMutable( bool ismutable );
 
+        bool isAsciiArmorEnabled() const;
+        void setAsciiArmorEnabled( bool enabled );
+
+        bool removeUnencryptedFile() const;
+        void setRemoveUnencryptedFile( bool remove );
 
         void setProtocol( GpgME::Protocol protocol );
         GpgME::Protocol protocol() const;
