@@ -286,6 +286,13 @@ void EncryptEMailController::Private::ensureWizardCreated() const {
         w = cmd->applyWindowID( w );
     w->setWindowTitle( i18n("Encrypt Mail Message") );
     w->setMode( SignEncryptWizard::EncryptEMail );
+   
+    std::vector<int> pageOrder;
+    pageOrder.push_back( SignEncryptWizard::ResolveRecipientsPage );
+    pageOrder.push_back( SignEncryptWizard::ResultPage );
+    w->setPageOrder( pageOrder );
+    w->setCommitPage( SignEncryptWizard::ResolveRecipientsPage );
+
     w->setAttribute( Qt::WA_DeleteOnClose );
     connect( w.get(), SIGNAL(recipientsResolved()), q, SLOT(slotWizardRecipientsResolved()), Qt::QueuedConnection );
     connect( w.get(), SIGNAL(canceled()), q, SLOT(slotWizardCanceled()), Qt::QueuedConnection );

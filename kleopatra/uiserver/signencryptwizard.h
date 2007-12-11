@@ -82,6 +82,8 @@ namespace Kleo {
         };
         void setMode( Mode mode );
 
+        void setCommitPage( Page );
+
         GpgME::Protocol presetProtocol() const;
         void setPresetProtocol( GpgME::Protocol proto );
 

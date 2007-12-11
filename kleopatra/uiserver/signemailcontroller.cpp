@@ -307,6 +307,13 @@ void SignEMailController::Private::ensureWizardCreated() {
     // ### virtual hook here
     w->setWindowTitle( i18n("Sign Mail Message") );
     w->setMode( SignEncryptWizard::SignEMail );
+
+    std::vector<int> pageOrder;
+    pageOrder.push_back( SignEncryptWizard::ResolveSignerPage );
+    pageOrder.push_back( SignEncryptWizard::ResultPage );
+    w->setPageOrder( pageOrder );
+    w->setCommitPage( SignEncryptWizard::ResolveSignerPage );
+
     // ### end virtual hook
     w->setAttribute( Qt::WA_DeleteOnClose );
     connect( w.get(), SIGNAL(signersResolved()), q, SLOT(slotWizardSignersResolved()), Qt::QueuedConnection );

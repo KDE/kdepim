@@ -111,6 +111,11 @@ SignEncryptWizard::SignEncryptWizard( QWidget * p, Qt::WindowFlags f )
 
 SignEncryptWizard::~SignEncryptWizard() {}
 
+void SignEncryptWizard::setCommitPage( Page page )
+{
+    d->setCommitPage( page );
+}
+
 void SignEncryptWizard::Private::setCommitPage( Page page )
 {
     q->page( ResolveSignerPage )->setCommitPage( false );
@@ -123,32 +128,6 @@ void SignEncryptWizard::Private::setCommitPage( Page page )
 
 void SignEncryptWizard::setMode( Mode mode ) {
 
-    std::vector<int> pageOrder;
-    switch ( mode )
-    {
-    case EncryptEMail:
-        pageOrder.push_back( ResolveRecipientsPage );
-        pageOrder.push_back( ResultPage );
-        d->setCommitPage( ResolveRecipientsPage );
-        break;
-    case SignEMail:
-        pageOrder.push_back( ResolveSignerPage );
-        pageOrder.push_back( ResultPage );
-        d->setCommitPage( ResolveSignerPage );
-        break;
-    case SignOrEncryptFiles:
-        pageOrder.push_back( ResolveSignerPage );
-        pageOrder.push_back( ObjectsPage );
-        pageOrder.push_back( ResolveRecipientsPage );
-        pageOrder.push_back( ResultPage );
-        d->setCommitPage( ResolveRecipientsPage );
-        break;
-    default:
-        assuan_assert( !"Case not yet implemented" );
-        break;
-    }
-    setPageOrder( pageOrder );
-    setCurrentPage( pageOrder.front() );
     d->mode = mode;
 }
 

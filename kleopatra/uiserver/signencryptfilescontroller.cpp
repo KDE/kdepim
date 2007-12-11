@@ -351,6 +351,15 @@ void SignEncryptFilesController::Private::ensureWizardCreated() {
 
     w->setWindowTitle( titleForOperation( operation ) );
     w->setMode( SignEncryptWizard::SignOrEncryptFiles );
+
+    std::vector<int> pageOrder;
+    pageOrder.push_back( SignEncryptWizard::ResolveSignerPage );
+    pageOrder.push_back( SignEncryptWizard::ObjectsPage );
+    pageOrder.push_back( SignEncryptWizard::ResolveRecipientsPage );
+    pageOrder.push_back( SignEncryptWizard::ResultPage );
+    w->setPageOrder( pageOrder );
+    w->setCommitPage( SignEncryptWizard::ResolveRecipientsPage );
+
     w->setAttribute( Qt::WA_DeleteOnClose );
     connect( w.get(), SIGNAL(objectsResolved()), q, SLOT(slotWizardObjectsResolved()), Qt::QueuedConnection );
     connect( w.get(), SIGNAL(recipientsResolved()), q, SLOT(slotWizardRecipientsResolved()), Qt::QueuedConnection );

@@ -158,6 +158,9 @@ void Wizard::setPage( int id, WizardPage* widget )
 void Wizard::setPageOrder( const std::vector<int>& pageOrder )
 {
     d->pageOrder = pageOrder;
+    if ( pageOrder.empty() )
+        return;
+    setCurrentPage( pageOrder.front() );
 }
 
 void Wizard::setCurrentPage( int id )
