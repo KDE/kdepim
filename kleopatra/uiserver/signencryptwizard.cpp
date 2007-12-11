@@ -32,7 +32,6 @@
 
 #include "signencryptwizard.h"
 
-#include "certificateresolver.h"
 #include "objectspage.h"
 #include "recipientresolvepage.h"
 #include "signerresolvepage.h"
@@ -42,8 +41,6 @@
 #include "kleo-assuan.h"
 
 #include <utils/stl_util.h>
-
-#include <kmime/kmime_header_parsing.h>
 
 #include <gpgme++/key.h>
 
@@ -66,11 +63,9 @@ public:
     explicit Private( SignEncryptWizard * qq );
     ~Private();
 
-    void selectedProtocolChanged();
     void setCommitPage( Page page );
 
 private:
-    std::vector<Mailbox> recipients;
     Mode mode;
 
     RecipientResolvePage * recipientResolvePage;
@@ -88,8 +83,6 @@ SignEncryptWizard::Private::Private( SignEncryptWizard * qq )
       objectsPage( new Kleo::ObjectsPage ),
       resultPage( new WizardResultPage )
 {
-    q->connect( recipientResolvePage, SIGNAL( selectedProtocolChanged() ),
-             q, SLOT( selectedProtocolChanged() ) );
     q->setPage( SignEncryptWizard::ResolveSignerPage, signerResolvePage );
     q->setPage( SignEncryptWizard::ObjectsPage, objectsPage );
     q->setPage( SignEncryptWizard::ResolveRecipientsPage, recipientResolvePage );
@@ -97,23 +90,6 @@ SignEncryptWizard::Private::Private( SignEncryptWizard * qq )
     q->resize( QSize( 640, 480 ).expandedTo( q->sizeHint() ) );
 }
 
-void SignEncryptWizard::Private::selectedProtocolChanged()
-{
-    //TODO: this slot is a temporary workaround to keep the 
-    // recipient resolving in the wizard for now. should be 
-    // changed when reworking the recipientresolvepage
-    const std::vector< std::vector<Key> > keys = CertificateResolver::resolveRecipients( recipients, q->selectedProtocol() );
-    assuan_assert( !keys.empty() );
-    assuan_assert( keys.size() == static_cast<size_t>( recipients.size() ) );
-
-    for ( unsigned int i = 0, end = keys.size() ; i < end ; ++i ) {
-        RecipientResolveWidget * const rr = recipientResolvePage->recipientResolveWidget( i );
-        assuan_assert( rr );
-        rr->setIdentifier( recipients[i].prettyAddress() );
-        rr->setCertificates( keys[i] );
-    }
-
-}
 
 void SignEncryptWizard::onNext( int currentId )
 {
@@ -255,9 +231,7 @@ bool SignEncryptWizard::encryptionSelected() const {
 
 void SignEncryptWizard::setRecipients( const std::vector<Mailbox> & recipients ) {
     assuan_assert( d->mode == EncryptEMail );
-    d->recipients = recipients;
-    d->recipientResolvePage->ensureIndexAvailable( recipients.size() - 1 );
-    d->selectedProtocolChanged();
+    d->recipientResolvePage->setRecipients( recipients );
 }
 
 void SignEncryptWizard::setSignersAndCandidates( const std::vector<Mailbox> & signers, const std::vector< std::vector<Key> > & keys ) {;
@@ -281,10 +255,7 @@ void SignEncryptWizard::connectTask( const shared_ptr<Task> & task, unsigned int
 }
 
 std::vector<Key> SignEncryptWizard::resolvedCertificates() const {
-    std::vector<Key> result;
-    for ( unsigned int i = 0, end = d->recipientResolvePage->numRecipientResolveWidgets() ; i < end ; ++i )
-        result.push_back( d->recipientResolvePage->recipientResolveWidget( i )->chosenCertificate() );
-    return result;
+    return d->recipientResolvePage->resolvedCertificates();
 }
 
 std::vector<Key> SignEncryptWizard::resolvedSigners() const {

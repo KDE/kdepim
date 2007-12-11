@@ -47,6 +47,12 @@ namespace GpgME {
     class Key;
 }
 
+namespace KMime {
+namespace Types {
+    class Mailbox;
+}
+}
+
 namespace Kleo {
 
     class RecipientResolveWidget : public QWidget {
@@ -99,11 +105,6 @@ namespace Kleo {
         GpgME::Protocol presetProtocol() const;
         void setPresetProtocol( GpgME::Protocol protocol );
 
-        unsigned int numRecipientResolveWidgets() const;
-        RecipientResolveWidget * recipientResolveWidget( unsigned int idx ) const;
-
-        void ensureIndexAvailable( unsigned int idx );
-
         bool isMultipleProtocolsAllowed() const;
         void setMultipleProtocolsAllowed( bool allowed );
 
@@ -116,8 +117,16 @@ namespace Kleo {
         bool symmetricEncryptionSelectable() const;
         void setSymmetricEncryptionSelectable( bool selectable );
 
+        void setRecipients( const std::vector<KMime::Types::Mailbox>& recipients );
+        std::vector<GpgME::Key> resolvedCertificates() const;
+
     Q_SIGNALS:
         void selectedProtocolChanged();
+
+    private:
+        unsigned int numRecipientResolveWidgets() const;
+        RecipientResolveWidget * recipientResolveWidget( unsigned int idx ) const;
+        void ensureIndexAvailable( unsigned int idx );
  
     private:
         class Private;

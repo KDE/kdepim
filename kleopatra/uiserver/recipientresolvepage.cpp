@@ -32,10 +32,14 @@
 
 #include "recipientresolvepage.h"
 #include "keyselectiondialog.h"
+#include "kleo-assuan.h"
 #include "models/keycache.h"
 #include "utils/formatting.h"
+#include "certificateresolver.h"
 
 #include <gpgme++/key.h>
+
+#include <kmime/kmime_header_parsing.h>
 
 #include <KLocale>
 
@@ -57,6 +61,8 @@
 #include <cassert>
  
 using namespace Kleo;
+using namespace KMime::Types;
+using namespace GpgME;
 
 class Kleo::RecipientResolvePage::Private {
     friend class ::RecipientResolvePage;
@@ -67,6 +73,7 @@ public:
     void addWidgetForIdentifier( const QString& identifier );
     void protocolSelected( int );
     void setSelectedProtocol( GpgME::Protocol protocol );
+    void protocolChanged();
 
     void updateRadioButtonVisibility();
     void addRecipient();
@@ -94,6 +101,7 @@ public:
         Asymmetric
     };
     bool symmetricEncryptionSelectable;
+    std::vector<Mailbox> recipients;
 };
 
 
@@ -180,6 +188,7 @@ bool RecipientResolvePage::isComplete() const
     return true;
 }
 
+
 QString RecipientResolvePage::explanatoryText() const
 {
     return d->explanationLabel->text();
@@ -201,7 +210,29 @@ void RecipientResolvePage::Private::protocolSelected( int protocol )
 {
     assert( !allowMultipleProtocols );
     setSelectedProtocol( static_cast<GpgME::Protocol>( protocol ) );
-    emit q->selectedProtocolChanged();
+    protocolChanged();
+}
+
+
+void RecipientResolvePage::setRecipients( const std::vector<Mailbox>& recipients )
+{
+    d->recipients = recipients;
+    ensureIndexAvailable( recipients.size()-1 );
+    d->protocolChanged();
+}
+
+void RecipientResolvePage::Private::protocolChanged()
+{
+    const std::vector< std::vector<Key> > keys = CertificateResolver::resolveRecipients( recipients, q->selectedProtocol() );
+    assuan_assert( !keys.empty() );
+    assuan_assert( keys.size() == static_cast<size_t>( recipients.size() ) );
+
+    for ( unsigned int i = 0, end = keys.size() ; i < end ; ++i ) {
+        RecipientResolveWidget * const rr = q->recipientResolveWidget( i );
+        assuan_assert( rr );
+        rr->setIdentifier( recipients[i].prettyAddress() );
+        rr->setCertificates( keys[i] );
+    }
 }
 
 void RecipientResolvePage::Private::setSelectedProtocol( GpgME::Protocol protocol )
@@ -254,6 +285,15 @@ void RecipientResolvePage::ensureIndexAvailable( unsigned int idx )
 unsigned int RecipientResolvePage::numRecipientResolveWidgets() const
 {
     return d->widgets.size();
+}
+
+std::vector<GpgME::Key> RecipientResolvePage::resolvedCertificates() const
+{
+
+    std::vector<Key> result;
+    for ( unsigned int i = 0, end = numRecipientResolveWidgets(); i < end; ++i )
+        result.push_back( recipientResolveWidget( i )->chosenCertificate() );
+    return result;
 }
 
 RecipientResolveWidget * RecipientResolvePage::recipientResolveWidget( unsigned int idx ) const
