@@ -107,6 +107,15 @@ namespace Kleo {
         bool isMultipleProtocolsAllowed() const;
         void setMultipleProtocolsAllowed( bool allowed );
 
+        QString explanatoryText() const;
+        void setExplanatoryText( const QString& text );
+
+        bool symmetricEncryptionEnabled() const;
+        void setSymmetricEncryptionEnabled( bool enabled );
+        
+        bool symmetricEncryptionSelectable() const;
+        void setSymmetricEncryptionSelectable( bool selectable );
+
     Q_SIGNALS:
         void selectedProtocolChanged();
  
@@ -116,6 +125,7 @@ namespace Kleo {
         Q_PRIVATE_SLOT( d, void protocolSelected( int ) );
         Q_PRIVATE_SLOT( d, void addRecipient() );
         Q_PRIVATE_SLOT( d, void removeRecipient() );
+        Q_PRIVATE_SLOT( d, void modeSelected( int ) );
     };
 }
 

@@ -71,6 +71,7 @@ public:
     void updateRadioButtonVisibility();
     void addRecipient();
     void removeRecipient();
+    void modeSelected( int );
 
 //    void completionStateChanged( const QString& id );
     void clear();
@@ -79,18 +80,25 @@ public:
     QPushButton* addRecipientButton;
     QPushButton* removeRecipientButton;
     QScrollArea* scrollArea;
+    QLabel* explanationLabel;
     QVBoxLayout* lineLayout;
     std::vector<RecipientResolveWidget*> widgets;
     QStringList identifiers;
     GpgME::Protocol presetProtocol;
     GpgME::Protocol selectedProtocol;
- 
+    QRadioButton* symmetricRB;
+    QRadioButton* asymmetricRB;
     bool allowMultipleProtocols;
+    enum Mode {
+        Symmetric,
+        Asymmetric
+    };
+    bool symmetricEncryptionSelectable;
 };
 
 
 RecipientResolvePage::Private::Private( RecipientResolvePage * qq )
-    : q( qq ), presetProtocol( GpgME::UnknownProtocol ), selectedProtocol( presetProtocol ), allowMultipleProtocols( false )
+    : q( qq ), presetProtocol( GpgME::UnknownProtocol ), selectedProtocol( presetProtocol ), allowMultipleProtocols( false ), symmetricEncryptionSelectable( false )
 {
 }
 
@@ -101,6 +109,23 @@ RecipientResolvePage::RecipientResolvePage( QWidget * parent )
 {
     QVBoxLayout* const top = new QVBoxLayout( this );
     QButtonGroup* const buttonGroup = new QButtonGroup( this );
+    d->explanationLabel = new QLabel;
+    d->explanationLabel->setWordWrap( true );
+    top->addWidget( d->explanationLabel );
+    QButtonGroup* symAsymGroup = new QButtonGroup( this );
+    connect( symAsymGroup, SIGNAL( clicked( int ) ), 
+             this, SLOT( modeSelected( int ) ) );
+    d->symmetricRB = new QRadioButton;
+    d->symmetricRB->setText( i18n( "Encrypt with passphrase only" ) );
+    symAsymGroup->addButton( d->symmetricRB, Private::Symmetric );
+    top->addWidget( d->symmetricRB );
+    d->symmetricRB->setVisible( false );
+    d->asymmetricRB = new QRadioButton;
+    d->asymmetricRB->setText( i18n( "Encrypt to recipient certificates" ) );
+    d->asymmetricRB->setChecked( true );
+    symAsymGroup->addButton( d->asymmetricRB, Private::Asymmetric );
+    top->addWidget( d->asymmetricRB );
+    d->asymmetricRB->setVisible( false );
     d->pgpRB = new QRadioButton;
     d->pgpRB->setText( i18n( "OpenPGP" ) );
     d->pgpRB->setChecked( true );
@@ -153,6 +178,16 @@ bool RecipientResolvePage::isComplete() const
             return false;
     }
     return true;
+}
+
+QString RecipientResolvePage::explanatoryText() const
+{
+    return d->explanationLabel->text();
+}
+
+void RecipientResolvePage::setExplanatoryText( const QString& text )
+{
+    d->explanationLabel->setText( text );
 }
 
 void RecipientResolvePage::setIdentifiers( const QStringList& ids )
@@ -407,6 +442,42 @@ void RecipientResolvePage::Private::addRecipient()
 void RecipientResolvePage::Private::removeRecipient()
 {
     emit q->completeChanged();
+}
+
+bool RecipientResolvePage::symmetricEncryptionEnabled() const
+{
+    return d->symmetricRB->isChecked();
+}
+
+void RecipientResolvePage::setSymmetricEncryptionEnabled( bool enabled )
+{
+    d->symmetricRB->setChecked( enabled );
+}
+        
+bool RecipientResolvePage::symmetricEncryptionSelectable() const
+{
+       return d->symmetricRB->isVisible(); 
+}
+
+void RecipientResolvePage::setSymmetricEncryptionSelectable( bool selectable )
+{
+    d->symmetricRB->setVisible( selectable );
+    d->asymmetricRB->setVisible( selectable );
+    if ( !selectable )
+        d->asymmetricRB->setChecked( true );
+}
+
+void RecipientResolvePage::Private::modeSelected( int mode )
+{
+    assert( mode == Private::Symmetric || mode == Private::Asymmetric );
+    if ( mode == Private::Symmetric )
+    {
+        q->setExplanatoryText( i18n( "You have chosen to apply symmetric encryption. This means that just the passphrase is sufficient to decrypt. You must provide anyone with the passphrase who should be able to decrypt. Please ensure a secure transfer of the passphrase. You should consider asymmetric encryption to avoid the problem of secure passphrase transfer." ) );
+    }
+    else
+    {
+        q->setExplanatoryText( QString() );
+    }
 }
 
 
