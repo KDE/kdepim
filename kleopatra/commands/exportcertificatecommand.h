@@ -1,5 +1,5 @@
 /* -*- mode: c++; c-basic-offset:4 -*-
-    mainwindow.h
+    exportcertificatecommand.h
 
     This file is part of Kleopatra, the KDE keymanager
     Copyright (c) 2007 Klarälvdalens Datakonsult AB
@@ -30,28 +30,31 @@
     your version.
 */
 
-#ifndef __KLEOPATRA_MAINWINDOW_H__
-#define __KLEOPATRA_MAINWINDOW_H__
+#ifndef __KLEOPATRA_EXPORTCERTIFICATECOMMAND_H__
+#define __KLEOPATRA_EXPORTCERTIFICATECOMMAND_H__
 
-#include <KXmlGuiWindow>
+#include "Command.h"
 
 #include <utils/pimpl_ptr.h>
 
-class MainWindow : public KXmlGuiWindow {
-    Q_OBJECT
-public:
-    explicit MainWindow( QWidget * parent=0, Qt::WindowFlags f=KDE_DEFAULT_WINDOWFLAGS );
-    ~MainWindow();
+namespace Kleo {
+    class ExportCertificateCommand : public Command {
+        Q_OBJECT
+    public:
+        explicit ExportCertificateCommand( KeyListController * parent );
+        ~ExportCertificateCommand();
 
-protected:
-    void closeEvent( QCloseEvent * e );
+        void setParentWidget( QWidget* parent );
 
-private:
-    class Private;
-    kdtools::pimpl_ptr<Private> d;
-    Q_PRIVATE_SLOT( d, void importCertificates() );
-    Q_PRIVATE_SLOT( d, void exportCertificates() );
-};
+    private:
+        /* reimp */ void doStart();
+        /* reimp */ void doCancel();
 
+    private:
+        class Private;
+        kdtools::pimpl_ptr<Private> d;
+    };
+}
 
-#endif /* __KLEOPATRA_MAINWINDOW_H__ */
+#endif // __KLEOPATRA_EXPORTCERTIFICATECOMMAND_H__
+

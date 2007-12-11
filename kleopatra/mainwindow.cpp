@@ -39,6 +39,7 @@
 #include "models/keylistmodel.h"
 #include "models/keylistsortfilterproxymodel.h"
 #include "controllers/keylistcontroller.h"
+#include "commands/exportcertificatecommand.h"
 #include "commands/importcertificatecommand.h"
 #include "commands/refreshkeyscommand.h"
 
@@ -90,6 +91,7 @@ public:
     explicit Private( MainWindow * qq );
     ~Private();
 
+    void exportCertificates();
     void importCertificates();
 
 private:
@@ -205,7 +207,19 @@ void MainWindow::Private::setupActions()
     action->setText( i18n( "Import Certificates..." ) );
     connect( action, SIGNAL( triggered( bool ) ), q, SLOT( importCertificates() ) );
     action->setShortcuts( KShortcut( "Ctrl+I" ) );
+
+    action->setText( i18n( "Export Certificates..." ) );
+    connect( action, SIGNAL( triggered( bool ) ), q, SLOT( exportCertificates() ) );
+    action->setShortcuts( KShortcut( "Ctrl+E" ) );
    
+}
+
+
+void MainWindow::Private::exportCertificates()
+{
+    ExportCertificateCommand* const cmd = new ExportCertificateCommand( &controller );
+    cmd->setParentWidget( q );
+    cmd->start();
 }
 
 void MainWindow::Private::importCertificates()
