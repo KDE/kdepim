@@ -104,7 +104,7 @@ Wizard::Private::Private( Wizard * qq )
     q->connect( cancelButton, SIGNAL( clicked() ), q, SLOT( reject() ) );
 
     backButton = new QPushButton;
-    backButton->setText( i18n( "Back" ) );
+    backButton->setText( wiz.buttonText( QWizard::BackButton ) );
     q->connect( backButton, SIGNAL( clicked() ), q, SLOT( back() ) );
     box->addButton( backButton, QDialogButtonBox::ActionRole );
 
@@ -115,8 +115,6 @@ Wizard::Private::Private( Wizard * qq )
 
     contentLayout->addWidget( box );
     top->addWidget( contentWidget );
-    //q->setButtons( KDialog::Try | KDialog::Cancel |  KDialog::Reset );
-    //q->setButtonGuiItem( KDialog::Reset, KGuiItem( i18n( "Back" ) )  );
 
     q->connect( q, SIGNAL( rejected() ), q, SIGNAL( canceled() ) ); 
     q->resize( QSize( 640, 480 ).expandedTo( q->sizeHint() ) );
