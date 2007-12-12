@@ -1,12 +1,11 @@
 <!DOCTYPE kpartgui >
-<kpartgui name="kleopatra" version="390" >
+<kpartgui name="kleopatra" version="393" >
 <MenuBar>
 	<Menu name="file">
 		<text>&amp;File</text>
-<!--
 		<Action name="file_new_certificate"/>
 		<Separator/>
-		<Action name="file_export_certificate"/>
+		<Action name="file_export_certificates"/>
 		<Action name="file_export_secret_keys"/>
 		<Separator/>
 		<Action name="file_import_certificates"/>		        
@@ -14,6 +13,7 @@
 		<Separator/>
 		<Action name="quit" />
 	</Menu>
+<!--
 	<Menu name="view">
 		<text>&amp;View</text>
 		<Action name="view_stop_operations"/>
@@ -28,10 +28,8 @@
 		<text>&amp;Certificates</text>
 		<Action name="certificates_validate"/>
 		<Action name="certificates_refresh_clr"/>
-<!--
 		<Action name="edit_revoke_certificate"/>
 		<Action name="edit_extend_certificate"/>
--->
 		<Action name="edit_delete_certificate"/>
 		<Action name="download_certificate"/>
 	</Menu>
@@ -48,9 +46,9 @@
                 <text>&amp;Settings</text>
 		<Action name="configure_gpgme"/>
 	</Menu>
+-->
         <Menu name="help"/>
         </Menu>
--->
 </MenuBar>
 
 <ToolBar position="Top" iconText="IconOnly" noMerge="1" name="searchToolBar" >
