@@ -121,7 +121,7 @@ RecipientResolvePage::RecipientResolvePage( QWidget * parent )
     d->explanationLabel->setWordWrap( true );
     top->addWidget( d->explanationLabel );
     QButtonGroup* symAsymGroup = new QButtonGroup( this );
-    connect( symAsymGroup, SIGNAL( clicked( int ) ), 
+    connect( symAsymGroup, SIGNAL( buttonClicked( int ) ), 
              this, SLOT( modeSelected( int ) ) );
     d->symmetricRB = new QRadioButton;
     d->symmetricRB->setText( i18n( "Encrypt with passphrase only" ) );
