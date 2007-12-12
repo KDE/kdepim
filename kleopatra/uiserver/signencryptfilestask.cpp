@@ -188,7 +188,7 @@ void SignEncryptFilesTask::setEncrypt( bool encrypt ) {
 }
 
 void SignEncryptFilesTask::setAsciiArmor( bool ascii ) {
-    assuan_assert( !d->ascii );
+    assuan_assert( !d->job );
     d->ascii = ascii;
 }
 
