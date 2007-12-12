@@ -158,3 +158,14 @@ QString Kleo::outputFileName( const QString & inputFileName ) {
     else
         return chopped( inputFileName, 4 );
 }
+
+/*!
+  \return the commonly used extension for files of type
+  \a classification, or NULL if none such exists.
+*/
+const char * Kleo::outputFileExtension( unsigned int classification ) {
+    for ( unsigned int i = 0 ; i < sizeof classifications / sizeof *classifications ; ++i )
+        if ( ( classifications[i].classification & classification ) == classification )
+            return classifications[i].extension;
+    return 0;
+}

@@ -85,6 +85,8 @@ namespace Kleo {
     QStringList findSignatures( const QString & signedDataFileName );
     QString outputFileName( const QString & input );
 
+    const char * outputFileExtension( unsigned int classification );
+
 #define make_convenience( What, Mask )                                  \
     inline bool is##What( const QString & filename ) {                  \
         return ( classify( filename ) & Class::Mask ) == Class::What ;  \
