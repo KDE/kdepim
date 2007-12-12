@@ -51,6 +51,7 @@ private:
     kdtools::pimpl_ptr<Private> d;
     Q_PRIVATE_SLOT( d, void importCertificates() );
     Q_PRIVATE_SLOT( d, void exportCertificates() );
+    Q_PRIVATE_SLOT( d, void refreshCertificates() );
 };
 
 

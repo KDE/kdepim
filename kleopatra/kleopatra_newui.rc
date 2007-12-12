@@ -13,6 +13,11 @@
 		<Separator/>
 		<Action name="quit" />
 	</Menu>
+	<Menu name="view">
+		<text>&amp;View</text>
+		<Action name="view_refresh_certificate_list"/>
+	</Menu>
+
 <!--
 	<Menu name="view">
 		<text>&amp;View</text>

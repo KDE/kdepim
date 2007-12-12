@@ -93,6 +93,7 @@ public:
     explicit Private( MainWindow * qq );
     ~Private();
 
+    void refreshCertificates();
     void exportCertificates();
     void importCertificates();
 
@@ -215,9 +216,18 @@ void MainWindow::Private::setupActions()
     action->setText( i18n( "Export Certificates..." ) );
     connect( action, SIGNAL( triggered( bool ) ), q, SLOT( exportCertificates() ) );
     action->setShortcuts( KShortcut( "Ctrl+E" ) );
+
+    action = coll->addAction( "view_refresh_certificate_list" );
+    action->setText( i18n( "Refresh Certificate List..." ) );
+    connect( action, SIGNAL( triggered( bool ) ), q, SLOT( refreshCertificates() ) );
+    action->setShortcuts( KShortcut( "F5" ) );
    
 }
 
+void MainWindow::Private::refreshCertificates()
+{
+    ( new RefreshKeysCommand( &controller ) )->start();
+}
 
 void MainWindow::Private::exportCertificates()
 {
