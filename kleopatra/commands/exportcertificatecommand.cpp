@@ -31,6 +31,7 @@
 */
 
 #include "exportcertificatecommand.h"
+#include "exportcertificatesdialog.h"
 
 #include <kleo/cryptobackend.h>
 #include <kleo/cryptobackendfactory.h>
@@ -44,6 +45,7 @@
 
 #include <QDataStream>
 #include <QFileDialog>
+#include <QMap>
 #include <QPointer>
 #include <QTextStream>
 
@@ -62,29 +64,35 @@ class ExportCertificateCommand::Private {
 public:
     explicit Private( ExportCertificateCommand * qq );
     ~Private();
-    void startSingleProtocolExport( GpgME::Protocol protocol, const std::vector<Key>& keys );
+    void startExportJob( GpgME::Protocol protocol, const std::vector<Key>& keys );
+    void cancelJobs();
     void exportResult( const GpgME::Error&, const QByteArray& );
     void showError( const GpgME::Error& error );
+
+    bool requestFileNames( Protocol prot );
+    void finishedIfLastJob();
 
 private:
     bool textArmor;
     QWidget* parent;
-    QString outfile;
-    QPointer<ExportJob> exportJob;
+    QMap<GpgME::Protocol, QString> fileNames;
     std::vector<GpgME::Key> certificates;
+    uint jobsPending;
+    QMap<QObject*, QString> outFileForSender;
+    QPointer<ExportJob> cmsJob;
+    QPointer<ExportJob> pgpJob;
 };
 
 
 ExportCertificateCommand::Private::Private( ExportCertificateCommand * qq )
-    : q( qq ), textArmor( true ), parent( 0 ), exportJob( 0 )
+    : q( qq ), textArmor( true ), parent( 0 ), jobsPending( 0 )
 {
     
 }
 
 ExportCertificateCommand::Private::~Private() 
 {
-    if ( exportJob )
-        exportJob->slotCancel();
+    cancelJobs();
 }
 
 
@@ -108,28 +116,46 @@ void ExportCertificateCommand::doStart()
     std::copy( keys.begin(), firstCms, std::back_inserter( openpgp ) ); 
     std::copy( firstCms, keys.end(), std::back_inserter( cms ) ); 
     assert( !openpgp.empty() || !cms.empty() );
-    if ( cms.empty() || openpgp.empty() )
+    const bool haveBoth = !cms.empty() && !openpgp.empty();
+    const GpgME::Protocol prot = haveBoth ? UnknownProtocol : ( !cms.empty() ? CMS : OpenPGP );
+    if ( !d->requestFileNames( prot ) )
     {
-        d->startSingleProtocolExport( keys.front().protocol(), keys );
-    }
-    else
-    {
-        //handle mixed protocol case
-        KMessageBox::error( d->parent, i18n( "Exporting both OpenPGP and S/MIME certificates at the same time is not supported yet. Please select only certificates of one type." ), i18n( "Certificate Export Failed" ) );
         emit canceled();
+        return;
     }
+
+    if ( !openpgp.empty() )
+        d->startExportJob( GpgME::OpenPGP, openpgp );
+    if ( !cms.empty() )
+        d->startExportJob( GpgME::CMS, cms );
+}
+    
+bool ExportCertificateCommand::Private::requestFileNames( GpgME::Protocol protocol )
+{
+    fileNames[OpenPGP] = QString();
+    fileNames[CMS] = QString();
+    if ( protocol == UnknownProtocol )
+    {
+        QPointer<ExportCertificatesDialog> dlg( new ExportCertificatesDialog( parent ) );
+        const bool accepted = dlg->exec() == QDialog::Accepted;
+        if ( accepted )
+        {
+            fileNames[OpenPGP] = dlg->openPgpExportFileName();
+            fileNames[CMS] = dlg->cmsExportFileName();
+        }
+        delete dlg;
+        return accepted;
+    }
+
+    const QString fname = QFileDialog::getSaveFileName( parent, i18n( "Export Certificates" ), QString(), protocol == GpgME::OpenPGP ? i18n( "OpenPGP Certificates (.asc)" ) : i18n( "S/MIME Certificates (.pem)" ) );
+    fileNames[protocol] = fname;
+    return !fname.isNull();
 }
 
-void ExportCertificateCommand::Private::startSingleProtocolExport( GpgME::Protocol protocol, const std::vector<Key>& keys )
+void ExportCertificateCommand::Private::startExportJob( GpgME::Protocol protocol, const std::vector<Key>& keys )
 {
     assert( protocol != GpgME::UnknownProtocol );
 
-    const QString out = QFileDialog::getSaveFileName( parent, i18n( "Export Certificates" ), QString(), protocol == GpgME::OpenPGP ? i18n( "OpenPGP Certificates (.asc)" ) : i18n( "S/MIME Certificates (.pem)" ) );
-    if ( out.isNull() ) {
-        emit q->canceled();
-        return;
-    }
-    outfile = out;
     const CryptoBackend::Protocol* const backend = CryptoBackendFactory::instance()->protocol( protocol );
     assert( backend );
     std::auto_ptr<ExportJob> job( backend->publicKeyExportJob( /*armor=*/true ) );
@@ -145,14 +171,18 @@ void ExportCertificateCommand::Private::startSingleProtocolExport( GpgME::Protoc
     Q_FOREACH ( const Key& i, keys )
         fingerprints << i.primaryFingerprint();
 
-  const GpgME::Error err = job->start( fingerprints );
-  if ( err ) {
-      showError( err );
-      emit q->finished();
-      return;
-  }
-  emit q->info( i18n( "Exporting certificates..." ) );
-  exportJob = job.release();
+    const GpgME::Error err = job->start( fingerprints );
+    if ( err ) {
+        showError( err );
+        emit q->finished();
+        return;
+    }
+    emit q->info( i18n( "Exporting certificates..." ) );
+    ++jobsPending;
+    const QPointer<ExportJob> exportJob( job.release() );
+
+    outFileForSender[exportJob] = fileNames[protocol];
+    ( protocol == CMS ? cmsJob : pgpJob ) = exportJob;
 }
 
 void ExportCertificateCommand::Private::showError( const GpgME::Error& err )
@@ -167,26 +197,37 @@ void ExportCertificateCommand::Private::showError( const GpgME::Error& err )
 
 void ExportCertificateCommand::doCancel()
 {
-    if ( d->exportJob )
-        d->exportJob->slotCancel();
+    d->cancelJobs();
+}
+
+void ExportCertificateCommand::Private::finishedIfLastJob()
+{
+    if ( jobsPending > 0 )
+        return;
+    emit q->finished();
 }
 
 void ExportCertificateCommand::Private::exportResult( const GpgME::Error& err, const QByteArray& data )
 {
+    assert( jobsPending > 0 );
+    --jobsPending;
+
+    assert( outFileForSender.contains( q->sender() ) );
+    const QString outFile = outFileForSender[q->sender()];
+
     if ( err ) {
         showError( err );
-        emit q->finished();
+        finishedIfLastJob();
         return;
     }
-    assert( !outfile.isNull() );
-    KSaveFile savefile( outfile );
+    KSaveFile savefile( outFile );
     //TODO: use KIO
-    const QString writeErrorMsg = i18n( "Could not write to file %1.", outfile );
+    const QString writeErrorMsg = i18n( "Could not write to file %1.",  outFile );
     const QString errorCaption = i18n( "Certificate Export Failed" );
     if ( !savefile.open() )
     {
         KMessageBox::error( parent, writeErrorMsg, errorCaption );
-        emit q->finished();
+        finishedIfLastJob();
         return;
     }
     if ( textArmor )
@@ -202,7 +243,7 @@ void ExportCertificateCommand::Private::exportResult( const GpgME::Error& err, c
 
     if ( !savefile.finalize() )
         KMessageBox::error( parent, writeErrorMsg, errorCaption );
-    emit q->finished();
+    finishedIfLastJob();
 }
 
 void ExportCertificateCommand::setCertificates( const std::vector<GpgME::Key>& certificates )
@@ -213,6 +254,14 @@ void ExportCertificateCommand::setCertificates( const std::vector<GpgME::Key>& c
 void ExportCertificateCommand::setParentWidget( QWidget* parent )
 {
     d->parent = parent;
+}
+
+void ExportCertificateCommand::Private::cancelJobs()
+{
+    if ( cmsJob )
+        cmsJob->slotCancel();
+    if ( pgpJob )
+        pgpJob->slotCancel();
 }
 
 #include "moc_exportcertificatecommand.cpp"

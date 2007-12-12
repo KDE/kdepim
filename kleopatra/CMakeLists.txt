@@ -108,6 +108,7 @@ set( _kleopatra_common_SRCS
    models/useridlistmodel.cpp
    aboutdata.cpp
    systemtrayicon.cpp
+   exportcertificatesdialog.cpp
    certificateinfowidgetimpl.cpp
    main.cpp )
 
