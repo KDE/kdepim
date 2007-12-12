@@ -35,6 +35,7 @@
 #include "searchbar.h"
 #include "tabwidget.h"
 
+#include "certificatewizardimpl.h"
 #include "searchbarstatehandler.h"
 #include "models/keylistmodel.h"
 #include "models/keylistsortfilterproxymodel.h"
@@ -96,6 +97,7 @@ public:
     void refreshCertificates();
     void exportCertificates();
     void importCertificates();
+    void newCertificate();
 
 private:
     void setupActions();
@@ -211,6 +213,11 @@ void MainWindow::Private::setupActions()
     connect( action, SIGNAL( triggered( bool ) ), q, SLOT( importCertificates() ) );
     action->setShortcuts( KShortcut( "Ctrl+I" ) );
 
+    action = coll->addAction( "file_new_certificate" );
+    action->setText( i18n( "New Certificate..." ) );
+    action->setIcon( KIcon( "document-new" ) );
+    connect( action, SIGNAL( triggered( bool ) ), q, SLOT( newCertificate() ) );
+    action->setShortcuts( KShortcut( "F5" ) );
 
     action = coll->addAction( "file_export_certificates" );
     action->setText( i18n( "Export Certificates..." ) );
@@ -227,6 +234,13 @@ void MainWindow::Private::setupActions()
 void MainWindow::Private::refreshCertificates()
 {
     ( new RefreshKeysCommand( &controller ) )->start();
+}
+
+void MainWindow::Private::newCertificate()
+{
+    QPointer<CertificateWizardImpl> wiz( new CertificateWizardImpl( q ) );
+    wiz->exec();
+    delete wiz;
 }
 
 void MainWindow::Private::exportCertificates()

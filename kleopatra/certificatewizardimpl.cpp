@@ -31,6 +31,7 @@
 */
 
 #include "certificatewizardimpl.h"
+#include "utils/filenamerequester.h"
 
 // libkleopatra
 #include "libkleo/kleo/oidmap.h"
@@ -125,13 +126,14 @@ CertificateWizardImpl::CertificateWizardImpl( QWidget* parent )
     // setNextEnabled( personalDataPage, false ); // ## disable again once we have a criteria when to enable again
 
     createPersonalDataPage();
-
+    _storeFR = new Kleo::FileNameRequester( storeCAWidget );
     // Allow to select remote URLs
-    storeUR->setMode( KFile::File );
-    storeUR->setFilter( "application/pkcs10" );
+#ifdef KLEO_TEMPORARILY_REMOVED //PENDING(frank)
+    _storeFR->setMode( KFile::File ); 
+    _storeFR->setFilter( "application/pkcs10" );
     connect( storeUR, SIGNAL( urlSelected( const KUrl& ) ),
              this, SLOT( slotURLSelected( const KUrl& ) ) );
-
+#endif
     const KConfigGroup config( KGlobal::config(), "CertificateCreationWizard" );
     caEmailED->setText( config.readEntry( "CAEmailAddress" ) );
 
@@ -402,11 +404,11 @@ QString CertificateWizardImpl::caEMailAddress() const {
 
 void CertificateWizardImpl::slotURLSelected( const KUrl& url )
 {
-  storeUR->setUrl( url.prettyUrl() );
+  _storeFR->setFileName( url.path() );
 }
 
 KUrl CertificateWizardImpl::saveFileUrl() const {
-  return storeUR->url();
+  return KUrl::fromPath( _storeFR->fileName() );
 }
 
 void CertificateWizardImpl::showPage( QWidget * page )
@@ -416,11 +418,11 @@ void CertificateWizardImpl::showPage( QWidget * page )
     // Initial settings for the generation page: focus the correct lineedit
     // and disable the other one
     if ( storeInFileRB->isChecked() ) {
-      storeUR->setEnabled( true );
+      _storeFR->setEnabled( true );
       caEmailED->setEnabled( false );
-      storeUR->setFocus();
+      _storeFR->setFocus();
     } else {
-      storeUR->setEnabled( false );
+      _storeFR->setEnabled( false );
       caEmailED->setEnabled( true );
       caEmailED->setFocus();
     }
@@ -436,6 +438,7 @@ void CertificateWizardImpl::sendCertificate( const QString& email, const QByteAr
 #ifdef __GNUC__
 #warning Port me to DBus!
 #endif
+#ifdef KLEO_TEMPORARILY_REMOVED //PENDING(frank)
   QString dbusService;
   int result = KDBusServiceStarter::self()->findServiceFor( "DBUS/Mailer", QString(), &error, &dbusService );
   if ( result != 0 ) {
@@ -491,6 +494,7 @@ void CertificateWizardImpl::sendCertificate( const QString& email, const QByteAr
   }*/
   // All good, close dialog
   CertificateWizard::accept();
+#endif // KLEO_TEMPORARILY_REMOVED 
 }
 
 // Called when pressing Finish
@@ -498,6 +502,7 @@ void CertificateWizardImpl::sendCertificate( const QString& email, const QByteAr
 // in case of errors during the upload.
 void CertificateWizardImpl::accept()
 {
+#ifdef KLEO_TEMPORARILY_REMOVED //PENDING(frank)
   if( sendToCA() ) {
     // Ask KMail to send this key to the CA.
     sendCertificate( caEMailAddress(), _keyData );
@@ -523,6 +528,8 @@ void CertificateWizardImpl::accept()
     // Can't press finish again during the upload
     setFinishEnabled( finishPage, false );
   }
+#endif // KLEO_TEMPORARILY_REMOVED 
+  CertificateWizard::accept();
 }
 
 /**
@@ -531,6 +538,7 @@ void CertificateWizardImpl::accept()
 */
 void CertificateWizardImpl::slotUploadResult( KJob* job )
 {
+#ifdef KLEO_TEMPORARILY_REMOVED //PENDING(frank)
   if ( job->error() ) {
     static_cast<KIO::Job*>(job)->ui()->showErrorMessage();
     setFinishEnabled( finishPage, true );
@@ -538,6 +546,7 @@ void CertificateWizardImpl::slotUploadResult( KJob* job )
     // All good, close dialog
     CertificateWizard::accept();
   }
+#endif
 }
 
 #include "certificatewizardimpl.moc"

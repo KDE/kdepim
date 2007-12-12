@@ -107,13 +107,14 @@ set( _kleopatra_common_SRCS
    models/keylistsortfilterproxymodel.cpp
    models/subkeylistmodel.cpp
    models/useridlistmodel.cpp
+   certificatewizardimpl.cpp
    aboutdata.cpp
    systemtrayicon.cpp
    exportcertificatesdialog.cpp
    certificateinfowidgetimpl.cpp
    main.cpp )
 
-kde4_add_ui_files( _kleopatra_common_SRCS certificateinfowidget.ui )
+kde4_add_ui_files( _kleopatra_common_SRCS certificateinfowidget.ui certificatewizard.ui )
 
 if (ONLY_KLEO)
    add_definitions( -DONLY_KLEO )

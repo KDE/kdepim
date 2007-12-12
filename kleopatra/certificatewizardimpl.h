@@ -46,16 +46,22 @@ namespace KIO {
   class Job;
 }
 
+namespace Kleo {
+    class FileNameRequester;
+}
+
 class KJob;
 
 class CertificateWizard : public Q3Wizard, public Ui::CertificateWizard
 {
+    Q_OBJECT
 public:
   CertificateWizard( QWidget *parent ) : Q3Wizard( parent ) {
     setupUi( this );
   }
+    //  public Q_SLOTS:
+    // void accept() { return Q3Wizard::accept(); }
 };
-
 
 class CertificateWizardImpl : public CertificateWizard
 {
@@ -74,6 +80,8 @@ public:
 
 public:
     virtual void showPage( QWidget * page );
+
+public slots:
     virtual void accept();
 
 private slots:
@@ -94,6 +102,7 @@ private:
 private:
     AttrPairList _attrPairList;
     QByteArray _keyData;
+    Kleo::FileNameRequester* _storeFR;
 };
 
 #endif // CERTIFICATEWIZARDIMPL_H
