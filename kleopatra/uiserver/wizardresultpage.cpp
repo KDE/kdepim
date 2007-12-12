@@ -35,8 +35,9 @@
 
 #include "scrollarea.h"
 
-#include <QBoxLayout>
-#include <QGridLayout>
+#include <KLocale>
+
+#include <QVBoxLayout>
 
 #include <cassert>
 
@@ -57,11 +58,11 @@ private:
 WizardResultPage::Private::Private( WizardResultPage * qq )
   : q( qq )
 {
-    QGridLayout* layout = new QGridLayout( q );
+    QVBoxLayout* layout = new QVBoxLayout( q );
     scrollArea = new ScrollArea;
     assert( qobject_cast<QBoxLayout*>( scrollArea->widget()->layout() ) );
     static_cast<QBoxLayout*>( scrollArea->widget()->layout() )->addStretch( 1 );
-    layout->addWidget( scrollArea, 0, 0 );
+    layout->addWidget( scrollArea );
 }
 
 WizardResultPage::Private::~Private() {}
@@ -71,7 +72,7 @@ WizardResultPage::Private::~Private() {}
 WizardResultPage::WizardResultPage( QWidget * parent )
   : WizardPage( parent ), d( new Private( this ) )
 {
-    
+    setTitle( i18n( "Results" ) );
 }
 
 
