@@ -50,6 +50,7 @@
 #include <QWidget>
 
 #include <memory>
+#include <cassert>
 
 using namespace GpgME;
 using namespace Kleo;
@@ -222,8 +223,9 @@ void ImportCertificateCommand::Private::importResult( const GpgME::ImportResult&
 
 GpgME::Protocol ImportCertificateCommand::Private::checkProtocol( const QByteArray& data, const QString& filename ) const
 {
+    // PENDING(frank) use Kleo::classify!
     QStringList smimeSuffixes;
-    smimeSuffixes << ".pem" << ".der", ".p7c", ".p12";
+    smimeSuffixes << ".pem" << ".der" << ".p7c" << ".p12";
     Q_FOREACH ( const QString& i, smimeSuffixes )
         if ( filename.endsWith( i, Qt::CaseInsensitive ) )
             return GpgME::CMS;
