@@ -36,9 +36,10 @@
 #include "assuancommand.h"
 #include "certificateresolver.h"
 #include "signencryptwizard.h"
-#include "encryptemailtask.h"
+#include "signencryptfilestask.h"
 #include "input.h"
 #include "output.h"
+#include "classify.h"
 
 #include <utils/stl_util.h>
 
@@ -56,8 +57,6 @@ using namespace Kleo;
 using namespace boost;
 using namespace GpgME;
 using namespace KMime::Types;
-
-struct SignEncryptFilesTask : Task {};
 
 class SignEncryptFilesController::Private {
     friend class ::Kleo::SignEncryptFilesController;
@@ -181,9 +180,52 @@ void SignEncryptFilesController::start() {
     d->ensureWizardVisible();
 }
 
+static shared_ptr<SignEncryptFilesTask>
+createSignEncryptTaskForFileInfo( const QFileInfo & fi, bool sign, bool encrypt, bool ascii, const std::vector<Key> & recipients, const std::vector<Key> & signers ) {
+    const shared_ptr<SignEncryptFilesTask> task( new SignEncryptFilesTask );
+    task->setSign( sign );
+    task->setEncrypt( encrypt );
+    task->setAsciiArmor( ascii );
+    if ( sign )
+        task->setSigners( signers );
+    if ( encrypt )
+        task->setRecipients( recipients );
+
+    unsigned int cls = Class::OpenPGP;
+    if ( encrypt )
+        cls |= Class::CipherText;
+    else if ( sign )
+        cls |= Class::DetachedSignature;
+    cls |= ascii ? Class::Ascii : Class::Binary ;
+
+    const QString input = fi.absoluteFilePath();
+    task->setInput( Input::createFromFile( input ) );
+
+    const char * ext = outputFileExtension( cls );
+    if ( !ext )
+        ext = "out"; // ### error out?
+
+    const QString output = input + '.' + ext;
+    task->setOutput( Output::createFromFile( output, false ) );
+
+    return task;
+}
+
 static std::vector< shared_ptr<SignEncryptFilesTask> >
-createSignEncryptTasksForFileInfo( const QFileInfo & fi, bool sign, bool encrypt ) {
-    notImplemented();
+createSignEncryptTasksForFileInfo( const QFileInfo & fi, bool sign, bool encrypt, bool ascii, const std::vector<Key> & pgpRecipients, const std::vector<Key> & pgpSigners, const std::vector<Key> & cmsRecipients, const std::vector<Key> & cmsSigners ) {
+    std::vector< shared_ptr<SignEncryptFilesTask> > result;
+
+    const bool pgp = encrypt && !pgpRecipients.empty() || sign && !pgpSigners.empty() ;
+    const bool cms = encrypt && !cmsRecipients.empty() || sign && !cmsSigners.empty() ;
+
+    result.reserve( pgp + cms );
+
+    if ( pgp )
+        result.push_back( createSignEncryptTaskForFileInfo( fi, sign, encrypt, ascii, pgpRecipients, pgpSigners ) );
+    if ( cms )
+        result.push_back( createSignEncryptTaskForFileInfo( fi, sign, encrypt, ascii, cmsRecipients, cmsSigners ) );
+
+    return result;
 }
 
 void SignEncryptFilesController::Private::slotWizardObjectsResolved() {
@@ -194,7 +236,30 @@ void SignEncryptFilesController::Private::slotWizardObjectsResolved() {
 
         const bool sign = wizard->signingSelected();
         const bool encrypt = wizard->encryptionSelected();
+        const bool ascii = wizard->isAsciiArmorEnabled();
         const QFileInfoList files = wizard->resolvedFiles();
+
+        std::vector<Key> pgpRecipients, cmsRecipients, pgpSigners, cmsSigners;
+        if ( encrypt ) {
+            const std::vector<Key> recipients = wizard->resolvedCertificates();
+            kdtools::copy_if( recipients.begin(), recipients.end(),
+                              std::back_inserter( pgpRecipients ),
+                              bind( &Key::protocol, _1 ) == GpgME::OpenPGP );
+            kdtools::copy_if( recipients.begin(), recipients.end(),
+                              std::back_inserter( cmsRecipients ),
+                              bind( &Key::protocol, _1 ) == GpgME::CMS );
+            assuan_assert( pgpRecipients.size() + cmsRecipients.size() == recipients.size() );
+        }
+        if ( sign ) {
+            const std::vector<Key> signers = wizard->resolvedSigners();
+            kdtools::copy_if( signers.begin(), signers.end(),
+                              std::back_inserter( pgpSigners ),
+                              bind( &Key::protocol, _1 ) == GpgME::OpenPGP );
+            kdtools::copy_if( signers.begin(), signers.end(),
+                              std::back_inserter( cmsSigners ),
+                              bind( &Key::protocol, _1 ) == GpgME::CMS );
+            assuan_assert( pgpSigners.size() + cmsSigners.size() == signers.size() );
+        }
 
         assuan_assert( !files.empty() );
 
@@ -203,7 +268,7 @@ void SignEncryptFilesController::Private::slotWizardObjectsResolved() {
 
         Q_FOREACH( const QFileInfo & fi, files ) {
             const std::vector< shared_ptr<SignEncryptFilesTask> > created = 
-                createSignEncryptTasksForFileInfo( fi, sign, encrypt );
+                createSignEncryptTasksForFileInfo( fi, sign, encrypt, ascii, pgpRecipients, pgpSigners, cmsRecipients, cmsSigners );
             tasks.insert( tasks.end(), created.begin(), created.end() );
         }
 
