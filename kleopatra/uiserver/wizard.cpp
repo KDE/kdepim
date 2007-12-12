@@ -184,7 +184,7 @@ void Wizard::setCurrentPage( int id )
 
 void Wizard::setPageVisible( int id, bool visible )
 {
-    if ( !visible )
+    if ( visible )
         d->hiddenPages.erase( id );
     else
         d->hiddenPages.insert( id );
