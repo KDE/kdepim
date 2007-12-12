@@ -91,6 +91,8 @@ FileNameRequester::Private::Private( FileNameRequester * qq )
 
     connect( &button, SIGNAL(clicked()),
              q, SLOT(slotButtonClicked()) );
+    connect( &lineedit, SIGNAL( textChanged( QString ) ),
+             q, SIGNAL( fileNameChanged( QString ) ) );
 }
 
 FileNameRequester::Private::~Private() {}

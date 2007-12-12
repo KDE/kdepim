@@ -59,6 +59,9 @@ namespace Kleo {
         void setFilter( QDir::Filters f );
         QDir::Filters filter() const;
 
+    Q_SIGNALS:
+        void fileNameChanged( const QString& filename );
+
     private:
         virtual QString requestFileName();
 
