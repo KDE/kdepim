@@ -33,7 +33,7 @@
 #ifndef __KLEOPATRA_EXPORTCERTIFICATECOMMAND_H__
 #define __KLEOPATRA_EXPORTCERTIFICATECOMMAND_H__
 
-#include "Command.h"
+#include "command.h"
 
 #include <utils/pimpl_ptr.h>
 
