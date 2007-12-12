@@ -216,6 +216,7 @@ bool Wizard::canGoToPreviousPage() const
 
 void Wizard::next()
 {
+    onNext( d->currentId );
     std::vector<int>::const_iterator it = qBinaryFind( d->pageOrder.begin(), d->pageOrder.end(), d->currentId );
     assert( it != d->pageOrder.end() );
     ++it;
@@ -245,6 +246,7 @@ int Wizard::Private::previousPage() const
 
 void Wizard::back()
 {
+    onBack( d->currentId );
     const int prev = d->previousPage();
     if ( prev == InvalidPage ) 
         return;
