@@ -65,6 +65,7 @@ public:
     explicit Private( SignEncryptFilesController * qq );
 
 private:
+    void slotWizardSignersResolved();
     void slotWizardObjectsResolved();
     void slotWizardRecipientsResolved();
     void slotWizardCanceled();
@@ -228,6 +229,28 @@ createSignEncryptTasksForFileInfo( const QFileInfo & fi, bool sign, bool encrypt
     return result;
 }
 
+void SignEncryptFilesController::Private::slotWizardSignersResolved() {
+
+    try {
+        assuan_assert( wizard );
+
+        const bool encrypt = wizard->encryptionSelected();
+        wizard->setPageVisible( SignEncryptWizard::ResolveRecipientsPage, encrypt );
+        wizard->setCommitPage( encrypt ? SignEncryptWizard::ResolveRecipientsPage : SignEncryptWizard::ObjectsPage );
+
+    } catch ( const assuan_exception & e ) {
+        emit q->error( e.error(), e.message() );
+    } catch ( const std::exception & e ) {
+        emit q->error( gpg_error( GPG_ERR_UNEXPECTED ),
+                       i18n("Caught unexpected exception in SignEncryptFilesController::Private::slotWizardSignersResolved: %1",
+                            QString::fromLocal8Bit( e.what() ) ) );
+    } catch ( ... ) {
+        emit q->error( gpg_error( GPG_ERR_UNEXPECTED ),
+                       i18n("Caught unknown exception in SignEncryptFilesController::Private::slotWizardSignersResolved") );
+    }
+
+}
+
 void SignEncryptFilesController::Private::slotWizardObjectsResolved() {
 
     try {
@@ -236,6 +259,7 @@ void SignEncryptFilesController::Private::slotWizardObjectsResolved() {
 
         const bool sign = wizard->signingSelected();
         const bool encrypt = wizard->encryptionSelected();
+
         const bool ascii = wizard->isAsciiArmorEnabled();
         const QFileInfoList files = wizard->resolvedFiles();
 
@@ -425,6 +449,7 @@ void SignEncryptFilesController::Private::ensureWizardCreated() {
     w->setCommitPage( SignEncryptWizard::ResolveRecipientsPage );
 
     w->setAttribute( Qt::WA_DeleteOnClose );
+    connect( w.get(), SIGNAL(signersResolved()), q, SLOT(slotWizardSignersResolved()), Qt::QueuedConnection );
     connect( w.get(), SIGNAL(objectsResolved()), q, SLOT(slotWizardObjectsResolved()), Qt::QueuedConnection );
     connect( w.get(), SIGNAL(recipientsResolved()), q, SLOT(slotWizardRecipientsResolved()), Qt::QueuedConnection );
     connect( w.get(), SIGNAL(canceled()), q, SLOT(slotWizardCanceled()), Qt::QueuedConnection );
