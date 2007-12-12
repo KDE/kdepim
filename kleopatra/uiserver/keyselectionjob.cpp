@@ -139,21 +139,12 @@ void KeySelectionJob::Private::keySelectionDialogClosed()
 
 void KeySelectionJob::Private::startKeyListing()
 {
-    if ( m_useCache )
-    {
-        if ( m_secretKeysOnly )
-        {
-            Q_FOREACH ( const GpgME::Key& i, KeyCache::instance()->keys() )
-            {
-                if ( i.isSecret() )
-                    m_keys.push_back( i );
-            }
+    if ( m_useCache ) {
+        if ( m_secretKeysOnly ) {
+            m_keys = SecretKeyCache::instance()->keys();
+        } else {
+            m_keys = PublicKeyCache::instance()->keys();
         }
-        else
-        {
-            m_keys = KeyCache::instance()->keys();
-        }
-        m_keys = KeyCache::instance()->keys();
         QTimer::singleShot( 0, q, SLOT( keyListingDone() ) );
         return;
     }

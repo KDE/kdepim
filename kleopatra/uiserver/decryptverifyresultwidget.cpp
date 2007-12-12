@@ -101,7 +101,7 @@ void DecryptVerifyResultWidget::setResult( const DecryptionResult & decryptionRe
     while ( QLayoutItem * child = m_box->takeAt(0) )
         delete child;
 
-    const QString decryptionResultString = formatDecryptionResult( decryptionResult, KeyCache::instance()->findRecipients( decryptionResult ) );
+    const QString decryptionResultString = formatDecryptionResult( decryptionResult, PublicKeyCache::instance()->findRecipients( decryptionResult ) );
 
     m_box->addWidget( new QLabel( decryptionResult.error() || decryptionResult.error().isCanceled()
                                   ? "<qt>" + decryptionResultString + "</qt>"
@@ -109,7 +109,7 @@ void DecryptVerifyResultWidget::setResult( const DecryptionResult & decryptionRe
     setColor( color( decryptionResult, verificationResult ) );
         
     const std::vector<Signature> sigs = verificationResult.signatures();
-    const std::vector<Key> signers = KeyCache::instance()->findSigners( verificationResult );
+    const std::vector<Key> signers = PublicKeyCache::instance()->findSigners( verificationResult );
     Q_FOREACH ( const Signature & sig, sigs )
         m_box->addWidget( formatSignatureWidget( new QLabel( resultWidget() ), sig, keyForSignature( sig, signers ) ) );
     m_box->addStretch( 1 );

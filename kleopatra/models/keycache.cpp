@@ -54,20 +54,59 @@ using namespace Kleo;
 using namespace GpgME;
 using namespace boost;
 
-shared_ptr<const KeyCache> KeyCache::instance() {
+//
+//
+// PublicKeyCache
+//
+//
+
+shared_ptr<const PublicKeyCache> PublicKeyCache::instance() {
     return mutableInstance();
 }
 
-shared_ptr<KeyCache> KeyCache::mutableInstance() {
-    static weak_ptr<KeyCache> self;
+shared_ptr<PublicKeyCache> PublicKeyCache::mutableInstance() {
+    static weak_ptr<PublicKeyCache> self;
     try {
-        return shared_ptr<KeyCache>( self );
+        return shared_ptr<PublicKeyCache>( self );
     } catch ( const bad_weak_ptr & ) {
-        const shared_ptr<KeyCache> s( new KeyCache );
+        const shared_ptr<PublicKeyCache> s( new PublicKeyCache );
         self = s;
         return s;
     }
 }
+
+PublicKeyCache::PublicKeyCache() : KeyCache() {}
+
+
+//
+//
+// SecretKeyCache
+//
+//
+
+shared_ptr<const SecretKeyCache> SecretKeyCache::instance() {
+    return mutableInstance();
+}
+
+shared_ptr<SecretKeyCache> SecretKeyCache::mutableInstance() {
+    static weak_ptr<SecretKeyCache> self;
+    try {
+        return shared_ptr<SecretKeyCache>( self );
+    } catch ( const bad_weak_ptr & ) {
+        const shared_ptr<SecretKeyCache> s( new SecretKeyCache );
+        self = s;
+        return s;
+    }
+}
+
+SecretKeyCache::SecretKeyCache() : KeyCache() {}
+
+//
+//
+// KeyCache
+//
+//
+
 
 namespace {
 
@@ -123,8 +162,8 @@ private:
 
 
 
-KeyCache::KeyCache( QObject * p )
-    : QObject( p ), d( new Private( this ) )
+KeyCache::KeyCache()
+    : QObject(), d( new Private( this ) )
 {
 
 }

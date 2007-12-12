@@ -101,7 +101,8 @@ int main( int argc, char** argv )
   KCmdLineArgs::addCmdLineOptions( options );
 
   // pin KeyCache to a shared_ptr to define it's minimum lifetime:
-  const boost::shared_ptr<Kleo::KeyCache> keyCache = Kleo::KeyCache::mutableInstance();
+  const boost::shared_ptr<Kleo::PublicKeyCache> publicKeyCache = Kleo::PublicKeyCache::mutableInstance();
+  const boost::shared_ptr<Kleo::SecretKeyCache> secretKeyCache = Kleo::SecretKeyCache::mutableInstance();
 
   KApplication app;
 

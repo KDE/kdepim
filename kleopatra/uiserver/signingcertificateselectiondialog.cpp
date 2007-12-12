@@ -36,6 +36,8 @@
 #include "models/keycache.h"
 #include "utils/formatting.h"
 
+#include <utils/stl_util.h>
+
 #include <QByteArray>
 #include <QMap>
 
@@ -89,11 +91,12 @@ void SigningCertificateSelectionDialog::setSelectedCertificates( const QMap<GpgM
 std::vector<GpgME::Key> SigningCertificateSelectionDialog::Private::candidates( GpgME::Protocol prot ) const
 {
     assert( prot != GpgME::UnknownProtocol );
-    std::vector<GpgME::Key> keys = KeyCache::instance()->keys();
+    std::vector<GpgME::Key> keys = SecretKeyCache::instance()->keys();
     std::vector<GpgME::Key>::iterator end = keys.end();
 
     end = std::remove_if( keys.begin(), end, bind( &GpgME::Key::protocol, _1 ) != prot );
-    end = std::remove_if( keys.begin(), end, !bind( &GpgME::Key::hasSecret, _1 ) );
+    //end = std::remove_if( keys.begin(), end, !bind( &GpgME::Key::hasSecret, _1 ) );
+    assert( kdtools::all( keys.begin(), end, bind( &GpgME::Key::hasSecret, _1 ) ) );
     end = std::remove_if( keys.begin(), end, !bind( &GpgME::Key::canSign, _1 ) );
     keys.erase( end, keys.end() );
     return keys;
@@ -115,8 +118,8 @@ QMap<GpgME::Protocol, GpgME::Key> SigningCertificateSelectionDialog::selectedCer
     QMap<GpgME::Protocol, GpgME::Key> res;
     
     const QByteArray pgpid = d->ui.pgpCombo->itemData( d->ui.pgpCombo->currentIndex() ).toByteArray();
-    res.insert( GpgME::OpenPGP, KeyCache::instance()->findByKeyIDOrFingerprint( pgpid.constData() ) );
+    res.insert( GpgME::OpenPGP, SecretKeyCache::instance()->findByKeyIDOrFingerprint( pgpid.constData() ) );
     const QByteArray cmsid = d->ui.cmsCombo->itemData( d->ui.cmsCombo->currentIndex() ).toByteArray();
-    res.insert( GpgME::CMS, KeyCache::instance()->findByKeyIDOrFingerprint( cmsid.constData() ) );
+    res.insert( GpgME::CMS, SecretKeyCache::instance()->findByKeyIDOrFingerprint( cmsid.constData() ) );
     return res;
 }

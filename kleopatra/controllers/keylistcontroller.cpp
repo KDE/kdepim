@@ -121,7 +121,9 @@ KeyListController::Private::Private( KeyListController * qq )
       commands(),
       model( 0 )
 {
-    connect( KeyCache::mutableInstance().get(), SIGNAL(added(GpgME::Key)),
+    // We only connect to PublicKeyCache, since we assume that
+    // SecretKeyCache's content is a real subset of PublicKeyCache's:
+    connect( PublicKeyCache::mutableInstance().get(), SIGNAL(added(GpgME::Key)),
              q, SLOT(slotAddKey(GpgME::Key)) );
 }
 

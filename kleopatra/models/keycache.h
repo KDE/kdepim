@@ -52,15 +52,10 @@ namespace Kleo {
 
     class KeyCache : public QObject {
         Q_OBJECT
-    private:
-        explicit KeyCache( QObject * parent=0 );
+    protected:
+        explicit KeyCache();
     public:
         ~KeyCache();
-
-        static boost::shared_ptr<KeyCache> make();
-
-        static boost::shared_ptr<const KeyCache> instance();
-        static boost::shared_ptr<KeyCache> mutableInstance();
 
         void insert( const GpgME::Key & key );
         void insert( const std::vector<GpgME::Key> & keys );
@@ -105,6 +100,29 @@ namespace Kleo {
     private:
         class Private;
         kdtools::pimpl_ptr<Private> d;
+    };
+
+    class PublicKeyCache : public KeyCache {
+        Q_OBJECT
+    private:
+        explicit PublicKeyCache();
+    public:
+        //static boost::shared_ptr<PublicKeyCache> make();
+
+        static boost::shared_ptr<const PublicKeyCache> instance();
+        static boost::shared_ptr<PublicKeyCache> mutableInstance();
+
+    };
+
+    class SecretKeyCache : public KeyCache {
+        Q_OBJECT
+    private:
+        explicit SecretKeyCache();
+    public:
+        //static boost::shared_ptr<SecretKeyCache> make();
+
+        static boost::shared_ptr<const SecretKeyCache> instance();
+        static boost::shared_ptr<SecretKeyCache> mutableInstance();
     };
 
 }

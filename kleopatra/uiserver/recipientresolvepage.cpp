@@ -380,7 +380,7 @@ void RecipientResolveWidget::setCertificates( const std::vector<GpgME::Key>& key
 GpgME::Key RecipientResolveWidget::chosenCertificate() const
 {
     const QByteArray id = d->currentData().toByteArray();
-    return KeyCache::instance()->findByKeyIDOrFingerprint( id.constData() );
+    return PublicKeyCache::instance()->findByKeyIDOrFingerprint( id.constData() );
 }
 
 void RecipientResolveWidget::Private::selectAnotherCertificate()
@@ -389,7 +389,7 @@ void RecipientResolveWidget::Private::selectAnotherCertificate()
     dlg->setSelectionMode( KeySelectionDialog::SingleSelection );
     dlg->setProtocol( m_protocol );
     dlg->setAllowedKeys( KeySelectionDialog::EncryptOnly );
-    dlg->addKeys( KeyCache::instance()->keys() );
+    dlg->addKeys( PublicKeyCache::instance()->keys() );
     if ( dlg->exec() == QDialog::Accepted )
     {
         const std::vector<GpgME::Key> keys = dlg->selectedKeys();

@@ -771,7 +771,7 @@ struct ResultPresentAndOutputFinalized {
 
 void DecryptVerifyCommand::Private::addResult( unsigned int id, const DVResult & res )
 {
-    const bool taskExists = id >= 0 && id < taskList.size();
+    const bool taskExists = id < taskList.size();
     assert( !taskExists || !taskList[id]->result );
 
     const shared_ptr<DVResult> result( new DVResult( res ) );
@@ -826,7 +826,7 @@ void DecryptVerifyCommand::Private::sendSigStatii() const {
 
         try {
             const std::vector<Signature> sigs = vResult.signatures();
-            const std::vector<Key> signers = KeyCache::instance()->findSigners( vResult );
+            const std::vector<Key> signers = PublicKeyCache::instance()->findSigners( vResult );
             Q_FOREACH ( const Signature & sig, sigs ) {
                 const QString s = signatureToString( sig, keyForSignature( sig, signers ) );
                 const char * color = summaryToString( sig.summary() );

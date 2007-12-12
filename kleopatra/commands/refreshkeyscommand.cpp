@@ -121,7 +121,10 @@ void RefreshKeysCommand::Private::secretKeyListingDone( const GpgME::KeyListResu
 
 void RefreshKeysCommand::Private::addKey( const GpgME::Key& key )
 {
-    KeyCache::mutableInstance()->insert( key );
+    if ( key.hasSecret() ) // ### hope this is ok. It is, after all, why we need the split in the first place...
+        SecretKeyCache::mutableInstance()->insert( key );
+    else
+        PublicKeyCache::mutableInstance()->insert( key );
 }
 
 RefreshKeysCommand::RefreshKeysCommand( KeyListController * p )
