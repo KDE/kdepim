@@ -37,6 +37,12 @@
 
 #include <utils/pimpl_ptr.h>
 
+#include <vector>
+
+namespace GpgME {
+    class Key;
+}
+
 namespace Kleo {
     class ExportCertificateCommand : public Command {
         Q_OBJECT
@@ -45,7 +51,8 @@ namespace Kleo {
         ~ExportCertificateCommand();
 
         void setParentWidget( QWidget* parent );
-
+        void setCertificates( const std::vector<GpgME::Key>& keys );
+ 
     private:
         /* reimp */ void doStart();
         /* reimp */ void doCancel();
@@ -53,6 +60,7 @@ namespace Kleo {
     private:
         class Private;
         kdtools::pimpl_ptr<Private> d;
+        Q_PRIVATE_SLOT( d, void exportResult( GpgME::Error, QByteArray ) );
     };
 }
 

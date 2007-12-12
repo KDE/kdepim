@@ -61,6 +61,8 @@
 #include <QApplication>
 #include <QCloseEvent>
 
+#include <gpgme++/key.h>
+
 #include <boost/shared_ptr.hpp>
 
 #include <vector>
@@ -208,6 +210,8 @@ void MainWindow::Private::setupActions()
     connect( action, SIGNAL( triggered( bool ) ), q, SLOT( importCertificates() ) );
     action->setShortcuts( KShortcut( "Ctrl+I" ) );
 
+
+    action = coll->addAction( "file_export_certificates" );
     action->setText( i18n( "Export Certificates..." ) );
     connect( action, SIGNAL( triggered( bool ) ), q, SLOT( exportCertificates() ) );
     action->setShortcuts( KShortcut( "Ctrl+E" ) );
@@ -217,9 +221,10 @@ void MainWindow::Private::setupActions()
 
 void MainWindow::Private::exportCertificates()
 {
-    ExportCertificateCommand* const cmd = new ExportCertificateCommand( &controller );
-    cmd->setParentWidget( q );
-    cmd->start();
+     ExportCertificateCommand* const cmd = new ExportCertificateCommand( &controller );
+     cmd->setParentWidget( q );
+     cmd->setCertificates( controller.model()->keys( ui.tabWidget.currentView()->selectionModel()->selectedRows() ) );
+     cmd->start();
 }
 
 void MainWindow::Private::importCertificates()
