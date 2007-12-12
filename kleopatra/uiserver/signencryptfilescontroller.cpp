@@ -75,6 +75,11 @@ private:
     void ensureWizardCreated();
     void ensureWizardVisible();
     void cancelAllTasks();
+    void reportError( int err, const QString & details ) {
+        errorDetected = true;
+        emit q->error( err, details );
+    }
+    void removeInputFiles();
 
     void schedule();
     shared_ptr<SignEncryptFilesTask> takeRunnable( GpgME::Protocol proto );
@@ -89,6 +94,7 @@ private:
     QPointer<SignEncryptWizard> wizard;
     unsigned int operation;
     Protocol protocol;
+    bool errorDetected : 1;
 };
 
 SignEncryptFilesController::Private::Private( SignEncryptFilesController * qq )
@@ -100,7 +106,8 @@ SignEncryptFilesController::Private::Private( SignEncryptFilesController * qq )
       command(),
       wizard(),
       operation( SignAllowed|EncryptAllowed ),
-      protocol( UnknownProtocol )
+      protocol( UnknownProtocol ),
+      errorDetected( false )
 {
 
 }
@@ -174,7 +181,7 @@ void SignEncryptFilesController::setFiles( const QStringList & files ) {
 }
 
 void SignEncryptFilesController::Private::slotWizardCanceled() {
-    emit q->error( gpg_error( GPG_ERR_CANCELED ), i18n("User cancel") );
+    reportError( gpg_error( GPG_ERR_CANCELED ), i18n("User cancel") );
 }
 
 void SignEncryptFilesController::start() {
@@ -239,14 +246,14 @@ void SignEncryptFilesController::Private::slotWizardSignersResolved() {
         wizard->setCommitPage( encrypt ? SignEncryptWizard::ResolveRecipientsPage : SignEncryptWizard::ObjectsPage );
 
     } catch ( const assuan_exception & e ) {
-        emit q->error( e.error(), e.message() );
+        reportError( e.error(), e.message() );
     } catch ( const std::exception & e ) {
-        emit q->error( gpg_error( GPG_ERR_UNEXPECTED ),
-                       i18n("Caught unexpected exception in SignEncryptFilesController::Private::slotWizardSignersResolved: %1",
-                            QString::fromLocal8Bit( e.what() ) ) );
+        reportError( gpg_error( GPG_ERR_UNEXPECTED ),
+                     i18n("Caught unexpected exception in SignEncryptFilesController::Private::slotWizardSignersResolved: %1",
+                          QString::fromLocal8Bit( e.what() ) ) );
     } catch ( ... ) {
-        emit q->error( gpg_error( GPG_ERR_UNEXPECTED ),
-                       i18n("Caught unknown exception in SignEncryptFilesController::Private::slotWizardSignersResolved") );
+        reportError( gpg_error( GPG_ERR_UNEXPECTED ),
+                     i18n("Caught unknown exception in SignEncryptFilesController::Private::slotWizardSignersResolved") );
     }
 
 }
@@ -299,14 +306,14 @@ void SignEncryptFilesController::Private::slotWizardObjectsResolved() {
         incomplete.swap( tasks );
 
     } catch ( const assuan_exception & e ) {
-        emit q->error( e.error(), e.message() );
+        reportError( e.error(), e.message() );
     } catch ( const std::exception & e ) {
-        emit q->error( gpg_error( GPG_ERR_UNEXPECTED ),
-                       i18n("Caught unexpected exception in SignEncryptFilesController::Private::slotWizardObjectsResolved: %1",
-                            QString::fromLocal8Bit( e.what() ) ) );
+        reportError( gpg_error( GPG_ERR_UNEXPECTED ),
+                     i18n("Caught unexpected exception in SignEncryptFilesController::Private::slotWizardObjectsResolved: %1",
+                          QString::fromLocal8Bit( e.what() ) ) );
     } catch ( ... ) {
-        emit q->error( gpg_error( GPG_ERR_UNEXPECTED ),
-                       i18n("Caught unknown exception in SignEncryptFilesController::Private::slotWizardObjectsResolved") );
+        reportError( gpg_error( GPG_ERR_UNEXPECTED ),
+                     i18n("Caught unknown exception in SignEncryptFilesController::Private::slotWizardObjectsResolved") );
     }
 }
 
@@ -325,14 +332,14 @@ void SignEncryptFilesController::Private::slotWizardRecipientsResolved() {
         schedule();
 
     } catch ( const assuan_exception & e ) {
-        emit q->error( e.error(), e.message() );
+        reportError( e.error(), e.message() );
     } catch ( const std::exception & e ) {
-        emit q->error( gpg_error( GPG_ERR_UNEXPECTED ),
-                       i18n("Caught unexpected exception in SignEncryptFilesController::Private::slotWizardRecipientsResolved: %1",
-                            QString::fromLocal8Bit( e.what() ) ) );
+        reportError( gpg_error( GPG_ERR_UNEXPECTED ),
+                     i18n("Caught unexpected exception in SignEncryptFilesController::Private::slotWizardRecipientsResolved: %1",
+                          QString::fromLocal8Bit( e.what() ) ) );
     } catch ( ... ) {
-        emit q->error( gpg_error( GPG_ERR_UNEXPECTED ),
-                       i18n("Caught unknown exception in SignEncryptFilesController::Private::slotWizardRecipientsResolved") );
+        reportError( gpg_error( GPG_ERR_UNEXPECTED ),
+                     i18n("Caught unknown exception in SignEncryptFilesController::Private::slotWizardRecipientsResolved") );
     }
 }
 
@@ -352,6 +359,8 @@ void SignEncryptFilesController::Private::schedule() {
 
     if ( !cms && !openpgp ) {
         assuan_assert( runnable.empty() );
+        if ( wizard->removeUnencryptedFile() && wizard->encryptionSelected() && !errorDetected )
+            removeInputFiles();
         emit q->done();
     }
     
@@ -398,6 +407,7 @@ void SignEncryptFilesController::Private::slotTaskDone() {
 
 void SignEncryptFilesController::cancel() {
     try {
+        d->errorDetected = true;
         if ( d->wizard )
             d->wizard->close();
         d->cancelAllTasks();
@@ -464,6 +474,19 @@ void SignEncryptFilesController::Private::ensureWizardVisible() {
         wizard->raise();
     else
         wizard->show();
+}
+
+void SignEncryptFilesController::Private::removeInputFiles() {
+    if ( !wizard ) {
+        qWarning( "SignEncryptFilesController::Private::removeInputFiles: no wizard!" );
+        return;
+    }
+    if ( errorDetected )
+        return;
+
+    const QFileInfoList files = wizard->resolvedFiles();
+    Q_FOREACH( const QFileInfo & fi, files )
+        QFile::remove( fi.absoluteFilePath() );
 }
 
 #include "moc_signencryptfilescontroller.cpp"
