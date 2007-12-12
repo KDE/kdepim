@@ -59,8 +59,8 @@ namespace Kleo {
         WizardPage* page( int id );
 
         void setPageOrder( const std::vector<int>& pages );
+        void setPageVisible( int id, bool visible );
 
-        void skipPage( int id );
         void setCurrentPage( int id );
         
         int currentPage() const;

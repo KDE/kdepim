@@ -45,6 +45,7 @@
 #include <QWizard>
 
 #include <map>
+#include <set>
 
 #include <cassert>
 
@@ -63,6 +64,7 @@ public:
 
 private:
     std::vector<int> pageOrder;
+    std::set<int> hiddenPages;
     std::map<int, WizardPage*> idToPage;
     int currentId;
     QStackedWidget* stack;
@@ -158,6 +160,7 @@ void Wizard::setPage( int id, WizardPage* widget )
 void Wizard::setPageOrder( const std::vector<int>& pageOrder )
 {
     d->pageOrder = pageOrder;
+    d->hiddenPages.clear();
     if ( pageOrder.empty() )
         return;
     setCurrentPage( pageOrder.front() );
@@ -179,17 +182,14 @@ void Wizard::setCurrentPage( int id )
     d->updateButtonStates();
 }
 
-void Wizard::skipPage( int id )
+void Wizard::setPageVisible( int id, bool visible )
 {
-    const std::vector<int>::iterator it = qBinaryFind( d->pageOrder.begin(), d->pageOrder.end(), id );
-    if ( it == d->pageOrder.end() )
-        return;
-    
-    if ( currentPage() == id )
-        next();
-
-    d->pageOrder.erase( it ); 
-
+    if ( !visible )
+        d->hiddenPages.erase( id );
+    else
+        d->hiddenPages.insert( id );
+    if ( currentPage() == id && !visible )
+        next(); 
 }
         
 int Wizard::currentPage() const
@@ -219,7 +219,12 @@ void Wizard::next()
     onNext( d->currentId );
     std::vector<int>::const_iterator it = qBinaryFind( d->pageOrder.begin(), d->pageOrder.end(), d->currentId );
     assert( it != d->pageOrder.end() );
-    ++it;
+    
+    do {
+        ++it;
+    }
+    while ( d->hiddenPages.find( *it ) != d->hiddenPages.end() );
+
     if ( it == d->pageOrder.end() ) // "Finish"
     {
         d->currentId = InvalidPage;
@@ -240,7 +245,9 @@ int Wizard::Private::previousPage() const
     if ( it == pageOrder.begin() || it == pageOrder.end() )
         return InvalidPage;
 
-    --it;
+    do {
+        --it;
+    } while ( it != pageOrder.begin() && hiddenPages.find( *it ) != hiddenPages.end() );
     return *it; 
 }
 
