@@ -1508,7 +1508,7 @@ bool ObjectTreeParser::processApplicationPkcs7MimeSubtype( partNode * node, Proc
           htmlWriter()->queue( writeSigstatFooter( messagePart ) );
       } else {
 
-        if ( passphraseError ) {
+        if ( passphraseError || smimeType.isEmpty() ) {
           isEncrypted = true;
           signTestNode = 0;
         }
