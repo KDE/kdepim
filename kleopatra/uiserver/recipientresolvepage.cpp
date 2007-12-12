@@ -512,6 +512,7 @@ void RecipientResolvePage::setRecipientsUserMutable( bool isMutable )
     d->recipientsUserMutable = isMutable;
     d->addRecipientButton->setVisible( isMutable );
     d->removeRecipientButton->setVisible( isMutable );
+    emit completeChanged();
 }
 
 void RecipientResolvePage::setSymmetricEncryptionSelectable( bool selectable )
