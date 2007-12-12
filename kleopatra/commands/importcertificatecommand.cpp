@@ -217,6 +217,7 @@ void ImportCertificateCommand::Private::importResult( const GpgME::ImportResult&
     }
 
     showDetails( result );
+    emit q->finished();
 }
 
 GpgME::Protocol ImportCertificateCommand::Private::checkProtocol( const QByteArray& data, const QString& filename ) const
