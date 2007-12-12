@@ -478,6 +478,11 @@ void RecipientResolvePage::Private::updateRadioButtonVisibility()
 void RecipientResolvePage::Private::addRecipient()
 {
     assert( recipientsUserMutable );
+    int count = 1;
+    QString id = i18n( "Recipient" );
+    while ( identifiers.contains( id ) )
+        id = i18n( "Recipient (%1)", ++count );
+    addWidgetForIdentifier( id );
     emit q->completeChanged();
 }
 
