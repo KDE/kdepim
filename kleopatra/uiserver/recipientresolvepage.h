@@ -117,6 +117,12 @@ namespace Kleo {
         bool symmetricEncryptionSelectable() const;
         void setSymmetricEncryptionSelectable( bool selectable );
 
+        /** if true, the user is allowed to remove/add recipients via the UI.
+         * Defaults to @p false.
+         */
+        bool recipientsUserMutable() const;
+        void setRecipientsUserMutable( bool isMutable ); 
+
         void setRecipients( const std::vector<KMime::Types::Mailbox>& recipients );
         std::vector<GpgME::Key> resolvedCertificates() const;
 

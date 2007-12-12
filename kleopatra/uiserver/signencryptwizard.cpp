@@ -248,4 +248,15 @@ void SignEncryptWizard::setRemoveUnencryptedFile( bool remove )
     d->signerResolvePage->setRemoveUnencryptedFile( remove );
 }
 
+bool SignEncryptWizard::recipientsUserMutable() const
+{
+    return d->recipientResolvePage->recipientsUserMutable();
+}
+
+void SignEncryptWizard::setRecipientsUserMutable( bool isMutable )
+{
+    d->recipientResolvePage->setRecipientsUserMutable( isMutable );
+}
+
+
 #include "moc_signencryptwizard.cpp"

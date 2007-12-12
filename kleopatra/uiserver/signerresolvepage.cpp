@@ -269,7 +269,10 @@ std::vector<GpgME::Key> SignerResolvePage::resolvedSigners() const
     std::vector<GpgME::Key> result;
     if ( d->protocol == GpgME::UnknownProtocol )
     {
-        assuan_assert( d->protocol != GpgME::UnknownProtocol || !"SIGN with unspecified protocol not implemented" );
+        if ( !d->certificates[GpgME::OpenPGP].isNull() )
+            result.push_back( d->certificates[GpgME::OpenPGP] );
+        if ( !d->certificates[GpgME::CMS].isNull() )
+            result.push_back( d->certificates[GpgME::CMS] );
     }
     else
     {

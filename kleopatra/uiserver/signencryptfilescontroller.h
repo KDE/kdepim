@@ -94,6 +94,7 @@ namespace Kleo {
     private:
         class Private;
         kdtools::pimpl_ptr<Private> d;
+        Q_PRIVATE_SLOT( d, void slotWizardSignersResolved() )
         Q_PRIVATE_SLOT( d, void slotWizardObjectsResolved() )
         Q_PRIVATE_SLOT( d, void slotWizardRecipientsResolved() )
         Q_PRIVATE_SLOT( d, void slotWizardCanceled() )

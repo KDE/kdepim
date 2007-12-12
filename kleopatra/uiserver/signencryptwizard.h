@@ -105,6 +105,13 @@ namespace Kleo {
         //@}
 
         void setRecipients( const std::vector<KMime::Types::Mailbox> & recipients );
+
+        /** if true, the user is allowed to remove/add recipients via the UI.
+         * Defaults to @p false.
+         */
+        bool recipientsUserMutable() const;
+        void setRecipientsUserMutable( bool isMutable ); 
+
         void setSignersAndCandidates( const std::vector<KMime::Types::Mailbox> & signers, const std::vector< std::vector<GpgME::Key> > & keys );
 
         void connectTask( const boost::shared_ptr<Task> & task, unsigned int idx );

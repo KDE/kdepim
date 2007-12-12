@@ -454,6 +454,7 @@ void SignEncryptFilesController::Private::ensureWizardCreated() {
     connect( w.get(), SIGNAL(recipientsResolved()), q, SLOT(slotWizardRecipientsResolved()), Qt::QueuedConnection );
     connect( w.get(), SIGNAL(canceled()), q, SLOT(slotWizardCanceled()), Qt::QueuedConnection );
     w->setMultipleProtocolsAllowed( true );
+    w->setRecipientsUserMutable( true );
     wizard = w.release();
 }
 

@@ -102,11 +102,12 @@ public:
     };
     bool symmetricEncryptionSelectable;
     std::vector<Mailbox> recipients;
+    bool recipientsUserMutable;
 };
 
 
 RecipientResolvePage::Private::Private( RecipientResolvePage * qq )
-    : q( qq ), presetProtocol( GpgME::UnknownProtocol ), selectedProtocol( presetProtocol ), allowMultipleProtocols( false ), symmetricEncryptionSelectable( false )
+    : q( qq ), presetProtocol( GpgME::UnknownProtocol ), selectedProtocol( presetProtocol ), allowMultipleProtocols( false ), symmetricEncryptionSelectable( false ), recipientsUserMutable( false )
 {
 }
 
@@ -178,7 +179,7 @@ RecipientResolvePage::~RecipientResolvePage() {}
 bool RecipientResolvePage::isComplete() const
 {
     if ( d->widgets.empty() )
-        return false;
+        return !d->recipientsUserMutable;
 
     Q_FOREACH ( RecipientResolveWidget* const i, d->widgets )
     {
@@ -476,11 +477,13 @@ void RecipientResolvePage::Private::updateRadioButtonVisibility()
 
 void RecipientResolvePage::Private::addRecipient()
 {
+    assert( recipientsUserMutable );
     emit q->completeChanged();
 }
 
 void RecipientResolvePage::Private::removeRecipient()
 {
+    assert( recipientsUserMutable );
     emit q->completeChanged();
 }
 
@@ -497,6 +500,18 @@ void RecipientResolvePage::setSymmetricEncryptionEnabled( bool enabled )
 bool RecipientResolvePage::symmetricEncryptionSelectable() const
 {
        return d->symmetricRB->isVisible(); 
+}
+
+bool RecipientResolvePage::recipientsUserMutable() const
+{
+    return d->recipientsUserMutable;
+}
+
+void RecipientResolvePage::setRecipientsUserMutable( bool isMutable )
+{
+    d->recipientsUserMutable = isMutable;
+    d->addRecipientButton->setVisible( isMutable );
+    d->removeRecipientButton->setVisible( isMutable );
 }
 
 void RecipientResolvePage::setSymmetricEncryptionSelectable( bool selectable )
