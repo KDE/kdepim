@@ -35,7 +35,7 @@
 #include "kleo-assuan.h"
 #include "assuancommand.h"
 #include "certificateresolver.h"
-#include "signencryptwizard.h"
+#include "signencryptfileswizard.h"
 #include "signencryptfilestask.h"
 #include "input.h"
 #include "output.h"
@@ -65,9 +65,7 @@ public:
     explicit Private( SignEncryptFilesController * qq );
 
 private:
-    void slotWizardSignersResolved();
-    void slotWizardObjectsResolved();
-    void slotWizardRecipientsResolved();
+    void slotWizardOperationPrepared();
     void slotWizardCanceled();
     void slotTaskDone();
 
@@ -88,10 +86,10 @@ private:
     static void assertValidOperation( unsigned int );
     static QString titleForOperation( unsigned int op );
 private:
-    std::vector< shared_ptr<SignEncryptFilesTask> > incomplete, runnable, completed;
+    std::vector< shared_ptr<SignEncryptFilesTask> > runnable, completed;
     shared_ptr<SignEncryptFilesTask> cms, openpgp;
     weak_ptr<AssuanCommand> command;
-    QPointer<SignEncryptWizard> wizard;
+    QPointer<SignEncryptFilesWizard> wizard;
     unsigned int operation;
     Protocol protocol;
     bool errorDetected : 1;
@@ -99,7 +97,6 @@ private:
 
 SignEncryptFilesController::Private::Private( SignEncryptFilesController * qq )
     : q( qq ),
-      incomplete(),
       runnable(),
       cms(),
       openpgp(),
@@ -236,29 +233,7 @@ createSignEncryptTasksForFileInfo( const QFileInfo & fi, bool sign, bool encrypt
     return result;
 }
 
-void SignEncryptFilesController::Private::slotWizardSignersResolved() {
-
-    try {
-        assuan_assert( wizard );
-
-        const bool encrypt = wizard->encryptionSelected();
-        wizard->setPageVisible( SignEncryptWizard::ResolveRecipientsPage, encrypt );
-        wizard->setCommitPage( encrypt ? SignEncryptWizard::ResolveRecipientsPage : SignEncryptWizard::ObjectsPage );
-
-    } catch ( const assuan_exception & e ) {
-        reportError( e.error(), e.message() );
-    } catch ( const std::exception & e ) {
-        reportError( gpg_error( GPG_ERR_UNEXPECTED ),
-                     i18n("Caught unexpected exception in SignEncryptFilesController::Private::slotWizardSignersResolved: %1",
-                          QString::fromLocal8Bit( e.what() ) ) );
-    } catch ( ... ) {
-        reportError( gpg_error( GPG_ERR_UNEXPECTED ),
-                     i18n("Caught unknown exception in SignEncryptFilesController::Private::slotWizardSignersResolved") );
-    }
-
-}
-
-void SignEncryptFilesController::Private::slotWizardObjectsResolved() {
+void SignEncryptFilesController::Private::slotWizardOperationPrepared() {
 
     try {
 
@@ -303,31 +278,13 @@ void SignEncryptFilesController::Private::slotWizardObjectsResolved() {
             tasks.insert( tasks.end(), created.begin(), created.end() );
         }
 
-        incomplete.swap( tasks );
-
-    } catch ( const assuan_exception & e ) {
-        reportError( e.error(), e.message() );
-    } catch ( const std::exception & e ) {
-        reportError( gpg_error( GPG_ERR_UNEXPECTED ),
-                     i18n("Caught unexpected exception in SignEncryptFilesController::Private::slotWizardObjectsResolved: %1",
-                          QString::fromLocal8Bit( e.what() ) ) );
-    } catch ( ... ) {
-        reportError( gpg_error( GPG_ERR_UNEXPECTED ),
-                     i18n("Caught unknown exception in SignEncryptFilesController::Private::slotWizardObjectsResolved") );
-    }
-}
-
-void SignEncryptFilesController::Private::slotWizardRecipientsResolved() {
-
-    try {
-
-        int i = 0;
-        Q_FOREACH( const shared_ptr<Task> task, incomplete )
-            connectTask( task, i++ );
-
         assuan_assert( runnable.empty() );
 
-        runnable.swap( incomplete );
+        runnable.swap( tasks );
+
+        int i = 0;
+        Q_FOREACH( const shared_ptr<Task> task, runnable )
+            connectTask( task, i++ );
 
         schedule();
 
@@ -335,11 +292,11 @@ void SignEncryptFilesController::Private::slotWizardRecipientsResolved() {
         reportError( e.error(), e.message() );
     } catch ( const std::exception & e ) {
         reportError( gpg_error( GPG_ERR_UNEXPECTED ),
-                     i18n("Caught unexpected exception in SignEncryptFilesController::Private::slotWizardRecipientsResolved: %1",
+                     i18n("Caught unexpected exception in SignEncryptFilesController::Private::slotWizardOperationPrepared: %1",
                           QString::fromLocal8Bit( e.what() ) ) );
     } catch ( ... ) {
         reportError( gpg_error( GPG_ERR_UNEXPECTED ),
-                     i18n("Caught unknown exception in SignEncryptFilesController::Private::slotWizardRecipientsResolved") );
+                     i18n("Caught unknown exception in SignEncryptFilesController::Private::slotWizardOperationPrepared") );
     }
 }
 
@@ -429,22 +386,11 @@ void SignEncryptFilesController::Private::cancelAllTasks() {
         openpgp->cancel();
 }
 
-
-#if 0
-static SignEncryptWizard::TriState signingTriState( unsigned int op ) {
-    notImplemented();
-}
-
-static SignEncryptWizard::TriState encryptionTriState( unsigned int op ) {
-    notImplemented();
-}
-#endif
-
 void SignEncryptFilesController::Private::ensureWizardCreated() {
     if ( wizard )
         return;
 
-    std::auto_ptr<SignEncryptWizard> w( new SignEncryptWizard );
+    std::auto_ptr<SignEncryptFilesWizard> w( new SignEncryptFilesWizard );
     if ( const shared_ptr<AssuanCommand> cmd = command.lock() )
         w = cmd->applyWindowID( w );
 
@@ -459,9 +405,7 @@ void SignEncryptFilesController::Private::ensureWizardCreated() {
     w->setCommitPage( SignEncryptWizard::ResolveRecipientsPage );
 
     w->setAttribute( Qt::WA_DeleteOnClose );
-    connect( w.get(), SIGNAL(signersResolved()), q, SLOT(slotWizardSignersResolved()), Qt::QueuedConnection );
-    connect( w.get(), SIGNAL(objectsResolved()), q, SLOT(slotWizardObjectsResolved()), Qt::QueuedConnection );
-    connect( w.get(), SIGNAL(recipientsResolved()), q, SLOT(slotWizardRecipientsResolved()), Qt::QueuedConnection );
+    connect( w.get(), SIGNAL(operationPrepared()), q, SLOT(slotWizardOperationPrepared()), Qt::QueuedConnection );
     connect( w.get(), SIGNAL(canceled()), q, SLOT(slotWizardCanceled()), Qt::QueuedConnection );
     w->setMultipleProtocolsAllowed( true );
     w->setRecipientsUserMutable( true );

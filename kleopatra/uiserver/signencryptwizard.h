@@ -65,7 +65,7 @@ namespace Kleo {
         Q_OBJECT
     public:
         explicit SignEncryptWizard( QWidget * parent=0, Qt::WindowFlags f=0 );
-        ~SignEncryptWizard();
+        virtual ~SignEncryptWizard();
 
         enum Page {
             ResolveSignerPage=0,

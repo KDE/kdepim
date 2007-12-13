@@ -54,6 +54,7 @@ if ( USABLE_ASSUAN_FOUND )
     uiserver/signcommand.cpp
     uiserver/signencryptfilescommand.cpp
     uiserver/signencryptfilescontroller.cpp
+    uiserver/signencryptfileswizard.cpp
     uiserver/signencryptfilestask.cpp
     uiserver/signingcertificateselectiondialog.cpp
     uiserver/certificateresolver.cpp

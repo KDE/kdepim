@@ -1,5 +1,5 @@
 /* -*- mode: c++; c-basic-offset:4 -*-
-    uiserver/signencryptfilescontroller.h
+    uiserver/signencryptfileswizard.h
 
     This file is part of Kleopatra, the KDE keymanager
     Copyright (c) 2007 Klarälvdalens Datakonsult AB
@@ -30,76 +30,32 @@
     your version.
 */
 
-#ifndef __KLEOPATRA_UISERVER_SIGNENCRYPTFILESCONTROLLER_H__
-#define __KLEOPATRA_UISERVER_SIGNENCRYPTFILESCONTROLLER_H__
+#ifndef __KLEOPATRA_SIGNENCRYPTFILESWIZARD_H__
+#define __KLEOPATRA_SIGNENCRYPTFILESWIZARD_H__
 
-#include <QObject>
-
+#include "signencryptwizard.h"
+    
 #include <utils/pimpl_ptr.h>
-
-#include <gpgme++/global.h>
-
-#include <boost/shared_ptr.hpp>
-
-#include <vector>
-
-namespace KMime {
-namespace Types {
-    class Mailbox;
-}
-}
-
+    
 namespace Kleo {
 
-    class AssuanCommand;
-
-    class SignEncryptFilesController : public QObject {
+    class SignEncryptFilesWizard : public SignEncryptWizard {
         Q_OBJECT
-    public:
-        explicit SignEncryptFilesController( QObject * parent=0 );
-        ~SignEncryptFilesController();
+            public:
+        explicit SignEncryptFilesWizard( QWidget * parent=0, Qt::WFlags f=0 );
+        ~SignEncryptFilesWizard();
+        
 
-        void setProtocol( GpgME::Protocol proto );
-        GpgME::Protocol protocol() const;
-        //const char * protocolAsString() const;
-
-        void setCommand( const boost::shared_ptr<AssuanCommand> & cmd );
-
-        enum Operation {
-            SignDisallowed = 0,
-            SignAllowed = 1,
-            SignForced  = 2,
-
-            SignMask = SignAllowed|SignForced,
-
-            EncryptDisallowed = 0,
-            EncryptAllowed = 4,
-            EncryptForced = 8,
-
-            EncryptMask = EncryptAllowed|EncryptForced
-        };
-        void setOperationMode( unsigned int mode );
-
-        void setFiles( const QStringList & files );
-
-        void start();
-
-    public Q_SLOTS:
-        void cancel();
+        /*reimp*/ void onNext( int currentId );
 
     Q_SIGNALS:
-        void error( int err, const QString & details );
-        void done();
+        void operationPrepared();
 
     private:
         class Private;
         kdtools::pimpl_ptr<Private> d;
-        Q_PRIVATE_SLOT( d, void slotWizardOperationPrepared() )
-        Q_PRIVATE_SLOT( d, void slotWizardCanceled() )
-        Q_PRIVATE_SLOT( d, void slotTaskDone() )
-        Q_PRIVATE_SLOT( d, void schedule() )
+        Q_PRIVATE_SLOT( d, void operationSelected() );
     };
 }
 
-#endif /* __KLEOPATRA_UISERVER_SIGNENCRYPTFILESCONTROLLER_H__ */
-
+#endif // __KLEOPATRA_SIGNENCRYPTFILESWIZARD_H__
