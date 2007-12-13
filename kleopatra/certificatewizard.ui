@@ -334,7 +334,7 @@ there.&lt;/p>&lt;qt></string>
        <item row="0" column="1" >
         <widget class="QFrame" name="storeCAWidget" >
          <property name="frameShape" >
-          <enum>QFrame::StyledPanel</enum>
+          <enum>QFrame::NoFrame</enum>
          </property>
          <property name="frameShadow" >
           <enum>QFrame::Raised</enum>

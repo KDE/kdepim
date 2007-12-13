@@ -74,6 +74,7 @@
 #include <QComboBox>
 #include <QGridLayout>
 #include <QByteArray>
+#include <QVBoxLayout>
 #include <QDBusConnection>
 #include <QDBusConnectionInterface>
 #include <QDBusReply>
@@ -128,8 +129,14 @@ CertificateWizardImpl::CertificateWizardImpl( QWidget* parent )
     // setNextEnabled( personalDataPage, false ); // ## disable again once we have a criteria when to enable again
 
     createPersonalDataPage();
-    _storeFR = new Kleo::FileNameRequester( storeCAWidget );
+    QVBoxLayout* layout = new QVBoxLayout( storeCAWidget );
+    layout->setMargin( 0 );
+    _storeFR = new Kleo::FileNameRequester;
+    connect( storeInFileRB, SIGNAL( toggled( bool ) ), 
+            _storeFR, SLOT( setEnabled( bool ) ) );
+    layout->addWidget( _storeFR );
     // Allow to select remote URLs
+    
 #ifdef KLEO_TEMPORARILY_REMOVED //PENDING(frank)
     _storeFR->setMode( KFile::File ); 
     _storeFR->setFilter( "application/pkcs10" );
