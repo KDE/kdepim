@@ -31,6 +31,7 @@
 */
 
 #include "importcertificatecommand.h"
+#include "uiserver/classify.h"
 
 #include <kleo/cryptobackendfactory.h>
 #include <kleo/importjob.h>
@@ -221,22 +222,9 @@ void ImportCertificateCommand::Private::importResult( const GpgME::ImportResult&
     emit q->finished();
 }
 
-GpgME::Protocol ImportCertificateCommand::Private::checkProtocol( const QByteArray& data, const QString& filename ) const
-{
-    // PENDING(frank) use Kleo::classify!
-    QStringList smimeSuffixes;
-    smimeSuffixes << ".pem" << ".der" << ".p7c" << ".p12";
-    Q_FOREACH ( const QString& i, smimeSuffixes )
-        if ( filename.endsWith( i, Qt::CaseInsensitive ) )
-            return GpgME::CMS;
-    if ( filename.endsWith( ".asc", Qt::CaseInsensitive ) )
-        return GpgME::OpenPGP;
-    return GpgME::UnknownProtocol;
-}
-
 void ImportCertificateCommand::Private::startImport( const QByteArray& data )
 {
-    const GpgME::Protocol protocol = checkProtocol( data, filename );
+    const GpgME::Protocol protocol = findProtocol( filename );
     if ( protocol == GpgME::UnknownProtocol ) //TODO: might use exceptions here
     {
         KMessageBox::error( parent, i18n( "Could not determine certificate type.", filename ), i18n( "Certificate Import Failed" ) );
