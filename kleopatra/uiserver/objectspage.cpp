@@ -70,6 +70,7 @@ private:
 ObjectsPage::Private::Private( ObjectsPage * qq )
   : q( qq )
 {
+    q->setTitle( i18n( "<b>Objects</b>" ) );
     QVBoxLayout* const top = new QVBoxLayout( q );
     fileListWidget = new QListWidget;
     fileListWidget->setSelectionMode( QAbstractItemView::MultiSelection );

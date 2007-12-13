@@ -109,6 +109,7 @@ public:
 RecipientResolvePage::Private::Private( RecipientResolvePage * qq )
     : q( qq ), presetProtocol( GpgME::UnknownProtocol ), selectedProtocol( presetProtocol ), allowMultipleProtocols( false ), symmetricEncryptionSelectable( false ), recipientsUserMutable( false )
 {
+    q->setTitle( i18n( "<b>Recipients</b>" ) ); 
 }
 
 RecipientResolvePage::Private::~Private() {}

@@ -72,7 +72,7 @@ WizardResultPage::Private::~Private() {}
 WizardResultPage::WizardResultPage( QWidget * parent )
   : WizardPage( parent ), d( new Private( this ) )
 {
-    setTitle( i18n( "Results" ) );
+    setTitle( i18n( "<b>Results</b>" ) );
 }
 
 
