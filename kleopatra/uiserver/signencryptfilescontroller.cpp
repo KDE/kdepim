@@ -220,8 +220,13 @@ static std::vector< shared_ptr<SignEncryptFilesTask> >
 createSignEncryptTasksForFileInfo( const QFileInfo & fi, bool sign, bool encrypt, bool ascii, const std::vector<Key> & pgpRecipients, const std::vector<Key> & pgpSigners, const std::vector<Key> & cmsRecipients, const std::vector<Key> & cmsSigners ) {
     std::vector< shared_ptr<SignEncryptFilesTask> > result;
 
-    const bool pgp = encrypt && !pgpRecipients.empty() || sign && !pgpSigners.empty() ;
-    const bool cms = encrypt && !cmsRecipients.empty() || sign && !cmsSigners.empty() ;
+    const bool shallPgpSign = sign && !pgpSigners.empty();
+    const bool shallPgpEncrypt = encrypt && !pgpRecipients.empty();
+    const bool pgp = shallPgpEncrypt && ( !sign || shallPgpSign ) || !encrypt && shallPgpSign;
+
+    const bool shallCmsSign = sign && !cmsSigners.empty();
+    const bool shallCmsEncrypt = encrypt && !cmsRecipients.empty();
+    const bool cms = shallCmsEncrypt && ( !sign || shallCmsSign ) || !encrypt && shallCmsSign;
 
     result.reserve( pgp + cms );
 
