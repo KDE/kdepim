@@ -106,8 +106,8 @@ namespace Kleo {
             virtual QString explanation() const = 0;
         };
 
-        void setValidator( const boost::shared_ptr<const Validator>& );
-        boost::shared_ptr<const Validator> validator() const;
+        void setValidator( const boost::shared_ptr<Validator>& );
+        boost::shared_ptr<Validator> validator() const;
 
     private:
         class Private;
@@ -115,7 +115,7 @@ namespace Kleo {
 
         Q_PRIVATE_SLOT( d, void setOperation( int ) )
         Q_PRIVATE_SLOT( d, void selectCertificates() )
-
+        Q_PRIVATE_SLOT( d, void updateUi() )
     };
 }
 

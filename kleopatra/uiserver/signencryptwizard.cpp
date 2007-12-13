@@ -259,4 +259,16 @@ void SignEncryptWizard::setRecipientsUserMutable( bool isMutable )
 }
 
 
+void SignEncryptWizard::setSignerResolvePageValidator( const boost::shared_ptr<SignerResolvePage::Validator>& validator )
+{
+    d->signerResolvePage->setValidator( validator );
+}
+
+SignerResolvePage* SignEncryptWizard::signerResolvePage()
+{
+    return d->signerResolvePage;
+}
+
+
+
 #include "moc_signencryptwizard.cpp"

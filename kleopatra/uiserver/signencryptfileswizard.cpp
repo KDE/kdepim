@@ -33,6 +33,10 @@
 #include "signencryptfileswizard.h"
 #include "signerresolvepage.h"
 
+#include <KLocale>
+
+#include <gpgme++/key.h>
+
 #include <cassert>
 
 using namespace Kleo;
@@ -44,25 +48,77 @@ namespace {
         explicit SignerResolveValidator( SignerResolvePage* page ); 
         bool isComplete() const;
         QString explanation() const;
+        void update() const;
 
     private:
-        SignerResolvePage* const m_page;
+        SignerResolvePage* m_page;
+        mutable QString expl;
+        mutable bool complete;
     };
 }
 
-SignerResolveValidator::SignerResolveValidator( SignerResolvePage* page ) : SignerResolvePage::Validator(), m_page( page )
+SignerResolveValidator::SignerResolveValidator( SignerResolvePage* page ) : SignerResolvePage::Validator(), m_page( page ), complete( true )
 {
-    assert( page );
+    assert( m_page );
+}
+
+void SignerResolveValidator::update() const {
+    const bool needPgpSC = m_page->operation() == SignerResolvePage::SignAndEncrypt;
+    const bool needAnySC = m_page->operation() != SignerResolvePage::EncryptOnly;
+    const bool havePgpSC = !m_page->signingCertificates( GpgME::OpenPGP ).empty();
+    const bool haveCmsSC = !m_page->signingCertificates( GpgME::CMS ).empty();
+    const bool haveAnySC = havePgpSC || haveCmsSC;
+
+    complete = ( !needPgpSC || havePgpSC ) && ( !needAnySC || haveAnySC );
+
+#undef setAndReturn
+#define setAndReturn(text) { expl = text; return; }
+
+    if( needPgpSC && !havePgpSC ) 
+        setAndReturn( i18n( "You need to select an OpenPGP signing certificate to perform this operation." ) );
+
+    if ( needAnySC && !haveAnySC )
+        setAndReturn( i18n( "You need to select at least one signing certificate to proceed." ) );
+
+    if ( needPgpSC && havePgpSC )
+
+        setAndReturn( i18n( "Only OpenPGP certificates will be offered for selection because you specified a combined sign/encrypt operation, which is only available for OpenPGP." ) );
+
+    if ( havePgpSC && !haveCmsSC )
+        setAndReturn( i18n( "Only OpenPGP certificates will be offered for selection because you specified only an OpenPGP signing certificate." ) );
+
+    if ( haveCmsSC && !havePgpSC )
+        setAndReturn( i18n( "Only S/MIME certificates will be offered for selection because you specified only an S/MIME signing certificate." ) );
+
+    const QString second = i18n( " One for OpenPGP recipients, one for S/MIME recipients." );
+
+    switch ( m_page->operation() )
+    {
+    case SignerResolvePage::SignAndEncrypt:
+        expl = i18n( "If you select certificates of both type OpenPGP and S/MIME, two encrypted files will be created." ) + second;
+        break;
+    case SignerResolvePage::SignOnly:
+        expl = i18n( "If you select certificates of both type OpenPGP and S/MIME, two signed files will be created." ) + second;
+        break;
+    case SignerResolvePage::EncryptOnly:
+        expl = i18n( "If you select certificates of both type OpenPGP and S/MIME, two signed/encrypted files will be created." ) + second;
+        break;
+    }
+
+
+#undef setAndReturn
 }
 
 bool SignerResolveValidator::isComplete() const
 {
-    return true;
+    update();
+    return complete;
 }
 
 QString SignerResolveValidator::explanation() const
 {
-    return QString();
+    update();
+    return expl;
 }
 
 
@@ -84,6 +140,7 @@ SignEncryptFilesWizard::Private::Private( SignEncryptFilesWizard * qq )
 {
     q->connect( q, SIGNAL( signersResolved() ), q, SLOT( operationSelected() ) );
     std::vector<int> pageOrder;
+    q->setSignerResolvePageValidator( boost::shared_ptr<SignerResolveValidator>( new SignerResolveValidator( q->signerResolvePage() ) ) );
     pageOrder.push_back( SignEncryptWizard::ResolveSignerPage );
     pageOrder.push_back( SignEncryptWizard::ObjectsPage );
     pageOrder.push_back( SignEncryptWizard::ResolveRecipientsPage );

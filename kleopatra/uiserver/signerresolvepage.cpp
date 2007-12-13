@@ -77,8 +77,7 @@ public:
     void selectCertificates();
     void setCertificates( const QMap<GpgME::Protocol, GpgME::Key>& certs );
     void updateModeSelectionWidgets();
-    void setExplanationText( const QString& );
-    QString explanation() const;
+    void updateUi();
 
 private:
 
@@ -102,11 +101,11 @@ private:
     bool signingSelected;
     bool encryptionSelected;
     QMap<GpgME::Protocol,GpgME::Key> certificates;
-    boost::shared_ptr<const SignerResolvePage::Validator> validator;
+    boost::shared_ptr<SignerResolvePage::Validator> validator;
 };
 
 SignerResolvePage::Private::Private( SignerResolvePage * qq )
-    : q( qq ), operation( SignOnly ), protocol( GpgME::UnknownProtocol ),
+    : q( qq ), operation( SignAndEncrypt ), protocol( GpgME::UnknownProtocol ),
       signingMutable( true ), encryptionMutable( true ), 
       signingSelected( false ), encryptionSelected( false ), validator( new ValidatorImpl )
 
@@ -182,26 +181,19 @@ SignerResolvePage::Private::Private( SignerResolvePage * qq )
 
     setCertificates( QMap<GpgME::Protocol, GpgME::Key>() );
     updateModeSelectionWidgets();
+    updateUi();
 }
 
-QString SignerResolvePage::Private::explanation() const
+void SignerResolvePage::setValidator( const boost::shared_ptr<SignerResolvePage::Validator>& validator )
 {
-    return QString();
-}
-
-void SignerResolvePage::setValidator( const boost::shared_ptr<const SignerResolvePage::Validator>& validator )
-{
+    assert( validator );
     d->validator = validator;
+    d->updateUi();
 }
 
-boost::shared_ptr<const SignerResolvePage::Validator> SignerResolvePage::validator() const
+boost::shared_ptr<SignerResolvePage::Validator> SignerResolvePage::validator() const
 {
     return d->validator;
-}
-
-void SignerResolvePage::Private::setExplanationText( const QString& str )
-{
-    explanationLabel->setText( str );
 }
 
 SignerResolvePage::Private::~Private() {}
@@ -214,9 +206,16 @@ void SignerResolvePage::Private::setCertificates( const QMap<GpgME::Protocol, Gp
     cmsLabel->setText( !cmsKey.isNull() ? Formatting::formatForComboBox( cmsKey ) : i18n( "No certificate selected" ) );
     const GpgME::Key pgpKey = certs[GpgME::OpenPGP];
     pgpLabel->setText( !pgpKey.isNull() ? Formatting::formatForComboBox( pgpKey ) : i18n( "No certificate selected" )  );
-    emit q->completeChanged();
+    updateUi();
 }
 
+void SignerResolvePage::Private::updateUi()
+{
+    const QString explanation = validator->explanation();
+    explanationLabel->setVisible( !explanation.isNull() );
+    explanationLabel->setText( explanation );
+    emit q->completeChanged();
+}
 
 void SignerResolvePage::Private::updateModeSelectionWidgets()
 {
@@ -249,6 +248,7 @@ void SignerResolvePage::Private::selectCertificates()
     }
 
     delete dlg;
+    updateUi();
 }
 
 void SignerResolvePage::Private::setOperation( int mode_ )
@@ -256,6 +256,7 @@ void SignerResolvePage::Private::setOperation( int mode_ )
     operation = static_cast<SignerResolvePage::Operation>( mode_ );
     signingBox->setEnabled( operation != EncryptOnly );
     encryptBox->setEnabled( operation != SignOnly );
+    updateUi();
 }
 
 
@@ -290,7 +291,7 @@ void SignerResolvePage::setSignersAndCandidates( const std::vector<KMime::Types:
     default: // > 1
         assuan_assert( !"Resolving multiple signers not implemented" );
     }
-    emit completeChanged();
+    d->updateUi();
 }
 
 
@@ -335,18 +336,8 @@ std::vector<GpgME::Key> SignerResolvePage::resolvedSigners() const
 
 bool SignerResolvePage::isComplete() const
 {
-    //TODO: factor out mode-specific code
-    if ( operation() != EncryptOnly )
-    {
-        return true;
-#if 0 // TODO: implement this correctly, dependent on selected mode and signing certificates
-        return d->certificates.contains( d->protocol ) && !d->certificates[d->protocol].isNull();
-#endif
-    }
-    else
-    {
-        return true;
-    }
+    assert( d->validator );
+    return d->validator->isComplete();
 }
 
 bool SignerResolvePage::encryptionSelected() const

@@ -34,6 +34,7 @@
 #define __KLEOPATRA_UISERVER_SIGNENCRYPTWIZARD_H__
 
 #include "wizard.h"
+#include "signerresolvepage.h"
 
 #include <utils/pimpl_ptr.h>
 
@@ -132,7 +133,12 @@ namespace Kleo {
         void signersResolved();
         void objectsResolved();
         void recipientsResolved();
- 
+
+    protected:
+        SignerResolvePage* signerResolvePage();
+        void setSignerResolvePageValidator( const boost::shared_ptr<SignerResolvePage::Validator>& validator );
+        
+
     private:
         class Private;
         kdtools::pimpl_ptr<Private> d;
