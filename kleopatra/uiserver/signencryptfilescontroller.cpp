@@ -186,7 +186,7 @@ void SignEncryptFilesController::start() {
 }
 
 static shared_ptr<SignEncryptFilesTask>
-createSignEncryptTaskForFileInfo( const QFileInfo & fi, bool sign, bool encrypt, bool ascii, const std::vector<Key> & recipients, const std::vector<Key> & signers ) {
+createSignEncryptTaskForFileInfo( const QFileInfo & fi, bool pgp, bool sign, bool encrypt, bool ascii, const std::vector<Key> & recipients, const std::vector<Key> & signers ) {
     const shared_ptr<SignEncryptFilesTask> task( new SignEncryptFilesTask );
     task->setSign( sign );
     task->setEncrypt( encrypt );
@@ -196,7 +196,7 @@ createSignEncryptTaskForFileInfo( const QFileInfo & fi, bool sign, bool encrypt,
     if ( encrypt )
         task->setRecipients( recipients );
 
-    unsigned int cls = Class::OpenPGP;
+    unsigned int cls = pgp ? Class::OpenPGP : Class::CMS ;
     if ( encrypt )
         cls |= Class::CipherText;
     else if ( sign )
@@ -226,9 +226,9 @@ createSignEncryptTasksForFileInfo( const QFileInfo & fi, bool sign, bool encrypt
     result.reserve( pgp + cms );
 
     if ( pgp )
-        result.push_back( createSignEncryptTaskForFileInfo( fi, sign, encrypt, ascii, pgpRecipients, pgpSigners ) );
+        result.push_back( createSignEncryptTaskForFileInfo( fi, true, sign, encrypt, ascii, pgpRecipients, pgpSigners ) );
     if ( cms )
-        result.push_back( createSignEncryptTaskForFileInfo( fi, sign, encrypt, ascii, cmsRecipients, cmsSigners ) );
+        result.push_back( createSignEncryptTaskForFileInfo( fi, false, sign, encrypt, ascii, cmsRecipients, cmsSigners ) );
 
     return result;
 }
