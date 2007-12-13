@@ -204,14 +204,14 @@ createSignEncryptTaskForFileInfo( const QFileInfo & fi, bool sign, bool encrypt,
     cls |= ascii ? Class::Ascii : Class::Binary ;
 
     const QString input = fi.absoluteFilePath();
-    task->setInput( Input::createFromFile( input ) );
+    task->setInputFileName( input );
 
     const char * ext = outputFileExtension( cls );
     if ( !ext )
         ext = "out"; // ### error out?
 
     const QString output = input + '.' + ext;
-    task->setOutput( Output::createFromFile( output, false ) );
+    task->setOutputFileName( output );
 
     return task;
 }

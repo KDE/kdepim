@@ -121,6 +121,7 @@ private:
 private:
     shared_ptr<Input> input;
     shared_ptr<Output> output;
+    QString inputFileName, outputFileName;
     std::vector<Key> signers;
     std::vector<Key> recipients;
 
@@ -136,6 +137,8 @@ SignEncryptFilesTask::Private::Private( SignEncryptFilesTask * qq )
     : q( qq ),
       input(),
       output(),
+      inputFileName(),
+      outputFileName(),
       signers(),
       recipients(),
       sign( true ),
@@ -155,16 +158,16 @@ SignEncryptFilesTask::SignEncryptFilesTask( QObject * p )
 
 SignEncryptFilesTask::~SignEncryptFilesTask() {}
 
-void SignEncryptFilesTask::setInput( const shared_ptr<Input> & input ) {
+void SignEncryptFilesTask::setInputFileName( const QString & fileName ) {
     assuan_assert( !d->job );
-    assuan_assert( input );
-    d->input = input;
+    assuan_assert( !fileName.isEmpty() );
+    d->inputFileName = fileName;
 }
 
-void SignEncryptFilesTask::setOutput( const shared_ptr<Output> & output ) {
+void SignEncryptFilesTask::setOutputFileName( const QString & fileName ) {
     assuan_assert( !d->job );
-    assuan_assert( output );
-    d->output = output;
+    assuan_assert( !fileName.isEmpty() );
+    d->outputFileName = fileName;
 }
 
 void SignEncryptFilesTask::setSigners( const std::vector<Key> & signers ) {
@@ -215,10 +218,11 @@ QString SignEncryptFilesTask::label() const {
 
 void SignEncryptFilesTask::doStart() {
     assuan_assert( !d->job );
-    assuan_assert( d->input );
-    assuan_assert( d->output );
     if ( d->sign )
         assuan_assert( !d->signers.empty() );
+
+    d->input = Input::createFromFile( d->inputFileName );
+    d->output = Output::createFromFile( d->outputFileName, false );
 
     if ( d->encrypt )
         if ( d->sign ) {

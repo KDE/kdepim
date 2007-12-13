@@ -43,14 +43,13 @@
 
 #include <vector>
 
+class QString;
+
 namespace GpgME {
     class Key;
 }
 
 namespace Kleo {
-
-    class Input;
-    class Output;
 
     class SignEncryptFilesTask : public Task {
         Q_OBJECT
@@ -58,8 +57,8 @@ namespace Kleo {
         explicit SignEncryptFilesTask( QObject * parent=0 );
         ~SignEncryptFilesTask();
 
-        void setInput( const boost::shared_ptr<Input> & input );
-        void setOutput( const boost::shared_ptr<Output> & output );
+        void setInputFileName( const QString & fileName );
+        void setOutputFileName( const QString & fileName );
         void setSigners( const std::vector<GpgME::Key> & singners );
         void setRecipients( const std::vector<GpgME::Key> & recipients );
 
