@@ -177,6 +177,8 @@ void Wizard::setPage( int id, WizardPage* widget )
     d->idToPage[id] = widget;
     d->stack->addWidget( widget );
     connect( widget, SIGNAL( completeChanged() ), this, SLOT( updateButtonStates() ) );
+    connect( widget, SIGNAL( titleChanged() ), this, SLOT( updateHeader() ) );
+    connect( widget, SIGNAL( subTitleChanged() ), this, SLOT( updateHeader() ) );
     connect( widget, SIGNAL( explanationChanged() ), this, SLOT( updateHeader() ) );
 }
 

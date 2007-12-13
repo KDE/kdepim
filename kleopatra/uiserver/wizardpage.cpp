@@ -82,7 +82,10 @@ QString WizardPage::title() const
 
 void WizardPage::setTitle( const QString& title )
 {
+    if ( d->title == title )
+        return;
     d->title = title;
+    emit titleChanged();
 }
 
 QString WizardPage::subTitle() const
@@ -92,7 +95,10 @@ QString WizardPage::subTitle() const
 
 void WizardPage::setSubTitle( const QString& subTitle )
 {
+    if ( d->subTitle == subTitle )
+        return;
     d->subTitle = subTitle;
+    emit subTitleChanged();
 }
 
 QString WizardPage::explanation() const

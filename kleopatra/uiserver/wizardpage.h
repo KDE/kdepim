@@ -62,6 +62,8 @@ namespace Kleo {
     Q_SIGNALS:
         void completeChanged();
         void explanationChanged();
+        void titleChanged();
+        void subTitleChanged();
 
     private:
         class Private;
