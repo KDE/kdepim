@@ -54,7 +54,7 @@ namespace Kleo {
 
         virtual GpgME::Protocol protocol() const = 0;
 
-        virtual void start() = 0;
+        void start();
 
         virtual QString label() const = 0;
 
@@ -65,6 +65,9 @@ namespace Kleo {
         void progress( const QString & what, int current, int total );
         void error( int err, const QString & details );
         void result( const boost::shared_ptr<const Kleo::Task::Result> & );
+
+    private:
+        virtual void doStart() = 0;
 
     private:
         class Private;

@@ -213,47 +213,43 @@ QString SignEncryptFilesTask::label() const {
     return d->input ? d->input->label() : QString();
 }
 
-void SignEncryptFilesTask::start() {
-    try {
-        assuan_assert( !d->job );
-        assuan_assert( d->input );
-        assuan_assert( d->output );
-        if ( d->sign )
-            assuan_assert( !d->signers.empty() );
+void SignEncryptFilesTask::doStart() {
+    assuan_assert( !d->job );
+    assuan_assert( d->input );
+    assuan_assert( d->output );
+    if ( d->sign )
+        assuan_assert( !d->signers.empty() );
 
-        if ( d->encrypt )
-            if ( d->sign ) {
-                std::auto_ptr<Kleo::SignEncryptJob> job = d->createSignEncryptJob( protocol() );
-                assuan_assert( job.get() );
+    if ( d->encrypt )
+        if ( d->sign ) {
+            std::auto_ptr<Kleo::SignEncryptJob> job = d->createSignEncryptJob( protocol() );
+            assuan_assert( job.get() );
 
-                job->start( d->signers, d->recipients,
-                            d->input->ioDevice(), d->output->ioDevice(), true );
+            job->start( d->signers, d->recipients,
+                        d->input->ioDevice(), d->output->ioDevice(), true );
 
-                d->job = job.release();
-            } else {
-                std::auto_ptr<Kleo::EncryptJob> job = d->createEncryptJob( protocol() );
-                assuan_assert( job.get() );
+            d->job = job.release();
+        } else {
+            std::auto_ptr<Kleo::EncryptJob> job = d->createEncryptJob( protocol() );
+            assuan_assert( job.get() );
 
-                job->start( d->recipients, d->input->ioDevice(), d->output->ioDevice(), true );
+            job->start( d->recipients, d->input->ioDevice(), d->output->ioDevice(), true );
 
-                d->job = job.release();
-            }
-        else
-            if ( d->sign ) {
-                std::auto_ptr<Kleo::SignJob> job = d->createSignJob( protocol() );
-                assuan_assert( job.get() );
+            d->job = job.release();
+        }
+    else
+        if ( d->sign ) {
+            std::auto_ptr<Kleo::SignJob> job = d->createSignJob( protocol() );
+            assuan_assert( job.get() );
 
-                job->start( d->signers,
-                            d->input->ioDevice(), d->output->ioDevice(),
-                            d->detached ? GpgME::Detached : GpgME::NormalSignatureMode );
+            job->start( d->signers,
+                        d->input->ioDevice(), d->output->ioDevice(),
+                        d->detached ? GpgME::Detached : GpgME::NormalSignatureMode );
 
-                d->job = job.release();
-            } else {
-                assuan_assert( !"Either 'sign' or 'encrypt' must be set!" );
-            }
-    } catch ( const GpgME::Exception & e ) {
-        emit error( e.error(), QString::fromLocal8Bit( e.what() ) );
-    }
+            d->job = job.release();
+        } else {
+            assuan_assert( !"Either 'sign' or 'encrypt' must be set!" );
+        }
 }
 
 void SignEncryptFilesTask::cancel() {

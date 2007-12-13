@@ -148,7 +148,7 @@ QString EncryptEMailTask::label() const
     return d->input ? d->input->label() : QString();
 }
 
-void EncryptEMailTask::start() {
+void EncryptEMailTask::doStart() {
     assuan_assert( !d->job );
     assuan_assert( d->input );
     assuan_assert( d->output );

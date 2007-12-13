@@ -159,7 +159,7 @@ QString SignEMailTask::label() const
     return d->input ? d->input->label() : QString();
 }
 
-void SignEMailTask::start() {
+void SignEMailTask::doStart() {
     assuan_assert( !d->job );
     assuan_assert( d->input );
     assuan_assert( d->output );

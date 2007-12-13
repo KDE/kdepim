@@ -70,9 +70,11 @@ namespace Kleo {
 
         GpgME::Protocol protocol() const;
 
-        /* reimp */ void start();
         /* reimp */ void cancel();
         /* reimp */ QString label() const;
+
+    private:
+        /* reimp */ void doStart();
 
     private:
         class Private;

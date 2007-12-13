@@ -68,6 +68,13 @@ Task::Task( QObject * p )
 
 Task::~Task() {}
 
+void Task::start() {
+    try {
+        doStart();
+    } catch ( const GpgME::Exception & e ) {
+        emit error( e.error(), QString::fromLocal8Bit( e.what() ) );
+    }
+}
 
 static QString makeNonce() {
     // ### make better
