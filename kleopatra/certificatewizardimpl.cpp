@@ -54,10 +54,12 @@
 #include <kapplication.h>
 #include <kdebug.h>
 #include <kdialog.h>
+#ifdef KLEO_TEMPORARILY_REMOVED //PENDING(frank)
 #include <kurlrequester.h>
 #include <kio/job.h>
 #include <kio/jobuidelegate.h>
 #include <kio/netaccess.h>
+#endif
 #include <ktoolinvocation.h>
 #include <kconfiggroup.h>
 #include <KDBusServiceStarter>
