@@ -301,10 +301,13 @@ void SignEncryptFilesTask::Private::slotResult( const SigningResult & result ) {
     if ( result.error().code() ) {
         output->cancel();
         emit q->error( result.error(), makeErrorString( result ) );
-    } else {
-        output->finalize();
-        emit q->result( shared_ptr<Result>( new SignEncryptFilesResult( result ) ) );
-    }
+    } else
+        try {
+            output->finalize();
+            emit q->result( shared_ptr<Result>( new SignEncryptFilesResult( result ) ) );
+        } catch ( const assuan_exception & e ) {
+            emit q->error( e.error(), e.message() );
+        }
 }
 
 void SignEncryptFilesTask::Private::slotResult( const SigningResult & sresult, const EncryptionResult & eresult ) {
@@ -314,20 +317,26 @@ void SignEncryptFilesTask::Private::slotResult( const SigningResult & sresult, c
     } else if ( eresult.error().code() ) {
         output->cancel();
         emit q->error( eresult.error(), makeErrorString( eresult ) );
-    } else {
-        output->finalize();
-        emit q->result( shared_ptr<Result>( new SignEncryptFilesResult( sresult, eresult ) ) );
-    }
+    } else
+        try {
+            output->finalize();
+            emit q->result( shared_ptr<Result>( new SignEncryptFilesResult( sresult, eresult ) ) );
+        } catch ( const assuan_exception & e ) {
+            emit q->error( e.error(), e.message() );
+        }
 }
 
 void SignEncryptFilesTask::Private::slotResult( const EncryptionResult & result ) {
     if ( result.error().code() ) {
         output->cancel();
         emit q->error( result.error(), makeErrorString( result ) );
-    } else {
-        output->finalize();
-        emit q->result( shared_ptr<Result>( new SignEncryptFilesResult( result ) ) );
-    }
+    } else
+        try {
+            output->finalize();
+            emit q->result( shared_ptr<Result>( new SignEncryptFilesResult( result ) ) );
+        } catch ( const assuan_exception & e ) {
+            emit q->error( e.error(), e.message() );
+        }
 }
 
 QString SignEncryptFilesResult::overview() const {
