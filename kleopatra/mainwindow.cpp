@@ -217,7 +217,7 @@ void MainWindow::Private::setupActions()
     action->setText( i18n( "New Certificate..." ) );
     action->setIcon( KIcon( "document-new" ) );
     connect( action, SIGNAL( triggered( bool ) ), q, SLOT( newCertificate() ) );
-    action->setShortcuts( KShortcut( "F5" ) );
+    action->setShortcuts( KShortcut( "Ctrl+N" ) );
 
     action = coll->addAction( "file_export_certificates" );
     action->setText( i18n( "Export Certificates..." ) );
