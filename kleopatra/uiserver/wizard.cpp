@@ -61,6 +61,7 @@ public:
     void updateButtonStates();
     bool isLastPage( int id ) const;
     int previousPage() const;
+    void updateHeader();
 
 private:
     std::vector<int> pageOrder;
@@ -75,6 +76,7 @@ private:
     QFrame* titleFrame;
     QLabel* titleLabel;
     QLabel* subTitleLabel;
+    QLabel* explanationLabel;
 };
 
 
@@ -96,6 +98,9 @@ Wizard::Private::Private( Wizard * qq )
     subTitleLabel = new QLabel;
     subTitleLabel->setWordWrap( true );
     titleLayout->addWidget( subTitleLabel );
+    explanationLabel = new QLabel;
+    explanationLabel->setWordWrap( true );
+    titleLayout->addWidget( explanationLabel );
     top->addWidget( titleFrame );
     titleFrame->setVisible( false );
     QWidget* const contentWidget = new QWidget;
@@ -139,6 +144,24 @@ void Wizard::Private::updateButtonStates()
     backButton->setEnabled( q->canGoToPreviousPage() );
 }
 
+void Wizard::Private::updateHeader()
+{
+    WizardPage * const widget = q->page( currentId );
+    assert( !widget || stack->indexOf( widget ) != -1 );
+    if ( widget )
+        stack->setCurrentWidget( widget );
+    const QString title = widget ? widget->title() : QString();
+    const QString subTitle = widget ? widget->subTitle() : QString();
+    const QString explanation = widget ? widget->explanation() : QString();
+    titleFrame->setVisible( !title.isEmpty() || !subTitle.isEmpty() || !explanation.isEmpty() );
+    titleLabel->setVisible( !title.isEmpty() );
+    titleLabel->setText( title );
+    subTitleLabel->setText( subTitle );
+    subTitleLabel->setVisible( !subTitle.isEmpty() );
+    explanationLabel->setText( explanation );
+    explanationLabel->setVisible( !explanation.isEmpty() );
+}
+
 Wizard::Wizard( QWidget * parent, Qt::WFlags f )
   : QDialog( parent, f ), d( new Private( this ) )
 {
@@ -154,7 +177,7 @@ void Wizard::setPage( int id, WizardPage* widget )
     d->idToPage[id] = widget;
     d->stack->addWidget( widget );
     connect( widget, SIGNAL( completeChanged() ), this, SLOT( updateButtonStates() ) );
-
+    connect( widget, SIGNAL( explanationChanged() ), this, SLOT( updateHeader() ) );
 }
 
 void Wizard::setPageOrder( const std::vector<int>& pageOrder )
@@ -171,14 +194,7 @@ void Wizard::setCurrentPage( int id )
     d->currentId = id;
     if ( id == InvalidPage )
         return;
-    WizardPage * const widget = page( id );
-    assert( widget && d->stack->indexOf( widget ) != -1 );
-    d->stack->setCurrentWidget( widget );
-    const QString title = widget->title();
-    const QString subTitle = widget->subTitle();
-    d->titleFrame->setVisible( !title.isEmpty() || !subTitle.isEmpty() );
-    d->titleLabel->setText( title );
-    d->subTitleLabel->setText( subTitle );
+    d->updateHeader();
     d->updateButtonStates();
 }
 

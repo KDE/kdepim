@@ -46,6 +46,7 @@ private:
     bool commitPage;
     QString title;
     QString subTitle;
+    QString explanation;
 };
 
 
@@ -93,6 +94,20 @@ void WizardPage::setSubTitle( const QString& subTitle )
 {
     d->subTitle = subTitle;
 }
+
+QString WizardPage::explanation() const
+{
+    return d->explanation;
+}
+
+void WizardPage::setExplanation( const QString& explanation )
+{
+    if ( d->explanation == explanation )
+        return;
+    d->explanation = explanation;
+    emit explanationChanged();
+}
+
 
 WizardPage::~WizardPage() {}
 

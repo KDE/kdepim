@@ -55,9 +55,13 @@ namespace Kleo {
 
         QString subTitle() const; 
         void setSubTitle( const QString& subTitle );
-          
+
+        QString explanation() const;
+        void setExplanation( const QString& explanation );
+
     Q_SIGNALS:
         void completeChanged();
+        void explanationChanged();
 
     private:
         class Private;

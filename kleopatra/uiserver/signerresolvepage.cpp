@@ -81,7 +81,6 @@ public:
 
 private:
 
-    QLabel* explanationLabel;
     Operation operation;
     QButtonGroup* signEncryptGroup;
     QRadioButton* signAndEncryptRB;
@@ -112,10 +111,6 @@ SignerResolvePage::Private::Private( SignerResolvePage * qq )
 {
     QVBoxLayout* layout = new QVBoxLayout( q );
     layout->setSpacing( KDialog::spacingHint() );
-
-    explanationLabel = new QLabel;
-    explanationLabel->setWordWrap( true );
-    layout->addWidget( explanationLabel );
 
     signEncryptGroup = new QButtonGroup( q );
     q->connect( signEncryptGroup, SIGNAL( buttonClicked( int ) ), q, SLOT( setOperation( int ) ) );
@@ -211,9 +206,7 @@ void SignerResolvePage::Private::setCertificates( const QMap<GpgME::Protocol, Gp
 
 void SignerResolvePage::Private::updateUi()
 {
-    const QString explanation = validator->explanation();
-    explanationLabel->setVisible( !explanation.isNull() );
-    explanationLabel->setText( explanation );
+    q->setExplanation( validator->explanation() );
     emit q->completeChanged();
 }
 
