@@ -81,14 +81,13 @@ void SignerResolveValidator::update() const {
         setAndReturn( i18n( "You need to select at least one signing certificate to proceed." ) );
 
     if ( needPgpSC && havePgpSC )
-
         setAndReturn( i18n( "Only OpenPGP certificates will be offered for selection because you specified a combined sign/encrypt operation, which is only available for OpenPGP." ) );
 
     if ( havePgpSC && !haveCmsSC )
-        setAndReturn( i18n( "Only OpenPGP certificates will be offered for selection because you specified only an OpenPGP signing certificate." ) );
+        setAndReturn( i18n( "Only OpenPGP certificates will be offered for selection because you specified an OpenPGP signing certificate only." ) );
 
     if ( haveCmsSC && !havePgpSC )
-        setAndReturn( i18n( "Only S/MIME certificates will be offered for selection because you specified only an S/MIME signing certificate." ) );
+        setAndReturn( i18n( "Only S/MIME certificates will be offered for selection because you specified an S/MIME signing certificate only." ) );
 
     const QString second = i18n( " One for OpenPGP recipients, one for S/MIME recipients." );
 
@@ -101,7 +100,7 @@ void SignerResolveValidator::update() const {
         expl = i18n( "If you select certificates of both type OpenPGP and S/MIME, two signed files will be created." ) + second;
         break;
     case SignerResolvePage::EncryptOnly:
-        expl = i18n( "If you select certificates of both type OpenPGP and S/MIME, two signed/encrypted files will be created." ) + second;
+        expl = i18n( "If you select certificates of both type OpenPGP and S/MIME, two encrypted files will be created." ) + second;
         break;
     }
 
