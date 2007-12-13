@@ -57,6 +57,15 @@
 
 using namespace Kleo;
 
+namespace {
+
+    class ValidatorImpl : public SignerResolvePage::Validator {
+    public:
+        QString explanation() const { return QString(); }
+        bool isComplete() const { return true; }
+    };
+}
+
 class SignerResolvePage::Private {
     friend class ::SignerResolvePage;
     SignerResolvePage * const q;
@@ -64,18 +73,17 @@ public:
     explicit Private( SignerResolvePage * qq );
     ~Private();
 
-    void setMode( int mode );
+    void setOperation( int operation );
     void selectCertificates();
     void setCertificates( const QMap<GpgME::Protocol, GpgME::Key>& certs );
     void updateModeSelectionWidgets();
+    void setExplanationText( const QString& );
+    QString explanation() const;
 
 private:
-    enum SignEncryptMode {
-        SignAndEncrypt=0,
-        SignOnly,
-        EncryptOnly
-    };
-    SignEncryptMode mode;
+
+    QLabel* explanationLabel;
+    Operation operation;
     QButtonGroup* signEncryptGroup;
     QRadioButton* signAndEncryptRB;
     QRadioButton* encryptOnlyRB;
@@ -94,19 +102,24 @@ private:
     bool signingSelected;
     bool encryptionSelected;
     QMap<GpgME::Protocol,GpgME::Key> certificates;
+    boost::shared_ptr<const SignerResolvePage::Validator> validator;
 };
 
 SignerResolvePage::Private::Private( SignerResolvePage * qq )
-    : q( qq ), mode( SignOnly ), protocol( GpgME::UnknownProtocol ),
+    : q( qq ), operation( SignOnly ), protocol( GpgME::UnknownProtocol ),
       signingMutable( true ), encryptionMutable( true ), 
-      signingSelected( false ), encryptionSelected( false )
+      signingSelected( false ), encryptionSelected( false ), validator( new ValidatorImpl )
 
 {
     QVBoxLayout* layout = new QVBoxLayout( q );
     layout->setSpacing( KDialog::spacingHint() );
 
+    explanationLabel = new QLabel;
+    explanationLabel->setWordWrap( true );
+    layout->addWidget( explanationLabel );
+
     signEncryptGroup = new QButtonGroup( q );
-    q->connect( signEncryptGroup, SIGNAL( buttonClicked( int ) ), q, SLOT( setMode( int ) ) );
+    q->connect( signEncryptGroup, SIGNAL( buttonClicked( int ) ), q, SLOT( setOperation( int ) ) );
 
     signAndEncryptRB = new QRadioButton;
     signAndEncryptRB->setText( i18n( "Sign and encrypt (OpenPGP only)" ) );
@@ -132,7 +145,7 @@ SignerResolvePage::Private::Private( SignerResolvePage * qq )
     encryptLayout->addWidget( textArmorCO );
     removeUnencryptedCO = new QCheckBox;
     removeUnencryptedCO->setText( i18n( "Remove unencrypted original file when done" ) );
-    removeUnencryptedCO->setChecked( true );
+    removeUnencryptedCO->setChecked( false );
     encryptLayout->addWidget( removeUnencryptedCO );
     layout->addWidget( encryptBox );
 
@@ -164,10 +177,31 @@ SignerResolvePage::Private::Private( SignerResolvePage * qq )
     q->connect( selectCertificatesButton, SIGNAL( clicked() ),
                 q, SLOT( selectCertificates() ) );
     layout->addWidget( signingBox );
+
     layout->addStretch();
 
     setCertificates( QMap<GpgME::Protocol, GpgME::Key>() );
     updateModeSelectionWidgets();
+}
+
+QString SignerResolvePage::Private::explanation() const
+{
+    return QString();
+}
+
+void SignerResolvePage::setValidator( const boost::shared_ptr<const SignerResolvePage::Validator>& validator )
+{
+    d->validator = validator;
+}
+
+boost::shared_ptr<const SignerResolvePage::Validator> SignerResolvePage::validator() const
+{
+    return d->validator;
+}
+
+void SignerResolvePage::Private::setExplanationText( const QString& str )
+{
+    explanationLabel->setText( str );
 }
 
 SignerResolvePage::Private::~Private() {}
@@ -182,6 +216,7 @@ void SignerResolvePage::Private::setCertificates( const QMap<GpgME::Protocol, Gp
     pgpLabel->setText( !pgpKey.isNull() ? Formatting::formatForComboBox( pgpKey ) : i18n( "No certificate selected" )  );
     emit q->completeChanged();
 }
+
 
 void SignerResolvePage::Private::updateModeSelectionWidgets()
 {
@@ -216,12 +251,19 @@ void SignerResolvePage::Private::selectCertificates()
     delete dlg;
 }
 
-void SignerResolvePage::Private::setMode( int mode_ )
+void SignerResolvePage::Private::setOperation( int mode_ )
 {
-    mode = static_cast<SignEncryptMode>( mode_ );
-    signingBox->setEnabled( mode != EncryptOnly );
-    encryptBox->setEnabled( mode != SignOnly );
+    operation = static_cast<SignerResolvePage::Operation>( mode_ );
+    signingBox->setEnabled( operation != EncryptOnly );
+    encryptBox->setEnabled( operation != SignOnly );
 }
+
+
+SignerResolvePage::Operation SignerResolvePage::operation() const
+{
+    return d->operation;
+}
+
 
 SignerResolvePage::SignerResolvePage( QWidget * parent, Qt::WFlags f )
   : WizardPage( parent, f ), d( new Private( this ) )
@@ -263,9 +305,19 @@ GpgME::Protocol SignerResolvePage::protocol() const
     return d->protocol;
 }
 
+std::vector<GpgME::Key> SignerResolvePage::signingCertificates( GpgME::Protocol protocol ) const
+{
+    std::vector<GpgME::Key> result;
+    if ( protocol != GpgME::CMS && !d->certificates[GpgME::OpenPGP].isNull() )
+            result.push_back( d->certificates[GpgME::OpenPGP] );
+    if ( protocol != GpgME::OpenPGP && !d->certificates[GpgME::CMS].isNull() )
+            result.push_back( d->certificates[GpgME::CMS] );
+    return result;
+
+}
+
 std::vector<GpgME::Key> SignerResolvePage::resolvedSigners() const
 {
-    assuan_assert( isComplete() );
     std::vector<GpgME::Key> result;
     if ( d->protocol == GpgME::UnknownProtocol )
     {
@@ -284,7 +336,7 @@ std::vector<GpgME::Key> SignerResolvePage::resolvedSigners() const
 bool SignerResolvePage::isComplete() const
 {
     //TODO: factor out mode-specific code
-    if ( d->mode != Private::EncryptOnly )
+    if ( operation() != EncryptOnly )
     {
         return true;
 #if 0 // TODO: implement this correctly, dependent on selected mode and signing certificates
@@ -340,7 +392,6 @@ void SignerResolvePage::setSigningUserMutable( bool ismutable )
     d->signingMutable = ismutable;
     d->updateModeSelectionWidgets();
 }
-
 
 bool SignerResolvePage::isAsciiArmorEnabled() const
 {

@@ -39,6 +39,8 @@
 
 #include <gpgme++/global.h>
 
+#include <boost/shared_ptr.hpp>
+
 namespace GpgME {
     class Key;
 }
@@ -61,6 +63,9 @@ namespace Kleo {
                                       const std::vector< std::vector<GpgME::Key> > & keys );
 
         std::vector<GpgME::Key> resolvedSigners() const;
+
+        std::vector<GpgME::Key> signingCertificates( GpgME::Protocol protocol = GpgME::UnknownProtocol ) const;
+
 
         /*reimpl*/ bool isComplete() const;
 
@@ -85,11 +90,30 @@ namespace Kleo {
         void setProtocol( GpgME::Protocol protocol );
         GpgME::Protocol protocol() const;
  
+        enum Operation {
+            SignAndEncrypt=0,
+            SignOnly,
+            EncryptOnly
+        };
+        
+        Operation operation() const;
+
+        class Validator
+        {
+        public:
+            virtual ~Validator() {}
+            virtual bool isComplete() const = 0;
+            virtual QString explanation() const = 0;
+        };
+
+        void setValidator( const boost::shared_ptr<const Validator>& );
+        boost::shared_ptr<const Validator> validator() const;
+
     private:
         class Private;
         kdtools::pimpl_ptr<Private> d;
 
-        Q_PRIVATE_SLOT( d, void setMode( int ) )
+        Q_PRIVATE_SLOT( d, void setOperation( int ) )
         Q_PRIVATE_SLOT( d, void selectCertificates() )
 
     };

@@ -31,8 +31,40 @@
 */
 
 #include "signencryptfileswizard.h"
+#include "signerresolvepage.h"
+
+#include <cassert>
 
 using namespace Kleo;
+
+namespace {
+
+    class SignerResolveValidator : public SignerResolvePage::Validator {
+    public:
+        explicit SignerResolveValidator( SignerResolvePage* page ); 
+        bool isComplete() const;
+        QString explanation() const;
+
+    private:
+        SignerResolvePage* const m_page;
+    };
+}
+
+SignerResolveValidator::SignerResolveValidator( SignerResolvePage* page ) : SignerResolvePage::Validator(), m_page( page )
+{
+    assert( page );
+}
+
+bool SignerResolveValidator::isComplete() const
+{
+    return true;
+}
+
+QString SignerResolveValidator::explanation() const
+{
+    return QString();
+}
+
 
 class SignEncryptFilesWizard::Private {
     friend class ::SignEncryptFilesWizard;
@@ -51,6 +83,15 @@ SignEncryptFilesWizard::Private::Private( SignEncryptFilesWizard * qq )
   : q( qq )
 {
     q->connect( q, SIGNAL( signersResolved() ), q, SLOT( operationSelected() ) );
+    std::vector<int> pageOrder;
+    pageOrder.push_back( SignEncryptWizard::ResolveSignerPage );
+    pageOrder.push_back( SignEncryptWizard::ObjectsPage );
+    pageOrder.push_back( SignEncryptWizard::ResolveRecipientsPage );
+    pageOrder.push_back( SignEncryptWizard::ResultPage );
+    q->setPageOrder( pageOrder );
+    q->setCommitPage( SignEncryptWizard::ResolveRecipientsPage );
+    q->setMultipleProtocolsAllowed( true );
+    q->setRecipientsUserMutable( true );
 }
 
 SignEncryptFilesWizard::Private::~Private() {}
