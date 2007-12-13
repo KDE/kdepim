@@ -305,8 +305,8 @@ void SignEncryptFilesTask::Private::slotResult( const SigningResult & result ) {
         try {
             output->finalize();
             emit q->result( shared_ptr<Result>( new SignEncryptFilesResult( result ) ) );
-        } catch ( const assuan_exception & e ) {
-            emit q->error( e.error(), e.message() );
+        } catch ( const GpgME::Exception & e ) {
+            emit q->error( e.error(), QString::fromLocal8Bit( e.what() ) );
         }
 }
 
@@ -321,8 +321,8 @@ void SignEncryptFilesTask::Private::slotResult( const SigningResult & sresult, c
         try {
             output->finalize();
             emit q->result( shared_ptr<Result>( new SignEncryptFilesResult( sresult, eresult ) ) );
-        } catch ( const assuan_exception & e ) {
-            emit q->error( e.error(), e.message() );
+        } catch ( const GpgME::Exception & e ) {
+            emit q->error( e.error(), QString::fromLocal8Bit( e.what() ) );
         }
 }
 
@@ -334,8 +334,8 @@ void SignEncryptFilesTask::Private::slotResult( const EncryptionResult & result 
         try {
             output->finalize();
             emit q->result( shared_ptr<Result>( new SignEncryptFilesResult( result ) ) );
-        } catch ( const assuan_exception & e ) {
-            emit q->error( e.error(), e.message() );
+        } catch ( const GpgME::Exception & e ) {
+            emit q->error( e.error(), QString::fromLocal8Bit( e.what() ) );
         }
 }
 
