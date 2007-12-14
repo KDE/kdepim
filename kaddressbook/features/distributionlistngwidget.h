@@ -35,6 +35,7 @@ class QDragEnterEvent;
 class QDragMoveEvent;
 class QDropEvent;
 class QPoint;
+class QPushButton;
 
 namespace KABC {
     class DistributionListManager;
@@ -50,14 +51,14 @@ public:
     ListBox( QWidget* parent = 0 );
 
 signals:
-    
-    void dropped( const QString &listName, const KABC::Addressee::List &addressees ); 
+
+    void dropped( const QString &listName, const KABC::Addressee::List &addressees );
 
 protected:
     //override
     void dragEnterEvent( QDragEnterEvent *event );
     //override
-    void dragMoveEvent( QDragMoveEvent *event ); 
+    void dragMoveEvent( QDragMoveEvent *event );
     //override
     void dropEvent( QDropEvent *event );
 };
@@ -81,17 +82,20 @@ private:
 
 private slots:
 
-    void deleteSelectedDistributionList();    
-    void editSelectedDistributionList();    
+    void deleteSelectedDistributionList();
+    void editSelectedDistributionList();
 
     void contextMenuRequested( QListBoxItem *item, const QPoint &point );
     void updateEntries();
     void itemSelected( int index );
-    void contactsDropped( const QString &listName, const KABC::Addressee::List &addressees ); 
+    void contactsDropped( const QString &listName, const KABC::Addressee::List &addressees );
 
 private:
     ListBox *mListBox;
     QStringList mCurrentEntries;
+    QPushButton *mAddButton;
+    QPushButton *mEditButton;
+    QPushButton *mRemoveButton;
 };
 
 } // namespace DistributionListNg

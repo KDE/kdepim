@@ -30,6 +30,7 @@
 #include <kabc/vcardconverter.h>
 
 #include <kdialog.h>
+#include <kiconloader.h>
 #include <klistview.h>
 #include <klocale.h>
 #include <kpopupmenu.h>
@@ -40,6 +41,8 @@
 #include <qlayout.h>
 #include <qpoint.h>
 #include <qtimer.h>
+#include <qpushbutton.h>
+#include <qtooltip.h>
 
 KAB::DistributionListNg::ListBox::ListBox( QWidget* parent ) : KListBox( parent )
 {
@@ -54,8 +57,8 @@ void KAB::DistributionListNg::ListBox::dragMoveEvent( QDragMoveEvent *event )
     }
     else {
         event->accept( itemRect( item ) );
-    }   
-} 
+    }
+}
 
 void KAB::DistributionListNg::ListBox::dragEnterEvent( QDragEnterEvent *event )
 {
@@ -118,16 +121,38 @@ KAB::DistributionListNg::MainWidget::MainWidget( KAB::Core *core, QWidget *paren
     QVBoxLayout *layout = new QVBoxLayout( this );
     layout->setSpacing( KDialog::spacingHint() );
 
+    QHBoxLayout *buttonLayout = new QHBoxLayout();
+    layout->addLayout( buttonLayout );
+
     QLabel *label = new QLabel( this );
     label->setText( i18n( "Distribution Lists" ) );
-    layout->addWidget( label );
+    buttonLayout->addWidget( label );
+    buttonLayout->addStretch( 1 );
+
+    mAddButton = new QPushButton( this );
+    mAddButton->setIconSet( SmallIconSet( "add" ) );
+    QToolTip::add( mAddButton, i18n( "Add distribution list" ) );
+    connect( mAddButton, SIGNAL(clicked()), core, SLOT(newDistributionList()) );
+    buttonLayout->addWidget( mAddButton );
+
+    mEditButton = new QPushButton( this );
+    mEditButton->setIconSet( SmallIconSet( "edit" ) );
+    QToolTip::add( mEditButton, i18n( "Edit distribution list" ) );
+    connect( mEditButton, SIGNAL(clicked()), this, SLOT(editSelectedDistributionList()) );
+    buttonLayout->addWidget( mEditButton );
+
+    mRemoveButton = new QPushButton( this );
+    mRemoveButton->setIconSet( SmallIconSet( "remove" ) );
+    QToolTip::add( mRemoveButton, i18n( "Remove distribution list" ) );
+    connect( mRemoveButton, SIGNAL(clicked()), this, SLOT(deleteSelectedDistributionList()) );
+    buttonLayout->addWidget( mRemoveButton );
 
     mListBox = new ListBox( this );
-    connect( mListBox, SIGNAL( contextMenuRequested( QListBoxItem*, const QPoint& ) ), 
+    connect( mListBox, SIGNAL( contextMenuRequested( QListBoxItem*, const QPoint& ) ),
              this, SLOT( contextMenuRequested( QListBoxItem*, const QPoint& ) ) );
-    connect( mListBox, SIGNAL( dropped( const QString &, const KABC::Addressee::List & ) ), 
+    connect( mListBox, SIGNAL( dropped( const QString &, const KABC::Addressee::List & ) ),
              this, SLOT( contactsDropped( const QString &, const KABC::Addressee::List & ) ) );
-    connect( mListBox, SIGNAL( highlighted( int ) ), 
+    connect( mListBox, SIGNAL( highlighted( int ) ),
              this, SLOT( itemSelected( int ) ) );
     layout->addWidget( mListBox );
 
@@ -142,15 +167,15 @@ KAB::DistributionListNg::MainWidget::MainWidget( KAB::Core *core, QWidget *paren
 
     QTimer::singleShot( 0, this, SLOT( updateEntries() ) );
 }
- 
+
 void KAB::DistributionListNg::MainWidget::contextMenuRequested( QListBoxItem *item, const QPoint &point )
 {
     QGuardedPtr<KPopupMenu> menu = new KPopupMenu( this );
-    menu->insertItem( i18n( "New Distribution List..." ), core(), SLOT( newDistributionList() ) ); 
+    menu->insertItem( i18n( "New Distribution List..." ), core(), SLOT( newDistributionList() ) );
     if ( item )
     {
-        menu->insertItem( i18n( "Edit..." ), this, SLOT( editSelectedDistributionList() ) ); 
-        menu->insertItem( i18n( "Delete" ), this, SLOT( deleteSelectedDistributionList() ) ); 
+        menu->insertItem( i18n( "Edit..." ), this, SLOT( editSelectedDistributionList() ) );
+        menu->insertItem( i18n( "Delete" ), this, SLOT( deleteSelectedDistributionList() ) );
     }
     menu->exec( point );
     delete menu;
@@ -193,7 +218,7 @@ void KAB::DistributionListNg::MainWidget::contactsDropped( const QString &listNa
 
     core()->addressBook()->insertAddressee( list );
     changed( list );
-} 
+}
 
 void KAB::DistributionListNg::MainWidget::changed( const KABC::Addressee& dist )
 {
@@ -217,6 +242,8 @@ void KAB::DistributionListNg::MainWidget::updateEntries()
 void KAB::DistributionListNg::MainWidget::itemSelected( int index )
 {
     core()->setSelectedDistributionList( index == 0 ? QString() : mListBox->item( index )->text()  );
+    mEditButton->setEnabled( index > 0 );
+    mRemoveButton->setEnabled( index > 0 );
 }
 
 #include "distributionlistngwidget.moc"
