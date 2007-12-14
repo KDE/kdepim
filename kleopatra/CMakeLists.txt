@@ -145,7 +145,6 @@ if ( KLEO_BUILD_OLD_MAINWINDOW )
     customactions.cpp
     certmanager.cpp
     hierarchyanalyser.cpp
-    certificatewizardimpl.cpp
     crlview.cpp
     certlistview.cpp )
 
