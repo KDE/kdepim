@@ -233,14 +233,11 @@ void RecipientResolvePage::Private::protocolChanged()
 
 void RecipientResolvePage::Private::setSelectedProtocol( GpgME::Protocol protocol )
 {
-    assert( protocol != GpgME::UnknownProtocol );
     selectedProtocol = protocol;
     for ( uint i = 0; i < widgets.size(); ++i )
     {
         widgets[i]->setProtocol( selectedProtocol );
     }
-
-
 }
 
 void RecipientResolvePage::Private::clear()
@@ -431,6 +428,8 @@ void RecipientResolvePage::setPresetProtocol( GpgME::Protocol prot )
     d->presetProtocol = prot;
     if ( d->selectedProtocol == GpgME::UnknownProtocol )
         d->selectedProtocol = prot;
+    if ( d->selectedProtocol != GpgME::UnknownProtocol )
+        ( d->selectedProtocol == GpgME::OpenPGP ? d->pgpRB : d->smimeRB )->setChecked( true );
     for ( uint i = 0; i < d->widgets.size(); ++i )
     {
         d->widgets[i]->setProtocol( d->selectedProtocol );
@@ -468,6 +467,8 @@ void RecipientResolvePage::Private::updateRadioButtonVisibility()
     smimeRB->setVisible( rbsVisible );
     if ( rbsVisible )
         setSelectedProtocol( pgpRB->isChecked() ? GpgME::OpenPGP : GpgME::CMS );
+    else
+        setSelectedProtocol( GpgME::UnknownProtocol );
 }
 
 void RecipientResolvePage::Private::addRecipient()
