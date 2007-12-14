@@ -140,10 +140,6 @@ void EncryptEMailController::setCommand( const shared_ptr<AssuanCommand> & cmd )
 void EncryptEMailController::startResolveRecipients( const std::vector<Mailbox> & recipients ) {
     d->ensureWizardCreated();
     d->wizard->setRecipients( recipients );
-
-    if ( d->wizard->canGoToNextPage() ) {
-        d->wizard->next();
-    }
     d->ensureWizardVisible();
 }
 
