@@ -46,6 +46,7 @@
 
 class Kleo::Command::Private {
     friend class ::Kleo::Command;
+protected:
     Command * const q;
 public:
     explicit Private( Command * qq, KeyListController * controller );

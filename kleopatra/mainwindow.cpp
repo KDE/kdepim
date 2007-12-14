@@ -95,6 +95,7 @@ public:
     ~Private();
 
     void refreshCertificates();
+    void validateCertificates();
     void exportCertificates();
     void importCertificates();
     void newCertificate();
@@ -173,7 +174,7 @@ MainWindow::Private::Private( MainWindow * qq )
     addView( i18n( "Trusted Certificates" ) );
     addView( i18n( "All Certificates" ) );
 
-    ( new RefreshKeysCommand( &controller ) )->start();
+    ( new RefreshKeysCommand( RefreshKeysCommand::Normal, &controller ) )->start();
 
     q->resize( 640, 480 );
 } 
@@ -210,30 +211,43 @@ void MainWindow::Private::setupActions()
 
     QAction* action = coll->addAction( "file_import_certificates" );
     action->setText( i18n( "Import Certificates..." ) );
-    connect( action, SIGNAL( triggered( bool ) ), q, SLOT( importCertificates() ) );
-    action->setShortcuts( KShortcut( "Ctrl+I" ) );
+    connect( action, SIGNAL(triggered()), q, SLOT(importCertificates()) );
+    action->setShortcuts( KShortcut( i18n("Ctrl+I") ) );
 
     action = coll->addAction( "file_new_certificate" );
     action->setText( i18n( "New Certificate..." ) );
     action->setIcon( KIcon( "document-new" ) );
-    connect( action, SIGNAL( triggered( bool ) ), q, SLOT( newCertificate() ) );
-    action->setShortcuts( KShortcut( "Ctrl+N" ) );
+    connect( action, SIGNAL(triggered()), q, SLOT(newCertificate()) );
+    action->setShortcuts( KShortcut( i18n("Ctrl+N") ) );
 
     action = coll->addAction( "file_export_certificates" );
     action->setText( i18n( "Export Certificates..." ) );
-    connect( action, SIGNAL( triggered( bool ) ), q, SLOT( exportCertificates() ) );
-    action->setShortcuts( KShortcut( "Ctrl+E" ) );
+    action->setIcon( KIcon("export") );
+    connect( action, SIGNAL(triggered()), q, SLOT(exportCertificates()) );
+    action->setShortcuts( KShortcut( i18n("Ctrl+E") ) );
 
-    action = coll->addAction( "view_refresh_certificate_list" );
-    action->setText( i18n( "Refresh Certificate List..." ) );
-    connect( action, SIGNAL( triggered( bool ) ), q, SLOT( refreshCertificates() ) );
-    action->setShortcuts( KShortcut( "F5" ) );
-   
+    action = coll->addAction( "view_redisplay" );
+    action->setText( i18n( "Redisplay" ) );
+    action->setIcon( KIcon( "view-refresh" ) );
+    connect( action, SIGNAL(triggered()), q, SLOT(refreshCertificates()) );
+    action->setShortcuts( KShortcut( i18n("F5") ) );
+
+    action = coll->addAction( "certificates_validate" );
+    action->setText( i18n("Validate" ) );
+    action->setIcon( KIcon( "view-refresh" ) );
+    //action->setToolTip( i18n("Validate selected certificates") );
+    connect( action, SIGNAL(triggered()), q, SLOT(validateCertificates()) );
+    action->setShortcuts( KShortcut( i18n("SHIFT+F5") ) );
 }
 
 void MainWindow::Private::refreshCertificates()
 {
-    ( new RefreshKeysCommand( &controller ) )->start();
+    ( new RefreshKeysCommand( RefreshKeysCommand::Normal, &controller ) )->start();
+}
+
+void MainWindow::Private::validateCertificates()
+{
+    ( new RefreshKeysCommand( RefreshKeysCommand::Validate, &controller ) )->start();
 }
 
 void MainWindow::Private::newCertificate()

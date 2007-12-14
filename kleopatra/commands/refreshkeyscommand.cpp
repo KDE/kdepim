@@ -48,9 +48,8 @@ using namespace Kleo;
 
 class RefreshKeysCommand::Private : public Command::Private {
     friend class ::Kleo::RefreshKeysCommand;
-    RefreshKeysCommand * const mq;
 public:
-    Private( RefreshKeysCommand * qq, KeyListController* controller );
+    Private( RefreshKeysCommand * qq, Mode mode, KeyListController* controller );
     ~Private();
     enum KeyType {
         PublicKeys,
@@ -63,6 +62,7 @@ public:
     void addKey( const GpgME::Key& key );
 
 private:
+    const Mode mode;
     uint m_pubKeysJobs;
     uint m_secKeysJobs;
 };
@@ -71,8 +71,19 @@ RefreshKeysCommand::Private * RefreshKeysCommand::d_func() { return static_cast<
 const RefreshKeysCommand::Private * RefreshKeysCommand::d_func() const { return static_cast<const Private*>( d.get() ); }
 
 
-RefreshKeysCommand::Private::Private( RefreshKeysCommand * qq, KeyListController * controller )
-    : Command::Private( qq, controller ), mq( qq ), m_pubKeysJobs( 0 ), m_secKeysJobs( 0 )
+RefreshKeysCommand::RefreshKeysCommand( Mode mode, KeyListController * p )
+    : Command( p, new Private( this, mode, p ) )
+{
+
+}
+
+RefreshKeysCommand::~RefreshKeysCommand() {}
+
+RefreshKeysCommand::Private::Private( RefreshKeysCommand * qq, Mode m, KeyListController * controller )
+    : Command::Private( qq, controller ),
+      mode( m ),
+      m_pubKeysJobs( 0 ),
+      m_secKeysJobs( 0 )
 {
 
 }
@@ -82,18 +93,22 @@ RefreshKeysCommand::Private::~Private() {}
 
 void RefreshKeysCommand::Private::startKeyListing( const char* backend, KeyType type )
 {
-    Kleo::KeyListJob * const job = Kleo::CryptoBackendFactory::instance()->protocol( backend )->keyListJob();
-    assert( job );
+    const Kleo::CryptoBackend::Protocol * const protocol = Kleo::CryptoBackendFactory::instance()->protocol( backend );
+    if ( !protocol )
+        return;
+    Kleo::KeyListJob * const job = protocol->keyListJob( /*remote*/false, /*includeSigs*/false, mode == Validate );
+    if ( !job )
+        return;
     if ( type == PublicKeys ) {
-        QObject::connect( job, SIGNAL( result( GpgME::KeyListResult ) ),
-                          mq, SLOT( publicKeyListingDone( GpgME::KeyListResult ) ) );
+        connect( job, SIGNAL(result(GpgME::KeyListResult)),
+                 q, SLOT(publicKeyListingDone(GpgME::KeyListResult)) );
     } else {
-        QObject::connect( job, SIGNAL( result( GpgME::KeyListResult ) ),
-                          mq, SLOT( secretKeyListingDone( GpgME::KeyListResult ) ) );
+        connect( job, SIGNAL(result(GpgME::KeyListResult)),
+                 q, SLOT(secretKeyListingDone(GpgME::KeyListResult)) );
     }
 
-    QObject::connect( job, SIGNAL( nextKey( GpgME::Key ) ),
-             mq, SLOT( addKey( GpgME::Key ) ) );
+    connect( job, SIGNAL(nextKey(GpgME::Key)),
+             q, SLOT(addKey(GpgME::Key)) );
     job->start( QStringList(), type == SecretKeys ); 
     ++( type == PublicKeys ? m_pubKeysJobs : m_secKeysJobs );
 }
@@ -127,16 +142,7 @@ void RefreshKeysCommand::Private::addKey( const GpgME::Key& key )
         PublicKeyCache::mutableInstance()->insert( key );
 }
 
-RefreshKeysCommand::RefreshKeysCommand( KeyListController * p )
-    : Command( p, new Private( this, p ) )
-{
-
-}
-
 #define d d_func()
-
-RefreshKeysCommand::~RefreshKeysCommand() {
-}
 
 void RefreshKeysCommand::doStart() {
     /* NOTE: first fetch public keys. when done, fetch secret keys. hasSecret() works only
