@@ -34,6 +34,9 @@
 
 #include <KIcon>
 #include <KLocale>
+#include <KAboutApplicationDialog>
+#include <KAboutData>
+#include <KComponentData>
 
 #include <QMenu>
 #include <QAction>
@@ -63,27 +66,56 @@ public:
     ~Private();
 
 private:
+    void slotOpenCertificateManager() {
+        emit q->activated( QSystemTrayIcon::Trigger );
+    }
+    void slotAbout() {
+        if ( !aboutDialog ) {
+            aboutDialog = new KAboutApplicationDialog( KGlobal::mainComponent().aboutData() );
+            aboutDialog->setAttribute( Qt::WA_DeleteOnClose );
+        }
+
+        if ( aboutDialog->isVisible() )
+            aboutDialog->raise();
+        else
+            aboutDialog->show();
+
+    }
     void slotCheckConfiguration();
 
 private:    
     QMenu menu;
+    QAction openCertificateManagerAction;
+    QAction aboutAction;
     QAction checkConfigAction;
     QAction quitAction;
+
+    QPointer<KAboutApplicationDialog> aboutDialog;
 };
 
 SystemTrayIcon::Private::Private( SystemTrayIcon * qq )
     : q( qq ),
       menu(),
+      openCertificateManagerAction( i18n("&Open Certificate Manager..."), q ),
+      aboutAction( i18n("&About %1...", KGlobal::mainComponent().aboutData()->programName() ), q ),
       checkConfigAction( i18n("&Check GnuPG Config..."), q ),
-      quitAction( i18n("&Quit"), q )
+      quitAction( i18n("&Shutdown Kleopatra"), q ),
+      aboutDialog()
 {
     KDAB_SET_OBJECT_NAME( menu );
+    KDAB_SET_OBJECT_NAME( openCertificateManagerAction );
+    KDAB_SET_OBJECT_NAME( aboutAction );
     KDAB_SET_OBJECT_NAME( checkConfigAction );
     KDAB_SET_OBJECT_NAME( quitAction );
 
+    connect( &openCertificateManagerAction, SIGNAL(triggered()), q, SLOT(slotOpenCertificateManager()) );
+    connect( &aboutAction, SIGNAL(triggered()), q, SLOT(slotAbout()) );
     connect( &quitAction, SIGNAL(triggered()), QCoreApplication::instance(), SLOT(quit()) );
     connect( &checkConfigAction, SIGNAL(triggered()), q, SLOT(slotCheckConfiguration()) );
 
+    menu.addAction( &openCertificateManagerAction );
+    menu.addAction( &aboutAction );
+    menu.addSeparator();
     menu.addAction( &checkConfigAction );
     menu.addSeparator();
     menu.addAction( &quitAction );

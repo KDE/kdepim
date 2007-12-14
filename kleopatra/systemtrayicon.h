@@ -46,6 +46,8 @@ public:
 private:
     class Private;
     kdtools::pimpl_ptr<Private> d;
+    Q_PRIVATE_SLOT( d, void slotOpenCertificateManager() )
+    Q_PRIVATE_SLOT( d, void slotAbout() )
     Q_PRIVATE_SLOT( d, void slotCheckConfiguration() )
 };
 
