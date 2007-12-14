@@ -61,6 +61,7 @@
 #include <QProgressBar>
 #include <QApplication>
 #include <QCloseEvent>
+#include <QTimer>
 
 #include <gpgme++/key.h>
 
@@ -108,6 +109,8 @@ private:
 
     Kleo::AbstractKeyListModel * model;
     Kleo::KeyListController controller;
+
+    QTimer refreshTimer;
 
     struct Actions {
         //QAction file_new_certificate;
@@ -157,10 +160,17 @@ MainWindow::Private::Private( MainWindow * qq )
     : q( qq ),
       model( AbstractKeyListModel::createFlatKeyListModel( q ) ),
       controller( q ),
+      refreshTimer(),
       actions( q ),
       ui( q )
 {
     KDAB_SET_OBJECT_NAME( controller );
+    KDAB_SET_OBJECT_NAME( refreshTimer );
+
+    refreshTimer.setInterval( 5 * 60 * 1000 );
+    refreshTimer.setSingleShot( false );
+    refreshTimer.start();
+    connect( &refreshTimer, SIGNAL(timeout()), q, SLOT(validateCertificates()) );
 
     controller.setModel( model );
     setupActions();
