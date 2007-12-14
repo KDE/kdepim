@@ -291,8 +291,8 @@ void SignEncryptFilesController::Private::slotWizardOperationPrepared() {
         Q_FOREACH( const shared_ptr<Task> task, runnable )
             connectTask( task, i++ );
 
-        QTimer::singleShot( 0, q, SLOT(schedule()) );
-
+        schedule();
+        
     } catch ( const assuan_exception & e ) {
         reportError( e.error(), e.message() );
     } catch ( const std::exception & e ) {
@@ -342,8 +342,8 @@ shared_ptr<SignEncryptFilesTask> SignEncryptFilesController::Private::takeRunnab
 
 void SignEncryptFilesController::Private::connectTask( const shared_ptr<Task> & t, unsigned int idx ) {
     connect( t.get(), SIGNAL(result(boost::shared_ptr<const Kleo::Task::Result>)),
-             q, SLOT(slotTaskDone()), Qt::QueuedConnection );
-    connect( t.get(), SIGNAL(error(int,QString)), q, SLOT(slotTaskDone()), Qt::QueuedConnection );
+             q, SLOT(slotTaskDone()) );
+    connect( t.get(), SIGNAL(error(int,QString)), q, SLOT(slotTaskDone()) );
     ensureWizardCreated();
     wizard->connectTask( t, idx );
 }
