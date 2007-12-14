@@ -85,7 +85,6 @@ public:
     QRadioButton* pgpRB;
     QRadioButton* smimeRB;
     QPushButton* addRecipientButton;
-    QPushButton* removeRecipientButton;
     QScrollArea* scrollArea;
     QLabel* explanationLabel;
     QVBoxLayout* lineLayout;
@@ -165,11 +164,6 @@ RecipientResolvePage::RecipientResolvePage( QWidget * parent )
     d->addRecipientButton->setVisible( false );
     connect( d->addRecipientButton, SIGNAL( clicked() ), this, SLOT( addRecipient() ) );
     buttonLayout->addWidget( d->addRecipientButton );
-    d->removeRecipientButton = new QPushButton;
-    d->removeRecipientButton->setText( i18n( "Remove Recipient..." ) );
-    d->removeRecipientButton->setVisible( false );
-    connect( d->removeRecipientButton, SIGNAL( clicked() ), this, SLOT( removeRecipient() ) );
-    buttonLayout->addWidget( d->removeRecipientButton );
     buttonLayout->addStretch();
     top->addWidget( buttonWidget );
     d->updateRadioButtonVisibility();
@@ -517,7 +511,6 @@ void RecipientResolvePage::setRecipientsUserMutable( bool isMutable )
 {
     d->recipientsUserMutable = isMutable;
     d->addRecipientButton->setVisible( isMutable );
-    d->removeRecipientButton->setVisible( isMutable );
     emit completeChanged();
 }
 
