@@ -47,7 +47,7 @@ if ( USABLE_ASSUAN_FOUND )
   # check if assuan has assuan_fd_t
   set(CMAKE_REQUIRED_LIBRARIES ${_gpg_error_library})
   set(CMAKE_REQUIRED_INCLUDES ${ASSUAN_INCLUDES})
-  if(MINGW)
+  if(MINGW) # TODO: this workaround will be removed as soon as we find better solution
     set(CMAKE_REQUIRED_INCLUDES ${CMAKE_REQUIRED_INCLUDES} ${KDEWIN32_INCLUDE_DIR}/mingw)
   elseif(MSVC)
     set(CMAKE_REQUIRED_INCLUDES ${CMAKE_REQUIRED_INCLUDES} ${KDEWIN32_INCLUDE_DIR}/msvc)
