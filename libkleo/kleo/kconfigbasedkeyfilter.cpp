@@ -172,7 +172,7 @@ bool Kleo::KConfigBasedKeyFilter::matches( const GpgME::Key & key ) const {
   CAN_MATCH( Certify );
   CAN_MATCH( Authenticate );
   IS_MATCH( Qualified );
-  MATCH( mHasSecret, isSecret );
+  MATCH( mHasSecret, hasSecret );
 #undef MATCH
   if ( mIsOpenPGP != DoesNotMatter &&
        bool( key.protocol() == GpgME::OpenPGP ) != bool( mIsOpenPGP == Set ) )

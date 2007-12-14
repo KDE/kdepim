@@ -124,7 +124,7 @@ static bool checkKeyUsage( const GpgME::Key & key, unsigned int keyUsage ) {
 
   if ( keyUsage & Kleo::KeySelectionDialog::SecretKeys &&
        !( keyUsage & Kleo::KeySelectionDialog::PublicKeys ) &&
-       !key.isSecret() ) {
+       !key.hasSecret() ) {
     kDebug() <<"key isn't secret";
     return false;
   }
@@ -133,7 +133,7 @@ static bool checkKeyUsage( const GpgME::Key & key, unsigned int keyUsage ) {
        key.protocol() == GpgME::OpenPGP &&
        // only check this for secret keys for now.
        // Seems validity isn't checked for secret keylistings...
-       !key.isSecret() ) {
+       !key.hasSecret() ) {
     std::vector<GpgME::UserID> uids = key.userIDs();
     for ( std::vector<GpgME::UserID>::const_iterator it = uids.begin() ; it != uids.end() ; ++it )
       if ( !it->isRevoked() && it->validity() >= GpgME::UserID::Marginal )
