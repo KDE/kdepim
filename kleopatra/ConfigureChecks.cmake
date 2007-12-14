@@ -41,7 +41,17 @@ endif( USABLE_ASSUAN_FOUND )
 
 if ( USABLE_ASSUAN_FOUND )
 
+  set(CMAKE_REQUIRED_LIBRARIES_tmp ${CMAKE_REQUIRED_LIBRARIES}) #push
+  set(CMAKE_REQUIRED_INCLUDES_tmp ${CMAKE_REQUIRED_INCLUDES}) #push
+
   # check if assuan has assuan_fd_t
+  set(CMAKE_REQUIRED_LIBRARIES ${_gpg_error_library})
+  set(CMAKE_REQUIRED_INCLUDES ${ASSUAN_INCLUDES})
+  if(MINGW)
+    set(CMAKE_REQUIRED_INCLUDES ${CMAKE_REQUIRED_INCLUDES} ${KDEWIN32_INCLUDE_DIR}/mingw)
+  elseif(MSVC)
+    set(CMAKE_REQUIRED_INCLUDES ${CMAKE_REQUIRED_INCLUDES} ${KDEWIN32_INCLUDE_DIR}/msvc)
+  endif(MINGW)
   check_cxx_source_compiles("
         #include <assuan.h>
         int main() {
@@ -98,12 +108,15 @@ if ( USABLE_ASSUAN_FOUND )
     set( USABLE_ASSUAN_FOUND false )
   endif ( WIN32 AND NOT HAVE_ASSUAN_SOCK_GET_NONCE )  
 
+  set(CMAKE_REQUIRED_LIBRARIES ${CMAKE_REQUIRED_LIBRARIES_tmp}) #pop
+  set(CMAKE_REQUIRED_INCLUDES ${CMAKE_REQUIRED_INCLUDES_tmp}) #pop
+
 endif ( USABLE_ASSUAN_FOUND )
 
 if ( USABLE_ASSUAN_FOUND )
-  message( STATUS "Usable assuan found" )
+  message( STATUS "Usable assuan found for Kleopatra" )
 else ( USABLE_ASSUAN_FOUND )
-  message( STATUS "NO usable assuan found" )
+  message( STATUS "NO usable assuan found for Kleopatra" )
 endif ( USABLE_ASSUAN_FOUND )
 
 macro_bool_to_01( USABLE_ASSUAN_FOUND  HAVE_USABLE_ASSUAN )
