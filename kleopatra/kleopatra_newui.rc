@@ -1,79 +1,26 @@
 <!DOCTYPE kpartgui >
-<kpartgui name="kleopatra" version="393" >
+<kpartgui name="kleopatra" version="399" >
 <MenuBar>
 	<Menu name="file">
 		<text>&amp;File</text>
 		<Action name="file_new_certificate"/>
 		<Separator/>
-		<Action name="file_export_certificates"/>
-		<Action name="file_export_secret_keys"/>
-		<Separator/>
 		<Action name="file_import_certificates"/>		        
 		<Action name="file_import_crls"/>
-		<Separator/>
+		<Action name="file_export_certificates"/>
+		<Action name="file_export_secret_keys"/>
 		<Action name="quit" />
 	</Menu>
 	<Menu name="view">
 		<text>&amp;View</text>
 		<Action name="view_refresh_certificate_list"/>
 	</Menu>
-
-<!--
-	<Menu name="view">
-		<text>&amp;View</text>
-		<Action name="view_stop_operations"/>
-		<Action name="view_certificate_details"/>
-		<Separator/>
-		<Action name="view_hierarchical"/>
-		<Separator/>
-		<Action name="view_expandall"/>
-		<Action name="view_collapseall"/>
-	</Menu>
-	<Menu name="certMenu">
-		<text>&amp;Certificates</text>
-		<Action name="certificates_validate"/>
-		<Action name="certificates_refresh_clr"/>
-		<Action name="edit_revoke_certificate"/>
-		<Action name="edit_extend_certificate"/>
-		<Action name="edit_delete_certificate"/>
-		<Action name="download_certificate"/>
-	</Menu>
-	<Menu name="crlMenu">
-		<text>C&amp;RLs</text>
-		<Action name="crl_clear_crl_cache"/>
-		<Action name="crl_dump_crl_cache"/>
-	</Menu>
-	<Menu name="tools">
-		<text>&amp;Tools</text>
-		<Action name="tools_start_kwatchgnupg"/>
-	</Menu>
-	<Menu name="settings">
-                <text>&amp;Settings</text>
-		<Action name="configure_gpgme"/>
-	</Menu>
--->
-        <Menu name="help"/>
-        </Menu>
+	<Menu name="help"/>
 </MenuBar>
 
 <ToolBar position="Top" iconText="IconOnly" noMerge="1" name="searchToolBar" >
-<text>Search Toolbar</text>
+	<text>Search Toolbar</text>
 	<Action name="key_search_bar" />
 </ToolBar>
-
-<Menu name="listview_popup">
-	<text>&amp;Certificates</text>
-	<Action name="certificates_validate"/>
-<!--
-	<Action name="edit_revoke_certificate"/>
-	<Action name="edit_extend_certificate"/>
--->
-	<Action name="edit_delete_certificate"/>
-	<Action name="download_certificate"/>
-	<Separator/>
-	<Action name="file_export_certificate"/>
-	<Separator/>
-	<Action name="view_certificate_details"/>
-</Menu>
 
 </kpartgui>
