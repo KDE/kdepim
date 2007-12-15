@@ -158,7 +158,8 @@ endif(QGPGME_FOUND)
 
 if(NOT WIN32)
    macro_optional_find_package(Opensync)
-   #macro_log_feature() not needed because FindOpensync.cmake does so for us
+   macro_log_feature(OPENSYNC_FOUND "OpenSync" "OpenSync Development Libraries" "http://www.opensync.org" FALSE "0.33" "Needed to provide syncing functionality in KDE PIM applications. Required to build kitchensync.")
+
    macro_optional_find_package(GLIB2)
    macro_log_feature(GLIB2_FOUND "glib2" "Low-level core library for data structure handling, portability wrappers, etc." "http://www.gtk.org" FALSE "2.x" "Needed to provide synching applications from KDE PIM applications. Necessary to compile kitchensync and other PIM applications.")
    macro_optional_add_subdirectory(kmobiletools)
