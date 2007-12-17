@@ -116,32 +116,38 @@ void RefreshKeysCommand::Private::startKeyListing( const char* backend, KeyType 
              q, SIGNAL(progress(QString,int,int)) );
     connect( job, SIGNAL(nextKey(GpgME::Key)),
              q, SLOT(addKey(GpgME::Key)) );
+    connect( q, SIGNAL(canceled()),
+             job, SLOT(slotCancel()) );
     job->start( QStringList(), type == SecretKeys ); 
     ++( type == PublicKeys ? m_pubKeysJobs : m_secKeysJobs );
 }
 
-void RefreshKeysCommand::Private::publicKeyListingDone( const GpgME::KeyListResult & )
+void RefreshKeysCommand::Private::publicKeyListingDone( const GpgME::KeyListResult & result )
 {
     assert( m_pubKeysJobs > 0 );
     --m_pubKeysJobs;
-    if ( m_pubKeysJobs == 0 ) {
+    if ( result.error().isCanceled() )
+        finished();
+    else if ( m_pubKeysJobs == 0 ) {
         startKeyListing( "openpgp", Private::SecretKeys );
         startKeyListing( "smime", Private::SecretKeys );
     }
 }
 
 
-void RefreshKeysCommand::Private::secretKeyListingDone( const GpgME::KeyListResult & )
+void RefreshKeysCommand::Private::secretKeyListingDone( const GpgME::KeyListResult & result )
 {
     assert( m_secKeysJobs > 0 );
     --m_secKeysJobs;
-    if ( m_secKeysJobs == 0 )
+    if ( result.error().isCanceled() || m_secKeysJobs == 0 )
         finished();
 }
 
 void RefreshKeysCommand::Private::addKey( const GpgME::Key& key )
 {
-    if ( key.hasSecret() ) // ### hope this is ok. It is, after all, why we need the split in the first place...
+    // ### collect them and replace them at the end in the key cache. This
+    // is waaaay to slow:
+    if ( key.hasSecret() )
         SecretKeyCache::mutableInstance()->insert( key );
     else
         PublicKeyCache::mutableInstance()->insert( key );
@@ -160,6 +166,9 @@ void RefreshKeysCommand::doStart() {
 }
 
 void RefreshKeysCommand::doCancel() {
+    // empty implementation, as canceled(), emitted from
+    // Command::cancel(), is connected to Kleo::Job::slotCanceled()
+    // for all our jobs.
 }
 
 #undef d
