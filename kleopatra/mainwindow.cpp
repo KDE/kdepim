@@ -260,6 +260,14 @@ void MainWindow::Private::setupActions()
     connect( action, SIGNAL(triggered()), q, SLOT(refreshCertificates()) );
     action->setShortcuts( KShortcut( i18n("F5") ) );
 
+    action = coll->addAction( "view_stop_operations" );
+    action->setText( i18n( "Stop Operation" ) );
+    action->setIcon( KIcon( "process-stop" ) );
+    connect( action, SIGNAL(triggered()), &controller, SLOT(cancelCommands()) );
+    connect( &controller, SIGNAL(commandsExecuting(bool)), action, SLOT(setEnabled(bool)) );
+    action->setShortcuts( KShortcut( i18n("Escape") ) );
+    action->setEnabled( false );
+
     action = coll->addAction( "view_certificate_details" );
     action->setText( i18n( "Certificate Details..." ) );
     //action->setIcon( KIcon( "view-details" ) );

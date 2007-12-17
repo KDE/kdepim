@@ -43,10 +43,13 @@
 #include <QPointer>
 #include <QItemSelectionModel>
 
+#include <boost/bind.hpp>
+
 #include <algorithm>
 #include <cassert>
 
 using namespace Kleo;
+using namespace boost;
 using namespace GpgME;
 
 static const QHeaderView::ResizeMode resize_modes[Kleo::AbstractKeyListModel::NumColumns] = {
@@ -93,6 +96,7 @@ public:
 
 public:
     void slotDestroyed( QObject * o ) {
+        qDebug( "KeyListController::Private::slotDestroyed( %p )", o );
         views.erase( std::remove( views.begin(), views.end(), o ), views.end() );
 	commands.erase( std::remove( commands.begin(), commands.end(), o ), commands.end() );
     }
@@ -179,8 +183,18 @@ AbstractKeyListModel * KeyListController::model() const {
 }
 
 void KeyListController::registerCommand( Command * cmd ) {
-    if ( cmd && !std::binary_search( d->commands.begin(), d->commands.end(), cmd ) )
-        d->addCommand( cmd );
+    if ( !cmd || std::binary_search( d->commands.begin(), d->commands.end(), cmd ) )
+        return;
+    d->addCommand( cmd );
+    qDebug( "KeyListController::registerCommand( %p )", cmd );
+    if ( d->commands.size() == 1 )
+        emit commandsExecuting( true );
+}
+
+// slot
+void KeyListController::cancelCommands() {
+    std::for_each( d->commands.begin(), d->commands.end(),
+                   bind( &Command::cancel, _1 ) );
 }
 
 void KeyListController::Private::connectView( QAbstractItemView * view ) {
@@ -263,7 +277,9 @@ void KeyListController::Private::slotCommandFinished() {
     Command * const cmd = qobject_cast<Command*>( q->sender() );
     if ( !cmd || !std::binary_search( commands.begin(), commands.end(), cmd ) )
         return;
-    // ### anything here?
+    qDebug( "KeyListController::Private::slotCommandFinished( %p )", cmd );
+    if ( commands.size() == 1 )
+        emit q->commandsExecuting( false );
 }
 
 #include "moc_keylistcontroller.cpp"

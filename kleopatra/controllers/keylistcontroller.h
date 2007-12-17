@@ -60,9 +60,14 @@ namespace Kleo {
 
         void registerCommand( Command * cmd );
 
+    public Q_SLOTS:
+        void cancelCommands();
+
     Q_SIGNALS:
         void progress( int current, int total );
         void message( const QString & msg, int timeout=0 );
+
+        void commandsExecuting( bool );
 
     private:
         class Private;
