@@ -47,11 +47,6 @@ namespace Kleo {
     private:
 	/* reimp */ void doStart();
 	/* reimp */ void doCancel();
-	
-    private:
-	class Private;
-	inline Private * d_func();
-	inline const Private * d_func() const;
     };
 
 }
