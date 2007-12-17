@@ -30,8 +30,8 @@
     your version.
 */
 
-#ifndef __KLEOPATRA_CERTIFICATEPICKERWIDGET_H__
-#define __KLEOPATRA_CERTIFICATEPICKERWIDGET_H__
+#ifndef __KLEOPATRA_RESOLVERECIPIENTSPAGE_H__
+#define __KLEOPATRA_RESOLVERECIPIENTSPAGE_H__
 
 #include "wizardpage.h"
 
@@ -89,8 +89,8 @@ namespace Kleo {
     
         bool isComplete() const;
 
-        void setIdentifiers( const QStringList& identifiers );
-        QStringList identifiers() const;
+//        void setIdentifiers( const QStringList& identifiers );
+//        QStringList identifiers() const;
 
 
         /** 
@@ -107,9 +107,6 @@ namespace Kleo {
 
         bool isMultipleProtocolsAllowed() const;
         void setMultipleProtocolsAllowed( bool allowed );
-
-        QString explanatoryText() const;
-        void setExplanatoryText( const QString& text );
 
         bool symmetricEncryptionEnabled() const;
         void setSymmetricEncryptionEnabled( bool enabled );
@@ -145,4 +142,5 @@ namespace Kleo {
 }
 
 
-#endif // __KLEOPATRA_CERTIFICATEPICKERWIDGET_H__
+
+#endif // __KLEOPATRA_RESOLVERECIPIENTSPAGE_H__

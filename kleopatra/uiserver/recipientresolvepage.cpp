@@ -86,7 +86,6 @@ public:
     QRadioButton* smimeRB;
     QPushButton* addRecipientButton;
     QScrollArea* scrollArea;
-    QLabel* explanationLabel;
     QVBoxLayout* lineLayout;
     std::vector<RecipientResolveWidget*> widgets;
     QStringList identifiers;
@@ -118,9 +117,6 @@ RecipientResolvePage::RecipientResolvePage( QWidget * parent )
 {
     QVBoxLayout* const top = new QVBoxLayout( this );
     QButtonGroup* const buttonGroup = new QButtonGroup( this );
-    d->explanationLabel = new QLabel;
-    d->explanationLabel->setWordWrap( true );
-    top->addWidget( d->explanationLabel );
     QButtonGroup* symAsymGroup = new QButtonGroup( this );
     connect( symAsymGroup, SIGNAL( buttonClicked( int ) ), 
              this, SLOT( modeSelected( int ) ) );
@@ -185,23 +181,6 @@ bool RecipientResolvePage::isComplete() const
 }
 
 
-QString RecipientResolvePage::explanatoryText() const
-{
-    return d->explanationLabel->text();
-}
-
-void RecipientResolvePage::setExplanatoryText( const QString& text )
-{
-    d->explanationLabel->setText( text );
-}
-
-void RecipientResolvePage::setIdentifiers( const QStringList& ids )
-{
-    d->clear();
-    Q_FOREACH ( const QString& i, ids )
-        d->addWidgetForIdentifier( i );
-}
-
 void RecipientResolvePage::Private::protocolSelected( int protocol )
 {
     assert( !allowMultipleProtocols );
@@ -259,11 +238,6 @@ void RecipientResolvePage::Private::addWidgetForIdentifier( const QString& id )
     line->setSizePolicy( QSizePolicy::MinimumExpanding, QSizePolicy::Preferred );
     line->show();
     emit q->completeChanged();
-}
-
-QStringList RecipientResolvePage::identifiers() const
-{
-    return d->identifiers;
 }
 
 void RecipientResolvePage::ensureIndexAvailable( unsigned int idx )
@@ -528,13 +502,13 @@ void RecipientResolvePage::Private::modeSelected( int mode )
     assert( mode == Private::Symmetric || mode == Private::Asymmetric );
     if ( mode == Private::Symmetric )
     {
-        q->setExplanatoryText( i18n( "You have chosen to apply symmetric encryption. This means that just the passphrase is sufficient to decrypt. You must provide anyone with the passphrase who should be able to decrypt. Please ensure a secure transfer of the passphrase. You should consider asymmetric encryption to avoid the problem of secure passphrase transfer." ) );
+        q->setExplanation( i18n( "You have chosen to apply symmetric encryption. This means that just the passphrase is sufficient to decrypt. You must provide anyone with the passphrase who should be able to decrypt. Please ensure a secure transfer of the passphrase. You should consider asymmetric encryption to avoid the problem of secure passphrase transfer." ) );
     }
     else
     {
-        q->setExplanatoryText( QString() );
+        q->setExplanation( QString() );
     }
 }
 
-
 #include "moc_recipientresolvepage.cpp"
+
