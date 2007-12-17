@@ -245,10 +245,9 @@ void KeyListController::Private::slotDoubleClicked( const QModelIndex & idx ) {
     if ( !view || !std::binary_search( views.begin(), views.end(), view ) )
 	return;
 
-    DetailsCommand * const c = new DetailsCommand( q );
+    DetailsCommand * const c = new DetailsCommand( view, q );
 
     c->setIndex( idx );
-    c->setView( view );
     c->start();
 }
 
