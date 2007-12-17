@@ -49,11 +49,12 @@ protected:
 private:
     class Private;
     kdtools::pimpl_ptr<Private> d;
-    Q_PRIVATE_SLOT( d, void importCertificates() );
-    Q_PRIVATE_SLOT( d, void exportCertificates() );
-    Q_PRIVATE_SLOT( d, void refreshCertificates() );
-    Q_PRIVATE_SLOT( d, void validateCertificates() );
-    Q_PRIVATE_SLOT( d, void newCertificate() );
+    Q_PRIVATE_SLOT( d, void certificateDetails() )
+    Q_PRIVATE_SLOT( d, void importCertificates() )
+    Q_PRIVATE_SLOT( d, void exportCertificates() )
+    Q_PRIVATE_SLOT( d, void refreshCertificates() )
+    Q_PRIVATE_SLOT( d, void validateCertificates() )
+    Q_PRIVATE_SLOT( d, void newCertificate() )
 };
 
 

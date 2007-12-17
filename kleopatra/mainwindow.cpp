@@ -43,6 +43,7 @@
 #include "commands/exportcertificatecommand.h"
 #include "commands/importcertificatecommand.h"
 #include "commands/refreshkeyscommand.h"
+#include "commands/detailscommand.h"
 
 #include <KActionCollection>
 #include <KLocale>
@@ -95,8 +96,15 @@ public:
     explicit Private( MainWindow * qq );
     ~Private();
 
-    void refreshCertificates();
-    void validateCertificates();
+    void certificateDetails() {
+        ( new DetailsCommand( currentView(), &controller ) )->start();
+    }
+    void refreshCertificates() {
+        ( new RefreshKeysCommand( RefreshKeysCommand::Normal, currentView(), &controller ) )->start();
+    }
+    void validateCertificates() {
+        ( new RefreshKeysCommand( RefreshKeysCommand::Validate, currentView(), &controller ) )->start();
+    }
     void exportCertificates();
     void importCertificates();
     void newCertificate();
@@ -104,6 +112,10 @@ public:
 private:
     void setupActions();
     void addView( const QString& title );
+
+    QAbstractItemView * currentView() const {
+        return ui.tabWidget.currentView();
+    }
 
 private:
 
@@ -219,10 +231,9 @@ void MainWindow::Private::setupActions()
     searchBarAction->setDefaultWidget( searchBar );
     coll->addAction( "key_search_bar", searchBarAction );
 
-    QAction* action = coll->addAction( "file_import_certificates" );
-    action->setText( i18n( "Import Certificates..." ) );
-    connect( action, SIGNAL(triggered()), q, SLOT(importCertificates()) );
-    action->setShortcuts( KShortcut( i18n("Ctrl+I") ) );
+    QAction* action;
+
+    // File menu
 
     action = coll->addAction( "file_new_certificate" );
     action->setText( i18n( "New Certificate..." ) );
@@ -236,11 +247,25 @@ void MainWindow::Private::setupActions()
     connect( action, SIGNAL(triggered()), q, SLOT(exportCertificates()) );
     action->setShortcuts( KShortcut( i18n("Ctrl+E") ) );
 
+    action = coll->addAction( "file_import_certificates" );
+    action->setText( i18n( "Import Certificates..." ) );
+    connect( action, SIGNAL(triggered()), q, SLOT(importCertificates()) );
+    action->setShortcuts( KShortcut( i18n("Ctrl+I") ) );
+
+    // View menu
+
     action = coll->addAction( "view_redisplay" );
     action->setText( i18n( "Redisplay" ) );
     action->setIcon( KIcon( "view-refresh" ) );
     connect( action, SIGNAL(triggered()), q, SLOT(refreshCertificates()) );
     action->setShortcuts( KShortcut( i18n("F5") ) );
+
+    action = coll->addAction( "view_certificate_details" );
+    action->setText( i18n( "Certificate Details..." ) );
+    //action->setIcon( KIcon( "view-details" ) );
+    connect( action, SIGNAL(triggered()), q, SLOT(certificateDetails()) );
+
+    // Certificates menu
 
     action = coll->addAction( "certificates_validate" );
     action->setText( i18n("Validate" ) );
@@ -248,16 +273,13 @@ void MainWindow::Private::setupActions()
     //action->setToolTip( i18n("Validate selected certificates") );
     connect( action, SIGNAL(triggered()), q, SLOT(validateCertificates()) );
     action->setShortcuts( KShortcut( i18n("SHIFT+F5") ) );
-}
 
-void MainWindow::Private::refreshCertificates()
-{
-    ( new RefreshKeysCommand( RefreshKeysCommand::Normal, &controller ) )->start();
-}
+    // CRLs menu
 
-void MainWindow::Private::validateCertificates()
-{
-    ( new RefreshKeysCommand( RefreshKeysCommand::Validate, &controller ) )->start();
+    // Tools menu
+
+    // Settings menu
+
 }
 
 void MainWindow::Private::newCertificate()
