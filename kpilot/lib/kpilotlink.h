@@ -223,7 +223,7 @@ public:
 	* will be giving to us, including tickle timeouts and 
 	* device communication events. 
 	*/
-	void customEvent(QCustomEvent *e);
+	virtual bool event(QEvent *e);
 
 	/**
 	* Install the list of files (full paths!) named by @p l
