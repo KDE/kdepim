@@ -77,6 +77,12 @@ RefreshKeysCommand::RefreshKeysCommand( Mode mode, KeyListController * p )
 
 }
 
+RefreshKeysCommand::RefreshKeysCommand( Mode mode, QAbstractItemView * v, KeyListController * p )
+    : Command( v, p, new Private( this, mode, p ) )
+{
+
+}
+
 RefreshKeysCommand::~RefreshKeysCommand() {}
 
 RefreshKeysCommand::Private::Private( RefreshKeysCommand * qq, Mode m, KeyListController * controller )
@@ -106,7 +112,8 @@ void RefreshKeysCommand::Private::startKeyListing( const char* backend, KeyType 
         connect( job, SIGNAL(result(GpgME::KeyListResult)),
                  q, SLOT(secretKeyListingDone(GpgME::KeyListResult)) );
     }
-
+    connect( job, SIGNAL(progress(QString,int,int)),
+             q, SIGNAL(progress(QString,int,int)) );
     connect( job, SIGNAL(nextKey(GpgME::Key)),
              q, SLOT(addKey(GpgME::Key)) );
     job->start( QStringList(), type == SecretKeys ); 

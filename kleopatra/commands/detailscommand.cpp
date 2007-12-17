@@ -71,6 +71,12 @@ DetailsCommand::DetailsCommand( KeyListController * p )
 
 }
 
+DetailsCommand::DetailsCommand( QAbstractItemView * v, KeyListController * p )
+    : Command( v, p, new Private( this, p ) )
+{
+
+}
+
 #define d d_func()
 
 DetailsCommand::~DetailsCommand() {
@@ -79,7 +85,7 @@ DetailsCommand::~DetailsCommand() {
 }
 
 void DetailsCommand::doStart() {
-    if ( d->indexes().count() != 1 ) {
+    if ( d->indexes().size() != 1 ) {
         qWarning( "DetailsCommand::doStart: can only work with one certificate at a time" );
         return;
     }

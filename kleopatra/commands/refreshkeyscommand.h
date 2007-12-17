@@ -47,6 +47,7 @@ namespace  Kleo {
         };
 
         RefreshKeysCommand( Mode mode, KeyListController* parent );
+        RefreshKeysCommand( Mode mode, QAbstractItemView * view, KeyListController* parent );
         ~RefreshKeysCommand();        
 
     private:

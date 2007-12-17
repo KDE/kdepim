@@ -49,6 +49,7 @@ namespace Kleo {
         Q_OBJECT
     public:
         explicit Command( KeyListController * parent );
+        explicit Command( QAbstractItemView * view, KeyListController * parent );
         ~Command();
 
         void setView( QAbstractItemView * view );
@@ -74,6 +75,7 @@ namespace Kleo {
         kdtools::pimpl_ptr<Private> d;
     protected:
         explicit Command( KeyListController * parent, Private * pp );
+        explicit Command( QAbstractItemView * view, KeyListController * parent, Private * pp );
     };
 
 }

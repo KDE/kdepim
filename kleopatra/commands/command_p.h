@@ -44,6 +44,9 @@
 
 #include <gpgme++/key.h>
 
+#include <algorithm>
+#include <iterator>
+
 class Kleo::Command::Private {
     friend class ::Kleo::Command;
 protected:
@@ -54,12 +57,16 @@ public:
 
     QAbstractItemView * view() const { return view_; }
     AbstractKeyListModel * model() const { return controller_ ? controller_->model() : 0 ; }
-    const QList<QModelIndex> & indexes() const { return indexes_; }
+    QList<QModelIndex> indexes() const {
+        QList<QModelIndex> result;
+        std::copy( indexes_.begin(), indexes_.end(), std::back_inserter( result ) );
+        return result;
+    }
     GpgME::Key key() const { return model() && !indexes_.empty() ? model()->key( indexes_.front() ) : GpgME::Key::null ; }
-    std::vector<GpgME::Key> keys() const { return model() ? model()->keys( indexes_ ) : std::vector<GpgME::Key>() ; }
+    std::vector<GpgME::Key> keys() const { return model() ? model()->keys( indexes() ) : std::vector<GpgME::Key>() ; }
 
 private:
-    QList<QModelIndex> indexes_;
+    QList<QPersistentModelIndex> indexes_;
     QPointer<QAbstractItemView> view_;
     QPointer<KeyListController> controller_;
 };

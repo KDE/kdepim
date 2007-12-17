@@ -57,6 +57,15 @@ Command::Command( KeyListController * p )
         p->registerCommand( this );
 }
 
+Command::Command( QAbstractItemView * v, KeyListController * p )
+    : QObject( p ), d( new Private( this, p ) )
+{
+    if ( p )
+        p->registerCommand( this );
+    if ( v )
+        setView( v );
+}
+
 Command::Command( KeyListController * p, Private * pp )
     : QObject( p ), d( pp )
 {
@@ -64,12 +73,35 @@ Command::Command( KeyListController * p, Private * pp )
         p->registerCommand( this );
 }
 
+Command::Command( QAbstractItemView * v, KeyListController * p, Private * pp )
+    : QObject( p ), d( pp )
+{
+    if ( p )
+        p->registerCommand( this );
+    if ( v )
+        setView( v );
+}
+
 Command::~Command() {}
 
 
 
 void Command::setView( QAbstractItemView * view ) {
+    if ( view == d->view_ )
+        return;
     d->view_ = view;
+    if ( !view || !d->indexes_.empty() )
+        return;
+    const QItemSelectionModel * const sm = view->selectionModel();
+    if ( !sm ) {
+        qWarning( "Command::setView: view %p has no selectionModel!", view );
+        return;
+    }
+    const QList<QModelIndex> selected = sm->selectedRows();
+    if ( !selected.empty() ) {
+        std::copy( selected.begin(), selected.end(), std::back_inserter( d->indexes_ ) );
+        return;
+    }
 }
 
 void Command::setIndex( const QModelIndex & idx ) {
@@ -78,7 +110,8 @@ void Command::setIndex( const QModelIndex & idx ) {
 }
 
 void Command::setIndexes( const QList<QModelIndex> & idx ) {
-    d->indexes_ = idx;
+    d->indexes_.clear();
+    std::copy( idx.begin(), idx.end(), std::back_inserter( d->indexes_ ) );
 }
 
 void Command::start() {
