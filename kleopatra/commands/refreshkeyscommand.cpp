@@ -124,8 +124,7 @@ void RefreshKeysCommand::Private::publicKeyListingDone( const GpgME::KeyListResu
 {
     assert( m_pubKeysJobs > 0 );
     --m_pubKeysJobs;
-    if ( m_pubKeysJobs == 0 )
-    {
+    if ( m_pubKeysJobs == 0 ) {
         startKeyListing( "openpgp", Private::SecretKeys );
         startKeyListing( "smime", Private::SecretKeys );
     }
@@ -137,8 +136,7 @@ void RefreshKeysCommand::Private::secretKeyListingDone( const GpgME::KeyListResu
     assert( m_secKeysJobs > 0 );
     --m_secKeysJobs;
     if ( m_secKeysJobs == 0 )
-    {
-    }
+        finished();
 }
 
 void RefreshKeysCommand::Private::addKey( const GpgME::Key& key )
