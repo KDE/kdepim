@@ -65,6 +65,11 @@ public:
     GpgME::Key key() const { return model() && !indexes_.empty() ? model()->key( indexes_.front() ) : GpgME::Key::null ; }
     std::vector<GpgME::Key> keys() const { return model() ? model()->keys( indexes() ) : std::vector<GpgME::Key>() ; }
 
+    void finished() {
+        emit q->finished();
+        q->deleteLater();
+    }
+
 private:
     QList<QPersistentModelIndex> indexes_;
     QPointer<QAbstractItemView> view_;
