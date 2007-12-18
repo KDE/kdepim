@@ -47,11 +47,11 @@ namespace GpgME {
 
 namespace Kleo {
 
-class KeySelectionJob : public QObject
+class CertificateSelectionJob : public QObject
 {
     Q_OBJECT
 public:
-    explicit KeySelectionJob( QObject* parent = 0 );
+    explicit CertificateSelectionJob( QObject* parent = 0 );
 
     void setPatterns( const QStringList& patterns );
     QStringList patterns() const;
@@ -82,7 +82,7 @@ private:
     Q_PRIVATE_SLOT( d, void nextKey( const GpgME::Key& key ) )
     Q_PRIVATE_SLOT( d, void keyListingDone() )
     Q_PRIVATE_SLOT( d, void keyListingDone( const GpgME::KeyListResult& result ) )
-    Q_PRIVATE_SLOT( d, void keySelectionDialogClosed() )
+    Q_PRIVATE_SLOT( d, void certificateSelectionDialogClosed() )
 
     class Private;
     kdtools::pimpl_ptr<Private> d;

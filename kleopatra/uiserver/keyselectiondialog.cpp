@@ -1,5 +1,5 @@
 /* -*- mode: c++; c-basic-offset:4 -*-
-    uiserver/keyselectiondialog.cpp
+    uiserver/certificateselectiondialog.cpp
 
     This file is part of Kleopatra, the KDE keymanager
     Copyright (c) 2007 Klarälvdalens Datakonsult AB
@@ -47,22 +47,22 @@
 
 using namespace Kleo;
 
-struct KeySelectionDialog::Private {
+struct CertificateSelectionDialog::Private {
   
-    Private( KeySelectionDialog * _q );
+    Private( CertificateSelectionDialog * _q );
     ~Private() {}
-    KeySelectionDialog * const q;
+    CertificateSelectionDialog * const q;
     Ui::KeySelectionWidget ui;
     AbstractKeyListModel* m_model;
     QString m_customText;
-    KeySelectionDialog::SelectionMode m_mode;
+    CertificateSelectionDialog::SelectionMode m_mode;
     void setLabelText();
     GpgME::Protocol m_protocol;
     KeyType m_allowedKeys;
 };
 
 
-KeySelectionDialog::Private::Private( KeySelectionDialog * _q)
+CertificateSelectionDialog::Private::Private( CertificateSelectionDialog * _q)
     :q( _q ), ui(), m_model( AbstractKeyListModel::createFlatKeyListModel( q ) ), m_mode( MultiSelection ), m_protocol( GpgME::UnknownProtocol ), m_allowedKeys( Any )
 {
     ui.setupUi( q );
@@ -73,27 +73,27 @@ KeySelectionDialog::Private::Private( KeySelectionDialog * _q)
     setLabelText();
 }
 
-KeySelectionDialog::KeySelectionDialog( QWidget * parent, Qt::WindowFlags flags ) : QDialog( parent, flags ), d( new KeySelectionDialog::Private( this ) )
+CertificateSelectionDialog::CertificateSelectionDialog( QWidget * parent, Qt::WindowFlags flags ) : QDialog( parent, flags ), d( new CertificateSelectionDialog::Private( this ) )
 {
 }
 
-KeySelectionDialog::~KeySelectionDialog()
+CertificateSelectionDialog::~CertificateSelectionDialog()
 {
 }
 
-void KeySelectionDialog::setCustomText( const QString& text )
+void CertificateSelectionDialog::setCustomText( const QString& text )
 {
     d->m_customText = text;
     d->setLabelText();
 }
 
 
-QString KeySelectionDialog::customText() const
+QString CertificateSelectionDialog::customText() const
 {
     return d->m_customText;
 }
 
-void KeySelectionDialog::Private::setLabelText()
+void CertificateSelectionDialog::Private::setLabelText()
 {
 
     if ( m_customText.isNull() ) 
@@ -108,14 +108,14 @@ void KeySelectionDialog::Private::setLabelText()
     }
 }        
 
-std::vector<GpgME::Key> KeySelectionDialog::selectedKeys() const
+std::vector<GpgME::Key> CertificateSelectionDialog::selectedKeys() const
 {
     QItemSelectionModel * const sm = d->ui.listView->selectionModel();
     assert( sm );
     return d->m_model->keys( sm->selectedIndexes() );
 }
 
-void KeySelectionDialog::addKeys(const std::vector<GpgME::Key> & keys_ )
+void CertificateSelectionDialog::addKeys(const std::vector<GpgME::Key> & keys_ )
 {
     std::vector<GpgME::Key> keys = keys_;
 
@@ -145,34 +145,34 @@ void KeySelectionDialog::addKeys(const std::vector<GpgME::Key> & keys_ )
     d->m_model->addKeys( keys );
 }
 
-void KeySelectionDialog::setSelectionMode( KeySelectionDialog::SelectionMode mode )
+void CertificateSelectionDialog::setSelectionMode( CertificateSelectionDialog::SelectionMode mode )
 {
     d->m_mode = mode;
     d->ui.listView->setSelectionMode( mode == MultiSelection ? QAbstractItemView::MultiSelection : QAbstractItemView::SingleSelection );
     d->setLabelText();
 }
 
-KeySelectionDialog::SelectionMode KeySelectionDialog::selectionMode() const
+CertificateSelectionDialog::SelectionMode CertificateSelectionDialog::selectionMode() const
 {
     return d->m_mode;
 }
 
-void KeySelectionDialog::setProtocol( GpgME::Protocol protocol )
+void CertificateSelectionDialog::setProtocol( GpgME::Protocol protocol )
 {
     d->m_protocol = protocol;
 }
 
-GpgME::Protocol KeySelectionDialog::protocol() const
+GpgME::Protocol CertificateSelectionDialog::protocol() const
 {
     return d->m_protocol;
 }
 
-void KeySelectionDialog::setAllowedKeys( KeyType type )
+void CertificateSelectionDialog::setAllowedKeys( KeyType type )
 {
     d->m_allowedKeys = type;
 }
 
-KeySelectionDialog::KeyType KeySelectionDialog::allowedKeys() const
+CertificateSelectionDialog::KeyType CertificateSelectionDialog::allowedKeys() const
 {
     return d->m_allowedKeys;
 }

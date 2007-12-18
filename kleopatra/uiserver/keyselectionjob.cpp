@@ -49,20 +49,20 @@
 
 using namespace Kleo;
 
-class KeySelectionJob::Private
+class CertificateSelectionJob::Private
 {
 public:
-    Private( KeySelectionJob* qq ) : q( qq ), m_secretKeysOnly( false ), m_silent( false ), m_keyListings( 0 ), m_started( false ), m_useCache( true ) {}
+    Private( CertificateSelectionJob* qq ) : q( qq ), m_secretKeysOnly( false ), m_silent( false ), m_keyListings( 0 ), m_started( false ), m_useCache( true ) {}
     ~Private();
 
     void startKeyListing();
-    void showKeySelectionDialog();
+    void showCertificateSelectionDialog();
 
     std::vector<GpgME::Key> m_keys;
     QStringList m_patterns;
     bool m_secretKeysOnly;
     bool m_silent;
-    QPointer<KeySelectionDialog> m_keySelector;
+    QPointer<CertificateSelectionDialog> m_keySelector;
     int m_keyListings;
     GpgME::KeyListResult m_listResult;
     bool m_started;
@@ -71,7 +71,7 @@ public:
     void nextKey( const GpgME::Key& key );
     void keyListingDone();
     void keyListingDone( const GpgME::KeyListResult& result );
-    void keySelectionDialogClosed();
+    void certificateSelectionDialogClosed();
 
 private:
     void emitError( int error, 
@@ -79,32 +79,32 @@ private:
     void emitResult( const std::vector<GpgME::Key>& keys );
 
 private:
-    KeySelectionJob* q;    
+    CertificateSelectionJob* q;    
 };
 
-KeySelectionJob::Private::~Private()
+CertificateSelectionJob::Private::~Private()
 {
     delete m_keySelector;
 }
 
-void KeySelectionJob::Private::emitError( int error, const GpgME::KeyListResult& result )
+void CertificateSelectionJob::Private::emitError( int error, const GpgME::KeyListResult& result )
 {
     q->deleteLater();
     emit q->error( GpgME::Error( AssuanCommand::makeError( error ) ), result );
 }
 
-void KeySelectionJob::Private::emitResult( const std::vector<GpgME::Key>& keys )
+void CertificateSelectionJob::Private::emitResult( const std::vector<GpgME::Key>& keys )
 {
     q->deleteLater();
     emit q->result( keys );
 }
 
-void KeySelectionJob::Private::keyListingDone()
+void CertificateSelectionJob::Private::keyListingDone()
 {
     keyListingDone( GpgME::KeyListResult() );
 }
 
-void KeySelectionJob::Private::keyListingDone( const GpgME::KeyListResult& result )
+void CertificateSelectionJob::Private::keyListingDone( const GpgME::KeyListResult& result )
 {
     m_listResult = result;
     if ( result.error() ) {
@@ -115,20 +115,20 @@ void KeySelectionJob::Private::keyListingDone( const GpgME::KeyListResult& resul
     assert( m_keyListings >= 0 );
 
     if ( m_keyListings == 0 ) {
-        showKeySelectionDialog();
+        showCertificateSelectionDialog();
     }
 }
 
-void KeySelectionJob::Private::nextKey( const GpgME::Key& key )
+void CertificateSelectionJob::Private::nextKey( const GpgME::Key& key )
 {
     m_keys.push_back( key );
 }
 
-KeySelectionJob::KeySelectionJob( QObject* parent ) : QObject( parent ), d( new Private( this ) )
+CertificateSelectionJob::CertificateSelectionJob( QObject* parent ) : QObject( parent ), d( new Private( this ) )
 {
 }
 
-void KeySelectionJob::Private::keySelectionDialogClosed()
+void CertificateSelectionJob::Private::certificateSelectionDialogClosed()
 {
     if ( m_keySelector->result() == QDialog::Rejected ) {
         emitError( GPG_ERR_CANCELED, m_listResult );
@@ -137,7 +137,7 @@ void KeySelectionJob::Private::keySelectionDialogClosed()
     emitResult( m_keySelector->selectedKeys() );
 }
 
-void KeySelectionJob::Private::startKeyListing()
+void CertificateSelectionJob::Private::startKeyListing()
 {
     if ( m_useCache ) {
         if ( m_secretKeysOnly ) {
@@ -169,21 +169,21 @@ void KeySelectionJob::Private::startKeyListing()
     }
 }
 
-void KeySelectionJob::Private::showKeySelectionDialog()
+void CertificateSelectionJob::Private::showCertificateSelectionDialog()
 {
     assert( !m_keySelector );
     if ( m_silent ) {
         emitResult( m_keys );
         return;
     }
-    m_keySelector = new KeySelectionDialog();
-    QObject::connect( m_keySelector, SIGNAL( accepted() ), q, SLOT( keySelectionDialogClosed() ) );
-    QObject::connect( m_keySelector, SIGNAL( rejected() ), q, SLOT( keySelectionDialogClosed() ) );
+    m_keySelector = new CertificateSelectionDialog();
+    QObject::connect( m_keySelector, SIGNAL( accepted() ), q, SLOT( certificateSelectionDialogClosed() ) );
+    QObject::connect( m_keySelector, SIGNAL( rejected() ), q, SLOT( certificateSelectionDialogClosed() ) );
     m_keySelector->addKeys( m_keys );
     m_keySelector->show();
 }
 
-void KeySelectionJob::start()
+void CertificateSelectionJob::start()
 {
     assert( !d->m_started );
     if ( d->m_started )
@@ -192,42 +192,42 @@ void KeySelectionJob::start()
     d->startKeyListing();
 }
 
-void KeySelectionJob::setPatterns( const QStringList& patterns )
+void CertificateSelectionJob::setPatterns( const QStringList& patterns )
 {
     d->m_patterns = patterns;
 }
 
-QStringList KeySelectionJob::patterns() const
+QStringList CertificateSelectionJob::patterns() const
 {
     return d->m_patterns;
 }
 
-void KeySelectionJob::setSecretKeysOnly( bool secretOnly )
+void CertificateSelectionJob::setSecretKeysOnly( bool secretOnly )
 {
     d->m_secretKeysOnly = secretOnly;
 }
 
-bool KeySelectionJob::secretKeysOnly() const
+bool CertificateSelectionJob::secretKeysOnly() const
 {
     return d->m_secretKeysOnly;
 }
 
-void KeySelectionJob::setSilent( bool silent )
+void CertificateSelectionJob::setSilent( bool silent )
 {
     d->m_silent = silent;
 }
 
-bool KeySelectionJob::silent() const
+bool CertificateSelectionJob::silent() const
 {
     return d->m_silent;
 }
 
-void KeySelectionJob::setUseKeyCache( bool useCache )
+void CertificateSelectionJob::setUseKeyCache( bool useCache )
 {
     d->m_useCache = useCache;
 }
 
-bool KeySelectionJob::useKeyCache() const
+bool CertificateSelectionJob::useKeyCache() const
 {
     return d->m_useCache;
 }

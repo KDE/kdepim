@@ -352,10 +352,10 @@ GpgME::Key RecipientResolveWidget::chosenCertificate() const
 
 void RecipientResolveWidget::Private::selectAnotherCertificate()
 {
-    QPointer<KeySelectionDialog> dlg = new KeySelectionDialog( q );
-    dlg->setSelectionMode( KeySelectionDialog::SingleSelection );
+    QPointer<CertificateSelectionDialog> dlg = new CertificateSelectionDialog( q );
+    dlg->setSelectionMode( CertificateSelectionDialog::SingleSelection );
     dlg->setProtocol( m_protocol );
-    dlg->setAllowedKeys( KeySelectionDialog::EncryptOnly );
+    dlg->setAllowedKeys( CertificateSelectionDialog::EncryptOnly );
     dlg->addKeys( PublicKeyCache::instance()->keys() );
     if ( dlg->exec() == QDialog::Accepted )
     {

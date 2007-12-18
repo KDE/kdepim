@@ -1,5 +1,5 @@
 /* -*- mode: c++; c-basic-offset:4 -*-
-    uiserver/keyselectiondialog.h
+    uiserver/certificateselectiondialog.h
 
     This file is part of Kleopatra, the KDE keymanager
     Copyright (c) 2007 Klarälvdalens Datakonsult AB
@@ -46,7 +46,7 @@ namespace GpgME {
 namespace Kleo
 {
 
-class KeySelectionDialog : public QDialog
+class CertificateSelectionDialog : public QDialog
 {
 public:
 
@@ -61,8 +61,8 @@ public:
         EncryptOnly,
     };
 
-    KeySelectionDialog( QWidget* parent = 0, Qt::WindowFlags flags = 0 );
-    ~KeySelectionDialog();
+    CertificateSelectionDialog( QWidget* parent = 0, Qt::WindowFlags flags = 0 );
+    ~CertificateSelectionDialog();
 
     void addKeys( const std::vector<GpgME::Key> & keys );
 
