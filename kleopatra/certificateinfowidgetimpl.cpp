@@ -49,16 +49,13 @@
 #include <kglobalsettings.h>
 
 // Qt
-#include <q3listview.h>
-#include <q3textedit.h>
-#include <q3header.h>
+#include <QTreeWidget>
+#include <QTextEdit>
+#include <QHeaderView>
 #include <QPushButton>
 #include <QCursor>
 #include <QApplication>
 #include <QDateTime>
-//Added by qt3to4:
-#include <QList>
-#include <QByteArray>
 
 // other
 #include <assert.h>
@@ -74,22 +71,22 @@ CertificateInfoWidgetImpl::CertificateInfoWidgetImpl( const GpgME::Key & key, bo
 {
   importButton->setEnabled( false );
 
-  listView->setColumnWidthMode( 1, Q3ListView::Maximum );
+  listView->header()->setResizeMode( 0, QHeaderView::ResizeToContents );
+  listView->header()->setResizeMode( 1, QHeaderView::Stretch );
+
   QFontMetrics fm = fontMetrics();
   listView->setColumnWidth( 1, fm.width( i18n("Information") ) * 5 );
 
-  listView->header()->setClickEnabled( false );
-  listView->setSorting( -1 );
+  listView->header()->setClickable( false );
+  listView->header()->setSortIndicatorShown( false );
 
-  connect( listView, SIGNAL( selectionChanged( Q3ListViewItem* ) ),
-	   this, SLOT( slotShowInfo( Q3ListViewItem* ) ) );
-  pathView->setColumnWidthMode( 0, Q3ListView::Maximum );
+  connect( listView, SIGNAL(itemSelectionChanged()),
+	   this, SLOT(slotShowInfo()) );
+  pathView->header()->setResizeMode( 0, QHeaderView::Stretch );
   pathView->header()->hide();
 
-  connect( pathView, SIGNAL( doubleClicked( Q3ListViewItem* ) ),
-	   this, SLOT( slotShowCertPathDetails( Q3ListViewItem* ) ) );
-  connect( pathView, SIGNAL( returnPressed( Q3ListViewItem* ) ),
-	   this, SLOT( slotShowCertPathDetails( Q3ListViewItem* ) ) );
+  connect( pathView, SIGNAL(itemDoubleClicked(QTreeWidgetItem*,int)),
+	   this, SLOT(slotShowCertPathDetails(QTreeWidgetItem*)) );
   connect( importButton, SIGNAL( clicked() ),
 	   this, SLOT( slotImportCertificate() ) );
 
@@ -103,6 +100,18 @@ static QString time_t2string( time_t t ) {
   QDateTime dt;
   dt.setTime_t( t );
   return dt.toString();
+}
+
+static QTreeWidgetItem * makeItem( QTreeWidget * p, const QString & text0, const QString & text1 ) {
+    return new QTreeWidgetItem( p, QStringList() << text0 << text1 );
+}
+
+static QTreeWidgetItem * makeItem( QTreeWidget * p, const QString & text ) {
+    return new QTreeWidgetItem( p, QStringList() << text );
+}
+
+static QTreeWidgetItem * makeItem( QTreeWidgetItem * p, const QString & text ) {
+    return new QTreeWidgetItem( p, QStringList() << text );
 }
 
 void CertificateInfoWidgetImpl::setKey( const GpgME::Key & key  ) {
@@ -121,22 +130,21 @@ void CertificateInfoWidgetImpl::setKey( const GpgME::Key & key  ) {
   startKeyExistanceCheck(); // starts a local keylisting to enable the
 			    // importButton if needed
 
-  Q3ListViewItem * item = 0;
-  item = new Q3ListViewItem( listView, item, i18n("Valid"), QString("From %1 to %2")
-			    .arg( time_t2string( key.subkey(0).creationTime() ),
-				  time_t2string( key.subkey(0).expirationTime() ) ) );
-  item = new Q3ListViewItem( listView, item, i18n("Can be used for signing"),
-			    key.canSign() ? i18n("Yes") : i18n("No") );
-  item = new Q3ListViewItem( listView, item, i18n("Can be used for encryption"),
-			    key.canEncrypt() ? i18n("Yes") : i18n("No") );
-  item = new Q3ListViewItem( listView, item, i18n("Can be used for certification"),
-			    key.canCertify() ? i18n("Yes") : i18n("No") );
-  item = new Q3ListViewItem( listView, item, i18n("Can be used for authentication"),
-			    key.canAuthenticate() ? i18n("Yes") : i18n("No" ) );
-  item = new Q3ListViewItem( listView, item, i18n("Fingerprint"), key.primaryFingerprint() );
-  item = new Q3ListViewItem( listView, item, i18n("Issuer"), Kleo::DN( key.issuerName() ).prettyDN() );
-  item = new Q3ListViewItem( listView, item, i18n("Serial Number"), key.issuerSerial() );
-
+  makeItem( listView, i18n("Valid"), i18n("From %1 to %2",
+                                          time_t2string( key.subkey(0).creationTime() ),
+                                          time_t2string( key.subkey(0).expirationTime() ) ) );
+  makeItem( listView, i18n("Can be used for signing"),
+            key.canSign() ? i18n("Yes") : i18n("No") );
+  makeItem( listView, i18n("Can be used for encryption"),
+            key.canEncrypt() ? i18n("Yes") : i18n("No") );
+  makeItem( listView, i18n("Can be used for certification"),
+            key.canCertify() ? i18n("Yes") : i18n("No") );
+  makeItem( listView, i18n("Can be used for authentication"),
+            key.canAuthenticate() ? i18n("Yes") : i18n("No" ) );
+  makeItem( listView, i18n("Fingerprint"), key.primaryFingerprint() );
+  makeItem( listView, i18n("Issuer"), Kleo::DN( key.issuerName() ).prettyDN() );
+  makeItem( listView, i18n("Serial Number"), key.issuerSerial() );
+  
   const Kleo::DN dn( key.userID(0).id() );
 
   // FIXME: use the attributeLabelMap from certificatewizardimpl.cpp:
@@ -153,13 +161,13 @@ void CertificateInfoWidgetImpl::setKey( const GpgME::Key & key  ) {
   for ( Kleo::DN::const_iterator dnit = dn.begin() ; dnit != dn.end() ; ++dnit ) {
 	QString displayName = (*dnit).name();
 	if( dnComponentNames.contains(displayName) ) displayName = dnComponentNames[displayName];
-	item = new Q3ListViewItem( listView, item, displayName, (*dnit).value() );
+	makeItem( listView, displayName, (*dnit).value() );
   }
 
   const std::vector<GpgME::UserID> uids = key.userIDs();
   if ( !uids.empty() ) {
-    item = new Q3ListViewItem( listView, item, i18n("Subject"),
-			      Kleo::DN( uids.front().id() ).prettyDN() );
+    makeItem( listView, i18n("Subject"),
+              Kleo::DN( uids.front().id() ).prettyDN() );
     for ( std::vector<GpgME::UserID>::const_iterator it = uids.begin() + 1 ; it != uids.end() ; ++it ) {
       if ( !(*it).id() )
 	continue;
@@ -167,10 +175,10 @@ void CertificateInfoWidgetImpl::setKey( const GpgME::Key & key  ) {
       if ( email.isEmpty() )
 	continue;
       if ( email.startsWith( "<" ) )
-	item = new Q3ListViewItem( listView, item, i18n("Email"),
-				  email.mid( 1, email.length()-2 ) );
+	makeItem( listView, i18n("Email"),
+                  email.mid( 1, email.length()-2 ) );
       else
-	item = new Q3ListViewItem( listView, item, i18n("A.k.a."), email );
+	makeItem( listView, i18n("A.k.a."), email );
     }
   }
 
@@ -256,12 +264,12 @@ void CertificateInfoWidgetImpl::startCertificateDump() {
   (*mProc) << "--dump-keys";
   (*mProc) << mChain.front().primaryFingerprint();
 
-  QObject::connect( mProc, SIGNAL(readyReadStandardOutput ()),
-		  this, SLOT( slotCollectStdout()));
-  QObject::connect( mProc, SIGNAL(readyReadStandardError()),
-		  this, SLOT(slotCollectStderr()));
-  QObject::connect( mProc, SIGNAL(finished (int, QProcess::ExitStatus)),
-		  this,SLOT(slotDumpProcessExited(int, QProcess::ExitStatus)));
+  connect( mProc, SIGNAL(readyReadStandardOutput ()),
+           this, SLOT( slotCollectStdout()));
+  connect( mProc, SIGNAL(readyReadStandardError()),
+           this, SLOT(slotCollectStderr()));
+  connect( mProc, SIGNAL(finished (int, QProcess::ExitStatus)),
+           this,SLOT(slotDumpProcessExited(int, QProcess::ExitStatus)));
 
   mProc->setOutputChannelMode(KProcess::SeparateChannels);
   mProc->start();
@@ -319,39 +327,40 @@ void CertificateInfoWidgetImpl::updateChainView() {
   pathView->clear();
   if ( mChain.empty() )
     return;
-  Q3ListViewItem * item = 0;
+  QTreeWidgetItem * item = 0;
 
   QList<GpgME::Key>::const_iterator it = mChain.begin();
   // root item:
   if ( (*it).chainID() && qstrcmp( (*it).chainID(), (*it).primaryFingerprint() ) == 0 )
-    item = new Q3ListViewItem( pathView, Kleo::DN( (*it++).userID(0).id() ).prettyDN() );
+    item = makeItem( pathView, Kleo::DN( (*it++).userID(0).id() ).prettyDN() );
   else {
-    item = new Q3ListViewItem( pathView, i18n("Issuer certificate not found ( %1)",
-			        Kleo::DN( (*it).issuerName() ).prettyDN() ) );
-    item->setOpen( true ); // Qt bug: doesn't open after setEnabled( false ) :/
-    item->setEnabled( false );
+    item = makeItem( pathView, i18n("Issuer certificate not found (%1)",
+                                    Kleo::DN( (*it).issuerName() ).prettyDN() ) );
+    item->setExpanded( true ); // Qt bug: doesn't open after setEnabled( false ) :/
+    item->setDisabled( true );
   }
-  item->setOpen( true );
+  item->setExpanded( true );
 
   // subsequent items:
   while ( it != mChain.end() ) {
-    item = new Q3ListViewItem( item, Kleo::DN( (*it++).userID(0).id() ).prettyDN() );
-    item->setOpen( true );
+    item = makeItem( item, Kleo::DN( (*it++).userID(0).id() ).prettyDN() );
+    item->setExpanded( true );
   }
 }
 
 void CertificateInfoWidgetImpl::slotCertificateChainListingResult( const GpgME::KeyListResult & res ) {
   if ( res.error() )
-    return showChainListError( this, res.error(), mChain.front().issuerName() );
+    showChainListError( this, res.error(), mChain.front().issuerName() );
   else
     startCertificateChainListing();
 }
 
-void CertificateInfoWidgetImpl::slotShowInfo( Q3ListViewItem * item ) {
-  textView->setText( item->text(1) );
+void CertificateInfoWidgetImpl::slotShowInfo() {
+    const QList<QTreeWidgetItem*> items = listView->selectedItems();
+    textView->setText( items.empty() ? QString() : items.front()->text(1) );
 }
 
-void CertificateInfoWidgetImpl::slotShowCertPathDetails( Q3ListViewItem * item ) {
+void CertificateInfoWidgetImpl::slotShowCertPathDetails( QTreeWidgetItem * item ) {
   if ( !item )
     return;
 
@@ -361,7 +370,7 @@ void CertificateInfoWidgetImpl::slotShowCertPathDetails( Q3ListViewItem * item )
   // widget spec for Kleo::KeyListView.
   int totalCount = 0;
   int itemIndex = -1;
-  for ( const Q3ListViewItem * i = pathView->firstChild() ; i ; i = i->firstChild() ) {
+  for ( const QTreeWidgetItem * i = pathView->topLevelItem( 0 ) ; i ; i = i->child( 0 ) ) {
     if ( i == item )
       itemIndex = totalCount;
     ++totalCount;
