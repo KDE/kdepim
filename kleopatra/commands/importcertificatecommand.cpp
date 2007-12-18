@@ -144,6 +144,9 @@ bool ImportCertificateCommand::Private::ensureHaveFile()
 
 void ImportCertificateCommand::Private::showDetails( const ImportResult& res )
 {
+    // ### TODO: make a keylisting over Import::fingerprints(), then
+    // ### highlight imported certificates in view(), or maybe in a new tab?
+
     const KLocalizedString normalLine = ki18n("<tr><td align=\"right\">%1</td><td>%2</td></tr>");
     const KLocalizedString boldLine = ki18n("<tr><td align=\"right\"><b>%1</b></td><td>%2</td></tr>");
 
