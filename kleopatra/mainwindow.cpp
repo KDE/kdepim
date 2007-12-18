@@ -230,8 +230,10 @@ void MainWindow::Private::setupActions()
     QWidgetAction * const searchBarAction = new QWidgetAction( q );
     SearchBar * const searchBar = new SearchBar( q );
     new SearchBarStateHandler( &ui.tabWidget, searchBar, searchBar );
-    connect( searchBar, SIGNAL( textChanged( QString ) ),
-             &ui.tabWidget, SLOT( setFilter( QString ) ) );
+    connect( searchBar, SIGNAL(textChanged(QString)),
+             &ui.tabWidget, SLOT(setStringFilter(QString)) );
+    connect( searchBar, SIGNAL(keyFilterChanged(boost::shared_ptr<Kleo::KeyFilter>)),
+             &ui.tabWidget, SLOT(setKeyFilter(boost::shared_ptr<Kleo::KeyFilter>)) );
     searchBarAction->setDefaultWidget( searchBar );
     coll->addAction( "key_search_bar", searchBarAction );
 

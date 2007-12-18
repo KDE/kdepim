@@ -37,10 +37,13 @@
 
 #include <utils/pimpl_ptr.h>
 
+#include <boost/shared_ptr.hpp>
+
 class QAbstractItemView;
 
 namespace Kleo {
     class AbstractKeyListModel;
+    class KeyFilter;
 }
 
 class TabWidget : public QWidget {
@@ -49,17 +52,16 @@ public:
     explicit TabWidget( QWidget * parent=0, Qt::WindowFlags f=0 );
     ~TabWidget();
 
-    QAbstractItemView * addView( Kleo::AbstractKeyListModel* model, const QString& caption );
+    QAbstractItemView * addView( Kleo::AbstractKeyListModel * model, const QString & caption );
 
     QAbstractItemView * currentView() const;
 
 public Q_SLOTS:
-
-    void setFilter( const QString& );
+    void setKeyFilter( const boost::shared_ptr<Kleo::KeyFilter> & filter );
+    void setStringFilter( const QString & filter );
 
 Q_SIGNALS:
-
-    void currentViewChanged( QAbstractItemView* view );
+    void currentViewChanged( QAbstractItemView * view );
 
 private:
     class Private;

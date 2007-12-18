@@ -39,6 +39,10 @@
 
 #include <boost/shared_ptr.hpp>
 
+namespace Kleo {
+    class KeyFilter;
+}
+
 class SearchBar : public QWidget {
     Q_OBJECT
 public:
@@ -48,34 +52,23 @@ public:
     QString text() const;
 
 
-    class State {
-        friend class ::SearchBar;
-    public:
-        State();
-        ~State();
-
-    private:
-        Q_DISABLE_COPY(State);
-        class Private;
-        kdtools::pimpl_ptr<Private> d;
-    };
-
+    class State;
     boost::shared_ptr<State> state() const;
-    void setState( const boost::shared_ptr<State>& state );
+    void setState( const boost::shared_ptr<State> & state );
     void resetState();                                                          
                                                          
 public Q_SLOTS:
-
-    void setText( const QString& text );
+    void setText( const QString & text );
+    void setKeyFilter( const boost::shared_ptr<Kleo::KeyFilter> & filter );
 
 Q_SIGNALS:
-
-    void textChanged( const QString& );
-
+    void textChanged( const QString & text );
+    void keyFilterChanged( const boost::shared_ptr<Kleo::KeyFilter> & filter );
 
 private:
     class Private;
     kdtools::pimpl_ptr<Private> d;
+    Q_PRIVATE_SLOT( d, void slotKeyFilterChanged(int) )
 };
 
 #endif // __KLEOPATRA_SEARCHBAR_H__ 

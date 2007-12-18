@@ -31,57 +31,109 @@
 */
 
 #include "tabwidget.h"
-#include "tabwidget_p.h"
 
-#include "models/keylistmodel.h"
+#include <models/keylistmodel.h>
+#include <models/keylistsortfilterproxymodel.h>
+
+#include <kleo/keyfilter.h>
 
 #include <KTabWidget>
 
 #include <QGridLayout>
-#include <QMap>
 #include <QTimer>
+#include <QResizeEvent>
+#include <QSortFilterProxyModel>
+#include <QTreeView>
 
+#include <map>
 #include <cassert>
 
-Page::Page( QAbstractItemModel* model, QWidget * parent )
+using namespace Kleo;
+using namespace boost;
+
+namespace {
+class Page : public QWidget {
+    Q_OBJECT
+public:
+    explicit Page( QAbstractItemModel * sourceModel, QWidget * parent=0 );
+
+    QAbstractItemView * view() const { return m_view; }
+
+    QString stringFilter() const { return m_stringFilter; }
+    void setStringFilter( const QString & filter ); 
+
+    const shared_ptr<KeyFilter> & keyFilter() const { return m_keyFilter; }
+    void setKeyFilter( const shared_ptr<KeyFilter> & filter );
+
+protected:
+    void resizeEvent( QResizeEvent * e ) {
+        QWidget::resizeEvent( e );
+        m_view->resize( e->size() );
+    }
+
+private:
+    KeyListSortFilterProxyModel m_proxy;
+    QTreeView * m_view;
+    QString m_stringFilter;
+    shared_ptr<KeyFilter> m_keyFilter;
+};
+} // anon namespace
+
+Page::Page( QAbstractItemModel * model, QWidget * parent )
     : QWidget( parent ),
+      m_proxy(),
       m_view( new QTreeView( this ) ),
-      m_proxy( new Kleo::KeyListSortFilterProxyModel( this ) )
+      m_stringFilter(),
+      m_keyFilter()
 {
+    KDAB_SET_OBJECT_NAME( m_proxy );
+    KDAB_SET_OBJECT_NAME( m_view );
+
     assert( model );
-    m_proxy->setSourceModel( model );
+    m_proxy.setSourceModel( model );
+#if 0 // done by controller, when registering view
     m_view->setRootIsDecorated( false );
     m_view->setSortingEnabled( true );
-    m_view->sortByColumn( Kleo::AbstractKeyListModel::Fingerprint, Qt::AscendingOrder );
-    m_view->setModel( m_proxy );
+    m_view->sortByColumn( AbstractKeyListModel::Fingerprint, Qt::AscendingOrder );
+#endif
+    m_view->setModel( &m_proxy );
 }
 
-void Page::setFilter( const QString& str )
-{
-    if ( str == m_filter )
+void Page::setStringFilter( const QString & filter ) {
+    if ( filter == m_stringFilter )
         return;
-    m_filter = str;
-    m_proxy->setFilterFixedString( m_filter ); 
+    m_stringFilter = filter;
+    m_proxy.setFilterFixedString( filter ); 
 }
 
-QAbstractItemView* Page::view() const
-{
-    return m_view;
+void Page::setKeyFilter( const shared_ptr<KeyFilter> & filter ) {
+    if ( filter == m_keyFilter || filter && m_keyFilter && filter->id() == m_keyFilter->id() )
+        return;
+    m_keyFilter = filter;
+    m_proxy.setKeyFilter( filter );
 }
 
-Page::~Page() {}
+//
+//
+// TabWidget
+//
+//
 
 class TabWidget::Private {
     friend class ::TabWidget;
     TabWidget * const q;
-
 public:
     explicit Private( TabWidget * qq );
     ~Private() {};
 
-    QMap<QAbstractItemView*, boost::shared_ptr<Page> > pages;
-    KTabWidget * tabWidget;
+private:
     void currentIndexChanged( int index );
+
+    const shared_ptr<Page> & currentPage() const;
+
+private:
+    std::map<QAbstractItemView*, shared_ptr<Page> > pages;
+    KTabWidget * tabWidget;
 };
 
 TabWidget::Private::Private( TabWidget* qq ) : q( qq )
@@ -108,14 +160,14 @@ TabWidget::~TabWidget()
 {
 }
 
-void TabWidget::setFilter( const QString& str )
-{
-    QAbstractItemView * const view = currentView();
-    assert( view || d->tabWidget->count() == 0 );
-    if ( !view )
-        return;
-    assert( d->pages.contains( view ) );
-    d->pages[view]->setFilter( str );
+void TabWidget::setStringFilter( const QString & filter ) {
+    if ( const shared_ptr<Page> & page = d->currentPage() )
+        page->setStringFilter( filter );
+}
+
+void TabWidget::setKeyFilter( const shared_ptr<KeyFilter> & filter ) {
+    if ( const shared_ptr<Page> & page = d->currentPage() )
+        page->setKeyFilter( filter );
 }
 
 QAbstractItemView * TabWidget::currentView() const
@@ -123,11 +175,23 @@ QAbstractItemView * TabWidget::currentView() const
     return qobject_cast<QAbstractItemView*>( d->tabWidget->currentWidget() );
 }
 
+const shared_ptr<Page> & TabWidget::Private::currentPage() const {
+    QAbstractItemView * const view = q->currentView();
+    assert( view || !tabWidget->count() );
+    if ( !view ) {
+        static const shared_ptr<Page> empty;
+        return empty;
+    }
+    const std::map<QAbstractItemView*,shared_ptr<Page> >::const_iterator it
+        = pages.find( view );
+    assert( it != pages.end() );
+    return it->second;
+}
 
-QAbstractItemView * TabWidget::addView( Kleo::AbstractKeyListModel * model, const QString& caption )
+QAbstractItemView * TabWidget::addView( AbstractKeyListModel * model, const QString& caption )
 {
     QAbstractItemView * const previous = currentView(); 
-    const boost::shared_ptr<Page> page( new Page( model ) );
+    const shared_ptr<Page> page( new Page( model ) );
     d->pages[page->view()] = page;
     d->tabWidget->addTab( page->view(), caption );
     // work around a bug in QTabWidget (tested with 4.3.2) not emitting currentChanged() when the first widget is inserted
@@ -138,4 +202,4 @@ QAbstractItemView * TabWidget::addView( Kleo::AbstractKeyListModel * model, cons
 }
 
 #include "moc_tabwidget.cpp"
-#include "moc_tabwidget_p.cpp"
+#include "tabwidget.moc"

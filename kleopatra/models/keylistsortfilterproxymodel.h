@@ -36,7 +36,6 @@
 
 #include <utils/pimpl_ptr.h>
 #include <boost/shared_ptr.hpp>
-#include <vector>
 
 namespace GpgME {
     class Key;
@@ -53,17 +52,9 @@ namespace Kleo {
 	explicit KeyListSortFilterProxyModel( QObject * parent=0 );
 	~KeyListSortFilterProxyModel();
 
-	std::vector< boost::shared_ptr<const KeyFilter> > keyFilters() const;
-	void setKeyFilters( const std::vector< boost::shared_ptr<const KeyFilter> > & kf );
+	boost::shared_ptr<const KeyFilter> keyFilter() const;
+	void setKeyFilter( const boost::shared_ptr<const KeyFilter> & kf );
 	
-	enum MatchMode {
-	    AllFiltersMatch,
-	    AnyFilterMatches
-	};
-
-	void setKeyFilterMatchMode( MatchMode mode );
-	MatchMode keyFilterMatchMode() const;
-
 #if 0
         GpgME::Key key( const QModelIndex & idx ) const;
         std::vector<GpgME::Key> keys( const QList<QModelIndex> & indexes ) const;

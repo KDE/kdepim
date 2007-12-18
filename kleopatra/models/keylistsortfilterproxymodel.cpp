@@ -51,12 +51,11 @@ class KeyListSortFilterProxyModel::Private {
     friend class ::Kleo::KeyListSortFilterProxyModel;
 public:
     explicit Private()
-        : keyFilters(), mode( AllFiltersMatch ) {}
+        : keyFilter() {}
     ~Private() {}
 
 private:
-    std::vector< shared_ptr<const KeyFilter> > keyFilters;
-    MatchMode mode;
+    shared_ptr<const KeyFilter> keyFilter;
 };
 
 
@@ -71,28 +70,16 @@ KeyListSortFilterProxyModel::KeyListSortFilterProxyModel( QObject * p )
 
 KeyListSortFilterProxyModel::~KeyListSortFilterProxyModel() {}
 
-std::vector< shared_ptr<const KeyFilter> > KeyListSortFilterProxyModel::keyFilters() const {
-    return d->keyFilters;
+shared_ptr<const KeyFilter> KeyListSortFilterProxyModel::keyFilter() const {
+    return d->keyFilter;
 }
 
-void KeyListSortFilterProxyModel::setKeyFilters( const std::vector< shared_ptr<const KeyFilter> > & kf ) {
-    if ( kf == d->keyFilters )
+void KeyListSortFilterProxyModel::setKeyFilter( const shared_ptr<const KeyFilter> & kf ) {
+    if ( kf == d->keyFilter )
         return;
-    d->keyFilters = kf;
+    d->keyFilter = kf;
     invalidateFilter();
 }
-
-KeyListSortFilterProxyModel::MatchMode KeyListSortFilterProxyModel::keyFilterMatchMode() const {
-    return d->mode;
-}
-
-void KeyListSortFilterProxyModel::setKeyFilterMatchMode( MatchMode mode ) {
-    if ( mode == d->mode )
-        return;
-    d->mode = mode;
-    invalidateFilter();
-}
-
 
 bool KeyListSortFilterProxyModel::filterAcceptsRow( int source_row, const QModelIndex & source_parent ) const {
 
@@ -121,21 +108,14 @@ bool KeyListSortFilterProxyModel::filterAcceptsRow( int source_row, const QModel
     //
     // 2. Check that key filters match (if any are defined)
     //
-    if ( !d->keyFilters.empty() ) { // avoid artifacts when no filters are defined
+    if ( d->keyFilter ) { // avoid artifacts when no filters are defined
 
         assert( qobject_cast<AbstractKeyListModel*>( sourceModel() ) );
         const AbstractKeyListModel * const klm = static_cast<AbstractKeyListModel*>( sourceModel() );
 
         const Key key = klm->key( nameIndex );
 
-        switch ( keyFilterMatchMode() ) {
-        case AllFiltersMatch:
-            return kdtools::all( d->keyFilters.begin(), d->keyFilters.end(),
-                                 bind( &KeyFilter::matches, _1, key ) );
-        case AnyFilterMatches:
-            return kdtools::any( d->keyFilters.begin(), d->keyFilters.end(),
-                                 bind( &KeyFilter::matches, _1, key ) );
-        };
+        return d->keyFilter->matches( key );
     }
 
     // 3. match by default:
