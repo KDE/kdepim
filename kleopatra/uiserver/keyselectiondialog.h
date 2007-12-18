@@ -48,6 +48,7 @@ namespace Kleo
 
 class CertificateSelectionDialog : public QDialog
 {
+    Q_OBJECT
 public:
 
     enum SelectionMode {
@@ -61,7 +62,7 @@ public:
         EncryptOnly,
     };
 
-    CertificateSelectionDialog( QWidget* parent = 0, Qt::WindowFlags flags = 0 );
+    explicit CertificateSelectionDialog( QWidget* parent = 0, Qt::WindowFlags flags = 0 );
     ~CertificateSelectionDialog();
 
     void addKeys( const std::vector<GpgME::Key> & keys );
