@@ -64,6 +64,7 @@ SignerResolveValidator::SignerResolveValidator( SignerResolvePage* page ) : Sign
 
 void SignerResolveValidator::update() const {
     const bool needPgpSC = m_page->operation() == SignerResolvePage::SignAndEncrypt;
+    const bool isSignEncrypt = m_page->operation() == SignerResolvePage::SignAndEncrypt;
     const bool needAnySC = m_page->operation() != SignerResolvePage::EncryptOnly;
     const bool havePgpSC = !m_page->signingCertificates( GpgME::OpenPGP ).empty();
     const bool haveCmsSC = !m_page->signingCertificates( GpgME::CMS ).empty();
@@ -80,10 +81,10 @@ void SignerResolveValidator::update() const {
     if ( needAnySC && !haveAnySC )
         setAndReturn( i18n( "You need to select at least one signing certificate to proceed." ) );
 
-    if ( needPgpSC && havePgpSC )
+    if ( isSignEncrypt && needPgpSC && havePgpSC )
         setAndReturn( i18n( "Only OpenPGP certificates will be offered for selection because you specified a combined sign/encrypt operation, which is only available for OpenPGP." ) );
 
-    if ( havePgpSC && !haveCmsSC )
+    if ( isSignEncrypt && havePgpSC && !haveCmsSC )
         setAndReturn( i18n( "Only OpenPGP certificates will be offered for selection because you specified an OpenPGP signing certificate only." ) );
 
     if ( haveCmsSC && !havePgpSC )
@@ -97,7 +98,7 @@ void SignerResolveValidator::update() const {
         expl = i18n( "If you select certificates of both type OpenPGP and S/MIME, two encrypted files will be created." ) + second;
         break;
     case SignerResolvePage::SignOnly:
-        expl = i18n( "If you select certificates of both type OpenPGP and S/MIME, two signed files will be created." ) + second;
+        expl = QString();
         break;
     case SignerResolvePage::EncryptOnly:
         expl = i18n( "If you select certificates of both type OpenPGP and S/MIME, two encrypted files will be created." ) + second;
