@@ -27,6 +27,7 @@
 #endif
 
 #include <unistd.h>
+#include <assert.h>
 #include <windows.h>
 
 #include <shlobj.h>
@@ -218,6 +219,9 @@ standard_homedir (void)
                                NULL, 0, path) >= 0) 
         {
           char *tmp = malloc (strlen (path) + 6 + 1);
+
+	  /* FIXME.  */
+	  assert (tmp);
 
 	  strcpy (tmp, path);
 	  strcat (tmp, "\\gnupg");
