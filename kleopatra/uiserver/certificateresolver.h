@@ -33,9 +33,15 @@
 #ifndef __KLEOPATRA_UISERVER_CERTIFICATERESOLVER_H__
 #define __KLEOPATRA_UISERVER_CERTIFICATERESOLVER_H__
 
+#include <utils/pimpl_ptr.h>
+
 #include <gpgme++/key.h>
 
+#include <KSharedConfig>
+
 #include <vector>
+
+class KConfig;
 
 namespace GpgME {
     class Key;
@@ -58,8 +64,14 @@ namespace Kleo {
     
     class KConfigBasedRecipientPreferences : public RecipientPreferences {
     public:
+        explicit KConfigBasedRecipientPreferences( KSharedConfigPtr config );
+        ~KConfigBasedRecipientPreferences();
         GpgME::Key preferredCertificate( const KMime::Types::Mailbox& recipient, GpgME::Protocol protocol );
         void setPreferredCertificate( const KMime::Types::Mailbox& recipient, GpgME::Protocol protocol, const GpgME::Key& certificate );
+    private:
+        Q_DISABLE_COPY( KConfigBasedRecipientPreferences )
+        class Private;
+        kdtools::pimpl_ptr<Private> d;
     };
     
     class CertificateResolver {

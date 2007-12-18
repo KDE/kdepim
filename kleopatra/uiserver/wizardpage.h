@@ -65,6 +65,10 @@ namespace Kleo {
         void titleChanged();
         void subTitleChanged();
 
+    protected:
+        
+        virtual void onNext();
+        
     private:
         class Private;
         kdtools::pimpl_ptr<Private> d;

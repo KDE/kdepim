@@ -35,6 +35,8 @@
 
 #include "resolverecipientspage.h"
 
+#include <kmime/kmime_header_parsing.h>
+
 #include <QHash>
 
 class QComboBox;
@@ -52,11 +54,16 @@ namespace Kleo {
         explicit ListWidget( QWidget* parent = 0, Qt::WindowFlags flags = 0 );
         ~ListWidget();
 
+        
         void addEntry( const QString& id, const QString& name );
+        void addEntry( const KMime::Types::Mailbox& mbox );
+        
         void removeEntry( const QString& id );
         QStringList selectedEntries() const;
         void setCertificates( const QString& id, const std::vector<GpgME::Key>& pgpCerts, const std::vector<GpgME::Key>& cmsCerts );
         GpgME::Key selectedCertificate( const QString& id ) const;
+        GpgME::Key selectedCertificate( const QString& id, GpgME::Protocol prot ) const;
+        KMime::Types::Mailbox mailbox( const QString& id ) const;
         QStringList identifiers() const;
         void setProtocol( GpgME::Protocol prot );
         void showSelectionDialog( const QString& id );
@@ -69,7 +76,10 @@ namespace Kleo {
         void selectionChanged();
         void completeChanged();
 
+    private:
         
+        void addEntry( const QString& id, const QString& name, const KMime::Types::Mailbox& mbox );
+
     private:        
         QListWidget* m_listWidget;
         
@@ -81,16 +91,18 @@ namespace Kleo {
     class ResolveRecipientsPage::ItemWidget : public QWidget {
         Q_OBJECT
     public:
-        explicit ItemWidget( const QString& id, const QString& name, QWidget* parent = 0, Qt::WindowFlags flags = 0 );
+        explicit ItemWidget( const QString& id, const QString& name, const KMime::Types::Mailbox& mbox, QWidget* parent = 0, Qt::WindowFlags flags = 0 );
         ~ItemWidget();
         
         QString id() const;
+        KMime::Types::Mailbox mailbox() const;
         void setCertificates( const std::vector<GpgME::Key>& pgp,
                               const std::vector<GpgME::Key>& cms );
         GpgME::Key selectedCertificate() const;
+        GpgME::Key selectedCertificate( GpgME::Protocol prot ) const;
         std::vector<GpgME::Key> certificates() const;
         void setProtocol( GpgME::Protocol protocol );
-
+        
     public Q_SLOTS:
         void showSelectionDialog();
 
@@ -105,6 +117,7 @@ namespace Kleo {
         
     private:        
         QString m_id;
+        KMime::Types::Mailbox m_mailbox;
         QLabel* m_nameLabel;
         QLabel* m_certLabel;
         QComboBox* m_certCombo;

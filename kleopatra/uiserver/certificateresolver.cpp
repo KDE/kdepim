@@ -40,6 +40,13 @@
 
 #include <kmime/kmime_header_parsing.h>
 
+#include <KConfig>
+#include <KConfigGroup>
+
+#include <QByteArray>
+#include <QHash>
+#include <QSet>
+
 #include <boost/bind.hpp>
 
 #include <algorithm>
@@ -92,14 +99,99 @@ std::vector<Key> CertificateResolver::resolveSigner( const Mailbox & signer, Pro
     return result;
 }
 
-GpgME::Key KConfigBasedRecipientPreferences::preferredCertificate( const KMime::Types::Mailbox& recipient, GpgME::Protocol protocol )
+class KConfigBasedRecipientPreferences::Private {
+    friend class Kleo::KConfigBasedRecipientPreferences;
+    KConfigBasedRecipientPreferences* const q;
+public:
+    explicit Private( KSharedConfigPtr config, KConfigBasedRecipientPreferences* qq );
+    ~Private();
+    
+private:
+    void ensurePrefsParsed() const;
+    void writePrefs();
+    
+private:
+    KSharedConfigPtr m_config;
+    
+    mutable QHash<QByteArray, QByteArray> pgpPrefs;
+    mutable QHash<QByteArray, QByteArray> cmsPrefs;
+    mutable bool m_parsed;
+    mutable bool m_dirty;
+};
+
+KConfigBasedRecipientPreferences::Private::Private( KSharedConfigPtr config , KConfigBasedRecipientPreferences* qq ) : q( qq ), m_config( config ), m_parsed( false ), m_dirty( false ) 
 {
-    return Key();
+    assert( m_config );
 }
 
-void KConfigBasedRecipientPreferences::setPreferredCertificate( const KMime::Types::Mailbox& recipient, GpgME::Protocol protocol, const GpgME::Key& certificate )
+KConfigBasedRecipientPreferences::Private::~Private()
 {
-    
+    writePrefs();
 }
 
+void KConfigBasedRecipientPreferences::Private::writePrefs()
+{
+    if ( !m_dirty )
+        return;
+    const QSet<QByteArray> keys = pgpPrefs.keys().toSet() + cmsPrefs.keys().toSet();
+    KConfigGroup general( m_config, "General" );
+    general.writeEntry( "numberOfEncryptionPreferences", keys.count() );
+    int n = 0;
+    Q_FOREACH ( const QByteArray& i, keys )
+    {
+        KConfigGroup group( m_config, QString( "EncryptionPreference_%1" ).arg( n++ ) );
+        group.writeEntry( "email", i );
+        const QByteArray pgp = pgpPrefs.value( i );
+        if ( !pgp.isEmpty() )
+            group.writeEntry( "pgpCertificate", pgp );
+        const QByteArray cms = cmsPrefs.value( i );
+        if ( !cms.isEmpty() )
+            group.writeEntry( "cmsCertificate", cms );
+    } 
+    // TODO: ensure that there are no old entries with n > keys.count()  
+    m_dirty = false;
+}
+void KConfigBasedRecipientPreferences::Private::ensurePrefsParsed() const
+{
+    if ( m_parsed )
+        return;
+    const KConfigGroup general( m_config, "General" );
+    const int num = general.readEntry( "numberOfEncryptionPreferences", 0 );
+    for ( int i = 0; i < num; ++i )
+    {
+        const KConfigGroup group( m_config, QString( "EncryptionPreference_%1" ).arg( i ) );
+        const QByteArray id = group.readEntry( "email", QByteArray() );
+        if ( id.isEmpty() )
+            continue;
+        pgpPrefs.insert( id, group.readEntry( "pgpCertificate", QByteArray() ) );
+        cmsPrefs.insert( id, group.readEntry( "cmsCertificate", QByteArray() ) );   
+    }
+    m_parsed = true;
+}
+
+KConfigBasedRecipientPreferences::KConfigBasedRecipientPreferences( KSharedConfigPtr config ) : d( new Private( config, this ) )
+{
+}
+
+
+KConfigBasedRecipientPreferences::~KConfigBasedRecipientPreferences()
+{
+}
+
+Key KConfigBasedRecipientPreferences::preferredCertificate( const Mailbox& recipient, Protocol protocol )
+{
+    d->ensurePrefsParsed();
     
+    const QByteArray keyId = ( protocol == CMS ? d->cmsPrefs : d->pgpPrefs ).value( recipient.address() );
+    return PublicKeyCache::instance()->findByKeyIDOrFingerprint( keyId );
+}
+
+void KConfigBasedRecipientPreferences::setPreferredCertificate( const Mailbox& recipient, Protocol protocol, const Key& certificate )
+{
+    d->ensurePrefsParsed();
+    if ( !recipient.hasAddress() )
+        return;
+    ( protocol == CMS ? d->cmsPrefs : d->pgpPrefs ).insert( recipient.address(), certificate.keyID() );
+    d->m_dirty = true;
+}
+

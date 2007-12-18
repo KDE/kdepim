@@ -117,3 +117,5 @@ void WizardPage::setExplanation( const QString& explanation )
 
 WizardPage::~WizardPage() {}
 
+void WizardPage::onNext() {}
+        

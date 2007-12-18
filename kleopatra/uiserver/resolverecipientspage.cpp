@@ -40,7 +40,9 @@
 
 #include <gpgme++/key.h>
 
-#include <KLocale>
+#include <KConfig>
+#include <KGlobal>
+#include <KLocalizedString>
 
 #include <QButtonGroup>
 #include <QComboBox>
@@ -72,13 +74,22 @@ ResolveRecipientsPage::ListWidget::ListWidget( QWidget* parent, Qt::WindowFlags 
 ResolveRecipientsPage::ListWidget::~ListWidget()
 {
 }
+void ResolveRecipientsPage::ListWidget::addEntry( const Mailbox& mbox )
+{
+    addEntry( mbox.prettyAddress(), mbox.prettyAddress(), mbox );
+}
 
 void ResolveRecipientsPage::ListWidget::addEntry( const QString& id, const QString& name )
+{
+    addEntry( id, name, Mailbox() );
+}
+
+void ResolveRecipientsPage::ListWidget::addEntry( const QString& id, const QString& name, const Mailbox& mbox )
 {
     assert( !widgets.contains( id ) && !items.contains( id ) );
     QListWidgetItem* item = new QListWidgetItem;
     item->setData( IdRole, id );
-    ItemWidget* wid = new ItemWidget( id, name, this );
+    ItemWidget* wid = new ItemWidget( id, name, mbox, this );
     connect( wid, SIGNAL( changed() ), this, SIGNAL( completeChanged() ) );
     wid->setProtocol( m_protocol );
     item->setSizeHint( wid->sizeHint() );
@@ -86,6 +97,11 @@ void ResolveRecipientsPage::ListWidget::addEntry( const QString& id, const QStri
     m_listWidget->setItemWidget( item, wid );    
     widgets[id] = wid;
     items[id] = item;
+}
+
+Mailbox ResolveRecipientsPage::ListWidget::mailbox( const QString& id ) const
+{
+    return widgets.contains( id ) ? widgets[id]->mailbox() : Mailbox();
 }
 
 void ResolveRecipientsPage::ListWidget::setCertificates( const QString& id, const std::vector<Key>& pgp, const std::vector<Key>& cms )
@@ -97,6 +113,12 @@ void ResolveRecipientsPage::ListWidget::setCertificates( const QString& id, cons
 Key ResolveRecipientsPage::ListWidget::selectedCertificate( const QString& id ) const
 {
     return widgets.contains( id ) ? widgets[id]->selectedCertificate() : Key();
+}
+
+
+GpgME::Key ResolveRecipientsPage::ListWidget::selectedCertificate( const QString& id, GpgME::Protocol prot ) const
+{
+    return  widgets.contains( id ) ? widgets[id]->selectedCertificate( prot ) : Key();
 }
 
 QStringList ResolveRecipientsPage::ListWidget::identifiers() const
@@ -141,8 +163,8 @@ QStringList ResolveRecipientsPage::ListWidget::selectedEntries() const
     return entries;
 }
 
-ResolveRecipientsPage::ItemWidget::ItemWidget( const QString& id, const QString& name,
-        QWidget* parent, Qt::WindowFlags flags ) : QWidget( parent, flags ), m_id( id ), m_protocol( UnknownProtocol )
+ResolveRecipientsPage::ItemWidget::ItemWidget( const QString& id, const QString& name, const Mailbox& mbox,
+        QWidget* parent, Qt::WindowFlags flags ) : QWidget( parent, flags ), m_id( id ), m_mailbox( mbox ), m_protocol( UnknownProtocol )
 {
     assert( !m_id.isEmpty() );
     QHBoxLayout* layout = new QHBoxLayout( this );
@@ -202,6 +224,11 @@ void ResolveRecipientsPage::ItemWidget::showSelectionDialog()
     }
 
     delete dlg;
+}
+
+Mailbox ResolveRecipientsPage::ItemWidget::mailbox() const
+{
+    return m_mailbox;
 }
 
 void ResolveRecipientsPage::ItemWidget::selectCertificateInComboBox( const Key& key )
@@ -268,6 +295,12 @@ Key ResolveRecipientsPage::ItemWidget::selectedCertificate() const
     return PublicKeyCache::instance()->findByKeyIDOrFingerprint( m_certCombo->itemData( m_certCombo->currentIndex(), ListWidget::IdRole ).toString().toStdString() );
 }
 
+
+GpgME::Key ResolveRecipientsPage::ItemWidget::selectedCertificate( GpgME::Protocol prot ) const
+{
+    return m_selectedCertificates.value( prot );
+}
+
 std::vector<Key> ResolveRecipientsPage::ItemWidget::certificates() const
 {
     std::vector<Key> certs;
@@ -290,6 +323,7 @@ public:
     void addRecipient( const QString& id, const QString& name );
     void updateProtocolRBVisibility();
     void protocolSelected( int prot );
+    void writeSelectedCertificatesToPreferences();
     
 private:
     ListWidget* m_listWidget;
@@ -300,10 +334,11 @@ private:
     Protocol m_presetProtocol;
     Protocol m_selectedProtocol;
     bool m_multipleProtocolsAllowed;
+    boost::shared_ptr<RecipientPreferences> m_recipientPreferences;
 };
 
 ResolveRecipientsPage::Private::Private( ResolveRecipientsPage * qq )
-    : q( qq ), m_presetProtocol( UnknownProtocol ), m_selectedProtocol( m_presetProtocol ), m_multipleProtocolsAllowed( false )
+    : q( qq ), m_presetProtocol( UnknownProtocol ), m_selectedProtocol( m_presetProtocol ), m_multipleProtocolsAllowed( false ), m_recipientPreferences( new KConfigBasedRecipientPreferences( KGlobal::config() ) )
 {
     q->setTitle( i18n( "<b>Recipients</b>" ) );
     QVBoxLayout* const layout = new QVBoxLayout( q );
@@ -454,12 +489,10 @@ void ResolveRecipientsPage::Private::addRecipient()
 
 namespace {
 
-    std::vector<Key> makeSuggestions( const Mailbox& mb, GpgME::Protocol prot )
+    std::vector<Key> makeSuggestions( const boost::shared_ptr<RecipientPreferences>& prefs, const Mailbox& mb, GpgME::Protocol prot )
     {
         std::vector<Key> suggestions;
-        //TODO: don't hardcode KConfig impl
-        KConfigBasedRecipientPreferences prefs;
-        const Key remembered = prefs.preferredCertificate( mb, prot );
+        const Key remembered = prefs ? prefs->preferredCertificate( mb, prot ) : Key();
          if ( !remembered.isNull() )
              suggestions.push_back( remembered );
          else
@@ -476,8 +509,8 @@ void ResolveRecipientsPage::setRecipients( const std::vector<Mailbox>& recipient
     {
         const QString address = i.prettyAddress();
         d->addRecipient( address, address );
-        const std::vector<Key> pgp = makeSuggestions( i, OpenPGP );
-        const std::vector<Key> cms = makeSuggestions( i, CMS );
+        const std::vector<Key> pgp = makeSuggestions( d->m_recipientPreferences, i, OpenPGP );
+        const std::vector<Key> cms = makeSuggestions( d->m_recipientPreferences, i, CMS );
         pgpCount += pgp.empty() ? 0 : 1;
         cmsCount += cms.empty() ? 0 : 1;
         d->m_listWidget->setCertificates( address, pgp, cms );
@@ -519,6 +552,40 @@ void ResolveRecipientsPage::setRecipientsUserMutable( bool isMutable )
 bool ResolveRecipientsPage::recipientsUserMutable() const
 {
     return d->m_addButton->isVisible();
+}
+
+
+boost::shared_ptr<RecipientPreferences> ResolveRecipientsPage::recipientPreferences() const
+{
+    return d->m_recipientPreferences;
+}
+
+void ResolveRecipientsPage::setRecipientPreferences( const boost::shared_ptr<RecipientPreferences>& prefs )
+{
+    d->m_recipientPreferences = prefs;
+}
+
+void ResolveRecipientsPage::Private::writeSelectedCertificatesToPreferences()
+{
+    if ( !m_recipientPreferences )
+        return;
+    
+    Q_FOREACH ( const QString& i, m_listWidget->identifiers() )
+    {
+        const Mailbox mbox = m_listWidget->mailbox( i );
+        if ( !mbox.hasAddress() )
+            continue;
+        const Key pgp = m_listWidget->selectedCertificate( i, OpenPGP );
+        if ( !pgp.isNull() )
+            m_recipientPreferences->setPreferredCertificate( mbox, OpenPGP, pgp );
+        const Key cms = m_listWidget->selectedCertificate( i, CMS );
+        if ( !cms.isNull() )
+            m_recipientPreferences->setPreferredCertificate( mbox, CMS, cms );
+    }
+}
+    
+void ResolveRecipientsPage::onNext() {
+    d->writeSelectedCertificatesToPreferences();
 }
 
 #include "moc_resolverecipientspage_p.cpp"
