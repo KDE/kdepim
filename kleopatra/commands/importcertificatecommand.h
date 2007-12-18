@@ -35,23 +35,15 @@
 
 #include "command.h"
 
-#include <utils/pimpl_ptr.h>
-
-
-namespace GpgME {
-    class ImportResult;
-}
-
 namespace Kleo {
 
     class ImportCertificateCommand : public Command {
         Q_OBJECT
     public:
         explicit ImportCertificateCommand( KeyListController * parent );
+        explicit ImportCertificateCommand( QAbstractItemView * view, KeyListController * parent );
         ~ImportCertificateCommand();
     
-        void setParentWidget( QWidget* widget );
-
         QString fileName() const;
         void setFileName( const QString& fileName );
 
@@ -61,8 +53,9 @@ namespace Kleo {
 
     private:
         class Private;
-        kdtools::pimpl_ptr<Private> d;
-        Q_PRIVATE_SLOT( d, void importResult( GpgME::ImportResult ) );
+        inline Private * d_func();
+        inline const Private * d_func() const;
+        Q_PRIVATE_SLOT( d_func(), void importResult( GpgME::ImportResult ) );
     };
 }
 

@@ -35,32 +35,23 @@
 
 #include "command.h"
 
-#include <utils/pimpl_ptr.h>
-
-#include <vector>
-
-namespace GpgME {
-    class Key;
-}
-
 namespace Kleo {
     class ExportCertificateCommand : public Command {
         Q_OBJECT
     public:
+        explicit ExportCertificateCommand( QAbstractItemView * view, KeyListController * parent );
         explicit ExportCertificateCommand( KeyListController * parent );
         ~ExportCertificateCommand();
 
-        void setParentWidget( QWidget* parent );
-        void setCertificates( const std::vector<GpgME::Key>& keys );
- 
     private:
         /* reimp */ void doStart();
         /* reimp */ void doCancel();
 
     private:
         class Private;
-        kdtools::pimpl_ptr<Private> d;
-        Q_PRIVATE_SLOT( d, void exportResult( GpgME::Error, QByteArray ) );
+        inline Private * d_func();
+        inline const Private * d_func() const;
+        Q_PRIVATE_SLOT( d_func(), void exportResult( GpgME::Error, QByteArray ) );
     };
 }
 

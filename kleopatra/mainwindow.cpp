@@ -105,8 +105,12 @@ public:
     void validateCertificates() {
         ( new RefreshKeysCommand( RefreshKeysCommand::Validate, currentView(), &controller ) )->start();
     }
-    void exportCertificates();
-    void importCertificates();
+    void exportCertificates() {
+        ( new ExportCertificateCommand( currentView(), &controller ) )->start();
+    }
+    void importCertificates() {
+        ( new ImportCertificateCommand( currentView(), &controller ) )->start();
+    }
     void newCertificate();
 
 private:
@@ -295,21 +299,6 @@ void MainWindow::Private::newCertificate()
     QPointer<CertificateWizardImpl> wiz( new CertificateWizardImpl( q ) );
     wiz->exec();
     delete wiz;
-}
-
-void MainWindow::Private::exportCertificates()
-{
-     ExportCertificateCommand* const cmd = new ExportCertificateCommand( &controller );
-     cmd->setParentWidget( q );
-     cmd->setCertificates( controller.model()->keys( ui.tabWidget.currentView()->selectionModel()->selectedRows() ) );
-     cmd->start();
-}
-
-void MainWindow::Private::importCertificates()
-{
-    ImportCertificateCommand* const cmd = new ImportCertificateCommand( &controller );
-    cmd->setParentWidget( q );
-    cmd->start();
 }
 
 void MainWindow::closeEvent( QCloseEvent * e ) {

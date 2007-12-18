@@ -66,18 +66,18 @@ Command::Command( QAbstractItemView * v, KeyListController * p )
         setView( v );
 }
 
-Command::Command( KeyListController * p, Private * pp )
-    : QObject( p ), d( pp )
+Command::Command( Private * pp )
+    : QObject( pp->controller_ ), d( pp )
 {
-    if ( p )
-        p->registerCommand( this );
+    if ( pp->controller_ )
+        pp->controller_->registerCommand( this );
 }
 
-Command::Command( QAbstractItemView * v, KeyListController * p, Private * pp )
-    : QObject( p ), d( pp )
+Command::Command( QAbstractItemView * v, Private * pp )
+    : QObject( pp->controller_ ), d( pp )
 {
-    if ( p )
-        p->registerCommand( this );
+    if ( pp->controller_ )
+        pp->controller_->registerCommand( this );
     if ( v )
         setView( v );
 }

@@ -74,8 +74,8 @@ namespace Kleo {
         class Private;
         kdtools::pimpl_ptr<Private> d;
     protected:
-        explicit Command( KeyListController * parent, Private * pp );
-        explicit Command( QAbstractItemView * view, KeyListController * parent, Private * pp );
+        explicit Command( Private * pp );
+        explicit Command( QAbstractItemView * view, Private * pp );
     };
 
 }

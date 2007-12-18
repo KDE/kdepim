@@ -72,13 +72,13 @@ const RefreshKeysCommand::Private * RefreshKeysCommand::d_func() const { return 
 
 
 RefreshKeysCommand::RefreshKeysCommand( Mode mode, KeyListController * p )
-    : Command( p, new Private( this, mode, p ) )
+    : Command( new Private( this, mode, p ) )
 {
 
 }
 
 RefreshKeysCommand::RefreshKeysCommand( Mode mode, QAbstractItemView * v, KeyListController * p )
-    : Command( v, p, new Private( this, mode, p ) )
+    : Command( v, new Private( this, mode, p ) )
 {
 
 }

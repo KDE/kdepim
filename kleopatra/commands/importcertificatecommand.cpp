@@ -31,6 +31,8 @@
 */
 
 #include "importcertificatecommand.h"
+#include "command_p.h"
+
 #include "uiserver/classify.h"
 
 #include <kleo/cryptobackendfactory.h>
@@ -56,11 +58,11 @@
 using namespace GpgME;
 using namespace Kleo;
 
-class ImportCertificateCommand::Private {
+class ImportCertificateCommand::Private : public Command::Private {
     friend class ::ImportCertificateCommand;
-    ImportCertificateCommand * const q;
+    ImportCertificateCommand * q_func() const { return static_cast<ImportCertificateCommand*>( q ); }
 public:
-    explicit Private( ImportCertificateCommand * qq );
+    explicit Private( ImportCertificateCommand * qq, KeyListController * c );
     ~Private();
 
     bool ensureHaveFile();
@@ -71,38 +73,39 @@ public:
     void showDetails( const ImportResult& result );
 
 private:
-    QWidget* parent;
     QPointer<ImportJob> importJob;
     QString filename;
 };
 
+ImportCertificateCommand::Private * ImportCertificateCommand::d_func() { return static_cast<Private*>(d.get()); }
+const ImportCertificateCommand::Private * ImportCertificateCommand::d_func() const { return static_cast<const Private*>(d.get()); }
 
-ImportCertificateCommand::Private::Private( ImportCertificateCommand * qq )
-    : q( qq ), parent( 0 ), importJob( 0 )
+ImportCertificateCommand::Private::Private( ImportCertificateCommand * qq, KeyListController * c )
+    : Command::Private( qq, c ), importJob( 0 )
 {
     
 }
 
-ImportCertificateCommand::Private::~Private() 
+ImportCertificateCommand::Private::~Private() {}
+
+
+
+ImportCertificateCommand::ImportCertificateCommand( KeyListController * p )
+    : Command( new Private( this, p ) )
 {
-    if ( importJob )
-        importJob->slotCancel();
+    
 }
 
-
-
-ImportCertificateCommand::ImportCertificateCommand( KeyListController * parent )
-  : Command( parent ), d( new Private( this ) )
+ImportCertificateCommand::ImportCertificateCommand( QAbstractItemView * v, KeyListController * p )
+    : Command( v, new Private( this, p ) )
 {
     
 }
 
 ImportCertificateCommand::~ImportCertificateCommand() {}
 
-void ImportCertificateCommand::setParentWidget( QWidget* parent )
-{
-    d->parent = parent;
-}
+#define d d_func()
+#define q q_func()
 
 QString ImportCertificateCommand::fileName() const
 {
@@ -116,18 +119,16 @@ void ImportCertificateCommand::setFileName( const QString& fileName )
 
 void ImportCertificateCommand::doStart()
 {
-    if ( !d->ensureHaveFile() )
-    {
+    if ( !d->ensureHaveFile() ) {
         emit canceled();
+        d->finished();
         return;
     }
     //TODO: use KIO here
     QFile in( d->filename );
-    if ( !in.open( QIODevice::ReadOnly ) )
-    {
-        KMessageBox::error( d->parent, i18n( "Could not open file %1 for reading", d->filename ), i18n( "Certificate Import Failed" ) );
-        
-        emit finished(); //TODO: correct signal??
+    if ( !in.open( QIODevice::ReadOnly ) ) {
+        KMessageBox::error( d->view(), i18n( "Could not open file %1 for reading", d->filename ), i18n( "Certificate Import Failed" ) );
+        d->finished();
         return;
     }
     d->startImport( in.readAll() ); 
@@ -137,110 +138,113 @@ void ImportCertificateCommand::doStart()
 bool ImportCertificateCommand::Private::ensureHaveFile()
 {
    if ( filename.isNull() )
-        filename = QFileDialog::getOpenFileName( parent, i18n( "Select Certificate File" ), QString(), i18n( "Certificates (*.asc *.pem *.der *.p7c *.p12)" )  );
+       filename = QFileDialog::getOpenFileName( view(), i18n( "Select Certificate File" ), QString(), i18n( "Certificates (*.asc *.pem *.der *.p7c *.p12)" )  );
    return !filename.isNull();
 }
 
 void ImportCertificateCommand::Private::showDetails( const ImportResult& res )
 {
-      const KLocalizedString normalLine = ki18n("<tr><td align=\"right\">%1</td><td>%2</td></tr>");
-        const KLocalizedString boldLine = ki18n("<tr><td align=\"right\"><b>%1</b></td><td>%2</td></tr>");
+    const KLocalizedString normalLine = ki18n("<tr><td align=\"right\">%1</td><td>%2</td></tr>");
+    const KLocalizedString boldLine = ki18n("<tr><td align=\"right\"><b>%1</b></td><td>%2</td></tr>");
 
-        QStringList lines;
-        lines.push_back( normalLine.subs( i18n("Total number processed:") )
-                         .subs( res.numConsidered() ).toString() );
-        lines.push_back( normalLine.subs( i18n("Imported:") )
-                         .subs( res.numImported() ).toString() );
-        if ( res.newSignatures() )
-            lines.push_back( normalLine.subs( i18n("New signatures:") )
-                             .subs( res.newSignatures() ).toString() );
-        if ( res.newUserIDs() )
-            lines.push_back( normalLine.subs( i18n("New user IDs:") )
-                             .subs( res.newUserIDs() ).toString() );
-        if ( res.numKeysWithoutUserID() )
-            lines.push_back( normalLine.subs( i18n("Keys without user IDs:") )
-                             .subs( res.numKeysWithoutUserID() ).toString() );
-        if ( res.newSubkeys() )
-            lines.push_back( normalLine.subs( i18n("New subkeys:") )
-                             .subs( res.newSubkeys() ).toString() );
-        if ( res.newRevocations() )
-            lines.push_back( boldLine.subs( i18n("Newly revoked:") )
-                             .subs( res.newRevocations() ).toString() );
-        if ( res.notImported() )
-            lines.push_back( boldLine.subs( i18n("Not imported:") )
-                             .subs( res.notImported() ).toString() );
-        if ( res.numUnchanged() )
-            lines.push_back( normalLine.subs( i18n("Unchanged:") )
-                             .subs( res.numUnchanged() ).toString() );
-        if ( res.numSecretKeysConsidered() )
-            lines.push_back( normalLine.subs( i18n("Secret keys processed:") )
-                             .subs( res.numSecretKeysConsidered() ).toString() );
-        if ( res.numSecretKeysImported() )
-            lines.push_back( normalLine.subs( i18n("Secret keys imported:") )
-                             .subs( res.numSecretKeysImported() ).toString() );
-        if ( res.numSecretKeysConsidered() - res.numSecretKeysImported() - res.numSecretKeysUnchanged() > 0 )
-            lines.push_back( boldLine.subs( i18n("Secret keys <em>not</em> imported:") )
-                             .subs(  res.numSecretKeysConsidered()
-                                     - res.numSecretKeysImported()
-                                     - res.numSecretKeysUnchanged() ).toString() );
-        if ( res.numSecretKeysUnchanged() )
-            lines.push_back( normalLine.subs( i18n("Secret keys unchanged:") )
-                             .subs( res.numSecretKeysUnchanged() ).toString() );
-        
-        KMessageBox::information( parent,
-                                  i18n( "<qt><p>Detailed results of importing %1:</p>"
-                                        "<table>%2</table></qt>" ,
-                                        filename, lines.join( QString() ) ),
-                                  i18n( "Certificate Import Result" ) );
+    QStringList lines;
+    lines.push_back( normalLine.subs( i18n("Total number processed:") )
+                     .subs( res.numConsidered() ).toString() );
+    lines.push_back( normalLine.subs( i18n("Imported:") )
+                     .subs( res.numImported() ).toString() );
+    if ( res.newSignatures() )
+        lines.push_back( normalLine.subs( i18n("New signatures:") )
+                         .subs( res.newSignatures() ).toString() );
+    if ( res.newUserIDs() )
+        lines.push_back( normalLine.subs( i18n("New user IDs:") )
+                         .subs( res.newUserIDs() ).toString() );
+    if ( res.numKeysWithoutUserID() )
+        lines.push_back( normalLine.subs( i18n("Keys without user IDs:") )
+                         .subs( res.numKeysWithoutUserID() ).toString() );
+    if ( res.newSubkeys() )
+        lines.push_back( normalLine.subs( i18n("New subkeys:") )
+                         .subs( res.newSubkeys() ).toString() );
+    if ( res.newRevocations() )
+        lines.push_back( boldLine.subs( i18n("Newly revoked:") )
+                         .subs( res.newRevocations() ).toString() );
+    if ( res.notImported() )
+        lines.push_back( boldLine.subs( i18n("Not imported:") )
+                         .subs( res.notImported() ).toString() );
+    if ( res.numUnchanged() )
+        lines.push_back( normalLine.subs( i18n("Unchanged:") )
+                         .subs( res.numUnchanged() ).toString() );
+    if ( res.numSecretKeysConsidered() )
+        lines.push_back( normalLine.subs( i18n("Secret keys processed:") )
+                         .subs( res.numSecretKeysConsidered() ).toString() );
+    if ( res.numSecretKeysImported() )
+        lines.push_back( normalLine.subs( i18n("Secret keys imported:") )
+                         .subs( res.numSecretKeysImported() ).toString() );
+    if ( res.numSecretKeysConsidered() - res.numSecretKeysImported() - res.numSecretKeysUnchanged() > 0 )
+        lines.push_back( boldLine.subs( i18n("Secret keys <em>not</em> imported:") )
+                         .subs(  res.numSecretKeysConsidered()
+                                 - res.numSecretKeysImported()
+                                 - res.numSecretKeysUnchanged() ).toString() );
+    if ( res.numSecretKeysUnchanged() )
+        lines.push_back( normalLine.subs( i18n("Secret keys unchanged:") )
+                         .subs( res.numSecretKeysUnchanged() ).toString() );
+    
+    KMessageBox::information( view(),
+                              i18n( "<qt><p>Detailed results of importing %1:</p>"
+                                    "<table>%2</table></qt>" ,
+                                    filename, lines.join( QString() ) ),
+                              i18n( "Certificate Import Result" ) );
 }
 
 void ImportCertificateCommand::Private::showError( const GpgME::Error& err )
 {
-  assert( err );
-  const QString msg = i18n( "<qt><p>An error occurred while trying "
-			    "to import the certificate %1:</p>"
-			    "<p><b>%2</b></p></qt>",
-                            filename,
-                            QString::fromLocal8Bit( err.asString() ) );
-  KMessageBox::error( parent, msg, i18n( "Certificate Import Failed" ) );
+    assert( err );
+    assert( !err.isCanceled() );
+    const QString msg = i18n( "<qt><p>An error occurred while trying "
+                              "to import the certificate %1:</p>"
+                              "<p><b>%2</b></p></qt>",
+                              filename,
+                              QString::fromLocal8Bit( err.asString() ) );
+    KMessageBox::error( view(), msg, i18n( "Certificate Import Failed" ) );
 }
 
 void ImportCertificateCommand::Private::importResult( const GpgME::ImportResult& result )
 {
-    if ( result.error().isCanceled() ) {
-        emit q->canceled();
-        return;
+    if ( result.error().code() ) {
+        if ( result.error().isCanceled() )
+            emit q->canceled();
+        else
+            showError( result.error() );
+    } else {
+        showDetails( result );
     }
 
-    if ( result.error() ) { 
-        showError( result.error() );
-        emit q->finished();
-        return;
-    }
-
-    showDetails( result );
-    emit q->finished();
+    finished();
 }
 
 void ImportCertificateCommand::Private::startImport( const QByteArray& data )
 {
     const GpgME::Protocol protocol = findProtocol( filename );
-    if ( protocol == GpgME::UnknownProtocol ) //TODO: might use exceptions here
-    {
-        KMessageBox::error( parent, i18n( "Could not determine certificate type.", filename ), i18n( "Certificate Import Failed" ) );
-        emit q->canceled(); //TODO: use correct signal
+    if ( protocol == GpgME::UnknownProtocol ) { //TODO: might use exceptions here
+        KMessageBox::error( view(), i18n( "Could not determine certificate type of %1.", filename ), i18n( "Certificate Import Failed" ) );
+        finished();
         return;
     }
 
     std::auto_ptr<ImportJob> job( CryptoBackendFactory::instance()->protocol( protocol )->importJob() );
     assert( job.get() );
-    connect( job.get(), SIGNAL(result( GpgME::ImportResult ) ),
-             q, SLOT( importResult( GpgME::ImportResult ) ) );
-    connect( job.get(), SIGNAL( process( QString, int, int ) ), 
-             q, SIGNAL( process( QString, int, int ) ) );
-    const GpgME::Error err = job->start( data );
-
-    importJob = job.release();
+    connect( job.get(), SIGNAL(result(GpgME::ImportResult)),
+             q, SLOT(importResult(GpgME::ImportResult)) );
+    connect( job.get(), SIGNAL(progress(QString,int,int)), 
+             q, SIGNAL(progress(QString,int,int)) );
+    if ( const GpgME::Error err = job->start( data ) ) {
+        showError( err );
+        finished();
+    } else if ( err.isCanceled() ) {
+        emit q->canceled();
+        finished();
+    } else {
+        importJob = job.release();
+    }
 }
 
 
@@ -249,6 +253,9 @@ void ImportCertificateCommand::doCancel()
     if ( d->importJob )
         d->importJob->slotCancel();
 }
+
+#undef d
+#undef q
 
 #include "moc_importcertificatecommand.cpp"
 
