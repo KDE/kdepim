@@ -76,6 +76,7 @@ private:
     QFrame* titleFrame;
     QLabel* titleLabel;
     QLabel* subTitleLabel;
+    QFrame* explanationFrame;
     QLabel* explanationLabel;
 };
 
@@ -98,14 +99,24 @@ Wizard::Private::Private( Wizard * qq )
     subTitleLabel = new QLabel;
     subTitleLabel->setWordWrap( true );
     titleLayout->addWidget( subTitleLabel );
-    explanationLabel = new QLabel;
-    explanationLabel->setWordWrap( true );
-    titleLayout->addWidget( explanationLabel );
     top->addWidget( titleFrame );
     titleFrame->setVisible( false );
-    QWidget* const contentWidget = new QWidget;
-    QVBoxLayout* const contentLayout = new QVBoxLayout( contentWidget );
-    contentLayout->addWidget( stack );
+    
+    top->addWidget( stack );
+    
+    explanationFrame = new QFrame;
+    explanationFrame->setFrameShape( QFrame::StyledPanel );
+    explanationFrame->setAutoFillBackground( true );
+    explanationFrame->setBackgroundRole( QPalette::Base );
+    QVBoxLayout* const explanationLayout = new QVBoxLayout( explanationFrame );
+    explanationLabel = new QLabel;
+    explanationLabel->setWordWrap( true );
+    explanationLayout->addWidget( explanationLabel );
+    top->addWidget( explanationFrame );
+    explanationFrame->setVisible( false );
+
+    QWidget* buttonWidget = new QWidget;
+    QHBoxLayout* buttonLayout = new QHBoxLayout( buttonWidget );
     QDialogButtonBox * const box = new QDialogButtonBox;
     QAbstractButton* const cancelButton = box->addButton( QDialogButtonBox::Cancel );
     q->connect( cancelButton, SIGNAL( clicked() ), q, SLOT( reject() ) );
@@ -119,12 +130,11 @@ Wizard::Private::Private( Wizard * qq )
     nextButton->setText( nextItem );
     q->connect( nextButton, SIGNAL( clicked() ), q, SLOT( next() ) );
     box->addButton( nextButton, QDialogButtonBox::ActionRole );
-
-    contentLayout->addWidget( box );
-    top->addWidget( contentWidget );
-
+    buttonLayout->addWidget( box );
+    
+    top->addWidget( buttonWidget );
+    
     q->connect( q, SIGNAL( rejected() ), q, SIGNAL( canceled() ) ); 
-    q->resize( QSize( 640, 480 ).expandedTo( q->sizeHint() ) );
 }
 
 Wizard::Private::~Private() {}
@@ -158,8 +168,10 @@ void Wizard::Private::updateHeader()
     titleLabel->setText( title );
     subTitleLabel->setText( subTitle );
     subTitleLabel->setVisible( !subTitle.isEmpty() );
-    explanationLabel->setText( explanation );
+    explanationFrame->setVisible( !explanation.isEmpty() );
     explanationLabel->setVisible( !explanation.isEmpty() );
+    explanationLabel->setText( explanation );    
+    q->resize( q->sizeHint().expandedTo( q->size() ) );
 }
 
 Wizard::Wizard( QWidget * parent, Qt::WFlags f )
