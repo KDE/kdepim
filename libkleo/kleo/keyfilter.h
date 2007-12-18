@@ -53,6 +53,7 @@ namespace Kleo {
     virtual bool matches( const GpgME::Key & key ) const = 0;
 
     virtual unsigned int specificity() const = 0;
+    virtual QString id() const = 0;
 
     // not sure if we want these here, but for the time being, it's
     // the easiest way:

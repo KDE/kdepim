@@ -52,6 +52,7 @@ namespace Kleo {
     bool matches( const GpgME::Key & key ) const;
 
     unsigned int specificity() const { return mSpecificity; }
+    QString id() const { return mId; }
 
     QColor fgColor() const { return mFgColor; }
     QColor bgColor() const { return mBgColor; }
@@ -63,6 +64,7 @@ namespace Kleo {
     QColor mFgColor, mBgColor;
     QString mName;
     QString mIcon;
+    QString mId;
     unsigned int mSpecificity;
     bool mItalic;
     bool mBold;

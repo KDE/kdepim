@@ -36,6 +36,7 @@
 #include <kconfigbase.h>
 #include <kconfiggroup.h>
 #include <klocale.h>
+
 static const struct {
   const char * name;
   GpgME::Key::OwnerTrust trust;
@@ -88,10 +89,11 @@ Kleo::KConfigBasedKeyFilter::KConfigBasedKeyFilter( const KConfigGroup & config 
     mValidity( LevelDoesNotMatter ),
     mValidityReferenceLevel( GpgME::UserID::Unknown )
 {
-  mFgColor = config.readEntry<QColor>( "foreground-color", QColor("black") );
-  mBgColor = config.readEntry<QColor>( "background-color", QColor("white") );
-  mName = config.readEntry( "name", i18n("<placeholder>unnamed</placeholder>") );
+  mFgColor = config.readEntry<QColor>( "foreground-color", QColor(Qt::black) );
+  mBgColor = config.readEntry<QColor>( "background-color", QColor(Qt::white) );
+  mName = config.readEntry( "name", config.name() );
   mIcon = config.readEntry( "icon" );
+  mId = config.readEntry( "id", config.name() );
   if ( config.hasKey( "font" ) ) {
     mUseFullFont = true;
     mFont = config.readEntry( "font" );
