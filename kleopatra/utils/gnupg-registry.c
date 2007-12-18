@@ -18,7 +18,7 @@
    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
    02110-1301, USA.  */
 
-/* keep this in sync with svn://cvs.gnupg.org/gpgex/trunk/src/registry.c (last checked against rev. 19) */
+/* keep this in sync with svn://cvs.gnupg.org/gpgex/trunk/src/registry.c (last checked against rev. 32) */
 
 #if 0 // We don't have a config.h in ONLY_KLEO, fix if needed
 #if HAVE_CONFIG_H
