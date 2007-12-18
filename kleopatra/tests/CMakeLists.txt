@@ -24,7 +24,7 @@ kde4_add_executable( test_signencryptwizard TEST
   test_signencryptwizard.cpp
   ../uiserver/certificateresolver.cpp
   ../uiserver/signencryptwizard.cpp 
-  ../uiserver/recipientresolvepage.cpp
+  ../uiserver/resolverecipientspage.cpp
   ../uiserver/keyselectiondialog.cpp
   ../uiserver/kleo-assuan.cpp
   ../uiserver/objectspage.cpp

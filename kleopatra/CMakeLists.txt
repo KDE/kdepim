@@ -69,6 +69,7 @@ if ( USABLE_ASSUAN_FOUND )
     uiserver/keyselectiondialog.cpp
     uiserver/keyselectionjob.cpp
     uiserver/recipientresolvepage.cpp
+    uiserver/resolverecipientspage.cpp
     uiserver/wizardresultpage.cpp
     uiserver/wizard.cpp
     uiserver/wizardpage.cpp

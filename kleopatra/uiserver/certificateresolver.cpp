@@ -91,3 +91,15 @@ std::vector<Key> CertificateResolver::resolveSigner( const Mailbox & signer, Pro
     result.erase( end, result.end() );
     return result;
 }
+
+GpgME::Key KConfigBasedRecipientPreferences::preferredCertificate( const KMime::Types::Mailbox& recipient, GpgME::Protocol protocol )
+{
+    return Key();
+}
+
+void KConfigBasedRecipientPreferences::setPreferredCertificate( const KMime::Types::Mailbox& recipient, GpgME::Protocol protocol, const GpgME::Key& certificate )
+{
+    
+}
+
+    

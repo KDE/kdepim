@@ -39,6 +39,10 @@
 
 #include <gpgme++/global.h>
 
+#include <boost/shared_ptr.hpp>
+
+#include <vector>
+
 namespace GpgME {
     class Key;
 }
@@ -49,6 +53,8 @@ namespace KMime {
     }
 }
 namespace Kleo {
+
+    class RecipientPreferences;
 
     class ResolveRecipientsPage : public WizardPage {
         Q_OBJECT
@@ -71,15 +77,15 @@ namespace Kleo {
         GpgME::Protocol presetProtocol() const;
         void setPresetProtocol( GpgME::Protocol protocol );
     
-        bool isMultipleProtocolsAllowed() const;
+        bool multipleProtocolsAllowed() const;
         void setMultipleProtocolsAllowed( bool allowed );
     
-        bool symmetricEncryptionEnabled() const;
-        void setSymmetricEncryptionEnabled( bool enabled );
+        bool symmetricEncryptionSelected() const;
+        void setSymmetricEncryptionSelected( bool enabled );
     
         bool symmetricEncryptionSelectable() const;
         void setSymmetricEncryptionSelectable( bool selectable );
-    
+   
         /** if true, the user is allowed to remove/add recipients via the UI.
          * Defaults to @p false.
          */
@@ -88,13 +94,19 @@ namespace Kleo {
     
         void setRecipients( const std::vector<KMime::Types::Mailbox>& recipients );
         std::vector<GpgME::Key> resolvedCertificates() const;
-    
-        Q_SIGNALS:
+
+    Q_SIGNALS:
         void selectedProtocolChanged();
     
     private:
         class Private;
         kdtools::pimpl_ptr<Private> d;
+        Q_PRIVATE_SLOT( d, void selectionChanged() )
+        Q_PRIVATE_SLOT( d, void protocolSelected( int ) )
+        Q_PRIVATE_SLOT( d, void addRecipient() )
+        Q_PRIVATE_SLOT( d, void removeSelectedEntries() )
+        class ListWidget;
+        class ItemWidget;
     };
 
 }

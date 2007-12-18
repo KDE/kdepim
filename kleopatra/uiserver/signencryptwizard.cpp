@@ -33,7 +33,7 @@
 #include "signencryptwizard.h"
 
 #include "objectspage.h"
-#include "recipientresolvepage.h"
+#include "resolverecipientspage.h"
 #include "signerresolvepage.h"
 #include "resultdisplaywidget.h"
 #include "wizardresultpage.h"
@@ -65,7 +65,7 @@ public:
 
     void setCommitPage( Page page );
 
-    RecipientResolvePage * recipientResolvePage;
+    Kleo::ResolveRecipientsPage * recipientResolvePage;
     SignerResolvePage * signerResolvePage;
     Kleo::ObjectsPage * objectsPage;
     WizardResultPage * resultPage;
@@ -74,7 +74,7 @@ public:
 
 SignEncryptWizard::Private::Private( SignEncryptWizard * qq )
     : q( qq ),
-      recipientResolvePage( new RecipientResolvePage ),
+      recipientResolvePage( new Kleo::ResolveRecipientsPage ),
       signerResolvePage( new SignerResolvePage ),
       objectsPage( new Kleo::ObjectsPage ),
       resultPage( new WizardResultPage )
@@ -164,7 +164,7 @@ bool SignEncryptWizard::isEncryptionUserMutable() const
 
 bool SignEncryptWizard::isMultipleProtocolsAllowed() const
 {
-    return d->recipientResolvePage->isMultipleProtocolsAllowed();
+    return d->recipientResolvePage->multipleProtocolsAllowed();
 }
 
 void SignEncryptWizard::setMultipleProtocolsAllowed( bool allowed )
