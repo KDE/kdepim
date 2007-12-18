@@ -33,7 +33,7 @@
 #include "resolverecipientspage.h"
 #include "resolverecipientspage_p.h"
 #include "certificateresolver.h"
-#include "keyselectiondialog.h"
+#include "certificateselectiondialog.h"
 #include <utils/formatting.h>
 #include <models/keycache.h>
 #include <kmime/kmime_header_parsing.h>

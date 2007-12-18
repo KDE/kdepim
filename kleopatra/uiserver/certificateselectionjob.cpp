@@ -30,8 +30,8 @@
     your version.
 */
 
-#include "keyselectionjob.h"
-#include "keyselectiondialog.h"
+#include "certificateselectionjob.h"
+#include "certificateselectiondialog.h"
 #include "kleo-assuan.h"
 #include "assuancommand.h" // for AssuanCommand::makeError()
 #include "models/keycache.h"
@@ -233,5 +233,5 @@ bool CertificateSelectionJob::useKeyCache() const
 }
 
 
-#include "keyselectionjob.moc"
+#include "certificateselectionjob.moc"
 

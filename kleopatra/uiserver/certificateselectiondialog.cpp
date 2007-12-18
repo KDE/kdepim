@@ -30,8 +30,8 @@
     your version.
 */
 
-#include "keyselectiondialog.h"
-#include "ui_keyselectiondialog.h"
+#include "certificateselectiondialog.h"
+#include "ui_certificateselectionwidget.h"
 
 #include "models/keylistmodel.h"
 
@@ -49,10 +49,10 @@ using namespace Kleo;
 
 struct CertificateSelectionDialog::Private {
   
-    Private( CertificateSelectionDialog * _q );
+    explicit Private( CertificateSelectionDialog * _q );
     ~Private() {}
     CertificateSelectionDialog * const q;
-    Ui::KeySelectionWidget ui;
+    Ui::CertificateSelectionWidget ui;
     AbstractKeyListModel* m_model;
     QString m_customText;
     CertificateSelectionDialog::SelectionMode m_mode;
@@ -176,5 +176,3 @@ CertificateSelectionDialog::KeyType CertificateSelectionDialog::allowedKeys() co
 {
     return d->m_allowedKeys;
 }
-
-

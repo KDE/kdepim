@@ -1,6 +1,6 @@
 <ui version="4.0" >
- <class>KeySelectionWidget</class>
- <widget class="QWidget" name="KeySelectionWidget" >
+ <class>CertificateSelectionWidget</class>
+ <widget class="QWidget" name="CertificateSelectionWidget" >
   <property name="geometry" >
    <rect>
     <x>0</x>

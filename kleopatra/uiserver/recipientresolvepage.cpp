@@ -31,7 +31,7 @@
 */
 
 #include "recipientresolvepage.h"
-#include "keyselectiondialog.h"
+#include "certificateselectiondialog.h"
 #include "kleo-assuan.h"
 #include "models/keycache.h"
 #include "utils/formatting.h"
