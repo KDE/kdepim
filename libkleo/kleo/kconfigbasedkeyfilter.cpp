@@ -103,7 +103,7 @@ KConfigBasedKeyFilter::KConfigBasedKeyFilter( const KConfigGroup & config )
 {
   mFgColor = config.readEntry<QColor>( "foreground-color", QColor() );
   mBgColor = config.readEntry<QColor>( "background-color", QColor() );
-  mName = config.readEntry( "name", config.name() );
+  mName = config.readEntry( "Name", config.name() );
   mIcon = config.readEntry( "icon" );
   mId = config.readEntry( "id", config.name() );
   if ( config.hasKey( "font" ) ) {
