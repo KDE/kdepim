@@ -45,6 +45,7 @@ class QListWidget;
 class QListWidgetItem;
 class QPushButton;
 class QStringList;
+class QToolButton;
 
 namespace Kleo {
 
@@ -121,7 +122,7 @@ namespace Kleo {
         QLabel* m_nameLabel;
         QLabel* m_certLabel;
         QComboBox* m_certCombo;
-        QPushButton* m_selectButton;
+        QToolButton* m_selectButton;
         GpgME::Protocol m_protocol;
         QHash<GpgME::Protocol, GpgME::Key> m_selectedCertificates;
         std::vector<GpgME::Key> m_pgp, m_cms;

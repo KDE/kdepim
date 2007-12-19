@@ -49,6 +49,7 @@
 #include <QPointer>
 #include <QPushButton>
 #include <QRadioButton>
+#include <QToolButton>
 #include <QSignalMapper>
 #include <QStringList>
 #include <QVBoxLayout>
@@ -178,7 +179,7 @@ ResolveRecipientsPage::ItemWidget::ItemWidget( const QString& id, const QString&
     connect( m_certCombo, SIGNAL( currentIndexChanged( int ) ), 
              this, SIGNAL( changed() ) );
     layout->addWidget( m_certCombo );
-    m_selectButton = new QPushButton;
+    m_selectButton = new QToolButton;
     m_selectButton->setText( i18n( "..." ) );
     connect( m_selectButton, SIGNAL( clicked() ), 
              this, SLOT( showSelectionDialog() ) );
