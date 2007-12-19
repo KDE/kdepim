@@ -54,6 +54,8 @@ if ( ONLY_KLEO )
     MESSAGE(STATUS "topological_sort.hpp is necessary to compile kleopatra. Please install package which contains it.")
   endif(TOPOLOGICAL_SORT_DIR)
 
+  macro_optional_add_subdirectory(doc)
+
 else ( ONLY_KLEO )
 find_package(Kode REQUIRED)
 find_package(ZLIB REQUIRED)

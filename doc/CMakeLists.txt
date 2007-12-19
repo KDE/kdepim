@@ -1,3 +1,6 @@
+if ( ONLY_KLEO )
+   add_subdirectory(kleopatra)
+else ( ONLY_KLEO )
 add_subdirectory(akregator)
 add_subdirectory(api)
 add_subdirectory(common)
@@ -25,3 +28,5 @@ endif(QGPGME_FOUND)
 add_subdirectory(korn)
 add_subdirectory(ktnef)
 add_subdirectory(kwatchgnupg)
+
+endif ( ONLY_KLEO )
