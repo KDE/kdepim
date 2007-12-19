@@ -36,6 +36,7 @@
 #include <utils/pimpl_ptr.h>
 
 #include <gpgme++/key.h>
+#include <kmime/kmime_header_parsing.h>
 
 #include <KSharedConfig>
 
@@ -45,12 +46,6 @@ class KConfig;
 
 namespace GpgME {
     class Key;
-}
-
-namespace KMime {
-namespace Types {
-    class Mailbox;
-}
 }
 
 namespace Kleo {

@@ -784,9 +784,9 @@ void DecryptVerifyCommand::Private::addResult( unsigned int id, const DVResult &
     const DecryptionResult   & dResult = result->decryptionResult;
 
     if ( dResult.error().code() )
-        result->error = dResult.error();
+        result->error = dResult.error().encodedError();
     else if ( vResult.error().code() )
-        result->error = vResult.error();
+        result->error = vResult.error().encodedError();
 
     if ( !result->error && taskExists && taskList[id]->output )
         try {

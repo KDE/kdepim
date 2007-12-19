@@ -65,7 +65,7 @@ namespace Kleo {
         ~assuan_exception() throw ();
 
         const std::string & messageLocal8Bit() const { return GpgME::Exception::message(); }
-        gpg_error_t error_code() const { return static_cast<unsigned int>( error() ); }
+        gpg_error_t error_code() const { return error().encodedError(); }
 
         QString message() const { return QString::fromLocal8Bit( GpgME::Exception::message().c_str() ); }
     };

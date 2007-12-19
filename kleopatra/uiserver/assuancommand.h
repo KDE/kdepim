@@ -36,6 +36,8 @@
 #include <utils/pimpl_ptr.h>
 
 #include <gpgme++/global.h>
+#include <gpgme++/error.h>
+#include <kmime/kmime_header_parsing.h>
 
 #include <boost/shared_ptr.hpp>
 #include <boost/enable_shared_from_this.hpp>
@@ -52,12 +54,6 @@ class QDialog;
 class QFile;
 
 struct assuan_context_s;
-
-namespace KMime {
-namespace Types {
-    class Mailbox;
-}
-}
 
 namespace Kleo {
 
@@ -297,8 +293,10 @@ namespace Kleo {
 
         int inquire( const char * keyword, QObject * receiver, const char * slot, unsigned int maxSize=0 );
 
-        void done( int err=0 );
-        void done( int err, const QString & details );
+        void done( const GpgME::Error& err = GpgME::Error() );
+        void done( const GpgME::Error& err, const QString & details );
+        void done( int err ) { done( GpgME::Error(err) ); }
+        void done( int err, const QString & details ) { done( GpgME::Error(err), details ); }
 
     private:
         virtual void doCanceled() = 0;

@@ -211,7 +211,7 @@ static QString collect_micalgs( const GpgME::SigningResult & result, GpgME::Prot
 void SignEMailTask::Private::slotResult( const SigningResult & result ) {
     if ( result.error().code() ) {
         output->cancel();
-        emit q->error( result.error(), makeErrorString( result ) );
+        emit q->error( result.error().encodedError(), makeErrorString( result ) );
     } else {
         output->finalize();
         micAlg = collect_micalgs( result, q->protocol() );

@@ -300,42 +300,42 @@ std::auto_ptr<Kleo::EncryptJob> SignEncryptFilesTask::Private::createEncryptJob(
 void SignEncryptFilesTask::Private::slotResult( const SigningResult & result ) {
     if ( result.error().code() ) {
         output->cancel();
-        emit q->error( result.error(), makeErrorString( result ) );
+        emit q->error( result.error().encodedError(), makeErrorString( result ) );
     } else
         try {
             output->finalize();
             emit q->result( shared_ptr<Result>( new SignEncryptFilesResult( result ) ) );
         } catch ( const GpgME::Exception & e ) {
-            emit q->error( e.error(), QString::fromLocal8Bit( e.what() ) );
+            emit q->error( e.error().encodedError(), QString::fromLocal8Bit( e.what() ) );
         }
 }
 
 void SignEncryptFilesTask::Private::slotResult( const SigningResult & sresult, const EncryptionResult & eresult ) {
     if ( sresult.error().code() ) {
         output->cancel();
-        emit q->error( sresult.error(), makeErrorString( sresult ) );
+        emit q->error( sresult.error().encodedError(), makeErrorString( sresult ) );
     } else if ( eresult.error().code() ) {
         output->cancel();
-        emit q->error( eresult.error(), makeErrorString( eresult ) );
+        emit q->error( eresult.error().encodedError(), makeErrorString( eresult ) );
     } else
         try {
             output->finalize();
             emit q->result( shared_ptr<Result>( new SignEncryptFilesResult( sresult, eresult ) ) );
         } catch ( const GpgME::Exception & e ) {
-            emit q->error( e.error(), QString::fromLocal8Bit( e.what() ) );
+            emit q->error( e.error().encodedError(), QString::fromLocal8Bit( e.what() ) );
         }
 }
 
 void SignEncryptFilesTask::Private::slotResult( const EncryptionResult & result ) {
     if ( result.error().code() ) {
         output->cancel();
-        emit q->error( result.error(), makeErrorString( result ) );
+        emit q->error( result.error().encodedError(), makeErrorString( result ) );
     } else
         try {
             output->finalize();
             emit q->result( shared_ptr<Result>( new SignEncryptFilesResult( result ) ) );
         } catch ( const GpgME::Exception & e ) {
-            emit q->error( e.error(), QString::fromLocal8Bit( e.what() ) );
+            emit q->error( e.error().encodedError(), QString::fromLocal8Bit( e.what() ) );
         }
 }
 

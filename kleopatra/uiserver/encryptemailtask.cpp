@@ -184,7 +184,7 @@ std::auto_ptr<Kleo::EncryptJob> EncryptEMailTask::Private::createJob( GpgME::Pro
 void EncryptEMailTask::Private::slotResult( const EncryptionResult & result ) {
     if ( result.error().code() ) {
         output->cancel();
-        emit q->error( result.error(), makeErrorString( result ) );
+        emit q->error( result.error().encodedError(), makeErrorString( result ) );
     } else {
         output->finalize();
         emit q->result( shared_ptr<Result>( new EncryptEMailResult( result ) ) );

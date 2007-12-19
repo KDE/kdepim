@@ -36,6 +36,7 @@
 #include "wizardpage.h"
 
 #include <gpgme++/global.h>
+#include <kmime/kmime_header_parsing.h>
 
 #include <utils/pimpl_ptr.h>
 
@@ -45,12 +46,6 @@ class QStringList;
 
 namespace GpgME {
     class Key;
-}
-
-namespace KMime {
-namespace Types {
-    class Mailbox;
-}
 }
 
 namespace Kleo {

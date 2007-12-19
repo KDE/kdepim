@@ -38,16 +38,11 @@
 #include <utils/pimpl_ptr.h>
 
 #include <gpgme++/global.h>
+#include <kmime/kmime_header_parsing.h>
 
 #include <boost/shared_ptr.hpp>
 
 #include <vector>
-
-namespace KMime {
-namespace Types {
-    class Mailbox;
-}
-}
 
 namespace Kleo {
 

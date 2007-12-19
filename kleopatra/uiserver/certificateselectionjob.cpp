@@ -108,7 +108,7 @@ void CertificateSelectionJob::Private::keyListingDone( const GpgME::KeyListResul
 {
     m_listResult = result;
     if ( result.error() ) {
-        emitError( result.error(), result );
+        emitError( result.error().encodedError(), result );
         return;
     }
     --m_keyListings;

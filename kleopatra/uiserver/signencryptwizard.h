@@ -39,6 +39,7 @@
 #include <utils/pimpl_ptr.h>
 
 #include <gpgme++/global.h>
+#include <kmime/kmime_header_parsing.h>
 
 #include <boost/shared_ptr.hpp>
 
@@ -46,12 +47,6 @@
 
 namespace GpgME {
     class Key;
-}
-
-namespace KMime {
-namespace Types {
-    class Mailbox;
-}
 }
 
 class QFileInfo;

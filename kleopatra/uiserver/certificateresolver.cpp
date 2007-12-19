@@ -38,8 +38,6 @@
 
 #include <gpgme++/key.h>
 
-#include <kmime/kmime_header_parsing.h>
-
 #include <KConfig>
 #include <KConfigGroup>
 

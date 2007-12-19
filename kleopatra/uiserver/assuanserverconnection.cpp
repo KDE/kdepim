@@ -391,8 +391,8 @@ private:
 
             return assuan_process_done( conn.ctx.get(), 0 );
         } catch ( const GpgME::Exception & e ) {
-            return assuan_process_done_msg( conn.ctx.get(), e.error(), e.message().c_str() );
-        } catch ( const std::exception & e ) {
+            return assuan_process_done_msg( conn.ctx.get(), e.error().encodedError(), e.message().c_str() );
+        } catch ( const std::exception & ) {
             return assuan_process_done( conn.ctx.get(), gpg_error( GPG_ERR_ASS_SYNTAX ) );
         } catch ( const gpg_error_t e ) {
             return assuan_process_done( conn.ctx.get(), e );
@@ -435,7 +435,7 @@ private:
 
             return assuan_process_done( conn.ctx.get(), 0 );
         } catch ( const assuan_exception & e ) {
-            return assuan_process_done_msg( conn.ctx.get(), e.error(), e.message().toUtf8().constData() );
+            return assuan_process_done_msg( conn.ctx.get(), e.error().encodedError(), e.message().toUtf8().constData() );
         } catch ( ... ) {
             return assuan_process_done_msg( conn.ctx.get(), gpg_error( GPG_ERR_UNEXPECTED ), i18n("unknown exception caught").toUtf8().constData() );
         }
@@ -958,23 +958,23 @@ int AssuanCommand::inquire( const char * keyword, QObject * receiver, const char
 #endif // HAVE_ASSUAN_INQUIRE_EXT
 }
 
-void AssuanCommand::done( int err, const QString & details ) {
+void AssuanCommand::done( const GpgME::Error& err, const QString & details ) {
     if ( d->ctx && !d->done && !details.isEmpty() ) {
 	qDebug() << "AssuanCommand::done(): Error: " << details;
         d->utf8ErrorKeepAlive = details.toUtf8();
         if ( !d->nohup )
-            assuan_set_error( d->ctx.get(), err, d->utf8ErrorKeepAlive.constData() );
+            assuan_set_error( d->ctx.get(), err.encodedError(), d->utf8ErrorKeepAlive.constData() );
     }
     done( err );
 }
 
-void AssuanCommand::done( int err ) {
+void AssuanCommand::done( const GpgME::Error& err ) {
     if ( !d->ctx ) {
-        qDebug( "AssuanCommand::done( %s ): called with NULL ctx.", gpg_strerror( err ) );
+        qDebug( "AssuanCommand::done( %s ): called with NULL ctx.", gpg_strerror( err.encodedError() ) );
         return;
     }
     if ( d->done ) {
-        qDebug( "AssuanCommand::done( %s ): called twice!", gpg_strerror( err ) );
+        qDebug( "AssuanCommand::done( %s ): called twice!", gpg_strerror( err.encodedError() ) );
         return;
     }
 
@@ -1000,7 +1000,7 @@ void AssuanCommand::done( int err ) {
         return;
     }
 
-    const gpg_error_t rc = assuan_process_done( d->ctx.get(), err );
+    const gpg_error_t rc = assuan_process_done( d->ctx.get(), err.encodedError() );
     if ( gpg_err_code( rc ) != GPG_ERR_NO_ERROR )
         qFatal( "AssuanCommand::done: assuan_process_done returned error %d (%s)",
                 static_cast<int>(rc), gpg_strerror(rc) );

@@ -41,8 +41,6 @@
 
 #include <utils/stl_util.h>
 
-#include <kmime/kmime_header_parsing.h>
-
 #include <gpgme++/key.h>
 
 #include <KLocale>

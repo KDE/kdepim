@@ -111,8 +111,8 @@ SignEncryptFilesController::Private::Private( SignEncryptFilesController * qq )
 
 
 QString SignEncryptFilesController::Private::titleForOperation( unsigned int op ) {
-    const bool signDisallowed = op & SignMask == SignDisallowed;
-    const bool encryptDisallowed = op & EncryptMask == EncryptDisallowed;
+    const bool signDisallowed = (op & SignMask) == SignDisallowed;
+    const bool encryptDisallowed = (op & EncryptMask) == EncryptDisallowed;
 
     assuan_assert( !signDisallowed || !encryptDisallowed );
  
@@ -294,7 +294,7 @@ void SignEncryptFilesController::Private::slotWizardOperationPrepared() {
         schedule();
         
     } catch ( const assuan_exception & e ) {
-        reportError( e.error(), e.message() );
+        reportError( e.error().encodedError(), e.message() );
     } catch ( const std::exception & e ) {
         reportError( gpg_error( GPG_ERR_UNEXPECTED ),
                      i18n("Caught unexpected exception in SignEncryptFilesController::Private::slotWizardOperationPrepared: %1",
