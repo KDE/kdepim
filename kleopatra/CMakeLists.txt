@@ -18,8 +18,8 @@ if (USABLE_ASSUAN_FOUND)
 endif(USABLE_ASSUAN_FOUND)
 add_definitions (-DQT3_SUPPORT -DQT3_SUPPORT_WARNINGS ${KDE4_ENABLE_EXCEPTIONS} -D_ASSUAN_ONLY_GPG_ERRORS -UQT_NO_STL )
 
+add_subdirectory( pics )
 add_subdirectory( kgpgconf )
-
 add_subdirectory( tests )
 
 if ( WIN32 )
@@ -174,3 +174,5 @@ install(TARGETS kleopatra_bin  DESTINATION ${BIN_INSTALL_DIR} )
 
 install( FILES kleopatra_import.desktop  DESTINATION ${XDG_APPS_INSTALL_DIR})
 install( FILES kleopatraui.rc kleopatra_newui.rc  DESTINATION ${DATA_INSTALL_DIR}/kleopatra)
+
+kde4_install_icons( ${ICON_INSTALL_DIR} )
