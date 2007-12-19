@@ -71,6 +71,7 @@ private:
     QStackedWidget* stack;
     QPushButton* nextButton;
     QPushButton* backButton;
+    QPushButton* cancelButton;
     QString finishItem;
     QString nextItem;
     QFrame* titleFrame;
@@ -118,7 +119,8 @@ Wizard::Private::Private( Wizard * qq )
     QWidget* buttonWidget = new QWidget;
     QHBoxLayout* buttonLayout = new QHBoxLayout( buttonWidget );
     QDialogButtonBox * const box = new QDialogButtonBox;
-    QAbstractButton* const cancelButton = box->addButton( QDialogButtonBox::Cancel );
+    
+    cancelButton = box->addButton( QDialogButtonBox::Cancel );
     q->connect( cancelButton, SIGNAL( clicked() ), q, SLOT( reject() ) );
 
     backButton = new QPushButton;
@@ -149,8 +151,10 @@ bool Wizard::Private::isLastPage( int id ) const
 void Wizard::Private::updateButtonStates()
 {
     const bool isLast = isLastPage( currentId );
+    const bool canGoToNext = q->canGoToNextPage();
     nextButton->setText( isLast ? finishItem : nextItem );
-    nextButton->setEnabled( q->canGoToNextPage() );
+    nextButton->setEnabled( canGoToNext );
+    cancelButton->setEnabled( !isLast || !canGoToNext );
     backButton->setEnabled( q->canGoToPreviousPage() );
 }
 
