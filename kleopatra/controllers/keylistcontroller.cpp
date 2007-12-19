@@ -36,6 +36,8 @@
 #include <models/keycache.h>
 #include <models/keylistmodel.h>
 
+#include <gpgme++/key.h>
+
 #include <QAbstractItemView>
 #include <QHeaderView>
 #include <QTreeView>
@@ -174,8 +176,11 @@ void KeyListController::setModel( AbstractKeyListModel * model ) {
 
     d->model = model;
     
-    if ( model )
+    if ( model ) {
+        model->clear();
+        model->addKeys( PublicKeyCache::instance()->keys() );
         d->connectModel();
+    }
 }
 
 AbstractKeyListModel * KeyListController::model() const {
