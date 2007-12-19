@@ -72,7 +72,7 @@ public Q_SLOTS:
     }
 
     void slotOperationDoneEvent( GpgME::Context* , const GpgME::Error& error ) {
-        qDebug( "listing done error: %d", static_cast<int>( error ) );
+        qDebug( "listing done error: %d", error.encodedError() );
     }
  
 Q_SIGNALS:
