@@ -259,7 +259,7 @@ Key KConfigBasedSigningPreferences::preferredCertificate( Protocol protocol )
     d->ensurePrefsParsed();
     
     const QByteArray keyId = ( protocol == CMS ? d->cmsSigningCertificate : d->pgpSigningCertificate );
-    return PublicKeyCache::instance()->findByKeyIDOrFingerprint( keyId );
+    return SecretKeyCache::instance()->findByKeyIDOrFingerprint( keyId );
 }
 
 void KConfigBasedSigningPreferences::setPreferredCertificate( Protocol protocol, const Key& certificate )
