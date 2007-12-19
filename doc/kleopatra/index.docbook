@@ -1400,7 +1400,7 @@ C=DE
       <para>
         The format of the entry is a list of tokens, separated by
         non-word characters. Each of the tokens is optionally prefixed
-        by a exclamation point (<literal>!</literal>), indicating negation. The tokens act
+        by an exclamation point (<literal>!</literal>), indicating negation. The tokens act
         in order on an internal list of contexts, which starts out
         empty. This is best explained by an example: <literal>any
         !apperance</literal> is the same as
