@@ -970,11 +970,11 @@ void AssuanCommand::done( const GpgME::Error& err, const QString & details ) {
 
 void AssuanCommand::done( const GpgME::Error& err ) {
     if ( !d->ctx ) {
-        qDebug( "AssuanCommand::done( %s ): called with NULL ctx.", gpg_strerror( err.encodedError() ) );
+        qDebug( "AssuanCommand::done( %s ): called with NULL ctx.", err.asString() );
         return;
     }
     if ( d->done ) {
-        qDebug( "AssuanCommand::done( %s ): called twice!", gpg_strerror( err.encodedError() ) );
+        qDebug( "AssuanCommand::done( %s ): called twice!", err.asString() );
         return;
     }
 
