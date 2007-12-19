@@ -37,6 +37,7 @@
 
 #include <kconfig.h>
 #include <kconfiggroup.h>
+#include <klocale.h>
 
 #include <QCoreApplication>
 #include <QRegExp>
@@ -53,13 +54,6 @@ using namespace Kleo;
 using namespace boost;
 using namespace GpgME;
 
-static std::vector< shared_ptr<KeyFilter> > defaultFilters() {
-    std::vector<shared_ptr<KeyFilter> > result;
-    
-    return result;
-}
-
-
 namespace {
 
     class Model : public QAbstractListModel {
@@ -72,7 +66,62 @@ namespace {
         /* reimp */ QVariant data( const QModelIndex & idx, int role ) const;
         /* upgrade to public */ using QAbstractListModel::reset;
     };
+
+    class MyCertificatesKeyFilter : public KeyFilterImplBase {
+    public:
+        MyCertificatesKeyFilter()
+            : KeyFilterImplBase()
+        {
+            mHasSecret = Set;
+            mSpecificity = UINT_MAX; // overly high for ordering
+
+            mName = i18n("My Certificates");
+            mId = "my-certificates";
+            mBold = true;
+        }
+    };
+
+    class TrustedCertificatesKeyFilter : public KeyFilterImplBase {
+    public:
+        TrustedCertificatesKeyFilter()
+            : KeyFilterImplBase()
+        {
+            mHasSecret = NotSet;
+            mRevoked = NotSet;
+            mValidity = IsAtLeast;
+            mValidityReferenceLevel = UserID::Marginal; // Full?
+            mSpecificity = UINT_MAX-1; // overly high for ordering
+
+            mName = i18n("Trusted Certificates");
+            mId = "trusted-certificates";
+        }
+    };
+
+    class OtherCertificatesKeyFilter : public KeyFilterImplBase {
+    public:
+        OtherCertificatesKeyFilter()
+            : KeyFilterImplBase()
+        {
+            mHasSecret = NotSet;
+            mValidity = IsAtMost;
+            mValidityReferenceLevel = UserID::Never;
+            mSpecificity = UINT_MAX-2; // overly high for ordering
+
+            mName = i18n("Other Certificates");
+            mId = "other-certificates";
+        }
+    };
 }
+
+static std::vector< shared_ptr<KeyFilter> > defaultFilters() {
+    std::vector<shared_ptr<KeyFilter> > result;
+    result.reserve( 3 );
+    result.push_back( shared_ptr<KeyFilter>( new MyCertificatesKeyFilter ) );
+    result.push_back( shared_ptr<KeyFilter>( new TrustedCertificatesKeyFilter ) );
+    result.push_back( shared_ptr<KeyFilter>( new OtherCertificatesKeyFilter ) );
+    return result;
+}
+
 
 class KeyFilterManager::Private {
 public:
@@ -120,7 +169,7 @@ const KeyFilter * KeyFilterManager::filterMatching( const Key & key ) const {
 }
 
 namespace {
-    struct BySpecificity : std::binary_function<shared_ptr<KeyFilter>,shared_ptr<KeyFilter>,bool> {
+    struct ByDecreasingSpecificity : std::binary_function<shared_ptr<KeyFilter>,shared_ptr<KeyFilter>,bool> {
         bool operator()( const shared_ptr<KeyFilter> & lhs, const shared_ptr<KeyFilter> & rhs ) const {
             return lhs->specificity() > rhs->specificity();
         }
@@ -130,18 +179,16 @@ namespace {
 void KeyFilterManager::reload() {
   d->clear();
 
-  KConfig * config = CryptoBackendFactory::instance()->configObject();
-  if ( !config )
-    return;
-  const QStringList groups = config->groupList().filter( QRegExp( "^Key Filter #\\d+$" ) );
-  for ( QStringList::const_iterator it = groups.begin() ; it != groups.end() ; ++it ) {
-    const KConfigGroup cfg( config, *it );
-    d->filters.push_back( shared_ptr<KeyFilter>( new KConfigBasedKeyFilter( cfg ) ) );
+  d->filters = defaultFilters();
+
+  if ( KConfig * config = CryptoBackendFactory::instance()->configObject() ) {
+      const QStringList groups = config->groupList().filter( QRegExp( "^Key Filter #\\d+$" ) );
+      for ( QStringList::const_iterator it = groups.begin() ; it != groups.end() ; ++it ) {
+          const KConfigGroup cfg( config, *it );
+          d->filters.push_back( shared_ptr<KeyFilter>( new KConfigBasedKeyFilter( cfg ) ) );
+      }
   }
-  qDebug( "KeyFilterManager::reload: loaded %lu filters", (unsigned long)d->filters.size() );
-  if ( d->filters.empty() )
-      d->filters = defaultFilters();
-  std::stable_sort( d->filters.begin(), d->filters.end(), BySpecificity() );
+  std::stable_sort( d->filters.begin(), d->filters.end(), ByDecreasingSpecificity() );
   qDebug( "KeyFilterManager::reload: final filter count is %lu", (unsigned long)d->filters.size() );
 }
 
@@ -174,7 +221,7 @@ QModelIndex KeyFilterManager::toModelIndex( const shared_ptr<KeyFilter> & kf ) c
     const std::pair<
       std::vector<shared_ptr<KeyFilter> >::const_iterator,
       std::vector<shared_ptr<KeyFilter> >::const_iterator
-    > pair = std::equal_range( d->filters.begin(), d->filters.end(), kf, BySpecificity() );
+    > pair = std::equal_range( d->filters.begin(), d->filters.end(), kf, ByDecreasingSpecificity() );
     const std::vector<shared_ptr<KeyFilter> >::const_iterator it
         = std::find( pair.first, pair.second, kf );
     if ( it != pair.second )
