@@ -50,6 +50,14 @@ namespace GpgME {
 
 namespace Kleo {
 
+    class SigningPreferences {
+    public:
+        virtual ~SigningPreferences() {}
+        virtual GpgME::Key preferredCertificate( GpgME::Protocol protocol ) = 0;
+        virtual void setPreferredCertificate( GpgME::Protocol protocol, const GpgME::Key& certificate ) = 0;
+        
+    };
+    
     class RecipientPreferences {
     public:
         virtual ~RecipientPreferences() {}
@@ -67,6 +75,18 @@ namespace Kleo {
         Q_DISABLE_COPY( KConfigBasedRecipientPreferences )
         class Private;
         kdtools::pimpl_ptr<Private> d;
+    };
+   
+    class KConfigBasedSigningPreferences : public SigningPreferences {
+    public:
+        explicit KConfigBasedSigningPreferences( KSharedConfigPtr config );
+        ~KConfigBasedSigningPreferences();
+        GpgME::Key preferredCertificate( GpgME::Protocol protocol );
+        void setPreferredCertificate(  GpgME::Protocol protocol, const GpgME::Key& certificate );
+    private:
+        Q_DISABLE_COPY( KConfigBasedSigningPreferences )
+        class Private;
+        kdtools::pimpl_ptr<Private> d;    
     };
     
     class CertificateResolver {

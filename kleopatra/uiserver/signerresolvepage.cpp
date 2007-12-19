@@ -31,6 +31,7 @@
 */
 
 #include "signerresolvepage.h"
+#include "certificateresolver.h"
 #include "signingcertificateselectiondialog.h"
 #include "kleo-assuan.h"
 #include "models/keycache.h"
@@ -55,7 +56,9 @@
 
 #include <cassert>
 
+using namespace GpgME;
 using namespace Kleo;
+using namespace boost;
 
 namespace {
 
@@ -100,7 +103,8 @@ private:
     bool signingSelected;
     bool encryptionSelected;
     QMap<GpgME::Protocol,GpgME::Key> certificates;
-    boost::shared_ptr<SignerResolvePage::Validator> validator;
+    shared_ptr<SignerResolvePage::Validator> validator;
+    shared_ptr<SigningPreferences> signingPreferences;
 };
 
 SignerResolvePage::Private::Private( SignerResolvePage * qq )
@@ -237,7 +241,12 @@ void SignerResolvePage::Private::selectCertificates()
     QPointer<SigningCertificateSelectionDialog> dlg = new SigningCertificateSelectionDialog( q );
     if ( dlg->exec() == QDialog::Accepted )
     {
-        setCertificates( dlg->selectedCertificates() );
+        const QMap<Protocol, Key> certs = dlg->selectedCertificates(); 
+        setCertificates( certs );
+        if ( signingPreferences ) {
+            signingPreferences->setPreferredCertificate( OpenPGP, certs.value( OpenPGP ) );
+            signingPreferences->setPreferredCertificate( CMS, certs.value( CMS ) );    
+        }
     }
 
     delete dlg;
@@ -307,7 +316,6 @@ std::vector<GpgME::Key> SignerResolvePage::signingCertificates( GpgME::Protocol 
     if ( protocol != GpgME::OpenPGP && !d->certificates[GpgME::CMS].isNull() )
             result.push_back( d->certificates[GpgME::CMS] );
     return result;
-
 }
 
 std::vector<GpgME::Key> SignerResolvePage::resolvedSigners() const
@@ -395,6 +403,24 @@ bool SignerResolvePage::removeUnencryptedFile() const
 void SignerResolvePage::setRemoveUnencryptedFile( bool remove )
 {
     d->removeUnencryptedCO->setChecked( remove );
+}
+
+void SignerResolvePage::setSigningPreferences( const boost::shared_ptr<SigningPreferences>& prefs )
+{
+    d->signingPreferences = prefs; 
+    QMap<Protocol,Key> map;
+    map[OpenPGP] = prefs ? prefs->preferredCertificate( OpenPGP ) : Key();
+    map[CMS] = prefs ? prefs->preferredCertificate( CMS ) : Key();
+    d->setCertificates( map );
+}
+
+shared_ptr<SigningPreferences> SignerResolvePage::signingPreferences() const
+{
+    return d->signingPreferences;
+}
+
+void SignerResolvePage::onNext()
+{
 }
 
 #include "moc_signerresolvepage.cpp"

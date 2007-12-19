@@ -193,3 +193,79 @@ void KConfigBasedRecipientPreferences::setPreferredCertificate( const Mailbox& r
     d->m_dirty = true;
 }
 
+class KConfigBasedSigningPreferences::Private {
+    friend class Kleo::KConfigBasedSigningPreferences;
+    KConfigBasedSigningPreferences* const q;
+public:
+    explicit Private( KSharedConfigPtr config, KConfigBasedSigningPreferences* qq );
+    ~Private();
+    
+private:
+    void ensurePrefsParsed() const;
+    void writePrefs();
+    
+private:
+    KSharedConfigPtr m_config;
+    
+    mutable QByteArray pgpSigningCertificate;
+    mutable QByteArray cmsSigningCertificate;
+    mutable bool m_parsed;
+    mutable bool m_dirty;
+};
+
+KConfigBasedSigningPreferences::Private::Private( KSharedConfigPtr config , KConfigBasedSigningPreferences* qq ) : q( qq ), m_config( config ), m_parsed( false ), m_dirty( false ) 
+{
+    assert( m_config );
+}
+
+void KConfigBasedSigningPreferences::Private::ensurePrefsParsed() const
+{
+    if ( m_parsed )
+        return;
+    const KConfigGroup group( m_config, "SigningPreferences" );
+    pgpSigningCertificate = group.readEntry( "pgpSigningCertificate", QByteArray() );
+    cmsSigningCertificate = group.readEntry( "cmsSigningCertificate", QByteArray() );
+    m_parsed = true;
+}
+
+void KConfigBasedSigningPreferences::Private::writePrefs()
+{
+    if ( !m_dirty )
+        return;
+    KConfigGroup group( m_config, "SigningPreferences" );
+    group.writeEntry( "pgpSigningCertificate", pgpSigningCertificate );
+    group.writeEntry( "cmsSigningCertificate", cmsSigningCertificate );
+    m_config->sync();
+    m_dirty = false;
+}
+
+KConfigBasedSigningPreferences::Private::~Private()
+{
+    writePrefs();
+}
+
+KConfigBasedSigningPreferences::KConfigBasedSigningPreferences( KSharedConfigPtr config ) : d( new Private( config, this ) )
+{
+}
+
+
+KConfigBasedSigningPreferences::~KConfigBasedSigningPreferences()
+{
+    d->writePrefs();
+}
+
+Key KConfigBasedSigningPreferences::preferredCertificate( Protocol protocol )
+{
+    d->ensurePrefsParsed();
+    
+    const QByteArray keyId = ( protocol == CMS ? d->cmsSigningCertificate : d->pgpSigningCertificate );
+    return PublicKeyCache::instance()->findByKeyIDOrFingerprint( keyId );
+}
+
+void KConfigBasedSigningPreferences::setPreferredCertificate( Protocol protocol, const Key& certificate )
+{
+    d->ensurePrefsParsed();
+    ( protocol == CMS ? d->cmsSigningCertificate : d->pgpSigningCertificate ) = certificate.keyID();
+    d->m_dirty = true;
+}
+

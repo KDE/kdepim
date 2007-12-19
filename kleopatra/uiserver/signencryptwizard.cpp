@@ -88,6 +88,7 @@ SignEncryptWizard::Private::Private( SignEncryptWizard * qq )
     q->setPage( SignEncryptWizard::ResultPage, resultPage );
     //TODO: move the RecipientPreferences creation out of here, don't create a new instance for each wizard 
     recipientResolvePage->setRecipientPreferences( shared_ptr<RecipientPreferences>( new KConfigBasedRecipientPreferences( KGlobal::config() ) ) );
+    signerResolvePage->setSigningPreferences( shared_ptr<SigningPreferences>( new KConfigBasedSigningPreferences( KGlobal::config() ) ) );
     q->resize( QSize( 640, 480 ).expandedTo( q->sizeHint() ) );
 }
 
