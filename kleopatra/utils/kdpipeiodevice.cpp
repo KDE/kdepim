@@ -705,7 +705,7 @@ void Reader::run() {
  
         while ( !cancel && !error && bufferFull() ) {
             notifyReadyRead();
-            if ( bufferFull() ) {
+            if ( !cancel && bufferFull() ) {
                 qDebug( "%p: Reader::run: buffer is full, going to sleep", this );
 	        bufferNotFullCondition.wait( &mutex );
 	    }
