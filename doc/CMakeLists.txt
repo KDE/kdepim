@@ -1,5 +1,7 @@
 if ( ONLY_KLEO )
-   add_subdirectory(kleopatra)
+  if(NOT WIN32)
+    add_subdirectory(kleopatra)
+  endif(NOT WIN32)
 else ( ONLY_KLEO )
 add_subdirectory(akregator)
 add_subdirectory(api)
