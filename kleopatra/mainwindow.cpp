@@ -51,6 +51,9 @@
 #include <KStatusBar>
 #include <KStandardAction>
 #include <KAction>
+#include <KAboutData>
+#include <KMessageBox>
+#include <KStandardGuiItem>
 
 #include <QAbstractItemView>
 #include <QLabel>
@@ -88,6 +91,19 @@ namespace {
     };
 }
 
+KGuiItem KStandardGuiItem_quit() {
+    static const QString app = KGlobal::mainComponent().aboutData()->programName();
+    KGuiItem item = KStandardGuiItem::quit();
+    item.setText( i18n( "&Quit %1", app ) );
+    return item;
+}
+
+KGuiItem KStandardGuiItem_close() {
+    KGuiItem item = KStandardGuiItem::close();
+    item.setText( i18n("Only &Close the Window" ) );
+    return item;
+}
+
 class MainWindow::Private {
     friend class ::MainWindow;
     MainWindow * const q;
@@ -96,6 +112,20 @@ public:
     explicit Private( MainWindow * qq );
     ~Private();
 
+    void closeAndQuit() {
+        const QString app = KGlobal::mainComponent().aboutData()->programName();
+        const int rc = KMessageBox::questionYesNoCancel( q,
+                                                         i18n("%1 may be used by other applications as a service.\n"
+                                                              "You may instead want to close this window without exiting %1.", app ),
+                                                         i18n("Really quit?"), KStandardGuiItem_quit(), KStandardGuiItem_close(), KStandardGuiItem::cancel(),
+                                                         "really-quit-" + app.toLower() );
+        if ( rc == KMessageBox::Cancel )
+            return;
+        q->close();
+        // WARNING: 'this' might be deleted at this point!
+        if ( rc == KMessageBox::Yes )
+            qApp->quit();
+    }
     void certificateDetails() {
         ( new DetailsCommand( currentView(), &controller ) )->start();
     }
@@ -115,7 +145,15 @@ public:
 
 private:
     void setupActions();
-    void addView( const QString& title );
+    void setupViews();
+    void saveViews();
+
+    void addView( const QString & title, const QString & keyFilterID=QString(), const QString & searchString=QString() );
+    void addView( const KConfigGroup & group );
+
+    unsigned int numViews() const {
+        return ui.tabWidget.count();
+    }
 
     QAbstractItemView * currentView() const {
         return ui.tabWidget.currentView();
@@ -145,7 +183,7 @@ private:
 
         explicit Actions( MainWindow * q )
             : file_close( KStandardAction::close( q, SLOT(close()), q->actionCollection() ) ),
-              file_quit( KStandardAction::quit( qApp, SLOT(quit()), q->actionCollection() ) )
+              file_quit( KStandardAction::quit( q, SLOT(closeAndQuit()), q->actionCollection() ) )
         {
 
         }
@@ -196,13 +234,11 @@ MainWindow::Private::Private( MainWindow * qq )
 
     q->createGUI( "kleopatra_newui.rc" );
 
-    addView( i18n( "My Certificates" ) );
-    addView( i18n( "Trusted Certificates" ) );
-    addView( i18n( "All Certificates" ) );
-
     ( new RefreshKeysCommand( RefreshKeysCommand::Normal, &controller ) )->start();
 
     q->resize( 640, 480 );
+
+    setupViews();
 } 
 
 MainWindow::Private::~Private() {} 
@@ -216,15 +252,19 @@ MainWindow::MainWindow( QWidget* parent, Qt::WindowFlags flags )
 MainWindow::~MainWindow() {}
 
 
-void MainWindow::Private::addView( const QString& title )
-{
-    QAbstractItemView * const view = ui.tabWidget.addView( model, title );
+void MainWindow::Private::addView( const QString & title, const QString & id, const QString & text ) {
+    QAbstractItemView * const view = ui.tabWidget.addView( model, title, id, text );
     assert( view );
     controller.addView( view );
 }
+
+void MainWindow::Private::addView( const KConfigGroup & group ) {
+    if ( QAbstractItemView * const view = ui.tabWidget.addView( model, group ) )
+        controller.addView( view );
+}
     
-void MainWindow::Private::setupActions()
-{
+void MainWindow::Private::setupActions() {
+
     KActionCollection * const coll = q->actionCollection();
 
     QWidgetAction * const searchBarAction = new QWidgetAction( q );
@@ -296,8 +336,52 @@ void MainWindow::Private::setupActions()
 
 }
 
-void MainWindow::Private::newCertificate()
-{
+static QStringList extractViewGroups( const KSharedConfig::Ptr & config ) {
+    return config->groupList().filter( QRegExp( "^View #\\d+$" ) );
+}
+
+void MainWindow::Private::setupViews() {
+
+    if ( const KSharedConfig::Ptr config = KGlobal::config() ) {
+
+        const QStringList groups = extractViewGroups( config );
+
+        Q_FOREACH( const QString & groupName, groups ) {
+            const KConfigGroup group( config, groupName );
+            addView( group );
+        }
+
+    }
+
+    if ( numViews() == 0 ) {
+
+        // add defaults:
+
+        addView( QString(), "my-certificates" );
+        addView( QString(), "trusted-certificates" );
+        addView( QString(), "other-certificates" );
+
+    }
+
+}
+
+void MainWindow::Private::saveViews() {
+
+    KSharedConfig::Ptr config = KGlobal::config();
+    if ( !config )
+        return;
+
+    Q_FOREACH( QString group, extractViewGroups( config ) )
+        config->deleteGroup( group );
+
+    for ( unsigned int i = 0, end = numViews() ; i != end ; ++i ) {
+        KConfigGroup group( config, QString().sprintf( "View #%u", i ) );
+        ui.tabWidget.saveTab( i, group );
+    }
+
+}
+
+void MainWindow::Private::newCertificate() {
     QPointer<CertificateWizardImpl> wiz( new CertificateWizardImpl( q ) );
     wiz->exec();
     delete wiz;
@@ -306,6 +390,8 @@ void MainWindow::Private::newCertificate()
 void MainWindow::closeEvent( QCloseEvent * e ) {
     // KMainWindow::closeEvent() insists on quitting the application,
     // so do not let it touch the event...
+    qDebug( "MainWindow::closeEvent()" );
+    d->saveViews();
     e->accept();
 }
 

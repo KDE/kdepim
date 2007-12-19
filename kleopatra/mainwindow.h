@@ -49,6 +49,7 @@ protected:
 private:
     class Private;
     kdtools::pimpl_ptr<Private> d;
+    Q_PRIVATE_SLOT( d, void closeAndQuit() )
     Q_PRIVATE_SLOT( d, void certificateDetails() )
     Q_PRIVATE_SLOT( d, void importCertificates() )
     Q_PRIVATE_SLOT( d, void exportCertificates() )

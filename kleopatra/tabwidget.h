@@ -46,15 +46,26 @@ namespace Kleo {
     class KeyFilter;
 }
 
+class KConfigGroup;
+
 class TabWidget : public QWidget {
     Q_OBJECT
 public:
     explicit TabWidget( QWidget * parent=0, Qt::WindowFlags f=0 );
     ~TabWidget();
 
-    QAbstractItemView * addView( Kleo::AbstractKeyListModel * model, const QString & caption );
+    void setOpenNewTabAction( QAction * action );
+    void setCloseCurrentTabAction( QAction * action );
+    //void setHierarchicalViewAction( QAction * action );
+
+    QAbstractItemView * addView( Kleo::AbstractKeyListModel * model, const QString & title=QString(), const QString & keyFilterID=QString(), const QString & searchString=QString() );
+    QAbstractItemView * addView( Kleo::AbstractKeyListModel * model, const KConfigGroup & group );
+
+    void saveTab( unsigned int idx, KConfigGroup & group ) const;
 
     QAbstractItemView * currentView() const;
+
+    unsigned int count() const;
 
 public Q_SLOTS:
     void setKeyFilter( const boost::shared_ptr<Kleo::KeyFilter> & filter );
@@ -62,6 +73,10 @@ public Q_SLOTS:
 
 Q_SIGNALS:
     void currentViewChanged( QAbstractItemView * view );
+    void enableCloseCurrentTabAction( bool enable );
+
+protected:
+    void resizeEvent( QResizeEvent * );
 
 private:
     class Private;
