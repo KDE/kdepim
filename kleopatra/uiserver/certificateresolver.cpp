@@ -134,8 +134,7 @@ void KConfigBasedRecipientPreferences::Private::writePrefs()
     if ( !m_dirty )
         return;
     const QSet<QByteArray> keys = pgpPrefs.keys().toSet() + cmsPrefs.keys().toSet();
-    KConfigGroup general( m_config, "General" );
-    general.writeEntry( "numberOfEncryptionPreferences", keys.count() );
+
     int n = 0;
     Q_FOREACH ( const QByteArray& i, keys )
     {
@@ -148,18 +147,18 @@ void KConfigBasedRecipientPreferences::Private::writePrefs()
         if ( !cms.isEmpty() )
             group.writeEntry( "cmsCertificate", cms );
     } 
-    // TODO: ensure that there are no old entries with n > keys.count()  
+    m_config->sync();
     m_dirty = false;
 }
 void KConfigBasedRecipientPreferences::Private::ensurePrefsParsed() const
 {
     if ( m_parsed )
         return;
-    const KConfigGroup general( m_config, "General" );
-    const int num = general.readEntry( "numberOfEncryptionPreferences", 0 );
-    for ( int i = 0; i < num; ++i )
+    const QStringList groups = m_config->groupList().filter( QRegExp( "^EncryptionPreference_\\d+$" ) );
+
+    Q_FOREACH ( const QString& i, groups )
     {
-        const KConfigGroup group( m_config, QString( "EncryptionPreference_%1" ).arg( i ) );
+        const KConfigGroup group( m_config, i );
         const QByteArray id = group.readEntry( "email", QByteArray() );
         if ( id.isEmpty() )
             continue;
@@ -176,6 +175,7 @@ KConfigBasedRecipientPreferences::KConfigBasedRecipientPreferences( KSharedConfi
 
 KConfigBasedRecipientPreferences::~KConfigBasedRecipientPreferences()
 {
+    d->writePrefs();
 }
 
 Key KConfigBasedRecipientPreferences::preferredCertificate( const Mailbox& recipient, Protocol protocol )

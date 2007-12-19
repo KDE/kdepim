@@ -38,8 +38,10 @@
 #include <utils/pimpl_ptr.h>
 
 namespace Kleo {
+    class Wizard;
 
     class WizardPage : public QWidget {
+        friend class Kleo::Wizard;
         Q_OBJECT
     public:
         explicit WizardPage( QWidget * parent=0, Qt::WFlags f=0 );

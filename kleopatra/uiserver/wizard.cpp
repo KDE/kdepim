@@ -246,6 +246,9 @@ bool Wizard::canGoToPreviousPage() const
 
 void Wizard::next()
 {
+    WizardPage* const current = currentPageWidget();
+    if ( current )
+        current->onNext();
     onNext( d->currentId );
     std::vector<int>::const_iterator it = qBinaryFind( d->pageOrder.begin(), d->pageOrder.end(), d->currentId );
     assert( it != d->pageOrder.end() );

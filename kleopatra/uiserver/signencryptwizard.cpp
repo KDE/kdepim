@@ -32,6 +32,7 @@
 
 #include "signencryptwizard.h"
 
+#include "certificateresolver.h"
 #include "objectspage.h"
 #include "resolverecipientspage.h"
 #include "signerresolvepage.h"
@@ -44,6 +45,8 @@
 
 #include <gpgme++/key.h>
 
+#include <KConfig>
+#include <KGlobal>
 #include <KLocale>
 
 #include <QFileInfo>
@@ -83,6 +86,8 @@ SignEncryptWizard::Private::Private( SignEncryptWizard * qq )
     q->setPage( SignEncryptWizard::ObjectsPage, objectsPage );
     q->setPage( SignEncryptWizard::ResolveRecipientsPage, recipientResolvePage );
     q->setPage( SignEncryptWizard::ResultPage, resultPage );
+    //TODO: move the RecipientPreferences creation out of here, don't create a new instance for each wizard 
+    recipientResolvePage->setRecipientPreferences( shared_ptr<RecipientPreferences>( new KConfigBasedRecipientPreferences( KGlobal::config() ) ) );
     q->resize( QSize( 640, 480 ).expandedTo( q->sizeHint() ) );
 }
 

@@ -39,9 +39,6 @@
 #include <kmime/kmime_header_parsing.h>
 
 #include <gpgme++/key.h>
-
-#include <KConfig>
-#include <KGlobal>
 #include <KLocalizedString>
 
 #include <QButtonGroup>
@@ -298,7 +295,7 @@ Key ResolveRecipientsPage::ItemWidget::selectedCertificate() const
 
 GpgME::Key ResolveRecipientsPage::ItemWidget::selectedCertificate( GpgME::Protocol prot ) const
 {
-    return m_selectedCertificates.value( prot );
+    return prot == m_protocol ? selectedCertificate() : m_selectedCertificates.value( prot );
 }
 
 std::vector<Key> ResolveRecipientsPage::ItemWidget::certificates() const
@@ -320,6 +317,7 @@ public:
     void selectionChanged();
     void removeSelectedEntries();
     void addRecipient();
+    void addRecipient( const Mailbox& mbox );
     void addRecipient( const QString& id, const QString& name );
     void updateProtocolRBVisibility();
     void protocolSelected( int prot );
@@ -338,7 +336,7 @@ private:
 };
 
 ResolveRecipientsPage::Private::Private( ResolveRecipientsPage * qq )
-    : q( qq ), m_presetProtocol( UnknownProtocol ), m_selectedProtocol( m_presetProtocol ), m_multipleProtocolsAllowed( false ), m_recipientPreferences( new KConfigBasedRecipientPreferences( KGlobal::config() ) )
+    : q( qq ), m_presetProtocol( UnknownProtocol ), m_selectedProtocol( m_presetProtocol ), m_multipleProtocolsAllowed( false ), m_recipientPreferences()
 {
     q->setTitle( i18n( "<b>Recipients</b>" ) );
     QVBoxLayout* const layout = new QVBoxLayout( q );
@@ -476,6 +474,11 @@ void ResolveRecipientsPage::Private::addRecipient( const QString& id, const QStr
     m_listWidget->addEntry( id, name );    
 }
 
+void ResolveRecipientsPage::Private::addRecipient( const Mailbox& mbox )
+{
+    m_listWidget->addEntry( mbox );    
+}
+
 void ResolveRecipientsPage::Private::addRecipient()
 {
     int i = 0;
@@ -507,8 +510,9 @@ void ResolveRecipientsPage::setRecipients( const std::vector<Mailbox>& recipient
     uint pgpCount = 0;
     Q_FOREACH( const Mailbox& i, recipients )
     {
+        //TODO: 
         const QString address = i.prettyAddress();
-        d->addRecipient( address, address );
+        d->addRecipient( i );
         const std::vector<Key> pgp = makeSuggestions( d->m_recipientPreferences, i, OpenPGP );
         const std::vector<Key> cms = makeSuggestions( d->m_recipientPreferences, i, CMS );
         pgpCount += pgp.empty() ? 0 : 1;
