@@ -98,7 +98,7 @@ GpgME::Error Kleo::QGpgMEKeyListJob::start( const QStringList & pats, bool secre
     mResult = GpgME::KeyListResult( 0, err );
     return err;
   }
-  mResult = GpgME::KeyListResult( 0, 0 );
+  mResult = GpgME::KeyListResult( 0 );
   return GpgME::Error();
 }
 
