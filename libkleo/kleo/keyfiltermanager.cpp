@@ -59,6 +59,7 @@ static std::vector< shared_ptr<KeyFilter> > defaultFilters() {
     return result;
 }
 
+
 namespace {
 
     class Model : public QAbstractListModel {
@@ -71,22 +72,22 @@ namespace {
         /* reimp */ QVariant data( const QModelIndex & idx, int role ) const;
         /* upgrade to public */ using QAbstractListModel::reset;
     };
-
 }
 
 class KeyFilterManager::Private {
-    friend class Model;
+    //friend class Model;
 public:
-    Private() : filters(), model( this ) {}
-
+    Private() : filters(), model( new Model( this ) ) {}
+    ~Private() { delete model; }
     void clear() {
         filters.clear();
-        model.reset();
+        model->reset();
     }
 
     std::vector< shared_ptr<KeyFilter> > filters;
-    Model model;
+    Model* const model;
 };
+
 
 KeyFilterManager * KeyFilterManager::mSelf = 0;
 
@@ -147,7 +148,7 @@ void KeyFilterManager::reload() {
 }
 
 QAbstractItemModel * KeyFilterManager::model() const {
-    return &d->model;
+    return d->model;
 }
 
 const shared_ptr<KeyFilter> & KeyFilterManager::keyFilterByID( const QString & id ) const {
@@ -161,7 +162,7 @@ const shared_ptr<KeyFilter> & KeyFilterManager::keyFilterByID( const QString & i
 }
 
 const shared_ptr<KeyFilter> & KeyFilterManager::fromModelIndex( const QModelIndex & idx ) const {
-    if ( !idx.isValid() || idx.model() != &d->model || idx.row() < 0 ||
+    if ( !idx.isValid() || idx.model() != d->model || idx.row() < 0 ||
          static_cast<unsigned>(idx.row()) >= d->filters.size() ) {
         static const shared_ptr<KeyFilter> empty;
         return empty;
@@ -179,7 +180,7 @@ QModelIndex KeyFilterManager::toModelIndex( const shared_ptr<KeyFilter> & kf ) c
     const std::vector<shared_ptr<KeyFilter> >::const_iterator it
         = std::find( pair.first, pair.second, kf );
     if ( it != pair.second )
-        return d->model.index( it - d->filters.begin() );
+        return d->model->index( it - d->filters.begin() );
     else
         return QModelIndex();
 }
