@@ -168,6 +168,20 @@ QVariant AbstractKeyListModel::headerData( int section, Qt::Orientation o, int r
     return QVariant();
 }
 
+static QVariant returnIfValid( const QColor & t ) {
+    if ( t.isValid() )
+        return t;
+    else
+        return QVariant();
+}
+
+static QVariant returnIfValid( const QIcon & t ) {
+    if ( t.isNull() )
+        return t;
+    else
+        return QVariant();
+}
+
 QVariant AbstractKeyListModel::data( const QModelIndex & index, int role ) const {
     const Key key = this->key( index );
     if ( key.isNull() )
@@ -211,9 +225,9 @@ QVariant AbstractKeyListModel::data( const QModelIndex & index, int role ) const
     } else if ( role == Qt::DecorationRole || role == Qt::BackgroundRole || role == Qt::ForegroundRole ) {
         if ( const KeyFilter * const filter = KeyFilterManager::instance()->filterMatching( key ) ) {
             switch ( role ) {
-            case Qt::DecorationRole: return column == Icon ? QIcon( filter->icon() ) : QVariant() ;
-            case Qt::BackgroundRole: return filter->bgColor();
-            case Qt::ForegroundRole: return filter->fgColor();
+            case Qt::DecorationRole: return column == Icon ? returnIfValid( QIcon( filter->icon() ) ) : QVariant() ;
+            case Qt::BackgroundRole: return returnIfValid( filter->bgColor() );
+            case Qt::ForegroundRole: return returnIfValid( filter->fgColor() );
             default: ; // silence compiler
             }
         }
