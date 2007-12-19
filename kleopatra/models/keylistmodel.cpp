@@ -176,7 +176,7 @@ static QVariant returnIfValid( const QColor & t ) {
 }
 
 static QVariant returnIfValid( const QIcon & t ) {
-    if ( t.isNull() )
+    if ( !t.isNull() )
         return t;
     else
         return QVariant();
