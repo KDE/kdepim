@@ -33,6 +33,8 @@
 #ifndef __KLEO_KEYFILTER_H__
 #define __KLEO_KEYFILTER_H__
 
+#include <QFlags>
+
 namespace GpgME {
   class Key;
 }
@@ -50,10 +52,21 @@ namespace Kleo {
   class KeyFilter {
   public:
     virtual ~KeyFilter() {}
-    virtual bool matches( const GpgME::Key & key ) const = 0;
+
+    enum MatchContext {
+        NoMatchContext = 0x0,
+        Appearance = 0x1,
+        Filtering = 0x2,
+
+        AnyMatchContext = Appearance|Filtering
+    };
+    Q_DECLARE_FLAGS( MatchContexts, MatchContext )
+
+    virtual bool matches( const GpgME::Key & key, MatchContexts ctx ) const = 0;
 
     virtual unsigned int specificity() const = 0;
     virtual QString id() const = 0;
+    virtual MatchContexts availableMatchContexts() const = 0;
 
     // not sure if we want these here, but for the time being, it's
     // the easiest way:
@@ -63,6 +76,8 @@ namespace Kleo {
     virtual QString name() const = 0;
     virtual QString icon() const = 0;
   };
+
+  Q_DECLARE_OPERATORS_FOR_FLAGS( KeyFilter::MatchContexts )
 
 }
 

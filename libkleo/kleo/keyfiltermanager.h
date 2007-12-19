@@ -38,12 +38,10 @@
 
 #include <boost/shared_ptr.hpp>
 
+#include <kleo/keyfilter.h>
+
 namespace GpgME {
   class Key;
-}
-
-namespace Kleo {
-  class KeyFilter;
 }
 
 class QAbstractItemModel;
@@ -60,7 +58,7 @@ namespace Kleo {
   public:
     static KeyFilterManager * instance();
 
-    const KeyFilter * filterMatching( const GpgME::Key & key ) const;
+    const boost::shared_ptr<KeyFilter> & filterMatching( const GpgME::Key & key, KeyFilter::MatchContexts contexts ) const;
 
     QAbstractItemModel * model() const;
 

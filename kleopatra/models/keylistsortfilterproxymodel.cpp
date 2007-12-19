@@ -115,7 +115,7 @@ bool KeyListSortFilterProxyModel::filterAcceptsRow( int source_row, const QModel
 
         const Key key = klm->key( nameIndex );
 
-        return d->keyFilter->matches( key );
+        return d->keyFilter->matches( key, KeyFilter::Filtering );
     }
 
     // 3. match by default:

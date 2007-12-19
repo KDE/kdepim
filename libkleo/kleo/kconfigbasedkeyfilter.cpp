@@ -70,6 +70,7 @@ static UserID::Validity map2Validity( const QString & s ) {
 
 KeyFilterImplBase::KeyFilterImplBase()
   : KeyFilter(),
+    mMatchContexts( AnyMatchContext ),
     mSpecificity( 0 ),
     mItalic( false ),
     mBold( false ),
@@ -161,9 +162,42 @@ KConfigBasedKeyFilter::KConfigBasedKeyFilter( const KConfigGroup & config )
       break;
     }
   }
+  static const struct {
+      const char * key;
+      MatchContext context;
+  } matchMap[] = {
+      { "any", AnyMatchContext },
+      { "appearance", Appearance },
+      { "filtering", Filtering },
+  };
+  const QStringList contexts = config.readEntry( "match-contexts", "any" ).toLower().split( QRegExp( "[^a-zA-Z0-9_-!]+" ), QString::SkipEmptyParts );
+  mMatchContexts = NoMatchContext;
+  Q_FOREACH( const QString & ctx, contexts ) {
+      bool found = false;
+      for ( unsigned int i = 0 ; i < sizeof matchMap / sizeof *matchMap ; ++i )
+          if ( ctx == matchMap[i].key ) {
+              mMatchContexts |= matchMap[i].context;
+              found = true;
+              break;
+          } else if ( ctx.startsWith( '!' ) && ctx.mid( 1 ) == matchMap[i].key ) {
+              mMatchContexts &= ~matchMap[i].context;
+              found = true;
+              break;
+          }
+      if ( !found )   
+          qWarning( "KConfigBasedKeyFilter: found unknown match context '%s' in group '%s'",
+                    qPrintable( ctx ), qPrintable( config.name() ) );
+  }
+  if ( mMatchContexts == NoMatchContext ) {
+      qWarning( "KConfigBasedKeyFilter: match context in group '%s' evaluates to NoMatchContext, "
+                "replaced by AnyMatchContext", qPrintable( config.name() ) );
+      mMatchContexts = AnyMatchContext;
+  }
 }
 
-bool KeyFilterImplBase::matches( const Key & key ) const {
+bool KeyFilterImplBase::matches( const Key & key, MatchContexts contexts ) const {
+  if ( !( mMatchContexts & contexts ) )
+    return false;
 #ifdef MATCH
 #undef MATCH
 #endif

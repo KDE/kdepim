@@ -77,6 +77,7 @@ namespace {
 
             mName = i18n("My Certificates");
             mId = "my-certificates";
+            mMatchContexts = AnyMatchContext;
             mBold = true;
         }
     };
@@ -94,6 +95,7 @@ namespace {
 
             mName = i18n("Trusted Certificates");
             mId = "trusted-certificates";
+            mMatchContexts = Filtering;
         }
     };
 
@@ -109,6 +111,7 @@ namespace {
 
             mName = i18n("Other Certificates");
             mId = "other-certificates";
+            mMatchContexts = Filtering;
         }
     };
 }
@@ -161,11 +164,14 @@ KeyFilterManager * KeyFilterManager::instance() {
   return mSelf;
 }
 
-const KeyFilter * KeyFilterManager::filterMatching( const Key & key ) const {
+const shared_ptr<KeyFilter> & KeyFilterManager::filterMatching( const Key & key, KeyFilter::MatchContexts contexts ) const {
     const std::vector< shared_ptr<KeyFilter> >::const_iterator it
         = std::find_if( d->filters.begin(), d->filters.end(),
-                        bind( &KeyFilter::matches, _1, cref( key ) ) );
-    return it == d->filters.end() ? 0 : it->get();
+                        bind( &KeyFilter::matches, _1, cref( key ), contexts ) );
+    if ( it != d->filters.end() )
+        return *it;
+    static const shared_ptr<KeyFilter> null;
+    return null;
 }
 
 namespace {
@@ -202,15 +208,15 @@ const shared_ptr<KeyFilter> & KeyFilterManager::keyFilterByID( const QString & i
                         bind( &KeyFilter::id, _1 ) == id );
     if ( it != d->filters.end() )
         return *it;
-    static const shared_ptr<KeyFilter> empty;
-    return empty;
+    static const shared_ptr<KeyFilter> null;
+    return null;
 }
 
 const shared_ptr<KeyFilter> & KeyFilterManager::fromModelIndex( const QModelIndex & idx ) const {
     if ( !idx.isValid() || idx.model() != &d->model || idx.row() < 0 ||
          static_cast<unsigned>(idx.row()) >= d->filters.size() ) {
-        static const shared_ptr<KeyFilter> empty;
-        return empty;
+        static const shared_ptr<KeyFilter> null;
+        return null;
     }
     return d->filters[idx.row()];
 }

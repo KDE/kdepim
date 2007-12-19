@@ -220,12 +220,12 @@ QVariant AbstractKeyListModel::data( const QModelIndex & index, int role ) const
         QFont font = qApp->font(); // ### correct font?
         if ( column == Fingerprint )
             font.setFamily( "courier" );
-        if ( const KeyFilter * const filter = KeyFilterManager::instance()->filterMatching( key ) )
+        if ( const shared_ptr<KeyFilter> & filter = KeyFilterManager::instance()->filterMatching( key, KeyFilter::Appearance ) )
             return filter->font( font );
         else
             return font;
     } else if ( role == Qt::DecorationRole || role == Qt::BackgroundRole || role == Qt::ForegroundRole ) {
-        if ( const KeyFilter * const filter = KeyFilterManager::instance()->filterMatching( key ) ) {
+        if ( const shared_ptr<KeyFilter> & filter = KeyFilterManager::instance()->filterMatching( key, KeyFilter::Appearance ) ) {
             switch ( role ) {
             case Qt::DecorationRole: return column == Icon ? returnIfValid( QIcon( filter->icon() ) ) : QVariant() ;
             case Qt::BackgroundRole: return returnIfValid( filter->bgColor() );

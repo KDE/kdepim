@@ -50,10 +50,11 @@ namespace Kleo {
     KeyFilterImplBase();
     ~KeyFilterImplBase();
 
-    bool matches( const GpgME::Key & key ) const;
+    bool matches( const GpgME::Key & key, MatchContexts ctx ) const;
 
     unsigned int specificity() const { return mSpecificity; }
     QString id() const { return mId; }
+    MatchContexts availableMatchContexts() const { return mMatchContexts; }
 
     QColor fgColor() const { return mFgColor; }
     QColor bgColor() const { return mBgColor; }
@@ -66,6 +67,7 @@ namespace Kleo {
     QString mName;
     QString mIcon;
     QString mId;
+    MatchContexts mMatchContexts;
     unsigned int mSpecificity;
     bool mItalic;
     bool mBold;
