@@ -66,12 +66,23 @@ ResolveRecipientsPage::ListWidget::ListWidget( QWidget* parent, Qt::WindowFlags 
     m_listWidget->setSelectionMode( QAbstractItemView::MultiSelection );
     QVBoxLayout * const layout = new QVBoxLayout( this );
     layout->addWidget( m_listWidget );
-    connect( m_listWidget, SIGNAL( itemSelectionChanged() ), this, SIGNAL( selectionChanged() ) );
+    connect( m_listWidget, SIGNAL( itemSelectionChanged() ), this, SLOT( onSelectionChange() ) );
 }
 
 ResolveRecipientsPage::ListWidget::~ListWidget()
 {
 }
+
+void ResolveRecipientsPage::ListWidget::onSelectionChange()
+{
+    Q_FOREACH ( const QString& i, widgets.keys() )
+    {
+        assert( items.contains( i ) );
+        widgets[i]->setSelected( items[i]->isSelected() );
+    }
+    emit selectionChanged();
+}
+
 void ResolveRecipientsPage::ListWidget::addEntry( const Mailbox& mbox )
 {
     addEntry( mbox.prettyAddress(), mbox.prettyAddress(), mbox );
@@ -162,9 +173,10 @@ QStringList ResolveRecipientsPage::ListWidget::selectedEntries() const
 }
 
 ResolveRecipientsPage::ItemWidget::ItemWidget( const QString& id, const QString& name, const Mailbox& mbox,
-        QWidget* parent, Qt::WindowFlags flags ) : QWidget( parent, flags ), m_id( id ), m_mailbox( mbox ), m_protocol( UnknownProtocol )
+        QWidget* parent, Qt::WindowFlags flags ) : QWidget( parent, flags ), m_id( id ), m_mailbox( mbox ), m_protocol( UnknownProtocol ), m_selected( false )
 {
     assert( !m_id.isEmpty() );
+    setAutoFillBackground( true );
     QHBoxLayout* layout = new QHBoxLayout( this );
     layout->setMargin( 0 );
     layout->addSpacing( 15 );
@@ -201,6 +213,23 @@ ResolveRecipientsPage::ItemWidget::~ItemWidget()
 QString ResolveRecipientsPage::ItemWidget::id() const
 {
     return m_id;
+}
+
+void ResolveRecipientsPage::ItemWidget::setSelected( bool selected )
+{
+    if ( m_selected == selected )
+        return;
+    m_selected = selected;
+    setBackgroundRole( selected ? QPalette::Highlight : QPalette::Base );
+    const QPalette::ColorRole foreground = selected ? QPalette::HighlightedText : QPalette::Text;
+    setForegroundRole( foreground );
+    m_nameLabel->setForegroundRole( foreground );
+    m_certLabel->setForegroundRole( foreground );
+}
+
+bool ResolveRecipientsPage::ItemWidget::isSelected() const
+{
+    return m_selected;
 }
 
 void ResolveRecipientsPage::ItemWidget::showSelectionDialog()

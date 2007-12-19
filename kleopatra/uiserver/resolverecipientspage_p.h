@@ -81,6 +81,9 @@ namespace Kleo {
         
         void addEntry( const QString& id, const QString& name, const KMime::Types::Mailbox& mbox );
 
+    private Q_SLOTS:
+        void onSelectionChange();
+        
     private:        
         QListWidget* m_listWidget;
         
@@ -103,6 +106,8 @@ namespace Kleo {
         GpgME::Key selectedCertificate( GpgME::Protocol prot ) const;
         std::vector<GpgME::Key> certificates() const;
         void setProtocol( GpgME::Protocol protocol );
+        void setSelected( bool selected );
+        bool isSelected() const;
         
     public Q_SLOTS:
         void showSelectionDialog();
@@ -126,6 +131,7 @@ namespace Kleo {
         GpgME::Protocol m_protocol;
         QHash<GpgME::Protocol, GpgME::Key> m_selectedCertificates;
         std::vector<GpgME::Key> m_pgp, m_cms;
+        bool m_selected;
     };
 }
 
