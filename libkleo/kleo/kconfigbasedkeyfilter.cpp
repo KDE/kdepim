@@ -37,27 +37,30 @@
 #include <kconfiggroup.h>
 #include <klocale.h>
 
+using namespace Kleo;
+using namespace GpgME;
+
 static const struct {
   const char * name;
-  GpgME::Key::OwnerTrust trust;
-  GpgME::UserID::Validity validity;
+  Key::OwnerTrust trust;
+  UserID::Validity validity;
 } ownerTrustAndValidityMap[] = {
-  { "unknown",   GpgME::Key::Unknown,   GpgME::UserID::Unknown   },
-  { "undefined", GpgME::Key::Undefined, GpgME::UserID::Undefined },
-  { "never",     GpgME::Key::Never,     GpgME::UserID::Never     },
-  { "marginal",  GpgME::Key::Marginal,  GpgME::UserID::Marginal  },
-  { "full",      GpgME::Key::Full,      GpgME::UserID::Full      },
-  { "ultimate",  GpgME::Key::Ultimate,  GpgME::UserID::Ultimate  },
+  { "unknown",   Key::Unknown,   UserID::Unknown   },
+  { "undefined", Key::Undefined, UserID::Undefined },
+  { "never",     Key::Never,     UserID::Never     },
+  { "marginal",  Key::Marginal,  UserID::Marginal  },
+  { "full",      Key::Full,      UserID::Full      },
+  { "ultimate",  Key::Ultimate,  UserID::Ultimate  },
 };
 
-static GpgME::Key::OwnerTrust map2OwnerTrust( const QString & s ) {
+static Key::OwnerTrust map2OwnerTrust( const QString & s ) {
   for ( unsigned int i = 0 ; i < sizeof ownerTrustAndValidityMap / sizeof *ownerTrustAndValidityMap ; ++i )
     if ( s.toLower() == ownerTrustAndValidityMap[i].name )
       return ownerTrustAndValidityMap[i].trust;
   return ownerTrustAndValidityMap[0].trust;
 }
 
-static GpgME::UserID::Validity map2Validity( const QString & s ) {
+static UserID::Validity map2Validity( const QString & s ) {
   for ( unsigned int i = 0 ; i < sizeof ownerTrustAndValidityMap / sizeof *ownerTrustAndValidityMap ; ++i )
     if ( s.toLower() == ownerTrustAndValidityMap[i].name )
       return ownerTrustAndValidityMap[i].validity;
@@ -65,7 +68,7 @@ static GpgME::UserID::Validity map2Validity( const QString & s ) {
 }
 
 
-Kleo::KConfigBasedKeyFilter::KConfigBasedKeyFilter( const KConfigGroup & config )
+KeyFilterImplBase::KeyFilterImplBase()
   : KeyFilter(),
     mSpecificity( 0 ),
     mItalic( false ),
@@ -85,12 +88,20 @@ Kleo::KConfigBasedKeyFilter::KConfigBasedKeyFilter( const KConfigGroup & config 
     mIsOpenPGP( DoesNotMatter ),
     mWasValidated( DoesNotMatter ),
     mOwnerTrust( LevelDoesNotMatter ),
-    mOwnerTrustReferenceLevel( GpgME::Key::Unknown ),
+    mOwnerTrustReferenceLevel( Key::Unknown ),
     mValidity( LevelDoesNotMatter ),
-    mValidityReferenceLevel( GpgME::UserID::Unknown )
+    mValidityReferenceLevel( UserID::Unknown )
 {
-  mFgColor = config.readEntry<QColor>( "foreground-color", QColor(Qt::black) );
-  mBgColor = config.readEntry<QColor>( "background-color", QColor(Qt::white) );
+
+}
+
+KeyFilterImplBase::~KeyFilterImplBase() {}
+
+KConfigBasedKeyFilter::KConfigBasedKeyFilter( const KConfigGroup & config )
+  : KeyFilterImplBase()
+{
+  mFgColor = config.readEntry<QColor>( "foreground-color", QColor() );
+  mBgColor = config.readEntry<QColor>( "background-color", QColor() );
   mName = config.readEntry( "name", config.name() );
   mIcon = config.readEntry( "icon" );
   mId = config.readEntry( "id", config.name() );
@@ -152,11 +163,7 @@ Kleo::KConfigBasedKeyFilter::KConfigBasedKeyFilter( const KConfigGroup & config 
   }
 }
 
-Kleo::KConfigBasedKeyFilter::~KConfigBasedKeyFilter() {
-
-}
-
-bool Kleo::KConfigBasedKeyFilter::matches( const GpgME::Key & key ) const {
+bool KeyFilterImplBase::matches( const Key & key ) const {
 #ifdef MATCH
 #undef MATCH
 #endif
@@ -203,7 +210,7 @@ bool Kleo::KConfigBasedKeyFilter::matches( const GpgME::Key & key ) const {
       return false;
     break;
   }
-  const GpgME::UserID uid = key.userID(0);
+  const UserID uid = key.userID(0);
   switch ( mValidity ) {
   default:
   case LevelDoesNotMatter:
@@ -245,7 +252,7 @@ static inline QFont adapt( QFont font, bool it, bool b, bool strike ) {
   return font;
 }
 
-QFont Kleo::KConfigBasedKeyFilter::font( const QFont & f ) const {
+QFont KeyFilterImplBase::font( const QFont & f ) const {
   if ( mUseFullFont )
     return resizedFont( mFont, f.pointSize(), mStrikeOut );
   else

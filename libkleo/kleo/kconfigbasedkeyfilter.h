@@ -45,10 +45,11 @@ class KConfigGroup;
 
 namespace Kleo {
 
-  class KConfigBasedKeyFilter : public KeyFilter {
+  class KeyFilterImplBase : public KeyFilter {
   public:
-    explicit KConfigBasedKeyFilter( const KConfigGroup & config );
-    ~KConfigBasedKeyFilter();
+    KeyFilterImplBase();
+    ~KeyFilterImplBase();
+
     bool matches( const GpgME::Key & key ) const;
 
     unsigned int specificity() const { return mSpecificity; }
@@ -60,7 +61,7 @@ namespace Kleo {
     QString name() const { return mName; }
     QString icon() const { return mIcon; }
 
-  private:
+  protected:
     QColor mFgColor, mBgColor;
     QString mName;
     QString mIcon;
@@ -100,6 +101,11 @@ namespace Kleo {
     GpgME::Key::OwnerTrust mOwnerTrustReferenceLevel;
     LevelState mValidity;
     GpgME::UserID::Validity mValidityReferenceLevel;
+  };
+
+  class KConfigBasedKeyFilter : public KeyFilterImplBase {
+  public:
+     explicit KConfigBasedKeyFilter( const KConfigGroup & group );
   };
 
 }
