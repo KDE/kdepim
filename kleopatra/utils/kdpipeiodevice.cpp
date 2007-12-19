@@ -327,11 +327,14 @@ void KDPipeIODevice::Private::emitReadyRead()
     emit q->readyRead();
 
     if ( !thisPointer )
-	return;
-    qDebug( "KDPipeIODevice::Private::emitReadyRead %p, %d: locking reader (CONSUMER THREAD)", this, counter );
-    synchronized( reader ) {
-        qDebug( "KDPipeIODevice::Private::emitReadyRead %p, %d: locked reader (CONSUMER THREAD)", this, counter );
-        reader->readyReadSentCondition.wakeAll();
+        return;
+    
+    if ( reader ) {
+        qDebug( "KDPipeIODevice::Private::emitReadyRead %p, %d: locking reader (CONSUMER THREAD)", this, counter );
+        synchronized( reader ) {
+            qDebug( "KDPipeIODevice::Private::emitReadyRead %p, %d: locked reader (CONSUMER THREAD)", this, counter );
+            reader->readyReadSentCondition.wakeAll();
+        }
     }
     qDebug( "KDPipeIODevice::Private::emitReadyRead %p leaving %d", this, counter );
 
