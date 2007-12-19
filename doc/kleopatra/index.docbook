@@ -1096,15 +1096,18 @@ C=DE
 	&kleopatra; allows the user to configure the <link
 	linkend="configuration-appearance">visual appearance</link> of
 	keys based on a concept called <guilabel>Key
-	Categories</guilabel>. This section describes how you can edit
-	the available categories and add new ones.
+	Categories</guilabel>. <guilabel>Key Categories</guilabel> are
+	also used to filter the list of certificates.This section
+	describes how you can edit the available categories and add
+	new ones.
       </para>
 
       <para>
 	When trying to find the category a key belongs to, &kleopatra;
 	tries to match the key to a sequence of key filters,
 	configured in the <filename>libkleopatrarc</filename>. The
-	first one to match defines the category.
+	first one to match defines the category, based on a concept of
+	<emphasis>specificity</emphasis>, explained further below.
       </para>
 
       <para>
@@ -1363,6 +1366,50 @@ C=DE
 	  checks.
 	</para>
       </note>
+
+      <para>
+        In addition to the config keys listed above, a key filter may
+        also have an <varname>id</varname> and
+        <varname>match-contexts</varname>.
+      </para>
+
+      <para>
+        Using the filter's <varname>id</varname>, which defaults to
+        the filter's config group name if not given or empty, you can
+        reference the key filter elsewhere in the configuration, &eg;
+        in &kleopatra;s View configurations<!--TODO write and
+        link-->. The <varname>id</varname> is not interpreted by
+        &kleopatra;, so you can use any string you like, as long as
+        it's unique.
+      </para>
+
+      <para>
+        The <varname>match-contexts</varname> limits the applicability
+        of the filter. Two contexts are currently defined: The
+        <literal>appearance</literal> context is used when defining
+        coloring and font properties for the views. The
+        <literal>filtering</literal> context is used to selectively
+        include (and exclude) certificate from
+        views. <literal>any</literal> can be used to signify all
+        currently defined contexts, and is the default if
+        <varname>match-contexts</varname> is not given, or otherwise
+        produces no contexts. This ensures that no key filter can end
+        up <quote>dead</quote>, &ie; with no contexts to apply it in.
+      </para>
+
+      <para>
+        The format of the entry is a list of tokens, separated by
+        non-word characters. Each of the tokens is optionally prefixed
+        by a <literal>!</literal>, indicating negation. The tokens act
+        in order on an internal list of contexts, which starts out
+        empty. This is best explained by an example: <literal>any
+        !apperance</literal> is the same as
+        <literal>filtering</literal>, and <literal>appearance
+        !appearance</literal> is producing the empty set, as is
+        <literal>!any</literal>. However, the last two will be
+        internally replaced by <literal>any</literal>, since they
+        produce no contexts at all.
+      </para>
 
       <para>
 	In general, criteria not specified (&ie; the config entry is
