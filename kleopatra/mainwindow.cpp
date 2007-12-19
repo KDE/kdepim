@@ -234,8 +234,6 @@ MainWindow::Private::Private( MainWindow * qq )
 
     q->createGUI( "kleopatra_newui.rc" );
 
-    ( new RefreshKeysCommand( RefreshKeysCommand::Normal, &controller ) )->start();
-
     q->resize( 640, 480 );
 
     setupViews();

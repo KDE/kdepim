@@ -39,6 +39,7 @@
 #else
 # include "mainwindow.h"
 # include "trayiconlistener.h"
+# include <commands/refreshkeyscommand.h>
 #endif
 
 #include "libkleo/kleo/cryptobackendfactory.h"
@@ -66,6 +67,7 @@
 #include <klocale.h>
 #include <kglobal.h>
 #include <kiconloader.h>
+#include <ksplashscreen.h>
 
 #include <QTextDocument> // for Qt::escape
 #include <QSystemTrayIcon>
@@ -79,6 +81,17 @@ namespace {
     boost::shared_ptr<T> make_shared_ptr( T * t ) {
         return t ? boost::shared_ptr<T>( t ) : boost::shared_ptr<T>() ;
     }
+}
+
+static void fillKeyCache( KSplashScreen * splash ) {
+
+  QEventLoop loop;
+  Kleo::RefreshKeysCommand * cmd = new Kleo::RefreshKeysCommand( Kleo::RefreshKeysCommand::Normal, 0 );
+  QObject::connect( cmd, SIGNAL(finished()), &loop, SLOT(quit()) );
+  splash->showMessage( i18n("Loading certificate cache...") );
+  cmd->start();
+  loop.exec();
+  splash->showMessage( i18n("Certificate cache loaded.") );
 }
 
 int main( int argc, char** argv )
@@ -114,6 +127,8 @@ int main( int argc, char** argv )
   SystemTrayIcon sysTray;
   sysTray.show();
 
+  KSplashScreen splash( UserIcon( "kleopatra_splashscreen" ), Qt::WindowStaysOnTopHint );
+
 #ifdef KLEO_BUILD_OLD_MAINWINDOW
   if( !Kleo::CryptoBackendFactory::instance()->smime() ) {
     KMessageBox::error(0,
@@ -122,18 +137,29 @@ int main( int argc, char** argv )
     return -2;
   }
 
+  splash.show();
+
   CertManager* manager = new CertManager( args->isSet("external"),
 					  args->getOption("query"),
 					  args->getOption("import-certificate") );
   manager->show();
+  splash.finish( manager );
 #else
+
+  const bool daemon = args->isSet("daemon");
+
+  if ( !daemon )
+      splash.show();
+
+  fillKeyCache( &splash );
 
   TrayIconListenerFor<MainWindow> trayIconListener( &sysTray );
 
-  if ( !args->isSet("daemon") ) {
+  if ( !daemon ) {
     MainWindow* mainWindow = new MainWindow;
     mainWindow->show();
     trayIconListener.setMainWindow( mainWindow );
+    splash.finish( mainWindow );
   }
 
 #endif
