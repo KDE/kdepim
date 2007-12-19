@@ -1377,7 +1377,7 @@ C=DE
         Using the filter's <varname>id</varname>, which defaults to
         the filter's config group name if not given or empty, you can
         reference the key filter elsewhere in the configuration, &eg;
-        in &kleopatra;s View configurations<!--TODO write and
+        in &kleopatra;'s View configurations<!--TODO write and
         link-->. The <varname>id</varname> is not interpreted by
         &kleopatra;, so you can use any string you like, as long as
         it's unique.
