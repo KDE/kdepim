@@ -362,6 +362,7 @@ void TabWidget::closeCurrentTab() {
     if ( current < 0 || count() <= 1 )
         return;
     d->tabWidget.removeTab( current );
+    d->tabWidget.setTabBarHidden( d->tabWidget.count() < 2 );
 }
 
 void TabWidget::duplicateCurrentTab() {
@@ -402,6 +403,7 @@ QAbstractItemView * TabWidget::Private::addView( Page * page ) {
 
     QAbstractItemView * const previous = q->currentView(); 
     tabWidget.addTab( page, page->title() );
+    tabWidget.setTabBarHidden( tabWidget.count() < 2 );
     // work around a bug in QTabWidget (tested with 4.3.2) not emitting currentChanged() when the first widget is inserted
     QAbstractItemView * const current = q->currentView(); 
     if ( previous != current )
