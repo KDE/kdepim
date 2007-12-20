@@ -254,32 +254,28 @@ KDPipeIODevice::KDPipeIODevice( Qt::HANDLE handle, OpenMode mode, QObject * p )
 }
 
 KDPipeIODevice::~KDPipeIODevice() { KDAB_CHECK_DTOR;
-if ( isOpen() )
-    close();
-delete d; d = 0;
+    if ( isOpen() )
+        close();
+    delete d; d = 0;
 }
 
 
 bool KDPipeIODevice::open( int fd, OpenMode mode ) { KDAB_CHECK_THIS;
-
-#ifdef Q_OS_WIN32
-return d->doOpen( fd, (HANDLE)_get_osfhandle( fd ), mode );
-#else
-return d->doOpen( fd, 0, mode );
-#endif
-
+    #ifdef Q_OS_WIN32
+    return d->doOpen( fd, (HANDLE)_get_osfhandle( fd ), mode );
+    #else
+    return d->doOpen( fd, 0, mode );
+    #endif
 }
 
 bool KDPipeIODevice::open( Qt::HANDLE h, OpenMode mode ) { KDAB_CHECK_THIS;
-
-#ifdef Q_OS_WIN32
-return d->doOpen( -1, h, mode );
-#else
-Q_UNUSED( h );
-Q_UNUSED( mode );
-assert( !"KDPipeIODevice::open( Qt::HANDLE, OpenMode ) should never be called except on Windows." );
-#endif
-
+    #ifdef Q_OS_WIN32
+    return d->doOpen( -1, h, mode );
+    #else
+    Q_UNUSED( h );
+    Q_UNUSED( mode );
+    assert( !"KDPipeIODevice::open( Qt::HANDLE, OpenMode ) should never be called except on Windows." );
+    #endif
 }
 
 bool KDPipeIODevice::Private::startReaderThread()
@@ -665,8 +661,8 @@ void KDPipeIODevice::close() { KDAB_CHECK_THIS;
     waitAndDelete( d->reader );
 #undef waitAndDelete
 #ifdef Q_OS_WIN32
-if ( d->fd != -1 )
-    _close( d->fd );
+    if ( d->fd != -1 )
+        _close( d->fd );
 else
     CloseHandle( d->handle );
 #else
