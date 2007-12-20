@@ -121,3 +121,8 @@ QMap<GpgME::Protocol, GpgME::Key> SigningCertificateSelectionDialog::selectedCer
     res.insert( GpgME::CMS, SecretKeyCache::instance()->findByFingerprint( cmsfpr.constData() ) );
     return res;
 }
+
+bool SigningCertificateSelectionDialog::rememberAsDefault() const
+{
+    return d->ui.rememberCO->isChecked();
+}

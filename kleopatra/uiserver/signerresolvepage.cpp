@@ -239,11 +239,11 @@ void SignerResolvePage::Private::updateModeSelectionWidgets()
 void SignerResolvePage::Private::selectCertificates()
 {
     QPointer<SigningCertificateSelectionDialog> dlg = new SigningCertificateSelectionDialog( q );
-    if ( dlg->exec() == QDialog::Accepted )
+    if ( dlg->exec() == QDialog::Accepted && dlg )
     {
         const QMap<Protocol, Key> certs = dlg->selectedCertificates(); 
         setCertificates( certs );
-        if ( signingPreferences ) {
+        if ( signingPreferences && dlg->rememberAsDefault() ) {
             signingPreferences->setPreferredCertificate( OpenPGP, certs.value( OpenPGP ) );
             signingPreferences->setPreferredCertificate( CMS, certs.value( CMS ) );    
         }
