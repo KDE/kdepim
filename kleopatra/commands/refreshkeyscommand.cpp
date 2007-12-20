@@ -32,7 +32,11 @@
 
 #include "refreshkeyscommand.h"
 #include "command_p.h"
+
 #include <models/keycache.h>
+#include <models/predicates.h>
+
+#include <utils/stl_util.h>
 
 #include <gpgme++/key.h>
 #include <gpgme++/keylistresult.h>
@@ -42,29 +46,42 @@
 
 #include <QStringList>
 
+#include <boost/bind.hpp>
+
+#include <deque>
+#include <vector>
+#include <algorithm>
 #include <cassert>
 
 using namespace Kleo;
+using namespace boost;
+using namespace GpgME;
 
 class RefreshKeysCommand::Private : public Command::Private {
     friend class ::Kleo::RefreshKeysCommand;
 public:
     Private( RefreshKeysCommand * qq, Mode mode, KeyListController* controller );
     ~Private();
+
     enum KeyType {
         PublicKeys,
         SecretKeys
     };
     void startKeyListing( const char* backend, KeyType type );
-    void publicKeyListingDone( const GpgME::KeyListResult& result );
-    void secretKeyListingDone( const GpgME::KeyListResult& result );
 
-    void addKey( const GpgME::Key& key );
+    void publicKeyListingDone( const KeyListResult & result );
+    void secretKeyListingDone( const KeyListResult & result );
+
+    void addKey( const Key & key );
+
+    void mergeKeysAndUpdateKeyCache();
 
 private:
     const Mode mode;
     uint m_pubKeysJobs;
     uint m_secKeysJobs;
+
+    std::deque<Key> m_pubkeys, m_seckeys;
 };
 
 RefreshKeysCommand::Private * RefreshKeysCommand::d_func() { return static_cast<Private*>( d.get() ); }
@@ -89,7 +106,9 @@ RefreshKeysCommand::Private::Private( RefreshKeysCommand * qq, Mode m, KeyListCo
     : Command::Private( qq, controller ),
       mode( m ),
       m_pubKeysJobs( 0 ),
-      m_secKeysJobs( 0 )
+      m_secKeysJobs( 0 ),
+      m_pubkeys(),
+      m_seckeys()
 {
 
 }
@@ -122,7 +141,7 @@ void RefreshKeysCommand::Private::startKeyListing( const char* backend, KeyType 
     ++( type == PublicKeys ? m_pubKeysJobs : m_secKeysJobs );
 }
 
-void RefreshKeysCommand::Private::publicKeyListingDone( const GpgME::KeyListResult & result )
+void RefreshKeysCommand::Private::publicKeyListingDone( const KeyListResult & result )
 {
     assert( m_pubKeysJobs > 0 );
     --m_pubKeysJobs;
@@ -135,22 +154,65 @@ void RefreshKeysCommand::Private::publicKeyListingDone( const GpgME::KeyListResu
 }
 
 
-void RefreshKeysCommand::Private::secretKeyListingDone( const GpgME::KeyListResult & result )
+void RefreshKeysCommand::Private::secretKeyListingDone( const KeyListResult & result )
 {
     assert( m_secKeysJobs > 0 );
     --m_secKeysJobs;
     if ( result.error().isCanceled() || m_secKeysJobs == 0 )
         finished();
+    if ( m_secKeysJobs == 0 )
+        mergeKeysAndUpdateKeyCache();
 }
 
-void RefreshKeysCommand::Private::addKey( const GpgME::Key& key )
+namespace {
+    template <typename ForwardIterator, typename BinaryPredicate>
+    ForwardIterator unique_by_merge( ForwardIterator first, ForwardIterator last, BinaryPredicate pred ) {
+        first = std::adjacent_find( first, last, pred );
+        if ( first == last )
+            return last;
+
+        ForwardIterator dest = first;
+        dest->merge( *++first );
+        while ( ++first != last )
+            if ( pred( *dest, *first ) )
+                dest->merge( *first );
+            else
+                *++dest = *first;
+        return ++dest;
+    }
+}
+
+void RefreshKeysCommand::Private::mergeKeysAndUpdateKeyCache()
 {
-    // ### collect them and replace them at the end in the key cache. This
-    // is waaaay to slow:
+    std::sort( m_pubkeys.begin(), m_pubkeys.end(), _detail::ByFingerprint<std::less>() );
+    std::sort( m_seckeys.begin(), m_seckeys.end(), _detail::ByFingerprint<std::less>() );
+
+    std::vector<Key> keys;
+    keys.reserve( m_pubkeys.size() + m_seckeys.size() );
+
+    std::merge( m_pubkeys.begin(), m_pubkeys.end(),
+                m_seckeys.begin(), m_seckeys.end(),
+                std::back_inserter( keys ),
+                _detail::ByFingerprint<std::less>() );
+
+    keys.erase( unique_by_merge( keys.begin(), keys.end(), _detail::ByFingerprint<std::equal_to>() ),
+                keys.end() );
+
+    std::vector<Key> sec;
+    sec.reserve( m_seckeys.size() );
+    kdtools::copy_if( keys.begin(), keys.end(), std::back_inserter( sec ),
+                      bind( &Key::hasSecret, _1 ) );
+
+    PublicKeyCache::mutableInstance()->insert( keys );
+    SecretKeyCache::mutableInstance()->insert( sec );
+}
+
+void RefreshKeysCommand::Private::addKey( const Key & key )
+{
     if ( key.hasSecret() )
-        SecretKeyCache::mutableInstance()->insert( key );
+        m_seckeys.push_back( key );
     else
-        PublicKeyCache::mutableInstance()->insert( key );
+        m_seckeys.push_back( key );
 }
 
 #define d d_func()
