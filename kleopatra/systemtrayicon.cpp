@@ -126,7 +126,7 @@ SystemTrayIcon::Private::Private( SystemTrayIcon * qq )
 SystemTrayIcon::Private::~Private() {}
 
 SystemTrayIcon::SystemTrayIcon( QObject * p )
-    : QSystemTrayIcon( KIcon( "gpg" ), p ), d( new Private( this ) )
+    : QSystemTrayIcon( KIcon( "kleopatra" ), p ), d( new Private( this ) )
 {
 
 }
