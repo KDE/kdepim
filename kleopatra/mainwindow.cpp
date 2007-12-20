@@ -280,63 +280,72 @@ void MainWindow::Private::setupActions() {
     searchBarAction->setDefaultWidget( searchBar );
     coll->addAction( "key_search_bar", searchBarAction );
 
-    QAction* action;
+    const struct action_data {
+        const char * const name;
+        QString text;
+        QString toolTip;
+        const char * icon;
+        const QObject * receiver;
+        const char * slot;
+        QString shortcut;
+        bool toggle;
+    } action_data[] = {
+        // File menu
+        { "file_new_certificate", i18n("New Certificate..."), QString(),
+          "document-new", q, SLOT(newCertificate()), i18n("Ctrl+N"), false },
+        { "file_export_certificates", i18n("Export Certificates..."), QString(),
+          "document-export", q, SLOT(exportCertificates()), i18n("Ctrl+E"), false },
+        { "file_import_certificates", i18n("Import Certificates..."), QString(),
+          /*"document-import"*/0, q, SLOT(importCertificates()), i18n("Ctrl+I"), false },
+        // View menu
+        { "view_redisplay", i18n( "Redisplay" ), QString(),
+          "view-refresh", q, SLOT(refreshCertificates()), i18n("F5"), false },
+        { "view_stop_operations", i18n( "Stop Operation" ), QString(),
+          "process-stop", &controller, SLOT(cancelCommands()), i18n("Escape"), false },
+        { "view_certificate_details", i18n( "Certificate Details..." ), QString(),
+          0, q, SLOT(certificateDetails()), QString(), false },
+        // Certificate menu
+        { "certificates_validate", i18n("Validate" ), QString()/*i18n("Validate selected certificates")*/,
+          "view-refresh", q, SLOT(validateCertificates()), i18n("SHIFT+F5"), false },
+        // CRLs menu
+        // Tools menu
+        // Settings menu
+        // Window menu
+        { "window_new_tab", i18n("New Tab"), i18n("Open a new tab"),
+          "tab-new", 0, 0, i18n("CTRL+SHIFT+N"), false },
+        { "window_duplicate_tab", i18n("Duplicate Current Tab"), i18n("Duplicate the current tab"),
+          "tab-duplicate", 0, 0, i18n("CTRL+SHIFT+D"), false },
+        { "window_close_tab", i18n("Close Current Tab"), i18n("Close the current tab"),
+          "tab-close", 0, 0, i18n("CTRL+SHIFT+W"), false }, // ### CTRL-W when available
+    };
 
-    // File menu
+    for ( unsigned int i = 0 ; i < sizeof action_data / sizeof *action_data ; ++i ) {
+        const struct action_data & ad = action_data[i];
+        QAction * const a = coll->addAction( ad.name );
+        a->setText( ad.text );
+        if ( !ad.toolTip.isEmpty() )
+            a->setToolTip( ad.toolTip );
+        if ( ad.icon )
+            a->setIcon( KIcon( ad.icon ) );
+        if ( ad.toggle )
+            a->setCheckable( true );
+        if ( ad.receiver && ad.slot )
+            if ( ad.toggle )
+                connect( a, SIGNAL(toggled(bool)), ad.receiver, ad.slot );
+            else
+                connect( a, SIGNAL(triggered()), ad.receiver, ad.slot );
+        if ( !ad.shortcut.isEmpty() )
+            a->setShortcuts( KShortcut( ad.shortcut ) );
+    }
 
-    action = coll->addAction( "file_new_certificate" );
-    action->setText( i18n( "New Certificate..." ) );
-    action->setIcon( KIcon( "document-new" ) );
-    connect( action, SIGNAL(triggered()), q, SLOT(newCertificate()) );
-    action->setShortcuts( KShortcut( i18n("Ctrl+N") ) );
+    if ( QAction * action = coll->action( "view_stop_operations" ) ) {
+        connect( &controller, SIGNAL(commandsExecuting(bool)), action, SLOT(setEnabled(bool)) );
+        action->setEnabled( false );
+    }
 
-    action = coll->addAction( "file_export_certificates" );
-    action->setText( i18n( "Export Certificates..." ) );
-    action->setIcon( KIcon("document-export") );
-    connect( action, SIGNAL(triggered()), q, SLOT(exportCertificates()) );
-    action->setShortcuts( KShortcut( i18n("Ctrl+E") ) );
-
-    action = coll->addAction( "file_import_certificates" );
-    action->setText( i18n( "Import Certificates..." ) );
-    connect( action, SIGNAL(triggered()), q, SLOT(importCertificates()) );
-    action->setShortcuts( KShortcut( i18n("Ctrl+I") ) );
-
-    // View menu
-
-    action = coll->addAction( "view_redisplay" );
-    action->setText( i18n( "Redisplay" ) );
-    action->setIcon( KIcon( "view-refresh" ) );
-    connect( action, SIGNAL(triggered()), q, SLOT(refreshCertificates()) );
-    action->setShortcuts( KShortcut( i18n("F5") ) );
-
-    action = coll->addAction( "view_stop_operations" );
-    action->setText( i18n( "Stop Operation" ) );
-    action->setIcon( KIcon( "process-stop" ) );
-    connect( action, SIGNAL(triggered()), &controller, SLOT(cancelCommands()) );
-    connect( &controller, SIGNAL(commandsExecuting(bool)), action, SLOT(setEnabled(bool)) );
-    action->setShortcuts( KShortcut( i18n("Escape") ) );
-    action->setEnabled( false );
-
-    action = coll->addAction( "view_certificate_details" );
-    action->setText( i18n( "Certificate Details..." ) );
-    //action->setIcon( KIcon( "view-details" ) );
-    connect( action, SIGNAL(triggered()), q, SLOT(certificateDetails()) );
-
-    // Certificates menu
-
-    action = coll->addAction( "certificates_validate" );
-    action->setText( i18n("Validate" ) );
-    action->setIcon( KIcon( "view-refresh" ) );
-    //action->setToolTip( i18n("Validate selected certificates") );
-    connect( action, SIGNAL(triggered()), q, SLOT(validateCertificates()) );
-    action->setShortcuts( KShortcut( i18n("SHIFT+F5") ) );
-
-    // CRLs menu
-
-    // Tools menu
-
-    // Settings menu
-
+    ui.tabWidget.setOpenNewTabAction( coll->action( "window_new_tab" ) );
+    ui.tabWidget.setDuplicateCurrentTabAction( coll->action( "window_duplicate_tab" ) );
+    ui.tabWidget.setCloseCurrentTabAction( coll->action( "window_close_tab" ) );
 }
 
 static QStringList extractViewGroups( const KSharedConfig::Ptr & config ) {

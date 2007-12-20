@@ -1,5 +1,5 @@
 <!DOCTYPE kpartgui >
-<kpartgui name="kleopatra" version="403" >
+<kpartgui name="kleopatra" version="404" >
 <MenuBar>
 	<Menu name="file">
 		<text>&amp;File</text>
@@ -21,6 +21,12 @@
 	<Menu name="certMenu">
 		<text>&amp;Certificates</text>
 		<Action name="certificates_validate"/>
+        </Menu>
+        <Menu name="window">
+                <text>&amp;Window</text>
+                <Action name="window_new_tab"/>
+                <Action name="window_duplicate_tab"/>
+                <Action name="window_close_tab"/>
         </Menu>
 	<Menu name="help"/>
 </MenuBar>
