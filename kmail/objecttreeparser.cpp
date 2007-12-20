@@ -697,7 +697,7 @@ bool ObjectTreeParser::okDecryptMIME( partNode& data,
                                                        &errTxt );
     kdDebug(5006) << "ObjectTreeParser::decryptMIME: returned from CRYPTPLUG"
                   << endl;
-    actuallyEncrypted = (errId & GPG_ERR_NO_DATA) == 0;
+    actuallyEncrypted = gpg_err_code( errId ) != GPG_ERR_NO_DATA;
     if ( bDecryptionOk && errId == CRYPTPLUG_ERR_WRONG_KEY_USAGE ){
       errId = 0;
       wrongKeyUsage = true;
