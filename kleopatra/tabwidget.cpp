@@ -406,6 +406,7 @@ QAbstractItemView * TabWidget::Private::addView( Page * page ) {
     QAbstractItemView * const current = q->currentView(); 
     if ( previous != current )
         currentIndexChanged( tabWidget.currentIndex() );
+    emit q->enableCloseCurrentTabAction( tabWidget.count() > 1 && currentPage() && currentPage()->canBeClosed() );
     return page->view();
 }
 
