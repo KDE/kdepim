@@ -220,8 +220,8 @@ DecryptVerifyWizard::Private::~Private() {}
 OperationsPage::OperationsPage( QWidget * p )
     : QWizardPage( p ), m_widgets(), m_ui( this )
 {
-    setTitle( i18n("FIXME Choose operations to be performed") );
-    setSubTitle( i18n("FIXME Here, you can check and, if needed, override "
+    setTitle( i18n("Choose operations to be performed") );
+    setSubTitle( i18n("Here you can check and, if needed, override "
                       "the operations Kleopatra detected for the input given.") );
     setCommitPage( true );
     setButtonText( QWizard::CommitButton, i18n("&Decrypt/Verify") );
@@ -283,7 +283,7 @@ ResultPage::ResultPage( QWidget * p )
     : QWizardPage( p ), m_widgets(), m_ui( this )
 {
     setTitle( i18n("Results") );
-    setSubTitle( i18n("FIXME") );
+    setSubTitle( i18n("Detailed operation results") );
     setButtonText( QWizard::FinishButton, i18n("&OK") );
 }
 
