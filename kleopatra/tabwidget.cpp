@@ -255,6 +255,9 @@ TabWidget::Private::Private( TabWidget * qq )
 {
     KDAB_SET_OBJECT_NAME( tabWidget );
 
+    tabWidget.setTabBarHidden( true );
+    tabWidget.setTabReorderingEnabled( true );
+
     connect( &tabWidget, SIGNAL(currentChanged(int)),
              q, SLOT(currentIndexChanged(int)) );
 }
