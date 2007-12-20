@@ -54,13 +54,15 @@ public:
     explicit TabWidget( QWidget * parent=0, Qt::WindowFlags f=0 );
     ~TabWidget();
 
+    void setModel( Kleo::AbstractKeyListModel * model );
+
     void setOpenNewTabAction( QAction * action );
     void setDuplicateCurrentTabAction( QAction * action );
     void setCloseCurrentTabAction( QAction * action );
     //void setHierarchicalViewAction( QAction * action );
 
-    QAbstractItemView * addView( Kleo::AbstractKeyListModel * model, const QString & title=QString(), const QString & keyFilterID=QString(), const QString & searchString=QString() );
-    QAbstractItemView * addView( Kleo::AbstractKeyListModel * model, const KConfigGroup & group );
+    QAbstractItemView * addView( const QString & title=QString(), const QString & keyFilterID=QString(), const QString & searchString=QString() );
+    QAbstractItemView * addView( const KConfigGroup & group );
 
     void saveTab( unsigned int idx, KConfigGroup & group ) const;
 

@@ -226,6 +226,8 @@ MainWindow::Private::Private( MainWindow * qq )
     connect( &refreshTimer, SIGNAL(timeout()), q, SLOT(validateCertificates()) );
 
     controller.setModel( model );
+    ui.tabWidget.setModel( model );
+
     setupActions();
 
     connect( &controller, SIGNAL(progress(int,int)), &ui.progressBar, SLOT(setProgress(int,int)) );
@@ -250,13 +252,13 @@ MainWindow::~MainWindow() {}
 
 
 void MainWindow::Private::addView( const QString & title, const QString & id, const QString & text ) {
-    QAbstractItemView * const view = ui.tabWidget.addView( model, title, id, text );
+    QAbstractItemView * const view = ui.tabWidget.addView( title, id, text );
     assert( view );
     controller.addView( view );
 }
 
 void MainWindow::Private::addView( const KConfigGroup & group ) {
-    if ( QAbstractItemView * const view = ui.tabWidget.addView( model, group ) )
+    if ( QAbstractItemView * const view = ui.tabWidget.addView( group ) )
         controller.addView( view );
 }
 
@@ -347,9 +349,6 @@ void MainWindow::Private::setupActions() {
     ui.tabWidget.setDuplicateCurrentTabAction( coll->action( "window_duplicate_tab" ) );
     ui.tabWidget.setCloseCurrentTabAction( coll->action( "window_close_tab" ) );
 
-    if ( "tabWidget doesn't hold a permanent reference to a model, "
-         "so newTab() isn't yet implemented - disable" )
-        coll->action( "window_new_tab" )->setEnabled( false );
 }
 
 static QStringList extractViewGroups( const KSharedConfig::Ptr & config ) {

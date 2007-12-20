@@ -60,13 +60,14 @@ class Page : public QWidget {
     Q_OBJECT
     Page( const Page & other );
 public:
-    Page( QAbstractItemModel * sourceModel, const QString & title, const QString & id, const QString & text, QWidget * parent=0 );
-    Page( QAbstractItemModel * sourceModel, const KConfigGroup & group, QWidget * parent=0 );
+    Page( const QString & title, const QString & id, const QString & text, QWidget * parent=0 );
+    Page( const KConfigGroup & group, QWidget * parent=0 );
     ~Page();
 
     QAbstractItemView * view() const { return m_view; }
 
-    void saveTo( KConfigGroup & group ) const;
+    AbstractKeyListModel * model() const { return m_model; }
+    void setModel( AbstractKeyListModel * model );
 
     QString stringFilter() const { return m_stringFilter; }
     void setStringFilter( const QString & filter ); 
@@ -79,6 +80,8 @@ public:
 
     bool canBeClosed() const { return m_canBeClosed; }
     void setCanBeClosed( bool on );
+
+    void saveTo( KConfigGroup & group ) const;
 
     Page * clone() const { return new Page( *this ); }
 
@@ -95,11 +98,12 @@ protected:
     }
 
 private:
-    void init( QAbstractItemModel * model );
+    void init();
 
 private:
     KeyListSortFilterProxyModel m_proxy;
     QTreeView * m_view;
+    AbstractKeyListModel * m_model;
 
     QString m_stringFilter;
     shared_ptr<KeyFilter> m_keyFilter;
@@ -112,44 +116,47 @@ Page::Page( const Page & other )
     : QWidget( 0 ),
       m_proxy(),
       m_view( new QTreeView( this ) ),
+      m_model( other.m_model ),
       m_stringFilter( other.m_stringFilter ),
       m_keyFilter( other.m_keyFilter ),
       m_title( other.m_title ),
       m_canBeClosed( other.m_canBeClosed )
 {
-    init( other.m_proxy.sourceModel() );
+    init();
 }
 
-Page::Page( QAbstractItemModel * model, const QString & title, const QString & id, const QString & text, QWidget * parent )
+Page::Page( const QString & title, const QString & id, const QString & text, QWidget * parent )
     : QWidget( parent ),
       m_proxy(),
       m_view( new QTreeView( this ) ),
+      m_model( 0 ),
       m_stringFilter( text ),
       m_keyFilter( KeyFilterManager::instance()->keyFilterByID( id ) ),
       m_title( title ),
       m_canBeClosed( true )
 {
-    init( model );
+    init();
 }
 
-Page::Page( QAbstractItemModel * model, const KConfigGroup & group, QWidget * parent )
+Page::Page( const KConfigGroup & group, QWidget * parent )
     : QWidget( parent ),
       m_proxy(),
       m_view( new QTreeView( this ) ),
+      m_model( 0 ),
       m_stringFilter( group.readEntry( "string-filter" ) ),
       m_keyFilter( KeyFilterManager::instance()->keyFilterByID( group.readEntry( "key-filter" ) ) ),
       m_title( group.readEntry( "title" ) ),
       m_canBeClosed( !group.isImmutable() )
 {
-    init( model );
+    init();
 }
 
-void Page::init( QAbstractItemModel * model ) {
+void Page::init() {
     KDAB_SET_OBJECT_NAME( m_proxy );
     KDAB_SET_OBJECT_NAME( m_view );
 
-    assert( model );
-    m_proxy.setSourceModel( model );
+    if ( m_model )
+        m_proxy.setSourceModel( m_model );
     m_proxy.setFilterFixedString( m_stringFilter );
     m_proxy.setKeyFilter( m_keyFilter );
     m_view->setModel( &m_proxy );
@@ -163,6 +170,13 @@ void Page::saveTo( KConfigGroup & group ) const {
     group.writeEntry( "string-filter", m_stringFilter );
     group.writeEntry( "key-filter", m_keyFilter ? m_keyFilter->id() : QString() );
 
+}
+
+void Page::setModel( AbstractKeyListModel * model ) {
+    if ( model == m_model )
+        return;
+    m_model = model;
+    m_proxy.setSourceModel( model );
 }
 
 void Page::setStringFilter( const QString & filter ) {
@@ -246,11 +260,13 @@ private:
     void setCornerAction( QAction * action, Qt::Corner corner );
 
 private:
+    AbstractKeyListModel * model;
     KTabWidget tabWidget;
 };
 
 TabWidget::Private::Private( TabWidget * qq )
     : q( qq ),
+      model( 0 ),
       tabWidget( q )
 {
     KDAB_SET_OBJECT_NAME( tabWidget );
@@ -303,6 +319,15 @@ TabWidget::TabWidget( QWidget * p, Qt::WindowFlags f )
 }
 
 TabWidget::~TabWidget() {}
+
+void TabWidget::setModel( AbstractKeyListModel * model ) {
+    if ( model == d->model )
+        return;
+    d->model = model;
+    for ( unsigned int i = 0, end = count() ; i != end ; ++i )
+        if ( Page * const page = d->page( i ) )
+            page->setModel( model );
+}
 
 void TabWidget::setOpenNewTabAction( QAction * action ) {
     d->setCornerAction( action, Qt::TopLeftCorner );
@@ -357,7 +382,7 @@ unsigned int TabWidget::count() const {
 }
 
 void TabWidget::newTab() {
-    //addView( QString(), QString() );
+    addView( QString(), "my-certificates" );
 }
 
 void TabWidget::closeCurrentTab() {
@@ -383,17 +408,19 @@ void TabWidget::resizeEvent( QResizeEvent * e ) {
     d->tabWidget.resize( e->size() );
 }
 
-QAbstractItemView * TabWidget::addView( AbstractKeyListModel * model, const QString & title, const QString & id, const QString & text ) {
-    return d->addView( new Page( model, title, id, text ) );
+QAbstractItemView * TabWidget::addView( const QString & title, const QString & id, const QString & text ) {
+    return d->addView( new Page( title, id, text ) );
 }
 
-QAbstractItemView * TabWidget::addView( AbstractKeyListModel * model, const KConfigGroup & group ) {
-    return d->addView( new Page( model, group ) );
+QAbstractItemView * TabWidget::addView( const KConfigGroup & group ) {
+    return d->addView( new Page( group ) );
 }
 
 QAbstractItemView * TabWidget::Private::addView( Page * page ) {
     if ( !page )
         return 0;
+
+    page->setModel( model );
 
     connect( page, SIGNAL(titleChanged(QString)),
              q, SLOT(slotPageTitleChanged(QString)) );
