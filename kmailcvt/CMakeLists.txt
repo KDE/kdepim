@@ -28,9 +28,7 @@ set(kmailcvt_SRCS
    filter_thebat.cxx 
    filter_lnotes.cxx )
 
-qt4_add_dbus_interfaces(kmailcvt_SRCS ${CMAKE_SOURCE_DIR}/kmail/org.kde.kmail.kmail.xml )
-
-
+qt4_add_dbus_interfaces(kmailcvt_SRCS ${CMAKE_BINARY_DIR}/kmail/org.kde.kmail.kmail.xml )
 
 kde4_add_ui_files(kmailcvt_SRCS kselfilterpagedlg.ui kimportpagedlg.ui)
 
