@@ -53,6 +53,8 @@ namespace Kleo {
         void setSelectedCertificates( const QMap<GpgME::Protocol, GpgME::Key>& certificates );
         QMap<GpgME::Protocol, GpgME::Key> selectedCertificates() const;
 
+        bool rememberAsDefault() const;
+        
     private:
         class Private;
         kdtools::pimpl_ptr<Private> d;
