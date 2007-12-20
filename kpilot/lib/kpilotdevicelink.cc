@@ -50,6 +50,7 @@
 #include <QtCore/QDateTime>
 #include <QtCore/QDir>
 #include <QtCore/QThread>
+#include <QtCore/QSocketNotifier>
 #include <QtCore/QTimer>
 #include <QtGui/QApplication>
 
@@ -66,255 +67,113 @@
 #include "pilotLocalDatabase.h"
 
 #include "kpilotlink.h"
+#include "kpilotdevicelinkPrivate.moc"
 #include "kpilotdevicelink.moc"
 
 #include <config-kpilot.h>
 
-// singleton helper class
-class DeviceMap
-{
-public:
-	static DeviceMap *self()
-	{
-		if (!mThis) mThis = new DeviceMap();
-		return mThis;
-	}
-
-	bool canBind( const QString &device )
-	{
-		showList();
-		return !mBoundDevices.contains( device );
-	}
-
-	void bindDevice( const QString &device )
-	{
-		mBoundDevices.append( device );
-		showList();
-	}
-
-	void unbindDevice( const QString &device )
-	{
-		mBoundDevices.removeAll( device );
-		showList();
-	}
-
-protected:
-	DeviceMap() {}
-	~DeviceMap() {}
-
-	QStringList mBoundDevices;
-	static DeviceMap *mThis;
-
-private:
-	inline void showList() const
-	{
-		if ( !(mBoundDevices.count() > 0) ) return;
-		FUNCTIONSETUPL(3);
-		DEBUGKPILOT << "Bound devices: ["
-			<< ((mBoundDevices.count() > 0) ?
-			mBoundDevices.join(CSL1(", ")) : CSL1("<none>")) 
-			<< ']';
-	}
-} ;
 
 DeviceMap *DeviceMap::mThis = 0L;
 
-class Messages
+
+static inline void startOpenTimer(DeviceCommThread *dev, QTimer *&t)
 {
-public:
-	Messages(KPilotDeviceLink *parent) :
-		fDeviceLink(parent)
+	if ( !t)
 	{
-		reset();
+		t = new QTimer(dev);
+		QObject::connect(t, SIGNAL(timeout()), dev, SLOT(openDevice()));
 	}
+	// just a single-shot timer.  we'll know when to start it again...
+   t->setSingleShot(true);
+	t->start(1000);
+}
 
-	void reset()
-	{
-		messages = 0;
-		messagesMask = ~messageIsError; // Never block errors
-	}
-
-	void block(unsigned int m, bool force=false)
-	{
-		if (force)
-		{
-			// Force blocking this message, even if it's an error msg.
-			messages |= m;
-		}
-		else
-		{
-			messages |= (m & messagesMask);
-		}
-	}
-
-	/**
-	* Some messages are only printed once and are suppressed
-	* after that. These are indicated by flag bits in
-	* messages. The following enum is a bitfield.
-	*/
-	enum {
-		OpenMessage=1, ///< Trying to open device ..
-		OpenFailMessage=2 ///< Failed to open device ...
-	} ;
-	int messages;
-	int messagesMask;
-	static const int messageIsError = 0;
-
-	/** Determines whether message @p s which has an id of @p msgid (one of
-	 *  the enum values mentioned above) should be printed, which is only if that
-	 *  message has not been suppressed through messagesMask.
-	 *  If return is true, this method also adds it to the messagesMask.
-	 */
-	bool shouldPrint(int msgid)
-	{
-		if (!(messages & msgid))
-		{
-			block(msgid);
-			return true;
-		}
-		else
-		{
-			return false;
-		}
-	}
-	
-protected:
-	KPilotDeviceLink *fDeviceLink;
-} ;
-
-class DeviceCommEvent : public QEvent
+DeviceCommThread::DeviceCommThread(KPilotDeviceLink *d) :
+	QThread(),
+	fDone(true),
+	fHandle(d),
+	fOpenTimer(0L),
+	fSocketNotifier(0L),
+	fSocketNotifierActive(false),
+	fWorkaroundUSBTimer(0L),
+	fPilotSocket(-1),
+	fTempSocket(-1),
+	fAcceptedCount(0)
 {
-public:
-	DeviceCommEvent ( DeviceCustomEvents type, QString msg = QString(), int progress = 0)
-		: QEvent( (QEvent::Type)type ),
-		fMessage( msg ),
-		fProgress( progress ),
-		fPilotSocket(-1) {}
-	QString message() const
-	{
-		return fMessage;
-	}
-	int progress()
-	{
-		return fProgress;
-	}
+	FUNCTIONSETUP;
+}
 
-	inline void setCurrentSocket(int i) { fPilotSocket = i; }
-
-	inline int currentSocket() { return fPilotSocket; }
-private:
-	QString fMessage;
-	int fProgress;
-	/**
-	* Pilot-link library handles for the device once it's opened.
-	*/
-	int fPilotSocket;
-};
-
-
-/** Class that handles all device communications.  We do this
-    in a different thread so that we do not block the main Qt
-    Event thread (similar to Swing's AWT event dispatch thread).
-*/
-
-class DeviceCommThread : public QThread
-{
-friend class KPilotDeviceLink;
-public:
-	DeviceCommThread(KPilotDeviceLink *d) :
-		QThread(),
-		fDone(true),
-		fHandle(d),
-		fPilotSocket(-1),
-		fTempSocket(-1)
-	{ };
-	virtual ~DeviceCommThread();
-
-	virtual void run();
-
-	static const int SecondsBetweenPoll = 1;
-
-	void setDone(bool b) 
-	{ 
-		FUNCTIONSETUP;
-		fDone = b; 
-	}
-
-private:
-	volatile bool fDone;
-
-	KPilotDeviceLink *fHandle;
-	inline KPilotDeviceLink *link() 
-	{
-		if (fHandle) 
-		{
-			return fHandle;
-		}
-		else
-		{
-			FUNCTIONSETUP;
-			WARNINGKPILOT << "Link asked for, but either I'm"
-				<< "done or I don't have a valid handle.  "
-				<< "Shutting down comm thread.";
-			QThread::exit();
-			return 0;
-		}
-	}
-
-	/**
-	* Pilot-link library handles for the device once it's opened.
-	*/
-	int fPilotSocket;
-	int fTempSocket;
-
-protected:
-	/**
-	* Attempt to open the device. Called regularly to check
-	* if the device exists (to handle USB-style devices).  This does
-	* everything necessary to connect to a Palm device.  If the
-	* open was successful, this method returns true, otherwise false.
-	*/
-	bool openDevice();
-
-	void close();
-
-protected:
-	/**
-	* Does the low-level opening of the device and handles the
-	* pilot-link library initialisation.
-	*/
-	bool open( const QString &device = QString() );
-	
-private:
-	inline QString errorMessage(int e) 
-	{
-		switch (e)
-		{
-		case ENOENT:
-			return i18n(" The port does not exist.");
-			break;
-		case ENODEV:
-			return i18n(" There is no such device.");
-			break;
-		case EPERM:
-			return i18n(" You do not have permission to open the "
-				"Pilot device.");
-			break;
-		default:
-			return i18n(" Check Pilot path and permissions.");
-		}
-	}
-
-} ;
 
 DeviceCommThread::~DeviceCommThread()
 {
 	FUNCTIONSETUPL(2);
 	close();
+	KPILOT_DELETE(fWorkaroundUSBTimer);
 }
 
+void DeviceCommThread::close()
+{
+	FUNCTIONSETUPL(2);
 
-bool DeviceCommThread::openDevice()
+	KPILOT_DELETE(fWorkaroundUSBTimer);
+	KPILOT_DELETE(fOpenTimer);
+	KPILOT_DELETE(fSocketNotifier);
+	fSocketNotifierActive=false;
+
+	if (fTempSocket != -1)
+	{
+		DEBUGKPILOT 
+		<< ": device comm thread closing socket: ["
+		<< fTempSocket << "]";
+
+		pi_close(fTempSocket);
+	}
+
+	if (fPilotSocket != -1)
+	{
+		DEBUGKPILOT
+		<< ": device comm thread closing socket: ["
+		<< fPilotSocket << "]";
+
+		pi_close(fPilotSocket);
+	}
+
+	fTempSocket = (-1);
+	fPilotSocket = (-1);
+
+	DeviceMap::self()->unbindDevice(link()->fRealPilotPath);
+}
+
+void DeviceCommThread::reset()
+{
+	FUNCTIONSETUP;
+
+	if (link()->fMessages->shouldPrint(Messages::OpenFailMessage))
+	{
+		QApplication::postEvent(link(), new DeviceCommEvent(EventLogMessage,
+				i18n("Could not open device: %1 (will retry)")
+				.arg(link()->pilotPath() )));
+	}
+
+	link()->fMessages->reset();
+	close();
+
+	// Timer already deleted by close() call.
+	startOpenTimer(this,fOpenTimer);
+
+	link()->fLinkStatus = WaitingForDevice;
+}
+
+/**
+ * This is an asyncronous process.  We try to create a socket with the Palm
+ * and then bind to it (in open()).  If we're able to do those 2 things, then
+ * we do 2 things:  we set a timeout timer (which will tell us that X amount of
+ * time has transpired before we get into the meat of the sync transaction), and
+ * we also set up a QSocketNotifier, which will tell us when data is available
+ * to be read from the Palm socket.  If we were unable to create a socket
+ * and/or bind to the Palm in this method, we'll start our timer again.
+ */
+void DeviceCommThread::openDevice()
 {
 	FUNCTIONSETUPL(2);
 
@@ -331,36 +190,39 @@ bool DeviceCommThread::openDevice()
 	if (link()->fMessages->shouldPrint(Messages::OpenMessage))
 	{
 		QApplication::postEvent(link(), new DeviceCommEvent(EventLogMessage,
-			i18n("Trying to open device %1...",link()->fPilotPath)));
+				i18n("Trying to open device %1...")
+				.arg(link()->fPilotPath)));
 	}
 
 	// if we're not supposed to be done, try to open the main pilot
 	// path...
 	if (!fDone && link()->fPilotPath.length() > 0)
 	{
-		DEBUGKPILOT << ": Opening main pilot path: [" 
+		DEBUGKPILOT << ": Opening main pilot path: ["
 			<< link()->fPilotPath << "].";
-		deviceOpened = open( link()->fPilotPath ); 
+		deviceOpened = open(link()->fPilotPath);
 	}
 
 	// only try the temp device if our earlier attempt didn't work and the temp
 	// device is different than the main device, and it's a non-empty
 	// string
-	bool tryTemp = !deviceOpened && 
-			(link()->fTempDevice.length() > 0) &&
-			(link()->fPilotPath != link()->fTempDevice) ;
+	bool tryTemp = !deviceOpened && (link()->fTempDevice.length() > 0) && (link()->fPilotPath != link()->fTempDevice);
 
 	// if we're not supposed to be done, and we should try the temp
 	// device, try the temp device...
 	if (!fDone && tryTemp)
 	{
-		DEBUGKPILOT << ": Couldn't open main pilot path."
-			<< "Now trying temp device: [" 
+		DEBUGKPILOT << ": Couldn't open main pilot path. "
+			<< "Now trying temp device: ["
 			<< link()->fTempDevice << "].";
-		deviceOpened = open( link()->fTempDevice );
+		deviceOpened = open(link()->fTempDevice);
 	}
 
-	return deviceOpened;
+	// if we couldn't connect, try to connect again...
+	if (!fDone && !deviceOpened)
+	{
+		startOpenTimer(this, fOpenTimer);
+	}
 }
 
 bool DeviceCommThread::open(const QString &device)
@@ -371,23 +233,31 @@ bool DeviceCommThread::open(const QString &device)
 	int e = 0;
 	QString msg;
 
-	link()->fRealPilotPath = KStandardDirs::realFilePath(device.isEmpty() ? link()->fPilotPath : device );
+	if (fTempSocket != -1)
+	{
+		pi_close(fTempSocket);
+	}
+	fTempSocket = (-1);
 
-	if ( !DeviceMap::self()->canBind( link()->fRealPilotPath ) ) {
+	link()->fRealPilotPath
+			= KStandardDirs::realFilePath(device.isEmpty() ? link()->fPilotPath : device);
+
+	if ( !DeviceMap::self()->canBind(link()->fRealPilotPath) )
+	{
 		msg = i18n("Already listening on that device");
-		
+
 		WARNINGKPILOT << "Pilot Path: ["
 			<< link()->fRealPilotPath << "] already connected.";
 		WARNINGKPILOT << msg;
 
 		link()->fLinkStatus = PilotLinkError;
 
-		QApplication::postEvent(link(),
-			new DeviceCommEvent(EventLogError, msg));
+		QApplication::postEvent(link(), new DeviceCommEvent(EventLogError, msg));
 
 		return false;
 	}
 
+	DEBUGKPILOT << ": Trying to create socket.";
 
 	fTempSocket = pi_socket(PI_AF_PILOT, PI_SOCK_STREAM, PI_PF_DLP);
 
@@ -395,92 +265,161 @@ bool DeviceCommThread::open(const QString &device)
 	{
 		e = errno;
 		msg = i18n("Cannot create socket for communicating "
-			"with the Pilot (%1)",errorMessage(e));
-		DEBUGKPILOT << msg << " (" << strerror(e) << ')';
-	
+				"with the Pilot (%1)").arg(errorMessage(e));
+		DEBUGKPILOT << msg;
+		DEBUGKPILOT << "(" << strerror(e) << ")";
+
 		link()->fLinkStatus = PilotLinkError;
-		
-		QApplication::postEvent(link(),
-			new DeviceCommEvent(EventLogError, msg));
-	
+
+		QApplication::postEvent(link(), new DeviceCommEvent(EventLogError, msg));
+
 		return false;
 	}
 
-	DEBUGKPILOT << "Got socket: [" << fTempSocket << ']' ;
+	DEBUGKPILOT << ": Got socket: [" << fTempSocket << "]";
 
 	link()->fLinkStatus = CreatedSocket;
 
-	DEBUGKPILOT << "Binding to path: [" 
-		<< link()->fRealPilotPath << ']';
+	DEBUGKPILOT << ": Binding to path: ["
+		<< link()->fRealPilotPath << "]";
 
 	ret = pi_bind(fTempSocket, QFile::encodeName(link()->fRealPilotPath));
 
 	if (ret < 0)
 	{
-		DEBUGKPILOT << "pi_bind error [" << strerror(errno) << ']';
+		DEBUGKPILOT 
+			<< ": pi_bind error: ["
+			<< strerror(errno) << "]";
 
 		e = errno;
-		msg = i18n("Cannot open Pilot port \"%1\". ",link()->fRealPilotPath);
-		
-		DEBUGKPILOT << msg << " (" << strerror(e) << ')';
-	
+		msg = i18n("Cannot open Pilot port \"%1\". ").arg(link()->fRealPilotPath);
+
+		DEBUGKPILOT << msg;
+		DEBUGKPILOT << "(" << strerror(e) << ")";
+
 		link()->fLinkStatus = PilotLinkError;
-		
+
 		if (link()->fMessages->shouldPrint(Messages::OpenFailMessage))
 		{
-			QApplication::postEvent(link(),
-				new DeviceCommEvent(EventLogError, msg));
+			QApplication::postEvent(link(), new DeviceCommEvent(EventLogError, msg));
 		}
 
 		return false;
 	}
 
 	link()->fLinkStatus = DeviceOpen;
-	DeviceMap::self()->bindDevice( link()->fRealPilotPath );
+	DeviceMap::self()->bindDevice(link()->fRealPilotPath);
 
-	DEBUGKPILOT << "Current status: ["
+	fSocketNotifier = new QSocketNotifier(fTempSocket,
+			QSocketNotifier::Read, this);
+	QObject::connect(fSocketNotifier, SIGNAL(activated(int)),
+			this, SLOT(acceptDevice()));
+	fSocketNotifierActive=true;
+
+	/**
+	 * We _always_ want to set a maximum amount of time that we will wait
+	 * for the sync process to start.  In the case where our user
+	 * has told us that he has a funky USB device, set the workaround timeout
+	 * for shorter than normal.
+	 */
+	int timeout=20000;
+	if (link()->fWorkaroundUSB)
+	{
+		timeout=5000;
+	}
+
+	fWorkaroundUSBTimer = new QTimer(this);
+	connect(fWorkaroundUSBTimer, SIGNAL(timeout()), this, SLOT(workaroundUSB()));
+	fWorkaroundUSBTimer->setSingleShot(true);
+	fWorkaroundUSBTimer->start(timeout);
+
+	return true;
+}
+
+/**
+ * We've been notified by our QSocketNotifier that we have data available on the
+ * socket.  Try to go through the remaining steps of the connnection process.
+ * Note: If we return at all from this before the very end without a successful
+ * connection, we need to make sure we restart our connection open timer, otherwise
+ * it won't be restarted.
+ */
+void DeviceCommThread::acceptDevice()
+{
+	FUNCTIONSETUP;
+
+	int ret;
+
+	/**
+	 * Our socket notifier should be the only reason that we end up here.
+	 * If we're here without him being active, we have a problem.  Try to clean
+	 * up and get out.
+	 */
+	if (!fSocketNotifierActive)
+	{
+		if (!fAcceptedCount)
+		{
+		   WARNINGKPILOT << ": Accidentally in acceptDevice()";
+		}
+		fAcceptedCount++;
+		if (fAcceptedCount>10)
+		{
+			// Damn the torpedoes
+			KPILOT_DELETE(fSocketNotifier);
+		}
+		return;
+	}
+
+	if (fSocketNotifier)
+	{
+		// fSocketNotifier->setEnabled(false);
+		fSocketNotifierActive=false;
+		KPILOT_DELETE(fSocketNotifier);
+	}
+
+	DEBUGKPILOT << ": Found connection on device: ["
+		<< link()->pilotPath() << "].";
+
+	DEBUGKPILOT
+		<< ": Current status: ["
 		<< link()->statusString()
-		<< "] and socket: [" << fTempSocket << ']';
+		<< "] and socket: [" << fTempSocket << "]";
 
 	ret = pi_listen(fTempSocket, 1);
 	if (ret < 0)
 	{
 		char *s = strerror(errno);
 
-		WARNINGKPILOT << "pi_listen returned: [" << s << ']';
+		WARNINGKPILOT << "pi_listen returned: [" << s << "]";
 
 		// Presumably, strerror() returns things in
 		// local8Bit and not latin1.
-		QApplication::postEvent(link(),
-			new DeviceCommEvent(EventLogError,
-				i18n("Cannot listen on Pilot socket (%1)",QString::fromLocal8Bit(s)))
-			);
-
-		return false;
+		QApplication::postEvent(link(), new DeviceCommEvent(EventLogError,
+				i18n("Cannot listen on Pilot socket (%1)").
+				arg(QString::fromLocal8Bit(s))));
+		reset();
+		return;
 	}
 
-	QApplication::postEvent(link(),
-		new DeviceCommEvent(EventLogProgress, QString(), 10));
+	QApplication::postEvent(link(), new DeviceCommEvent(EventLogProgress, QString::null, 10));
 
-	DEBUGKPILOT << ": Listening to pilot. Now trying accept...";
+	DEBUGKPILOT << 
+		": Listening to pilot. Now trying accept...";
 
-	int timeout=20;
-	if (link()->fWorkaroundUSB)
-		timeout=10;
-
+	int timeout = 20;
 	fPilotSocket = pi_accept_to(fTempSocket, 0, 0, timeout);
 
 	if (fPilotSocket < 0)
 	{
 		char *s = strerror(errno);
 
-		WARNINGKPILOT << "pi_accept returned message [" << s << ']';
+		WARNINGKPILOT << "pi_accept returned: [" << s << "]";
 
-		QApplication::postEvent(link(),
-			new DeviceCommEvent(EventLogError, i18n("Cannot accept Pilot (%1)",QString::fromLocal8Bit(s))));
+		QApplication::postEvent(link(), new DeviceCommEvent(EventLogError, i18n("Cannot accept Pilot (%1)")
+				.arg(QString::fromLocal8Bit(s))));
 
 		link()->fLinkStatus = PilotLinkError;
-		return false;
+		reset();
+		return;
 	}
 
 	DEBUGKPILOT << ": Link accept done.";
@@ -490,132 +429,96 @@ bool DeviceCommThread::open(const QString &device)
 		link()->fLinkStatus = PilotLinkError;
 		WARNINGKPILOT << "Already connected or unable to connect!";
 
-		QApplication::postEvent(link(),
-			new DeviceCommEvent(EventLogError, i18n("Cannot accept Pilot (%1)",i18n("already connected"))));
+		QApplication::postEvent(link(), new DeviceCommEvent(EventLogError, i18n("Cannot accept Pilot (%1)")
+				.arg(i18n("already connected"))));
 
-		return false;
+		reset();
+		return;
 	}
 
-	QApplication::postEvent(link(),
-		new DeviceCommEvent(EventLogProgress, QString(), 30));
+	QApplication::postEvent(link(), new DeviceCommEvent(EventLogProgress, QString::null, 30));
 
 	DEBUGKPILOT << ": doing dlp_ReadSysInfo...";
 
 	struct SysInfo sys_info;
 	if (dlp_ReadSysInfo(fPilotSocket, &sys_info) < 0)
 	{
-		QApplication::postEvent(link(),
-			new DeviceCommEvent(EventLogError,
-			i18n("Unable to read system information from Pilot")));
+		QApplication::postEvent(link(), new DeviceCommEvent(EventLogError,
+				i18n("Unable to read system information from Pilot")));
 
 		link()->fLinkStatus=PilotLinkError;
-		return false;
+		reset();
+		return;
 	}
 	else
 	{
-		DEBUGKPILOT << "dlp_ReadSysInfo successful...";
+		DEBUGKPILOT << ": dlp_ReadSysInfo successful...";
 
-        	KPILOT_DELETE(link()->fPilotSysInfo);
+		KPILOT_DELETE(link()->fPilotSysInfo);
 		link()->fPilotSysInfo = new KPilotSysInfo(&sys_info);
-		DEBUGKPILOT << "RomVersion: [" << link()->fPilotSysInfo->getRomVersion()
+		DEBUGKPILOT 
+			<< ": RomVersion: [" << link()->fPilotSysInfo->getRomVersion()
 			<< "] Locale: [" << link()->fPilotSysInfo->getLocale()
 			<< "] Product: [" << link()->fPilotSysInfo->getProductID()
-			<< ']';
+			<< "]";
 	}
 
-	QApplication::postEvent(link(),
-		new DeviceCommEvent(EventLogProgress, QString(), 60));
+	// If we've made it this far, make sure our USB workaround timer doesn't fire!
+	fWorkaroundUSBTimer->stop();
+	KPILOT_DELETE(fWorkaroundUSBTimer);
 
-        KPILOT_DELETE(link()->fPilotUser);
+	QApplication::postEvent(link(), new DeviceCommEvent(EventLogProgress, QString::null, 60));
+
+	KPILOT_DELETE(link()->fPilotUser);
 	link()->fPilotUser = new KPilotUser;
 
-	DEBUGKPILOT << "doing dlp_ReadUserInfo...";
+	DEBUGKPILOT << ": doing dlp_ReadUserInfo...";
 
 	/* Ask the pilot who it is.  And see if it's who we think it is. */
 	dlp_ReadUserInfo(fPilotSocket, link()->fPilotUser->data());
 
 	QString n = link()->getPilotUser().name();
-	DEBUGKPILOT << "Read user name: [" << n << ']';
+	DEBUGKPILOT
+		<< ": Read user name: [" << n << "]";
 
-	QApplication::postEvent(link(),
-		new DeviceCommEvent(EventLogProgress, i18n("Checking last PC..."), 90));
+	QApplication::postEvent(link(), new DeviceCommEvent(EventLogProgress, i18n("Checking last PC..."), 90));
 
 	/* Tell user (via Pilot) that we are starting things up */
 	if ((ret=dlp_OpenConduit(fPilotSocket)) < 0)
 	{
-		DEBUGKPILOT << "dlp_OpenConduit returned: [" << ret << ']';
+		DEBUGKPILOT
+			<< ": dlp_OpenConduit returned: [" << ret << "]";
 
-		QApplication::postEvent(link(),
-			new DeviceCommEvent(EventLogError,
-			i18n("Could not read user information from the Pilot. "
-			"Perhaps you have a password set on the device?")));
+		QApplication::postEvent(link(), new DeviceCommEvent(EventLogError,
+				i18n("Could not read user information from the Pilot. "
+						"Perhaps you have a password set on the device?")));
 
 	}
 	link()->fLinkStatus = AcceptedDevice;
 
-	QApplication::postEvent(link(),
-		new DeviceCommEvent(EventLogProgress, QString(), 100));
+	QApplication::postEvent(link(), new DeviceCommEvent(EventLogProgress, QString::null, 100));
 
-	return true;
+	DeviceCommEvent * ev = new DeviceCommEvent(EventDeviceReady);
+	ev->setCurrentSocket(fPilotSocket);
+	QApplication::postEvent(link(), ev);
+
 }
 
-void DeviceCommThread::close()
+void DeviceCommThread::workaroundUSB()
 {
-	FUNCTIONSETUPL(2);
+	FUNCTIONSETUP;
 
-	pi_close(fTempSocket);
-
-	if (fPilotSocket != -1)
-	{
-		DEBUGKPILOT << "Device comm thread closing socket: ["
-			<< fPilotSocket << ']';
-
-		pi_close(fPilotSocket);
-	}
-	fPilotSocket = (-1);
-
-	DeviceMap::self()->unbindDevice( link()->fRealPilotPath );
+	reset();
 }
-
 
 void DeviceCommThread::run()
 {
 	FUNCTIONSETUP;
-	int sleepBetweenPoll = SecondsBetweenPoll;
 	fDone = false;
 
-	DEBUGKPILOT << ": Polling every: ["
-		<< sleepBetweenPoll << "] seconds.";
+	startOpenTimer(this, fOpenTimer);
 
-	while (!fDone)
-	{
-		openDevice();
-
-		if (link()->fLinkStatus == AcceptedDevice)
-		{
-			DeviceCommEvent * ev = new DeviceCommEvent(EventDeviceReady);
-			ev->setCurrentSocket(fPilotSocket);
-			QApplication::postEvent(link(), ev);
-
-			break;
-		}
-		else
-		{
-			if (link()->fMessages->shouldPrint(Messages::OpenFailMessage))
-			{
-				QApplication::postEvent(link(), 
-					new DeviceCommEvent(EventLogMessage, 
-						i18n("Could not open device: %1 (will retry)",link()->fPilotPath)));
-			}
-			close();
-
-			// sleep before trying again
-			QThread::sleep(sleepBetweenPoll);
-		}
-	}
-
-	DEBUGKPILOT << "comm thread waiting to be done...";
-
+	int sleepBetweenPoll = 2;
 	// keep the thread alive until we're supposed to be done
 	while (!fDone)
 	{
@@ -627,9 +530,10 @@ void DeviceCommThread::run()
 	// pilot-link (potentially, if it's libusb) is done before we exit
 	QThread::sleep(1);
 
-	DEBUGKPILOT << "comm thread now done...";
+	DEBUGKPILOT << ": comm thread now done...";
 }
 
+// End of Comm Thread
 
 
 
@@ -661,63 +565,43 @@ KPilotDeviceLink::~KPilotDeviceLink()
 	 return fLinkStatus == AcceptedDevice;
 }
 
-void KPilotDeviceLink::customEvent(QEvent *e)
+/* virtual */bool KPilotDeviceLink::event(QEvent *e)
 {
 	FUNCTIONSETUP;
 
+	bool handled = false;
+
 	if ((int)e->type() == EventDeviceReady)
 	{
-		DeviceCommEvent* t = dynamic_cast<DeviceCommEvent*>(e);
-		if (t)
-		{
-			fPilotSocket = t->currentSocket();
-			emit deviceReady( this );
-		}
-		else
-		{
-			DEBUGKPILOT << "Unable to cast event: [" << e << ']';
-		}
+		DeviceCommEvent* t = static_cast<DeviceCommEvent*>(e);
+		fPilotSocket = t->currentSocket();
+		emit deviceReady( this);
+		handled = true;
 	}
 	else if ((int)e->type() == EventLogMessage)
 	{
-		DeviceCommEvent* t = dynamic_cast<DeviceCommEvent*>(e);
-		if (t)
-		{
-			emit logMessage(t->message());
-		}
-		else
-		{
-			DEBUGKPILOT << "Unable to cast event: [" << e << ']';
-		}
+		DeviceCommEvent* t = static_cast<DeviceCommEvent*>(e);
+		emit logMessage(t->message());
+		handled = true;
 	}
 	else if ((int)e->type() == EventLogError)
 	{
-		DeviceCommEvent* t = dynamic_cast<DeviceCommEvent*>(e);
-		if (t)
-		{
-			emit logError(t->message());
-		}
-		else
-		{
-			DEBUGKPILOT << "Unable to cast event: [" << e << ']';
-		}
+		DeviceCommEvent* t = static_cast<DeviceCommEvent*>(e);
+		emit logError(t->message());
+		handled = true;
 	}
 	else if ((int)e->type() == EventLogProgress)
 	{
-		DeviceCommEvent* t = dynamic_cast<DeviceCommEvent*>(e);
-		if (t)
-		{
-			emit logProgress(t->message(), t->progress());
-		}
-		else
-		{
-			DEBUGKPILOT << "Unable to cast event: [" << e << ']';
-		}
+		DeviceCommEvent* t = static_cast<DeviceCommEvent*>(e);
+		emit logProgress(t->message(), t->progress());
+		handled = true;
 	}
 	else
 	{
-		KPilotLink::customEvent(e);
+		handled = KPilotLink::event(e);
 	}
+
+	return handled;
 }
 
 void KPilotDeviceLink::stopCommThread()
@@ -733,7 +617,7 @@ void KPilotDeviceLink::stopCommThread()
 		{
 			DEBUGKPILOT
 				<< "comm thread still running. Waiting for it to complete.";
-			bool done = fDeviceCommThread->wait(30000);
+			bool done = fDeviceCommThread->wait(5000);
 			if (!done)
 			{
 				DEBUGKPILOT
