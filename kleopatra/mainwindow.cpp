@@ -346,6 +346,10 @@ void MainWindow::Private::setupActions() {
     ui.tabWidget.setOpenNewTabAction( coll->action( "window_new_tab" ) );
     ui.tabWidget.setDuplicateCurrentTabAction( coll->action( "window_duplicate_tab" ) );
     ui.tabWidget.setCloseCurrentTabAction( coll->action( "window_close_tab" ) );
+
+    if ( "tabWidget doesn't hold a permanent reference to a model, "
+         "so newTab() isn't yet implemented - disable" )
+        coll->action( "window_new_tab" )->setEnabled( false );
 }
 
 static QStringList extractViewGroups( const KSharedConfig::Ptr & config ) {
