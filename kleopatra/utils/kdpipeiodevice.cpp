@@ -112,21 +112,21 @@ private:
 };
 
 
-Reader::Reader( int fd_, Qt::HANDLE handle_ )
-: QThread(),
-fd( fd_ ),
-handle( handle_ ),
-mutex(),
-bufferNotFullCondition(),
-bufferNotEmptyCondition(),
-hasStarted(),
-cancel( false ),
-eof( false ),
-error( false ),
-eofShortCut( false ),
-errorCode( 0 ),
-consumerBlocksOnUs( false ),
-rptr( 0 ), wptr( 0 )
+Reader::Reader( int fd_, Qt::HANDLE handle_ ) : QThread(),
+    fd( fd_ ),
+    handle( handle_ ),
+    mutex(),
+    bufferNotFullCondition(),
+    bufferNotEmptyCondition(),
+    hasStarted(),
+    cancel( false ),
+    eof( false ),
+    error( false ),
+    eofShortCut( false ),
+    errorCode( 0 ),
+    consumerBlocksOnUs( false ),
+    rptr( 0 ),
+    wptr( 0 )
 {
 
 }
@@ -175,18 +175,17 @@ private:
 };
 }
 
-Writer::Writer( int fd_, Qt::HANDLE handle_ )
-: QThread(),
-fd( fd_ ),
-handle( handle_ ),
-mutex(),
-bufferEmptyCondition(),
-bufferNotEmptyCondition(),
-hasStarted(),
-cancel( false ),
-error( false ),
-errorCode( 0 ),
-numBytesInBuffer( 0 )
+Writer::Writer( int fd_, Qt::HANDLE handle_ ) : QThread(),
+    fd( fd_ ),
+    handle( handle_ ),
+    mutex(),
+    bufferEmptyCondition(),
+    bufferNotEmptyCondition(),
+    hasStarted(),
+    cancel( false ),
+    error( false ),
+    errorCode( 0 ),
+    numBytesInBuffer( 0 )
 {
 
 }
@@ -208,7 +207,7 @@ public:
     void stopThreads();
 
 public Q_SLOTS:
-void emitReadyRead();
+    void emitReadyRead();
 
 private:
     int fd;
@@ -219,13 +218,13 @@ private:
     bool triedToStartWriter;
 };
 
-KDPipeIODevice::Private::Private( KDPipeIODevice * qq )
-: QObject( qq ), q( qq ),
-fd( -1 ),
-handle( 0 ),
-reader( 0 ),
-writer( 0 ),
-triedToStartReader( false ), triedToStartWriter( false ) 
+KDPipeIODevice::Private::Private( KDPipeIODevice * qq ) : QObject( qq ), q( qq ),
+    fd( -1 ),
+    handle( 0 ),
+    reader( 0 ),
+    writer( 0 ),
+    triedToStartReader( false ),
+    triedToStartWriter( false ) 
 {
 
 }
@@ -384,43 +383,43 @@ bool KDPipeIODevice::Private::doOpen( int fd_, Qt::HANDLE handle_, OpenMode mode
 }
 
 int KDPipeIODevice::descriptor() const { KDAB_CHECK_THIS;
-return d->fd;
+    return d->fd;
 }
 
 
 Qt::HANDLE KDPipeIODevice::handle() const { KDAB_CHECK_THIS;
-return d->handle;
+    return d->handle;
 }
 
 qint64 KDPipeIODevice::bytesAvailable() const { KDAB_CHECK_THIS;
-const qint64 base = QIODevice::bytesAvailable();
-if ( !d->triedToStartReader ) {
-    d->startReaderThread();
+    const qint64 base = QIODevice::bytesAvailable();
+    if ( !d->triedToStartReader ) {
+        d->startReaderThread();
+        return base;
+    }
+    if ( d->reader )
+        synchronized( d->reader ) {
+        const qint64 inBuffer = d->reader->bytesInBuffer();     
+        return base + inBuffer;
+    }
     return base;
-}
-if ( d->reader )
-    synchronized( d->reader ) {
-    const qint64 inBuffer = d->reader->bytesInBuffer();     
-    return base + inBuffer;
-}
-return base;
 }
 
 qint64 KDPipeIODevice::bytesToWrite() const { KDAB_CHECK_THIS;
-d->startWriterThread();
-const qint64 base = QIODevice::bytesToWrite();
-if ( d->writer )
-    synchronized( d->writer ) return base + d->writer->bytesInBuffer();
-return base;
+    d->startWriterThread();
+    const qint64 base = QIODevice::bytesToWrite();
+    if ( d->writer )
+        synchronized( d->writer ) return base + d->writer->bytesInBuffer();
+    return base;
 }
 
 bool KDPipeIODevice::canReadLine() const { KDAB_CHECK_THIS;
-d->startReaderThread();
-if ( QIODevice::canReadLine() )
+    d->startReaderThread();
+    if ( QIODevice::canReadLine() )
+        return true;
+    if ( d->reader )
+        synchronized( d->reader ) return d->reader->bufferContains( '\n' );
     return true;
-if ( d->reader )
-    synchronized( d->reader ) return d->reader->bufferContains( '\n' );
-return true;
 }
 
 bool KDPipeIODevice::isSequential() const {
@@ -428,52 +427,52 @@ bool KDPipeIODevice::isSequential() const {
 }
 
 bool KDPipeIODevice::atEnd() const { KDAB_CHECK_THIS;
-d->startReaderThread();
-if ( !QIODevice::atEnd() ) {
-    qDebug( "%p: KDPipeIODevice::atEnd returns false since QIODevice::atEnd does (with bytesAvailable=%ld)", this, static_cast<long>(bytesAvailable()) );
-    return false;
-}
-if ( !isOpen() )
-    return true;
-if ( d->reader->eofShortCut )
-    return true;
-LOCKED( d->reader );
-const bool eof = ( d->reader->error || d->reader->eof ) && d->reader->bufferEmpty();
-if ( !eof ) {
-    if ( !d->reader->error && !d->reader->eof )
-        qDebug( "%p: KDPipeIODevice::atEnd returns false since !reader->error && !reader->eof", this );
-    if ( !d->reader->bufferEmpty() )
-        qDebug( "%p: KDPipeIODevice::atEnd returns false since !reader->bufferEmpty()", this );
-}
-return eof;
+    d->startReaderThread();
+    if ( !QIODevice::atEnd() ) {
+        qDebug( "%p: KDPipeIODevice::atEnd returns false since QIODevice::atEnd does (with bytesAvailable=%ld)", this, static_cast<long>(bytesAvailable()) );
+        return false;
+    }
+    if ( !isOpen() )
+        return true;
+    if ( d->reader->eofShortCut )
+        return true;
+    LOCKED( d->reader );
+    const bool eof = ( d->reader->error || d->reader->eof ) && d->reader->bufferEmpty();
+    if ( !eof ) {
+        if ( !d->reader->error && !d->reader->eof )
+            qDebug( "%p: KDPipeIODevice::atEnd returns false since !reader->error && !reader->eof", this );
+        if ( !d->reader->bufferEmpty() )
+            qDebug( "%p: KDPipeIODevice::atEnd returns false since !reader->bufferEmpty()", this );
+    }
+    return eof;
 }
 
 bool KDPipeIODevice::waitForBytesWritten( int msecs ) { KDAB_CHECK_THIS;
-d->startWriterThread();
-Writer * const w = d->writer;
-if ( !w )
-    return true;
-LOCKED( w );
-qDebug( "KDPipeIODevice::waitForBytesWritten (%p,w=%p): entered locked area", this, w 
-); 
-return w->bufferEmpty() || w->error || w->bufferEmptyCondition.wait( &w->mutex, msecs ) ;
-}
-
-bool KDPipeIODevice::waitForReadyRead( int msecs ) { KDAB_CHECK_THIS;
-qDebug( "KDPipeIODEvice::waitForReadyRead()(%p)", this);
-d->startReaderThread();
-if ( ALLOW_QIODEVICE_BUFFERING ) {
-    if ( bytesAvailable() > 0 )
+    d->startWriterThread();
+    Writer * const w = d->writer;
+    if ( !w )
         return true;
-}
-Reader * const r = d->reader;
-if ( !r || r->eofShortCut )
-    return true;
-LOCKED( r );
-if ( r->bytesInBuffer() != 0 || r->eof || r->error )
-    return true;
-assert( false );
-return r->bufferNotEmptyCondition.wait( &r->mutex, msecs ) ;
+    LOCKED( w );
+    qDebug( "KDPipeIODevice::waitForBytesWritten (%p,w=%p): entered locked area", this, w 
+    ); 
+    return w->bufferEmpty() || w->error || w->bufferEmptyCondition.wait( &w->mutex, msecs ) ;
+    }
+    
+    bool KDPipeIODevice::waitForReadyRead( int msecs ) { KDAB_CHECK_THIS;
+    qDebug( "KDPipeIODEvice::waitForReadyRead()(%p)", this);
+    d->startReaderThread();
+    if ( ALLOW_QIODEVICE_BUFFERING ) {
+        if ( bytesAvailable() > 0 )
+            return true;
+    }
+    Reader * const r = d->reader;
+    if ( !r || r->eofShortCut )
+        return true;
+    LOCKED( r );
+    if ( r->bytesInBuffer() != 0 || r->eof || r->error )
+        return true;
+    assert( false );
+    return r->bufferNotEmptyCondition.wait( &r->mutex, msecs ) ;
 }
 
 template <typename T>
@@ -503,56 +502,56 @@ bool KDPipeIODevice::writeWouldBlock() const
 
 
 qint64 KDPipeIODevice::readData( char * data, qint64 maxSize ) { KDAB_CHECK_THIS;
-qDebug( "%p: KDPipeIODevice::readData: data=%p, maxSize=%lld", this, data, maxSize );
-d->startReaderThread();
-Reader * const r = d->reader;
-
-assert( r );
-
-
-//assert( r->isRunning() ); // wrong (might be eof, error)
-assert( data || maxSize == 0 );
-assert( maxSize >= 0 );
-
-if ( r->eofShortCut ) {
-    qDebug( "%p: KDPipeIODevice::readData: hit eofShortCut, returning 0", this );
-    return 0;
-}
-
-if ( maxSize < 0 )
-    maxSize = 0;
-
-if ( ALLOW_QIODEVICE_BUFFERING ) {
-    if ( bytesAvailable() > 0 )
-        maxSize = std::min( maxSize, bytesAvailable() ); // don't block
-}
-qDebug( "%p: KDPipeIODevice::readData: try to lock reader (CONSUMER THREAD)", this );
-LOCKED( r );
-qDebug( "%p: KDPipeIODevice::readData: locked reader (CONSUMER THREAD)", this );
-
-r->readyReadSentCondition.wakeAll();
-if ( /* maxSize > 0 && */ r->bufferEmpty() &&  !r->error && !r->eof ) { // ### block on maxSize == 0?
-    qDebug( "%p: KDPipeIODevice::readData: waiting for bufferNotEmptyCondition (CONSUMER THREAD)", this );
-    const TemporaryValue<bool> tmp( d->reader->consumerBlocksOnUs, true );
-    r->bufferNotEmptyCondition.wait( &r->mutex );
-    r->blockedConsumerIsDoneCondition.wakeAll();
-    qDebug( "%p: KDPipeIODevice::readData: woke up from bufferNotEmptyCondition (CONSUMER THREAD)", this ); 
-}
-
-if ( r->bufferEmpty() ) {
-    qDebug( "%p: KDPipeIODevice::readData: got empty buffer, signal eof", this );
-    // woken with an empty buffer must mean either EOF or error:
-    assert( r->eof || r->error );
-    r->eofShortCut = true;
-    return r->eof ? 0 : -1 ;
-}
-
-qDebug( "%p: KDPipeIODevice::readData: got bufferNotEmptyCondition, trying to read %lld bytes", this, maxSize );
-const qint64 bytesRead = r->readData( data, maxSize );
-qDebug( "%p: KDPipeIODevice::readData: read %lld bytes", this, bytesRead );
-qDebug( "%p (fd=%d): KDPipeIODevice::readData: %s", this, d->fd, data );
-
-return bytesRead;
+    qDebug( "%p: KDPipeIODevice::readData: data=%p, maxSize=%lld", this, data, maxSize );
+    d->startReaderThread();
+    Reader * const r = d->reader;
+    
+    assert( r );
+    
+    
+    //assert( r->isRunning() ); // wrong (might be eof, error)
+    assert( data || maxSize == 0 );
+    assert( maxSize >= 0 );
+    
+    if ( r->eofShortCut ) {
+        qDebug( "%p: KDPipeIODevice::readData: hit eofShortCut, returning 0", this );
+        return 0;
+    }
+    
+    if ( maxSize < 0 )
+        maxSize = 0;
+    
+    if ( ALLOW_QIODEVICE_BUFFERING ) {
+        if ( bytesAvailable() > 0 )
+            maxSize = std::min( maxSize, bytesAvailable() ); // don't block
+    }
+    qDebug( "%p: KDPipeIODevice::readData: try to lock reader (CONSUMER THREAD)", this );
+    LOCKED( r );
+    qDebug( "%p: KDPipeIODevice::readData: locked reader (CONSUMER THREAD)", this );
+    
+    r->readyReadSentCondition.wakeAll();
+    if ( /* maxSize > 0 && */ r->bufferEmpty() &&  !r->error && !r->eof ) { // ### block on maxSize == 0?
+        qDebug( "%p: KDPipeIODevice::readData: waiting for bufferNotEmptyCondition (CONSUMER THREAD)", this );
+        const TemporaryValue<bool> tmp( d->reader->consumerBlocksOnUs, true );
+        r->bufferNotEmptyCondition.wait( &r->mutex );
+        r->blockedConsumerIsDoneCondition.wakeAll();
+        qDebug( "%p: KDPipeIODevice::readData: woke up from bufferNotEmptyCondition (CONSUMER THREAD)", this ); 
+    }
+    
+    if ( r->bufferEmpty() ) {
+        qDebug( "%p: KDPipeIODevice::readData: got empty buffer, signal eof", this );
+        // woken with an empty buffer must mean either EOF or error:
+        assert( r->eof || r->error );
+        r->eofShortCut = true;
+        return r->eof ? 0 : -1 ;
+    }
+    
+    qDebug( "%p: KDPipeIODevice::readData: got bufferNotEmptyCondition, trying to read %lld bytes", this, maxSize );
+    const qint64 bytesRead = r->readData( data, maxSize );
+    qDebug( "%p: KDPipeIODevice::readData: read %lld bytes", this, bytesRead );
+    qDebug( "%p (fd=%d): KDPipeIODevice::readData: %s", this, d->fd, data );
+    
+    return bytesRead;
 }
 
 qint64 Reader::readData( char * data, qint64 maxSize ) {
@@ -576,28 +575,28 @@ qint64 Reader::readData( char * data, qint64 maxSize ) {
 }
 
 qint64 KDPipeIODevice::writeData( const char * data, qint64 size ) { KDAB_CHECK_THIS;
-d->startWriterThread();
-Writer * const w = d->writer;
-
-assert( w );
-assert( w->error || w->isRunning() );
-assert( data || size == 0 );
-assert( size >= 0 );
-
-LOCKED( w );
-
-while ( !w->error && !w->bufferEmpty() ) { 
-    qDebug( "%p: KDPipeIODevice::writeData: wait for empty buffer", this );
-    w->bufferEmptyCondition.wait( &w->mutex );
-    qDebug( "%p: KDPipeIODevice::writeData: empty buffer signaled", this );
-
-}
-if ( w->error )
-    return -1;
-
-assert( w->bufferEmpty() );
-
-return w->writeData( data, size );
+    d->startWriterThread();
+    Writer * const w = d->writer;
+    
+    assert( w );
+    assert( w->error || w->isRunning() );
+    assert( data || size == 0 );
+    assert( size >= 0 );
+    
+    LOCKED( w );
+    
+    while ( !w->error && !w->bufferEmpty() ) { 
+        qDebug( "%p: KDPipeIODevice::writeData: wait for empty buffer", this );
+        w->bufferEmptyCondition.wait( &w->mutex );
+        qDebug( "%p: KDPipeIODevice::writeData: empty buffer signaled", this );
+    
+    }
+    if ( w->error )
+        return -1;
+    
+    assert( w->bufferEmpty() );
+    
+    return w->writeData( data, size );
 }
 
 qint64 Writer::writeData( const char * data, qint64 size ) {
@@ -647,23 +646,23 @@ void KDPipeIODevice::Private::stopThreads()
 }
 
 void KDPipeIODevice::close() { KDAB_CHECK_THIS;
-qDebug( "KDPipeIODevice::close(%p)", this );
-if ( !isOpen() )
-    return;
-
-// tell clients we're about to close:
-emit aboutToClose();
-d->stopThreads();
-
-#define waitAndDelete( t ) if ( t ) { t->wait(); QThread* const t2 = t; t = 0; delete t2; }
-qDebug( "KPipeIODevice::close(%p): wait and closing writer %p", this, d->writer );
-waitAndDelete( d->writer );
-qDebug( "KPipeIODevice::close(%p): wait and closing reader %p", this, d->reader );
-if ( d->reader ) {
-    LOCKED( d->reader );
-    d->reader->readyReadSentCondition.wakeAll();
-}
-waitAndDelete( d->reader );
+    qDebug( "KDPipeIODevice::close(%p)", this );
+    if ( !isOpen() )
+        return;
+    
+    // tell clients we're about to close:
+    emit aboutToClose();
+    d->stopThreads();
+    
+    #define waitAndDelete( t ) if ( t ) { t->wait(); QThread* const t2 = t; t = 0; delete t2; }
+    qDebug( "KPipeIODevice::close(%p): wait and closing writer %p", this, d->writer );
+    waitAndDelete( d->writer );
+    qDebug( "KPipeIODevice::close(%p): wait and closing reader %p", this, d->reader );
+    if ( d->reader ) {
+        LOCKED( d->reader );
+        d->reader->readyReadSentCondition.wakeAll();
+    }
+    waitAndDelete( d->reader );
 #undef waitAndDelete
 #ifdef Q_OS_WIN32
 if ( d->fd != -1 )
